@@ -28,6 +28,7 @@ const AMMO_SPENDERS = {
 	[ACTIONS.BURST_STRIKE.id]: 1,
 	[ACTIONS.FATED_CIRCLE.id]: 1,
 }
+
 const SINGLE_TARGET_CIRCLE_SEVERITY_TIERS = {
 	1: SEVERITY.MINOR,
 	2: SEVERITY.MEDIUM,
@@ -353,6 +354,7 @@ export default class Ammo extends Module {
 					},
 				}],
 			},
+			/* eslint-disable @typescript-eslint/no-explicit-any */
 			tooltips: {
 				callbacks: {
 					label: function (tooltipItem: any, data: any) {
@@ -363,9 +365,8 @@ export default class Ammo extends Module {
 						if (datasetIndex === TimelineDatasetIndex.OVERCAP_HISTORY &&
 							hoveredHistory.timing === OvercapTiming.BEFORE) {
 							return ' ' + hoveredHistory.y + ' Before <' + hoveredHistory.source + '> Overcapping'
-						} else {
-							return ' ' + hoveredHistory.y + ' After <' + hoveredHistory.source + '>'
 						}
+						return ' ' + hoveredHistory.y + ' After <' + hoveredHistory.source + '>'
 					},
 					afterBody: function(tooltipItems: any, data: any) {
 						const datasetIndex = tooltipItems[0].datasetIndex
@@ -393,6 +394,7 @@ export default class Ammo extends Module {
 				},
 			},
 		}
+		/* eslint-enable @typescript-eslint/no-explicit-any */
 		/* eslint-enable @typescript-eslint/no-magic-numbers */
 
 		return <Fragment>
