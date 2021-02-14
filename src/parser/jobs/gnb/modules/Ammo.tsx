@@ -61,6 +61,11 @@ class AmmoState {
 	y?: number
 	source: string
 	action: number
+
+	constructor() {
+		this.source = ''
+		this.action = 0
+	}
 }
 
 class OvercapState {
@@ -69,6 +74,12 @@ class OvercapState {
 	wasted: number
 	source: string
 	timing: number
+
+	constructor() {
+		this.wasted = 0
+		this.source = ''
+		this.timing = 0
+	}
 }
 
 export default class Ammo extends Module {
@@ -78,6 +89,7 @@ export default class Ammo extends Module {
 
 	private ammo = 0
 	private currentAbility = ''
+	private currentAbilityImpact = 0
 	private ammoHistory: AmmoState[] = []
 	private overcapHistory: OvercapState[] = []
 	private wasteBySource = {
@@ -160,13 +172,15 @@ export default class Ammo extends Module {
 			this.pushToOvercapHistory(originalAmmo + generatedAmmo, waste, OvercapTiming.AFTER)
 		}
 
-		this.pushToHistory(ActionImpact.GENERATOR)
+		this.currentAbilityImpact = ActionImpact.GENERATOR
+		this.pushToHistory()
 	}
 
 	private onSpender(event: CastEvent) {
 		this.ammo = this.ammo - AMMO_SPENDERS[event.ability.guid]
 		this.currentAbility = event.ability.name
-		this.pushToHistory(ActionImpact.SPENDER)
+		this.currentAbilityImpact = ActionImpact.SPENDER
+		this.pushToHistory()
 	}
 
 	private onDeath() {
@@ -178,16 +192,17 @@ export default class Ammo extends Module {
 		this.leftoverAmmo = this.ammo
 		this.ammo = 0
 		this.currentAbility = 'Death'
-		this.pushToHistory(ActionImpact.SPENDER)
+		this.currentAbilityImpact = ActionImpact.SPENDER
+		this.pushToHistory()
 	}
 
-	private pushToHistory(actionIndicator: number) {
+	private pushToHistory() {
 		const timestamp = this.parser.currentTimestamp - this.parser.fight.start_time
 		this.ammoHistory.push({
 			t: timestamp,
 			y: this.ammo,
 			source: this.currentAbility,
-			action: actionIndicator,
+			action: this.currentAbilityImpact,
 		})
 	}
 
@@ -340,12 +355,12 @@ export default class Ammo extends Module {
 			},
 			tooltips: {
 				callbacks: {
-					afterBody: function(t: TooltipItem[], y: object) {
-						const datasetIndex = t[0].datasetIndex
-						const valueIndex = t[0].index
+					afterBody: function(tooltipItems: any, data: any) {
+						const datasetIndex = tooltipItems[0].datasetIndex
+						const valueIndex = tooltipItems[0].index
 
 						if (datasetIndex === TimelineDatasetIndex.AMMO_HISTORY) {
-							const hoveredAmmoHistory = y.datasets[datasetIndex].data[valueIndex]
+							const hoveredAmmoHistory = data.datasets[datasetIndex].data[valueIndex]
 
 							if (hoveredAmmoHistory.action === ActionImpact.GENERATOR) {
 								return 'Generator: ' + hoveredAmmoHistory.source
@@ -354,13 +369,13 @@ export default class Ammo extends Module {
 								return 'Spender: ' + hoveredAmmoHistory.source
 							}
 						} else if (datasetIndex === TimelineDatasetIndex.OVERCAP_HISTORY) {
-							const hoveredOvercapHistory = y.datasets[datasetIndex].data[valueIndex]
+							const hoveredOvercapHistory = data.datasets[datasetIndex].data[valueIndex]
 
 							if (hoveredOvercapHistory.timing === OvercapTiming.BEFORE) {
 								return 'Before ' + hoveredOvercapHistory.source
 							}
 							if (hoveredOvercapHistory.timing === OvercapTiming.AFTER) {
-								return 'After ' + hoveredOvercapHistory.source + 
+								return 'After ' + hoveredOvercapHistory.source +
 								' \nWasted ' + hoveredOvercapHistory.wasted + ' Cartridge'
 							}
 						}
