@@ -355,6 +355,18 @@ export default class Ammo extends Module {
 			},
 			tooltips: {
 				callbacks: {
+					label: function (tooltipItem: any, data: any) {
+						const datasetIndex = tooltipItem.datasetIndex
+						const valueIndex = tooltipItem.index
+						const hoveredHistory = data.datasets[datasetIndex].data[valueIndex]
+
+						if (datasetIndex === TimelineDatasetIndex.OVERCAP_HISTORY &&
+							hoveredHistory.timing === OvercapTiming.BEFORE) {
+							return ' ' + hoveredHistory.y + ' Before <' + hoveredHistory.source + '> Overcapping'
+						} else {
+							return ' ' + hoveredHistory.y + ' After <' + hoveredHistory.source + '>'
+						}
+					},
 					afterBody: function(tooltipItems: any, data: any) {
 						const datasetIndex = tooltipItems[0].datasetIndex
 						const valueIndex = tooltipItems[0].index
@@ -363,20 +375,16 @@ export default class Ammo extends Module {
 							const hoveredAmmoHistory = data.datasets[datasetIndex].data[valueIndex]
 
 							if (hoveredAmmoHistory.action === ActionImpact.GENERATOR) {
-								return 'Generator: ' + hoveredAmmoHistory.source
+								return '(Generator)'
 							}
 							if (hoveredAmmoHistory.action === ActionImpact.SPENDER) {
-								return 'Spender: ' + hoveredAmmoHistory.source
+								return '(Spender)'
 							}
 						} else if (datasetIndex === TimelineDatasetIndex.OVERCAP_HISTORY) {
 							const hoveredOvercapHistory = data.datasets[datasetIndex].data[valueIndex]
 
-							if (hoveredOvercapHistory.timing === OvercapTiming.BEFORE) {
-								return 'Before ' + hoveredOvercapHistory.source
-							}
 							if (hoveredOvercapHistory.timing === OvercapTiming.AFTER) {
-								return 'After ' + hoveredOvercapHistory.source +
-								' \nWasted ' + hoveredOvercapHistory.wasted + ' Cartridge'
+								return '(Wasted ' + hoveredOvercapHistory.wasted + ' Cartridge)'
 							}
 						}
 
