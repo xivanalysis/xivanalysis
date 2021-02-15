@@ -89,12 +89,14 @@ export interface Pet extends Actor {
 export interface ActorResources {
 	hitPoints: number
 	maxHitPoints: number
+	absorb?: number
 	mp: number
 	maxMP: number
 	tp: number
 	maxTP: number
 	x: number
 	y: number
+	facing?: number
 }
 
 // -----
@@ -163,6 +165,7 @@ interface EncounterFields extends BaseEventFields {
 	encounterID: number
 	name: string
 	size: number
+	difficulty?: number
 }
 
 /** Fields present on events caused by, or in relation to an "ability" being executed */
@@ -206,14 +209,14 @@ export interface EncounterStartEvent extends EncounterFields {
 
 export interface EncounterEndEvent extends EncounterFields {
 	type: 'encounterend'
-	completion: number
+	completion?: number
 	difficulty: number
 	kill: boolean
-	medal: number
 }
 
 export interface DeathEvent extends BaseEventFields {
 	type: 'death'
+	ability?: Ability
 }
 
 /* These likewise do not have source/target fields */
@@ -289,7 +292,7 @@ export const isDamageEvent = (event: Event): event is DamageEvent =>
 export interface DamageEvent extends EffectEventFields {
 	type: typeof damageEventTypes[number]
 	overkill?: number
-	absorbed: number
+	absorbed?: number
 	multistrike?: boolean
 	blocked?: number
 }
@@ -302,7 +305,7 @@ export const isHealEvent = (event: Event): event is HealEvent =>
 	(healEventTypes as readonly unknown[]).includes(event.type)
 export interface HealEvent extends EffectEventFields {
 	type: typeof healEventTypes[number]
-	overheal: number
+	overheal?: number
 }
 
 type EncounterEvent =
