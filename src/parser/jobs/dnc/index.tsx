@@ -10,9 +10,7 @@ const description = t('dnc.about.description')`So, you've become a dancer, but y
 
 The core parts of dancer are proper performance of your dances, preventing your gauges from overcapping, and using your procs. We'll provide suggestions to help you use these to their best effect.
 
-For further reading, check out these guides:
-* [FAQ by Tsuki](https://docs.google.com/document/d/1eNAxyjxvG4u8jEBARCD3FXWUfkK2RgCjEvKSPOUCSOQ/edit?usp=sharing)
-* [Write up by Ellunavi](https://docs.google.com/document/d/1iktjQ-kW7Vp-iWy_xEWh6t62FaXqjfGELGmcWOtPQfM/edit?usp=sharing)
+If you would like to learn more about dancer, check out the [comprehensive gameplay guide](https://saltedxiv.com/guides/dnc) by Ringabel Dim.
 `
 
 export default new Meta({
