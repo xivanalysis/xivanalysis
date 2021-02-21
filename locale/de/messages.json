@@ -401,6 +401,7 @@
   "drg.drift.table.heading-2": "Delta",
   "drg.drift.table.heading-3": "Gesamter Drift",
   "drg.drift.title": "Fähigkeits-Drift",
+  "drg.ds.notes.drgdied": "Du bist gestorben",
   "drg.lancecharge.title": "Lanzenschärfung",
   "drg.positionals.analysis.missed": "<0/> Du hast <1>{missed}</1> von <2>{0}</2> möglichen <3/> verpasst.",
   "drg.positionals.analysis.truenorth": "Für <0>{withTn}</0> davon wäre <1/> verfügbar gewesen.",
