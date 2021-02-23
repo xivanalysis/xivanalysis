@@ -3,13 +3,14 @@ import {STATUS_ID_OFFSET} from 'data/STATUSES'
 import {Event, Events, Cause, SourceModifier, TargetModifier} from 'event'
 import {ActorResources, BuffEvent, BuffStackEvent, CastEvent, DamageEvent, DeathEvent, EventActor, FflogsEvent, HealEvent, HitType, TargetabilityUpdateEvent} from 'fflogs'
 import {Actor, Report} from 'report'
-import {isDefined} from 'utilities'
 
 /*
 NOTES:
 - FFLogs uses an ID offset for statuses. It's currently handled throughout the application - once legacy handling is removed, we can safely contain the offset in the adaption.
 - FFLogs re-attributes limit break results to a special actor, resulting in two actions (one from the original, one from fabricated), then all follow-up data being on the fabricated actor. We should adapt that back to the caster.
 */
+
+type AdaptionStep = (baseEvent: FflogsEvent, adaptedEvents: Event[]) => Event[]
 
 /** Mapping from FFLogs hit types to source-originating modifiers. */
 const sourceHitType: Partial<Record<HitType, SourceModifier>> = {
@@ -33,6 +34,10 @@ export function adaptEvents(report: Report, events: FflogsEvent[]): Event[] {
 }
 
 class EventAdapter {
+	private adaptionSteps: AdaptionStep[] = [
+		this.translateEvent.bind(this),
+	]
+
 	/** xiva report representation. */
 	private report: Report
 
@@ -44,17 +49,18 @@ class EventAdapter {
 	}
 
 	adaptEvents(events: FflogsEvent[]): Event[] {
-		return events
-			.flatMap(event => this.adaptEvent(event))
-			.filter(isDefined)
+		return events.flatMap(baseEvent => this.adaptionSteps.reduce(
+			(adaptedEvents, step) => step(baseEvent, adaptedEvents),
+			[] as Event[],
+		))
 	}
 
-	/** Adapt an FFLogs APIv1 event to xiva representation if any. */
-	private adaptEvent(event: FflogsEvent): Event | Event[] | undefined {
+	/** Translate an FFLogs APIv1 event to the xiva representation, if any exists. */
+	private translateEvent(event: FflogsEvent): Event[] {
 		switch (event.type) {
 		case 'begincast':
 		case 'cast':
-			return this.adaptCastEvent(event)
+			return [this.adaptCastEvent(event)]
 
 		case 'calculateddamage':
 		case 'calculatedheal':
@@ -70,7 +76,7 @@ class EventAdapter {
 		case 'applydebuff':
 		case 'refreshbuff':
 		case 'refreshdebuff':
-			return this.adaptStatusApplyEvent(event)
+			return [this.adaptStatusApplyEvent(event)]
 
 		// TODO: Due to FFLogs™️ Quality™️, this effectively results in a double application
 		// of every stacked status. Probably should resolve that out.
@@ -78,17 +84,17 @@ class EventAdapter {
 		case 'applydebuffstack':
 		case 'removebuffstack':
 		case 'removedebuffstack':
-			return this.adaptStatusApplyDataEvent(event)
+			return [this.adaptStatusApplyDataEvent(event)]
 
 		case 'removebuff':
 		case 'removedebuff':
-			return this.adaptStatusRemoveEvent(event)
+			return [this.adaptStatusRemoveEvent(event)]
 
 		case 'death':
-			return this.adaptDeathEvent(event)
+			return [this.adaptDeathEvent(event)]
 
 		case 'targetabilityupdate':
-			return this.adaptTargetableEvent(event)
+			return [this.adaptTargetableEvent(event)]
 
 		/* eslint-disable no-fallthrough */
 		// Dispels are already modelled by other events, and aren't something we really care about
@@ -128,6 +134,8 @@ class EventAdapter {
 			this.unhandledTypes.add(unknownEvent.type)
 		}
 		}
+
+		return []
 	}
 
 	private adaptCastEvent(event: CastEvent): Events['prepare' | 'action'] {
