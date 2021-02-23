@@ -2,6 +2,7 @@ import {Event} from 'event'
 import {FflogsEvent} from 'fflogs'
 import {Report} from 'report'
 import {AdapterStep} from './base'
+import {DeduplicateStatusApplicationStep} from './deduplicateStatus'
 import {TranslateAdapterStep} from './translate'
 
 /** Adapt an array of FFLogs APIv1 events to xiva representation. */
@@ -16,6 +17,7 @@ class EventAdapter {
 	constructor({report}: {report: Report}) {
 		this.adaptionSteps = [
 			new TranslateAdapterStep({report}),
+			new DeduplicateStatusApplicationStep({report}),
 		]
 	}
 

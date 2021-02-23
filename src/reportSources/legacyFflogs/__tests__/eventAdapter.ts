@@ -1,4 +1,5 @@
 import {GameEdition} from 'data/PATCHES'
+import {Events} from 'event'
 import {FflogsEvent, ReportLanguage} from 'fflogs'
 import {Report} from 'report'
 import {adaptEvents} from '../eventAdapter'
@@ -30,6 +31,13 @@ const report: Report = {
 // Below is a "fake" definition of every fflogs type we have typed in the codebase.
 // It's long - you'll probably want to collapse it
 // #region FFLogs event definitions
+
+const fakeAbility = {
+	name: 'Fake Ability',
+	guid: -1,
+	type: 0,
+	abilityIcon: 'fakeAbilityIcon',
+}
 
 // For stuff that will never have them
 const fakeBaseFields = {
@@ -490,5 +498,32 @@ describe('Event adapter', () => {
 			const event = fakeEvents[eventType as keyof typeof fakeEvents]
 			expect(adaptEvents(report, [event])).toMatchSnapshot()
 		}))
+	})
+
+	it('merges duplicate status data', () => {
+		const statusData = 10
+
+		const result = adaptEvents(report, [{
+			timestamp: 100,
+			type: 'applybuff',
+			sourceID: 1,
+			sourceIsFriendly: true,
+			targetID: 2,
+			targetIsFriendly: true,
+			ability: fakeAbility,
+		}, {
+			timestamp: 100,
+			type: 'applybuffstack',
+			sourceID: 1,
+			sourceIsFriendly: true,
+			targetID: 2,
+			targetIsFriendly: true,
+			ability: fakeAbility,
+			stack: statusData,
+		}])
+
+		expect(result).toHaveLength(1)
+		expect(result[0].type).toBe('statusApply')
+		expect((result[0] as Events['statusApply']).data).toBe(statusData)
 	})
 })
