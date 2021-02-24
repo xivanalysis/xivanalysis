@@ -65,6 +65,7 @@ export class DeduplicateActorUpdateStep extends AdapterStep {
 		return this.denseObject([
 			['x', this.resolveValue(prev?.x, next?.x)],
 			['y', this.resolveValue(prev?.y, next?.y)],
+			['bearing', this.resolveValue(prev?.bearing, next?.bearing)],
 		])
 	}
 
