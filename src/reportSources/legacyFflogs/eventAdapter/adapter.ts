@@ -2,6 +2,7 @@ import {Event} from 'event'
 import {FflogsEvent} from 'fflogs'
 import {Report} from 'report'
 import {AdapterStep} from './base'
+import {DeduplicateActorUpdateStep} from './deduplicateActorUpdates'
 import {DeduplicateStatusApplicationStep} from './deduplicateStatus'
 import {TranslateAdapterStep} from './translate'
 
@@ -18,6 +19,7 @@ class EventAdapter {
 		this.adaptionSteps = [
 			new TranslateAdapterStep({report}),
 			new DeduplicateStatusApplicationStep({report}),
+			new DeduplicateActorUpdateStep({report}),
 		]
 	}
 

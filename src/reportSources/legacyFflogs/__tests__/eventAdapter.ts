@@ -1,6 +1,6 @@
 import {GameEdition} from 'data/PATCHES'
 import {Events} from 'event'
-import {FflogsEvent, ReportLanguage} from 'fflogs'
+import {FflogsEvent, HitType, ReportLanguage} from 'fflogs'
 import {Report} from 'report'
 import {adaptEvents} from '../eventAdapter'
 
@@ -525,5 +525,79 @@ describe('Event adapter', () => {
 		expect(result).toHaveLength(1)
 		expect(result[0].type).toBe('statusApply')
 		expect((result[0] as Events['statusApply']).data).toBe(statusData)
+	})
+
+	it('omits duplicate actor data', () => {
+		const sharedFields = {
+			...fakeHitTypeFields,
+			...fakeBaseFields,
+			type: 'damage',
+			targetID: 1,
+			sourceID: 2,
+			hitType: HitType.NORMAL,
+			amount: 100,
+			ability: fakeAbility,
+		} as const
+
+		const sharedResources = {
+			hitPoints: 100,
+			maxHitPoints: 1000,
+			mp: 100,
+			maxMP: 10000,
+			tp: 0,
+			maxTP: 0,
+			x: 100,
+			y: 100,
+			facing: 0,
+		}
+
+		const result = adaptEvents(report, [{
+			...sharedFields,
+			timestamp: 100,
+			targetResources: sharedResources,
+		}, {
+			...sharedFields,
+			timestamp: 200,
+			targetResources: {
+				...sharedResources,
+				hitPoints: 200,
+			},
+		}, {
+			...sharedFields,
+			timestamp: 300,
+			targetResources: {
+				...sharedResources,
+				hitPoints: 200,
+				mp: 300,
+				maxMP: 15000,
+				x: 150,
+				y: 50,
+			},
+		}])
+
+		const updates = result.filter(event => true
+			&& event.type === 'actorUpdate'
+			&& event.actor === '1'
+		)
+
+		expect(updates).toEqual([{
+			timestamp: 100,
+			type: 'actorUpdate',
+			actor: '1',
+			hp: {current: 100, maximum: 1000},
+			mp: {current: 100, maximum: 10000},
+			position: {x: 100, y: 100},
+		}, {
+			timestamp: 200,
+			type: 'actorUpdate',
+			actor: '1',
+			hp: {current: 200},
+		}, {
+			timestamp: 300,
+			type: 'actorUpdate',
+			actor: '1',
+			mp: {current: 300, maximum: 15000},
+			position: {x: 150, y: 50},
+		}])
 	})
 })

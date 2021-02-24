@@ -136,23 +136,6 @@ Array [
     "timestamp": 7412071,
     "type": "actorUpdate",
   },
-  Object {
-    "actor": "3",
-    "hp": Object {
-      "current": 122214,
-      "maximum": 122214,
-    },
-    "mp": Object {
-      "current": 9800,
-      "maximum": 10000,
-    },
-    "position": Object {
-      "x": 9887,
-      "y": 10642,
-    },
-    "timestamp": 7412071,
-    "type": "actorUpdate",
-  },
 ]
 `;
 

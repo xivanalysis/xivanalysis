@@ -155,8 +155,8 @@ interface EventHeal extends FieldsTargeted {
 
 /** Status of a single numeric resource. */
 export interface Resource {
-	maximum?: number
-	current?: number
+	maximum: number
+	current: number
 }
 
 /** Position of an actor. */
@@ -170,11 +170,11 @@ interface EventActorUpdate extends FieldsBase {
 	/** ID of the updated actor. */
 	actor: Actor['id']
 	/** Updated HP status. */
-	hp?: Resource
+	hp?: Partial<Resource>
 	/** Updated MP status. */
-	mp?: Resource
+	mp?: Partial<Resource>
 	/** Updated position. */
-	position?: Position
+	position?: Partial<Position>
 	/** Current targetability. */
 	targetable?: boolean
 }
