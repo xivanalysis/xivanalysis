@@ -163,6 +163,7 @@ export interface Resource {
 export interface Position {
 	x: number
 	y: number
+	heading: number
 }
 
 /** An actors parameters have been updated. */
