@@ -586,7 +586,7 @@ describe('Event adapter', () => {
 			actor: '1',
 			hp: {current: 100, maximum: 1000},
 			mp: {current: 100, maximum: 10000},
-			position: {x: 100, y: 100, heading: 0},
+			position: {x: 100, y: 100, bearing: 0},
 		}, {
 			timestamp: 200,
 			type: 'actorUpdate',

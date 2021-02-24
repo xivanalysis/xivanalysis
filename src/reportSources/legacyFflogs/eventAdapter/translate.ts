@@ -229,7 +229,7 @@ export class TranslateAdapterStep extends AdapterStep {
 			actor,
 			hp: {current: resources.hitPoints, maximum: resources.maxHitPoints},
 			mp: {current: resources.mp, maximum: resources.maxMP},
-			position: {x: resources.x, y: resources.y, heading: resources.facing},
+			position: {x: resources.x, y: resources.y, bearing: resources.facing},
 		}
 	}
 

@@ -83,7 +83,7 @@ Array [
       "maximum": 10000,
     },
     "position": Object {
-      "heading": -160,
+      "bearing": -160,
       "x": 9999,
       "y": 10081,
     },
@@ -101,7 +101,7 @@ Array [
       "maximum": 10000,
     },
     "position": Object {
-      "heading": -245,
+      "bearing": -245,
       "x": 9260,
       "y": 10463,
     },
@@ -132,7 +132,7 @@ Array [
       "maximum": 10000,
     },
     "position": Object {
-      "heading": -208,
+      "bearing": -208,
       "x": 9887,
       "y": 10642,
     },
@@ -184,7 +184,7 @@ Array [
       "maximum": 10000,
     },
     "position": Object {
-      "heading": -160,
+      "bearing": -160,
       "x": 9999,
       "y": 10081,
     },
@@ -243,7 +243,7 @@ Array [
       "maximum": 10000,
     },
     "position": Object {
-      "heading": -288,
+      "bearing": -288,
       "x": 10601,
       "y": 9971,
     },
