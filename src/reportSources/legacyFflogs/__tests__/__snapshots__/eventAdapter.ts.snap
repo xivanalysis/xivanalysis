@@ -83,6 +83,7 @@ Array [
       "maximum": 10000,
     },
     "position": Object {
+      "bearing": -160,
       "x": 9999,
       "y": 10081,
     },
@@ -100,6 +101,7 @@ Array [
       "maximum": 10000,
     },
     "position": Object {
+      "bearing": -245,
       "x": 9260,
       "y": 10463,
     },
@@ -130,23 +132,7 @@ Array [
       "maximum": 10000,
     },
     "position": Object {
-      "x": 9887,
-      "y": 10642,
-    },
-    "timestamp": 7412071,
-    "type": "actorUpdate",
-  },
-  Object {
-    "actor": "3",
-    "hp": Object {
-      "current": 122214,
-      "maximum": 122214,
-    },
-    "mp": Object {
-      "current": 9800,
-      "maximum": 10000,
-    },
-    "position": Object {
+      "bearing": -208,
       "x": 9887,
       "y": 10642,
     },
@@ -198,6 +184,7 @@ Array [
       "maximum": 10000,
     },
     "position": Object {
+      "bearing": -160,
       "x": 9999,
       "y": 10081,
     },
@@ -256,6 +243,7 @@ Array [
       "maximum": 10000,
     },
     "position": Object {
+      "bearing": -288,
       "x": 10601,
       "y": 9971,
     },
