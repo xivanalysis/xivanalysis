@@ -50,8 +50,10 @@ export class BuffWindowState {
 				.filter(e => this.data.getAction(e.ability.guid)?.onGcd)
 				.map(e => e.timestamp)
 
+			// Check to make sure at least one GCD happened before the status expired
 			return this.expiredStatuses
-				.filter(e => e.ability.guid === action.status?.id && gcdTimestamps.includes(e.timestamp))
+				.filter(e => e.ability.guid === action.status?.id &&
+					gcdTimestamps.some(t => t <= e.timestamp))
 				.length
 		}
 
