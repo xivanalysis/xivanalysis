@@ -20,6 +20,11 @@ export default new Meta({
 		{user: CONTRIBUTORS.TOASTDEIB, role: ROLES.MAINTAINER},
 	],
 	changelog: [{
+		date: new Date('2021-02-27'),
+		Changes: () => <>Corrected cases where Trick Attack windows could be improperly split in Shadowkeeper..</>,
+		contributors: [CONTRIBUTORS.KELOS],
+	},
+	{
 		date: new Date('2020-05-25'),
 		Changes: () => <>Included OGCD usage tracking in the checklist.</>,
 		contributors: [CONTRIBUTORS.TOASTDEIB],
