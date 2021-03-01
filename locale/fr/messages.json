@@ -386,7 +386,6 @@
   "drg.buffs.checklist.description": "<0/> vous octroie 10% de dégâts en plus et devrait être actif à tout moment.",
   "drg.buffs.checklist.name": "Gardez {0} actif",
   "drg.buffs.checklist.requirement.name": "Temps d'activité total de <0/>",
-  "drg.buffs.suggestions.life-surge.content": "Évitez d'utiliser <0/> sur un GCD qui n'est ni <1/> ni la 5ème action de votre combo. Toute autre action de combo aura une puissance significativement inférieure, vous faisant perdre une grande partie du bénéfice d'un coup critique garanti.",
   "drg.buffs.suggestions.life-surge.why": "Vous avez utilisé {0} sur un GCD non optimal {1, plural, one {# fois} other {# fois}}.",
   "drg.buffs.suggestions.solo-ds.why": "Au moins un de vos vue du dragon n'avait pas de partenaire.",
   "drg.buffs.title": "Boost",
