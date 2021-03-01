@@ -393,7 +393,6 @@
   "drg.buffs.checklist.description": "<0/>는 피해량을 10% 증가시키며 항상 켜져 있어야 합니다.",
   "drg.buffs.checklist.name": "항상 {0}가 유지되도록 하십시오.",
   "drg.buffs.checklist.requirement.name": "적용시간 <0/>",
-  "drg.buffs.suggestions.life-surge.content": "<0/>를 <1/>나 5번째 콤보가 아닌 글쿨에 사용하는 것을 피하세요. 다른 무기 기술은 현저하게 낮은 위력으로 인해 그 효과가 떨어집니다.",
   "drg.buffs.suggestions.life-surge.why": "{0} 를 적절하지 못한 무기 기술에 {0, plural, one {#회} other {#회}} 사용했습니다.",
   "drg.buffs.suggestions.solo-ds.content": "대상을 지정하지 않은 <0/>은 파티원에게 버프를 주지 못합니다. 개인 딜에 영향이 안끼치더라도 최대한 대상을 지정하여 사용하십시오.",
   "drg.buffs.suggestions.solo-ds.why": "대상을 지정하지 않은 용의 시선이 최소 1 회 이상 사용되었습니다.",
