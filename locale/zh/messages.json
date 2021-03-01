@@ -392,7 +392,6 @@
   "drg.buffs.checklist.description": "<0/>可以提高自身伤害10%，应该始终保持。",
   "drg.buffs.checklist.name": "保持 {0} 不断",
   "drg.buffs.checklist.requirement.name": "<0/> 覆盖率",
-  "drg.buffs.suggestions.life-surge.content": "不要在<1/>与龙5以外的GCD使用<0/>。用在其他任何连击技能上，都会显著降低威力，损失大量必定暴击带来的收益。",
   "drg.buffs.suggestions.life-surge.why": "你在非最优GCD使用了 {1, plural, other {# 次}}{0}",
   "drg.buffs.suggestions.solo-ds.content": "尝试在释放<0/>时总是对队友释放，尽管不这样做也不会影响你的个人DPS，但是这样可以让队友也能享受到伤害增益。",
   "drg.buffs.suggestions.solo-ds.why": "至少有一次巨龙视线没有绑定队友。",
