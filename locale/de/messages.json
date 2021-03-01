@@ -387,7 +387,6 @@
   "drg.buffs.checklist.description": "<0/> erhöht deinen eigenen Schaden um 10% und sollte immer aktiv sein.",
   "drg.buffs.checklist.name": "Halte {0} aufrecht",
   "drg.buffs.checklist.requirement.name": "<0/> Gesamtanwendungszeit",
-  "drg.buffs.suggestions.life-surge.content": "Benutze <0/> möglichst nicht für andere GCDs als <1/> oder einen 5. Komboskill. Alle anderen Komboskills haben einen deutlich geringeren Attacke-Wert, was in verschwendetem Potential des garantierten Crits resultiert.",
   "drg.buffs.suggestions.life-surge.why": "Du hast {0} {1, plural, one {# Mal} other {# Mal}} für einen nicht-optimalen GCD benutzt.",
   "drg.buffs.suggestions.solo-ds.why": "Mindestens 1 Drachenblick hatte keinen Partner.",
   "drg.buffs.title": "バフ",
