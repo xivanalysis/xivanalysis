@@ -12,7 +12,7 @@ export default new Meta({
 		<Trans id="pld.about.description">
 			<p>As the illegitimate child of a WHM and BLM, you chose the gory path of a shield lobbing, sword swinging Mage that also tries to help everybody out.
 			</p>
-			<p>This analyzer attempts to find just the right things to get you to be a fearsome tank that will show no <ActionLink {...ACTIONS.CLEMENCY}/> to your enemies, while being the true <ActionLink {...ACTIONS.HOLY_SPIRIT}/> of the party.
+			<p>This analyser attempts to find just the right things to turn you into a fearsome tank that will show no <ActionLink {...ACTIONS.CLEMENCY}/> to your enemies while being the true <ActionLink {...ACTIONS.HOLY_SPIRIT}/> of the party.
 			</p>
 		</Trans>
 	</>,
