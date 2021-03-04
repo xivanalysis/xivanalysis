@@ -621,7 +621,6 @@
   "nin.taWindow.suggestions.gcds.content": "<0/>의 여부에 따라 매 구간마다 얼만큼 많은 글쿨 기술을 넣을 수 있냐 차이가 나지만 매 <1/> 구간마다 반드시 {BASE_GCDS_PER_WINDOW} 회의 글쿨기를 포함하여야 합니다.",
   "nin.taWindow.suggestions.trackedactions.content": "최대한 딜을 내기위해선 <0/> 구간마다 <1/>, <2/>, <3/> 2회 (오프닝의 경우 1회), 그리고 <4/>를 포함해야합니다.",
   "nin.taWindow.title": "속공 구간",
-  "pld.about.description": "백마의 관용과 흑마의 권능을 가진 나이트는 방패로 후려치고 검으로 꿰뚫어 성령의 기도를 올리는 결연한 수호자의 길입니다.\n\n이 분석기는 적에게 관용을 보여주지 않지만 파티는 감싸주는 진정한 나이트가 될 수 있도록 정확하게 진단할것입니다.\n",
   "pld.fightorflight.suggestions.gcds.content": "<0/> 구간 마다 반드시 11회의 물리 공격 글쿨기를 포함하십시오.",
   "pld.fightorflight.suggestions.gcds.why": "<0/> 구간에서 {0, plural, one {#회} other {#회}}의 글쿨을 놓쳤습니다.",
   "pld.fightorflight.suggestions.goring-blade-clip.content": "<2/> 구간 안에서 첫 <1/> 이후 <0/>를 9글쿨 이후 갱신하도록 합니다.",
