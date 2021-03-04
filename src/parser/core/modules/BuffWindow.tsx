@@ -211,7 +211,9 @@ export abstract class BuffWindowModule extends Module {
 			return
 		}
 
-		this.startNewBuffWindow(event.timestamp, status)
+		if (this.activeBuffWindow === undefined) {
+			this.startNewBuffWindow(event.timestamp, status)
+		}
 	}
 
 	private startNewBuffWindow(startTime: number, status: Status) {
