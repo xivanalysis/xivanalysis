@@ -637,7 +637,7 @@
   "nin.taWindow.suggestions.gcds.content": "効果時間中に実行すべきウェポンスキルの数は<0/>が使われているかどうかによって異なりますが、<1/>の効果時間中には最低でも{BASE_GCDS_PER_WINDOW} 回のウェポンスキルを使用しましょう。",
   "nin.taWindow.suggestions.trackedactions.content": "最大ダメージを与えるためには、<0/>の効果時間中に<1/>, <2/>, 2回の<3/>(開幕は1回) そして<4/>を使う必要があります。",
   "nin.taWindow.title": "だまし討ち",
-  "pld.about.description": "白魔と黒魔の隠し子として生まれたあなたは、盾を投げ剣を振り回す魔導士としての輝ける道を選び、皆を助けようとするものです。\n\nこのアナライザーは、[~action/CLEMENCY] を見せないパーティーの真なる[~action/HOLY_SPIRIT] として恐るべきタンクになるための真理を見出そうとするものです。\n",
+  "pld.about.description": "",
   "pld.fightorflight.suggestions.gcds.content": "<0/>の効果時間中に11回のウェポンスキルを使いましょう。",
   "pld.fightorflight.suggestions.gcds.why": "{0, plural, other {# 回のウェポンスキル}}を<0/>の効果時間中に使えませんでした。",
   "pld.fightorflight.suggestions.goring-blade-clip.content": "",
