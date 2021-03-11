@@ -1,4 +1,5 @@
 import {Trans} from '@lingui/react'
+import * as Sentry from '@sentry/browser'
 import {Message} from 'akkd'
 import classNames from 'classnames'
 import {Analyse as LegacyAnalyse} from 'components/LegacyAnalyse'
@@ -83,7 +84,10 @@ function AnalyseEvents({report, reportStore}: AnalyseEventsProps) {
 	React.useEffect(() => {
 		reportStore.fetchEvents(pullId, actorId)
 			.then(setEvents)
-			.catch(e => { globalErrorStore.setGlobalError(e) })
+			.catch(error => {
+				Sentry.captureException(error)
+				globalErrorStore.setGlobalError(error)
+			})
 	}, [pullId, actorId, reportStore, globalErrorStore])
 
 	if (events == null) {
