@@ -420,7 +420,7 @@ interface CorrectReportEventsResponse {
 }
 
 // Yes, really.
-type MalformedReportEventsResponse = ''
+type MalformedReportEventsResponse = string
 
 export type ReportEventsResponse =
 	| CorrectReportEventsResponse
