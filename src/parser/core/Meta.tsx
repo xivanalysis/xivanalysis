@@ -68,7 +68,7 @@ export class Meta {
 	/** Create a new meta object containing merged data */
 	merge(meta: Meta): Meta {
 		const currentDate: Date = new Date();
-		const isAprilFirst: Boolean = currentDate.getDay() === 1 && currentDate.getMonth() === 3; // JS months are 0-indexed because reasons
+		const isAprilFirst: Boolean = currentDate.getDate() === 1 && currentDate.getMonth() === 2; // JS months are 0-indexed because reasons
 
 		return new Meta({
 			// Modules should contain all loaded modules
@@ -83,9 +83,14 @@ export class Meta {
 			// after zones and core, so the new meta should be above the old.
 			// TODO: Headers? Somehow?
 			Description: () => <>
-				{isAprilFirst && this.Description && <><div style={{display: 'flex', marginBottom: '10px'}}>
-					<img src={require('../../data/avatar/Clippy.png')} style={{width: '40px', marginRight: '1.5em'}}/>
-					<div><Trans id="meta.easter-eggs.april-fools">You look like you're trying to play FFXIV? Would you like some help?</Trans></div></div></>}
+				{isAprilFirst && <>
+					<div style={{display: 'flex', marginBottom: '10px'}}>
+						<img src={require('../../data/avatar/Clippy.png')} style={{width: '40px', marginRight: '1.5em'}}/>
+						<div>
+							<Trans id="meta.easter-eggs.april-fools">You look like you're trying to play FFXIV? Would you like some help?</Trans>
+						</div>
+					</div>
+				</>}
 				{meta.Description && <meta.Description/>}
 				{this.Description && <this.Description/>}
 			</>,
