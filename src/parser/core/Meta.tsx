@@ -4,7 +4,6 @@ import {PatchNumber} from 'data/PATCHES'
 import _ from 'lodash'
 import React from 'react'
 import {Injectable} from './Injectable'
-import {Label} from 'semantic-ui-react'
 
 type ModulesLoader = () => Promise<{default: Array<typeof Injectable>}>
 

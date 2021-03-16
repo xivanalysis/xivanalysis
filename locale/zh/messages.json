@@ -535,6 +535,7 @@
   "mch.wildfire.suggestions.fizzle.why": "你存在 {fizzledWildfires} 次未造成伤害的无效野火。",
   "mch.wildfire.title": "野火",
   "mch.wildfire.trigger.no-buff-wf": "<0/> 伤害是在没有相应的 <1/> Debuff时被记录的。",
+  "meta.easter-eggs.april-fools": "",
   "mnk.about.description": "",
   "mnk.demolish.checklist.description": "",
   "mnk.demolish.checklist.name": "保持破碎拳DoT不断",
