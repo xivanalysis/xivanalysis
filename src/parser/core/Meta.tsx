@@ -7,6 +7,8 @@ import {Injectable} from './Injectable'
 
 type ModulesLoader = () => Promise<{default: Array<typeof Injectable>}>
 
+const DEBUG_IS_APRIL_FIRST: Boolean = false;
+
 /** Representation of patches supported by a meta instance. */
 export interface SupportedPatches {
 	from: PatchNumber
@@ -49,6 +51,22 @@ export class Meta {
 		this.changelog = opts.changelog || []
 	}
 
+	private getIsAprilFirst(): Boolean {
+		const currentDate: Date = new Date();
+		return DEBUG_IS_APRIL_FIRST || (currentDate.getDate() === 1 && currentDate.getMonth() === 3); // JS months start at 0 because reasons
+	}
+
+	private getAprilFirstMeta() {
+		return <>
+			<div style={{display: 'flex', marginBottom: '10px'}}>
+				<img src={require('../../data/avatar/Clippy.png')} style={{width: '40px', marginRight: '1.5em'}}/>
+				<div>
+					<Trans id="meta.easter-eggs.april-fools">You look like you're trying to play FFXIV? Would you like some help?</Trans>
+				</div>
+			</div>
+		</>
+	}
+
 	/**
 	 * Ensure all modules in the current meta have been loaded, and return them.
 	 */
@@ -66,9 +84,6 @@ export class Meta {
 
 	/** Create a new meta object containing merged data */
 	merge(meta: Meta): Meta {
-		const currentDate: Date = new Date();
-		const isAprilFirst: Boolean = currentDate.getDate() === 1 && currentDate.getMonth() === 2; // JS months are 0-indexed because reasons
-
 		return new Meta({
 			// Modules should contain all loaded modules
 			modules: () => Promise.all([this.getModules(), meta.getModules()])
@@ -82,14 +97,7 @@ export class Meta {
 			// after zones and core, so the new meta should be above the old.
 			// TODO: Headers? Somehow?
 			Description: () => <>
-				{isAprilFirst && <>
-					<div style={{display: 'flex', marginBottom: '10px'}}>
-						<img src={require('../../data/avatar/Clippy.png')} style={{width: '40px', marginRight: '1.5em'}}/>
-						<div>
-							<Trans id="meta.easter-eggs.april-fools">You look like you're trying to play FFXIV? Would you like some help?</Trans>
-						</div>
-					</div>
-				</>}
+				{this.getIsAprilFirst() && this.getAprilFirstMeta()}
 				{meta.Description && <meta.Description/>}
 				{this.Description && <this.Description/>}
 			</>,
