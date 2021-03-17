@@ -7,7 +7,8 @@ import {Injectable} from './Injectable'
 
 type ModulesLoader = () => Promise<{default: Array<typeof Injectable>}>
 
-const DEBUG_IS_APRIL_FIRST: Boolean = false;
+const DEBUG_IS_APRIL_FIRST: boolean = false
+const JS_APRIL_MONTH: number = 3 // JS months start at 0 because reasons
 
 /** Representation of patches supported by a meta instance. */
 export interface SupportedPatches {
@@ -51,9 +52,9 @@ export class Meta {
 		this.changelog = opts.changelog || []
 	}
 
-	private getIsAprilFirst(): Boolean {
-		const currentDate: Date = new Date();
-		return DEBUG_IS_APRIL_FIRST || (currentDate.getDate() === 1 && currentDate.getMonth() === 3); // JS months start at 0 because reasons
+	private getIsAprilFirst(): boolean {
+		const currentDate: Date = new Date()
+		return DEBUG_IS_APRIL_FIRST || (currentDate.getDate() === 1 && currentDate.getMonth() === JS_APRIL_MONTH)
 	}
 
 	private getAprilFirstMeta() {
