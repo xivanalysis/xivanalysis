@@ -69,6 +69,14 @@ Array [
     "sequence": 16647,
     "source": "1",
     "target": "3",
+    "timestamp": 0,
+    "type": "action",
+  },
+  Object {
+    "action": 3554,
+    "sequence": 16647,
+    "source": "1",
+    "target": "3",
     "timestamp": 8011183,
     "type": "snapshot",
   },
@@ -113,6 +121,14 @@ Array [
 
 exports[`Event adapter individual events adapts calculatedheal 1`] = `
 Array [
+  Object {
+    "action": 3571,
+    "sequence": 4570,
+    "source": "3",
+    "target": "3",
+    "timestamp": 0,
+    "type": "action",
+  },
   Object {
     "action": 3571,
     "sequence": 4570,

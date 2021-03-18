@@ -1,6 +1,5 @@
 import {Event, Events} from 'event'
 import {FflogsEvent} from 'fflogs'
-import {action} from 'mobx'
 import {isDefined} from 'utilities'
 import {AdapterStep} from '../base'
 
@@ -13,7 +12,7 @@ export class PrepullActionAdapterStep extends AdapterStep {
 			return adaptedEvents
 		}
 
-		if (!this.initialEventLocation) {
+		if (!isDefined(this.initialEventLocation)) {
 			this.initialEventLocation = adaptedEvents
 		}
 
