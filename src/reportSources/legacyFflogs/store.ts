@@ -51,7 +51,8 @@ export class LegacyFflogsReportStore extends ReportStore {
 		// Dig into the fflogs report data to build the request
 		const legacyReport = report.meta
 		const legacyFight = legacyReport.fights.find(fight => fight.id.toString() === pullId)
-		if (legacyFight == null) {
+		const pull = report.pulls.find(pull => pull.id === pullId)
+		if (legacyFight == null || pull == null) {
 			throw new Error('no fight')
 		}
 
@@ -62,7 +63,7 @@ export class LegacyFflogsReportStore extends ReportStore {
 			{/* actorid: parseInt(actorId, 10) */},
 			true,
 		)
-		return adaptEvents(report, legacyEvents)
+		return adaptEvents(report, pull, legacyEvents)
 	}
 
 	getReportLink(pullId?: Pull['id'], actorId?: Actor['id']) {

@@ -1,25 +1,32 @@
 import {Event} from 'event'
 import {FflogsEvent} from 'fflogs'
-import {Report} from 'report'
+import {Pull, Report} from 'report'
 import {AdapterStep} from './base'
 import {DeduplicateActorUpdateStep} from './deduplicateActorUpdates'
 import {DeduplicateStatusApplicationStep} from './deduplicateStatus'
+import {PrepullActionAdapterStep} from './prepull/action'
 import {TranslateAdapterStep} from './translate'
 
 /** Adapt an array of FFLogs APIv1 events to xiva representation. */
-export function adaptEvents(report: Report, events: FflogsEvent[]): Event[] {
-	const adapter = new EventAdapter({report})
+export function adaptEvents(report: Report, pull: Pull, events: FflogsEvent[]): Event[] {
+	const adapter = new EventAdapter({report, pull})
 	return adapter.adaptEvents(events)
+}
+
+export interface AdapterOptions {
+	report: Report
+	pull: Pull
 }
 
 class EventAdapter {
 	private adaptionSteps: AdapterStep[]
 
-	constructor({report}: {report: Report}) {
+	constructor(opts: AdapterOptions) {
 		this.adaptionSteps = [
-			new TranslateAdapterStep({report}),
-			new DeduplicateStatusApplicationStep({report}),
-			new DeduplicateActorUpdateStep({report}),
+			new TranslateAdapterStep(opts),
+			new DeduplicateStatusApplicationStep(opts),
+			new DeduplicateActorUpdateStep(opts),
+			new PrepullActionAdapterStep(opts),
 		]
 	}
 
