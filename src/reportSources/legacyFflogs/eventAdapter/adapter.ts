@@ -1,7 +1,7 @@
 import {Event} from 'event'
 import {FflogsEvent} from 'fflogs'
 import {Pull, Report} from 'report'
-import {AdapterStep} from './base'
+import {AdapterOptions, AdapterStep} from './base'
 import {DeduplicateActorUpdateStep} from './deduplicateActorUpdates'
 import {DeduplicateStatusApplicationStep} from './deduplicateStatus'
 import {PrepullActionAdapterStep} from './prepull/action'
@@ -11,11 +11,6 @@ import {TranslateAdapterStep} from './translate'
 export function adaptEvents(report: Report, pull: Pull, events: FflogsEvent[]): Event[] {
 	const adapter = new EventAdapter({report, pull})
 	return adapter.adaptEvents(events)
-}
-
-export interface AdapterOptions {
-	report: Report
-	pull: Pull
 }
 
 class EventAdapter {
@@ -31,9 +26,10 @@ class EventAdapter {
 	}
 
 	adaptEvents(events: FflogsEvent[]): Event[] {
-		return events.flatMap(baseEvent => this.adaptionSteps.reduce(
-			(adaptedEvents, step) => step.adapt(baseEvent, adaptedEvents),
-			[] as Event[],
-		))
+		return events
+			.map(baseEvent => this.adaptionSteps
+				.reduce((adaptedEvents, step) => step.adapt(baseEvent, adaptedEvents),
+				[] as Event[]))
+			.flat()
 	}
 }
