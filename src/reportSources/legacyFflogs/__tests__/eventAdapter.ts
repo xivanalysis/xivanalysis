@@ -514,6 +514,12 @@ describe('Event adapter', () => {
 		}))
 	})
 
+	it('synthesizes prepull actions', () => {
+		const result = adaptEvents(report, pull, [fakeEvents.calculateddamage])
+		expect(result[0].type).toBe('action')
+		expect(result[1].type).toBe('snapshot')
+	})
+
 	it('merges duplicate status data', () => {
 		const statusData = 10
 
