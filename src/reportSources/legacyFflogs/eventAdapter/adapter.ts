@@ -26,11 +26,12 @@ class EventAdapter {
 	}
 
 	adaptEvents(events: FflogsEvent[]): Event[] {
-		const adaptedEvents = events
-			.map(baseEvent => this.adaptionSteps
-				.reduce((adaptedEvents, step) => step.adapt(baseEvent, adaptedEvents),
-				[] as Event[]))
-			.flat()
+		const adaptedEvents = events.flatMap(baseEvent =>
+			this.adaptionSteps.reduce(
+				(adaptedEvents, step) => step.adapt(baseEvent, adaptedEvents),
+				[] as Event[]
+			)
+		)
 
 		return this.adaptionSteps.reduce(
 			(processedEvents, step) => step.postprocess(processedEvents),
