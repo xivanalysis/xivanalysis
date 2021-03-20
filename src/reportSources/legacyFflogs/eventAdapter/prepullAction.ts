@@ -1,5 +1,5 @@
 import {Event, Events} from 'event'
-import {AdapterStep} from '../base'
+import {AdapterStep} from './base'
 
 export class PrepullActionAdapterStep extends AdapterStep {
 	postprocess(adaptedEvents: Event[]): Event[] {

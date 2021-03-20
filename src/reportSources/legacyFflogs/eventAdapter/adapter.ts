@@ -4,7 +4,7 @@ import {Pull, Report} from 'report'
 import {AdapterOptions, AdapterStep} from './base'
 import {DeduplicateActorUpdateStep} from './deduplicateActorUpdates'
 import {DeduplicateStatusApplicationStep} from './deduplicateStatus'
-import {PrepullActionAdapterStep} from './prepull/action'
+import {PrepullActionAdapterStep} from './prepullAction'
 import {TranslateAdapterStep} from './translate'
 
 /** Adapt an array of FFLogs APIv1 events to xiva representation. */
