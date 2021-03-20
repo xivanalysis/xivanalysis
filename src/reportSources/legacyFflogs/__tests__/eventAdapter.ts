@@ -515,9 +515,19 @@ describe('Event adapter', () => {
 	})
 
 	it('synthesizes prepull actions', () => {
-		const result = adaptEvents(report, pull, [fakeEvents.calculateddamage])
-		expect(result[0].type).toBe('action')
-		expect(result[1].type).toBe('snapshot')
+		// simulating a begincast before the event that should trip the prepull, to ensure
+		// prepull is added before _all_ events, not just the start of the adapted base.
+		const result = adaptEvents(report, pull, [
+			fakeEvents.begincast,
+			fakeEvents.calculateddamage,
+		])
+		expect(result.map(event => event.type)).toEqual([
+			'action', // prepull synth
+			'prepare', // begincast
+			'snapshot', // calculateddamage
+			'actorUpdate',
+			'actorUpdate',
+		])
 	})
 
 	it('merges duplicate status data', () => {
