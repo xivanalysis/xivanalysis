@@ -1,14 +1,28 @@
 import {GameEdition} from 'data/PATCHES'
 import {Events} from 'event'
 import {FflogsEvent, HitType, ReportLanguage} from 'fflogs'
-import {Report} from 'report'
+import {Pull, Report} from 'report'
 import {adaptEvents} from '../eventAdapter'
+
+const pull: Pull = {
+	id: '1',
+	timestamp: 0,
+	duration: 1,
+	encounter: {
+		name: 'test encounter',
+		duty: {
+			id: 1,
+			name: 'test duty',
+		},
+	},
+	actors: [],
+}
 
 const report: Report = {
 	timestamp: 0,
 	edition: GameEdition.GLOBAL,
 	name: 'Event adapter test',
-	pulls: [],
+	pulls: [pull],
 	meta: {
 		source: 'legacyFflogs',
 		code: 'adapterTest',
@@ -496,14 +510,30 @@ describe('Event adapter', () => {
 	describe('individual events', () => {
 		Object.keys(fakeEvents).forEach(eventType => it(`adapts ${eventType}`, () => {
 			const event = fakeEvents[eventType as keyof typeof fakeEvents]
-			expect(adaptEvents(report, [event])).toMatchSnapshot()
+			expect(adaptEvents(report, pull, [event])).toMatchSnapshot()
 		}))
+	})
+
+	it('synthesizes prepull actions', () => {
+		// simulating a begincast before the event that should trip the prepull, to ensure
+		// prepull is added before _all_ events, not just the start of the adapted base.
+		const result = adaptEvents(report, pull, [
+			fakeEvents.begincast,
+			fakeEvents.calculateddamage,
+		])
+		expect(result.map(event => event.type)).toEqual([
+			'action', // prepull synth
+			'prepare', // begincast
+			'snapshot', // calculateddamage
+			'actorUpdate',
+			'actorUpdate',
+		])
 	})
 
 	it('merges duplicate status data', () => {
 		const statusData = 10
 
-		const result = adaptEvents(report, [{
+		const result = adaptEvents(report, pull, [{
 			timestamp: 100,
 			type: 'applybuff',
 			sourceID: 1,
@@ -551,7 +581,7 @@ describe('Event adapter', () => {
 			facing: 0,
 		}
 
-		const result = adaptEvents(report, [{
+		const result = adaptEvents(report, pull, [{
 			...sharedFields,
 			timestamp: 100,
 			targetResources: sharedResources,
