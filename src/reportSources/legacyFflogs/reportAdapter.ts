@@ -99,13 +99,19 @@ function buildActorsByFight(report: LegacyReport) {
 }
 
 const convertActor = (actor: FflogsActor, overrides?: Partial<Actor>): Actor => ({
+	...UNKNOWN_ACTOR,
 	id: actor.id.toString(),
 	name: actor.name,
+	...overrides,
+})
+
+const UNKNOWN_ACTOR: Actor = {
+	id: 'unknown',
+	name: 'Unknown',
 	team: Team.UNKNOWN,
 	playerControlled: false,
 	job: 'UNKNOWN',
-	...overrides,
-})
+}
 
 const convertFight = (
 	report: LegacyReport,
@@ -127,7 +133,7 @@ const convertFight = (
 		},
 	},
 
-	actors,
+	actors: [...actors, UNKNOWN_ACTOR],
 })
 
 function getFightProgress(fight: Fight) {
