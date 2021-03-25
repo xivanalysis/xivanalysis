@@ -20,56 +20,56 @@ export default class PrecastStatus extends Module {
 	_actionsToSynth = []
 	_startTime = this.parser.eventTimeOffset
 
-	normalise(events) {
-		sortEvents(events)
+	//ormalise(events) {
+	//	sortEvents(events)
 
-		for (let i = 0; i < events.length; i++) {
-			const event = events[i]
-			const targetId = event.targetID
+	//	for (let i = 0; i < events.length; i++) {
+	//		const event = events[i]
+	//		const targetId = event.targetID
 
-			const statusInfo = this.data.getStatus(event.ability?.guid)
-			if (!statusInfo) {
-				if (event.type === 'cast' && event.ability?.guid) {
-					// Add cast to list of observed actions
-					this.markActionAsTracked(event.ability.guid)
-				}
+	//		const statusInfo = this.data.getStatus(event.ability?.guid)
+	//		if (!statusInfo) {
+	//			if (event.type === 'cast' && event.ability?.guid) {
+	//				// Add cast to list of observed actions
+	//				this.markActionAsTracked(event.ability.guid)
+	//			}
 
-				// No valid status data, skip to next event
-				continue
-			}
+	//			// No valid status data, skip to next event
+	//			continue
+	//		}
 
-			this._combatantStatuses[targetId] = this._combatantStatuses[targetId] || []
+	//		this._combatantStatuses[targetId] = this._combatantStatuses[targetId] || []
 
-			if (event.type === 'applybuff' && statusInfo.stacksApplied == null) {
-				// If status applies stacks, check applybuffstack for applying full stacks before considering this the first application of this status
-				this.fabricateActionEventIfNew(event, statusInfo)
-				this.markStatusAsTracked(statusInfo.id, targetId)
-			}
+	//		if (event.type === 'applybuff' && statusInfo.stacksApplied == null) {
+	//			// If status applies stacks, check applybuffstack for applying full stacks before considering this the first application of this status
+	//			this.fabricateActionEventIfNew(event, statusInfo)
+	//			this.markStatusAsTracked(statusInfo.id, targetId)
+	//		}
 
-			if (event.type === 'applybuffstack' && statusInfo.stacksApplied == null) {
-				// Determine if this is applying fewer than the max stacks
-				if (event.stack < statusInfo.stacksApplied) {
-					// Synth the precast status event if this applied fewer than max stacks
-					this.fabricateStatusEvent(event, statusInfo)
-				}
+	//		if (event.type === 'applybuffstack' && statusInfo.stacksApplied == null) {
+	//			// Determine if this is applying fewer than the max stacks
+	//			if (event.stack < statusInfo.stacksApplied) {
+	//				// Synth the precast status event if this applied fewer than max stacks
+	//				this.fabricateStatusEvent(event, statusInfo)
+	//			}
 
-				this.fabricateActionEventIfNew(event, statusInfo)
-				this.markStatusAsTracked(statusInfo.id, targetId)
-			}
+	//			this.fabricateActionEventIfNew(event, statusInfo)
+	//			this.markStatusAsTracked(statusInfo.id, targetId)
+	//		}
 
-			if (['removebuff', 'removebuffstack', 'refreshbuff'].includes(event.type)) {
-				// If it's already been applied, we don't have to worry about it
-				if (this._combatantStatuses[targetId].includes(statusInfo.id)) {
-					continue
-				}
+	//		if (['removebuff', 'removebuffstack', 'refreshbuff'].includes(event.type)) {
+	//			// If it's already been applied, we don't have to worry about it
+	//			if (this._combatantStatuses[targetId].includes(statusInfo.id)) {
+	//				continue
+	//			}
 
-				this.fabricateStatusEvent(event, statusInfo)
-				this.markStatusAsTracked(statusInfo.id, targetId)
-			}
-		}
+	//			this.fabricateStatusEvent(event, statusInfo)
+	//			this.markStatusAsTracked(statusInfo.id, targetId)
+	//		}
+	//	}
 
-		return [...this._actionsToSynth, ...this._statusesToSynth, ...events]
-	}
+	//	return [...this._actionsToSynth, ...this._statusesToSynth, ...events]
+	//
 
 	fabricateStatusEvent(event, statusInfo) {
 		this.debug(`Fabricating applybuff event for status ${statusInfo.name}`)
