@@ -2,8 +2,8 @@ import * as Sentry from '@sentry/browser'
 import {STATUS_ID_OFFSET} from 'data/STATUSES'
 import {Event, Events, Cause, SourceModifier, TargetModifier} from 'event'
 import {ActorResources, BuffEvent, BuffStackEvent, CastEvent, DamageEvent, DeathEvent, EventActor, FflogsEvent, HealEvent, HitType, TargetabilityUpdateEvent} from 'fflogs'
-import {Actor, Report} from 'report'
-import {isDefined} from 'utilities'
+import {Actor} from 'report'
+import {AdapterStep} from './base'
 
 /*
 NOTES:
@@ -26,51 +26,31 @@ const targetHitType: Partial<Record<HitType, TargetModifier>> = {
 	[HitType.IMMUNE]: TargetModifier.INVULNERABLE,
 }
 
-/** Adapt an array of FFLogs APIv1 events to xiva representation. */
-export function adaptEvents(report: Report, events: FflogsEvent[]): Event[] {
-	const adapter = new EventAdapter({report})
-	return adapter.adaptEvents(events)
-}
-
-class EventAdapter {
-	/** xiva report representation. */
-	private report: Report
-
-	/** Set of event types marked as unhandled. Used to prevent duplicate warnings. */
+/** Translate an FFLogs APIv1 event to the xiva representation, if any exists. */
+export class TranslateAdapterStep extends AdapterStep {
 	private unhandledTypes = new Set<string>()
 
-	constructor(opts: {report: Report}) {
-		this.report = opts.report
-	}
-
-	adaptEvents(events: FflogsEvent[]): Event[] {
-		return events
-			.flatMap(event => this.adaptEvent(event))
-			.filter(isDefined)
-	}
-
-	/** Adapt an FFLogs APIv1 event to xiva representation if any. */
-	private adaptEvent(event: FflogsEvent): Event | Event[] | undefined {
-		switch (event.type) {
+	adapt(baseEvent: FflogsEvent, _adaptedEvents: Event[]): Event[] {
+		switch (baseEvent.type) {
 		case 'begincast':
 		case 'cast':
-			return this.adaptCastEvent(event)
+			return [this.adaptCastEvent(baseEvent)]
 
 		case 'calculateddamage':
 		case 'calculatedheal':
-			return this.adaptSnapshotEvent(event)
+			return this.adaptSnapshotEvent(baseEvent)
 
 		case 'damage':
-			return this.adaptDamageEvent(event)
+			return this.adaptDamageEvent(baseEvent)
 
 		case 'heal':
-			return this.adaptHealEvent(event)
+			return this.adaptHealEvent(baseEvent)
 
 		case 'applybuff':
 		case 'applydebuff':
 		case 'refreshbuff':
 		case 'refreshdebuff':
-			return this.adaptStatusApplyEvent(event)
+			return [this.adaptStatusApplyEvent(baseEvent)]
 
 		// TODO: Due to FFLogs™️ Quality™️, this effectively results in a double application
 		// of every stacked status. Probably should resolve that out.
@@ -78,17 +58,17 @@ class EventAdapter {
 		case 'applydebuffstack':
 		case 'removebuffstack':
 		case 'removedebuffstack':
-			return this.adaptStatusApplyDataEvent(event)
+			return [this.adaptStatusApplyDataEvent(baseEvent)]
 
 		case 'removebuff':
 		case 'removedebuff':
-			return this.adaptStatusRemoveEvent(event)
+			return [this.adaptStatusRemoveEvent(baseEvent)]
 
 		case 'death':
-			return this.adaptDeathEvent(event)
+			return [this.adaptDeathEvent(baseEvent)]
 
 		case 'targetabilityupdate':
-			return this.adaptTargetableEvent(event)
+			return [this.adaptTargetableEvent(baseEvent)]
 
 		/* eslint-disable no-fallthrough */
 		// Dispels are already modelled by other events, and aren't something we really care about
@@ -109,7 +89,7 @@ class EventAdapter {
 
 		default: {
 			// Anything that reaches this point is unknown. If we've already notified, just noop
-			const unknownEvent = event as {type: string}
+			const unknownEvent = baseEvent as {type: string}
 			if (this.unhandledTypes.has(unknownEvent.type)) {
 				break
 			}
@@ -118,7 +98,7 @@ class EventAdapter {
 			Sentry.withScope(scope => {
 				scope.setExtras({
 					report: this.report.meta.code,
-					event,
+					event: baseEvent,
 				})
 				Sentry.captureMessage(`adapter.fflogs.unhandled.${unknownEvent.type}`)
 			})
@@ -128,6 +108,8 @@ class EventAdapter {
 			this.unhandledTypes.add(unknownEvent.type)
 		}
 		}
+
+		return []
 	}
 
 	private adaptCastEvent(event: CastEvent): Events['prepare' | 'action'] {
@@ -247,7 +229,7 @@ class EventAdapter {
 			actor,
 			hp: {current: resources.hitPoints, maximum: resources.maxHitPoints},
 			mp: {current: resources.mp, maximum: resources.maxMP},
-			position: {x: resources.x, y: resources.y},
+			position: {x: resources.x, y: resources.y, bearing: resources.facing},
 		}
 	}
 

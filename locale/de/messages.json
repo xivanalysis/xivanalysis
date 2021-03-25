@@ -637,7 +637,7 @@
   "nin.taWindow.suggestions.gcds.content": "Obwohl die exakte Anzahl an GCDs pro Fenster je nach <0/> unterschiedlich ist, sollte jedes <1/>-Fenster mindestens {BASE_GCDS_PER_WINDOW} GCDs enthalten.",
   "nin.taWindow.suggestions.trackedactions.content": "Jedes <0/>-Fenster sollte mindestens <1/>, <2/>, 2 <3/> Casts (oder einen im Opener) und <4/> enthalten, um Schaden zu maximieren.",
   "nin.taWindow.title": "Trickattacke-Fenster",
-  "pld.about.description": "Als das uneheliche Kind von Weiß- und Schwarzmagier hast du den blutigen Pfad des schildwerfenden, schwertschwingenden Magiers ausgesucht, das außerdem versucht jedem zu helfen.\n\nDieser Analysator versucht, die richtigen Dinge zu finden um dich zum furchteinflößenden Verteidiger zu machen, der keine Klemenz gegenüber Feinden zeigt und gleichzeitig der wahre Heilige Geist deiner Gruppe ist.\n",
+  "pld.about.description": "",
   "pld.fightorflight.suggestions.gcds.content": "Versuche während jedes <0/>-Zeitfensters 11 physische GCD-Angriffe unterzubringen.",
   "pld.fightorflight.suggestions.gcds.why": "{0, plural, one {# physische GCD} other {# physische GCDs}} verpasst unter <0/>-Fenstern.",
   "pld.fightorflight.suggestions.goring-blade-clip.content": "Versuche, <0/> 9 GCDs nach dem ersten <1/> in einem <2/>-Fenster zu erneuern.",

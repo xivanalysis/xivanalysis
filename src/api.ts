@@ -19,27 +19,39 @@ if (process.env.REACT_APP_FFLOGS_V1_API_KEY) {
 // Core API via ky
 export const fflogsApi = ky.create(options)
 
+function fetchEvents(code: string, searchParams: Record<string, string | number | boolean>) {
+	return fflogsApi.get(
+		`report/events/${code}`,
+		{searchParams},
+	).json<ReportEventsResponse>()
+}
+
 async function requestEvents(
 	code: string,
 	query: ReportEventsQuery,
 ) {
 	const searchParams = query as Record<string, string | number | boolean>
-	let response = await fflogsApi.get(
-		`report/events/${code}`,
-		{searchParams},
-	).json<ReportEventsResponse>()
+	let response = await fetchEvents(
+		code,
+		searchParams,
+	)
 
 	// If it's blank, try again, bypassing the cache
 	if (response === '') {
-		response = await fflogsApi.get(
-			`report/events/${code}`,
-			{searchParams: {...searchParams, bypassCache: 'true'}},
-		).json<ReportEventsResponse>()
+		response = await fetchEvents(
+			code,
+			{...searchParams, bypassCache: 'true'},
+		)
 	}
 
 	// If it's _still_ blank, bail and get them to retry
 	if (response === '') {
 		throw new ReportProcessingError()
+	}
+
+	// If it's a string at this point, there's an upstream failure.
+	if (typeof response === 'string') {
+		throw new Error(response)
 	}
 
 	return response
