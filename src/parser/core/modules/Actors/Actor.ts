@@ -8,6 +8,9 @@ class ActorResources {
 	hp: Readonly<Resource>
 	mp: Readonly<Resource>
 	position: Readonly<Position>
+	get targetable() {
+		return this.getHistoricalValue(event => event.targetable, true)
+	}
 
 	protected history: Array<Events['actorUpdate']> = []
 	private time?: number
@@ -31,10 +34,10 @@ class ActorResources {
 		const self = this
 		return {
 			get maximum() {
-				return self.getHistoricalValue(event => event[field]?.maximum)
+				return self.getHistoricalValue(event => event[field]?.maximum, 0)
 			},
 			get current() {
-				return self.getHistoricalValue(event => event[field]?.current)
+				return self.getHistoricalValue(event => event[field]?.current, 0)
 			},
 		}
 	}
@@ -45,13 +48,13 @@ class ActorResources {
 		const self = this
 		return {
 			get x() {
-				return self.getHistoricalValue(event => event.position?.x)
+				return self.getHistoricalValue(event => event.position?.x, 0)
 			},
 			get y() {
-				return self.getHistoricalValue(event => event.position?.y)
+				return self.getHistoricalValue(event => event.position?.y, 0)
 			},
 			get bearing() {
-				return self.getHistoricalValue(event => event.position?.bearing)
+				return self.getHistoricalValue(event => event.position?.bearing, 0)
 			},
 		}
 	}
@@ -60,9 +63,10 @@ class ActorResources {
 	 * Retrieve the most recent value as fetched by `getter` occuring
 	 * before `this.time`, if it is set.
 	 */
-	private getHistoricalValue(
-		getter: (x: Events['actorUpdate']) => number | undefined,
-	): number {
+	private getHistoricalValue<T>(
+		getter: (x: Events['actorUpdate']) => T | undefined,
+		fallback: T,
+	): T {
 		// Infinity -> most recent data point
 		const time = this.time ?? Infinity
 		// TODO: Work out how to optimise this w/ cache &c
@@ -79,7 +83,7 @@ class ActorResources {
 			return value
 		}
 
-		return 0
+		return fallback
 	}
 }
 
