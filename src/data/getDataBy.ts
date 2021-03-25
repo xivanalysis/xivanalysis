@@ -25,7 +25,7 @@ export function getDataArrayBy<
 	data: Data,
 	by: Key,
 	value: FlattenArray<Value[Key]>,
-):  Value[] | undefined {
+): Value[] | undefined {
 	// Sanity check in case someone is using this from JS and misspelled a key
 	const dataKeys = Object.keys(data)
 	const testEntry = data[dataKeys[0]]
