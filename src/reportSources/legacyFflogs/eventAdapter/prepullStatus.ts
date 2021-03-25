@@ -1,4 +1,4 @@
-import {getDataBy} from 'data'
+import {getDataBy, getDataArrayBy} from 'data'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES, {Status} from 'data/STATUSES'
 import {Event, Events} from 'event'
@@ -55,18 +55,14 @@ export class PrepullStatusAdapterStep extends AdapterStep {
 		if (!this.observedActions.has(sourceId)) {
 			this.observedActions.set(sourceId, new Set())
 		}
-
-		const actions = this.observedActions.get(sourceId)
-		actions?.add(actionId)
+		this.observedActions.get(sourceId)?.add(actionId)
 	}
 
 	private observeStatus(statusId: number, sourceId: Actor['id']) {
 		if (!this.observedStatuses.has(sourceId)) {
 			this.observedStatuses.set(sourceId, new Set())
 		}
-
-		const statuses = this.observedStatuses.get(sourceId)
-		statuses?.add(statusId)
+		this.observedStatuses.get(sourceId)?.add(statusId)
 	}
 
 	private synthesizeActionIfNew(event: StatusEvent, status: Status) {
@@ -76,12 +72,14 @@ export class PrepullStatusAdapterStep extends AdapterStep {
 			return
 		}
 
-		const action = getDataBy(ACTIONS, 'statusesApplied', statusKey)
-		if (!action) {
-			// No action is known to apply this status, skip
+		const actions = getDataArrayBy(ACTIONS, 'statusesApplied', statusKey)
+		if (!actions || actions.length > 1) {
+			// No action is known to apply this status OR
+			// multiple actions can apply this status, not enough info to synth
 			return
 		}
 
+		const action = actions[0]
 		const observedActions = this.observedActions.get(event.source)
 
 		if (observedActions?.has(action.id)) {
