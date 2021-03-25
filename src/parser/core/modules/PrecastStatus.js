@@ -1,4 +1,4 @@
-import {getDataBy} from 'data'
+import {getDataArrayBy} from 'data'
 import _ from 'lodash'
 import {sortEvents} from 'parser/core/EventSorting'
 import Module from 'parser/core/Module'
@@ -102,11 +102,18 @@ export default class PrecastStatus extends Module {
 		this.debug(`Checking action associated with status ${statusInfo.name}`)
 		// Determine if this buff comes from a known action, fab a cast event
 		const statusKey = _.findKey(this.data.statuses, statusInfo)
-		const actionInfo = getDataBy(this.data.actions, 'statusesApplied', statusKey)
-		if (!actionInfo) {
-			this.debug('No action is applied by status, no action to synthesize')
+		const applyActions = getDataArrayBy(this.data.actions, 'statusesApplied', statusKey)
+		if (!applyActions) {
+			this.debug('No action applies this status, no action to synthesize')
 			return
 		}
+
+		if (applyActions.length > 1) {
+			this.debug('Multiple actions can apply this status, not enough info to synthesize')
+			return
+		}
+
+		const actionInfo = applyActions[0]
 
 		this.debug(`Checking if action ${actionInfo.name} has been observed`)
 		if (this._combatantActions.includes(actionInfo.id)) {
