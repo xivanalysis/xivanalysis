@@ -1,5 +1,6 @@
 import {Event} from 'event'
 import {FflogsEvent} from 'fflogs'
+import {sortEvents} from 'parser/core/EventSorting'
 import {Pull, Report} from 'report'
 import {AdapterOptions, AdapterStep} from './base'
 import {DeduplicateActorUpdateStep} from './deduplicateActorUpdates'
@@ -11,6 +12,7 @@ import {TranslateAdapterStep} from './translate'
 /** Adapt an array of FFLogs APIv1 events to xiva representation. */
 export function adaptEvents(report: Report, pull: Pull, events: FflogsEvent[]): Event[] {
 	const adapter = new EventAdapter({report, pull})
+	sortEvents(events)
 	return adapter.adaptEvents(events)
 }
 
