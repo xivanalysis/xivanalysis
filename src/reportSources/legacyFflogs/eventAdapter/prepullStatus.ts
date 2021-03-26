@@ -33,16 +33,16 @@ export class PrepullStatusAdapterStep extends AdapterStep {
 
 			if (event.type === 'statusApply') {
 				this.synthesizeActionIfNew(event, status)
-				this.observeStatus(event.status, event.source)
+				this.observeStatus(status.id, event.target)
 
 			} else if (event.type === 'statusRemove') {
-				if (this.observedStatuses.get(event.source)?.has(status.id)) {
+				if (this.observedStatuses.get(event.target)?.has(status.id)) {
 					// If we've already seen a matching apply event, skip
 					continue
 				}
 				this.synthesizeActionIfNew(event, status)
 				this.synthesizeStatusApply(event)
-				this.observeStatus(event.status, event.source)
+				this.observeStatus(status.id, event.target)
 			}
 		}
 
@@ -58,11 +58,11 @@ export class PrepullStatusAdapterStep extends AdapterStep {
 		this.observedActions.get(sourceId)?.add(actionId)
 	}
 
-	private observeStatus(statusId: number, sourceId: Actor['id']) {
-		if (!this.observedStatuses.has(sourceId)) {
-			this.observedStatuses.set(sourceId, new Set())
+	private observeStatus(statusId: number, targetId: Actor['id']) {
+		if (!this.observedStatuses.has(targetId)) {
+			this.observedStatuses.set(targetId, new Set())
 		}
-		this.observedStatuses.get(sourceId)?.add(statusId)
+		this.observedStatuses.get(targetId)?.add(statusId)
 	}
 
 	private synthesizeActionIfNew(event: StatusEvent, status: Status) {
