@@ -1,15 +1,22 @@
+import {Trans} from '@lingui/react'
 import {Events} from 'event'
 import {Analyser} from 'parser/core/Analyser'
+import {dependency} from 'parser/core/Injectable'
+import React from 'react'
 import {Actor as ReportActor} from 'report'
+import {ResourceDatum, ResourceGraphs} from '../ResourceGraphs'
 import {Actor} from './Actor'
 
 export class Actors extends Analyser {
 	static handle = 'actors'
 
+	@dependency private resourceGraphs!: ResourceGraphs
+
 	private actors = new Map<ReportActor['id'], Actor>()
 
 	initialise() {
 		this.addEventHook('actorUpdate', this.onUpdate)
+		this.addEventHook('complete', this.onComplete)
 	}
 
 	/** Data for the actor currently being analysed. */
@@ -40,5 +47,30 @@ export class Actors extends Analyser {
 	private onUpdate(event: Events['actorUpdate']) {
 		const actor = this.get(event.actor)
 		actor.update(event)
+	}
+
+	private onComplete() {
+		// Build & add the current player's primary resources to the resource graphs
+		const hp: ResourceDatum[] = []
+		const mp: ResourceDatum[] = []
+
+		for (const event of this.current.history) {
+			if (event.hp?.current != null) {
+				hp.push({time: event.timestamp, value: event.hp.current})
+			}
+			if (event.mp?.current != null) {
+				mp.push({time: event.timestamp, value: event.mp.current})
+			}
+		}
+
+		this.resourceGraphs.addResource({
+			label: <Trans id="core.actors.resource.hp">HP</Trans>,
+			data: hp,
+		})
+
+		this.resourceGraphs.addResource({
+			label: <Trans id="core.actors.resource.mp">MP</Trans>,
+			data: mp,
+		})
 	}
 }
