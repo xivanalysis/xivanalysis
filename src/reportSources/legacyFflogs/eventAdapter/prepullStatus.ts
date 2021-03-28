@@ -35,7 +35,8 @@ export class PrepullStatusAdapterStep extends AdapterStep {
 				this.observeStatus(status.id, event.target)
 
 			} else if (event.type === 'statusRemove') {
-				if (this.observedStatuses.get(event.target)?.has(status.id)) {
+				const statuses = this.observedStatuses.get(event.target)
+				if (statuses && statuses.has(status.id)) {
 					// If we've already seen a matching apply event, skip
 					continue
 				}
