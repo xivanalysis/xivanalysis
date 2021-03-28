@@ -1,13 +1,12 @@
 import {getDataBy, getDataArrayBy} from 'data'
 import ACTIONS from 'data/ACTIONS'
-import STATUSES, {Status} from 'data/STATUSES'
+import STATUSES, {Status, StatusKey} from 'data/STATUSES'
 import {Event, Events} from 'event'
 import _ from 'lodash'
 import {Actor} from 'report'
 import {AdapterStep} from './base'
 
 type StatusEvent = Events['statusApply'] | Events['statusRemove']
-type StatusKey = keyof typeof STATUSES
 
 // Statuses applied before the pull won't have an applyStatus event
 // Fabricate status applications so modules don't need to take this into account
