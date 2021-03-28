@@ -91,7 +91,7 @@ export class PrepullStatusAdapterStep extends AdapterStep {
 			...event,
 			type: 'action',
 			action: action.id,
-			timestamp: this.pull.timestamp,
+			timestamp: this.pull.timestamp - 2,
 		}
 
 		this.precastEvents.push(actionEvent)
@@ -102,7 +102,7 @@ export class PrepullStatusAdapterStep extends AdapterStep {
 		const applyEvent: Events['statusApply'] = {
 			...event,
 			type: 'statusApply',
-			timestamp: this.pull.timestamp,
+			timestamp: this.pull.timestamp - 1,
 		}
 
 		this.precastEvents.push(applyEvent)

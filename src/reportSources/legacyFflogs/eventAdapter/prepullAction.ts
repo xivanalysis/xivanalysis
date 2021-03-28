@@ -24,7 +24,7 @@ export class PrepullActionAdapterStep extends AdapterStep {
 		return {
 			...event,
 			type: 'action',
-			timestamp: this.pull.timestamp,
+			timestamp: this.pull.timestamp - 1,
 		}
 	}
 }
