@@ -52,13 +52,13 @@ export function getDataArrayBy<
 			// Keys can be arrays (see STATUSES), handle it
 			const newKeys = ensureArray(val[by])
 			newKeys.forEach(key => {
-				if (map.has(key)) {
-					map.get(key)?.push(val)
-				} else {
-					map.set(key, [val])
+				let values = map.get(key)
+				if (values == null) {
+					values = []
+					map.set(key, values)
 				}
+				values.push(val)
 			})
-
 			return map
 		}, new Map<Value[Key], Value[]>())
 
