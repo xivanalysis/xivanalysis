@@ -9,6 +9,7 @@ import {Actor} from './Actor'
 
 export class Actors extends Analyser {
 	static handle = 'actors'
+	static displayOrder = -Infinity
 
 	@dependency private resourceGraphs!: ResourceGraphs
 
