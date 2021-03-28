@@ -1,8 +1,2 @@
-node_modules
-config
-scripts
-locale
-preset-react-app-custom
 build
-**/*.ts
-**/__tests__/**
+locale

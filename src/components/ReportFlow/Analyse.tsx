@@ -1,16 +1,18 @@
-import React, {useCallback} from 'react'
 import {Trans} from '@lingui/react'
+import * as Sentry from '@sentry/browser'
 import {Message} from 'akkd'
 import classNames from 'classnames'
 import {Analyse as LegacyAnalyse} from 'components/LegacyAnalyse'
+import {AnalysisLoader} from 'components/ui/SharedLoaders'
 import {Event} from 'event'
+import React, {useCallback, useContext} from 'react'
 import {useParams} from 'react-router-dom'
+import {Report} from 'report'
 import {ReportStore} from 'reportSources'
 import {Icon} from 'semantic-ui-react'
+import {StoreContext} from 'store'
 import {AnalyseRouteParams} from './ReportFlow'
 import styles from './ReportFlow.module.css'
-import {Report} from 'report'
-import {AnalysisLoader} from 'components/ui/SharedLoaders'
 
 export interface AnalyseProps {
 	reportStore: ReportStore
@@ -60,8 +62,6 @@ export function Analyse({reportStore}: AnalyseProps) {
 		)
 	}
 
-	const legacyReport = report.meta
-
 	return (
 		<AnalyseEvents
 			reportStore={reportStore}
@@ -77,12 +77,18 @@ interface AnalyseEventsProps {
 
 function AnalyseEvents({report, reportStore}: AnalyseEventsProps) {
 	const {pullId, actorId} = useParams<AnalyseRouteParams>()
+	const {globalErrorStore} = useContext(StoreContext)
 
 	// We have a definitive report that's ready to go - fetch the events and start the analysis
 	const [events, setEvents] = React.useState<Event[]>()
 	React.useEffect(() => {
-		reportStore.fetchEvents(pullId, actorId).then(setEvents)
-	}, [pullId, actorId])
+		reportStore.fetchEvents(pullId, actorId)
+			.then(setEvents)
+			.catch(error => {
+				Sentry.captureException(error)
+				globalErrorStore.setGlobalError(error)
+			})
+	}, [pullId, actorId, reportStore, globalErrorStore])
 
 	if (events == null) {
 		return <AnalysisLoader/>

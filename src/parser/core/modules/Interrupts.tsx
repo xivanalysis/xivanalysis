@@ -1,9 +1,6 @@
 import {MessageDescriptor} from '@lingui/core'
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
-import React from 'react'
-import {Button, Table} from 'semantic-ui-react'
-
 import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
 import {CastEvent} from 'fflogs'
@@ -11,6 +8,8 @@ import Module, {dependency} from 'parser/core/Module'
 import GlobalCooldown from 'parser/core/modules/GlobalCooldown'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import {Timeline} from 'parser/core/modules/Timeline'
+import React from 'react'
+import {Button, Table} from 'semantic-ui-react'
 import {Data} from './Data'
 
 interface SeverityTiers {
@@ -20,11 +19,11 @@ interface SeverityTiers {
 // used for timeline viewing by giving you a nice 30s window
 const TIMELINE_UPPER_MOD: number = 30000
 
-export abstract class Interrupts extends Module {
+export class Interrupts extends Module {
 	static handle: string = 'interrupts'
 	static title: MessageDescriptor = t('core.interrupts.title')`Interrupted Casts`
 
-	@dependency private data!: Data
+	@dependency protected data!: Data
 	@dependency private globalCooldown!: GlobalCooldown
 	@dependency private suggestions!: Suggestions
 	@dependency private timeline!: Timeline
@@ -51,7 +50,7 @@ export abstract class Interrupts extends Module {
 	 * Implementing modules MAY override the default suggestion text
 	 */
 	protected suggestionContent: JSX.Element = <Trans id="core.interrupts.suggestion.content">
-		Avoid interrupting casts by either prepositioning yourself or utilizing slidecasting where possible.
+		Avoid interrupting casts by either prepositioning yourself or utilizing slidecasting where possible. If you have to move, try to save an instant cast to keep your GCD rolling.
 	</Trans>
 
 	/**
@@ -124,38 +123,38 @@ export abstract class Interrupts extends Module {
 		}
 
 		return <Table compact unstackable celled collapsing>
-		<Table.Header>
-			<Table.Row>
-				<Table.HeaderCell collapsing>
-					<strong><Trans id="core.interrupts.table.time">Time</Trans></strong>
-				</Table.HeaderCell>
-				<Table.HeaderCell>
-					<strong><Trans id="core.interrupts.table.cast">Cast</Trans></strong>
-				</Table.HeaderCell>
-			</Table.Row>
-		</Table.Header>
-		<Table.Body>
-			{
-				this.droppedCasts.map((cast) =>
-					<Table.Row key={cast.timestamp}>
-						<Table.Cell textAlign="center">
-							<span style={{marginRight: 5}}>{this.parser.formatTimestamp(cast.timestamp)}</span>
-							<Button
-								circular
-								compact
-								size="mini"
-								icon="time"
-								onClick={() => this.timeline.show(cast.timestamp - this.parser.eventTimeOffset, cast.timestamp - this.parser.eventTimeOffset + TIMELINE_UPPER_MOD)}
-							/>
-						</Table.Cell>
-						<Table.Cell>
-							<ActionLink {...this.data.getAction(cast.ability.guid)} />
-						</Table.Cell>
-					</Table.Row>,
-				)
-			}
-		</Table.Body>
-	</Table>
+			<Table.Header>
+				<Table.Row>
+					<Table.HeaderCell collapsing>
+						<strong><Trans id="core.interrupts.table.time">Time</Trans></strong>
+					</Table.HeaderCell>
+					<Table.HeaderCell>
+						<strong><Trans id="core.interrupts.table.cast">Cast</Trans></strong>
+					</Table.HeaderCell>
+				</Table.Row>
+			</Table.Header>
+			<Table.Body>
+				{
+					this.droppedCasts.map((cast) =>
+						<Table.Row key={cast.timestamp}>
+							<Table.Cell textAlign="center">
+								<span style={{marginRight: 5}}>{this.parser.formatTimestamp(cast.timestamp)}</span>
+								<Button
+									circular
+									compact
+									size="mini"
+									icon="time"
+									onClick={() => this.timeline.show(cast.timestamp - this.parser.eventTimeOffset, cast.timestamp - this.parser.eventTimeOffset + TIMELINE_UPPER_MOD)}
+								/>
+							</Table.Cell>
+							<Table.Cell>
+								<ActionLink {...this.data.getAction(cast.ability.guid)} />
+							</Table.Cell>
+						</Table.Row>,
+					)
+				}
+			</Table.Body>
+		</Table>
 
 	}
 }

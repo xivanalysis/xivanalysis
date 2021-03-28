@@ -1,7 +1,7 @@
 import {Event, Events} from 'event'
 import {Dispatcher, EventHook, TimestampHook} from '../Dispatcher'
 
-/* tslint:disable:no-magic-numbers */
+/* eslint-disable @typescript-eslint/no-magic-numbers */
 
 const event: Events['action'] = {
 	type: 'action',

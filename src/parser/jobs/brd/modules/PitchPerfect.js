@@ -1,17 +1,16 @@
 /**
  * @author Yumiya
  */
-import {Trans, Plural} from '@lingui/react'
 import {t} from '@lingui/macro'
-import React from 'react'
-import Module from 'parser/core/Module'
-import {Accordion, Icon, Message, List, Button, Label} from 'semantic-ui-react'
-import STATUSES from 'data/STATUSES'
-import ACTIONS from 'data/ACTIONS'
+import {Trans, Plural} from '@lingui/react'
 import {ActionLink} from 'components/ui/DbLink'
+import ACTIONS from 'data/ACTIONS'
+import STATUSES from 'data/STATUSES'
+import Module from 'parser/core/Module'
 import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import React from 'react'
+import {Accordion, Icon, Message, List, Button, Label} from 'semantic-ui-react'
 import {matchClosest} from 'utilities'
-
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 import styles from './PitchPerfect.module.css'
 

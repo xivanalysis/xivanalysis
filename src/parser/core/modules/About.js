@@ -1,16 +1,14 @@
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
-import React from 'react'
-import {Header} from 'semantic-ui-react'
-
 import {Message, Segment} from 'akkd'
 import ContributorLabel from 'components/ui/ContributorLabel'
 import NormalisedMessage from 'components/ui/NormalisedMessage'
 import {patchSupported} from 'data/PATCHES'
 import {Analyser, DisplayMode} from 'parser/core/Analyser'
-import DISPLAY_ORDER from './DISPLAY_ORDER'
-
+import React from 'react'
+import {Header} from 'semantic-ui-react'
 import styles from './About.module.css'
+import DISPLAY_ORDER from './DISPLAY_ORDER'
 
 export default class About extends Analyser {
 	static handle = 'about'
@@ -72,12 +70,14 @@ export default class About extends Analyser {
 			this.parser.parseDate,
 		)
 
+		const {Description} = this
+
 		return (
 			<div className={styles.container}>
 				<div className={styles.description}>
 					<Header><NormalisedMessage message={this.constructor.title}/></Header>
 
-					<this.Description/>
+					<Description/>
 
 					{!supported && (
 						<Message error icon="times circle outline">

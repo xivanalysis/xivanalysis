@@ -1,5 +1,5 @@
-import Entities from './Entities'
 import Combatant from '../Combatant'
+import Entities from './Entities'
 
 export default class Combatants extends Entities {
 	static handle = 'combatants'

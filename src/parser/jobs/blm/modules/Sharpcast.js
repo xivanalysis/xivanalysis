@@ -1,13 +1,13 @@
+import {Trans, Plural} from '@lingui/react'
+import {StatusLink, ActionLink} from 'components/ui/DbLink'
 import {getDataBy} from 'data'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
-import React from 'react'
-import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
-import {Trans, Plural} from '@lingui/react'
-import {StatusLink, ActionLink} from 'components/ui/DbLink'
-import {StatusItem} from 'parser/core/modules/Timeline'
 import {SimpleStatistic} from 'parser/core/modules/Statistics'
+import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import {StatusItem} from 'parser/core/modules/Timeline'
+import React from 'react'
 
 const SHARPCAST_DURATION_MILLIS = STATUSES.SHARPCAST.duration * 1000
 

@@ -1,13 +1,12 @@
-import React from 'react'
 import {Trans, Plural} from '@lingui/react'
-
+import {ActionLink} from 'components/ui/DbLink'
+import {getDataBy} from 'data'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import Module, {dependency} from 'parser/core/Module'
 import {PieChartStatistic} from 'parser/core/modules/Statistics'
-import {ActionLink} from 'components/ui/DbLink'
-import {getDataBy} from 'data'
 import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import React from 'react'
 
 /*
 * Thanks to the following for feedback on content (via the #sch_lounge) balance channel:

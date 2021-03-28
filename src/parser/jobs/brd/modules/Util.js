@@ -1,9 +1,8 @@
 /**
  * @author Yumiya
  */
-import React from 'react'
 import Module from 'parser/core/Module'
-
+import React from 'react'
 import {Button} from 'semantic-ui-react'
 
 export default class Util extends Module {

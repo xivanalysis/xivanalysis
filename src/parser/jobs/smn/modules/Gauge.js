@@ -1,14 +1,13 @@
 import {Plural, Trans} from '@lingui/react'
-import React from 'react'
-
 import {ActionLink} from 'components/ui/DbLink'
+import {getDataBy} from 'data'
 import ACTIONS from 'data/ACTIONS'
 import PETS from 'data/PETS'
 import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import React from 'react'
 import {DWT_LENGTH} from './DWT'
-import {getDataBy} from 'data'
 import {DEMI_SUMMON_LENGTH} from './Pets'
 
 const AETHER_ACTIONS = [

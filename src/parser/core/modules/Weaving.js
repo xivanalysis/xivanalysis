@@ -1,12 +1,11 @@
 import {t} from '@lingui/macro'
 import {Trans, Plural} from '@lingui/react'
-import React from 'react'
-import {Accordion} from 'semantic-ui-react'
-
-import Rotation from 'components/ui/Rotation'
 import NormalisedMessage from 'components/ui/NormalisedMessage'
+import Rotation from 'components/ui/Rotation'
 import Module from 'parser/core/Module'
 import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import React from 'react'
+import {Accordion} from 'semantic-ui-react'
 import {matchClosestLower} from 'utilities'
 
 // BRD weaves, ninjustsu, etc. should be handled by subclasses w/ isBadWeave overrides
@@ -147,9 +146,9 @@ export default class Weaving extends Module {
 
 	// Basic weave check. For job-specific weave concerns, subclass Weaving and override this method. Make sure it's included under the same module key to override the base implementation.
 	isBadWeave(weave, maxWeaves) {
-		// Calc. the no. of weaves - we're ignoring any made while the boss is untargetable
+		// Calc. the no. of weaves - we're ignoring any made while the boss is untargetable, and events that happened before the pull
 		const weaveCount = weave.weaves.filter(
-			event => !this.invuln.isUntargetable('all', event.timestamp),
+			event => !this.invuln.isUntargetable('all', event.timestamp) && event.timestamp >= this.parser.fight.start_time,
 		).length
 
 		// Just using maxWeaves to allow potential subclasses to utilise standard functionality with custom max

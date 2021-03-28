@@ -1,19 +1,17 @@
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
-import _ from 'lodash'
-import React, {Fragment} from 'react'
-import {Message, Icon} from 'semantic-ui-react'
-
 import {ActionLink} from 'components/ui/DbLink'
 import {RotationTable} from 'components/ui/RotationTable'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import {BuffEvent, CastEvent, DeathEvent} from 'fflogs'
-
+import _ from 'lodash'
 import Module, {dependency} from 'parser/core/Module'
-import {NormalisedApplyBuffEvent} from 'parser/core/modules/NormalisedEvents'
 import {Data} from 'parser/core/modules/Data'
+import {NormalisedApplyBuffEvent} from 'parser/core/modules/NormalisedEvents'
 import {Timeline} from 'parser/core/modules/Timeline'
+import React, {Fragment} from 'react'
+import {Message, Icon} from 'semantic-ui-react'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 
 const BL_GCD_TARGET = 8
@@ -22,7 +20,7 @@ const WINDOW_STATUSES = [
 ]
 
 // how long (or short, really) a window needs to be in order to be considered truncated
-// tslint:disable-next-line:no-magic-numbers
+// eslint-disable-next-line @typescript-eslint/no-magic-numbers
 const BL_TRUNCATE_DURATION = (STATUSES.BATTLE_LITANY.duration * 1000) - 2000
 
 class BLWindow {
@@ -42,7 +40,6 @@ class BLWindow {
 		this.start = start
 	}
 }
-
 
 // in this module we only want to track battle litany windows opened by
 // the character selected for analysis. windows that clip into or overwrite other
@@ -81,7 +78,6 @@ export default class BattleLitany extends Module {
 	private tryOpenWindow(event: NormalisedApplyBuffEvent): BLWindow | undefined {
 		const lastWindow: BLWindow | undefined = _.last(this.history)
 
-
 		if (lastWindow && !lastWindow.end) {
 			return lastWindow
 		}
@@ -105,8 +101,7 @@ export default class BattleLitany extends Module {
 		this.lastLitFalloffTime = event.timestamp
 
 		// only track the things one player added
-		if (event.sourceID && event.sourceID !== this.parser.player.id)
-			return
+		if (event.sourceID && event.sourceID !== this.parser.player.id) { return }
 
 		const lastWindow: BLWindow | undefined = _.last(this.history)
 

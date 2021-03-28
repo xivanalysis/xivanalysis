@@ -1,9 +1,8 @@
 import {t} from '@lingui/macro'
-import React from 'react'
-
-import {default as ChangelogComponent} from './Component'
 import {Analyser, DisplayMode} from 'parser/core/Analyser'
+import React from 'react'
 import DISPLAY_ORDER from '../DISPLAY_ORDER'
+import {default as ChangelogComponent} from './Component'
 
 export default class ChangeLog extends Analyser {
 	static handle = 'changelog'

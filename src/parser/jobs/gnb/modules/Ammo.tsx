@@ -1,9 +1,6 @@
 import {t} from '@lingui/macro'
 import {Plural, Trans} from '@lingui/react'
 import Color from 'color'
-import React, {Fragment} from 'react'
-import {Accordion} from 'semantic-ui-react'
-
 import {ActionLink} from 'components/ui/DbLink'
 import TimeLineChart from 'components/ui/TimeLineChart'
 import ACTIONS from 'data/ACTIONS'
@@ -14,6 +11,8 @@ import Checklist, {Requirement, Rule} from 'parser/core/modules/Checklist'
 import {ComboEvent} from 'parser/core/modules/Combos'
 import {NormalisedDamageEvent} from 'parser/core/modules/NormalisedEvents'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
+import React, {Fragment} from 'react'
+import {Accordion} from 'semantic-ui-react'
 
 const ON_CAST_GENERATORS = {
 	[ACTIONS.BLOODFEST.id]: 2,
@@ -43,9 +42,45 @@ const LEFTOVER_AMMO_SEVERITY_TIERS = {
 
 const MAX_AMMO = 2
 
+const TimelineDatasetIndex = Object.freeze({
+	AMMO_HISTORY: 0,
+	OVERCAP_HISTORY: 1,
+})
+
+const ActionImpact = Object.freeze({
+	GENERATOR: 1,
+	SPENDER: -1,
+})
+
+const OvercapTiming = Object.freeze({
+	BEFORE: -1,
+	AFTER: 1,
+})
+
 class AmmoState {
 	t?: number
 	y?: number
+	source: string
+	action: number
+
+	constructor() {
+		this.source = ''
+		this.action = 0
+	}
+}
+
+class OvercapState {
+	t?: number
+	y?: number
+	wasted: number
+	source: string
+	timing: number
+
+	constructor() {
+		this.wasted = 0
+		this.source = ''
+		this.timing = 0
+	}
 }
 
 export default class Ammo extends Module {
@@ -54,13 +89,17 @@ export default class Ammo extends Module {
 	static displayMode = DISPLAY_MODE.FULL
 
 	private ammo = 0
+	private currentAbility = ''
+	private currentAbilityImpact = 0
 	private ammoHistory: AmmoState[] = []
+	private overcapHistory: OvercapState[] = []
 	private wasteBySource = {
 		[ACTIONS.SOLID_BARREL.id]: 0,
 		[ACTIONS.DEMON_SLAUGHTER.id]: 0,
 		[ACTIONS.BLOODFEST.id]: 0,
 		[ACTIONS.RAISE.id]: 0,
 	}
+	private ammoMaxWithOvercap = MAX_AMMO
 	private leftoverAmmo = 0
 	private totalGeneratedAmmo = 0 // Keep track of the total amount of generated ammo over the fight
 	private erroneousCircles = 0 // This is my new NEW band name.
@@ -108,6 +147,7 @@ export default class Ammo extends Module {
 	private onCastGenerator(event: CastEvent) {
 		const abilityId = event.ability.guid
 		const generatedAmmo = ON_CAST_GENERATORS[abilityId]
+		this.currentAbility = event.ability.name
 
 		this.addGeneratedAmmoAndPush(generatedAmmo, abilityId)
 	}
@@ -115,25 +155,32 @@ export default class Ammo extends Module {
 	private onComboGenerator(event: ComboEvent) {
 		const abilityId = event.ability.guid
 		const generatedAmmo = ON_COMBO_GENERATORS[abilityId]
+		this.currentAbility = event.ability.name
 
 		this.addGeneratedAmmoAndPush(generatedAmmo, abilityId)
 	}
 
 	private addGeneratedAmmoAndPush(generatedAmmo: number, abilityId: number) {
+		const originalAmmo = this.ammo
 		this.ammo += generatedAmmo
 		this.totalGeneratedAmmo += generatedAmmo
 		if (this.ammo > MAX_AMMO) {
 			const waste = this.ammo - MAX_AMMO
 			this.wasteBySource[abilityId] += waste
 			this.ammo = MAX_AMMO
+
+			this.pushToOvercapHistory(originalAmmo, 0, OvercapTiming.BEFORE)
+			this.pushToOvercapHistory(originalAmmo + generatedAmmo, waste, OvercapTiming.AFTER)
 		}
 
+		this.currentAbilityImpact = ActionImpact.GENERATOR
 		this.pushToHistory()
 	}
 
 	private onSpender(event: CastEvent) {
 		this.ammo = this.ammo - AMMO_SPENDERS[event.ability.guid]
-
+		this.currentAbility = event.ability.name
+		this.currentAbilityImpact = ActionImpact.SPENDER
 		this.pushToHistory()
 	}
 
@@ -145,12 +192,34 @@ export default class Ammo extends Module {
 	private dumpRemainingResources() {
 		this.leftoverAmmo = this.ammo
 		this.ammo = 0
+		this.currentAbility = 'Death'
+		this.currentAbilityImpact = ActionImpact.SPENDER
 		this.pushToHistory()
 	}
 
 	private pushToHistory() {
 		const timestamp = this.parser.currentTimestamp - this.parser.fight.start_time
-		this.ammoHistory.push({t: timestamp, y: this.ammo})
+		this.ammoHistory.push({
+			t: timestamp,
+			y: this.ammo,
+			source: this.currentAbility,
+			action: this.currentAbilityImpact,
+		})
+	}
+
+	private pushToOvercapHistory(ammo: number, waste: number, timing: number) {
+		const timestamp = this.parser.currentTimestamp - this.parser.fight.start_time
+		this.overcapHistory.push({
+			t: timestamp,
+			y: ammo,
+			wasted: waste,
+			source: this.currentAbility,
+			timing: timing,
+		})
+
+		if (this.ammoMaxWithOvercap < ammo) {
+			this.ammoMaxWithOvercap = ammo
+		}
 	}
 
 	private onComplete() {
@@ -250,7 +319,7 @@ export default class Ammo extends Module {
 		})
 
 		const ammoColor = Color(JOBS.GUNBREAKER.colour)
-		/* tslint:disable:no-magic-numbers */
+		/* eslint-disable @typescript-eslint/no-magic-numbers */
 		const chartData = {
 			datasets: [
 				{
@@ -260,16 +329,23 @@ export default class Ammo extends Module {
 					backgroundColor: ammoColor.fade(0.8).toString(),
 					borderColor: ammoColor.fade(0.5).toString(),
 				},
+				{
+					label: 'Overcap',
+					steppedLine: true,
+					data: this.overcapHistory,
+					backgroundColor: Color('#db2828').fade(0.8).toString(),
+					borderColor: Color('#db2828').fade(0.5).toString(),
+				},
 			],
 		}
 
 		const chartOptions = {
-			scales : {
+			scales: {
 				yAxes: [{
 					ticks: {
 						beginAtZero: true,
 						min: 0,
-						max: 2,
+						max: this.ammoMaxWithOvercap,
 						callback: ((value: number) => {
 							if (value % 1 === 0) {
 								return value
@@ -278,8 +354,48 @@ export default class Ammo extends Module {
 					},
 				}],
 			},
+			/* eslint-disable @typescript-eslint/no-explicit-any */
+			tooltips: {
+				callbacks: {
+					label: function (tooltipItem: any, data: any) {
+						const datasetIndex = tooltipItem.datasetIndex
+						const valueIndex = tooltipItem.index
+						const hoveredHistory = data.datasets[datasetIndex].data[valueIndex]
+
+						if (datasetIndex === TimelineDatasetIndex.OVERCAP_HISTORY &&
+							hoveredHistory.timing === OvercapTiming.BEFORE) {
+							return ' ' + hoveredHistory.y + ' Before <' + hoveredHistory.source + '> Overcapping'
+						}
+						return ' ' + hoveredHistory.y + ' After <' + hoveredHistory.source + '>'
+					},
+					afterBody: function(tooltipItems: any, data: any) {
+						const datasetIndex = tooltipItems[0].datasetIndex
+						const valueIndex = tooltipItems[0].index
+
+						if (datasetIndex === TimelineDatasetIndex.AMMO_HISTORY) {
+							const hoveredAmmoHistory = data.datasets[datasetIndex].data[valueIndex]
+
+							if (hoveredAmmoHistory.action === ActionImpact.GENERATOR) {
+								return '(Generator)'
+							}
+							if (hoveredAmmoHistory.action === ActionImpact.SPENDER) {
+								return '(Spender)'
+							}
+						} else if (datasetIndex === TimelineDatasetIndex.OVERCAP_HISTORY) {
+							const hoveredOvercapHistory = data.datasets[datasetIndex].data[valueIndex]
+
+							if (hoveredOvercapHistory.timing === OvercapTiming.AFTER) {
+								return '(Wasted ' + hoveredOvercapHistory.wasted + ' Cartridge)'
+							}
+						}
+
+						return ''
+					},
+				},
+			},
 		}
-		/* tslint:enable:no-magic-numbers */
+		/* eslint-enable @typescript-eslint/no-explicit-any */
+		/* eslint-enable @typescript-eslint/no-magic-numbers */
 
 		return <Fragment>
 			<TimeLineChart

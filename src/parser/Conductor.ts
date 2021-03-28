@@ -1,16 +1,16 @@
 import {getFflogsEvents} from 'api'
 import * as Errors from 'errors'
+import {Event} from 'event'
 import {Actor as FflogsActor, Fight} from 'fflogs'
+import {Report, Pull, Actor} from 'report'
 import {Report as LegacyReport} from 'store/report'
 import {isDefined} from 'utilities'
 import AVAILABLE_MODULES from './AVAILABLE_MODULES'
 import Parser, {Result} from './core/Parser'
-import {Report, Pull, Actor} from 'report'
-import {Event} from 'event'
 
 export class Conductor {
 	private parser?: Parser
-	private resultsCache?: ReadonlyArray<Result>
+	private resultsCache?: readonly Result[]
 
 	private readonly legacyReport: LegacyReport
 	private readonly fight: Fight

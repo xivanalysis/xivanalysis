@@ -1,16 +1,15 @@
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
-import React from 'react'
-import {Table, Button} from 'semantic-ui-react'
-
 import {ActionLink} from 'components/ui/DbLink'
 import {getDataBy} from 'data'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
-import {Rule, Requirement} from 'parser/core/modules/Checklist'
 import Module from 'parser/core/Module'
-import DISPLAY_ORDER from './DISPLAY_ORDER'
+import {Rule, Requirement} from 'parser/core/modules/Checklist'
 import {SimpleRow, StatusItem} from 'parser/core/modules/Timeline'
+import React from 'react'
+import {Table, Button} from 'semantic-ui-react'
+import DISPLAY_ORDER from './DISPLAY_ORDER'
 
 const LL_BUFFS = [
 	STATUSES.LEY_LINES.id,

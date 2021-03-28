@@ -1,9 +1,9 @@
 function _matchClosestHoF(difference: (a: number, b: number) => number) {
 	return matcher
 
-	function matcher(values: ReadonlyArray<number>, value: number): number | undefined
+	function matcher(values: readonly number[], value: number): number | undefined
 	function matcher<T>(values: Record<number, T>, value: number): T | undefined
-	function matcher(values: ReadonlyArray<number>|Record<number, any>, value: any) {
+	function matcher(values: readonly number[] | Record<number, unknown>, value: number) {
 		const isArray = Array.isArray(values)
 		const isObject = typeof values === typeof {}
 
@@ -12,7 +12,7 @@ function _matchClosestHoF(difference: (a: number, b: number) => number) {
 		}
 
 		const workingValues: ReadonlyArray<number|string> = isArray ?
-			values as ReadonlyArray<number> :
+			values as readonly number[] :
 			isObject ?
 				Object.keys(values) :
 				[]

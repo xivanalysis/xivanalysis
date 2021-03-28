@@ -1,9 +1,9 @@
-import Module, {dependency} from 'parser/core/Module'
-import {STATUS_IDS} from './statusIds'
 import {AbilityEvent} from 'fflogs'
-import {SimpleRow, Timeline, SimpleItem} from '../Timeline'
-import React from 'react'
+import Module, {dependency} from 'parser/core/Module'
 import {CompleteEvent} from 'parser/core/Parser'
+import React from 'react'
+import {SimpleRow, Timeline, SimpleItem} from '../Timeline'
+import {STATUS_IDS} from './statusIds'
 
 interface UTADowntime {
 	depth: number

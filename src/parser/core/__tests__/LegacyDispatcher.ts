@@ -1,7 +1,7 @@
-import {LegacyDispatcher, EventHook, TimestampHook} from '../LegacyDispatcher'
 import {DeathEvent} from 'fflogs'
+import {LegacyDispatcher, EventHook, TimestampHook} from '../LegacyDispatcher'
 
-/* tslint:disable:no-magic-numbers */
+/* eslint-disable @typescript-eslint/no-magic-numbers */
 
 const event: DeathEvent = {
 	timestamp: 50,
@@ -43,7 +43,7 @@ describe('LegacyDispatcher', () => {
 	})
 
 	it('does not trigger non-matching hooks', () => {
-		// @ts-expect-error
+		// @ts-expect-error This mistake is only possible in JS
 		dispatcher.addEventHook({...eventHook, event: '__unused'})
 
 		dispatcher.dispatch(event, ['test'])

@@ -1,11 +1,11 @@
 /**
  * @author Yumiya
  */
-import Module from 'parser/core/Module'
 import {getDataBy} from 'data'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import math from 'mathjsCustom'
+import Module from 'parser/core/Module'
 
 // Relevant crit buffs
 const CRIT_MODIFIERS = [
@@ -219,7 +219,7 @@ export default class AdditionalStats extends Module {
 	}
 
 	// Sorry, but these constants are all fucking magic
-	/* eslint-disable no-magic-numbers */
+	/* eslint-disable @typescript-eslint/no-magic-numbers */
 
 	// Reference to the formulas: https://docs.google.com/document/d/1h85J3xPhVZ2ubqR77gzoD16L4T-Pltv3dnsKthE4k60/edit
 	// Credits to The TheoryJerks
@@ -260,7 +260,7 @@ export default class AdditionalStats extends Module {
 		return Math.floor((200 * (chr - BASE_SUBSTAT_80) / LEVEL_MOD_80) + 1400) / 1000
 
 	}
-	/* eslint-enable no-magic-numbers */
+	/* eslint-enable @typescript-eslint/no-magic-numbers */
 
 	// We use the damage events to determine 'potencyDamageRatio'
 	// tl;dr: 'potencyDamageRatio' is an approximation to damage to potency ratio, ignoring the natural 5% spread because we don't need this kind of precision

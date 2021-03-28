@@ -1,19 +1,18 @@
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
 import Color from 'color'
-import React, {Fragment} from 'react'
-import {Accordion} from 'semantic-ui-react'
-
-import STATUSES from 'data/STATUSES'
-
 import {ActionLink} from 'components/ui/DbLink'
 import TimeLineChart from 'components/ui/TimeLineChart'
 import ACTIONS from 'data/ACTIONS'
 import JOBS from 'data/JOBS'
+import STATUSES from 'data/STATUSES'
 import {BuffEvent, CastEvent} from 'fflogs'
 import Module, {dependency, DISPLAY_MODE} from 'parser/core/Module'
 import Checklist, {Requirement, Rule} from 'parser/core/modules/Checklist'
 import {Data} from 'parser/core/modules/Data'
+import React, {Fragment} from 'react'
+import {Accordion} from 'semantic-ui-react'
+import DISPLAY_ORDER from './DISPLAY_ORDER'
 
 const GENERATORS = {
 	[ACTIONS.HIGANBANA.id]: 1,
@@ -38,6 +37,7 @@ interface StackState {
 }
 
 export default class Shoha extends Module {
+	static displayOrder = DISPLAY_ORDER.SHOHA
 	static handle = 'shoha'
 	static title = t('sam.shoha.title')`Meditation Timeline`
 	static displayMode = DISPLAY_MODE.FULL
@@ -90,11 +90,11 @@ export default class Shoha extends Module {
 		const generatedStacks = GENERATORS[abilityId]
 
 		this.addStacks(generatedStacks, abilityId)
-		}
+	}
 
-		// back to time guessing we a go~
+	// back to time guessing we a go~
 	private onApplyMeditate(event: BuffEvent) {
-			this.meditateStart = event.timestamp
+		this.meditateStart = event.timestamp
 	}
 
 	private onRemoveMeditate(event: BuffEvent) {
@@ -104,13 +104,13 @@ export default class Shoha extends Module {
 
 		let generatedStacks = ticks
 
-		if ( (ticks + this.stacks) > MAX_STACKS ) {
+		if ((ticks + this.stacks) > MAX_STACKS) {
 			generatedStacks = (MAX_STACKS - this.stacks)
 		}
 
 		this.stacks += generatedStacks
 		this.totalGeneratedStacks += generatedStacks
-		if ( this.stacks > MAX_STACKS) {
+		if (this.stacks > MAX_STACKS) {
 			this.stacks = MAX_STACKS
 		}
 
@@ -129,7 +129,7 @@ export default class Shoha extends Module {
 		this.pushToHistory()
 	}
 
-	private onSpend(event: CastEvent) {
+	private onSpend() {
 		this.stacks = 0
 		this.shohaUses++
 
@@ -217,7 +217,7 @@ export default class Shoha extends Module {
 
 	output() {
 		const stackColor = Color(JOBS.SAMURAI.colour)
-		/* tslint:disable:no-magic-numbers */
+		/* eslint-disable @typescript-eslint/no-magic-numbers */
 		const chartData = {
 			datasets: [
 				{
@@ -231,7 +231,7 @@ export default class Shoha extends Module {
 		}
 
 		const chartOptions = {
-			scales : {
+			scales: {
 				yAxes: [{
 					ticks: {
 						beginAtZero: true,
@@ -246,7 +246,7 @@ export default class Shoha extends Module {
 				}],
 			},
 		}
-		/* tslint:enable:no-magic-numbers */
+		/* eslint-enable @typescript-eslint/no-magic-numbers */
 
 		return <Fragment>
 			<TimeLineChart

@@ -1,4 +1,4 @@
-/* eslint-disable no-magic-numbers */
+/* eslint-disable @typescript-eslint/no-magic-numbers */
 
 export const PARTYWIDE_SPEED_BUFF_FLAGS = {
 	NONE: 0,

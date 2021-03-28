@@ -1,12 +1,12 @@
-import {ReportStore, FetchOptions} from '../base'
-import {reportStore as legacyReportStore} from 'store/report'
+import {getFflogsEvents} from 'api'
 import {computed, toJS} from 'mobx'
 import {Pull, Actor} from 'report'
+import {reportStore as legacyReportStore} from 'store/report'
 import {isDefined} from 'utilities'
+import {ReportStore, FetchOptions} from '../base'
+import {adaptEvents} from './eventAdapter'
 import fflogsIcon from './fflogs.png'
 import {adaptReport} from './reportAdapter'
-import {adaptEvents} from './eventAdapter'
-import {getFflogsEvents} from 'api'
 
 /**
  * Report source acting as an adapter to the old report store system while we port
@@ -38,7 +38,7 @@ export class LegacyFflogsReportStore extends ReportStore {
 	}
 
 	// todo: clean up
-	async fetchEvents(pullId: Pull['id'], actorId: Actor['id']) {
+	async fetchEvents(pullId: Pull['id']) {
 		if (this.report == null) {
 			// todo: wait for report?
 			throw new Error('no report')
@@ -51,7 +51,8 @@ export class LegacyFflogsReportStore extends ReportStore {
 		// Dig into the fflogs report data to build the request
 		const legacyReport = report.meta
 		const legacyFight = legacyReport.fights.find(fight => fight.id.toString() === pullId)
-		if (legacyFight == null) {
+		const pull = report.pulls.find(pull => pull.id === pullId)
+		if (legacyFight == null || pull == null) {
 			throw new Error('no fight')
 		}
 
@@ -62,7 +63,7 @@ export class LegacyFflogsReportStore extends ReportStore {
 			{/* actorid: parseInt(actorId, 10) */},
 			true,
 		)
-		return adaptEvents(report, legacyEvents)
+		return adaptEvents(report, pull, legacyEvents)
 	}
 
 	getReportLink(pullId?: Pull['id'], actorId?: Actor['id']) {

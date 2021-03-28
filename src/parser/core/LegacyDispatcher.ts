@@ -1,5 +1,4 @@
 import {Event} from 'legacyEvent'
-import _ from 'lodash'
 import Module from './Module'
 
 export type FilterPartial<T> = {
@@ -40,6 +39,7 @@ export class LegacyDispatcher {
 	}
 
 	// eventHooks[eventType][moduleHandle]: Set<Hook>
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	private eventHooks = new Map<Event['type'], Map<ModuleHandle, Set<EventHook<any>>>>()
 
 	// Stored nearest-last so we can use the significantly-faster pop
@@ -70,6 +70,7 @@ export class LegacyDispatcher {
 	 * Removal is performed via strict equality, the hook being removed must have
 	 * been explicitly added prior.
 	 */
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	removeEventHook(hook: EventHook<any>) {
 		const eventTypeHooks = this.eventHooks.get(hook.event)
 		if (!eventTypeHooks) { return }
@@ -121,6 +122,8 @@ export class LegacyDispatcher {
 		// Fire off any timestamp hooks that are ready
 		const thq = this.timestampHookQueue
 		while (thq.length > 0 && thq[thq.length - 1].timestamp <= timestamp) {
+			// Enforced by the while loop
+			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 			const hook = thq.pop()!
 
 			// If we're not triggering on this module, skip the hook - removing it entirely
@@ -178,13 +181,15 @@ export class LegacyDispatcher {
 	): boolean {
 		return Object.keys(filter).every(key => {
 			// If the event doesn't have the key we're looking for, just shortcut out
-			if (!object.hasOwnProperty(key)) {
+			if (!Object.hasOwnProperty.call(object, key)) {
 				return false
 			}
 
 			// Just trust me 'aite
+			/* eslint-disable @typescript-eslint/no-explicit-any */
 			const filterVal: any = filter[key as keyof typeof filter]
 			const objectVal: any = object[key as keyof typeof object]
+			/* eslint-enable @typescript-eslint/no-explicit-any */
 
 			// FFLogs doesn't use arrays inside events themselves, so I'm using them to handle multiple possible values
 			if (Array.isArray(filterVal)) {

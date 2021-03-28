@@ -1,11 +1,11 @@
 import {t, Trans} from '@lingui/macro'
-import React from 'react'
-
 import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS, {Action} from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import {BuffWindowModule, BuffWindowState} from 'parser/core/modules/BuffWindow'
 import {SEVERITY} from 'parser/core/modules/Suggestions'
+import React from 'react'
+import DISPLAY_ORDER from './DISPLAY_ORDER'
 
 // Set for stuff to ignore TODO: revisit this and get it to show iaijutsu properly
 // const IGNORE_THIS = new Set([ACTIONS.MIDARE_SETSUGEKKA.id, ACTIONS.TENKA_GOKEN.id, ACTIONS.HIGANBANA.id, ACTIONS.KAESHI_SETSUGEKKA.id, ACTIONS.KAESHI_GOKEN.id, ACTIONS.KAESHI_HIGANBANA])
@@ -17,6 +17,7 @@ const SEN_GCDS = 3
 const SAM_BASE_GCD_SPEED_BUFFED = 2180
 
 export default class MeikyoShisui extends BuffWindowModule {
+	static displayOrder = DISPLAY_ORDER.MEIKYO
 	static handle = 'Meikyo'
 	static title = t('sam.ms.title')`Meikyo Shisui Windows`
 
@@ -67,22 +68,22 @@ considerAction(action: Action) {
 // override for end of fight reducing
 
 reduceExpectedGCDsEndOfFight(buffWindow: BuffWindowState): number  {
-		let reduceGCDsBy = 0
+	let reduceGCDsBy = 0
 
-		// Check to see if this window is rushing due to end of fight - reduce expected GCDs accordingly
-		const windowDurationMillis = this.buffStatus.duration * 1000
-		const fightTimeRemaining = this.parser.pull.duration - (buffWindow.start - this.parser.eventTimeOffset)
+	// Check to see if this window is rushing due to end of fight - reduce expected GCDs accordingly
+	const windowDurationMillis = this.buffStatus.duration * 1000
+	const fightTimeRemaining = this.parser.pull.duration - (buffWindow.start - this.parser.eventTimeOffset)
 
-		if (windowDurationMillis >= fightTimeRemaining) {
-			// This is using floor instead of ceiling to grant some forgiveness to first weave slot casts at the cost of 2nd weaves might be too forgiven
-			const possibleGCDs = Math.floor(fightTimeRemaining / SAM_BASE_GCD_SPEED_BUFFED)
+	if (windowDurationMillis >= fightTimeRemaining) {
+		// This is using floor instead of ceiling to grant some forgiveness to first weave slot casts at the cost of 2nd weaves might be too forgiven
+		const possibleGCDs = Math.floor(fightTimeRemaining / SAM_BASE_GCD_SPEED_BUFFED)
 
-			if (possibleGCDs < SEN_GCDS) {
-				reduceGCDsBy += (SEN_GCDS - possibleGCDs)
-			}
+		if (possibleGCDs < SEN_GCDS) {
+			reduceGCDsBy += (SEN_GCDS - possibleGCDs)
 		}
+	}
 
-		return reduceGCDsBy
+	return reduceGCDsBy
 }
 
 }

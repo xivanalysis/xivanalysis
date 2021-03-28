@@ -1,9 +1,8 @@
-import React from 'react'
 import {ActionLink} from 'components/ui/DbLink'
-
-import CONTRIBUTORS, {ROLES} from 'data/CONTRIBUTORS'
 import ACTIONS from 'data/ACTIONS'
+import CONTRIBUTORS, {ROLES} from 'data/CONTRIBUTORS'
 import {Meta} from 'parser/core/Meta'
+import React from 'react'
 import {changelog} from './changelog'
 
 export default new Meta({

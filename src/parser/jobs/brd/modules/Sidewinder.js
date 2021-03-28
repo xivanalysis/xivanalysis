@@ -1,16 +1,16 @@
 /**
  * @author Ririan
  */
-import React from 'react'
-import {Trans, Plural, NumberFormat} from '@lingui/react'
 import {t} from '@lingui/macro'
-import {List, Button, Label, Icon, Message} from 'semantic-ui-react'
-import Module from 'parser/core/Module'
-import {getDataBy} from 'data'
-import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
-import STATUSES from 'data/STATUSES'
-import ACTIONS from 'data/ACTIONS'
+import {Trans, Plural, NumberFormat} from '@lingui/react'
 import {ActionLink} from 'components/ui/DbLink'
+import {getDataBy} from 'data'
+import ACTIONS from 'data/ACTIONS'
+import STATUSES from 'data/STATUSES'
+import Module from 'parser/core/Module'
+import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import React from 'react'
+import {List, Button, Label, Icon, Message} from 'semantic-ui-react'
 import {matchClosest} from 'utilities'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 

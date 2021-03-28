@@ -1,8 +1,8 @@
-import CoreCombos from 'parser/core/modules/Combos'
+import {Plural, Trans} from '@lingui/react'
 import ACTIONS from 'data/ACTIONS'
+import CoreCombos from 'parser/core/modules/Combos'
 import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import React from 'react'
-import {Plural, Trans} from '@lingui/react'
 
 export default class Combos extends CoreCombos {
 	// Overrides
@@ -15,9 +15,7 @@ export default class Combos extends CoreCombos {
 		ACTIONS.ENCHANTED_REDOUBLEMENT.id,
 	]
 	_severityDerpComboActions = {
-		1: SEVERITY.MINOR,
-		2: SEVERITY.MEDIUM,
-		3: SEVERITY.MAJOR,
+		1: SEVERITY.MAJOR,
 	}
 	//These actions mean you went in without enough mana
 	_notEnoughManaActions = [
@@ -30,9 +28,7 @@ export default class Combos extends CoreCombos {
 	}
 	//Generics, not handled by the rest
 	_severityGenericActions = {
-		1: SEVERITY.MINOR,
-		2: SEVERITY.MEDIUM,
-		4: SEVERITY.MAJOR,
+		1: SEVERITY.MAJOR,
 	}
 
 	//Overrides

@@ -1,6 +1,4 @@
 import {Trans} from '@lingui/react'
-import React from 'react'
-
 import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
@@ -11,6 +9,7 @@ import Combatants from 'parser/core/modules/Combatants'
 import {EntityStatuses} from 'parser/core/modules/EntityStatuses'
 import {Invulnerability} from 'parser/core/modules/Invulnerability'
 import Suggestions, {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import React from 'react'
 
 const STORMS_EYE_BUFFER = 7000
 

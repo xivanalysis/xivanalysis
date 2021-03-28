@@ -1,17 +1,20 @@
-import Gauge from './Gauge'
-import Dualcast from './Dualcast'
-import GeneralCDDowntime from './GeneralCDDowntime'
-import Procs from './Procs'
+import {Tincture} from 'parser/core/modules/Tincture'
 import Combos from './Combos'
+import Dualcast from './Dualcast'
+import Gauge from './Gauge'
+import GeneralCDDowntime from './GeneralCDDowntime'
+import {Interrupts} from './Interrupts'
 import MeleeCombos from './MeleeCombos'
 import MovementSkills from './MovementSkills'
+import Procs from './Procs'
+
 export {DualStatistic} from 'parser/jobs/rdm/statistics/DualStatistic'
-import {Tincture} from 'parser/core/modules/Tincture'
 
 export default [
 	Gauge,
 	Dualcast,
 	GeneralCDDowntime,
+	Interrupts,
 	Procs,
 	Combos,
 	MeleeCombos,

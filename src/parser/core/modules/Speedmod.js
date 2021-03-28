@@ -26,14 +26,11 @@ export default class Speedmod extends Module {
 
 	// Override to handle extra logic during normalise, or to fill in _activeSpeedMap manually if not generating gauge-based buff events
 	// TODO: disabled due to TS typing
-	// eslint-disable-next-line no-unused-vars
-	jobSpecificNormaliseLogic(event) {
-	}
+	jobSpecificNormaliseLogic(_event) { /* noop */ }
 
 	// Override for scalars that function outside of speedmod
 	// NOTE: Only Greased Lightning (MNK) and 3-stack Astral Fire/Umbral Ice (BLM) actually do this. Please use _activeSpeedMap for everything else
-	// eslint-disable-next-line no-unused-vars
-	getJobAdditionalSpeedbuffScalar(event) {
+	getJobAdditionalSpeedbuffScalar(_event) {
 		return 1.0
 	}
 

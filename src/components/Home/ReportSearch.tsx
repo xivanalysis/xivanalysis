@@ -1,15 +1,14 @@
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
+import NormalisedMessage from 'components/ui/NormalisedMessage'
 import {action, observable} from 'mobx'
 import {observer} from 'mobx-react'
 import React from 'react'
 import {RouteComponentProps, withRouter, Redirect} from 'react-router-dom'
-import {Button, Input, InputOnChangeData} from 'semantic-ui-react'
-import styles from './ReportSearch.module.css'
-import NormalisedMessage from 'components/ui/NormalisedMessage'
 import {SearchHandlerResult} from 'reportSources'
-import _ from 'lodash'
+import {Button, Input, InputOnChangeData} from 'semantic-ui-react'
 import {parseInput} from './parseInput'
+import styles from './ReportSearch.module.css'
 
 const DEFAULT_REASON = t('core.home.report-search.unknown-query-error')`An unknown error occured when parsing the provided query.`
 

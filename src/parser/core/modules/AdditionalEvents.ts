@@ -1,6 +1,6 @@
-import Module, {dependency} from 'parser/core/Module'
-import {Event} from 'legacyEvent'
 import {getFflogsEvents} from 'api'
+import {Event} from 'legacyEvent'
+import Module, {dependency} from 'parser/core/Module'
 import {sortEvents} from '../EventSorting'
 
 // Unexported symbols so I can have properties that are inaccessible outside this file

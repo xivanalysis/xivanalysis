@@ -1,10 +1,10 @@
 import {Trans} from '@lingui/react'
-import Downtime from 'parser/core/modules/Downtime'
 import {dependency} from 'parser/core/Module'
+import {BuffWindowState, BuffWindowTrackedAction} from 'parser/core/modules/BuffWindow'
+import Downtime from 'parser/core/modules/Downtime'
 import {SEVERITY} from 'parser/core/modules/Suggestions'
 import {Tincture as CoreTincture} from 'parser/core/modules/Tincture'
 import React from 'react'
-import {BuffWindowState, BuffWindowTrackedAction} from 'parser/core/modules/BuffWindow'
 
 // Arbitrary 1 GCD buffer for the tincture buff application
 const TINCTURE_BUFFER = 2500
@@ -25,6 +25,7 @@ export default class Tincture extends CoreTincture {
 			},
 			{
 				action: this.data.actions.REASSEMBLE,
+				status: this.data.statuses.REASSEMBLED,
 				expectedPerWindow: 1,
 			},
 			{
@@ -49,13 +50,7 @@ export default class Tincture extends CoreTincture {
 	changeExpectedTrackedActionClassLogic(buffWindow: BuffWindowState, action: BuffWindowTrackedAction): number {
 		const bufferedWindowStart = buffWindow.start - TINCTURE_BUFFER
 
-		if (action.action === this.data.actions.REASSEMBLE) {
-			// Reassemble might be used prepull or during downtime
-			if (bufferedWindowStart <= this.parser.fight.start_time || this.downtime.isDowntime(bufferedWindowStart)) {
-				return -1
-			}
-
-		} else if (action.action === this.data.actions.PILE_BUNKER) {
+		if (action.action === this.data.actions.PILE_BUNKER) {
 			// We don't have queen in the opener
 			if (bufferedWindowStart <= this.parser.fight.start_time) {
 				return -1

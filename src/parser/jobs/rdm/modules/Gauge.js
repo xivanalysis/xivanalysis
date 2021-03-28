@@ -1,13 +1,13 @@
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
 import Color from 'color'
-import React, {Fragment} from 'react'
 import TimeLineChart from 'components/ui/TimeLineChart'
 import ACTIONS from 'data/ACTIONS'
 import JOBS from 'data/JOBS'
 import Module from 'parser/core/Module'
 import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import {DualStatistic} from 'parser/jobs/rdm/statistics/DualStatistic'
+import React, {Fragment} from 'react'
 //import {getCooldownRemaining} from 'parser/core/modules/Cooldowns'
 //import {ActionLink} from 'components/ui/DbLink'
 //TODO: Should possibly look into different Icons for things in Suggestions
@@ -363,7 +363,7 @@ export default class Gauge extends Module {
 			const blm = Color(JOBS.BLACK_MAGE.colour)
 
 			// Disabling magic numbers for the chart, 'cus it's a chart
-			/* eslint-disable no-magic-numbers */
+			/* eslint-disable @typescript-eslint/no-magic-numbers */
 			const data = {
 				datasets: [{
 					label: 'White Mana',
@@ -382,7 +382,7 @@ export default class Gauge extends Module {
 			return <TimeLineChart
 				data={data}
 			/>
-			/* eslint-enable no-magic-numbers */
+			/* eslint-enable @typescript-eslint/no-magic-numbers */
 		}
 
 		/**

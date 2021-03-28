@@ -1,10 +1,9 @@
 import {t} from '@lingui/macro'
-import React from 'react'
-
-import Suggestion, {SEVERITY} from './Suggestion'
-import SuggestionsComponent from './Component'
 import {Analyser, DisplayMode} from 'parser/core/Analyser'
+import React from 'react'
 import DISPLAY_ORDER from '../DISPLAY_ORDER'
+import SuggestionsComponent from './Component'
+import Suggestion, {SEVERITY} from './Suggestion'
 
 export default class Suggestions extends Analyser {
 	static handle = 'suggestions'

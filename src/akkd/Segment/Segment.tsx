@@ -1,8 +1,12 @@
-import React from 'react'
+import React, {ReactNode} from 'react'
 import {ExpandableSegment} from './ExpandableSegment'
 import styles from './Segment.module.css'
 
-export class Segment extends React.PureComponent {
+interface SegmentProps {
+	children?: ReactNode
+}
+
+export class Segment extends React.PureComponent<SegmentProps> {
 	static Expandable = ExpandableSegment
 
 	render() {

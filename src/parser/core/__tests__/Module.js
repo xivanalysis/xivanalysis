@@ -1,13 +1,13 @@
+import {GameEdition} from 'data/PATCHES'
+import {Team} from 'report'
+import {LegacyDispatcher} from '../LegacyDispatcher'
+import {Meta} from '../Meta'
 import Module from '../Module'
 import Parser from '../Parser'
-import {Meta} from '../Meta'
-import {LegacyDispatcher} from '../LegacyDispatcher'
-import {Team} from 'report'
-import {GameEdition} from 'data/PATCHES'
 
 jest.mock('../LegacyDispatcher')
 
-/* eslint-disable no-magic-numbers */
+/* eslint-disable @typescript-eslint/no-magic-numbers */
 
 class TestModule extends Module {
 	static handle = 'test'
@@ -51,16 +51,16 @@ const pull = {
 	duration: 100,
 	encounter: {
 		name: 'Test encounter',
-		duty: {id: -1, name: 'Test duty'}
+		duty: {id: -1, name: 'Test duty'},
 	},
-	actors: [actor]
+	actors: [actor],
 }
 const newReport = {
 	timestamp: 0,
 	edition: GameEdition.GLOBAL,
 	name: 'Test report',
 	pulls: [pull],
-	meta: {source: '__test'}
+	meta: {source: '__test'},
 }
 
 const event = {

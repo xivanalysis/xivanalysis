@@ -1,8 +1,8 @@
+import {Trans} from '@lingui/react'
+import CONTRIBUTORS, {ROLES} from 'data/CONTRIBUTORS'
+import {Meta} from 'parser/core/Meta'
 import React from 'react'
 import {Icon, Message} from 'semantic-ui-react'
-import CONTRIBUTORS, {ROLES} from 'data/CONTRIBUTORS'
-import {Trans} from '@lingui/react'
-import {Meta} from 'parser/core/Meta'
 
 export default new Meta({
 	modules: () => import('./modules' /* webpackChunkName: "jobs-rdm" */),
@@ -30,6 +30,11 @@ export default new Meta({
 	],
 
 	changelog: [
+		{
+			date: new Date('2021-02-11'),
+			Changes: () => <>Severity for all broken melee combos is now Major</>,
+			contributors: [CONTRIBUTORS.LEYLIA],
+		},
 		{
 			date: new Date('2020-12-07'),
 			Changes: () => <>Bump up for patch 5.4</>,

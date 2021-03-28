@@ -1,20 +1,16 @@
-import {t} from '@lingui/macro'
-
-import React from 'react'
-
+import {Trans} from '@lingui/react'
+import {ActionLink, StatusLink} from 'components/ui/DbLink'
+import ACTIONS from 'data/ACTIONS'
 import CONTRIBUTORS, {ROLES} from 'data/CONTRIBUTORS'
-import TransMarkdown from 'components/ui/TransMarkdown'
-import {Meta} from 'parser/core/Meta'
-import {StatusLink} from 'components/ui/DbLink'
 import STATUSES from 'data/STATUSES'
-
-const description = t('blm.about.description')`This analyser aims to identify how you're not actually casting [~action/FIRE_IV] as much as you think you are.`
+import {Meta} from 'parser/core/Meta'
+import React from 'react'
 
 export default new Meta({
 	modules: () => import('./modules' /* webpackChunkName: "jobs-blm" */),
 
 	Description: () => <>
-		<TransMarkdown source={description}/>
+		<Trans id="blm.about.description">This analyser aims to identify how you're not actually casting <ActionLink {...ACTIONS.FIRE_IV} /> as much as you think you are.</Trans>
 	</>,
 	supportedPatches: {
 		from: '5.0',
@@ -69,5 +65,10 @@ export default new Meta({
 		date: new Date('2020-05-26'),
 		Changes: () => <>(Modified) Jp Opener is no longer falsely flagged.</>,
 		contributors: [CONTRIBUTORS.FURST],
+	},
+	{
+		date: new Date('2021-03-18'),
+		Changes: () => <>Forgive single-weave Triplecast in JP opener</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
 	}],
 })

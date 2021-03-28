@@ -1,16 +1,15 @@
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
-import React from 'react'
-
-import ACTIONS from 'data/ACTIONS'
 import {ActionLink} from 'components/ui/DbLink'
-import {BuffWindowModule, BuffWindowState, BuffWindowTrackedAction} from 'parser/core/modules/BuffWindow'
-import {SEVERITY} from 'parser/core/modules/Suggestions'
-import STATUSES from 'data/STATUSES'
-import DISPLAY_ORDER from './DISPLAY_ORDER'
-import {DeathEvent} from 'fflogs'
 import {RotationTargetOutcome} from 'components/ui/RotationTable'
+import ACTIONS from 'data/ACTIONS'
+import STATUSES from 'data/STATUSES'
+import {DeathEvent} from 'fflogs'
+import {BuffWindowModule, BuffWindowState} from 'parser/core/modules/BuffWindow'
+import {SEVERITY} from 'parser/core/modules/Suggestions'
+import React from 'react'
 import {isDefined} from 'utilities'
+import DISPLAY_ORDER from './DISPLAY_ORDER'
 
 // give it a gcd for marking as truncated window
 const SHORT_WINDOW_BUFFER: number = 2500
@@ -85,7 +84,7 @@ export default class DragonSight extends BuffWindowModule {
 		this.deathTimes.push(event.timestamp)
 	}
 
-	protected reduceTrackedActionsEndOfFight(buffWindow: BuffWindowState, action: BuffWindowTrackedAction): number {
+	protected reduceTrackedActionsEndOfFight(buffWindow: BuffWindowState): number {
 		const windowDurationMillis = this.buffStatus.duration * 1000
 		const fightTimeRemaining = this.parser.pull.duration - (buffWindow.start - this.parser.eventTimeOffset)
 
@@ -114,7 +113,7 @@ export default class DragonSight extends BuffWindowModule {
 	}
 
 	// adjust expected tracked gcds for partner dying
-	protected changeExpectedTrackedActionClassLogic(buffWindow: BuffWindowState, action: BuffWindowTrackedAction): number {
+	protected changeExpectedTrackedActionClassLogic(buffWindow: BuffWindowState): number {
 		if (this.buffTargetDied(buffWindow) === SHORT_WINDOW_FAULT.PARTNER) {
 			return -1
 		}
@@ -124,14 +123,13 @@ export default class DragonSight extends BuffWindowModule {
 
 	// adjust highlighting for partner dying
 	// if partner dies, we reduce expected to 0 but still highlight a 0 in the table
-	protected changeComparisonClassLogic(buffWindow: BuffWindowState, action: BuffWindowTrackedAction) {
+	protected changeComparisonClassLogic(buffWindow: BuffWindowState) {
 		if (this.buffTargetDied(buffWindow) === SHORT_WINDOW_FAULT.PARTNER) {
 			return (actual: number, expected?: number) => {
 				if (!isDefined(expected) || actual <= expected) {
 					return RotationTargetOutcome.NEGATIVE
-				} else {
-					return RotationTargetOutcome.POSITIVE
 				}
+				return RotationTargetOutcome.POSITIVE
 			}
 		}
 	}
@@ -142,7 +140,8 @@ export default class DragonSight extends BuffWindowModule {
 		if (fault === SHORT_WINDOW_FAULT.PARTNER) {
 			return <Trans id="drg.ds.notes.partnerdied">Partner Died</Trans>
 		}
-		else if (fault === SHORT_WINDOW_FAULT.DRG) {
+
+		if (fault === SHORT_WINDOW_FAULT.DRG) {
 			return <Trans id="drg.ds.notes.drgdied">You Died</Trans>
 		}
 

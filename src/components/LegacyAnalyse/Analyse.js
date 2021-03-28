@@ -1,11 +1,12 @@
 import {SidebarContent} from 'components/GlobalSidebar'
 import JobIcon from 'components/ui/JobIcon'
 import NormalisedMessage from 'components/ui/NormalisedMessage'
+import {AnalysisLoader} from 'components/ui/SharedLoaders'
 import JOBS, {ROLES} from 'data/JOBS'
 import {observable, runInAction} from 'mobx'
 import {observer} from 'mobx-react'
 import {Conductor} from 'parser/Conductor'
-import PropTypes from 'prop-types'
+import * as PropTypes from 'prop-types'
 import React, {Component} from 'react'
 import {Header} from 'semantic-ui-react'
 import {StoreContext} from 'store'
@@ -13,7 +14,6 @@ import styles from './Analyse.module.css'
 import ResultSegment from './ResultSegment'
 import SegmentLinkItem from './SegmentLinkItem'
 import {SegmentPositionProvider} from './SegmentPositionContext'
-import {AnalysisLoader} from 'components/ui/SharedLoaders'
 
 @observer
 class Analyse extends Component {

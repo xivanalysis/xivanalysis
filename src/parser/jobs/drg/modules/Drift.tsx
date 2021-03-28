@@ -1,14 +1,14 @@
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
-import {Message, Table, Button} from 'semantic-ui-react'
 import {ActionLink} from 'components/ui/DbLink'
+import {getDataBy} from 'data'
 import ACTIONS from 'data/ACTIONS'
 import {CastEvent} from 'fflogs'
-import Downtime from 'parser/core/modules/Downtime'
-import {getDataBy} from 'data'
 import Module, {dependency} from 'parser/core/Module'
-import React, {Fragment} from 'react'
+import Downtime from 'parser/core/modules/Downtime'
 import {Timeline} from 'parser/core/modules/Timeline'
+import React, {Fragment} from 'react'
+import {Table, Button} from 'semantic-ui-react'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 
 // Buffer (ms) to forgive insignificant drift, we really only care about GCD drift here
@@ -43,7 +43,6 @@ export default class Drift extends Module {
 	static title = t('drg.drift.title')`Ability Drift`
 	static displayOrder = DISPLAY_ORDER.DRIFT
 
-
 	@dependency private downtime!: Downtime
 	@dependency private timeline!: Timeline
 
@@ -60,8 +59,7 @@ export default class Drift extends Module {
 
 	private onDriftableCast(event: CastEvent) {
 		// Get skill info.
-		let actionId: number
-		actionId = event.ability.guid
+		const actionId = event.ability.guid
 
 		const cooldown = COOLDOWN_MS[actionId]
 		// this.debug(cooldown)
@@ -131,7 +129,7 @@ export default class Drift extends Module {
 
 	output() {
 		// Nothing to show
-		if (!this.driftedWindows.length) return
+		if (!this.driftedWindows.length) { return }
 
 		return <Fragment>
 			<Table style={{border: 'none'}}>

@@ -4,22 +4,21 @@ import ResultSegment from 'components/LegacyAnalyse/ResultSegment'
 import ErrorMessage from 'components/ui/ErrorMessage'
 import {getReportPatch, languageToEdition} from 'data/PATCHES'
 import {DependencyCascadeError, ModulesNotFoundError} from 'errors'
-import type {Event as LegacyEvent} from 'legacyEvent'
+import {Event, FieldsBase} from 'event'
 import type {Actor as FflogsActor, Fight, Pet} from 'fflogs'
+import type {Event as LegacyEvent} from 'legacyEvent'
 import React from 'react'
+import {Report, Pull, Actor} from 'report'
 import {Report as LegacyReport} from 'store/report'
 import toposort from 'toposort'
-import {extractErrorContext, isDefined} from 'utilities'
+import {extractErrorContext, isDefined, formatDuration} from 'utilities'
+import {Analyser} from './Analyser'
+import {Dispatcher} from './Dispatcher'
+import {Injectable} from './Injectable'
 import {LegacyDispatcher} from './LegacyDispatcher'
 import {Meta} from './Meta'
 import Module, {DISPLAY_MODE, MappedDependency} from './Module'
 import {Patch} from './Patch'
-import {formatDuration} from 'utilities'
-import {Report, Pull, Actor} from 'report'
-import {Injectable} from './Injectable'
-import {Analyser} from './Analyser'
-import {Event} from 'event'
-import {Dispatcher} from './Dispatcher'
 
 interface Player extends FflogsActor {
 	pets: Pet[]
@@ -32,6 +31,12 @@ export interface Result {
 	mode: DISPLAY_MODE
 	order: number
 	markup: React.ReactNode
+}
+
+declare module 'event' {
+	interface EventTypeRepository {
+		complete: FieldsBase,
+	}
 }
 
 export interface InitEvent {
@@ -78,15 +83,31 @@ class Parser {
 	// Stored soonest-last for performance
 	private eventDispatchQueue: Event[] = []
 
-	get currentTimestamp() {
-		const start = this.eventTimeOffset
+	/** Get the unix epoch timestamp of the current state of the parser. */
+	get currentEpochTimestamp() {
+		const start = this.pull.timestamp
 		const end = start + this.pull.duration
-		const timestamp = Math.max(this.dispatcher.timestamp, this.legacyDispatcher.timestamp)
+
+		// Adjust for fflog's bullshit
+		const legacyTimestamp = this.legacyDispatcher.timestamp + this.report.start
+
+		const timestamp = Math.max(this.dispatcher.timestamp, legacyTimestamp)
 		return Math.min(end, Math.max(start, timestamp))
 	}
 
+	/**
+	 * Get the current timestamp as per the legacy event system. Values are
+	 * zeroed to the start of the legacy FF Logs report.
+	 *
+	 * If writing an Analyser for the new event system, you should use
+	 * currentEpochTimestamp.
+	 */
+	get currentTimestamp() {
+		return this.currentEpochTimestamp - this.report.start
+	}
+
 	get currentDuration() {
-		return this.currentTimestamp - this.eventTimeOffset
+		return this.currentEpochTimestamp - this.pull.timestamp
 	}
 
 	// TODO: REMOVE
@@ -263,7 +284,9 @@ class Parser {
 
 		while (!xivaResult.done || !legacyResult.done) {
 			const xivaTimestamp = xivaResult.done ? Infinity : xivaResult.value.timestamp
-			const legacyTimestamp = legacyResult.done ? Infinity : legacyResult.value.timestamp
+			const legacyTimestamp = legacyResult.done
+				? Infinity
+				: legacyResult.value.timestamp + this.report.start
 
 			// Preference xiva events when equal timestamps, as we're doing a trunk-first migration.
 			if (!xivaResult.done && xivaTimestamp <= legacyTimestamp) {
@@ -279,7 +302,6 @@ class Parser {
 	}
 
 	private *iterateXivaEvents(events: Event[]): Iterable<Event> {
-		// TODO: Do we want start/end events as well?
 		const eventIterator = events[Symbol.iterator]()
 
 		// Iterate the primary event source
@@ -293,12 +315,20 @@ class Parser {
 			// the below to use <= instead - effectively weaving queue into source.
 			const queue = this.eventDispatchQueue
 			while (queue.length > 0 && queue[queue.length -1].timestamp < event.timestamp) {
+				// Enforced by the while loop.
+				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 				yield queue.pop()!
 			}
 
 			// Yield the source event and prep for next iteration
 			yield event
 			result = eventIterator.next()
+		}
+
+		// Mark the end of the pull with a completion event
+		yield {
+			type: 'complete',
+			timestamp: this.pull.timestamp + this.pull.duration,
 		}
 	}
 
@@ -348,7 +378,7 @@ class Parser {
 		const moduleErrors = this.legacyDispatcher.dispatch(event, this._triggerModules)
 
 		for (const handle in moduleErrors) {
-			if (!moduleErrors.hasOwnProperty(handle)) { continue }
+			if (moduleErrors[handle] == null) { continue }
 			const error = moduleErrors[handle]
 
 			this.captureError({
@@ -364,7 +394,7 @@ class Parser {
 
 	queueEvent(event: Event) {
 		// If the event is in the past, noop.
-		if (event.timestamp < this.currentTimestamp) {
+		if (event.timestamp < this.currentEpochTimestamp) {
 			if (process.env.NODE_ENV === 'development') {
 				console.warn(`Attempted to queue an event in the past. Current timestamp: ${this.currentTimestamp}. Event: ${JSON.stringify(event)}`)
 			}
@@ -389,7 +419,7 @@ class Parser {
 	private _setModuleError(mod: string, error: Error) {
 		// Set the error for the current module
 		const moduleIndex = this._triggerModules.indexOf(mod)
-		if (moduleIndex !== -1 ) {
+		if (moduleIndex !== -1) {
 			this._triggerModules = this._triggerModules.slice(0)
 			this._triggerModules.splice(moduleIndex, 1)
 		}
@@ -417,8 +447,8 @@ class Parser {
 		source: 'event' | 'output',
 		error: Error,
 		event?: LegacyEvent,
-	): [Record<string, any>, Array<[string, Error]>] {
-		const output: Record<string, any> = {}
+	): [Record<string, unknown>, Array<[string, Error]>] {
+		const output: Record<string, unknown> = {}
 		const errors: Array<[string, Error]> = []
 		const visited = new Set<string>()
 
@@ -468,7 +498,7 @@ class Parser {
 			// If there's an error, override output handling to show it
 			if (this._moduleErrors[handle]) {
 				const error = this._moduleErrors[handle]
-				return{
+				return {
 					...resultMeta,
 					markup: <ErrorMessage error={error} />,
 				}
@@ -486,7 +516,7 @@ class Parser {
 				})
 
 				// Also add the error to the results to be displayed.
-				return{
+				return {
 					...resultMeta,
 					markup: <ErrorMessage error={error} />,
 				}
@@ -573,7 +603,7 @@ class Parser {
 			module: opts.module,
 		}
 
-		const extra: Record<string, any> = {
+		const extra: Record<string, unknown> = {
 			source: this.newReport.meta.source,
 			pull: this.pull.id,
 			actor: this.actor.id,

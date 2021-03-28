@@ -1,14 +1,13 @@
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
-import React, {Fragment} from 'react'
-import {Accordion, Message} from 'semantic-ui-react'
-
 import {ActionLink} from 'components/ui/DbLink'
 import Rotation from 'components/ui/Rotation'
 import {getDataBy} from 'data'
 import ACTIONS from 'data/ACTIONS'
 import Module from 'parser/core/Module'
 import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import React, {Fragment} from 'react'
+import {Accordion, Message} from 'semantic-ui-react'
 
 // Constants
 const QUEEN_ATTACKS = [

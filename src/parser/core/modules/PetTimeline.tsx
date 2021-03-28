@@ -48,7 +48,7 @@ export default class PetTimeline extends Module {
 	private autoCasts: CastEvent[] = []
 	private commandCasts: CastEvent[] = []
 
-	protected isCommandedEvent(event: CastEvent) {
+	protected isCommandedEvent(_event: CastEvent) {
 		return false
 	}
 

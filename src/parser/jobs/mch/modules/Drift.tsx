@@ -1,15 +1,14 @@
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
-import {Accordion, Message} from 'semantic-ui-react'
 import {ActionLink} from 'components/ui/DbLink'
+import Rotation from 'components/ui/Rotation'
+import {getDataBy} from 'data'
 import ACTIONS from 'data/ACTIONS'
 import {CastEvent} from 'fflogs'
-import Downtime from 'parser/core/modules/Downtime'
-import {getDataBy} from 'data'
 import Module, {dependency} from 'parser/core/Module'
+import Downtime from 'parser/core/modules/Downtime'
 import React, {Fragment} from 'react'
-import Rotation from 'components/ui/Rotation'
-
+import {Accordion, Message} from 'semantic-ui-react'
 
 // Buffer (ms) to forgive insignificant drift, we really only care about GCD drift here
 // and not log inconsistencies / sks issues / misguided weaving
@@ -99,7 +98,7 @@ export default class Drift extends Module {
 
 	output() {
 		// Nothing to show
-		if (!this.driftedWindows.length) return
+		if (!this.driftedWindows.length) { return }
 
 		const panels = this.driftedWindows.map(window => {
 			return {

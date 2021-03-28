@@ -1,16 +1,16 @@
-import Module from '../Module'
-import Parser from '../Parser'
-import {Meta} from '../Meta'
-import {LegacyDispatcher} from '../LegacyDispatcher'
-import {Dispatcher} from '../Dispatcher'
 import {GameEdition} from 'data/PATCHES'
 import {Team} from 'report'
 import {Analyser} from '../Analyser'
+import {Dispatcher} from '../Dispatcher'
+import {LegacyDispatcher} from '../LegacyDispatcher'
+import {Meta} from '../Meta'
+import Module from '../Module'
+import Parser from '../Parser'
 
 jest.mock('../LegacyDispatcher')
 jest.mock('../Dispatcher')
 
-/* eslint-disable @xivanalysis/no-unused-dependencies, no-magic-numbers */
+/* eslint-disable @xivanalysis/no-unused-dependencies, @typescript-eslint/no-magic-numbers */
 
 // Testing modules
 class BasicModule extends Module {
@@ -33,6 +33,11 @@ class BasicAnalyser extends Analyser {
 	static handle = 'basic_analyser'
 }
 
+const REPORT_START_TIME = 10000
+const PULL_START_TIME_OFFSET = 1000
+const OLD_EVENT_OFFSET = PULL_START_TIME_OFFSET
+const NEW_EVENT_OFFSET = REPORT_START_TIME + PULL_START_TIME_OFFSET
+
 // Bunch of basic testing data
 const friendlyInFight = {
 	id: 1,
@@ -46,14 +51,14 @@ const friendlyNotInFight = {
 }
 const report = {
 	lang: 'en',
-	start: 0,
+	start: REPORT_START_TIME,
 	friendlies: [friendlyInFight, friendlyNotInFight],
 	friendlyPets: [],
 }
 const fight = {
 	id: 1,
-	start_time: 0,
-	end_time: 100,
+	start_time: PULL_START_TIME_OFFSET,
+	end_time: PULL_START_TIME_OFFSET+100,
 }
 const event = {
 	type: '__testLegacy',
@@ -69,35 +74,44 @@ const actor = {
 }
 const pull = {
 	id: '1',
-	timestamp: 0,
+	timestamp: REPORT_START_TIME+PULL_START_TIME_OFFSET,
 	duration: 100,
 	encounter: {
 		name: 'Test encounter',
-		duty: {id: -1, name: 'Test duty'}
+		duty: {id: -1, name: 'Test duty'},
 	},
-	actors: [actor]
+	actors: [actor],
 }
 const newReport = {
-	timestamp: 0,
+	timestamp: REPORT_START_TIME,
 	edition: GameEdition.GLOBAL,
 	name: 'Test report',
 	pulls: [pull],
-	meta: {source: '__test'}
+	meta: {source: '__test'},
 }
 
-const buildParser = (modules = []) => new Parser({
-	meta: new Meta({modules: () => Promise.resolve({default: modules})}),
-	report,
-	fight,
-	fflogsActor: friendlyInFight,
+const buildParser = (modules = []) => {
+	const legacyDispatcher = new LegacyDispatcher()
+	legacyDispatcher.timestamp = 0
 
-	newReport,
-	pull,
-	actor,
+	const dispatcher = new Dispatcher()
+	dispatcher.timestamp = 0
+	dispatcher.dispatch.mockReturnValue([])
 
-	legacyDispatcher: new LegacyDispatcher(),
-	dispatcher: new Dispatcher(),
-})
+	return new Parser({
+		meta: new Meta({modules: () => Promise.resolve({default: modules})}),
+		report,
+		fight,
+		fflogsActor: friendlyInFight,
+
+		newReport,
+		pull,
+		actor,
+
+		legacyDispatcher,
+		dispatcher,
+	})
+}
 
 describe('Parser', () => {
 	let parser
@@ -111,11 +125,7 @@ describe('Parser', () => {
 		parser = buildParser()
 
 		dispatcher = Dispatcher.mock.instances[0]
-		dispatcher.timestamp = 0
-		dispatcher.dispatch.mockReturnValue([])
-
 		legacyDispatcher = LegacyDispatcher.mock.instances[0]
-		legacyDispatcher.timestamp = 0
 	})
 
 	it('exposes metadata', () => {
@@ -188,14 +198,15 @@ describe('Parser', () => {
 	it('stops dispatching to analysers that error', async () => {
 		parser = buildParser([BasicAnalyser])
 		dispatcher = Dispatcher.mock.instances[1]
-		dispatcher.dispatch
-			.mockReturnValueOnce([{handle: 'basic_analyser', error: new Error('test')}])
-			.mockReturnValueOnce([])
+		dispatcher.dispatch.mockReturnValueOnce([{handle: 'basic_analyser', error: new Error('test')}])
 		await parser.configure()
-		parser.parseEvents({events: [
-			{type: 'test', timestamp: 50},
-			{type: 'test', timestamp: 60},
-		], legacyEvents: []})
+		parser.parseEvents({
+			events: [
+				{type: 'test', timestamp: 50},
+				{type: 'test', timestamp: 60},
+			],
+			legacyEvents: [],
+		})
 
 		const {calls} = dispatcher.dispatch.mock
 		expect(calls[0][1]).toEqual(['basic_analyser'])
@@ -241,9 +252,9 @@ describe('Parser', () => {
 
 	it('queues new events for dispatch', async () => {
 		const toQueue = [
-			{timestamp: 50, type: '__queuedEvent'},
-			{timestamp: 70, type: '__queuedEvent'},
-			{timestamp: 0, type: '__queuedEvent'},
+			{timestamp: NEW_EVENT_OFFSET+50, type: '__queuedEvent'},
+			{timestamp: NEW_EVENT_OFFSET+70, type: '__queuedEvent'},
+			{timestamp: NEW_EVENT_OFFSET+0, type: '__queuedEvent'},
 		]
 		const dispatchedEvents = []
 
@@ -259,9 +270,9 @@ describe('Parser', () => {
 		await parser.configure()
 		parser.parseEvents({
 			events: [
-				{timestamp: 0, type: '__sourceEvent'},
-				{timestamp: 50, type: '__sourceEvent'},
-				{timestamp: 100, type: '__sourceEvent'},
+				{timestamp: NEW_EVENT_OFFSET+0, type: '__sourceEvent'},
+				{timestamp: NEW_EVENT_OFFSET+50, type: '__sourceEvent'},
+				{timestamp: NEW_EVENT_OFFSET+100, type: '__sourceEvent'},
 			],
 			legacyEvents: [],
 		})
@@ -272,51 +283,52 @@ describe('Parser', () => {
 			'__queuedEvent',
 			'__queuedEvent',
 			'__sourceEvent',
+			'complete',
 		])
 		expect(dispatchedEvents.map(({timestamp}) => timestamp))
-			.toEqual([0, 50, 50, 70, 100])
+			.toEqual([0, 50, 50, 70, 100, 100].map(n => OLD_EVENT_OFFSET+n))
 	})
 
 	describe('event migration', () => {
 		[{
 			name: 'equal timestamp',
-			events: [{timestamp: 50, type: '__rfEvent'}],
-			legacyEvents: [{timestamp: 50, type: '__lEvent'}],
+			events: [{timestamp: NEW_EVENT_OFFSET+50, type: '__rfEvent'}],
+			legacyEvents: [{timestamp: OLD_EVENT_OFFSET+50, type: '__lEvent'}],
 			expected: {
-				type: ['init', '__rfEvent', '__lEvent', 'complete'],
-				timestamp: [0, 50, 50, 100],
+				type: ['init', '__rfEvent', '__lEvent', 'complete', 'complete'],
+				timestamp: [0, 50, 50, 100, 100].map(n => OLD_EVENT_OFFSET+n),
 			},
 		}, {
 			name: 'flow first',
-			events: [{timestamp: -100, type: '__rfEvent'}],
-			legacyEvents: [{timestamp: 50, type: '__lEvent'}],
+			events: [{timestamp: NEW_EVENT_OFFSET-100, type: '__rfEvent'}],
+			legacyEvents: [{timestamp: OLD_EVENT_OFFSET+50, type: '__lEvent'}],
 			expected: {
-				type: ['__rfEvent', 'init', '__lEvent', 'complete'],
-				timestamp: [0, 0, 50, 100],
+				type: ['__rfEvent', 'init', '__lEvent', 'complete', 'complete'],
+				timestamp: [0, 0, 50, 100, 100].map(n => OLD_EVENT_OFFSET+n),
 			},
 		}, {
 			name: 'flow last',
-			events: [{timestamp: 200, type: '__rfEvent'}],
-			legacyEvents: [{timestamp: 50, type: '__lEvent'}],
+			events: [{timestamp: NEW_EVENT_OFFSET+200, type: '__rfEvent'}],
+			legacyEvents: [{timestamp: OLD_EVENT_OFFSET+50, type: '__lEvent'}],
 			expected: {
-				type: ['init', '__lEvent', 'complete', '__rfEvent'],
-				timestamp: [0, 50, 100, 100],
+				type: ['init', '__lEvent', 'complete', '__rfEvent', 'complete'],
+				timestamp: [0, 50, 100, 100, 100].map(n => OLD_EVENT_OFFSET+n),
 			},
 		}, {
 			name: 'no flow',
 			events: [],
-			legacyEvents: [{timestamp: 50, type: '__lEvent'}],
+			legacyEvents: [{timestamp: OLD_EVENT_OFFSET+50, type: '__lEvent'}],
 			expected: {
-				type: ['init', '__lEvent', 'complete'],
-				timestamp: [0, 50, 100],
+				type: ['init', '__lEvent', 'complete', 'complete'],
+				timestamp: [0, 50, 100, 100].map(n => OLD_EVENT_OFFSET+n),
 			},
 		}, {
 			name: 'no legacy',
-			events: [{timestamp: 50, type: '__rfEvent'}],
+			events: [{timestamp: NEW_EVENT_OFFSET+50, type: '__rfEvent'}],
 			legacyEvents: [],
 			expected: {
-				type: ['init', '__rfEvent', 'complete'],
-				timestamp: [0, 50,100],
+				type: ['init', '__rfEvent', 'complete', 'complete'],
+				timestamp: [0, 50, 100, 100].map(n => OLD_EVENT_OFFSET+n),
 			},
 		}].forEach(opts => it(`interleaves events: ${opts.name}`, async () => {
 			const dispatchedEvents = []
@@ -332,7 +344,7 @@ describe('Parser', () => {
 			await parser.configure()
 			parser.parseEvents({
 				events: opts.events,
-				legacyEvents: opts.legacyEvents
+				legacyEvents: opts.legacyEvents,
 			})
 
 			expect(dispatchedEvents.map(({event}) => event.type)).toEqual(opts.expected.type)

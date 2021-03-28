@@ -1,12 +1,12 @@
 /**
  * @author Yumiya
  */
-import React, {Fragment} from 'react'
-import Module from 'parser/core/Module'
-import STATUSES from 'data/STATUSES'
-import ACTIONS from 'data/ACTIONS'
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
+import ACTIONS from 'data/ACTIONS'
+import STATUSES from 'data/STATUSES'
+import Module from 'parser/core/Module'
 import {Rule, Requirement} from 'parser/core/modules/Checklist'
+import React, {Fragment} from 'react'
 
 //const DROP_TOLERANCE = 1000
 

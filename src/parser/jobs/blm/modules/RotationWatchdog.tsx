@@ -1,8 +1,5 @@
 import {t} from '@lingui/macro'
 import {Plural, Trans} from '@lingui/react'
-import React, {Fragment} from 'react'
-import {Icon, Message} from 'semantic-ui-react'
-
 import {ActionLink} from 'components/ui/DbLink'
 import {RotationTable} from 'components/ui/RotationTable'
 import {getDataBy} from 'data'
@@ -12,12 +9,13 @@ import Module, {dependency} from 'parser/core/Module'
 import Checklist from 'parser/core/modules/Checklist'
 import Combatants from 'parser/core/modules/Combatants'
 import Enemies from 'parser/core/modules/Enemies'
+import {EntityStatuses} from 'parser/core/modules/EntityStatuses'
 import {Invulnerability} from 'parser/core/modules/Invulnerability'
 import Suggestions, {SEVERITY, Suggestion, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import {Timeline} from 'parser/core/modules/Timeline'
 import UnableToAct from 'parser/core/modules/UnableToAct'
-
-import {EntityStatuses} from 'parser/core/modules/EntityStatuses'
+import React, {Fragment} from 'react'
+import {Icon, Message} from 'semantic-ui-react'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 import {FIRE_SPELLS} from './Elements'
 import {BLM_GAUGE_EVENT, BLMGaugeEvent} from './Gauge'
@@ -461,7 +459,7 @@ export default class RotationWatchdog extends Module {
 	output() {
 		const outliers: Cycle[] = this.history.filter(cycle => cycle.errorCode.priority >
 			CYCLE_ERRORS.SHORT.priority || DEBUG_SHOW_ALL_CYCLES)
-		if (outliers.length > 0 ) {
+		if (outliers.length > 0) {
 			return <Fragment>
 				<Message>
 					<Trans id="blm.rotation-watchdog.rotation-table.message">

@@ -18,7 +18,7 @@ interface ProviderState extends Context {
 	registry: ReadonlyMap<number, boolean>
 }
 
-export class SegmentPositionProvider extends React.PureComponent<{}, ProviderState> {
+export class SegmentPositionProvider extends React.PureComponent<Record<string, never>, ProviderState> {
 	readonly state: Readonly<ProviderState> = {
 		active: null,
 		register: this.register.bind(this),
@@ -28,11 +28,11 @@ export class SegmentPositionProvider extends React.PureComponent<{}, ProviderSta
 	}
 	private readonly refMap = new Map<number, { scrollIntoView(): void }>()
 
-	componentDidUpdate(_prevProps: Readonly<{}>, prevState: Readonly<ProviderState>) {
+	componentDidUpdate(_prevProps: Readonly<Record<string, never>>, prevState: Readonly<ProviderState>) {
 		const {registry} = this.state
 		if (registry !== prevState.registry) {
 			const toCheck = Array.from(registry.keys()).sort((a, b) => a - b)
-			const activeId = toCheck.find(id => registry.get(id)!)
+			const activeId = toCheck.find(id => registry.get(id))
 			const active = activeId !== undefined ? activeId : (
 				toCheck.length > 0 ? toCheck[toCheck.length - 1] : null
 			)

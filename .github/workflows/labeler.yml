@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     if: github.repository == 'xivanalysis/xivanalysis'
     steps:
-      - uses: paulfantom/periodic-labeler@3bafde5
+      - uses: paulfantom/periodic-labeler@3bafde5d1fb46a2574044baf4070471f6d6a7df9
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_REPOSITORY: ${{ github.repository }}

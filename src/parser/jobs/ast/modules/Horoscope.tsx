@@ -1,10 +1,9 @@
 import {t} from '@lingui/macro'
 import {Plural, Trans} from '@lingui/react'
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
-import {Data} from 'parser/core/modules/Data'
-import {CastEvent} from 'fflogs'
 import Module, {dependency} from 'parser/core/Module'
 import Cooldowns from 'parser/core/modules/Cooldowns'
+import {Data} from 'parser/core/modules/Data'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
 
@@ -21,12 +20,6 @@ const SEVERITIES = {
 		1: SEVERITY.MINOR,
 		5: SEVERITY.MEDIUM,
 	},
-}
-
-interface HoroscopeWindow {
-	start: number,
-	end: number | null,
-	casts: CastEvent[],
 }
 
 export default class Horoscope extends Module {
@@ -54,14 +47,14 @@ export default class Horoscope extends Module {
 		this.addEventHook('complete', this.onComplete)
 	}
 
-	private onHoroscope(event: CastEvent) {
+	private onHoroscope() {
 		this.uses++
 	}
-	private onActivate(event: CastEvent) {
+	private onActivate() {
 		this.activations++
 	}
 
-	private onHeliosCast(event: CastEvent) {
+	private onHeliosCast() {
 		if (this.cooldowns.getCooldownRemaining(this.data.actions.HOROSCOPE.id) > 0) {
 			return
 		}
@@ -70,7 +63,7 @@ export default class Horoscope extends Module {
 
 	onComplete() {
 
-		if (this.parser.patch.before('5.3')){
+		if (this.parser.patch.before('5.3')) {
 			/*
 				SUGGESTION: Didn't activate
 			*/
@@ -79,10 +72,10 @@ export default class Horoscope extends Module {
 				icon: this.data.actions.HOROSCOPE_ACTIVATION.icon,
 				content: <Trans id="ast.horoscope.suggestion.expired.content">
 					<ActionLink {...this.data.actions.HOROSCOPE} /> does not activate by itself, so don't forget to use it again or it will expire for no potency.
-			</Trans>,
+				</Trans>,
 				why: <Trans id="ast.horoscope.suggestion.expired.why">
 					<Plural value={missedActivations} one="# expiration" other="# expirations" />  of Horoscope without reading fortunes again.
-			</Trans>,
+				</Trans>,
 				tiers: SEVERITIES.ACTIVATES_MISSED,
 				value: missedActivations,
 			}))
@@ -95,13 +88,13 @@ export default class Horoscope extends Module {
 				icon: this.data.actions.HOROSCOPE.icon,
 				content: <Trans id="ast.horoscope.suggestion.usage.content">
 					Try to plan your <ActionLink {...this.data.actions.HOROSCOPE} /> usages to have it up before you need to cast <ActionLink {...this.data.actions.HELIOS} /> or <ActionLink {...this.data.actions.ASPECTED_HELIOS} />.
-				<StatusLink {...this.data.statuses.HOROSCOPE_HELIOS} /> may help to cover more damage later without needing to cast more AOE heals.
-			</Trans>,
+					<StatusLink {...this.data.statuses.HOROSCOPE_HELIOS} /> may help to cover more damage later without needing to cast more AOE heals.
+				</Trans>,
 				tiers: SEVERITIES.WASTED_AOE_HEAL_TIERS,
 				value: this.nonHoroscopeHeals,
 				why: <Trans id="ast.horoscope.suggestion.usage.why">
 					<Plural value={this.nonHoroscopeHeals} one="# AOE GCD heal was cast" other="# AOE GCD heals were cast" /> without horoscope even though it was available.
-			</Trans>,
+				</Trans>,
 			}))
 		}
 	}

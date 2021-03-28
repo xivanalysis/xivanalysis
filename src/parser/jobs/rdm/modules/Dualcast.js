@@ -1,7 +1,5 @@
 import {t} from '@lingui/macro'
 import {Trans, Plural} from '@lingui/react'
-import React, {Fragment} from 'react'
-import {Accordion} from 'semantic-ui-react'
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
 import Rotation from 'components/ui/Rotation'
 import {getDataBy} from 'data'
@@ -10,6 +8,8 @@ import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import {CAST_TYPE, CORRECT_GCDS} from 'parser/jobs/rdm/modules/DualCastEnums'
+import React, {Fragment} from 'react'
+import {Accordion} from 'semantic-ui-react'
 
 //const util = require('util')
 

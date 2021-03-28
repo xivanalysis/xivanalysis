@@ -1,5 +1,5 @@
-import {ReportMetaKey} from 'report'
 import _ from 'lodash'
+import {ReportMetaKey} from 'report'
 
 export interface Encounter {
 	ids?: Partial<Record<ReportMetaKey, string>>

@@ -25,7 +25,7 @@ making it available and discoverable throughout the rest of the parser.
  * Declaration merge target. You don't want to use this directly unless you are
  * declaring a new type of event. If you're importing this, you're doing it wrong.
  */
-// tslint:disable-next-line no-empty-interface
+// eslint-disable-next-line @typescript-eslint/no-empty-interface,import/export
 export interface EventTypeRepository {}
 
 /** Event fields with merged type discrimination field. */
@@ -155,14 +155,15 @@ interface EventHeal extends FieldsTargeted {
 
 /** Status of a single numeric resource. */
 export interface Resource {
-	maximum?: number
-	current?: number
+	maximum: number
+	current: number
 }
 
 /** Position of an actor. */
 export interface Position {
 	x: number
 	y: number
+	bearing: number
 }
 
 /** An actors parameters have been updated. */
@@ -170,17 +171,18 @@ interface EventActorUpdate extends FieldsBase {
 	/** ID of the updated actor. */
 	actor: Actor['id']
 	/** Updated HP status. */
-	hp?: Resource
+	hp?: Partial<Resource>
 	/** Updated MP status. */
-	mp?: Resource
+	mp?: Partial<Resource>
 	/** Updated position. */
-	position?: Position
+	position?: Partial<Position>
 	/** Current targetability. */
 	targetable?: boolean
 }
 
 // Merge core events into the repository.
 // No declare module, as we're in the same file as the root repository.
+// eslint-disable-next-line import/export
 export interface EventTypeRepository {
 	prepare: EventPrepare
 	action: EventAction

@@ -1,6 +1,6 @@
-import {Report, Pull, Actor} from 'report'
 import {MessageDescriptor} from '@lingui/core'
 import {Event} from 'event'
+import {Report, Pull, Actor} from 'report'
 
 export type SearchHandlerResult =
 	| {valid: false, reason?: MessageDescriptor}
@@ -27,15 +27,15 @@ export interface ReportLink {
  * exclusively by subclasses of this class and their respective component(s).
  */
 export abstract class ReportStore {
-	abstract readonly report?: Report
+	declare abstract readonly report?: Report
 
-	requestPulls(options?: FetchOptions) {}
-	requestActors(pullId: Pull['id'], options?: FetchOptions) {}
+	requestPulls(_options?: FetchOptions) { /* noop */ }
+	requestActors(_pullId: Pull['id'], _options?: FetchOptions) { /* noop */ }
 
 	abstract fetchEvents(pullId: Pull['id'], actorId: Actor['id']): Promise<Event[]>
 
 	getReportLink(
-		pullId?: Pull['id'],
-		actorId?: Actor['id'],
+		_pullId?: Pull['id'],
+		_actorId?: Actor['id'],
 	): ReportLink | undefined { return }
 }

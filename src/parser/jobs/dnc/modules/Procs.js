@@ -1,6 +1,4 @@
 import {Trans, Plural} from '@lingui/react'
-import React from 'react'
-
 import {ActionLink} from 'components/ui/DbLink'
 import {getDataBy} from 'data'
 import ACTIONS from 'data/ACTIONS'
@@ -8,6 +6,7 @@ import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import {SimpleRow, StatusItem} from 'parser/core/modules/Timeline'
+import React from 'react'
 
 const PROC_STATUSES = [
 	STATUSES.FLOURISHING_FAN_DANCE.id,

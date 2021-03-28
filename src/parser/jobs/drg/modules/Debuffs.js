@@ -1,12 +1,11 @@
 import {Trans} from '@lingui/react'
-import React from 'react'
-
 import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
-import DoTs from 'parser/core/modules/DoTs'
 import {Rule, Requirement} from 'parser/core/modules/Checklist'
+import DoTs from 'parser/core/modules/DoTs'
 import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import React from 'react'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 
 export default class Debuffs extends DoTs {
