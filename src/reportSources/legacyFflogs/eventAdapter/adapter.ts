@@ -12,7 +12,10 @@ import {TranslateAdapterStep} from './translate'
 /** Adapt an array of FFLogs APIv1 events to xiva representation. */
 export function adaptEvents(report: Report, pull: Pull, events: FflogsEvent[]): Event[] {
 	const adapter = new EventAdapter({report, pull})
+
+	// TODO: Move sort logic into adapter scope once legacy is removed
 	sortEvents(events)
+
 	return adapter.adaptEvents(events)
 }
 
