@@ -58,7 +58,6 @@
   "ast.sleeve-draw.checklist.name": "常にスリーヴドローを使ってください",
   "ast.sleeve-draw.checklist.requirement.uses.name": "使用回数：<0/>",
   "ast.sleeve-draw.title": "スリーヴドロー",
-  "blm.about.description": "このアナライザーは、あなたが知っている [~action/FIRE_IV] 詠唱回数より実際に詠唱できていない [~action/FIRE_IV] を特定することを目指しています。",
   "blm.gauge.suggestions.dropped-enochian.content": "<0/> をドロップすると、 <1/>や<2/>が失われたり、 <3/>のキャストが追加されたり、 <3/> および <4/> が利用できなくなったり、 <6/> が提供する与ダメージの15%アップを見逃したりする可能性があります。",
   "blm.gauge.suggestions.dropped-enochian.why": "落としたエノキアン回数：{droppedEno}{droppedEno, plural, other {回}}。",
   "blm.gauge.suggestions.lost-polyglot.content": "<0/>が切れたため、ポリグロットをすべて失いました。 <1/>や<2/> は最も強力なGCDなので、キャストを常に最大化しましょう。",
