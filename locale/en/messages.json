@@ -79,7 +79,7 @@
   "ast.sleeve-draw.title": "Sleeve Draw",
   "ast.synastry.suggestion.content": "Try to use <0/> if you need to cast a single-target GCD heal. The GCD heal itself is already an efficiency loss, so it's better to make it as strong as possible if Synastry is not needed soon.",
   "ast.synastry.suggestion.why": "{0, plural, one {# single-target GCD heal was cast} other {# single-target GCD heals were cast}} without synastry even though it was available.",
-  "blm.about.description": "This analyser aims to identify how you're not actually casting [~action/FIRE_IV] as much as you think you are.",
+  "blm.about.description": "This analyser aims to identify how you're not actually casting <0/> as much as you think you are.",
   "blm.gauge.suggestions.dropped-enochian.content": "Dropping <0/> may lead to lost <1/> or <2/> casts, more clipping because of additional <3/> casts, unavailability of <4/> and <5/> or straight up missing out on the 15% damage bonus that <6/> provides.",
   "blm.gauge.suggestions.dropped-enochian.why": "{droppedEno} dropped Enochian {droppedEno, plural, one {buff} other {buffs}}.",
   "blm.gauge.suggestions.lost-polyglot.content": "You lost Polyglot due to dropped <0/>. <1/> and <2/> are your strongest GCDs, so always maximize their casts.",
