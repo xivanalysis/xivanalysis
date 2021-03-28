@@ -51,17 +51,21 @@ export class PrepullStatusAdapterStep extends AdapterStep {
 	}
 
 	private observeAction(actionId: number, sourceId: Actor['id']) {
-		if (!this.observedActions.has(sourceId)) {
-			this.observedActions.set(sourceId, new Set())
+		let actions = this.observedActions.get(sourceId)
+		if (actions == null) {
+			actions = new Set()
+			this.observedActions.set(sourceId, actions)
 		}
-		this.observedActions.get(sourceId)?.add(actionId)
+		actions.add(actionId)
 	}
 
 	private observeStatus(statusId: number, targetId: Actor['id']) {
-		if (!this.observedStatuses.has(targetId)) {
-			this.observedStatuses.set(targetId, new Set())
+		let statuses = this.observedStatuses.get(targetId)
+		if (statuses == null) {
+			statuses = new Set()
+			this.observedStatuses.set(targetId, statuses)
 		}
-		this.observedStatuses.get(targetId)?.add(statusId)
+		statuses.add(statusId)
 	}
 
 	private synthesizeActionIfNew(event: StatusEvent, status: Status) {
