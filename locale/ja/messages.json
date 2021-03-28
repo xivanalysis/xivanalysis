@@ -383,6 +383,7 @@
   "pld.oath.checklist.swordoath.description": "ナイトにとって<0/>は主要なダメージ源であり、最大ダメージを出すためには可能な限り使用する必要があります。",
   "pld.requiescat.checklist.swordoath.requirement.uptime": "アクティブ率: <0/>",
   "pld.requiescat.title": "レクイエスカットの使用状況",
+  "rdm.about.description": "<0>このアナライザーはあなたの数字を<1>この色</1>から<2>この色</2>へ変えるお手伝いを目的としたものです。</0><3>赤魔道士についてもっと知りたい時は<4>The Balance</4>を読んでから、<5>#rdm_questions</5>チャンネルでお話しましょう。</3>",
   "rdm.about.description.warning": "開幕、<0/>、<1/>、と<2/>の上位使用方法やルールのサポートはまだ対応していません。 ",
   "rdm.combos.suggestions.derpcombos.content": "コンボアクションは必ずルートの順番に従って使ってください。",
   "rdm.dualcast.suggestions.wasted.content": "<0/>が付与されたときは、<1/>や<2/>や<3/>のみをキャストしましょう",
