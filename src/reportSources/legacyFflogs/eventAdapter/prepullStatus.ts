@@ -86,7 +86,7 @@ export class PrepullStatusAdapterStep extends AdapterStep {
 		const action = actions[0]
 		const observedActions = this.observedActions.get(event.source)
 
-		if (observedActions?.has(action.id)) {
+		if (observedActions?.has(action.id) ?? false) {
 			// We've already seen an action that applies this status, skip
 			return
 		}
