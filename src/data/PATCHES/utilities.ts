@@ -1,6 +1,6 @@
 import _ from 'lodash'
 import {Report} from 'report'
-import {GameEdition} from './editions'
+import {GameEdition} from '../EDITIONS'
 import {FALLBACK_KEY, PATCHES, PatchInfo, PatchNumber} from './patches'
 
 interface PatchData {[key: string]: PatchInfo}

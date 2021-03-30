@@ -1,6 +1,6 @@
+import {languageToEdition} from 'data/EDITIONS'
 import {getEncounterKey} from 'data/ENCOUNTERS'
 import JOBS, {JobKey} from 'data/JOBS'
-import {languageToEdition} from 'data/PATCHES'
 import {ActorType, Actor as FflogsActor, Fight, ActorFightInstance} from 'fflogs'
 import {toJS} from 'mobx'
 import {Actor, Pull, Report, Team} from 'report'

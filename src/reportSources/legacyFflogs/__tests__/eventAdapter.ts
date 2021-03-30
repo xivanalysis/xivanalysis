@@ -1,4 +1,4 @@
-import {GameEdition} from 'data/PATCHES'
+import {GameEdition} from 'data/EDITIONS'
 import {Events} from 'event'
 import {FflogsEvent, HitType, ReportLanguage} from 'fflogs'
 import {Pull, Report} from 'report'

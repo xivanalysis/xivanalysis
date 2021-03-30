@@ -1,6 +1,6 @@
+import {GameEdition} from 'data/EDITIONS'
 import {EncounterKey} from 'data/ENCOUNTERS'
 import {JobKey} from 'data/JOBS'
-import {GameEdition} from 'data/PATCHES'
 import {Compute} from 'utilities'
 
 /** Declaration merge target for report meta types. */

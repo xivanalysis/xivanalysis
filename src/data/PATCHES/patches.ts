@@ -1,4 +1,4 @@
-import {GameEdition} from './editions'
+import {GameEdition} from '../EDITIONS'
 
 // Using global as a source of truth on the order of patch keys
 type PatchDates =
