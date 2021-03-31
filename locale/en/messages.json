@@ -535,7 +535,6 @@
   "mch.wildfire.suggestions.fizzle.why": "{fizzledWildfires} of your Wildfire windows resolved for 0 damage.",
   "mch.wildfire.title": "Wildfire",
   "mch.wildfire.trigger.no-buff-wf": "<0/> damage was recorded without a corresponding <1/> debuff.",
-  "meta.easter-eggs.april-fools": "You look like you're trying to play FFXIV? Would you like some help?",
   "mnk.about.description": "<0>Hello friendly monk! Do you not Crit the Boot? Does your Six-Sided Star dream remain a meme?</0><1>This monk analyser aims to help you realise your true potential as a monk by highlighting issues that can be difficult to spot in a raw log. The main focus is on your buff windows, buff uptime, and ensuring your cooldowns are used while providing tips on utility skill usage.</1><2>If you notice anything that looks wrong or have a feature idea, please visit our Discord server and report it in the #fb-monk channel.</2>",
   "mnk.demolish.checklist.description": "<0/> is your strongest finisher (assuming at least 3 DoT ticks hit).",
   "mnk.demolish.checklist.name": "Keep Demolish up",
