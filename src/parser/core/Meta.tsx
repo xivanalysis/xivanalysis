@@ -1,4 +1,3 @@
-import {Trans} from '@lingui/macro'
 import {Contributor, Role} from 'data/CONTRIBUTORS'
 import {PatchNumber} from 'data/PATCHES'
 import _ from 'lodash'
