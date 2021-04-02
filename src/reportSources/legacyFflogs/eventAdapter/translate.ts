@@ -1,9 +1,9 @@
 import * as Sentry from '@sentry/browser'
 import {STATUS_ID_OFFSET} from 'data/STATUSES'
 import {Event, Events, Cause, SourceModifier, TargetModifier} from 'event'
-import {ActorResources, BuffEvent, BuffStackEvent, CastEvent, DamageEvent, DeathEvent, EventActor, FflogsEvent, HealEvent, HitType, TargetabilityUpdateEvent} from 'fflogs'
+import {ActorResources, BuffEvent, BuffStackEvent, CastEvent, DamageEvent, DeathEvent, FflogsEvent, HealEvent, HitType, TargetabilityUpdateEvent} from 'fflogs'
 import {Actor} from 'report'
-import {AdapterStep} from './base'
+import {AdapterStep, resolveActorId} from './base'
 
 /*
 NOTES:
@@ -284,14 +284,6 @@ const resolveActorIds = (event: FflogsEvent) => ({
 		actor: event.target,
 	}),
 })
-
-const resolveActorId = (opts: {id?: number, instance?: number, actor?: EventActor}): Actor['id'] => {
-	const id = (opts.id ?? opts.actor?.id ?? -1).toString()
-	const instance = opts.instance ?? 1
-	return instance > 1
-		? `${id}:${instance}`
-		: id
-}
 
 const resolveCause = (fflogsAbilityId: number): Cause =>
 	fflogsAbilityId < STATUS_ID_OFFSET

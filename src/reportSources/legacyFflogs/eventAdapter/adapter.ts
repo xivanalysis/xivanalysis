@@ -5,6 +5,7 @@ import {AdapterOptions, AdapterStep} from './base'
 import {DeduplicateActorUpdateStep} from './deduplicateActorUpdates'
 import {DeduplicateStatusApplicationStep} from './deduplicateStatus'
 import {PrepullActionAdapterStep} from './prepullAction'
+import {ReassignUnknownActorStep} from './reassignUnknownActor'
 import {TranslateAdapterStep} from './translate'
 
 /** Adapt an array of FFLogs APIv1 events to xiva representation. */
@@ -18,6 +19,7 @@ class EventAdapter {
 
 	constructor(opts: AdapterOptions) {
 		this.adaptionSteps = [
+			new ReassignUnknownActorStep(opts),
 			new TranslateAdapterStep(opts),
 			new DeduplicateStatusApplicationStep(opts),
 			new DeduplicateActorUpdateStep(opts),

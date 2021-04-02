@@ -1,6 +1,19 @@
 import {Event} from 'event'
-import {FflogsEvent} from 'fflogs'
-import {Pull, Report} from 'report'
+import {EventActor, FflogsEvent} from 'fflogs'
+import {Actor, Pull, Report} from 'report'
+
+export function resolveActorId(opts: {
+	id?: number,
+	instance?: number,
+	actor?: EventActor
+}): Actor['id'] {
+	const idNum = (opts.id ?? opts.actor?.id ?? -1)
+	const id = idNum === -1 ? 'unknown' : idNum.toString()
+	const instance = opts.instance ?? 1
+	return instance > 1
+		? `${id}:${instance}`
+		: id
+}
 
 // This stuff will probably be moved to a shared location for other sources to use
 

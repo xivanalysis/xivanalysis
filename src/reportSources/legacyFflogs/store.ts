@@ -1,4 +1,5 @@
 import {getFflogsEvents} from 'api'
+import _ from 'lodash'
 import {computed, toJS} from 'mobx'
 import {Pull, Actor} from 'report'
 import {reportStore as legacyReportStore} from 'store/report'
@@ -63,7 +64,11 @@ export class LegacyFflogsReportStore extends ReportStore {
 			{/* actorid: parseInt(actorId, 10) */},
 			true,
 		)
-		return adaptEvents(report, pull, legacyEvents)
+
+		// We're cloning the events going into the adapter, such that any mutations from it do not effect the
+		// legacy event parser run.
+		// TODO: Remove this cloning when we're migrated fully onto the report source for events.
+		return adaptEvents(report, pull, _.cloneDeep(legacyEvents))
 	}
 
 	getReportLink(pullId?: Pull['id'], actorId?: Actor['id']) {
