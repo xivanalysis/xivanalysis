@@ -7,17 +7,17 @@ WeakMap<
 		Property being used for lookup,
 		Map<
 			Value for provided property,
-			DATA entry
+			DATA entries
 		>
 	>
 >
 */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const cache = new WeakMap<object, Map<any, Map<any, any>>>()
+const cache = new WeakMap<object, Map<any, Map<any, any[]>>>()
 
 type FlattenArray<T> = T extends Array<infer I> ? I : T
 
-export function getDataBy<
+export function getDataArrayBy<
 	Data extends Record<string, object>,
 	Value extends Data[keyof Data],
 	Key extends keyof Value,
@@ -25,7 +25,7 @@ export function getDataBy<
 	data: Data,
 	by: Key,
 	value: FlattenArray<Value[Key]>,
-): Value | undefined {
+): Value[] | undefined {
 	// Sanity check in case someone is using this from JS and misspelled a key
 	const dataKeys = Object.keys(data)
 	const testEntry = data[dataKeys[0]]
@@ -51,13 +51,32 @@ export function getDataBy<
 
 			// Keys can be arrays (see STATUSES), handle it
 			const newKeys = ensureArray(val[by])
-			newKeys.forEach(key => map.set(key, val))
-
+			newKeys.forEach(key => {
+				let values = map.get(key)
+				if (values == null) {
+					values = []
+					map.set(key, values)
+				}
+				values.push(val)
+			})
 			return map
-		}, new Map<Value[Key], Value>())
+		}, new Map<Value[Key], Value[]>())
 
 		dataCache.set(by, lookup)
 	}
 
 	return lookup.get(value)
+}
+
+export function getDataBy<
+	Data extends Record<string, object>,
+	Value extends Data[keyof Data],
+	Key extends keyof Value,
+>(
+	data: Data,
+	by: Key,
+	value: FlattenArray<Value[Key]>,
+): Value | undefined {
+	const entries = getDataArrayBy(data, by, value)
+	return entries ? entries[0] : undefined
 }
