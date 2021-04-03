@@ -1,6 +1,8 @@
 import {getDataBy, getDataArrayBy} from 'data'
-import ACTIONS from 'data/ACTIONS'
-import STATUSES, {Status, StatusKey} from 'data/STATUSES'
+import {layers as actionLayers, root as actionRoot} from 'data/ACTIONS'
+import {getAppliedData, Layer} from 'data/layer'
+import {Patch} from 'data/PATCHES'
+import {layers as statusLayers, root as statusRoot, Status, StatusKey} from 'data/STATUSES'
 import {Event, Events} from 'event'
 import _ from 'lodash'
 import {Actor} from 'report'
@@ -24,7 +26,7 @@ export class PrepullStatusAdapterStep extends AdapterStep {
 				continue
 			}
 
-			const status = getDataBy(STATUSES, 'id', event.status)
+			const status = getDataBy(this.getStatuses(), 'id', event.status)
 			if (!status) {
 				// No data for this status, skip to next event
 				continue
@@ -70,13 +72,13 @@ export class PrepullStatusAdapterStep extends AdapterStep {
 	}
 
 	private synthesizeActionIfNew(event: StatusEvent, status: Status) {
-		const statusKey = _.findKey(STATUSES, status) as StatusKey | undefined
+		const statusKey = _.findKey(this.getStatuses(), status) as StatusKey | undefined
 		if (!statusKey) {
 			// This shouldn't be possible, but let's be safe and bail if there's no key
 			return
 		}
 
-		const actions = getDataArrayBy(ACTIONS, 'statusesApplied', statusKey)
+		const actions = getDataArrayBy(this.getActions(), 'statusesApplied', statusKey)
 		if (!actions || actions.length > 1) {
 			// No action is known to apply this status OR
 			// multiple actions can apply this status, not enough info to synth
@@ -110,5 +112,19 @@ export class PrepullStatusAdapterStep extends AdapterStep {
 		}
 
 		this.precastEvents.push(applyEvent)
+	}
+
+	// TODO: If these are needed in >1 adapter, lift to a generalised location
+	private patch = new Patch(this.report.edition, this.report.timestamp / 1000)
+
+	private getActions = () => this.getAppliedData(actionRoot, actionLayers)
+	private getStatuses = () => this.getAppliedData(statusRoot, statusLayers)
+
+	private getAppliedData<R extends object>(root: R, layers: Array<Layer<R>>) {
+		return getAppliedData({
+			root,
+			layers,
+			state: {patch: this.patch},
+		})
 	}
 }
