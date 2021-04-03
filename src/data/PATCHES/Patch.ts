@@ -1,4 +1,5 @@
-import {GameEdition, getPatch, getPatchDate, PatchNumber} from 'data/PATCHES'
+import {GameEdition} from 'data/EDITIONS'
+import {getPatch, getPatchDate, PatchNumber} from 'data/PATCHES'
 import {matchClosestLower} from 'utilities'
 
 export class Patch {

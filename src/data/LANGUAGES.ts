@@ -1,5 +1,5 @@
 import {StrictDropdownItemProps} from 'semantic-ui-react'
-import {GameEdition} from './PATCHES'
+import {GameEdition} from './EDITIONS'
 
 interface LanguageData {
 	enable: boolean
