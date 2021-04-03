@@ -20,7 +20,7 @@ Array [
     "source": "7",
     "status": 1001238,
     "target": "7",
-    "timestamp": -2,
+    "timestamp": -3,
     "type": "action",
   },
   Object {
@@ -41,7 +41,7 @@ Array [
     "source": "6",
     "status": 1000638,
     "target": "11",
-    "timestamp": -2,
+    "timestamp": -3,
     "type": "action",
   },
   Object {
@@ -319,14 +319,14 @@ Array [
     "source": "1",
     "status": 1001902,
     "target": "1",
-    "timestamp": -2,
+    "timestamp": -3,
     "type": "action",
   },
   Object {
     "source": "1",
     "status": 1001902,
     "target": "1",
-    "timestamp": -1,
+    "timestamp": -2,
     "type": "statusApply",
   },
   Object {
@@ -347,7 +347,7 @@ Array [
     "source": "7",
     "status": 1001238,
     "target": "7",
-    "timestamp": -2,
+    "timestamp": -3,
     "type": "action",
   },
   Object {
@@ -368,14 +368,14 @@ Array [
     "source": "9",
     "status": 1001221,
     "target": "2",
-    "timestamp": -2,
+    "timestamp": -3,
     "type": "action",
   },
   Object {
     "source": "9",
     "status": 1001221,
     "target": "2",
-    "timestamp": -1,
+    "timestamp": -2,
     "type": "statusApply",
   },
   Object {

@@ -1,5 +1,5 @@
 import {Event, Events} from 'event'
-import {AdapterStep} from './base'
+import {AdapterStep, PREPULL_OFFSETS} from './base'
 
 export class PrepullActionAdapterStep extends AdapterStep {
 	postprocess(adaptedEvents: Event[]): Event[] {
@@ -24,7 +24,7 @@ export class PrepullActionAdapterStep extends AdapterStep {
 		return {
 			...event,
 			type: 'action',
-			timestamp: this.pull.timestamp - 1,
+			timestamp: this.pull.timestamp + PREPULL_OFFSETS.PULL_ACTION,
 		}
 	}
 }

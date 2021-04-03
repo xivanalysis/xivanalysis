@@ -4,7 +4,7 @@ import STATUSES, {Status, StatusKey} from 'data/STATUSES'
 import {Event, Events} from 'event'
 import _ from 'lodash'
 import {Actor} from 'report'
-import {AdapterStep} from './base'
+import {AdapterStep, PREPULL_OFFSETS} from './base'
 
 type StatusEvent = Events['statusApply'] | Events['statusRemove']
 
@@ -95,7 +95,7 @@ export class PrepullStatusAdapterStep extends AdapterStep {
 			...event,
 			type: 'action',
 			action: action.id,
-			timestamp: this.pull.timestamp - 2,
+			timestamp: this.pull.timestamp + PREPULL_OFFSETS.STATUS_ACTION,
 		}
 
 		this.precastEvents.push(actionEvent)
@@ -106,7 +106,7 @@ export class PrepullStatusAdapterStep extends AdapterStep {
 		const applyEvent: Events['statusApply'] = {
 			...event,
 			type: 'statusApply',
-			timestamp: this.pull.timestamp - 1,
+			timestamp: this.pull.timestamp + PREPULL_OFFSETS.STATUS_APPLY,
 		}
 
 		this.precastEvents.push(applyEvent)
