@@ -16,6 +16,8 @@
 		"jsx": "preserve",
 		"experimentalDecorators": true,
 
+		"noErrorTruncation": true,
+
 		"types": [
 			"webpack-env",
 			"jest"

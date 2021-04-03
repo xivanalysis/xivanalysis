@@ -1,5 +1,5 @@
+import {GameEdition} from 'data/EDITIONS'
 import {Language, LANGUAGES} from 'data/LANGUAGES'
-import {GameEdition} from 'data/PATCHES'
 import {action, observable} from 'mobx'
 import {getUserLanguage} from 'utilities'
 

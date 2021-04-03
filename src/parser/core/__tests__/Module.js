@@ -1,4 +1,4 @@
-import {GameEdition} from 'data/PATCHES'
+import {GameEdition} from 'data/EDITIONS'
 import {Team} from 'report'
 import {LegacyDispatcher} from '../LegacyDispatcher'
 import {Meta} from '../Meta'

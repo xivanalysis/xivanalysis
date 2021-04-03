@@ -1,8 +1,29 @@
-import {GameEdition} from 'data/PATCHES'
+import {GameEdition} from 'data/EDITIONS'
 import {Events} from 'event'
 import {FflogsEvent, HitType, ReportLanguage} from 'fflogs'
-import {Pull, Report} from 'report'
+import {Actor, Pull, Report, Team} from 'report'
 import {adaptEvents} from '../eventAdapter'
+import {AdapterStep} from '../eventAdapter/base'
+import {ReassignUnknownActorStep} from '../eventAdapter/reassignUnknownActor'
+
+// "Mock" the reassign unknown actor step with its real implementation. We use this mock handling later
+// to disable the step on a test-by-test basis.
+// TODO: If we need to do this >1 times, work out a cleaner way of doing this.
+jest.mock('../eventAdapter/reassignUnknownActor')
+type ReassignUnknownActorStepParams = ConstructorParameters<typeof ReassignUnknownActorStep>
+const MockReassignUnknownActorStep = ReassignUnknownActorStep as jest.Mock<ReassignUnknownActorStep>
+MockReassignUnknownActorStep.mockImplementation((...args: ReassignUnknownActorStepParams) => {
+	const {ReassignUnknownActorStep} = jest.requireActual('../eventAdapter/reassignUnknownActor')
+	return new ReassignUnknownActorStep(...args)
+})
+
+const actor: Actor = {
+	id: '1',
+	name: 'Test Actor',
+	team: Team.FRIEND,
+	playerControlled: true,
+	job: 'UNKNOWN',
+}
 
 const pull: Pull = {
 	id: '1',
@@ -15,7 +36,7 @@ const pull: Pull = {
 			name: 'test duty',
 		},
 	},
-	actors: [],
+	actors: [actor],
 }
 
 const report: Report = {
@@ -508,6 +529,15 @@ const fakeEvents: Record<FflogsEvent['type'], FflogsEvent> = {
 
 describe('Event adapter', () => {
 	describe('individual events', () => {
+		// Noop the reassign unknown actor step - the test data for individual events is intentionally
+		// pulled directly out of real logcs, and as such will always be misaligned from the test report.
+		class NoopStep extends AdapterStep {}
+		beforeEach(() => {
+			MockReassignUnknownActorStep.mockImplementationOnce((...args: ReassignUnknownActorStepParams) => {
+				return new NoopStep(...args) as ReassignUnknownActorStep
+			})
+		})
+
 		Object.keys(fakeEvents).forEach(eventType => it(`adapts ${eventType}`, () => {
 			const event = fakeEvents[eventType as keyof typeof fakeEvents]
 			expect(adaptEvents(report, pull, [event])).toMatchSnapshot()
