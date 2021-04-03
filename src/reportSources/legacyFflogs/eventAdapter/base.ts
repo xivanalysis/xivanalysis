@@ -15,6 +15,12 @@ export function resolveActorId(opts: {
 		: id
 }
 
+export const PREPULL_OFFSETS = {
+	STATUS_ACTION: -3,
+	STATUS_APPLY: -2,
+	PULL_ACTION: -1,
+}
+
 // This stuff will probably be moved to a shared location for other sources to use
 
 export interface AdapterOptions {

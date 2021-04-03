@@ -66,6 +66,7 @@ export const SMN = ensureActions({
 		name: 'Tri-disaster',
 		icon: 'https://xivapi.com/i/002000/002683.png',
 		cooldown: 50,
+		statusesApplied: ['BIO_III', 'MIASMA_III'],
 	},
 
 	DREADWYRM_TRANCE: {

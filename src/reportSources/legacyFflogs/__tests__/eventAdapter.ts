@@ -544,6 +544,22 @@ describe('Event adapter', () => {
 		}))
 	})
 
+	it('sorts events with identical timestamps', () => {
+		const result = adaptEvents(report, pull, [
+			{...fakeEvents.applybuff, timestamp: 1},
+			{...fakeEvents.cast, timestamp: 1},
+			{...fakeEvents.begincast, timestamp: 1},
+			{...fakeEvents.death, timestamp: 1},
+		])
+
+		expect(result.map(event => event.type)).toEqual([
+			'actorUpdate',
+			'prepare',
+			'action',
+			'statusApply',
+		])
+	})
+
 	it('synthesizes prepull actions', () => {
 		// simulating a begincast before the event that should trip the prepull, to ensure
 		// prepull is added before _all_ events, not just the start of the adapted base.
@@ -557,6 +573,49 @@ describe('Event adapter', () => {
 			'snapshot', // calculateddamage
 			'actorUpdate',
 			'actorUpdate',
+		])
+	})
+
+	it('synthesizes prepull status-applying actions', () => {
+		// simulating a begincast before the event that should trip the prepull, to ensure
+		// prepull is added before _all_ events, not just the start of the adapted base.
+		const result = adaptEvents(report, pull, [
+			{...fakeEvents.begincast, timestamp: 1},
+			{
+				timestamp: 2,
+				type: 'applybuff',
+				sourceID: 11,
+				sourceInstance: 2,
+				sourceIsFriendly: true,
+				targetID: 4,
+				targetIsFriendly: true,
+				ability: {
+					name: 'Raging Strikes',
+					guid: 1000125,
+					type: 8,
+					abilityIcon: '012000-012848.png',
+				},
+			},
+		])
+		expect(result.map(event => event.type)).toEqual([
+			'action', // prepull synth
+			'prepare', // begincast
+			'statusApply', // applybuff
+		])
+	})
+
+	it('synthesizes prepull status applications', () => {
+		// simulating a begincast before the event that should trip the prepull, to ensure
+		// prepull is added before _all_ events, not just the start of the adapted base.
+		const result = adaptEvents(report, pull, [
+			fakeEvents.begincast,
+			fakeEvents.removebuff,
+		])
+		expect(result.map(event => event.type)).toEqual([
+			'action', // prepull synth
+			'statusApply', // prepull synth
+			'prepare', // begincast
+			'statusRemove', // removebuff
 		])
 	})
 
