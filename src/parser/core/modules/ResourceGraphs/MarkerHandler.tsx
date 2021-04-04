@@ -11,10 +11,13 @@ export interface MarkerHandlerProps {
 	getResources: (fightPercent: number) => ResourceInfo[]
 }
 
-interface MarkerState {
+interface MarkerPositionData {
 	cursorLeft: number
 	itemTop: number
 	itemLeft: number
+}
+
+interface MarkerState extends MarkerPositionData {
 	resources: ResourceInfo[]
 }
 
@@ -45,27 +48,43 @@ export function MarkerHandler({getResources}: MarkerHandlerProps) {
 			onMouseMove={onMouseMove}
 			onMouseLeave={onMouseLeave}
 		>
-			<div
-				className={styles.markerLine}
-				style={{
-					left: markerState && (markerState.cursorLeft - markerState.itemLeft), // todo: yuck
-					opacity: markerState == null ? 0 : 1,
-				}}
-			/>
-			{createPortal(
-				<ul
-					className={styles.markerTooltip}
-					style={{
-						top: markerState?.itemTop,
-						left: markerState?.cursorLeft,
-					}}
-				>
-					{markerState?.resources.map((resource, index) => (
-						<li key={index}>{resource.label}: {resource.value}</li>
-					))}
-				</ul>,
-				document.body,
+			{markerState != null && (
+				<Marker {...markerState}>
+					<ul className={styles.resourceList}>
+						{markerState.resources.map((resource, index) => (
+							<li key={index}>{resource.label}: {resource.value}</li>
+						))}
+					</ul>
+				</Marker>
 			)}
 		</div>
 	)
 }
+
+interface MarkerProps extends MarkerPositionData {
+	children?: ReactNode
+}
+
+const Marker = ({
+	children,
+	cursorLeft,
+	itemTop,
+	itemLeft,
+}: MarkerProps) => <>
+	<div
+		className={styles.markerLine}
+		style={{left: cursorLeft - itemLeft}}
+	/>
+	{createPortal(
+		<div
+			className={styles.markerTooltip}
+			style={{
+				top: itemTop,
+				left: cursorLeft,
+			}}
+		>
+			{children}
+		</div>,
+		document.body,
+	)}
+</>

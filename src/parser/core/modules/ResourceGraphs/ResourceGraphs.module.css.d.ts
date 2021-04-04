@@ -7,6 +7,7 @@ declare namespace ResourceGraphsModuleCssNamespace {
     markerLine: string;
     markerPointerSize: string;
     markerTooltip: string;
+    resourceList: string;
     themeBackground: string;
   }
 }

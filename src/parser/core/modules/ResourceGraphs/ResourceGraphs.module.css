@@ -22,13 +22,11 @@
 
 .markerTooltip {
 	position: fixed;
-	margin: 0;
 	border: 1px solid black;
 	padding: 5px;
 	transform: translate(-50%, calc(-100% - markerPointerSize));
 	background: themeBackground;
-	background-clip: padding-box;
-	list-style: none;
+	white-space: nowrap;
 }
 
 .markerTooltip::after {
@@ -40,4 +38,10 @@
 	border-top-color: black;
 	border-bottom-width: 0;
 	transform: translateX(-50%);
+}
+
+.resourceList {
+	margin: 0;
+	padding: 0;
+	list-style: none;
 }
