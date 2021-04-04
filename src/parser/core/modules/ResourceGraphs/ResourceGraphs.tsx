@@ -62,20 +62,6 @@ export class ResourceGraphs extends Analyser {
 	addResource(resource: ResourceData) {
 		this.resources.push(resource)
 
-		// Find the maximum value in the data and use it to build the Y axis scale
-		const max = _.maxBy(resource.data, x => x.maximum)
-		const scaleY = scaleLinear()
-			.domain([0, max?.maximum ?? 1])
-			.range([1, 0])
-
-		// Set up the D3 area builder with the scales
-		const buildArea = area<ResourceDatum>()
-			// TODO: Should this be configurable?
-			.curve(curveStepAfter)
-			.x(datum => this.scaleX(datum.time) ?? NaN)
-			.y0(scaleY(0) ?? 0)
-			.y1(datum => scaleY(datum.current) ?? 0)
-
 		// Ensure there's a data point for the end of the fight to prevent an early drop off
 		let data = resource.data
 
@@ -86,17 +72,54 @@ export class ResourceGraphs extends Analyser {
 			data = [...data, {...lastDatum, time: domainEnd}]
 		}
 
-		// Build the final graph SVG
+		// Find the maximum value in the data and use it to build the Y axis scale
+		const maximumY = _.maxBy(resource.data, x => x.maximum)?.maximum ?? 1
+		const scaleY = scaleLinear()
+			.domain([0, maximumY ?? 1])
+			.range([1, 0])
+
+		// Build the area path for the current value
+		const currentArea = area<ResourceDatum>()
+			// TODO: Should this be configurable?
+			.curve(curveStepAfter)
+			.x(datum => this.scaleX(datum.time) ?? NaN)
+			.y0(scaleY(0) ?? 0)
+			.y1(datum => scaleY(datum.current) ?? 0)
+
+		const currentPath = (
+			<path
+				fill={resource.colour.toString()}
+				d={currentArea(data) ?? undefined}
+			/>
+		)
+
+		// If the maximum value varies, build an area path for it
+		let maximumPath: ReactNode
+		const minimumMaximum = _.minBy(resource.data, x => x.maximum)?.maximum
+		if (minimumMaximum !== maximumY) {
+			const maximumArea = area<ResourceDatum>()
+				.curve(curveStepAfter)
+				.x(datum => this.scaleX(datum.time) ?? NaN)
+				.y0(datum => scaleY(datum.maximum) ?? 0)
+				.y1(scaleY(maximumY) ?? 0)
+
+			maximumPath = (
+				<path
+					fill="red" // TODO
+					d={maximumArea(data) ?? undefined}
+				/>
+			)
+		}
+
+		// Compose the final graph SVG
 		const content = (
 			<svg
 				viewBox="0 0 1 1"
 				preserveAspectRatio="none"
 				className={styles.graph}
 			>
-				<path
-					fill={resource.colour.toString()}
-					d={buildArea(data) ?? undefined}
-				/>
+				{currentPath}
+				{maximumPath}
 			</svg>
 		)
 
