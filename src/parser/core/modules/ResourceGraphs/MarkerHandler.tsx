@@ -57,7 +57,7 @@ export function MarkerHandler({getResources}: MarkerHandlerProps) {
 									className={styles.resourceSwatch}
 									style={{background: resource.colour.toString()}}
 								/>
-								{resource.label}: {resource.value ?? 'Unknown'}
+								{resource.label}: {resource.current ?? 'Unknown'} / {resource.maximum ?? 'Unknown'}
 							</li>
 						))}
 					</ul>

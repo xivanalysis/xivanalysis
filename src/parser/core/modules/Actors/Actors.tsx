@@ -56,11 +56,19 @@ export class Actors extends Analyser {
 		const mp: ResourceDatum[] = []
 
 		for (const event of this.current.history) {
-			if (event.hp?.current != null) {
-				hp.push({time: event.timestamp, value: event.hp.current})
+			if (event.hp != null) {
+				hp.push({
+					...hp[hp.length - 1],
+					...event.hp,
+					time: event.timestamp,
+				})
 			}
-			if (event.mp?.current != null) {
-				mp.push({time: event.timestamp, value: event.mp.current})
+			if (event.mp != null) {
+				mp.push({
+					...mp[mp.length - 1],
+					...event.mp,
+					time: event.timestamp,
+				})
 			}
 		}
 

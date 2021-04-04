@@ -2,6 +2,7 @@ import {Trans} from '@lingui/react'
 import Color from 'color'
 import {scaleLinear, ScaleTime, scaleUtc} from 'd3-scale'
 import {area, curveStepAfter} from 'd3-shape'
+import {Resource} from 'event'
 import _ from 'lodash'
 import {Analyser, AnalyserOptions} from 'parser/core/Analyser'
 import {dependency} from 'parser/core/Injectable'
@@ -15,12 +16,11 @@ export interface ResourceMeta {
 	colour: string | Color
 }
 
-export interface ResourceDatum {
+export interface ResourceDatum extends Resource {
 	time: number
-	value: number
 }
 
-export interface Resource extends ResourceMeta {
+export interface ResourceData extends ResourceMeta {
 	data: ResourceDatum[]
 }
 
@@ -29,7 +29,7 @@ export class ResourceGraphs extends Analyser {
 
 	@dependency private timeline!: Timeline
 
-	private resources: Resource[] = []
+	private resources: ResourceData[] = []
 	private parentRow: SimpleRow
 	private scaleX: ScaleTime<number, number>
 
@@ -59,13 +59,13 @@ export class ResourceGraphs extends Analyser {
 			.range([0, 1])
 	}
 
-	addResource(resource: Resource) {
+	addResource(resource: ResourceData) {
 		this.resources.push(resource)
 
 		// Find the maximum value in the data and use it to build the Y axis scale
-		const max = _.maxBy(resource.data, x => x.value)
+		const max = _.maxBy(resource.data, x => x.maximum)
 		const scaleY = scaleLinear()
-			.domain([0, max?.value ?? 1])
+			.domain([0, max?.maximum ?? 1])
 			.range([1, 0])
 
 		// Set up the D3 area builder with the scales
@@ -74,7 +74,7 @@ export class ResourceGraphs extends Analyser {
 			.curve(curveStepAfter)
 			.x(datum => this.scaleX(datum.time) ?? NaN)
 			.y0(scaleY(0) ?? 0)
-			.y1(datum => scaleY(datum.value) ?? 0)
+			.y1(datum => scaleY(datum.current) ?? 0)
 
 		// Ensure there's a data point for the end of the fight to prevent an early drop off
 		let data = resource.data
@@ -121,7 +121,7 @@ export class ResourceGraphs extends Analyser {
 		const resources = this.resources.map(resource => ({
 			label: resource.label,
 			colour: resource.colour,
-			value: _.findLast(resource.data, datum => datum.time <= timestamp)?.value,
+			..._.findLast(resource.data, datum => datum.time <= timestamp),
 		}))
 
 		return resources

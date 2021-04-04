@@ -1,2 +1,2 @@
 export {ResourceGraphs} from './ResourceGraphs'
-export type {Resource, ResourceDatum} from './ResourceGraphs'
+export type {ResourceData, ResourceDatum} from './ResourceGraphs'
