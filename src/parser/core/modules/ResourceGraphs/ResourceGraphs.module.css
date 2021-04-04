@@ -27,6 +27,7 @@
 	transform: translate(-50%, calc(-100% - markerPointerSize));
 	background: themeBackground;
 	white-space: nowrap;
+	pointer-events: none;
 }
 
 .markerTooltip::after {

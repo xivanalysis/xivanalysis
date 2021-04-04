@@ -62,11 +62,13 @@ export class ResourceGraphs extends Analyser {
 	addResource(resource: Resource) {
 		this.resources.push(resource)
 
+		// Find the maximum value in the data and use it to build the Y axis scale
 		const max = _.maxBy(resource.data, x => x.value)
 		const scaleY = scaleLinear()
 			.domain([0, max?.value ?? 1])
 			.range([1, 0])
 
+		// Set up the D3 area builder with the scales
 		const buildArea = area<ResourceDatum>()
 			// TODO: Should this be configurable?
 			.curve(curveStepAfter)
@@ -74,6 +76,17 @@ export class ResourceGraphs extends Analyser {
 			.y0(scaleY(0) ?? 0)
 			.y1(datum => scaleY(datum.value) ?? 0)
 
+		// Ensure there's a data point for the end of the fight to prevent an early drop off
+		let data = resource.data
+
+		const [, domainEndDate] = this.scaleX.domain()
+		const domainEnd = domainEndDate.getTime()
+		const lastDatum = data[data.length - 1]
+		if (lastDatum.time < domainEnd) {
+			data = [...data, {...lastDatum, time: domainEnd}]
+		}
+
+		// Build the final graph SVG
 		const content = (
 			<svg
 				viewBox="0 0 1 1"
@@ -82,11 +95,14 @@ export class ResourceGraphs extends Analyser {
 			>
 				<path
 					fill={resource.colour.toString()}
-					d={buildArea(resource.data) ?? undefined}
+					d={buildArea(data) ?? undefined}
 				/>
 			</svg>
 		)
 
+		// Add a row for the graph - we only need a single item, as the graph is the full duration.
+		// TODO: Keep an eye on performance of this. If this chews resources too much, it should be
+		// relatively simple to slice the graph into multiple smaller items which can be windowed.
 		this.parentRow.addRow(new SimpleRow({
 			label: resource.label,
 			height: 64,

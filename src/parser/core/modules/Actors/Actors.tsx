@@ -73,10 +73,13 @@ export class Actors extends Analyser {
 			data: hp,
 		})
 
-		this.resourceGraphs.addResource({
-			label: <Trans id="core.actors.resource.mp">MP</Trans>,
-			colour: 'rgba(188, 55, 147, 0.5)',
-			data: mp,
-		})
+		// Some jobs do not use MP at all - hide if we get no info beyond the initial data dump
+		if (mp.length > 1) {
+			this.resourceGraphs.addResource({
+				label: <Trans id="core.actors.resource.mp">MP</Trans>,
+				colour: 'rgba(188, 55, 147, 0.5)',
+				data: mp,
+			})
+		}
 	}
 }
