@@ -56,7 +56,7 @@ export class Medicated extends Analyser {
 		if (this.pots.length > 0) {
 			const row = new SimpleRow({
 				label: 'Medicated',
-				order: -98,
+				order: -99,
 			})
 
 			this.pots.forEach(pot => row.addItem(new StatusItem({
