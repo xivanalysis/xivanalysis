@@ -1,3 +1,4 @@
+import {NumberFormat, Trans} from '@lingui/react'
 import React, {MouseEventHandler, ReactNode, useCallback, useState} from 'react'
 import {createPortal} from 'react-dom'
 import {ResourceDatum, ResourceMeta} from './ResourceGraphs'
@@ -51,13 +52,17 @@ export function MarkerHandler({getResources}: MarkerHandlerProps) {
 			{markerState != null && (
 				<Marker {...markerState}>
 					<ul className={styles.resourceList}>
-						{markerState.resources.map((resource, index) => (
+						{markerState.resources.map(({label, current = 0, maximum = 0, colour}, index) => (
 							<li key={index} className={styles.resourceItem}>
 								<span
 									className={styles.resourceSwatch}
-									style={{background: resource.colour.toString()}}
+									style={{background: colour.toString()}}
 								/>
-								{resource.label}: {resource.current ?? 'Unknown'} / {resource.maximum ?? 'Unknown'}
+								<Trans id="core.resource-graphs.resource-value">
+									{label}:
+									<NumberFormat value={current}/> /
+									<NumberFormat value={maximum}/>
+								</Trans>
 							</li>
 						))}
 					</ul>
