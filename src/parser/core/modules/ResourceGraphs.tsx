@@ -1,4 +1,5 @@
 import {Trans} from '@lingui/react'
+import Color from 'color'
 import {scaleLinear, ScaleTime, scaleUtc} from 'd3-scale'
 import {area, curveStepAfter} from 'd3-shape'
 import _ from 'lodash'
@@ -13,7 +14,8 @@ export interface ResourceDatum {
 }
 
 export interface Resource {
-	label: React.ReactNode,
+	label: React.ReactNode
+	colour: string | Color
 	data: ResourceDatum[]
 }
 
@@ -30,6 +32,9 @@ export class ResourceGraphs extends Analyser {
 
 		this.parentRow = this.timeline.addRow(new SimpleRow({
 			label: <Trans id="core.resource-graphs.row-label">Resources</Trans>,
+			order: -200,
+			height: 64,
+			collapse: true,
 		}))
 
 		const {timestamp, duration} = this.parser.pull
@@ -59,8 +64,7 @@ export class ResourceGraphs extends Analyser {
 				style={{width: '100%', height: '100%'}}
 			>
 				<path
-					// TODO: Configurable
-					fill="green"
+					fill={resource.colour.toString()}
 					d={buildArea(resource.data) ?? undefined}
 				/>
 			</svg>
@@ -68,6 +72,7 @@ export class ResourceGraphs extends Analyser {
 
 		this.parentRow.addRow(new SimpleRow({
 			label: resource.label,
+			height: 64,
 			items: [new SimpleItem({
 				content,
 				start: 0,

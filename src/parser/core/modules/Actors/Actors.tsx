@@ -64,13 +64,18 @@ export class Actors extends Analyser {
 			}
 		}
 
+		// Colours borroed from cactbot's jobs UI
+		// TODO: Abstract the base colours if we need to reuse somewhere
+
 		this.resourceGraphs.addResource({
 			label: <Trans id="core.actors.resource.hp">HP</Trans>,
+			colour: 'rgba(59, 133, 4, 0.5)',
 			data: hp,
 		})
 
 		this.resourceGraphs.addResource({
 			label: <Trans id="core.actors.resource.mp">MP</Trans>,
+			colour: 'rgba(188, 55, 147, 0.5)',
 			data: mp,
 		})
 	}
