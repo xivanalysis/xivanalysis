@@ -101,6 +101,7 @@ export class ResourceGraphs extends Analyser {
 
 		const resources = this.resources.map(resource => ({
 			label: resource.label,
+			colour: resource.colour,
 			value: _.findLast(resource.data, datum => datum.time <= timestamp)?.value,
 		}))
 

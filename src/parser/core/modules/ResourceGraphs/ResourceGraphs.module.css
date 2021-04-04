@@ -45,3 +45,15 @@
 	padding: 0;
 	list-style: none;
 }
+
+.resourceItem {
+	display: flex;
+	align-items: center;
+}
+
+.resourceSwatch {
+	display: inline-block;
+	margin-right: 0.25em;
+	width: 1em;
+	height: 1em;
+}

@@ -1,9 +1,12 @@
+import Color from 'color'
 import React, {MouseEventHandler, ReactNode, useCallback, useState} from 'react'
 import {createPortal} from 'react-dom'
 import styles from './ResourceGraphs.module.css'
 
 export interface ResourceInfo {
-	label: ReactNode,
+	// TODO: extract this meta info out to a shared type?
+	label: ReactNode
+	colour: string | Color
 	value?: number
 }
 
@@ -52,7 +55,13 @@ export function MarkerHandler({getResources}: MarkerHandlerProps) {
 				<Marker {...markerState}>
 					<ul className={styles.resourceList}>
 						{markerState.resources.map((resource, index) => (
-							<li key={index}>{resource.label}: {resource.value}</li>
+							<li key={index} className={styles.resourceItem}>
+								<span
+									className={styles.resourceSwatch}
+									style={{background: resource.colour.toString()}}
+								/>
+								{resource.label}: {resource.value ?? 'Unknown'}
+							</li>
 						))}
 					</ul>
 				</Marker>
