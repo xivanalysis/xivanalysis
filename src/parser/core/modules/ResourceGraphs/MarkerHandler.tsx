@@ -1,14 +1,11 @@
-import Color from 'color'
 import React, {MouseEventHandler, ReactNode, useCallback, useState} from 'react'
 import {createPortal} from 'react-dom'
+import {ResourceDatum, ResourceMeta} from './ResourceGraphs'
 import styles from './ResourceGraphs.module.css'
 
-export interface ResourceInfo {
-	// TODO: extract this meta info out to a shared type?
-	label: ReactNode
-	colour: string | Color
-	value?: number
-}
+export type ResourceInfo =
+	& ResourceMeta
+	& Partial<ResourceDatum>
 
 export interface MarkerHandlerProps {
 	getResources: (fightPercent: number) => ResourceInfo[]

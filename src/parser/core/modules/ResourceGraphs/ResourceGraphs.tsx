@@ -6,18 +6,21 @@ import _ from 'lodash'
 import {Analyser, AnalyserOptions} from 'parser/core/Analyser'
 import {dependency} from 'parser/core/Injectable'
 import {SimpleItem, SimpleRow, Timeline} from 'parser/core/modules/Timeline'
-import React from 'react'
+import React, {ReactNode} from 'react'
 import {MarkerHandler, ResourceInfo} from './MarkerHandler'
 import styles from './ResourceGraphs.module.css'
+
+export interface ResourceMeta {
+	label: ReactNode
+	colour: string | Color
+}
 
 export interface ResourceDatum {
 	time: number
 	value: number
 }
 
-export interface Resource {
-	label: React.ReactNode
-	colour: string | Color
+export interface Resource extends ResourceMeta {
 	data: ResourceDatum[]
 }
 
