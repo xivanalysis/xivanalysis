@@ -12,6 +12,7 @@ interface SeverityTiers {
 }
 
 interface TrackedOverhealOpts {
+	id?: number,
 	name: JSX.Element,
 	color?: string
 	trackedHealIds?: number[],
@@ -41,6 +42,7 @@ export const SuggestedColors: string[] = [
 ]
 
 export class TrackedOverheal {
+	id: number = -1
 	name: JSX.Element
 	color: string = '#fff'
 	protected trackedHealIds: number[]
@@ -48,6 +50,7 @@ export class TrackedOverheal {
 	overheal: number = 0
 
 	constructor(opts: TrackedOverhealOpts) {
+		this.id = opts.id || -1
 		this.name = opts.name
 		this.color = opts.color || this.color
 		this.trackedHealIds = opts.trackedHealIds || []
@@ -217,12 +220,34 @@ export class CoreOverheal extends Module {
 		return <Trans id="core.overheal.rule.description">Avoid healing your party for more than is needed. Cut back on unnecessary heals and coordinate with your co-healer to plan resources efficiently.</Trans>
 	}
 
+	/**
+	 * This method MAY be overriden to force a heal into a specific bucket for whatever reason
+	 * @param event - the healing event to consider
+	 * @param petHeal - whether the heal comes from a pet or not; defaults to false
+	 * @returns a number for the bucket to for a heal into. Return -1 to bucket the heal normally
+	 */
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	protected overrideHealCategory(event: HealEvent, petHeal: boolean = false): number {
+		return -1
+	}
+
 	private isRegeneration(event: HealEvent): boolean {
 		return event.ability.guid === REGENERATION_ID
 	}
 
 	private onHeal(event: HealEvent, petHeal: boolean = false) {
 		if (this.isRegeneration(event) || ! this.considerHeal(event, petHeal)) { return }
+
+		let category = -1
+		if ((category = this.overrideHealCategory(event, petHeal)) >= 0) {
+			for (const trackedHeal of this.trackedOverheals) {
+				if (trackedHeal.id === category) {
+					this.debug(`Heal from ${event.ability.name} (${event.ability.guid}) at ${event.timestamp} manually matched into category ${trackedHeal.name.props.default}`)
+					trackedHeal.pushHeal(event)
+				}
+			}
+			return // return here because you might want to set multiple things with an id to match into multiple categories based on some criteria
+		}
 
 		const guid = event.ability.guid
 		for (const trackedHeal of this.trackedOverheals) {
