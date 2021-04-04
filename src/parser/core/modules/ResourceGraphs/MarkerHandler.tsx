@@ -1,5 +1,6 @@
 import React, {MouseEventHandler, ReactNode, useCallback, useState} from 'react'
 import {createPortal} from 'react-dom'
+import styles from './ResourceGraphs.module.css'
 
 export interface ResourceInfo {
 	label: ReactNode,
@@ -40,39 +41,29 @@ export function MarkerHandler({getResources}: MarkerHandlerProps) {
 
 	return (
 		<div
-			style={{
-				position: 'relative',
-				width: '100%',
-				height: '100%',
-				backgroundColor: 'rgba(255, 0, 0, 0.2)',
-			}}
+			className={styles.markerContainer}
 			onMouseMove={onMouseMove}
 			onMouseLeave={onMouseLeave}
 		>
 			<div
+				className={styles.markerLine}
 				style={{
-					position: 'absolute',
 					left: markerState && (markerState.cursorLeft - markerState.itemLeft), // todo: yuck
 					opacity: markerState == null ? 0 : 1,
-					width: 1,
-					height: '100%',
-					background: 'black',
-					pointerEvents: 'none',
 				}}
 			/>
 			{createPortal(
-				<div style={{
-					position: 'fixed',
-					top: markerState?.itemTop,
-					left: markerState?.cursorLeft,
-					transform: 'translate(-50%, -100%)',
-				}}>
-					<ul>
-						{markerState?.resources.map((resource, index) => (
-							<li key={index}>{resource.label}: {resource.value}</li>
-						))}
-					</ul>
-				</div>,
+				<ul
+					className={styles.markerTooltip}
+					style={{
+						top: markerState?.itemTop,
+						left: markerState?.cursorLeft,
+					}}
+				>
+					{markerState?.resources.map((resource, index) => (
+						<li key={index}>{resource.label}: {resource.value}</li>
+					))}
+				</ul>,
 				document.body,
 			)}
 		</div>

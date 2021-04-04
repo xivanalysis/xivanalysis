@@ -8,6 +8,7 @@ import {dependency} from 'parser/core/Injectable'
 import {SimpleItem, SimpleRow, Timeline} from 'parser/core/modules/Timeline'
 import React from 'react'
 import {MarkerHandler, ResourceInfo} from './MarkerHandler'
+import styles from './ResourceGraphs.module.css'
 
 export interface ResourceDatum {
 	time: number
@@ -74,7 +75,7 @@ export class ResourceGraphs extends Analyser {
 			<svg
 				viewBox="0 0 1 1"
 				preserveAspectRatio="none"
-				style={{width: '100%', height: '100%'}}
+				className={styles.graph}
 			>
 				<path
 					fill={resource.colour.toString()}
