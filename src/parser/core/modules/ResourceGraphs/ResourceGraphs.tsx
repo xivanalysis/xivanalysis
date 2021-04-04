@@ -1,15 +1,14 @@
 import {Trans} from '@lingui/react'
 import Color from 'color'
-import {scaleLinear, ScaleTime, scaleUtc} from 'd3-scale'
-import {area, curveStepAfter} from 'd3-shape'
+import {ScaleTime, scaleUtc} from 'd3-scale'
 import {Resource} from 'event'
 import _ from 'lodash'
 import {Analyser, AnalyserOptions} from 'parser/core/Analyser'
 import {dependency} from 'parser/core/Injectable'
 import {SimpleItem, SimpleRow, Timeline} from 'parser/core/modules/Timeline'
 import React, {ReactNode} from 'react'
+import {Graph} from './Graph'
 import {MarkerHandler, ResourceInfo} from './MarkerHandler'
-import styles from './ResourceGraphs.module.css'
 
 export interface ResourceMeta {
 	label: ReactNode
@@ -62,67 +61,6 @@ export class ResourceGraphs extends Analyser {
 	addResource(resource: ResourceData) {
 		this.resources.push(resource)
 
-		// Ensure there's a data point for the end of the fight to prevent an early drop off
-		let data = resource.data
-
-		const [, domainEndDate] = this.scaleX.domain()
-		const domainEnd = domainEndDate.getTime()
-		const lastDatum = data[data.length - 1]
-		if (lastDatum.time < domainEnd) {
-			data = [...data, {...lastDatum, time: domainEnd}]
-		}
-
-		// Find the maximum value in the data and use it to build the Y axis scale
-		const maximumY = _.maxBy(resource.data, x => x.maximum)?.maximum ?? 1
-		const scaleY = scaleLinear()
-			.domain([0, maximumY ?? 1])
-			.range([1, 0])
-
-		// Build the area path for the current value
-		const currentArea = area<ResourceDatum>()
-			// TODO: Should this be configurable?
-			.curve(curveStepAfter)
-			.x(datum => this.scaleX(datum.time) ?? NaN)
-			.y0(scaleY(0) ?? 0)
-			.y1(datum => scaleY(datum.current) ?? 0)
-
-		const currentPath = (
-			<path
-				fill={resource.colour.toString()}
-				d={currentArea(data) ?? undefined}
-			/>
-		)
-
-		// If the maximum value varies, build an area path for it
-		let maximumPath: ReactNode
-		const minimumMaximum = _.minBy(resource.data, x => x.maximum)?.maximum
-		if (minimumMaximum !== maximumY) {
-			const maximumArea = area<ResourceDatum>()
-				.curve(curveStepAfter)
-				.x(datum => this.scaleX(datum.time) ?? NaN)
-				.y0(datum => scaleY(datum.maximum) ?? 0)
-				.y1(scaleY(maximumY) ?? 0)
-
-			maximumPath = (
-				<path
-					fill="red" // TODO
-					d={maximumArea(data) ?? undefined}
-				/>
-			)
-		}
-
-		// Compose the final graph SVG
-		const content = (
-			<svg
-				viewBox="0 0 1 1"
-				preserveAspectRatio="none"
-				className={styles.graph}
-			>
-				{currentPath}
-				{maximumPath}
-			</svg>
-		)
-
 		// Add a row for the graph - we only need a single item, as the graph is the full duration.
 		// TODO: Keep an eye on performance of this. If this chews resources too much, it should be
 		// relatively simple to slice the graph into multiple smaller items which can be windowed.
@@ -130,7 +68,7 @@ export class ResourceGraphs extends Analyser {
 			label: resource.label,
 			height: 64,
 			items: [new SimpleItem({
-				content,
+				content: <Graph resource={resource} scaleX={this.scaleX}/>,
 				start: 0,
 				end: this.parser.pull.duration,
 			})],
