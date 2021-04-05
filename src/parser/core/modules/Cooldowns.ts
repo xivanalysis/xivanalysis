@@ -1,37 +1,60 @@
+import {Action} from 'data/ACTIONS'
+import {CastEvent} from 'fflogs'
 import _ from 'lodash'
 import Module from 'parser/core/Module'
-import {ActionItem, ContainerRow} from './Timeline'
+import {dependency} from '../Injectable'
+import {Data} from './Data'
+import Downtime from './Downtime'
+import {ActionItem, ContainerRow, Timeline} from './Timeline'
+
+export interface CooldownOrderGroup {
+	name: string
+	merge: boolean // TODO: Probably can enable on all and remove
+	actions: number[] // TODO: use action keys
+}
+
+export type CooldownOrderItem =
+	| CooldownOrderGroup
+	| number // TODO: use action key
+
+interface CooldownState {
+	timestamp: number,
+	length: number,
+	shared: boolean,
+	invulnTime: number,
+}
+
+interface CooldownHistory {
+	current: CooldownState | null
+	history: CooldownState[]
+}
 
 // Track the cooldowns on actions and shit
 export default class Cooldowns extends Module {
 	static handle = 'cooldowns'
-	static dependencies = [
-		'data',
-		'downtime',
-		'timeline',
-	]
+
+	@dependency private data!: Data
+	@dependency private downtime!: Downtime
+	@dependency private timeline!: Timeline
 
 	// Array used to sort cooldowns in the timeline. Elements should be either IDs for
 	// top-level groups, or objects of the format {name: string, actions: array} for
 	// nested groups. Actions not specified here will be sorted by their ID below.
 	// Check the NIN and SMN modules for examples.
-	static cooldownOrder = []
+	static cooldownOrder: CooldownOrderItem[] = []
 
-	_cooldownGroups = {}
+	private _cooldownGroups: Record<string, Action[]> = _.groupBy(this.data.actions, 'cooldownGroup')
 
-	_currentAction = null
-	_cooldowns = {}
-	_groups = {}
-	_rows = {}
+	private _currentAction: Action | null = null
+	private _cooldowns: Partial<Record<number, CooldownHistory>> = {}
+	private _groups = {} // TODO: Unused?
+	private _rows: Partial<Record<number | string, ContainerRow>> = {}
 
-	constructor(...args) {
-		super(...args)
-
-		this._cooldownGroups = _.groupBy(this.data.actions, 'cooldownGroup')
-
+	protected init() {
+		const constructor = this.constructor as typeof Cooldowns
 		// Pre-build rows for actions explicitly set by subclasses
-		if (this.constructor.cooldownOrder) {
-			this._buildRows(this.constructor.cooldownOrder)
+		if (constructor.cooldownOrder) {
+			this._buildRows(constructor.cooldownOrder)
 		}
 
 		this.addEventHook('begincast', {by: 'player'}, this._onBeginCast)
@@ -39,7 +62,7 @@ export default class Cooldowns extends Module {
 		this.addEventHook('complete', this._onComplete)
 	}
 
-	_buildRows(mappings) {
+	private _buildRows(mappings: CooldownOrderItem[]) {
 		mappings.map((mapping, index) => {
 			const order = -(mappings.length - index)
 
@@ -61,16 +84,18 @@ export default class Cooldowns extends Module {
 			} else {
 				// Otherwise, build nested rows for each action in the mapping
 				this._buildRows(mapping.actions)
-					.forEach(subRow => row.addRow(subRow))
+				// TODO: Probably remove this. Will never succeed.
+				// 	.forEach(subRow => row.addRow(subRow))
 			}
 
 			return row
 		})
 	}
 
-	_buildRow(id, opts) {
-		if (this._rows[id] != null) {
-			return this._rows[id]
+	private _buildRow(id: number | string, opts: {label?: string, order: number}) {
+		const currentRow = this._rows[id]
+		if (currentRow != null) {
+			return currentRow
 		}
 
 		const row = this.timeline.addRow(new ContainerRow({
@@ -82,14 +107,14 @@ export default class Cooldowns extends Module {
 		return row
 	}
 
-	getActionTimelineRow(action) {
+	getActionTimelineRow(action: Action) {
 		return this._buildRow(action.id, {label: action.name, order: action.id})
 	}
 
 	// cooldown starts at the beginning of the casttime
 	// (though 99% of CD based abilities have no cast time)
 	// TODO: Should I be tracking pet CDs too? I mean, contagion/radiant are a thing.
-	_onBeginCast(event) {
+	private _onBeginCast(event: CastEvent) {
 		const action = this.data.getAction(event.ability.guid)
 		if (!action || action.cooldown == null) { return }
 
@@ -101,7 +126,7 @@ export default class Cooldowns extends Module {
 		}
 	}
 
-	_onCast(event) {
+	private _onCast(event: CastEvent) {
 		const action = this.data.getAction(event.ability.guid)
 		if (!action || action.cooldown == null) { return }
 
@@ -116,13 +141,13 @@ export default class Cooldowns extends Module {
 		}
 	}
 
-	_onComplete() {
+	private _onComplete() {
 		Object.keys(this._cooldowns).forEach(actionId => {
 			this._addToTimeline(parseInt(actionId, 10))
 		})
 	}
 
-	_addToTimeline(actionId) {
+	private _addToTimeline(actionId: number) {
 		const cd = this._cooldowns[actionId]
 		if (!cd) {
 			return false
@@ -160,22 +185,22 @@ export default class Cooldowns extends Module {
 		return true
 	}
 
-	getCooldown(actionId) {
+	getCooldown(actionId: number) {
 		return this._cooldowns[actionId] || {
 			current: null,
 			history: [],
 		}
 	}
 
-	startCooldownGroup(originActionId, cooldownGroup) {
-		const sharedCooldownActions = _.get(this._cooldownGroups, cooldownGroup, [])
+	startCooldownGroup(originActionId: number, cooldownGroup: number) {
+		const sharedCooldownActions = _.get(this._cooldownGroups, cooldownGroup, [] as Action[])
 		sharedCooldownActions
 			.map(action => action.id)
 			.filter(id => id !== originActionId)
 			.forEach(id => this.startCooldown(id, true))
 	}
 
-	startCooldown(actionId, sharedCooldown = false) {
+	startCooldown(actionId: number, sharedCooldown = false) {
 		// TODO: handle shared CDs
 		const action = this.data.getAction(actionId)
 		if (!action) { return }
@@ -197,7 +222,7 @@ export default class Cooldowns extends Module {
 
 		cd.current = {
 			timestamp: this.parser.currentTimestamp,
-			length: action.cooldown * 1000, // CDs are in S, timestamps are in MS
+			length: (action.cooldown ?? 0) * 1000, // CDs are in S, timestamps are in MS
 			shared: sharedCooldown,
 			invulnTime: 0,
 		}
@@ -206,7 +231,7 @@ export default class Cooldowns extends Module {
 		this._cooldowns[actionId] = cd
 	}
 
-	reduceCooldown(actionId, reduction) {
+	reduceCooldown(actionId: number, reduction: number) {
 		const cd = this.getCooldown(actionId)
 		const currentTimestamp = this.parser.currentTimestamp
 
@@ -230,16 +255,14 @@ export default class Cooldowns extends Module {
 		}
 	}
 
-	setInvulnTime(actionId) {
+	setInvulnTime(actionId: number) {
 		const cd = this.getCooldown(actionId)
 		let previousEndTimestamp = this.parser.eventTimeOffset
-		let previousCooldown = {}
-		let isFirst = true
+		let previousCooldown: CooldownState | undefined
 
 		for (const cooldown of cd.history) {
-			if (isFirst) {
+			if (previousCooldown == null) {
 				previousEndTimestamp = (cooldown.timestamp + cooldown.length)
-				isFirst = false
 				previousCooldown = cooldown
 			}
 
@@ -250,7 +273,7 @@ export default class Cooldowns extends Module {
 		}
 	}
 
-	resetCooldown(actionId) {
+	resetCooldown(actionId: number) {
 		const cd = this.getCooldown(actionId)
 
 		// If there's nothing running, we can just stop
@@ -267,7 +290,7 @@ export default class Cooldowns extends Module {
 		cd.current = null
 	}
 
-	getCooldownRemaining(actionId) {
+	getCooldownRemaining(actionId: number) {
 		const current = this.getCooldown(actionId).current
 		if (!current) {
 			return 0
@@ -277,7 +300,7 @@ export default class Cooldowns extends Module {
 	}
 
 	// TODO: Should this be here?
-	getTimeOnCooldown(actionId, considerInvulnTime = false, extension = 0) {
+	getTimeOnCooldown(actionId: number, considerInvulnTime = false, extension = 0) {
 		const cd = this.getCooldown(actionId)
 		const currentTimestamp = this.parser.currentTimestamp
 
@@ -295,7 +318,7 @@ export default class Cooldowns extends Module {
 		)
 	}
 
-	getAdjustedTimeOnCooldown(cooldown, currentTimestamp, extension) {
+	getAdjustedTimeOnCooldown(cooldown: CooldownState, currentTimestamp: number, extension: number) {
 		// Doesn't count time on CD outside the bounds of the current fight, it'll throw calcs off
 		// Add to the length of the cooldown any invuln time for the boss
 		// Additionally account for any extension the caller allowed to the CD Length
