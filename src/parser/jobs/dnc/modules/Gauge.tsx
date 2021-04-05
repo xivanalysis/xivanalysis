@@ -16,10 +16,14 @@ import {FINISHES} from '../CommonData'
 
 interface DancerResourceDatum extends ResourceDatum {
 	isGenerator: boolean // Need to know if the resource event was a generator or a spender, used for graph smoothing
+	t: number, // non-Epoch-based timestamp since I haven't figured out how to translate to/from that, needed for Technicalities
 }
 
-interface FeatherResourceDatum extends DancerResourceDatum {
-	t: number, // non-Epoch-based timestamp since I haven't figured out how to translate to/from that, needed for Technicalities
+interface DancerGauge {
+	currentAmount: number,
+	overcapAmount: number,
+	maximum: number,
+	history: DancerResourceDatum[],
 }
 
 // More lenient than usual due to the probable unreliability of the data.
@@ -84,13 +88,20 @@ export default class Gauge extends Module {
 	@dependency private suggestions!: Suggestions
 	@dependency private resourceGraphs!: ResourceGraphs
 
-	private espritHistory: DancerResourceDatum[] = [{time: this.parser.pull.timestamp, current: 0, maximum: MAX_ESPRIT, isGenerator: false}]
-	private featherHistory: FeatherResourceDatum[] = [{t: 0, time: this.parser.pull.timestamp, current: 0, maximum: MAX_FEATHERS, isGenerator: false}]
-	private currentEsprit = 0
-	private espritOvercap = 0
+	private espritGauge: DancerGauge = {
+		currentAmount: 0,
+		overcapAmount: 0,
+		maximum: MAX_ESPRIT,
+		history: [{t: 0, time: this.parser.pull.timestamp, current: 0, maximum: MAX_ESPRIT, isGenerator: false}],
+	}
+	private featherGauge: DancerGauge = {
+		currentAmount: 0,
+		overcapAmount: 0,
+		maximum: MAX_FEATHERS,
+		history: [{t: 0, time: this.parser.pull.timestamp, current: 0, maximum: MAX_FEATHERS, isGenerator: false}],
+	}
+
 	private improvisationStart = 0
-	private currentFeathers = 0
-	private featherOvercap = 0
 
 	protected init() {
 		this.addEventHook('normaliseddamage', {by: 'player'}, this.onDamage)
@@ -110,7 +121,7 @@ export default class Gauge extends Module {
 		if (start > end) {
 			return -1
 		}
-		return this.featherHistory.filter(event => event.t >= start - this.parser.fight.start_time && event.t <= end - this.parser.fight.start_time && !event.isGenerator).length
+		return this.featherGauge.history.filter(event => event.t >= start - this.parser.fight.start_time && event.t <= end - this.parser.fight.start_time && !event.isGenerator).length
 	}
 
 	/* Gauge Event Hooks */
@@ -118,6 +129,7 @@ export default class Gauge extends Module {
 		if (!ESPRIT_GENERATION_MULTIPLIERS[event.ability.guid] || !event.hasSuccessfulHit) {
 			return
 		}
+
 		let generatedAmt = 0
 		if (this.combatants.selected.hasStatus({statusId: STATUSES.TECHNICAL_FINISH.id, sourceID: this.combatants.selected.guid})) {
 			generatedAmt += ESPRIT_GENERATION_MULTIPLIERS[event.ability.guid] * ESPRIT_GENERATION_AMOUNT * ESPRIT_RATE_PARTY * (Object.keys(this.combatants.getEntities()).length-1)
@@ -131,9 +143,8 @@ export default class Gauge extends Module {
 				generatedAmt += ESPRIT_GENERATION_MULTIPLIERS[event.ability.guid] * ESPRIT_GENERATION_AMOUNT * ESPRIT_RATE_PARTY
 			}
 		}
-		if (generatedAmt > 0) {
-			this.setEsprit(this.currentEsprit + generatedAmt, true)
-		}
+
+		this.generateGauge(this.espritGauge, generatedAmt)
 	}
 
 	private startImprov(event: BuffEvent) {
@@ -147,86 +158,70 @@ export default class Gauge extends Module {
 		const ticks = Math.min(Math.max(1, Math.floor(diff / TICK_FREQUENCY)), MAX_IMPROV_TICKS)
 
 		// Choosing to assume in this case that everyone is in range so you get the maximum amount of Esprit per tic
-		this.setEsprit(this.currentEsprit + ticks * ESPRIT_GENERATION_AMOUNT, true)
+		this.generateGauge(this.espritGauge, ticks * ESPRIT_GENERATION_AMOUNT)
 	}
 
 	private onConsumeEsprit() {
-		// If we're using more esprit than we think we have, go back to the previous spender event and add some
-		// more esprit to the intervening generation events so the graph looks more correct
-		if (this.currentEsprit < SABER_DANCE_COST) {
-			this.correctEspritHistory()
-		}
-
-		this.setEsprit(this.currentEsprit - SABER_DANCE_COST)
+		this.spendGauge(this.espritGauge, SABER_DANCE_COST)
 	}
 
 	private onCastGenerator(event: NormalisedDamageEvent) {
 		if (!event.hasSuccessfulHit) {
 			return
 		}
-		this.setFeather(this.currentFeathers + FEATHER_GENERATION_CHANCE, true)
+		this.generateGauge(this.featherGauge, FEATHER_GENERATION_CHANCE)
 	}
 
 	private onConsumeFeather() {
-		// If we consumed a feather when we think we don't have one, clearly we do, so update the history to reflect that
-		if (this.currentFeathers < 1) {
-			this.correctFeatherHistory()
-		}
-
-		this.setFeather(this.currentFeathers - 1)
+		this.spendGauge(this.featherGauge, 1)
 	}
 
 	private onDeath() {
-		this.setEsprit(0)
-		this.setFeather(0)
+		this.setGauge(this.espritGauge, 0)
+		this.setGauge(this.featherGauge, 0)
 	}
 
 	/* Gauge Event Helpers */
-	private setEsprit(value: number, generatorEvent: boolean = false) {
-		this.currentEsprit = _.clamp(value, 0, MAX_ESPRIT)
-		this.espritOvercap += Math.max(0, value - this.currentEsprit)
-
-		this.espritHistory.push({time: this.parser.currentEpochTimestamp, current: this.currentEsprit, isGenerator: generatorEvent, maximum: MAX_ESPRIT})
-	}
-
-	private correctEspritHistory() {
-		const totalUnderRun = Math.abs(this.currentEsprit - SABER_DANCE_COST)
-
-		const lastSpendIndex = _.findLastIndex(this.espritHistory, event => !event.isGenerator)
-		const adjustmentPerEvent = totalUnderRun / (this.espritHistory.length - (lastSpendIndex + 1))
-		for (let i = lastSpendIndex + 1; i < this.espritHistory.length; i ++) {
-			this.espritHistory[i].current = this.espritHistory[i].current + adjustmentPerEvent * (i - lastSpendIndex)
+	private generateGauge(gauge: DancerGauge, generatedAmount: number) {
+		if (generatedAmount > 0) {
+			this.setGauge(gauge, gauge.currentAmount + generatedAmount, true)
 		}
 	}
 
-	private setFeather(value: number, generationEvent: boolean = false) {
-		this.currentFeathers = _.clamp(value, 0, MAX_FEATHERS)
-		this.featherOvercap += Math.max(0, value - this.currentFeathers)
+	private spendGauge(gauge: DancerGauge, spentAmount: number) {
+		// If we spent gauge that we don't think we have right now, fix the history to show that we obviously did
+		if (gauge.currentAmount < spentAmount) {
+			this.correctGaugeHistory(gauge.history, spentAmount, gauge.currentAmount)
+		}
+
+		this.setGauge(gauge, gauge.currentAmount - spentAmount)
+	}
+
+	private setGauge(gauge: DancerGauge, newAmount: number, isGenerator: boolean = false) {
+		gauge.currentAmount = _.clamp(newAmount, 0, gauge.maximum)
+		gauge.overcapAmount += Math.max(0, newAmount - gauge.currentAmount)
 
 		const t = this.parser.currentTimestamp - this.parser.fight.start_time
-		this.featherHistory.push({t, time: this.parser.currentEpochTimestamp, current: this.currentFeathers, isGenerator: generationEvent, maximum: MAX_FEATHERS})
-
+		gauge.history.push({t, time: this.parser.currentEpochTimestamp, current: gauge.currentAmount, isGenerator, maximum: gauge.maximum})
 	}
 
-	private correctFeatherHistory() {
-		// Add the underrun amount to all events back to the previous spender so the graph shows we had enough to spend
-		let lastGeneratorIndex = _.findLastIndex(this.featherHistory, event => event.isGenerator)
-		lastGeneratorIndex = lastGeneratorIndex === -1 ? 0 : lastGeneratorIndex
-		const underrun = 1 - this.currentFeathers
-		for (let i = lastGeneratorIndex; i < this.featherHistory.length; i++) {
-			this.featherHistory[i].current += underrun
+	private correctGaugeHistory(historyObject: DancerResourceDatum[], spenderCost: number, currentGauge: number) {
+		let lastGeneratorIndex = _.findLastIndex(historyObject, event => event.isGenerator)
+		lastGeneratorIndex = lastGeneratorIndex === -1 ? 0 : lastGeneratorIndex // Deal with possibility we don't have a generation event yet
+
+		const underrunAmount = Math.abs(currentGauge - spenderCost)
+		for (let i = lastGeneratorIndex; i < historyObject.length; i++) {
+			historyObject[i].current += underrunAmount
 		}
 
-		// If there's nothing before the last generator, we don't need to smooth anything
 		if (lastGeneratorIndex === 0) {
 			return
 		}
 
-		// Find the last spender event prior to the generator event found above and linearly smooth the graph between the two events
-		const prevSpenderIndex = _.findLastIndex(this.featherHistory.slice(0, lastGeneratorIndex), event => !event.isGenerator)
-		const adjustmentPerEvent = underrun / (lastGeneratorIndex - prevSpenderIndex)
-		for (let j = prevSpenderIndex + 1; j < lastGeneratorIndex; j ++) {
-			this.featherHistory[j].current = this.featherHistory[j].current + adjustmentPerEvent * (j - prevSpenderIndex)
+		const previousSpenderIndex = _.findLastIndex(historyObject.slice(0, lastGeneratorIndex), event => !event.isGenerator)
+		const adjustmentPerEvent = underrunAmount / (lastGeneratorIndex - previousSpenderIndex)
+		for (let i = previousSpenderIndex + 1; i < lastGeneratorIndex; i ++) {
+			historyObject[i].current += adjustmentPerEvent * (i - previousSpenderIndex)
 		}
 	}
 
@@ -235,17 +230,17 @@ export default class Gauge extends Module {
 		this.resourceGraphs.addResource({
 			label: <Trans id="dnc.gauge.resource.esprit">Esprit</Trans>,
 			colour: DNC_COLOR,
-			data: this.espritHistory,
+			data: this.espritGauge.history,
 		})
 
 		this.resourceGraphs.addResource({
 			label: <Trans id="dnc.gauge.resource.feathers">Feathers</Trans>,
 			// eslint-disable-next-line @typescript-eslint/no-magic-numbers
 			colour: DNC_COLOR.fade(0.6).toString(),
-			data: this.featherHistory,
+			data: this.featherGauge.history,
 		})
 
-		const missedSaberDances = Math.floor(this.espritOvercap/SABER_DANCE_COST)
+		const missedSaberDances = Math.floor(this.espritGauge.overcapAmount/SABER_DANCE_COST)
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.SABER_DANCE.icon,
 			content: <Trans id="dnc.esprit.suggestions.overcapped-esprit.content">
@@ -258,16 +253,16 @@ export default class Gauge extends Module {
 			</Trans>,
 		}))
 
-		this.featherOvercap = Math.floor(this.featherOvercap)
+		const featherOvercap = Math.floor(this.featherGauge.overcapAmount)
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.FAN_DANCE_III.icon,
 			content: <Trans id="dnc.feather-gauge.suggestions.overcapped-feathers.content">
 				You may have lost uses of your <ActionLink {...ACTIONS.FAN_DANCE} />s due to using one of your procs while already holding four feathers. Make sure to use a feather with <ActionLink showIcon={false} {...ACTIONS.FAN_DANCE} /> or <ActionLink showIcon={false} {...ACTIONS.FAN_DANCE_II} /> before using a proc to prevent overcapping.
 			</Trans>,
 			tiers: GAUGE_SEVERITY_TIERS,
-			value: this.featherOvercap,
+			value: featherOvercap,
 			why: <Trans id="dnc.feather-gauge.suggestions.overcapped-feathers.why">
-				<Plural value={this.featherOvercap} one="# feather" other="# feathers"/> may have been lost.
+				<Plural value={featherOvercap} one="# feather" other="# feathers"/> may have been lost.
 			</Trans>,
 		}))
 	}
