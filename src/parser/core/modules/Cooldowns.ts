@@ -42,7 +42,7 @@ export default class Cooldowns extends Module {
 	// Check the NIN and SMN modules for examples.
 	static cooldownOrder: CooldownOrderItem[] = []
 
-	private _cooldownGroups: Record<string, Action[]> = _.groupBy(this.data.actions, 'cooldownGroup')
+	private readonly _cooldownGroups: Record<string, Action[]> = _.groupBy(this.data.actions, 'cooldownGroup')
 
 	private _currentAction?: Action
 	private _cooldowns: Partial<Record<number, CooldownHistory>> = {}
@@ -185,7 +185,7 @@ export default class Cooldowns extends Module {
 		}
 	}
 
-	startCooldownGroup(originActionId: number, cooldownGroup: number) {
+	private startCooldownGroup(originActionId: number, cooldownGroup: number) {
 		const sharedCooldownActions = _.get(this._cooldownGroups, cooldownGroup, [] as Action[])
 		sharedCooldownActions
 			.map(action => action.id)
@@ -193,7 +193,7 @@ export default class Cooldowns extends Module {
 			.forEach(id => this.startCooldown(id, true))
 	}
 
-	startCooldown(actionId: number, sharedCooldown = false) {
+	private startCooldown(actionId: number, sharedCooldown = false) {
 		// TODO: handle shared CDs
 		const action = this.data.getAction(actionId)
 		if (!action) { return }
@@ -248,7 +248,7 @@ export default class Cooldowns extends Module {
 		}
 	}
 
-	setInvulnTime(actionId: number) {
+	private setInvulnTime(actionId: number) {
 		const cd = this.getCooldown(actionId)
 		let previousEndTimestamp = this.parser.eventTimeOffset
 		let previousCooldown: CooldownState | undefined
@@ -311,16 +311,12 @@ export default class Cooldowns extends Module {
 		)
 	}
 
-	getAdjustedTimeOnCooldown(cooldown: CooldownState, currentTimestamp: number, extension: number) {
+	private getAdjustedTimeOnCooldown(cooldown: CooldownState, currentTimestamp: number, extension: number) {
 		// Doesn't count time on CD outside the bounds of the current fight, it'll throw calcs off
 		// Add to the length of the cooldown any invuln time for the boss
 		// Additionally account for any extension the caller allowed to the CD Length
 		const duration = currentTimestamp - cooldown.timestamp
 		const maximumDuration = cooldown.length + cooldown.invulnTime + extension
 		return _.clamp(duration, 0, maximumDuration)
-	}
-
-	get used() {
-		return Object.keys(this._cooldowns)
 	}
 }
