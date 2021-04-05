@@ -1,38 +1,37 @@
-import ACTIONS from 'data/ACTIONS'
 import CoreCooldowns from 'parser/core/modules/Cooldowns'
 
 export default class Cooldowns extends CoreCooldowns {
 	static cooldownOrder = [
-		ACTIONS.BARRAGE.id,
-		ACTIONS.RAGING_STRIKES.id,
-		ACTIONS.BATTLE_VOICE.id,
+		'BARRAGE',
+		'RAGING_STRIKES',
+		'BATTLE_VOICE',
 		{
 			name: 'Bloodletter',
 			actions: [
-				ACTIONS.BLOODLETTER.id,
-				ACTIONS.RAIN_OF_DEATH.id,
+				'BLOODLETTER',
+				'RAIN_OF_DEATH',
 			],
 		},
 		{
 			name: 'Songs',
 			actions: [
-				ACTIONS.THE_WANDERERS_MINUET.id,
-				ACTIONS.MAGES_BALLAD.id,
-				ACTIONS.ARMYS_PAEON.id,
+				'THE_WANDERERS_MINUET',
+				'MAGES_BALLAD',
+				'ARMYS_PAEON',
 			],
 		},
-		ACTIONS.EMPYREAL_ARROW.id,
+		'EMPYREAL_ARROW',
 		{
 			name: 'Sidewinder',
 			actions: [
-				ACTIONS.SIDEWINDER.id,
-				ACTIONS.SHADOWBITE.id,
+				'SIDEWINDER',
+				'SHADOWBITE',
 			],
 		},
-		ACTIONS.PITCH_PERFECT.id,
-		ACTIONS.TROUBADOUR.id,
-		ACTIONS.NATURES_MINNE.id,
-		ACTIONS.THE_WARDENS_PAEAN.id,
-		ACTIONS.REPELLING_SHOT.id,
+		'PITCH_PERFECT',
+		'TROUBADOUR',
+		'NATURES_MINNE',
+		'THE_WARDENS_PAEAN',
+		'REPELLING_SHOT',
 	]
 }

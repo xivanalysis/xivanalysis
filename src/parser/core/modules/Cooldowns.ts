@@ -1,4 +1,4 @@
-import {Action} from 'data/ACTIONS'
+import {Action, ActionKey} from 'data/ACTIONS'
 import {CastEvent} from 'fflogs'
 import _ from 'lodash'
 import Module from 'parser/core/Module'
@@ -9,12 +9,12 @@ import {ActionItem, ContainerRow, Timeline} from './Timeline'
 
 export interface CooldownOrderGroup {
 	name: string
-	actions: number[] // TODO: use action keys
+	actions: ActionKey[]
 }
 
 export type CooldownOrderItem =
 	| CooldownOrderGroup
-	| number // TODO: use action key
+	| ActionKey
 
 interface CooldownState {
 	timestamp: number,
@@ -65,13 +65,13 @@ export default class Cooldowns extends Module {
 			const order = -(mappings.length - index)
 
 			// If it's just the ID of an action, build a row for it and bail
-			if (typeof mapping === 'number') {
-				const action = this.data.getAction(mapping)
-				return this._buildRow(mapping, {label: action?.name, order})
+			if (typeof mapping === 'string') {
+				const action = this.data.actions[mapping]
+				return this._buildRow(action.id, {label: action.name, order})
 			}
 
 			// Otherwise, it's a grouping - build a base row
-			const row = this._buildRow(mapping.name, {label: mapping.name, order})
+			const row = this._buildRow(undefined, {label: mapping.name, order})
 
 			// Register the group for each of the action IDs
 			mapping.actions.forEach(id => {
@@ -80,10 +80,12 @@ export default class Cooldowns extends Module {
 		})
 	}
 
-	private _buildRow(id: number | string, opts: {label?: string, order: number}) {
-		const currentRow = this._rows[id]
-		if (currentRow != null) {
-			return currentRow
+	private _buildRow(id: number | undefined, opts: {label: string, order: number}) {
+		if (id != null) {
+			const currentRow = this._rows[id]
+			if (currentRow != null) {
+				return currentRow
+			}
 		}
 
 		const row = this.timeline.addRow(new ContainerRow({
@@ -91,7 +93,10 @@ export default class Cooldowns extends Module {
 			collapse: true,
 		}))
 
-		this._rows[id] = row
+		if (id != null) {
+			this._rows[id] = row
+		}
+
 		return row
 	}
 
