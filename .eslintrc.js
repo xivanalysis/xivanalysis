@@ -1,3 +1,5 @@
+/* global __dirname */
+
 module.exports = {
 	root: true,
 	extends: [
@@ -10,6 +12,11 @@ module.exports = {
 
 	// TODO: Might need to use both babel-eslint and typescript-eslint depending on filetype?
 	parser: '@typescript-eslint/parser',
+	parserOptions: {
+		tsconfigRootDir: __dirname,
+		project: ['./tsconfig.json'],
+	},
+
 	plugins: [
 		'@typescript-eslint',
 		'react',
@@ -62,7 +69,10 @@ module.exports = {
 		'comma-style': 'warn',
 		'computed-property-spacing': 'warn',
 		'curly': ['error', 'all'],
-		'dot-notation': 'error',
+		'@typescript-eslint/dot-notation': ['error', {
+			allowPrivateClassPropertyAccess: true,
+			allowProtectedClassPropertyAccess: true,
+		}],
 		'eol-last': 'error',
 		'eqeqeq': ['error', 'smart'],
 		'func-call-spacing': 'warn',
