@@ -8,7 +8,6 @@ export default class Cooldowns extends CoreCooldowns {
 		ACTIONS.BATTLE_VOICE.id,
 		{
 			name: 'Bloodletter',
-			merge: true,
 			actions: [
 				ACTIONS.BLOODLETTER.id,
 				ACTIONS.RAIN_OF_DEATH.id,
@@ -16,7 +15,6 @@ export default class Cooldowns extends CoreCooldowns {
 		},
 		{
 			name: 'Songs',
-			merge: true,
 			actions: [
 				ACTIONS.THE_WANDERERS_MINUET.id,
 				ACTIONS.MAGES_BALLAD.id,
@@ -26,7 +24,6 @@ export default class Cooldowns extends CoreCooldowns {
 		ACTIONS.EMPYREAL_ARROW.id,
 		{
 			name: 'Sidewinder',
-			merge: true,
 			actions: [
 				ACTIONS.SIDEWINDER.id,
 				ACTIONS.SHADOWBITE.id,

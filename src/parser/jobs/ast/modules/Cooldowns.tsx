@@ -6,7 +6,6 @@ export default class Cooldowns extends CoreCooldowns {
 		// Arcanum
 		{
 			name: 'Draw/Undraw',
-			merge: true,
 			actions: [
 				ACTIONS.DRAW.id,
 				ACTIONS.UNDRAW.id,
@@ -14,7 +13,6 @@ export default class Cooldowns extends CoreCooldowns {
 		},
 		{
 			name: 'Redraw/Minor Arcana',
-			merge: true,
 			actions: [
 				ACTIONS.REDRAW.id,
 				ACTIONS.MINOR_ARCANA.id,
@@ -23,7 +21,6 @@ export default class Cooldowns extends CoreCooldowns {
 		ACTIONS.SLEEVE_DRAW.id,
 		{
 			name: 'Play',
-			merge: true,
 			actions: [
 				ACTIONS.THE_BALANCE.id,
 				ACTIONS.THE_BOLE.id,
@@ -44,7 +41,6 @@ export default class Cooldowns extends CoreCooldowns {
 		// oGCD AoE heals
 		{
 			name: 'Earthly Star',
-			merge: true,
 			actions: [
 				ACTIONS.EARTHLY_STAR.id,
 				ACTIONS.STELLAR_DETONATION.id,
@@ -54,7 +50,6 @@ export default class Cooldowns extends CoreCooldowns {
 		// Horoscope
 		{
 			name: 'Horoscope',
-			merge: true,
 			actions: [
 				ACTIONS.HOROSCOPE.id,
 				ACTIONS.HOROSCOPE_ACTIVATION.id,

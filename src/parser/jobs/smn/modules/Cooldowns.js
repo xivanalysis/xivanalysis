@@ -5,7 +5,6 @@ export default class Cooldowns extends CoreCooldowns {
 	static cooldownOrder = [
 		{
 			name: 'Energy Drain/Siphon',
-			merge: true,
 			actions: [
 				ACTIONS.ENERGY_DRAIN.id,
 				ACTIONS.ENERGY_SIPHON.id,
@@ -16,7 +15,6 @@ export default class Cooldowns extends CoreCooldowns {
 		ACTIONS.BANE.id,
 		{
 			name: 'Trance',
-			merge: true,
 			actions: [
 				ACTIONS.DREADWYRM_TRANCE.id,
 				ACTIONS.FIREBIRD_TRANCE.id,
@@ -28,7 +26,6 @@ export default class Cooldowns extends CoreCooldowns {
 		ACTIONS.ENKINDLE_PHOENIX.id,
 		{
 			name: 'Summon',
-			merge: true,
 			actions: [
 				ACTIONS.SUMMON.id,
 				ACTIONS.SUMMON_II.id,
@@ -37,7 +34,6 @@ export default class Cooldowns extends CoreCooldowns {
 		},
 		{
 			name: 'Assault I',
-			merge: true,
 			actions: [
 				ACTIONS.ASSAULT_I_AERIAL_SLASH.id,
 				ACTIONS.ASSAULT_I_EARTHEN_ARMOR.id,
@@ -46,7 +42,6 @@ export default class Cooldowns extends CoreCooldowns {
 		},
 		{
 			name: 'Assault II',
-			merge: true,
 			actions: [
 				ACTIONS.ASSAULT_II_SLIIPSTREAM.id,
 				ACTIONS.ASSAULT_II_MOUNTAIN_BUSTER.id,
@@ -55,7 +50,6 @@ export default class Cooldowns extends CoreCooldowns {
 		},
 		{
 			name: 'Enkindle',
-			merge: true,
 			actions: [
 				ACTIONS.ENKINDLE_AERIAL_BLAST.id,
 				ACTIONS.ENKINDLE_EARTHEN_FURY.id,

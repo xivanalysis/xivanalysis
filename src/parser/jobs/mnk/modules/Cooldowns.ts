@@ -5,7 +5,6 @@ export default class Cooldowns extends CoreCooldowns {
 	static cooldownOrder = [
 		{
 			name: 'Chakras',
-			merge: true,
 			actions: [
 				ACTIONS.THE_FORBIDDEN_CHAKRA.id,
 				ACTIONS.ENLIGHTENMENT.id,
@@ -13,7 +12,6 @@ export default class Cooldowns extends CoreCooldowns {
 		},
 		{
 			name: 'Fists',
-			merge: true,
 			actions: [
 				ACTIONS.FISTS_OF_FIRE.id,
 				ACTIONS.FISTS_OF_WIND.id,

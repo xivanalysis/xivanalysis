@@ -13,7 +13,6 @@ export default class Cooldowns extends CoreCooldowns {
 		// Continuation
 		{
 			name: 'Continuation',
-			merge: true,
 			actions: [
 				ACTIONS.JUGULAR_RIP.id,
 				ACTIONS.ABDOMEN_TEAR.id,

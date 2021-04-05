@@ -9,7 +9,6 @@ import {ActionItem, ContainerRow, Timeline} from './Timeline'
 
 export interface CooldownOrderGroup {
 	name: string
-	merge: boolean // TODO: Probably can enable on all and remove
 	actions: number[] // TODO: use action keys
 }
 
@@ -62,7 +61,7 @@ export default class Cooldowns extends Module {
 	}
 
 	private _buildRows(mappings: CooldownOrderItem[]) {
-		mappings.map((mapping, index) => {
+		mappings.forEach((mapping, index) => {
 			const order = -(mappings.length - index)
 
 			// If it's just the ID of an action, build a row for it and bail
@@ -74,20 +73,10 @@ export default class Cooldowns extends Module {
 			// Otherwise, it's a grouping - build a base row
 			const row = this._buildRow(mapping.name, {label: mapping.name, order})
 
-			if (mapping.merge) {
-				// If it's a merge group, it'll be absorbing all the child actions
-				// Register the group for each of the action IDs
-				mapping.actions.forEach(id => {
-					this._rows[id] = row
-				})
-			} else {
-				// Otherwise, build nested rows for each action in the mapping
-				this._buildRows(mapping.actions)
-				// TODO: Probably remove this. Will never succeed.
-				// 	.forEach(subRow => row.addRow(subRow))
-			}
-
-			return row
+			// Register the group for each of the action IDs
+			mapping.actions.forEach(id => {
+				this._rows[id] = row
+			})
 		})
 	}
 
