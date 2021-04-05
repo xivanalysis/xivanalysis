@@ -113,10 +113,7 @@ export default class Cooldowns extends Module {
 
 		this._currentAction = action
 
-		this.startCooldown(action.id)
-		if (!_.isNil(action.cooldownGroup)) {
-			this.startCooldownGroup(action.id, action.cooldownGroup)
-		}
+		this.startCooldownGroup(action)
 	}
 
 	private _onCast(event: CastEvent) {
@@ -128,10 +125,7 @@ export default class Cooldowns extends Module {
 
 		if (finishingCast) { return }
 
-		this.startCooldown(action.id)
-		if (!_.isNil(action.cooldownGroup)) {
-			this.startCooldownGroup(action.id, action.cooldownGroup)
-		}
+		this.startCooldownGroup(action)
 	}
 
 	private _onComplete() {
@@ -185,21 +179,20 @@ export default class Cooldowns extends Module {
 		}
 	}
 
-	private startCooldownGroup(originActionId: number, cooldownGroup: number) {
-		const sharedCooldownActions = _.get(this._cooldownGroups, cooldownGroup, [] as Action[])
-		sharedCooldownActions
-			.map(action => action.id)
-			.filter(id => id !== originActionId)
-			.forEach(id => this.startCooldown(id, true))
+	private startCooldownGroup(action: Action) {
+		const cooldownActions = action.cooldownGroup != null
+			? _.get(this._cooldownGroups, action.cooldownGroup, [])
+			: [action]
+
+		cooldownActions.forEach(cooldownAction => this.startCooldown(
+			cooldownAction,
+			cooldownAction.id !== action.id
+		))
 	}
 
-	private startCooldown(actionId: number, sharedCooldown = false) {
-		// TODO: handle shared CDs
-		const action = this.data.getAction(actionId)
-		if (!action) { return }
-
+	private startCooldown(action: Action, sharedCooldown = false) {
 		// Get the current cooldown status, falling back to a new cooldown
-		const cd = this.getCooldown(actionId)
+		const cd = this.getCooldown(action.id)
 
 		// If there's a current object, move it into the history
 		// TODO: handle errors on CD overlap
@@ -207,7 +200,7 @@ export default class Cooldowns extends Module {
 			const currentFightDuration = this.parser.currentTimestamp - this.parser.eventTimeOffset
 			if (cd.current.timestamp < this.parser.eventTimeOffset && cd.current.length > currentFightDuration) {
 				// Pre-pull usage, reset the cooldown to prevent overlap on timeline since we don't know exactly when cooldown was used pre-pull
-				this.resetCooldown(actionId)
+				this.resetCooldown(action.id)
 			} else {
 				cd.history.push(cd.current)
 			}
@@ -221,7 +214,7 @@ export default class Cooldowns extends Module {
 		}
 
 		// Save the info back out (to ensure propagation if we've got a new info)
-		this._cooldowns[actionId] = cd
+		this._cooldowns[action.id] = cd
 	}
 
 	reduceCooldown(actionId: number, reduction: number) {
