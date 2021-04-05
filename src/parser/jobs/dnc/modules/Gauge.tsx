@@ -14,16 +14,16 @@ import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Sugge
 import React from 'react'
 import {FINISHES} from '../CommonData'
 
-export interface DancerResourceDatum extends ResourceDatum {
+interface DancerResourceDatum extends ResourceDatum {
 	isGenerator: boolean // Need to know if the resource event was a generator or a spender, used for graph smoothing
 }
 
-export interface FeatherResourceDatum extends DancerResourceDatum {
+interface FeatherResourceDatum extends DancerResourceDatum {
 	t: number, // non-Epoch-based timestamp since I haven't figured out how to translate to/from that, needed for Technicalities
 }
 
 // More lenient than usual due to the probable unreliability of the data.
-export const GAUGE_SEVERITY_TIERS = {
+const GAUGE_SEVERITY_TIERS = {
 	1: SEVERITY.MINOR,
 	5: SEVERITY.MEDIUM,
 	10: SEVERITY.MAJOR,
