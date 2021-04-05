@@ -23,6 +23,5 @@
 			"jest"
 		]
 	},
-	"include": ["**/*", "**/.*"],
-	"exclude": ["build", "docs", "locale", "node_modules"]
+	"include": ["src/**/*"]
 }
