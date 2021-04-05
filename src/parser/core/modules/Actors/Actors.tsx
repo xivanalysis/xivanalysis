@@ -82,6 +82,8 @@ export class Actors extends Analyser {
 		})
 
 		// Some jobs do not use MP at all - hide if we get no info beyond the initial data dump
+		// TODO: This check fails if there was a death - the natural MP regen will create mp update
+		// events. Look into a more robust way of deriving MP-less jobs - will require updates in data/
 		if (mp.length > 1) {
 			this.resourceGraphs.addResource({
 				label: <Trans id="core.actors.resource.mp">MP</Trans>,
