@@ -25,7 +25,7 @@ interface CooldownState {
 }
 
 interface CooldownHistory {
-	current: CooldownState | null
+	current?: CooldownState
 	history: CooldownState[]
 }
 
@@ -45,9 +45,8 @@ export default class Cooldowns extends Module {
 
 	private _cooldownGroups: Record<string, Action[]> = _.groupBy(this.data.actions, 'cooldownGroup')
 
-	private _currentAction: Action | null = null
+	private _currentAction?: Action
 	private _cooldowns: Partial<Record<number, CooldownHistory>> = {}
-	private _groups = {} // TODO: Unused?
 	private _rows: Partial<Record<number | string, ContainerRow>> = {}
 
 	protected init() {
@@ -131,7 +130,7 @@ export default class Cooldowns extends Module {
 		if (!action || action.cooldown == null) { return }
 
 		const finishingCast = this._currentAction && this._currentAction.id === action.id
-		this._currentAction = null
+		this._currentAction = undefined
 
 		if (finishingCast) { return }
 
@@ -156,7 +155,7 @@ export default class Cooldowns extends Module {
 		// Clean out any 'current' cooldowns into the history
 		if (cd.current) {
 			cd.history.push(cd.current)
-			cd.current = null
+			cd.current = undefined
 		}
 
 		const action = this.data.getAction(actionId)
@@ -185,9 +184,9 @@ export default class Cooldowns extends Module {
 		return true
 	}
 
-	getCooldown(actionId: number) {
-		return this._cooldowns[actionId] || {
-			current: null,
+	getCooldown(actionId: number): CooldownHistory {
+		return this._cooldowns[actionId] ?? {
+			current: undefined,
 			history: [],
 		}
 	}
@@ -238,11 +237,11 @@ export default class Cooldowns extends Module {
 		// Check if current isn't current
 		if (cd.current && cd.current.timestamp + cd.current.length < currentTimestamp) {
 			cd.history.push(cd.current)
-			cd.current = null
+			cd.current = undefined
 		}
 
 		// TODO: Do I need to warn if they're reducing cooldown on something _with_ no cooldown?
-		if (cd.current === null) {
+		if (cd.current == null) {
 			return
 		}
 
@@ -278,7 +277,7 @@ export default class Cooldowns extends Module {
 
 		// If there's nothing running, we can just stop
 		// TODO: need to warn?
-		if (cd.current === null) {
+		if (cd.current == null) {
 			return
 		}
 
@@ -287,7 +286,7 @@ export default class Cooldowns extends Module {
 
 		// Move the CD into the history
 		cd.history.push(cd.current)
-		cd.current = null
+		cd.current = undefined
 	}
 
 	getCooldownRemaining(actionId: number) {
