@@ -75,4 +75,9 @@ export const changelog = [
 		Changes: () => <>Added support for patch 5.3</>,
 		contributors: [CONTRIBUTORS.CADENCE],
 	},
+	{
+		date: new Date('2021-04-05'),
+		Changes: () => <>Merge gauge modules and move graph display into the Resources section of the Timeline.</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
 ]

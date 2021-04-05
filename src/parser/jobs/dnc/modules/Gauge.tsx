@@ -230,16 +230,18 @@ export default class Gauge extends Module {
 		}
 	}
 
+	/* Parse Completion and output */
 	private onComplete() {
 		this.resourceGraphs.addResource({
-			label: 'Esprit',
+			label: <Trans id="dnc.gauge.resource.esprit">Esprit</Trans>,
 			colour: DNC_COLOR,
 			data: this.espritHistory,
 		})
 
 		this.resourceGraphs.addResource({
-			label: 'Feathers',
-			colour: DNC_COLOR,
+			label: <Trans id="dnc.gauge.resource.feathers">Feathers</Trans>,
+			// eslint-disable-next-line @typescript-eslint/no-magic-numbers
+			colour: DNC_COLOR.fade(0.6).toString(),
 			data: this.featherHistory,
 		})
 
