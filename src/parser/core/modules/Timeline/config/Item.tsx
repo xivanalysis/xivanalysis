@@ -9,6 +9,8 @@ export interface Item {
 	readonly start: number
 	/** End time of the item */
 	readonly end: number
+	/** Depth of the item. Higher values are closer to the user. */
+	readonly depth?: number
 	/** Component to render as the item */
 	readonly Content: ComponentType
 }
@@ -16,17 +18,20 @@ export interface Item {
 interface BaseItemOptions {
 	start: number
 	end: number
+	depth?: number
 }
 
 abstract class BaseItem implements Item {
 	readonly start: number
 	readonly end: number
+	readonly depth?: number
 
 	abstract Content: ComponentType
 
 	constructor(opts: BaseItemOptions) {
 		this.start = opts.start
 		this.end = opts.end
+		this.depth = opts.depth
 	}
 }
 
