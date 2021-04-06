@@ -20,6 +20,11 @@ export default new Meta({
 		{user: CONTRIBUTORS.YUMIYAFANGIRL, role: ROLES.DEVELOPER},
 	],
 	changelog: [{
+		date: new Date('2021-04-06'),
+		Changes: () => <>Added resource graphs for Heat and Battery gauge to the Timeline.</>,
+		contributors: [CONTRIBUTORS.YUMIYAFANGIRL],
+	},
+	{
 		date: new Date('2021-01-29'),
 		Changes: () => <>Added Automaton Queen actions to the Timeline.</>,
 		contributors: [CONTRIBUTORS.YUMIYAFANGIRL],
