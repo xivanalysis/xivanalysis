@@ -9,14 +9,13 @@ import BrokenLog from 'parser/core/modules/BrokenLog'
 import {ComboEvent} from 'parser/core/modules/Combos'
 import {Data} from 'parser/core/modules/Data'
 import {CounterGauge, Gauge as CoreGauge} from 'parser/core/modules/Gauge'
-import {ResourceDatum, ResourceGraphs} from 'parser/core/modules/ResourceGraphs'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
 
 const COLORS = {
 	HEAT: Color('#D35A10'),
 	BATTERY: Color('#2C9FCB'),
-} as const
+}
 
 const OVERCAP_SEVERITY = {
 	5: SEVERITY.MINOR,
@@ -119,16 +118,23 @@ export default class Gauge extends CoreGauge {
 		const amount = modifier[event.type] ?? 0
 		if (event.ability.guid === this.data.actions.AUTOMATON_QUEEN.id ||
 			event.ability.guid === this.data.actions.ROOK_AUTOTURRET.id) {
+			// Queen and turret dump the entire gauge, set to zero and handle overflow
 			if (this.battery.value < amount) {
 				this.flagBatteryUnderflow(event.ability.guid)
 			}
 			this.lastQueenCost = this.battery.value
 			this.battery.set(0)
+
 		} else {
 			this.battery.modify(amount)
 		}
 	}
 
+	/**
+	 * If the player had some gauge built up before parsing began,
+	 * we'll experience a gauge underflow. Trigger a broken log error
+	 * if this happens.
+	 */
 	private flagHeatUnderflow() {
 		this.brokenLog.trigger(this, 'negative heat', (
 			<Trans id="mch.gauge.trigger.negative-heat">
