@@ -1,3 +1,4 @@
+import {getDataArrayBy} from 'data'
 import {Action, ActionKey} from 'data/ACTIONS'
 import {CastEvent} from 'fflogs'
 import _ from 'lodash'
@@ -41,8 +42,6 @@ export default class Cooldowns extends Module {
 	// nested groups. Actions not specified here will be sorted by their ID below.
 	// Check the NIN and SMN modules for examples.
 	static cooldownOrder: CooldownOrderItem[] = []
-
-	private readonly _cooldownGroups: Record<string, Action[]> = _.groupBy(this.data.actions, 'cooldownGroup')
 
 	private _currentAction?: Action
 	private _cooldowns: Partial<Record<number, CooldownHistory>> = {}
@@ -180,9 +179,8 @@ export default class Cooldowns extends Module {
 	}
 
 	private startCooldownGroup(action: Action) {
-		const cooldownActions = action.cooldownGroup != null
-			? _.get(this._cooldownGroups, action.cooldownGroup, [])
-			: [action]
+		const cooldownGroup = getDataArrayBy(this.data.actions, 'cooldownGroup', action.cooldownGroup)
+		const cooldownActions = cooldownGroup.length > 0 ? cooldownGroup : [action]
 
 		cooldownActions.forEach(cooldownAction => this.startCooldown(
 			cooldownAction,
