@@ -1,7 +1,7 @@
 import {Plural, Trans} from '@lingui/react'
 import Color from 'color'
 import {ActionLink} from 'components/ui/DbLink'
-import {ActionKey} from 'data/ACTIONS'
+import ACTIONS, {ActionKey} from 'data/ACTIONS'
 import JOBS from 'data/JOBS'
 import {Cause, Event, Events} from 'event'
 import _ from 'lodash'
@@ -79,6 +79,23 @@ export default class Gauge extends Analyser {
 
 	private espritGenerationExceptions = [
 		...FINISHES,
+		ACTIONS.FUMA_SHURIKEN.id,
+		ACTIONS.FUMA_SHURIKEN_TCJ_TEN.id,
+		ACTIONS.FUMA_SHURIKEN_TCJ_CHI.id,
+		ACTIONS.FUMA_SHURIKEN_TCJ_JIN.id,
+		ACTIONS.KATON.id,
+		ACTIONS.KATON_TCJ.id,
+		ACTIONS.RAITON_TCJ.id,
+		ACTIONS.RAITON_TCJ.id,
+		ACTIONS.HYOTON_TCJ.id,
+		ACTIONS.HYOTON_TCJ.id,
+		ACTIONS.GOKA_MEKKYAKU.id,
+		ACTIONS.HYOSHO_RANRYU.id,
+		ACTIONS.SUITON.id,
+		ACTIONS.SUITON_TCJ.id,
+		ACTIONS.KAESHI_GOKEN.id,
+		ACTIONS.KAESHI_HIGANBANA.id,
+		ACTIONS.KAESHI_SETSUGEKKA.id,
 	]
 
 	private featherGenerators: ActionKey[] = [
