@@ -35,7 +35,7 @@ export class Medicated extends Analyser {
 	}
 
 	private onMedication(event: Events['statusApply']) {
-		this.pot = {start: event.timestamp - this.parser.pull.timestamp}
+		this.pot = {start: event.timestamp}
 	}
 
 	private offMedication(event: Events['statusRemove']) {
@@ -43,7 +43,7 @@ export class Medicated extends Analyser {
 			throw new Error('potion instance not found')
 		}
 
-		this.pots.push({end: event.timestamp - this.parser.pull.timestamp, ...this.pot})
+		this.pots.push({end: event.timestamp, ...this.pot})
 
 		this.pot = undefined
 	}
@@ -59,8 +59,8 @@ export class Medicated extends Analyser {
 
 			this.pots.forEach(pot => row.addItem(new StatusItem({
 				status: status,
-				start: pot.start,
-				end: pot.end ?? (this.parser.pull.timestamp + this.parser.pull.duration),
+				start: pot.start - this.parser.pull.timestamp,
+				end: pot.end != null ? pot.end - this.parser.pull.timestamp : this.parser.pull.duration,
 			})))
 
 			this.timeline.addRow(row)
