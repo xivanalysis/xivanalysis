@@ -77,7 +77,7 @@ export const changelog = [
 	},
 	{
 		date: new Date('2021-04-05'),
-		Changes: () => <>Merge gauge modules and move graph display into the Resources section of the Timeline.</>,
+		Changes: () => <>Significant gauge overhaul. Esprit and Feathers merged into a single analyser and graph output moved into the timeline. Data should be more accurate, though still simulated due to probabilistic generation.</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],
 	},
 ]
