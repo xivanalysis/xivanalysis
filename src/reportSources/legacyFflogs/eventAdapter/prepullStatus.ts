@@ -79,7 +79,7 @@ export class PrepullStatusAdapterStep extends AdapterStep {
 		}
 
 		const actions = getDataArrayBy(this.getActions(), 'statusesApplied', statusKey)
-		if (!actions || actions.length > 1) {
+		if (actions.length !== 1) {
 			// No action is known to apply this status OR
 			// multiple actions can apply this status, not enough info to synth
 			return
