@@ -1,10 +1,12 @@
 import {ChartDataSets} from 'chart.js'
 import Color from 'color'
 import _ from 'lodash'
+import {ResourceData} from '../ResourceGraphs'
 import {AbstractGauge, AbstractGaugeOptions} from './AbstractGauge'
 
 interface CounterHistory {
 	timestamp: number
+	epochTimestamp: number
 	value: number
 	minimum: number
 	maximum: number
@@ -19,6 +21,8 @@ export interface CounterGaugeOptions extends AbstractGaugeOptions {
 	maximum?: number,
 	/** Chart options. Omit to disable charting for this gauge. */
 	chart?: CounterChartOptions,
+	/** Resource graph options. Omit to disable resource graphing on the timeline for this gauge. */
+	resource?: ResourceGraphOptions,
 }
 
 export interface CounterChartOptions {
@@ -28,6 +32,13 @@ export interface CounterChartOptions {
 	color?: string | Color
 }
 
+export interface ResourceGraphOptions {
+	/** Label to display on the tooltip. */
+	label: string
+	/** Colour to draw the resource graph in. */
+	colour: string | Color
+}
+
 export class CounterGauge extends AbstractGauge {
 	private _value: number
 	private minimum: number
@@ -35,6 +46,7 @@ export class CounterGauge extends AbstractGauge {
 	overCap: number = 0
 
 	private chartOptions?: CounterChartOptions
+	private resourceOptions?: ResourceGraphOptions
 
 	private history: CounterHistory[] = []
 
@@ -50,6 +62,7 @@ export class CounterGauge extends AbstractGauge {
 		this.maximum = opts.maximum || 100
 
 		this.chartOptions = opts.chart
+		this.resourceOptions = opts.resource
 	}
 
 	getValueAt(timestamp: number) {
@@ -113,7 +126,8 @@ export class CounterGauge extends AbstractGauge {
 		}
 
 		this.history.push({
-			timestamp,
+			timestamp: timestamp,
+			epochTimestamp: this.parser.currentEpochTimestamp,
 			value: this._value,
 			minimum: this.minimum,
 			maximum: this.maximum,
@@ -150,5 +164,23 @@ export class CounterGauge extends AbstractGauge {
 		}
 
 		return dataSet
+	}
+
+	generateResourceDataset(): ResourceData | undefined {
+		// If there's no resource options, provide nothing
+		if (!this.resourceOptions) {
+			return
+		}
+
+		const data = this.history.map(entry => ({
+			maximum: entry.maximum,
+			current: entry.value,
+			time: entry.epochTimestamp,
+		}))
+
+		return {
+			data: data,
+			...this.resourceOptions,
+		}
 	}
 }

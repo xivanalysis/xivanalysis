@@ -1,5 +1,6 @@
 import {ChartDataSets} from 'chart.js'
 import Parser from 'parser/core/Parser'
+import {ResourceData} from '../ResourceGraphs'
 
 export interface AbstractGaugeOptions {
 	/** Reference to the parser. Required if not adding the gauge to the core gauge module. */
@@ -32,4 +33,7 @@ export abstract class AbstractGauge {
 
 	/** Generate a dataset suitable for use in ChartJS */
 	generateDataset(): ChartDataSets | undefined { return undefined }
+
+	/** Generate a resource dataset for use in the timeline */
+	generateResourceDataset(): ResourceData | undefined { return undefined }
 }

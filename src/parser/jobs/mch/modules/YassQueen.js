@@ -52,7 +52,7 @@ export default class YassQueen extends Module {
 		this._queens.current = {
 			start: event.timestamp,
 			casts: [],
-			cost: this.gauge.lastQueenCost(),
+			cost: this.gauge.lastQueenCost,
 			damage: 0,
 		}
 	}

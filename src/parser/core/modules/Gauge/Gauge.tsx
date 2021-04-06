@@ -1,14 +1,17 @@
 import {t} from '@lingui/macro'
 import TimeLineChart from 'components/ui/TimeLineChart'
-import Module from 'parser/core/Module'
+import Module, {dependency} from 'parser/core/Module'
 import React from 'react'
 import {isDefined} from 'utilities'
+import {ResourceGraphs} from '../ResourceGraphs'
 import {AbstractGauge} from './AbstractGauge'
 import {TimerGauge} from './TimerGauge'
 
 export class Gauge extends Module {
 	static handle = 'gauge'
 	static title = t('core.gauge.title')`Gauge`
+
+	@dependency private resourceGraphs!: ResourceGraphs
 
 	private gauges: AbstractGauge[] = []
 
@@ -35,6 +38,12 @@ export class Gauge extends Module {
 	}
 
 	output() {
+		// Generate a resource graph on the timeline for each registered gauge
+		this.gauges
+			.map(gauge => gauge.generateResourceDataset())
+			.filter(isDefined)
+			.forEach(resource => this.resourceGraphs.addResource(resource))
+
 		// Generate a dataset from each registered gauge
 		const datasets = this.gauges
 			.map(gauge => gauge.generateDataset())
