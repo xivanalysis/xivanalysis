@@ -89,13 +89,13 @@ export const DNC = ensureStatuses({
 		icon: 'https://xivapi.com/i/013000/013717.png',
 		duration: 15,
 	},
-	ESPRIT: {
+	ESPRIT: { // The Esprit buff sourced from Standard Finish, applies to the DNC and their Dance Partner
 		id: 1847,
 		name: 'Esprit',
 		icon: 'https://xivapi.com/i/013000/013710.png',
 		duration: 60,
 	},
-	ESPRIT_TECHNICAL: {
+	ESPRIT_TECHNICAL: { // The Esprit buff sourced from Technical finish. Superseded by ESPRIT
 		id: 1848,
 		name: 'Esprit',
 		icon: 'https://xivapi.com/i/013000/013711.png',
