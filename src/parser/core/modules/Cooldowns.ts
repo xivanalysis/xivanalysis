@@ -44,7 +44,7 @@ export default class Cooldowns extends Module {
 	static cooldownOrder: CooldownOrderItem[] = []
 
 	private _currentAction?: Action
-	private _cooldowns: Partial<Record<number, CooldownHistory>> = {}
+	private _cooldowns = new Map<number, CooldownHistory>()
 	private _rows: Partial<Record<number | string, ContainerRow>> = {}
 
 	protected init() {
@@ -128,54 +128,52 @@ export default class Cooldowns extends Module {
 	}
 
 	private _onComplete() {
-		Object.keys(this._cooldowns).forEach(actionId => {
-			this._addToTimeline(parseInt(actionId, 10))
+		this._cooldowns.forEach((history, actionId) => {
+			this._cleanHistory(history)
+			this._addToTimeline(actionId, history)
 		})
 	}
 
-	private _addToTimeline(actionId: number) {
-		const cd = this._cooldowns[actionId]
-		if (!cd) {
-			return false
-		}
-
+	private _cleanHistory(history: CooldownHistory) {
+		if (history.current == null) { return }
 		// Clean out any 'current' cooldowns into the history
-		if (cd.current) {
-			cd.history.push(cd.current)
-			cd.current = undefined
-		}
+		history.history.push(history.current)
+		history.current = undefined
+	}
 
-		const action = this.data.getAction(actionId)
-
+	private _addToTimeline(actionId: number, history: CooldownHistory) {
 		// If the action is on the GCD, GlobalCooldown will be managing its own group
-		if (!action || action.onGcd) {
-			return false
+		const action = this.data.getAction(actionId)
+		if (action == null || action.onGcd) {
+			return
 		}
 
 		// Ensure we've got a row for this item
 		const row = this._buildRow(actionId, {label: action.name, order: actionId})
 
 		// Add CD info to the timeline
-		cd.history
-			.forEach(use => {
-				if (use.shared) { return }
+		history.history.forEach(use => {
+			if (use.shared) { return }
 
-				const start = use.timestamp - this.parser.eventTimeOffset
-				row.addItem(new ActionItem({
-					start,
-					end: start + use.length,
-					action,
-				}))
-			})
-
-		return true
+			const start = use.timestamp - this.parser.eventTimeOffset
+			row.addItem(new ActionItem({
+				start,
+				end: start + use.length,
+				action,
+			}))
+		})
 	}
 
 	getCooldown(actionId: number): CooldownHistory {
-		return this._cooldowns[actionId] ?? {
-			current: undefined,
-			history: [],
+		let history = this._cooldowns.get(actionId)
+		if (history == null) {
+			history = {
+				current: undefined,
+				history: [],
+			}
+			this._cooldowns.set(actionId, history)
 		}
+		return history
 	}
 
 	private startCooldownGroup(action: Action) {
@@ -210,9 +208,6 @@ export default class Cooldowns extends Module {
 			shared: sharedCooldown,
 			invulnTime: 0,
 		}
-
-		// Save the info back out (to ensure propagation if we've got a new info)
-		this._cooldowns[action.id] = cd
 	}
 
 	reduceCooldown(actionId: number, reduction: number) {
