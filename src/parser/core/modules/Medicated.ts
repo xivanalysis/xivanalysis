@@ -39,9 +39,8 @@ export class Medicated extends Analyser {
 	}
 
 	private offMedication(event: Events['statusRemove']) {
-		// Pre-pull should handle if we're missing a start time
-		if (!this.pot) {
-			this.pot = {start: this.parser.pull.timestamp}
+		if (this.pot == null) {
+			throw new Error('potion instance not found')
 		}
 
 		this.pots.push({end: event.timestamp - this.parser.pull.timestamp, ...this.pot})
@@ -51,7 +50,6 @@ export class Medicated extends Analyser {
 
 	private onComplete() {
 		const status = this.data.statuses.MEDICATED
-		if (!status) { return }
 
 		if (this.pots.length > 0) {
 			const row = new SimpleRow({
