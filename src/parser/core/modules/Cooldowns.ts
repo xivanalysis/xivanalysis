@@ -45,7 +45,7 @@ export default class Cooldowns extends Module {
 
 	private _currentAction?: Action
 	private _cooldowns = new Map<number, CooldownHistory>()
-	private _rows: Partial<Record<number | string, ContainerRow>> = {}
+	private _rows = new Map<number | string, ContainerRow>()
 
 	protected init() {
 		const constructor = this.constructor as typeof Cooldowns
@@ -74,14 +74,14 @@ export default class Cooldowns extends Module {
 
 			// Register the group for each of the action IDs
 			mapping.actions.forEach(id => {
-				this._rows[id] = row
+				this._rows.set(id, row)
 			})
 		})
 	}
 
 	private _buildRow(id: number | undefined, opts: {label: string, order: number}) {
 		if (id != null) {
-			const currentRow = this._rows[id]
+			const currentRow = this._rows.get(id)
 			if (currentRow != null) {
 				return currentRow
 			}
@@ -93,7 +93,7 @@ export default class Cooldowns extends Module {
 		}))
 
 		if (id != null) {
-			this._rows[id] = row
+			this._rows.set(id, row)
 		}
 
 		return row
