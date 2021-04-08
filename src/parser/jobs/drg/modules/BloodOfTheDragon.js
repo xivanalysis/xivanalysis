@@ -247,7 +247,10 @@ export default class BloodOfTheDragon extends Module {
 			lifeWindow.buffsInDelayWindow = {}
 
 			// downtime overlap
-			lifeWindow.dtOverlapTime = this._intersectsDowntime((lifeWindow.start + ACTIONS.HIGH_JUMP.cooldown * 1000))
+			lifeWindow.dtOverlapTime = this._intersectsDowntime(Math.min(
+				lifeWindow.start + ACTIONS.HIGH_JUMP.cooldown * 1000,
+				this.parser.eventTimeOffset + this.parser.pull.duration,
+			))
 
 			// flag for last life window
 			lifeWindow.isLast = lifeWindow.start + lifeWindow.duration > this.parser.fight.end_time

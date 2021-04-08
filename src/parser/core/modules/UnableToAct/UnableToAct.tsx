@@ -88,6 +88,9 @@ export default class UnableToAct extends Module {
 	}
 
 	getDowntimes(start = 0, end = this.parser.currentTimestamp) {
+		if (end > this.parser.currentTimestamp) {
+			throw new Error('Invariant: Tried to retrieve UTA window beyond current analysis position.')
+		}
 		return this.downtimes.filter(downtime => downtime.end > start && downtime.start < end)
 	}
 }

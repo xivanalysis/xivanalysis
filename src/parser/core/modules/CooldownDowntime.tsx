@@ -188,14 +188,14 @@ export abstract class CooldownDowntime extends Module {
 		if (gRep.cooldown === undefined) {
 			return 0
 		}
-		const maxCharges = gRep.charges || 1
+		const maxCharges = gRep.charges ?? 1
 
 		// Skill with charges get their allowed downtime from the charge build up time,
 		// so ignore the value on the group object
-		const step = gRep.cooldown * 1000 + ((maxCharges > 1) ? 0 : (group.allowedAverageDowntime || this.defaultAllowedAverageDowntime))
+		const step = gRep.cooldown * 1000 + ((maxCharges > 1) ? 0 : (group.allowedAverageDowntime ?? this.defaultAllowedAverageDowntime))
 
-		const gResets = this.resets.get(group) || []
-		const gUsages = (this.usages.get(group) || [])
+		const gResets = this.resets.get(group) ?? []
+		const gUsages = (this.usages.get(group) ?? [])
 		const dtUsages = gUsages
 			.filter(u => this.downtime.isDowntime(u.timestamp))
 			.map(u => this.downtime.getDowntimeWindows(u.timestamp)[0])
@@ -206,11 +206,12 @@ export abstract class CooldownDowntime extends Module {
 		this.debug(`Checking downtime for group ${gRep.name} with default first use ${group.firstUseOffset} and step ${step} and ${maxCharges} charges`)
 		let charges = maxCharges
 		let count = 0
-		const expectedFirstUseTime = this.parser.eventTimeOffset + (group.firstUseOffset || this.defaultFirstUseOffset)
+		const expectedFirstUseTime = this.parser.eventTimeOffset + (group.firstUseOffset ?? this.defaultFirstUseOffset)
 		const actualFirstUseTime = gUsages[0]
+		const pullEndTimestamp = this.parser.pull.duration + this.parser.eventTimeOffset
 
 		let currentTime = expectedFirstUseTime
-		if ((group.firstUseOffset || 0) < 0 && maxCharges === 1) {
+		if ((group.firstUseOffset ?? 0) < 0 && maxCharges === 1) {
 			// check for pre-fight usages, which cause synthesized usage events
 			// that will have timestamps that don't accurartely indicated when
 			// exactly they were used pre-fight
@@ -232,7 +233,7 @@ export abstract class CooldownDowntime extends Module {
 			currentTime = Math.min(actualFirstUseTime.timestamp, expectedFirstUseTime)
 		}
 
-		while (currentTime - this.parser.eventTimeOffset < this.parser.pull.duration) {
+		while (currentTime < pullEndTimestamp) {
 			// spend accumulated charges
 			count += charges
 			this.debug(`Expected ${charges} usages at ${this.parser.formatTimestamp(currentTime)}. Count: ${count}`)
@@ -262,7 +263,11 @@ export abstract class CooldownDowntime extends Module {
 				gResets.shift()
 			}
 
-			while (charges < maxCharges && this.downtime.isDowntime(currentTime)) {
+			while (
+				currentTime < pullEndTimestamp
+				&& charges < maxCharges
+				&& this.downtime.isDowntime(currentTime)
+			) {
 				this.debug(`Saving charge during downtime at ${this.parser.formatTimestamp(currentTime)}. ${charges} charges stored`)
 
 				const window = this.downtime.getDowntimeWindows(currentTime)[0]
@@ -277,7 +282,10 @@ export abstract class CooldownDowntime extends Module {
 			}
 
 			// full charges were built up during a downtime.  Move to the end of the downtime to spend charges.
-			if (this.downtime.isDowntime(currentTime)) {
+			if (
+				currentTime < pullEndTimestamp
+				&& this.downtime.isDowntime(currentTime)
+			) {
 				const window = this.downtime.getDowntimeWindows(currentTime)[0]
 				this.debug(`Downtime detected at ${this.parser.formatTimestamp(currentTime)} in window from ${this.parser.formatTimestamp(window.start)} to ${this.parser.formatTimestamp(window.end)}`)
 
