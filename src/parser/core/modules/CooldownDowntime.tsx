@@ -188,7 +188,8 @@ export abstract class CooldownDowntime extends Module {
 		if (gRep.cooldown === undefined) {
 			return 0
 		}
-		const maxCharges = gRep.charges ?? 1
+		// 0 charges is nonsensical at this point, default up to 1.
+		const maxCharges = gRep.charges || 1
 
 		// Skill with charges get their allowed downtime from the charge build up time,
 		// so ignore the value on the group object
