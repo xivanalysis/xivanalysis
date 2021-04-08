@@ -197,14 +197,10 @@ export default class DirtyDancing extends Module {
 		dance.end = finisher.timestamp
 
 		// Count dance as dirty if we didn't get the expected finisher, and the fight wouldn't have ended or been in an invuln window before we could have
-		if (finisher.ability.guid !== dance.expectedFinishId) {
-			if (dance.expectedEndTime <= this.parser.eventTimeOffset + this.parser.pull.duration) {
-				dance.dirty = true
-			} else {
-				this.addTimestampHook(dance.expectedEndTime, ({timestamp}) => {
-					dance.dirty = !this.invuln.isInvulnerable('all', timestamp)
-				})
-			}
+		if (finisher.ability.guid !== dance.expectedFinishId && dance.expectedEndTime <= this.parser.eventTimeOffset + this.parser.pull.duration) {
+			this.addTimestampHook(dance.expectedEndTime, ({timestamp}) => {
+				dance.dirty = !this.invuln.isInvulnerable('all', timestamp)
+			})
 		}
 
 		// If the finisher didn't hit anything, and something could've been, ding it.
