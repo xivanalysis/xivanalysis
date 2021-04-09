@@ -6,7 +6,7 @@ import {getDataBy} from 'data'
 import ACTIONS from 'data/ACTIONS'
 import {CastEvent} from 'fflogs'
 import Module, {dependency} from 'parser/core/Module'
-import Combatants from 'parser/core/modules/Combatants'
+import {Actors} from 'parser/core/modules/Actors'
 import Enemies from 'parser/core/modules/Enemies'
 import {EntityStatuses} from 'parser/core/modules/EntityStatuses'
 import {Invulnerability} from 'parser/core/modules/Invulnerability'
@@ -201,9 +201,9 @@ export default class RotationWatchdog extends Module {
 	@dependency private invuln!: Invulnerability
 	@dependency private enemies!: Enemies
 	@dependency private timeline!: Timeline
-	@dependency private combatants!: Combatants
 	@dependency private unableToAct!: UnableToAct
 	@dependency private entityStatuses!: EntityStatuses
+	@dependency private actors!: Actors
 
 	private currentGaugeState: GaugeState = new GaugeState()
 	private currentRotation: Cycle = new Cycle(this.parser.fight.start_time, this.currentGaugeState)
@@ -225,7 +225,7 @@ export default class RotationWatchdog extends Module {
 		// If we're beginning the fire phase of this cycle, note it and save some data
 		if (this.currentGaugeState.astralFire === 0 && event.astralFire > 0) {
 			this.currentRotation.inFirePhase = true
-			this.currentRotation.firePhaseStartMP = this.combatants.selected.resources.mp
+			this.currentRotation.firePhaseStartMP = this.actors.current.mp.current
 
 			// If we didn't enter fire phase with a normal gauge state of 3 UI/UH stacks, note it
 			if (this.currentRotation.gaugeStateBeforeFire.umbralIce !== AF_UI_BUFF_MAX_STACK ||
