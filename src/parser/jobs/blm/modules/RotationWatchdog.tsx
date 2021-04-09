@@ -277,6 +277,18 @@ export default class RotationWatchdog extends Module {
 			}
 		})
 
+		// Re-check to see if any of the cycles that were tagged as missing Fire 4s were actually right before a downtime but the boss
+		// became invunlnerable before another Fire 4 could've been cast. If so, mark it as a finalOrDowntime cycle, clear the error code
+		// and reprocess it to see if there were any other errors
+		this.history.filter(cycle => cycle.errorCode === CYCLE_ERRORS.MISSING_FIRE4S).forEach(cycle => {
+			const cycleEnd = cycle.endTime ?? this.parser.fight.end_time
+			if (this.invuln.isInvulnerable('all', cycleEnd + FIRE_IV_CAST_MILLIS)) {
+				cycle.finalOrDowntime = true
+				cycle.overrideErrorCode(CYCLE_ERRORS.NONE)
+				this.processCycle(cycle)
+			}
+		})
+
 		// Suggestion for skipping B4 on rotations that are cut short by the end of the parse or downtime
 		if (this.missedF4s) {
 			this.suggestions.add(new Suggestion({
