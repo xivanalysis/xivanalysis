@@ -3,8 +3,11 @@ import {t} from '@lingui/macro'
 import {Trans, Plural} from '@lingui/react'
 import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
-import Module from 'parser/core/Module'
-import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import Module, {dependency} from 'parser/core/Module'
+import BrokenLog from 'parser/core/modules/BrokenLog'
+import PrecastAction from 'parser/core/modules/PrecastAction'
+import Suggestions, {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import UnableToAct from 'parser/core/modules/UnableToAct'
 import React from 'react'
 
 const GAUGE_EVENTS = [
@@ -26,12 +29,11 @@ const MAX_POLYGLOT_STACKS = 2
 export default class Gauge extends Module {
 	static handle = 'gauge'
 	static title = t('blm.gauge.title')`Gauge`
-	static dependencies = [
-		'precastAction', // eslint-disable-line @xivanalysis/no-unused-dependencies
-		'suggestions',
-		'brokenLog',
-		'unableToAct',
-	]
+
+	@dependency precastAction!: PrecastAction
+	@dependency suggestions!: Suggestions
+	@dependency brokenLog!: BrokenLog
+	@dependency unableToAct!: UnableToAct
 
 	_astralFireStacks = 0
 	_umbralIceStacks = 0
