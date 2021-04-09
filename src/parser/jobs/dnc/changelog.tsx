@@ -75,4 +75,9 @@ export const changelog = [
 		Changes: () => <>Added support for patch 5.3</>,
 		contributors: [CONTRIBUTORS.CADENCE],
 	},
+	{
+		date: new Date('2021-04-09'),
+		Changes: () => <>Fix timeline display for overwritten procs, and stop flagging procs as 'dropped' when they're lost due to death. Don't die suggestion is enough.</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
 ]
