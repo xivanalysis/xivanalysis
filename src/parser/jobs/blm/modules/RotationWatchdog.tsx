@@ -52,7 +52,8 @@ const MIN_ROTATION_LENGTH = 3
  * NOTE: Cycles with values below ERROR_CODES.SHORT will be filtered out of the RotationTable display
  * unless the DEBUG_SHOW_ALL_CYCLES variable is set to true
  */
-const CYCLE_ERRORS = {
+interface CycleErrorCode {priority: number, message: string | JSX.Element}
+const CYCLE_ERRORS: {[key: string]: CycleErrorCode } = {
 	NONE: {priority: 0, message: 'No errors'},
 	FINAL_OR_DOWNTIME: {priority: 1, message: 'Ended with downtime, or last cycle'},
 	SHORT: {priority: 2, message: 'Too short, won\'t process'},
@@ -83,13 +84,13 @@ class Cycle {
 
 	gaugeStateBeforeFire: GaugeState = new GaugeState()
 
-	_errorCode: {priority: number, message: TODO} = CYCLE_ERRORS.NONE
+	_errorCode: CycleErrorCode = CYCLE_ERRORS.NONE
 	public set errorCode(code) {
 		if (code.priority > this._errorCode.priority) {
 			this._errorCode = code
 		}
 	}
-	public get errorCode() {
+	public get errorCode(): CycleErrorCode {
 		return this._errorCode
 	}
 
