@@ -174,15 +174,15 @@ export default class RotationWatchdog extends Module {
 	private currentRotation: Cycle = new Cycle(this.parser.fight.start_time, this.currentGaugeState)
 	private history: Cycle[] = []
 
-	private firstEvent = true
+	private firstEvent: boolean = true
 	// counters for suggestions
-	private missedF4s = 0
-	private extraF1s = 0
-	private extraT3s = 0
-	private rotationsWithoutFire = 0
-	private manafontBeforeDespair = 0
-	private astralFiresMissingDespairs = 0
-	private primaryTargetId?: number
+	private missedF4s: number = 0
+	private extraF1s: number = 0
+	private extraT3s: number = 0
+	private rotationsWithoutFire: number = 0
+	private manafontBeforeDespair: number = 0
+	private astralFiresMissingDespairs: number = 0
+	private uptimeSouls: number = 0
 
 	protected init() {
 		this.addEventHook('cast', {by: 'player'}, this.onCast)
@@ -253,6 +253,10 @@ export default class RotationWatchdog extends Module {
 		// If this is manafont, note that we used it so we don't have to cast.filter(...).length to find out
 		if (actionId === ACTIONS.MANAFONT.id) {
 			this.currentRotation.hasManafont = true
+		}
+
+		if (actionId === ACTIONS.UMBRAL_SOUL.id && !this.invuln.isInvulnerable('all')) {
+			this.uptimeSouls++
 		}
 	}
 
@@ -352,6 +356,18 @@ export default class RotationWatchdog extends Module {
 			value: this.rotationsWithoutFire,
 			why: <Trans id="blm.rotation-watchdog.suggestions.icemage.why">
 				<Plural value={this.rotationsWithoutFire} one="# rotation was" other="# rotations were"/> performed with no fire spells.
+			</Trans>,
+		}))
+
+		this.suggestions.add(new TieredSuggestion({
+			icon: ACTIONS.UMBRAL_SOUL.icon,
+			content: <Trans id="blm.rotation-watchdog.suggestions.uptime-souls.content">
+				Avoid using <ActionLink {...ACTIONS.UMBRAL_SOUL} /> when there is a target available to hit with a damaging ability. <ActionLink showIcon={false} {...ACTIONS.UMBRAL_SOUL} /> does no damage and prevents you from using other GCD skills. It should be reserved for downtime.
+			</Trans>,
+			tiers: ISSUE_SEVERITY_TIERS,
+			value: this.uptimeSouls,
+			why: <Trans id="blm.rotation-watchdog.suggestions.uptime-souls.why">
+				<Plural value={this.uptimeSouls} one="# Umbral Soul was" other="# Umbral Souls were"/> performed during uptime.
 			</Trans>,
 		}))
 	}
