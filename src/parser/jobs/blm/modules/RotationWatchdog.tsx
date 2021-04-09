@@ -144,7 +144,7 @@ class Cycle {
 		this.gaugeStateBeforeFire = Object.assign(this.gaugeStateBeforeFire, gaugeState)
 	}
 
-	public overrideErrorCode(code: {priority: number, message: TODO}) {
+	public overrideErrorCode(code: CycleErrorCode): void {
 		this._errorCode = code
 	}
 }
