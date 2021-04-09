@@ -59,6 +59,7 @@ const CYCLE_ERRORS: {[key: string]: CycleErrorCode } = {
 	FINAL_OR_DOWNTIME: {priority: 1, message: 'Ended with downtime, or last cycle'},
 	SHORT: {priority: 2, message: 'Too short, won\'t process'},
 	// Messages below should be Trans objects since they'll be displayed to end users
+	SHOULD_SKIP_T3: {priority: 8, message: <Trans id="blm.rotation-watchdog.error-messages.should-skip-t3">Should skip hardcast <ActionLink {...ACTIONS.THUNDER_III}/></Trans>},
 	SHOULD_SKIP_B4: {priority: 9, message: <Trans id="blm.rotation-watchdog.error-messages.should-skip-b4">Should skip <ActionLink {...ACTIONS.BLIZZARD_IV}/></Trans>},
 	MISSING_FIRE4S: {priority: 10, message: <Trans id="blm.rotation-watchdog.error-messages.missing-fire4s">Missing one or more <ActionLink {...ACTIONS.FIRE_IV}/>s</Trans>}, // These two errors are lower priority since they can be determined by looking at the
 	MISSING_DESPAIRS: {priority: 15, message: <Trans id="blm.rotation-watchdog.error-messages.missing-despair">Missing one or more <ActionLink {...ACTIONS.DESPAIR}/>s</Trans>}, // target columns in the table, so we want to tell players about other errors first
@@ -144,13 +145,15 @@ class Cycle {
 		return Math.max(this.casts.filter(cast => cast.ability.guid === ACTIONS.FIRE_I.id).length - 1, 0)
 	}
 
-	public get extraT3s(): number {
-		const hardT3Count = this.casts.filter(cast => cast.ability.overrideAction)
+	public get hardT3Count(): number {
+		return this.casts.filter(cast => cast.ability.overrideAction)
 			.filter(cast => cast.ability.overrideAction.id === ACTIONS.THUNDER_III_FALSE.id).length
-		if (hardT3Count > 1 || (hardT3Count > 0 && this.firePhaseStartMP < MIN_MP_FOR_FULL_ROTATION)) {
-			return Math.max(hardT3Count - 1, 0)
+	}
+	public get extraT3s(): number {
+		if (this.firePhaseStartMP < MIN_MP_FOR_FULL_ROTATION) {
+			return this.hardT3Count
 		}
-		return 0
+		return Math.max(this.hardT3Count - 1, 0)
 	}
 
 	public get manafontBeforeDespair(): boolean {
@@ -164,7 +167,10 @@ class Cycle {
 	}
 
 	public get shouldSkipB4(): boolean {
-		return this.gaugeStateBeforeFire.umbralHearts > 0 && this.missingFire4s === 2
+		return this.finalOrDowntime && this.gaugeStateBeforeFire.umbralHearts > 0 && this.missingFire4s === 2
+	}
+	public get shouldSkipT3(): boolean {
+		return this.finalOrDowntime && this.hardT3Count > 0
 	}
 
 	constructor(start: number, gaugeState: GaugeState) {
@@ -322,6 +328,21 @@ export default class RotationWatchdog extends Module {
 				severity: SEVERITY.MEDIUM,
 				why: <Trans id="blm.rotation-watchdog.suggestions.should-skip-b4.why">
 					You should have skipped <ActionLink showIcon={false} {...ACTIONS.BLIZZARD_IV} /> <Plural value={shouldSkipB4s} one="# time" other="# times"/>.
+				</Trans>,
+			}))
+		}
+
+		// Suggestion for skipping T3 on rotations that are cut short by the end of the parse or downtime
+		const shouldSkipT3s = this.history.filter(cycle => cycle.shouldSkipT3).reduce<number>((sum, cycle) => sum + cycle.hardT3Count, 0)
+		if (shouldSkipT3s > 0) {
+			this.suggestions.add(new Suggestion({
+				icon: ACTIONS.FIRE_IV.icon,
+				content: <Trans id="blm.rotation-watchdog.suggestions.should-skip-t3.content">
+					You lost at least one <ActionLink {...ACTIONS.FIRE_IV}/> by hard casting <ActionLink {...ACTIONS.THUNDER_III} /> before the fight finished or a phase transition occurred.
+				</Trans>,
+				severity: SEVERITY.MEDIUM,
+				why: <Trans id="blm.rotation-watchdog.suggestions.should-skip-t3.why">
+					You should have skipped <ActionLink showIcon={false} {...ACTIONS.THUNDER_III} /> <Plural value={shouldSkipT3s} one="# time" other="# times"/>.
 				</Trans>,
 			}))
 		}
@@ -496,11 +517,14 @@ export default class RotationWatchdog extends Module {
 		currentRotation.errorCode = CYCLE_ERRORS.FINAL_OR_DOWNTIME
 
 		// Check if more Fire 4s could've been cast by skipping Blizzard 4 before this downtime
-		if (currentRotation.gaugeStateBeforeFire.umbralHearts > 0 && currentRotation.missingFire4s === 2) {
+		if (currentRotation.shouldSkipB4) {
 			currentRotation.errorCode = CYCLE_ERRORS.SHOULD_SKIP_B4
 		}
 
-		// TODO: Check for hardcast T3s, if this cycle ends in downtime, that cast time should've been a fire spell
+		// Check if more Fire 4s could've been cast by skipping a hardcast Thunder 3
+		if (currentRotation.hardT3Count > 0) {
+			currentRotation.errorCode = CYCLE_ERRORS.SHOULD_SKIP_T3
+		}
 	}
 
 	output() {
