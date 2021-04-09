@@ -18,7 +18,7 @@ import React, {Fragment} from 'react'
 import {Icon, Message} from 'semantic-ui-react'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 import {FIRE_SPELLS} from './Elements'
-import {BLM_GAUGE_EVENT, BLMGaugeEvent} from './Gauge'
+import {EventBLMGauge} from './Gauge'
 
 const DEBUG_SHOW_ALL_CYCLES = false && process.env.NODE_ENV !== 'production'
 
@@ -187,12 +187,12 @@ export default class RotationWatchdog extends Module {
 	protected init() {
 		this.addEventHook('cast', {by: 'player'}, this.onCast)
 		this.addEventHook('complete', this.onComplete)
-		this.addEventHook(BLM_GAUGE_EVENT, this.onGaugeEvent)
+		this.addEventHook('blmgauge', this.onGaugeEvent)
 		this.addEventHook('death', {to: 'player'}, this.onDeath)
 	}
 
 	// Handle events coming from BLM's Gauge module
-	private onGaugeEvent(event: BLMGaugeEvent) {
+	private onGaugeEvent(event: EventBLMGauge) {
 		// If we're beginning the fire phase of this cycle, note it and save some data
 		if (this.currentGaugeState.astralFire === 0 && event.astralFire > 0) {
 			this.currentRotation.inFirePhase = true

@@ -1,7 +1,6 @@
 import STATUSES from 'data/STATUSES'
 import CoreSpeedmod from 'parser/core/modules/Speedmod'
 import {FIRE_SPELLS, ICE_SPELLS} from './Elements'
-import {BLM_GAUGE_EVENT} from './Gauge'
 
 const MAX_ASTRAL_UMBRAL_STACKS = 3
 const FAST_CAST_SCALAR = 0.5
@@ -25,14 +24,14 @@ export default class Speedmod extends CoreSpeedmod {
 	}
 
 	jobSpecificNormaliseLogic(event) {
-		const types = [BLM_GAUGE_EVENT, 'begincast', 'cast']
+		const types = ['blmgauge', 'begincast', 'cast']
 
 		if (!types.includes(event.type)) {
 			return
 		}
 
 		switch (event.type) {
-		case BLM_GAUGE_EVENT:
+		case 'blmgauge':
 			this._astralFireStacks = event.astralFire
 			this._umbralIceStacks = event.umbralIce
 			break
