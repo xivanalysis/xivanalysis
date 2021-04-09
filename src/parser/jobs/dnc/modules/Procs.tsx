@@ -121,6 +121,9 @@ export default class Procs extends Module {
 	}
 	private procOverwritten(event: BuffEvent) {
 		this.overwrittenProcs++
+		// Close this window and open a fresh one so the timeline shows the re-applications correctly
+		this.stopAndSave(event.ability.guid, event.timestamp, true)
+		this.onProcGained(event)
 	}
 	private onProcRemoved(event: BuffEvent) {
 		this.stopAndSave(event.ability.guid, event.timestamp)
