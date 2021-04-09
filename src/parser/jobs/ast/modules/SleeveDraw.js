@@ -45,7 +45,10 @@ export default class SleeveDraw extends Module {
 		const firstOpportunity = this._lastUse + ACTIONS.SLEEVE_DRAW.cooldown*1000
 		const _held = event.timestamp - firstOpportunity
 		if (_held > 0) {
-			const downtimes = this.unableToAct.getDowntimes(firstOpportunity, firstOpportunity + EXCUSED_HOLD_DEFAULT)
+			const downtimes = this.unableToAct.getDowntimes(
+				firstOpportunity,
+				Math.min(firstOpportunity + EXCUSED_HOLD_DEFAULT, event.timestamp),
+			)
 			const firstEnd = downtimes.length ? downtimes[0].end : firstOpportunity
 			this._totalHeld += _held
 			this._excusedHeld += EXCUSED_HOLD_DEFAULT + (firstEnd - firstOpportunity)

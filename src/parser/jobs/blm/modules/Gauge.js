@@ -257,7 +257,9 @@ export default class Gauge extends Module {
 
 	// Refund unable-to-act time if the downtime window was longer than the AF/UI timer
 	_countLostPolyglots(time) {
-		const unableToActTime = this.unableToAct.getDowntimes().filter(downtime => Math.max(0, downtime.end - downtime.start) >= ASTRAL_UMBRAL_DURATION).reduce((duration, downtime) => duration + Math.max(0, downtime.end - downtime.start), 0)
+		const unableToActTime = this.unableToAct.getDowntimes()
+			.filter(downtime => Math.max(0, downtime.end - downtime.start) >= ASTRAL_UMBRAL_DURATION)
+			.reduce((duration, downtime) => duration + Math.max(0, downtime.end - downtime.start), 0)
 		return Math.floor((time - unableToActTime)/ENOCHIAN_DURATION_REQUIRED)
 	}
 
