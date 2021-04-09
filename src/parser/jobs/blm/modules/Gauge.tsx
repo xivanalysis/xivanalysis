@@ -53,38 +53,38 @@ export default class Gauge extends Module {
 	@dependency brokenLog!: BrokenLog
 	@dependency unableToAct!: UnableToAct
 
-	_astralFireStacks: number = 0
-	_umbralIceStacks: number = 0
-	_umbralHeartStacks: number = 0
-	_astralUmbralStackTimer: number = 0
-	_hasEnochian: boolean = false
-	_enochianTimer: number = 0
-	_enochianDownTimer: { start: number, stop: number, time: number} = {
+	private astralFireStacks: number = 0
+	private umbralIceStacks: number = 0
+	private umbralHeartStacks: number = 0
+	private astralUmbralStackTimer: number = 0
+	private hasEnochian: boolean = false
+	private enochianTimer: number = 0
+	private enochianDownTimer: { start: number, stop: number, time: number} = {
 		start: 0,
 		stop: 0,
 		time: 0,
 	}
-	_polyglotStacks: number = 0
+	private polyglotStacks: number = 0
 
-	_droppedEnoTimestamps: number[] = []
-	_lostPolyglot: number = 0
-	_overwrittenPolyglot: number = 0
+	private droppedEnoTimestamps: number[] = []
+	private lostPolyglot: number = 0
+	private overwrittenPolyglot: number = 0
 
-	_normalizeIndex: number = 0
-	_currentTimestamp: number = 0
+	private normalizeIndex: number = 0
+	private currentTimestamp: number = 0
 
-	_toAdd: EventBLMGauge[] = []
-	_lastAdded: EventBLMGauge | null = null
+	private toAdd: EventBLMGauge[] = []
+	private lastAdded: EventBLMGauge | null = null
 
 	gaugeValuesChanged(lastGaugeEvent: EventBLMGauge | null) {
 		if (!lastGaugeEvent) {
 			return true
 		}
-		if (lastGaugeEvent.astralFire !== this._astralFireStacks ||
-			lastGaugeEvent.umbralIce !== this._umbralIceStacks ||
-			lastGaugeEvent.umbralHearts !== this._umbralHeartStacks ||
-			lastGaugeEvent.enochian !== this._hasEnochian ||
-			lastGaugeEvent.polyglot !== this._polyglotStacks
+		if (lastGaugeEvent.astralFire !== this.astralFireStacks ||
+			lastGaugeEvent.umbralIce !== this.umbralIceStacks ||
+			lastGaugeEvent.umbralHearts !== this.umbralHeartStacks ||
+			lastGaugeEvent.enochian !== this.hasEnochian ||
+			lastGaugeEvent.polyglot !== this.polyglotStacks
 		) {
 			return true
 		}
@@ -92,36 +92,36 @@ export default class Gauge extends Module {
 	}
 
 	addEvent() {
-		const lastAdded = this._toAdd.length > 0 ? this._toAdd[this._toAdd.length - 1] : null
+		const lastAdded = this.toAdd.length > 0 ? this.toAdd[this.toAdd.length - 1] : null
 
 		if (this.gaugeValuesChanged(lastAdded)) {
-			this._toAdd.push({
+			this.toAdd.push({
 				type: 'blmgauge',
-				timestamp: this._currentTimestamp,
-				insertAfter: this._normalizeIndex,
-				astralFire: this._astralFireStacks,
-				umbralIce: this._umbralIceStacks,
-				umbralHearts: this._umbralHeartStacks,
-				enochian: this._hasEnochian,
-				polyglot: this._polyglotStacks,
-				lastGaugeEvent: this._lastAdded,
+				timestamp: this.currentTimestamp,
+				insertAfter: this.normalizeIndex,
+				astralFire: this.astralFireStacks,
+				umbralIce: this.umbralIceStacks,
+				umbralHearts: this.umbralHeartStacks,
+				enochian: this.hasEnochian,
+				polyglot: this.polyglotStacks,
+				lastGaugeEvent: this.lastAdded,
 			})
-			this._lastAdded = this._toAdd[this._toAdd.length - 1]
+			this.lastAdded = this.toAdd[this.toAdd.length - 1]
 		}
 	}
 
 	protected init() {
-		this.addEventHook('complete', this._onComplete)
+		this.addEventHook('complete', this.onComplete)
 	}
 
 	normalise(events: Event[]) {
 		// Add initial event
-		this._currentTimestamp = events[0].timestamp
+		this.currentTimestamp = events[0].timestamp
 		this.addEvent()
 
-		for (this._normalizeIndex = 0; this._normalizeIndex < events.length; this._normalizeIndex++) {
-			const event = events[this._normalizeIndex]
-			this._currentTimestamp = event.timestamp
+		for (this.normalizeIndex = 0; this.normalizeIndex < events.length; this.normalizeIndex++) {
+			const event = events[this.normalizeIndex]
+			this.currentTimestamp = event.timestamp
 
 			this.updateStackTimers(event)
 			if (!GAUGE_EVENTS.includes(event.type)) { continue }
@@ -130,20 +130,20 @@ export default class Gauge extends Module {
 				case 'begincast':
 					break
 				case 'cast':
-					this._onCast(event)
+					this.onCast(event)
 					break
 				case 'damage':
 					break
 				}
 			}
 			if (event.type === 'death' && this.parser.toPlayer(event)) {
-				this._onDeath()
+				this.onDeath()
 			}
 		}
 
 		// Add all the events we gathered up in, in order
 		let offset = 0
-		this._toAdd.sort((a, b) => a.insertAfter - b.insertAfter).forEach(event => {
+		this.toAdd.sort((a, b) => a.insertAfter - b.insertAfter).forEach(event => {
 			events.splice(event.insertAfter + 1 + offset, 0, event)
 			offset++
 		})
@@ -151,149 +151,149 @@ export default class Gauge extends Module {
 		return events
 	}
 
-	onAstralUmbralTimeout(event: Event) {
-		this._astralFireStacks = 0
-		this._umbralIceStacks = 0
-		this._astralUmbralStackTimer = 0
+	private onAstralUmbralTimeout(event: Event) {
+		this.astralFireStacks = 0
+		this.umbralIceStacks = 0
+		this.astralUmbralStackTimer = 0
 		this.onEnoDropped(event)
 	}
 
-	onEnoDropped(event: Event) {
-		if (this._hasEnochian) {
-			this._enochianDownTimer.start = event.timestamp
-			const enoRunTime = event.timestamp - this._enochianTimer
+	private onEnoDropped(event: Event) {
+		if (this.hasEnochian) {
+			this.enochianDownTimer.start = event.timestamp
+			const enoRunTime = event.timestamp - this.enochianTimer
 			//add the time remaining on the eno timer to total downtime
-			this._enochianDownTimer.time += enoRunTime
-			this._droppedEnoTimestamps.push(event.timestamp)
+			this.enochianDownTimer.time += enoRunTime
+			this.droppedEnoTimestamps.push(event.timestamp)
 		}
-		this._hasEnochian = false
-		this._enochianTimer = 0
-		this._umbralHeartStacks = 0
+		this.hasEnochian = false
+		this.enochianTimer = 0
+		this.umbralHeartStacks = 0
 		this.addEvent()
 	}
 
-	onGainPolyglot() {
-		this._polyglotStacks++
-		if (this._polyglotStacks > MAX_POLYGLOT_STACKS) {
-			this._overwrittenPolyglot++
+	private onGainPolyglot() {
+		this.polyglotStacks++
+		if (this.polyglotStacks > MAX_POLYGLOT_STACKS) {
+			this.overwrittenPolyglot++
 		}
-		this._polyglotStacks = Math.min(this._polyglotStacks, MAX_POLYGLOT_STACKS)
+		this.polyglotStacks = Math.min(this.polyglotStacks, MAX_POLYGLOT_STACKS)
 		this.addEvent()
 	}
 
-	onConsumePolyglot() {
-		if (this._polyglotStacks <= 0 && this._overwrittenPolyglot > 0) {
+	private onConsumePolyglot() {
+		if (this.polyglotStacks <= 0 && this.overwrittenPolyglot > 0) {
 			// Safety to catch ordering issues where Foul is used late enough to trigger our overwrite check but happens before Poly actually overwrites
-			this._overwrittenPolyglot--
+			this.overwrittenPolyglot--
 		}
-		this._polyglotStacks = Math.max(this._polyglotStacks - 1, 0)
+		this.polyglotStacks = Math.max(this.polyglotStacks - 1, 0)
 		this.addEvent()
 	}
 
-	onGainAstralFireStacks(event: CastEvent, stackCount: number, dropsElementOnSwap: boolean = true) {
-		if (this._umbralIceStacks > 0 && dropsElementOnSwap) {
+	private onGainAstralFireStacks(event: CastEvent, stackCount: number, dropsElementOnSwap: boolean = true) {
+		if (this.umbralIceStacks > 0 && dropsElementOnSwap) {
 			this.onAstralUmbralTimeout(event)
 		} else {
-			this._umbralIceStacks = 0
-			this._astralUmbralStackTimer = event.timestamp
-			this._astralFireStacks = Math.min(this._astralFireStacks + stackCount, MAX_ASTRAL_UMBRAL_STACKS)
+			this.umbralIceStacks = 0
+			this.astralUmbralStackTimer = event.timestamp
+			this.astralFireStacks = Math.min(this.astralFireStacks + stackCount, MAX_ASTRAL_UMBRAL_STACKS)
 			this.addEvent()
 		}
 	}
 
-	onGainUmbralIceStacks(event: CastEvent, stackCount: number, dropsElementOnSwap: boolean = true) {
-		if (this._astralFireStacks > 0 && dropsElementOnSwap) {
+	private onGainUmbralIceStacks(event: CastEvent, stackCount: number, dropsElementOnSwap: boolean = true) {
+		if (this.astralFireStacks > 0 && dropsElementOnSwap) {
 			this.onAstralUmbralTimeout(event)
 		} else {
-			this._astralFireStacks = 0
-			this._astralUmbralStackTimer = event.timestamp
-			this._umbralIceStacks = Math.min(this._umbralIceStacks + stackCount, MAX_ASTRAL_UMBRAL_STACKS)
+			this.astralFireStacks = 0
+			this.astralUmbralStackTimer = event.timestamp
+			this.umbralIceStacks = Math.min(this.umbralIceStacks + stackCount, MAX_ASTRAL_UMBRAL_STACKS)
 			this.addEvent()
 		}
 	}
 
-	onTransposeStacks(event: CastEvent) {
-		if (this._astralFireStacks > 0 || this._umbralIceStacks > 0) {
-			this._astralUmbralStackTimer = event.timestamp
-			if (this._astralFireStacks > 0) {
-				this._astralFireStacks = 0
-				this._umbralIceStacks = 1
+	private onTransposeStacks(event: CastEvent) {
+		if (this.astralFireStacks > 0 || this.umbralIceStacks > 0) {
+			this.astralUmbralStackTimer = event.timestamp
+			if (this.astralFireStacks > 0) {
+				this.astralFireStacks = 0
+				this.umbralIceStacks = 1
 			} else {
-				this._astralFireStacks = 1
-				this._umbralIceStacks = 0
+				this.astralFireStacks = 1
+				this.umbralIceStacks = 0
 			}
 			this.addEvent()
 		}
 	}
 
-	tryGainUmbralHearts(event: CastEvent, count: number) {
-		if (this._umbralIceStacks > 0) {
-			this._umbralHeartStacks = Math.min(this._umbralHeartStacks + count, MAX_UMBRAL_HEART_STACKS)
+	private tryGainUmbralHearts(event: CastEvent, count: number) {
+		if (this.umbralIceStacks > 0) {
+			this.umbralHeartStacks = Math.min(this.umbralHeartStacks + count, MAX_UMBRAL_HEART_STACKS)
 			this.addEvent()
 		}
 	}
 
-	tryConsumeUmbralHearts(event: CastEvent, count:  number, force: boolean = false) {
-		if (this._umbralHeartStacks > 0 && (this._astralFireStacks > 0 || force)) {
-			this._umbralHeartStacks = Math.max(this._umbralHeartStacks - count, 0)
+	private tryConsumeUmbralHearts(event: CastEvent, count:  number, force: boolean = false) {
+		if (this.umbralHeartStacks > 0 && (this.astralFireStacks > 0 || force)) {
+			this.umbralHeartStacks = Math.max(this.umbralHeartStacks - count, 0)
 			this.addEvent()
 		}
 	}
 
-	updateStackTimers(event: Event) {
-		if ((this._astralFireStacks > 0 || this._umbralIceStacks > 0) &&
-			(event.timestamp - this._astralUmbralStackTimer > ASTRAL_UMBRAL_DURATION)
+	private updateStackTimers(event: Event) {
+		if ((this.astralFireStacks > 0 || this.umbralIceStacks > 0) &&
+			(event.timestamp - this.astralUmbralStackTimer > ASTRAL_UMBRAL_DURATION)
 		) {
 			this.onAstralUmbralTimeout(event)
 		}
 
-		if (this._hasEnochian) {
-			const enoRunTime = event.timestamp - this._enochianTimer
+		if (this.hasEnochian) {
+			const enoRunTime = event.timestamp - this.enochianTimer
 			if (enoRunTime >= ENOCHIAN_DURATION_REQUIRED) {
-				this._enochianTimer = event.timestamp - (enoRunTime - ENOCHIAN_DURATION_REQUIRED)
+				this.enochianTimer = event.timestamp - (enoRunTime - ENOCHIAN_DURATION_REQUIRED)
 				this.onGainPolyglot()
 			}
 		}
 	}
 
-	_startEnoTimer(event: CastEvent) {
-		this._hasEnochian = true
-		this._enochianTimer = event.timestamp
-		if (this._enochianDownTimer.start) {
-			this._enoDownTimerStop(event)
+	private startEnoTimer(event: CastEvent) {
+		this.hasEnochian = true
+		this.enochianTimer = event.timestamp
+		if (this.enochianDownTimer.start) {
+			this.enoDownTimerStop(event)
 		}
 	}
 
-	_enoDownTimerStop(event: CastEvent | CompleteEvent) {
-		this._enochianDownTimer.stop = event.timestamp
-		this._enochianDownTimer.time += Math.max(this._enochianDownTimer.stop - this._enochianDownTimer.start, 0)
+	private enoDownTimerStop(event: CastEvent | CompleteEvent) {
+		this.enochianDownTimer.stop = event.timestamp
+		this.enochianDownTimer.time += Math.max(this.enochianDownTimer.stop - this.enochianDownTimer.start, 0)
 		//reset the timer again to prevent weirdness/errors
-		this._enochianDownTimer.start = 0
-		this._enochianDownTimer.stop = 0
+		this.enochianDownTimer.start = 0
+		this.enochianDownTimer.stop = 0
 	}
 
 	// Refund unable-to-act time if the downtime window was longer than the AF/UI timer
-	_countLostPolyglots(time: number) {
+	private countLostPolyglots(time: number) {
 		const unableToActTime = this.unableToAct.getDowntimes()
 			.filter(downtime => Math.max(0, downtime.end - downtime.start) >= ASTRAL_UMBRAL_DURATION)
 			.reduce((duration, downtime) => duration + Math.max(0, downtime.end - downtime.start), 0)
 		return Math.floor((time - unableToActTime)/ENOCHIAN_DURATION_REQUIRED)
 	}
 
-	_onCast(event: CastEvent) {
+	private onCast(event: CastEvent) {
 		const abilityId = event.ability.guid
 
 		switch (abilityId) {
 		case ACTIONS.ENOCHIAN.id:
-			if (!this._astralFireStacks && !this._umbralIceStacks) {
+			if (!this.astralFireStacks && !this.umbralIceStacks) {
 				this.brokenLog.trigger(this, 'no stack eno', (
 					<Trans id="blm.gauge.trigger.no-stack-eno">
 						<ActionLink {...ACTIONS.ENOCHIAN}/> was cast without any Astral Fire or Umbral Ice stacks detected.
 					</Trans>
 				))
 			}
-			if (!this._hasEnochian) {
-				this._startEnoTimer(event)
+			if (!this.hasEnochian) {
+				this.startEnoTimer(event)
 				this.addEvent()
 			}
 			break
@@ -307,15 +307,15 @@ export default class Gauge extends Module {
 			this.onGainUmbralIceStacks(event, MAX_ASTRAL_UMBRAL_STACKS, false)
 			break
 		case ACTIONS.BLIZZARD_IV.id:
-			if (!this._hasEnochian) {
+			if (!this.hasEnochian) {
 				this.brokenLog.trigger(this, 'no eno b4', (
 					<Trans id="blm.gauge.trigger.no-eno-b4">
 						<ActionLink {...ACTIONS.BLIZZARD_IV}/> was cast while <ActionLink {...ACTIONS.ENOCHIAN}/> was deemed inactive.
 					</Trans>
 				))
-				this._startEnoTimer(event)
+				this.startEnoTimer(event)
 			}
-			this._umbralHeartStacks = MAX_UMBRAL_HEART_STACKS
+			this.umbralHeartStacks = MAX_UMBRAL_HEART_STACKS
 			this.addEvent()
 			break
 		case ACTIONS.UMBRAL_SOUL.id:
@@ -332,13 +332,13 @@ export default class Gauge extends Module {
 			this.onGainAstralFireStacks(event, MAX_ASTRAL_UMBRAL_STACKS, false)
 			break
 		case ACTIONS.FIRE_IV.id:
-			if (!this._hasEnochian) {
+			if (!this.hasEnochian) {
 				this.brokenLog.trigger(this, 'no eno f4', (
 					<Trans id="blm.gauge.trigger.no-eno-f4">
 						<ActionLink {...ACTIONS.FIRE_IV}/> was cast while <ActionLink {...ACTIONS.ENOCHIAN}/> was deemed inactive.
 					</Trans>
 				))
-				this._startEnoTimer(event)
+				this.startEnoTimer(event)
 			}
 			this.tryConsumeUmbralHearts(event, 1)
 			break
@@ -359,26 +359,26 @@ export default class Gauge extends Module {
 		}
 	}
 
-	_onDeath() {
+	private onDeath() {
 		// Not counting the loss towards the rest of the gauge loss, that'll just double up on the suggestions
-		this._astralFireStacks = 0
-		this._umbralIceStacks = 0
-		this._umbralHeartStacks = 0
-		this._astralUmbralStackTimer = 0
-		this._hasEnochian = false
-		this._polyglotStacks = 0
-		this._enochianTimer = 0
+		this.astralFireStacks = 0
+		this.umbralIceStacks = 0
+		this.umbralHeartStacks = 0
+		this.astralUmbralStackTimer = 0
+		this.hasEnochian = false
+		this.polyglotStacks = 0
+		this.enochianTimer = 0
 		this.addEvent()
 	}
 
-	_onComplete(event: CompleteEvent) {
-		if (this._enochianDownTimer.start) {
-			this._enoDownTimerStop(event)
+	private onComplete(event: CompleteEvent) {
+		if (this.enochianDownTimer.start) {
+			this.enoDownTimerStop(event)
 		}
-		this._lostPolyglot = this._countLostPolyglots(this._enochianDownTimer.time)
+		this.lostPolyglot = this.countLostPolyglots(this.enochianDownTimer.time)
 
 		// Find out how many of the enochian drops ocurred during times where the player could not act for longer than the AF/UI buff timer. If they could act, they could've kept it going, so warn about those.
-		const droppedEno = this._droppedEnoTimestamps.filter(drop => this.unableToAct.getDowntimes(drop, drop).filter(downtime => Math.max(0, downtime.end - downtime.start) >= ASTRAL_UMBRAL_DURATION).length === 0).length
+		const droppedEno = this.droppedEnoTimestamps.filter(drop => this.unableToAct.getDowntimes(drop, drop).filter(downtime => Math.max(0, downtime.end - downtime.start) >= ASTRAL_UMBRAL_DURATION).length === 0).length
 		if (droppedEno) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.ENOCHIAN.icon,
@@ -392,7 +392,7 @@ export default class Gauge extends Module {
 			}))
 		}
 
-		if (this._lostPolyglot) {
+		if (this.lostPolyglot) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.XENOGLOSSY.icon,
 				content: <Trans id="blm.gauge.suggestions.lost-polyglot.content">
@@ -400,12 +400,12 @@ export default class Gauge extends Module {
 				</Trans>,
 				severity: SEVERITY.MAJOR,
 				why: <Trans id="blm.gauge.suggestions.lost-polyglot.why">
-					<Plural value={this._lostPolyglot} one="# Polyglot stack was" other="# Polyglot stacks were"/> lost.
+					<Plural value={this.lostPolyglot} one="# Polyglot stack was" other="# Polyglot stacks were"/> lost.
 				</Trans>,
 			}))
 		}
 
-		if (this._overwrittenPolyglot) {
+		if (this.overwrittenPolyglot) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.XENOGLOSSY.icon,
 				content: <Trans id="blm.gauge.suggestions.overwritten-polyglot.content">
@@ -413,7 +413,7 @@ export default class Gauge extends Module {
 				</Trans>,
 				severity: SEVERITY.MAJOR,
 				why: <Trans id="blm.gauge.suggestions.overwritten-polyglot.why">
-					Xenoglossy got overwritten <Plural value={this._overwrittenPolyglot} one="# time" other="# times"/>.
+					Xenoglossy got overwritten <Plural value={this.overwrittenPolyglot} one="# time" other="# times"/>.
 				</Trans>,
 			}))
 		}
