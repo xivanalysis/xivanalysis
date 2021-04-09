@@ -103,7 +103,7 @@ export default class PrecastStatus extends Module {
 		// Determine if this buff comes from a known action, fab a cast event
 		const statusKey = _.findKey(this.data.statuses, statusInfo)
 		const applyActions = getDataArrayBy(this.data.actions, 'statusesApplied', statusKey)
-		if (!applyActions) {
+		if (applyActions.length === 0) {
 			this.debug('No action applies this status, no action to synthesize')
 			return
 		}

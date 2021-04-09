@@ -1,70 +1,64 @@
-import ACTIONS from 'data/ACTIONS'
-import CoreCooldowns from 'parser/core/modules/Cooldowns'
+import CoreCooldowns, {CooldownOrderItem} from 'parser/core/modules/Cooldowns'
 
 export default class Cooldowns extends CoreCooldowns {
-	static cooldownOrder = [
+	static cooldownOrder: CooldownOrderItem[] = [
 		// Arcanum
 		{
 			name: 'Draw/Undraw',
-			merge: true,
 			actions: [
-				ACTIONS.DRAW.id,
-				ACTIONS.UNDRAW.id,
+				'DRAW',
+				'UNDRAW',
 			],
 		},
 		{
 			name: 'Redraw/Minor Arcana',
-			merge: true,
 			actions: [
-				ACTIONS.REDRAW.id,
-				ACTIONS.MINOR_ARCANA.id,
+				'REDRAW',
+				'MINOR_ARCANA',
 			],
 		},
-		ACTIONS.SLEEVE_DRAW.id,
+		'SLEEVE_DRAW',
 		{
 			name: 'Play',
-			merge: true,
 			actions: [
-				ACTIONS.THE_BALANCE.id,
-				ACTIONS.THE_BOLE.id,
-				ACTIONS.THE_ARROW.id,
-				ACTIONS.THE_SPEAR.id,
-				ACTIONS.THE_EWER.id,
-				ACTIONS.THE_SPIRE.id,
-				ACTIONS.LORD_OF_CROWNS.id,
-				ACTIONS.LADY_OF_CROWNS.id,
+				'THE_BALANCE',
+				'THE_BOLE',
+				'THE_ARROW',
+				'THE_SPEAR',
+				'THE_EWER',
+				'THE_SPIRE',
+				'LORD_OF_CROWNS',
+				'LADY_OF_CROWNS',
 			],
 		},
-		ACTIONS.DIVINATION.id,
-		ACTIONS.LIGHTSPEED.id,
+		'DIVINATION',
+		'LIGHTSPEED',
 		// oGCD ST heals
-		ACTIONS.ESSENTIAL_DIGNITY.id,
-		ACTIONS.CELESTIAL_INTERSECTION.id,
-		ACTIONS.SYNASTRY.id,
+		'ESSENTIAL_DIGNITY',
+		'CELESTIAL_INTERSECTION',
+		'SYNASTRY',
 		// oGCD AoE heals
 		{
 			name: 'Earthly Star',
-			merge: true,
 			actions: [
-				ACTIONS.EARTHLY_STAR.id,
-				ACTIONS.STELLAR_DETONATION.id,
+				'EARTHLY_STAR',
+				'STELLAR_DETONATION',
 			],
 		},
-		ACTIONS.CELESTIAL_OPPOSITION.id,
+		'CELESTIAL_OPPOSITION',
 		// Horoscope
 		{
 			name: 'Horoscope',
-			merge: true,
 			actions: [
-				ACTIONS.HOROSCOPE.id,
-				ACTIONS.HOROSCOPE_ACTIVATION.id,
+				'HOROSCOPE',
+				'HOROSCOPE_ACTIVATION',
 			],
 		},
 		// Party mitigation
-		ACTIONS.COLLECTIVE_UNCONSCIOUS.id,
+		'COLLECTIVE_UNCONSCIOUS',
 		// Healing buff
-		ACTIONS.NEUTRAL_SECT.id,
+		'NEUTRAL_SECT',
 		// Role actions
-		ACTIONS.LUCID_DREAMING.id,
+		'LUCID_DREAMING',
 	]
 }

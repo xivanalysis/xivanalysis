@@ -1,19 +1,18 @@
-import ACTIONS from 'data/ACTIONS'
 import CoreCooldowns from 'parser/core/modules/Cooldowns'
 
 export default class Cooldowns extends CoreCooldowns {
 	static cooldownOrder = [
-		ACTIONS.KASSATSU.id,
-		ACTIONS.TEN_CHI_JIN.id,
-		ACTIONS.TRICK_ATTACK.id,
-		ACTIONS.DREAM_WITHIN_A_DREAM.id,
-		ACTIONS.ASSASSINATE.id,
-		ACTIONS.BUNSHIN.id,
-		ACTIONS.BHAVACAKRA.id,
-		ACTIONS.MUG.id,
-		ACTIONS.MEISUI.id,
-		ACTIONS.HELLFROG_MEDIUM.id,
-		ACTIONS.SHUKUCHI.id,
-		ACTIONS.SHADE_SHIFT.id,
+		'KASSATSU',
+		'TEN_CHI_JIN',
+		'TRICK_ATTACK',
+		'DREAM_WITHIN_A_DREAM',
+		'ASSASSINATE',
+		'BUNSHIN',
+		'BHAVACAKRA',
+		'MUG',
+		'MEISUI',
+		'HELLFROG_MEDIUM',
+		'SHUKUCHI',
+		'SHADE_SHIFT',
 	]
 }

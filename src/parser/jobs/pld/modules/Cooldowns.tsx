@@ -1,34 +1,33 @@
-import ACTIONS from 'data/ACTIONS'
-import CoreCooldowns from 'parser/core/modules/Cooldowns'
+import CoreCooldowns, {CooldownOrderItem} from 'parser/core/modules/Cooldowns'
 
 export default class Cooldowns extends CoreCooldowns {
-	static cooldownOrder = [
+	static cooldownOrder: CooldownOrderItem[] = [
 		// Buffs
-		ACTIONS.FIGHT_OR_FLIGHT.id,
-		ACTIONS.REQUIESCAT.id,
+		'FIGHT_OR_FLIGHT',
+		'REQUIESCAT',
 		// oGCD Damage
-		ACTIONS.SPIRITS_WITHIN.id,
-		ACTIONS.CIRCLE_OF_SCORN.id,
-		ACTIONS.INTERVENE.id,
+		'SPIRITS_WITHIN',
+		'CIRCLE_OF_SCORN',
+		'INTERVENE',
 		// Gauge Mitigation
-		ACTIONS.SHELTRON.id,
-		ACTIONS.INTERVENTION.id,
+		'SHELTRON',
+		'INTERVENTION',
 		// Personal Mitigation
-		ACTIONS.HALLOWED_GROUND.id,
-		ACTIONS.SENTINEL.id,
-		ACTIONS.RAMPART.id,
+		'HALLOWED_GROUND',
+		'SENTINEL',
+		'RAMPART',
 		// Personal Utility
-		ACTIONS.ARMS_LENGTH.id,
+		'ARMS_LENGTH',
 		// Party Mitigation
-		ACTIONS.PASSAGE_OF_ARMS.id,
-		ACTIONS.DIVINE_VEIL.id,
-		ACTIONS.REPRISAL.id,
-		ACTIONS.COVER.id,
+		'PASSAGE_OF_ARMS',
+		'DIVINE_VEIL',
+		'REPRISAL',
+		'COVER',
 		// Tank Utility
-		ACTIONS.PROVOKE.id,
-		ACTIONS.SHIRK.id,
+		'PROVOKE',
+		'SHIRK',
 		// Disrupt Utility
-		ACTIONS.INTERJECT.id,
-		ACTIONS.LOW_BLOW.id,
+		'INTERJECT',
+		'LOW_BLOW',
 	]
 }
