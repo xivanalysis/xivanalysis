@@ -19,6 +19,26 @@ const PROC_STATUSES = [
 	STATUSES.FLOURISHING_WINDMILL.id,
 ]
 
+const PROC_ACTIONS = [
+	ACTIONS.FAN_DANCE_III.id,
+	ACTIONS.REVERSE_CASCADE.id,
+	ACTIONS.FOUNTAINFALL.id,
+	ACTIONS.BLOODSHOWER.id,
+	ACTIONS.RISING_WINDMILL.id,
+]
+
+interface ProcBuffWindow {
+	start: number,
+	stop?: number
+}
+
+interface ProcBuffWindows {
+	[key: number]: {
+		current: ProcBuffWindow | null,
+		history: ProcBuffWindow[]
+	}
+}
+
 export default class Procs extends Module {
 	static handle = 'procs'
 
