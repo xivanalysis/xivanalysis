@@ -43,6 +43,8 @@ const CYCLE_ENDPOINTS = [
 	ACTIONS.FREEZE.id,
 ]
 
+const FIRE_IV_CAST_MILLIS = ACTIONS.FIRE_IV.castTime * 1000
+
 // This is feelycraft at the moment. Rotations shorter than this won't be processed for errors.
 const MIN_ROTATION_LENGTH = 3
 
@@ -58,6 +60,7 @@ const CYCLE_ERRORS: {[key: string]: CycleErrorCode } = {
 	FINAL_OR_DOWNTIME: {priority: 1, message: 'Ended with downtime, or last cycle'},
 	SHORT: {priority: 2, message: 'Too short, won\'t process'},
 	// Messages below should be Trans objects since they'll be displayed to end users
+	SHOULD_SKIP_B4: {priority: 9, message: <Trans id="blm.rotation-watchdog.error-messages.should-skip-b4">Should skip <ActionLink {...ACTIONS.BLIZZARD_IV}/></Trans>},
 	MISSING_FIRE4S: {priority: 10, message: <Trans id="blm.rotation-watchdog.error-messages.missing-fire4s">Missing one or more <ActionLink {...ACTIONS.FIRE_IV}/>s</Trans>}, // These two errors are lower priority since they can be determined by looking at the
 	MISSING_DESPAIRS: {priority: 15, message: <Trans id="blm.rotation-watchdog.error-messages.missing-despair">Missing one or more <ActionLink {...ACTIONS.DESPAIR}/>s</Trans>}, // target columns in the table, so we want to tell players about other errors first
 	MANAFONT_BEFORE_DESPAIR: {priority: 30, message: <Trans id="blm.rotation-watchdog.error-messages.manafont-before-despair"><ActionLink {...ACTIONS.MANAFONT}/> used before <ActionLink {...ACTIONS.DESPAIR}/></Trans>},
@@ -138,6 +141,33 @@ class Cycle {
 		return Math.max(this.expectedDespairs - this.actualDespairs, 0)
 	}
 
+	public get extraF1s(): number {
+		return Math.max(this.casts.filter(cast => cast.ability.guid === ACTIONS.FIRE_I.id).length - 1, 0)
+	}
+
+	public get extraT3s(): number {
+		const hardT3Count = this.casts.filter(cast => cast.ability.overrideAction)
+			.filter(cast => cast.ability.overrideAction.id === ACTIONS.THUNDER_III_FALSE.id).length
+		if (hardT3Count > 1 || (hardT3Count > 0 && this.firePhaseStartMP < MIN_MP_FOR_FULL_ROTATION)) {
+			return Math.max(hardT3Count - 1, 0)
+		}
+		return 0
+	}
+
+	public get manafontBeforeDespair(): boolean {
+		return this.hasManafont && this.actualDespairs > 0 &&
+			this.casts.findIndex(cast => cast.ability.guid === ACTIONS.MANAFONT.id) <
+			this.casts.findIndex(cast => cast.ability.guid === ACTIONS.DESPAIR.id)
+	}
+
+	public get isMissingFire(): boolean {
+		return !this.casts.filter(cast => FIRE_SPELLS.includes(cast.ability.guid)).length
+	}
+
+	public get shouldSkipB4(): boolean {
+		return this.gaugeStateBeforeFire.umbralHearts > 0 && this.missingFire4s === 2
+	}
+
 	constructor(start: number, gaugeState: GaugeState) {
 		this.startTime = start
 		// Object.assign because this needs to be a by-value assignment, not by-reference
@@ -177,12 +207,6 @@ export default class RotationWatchdog extends Module {
 
 	private firstEvent: boolean = true
 	// counters for suggestions
-	private missedF4s: number = 0
-	private extraF1s: number = 0
-	private extraT3s: number = 0
-	private rotationsWithoutFire: number = 0
-	private manafontBeforeDespair: number = 0
-	private astralFiresMissingDespairs: number = 0
 	private uptimeSouls: number = 0
 
 	protected init() {
@@ -290,46 +314,50 @@ export default class RotationWatchdog extends Module {
 		})
 
 		// Suggestion for skipping B4 on rotations that are cut short by the end of the parse or downtime
-		if (this.missedF4s) {
+		const shouldSkipB4s = this.history.filter(cycle => cycle.shouldSkipB4).length
+		if (shouldSkipB4s > 0) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.FIRE_IV.icon,
-				content: <Trans id="blm.rotation-watchdog.suggestions.missed-f4s.content">
-					You lost at least one <ActionLink {...ACTIONS.FIRE_IV}/> by not skipping <ActionLink {...ACTIONS.BLIZZARD_IV}/> in the Umbral Ice phase before the fight finished.
+				content: <Trans id="blm.rotation-watchdog.suggestions.should-skip-b4.content">
+					You lost at least one <ActionLink {...ACTIONS.FIRE_IV}/> by not skipping <ActionLink {...ACTIONS.BLIZZARD_IV}/> in an Umbral Ice phase before the fight finished or a phase transition occurred.
 				</Trans>,
 				severity: SEVERITY.MEDIUM,
-				why: <Trans id="blm.rotation-watchdog.suggestions.missed-f4s.why">
-					<Plural value={this.missedF4s} one="# Fire IV was" other="# Fire IVs were"/> missed.
+				why: <Trans id="blm.rotation-watchdog.suggestions.should-skip-b4.why">
+					You should have skipped <ActionLink showIcon={false} {...ACTIONS.BLIZZARD_IV} /> <Plural value={shouldSkipB4s} one="# time" other="# times"/>.
 				</Trans>,
 			}))
 		}
 
 		// Suggestion for unneccessary extra F1s
+		const extraF1s = this.history.reduce<number>((sum, cycle) => sum + cycle.extraF1s, 0)
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.FIRE_I.icon,
 			content: <Trans id="blm.rotation-watchdog.suggestions.extra-f1s.content">
 				Casting more than one <ActionLink {...ACTIONS.FIRE_I}/> per Astral Fire cycle is a crutch that should be avoided by better pre-planning of the encounter.
 			</Trans>,
 			tiers: ISSUE_SEVERITY_TIERS,
-			value: this.extraF1s,
+			value: extraF1s,
 			why: <Trans id="blm.rotation-watchdog.suggestions.extra-f1s.why">
-				<Plural value={this.extraF1s} one="# extra Fire I was" other="# extra Fire Is were"/> cast.
+				<Plural value={extraF1s} one="# extra Fire I was" other="# extra Fire Is were"/> cast.
 			</Trans>,
 		}))
 
 		// Suggestion to end Astral Fires with Despair
+		const astralFiresMissingDespairs = this.history.filter(cycle => cycle.missingDespairs).length
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.DESPAIR.icon,
 			content: <Trans id="blm.rotation-watchdog.suggestions.end-with-despair.content">
 				Once you can no longer cast another spell in Astral Fire and remain above 800 MP, you should use your remaining MP by casting <ActionLink {...ACTIONS.DESPAIR} />.
 			</Trans>,
 			tiers: ISSUE_SEVERITY_TIERS,
-			value: this.astralFiresMissingDespairs,
+			value: astralFiresMissingDespairs,
 			why: <Trans id="blm.rotation-watchdog.suggestions.end-with-despair.why">
-				<Plural value={this.astralFiresMissingDespairs} one="# Astral Fire phase was" other="# Astral Fire phases were"/> missing at least one <ActionLink showIcon={false} {...ACTIONS.DESPAIR} />.
+				<Plural value={astralFiresMissingDespairs} one="# Astral Fire phase was" other="# Astral Fire phases were"/> missing at least one <ActionLink showIcon={false} {...ACTIONS.DESPAIR} />.
 			</Trans>,
 		}))
 
 		// Suggestion to not use Manafont before Despair
+		const manafontsBeforeDespair = this.history.filter(cycle => cycle.manafontBeforeDespair).length
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.MANAFONT.icon,
 			content: <Trans id="blm.rotation-watchdog.suggestions.mf-before-despair.content">
@@ -340,35 +368,37 @@ export default class RotationWatchdog extends Module {
 				2: SEVERITY.MEDIUM,
 				3: SEVERITY.MAJOR,
 			},
-			value: this.manafontBeforeDespair,
+			value: manafontsBeforeDespair,
 			why: <Trans id="blm.rotation-watchdog.suggestions.mf-before-despair.why">
-				<Plural value={this.manafontBeforeDespair} one="# Manafont was" other="# Manafonts were"/> used before <ActionLink {...ACTIONS.DESPAIR} />.
+				<Plural value={manafontsBeforeDespair} one="# Manafont was" other="# Manafonts were"/> used before <ActionLink {...ACTIONS.DESPAIR} />.
 			</Trans>,
 		}))
 
 		// Suggestion for hard T3s under AF. Should only have one per cycle
+		const extraT3s = this.history.reduce<number>((sum, cycle) => sum + cycle.extraT3s, 0)
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.THUNDER_III_FALSE.icon,
 			content: <Trans id="blm.rotation-watchdog.suggestions.wrong-t3.content">
 				Don't hard cast more than one <ActionLink {...ACTIONS.THUNDER_III}/> in your Astral Fire phase, since that costs MP which could be used for more <ActionLink {...ACTIONS.FIRE_IV}/>s.
 			</Trans>,
 			tiers: ISSUE_SEVERITY_TIERS,
-			value: this.extraT3s,
+			value: extraT3s,
 			why: <Trans id="blm.rotation-watchdog.suggestions.wrong-t3.why">
-				<Plural value={this.extraT3s} one="# extra Thunder III was" other="# extra Thunder IIIs were"/> hard casted under Astral Fire.
+				<Plural value={extraT3s} one="# extra Thunder III was" other="# extra Thunder IIIs were"/> hard casted under Astral Fire.
 			</Trans>,
 		}))
 
 		// Suggestion not to icemage... :(
+		const rotationsWithoutFire = this.history.filter(cycle => cycle.isMissingFire).length
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.BLIZZARD_II.icon,
 			content: <Trans id="blm.rotation-watchdog.suggestions.icemage.content">
 				Avoid spending significant amounts of time in Umbral Ice. The majority of your damage comes from your Astral Fire phase, so you should maximize the number of <ActionLink {...ACTIONS.FIRE_IV}/>s cast during the fight.
 			</Trans>,
 			tiers: ISSUE_SEVERITY_TIERS,
-			value: this.rotationsWithoutFire,
+			value: rotationsWithoutFire,
 			why: <Trans id="blm.rotation-watchdog.suggestions.icemage.why">
-				<Plural value={this.rotationsWithoutFire} one="# rotation was" other="# rotations were"/> performed with no fire spells.
+				<Plural value={rotationsWithoutFire} one="# rotation was" other="# rotations were"/> performed with no fire spells.
 			</Trans>,
 		}))
 
@@ -422,23 +452,17 @@ export default class RotationWatchdog extends Module {
 
 		// Check if the rotation included the expected number of Despair casts
 		if (currentRotation.missingDespairs) {
-			this.astralFiresMissingDespairs++
 			currentRotation.errorCode = CYCLE_ERRORS.MISSING_DESPAIRS
 		}
 
 		// Check whether manafont was used before despair
-		if (currentRotation.hasManafont && currentRotation.actualDespairs > 0 &&
-			currentRotation.casts.findIndex(cast => cast.ability.guid === ACTIONS.MANAFONT.id) <
-			currentRotation.casts.findIndex(cast => cast.ability.guid === ACTIONS.DESPAIR.id)) {
-			this.manafontBeforeDespair++
+		if (currentRotation.manafontBeforeDespair) {
 			currentRotation.errorCode = CYCLE_ERRORS.MANAFONT_BEFORE_DESPAIR
 		}
 
 		// Check if the rotation included more than one Fire 1
-		const fire1Count = currentRotation.casts.filter(cast => cast.ability.guid === ACTIONS.FIRE_I.id).length
-		if (fire1Count > 1) {
+		if (currentRotation.extraF1s > 0) {
 			currentRotation.errorCode = CYCLE_ERRORS.EXTRA_F1
-			this.extraF1s += Math.max(0, fire1Count-1)
 		}
 
 		// If this cycle ends with downtime or is the last cycle, many of the errors we normally check for
@@ -454,16 +478,12 @@ export default class RotationWatchdog extends Module {
 	// Process errors for a normal mid-fight cycle
 	private processNormalCycle(currentRotation: Cycle) {
 		// Check to make sure we didn't lose Fire 4 casts due to spending MP on T3 hardcasts
-		const hardT3Count = currentRotation.casts.filter(cast => cast.ability.overrideAction)
-			.filter(cast => cast.ability.overrideAction.id === ACTIONS.THUNDER_III_FALSE.id).length
-		if (hardT3Count > 1 || (hardT3Count > 0 && currentRotation.firePhaseStartMP < MIN_MP_FOR_FULL_ROTATION)) {
-			this.extraT3s++
+		if (currentRotation.extraT3s > 0) {
 			currentRotation.errorCode = CYCLE_ERRORS.EXTRA_T3
 		}
 
 		// Why so icemage?
-		if (!currentRotation.casts.filter(cast => FIRE_SPELLS.includes(cast.ability.guid)).length) {
-			this.rotationsWithoutFire++
+		if (currentRotation.isMissingFire) {
 			currentRotation.errorCode = CYCLE_ERRORS.NO_FIRE_SPELLS
 		}
 
@@ -479,7 +499,7 @@ export default class RotationWatchdog extends Module {
 
 		// Check if more Fire 4s could've been cast by skipping Blizzard 4 before this downtime
 		if (currentRotation.gaugeStateBeforeFire.umbralHearts > 0 && currentRotation.missingFire4s === 2) {
-			this.missedF4s++
+			currentRotation.errorCode = CYCLE_ERRORS.SHOULD_SKIP_B4
 		}
 
 		// TODO: Check for hardcast T3s, if this cycle ends in downtime, that cast time should've been a fire spell
