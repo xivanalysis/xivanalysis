@@ -6,7 +6,6 @@ import {getDataBy} from 'data'
 import ACTIONS from 'data/ACTIONS'
 import {CastEvent} from 'fflogs'
 import Module, {dependency} from 'parser/core/Module'
-import Checklist from 'parser/core/modules/Checklist'
 import Combatants from 'parser/core/modules/Combatants'
 import Enemies from 'parser/core/modules/Enemies'
 import {EntityStatuses} from 'parser/core/modules/EntityStatuses'
@@ -192,7 +191,6 @@ export default class RotationWatchdog extends Module {
 	static title = t('blm.rotation-watchdog.title')`Rotation Outliers`
 	static displayOrder = DISPLAY_ORDER.ROTATION
 
-	@dependency private checklist!: Checklist
 	@dependency private suggestions!: Suggestions
 	@dependency private invuln!: Invulnerability
 	@dependency private enemies!: Enemies
