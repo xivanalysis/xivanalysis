@@ -2,10 +2,13 @@ import {Trans, Plural} from '@lingui/react'
 import {ActionLink} from 'components/ui/DbLink'
 import {getDataBy} from 'data'
 import ACTIONS from 'data/ACTIONS'
-import STATUSES from 'data/STATUSES'
-import Module from 'parser/core/Module'
-import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
-import {SimpleRow, StatusItem} from 'parser/core/modules/Timeline'
+import STATUSES, {Status} from 'data/STATUSES'
+import {BuffEvent, CastEvent} from 'fflogs'
+import Module, {dependency} from 'parser/core/Module'
+import {Actors} from 'parser/core/modules/Actors'
+import Downtime from 'parser/core/modules/Downtime'
+import Suggestions, {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import {SimpleRow, StatusItem, Timeline} from 'parser/core/modules/Timeline'
 import React from 'react'
 
 const PROC_STATUSES = [
@@ -18,13 +21,12 @@ const PROC_STATUSES = [
 
 export default class Procs extends Module {
 	static handle = 'procs'
-	static dependencies = [
-		'downtime',
-		'suggestions',
-		'timeline',
-	]
 
-	_casts = { //the listing order is arbitrary
+	@dependency private downtime!: Downtime
+	@dependency private suggestions!: Suggestions
+	@dependency private timeline!: Timeline
+	@dependency private actors!: Actors
+
 		[ACTIONS.FAN_DANCE_III.id]: 0,
 		[ACTIONS.REVERSE_CASCADE.id]: 0,
 		[ACTIONS.FOUNTAINFALL.id]: 0,
