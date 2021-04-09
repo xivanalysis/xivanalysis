@@ -47,13 +47,14 @@ export default class Procs extends Module {
 	@dependency private timeline!: Timeline
 	@dependency private actors!: Actors
 
+	casts = { //the listing order is arbitrary
 		[ACTIONS.FAN_DANCE_III.id]: 0,
 		[ACTIONS.REVERSE_CASCADE.id]: 0,
 		[ACTIONS.FOUNTAINFALL.id]: 0,
 		[ACTIONS.BLOODSHOWER.id]: 0,
 		[ACTIONS.RISING_WINDMILL.id]: 0,
 	}
-	_removedProcs = {
+	removedProcs = {
 		[STATUSES.FLOURISHING_FAN_DANCE.id]: 0,
 		[STATUSES.FLOURISHING_CASCADE.id]: 0,
 		[STATUSES.FLOURISHING_FOUNTAIN.id]: 0,
@@ -61,7 +62,7 @@ export default class Procs extends Module {
 		[STATUSES.FLOURISHING_WINDMILL.id]: 0,
 	}
 
-	_buffWindows = {
+	buffWindows: ProcBuffWindows = {
 		[STATUSES.FLOURISHING_FAN_DANCE.id]: {
 			current: null,
 			history: [],
@@ -83,33 +84,32 @@ export default class Procs extends Module {
 			history: [],
 		},
 	}
-	_row = null
-	_rows = new Map()
+	row!: SimpleRow
+	rows = new Map()
 
-	_overwrittenProcs = 0
-	constructor(...args) {
-		super(...args)
+	overwrittenProcs = 0
+	protected init() {
 
-		this.addEventHook('cast', {by: 'player', abilityId: Object.keys(this._casts).map(Number)}, this._onCast)
-		this.addEventHook('applybuff', {by: 'player', abilityId: PROC_STATUSES}, this._onProcGained)
-		this.addEventHook('refreshbuff', {by: 'player', abilityId: PROC_STATUSES}, this._procOverwritten)
-		this.addEventHook('removebuff', {by: 'player', abilityId: PROC_STATUSES}, this._onProcRemoved)
-		this.addEventHook('complete', this._onComplete)
+		this.addEventHook('cast', {by: 'player', abilityId: PROC_ACTIONS}, this.onCast)
+		this.addEventHook('applybuff', {by: 'player', abilityId: PROC_STATUSES}, this.onProcGained)
+		this.addEventHook('refreshbuff', {by: 'player', abilityId: PROC_STATUSES}, this.procOverwritten)
+		this.addEventHook('removebuff', {by: 'player', abilityId: PROC_STATUSES}, this.onProcRemoved)
+		this.addEventHook('complete', this.onComplete)
 
-		this._row = this.timeline.addRow(new SimpleRow({
+		this.row = this.timeline.addRow(new SimpleRow({
 			label: 'Procs',
 			order: 0,
 		}))
 	}
 
-	_onCast(event) {
+	private onCast(event: CastEvent) {
 		if (!this.downtime.isDowntime(event.timestamp)) {
-			this._casts[event.ability.guid]++
+			this.casts[event.ability.guid]++
 		}
 	}
-	_onProcGained(event) {
+	private onProcGained(event: BuffEvent) {
 		const statusId = event.ability.guid
-		const tracker = this._buffWindows[statusId]
+		const tracker = this.buffWindows[statusId]
 
 		if (!tracker) {
 			return
@@ -119,19 +119,19 @@ export default class Procs extends Module {
 			start: event.timestamp,
 		}
 	}
-	_procOverwritten() {
-		this._overwrittenProcs++
+	private procOverwritten(event: BuffEvent) {
+		this.overwrittenProcs++
 	}
-	_onProcRemoved(event) {
-		this._stopAndSave(event.ability.guid, event.timestamp)
+	private onProcRemoved(event: BuffEvent) {
+		this.stopAndSave(event.ability.guid, event.timestamp)
 	}
 
-	_onComplete() { // tracking dropped procs
-		const droppedFan_Dance = this._removedProcs[STATUSES.FLOURISHING_FAN_DANCE.id] - this._casts[ACTIONS.FAN_DANCE_III.id]
-		const droppedCascade = this._removedProcs[STATUSES.FLOURISHING_CASCADE.id] - this._casts[ACTIONS.REVERSE_CASCADE.id]
-		const droppedFountain = this._removedProcs[STATUSES.FLOURISHING_FOUNTAIN.id] - this._casts[ACTIONS.FOUNTAINFALL.id]
-		const droppedShower = this._removedProcs[STATUSES.FLOURISHING_SHOWER.id] - this._casts[ACTIONS.BLOODSHOWER.id]
-		const droppedWindmill = this._removedProcs[STATUSES.FLOURISHING_WINDMILL.id] - this._casts[ACTIONS.RISING_WINDMILL.id]
+	private onComplete() { // tracking dropped procs
+		const droppedFan_Dance = this.removedProcs[STATUSES.FLOURISHING_FAN_DANCE.id] - this.casts[ACTIONS.FAN_DANCE_III.id]
+		const droppedCascade = this.removedProcs[STATUSES.FLOURISHING_CASCADE.id] - this.casts[ACTIONS.REVERSE_CASCADE.id]
+		const droppedFountain = this.removedProcs[STATUSES.FLOURISHING_FOUNTAIN.id] - this.casts[ACTIONS.FOUNTAINFALL.id]
+		const droppedShower = this.removedProcs[STATUSES.FLOURISHING_SHOWER.id] - this.casts[ACTIONS.BLOODSHOWER.id]
+		const droppedWindmill = this.removedProcs[STATUSES.FLOURISHING_WINDMILL.id] - this.casts[ACTIONS.RISING_WINDMILL.id]
 		const droppedProcs = droppedWindmill + droppedShower + droppedFan_Dance + droppedCascade + droppedFountain
 		this.suggestions.add(new TieredSuggestion({ //dropped procs
 			icon: ACTIONS.FOUNTAINFALL.icon,
@@ -155,28 +155,34 @@ export default class Procs extends Module {
 				Avoid overwriting your procs. Your proc actions are stronger than your normal combo, so overwriting them is a significant DPS loss.
 			</Trans>,
 			why: <Trans id="dnc.procs.suggestions.overwrite.why">
-							You overwrote <Plural value={this._overwrittenProcs} one="# proc" other="# procs"/>
+				You overwrote <Plural value={this.overwrittenProcs} one="# proc" other="# procs"/>
 			</Trans>,
 			tiers: {
 				1: SEVERITY.MINOR,
 				2: SEVERITY.MEDIUM,
 				3: SEVERITY.MAJOR,
 			},
-			value: this._overwrittenProcs,
+			value: this.overwrittenProcs,
 		}))
 
 		PROC_STATUSES.forEach(buff => {
 			const status = getDataBy(STATUSES, 'id', buff)
+			if (status === undefined) {
+				return
+			}
 			const row = this.getRowForStatus(status)
 			const fightStart = this.parser.fight.start_time
 
 			// Finalise the buff if it was still active
-			if (this._buffWindows[buff].current) {
-				this._stopAndSave(buff, this.parser.fight.end_time)
+			if (this.buffWindows[buff].current) {
+				this.stopAndSave(buff, this.parser.fight.end_time)
 			}
 
 			// Add buff windows to the timeline
-			this._buffWindows[buff].history.forEach(window => {
+			this.buffWindows[buff].history.forEach(window => {
+				if (window.stop === undefined) {
+					return
+				}
 				row.addItem(new StatusItem({
 					status,
 					start: window.start - fightStart,
@@ -192,7 +198,7 @@ export default class Procs extends Module {
 		}
 
 		// If this proc is active, stop the buff window
-		const tracker = this._buffWindows[statusId]
+		const tracker = this.buffWindows[statusId]
 
 		if (!tracker.current) {
 			return
@@ -203,11 +209,11 @@ export default class Procs extends Module {
 		tracker.current = null
 	}
 
-	getRowForStatus(status) {
-		let row = this._rows.get(status.id)
-		if (row == null) {
-			row = this._row.addRow(new SimpleRow({label: status.name}))
-			this._rows.set(status.id, row)
+	private getRowForStatus(status: Status) {
+		let row = this.rows.get(status.id)
+		if (row === undefined) {
+			row = this.row.addRow(new SimpleRow({label: status.name}))
+			this.rows.set(status.id, row)
 		}
 		return row
 	}
