@@ -192,9 +192,10 @@ export default class Procs extends Module {
 		})
 	}
 
-	_stopAndSave(statusId, timestamp) {
-		if (!this.downtime.isDowntime(timestamp)) {
-			this._removedProcs[statusId]++
+	private stopAndSave(statusId: number, timestamp: number, overwrite: boolean = false) {
+		// The player dropped the proc if it fell off during uptime, while they were alive, and it wasn't overwritten by a new instance
+		if (!(this.downtime.isDowntime(timestamp) || this.actors.current.hp.current === 0 || overwrite)) {
+			this.removedProcs[statusId]++
 		}
 
 		// If this proc is active, stop the buff window
