@@ -59,7 +59,7 @@ export default class Ruin2 extends Module {
 		// Calc the time in the GCD that the boss can't be targeted - R2ing before an invuln to prevent an R3 cancel is good
 		const invulnTime = this.invuln.getUntargetableUptime(
 			'all',
-			this._lastGcd.timestamp,
+			this._lastGcd?.timestamp ?? this.parser.eventTimeOffset,
 			event.timestamp,
 		)
 
