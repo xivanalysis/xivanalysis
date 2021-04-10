@@ -99,13 +99,18 @@ export default class NotCasting extends Module {
 		const gcdLength = this.gcd.getEstimate(true)
 		//finish up
 		this._stopAndSave(event.timestamp)
+		// TODO: The following two filters can probably be replaced with one filter with the downtime module.
 		//filter out invuln periods
 		this._noCastWindows.history = this._noCastWindows.history.filter(windows => {
 			return this.invuln.getInvulns('all', windows.start, windows.stop).length === 0
 		})
 		// Filter out periods where you got stunned, etc
 		this._noCastWindows.history = this._noCastWindows.history.filter(windows => {
-			return this.unableToAct.getDowntimes(windows.start, windows.stop).length === 0
+			const duration = this.unableToAct.getDuration({
+				start: this.parser.fflogsToEpoch(windows.start),
+				end: this.parser.fflogsToEpoch(windows.stop),
+			})
+			return duration === 0
 		})
 		//filter out negative durations
 		this._noCastWindows.history = this._noCastWindows.history.filter(windows => windows.stop - windows.start > gcdLength + GCD_ERROR_OFFSET)

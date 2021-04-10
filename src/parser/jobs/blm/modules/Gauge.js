@@ -257,7 +257,11 @@ export default class Gauge extends Module {
 
 	// Refund unable-to-act time if the downtime window was longer than the AF/UI timer
 	_countLostPolyglots(time) {
-		const unableToActTime = this.unableToAct.getDowntimes()
+		const unableToActTime = this.unableToAct.getWindows()
+			.map(window => ({
+				start: this.parser.epochToFflogs(window.start),
+				end: this.parser.epochToFflogs(window.end),
+			}))
 			.filter(downtime => Math.max(0, downtime.end - downtime.start) >= ASTRAL_UMBRAL_DURATION)
 			.reduce((duration, downtime) => duration + Math.max(0, downtime.end - downtime.start), 0)
 		return Math.floor((time - unableToActTime)/ENOCHIAN_DURATION_REQUIRED)
@@ -361,7 +365,16 @@ export default class Gauge extends Module {
 		this._lostPolyglot = this._countLostPolyglots(this._enochianDownTimer.time)
 
 		// Find out how many of the enochian drops ocurred during times where the player could not act for longer than the AF/UI buff timer. If they could act, they could've kept it going, so warn about those.
-		const droppedEno = this._droppedEnoTimestamps.filter(drop => this.unableToAct.getDowntimes(drop, drop).filter(downtime => Math.max(0, downtime.end - downtime.start) >= ASTRAL_UMBRAL_DURATION).length === 0).length
+		const droppedEno = this._droppedEnoTimestamps.filter(drop =>
+			this.unableToAct
+				.getWindows({
+					start: this.parser.fflogsToEpoch(drop),
+					end: this.parser.fflogsToEpoch(drop),
+				})
+				.filter(downtime => Math.max(0, downtime.end - downtime.start) >= ASTRAL_UMBRAL_DURATION)
+				.length === 0
+		).length
+
 		if (droppedEno) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.ENOCHIAN.icon,
