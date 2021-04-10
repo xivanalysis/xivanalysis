@@ -5,6 +5,7 @@ import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
 import {CastEvent} from 'fflogs'
 import {Event} from 'legacyEvent'
+import {TimestampHook} from 'parser/core/LegacyDispatcher'
 import Module, {dependency} from 'parser/core/Module'
 import BrokenLog from 'parser/core/modules/BrokenLog'
 import PrecastAction from 'parser/core/modules/PrecastAction'
@@ -56,7 +57,6 @@ export default class Gauge extends Module {
 	private astralFireStacks: number = 0
 	private umbralIceStacks: number = 0
 	private umbralHeartStacks: number = 0
-	private astralUmbralStackTimer: number = 0
 	private hasEnochian: boolean = false
 	private enochianTimer: number = 0
 	private enochianDownTimer: { start: number, stop: number, time: number} = {
@@ -76,6 +76,9 @@ export default class Gauge extends Module {
 	private toAdd: EventBLMGauge[] = []
 	private lastAdded: EventBLMGauge | null = null
 
+	private astralUmbralTimeoutHook!: TimestampHook | null
+	private gainPolyglotHook!: TimestampHook | null
+
 	gaugeValuesChanged(lastGaugeEvent: EventBLMGauge | null) {
 		if (!lastGaugeEvent) {
 			return true
@@ -93,6 +96,15 @@ export default class Gauge extends Module {
 
 	addEvent() {
 		const lastAdded = this.toAdd.length > 0 ? this.toAdd[this.toAdd.length - 1] : null
+
+		if (this.astralFireStacks > 0 || this.umbralIceStacks > 0) {
+			if (!this.astralUmbralTimeoutHook) {
+				this.astralUmbralTimeoutHook = this.addTimestampHook(this.currentTimestamp + ASTRAL_UMBRAL_DURATION, () => this.onAstralUmbralTimeout())
+			}
+			if (!this.gainPolyglotHook && this.hasEnochian) {
+				this.gainPolyglotHook = this.addTimestampHook(this.currentTimestamp + ENOCHIAN_DURATION_REQUIRED, this.onGainPolyglot)
+			}
+		}
 
 		if (this.gaugeValuesChanged(lastAdded)) {
 			this.toAdd.push({
@@ -123,7 +135,6 @@ export default class Gauge extends Module {
 			const event = events[this.normalizeIndex]
 			this.currentTimestamp = event.timestamp
 
-			this.updateStackTimers(event)
 			if (!GAUGE_EVENTS.includes(event.type)) { continue }
 			if (this.parser.byPlayer(event)) {
 				switch (event.type) {
@@ -151,33 +162,41 @@ export default class Gauge extends Module {
 		return events
 	}
 
-	private onAstralUmbralTimeout(event: Event) {
+	private onAstralUmbralTimeout(flagIssues: boolean = true) {
+		this.tryExpireAstralUmbralTimeout()
+
 		this.astralFireStacks = 0
 		this.umbralIceStacks = 0
-		this.astralUmbralStackTimer = 0
-		this.onEnoDropped(event)
+
+		this.onEnoDropped(flagIssues)
 	}
 
-	private onEnoDropped(event: Event) {
-		if (this.hasEnochian) {
-			this.enochianDownTimer.start = event.timestamp
-			const enoRunTime = event.timestamp - this.enochianTimer
+	private onEnoDropped(flagIssues: boolean = true) {
+		this.tryExpirePolyglotGain()
+
+		if (this.hasEnochian && flagIssues) {
+			this.enochianDownTimer.start = this.currentTimestamp
+			const enoRunTime = this.currentTimestamp - this.enochianTimer
 			//add the time remaining on the eno timer to total downtime
 			this.enochianDownTimer.time += enoRunTime
-			this.droppedEnoTimestamps.push(event.timestamp)
+			this.droppedEnoTimestamps.push(this.currentTimestamp)
 		}
 		this.hasEnochian = false
 		this.enochianTimer = 0
 		this.umbralHeartStacks = 0
+
 		this.addEvent()
 	}
 
 	private onGainPolyglot() {
+		this.tryExpirePolyglotGain()
+
 		this.polyglotStacks++
 		if (this.polyglotStacks > MAX_POLYGLOT_STACKS) {
 			this.overwrittenPolyglot++
 		}
 		this.polyglotStacks = Math.min(this.polyglotStacks, MAX_POLYGLOT_STACKS)
+
 		this.addEvent()
 	}
 
@@ -192,68 +211,73 @@ export default class Gauge extends Module {
 
 	private onGainAstralFireStacks(event: CastEvent, stackCount: number, dropsElementOnSwap: boolean = true) {
 		if (this.umbralIceStacks > 0 && dropsElementOnSwap) {
-			this.onAstralUmbralTimeout(event)
+			this.onAstralUmbralTimeout()
 		} else {
+			this.tryExpireAstralUmbralTimeout()
+
 			this.umbralIceStacks = 0
-			this.astralUmbralStackTimer = event.timestamp
 			this.astralFireStacks = Math.min(this.astralFireStacks + stackCount, MAX_ASTRAL_UMBRAL_STACKS)
+
 			this.addEvent()
 		}
 	}
 
 	private onGainUmbralIceStacks(event: CastEvent, stackCount: number, dropsElementOnSwap: boolean = true) {
 		if (this.astralFireStacks > 0 && dropsElementOnSwap) {
-			this.onAstralUmbralTimeout(event)
+			this.onAstralUmbralTimeout()
 		} else {
+			this.tryExpireAstralUmbralTimeout()
+
 			this.astralFireStacks = 0
-			this.astralUmbralStackTimer = event.timestamp
 			this.umbralIceStacks = Math.min(this.umbralIceStacks + stackCount, MAX_ASTRAL_UMBRAL_STACKS)
+
 			this.addEvent()
 		}
 	}
 
-	private onTransposeStacks(event: CastEvent) {
-		if (this.astralFireStacks > 0 || this.umbralIceStacks > 0) {
-			this.astralUmbralStackTimer = event.timestamp
-			if (this.astralFireStacks > 0) {
-				this.astralFireStacks = 0
-				this.umbralIceStacks = 1
-			} else {
-				this.astralFireStacks = 1
-				this.umbralIceStacks = 0
-			}
-			this.addEvent()
+	private onTransposeStacks() {
+		if (this.astralFireStacks <= 0 && this.umbralIceStacks <= 0) { return }
+
+		this.tryExpireAstralUmbralTimeout()
+
+		if (this.astralFireStacks > 0) {
+			this.astralFireStacks = 0
+			this.umbralIceStacks = 1
+		} else {
+			this.astralFireStacks = 1
+			this.umbralIceStacks = 0
 		}
+
+		this.addEvent()
 	}
 
-	private tryGainUmbralHearts(event: CastEvent, count: number) {
-		if (this.umbralIceStacks > 0) {
-			this.umbralHeartStacks = Math.min(this.umbralHeartStacks + count, MAX_UMBRAL_HEART_STACKS)
-			this.addEvent()
-		}
+	private tryExpireAstralUmbralTimeout() {
+		if (!this.astralUmbralTimeoutHook) { return }
+
+		this.removeTimestampHook(this.astralUmbralTimeoutHook)
+		this.astralUmbralTimeoutHook = null
 	}
 
-	private tryConsumeUmbralHearts(event: CastEvent, count:  number, force: boolean = false) {
-		if (this.umbralHeartStacks > 0 && (this.astralFireStacks > 0 || force)) {
-			this.umbralHeartStacks = Math.max(this.umbralHeartStacks - count, 0)
-			this.addEvent()
-		}
+	private tryExpirePolyglotGain() {
+		if (!this.gainPolyglotHook) { return }
+
+		this.removeTimestampHook(this.gainPolyglotHook)
+		this.gainPolyglotHook = null
 	}
 
-	private updateStackTimers(event: Event) {
-		if ((this.astralFireStacks > 0 || this.umbralIceStacks > 0) &&
-			(event.timestamp - this.astralUmbralStackTimer > ASTRAL_UMBRAL_DURATION)
-		) {
-			this.onAstralUmbralTimeout(event)
-		}
+	private tryGainUmbralHearts(count: number) {
+		if (this.umbralIceStacks <= 0) { return }
 
-		if (this.hasEnochian) {
-			const enoRunTime = event.timestamp - this.enochianTimer
-			if (enoRunTime >= ENOCHIAN_DURATION_REQUIRED) {
-				this.enochianTimer = event.timestamp - (enoRunTime - ENOCHIAN_DURATION_REQUIRED)
-				this.onGainPolyglot()
-			}
-		}
+		this.umbralHeartStacks = Math.min(this.umbralHeartStacks + count, MAX_UMBRAL_HEART_STACKS)
+
+		this.addEvent()
+	}
+
+	private tryConsumeUmbralHearts(count:  number, force: boolean = false) {
+		if (!(this.umbralHeartStacks > 0 && (this.astralFireStacks > 0 || force))) { return }
+
+		this.umbralHeartStacks = Math.max(this.umbralHeartStacks - count, 0)
+		this.addEvent()
 	}
 
 	private startEnoTimer(event: CastEvent) {
@@ -301,7 +325,7 @@ export default class Gauge extends Module {
 		case ACTIONS.BLIZZARD_II.id:
 		case ACTIONS.FREEZE.id:
 			this.onGainUmbralIceStacks(event, MAX_ASTRAL_UMBRAL_STACKS, false)
-			this.tryGainUmbralHearts(event, 1)
+			this.tryGainUmbralHearts(1)
 			break
 		case ACTIONS.BLIZZARD_III.id:
 			this.onGainUmbralIceStacks(event, MAX_ASTRAL_UMBRAL_STACKS, false)
@@ -320,15 +344,15 @@ export default class Gauge extends Module {
 			break
 		case ACTIONS.UMBRAL_SOUL.id:
 			this.onGainUmbralIceStacks(event, 1)
-			this.tryGainUmbralHearts(event, 1)
+			this.tryGainUmbralHearts(1)
 			break
 		case ACTIONS.FIRE_I.id:
 		case ACTIONS.FIRE_II.id:
-			this.tryConsumeUmbralHearts(event, 1)
+			this.tryConsumeUmbralHearts(1)
 			this.onGainAstralFireStacks(event, 1)
 			break
 		case ACTIONS.FIRE_III.id:
-			this.tryConsumeUmbralHearts(event, 1)
+			this.tryConsumeUmbralHearts(1)
 			this.onGainAstralFireStacks(event, MAX_ASTRAL_UMBRAL_STACKS, false)
 			break
 		case ACTIONS.FIRE_IV.id:
@@ -340,13 +364,13 @@ export default class Gauge extends Module {
 				))
 				this.startEnoTimer(event)
 			}
-			this.tryConsumeUmbralHearts(event, 1)
+			this.tryConsumeUmbralHearts(1)
 			break
 		case ACTIONS.DESPAIR.id:
 			this.onGainAstralFireStacks(event, MAX_ASTRAL_UMBRAL_STACKS, false)
 			break
 		case ACTIONS.FLARE.id:
-			this.tryConsumeUmbralHearts(event, FLARE_MAX_HEART_CONSUMPTION, true)
+			this.tryConsumeUmbralHearts(FLARE_MAX_HEART_CONSUMPTION, true)
 			this.onGainAstralFireStacks(event, MAX_ASTRAL_UMBRAL_STACKS, false)
 			break
 		case ACTIONS.XENOGLOSSY.id:
@@ -354,21 +378,14 @@ export default class Gauge extends Module {
 			this.onConsumePolyglot()
 			break
 		case ACTIONS.TRANSPOSE.id:
-			this.onTransposeStacks(event)
+			this.onTransposeStacks()
 			break
 		}
 	}
 
 	private onDeath() {
 		// Not counting the loss towards the rest of the gauge loss, that'll just double up on the suggestions
-		this.astralFireStacks = 0
-		this.umbralIceStacks = 0
-		this.umbralHeartStacks = 0
-		this.astralUmbralStackTimer = 0
-		this.hasEnochian = false
-		this.polyglotStacks = 0
-		this.enochianTimer = 0
-		this.addEvent()
+		this.onAstralUmbralTimeout(false)
 	}
 
 	private onComplete(event: CompleteEvent) {
