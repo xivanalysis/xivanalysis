@@ -542,7 +542,7 @@ export default class RotationWatchdog extends Module {
 					<Icon name="warning sign"/>
 					<Message.Content>
 						<Trans id="blm.rotation-watchdog.rotation-table.disclaimer">This module assumes you are following the standard BLM playstyle.<br/>
-							If you are following the AI playstyle, this report and many of the suggestions may not be applicable.
+							If you are following a non-standard playstyle, this report and many of the suggestions may not be applicable.
 						</Trans>
 					</Message.Content>
 				</Message>
