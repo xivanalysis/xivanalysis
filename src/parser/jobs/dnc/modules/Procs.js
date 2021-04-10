@@ -17,7 +17,7 @@ const PROC_STATUSES = [
 ]
 
 export default class Procs extends Module {
-	static handle = 'procs'
+	static handle = 'procsLegacy'
 	static dependencies = [
 		'downtime',
 		'suggestions',

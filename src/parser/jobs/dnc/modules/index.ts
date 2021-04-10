@@ -1,5 +1,6 @@
 import Combos from './Combos'
 import DirtyDancing from './DirtyDancing'
+import DNCProcs from './DNCProcs'
 import EspritGauge from './Esprit'
 import FeatherGauge from './FeatherGauge'
 import OGCDDowntime from './OGCDDowntime'
@@ -9,6 +10,7 @@ import Weaving from './Weaving'
 
 export default [
 	Combos,
+	DNCProcs,
 	Procs,
 	DirtyDancing,
 	EspritGauge,
