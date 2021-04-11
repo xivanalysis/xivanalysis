@@ -54,12 +54,12 @@ export abstract class Procs extends Analyser {
 	protected abstract trackedProcs: ProcGroup[]
 
 	// Subclassing modules may override these suggestion properties with relevant job-specific ones
-	protected showDroppedProcSuggestion: boolean = true
+	protected showDroppedProcSuggestion: boolean = false
 	protected droppedProcIcon: string = 'https://xivapi.com/i/001000/001989.png' // Hasty Touch ...
 	protected droppedProcContent: JSX.Element | string = <Trans id="core.procs.suggestions.dropped.content">Avoid letting your procs fall off without using them. Proc actions are generally stronger than other actions and should not be wasted.</Trans>
 	protected droppedProcSeverityTiers = DEFAULT_SEVERITY_TIERS
 
-	protected showOverwroteProcSuggestion: boolean = true
+	protected showOverwroteProcSuggestion: boolean = false
 	protected overwroteProcIcon: string = 'https://xivapi.com/i/001000/001994.png' // Muscle Memory ...
 	protected overwroteProcContent: JSX.Element | string = <Trans id="core.procs.suggestions.overwritten.content">Avoid using an action that could generate a proc when you already have that proc active.</Trans>
 	protected overwroteProcSeverityTiers = DEFAULT_SEVERITY_TIERS

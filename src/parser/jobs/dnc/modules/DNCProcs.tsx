@@ -1,6 +1,9 @@
+import {Trans} from '@lingui/macro'
+import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import {Procs} from 'parser/core/modules/Procs'
+import React from 'react'
 
 export default class DNCProcs extends Procs {
 	trackedProcs = [
@@ -26,6 +29,17 @@ export default class DNCProcs extends Procs {
 		},
 	]
 
-	// droppedProcIcon = ACTIONS.BLOODSHOWER.icon
-	// overwroteProcIcon = ACTIONS.RISING_WINDMILL.icon
+	showDroppedProcSuggestion = true
+	droppedProcIcon = ACTIONS.FOUNTAINFALL.icon
+	droppedProcContent =
+		<Trans id="dnc.procs.suggestions.drops.content">
+			Avoid dropping your procs unless absolutely necessary. If you have to drop one to keep your Esprit from overcapping, <ActionLink {...ACTIONS.RISING_WINDMILL} /> or <ActionLink {...ACTIONS.REVERSE_CASCADE} /> will lose the least DPS overall.
+		</Trans>
+
+	showOverwroteProcSuggestion = true
+	overwroteProcIcon = ACTIONS.REVERSE_CASCADE.icon
+	overwroteProcContent =
+		<Trans id="dnc.procs.suggestions.overwrite.content">
+			Avoid overwriting your procs. Your proc actions are stronger than your normal combo, so overwriting them is a significant DPS loss.
+		</Trans>
 }

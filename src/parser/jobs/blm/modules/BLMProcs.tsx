@@ -1,18 +1,11 @@
 import {Plural, Trans} from '@lingui/macro'
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
-import ACTIONS from 'data/ACTIONS'
 import {Events} from 'event'
 import {CastEvent} from 'fflogs'
 import _ from 'lodash'
 import {ProcGroup, Procs} from 'parser/core/modules/Procs'
 import {SEVERITY, Suggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
-
-const ACTION_PROCS = {
-	[ACTIONS.FIRE_III.id]: ACTIONS.FIRE_III_PROC,
-	[ACTIONS.THUNDER_III.id]: ACTIONS.THUNDER_III_PROC,
-	[ACTIONS.THUNDER_IV.id]: ACTIONS.THUNDER_IV_PROC,
-}
 
 declare module 'event' {
 	interface FieldsBase {
@@ -37,9 +30,11 @@ export default class BLMProcs extends Procs {
 		},
 	]
 
-	showDroppedProcSuggestion = false
-	showOverwroteProcSuggestion = false
-	showInvulnProcSuggestion = false
+	private actionProcs: Map<number, number> = new Map([
+		[this.data.actions.THUNDER_III.id, this.data.actions.THUNDER_III_PROC.id],
+		[this.data.actions.THUNDER_IV.id, this.data.actions.THUNDER_IV_PROC.id],
+		[this.data.actions.FIRE_III.id, this.data.actions.FIRE_III_PROC.id],
+	])
 
 	public checkProc(event: Event, statusId: number): boolean {
 		const procHistory = this.getHistoryForStatus(statusId)
@@ -68,14 +63,15 @@ export default class BLMProcs extends Procs {
 	protected jobSpecificOnConsumeProc(_procGroup: ProcGroup, event: Events['action']): void {
 		// TODO: castTime needs to be on Analyser
 		// this.castTime.set([actionId], 0, event.timestamp, event.timestamp)
-		if (ACTION_PROCS[event.action]) {
-			event.overrideAction = ACTION_PROCS[event.action].id
+		const actionProcId = this.actionProcs.get(event.action)
+		if (actionProcId !== undefined) {
+			event.overrideAction = actionProcId
 		}
 		return
 	}
 
 	protected addJobSpecificSuggestions(): void {
-		const droppedThunderClouds = this.getDropsForStatus(this.data.statuses.THUNDERCLOUD.id).length -
+		const droppedThunderClouds: number = this.getDropsForStatus(this.data.statuses.THUNDERCLOUD.id).length-
 			this.getUsagesForStatus(this.data.statuses.THUNDERCLOUD.id).length
 		if (droppedThunderClouds > 0) {
 			this.suggestions.add(new Suggestion({
@@ -90,7 +86,7 @@ export default class BLMProcs extends Procs {
 			}))
 		}
 
-		const droppedFireStarters = this.getDropsForStatus(this.data.statuses.FIRESTARTER.id).length -
+		const droppedFireStarters:number = this.getDropsForStatus(this.data.statuses.FIRESTARTER.id).length -
 			this.getUsagesForStatus(this.data.statuses.FIRESTARTER.id).length
 		if (droppedFireStarters > 0) {
 			this.suggestions.add(new Suggestion({
