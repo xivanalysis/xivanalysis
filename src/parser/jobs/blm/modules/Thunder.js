@@ -33,6 +33,7 @@ export default class Thunder extends Module {
 		'entityStatuses',
 		'invuln',
 		'suggestions',
+		'legacyProcs',
 		'procs',
 	]
 
@@ -78,6 +79,9 @@ export default class Thunder extends Module {
 	_onDotCast(event) {
 		if (event.ability.guid === ACTIONS.THUNDER_III.id) {
 			this.thunder3Casts++
+		}
+		if (this.legacyProcs.checkProc(event, STATUSES.THUNDERCLOUD.id)) {
+			this._lastThunderProc = true
 		}
 		if (this.procs.checkProc(event, STATUSES.THUNDERCLOUD.id)) {
 			this._lastThunderProc = true

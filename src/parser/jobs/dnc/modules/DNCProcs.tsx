@@ -25,6 +25,7 @@ export default class DNCProcs extends Procs {
 			consumeActions: [ACTIONS.RISING_WINDMILL],
 		},
 	]
-	static droppedProcIcon = ACTIONS.FOUNTAINFALL.icon
-	static overwroteProcIcon = ACTIONS.REVERSE_CASCADE.icon
+
+	// droppedProcIcon = ACTIONS.BLOODSHOWER.icon
+	// overwroteProcIcon = ACTIONS.RISING_WINDMILL.icon
 }

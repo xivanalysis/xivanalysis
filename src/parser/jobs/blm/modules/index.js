@@ -1,4 +1,5 @@
 import {Interrupts} from 'parser/core/modules/Interrupts'
+import BLMProcs from './BLMProcs'
 import Gauge from './Gauge'
 import Leylines from './Leylines'
 import NotCasting from './NotCasting'
@@ -12,6 +13,7 @@ import BlmWeaving from './Weaving'
 
 export default [
 	BlmWeaving,
+	BLMProcs,
 	Gauge,
 	Interrupts,
 	Leylines,

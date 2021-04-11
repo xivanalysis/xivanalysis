@@ -36,7 +36,7 @@ const ACTION_PROCS = {
 }
 
 export default class Procs extends Module {
-	static handle = 'procs'
+	static handle = 'legacyProcs'
 	static dependencies = [
 		'castTime',
 		'suggestions',
