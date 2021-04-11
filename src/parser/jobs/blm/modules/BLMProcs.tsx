@@ -71,7 +71,7 @@ export default class BLMProcs extends Procs {
 	}
 
 	protected addJobSpecificSuggestions(): void {
-		const droppedThunderClouds: number = this.getDropsForStatus(this.data.statuses.THUNDERCLOUD.id).length-
+		const droppedThunderClouds: number = this.getDropsForStatus(this.data.statuses.THUNDERCLOUD.id).length -
 			this.getUsagesForStatus(this.data.statuses.THUNDERCLOUD.id).length
 		if (droppedThunderClouds > 0) {
 			this.suggestions.add(new Suggestion({
@@ -81,12 +81,12 @@ export default class BLMProcs extends Procs {
 				</Trans>,
 				severity: SEVERITY.MEDIUM,
 				why: <Trans id="blm.procs.suggestions.dropped-t3ps.why">
-					<Plural value={droppedThunderClouds} one="# Thundercloud proc" other="# Thundercloud procs"/> expired.
+					<Plural value={droppedThunderClouds} one="# Thundercloud proc" other="# Thundercloud procs" /> expired.
 				</Trans>,
 			}))
 		}
 
-		const droppedFireStarters:number = this.getDropsForStatus(this.data.statuses.FIRESTARTER.id).length -
+		const droppedFireStarters: number = this.getDropsForStatus(this.data.statuses.FIRESTARTER.id).length -
 			this.getUsagesForStatus(this.data.statuses.FIRESTARTER.id).length
 		if (droppedFireStarters > 0) {
 			this.suggestions.add(new Suggestion({
@@ -96,7 +96,7 @@ export default class BLMProcs extends Procs {
 				</Trans>,
 				severity: SEVERITY.MEDIUM,
 				why: <Trans id="blm.procs.suggestions.dropped-f3ps.why">
-					<Plural value={droppedFireStarters} one="# Firestarter proc" other="# Firestarter procs"/> expired.
+					<Plural value={droppedFireStarters} one="# Firestarter proc" other="# Firestarter procs" /> expired.
 				</Trans>,
 			}))
 		}
