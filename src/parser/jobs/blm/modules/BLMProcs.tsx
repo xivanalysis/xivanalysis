@@ -1,4 +1,4 @@
-import {Plural, Trans} from '@lingui/macro'
+import {Plural, Trans} from '@lingui/react'
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
 import {Events} from 'event'
 import {CastEvent} from 'fflogs'
