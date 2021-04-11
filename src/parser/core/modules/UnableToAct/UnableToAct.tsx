@@ -82,7 +82,7 @@ export class UnableToAct extends Analyser {
 	}
 
 	initialise() {
-		const statusFilter = filter<Event>().status(oneOf(...STATUS_IDS))
+		const statusFilter = filter<Event>().status(oneOf(STATUS_IDS))
 		this.addEventHook(statusFilter.type('statusApply'), this.onApply)
 		this.addEventHook(statusFilter.type('statusRemove'), this.onRemove)
 
