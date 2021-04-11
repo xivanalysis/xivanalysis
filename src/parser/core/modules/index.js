@@ -28,7 +28,7 @@ import {Statistics} from './Statistics'
 import Statuses from './Statuses'
 import Suggestions from './Suggestions'
 import {Timeline} from './Timeline'
-import UnableToAct from './UnableToAct'
+import {UnableToAct} from './UnableToAct'
 import Weaving from './Weaving'
 
 export default [

@@ -50,7 +50,7 @@ describe('filter', () => {
 
 describe('matchers', () => {
 	test('oneOf', () => {
-		const matcher = oneOf(1, 2)
+		const matcher = oneOf([1, 2])
 		expect(matcher(1)).toBeTrue()
 		expect(matcher(2)).toBeTrue()
 		expect(matcher(3)).toBeFalse()

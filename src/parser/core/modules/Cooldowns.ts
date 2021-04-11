@@ -45,7 +45,7 @@ export default class Cooldowns extends Module {
 
 	private _currentAction?: Action
 	private _cooldowns = new Map<number, CooldownHistory>()
-	private _rows = new Map<number | string, ContainerRow>()
+	private _rows = new Map<number, ContainerRow>()
 
 	protected init() {
 		const constructor = this.constructor as typeof Cooldowns
@@ -73,8 +73,8 @@ export default class Cooldowns extends Module {
 			const row = this._buildRow(undefined, {label: mapping.name, order})
 
 			// Register the group for each of the action IDs
-			mapping.actions.forEach(id => {
-				this._rows.set(id, row)
+			mapping.actions.forEach(key => {
+				this._rows.set(this.data.actions[key].id, row)
 			})
 		})
 	}
