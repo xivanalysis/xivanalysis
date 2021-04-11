@@ -2,6 +2,7 @@ import {Plural, Trans} from '@lingui/macro'
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
 import {Events} from 'event'
+import {CastEvent} from 'fflogs'
 import _ from 'lodash'
 import {ProcGroup, Procs} from 'parser/core/modules/Procs'
 import {SEVERITY, Suggestion} from 'parser/core/modules/Suggestions'
@@ -48,11 +49,12 @@ export default class BLMProcs extends Procs {
 		return event.timeStamp === lastHistoryEntry
 	}
 
-	public checkProcLegacy(event: Event, statusId: number) : boolean {
+	/** @deprecated */
+	public checkProcLegacy(event: CastEvent, statusId: number) : boolean {
 		const procHistory = this.getHistoryForStatus(statusId)
 		if (procHistory.length === 0) { return false }
 		const lastHistoryEntry = _.last(procHistory)?.stop || 0
-		return event.timeStamp === this.parser.fflogsToEpoch
+		return event.timestamp === this.parser.epochToFflogs(lastHistoryEntry)
 	}
 
 	protected jobSpecificCheckConsumeProc(_procGroup: ProcGroup, event: Events['action']): boolean {
