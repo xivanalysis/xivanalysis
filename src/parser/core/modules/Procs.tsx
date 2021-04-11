@@ -122,13 +122,13 @@ export abstract class Procs extends Analyser {
 		const trackedProcActionsIds: number[] = this.trackedProcs.map(group => group.consumeActions).reduce((acc, cur) => acc.concat(cur)).map(action => action.id)
 		const trackedActionFilter = filter<Event>()
 			.source(this.parser.actor.id)
-			.action(oneOf(...trackedProcActionsIds))
+			.action(oneOf(trackedProcActionsIds))
 		this.addEventHook(trackedActionFilter.type('action'), this.onCast)
 
 		const trackedProcStatusIds: number[] = this.trackedProcs.map(group => group.procStatus.id)
 		const trackedStatusFilter = filter<Event>()
 			.target(this.parser.actor.id)
-			.status(oneOf(...trackedProcStatusIds))
+			.status(oneOf(trackedProcStatusIds))
 		this.addEventHook(trackedStatusFilter.type('statusApply'), this.onProcGained)
 		this.addEventHook(trackedStatusFilter.type('statusRemove'), this.onProcRemoved)
 
@@ -185,6 +185,7 @@ export abstract class Procs extends Analyser {
 		// }
 
 		// TODO: If the target of the cast was invulnerable, push event to invulns
+
 		this.stopAndSave(procGroup, event)
 
 		this.jobSpecificOnConsumeProc(procGroup, event)
