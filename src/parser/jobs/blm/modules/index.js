@@ -4,7 +4,6 @@ import Gauge from './Gauge'
 import Leylines from './Leylines'
 import NotCasting from './NotCasting'
 import OGCDDowntime from './OGCDDowntime'
-import Procs from './Procs'
 import RotationWatchdog from './RotationWatchdog'
 import Sharpcast from './Sharpcast'
 import Speedmod from './Speedmod'
@@ -19,7 +18,6 @@ export default [
 	Leylines,
 	NotCasting,
 	OGCDDowntime,
-	Procs,
 	RotationWatchdog,
 	Sharpcast,
 	Speedmod,
