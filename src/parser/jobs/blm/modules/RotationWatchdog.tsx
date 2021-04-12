@@ -13,7 +13,7 @@ import {EntityStatuses} from 'parser/core/modules/EntityStatuses'
 import {Invulnerability} from 'parser/core/modules/Invulnerability'
 import Suggestions, {SEVERITY, Suggestion, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import {Timeline} from 'parser/core/modules/Timeline'
-import UnableToAct from 'parser/core/modules/UnableToAct'
+import {UnableToAct} from 'parser/core/modules/UnableToAct'
 import React, {Fragment} from 'react'
 import {Icon, Message} from 'semantic-ui-react'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
@@ -266,11 +266,24 @@ export default class RotationWatchdog extends Module {
 
 		// Override the error code for cycles that dropped enochian, when the cycle contained an unabletoact time long enough to kill it.
 		// Couldn't do this at the time of code assignment, since the downtime data wasn't fully available yet
-		this.history.filter(cycle => cycle.errorCode === CYCLE_ERRORS.DROPPED_ENOCHIAN).forEach(cycle => {
-			if (this.unableToAct.getDowntimes(cycle.startTime, cycle.endTime).filter(downtime => Math.max(0, downtime.end - downtime.start) >= ASTRAL_UMBRAL_DURATION).length > 0) {
+		for (const cycle of this.history) {
+			if (cycle.errorCode !== CYCLE_ERRORS.DROPPED_ENOCHIAN) { continue }
+
+			const windows = this.unableToAct
+				.getWindows({
+					start: this.parser.fflogsToEpoch(cycle.startTime),
+					end: cycle.endTime && this.parser.fflogsToEpoch(cycle.endTime),
+				})
+				.map(window => ({
+					start: this.parser.epochToFflogs(window.start),
+					end: this.parser.epochToFflogs(window.end),
+				}))
+				.filter(window => Math.max(0, window.end - window.start) >= ASTRAL_UMBRAL_DURATION)
+
+			if (windows.length > 0) {
 				cycle.overrideErrorCode(CYCLE_ERRORS.FINAL_OR_DOWNTIME)
 			}
-		})
+		}
 
 		// Suggestion for skipping B4 on rotations that are cut short by the end of the parse or downtime
 		if (this.missedF4s) {

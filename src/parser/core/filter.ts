@@ -39,7 +39,7 @@ export const filter = <Base>() => filterInternal<Base, {}>({})
 // -----
 
 // Extending primitive so TS narrows the type as far as it can
-export const oneOf = <T extends TB.Misc.Primitive>(...values: T[]): Matcher<T> =>
+export const oneOf = <T extends TB.Misc.Primitive>(values: T[]): Matcher<T> =>
 	(objValue): objValue is T => values.includes(objValue)
 
 // -----

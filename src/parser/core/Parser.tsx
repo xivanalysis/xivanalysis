@@ -653,6 +653,24 @@ class Parser {
 		return pet && pet.petOwner === playerId
 	}
 
+	/**
+	 * Convert an fflogs event timestamp for the current pull to an epoch timestamp
+	 * compatible with logic running in the new analysis system. Do ***not*** use this
+	 * outside the above scenario.
+	 * @deprecated
+	 */
+	fflogsToEpoch = (timestamp: number) =>
+		timestamp - this.eventTimeOffset + this.pull.timestamp
+
+	/**
+	 * Convert a unix epoch timestamp to a report-relative timestamp compatible
+	 * with logic running in the old analysis system.. Do ***not*** use this
+	 * outside the above scenario.
+	 * @deprecated
+	 */
+	epochToFflogs = (timestamp: number) =>
+		timestamp - this.pull.timestamp + this.eventTimeOffset
+
 	formatTimestamp(timestamp: number, secondPrecision?: number) {
 		return this.formatDuration(timestamp - this.fight.start_time, secondPrecision)
 	}
