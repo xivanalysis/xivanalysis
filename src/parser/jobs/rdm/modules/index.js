@@ -6,7 +6,7 @@ import GeneralCDDowntime from './GeneralCDDowntime'
 import {Interrupts} from './Interrupts'
 import MeleeCombos from './MeleeCombos'
 import MovementSkills from './MovementSkills'
-import Procs from './Procs'
+import RDMProcs from './RDMProcs'
 
 export {DualStatistic} from 'parser/jobs/rdm/statistics/DualStatistic'
 
@@ -15,7 +15,7 @@ export default [
 	Dualcast,
 	GeneralCDDowntime,
 	Interrupts,
-	Procs,
+	RDMProcs,
 	Combos,
 	MeleeCombos,
 	MovementSkills,
