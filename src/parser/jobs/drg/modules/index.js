@@ -5,11 +5,11 @@ import Combos from './Combos'
 import Cooldowns from './Cooldowns'
 import Debuffs from './Debuffs'
 import DragonSight from './DragonSight'
+import DRGProcs from './DRGProcs'
 import Drift from './Drift'
 import LanceCharge from './LanceCharge'
 import OGCDDowntime from './OGCDDowntime'
 import Positionals from './Positionals'
-import Procs from './Procs'
 import Tincture from './Tincture'
 import Weaving from './Weaving'
 
@@ -21,11 +21,11 @@ export default [
 	Cooldowns,
 	Debuffs,
 	DragonSight,
+	DRGProcs,
 	Drift,
 	LanceCharge,
 	OGCDDowntime,
 	Positionals,
-	Procs,
 	Tincture,
 	Weaving,
 ]

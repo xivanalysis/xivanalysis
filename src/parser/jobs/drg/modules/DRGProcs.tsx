@@ -1,61 +1,32 @@
-import {Trans, Plural} from '@lingui/react'
+import {Plural, Trans} from '@lingui/react'
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
-import Module from 'parser/core/Module'
-import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import {Procs} from 'parser/core/modules/Procs'
+import {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
 
-export default class Procs extends Module {
-	static handle = 'procs'
-	static dependencies = [
-		'downtime',
-		'suggestions',
+export default class DRGProcs extends Procs {
+	trackedProcs = [
+		{
+			procStatus: STATUSES.SHARPER_FANG_AND_CLAW,
+			consumeActions: [ACTIONS.FANG_AND_CLAW],
+		},
+		{
+			procStatus: STATUSES.ENHANCED_WHEELING_THRUST,
+			consumeActions: [ACTIONS.WHEELING_THRUST],
+		},
+		{
+			procStatus: STATUSES.DIVE_READY,
+			consumeActions: [ACTIONS.MIRAGE_DIVE],
+		},
 	]
 
-	_casts = {
-		[ACTIONS.FANG_AND_CLAW.id]: 0,
-		[ACTIONS.WHEELING_THRUST.id]: 0,
-		[ACTIONS.MIRAGE_DIVE.id]: 0,
-	}
-	_removedProcs = {
-		[STATUSES.SHARPER_FANG_AND_CLAW.id]: 0,
-		[STATUSES.ENHANCED_WHEELING_THRUST.id]: 0,
-		[STATUSES.DIVE_READY.id]: 0,
-	}
-	_overwrittenDiveReady = 0
-
-	constructor(...args) {
-		super(...args)
-
-		this.addEventHook('cast', {by: 'player', abilityId: Object.keys(this._casts).map(Number)}, this._onCast)
-		this.addEventHook('refreshbuff', {by: 'player', abilityId: STATUSES.DIVE_READY.id}, this._onReadyOverwritten) // The other two can't be overwritten due to how they drop
-		this.addEventHook('removebuff', {by: 'player', abilityId: Object.keys(this._removedProcs).map(Number)}, this._onProcRemoved)
-		this.addEventHook('complete', this._onComplete)
-	}
-
-	// For all of our cast/removal tracking, we only want to know if it happened outside of downtime to avoid errant penalization.
-	// The only one that doesn't need the check is overwriting Mirage Dive, since you can't get a proc from an invulnerable target.
-	_onCast(event) {
-		if (!this.downtime.isDowntime(event.timestamp)) {
-			this._casts[event.ability.guid]++
-		}
-	}
-
-	_onReadyOverwritten() {
-		this._overwrittenDiveReady++
-	}
-
-	_onProcRemoved(event) {
-		if (!this.downtime.isDowntime(event.timestamp)) {
-			this._removedProcs[event.ability.guid]++
-		}
-	}
-
-	_onComplete() {
-		const droppedFang = this._removedProcs[STATUSES.SHARPER_FANG_AND_CLAW.id] - this._casts[ACTIONS.FANG_AND_CLAW.id]
-		const droppedWheeling = this._removedProcs[STATUSES.ENHANCED_WHEELING_THRUST.id] - this._casts[ACTIONS.WHEELING_THRUST.id]
-		const droppedMirage = this._removedProcs[STATUSES.DIVE_READY.id] - this._casts[ACTIONS.MIRAGE_DIVE.id]
+	protected addJobSpecificSuggestions(): void {
+		const droppedFang = this.getDropsForStatus(STATUSES.SHARPER_FANG_AND_CLAW.id).length - this.getUsagesForStatus(STATUSES.SHARPER_FANG_AND_CLAW.id).length
+		const droppedWheeling = this.getDropsForStatus(STATUSES.ENHANCED_WHEELING_THRUST.id).length - this.getUsagesForStatus(STATUSES.ENHANCED_WHEELING_THRUST.id).length
+		const droppedMirage = this.getDropsForStatus(STATUSES.DIVE_READY.id).length - this.getUsagesForStatus(STATUSES.DIVE_READY.id).length
+		const overwrittenDiveReady = this.getOverwritesForStatus(STATUSES.DIVE_READY.id).length
 
 		this.suggestions.add(new TieredSuggestion({
 			icon: droppedFang >= droppedWheeling ? ACTIONS.FANG_AND_CLAW.icon : ACTIONS.WHEELING_THRUST.icon,
@@ -97,9 +68,9 @@ export default class Procs extends Module {
 				1: SEVERITY.MEDIUM,
 				3: SEVERITY.MAJOR,
 			},
-			value: this._overwrittenDiveReady,
+			value: overwrittenDiveReady,
 			why: <Trans id="drg.procs.suggestions.mirage-overwritten.why">
-				You overwrote <Plural value={this._overwrittenDiveReady} one="# Mirage Dive proc" other="# Mirage Dive procs"/>.
+				You overwrote <Plural value={overwrittenDiveReady} one="# Mirage Dive proc" other="# Mirage Dive procs"/>.
 			</Trans>,
 		}))
 	}
