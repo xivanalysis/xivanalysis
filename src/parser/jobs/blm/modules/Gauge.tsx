@@ -299,12 +299,12 @@ export default class Gauge extends Module {
 	// Refund unable-to-act time if the downtime window was longer than the AF/UI timer
 	private countLostPolyglots(time: number) {
 		const unableToActTime = this.unableToAct.getWindows()
-			.map((window: { start: number; end: number }) => ({
+			.map((window) => ({
 				start: this.parser.epochToFflogs(window.start),
 				end: this.parser.epochToFflogs(window.end),
 			}))
-			.filter((downtime: { end: number; start: number }) => Math.max(0, downtime.end - downtime.start) >= ASTRAL_UMBRAL_DURATION)
-			.reduce((duration: number, downtime: { end: number; start: number }) => duration + Math.max(0, downtime.end - downtime.start), 0)
+			.filter((downtime) => Math.max(0, downtime.end - downtime.start) >= ASTRAL_UMBRAL_DURATION)
+			.reduce((duration, downtime) => duration + Math.max(0, downtime.end - downtime.start), 0)
 		return Math.floor((time - unableToActTime)/ENOCHIAN_DURATION_REQUIRED)
 	}
 
@@ -405,7 +405,7 @@ export default class Gauge extends Module {
 					start: this.parser.fflogsToEpoch(drop),
 					end: this.parser.fflogsToEpoch(drop),
 				})
-				.filter((downtime: { end: number; start: number }) => Math.max(0, downtime.end - downtime.start) >= ASTRAL_UMBRAL_DURATION)
+				.filter((downtime) => Math.max(0, downtime.end - downtime.start) >= ASTRAL_UMBRAL_DURATION)
 				.length === 0
 		).length
 		if (droppedEno) {
