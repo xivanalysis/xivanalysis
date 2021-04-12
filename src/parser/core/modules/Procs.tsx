@@ -174,9 +174,7 @@ export abstract class Procs extends Analyser {
 		const action = this.data.getAction(event.action)
 		if (action === undefined) { return }
 
-		// If procced version of the action are always instant cast, but we detect that this cast event was a hardcast, don't consume the proc
-		// if (procGroup.procsBecomeInstant && action.castTime && this.lastCastingSpellId && this.lastCastingSpellId === action.id) { return }
-
+		// If there is job-specific logic that needs to be run to decide if a proc is being used, do that now
 		if (!this.jobSpecificCheckConsumeProc(procGroup, event)) { return }
 
 		// TODO: need downtime on Analyser system
