@@ -19,20 +19,14 @@ type FlattenArray<T> = T extends Array<infer I> ? I : T
 
 export function getDataArrayBy<
 	Data extends Record<string, object>,
-	Value extends Data[keyof Data],
-	Key extends keyof Value,
+	Entry extends Data[keyof Data],
+	Key extends keyof Entry,
 >(
 	data: Data,
 	by: Key,
-	value: FlattenArray<Value[Key]>,
-): Value[] | undefined {
-	// Sanity check in case someone is using this from JS and misspelled a key
+	value: FlattenArray<Entry[Key]>,
+): Entry[] {
 	const dataKeys = Object.keys(data)
-	const testEntry = data[dataKeys[0]]
-	if (!Object.hasOwnProperty.call(testEntry, by)) {
-		const correctKeys = Object.keys(testEntry).join('|')
-		throw new Error(`Invalid 'by' value provided: got '${by}', expected '${correctKeys}'`)
-	}
 
 	// Pull up the cache for the given data object, creating a new one if none exists
 	let dataCache = cache.get(data)
@@ -45,38 +39,43 @@ export function getDataArrayBy<
 	let lookup = dataCache.get(by)
 
 	// If there isn't a lookup map, build one
-	if (!lookup) {
+	if (lookup == null) {
 		lookup = dataKeys.reduce((map, key) => {
-			const val = data[key] as Value
+			const entry = data[key] as Entry
+			const value = entry[by]
+
+			// If the entry does not contain data for the key, we can skip it
+			if (value == null) {
+				return map
+			}
 
 			// Keys can be arrays (see STATUSES), handle it
-			const newKeys = ensureArray(val[by])
-			newKeys.forEach(key => {
-				let values = map.get(key)
-				if (values == null) {
-					values = []
-					map.set(key, values)
+			const values = ensureArray(value)
+			values.forEach(value => {
+				let entries = map.get(value)
+				if (entries == null) {
+					entries = []
+					map.set(value, entries)
 				}
-				values.push(val)
+				entries.push(entry)
 			})
 			return map
-		}, new Map<Value[Key], Value[]>())
+		}, new Map<Entry[Key], Entry[]>())
 
 		dataCache.set(by, lookup)
 	}
 
-	return lookup.get(value)
+	return lookup.get(value) ?? []
 }
 
 export function getDataBy<
 	Data extends Record<string, object>,
-	Value extends Data[keyof Data],
-	Key extends keyof Value,
+	Entry extends Data[keyof Data],
+	Key extends keyof Entry,
 >(
 	data: Data,
 	by: Key,
-	value: FlattenArray<Value[Key]>,
-): Value | undefined {
-	const entries = getDataArrayBy(data, by, value)
-	return entries ? entries[0] : undefined
+	value: FlattenArray<Entry[Key]>,
+): Entry | undefined {
+	return getDataArrayBy(data, by, value)[0]
 }

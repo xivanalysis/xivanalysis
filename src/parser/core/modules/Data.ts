@@ -34,12 +34,12 @@ export class Data extends Analyser {
 		return getDataBy(this.statuses, 'id', id)
 	}
 
-	matchActionId(...keys: ActionKey[]) {
-		return oneOf(...keys.map(key => this.actions[key].id))
+	matchActionId(keys: ActionKey[]) {
+		return oneOf(keys.map(key => this.actions[key].id))
 	}
 
-	matchStatusId(...keys: StatusKey[]) {
-		return oneOf(...keys.map(key => this.statuses[key].id))
+	matchStatusId(keys: StatusKey[]) {
+		return oneOf(keys.map(key => this.statuses[key].id))
 	}
 
 	private getAppliedData<R extends object>(root: R, layers: Array<Layer<R>>): R {
