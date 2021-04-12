@@ -15,9 +15,14 @@ import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Sugge
 import React from 'react'
 import {FINISHES} from '../CommonData'
 
+type GaugeEventType =
+	| 'init'
+	| 'generate'
+	| 'spend'
+	| 'death'
+
 interface DancerResourceDatum extends ResourceDatum {
-	isGenerator: boolean, // Need to know if the resource event was a generator or a spender, used for graph smoothing
-	t: number, // non-Epoch-based timestamp since I haven't figured out how to translate to/from that, needed for Technicalities/feathersSpentInRange
+	type: GaugeEventType, // Need to know if the resource event was a generator or a spender, used for graph smoothing
 }
 
 interface DancerGauge {
@@ -59,13 +64,13 @@ export default class Gauge extends Analyser {
 		currentAmount: 0,
 		overcapAmount: 0,
 		maximum: MAX_ESPRIT,
-		history: [{t: 0, time: this.parser.pull.timestamp, current: 0, maximum: MAX_ESPRIT, isGenerator: true}],
+		history: [{time: this.parser.pull.timestamp, current: 0, maximum: MAX_ESPRIT, type: 'init'}],
 	}
 	private featherGauge: DancerGauge = {
 		currentAmount: 0,
 		overcapAmount: 0,
 		maximum: MAX_FEATHERS,
-		history: [{t: 0, time: this.parser.pull.timestamp, current: 0, maximum: MAX_FEATHERS, isGenerator: true}],
+		history: [{time: this.parser.pull.timestamp, current: 0, maximum: MAX_FEATHERS, type: 'init'}],
 	}
 	private espritStatuses = [
 		this.data.statuses.ESPRIT.id,
@@ -113,11 +118,6 @@ export default class Gauge extends Analyser {
 	private pauseGeneration = false;
 
 	initialise() {
-		/*this.addEventHook({
-			type: 'damage',
-			actor: this.parser.actor.id,
-		}, this.onDamage)*/
-
 		const espritApplyFilter = filter<Event>()
 			.type('statusApply')
 			.source(this.parser.actor.id)
@@ -179,11 +179,16 @@ export default class Gauge extends Analyser {
 	}
 
 	/* Public functions */
+	/** @deprecated */
+	public feathersSpentInRangeLegacy(start: number, end: number): number {
+		return this.feathersSpentInRange(this.parser.fflogsToEpoch(start), this.parser.fflogsToEpoch(end))
+	}
+
 	public feathersSpentInRange(start: number, end: number): number {
 		if (start > end) {
 			return -1
 		}
-		return this.featherGauge.history.filter(event => event.t >= start - this.parser.fight.start_time && event.t <= end - this.parser.fight.start_time && !event.isGenerator).length
+		return this.featherGauge.history.filter(event => start <= event.time && event.time <= end && event.type === 'spend').length
 	}
 
 	/* Esprit buff application/removal hooks */
@@ -308,19 +313,21 @@ export default class Gauge extends Analyser {
 	// Zero out gauges, and pause Esprit generation from living party members while dead
 	private onDeath() {
 		this.pauseGeneration = true
-		this.setGauge(this.espritGauge, 0)
-		this.setGauge(this.featherGauge, 0)
+		this.setGauge(this.espritGauge, 0, 'death')
+		this.setGauge(this.featherGauge, 0, 'death')
 	}
 
 	// Re-enable Esprit generation from living party members once alive again
 	private onRaise() {
 		this.pauseGeneration = false
+		this.setGauge(this.espritGauge, 0, 'init')
+		this.setGauge(this.featherGauge, 0, 'init')
 	}
 
 	/* Gauge Event Helpers */
 	private generateGauge(gauge: DancerGauge, generatedAmount: number) {
 		if (generatedAmount > 0) {
-			this.setGauge(gauge, gauge.currentAmount + generatedAmount, true)
+			this.setGauge(gauge, gauge.currentAmount + generatedAmount, 'generate')
 		}
 	}
 
@@ -330,20 +337,19 @@ export default class Gauge extends Analyser {
 			this.correctGaugeHistory(gauge.history, spentAmount, gauge.currentAmount)
 		}
 
-		this.setGauge(gauge, gauge.currentAmount - spentAmount)
+		this.setGauge(gauge, gauge.currentAmount - spentAmount, 'spend')
 	}
 
-	private setGauge(gauge: DancerGauge, newAmount: number, isGenerator: boolean = false) {
+	private setGauge(gauge: DancerGauge, newAmount: number, type: GaugeEventType) {
 		gauge.currentAmount = _.clamp(newAmount, 0, gauge.maximum)
 		gauge.overcapAmount += Math.max(0, newAmount - gauge.currentAmount)
 
-		const t = this.parser.currentTimestamp - this.parser.fight.start_time
-		gauge.history.push({t, time: this.parser.currentEpochTimestamp, current: gauge.currentAmount, isGenerator, maximum: gauge.maximum})
+		gauge.history.push({time: this.parser.currentEpochTimestamp, current: gauge.currentAmount, type, maximum: gauge.maximum})
 	}
 
 	/** Dancer's gauges are both probabilistic, so we have to do some fudging to produce a realistic-looking graph */
 	private correctGaugeHistory(historyObject: DancerResourceDatum[], spenderCost: number, currentGauge: number) {
-		const lastGeneratorIndex = _.findLastIndex(historyObject, event => event.isGenerator) // Get the last generation event we've recorded
+		const lastGeneratorIndex = _.findLastIndex(historyObject, event => event.type === 'generate') // Get the last generation event we've recorded
 
 		// Add the amount we underran the simulation by to the last generation event, and all events through the current one
 		const underrunAmount = Math.abs(currentGauge - spenderCost)
@@ -356,8 +362,8 @@ export default class Gauge extends Analyser {
 			return
 		}
 
-		// Find the first spender event previous to the last generator we already found, and smooth the graph between the two events by adding a proportional amount of the underrun value to each event
-		const previousSpenderIndex = _.findLastIndex(historyObject.slice(0, lastGeneratorIndex), event => !event.isGenerator)
+		// Find the first spender or init event previous to the last generator we already found, and smooth the graph between the two events by adding a proportional amount of the underrun value to each event
+		const previousSpenderIndex = _.findLastIndex(historyObject.slice(0, lastGeneratorIndex), event => (event.type === 'spend' || event.type === 'init'))
 		const adjustmentPerEvent = underrunAmount / (lastGeneratorIndex - previousSpenderIndex)
 		for (let i = previousSpenderIndex + 1; i < lastGeneratorIndex; i ++) {
 			historyObject[i].current += adjustmentPerEvent * (i - previousSpenderIndex)

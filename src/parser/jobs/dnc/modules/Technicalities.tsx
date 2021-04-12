@@ -126,9 +126,9 @@ export default class Technicalities extends Module {
 			lastWindow.end = event.timestamp
 
 			// Check to see if this window could've had more feathers due to possible pooling problems
-			if (this.gauge.feathersSpentInRange(lastWindow.start, lastWindow.end) < FEATHER_THRESHHOLD) {
+			if (this.gauge.feathersSpentInRangeLegacy(lastWindow.start, lastWindow.end) < FEATHER_THRESHHOLD) {
 				const previousWindow = this.history[this.history.length-2]
-				const feathersBeforeWindow = this.gauge.feathersSpentInRange((previousWindow && previousWindow.end || this.parser.fight.start_time)
+				const feathersBeforeWindow = this.gauge.feathersSpentInRangeLegacy((previousWindow && previousWindow.end || this.parser.fight.start_time)
 					+ POST_WINDOW_GRACE_PERIOD_MILLIS, lastWindow.start)
 				lastWindow.poolingProblem = feathersBeforeWindow > 0
 			} else {
