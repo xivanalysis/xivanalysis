@@ -7,7 +7,7 @@ import {Actors} from 'parser/core/modules/Actors'
 // import Downtime from 'parser/core/modules/Downtime'
 import Suggestions, {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import {SimpleRow, StatusItem, Timeline} from 'parser/core/modules/Timeline'
-import React, {Fragment} from 'react'
+import React from 'react'
 import {Analyser} from '../Analyser'
 import {filter, oneOf} from '../filter'
 import {dependency} from '../Injectable'
@@ -334,10 +334,6 @@ export abstract class Procs extends Analyser {
 		}
 
 		this.addJobSpecificSuggestions()
-	}
-
-	output() {
-		return <Fragment>derp</Fragment>
 	}
 
 	private stopAndSave(procGroup: ProcGroup, event?: Event, type?: ProcErrorType): void {

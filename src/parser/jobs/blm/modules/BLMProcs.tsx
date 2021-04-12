@@ -8,8 +8,8 @@ import {SEVERITY, Suggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
 
 declare module 'event' {
-	interface FieldsBase {
-		overrideAction: number
+	interface FieldsTargeted {
+		overrideAction?: number
 	}
 }
 
