@@ -675,6 +675,10 @@ class Parser {
 		return this.formatDuration(timestamp - this.fight.start_time, secondPrecision)
 	}
 
+	formatEpochTimestamp(timestamp: number, secondPrecision?: number) {
+		return this.formatDuration(timestamp - this.pull.timestamp, secondPrecision)
+	}
+
 	formatDuration(duration: number, secondPrecision?: number) {
 		return formatDuration(duration, {secondPrecision, hideMinutesIfZero: true, showNegative: true})
 	}
