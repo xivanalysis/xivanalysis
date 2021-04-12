@@ -121,12 +121,12 @@ export default class Gauge extends Analyser {
 		const espritApplyFilter = filter<Event>()
 			.type('statusApply')
 			.source(this.parser.actor.id)
-			.status(oneOf(...this.espritStatuses))
+			.status(oneOf(this.espritStatuses))
 		this.addEventHook(espritApplyFilter, this.addEspritGenerationHook)
 		const espritRemoveFilter = filter<Event>()
 			.type('statusRemove')
 			.source(this.parser.actor.id)
-			.status(oneOf(...this.espritStatuses))
+			.status(oneOf(this.espritStatuses))
 		this.addEventHook(espritRemoveFilter, this.removeEspritGenerationHook)
 
 		this.addEventHook({
@@ -159,12 +159,12 @@ export default class Gauge extends Analyser {
 			.type('damage')
 			.source(this.parser.actor.id)
 			.cause(filter<Cause>()
-				.action(this.data.matchActionId(...this.featherGenerators)))
+				.action(this.data.matchActionId(this.featherGenerators)))
 		this.addEventHook(procFilter, this.onCastGenerator)
 		const fanDanceFilter = filter<Event>()
 			.type('action')
 			.source(this.parser.actor.id)
-			.action(oneOf(...this.featherConsumers))
+			.action(oneOf(this.featherConsumers))
 		this.addEventHook(fanDanceFilter, this.onConsumeFeather)
 
 		this.addEventHook({
