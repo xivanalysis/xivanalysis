@@ -41,7 +41,7 @@ export abstract class Procs extends Analyser {
 	// @dependency private downtime!: Downtime
 	@dependency protected suggestions!: Suggestions
 	@dependency private timeline!: Timeline
-	@dependency private actors!: Actors
+	@dependency protected actors!: Actors
 	@dependency protected data!: Data
 
 	private droppedProcs: number = 0
@@ -184,7 +184,11 @@ export abstract class Procs extends Analyser {
 		this.usages.get(procGroup)?.push(event)
 		// }
 
-		// TODO: If the target of the cast was invulnerable, push event to invulns
+		// TODO: Need Invulnerability on Analyser system
+		// If the target of the cast was invulnerable, push event to invulns
+		/* if (this.invuln.isInvulnerable(event.target, event.timestamp)) {
+			this.invulns.get(procGroup)?.push(event)
+		}*/
 
 		this.stopAndSave(procGroup, event)
 
