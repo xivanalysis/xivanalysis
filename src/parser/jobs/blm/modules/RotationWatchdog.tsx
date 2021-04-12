@@ -68,8 +68,7 @@ const CYCLE_ERRORS = {
 }
 
 class Cycle {
-	// TS CastEvent Ability interface doesn't include the overrideAbility property that BLM Procs sets to denote T3P/F3P
-	casts: TODO[] = []
+	casts: CastEvent[] = []
 	startTime: number
 	endTime?: number
 
@@ -439,7 +438,7 @@ export default class RotationWatchdog extends Module {
 	private processNormalCycle(currentRotation: Cycle) {
 		// Check to make sure we didn't lose Fire 4 casts due to spending MP on T3 hardcasts
 		const hardT3Count = currentRotation.casts.filter(cast => cast.ability.overrideAction)
-			.filter(cast => cast.ability.overrideAction.id === ACTIONS.THUNDER_III_FALSE.id).length
+			.filter(cast => (cast.ability.overrideAction || 0) === ACTIONS.THUNDER_III_FALSE.id).length
 		if (hardT3Count > 1 || (hardT3Count > 0 && currentRotation.firePhaseStartMP < MIN_MP_FOR_FULL_ROTATION)) {
 			this.extraT3s++
 			currentRotation.errorCode = CYCLE_ERRORS.EXTRA_T3

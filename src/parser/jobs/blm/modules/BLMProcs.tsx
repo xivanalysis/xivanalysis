@@ -13,6 +13,12 @@ declare module 'event' {
 	}
 }
 
+declare module 'fflogs' {
+	interface Ability {
+		overrideAction?: number
+	}
+}
+
 export default class BLMProcs extends Procs {
 	trackedProcs = [
 		{
