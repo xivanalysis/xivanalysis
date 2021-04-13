@@ -283,7 +283,6 @@
   "dnc.feather-gauge.title": "幻扇シンボル",
   "dnc.procs.suggestions.overwrite.content": "プロックの上書きは避けましょう。プロックのアクションは通常のコンボよりも強いので、上書きすることで大きなDPSの損失を招きます。",
   "dnc.technicalities.rotation-table.header.buffed": "バフを与えた人数",
-  "drg.about.description": "<0>このアナライザーは、あなたを先入観から解き放ち、ジューシーな色を出す手助けをになることを目指しています。竜騎士のスキル回しはきっちり決まっているため、提案は主にスキル回しをスムーズに保つこと、紅の竜血の効果時間とバフ合わせに関する問題を解決することに焦点を当てます。</0>",
   "drg.battlelitany.rotation-table.header.buffed": "バフを与えた人数",
   "drg.battlelitany.rotation-table.header.gcd-count": "GCD",
   "drg.battlelitany.title": "バトルリタニー",
