@@ -1,68 +1,61 @@
-import ACTIONS from 'data/ACTIONS'
 import CoreCooldowns from 'parser/core/modules/Cooldowns'
 
 export default class Cooldowns extends CoreCooldowns {
 	static cooldownOrder = [
 		{
 			name: 'Energy Drain/Siphon',
-			merge: true,
 			actions: [
-				ACTIONS.ENERGY_DRAIN.id,
-				ACTIONS.ENERGY_SIPHON.id,
+				'ENERGY_DRAIN',
+				'ENERGY_SIPHON',
 			],
 		},
-		ACTIONS.FESTER.id,
-		ACTIONS.PAINFLARE.id,
-		ACTIONS.BANE.id,
+		'FESTER',
+		'PAINFLARE',
+		'BANE',
 		{
 			name: 'Trance',
-			merge: true,
 			actions: [
-				ACTIONS.DREADWYRM_TRANCE.id,
-				ACTIONS.FIREBIRD_TRANCE.id,
+				'DREADWYRM_TRANCE',
+				'FIREBIRD_TRANCE',
 			],
 		},
-		ACTIONS.DEATHFLARE.id,
-		ACTIONS.SUMMON_BAHAMUT.id,
-		ACTIONS.ENKINDLE_BAHAMUT.id,
-		ACTIONS.ENKINDLE_PHOENIX.id,
+		'DEATHFLARE',
+		'SUMMON_BAHAMUT',
+		'ENKINDLE_BAHAMUT',
+		'ENKINDLE_PHOENIX',
 		{
 			name: 'Summon',
-			merge: true,
 			actions: [
-				ACTIONS.SUMMON.id,
-				ACTIONS.SUMMON_II.id,
-				ACTIONS.SUMMON_III.id,
+				'SUMMON',
+				'SUMMON_II',
+				'SUMMON_III',
 			],
 		},
 		{
 			name: 'Assault I',
-			merge: true,
 			actions: [
-				ACTIONS.ASSAULT_I_AERIAL_SLASH.id,
-				ACTIONS.ASSAULT_I_EARTHEN_ARMOR.id,
-				ACTIONS.ASSAULT_I_CRIMSON_CYCLONE.id,
+				'ASSAULT_I_AERIAL_SLASH',
+				'ASSAULT_I_EARTHEN_ARMOR',
+				'ASSAULT_I_CRIMSON_CYCLONE',
 			],
 		},
 		{
 			name: 'Assault II',
-			merge: true,
 			actions: [
-				ACTIONS.ASSAULT_II_SLIIPSTREAM.id,
-				ACTIONS.ASSAULT_II_MOUNTAIN_BUSTER.id,
-				ACTIONS.ASSAULT_II_FLAMING_CRUSH.id,
+				'ASSAULT_II_SLIIPSTREAM',
+				'ASSAULT_II_MOUNTAIN_BUSTER',
+				'ASSAULT_II_FLAMING_CRUSH',
 			],
 		},
 		{
 			name: 'Enkindle',
-			merge: true,
 			actions: [
-				ACTIONS.ENKINDLE_AERIAL_BLAST.id,
-				ACTIONS.ENKINDLE_EARTHEN_FURY.id,
-				ACTIONS.ENKINDLE_INFERNO.id,
+				'ENKINDLE_AERIAL_BLAST',
+				'ENKINDLE_EARTHEN_FURY',
+				'ENKINDLE_INFERNO',
 			],
 		},
-		ACTIONS.SMN_AETHERPACT.id,
-		ACTIONS.TRI_DISASTER.id,
+		'SMN_AETHERPACT',
+		'TRI_DISASTER',
 	]
 }

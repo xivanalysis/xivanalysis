@@ -1,51 +1,49 @@
-import ACTIONS from 'data/ACTIONS'
-import CoreCooldowns from 'parser/core/modules/Cooldowns'
+import CoreCooldowns, {CooldownOrderItem} from 'parser/core/modules/Cooldowns'
 
 export default class Cooldowns extends CoreCooldowns {
-	static cooldownOrder = [
+	static cooldownOrder: CooldownOrderItem[] = [
 		// Stance
-		ACTIONS.ROYAL_GUARD.id,
+		'ROYAL_GUARD',
 
 		// Buffs
-		ACTIONS.NO_MERCY.id,
-		ACTIONS.BLOODFEST.id,
+		'NO_MERCY',
+		'BLOODFEST',
 
 		// Continuation
 		{
 			name: 'Continuation',
-			merge: true,
 			actions: [
-				ACTIONS.JUGULAR_RIP.id,
-				ACTIONS.ABDOMEN_TEAR.id,
-				ACTIONS.EYE_GOUGE.id,
+				'JUGULAR_RIP',
+				'ABDOMEN_TEAR',
+				'EYE_GOUGE',
 			],
 		},
 
 		// oGCD Damage
-		ACTIONS.DANGER_ZONE.id,
-		ACTIONS.BLASTING_ZONE.id,
-		ACTIONS.BOW_SHOCK.id,
-		ACTIONS.ROUGH_DIVIDE.id,
+		'DANGER_ZONE',
+		'BLASTING_ZONE',
+		'BOW_SHOCK',
+		'ROUGH_DIVIDE',
 
 		// Personal Mitigation
-		ACTIONS.SUPERBOLIDE.id,
-		ACTIONS.CAMOUFLAGE.id,
-		ACTIONS.NEBULA.id,
-		ACTIONS.RAMPART.id,
+		'SUPERBOLIDE',
+		'CAMOUFLAGE',
+		'NEBULA',
+		'RAMPART',
 
 		// Party Mitigation
-		ACTIONS.HEART_OF_LIGHT.id,
-		ACTIONS.HEART_OF_STONE.id,
-		ACTIONS.AURORA.id,
-		ACTIONS.REPRISAL.id,
+		'HEART_OF_LIGHT',
+		'HEART_OF_STONE',
+		'AURORA',
+		'REPRISAL',
 
 		// Tank Utility
-		ACTIONS.PROVOKE.id,
-		ACTIONS.SHIRK.id,
+		'PROVOKE',
+		'SHIRK',
 
 		// Disrupt Utility
-		ACTIONS.INTERJECT.id,
-		ACTIONS.LOW_BLOW.id,
-		ACTIONS.ARMS_LENGTH.id,
+		'INTERJECT',
+		'LOW_BLOW',
+		'ARMS_LENGTH',
 	]
 }

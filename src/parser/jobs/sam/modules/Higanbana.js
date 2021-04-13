@@ -81,15 +81,23 @@ export default class Higanbana extends Module {
 		// Remove any untargetable time from the clip - often want to hardcast after an invuln phase, but refresh w/ 3D shortly after.
 		clip -= this.invuln.getUntargetableUptime('all', event.timestamp - STATUS_DURATION[statusId], event.timestamp)
 
-		// Also remove invuln time in the future that casting later would just push dots into
-		// TODO: This relies on a full set of invuln data ahead of time. Can this be trusted?
-		clip -= this.invuln.getInvulnerableUptime('all', event.timestamp, event.timestamp + STATUS_DURATION[statusId] + clip)
-		clip = Math.max(0, clip)
+		// Wait for when the status would typically drop without clipping - clipping a dot early isn't as problematic if it would
+		// just push it into invuln time.
+		this.addTimestampHook(
+			Math.min(
+				event.timestamp + STATUS_DURATION[statusId] + clip,
+				this.parser.eventTimeOffset + this.parser.pull.duration,
+			),
+			({timestamp}) => {
+				clip -= this.invuln.getInvulnerableUptime('all', event.timestamp, timestamp)
+				clip = Math.max(0, clip)
 
-		// Capping clip at 0 - less than that is downtime, which is handled by the checklist requirement
-		this._clip[statusId] += clip
+				// Capping clip at 0 - less than that is downtime, which is handled by the checklist requirement
+				this._clip[statusId] += clip
 
-		this._pushApplication(applicationKey, statusId, event, clip)
+				this._pushApplication(applicationKey, statusId, event, clip)
+			}
+		)
 
 		lastApplication[statusId] = event.timestamp
 	}
