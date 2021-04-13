@@ -18,7 +18,7 @@ export default new Meta({
 	</>,
 	supportedPatches: {
 		from: '5.0',
-		to: '5.4',
+		to: '5.5',
 	},
 	contributors: [
 		{user: CONTRIBUTORS.LIMA, role: ROLES.MAINTAINER},
@@ -27,6 +27,11 @@ export default new Meta({
 		{user: CONTRIBUTORS.NIV, role: ROLES.DEVELOPER},
 	],
 	changelog: [{
+		date: new Date('2020-4-13'),
+		Changes: () => <>Support for 5.5 added – 100 mp cost down on succor won't hurt us!.</>,
+		contributors: [CONTRIBUTORS.NONO],
+	},
+	{
 		date: new Date('2020-12-7'),
 		Changes: () => <>Support for 5.4 added – potency changes shouldn't affect analysis anyway.</>,
 		contributors: [CONTRIBUTORS.NONO],
