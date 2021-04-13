@@ -12,8 +12,8 @@ import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Sugge
 import React from 'react'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 
-// Expected GCDs between TS
-const TWIN_SNAKES_CYCLE_LENGTH = 5
+// Expected maximum time left to refresh TS
+const TWIN_SNAKES_BUFFER = 6000
 
 const TWIN_IGNORED_GCDS = [
 	ACTIONS.FORM_SHIFT.id,
@@ -52,6 +52,7 @@ export default class TwinSnakes extends Module {
 
 	private history: TwinState[] = []
 	private twinSnake?: TwinState
+	private lastRefresh: number = this.parser.fight.start_time
 
 	// Clipping the duration
 	private earlySnakes: number = 0
@@ -61,9 +62,6 @@ export default class TwinSnakes extends Module {
 
 	// Antman used without TS active
 	private failedAnts: number = 0
-
-	// Separate accounting from the window, to handle counting while TS is down
-	private gcdsSinceTS: number = 0
 
 	protected init() {
 		// Hook all GCDs so we can count GCDs in buff windows
@@ -110,27 +108,25 @@ export default class TwinSnakes extends Module {
 		// Verify the window isn't closed, and count the GCDs:
 		if (this.twinSnake && !this.twinSnake.end) {
 			// We still count TS in the GCD list of the window, just flag if it's early
-			if (action.id === this.data.actions.TWIN_SNAKES.id && this.gcdsSinceTS < TWIN_SNAKES_CYCLE_LENGTH) {
-				this.earlySnakes++
+			if (action.id === this.data.actions.TWIN_SNAKES.id) {
+				const expected = this.data.statuses.TWIN_SNAKES.duration * 1000 - TWIN_SNAKES_BUFFER
+				if (event.timestamp - this.lastRefresh < expected) { this.earlySnakes++ }
 			}
 
 			this.twinSnake.casts.push(event)
 		}
-
-		// This will get reset by the buff refresh hook
-		this.gcdsSinceTS++
 	}
 
 	// Only happens from TS itself
 	// This might be better checking if the GCD before it was buffed but ehh
 	private onGain(event: BuffEvent): void {
 		this.twinSnake = new TwinState(event.timestamp, this.data)
-		this.gcdsSinceTS = 0
+		this.lastRefresh = event.timestamp
 	}
 
 	// Can be TS, FPF, or Antman - just reset the GCD count
-	private onRefresh(): void {
-		this.gcdsSinceTS = 0
+	private onRefresh(event: BuffEvent): void {
+		this.lastRefresh = event.timestamp
 	}
 
 	private onDrop(event: BuffEvent): void {
