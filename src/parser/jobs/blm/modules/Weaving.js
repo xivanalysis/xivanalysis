@@ -11,7 +11,11 @@ const OGCD_EXCEPTIONS = [
 	ACTIONS.TRANSPOSE.id,
 ]
 
-const OPENER_ENO_TIME_THRESHHOLD = 10000
+const OPENER_TIME_THRESHHOLD = 10000
+const OPENER_EXCEPTIONS = [
+	ACTIONS.ENOCHIAN.id,
+	ACTIONS.TRIPLECAST.id,
+]
 
 //max number of AFUI stacks
 const MAX_BUFF_STACKS = 3
@@ -76,10 +80,10 @@ export default class BlmWeaving extends Weaving {
 				return false
 			}
 
-			//allow first eno to be ignored because it's a neccessary weave. 10s for that to happen because of O5s Eno delay.
+			//allow certain actions to be ignored in openers because it can be a neccessary weave. 10s for that to happen because of O5s Eno delay.
 			if (weaveCount === 1) {
 				const ogcdTime = weave.weaves[0].timestamp - this.parser.fight.start_time
-				if (ogcdTime < OPENER_ENO_TIME_THRESHHOLD && weave.weaves[0].ability.guid === ACTIONS.ENOCHIAN.id) {
+				if (ogcdTime < OPENER_TIME_THRESHHOLD && OPENER_EXCEPTIONS.includes(weave.weaves[0].ability.guid)) {
 					return false
 				}
 			}

@@ -7,12 +7,12 @@ export default new Meta({
 	modules: () => import('./modules' /* webpackChunkName: "jobs-drg" */),
 	Description: () => <>
 		<Trans id="drg.about.description">
-			<p>This analyzer aims to help you beat the sterotypes, stay off the floor, and dish out some big juicy numbers. As the DRG rotation is pretty strict, the suggestions you see will focus mostly on keeping that rotation flowing smoothly, as well as picking out issues related to your Life of the Dragon windows and buff alignment.</p>
+			<p>This analyzer aims to help you beat the stereotypes, stay off the floor, and dish out some big juicy numbers. As the DRG rotation is pretty strict, the suggestions you see will focus mostly on keeping that rotation flowing smoothly, as well as picking out issues related to your Life of the Dragon windows and buff alignment.</p>
 		</Trans>
 	</>,
 	supportedPatches: {
 		from: '5.0',
-		to: '5.4',
+		to: '5.5',
 	},
 	contributors: [
 		{user: CONTRIBUTORS.TOASTDEIB, role: ROLES.MAINTAINER},

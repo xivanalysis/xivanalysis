@@ -4,69 +4,39 @@ import * as Sentry from '@sentry/browser'
 import {Message, Segment} from 'akkd'
 import NormalisedMessage from 'components/ui/NormalisedMessage'
 import {getReportPatch} from 'data/PATCHES'
-import Module, {dependency, DISPLAY_MODE} from 'parser/core/Module'
+import Module from 'parser/core/Module'
 import React from 'react'
 import {Table} from 'semantic-ui-react'
+import {Analyser, DisplayMode} from '../Analyser'
+import {dependency} from '../Injectable'
 import {Data} from './Data'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 
+type SourceConstructor = typeof Module | typeof Analyser
+
 interface Trigger {
-	module: typeof Module
+	source: SourceConstructor
 	reason?: React.ReactNode
 }
 
-const EXPECTED_ABILITY_EVENTS = [
-	'begincast',
-	'cast',
-	'damage',
-	'calculateddamage',
-	'heal',
-	'calculatedheal',
-	'applybuff',
-	'applydebuff',
-	'refreshbuff',
-	'refreshdebuff',
-	'removebuff',
-	'removedebuff',
-	'applybuffstack',
-	'applydebuffstack',
-	'removebuffstack',
-	'removedebuffstack',
-] as const
-
-export default class BrokenLog extends Module {
+export default class BrokenLog extends Analyser {
 	static handle = 'brokenLog'
 	static title = t('core.broken-log.title')`Broken Log`
 	static displayOrder = DISPLAY_ORDER.BROKEN_LOG
-	static displayMode = DISPLAY_MODE.RAW
+	static displayMode = DisplayMode.RAW
 
 	@dependency private data!: Data
 
 	private triggers = new Map<string, Trigger>()
 
-	init() {
-		// Unknown actions are unparseable
-		this.addEventHook(
-			EXPECTED_ABILITY_EVENTS,
-			{by: 'player', abilityId: this.data.actions.UNKNOWN.id},
-			() => {
-				this.trigger(this, 'unknown action', (
-					<Trans id="core.broken-log.trigger.unknown-action">
-						One or more actions were recorded incorrectly, and could not be parsed.
-					</Trans>
-				))
-			},
-		)
-	}
-
 	/**
 	 * Trigger the module to display the broken log error.
 	 * @param key Unique key that represents the BL trigger
-	 * @param module Module that is triggering BL
+	 * @param source Module that is triggering BL
 	 * @param reason Short description of why BL was triggered
 	 */
-	trigger(module: Module, key: string, reason?: React.ReactNode) {
-		const constructor = (module.constructor as typeof Module)
+	trigger(source: Module | Analyser, key: string, reason?: React.ReactNode) {
+		const constructor = (source.constructor as SourceConstructor)
 		const {handle} = constructor
 		const triggerKey = `${handle}.${key}`
 
@@ -92,9 +62,27 @@ export default class BrokenLog extends Module {
 		}
 
 		this.triggers.set(triggerKey, {
-			module: constructor,
+			source: constructor,
 			reason,
 		})
+	}
+
+	initialise() {
+		const unknownAction = this.data.actions.UNKNOWN.id
+		this.addEventHook({cause: {type: 'action', action: unknownAction}}, this.triggerUnknownCause)
+		this.addEventHook({action: unknownAction}, this.triggerUnknownCause)
+
+		const unknownStatus = this.data.statuses.UNKNOWN.id
+		this.addEventHook({cause: {type: 'status', status: unknownStatus}}, this.triggerUnknownCause)
+		this.addEventHook({status: unknownStatus}, this.triggerUnknownCause)
+	}
+
+	private triggerUnknownCause() {
+		this.trigger(this, 'unknown action', (
+			<Trans id="core.broken-log.trigger.unknown-action">
+				One or more actions were recorded incorrectly, and could not be parsed.
+			</Trans>
+		))
 	}
 
 	output() {
@@ -120,9 +108,9 @@ export default class BrokenLog extends Module {
 					</Table.Row>
 				</Table.Header>
 				<Table.Body>
-					{Array.from(this.triggers.values()).map(({module, reason}, index) => (
+					{Array.from(this.triggers.values()).map(({source, reason}, index) => (
 						<Table.Row key={index}>
-							<Table.Cell><NormalisedMessage message={module.title} id={module.i18n_id}/></Table.Cell>
+							<Table.Cell><NormalisedMessage message={source.title}/></Table.Cell>
 							<Table.Cell>{reason}</Table.Cell>
 						</Table.Row>
 					))}

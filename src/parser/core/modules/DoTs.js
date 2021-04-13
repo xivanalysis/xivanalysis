@@ -75,12 +75,20 @@ export default class DoTs extends Module {
 		// Remove any untargetable time from the clip - often want to hardcast after an invuln phase, but refresh w/ 3D shortly after.
 		clip -= this.invuln.getUntargetableUptime('all', event.timestamp - this._statusDuration[statusId], event.timestamp)
 
-		// Also remove invuln time in the future that casting later would just push dots into
-		// TODO: This relies on a full set of invuln data ahead of time. Can this be trusted?
-		clip -= this.invuln.getInvulnerableUptime('all', event.timestamp, event.timestamp + this._statusDuration[statusId] + clip)
+		// Wait for when the status would typically drop without clipping - clipping a dot early isn't as problematic if it would
+		// just push it into invuln time.
+		this.addTimestampHook(
+			Math.min(
+				event.timestamp + this._statusDuration[statusId] + clip,
+				this.parser.eventTimeOffset + this.parser.pull.duration,
+			),
+			({timestamp}) => {
+				clip -= this.invuln.getInvulnerableUptime('all', event.timestamp, timestamp)
 
-		// Capping clip at 0 - less than that is downtime, which is handled by the checklist requirement
-		this._clip[statusId] = (this._clip[statusId] || 0) + Math.max(0, clip)
+				// Capping clip at 0 - less than that is downtime, which is handled by the checklist requirement
+				this._clip[statusId] = (this._clip[statusId] || 0) + Math.max(0, clip)
+			},
+		)
 
 		lastApplication[statusId] = event.timestamp
 	}

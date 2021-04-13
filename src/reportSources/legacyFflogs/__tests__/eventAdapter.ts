@@ -1,8 +1,29 @@
-import {GameEdition} from 'data/PATCHES'
+import {GameEdition} from 'data/EDITIONS'
 import {Events} from 'event'
 import {FflogsEvent, HitType, ReportLanguage} from 'fflogs'
-import {Pull, Report} from 'report'
+import {Actor, Pull, Report, Team} from 'report'
 import {adaptEvents} from '../eventAdapter'
+import {AdapterStep} from '../eventAdapter/base'
+import {ReassignUnknownActorStep} from '../eventAdapter/reassignUnknownActor'
+
+// "Mock" the reassign unknown actor step with its real implementation. We use this mock handling later
+// to disable the step on a test-by-test basis.
+// TODO: If we need to do this >1 times, work out a cleaner way of doing this.
+jest.mock('../eventAdapter/reassignUnknownActor')
+type ReassignUnknownActorStepParams = ConstructorParameters<typeof ReassignUnknownActorStep>
+const MockReassignUnknownActorStep = ReassignUnknownActorStep as jest.Mock<ReassignUnknownActorStep>
+MockReassignUnknownActorStep.mockImplementation((...args: ReassignUnknownActorStepParams) => {
+	const {ReassignUnknownActorStep} = jest.requireActual('../eventAdapter/reassignUnknownActor')
+	return new ReassignUnknownActorStep(...args)
+})
+
+const actor: Actor = {
+	id: '1',
+	name: 'Test Actor',
+	team: Team.FRIEND,
+	playerControlled: true,
+	job: 'UNKNOWN',
+}
 
 const pull: Pull = {
 	id: '1',
@@ -15,7 +36,7 @@ const pull: Pull = {
 			name: 'test duty',
 		},
 	},
-	actors: [],
+	actors: [actor],
 }
 
 const report: Report = {
@@ -508,10 +529,35 @@ const fakeEvents: Record<FflogsEvent['type'], FflogsEvent> = {
 
 describe('Event adapter', () => {
 	describe('individual events', () => {
+		// Noop the reassign unknown actor step - the test data for individual events is intentionally
+		// pulled directly out of real logcs, and as such will always be misaligned from the test report.
+		class NoopStep extends AdapterStep {}
+		beforeEach(() => {
+			MockReassignUnknownActorStep.mockImplementationOnce((...args: ReassignUnknownActorStepParams) => {
+				return new NoopStep(...args) as ReassignUnknownActorStep
+			})
+		})
+
 		Object.keys(fakeEvents).forEach(eventType => it(`adapts ${eventType}`, () => {
 			const event = fakeEvents[eventType as keyof typeof fakeEvents]
 			expect(adaptEvents(report, pull, [event])).toMatchSnapshot()
 		}))
+	})
+
+	it('sorts events with identical timestamps', () => {
+		const result = adaptEvents(report, pull, [
+			{...fakeEvents.applybuff, timestamp: 1},
+			{...fakeEvents.cast, timestamp: 1},
+			{...fakeEvents.begincast, timestamp: 1},
+			{...fakeEvents.death, timestamp: 1},
+		])
+
+		expect(result.map(event => event.type)).toEqual([
+			'actorUpdate',
+			'prepare',
+			'action',
+			'statusApply',
+		])
 	})
 
 	it('synthesizes prepull actions', () => {
@@ -527,6 +573,49 @@ describe('Event adapter', () => {
 			'snapshot', // calculateddamage
 			'actorUpdate',
 			'actorUpdate',
+		])
+	})
+
+	it('synthesizes prepull status-applying actions', () => {
+		// simulating a begincast before the event that should trip the prepull, to ensure
+		// prepull is added before _all_ events, not just the start of the adapted base.
+		const result = adaptEvents(report, pull, [
+			{...fakeEvents.begincast, timestamp: 1},
+			{
+				timestamp: 2,
+				type: 'applybuff',
+				sourceID: 11,
+				sourceInstance: 2,
+				sourceIsFriendly: true,
+				targetID: 4,
+				targetIsFriendly: true,
+				ability: {
+					name: 'Raging Strikes',
+					guid: 1000125,
+					type: 8,
+					abilityIcon: '012000-012848.png',
+				},
+			},
+		])
+		expect(result.map(event => event.type)).toEqual([
+			'action', // prepull synth
+			'prepare', // begincast
+			'statusApply', // applybuff
+		])
+	})
+
+	it('synthesizes prepull status applications', () => {
+		// simulating a begincast before the event that should trip the prepull, to ensure
+		// prepull is added before _all_ events, not just the start of the adapted base.
+		const result = adaptEvents(report, pull, [
+			fakeEvents.begincast,
+			fakeEvents.removebuff,
+		])
+		expect(result.map(event => event.type)).toEqual([
+			'action', // prepull synth
+			'statusApply', // prepull synth
+			'prepare', // begincast
+			'statusRemove', // removebuff
 		])
 	})
 

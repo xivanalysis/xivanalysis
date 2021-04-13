@@ -1,33 +1,32 @@
-import ACTIONS from 'data/ACTIONS'
-import CoreCooldowns from 'parser/core/modules/Cooldowns'
+import CoreCooldowns, {CooldownOrderItem} from 'parser/core/modules/Cooldowns'
 
 export class Cooldowns extends CoreCooldowns {
-	static cooldownOrder = [
+	static cooldownOrder: CooldownOrderItem[] = [
 		// Buffs
-		ACTIONS.BLOOD_WEAPON.id,
-		ACTIONS.DELIRIUM.id,
+		'BLOOD_WEAPON',
+		'DELIRIUM',
 		// oGCD Damage
-		ACTIONS.LIVING_SHADOW.id,
-		ACTIONS.EDGE_OF_SHADOW.id,
-		ACTIONS.FLOOD_OF_SHADOW.id,
-		ACTIONS.CARVE_AND_SPIT.id,
-		ACTIONS.ABYSSAL_DRAIN.id,
-		ACTIONS.PLUNGE.id,
-		ACTIONS.SALTED_EARTH.id,
+		'LIVING_SHADOW',
+		'EDGE_OF_SHADOW',
+		'FLOOD_OF_SHADOW',
+		'CARVE_AND_SPIT',
+		'ABYSSAL_DRAIN',
+		'PLUNGE',
+		'SALTED_EARTH',
 		// Personal Mitigation
-		ACTIONS.LIVING_DEAD.id,
-		ACTIONS.SHADOW_WALL.id,
-		ACTIONS.RAMPART.id,
-		ACTIONS.DARK_MIND.id,
+		'LIVING_DEAD',
+		'SHADOW_WALL',
+		'RAMPART',
+		'DARK_MIND',
 		// Party Mitigation
-		ACTIONS.THE_BLACKEST_NIGHT.id,
-		ACTIONS.REPRISAL.id,
-		ACTIONS.DARK_MISSIONARY.id,
+		'THE_BLACKEST_NIGHT',
+		'REPRISAL',
+		'DARK_MISSIONARY',
 		// Tank Utility
-		ACTIONS.PROVOKE.id,
-		ACTIONS.SHIRK.id,
+		'PROVOKE',
+		'SHIRK',
 		// Disrupt Utility
-		ACTIONS.INTERJECT.id,
-		ACTIONS.LOW_BLOW.id,
+		'INTERJECT',
+		'LOW_BLOW',
 	]
 }

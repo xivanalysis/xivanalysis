@@ -1,6 +1,7 @@
 import {Trans} from '@lingui/react'
 import {Segment} from 'akkd'
-import PATCHES, {getPatch, languageToEdition} from 'data/PATCHES'
+import {languageToEdition} from 'data/EDITIONS'
+import PATCHES, {getPatch} from 'data/PATCHES'
 import {observer} from 'mobx-react'
 import React from 'react'
 import {RouteComponentProps, withRouter} from 'react-router'

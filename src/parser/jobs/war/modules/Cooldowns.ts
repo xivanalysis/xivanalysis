@@ -1,32 +1,31 @@
-import ACTIONS from 'data/ACTIONS'
-import CoreCooldowns from 'parser/core/modules/Cooldowns'
+import CoreCooldowns, {CooldownOrderItem} from 'parser/core/modules/Cooldowns'
 
 export default class Cooldowns extends CoreCooldowns {
-	static cooldownOrder = [
+	static cooldownOrder: CooldownOrderItem[] = [
 		// Buffs
-		ACTIONS.INFURIATE.id,
-		ACTIONS.INNER_RELEASE.id,
+		'INFURIATE',
+		'INNER_RELEASE',
 		// oGCD Damage
-		ACTIONS.UPHEAVAL.id,
-		ACTIONS.ONSLAUGHT.id,
+		'UPHEAVAL',
+		'ONSLAUGHT',
 		// Personal Mitigation
-		ACTIONS.VENGEANCE.id,
-		ACTIONS.RAMPART.id,
-		ACTIONS.NASCENT_FLASH.id,
-		ACTIONS.RAW_INTUITION.id,
-		ACTIONS.THRILL_OF_BATTLE.id,
-		ACTIONS.EQUILIBRIUM.id,
-		ACTIONS.HOLMGANG.id,
+		'VENGEANCE',
+		'RAMPART',
+		'NASCENT_FLASH',
+		'RAW_INTUITION',
+		'THRILL_OF_BATTLE',
+		'EQUILIBRIUM',
+		'HOLMGANG',
 		// Party Mitigation
-		ACTIONS.SHAKE_IT_OFF.id,
-		ACTIONS.REPRISAL.id,
+		'SHAKE_IT_OFF',
+		'REPRISAL',
 		// Tank Utility
-		ACTIONS.PROVOKE.id,
-		ACTIONS.SHIRK.id,
+		'PROVOKE',
+		'SHIRK',
 		// Stance
-		ACTIONS.DEFIANCE.id,
+		'DEFIANCE',
 		// Disrupt Utility
-		ACTIONS.INTERJECT.id,
-		ACTIONS.LOW_BLOW.id,
+		'INTERJECT',
+		'LOW_BLOW',
 	]
 }

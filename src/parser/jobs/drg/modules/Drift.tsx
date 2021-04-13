@@ -68,7 +68,8 @@ export default class Drift extends Module {
 		const window = this.currentWindows[actionId]
 		window.end = event.timestamp
 
-		const plannedUseTime = window.start + cooldown
+		// Cap at this event's timestamp, as if we used before it came off CD, it's certainly driftless! (ms-range negative drift is common)
+		const plannedUseTime = Math.min(window.start + cooldown, event.timestamp)
 		this.debug(this.parser.formatTimestamp(plannedUseTime))
 
 		let expectedUseTime = 0
