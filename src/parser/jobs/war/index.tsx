@@ -15,7 +15,7 @@ export default new Meta({
 	</>,
 	supportedPatches: {
 		from: '5.0',
-		to: '5.4',
+		to: '5.5',
 	},
 	contributors: [
 		{user: CONTRIBUTORS.ACCHAN, role: ROLES.MAINTAINER},
@@ -23,6 +23,13 @@ export default new Meta({
 	],
 
 	changelog: [
+		{
+			date: new Date('2021-04-13'),
+			contributors: [CONTRIBUTORS.ACCHAN],
+			Changes: () => <>
+				Add patch 5.5 support.
+			</>,
+		},
 		{
 			date: new Date('2020-12-08'),
 			contributors: [CONTRIBUTORS.ACCHAN],
