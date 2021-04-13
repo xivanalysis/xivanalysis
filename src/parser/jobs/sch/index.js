@@ -27,7 +27,7 @@ export default new Meta({
 		{user: CONTRIBUTORS.NIV, role: ROLES.DEVELOPER},
 	],
 	changelog: [{
-		date: new Date('2020-4-13'),
+		date: new Date('2021-04-13'),
 		Changes: () => <>Support for 5.5 added – 100 mp cost down on succor won't hurt us!.</>,
 		contributors: [CONTRIBUTORS.NONO],
 	},
