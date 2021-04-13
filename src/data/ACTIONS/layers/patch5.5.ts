@@ -19,5 +19,9 @@ export const patch550: Layer<ActionRoot> = {
 			potency: 420,
 			end: true,
 		}},
+
+		// DRG 5.5 potency changes
+		FANG_AND_CLAW: {potency: 380},
+		WHEELING_THRUST: {potency: 380},
 	},
 }
