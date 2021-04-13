@@ -356,7 +356,6 @@
   "dnc.technicalities.suggestions.unpooled.content": "Regrouper vos plumes oniriques avant d'entrer dans une fenêtre <0/> vous permet d'utiliser plus de <1/>s avec les bonus multiplicatifs actifs, augmentant leur efficacité. Essayez de créer et de tenir au moins trois plumes oniriques entre les fenêtres.",
   "dnc.technicalities.suggestions.unpooled.why": "{unpooledWindows, plural,one {#fenêtre}other {#fenêtres}} ou il manquait des potentiels <0/>s.",
   "dnc.technicalities.title": "Fenêtres techniques",
-  "drg.about.description": "<0>Ce module a pour but de vous aider à contrer les stéréotypes, rester loin du plancher, et sortir de beaux gros nombres. Étant donné que le Chevalier Dragon possède un rotation très stricte, les suggestions que vous verrez seront présentées de manière à ce que cette rotation demeure fluide, et aussi vous montrer les problèmes existant en lien avec Vie du Dragon et les buffs d'équipe.</0>",
   "drg.battlelitany.rotation-table.header.buffed": "Buff du joueurs",
   "drg.battlelitany.rotation-table.header.gcd-count": "GCDs",
   "drg.battlelitany.rotation-table.header.interfered": "Pas de chevauchage",
