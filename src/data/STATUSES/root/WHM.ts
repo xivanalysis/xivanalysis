@@ -15,6 +15,13 @@ export const WHM = ensureStatuses({
 		duration: 20,
 	},
 
+	TEMPERANCE_MITIGATION: {
+		id: 1873,
+		name: 'Temperance',
+		icon: 'https://xivapi.com/i/012000/012634.png',
+		duration: 20,
+	},
+
 	CONFESSION: {
 		id: 1219,
 		name: 'Confession',
