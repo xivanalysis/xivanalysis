@@ -64,6 +64,7 @@
   "ast.overheal.requirement.all": "Soins en surplus (toutes les sources)",
   "ast.overheal.requirement.earthly-star": "Overheal (Étoile terrestre) : {0}%",
   "ast.overheal.requirement.hot": "Overheal (soin sur la durée) : {0}%",
+  "ast.overheal.requirement.nonhot": "Surplus de soin (non-HoT): {0}%",
   "ast.overheal.rule.description": "Évitez de gaspiller des heals qui rempliront plus que la barre de vie du joueur ciblé. Bien que de l'overheal est inévitable, l'overheal ne fait que générer plus d'inimité, pour aucun autre gain. De plus, être efficace en soignant vous aide dans la gestion de votre Magie prompte.",
   "ast.overheal.rule.name": "Éviter l'overheal",
   "ast.sect.info": "Le choix de la Secte dépend du contenu auquel vous êtes confronté, de la composition du groupe et de vos préférences. <0/><1/> fournit plus de puissance de soin grâce aux sorts de régénération, et est bien plus efficace dans les donjons à 4 et les raids à 8, à partir du moment où les dégâts encaissés ne dépassent pas le montant maximal des PV des joueurs. <2/><3/> est essentiel si vous avez besoin de mettre des boucliers afin de survivre à des attaques que <4/> ne permet pas d'encaisser. Attention toutefois, les boucliers de la Secte Nocture ne peuvent pas s'ajouter aux à ceux de l'Erudit, il n'est donc pas recommandé de jouer cette Secte avec un tel binôme.",
