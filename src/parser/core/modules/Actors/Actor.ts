@@ -94,6 +94,7 @@ interface ActorOptions {
 export class Actor extends ActorResources implements ReportActor {
 	// we re-export the actor shape so people don't need to dig into `Pull` to get it.
 	readonly id: string
+	readonly kind: string
 	readonly name: string
 	readonly team: Team
 	readonly playerControlled: boolean
@@ -106,6 +107,7 @@ export class Actor extends ActorResources implements ReportActor {
 	constructor({actor}: ActorOptions) {
 		super({})
 		this.id = actor.id
+		this.kind = actor.kind
 		this.name = actor.name
 		this.team = actor.team
 		this.playerControlled = actor.playerControlled
