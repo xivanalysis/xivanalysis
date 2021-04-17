@@ -39,8 +39,13 @@ export const filter = <Base>() => filterInternal<Base, {}>({})
 // -----
 
 // Extending primitive so TS narrows the type as far as it can
+/** Match successfully if value matches any of the provided values. */
 export const oneOf = <T extends TB.Misc.Primitive>(values: T[]): Matcher<T> =>
 	(objValue): objValue is T => values.includes(objValue)
+
+// This will technically always return true in a filter due to lodash semantics, but hey
+/** Match successfully if value is not nullish. */
+export const exists = <T>(value?: T | null): value is T => value != null
 
 // -----
 // #endregion
