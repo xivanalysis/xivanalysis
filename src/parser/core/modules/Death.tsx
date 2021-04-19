@@ -64,6 +64,8 @@ export class Death extends Analyser {
 	private _deadTime = 0
 
 	initialise() {
+		// TODO: Look into generalising this to handle actors other than the parsed PC?
+
 		// An actor hitting 0 HP is a sign of a death.
 		this.addEventHook({
 			type: 'actorUpdate',

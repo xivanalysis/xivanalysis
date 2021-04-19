@@ -19,6 +19,7 @@ MockReassignUnknownActorStep.mockImplementation((...args: ReassignUnknownActorSt
 
 const actor: Actor = {
 	id: '1',
+	kind: '1',
 	name: 'Test Actor',
 	team: Team.FRIEND,
 	playerControlled: true,
