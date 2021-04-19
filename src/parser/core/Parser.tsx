@@ -2,9 +2,10 @@ import {MessageDescriptor} from '@lingui/core'
 import * as Sentry from '@sentry/browser'
 import ResultSegment from 'components/LegacyAnalyse/ResultSegment'
 import ErrorMessage from 'components/ui/ErrorMessage'
-import {getReportPatch, languageToEdition} from 'data/PATCHES'
+import {languageToEdition} from 'data/EDITIONS'
+import {getReportPatch, Patch} from 'data/PATCHES'
 import {DependencyCascadeError, ModulesNotFoundError} from 'errors'
-import {Event, FieldsBase} from 'event'
+import {Event} from 'event'
 import type {Actor as FflogsActor, Fight, Pet} from 'fflogs'
 import type {Event as LegacyEvent} from 'legacyEvent'
 import React from 'react'
@@ -18,7 +19,6 @@ import {Injectable} from './Injectable'
 import {LegacyDispatcher} from './LegacyDispatcher'
 import {Meta} from './Meta'
 import Module, {DISPLAY_MODE, MappedDependency} from './Module'
-import {Patch} from './Patch'
 
 interface Player extends FflogsActor {
 	pets: Pet[]
@@ -652,6 +652,24 @@ class Parser {
 		const pet = this.report.friendlyPets.find(pet => pet.id === event.targetID)
 		return pet && pet.petOwner === playerId
 	}
+
+	/**
+	 * Convert an fflogs event timestamp for the current pull to an epoch timestamp
+	 * compatible with logic running in the new analysis system. Do ***not*** use this
+	 * outside the above scenario.
+	 * @deprecated
+	 */
+	fflogsToEpoch = (timestamp: number) =>
+		timestamp - this.eventTimeOffset + this.pull.timestamp
+
+	/**
+	 * Convert a unix epoch timestamp to a report-relative timestamp compatible
+	 * with logic running in the old analysis system.. Do ***not*** use this
+	 * outside the above scenario.
+	 * @deprecated
+	 */
+	epochToFflogs = (timestamp: number) =>
+		timestamp - this.pull.timestamp + this.eventTimeOffset
 
 	formatTimestamp(timestamp: number, secondPrecision?: number) {
 		return this.formatDuration(timestamp - this.fight.start_time, secondPrecision)

@@ -5,7 +5,7 @@ import {RotationTable, RotationTableEntry} from 'components/ui/RotationTable'
 import {getDataBy} from 'data'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
-import {CastEvent} from 'fflogs'
+import {BuffEvent, CastEvent} from 'fflogs'
 import _ from 'lodash'
 import Module, {dependency} from 'parser/core/Module'
 import {Invulnerability} from 'parser/core/modules/Invulnerability'
@@ -18,7 +18,7 @@ interface TimestampRotationMap {
 	[timestamp: number]: CastEvent[]
 }
 
-const SEVERETIES = {
+const SEVERITIES = {
 	MISSED_OGCDS: {
 		1: SEVERITY.MINOR,
 		4: SEVERITY.MEDIUM,
@@ -69,8 +69,6 @@ const EXCLUDED_GCD_IDS = [
 	ACTIONS.CONFITEOR.id,
 ]
 
-const FOF_DURATION_MILLIS = STATUSES.FIGHT_OR_FLIGHT.duration * 1000
-
 class FightOrFlightState {
 	start: number | null = null
 	lastGoringGcd: number | null = null
@@ -79,7 +77,7 @@ class FightOrFlightState {
 	circleOfScornCounter: number = 0
 	spiritsWithinCounter: number = 0
 	interveneCounter: number = 0
-	isRushed: boolean = false
+	goringTooCloseCounter: number = 0
 }
 
 class FightOrFlightErrorResult {
@@ -128,11 +126,6 @@ export default class FightOrFlight extends Module {
 
 		if (actionId === ACTIONS.FIGHT_OR_FLIGHT.id) {
 			this.fofState.start = event.timestamp
-
-			const endOfWindow = event.timestamp + FOF_DURATION_MILLIS
-			this.fofState.isRushed = endOfWindow >= this.parser.fight.end_time
-				|| this.invuln.isInvulnerable('all', endOfWindow)
-				|| this.invuln.isUntargetable('all', endOfWindow)
 		}
 
 		if (this.fofState.start) {
@@ -148,8 +141,8 @@ export default class FightOrFlight extends Module {
 				this.fofState.goringCounter++
 
 				if (this.fofState.lastGoringGcd !== null) {
-					if (this.fofState.gcdCounter - this.fofState.lastGoringGcd < CONSTANTS.GORING.MINIMUM_DISTANCE && !this.fofState.isRushed) {
-						this.fofErrorResult.goringTooCloseCounter++
+					if (this.fofState.gcdCounter - this.fofState.lastGoringGcd < CONSTANTS.GORING.MINIMUM_DISTANCE) {
+						this.fofState.goringTooCloseCounter++
 					}
 				}
 				this.fofState.lastGoringGcd = this.fofState.gcdCounter
@@ -173,13 +166,20 @@ export default class FightOrFlight extends Module {
 		}
 	}
 
-	private onRemoveFightOrFlight() {
-		if (!this.fofState.isRushed) {
+	private onRemoveFightOrFlight(event: BuffEvent) {
+		// If the enemy is untargetable at the end of FoF, the player was rushed - forgive missed hits.
+		// While technically this will never be called beyond the end of the fight, let's be really sure
+		const wasRushed = event.timestamp >= this.parser.eventTimeOffset + this.parser.pull.duration
+			|| this.invuln.isInvulnerable('all', event.timestamp)
+			|| this.invuln.isUntargetable('all', event.timestamp)
+
+		if (!wasRushed) {
 			this.fofErrorResult.missedGcds += Math.max(0, CONSTANTS.GCD.EXPECTED - this.fofState.gcdCounter)
 			this.fofErrorResult.missedGorings += Math.max(0, CONSTANTS.GORING.EXPECTED - this.fofState.goringCounter)
 			this.fofErrorResult.missedSpiritWithins += Math.max(0, CONSTANTS.SPIRITS_WITHIN.EXPECTED - this.fofState.spiritsWithinCounter)
 			this.fofErrorResult.missedCircleOfScorns += Math.max(0, CONSTANTS.CIRCLE_OF_SCORN.EXPECTED - this.fofState.circleOfScornCounter)
 			this.fofErrorResult.missedIntervenes += Math.max(0, CONSTANTS.INTERVENE.EXPECTED - this.fofState.interveneCounter)
+			this.fofErrorResult.goringTooCloseCounter += this.fofState.goringTooCloseCounter
 		}
 
 		this.fofState = new FightOrFlightState()
@@ -196,7 +196,7 @@ export default class FightOrFlight extends Module {
 			why: <Trans id="pld.fightorflight.suggestions.gcds.why">
 				<Plural value={this.fofErrorResult.missedGcds} one="# physical GCD" other="# physical GCDs"/> missed during <StatusLink {...STATUSES.FIGHT_OR_FLIGHT}/> windows.
 			</Trans>,
-			tiers: SEVERETIES.MISSED_GCD,
+			tiers: SEVERITIES.MISSED_GCD,
 			value: this.fofErrorResult.missedGcds,
 		}))
 
@@ -209,7 +209,7 @@ export default class FightOrFlight extends Module {
 			why: <Trans id="pld.fightorflight.suggestions.goring-blade.why">
 				<Plural value={this.fofErrorResult.missedGorings} one="# application" other="# applications"/> missed during <StatusLink {...STATUSES.FIGHT_OR_FLIGHT}/> windows.
 			</Trans>,
-			tiers: SEVERETIES.MISSED_GORING,
+			tiers: SEVERITIES.MISSED_GORING,
 			value: this.fofErrorResult.missedGorings,
 		}))
 
@@ -222,13 +222,13 @@ export default class FightOrFlight extends Module {
 			why: <Trans id="pld.fightorflight.suggestions.ogcds.why">
 				<Plural value={missedOgcds} one="# usage" other="# usages"/> missed during <StatusLink {...STATUSES.FIGHT_OR_FLIGHT}/> windows.
 			</Trans>,
-			tiers: SEVERETIES.MISSED_OGCDS,
+			tiers: SEVERITIES.MISSED_OGCDS,
 			value: missedOgcds,
 		}))
 
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.GORING_BLADE.icon,
-			severity: matchClosestLower(SEVERETIES.MISSED_GCD, this.fofErrorResult.goringTooCloseCounter),
+			severity: matchClosestLower(SEVERITIES.MISSED_GCD, this.fofErrorResult.goringTooCloseCounter),
 			content: <Trans id="pld.fightorflight.suggestions.goring-blade-clip.content">
 				Try to refresh <ActionLink {...ACTIONS.GORING_BLADE}/> 9 GCDs after the
 				first <ActionLink {...ACTIONS.GORING_BLADE}/> in
@@ -237,7 +237,7 @@ export default class FightOrFlight extends Module {
 			why: <Trans id="pld.fightorflight.suggestions.goring-blade-clip.why">
 				<Plural value={this.fofErrorResult.goringTooCloseCounter} one="# application was" other="# applications were"/> refreshed too early during <StatusLink {...STATUSES.FIGHT_OR_FLIGHT}/> windows.
 			</Trans>,
-			tiers: SEVERETIES.GORING_CLIP,
+			tiers: SEVERITIES.GORING_CLIP,
 			value: this.fofErrorResult.goringTooCloseCounter,
 		}))
 	}

@@ -1,4 +1,5 @@
 import About from './About'
+import {Actors} from './Actors'
 import {AdditionalEvents, AdditionalEventQueries} from './AdditionalEvents'
 import AlwaysBeCasting from './AlwaysBeCasting'
 import BrokenLog from './BrokenLog'
@@ -17,20 +18,23 @@ import {EventsView} from './EventsView'
 import GlobalCooldown from './GlobalCooldown'
 import HitType from './HitType'
 import {Invulnerability} from './Invulnerability'
+import {Invulnerability as Invulnerability2} from './Invulnerability2'
 import {NormalisedEvents} from './NormalisedEvents'
 import PrecastAction from './PrecastAction'
 import PrecastStatus from './PrecastStatus'
 import RaidBuffs, {RaidBuffsQuery} from './RaidBuffs'
+import {ResourceGraphs} from './ResourceGraphs'
 import Speedmod from './Speedmod'
 import {Statistics} from './Statistics'
 import Statuses from './Statuses'
 import Suggestions from './Suggestions'
 import {Timeline} from './Timeline'
-import UnableToAct from './UnableToAct'
+import {UnableToAct} from './UnableToAct'
 import Weaving from './Weaving'
 
 export default [
 	About,
+	Actors,
 	AdditionalEventQueries,
 	AdditionalEvents,
 	AlwaysBeCasting,
@@ -50,11 +54,13 @@ export default [
 	GlobalCooldown,
 	HitType,
 	Invulnerability,
+	Invulnerability2,
 	NormalisedEvents,
 	PrecastAction,
 	PrecastStatus,
 	RaidBuffsQuery,
 	RaidBuffs,
+	ResourceGraphs,
 	Speedmod,
 	Statistics,
 	Statuses,

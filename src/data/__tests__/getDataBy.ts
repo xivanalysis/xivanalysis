@@ -1,10 +1,12 @@
-import {getDataBy} from '../getDataBy'
+import {getDataBy, getDataArrayBy} from '../getDataBy'
 
 /* eslint-disable @typescript-eslint/no-magic-numbers */
 
 const ExampleData = {
 	ONE: {value: 'one', arr: [0, 1, 2, 3, 4]},
 	TWO: {value: 'two', arr: [10, 11, 12, 13, 14]},
+	THREE: {value: 'same', arr: []},
+	FOUR: {value: 'same', arr: []},
 }
 
 describe('DATA', () => {
@@ -20,13 +22,12 @@ describe('DATA', () => {
 		it('falls back when no match is found', () => {
 			expect(getDataBy(ExampleData, 'value', 'three')).toBeUndefined()
 		})
-
-		it('errors when an invalid `by` is passed', () => {
-			function erraneousCall() {
-				// @ts-expect-error This mistake is only possible in JS
-				getDataBy(ExampleData, 'invalid', 'one')
-			}
-			expect(erraneousCall).toThrowError('invalid')
+	}),
+	describe('getDataArrayBy', () => {
+		it('returns all matching data entries', () => {
+			expect(getDataArrayBy(ExampleData, 'value', 'same'))
+				.toContain(ExampleData.THREE)
+				.toContain(ExampleData.FOUR)
 		})
 	})
 })

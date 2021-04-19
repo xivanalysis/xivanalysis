@@ -30,8 +30,8 @@ const EXTRA_AETHERFLOWS = 3
 
 const AETHERFLOW_COOLDOWN = 60000
 
-// Flow needs to be burnt before first use - estimate at 10s for now
-const FIRST_FLOW_TIMESTAMP = 10000
+// Aetherflow should typically be used immediately at the start of fights
+const FIRST_FLOW_TIMESTAMP = 2000
 
 export default class Aetherflow extends Module {
 	static displayOrder = DISPLAY_ORDER.AETHERFLOW
@@ -42,7 +42,7 @@ export default class Aetherflow extends Module {
 	]
 
 	_totalAetherflowCasts = 0
-	_extraAetherflows = EXTRA_AETHERFLOWS // pre-pull
+	_extraAetherflows = EXTRA_AETHERFLOWS //first aetherflow cast at start of fight
 	_recitationActive = false
 	_uses = []
 
@@ -77,13 +77,16 @@ export default class Aetherflow extends Module {
 	}
 
 	_onCast(event) {
+		// don't include aetherflow events that occur before or at
+		// the start of the fight
+		if (event.timestamp <= this.parser.fight.start_time) {
+			return
+		}
 		const abilityId = event.ability.guid
 
 		if (AETHERFLOW_CD_ACTIONS.includes(abilityId)) {
 			// should be the standard case
-			if (!this._recitationActive) {
-				this._updateAetherflowUses(event.timestamp, abilityId)
-			} else if (!RECITATION_ACTIONS.includes(abilityId)) {
+			if (!this._recitationActive || !RECITATION_ACTIONS.includes(abilityId))  {
 				this._updateAetherflowUses(event.timestamp, abilityId)
 			}
 		}
@@ -156,21 +159,35 @@ export default class Aetherflow extends Module {
 						return [...prev, curr]
 					}, [])
 					.map(({timestamp, debit = 0, id}, index, all) => {
+						if (!Array.isArray(timestamp)) {
+							// I mean, they should be doing more than one AF cast per stack
+							// but who am I to judge?
+							timestamp = [timestamp]
+						}
+
+						// don't include or output events that occured at or before the start of the fight
+						if (timestamp[0] <= this.parser.fight.start_time) {
+							return
+						}
+
 						let downtime = 0
 						let drift = 0
 						if (id.includes(ACTIONS.AETHERFLOW.id)) {
 							let nextUptime
+							let nextCredit
 
-							// next credit is an aetherflow, calculate downtime now
-							const nextCredit = all[index + 1]
-							// if not, next next credit (due to dissipation)
-							const nextNextCredit = all[index + 2]
-							// if not, just consider it the end of fight.
+							let i = 1
+							nextCredit = all[index + i]
+
+							// find the next aetherflow cast
+							while (nextCredit && nextCredit.id[0] !== ACTIONS.AETHERFLOW.id) {
+								i += 1
+								nextCredit = all[index + i]
+							}
+
+							// if a next aetherflow cast was found use that timestamp to look for aetherflow drift, otherwise use the end of the fight
 							if (nextCredit && nextCredit.id[0] === ACTIONS.AETHERFLOW.id) {
 								nextUptime = nextCredit.timestamp[0]
-							} else if (nextNextCredit && nextNextCredit.id[0] === ACTIONS.AETHERFLOW.id) {
-								nextUptime = nextNextCredit.timestamp[0]
-								drift += EXTRA_AETHERFLOWS * 1000
 							} else {
 								nextUptime = this.parser.currentTimestamp
 							}
@@ -182,16 +199,12 @@ export default class Aetherflow extends Module {
 						if (drift > 0) {
 							totalDrift += drift
 						}
+
 						let wasted = 0
-						if (downtime > AETHERFLOW_COOLDOWN) {
+						// if either aetherflow or dissipation then check whether the previous aetherflow usages where used
+						if (id.includes(ACTIONS.AETHERFLOW.id) || id.includes(ACTIONS.DISSIPATION.id)) {
 							wasted = EXTRA_AETHERFLOWS - debit || 0
 							totalWasted += wasted
-						}
-
-						if (!Array.isArray(timestamp)) {
-							// I mean, they should be doing more than one AF cast per stack
-							// but who am I to judge?
-							timestamp = [timestamp]
 						}
 
 						return <Table.Row key={timestamp}>

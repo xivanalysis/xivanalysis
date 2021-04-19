@@ -5,6 +5,7 @@ import Gauge from './Gauge'
 import GeneralCDDowntime from './GeneralCDDowntime'
 import Heat from './Heat'
 import MultiHitSkills from './MultiHitSkills'
+import QueenTimeline from './QueenTimeline'
 import Reassemble from './Reassemble'
 import Tincture from './Tincture'
 import Weaving from './Weaving'
@@ -19,6 +20,7 @@ export default [
 	GeneralCDDowntime,
 	Heat,
 	MultiHitSkills,
+	QueenTimeline,
 	Reassemble,
 	Tincture,
 	Weaving,

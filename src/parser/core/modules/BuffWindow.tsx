@@ -19,6 +19,7 @@ export class BuffWindowState {
 	start: number
 	end?: number
 	rotation: CastEvent[] = []
+	expiredStatuses: BuffEvent[] = []
 	status: Status
 
 	private data: Data
@@ -41,6 +42,22 @@ export class BuffWindowState {
 		return this.rotation
 			.filter(e => actionsById.includes(e.ability.guid))
 			.length
+	}
+
+	getTrackedActionCount(action: BuffWindowTrackedAction): number {
+		if (action.status) {
+			const gcdTimestamps = this.rotation
+				.filter(e => this.data.getAction(e.ability.guid)?.onGcd)
+				.map(e => e.timestamp)
+
+			// Check to make sure at least one GCD happened before the status expired
+			return this.expiredStatuses
+				.filter(e => e.ability.guid === action.status?.id &&
+					gcdTimestamps.some(t => t <= e.timestamp))
+				.length
+		}
+
+		return this.getActionCountByIds([action.action.id])
 	}
 }
 
@@ -70,6 +87,11 @@ interface BuffWindowTrackedActions {
 
 export interface BuffWindowTrackedAction {
 	action: Action
+	/**
+	 * Implementing modules can optionally specify a Status if the trackedAction is a weaponskill modifier
+	 * (e.g. Barrage, Life Surge, Reassemble)
+	 */
+	status?: Status
 	expectedPerWindow: number
 }
 
@@ -102,15 +124,15 @@ export abstract class BuffWindowModule extends Module {
 	 */
 	protected requiredGCDs?: BuffWindowRequiredGCDs
 	/**
-	 * Optionally, you can also specify additional cooldowns to track usage of, indicating the number of expected usages per window.
-	 * - trackedCooldowns will require a MINIMUM of trackedCooldown.expectedPerWindow uses of the specified action in each window
+	 * Optionally, you can also specify additional actions to track usage of, indicating the number of expected usages per window.
+	 * - trackedActions will require a MINIMUM of trackedAction.expectedPerWindow uses of the specified action in each window
 	 *     and will provide data in the RotationTable about the number used as well as a suggestion based on missed uses
 	 */
 	protected trackedActions?: BuffWindowTrackedActions
 	/**
 	 * Optionally, you can also specify additional cooldowns to track usage of, indicating the number of expected usages per window.
-	 *  - trackedBadCooldowns will require NO MORE THAN trackedBadCooldown.expectedPerWindow uses of the specified action in each window
-	 *     (usually, this number should be 0), and will provide a suggestion if the BadCooldown is being used more than the expected threshold
+	 *  - trackedBadActions will require NO MORE THAN trackedBadAction.expectedPerWindow uses of the specified action in each window
+	 *     (usually, this number should be 0), and will provide a suggestion if the BadAction is being used more than the expected threshold
 	 */
 	protected trackedBadActions?: BuffWindowTrackedActions
 	/**
@@ -189,7 +211,9 @@ export abstract class BuffWindowModule extends Module {
 			return
 		}
 
-		this.startNewBuffWindow(event.timestamp, status)
+		if (this.activeBuffWindow === undefined) {
+			this.startNewBuffWindow(event.timestamp, status)
+		}
 	}
 
 	private startNewBuffWindow(startTime: number, status: Status) {
@@ -197,12 +221,16 @@ export abstract class BuffWindowModule extends Module {
 	}
 
 	private onRemoveBuff(event: BuffEvent) {
-		if (!this.buffStatus || !this.buffStatusArray.find(s => event.ability.guid === s.id)) {
+		if (!this.buffStatus) {
 			return
 		}
 
 		if (this.activeBuffWindow) {
-			this.activeBuffWindow.end = event.timestamp
+			this.activeBuffWindow.expiredStatuses.push(event)
+
+			if (this.buffStatusArray.find(s => event.ability.guid === s.id)) {
+				this.activeBuffWindow.end = event.timestamp
+			}
 		}
 	}
 
@@ -337,8 +365,8 @@ export abstract class BuffWindowModule extends Module {
 
 	private countMissedTrackedActions(buffWindow: BuffWindowState, action: BuffWindowTrackedAction): number {
 		const expected = this.getBuffWindowExpectedTrackedActions(buffWindow, action)
-		const actual = buffWindow.getActionCountByIds([action.action.id])
 		const comparator = this.changeComparisonClassLogic(buffWindow, action)
+		const actual = buffWindow.getTrackedActionCount(action)
 
 		// If a custom comparator is defined for this action, and it didn't return negative, don't count this window
 		if (comparator && comparator(actual, expected) !== RotationTargetOutcome.NEGATIVE) { return 0 }
@@ -399,7 +427,7 @@ export abstract class BuffWindowModule extends Module {
 		if (this.trackedBadActions) {
 			const badActions = this.trackedBadActions.actions
 				.reduce((sum, trackedAction) => sum + this.buffWindows
-					.reduce((sum, buffWindow) => sum + Math.max(0, buffWindow.getActionCountByIds([trackedAction.action.id]) - trackedAction.expectedPerWindow), 0), 0)
+					.reduce((sum, buffWindow) => sum + Math.max(0, buffWindow.getTrackedActionCount(trackedAction) - trackedAction.expectedPerWindow), 0), 0)
 
 			this.suggestions.add(new TieredSuggestion({
 				icon: this.trackedBadActions.icon,
@@ -472,7 +500,7 @@ export abstract class BuffWindowModule extends Module {
 				if (this.trackedActions) {
 					this.trackedActions.actions.forEach((trackedAction) => {
 						targetsData[trackedAction.action.name] = {
-							actual: buffWindow.getActionCountByIds([trackedAction.action.id]),
+							actual: buffWindow.getTrackedActionCount(trackedAction),
 							expected: this.getBuffWindowExpectedTrackedActions(buffWindow, trackedAction),
 							targetComparator: this.changeComparisonClassLogic(buffWindow, trackedAction),
 						}

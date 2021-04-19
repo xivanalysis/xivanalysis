@@ -2,7 +2,7 @@ import Module, {dependency} from 'parser/core/Module'
 import React from 'react'
 import {Invulnerability} from './Invulnerability'
 import {Timeline, SimpleItem} from './Timeline'
-import UnableToAct from './UnableToAct'
+import {UnableToAct} from './UnableToAct'
 
 interface DowntimeWindow {
 	start: number,
@@ -22,8 +22,14 @@ export default class Downtime extends Module {
 
 	private internalDowntime(start = 0, end = this.parser.currentTimestamp) {
 		// Get all the downtime from both unableToAct and invuln, and sort it
-		const downtimePeriods = [
-			...this.unableToAct.getDowntimes(start, end),
+		const downtimePeriods: DowntimeWindow[] = [
+			...this.unableToAct.getWindows({
+				start: this.parser.fflogsToEpoch(start),
+				end: this.parser.fflogsToEpoch(end),
+			}).map(window => ({
+				start: this.parser.epochToFflogs(window.start),
+				end: this.parser.epochToFflogs(window.end),
+			})),
 			...this.invuln.getInvulns('all', start, end, 'untargetable'),
 		].sort((a, b) => a.start - b.start)
 

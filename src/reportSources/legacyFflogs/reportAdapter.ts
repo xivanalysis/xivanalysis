@@ -1,6 +1,6 @@
+import {languageToEdition} from 'data/EDITIONS'
 import {getEncounterKey} from 'data/ENCOUNTERS'
 import JOBS, {JobKey} from 'data/JOBS'
-import {languageToEdition} from 'data/PATCHES'
 import {ActorType, Actor as FflogsActor, Fight, ActorFightInstance} from 'fflogs'
 import {toJS} from 'mobx'
 import {Actor, Pull, Report, Team} from 'report'
@@ -99,13 +99,21 @@ function buildActorsByFight(report: LegacyReport) {
 }
 
 const convertActor = (actor: FflogsActor, overrides?: Partial<Actor>): Actor => ({
+	...UNKNOWN_ACTOR,
 	id: actor.id.toString(),
+	kind: actor.guid.toString(),
 	name: actor.name,
+	...overrides,
+})
+
+const UNKNOWN_ACTOR: Actor = {
+	id: 'unknown',
+	kind: 'unknown',
+	name: 'Unknown',
 	team: Team.UNKNOWN,
 	playerControlled: false,
 	job: 'UNKNOWN',
-	...overrides,
-})
+}
 
 const convertFight = (
 	report: LegacyReport,
@@ -127,7 +135,7 @@ const convertFight = (
 		},
 	},
 
-	actors,
+	actors: [...actors, UNKNOWN_ACTOR],
 })
 
 function getFightProgress(fight: Fight) {

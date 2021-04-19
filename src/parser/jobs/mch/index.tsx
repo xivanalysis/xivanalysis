@@ -1,4 +1,4 @@
-import {Trans} from '@lingui/react'
+import {Trans} from '@lingui/macro'
 import CONTRIBUTORS, {ROLES} from 'data/CONTRIBUTORS'
 import {Meta} from 'parser/core/Meta'
 import React from 'react'
@@ -13,13 +13,18 @@ export default new Meta({
 	</>,
 	supportedPatches: {
 		from: '5.0',
-		to: '5.4',
+		to: '5.5',
 	},
 	contributors: [
 		{user: CONTRIBUTORS.TOASTDEIB, role: ROLES.MAINTAINER},
 		{user: CONTRIBUTORS.YUMIYAFANGIRL, role: ROLES.DEVELOPER},
 	],
 	changelog: [{
+		date: new Date('2021-01-29'),
+		Changes: () => <>Added Automaton Queen actions to the Timeline.</>,
+		contributors: [CONTRIBUTORS.YUMIYAFANGIRL],
+	},
+	{
 		date: new Date('2020-08-08'),
 		Changes: () => <>Added a module that shows Tincture windows.</>,
 		contributors: [CONTRIBUTORS.YUMIYAFANGIRL],

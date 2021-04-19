@@ -422,7 +422,11 @@ export default class PitchPerfect extends Module {
 	}
 
 	_isAMissedPP(lastPPInWM, missedPPGracePeriod) {
-		return lastPPInWM.timeLeftOnSong > missedPPGracePeriod && !this.downtime.getDowntime(lastPPInWM.timestamp, lastPPInWM.timestamp + missedPPGracePeriod)
+		const downtime = this.downtime.getDowntime(
+			lastPPInWM.timestamp,
+			Math.min(lastPPInWM.timestamp + missedPPGracePeriod, this.parser.eventTimeOffset + this.parser.pull.duration)
+		)
+		return lastPPInWM.timeLeftOnSong > missedPPGracePeriod && !downtime
 	}
 
 	_cleanUpPPs() {
@@ -464,7 +468,11 @@ export default class PitchPerfect extends Module {
 				stacksUsedInCurrentWM = 0
 				castsInCurrentWM = []
 			}
-			if (this.downtime.isDowntime(pp.lastTickOnEnemy + DOT_TICK_FREQUENCY + ANIMATION_LOCK)) {
+			const nextPPTick = pp.lastTickOnEnemy + DOT_TICK_FREQUENCY + ANIMATION_LOCK
+			if (
+				nextPPTick > this.parser.eventTimeOffset + this.parser.pull.duration
+				|| this.downtime.isDowntime(nextPPTick)
+			) {
 				this._ppEvents.splice(this._ppEvents.indexOf(pp), 1)
 			}
 

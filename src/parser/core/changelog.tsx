@@ -4,6 +4,11 @@ import {ChangelogEntry} from './Meta'
 
 export const changelog: ChangelogEntry[] = [
 	{
+		date: new Date('2021-04-04'),
+		Changes: () => <>Resources of the analysed player are now visible in the timeline. You can expand the row to view the graphs separately, and hover in either state to view numeric values.</>,
+		contributors: [CONTRIBUTORS.ACKWELL],
+	},
+	{
 		date: new Date('2020-04-19'),
 		Changes: () => <>
 			Overhaul of logic used to calculate when the boss is invulnerable and/or untargetable. This will have minimal impact on DPS and tanks with average or better play - however, it will have a <em>marked</em> impact on low-uptime play and healer accuracy.<br/>

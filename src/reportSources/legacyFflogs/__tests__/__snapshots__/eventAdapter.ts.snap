@@ -1,0 +1,417 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Event adapter individual events adapts applybuff 1`] = `
+Array [
+  Object {
+    "source": "11:2",
+    "status": 1001917,
+    "target": "4",
+    "timestamp": 7537469,
+    "type": "statusApply",
+  },
+]
+`;
+
+exports[`Event adapter individual events adapts applybuffstack 1`] = `
+Array [
+  Object {
+    "action": 7518,
+    "data": 2,
+    "source": "7",
+    "status": 1001238,
+    "target": "7",
+    "timestamp": -3,
+    "type": "action",
+  },
+  Object {
+    "data": 2,
+    "source": "7",
+    "status": 1001238,
+    "target": "7",
+    "timestamp": 7410286,
+    "type": "statusApply",
+  },
+]
+`;
+
+exports[`Event adapter individual events adapts applydebuff 1`] = `
+Array [
+  Object {
+    "action": 2258,
+    "source": "6",
+    "status": 1000638,
+    "target": "11",
+    "timestamp": -3,
+    "type": "action",
+  },
+  Object {
+    "source": "6",
+    "status": 1000638,
+    "target": "11",
+    "timestamp": 190177,
+    "type": "statusApply",
+  },
+]
+`;
+
+exports[`Event adapter individual events adapts applydebuffstack 1`] = `
+Array [
+  Object {
+    "data": 2,
+    "source": "8",
+    "status": 1000861,
+    "target": "2",
+    "timestamp": 7425207,
+    "type": "statusApply",
+  },
+]
+`;
+
+exports[`Event adapter individual events adapts begincast 1`] = `
+Array [
+  Object {
+    "action": 16541,
+    "source": "9",
+    "target": "2",
+    "timestamp": 7446878,
+    "type": "prepare",
+  },
+]
+`;
+
+exports[`Event adapter individual events adapts calculateddamage 1`] = `
+Array [
+  Object {
+    "action": 3554,
+    "sequence": 16647,
+    "source": "1",
+    "target": "3",
+    "timestamp": -1,
+    "type": "action",
+  },
+  Object {
+    "action": 3554,
+    "sequence": 16647,
+    "source": "1",
+    "target": "3",
+    "timestamp": 8011183,
+    "type": "snapshot",
+  },
+  Object {
+    "actor": "3",
+    "hp": Object {
+      "current": 67180802,
+      "maximum": 75722720,
+    },
+    "mp": Object {
+      "current": 10000,
+      "maximum": 10000,
+    },
+    "position": Object {
+      "bearing": -160,
+      "x": 9999,
+      "y": 10081,
+    },
+    "timestamp": 8011183,
+    "type": "actorUpdate",
+  },
+  Object {
+    "actor": "1",
+    "hp": Object {
+      "current": 142411,
+      "maximum": 142411,
+    },
+    "mp": Object {
+      "current": 10000,
+      "maximum": 10000,
+    },
+    "position": Object {
+      "bearing": -245,
+      "x": 9260,
+      "y": 10463,
+    },
+    "timestamp": 8011183,
+    "type": "actorUpdate",
+  },
+]
+`;
+
+exports[`Event adapter individual events adapts calculatedheal 1`] = `
+Array [
+  Object {
+    "action": 3571,
+    "sequence": 4570,
+    "source": "3",
+    "target": "3",
+    "timestamp": -1,
+    "type": "action",
+  },
+  Object {
+    "action": 3571,
+    "sequence": 4570,
+    "source": "3",
+    "target": "3",
+    "timestamp": 7412071,
+    "type": "snapshot",
+  },
+  Object {
+    "actor": "3",
+    "hp": Object {
+      "current": 122214,
+      "maximum": 122214,
+    },
+    "mp": Object {
+      "current": 9800,
+      "maximum": 10000,
+    },
+    "position": Object {
+      "bearing": -208,
+      "x": 9887,
+      "y": 10642,
+    },
+    "timestamp": 7412071,
+    "type": "actorUpdate",
+  },
+]
+`;
+
+exports[`Event adapter individual events adapts cast 1`] = `
+Array [
+  Object {
+    "action": 16139,
+    "source": "4",
+    "target": "2",
+    "timestamp": 7537601,
+    "type": "action",
+  },
+]
+`;
+
+exports[`Event adapter individual events adapts checksummismatch 1`] = `Array []`;
+
+exports[`Event adapter individual events adapts damage 1`] = `
+Array [
+  Object {
+    "amount": 4176,
+    "cause": Object {
+      "status": 1000725,
+      "type": "status",
+    },
+    "overkill": 0,
+    "sequence": undefined,
+    "source": "2",
+    "sourceModifier": 0,
+    "target": "3",
+    "targetModifier": 0,
+    "timestamp": 8012166,
+    "type": "damage",
+  },
+  Object {
+    "actor": "3",
+    "hp": Object {
+      "current": 66978953,
+      "maximum": 75722720,
+    },
+    "mp": Object {
+      "current": 10000,
+      "maximum": 10000,
+    },
+    "position": Object {
+      "bearing": -160,
+      "x": 9999,
+      "y": 10081,
+    },
+    "timestamp": 8012166,
+    "type": "actorUpdate",
+  },
+]
+`;
+
+exports[`Event adapter individual events adapts death 1`] = `
+Array [
+  Object {
+    "actor": "8",
+    "hp": Object {
+      "current": 0,
+    },
+    "mp": Object {
+      "current": 0,
+    },
+    "timestamp": 502017,
+    "type": "actorUpdate",
+  },
+]
+`;
+
+exports[`Event adapter individual events adapts dispel 1`] = `Array []`;
+
+exports[`Event adapter individual events adapts encounterend 1`] = `Array []`;
+
+exports[`Event adapter individual events adapts encounterstart 1`] = `Array []`;
+
+exports[`Event adapter individual events adapts heal 1`] = `
+Array [
+  Object {
+    "amount": 4588,
+    "cause": Object {
+      "action": 500001,
+      "type": "action",
+    },
+    "overheal": 0,
+    "sequence": undefined,
+    "source": "11",
+    "sourceModifier": 0,
+    "target": "8",
+    "timestamp": 8586700,
+    "type": "heal",
+  },
+  Object {
+    "actor": "8",
+    "hp": Object {
+      "current": 60545,
+      "maximum": 128026,
+    },
+    "mp": Object {
+      "current": 9461,
+      "maximum": 10000,
+    },
+    "position": Object {
+      "bearing": -288,
+      "x": 10601,
+      "y": 9971,
+    },
+    "timestamp": 8586700,
+    "type": "actorUpdate",
+  },
+]
+`;
+
+exports[`Event adapter individual events adapts limitbreakupdate 1`] = `Array []`;
+
+exports[`Event adapter individual events adapts refreshbuff 1`] = `
+Array [
+  Object {
+    "source": "3",
+    "status": 1001873,
+    "target": "3",
+    "timestamp": 7416935,
+    "type": "statusApply",
+  },
+]
+`;
+
+exports[`Event adapter individual events adapts refreshdebuff 1`] = `
+Array [
+  Object {
+    "source": "8",
+    "status": 1000861,
+    "target": "2",
+    "timestamp": 7423728,
+    "type": "statusApply",
+  },
+]
+`;
+
+exports[`Event adapter individual events adapts removebuff 1`] = `
+Array [
+  Object {
+    "action": 3539,
+    "source": "1",
+    "status": 1001902,
+    "target": "1",
+    "timestamp": -3,
+    "type": "action",
+  },
+  Object {
+    "source": "1",
+    "status": 1001902,
+    "target": "1",
+    "timestamp": -2,
+    "type": "statusApply",
+  },
+  Object {
+    "source": "1",
+    "status": 1001902,
+    "target": "1",
+    "timestamp": 7735462,
+    "type": "statusRemove",
+  },
+]
+`;
+
+exports[`Event adapter individual events adapts removebuffstack 1`] = `
+Array [
+  Object {
+    "action": 7518,
+    "data": 1,
+    "source": "7",
+    "status": 1001238,
+    "target": "7",
+    "timestamp": -3,
+    "type": "action",
+  },
+  Object {
+    "data": 1,
+    "source": "7",
+    "status": 1001238,
+    "target": "7",
+    "timestamp": 7410865,
+    "type": "statusApply",
+  },
+]
+`;
+
+exports[`Event adapter individual events adapts removedebuff 1`] = `
+Array [
+  Object {
+    "action": 7436,
+    "source": "9",
+    "status": 1001221,
+    "target": "2",
+    "timestamp": -3,
+    "type": "action",
+  },
+  Object {
+    "source": "9",
+    "status": 1001221,
+    "target": "2",
+    "timestamp": -2,
+    "type": "statusApply",
+  },
+  Object {
+    "source": "9",
+    "status": 1001221,
+    "target": "2",
+    "timestamp": 7427662,
+    "type": "statusRemove",
+  },
+]
+`;
+
+exports[`Event adapter individual events adapts removedebuffstack 1`] = `
+Array [
+  Object {
+    "data": 1,
+    "source": "4917",
+    "status": 1001964,
+    "target": "4883:14",
+    "timestamp": 431742760,
+    "type": "statusApply",
+  },
+]
+`;
+
+exports[`Event adapter individual events adapts targetabilityupdate 1`] = `
+Array [
+  Object {
+    "actor": "20:7",
+    "targetable": true,
+    "timestamp": 7906700,
+    "type": "actorUpdate",
+  },
+]
+`;
+
+exports[`Event adapter individual events adapts unknown 1`] = `Array []`;
+
+exports[`Event adapter individual events adapts zonechange 1`] = `Array []`;

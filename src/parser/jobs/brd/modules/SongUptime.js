@@ -118,7 +118,10 @@ export default class SongUptime extends Module {
 		let tolerance = SETUP_TIME
 
 		this._songCastEvents.forEach(c => {
-			if (this.downtime.isDowntime(c.timestamp + SONG_DURATION)) {
+			if (this.downtime.isDowntime(Math.min(
+				c.timestamp + SONG_DURATION,
+				this.parser.eventTimeOffset + this.parser.pull.duration,
+			))) {
 				tolerance += SETUP_TIME
 			}
 		})
