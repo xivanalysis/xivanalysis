@@ -12,10 +12,6 @@ import React, {Fragment} from 'react'
 const GAUGE_GAIN_AMOUNT = 5
 const GAUGE_SPEND_AMOUNT = 50
 
-const GAUGE_SEVERITY = {
-	10: SEVERITY.MINOR,
-}
-
 export default class OathGauge extends CoreGauge {
 	static title = t('pld.gauge.title')`Oath Gauge Usage`
 
