@@ -653,7 +653,6 @@
   "pld.fightorflight.table.header.gcds": "GCDs",
   "pld.fightorflight.title": "Fight Or Flight Usage",
   "pld.gauge.title": "Oath Gauge Usage",
-  "pld.gauge.waste": "A total of {0} Oath Gauge was wasted due to overcapping.",
   "pld.gauge.waste.suggestion.content": "You should periodically use your gauge either on you with a <0/> or on your tank partner with an <1/> in case you're off-tanking.",
   "pld.gauge.waste.suggestion.why": "A total of {0} gauge was lost due to exceeding the cap, part of this should be used to reduce incoming damage from abilities or auto-attacks.",
   "pld.goring.checklist.goringblade.description": "As a Paladin, <0/> is a significant portion of your sustained damage, and is required to kept up for as much as possible, for the best damage output.",
