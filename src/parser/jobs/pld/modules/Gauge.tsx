@@ -6,7 +6,7 @@ import JOBS from 'data/JOBS'
 import {dependency} from 'parser/core/Module'
 import {CounterGauge, Gauge as CoreGauge} from 'parser/core/modules/Gauge'
 import Suggestions, {SEVERITY, Suggestion} from 'parser/core/modules/Suggestions'
-import React, {Fragment} from 'react'
+import React from 'react'
 
 // Gauge numbers
 const GAUGE_GAIN_AMOUNT = 5
