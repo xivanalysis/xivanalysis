@@ -12,7 +12,7 @@ import React, {Fragment} from 'react'
 const GAUGE_GAIN_AMOUNT = 5
 const GAUGE_SPEND_AMOUNT = 50
 
-export default class OathGauge extends CoreGauge {
+export default class Gauge extends CoreGauge {
 	static title = t('pld.gauge.title')`Oath Gauge Usage`
 
 	@dependency private suggestions!: Suggestions
@@ -64,15 +64,5 @@ export default class OathGauge extends CoreGauge {
 			severity: SEVERITY.MINOR,
 			value: this.oathGauge.overCap,
 		}))
-	}
-
-	output() {
-		const fragment = super.output()
-		return <Fragment>
-			{fragment}
-			<Trans id="pld.gauge.waste">
-				A total of {this.oathGauge.overCap} Oath Gauge was wasted due to overcapping.
-			</Trans>
-		</Fragment>
 	}
 }
