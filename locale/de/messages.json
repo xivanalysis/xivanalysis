@@ -363,6 +363,7 @@
   "sam.meikyo.title": "Meikyo",
   "sam.thirdeye.title": "Drittes Auge",
   "sch.about.description.warning.healer": "Die Phasen, in denen Bosse Unverwundbar sind, werden in Heiler-Analysen aktuell nicht korrekt erfasst. Dies führt bei vielen zeitabhängige Einträgen - wie \"Verwende eine Fertigkeit zu jeder Zeit\" oder \"DoT-Uptime\" - zu Ungenauigkeiten.",
+  "sch.aetherflow.stacks-wasted": "Stapel verloren",
   "sch.dots.checklist.name": "Halte deine DoTs aufrecht",
   "sch.dots.checklist.requirement.bio-ii.name": "Gesamtanwendungszeit von <0/>",
   "sch.dots.checklist.requirement.miasma.name": "Gesamtanwendungszeit von <0/>",
