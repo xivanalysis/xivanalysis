@@ -31,6 +31,7 @@ const EXPECTED_USES = {
 	ROUGH_DIVIDE: 1,
 	BLASTING_ZONE: 1,
 	BOW_SHOCK: 1,
+	BURST_STRIKE: 2,
 	GCD: 9,
 
 	// Don't check for correct Continuations; that will be covered by the Continuation module.
@@ -53,6 +54,7 @@ class NoMercyState {
 	numRoughDivides: number = 0
 	numGnashingFangs: number = 0
 	numBowShocks: number = 0
+	numBrustStrike: number = 0
 
 	constructor(start: number) {
 		this.start = start
@@ -133,6 +135,9 @@ export default class NoMercy extends Module {
 			case ACTIONS.BOW_SHOCK.id:
 				lastNoMercy.numBowShocks++
 				break
+			case ACTIONS.BURST_STRIKE.id:
+				lastNoMercy.numBrustStrike++
+				break
 			}
 		}
 	}
@@ -162,7 +167,10 @@ export default class NoMercy extends Module {
 			.reduce((sum, window) => sum + Math.max(0, EXPECTED_USES.GNASHING_FANG - window.numGnashingFangs), 0)
 		const missedBowShocks = this.noMercyWindows
 			.reduce((sum, window) => sum + Math.max(0, EXPECTED_USES.BOW_SHOCK - window.numBowShocks), 0)
-		const sumMissingExpectedUses = missedBlastingZones + missedSonicBreaks + missedRoughDivides + missedGnashingFangs + missedBowShocks
+		const missedBurstStrike = this.noMercyWindows
+			.reduce((sum, window) => sum + Math.max(0, EXPECTED_USES.BURST_STRIKE - window.numBrustStrike), 0)
+
+		const sumMissingExpectedUses = missedBlastingZones + missedSonicBreaks + missedRoughDivides + missedGnashingFangs + missedBowShocks + missedBurstStrike
 
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.NO_MERCY.icon,
@@ -220,6 +228,10 @@ export default class NoMercy extends Module {
 					header: <ActionLink showName={false} {...ACTIONS.GNASHING_FANG}/>,
 					accessor: 'gnashingFang',
 				},
+				{
+					header: <ActionLink showName={false} {...ACTIONS.BURST_STRIKE} />,
+					accessor: 'burstStrike',
+				},
 			]}
 			data={this.noMercyWindows
 				.map(window => {
@@ -252,6 +264,10 @@ export default class NoMercy extends Module {
 							gnashingFang: {
 								actual: window.numGnashingFangs,
 								expected: EXPECTED_USES.GNASHING_FANG,
+							},
+							burstStrike: {
+								actual: window.numBrustStrike,
+								expected: EXPECTED_USES.BURST_STRIKE,
 							},
 						},
 						rotation: window.rotation,
