@@ -250,7 +250,7 @@
   "core.combos.why": "打错了 {0, plural, other {# 次}}连击",
   "core.cooldownDowntime.ogcd-cd-metric": "确保你的能力技在转好后第一时间打出去，但是不要卡GCD使用。",
   "core.cooldownDowntime.title": "冷却时间",
-  "core.cooldownDowntime.use-ogcd-cds": "使用你的GCD技能",
+  "core.cooldownDowntime.use-ogcd-cds": "使用你的oGCD技能",
   "core.dblink.loading": "加载中…",
   "core.deaths.content": "不要死。不仅会丢失输出时间，清空战斗资源，起来还会有虚弱debuff，死亡绝对会<0>严重降低</0>你的输出。",
   "core.deaths.why": "{0, plural, =1 {# 次死亡} other {# 次死亡}}",
