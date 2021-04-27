@@ -524,6 +524,12 @@ const fakeEvents: Record<FflogsEvent['type'], FflogsEvent> = {
 		},
 		isBuff: false,
 	},
+	wipecalled: {
+		timestamp: 100000000,
+		type: 'wipecalled',
+		sourceIsFriendly: true,
+		targetIsFriendly: true,
+	},
 }
 
 // #endregion
