@@ -104,7 +104,9 @@ export default class NoMercy extends BuffWindowModule {
 
 			if (buffWindow.rotation.find(cast => cast.ability.guid === ACTIONS.BLOODFEST.id) && (this.getBaselineExpectedTrackedAction(buffWindow, action) === 2)) {
 
-				return 2
+				return 1
+				//In fights with minimal downtime, it is possible to hit 4/4 bloodfests,
+				//however I feel it is better to leave it at 3 / 3 for the adjusted rinfest window which seems to be more common
 			}
 
 
