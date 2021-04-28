@@ -1,0 +1,60 @@
+@value themeBackground from 'theme.module.css';
+
+@value markerPointerSize: 5px;
+
+.graph {
+	width: 100%;
+	height: 100%;
+}
+
+.markerContainer {
+	composes: graph;
+	position: relative;
+}
+
+.markerLine {
+	position: absolute;
+	width: 1px;
+	height: 100%;
+	background: black;
+	pointer-events: none;
+}
+
+.markerTooltip {
+	position: fixed;
+	border: 1px solid black;
+	padding: 5px;
+	transform: translate(-50%, calc(-100% - markerPointerSize));
+	background: themeBackground;
+	white-space: nowrap;
+	pointer-events: none;
+}
+
+.markerTooltip::after {
+	content: '';
+	position: absolute;
+	top: 100%;
+	left: 50%;
+	border: markerPointerSize solid transparent;
+	border-top-color: black;
+	border-bottom-width: 0;
+	transform: translateX(-50%);
+}
+
+.resourceList {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.resourceItem {
+	display: flex;
+	align-items: center;
+}
+
+.resourceSwatch {
+	display: inline-block;
+	margin-right: 0.25em;
+	width: 1em;
+	height: 1em;
+}

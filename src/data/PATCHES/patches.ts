@@ -83,6 +83,12 @@ const patchData = {
 	'5.4': {
 		date: {
 			[GameEdition.GLOBAL]: 1607418000, // 08/12/20 09:00:00 GMT
+			[GameEdition.KOREAN]: 1621324800, // 18/05/21 08:00:00 GMT
+		},
+	},
+	'5.5': {
+		date: {
+			[GameEdition.GLOBAL]: 1618304400, // 13/04/21 09:00:00 GMT
 		},
 	},
 }

@@ -18,17 +18,19 @@ import {EventsView} from './EventsView'
 import GlobalCooldown from './GlobalCooldown'
 import HitType from './HitType'
 import {Invulnerability} from './Invulnerability'
+import {Invulnerability as Invulnerability2} from './Invulnerability2'
 import {Medicated} from './Medicated'
 import {NormalisedEvents} from './NormalisedEvents'
 import PrecastAction from './PrecastAction'
 import PrecastStatus from './PrecastStatus'
 import RaidBuffs, {RaidBuffsQuery} from './RaidBuffs'
+import {ResourceGraphs} from './ResourceGraphs'
 import Speedmod from './Speedmod'
 import {Statistics} from './Statistics'
 import Statuses from './Statuses'
 import Suggestions from './Suggestions'
 import {Timeline} from './Timeline'
-import UnableToAct from './UnableToAct'
+import {UnableToAct} from './UnableToAct'
 import Weaving from './Weaving'
 
 export default [
@@ -53,12 +55,14 @@ export default [
 	GlobalCooldown,
 	HitType,
 	Invulnerability,
+	Invulnerability2,
 	Medicated,
 	NormalisedEvents,
 	PrecastAction,
 	PrecastStatus,
 	RaidBuffsQuery,
 	RaidBuffs,
+	ResourceGraphs,
 	Speedmod,
 	Statistics,
 	Statuses,

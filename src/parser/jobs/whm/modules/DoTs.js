@@ -60,12 +60,20 @@ export default class DoTs extends Module {
 		// Base clip calc
 		let clip = STATUS_DURATION - (event.timestamp - lastApplication)
 
-		// Also remove invuln time in the future that casting later would just push dots into
-		// TODO: This relies on a full set of invuln data ahead of time. Can this be trusted?
-		clip -= this.invuln.getInvulnerableUptime('all', event.timestamp, event.timestamp + STATUS_DURATION + clip)
+		// Wait for when the status would typically drop without clipping - clipping a dot early isn't as problematic if it would
+		// just push it into invuln time.
+		this.addTimestampHook(
+			Math.min(
+				event.timestamp + STATUS_DURATION + clip,
+				this.parser.eventTimeOffset + this.parser.pull.duration,
+			),
+			({timestamp}) => {
+				clip -= this.invuln.getInvulnerableUptime('all', event.timestamp, timestamp)
 
-		// Capping clip at 0 - less than that is downtime, which is handled by the checklist requirement
-		this._clip += Math.max(0, clip)
+				// Capping clip at 0 - less than that is downtime, which is handled by the checklist requirement
+				this._clip += Math.max(0, clip)
+			}
+		)
 
 		this._lastApplication[applicationKey] = event.timestamp
 	}

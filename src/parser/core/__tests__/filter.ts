@@ -1,4 +1,4 @@
-import {filter, oneOf} from '../filter'
+import {exists, filter, oneOf} from '../filter'
 
 /* eslint-disable @typescript-eslint/no-magic-numbers */
 
@@ -50,9 +50,17 @@ describe('filter', () => {
 
 describe('matchers', () => {
 	test('oneOf', () => {
-		const matcher = oneOf(1, 2)
+		const matcher = oneOf([1, 2])
 		expect(matcher(1)).toBeTrue()
 		expect(matcher(2)).toBeTrue()
 		expect(matcher(3)).toBeFalse()
+	})
+
+	test('exists', () => {
+		expect(exists(1)).toBeTrue()
+		expect(exists('2')).toBeTrue()
+		expect(exists({a: 3})).toBeTrue()
+		expect(exists(undefined)).toBeFalse()
+		expect(exists(null)).toBeFalse()
 	})
 })

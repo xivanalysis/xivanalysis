@@ -1,8 +1,8 @@
-import {getDataBy, getDataArrayBy} from 'data'
+import {getDataArrayBy} from 'data'
 import {layers as actionLayers, root as actionRoot} from 'data/ACTIONS'
 import {getAppliedData, Layer} from 'data/layer'
 import {Patch} from 'data/PATCHES'
-import {layers as statusLayers, root as statusRoot, Status, StatusKey} from 'data/STATUSES'
+import {layers as statusLayers, root as statusRoot, StatusKey} from 'data/STATUSES'
 import {Event, Events} from 'event'
 import _ from 'lodash'
 import {Actor} from 'report'
@@ -26,25 +26,19 @@ export class PrepullStatusAdapterStep extends AdapterStep {
 				continue
 			}
 
-			const status = getDataBy(this.getStatuses(), 'id', event.status)
-			if (!status) {
-				// No data for this status, skip to next event
-				continue
-			}
-
 			if (event.type === 'statusApply') {
-				this.synthesizeActionIfNew(event, status)
-				this.observeStatus(status.id, event.target)
+				this.synthesizeActionIfNew(event)
+				this.observeStatus(event.status, event.target)
 
 			} else if (event.type === 'statusRemove') {
 				const statuses = this.observedStatuses.get(event.target)
-				if (statuses && statuses.has(status.id)) {
+				if (statuses && statuses.has(event.status)) {
 					// If we've already seen a matching apply event, skip
 					continue
 				}
-				this.synthesizeActionIfNew(event, status)
+				this.synthesizeActionIfNew(event)
 				this.synthesizeStatusApply(event)
-				this.observeStatus(status.id, event.target)
+				this.observeStatus(event.status, event.target)
 			}
 		}
 
@@ -71,15 +65,15 @@ export class PrepullStatusAdapterStep extends AdapterStep {
 		statuses.add(statusId)
 	}
 
-	private synthesizeActionIfNew(event: StatusEvent, status: Status) {
-		const statusKey = _.findKey(this.getStatuses(), status) as StatusKey | undefined
+	private synthesizeActionIfNew(event: StatusEvent) {
+		const statusKey = _.findKey(this.getStatuses(), status => status.id === event.status) as StatusKey | undefined
 		if (!statusKey) {
 			// This shouldn't be possible, but let's be safe and bail if there's no key
 			return
 		}
 
 		const actions = getDataArrayBy(this.getActions(), 'statusesApplied', statusKey)
-		if (!actions || actions.length > 1) {
+		if (actions.length !== 1) {
 			// No action is known to apply this status OR
 			// multiple actions can apply this status, not enough info to synth
 			return

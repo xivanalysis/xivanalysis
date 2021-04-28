@@ -47,6 +47,8 @@ type DebugCallback = (opts: {
 	log: (...data: LogParameters) => void,
 }) => void
 
+export type AnalyserOptions = ConstructorParameters<typeof Analyser>
+
 export class Analyser extends Injectable {
 	private static _title?: string | MessageDescriptor
 	/**

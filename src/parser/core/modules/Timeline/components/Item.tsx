@@ -25,6 +25,7 @@ export const Items = memo(function Items({
 			index,
 			left: scales.primary(item.start) ?? 0,
 			right: scales.primary(item.end),
+			depth: item.depth,
 		})
 	}
 
@@ -32,7 +33,12 @@ export const Items = memo(function Items({
 		{filteredItems.map((itemDetails) => {
 			const {Content} = items[itemDetails.index]
 			return (
-				<Item key={itemDetails.index} left={itemDetails.left} right={itemDetails.right}>
+				<Item
+					key={itemDetails.index}
+					left={itemDetails.left}
+					right={itemDetails.right}
+					depth={itemDetails.depth}
+				>
 					<Content/>
 				</Item>
 			)
@@ -44,12 +50,14 @@ export interface ItemProps {
 	children?: ReactNode,
 	left: number
 	right?: number
+	depth?: number
 }
 
 export const Item = memo(function Item({
 	children,
 	left,
 	right,
+	depth,
 }: ItemProps) {
 	return (
 		<div
@@ -57,6 +65,7 @@ export const Item = memo(function Item({
 			style={{
 				left,
 				width: right != null ? right - left : undefined,
+				zIndex: depth,
 			}}
 		>
 			{children}

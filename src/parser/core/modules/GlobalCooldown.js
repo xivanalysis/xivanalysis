@@ -231,7 +231,7 @@ export default class GlobalCooldown extends Module {
 			const duration = this._getGcdLength(gcd)
 			const downtime = this.downtime.getDowntime(
 				gcd.timestamp,
-				gcd.timestamp + duration,
+				Math.min(gcd.timestamp + duration, this.parser.eventTimeOffset + this.parser.pull.duration),
 			)
 			return carry + duration - downtime
 		}, 0)

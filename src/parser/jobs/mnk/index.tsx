@@ -18,7 +18,7 @@ export default new Meta({
 	</>,
 	supportedPatches: {
 		from: '5.4',
-		to: '5.4',
+		to: '5.5',
 	},
 
 	contributors: [
@@ -26,6 +26,13 @@ export default new Meta({
 		{user: CONTRIBUTORS.LHEA, role: ROLES.DEVELOPER},
 	],
 	changelog: [
+		{
+			date: new Date('2021-04-13'),
+			Changes: () => <>
+				Update MNK support for patch 5.5, fix Twin clipping bug, and allow ST in opener outside of RoF.
+			</>,
+			contributors: [CONTRIBUTORS.ACCHAN],
+		},
 		{
 			date: new Date('2020-12-08'),
 			Changes: () => <>

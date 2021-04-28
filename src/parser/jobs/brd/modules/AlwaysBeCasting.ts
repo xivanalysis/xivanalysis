@@ -76,7 +76,10 @@ export default class AlwaysBeCasting extends CoreAlwaysBeCasting {
 
 		const uptime = this.gcd.gcds.reduce((acc, gcd) => {
 			const duration = this.gcd._getGcdLength(gcd)
-			const downtime = this.downtime.getDowntime(gcd.timestamp, gcd.timestamp + duration)
+			const downtime = this.downtime.getDowntime(
+				gcd.timestamp,
+				Math.min(gcd.timestamp + duration, this.parser.eventTimeOffset + this.parser.pull.duration)
+			)
 			// Ignore GCDs while muse / paeon were up
 			if (this.isArmyBuffActive(gcd.timestamp)) {
 				return acc
