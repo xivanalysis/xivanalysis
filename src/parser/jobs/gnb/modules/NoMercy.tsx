@@ -1,12 +1,11 @@
-import { t } from '@lingui/macro'
-import { Trans } from '@lingui/react'
-import { ActionLink } from 'components/ui/DbLink'
+import {t} from '@lingui/macro'
+import {Trans} from '@lingui/react'
+import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
-import { BuffWindowModule, BuffWindowState, BuffWindowTrackedAction } from 'parser/core/modules/BuffWindow'
-import { SEVERITY } from 'parser/core/modules/Suggestions'
+import {BuffWindowModule, BuffWindowState, BuffWindowTrackedAction} from 'parser/core/modules/BuffWindow'
+import {SEVERITY} from 'parser/core/modules/Suggestions'
 import React from 'react'
-
 
 const SEVERITIES = {
 	MISSING_EXPECTED_USES: {
@@ -35,7 +34,6 @@ const EXPECTED_USES = {
 	// Don't check for correctness on the Gnashing Fang combo; that's covered by the built-in Combo tracker.
 }
 
-
 export default class NoMercy extends BuffWindowModule {
 	static handle = 'nomercy'
 	static title = t('gnb.nomercy.title')`No Mercy Windows`
@@ -50,7 +48,7 @@ export default class NoMercy extends BuffWindowModule {
 		suggestionContent: <Trans id="gnb.nomercy.suggestions.gcds.content">
 			Try to land 9 GCDs during every <ActionLink {...ACTIONS.NO_MERCY} /> window. A 20 second duration is sufficient
 				to comfortably fit 9 GCDs with full uptime if you wait until the last one-third of your GCD timer to activate it.
-			</Trans>,
+		</Trans>,
 		severityTiers: SEVERITIES.TOO_FEW_GCDS,
 	}
 
@@ -93,7 +91,7 @@ export default class NoMercy extends BuffWindowModule {
 				be using <ActionLink {...ACTIONS.SONIC_BREAK} />, a full <ActionLink {...ACTIONS.GNASHING_FANG} /> combo, and all of
 				your off-GCD skills - <ActionLink {...ACTIONS.BLASTING_ZONE} />, <ActionLink {...ACTIONS.BOW_SHOCK} />, and at least one
 				charge of <ActionLink {...ACTIONS.ROUGH_DIVIDE} /> - under the buff duration.
-			</Trans>,
+		</Trans>,
 		severityTiers: SEVERITIES.MISSING_EXPECTED_USES,
 
 	}
@@ -109,7 +107,6 @@ export default class NoMercy extends BuffWindowModule {
 				//however I feel it is better to leave it at 3 / 3 for the adjusted rinfest window which seems to be more common
 			}
 
-
 		}
 
 		return 0
@@ -119,5 +116,5 @@ export default class NoMercy extends BuffWindowModule {
 		return buffWindow.rotation.find(cast => cast.ability.guid === ACTIONS.BLOODFEST.id) ?
 			<Trans id="gnb.nomercy.chart.notes.yes"> Yes </Trans> : <Trans id = "gnb.nomercy.chart.notes.no"> No </Trans>
 	}
-	
+
 }
