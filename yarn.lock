@@ -5555,11 +5555,6 @@ interpret@^2.2.0:
   resolved "https://registry.yarnpkg.com/interpret/-/interpret-2.2.0.tgz#1a78a0b5965c40a5416d007ad6f50ad27c417df9"
   integrity sha512-Ju0Bz/cEia55xDwUWEa8+olFpCiQoypjnQySseKtmjNrnps3P+xfpUmGr90T7yjlVJmOtybRvPXhKMbHr+fWnw==
 
-intersecting-ranges@^1.2.0:
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/intersecting-ranges/-/intersecting-ranges-1.2.0.tgz#d600842401af5a40cd03d24efbe0fc6a6ac5520a"
-  integrity sha512-MlHLVltGuBruf6xrfrqs33VXlUCG4tWMSy9Y+XSt+bRKkL2uJEOQI+8ORvfy722T678ZsdusJwOImZjVhjNOig==
-
 intersection-observer@^0.11:
   version "0.11.0"
   resolved "https://registry.yarnpkg.com/intersection-observer/-/intersection-observer-0.11.0.tgz#f4ea067070326f68393ee161cc0a2ca4c0040c6f"
