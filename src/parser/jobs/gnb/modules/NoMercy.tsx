@@ -41,7 +41,7 @@ export default class NoMercy extends BuffWindowModule {
 	buffAction = ACTIONS.NO_MERCY
 	buffStatus = STATUSES.NO_MERCY
 
-	rotationTableNotesColumnHeader = <Trans id="gnb.nomercy.notes.header"> Bloodfest Used </Trans>
+	rotationTableNotesColumnHeader = <Trans id="gnb.nomercy.notes.header">Bloodfest Used</Trans>
 
 	expectedGCDs = {
 		expectedPerWindow: EXPECTED_USES.GCD,
@@ -89,18 +89,19 @@ export default class NoMercy extends BuffWindowModule {
 		suggestionContent: <Trans id="gnb.nomercy.suggestions.expected-uses.content">
 			Watch your uses of certain abilities during <ActionLink {...ACTIONS.NO_MERCY} />. Under ideal conditions, you should
 				be using <ActionLink {...ACTIONS.SONIC_BREAK} />, a full <ActionLink {...ACTIONS.GNASHING_FANG} /> combo, and all of
-				your off-GCD skills - <ActionLink {...ACTIONS.BLASTING_ZONE} />, <ActionLink {...ACTIONS.BOW_SHOCK} />, and at least one
-				charge of <ActionLink {...ACTIONS.ROUGH_DIVIDE} /> - under the buff duration.
+				your off-GCD skills <ActionLink {...ACTIONS.BLASTING_ZONE} />, <ActionLink {...ACTIONS.BOW_SHOCK} />, and at least one
+				charge of <ActionLink {...ACTIONS.ROUGH_DIVIDE} /> under the buff duration.
 		</Trans>,
 		severityTiers: SEVERITIES.MISSING_EXPECTED_USES,
 
 	}
 
 	changeExpectedTrackedActionClassLogic(buffWindow: BuffWindowState, action: BuffWindowTrackedAction) {
+		const Id = action.action.id
+		if (Id === ACTIONS.BURST_STRIKE.id) {
 
-		if (action.action.id === ACTIONS.BURST_STRIKE.id) {
-
-			if (buffWindow.rotation.find(cast => cast.ability.guid === ACTIONS.BLOODFEST.id) && (this.getBaselineExpectedTrackedAction(buffWindow, action) === 2)) {
+			if (buffWindow.rotation.find(cast => cast.ability.guid === ACTIONS.BLOODFEST.id)
+				&& (this.getBaselineExpectedTrackedAction(buffWindow, action) === 2)) {
 
 				return 1
 				//In fights with minimal downtime, it is possible to hit 4/4 bloodfests,
@@ -114,7 +115,7 @@ export default class NoMercy extends BuffWindowModule {
 
 	getBuffWindowNotes(buffWindow: BuffWindowState) {
 		return buffWindow.rotation.find(cast => cast.ability.guid === ACTIONS.BLOODFEST.id) ?
-			<Trans id="gnb.nomercy.chart.notes.yes"> Yes </Trans> : <Trans id = "gnb.nomercy.chart.notes.no"> No </Trans>
+			<Trans id="gnb.nomercy.chart.notes.yes">Yes</Trans> : <Trans id = "gnb.nomercy.chart.notes.no">No</Trans>
 	}
 
 }
