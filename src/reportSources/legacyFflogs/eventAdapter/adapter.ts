@@ -11,8 +11,12 @@ import {ReassignUnknownActorStep} from './reassignUnknownActor'
 import {TranslateAdapterStep} from './translate'
 
 /** Adapt an array of FFLogs APIv1 events to xiva representation. */
-export function adaptEvents(report: Report, pull: Pull, events: FflogsEvent[]): Event[] {
+export function adaptEvents(report: Report, pull: Pull, baseEvents: FflogsEvent[]): Event[] {
 	const adapter = new EventAdapter({report, pull})
+
+	// Shallow clone to ensure top-level updates will not effect the base array.
+	// Child adapters are responsible for ensuring updates are copy-on-write.
+	const events = [...baseEvents]
 
 	// TODO: Move sort logic into adapter scope once legacy is removed
 	sortEvents(events)
@@ -37,7 +41,16 @@ class EventAdapter {
 	adaptEvents(events: FflogsEvent[]): Event[] {
 		const adaptedEvents = events.flatMap(baseEvent =>
 			this.adaptionSteps.reduce(
-				(adaptedEvents, step) => step.adapt(baseEvent, adaptedEvents),
+				(adaptedEvents, step) => {
+					let result = step.adapt(baseEvent, adaptedEvents)
+
+					if (!Array.isArray(result)) {
+						baseEvent = result.dangerouslyMutatedBaseEvent
+						result = result.adaptedEvents
+					}
+
+					return result
+				},
 				[] as Event[]
 			)
 		)

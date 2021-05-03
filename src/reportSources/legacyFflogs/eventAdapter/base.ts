@@ -28,6 +28,13 @@ export interface AdapterOptions {
 	pull: Pull
 }
 
+// TODO: Remove this once the legacy system is phased out - we only need explicit mutation handling
+// while the legacy system is actually using these events
+export interface MutationAdaptionResult {
+	dangerouslyMutatedBaseEvent: FflogsEvent
+	adaptedEvents: Event[]
+}
+
 export abstract class AdapterStep {
 	protected report: Report
 	protected pull: Pull
@@ -42,7 +49,7 @@ export abstract class AdapterStep {
 	 * This will be called once with each report source event, in the order provided
 	 * by the source.
 	 */
-	adapt(baseEvent: FflogsEvent, adaptedEvents: Event[]): Event[] {
+	adapt(baseEvent: FflogsEvent, adaptedEvents: Event[]): Event[] | MutationAdaptionResult {
 		return adaptedEvents
 	}
 

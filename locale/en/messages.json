@@ -507,6 +507,7 @@
   "gnb.nomercy.suggestions.gcds.why": "{missedGcds, plural, one {# GCD} other {# GCDs}} missed during <0/> windows.",
   "gnb.nomercy.table.header.gcds": "GCDs",
   "gnb.nomercy.title": "No Mercy Windows",
+  "gnb.tincture.suggestions.trackedActions.content": "Try to cover as much damage as possible with your Tinctures of Strength.",
   "mch.about.description": "<0>BOB! <1>DO SOMETHING!</1></0><2>This module aims to help you improve your MCH gameplay by analyzing things that are difficult to spot in raw logs and pointing out ways to keep your rotation tight, keep your tools on cooldown, make your Wildfire windows as strong as possible, and get the most out of the best pet any job has right now.</2>",
   "mch.drift.accordion.message": "<0/> and <1/> are your strongest GCDs and ideally they should always be kept on cooldown, unless you need to insert a filler GCD to adjust for skill speed. Avoid casting <2/> if Drill or Air Anchor will come off cooldown within 8 seconds.",
   "mch.drift.panel-drift": "<0/> drifted by {0}",

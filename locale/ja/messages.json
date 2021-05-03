@@ -507,6 +507,7 @@
   "gnb.nomercy.suggestions.gcds.why": "{missedGcds, plural, other {# GCD}} を <0/> の効果時間中にミスしました",
   "gnb.nomercy.table.header.gcds": "GCD",
   "gnb.nomercy.title": "ノー・マーシー効果時間",
+  "gnb.tincture.suggestions.trackedActions.content": "",
   "mch.about.description": "",
   "mch.drift.accordion.message": "",
   "mch.drift.panel-drift": "",
