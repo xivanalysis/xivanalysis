@@ -316,6 +316,7 @@
   "core.tincture.title": "爆发药持续中释放的技能",
   "core.ui.rotation-table.header.rotation": "循环",
   "core.ui.rotation-table.header.time": "时间",
+  "core.unable-to-act.no-valid-window": "",
   "core.weaving.between-gcds": "GCD之间",
   "core.weaving.content": "不要在GCD之间插入过多的能力技能，否则会延后下一个GCD导致GCD利用率下降。下面的<0><1/></0>模块有详细分析。",
   "core.weaving.panel-count": "插入 {0, plural, other {#}}",

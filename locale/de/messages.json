@@ -316,6 +316,7 @@
   "core.tincture.title": "Visionsremedien",
   "core.ui.rotation-table.header.rotation": "Rotation",
   "core.ui.rotation-table.header.time": "Zeit",
+  "core.unable-to-act.no-valid-window": "",
   "core.weaving.between-gcds": "zwischen GCDs",
   "core.weaving.content": "Vermeide mehr Aktionen zu machen, als die globale Abklingzeit zulässt. Du verzögerst dadurch deine nächste globale Abklingzeit und verlierst wertvolle Uptime. \nPrüfe das <0><1/></0> Modul unten, um eine genauere Analyse zu bekommen.",
   "core.weaving.panel-count": "{0, plural, =1 {# weave} other {# weaves}}",
