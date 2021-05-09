@@ -119,9 +119,12 @@ export default class Weaving extends Module {
 
 	_saveIfBad() {
 		const leadingGcdEvent =	this._leadingGcdEvent || {timestamp: this.parser.eventTimeOffset}
-		const gcdTimeDiff = this._trailingGcdEvent.timestamp -
-			leadingGcdEvent.timestamp -
-			this.invuln.getUntargetableUptime('all', 	leadingGcdEvent.timestamp, this._trailingGcdEvent.timestamp)
+		const gcdTimeDiff = this._trailingGcdEvent.timestamp
+			- leadingGcdEvent.timestamp
+			- this.invulnerability.getDuration({
+				start: this.parser.fflogsToEpoch(leadingGcdEvent.timestamp),
+				end: this.parser.fflogsToEpoch(this._trailingGcdEvent.timestamp),
+			})
 
 		const weave = {
 			leadingGcdEvent,
