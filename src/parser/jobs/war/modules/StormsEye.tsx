@@ -7,7 +7,7 @@ import Module, {dependency} from 'parser/core/Module'
 import Checklist, {Rule, Requirement} from 'parser/core/modules/Checklist'
 import Combatants from 'parser/core/modules/Combatants'
 import {EntityStatuses} from 'parser/core/modules/EntityStatuses'
-import {Invulnerability} from 'parser/core/modules/Invulnerability2'
+import {Invulnerability} from 'parser/core/modules/Invulnerability'
 import Suggestions, {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import React from 'react'
 

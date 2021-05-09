@@ -4,7 +4,7 @@ import Module from 'parser/core/Module'
 import CastTime from './CastTime'
 import {Data} from './Data'
 import GlobalCooldown from './GlobalCooldown'
-import {Invulnerability} from './Invulnerability2'
+import {Invulnerability} from './Invulnerability'
 import Speedmod from './Speedmod'
 import Suggestions from './Suggestions'
 

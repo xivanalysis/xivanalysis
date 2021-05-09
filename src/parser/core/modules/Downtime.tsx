@@ -1,6 +1,6 @@
 import Module, {dependency} from 'parser/core/Module'
 import React from 'react'
-import {Invulnerability} from './Invulnerability2'
+import {Invulnerability} from './Invulnerability'
 import {Timeline, SimpleItem} from './Timeline'
 import {UnableToAct} from './UnableToAct'
 

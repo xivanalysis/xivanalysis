@@ -1,3 +1,3 @@
-import {Invulnerability as Invulnerability2} from './Invulnerability2'
+import {Invulnerability} from './Invulnerability'
 
-export default [Invulnerability2]
+export default [Invulnerability]

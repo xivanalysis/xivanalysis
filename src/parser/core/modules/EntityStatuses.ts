@@ -2,7 +2,7 @@ import {BuffEvent} from 'fflogs'
 import _ from 'lodash'
 import Module, {dependency} from 'parser/core/Module'
 import {Data} from 'parser/core/modules/Data'
-import {Invulnerability} from 'parser/core/modules/Invulnerability2'
+import {Invulnerability} from 'parser/core/modules/Invulnerability'
 
 const APPLY = 'apply'
 const REMOVE = 'remove'
