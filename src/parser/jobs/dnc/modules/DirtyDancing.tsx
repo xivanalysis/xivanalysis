@@ -12,7 +12,7 @@ import CheckList, {Requirement, Rule} from 'parser/core/modules/Checklist'
 import Combatants from 'parser/core/modules/Combatants'
 import Downtime from 'parser/core/modules/Downtime'
 import {EntityStatuses} from 'parser/core/modules/EntityStatuses'
-import {Invulnerability} from 'parser/core/modules/Invulnerability'
+import {Invulnerability} from 'parser/core/modules/Invulnerability2'
 import {NormalisedDamageEvent} from 'parser/core/modules/NormalisedEvents'
 import Suggestions, {SEVERITY, TieredSuggestion, Suggestion} from 'parser/core/modules/Suggestions'
 import {Timeline} from 'parser/core/modules/Timeline'
@@ -109,7 +109,7 @@ export default class DirtyDancing extends Module {
 
 	@dependency private checklist!: CheckList
 	@dependency private suggestions!: Suggestions
-	@dependency private invuln!: Invulnerability
+	@dependency private invulnerability!: Invulnerability
 	@dependency private combatants!: Combatants
 	@dependency private timeline!: Timeline
 	@dependency private downtime!: Downtime
@@ -199,13 +199,22 @@ export default class DirtyDancing extends Module {
 		// Count dance as dirty if we didn't get the expected finisher, and the fight wouldn't have ended or been in an invuln window before we could have
 		if (finisher.ability.guid !== dance.expectedFinishId && dance.expectedEndTime <= this.parser.eventTimeOffset + this.parser.pull.duration) {
 			this.addTimestampHook(dance.expectedEndTime, ({timestamp}) => {
-				dance.dirty = !this.invuln.isInvulnerable('all', timestamp)
+				dance.dirty = this.invulnerability.isActive({
+					timestamp: this.parser.fflogsToEpoch(timestamp),
+					types: ['invulnerable'],
+				})
 			})
 		}
 
 		// If the finisher didn't hit anything, and something could've been, ding it.
 		// Don't gripe if the boss is invuln, there is use-case for finishing during the downtime
-		if (!event.hasSuccessfulHit && !this.invuln.isInvulnerable('all', finisher.timestamp)) {
+		if (
+			!event.hasSuccessfulHit
+			&& !this.invulnerability.isActive({
+				timestamp: this.parser.fflogsToEpoch(finisher.timestamp),
+				types: ['invulnerable'],
+			})
+		) {
 			dance.missed = true
 		}
 		// Dancer messed up if more step actions were recorded than we expected
