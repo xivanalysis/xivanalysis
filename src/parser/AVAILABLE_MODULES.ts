@@ -19,6 +19,9 @@ import {neir11} from './bosses/nier11'
 import {neir3} from './bosses/nier3'
 import {neir4} from './bosses/nier4'
 import {tea} from './bosses/tea'
+import {urLeviathan} from './bosses/urLeviathan'
+import {urShiva} from './bosses/urShiva'
+import {urTitan} from './bosses/urTitan'
 import CORE from './core'
 import {Meta} from './core/Meta'
 import ASTROLOGIAN from './jobs/ast'
@@ -87,6 +90,10 @@ const AVAILABLE_MODULES: AvailableModules = {
 		[BOSSES.VARIS_YAE_GALVUS.logId]: exVaris,
 		[BOSSES.EMERALD_WEAPON_1.logId]: exEmerald1,
 		[BOSSES.EMERALD_WEAPON_2.logId]: exEmerald2,
+
+		[BOSSES.UNREAL_SHIVA.logId]: urShiva,
+		[BOSSES.UNREAL_TITAN.logId]: urTitan,
+		[BOSSES.UNREAL_LEVIATHAN.logId]: urLeviathan,
 
 		[BOSSES.E4.logId]: e4,
 		[BOSSES.E6.logId]: e6,

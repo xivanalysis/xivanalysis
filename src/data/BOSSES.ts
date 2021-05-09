@@ -59,6 +59,11 @@ const BOSSES = ensureBosses({
 	EMERALD_WEAPON_1: {logId: 1056},
 	EMERALD_WEAPON_2: {logId: 1055}, // Yes, they're in the wrong order.
 
+	// Unreal trials
+	UNREAL_SHIVA: {logId: 3001},
+	UNREAL_TITAN: {logId: 3002},
+	UNREAL_LEVIATHAN: {logId: 3003},
+
 	// Raids (savage and normal share log boss IDs)
 	E1: {logId: 65},
 	E2: {logId: 66},
