@@ -39,6 +39,15 @@ const BOSSES = ensureBosses({
 	NIER2: {logId: 2021},
 	NIER3: {logId: 2022},
 	NIER4: {logId: 2023},
+	NIER5: {logId: 2024},
+	NIER6: {logId: 2025},
+	NIER7: {logId: 2026},
+	NIER8: {logId: 2027},
+	NIER9: {logId: 2032},
+	NIER10: {logId: 2033},
+	NIER11: {logId: 2034},
+	NIER12_1: {logId: 2035},
+	NIER12_2: {logId: 2036},
 
 	// Trials
 	TITANIA: {logId: 1045},

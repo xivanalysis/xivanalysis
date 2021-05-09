@@ -15,7 +15,9 @@ import {exRuby1} from './bosses/exRuby1'
 import {exRuby2} from './bosses/exRuby2'
 import {exTitania} from './bosses/exTitania'
 import {exVaris} from './bosses/exVaris'
+import {neir11} from './bosses/nier11'
 import {neir3} from './bosses/nier3'
+import {neir4} from './bosses/nier4'
 import {tea} from './bosses/tea'
 import CORE from './core'
 import {Meta} from './core/Meta'
@@ -74,6 +76,8 @@ const AVAILABLE_MODULES: AvailableModules = {
 
 	BOSSES: {
 		[BOSSES.NIER3.logId]: neir3,
+		[BOSSES.NIER4.logId]: neir4,
+		[BOSSES.NIER11.logId]: neir11,
 
 		[BOSSES.TITANIA.logId]: exTitania,
 		[BOSSES.INNOCENCE.logId]: exInnocence,
