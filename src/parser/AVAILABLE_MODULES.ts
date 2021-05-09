@@ -1,7 +1,9 @@
 import BOSSES, {Boss} from 'data/BOSSES'
 import {JobKey} from 'data/JOBS'
 import {e121} from './bosses/e12_1'
+import {e122} from './bosses/e12_2'
 import {e4} from './bosses/e4'
+import {e6} from './bosses/e6'
 import {e7} from './bosses/e7'
 import {e8} from './bosses/e8'
 import {e9} from './bosses/e9'
@@ -83,10 +85,12 @@ const AVAILABLE_MODULES: AvailableModules = {
 		[BOSSES.EMERALD_WEAPON_2.logId]: exEmerald2,
 
 		[BOSSES.E4.logId]: e4,
+		[BOSSES.E6.logId]: e6,
 		[BOSSES.E7.logId]: e7,
 		[BOSSES.E8.logId]: e8,
 		[BOSSES.E9.logId]: e9,
 		[BOSSES.E12_1.logId]: e121,
+		[BOSSES.E12_2.logId]: e122,
 
 		[BOSSES.TEA.logId]: tea,
 	},
