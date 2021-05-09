@@ -1,9 +1,11 @@
+import {Trans} from '@lingui/react'
 import {Event, Events} from 'event'
 import {Analyser} from 'parser/core/Analyser'
 import {filter, oneOf} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
 import React from 'react'
 import {Actor} from 'report'
+import BrokenLog from '../BrokenLog'
 import {SimpleItem, SimpleRow, Timeline} from '../Timeline'
 import {STATUS_IDS} from './statusIds'
 
@@ -33,6 +35,7 @@ export class UnableToAct extends Analyser {
 	static handle = 'unableToAct'
 	static debug = false
 
+	@dependency private brokenLog!: BrokenLog
 	@dependency private timeline!: Timeline
 
 	private actorWindows = new Map<Actor['id'], Window[]>()
@@ -115,7 +118,12 @@ export class UnableToAct extends Analyser {
 		// Make sure nothing's gone wrong
 		const window: Window | undefined = windows[windows.length - 1]
 		if (window == null || window.depth <= 0) {
-			throw new Error('No valid UTA window to close.')
+			this.brokenLog.trigger(this, 'no valid window to close', (
+				<Trans id="core.unable-to-act.no-valid-window">
+					Actor {event.target} has no valid window to end.
+				</Trans>
+			))
+			return
 		}
 
 		this.decrementWindow(window, event)

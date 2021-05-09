@@ -316,6 +316,7 @@
   "core.tincture.title": "幻薬",
   "core.ui.rotation-table.header.rotation": "スキル回し",
   "core.ui.rotation-table.header.time": "時間",
+  "core.unable-to-act.no-valid-window": "",
   "core.weaving.between-gcds": "GCDの間",
   "core.weaving.content": "GCDの間にアビリティを過度に挟み込む行為は避けてください。過度な挟み込みはGCDを遅延させてアクティブ率を低下させます。詳細は下にある <0><1/></0> モジュールをご覧ください。",
   "core.weaving.panel-count": "{0, plural, other {挟み込み回数：#}}",

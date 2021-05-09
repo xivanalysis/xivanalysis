@@ -316,6 +316,7 @@
   "core.tincture.title": "환혹약",
   "core.ui.rotation-table.header.rotation": "딜사이클",
   "core.ui.rotation-table.header.time": "시간",
+  "core.unable-to-act.no-valid-window": "",
   "core.weaving.between-gcds": "글로벌 쿨타임 사이",
   "core.weaving.content": "글쿨 사이에 초과 한도 이상의 논글쿨기를 끼워 넣는것을 피하십시오. 초과시 다음 글쿨 사용이 늦어지며 전투 지속시간도 손해를 볼수있습니다. 상세한 분석을 확인 하려면 아래의 <0><1/></0> 모듈을 확인하십시오.",
   "core.weaving.panel-count": "{0, plural, other {끼워넣은 스킬횟수：#}}",
