@@ -1,6 +1,6 @@
 import Module, {dependency} from 'parser/core/Module'
 import React from 'react'
-import {Invulnerability} from './Invulnerability'
+import {Invulnerability} from './Invulnerability2'
 import {Timeline, SimpleItem} from './Timeline'
 import {UnableToAct} from './UnableToAct'
 
@@ -13,7 +13,7 @@ export default class Downtime extends Module {
 	static handle = 'downtime'
 
 	@dependency private readonly unableToAct!: UnableToAct
-	@dependency private readonly invuln!: Invulnerability
+	@dependency private readonly invulnerability!: Invulnerability
 	@dependency private readonly timeline!: Timeline
 
 	protected init() {
@@ -21,17 +21,26 @@ export default class Downtime extends Module {
 	}
 
 	private internalDowntime(start = 0, end = this.parser.currentTimestamp) {
+		const epochStart = this.parser.fflogsToEpoch(start)
+		const epochEnd = this.parser.fflogsToEpoch(end)
+
 		// Get all the downtime from both unableToAct and invuln, and sort it
 		const downtimePeriods: DowntimeWindow[] = [
 			...this.unableToAct.getWindows({
-				start: this.parser.fflogsToEpoch(start),
-				end: this.parser.fflogsToEpoch(end),
-			}).map(window => ({
+				start: epochStart,
+				end: epochEnd,
+			}),
+			...this.invulnerability.getWindows({
+				start: epochStart,
+				end: epochEnd,
+				types: ['untargetable'],
+			}),
+		]
+			.map(window => ({
 				start: this.parser.epochToFflogs(window.start),
 				end: this.parser.epochToFflogs(window.end),
-			})),
-			...this.invuln.getInvulns('all', start, end, 'untargetable'),
-		].sort((a, b) => a.start - b.start)
+			}))
+			.sort((a, b) => a.start - b.start)
 
 		// If there's nothing, just stop now
 		const firstElement = downtimePeriods.shift()
