@@ -4,7 +4,7 @@ import Module from 'parser/core/Module'
 import CastTime from './CastTime'
 import {Data} from './Data'
 import GlobalCooldown from './GlobalCooldown'
-import {Invulnerability} from './Invulnerability'
+import {Invulnerability} from './Invulnerability2'
 import Speedmod from './Speedmod'
 import Suggestions from './Suggestions'
 
@@ -29,7 +29,7 @@ export default class Weaving extends Module {
 	protected castTime: CastTime
 	protected data: Data
 	protected gcd: GlobalCooldown
-	protected invuln: Invulnerability
+	protected invulnerability: Invulnerability
 	protected speedmod: Speedmod
 	protected suggestions: Suggestions
 

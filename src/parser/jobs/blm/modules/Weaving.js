@@ -26,7 +26,7 @@ export default class BlmWeaving extends Weaving {
 
 	static dependencies = [
 		...Weaving.dependencies,
-		'invuln',
+		'invulnerability',
 		'gauge', // eslint-disable-line @xivanalysis/no-unused-dependencies
 		'castTime',
 	]
@@ -72,7 +72,10 @@ export default class BlmWeaving extends Weaving {
 	isBadWeave(weave, maxWeaves) {
 		if (weave.leadingGcdEvent.ability) {
 			const weaveCount = weave.weaves.filter(
-				event => !this.invuln.isUntargetable('all', event.timestamp),
+				event => !this.invulnerability.isActive({
+					timestamp: this.parser.fflogsToEpoch(event.timestamp),
+					types: ['untargetable'],
+				})
 			).length
 
 			//allow a single weave of the OGCD exceptions

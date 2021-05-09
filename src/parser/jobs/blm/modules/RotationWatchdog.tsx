@@ -10,7 +10,7 @@ import Checklist from 'parser/core/modules/Checklist'
 import Combatants from 'parser/core/modules/Combatants'
 import Enemies from 'parser/core/modules/Enemies'
 import {EntityStatuses} from 'parser/core/modules/EntityStatuses'
-import {Invulnerability} from 'parser/core/modules/Invulnerability'
+import {Invulnerability} from 'parser/core/modules/Invulnerability2'
 import Suggestions, {SEVERITY, Suggestion, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import {Timeline} from 'parser/core/modules/Timeline'
 import {UnableToAct} from 'parser/core/modules/UnableToAct'
@@ -163,7 +163,7 @@ export default class RotationWatchdog extends Module {
 
 	@dependency private checklist!: Checklist
 	@dependency private suggestions!: Suggestions
-	@dependency private invuln!: Invulnerability
+	@dependency private invulnerability!: Invulnerability
 	@dependency private enemies!: Enemies
 	@dependency private timeline!: Timeline
 	@dependency private combatants!: Combatants
@@ -382,8 +382,17 @@ export default class RotationWatchdog extends Module {
 
 		// If an event object wasn't passed, or the event was a transpose that occurred during downtime,
 		// treat this as a rotation that ended with some kind of downtime
-		if (!event || (event && event.ability.guid === ACTIONS.TRANSPOSE.id &&
-			this.invuln.isUntargetable('all', event.timestamp))) {
+		if (
+			!event
+			|| (
+				event
+				&& event.ability.guid === ACTIONS.TRANSPOSE.id
+				&& this.invulnerability.isActive({
+					timestamp: this.parser.fflogsToEpoch(event.timestamp),
+					types: ['untargetable'],
+				})
+			)
+		) {
 			this.currentRotation.finalOrDowntime = true
 		}
 

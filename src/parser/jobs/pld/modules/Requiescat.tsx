@@ -7,7 +7,7 @@ import STATUSES from 'data/STATUSES'
 import {BuffEvent, CastEvent} from 'fflogs'
 import _ from 'lodash'
 import Module, {dependency} from 'parser/core/Module'
-import {Invulnerability} from 'parser/core/modules/Invulnerability'
+import {Invulnerability} from 'parser/core/modules/Invulnerability2'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import {Timeline} from 'parser/core/modules/Timeline'
 import React, {Fragment} from 'react'
@@ -68,7 +68,7 @@ export default class Requiescat extends Module {
 
 	@dependency private suggestions!: Suggestions
 	@dependency private timeline!: Timeline
-	@dependency private invuln!: Invulnerability
+	@dependency private invulnerability!: Invulnerability
 
 	// Requiescat Casts
 	private requiescats: RequiescatState[] = []
@@ -110,8 +110,10 @@ export default class Requiescat extends Module {
 			} else {
 				// Otherwise, wait for the expected end time and check invuln status
 				this.addTimestampHook(reqEnd, ({timestamp}) => {
-					reqState.isRushing = this.invuln.isUntargetable('all', timestamp)
-						|| this.invuln.isInvulnerable('all', timestamp)
+					const epochTimestamp = this.parser.fflogsToEpoch(timestamp)
+					reqState.isRushing = false
+						|| this.invulnerability.isActive({timestamp: epochTimestamp, types: ['invulnerable']})
+						|| this.invulnerability.isActive({timestamp: epochTimestamp, types: ['untargetable']})
 				})
 			}
 

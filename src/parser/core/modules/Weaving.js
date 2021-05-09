@@ -27,7 +27,7 @@ export default class Weaving extends Module {
 		'castTime',
 		'data',
 		'gcd',
-		'invuln',
+		'invulnerability',
 		'speedmod',
 		'suggestions',
 	]
@@ -148,7 +148,9 @@ export default class Weaving extends Module {
 	isBadWeave(weave, maxWeaves) {
 		// Calc. the no. of weaves - we're ignoring any made while the boss is untargetable, and events that happened before the pull
 		const weaveCount = weave.weaves.filter(
-			event => !this.invuln.isUntargetable('all', event.timestamp) && event.timestamp >= this.parser.fight.start_time,
+			event => true
+				&& !this.invulnerability.isActive({timestamp: this.parser.fflogsToEpoch(event.timestamp), types: ['untargetable']})
+				&& event.timestamp >= this.parser.fight.start_time,
 		).length
 
 		// Just using maxWeaves to allow potential subclasses to utilise standard functionality with custom max
