@@ -17,7 +17,6 @@ import {EntityStatuses} from './EntityStatuses'
 import {EventsView} from './EventsView'
 import GlobalCooldown from './GlobalCooldown'
 import HitType from './HitType'
-import {Invulnerability} from './Invulnerability'
 import {Invulnerability as Invulnerability2} from './Invulnerability2'
 import {NormalisedEvents} from './NormalisedEvents'
 import PrecastAction from './PrecastAction'
@@ -53,7 +52,6 @@ export default [
 	EventsView,
 	GlobalCooldown,
 	HitType,
-	Invulnerability,
 	Invulnerability2,
 	NormalisedEvents,
 	PrecastAction,
