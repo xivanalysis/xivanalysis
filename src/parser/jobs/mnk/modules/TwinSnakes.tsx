@@ -7,7 +7,7 @@ import Checklist, {Requirement, Rule} from 'parser/core/modules/Checklist'
 import Combatants from 'parser/core/modules/Combatants'
 import {Data} from 'parser/core/modules/Data'
 import {EntityStatuses} from 'parser/core/modules/EntityStatuses'
-import {Invulnerability} from 'parser/core/modules/Invulnerability'
+import {Invulnerability} from 'parser/core/modules/Invulnerability2'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
@@ -46,7 +46,7 @@ export default class TwinSnakes extends Module {
 	@dependency private checklist!: Checklist
 	@dependency private combatants!: Combatants
 	@dependency private data!: Data
-	@dependency private invuln!: Invulnerability
+	@dependency private invulnerability!: Invulnerability
 	@dependency private suggestions!: Suggestions
 	@dependency private entityStatuses!: EntityStatuses
 
@@ -207,7 +207,7 @@ export default class TwinSnakes extends Module {
 
 	private getBuffUptimePercent(statusId: number): number {
 		const statusUptime = this.entityStatuses.getStatusUptime(statusId, this.combatants.getEntities())
-		const fightUptime = this.parser.currentDuration - this.invuln.getInvulnerableUptime()
+		const fightUptime = this.parser.currentDuration - this.invulnerability.getDuration({types: ['invulnerable']})
 
 		return (statusUptime / fightUptime) * 100
 	}

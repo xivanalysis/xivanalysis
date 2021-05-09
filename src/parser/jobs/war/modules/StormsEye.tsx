@@ -7,7 +7,7 @@ import Module, {dependency} from 'parser/core/Module'
 import Checklist, {Rule, Requirement} from 'parser/core/modules/Checklist'
 import Combatants from 'parser/core/modules/Combatants'
 import {EntityStatuses} from 'parser/core/modules/EntityStatuses'
-import {Invulnerability} from 'parser/core/modules/Invulnerability'
+import {Invulnerability} from 'parser/core/modules/Invulnerability2'
 import Suggestions, {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import React from 'react'
 
@@ -19,7 +19,7 @@ export default class StormsEye extends Module {
 	@dependency private checklist!: Checklist
 	@dependency private combatants!: Combatants
 	@dependency private entityStatuses!: EntityStatuses
-	@dependency private invuln!: Invulnerability
+	@dependency private invulnerability!: Invulnerability
 	@dependency private suggestions!: Suggestions
 
 	private earlyEyes: number = 0
@@ -78,7 +78,7 @@ export default class StormsEye extends Module {
 
 	getUptimePercent(): number {
 		const statusUptime = this.entityStatuses.getStatusUptime(STATUSES.STORMS_EYE.id, this.combatants.getEntities())
-		const fightUptime = this.parser.currentDuration - this.invuln.getInvulnerableUptime()
+		const fightUptime = this.parser.currentDuration - this.invulnerability.getDuration({types: ['invulnerable']})
 
 		return (statusUptime / fightUptime) * 100
 	}

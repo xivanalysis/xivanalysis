@@ -14,7 +14,7 @@ export default class Buffs extends Module {
 		'checklist',
 		'combatants',
 		'entityStatuses',
-		'invuln',
+		'invulnerability',
 	]
 
 	constructor(...args) {
@@ -45,7 +45,7 @@ export default class Buffs extends Module {
 
 	getUptimePercent(StatusId) {
 		const statusUptime = this.entityStatuses.getStatusUptime((StatusId), this.combatants.getEntities())
-		const fightUptime = this.parser.currentDuration - this.invuln.getInvulnerableUptime()
+		const fightUptime = this.parser.currentDuration - this.invulnerability.getDuration({types: ['invulnerable']})
 
 		return (statusUptime / fightUptime) * 100
 	}

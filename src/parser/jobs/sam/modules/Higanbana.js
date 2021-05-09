@@ -28,7 +28,6 @@ export default class Higanbana extends Module {
 		'checklist',
 		'enemies',
 		'entityStatuses',
-		'invuln',
 		'invulnerability',
 		'suggestions',
 	]
@@ -94,7 +93,11 @@ export default class Higanbana extends Module {
 				this.parser.eventTimeOffset + this.parser.pull.duration,
 			),
 			({timestamp}) => {
-				clip -= this.invuln.getInvulnerableUptime('all', event.timestamp, timestamp)
+				clip -= this.invulnerability.getDuration({
+					start: this.parser.fflogsToEpoch(event.timestamp),
+					end: this.parser.fflogsToEpoch(timestamp),
+					types: ['invulnerable'],
+				})
 				clip = Math.max(0, clip)
 
 				// Capping clip at 0 - less than that is downtime, which is handled by the checklist requirement
@@ -139,7 +142,7 @@ export default class Higanbana extends Module {
 	}
 	getDotUptimePercent(statusId) {
 		const statusUptime = this.entityStatuses.getStatusUptime(statusId, this.enemies.getEntities())
-		const fightDuration = this.parser.currentDuration - this.invuln.getInvulnerableUptime()
+		const fightDuration = this.parser.currentDuration - this.invulnerability.getDuration({types: ['invulnerable']})
 
 		return (statusUptime / fightDuration) * 100
 	}

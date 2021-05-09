@@ -7,7 +7,7 @@ import STATUSES from 'data/STATUSES'
 import {AbilityType, CastEvent} from 'fflogs'
 import {Event} from 'legacyEvent'
 import Module, {dependency} from 'parser/core/Module'
-import {Invulnerability} from 'parser/core/modules/Invulnerability'
+import {Invulnerability} from 'parser/core/modules/Invulnerability2'
 import Suggestions, {SEVERITY, Suggestion, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import {Timeline} from 'parser/core/modules/Timeline'
 import React from 'react'
@@ -79,7 +79,7 @@ export default class EgiCommands extends Module {
 
 	@dependency private suggestions!: Suggestions
 	@dependency private timeline!: Timeline
-	@dependency private invuln!: Invulnerability
+	@dependency private invulnerability!: Invulnerability
 
 	private currentStackCount = 0
 	private bahamutMissingStackCount = 0
@@ -127,7 +127,10 @@ export default class EgiCommands extends Module {
 	}
 
 	private onPetCast(event: CastEvent) {
-		if (this.invuln.getInvulnerableUptime('all', event.timestamp)) { return }
+		if (this.invulnerability.isActive({
+			timestamp: this.parser.fflogsToEpoch(event.timestamp),
+			types: ['invulnerable'],
+		})) { return }
 
 		this.petSkillCount++
 		if (this.currentStackCount >= MAX_FURTHER_RUIN_COUNT) {
