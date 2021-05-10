@@ -20,7 +20,7 @@ export default class Downtime extends Module {
 		this.addEventHook('complete', this.onComplete)
 	}
 
-	private internalDowntime(start = 0, end = this.parser.currentTimestamp) {
+	private internalDowntime(start = this.parser.fight.start_time, end = this.parser.currentTimestamp) {
 		const epochStart = this.parser.fflogsToEpoch(start)
 		const epochEnd = this.parser.fflogsToEpoch(end)
 
@@ -67,12 +67,12 @@ export default class Downtime extends Module {
 		return this.internalDowntime(when, when).length > 0
 	}
 
-	getDowntime(start = 0, end = this.parser.currentTimestamp) {
+	getDowntime(start = this.parser.fight.start_time, end = this.parser.currentTimestamp) {
 		// Return the final number
 		return this.internalDowntime(start, end).reduce((uptime, invuln) => uptime + Math.min(invuln.end, end) - Math.max(invuln.start, start), 0)
 	}
 
-	getDowntimes = (start = 0, end = this.parser.currentTimestamp, minimumDowntimeLength = -1) =>
+	getDowntimes = (start = this.parser.fight.start_time, end = this.parser.currentTimestamp, minimumDowntimeLength = -1) =>
 		this.internalDowntime(start, end).reduce<number[]>(
 			(aggregator, invuln) => {
 				if (Math.min(invuln.end, end) - Math.max(invuln.start, start) > Math.min(minimumDowntimeLength, 0)) {
@@ -83,7 +83,7 @@ export default class Downtime extends Module {
 			[],
 		)
 
-	getDowntimeWindows = (start = 0, end = this.parser.currentTimestamp, minimumWindowSize = -1) =>
+	getDowntimeWindows = (start = this.parser.fight.start_time, end = this.parser.currentTimestamp, minimumWindowSize = -1) =>
 		this.internalDowntime(start, end).reduce<DowntimeWindow[]>(
 			(aggregator, invuln) => {
 				if (Math.min(invuln.end, end) - Math.max(invuln.start, start) > Math.min(minimumWindowSize, 0)) {
