@@ -34,7 +34,7 @@ export const BLM = ensureActions({
 		name: 'Freeze',
 		icon: 'https://xivapi.com/i/002000/002653.png',
 		onGcd: true,
-		castTime: 3.0,
+		castTime: 2.5,
 	},
 	UMBRAL_SOUL: {
 		id: 16506,
