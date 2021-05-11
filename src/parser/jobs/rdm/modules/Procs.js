@@ -46,7 +46,7 @@ export default class Procs extends Module {
 	static dependencies = [
 		'downtime',
 		'enemies',
-		'invuln',
+		'invulnerability',
 		'suggestions',
 		'timeline',
 	]
@@ -104,9 +104,22 @@ export default class Procs extends Module {
 	_onCast(event) {
 		const abilityID = event.ability.guid
 		const downtime = this.downtime.getDowntime(this._previousCast || 0, event.timestamp)
+
+		// Using kind here to maintain relative compatibility with the previous
+		// logic. Realistically, this should probably be updated and checked to
+		// use the actor ID instead.
+		const actorId = this.parser.getFflogsEventTargetActorId(event)
+		const actorKind = this.parser.pull.actors
+			.find(actor => actor.id === actorId)
+			?.kind ?? 'unknown'
+
 		this._previousCast = event.timestamp
 		this._playerWasInDowntime = downtime > 0
-		this._targetWasInvuln = this.invuln.isInvulnerable(event.targetID, event.timestamp)
+		this._targetWasInvuln = this.invulnerability.isActive({
+			timestamp: this.parser.fflogsToEpoch(event.timestamp),
+			actorFilter: actor => actor.kind === actorKind,
+			types: ['invulnerable'],
+		})
 		this._lastTargetID = event.targetID
 		this._castState = abilityID
 	}

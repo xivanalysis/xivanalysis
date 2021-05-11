@@ -38,7 +38,7 @@ export class EntityStatuses extends Module {
 	static handle = 'entityStatuses'
 	static debug = false
 
-	@dependency private invuln!: Invulnerability
+	@dependency private invulnerability!: Invulnerability
 	@dependency private data!: Data
 
 	// -----
@@ -117,10 +117,24 @@ export class EntityStatuses extends Module {
 
 		const target = statusEvent.targetID
 		this.debug(`Searching for invulns against target ID ${target} from ${this.parser.formatTimestamp(statusEvent.start, 1)} to ${this.parser.formatTimestamp(statusEvent.end, 1)}`)
-		const invulns = this.invuln.getInvulns(target, statusEvent.start, statusEvent.end, 'invulnerable')
 
-		// TODO: Export an interface for invulnerable events from Invulnerability.js
-		invulns.forEach((invuln: TODO) => {
+		const actorId = this.parser.getFflogsEventTargetActorId(statusEvent)
+		const actorKind = this.parser.pull.actors
+			.find(actor => actor.id === actorId)
+			?.kind ?? 'unknown'
+
+		const invulns = this.invulnerability.getWindows({
+			start: this.parser.fflogsToEpoch(statusEvent.start),
+			end: this.parser.fflogsToEpoch(statusEvent.end),
+			actorFilter: actor => actor.kind === actorKind,
+			types: ['invulnerable'],
+		}).map(window => ({
+			...window,
+			start: this.parser.epochToFflogs(window.start),
+			end: this.parser.epochToFflogs(window.end),
+		}))
+
+		invulns.forEach(invuln => {
 			this.debug(`Target was detected as invulnerable during duration of status.  Invulnerable from ${this.parser.formatTimestamp(invuln.start, 1)} to ${this.parser.formatTimestamp(invuln.end, 1)}`)
 			if (invuln.start < statusEvent.start && invuln.end >= statusEvent.start) {
 				this.debug('Invuln clipped the start of the range - changing beginning of event')

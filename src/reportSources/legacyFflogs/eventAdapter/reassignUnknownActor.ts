@@ -1,7 +1,8 @@
 import {Event} from 'event'
 import {FflogsEvent} from 'fflogs'
 import {Actor} from 'report'
-import {AdapterStep, MutationAdaptionResult, resolveActorId} from './base'
+import {resolveActorId} from '../base'
+import {AdapterStep, MutationAdaptionResult} from './base'
 
 /**
  * FFLogs doesn't seem to guarantee that every actor in events is present in

@@ -46,7 +46,7 @@ export default class TwinSnakes extends Module {
 	@dependency private checklist!: Checklist
 	@dependency private combatants!: Combatants
 	@dependency private data!: Data
-	@dependency private invuln!: Invulnerability
+	@dependency private invulnerability!: Invulnerability
 	@dependency private suggestions!: Suggestions
 	@dependency private entityStatuses!: EntityStatuses
 
@@ -207,7 +207,7 @@ export default class TwinSnakes extends Module {
 
 	private getBuffUptimePercent(statusId: number): number {
 		const statusUptime = this.entityStatuses.getStatusUptime(statusId, this.combatants.getEntities())
-		const fightUptime = this.parser.currentDuration - this.invuln.getInvulnerableUptime()
+		const fightUptime = this.parser.currentDuration - this.invulnerability.getDuration({types: ['invulnerable']})
 
 		return (statusUptime / fightUptime) * 100
 	}
