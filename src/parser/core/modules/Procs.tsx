@@ -4,7 +4,6 @@ import {Action} from 'data/ACTIONS'
 import {Status} from 'data/STATUSES'
 import {Event, Events} from 'event'
 import {Actors} from 'parser/core/modules/Actors'
-// import Downtime from 'parser/core/modules/Downtime'
 import Suggestions, {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import {SimpleRow, StatusItem, Timeline} from 'parser/core/modules/Timeline'
 import React from 'react'
@@ -12,6 +11,7 @@ import {Analyser} from '../Analyser'
 import {filter, oneOf} from '../filter'
 import {dependency} from '../Injectable'
 import {Data} from './Data'
+import {Invulnerability} from './Invulnerability'
 
 export interface ProcBuffWindow {
 	start: number,
@@ -43,6 +43,7 @@ export abstract class Procs extends Analyser {
 	@dependency private timeline!: Timeline
 	@dependency protected actors!: Actors
 	@dependency protected data!: Data
+	@dependency protected invulnerability!: Invulnerability
 
 	private droppedProcs: number = 0
 	private overwrittenProcs: number = 0
@@ -182,11 +183,14 @@ export abstract class Procs extends Analyser {
 		this.usages.get(procGroup)?.push(event)
 		// }
 
-		// TODO: Need Invulnerability on Analyser system
 		// If the target of the cast was invulnerable, push event to invulns
-		/* if (this.invuln.isInvulnerable(event.target, event.timestamp)) {
+		if (this.invulnerability.isActive({
+			timestamp: event.timestamp,
+			actorFilter: actor => actor.id === event.target,
+			types: ['invulnerable'],
+		})) {
 			this.invulns.get(procGroup)?.push(event)
-		}*/
+		}
 
 		this.stopAndSave(procGroup, event)
 
