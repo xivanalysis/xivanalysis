@@ -360,6 +360,7 @@
   "sam.higanbana.checklist.name": "Halte <0/> aufrecht",
   "sam.higanbana.checklist.requirement": "Gesamtanwendungszeit von <0/>",
   "sam.higanbana.suggestion.content": "Vermeide es <0/> zu erneuern, wenn er noch über eine lange Restlaufzeit verfügt.",
+  "sam.higanbana.suggestion.why": "{0} von {1} durch zu frühes Reaktivieren verloren.",
   "sam.higanbana.title": "Higanbana",
   "sam.kaiten.title": "Kaiten",
   "sam.kenki.title": "Kenki",
@@ -448,5 +449,7 @@
   "whm.dots.requirement.uptime-a3.name": "Gesamtanwendungszeit von <0/>",
   "whm.dots.rule.description": "DoTs sind eine große Portion deines kontinuierlichen Schadens als Weißmagier. Versuche sie immer aufrecht zu halten.",
   "whm.dots.rule.name": "Halte deine DoTs aufrecht",
+  "whm.dots.suggestion.clip-a2.why": "{0} von {1} durch zu frühes Reaktivieren verloren.",
+  "whm.dots.suggestion.clip-a3.why": "{0} von {1} durch zu frühes Reaktivieren verloren.",
   "whm.overheal.rule.name": "Vermeide Overheal"
 }
