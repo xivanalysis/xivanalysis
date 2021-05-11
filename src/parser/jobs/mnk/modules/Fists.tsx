@@ -185,7 +185,7 @@ export default class Fists extends Module {
 				columns: [
 					this.getFistName(id, unknownFist),
 					this.parser.formatDuration(value),
-					this.getFistUptimePercent(id) + '%',
+					this.getFistUptimePercent(id, unknownFist) + '%',
 				] as const,
 			}
 		}).filter(datum => datum.value > 0)
@@ -202,8 +202,13 @@ export default class Fists extends Module {
 			.reduce((total, current) => total + current.gcdCounter, 0)
 	}
 
-	getFistUptimePercent(fistId: number): string {
+	getFistUptimePercent(fistId: number, unknownFist: boolean): string {
 		const statusUptime = this.entityStatuses.getStatusUptime(fistId, this.combatants.getEntities())
+
+		if (unknownFist && statusUptime === 0) {
+			// No status events for this fist, assume 100% uptime
+			return '100'
+		}
 
 		return ((statusUptime / this.parser.currentDuration) * 100).toFixed(2)
 	}

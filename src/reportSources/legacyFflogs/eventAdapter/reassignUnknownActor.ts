@@ -1,7 +1,8 @@
 import {Event} from 'event'
 import {FflogsEvent} from 'fflogs'
 import {Actor} from 'report'
-import {AdapterStep, resolveActorId} from './base'
+import {resolveActorId} from '../base'
+import {AdapterStep, MutationAdaptionResult} from './base'
 
 /**
  * FFLogs doesn't seem to guarantee that every actor in events is present in
@@ -17,11 +18,17 @@ export class ReassignUnknownActorStep extends AdapterStep {
 	// Optimisation; store results of ID lookups to save looping the actors array every time
 	private knownIds = new Map<Actor['id'], boolean>()
 
-	adapt(baseEvent: FflogsEvent, adaptedEvents: Event[]): Event[] {
-		this.reassign(baseEvent, 'source')
-		this.reassign(baseEvent, 'target')
+	adapt(baseEvent: FflogsEvent, adaptedEvents: Event[]): MutationAdaptionResult {
+		// In the common case, this chain of assignments isn't actually changing anything -
+		// we're only creating a new event object when an explicit mutation is performed.
+		let event = baseEvent
+		event = this.reassign(event, 'source')
+		event = this.reassign(event, 'target')
 
-		return adaptedEvents
+		return {
+			adaptedEvents,
+			dangerouslyMutatedBaseEvent: event,
+		}
 	}
 
 	private reassign<F extends 'source' | 'target'>(event: FflogsEvent, field: F) {
@@ -39,12 +46,14 @@ export class ReassignUnknownActorStep extends AdapterStep {
 			exists = this.pull.actors.some(actor => actor.id === actorId)
 			this.knownIds.set(actorId, exists)
 		}
-		if (exists) { return }
+		if (exists) { return event }
 
-		// Am I seriously mutating the fflogs events?
-		// Yup. This is cursed code.
-		event[idField] = -1
-		delete event[instanceField]
-		delete event[field]
+		// Build a mutated event
+		const mutatedEvent = {...event}
+		mutatedEvent[idField] = -1
+		delete mutatedEvent[instanceField]
+		delete mutatedEvent[field]
+
+		return mutatedEvent
 	}
 }

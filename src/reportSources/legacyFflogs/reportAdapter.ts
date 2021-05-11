@@ -5,6 +5,7 @@ import {ActorType, Actor as FflogsActor, Fight, ActorFightInstance} from 'fflogs
 import {toJS} from 'mobx'
 import {Actor, Pull, Report, Team} from 'report'
 import {Report as LegacyReport} from 'store/report'
+import {resolveActorId} from './base'
 
 // Some actor types represent NPCs, but show up in the otherwise player-controlled "friendlies" array.
 const NPC_FRIENDLY_TYPES: ActorType[] = [
@@ -60,7 +61,7 @@ function buildActorsByFight(report: LegacyReport) {
 			for (let instance = 1; instance <= instances; instance++) {
 				const instanceActor: Actor = instance === 1
 					? actor
-					: {...actor, id: `${actor.id}:${instance}`}
+					: {...actor, id: resolveActorId({id: actor.id, instance})}
 				pushToFight(fight.id, instanceActor)
 			}
 		})
@@ -100,13 +101,15 @@ function buildActorsByFight(report: LegacyReport) {
 
 const convertActor = (actor: FflogsActor, overrides?: Partial<Actor>): Actor => ({
 	...UNKNOWN_ACTOR,
-	id: actor.id.toString(),
+	id: resolveActorId({id: actor.id}),
+	kind: actor.guid.toString(),
 	name: actor.name,
 	...overrides,
 })
 
 const UNKNOWN_ACTOR: Actor = {
 	id: 'unknown',
+	kind: 'unknown',
 	name: 'Unknown',
 	team: Team.UNKNOWN,
 	playerControlled: false,
