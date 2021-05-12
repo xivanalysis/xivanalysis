@@ -68,6 +68,10 @@ export class Death extends Analyser {
 
 	private info = new Map<Actor['id'], ActorInfo>()
 
+	getCount(actorId: Actor['id']) {
+		return this.getActorInfo(actorId).count
+	}
+
 	getDuration(actorId: Actor['id']) {
 		const actorInfo = this.getActorInfo(actorId)
 		const timestamp = this.parser.currentEpochTimestamp
