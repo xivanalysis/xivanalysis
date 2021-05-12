@@ -1,8 +1,5 @@
-@value gutter, themeGrey, themeBlue, themeGreen, themeYellow, themeRed from 'theme.module.css';
+@value gutter, messageBackground, messageText, infoBackground, infoText, successBackground, successText, warningBackground, warningText, errorBackground, errorText from 'theme.module.css';
 @value block from '../shared.module.css';
-
-@value backgroundLightness: 95%;
-@value colorLightness: 30%;
 
 .message {
 	composes: block;
@@ -10,8 +7,6 @@
 	align-items: center;
 	margin: 0 calc(-1 * gutter);
 	padding: gutter;
-	background: color(themeGrey l(backgroundLightness));
-	color: color(themeGrey l(colorLightness));
 }
 .message:first-child {
 	margin-top: calc(-1 * gutter);
@@ -21,21 +16,30 @@
 }
 
 /* Message type colours */
+.default {
+	background: messageBackground;
+	color: messageText;
+	border-color: messageText;
+}
 .info {
-	background: color(themeBlue l(backgroundLightness));
-	color: color(themeBlue l(colorLightness));
+	background: infoBackground;
+	color: infoText;
+	border-color: infoText;
 }
 .success {
-	background: color(themeGreen l(backgroundLightness));
-	color: color(themeGreen l(colorLightness));
+	background: successBackground;
+	color: successText;
+	border-color: successText;
 }
 .warning {
-	background: color(themeYellow l(backgroundLightness));
-	color: color(themeYellow l(colorLightness));
+	background: warningBackground;
+	color: warningText;
+	border-color: warningText;
 }
 .error {
-	background: color(themeRed l(backgroundLightness));
-	color: color(themeRed l(colorLightness));
+	background: errorBackground;
+	color: errorText;
+	border-color: errorText;
 }
 
 .icon {
@@ -48,4 +52,20 @@
 .header {
 	font-weight: bold;
 	font-size: 1.1em;
+}
+
+.box > .text {
+	min-height: 1em;
+	margin: 1em 0;
+}
+
+.box {
+	composes: block;
+	display: flex;
+	align-items: center;
+	border-radius: 5px;
+	margin: 14px 0;
+	padding: 0 21px;
+	border-width: 1px;
+	border-style: solid;
 }
