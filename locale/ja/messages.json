@@ -257,6 +257,8 @@
   "core.dblink.loading": "読み込み中...",
   "core.deaths.content": "無駄死は避けてください。戦闘途中で死亡してしまうとトランスゲージのリセット・再構成によるロストタイムや蘇生による弱体化など様々な原因で火力の出力に<0>悪い</0>影響が出ます。",
   "core.deaths.why": "{0, plural, other {死亡回数: #}}",
+  "core.dummy.broken-log": "",
+  "core.dummy.title": "",
   "core.error.generic": "おや、何か大変なことになりましたね。すでに開発者にアラートを送りましたのでご安心ください。",
   "core.find.refresh": "更新",
   "core.gauge.title": "ゲージ",
