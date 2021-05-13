@@ -54,7 +54,10 @@ export default class TrickAttackUsage extends Module {
 		if (this._taCasts.length > 0) {
 			const lastCast = this._taCasts[this._taCasts.length - 1]
 			const taAvailable = lastCast + TA_COOLDOWN_MILLIS
-			const downtime = this.downtime.getDowntime(taAvailable, event.timestamp)
+			const downtime = this.downtime.getDowntime(
+				this.parser.fflogsToEpoch(taAvailable),
+				this.parser.fflogsToEpoch(event.timestamp),
+			)
 			this._lostTime += Math.max((event.timestamp - taAvailable) - downtime, 0)
 		}
 

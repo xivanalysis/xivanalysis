@@ -37,7 +37,7 @@ export default class Procs extends Module {
 	// For all of our cast/removal tracking, we only want to know if it happened outside of downtime to avoid errant penalization.
 	// The only one that doesn't need the check is overwriting Mirage Dive, since you can't get a proc from an invulnerable target.
 	_onCast(event) {
-		if (!this.downtime.isDowntime(event.timestamp)) {
+		if (!this.downtime.isDowntime(this.parser.fflogsToEpoch(event.timestamp))) {
 			this._casts[event.ability.guid]++
 		}
 	}
@@ -47,7 +47,7 @@ export default class Procs extends Module {
 	}
 
 	_onProcRemoved(event) {
-		if (!this.downtime.isDowntime(event.timestamp)) {
+		if (!this.downtime.isDowntime(this.parser.fflogsToEpoch(event.timestamp))) {
 			this._removedProcs[event.ability.guid]++
 		}
 	}

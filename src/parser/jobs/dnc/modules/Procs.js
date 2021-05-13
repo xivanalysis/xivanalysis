@@ -81,7 +81,7 @@ export default class Procs extends Module {
 	}
 
 	_onCast(event) {
-		if (!this.downtime.isDowntime(event.timestamp)) {
+		if (!this.downtime.isDowntime(this.parser.fflogsToEpoch(event.timestamp))) {
 			this._casts[event.ability.guid]++
 		}
 	}
@@ -165,7 +165,7 @@ export default class Procs extends Module {
 	}
 
 	_stopAndSave(statusId, timestamp) {
-		if (!this.downtime.isDowntime(timestamp)) {
+		if (!this.downtime.isDowntime(this.parser.fflogsToEpoch(timestamp))) {
 			this._removedProcs[statusId]++
 		}
 

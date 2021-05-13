@@ -103,7 +103,10 @@ export default class Procs extends Module {
 
 	_onCast(event) {
 		const abilityID = event.ability.guid
-		const downtime = this.downtime.getDowntime(this._previousCast || 0, event.timestamp)
+		const downtime = this.downtime.getDowntime(
+			this.parser.fflogsToEpoch(this._previousCast || 0),
+			this.parser.fflogsToEpoch(event.timestamp),
+		)
 
 		// Using kind here to maintain relative compatibility with the previous
 		// logic. Realistically, this should probably be updated and checked to
