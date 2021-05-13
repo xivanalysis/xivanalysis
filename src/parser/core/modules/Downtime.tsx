@@ -1,5 +1,6 @@
-import Module, {dependency} from 'parser/core/Module'
 import React from 'react'
+import {Analyser} from '../Analyser'
+import {dependency} from '../Injectable'
 import {Invulnerability} from './Invulnerability'
 import {Timeline, SimpleItem} from './Timeline'
 import {UnableToAct} from './UnableToAct'
@@ -9,38 +10,30 @@ interface DowntimeWindow {
 	end: number
 }
 
-export default class Downtime extends Module {
+export default class Downtime extends Analyser {
 	static handle = 'downtime'
 
 	@dependency private readonly unableToAct!: UnableToAct
 	@dependency private readonly invulnerability!: Invulnerability
 	@dependency private readonly timeline!: Timeline
 
-	protected init() {
+	initialise() {
 		this.addEventHook('complete', this.onComplete)
 	}
 
-	private internalDowntime(start = this.parser.fight.start_time, end = this.parser.currentTimestamp) {
-		const epochStart = this.parser.fflogsToEpoch(start)
-		const epochEnd = this.parser.fflogsToEpoch(end)
-
+	private internalDowntime(start = this.parser.pull.timestamp, end = this.parser.currentEpochTimestamp) {
 		// Get all the downtime from both unableToAct and invuln, and sort it
 		const downtimePeriods: DowntimeWindow[] = [
 			...this.unableToAct.getWindows({
-				start: epochStart,
-				end: epochEnd,
+				start,
+				end,
 			}),
 			...this.invulnerability.getWindows({
-				start: epochStart,
-				end: epochEnd,
+				start,
+				end,
 				types: ['untargetable'],
 			}),
-		]
-			.map(window => ({
-				start: this.parser.epochToFflogs(window.start),
-				end: this.parser.epochToFflogs(window.end),
-			}))
-			.sort((a, b) => a.start - b.start)
+		].sort((a, b) => a.start - b.start)
 
 		// If there's nothing, just stop now
 		const firstElement = downtimePeriods.shift()
@@ -63,39 +56,31 @@ export default class Downtime extends Module {
 		return finalDowntimes
 	}
 
-	isDowntime(when = this.parser.currentTimestamp) {
+	isDowntime(when = this.parser.currentEpochTimestamp) {
 		return this.internalDowntime(when, when).length > 0
 	}
 
-	getDowntime(start = this.parser.fight.start_time, end = this.parser.currentTimestamp) {
-		// Return the final number
-		return this.internalDowntime(start, end).reduce((uptime, invuln) => uptime + Math.min(invuln.end, end) - Math.max(invuln.start, start), 0)
+	getDowntime(start = this.parser.pull.timestamp, end = this.parser.currentEpochTimestamp) {
+		return this.internalDowntime(start, end).reduce(
+			(uptime, invuln) => uptime + Math.min(invuln.end, end) - Math.max(invuln.start, start),
+			0,
+		)
 	}
 
-	getDowntimes = (start = this.parser.fight.start_time, end = this.parser.currentTimestamp, minimumDowntimeLength = -1) =>
-		this.internalDowntime(start, end).reduce<number[]>(
-			(aggregator, invuln) => {
-				if (Math.min(invuln.end, end) - Math.max(invuln.start, start) > Math.min(minimumDowntimeLength, 0)) {
-					aggregator.push(Math.min(invuln.end, end) - Math.max(invuln.start, start))
-				}
-				return aggregator
-			},
-			[],
-		)
-
-	getDowntimeWindows = (start = this.parser.fight.start_time, end = this.parser.currentTimestamp, minimumWindowSize = -1) =>
+	getDowntimeWindows = (start = this.parser.pull.timestamp, end = this.parser.currentEpochTimestamp) =>
 		this.internalDowntime(start, end).reduce<DowntimeWindow[]>(
-			(aggregator, invuln) => {
-				if (Math.min(invuln.end, end) - Math.max(invuln.start, start) > Math.min(minimumWindowSize, 0)) {
-					aggregator.push({start: Math.max(invuln.start, start), end: Math.min(invuln.end, end)})
-				}
-				return aggregator
+			(windows, invuln) => {
+				windows.push({
+					start: Math.max(invuln.start, start),
+					end: Math.min(invuln.end, end),
+				})
+				return windows
 			},
 			[],
 		)
 
 	private onComplete() {
-		const startTime = this.parser.eventTimeOffset
+		const startTime = this.parser.pull.timestamp
 		const windows = this.getDowntimeWindows()
 
 		windows.forEach(window => {
