@@ -257,6 +257,8 @@
   "core.dblink.loading": "Chargement...",
   "core.deaths.content": "Ne mourez pas. Entre l'arrêt de votre DPS pendant votre mort, les pertes de PM/PT ou les ressources liées à votre jauge de job ainsi que le débuff d’affaiblissement : mourir est un <0>handicap</0> au DPS global.",
   "core.deaths.why": "{0, plural, =1 {# mort} other {# morts}}",
+  "core.dummy.broken-log": "",
+  "core.dummy.title": "",
   "core.error.generic": "On dirait que quelque tourne pas rond. Notre équipe de développeurs hautement qualifiée à été notifiée.",
   "core.find.refresh": "Actualiser",
   "core.gauge.title": "Jauge",

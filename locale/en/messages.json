@@ -257,6 +257,8 @@
   "core.dblink.loading": "Loading...",
   "core.deaths.content": "Don't die. Between downtime, lost gauge resources, and resurrection debuffs, dying is absolutely <0>crippling</0> to damage output.",
   "core.deaths.why": "{0, plural, =1 {# death} other {# deaths}}",
+  "core.dummy.broken-log": "One or more actors in this pull appear to be striking dummies. The behaviour of dummy health pools breaks a number of assumptions made by xivanalysis, which can lead to subtly incorrect results.",
+  "core.dummy.title": "Striking Dummy",
   "core.error.generic": "Looks like something has gone wrong. The code monkies have been notified.",
   "core.find.refresh": "Refresh",
   "core.gauge.title": "Gauge",

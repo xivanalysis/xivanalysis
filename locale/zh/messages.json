@@ -257,6 +257,8 @@
   "core.dblink.loading": "加载中…",
   "core.deaths.content": "不要死。不仅会丢失输出时间，清空战斗资源，起来还会有虚弱debuff，死亡绝对会<0>严重降低</0>你的输出。",
   "core.deaths.why": "{0, plural, =1 {# 次死亡} other {# 次死亡}}",
+  "core.dummy.broken-log": "",
+  "core.dummy.title": "",
   "core.error.generic": "好像出了点问题。程序猿已经接到报警。",
   "core.find.refresh": "刷新",
   "core.gauge.title": "职业量谱",
