@@ -26,9 +26,15 @@ export interface ProcGroup {
 	procsBecomeInstant?: boolean,
 }
 
-type ProcErrorType =
+export interface ProcGroupEvents {
+	timestamps: number[],
+	events: Event[]
+}
+
+type ProcStatusEventType =
 	| 'overwrite'
-	| 'drop'
+	| 'removal'
+	| 'usage'
 
 const DEFAULT_SEVERITY_TIERS = {
 	1: SEVERITY.MINOR,
@@ -80,34 +86,63 @@ export abstract class Procs extends Analyser {
 	protected overwroteProcWhy!: JSX.Element | string
 	protected invulnProcWhy!: JSX.Element | string
 
-	private usages = new Map<ProcGroup, Event[]>()
+	private usages = new Map<ProcGroup, ProcGroupEvents>()
 	protected getUsagesForStatus(status: number | ProcGroup): Event[] {
 		const procGroup = this.getTrackedGroupByStatus(status)
 		if (procGroup === undefined) { return [] }
-		return this.usages.get(procGroup) || []
+		return this.usages.get(procGroup)?.events || []
 	}
-	private overWrites = new Map<ProcGroup, Event[]>()
-	protected getOverwritesForStatus(status: number): Event[] {
+	protected getUsageCountForStatus(status: number | ProcGroup): number {
+		const procGroup = this.getTrackedGroupByStatus(status)
+		if (procGroup === undefined) { return 0 }
+		return this.usages.get(procGroup)?.events.length || 0
+	}
+
+	private overWrites = new Map<ProcGroup, ProcGroupEvents>()
+	protected getOverwritesForStatus(status: number | ProcGroup): Event[] {
 		const procGroup = this.getTrackedGroupByStatus(status)
 		if (procGroup === undefined) { return [] }
-		return this.overWrites.get(procGroup) || []
+		return this.overWrites.get(procGroup)?.events || []
 	}
-	private drops = new Map<ProcGroup, Event[]>()
-	protected getDropsForStatus(status: number): Event[] {
+	protected getOverwriteCountForStatus(status: number | ProcGroup): number {
+		const procGroup = this.getTrackedGroupByStatus(status)
+		if (procGroup === undefined) { return 0 }
+		return this.overWrites.get(procGroup)?.events.length || 0
+	}
+
+	private removals = new Map<ProcGroup, ProcGroupEvents>()
+	protected getRemovalsForStatus(status: number | ProcGroup): Event[] {
 		const procGroup = this.getTrackedGroupByStatus(status)
 		if (procGroup === undefined) { return [] }
-		return this.drops.get(procGroup) || []
+		return this.removals.get(procGroup)?.events || []
 	}
-	private invulns = new Map<ProcGroup, Event[]>()
-	protected getInvulnsForStatus(status: number): Event[] {
+	protected getRemovalCountForStatus(status: number | ProcGroup): number {
+		const procGroup = this.getTrackedGroupByStatus(status)
+		if (procGroup === undefined) { return 0 }
+		return this.removals.get(procGroup)?.events.length || 0
+	}
+
+	private invulns = new Map<ProcGroup, ProcGroupEvents>()
+	protected getInvulnsForStatus(status: number | ProcGroup): Event[] {
 		const procGroup = this.getTrackedGroupByStatus(status)
 		if (procGroup === undefined) { return [] }
-		return this.invulns.get(procGroup) || []
+		return this.invulns.get(procGroup)?.events || []
+	}
+	protected getInvulnCountForStatus(status: number | ProcGroup): number {
+		const procGroup = this.getTrackedGroupByStatus(status)
+		if (procGroup === undefined) { return 0 }
+		return this.invulns.get(procGroup)?.events.length || 0
+	}
+
+	protected getDropCountForStatus(status: number| ProcGroup): number {
+		const procGroup = this.getTrackedGroupByStatus(status)
+		if (procGroup === undefined) { return 0 }
+		return this.getRemovalCountForStatus(status) - this.getUsageCountForStatus(status)
 	}
 
 	private currentWindows = new Map<ProcGroup, ProcBuffWindow>()
 	private history = new Map<ProcGroup, ProcBuffWindow[]>()
-	protected getHistoryForStatus(status: number): ProcBuffWindow[] {
+	protected getHistoryForStatus(status: number| ProcGroup): ProcBuffWindow[] {
 		const procGroup = this.getTrackedGroupByStatus(status)
 		if (procGroup === undefined) { return [] }
 		return this.history.get(procGroup) || []
@@ -138,15 +173,15 @@ export abstract class Procs extends Analyser {
 		this.addEventHook('complete', this.onComplete)
 
 		this.row = this.timeline.addRow(new SimpleRow({
-			label: 'Procs Core',
+			label: 'Procs',
 			order: 0,
 		}))
 
 		this.trackedProcs.forEach(group => {
-			this.usages.set(group, [])
-			this.overWrites.set(group, [])
-			this.drops.set(group, [])
-			this.invulns.set(group, [])
+			this.usages.set(group, {timestamps: [], events: []})
+			this.overWrites.set(group, {timestamps: [], events: []})
+			this.removals.set(group, {timestamps: [], events: []})
+			this.invulns.set(group, {timestamps: [], events: []})
 			this.history.set(group, [])
 		})
 	}
@@ -180,21 +215,7 @@ export abstract class Procs extends Analyser {
 		// If there is job-specific logic that needs to be run to decide if a proc is being used, do that now
 		if (!this.jobSpecificCheckConsumeProc(procGroup, event)) { return }
 
-		// only count usages if the event happens during uptime
-		if (!this.downtime.isDowntime(event.timestamp)) {
-			this.usages.get(procGroup)?.push(event)
-		}
-
-		// If the target of the cast was invulnerable, push event to invulns
-		if (this.invulnerability.isActive({
-			timestamp: event.timestamp,
-			actorFilter: actor => actor.id === event.target,
-			types: ['invulnerable'],
-		})) {
-			this.invulns.get(procGroup)?.push(event)
-		}
-
-		this.stopAndSave(procGroup, event)
+		this.stopAndSave(procGroup, event, 'usage')
 
 		this.jobSpecificOnConsumeProc(procGroup, event)
 	}
@@ -222,7 +243,7 @@ export abstract class Procs extends Analyser {
 			return
 		}
 
-		this.stopAndSave(procGroup, event, 'drop')
+		this.stopAndSave(procGroup, event, 'removal')
 	}
 
 	/**
@@ -299,9 +320,7 @@ export abstract class Procs extends Analyser {
 
 		// Dropped Procs
 		if (this.showDroppedProcSuggestion) {
-			this.drops.forEach(drops => this.droppedProcs += drops.length)
-			this.usages.forEach(useage => this.droppedProcs -= useage.length)
-			this.droppedProcs = Math.max(this.droppedProcs, 0)
+			this.trackedProcs.forEach(procGroup => this.droppedProcs += this.getDropCountForStatus(procGroup.procStatus.id))
 			this.overrideDroppedProcsIcon()
 			this.overrideDroppedProcsWhy()
 			this.suggestions.add(new TieredSuggestion({
@@ -315,7 +334,7 @@ export abstract class Procs extends Analyser {
 
 		// Overwritten Procs
 		if (this.showOverwroteProcSuggestion) {
-			this.overWrites.forEach(overwrites => this.overwrittenProcs += overwrites.length)
+			this.trackedProcs.forEach(procGroup => this.overwrittenProcs += this.getOverwriteCountForStatus(procGroup.procStatus.id))
 			this.overrideOverwroteProcsIcon()
 			this.overrideOverwroteProcsWhy()
 			this.suggestions.add(new TieredSuggestion({
@@ -329,7 +348,7 @@ export abstract class Procs extends Analyser {
 
 		// Procs used on invulnerable enemies
 		if (this.showInvulnProcSuggestion) {
-			this.invulns.forEach(invulns => this.invulnUsages += invulns.length)
+			this.trackedProcs.forEach(procGroup => this.invulnUsages += this.getInvulnCountForStatus(procGroup.procStatus.id))
 			this.overrideInvulnProcsIcon()
 			this.overrideInvulnProcsWhy()
 			this.suggestions.add(new TieredSuggestion({
@@ -344,15 +363,30 @@ export abstract class Procs extends Analyser {
 		this.addJobSpecificSuggestions()
 	}
 
-	private stopAndSave(procGroup: ProcGroup, event?: Event, type?: ProcErrorType): void {
-		// The player dropped the proc if it fell off during uptime, while they were alive, and it wasn't overwritten by a new instance
-		if (event && type === 'drop' && !(/* this.downtime.isDowntime(event.timestamp) || */ this.actors.current.hp.current === 0)) {
-			this.drops.get(procGroup)?.push(event)
+	private stopAndSave(procGroup: ProcGroup, event?: Event, type?: ProcStatusEventType): void {
+
+		// Only count usages if the event happens during uptime, you don't get credit for using an AoE-around-self Proc during downtime
+		if (event && type === 'usage' && !this.downtime.isDowntime(event.timestamp)) {
+			this.tryAddEventToUsages(procGroup, event)
+
+			// If the target of the cast was invulnerable, keep track of that too
+			if (this.invulnerability.isActive({
+				timestamp: event.timestamp,
+				actorFilter: actor => actor.id === (event as Events['action']).target,
+				types: ['invulnerable'],
+			})) {
+				this.tryAddEventToInvulns(procGroup, event)
+			}
+		}
+
+		// Count removals that occur during uptime, and the player is still alive. Don't need to double-penalize deaths or not having GCD space to use all your procs before a downtime
+		if (event && type === 'removal' && !(this.downtime.isDowntime(event.timestamp) || this.actors.current.hp.current === 0)) {
+			this.tryAddEventToRemovals(procGroup, event)
 		}
 
 		// If this was an overwrite event, and overwrites are disallowed for this proc, save a record of that
 		if (event && type === 'overwrite' && !procGroup.mayOverwrite) {
-			this.overWrites.get(procGroup)?.push(event)
+			this.tryAddEventToOverwrites(procGroup, event)
 		}
 
 		if (!this.currentWindows.has(procGroup)) { return }
@@ -363,6 +397,41 @@ export abstract class Procs extends Analyser {
 		currentWindow.stop = event?.timestamp ?? this.parser.pull.timestamp + this.parser.pull.duration
 		this.history.get(procGroup)?.push(currentWindow)
 		this.currentWindows.delete(procGroup)
+	}
+
+	/**
+	 * Add the event to the usage map for the group, if it's not already present in the group
+	*/
+	private tryAddEventToUsages(procGroup: ProcGroup, event: Event) {
+		this.tryAddEventToMap(this.usages.get(procGroup), event)
+	}
+	/**
+	 * Add the event to the removal map for the group, if it's not already present in the group
+	 * This method is protected so subclassing analysers can hook into it
+	 * Currently only used by BLM to deal with the interaction between T3P and Sharpcast
+	*/
+	protected tryAddEventToRemovals(procGroup: ProcGroup, event: Event) {
+		this.tryAddEventToMap(this.removals.get(procGroup), event)
+	}
+	/**
+	 * Add the event to the invuln map for the group, if it's not already present in the group
+	*/
+	private tryAddEventToInvulns(procGroup: ProcGroup, event: Event) {
+		this.tryAddEventToMap(this.invulns.get(procGroup), event)
+	}
+	/**
+	 * Add the event to the overwrite map for the group, if it's not already present in the group
+	*/
+	private tryAddEventToOverwrites(procGroup: ProcGroup, event: Event) {
+		this.tryAddEventToMap(this.overWrites.get(procGroup), event)
+	}
+
+	/** Checks to see if the specified event timestamp already exists in that map, and if not, adds the event to the collection */
+	private tryAddEventToMap(groupEvents: ProcGroupEvents | undefined, event: Event) {
+		if (groupEvents === undefined) { return }
+		if (groupEvents.timestamps.includes(event.timestamp)) { return }
+		groupEvents.timestamps.push(event.timestamp)
+		groupEvents.events.push(event)
 	}
 
 	private getRowForStatus(status: Status): SimpleRow {
