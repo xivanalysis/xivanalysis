@@ -12,6 +12,7 @@ import Cooldowns from './Cooldowns'
 import {Data} from './Data'
 import {Death} from './Death'
 import Downtime from './Downtime'
+import {Dummy} from './Dummy'
 import Enemies from './Enemies'
 import {EntityStatuses} from './EntityStatuses'
 import {EventsView} from './EventsView'
@@ -47,6 +48,7 @@ export default [
 	Data,
 	Death,
 	Downtime,
+	Dummy,
 	Enemies,
 	EntityStatuses,
 	EventsView,

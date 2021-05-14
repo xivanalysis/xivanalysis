@@ -246,7 +246,10 @@ export default class Cooldowns extends Module {
 			}
 
 			//We invuln time is the time the boss was invuln from when the CD came off CD and when it was next executed
-			previousCooldown.invulnTime = this.downtime.getDowntime(previousEndTimestamp, cooldown.timestamp)
+			previousCooldown.invulnTime = this.downtime.getDowntime(
+				this.parser.fflogsToEpoch(previousEndTimestamp),
+				this.parser.fflogsToEpoch(cooldown.timestamp),
+			)
 			previousEndTimestamp = (cooldown.timestamp + cooldown.length)
 			previousCooldown = cooldown
 		}

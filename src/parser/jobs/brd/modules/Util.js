@@ -31,7 +31,12 @@ export default class Util extends Module {
 	}
 
 	getDowntimeLength(timestamp) {
-		const window = this.downtime.getDowntimeWindows().filter(x => x.start <= timestamp && x.end >= timestamp)
+		const window = this.downtime.getDowntimeWindows()
+			.map(window => ({
+				start: this.parser.epochToFflogs(window.start),
+				end: this.parser.epochToFflogs(window.end),
+			}))
+			.find(x => x.start <= timestamp && x.end >= timestamp)
 		return Math.max(0, (window.end - window.start) / 1000)
 	}
 

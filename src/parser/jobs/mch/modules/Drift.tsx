@@ -77,7 +77,10 @@ export default class Drift extends Module {
 
 		const window = this.currentWindows[actionId]
 		window.end = event.timestamp
-		const downtime = this.downtime.getDowntime(window.start, window.end)
+		const downtime = this.downtime.getDowntime(
+			this.parser.fflogsToEpoch(window.start),
+			this.parser.fflogsToEpoch(window.end),
+		)
 		const cd = COOLDOWN_MS[actionId]
 		window.drift = Math.max(0, window.end - window.start - cd - downtime)
 
