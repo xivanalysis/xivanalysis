@@ -4,6 +4,7 @@
 		"noEmit": true,
 
 		"strict": true,
+		"noImplicitOverride": true,
 
 		"target": "ESNext",
 		"module": "ESNext",
