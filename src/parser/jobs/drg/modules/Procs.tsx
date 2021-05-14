@@ -2,11 +2,11 @@ import {Plural, Trans} from '@lingui/react'
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
-import {Procs} from 'parser/core/modules/Procs'
+import {Procs as CoreProcs} from 'parser/core/modules/Procs'
 import {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
 
-export default class DRGProcs extends Procs {
+export default class Procs extends CoreProcs {
 	trackedProcs = [
 		{
 			procStatus: STATUSES.SHARPER_FANG_AND_CLAW,

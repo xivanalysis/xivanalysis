@@ -3,7 +3,7 @@ import {ActionLink, StatusLink} from 'components/ui/DbLink'
 import {Events} from 'event'
 import {CastEvent} from 'fflogs'
 import _ from 'lodash'
-import {ProcGroup, Procs} from 'parser/core/modules/Procs'
+import {ProcGroup, Procs as CoreProcs} from 'parser/core/modules/Procs'
 import {SEVERITY, Suggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
 
@@ -19,7 +19,7 @@ declare module 'fflogs' {
 	}
 }
 
-export default class BLMProcs extends Procs {
+export default class Procs extends CoreProcs {
 	trackedProcs = [
 		{
 			procStatus: this.data.statuses.THUNDERCLOUD,

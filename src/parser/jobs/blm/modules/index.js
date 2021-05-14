@@ -1,9 +1,9 @@
 import {Interrupts} from 'parser/core/modules/Interrupts'
-import BLMProcs from './BLMProcs'
 import Gauge from './Gauge'
 import Leylines from './Leylines'
 import NotCasting from './NotCasting'
 import OGCDDowntime from './OGCDDowntime'
+import Procs from './Procs'
 import RotationWatchdog from './RotationWatchdog'
 import Sharpcast from './Sharpcast'
 import Speedmod from './Speedmod'
@@ -12,7 +12,7 @@ import BlmWeaving from './Weaving'
 
 export default [
 	BlmWeaving,
-	BLMProcs,
+	Procs,
 	Gauge,
 	Interrupts,
 	Leylines,

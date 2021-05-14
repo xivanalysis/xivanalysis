@@ -4,7 +4,7 @@ import {ActionLink, StatusLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import {Events} from 'event'
-import {Procs} from 'parser/core/modules/Procs'
+import {Procs as CoreProcs} from 'parser/core/modules/Procs'
 import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import React, {Fragment} from 'react'
 
@@ -26,7 +26,7 @@ const SEVERITY_MISSED_PROCS = {
 	7: SEVERITY.MAJOR,
 }
 
-export default class RDMProcs extends Procs {
+export default class Procs extends CoreProcs {
 	static title = t('rdm.procs.title')`Proc Issues`
 
 	/**

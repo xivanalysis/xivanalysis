@@ -2,10 +2,10 @@ import {Trans} from '@lingui/react'
 import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
-import {Procs} from 'parser/core/modules/Procs'
+import {Procs as CoreProcs} from 'parser/core/modules/Procs'
 import React from 'react'
 
-export default class DNCProcs extends Procs {
+export default class Procs extends CoreProcs {
 	trackedProcs = [
 		{
 			procStatus: STATUSES.FLOURISHING_FAN_DANCE,
