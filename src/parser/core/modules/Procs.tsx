@@ -11,6 +11,7 @@ import {Analyser} from '../Analyser'
 import {filter, oneOf} from '../filter'
 import {dependency} from '../Injectable'
 import {Data} from './Data'
+import Downtime from './Downtime'
 import {Invulnerability} from './Invulnerability'
 
 export interface ProcBuffWindow {
@@ -44,6 +45,7 @@ export abstract class Procs extends Analyser {
 	@dependency protected actors!: Actors
 	@dependency protected data!: Data
 	@dependency protected invulnerability!: Invulnerability
+	@dependency protected downtime!: Downtime
 
 	private droppedProcs: number = 0
 	private overwrittenProcs: number = 0
@@ -178,10 +180,10 @@ export abstract class Procs extends Analyser {
 		// If there is job-specific logic that needs to be run to decide if a proc is being used, do that now
 		if (!this.jobSpecificCheckConsumeProc(procGroup, event)) { return }
 
-		// TODO: need downtime on Analyser system
-		// if (!this.downtime.isDowntime(event.timestamp)) {
-		this.usages.get(procGroup)?.push(event)
-		// }
+		// only count usages if the event happens during uptime
+		if (!this.downtime.isDowntime(event.timestamp)) {
+			this.usages.get(procGroup)?.push(event)
+		}
 
 		// If the target of the cast was invulnerable, push event to invulns
 		if (this.invulnerability.isActive({
