@@ -12,7 +12,7 @@ import styles from './BranchBanner.module.css'
 @observer
 class BranchBannerComponent extends React.Component<RouteComponentProps> {
 	static contextType = StoreContext
-	context!: React.ContextType<typeof StoreContext>
+	declare context: React.ContextType<typeof StoreContext>
 
 	render() {
 		const {reportStore} = this.context
