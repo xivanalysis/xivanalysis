@@ -45,24 +45,25 @@ export abstract class Procs extends Analyser {
 	static handle = 'procs'
 	static title = t('core.procs.title')`Procs`
 
-	// @dependency private downtime!: Downtime
+	@dependency private downtime!: Downtime
 	@dependency protected suggestions!: Suggestions
 	@dependency private timeline!: Timeline
 	@dependency protected actors!: Actors
 	@dependency protected data!: Data
 	@dependency protected invulnerability!: Invulnerability
-	@dependency protected downtime!: Downtime
 
 	private droppedProcs: number = 0
 	private overwrittenProcs: number = 0
 	private invulnUsages: number = 0
 
 	/**
-	 * Implementing analysers must provide a list of tracked procs
+	 * Subclassing analysers must provide a list of tracked procs
 	 */
 	protected abstract trackedProcs: ProcGroup[]
 
-	// Subclassing modules may override these suggestion properties with relevant job-specific ones
+	/**
+	 * Subclassing analysers may override these suggestion properties with relevant job-specific ones
+	 */
 	protected showDroppedProcSuggestion: boolean = false
 	protected droppedProcIcon: string = 'https://xivapi.com/i/001000/001989.png' // Hasty Touch ...
 	protected droppedProcContent: JSX.Element | string = <Trans id="core.procs.suggestions.dropped.content">Avoid letting your procs fall off without using them. Proc actions are generally stronger than other actions and should not be wasted.</Trans>
@@ -87,6 +88,11 @@ export abstract class Procs extends Analyser {
 	protected invulnProcWhy!: JSX.Element | string
 
 	private usages = new Map<ProcGroup, ProcGroupEvents>()
+	/**
+	 * Get an array of usage events for a given proc status
+	 * @param status The status, as an ID number or ProcGroup object
+	 * @returns The array of usage Events
+	 */
 	protected getUsagesForStatus(status: number | ProcGroup): Event[] {
 		const procGroup = this.getTrackedGroupByStatus(status)
 		if (procGroup === undefined) { return [] }
@@ -98,24 +104,44 @@ export abstract class Procs extends Analyser {
 		return this.usages.get(procGroup)?.events.length || 0
 	}
 
-	private overWrites = new Map<ProcGroup, ProcGroupEvents>()
+	private overwrites = new Map<ProcGroup, ProcGroupEvents>()
+	/**
+	 * Get an array of overwrite events for a given proc status
+	 * @param status The status, as an ID number or ProcGroup object
+	 * @returns The array of overwrite Events
+	 */
 	protected getOverwritesForStatus(status: number | ProcGroup): Event[] {
 		const procGroup = this.getTrackedGroupByStatus(status)
 		if (procGroup === undefined) { return [] }
-		return this.overWrites.get(procGroup)?.events || []
+		return this.overwrites.get(procGroup)?.events || []
 	}
+	/**
+	 * Get the number of times a proc was overwritten
+	 * @param status The status, as an ID number or ProcGroup object
+	 * @returns The number of times the proc was overwritten
+	 */
 	protected getOverwriteCountForStatus(status: number | ProcGroup): number {
 		const procGroup = this.getTrackedGroupByStatus(status)
 		if (procGroup === undefined) { return 0 }
-		return this.overWrites.get(procGroup)?.events.length || 0
+		return this.overwrites.get(procGroup)?.events.length || 0
 	}
 
 	private removals = new Map<ProcGroup, ProcGroupEvents>()
+	/**
+	 * Get an array of removal events for a given proc status
+	 * @param status The status, as an ID number or ProcGroup object
+	 * @returns The array of removal Events
+	 */
 	protected getRemovalsForStatus(status: number | ProcGroup): Event[] {
 		const procGroup = this.getTrackedGroupByStatus(status)
 		if (procGroup === undefined) { return [] }
 		return this.removals.get(procGroup)?.events || []
 	}
+	/**
+	 * Get the number of times a proc was removed
+	 * @param status The status, as an ID number or ProcGroup object
+	 * @returns The number of times the proc was removed
+	 */
 	protected getRemovalCountForStatus(status: number | ProcGroup): number {
 		const procGroup = this.getTrackedGroupByStatus(status)
 		if (procGroup === undefined) { return 0 }
@@ -123,17 +149,32 @@ export abstract class Procs extends Analyser {
 	}
 
 	private invulns = new Map<ProcGroup, ProcGroupEvents>()
+	/**
+	 * Get an array of invulnerable usage events for a given proc status
+	 * @param status The status, as an ID number or ProcGroup object
+	 * @returns The array of invulnerable usage Events
+	 */
 	protected getInvulnsForStatus(status: number | ProcGroup): Event[] {
 		const procGroup = this.getTrackedGroupByStatus(status)
 		if (procGroup === undefined) { return [] }
 		return this.invulns.get(procGroup)?.events || []
 	}
+	/**
+	 * Get the number of times a proc was used on an invulnerable target
+	 * @param status The status, as an ID number or ProcGroup object
+	 * @returns The number of times the proc was used on an invulnerable target
+	 */
 	protected getInvulnCountForStatus(status: number | ProcGroup): number {
 		const procGroup = this.getTrackedGroupByStatus(status)
 		if (procGroup === undefined) { return 0 }
 		return this.invulns.get(procGroup)?.events.length || 0
 	}
 
+	/**
+	 * Gets the number of times a proc was allowed to fall off
+	 * @param status The status, as an ID number or ProcGroup object
+	 * @returns The number of times the proc was dropped (removals - usages)
+	 */
 	protected getDropCountForStatus(status: number| ProcGroup): number {
 		const procGroup = this.getTrackedGroupByStatus(status)
 		if (procGroup === undefined) { return 0 }
@@ -142,6 +183,11 @@ export abstract class Procs extends Analyser {
 
 	private currentWindows = new Map<ProcGroup, ProcBuffWindow>()
 	private history = new Map<ProcGroup, ProcBuffWindow[]>()
+	/**
+	 * Gets the array of buff windows for a specified status
+	 * @param status The status to get windows for, as either the ID or a ProcGroup object
+	 * @returns An array of ProcBuffWindows
+	 */
 	protected getHistoryForStatus(status: number| ProcGroup): ProcBuffWindow[] {
 		const procGroup = this.getTrackedGroupByStatus(status)
 		if (procGroup === undefined) { return [] }
@@ -179,7 +225,7 @@ export abstract class Procs extends Analyser {
 
 		this.trackedProcs.forEach(group => {
 			this.usages.set(group, {timestamps: [], events: []})
-			this.overWrites.set(group, {timestamps: [], events: []})
+			this.overwrites.set(group, {timestamps: [], events: []})
 			this.removals.set(group, {timestamps: [], events: []})
 			this.invulns.set(group, {timestamps: [], events: []})
 			this.history.set(group, [])
@@ -192,13 +238,18 @@ export abstract class Procs extends Analyser {
 
 	/**
 	 * May be overridden by subclasses. Called by onCast to allow jobs to add specific logic that determines whether a proc was consumed
-	 * @param _event
+	 * @param _procGroup The procGroup to check for consumption
+	 * @param _event The event to check
 	 */
 	protected jobSpecificCheckConsumeProc(_procGroup: ProcGroup, _event: Events['action']): boolean {
 		return true
 	}
 
-	/** May be overridden by subclasses. Called by onCast to allow jobs to add specific handlers for a consumed proc */
+	/**
+	 * May be overridden by subclasses. Called by onCast to allow jobs to add specific handlers for a consumed proc
+	 * @param _procGroup The procGroup to add consumption handling for
+	 * @param _event The event triggering a proc consumption
+	*/
 	protected jobSpecificOnConsumeProc(_procGroup: ProcGroup, _event: Events['action']): void { /* */ }
 
 	private onCast(event: Events['action']): void {
@@ -423,7 +474,7 @@ export abstract class Procs extends Analyser {
 	 * Add the event to the overwrite map for the group, if it's not already present in the group
 	*/
 	private tryAddEventToOverwrites(procGroup: ProcGroup, event: Event) {
-		this.tryAddEventToMap(this.overWrites.get(procGroup), event)
+		this.tryAddEventToMap(this.overwrites.get(procGroup), event)
 	}
 
 	/** Checks to see if the specified event timestamp already exists in that map, and if not, adds the event to the collection */
