@@ -12,12 +12,12 @@ import BlmWeaving from './Weaving'
 
 export default [
 	BlmWeaving,
-	Procs,
 	Gauge,
 	Interrupts,
 	Leylines,
 	NotCasting,
 	OGCDDowntime,
+	Procs,
 	RotationWatchdog,
 	Sharpcast,
 	Speedmod,

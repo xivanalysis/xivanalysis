@@ -21,11 +21,11 @@ export default [
 	Cooldowns,
 	Debuffs,
 	DragonSight,
-	Procs,
 	Drift,
 	LanceCharge,
 	OGCDDowntime,
 	Positionals,
+	Procs,
 	Tincture,
 	Weaving,
 ]
