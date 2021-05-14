@@ -230,8 +230,11 @@ export default class GlobalCooldown extends Module {
 		return this.gcds.reduce((carry, gcd) => {
 			const duration = this._getGcdLength(gcd)
 			const downtime = this.downtime.getDowntime(
-				gcd.timestamp,
-				Math.min(gcd.timestamp + duration, this.parser.eventTimeOffset + this.parser.pull.duration),
+				this.parser.fflogsToEpoch(gcd.timestamp),
+				this.parser.fflogsToEpoch(Math.min(
+					gcd.timestamp + duration,
+					this.parser.eventTimeOffset + this.parser.pull.duration
+				)),
 			)
 			return carry + duration - downtime
 		}, 0)

@@ -148,7 +148,11 @@ export default class DirtyDancing extends Module {
 		const stepId = event.ability.guid
 		if (this.previousUseTimestamp[stepId]) {
 			const lastUse = this.previousUseTimestamp[stepId]
-			const drift = Math.max(0, event.timestamp - lastUse - STEP_COOLDOWN_MILLIS[stepId] - this.downtime.getDowntime(lastUse, event.timestamp))
+			const downtime = this.downtime.getDowntime(
+				this.parser.fflogsToEpoch(lastUse),
+				this.parser.fflogsToEpoch(event.timestamp),
+			)
+			const drift = Math.max(0, event.timestamp - lastUse - STEP_COOLDOWN_MILLIS[stepId] - downtime)
 			this.totalDrift[stepId] += drift
 			this.previousUseTimestamp[stepId] = event.timestamp
 		}
