@@ -129,9 +129,9 @@ class SenState {
 }
 
 export default class Sen extends Module {
-	static displayOrder = DISPLAY_ORDER.SEN
-	static handle = 'sen'
-	static title = t('sam.sen.title')`Non-Standard Sen Windows`
+	static override displayOrder = DISPLAY_ORDER.SEN
+	static override handle = 'sen'
+	static override title = t('sam.sen.title')`Non-Standard Sen Windows`
 
 	@dependency private suggestions!: Suggestions
 	@dependency private kenki!: Kenki
@@ -147,7 +147,7 @@ export default class Sen extends Module {
 		return _.last(this.senStateWindows)
 	}
 
-	protected init() {
+	protected override init() {
 
 		this.addEventHook(
 			'cast',
@@ -353,7 +353,7 @@ export default class Sen extends Module {
 
 	}
 
-	output() {
+	override output() {
 		if (this.nonStandardCount !== 0) {
 			return <Fragment>
 				<Message>

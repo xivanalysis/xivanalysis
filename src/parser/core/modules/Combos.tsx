@@ -23,8 +23,8 @@ const ISSUE_TYPENAMES = {
 
 export class ComboEvent extends NormalisedEventFields {
 	type = 'combo' as const
-	calculatedEvents: DamageEvent[] = []
-	confirmedEvents: DamageEvent[] = []
+	override calculatedEvents: DamageEvent[] = []
+	override confirmedEvents: DamageEvent[] = []
 
 	constructor(event: NormalisedDamageEvent) {
 		super()
@@ -47,9 +47,9 @@ export interface ComboIssue {
 }
 
 export default class Combos extends Module {
-	static handle = 'combos'
-	static title = t('core.combos.title')`Combo Issues`
-	static displayOrder = DISPLAY_ORDER.COMBOS
+	static override handle = 'combos'
+	static override title = t('core.combos.title')`Combo Issues`
+	static override displayOrder = DISPLAY_ORDER.COMBOS
 
 	// This should be redefined by subclassing modules; the default is the basic 'Attack' icon
 	static suggestionIcon = 'https://xivapi.com/i/000000/000405.png'
@@ -62,7 +62,7 @@ export default class Combos extends Module {
 	private currentComboChain: NormalisedDamageEvent[] = []
 	private issues: ComboIssue[] = []
 
-	protected init() {
+	protected override init() {
 		this.addEventHook('normaliseddamage', {by: 'player'}, this.onCast)
 		this.addEventHook('complete', this.onComplete)
 	}
@@ -255,7 +255,7 @@ export default class Combos extends Module {
 		return false
 	}
 
-	output(): React.ReactNode {
+	override output(): React.ReactNode {
 		if (this.issues.length <= 0) {
 			return false
 		}

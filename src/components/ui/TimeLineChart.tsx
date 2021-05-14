@@ -34,7 +34,7 @@ export default class TimeLineChart extends PureComponent<TimeLineChartProps> {
 		options: PropTypes.object,
 	}
 
-	render() {
+	override render() {
 		const options = _.merge({}, DEFAULT_OPTIONS, this.props.options || {})
 		return <Line
 			data={this.props.data}

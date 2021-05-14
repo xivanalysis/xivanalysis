@@ -16,7 +16,7 @@ export default class AlwaysBeCasting extends CoreAlwaysBeCasting {
 	currentMuse: ArmyWindow | undefined
 	currentPaeon: ArmyWindow | undefined
 
-	protected init() {
+	protected override init() {
 		super.init()
 		this.addEventHook('applybuff', {by: 'player', abilityId: [STATUSES.ARMYS_MUSE.id]}, this.onMuse)
 		this.addEventHook('removebuff', {by: 'player', abilityId: [STATUSES.ARMYS_MUSE.id]}, this.onRemoveMuse)
@@ -67,7 +67,7 @@ export default class AlwaysBeCasting extends CoreAlwaysBeCasting {
 		return this.armyHistory.some(army => timestamp > army.start && timestamp < army.end)
 	}
 
-	protected getUptimePercent(): number {
+	protected override getUptimePercent(): number {
 		const fightDuration = this.parser.currentDuration - this.downtime.getDowntime()
 		const armyDuration = this.armyHistory.reduce((acc, army) => {
 			const downtime = this.downtime.getDowntime(army.start, army.end)

@@ -17,7 +17,7 @@ export class PrepullStatusAdapterStep extends AdapterStep {
 	private observedStatuses = new Map<Actor['id'], Set<number>>()
 	private precastEvents: Event[] = []
 
-	postprocess(adaptedEvents: Event[]): Event[] {
+	override postprocess(adaptedEvents: Event[]): Event[] {
 		for (const event of adaptedEvents) {
 			if (event.type !== 'statusApply' && event.type !== 'statusRemove') {
 				if (event.type === 'action') {

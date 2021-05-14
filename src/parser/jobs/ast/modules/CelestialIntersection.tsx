@@ -14,7 +14,7 @@ const SEVERITY_MOD = {
 
 // Lifted from WHM benison and adapted to AST and TSX
 export default class CelestialIntersection extends Module {
-	static handle = 'celestialintersection'
+	static override handle = 'celestialintersection'
 
 	@dependency private data!: Data
 	@dependency private suggestions!: Suggestions
@@ -23,7 +23,7 @@ export default class CelestialIntersection extends Module {
 	private uses = 0
 	private totalHeld = 0
 
-	protected init() {
+	protected override init() {
 		this.addEventHook('cast', {abilityId: this.data.actions.CELESTIAL_INTERSECTION.id, by: 'player'}, this.onCast)
 		this.addEventHook('complete', this.onComplete)
 	}

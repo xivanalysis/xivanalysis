@@ -20,10 +20,10 @@ interface Trigger {
 }
 
 export default class BrokenLog extends Analyser {
-	static handle = 'brokenLog'
-	static title = t('core.broken-log.title')`Broken Log`
-	static displayOrder = DISPLAY_ORDER.BROKEN_LOG
-	static displayMode = DisplayMode.RAW
+	static override handle = 'brokenLog'
+	static override title = t('core.broken-log.title')`Broken Log`
+	static override displayOrder = DISPLAY_ORDER.BROKEN_LOG
+	static override displayMode = DisplayMode.RAW
 
 	@dependency private data!: Data
 
@@ -67,7 +67,7 @@ export default class BrokenLog extends Analyser {
 		})
 	}
 
-	initialise() {
+	override initialise() {
 		const unknownAction = this.data.actions.UNKNOWN.id
 		this.addEventHook({cause: {type: 'action', action: unknownAction}}, this.triggerUnknownCause)
 		this.addEventHook({action: unknownAction}, this.triggerUnknownCause)
@@ -85,7 +85,7 @@ export default class BrokenLog extends Analyser {
 		))
 	}
 
-	output() {
+	override output() {
 		if (this.triggers.size === 0) {
 			return false
 		}

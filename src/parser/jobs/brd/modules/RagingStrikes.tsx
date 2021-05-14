@@ -35,9 +35,9 @@ interface MuseWindow {
 }
 
 export default class RagingStrikes extends BuffWindowModule {
-	static handle = 'rs'
-	static title = t('brd.rs.title')`Raging Strikes`
-	static displayOrder = DISPLAY_ORDER.RAGING_STRIKES
+	static override handle = 'rs'
+	static override title = t('brd.rs.title')`Raging Strikes`
+	static override displayOrder = DISPLAY_ORDER.RAGING_STRIKES
 
 	buffAction = this.data.actions.RAGING_STRIKES
 	buffStatus = this.data.statuses.RAGING_STRIKES
@@ -45,7 +45,7 @@ export default class RagingStrikes extends BuffWindowModule {
 	private museHistory: MuseWindow[] = []
 	private SUPPORT_ACTIONS: number[] = []
 
-	expectedGCDs = {
+	override expectedGCDs = {
 		expectedPerWindow: 8,
 		suggestionContent: <Trans id="brd.rs.suggestions.missedgcd.content">
 			Try to land 8 GCDs (9 GCDs with <StatusLink {...this.data.statuses.ARMYS_MUSE}/>) during every <ActionLink {...this.data.actions.RAGING_STRIKES}/> window.
@@ -57,7 +57,7 @@ export default class RagingStrikes extends BuffWindowModule {
 		},
 	}
 
-	trackedActions = {
+	override trackedActions = {
 		icon: this.data.actions.BARRAGE.icon,
 		actions: [
 			{
@@ -80,7 +80,7 @@ export default class RagingStrikes extends BuffWindowModule {
 		},
 	}
 
-	protected init() {
+	protected override init() {
 		super.init()
 
 		this.SUPPORT_ACTIONS = SUPPORT_ACTIONS.map(actionKey => this.data.actions[actionKey].id)
@@ -106,9 +106,9 @@ export default class RagingStrikes extends BuffWindowModule {
 		}
 	}
 
-	protected considerAction = (action: Action) => !this.SUPPORT_ACTIONS.includes(action.id)
+	protected override considerAction = (action: Action) => !this.SUPPORT_ACTIONS.includes(action.id)
 
-	protected changeExpectedGCDsClassLogic(buffWindow: BuffWindowState): number {
+	protected override changeExpectedGCDsClassLogic(buffWindow: BuffWindowState): number {
 		// Check if muse was up for at least 3 GCDs in this buffWindow
 		const museOverlap = this.museHistory.some(muse => (
 			buffWindow.rotation.filter(event => this.data.getAction(event.ability.guid)?.onGcd &&
@@ -121,7 +121,7 @@ export default class RagingStrikes extends BuffWindowModule {
 
 	private getEventTargetKey = (event: CastEvent): string => `${event.targetID}-${event.targetInstance}`
 
-	protected getBaselineExpectedTrackedAction(buffWindow: BuffWindowState, action: BuffWindowTrackedAction): number {
+	protected override getBaselineExpectedTrackedAction(buffWindow: BuffWindowState, action: BuffWindowTrackedAction): number {
 		if (action.action !== this.data.actions.IRON_JAWS) {
 			return action.expectedPerWindow || 0
 		}
@@ -137,7 +137,7 @@ export default class RagingStrikes extends BuffWindowModule {
 		return enemyIDs.size
 	}
 
-	protected reduceTrackedActionsEndOfFight(buffWindow: BuffWindowState): number {
+	protected override reduceTrackedActionsEndOfFight(buffWindow: BuffWindowState): number {
 		const windowDurationMillis = this.buffStatus.duration * 1000
 		const fightTimeRemaining = this.parser.pull.duration - (buffWindow.start - this.parser.eventTimeOffset)
 
@@ -152,7 +152,7 @@ export default class RagingStrikes extends BuffWindowModule {
 		return 0
 	}
 
-	protected changeComparisonClassLogic(buffWindow: BuffWindowState, action: BuffWindowTrackedAction) {
+	protected override changeComparisonClassLogic(buffWindow: BuffWindowState, action: BuffWindowTrackedAction) {
 		/**
 		 * Positive only if we had exactly one Iron Jaws in this RS
 		 * If expected > 1, we're in AoE and there is no clear rotation target, so don't highlight this cell

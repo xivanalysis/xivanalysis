@@ -34,8 +34,8 @@ const SEVERITIES = {
 }
 
 export default class Draw extends Module {
-	static handle = 'draw'
-	static title = t('ast.draw.title')`Draw`
+	static override handle = 'draw'
+	static override title = t('ast.draw.title')`Draw`
 
 	@dependency private data!: Data
 	@dependency private checklist!: Checklist
@@ -60,7 +60,7 @@ export default class Draw extends Module {
 	private PLAY: number[] = []
 	private ARCANA_STATUSES: number[] = []
 
-	protected init() {
+	protected override init() {
 
 		PLAY.forEach(actionKey => {
 			this.PLAY.push(this.data.actions[actionKey].id)

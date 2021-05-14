@@ -47,7 +47,7 @@ const INFURIATE_REDUCERS = [
 const INFURIATE_CDR = 5
 
 export class Gauge extends CoreGauge {
-	static title = t('war.gauge.title')`Beast Gauge`
+	static override title = t('war.gauge.title')`Beast Gauge`
 
 	@dependency private combatants!: Combatants
 	@dependency private cooldowns!: Cooldowns
@@ -57,7 +57,7 @@ export class Gauge extends CoreGauge {
 		chart: {label: 'Beast Gauge', color: JOBS.WARRIOR.colour},
 	}))
 
-	protected init() {
+	protected override init() {
 		super.init()
 
 		this.addEventHook(

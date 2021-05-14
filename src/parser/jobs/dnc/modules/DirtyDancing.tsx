@@ -103,9 +103,9 @@ class Dance {
 }
 
 export default class DirtyDancing extends Module {
-	static handle = 'dirtydancing'
-	static title = t('dnc.dirty-dancing.title')`Dance Issues`
-	static displayOrder = DISPLAY_ORDER.DIRTY_DANCING
+	static override handle = 'dirtydancing'
+	static override title = t('dnc.dirty-dancing.title')`Dance Issues`
+	static override displayOrder = DISPLAY_ORDER.DIRTY_DANCING
 
 	@dependency private checklist!: CheckList
 	@dependency private suggestions!: Suggestions
@@ -129,7 +129,7 @@ export default class DirtyDancing extends Module {
 		[ACTIONS.TECHNICAL_STEP.id]: 0,
 	}
 
-	protected init() {
+	protected override init() {
 		this.addEventHook('cast', {by: 'player', abilityId: STEPS}, this.beginDance)
 		this.addEventHook('cast', {by: 'player'}, this.continueDance)
 		this.addEventHook('cast', {by: 'player', abilityId: FINISHES}, this.finishDance)
@@ -351,7 +351,7 @@ export default class DirtyDancing extends Module {
 		}
 	}
 
-	output() {
+	override output() {
 		if (this.danceHistory.some(dance => dance.error)) {
 			return <Fragment>
 				<Message>

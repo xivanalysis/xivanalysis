@@ -10,13 +10,13 @@ interface DowntimeWindow {
 }
 
 export default class Downtime extends Module {
-	static handle = 'downtime'
+	static override handle = 'downtime'
 
 	@dependency private readonly unableToAct!: UnableToAct
 	@dependency private readonly invulnerability!: Invulnerability
 	@dependency private readonly timeline!: Timeline
 
-	protected init() {
+	protected override init() {
 		this.addEventHook('complete', this.onComplete)
 	}
 

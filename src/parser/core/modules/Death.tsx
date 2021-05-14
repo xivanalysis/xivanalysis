@@ -44,8 +44,8 @@ declare module 'legacyEvent' {
 }
 
 export class Death extends Analyser {
-	static handle = 'death'
-	static debug = true
+	static override handle = 'death'
+	static override debug = true
 
 	@dependency private data!: Data
 	@dependency private suggestions!: Suggestions
@@ -63,7 +63,7 @@ export class Death extends Analyser {
 	private count = 0
 	private _deadTime = 0
 
-	initialise() {
+	override initialise() {
 		// TODO: Look into generalising this to handle actors other than the parsed PC?
 
 		// An actor hitting 0 HP is a sign of a death.

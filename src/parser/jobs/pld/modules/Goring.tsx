@@ -17,16 +17,16 @@ const SEVERITIES = {
 }
 
 export default class Goring extends DoTs {
-	static handle = 'goring'
+	static override handle = 'goring'
 
-	static statusesToTrack = [
+	static override statusesToTrack = [
 		STATUSES.GORING_BLADE.id,
 	]
 
 	@dependency private checklist!: Checklist
 	@dependency private suggestions!: Suggestions
 
-	addChecklistRules() {
+	override addChecklistRules() {
 		this.checklist.add(new Rule({
 			name: 'Keep your Goring Blade up',
 			description: <Trans id="pld.goring.checklist.goringblade.description">
@@ -43,7 +43,7 @@ export default class Goring extends DoTs {
 		}))
 	}
 
-	addClippingSuggestions(clip: TODO) {
+	override addClippingSuggestions(clip: TODO) {
 		// Suggestion for Goring Blade DoT clipping
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.GORING_BLADE.icon,

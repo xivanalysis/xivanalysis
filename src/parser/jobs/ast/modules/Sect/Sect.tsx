@@ -82,7 +82,7 @@ const NOCTURNAL_SECT_BUFF_ABILITY = {
 
 // Determine sect by checking the result of an aspected spell/ability
 export default class Sect extends Module {
-	static handle = 'sect'
+	static override handle = 'sect'
 
 	@dependency private statistics!: Statistics
 	@dependency private precastAction!: PrecastAction
@@ -92,13 +92,13 @@ export default class Sect extends Module {
 	private activeSectId: string | number | undefined = undefined
 	private gaveup = false
 
-	protected init() {
+	protected override init() {
 		this.addEventHook('cast', {abilityId: [...SECT_ACTIONS], by: 'player'}, this.onCast)
 		this.addEventHook('applybuff', {abilityId: [...SECT_STATUSES], by: 'player'}, this.onApplySect)
 		this.addEventHook('complete', this.onComplete)
 	}
 
-	normalise(events: Event[]) {
+	override normalise(events: Event[]) {
 		const startTime = this.parser.fight.start_time
 		let aspectedCast: CastEvent | null = null
 

@@ -25,9 +25,9 @@ interface DarksideDrop {
 }
 
 export class Darkside extends Module {
-	static handle = 'Darkside'
+	static override handle = 'Darkside'
 
-	static title = t('drk.darkside.title')`Darkside`
+	static override title = t('drk.darkside.title')`Darkside`
 	@dependency private checklist!: Checklist
 	@dependency private death!: Death
 
@@ -36,7 +36,7 @@ export class Darkside extends Module {
 	private lastEventTime: number | null = null
 	private darksideDrops: DarksideDrop[] = []
 
-	protected init() {
+	protected override init() {
 		this.addEventHook('normaliseddamage', {by: 'player', abilityId: Object.keys(DARKSIDE_EXTENSION).map(Number)}, this.updateDarkside)
 		this.addEventHook('death', {to: 'player'}, this.onDeath)
 		this.addEventHook('raise', {to: 'player'}, this.onRaise)
@@ -100,7 +100,7 @@ export class Darkside extends Module {
 		}))
 	}
 
-	output() {
+	override output() {
 		if (this.darksideDrops.length > 0) {
 			return (
 				<Table collapsing unstackable>

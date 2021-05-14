@@ -57,9 +57,9 @@ class TechnicalWindow {
 }
 
 export default class Technicalities extends Module {
-	static handle = 'technicalities'
-	static title = t('dnc.technicalities.title')`Technical Windows`
-	static displayOrder = DISPLAY_ORDER.TECHNICALITIES
+	static override handle = 'technicalities'
+	static override title = t('dnc.technicalities.title')`Technical Windows`
+	static override displayOrder = DISPLAY_ORDER.TECHNICALITIES
 
 	@dependency private combatants!: Combatants
 	@dependency private suggestions!: Suggestions
@@ -70,7 +70,7 @@ export default class Technicalities extends Module {
 	private badDevilments: number = 0
 	private lastDevilmentTimestamp: number = -1
 
-	protected init() {
+	protected override init() {
 		this.addEventHook('normalisedapplybuff', {to: 'player', abilityId: STATUSES.TECHNICAL_FINISH.id}, this.tryOpenWindow)
 		this.addEventHook('normalisedapplybuff', {by: 'player', abilityId: STATUSES.TECHNICAL_FINISH.id}, this.countTechBuffs)
 		this.addEventHook('removebuff', {to: 'player', abilityId: WINDOW_STATUSES}, this.tryCloseWindow)
@@ -263,7 +263,7 @@ export default class Technicalities extends Module {
 		}))
 	}
 
-	output() {
+	override output() {
 		const otherDancers = this.history.filter(window => window.containsOtherDNC).length > 0
 		return <Fragment>
 			{otherDancers && (

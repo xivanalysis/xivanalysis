@@ -60,8 +60,8 @@ class NoMercyState {
 }
 
 export default class NoMercy extends Module {
-	static handle = 'nomercy'
-	static title = t('gnb.nomercy.title')`No Mercy Windows`
+	static override handle = 'nomercy'
+	static override title = t('gnb.nomercy.title')`No Mercy Windows`
 
 	@dependency private suggestions!: Suggestions
 	@dependency private timeline!: Timeline
@@ -72,7 +72,7 @@ export default class NoMercy extends Module {
 		return _.last(this.noMercyWindows)
 	}
 
-	protected init() {
+	protected override init() {
 		this.addEventHook('cast', {by: 'player'}, this.onCast)
 		this.addEventHook(
 			'removebuff',
@@ -193,7 +193,7 @@ export default class NoMercy extends Module {
 		}))
 	}
 
-	output() {
+	override output() {
 		return <RotationTable
 			targets={[
 				{

@@ -100,7 +100,7 @@ export class TrackedOverheal {
 }
 
 export class CoreOverheal extends Module {
-	static handle: string = 'overheal'
+	static override handle: string = 'overheal'
 
 	@dependency private checklist!: Checklist
 	@dependency private suggestions!: Suggestions
@@ -185,7 +185,7 @@ export class CoreOverheal extends Module {
 		return <Trans id="core.overheal.suggestion.why">You had an overheal of { overhealPercent.toFixed(2) }%</Trans>
 	}
 
-	protected init() {
+	protected override init() {
 		this.direct = new TrackedOverheal({
 			name: this.overhealName,
 			color: this.overhealColor,
@@ -343,7 +343,7 @@ class InvertedRequirement extends Requirement {
 		return 100 - this.percent
 	}
 
-	get content() {
+	override get content() {
 		if (this._percent !== null || this.value === null) { return `${this.percentInverted.toFixed(2)}%` }
 		return `${this.value.toFixed(0)}/${this.target.toFixed(0)}` // avoid weird floating point shit
 	}

@@ -23,8 +23,8 @@ const SEVERITIES = {
 }
 
 export default class Horoscope extends Module {
-	static handle = 'horoscope'
-	static title = t('ast.horoscope.title')`Horoscope`
+	static override handle = 'horoscope'
+	static override title = t('ast.horoscope.title')`Horoscope`
 
 	@dependency private data!: Data
 	@dependency private cooldowns!: Cooldowns
@@ -34,7 +34,7 @@ export default class Horoscope extends Module {
 	private activations = 0
 	private nonHoroscopeHeals = 0
 
-	protected init() {
+	protected override init() {
 
 		const HELIOS_CASTS = [
 			this.data.actions.HELIOS.id,

@@ -51,9 +51,9 @@ const MAX_ESPRIT = 100
 const SABER_DANCE_COST = 50
 
 export default class EspritGauge extends Module {
-	static handle = 'espritgauge'
-	static title = t('dnc.esprit-gauge.title')`Esprit Gauge`
-	static displayOrder = DISPLAY_ORDER.ESPRIT
+	static override handle = 'espritgauge'
+	static override title = t('dnc.esprit-gauge.title')`Esprit Gauge`
+	static override displayOrder = DISPLAY_ORDER.ESPRIT
 
 	@dependency private combatants!: Combatants
 	@dependency private suggestions!: Suggestions
@@ -65,7 +65,7 @@ export default class EspritGauge extends Module {
 	private currentEsprit = 0
 	private improvisationStart = 0
 
-	protected init() {
+	protected override init() {
 		this.addEventHook('normaliseddamage', {by: 'player'}, this.onDamage)
 		this.addEventHook('cast', {by: 'player', abilityId: ACTIONS.SABER_DANCE.id}, this.onConsumeEsprit)
 		this.addEventHook('applybuff', {by: 'player', abilityId: STATUSES.IMPROVISATION.id}, this.startImprov)
@@ -154,7 +154,7 @@ export default class EspritGauge extends Module {
 		}))
 	}
 
-	output() {
+	override output() {
 		const dncColor = Color(JOBS.DANCER.colour)
 
 		/* eslint-disable @typescript-eslint/no-magic-numbers */

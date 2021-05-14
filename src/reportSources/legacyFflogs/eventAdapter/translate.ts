@@ -31,7 +31,7 @@ const targetHitType: Partial<Record<HitType, TargetModifier>> = {
 export class TranslateAdapterStep extends AdapterStep {
 	private unhandledTypes = new Set<string>()
 
-	adapt(baseEvent: FflogsEvent, _adaptedEvents: Event[]): Event[] {
+	override adapt(baseEvent: FflogsEvent, _adaptedEvents: Event[]): Event[] {
 		switch (baseEvent.type) {
 		case 'begincast':
 		case 'cast':

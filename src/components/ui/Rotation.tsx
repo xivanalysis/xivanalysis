@@ -11,7 +11,7 @@ interface RotationProps {
 }
 
 export default class Rotation extends Component<RotationProps> {
-	render() {
+	override render() {
 		const {events} = this.props
 
 		return <div className={styles.container}>

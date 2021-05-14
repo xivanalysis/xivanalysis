@@ -38,10 +38,10 @@ interface CardLog extends CardState {
 }
 
 export default class ArcanaSuggestions extends Module {
-	static handle = 'arcanaSuggestions'
+	static override handle = 'arcanaSuggestions'
 
-	static title = t('ast.arcana-suggestions.title')`Arcana Logs`
-	static displayOrder = DISPLAY_ORDER.ARCANA_TRACKING
+	static override title = t('ast.arcana-suggestions.title')`Arcana Logs`
+	static override displayOrder = DISPLAY_ORDER.ARCANA_TRACKING
 
 	@dependency private data!: Data
 	@dependency private combatants!: Combatants
@@ -55,7 +55,7 @@ export default class ArcanaSuggestions extends Module {
 
 	private SLEEVE_ICON: SleeveIcon = {}
 
-	protected init() {
+	protected override init() {
 		PLAY.forEach(actionKey => {
 			this.PLAY.push(this.data.actions[actionKey].id)
 		})
@@ -95,7 +95,7 @@ export default class ArcanaSuggestions extends Module {
 		})
 	}
 
-	output() {
+	override output() {
 		return <>
 			<p>
 				<Trans id="ast.arcana-suggestions.messages.explanation">
@@ -176,7 +176,7 @@ export default class ArcanaSuggestions extends Module {
 		</>
 	}
 
-	// Helper for output()
+	// Helper for override output()
 	RenderAction(artifact: CardLog) {
 		if (artifact.lastEvent.type === 'cast' && this.PLAY.includes(artifact.lastEvent.ability.guid)) {
 			const targetJob = getDataBy(JOBS, 'logType', artifact.targetJob as ActorType)
@@ -219,7 +219,7 @@ export default class ArcanaSuggestions extends Module {
 		</>
 	}
 
-	// Helper for output()
+	// Helper for override output()
 	RenderSpreadState(artifact: CardLog) {
 		const drawnArcana = artifact.drawState ? this.data.getStatus(artifact.drawState) : undefined
 

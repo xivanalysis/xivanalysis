@@ -8,13 +8,13 @@ import {SEVERITY} from 'parser/core/modules/Suggestions'
 import React from 'react'
 
 export default class InnerRelease extends BuffWindowModule {
-	static handle = 'ir'
-	static title = t('war.ir.title')`Inner Release`
+	static override handle = 'ir'
+	static override title = t('war.ir.title')`Inner Release`
 
 	buffAction = ACTIONS.INNER_RELEASE
 	buffStatus = STATUSES.INNER_RELEASE
 
-	expectedGCDs = {
+	override expectedGCDs = {
 		expectedPerWindow: 5,
 		suggestionContent: <Trans id="war.ir.suggestions.missedgcd.content">
 			Try to land 5 GCDs during every <ActionLink {...ACTIONS.INNER_RELEASE}/> window. If you cannot do this with full uptime and no clipping, consider adjusting your gearset for more Skill Speed.
@@ -23,7 +23,7 @@ export default class InnerRelease extends BuffWindowModule {
 			1: SEVERITY.MAJOR,
 		},
 	}
-	requiredGCDs = {
+	override requiredGCDs = {
 		icon: ACTIONS.FELL_CLEAVE.icon,
 		actions: [
 			ACTIONS.FELL_CLEAVE,
@@ -36,7 +36,7 @@ export default class InnerRelease extends BuffWindowModule {
 			1: SEVERITY.MAJOR,
 		},
 	}
-	trackedActions = {
+	override trackedActions = {
 		icon: ACTIONS.UPHEAVAL.icon,
 		actions: [
 			{
@@ -56,7 +56,7 @@ export default class InnerRelease extends BuffWindowModule {
 		},
 	}
 
-	trackedBadActions = {
+	override trackedBadActions = {
 		icon: ACTIONS.INNER_CHAOS.icon,
 		actions: [
 			{

@@ -50,8 +50,8 @@ class DriftWindow {
 }
 
 export default class Drift extends Module {
-	static handle = 'drift'
-	static title = t('mch.drift.title')`GCD Drift`
+	static override handle = 'drift'
+	static override title = t('mch.drift.title')`GCD Drift`
 
 	@dependency private downtime!: Downtime
 
@@ -62,7 +62,7 @@ export default class Drift extends Module {
 		[ACTIONS.DRILL.id]: new DriftWindow(ACTIONS.DRILL.id, this.parser.fight.start_time),
 	}
 
-	protected init() {
+	protected override init() {
 		this.addEventHook('cast', {by: 'player', abilityId: DRIFT_GCDS}, this.onDriftableCast)
 		this.addEventHook('cast', {by: 'player'}, this.onCast)
 	}
@@ -96,7 +96,7 @@ export default class Drift extends Module {
 		}
 	}
 
-	output() {
+	override output() {
 		// Nothing to show
 		if (!this.driftedWindows.length) { return }
 

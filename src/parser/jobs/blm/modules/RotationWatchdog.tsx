@@ -157,9 +157,9 @@ class GaugeState {
 }
 
 export default class RotationWatchdog extends Module {
-	static handle = 'RotationWatchdog'
-	static title = t('blm.rotation-watchdog.title')`Rotation Outliers`
-	static displayOrder = DISPLAY_ORDER.ROTATION
+	static override handle = 'RotationWatchdog'
+	static override title = t('blm.rotation-watchdog.title')`Rotation Outliers`
+	static override displayOrder = DISPLAY_ORDER.ROTATION
 
 	@dependency private checklist!: Checklist
 	@dependency private suggestions!: Suggestions
@@ -184,7 +184,7 @@ export default class RotationWatchdog extends Module {
 	private astralFiresMissingDespairs = 0
 	private primaryTargetId?: number
 
-	protected init() {
+	protected override init() {
 		this.addEventHook('cast', {by: 'player'}, this.onCast)
 		this.addEventHook('complete', this.onComplete)
 		this.addEventHook(BLM_GAUGE_EVENT, this.onGaugeEvent)
@@ -478,7 +478,7 @@ export default class RotationWatchdog extends Module {
 		// TODO: Check for hardcast T3s, if this cycle ends in downtime, that cast time should've been a fire spell
 	}
 
-	output() {
+	override output() {
 		const outliers: Cycle[] = this.history.filter(cycle => cycle.errorCode.priority >
 			CYCLE_ERRORS.SHORT.priority || DEBUG_SHOW_ALL_CYCLES)
 		if (outliers.length > 0) {

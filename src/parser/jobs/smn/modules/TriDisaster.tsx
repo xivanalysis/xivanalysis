@@ -22,9 +22,9 @@ import React from 'react'
 const TRI_DISASTER_COOLDOWN = ACTIONS.TRI_DISASTER.cooldown * 1000
 
 export default class TriDisaster extends Module {
-	static handle = 'tridisaster'
-	static title = t('smn.tridisaster.title')`Tri-disaster`
-	static debug = true
+	static override handle = 'tridisaster'
+	static override title = t('smn.tridisaster.title')`Tri-disaster`
+	static override debug = true
 
 	@dependency private cooldowns!: Cooldowns
 	@dependency private data!: Data
@@ -33,7 +33,7 @@ export default class TriDisaster extends Module {
 	private lastTriDCast = -TRI_DISASTER_COOLDOWN
 	private badCastCount = 0
 
-	protected init() {
+	protected override init() {
 		this.addEventHook('cast', {by: 'player', abilityId: ACTIONS.TRI_DISASTER.id}, this.onTridisaster)
 		this.addEventHook('cast', {by: 'player', abilityId: [ACTIONS.DREADWYRM_TRANCE.id, ACTIONS.FIREBIRD_TRANCE.id]}, this.onReset)
 		this.addEventHook('cast', {by: 'player', abilityId: [ACTIONS.BIO_III.id, ACTIONS.MIASMA_III.id]}, this.checkCast)

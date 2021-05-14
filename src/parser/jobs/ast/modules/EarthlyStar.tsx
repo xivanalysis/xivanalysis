@@ -26,8 +26,8 @@ const SEVERETIES = {
 // const PLAYER_STATUSES = [STATUSES.EARTHLY_DOMINANCE.id, STATUSES.GIANT_DOMINANCE.id]
 
 export default class EarthlyStar extends Module {
-	static handle = 'earthlystar'
-	static title = t('ast.earthly-star.title')`Earthly Star`
+	static override handle = 'earthlystar'
+	static override title = t('ast.earthly-star.title')`Earthly Star`
 
 	@dependency private data!: Data
 	@dependency private suggestions!: Suggestions
@@ -41,7 +41,7 @@ export default class EarthlyStar extends Module {
 
 	private PET_CASTS: number[] = [this.data.actions.STELLAR_BURST.id, this.data.actions.STELLAR_EXPLOSION.id]
 
-	protected init() {
+	protected override init() {
 		this.addEventHook('cast', {abilityId: this.data.actions.EARTHLY_STAR.id, by: 'player'}, this.onPlace)
 		this.addEventHook('cast', {abilityId: this.PET_CASTS, by: 'pet'}, this.onPetCast)
 		// this.addHook('applybuff', {abilityId: PLAYER_STATUSES, by: 'player'}, this._onDominance)

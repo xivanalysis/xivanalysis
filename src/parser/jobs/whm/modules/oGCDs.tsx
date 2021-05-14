@@ -62,8 +62,8 @@ interface CooldownTrackCollection {
 }
 
 export default class OGCDs extends Module {
-	static handle = 'oGCDs'
-	static title = t('whm.ogcds.title')`Off Global Cooldowns`
+	static override handle = 'oGCDs'
+	static override title = t('whm.ogcds.title')`Off Global Cooldowns`
 
 	@dependency private checklist!: Checklist
 	@dependency private suggestions!: Suggestions
@@ -72,7 +72,7 @@ export default class OGCDs extends Module {
 	private castFilter: number[] = []
 	private spellCooldowns: {[id: number]: number} = {}
 
-	protected init() {
+	protected override init() {
 		this.initSpellCooldowns()
 		this.initCastFilter()
 		this.initCooldownUsage()

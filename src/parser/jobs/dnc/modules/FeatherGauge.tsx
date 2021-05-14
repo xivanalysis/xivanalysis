@@ -30,9 +30,9 @@ const FEATHER_GENERATION_CHANCE = .5
 const MAX_FEATHERS = 4
 
 export default class FeatherGauge extends Module {
-	static handle = 'feathergauge'
-	static title = t('dnc.feather-gauge.title')`Feather Gauge`
-	static displayOrder = DISPLAY_ORDER.FEATHERS
+	static override handle = 'feathergauge'
+	static override title = t('dnc.feather-gauge.title')`Feather Gauge`
+	static override displayOrder = DISPLAY_ORDER.FEATHERS
 
 	@dependency private suggestions!: Suggestions
 
@@ -42,7 +42,7 @@ export default class FeatherGauge extends Module {
 	private currentFeathers = 0
 	private featherOvercap = 0
 
-	protected init() {
+	protected override init() {
 		this.addEventHook('normaliseddamage', {by: 'player', abilityId: FEATHER_GENERATORS}, this.onCastGenerator)
 		this.addEventHook('cast', {by: 'player', abilityId: FEATHER_CONSUMERS}, this.onConsumeFeather)
 		this.addEventHook('death', {to: 'player'}, this.onDeath)
@@ -124,7 +124,7 @@ export default class FeatherGauge extends Module {
 		}))
 	}
 
-	output() {
+	override output() {
 		const dncColor = Color(JOBS.DANCER.colour)
 
 		/* eslint-disable @typescript-eslint/no-magic-numbers */

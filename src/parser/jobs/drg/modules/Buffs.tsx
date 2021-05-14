@@ -51,8 +51,8 @@ const OTHER_ACTION_COLOR: string = '#660000'
 const MIN_COT_HITS: number = 3
 
 export default class Buffs extends Module {
-	static handle = 'buffs'
-	static title = t('drg.buffs.title')`Buffs`
+	static override handle = 'buffs'
+	static override title = t('drg.buffs.title')`Buffs`
 
 	private badLifeSurges: number = 0
 	private fifthGcd: boolean = false
@@ -67,7 +67,7 @@ export default class Buffs extends Module {
 	@dependency private data!: Data
 	@dependency private statistics!: Statistics
 
-	init() {
+	override init() {
 		this.addEventHook('cast', {by: 'player'}, this.onCast)
 		this.addEventHook('complete', this.onComplete)
 		this.addEventHook('applybuff', {by: 'player', abilityId: STATUSES.RIGHT_EYE_SOLO.id}, () => this.soloDragonSight = true)

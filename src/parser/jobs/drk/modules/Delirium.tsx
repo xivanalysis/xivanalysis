@@ -9,14 +9,14 @@ import React from 'react'
 import {DISPLAY_ORDER} from './DISPLAY_ORDER'
 
 export class Delirium extends BuffWindowModule {
-	static handle = 'delirium'
-	static title = t('drk.delirium.title')`Delirium Usage`
-	static displayOrder = DISPLAY_ORDER.DELIRIUM
+	static override handle = 'delirium'
+	static override title = t('drk.delirium.title')`Delirium Usage`
+	static override displayOrder = DISPLAY_ORDER.DELIRIUM
 
 	buffAction = ACTIONS.DELIRIUM
 	buffStatus = STATUSES.DELIRIUM
 
-	expectedGCDs = {
+	override expectedGCDs = {
 		expectedPerWindow: 5,
 		suggestionContent: <Trans id="drk.delirium.suggestions.missedgcd.content">
 			Try to land 5 GCDs during every <ActionLink {...ACTIONS.DELIRIUM} /> window.  If you cannot do this with full uptime and no clipping, consider adjusting your gearset for more Skill Speed.
@@ -26,7 +26,7 @@ export class Delirium extends BuffWindowModule {
 			3: SEVERITY.MAJOR,
 		},
 	}
-	requiredGCDs = {
+	override requiredGCDs = {
 		icon: ACTIONS.BLOODSPILLER.icon,
 		actions: [
 			ACTIONS.BLOODSPILLER,

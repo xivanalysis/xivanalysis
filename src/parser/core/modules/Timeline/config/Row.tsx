@@ -63,7 +63,7 @@ export class SimpleRow implements Row {
 export class ContainerRow extends SimpleRow {
 	private containerRow?: SimpleRow
 
-	addRow<T extends Row>(row: T): T {
+	override addRow<T extends Row>(row: T): T {
 		// If there's items on the main row, we need to move them onto the container now there's a subrow
 		if (this.items.length > 0) {
 			this.buildContainer()
@@ -72,7 +72,7 @@ export class ContainerRow extends SimpleRow {
 		return super.addRow(row)
 	}
 
-	addItem<T extends Item>(item: T): T {
+	override addItem<T extends Item>(item: T): T {
 		// If we don't have a container, but there's already subrows, we need to build one
 		if (this.containerRow == null && this.rows.length > 0) {
 			this.buildContainer()

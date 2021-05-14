@@ -22,7 +22,7 @@ const GCD_ST_HEAL: Array<keyof ActionRoot> = [
 
 // Ripped off from WHM and converted to TSX
 export default class Synastry extends Module {
-	static handle = 'synastry'
+	static override handle = 'synastry'
 
 	@dependency private data!: Data
 	@dependency private combatants!: Combatants
@@ -33,7 +33,7 @@ export default class Synastry extends Module {
 
 	private GCD_ST_HEAL: number[] = []
 
-	protected init() {
+	protected override init() {
 		GCD_ST_HEAL.forEach(actionKey => {
 			this.GCD_ST_HEAL.push(this.data.actions[actionKey].id)
 		})
