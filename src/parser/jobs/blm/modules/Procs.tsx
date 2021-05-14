@@ -1,8 +1,9 @@
 import {Plural, Trans} from '@lingui/react'
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
-import {Events} from 'event'
+import {Event, Events} from 'event'
 import {CastEvent} from 'fflogs'
 import _ from 'lodash'
+import {filter} from 'parser/core/filter'
 import {ProcGroup, Procs as CoreProcs} from 'parser/core/modules/Procs'
 import {SEVERITY, Suggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
@@ -24,8 +25,6 @@ export default class Procs extends CoreProcs {
 		{
 			procStatus: this.data.statuses.THUNDERCLOUD,
 			consumeActions: [
-				this.data.actions.THUNDER,
-				this.data.actions.THUNDER_II,
 				this.data.actions.THUNDER_III,
 				this.data.actions.THUNDER_IV,
 			],
@@ -42,12 +41,25 @@ export default class Procs extends CoreProcs {
 		[this.data.actions.FIRE_III.id, this.data.actions.FIRE_III_PROC.id],
 	])
 
+	private hasSharpcast: boolean = false
+
+	initialise() {
+		super.initialise()
+
+		// Hacky workaround because Statuses aren't in Analyser format yet, can (and probably should) remove this when that's done
+		const trackedStatusFilter = filter<Event>()
+			.target(this.parser.actor.id)
+			.status(this.data.statuses.SHARPCAST.id)
+		this.addEventHook(trackedStatusFilter.type('statusApply'), () => { this.hasSharpcast = true })
+		this.addEventHook(trackedStatusFilter.type('statusRemove'), () => { this.hasSharpcast = false })
+	}
+
 	public checkProc(event: Event, statusId: number): boolean {
 		const procHistory = this.getHistoryForStatus(statusId)
 		if (procHistory.length === 0) { return false }
 
 		const lastHistoryEntry = _.last(procHistory)?.stop || 0
-		return event.timeStamp === lastHistoryEntry
+		return event.timestamp === lastHistoryEntry
 	}
 
 	/** @deprecated */
@@ -66,19 +78,22 @@ export default class Procs extends CoreProcs {
 		return true // otherwise, it's a proc
 	}
 
-	protected jobSpecificOnConsumeProc(_procGroup: ProcGroup, event: Events['action']): void {
+	protected jobSpecificOnConsumeProc(procGroup: ProcGroup, event: Events['action']): void {
 		// TODO: castTime needs to be on Analyser
 		// this.castTime.set([actionId], 0, event.timestamp, event.timestamp)
 		const actionProcId = this.actionProcs.get(event.action)
 		if (actionProcId !== undefined) {
 			event.overrideAction = actionProcId
 		}
+		// Thunder procs used while sharpcast is up re-grant the proc status without technically removing it, so we need to forcibly add the 'removal' here to keep the 'dropped' counting correct
+		if ((event.action === this.data.actions.THUNDER_III.id || event.action === this.data.actions.THUNDER_IV.id) && this.hasSharpcast) {
+			this.tryAddEventToRemovals(procGroup, event)
+		}
 		return
 	}
 
 	protected addJobSpecificSuggestions(): void {
-		const droppedThunderClouds: number = this.getDropsForStatus(this.data.statuses.THUNDERCLOUD.id).length -
-			this.getUsagesForStatus(this.data.statuses.THUNDERCLOUD.id).length
+		const droppedThunderClouds: number = this.getDropCountForStatus(this.data.statuses.THUNDERCLOUD.id)
 		if (droppedThunderClouds > 0) {
 			this.suggestions.add(new Suggestion({
 				icon: this.data.actions.THUNDER_III_PROC.icon,
@@ -92,8 +107,7 @@ export default class Procs extends CoreProcs {
 			}))
 		}
 
-		const droppedFireStarters: number = this.getDropsForStatus(this.data.statuses.FIRESTARTER.id).length -
-			this.getUsagesForStatus(this.data.statuses.FIRESTARTER.id).length
+		const droppedFireStarters: number = this.getDropCountForStatus(this.data.statuses.FIRESTARTER.id)
 		if (droppedFireStarters > 0) {
 			this.suggestions.add(new Suggestion({
 				icon: this.data.actions.FIRE_III_PROC.icon,
