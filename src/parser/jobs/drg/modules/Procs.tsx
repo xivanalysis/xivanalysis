@@ -23,10 +23,10 @@ export default class Procs extends CoreProcs {
 	]
 
 	protected addJobSpecificSuggestions(): void {
-		const droppedFang = this.getDropsForStatus(STATUSES.SHARPER_FANG_AND_CLAW.id).length - this.getUsagesForStatus(STATUSES.SHARPER_FANG_AND_CLAW.id).length
-		const droppedWheeling = this.getDropsForStatus(STATUSES.ENHANCED_WHEELING_THRUST.id).length - this.getUsagesForStatus(STATUSES.ENHANCED_WHEELING_THRUST.id).length
-		const droppedMirage = this.getDropsForStatus(STATUSES.DIVE_READY.id).length - this.getUsagesForStatus(STATUSES.DIVE_READY.id).length
-		const overwrittenDiveReady = this.getOverwritesForStatus(STATUSES.DIVE_READY.id).length
+		const droppedFang = this.getDropCountForStatus(STATUSES.SHARPER_FANG_AND_CLAW.id)
+		const droppedWheeling = this.getDropCountForStatus(STATUSES.ENHANCED_WHEELING_THRUST.id)
+		const droppedMirage = this.getDropCountForStatus(STATUSES.DIVE_READY.id)
+		const overwrittenDiveReady = this.getOverwriteCountForStatus(STATUSES.DIVE_READY.id)
 
 		this.suggestions.add(new TieredSuggestion({
 			icon: droppedFang >= droppedWheeling ? ACTIONS.FANG_AND_CLAW.icon : ACTIONS.WHEELING_THRUST.icon,

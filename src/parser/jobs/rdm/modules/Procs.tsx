@@ -140,12 +140,12 @@ export default class Procs extends CoreProcs {
 	}
 
 	protected addJobSpecificSuggestions() {
-		const missedFire = this.getDropsForStatus(STATUSES.VERFIRE_READY.id).length - this.getUsagesForStatus(STATUSES.VERFIRE_READY.id).length
-		const invulnFire = this.getInvulnsForStatus(STATUSES.VERFIRE_READY.id).length
-		const overWrittenFire = this.getOverwritesForStatus(STATUSES.VERFIRE_READY.id).length
-		const missedStone = this.getDropsForStatus(STATUSES.VERSTONE_READY.id).length - this.getUsagesForStatus(STATUSES.VERSTONE_READY.id).length
-		const invulnStone = this.getInvulnsForStatus(STATUSES.VERSTONE_READY.id).length
-		const overWrittenStone = this.getOverwritesForStatus(STATUSES.VERSTONE_READY.id).length
+		const missedFire = this.getDropCountForStatus(STATUSES.VERFIRE_READY.id)
+		const invulnFire = this.getInvulnCountForStatus(STATUSES.VERFIRE_READY.id)
+		const overWrittenFire = this.getOverwriteCountForStatus(STATUSES.VERFIRE_READY.id)
+		const missedStone = this.getDropCountForStatus(STATUSES.VERSTONE_READY.id)
+		const invulnStone = this.getInvulnCountForStatus(STATUSES.VERSTONE_READY.id)
+		const overWrittenStone = this.getOverwriteCountForStatus(STATUSES.VERSTONE_READY.id)
 
 		//Icons always default to the White Mana spell if black/jolt spells don't have more bad items.
 		//Fire/Stone are identical
