@@ -73,7 +73,7 @@ export default class DualCast extends Module {
 		//console.log('Invuln:' + invuln)
 		//console.log(`Cast: ${event.ability.name}, timestamp: ${this.parser.formatTimestamp(event.timestamp)}`)
 		if (castTime > 0 && this._castType === CAST_TYPE.DualCast) {
-			this._ctIndex = this.castTime.set('all', 0)
+			this._ctIndex = this.setFflogs('all', 0)
 			if (!CORRECT_GCDS.includes(abilityID) && invuln === 0) {
 				this._wastedDualCasts += 1
 				const casts = {
@@ -110,7 +110,7 @@ export default class DualCast extends Module {
 
 		this._castType = CAST_TYPE.HardCast
 		if (this._ctIndex != null) {
-			this.castTime.reset(this._ctIndex)
+			this.castTime.resetFflogs(this._ctIndex)
 		}
 		this._ctIndex = null
 		this._castTypeLastChanged = event.timestamp

@@ -61,11 +61,11 @@ export default class BlmWeaving extends Weaving {
 	}
 
 	_onApplyTriple() {
-		this._ctIndex = this.castTime.set('all', 0)
+		this._ctIndex = this.castTime.setFflogs('all', 0)
 	}
 
 	_onRemoveTriple() {
-		this.castTime.reset(this._ctIndex)
+		this.castTime.resetFflogs(this._ctIndex)
 	}
 
 	//check for fast casted F3/B3 and allow 1 weave if you get one
