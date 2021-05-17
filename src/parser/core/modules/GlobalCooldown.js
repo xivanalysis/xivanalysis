@@ -241,7 +241,6 @@ export default class GlobalCooldown extends Module {
 		let cooldown = (gcd.isInstant || gcd.castTime <= gcd.cooldown)
 			? gcd.cooldown
 			: Math.max(gcd.castTime, gcd.cooldown)
-		cooldown *= 1000
 
 		// Some actions are lower than or equal to min gcd, only adjust with ratios when they are not
 		if (cooldown > MIN_GCD) {

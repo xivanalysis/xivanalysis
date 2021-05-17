@@ -248,7 +248,7 @@ export default class BloodOfTheDragon extends Module {
 
 			// downtime overlap
 			lifeWindow.dtOverlapTime = this._intersectsDowntime(Math.min(
-				lifeWindow.start + ACTIONS.HIGH_JUMP.cooldown * 1000,
+				lifeWindow.start + ACTIONS.HIGH_JUMP.cooldown,
 				this.parser.eventTimeOffset + this.parser.pull.duration,
 			))
 

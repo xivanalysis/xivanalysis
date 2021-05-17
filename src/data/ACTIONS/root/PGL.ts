@@ -61,21 +61,21 @@ export const PGL = ensureActions({
 		id: 60,
 		name: 'Fists of Earth',
 		icon: 'https://xivapi.com/i/000000/000206.png',
-		cooldown: 3,
+		cooldown: 3000,
 	},
 
 	FISTS_OF_WIND: {
 		id: 73,
 		name: 'Fists of Wind',
 		icon: 'https://xivapi.com/i/002000/002527.png',
-		cooldown: 3,
+		cooldown: 3000,
 	},
 
 	MANTRA: {
 		id: 65,
 		name: 'Mantra',
 		icon: 'https://xivapi.com/i/000000/000216.png',
-		cooldown: 90,
+		cooldown: 90000,
 		statusesApplied: ['MANTRA'],
 	},
 
@@ -83,7 +83,7 @@ export const PGL = ensureActions({
 		id: 69,
 		name: 'Perfect Balance',
 		icon: 'https://xivapi.com/i/000000/000217.png',
-		cooldown: 120,
+		cooldown: 120000,
 		statusesApplied: ['PERFECT_BALANCE'],
 	},
 })

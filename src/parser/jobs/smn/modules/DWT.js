@@ -15,7 +15,7 @@ const INCORRECT_GCDS = [
 	ACTIONS.PHYSICK.id,
 ]
 
-export const DWT_CAST_TIME_MOD = -2.5
+export const DWT_CAST_TIME_MOD = -2500
 
 export const DWT_LENGTH = 15000
 
