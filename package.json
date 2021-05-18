@@ -96,7 +96,7 @@
     "@types/react-router-dom": "^5",
     "@types/react-scroll": "^1.5.4",
     "@types/react-window": "^1.8.2",
-    "@types/webpack": "^4.41.25",
+    "@types/webpack": "^5",
     "@types/webpack-dev-server": "^3.11.1",
     "@types/webpack-env": "^1.13.6",
     "@typescript-eslint/eslint-plugin": "^4.12.0",
