@@ -113,7 +113,7 @@
     "cross-env": "^7.0.3",
     "css-loader": "^5.0.1",
     "cssnano": "^5",
-    "dotenv": "^8.2.0",
+    "dotenv": "^9",
     "dotenv-expand": "^5.1.0",
     "eslint": "^7.17.0",
     "eslint-import-resolver-typescript": "^2.3.0",
