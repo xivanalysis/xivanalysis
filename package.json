@@ -19,7 +19,7 @@
   "dependencies": {
     "@babel/runtime-corejs3": "^7.12.5",
     "@lingui/react": "^2.5.0",
-    "@reach/auto-id": "^0.14.0",
+    "@reach/auto-id": "^0.15.0",
     "@sentry/browser": "^5.6.3",
     "@visx/pattern": "^1.7.0",
     "@visx/shape": "^1.7.0",
