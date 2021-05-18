@@ -130,7 +130,7 @@
     "jest-junit": "^12.0.0",
     "mini-css-extract-plugin": "^1.3.3",
     "postcss": "^8.2.2",
-    "postcss-calc": "^7.0.5",
+    "postcss-calc": "^8",
     "postcss-color-function": "^4.1.0",
     "postcss-loader": "^4.1.0",
     "postcss-modules-tilda": "^2.0.0",
