@@ -12,8 +12,8 @@ import {matchClosestLower} from 'utilities'
 const DEFAULT_MAX_WEAVES = 2 // Default castTime is 0
 const MAX_WEAVE_TIERS = {
 	0: 2,
-	1: 1,
-	2.5: 0,
+	1000: 1,
+	2500: 0,
 }
 
 const WEAVING_SEVERITY = {

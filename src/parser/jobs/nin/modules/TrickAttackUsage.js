@@ -6,7 +6,7 @@ import Module from 'parser/core/Module'
 import {Suggestion, TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import React from 'react'
 
-const TA_COOLDOWN_MILLIS = ACTIONS.TRICK_ATTACK.cooldown * 1000
+const TA_COOLDOWN_MILLIS = ACTIONS.TRICK_ATTACK.cooldown
 const OPTIMAL_GCD_COUNT = 5 // Opener should be Suiton > AE combo > SE before Trick
 
 const MUDRAS = [

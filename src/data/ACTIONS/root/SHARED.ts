@@ -8,7 +8,7 @@ export const SHARED = ensureActions({
 		icon: 'https://xivapi.com/i/000000/000026.png',
 		// Using a 2.5s "cooldown" so it sort-of-fits as a GCD and cooldown.
 		// We don't actually know what it was.
-		cooldown: 2.5,
+		cooldown: 2500,
 		statusesApplied: [],
 	},
 	SPRINT: {

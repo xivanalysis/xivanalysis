@@ -27,7 +27,7 @@ export const ARC = ensureActions({
 		name: 'Bloodletter',
 		icon: 'https://xivapi.com/i/000000/000361.png',
 		onGcd: false,
-		cooldown: 15,
+		cooldown: 15000,
 		potency: 150,
 	},
 	STRAIGHT_SHOT: {
@@ -42,7 +42,7 @@ export const ARC = ensureActions({
 		name: 'Barrage',
 		icon: 'https://xivapi.com/i/000000/000353.png',
 		onGcd: false,
-		cooldown: 80,
+		cooldown: 80000,
 		statusesApplied: ['BARRAGE'],
 	},
 	WINDBITE: {
@@ -57,7 +57,7 @@ export const ARC = ensureActions({
 		name: 'Raging Strikes',
 		icon: 'https://xivapi.com/i/000000/000352.png',
 		onGcd: false,
-		cooldown: 80,
+		cooldown: 80000,
 		statusesApplied: ['RAGING_STRIKES'],
 	},
 	REPELLING_SHOT: {
@@ -65,6 +65,6 @@ export const ARC = ensureActions({
 		name: 'Repelling Shot',
 		icon: 'https://xivapi.com/i/000000/000366.png',
 		onGcd: false,
-		cooldown: 30,
+		cooldown: 30000,
 	},
 })

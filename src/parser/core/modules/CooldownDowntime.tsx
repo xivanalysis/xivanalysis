@@ -193,7 +193,7 @@ export abstract class CooldownDowntime extends Module {
 
 		// Skill with charges get their allowed downtime from the charge build up time,
 		// so ignore the value on the group object
-		const step = gRep.cooldown * 1000 + ((maxCharges > 1) ? 0 : (group.allowedAverageDowntime ?? this.defaultAllowedAverageDowntime))
+		const step = gRep.cooldown + ((maxCharges > 1) ? 0 : (group.allowedAverageDowntime ?? this.defaultAllowedAverageDowntime))
 
 		const gResets = this.resets.get(group) ?? []
 		const gUsages = (this.usages.get(group) ?? [])
@@ -220,8 +220,8 @@ export abstract class CooldownDowntime extends Module {
 			// that will have timestamps that don't accurartely indicated when
 			// exactly they were used pre-fight
 			const actualSecondUseTime = gUsages[1]
-			if (actualSecondUseTime && (actualSecondUseTime.timestamp - actualFirstUseTime.timestamp) < gRep.cooldown * 1000) {
-				this.debug(`Assumed first use of skill ${gRep.name} at ${this.parser.formatTimestamp(actualSecondUseTime.timestamp - gRep.cooldown * 1000)}`)
+			if (actualSecondUseTime && (actualSecondUseTime.timestamp - actualFirstUseTime.timestamp) < gRep.cooldown) {
+				this.debug(`Assumed first use of skill ${gRep.name} at ${this.parser.formatTimestamp(actualSecondUseTime.timestamp - gRep.cooldown)}`)
 				this.debug(`Actual second use of skill ${gRep.name} at ${this.parser.formatTimestamp(actualSecondUseTime.timestamp)}`)
 				count += 1 // add in the pre-fight usage
 				currentTime = actualSecondUseTime.timestamp

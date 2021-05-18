@@ -21,8 +21,8 @@ const DRIFT_GCDS = [
 ]
 
 const COOLDOWN_MS = {
-	[ACTIONS.DRILL.id]: ACTIONS.DRILL.cooldown * 1000,
-	[ACTIONS.AIR_ANCHOR.id]: ACTIONS.AIR_ANCHOR.cooldown * 1000,
+	[ACTIONS.DRILL.id]: ACTIONS.DRILL.cooldown,
+	[ACTIONS.AIR_ANCHOR.id]: ACTIONS.AIR_ANCHOR.cooldown,
 }
 
 class DriftWindow {
