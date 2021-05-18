@@ -188,7 +188,7 @@ export default class GlobalCooldown extends Module {
 
 		const normalizedGcd = Math.round(
 			gcdLength
-			* ((BASE_GCD / 1000) / normaliseWith)
+			* (BASE_GCD / normaliseWith)
 			* (1 / speedMod),
 		)
 
