@@ -36,7 +36,7 @@ export default class Leylines extends Analyser {
 		this.data.statuses.CIRCLE_OF_POWER.id,
 	]
 
-	private buffWindows: Map<number, LeyLinesWindows> = new Map<number, LeyLinesWindows>()
+	private buffWindows: {[key: number]: LeyLinesWindows} = {}
 
 	initialise() {
 		const leyLinesFilter = filter<Event>()
@@ -51,7 +51,7 @@ export default class Leylines extends Analyser {
 		this.addEventHook('complete', this.onComplete)
 
 		this.leyLinesStatuses.forEach(status => {
-			this.buffWindows.set(status, {history: []})
+			this.buffWindows[status] = {history: []}
 		})
 	}
 
@@ -63,7 +63,7 @@ export default class Leylines extends Analyser {
 		if (!status) { return }
 
 		// Track the new window
-		const tracker = this.buffWindows.get(status.id)
+		const tracker = this.buffWindows[status.id]
 		if (!tracker || tracker.current) { return }
 
 		tracker.current = {
@@ -82,7 +82,7 @@ export default class Leylines extends Analyser {
 
 	// Finalise a buff window
 	private stopAndSave(statusId: number, endTime: number = this.parser.currentEpochTimestamp) {
-		const tracker = this.buffWindows.get(statusId)
+		const tracker = this.buffWindows[statusId]
 
 		// Already closed or can't find the tracker, nothing to do here
 		if (!tracker || !tracker.current) { return }
@@ -122,7 +122,7 @@ export default class Leylines extends Analyser {
 
 			const row = parentRow.addRow(new SimpleRow({label: status.name}))
 
-			this.buffWindows.get(buff)?.history.forEach(window => {
+			this.buffWindows[buff].history.forEach(window => {
 				if (window.stop == null) { return }
 				row.addItem(new StatusItem({
 					status,
@@ -133,8 +133,8 @@ export default class Leylines extends Analyser {
 		})
 
 		// Get the total duration of CoP uptime and Ley Lines, so we can get the overall percentage uptime
-		const copDuration = this.buffWindows.get(this.data.statuses.CIRCLE_OF_POWER.id)?.history.reduce((duration, cop) => duration + Math.max((cop.stop || 0) - cop.start, 0), 0) || 0
-		const linesDuration = this.buffWindows.get(this.data.statuses.LEY_LINES.id)?.history.reduce((duration, lines) => duration + Math.max((lines.stop || 0) - lines.start, 0), 0) || 0
+		const copDuration = this.buffWindows[this.data.statuses.CIRCLE_OF_POWER.id].history.reduce((duration, cop) => duration + Math.max((cop.stop || 0) - cop.start, 0), 0)
+		const linesDuration = this.buffWindows[this.data.statuses.LEY_LINES.id].history.reduce((duration, lines) => duration + Math.max((lines.stop || 0) - lines.start, 0), 0)
 
 		this.checklist.add(new Rule({
 			name: <Trans id="blm.leylines.checklist-caption">Stay in your <ActionLink {...this.data.actions.LEY_LINES} /></Trans>,
@@ -161,9 +161,9 @@ export default class Leylines extends Analyser {
 				</Table.Row>
 			</Table.Header>
 			<Table.Body>
-				{this.buffWindows.get(this.data.statuses.LEY_LINES.id)?.history.map(leyLinesEvent => {
+				{this.buffWindows[this.data.statuses.LEY_LINES.id].history.map(leyLinesEvent => {
 					// Find the CoPs that were inside this Ley Lines
-					const thisCoPHistory = this.buffWindows.get(this.data.statuses.CIRCLE_OF_POWER.id)?.history.filter(cops => ((cops.start >= leyLinesEvent.start) && ((cops.stop || 0) <= (leyLinesEvent.stop || 0)))) || []
+					const thisCoPHistory = this.buffWindows[this.data.statuses.CIRCLE_OF_POWER.id].history.filter(cops => ((cops.start >= leyLinesEvent.start) && ((cops.stop || 0) <= (leyLinesEvent.stop || 0))))
 
 					// For this set of CoPs, get the uptime
 					const thisCoPUptime = thisCoPHistory.reduce((duration, cop) => duration + Math.max((cop.stop || 0) - cop.start, 0), 0)
