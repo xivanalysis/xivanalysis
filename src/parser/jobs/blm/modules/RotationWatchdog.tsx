@@ -110,14 +110,14 @@ class Cycle {
 		}
 
 		// Account for the no-UH opener/LeyLines optimization when determining the expected count of Fire 4s
-		let expectedCount = (this.gaugeStateBeforeFire.umbralHearts === 0 && this.casts.filter(cast => cast.ability.guid === ACTIONS.FIRE_I.id).length === 0)
+		let expectedCount = (this.gaugeStateBeforeFire.umbralHearts === 0 && !this.casts.some(cast => cast.ability.guid === ACTIONS.FIRE_I.id))
 			? NO_UH_EXPECTED_FIRE4 : EXPECTED_FIRE4
 
 		/**
 		 * A bit hacky but, when we are in the opener and start with F3 it will be the only cycle that doesn't include any B3, Freeze, US.
 		 * Since we are in the opener, and specifically opening with F3, we are doing the (mod) Jp Opener, which drops the expected count by 1
 		 */
-		expectedCount -= (this.casts.filter(cast => CYCLE_ENDPOINTS.includes(cast.ability.guid)).length === 0 ? 1 : 0)
+		expectedCount -= (this.casts.some(cast => CYCLE_ENDPOINTS.includes(cast.ability.guid)) ? 1 : 0)
 		// Adjust expected count if the cycle included manafont
 		expectedCount += this.hasManafont ? FIRE4_FROM_MANAFONT : 0
 
@@ -146,8 +146,7 @@ class Cycle {
 	}
 
 	public get hardT3Count(): number {
-		return this.casts.filter(cast => cast.ability.overrideAction)
-			.filter(cast => cast.ability.overrideAction.id === ACTIONS.THUNDER_III_FALSE.id).length
+		return this.casts.filter(cast => cast.ability.overrideAction && cast.ability.overrideAction.id === ACTIONS.THUNDER_III_FALSE.id).length
 	}
 	public get extraT3s(): number {
 		if (this.firePhaseStartMP < MIN_MP_FOR_FULL_ROTATION) {
@@ -163,7 +162,7 @@ class Cycle {
 	}
 
 	public get isMissingFire(): boolean {
-		return !this.casts.filter(cast => FIRE_SPELLS.includes(cast.ability.guid)).length
+		return !this.casts.some(cast => FIRE_SPELLS.includes(cast.ability.guid))
 	}
 
 	public get shouldSkipB4(): boolean {
@@ -299,8 +298,9 @@ export default class RotationWatchdog extends Module {
 
 		// Override the error code for cycles that dropped enochian, when the cycle contained an unabletoact time long enough to kill it.
 		// Couldn't do this at the time of code assignment, since the downtime data wasn't fully available yet
-		this.history.filter(cycle => cycle.errorCode === CYCLE_ERRORS.DROPPED_ENOCHIAN).forEach(cycle => {
-			if (this.unableToAct.getDowntimes(cycle.startTime, cycle.endTime).filter(downtime => Math.max(0, downtime.end - downtime.start) >= ASTRAL_UMBRAL_DURATION).length > 0) {
+		this.history.forEach(cycle => {
+			if (cycle.errorCode !== CYCLE_ERRORS.DROPPED_ENOCHIAN) { return }
+			if (this.unableToAct.getDowntimes(cycle.startTime, cycle.endTime).some(downtime => Math.max(0, downtime.end - downtime.start) >= ASTRAL_UMBRAL_DURATION)) {
 				cycle.overrideErrorCode(CYCLE_ERRORS.FINAL_OR_DOWNTIME)
 			}
 		})
@@ -308,7 +308,8 @@ export default class RotationWatchdog extends Module {
 		// Re-check to see if any of the cycles that were tagged as missing Fire 4s were actually right before a downtime but the boss
 		// became invunlnerable before another Fire 4 could've been cast. If so, mark it as a finalOrDowntime cycle, clear the error code
 		// and reprocess it to see if there were any other errors
-		this.history.filter(cycle => cycle.errorCode === CYCLE_ERRORS.MISSING_FIRE4S).forEach(cycle => {
+		this.history.forEach(cycle => {
+			if (cycle.errorCode !== CYCLE_ERRORS.MISSING_FIRE4S) { return }
 			const cycleEnd = cycle.endTime ?? this.parser.fight.end_time
 			if (this.invuln.isInvulnerable('all', cycleEnd + FIRE_IV_CAST_MILLIS)) {
 				cycle.finalOrDowntime = true
