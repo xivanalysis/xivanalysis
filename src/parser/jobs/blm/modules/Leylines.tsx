@@ -143,8 +143,8 @@ export default class Leylines extends Analyser {
 		const linesDuration = this.buffWindows.get(STATUSES.LEY_LINES.id)?.history.reduce((duration, lines) => duration + Math.max(lines.stop || 0 - lines.start, 0), 0)
 
 		this.checklist.add(new Rule({
-			name: <Trans id="blm.leylines.checklist-caption">Stay in your Ley Lines</Trans>,
-			description: <Trans id="blm.leylines.checklist">Try to avoid leaving your Ley Lines after placing them. Take advantage of Ley Lines' size to stay in them while dodging AOEs and being in range of healers. If you can't stay in them for the majority of a Ley Lines' duration, consider changing where they're placed in the fight.</Trans>,
+			name: <Trans id="blm.leylines.checklist-caption">Stay in your <ActionLink {...this.data.actions.LEY_LINES} /></Trans>,
+			description: <Trans id="blm.leylines.checklist">Try to avoid leaving your <ActionLink showIcon={false} {...this.data.actions.LEY_LINES} /> after placing them. Take advantage of <ActionLink showIcon={false} {...this.data.actions.LEY_LINES} />' size to stay in them while dodging AOEs and being in range of healers. If you can't stay in them for the majority of a <ActionLink showIcon={false} {...this.data.actions.LEY_LINES} />' duration, consider changing where they're placed in the fight.</Trans>,
 			requirements: [
 				new Requirement({
 					name: <ActionLink {...ACTIONS.LEY_LINES} />,
