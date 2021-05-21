@@ -15,10 +15,6 @@ export default class GeneralCDDowntime extends CooldownDowntime {
 			allowedAverageDowntime: 4000,
 		},
 		{
-			cooldowns: [ACTIONS.SWIFTCAST],
-			firstUseOffset: 31000,
-		},
-		{
 			cooldowns: [ACTIONS.MANAFICATION],
 			firstUseOffset: 17500,
 		},

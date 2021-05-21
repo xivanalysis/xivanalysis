@@ -7,12 +7,10 @@ import ACTIONS from 'data/ACTIONS'
 import {CastEvent} from 'fflogs'
 import Module, {dependency} from 'parser/core/Module'
 import {Actors} from 'parser/core/modules/Actors'
-import Enemies from 'parser/core/modules/Enemies'
-import {EntityStatuses} from 'parser/core/modules/EntityStatuses'
 import {Invulnerability} from 'parser/core/modules/Invulnerability'
 import Suggestions, {SEVERITY, Suggestion, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import {Timeline} from 'parser/core/modules/Timeline'
-import UnableToAct from 'parser/core/modules/UnableToAct'
+import {UnableToAct} from 'parser/core/modules/UnableToAct'
 import React, {Fragment} from 'react'
 import {Icon, Message} from 'semantic-ui-react'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
@@ -42,7 +40,7 @@ const CYCLE_ENDPOINTS = [
 	ACTIONS.FREEZE.id,
 ]
 
-const FIRE_IV_CAST_MILLIS = ACTIONS.FIRE_IV.castTime * 1000
+// TODO const FIRE_IV_CAST_MILLIS = ACTIONS.FIRE_IV.castTime * 1000
 
 // This is feelycraft at the moment. Rotations shorter than this won't be processed for errors.
 const MIN_ROTATION_LENGTH = 3
@@ -197,11 +195,9 @@ export default class RotationWatchdog extends Module {
 	static displayOrder = DISPLAY_ORDER.ROTATION
 
 	@dependency private suggestions!: Suggestions
-	@dependency private invuln!: Invulnerability
-	@dependency private enemies!: Enemies
+	@dependency private invulnerability!: Invulnerability
 	@dependency private timeline!: Timeline
 	@dependency private unableToAct!: UnableToAct
-	@dependency private entityStatuses!: EntityStatuses
 	@dependency private actors!: Actors
 
 	private currentGaugeState: GaugeState = new GaugeState()
@@ -283,7 +279,7 @@ export default class RotationWatchdog extends Module {
 			this.currentRotation.hasManafont = true
 		}
 
-		if (actionId === ACTIONS.UMBRAL_SOUL.id && !this.invuln.isInvulnerable('all')) {
+		if (actionId === ACTIONS.UMBRAL_SOUL.id /* TODO && !this.invulnerability.isInvulnerable('all') */) {
 			this.uptimeSouls++
 		}
 	}
@@ -298,24 +294,36 @@ export default class RotationWatchdog extends Module {
 
 		// Override the error code for cycles that dropped enochian, when the cycle contained an unabletoact time long enough to kill it.
 		// Couldn't do this at the time of code assignment, since the downtime data wasn't fully available yet
-		this.history.forEach(cycle => {
-			if (cycle.errorCode !== CYCLE_ERRORS.DROPPED_ENOCHIAN) { return }
-			if (this.unableToAct.getDowntimes(cycle.startTime, cycle.endTime).some(downtime => Math.max(0, downtime.end - downtime.start) >= ASTRAL_UMBRAL_DURATION)) {
+		for (const cycle of this.history) {
+			if (cycle.errorCode !== CYCLE_ERRORS.DROPPED_ENOCHIAN) { continue }
+
+			const windows = this.unableToAct
+				.getWindows({
+					start: this.parser.fflogsToEpoch(cycle.startTime),
+					end: cycle.endTime && this.parser.fflogsToEpoch(cycle.endTime),
+				})
+				.map(window => ({
+					start: this.parser.epochToFflogs(window.start),
+					end: this.parser.epochToFflogs(window.end),
+				}))
+				.filter(window => Math.max(0, window.end - window.start) >= ASTRAL_UMBRAL_DURATION)
+
+			if (windows.length > 0) {
 				cycle.overrideErrorCode(CYCLE_ERRORS.FINAL_OR_DOWNTIME)
 			}
-		})
+		}
 
 		// Re-check to see if any of the cycles that were tagged as missing Fire 4s were actually right before a downtime but the boss
 		// became invunlnerable before another Fire 4 could've been cast. If so, mark it as a finalOrDowntime cycle, clear the error code
 		// and reprocess it to see if there were any other errors
 		this.history.forEach(cycle => {
 			if (cycle.errorCode !== CYCLE_ERRORS.MISSING_FIRE4S) { return }
-			const cycleEnd = cycle.endTime ?? this.parser.fight.end_time
-			if (this.invuln.isInvulnerable('all', cycleEnd + FIRE_IV_CAST_MILLIS)) {
+			/* TODO const cycleEnd = cycle.endTime ?? this.parser.fight.end_time
+			if (this.invulnerability.isInvulnerable('all', cycleEnd + FIRE_IV_CAST_MILLIS)) {
 				cycle.finalOrDowntime = true
 				cycle.overrideErrorCode(CYCLE_ERRORS.NONE)
 				this.processCycle(cycle)
-			}
+			}*/
 		})
 
 		// Suggestion for skipping B4 on rotations that are cut short by the end of the parse or downtime
@@ -448,8 +456,17 @@ export default class RotationWatchdog extends Module {
 
 		// If an event object wasn't passed, or the event was a transpose that occurred during downtime,
 		// treat this as a rotation that ended with some kind of downtime
-		if (!event || (event && event.ability.guid === ACTIONS.TRANSPOSE.id &&
-			this.invuln.isUntargetable('all', event.timestamp))) {
+		if (
+			!event
+			|| (
+				event
+				&& event.ability.guid === ACTIONS.TRANSPOSE.id
+				&& this.invulnerability.isActive({
+					timestamp: this.parser.fflogsToEpoch(event.timestamp),
+					types: ['untargetable'],
+				})
+			)
+		) {
 			this.currentRotation.finalOrDowntime = true
 		}
 

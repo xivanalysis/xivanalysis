@@ -229,7 +229,11 @@ export default class BloodOfTheDragon extends Module {
 	}
 
 	_intersectsDowntime(start) {
-		const windows = this.downtime.getDowntimeWindows(start)
+		const windows = this.downtime.getDowntimeWindows(this.parser.fflogsToEpoch(start))
+			.map(window => ({
+				start: this.parser.epochToFflogs(window.start),
+				end: this.parser.epochToFflogs(window.end),
+			}))
 		const end = start + DRAGON_DEFAULT_DURATION_MILLIS
 
 		for (const dtWindow of windows) {
@@ -247,7 +251,10 @@ export default class BloodOfTheDragon extends Module {
 			lifeWindow.buffsInDelayWindow = {}
 
 			// downtime overlap
-			lifeWindow.dtOverlapTime = this._intersectsDowntime((lifeWindow.start + ACTIONS.HIGH_JUMP.cooldown * 1000))
+			lifeWindow.dtOverlapTime = this._intersectsDowntime(Math.min(
+				lifeWindow.start + ACTIONS.HIGH_JUMP.cooldown,
+				this.parser.eventTimeOffset + this.parser.pull.duration,
+			))
 
 			// flag for last life window
 			lifeWindow.isLast = lifeWindow.start + lifeWindow.duration > this.parser.fight.end_time

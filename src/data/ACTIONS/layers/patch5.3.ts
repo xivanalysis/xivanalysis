@@ -12,7 +12,7 @@ export const patch530: Layer<ActionRoot> = {
 		REFULGENT_ARROW: {potency: 340},
 
 		// MNK 5.3 cooldown changes
-		PERFECT_BALANCE: {cooldown: 90},
+		PERFECT_BALANCE: {cooldown: 90000},
 
 		// AST 5.3 mp changes
 		HELIOS: {mpCost: 700},

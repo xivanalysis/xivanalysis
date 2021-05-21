@@ -12,8 +12,8 @@ import {matchClosestLower} from 'utilities'
 const DEFAULT_MAX_WEAVES = 2 // Default castTime is 0
 const MAX_WEAVE_TIERS = {
 	0: 2,
-	1: 1,
-	2.5: 0,
+	1000: 1,
+	2500: 0,
 }
 
 const WEAVING_SEVERITY = {
@@ -27,7 +27,7 @@ export default class Weaving extends Module {
 		'castTime',
 		'data',
 		'gcd',
-		'invuln',
+		'invulnerability',
 		'speedmod',
 		'suggestions',
 	]
@@ -119,9 +119,12 @@ export default class Weaving extends Module {
 
 	_saveIfBad() {
 		const leadingGcdEvent =	this._leadingGcdEvent || {timestamp: this.parser.eventTimeOffset}
-		const gcdTimeDiff = this._trailingGcdEvent.timestamp -
-			leadingGcdEvent.timestamp -
-			this.invuln.getUntargetableUptime('all', 	leadingGcdEvent.timestamp, this._trailingGcdEvent.timestamp)
+		const gcdTimeDiff = this._trailingGcdEvent.timestamp
+			- leadingGcdEvent.timestamp
+			- this.invulnerability.getDuration({
+				start: this.parser.fflogsToEpoch(leadingGcdEvent.timestamp),
+				end: this.parser.fflogsToEpoch(this._trailingGcdEvent.timestamp),
+			})
 
 		const weave = {
 			leadingGcdEvent,
@@ -148,7 +151,9 @@ export default class Weaving extends Module {
 	isBadWeave(weave, maxWeaves) {
 		// Calc. the no. of weaves - we're ignoring any made while the boss is untargetable, and events that happened before the pull
 		const weaveCount = weave.weaves.filter(
-			event => !this.invuln.isUntargetable('all', event.timestamp) && event.timestamp >= this.parser.fight.start_time,
+			event => true
+				&& !this.invulnerability.isActive({timestamp: this.parser.fflogsToEpoch(event.timestamp), types: ['untargetable']})
+				&& event.timestamp >= this.parser.fight.start_time,
 		).length
 
 		// Just using maxWeaves to allow potential subclasses to utilise standard functionality with custom max

@@ -19,6 +19,7 @@ MockReassignUnknownActorStep.mockImplementation((...args: ReassignUnknownActorSt
 
 const actor: Actor = {
 	id: '1',
+	kind: '1',
 	name: 'Test Actor',
 	team: Team.FRIEND,
 	playerControlled: true,
@@ -522,6 +523,12 @@ const fakeEvents: Record<FflogsEvent['type'], FflogsEvent> = {
 			abilityIcon: '013000-013307.png',
 		},
 		isBuff: false,
+	},
+	wipecalled: {
+		timestamp: 100000000,
+		type: 'wipecalled',
+		sourceIsFriendly: true,
+		targetIsFriendly: true,
 	},
 }
 

@@ -10,7 +10,7 @@ import React, {Fragment} from 'react'
 import {Accordion} from 'semantic-ui-react'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 
-const LIGHTSPEED_CAST_TIME_MOD = -2.5
+const LIGHTSPEED_CAST_TIME_MOD = -2500
 
 export default class LIGHTSPEED extends Module {
 	static handle = 'lightspeed'

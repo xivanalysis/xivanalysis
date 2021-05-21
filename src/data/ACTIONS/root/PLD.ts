@@ -93,7 +93,7 @@ export const PLD = ensureActions({
 		name: 'Clemency',
 		icon: 'https://xivapi.com/i/002000/002509.png',
 		onGcd: true,
-		castTime: 1.5,
+		castTime: 1500,
 		breaksCombo: true,
 	},
 	ROYAL_AUTHORITY: {
@@ -114,7 +114,7 @@ export const PLD = ensureActions({
 		name: 'Holy Spirit',
 		icon: 'https://xivapi.com/i/002000/002514.png',
 		onGcd: true,
-		castTime: 1.5,
+		castTime: 1500,
 		breaksCombo: true,
 		potency: 350,
 	},
@@ -123,7 +123,7 @@ export const PLD = ensureActions({
 		name: 'Holy Circle',
 		icon: 'https://xivapi.com/i/002000/002517.png',
 		onGcd: true,
-		castTime: 1.5,
+		castTime: 1500,
 		breaksCombo: true,
 		potency: 250,
 	},
@@ -152,7 +152,7 @@ export const PLD = ensureActions({
 		name: 'Fight Or Flight',
 		icon: 'https://xivapi.com/i/000000/000166.png',
 		onGcd: false,
-		cooldown: 60,
+		cooldown: 60000,
 		statusesApplied: ['FIGHT_OR_FLIGHT'],
 	},
 	IRON_WILL: {
@@ -160,14 +160,14 @@ export const PLD = ensureActions({
 		name: 'Iron Will',
 		icon: 'https://xivapi.com/i/002000/002505.png',
 		onGcd: false,
-		cooldown: 10,
+		cooldown: 10000,
 	},
 	SENTINEL: {
 		id: 17,
 		name: 'Sentinel',
 		icon: 'https://xivapi.com/i/000000/000151.png',
 		onGcd: false,
-		cooldown: 120,
+		cooldown: 120000,
 		statusesApplied: ['SENTINEL'],
 	},
 	CIRCLE_OF_SCORN: {
@@ -175,7 +175,7 @@ export const PLD = ensureActions({
 		name: 'Circle Of Scorn',
 		icon: 'https://xivapi.com/i/000000/000161.png',
 		onGcd: false,
-		cooldown: 25,
+		cooldown: 25000,
 		statusesApplied: ['CIRCLE_OF_SCORN'],
 	},
 	COVER: {
@@ -183,7 +183,7 @@ export const PLD = ensureActions({
 		name: 'Cover',
 		icon: 'https://xivapi.com/i/002000/002501.png',
 		onGcd: false,
-		cooldown: 120,
+		cooldown: 120000,
 		statusesApplied: ['COVER', 'COVERED'],
 	},
 	SPIRITS_WITHIN: {
@@ -191,14 +191,14 @@ export const PLD = ensureActions({
 		name: 'Spirits Within',
 		icon: 'https://xivapi.com/i/002000/002503.png',
 		onGcd: false,
-		cooldown: 30,
+		cooldown: 30000,
 	},
 	HALLOWED_GROUND: {
 		id: 30,
 		name: 'Hallowed Ground',
 		icon: 'https://xivapi.com/i/002000/002502.png',
 		onGcd: false,
-		cooldown: 420,
+		cooldown: 420000,
 		statusesApplied: ['HALLOWED_GROUND'],
 	},
 	SHELTRON: {
@@ -206,7 +206,7 @@ export const PLD = ensureActions({
 		name: 'Sheltron',
 		icon: 'https://xivapi.com/i/002000/002510.png',
 		onGcd: false,
-		cooldown: 5,
+		cooldown: 5000,
 		statusesApplied: ['SHELTRON'],
 	},
 	DIVINE_VEIL: {
@@ -214,7 +214,7 @@ export const PLD = ensureActions({
 		name: 'Divine Veil',
 		icon: 'https://xivapi.com/i/002000/002508.png',
 		onGcd: false,
-		cooldown: 120,
+		cooldown: 120000,
 		statusesApplied: ['DIVINE_VEIL', 'DIVINE_VEIL_PROC'],
 	},
 	INTERVENTION: {
@@ -222,7 +222,7 @@ export const PLD = ensureActions({
 		name: 'Intervention',
 		icon: 'https://xivapi.com/i/002000/002512.png',
 		onGcd: false,
-		cooldown: 10,
+		cooldown: 10000,
 		statusesApplied: ['INTERVENTION'],
 	},
 	REQUIESCAT: {
@@ -230,7 +230,7 @@ export const PLD = ensureActions({
 		name: 'Requiescat',
 		icon: 'https://xivapi.com/i/002000/002513.png',
 		onGcd: false,
-		cooldown: 60,
+		cooldown: 60000,
 		statusesApplied: ['REQUIESCAT'],
 	},
 	PASSAGE_OF_ARMS: {
@@ -238,7 +238,7 @@ export const PLD = ensureActions({
 		name: 'Passage Of Arms',
 		icon: 'https://xivapi.com/i/002000/002515.png',
 		onGcd: false,
-		cooldown: 120,
+		cooldown: 120000,
 		statusesApplied: ['PASSAGE_OF_ARMS'],
 	},
 	INTERVENE: {
@@ -246,7 +246,7 @@ export const PLD = ensureActions({
 		name: 'Intervene',
 		icon: 'https://xivapi.com/i/002000/002520.png',
 		onGcd: false,
-		cooldown: 30,
+		cooldown: 30000,
 		charges: 2,
 	},
 })

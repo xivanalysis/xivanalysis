@@ -8,7 +8,7 @@ export const patch510: Layer<ActionRoot> = {
 	data: {
 		// BRD 5.1 cooldown+potency changes
 		SIDEWINDER: {potency: [100, 200, 300]},
-		TROUBADOUR: {cooldown: 120},
+		TROUBADOUR: {cooldown: 120000},
 		VENOMOUS_BITE: {potency: 30},
 		WINDBITE: {potency: 40},
 		CAUSTIC_BITE: {potency: 40},
@@ -17,7 +17,7 @@ export const patch510: Layer<ActionRoot> = {
 
 		// AST 5.1 mp changes and CU additional noct statuses
 		COLLECTIVE_UNCONSCIOUS: {
-			cooldown: 60,
+			cooldown: 60000,
 			statusesApplied: [
 				'COLLECTIVE_UNCONSCIOUS_DIURNAL_MITIGATION',
 				'COLLECTIVE_UNCONSCIOUS',

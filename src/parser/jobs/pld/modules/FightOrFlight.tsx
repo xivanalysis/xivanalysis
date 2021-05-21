@@ -5,7 +5,7 @@ import {RotationTable, RotationTableEntry} from 'components/ui/RotationTable'
 import {getDataBy} from 'data'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
-import {CastEvent} from 'fflogs'
+import {BuffEvent, CastEvent} from 'fflogs'
 import _ from 'lodash'
 import Module, {dependency} from 'parser/core/Module'
 import {Invulnerability} from 'parser/core/modules/Invulnerability'
@@ -69,8 +69,6 @@ const EXCLUDED_GCD_IDS = [
 	ACTIONS.CONFITEOR.id,
 ]
 
-const FOF_DURATION_MILLIS = STATUSES.FIGHT_OR_FLIGHT.duration * 1000
-
 class FightOrFlightState {
 	start: number | null = null
 	lastGoringGcd: number | null = null
@@ -79,7 +77,7 @@ class FightOrFlightState {
 	circleOfScornCounter: number = 0
 	spiritsWithinCounter: number = 0
 	interveneCounter: number = 0
-	isRushed: boolean = false
+	goringTooCloseCounter: number = 0
 }
 
 class FightOrFlightErrorResult {
@@ -97,7 +95,7 @@ export default class FightOrFlight extends Module {
 
 	@dependency private suggestions!: Suggestions
 	@dependency private timeline!: Timeline
-	@dependency private invuln!: Invulnerability
+	@dependency private invulnerability!: Invulnerability
 
 	// Internal State Counters
 	// ToDo: Merge some of these, so instead of saving rotations, make the rotation part of FoFState, so we can reduce the error result out of the saved rotations
@@ -128,11 +126,6 @@ export default class FightOrFlight extends Module {
 
 		if (actionId === ACTIONS.FIGHT_OR_FLIGHT.id) {
 			this.fofState.start = event.timestamp
-
-			const endOfWindow = event.timestamp + FOF_DURATION_MILLIS
-			this.fofState.isRushed = endOfWindow >= this.parser.fight.end_time
-				|| this.invuln.isInvulnerable('all', endOfWindow)
-				|| this.invuln.isUntargetable('all', endOfWindow)
 		}
 
 		if (this.fofState.start) {
@@ -148,8 +141,8 @@ export default class FightOrFlight extends Module {
 				this.fofState.goringCounter++
 
 				if (this.fofState.lastGoringGcd !== null) {
-					if (this.fofState.gcdCounter - this.fofState.lastGoringGcd < CONSTANTS.GORING.MINIMUM_DISTANCE && !this.fofState.isRushed) {
-						this.fofErrorResult.goringTooCloseCounter++
+					if (this.fofState.gcdCounter - this.fofState.lastGoringGcd < CONSTANTS.GORING.MINIMUM_DISTANCE) {
+						this.fofState.goringTooCloseCounter++
 					}
 				}
 				this.fofState.lastGoringGcd = this.fofState.gcdCounter
@@ -173,13 +166,21 @@ export default class FightOrFlight extends Module {
 		}
 	}
 
-	private onRemoveFightOrFlight() {
-		if (!this.fofState.isRushed) {
+	private onRemoveFightOrFlight(event: BuffEvent) {
+		// If the enemy is untargetable at the end of FoF, the player was rushed - forgive missed hits.
+		// While technically this will never be called beyond the end of the fight, let's be really sure
+		const epochTimestamp = this.parser.fflogsToEpoch(event.timestamp)
+		const wasRushed = event.timestamp >= this.parser.eventTimeOffset + this.parser.pull.duration
+			|| this.invulnerability.isActive({timestamp: epochTimestamp, types: ['invulnerable']})
+			|| this.invulnerability.isActive({timestamp: epochTimestamp, types: ['untargetable']})
+
+		if (!wasRushed) {
 			this.fofErrorResult.missedGcds += Math.max(0, CONSTANTS.GCD.EXPECTED - this.fofState.gcdCounter)
 			this.fofErrorResult.missedGorings += Math.max(0, CONSTANTS.GORING.EXPECTED - this.fofState.goringCounter)
 			this.fofErrorResult.missedSpiritWithins += Math.max(0, CONSTANTS.SPIRITS_WITHIN.EXPECTED - this.fofState.spiritsWithinCounter)
 			this.fofErrorResult.missedCircleOfScorns += Math.max(0, CONSTANTS.CIRCLE_OF_SCORN.EXPECTED - this.fofState.circleOfScornCounter)
 			this.fofErrorResult.missedIntervenes += Math.max(0, CONSTANTS.INTERVENE.EXPECTED - this.fofState.interveneCounter)
+			this.fofErrorResult.goringTooCloseCounter += this.fofState.goringTooCloseCounter
 		}
 
 		this.fofState = new FightOrFlightState()

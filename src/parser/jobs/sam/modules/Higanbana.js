@@ -28,7 +28,7 @@ export default class Higanbana extends Module {
 		'checklist',
 		'enemies',
 		'entityStatuses',
-		'invuln',
+		'invulnerability',
 		'suggestions',
 	]
 
@@ -79,17 +79,33 @@ export default class Higanbana extends Module {
 		let clip = STATUS_DURATION[statusId] - (event.timestamp - lastApplication[statusId])
 
 		// Remove any untargetable time from the clip - often want to hardcast after an invuln phase, but refresh w/ 3D shortly after.
-		clip -= this.invuln.getUntargetableUptime('all', event.timestamp - STATUS_DURATION[statusId], event.timestamp)
+		clip -= this.invulnerability.getDuration({
+			start: this.parser.fflogsToEpoch(event.timestamp - event.timestamp - STATUS_DURATION[statusId]),
+			end: this.parser.fflogsToEpoch(event.timestamp),
+			types: ['untargetable'],
+		})
 
-		// Also remove invuln time in the future that casting later would just push dots into
-		// TODO: This relies on a full set of invuln data ahead of time. Can this be trusted?
-		clip -= this.invuln.getInvulnerableUptime('all', event.timestamp, event.timestamp + STATUS_DURATION[statusId] + clip)
-		clip = Math.max(0, clip)
+		// Wait for when the status would typically drop without clipping - clipping a dot early isn't as problematic if it would
+		// just push it into invuln time.
+		this.addTimestampHook(
+			Math.min(
+				event.timestamp + STATUS_DURATION[statusId] + clip,
+				this.parser.eventTimeOffset + this.parser.pull.duration,
+			),
+			({timestamp}) => {
+				clip -= this.invulnerability.getDuration({
+					start: this.parser.fflogsToEpoch(event.timestamp),
+					end: this.parser.fflogsToEpoch(timestamp),
+					types: ['invulnerable'],
+				})
+				clip = Math.max(0, clip)
 
-		// Capping clip at 0 - less than that is downtime, which is handled by the checklist requirement
-		this._clip[statusId] += clip
+				// Capping clip at 0 - less than that is downtime, which is handled by the checklist requirement
+				this._clip[statusId] += clip
 
-		this._pushApplication(applicationKey, statusId, event, clip)
+				this._pushApplication(applicationKey, statusId, event, clip)
+			}
+		)
 
 		lastApplication[statusId] = event.timestamp
 	}
@@ -126,7 +142,7 @@ export default class Higanbana extends Module {
 	}
 	getDotUptimePercent(statusId) {
 		const statusUptime = this.entityStatuses.getStatusUptime(statusId, this.enemies.getEntities())
-		const fightDuration = this.parser.currentDuration - this.invuln.getInvulnerableUptime()
+		const fightDuration = this.parser.currentDuration - this.invulnerability.getDuration({types: ['invulnerable']})
 
 		return (statusUptime / fightDuration) * 100
 	}

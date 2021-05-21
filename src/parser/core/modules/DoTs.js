@@ -9,7 +9,7 @@ export default class DoTs extends Module {
 		'data',
 		'enemies',
 		'entityStatuses',
-		'invuln',
+		'invulnerability',
 	]
 
 	// To be overriden by submodules with an array of status IDs to track
@@ -73,14 +73,30 @@ export default class DoTs extends Module {
 		let clip = this._statusDuration[statusId] - (event.timestamp - lastApplication[statusId])
 
 		// Remove any untargetable time from the clip - often want to hardcast after an invuln phase, but refresh w/ 3D shortly after.
-		clip -= this.invuln.getUntargetableUptime('all', event.timestamp - this._statusDuration[statusId], event.timestamp)
+		clip -= this.invulnerability.getDuration({
+			start: this.parser.fflogsToEpoch(event.timestamp - this._statusDuration[statusId]),
+			end: this.parser.fflogsToEpoch(event.timestamp),
+			types: ['untargetable'],
+		})
 
-		// Also remove invuln time in the future that casting later would just push dots into
-		// TODO: This relies on a full set of invuln data ahead of time. Can this be trusted?
-		clip -= this.invuln.getInvulnerableUptime('all', event.timestamp, event.timestamp + this._statusDuration[statusId] + clip)
+		// Wait for when the status would typically drop without clipping - clipping a dot early isn't as problematic if it would
+		// just push it into invuln time.
+		this.addTimestampHook(
+			Math.min(
+				event.timestamp + this._statusDuration[statusId] + clip,
+				this.parser.eventTimeOffset + this.parser.pull.duration,
+			),
+			({timestamp}) => {
+				clip -= this.invulnerability.getDuration({
+					start: this.parser.fflogsToEpoch(event.timestamp),
+					end: this.parser.fflogsToEpoch(timestamp),
+					types: ['invulnerable'],
+				})
 
-		// Capping clip at 0 - less than that is downtime, which is handled by the checklist requirement
-		this._clip[statusId] = (this._clip[statusId] || 0) + Math.max(0, clip)
+				// Capping clip at 0 - less than that is downtime, which is handled by the checklist requirement
+				this._clip[statusId] = (this._clip[statusId] || 0) + Math.max(0, clip)
+			},
+		)
 
 		lastApplication[statusId] = event.timestamp
 	}
@@ -93,13 +109,14 @@ export default class DoTs extends Module {
 	// These two functions are helpers for submodules and should be used but not overridden
 	getUptimePercent(statusId) {
 		const statusUptime = this.entityStatuses.getStatusUptime(statusId, this.enemies.getEntities())
-		const fightDuration = this.parser.currentDuration - this.invuln.getInvulnerableUptime()
+		const fightDuration = this.parser.currentDuration - this.invulnerability.getDuration({types: ['invulnerable']})
 		return (statusUptime / fightDuration) * 100
 	}
 
 	getClippingAmount(statusId) {
 		// This normalises clipping as seconds clipped per minute, since some level of clipping is expected and we need tiers that work for both long and short fights
-		const fightDurationMillis = (this.parser.currentDuration - this.invuln.getInvulnerableUptime())
+		const fightDurationMillis = (this.parser.currentDuration - this.invulnerability.getDuration({types: ['invulnerable']}))
+		if (fightDurationMillis <= 0) { return 0 }
 		// eslint-disable-next-line @typescript-eslint/no-magic-numbers
 		const clipSecsPerMin = Math.round(((this._clip[statusId] ?? 0) * 60) / fightDurationMillis)
 		return clipSecsPerMin

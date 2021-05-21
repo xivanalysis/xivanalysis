@@ -115,6 +115,13 @@ export interface Actor {
 	 * Treat as a black box outside report sources.
 	 */
 	id: string
+	/**
+	 * Unique identifier of the kind of enemy this actor is. Unlike IDs, an actor's
+	 * kind will be stable both between multiple copies of the same enemy, and multiple
+	 * pulls across multiple reports.
+	 * The value of this field should be treated as a black box outside report sources.
+	 */
+	kind: string
 	/** Name of the actor. */
 	name: string
 	/** Team the actor belongs to, in relation to the logging user. */

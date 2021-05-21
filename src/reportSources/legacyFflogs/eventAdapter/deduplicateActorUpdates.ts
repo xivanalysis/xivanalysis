@@ -27,10 +27,18 @@ export class DeduplicateActorUpdateStep extends AdapterStep {
 		}
 
 		// Build an object of changes since the previous values
-		const updates = this.denseObject([
+		const baseFields = {
+			type: 'actorUpdate',
+			timestamp: next.timestamp,
+			actor: next.actor,
+		} as const
+
+		type DeduplicatedFields = Omit<Events['actorUpdate'], keyof typeof baseFields>
+		const updates = this.denseObject<DeduplicatedFields>()([
 			['hp', this.resolveResource(prev.hp, next.hp)],
 			['mp', this.resolveResource(prev.mp, next.mp)],
 			['position', this.resolvePosition(prev.position, next.position)],
+			['targetable', this.resolveValue(prev.targetable, next.targetable)],
 		])
 
 		// If nothing has changed, we can noop this entire event
@@ -41,9 +49,7 @@ export class DeduplicateActorUpdateStep extends AdapterStep {
 		this.actorState.set(next.actor, _.merge({}, prev, updates))
 
 		return {
-			type: 'actorUpdate',
-			timestamp: next.timestamp,
-			actor: next.actor,
+			...baseFields,
 			...updates,
 		}
 	}
@@ -51,8 +57,8 @@ export class DeduplicateActorUpdateStep extends AdapterStep {
 	private resolveResource(
 		prev?: Partial<Resource>,
 		next?: Partial<Resource>,
-	): Partial<Resource> | undefined {
-		return this.denseObject([
+	) {
+		return this.denseObject<Resource>()([
 			['current', this.resolveValue(prev?.current, next?.current)],
 			['maximum', this.resolveValue(prev?.maximum, next?.maximum)],
 		])
@@ -61,8 +67,8 @@ export class DeduplicateActorUpdateStep extends AdapterStep {
 	private resolvePosition(
 		prev?: Partial<Position>,
 		next?: Partial<Position>,
-	): Partial<Position> | undefined {
-		return this.denseObject([
+	) {
+		return this.denseObject<Position>()([
 			['x', this.resolveValue(prev?.x, next?.x)],
 			['y', this.resolveValue(prev?.y, next?.y)],
 			['bearing', this.resolveValue(prev?.bearing, next?.bearing)],
@@ -73,10 +79,20 @@ export class DeduplicateActorUpdateStep extends AdapterStep {
 		return next !== prev ? next : undefined
 	}
 
-	private denseObject<T extends object>(entries: Array<[string, unknown]>): T | undefined {
-		const filtered = entries.filter(([, value]) => value != null)
-		return filtered.length === 0
-			? undefined
-			: Object.fromEntries(filtered) as T
+	private denseObject<T extends object>() {
+		// If you're getting red squigglies up above when calling this function, it's
+		// almost certainly because a new field has been added to one of the interfaces,
+		// and needs to be added to the call site. Yes, it's ugly as fuck. But it catches
+		// nasty mistakes, so it's worth it.
+		return <
+			M extends Array<[keyof T, unknown]>
+		>(
+			entries: [keyof T] extends [M[number][0]] ? M : never[]
+		) => {
+			const filtered = (entries as M).filter(([, value]) => value != null)
+			return filtered.length === 0
+				? undefined
+				: Object.fromEntries(filtered) as Partial<T>
+		}
 	}
 }

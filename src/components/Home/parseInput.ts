@@ -2,7 +2,7 @@ import {t} from '@lingui/macro'
 import {SearchHandlerResult, reportSources} from 'reportSources'
 
 // Localhost is... a bit generous. But we'll let the rest of the app fail out on that for us.
-const XIVA_URL_EXPRESSION = /(?:xivanalysis.com|localhost(?::\d+)?)\/(.+)/
+const XIVA_URL_EXPRESSION = /(?:xivanalysis.com|(?:localhost|127.0.0.1)(?::\d+)?)\/(.+)/
 
 export function parseInput(input: string): SearchHandlerResult {
 	// Check if any report sources provide a matching search handler

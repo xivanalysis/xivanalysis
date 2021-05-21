@@ -19,7 +19,7 @@ import React from 'react'
 // checks for DoT uptime and clipping.
 
 // timestamps are ms, array has s
-const TRI_DISASTER_COOLDOWN = ACTIONS.TRI_DISASTER.cooldown * 1000
+const TRI_DISASTER_COOLDOWN = ACTIONS.TRI_DISASTER.cooldown
 
 export default class TriDisaster extends Module {
 	static handle = 'tridisaster'

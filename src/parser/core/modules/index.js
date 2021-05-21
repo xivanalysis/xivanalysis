@@ -12,12 +12,14 @@ import Cooldowns from './Cooldowns'
 import {Data} from './Data'
 import {Death} from './Death'
 import Downtime from './Downtime'
+import {Dummy} from './Dummy'
 import Enemies from './Enemies'
 import {EntityStatuses} from './EntityStatuses'
 import {EventsView} from './EventsView'
 import GlobalCooldown from './GlobalCooldown'
 import HitType from './HitType'
 import {Invulnerability} from './Invulnerability'
+import {Medicated} from './Medicated'
 import {NormalisedEvents} from './NormalisedEvents'
 import PrecastAction from './PrecastAction'
 import PrecastStatus from './PrecastStatus'
@@ -28,7 +30,7 @@ import {Statistics} from './Statistics'
 import Statuses from './Statuses'
 import Suggestions from './Suggestions'
 import {Timeline} from './Timeline'
-import UnableToAct from './UnableToAct'
+import {UnableToAct} from './UnableToAct'
 import Weaving from './Weaving'
 
 export default [
@@ -47,12 +49,14 @@ export default [
 	Data,
 	Death,
 	Downtime,
+	Dummy,
 	Enemies,
 	EntityStatuses,
 	EventsView,
 	GlobalCooldown,
 	HitType,
 	Invulnerability,
+	Medicated,
 	NormalisedEvents,
 	PrecastAction,
 	PrecastStatus,

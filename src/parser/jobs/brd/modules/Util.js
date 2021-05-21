@@ -12,26 +12,31 @@ export default class Util extends Module {
 		'downtime',
 		'enemies',
 		'entityStatuses',
-		'invuln',
+		'invulnerability',
 		'timeline',
 	]
 
 	getDebuffUptime(status) {
 		const statusTime = this.entityStatuses.getStatusUptime(status.id, this.enemies.getEntities())
-		const uptime = this.parser.currentDuration - this.invuln.getInvulnerableUptime()
+		const uptime = this.parser.currentDuration - this.invulnerability.getDuration({types: ['invulnerable']})
 
 		return (statusTime / uptime) * 100
 	}
 
 	getBuffUptime(status) {
 		const statusTime = this.entityStatuses.getStatusUptime(status.id, this.combatants.getEntities())
-		const uptime = this.parser.currentDuration - this.invuln.getInvulnerableUptime()
+		const uptime = this.parser.currentDuration - this.invulnerability.getDuration({types: ['invulnerable']})
 
 		return (statusTime / uptime) * 100
 	}
 
 	getDowntimeLength(timestamp) {
-		const window = this.downtime.getDowntimeWindows().filter(x => x.start <= timestamp && x.end >= timestamp)
+		const window = this.downtime.getDowntimeWindows()
+			.map(window => ({
+				start: this.parser.epochToFflogs(window.start),
+				end: this.parser.epochToFflogs(window.end),
+			}))
+			.find(x => x.start <= timestamp && x.end >= timestamp)
 		return Math.max(0, (window.end - window.start) / 1000)
 	}
 

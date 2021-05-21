@@ -8,7 +8,7 @@ export const BRD = ensureActions({
 		name: 'Mage\'s Ballad',
 		icon: 'https://xivapi.com/i/002000/002602.png',
 		onGcd: false,
-		cooldown: 80,
+		cooldown: 80000,
 		potency: 100,
 	},
 	ARMYS_PAEON: {
@@ -16,7 +16,7 @@ export const BRD = ensureActions({
 		name: 'Army\'s Paeon',
 		icon: 'https://xivapi.com/i/002000/002603.png',
 		onGcd: false,
-		cooldown: 80,
+		cooldown: 80000,
 		potency: 100,
 	},
 	RAIN_OF_DEATH: {
@@ -24,7 +24,7 @@ export const BRD = ensureActions({
 		name: 'Rain Of Death',
 		icon: 'https://xivapi.com/i/002000/002605.png',
 		onGcd: false,
-		cooldown: 15,
+		cooldown: 15000,
 		potency: 130,
 	},
 	BATTLE_VOICE: {
@@ -32,7 +32,7 @@ export const BRD = ensureActions({
 		name: 'Battle Voice',
 		icon: 'https://xivapi.com/i/002000/002601.png',
 		onGcd: false,
-		cooldown: 180,
+		cooldown: 180000,
 		statusesApplied: ['BATTLE_VOICE'],
 	},
 	EMPYREAL_ARROW: {
@@ -40,7 +40,7 @@ export const BRD = ensureActions({
 		name: 'Empyreal Arrow',
 		icon: 'https://xivapi.com/i/002000/002606.png',
 		onGcd: false,
-		cooldown: 15,
+		cooldown: 15000,
 		potency: 230,
 	},
 	THE_WANDERERS_MINUET: {
@@ -48,7 +48,7 @@ export const BRD = ensureActions({
 		name: 'The Wanderer\'s Minuet',
 		icon: 'https://xivapi.com/i/002000/002607.png',
 		onGcd: false,
-		cooldown: 80,
+		cooldown: 80000,
 		potency: 100,
 	},
 	IRON_JAWS: {
@@ -63,7 +63,7 @@ export const BRD = ensureActions({
 		name: 'The Warden\'s Paean',
 		icon: 'https://xivapi.com/i/002000/002609.png',
 		onGcd: false,
-		cooldown: 45,
+		cooldown: 45000,
 		statusesApplied: ['THE_WARDENS_PAEAN'],
 	},
 	SIDEWINDER: {
@@ -71,7 +71,7 @@ export const BRD = ensureActions({
 		name: 'Sidewinder',
 		icon: 'https://xivapi.com/i/002000/002610.png',
 		onGcd: false,
-		cooldown: 60,
+		cooldown: 60000,
 		potency: [100, 175, 260],
 		cooldownGroup: 3562, // Sidewinder Group
 	},
@@ -80,7 +80,7 @@ export const BRD = ensureActions({
 		name: 'Pitch Perfect',
 		icon: 'https://xivapi.com/i/002000/002611.png',
 		onGcd: false,
-		cooldown: 3,
+		cooldown: 3000,
 		potency: [100, 250, 450],
 	},
 	TROUBADOUR: {
@@ -88,7 +88,7 @@ export const BRD = ensureActions({
 		name: 'Troubadour',
 		icon: 'https://xivapi.com/i/002000/002612.png',
 		onGcd: false,
-		cooldown: 180,
+		cooldown: 180000,
 		statusesApplied: ['TROUBADOUR'],
 	},
 	CAUSTIC_BITE: {
@@ -112,7 +112,7 @@ export const BRD = ensureActions({
 		name: 'Nature\'s Minne',
 		icon: 'https://xivapi.com/i/002000/002615.png',
 		onGcd: false,
-		cooldown: 90,
+		cooldown: 90000,
 		statusesApplied: ['NATURES_MINNE'],
 	},
 	REFULGENT_ARROW: {
@@ -127,7 +127,7 @@ export const BRD = ensureActions({
 		name: 'Shadowbite',
 		icon: 'https://xivapi.com/i/002000/002617.png',
 		onGcd: false,
-		cooldown: 60,
+		cooldown: 60000,
 		potency: [100, 160, 220],
 		cooldownGroup: 3562, // Sidewinder Group
 	},
