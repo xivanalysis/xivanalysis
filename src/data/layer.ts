@@ -1,3 +1,6 @@
+import {layers as actionLayers, root as actionRoot} from 'data/ACTIONS'
+import {layers as statusLayers, root as statusRoot} from 'data/STATUSES'
+import {Report} from 'report'
 import {Patch, PatchNumber} from './PATCHES'
 
 export type LayerData<R> = {[K in keyof R]?: Partial<R[K]>}
@@ -61,6 +64,16 @@ export function getAppliedData<R extends object>({root, layers, state}: {
 	appliedCache.set(root, {key, data: applied})
 
 	return applied
+}
+
+export function getActions(report: Report) {
+	const patch = new Patch(report.edition, report.timestamp / 1000)
+	return getAppliedData({root: actionRoot, layers: actionLayers, state: {patch: patch}})
+}
+
+export function getStatuses(report: Report) {
+	const patch = new Patch(report.edition, report.timestamp / 1000)
+	return getAppliedData({root: statusRoot, layers: statusLayers, state: {patch: patch}})
 }
 
 const cacheKeysMatch = <R>(cached: CacheKey<R>, request: CacheKey<R>) =>

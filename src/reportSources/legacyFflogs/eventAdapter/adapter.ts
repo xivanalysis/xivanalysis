@@ -9,6 +9,7 @@ import {OneHpLockAdapterStep} from './oneHpLock'
 import {PrepullActionAdapterStep} from './prepullAction'
 import {PrepullStatusAdapterStep} from './prepullStatus'
 import {ReassignUnknownActorStep} from './reassignUnknownActor'
+import {SpeedStatsAdapterStep} from './speedStat'
 import {TranslateAdapterStep} from './translate'
 
 /** Adapt an array of FFLogs APIv1 events to xiva representation. */
@@ -36,7 +37,11 @@ class EventAdapter {
 			new DeduplicateActorUpdateStep(opts),
 			new PrepullActionAdapterStep(opts),
 			new PrepullStatusAdapterStep(opts),
+<<<<<<< HEAD
 			new OneHpLockAdapterStep(opts),
+=======
+			new SpeedStatsAdapterStep(opts),
+>>>>>>> wip: change GCD estimation to Adapter step
 		]
 	}
 
