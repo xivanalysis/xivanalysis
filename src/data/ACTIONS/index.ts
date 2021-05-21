@@ -4,7 +4,7 @@ import {ActionRoot, ITEM_ID_OFFSET, root} from './root'
 import {Action} from './type'
 
 const DEFAULT_GCD_CASTTIME = 0
-const DEFAULT_GCD_COOLDOWN = 2.5
+const DEFAULT_GCD_COOLDOWN = 2500
 
 export type ActionKey = keyof ActionRoot
 

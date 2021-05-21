@@ -29,7 +29,7 @@ export default class Weaving extends Module {
 	protected castTime: CastTime
 	protected data: Data
 	protected gcd: GlobalCooldown
-	protected invuln: Invulnerability
+	protected invulnerability: Invulnerability
 	protected speedmod: Speedmod
 	protected suggestions: Suggestions
 

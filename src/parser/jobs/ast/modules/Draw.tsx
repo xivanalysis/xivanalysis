@@ -95,7 +95,7 @@ export default class Draw extends Module {
 
 		} else {
 			// Take holding as from the time it comes off cooldown
-			this.drawDrift = event.timestamp - this.lastDrawTimestamp - (this.data.actions.DRAW.cooldown * 1000)
+			this.drawDrift = event.timestamp - this.lastDrawTimestamp - this.data.actions.DRAW.cooldown
 		}
 
 		// Keep track of total drift time not using Draw
@@ -128,7 +128,7 @@ export default class Draw extends Module {
 
 		} else {
 			// Take holding as from the time it comes off cooldown
-			this.sleeveDrift = event.timestamp - this.lastSleeveTimestamp - (this.data.actions.SLEEVE_DRAW.cooldown * 1000)
+			this.sleeveDrift = event.timestamp - this.lastSleeveTimestamp - this.data.actions.SLEEVE_DRAW.cooldown
 		}
 
 		// Keep track of total drift time not using sleeve
@@ -155,13 +155,13 @@ export default class Draw extends Module {
 			: SLEEVE_DRAW_PLAYS_GIVEN_530
 
 		// If they stopped using Sleeve at any point in the fight, this'll calculate the drift "accurately"
-		if (this.parser.fight.end_time - this.lastSleeveTimestamp > (this.data.actions.SLEEVE_DRAW.cooldown * 1000)) {
-			this.sleeveTotalDrift += (this.parser.fight.end_time - (this.lastSleeveTimestamp + (this.data.actions.SLEEVE_DRAW.cooldown * 1000)))
+		if (this.parser.fight.end_time - this.lastSleeveTimestamp > this.data.actions.SLEEVE_DRAW.cooldown) {
+			this.sleeveTotalDrift += (this.parser.fight.end_time - (this.lastSleeveTimestamp + this.data.actions.SLEEVE_DRAW.cooldown))
 		}
 
 		// If they stopped using Draw at any point in the fight, this'll calculate the drift "accurately"
-		if (this.parser.fight.end_time - this.lastDrawTimestamp > (this.data.actions.DRAW.cooldown * 1000)) {
-			this.drawTotalDrift += (this.parser.fight.end_time - ((this.lastDrawTimestamp + this.data.actions.DRAW.cooldown * 1000)))
+		if (this.parser.fight.end_time - this.lastDrawTimestamp > this.data.actions.DRAW.cooldown) {
+			this.drawTotalDrift += (this.parser.fight.end_time - (this.lastDrawTimestamp + this.data.actions.DRAW.cooldown))
 		}
 
 		// Max plays:
@@ -174,9 +174,9 @@ export default class Draw extends Module {
 
 		// Begin Theoretical Max Plays calc
 		const fightDuration = this.parser.pull.duration
-		const maxSleeveUses = Math.floor(Math.max(0, (fightDuration - (CARD_DURATION*2))) / (this.data.actions.SLEEVE_DRAW.cooldown * 1000)) + 1
+		const maxSleeveUses = Math.floor(Math.max(0, (fightDuration - (CARD_DURATION*2))) / this.data.actions.SLEEVE_DRAW.cooldown) + 1
 		const playsFromSleeveDraw = maxSleeveUses * SLEEVE_DRAW_PLAYS_GIVEN
-		const playsFromDraw = Math.floor(Math.max(0, (fightDuration - CARD_DURATION)) / (this.data.actions.DRAW.cooldown * 1000)) + 1
+		const playsFromDraw = Math.floor(Math.max(0, (fightDuration - CARD_DURATION)) / this.data.actions.DRAW.cooldown) + 1
 		const theoreticalMaxPlays = playsFromDraw + playsFromSleeveDraw + 1
 
 		// TODO: Include downtime calculation for each fight??
@@ -222,7 +222,7 @@ export default class Draw extends Module {
 		/*
 			SUGGESTION: Didn't use draw enough
 		*/
-		const drawsMissed = Math.floor(this.drawTotalDrift / (this.data.actions.DRAW.cooldown * 1000))
+		const drawsMissed = Math.floor(this.drawTotalDrift / this.data.actions.DRAW.cooldown)
 		if (this.draws > 0 && drawsMissed > 0) {
 			this.suggestions.add(new TieredSuggestion({
 				icon: this.data.actions.DRAW.icon,
@@ -255,7 +255,7 @@ export default class Draw extends Module {
 		/*
 			SUGGESTION: Didn't use sleeve draw enough
 		*/
-		const sleevesMissed = Math.floor(this.sleeveTotalDrift / (this.data.actions.SLEEVE_DRAW.cooldown * 1000))
+		const sleevesMissed = Math.floor(this.sleeveTotalDrift / this.data.actions.SLEEVE_DRAW.cooldown)
 		if (this.sleeveUses > 0 && sleevesMissed > 0) {
 			this.suggestions.add(new TieredSuggestion({
 				icon: this.data.actions.SLEEVE_DRAW.icon,

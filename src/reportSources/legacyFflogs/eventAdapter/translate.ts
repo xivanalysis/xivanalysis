@@ -3,7 +3,8 @@ import {STATUS_ID_OFFSET} from 'data/STATUSES'
 import {Event, Events, Cause, SourceModifier, TargetModifier} from 'event'
 import {ActorResources, BuffEvent, BuffStackEvent, CastEvent, DamageEvent, DeathEvent, FflogsEvent, HealEvent, HitType, TargetabilityUpdateEvent} from 'fflogs'
 import {Actor} from 'report'
-import {AdapterStep, resolveActorId} from './base'
+import {resolveActorId} from '../base'
+import {AdapterStep} from './base'
 
 /*
 NOTES:

@@ -5,7 +5,7 @@ export const WHM = ensureActions({
 		id: 16536,
 		name: 'Temperance',
 		icon: 'https://xivapi.com/i/002000/002645.png',
-		cooldown: 120,
+		cooldown: 120000,
 		statusesApplied: ['TEMPERANCE'],
 	},
 
@@ -43,14 +43,14 @@ export const WHM = ensureActions({
 		name: 'Glare',
 		icon: 'https://xivapi.com/i/002000/002642.png',
 		onGcd: true,
-		castTime: 2.5,
+		castTime: 2500,
 	},
 
 	PLENARY_INDULGENCE: {
 		id: 7433,
 		name: 'Plenary Indulgence',
 		icon: 'https://xivapi.com/i/002000/002639.png',
-		cooldown: 60,
+		cooldown: 60000,
 		statusesApplied: ['CONFESSION'],
 	},
 
@@ -59,28 +59,28 @@ export const WHM = ensureActions({
 		name: 'Stone IV',
 		icon: 'https://xivapi.com/i/002000/002637.png',
 		onGcd: true,
-		castTime: 2.5,
+		castTime: 2500,
 	},
 
 	TETRAGRAMMATON: {
 		id: 3570,
 		name: 'Tetragrammaton',
 		icon: 'https://xivapi.com/i/002000/002633.png',
-		cooldown: 60,
+		cooldown: 60000,
 	},
 
 	ASSIZE: {
 		id: 3571,
 		name: 'Assize',
 		icon: 'https://xivapi.com/i/002000/002634.png',
-		cooldown: 45,
+		cooldown: 45000,
 	},
 
 	ASYLUM: {
 		id: 3569,
 		name: 'Asylum',
 		icon: 'https://xivapi.com/i/002000/002632.png',
-		cooldown: 90,
+		cooldown: 90000,
 		statusesApplied: ['ASYLUM'],
 	},
 
@@ -88,7 +88,7 @@ export const WHM = ensureActions({
 		id: 140,
 		name: 'Benediction',
 		icon: 'https://xivapi.com/i/002000/002627.png',
-		cooldown: 180,
+		cooldown: 180000,
 	},
 
 	HOLY: {
@@ -96,14 +96,14 @@ export const WHM = ensureActions({
 		name: 'Holy',
 		icon: 'https://xivapi.com/i/002000/002629.png',
 		onGcd: true,
-		castTime: 3,
+		castTime: 3000,
 	},
 
 	PRESENCE_OF_MIND: {
 		id: 136,
 		name: 'Presence of Mind',
 		icon: 'https://xivapi.com/i/002000/002626.png',
-		cooldown: 150,
+		cooldown: 150000,
 		statusesApplied: ['PRESENCE_OF_MIND'],
 	},
 
@@ -112,14 +112,14 @@ export const WHM = ensureActions({
 		name: 'Stone III',
 		icon: 'https://xivapi.com/i/002000/002631.png',
 		onGcd: true,
-		castTime: 2.5,
+		castTime: 2500,
 	},
 
 	DIVINE_BENISON: {
 		id: 7432,
 		name: 'Divine Benison',
 		icon: 'https://xivapi.com/i/002000/002638.png',
-		cooldown: 30,
+		cooldown: 30000,
 		statusesApplied: ['DIVINE_BENISON'],
 	},
 
@@ -127,7 +127,7 @@ export const WHM = ensureActions({
 		id: 7430,
 		name: 'Thin Air',
 		icon: 'https://xivapi.com/i/002000/002636.png',
-		cooldown: 120,
+		cooldown: 120000,
 		statusesApplied: ['THIN_AIR'],
 	},
 
@@ -136,7 +136,7 @@ export const WHM = ensureActions({
 		name: 'Aero III',
 		icon: 'https://xivapi.com/i/002000/002635.png',
 		onGcd: true,
-		castTime: 2.5,
+		castTime: 2500,
 	},
 
 	MEDICA_II: {
@@ -144,7 +144,7 @@ export const WHM = ensureActions({
 		name: 'Medica II',
 		icon: 'https://xivapi.com/i/000000/000409.png',
 		onGcd: true,
-		castTime: 2.5,
+		castTime: 2500,
 		statusesApplied: ['MEDICA_II'],
 	},
 
@@ -154,7 +154,7 @@ export const WHM = ensureActions({
 		name: 'Raise',
 		icon: 'https://xivapi.com/i/000000/000411.png',
 		onGcd: true,
-		castTime: 8,
+		castTime: 8000,
 	},
 
 	CURE_II: {
@@ -162,7 +162,7 @@ export const WHM = ensureActions({
 		name: 'Cure II',
 		icon: 'https://xivapi.com/i/000000/000406.png',
 		onGcd: true,
-		castTime: 2,
+		castTime: 2000,
 	},
 
 	CURE_III: {
@@ -170,7 +170,7 @@ export const WHM = ensureActions({
 		name: 'Cure III',
 		icon: 'https://xivapi.com/i/000000/000407.png',
 		onGcd: true,
-		castTime: 2,
+		castTime: 2000,
 	},
 
 	REGEN: {
@@ -185,7 +185,7 @@ export const WHM = ensureActions({
 		id: 134,
 		name: 'Fluid Aura',
 		icon: 'https://xivapi.com/i/000000/000416.png',
-		cooldown: 30,
+		cooldown: 30000,
 	},
 
 	MEDICA: {
@@ -193,7 +193,7 @@ export const WHM = ensureActions({
 		name: 'Medica',
 		icon: 'https://xivapi.com/i/000000/000408.png',
 		onGcd: true,
-		castTime: 2.5,
+		castTime: 2500,
 	},
 
 	STONE: {
@@ -201,7 +201,7 @@ export const WHM = ensureActions({
 		name: 'Stone',
 		icon: 'https://xivapi.com/i/000000/000403.png',
 		onGcd: true,
-		castTime: 2.5,
+		castTime: 2500,
 	},
 
 	AERO_II: {
@@ -223,7 +223,7 @@ export const WHM = ensureActions({
 		name: 'Repose',
 		icon: 'https://xivapi.com/i/000000/000414.png',
 		onGcd: true,
-		castTime: 2.5,
+		castTime: 2500,
 	},
 
 	STONE_II: {
@@ -231,7 +231,7 @@ export const WHM = ensureActions({
 		name: 'Stone II',
 		icon: 'https://xivapi.com/i/000000/000404.png',
 		onGcd: true,
-		castTime: 2.5,
+		castTime: 2500,
 	},
 
 	CURE: {
@@ -239,6 +239,6 @@ export const WHM = ensureActions({
 		name: 'Cure',
 		icon: 'https://xivapi.com/i/000000/000405.png',
 		onGcd: true,
-		castTime: 1.5,
+		castTime: 1500,
 	},
 })

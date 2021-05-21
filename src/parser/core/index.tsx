@@ -11,6 +11,10 @@ export default new Meta({
 		? AprilFoolsDescription
 		: undefined,
 	changelog,
+	supportedPatches: {
+		from: '5.08',
+		to: 'Perpetuity - CORE ONLY',
+	},
 })
 
 function getIsAprilFirst(): boolean {

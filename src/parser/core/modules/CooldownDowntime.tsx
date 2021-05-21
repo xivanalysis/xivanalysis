@@ -193,13 +193,16 @@ export abstract class CooldownDowntime extends Module {
 
 		// Skill with charges get their allowed downtime from the charge build up time,
 		// so ignore the value on the group object
-		const step = gRep.cooldown * 1000 + ((maxCharges > 1) ? 0 : (group.allowedAverageDowntime ?? this.defaultAllowedAverageDowntime))
+		const step = gRep.cooldown + ((maxCharges > 1) ? 0 : (group.allowedAverageDowntime ?? this.defaultAllowedAverageDowntime))
 
 		const gResets = this.resets.get(group) ?? []
 		const gUsages = (this.usages.get(group) ?? [])
 		const dtUsages = gUsages
-			.filter(u => this.downtime.isDowntime(u.timestamp))
-			.map(u => this.downtime.getDowntimeWindows(u.timestamp)[0])
+			.filter(u => this.downtime.isDowntime(this.parser.fflogsToEpoch(u.timestamp)))
+			.map(u => {
+				const window = this.downtime.getDowntimeWindows(this.parser.fflogsToEpoch(u.timestamp))[0]
+				return {start: this.parser.epochToFflogs(window.start), end: this.parser.epochToFflogs(window.end)}
+			})
 		const resetTime = (group.resetBy && group.resetBy.refundAmount) ? group.resetBy.refundAmount : 0
 
 		let timeLost = 0 // TODO: this variable is for logging only and does not actually affect the final count
@@ -217,8 +220,8 @@ export abstract class CooldownDowntime extends Module {
 			// that will have timestamps that don't accurartely indicated when
 			// exactly they were used pre-fight
 			const actualSecondUseTime = gUsages[1]
-			if (actualSecondUseTime && (actualSecondUseTime.timestamp - actualFirstUseTime.timestamp) < gRep.cooldown * 1000) {
-				this.debug(`Assumed first use of skill ${gRep.name} at ${this.parser.formatTimestamp(actualSecondUseTime.timestamp - gRep.cooldown * 1000)}`)
+			if (actualSecondUseTime && (actualSecondUseTime.timestamp - actualFirstUseTime.timestamp) < gRep.cooldown) {
+				this.debug(`Assumed first use of skill ${gRep.name} at ${this.parser.formatTimestamp(actualSecondUseTime.timestamp - gRep.cooldown)}`)
 				this.debug(`Actual second use of skill ${gRep.name} at ${this.parser.formatTimestamp(actualSecondUseTime.timestamp)}`)
 				count += 1 // add in the pre-fight usage
 				currentTime = actualSecondUseTime.timestamp
@@ -267,11 +270,12 @@ export abstract class CooldownDowntime extends Module {
 			while (
 				currentTime < pullEndTimestamp
 				&& charges < maxCharges
-				&& this.downtime.isDowntime(currentTime)
+				&& this.downtime.isDowntime(this.parser.fflogsToEpoch(currentTime))
 			) {
 				this.debug(`Saving charge during downtime at ${this.parser.formatTimestamp(currentTime)}. ${charges} charges stored`)
 
-				const window = this.downtime.getDowntimeWindows(currentTime)[0]
+				const epochWindow = this.downtime.getDowntimeWindows(this.parser.fflogsToEpoch(currentTime))[0]
+				const window = {start: this.parser.epochToFflogs(epochWindow.start), end: this.parser.epochToFflogs(epochWindow.end)}
 				if (window.end < currentTime + step) {
 					count += charges
 					this.debug(`Delayed charge spend at ${this.parser.formatTimestamp(window.end)}. ${charges} charges spent. No charge time lost. Count: ${count}`)
@@ -285,9 +289,10 @@ export abstract class CooldownDowntime extends Module {
 			// full charges were built up during a downtime.  Move to the end of the downtime to spend charges.
 			if (
 				currentTime < pullEndTimestamp
-				&& this.downtime.isDowntime(currentTime)
+				&& this.downtime.isDowntime(this.parser.fflogsToEpoch(currentTime))
 			) {
-				const window = this.downtime.getDowntimeWindows(currentTime)[0]
+				const epochWindow = this.downtime.getDowntimeWindows(this.parser.fflogsToEpoch(currentTime))[0]
+				const window = {start: this.parser.epochToFflogs(epochWindow.start), end: this.parser.epochToFflogs(epochWindow.end)}
 				this.debug(`Downtime detected at ${this.parser.formatTimestamp(currentTime)} in window from ${this.parser.formatTimestamp(window.start)} to ${this.parser.formatTimestamp(window.end)}`)
 
 				const matchingDtUsage = dtUsages.find(uw => uw.end === window.end)

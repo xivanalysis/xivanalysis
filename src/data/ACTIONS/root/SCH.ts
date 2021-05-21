@@ -18,7 +18,7 @@ export const SCH = ensureActions({
 		name: 'Adloquium',
 		icon: 'https://xivapi.com/i/002000/002801.png',
 		onGcd: true,
-		castTime: 2,
+		castTime: 2000,
 		statusesApplied: ['GALVANIZE', 'CATALYZE'],
 	},
 
@@ -27,7 +27,7 @@ export const SCH = ensureActions({
 		name: 'Broil III',
 		icon: 'https://xivapi.com/i/002000/002821.png',
 		onGcd: true,
-		castTime: 2.5,
+		castTime: 2500,
 	},
 
 	SCH_RUIN_II: {
@@ -41,7 +41,7 @@ export const SCH = ensureActions({
 		id: 16542,
 		name: 'Recitation',
 		icon: 'https://xivapi.com/i/002000/002822.png',
-		cooldown: 90,
+		cooldown: 90000,
 	},
 
 	// This is the action cast by the SCH
@@ -49,21 +49,21 @@ export const SCH = ensureActions({
 		id: 16543,
 		name: 'Fey Blessing',
 		icon: 'https://xivapi.com/i/002000/002854.png',
-		cooldown: 60,
+		cooldown: 60000,
 	},
 
 	SUMMON_SERAPH: {
 		id: 16545,
 		name: 'Summon Seraph',
 		icon: 'https://xivapi.com/i/002000/002850.png',
-		cooldown: 120,
+		cooldown: 120000,
 	},
 
 	SCH_CONSOLATION: {
 		id: 16546,
 		name: 'Consolation',
 		icon: 'https://xivapi.com/i/002000/002851.png',
-		cooldown: 30,
+		cooldown: 30000,
 		charges: 2,
 	},
 
@@ -72,7 +72,7 @@ export const SCH = ensureActions({
 		name: 'Succor',
 		icon: 'https://xivapi.com/i/002000/002802.png',
 		onGcd: true,
-		castTime: 2,
+		castTime: 2000,
 		statusesApplied: ['GALVANIZE'],
 	},
 
@@ -80,14 +80,14 @@ export const SCH = ensureActions({
 		id: 188,
 		name: 'Sacred Soil',
 		icon: 'https://xivapi.com/i/002000/002804.png',
-		cooldown: 30,
+		cooldown: 30000,
 	},
 
 	LUSTRATE: {
 		id: 189,
 		name: 'Lustrate',
 		icon: 'https://xivapi.com/i/002000/002805.png',
-		cooldown: 1,
+		cooldown: 1000,
 	},
 
 	ART_OF_WAR: {
@@ -101,7 +101,7 @@ export const SCH = ensureActions({
 		id: 3583,
 		name: 'Indomitability',
 		icon: 'https://xivapi.com/i/002000/002806.png',
-		cooldown: 30,
+		cooldown: 30000,
 	},
 
 	BROIL: {
@@ -109,21 +109,21 @@ export const SCH = ensureActions({
 		name: 'Broil',
 		icon: 'https://xivapi.com/i/002000/002807.png',
 		onGcd: true,
-		castTime: 2.5,
+		castTime: 2500,
 	},
 
 	DEPLOYMENT_TACTICS: {
 		id: 3585,
 		name: 'Deployment Tactics',
 		icon: 'https://xivapi.com/i/002000/002808.png',
-		cooldown: 120,
+		cooldown: 120000,
 	},
 
 	EMERGENCY_TACTICS: {
 		id: 3586,
 		name: 'Emergency Tactics',
 		icon: 'https://xivapi.com/i/002000/002809.png',
-		cooldown: 15,
+		cooldown: 15000,
 		statusesApplied: ['EMERGENCY_TACTICS'],
 	},
 
@@ -131,7 +131,7 @@ export const SCH = ensureActions({
 		id: 3587,
 		name: 'Dissipation',
 		icon: 'https://xivapi.com/i/002000/002810.png',
-		cooldown: 180,
+		cooldown: 180000,
 		statusesApplied: ['DISSIPATION'],
 	},
 
@@ -139,7 +139,7 @@ export const SCH = ensureActions({
 		id: 7434,
 		name: 'Excogitation',
 		icon: 'https://xivapi.com/i/002000/002813.png',
-		cooldown: 45,
+		cooldown: 45000,
 		statusesApplied: ['EXCOGITATION'],
 	},
 
@@ -148,14 +148,14 @@ export const SCH = ensureActions({
 		name: 'Broil II',
 		icon: 'https://xivapi.com/i/002000/002814.png',
 		onGcd: true,
-		castTime: 2.5,
+		castTime: 2500,
 	},
 
 	CHAIN_STRATAGEM: {
 		id: 7436,
 		name: 'Chain Stratagem',
 		icon: 'https://xivapi.com/i/002000/002815.png',
-		cooldown: 120,
+		cooldown: 120000,
 		statusesApplied: ['CHAIN_STRATAGEM'],
 	},
 
@@ -163,21 +163,21 @@ export const SCH = ensureActions({
 		id: 7437,
 		name: 'Aetherpact',
 		icon: 'https://xivapi.com/i/002000/002816.png',
-		cooldown: 3,
+		cooldown: 3000,
 	},
 
 	DISSOLVE_UNION: {
 		id: 7869,
 		name: 'Dissolve Union',
 		icon: 'https://xivapi.com/i/002000/002817.png',
-		cooldown: 1,
+		cooldown: 1000,
 	},
 
 	SCH_WHISPERING_DAWN: {
 		id: 16537,
 		name: 'Whispering Dawn',
 		icon: 'https://xivapi.com/i/002000/002827.png',
-		cooldown: 60,
+		cooldown: 60000,
 		statusesApplied: ['WHISPERING_DAWN'],
 	},
 
@@ -185,14 +185,14 @@ export const SCH = ensureActions({
 		id: 16538,
 		name: 'Fey Illumination',
 		icon: 'https://xivapi.com/i/002000/002829.png',
-		cooldown: 120,
+		cooldown: 120000,
 	},
 
 	SCH_ENERGY_DRAIN: {
 		id: 167,
 		name: 'Energy Drain',
 		icon: 'https://xivapi.com/i/000000/000514.png',
-		cooldown: 3,
+		cooldown: 3000,
 	},
 
 	SUMMON_EOS: {
@@ -200,7 +200,7 @@ export const SCH = ensureActions({
 		name: 'Summon Eos',
 		icon: 'https://xivapi.com/i/002000/002823.png',
 		onGcd: true,
-		castTime: 2.5,
+		castTime: 2500,
 	},
 
 	SUMMON_SELENE: {
@@ -208,7 +208,7 @@ export const SCH = ensureActions({
 		name: 'Summon Selene',
 		icon: 'https://xivapi.com/i/002000/002824.png',
 		onGcd: true,
-		castTime: 2.5,
+		castTime: 2500,
 	},
 
 	// -----
@@ -218,7 +218,7 @@ export const SCH = ensureActions({
 		id: 802,
 		name: 'Embrace',
 		icon: 'https://xivapi.com/i/002000/002826.png',
-		cooldown: 3,
+		cooldown: 3000,
 		pet: true,
 	},
 

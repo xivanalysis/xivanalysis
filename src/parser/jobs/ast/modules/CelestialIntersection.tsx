@@ -32,7 +32,7 @@ export default class CelestialIntersection extends Module {
 		this.uses++
 		if (this.lastUse === 0) { this.lastUse = this.parser.fight.start_time }
 
-		const held = event.timestamp - this.lastUse - (this.data.actions.CELESTIAL_INTERSECTION.cooldown * 1000)
+		const held = event.timestamp - this.lastUse - this.data.actions.CELESTIAL_INTERSECTION.cooldown
 		if (held > 0) {
 			this.totalHeld += held
 		}
@@ -42,9 +42,9 @@ export default class CelestialIntersection extends Module {
 
 	onComplete() {
 		const holdDuration = this.uses === 0 ? this.parser.currentDuration : this.totalHeld
-		const usesMissed = Math.floor(holdDuration / (this.data.actions.CELESTIAL_INTERSECTION.cooldown * 1000))
+		const usesMissed = Math.floor(holdDuration / (this.data.actions.CELESTIAL_INTERSECTION.cooldown))
 		const fightDuration = this.parser.fight.end_time - this.parser.fight.start_time
-		const maxUses = (fightDuration / (this.data.actions.CELESTIAL_INTERSECTION.cooldown * 1000)) - 1
+		const maxUses = (fightDuration / this.data.actions.CELESTIAL_INTERSECTION.cooldown) - 1
 
 		const WASTED_USE_TIERS = {
 			[maxUses * SEVERITY_MOD.MINOR]: SEVERITY.MINOR,

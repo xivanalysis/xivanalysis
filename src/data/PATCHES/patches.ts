@@ -91,6 +91,14 @@ const patchData = {
 			[GameEdition.GLOBAL]: 1618304400, // 13/04/21 09:00:00 GMT
 		},
 	},
+	// Do not add new patches beneath this point.
+	'Perpetuity - CORE ONLY': {
+		date: {
+			[GameEdition.GLOBAL]: Infinity,
+			[GameEdition.KOREAN]: Infinity,
+			[GameEdition.CHINESE]: Infinity,
+		},
+	},
 }
 
 export type PatchNumber = keyof typeof patchData

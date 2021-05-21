@@ -6,7 +6,7 @@ import Module from 'parser/core/Module'
 import {Suggestion, TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import React from 'react'
 
-const TA_COOLDOWN_MILLIS = ACTIONS.TRICK_ATTACK.cooldown * 1000
+const TA_COOLDOWN_MILLIS = ACTIONS.TRICK_ATTACK.cooldown
 const OPTIMAL_GCD_COUNT = 5 // Opener should be Suiton > AE combo > SE before Trick
 
 const MUDRAS = [
@@ -54,7 +54,10 @@ export default class TrickAttackUsage extends Module {
 		if (this._taCasts.length > 0) {
 			const lastCast = this._taCasts[this._taCasts.length - 1]
 			const taAvailable = lastCast + TA_COOLDOWN_MILLIS
-			const downtime = this.downtime.getDowntime(taAvailable, event.timestamp)
+			const downtime = this.downtime.getDowntime(
+				this.parser.fflogsToEpoch(taAvailable),
+				this.parser.fflogsToEpoch(event.timestamp),
+			)
 			this._lostTime += Math.max((event.timestamp - taAvailable) - downtime, 0)
 		}
 

@@ -3,6 +3,21 @@ import React from 'react'
 
 export const changelog = [
 	{
+		date: new Date('2021-04-28'),
+		contributors: [CONTRIBUTORS.RYAN],
+		Changes: () => <>
+			Expanded No Mercy table to include the optimal amount of burst strikes based on bloodfest use
+		</>,
+	},
+
+	{
+		date: new Date('2021-04-26'),
+		contributors: [CONTRIBUTORS.YUMIYAFANGIRL],
+		Changes: () => <>
+		Added a module that shows Tincture windows.
+		</>,
+	},
+	{
 		date: new Date('2021-04-13'),
 		contributors: [CONTRIBUTORS.ACCHAN],
 		Changes: () => <>

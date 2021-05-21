@@ -72,7 +72,7 @@ export const SAM = ensureActions({
 		name: 'Iaijutsu',
 		icon: 'https://xivapi.com/i/003000/003159.png',
 		onGcd: true,
-		castTime: 1.3,
+		castTime: 1300,
 	},
 
 	HIGANBANA: {
@@ -80,7 +80,7 @@ export const SAM = ensureActions({
 		name: 'Higanbana',
 		icon: 'https://xivapi.com/i/003000/003160.png',
 		onGcd: true,
-		castTime: 1.3,
+		castTime: 1300,
 		statusesApplied: ['HIGANBANA'],
 	},
 
@@ -115,7 +115,7 @@ export const SAM = ensureActions({
 		name: 'Tenka Goken',
 		icon: 'https://xivapi.com/i/003000/003161.png',
 		onGcd: true,
-		castTime: 1.3,
+		castTime: 1300,
 	},
 
 	KASHA: {
@@ -149,7 +149,7 @@ export const SAM = ensureActions({
 		name: 'Midare Setsugekka',
 		icon: 'https://xivapi.com/i/003000/003162.png',
 		onGcd: true,
-		castTime: 1.3,
+		castTime: 1300,
 	},
 
 	YUKIKAZE: {
@@ -173,7 +173,7 @@ export const SAM = ensureActions({
 		id: 7498,
 		name: 'Third Eye',
 		icon: 'https://xivapi.com/i/003000/003153.png',
-		cooldown: 15,
+		cooldown: 15000,
 		statusesApplied: ['THIRD_EYE', 'EYES_OPEN'],
 	},
 
@@ -181,7 +181,7 @@ export const SAM = ensureActions({
 		id: 7499,
 		name: 'Meikyo Shisui',
 		icon: 'https://xivapi.com/i/003000/003167.png',
-		cooldown: 55,
+		cooldown: 55000,
 		statusesApplied: ['MEIKYO_SHISUI'],
 	},
 
@@ -189,7 +189,7 @@ export const SAM = ensureActions({
 		id: 7494,
 		name: 'Hissatsu: Kaiten',
 		icon: 'https://xivapi.com/i/003000/003168.png',
-		cooldown: 1,
+		cooldown: 1000,
 		statusesApplied: ['KAITEN'],
 	},
 
@@ -197,14 +197,14 @@ export const SAM = ensureActions({
 		id: 7492,
 		name: 'Hissatsu: Gyoten',
 		icon: 'https://xivapi.com/i/003000/003169.png',
-		cooldown: 10,
+		cooldown: 10000,
 	},
 
 	HISSATSU_YATEN: {
 		id: 7493,
 		name: 'Hissatsu: Yaten',
 		icon: 'https://xivapi.com/i/003000/003170.png',
-		cooldown: 10,
+		cooldown: 10000,
 		statusesApplied: ['ENHANCED_ENPI'],
 	},
 
@@ -212,7 +212,7 @@ export const SAM = ensureActions({
 		id: 7502,
 		name: 'Merciful Eyes',
 		icon: 'https://xivapi.com/i/003000/003171.png',
-		cooldown: 1,
+		cooldown: 1000,
 		cooldownGroup: 24,
 	},
 
@@ -221,8 +221,8 @@ export const SAM = ensureActions({
 		name: 'Meditate',
 		icon: 'https://xivapi.com/i/003000/003172.png',
 		onGcd: true,
-		cooldown: 60,
-		gcdRecast: 2.5,
+		cooldown: 60000,
+		gcdRecast: 2500,
 		statusesApplied: ['MEDITATE', 'MEDITATION'],
 	},
 
@@ -230,21 +230,21 @@ export const SAM = ensureActions({
 		id: 7490,
 		name: 'Hissatsu: Shinten',
 		icon: 'https://xivapi.com/i/003000/003173.png',
-		cooldown: 1,
+		cooldown: 1000,
 	},
 
 	HISSATSU_KYUTEN: {
 		id: 7491,
 		name: 'Hissatsu: Kyuten',
 		icon: 'https://xivapi.com/i/003000/003174.png',
-		cooldown: 1,
+		cooldown: 1000,
 	},
 
 	HISSATSU_SEIGAN: {
 		id: 7501,
 		name: 'Hissatsu: Seigan',
 		icon: 'https://xivapi.com/i/003000/003175.png',
-		cooldown: 1,
+		cooldown: 1000,
 		cooldownGroup: 24,
 	},
 
@@ -252,21 +252,21 @@ export const SAM = ensureActions({
 		id: 7495,
 		name: 'Hagakure',
 		icon: 'https://xivapi.com/i/003000/003176.png',
-		cooldown: 40,
+		cooldown: 40000,
 	},
 
 	IKISHOTEN: {
 		id: 16482,
 		name: 'Ikishoten',
 		icon: 'https://xivapi.com/i/003000/003179.png',
-		cooldown: 60,
+		cooldown: 60000,
 	},
 
 	HISSATSU_GUREN: {
 		id: 7496,
 		name: 'Hissatsu: Guren',
 		icon: 'https://xivapi.com/i/003000/003177.png',
-		cooldown: 120,
+		cooldown: 120000,
 		cooldownGroup: 10,
 	},
 
@@ -274,7 +274,7 @@ export const SAM = ensureActions({
 		id: 16481,
 		name: 'Hissatsu: Senei',
 		icon: 'https://xivapi.com/i/003000/003178.png',
-		cooldown: 120,
+		cooldown: 120000,
 		cooldownGroup: 10,
 	},
 
@@ -283,7 +283,7 @@ export const SAM = ensureActions({
 		name: 'Tsubame Gaeshi',
 		icon: 'https://xivapi.com/i/003000/003180.png',
 		onGcd: true,
-		cooldown: 60,
+		cooldown: 60000,
 	},
 
 	KAESHI_HIGANBANA: {
@@ -291,8 +291,8 @@ export const SAM = ensureActions({
 		name: 'Kaeshi: Higanbana',
 		icon: 'https://xivapi.com/i/003000/003181.png',
 		onGcd: true,
-		cooldown: 60,
-		gcdRecast: 2.5,
+		cooldown: 60000,
+		gcdRecast: 2500,
 		cooldownGroup: SAM_COOLDOWN_GROUP.TSUBAME,
 		statusesApplied: ['HIGANBANA'],
 	},
@@ -302,8 +302,8 @@ export const SAM = ensureActions({
 		name: 'Kaeshi: Goken',
 		icon: 'https://xivapi.com/i/003000/003182.png',
 		onGcd: true,
-		gcdRecast: 2.5,
-		cooldown: 60,
+		gcdRecast: 2500,
+		cooldown: 60000,
 		cooldownGroup: SAM_COOLDOWN_GROUP.TSUBAME,
 	},
 
@@ -312,8 +312,8 @@ export const SAM = ensureActions({
 		name: 'Kaeshi: Setsugekka',
 		icon: 'https://xivapi.com/i/003000/003183.png',
 		onGcd: true,
-		gcdRecast: 2.5,
-		cooldown: 60,
+		gcdRecast: 2500,
+		cooldown: 60000,
 		cooldownGroup: SAM_COOLDOWN_GROUP.TSUBAME,
 
 	},
@@ -322,6 +322,6 @@ export const SAM = ensureActions({
 		id: 16487,
 		name: 'Shoha',
 		icon: 'https://xivapi.com/i/003000/003184.png',
-		cooldown: 15,
+		cooldown: 15000,
 	},
 })

@@ -1,5 +1,7 @@
 import {Contributor, Role} from 'data/CONTRIBUTORS'
-import {PatchNumber} from 'data/PATCHES'
+import {GameEdition} from 'data/EDITIONS'
+import PATCHES, {PatchNumber} from 'data/PATCHES'
+import {FALLBACK_KEY} from 'data/PATCHES/patches'
 import _ from 'lodash'
 import React from 'react'
 import {Injectable} from './Injectable'
@@ -70,9 +72,8 @@ export class Meta {
 			modules: () => Promise.all([this.getModules(), meta.getModules()])
 				.then(groupedModules => ({default: _.flatten(groupedModules)})),
 
-			// New sets of supported patches override old ones
-			// TODO: Perhaps narrow as meta is merged?
-			supportedPatches: meta.supportedPatches,
+			// New sets of supported patches narrow old ones
+			supportedPatches: this.mergeSupportedPatches(meta.supportedPatches),
 
 			// Descriptions are merged all lovely and jsx like. Jobs are loaded
 			// after zones and core, so the new meta should be above the old.
@@ -95,5 +96,21 @@ export class Meta {
 				...this.changelog,
 			], 'date'),
 		})
+	}
+
+	private mergeSupportedPatches(toMerge?: SupportedPatches): SupportedPatches | undefined {
+		if (toMerge == null) { return this.supportedPatches }
+		if (this.supportedPatches == null) { return toMerge }
+
+		return {
+			from: _.maxBy<PatchNumber>(
+				[this.supportedPatches.from, toMerge.from],
+				key => PATCHES[key].date[GameEdition.GLOBAL],
+			) ?? FALLBACK_KEY,
+			to: _.minBy<PatchNumber>(
+				[this.supportedPatches.to, toMerge.to],
+				key => PATCHES[key].date[GameEdition.GLOBAL],
+			) ?? FALLBACK_KEY,
+		}
 	}
 }
