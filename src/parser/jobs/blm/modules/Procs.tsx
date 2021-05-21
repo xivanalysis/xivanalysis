@@ -4,6 +4,8 @@ import {Event, Events} from 'event'
 import {CastEvent} from 'fflogs'
 import _ from 'lodash'
 import {filter} from 'parser/core/filter'
+import {dependency} from 'parser/core/Injectable'
+import CastTime from 'parser/core/modules/CastTime'
 import {ProcGroup, Procs as CoreProcs} from 'parser/core/modules/Procs'
 import {SEVERITY, Suggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
@@ -21,6 +23,8 @@ declare module 'fflogs' {
 }
 
 export default class Procs extends CoreProcs {
+	@dependency castTime!: CastTime
+
 	trackedProcs = [
 		{
 			procStatus: this.data.statuses.THUNDERCLOUD,
@@ -54,35 +58,36 @@ export default class Procs extends CoreProcs {
 		this.addEventHook(trackedStatusFilter.type('statusRemove'), () => { this.hasSharpcast = false })
 	}
 
-	public checkProc(event: Event, statusId: number): boolean {
-		const procHistory = this.getHistoryForStatus(statusId)
-		if (procHistory.length === 0) { return false }
-
-		const lastHistoryEntry = _.last(procHistory)?.stop || 0
-		return event.timestamp === lastHistoryEntry
-	}
-
-	/** @deprecated */
+	/**
+	 * Legacy API to check to see if a proc was active for this event. Only for use in Modules until they can be converted to Analyser
+	 * @deprecated */
 	public checkProcLegacy(event: CastEvent, statusId: number) : boolean {
+		return this.checkProcAtTimestamp(this.parser.fflogsToEpoch(event.timestamp), statusId)
+	}
+	/** Check to see if a proc was active for this event */
+	public checkProc(event: Event, statusId: number): boolean {
+		return this.checkProcAtTimestamp(event.timestamp, statusId)
+	}
+	/** Check to see if a proc was active at this timestamp */
+	private checkProcAtTimestamp(timestamp: number, statusId: number) : boolean {
 		const procHistory = this.getHistoryForStatus(statusId)
 		if (procHistory.length === 0) { return false }
+
 		const lastHistoryEntry = _.last(procHistory)?.stop || 0
-		return event.timestamp === this.parser.epochToFflogs(lastHistoryEntry)
+		return timestamp === lastHistoryEntry
 	}
 
 	protected jobSpecificCheckConsumeProc(_procGroup: ProcGroup, event: Events['action']): boolean {
-		const action = this.data.getAction(event.action)
-		if (action === undefined) { return false } // If we don't know what action this is, it didn't consume a proc
-		if (!action.castTime) { return false } // BLM's procs spells all have cast times, so if this action doesn't have a cast time, it's not a proc
-		if (this.lastCastingSpellId && this.lastCastingSpellId === action.id) { return false } // If this spell was hardcast, it's not a proc
-		return true // otherwise, it's a proc
+		// If we were already hardcasting this spell, it does not consume the proc
+		return !(this.lastCastingSpellId && this.lastCastingSpellId === event.action)
 	}
 
 	protected jobSpecificOnConsumeProc(procGroup: ProcGroup, event: Events['action']): void {
-		// TODO: castTime needs to be on Analyser
-		// this.castTime.set([actionId], 0, event.timestamp, event.timestamp)
+		// BLM's procs are all instant-casts
+		this.castTime.set([event.action], 0, event.timestamp, event.timestamp)
+
 		const actionProcId = this.actionProcs.get(event.action)
-		if (actionProcId !== undefined) {
+		if (actionProcId) {
 			event.overrideAction = actionProcId
 		}
 		// Thunder procs used while sharpcast is up re-grant the proc status without technically removing it, so we need to forcibly add the 'removal' here to keep the 'dropped' counting correct
