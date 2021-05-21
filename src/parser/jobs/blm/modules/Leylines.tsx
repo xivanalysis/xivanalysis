@@ -64,7 +64,9 @@ export default class Leylines extends Analyser {
 
 		// Track the new window
 		const tracker = this.buffWindows[status.id]
-		if (!tracker || tracker.current) { return }
+
+		// Don't open a new window if one's already going
+		if (tracker.current) { return }
 
 		tracker.current = {
 			start: event.timestamp,
@@ -84,8 +86,8 @@ export default class Leylines extends Analyser {
 	private stopAndSave(statusId: number, endTime: number = this.parser.currentEpochTimestamp) {
 		const tracker = this.buffWindows[statusId]
 
-		// Already closed or can't find the tracker, nothing to do here
-		if (!tracker || !tracker.current) { return }
+		// Already closed, nothing to do here
+		if (!tracker.current) { return }
 
 		// Close the window
 		tracker.current.stop = endTime
