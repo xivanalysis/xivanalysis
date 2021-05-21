@@ -40,7 +40,7 @@ const CYCLE_ENDPOINTS = [
 	ACTIONS.FREEZE.id,
 ]
 
-const FIRE_IV_CAST_MILLIS = ACTIONS.FIRE_IV.castTime * 1000
+const FIRE_IV_CAST_MILLIS = ACTIONS.FIRE_IV.castTime
 
 // This is feelycraft at the moment. Rotations shorter than this won't be processed for errors.
 const MIN_ROTATION_LENGTH = 3
