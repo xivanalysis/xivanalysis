@@ -23,6 +23,7 @@ import {NormalisedEvents} from './NormalisedEvents'
 import PrecastAction from './PrecastAction'
 import PrecastStatus from './PrecastStatus'
 import RaidBuffs, {RaidBuffsQuery} from './RaidBuffs'
+import Mitigations, {MitigationsQuery} from './Mitigations'
 import {ResourceGraphs} from './ResourceGraphs'
 import Speedmod from './Speedmod'
 import {Statistics} from './Statistics'
@@ -55,6 +56,8 @@ export default [
 	GlobalCooldown,
 	HitType,
 	Invulnerability,
+	MitigationsQuery,
+	Mitigations,
 	NormalisedEvents,
 	PrecastAction,
 	PrecastStatus,

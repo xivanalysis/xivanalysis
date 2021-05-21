@@ -60,6 +60,12 @@ export const PLD = ensureStatuses({
 		icon: 'https://xivapi.com/i/012000/012512.png',
 		duration: 18,
 	},
+	ARMS_UP: {
+		id: 1176,
+		name: 'Arms Up',
+		icon: 'https://xivapi.com/i/012000/012512.png',
+		duration: 18,
+	},
 	DIVINE_VEIL: {
 		id: 726,
 		name: 'Divine Veil',
