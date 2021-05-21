@@ -40,7 +40,7 @@ const CYCLE_ENDPOINTS = [
 	ACTIONS.FREEZE.id,
 ]
 
-// TODO const FIRE_IV_CAST_MILLIS = ACTIONS.FIRE_IV.castTime * 1000
+const FIRE_IV_CAST_MILLIS = ACTIONS.FIRE_IV.castTime * 1000
 
 // This is feelycraft at the moment. Rotations shorter than this won't be processed for errors.
 const MIN_ROTATION_LENGTH = 3
@@ -279,7 +279,7 @@ export default class RotationWatchdog extends Module {
 			this.currentRotation.hasManafont = true
 		}
 
-		if (actionId === ACTIONS.UMBRAL_SOUL.id /* TODO && !this.invulnerability.isInvulnerable('all') */) {
+		if (actionId === ACTIONS.UMBRAL_SOUL.id && !this.invulnerability.isActive({types: ['invulnerable']})) {
 			this.uptimeSouls++
 		}
 	}
@@ -318,12 +318,15 @@ export default class RotationWatchdog extends Module {
 		// and reprocess it to see if there were any other errors
 		this.history.forEach(cycle => {
 			if (cycle.errorCode !== CYCLE_ERRORS.MISSING_FIRE4S) { return }
-			/* TODO const cycleEnd = cycle.endTime ?? this.parser.fight.end_time
-			if (this.invulnerability.isInvulnerable('all', cycleEnd + FIRE_IV_CAST_MILLIS)) {
+			const cycleEnd = cycle.endTime ?? this.parser.fight.end_time
+			if (this.invulnerability.isActive({
+				timestamp: this.parser.fflogsToEpoch(cycleEnd + FIRE_IV_CAST_MILLIS),
+				types: ['invulnerable'],
+			})) {
 				cycle.finalOrDowntime = true
 				cycle.overrideErrorCode(CYCLE_ERRORS.NONE)
 				this.processCycle(cycle)
-			}*/
+			}
 		})
 
 		// Suggestion for skipping B4 on rotations that are cut short by the end of the parse or downtime
