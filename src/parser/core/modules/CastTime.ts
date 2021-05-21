@@ -59,7 +59,7 @@ export default class CastTime extends Analyser {
 		this.reset(id, this.parser.fflogsToEpoch(timestamp))
 	}
 	public reset(id: number | null, timestamp = this.parser.currentEpochTimestamp): void {
-		if (id === null) { return }
+		if (id == null) { return }
 		const ct = this.castTimes[id]
 		if (!ct) { return }
 		ct.end = timestamp
@@ -82,7 +82,7 @@ export default class CastTime extends Analyser {
 		const matchingTimes = this.castTimes.filter(ct =>
 			(ct.actions === 'all' || ct.actions.includes(actionId)) &&
 			ct.start <= timestamp &&
-			(ct.end === null || ct.end >= timestamp),
+			(ct.end == null || ct.end >= timestamp),
 		)
 
 		// Mimicking old logic w/ the undefined. Don't ask.
@@ -90,7 +90,7 @@ export default class CastTime extends Analyser {
 		const defaultCastTime = action?.castTime
 
 		// If there were no modifiers, just use the default (or if the default comes back undefined, shouldn't happen but eh)
-		if (!matchingTimes.length || defaultCastTime === undefined) {
+		if (!matchingTimes.length || defaultCastTime == null) {
 			return defaultCastTime
 		}
 
