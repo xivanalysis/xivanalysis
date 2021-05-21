@@ -95,12 +95,17 @@ export abstract class Procs extends Analyser {
 	 */
 	protected getUsagesForStatus(status: number | ProcGroup): Event[] {
 		const procGroup = this.getTrackedGroupByStatus(status)
-		if (procGroup === undefined) { return [] }
+		if (procGroup == null) { return [] }
 		return this.usages.get(procGroup)?.events || []
 	}
+	/**
+	 * Get the number of times a proc was used
+	 * @param status The status, as an ID number or ProcGroup object
+	 * @returns The number of times the proc was used
+	 */
 	protected getUsageCountForStatus(status: number | ProcGroup): number {
 		const procGroup = this.getTrackedGroupByStatus(status)
-		if (procGroup === undefined) { return 0 }
+		if (procGroup == null) { return 0 }
 		return this.usages.get(procGroup)?.events.length || 0
 	}
 
@@ -112,7 +117,7 @@ export abstract class Procs extends Analyser {
 	 */
 	protected getOverwritesForStatus(status: number | ProcGroup): Event[] {
 		const procGroup = this.getTrackedGroupByStatus(status)
-		if (procGroup === undefined) { return [] }
+		if (procGroup == null) { return [] }
 		return this.overwrites.get(procGroup)?.events || []
 	}
 	/**
@@ -122,7 +127,7 @@ export abstract class Procs extends Analyser {
 	 */
 	protected getOverwriteCountForStatus(status: number | ProcGroup): number {
 		const procGroup = this.getTrackedGroupByStatus(status)
-		if (procGroup === undefined) { return 0 }
+		if (procGroup == null) { return 0 }
 		return this.overwrites.get(procGroup)?.events.length || 0
 	}
 
@@ -134,7 +139,7 @@ export abstract class Procs extends Analyser {
 	 */
 	protected getRemovalsForStatus(status: number | ProcGroup): Event[] {
 		const procGroup = this.getTrackedGroupByStatus(status)
-		if (procGroup === undefined) { return [] }
+		if (procGroup == null) { return [] }
 		return this.removals.get(procGroup)?.events || []
 	}
 	/**
@@ -144,7 +149,7 @@ export abstract class Procs extends Analyser {
 	 */
 	protected getRemovalCountForStatus(status: number | ProcGroup): number {
 		const procGroup = this.getTrackedGroupByStatus(status)
-		if (procGroup === undefined) { return 0 }
+		if (procGroup == null) { return 0 }
 		return this.removals.get(procGroup)?.events.length || 0
 	}
 
@@ -156,7 +161,7 @@ export abstract class Procs extends Analyser {
 	 */
 	protected getInvulnsForStatus(status: number | ProcGroup): Event[] {
 		const procGroup = this.getTrackedGroupByStatus(status)
-		if (procGroup === undefined) { return [] }
+		if (procGroup == null) { return [] }
 		return this.invulns.get(procGroup)?.events || []
 	}
 	/**
@@ -166,7 +171,7 @@ export abstract class Procs extends Analyser {
 	 */
 	protected getInvulnCountForStatus(status: number | ProcGroup): number {
 		const procGroup = this.getTrackedGroupByStatus(status)
-		if (procGroup === undefined) { return 0 }
+		if (procGroup == null) { return 0 }
 		return this.invulns.get(procGroup)?.events.length || 0
 	}
 
@@ -177,7 +182,7 @@ export abstract class Procs extends Analyser {
 	 */
 	protected getDropCountForStatus(status: number| ProcGroup): number {
 		const procGroup = this.getTrackedGroupByStatus(status)
-		if (procGroup === undefined) { return 0 }
+		if (procGroup == null) { return 0 }
 		return this.getRemovalCountForStatus(status) - this.getUsageCountForStatus(status)
 	}
 
@@ -190,7 +195,7 @@ export abstract class Procs extends Analyser {
 	 */
 	protected getHistoryForStatus(status: number| ProcGroup): ProcBuffWindow[] {
 		const procGroup = this.getTrackedGroupByStatus(status)
-		if (procGroup === undefined) { return [] }
+		if (procGroup == null) { return [] }
 		return this.history.get(procGroup) || []
 	}
 
@@ -253,15 +258,15 @@ export abstract class Procs extends Analyser {
 	protected jobSpecificOnConsumeProc(_procGroup: ProcGroup, _event: Events['action']): void { /* */ }
 
 	private onCast(event: Events['action']): void {
-		const procGroup: ProcGroup | undefined = this.getTrackedGroupByAction(event.action)
+		const procGroup = this.getTrackedGroupByAction(event.action)
 		this.lastCastingSpellId = this.castingSpellId
 		this.castingSpellId = null
 
-		if (procGroup === undefined) { return }
+		if (procGroup == null) { return }
 		if (!this.currentWindows.has(procGroup)) { return }
 
 		const action = this.data.getAction(event.action)
-		if (action === undefined) { return }
+		if (action == null) { return }
 
 		// If there is job-specific logic that needs to be run to decide if a proc is being used, do that now
 		if (!this.jobSpecificCheckConsumeProc(procGroup, event)) { return }
@@ -272,9 +277,9 @@ export abstract class Procs extends Analyser {
 	}
 
 	private onProcGained(event: Events['statusApply']): void {
-		const procGroup: ProcGroup | undefined = this.getTrackedGroupByStatus(event.status)
+		const procGroup = this.getTrackedGroupByStatus(event.status)
 
-		if (procGroup === undefined) {
+		if (procGroup == null) {
 			return
 		}
 
@@ -288,9 +293,9 @@ export abstract class Procs extends Analyser {
 	}
 
 	private onProcRemoved(event: Events['statusRemove']): void {
-		const procGroup: ProcGroup | undefined = this.getTrackedGroupByStatus(event.status)
+		const procGroup = this.getTrackedGroupByStatus(event.status)
 
-		if (procGroup === undefined) {
+		if (procGroup == null) {
 			return
 		}
 
@@ -347,7 +352,7 @@ export abstract class Procs extends Analyser {
 	private onComplete(): void {
 		this.trackedProcs.forEach(procGroup => {
 			const status = procGroup.procStatus
-			if (status === undefined) {
+			if (status == null) {
 				return
 			}
 
@@ -358,7 +363,7 @@ export abstract class Procs extends Analyser {
 
 			// Add buff windows to the timeline
 			this.history.get(procGroup)?.forEach(window => {
-				if (window.stop === undefined) {
+				if (window.stop == null) {
 					return
 				}
 				row.addItem(new StatusItem({
@@ -443,7 +448,7 @@ export abstract class Procs extends Analyser {
 		if (!this.currentWindows.has(procGroup)) { return }
 
 		const currentWindow = this.currentWindows.get(procGroup)
-		if (currentWindow === undefined) { return }
+		if (currentWindow == null) { return }
 
 		currentWindow.stop = event?.timestamp ?? this.parser.pull.timestamp + this.parser.pull.duration
 		this.history.get(procGroup)?.push(currentWindow)
@@ -479,7 +484,7 @@ export abstract class Procs extends Analyser {
 
 	/** Checks to see if the specified event timestamp already exists in that map, and if not, adds the event to the collection */
 	private tryAddEventToMap(groupEvents: ProcGroupEvents | undefined, event: Event) {
-		if (groupEvents === undefined) { return }
+		if (groupEvents == null) { return }
 		if (groupEvents.timestamps.includes(event.timestamp)) { return }
 		groupEvents.timestamps.push(event.timestamp)
 		groupEvents.events.push(event)
@@ -487,7 +492,7 @@ export abstract class Procs extends Analyser {
 
 	private getRowForStatus(status: Status): SimpleRow {
 		let row = this.rows.get(status.id)
-		if (row === undefined) {
+		if (row == null) {
 			row = this.row.addRow(new SimpleRow({label: status.name}))
 			this.rows.set(status.id, row)
 		}
