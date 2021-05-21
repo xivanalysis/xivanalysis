@@ -204,7 +204,7 @@ export default class Cooldowns extends Module {
 
 		cd.current = {
 			timestamp: this.parser.currentTimestamp,
-			length: (action.cooldown ?? 0) * 1000, // CDs are in S, timestamps are in MS
+			length: action.cooldown ?? 0,
 			shared: sharedCooldown,
 			invulnTime: 0,
 		}
@@ -226,7 +226,7 @@ export default class Cooldowns extends Module {
 		}
 
 		// Reduce the CD
-		cd.current.length -= reduction * 1000
+		cd.current.length -= reduction
 
 		// If the reduction would have made it come off CD earlier than now, reset it - the extra time reduction should be lost.
 		if (cd.current.timestamp + cd.current.length < currentTimestamp) {

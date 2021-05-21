@@ -43,8 +43,8 @@ export const MCH = ensureActions({
 		name: 'Hot Shot',
 		icon: 'https://xivapi.com/i/003000/003003.png',
 		onGcd: true,
-		cooldown: 40,
-		gcdRecast: 2.5,
+		cooldown: 40000,
+		gcdRecast: 2500,
 	},
 
 	CLEAN_SHOT: {
@@ -101,7 +101,7 @@ export const MCH = ensureActions({
 		name: 'Heat Blast',
 		icon: 'https://xivapi.com/i/003000/003030.png',
 		onGcd: true,
-		cooldown: 1.5,
+		cooldown: 1500,
 		potency: 220,
 	},
 
@@ -117,8 +117,8 @@ export const MCH = ensureActions({
 		name: 'Drill',
 		icon: 'https://xivapi.com/i/003000/003043.png',
 		onGcd: true,
-		cooldown: 20,
-		gcdRecast: 2.5,
+		cooldown: 20000,
+		gcdRecast: 2500,
 	},
 
 	BIOBLASTER: {
@@ -126,8 +126,8 @@ export const MCH = ensureActions({
 		name: 'Bioblaster',
 		icon: 'https://xivapi.com/i/003000/003044.png',
 		onGcd: true,
-		cooldown: 20,
-		gcdRecast: 2.5,
+		cooldown: 20000,
+		gcdRecast: 2500,
 		statusesApplied: ['BIOBLASTER'],
 	},
 
@@ -136,8 +136,8 @@ export const MCH = ensureActions({
 		name: 'Air Anchor',
 		icon: 'https://xivapi.com/i/003000/003045.png',
 		onGcd: true,
-		cooldown: 40,
-		gcdRecast: 2.5,
+		cooldown: 40000,
+		gcdRecast: 2500,
 	},
 
 	// -----
@@ -149,7 +149,7 @@ export const MCH = ensureActions({
 		name: 'Reassemble',
 		icon: 'https://xivapi.com/i/003000/003022.png',
 		onGcd: false,
-		cooldown: 55,
+		cooldown: 55000,
 		statusesApplied: ['REASSEMBLED'],
 	},
 
@@ -158,7 +158,7 @@ export const MCH = ensureActions({
 		name: 'Wildfire',
 		icon: 'https://xivapi.com/i/003000/003018.png',
 		onGcd: false,
-		cooldown: 120,
+		cooldown: 120000,
 		statusesApplied: ['WILDFIRE_SELF'],
 	},
 
@@ -167,7 +167,7 @@ export const MCH = ensureActions({
 		name: 'Detonator',
 		icon: 'https://xivapi.com/i/003000/003039.png',
 		onGCD: false,
-		cooldown: 1,
+		cooldown: 1000,
 	},
 
 	ROOK_AUTOTURRET: {
@@ -175,7 +175,7 @@ export const MCH = ensureActions({
 		name: 'Rook Autoturret',
 		icon: 'https://xivapi.com/i/003000/003026.png',
 		onGcd: false,
-		cooldown: 6,
+		cooldown: 6000,
 	},
 
 	GAUSS_ROUND: {
@@ -183,7 +183,7 @@ export const MCH = ensureActions({
 		name: 'Gauss Round',
 		icon: 'https://xivapi.com/i/003000/003005.png',
 		onGcd: false,
-		cooldown: 30,
+		cooldown: 30000,
 		charges: 3,
 	},
 
@@ -192,7 +192,7 @@ export const MCH = ensureActions({
 		name: 'Hypercharge',
 		icon: 'https://xivapi.com/i/003000/003041.png',
 		onGcd: false,
-		cooldown: 10,
+		cooldown: 10000,
 	},
 
 	RICOCHET: {
@@ -200,7 +200,7 @@ export const MCH = ensureActions({
 		name: 'Ricochet',
 		icon: 'https://xivapi.com/i/003000/003017.png',
 		onGcd: false,
-		cooldown: 30,
+		cooldown: 30000,
 		charges: 3,
 	},
 
@@ -209,7 +209,7 @@ export const MCH = ensureActions({
 		name: 'Barrel Stabilizer',
 		icon: 'https://xivapi.com/i/003000/003034.png',
 		onGcd: false,
-		cooldown: 120,
+		cooldown: 120000,
 	},
 
 	ROOK_OVERDRIVE: {
@@ -217,7 +217,7 @@ export const MCH = ensureActions({
 		name: 'Rook Overdrive',
 		icon: 'https://xivapi.com/i/003000/003035.png',
 		onGcd: false,
-		cooldown: 15,
+		cooldown: 15000,
 	},
 
 	FLAMETHROWER: {
@@ -225,7 +225,7 @@ export const MCH = ensureActions({
 		name: 'Flamethrower',
 		icon: 'https://xivapi.com/i/003000/003038.png',
 		onGcd: false,
-		cooldown: 60,
+		cooldown: 60000,
 		statusesApplied: ['FLAMETHROWER'],
 	},
 
@@ -234,7 +234,7 @@ export const MCH = ensureActions({
 		name: 'Tactician',
 		icon: 'https://xivapi.com/i/003000/003040.png',
 		onGcd: false,
-		cooldown: 120,
+		cooldown: 120000,
 		statusesApplied: ['TACTICIAN'],
 	},
 
@@ -243,7 +243,7 @@ export const MCH = ensureActions({
 		name: 'Automaton Queen',
 		icon: 'https://xivapi.com/i/003000/003501.png',
 		onGcd: false,
-		cooldown: 6,
+		cooldown: 6000,
 	},
 
 	QUEEN_OVERDRIVE: {
@@ -251,7 +251,7 @@ export const MCH = ensureActions({
 		name: 'Queen Overdrive',
 		icon: 'https://xivapi.com/i/003000/003502.png',
 		onGcd: false,
-		cooldown: 15,
+		cooldown: 15000,
 	},
 
 	// -----

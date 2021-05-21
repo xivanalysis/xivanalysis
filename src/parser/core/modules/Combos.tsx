@@ -13,7 +13,7 @@ import {Timeline} from 'parser/core/modules/Timeline'
 import React from 'react'
 import {Data} from './Data'
 
-const DEFAULT_GCD = 2.5
+const DEFAULT_GCD = 2500
 const GCD_TIMEOUT_MILLIS = 15000
 const ISSUE_TYPENAMES = {
 	uncomboed: <Trans id="core.combos.issuetypenames.uncomboed">Uncomboed</Trans>,

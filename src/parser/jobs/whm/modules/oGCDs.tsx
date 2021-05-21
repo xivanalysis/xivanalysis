@@ -83,7 +83,7 @@ export default class OGCDs extends Module {
 
 	private initSpellCooldowns() {
 		this.spellCooldowns = [...DPS_COOLDOWNS_TRACKED, ...OTHER_COOLDOWNS_TRACKED].reduce((obj, action) => {
-			obj[action.id] = action.cooldown * 1000
+			obj[action.id] = action.cooldown
 			return obj
 		}, this.spellCooldowns)
 	}
@@ -126,7 +126,7 @@ export default class OGCDs extends Module {
 		const requirements = DPS_COOLDOWNS_TRACKED.map(action => new Requirement({
 			name: <ActionLink {...action}/>,
 			value: this.getCooldownUsage(action.id).uses,
-			target: Math.ceil(this.parser.currentDuration / (action.cooldown * 1000)),
+			target: Math.ceil(this.parser.currentDuration / action.cooldown),
 		}))
 
 		this.checklist.add(new Rule({
@@ -146,7 +146,7 @@ export default class OGCDs extends Module {
 			// calculate final held amount
 			cooldownUsage.held += this.calculateHeldTime(this.parser.currentTimestamp, cooldownUsage.lastUsed, this.spellCooldowns[action.id])
 			// set up for suggestion(s)
-			const maxUses = Math.ceil(this.parser.currentDuration / (action.cooldown * 1000))
+			const maxUses = Math.ceil(this.parser.currentDuration / action.cooldown)
 			const uses = cooldownUsage.uses
 			const held = cooldownUsage.held
 			const showHeld = OTHER_ALLOWED_MISSES[action.id].showHeld

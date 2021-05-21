@@ -12,7 +12,7 @@ export const ACN = ensureActions({
 		name: 'Ruin',
 		icon: 'https://xivapi.com/i/000000/000501.png',
 		onGcd: true,
-		castTime: 2.5,
+		castTime: 2500,
 	},
 
 	BIO: {
@@ -26,7 +26,7 @@ export const ACN = ensureActions({
 		id: 165,
 		name: 'Summon',
 		icon: 'https://xivapi.com/i/000000/000516.png',
-		cooldown: 3,
+		cooldown: 3000,
 		cooldownGroup: SMN_COOLDOWN_GROUP.SUMMON,
 	},
 
@@ -34,14 +34,14 @@ export const ACN = ensureActions({
 		id: 166,
 		name: 'Aetherflow',
 		icon: 'https://xivapi.com/i/000000/000510.png',
-		cooldown: 60,
+		cooldown: 60000,
 	},
 
 	ENERGY_DRAIN: {
 		id: 16508,
 		name: 'Energy Drain',
 		icon: 'https://xivapi.com/i/000000/000514.png',
-		cooldown: 30,
+		cooldown: 30000,
 		cooldownGroup: SMN_COOLDOWN_GROUP.ENERGY,
 	},
 
@@ -50,14 +50,14 @@ export const ACN = ensureActions({
 		name: 'Miasma',
 		icon: 'https://xivapi.com/i/000000/000505.png',
 		onGcd: true,
-		castTime: 2.5,
+		castTime: 2500,
 	},
 
 	SUMMON_II: {
 		id: 170,
 		name: 'Summon II',
 		icon: 'https://xivapi.com/i/000000/000517.png',
-		cooldown: 3,
+		cooldown: 3000,
 		cooldownGroup: SMN_COOLDOWN_GROUP.SUMMON,
 	},
 
@@ -73,14 +73,14 @@ export const ACN = ensureActions({
 		name: 'Resurrection',
 		icon: 'https://xivapi.com/i/000000/000511.png',
 		onGcd: true,
-		castTime: 8,
+		castTime: 8000,
 	},
 
 	BANE: {
 		id: 174,
 		name: 'Bane',
 		icon: 'https://xivapi.com/i/000000/000507.png',
-		cooldown: 10,
+		cooldown: 10000,
 	},
 
 	BIO_II: {
@@ -95,7 +95,7 @@ export const ACN = ensureActions({
 		name: 'Physick',
 		icon: 'https://xivapi.com/i/000000/000518.png',
 		onGcd: true,
-		castTime: 2,
+		castTime: 2000,
 	},
 
 	// -----
@@ -113,7 +113,7 @@ export const ACN = ensureActions({
 		id: 638,
 		name: 'Backdraft',
 		icon: 'https://xivapi.com/i/000000/000563.png',
-		cooldown: 90,
+		cooldown: 90000,
 		pet: PETS.EMERALD_CARBUNCLE.id,
 	},
 
@@ -121,7 +121,7 @@ export const ACN = ensureActions({
 		id: 639,
 		name: 'Downburst',
 		icon: 'https://xivapi.com/i/000000/000562.png',
-		cooldown: 30,
+		cooldown: 30000,
 		pet: PETS.EMERALD_CARBUNCLE.id,
 	},
 
@@ -129,7 +129,7 @@ export const ACN = ensureActions({
 		id: 640,
 		name: 'Shining Emerald',
 		icon: 'https://xivapi.com/i/000000/000564.png',
-		cooldown: 60,
+		cooldown: 60000,
 		pet: PETS.EMERALD_CARBUNCLE.id,
 	},
 
@@ -145,7 +145,7 @@ export const ACN = ensureActions({
 		id: 634,
 		name: 'Shining Topaz',
 		icon: 'https://xivapi.com/i/000000/000552.png',
-		cooldown: 15,
+		cooldown: 15000,
 		pet: PETS.TOPAZ_CARBUNCLE.id,
 	},
 
@@ -153,7 +153,7 @@ export const ACN = ensureActions({
 		id: 635,
 		name: 'Curl',
 		icon: 'https://xivapi.com/i/000000/000553.png',
-		cooldown: 120,
+		cooldown: 120000,
 		pet: PETS.TOPAZ_CARBUNCLE.id,
 	},
 
@@ -161,7 +161,7 @@ export const ACN = ensureActions({
 		id: 636,
 		name: 'Storm',
 		icon: 'https://xivapi.com/i/000000/000554.png',
-		cooldown: 40,
+		cooldown: 40000,
 		pet: PETS.TOPAZ_CARBUNCLE.id,
 	},
 })
