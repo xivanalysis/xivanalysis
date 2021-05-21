@@ -157,7 +157,7 @@ export default class DWT extends Module {
 			casts: [],
 		}
 
-		this._ctIndex = this.castTime.set('all', DWT_CAST_TIME_MOD)
+		this._ctIndex = this.castTime.setFflogs('all', DWT_CAST_TIME_MOD)
 	}
 
 	_stopAndSave(dfHits, endTime = this.parser.currentTimestamp) {
@@ -170,7 +170,7 @@ export default class DWT extends Module {
 		this._dwt.end = endTime
 		this._history.push(this._dwt)
 
-		this.castTime.reset(this._ctIndex)
+		this.castTime.resetFflogs(this._ctIndex)
 
 		// ...don't miss deathflare k
 		// Don't flag if they died, the death suggestion is morbid enough.
