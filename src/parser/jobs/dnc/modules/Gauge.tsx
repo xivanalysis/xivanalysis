@@ -349,7 +349,7 @@ export default class Gauge extends Analyser {
 
 	/** Dancer's gauges are both probabilistic, so we have to do some fudging to produce a realistic-looking graph */
 	private correctGaugeHistory(historyObject: DancerResourceDatum[], spenderCost: number, currentGauge: number) {
-		const lastGeneratorIndex = _.findLastIndex(historyObject, event => event.type === 'generate') // Get the last generation event we've recorded
+		const lastGeneratorIndex = _.findLastIndex(historyObject, event => event.type === 'generate' || event.type === 'init') // Get the last generation event we've recorded
 
 		// Add the amount we underran the simulation by to the last generation event, and all events through the current one
 		const underrunAmount = Math.abs(currentGauge - spenderCost)
