@@ -1,10 +1,11 @@
 import {JobKey} from 'data/JOBS'
 import {getActions, getStatuses} from 'data/layer'
-import {Event, Events} from 'event'
+import {Event} from 'event'
 import {BuffEvent, CastEvent, FflogsEvent} from 'fflogs'
 import _ from 'lodash'
 import {Actor, Team} from 'report'
-import {AdapterStep, resolveActorId} from './base'
+import {resolveActorId} from 'reportSources/legacyFflogs/base'
+import {AdapterStep} from './base'
 
 const BASE_GCD = 2.5
 const CASTER_TAX = 0.1
