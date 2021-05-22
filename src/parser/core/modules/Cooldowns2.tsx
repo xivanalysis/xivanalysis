@@ -1,9 +1,11 @@
 import {Action} from 'data/ACTIONS'
 import {Events} from 'event'
+import React from 'react'
 import {Analyser} from '../Analyser'
 import {TimestampHook} from '../Dispatcher'
 import {dependency} from '../Injectable'
 import {Data} from './Data'
+import {SimpleItem, SimpleRow, Timeline} from './Timeline'
 
 const DEFAULT_CHARGES = 1
 
@@ -13,6 +15,7 @@ interface ChargeState {
 }
 
 interface CooldownState {
+	start: number
 	end: number
 	hook: TimestampHook
 }
@@ -25,6 +28,7 @@ export class Cooldowns extends Analyser {
 	// TODO: cooldownOrder
 
 	@dependency private data!: Data
+	@dependency private timeline!: Timeline
 
 	private chargeStates = new Map<Action['id'], ChargeState>()
 	private cooldownStates = new Map<CooldownGroup, CooldownState>()
@@ -33,6 +37,8 @@ export class Cooldowns extends Analyser {
 		toGroups: new Map<Action['id'], CooldownGroup[]>(),
 		fromGroup: new Map<CooldownGroup, Action[]>(),
 	}
+
+	private tempTimelineRow = this.timeline.addRow(new SimpleRow({label: 'cd2 temp'}))
 
 	initialise() {
 		// TODO: doc fucking shit
@@ -99,6 +105,13 @@ export class Cooldowns extends Analyser {
 		chargeState.current--
 
 		// save to history in some manner? we need to track this shit in the timeline as well
+		// TEMP
+		const now = this.parser.currentEpochTimestamp - this.parser.pull.timestamp
+		const row = this.tempGetTimelineRow(`charge:${action.name}`)
+		row.addItem(new SimpleItem({
+			content: '-',
+			start: now,
+		}))
 	}
 
 	private gainCharge(action: Action) {
@@ -124,6 +137,15 @@ export class Cooldowns extends Analyser {
 		if (chargeState.current < chargeState.maximum) {
 			this.startGroupsForAction(action)
 		}
+
+		// mark history
+		// temp
+		const now = this.parser.currentEpochTimestamp - this.parser.pull.timestamp
+		const row = this.tempGetTimelineRow(`charge:${action.name}`)
+		row.addItem(new SimpleItem({
+			content: '+',
+			start: now,
+		}))
 	}
 
 	private startGroupsForAction(action: Action) {
@@ -146,10 +168,12 @@ export class Cooldowns extends Analyser {
 		}
 
 		// build a new cooldown state
-		const end = this.parser.currentEpochTimestamp + duration
+		const start = this.parser.currentEpochTimestamp
+		const end = start + duration
 
 		// configure a timestamp hook
 		this.cooldownStates.set(group, {
+			start,
 			end,
 			hook: this.addTimestampHook(end, () => {
 				this.endCooldownGroup(group)
@@ -161,11 +185,12 @@ export class Cooldowns extends Analyser {
 
 	private endCooldownGroup(group: CooldownGroup) {
 		// clear state
-		const existed = this.cooldownStates.delete(group)
+		const cooldownState = this.cooldownStates.get(group)
 		// if there isn't anything in the state, shit's fucked
-		if (!existed) {
+		if (cooldownState == null) {
 			throw new Error('shit was def fucked')
 		}
+		this.cooldownStates.delete(group)
 
 		// get list of actions associated with the expiring CDG
 		const actions = this.actionMapping.fromGroup.get(group) ?? []
@@ -173,6 +198,13 @@ export class Cooldowns extends Analyser {
 			// increment charge count
 			this.gainCharge(action)
 		}
+
+		const row = this.tempGetTimelineRow(`group:${group}`)
+		row.addItem(new SimpleItem({
+			content: <div style={{width: '100%', height: '100%', background: '#ff000033'}}/>,
+			start: cooldownState.start - this.parser.pull.timestamp,
+			end: cooldownState.end - this.parser.pull.timestamp,
+		}))
 	}
 
 	// TODO: inline?
@@ -182,6 +214,16 @@ export class Cooldowns extends Analyser {
 		// TODO: doc reasoning for neg (sep namespace etc)
 		const group = action.cooldownGroup ?? -action.id
 		return [group]
+	}
+
+	private tempRows = new Map<string, SimpleRow>()
+	private tempGetTimelineRow(key:string) {
+		let row = this.tempRows.get(key)
+		if (row == null) {
+			row = this.tempTimelineRow.addRow(new SimpleRow({label: key}))
+			this.tempRows.set(key, row)
+		}
+		return row
 	}
 }
 
