@@ -26,7 +26,7 @@ export default class BlmWeaving extends Weaving {
 	static dependencies = [
 		...Weaving.dependencies,
 		'invulnerability',
-		'gauge', // eslint-disable-line @xivanalysis/no-unused-dependencies
+		'gauge',
 		'castTime',
 	]
 
@@ -55,8 +55,10 @@ export default class BlmWeaving extends Weaving {
 	}
 
 	_onGaugeChange(event) {
-		this._astralFireStacks = event.astralFire
-		this._umbralIceStacks = event.umbralIce
+		const gaugeState = this.gauge.getFflogsGaugeState(event.timestamp)
+		if (!gaugeState) { return }
+		this._astralFireStacks = gaugeState.astralFire
+		this._umbralIceStacks = gaugeState.umbralIce
 	}
 
 	_onApplyTriple() {

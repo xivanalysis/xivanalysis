@@ -7,6 +7,7 @@ import ACTIONS from 'data/ACTIONS'
 import {CastEvent} from 'fflogs'
 import Module, {dependency} from 'parser/core/Module'
 import {Actors} from 'parser/core/modules/Actors'
+import {Data} from 'parser/core/modules/Data'
 import {Invulnerability} from 'parser/core/modules/Invulnerability'
 import Suggestions, {SEVERITY, Suggestion, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import {Timeline} from 'parser/core/modules/Timeline'
@@ -15,7 +16,7 @@ import React, {Fragment} from 'react'
 import {Icon, Message} from 'semantic-ui-react'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 import {FIRE_SPELLS} from './Elements'
-import {EventBLMGauge} from './Gauge'
+import Gauge, {EventBLMGauge, BLMGaugeState} from './Gauge'
 
 const DEBUG_SHOW_ALL_CYCLES = false && process.env.NODE_ENV !== 'production'
 
@@ -39,8 +40,6 @@ const CYCLE_ENDPOINTS = [
 	ACTIONS.TRANSPOSE.id,
 	ACTIONS.FREEZE.id,
 ]
-
-const FIRE_IV_CAST_MILLIS = ACTIONS.FIRE_IV.castTime
 
 // This is feelycraft at the moment. Rotations shorter than this won't be processed for errors.
 const MIN_ROTATION_LENGTH = 3
@@ -83,7 +82,13 @@ class Cycle {
 
 	finalOrDowntime: boolean = false
 
-	gaugeStateBeforeFire: GaugeState = new GaugeState()
+	gaugeStateBeforeFire: BLMGaugeState = {
+		astralFire: 0,
+		umbralIce: 0,
+		umbralHearts: 0,
+		polyglot: 0,
+		enochian: false,
+	}
 
 	_errorCode: CycleErrorCode = CYCLE_ERRORS.NONE
 	public set errorCode(code) {
@@ -115,7 +120,7 @@ class Cycle {
 		 * A bit hacky but, when we are in the opener and start with F3 it will be the only cycle that doesn't include any B3, Freeze, US.
 		 * Since we are in the opener, and specifically opening with F3, we are doing the (mod) Jp Opener, which drops the expected count by 1
 		 */
-		expectedCount -= (this.casts.some(cast => CYCLE_ENDPOINTS.includes(cast.ability.guid)) ? 1 : 0)
+		expectedCount -= !this.casts.some(cast => CYCLE_ENDPOINTS.includes(cast.ability.guid)) ? 1 : 0
 		// Adjust expected count if the cycle included manafont
 		expectedCount += this.hasManafont ? FIRE4_FROM_MANAFONT : 0
 
@@ -170,25 +175,17 @@ class Cycle {
 		return this.finalOrDowntime && this.hardT3Count > 0
 	}
 
-	constructor(start: number, gaugeState: GaugeState) {
+	constructor(start: number, gaugeState?: BLMGaugeState) {
 		this.startTime = start
-		// Object.assign because this needs to be a by-value assignment, not by-reference
-		this.gaugeStateBeforeFire = Object.assign(this.gaugeStateBeforeFire, gaugeState)
+		if (gaugeState) {
+			this.gaugeStateBeforeFire = {...gaugeState}
+		}
 	}
 
 	public overrideErrorCode(code: CycleErrorCode): void {
 		this._errorCode = code
 	}
 }
-
-// typedef for the subset of the data contained in BLMGaugeEvent that we're going to keep track of for suggestions
-class GaugeState {
-	astralFire: number = 0
-	umbralIce: number = 0
-	umbralHearts: number = 0
-	enochian: boolean = false
-}
-
 export default class RotationWatchdog extends Module {
 	static handle = 'RotationWatchdog'
 	static title = t('blm.rotation-watchdog.title')`Rotation Outliers`
@@ -199,9 +196,18 @@ export default class RotationWatchdog extends Module {
 	@dependency private timeline!: Timeline
 	@dependency private unableToAct!: UnableToAct
 	@dependency private actors!: Actors
+	@dependency private gauge!: Gauge
+	@dependency private data!: Data
 
-	private currentGaugeState: GaugeState = new GaugeState()
-	private currentRotation: Cycle = new Cycle(this.parser.fight.start_time, this.currentGaugeState)
+	private currentGaugeState: BLMGaugeState = {
+		astralFire: 0,
+		umbralIce: 0,
+		umbralHearts: 0,
+		polyglot: 0,
+		enochian: false,
+	}
+
+	private currentRotation: Cycle = new Cycle(this.parser.fight.start_time)
 	private history: Cycle[] = []
 
 	private firstEvent: boolean = true
@@ -217,8 +223,11 @@ export default class RotationWatchdog extends Module {
 
 	// Handle events coming from BLM's Gauge module
 	private onGaugeEvent(event: EventBLMGauge) {
+		const nextGaugeState = this.gauge.getGaugeState(event.timestamp)
+		if (!nextGaugeState) { return }
+
 		// If we're beginning the fire phase of this cycle, note it and save some data
-		if (this.currentGaugeState.astralFire === 0 && event.astralFire > 0) {
+		if (this.currentGaugeState.astralFire === 0 && nextGaugeState.astralFire > 0) {
 			this.currentRotation.inFirePhase = true
 			this.currentRotation.firePhaseStartMP = this.actors.current.mp.current
 
@@ -230,15 +239,12 @@ export default class RotationWatchdog extends Module {
 		}
 
 		// If we no longer have enochian, flag it for display
-		if (this.currentGaugeState.enochian && !event.enochian) {
+		if (this.currentGaugeState.enochian && !nextGaugeState.enochian) {
 			this.currentRotation.errorCode = CYCLE_ERRORS.DROPPED_ENOCHIAN
 		}
 
 		// Retrieve the GaugeState from the event
-		this.currentGaugeState.astralFire = event.astralFire
-		this.currentGaugeState.umbralIce = event.umbralIce
-		this.currentGaugeState.umbralHearts = event.umbralHearts
-		this.currentGaugeState.enochian = event.enochian
+		this.currentGaugeState = {...nextGaugeState}
 
 		// If we're in fire phase, stop processing
 		if (this.currentRotation.inFirePhase) {
@@ -247,7 +253,7 @@ export default class RotationWatchdog extends Module {
 
 		// If we're in ice phase, set the current gauge state into the pre-fire cache for later recording
 		// Still need by-value assignment here
-		this.currentRotation.gaugeStateBeforeFire = Object.assign(this.currentRotation.gaugeStateBeforeFire, this.currentGaugeState)
+		this.currentRotation.gaugeStateBeforeFire = {...this.currentGaugeState}
 	}
 
 	// Handle cast events and updated recording data accordingly
@@ -320,7 +326,7 @@ export default class RotationWatchdog extends Module {
 			if (cycle.errorCode !== CYCLE_ERRORS.MISSING_FIRE4S) { return }
 			const cycleEnd = cycle.endTime ?? this.parser.fight.end_time
 			if (this.invulnerability.isActive({
-				timestamp: this.parser.fflogsToEpoch(cycleEnd + FIRE_IV_CAST_MILLIS),
+				timestamp: this.parser.fflogsToEpoch(cycleEnd + this.data.actions.FIRE_IV.castTime),
 				types: ['invulnerable'],
 			})) {
 				cycle.finalOrDowntime = true
@@ -419,8 +425,8 @@ export default class RotationWatchdog extends Module {
 			</Trans>,
 		}))
 
-		// Suggestion not to icemage... :(
-		const rotationsWithoutFire = this.history.filter(cycle => cycle.isMissingFire).length
+		// Suggestion not to icemage, but don't double-count it if they got cut short or we otherwise weren't showing it in the errors table
+		const rotationsWithoutFire = this.history.filter(cycle => cycle.isMissingFire && cycle.errorCode < CYCLE_ERRORS.DIED && cycle.errorCode.priority > CYCLE_ERRORS.SHORT.priority).length
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.BLIZZARD_II.icon,
 			content: <Trans id="blm.rotation-watchdog.suggestions.icemage.content">
