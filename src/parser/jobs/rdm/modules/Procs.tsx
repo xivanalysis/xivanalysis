@@ -1,8 +1,6 @@
 import {t} from '@lingui/macro'
 import {Trans, Plural} from '@lingui/react'
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
-import ACTIONS from 'data/ACTIONS'
-import STATUSES from 'data/STATUSES'
 import {Events} from 'event'
 import {Procs as CoreProcs} from 'parser/core/modules/Procs'
 import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
@@ -34,28 +32,28 @@ export default class Procs extends CoreProcs {
 	 */
 	trackedProcs = [
 		{
-			procStatus: STATUSES.VERSTONE_READY,
-			consumeActions: [ACTIONS.VERSTONE],
+			procStatus: this.data.statuses.VERSTONE_READY,
+			consumeActions: [this.data.actions.VERSTONE],
 		},
 		{
-			procStatus: STATUSES.VERFIRE_READY,
-			consumeActions: [ACTIONS.VERFIRE],
+			procStatus: this.data.statuses.VERFIRE_READY,
+			consumeActions: [this.data.actions.VERFIRE],
 		},
 	]
 
 	private getMissedProcContent(missedFire: number, missedStone: number) {
 		if (missedFire > 0 && missedStone > 0) {
 			return <Trans id="rdm.procs.suggestions.missed.content">
-				Try to use <ActionLink {...ACTIONS.VERFIRE} /> whenever you have <StatusLink {...STATUSES.VERFIRE_READY} /> or <ActionLink {...ACTIONS.VERSTONE} /> whenever you have <StatusLink {...STATUSES.VERSTONE_READY} /> to avoid losing out on mana gains.
+				Try to use <ActionLink {...this.data.actions.VERFIRE} /> whenever you have <StatusLink {...this.data.statuses.VERFIRE_READY} /> or <ActionLink {...this.data.actions.VERSTONE} /> whenever you have <StatusLink {...this.data.statuses.VERSTONE_READY} /> to avoid losing out on mana gains.
 			</Trans>
 		}
 		if (missedFire > 0) {
 			return <Trans id="rdm.procs.suggestions.missed-fire.content">
-				Try to use <ActionLink {...ACTIONS.VERFIRE} /> whenever you have <StatusLink {...STATUSES.VERFIRE_READY} /> to avoid losing out on mana gains.
+				Try to use <ActionLink {...this.data.actions.VERFIRE} /> whenever you have <StatusLink {...this.data.statuses.VERFIRE_READY} /> to avoid losing out on mana gains.
 			</Trans>
 		}
 		return <Trans id="rdm.procs.suggestions.missed-stone.content">
-			Try to use <ActionLink {...ACTIONS.VERSTONE} /> whenever you have <StatusLink {...STATUSES.VERSTONE_READY} /> to avoid losing out on mana gains.
+			Try to use <ActionLink {...this.data.actions.VERSTONE} /> whenever you have <StatusLink {...this.data.statuses.VERSTONE_READY} /> to avoid losing out on mana gains.
 		</Trans>
 	}
 
@@ -78,16 +76,16 @@ export default class Procs extends CoreProcs {
 	private getOverwrittenProcContent(overWrittenFire: number, overWrittenStone: number) {
 		if (overWrittenFire > 0 && overWrittenStone > 0) {
 			return <Trans id="rdm.procs.suggestions.overwritten.content">
-				Don't cast <ActionLink {...ACTIONS.VERTHUNDER} /> when you have <StatusLink {...STATUSES.VERFIRE_READY} /> or <ActionLink {...ACTIONS.VERAERO} /> when you have <StatusLink {...STATUSES.VERSTONE_READY} />.
+				Don't cast <ActionLink {...this.data.actions.VERTHUNDER} /> when you have <StatusLink {...this.data.statuses.VERFIRE_READY} /> or <ActionLink {...this.data.actions.VERAERO} /> when you have <StatusLink {...this.data.statuses.VERSTONE_READY} />.
 			</Trans>
 		}
 		if (overWrittenFire > 0) {
 			return <Trans id="rdm.procs.suggestions.overwritten-fire.content">
-				Don't cast <ActionLink {...ACTIONS.VERTHUNDER} /> when you have <StatusLink {...STATUSES.VERFIRE_READY} />.
+				Don't cast <ActionLink {...this.data.actions.VERTHUNDER} /> when you have <StatusLink {...this.data.statuses.VERFIRE_READY} />.
 			</Trans>
 		}
 		return <Trans id="rdm.procs.suggestions.overwritten-stone.content">
-			Don't cast <ActionLink {...ACTIONS.VERAERO} /> when you have <StatusLink {...STATUSES.VERSTONE_READY} />.
+			Don't cast <ActionLink {...this.data.actions.VERAERO} /> when you have <StatusLink {...this.data.statuses.VERSTONE_READY} />.
 		</Trans>
 	}
 
@@ -110,16 +108,16 @@ export default class Procs extends CoreProcs {
 	private getInvulnProcContent(invulnFire: number, invulnStone: number) {
 		if (invulnFire > 0 && invulnStone > 0) {
 			return <Trans id="rdm.procs.suggestions.invuln.content">
-				Try not to use <ActionLink {...ACTIONS.VERFIRE} />, and <ActionLink {...ACTIONS.VERSTONE} /> while the boss is invulnerable.
+				Try not to use <ActionLink {...this.data.actions.VERFIRE} />, and <ActionLink {...this.data.actions.VERSTONE} /> while the boss is invulnerable.
 			</Trans>
 		}
 		if (invulnFire > 0) {
 			return <Trans id="rdm.procs.suggestions.invuln-fire.content">
-				Try not to use <ActionLink {...ACTIONS.VERFIRE} /> while the boss is invulnerable.
+				Try not to use <ActionLink {...this.data.actions.VERFIRE} /> while the boss is invulnerable.
 			</Trans>
 		}
 		return <Trans id="rdm.procs.suggestions.invuln-stone.content">
-			Try not to use <ActionLink {...ACTIONS.VERSTONE} /> while the boss is invulnerable.
+			Try not to use <ActionLink {...this.data.actions.VERSTONE} /> while the boss is invulnerable.
 		</Trans>
 	}
 
@@ -140,17 +138,17 @@ export default class Procs extends CoreProcs {
 	}
 
 	protected addJobSpecificSuggestions() {
-		const missedFire = this.getDropCountForStatus(STATUSES.VERFIRE_READY.id)
-		const invulnFire = this.getInvulnCountForStatus(STATUSES.VERFIRE_READY.id)
-		const overWrittenFire = this.getOverwriteCountForStatus(STATUSES.VERFIRE_READY.id)
-		const missedStone = this.getDropCountForStatus(STATUSES.VERSTONE_READY.id)
-		const invulnStone = this.getInvulnCountForStatus(STATUSES.VERSTONE_READY.id)
-		const overWrittenStone = this.getOverwriteCountForStatus(STATUSES.VERSTONE_READY.id)
+		const missedFire = this.getDropCountForStatus(this.data.statuses.VERFIRE_READY.id)
+		const invulnFire = this.getInvulnCountForStatus(this.data.statuses.VERFIRE_READY.id)
+		const overWrittenFire = this.getOverwriteCountForStatus(this.data.statuses.VERFIRE_READY.id)
+		const missedStone = this.getDropCountForStatus(this.data.statuses.VERSTONE_READY.id)
+		const invulnStone = this.getInvulnCountForStatus(this.data.statuses.VERSTONE_READY.id)
+		const overWrittenStone = this.getOverwriteCountForStatus(this.data.statuses.VERSTONE_READY.id)
 
 		//Icons always default to the White Mana spell if black/jolt spells don't have more bad items.
 		//Fire/Stone are identical
 		this.suggestions.add(new TieredSuggestion({
-			icon: missedFire > missedStone ? ACTIONS.VERFIRE.icon : ACTIONS.VERSTONE.icon,
+			icon: missedFire > missedStone ? this.data.actions.VERFIRE.icon : this.data.actions.VERSTONE.icon,
 			content: this.getMissedProcContent(missedFire, missedStone),
 			tiers: SEVERITY_MISSED_PROCS,
 			value: missedFire + missedStone,
@@ -158,7 +156,7 @@ export default class Procs extends CoreProcs {
 		}))
 
 		this.suggestions.add(new TieredSuggestion({
-			icon: overWrittenFire > overWrittenStone ? ACTIONS.VERFIRE.icon : ACTIONS.VERSTONE.icon,
+			icon: overWrittenFire > overWrittenStone ? this.data.actions.VERFIRE.icon : this.data.actions.VERSTONE.icon,
 			content: this.getOverwrittenProcContent(overWrittenFire, overWrittenStone),
 			tiers: SEVERITY_OVERWRITTEN_PROCS,
 			value: overWrittenFire + overWrittenStone,
@@ -166,7 +164,7 @@ export default class Procs extends CoreProcs {
 		}))
 
 		this.suggestions.add(new TieredSuggestion({
-			icon: invulnFire > invulnStone ? ACTIONS.VERFIRE.icon : ACTIONS.VERSTONE.icon,
+			icon: invulnFire > invulnStone ? this.data.actions.VERFIRE.icon : this.data.actions.VERSTONE.icon,
 			content: this.getInvulnProcContent(invulnFire, invulnStone),
 			tiers: SEVERITY_INVULN_PROCS,
 			value: invulnFire + invulnStone,
@@ -175,10 +173,8 @@ export default class Procs extends CoreProcs {
 	}
 
 	output() {
-		const allInvulns = this.getUsagesForStatus(STATUSES.VERFIRE_READY.id).concat(this.getInvulnsForStatus(STATUSES.VERSTONE_READY.id)).sort((a, b) => a.timestamp - b.timestamp)
-		if (allInvulns.length === 0) {
-			return
-		}
+		const allInvulns = this.getUsagesForStatus(this.data.statuses.VERFIRE_READY.id).concat(this.getInvulnsForStatus(this.data.statuses.VERSTONE_READY.id)).sort((a, b) => a.timestamp - b.timestamp)
+		if (allInvulns.length === 0) { return }
 
 		//Currently we only care about Invuln points in time, this has been requested quite often in The Balance from RDMs looking over their logs
 		return <Fragment>

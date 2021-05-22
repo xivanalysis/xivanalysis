@@ -95,7 +95,7 @@ export abstract class Procs extends Analyser {
 	 */
 	protected getUsagesForStatus(status: number | ProcGroup): Event[] {
 		const procGroup = this.getTrackedGroupByStatus(status)
-		if (procGroup == null) { return [] }
+		if (!procGroup) { return [] }
 		return this.usages.get(procGroup)?.events || []
 	}
 	/**
@@ -105,7 +105,7 @@ export abstract class Procs extends Analyser {
 	 */
 	protected getUsageCountForStatus(status: number | ProcGroup): number {
 		const procGroup = this.getTrackedGroupByStatus(status)
-		if (procGroup == null) { return 0 }
+		if (!procGroup) { return 0 }
 		return this.usages.get(procGroup)?.events.length || 0
 	}
 
@@ -117,7 +117,7 @@ export abstract class Procs extends Analyser {
 	 */
 	protected getOverwritesForStatus(status: number | ProcGroup): Event[] {
 		const procGroup = this.getTrackedGroupByStatus(status)
-		if (procGroup == null) { return [] }
+		if (!procGroup) { return [] }
 		return this.overwrites.get(procGroup)?.events || []
 	}
 	/**
@@ -127,7 +127,7 @@ export abstract class Procs extends Analyser {
 	 */
 	protected getOverwriteCountForStatus(status: number | ProcGroup): number {
 		const procGroup = this.getTrackedGroupByStatus(status)
-		if (procGroup == null) { return 0 }
+		if (!procGroup) { return 0 }
 		return this.overwrites.get(procGroup)?.events.length || 0
 	}
 
@@ -139,7 +139,7 @@ export abstract class Procs extends Analyser {
 	 */
 	protected getRemovalsForStatus(status: number | ProcGroup): Event[] {
 		const procGroup = this.getTrackedGroupByStatus(status)
-		if (procGroup == null) { return [] }
+		if (!procGroup) { return [] }
 		return this.removals.get(procGroup)?.events || []
 	}
 	/**
@@ -149,7 +149,7 @@ export abstract class Procs extends Analyser {
 	 */
 	protected getRemovalCountForStatus(status: number | ProcGroup): number {
 		const procGroup = this.getTrackedGroupByStatus(status)
-		if (procGroup == null) { return 0 }
+		if (!procGroup) { return 0 }
 		return this.removals.get(procGroup)?.events.length || 0
 	}
 
@@ -161,7 +161,7 @@ export abstract class Procs extends Analyser {
 	 */
 	protected getInvulnsForStatus(status: number | ProcGroup): Event[] {
 		const procGroup = this.getTrackedGroupByStatus(status)
-		if (procGroup == null) { return [] }
+		if (!procGroup) { return [] }
 		return this.invulns.get(procGroup)?.events || []
 	}
 	/**
@@ -171,7 +171,7 @@ export abstract class Procs extends Analyser {
 	 */
 	protected getInvulnCountForStatus(status: number | ProcGroup): number {
 		const procGroup = this.getTrackedGroupByStatus(status)
-		if (procGroup == null) { return 0 }
+		if (!procGroup) { return 0 }
 		return this.invulns.get(procGroup)?.events.length || 0
 	}
 
@@ -182,7 +182,7 @@ export abstract class Procs extends Analyser {
 	 */
 	protected getDropCountForStatus(status: number| ProcGroup): number {
 		const procGroup = this.getTrackedGroupByStatus(status)
-		if (procGroup == null) { return 0 }
+		if (!procGroup) { return 0 }
 		return this.getRemovalCountForStatus(status) - this.getUsageCountForStatus(status)
 	}
 
@@ -195,7 +195,7 @@ export abstract class Procs extends Analyser {
 	 */
 	protected getHistoryForStatus(status: number| ProcGroup): ProcBuffWindow[] {
 		const procGroup = this.getTrackedGroupByStatus(status)
-		if (procGroup == null) { return [] }
+		if (!procGroup) { return [] }
 		return this.history.get(procGroup) || []
 	}
 
@@ -262,11 +262,11 @@ export abstract class Procs extends Analyser {
 		this.lastCastingSpellId = this.castingSpellId
 		this.castingSpellId = null
 
-		if (procGroup == null) { return }
+		if (!procGroup) { return }
 		if (!this.currentWindows.has(procGroup)) { return }
 
 		const action = this.data.getAction(event.action)
-		if (action == null) { return }
+		if (!action) { return }
 
 		// If there is job-specific logic that needs to be run to decide if a proc is being used, do that now
 		if (!this.jobSpecificCheckConsumeProc(procGroup, event)) { return }
@@ -279,7 +279,7 @@ export abstract class Procs extends Analyser {
 	private onProcGained(event: Events['statusApply']): void {
 		const procGroup = this.getTrackedGroupByStatus(event.status)
 
-		if (procGroup == null) {
+		if (!procGroup) {
 			return
 		}
 
@@ -295,7 +295,7 @@ export abstract class Procs extends Analyser {
 	private onProcRemoved(event: Events['statusRemove']): void {
 		const procGroup = this.getTrackedGroupByStatus(event.status)
 
-		if (procGroup == null) {
+		if (!procGroup) {
 			return
 		}
 
@@ -352,9 +352,7 @@ export abstract class Procs extends Analyser {
 	private onComplete(): void {
 		this.trackedProcs.forEach(procGroup => {
 			const status = procGroup.procStatus
-			if (status == null) {
-				return
-			}
+			if (!status) { return }
 
 			const row = this.getRowForStatus(status)
 			const fightStart = this.parser.pull.timestamp
@@ -363,9 +361,7 @@ export abstract class Procs extends Analyser {
 
 			// Add buff windows to the timeline
 			this.history.get(procGroup)?.forEach(window => {
-				if (window.stop == null) {
-					return
-				}
+				if (!window.stop) { return }
 				row.addItem(new StatusItem({
 					status,
 					start: window.start - fightStart,
@@ -448,7 +444,7 @@ export abstract class Procs extends Analyser {
 		if (!this.currentWindows.has(procGroup)) { return }
 
 		const currentWindow = this.currentWindows.get(procGroup)
-		if (currentWindow == null) { return }
+		if (!currentWindow) { return }
 
 		currentWindow.stop = event?.timestamp ?? this.parser.pull.timestamp + this.parser.pull.duration
 		this.history.get(procGroup)?.push(currentWindow)
@@ -484,7 +480,7 @@ export abstract class Procs extends Analyser {
 
 	/** Checks to see if the specified event timestamp already exists in that map, and if not, adds the event to the collection */
 	private tryAddEventToMap(groupEvents: ProcGroupEvents | undefined, event: Event) {
-		if (groupEvents == null) { return }
+		if (!groupEvents) { return }
 		if (groupEvents.timestamps.includes(event.timestamp)) { return }
 		groupEvents.timestamps.push(event.timestamp)
 		groupEvents.events.push(event)
@@ -492,7 +488,7 @@ export abstract class Procs extends Analyser {
 
 	private getRowForStatus(status: Status): SimpleRow {
 		let row = this.rows.get(status.id)
-		if (row == null) {
+		if (!row) {
 			row = this.row.addRow(new SimpleRow({label: status.name}))
 			this.rows.set(status.id, row)
 		}
