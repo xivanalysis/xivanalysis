@@ -78,13 +78,6 @@ export default class Higanbana extends Module {
 		// Base clip calc
 		let clip = STATUS_DURATION[statusId] - (event.timestamp - lastApplication[statusId])
 
-		// Remove any untargetable time from the clip - often want to hardcast after an invuln phase, but refresh w/ 3D shortly after.
-		clip -= this.invulnerability.getDuration({
-			start: this.parser.fflogsToEpoch(event.timestamp - event.timestamp - STATUS_DURATION[statusId]),
-			end: this.parser.fflogsToEpoch(event.timestamp),
-			types: ['untargetable'],
-		})
-
 		// Wait for when the status would typically drop without clipping - clipping a dot early isn't as problematic if it would
 		// just push it into invuln time.
 		this.addTimestampHook(
@@ -98,9 +91,9 @@ export default class Higanbana extends Module {
 					end: this.parser.fflogsToEpoch(timestamp),
 					types: ['invulnerable'],
 				})
-				clip = Math.max(0, clip)
 
 				// Capping clip at 0 - less than that is downtime, which is handled by the checklist requirement
+				clip = Math.max(0, clip)
 				this._clip[statusId] += clip
 
 				this._pushApplication(applicationKey, statusId, event, clip)
