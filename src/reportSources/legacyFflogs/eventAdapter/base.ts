@@ -1,9 +1,4 @@
 import {Event} from 'event'
-<<<<<<< HEAD
-import {FflogsEvent} from 'fflogs'
-import {Loggable} from 'parser/core/Loggable'
-import {Pull, Report} from 'report'
-=======
 import {EventActor, FflogsEvent} from 'fflogs'
 import {Loggable} from 'parser/core/Loggable'
 import {Actor, Pull, Report} from 'report'
@@ -20,7 +15,6 @@ export function resolveActorId(opts: {
 		? `${id}:${instance}`
 		: id
 }
->>>>>>> wip: change GCD estimation to Adapter step
 
 export const PREPULL_OFFSETS = {
 	STATUS_ACTION: -3,
@@ -35,7 +29,6 @@ export interface AdapterOptions {
 	pull: Pull
 }
 
-<<<<<<< HEAD
 // TODO: Remove this once the legacy system is phased out - we only need explicit mutation handling
 // while the legacy system is actually using these events
 export interface MutationAdaptionResult {
@@ -43,18 +36,12 @@ export interface MutationAdaptionResult {
 	adaptedEvents: Event[]
 }
 
-=======
->>>>>>> wip: change GCD estimation to Adapter step
 export abstract class AdapterStep extends Loggable {
 	protected report: Report
 	protected pull: Pull
 
 	constructor(opts: AdapterOptions) {
 		super()
-<<<<<<< HEAD
-=======
-
->>>>>>> wip: change GCD estimation to Adapter step
 		this.report = opts.report
 		this.pull = opts.pull
 	}

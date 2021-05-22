@@ -9,24 +9,14 @@ type DebugCallback = (opts: {
 
 export abstract class Loggable {
 	/**
-<<<<<<< HEAD
 	 * Set to `true` to enable debug mode for this loggable class, allowing the execution
-=======
-	 * Set to `true` to enable debug mode for this analyser, allowing the execution
->>>>>>> wip: change GCD estimation to Adapter step
 	 * of any calls to the debug method.
 	 */
 	static debug = false
 
-<<<<<<< HEAD
 	/** Execute the provided callback if the loggable is in debug mode. */
 	protected debug(callback: DebugCallback): void
 	/** Log the provided arguments if the loggable is in debug mode. */
-=======
-	/** Execute the provided callback if the analyser is in debug mode. */
-	protected debug(callback: DebugCallback): void
-	/** Log the provided arguments if the analyser is in debug mode. */
->>>>>>> wip: change GCD estimation to Adapter step
 	protected debug(...data: LogParameters): void
 	protected debug(...args: [DebugCallback] | LogParameters) {
 		const constructor = this.constructor as typeof Loggable
