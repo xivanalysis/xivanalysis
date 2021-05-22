@@ -47,8 +47,8 @@ export const ROG = ensureActions({
 		icon: 'https://xivapi.com/i/000000/000606.png',
 		onGcd: true,
 		potency: 200,
-		cooldown: 70,
-		gcdRecast: 2.5,
+		cooldown: 70000,
+		gcdRecast: 2500,
 		statusesApplied: ['SHADOW_FANG'],
 	},
 
@@ -81,7 +81,7 @@ export const ROG = ensureActions({
 		name: 'Mug',
 		icon: 'https://xivapi.com/i/000000/000613.png',
 		onGcd: false,
-		cooldown: 120,
+		cooldown: 120000,
 	},
 
 	ASSASSINATE: {
@@ -89,7 +89,7 @@ export const ROG = ensureActions({
 		name: 'Assassinate',
 		icon: 'https://xivapi.com/i/000000/000612.png',
 		onGcd: false,
-		cooldown: 60,
+		cooldown: 60000,
 	},
 
 	TRICK_ATTACK: {
@@ -97,7 +97,7 @@ export const ROG = ensureActions({
 		name: 'Trick Attack',
 		icon: 'https://xivapi.com/i/000000/000618.png',
 		onGcd: false,
-		cooldown: 60,
+		cooldown: 60000,
 		statusesApplied: ['TRICK_ATTACK_VULNERABILITY_UP'],
 	},
 
@@ -106,7 +106,7 @@ export const ROG = ensureActions({
 		name: 'Shade Shift',
 		icon: 'https://xivapi.com/i/000000/000607.png',
 		onGcd: false,
-		cooldown: 120,
+		cooldown: 120000,
 		statusesApplied: ['SHADE_SHIFT'],
 	},
 })

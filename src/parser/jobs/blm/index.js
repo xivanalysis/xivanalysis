@@ -14,7 +14,7 @@ export default new Meta({
 	</>,
 	supportedPatches: {
 		from: '5.0',
-		to: '5.4',
+		to: '5.5',
 	},
 	contributors: [
 		{user: CONTRIBUTORS.FURST, role: ROLES.MAINTAINER},
@@ -68,7 +68,12 @@ export default new Meta({
 	},
 	{
 		date: new Date('2021-03-18'),
-		Changes: () => <>Forgive single-weave Triplecast in JP opener</>,
+		Changes: () => <>Forgive single-weave Triplecast in JP opener.</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
+	{
+		date: new Date('2021-04-08'),
+		Changes: () => <>Updated Rotation Outliers suggestions for cycles before downtimes, and Umbral Soul usage during uptime.</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],
 	}],
 })

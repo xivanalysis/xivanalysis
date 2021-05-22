@@ -237,6 +237,10 @@ export interface ZoneChangeEvent extends BaseEventFields {
 	zoneID: number
 	zoneName: string,
 }
+
+export interface WipeCalledEvent extends BaseEventFields {
+	type: 'wipecalled'
+}
 /* End no source/target */
 
 export interface UnknownEvent extends AbilityEventFields {
@@ -332,6 +336,7 @@ export type FflogsEvent =
 	| ZoneChangeEvent
 	| UnknownEvent
 	| DispelEvent
+	| WipeCalledEvent
 
 declare module 'legacyEvent' {
 	interface EventTypeRepository {

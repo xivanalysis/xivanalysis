@@ -9,9 +9,10 @@ const description = t('gnb.about.description')`This analyzer looks for the low-h
 If you're looking to learn about how exactly the job plays and functions from the ground up, take a look at a few basic guides:
 
 * [General tanking guide by Aletin](https://goo.gl/nYzAnq)
-* [Gunbreaker guide by Aletin](https://docs.google.com/document/d/1gfsMbHP55N5e0UKyc9zfpAdL_uVco40YdBlVNGvyJ0k/edit?usp=sharing)
+* [Gunbreaker guide on SaltedXIV](https://saltedxiv.com/guides/gnb)
+* [No Mercy Windows by Rin Karigani](https://i.imgur.com/o8hza9e.png)
 
-If you have any suggestions about the module, feel free to ping me on Discord at Lhea#7581.
+If you have any suggestions about the module, feel free to join the XIVA discord and use the feedback channels.
 `
 
 export default new Meta({
@@ -21,7 +22,7 @@ export default new Meta({
 
 	supportedPatches: {
 		from: '5.0',
-		to: '5.4',
+		to: '5.5',
 	},
 
 	contributors: [

@@ -148,12 +148,17 @@ interface ActorLinkProps {
 function ActorLink({actor}: ActorLinkProps) {
 	const {url} = useRouteMatch()
 
+	let meta = AVAILABLE_MODULES.CORE
+
 	const job = JOBS[actor.job]
 	const jobMeta = AVAILABLE_MODULES.JOBS[actor.job]
+	if (jobMeta != null) {
+		meta = meta.merge(jobMeta)
+	}
 
 	let supportedPatches: ReactNode
-	if (jobMeta?.supportedPatches != null) {
-		const {from, to = from} = jobMeta.supportedPatches
+	if (meta?.supportedPatches != null) {
+		const {from, to = from} = meta.supportedPatches
 		supportedPatches = (
 			<Trans id="core.report-flow.supported-patches">
 				Patch {from}{from !== to ? `-${to}` : ''}

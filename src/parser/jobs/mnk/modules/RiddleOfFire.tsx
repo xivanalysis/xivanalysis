@@ -192,7 +192,7 @@ export default class RiddleOfFire extends Module {
 				unless you need to hold a charge for strategic purposes.
 			</Trans>,
 			tiers: {
-				1: SEVERITY.MINOR,	// Always a minor suggestion
+				2: SEVERITY.MINOR,	// Always a minor suggestion, however we start from 2 to forgive ST on pull
 			},
 			value: riddlesWithOneTackle,
 			why: <Trans id="mnk.rof.suggestions.tackle.why">

@@ -204,7 +204,7 @@ export default class Cooldowns extends Module {
 
 		cd.current = {
 			timestamp: this.parser.currentTimestamp,
-			length: (action.cooldown ?? 0) * 1000, // CDs are in S, timestamps are in MS
+			length: action.cooldown ?? 0,
 			shared: sharedCooldown,
 			invulnTime: 0,
 		}
@@ -226,7 +226,7 @@ export default class Cooldowns extends Module {
 		}
 
 		// Reduce the CD
-		cd.current.length -= reduction * 1000
+		cd.current.length -= reduction
 
 		// If the reduction would have made it come off CD earlier than now, reset it - the extra time reduction should be lost.
 		if (cd.current.timestamp + cd.current.length < currentTimestamp) {
@@ -246,7 +246,10 @@ export default class Cooldowns extends Module {
 			}
 
 			//We invuln time is the time the boss was invuln from when the CD came off CD and when it was next executed
-			previousCooldown.invulnTime = this.downtime.getDowntime(previousEndTimestamp, cooldown.timestamp)
+			previousCooldown.invulnTime = this.downtime.getDowntime(
+				this.parser.fflogsToEpoch(previousEndTimestamp),
+				this.parser.fflogsToEpoch(cooldown.timestamp),
+			)
 			previousEndTimestamp = (cooldown.timestamp + cooldown.length)
 			previousCooldown = cooldown
 		}

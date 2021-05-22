@@ -19,7 +19,7 @@ export default class NotCasting extends Module {
 	static dependencies = [
 		'timeline',
 		'gcd',
-		'invuln',
+		'invulnerability',
 		'unableToAct',
 	]
 
@@ -102,7 +102,11 @@ export default class NotCasting extends Module {
 		// TODO: The following two filters can probably be replaced with one filter with the downtime module.
 		//filter out invuln periods
 		this._noCastWindows.history = this._noCastWindows.history.filter(windows => {
-			return this.invuln.getInvulns('all', windows.start, windows.stop).length === 0
+			return !this.invulnerability.isActive({
+				start: this.parser.fflogsToEpoch(windows.start),
+				end: this.parser.fflogsToEpoch(windows.stop),
+				types: ['untargetable'],
+			})
 		})
 		// Filter out periods where you got stunned, etc
 		this._noCastWindows.history = this._noCastWindows.history.filter(windows => {

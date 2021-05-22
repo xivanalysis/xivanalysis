@@ -21,7 +21,7 @@ export default new Meta({
 	</>,
 	supportedPatches: {
 		from: '5.1',
-		to: '5.4',
+		to: '5.5',
 	},
 	contributors: [
 		{user: CONTRIBUTORS.LEYLIA, role: ROLES.MAINTAINER},
@@ -30,6 +30,11 @@ export default new Meta({
 	],
 
 	changelog: [
+		{
+			date: new Date('2021-04-14'),
+			Changes: () => <>Removed Swift Cast from General CD Usage as it's no longer suggested to use on CD</>,
+			contributors: [CONTRIBUTORS.LEYLIA],
+		},
 		{
 			date: new Date('2021-02-11'),
 			Changes: () => <>Severity for all broken melee combos is now Major</>,

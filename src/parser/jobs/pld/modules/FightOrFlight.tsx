@@ -95,7 +95,7 @@ export default class FightOrFlight extends Module {
 
 	@dependency private suggestions!: Suggestions
 	@dependency private timeline!: Timeline
-	@dependency private invuln!: Invulnerability
+	@dependency private invulnerability!: Invulnerability
 
 	// Internal State Counters
 	// ToDo: Merge some of these, so instead of saving rotations, make the rotation part of FoFState, so we can reduce the error result out of the saved rotations
@@ -169,9 +169,10 @@ export default class FightOrFlight extends Module {
 	private onRemoveFightOrFlight(event: BuffEvent) {
 		// If the enemy is untargetable at the end of FoF, the player was rushed - forgive missed hits.
 		// While technically this will never be called beyond the end of the fight, let's be really sure
+		const epochTimestamp = this.parser.fflogsToEpoch(event.timestamp)
 		const wasRushed = event.timestamp >= this.parser.eventTimeOffset + this.parser.pull.duration
-			|| this.invuln.isInvulnerable('all', event.timestamp)
-			|| this.invuln.isUntargetable('all', event.timestamp)
+			|| this.invulnerability.isActive({timestamp: epochTimestamp, types: ['invulnerable']})
+			|| this.invulnerability.isActive({timestamp: epochTimestamp, types: ['untargetable']})
 
 		if (!wasRushed) {
 			this.fofErrorResult.missedGcds += Math.max(0, CONSTANTS.GCD.EXPECTED - this.fofState.gcdCounter)

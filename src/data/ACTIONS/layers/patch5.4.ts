@@ -17,8 +17,8 @@ export const patch540: Layer<ActionRoot> = {
 		BOOTSHINE: {potency: 200},
 		TRUE_STRIKE: {potency: 300},
 		TWIN_SNAKES: {potency: 260},
-		RIDDLE_OF_EARTH: {charges: 3, cooldown: 30, statusesApplied: ['RIDDLE_OF_EARTH']},
-		TORNADO_KICK: {cooldown: 45},
+		RIDDLE_OF_EARTH: {charges: 3, cooldown: 30000, statusesApplied: ['RIDDLE_OF_EARTH']},
+		TORNADO_KICK: {cooldown: 45000},
 
 		// NIN 5.4 potency changes
 		SPINNING_EDGE: {potency: 230},
