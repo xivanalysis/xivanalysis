@@ -6,6 +6,7 @@ export const BLM = ensureActions({
 		name: 'Blizzard',
 		icon: 'https://xivapi.com/i/000000/000454.png',
 		onGcd: true,
+		speedAttribute: 'SpellSpeed',
 		castTime: 2500,
 	},
 	BLIZZARD_II: {
@@ -13,6 +14,7 @@ export const BLM = ensureActions({
 		name: 'Blizzard II',
 		icon: 'https://xivapi.com/i/000000/000455.png',
 		onGcd: true,
+		speedAttribute: 'SpellSpeed',
 		castTime: 2000,
 	},
 	BLIZZARD_III: {
@@ -20,6 +22,7 @@ export const BLM = ensureActions({
 		name: 'Blizzard III',
 		icon: 'https://xivapi.com/i/000000/000456.png',
 		onGcd: true,
+		speedAttribute: 'SpellSpeed',
 		castTime: 3500,
 	},
 	BLIZZARD_IV: {
@@ -27,6 +30,7 @@ export const BLM = ensureActions({
 		name: 'Blizzard IV',
 		icon: 'https://xivapi.com/i/002000/002659.png',
 		onGcd: true,
+		speedAttribute: 'SpellSpeed',
 		castTime: 2800,
 	},
 	FREEZE: {
@@ -34,6 +38,7 @@ export const BLM = ensureActions({
 		name: 'Freeze',
 		icon: 'https://xivapi.com/i/002000/002653.png',
 		onGcd: true,
+		speedAttribute: 'SpellSpeed',
 		castTime: 3000,
 	},
 	UMBRAL_SOUL: {
@@ -41,12 +46,14 @@ export const BLM = ensureActions({
 		name: 'Umbral Soul',
 		icon: 'https://xivapi.com/i/002000/002666.png',
 		onGcd: true,
+		speedAttribute: 'SpellSpeed',
 	},
 	FIRE_I: {
 		id: 141,
 		name: 'Fire',
 		icon: 'https://xivapi.com/i/000000/000451.png',
 		onGcd: true,
+		speedAttribute: 'SpellSpeed',
 		castTime: 2500,
 	},
 	FIRE_II: {
@@ -54,6 +61,7 @@ export const BLM = ensureActions({
 		name: 'Fire II',
 		icon: 'https://xivapi.com/i/000000/000452.png',
 		onGcd: true,
+		speedAttribute: 'SpellSpeed',
 		castTime: 3000,
 	},
 	FIRE_III: {
@@ -61,6 +69,7 @@ export const BLM = ensureActions({
 		name: 'Fire III',
 		icon: 'https://xivapi.com/i/000000/000453.png',
 		onGcd: true,
+		speedAttribute: 'SpellSpeed',
 		castTime: 3500,
 	},
 	FIRE_IV: {
@@ -68,6 +77,7 @@ export const BLM = ensureActions({
 		name: 'Fire IV',
 		icon: 'https://xivapi.com/i/002000/002660.png',
 		onGcd: true,
+		speedAttribute: 'SpellSpeed',
 		castTime: 2800,
 	},
 	FLARE: {
@@ -75,6 +85,7 @@ export const BLM = ensureActions({
 		name: 'Flare',
 		icon: 'https://xivapi.com/i/002000/002652.png',
 		onGcd: true,
+		speedAttribute: 'SpellSpeed',
 		castTime: 4000,
 	},
 	DESPAIR: {
@@ -82,6 +93,7 @@ export const BLM = ensureActions({
 		name: 'Despair',
 		icon: 'https://xivapi.com/i/002000/002665.png',
 		onGcd: true,
+		speedAttribute: 'SpellSpeed',
 		castTime: 3000,
 	},
 	THUNDER: {
@@ -89,6 +101,7 @@ export const BLM = ensureActions({
 		name: 'Thunder',
 		icon: 'https://xivapi.com/i/000000/000457.png',
 		onGcd: true,
+		speedAttribute: 'SpellSpeed',
 		castTime: 2500,
 	},
 	THUNDER_II: {
@@ -96,6 +109,7 @@ export const BLM = ensureActions({
 		name: 'Thunder II',
 		icon: 'https://xivapi.com/i/000000/000468.png',
 		onGcd: true,
+		speedAttribute: 'SpellSpeed',
 		castTime: 3000,
 	},
 	THUNDER_III: {
@@ -103,6 +117,7 @@ export const BLM = ensureActions({
 		name: 'Thunder III',
 		icon: 'https://xivapi.com/i/000000/000459.png',
 		onGcd: true,
+		speedAttribute: 'SpellSpeed',
 		castTime: 2500,
 	},
 	THUNDER_IV: {
@@ -110,6 +125,7 @@ export const BLM = ensureActions({
 		name: 'Thunder IV',
 		icon: 'https://xivapi.com/i/002000/002662.png',
 		onGcd: true,
+		speedAttribute: 'SpellSpeed',
 		castTime: 3000,
 	},
 	SCATHE: {
@@ -117,12 +133,14 @@ export const BLM = ensureActions({
 		name: 'Scathe',
 		icon: 'https://xivapi.com/i/000000/000462.png',
 		onGcd: true,
+		speedAttribute: 'SpellSpeed',
 	},
 	FOUL: {
 		id: 7422,
 		name: 'Foul',
 		icon: 'https://xivapi.com/i/002000/002664.png',
 		onGcd: true,
+		speedAttribute: 'SpellSpeed',
 		castTime: 2500,
 	},
 	XENOGLOSSY: {
@@ -130,12 +148,14 @@ export const BLM = ensureActions({
 		name: 'Xenoglossy',
 		icon: 'https://xivapi.com/i/002000/002667.png',
 		onGcd: true,
+		speedAttribute: 'SpellSpeed',
 	},
 	SLEEP: {
 		id: 145,
 		name: 'Sleep',
 		icon: 'https://xivapi.com/i/000000/000465.png',
 		onGcd: true,
+		speedAttribute: 'SpellSpeed',
 		castTime: 2500,
 	},
 	TRANSPOSE: {

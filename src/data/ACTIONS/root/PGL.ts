@@ -11,6 +11,7 @@ export const PGL = ensureActions({
 		name: 'Bootshine',
 		icon: 'https://xivapi.com/i/000000/000208.png',
 		onGcd: true,
+		speedAttribute: 'SkillSpeed',
 		potency: 150,
 	},
 
@@ -19,6 +20,7 @@ export const PGL = ensureActions({
 		name: 'True Strike',
 		icon: 'https://xivapi.com/i/000000/000209.png',
 		onGcd: true,
+		speedAttribute: 'SkillSpeed',
 		potency: 240,
 	},
 
@@ -27,6 +29,7 @@ export const PGL = ensureActions({
 		name: 'Snap Punch',
 		icon: 'https://xivapi.com/i/000000/000210.png',
 		onGcd: true,
+		speedAttribute: 'SkillSpeed',
 	},
 
 	TWIN_SNAKES: {
@@ -34,6 +37,7 @@ export const PGL = ensureActions({
 		name: 'Twin Snakes',
 		icon: 'https://xivapi.com/i/000000/000213.png',
 		onGcd: true,
+		speedAttribute: 'SkillSpeed',
 		potency: 170,
 		statusesApplied: ['TWIN_SNAKES'],
 	},
@@ -43,6 +47,7 @@ export const PGL = ensureActions({
 		name: 'Arm of the Destroyer',
 		icon: 'https://xivapi.com/i/000000/000215.png',
 		onGcd: true,
+		speedAttribute: 'SkillSpeed',
 	},
 
 	DEMOLISH: {
@@ -50,6 +55,7 @@ export const PGL = ensureActions({
 		name: 'Demolish',
 		icon: 'https://xivapi.com/i/000000/000204.png',
 		onGcd: true,
+		speedAttribute: 'SkillSpeed',
 		statusesApplied: ['DEMOLISH'],
 	},
 

@@ -56,6 +56,7 @@ export const BRD = ensureActions({
 		name: 'Iron Jaws',
 		icon: 'https://xivapi.com/i/002000/002608.png',
 		onGcd: true,
+		speedAttribute: 'SkillSpeed',
 		potency: 100,
 	},
 	THE_WARDENS_PAEAN: {
@@ -96,6 +97,7 @@ export const BRD = ensureActions({
 		name: 'Caustic Bite',
 		icon: 'https://xivapi.com/i/002000/002613.png',
 		onGcd: true,
+		speedAttribute: 'SkillSpeed',
 		potency: 150,
 		statusesApplied: ['CAUSTIC_BITE'],
 	},
@@ -120,6 +122,7 @@ export const BRD = ensureActions({
 		name: 'Refulgent Arrow',
 		icon: 'https://xivapi.com/i/002000/002616.png',
 		onGcd: true,
+		speedAttribute: 'SkillSpeed',
 		potency: 340,
 	},
 	SHADOWBITE: {
@@ -136,6 +139,7 @@ export const BRD = ensureActions({
 		name: 'Burst Shot',
 		icon: 'https://xivapi.com/i/002000/002618.png',
 		onGcd: true,
+		speedAttribute: 'SkillSpeed',
 		potency: 230,
 	},
 	APEX_ARROW: {
@@ -143,6 +147,7 @@ export const BRD = ensureActions({
 		name: 'Apex Arow',
 		icon: 'https://xivapi.com/i/002000/002619.png',
 		onGcd: true,
+		speedAttribute: 'SkillSpeed',
 		potency: 500,
 	},
 })

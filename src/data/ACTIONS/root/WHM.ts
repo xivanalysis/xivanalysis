@@ -14,6 +14,7 @@ export const WHM = ensureActions({
 		name: 'Afflatus Misery',
 		icon: 'https://xivapi.com/i/002000/002644.png',
 		onGcd: true,
+		speedAttribute: 'SpellSpeed',
 	},
 
 	AFFLATUS_RAPTURE: {
@@ -21,6 +22,7 @@ export const WHM = ensureActions({
 		name: 'Afflatus Rapture',
 		icon: 'https://xivapi.com/i/002000/002643.png',
 		onGcd: true,
+		speedAttribute: 'SpellSpeed',
 	},
 
 	AFFLATUS_SOLACE: {
@@ -28,6 +30,7 @@ export const WHM = ensureActions({
 		name: 'Afflatus Solace',
 		icon: 'https://xivapi.com/i/002000/002640.png',
 		onGcd: true,
+		speedAttribute: 'SpellSpeed',
 	},
 
 	DIA: {
@@ -35,6 +38,7 @@ export const WHM = ensureActions({
 		name: 'Dia',
 		icon: 'https://xivapi.com/i/002000/002641.png',
 		onGcd: true,
+		speedAttribute: 'SpellSpeed',
 		statusesApplied: ['DIA'],
 	},
 
@@ -43,6 +47,7 @@ export const WHM = ensureActions({
 		name: 'Glare',
 		icon: 'https://xivapi.com/i/002000/002642.png',
 		onGcd: true,
+		speedAttribute: 'SpellSpeed',
 		castTime: 2500,
 	},
 
@@ -59,6 +64,7 @@ export const WHM = ensureActions({
 		name: 'Stone IV',
 		icon: 'https://xivapi.com/i/002000/002637.png',
 		onGcd: true,
+		speedAttribute: 'SpellSpeed',
 		castTime: 2500,
 	},
 
@@ -96,6 +102,7 @@ export const WHM = ensureActions({
 		name: 'Holy',
 		icon: 'https://xivapi.com/i/002000/002629.png',
 		onGcd: true,
+		speedAttribute: 'SpellSpeed',
 		castTime: 3000,
 	},
 
@@ -112,6 +119,7 @@ export const WHM = ensureActions({
 		name: 'Stone III',
 		icon: 'https://xivapi.com/i/002000/002631.png',
 		onGcd: true,
+		speedAttribute: 'SpellSpeed',
 		castTime: 2500,
 	},
 
@@ -136,6 +144,7 @@ export const WHM = ensureActions({
 		name: 'Aero III',
 		icon: 'https://xivapi.com/i/002000/002635.png',
 		onGcd: true,
+		speedAttribute: 'SpellSpeed',
 		castTime: 2500,
 	},
 
@@ -144,6 +153,7 @@ export const WHM = ensureActions({
 		name: 'Medica II',
 		icon: 'https://xivapi.com/i/000000/000409.png',
 		onGcd: true,
+		speedAttribute: 'SpellSpeed',
 		castTime: 2500,
 		statusesApplied: ['MEDICA_II'],
 	},
@@ -154,6 +164,7 @@ export const WHM = ensureActions({
 		name: 'Raise',
 		icon: 'https://xivapi.com/i/000000/000411.png',
 		onGcd: true,
+		speedAttribute: 'SpellSpeed',
 		castTime: 8000,
 	},
 
@@ -162,6 +173,7 @@ export const WHM = ensureActions({
 		name: 'Cure II',
 		icon: 'https://xivapi.com/i/000000/000406.png',
 		onGcd: true,
+		speedAttribute: 'SpellSpeed',
 		castTime: 2000,
 	},
 
@@ -170,6 +182,7 @@ export const WHM = ensureActions({
 		name: 'Cure III',
 		icon: 'https://xivapi.com/i/000000/000407.png',
 		onGcd: true,
+		speedAttribute: 'SpellSpeed',
 		castTime: 2000,
 	},
 
@@ -178,6 +191,7 @@ export const WHM = ensureActions({
 		name: 'Regen',
 		icon: 'https://xivapi.com/i/002000/002628.png',
 		onGcd: true,
+		speedAttribute: 'SpellSpeed',
 		statusesApplied: ['REGEN'],
 	},
 
@@ -193,6 +207,7 @@ export const WHM = ensureActions({
 		name: 'Medica',
 		icon: 'https://xivapi.com/i/000000/000408.png',
 		onGcd: true,
+		speedAttribute: 'SpellSpeed',
 		castTime: 2500,
 	},
 
@@ -201,6 +216,7 @@ export const WHM = ensureActions({
 		name: 'Stone',
 		icon: 'https://xivapi.com/i/000000/000403.png',
 		onGcd: true,
+		speedAttribute: 'SpellSpeed',
 		castTime: 2500,
 	},
 
@@ -209,6 +225,7 @@ export const WHM = ensureActions({
 		name: 'Aero II',
 		icon: 'https://xivapi.com/i/000000/000402.png',
 		onGcd: true,
+		speedAttribute: 'SpellSpeed',
 	},
 
 	AERO: {
@@ -216,6 +233,7 @@ export const WHM = ensureActions({
 		name: 'Aero',
 		icon: 'https://xivapi.com/i/000000/000401.png',
 		onGcd: true,
+		speedAttribute: 'SpellSpeed',
 	},
 
 	REPOSE: {
@@ -231,6 +249,7 @@ export const WHM = ensureActions({
 		name: 'Stone II',
 		icon: 'https://xivapi.com/i/000000/000404.png',
 		onGcd: true,
+		speedAttribute: 'SpellSpeed',
 		castTime: 2500,
 	},
 
@@ -239,6 +258,7 @@ export const WHM = ensureActions({
 		name: 'Cure',
 		icon: 'https://xivapi.com/i/000000/000405.png',
 		onGcd: true,
+		speedAttribute: 'SpellSpeed',
 		castTime: 1500,
 	},
 })

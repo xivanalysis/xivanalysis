@@ -11,6 +11,7 @@ export const LNC = ensureActions({
 		name: 'True Thrust',
 		icon: 'https://xivapi.com/i/000000/000310.png',
 		onGcd: true,
+		speedAttribute: 'SkillSpeed',
 		potency: 290,
 		combo: {
 			start: true,
@@ -22,6 +23,7 @@ export const LNC = ensureActions({
 		name: 'Vorpal Thrust',
 		icon: 'https://xivapi.com/i/000000/000312.png',
 		onGcd: true,
+		speedAttribute: 'SkillSpeed',
 		potency: 140,
 		combo: {
 			from: [75, 16479],
@@ -34,6 +36,7 @@ export const LNC = ensureActions({
 		name: 'Piercing Talon',
 		icon: 'https://xivapi.com/i/000000/000315.png',
 		onGcd: true,
+		speedAttribute: 'SkillSpeed',
 		potency: 150,
 	},
 
@@ -42,6 +45,7 @@ export const LNC = ensureActions({
 		name: 'Full Thrust',
 		icon: 'https://xivapi.com/i/000000/000314.png',
 		onGcd: true,
+		speedAttribute: 'SkillSpeed',
 		potency: 100,
 		combo: {
 			from: 78,
@@ -55,6 +59,7 @@ export const LNC = ensureActions({
 		name: 'Disembowel',
 		icon: 'https://xivapi.com/i/000000/000317.png',
 		onGcd: true,
+		speedAttribute: 'SkillSpeed',
 		potency: 150,
 		combo: {
 			from: [75, 16479],
@@ -68,6 +73,7 @@ export const LNC = ensureActions({
 		name: 'Chaos Thrust',
 		icon: 'https://xivapi.com/i/000000/000308.png',
 		onGcd: true,
+		speedAttribute: 'SkillSpeed',
 		potency: 100,
 		combo: {
 			from: 87,
