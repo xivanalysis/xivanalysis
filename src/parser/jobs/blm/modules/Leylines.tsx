@@ -125,7 +125,7 @@ export default class Leylines extends Analyser {
 			const row = parentRow.addRow(new SimpleRow({label: status.name}))
 
 			this.buffWindows[buff].history.forEach(window => {
-				if (window.stop == null) { return }
+				if (!window.stop) { return }
 				row.addItem(new StatusItem({
 					status,
 					start: window.start - fightStart,
