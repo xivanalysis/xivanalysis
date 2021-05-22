@@ -51,6 +51,7 @@ export const BLM = ensureStatuses({
 		id: 738,
 		name: 'Circle Of Power',
 		icon: 'https://xivapi.com/i/012000/012654.png',
+		speedModifier: 0.85,
 	},
 	SHARPCAST: {
 		id: 867,
