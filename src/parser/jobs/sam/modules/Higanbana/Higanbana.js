@@ -8,7 +8,7 @@ import {Rule, Requirement} from 'parser/core/modules/Checklist'
 import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import React from 'react'
 import {Accordion, Table} from 'semantic-ui-react'
-import DISPLAY_ORDER from './DISPLAY_ORDER'
+import DISPLAY_ORDER from '../DISPLAY_ORDER'
 import styles from './Higanbana.module.css'
 
 const STATUS_DURATION = {
