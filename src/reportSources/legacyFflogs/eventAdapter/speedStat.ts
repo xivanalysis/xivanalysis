@@ -43,7 +43,7 @@ export class SpeedStatsAdapterStep extends AdapterStep {
 	private actorActions = new Map<Actor['id'], GCD[]>()
 	private actorSpeedmodWindows = new Map<Actor['id'], Map<number, SpeedmodWindow[]>>()
 
-	static debug = true
+	static debug = false
 	private endTimestamp = 0
 
 	adapt(baseEvent: FflogsEvent, adaptedEvents: Event[]) {
