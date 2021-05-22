@@ -2,17 +2,19 @@
 import {t} from '@lingui/macro'
 import {Trans, Plural} from '@lingui/react'
 import {ActionLink} from 'components/ui/DbLink'
-import ACTIONS from 'data/ACTIONS'
+import {Event, Events} from 'event'
 import {CastEvent} from 'fflogs'
-import {Event} from 'legacyEvent'
-import {TimestampHook} from 'parser/core/LegacyDispatcher'
-import Module, {dependency} from 'parser/core/Module'
+import {Analyser} from 'parser/core/Analyser'
+import {TimestampHook} from 'parser/core/Dispatcher'
+import {filter, oneOf} from 'parser/core/filter'
+import {dependency} from 'parser/core/Injectable'
 import BrokenLog from 'parser/core/modules/BrokenLog'
-import PrecastAction from 'parser/core/modules/PrecastAction'
+import {Data} from 'parser/core/modules/Data'
 import Suggestions, {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import {UnableToAct} from 'parser/core/modules/UnableToAct'
 import {CompleteEvent} from 'parser/core/Parser'
 import React from 'react'
+import Elements from './Elements'
 
 const GAUGE_EVENTS = [
 	'begincast',
@@ -39,20 +41,27 @@ export interface EventBLMGauge {
 	enochian: boolean,
 	lastGaugeEvent: EventBLMGauge | null,
 }
+
+declare module 'event' {
+	interface EventTypeRepository {
+		blmgauge: EventBLMGauge
+	}
+}
 declare module 'legacyEvent' {
 	interface EventTypeRepository {
 		blmgauge: EventBLMGauge
 	}
 }
 
-export default class Gauge extends Module {
+export default class Gauge extends Analyser {
 	static handle = 'gauge'
 	static title = t('blm.gauge.title')`Gauge`
 
-	@dependency precastAction!: PrecastAction
 	@dependency suggestions!: Suggestions
 	@dependency brokenLog!: BrokenLog
 	@dependency unableToAct!: UnableToAct
+	@dependency data!: Data
+	@dependency elements!: Elements
 
 	private astralFireStacks: number = 0
 	private umbralIceStacks: number = 0
@@ -78,6 +87,18 @@ export default class Gauge extends Module {
 
 	private astralUmbralTimeoutHook!: TimestampHook | null
 	private gainPolyglotHook!: TimestampHook | null
+
+	private affectsGaugeOnDamage: number[] = [
+		...this.elements.fireSpells,
+		...this.elements.targetedIceSpells,
+	]
+	private affectsGaugeOnCast: number[] = [
+		...this.elements.untargetedIceSpells,
+		this.data.actions.TRANSPOSE.id,
+		this.data.actions.ENOCHIAN.id,
+		this.data.actions.FOUL.id,
+		this.data.actions.XENOGLOSSY.id,
+	]
 
 	gaugeValuesChanged(lastGaugeEvent: EventBLMGauge | null) {
 		if (!lastGaugeEvent) {
@@ -122,10 +143,15 @@ export default class Gauge extends Module {
 		}
 	}
 
-	protected init() {
+	initialse() {
+		const playerFilter = filter<Event>()
+			.source(this.parser.actor.id)
+		this.addEventHook(playerFilter.type('action').action(oneOf(this.affectsGaugeOnCast)), this.onGaugeAffectingCast)
+		this.addEventHook(playerFilter.type('damage').cause())
 		this.addEventHook('complete', this.onComplete)
 	}
 
+	private onGaugeAffectingCast(event: Events['action'] | Events['damage'])
 	normalise(events: Event[]) {
 		// Add initial event
 		this.currentTimestamp = events[0].timestamp
