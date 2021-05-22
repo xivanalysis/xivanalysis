@@ -8,6 +8,7 @@ import {Data} from './Data'
 import {SimpleItem, SimpleRow, Timeline} from './Timeline'
 
 const DEFAULT_CHARGES = 1
+const GCD_COOLDOWN_GROUP = 58
 
 interface ChargeState {
 	current: number
@@ -126,6 +127,10 @@ export class Cooldowns extends Analyser {
 		}
 
 		// TODO: bounds check < max - what does a fail _here_ mean?
+		// akkthoughts: realistically, not much? a cdg gaining a charge past max is just... what happens?
+		if (chargeState.current === chargeState.maximum) {
+			return
+		}
 
 		// gain
 		chargeState.current++
@@ -162,9 +167,14 @@ export class Cooldowns extends Analyser {
 
 	private startCooldownGroup(group: CooldownGroup, duration: number) {
 		// if there's a current state then shit's fucked
-		if (this.cooldownStates.has(group)) {
+		// todo: note about gcd shit/speed stat / fix soon :tm:
+		const cooldownState = this.cooldownStates.get(group)
+		if (cooldownState != null) {
+			console.log('fuck', group, cooldownState.end, this.parser.currentEpochTimestamp)
+			this.endCooldownGroup(group)
+
 			// TODO: broken log? or error?
-			throw new Error('shit\'s fucked')
+			// throw new Error('shit\'s fucked')
 		}
 
 		// build a new cooldown state
@@ -191,6 +201,9 @@ export class Cooldowns extends Analyser {
 			throw new Error('shit was def fucked')
 		}
 		this.cooldownStates.delete(group)
+		// words
+		cooldownState.end = this.parser.currentEpochTimestamp
+		this.removeTimestampHook(cooldownState.hook)
 
 		// get list of actions associated with the expiring CDG
 		const actions = this.actionMapping.fromGroup.get(group) ?? []
@@ -209,11 +222,19 @@ export class Cooldowns extends Analyser {
 
 	// TODO: inline?
 	private getActionCooldownGroups(action: Action): CooldownGroup[] {
-		// TODO: handle gcd group
 		// TODO: prefill cdg. i neeeeeed to write an automated extraction
+		const groups: CooldownGroup[] = []
+
+		if (action.onGcd) {
+			groups.push(GCD_COOLDOWN_GROUP)
+			if (action.gcdRecast == null) {
+				return groups
+			}
+		}
+
 		// TODO: doc reasoning for neg (sep namespace etc)
-		const group = action.cooldownGroup ?? -action.id
-		return [group]
+		groups.push(action.cooldownGroup ?? -action.id)
+		return groups
 	}
 
 	private tempRows = new Map<string, SimpleRow>()
