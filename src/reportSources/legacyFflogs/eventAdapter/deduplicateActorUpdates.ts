@@ -33,7 +33,7 @@ export class DeduplicateActorUpdateStep extends AdapterStep {
 			actor: next.actor,
 		} as const
 
-		type DeduplicatedFields = Omit<Events['actorUpdate'], keyof typeof baseFields>
+		type DeduplicatedFields = Omit<Events['actorUpdate'], keyof typeof baseFields | 'attributes'>
 		const updates = this.denseObject<DeduplicatedFields>()([
 			['hp', this.resolveResource(prev.hp, next.hp)],
 			['mp', this.resolveResource(prev.mp, next.mp)],
