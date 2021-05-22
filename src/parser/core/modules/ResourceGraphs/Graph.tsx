@@ -22,11 +22,13 @@ export function Graph({resource, scaleX}: GraphProps) {
 	// Ensure there's a data point for the end of the fight to prevent an early drop off
 	let data = resource.data
 
-	const [, domainEndDate] = scaleX.domain()
-	const domainEnd = domainEndDate.getTime()
-	const lastDatum = data[data.length - 1]
-	if (lastDatum.time < domainEnd) {
-		data = [...data, {...lastDatum, time: domainEnd}]
+	if (data.length > 0) {
+		const [, domainEndDate] = scaleX.domain()
+		const domainEnd = domainEndDate.getTime()
+		const lastDatum = data[data.length - 1]
+		if (lastDatum.time < domainEnd) {
+			data = [...data, {...lastDatum, time: domainEnd}]
+		}
 	}
 
 	// Find the maximum value in the data and use it to build the Y axis scale
