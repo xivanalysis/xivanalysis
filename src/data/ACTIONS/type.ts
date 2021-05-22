@@ -16,6 +16,7 @@ export interface Action {
 	combo?: ActionCombo
 	castTime?: number
 	cooldown?: number
+	gcdRecast?: number
 	cooldownGroup?: number
 	autoAttack?: boolean
 	statusesApplied?: Array<keyof StatusRoot>

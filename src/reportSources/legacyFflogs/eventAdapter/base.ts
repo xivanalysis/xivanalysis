@@ -17,6 +17,7 @@ export function resolveActorId(opts: {
 }
 
 export const PREPULL_OFFSETS = {
+	ATTRIBUTE_UPDATE: -4,
 	STATUS_ACTION: -3,
 	STATUS_APPLY: -2,
 	PULL_ACTION: -1,

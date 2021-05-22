@@ -166,6 +166,13 @@ export interface Position {
 	bearing: number
 }
 
+/** Actor attribute (stat value) */
+export interface Attribute {
+	name: 'SkillSpeed' | 'SpellSpeed'
+	value: number
+	isEstimated?: boolean
+}
+
 /** An actors parameters have been updated. */
 interface EventActorUpdate extends FieldsBase {
 	/** ID of the updated actor. */
@@ -178,6 +185,8 @@ interface EventActorUpdate extends FieldsBase {
 	position?: Partial<Position>
 	/** Current targetability. */
 	targetable?: boolean
+	/** Current attributes (stats) */
+	attributes?: Attribute[]
 }
 
 // Merge core events into the repository.

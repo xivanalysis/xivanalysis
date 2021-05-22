@@ -1,11 +1,12 @@
 import {JobKey} from 'data/JOBS'
 import {getActions, getStatuses} from 'data/layer'
-import {Event} from 'event'
+import {Attribute, Event, Events} from 'event'
 import {BuffEvent, CastEvent, FflogsEvent} from 'fflogs'
 import _ from 'lodash'
 import {Actor, Team} from 'report'
 import {resolveActorId} from 'reportSources/legacyFflogs/base'
-import {AdapterStep} from './base'
+import {GetSpeedStat} from 'utilities/speedStatMapper'
+import {AdapterStep, PREPULL_OFFSETS} from './base'
 
 const BASE_GCD_MS = 2500
 const CASTER_TAX = 0.1
@@ -66,9 +67,10 @@ export class SpeedStatsAdapterStep extends AdapterStep {
 	}
 
 	postprocess(adaptedEvents: Event[]): Event[] {
-		this.actorActions.forEach(this.estimateActorSpeedStat, this)
+		const eventsToAdd: Array<Events['actorUpdate']> = []
+		this.actorActions.forEach((gcds, actorId) => eventsToAdd.push(this.estimateActorSpeedStat(gcds, actorId)))
 
-		return adaptedEvents
+		return [...eventsToAdd, ...adaptedEvents]
 	}
 
 	private trackAction(event: CastEvent) {
@@ -152,37 +154,71 @@ export class SpeedStatsAdapterStep extends AdapterStep {
 		return actor?.team !== Team.FRIEND
 	}
 
-	private estimateActorSpeedStat(gcds: GCD[], actorId: string) {
-		const intervalGroups = new Map<number, number>()
+	private estimateActorSpeedStat(gcds: GCD[], actorId: string): Events['actorUpdate'] {
+		const skillSpeedIntervalGroups = new Map<number, number>()
+		const spellSpeedIntervalGroups = new Map<number, number>()
 
 		gcds.forEach((gcd, idx) => {
 			const previous = gcds[idx - 1]
+			// Skip the first iteration (no interval to compare), and skip any intervals where the user interrputed a cast since that didn't trigger a full gcd
 			if (previous == null || previous.isInterrupted) { return }
+
+			const previousAction = _.find(getActions(this.report), a => a.id === previous.actionId)
+			// Skip intervals where the leading skill's gcdRecast isn't modified by a speed stat
+			if (previousAction == null || previousAction.speedAttribute == null) { return }
 
 			const rawIntervalSeconds = (gcd.start - previous.start) / 1000
 			let isCasterTaxed = false
-			let castTimeScale = 1
+			let recast = previousAction.gcdRecast ?? previousAction.cooldown ?? BASE_GCD_MS
 
 			if (!previous.isInstant) {
-				const action = _.find(getActions(this.report), a => a.id === previous.actionId)
-				if (action != null && action.castTime != null && action.castTime >= BASE_GCD_MS) {
+				if (previousAction.castTime != null && previousAction.castTime >= BASE_GCD_MS) {
 					isCasterTaxed = true
-					castTimeScale = action.castTime / BASE_GCD_MS
+					recast = previousAction.castTime
 				}
 			}
 
+			const castTimeScale = recast / BASE_GCD_MS
 			const speedModifier = this.getSpeedModifierAtTimestamp(previous.start, actorId)
-
-			const intervalSeconds = _.ceil((rawIntervalSeconds - (isCasterTaxed ? CASTER_TAX : 0)) / castTimeScale / speedModifier, 2)
+			const intervalMS = _.round((rawIntervalSeconds - (isCasterTaxed ? CASTER_TAX : 0)) / castTimeScale / speedModifier, 2) * 1000
 
 			// The below debug is useful if you need to trace individual interval calculations, but will make your console really laggy if you enable it without any filter
 			//this.debug(`Actor ID: ${actorId} - Event at ${previous.start} - Raw Interval: ${rawIntervalSeconds}s - Caster Tax: ${isCasterTaxed} - Cast Time Scale: ${castTimeScale} - Speed Modifier: ${speedModifier} - Calculated Interval: ${intervalSeconds}s`)
 
-			const count = intervalGroups.get(intervalSeconds) ?? 0
-			intervalGroups.set(intervalSeconds, count + 1)
+			if (previousAction.speedAttribute === 'SkillSpeed') {
+				const count = skillSpeedIntervalGroups.get(intervalMS) ?? 0
+				skillSpeedIntervalGroups.set(intervalMS, count + 1)
+			} else if (previousAction.speedAttribute === 'SpellSpeed') {
+				const count = spellSpeedIntervalGroups.get(intervalMS) ?? 0
+				spellSpeedIntervalGroups.set(intervalMS, count + 1)
+			}
 		})
 
-		this.debug(`Actor ID: ${actorId} - Event Intervals ${JSON.stringify(Array.from(intervalGroups.entries()).sort((a, b) => b[1] - a[1]))}`)
+		const attributes: Attribute[] = []
+		if (skillSpeedIntervalGroups.size > 0) {
+			this.debug(`Actor ID: ${actorId} - Skill Speed Event Intervals ${JSON.stringify(Array.from(skillSpeedIntervalGroups.entries()).sort((a, b) => b[1] - a[1]))}`)
+			attributes.push({
+				name: 'SkillSpeed',
+				value: GetSpeedStat(this.getMostFrequentInterval(skillSpeedIntervalGroups)),
+				isEstimated: true,
+			})
+		}
+
+		if (spellSpeedIntervalGroups.size > 0) {
+			this.debug(`Actor ID: ${actorId} - Spell Speed Event Intervals ${JSON.stringify(Array.from(spellSpeedIntervalGroups.entries()).sort((a, b) => b[1] - a[1]))}`)
+			attributes.push({
+				name: 'SpellSpeed',
+				value: GetSpeedStat(this.getMostFrequentInterval(spellSpeedIntervalGroups)),
+				isEstimated: true,
+			})
+		}
+
+		return {
+			type: 'actorUpdate',
+			actor: actorId,
+			timestamp: this.pull.timestamp + PREPULL_OFFSETS.ATTRIBUTE_UPDATE,
+			attributes: attributes,
+		}
 	}
 
 	private getSpeedModifierAtTimestamp(timestamp: number, actorId: string) {
@@ -208,5 +244,9 @@ export class SpeedStatsAdapterStep extends AdapterStep {
 		})
 
 		return speedModifier
+	}
+
+	private getMostFrequentInterval(intervalGroups: Map<number,  number>) : number {
+		return Array.from(intervalGroups.entries()).reduce((a, b) => b[1] > a[1] ? b : a)[0]
 	}
 }
