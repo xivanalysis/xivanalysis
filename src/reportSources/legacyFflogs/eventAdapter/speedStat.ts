@@ -7,7 +7,7 @@ import {Actor, Team} from 'report'
 import {resolveActorId} from 'reportSources/legacyFflogs/base'
 import {AdapterStep} from './base'
 
-const BASE_GCD = 2.5
+const BASE_GCD_MS = 2500
 const CASTER_TAX = 0.1
 const JOB_SPEED_MODIFIERS: Partial<Record<JobKey, number>> = {
 	'MONK': 0.8,
@@ -165,9 +165,9 @@ export class SpeedStatsAdapterStep extends AdapterStep {
 
 			if (!previous.isInstant) {
 				const action = _.find(getActions(this.report), a => a.id === previous.actionId)
-				if (action != null && action.castTime != null && action.castTime >= BASE_GCD) {
+				if (action != null && action.castTime != null && action.castTime >= BASE_GCD_MS) {
 					isCasterTaxed = true
-					castTimeScale = action.castTime / BASE_GCD
+					castTimeScale = action.castTime / BASE_GCD_MS
 				}
 			}
 
