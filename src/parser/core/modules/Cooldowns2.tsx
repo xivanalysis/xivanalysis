@@ -25,6 +25,7 @@ type CooldownGroup = Exclude<Action['cooldownGroup'], undefined>
 
 export class Cooldowns extends Analyser {
 	static handle = 'cooldowns2'
+	static debug = true
 
 	// TODO: cooldownOrder
 
@@ -42,49 +43,51 @@ export class Cooldowns extends Analyser {
 	private tempTimelineRow = this.timeline.addRow(new SimpleRow({label: 'cd2 temp'}))
 
 	initialise() {
-		// TODO: doc fucking shit
-		// TODO: clean up
+		// Preemptively build a two-directional mapping between actions and cooldown groups
 		for (const action of Object.values(this.data.actions)) {
 			const toGroup: CooldownGroup[] = []
 			this.actionMapping.toGroups.set(action.id, toGroup)
+
 			for (const group of this.getActionCooldownGroups(action)) {
 				toGroup.push(group)
+
 				let fromGroup = this.actionMapping.fromGroup.get(group)
 				if (fromGroup == null) {
 					fromGroup = []
 					this.actionMapping.fromGroup.set(group, fromGroup)
 				}
+
 				fromGroup.push(action)
 			}
 		}
+
+		// TODO: need prepare, gcd has a cast time and cd starts with the prepare
+		// TODOTHOUGHT: Should possibly just skip GCD for now? between ^, speed stats, and stuff like swiftcast, this will need both adapted speed stat and a ported cast time to function.
+		// then again, casttime is... pretty simple. portable? let's fucking try. i'm fucking insane. help.
+		// oh it's already done. merge prod tomorrow or something
 
 		this.addEventHook(
 			{type: 'action', source: this.parser.actor.id},
 			this.onAction,
 		)
-		// this.addEventHook('complete', () => console.log('complte'))
 	}
 
-	// TODO: inline?
 	private onAction(event: Events['action']) {
 		const action = this.data.getAction(event.action)
 		if (action == null) { return }
 
-		// uuuh, doc reason? basically can't consume a charge if there's no way to restore it
+		// Shouldn't consume a charge if there's no way to then regenerate it.
+		// Realistically, almost everything should have a CD defined.
 		const cooldown = action.cooldown
 		if (cooldown == null) { return }
 
-		// do thing
 		this.consumeCharge(action)
 	}
 
-	// TODO: consider further. thinking that we should treat _every_ action as a charge action - defaulting to one charge.
 	private consumeCharge(action: Action) {
 		// TODO: possibly abstract "get charge state" to method - we might reuse in other CD tracking?
-		// get current charge status for the action
+		// Get the current charge state for the action, filling with pristine state if none exists
 		let chargeState = this.chargeStates.get(action.id)
-
-		// if there's no state, prefill with a pristine unused state
 		if (chargeState == null) {
 			const maximum = action.charges ?? DEFAULT_CHARGES
 			chargeState = {
@@ -94,18 +97,23 @@ export class Cooldowns extends Analyser {
 			this.chargeStates.set(action.id, chargeState)
 		}
 
-		// TODO: bounds check > 0? what does a fail on this mean?
+		// If we're trying to consume a charge at 0 charges, something in the state is very wrong.
+		if (chargeState.current === 0) {
+			// TODO: Possibly worth just raising a broken log and nooping this function?
+			// TODO: Currently, this will break on parses with sub-2.5 GCDs that chain the same GCD twice in a row.
+			//       Should be fixed by GCD/CastTime calcs, but _may_ not be. Check.
+			// throw new Error('Attempting to consume charge with 0 available.')
+			return
+		}
 
-		// if charges are at maximum, we need to start the cooldown timer
+		// If the action was at maximum charges, this usage will trip it's cooldown
 		if (chargeState.current === chargeState.maximum) {
 			this.startGroupsForAction(action)
 		}
 
-		// consume a charge
-		// TODO: enable
+		// Consume the charge
 		chargeState.current--
 
-		// save to history in some manner? we need to track this shit in the timeline as well
 		// TEMP
 		const now = this.parser.currentEpochTimestamp - this.parser.pull.timestamp
 		const row = this.tempGetTimelineRow(`charge:${action.name}`)
@@ -116,35 +124,29 @@ export class Cooldowns extends Analyser {
 	}
 
 	private gainCharge(action: Action) {
+		// Get the current charge state for the action. If it's already at max, or
+		// there's no state (implicitly max), we can noop.
 		const chargeState = this.chargeStates.get(action.id)
-
-		// if there's no charge state we can't reasonably recharge what doesn't exist
-		// the mapping group -> action _will_ contain cross-job shit, which we're not tracking
-		if (chargeState == null) {
-			// debugger
-			// throw new Error('shit is yet again fucked')
+		if (
+			chargeState == null
+			|| chargeState.current === chargeState.maximum
+		) {
 			return
 		}
 
-		// TODO: bounds check < max - what does a fail _here_ mean?
-		// akkthoughts: realistically, not much? a cdg gaining a charge past max is just... what happens?
-		if (chargeState.current === chargeState.maximum) {
-			return
-		}
-
-		// gain
+		// Add the charge
 		chargeState.current++
 
-		// if we're sub max, kick off a cdg for the action
-		// TODO: this is where we break the logic. cdg expires -> clear multiple actions which need to requeue -> multiple starts on the cdg.
-		// that is back in the "shared cdg with 2+ actions with 2+ charges" world. do i give a siht? probably not...
-		// leave a comment and let it error, come back if ever required?
+		// If there are still charges left to regenerate on the action, boot up
+		// another cooldown for it.
+		// TODO: This will break if ever there is a single CDG with 2+ actions in
+		//       it, which have 2+ charges. The game does not currently contain
+		//       anything which breaks this assumption.
 		if (chargeState.current < chargeState.maximum) {
 			this.startGroupsForAction(action)
 		}
 
-		// mark history
-		// temp
+		// TEMP
 		const now = this.parser.currentEpochTimestamp - this.parser.pull.timestamp
 		const row = this.tempGetTimelineRow(`charge:${action.name}`)
 		row.addItem(new SimpleItem({
@@ -166,22 +168,20 @@ export class Cooldowns extends Analyser {
 	}
 
 	private startCooldownGroup(group: CooldownGroup, duration: number) {
-		// if there's a current state then shit's fucked
-		// todo: note about gcd shit/speed stat / fix soon :tm:
+		// If there is an existing cooldown state for the action, something has gone
+		// wrong (cooldowns on a group do not overlap).
+		// TODO: This is currently fudging with an endCooldownGroup. Once GCD and
+		//       cast time are integrated with this module, this fudging should be
+		//       re-examined for sanity.
 		const cooldownState = this.cooldownStates.get(group)
 		if (cooldownState != null) {
-			console.log('fuck', group, cooldownState.end, this.parser.currentEpochTimestamp)
+			this.debug(`Overlapping cooldown windows: Group ${group} expected end at ${this.parser.formatEpochTimestamp(cooldownState.end)}, got start at ${this.parser.formatEpochTimestamp(this.parser.currentEpochTimestamp)}.`)
 			this.endCooldownGroup(group)
-
-			// TODO: broken log? or error?
-			// throw new Error('shit\'s fucked')
 		}
 
-		// build a new cooldown state
+		// Build a new cooldown state and save it out
 		const start = this.parser.currentEpochTimestamp
 		const end = start + duration
-
-		// configure a timestamp hook
 		this.cooldownStates.set(group, {
 			start,
 			end,
@@ -189,29 +189,31 @@ export class Cooldowns extends Analyser {
 				this.endCooldownGroup(group)
 			}),
 		})
-
-		// save to history?
 	}
 
 	private endCooldownGroup(group: CooldownGroup) {
-		// clear state
+		// Grab the current cooldown state for the group - if there is none, something
+		// has gone pretty wrong.
 		const cooldownState = this.cooldownStates.get(group)
-		// if there isn't anything in the state, shit's fucked
 		if (cooldownState == null) {
-			throw new Error('shit was def fucked')
+			throw new Error(`Trying to end cooldown for group ${group} which has no current state.`)
 		}
-		this.cooldownStates.delete(group)
-		// words
-		cooldownState.end = this.parser.currentEpochTimestamp
-		this.removeTimestampHook(cooldownState.hook)
 
-		// get list of actions associated with the expiring CDG
+		// Clear the state out of shared structures and update the end to match the
+		// current timestamp (will be a noop if CDG expired uneventfully).
+		this.cooldownStates.delete(group)
+		this.removeTimestampHook(cooldownState.hook)
+		cooldownState.end = this.parser.currentEpochTimestamp
+
+		// On expiration of a CDG, all associated actions gain a charge.
+		// TODO: Consider perf of this on the GCD group - it's going to be looping
+		//       through every GCD in data only to noop most of them. Reverse the loop?
 		const actions = this.actionMapping.fromGroup.get(group) ?? []
 		for (const action of actions) {
-			// increment charge count
 			this.gainCharge(action)
 		}
 
+		// TEMP
 		const row = this.tempGetTimelineRow(`group:${group}`)
 		row.addItem(new SimpleItem({
 			content: <div style={{width: '100%', height: '100%', background: '#ff000033'}}/>,
@@ -220,19 +222,23 @@ export class Cooldowns extends Analyser {
 		}))
 	}
 
-	// TODO: inline?
 	private getActionCooldownGroups(action: Action): CooldownGroup[] {
-		// TODO: prefill cdg. i neeeeeed to write an automated extraction
+		// TODO: Write automated CDG extraction from the data files, current data
+		//       is pretty dumb about this stuff.
 		const groups: CooldownGroup[] = []
 
+		// GCDs all share a CDG.
 		if (action.onGcd) {
 			groups.push(GCD_COOLDOWN_GROUP)
+			// GCDs with a seperate recast are part of two CDGs.
 			if (action.gcdRecast == null) {
 				return groups
 			}
 		}
 
-		// TODO: doc reasoning for neg (sep namespace etc)
+		// Include the action's CDG. If none is specified, use the action ID to fill
+		// in (all actions must have 1+ CDGs from a game POV). Using negative to ensure
+		// that fudged CDGs do not overlap with real data.
 		groups.push(action.cooldownGroup ?? -action.id)
 		return groups
 	}
@@ -247,17 +253,3 @@ export class Cooldowns extends Analyser {
 		return row
 	}
 }
-
-/*
-shit we need:
-action ID -> charge status
-cooldown group -> cooldown status
-
-when cdg cd expires, +1 charge for all actions mapped, hence require
-cdg -> action id[]
-in some manner
-
-if max charges > 1, incrementing charge should retrip cdg cd
-currently not in-game, but what about 2+ actions on same cdg with 2+ charges and diff CDs?
-probably just throw a warning of some kind, i guess? error?
-*/
