@@ -130,7 +130,7 @@ interface EventDamage extends FieldsTargeted {
 	amount: number
 	/** Amount of total damage that was overkill. */
 	overkill: number
-	/** Unique numeric ID that will match this damage to its execution confirmation. If omitted, no confirmation occurred (status ticks, etc). */
+	/** Unique numeric ID that will match this damage to its execution confirmation. If omitted, no confirmation will occur (status ticks, etc). */
 	sequence?: number
 	// TODO: Are these exclusive? Merge?
 	/** Source damage modifier. */
@@ -147,7 +147,7 @@ interface EventHeal extends FieldsTargeted {
 	amount: number
 	/** Amount of total healing that was overheal. */
 	overheal: number
-	/** Unique numeric ID that will match this heal to its execution confirmation. If omitted, no confirmation occurred (status ticks, etc). */
+	/** Unique numeric ID that will match this heal to its execution confirmation. If omitted, no confirmation will occur (status ticks, etc). */
 	sequence?: number
 	/** Source healing modifier. */
 	sourceModifier: SourceModifier
