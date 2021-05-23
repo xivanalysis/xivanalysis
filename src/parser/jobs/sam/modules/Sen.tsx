@@ -13,7 +13,7 @@ import {Timeline} from 'parser/core/modules/Timeline'
 import React, {Fragment} from 'react'
 import {Icon, Message} from 'semantic-ui-react'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
-import Kenki from './Kenki/Kenki'
+import {Kenki} from './Kenki'
 
 // defining a const message to assign later via markdown
 
