@@ -69,13 +69,13 @@ export default class CastTime extends Analyser {
 	/**
 	 * Sets a cast time adjustment for a percentage change per cast (See: Swiftcast, RDM's Doublecast trait, Ley Lines, etc.)
 	 * @param actions The actions this adjustment applies to. Either an array of IDs, or the string 'all'
-	 * @param reduction The percent by which cast times are adjusted (ie, 100 for instant casts, 15 for 85% time casts under Ley Lines, -50 for a 50% slow)
+	 * @param reduction The percent by which cast times are adjusted (ie, -100 for instant casts, -15 for 85% time casts under Ley Lines, 50 for a 50% slow)
 	 * @param start The beginning of the adjustment time range. Defaults to the current epoch timestamp
 	 * @param end The end of the adjustment time range. May be left null if the end of the range is not yet known
 	 * @returns The index number within the cast time adjustments collection, can be used to reset/end this adjustment later
 	 */
 	public setPercentageAdjustment(actions: number[] | 'all', adjustment: number, start: number = this.parser.currentEpochTimestamp, end: number | null = null): number {
-		return this.set(actions, 'percentage', Math.max(adjustment, 100), start, end)
+		return this.set(actions, 'percentage', Math.max(adjustment, this.instantCastAdjustment), start, end)
 	}
 	private set(actions: number[] | 'all', type: 'time' | 'percentage', adjustment: number, start: number = this.parser.currentEpochTimestamp, end: number | null = null): number {
 		const newLength = this.castTimes.push({
@@ -154,33 +154,33 @@ export default class CastTime extends Analyser {
 		// Find the largest flat cast time reduction value
 		const flatReduction = matchingTimes.reduce(
 			(reduction, ct) => {
-				if (ct.type === 'time' || ct.adjustment > 0) { return reduction }
+				if (ct.type === 'percentage' || ct.adjustment > 0) { return reduction }
 				if (ct.adjustment < reduction) { return ct.adjustment }
 				return reduction
 			}, 0)
 		// Find the largest flat cast time increase value
 		const flatIncrease = matchingTimes.reduce(
 			(increase, ct) => {
-				if (ct.type === 'time' || ct.adjustment < 0) { return increase }
+				if (ct.type === 'percentage' || ct.adjustment < 0) { return increase }
 				if (ct.adjustment > increase) { return ct.adjustment }
 				return increase
 			}, 0)
 		// Find the largest percentage cast time reduction value
 		const percentageReduction = matchingTimes.reduce(
 			(reduction, ct) => {
-				if (ct.type === 'percentage' || ct.adjustment < 0) { return reduction }
-				if (ct.adjustment > reduction) { return ct.adjustment }
+				if (ct.type === 'time' || ct.adjustment > 0) { return reduction }
+				if (ct.adjustment < reduction) { return ct.adjustment }
 				return reduction
 			}, 0)
 		// Find the largest percentage cast time increase value
 		const percentageIncrease = matchingTimes.reduce(
 			(increase, ct) => {
-				if (ct.type === 'percentage' || ct.adjustment > 0) { return increase }
-				if (ct.adjustment < increase) { return ct.adjustment }
+				if (ct.type === 'time' || ct.adjustment < 0) { return increase }
+				if (ct.adjustment > increase) { return ct.adjustment }
 				return increase
 			}, 0)
 		// Calculate the final cast time based on the flat and percentage reductions we've found
-		return Math.max(defaultCastTime + flatIncrease - flatReduction, 0) * (100 + Math.abs(percentageIncrease)) * (100 - percentageReduction)
+		return Math.max(defaultCastTime + flatIncrease + flatReduction, 0) * (100 + percentageIncrease) * (100 + percentageReduction) // Yes, plus reductions because they're already negative values
 
 		/**
 		 * In the absence of easily-acquired slows to test with, I'm going to assume this is the right way to calculate this:
