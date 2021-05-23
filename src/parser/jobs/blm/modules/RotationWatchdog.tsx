@@ -2,7 +2,6 @@ import {t} from '@lingui/macro'
 import {Plural, Trans} from '@lingui/react'
 import {ActionLink} from 'components/ui/DbLink'
 import {RotationTable} from 'components/ui/RotationTable'
-import {getDataBy} from 'data'
 import ACTIONS from 'data/ACTIONS'
 import {CastEvent} from 'fflogs'
 import Module, {dependency} from 'parser/core/Module'
@@ -74,8 +73,6 @@ class Cycle {
 	startTime: number
 	endTime?: number
 
-	hasManafont: boolean = false
-
 	inFirePhase: boolean = false
 	atypicalAFStart: boolean = false
 	firePhaseStartMP: number = 0
@@ -134,6 +131,9 @@ class Cycle {
 		return Math.max(this.expectedFire4s - this.actualFire4s, 0)
 	}
 
+	public get hasManafont(): boolean {
+		return this.casts.some(cast => cast.ability.guid === ACTIONS.MANAFONT.id)
+	}
 	public get expectedDespairs(): number {
 		return this.hasManafont ? 2 : 1
 	}
@@ -251,8 +251,7 @@ export default class RotationWatchdog extends Module {
 			return
 		}
 
-		// If we're in ice phase, set the current gauge state into the pre-fire cache for later recording
-		// Still need by-value assignment here
+		// If we're in ice phase, spread the current gauge state into the pre-fire cache for later recording
 		this.currentRotation.gaugeStateBeforeFire = {...this.currentGaugeState}
 	}
 
@@ -264,12 +263,12 @@ export default class RotationWatchdog extends Module {
 		// cast of the log, stop the current cycle, and begin a new one. If Transposing from ice
 		// to fire, keep this cycle going
 		if (CYCLE_ENDPOINTS.includes(actionId) && !this.firstEvent &&
-			!(actionId === ACTIONS.TRANSPOSE.id && this.currentGaugeState.umbralIce > 0)) {
+			!(actionId === this.data.actions.TRANSPOSE.id && this.currentGaugeState.umbralIce > 0)) {
 			this.startRecording(event)
 		}
 
 		// Add actions other than auto-attacks to the rotation cast list
-		const action = getDataBy(ACTIONS, 'id', actionId) as TODO
+		const action = this.data.getAction(actionId)
 
 		if (!action  || action.autoAttack) {
 			return
@@ -280,12 +279,7 @@ export default class RotationWatchdog extends Module {
 
 		this.currentRotation.casts.push(event)
 
-		// If this is manafont, note that we used it so we don't have to cast.filter(...).length to find out
-		if (actionId === ACTIONS.MANAFONT.id) {
-			this.currentRotation.hasManafont = true
-		}
-
-		if (actionId === ACTIONS.UMBRAL_SOUL.id && !this.invulnerability.isActive({types: ['invulnerable']})) {
+		if (actionId === this.data.actions.UMBRAL_SOUL.id && !this.invulnerability.isActive({types: ['invulnerable']})) {
 			this.uptimeSouls++
 		}
 	}
@@ -339,13 +333,13 @@ export default class RotationWatchdog extends Module {
 		const shouldSkipB4s = this.history.filter(cycle => cycle.shouldSkipB4).length
 		if (shouldSkipB4s > 0) {
 			this.suggestions.add(new Suggestion({
-				icon: ACTIONS.FIRE_IV.icon,
+				icon: this.data.actions.FIRE_IV.icon,
 				content: <Trans id="blm.rotation-watchdog.suggestions.should-skip-b4.content">
-					You lost at least one <ActionLink {...ACTIONS.FIRE_IV}/> by not skipping <ActionLink {...ACTIONS.BLIZZARD_IV}/> in an Umbral Ice phase before the fight finished or a phase transition occurred.
+					You lost at least one <ActionLink {...this.data.actions.FIRE_IV}/> by not skipping <ActionLink {...this.data.actions.BLIZZARD_IV}/> in an Umbral Ice phase before the fight finished or a phase transition occurred.
 				</Trans>,
 				severity: SEVERITY.MEDIUM,
 				why: <Trans id="blm.rotation-watchdog.suggestions.should-skip-b4.why">
-					You should have skipped <ActionLink showIcon={false} {...ACTIONS.BLIZZARD_IV} /> <Plural value={shouldSkipB4s} one="# time" other="# times"/>.
+					You should have skipped <ActionLink showIcon={false} {...this.data.actions.BLIZZARD_IV} /> <Plural value={shouldSkipB4s} one="# time" other="# times"/>.
 				</Trans>,
 			}))
 		}
@@ -354,13 +348,13 @@ export default class RotationWatchdog extends Module {
 		const shouldSkipT3s = this.history.filter(cycle => cycle.shouldSkipT3).reduce<number>((sum, cycle) => sum + cycle.hardT3Count, 0)
 		if (shouldSkipT3s > 0) {
 			this.suggestions.add(new Suggestion({
-				icon: ACTIONS.FIRE_IV.icon,
+				icon: this.data.actions.FIRE_IV.icon,
 				content: <Trans id="blm.rotation-watchdog.suggestions.should-skip-t3.content">
-					You lost at least one <ActionLink {...ACTIONS.FIRE_IV}/> by hard casting <ActionLink {...ACTIONS.THUNDER_III} /> before the fight finished or a phase transition occurred.
+					You lost at least one <ActionLink {...this.data.actions.FIRE_IV}/> by hard casting <ActionLink {...this.data.actions.THUNDER_III} /> before the fight finished or a phase transition occurred.
 				</Trans>,
 				severity: SEVERITY.MEDIUM,
 				why: <Trans id="blm.rotation-watchdog.suggestions.should-skip-t3.why">
-					You should have skipped <ActionLink showIcon={false} {...ACTIONS.THUNDER_III} /> <Plural value={shouldSkipT3s} one="# time" other="# times"/>.
+					You should have skipped <ActionLink showIcon={false} {...this.data.actions.THUNDER_III} /> <Plural value={shouldSkipT3s} one="# time" other="# times"/>.
 				</Trans>,
 			}))
 		}
@@ -368,37 +362,37 @@ export default class RotationWatchdog extends Module {
 		// Suggestion for unneccessary extra F1s
 		const extraF1s = this.history.reduce<number>((sum, cycle) => sum + cycle.extraF1s, 0)
 		this.suggestions.add(new TieredSuggestion({
-			icon: ACTIONS.FIRE_I.icon,
+			icon: this.data.actions.FIRE_I.icon,
 			content: <Trans id="blm.rotation-watchdog.suggestions.extra-f1s.content">
-				Casting more than one <ActionLink {...ACTIONS.FIRE_I}/> per Astral Fire cycle is a crutch that should be avoided by better pre-planning of the encounter.
+				Casting more than one <ActionLink {...this.data.actions.FIRE_I}/> per Astral Fire cycle is a crutch that should be avoided by better pre-planning of the encounter.
 			</Trans>,
 			tiers: ISSUE_SEVERITY_TIERS,
 			value: extraF1s,
 			why: <Trans id="blm.rotation-watchdog.suggestions.extra-f1s.why">
-				<Plural value={extraF1s} one="# extra Fire I was" other="# extra Fire Is were"/> cast.
+				You cast an extra <ActionLink showIcon={false} {...this.data.actions.FIRE_I} /> <Plural value={extraF1s} one="# time" other="# times"/>.
 			</Trans>,
 		}))
 
 		// Suggestion to end Astral Fires with Despair
 		const astralFiresMissingDespairs = this.history.filter(cycle => cycle.missingDespairs).length
 		this.suggestions.add(new TieredSuggestion({
-			icon: ACTIONS.DESPAIR.icon,
+			icon: this.data.actions.DESPAIR.icon,
 			content: <Trans id="blm.rotation-watchdog.suggestions.end-with-despair.content">
-				Once you can no longer cast another spell in Astral Fire and remain above 800 MP, you should use your remaining MP by casting <ActionLink {...ACTIONS.DESPAIR} />.
+				Once you can no longer cast another spell in Astral Fire and remain above 800 MP, you should use your remaining MP by casting <ActionLink {...this.data.actions.DESPAIR} />.
 			</Trans>,
 			tiers: ISSUE_SEVERITY_TIERS,
 			value: astralFiresMissingDespairs,
 			why: <Trans id="blm.rotation-watchdog.suggestions.end-with-despair.why">
-				<Plural value={astralFiresMissingDespairs} one="# Astral Fire phase was" other="# Astral Fire phases were"/> missing at least one <ActionLink showIcon={false} {...ACTIONS.DESPAIR} />.
+				<Plural value={astralFiresMissingDespairs} one="# Astral Fire phase was" other="# Astral Fire phases were"/> missing at least one <ActionLink showIcon={false} {...this.data.actions.DESPAIR} />.
 			</Trans>,
 		}))
 
 		// Suggestion to not use Manafont before Despair
 		const manafontsBeforeDespair = this.history.filter(cycle => cycle.manafontBeforeDespair).length
 		this.suggestions.add(new TieredSuggestion({
-			icon: ACTIONS.MANAFONT.icon,
+			icon: this.data.actions.MANAFONT.icon,
 			content: <Trans id="blm.rotation-watchdog.suggestions.mf-before-despair.content">
-				Using <ActionLink {...ACTIONS.MANAFONT} /> before <ActionLink {...ACTIONS.DESPAIR} /> leads to fewer <ActionLink showIcon={false} {...ACTIONS.DESPAIR} />s than possible being cast. Try to avoid that since <ActionLink showIcon={false} {...ACTIONS.DESPAIR} /> is stronger than <ActionLink {...ACTIONS.FIRE_IV} />.
+				Using <ActionLink {...this.data.actions.MANAFONT} /> before <ActionLink {...this.data.actions.DESPAIR} /> leads to fewer <ActionLink showIcon={false} {...this.data.actions.DESPAIR} />s than possible being cast. Try to avoid that since <ActionLink showIcon={false} {...this.data.actions.DESPAIR} /> is stronger than <ActionLink {...this.data.actions.FIRE_IV} />.
 			</Trans>,
 			tiers: { // Special severity tiers, since there's only so many times manafont can be used in a fight
 				1: SEVERITY.MINOR,
@@ -407,30 +401,30 @@ export default class RotationWatchdog extends Module {
 			},
 			value: manafontsBeforeDespair,
 			why: <Trans id="blm.rotation-watchdog.suggestions.mf-before-despair.why">
-				<Plural value={manafontsBeforeDespair} one="# Manafont was" other="# Manafonts were"/> used before <ActionLink {...ACTIONS.DESPAIR} />.
+				<ActionLink showIcon={false} {...this.data.actions.MANAFONT} /> was used before <ActionLink {...this.data.actions.DESPAIR} /> <Plural value={manafontsBeforeDespair} one="# time" other="# times"/>.
 			</Trans>,
 		}))
 
 		// Suggestion for hard T3s under AF. Should only have one per cycle
 		const extraT3s = this.history.reduce<number>((sum, cycle) => sum + cycle.extraT3s, 0)
 		this.suggestions.add(new TieredSuggestion({
-			icon: ACTIONS.THUNDER_III_FALSE.icon,
+			icon: this.data.actions.THUNDER_III_FALSE.icon,
 			content: <Trans id="blm.rotation-watchdog.suggestions.wrong-t3.content">
-				Don't hard cast more than one <ActionLink {...ACTIONS.THUNDER_III}/> in your Astral Fire phase, since that costs MP which could be used for more <ActionLink {...ACTIONS.FIRE_IV}/>s.
+				Don't hard cast more than one <ActionLink {...this.data.actions.THUNDER_III}/> in your Astral Fire phase, since that costs MP which could be used for more <ActionLink {...this.data.actions.FIRE_IV}/>s.
 			</Trans>,
 			tiers: ISSUE_SEVERITY_TIERS,
 			value: extraT3s,
 			why: <Trans id="blm.rotation-watchdog.suggestions.wrong-t3.why">
-				<Plural value={extraT3s} one="# extra Thunder III was" other="# extra Thunder IIIs were"/> hard casted under Astral Fire.
+				<ActionLink showIcon={false} {...this.data.actions.THUNDER_III} /> was hard casted under Astral Fire <Plural value={extraT3s} one="# extra time" other="# extra times"/>.
 			</Trans>,
 		}))
 
 		// Suggestion not to icemage, but don't double-count it if they got cut short or we otherwise weren't showing it in the errors table
 		const rotationsWithoutFire = this.history.filter(cycle => cycle.isMissingFire && cycle.errorCode < CYCLE_ERRORS.DIED && cycle.errorCode.priority > CYCLE_ERRORS.SHORT.priority).length
 		this.suggestions.add(new TieredSuggestion({
-			icon: ACTIONS.BLIZZARD_II.icon,
+			icon: this.data.actions.BLIZZARD_II.icon,
 			content: <Trans id="blm.rotation-watchdog.suggestions.icemage.content">
-				Avoid spending significant amounts of time in Umbral Ice. The majority of your damage comes from your Astral Fire phase, so you should maximize the number of <ActionLink {...ACTIONS.FIRE_IV}/>s cast during the fight.
+				Avoid spending significant amounts of time in Umbral Ice. The majority of your damage comes from your Astral Fire phase, so you should maximize the number of <ActionLink {...this.data.actions.FIRE_IV}/>s cast during the fight.
 			</Trans>,
 			tiers: ISSUE_SEVERITY_TIERS,
 			value: rotationsWithoutFire,
@@ -440,14 +434,14 @@ export default class RotationWatchdog extends Module {
 		}))
 
 		this.suggestions.add(new TieredSuggestion({
-			icon: ACTIONS.UMBRAL_SOUL.icon,
+			icon: this.data.actions.UMBRAL_SOUL.icon,
 			content: <Trans id="blm.rotation-watchdog.suggestions.uptime-souls.content">
-				Avoid using <ActionLink {...ACTIONS.UMBRAL_SOUL} /> when there is a target available to hit with a damaging ability. <ActionLink showIcon={false} {...ACTIONS.UMBRAL_SOUL} /> does no damage and prevents you from using other GCD skills. It should be reserved for downtime.
+				Avoid using <ActionLink {...this.data.actions.UMBRAL_SOUL} /> when there is a target available to hit with a damaging ability. <ActionLink showIcon={false} {...this.data.actions.UMBRAL_SOUL} /> does no damage and prevents you from using other GCD skills. It should be reserved for downtime.
 			</Trans>,
 			tiers: ISSUE_SEVERITY_TIERS,
 			value: this.uptimeSouls,
 			why: <Trans id="blm.rotation-watchdog.suggestions.uptime-souls.why">
-				<Plural value={this.uptimeSouls} one="# Umbral Soul was" other="# Umbral Souls were"/> performed during uptime.
+				<ActionLink showIcon={false} {...this.data.actions.UMBRAL_SOUL} /> was performed during uptime <Plural value={this.uptimeSouls} one="# time" other="# times"/>.
 			</Trans>,
 		}))
 	}
@@ -469,7 +463,7 @@ export default class RotationWatchdog extends Module {
 			!event
 			|| (
 				event
-				&& event.ability.guid === ACTIONS.TRANSPOSE.id
+				&& event.ability.guid === this.data.actions.TRANSPOSE.id
 				&& this.invulnerability.isActive({
 					timestamp: this.parser.fflogsToEpoch(event.timestamp),
 					types: ['untargetable'],
@@ -561,7 +555,7 @@ export default class RotationWatchdog extends Module {
 			return <Fragment>
 				<Message>
 					<Trans id="blm.rotation-watchdog.rotation-table.message">
-						The core of BLM consists of six <ActionLink {...ACTIONS.FIRE_IV} />s and one <ActionLink {...ACTIONS.DESPAIR} /> per rotation (seven <ActionLink {...ACTIONS.FIRE_IV} />s and two <ActionLink {...ACTIONS.DESPAIR} />s with <ActionLink {...ACTIONS.MANAFONT} />).<br/>
+						The core of BLM consists of six <ActionLink {...this.data.actions.FIRE_IV} />s and one <ActionLink {...this.data.actions.DESPAIR} /> per rotation (seven <ActionLink {...this.data.actions.FIRE_IV} />s and two <ActionLink {...this.data.actions.DESPAIR} />s with <ActionLink {...this.data.actions.MANAFONT} />).<br/>
 						Avoid missing Fire IV casts where possible.
 					</Trans>
 				</Message>
@@ -576,11 +570,11 @@ export default class RotationWatchdog extends Module {
 				<RotationTable
 					targets={[
 						{
-							header: <ActionLink showName={false} {...ACTIONS.FIRE_IV} />,
+							header: <ActionLink showName={false} {...this.data.actions.FIRE_IV} />,
 							accessor: 'fire4s',
 						},
 						{
-							header: <ActionLink showName={false} {...ACTIONS.DESPAIR} />,
+							header: <ActionLink showName={false} {...this.data.actions.DESPAIR} />,
 							accessor: 'despairs',
 						},
 					]}
