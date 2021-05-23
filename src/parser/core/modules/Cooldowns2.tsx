@@ -71,6 +71,8 @@ export class Cooldowns extends Analyser {
 			{type: 'action', source: this.parser.actor.id},
 			this.onAction,
 		)
+
+		this.addEventHook('complete', this.onComplete)
 	}
 
 	private onPrepare(event: Events['prepare']) {
@@ -99,6 +101,13 @@ export class Cooldowns extends Analyser {
 		if (action == null) { return }
 
 		this.consumeCharge(action)
+	}
+
+	private onComplete() {
+		// Clean up any cooldown groups that are still active
+		for (const group of this.cooldownStates.keys()) {
+			this.resolveCooldownGroup(group)
+		}
 	}
 
 	private consumeCharge(action: Action) {
@@ -217,6 +226,18 @@ export class Cooldowns extends Analyser {
 	}
 
 	private endCooldownGroup(group: CooldownGroup) {
+		this.resolveCooldownGroup(group)
+
+		// On expiration of a CDG, all associated actions gain a charge.
+		// TODO: Consider perf of this on the GCD group - it's going to be looping
+		//       through every GCD in data only to noop most of them. Reverse the loop?
+		const actions = this.actionMapping.fromGroup.get(group) ?? []
+		for (const action of actions) {
+			this.gainCharge(action)
+		}
+	}
+
+	private resolveCooldownGroup(group: CooldownGroup) {
 		// Grab the current cooldown state for the group - if there is none, something
 		// has gone pretty wrong.
 		const cooldownState = this.cooldownStates.get(group)
@@ -230,18 +251,10 @@ export class Cooldowns extends Analyser {
 		this.removeTimestampHook(cooldownState.hook)
 		cooldownState.end = this.parser.currentEpochTimestamp
 
-		// On expiration of a CDG, all associated actions gain a charge.
-		// TODO: Consider perf of this on the GCD group - it's going to be looping
-		//       through every GCD in data only to noop most of them. Reverse the loop?
-		const actions = this.actionMapping.fromGroup.get(group) ?? []
-		for (const action of actions) {
-			this.gainCharge(action)
-		}
-
 		// TEMP
 		const row = this.tempGetTimelineRow(`group:${group}`)
 		row.addItem(new SimpleItem({
-			content: <div style={{width: '100%', height: '100%', background: '#ff000033'}}/>,
+			content: <div style={{width: '100%', height: '100%', background: '#ff000033', borderLeft: '1px solid red'}}/>,
 			start: cooldownState.start - this.parser.pull.timestamp,
 			end: cooldownState.end - this.parser.pull.timestamp,
 		}))
