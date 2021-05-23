@@ -20,6 +20,7 @@ import {EventsView} from './EventsView'
 import GlobalCooldown from './GlobalCooldown'
 import HitType from './HitType'
 import {Invulnerability} from './Invulnerability'
+import {Medicated} from './Medicated'
 import {NormalisedEvents} from './NormalisedEvents'
 import PrecastAction from './PrecastAction'
 import PrecastStatus from './PrecastStatus'
@@ -57,6 +58,7 @@ export default [
 	GlobalCooldown,
 	HitType,
 	Invulnerability,
+	Medicated,
 	NormalisedEvents,
 	PrecastAction,
 	PrecastStatus,

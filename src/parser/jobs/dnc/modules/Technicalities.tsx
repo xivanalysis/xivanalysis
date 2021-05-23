@@ -16,7 +16,7 @@ import React, {Fragment} from 'react'
 import {Icon, Message} from 'semantic-ui-react'
 import {TECHNICAL_FINISHES} from '../CommonData'
 import DISPLAY_ORDER from '../DISPLAY_ORDER'
-import FeatherGauge from './FeatherGauge'
+import Gauge from './Gauge'
 
 // Harsher than the default since you'll only have 4-5 total windows anyways
 const TECHNICAL_SEVERITY_TIERS = {
@@ -64,7 +64,7 @@ export default class Technicalities extends Module {
 	@dependency private combatants!: Combatants
 	@dependency private suggestions!: Suggestions
 	@dependency private timeline!: Timeline
-	@dependency private feathers!: FeatherGauge
+	@dependency private gauge!: Gauge
 
 	private history: TechnicalWindow[] = []
 	private badDevilments: number = 0
@@ -126,9 +126,9 @@ export default class Technicalities extends Module {
 			lastWindow.end = event.timestamp
 
 			// Check to see if this window could've had more feathers due to possible pooling problems
-			if (this.feathers.feathersSpentInRange(lastWindow.start, lastWindow.end) < FEATHER_THRESHHOLD) {
+			if (this.gauge.feathersSpentInRangeLegacy(lastWindow.start, lastWindow.end) < FEATHER_THRESHHOLD) {
 				const previousWindow = this.history[this.history.length-2]
-				const feathersBeforeWindow = this.feathers.feathersSpentInRange((previousWindow && previousWindow.end || this.parser.fight.start_time)
+				const feathersBeforeWindow = this.gauge.feathersSpentInRangeLegacy((previousWindow && previousWindow.end || this.parser.fight.start_time)
 					+ POST_WINDOW_GRACE_PERIOD_MILLIS, lastWindow.start)
 				lastWindow.poolingProblem = feathersBeforeWindow > 0
 			} else {
