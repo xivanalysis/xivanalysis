@@ -32,6 +32,7 @@ export class Cooldowns extends Analyser {
 	@dependency private data!: Data
 	@dependency private timeline!: Timeline
 
+	private currentCast?: Action['id']
 	private chargeStates = new Map<Action['id'], ChargeState>()
 	private cooldownStates = new Map<CooldownGroup, CooldownState>()
 
@@ -61,10 +62,10 @@ export class Cooldowns extends Analyser {
 			}
 		}
 
-		// TODO: need prepare, gcd has a cast time and cd starts with the prepare
-		// TODOTHOUGHT: Should possibly just skip GCD for now? between ^, speed stats, and stuff like swiftcast, this will need both adapted speed stat and a ported cast time to function.
-		// then again, casttime is... pretty simple. portable? let's fucking try. i'm fucking insane. help.
-		// oh it's already done. merge prod tomorrow or something
+		this.addEventHook(
+			{type: 'prepare', source: this.parser.actor.id},
+			this.onPrepare,
+		)
 
 		this.addEventHook(
 			{type: 'action', source: this.parser.actor.id},
@@ -72,19 +73,40 @@ export class Cooldowns extends Analyser {
 		)
 	}
 
-	private onAction(event: Events['action']) {
+	private onPrepare(event: Events['prepare']) {
 		const action = this.data.getAction(event.action)
 		if (action == null) { return }
 
-		// Shouldn't consume a charge if there's no way to then regenerate it.
-		// Realistically, almost everything should have a CD defined.
-		const cooldown = action.cooldown
-		if (cooldown == null) { return }
+		// This is, for the sake of simplicity, assuming that charges are consumed
+		// on prepare. As it stands, no 2+ charge action actually has a cast time,
+		// so this is a pretty-safe assumption. Revisit if this ever changes.
+		// TODO: How will this play alongside interrupts?
+		this.currentCast = event.action
+		this.consumeCharge(action)
+	}
+
+	private onAction(event: Events['action']) {
+		// Clear out any current casting state. If we're finishing a cast that's
+		// already been tracked, noop.
+		// TODO: Work out how this will interact with interrupts.
+		const currentCast = this.currentCast
+		this.currentCast = undefined
+		if (currentCast === event.action) {
+			return
+		}
+
+		const action = this.data.getAction(event.action)
+		if (action == null) { return }
 
 		this.consumeCharge(action)
 	}
 
 	private consumeCharge(action: Action) {
+		// Shouldn't consume a charge if there's no way to then regenerate it.
+		// Realistically, almost everything should have a CD defined.
+		const cooldown = action.cooldown
+		if (cooldown == null) { return }
+
 		// TODO: possibly abstract "get charge state" to method - we might reuse in other CD tracking?
 		// Get the current charge state for the action, filling with pristine state if none exists
 		let chargeState = this.chargeStates.get(action.id)
@@ -160,6 +182,9 @@ export class Cooldowns extends Analyser {
 		// TODO: Is... this even possible? Should this throw?
 		const cooldown = action.cooldown
 		if (cooldown == null) { return }
+
+		// TODO: Some cooldowns (GCD, GF, etc) should have their cooldown modified
+		//       by the relevant speed attribute value.
 
 		const groups = this.actionMapping.toGroups.get(action.id) ?? []
 		for (const group of groups) {
