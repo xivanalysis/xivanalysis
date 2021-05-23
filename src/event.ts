@@ -90,11 +90,11 @@ interface EventStatusRemove extends FieldsTargeted {
 	status: number
 }
 
-/** The server has snapshot the effects of an action on its target. */
-interface EventSnapshot extends FieldsTargeted {
+/** The server has confirmed the execution of an action on its target. */
+interface EventExecute extends FieldsTargeted {
 	/** XIV Action ID */
 	action: number
-	/** Unique numeric ID that will match the snapshot to each of the resulting effects. */
+	/** Unique numeric ID that will match the execution to each of the actions that caused it. */
 	sequence: number
 }
 
@@ -130,7 +130,7 @@ interface EventDamage extends FieldsTargeted {
 	amount: number
 	/** Amount of total damage that was overkill. */
 	overkill: number
-	/** Unique numeric ID that will match this damage to the snapshot it stems from. If omitted, no snapshot was performed (status ticks, etc). */
+	/** Unique numeric ID that will match this damage to its execution confirmation. If omitted, no confirmation occurred (status ticks, etc). */
 	sequence?: number
 	// TODO: Are these exclusive? Merge?
 	/** Source damage modifier. */
@@ -147,7 +147,7 @@ interface EventHeal extends FieldsTargeted {
 	amount: number
 	/** Amount of total healing that was overheal. */
 	overheal: number
-	/** Unique numeric ID that will match this heal to the snapshot it stems from. If omitted, no snapshot was performed (status ticks, etc). */
+	/** Unique numeric ID that will match this heal to its execution confirmation. If omitted, no confirmation occurred (status ticks, etc). */
 	sequence?: number
 	/** Source healing modifier. */
 	sourceModifier: SourceModifier
@@ -188,7 +188,7 @@ export interface EventTypeRepository {
 	action: EventAction
 	statusApply: EventStatusApply
 	statusRemove: EventStatusRemove
-	snapshot: EventSnapshot
+	execute: EventExecute
 	damage: EventDamage
 	heal: EventHeal
 	actorUpdate: EventActorUpdate

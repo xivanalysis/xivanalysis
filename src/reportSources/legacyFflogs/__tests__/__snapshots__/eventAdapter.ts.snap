@@ -83,19 +83,25 @@ exports[`Event adapter individual events adapts calculateddamage 1`] = `
 Array [
   Object {
     "action": 3554,
-    "sequence": 16647,
     "source": "1",
     "target": "3",
     "timestamp": -1,
     "type": "action",
   },
   Object {
-    "action": 3554,
+    "amount": 0,
+    "cause": Object {
+      "action": 3554,
+      "type": "action",
+    },
+    "overkill": 0,
     "sequence": 16647,
     "source": "1",
+    "sourceModifier": 2,
     "target": "3",
+    "targetModifier": 0,
     "timestamp": 8011183,
-    "type": "snapshot",
+    "type": "damage",
   },
   Object {
     "actor": "3",
@@ -139,20 +145,18 @@ Array [
 exports[`Event adapter individual events adapts calculatedheal 1`] = `
 Array [
   Object {
-    "action": 3571,
+    "amount": 36194,
+    "cause": Object {
+      "action": 3571,
+      "type": "action",
+    },
+    "overheal": 0,
     "sequence": 4570,
     "source": "3",
-    "target": "3",
-    "timestamp": -1,
-    "type": "action",
-  },
-  Object {
-    "action": 3571,
-    "sequence": 4570,
-    "source": "3",
+    "sourceModifier": 2,
     "target": "3",
     "timestamp": 7412071,
-    "type": "snapshot",
+    "type": "heal",
   },
   Object {
     "actor": "3",

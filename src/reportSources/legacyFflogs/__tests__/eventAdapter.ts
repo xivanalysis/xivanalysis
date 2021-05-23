@@ -577,7 +577,7 @@ describe('Event adapter', () => {
 		expect(result.map(event => event.type)).toEqual([
 			'action', // prepull synth
 			'prepare', // begincast
-			'snapshot', // calculateddamage
+			'damage', // calculateddamage
 			'actorUpdate',
 			'actorUpdate',
 		])

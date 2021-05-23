@@ -38,14 +38,13 @@ export class TranslateAdapterStep extends AdapterStep {
 			return [this.adaptCastEvent(baseEvent)]
 
 		case 'calculateddamage':
+			return this.adaptDamageEvent(baseEvent)
 		case 'calculatedheal':
-			return this.adaptSnapshotEvent(baseEvent)
+			return this.adaptHealEvent(baseEvent)
 
 		case 'damage':
-			return this.adaptDamageEvent(baseEvent)
-
 		case 'heal':
-			return this.adaptHealEvent(baseEvent)
+			return this.adaptFFLogsEffectEvent(baseEvent)
 
 		case 'applybuff':
 		case 'applydebuff':
@@ -123,16 +122,18 @@ export class TranslateAdapterStep extends AdapterStep {
 		}
 	}
 
-	private adaptSnapshotEvent(event: DamageEvent | HealEvent): Array<Events['snapshot' | 'actorUpdate']> {
+	private adaptFFLogsEffectEvent(event: DamageEvent | HealEvent): Array<Events['execute' | 'damage' | 'heal' | 'actorUpdate']> {
 		// Calc events should all have a packet ID for sequence purposes. Let sentry catch outliers.
 		const sequence = event.packetID
 		if (sequence == null) {
-			throw new Error('Calculated damage event encountered with no packet ID.')
+			if (event.type === 'damage') { return this.adaptDamageEvent(event) }
+			if (event.type === 'heal') { return this.adaptHealEvent(event) }
+			throw new Error('FFLogs Effect event encountered with no packet ID, did not match to DoT or HoT')
 		}
 
-		const newEvent: Events['snapshot'] = {
+		const newEvent: Events['execute'] = {
 			...this.adaptTargetedFields(event),
-			type: 'snapshot',
+			type: 'execute',
 			action: event.ability.guid,
 			sequence,
 		}

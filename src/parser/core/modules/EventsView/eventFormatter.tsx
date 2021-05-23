@@ -91,10 +91,10 @@ registerEventFormatter('statusRemove', ({event, pull}) => <>
 	&nbsp;fades from {getActorName(event.target, pull.actors)}
 </>)
 
-registerEventFormatter('snapshot', ({event, pull}) => <>
+registerEventFormatter('execute', ({event, pull}) => <>
 	{getActorName(event.source, pull.actors)}'s
 	&nbsp;<ActionLink id={event.action}/>
-	&nbsp;snapshots on {getActorName(event.target, pull.actors)}
+	&nbsp;executes on {getActorName(event.target, pull.actors)}
 	&nbsp;(seq: {event.sequence})
 </>)
 
