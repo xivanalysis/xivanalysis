@@ -145,7 +145,7 @@ export default class Procs extends Module {
 		// If this proc is active, consume it
 		if (this._buffWindows[statusId].current) {
 			// Procs have 0 cast time
-			this.castTime.setFflogs([actionId], 0, event.timestamp, event.timestamp)
+			this.castTime.setPercentageAdjustmentFflogs([actionId], this.castTime.instantCastAdjustment, event.timestamp, event.timestamp)
 			// Set overrideAction if we're tracking it for this spell
 			if (ACTION_PROCS[actionId]) {
 				event.ability.overrideAction = ACTION_PROCS[actionId]
