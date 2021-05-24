@@ -186,7 +186,7 @@ export class TranslateAdapterStep extends AdapterStep {
 		// We don't get explicit execution, fabricate an execute to preserve event stream semantics
 		const sequence = this.falseSequence++
 		(adaptedEvents[primaryEventIndex] as Events['damage' | 'heal']).sequence = sequence
-		adaptedEvents.splice(primaryEventIndex, 0, {
+		adaptedEvents.splice(primaryEventIndex+1, 0, {
 			...this.adaptTargetedFields(event),
 			type: 'execute',
 			action: event.ability.guid,
