@@ -26,9 +26,12 @@ const actor: Actor = {
 	job: 'UNKNOWN',
 }
 
+// Semi-arbitrary time during 5.3. Needs to be post-5.08 for code path purposes.
+const timestamp = 1600000000000
+
 const pull: Pull = {
 	id: '1',
-	timestamp: 0,
+	timestamp,
 	duration: 1,
 	encounter: {
 		name: 'test encounter',
@@ -41,7 +44,7 @@ const pull: Pull = {
 }
 
 const report: Report = {
-	timestamp: 0,
+	timestamp,
 	edition: GameEdition.GLOBAL,
 	name: 'Event adapter test',
 	pulls: [pull],
@@ -614,6 +617,32 @@ describe('Event adapter', () => {
 		}))
 	})
 
+	it('preserves event semantics for old logs', () => {
+		const result = adaptEvents(
+			{...report, timestamp: 0},
+			{...pull, timestamp: 0},
+			[
+				fakeEvents.calculateddamage[0],
+				fakeEvents.calculatedheal[0],
+				fakeEvents.damage[0],
+				fakeEvents.heal[0],
+			],
+		)
+
+		expect(result.map(event => event.type)).toEqual([
+			// calculated events should be nooped
+			'damage', // from damage event
+			'execute', // fabricated immediate execution
+			'actorUpdate',
+			'heal',
+			'execute',
+			'actorUpdate',
+		])
+		// Ensure the sequence is matched up
+		expect((result[0] as Events['damage']).sequence).toEqual((result[1] as Events['execute']).sequence)
+		expect((result[3] as Events['heal']).sequence).toEqual((result[4] as Events['execute']).sequence)
+	})
+
 	it('sorts events with identical timestamps', () => {
 		const result = adaptEvents(report, pull, [
 			{...fakeEvents.applybuff[0], timestamp: 1},
@@ -769,24 +798,26 @@ describe('Event adapter', () => {
 			&& event.actor === '1'
 		)
 
+		/* eslint-disable @typescript-eslint/no-magic-numbers */
 		expect(updates).toEqual([{
-			timestamp: 100,
+			timestamp: timestamp + 100,
 			type: 'actorUpdate',
 			actor: '1',
 			hp: {current: 100, maximum: 1000},
 			mp: {current: 100, maximum: 10000},
 			position: {x: 100, y: 100, bearing: 0},
 		}, {
-			timestamp: 200,
+			timestamp: timestamp + 200,
 			type: 'actorUpdate',
 			actor: '1',
 			hp: {current: 200},
 		}, {
-			timestamp: 300,
+			timestamp: timestamp + 300,
 			type: 'actorUpdate',
 			actor: '1',
 			mp: {current: 300, maximum: 15000},
 			position: {x: 150, y: 50},
 		}])
+		/* eslint-enable @typescript-eslint/no-magic-numbers */
 	})
 })
