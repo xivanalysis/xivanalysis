@@ -115,7 +115,7 @@ class Cycle {
 		 * A bit hacky but, when we are in the opener and start with F3 it will be the only cycle that doesn't include any B3, Freeze, US.
 		 * Since we are in the opener, and specifically opening with F3, we are doing the (mod) Jp Opener, which drops the expected count by 1
 		 */
-		expectedCount -= (this.casts.some(cast => CYCLE_ENDPOINTS.includes(cast.ability.guid)) ? 1 : 0)
+		expectedCount -= !this.casts.some(cast => CYCLE_ENDPOINTS.includes(cast.ability.guid)) ? 1 : 0
 		// Adjust expected count if the cycle included manafont
 		expectedCount += this.hasManafont ? FIRE4_FROM_MANAFONT : 0
 

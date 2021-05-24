@@ -1,6 +1,6 @@
 import {Event} from 'event'
 import {EventActor, FflogsEvent} from 'fflogs'
-import {Loggable} from 'parser/core/Loggable'
+import {Debuggable} from 'parser/core/Debuggable'
 import {Actor, Pull, Report} from 'report'
 
 export function resolveActorId(opts: {
@@ -37,7 +37,7 @@ export interface MutationAdaptionResult {
 	adaptedEvents: Event[]
 }
 
-export abstract class AdapterStep extends Loggable {
+export abstract class AdapterStep extends Debuggable {
 	protected report: Report
 	protected pull: Pull
 
