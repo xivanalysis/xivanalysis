@@ -1,10 +1,11 @@
 import * as Sentry from '@sentry/browser'
+import {Patch, PatchNumber} from 'data/PATCHES'
 import {STATUS_ID_OFFSET} from 'data/STATUSES'
 import {Event, Events, Cause, SourceModifier, TargetModifier} from 'event'
 import {ActorResources, BuffEvent, BuffStackEvent, CastEvent, DamageEvent, DeathEvent, FflogsEvent, HealEvent, HitType, TargetabilityUpdateEvent} from 'fflogs'
 import {Actor} from 'report'
 import {resolveActorId} from '../base'
-import {AdapterStep} from './base'
+import {AdapterOptions, AdapterStep} from './base'
 
 /*
 NOTES:
@@ -44,9 +45,26 @@ const FAILED_HITS = new Set([
 ])
 /* eslint-enable @typescript-eslint/no-magic-numbers */
 
+const CALCULATED_DAMAGE_UPDATE: PatchNumber = '5.08'
+
+// 1564483826807
+
+// private adaptEffectEvent(event: DamageEvent | HealEvent): Array<Events['execute' | 'damage' | 'heal' | 'actorUpdate']> {
+
 /** Translate an FFLogs APIv1 event to the xiva representation, if any exists. */
 export class TranslateAdapterStep extends AdapterStep {
 	private unhandledTypes = new Set<string>()
+
+	private adaptFuck: (event: DamageEvent | HealEvent) => Event[]
+
+	constructor(opts: AdapterOptions) {
+		super(opts)
+
+		const patch = new Patch(this.report.edition, this.report.timestamp/1000)
+		this.adaptFuck = patch.before(CALCULATED_DAMAGE_UPDATE)
+			? this.adaptFuckingOldTHing
+			: this.adaptEffectEvent
+	}
 
 	adapt(baseEvent: FflogsEvent, _adaptedEvents: Event[]): Event[] {
 		switch (baseEvent.type) {
@@ -61,7 +79,7 @@ export class TranslateAdapterStep extends AdapterStep {
 
 		case 'damage':
 		case 'heal':
-			return this.adaptEffectEvent(baseEvent)
+			return this.adaptFuck(baseEvent)
 
 		case 'applybuff':
 		case 'applydebuff':
@@ -139,6 +157,11 @@ export class TranslateAdapterStep extends AdapterStep {
 		}
 	}
 
+	private adaptFuckingOldTHing(event: DamageEvent | HealEvent): Event[] {
+		console.log('fuck')
+		return []
+	}
+
 	private adaptEffectEvent(event: DamageEvent | HealEvent): Array<Events['execute' | 'damage' | 'heal' | 'actorUpdate']> {
 		// Calc events should all have a packet ID for sequence purposes. Let sentry catch outliers.
 		const sequence = event.packetID
@@ -154,6 +177,7 @@ export class TranslateAdapterStep extends AdapterStep {
 				if (event.type === 'damage') { return this.adaptDamageEvent(event) }
 				if (event.type === 'heal') { return this.adaptHealEvent(event) }
 			}
+			debugger
 			throw new Error('FFLogs Effect event encountered with no packet ID, did not match to over time status effect (DoT/HoT)')
 		}
 
