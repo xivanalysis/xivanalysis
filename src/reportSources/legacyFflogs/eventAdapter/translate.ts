@@ -27,12 +27,19 @@ const targetHitType: Partial<Record<HitType, TargetModifier>> = {
 	[HitType.IMMUNE]: TargetModifier.INVULNERABLE,
 }
 
-/** Mapping from FFLogs actions that are effect-only and don't map to a specific calculateddamage or calculatedheal event */
 /* eslint-disable @typescript-eslint/no-magic-numbers */
+/** Mapping from FFLogs actions that are effect-only and don't map to a specific calculateddamage or calculatedheal event */
 const EFFECT_ONLY_ACTIONS = [
 	1302, // Regeneration
 	500000, // Combined DoTs
 	500001, // Combined HoTs
+]
+
+/** Mapping from failed actions that are effect-only and don't map to a specific calculateddamage or calculatedheal event */
+const FAILED_HITS = [
+	HitType.MISS,
+	HitType.DODGE,
+	HitType.IMMUNE,
 ]
 /* eslint-enable @typescript-eslint/no-magic-numbers */
 
@@ -136,8 +143,9 @@ export class TranslateAdapterStep extends AdapterStep {
 		const sequence = event.packetID
 		if (sequence == null) {
 			const cause = resolveCause(event.ability.guid)
-			if (cause.type === 'status' || EFFECT_ONLY_ACTIONS.includes(event.ability.guid)) {
+			if (cause.type === 'status' || EFFECT_ONLY_ACTIONS.includes(event.ability.guid) || FAILED_HITS.includes(event.hitType)) {
 				// Damage over time or Heal over time effects are sent as damage/heal events without a sequence ID -- there is no execute confirmation for over time effects, just the actual damage or heal event
+				// Similarly, certain failed hits will generate an "unpaired" event
 				if (event.type === 'damage') { return this.adaptDamageEvent(event) }
 				if (event.type === 'heal') { return this.adaptHealEvent(event) }
 			}
