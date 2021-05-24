@@ -192,7 +192,7 @@ export default class CastTime extends Analyser {
 				return adjustment * ct.adjustment
 			}, 1)
 		// Calculate the final cast time based on the flat and percentage reductions we've found
-		return Math.max(defaultCastTime + flatIncrease + flatReduction, 0) * percentageAdjustment
+		return Math.max(defaultCastTime + flatIncrease + flatReduction, 0) * percentageAdjustment // Yes, plus flatReduction because it's already a negative value
 
 		/**
 		 * In the absence of easily-acquired slows to test with, I'm going to assume this is the right way to calculate this:
