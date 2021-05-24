@@ -29,19 +29,19 @@ const targetHitType: Partial<Record<HitType, TargetModifier>> = {
 
 /* eslint-disable @typescript-eslint/no-magic-numbers */
 /** Mapping from FFLogs actions that are effect-only and don't map to a specific calculateddamage or calculatedheal event */
-const EFFECT_ONLY_ACTIONS = [
+const EFFECT_ONLY_ACTIONS = new Set([
 	1302, // Regeneration
 	500000, // Combined DoTs
 	500001, // Combined HoTs
-]
+])
 
 /** Mapping from failed actions that are effect-only and don't map to a specific calculateddamage or calculatedheal event */
-const FAILED_HITS = [
+const FAILED_HITS = new Set([
 	HitType.MISS,
 	HitType.DODGE,
 	HitType.IMMUNE,
 	HitType.RESIST,
-]
+])
 /* eslint-enable @typescript-eslint/no-magic-numbers */
 
 /** Translate an FFLogs APIv1 event to the xiva representation, if any exists. */
@@ -143,14 +143,14 @@ export class TranslateAdapterStep extends AdapterStep {
 		// Calc events should all have a packet ID for sequence purposes. Let sentry catch outliers.
 		const sequence = event.packetID
 		if (sequence == null) {
+			// Damage over time or Heal over time effects are sent as damage/heal events without a sequence ID -- there is no execute confirmation for over time effects, just the actual damage or heal event
+			// Similarly, certain failed hits will generate an "unpaired" event
 			const cause = resolveCause(event.ability.guid)
 			if (
 				cause.type === 'status'
-				|| EFFECT_ONLY_ACTIONS.includes(event.ability.guid)
-				|| FAILED_HITS.includes(event.hitType)
+				|| EFFECT_ONLY_ACTIONS.has(event.ability.guid)
+				|| FAILED_HITS.has(event.hitType)
 			) {
-				// Damage over time or Heal over time effects are sent as damage/heal events without a sequence ID -- there is no execute confirmation for over time effects, just the actual damage or heal event
-				// Similarly, certain failed hits will generate an "unpaired" event
 				if (event.type === 'damage') { return this.adaptDamageEvent(event) }
 				if (event.type === 'heal') { return this.adaptHealEvent(event) }
 			}
