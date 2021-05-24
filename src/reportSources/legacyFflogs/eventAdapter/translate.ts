@@ -27,6 +27,15 @@ const targetHitType: Partial<Record<HitType, TargetModifier>> = {
 	[HitType.IMMUNE]: TargetModifier.INVULNERABLE,
 }
 
+/** Mapping from FFLogs actions that are effect-only and don't map to a specific calculateddamage or calculatedheal event */
+/* eslint-disable @typescript-eslint/no-magic-numbers */
+const EFFECT_ONLY_ACTIONS = [
+	1302, // Regeneration
+	500000, // Combined DoTs
+	500001, // Combined HoTs
+]
+/* eslint-enable @typescript-eslint/no-magic-numbers */
+
 /** Translate an FFLogs APIv1 event to the xiva representation, if any exists. */
 export class TranslateAdapterStep extends AdapterStep {
 	private unhandledTypes = new Set<string>()
@@ -38,14 +47,13 @@ export class TranslateAdapterStep extends AdapterStep {
 			return [this.adaptCastEvent(baseEvent)]
 
 		case 'calculateddamage':
+			return this.adaptDamageEvent(baseEvent)
 		case 'calculatedheal':
-			return this.adaptSnapshotEvent(baseEvent)
+			return this.adaptHealEvent(baseEvent)
 
 		case 'damage':
-			return this.adaptDamageEvent(baseEvent)
-
 		case 'heal':
-			return this.adaptHealEvent(baseEvent)
+			return this.adaptEffectEvent(baseEvent)
 
 		case 'applybuff':
 		case 'applydebuff':
@@ -123,16 +131,23 @@ export class TranslateAdapterStep extends AdapterStep {
 		}
 	}
 
-	private adaptSnapshotEvent(event: DamageEvent | HealEvent): Array<Events['snapshot' | 'actorUpdate']> {
+	private adaptEffectEvent(event: DamageEvent | HealEvent): Array<Events['execute' | 'damage' | 'heal' | 'actorUpdate']> {
 		// Calc events should all have a packet ID for sequence purposes. Let sentry catch outliers.
 		const sequence = event.packetID
 		if (sequence == null) {
-			throw new Error('Calculated damage event encountered with no packet ID.')
+			const cause = resolveCause(event.ability.guid)
+			if (cause.type === 'status' || EFFECT_ONLY_ACTIONS.includes(event.ability.guid)) {
+				// Damage over time or Heal over time effects are sent as damage/heal events without a sequence ID -- there is no execute confirmation for over time effects, just the actual damage or heal event
+				if (event.type === 'damage') { return this.adaptDamageEvent(event) }
+				if (event.type === 'heal') { return this.adaptHealEvent(event) }
+			}
+			throw new Error('FFLogs Effect event encountered with no packet ID, did not match to over time status effect (DoT/HoT)')
 		}
 
-		const newEvent: Events['snapshot'] = {
-			...this.adaptTargetedFields(event),
-			type: 'snapshot',
+		const targetedFields = this.adaptTargetedFields(event)
+		const newEvent: Events['execute'] = {
+			...targetedFields,
+			type: 'execute',
 			action: event.ability.guid,
 			sequence,
 		}

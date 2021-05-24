@@ -88,8 +88,8 @@ const fakeHitTypeFields = {
 	successfulHit: true,
 }
 
-const fakeEvents: Record<FflogsEvent['type'], FflogsEvent> = {
-	encounterstart: {
+const fakeEvents: Record<FflogsEvent['type'], FflogsEvent[]> = {
+	encounterstart: [{
 		...fakeBaseFields,
 		timestamp: 10131563,
 		type: 'encounterstart',
@@ -99,8 +99,8 @@ const fakeEvents: Record<FflogsEvent['type'], FflogsEvent> = {
 		size: 4,
 		level: 0,
 		affixes: [],
-	},
-	encounterend: {
+	}],
+	encounterend: [{
 		...fakeBaseFields,
 		timestamp: 8588978,
 		type: 'encounterend',
@@ -109,8 +109,8 @@ const fakeEvents: Record<FflogsEvent['type'], FflogsEvent> = {
 		difficulty: 0,
 		size: 8,
 		kill: true,
-	},
-	calculateddamage: {
+	}],
+	calculateddamage: [{
 		timestamp: 8011183,
 		type: 'calculateddamage',
 		sourceID: 1,
@@ -152,8 +152,8 @@ const fakeEvents: Record<FflogsEvent['type'], FflogsEvent> = {
 			absorb: 0,
 		},
 		...fakeHitTypeFields,
-	},
-	damage: {
+	}],
+	damage: [{
 		ability: {
 			abilityIcon: '012000-012507.png',
 			guid: 1000725,
@@ -192,7 +192,38 @@ const fakeEvents: Record<FflogsEvent['type'], FflogsEvent> = {
 		type: 'damage',
 		...fakeHitTypeFields,
 	},
-	calculatedheal: {
+	{
+		timestamp: 107453814,
+		type: 'damage',
+		sourceID: 2,
+		sourceIsFriendly: true,
+		targetID: 3,
+		targetIsFriendly: false,
+		ability: {
+			name: 'Malefic IV',
+			guid: 16555,
+			type: 1024,
+			abilityIcon: '003000-003555.png',
+		},
+		hitType: 1,
+		amount: 21603,
+		debugMultiplier: 1.05,
+		packetID: 18762,
+		targetResources: {
+			hitPoints: 73328677,
+			maxHitPoints: 73350280,
+			mp: 10000,
+			maxMP: 10000,
+			tp: 0,
+			maxTP: 0,
+			x: 10000,
+			y: 9100,
+			facing: -472,
+			absorb: 0,
+		},
+		...fakeHitTypeFields,
+	}],
+	calculatedheal: [{
 		timestamp: 7412071,
 		type: 'calculatedheal',
 		sourceID: 3,
@@ -233,8 +264,8 @@ const fakeEvents: Record<FflogsEvent['type'], FflogsEvent> = {
 			absorb: 0,
 		},
 		...fakeHitTypeFields,
-	},
-	heal: {
+	}],
+	heal: [{
 		timestamp: 8586700,
 		type: 'heal',
 		sourceID: 11,
@@ -264,7 +295,38 @@ const fakeEvents: Record<FflogsEvent['type'], FflogsEvent> = {
 		},
 		...fakeHitTypeFields,
 	},
-	begincast: {
+	{
+		timestamp: 107457863,
+		type: 'heal',
+		sourceID: 1,
+		sourceIsFriendly: true,
+		targetID: 1,
+		targetIsFriendly: true,
+		ability: {
+			name: 'Brutal Shell',
+			guid: 16139,
+			type: 128,
+			abilityIcon: '003000-003403.png',
+		},
+		hitType: 1,
+		amount: 0,
+		overheal: 7670,
+		packetID: 18799,
+		targetResources: {
+			hitPoints: 213022,
+			maxHitPoints: 213022,
+			mp: 10000,
+			maxMP: 10000,
+			tp: 0,
+			maxTP: 0,
+			x: 9996,
+			y: 9999,
+			facing: -783,
+			absorb: 43,
+		},
+		...fakeHitTypeFields,
+	}],
+	begincast: [{
 		timestamp: 7446878,
 		type: 'begincast',
 		sourceID: 9,
@@ -277,8 +339,8 @@ const fakeEvents: Record<FflogsEvent['type'], FflogsEvent> = {
 			type: 1024,
 			abilityIcon: '002000-002821.png',
 		},
-	},
-	cast: {
+	}],
+	cast: [{
 		timestamp: 7537601,
 		type: 'cast',
 		sourceID: 4,
@@ -291,8 +353,8 @@ const fakeEvents: Record<FflogsEvent['type'], FflogsEvent> = {
 			type: 128,
 			abilityIcon: '003000-003403.png',
 		},
-	},
-	applybuff: {
+	}],
+	applybuff: [{
 		timestamp: 7537469,
 		type: 'applybuff',
 		sourceID: 11,
@@ -306,8 +368,8 @@ const fakeEvents: Record<FflogsEvent['type'], FflogsEvent> = {
 			type: 8,
 			abilityIcon: '012000-012848.png',
 		},
-	},
-	applydebuff: {
+	}],
+	applydebuff: [{
 		timestamp: 190177,
 		type: 'applydebuff',
 		sourceID: 6,
@@ -320,8 +382,8 @@ const fakeEvents: Record<FflogsEvent['type'], FflogsEvent> = {
 			type: 1,
 			abilityIcon: '015000-015020.png',
 		},
-	},
-	refreshbuff: {
+	}],
+	refreshbuff: [{
 		timestamp: 7416935,
 		type: 'refreshbuff',
 		sourceID: 3,
@@ -334,8 +396,8 @@ const fakeEvents: Record<FflogsEvent['type'], FflogsEvent> = {
 			type: 1,
 			abilityIcon: '012000-012633.png',
 		},
-	},
-	refreshdebuff: {
+	}],
+	refreshdebuff: [{
 		timestamp: 7423728,
 		type: 'refreshdebuff',
 		sourceID: 8,
@@ -348,8 +410,8 @@ const fakeEvents: Record<FflogsEvent['type'], FflogsEvent> = {
 			type: 1,
 			abilityIcon: '013000-013011.png',
 		},
-	},
-	removebuff: {
+	}],
+	removebuff: [{
 		timestamp: 7735462,
 		type: 'removebuff',
 		sourceID: 1,
@@ -362,8 +424,8 @@ const fakeEvents: Record<FflogsEvent['type'], FflogsEvent> = {
 			type: 1,
 			abilityIcon: '019000-019461.png',
 		},
-	},
-	removedebuff: {
+	}],
+	removedebuff: [{
 		timestamp: 7427662,
 		type: 'removedebuff',
 		sourceID: 9,
@@ -376,8 +438,8 @@ const fakeEvents: Record<FflogsEvent['type'], FflogsEvent> = {
 			type: 1,
 			abilityIcon: '012000-012809.png',
 		},
-	},
-	applybuffstack: {
+	}],
+	applybuffstack: [{
 		timestamp: 7410286,
 		type: 'applybuffstack',
 		sourceID: 7,
@@ -391,8 +453,8 @@ const fakeEvents: Record<FflogsEvent['type'], FflogsEvent> = {
 			abilityIcon: '019000-019661.png',
 		},
 		stack: 2,
-	},
-	applydebuffstack: {
+	}],
+	applydebuffstack: [{
 		timestamp: 7425207,
 		type: 'applydebuffstack',
 		sourceID: 8,
@@ -406,8 +468,8 @@ const fakeEvents: Record<FflogsEvent['type'], FflogsEvent> = {
 			abilityIcon: '013000-013011.png',
 		},
 		stack: 2,
-	},
-	removebuffstack: {
+	}],
+	removebuffstack: [{
 		timestamp: 7410865,
 		type: 'removebuffstack',
 		sourceID: 7,
@@ -421,8 +483,8 @@ const fakeEvents: Record<FflogsEvent['type'], FflogsEvent> = {
 			abilityIcon: '019000-019661.png',
 		},
 		stack: 1,
-	},
-	removedebuffstack: {
+	}],
+	removedebuffstack: [{
 		timestamp: 431742760,
 		type: 'removedebuffstack',
 		sourceID: 4917,
@@ -437,8 +499,8 @@ const fakeEvents: Record<FflogsEvent['type'], FflogsEvent> = {
 			abilityIcon: '019000-019711.png',
 		},
 		stack: 1,
-	},
-	targetabilityupdate: {
+	}],
+	targetabilityupdate: [{
 		timestamp: 7906700,
 		type: 'targetabilityupdate',
 		sourceID: 20,
@@ -454,8 +516,8 @@ const fakeEvents: Record<FflogsEvent['type'], FflogsEvent> = {
 			abilityIcon: '000000-000405.png',
 		},
 		targetable: 1,
-	},
-	death: {
+	}],
+	death: [{
 		timestamp: 502017,
 		type: 'death',
 		sourceID: 29,
@@ -469,29 +531,29 @@ const fakeEvents: Record<FflogsEvent['type'], FflogsEvent> = {
 			type: 0,
 			abilityIcon: '000000-000405.png',
 		},
-	},
-	limitbreakupdate: {
+	}],
+	limitbreakupdate: [{
 		...fakeBaseFields,
 		bars: 3,
 		timestamp: 8588751,
 		type: 'limitbreakupdate',
 		value: 220,
-	},
-	checksummismatch: {
+	}],
+	checksummismatch: [{
 		...fakeBaseFields,
 		timestamp: 3206414,
 		type: 'checksummismatch',
 		data: 41298,
-	},
-	zonechange: {
+	}],
+	zonechange: [{
 		...fakeBaseFields,
 		timestamp: 8240010,
 		type: 'zonechange',
 		zoneDifficulty: 0,
 		zoneID: 840,
 		zoneName: 'the Twinning',
-	},
-	unknown: {
+	}],
+	unknown: [{
 		...fakeBaseFields,
 		timestamp: 760647,
 		type: 'unknown',
@@ -501,8 +563,8 @@ const fakeEvents: Record<FflogsEvent['type'], FflogsEvent> = {
 			name: 'Holy',
 			type: 1024,
 		},
-	},
-	dispel: {
+	}],
+	dispel: [{
 		timestamp: 67561238,
 		type: 'dispel',
 		sourceID: 20,
@@ -523,13 +585,13 @@ const fakeEvents: Record<FflogsEvent['type'], FflogsEvent> = {
 			abilityIcon: '013000-013307.png',
 		},
 		isBuff: false,
-	},
-	wipecalled: {
+	}],
+	wipecalled: [{
 		timestamp: 100000000,
 		type: 'wipecalled',
 		sourceIsFriendly: true,
 		targetIsFriendly: true,
-	},
+	}],
 }
 
 // #endregion
@@ -540,23 +602,24 @@ describe('Event adapter', () => {
 		// pulled directly out of real logcs, and as such will always be misaligned from the test report.
 		class NoopStep extends AdapterStep {}
 		beforeEach(() => {
-			MockReassignUnknownActorStep.mockImplementationOnce((...args: ReassignUnknownActorStepParams) => {
+			MockReassignUnknownActorStep.mockImplementation((...args: ReassignUnknownActorStepParams) => {
 				return new NoopStep(...args) as ReassignUnknownActorStep
 			})
 		})
 
 		Object.keys(fakeEvents).forEach(eventType => it(`adapts ${eventType}`, () => {
-			const event = fakeEvents[eventType as keyof typeof fakeEvents]
-			expect(adaptEvents(report, pull, [event])).toMatchSnapshot()
+			for (const event of fakeEvents[eventType as keyof typeof fakeEvents]) {
+				expect(adaptEvents(report, pull, [event])).toMatchSnapshot()
+			}
 		}))
 	})
 
 	it('sorts events with identical timestamps', () => {
 		const result = adaptEvents(report, pull, [
-			{...fakeEvents.applybuff, timestamp: 1},
-			{...fakeEvents.cast, timestamp: 1},
-			{...fakeEvents.begincast, timestamp: 1},
-			{...fakeEvents.death, timestamp: 1},
+			{...fakeEvents.applybuff[0], timestamp: 1},
+			{...fakeEvents.cast[0], timestamp: 1},
+			{...fakeEvents.begincast[0], timestamp: 1},
+			{...fakeEvents.death[0], timestamp: 1},
 		])
 
 		expect(result.map(event => event.type)).toEqual([
@@ -571,13 +634,13 @@ describe('Event adapter', () => {
 		// simulating a begincast before the event that should trip the prepull, to ensure
 		// prepull is added before _all_ events, not just the start of the adapted base.
 		const result = adaptEvents(report, pull, [
-			fakeEvents.begincast,
-			fakeEvents.calculateddamage,
+			fakeEvents.begincast[0],
+			fakeEvents.calculateddamage[0],
 		])
 		expect(result.map(event => event.type)).toEqual([
 			'action', // prepull synth
 			'prepare', // begincast
-			'snapshot', // calculateddamage
+			'damage', // calculateddamage
 			'actorUpdate',
 			'actorUpdate',
 		])
@@ -587,7 +650,7 @@ describe('Event adapter', () => {
 		// simulating a begincast before the event that should trip the prepull, to ensure
 		// prepull is added before _all_ events, not just the start of the adapted base.
 		const result = adaptEvents(report, pull, [
-			{...fakeEvents.begincast, timestamp: 1},
+			{...fakeEvents.begincast[0], timestamp: 1},
 			{
 				timestamp: 2,
 				type: 'applybuff',
@@ -615,8 +678,8 @@ describe('Event adapter', () => {
 		// simulating a begincast before the event that should trip the prepull, to ensure
 		// prepull is added before _all_ events, not just the start of the adapted base.
 		const result = adaptEvents(report, pull, [
-			fakeEvents.begincast,
-			fakeEvents.removebuff,
+			fakeEvents.begincast[0],
+			fakeEvents.removebuff[0],
 		])
 		expect(result.map(event => event.type)).toEqual([
 			'action', // prepull synth
@@ -657,7 +720,7 @@ describe('Event adapter', () => {
 		const sharedFields = {
 			...fakeHitTypeFields,
 			...fakeBaseFields,
-			type: 'damage',
+			type: 'calculateddamage',
 			targetID: 1,
 			sourceID: 2,
 			hitType: HitType.NORMAL,
