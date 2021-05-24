@@ -61,7 +61,7 @@ export default class BlmWeaving extends Weaving {
 	}
 
 	_onApplyTriple() {
-		this._ctIndex = this.castTime.setPercentageAdjustmentFflogs('all', this.castTime.instantCastAdjustment)
+		this._ctIndex = this.castTime.setInstantCastAdjustmentFflogs()
 	}
 
 	_onRemoveTriple() {
