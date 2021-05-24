@@ -4,7 +4,6 @@ import {Event} from 'legacyEvent'
 import {cloneDeep} from 'lodash'
 import 'reflect-metadata'
 import {ensureArray} from 'utilities'
-import {seededColor} from 'utilities/color'
 import {Injectable, MappedDependency, dependency, executeBeforeDoNotUseOrYouWillBeFired} from './Injectable'
 import {EventHook, EventHookCallback, Filter, FilterPartial, TimestampHook, TimestampHookCallback} from './LegacyDispatcher'
 import Parser from './Parser'
@@ -31,12 +30,6 @@ type ModuleFilter<T extends Event> = Filter<T> & FilterPartial<{
 	to: 'player' | 'pet' | FflogsEvent['targetID'],
 	by: 'player' | 'pet' | FflogsEvent['sourceID'],
 }>
-
-type LogParams = Parameters<typeof console.log>
-interface DebugFnOpts {
-	log: (...messages: LogParams) => void
-}
-type DebugFn = (opts: DebugFnOpts) => void
 
 export default class Module extends Injectable {
 	static displayOrder: number = DISPLAY_ORDER.DEFAULT
@@ -215,35 +208,6 @@ export default class Module extends Injectable {
 	/** Remove a previously added timestamp hook */
 	protected removeTimestampHook(hook: TimestampHook) {
 		this.parser.legacyDispatcher.removeTimestampHook(hook)
-	}
-
-	/**
-	 * Log a debug console message. Will only be printed if built in a non-production
-	 * environment, with `static debug = true` in the module it's being executed in.
-	 */
-	protected debug(debugFn: DebugFn): void
-	protected debug(...messages: LogParams): void
-	protected debug(...messages: [DebugFn] | LogParams) {
-		const module = this.constructor as typeof Module
-
-		if (!module.debug || process.env.NODE_ENV === 'production') {
-			return
-		}
-
-		typeof messages[0] === 'function'
-			? messages[0]({log: this.debugLog})
-			: this.debugLog(...messages)
-	}
-
-	private debugLog = (...messages: LogParams) => {
-		const module = this.constructor as typeof Module
-		// eslint-disable-next-line no-console
-		console.log(
-			`[%c${module.handle}%c]`,
-			`color: ${seededColor(module.handle)}`,
-			'color: inherit',
-			...messages,
-		)
 	}
 
 	output(): React.ReactNode {

@@ -1,3 +1,5 @@
+import {Debuggable} from 'parser/core/Debuggable'
+
 /**
  * Mark the decorated property as a dependency. The dependency will be injected
  * during construction, and will be available for the lifetime of the instance.
@@ -60,7 +62,7 @@ export interface InjectableOptions {
  * Base dependency injection logic. Injectables can be injected into each other by
  * specifying dependencies within the class definition.
  */
-export class Injectable {
+export class Injectable extends Debuggable {
 	static dependencies: Array<string | MappedDependency> = []
 
 	private static _handle: string
@@ -76,6 +78,8 @@ export class Injectable {
 	}
 
 	constructor({container}: InjectableOptions) {
+		super()
+
 		const injectable = this.constructor as typeof Injectable
 		for (const dependency of injectable.dependencies) {
 			// If the dependency is a plain string, normalise it to the mapped representation

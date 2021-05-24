@@ -11,7 +11,7 @@ import {ReassignUnknownActorStep} from '../eventAdapter/reassignUnknownActor'
 // TODO: If we need to do this >1 times, work out a cleaner way of doing this.
 jest.mock('../eventAdapter/reassignUnknownActor')
 type ReassignUnknownActorStepParams = ConstructorParameters<typeof ReassignUnknownActorStep>
-const MockReassignUnknownActorStep = ReassignUnknownActorStep as jest.Mock<ReassignUnknownActorStep>
+const MockReassignUnknownActorStep = ReassignUnknownActorStep as unknown as jest.Mock<ReassignUnknownActorStep>
 MockReassignUnknownActorStep.mockImplementation((...args: ReassignUnknownActorStepParams) => {
 	const {ReassignUnknownActorStep} = jest.requireActual('../eventAdapter/reassignUnknownActor')
 	return new ReassignUnknownActorStep(...args)
