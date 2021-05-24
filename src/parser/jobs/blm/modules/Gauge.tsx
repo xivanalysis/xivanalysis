@@ -436,26 +436,26 @@ export default class Gauge extends Analyser {
 			this.enoDownTimerStop(event.timestamp)
 		}
 
-		this.resourceGraphs.addResource({
+		this.resourceGraphs.addGauge({
 			label: <Trans id="blm.gauge.resource.polyglot">Polyglot</Trans>,
 			colour: Color(JOBS.BLACK_MAGE.colour),
 			data: this.polyglotHistory,
 		})
-		this.resourceGraphs.addResource({
+		this.resourceGraphs.addGauge({
 			label: <Trans id="blm.gauge.resource.umbral-hearts">Umbral Hearts</Trans>,
 			colour: 'rgba(47, 113, 177, 0.75)',
 			data: this.umbralHeartHistory,
 		})
-		this.resourceGraphs.addResource({
-			label: <Trans id="blm.gauge.resource.umbral-ice">Umbral Ice</Trans>,
-			colour: 'rgba(47, 113, 177, 0.5)',
-			data: this.umbralIceHistory,
-		})
-		this.resourceGraphs.addResource({
+		this.resourceGraphs.addGauges(<Trans id="blm.gauge.resource.astral-umbral">Astral Fire and<br></br>Umbral Ice</Trans>, [{
 			label: <Trans id="blm.gauge.resource.astral-fire">Astral Fire</Trans>,
 			colour: 'rgba(210, 62, 38, 0.5)',
 			data: this.astralFireHistory,
-		})
+		},
+		{
+			label: <Trans id="blm.gauge.resource.umbral-ice">Umbral Ice</Trans>,
+			colour: 'rgba(47, 113, 177, 0.5)',
+			data: this.umbralIceHistory,
+		}])
 
 		this.lostPolyglot = this.countLostPolyglots(this.enochianDownTimer.time)
 
