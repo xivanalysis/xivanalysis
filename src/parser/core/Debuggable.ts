@@ -7,7 +7,7 @@ type DebugCallback = (opts: {
 	log: (...data: LogParameters) => void,
 }) => void
 
-export abstract class Loggable {
+export abstract class Debuggable {
 	/**
 	 * Set to `true` to enable debug mode for this loggable class, allowing the execution
 	 * of any calls to the debug method.
@@ -19,7 +19,7 @@ export abstract class Loggable {
 	/** Log the provided arguments if the loggable is in debug mode. */
 	protected debug(...data: LogParameters): void
 	protected debug(...args: [DebugCallback] | LogParameters) {
-		const constructor = this.constructor as typeof Loggable
+		const constructor = this.constructor as typeof Debuggable
 		if (!constructor.debug || process.env.NODE_ENV === 'production') {
 			return
 		}
@@ -30,7 +30,7 @@ export abstract class Loggable {
 	}
 
 	private debugLog = (...data: LogParameters) => {
-		const constructor = this.constructor as typeof Loggable
+		const constructor = this.constructor as typeof Debuggable
 		// eslint-disable-next-line no-console
 		console.log(
 			`[%c${constructor.name}%c]`,
