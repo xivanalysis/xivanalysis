@@ -40,6 +40,7 @@ const FAILED_HITS = [
 	HitType.MISS,
 	HitType.DODGE,
 	HitType.IMMUNE,
+	HitType.RESIST,
 ]
 /* eslint-enable @typescript-eslint/no-magic-numbers */
 
@@ -143,7 +144,11 @@ export class TranslateAdapterStep extends AdapterStep {
 		const sequence = event.packetID
 		if (sequence == null) {
 			const cause = resolveCause(event.ability.guid)
-			if (cause.type === 'status' || EFFECT_ONLY_ACTIONS.includes(event.ability.guid) || FAILED_HITS.includes(event.hitType)) {
+			if (
+				cause.type === 'status'
+				|| EFFECT_ONLY_ACTIONS.includes(event.ability.guid)
+				|| FAILED_HITS.includes(event.hitType)
+			) {
 				// Damage over time or Heal over time effects are sent as damage/heal events without a sequence ID -- there is no execute confirmation for over time effects, just the actual damage or heal event
 				// Similarly, certain failed hits will generate an "unpaired" event
 				if (event.type === 'damage') { return this.adaptDamageEvent(event) }
