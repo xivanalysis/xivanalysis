@@ -1,6 +1,6 @@
 import {Event} from 'event'
 import {FflogsEvent} from 'fflogs'
-import {Loggable} from 'parser/core/Loggable'
+import {Debuggable} from 'parser/core/Debuggable'
 import {Pull, Report} from 'report'
 
 export const PREPULL_OFFSETS = {
@@ -23,7 +23,7 @@ export interface MutationAdaptionResult {
 	adaptedEvents: Event[]
 }
 
-export abstract class AdapterStep extends Loggable {
+export abstract class AdapterStep extends Debuggable {
 	protected report: Report
 	protected pull: Pull
 

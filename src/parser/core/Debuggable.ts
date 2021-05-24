@@ -9,14 +9,14 @@ type DebugCallback = (opts: {
 
 export abstract class Debuggable {
 	/**
-	 * Set to `true` to enable debug mode for this loggable class, allowing the execution
+	 * Set to `true` to enable debug mode for this debuggable class, allowing the execution
 	 * of any calls to the debug method.
 	 */
 	static debug = false
 
-	/** Execute the provided callback if the loggable is in debug mode. */
+	/** Execute the provided callback if the debuggable is in debug mode. */
 	protected debug(callback: DebugCallback): void
-	/** Log the provided arguments if the loggable is in debug mode. */
+	/** Log the provided arguments if the debuggable is in debug mode. */
 	protected debug(...data: LogParameters): void
 	protected debug(...args: [DebugCallback] | LogParameters) {
 		const constructor = this.constructor as typeof Debuggable
