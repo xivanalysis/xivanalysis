@@ -99,25 +99,31 @@ export class ResourceGraphs extends Analyser {
 	 * @returns A reference to the ResourceDataGroup that was added or updated
 	 */
 	public addDataGroup(handle: string, label: ReactNode, collapse: boolean = true): ResourceDataGroup {
-		const resourceRow = new SimpleRow({
-			label,
-			order: -200,
-			height: 64,
+		let resourceData = this.dataGroups.get(handle)
+		if (!resourceData) {
+			const resourceRow = new SimpleRow({
+				label,
+				order: -200,
+				height: 64,
 				collapse,
-			items: [new SimpleItem({
-				content: <MarkerHandler handle={handle} getData={this.getDataByHandle} />,
-				start: 0,
-				end: this.parser.pull.duration,
-				// Forcing this item above other items in its row, such that the line
-				// marker is always above all graphs
-				depth: 1,
-			})],
-		})
-		this.timeline.addRow(resourceRow)
-		const resourceData = {data: [],
-			row: resourceRow,
+				items: [new SimpleItem({
+					content: <MarkerHandler handle={handle} getData={this.getDataByHandle} />,
+					start: 0,
+					end: this.parser.pull.duration,
+					// Forcing this item above other items in its row, such that the line
+					// marker is always above all graphs
+					depth: 1,
+				})],
+			})
+			this.timeline.addRow(resourceRow)
+			resourceData = {data: [],
+				row: resourceRow,
+			}
+			this.dataGroups.set(handle, resourceData)
+		} else {
+			resourceData.row.label = label
+			resourceData.row.collapse = collapse
 		}
-		this.dataGroups.set(handle, resourceData)
 		return resourceData
 	}
 
