@@ -113,6 +113,7 @@
   "blm.rotation-watchdog.error-messages.missing-despair": "Il manque un ou plusieurs<0/>s",
   "blm.rotation-watchdog.error-messages.missing-fire4s": "Il manque un ou plusieurs<0/>s",
   "blm.rotation-watchdog.error-messages.no-fire-spells": "Rotation sans sort de Feu",
+  "blm.rotation-watchdog.rotation-table.disclaimer": "Ce module part du principe que vous utilisez le style de jeu standard du BLM. <0/>Si vous suivez un style de jeu non-standard, ce rapport et beaucoup de suggestions ne sont pas applicables.",
   "blm.rotation-watchdog.rotation-table.header.reason": "Raisons des défauts",
   "blm.rotation-watchdog.rotation-table.message": "Le principe de base du gameplay du Mage Noir est de lancer 6 <0/> et un <1/> par rotation (7 <2/> et deux <3/> si vous utilisez <4/>). <5/>Évitez de manquer l'utilisation de Giga-Feu sauf si les mécaniques l'imposent.",
   "blm.rotation-watchdog.suggestions.end-with-despair.content": "Quand vous ne pouvez plus caster un autre sort en Feu Astral et que vous rester au-dessus de 800 PM, vous devriez utiliser vos MP restant en utilisnt <0/>.",
