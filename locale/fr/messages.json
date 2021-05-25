@@ -117,6 +117,7 @@
   "blm.rotation-watchdog.rotation-table.header.reason": "Raisons des défauts",
   "blm.rotation-watchdog.rotation-table.message": "Le principe de base du gameplay du Mage Noir est de lancer 6 <0/> et un <1/> par rotation (7 <2/> et deux <3/> si vous utilisez <4/>). <5/>Évitez de manquer l'utilisation de Giga-Feu sauf si les mécaniques l'imposent.",
   "blm.rotation-watchdog.suggestions.end-with-despair.content": "Quand vous ne pouvez plus caster un autre sort en Feu Astral et que vous rester au-dessus de 800 PM, vous devriez utiliser vos MP restant en utilisnt <0/>.",
+  "blm.rotation-watchdog.suggestions.end-with-despair.why": "{astralFiresMissingDespairs, plural, one {# phase de Feu Astral ne comportait pas} other {# phases de Feu Astral ne comportaient pas}} au moins un <0/>.",
   "blm.rotation-watchdog.suggestions.extra-f1s.content": "Incanter plus d'un <0/> pendant votre phase de Feu Astral est une perte qui devrait être évitée grâce a une meilleure connaissance des mécaniques du combat.",
   "blm.rotation-watchdog.suggestions.extra-f1s.why": "{extraF1s, plural, one {# Feu de trop a été lancé} other {# Feux de trop ont été lancés}}.",
   "blm.rotation-watchdog.suggestions.icemage.content": "Évitez de rester trop longtemps en Glace Ombrale. La majorité des dégâts que vous faites sont infligés pendant votre phase Feu Astral, alors à vous de maximiser le nombre de <0/> lancés pendant le combat.",
