@@ -51,54 +51,59 @@ export class ResourceGraphs extends Analyser {
 	/**
 	 * Shorthand accessor for addData with the default resources group
 	 * @param resource The ResourceData to add
+	 * @param collapse Set the default collapse state of the resources group, if the group must be created. Defaults to collapsed
 	 */
-	public addResource(resource: ResourceData) {
-		this.addData('resources', resource.label, [resource])
+	public addResource(resource: ResourceData, collapse: boolean = true) {
+		this.addData('resources', resource.label, [resource], collapse)
 	}
 
 	/**
 	 * Shorthand accessor for addData with the default resources group, if adding data to display on the same sub-row
 	 * @param label The sub-row label
 	 * @param resources The array of ResourceData to add
+	 * @param collapse Set the default collapse state of the resources group, if the group must be created. Defaults to collapsed
 	 */
-	public addResources(label: ReactNode, resources: ResourceData[]) {
-		this.addData('resources', label, resources)
+	public addResources(label: ReactNode, resources: ResourceData[], collapse: boolean = true) {
+		this.addData('resources', label, resources, collapse)
 	}
 
 	/**
 	 * Shorthand accessor for addData with the default gauges group, creating the group if necessary
 	 * @param gauge The gauge ResourceData to add
+	 * @param collapse Set the default collapse state of the gauge group, if the group must be created. Defaults to collapsed
 	 */
-	public addGauge(gauge: ResourceData) {
-		this.addGauges(gauge.label, [gauge])
+	public addGauge(gauge: ResourceData, collapse: boolean = true) {
+		this.addGauges(gauge.label, [gauge], collapse)
 	}
 
 	/**
 	 * Shorthand accessor for addData with the default resources group, if adding data to display on the same sub-row, creating the group if necessary
 	 * @param label The sub-row label
 	 * @param gauges The array of gauge ResourceData to add
+	 * @param collapse Set the default collapse state of the gauge group, if the group must be created. Defaults to collapsed
 	 */
-	public addGauges(label: ReactNode, gauges: ResourceData[]) {
+	public addGauges(label: ReactNode, gauges: ResourceData[], collapse: boolean = true) {
 		let gaugeGroup = this.dataGroups.get('gauges')
 		if (!gaugeGroup) {
-			gaugeGroup = this.addDataGroup('gauges', <Trans id="core.resource-graphs.gauge-label">Gauges</Trans>)
+			gaugeGroup = this.addDataGroup('gauges', <Trans id="core.resource-graphs.gauge-label">Gauges</Trans>, collapse)
 		}
 
 		this.addData('gauges', label, gauges)
 	}
 
 	/**
-	 * Adds a new data group and displays it on the timeline
+	 * Adds a new data group and displays it on the timeline. Updates the label and collapse state if the group already exists in the collection
 	 * @param handle The handle for this data group
 	 * @param label The label to display for this group
-	 * @returns A reference to the ResourceDataGroup that was added
+	 * @param collapse Set the default collapse state of the group. Defaults to collapsed
+	 * @returns A reference to the ResourceDataGroup that was added or updated
 	 */
-	public addDataGroup(handle: string, label: ReactNode): ResourceDataGroup {
+	public addDataGroup(handle: string, label: ReactNode, collapse: boolean = true): ResourceDataGroup {
 		const resourceRow = new SimpleRow({
 			label,
 			order: -200,
 			height: 64,
-			collapse: true,
+				collapse,
 			items: [new SimpleItem({
 				content: <MarkerHandler handle={handle} getData={this.getDataByHandle} />,
 				start: 0,
@@ -121,11 +126,12 @@ export class ResourceGraphs extends Analyser {
 	 * @param handle The handle of the group to add this data to
 	 * @param label The label for this data within the group. Will also be the label for the group if the group did not previously exist
 	 * @param data The array of data to add to the group
+	 * @param collapse Set the default collapse state of the group, if the group must be created. Defaults to collapsed
 	 */
-	public addData(handle: string, label: ReactNode, data: ResourceData[]) {
+	public addData(handle: string, label: ReactNode, data: ResourceData[], collapse: boolean = true): void {
 		let dataGroup = this.dataGroups.get(handle)
 		if (!dataGroup) {
-			dataGroup = this.addDataGroup(handle, label)
+			dataGroup = this.addDataGroup(handle, label, collapse)
 		}
 
 		data.forEach(data => dataGroup?.data.push(data))
@@ -146,6 +152,12 @@ export class ResourceGraphs extends Analyser {
 		}))
 	}
 
+	/**
+	 * Retrieves the resource information for display when moused over the timeline
+	 * @param fightPercent The timestamp of the fight to show information at, as a percentage of the fight duration
+	 * @param dataHandle The handle of the group to display information for
+	 * @returns The array of ResourceInfo objects to display
+	 */
 	private getDataByHandle = (fightPercent: number, dataHandle: string): ResourceInfo[] => {
 		const dataGroup = this.dataGroups.get(dataHandle)
 		if (!dataGroup) { return [] }
