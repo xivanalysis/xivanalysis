@@ -436,28 +436,31 @@ export default class Gauge extends Analyser {
 			this.enoDownTimerStop(event.timestamp)
 		}
 
-		this.resourceGraphs.addGauge({
-			label: <Trans id="blm.gauge.resource.polyglot">Polyglot</Trans>,
-			colour: Color(JOBS.BLACK_MAGE.colour),
-			data: this.polyglotHistory,
+		this.resourceGraphs.addDataGroup('astralumbral', <Trans id="blm.gauge.resource.astral-umbral">Astral Fire and<br></br>Umbral Ice</Trans>, true, true)
+		this.resourceGraphs.addData('astralumbral', {
+			label: <Trans id="blm.gauge.resource.astral-fire">Astral Fire</Trans>,
+			// eslint-disable-next-line @typescript-eslint/no-magic-numbers
+			colour: Color.rgb(210, 62, 38).fade(0.5).toString(),
+			data: this.astralFireHistory,
+		})
+		this.resourceGraphs.addData('astralumbral', {
+			label: <Trans id="blm.gauge.resource.umbral-ice">Umbral Ice</Trans>,
+			// eslint-disable-next-line @typescript-eslint/no-magic-numbers
+			colour: Color.rgb(47, 113, 177).fade(0.5).toString(),
+			data: this.umbralIceHistory,
 		})
 		this.resourceGraphs.addGauge({
 			label: <Trans id="blm.gauge.resource.umbral-hearts">Umbral Hearts</Trans>,
-			colour: 'rgba(47, 113, 177, 0.75)',
+			// eslint-disable-next-line @typescript-eslint/no-magic-numbers
+			colour: Color.rgb(47, 113, 177).fade(0.25).toString(),
 			data: this.umbralHeartHistory,
 		})
-		this.resourceGraphs.addGauges(<Trans id="blm.gauge.resource.astral-umbral">Astral Fire and<br></br>Umbral Ice</Trans>, [{
-			label: <Trans id="blm.gauge.resource.astral-fire">Astral Fire</Trans>,
-			colour: 'rgba(210, 62, 38, 0.5)',
-			data: this.astralFireHistory,
-		},
-		{
-			label: <Trans id="blm.gauge.resource.umbral-ice">Umbral Ice</Trans>,
-			colour: 'rgba(47, 113, 177, 0.5)',
-			data: this.umbralIceHistory,
-		}])
-
-		this.lostPolyglot = this.countLostPolyglots(this.enochianDownTimer.time)
+		this.resourceGraphs.addGauge({
+			label: <Trans id="blm.gauge.resource.polyglot">Polyglot</Trans>,
+			// eslint-disable-next-line @typescript-eslint/no-magic-numbers
+			colour: Color(JOBS.BLACK_MAGE.colour).fade(0.25).toString(),
+			data: this.polyglotHistory,
+		})
 
 		// Find out how many of the enochian drops ocurred during times where the player could not act for longer than the AF/UI buff timer. If they could act, they could've kept it going, so warn about those.
 		const droppedEno = this.droppedEnoTimestamps.filter(drop =>
