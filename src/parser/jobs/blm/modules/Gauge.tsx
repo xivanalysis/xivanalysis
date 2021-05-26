@@ -284,7 +284,7 @@ export default class Gauge extends Analyser {
 
 	//#region Astral Fire and Umbral Ice
 	private onAstralUmbralTimeout(flagIssues: boolean = true) {
-		this.tryExpireTimestampHook(this.astralUmbralTimeoutHook)
+		this.astralUmbralTimeoutHook = this.tryExpireTimestampHook(this.astralUmbralTimeoutHook)
 
 		this.currentGaugeState.astralFire = 0
 		this.currentGaugeState.umbralIce = 0
@@ -296,7 +296,7 @@ export default class Gauge extends Analyser {
 		if (this.currentGaugeState.umbralIce > 0 && dropsElementOnSwap) {
 			this.onAstralUmbralTimeout()
 		} else {
-			this.tryExpireTimestampHook(this.astralUmbralTimeoutHook)
+			this.astralUmbralTimeoutHook = this.tryExpireTimestampHook(this.astralUmbralTimeoutHook)
 
 			this.currentGaugeState.umbralIce = 0
 			this.currentGaugeState.astralFire = Math.min(this.currentGaugeState.astralFire + stackCount, MAX_ASTRAL_UMBRAL_STACKS)
@@ -309,7 +309,7 @@ export default class Gauge extends Analyser {
 		if (this.currentGaugeState.astralFire > 0 && dropsElementOnSwap) {
 			this.onAstralUmbralTimeout()
 		} else {
-			this.tryExpireTimestampHook(this.astralUmbralTimeoutHook)
+			this.astralUmbralTimeoutHook = this.tryExpireTimestampHook(this.astralUmbralTimeoutHook)
 
 			this.currentGaugeState.astralFire = 0
 			this.currentGaugeState.umbralIce = Math.min(this.currentGaugeState.umbralIce + stackCount, MAX_ASTRAL_UMBRAL_STACKS)
@@ -321,7 +321,7 @@ export default class Gauge extends Analyser {
 	private onTransposeStacks() {
 		if (this.currentGaugeState.astralFire <= 0 && this.currentGaugeState.umbralIce <= 0) { return }
 
-		this.tryExpireTimestampHook(this.astralUmbralTimeoutHook)
+		this.astralUmbralTimeoutHook = this.tryExpireTimestampHook(this.astralUmbralTimeoutHook)
 
 		if (this.currentGaugeState.astralFire > 0) {
 			this.currentGaugeState.astralFire = 0
@@ -371,7 +371,7 @@ export default class Gauge extends Analyser {
 	}
 
 	private onGainPolyglot() {
-		this.tryExpireTimestampHook(this.gainPolyglotHook)
+		this.gainPolyglotHook = this.tryExpireTimestampHook(this.gainPolyglotHook)
 
 		this.currentGaugeState.polyglot++
 		if (this.currentGaugeState.polyglot > MAX_POLYGLOT_STACKS) {
@@ -420,10 +420,12 @@ export default class Gauge extends Analyser {
 	}
 	//#endregion
 
-	private tryExpireTimestampHook(hook: TimestampHook | null): void {
-		if (!hook) { return }
+	private tryExpireTimestampHook(hook: TimestampHook | null): TimestampHook | null {
+		if (hook) {
 		this.removeTimestampHook(hook)
 		hook = null
+	}
+		return hook
 	}
 
 	private onDeath() {
