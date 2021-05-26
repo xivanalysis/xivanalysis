@@ -54,17 +54,17 @@ export class ResourceGraphs extends Analyser {
 	 * @param collapse Set the default collapse state of the resources group, if the group must be created. Defaults to collapsed
 	 */
 	public addResource(resource: ResourceData, collapse: boolean = true) {
-		this.addData('resources', resource.label, [resource], collapse)
+		this.addData('resources', resource, collapse)
 	}
 
 	/**
-	 * Shorthand accessor for addData with the default resources group, if adding data to display on the same sub-row
+	 * Shorthand accessor for addDatas with the default resources group, if adding data to display on the same sub-row
 	 * @param label The sub-row label
 	 * @param resources The array of ResourceData to add
 	 * @param collapse Set the default collapse state of the resources group, if the group must be created. Defaults to collapsed
 	 */
 	public addResources(label: ReactNode, resources: ResourceData[], collapse: boolean = true) {
-		this.addData('resources', label, resources, collapse)
+		this.addDatas('resources', label, resources, collapse)
 	}
 
 	/**
@@ -77,7 +77,7 @@ export class ResourceGraphs extends Analyser {
 	}
 
 	/**
-	 * Shorthand accessor for addData with the default resources group, if adding data to display on the same sub-row, creating the group if necessary
+	 * Shorthand accessor for addDatas with the default resources group, if adding data to display on the same sub-row, creating the group if necessary
 	 * @param label The sub-row label
 	 * @param gauges The array of gauge ResourceData to add
 	 * @param collapse Set the default collapse state of the gauge group, if the group must be created. Defaults to collapsed
@@ -88,7 +88,7 @@ export class ResourceGraphs extends Analyser {
 			gaugeGroup = this.addDataGroup('gauges', <Trans id="core.resource-graphs.gauge-label">Gauges</Trans>, collapse)
 		}
 
-		this.addData('gauges', label, gauges)
+		this.addDatas('gauges', label, gauges)
 	}
 
 	/**
@@ -96,9 +96,10 @@ export class ResourceGraphs extends Analyser {
 	 * @param handle The handle for this data group
 	 * @param label The label to display for this group
 	 * @param collapse Set the default collapse state of the group. Defaults to collapsed
+	 * @param forceCollapsed If the group defaults to collapsed, sets whether it will be forced to stay collapsed. Defaults to false (allows expansion)
 	 * @returns A reference to the ResourceDataGroup that was added or updated
 	 */
-	public addDataGroup(handle: string, label: ReactNode, collapse: boolean = true): ResourceDataGroup {
+	public addDataGroup(handle: string, label: ReactNode, collapse: boolean = true, forceCollapsed: boolean = false): ResourceDataGroup {
 		let resourceData = this.dataGroups.get(handle)
 		if (!resourceData) {
 			const resourceRow = new SimpleRow({
@@ -106,6 +107,7 @@ export class ResourceGraphs extends Analyser {
 				order: -200,
 				height: 64,
 				collapse,
+				forceCollapsed,
 				items: [new SimpleItem({
 					content: <MarkerHandler handle={handle} getData={this.getDataByHandle} />,
 					start: 0,
@@ -128,13 +130,22 @@ export class ResourceGraphs extends Analyser {
 	}
 
 	/**
-	 * Adds data to the specified group, creating the group if necessary
+	 * Adds one ResourceData object to the specified group, creating the group if necessary
 	 * @param handle The handle of the group to add this data to
-	 * @param label The label for this data within the group. Will also be the label for the group if the group did not previously exist
-	 * @param data The array of data to add to the group
+	 * @param data The ResourceData object to add to the group
 	 * @param collapse Set the default collapse state of the group, if the group must be created. Defaults to collapsed
 	 */
-	public addData(handle: string, label: ReactNode, data: ResourceData[], collapse: boolean = true): void {
+	public addData(handle: string, data: ResourceData, collapse: boolean = true): void {
+		this.addDatas(handle, data.label, [data], collapse)
+	}
+	/**
+	 * Adds a list of ResourceData objects to the specified group, creating the group if necessary
+	 * @param handle The handle of the group to add these data to
+	 * @param label The label for these data within the group. Will also be the label for the group if the group did not previously exist
+	 * @param data The array of ResourceData objects to add to the group
+	 * @param collapse Set the default collapse state of the group, if the group must be created. Defaults to collapsed
+	 */
+	public addDatas(handle: string, label: ReactNode, data: ResourceData[], collapse: boolean = true): void {
 		let dataGroup = this.dataGroups.get(handle)
 		if (!dataGroup) {
 			dataGroup = this.addDataGroup(handle, label, collapse)
