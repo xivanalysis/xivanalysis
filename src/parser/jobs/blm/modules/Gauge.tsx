@@ -59,10 +59,10 @@ export default class Gauge extends Analyser {
 	@dependency private resourceGraphs!: ResourceGraphs
 
 	private enochianStartTimestamp: number = 0
-	private enochianDownTimer: { start: number, stop: number, time: number} = {
+	private enochianDowntimeTracker: { start: number, stop: number, totalDowntime: number} = {
 		start: 0,
 		stop: 0,
-		time: 0,
+		totalDowntime: 0,
 	}
 
 	private droppedEnoTimestamps: number[] = []
@@ -154,7 +154,7 @@ export default class Gauge extends Analyser {
 				))
 			}
 			if (!this.currentGaugeState.enochian) {
-				this.startEnoTimer(event.timestamp)
+				this.startEnochianUptime(event.timestamp)
 				this.addEvent()
 			}
 			break
@@ -174,7 +174,7 @@ export default class Gauge extends Analyser {
 						<ActionLink {...this.data.actions.BLIZZARD_IV}/> was cast while <ActionLink {...this.data.actions.ENOCHIAN}/> was deemed inactive.
 					</Trans>
 				))
-				this.startEnoTimer(event.timestamp)
+				this.startEnochianUptime(event.timestamp)
 			}
 			this.currentGaugeState.umbralHearts = MAX_UMBRAL_HEART_STACKS
 			this.addEvent()
@@ -199,7 +199,7 @@ export default class Gauge extends Analyser {
 						<ActionLink {...this.data.actions.FIRE_IV}/> was cast while <ActionLink {...this.data.actions.ENOCHIAN}/> was deemed inactive.
 					</Trans>
 				))
-				this.startEnoTimer(event.timestamp)
+				this.startEnochianUptime(event.timestamp)
 			}
 			this.tryConsumeUmbralHearts(1)
 			break
@@ -210,7 +210,7 @@ export default class Gauge extends Analyser {
 						<ActionLink {...this.data.actions.DESPAIR}/> was cast while <ActionLink {...this.data.actions.ENOCHIAN}/> was deemed inactive.
 					</Trans>
 				))
-				this.startEnoTimer(event.timestamp)
+				this.startEnochianUptime(event.timestamp)
 			}
 			this.onGainAstralFireStacks(MAX_ASTRAL_UMBRAL_STACKS, false)
 			break
@@ -354,15 +354,12 @@ export default class Gauge extends Analyser {
 
 	//#region Polyglot
 	private onEnochianTimeout(flagIssues: boolean = true) {
-		this.tryExpireTimestampHook(this.gainPolyglotHook)
+		this.gainPolyglotHook = this.tryExpireTimestampHook(this.gainPolyglotHook)
 
 		if (this.currentGaugeState.enochian && flagIssues) {
-			this.enochianDownTimer.start = this.parser.currentEpochTimestamp
-			const enoRunTime = this.parser.currentEpochTimestamp - this.enochianStartTimestamp
-			//add the time remaining on the eno timer to total downtime
-			this.enochianDownTimer.time += enoRunTime
 			this.droppedEnoTimestamps.push(this.parser.currentEpochTimestamp)
 		}
+
 		this.currentGaugeState.enochian = false
 		this.enochianStartTimestamp = 0
 		this.currentGaugeState.umbralHearts = 0
@@ -391,20 +388,20 @@ export default class Gauge extends Analyser {
 		this.addEvent()
 	}
 
-	private startEnoTimer(timestamp: number) {
+	private startEnochianUptime(timestamp: number) {
 		this.currentGaugeState.enochian = true
 		this.enochianStartTimestamp = timestamp
-		if (this.enochianDownTimer.start) {
-			this.enoDownTimerStop(timestamp)
+		if (this.enochianDowntimeTracker.start) {
+			this.stopEnochianDowntime(timestamp)
 		}
 	}
 
-	private enoDownTimerStop(timestamp: number) {
-		this.enochianDownTimer.stop = timestamp
-		this.enochianDownTimer.time += Math.max(this.enochianDownTimer.stop - this.enochianDownTimer.start, 0)
+	private stopEnochianDowntime(timestamp: number) {
+		this.enochianDowntimeTracker.stop = timestamp
+		this.enochianDowntimeTracker.totalDowntime += Math.max(this.enochianDowntimeTracker.stop - this.enochianDowntimeTracker.start, 0)
 		//reset the timer again to prevent weirdness/errors
-		this.enochianDownTimer.start = 0
-		this.enochianDownTimer.stop = 0
+		this.enochianDowntimeTracker.start = 0
+		this.enochianDowntimeTracker.stop = 0
 	}
 
 	// Refund unable-to-act time if the downtime window was longer than the AF/UI timer
@@ -422,9 +419,9 @@ export default class Gauge extends Analyser {
 
 	private tryExpireTimestampHook(hook: TimestampHook | null): TimestampHook | null {
 		if (hook) {
-		this.removeTimestampHook(hook)
-		hook = null
-	}
+			this.removeTimestampHook(hook)
+			hook = null
+		}
 		return hook
 	}
 
@@ -434,8 +431,8 @@ export default class Gauge extends Analyser {
 	}
 
 	private onComplete(event: CompleteEvent) {
-		if (this.enochianDownTimer.start) {
-			this.enoDownTimerStop(event.timestamp)
+		if (this.enochianDowntimeTracker.start) {
+			this.stopEnochianDowntime(event.timestamp)
 		}
 
 		this.resourceGraphs.addDataGroup('astralumbral', <Trans id="blm.gauge.resource.astral-umbral">Astral Fire and<br></br>Umbral Ice</Trans>, true, true)
@@ -463,6 +460,7 @@ export default class Gauge extends Analyser {
 			colour: Color(JOBS.BLACK_MAGE.colour).fade(0.25).toString(),
 			data: this.polyglotHistory,
 		})
+		this.lostPolyglot = this.countLostPolyglots(this.enochianDowntimeTracker.totalDowntime)
 
 		// Find out how many of the enochian drops ocurred during times where the player could not act for longer than the AF/UI buff timer. If they could act, they could've kept it going, so warn about those.
 		const droppedEno = this.droppedEnoTimestamps.filter(drop =>
