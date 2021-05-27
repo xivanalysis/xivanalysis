@@ -425,8 +425,8 @@ export default class Gauge extends Analyser {
 		this.enochianDowntimeTracker.history.forEach(downtime => {
 			const endOfDowntime = downtime.stop || (this.parser.pull.timestamp + this.parser.pull.duration)
 			if (this.unableToAct.getWindows({
-				start: endOfDowntime,
-				end: endOfDowntime,
+				start: downtime.start,
+				end: downtime.start,
 			}).filter((uta) => Math.max(0, uta.end - uta.start) >= ASTRAL_UMBRAL_DURATION).length > 0) {
 				refundTime += endOfDowntime - downtime.start // If the end of this enochian downtime occurred during an unableToAct time frame that lasted longer than the AF/UI timeout, refund that downtime
 			}
