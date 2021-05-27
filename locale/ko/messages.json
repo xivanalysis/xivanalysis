@@ -302,6 +302,7 @@
   "core.report-flow.report-not-found": "<0>리포트를 찾을 수 없습니다.</0> \"{url}\" 주소를 가진 리포트가 없습니다.",
   "core.report-flow.supported-patches": "{from}{0} 패치",
   "core.report-flow.view-report": "{0} 에서 리포트 보기",
+  "core.resource-graphs.gauge-label": "",
   "core.resource-graphs.resource-value": "",
   "core.resource-graphs.row-label": "",
   "core.role.developer": "개발자",
