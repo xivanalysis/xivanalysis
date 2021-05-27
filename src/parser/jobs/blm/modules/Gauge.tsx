@@ -48,6 +48,17 @@ declare module 'legacyEvent' {
 	}
 }
 
+interface EnochianDowntimeWindow {
+	start: number,
+	stop?: number,
+}
+
+interface EnochianDowntimeTracking {
+	current?: EnochianDowntimeWindow,
+	history: EnochianDowntimeWindow[],
+	totalDowntime: number
+}
+
 export default class Gauge extends Analyser {
 	static handle = 'gauge'
 	static title = t('blm.gauge.title')`Gauge`
@@ -58,10 +69,8 @@ export default class Gauge extends Analyser {
 	@dependency private data!: Data
 	@dependency private resourceGraphs!: ResourceGraphs
 
-	private enochianStartTimestamp: number = 0
-	private enochianDowntimeTracker: { start: number, stop: number, totalDowntime: number} = {
-		start: 0,
-		stop: 0,
+	private enochianDowntimeTracker: EnochianDowntimeTracking = {
+		history: [],
 		totalDowntime: 0,
 	}
 
@@ -357,11 +366,11 @@ export default class Gauge extends Analyser {
 		this.gainPolyglotHook = this.tryExpireTimestampHook(this.gainPolyglotHook)
 
 		if (this.currentGaugeState.enochian && flagIssues) {
+			this.enochianDowntimeTracker.current = {start: this.parser.currentEpochTimestamp}
 			this.droppedEnoTimestamps.push(this.parser.currentEpochTimestamp)
 		}
 
 		this.currentGaugeState.enochian = false
-		this.enochianStartTimestamp = 0
 		this.currentGaugeState.umbralHearts = 0
 
 		this.addEvent()
@@ -390,30 +399,39 @@ export default class Gauge extends Analyser {
 
 	private startEnochianUptime(timestamp: number) {
 		this.currentGaugeState.enochian = true
-		this.enochianStartTimestamp = timestamp
-		if (this.enochianDowntimeTracker.start) {
+		if (this.enochianDowntimeTracker.current) {
 			this.stopEnochianDowntime(timestamp)
 		}
 	}
 
 	private stopEnochianDowntime(timestamp: number) {
-		this.enochianDowntimeTracker.stop = timestamp
-		this.enochianDowntimeTracker.totalDowntime += Math.max(this.enochianDowntimeTracker.stop - this.enochianDowntimeTracker.start, 0)
+		if (!this.enochianDowntimeTracker.current) { return }
+		this.enochianDowntimeTracker.current.stop = timestamp
+		this.enochianDowntimeTracker.totalDowntime += Math.max(this.enochianDowntimeTracker.current.stop - this.enochianDowntimeTracker.current.start, 0)
+		this.enochianDowntimeTracker.history.push({...this.enochianDowntimeTracker.current})
 		//reset the timer again to prevent weirdness/errors
-		this.enochianDowntimeTracker.start = 0
-		this.enochianDowntimeTracker.stop = 0
+		this.enochianDowntimeTracker.current = undefined
 	}
 
+	/**
+	 * Enhancement idea:
+	 * - Keep track of each downtime window in a history array
+	 * - For each downtime window, check to see if that window ended during an unabletoact window > AFUI during
+	 * - If it did, refund the time from the beginning of that unabletoact window, to the end of the enochian downtime
+	 */
 	// Refund unable-to-act time if the downtime window was longer than the AF/UI timer
 	private countLostPolyglots(time: number) {
-		const unableToActTime = this.unableToAct.getWindows()
-			.map((window) => ({
-				start: this.parser.epochToFflogs(window.start),
-				end: this.parser.epochToFflogs(window.end),
-			}))
-			.filter((downtime) => Math.max(0, downtime.end - downtime.start) >= ASTRAL_UMBRAL_DURATION)
-			.reduce((duration, downtime) => duration + Math.max(0, downtime.end - downtime.start), 0)
-		return Math.floor((time - unableToActTime)/ENOCHIAN_DURATION_REQUIRED)
+		let refundTime = 0
+		this.enochianDowntimeTracker.history.forEach(downtime => {
+			const endOfDowntime = downtime.stop || (this.parser.pull.timestamp + this.parser.pull.duration)
+			if (this.unableToAct.getWindows({
+				start: endOfDowntime,
+				end: endOfDowntime,
+			}).filter((uta) => Math.max(0, uta.end - uta.start) >= ASTRAL_UMBRAL_DURATION).length > 0) {
+				refundTime += endOfDowntime - downtime.start // If the end of this enochian downtime occurred during an unableToAct time frame that lasted longer than the AF/UI timeout, refund that downtime
+			}
+		})
+		return Math.floor(Math.max(0, time - refundTime)/ENOCHIAN_DURATION_REQUIRED)
 	}
 	//#endregion
 
@@ -431,7 +449,7 @@ export default class Gauge extends Analyser {
 	}
 
 	private onComplete(event: CompleteEvent) {
-		if (this.enochianDowntimeTracker.start) {
+		if (this.enochianDowntimeTracker.current) {
 			this.stopEnochianDowntime(event.timestamp)
 		}
 
