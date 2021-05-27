@@ -9,7 +9,7 @@ import _ from 'lodash'
 import Module from 'parser/core/Module'
 import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import React from 'react'
-import DISPLAY_ORDER from './DISPLAY_ORDER'
+import DISPLAY_ORDER from '../DISPLAY_ORDER'
 import styles from './Kenki.module.css'
 import kenkiIcon from './kenki.png'
 
