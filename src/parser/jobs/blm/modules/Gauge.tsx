@@ -4,7 +4,7 @@ import {Trans, Plural} from '@lingui/react'
 import Color from 'color'
 import {ActionLink} from 'components/ui/DbLink'
 import JOBS from 'data/JOBS'
-import {Event, Events, FieldsBase} from 'event'
+import {Cause, Event, Events, FieldsBase} from 'event'
 import {Analyser} from 'parser/core/Analyser'
 import {TimestampHook} from 'parser/core/Dispatcher'
 import {filter, oneOf} from 'parser/core/filter'
@@ -108,10 +108,14 @@ export default class Gauge extends Analyser {
 	]
 
 	initialise() {
-		const playerFilter = filter<Event>()
-			.source(this.parser.actor.id)
-		this.addEventHook(playerFilter.type('action').action(oneOf(this.affectsGaugeOnCast)), this.onCast)
-		this.addEventHook(playerFilter.type('snapshot').action(oneOf(this.affectsGaugeOnDamage)), this.onCast)
+		const playerFilter = filter<Event>().source(this.parser.actor.id)
+
+		// The execute event is sufficient for actions that don't need to do damage to affect gauge state (ie. Transpose, Enochian, Umbral Soul)
+		// Foul and Xenoglossy also fall into this category since they consume Polyglot on execution
+		this.addEventHook(playerFilter.type('execute').action(oneOf(this.affectsGaugeOnCast)), this.onCast)
+
+		// The rest of the fire and ice spells must do damage in order to affect gauge state, so hook that event instead.
+		this.addEventHook(playerFilter.type('damage').cause(filter<Cause>().action(oneOf(this.affectsGaugeOnDamage))), this.onCast)
 
 		this.addEventHook({
 			type: 'death',
@@ -150,8 +154,16 @@ export default class Gauge extends Analyser {
 	}
 
 	//#region onCast and gauge state modification
-	private onCast(event: Events['action'] | Events['snapshot']) {
-		const abilityId = event.action
+	private onCast(event: Events['execute'] | Events['damage']) {
+		let abilityId = 0
+		if (event.type === 'execute') {
+			abilityId = event.action
+		} else if (event.cause.type === 'action') {
+			abilityId = event.cause.action
+		}
+
+		// If we couldn't figure out what ability this is (somehow wound up here because of a DoT?), bail
+		if (abilityId === 0) { return }
 
 		switch (abilityId) {
 		case this.data.actions.ENOCHIAN.id:
