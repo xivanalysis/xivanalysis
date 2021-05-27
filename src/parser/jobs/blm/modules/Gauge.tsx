@@ -413,21 +413,15 @@ export default class Gauge extends Analyser {
 		this.enochianDowntimeTracker.current = undefined
 	}
 
-	/**
-	 * Enhancement idea:
-	 * - Keep track of each downtime window in a history array
-	 * - For each downtime window, check to see if that window ended during an unabletoact window > AFUI during
-	 * - If it did, refund the time from the beginning of that unabletoact window, to the end of the enochian downtime
-	 */
 	// Refund unable-to-act time if the downtime window was longer than the AF/UI timer
 	private countLostPolyglots(time: number) {
 		let refundTime = 0
 		this.enochianDowntimeTracker.history.forEach(downtime => {
-			const endOfDowntime = downtime.stop || (this.parser.pull.timestamp + this.parser.pull.duration)
 			if (this.unableToAct.getWindows({
 				start: downtime.start,
 				end: downtime.start,
 			}).filter((uta) => Math.max(0, uta.end - uta.start) >= ASTRAL_UMBRAL_DURATION).length > 0) {
+				const endOfDowntime = downtime.stop || (this.parser.pull.timestamp + this.parser.pull.duration)
 				refundTime += endOfDowntime - downtime.start // If the end of this enochian downtime occurred during an unableToAct time frame that lasted longer than the AF/UI timeout, refund that downtime
 			}
 		})
