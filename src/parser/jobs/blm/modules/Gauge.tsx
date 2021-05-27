@@ -16,6 +16,7 @@ import Suggestions, {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions
 import {UnableToAct} from 'parser/core/modules/UnableToAct'
 import {CompleteEvent} from 'parser/core/Parser'
 import React from 'react'
+import {isSuccessfulHit} from 'utilities'
 import {FIRE_SPELLS, ICE_SPELLS_TARGETED, ICE_SPELLS_UNTARGETED} from './Elements'
 
 const ENOCHIAN_DURATION_REQUIRED = 30000
@@ -164,6 +165,9 @@ export default class Gauge extends Analyser {
 
 		// If we couldn't figure out what ability this is (somehow wound up here because of a DoT?), bail
 		if (abilityId === 0) { return }
+
+		// Bail out if the event didn't do damage and the action needs to in order to affect gauge state
+		if (this.affectsGaugeOnDamage.includes(abilityId) && event.type === 'damage' && isSuccessfulHit(event)) { return }
 
 		switch (abilityId) {
 		case this.data.actions.ENOCHIAN.id:
