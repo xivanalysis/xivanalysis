@@ -79,7 +79,7 @@ export default class Thunder extends Module {
 		if (event.ability.guid === ACTIONS.THUNDER_III.id) {
 			this.thunder3Casts++
 		}
-		if (this.procs.checkProc(event, STATUSES.THUNDERCLOUD.id)) {
+		if (this.procs.checkProcLegacy(event, STATUSES.THUNDERCLOUD.id)) {
 			this._lastThunderProc = true
 		}
 		this._lastThunderCast = event.ability.guid

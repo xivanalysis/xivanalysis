@@ -457,7 +457,7 @@ class Parser {
 			visited.add(handle)
 
 			const injectable = this.container[handle]
-			const constructor = injectable as typeof Injectable
+			const constructor = injectable.constructor as typeof Injectable
 
 			// TODO: Should Injectable also contain rudimentary error logic?
 			if (injectable instanceof Module) {
