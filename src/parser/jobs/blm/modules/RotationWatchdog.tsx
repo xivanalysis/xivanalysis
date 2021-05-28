@@ -70,8 +70,7 @@ const CYCLE_ERRORS: {[key: string]: CycleErrorCode } = {
 }
 
 class Cycle {
-	// TS CastEvent Ability interface doesn't include the overrideAbility property that BLM Procs sets to denote T3P/F3P
-	casts: TODO[] = []
+	casts: CastEvent[] = []
 	startTime: number
 	endTime?: number
 
@@ -144,7 +143,7 @@ class Cycle {
 	}
 
 	public get hardT3Count(): number {
-		return this.casts.filter(cast => cast.ability.overrideAction && cast.ability.overrideAction.id === ACTIONS.THUNDER_III_FALSE.id).length
+		return this.casts.filter(cast => cast.ability.overrideAction && cast.ability.overrideAction === ACTIONS.THUNDER_III_FALSE.id).length
 	}
 	public get extraT3s(): number {
 		if (this.firePhaseStartMP < MIN_MP_FOR_FULL_ROTATION) {

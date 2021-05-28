@@ -4,6 +4,11 @@ import {ChangelogEntry} from './Meta'
 
 export const changelog: ChangelogEntry[] = [
 	{
+		date: new Date('2021-05-14'),
+		Changes: () => <>Migrated proc tracking into the core analysis pipeline.</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
+	{
 		date: new Date('2021-04-04'),
 		Changes: () => <>Resources of the analysed player are now visible in the timeline. You can expand the row to view the graphs separately, and hover in either state to view numeric values.</>,
 		contributors: [CONTRIBUTORS.ACKWELL],
