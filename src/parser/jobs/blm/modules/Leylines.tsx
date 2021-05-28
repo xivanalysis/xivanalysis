@@ -176,7 +176,7 @@ export default class Leylines extends Analyser {
 					const thisPercent = this.dontMovePercent(thisCoPUptime, (leyLinesEvent.stop || fightEnd) - leyLinesEvent.start).toFixed(2)
 
 					return <Table.Row key={leyLinesEvent.start}>
-						<Table.Cell>{this.parser.formatTimestamp(leyLinesEvent.start)}</Table.Cell>
+						<Table.Cell>{this.parser.formatEpochTimestamp(leyLinesEvent.start)}</Table.Cell>
 						<Table.Cell>{thisPercent}%</Table.Cell>
 						<Table.Cell>
 							<Button onClick={() =>
