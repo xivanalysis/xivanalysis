@@ -448,8 +448,6 @@
   "drg.procs.suggestions.extenders.why": "あなたは {droppedFang, plural, one {# Fang and Claw proc} other {# Fang and Claw procs}} と {droppedWheeling, plural, one {# Wheeling Thrust proc} other {# Wheeling Thrust procs}}を落としています。",
   "drg.procs.suggestions.mirage-dropped.content": "<0/>のプロックを落とさないようにして下さい。紅の竜血になるのが遅れ、DPSのロスが大きくなりやすいです。",
   "drg.procs.suggestions.mirage-dropped.why": "あなたは{droppedMirage, plural, one {# Mirage Dive proc} other {# Mirage Dive procs}}を落としています。",
-  "drg.procs.suggestions.mirage-overwritten.content": "<2/>がプロックしている時は<0/> と<1/> の使用は避けて下さい。使用すると上書きされ、紅の竜血になることを遅延させ、潜在的に多くのDPSを犠牲にする可能性があります。",
-  "drg.procs.suggestions.mirage-overwritten.why": "あなたは{0, plural, one {# Mirage Dive proc} other {# Mirage Dive procs}}で上書きしている。",
   "drg.suggestions.nastrond.content": "紅の竜血使用中に<0/>を3回使ってください。",
   "drg.suggestions.nastrond.why": "{noFullNsLife} 回の紅の竜血中に1回以上の <0/> を使えていません。",
   "drg.suggestions.stardiver.content": "紅の竜血使用中に<0/>を1回使ってください。",

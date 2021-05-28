@@ -448,8 +448,6 @@
   "drg.procs.suggestions.extenders.why": "You dropped {droppedFang, plural, one {# Fang and Claw proc} other {# Fang and Claw procs}} and {droppedWheeling, plural, one {# Wheeling Thrust proc} other {# Wheeling Thrust procs}}.",
   "drg.procs.suggestions.mirage-dropped.content": "Avoid letting your <0/> procs fall off, as it can delay your Life of the Dragon windows and potentially cost you a lot of DPS.",
   "drg.procs.suggestions.mirage-dropped.why": "You dropped {droppedMirage, plural, one {# Mirage Dive proc} other {# Mirage Dive procs}}.",
-  "drg.procs.suggestions.mirage-overwritten.content": "Avoid casting <0/> and <1/> when you already have a <2/> procs, as it overwrites them and can delay your Life of the Dragon windows and potentially cost you a lot of DPS.",
-  "drg.procs.suggestions.mirage-overwritten.why": "You overwrote {overwrittenDiveReady, plural, one {# Mirage Dive proc} other {# Mirage Dive procs}}.",
   "drg.suggestions.nastrond.content": "Each Life of the Dragon window should contain 3 <0/> uses.",
   "drg.suggestions.nastrond.why": "{noFullNsLife} of your Life of the Dragon windows were missing one or more <0/> uses.",
   "drg.suggestions.stardiver.content": "Each Life of the Dragon window should contain 1 <0/> use.",

@@ -448,8 +448,6 @@
   "drg.procs.suggestions.extenders.why": "你丢失了 {droppedFang, plural, one {# 次龙牙龙爪} other {# 次龙牙龙爪}}与 {droppedWheeling, plural, one {# 次龙尾大回旋} other {# 次龙尾大回旋}}。",
   "drg.procs.suggestions.mirage-dropped.content": "不要让你的<0/>触发状态消失，这样会延后你的红莲龙血，并很可能显著降低你的DPS。",
   "drg.procs.suggestions.mirage-dropped.why": "你丢失了 {droppedMirage, plural, one {# 次幻象冲预备} other {# 次幻象冲预备}}。",
-  "drg.procs.suggestions.mirage-overwritten.content": "不要在已经有<2/>触发状态的时候使用<0/>和<1/>。这样会覆盖触发状态，延后你的红莲龙血，并很可能显著降低你的DPS。",
-  "drg.procs.suggestions.mirage-overwritten.why": "你覆盖了{0, plural, one {# 次幻象冲预备} other {# 次幻象冲预备}}。",
   "drg.suggestions.nastrond.content": "每次红龙血内应使用3次<0/>",
   "drg.suggestions.nastrond.why": "{noFullNsLife}次红莲龙血状态中没有使用过<0/>。",
   "drg.suggestions.stardiver.content": "每次红龙血中应该包含一次<0/>使用。",

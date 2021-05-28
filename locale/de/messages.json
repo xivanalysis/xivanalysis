@@ -448,8 +448,6 @@
   "drg.procs.suggestions.extenders.why": "Du hast {droppedFang, plural, one {# Fang und Klaue proc} other {# Fang und Klaue procs}} und {droppedWheeling, plural, one {# Fächerstoß proc} other {# Fächerstoß procs}} verloren.",
   "drg.procs.suggestions.mirage-dropped.content": "Lass deine <0/> procs nicht auslaufen, da deine Drachengeist Fenster dadurch verschoben und dein DPS gravierend beeinträchtigt werden können.",
   "drg.procs.suggestions.mirage-dropped.why": "Du hast {droppedMirage, plural, one {# Illusionssprung proc} other {# Illusionssprung procs}} verloren.",
-  "drg.procs.suggestions.mirage-overwritten.content": "Vermeide es, <0/> und <1/> zu benutzen, wenn du schon <2/>-Procs hast. Es überschreibt sie und kann dadurch deine Drachengeist-Fenster verzögern, was potenziell eine Menge DPS kostet.",
-  "drg.procs.suggestions.mirage-overwritten.why": "Du hast {0, plural, one {# Illusionssprung-proc} other {# Illusionssprung-procs}} überschrieben.",
   "drg.suggestions.nastrond.content": "Jedes Drachengeist Fenster sollte 3 <0/> beinhalten.",
   "drg.suggestions.nastrond.why": "In {noFullNsLife} deiner Drachengeist Fenster fehlt mindestens ein <0/>.",
   "drg.suggestions.stardiver.content": "Jedes Drachengeist Fenster sollte 1 <0/> beinhalten.",
