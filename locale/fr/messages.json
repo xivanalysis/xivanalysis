@@ -627,6 +627,7 @@
   "pld.fightorflight.suggestions.ogcds.why": "{missedOgcds, plural, one {# utilisation ratée} other {# utilisations ratées}} pendant <0/> fenêtres.",
   "pld.fightorflight.table.header.gcds": "GCDs",
   "pld.fightorflight.title": "Utilisation de combat acharné",
+  "pld.gauge.waste.suggestion.why": "Un total de {0} de la jauge a été perdus du au dépassement de la valeurs maximal de la jauge.",
   "pld.goring.checklist.goringblade.description": "En tant que Paladin, <0/> occupe une place importante de vos dégâts infligés, et devrait être actif autant que possible.",
   "pld.goring.checklist.goringblade.requirement.uptime": "Temps total d'application de <0/>",
   "pld.goring.suggestions.goringblade.content": "Évitez de rafraîchir <0/> avant qu'il expire.",
