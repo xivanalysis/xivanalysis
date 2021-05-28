@@ -84,7 +84,7 @@ export default class Procs extends CoreProcs {
 
 	protected jobSpecificOnConsumeProc(procGroup: ProcGroup, event: Events['action']): void {
 		// BLM's procs are all instant-casts
-		this.castTime.set([event.action], 0, event.timestamp, event.timestamp)
+		this.castTime.setInstantCastAdjustment([event.action], event.timestamp, event.timestamp)
 
 		const actionProcId = this.actionProcs.get(event.action)
 		if (actionProcId) {
