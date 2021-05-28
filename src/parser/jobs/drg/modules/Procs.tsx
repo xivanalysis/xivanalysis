@@ -24,7 +24,6 @@ export default class Procs extends CoreProcs {
 		const droppedFang = this.getDropCountForStatus(this.data.statuses.SHARPER_FANG_AND_CLAW.id)
 		const droppedWheeling = this.getDropCountForStatus(this.data.statuses.ENHANCED_WHEELING_THRUST.id)
 		const droppedMirage = this.getDropCountForStatus(this.data.statuses.DIVE_READY.id)
-		const overwrittenDiveReady = this.getOverwriteCountForStatus(this.data.statuses.DIVE_READY.id)
 
 		this.suggestions.add(new TieredSuggestion({
 			icon: droppedFang >= droppedWheeling ? this.data.actions.FANG_AND_CLAW.icon : this.data.actions.WHEELING_THRUST.icon,
@@ -54,21 +53,6 @@ export default class Procs extends CoreProcs {
 			value: droppedMirage,
 			why: <Trans id="drg.procs.suggestions.mirage-dropped.why">
 				You dropped <Plural value={droppedMirage} one="# Mirage Dive proc" other="# Mirage Dive procs"/>.
-			</Trans>,
-		}))
-
-		this.suggestions.add(new TieredSuggestion({
-			icon: this.data.actions.MIRAGE_DIVE.icon,
-			content: <Trans id="drg.procs.suggestions.mirage-overwritten.content">
-				Avoid casting <ActionLink {...this.data.actions.JUMP}/> and <ActionLink {...this.data.actions.SPINESHATTER_DIVE}/> when you already have a <StatusLink {...this.data.statuses.DIVE_READY}/> procs, as it overwrites them and can delay your Life of the Dragon windows and potentially cost you a lot of DPS.
-			</Trans>,
-			tiers: {
-				1: SEVERITY.MEDIUM,
-				3: SEVERITY.MAJOR,
-			},
-			value: overwrittenDiveReady,
-			why: <Trans id="drg.procs.suggestions.mirage-overwritten.why">
-				You overwrote <Plural value={overwrittenDiveReady} one="# Mirage Dive proc" other="# Mirage Dive procs"/>.
 			</Trans>,
 		}))
 	}
