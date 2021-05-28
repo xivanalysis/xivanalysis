@@ -173,7 +173,7 @@ export default class Procs extends CoreProcs {
 	}
 
 	output() {
-		const allInvulns = this.getUsagesForStatus(this.data.statuses.VERFIRE_READY.id).concat(this.getInvulnsForStatus(this.data.statuses.VERSTONE_READY.id)).sort((a, b) => a.timestamp - b.timestamp)
+		const allInvulns = this.getInvulnsForStatus(this.data.statuses.VERFIRE_READY.id).concat(this.getInvulnsForStatus(this.data.statuses.VERSTONE_READY.id)).sort((a, b) => a.timestamp - b.timestamp)
 		if (allInvulns.length === 0) { return }
 
 		//Currently we only care about Invuln points in time, this has been requested quite often in The Balance from RDMs looking over their logs
