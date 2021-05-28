@@ -6,7 +6,7 @@ import {Event, Events} from 'event'
 import {Actors} from 'parser/core/modules/Actors'
 import Suggestions, {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import {SimpleRow, StatusItem, Timeline} from 'parser/core/modules/Timeline'
-import React from 'react'
+import React, {ReactNode} from 'react'
 import {Analyser} from '../Analyser'
 import {filter, oneOf} from '../filter'
 import {dependency} from '../Injectable'
@@ -66,26 +66,26 @@ export abstract class Procs extends Analyser {
 	 */
 	protected showDroppedProcSuggestion: boolean = false
 	protected droppedProcIcon: string = 'https://xivapi.com/i/001000/001989.png' // Hasty Touch ...
-	protected droppedProcContent: JSX.Element | string = <Trans id="core.procs.suggestions.dropped.content">Avoid letting your procs fall off without using them. Proc actions are generally stronger than other actions and should not be wasted.</Trans>
+	protected droppedProcContent: ReactNode = <Trans id="core.procs.suggestions.dropped.content">Avoid letting your procs fall off without using them. Proc actions are generally stronger than other actions and should not be wasted.</Trans>
 	protected droppedProcSeverityTiers = DEFAULT_SEVERITY_TIERS
 
 	protected showOverwroteProcSuggestion: boolean = false
 	protected overwroteProcIcon: string = 'https://xivapi.com/i/001000/001994.png' // Muscle Memory ...
-	protected overwroteProcContent: JSX.Element | string = <Trans id="core.procs.suggestions.overwritten.content">Avoid using an action that could generate a proc when you already have that proc active.</Trans>
+	protected overwroteProcContent: ReactNode = <Trans id="core.procs.suggestions.overwritten.content">Avoid using an action that could generate a proc when you already have that proc active.</Trans>
 	protected overwroteProcSeverityTiers = DEFAULT_SEVERITY_TIERS
 
 	protected showInvulnProcSuggestion: boolean = false
 	protected invulnProcIcon: string = this.data.actions.HALLOWED_GROUND.icon // lol
-	protected invulnProcContent: JSX.Element | string = <Trans id="core.procs.suggestions.invuln.content">Try not to use your procs while the boss is invulnerable.</Trans>
+	protected invulnProcContent: ReactNode = <Trans id="core.procs.suggestions.invuln.content">Try not to use your procs while the boss is invulnerable.</Trans>
 	protected invulnProcSeverityTiers = DEFAULT_SEVERITY_TIERS
 
 	/**
 	 * Subclassing analysers should not assign these directly. The corresponding override functions should be used instead to ensure that the
 	 * variables needed for the Plurals typically used in suggestion Whys are ready for setting into the object
 	 */
-	protected droppedProcWhy!: JSX.Element | string
-	protected overwroteProcWhy!: JSX.Element | string
-	protected invulnProcWhy!: JSX.Element | string
+	protected droppedProcWhy!: ReactNode
+	protected overwroteProcWhy!: ReactNode
+	protected invulnProcWhy!: ReactNode
 
 	private usages = new Map<ProcGroup, ProcGroupEvents>()
 	/**
