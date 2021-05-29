@@ -333,7 +333,7 @@ export abstract class Procs extends Analyser {
 	* has been calculated
 	*/
 	protected overrideOverwroteProcsWhy(): void {
-		this.overwroteProcWhy = <Trans id="core.procs.suggestions.overwrote.why">You overwrote <Plural value={this.overwrittenProcs} one="# proc" other="# procs" /></Trans>
+		this.overwroteProcWhy = <Trans id="core.procs.suggestions.overwrote.why">You overwrote <Plural value={this.overwrittenProcs} one="# proc" other="# procs" />.</Trans>
 	}
 
 	/**
