@@ -8,6 +8,7 @@ import MultiHitSkills from './MultiHitSkills'
 import OGCDDowntime from './OGCDDowntime'
 import PitchPerfect from './PitchPerfect'
 import RagingStrikes from './RagingStrikes'
+import RefulgentProcs from './RefulgentProcs'
 import Sidewinder from './Sidewinder'
 import Snapshots from './Snapshots'
 import SongUptime from './SongUptime'
@@ -25,6 +26,7 @@ export default [
 	OGCDDowntime,
 	PitchPerfect,
 	RagingStrikes,
+	RefulgentProcs,
 	Sidewinder,
 	Snapshots,
 	SongUptime,

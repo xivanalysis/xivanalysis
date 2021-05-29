@@ -193,6 +193,8 @@
   "brd.pitch-perfect.title": "Absolutes Gehör",
   "brd.pitch-perfect.trigger.no-wm-cast": "<0/> wurde eingesetzt, während keine Anwendung von <1/> zuvor kam.",
   "brd.pitch-perfect.without-max-stacks.total-potency-lost": "<0/> Anwendungen ohne volle Aufladungen haben einen Gesamtschadensverlust von <1>{0}</1> Potenz verursacht",
+  "brd.procs.suggestions.missed.content": "",
+  "brd.procs.suggestions.overwritten.content": "",
   "brd.rs.suggestions.missedgcd.content": "",
   "brd.rs.suggestions.trackedactions.content": "Jedes Mal, während <2/> aktiv ist, solltest du 1x <0/> und 1x <1/> benutzen.",
   "brd.rs.title": "Wütende Attacke",

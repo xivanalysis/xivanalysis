@@ -193,6 +193,8 @@
   "brd.pitch-perfect.title": "ピッチパーフェクト",
   "brd.pitch-perfect.trigger.no-wm-cast": "",
   "brd.pitch-perfect.without-max-stacks.total-potency-lost": "<0/> 最大スタックで使用しなかったために、<1>{0}</1> の威力を失いました",
+  "brd.procs.suggestions.missed.content": "",
+  "brd.procs.suggestions.overwritten.content": "",
   "brd.rs.suggestions.missedgcd.content": "<1/> の効果時間中に8 GCD(<0/>中は9 GCD) を回すようにしましょう。",
   "brd.rs.suggestions.trackedactions.content": "<0/>と<1/>は<2/>の効果時間中に毎回使いましょう。",
   "brd.rs.title": "猛者の撃",
