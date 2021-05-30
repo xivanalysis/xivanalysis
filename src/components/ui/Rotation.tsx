@@ -2,12 +2,13 @@ import cn from 'classnames'
 import {ActionLink, ItemLink} from 'components/ui/DbLink'
 import {getDataBy} from 'data'
 import ACTIONS, {ITEM_ID_OFFSET} from 'data/ACTIONS'
+import {Cause} from 'event'
 import {Ability} from 'fflogs'
 import React, {Component} from 'react'
 import styles from './Rotation.module.css'
 
 interface RotationProps {
-	events: Array<{ability: Ability}>
+	events: Array<{ability?: Ability, cause?: Cause, action?: number}>
 }
 
 export default class Rotation extends Component<RotationProps> {
@@ -16,7 +17,16 @@ export default class Rotation extends Component<RotationProps> {
 
 		return <div className={styles.container}>
 			{events.map((event, index) => {
-				const action = getDataBy(ACTIONS, 'id', event.ability.guid) as TODO
+				let actionId = event.action
+				if (!actionId) {
+					if (event.ability) {
+						actionId = event.ability.guid
+					} else if (event.cause && event.cause.type === 'action') {
+						actionId = event.cause.action
+					}
+				}
+
+				const action = getDataBy(ACTIONS, 'id', actionId) as TODO
 
 				// Don't bother showing the icon for autos
 				if (!action || action.autoAttack) {

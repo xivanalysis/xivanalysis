@@ -1,5 +1,6 @@
 import {Trans} from '@lingui/react'
 import Rotation from 'components/ui/Rotation'
+import {Cause} from 'event'
 import {Ability} from 'fflogs'
 import React from 'react'
 import {Button, Table} from 'semantic-ui-react'
@@ -83,7 +84,7 @@ export interface RotationTableEntry {
 	/**
 	 * Rotation to display that occurs during this entry
 	 */
-	rotation: Array<{ability: Ability}>
+	rotation: Array<{ability?: Ability, cause?: Cause, action?: number}>
 }
 
 interface RotationTableProps {
