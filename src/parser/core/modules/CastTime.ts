@@ -166,8 +166,8 @@ export default class CastTime extends Analyser {
 		const action = this.data.getAction(actionId)
 		const defaultCastTime = action?.castTime
 
-		// If there were no modifiers, just use the default (or if the default comes back undefined, shouldn't happen but eh)
-		if (!matchingTimes.length || !defaultCastTime) {
+		// If there were no modifiers, just use the default (or if the default comes back undefined or already instant, shouldn't happen but eh)
+		if (!matchingTimes.length || defaultCastTime == null || defaultCastTime === 0) {
 			return defaultCastTime
 		}
 
