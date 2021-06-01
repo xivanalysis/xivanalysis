@@ -137,7 +137,7 @@ export default class CastTime extends Analyser {
 	 * @param event The event in question
 	 * @returns The actual cast time, either as the default, or the modified time if any modifiers were in effect. Returns undefined if the action cannot be determined, or has no default cast time
 	 */
-	public forEvent(event: Events['action']): number | undefined {
+	public forEvent(event: Events['action'] | Events['prepare']): number | undefined {
 		return this.forAction(event.action, event.timestamp)
 	}
 
