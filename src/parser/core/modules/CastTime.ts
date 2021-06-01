@@ -10,7 +10,7 @@ export interface CastTimeAdjustment {
 	type: 'time' | 'percentage'
 	adjustment: number,
 	start: number,
-	end: number | null
+	end?: number
 }
 
 export default class CastTime extends Analyser {
@@ -44,8 +44,8 @@ export default class CastTime extends Analyser {
 	 * setTimeAdjustment Module-compatibility function
 	 * @deprecated
 	 */
-	public setTimeAdjustmentFflogs(actions: number[] | 'all', adjustment: number, start: number = this.parser.currentTimestamp, end: number | null = null): number {
-		return this.setTimeAdjustment(actions, adjustment, this.parser.fflogsToEpoch(start), end ? this.parser.fflogsToEpoch(end) : null)
+	public setTimeAdjustmentFflogs(actions: number[] | 'all', adjustment: number, start: number = this.parser.currentTimestamp, end?: number): number {
+		return this.setTimeAdjustment(actions, adjustment, this.parser.fflogsToEpoch(start), end ? this.parser.fflogsToEpoch(end) : undefined)
 	}
 	/**
 	 * Sets a cast time adjustment for a flat time amount per cast (See: Lightspeed, Dreadwyrm Trance, etc.)
@@ -55,7 +55,7 @@ export default class CastTime extends Analyser {
 	 * @param end The end of the adjustment time range. May be left null if the end of the range is not yet known
 	 * @returns The index number within the cast time adjustments collection, can be used to reset/end this adjustment later
 	 */
-	public setTimeAdjustment(actions: number[] | 'all', adjustment: number, start: number = this.parser.currentEpochTimestamp, end: number | null = null): number {
+	public setTimeAdjustment(actions: number[] | 'all', adjustment: number, start: number = this.parser.currentEpochTimestamp, end?: number): number {
 		return this.set(actions, 'time', adjustment, start, end)
 	}
 
@@ -63,8 +63,8 @@ export default class CastTime extends Analyser {
 	 * setInstantCastAdjustment Module-compatibility function
 	 * @deprecated
 	 */
-	public setInstantCastAdjustmentFflogs(actions: number[] | 'all' = 'all', start: number = this.parser.currentTimestamp, end: number | null = null): number {
-		return this.set(actions, 'percentage', 0, this.parser.fflogsToEpoch(start), end ? this.parser.fflogsToEpoch(end) : null)
+	public setInstantCastAdjustmentFflogs(actions: number[] | 'all' = 'all', start: number = this.parser.currentTimestamp, end?: number): number {
+		return this.set(actions, 'percentage', 0, this.parser.fflogsToEpoch(start), end ? this.parser.fflogsToEpoch(end) : undefined)
 	}
 	/**
 	 * Shorthand function for setting all casts to instant (ie. Swiftcast, Triplecast)
@@ -73,15 +73,15 @@ export default class CastTime extends Analyser {
 	 * @param end The beginning of the adjustment time range. Defaults to the current epoch timestamp
 	 * @returns The end of the adjustment time range. May be left null if the end of the range is not yet known
 	 */
-	public setInstantCastAdjustment(actions: number[] | 'all' = 'all', start: number = this.parser.currentEpochTimestamp, end: number | null = null): number {
+	public setInstantCastAdjustment(actions: number[] | 'all' = 'all', start: number = this.parser.currentEpochTimestamp, end?: number): number {
 		return this.set(actions, 'percentage', 0, start, end)
 	}
 	/**
 	 * setPercentageAdjustment Module-compatibility function
 	 * @deprecated
 	 */
-	public setPercentageAdjustmentFflogs(actions: number[] | 'all', reduction: number, start: number = this.parser.currentTimestamp, end: number | null = null): number {
-		return this.setPercentageAdjustment(actions, reduction, this.parser.fflogsToEpoch(start), end ? this.parser.fflogsToEpoch(end) : null)
+	public setPercentageAdjustmentFflogs(actions: number[] | 'all', reduction: number, start: number = this.parser.currentTimestamp, end?: number): number {
+		return this.setPercentageAdjustment(actions, reduction, this.parser.fflogsToEpoch(start), end ? this.parser.fflogsToEpoch(end) : undefined)
 	}
 	/**
 	 * Sets a cast time adjustment for a percentage change per cast (See: Swiftcast, RDM's Doublecast trait, Ley Lines, etc.)
@@ -91,10 +91,10 @@ export default class CastTime extends Analyser {
 	 * @param end The end of the adjustment time range. May be left null if the end of the range is not yet known
 	 * @returns The index number within the cast time adjustments collection, can be used to reset/end this adjustment later
 	 */
-	public setPercentageAdjustment(actions: number[] | 'all', adjustment: number, start: number = this.parser.currentEpochTimestamp, end: number | null = null): number {
+	public setPercentageAdjustment(actions: number[] | 'all', adjustment: number, start: number = this.parser.currentEpochTimestamp, end?: number): number {
 		return this.set(actions, 'percentage', Math.max(adjustment, 0), start, end)
 	}
-	private set(actions: number[] | 'all', type: 'time' | 'percentage', adjustment: number, start: number = this.parser.currentEpochTimestamp, end: number | null = null): number {
+	private set(actions: number[] | 'all', type: 'time' | 'percentage', adjustment: number, start: number = this.parser.currentEpochTimestamp, end?: number): number {
 		const newLength = this.castTimes.push({
 			actions,
 			type,
