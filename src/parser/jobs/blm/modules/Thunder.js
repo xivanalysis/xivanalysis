@@ -31,7 +31,7 @@ export default class Thunder extends Module {
 		'checklist',
 		'enemies',
 		'entityStatuses',
-		'invuln',
+		'invulnerability',
 		'suggestions',
 		'procs',
 	]
@@ -79,7 +79,7 @@ export default class Thunder extends Module {
 		if (event.ability.guid === ACTIONS.THUNDER_III.id) {
 			this.thunder3Casts++
 		}
-		if (this.procs.checkProc(event, STATUSES.THUNDERCLOUD.id)) {
+		if (this.procs.checkProcLegacy(event, STATUSES.THUNDERCLOUD.id)) {
 			this._lastThunderProc = true
 		}
 		this._lastThunderCast = event.ability.guid
@@ -113,7 +113,7 @@ export default class Thunder extends Module {
 	// Get the uptime percentage for the Thunder status debuff
 	getThunderUptime() {
 		const statusTime = this.entityStatuses.getStatusUptime(STATUSES.THUNDER_III.id, this.enemies.getEntities())
-		const uptime = this.parser.currentDuration - this.invuln.getInvulnerableUptime()
+		const uptime = this.parser.currentDuration - this.invulnerability.getDuration({types: ['invulnerable']})
 		return (statusTime / uptime) * 100
 	}
 

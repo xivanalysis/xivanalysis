@@ -7,6 +7,13 @@ import {Label} from 'semantic-ui-react'
 
 export const changelog = [
 	{
+		date: new Date('2021-05-28'),
+		Changes: () => <>
+			Added suggestions for dropped and overwritten <StatusLink {...STATUSES.STRAIGHT_SHOT_READY}/> procs.
+		</>,
+		contributors: [CONTRIBUTORS.YUMIYAFANGIRL],
+	},
+	{
 		date: new Date('2020-12-16'),
 		Changes: () => <>
 			Added a module that tracks actions used during <ActionLink {...ACTIONS.RAGING_STRIKES}/> windows.

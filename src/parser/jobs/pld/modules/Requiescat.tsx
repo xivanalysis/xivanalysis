@@ -68,7 +68,7 @@ export default class Requiescat extends Module {
 
 	@dependency private suggestions!: Suggestions
 	@dependency private timeline!: Timeline
-	@dependency private invuln!: Invulnerability
+	@dependency private invulnerability!: Invulnerability
 
 	// Requiescat Casts
 	private requiescats: RequiescatState[] = []
@@ -104,11 +104,19 @@ export default class Requiescat extends Module {
 			const reqState = new RequiescatState(event.timestamp)
 			const reqEnd = event.timestamp + REQUIESCAT_DURATION_MILLIS
 
-			const isBossInvulnBeforeEnd = this.invuln.isUntargetable('all', reqEnd)
-				|| this.invuln.isInvulnerable('all', reqEnd)
+			if (reqEnd >= this.parser.fight.end_time) {
+				// If the requiescat overshoots the end of the fight, we know ahead of time it'll be a rush
+				reqState.isRushing = true
+			} else {
+				// Otherwise, wait for the expected end time and check invuln status
+				this.addTimestampHook(reqEnd, ({timestamp}) => {
+					const epochTimestamp = this.parser.fflogsToEpoch(timestamp)
+					reqState.isRushing = false
+						|| this.invulnerability.isActive({timestamp: epochTimestamp, types: ['invulnerable']})
+						|| this.invulnerability.isActive({timestamp: epochTimestamp, types: ['untargetable']})
+				})
+			}
 
-			reqState.isRushing = (reqEnd >= this.parser.fight.end_time)
-				|| isBossInvulnBeforeEnd
 			this.requiescats.push(reqState)
 		}
 

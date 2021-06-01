@@ -54,7 +54,7 @@ export default class GlobalCooldown extends Module {
 
 		this.timelineRow = this.timeline.addRow(new ContainerRow({
 			label: 'GCD',
-			order: -98,
+			order: -97,
 			collapse: true,
 		}))
 	}
@@ -188,7 +188,7 @@ export default class GlobalCooldown extends Module {
 
 		const normalizedGcd = Math.round(
 			gcdLength
-			* ((BASE_GCD / 1000) / normaliseWith)
+			* (BASE_GCD / normaliseWith)
 			* (1 / speedMod),
 		)
 
@@ -230,8 +230,11 @@ export default class GlobalCooldown extends Module {
 		return this.gcds.reduce((carry, gcd) => {
 			const duration = this._getGcdLength(gcd)
 			const downtime = this.downtime.getDowntime(
-				gcd.timestamp,
-				gcd.timestamp + duration,
+				this.parser.fflogsToEpoch(gcd.timestamp),
+				this.parser.fflogsToEpoch(Math.min(
+					gcd.timestamp + duration,
+					this.parser.eventTimeOffset + this.parser.pull.duration
+				)),
 			)
 			return carry + duration - downtime
 		}, 0)
@@ -241,7 +244,6 @@ export default class GlobalCooldown extends Module {
 		let cooldown = (gcd.isInstant || gcd.castTime <= gcd.cooldown)
 			? gcd.cooldown
 			: Math.max(gcd.castTime, gcd.cooldown)
-		cooldown *= 1000
 
 		// Some actions are lower than or equal to min gcd, only adjust with ratios when they are not
 		if (cooldown > MIN_GCD) {

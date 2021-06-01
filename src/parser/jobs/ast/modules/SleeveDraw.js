@@ -42,11 +42,18 @@ export default class SleeveDraw extends Module {
 			this._lastUse = this.parser.fight.start_time
 		}
 
-		const firstOpportunity = this._lastUse + ACTIONS.SLEEVE_DRAW.cooldown*1000
+		const firstOpportunity = this._lastUse + ACTIONS.SLEEVE_DRAW.cooldown
 		const _held = event.timestamp - firstOpportunity
 		if (_held > 0) {
-			const downtimes = this.unableToAct.getDowntimes(firstOpportunity, firstOpportunity + EXCUSED_HOLD_DEFAULT)
-			const firstEnd = downtimes.length ? downtimes[0].end : firstOpportunity
+			const downtimes = this.unableToAct.getWindows({
+				start: this.parser.fflogsToEpoch(firstOpportunity),
+				end: this.parser.fflogsToEpoch(
+					Math.min(firstOpportunity + EXCUSED_HOLD_DEFAULT, event.timestamp)
+				),
+			})
+			const firstEnd = downtimes.length
+				? this.parser.epochToFflogs(downtimes[0].end)
+				: firstOpportunity
 			this._totalHeld += _held
 			this._excusedHeld += EXCUSED_HOLD_DEFAULT + (firstEnd - firstOpportunity)
 		}
@@ -56,7 +63,7 @@ export default class SleeveDraw extends Module {
 
 	_onComplete() {
 		const holdDuration = this._uses === 0 ? this.parser.currentDuration : this._totalHeld
-		const _usesMissed = Math.floor((holdDuration - this._excusedHeld) / (ACTIONS.SLEEVE_DRAW.cooldown * 1000))
+		const _usesMissed = Math.floor((holdDuration - this._excusedHeld) / ACTIONS.SLEEVE_DRAW.cooldown)
 		const maxUses = this._uses + _usesMissed
 
 		this.checklist.add(new Rule({

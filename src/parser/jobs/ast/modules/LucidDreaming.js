@@ -48,7 +48,7 @@ export default class LucidDreaming extends Module {
 			_held = event.timestamp - this.parser.fight.start_time
 		} else {
 			// Take holding as from the time it comes off cooldown
-			_held = event.timestamp - this._lastUse - (ACTIONS.LUCID_DREAMING.cooldown * 1000)
+			_held = event.timestamp - this._lastUse - ACTIONS.LUCID_DREAMING.cooldown
 		}
 
 		if (_held > 0) {
@@ -67,7 +67,7 @@ export default class LucidDreaming extends Module {
 	_onComplete() {
 		//uses missed reported in 1 decimal
 		const holdDuration = this._uses === 0 ? this.parser.currentDuration : this._totalHeld
-		const _usesMissed = Math.floor(holdDuration / (ACTIONS.LUCID_DREAMING.cooldown * 1000))
+		const _usesMissed = Math.floor(holdDuration / ACTIONS.LUCID_DREAMING.cooldown)
 
 		if (_usesMissed > 1 || this._uses === 0) {
 			this.suggestions.add(new Suggestion({

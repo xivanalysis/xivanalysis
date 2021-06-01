@@ -74,14 +74,14 @@ export const DRG = ensureActions({
 		id: 92,
 		name: 'Jump',
 		icon: 'https://xivapi.com/i/002000/002576.png',
-		cooldown: 30,
+		cooldown: 30000,
 	},
 
 	HIGH_JUMP: {
 		id: 16478,
 		name: 'High Jump',
 		icon: 'https://xivapi.com/i/002000/002591.png',
-		cooldown: 30,
+		cooldown: 30000,
 		statusesApplied: ['DIVE_READY'],
 	},
 
@@ -89,21 +89,21 @@ export const DRG = ensureActions({
 		id: 94,
 		name: 'Elusive Jump',
 		icon: 'https://xivapi.com/i/002000/002577.png',
-		cooldown: 30,
+		cooldown: 30000,
 	},
 
 	SPINESHATTER_DIVE: {
 		id: 95,
 		name: 'Spineshatter Dive',
 		icon: 'https://xivapi.com/i/002000/002580.png',
-		cooldown: 60,
+		cooldown: 60000,
 	},
 
 	DRAGONFIRE_DIVE: {
 		id: 96,
 		name: 'Dragonfire Dive',
 		icon: 'https://xivapi.com/i/002000/002578.png',
-		cooldown: 120,
+		cooldown: 120000,
 
 	},
 
@@ -111,7 +111,7 @@ export const DRG = ensureActions({
 		id: 3557,
 		name: 'Battle Litany',
 		icon: 'https://xivapi.com/i/002000/002585.png',
-		cooldown: 180,
+		cooldown: 180000,
 		statusesApplied: ['BATTLE_LITANY'],
 	},
 
@@ -119,14 +119,14 @@ export const DRG = ensureActions({
 		id: 3553,
 		name: 'Blood Of The Dragon',
 		icon: 'https://xivapi.com/i/002000/002581.png',
-		cooldown: 25,
+		cooldown: 25000,
 	},
 
 	GEIRSKOGUL: {
 		id: 3555,
 		name: 'Geirskogul',
 		icon: 'https://xivapi.com/i/002000/002583.png',
-		cooldown: 30,
+		cooldown: 30000,
 		potency: 300,
 	},
 
@@ -134,7 +134,7 @@ export const DRG = ensureActions({
 		id: 7398,
 		name: 'Dragon Sight',
 		icon: 'https://xivapi.com/i/002000/002587.png',
-		cooldown: 120,
+		cooldown: 120000,
 		statusesApplied: ['RIGHT_EYE', 'LEFT_EYE', 'RIGHT_EYE_SOLO'],
 	},
 
@@ -142,7 +142,7 @@ export const DRG = ensureActions({
 		id: 7399,
 		name: 'Mirage Dive',
 		icon: 'https://xivapi.com/i/002000/002588.png',
-		cooldown: 1,
+		cooldown: 1000,
 		potency: 300,
 	},
 
@@ -150,14 +150,14 @@ export const DRG = ensureActions({
 		id: 7400,
 		name: 'Nastrond',
 		icon: 'https://xivapi.com/i/002000/002589.png',
-		cooldown: 10,
+		cooldown: 10000,
 	},
 
 	STARDIVER: {
 		id: 16480,
 		name: 'Stardiver',
 		icon: 'https://xivapi.com/i/002000/002593.png',
-		cooldown: 30,
+		cooldown: 30000,
 		potency: 600,
 	},
 })

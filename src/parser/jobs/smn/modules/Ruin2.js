@@ -18,8 +18,7 @@ export default class Ruin2 extends Module {
 	static handle = 'ruin2'
 	static dependencies = [
 		'combatants',
-		'gcd',
-		'invuln',
+		'invulnerability',
 		'pets',
 		'suggestions',
 	]
@@ -58,11 +57,11 @@ export default class Ruin2 extends Module {
 		}
 
 		// Calc the time in the GCD that the boss can't be targeted - R2ing before an invuln to prevent an R3 cancel is good
-		const invulnTime = this.invuln.getUntargetableUptime(
-			'all',
-			event.timestamp,
-			event.timestamp + this.gcd.getEstimate(),
-		)
+		const invulnTime = this.invulnerability.getDuration({
+			start: this.parser.fflogsToEpoch(this._lastGcd?.timestamp ?? this.parser.eventTimeOffset),
+			end: this.parser.fflogsToEpoch(event.timestamp),
+			types: ['untargetable'],
+		})
 
 		if (
 			action.onGcd &&

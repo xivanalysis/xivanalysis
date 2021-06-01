@@ -19,7 +19,7 @@ export const SMN = ensureActions({
 		id: 180,
 		name: 'Summon III',
 		icon: 'https://xivapi.com/i/002000/002680.png',
-		cooldown: 3,
+		cooldown: 3000,
 		cooldownGroup: SMN_COOLDOWN_GROUP.SUMMON,
 	},
 
@@ -27,7 +27,7 @@ export const SMN = ensureActions({
 		id: 181,
 		name: 'Fester',
 		icon: 'https://xivapi.com/i/002000/002676.png',
-		cooldown: 5,
+		cooldown: 5000,
 	},
 
 	OUTBURST: {
@@ -35,14 +35,14 @@ export const SMN = ensureActions({
 		name: 'Outburst',
 		icon: 'https://xivapi.com/i/002000/002698.png',
 		onGcd: true,
-		castTime: 2.5,
+		castTime: 2500,
 	},
 
 	ENERGY_SIPHON: {
 		id: 16510,
 		name: 'Energy Siphon',
 		icon: 'https://xivapi.com/i/002000/002697.png',
-		cooldown: 30,
+		cooldown: 30000,
 		cooldownGroup: SMN_COOLDOWN_GROUP.ENERGY,
 	},
 
@@ -50,7 +50,7 @@ export const SMN = ensureActions({
 		id: 3578,
 		name: 'Painflare',
 		icon: 'https://xivapi.com/i/002000/002681.png',
-		cooldown: 5,
+		cooldown: 5000,
 	},
 
 	RUIN_III: {
@@ -58,21 +58,22 @@ export const SMN = ensureActions({
 		name: 'Ruin III',
 		icon: 'https://xivapi.com/i/002000/002682.png',
 		onGcd: true,
-		castTime: 2.5, // This is reduced to instant during DWT
+		castTime: 2500, // This is reduced to instant during DWT
 	},
 
 	TRI_DISASTER: {
 		id: 3580,
 		name: 'Tri-disaster',
 		icon: 'https://xivapi.com/i/002000/002683.png',
-		cooldown: 50,
+		cooldown: 50000,
+		statusesApplied: ['BIO_III', 'MIASMA_III'],
 	},
 
 	DREADWYRM_TRANCE: {
 		id: 3581,
 		name: 'Dreadwyrm Trance',
 		icon: 'https://xivapi.com/i/002000/002684.png',
-		cooldown: 55,
+		cooldown: 55000,
 		cooldownGroup: SMN_COOLDOWN_GROUP.TRANCE,
 	},
 
@@ -80,7 +81,7 @@ export const SMN = ensureActions({
 		id: 3582,
 		name: 'Deathflare',
 		icon: 'https://xivapi.com/i/002000/002685.png',
-		cooldown: 15,
+		cooldown: 15000,
 	},
 
 	// Both SMN and SCH have Aetherpact, but they're different skills
@@ -88,7 +89,7 @@ export const SMN = ensureActions({
 		id: 7423,
 		name: 'Aetherpact',
 		icon: 'https://xivapi.com/i/002000/002687.png',
-		cooldown: 180,
+		cooldown: 180000,
 	},
 
 	BIO_III: {
@@ -104,7 +105,7 @@ export const SMN = ensureActions({
 		name: 'Miasma III',
 		icon: 'https://xivapi.com/i/002000/002690.png',
 		onGcd: true,
-		castTime: 2.5,
+		castTime: 2500,
 		statusesApplied: ['MIASMA_III'],
 	},
 
@@ -119,21 +120,21 @@ export const SMN = ensureActions({
 		id: 7427,
 		name: 'Summon Bahamut',
 		icon: 'https://xivapi.com/i/002000/002691.png',
-		cooldown: 30,
+		cooldown: 30000,
 	},
 
 	ENKINDLE_BAHAMUT: {
 		id: 7429,
 		name: 'Enkindle Bahamut',
 		icon: 'https://xivapi.com/i/002000/002693.png',
-		cooldown: 10,
+		cooldown: 10000,
 	},
 
 	FIREBIRD_TRANCE: {
 		id: 16549,
 		name: 'Firebird Trance',
 		icon: 'https://xivapi.com/i/002000/002734.png',
-		cooldown: 55,
+		cooldown: 55000,
 		cooldownGroup: SMN_COOLDOWN_GROUP.TRANCE,
 		statusesApplied: ['EVERLASTING_FLIGHT'],
 	},
@@ -156,7 +157,7 @@ export const SMN = ensureActions({
 		id: 16516,
 		name: 'Enkindle Phoenix',
 		icon: 'https://xivapi.com/i/002000/002737.png',
-		cooldown: 10,
+		cooldown: 10000,
 	},
 
 	// Egi Assault, Egi Assault II, and Enkindle have unique ids depending on the summoned pet.
@@ -164,10 +165,10 @@ export const SMN = ensureActions({
 		id: 16797,
 		name: 'Assault I: Aerial Slash',
 		icon: 'https://xivapi.com/i/002000/002717.png',
-		cooldown: 30,
+		cooldown: 30000,
 		cooldownGroup: SMN_COOLDOWN_GROUP.EGI_ASSAULT,
 		onGcd: true,
-		gcdRecast: 2.5,
+		gcdRecast: 2500,
 		charges: 2,
 	},
 
@@ -175,10 +176,10 @@ export const SMN = ensureActions({
 		id: 16795,
 		name: 'Assault I: Earthen Armor',
 		icon: 'https://xivapi.com/i/002000/002707.png',
-		cooldown: 30,
+		cooldown: 30000,
 		cooldownGroup: SMN_COOLDOWN_GROUP.EGI_ASSAULT,
 		onGcd: true,
-		gcdRecast: 2.5,
+		gcdRecast: 2500,
 		charges: 2,
 	},
 
@@ -186,10 +187,10 @@ export const SMN = ensureActions({
 		id: 16799,
 		name: 'Assault I: Crimson Cyclone',
 		icon: 'https://xivapi.com/i/002000/002726.png',
-		cooldown: 30,
+		cooldown: 30000,
 		cooldownGroup: SMN_COOLDOWN_GROUP.EGI_ASSAULT,
 		onGcd: true,
-		gcdRecast: 2.5,
+		gcdRecast: 2500,
 		charges: 2,
 	},
 
@@ -197,10 +198,10 @@ export const SMN = ensureActions({
 		id: 16798,
 		name: 'Assault II: Slipstream',
 		icon: 'https://xivapi.com/i/002000/002718.png',
-		cooldown: 30,
+		cooldown: 30000,
 		cooldownGroup: SMN_COOLDOWN_GROUP.EGI_ASSAULT_II,
 		onGcd: true,
-		gcdRecast: 2.5,
+		gcdRecast: 2500,
 		charges: 2,
 	},
 
@@ -208,10 +209,10 @@ export const SMN = ensureActions({
 		id: 16796,
 		name: 'Assault II: Mountain Buster',
 		icon: 'https://xivapi.com/i/002000/002708.png',
-		cooldown: 30,
+		cooldown: 30000,
 		cooldownGroup: SMN_COOLDOWN_GROUP.EGI_ASSAULT_II,
 		onGcd: true,
-		gcdRecast: 2.5,
+		gcdRecast: 2500,
 		charges: 2,
 	},
 
@@ -219,10 +220,10 @@ export const SMN = ensureActions({
 		id: 16800,
 		name: 'Assault II: Flaming Crush',
 		icon: 'https://xivapi.com/i/002000/002727.png',
-		cooldown: 30,
+		cooldown: 30000,
 		cooldownGroup: SMN_COOLDOWN_GROUP.EGI_ASSAULT_II,
 		onGcd: true,
-		gcdRecast: 2.5,
+		gcdRecast: 2500,
 		charges: 2,
 	},
 
@@ -230,7 +231,7 @@ export const SMN = ensureActions({
 		id: 16802,
 		name: 'Enkindle: Aerial Blast',
 		icon: 'https://xivapi.com/i/002000/002719.png',
-		cooldown: 120,
+		cooldown: 120000,
 		cooldownGroup: SMN_COOLDOWN_GROUP.ENKINDLE,
 	},
 
@@ -238,7 +239,7 @@ export const SMN = ensureActions({
 		id: 16801,
 		name: 'Enkindle: Earthen Fury',
 		icon: 'https://xivapi.com/i/002000/002709.png',
-		cooldown: 120,
+		cooldown: 120000,
 		cooldownGroup: SMN_COOLDOWN_GROUP.ENKINDLE,
 	},
 
@@ -246,7 +247,7 @@ export const SMN = ensureActions({
 		id: 16803,
 		name: 'Enkindle: Inferno',
 		icon: 'https://xivapi.com/i/002000/002728.png',
-		cooldown: 120,
+		cooldown: 120000,
 		cooldownGroup: SMN_COOLDOWN_GROUP.ENKINDLE,
 	},
 

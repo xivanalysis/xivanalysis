@@ -75,4 +75,9 @@ export const changelog = [
 		Changes: () => <>Added support for patch 5.3</>,
 		contributors: [CONTRIBUTORS.CADENCE],
 	},
+	{
+		date: new Date('2021-04-05'),
+		Changes: () => <>Significant gauge overhaul. Esprit and Feathers merged into a single analyser and graph output moved into the timeline. Data should be more accurate, though still simulated due to probabilistic generation.</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
 ]

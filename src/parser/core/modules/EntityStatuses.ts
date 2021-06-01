@@ -38,7 +38,7 @@ export class EntityStatuses extends Module {
 	static handle = 'entityStatuses'
 	static debug = false
 
-	@dependency private invuln!: Invulnerability
+	@dependency private invulnerability!: Invulnerability
 	@dependency private data!: Data
 
 	// -----
@@ -117,10 +117,24 @@ export class EntityStatuses extends Module {
 
 		const target = statusEvent.targetID
 		this.debug(`Searching for invulns against target ID ${target} from ${this.parser.formatTimestamp(statusEvent.start, 1)} to ${this.parser.formatTimestamp(statusEvent.end, 1)}`)
-		const invulns = this.invuln.getInvulns(target, statusEvent.start, statusEvent.end, 'invulnerable')
 
-		// TODO: Export an interface for invulnerable events from Invulnerability.js
-		invulns.forEach((invuln: TODO) => {
+		const actorId = this.parser.getFflogsEventTargetActorId(statusEvent)
+		const actorKind = this.parser.pull.actors
+			.find(actor => actor.id === actorId)
+			?.kind ?? 'unknown'
+
+		const invulns = this.invulnerability.getWindows({
+			start: this.parser.fflogsToEpoch(statusEvent.start),
+			end: this.parser.fflogsToEpoch(statusEvent.end),
+			actorFilter: actor => actor.kind === actorKind,
+			types: ['invulnerable'],
+		}).map(window => ({
+			...window,
+			start: this.parser.epochToFflogs(window.start),
+			end: this.parser.epochToFflogs(window.end),
+		}))
+
+		invulns.forEach(invuln => {
 			this.debug(`Target was detected as invulnerable during duration of status.  Invulnerable from ${this.parser.formatTimestamp(invuln.start, 1)} to ${this.parser.formatTimestamp(invuln.end, 1)}`)
 			if (invuln.start < statusEvent.start && invuln.end >= statusEvent.start) {
 				this.debug('Invuln clipped the start of the range - changing beginning of event')
@@ -162,12 +176,18 @@ export class EntityStatuses extends Module {
 		if (statusEvent.end == null) {
 			this.debug('Unfinished status event detected.  Applying ability duration after last refresh event.')
 			const statusInfo = this.data.getStatus(statusEvent.ability.guid)
+			let end: number
 			if (statusInfo?.duration) {
-				statusEvent.end = Math.min(this.parser.fight.end_time, statusEvent.lastRefreshed + statusInfo.duration * 1000)
-				this.debug(`Updating status event for status ${statusInfo.name}.  Adding ${statusInfo.duration} seconds, effective end time set to ${this.parser.formatTimestamp(statusEvent.end, 1)}`)
+				end = Math.min(this.parser.currentTimestamp, statusEvent.lastRefreshed + statusInfo.duration * 1000)
+				this.debug(`Updating status event for status ${statusInfo.name}.  Adding ${statusInfo.duration} seconds, effective end time set to ${this.parser.formatTimestamp(end, 1)}`)
 			} else {
 				this.debug(`No matching status duration information found for status ${statusEvent.ability.guid}, setting to end of fight so invuln detection can clip the end to when the target went untargetable`)
-				statusEvent.end = this.parser.pull.duration + this.parser.eventTimeOffset
+				end = this.parser.currentTimestamp
+			}
+
+			statusEvent = {
+				...statusEvent,
+				end,
 			}
 		}
 

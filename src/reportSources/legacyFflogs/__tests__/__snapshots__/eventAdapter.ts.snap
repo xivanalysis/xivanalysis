@@ -6,7 +6,7 @@ Array [
     "source": "11:2",
     "status": 1001917,
     "target": "4",
-    "timestamp": 7537469,
+    "timestamp": 1600007537469,
     "type": "statusApply",
   },
 ]
@@ -15,11 +15,20 @@ Array [
 exports[`Event adapter individual events adapts applybuffstack 1`] = `
 Array [
   Object {
+    "action": 7518,
     "data": 2,
     "source": "7",
     "status": 1001238,
     "target": "7",
-    "timestamp": 7410286,
+    "timestamp": 1599999999997,
+    "type": "action",
+  },
+  Object {
+    "data": 2,
+    "source": "7",
+    "status": 1001238,
+    "target": "7",
+    "timestamp": 1600007410286,
     "type": "statusApply",
   },
 ]
@@ -28,10 +37,18 @@ Array [
 exports[`Event adapter individual events adapts applydebuff 1`] = `
 Array [
   Object {
+    "action": 2258,
     "source": "6",
     "status": 1000638,
     "target": "11",
-    "timestamp": 190177,
+    "timestamp": 1599999999997,
+    "type": "action",
+  },
+  Object {
+    "source": "6",
+    "status": 1000638,
+    "target": "11",
+    "timestamp": 1600000190177,
     "type": "statusApply",
   },
 ]
@@ -44,7 +61,7 @@ Array [
     "source": "8",
     "status": 1000861,
     "target": "2",
-    "timestamp": 7425207,
+    "timestamp": 1600007425207,
     "type": "statusApply",
   },
 ]
@@ -56,7 +73,7 @@ Array [
     "action": 16541,
     "source": "9",
     "target": "2",
-    "timestamp": 7446878,
+    "timestamp": 1600007446878,
     "type": "prepare",
   },
 ]
@@ -66,19 +83,25 @@ exports[`Event adapter individual events adapts calculateddamage 1`] = `
 Array [
   Object {
     "action": 3554,
-    "sequence": 16647,
     "source": "1",
     "target": "3",
-    "timestamp": 0,
+    "timestamp": 1599999999999,
     "type": "action",
   },
   Object {
-    "action": 3554,
+    "amount": 0,
+    "cause": Object {
+      "action": 3554,
+      "type": "action",
+    },
+    "overkill": 0,
     "sequence": 16647,
     "source": "1",
+    "sourceModifier": 2,
     "target": "3",
-    "timestamp": 8011183,
-    "type": "snapshot",
+    "targetModifier": 0,
+    "timestamp": 1600008011183,
+    "type": "damage",
   },
   Object {
     "actor": "3",
@@ -95,7 +118,7 @@ Array [
       "x": 9999,
       "y": 10081,
     },
-    "timestamp": 8011183,
+    "timestamp": 1600008011183,
     "type": "actorUpdate",
   },
   Object {
@@ -113,7 +136,7 @@ Array [
       "x": 9260,
       "y": 10463,
     },
-    "timestamp": 8011183,
+    "timestamp": 1600008011183,
     "type": "actorUpdate",
   },
 ]
@@ -122,20 +145,18 @@ Array [
 exports[`Event adapter individual events adapts calculatedheal 1`] = `
 Array [
   Object {
-    "action": 3571,
+    "amount": 36194,
+    "cause": Object {
+      "action": 3571,
+      "type": "action",
+    },
+    "overheal": 0,
     "sequence": 4570,
     "source": "3",
+    "sourceModifier": 2,
     "target": "3",
-    "timestamp": 0,
-    "type": "action",
-  },
-  Object {
-    "action": 3571,
-    "sequence": 4570,
-    "source": "3",
-    "target": "3",
-    "timestamp": 7412071,
-    "type": "snapshot",
+    "timestamp": 1600007412071,
+    "type": "heal",
   },
   Object {
     "actor": "3",
@@ -152,7 +173,7 @@ Array [
       "x": 9887,
       "y": 10642,
     },
-    "timestamp": 7412071,
+    "timestamp": 1600007412071,
     "type": "actorUpdate",
   },
 ]
@@ -164,7 +185,7 @@ Array [
     "action": 16139,
     "source": "4",
     "target": "2",
-    "timestamp": 7537601,
+    "timestamp": 1600007537601,
     "type": "action",
   },
 ]
@@ -186,7 +207,7 @@ Array [
     "sourceModifier": 0,
     "target": "3",
     "targetModifier": 0,
-    "timestamp": 8012166,
+    "timestamp": 1600008012166,
     "type": "damage",
   },
   Object {
@@ -204,7 +225,38 @@ Array [
       "x": 9999,
       "y": 10081,
     },
-    "timestamp": 8012166,
+    "timestamp": 1600008012166,
+    "type": "actorUpdate",
+  },
+]
+`;
+
+exports[`Event adapter individual events adapts damage 2`] = `
+Array [
+  Object {
+    "action": 16555,
+    "sequence": 18762,
+    "source": "2",
+    "target": "3",
+    "timestamp": 1600107453814,
+    "type": "execute",
+  },
+  Object {
+    "actor": "3",
+    "hp": Object {
+      "current": 73328677,
+      "maximum": 73350280,
+    },
+    "mp": Object {
+      "current": 10000,
+      "maximum": 10000,
+    },
+    "position": Object {
+      "bearing": -472,
+      "x": 10000,
+      "y": 9100,
+    },
+    "timestamp": 1600107453814,
     "type": "actorUpdate",
   },
 ]
@@ -220,7 +272,7 @@ Array [
     "mp": Object {
       "current": 0,
     },
-    "timestamp": 502017,
+    "timestamp": 1600000502017,
     "type": "actorUpdate",
   },
 ]
@@ -245,7 +297,7 @@ Array [
     "source": "11",
     "sourceModifier": 0,
     "target": "8",
-    "timestamp": 8586700,
+    "timestamp": 1600008586700,
     "type": "heal",
   },
   Object {
@@ -263,7 +315,38 @@ Array [
       "x": 10601,
       "y": 9971,
     },
-    "timestamp": 8586700,
+    "timestamp": 1600008586700,
+    "type": "actorUpdate",
+  },
+]
+`;
+
+exports[`Event adapter individual events adapts heal 2`] = `
+Array [
+  Object {
+    "action": 16139,
+    "sequence": 18799,
+    "source": "1",
+    "target": "1",
+    "timestamp": 1600107457863,
+    "type": "execute",
+  },
+  Object {
+    "actor": "1",
+    "hp": Object {
+      "current": 213022,
+      "maximum": 213022,
+    },
+    "mp": Object {
+      "current": 10000,
+      "maximum": 10000,
+    },
+    "position": Object {
+      "bearing": -783,
+      "x": 9996,
+      "y": 9999,
+    },
+    "timestamp": 1600107457863,
     "type": "actorUpdate",
   },
 ]
@@ -277,7 +360,7 @@ Array [
     "source": "3",
     "status": 1001873,
     "target": "3",
-    "timestamp": 7416935,
+    "timestamp": 1600007416935,
     "type": "statusApply",
   },
 ]
@@ -289,7 +372,7 @@ Array [
     "source": "8",
     "status": 1000861,
     "target": "2",
-    "timestamp": 7423728,
+    "timestamp": 1600007423728,
     "type": "statusApply",
   },
 ]
@@ -298,10 +381,25 @@ Array [
 exports[`Event adapter individual events adapts removebuff 1`] = `
 Array [
   Object {
+    "action": 3539,
     "source": "1",
     "status": 1001902,
     "target": "1",
-    "timestamp": 7735462,
+    "timestamp": 1599999999997,
+    "type": "action",
+  },
+  Object {
+    "source": "1",
+    "status": 1001902,
+    "target": "1",
+    "timestamp": 1599999999998,
+    "type": "statusApply",
+  },
+  Object {
+    "source": "1",
+    "status": 1001902,
+    "target": "1",
+    "timestamp": 1600007735462,
     "type": "statusRemove",
   },
 ]
@@ -310,11 +408,20 @@ Array [
 exports[`Event adapter individual events adapts removebuffstack 1`] = `
 Array [
   Object {
+    "action": 7518,
     "data": 1,
     "source": "7",
     "status": 1001238,
     "target": "7",
-    "timestamp": 7410865,
+    "timestamp": 1599999999997,
+    "type": "action",
+  },
+  Object {
+    "data": 1,
+    "source": "7",
+    "status": 1001238,
+    "target": "7",
+    "timestamp": 1600007410865,
     "type": "statusApply",
   },
 ]
@@ -323,10 +430,25 @@ Array [
 exports[`Event adapter individual events adapts removedebuff 1`] = `
 Array [
   Object {
+    "action": 7436,
     "source": "9",
     "status": 1001221,
     "target": "2",
-    "timestamp": 7427662,
+    "timestamp": 1599999999997,
+    "type": "action",
+  },
+  Object {
+    "source": "9",
+    "status": 1001221,
+    "target": "2",
+    "timestamp": 1599999999998,
+    "type": "statusApply",
+  },
+  Object {
+    "source": "9",
+    "status": 1001221,
+    "target": "2",
+    "timestamp": 1600007427662,
     "type": "statusRemove",
   },
 ]
@@ -339,7 +461,7 @@ Array [
     "source": "4917",
     "status": 1001964,
     "target": "4883:14",
-    "timestamp": 431742760,
+    "timestamp": 1600431742760,
     "type": "statusApply",
   },
 ]
@@ -350,12 +472,14 @@ Array [
   Object {
     "actor": "20:7",
     "targetable": true,
-    "timestamp": 7906700,
+    "timestamp": 1600007906700,
     "type": "actorUpdate",
   },
 ]
 `;
 
 exports[`Event adapter individual events adapts unknown 1`] = `Array []`;
+
+exports[`Event adapter individual events adapts wipecalled 1`] = `Array []`;
 
 exports[`Event adapter individual events adapts zonechange 1`] = `Array []`;

@@ -69,7 +69,7 @@ export default class EarthlyStar extends Module {
 			drift = event.timestamp - this.parser.fight.start_time
 		} else {
 			// Take holding as from the time it comes off cooldown
-			drift = event.timestamp - this.lastUse - (this.data.actions.EARTHLY_STAR.cooldown * 1000)
+			drift = event.timestamp - this.lastUse - this.data.actions.EARTHLY_STAR.cooldown
 		}
 
 		// Keep track of total drift time not using star
@@ -108,15 +108,15 @@ export default class EarthlyStar extends Module {
 		}
 
 		// If they stopped using Star at any point in the fight, this'll calculate the drift "accurately"
-		if (this.parser.fight.end_time - this.lastUse > (this.data.actions.EARTHLY_STAR.cooldown * 1000)) {
-			this.totalHeld += (this.parser.fight.end_time - (this.lastUse + (this.data.actions.EARTHLY_STAR.cooldown * 1000)))
+		if (this.parser.fight.end_time - this.lastUse > this.data.actions.EARTHLY_STAR.cooldown) {
+			this.totalHeld += (this.parser.fight.end_time - (this.lastUse + this.data.actions.EARTHLY_STAR.cooldown))
 		}
 
 		/*
 			SUGGESTION: Missed uses
 		*/
 		const holdDuration = this.uses === 0 ? this.parser.currentDuration : this.totalHeld
-		const usesMissed = Math.floor(holdDuration / (this.data.actions.EARTHLY_STAR.cooldown * 1000))
+		const usesMissed = Math.floor(holdDuration / this.data.actions.EARTHLY_STAR.cooldown)
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.EARTHLY_STAR.icon,
 			content: <Trans id="ast.earthly-star.suggestion.missed-use.content">

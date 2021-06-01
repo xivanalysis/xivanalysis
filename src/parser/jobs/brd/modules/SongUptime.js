@@ -104,7 +104,11 @@ export default class SongUptime extends Module {
 
 			// If there's songless time between two songs, subtracts the amount of time the target was invulnerable during that interval
 			if (theoreticalSonglessTime > 0) {
-				const effectiveSonglessTime = Math.max(theoreticalSonglessTime - this.downtime.getDowntime(songless.start, songless.end), 0)
+				const downtime = this.downtime.getDowntime(
+					this.parser.fflogsToEpoch(songless.start),
+					this.parser.fflogsToEpoch(songless.end),
+				)
+				const effectiveSonglessTime = Math.max(theoreticalSonglessTime - downtime, 0)
 				totalSonglessTime += effectiveSonglessTime
 			}
 		}
@@ -118,7 +122,10 @@ export default class SongUptime extends Module {
 		let tolerance = SETUP_TIME
 
 		this._songCastEvents.forEach(c => {
-			if (this.downtime.isDowntime(c.timestamp + SONG_DURATION)) {
+			if (this.downtime.isDowntime(this.parser.fflogsToEpoch(Math.min(
+				c.timestamp + SONG_DURATION,
+				this.parser.eventTimeOffset + this.parser.pull.duration,
+			)))) {
 				tolerance += SETUP_TIME
 			}
 		})

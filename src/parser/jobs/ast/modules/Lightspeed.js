@@ -10,7 +10,7 @@ import React, {Fragment} from 'react'
 import {Accordion} from 'semantic-ui-react'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 
-const LIGHTSPEED_CAST_TIME_MOD = -2.5
+const LIGHTSPEED_CAST_TIME_MOD = -2500
 
 export default class LIGHTSPEED extends Module {
 	static handle = 'lightspeed'
@@ -86,7 +86,7 @@ export default class LIGHTSPEED extends Module {
 			casts: [],
 		}
 
-		this._ctIndex = this.castTime.set('all', LIGHTSPEED_CAST_TIME_MOD)
+		this._ctIndex = this.castTime.setFflogs('all', LIGHTSPEED_CAST_TIME_MOD)
 	}
 
 	_stopAndSave(endTime = this.parser.currentTimestamp) {
@@ -100,7 +100,7 @@ export default class LIGHTSPEED extends Module {
 
 		this._history.push(this._lightspeed)
 
-		this.castTime.reset(this._ctIndex)
+		this.castTime.resetFflogs(this._ctIndex)
 
 	}
 
