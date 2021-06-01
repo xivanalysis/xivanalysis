@@ -684,7 +684,8 @@ describe('Event adapter', () => {
 		expect(result[4] as Events['interrupt']).toEqual({
 			type: 'interrupt',
 			timestamp: timestamp + interruptionTimestamp,
-			actor: '1',
+			source: '1',
+			target: '1',
 			action: interruptedAbility.guid,
 		})
 	})
