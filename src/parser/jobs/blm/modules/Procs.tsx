@@ -12,6 +12,7 @@ import React from 'react'
 
 declare module 'event' {
 	interface FieldsTargeted {
+		/** BLM specific logic. Do not use. Please remove ASAP. */
 		overrideAction?: number
 	}
 }
