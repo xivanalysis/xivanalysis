@@ -72,9 +72,9 @@ registerEventFormatter('prepare', ({event, pull}) => <>
 </>)
 
 registerEventFormatter('interrupt', ({event, pull}) => <>
-	{getActorName(event.actor, pull.actors)}'s
+	{getActorName(event.source, pull.actors)}
+	&nbsp;interrupts {getActorName(event.target, pull.actors)}'s
 	&nbsp;<ActionLink id={event.action}/>
-	&nbsp;is interrupted
 </>)
 
 registerEventFormatter('action', ({event, pull}) => <>

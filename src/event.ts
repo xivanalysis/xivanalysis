@@ -69,9 +69,7 @@ interface EventPrepare extends FieldsTargeted {
 }
 
 /** An actor's cast has been interrupted in some manner. */
-interface EventInterrupt extends FieldsBase {
-	/** ID of the actor whose cast was interrupted. */
-	actor: Actor['id']
+interface EventInterrupt extends FieldsTargeted {
 	/** XIV Action ID */
 	action: number
 }

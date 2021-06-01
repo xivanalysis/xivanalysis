@@ -48,7 +48,10 @@ export class InterruptsAdapterStep extends AdapterStep {
 		return {
 			type: 'interrupt',
 			timestamp: event.timestamp,
-			actor: event.source,
+			// TODO: Work out if it's possible to find the true source of the interruption.
+			//       Using source for now, as it's a reasonably safe bet for players.
+			source: event.source,
+			target: event.source,
 			action,
 		}
 	}
