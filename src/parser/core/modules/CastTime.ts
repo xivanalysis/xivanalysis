@@ -171,26 +171,26 @@ export default class CastTime extends Analyser {
 			return defaultCastTime
 		}
 
+		let flatReduction=0
+		let flatIncrease=0
+		let percentageAdjustment=1
+
+		matchingTimes.forEach(ct => {
+			if (ct.type === 'time') {
 		// Find the largest flat cast time reduction value
-		const flatReduction = matchingTimes.reduce(
-			(reduction, ct) => {
-				if (ct.type === 'percentage' || ct.adjustment > 0) { return reduction }
-				if (ct.adjustment < reduction) { return ct.adjustment }
-				return reduction
-			}, 0)
+				if (ct.adjustment < 0 && ct.adjustment < flatReduction) {
+					flatReduction = ct.adjustment
+				}
 		// Find the largest flat cast time increase value
-		const flatIncrease = matchingTimes.reduce(
-			(increase, ct) => {
-				if (ct.type === 'percentage' || ct.adjustment < 0) { return increase }
-				if (ct.adjustment > increase) { return ct.adjustment }
-				return increase
-			}, 0)
+				if (ct.adjustment > 0 && ct.adjustment > flatIncrease)  {
+					flatIncrease = ct.adjustment
+				}
+			} else if (ct.type === 'percentage') {
 		// Get the total percentage adjustment
-		const percentageAdjustment = matchingTimes.reduce(
-			(adjustment, ct) => {
-				if (ct.type === 'time') { return adjustment }
-				return adjustment * ct.adjustment
-			}, 1)
+				percentageAdjustment *= ct.adjustment
+			}
+		})
+
 		// Calculate the final cast time based on the flat and percentage reductions we've found
 		return Math.max(defaultCastTime + flatIncrease + flatReduction, 0) * percentageAdjustment // Yes, plus flatReduction because it's already a negative value
 
