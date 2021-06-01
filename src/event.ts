@@ -68,6 +68,14 @@ interface EventPrepare extends FieldsTargeted {
 	action: number
 }
 
+/** An actor's cast has been interrupted in some manner. */
+interface EventInterrupt extends FieldsBase {
+	/** ID of the actor whose cast was interrupted. */
+	actor: Actor['id']
+	/** XIV Action ID */
+	action: number
+}
+
 /** An actor has executed an action. */
 interface EventAction extends FieldsTargeted {
 	/** XIV Action ID */
@@ -185,6 +193,7 @@ interface EventActorUpdate extends FieldsBase {
 // eslint-disable-next-line import/export
 export interface EventTypeRepository {
 	prepare: EventPrepare
+	interrupt: EventInterrupt
 	action: EventAction
 	statusApply: EventStatusApply
 	statusRemove: EventStatusRemove
