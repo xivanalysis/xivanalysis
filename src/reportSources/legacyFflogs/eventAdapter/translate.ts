@@ -1,10 +1,11 @@
 import * as Sentry from '@sentry/browser'
+import {Patch, PatchNumber} from 'data/PATCHES'
 import {STATUS_ID_OFFSET} from 'data/STATUSES'
 import {Event, Events, Cause, SourceModifier, TargetModifier} from 'event'
 import {ActorResources, BuffEvent, BuffStackEvent, CastEvent, DamageEvent, DeathEvent, FflogsEvent, HealEvent, HitType, TargetabilityUpdateEvent} from 'fflogs'
 import {Actor} from 'report'
 import {resolveActorId} from '../base'
-import {AdapterStep} from './base'
+import {AdapterOptions, AdapterStep} from './base'
 
 /*
 NOTES:
@@ -27,9 +28,55 @@ const targetHitType: Partial<Record<HitType, TargetModifier>> = {
 	[HitType.IMMUNE]: TargetModifier.INVULNERABLE,
 }
 
+/* eslint-disable @typescript-eslint/no-magic-numbers */
+/** Mapping from FFLogs actions that are effect-only and don't map to a specific calculateddamage or calculatedheal event */
+const EFFECT_ONLY_ACTIONS = new Set([
+	1302, // Regeneration
+	500000, // Combined DoTs
+	500001, // Combined HoTs
+])
+
+/** Mapping from failed actions that are effect-only and don't map to a specific calculateddamage or calculatedheal event */
+const FAILED_HITS = new Set([
+	HitType.MISS,
+	HitType.DODGE,
+	HitType.IMMUNE,
+	HitType.RESIST,
+])
+/* eslint-enable @typescript-eslint/no-magic-numbers */
+
+// Calculated damage/heal events were not added to FF Logs until during 5.05 ish.
+// To ensure the xiva event model remains sane, we patch up events to match them together.
+const CALCULATED_DAMAGE_UPDATE: PatchNumber = '5.08'
+
 /** Translate an FFLogs APIv1 event to the xiva representation, if any exists. */
 export class TranslateAdapterStep extends AdapterStep {
 	private unhandledTypes = new Set<string>()
+
+	private falseSequence = 0
+	private adaptEffectEvent: (event: DamageEvent | HealEvent) => Event[]
+	private adaptDamageEvent: (event: DamageEvent) => Event[]
+	private adaptHealEvent: (event: HealEvent) => Event[]
+
+	constructor(opts: AdapterOptions) {
+		super(opts)
+
+		// TODO: Remove this logic in 6.0.
+		const patch = new Patch(this.report.edition, this.report.timestamp/1000)
+		const beforeCalculateDamageUpdate = patch.before(CALCULATED_DAMAGE_UPDATE)
+		this.adaptEffectEvent = beforeCalculateDamageUpdate
+			? this.adaptPreCalculatedEffectEvent
+			: this.adaptPostCalculatedEffectEvent
+
+		// While the above should be enough, we noop the calculated* events just in
+		// case they slip through, to preserve event stream sanity.
+		this.adaptDamageEvent = beforeCalculateDamageUpdate
+			? this.adaptNothing
+			: this.adaptPostCalculatedDamageEvent
+		this.adaptHealEvent = beforeCalculateDamageUpdate
+			? this.adaptNothing
+			: this.adaptPostCalculatedHealEvent
+	}
 
 	adapt(baseEvent: FflogsEvent, _adaptedEvents: Event[]): Event[] {
 		switch (baseEvent.type) {
@@ -38,14 +85,13 @@ export class TranslateAdapterStep extends AdapterStep {
 			return [this.adaptCastEvent(baseEvent)]
 
 		case 'calculateddamage':
+			return this.adaptDamageEvent(baseEvent)
 		case 'calculatedheal':
-			return this.adaptSnapshotEvent(baseEvent)
+			return this.adaptHealEvent(baseEvent)
 
 		case 'damage':
-			return this.adaptDamageEvent(baseEvent)
-
 		case 'heal':
-			return this.adaptHealEvent(baseEvent)
+			return this.adaptEffectEvent(baseEvent)
 
 		case 'applybuff':
 		case 'applydebuff':
@@ -115,6 +161,8 @@ export class TranslateAdapterStep extends AdapterStep {
 		return []
 	}
 
+	private adaptNothing(_event: FflogsEvent): Event[] { return [] }
+
 	private adaptCastEvent(event: CastEvent): Events['prepare' | 'action'] {
 		return {
 			...this.adaptTargetedFields(event),
@@ -123,16 +171,53 @@ export class TranslateAdapterStep extends AdapterStep {
 		}
 	}
 
-	private adaptSnapshotEvent(event: DamageEvent | HealEvent): Array<Events['snapshot' | 'actorUpdate']> {
+	private adaptPreCalculatedEffectEvent(event: DamageEvent | HealEvent): Event[] {
+		// Adapt the event into the primary effect event
+		let adaptedEvents: Event[] | undefined
+		if (event.type === 'damage') { adaptedEvents = this.adaptPostCalculatedDamageEvent(event) }
+		if (event.type === 'heal') { adaptedEvents = this.adaptPostCalculatedHealEvent(event) }
+		if (adaptedEvents == null) {
+			throw new Error(`Unexpected event type "${event.type}" when adapting old effect event.`)
+		}
+
+		const primaryEventIndex = adaptedEvents
+			.findIndex(adaptedEvent => adaptedEvent.type === 'damage' || adaptedEvent.type === 'heal')
+
+		// We don't get explicit execution, fabricate an execute to preserve event stream semantics
+		const sequence = this.falseSequence++
+		(adaptedEvents[primaryEventIndex] as Events['damage' | 'heal']).sequence = sequence
+		adaptedEvents.splice(primaryEventIndex+1, 0, {
+			...this.adaptTargetedFields(event),
+			type: 'execute',
+			action: event.ability.guid,
+			sequence,
+		})
+
+		return adaptedEvents
+	}
+
+	private adaptPostCalculatedEffectEvent(event: DamageEvent | HealEvent): Array<Events['execute' | 'damage' | 'heal' | 'actorUpdate']> {
 		// Calc events should all have a packet ID for sequence purposes. Let sentry catch outliers.
 		const sequence = event.packetID
 		if (sequence == null) {
-			throw new Error('Calculated damage event encountered with no packet ID.')
+			// Damage over time or Heal over time effects are sent as damage/heal events without a sequence ID -- there is no execute confirmation for over time effects, just the actual damage or heal event
+			// Similarly, certain failed hits will generate an "unpaired" event
+			const cause = resolveCause(event.ability.guid)
+			if (
+				cause.type === 'status'
+				|| EFFECT_ONLY_ACTIONS.has(event.ability.guid)
+				|| FAILED_HITS.has(event.hitType)
+			) {
+				if (event.type === 'damage') { return this.adaptPostCalculatedDamageEvent(event) }
+				if (event.type === 'heal') { return this.adaptPostCalculatedHealEvent(event) }
+			}
+			throw new Error('FFLogs Effect event encountered with no packet ID, did not match to over time status effect (DoT/HoT)')
 		}
 
-		const newEvent: Events['snapshot'] = {
-			...this.adaptTargetedFields(event),
-			type: 'snapshot',
+		const targetedFields = this.adaptTargetedFields(event)
+		const newEvent: Events['execute'] = {
+			...targetedFields,
+			type: 'execute',
 			action: event.ability.guid,
 			sequence,
 		}
@@ -140,7 +225,7 @@ export class TranslateAdapterStep extends AdapterStep {
 		return [newEvent, ...this.buildActorUpdateResourceEvents(event)]
 	}
 
-	private adaptDamageEvent(event: DamageEvent): Array<Events['damage' | 'actorUpdate']> {
+	private adaptPostCalculatedDamageEvent(event: DamageEvent): Array<Events['damage' | 'actorUpdate']> {
 		// Calculate source modifier
 		let sourceModifier = sourceHitType[event.hitType] ?? SourceModifier.NORMAL
 		if (event.multistrike) {
@@ -166,7 +251,7 @@ export class TranslateAdapterStep extends AdapterStep {
 		return [newEvent, ...this.buildActorUpdateResourceEvents(event)]
 	}
 
-	private adaptHealEvent(event: HealEvent): Array<Events['heal' | 'actorUpdate']> {
+	private adaptPostCalculatedHealEvent(event: HealEvent): Array<Events['heal' | 'actorUpdate']> {
 		const overheal = event.overheal ?? 0
 		const newEvent: Events['heal'] = {
 			...this.adaptTargetedFields(event),

@@ -2,7 +2,6 @@ import {MessageDescriptor} from '@lingui/core'
 import {Event} from 'event'
 import _ from 'lodash'
 import {Compute} from 'utilities'
-import {seededColor} from 'utilities/color'
 import {EventFilterPredicate, EventHook, EventHookCallback, TimestampHook, TimestampHookCallback} from './Dispatcher'
 import {Injectable} from './Injectable'
 import Module, {DISPLAY_MODE as DisplayMode} from './Module'
@@ -39,13 +38,6 @@ type FilterUnion<U, F> =
 /** Builds a predicate function that will filter to events that match the provided partial. */
 const buildFilterPredicate = <T extends Event>(filter: Partial<Event>) =>
 	_.matches(filter) as EventFilterPredicate<T>
-
-// Helper types for debug
-type LogParameters = Parameters<typeof console.log>
-type DebugCallback = (opts: {
-	/** Log the provided arguments. */
-	log: (...data: LogParameters) => void,
-}) => void
 
 export type AnalyserOptions = ConstructorParameters<typeof Analyser>
 
@@ -197,37 +189,6 @@ export class Analyser extends Injectable {
 	 */
 	protected removeTimestampHook(hook: TimestampHook): boolean {
 		return this.parser.dispatcher.removeTimestampHook(hook)
-	}
-
-	// -----
-	// #endregion
-	// #region Debug
-	// -----
-
-	/** Execute the provided callback if the analyser is in debug mode. */
-	protected debug(callback: DebugCallback): void
-	/** Log the provided arguments if the analyser is in debug mode. */
-	protected debug(...data: LogParameters): void
-	protected debug(...args: [DebugCallback] | LogParameters) {
-		const constructor = this.constructor as typeof Analyser
-		if (!constructor.debug || process.env.NODE_ENV === 'production') {
-			return
-		}
-
-		typeof args[0] === 'function'
-			? args[0]({log: this.debugLog})
-			: this.debugLog(...args)
-	}
-
-	private debugLog = (...data: LogParameters) => {
-		const constructor = this.constructor as typeof Module
-		// eslint-disable-next-line no-console
-		console.log(
-			`[%c${constructor.handle}%c]`,
-			`color: ${seededColor(constructor.handle)}`,
-			'color: inherit',
-			...data,
-		)
 	}
 
 	// -----

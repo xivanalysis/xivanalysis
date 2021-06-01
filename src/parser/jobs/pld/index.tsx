@@ -28,6 +28,13 @@ export default new Meta({
 
 	changelog: [
 		{
+			date: new Date('2021-04-19'),
+			Changes: () => <>
+				Add an Oath Gauge usage module.
+			</>,
+			contributors: [CONTRIBUTORS.POGRAMOS],
+		},
+		{
 			date: new Date('2021-01-31'),
 			Changes: () => <>
 				Add a Tincture of Strength module.
