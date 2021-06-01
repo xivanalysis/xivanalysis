@@ -67,7 +67,7 @@ export default class CastTime extends Analyser {
 		return this.set(actions, 'percentage', 0, this.parser.fflogsToEpoch(start), end ? this.parser.fflogsToEpoch(end) : undefined)
 	}
 	/**
-	 * Shorthand function for setting all casts to instant (ie. Swiftcast, Triplecast)
+	 * Shorthand function for setting casts to instant (ie. Swiftcast, Triplecast)
 	 * @param actions The actions this adjustment applies to. Either an array of IDs, or the string 'all'. Defaults to 'all'
 	 * @param start The beginning of the adjustment time range. Defaults to the current epoch timestamp
 	 * @param end The beginning of the adjustment time range. Defaults to the current epoch timestamp
@@ -177,16 +177,16 @@ export default class CastTime extends Analyser {
 
 		matchingTimes.forEach(ct => {
 			if (ct.type === 'time') {
-		// Find the largest flat cast time reduction value
+				// Find the largest flat cast time reduction value
 				if (ct.adjustment < 0 && ct.adjustment < flatReduction) {
 					flatReduction = ct.adjustment
 				}
-		// Find the largest flat cast time increase value
+				// Find the largest flat cast time increase value
 				if (ct.adjustment > 0 && ct.adjustment > flatIncrease)  {
 					flatIncrease = ct.adjustment
 				}
 			} else if (ct.type === 'percentage') {
-		// Get the total percentage adjustment
+				// Get the total percentage adjustment
 				percentageAdjustment *= ct.adjustment
 			}
 		})
