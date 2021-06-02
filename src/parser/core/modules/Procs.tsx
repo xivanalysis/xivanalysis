@@ -228,22 +228,20 @@ export abstract class Procs extends Analyser {
 	private row!: SimpleRow
 	private rows = new Map()
 
-	protected castingSpellId: number | null = null
-	protected lastCastingSpellId: number | null = null
+	protected castingSpellId?: number
+	protected lastCastingSpellId?: number
 
 	initialise() {
-		this.addEventHook(filter<Event>().type('prepare').source(this.parser.actor.id), this.onPrepare)
+		const playerFilter = filter<Event>().source(this.parser.actor.id)
+		this.addEventHook(playerFilter.type('prepare'), this.onPrepare)
+		this.addEventHook(playerFilter.type('interrupt'), this.onInterrupt)
 
 		const trackedProcActionsIds: number[] = this.trackedProcs.map(group => group.consumeActions).reduce((acc, cur) => acc.concat(cur)).map(action => action.id)
-		const trackedActionFilter = filter<Event>()
-			.source(this.parser.actor.id)
-			.action(oneOf(trackedProcActionsIds))
+		const trackedActionFilter = playerFilter.action(oneOf(trackedProcActionsIds))
 		this.addEventHook(trackedActionFilter.type('action'), this.onCast)
 
 		const trackedProcStatusIds: number[] = this.trackedProcs.map(group => group.procStatus.id)
-		const trackedStatusFilter = filter<Event>()
-			.target(this.parser.actor.id)
-			.status(oneOf(trackedProcStatusIds))
+		const trackedStatusFilter = playerFilter.status(oneOf(trackedProcStatusIds))
 		this.addEventHook(trackedStatusFilter.type('statusApply'), this.onProcGained)
 		this.addEventHook(trackedStatusFilter.type('statusRemove'), this.onProcRemoved)
 
@@ -267,6 +265,10 @@ export abstract class Procs extends Analyser {
 		this.castingSpellId = event.action
 	}
 
+	private onInterrupt(_event: Events['interrupt']): void {
+		this.castingSpellId = undefined
+	}
+
 	/**
 	 * May be overridden by subclasses. Called by onCast to allow jobs to add specific logic that determines whether a proc was consumed
 	 * @param _procGroup The procGroup to check for consumption
@@ -286,7 +288,7 @@ export abstract class Procs extends Analyser {
 	private onCast(event: Events['action']): void {
 		const procGroup = this.getTrackedGroupByAction(event.action)
 		this.lastCastingSpellId = this.castingSpellId
-		this.castingSpellId = null
+		this.castingSpellId = undefined
 
 		if (!procGroup) { return }
 		if (!this.currentWindows.has(procGroup)) { return }
