@@ -2,6 +2,7 @@ import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
 import NormalisedMessage from 'components/ui/NormalisedMessage'
+import styles from 'components/ui/Procs/ProcOverlay.module.css'
 import {getDataBy} from 'data'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
@@ -11,7 +12,6 @@ import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import React from 'react'
 import {Accordion, Table, Message} from 'semantic-ui-react'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
-import styles from './wrapper.module.css'
 
 // Can never be too careful :blobsweat:
 const STATUS_DURATION = {
@@ -79,7 +79,7 @@ export default class Thunder extends Module {
 		if (event.ability.guid === ACTIONS.THUNDER_III.id) {
 			this.thunder3Casts++
 		}
-		if (this.procs.checkProc(event, STATUSES.THUNDERCLOUD.id)) {
+		if (this.procs.checkFflogsEventWasProc(event)) {
 			this._lastThunderProc = true
 		}
 		this._lastThunderCast = event.ability.guid
