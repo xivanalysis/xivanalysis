@@ -115,9 +115,11 @@ export default class Pets extends Module {
 
 			// I mean this shouldn't happen but people are stupid.
 			// If there's a summon cast before any pet action, they didn't start with a pet.
-			if (action.id && Object.keys(SUMMON_ACTIONS).includes(action.id.toString())) {
-				break
-			}
+			if (
+				action.id &&
+				event.sourceID === this.parser.player.id &&
+				Object.keys(SUMMON_ACTIONS).includes(action.id.toString())
+			) { break }
 
 			const pet = petCache[event.sourceID]
 				|| this.parser.report.friendlyPets.find(pet => pet.id === event.sourceID)
@@ -319,7 +321,7 @@ export default class Pets extends Module {
 			tiers: NO_PET_SEVERITY,
 			value: noPetUptimePercent,
 			content: <Trans id="smn.pets.suggestions.no-pet.content">
-				Pets provide a <em>lot</em> of SMN's passive damage, and are essential for <StatusLink {...STATUSES.FURTHER_RUIN}/> procs and <ActionLink {...ACTIONS.ENKINDLE}/>. Make sure you have a pet summoned at all times, and keep them out of boss AoEs.
+				Pets provide a <em>lot</em> of SMN's passive damage, and are essential for <StatusLink {...STATUSES.FURTHER_RUIN}/> procs and <ActionLink {...ACTIONS.ENKINDLE}/>. Make sure you have a pet summoned at all times.
 			</Trans>,
 			why: <Trans id="smn.pets.suggestions.no-pet.why">
 				No pet summoned for {noPetUptimePercent}% of the fight (&lt;1% is recommended).
