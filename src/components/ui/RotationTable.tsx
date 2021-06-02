@@ -84,7 +84,7 @@ export interface RotationTableEntry {
 	/**
 	 * Rotation to display that occurs during this entry
 	 */
-	rotation: Array<{ability?: Ability, cause?: Cause, action?: number}>
+	rotation: Array<{ability?: Ability, cause?: Cause, action?: number, isProc?: boolean}>
 }
 
 interface RotationTableProps {

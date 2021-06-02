@@ -5,10 +5,11 @@ import ACTIONS, {ITEM_ID_OFFSET} from 'data/ACTIONS'
 import {Cause} from 'event'
 import {Ability} from 'fflogs'
 import React, {Component} from 'react'
+import overlayStyle from './Procs/ProcOverlay.module.css'
 import styles from './Rotation.module.css'
 
 interface RotationProps {
-	events: Array<{ability?: Ability, cause?: Cause, action?: number}>
+	events: Array<{ability?: Ability, cause?: Cause, action?: number, isProc?: boolean}>
 }
 
 export default class Rotation extends Component<RotationProps> {
@@ -43,6 +44,7 @@ export default class Rotation extends Component<RotationProps> {
 				const linkClassName = [
 					styles.link,
 					{[styles.ogcd]: !action.onGcd},
+					event.isProc ? overlayStyle.procOverlay : '',
 				]
 
 				const iconSize = action.onGcd ? styles.gcdSize : styles.ogcdSize
