@@ -5,6 +5,7 @@ import {Pull, Report} from 'report'
 import {AdapterOptions, AdapterStep} from './base'
 import {DeduplicateActorUpdateStep} from './deduplicateActorUpdates'
 import {DeduplicateStatusApplicationStep} from './deduplicateStatus'
+import {InterruptsAdapterStep} from './interrupts'
 import {OneHpLockAdapterStep} from './oneHpLock'
 import {PrepullActionAdapterStep} from './prepullAction'
 import {PrepullStatusAdapterStep} from './prepullStatus'
@@ -32,6 +33,7 @@ class EventAdapter {
 		this.adaptionSteps = [
 			new ReassignUnknownActorStep(opts),
 			new TranslateAdapterStep(opts),
+			new InterruptsAdapterStep(opts),
 			new DeduplicateStatusApplicationStep(opts),
 			new DeduplicateActorUpdateStep(opts),
 			new PrepullActionAdapterStep(opts),

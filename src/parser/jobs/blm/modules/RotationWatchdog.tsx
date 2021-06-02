@@ -16,6 +16,7 @@ import {Icon, Message} from 'semantic-ui-react'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 import {FIRE_SPELLS} from './Elements'
 import {BLM_GAUGE_EVENT, BLMGaugeEvent} from './Gauge'
+import Procs from './Procs'
 
 const DEBUG_SHOW_ALL_CYCLES = false && process.env.NODE_ENV !== 'production'
 
@@ -69,8 +70,12 @@ const CYCLE_ERRORS: {[key: string]: CycleErrorCode } = {
 	DIED: {priority: 101, message: <Trans id="blm.rotation-watchdog.error-messages.died"><ActionLink showName={false} {...ACTIONS.RAISE} /> Died</Trans>},
 }
 
+interface ProcableCastEvent extends CastEvent {
+	isProc?: boolean
+}
+
 class Cycle {
-	casts: CastEvent[] = []
+	casts: ProcableCastEvent[] = []
 	startTime: number
 	endTime?: number
 
@@ -143,7 +148,7 @@ class Cycle {
 	}
 
 	public get hardT3Count(): number {
-		return this.casts.filter(cast => cast.ability.overrideAction && cast.ability.overrideAction === ACTIONS.THUNDER_III_FALSE.id).length
+		return this.casts.filter(cast => cast.ability.guid === ACTIONS.THUNDER_III.id && !cast.isProc).length
 	}
 	public get extraT3s(): number {
 		if (this.firePhaseStartMP < MIN_MP_FOR_FULL_ROTATION) {
@@ -198,6 +203,7 @@ export default class RotationWatchdog extends Module {
 	@dependency private timeline!: Timeline
 	@dependency private unableToAct!: UnableToAct
 	@dependency private actors!: Actors
+	@dependency private procs!: Procs
 
 	private currentGaugeState: GaugeState = new GaugeState()
 	private currentRotation: Cycle = new Cycle(this.parser.fight.start_time, this.currentGaugeState)
@@ -271,7 +277,7 @@ export default class RotationWatchdog extends Module {
 		// Note that we've recorded our first damage event once we have one
 		if (this.firstEvent && action.onGcd) { this.firstEvent = false }
 
-		this.currentRotation.casts.push(event)
+		this.currentRotation.casts.push({...event, isProc: this.procs.checkFflogsEventWasProc(event)})
 
 		// If this is manafont, note that we used it so we don't have to cast.filter(...).length to find out
 		if (actionId === ACTIONS.MANAFONT.id) {
