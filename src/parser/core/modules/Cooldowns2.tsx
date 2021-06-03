@@ -68,6 +68,11 @@ export class Cooldowns extends Analyser {
 		)
 
 		this.addEventHook(
+			{type: 'interrupt', target: this.parser.actor.id},
+			this.onInterrupt
+		)
+
+		this.addEventHook(
 			{type: 'action', source: this.parser.actor.id},
 			this.onAction,
 		)
@@ -85,6 +90,26 @@ export class Cooldowns extends Analyser {
 		// TODO: How will this play alongside interrupts?
 		this.currentCast = event.action
 		this.consumeCharge(action)
+	}
+
+	private onInterrupt(event: Events['interrupt']) {
+		// If the interrupt doesn't match the current cast, something has gone very wrong
+		if (this.currentCast !== event.action) {
+			throw new Error('woopsiedaisy, shit just went fucky wucky')
+		}
+
+		// Clear out current cast state
+		this.currentCast = undefined
+
+		// Reset the cooldown for the interrupted cast's group
+		// NOTE: This assumes that interrupting casts refunds charges. Given that,
+		//       at current, there are no multi-charge or non-gcd interruptible
+		//       skills, this is a safe assumption. Re-evaluate if the above changes.
+		// TODO: This logic might make sense as a public "reset" helper.
+		const groups = this.actionMapping.toGroups.get(event.action) ?? []
+		for (const group of groups) {
+			this.endCooldownGroup(group)
+		}
 	}
 
 	private onAction(event: Events['action']) {
@@ -128,13 +153,15 @@ export class Cooldowns extends Analyser {
 			this.chargeStates.set(action.id, chargeState)
 		}
 
-		// If we're trying to consume a charge at 0 charges, something in the state is very wrong.
-		if (chargeState.current === 0) {
-			// TODO: Possibly worth just raising a broken log and nooping this function?
-			// TODO: Currently, this will break on parses with sub-2.5 GCDs that chain the same GCD twice in a row.
-			//       Should be fixed by GCD/CastTime calcs, but _may_ not be. Check.
-			// throw new Error('Attempting to consume charge with 0 available.')
-			return
+		// If we're trying to consume a charge at 0 charges, something in the state
+		// is very wrong. At EOD, the parse is the source of truth, so we're fudging
+		// the current charge state to respect it.
+		// TODO: Currently, this is primarily firing on consecutive casts of the same
+		//       GCD action with a sub-2.5 GCD. Most instances of this should be
+		//       resolved with spks calculations.
+		if (chargeState.current <= 0) {
+			this.debug(`Attempting to consume charge of ${action.name} (${action.id}) with no charges remaining, fudging.`)
+			chargeState.current = 1
 		}
 
 		// If the action was at maximum charges, this usage will trip it's cooldown
@@ -231,6 +258,8 @@ export class Cooldowns extends Analyser {
 		// On expiration of a CDG, all associated actions gain a charge.
 		// TODO: Consider perf of this on the GCD group - it's going to be looping
 		//       through every GCD in data only to noop most of them. Reverse the loop?
+		// TODO: This is inaccurate for actions with >1 CDG. We should only gain a
+		//       charge if _all_ CDGs for a given action are inactive.
 		const actions = this.actionMapping.fromGroup.get(group) ?? []
 		for (const action of actions) {
 			this.gainCharge(action)
