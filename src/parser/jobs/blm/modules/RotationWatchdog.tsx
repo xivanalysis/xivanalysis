@@ -3,6 +3,7 @@ import {Plural, Trans} from '@lingui/react'
 import {ActionLink} from 'components/ui/DbLink'
 import {RotationTable} from 'components/ui/RotationTable'
 import ACTIONS from 'data/ACTIONS'
+import {Events} from 'event'
 import {CastEvent} from 'fflogs'
 import Module, {dependency} from 'parser/core/Module'
 import {Actors} from 'parser/core/modules/Actors'
@@ -15,7 +16,8 @@ import React, {Fragment} from 'react'
 import {Icon, Message} from 'semantic-ui-react'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 import {FIRE_SPELLS} from './Elements'
-import Gauge, {EventBLMGauge, BLMGaugeState} from './Gauge'
+import Gauge, {BLMGaugeState} from './Gauge'
+import Procs from './Procs'
 
 const DEBUG_SHOW_ALL_CYCLES = false && process.env.NODE_ENV !== 'production'
 
@@ -67,9 +69,12 @@ const CYCLE_ERRORS: {[key: string]: CycleErrorCode } = {
 	DIED: {priority: 101, message: <Trans id="blm.rotation-watchdog.error-messages.died"><ActionLink showName={false} {...ACTIONS.RAISE} /> Died</Trans>},
 }
 
+interface ProcableCastEvent extends CastEvent {
+	isProc?: boolean
+}
+
 class Cycle {
-	// TS CastEvent Ability interface doesn't include the overrideAbility property that BLM Procs sets to denote T3P/F3P
-	casts: TODO[] = []
+	casts: ProcableCastEvent[] = []
 	startTime: number
 	endTime?: number
 
@@ -149,7 +154,7 @@ class Cycle {
 	}
 
 	public get hardT3Count(): number {
-		return this.casts.filter(cast => cast.ability.overrideAction && cast.ability.overrideAction.id === ACTIONS.THUNDER_III_FALSE.id).length
+		return this.casts.filter(cast => cast.ability.guid === ACTIONS.THUNDER_III.id && !cast.isProc).length
 	}
 	public get extraT3s(): number {
 		if (this.firePhaseStartMP < MIN_MP_FOR_FULL_ROTATION) {
@@ -198,6 +203,7 @@ export default class RotationWatchdog extends Module {
 	@dependency private actors!: Actors
 	@dependency private gauge!: Gauge
 	@dependency private data!: Data
+	@dependency private procs!: Procs
 
 	private currentGaugeState: BLMGaugeState = {
 		astralFire: 0,
@@ -222,7 +228,7 @@ export default class RotationWatchdog extends Module {
 	}
 
 	// Handle events coming from BLM's Gauge module
-	private onGaugeEvent(event: EventBLMGauge) {
+	private onGaugeEvent(event: Events['blmgauge']) {
 		const nextGaugeState = this.gauge.getGaugeState(event.timestamp)
 		if (!nextGaugeState) { return }
 
@@ -277,7 +283,7 @@ export default class RotationWatchdog extends Module {
 		// Note that we've recorded our first damage event once we have one
 		if (this.firstEvent && action.onGcd) { this.firstEvent = false }
 
-		this.currentRotation.casts.push(event)
+		this.currentRotation.casts.push({...event, isProc: this.procs.checkFflogsEventWasProc(event)})
 
 		if (actionId === this.data.actions.UMBRAL_SOUL.id && !this.invulnerability.isActive({types: ['invulnerable']})) {
 			this.uptimeSouls++
