@@ -166,11 +166,16 @@ export interface Position {
 	bearing: number
 }
 
+export enum SpeedAttributeProperty {
+	SKILL_SPEED,
+	SPELL_SPEED,
+}
+
 /** Actor attribute (stat value) */
 export interface Attribute {
-	name: 'SkillSpeed' | 'SpellSpeed'
+	name: SpeedAttributeProperty
 	value: number
-	isEstimated?: boolean
+	estimated?: boolean
 }
 
 /** An actors parameters have been updated. */

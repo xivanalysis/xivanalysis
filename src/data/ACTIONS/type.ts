@@ -1,4 +1,5 @@
 import {StatusRoot} from 'data/STATUSES/root'
+import {SpeedAttributeProperty} from 'event'
 import {Compute, ReplaceFrom} from 'utilities/typescript'
 
 interface ActionCombo {
@@ -23,7 +24,7 @@ export interface Action {
 	charges?: number
 	mpCost?: number
 	/** Indicate whether this action's recast is adjusted by skill speed or spell speed.  Should be set for any onGCD skill or gcd-like skill that has a reduced recast based on speed stats */
-	speedAttribute?: 'SkillSpeed' | 'SpellSpeed'
+	speedAttribute?: SpeedAttributeProperty
 	// TODO: Do I need this still?
 	// [key: string]: unknown
 }
