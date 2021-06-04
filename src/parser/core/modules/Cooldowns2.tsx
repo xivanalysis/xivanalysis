@@ -1,3 +1,4 @@
+import Color from 'color'
 import {Action} from 'data/ACTIONS'
 import {Events} from 'event'
 import React from 'react'
@@ -13,6 +14,14 @@ const GCD_COOLDOWN_GROUP = 58
 interface ChargeState {
 	current: number
 	maximum: number
+}
+
+enum CooldownEndReason {
+	EXPIRED,
+	INTERRUPTED,
+	// Fudges
+	PULL_ENDED,
+	OVERLAPPED,
 }
 
 interface CooldownState {
@@ -108,7 +117,7 @@ export class Cooldowns extends Analyser {
 		// TODO: This logic might make sense as a public "reset" helper.
 		const groups = this.actionMapping.toGroups.get(event.action) ?? []
 		for (const group of groups) {
-			this.endCooldownGroup(group)
+			this.endCooldownGroup(group, CooldownEndReason.INTERRUPTED)
 		}
 	}
 
@@ -131,7 +140,7 @@ export class Cooldowns extends Analyser {
 	private onComplete() {
 		// Clean up any cooldown groups that are still active
 		for (const group of this.cooldownStates.keys()) {
-			this.resolveCooldownGroup(group)
+			this.resolveCooldownGroup(group, CooldownEndReason.PULL_ENDED)
 		}
 	}
 
@@ -237,7 +246,7 @@ export class Cooldowns extends Analyser {
 		const cooldownState = this.cooldownStates.get(group)
 		if (cooldownState != null) {
 			this.debug(`Overlapping cooldown windows: Group ${group} expected end at ${this.parser.formatEpochTimestamp(cooldownState.end)}, got start at ${this.parser.formatEpochTimestamp(this.parser.currentEpochTimestamp)}.`)
-			this.endCooldownGroup(group)
+			this.endCooldownGroup(group, CooldownEndReason.OVERLAPPED)
 		}
 
 		// Build a new cooldown state and save it out
@@ -247,13 +256,13 @@ export class Cooldowns extends Analyser {
 			start,
 			end,
 			hook: this.addTimestampHook(end, () => {
-				this.endCooldownGroup(group)
+				this.endCooldownGroup(group, CooldownEndReason.EXPIRED)
 			}),
 		})
 	}
 
-	private endCooldownGroup(group: CooldownGroup) {
-		this.resolveCooldownGroup(group)
+	private endCooldownGroup(group: CooldownGroup, reason: CooldownEndReason) {
+		this.resolveCooldownGroup(group, reason)
 
 		// On expiration of a CDG, all associated actions gain a charge.
 		// TODO: Consider perf of this on the GCD group - it's going to be looping
@@ -266,7 +275,7 @@ export class Cooldowns extends Analyser {
 		}
 	}
 
-	private resolveCooldownGroup(group: CooldownGroup) {
+	private resolveCooldownGroup(group: CooldownGroup, reason: CooldownEndReason) {
 		// Grab the current cooldown state for the group - if there is none, something
 		// has gone pretty wrong.
 		const cooldownState = this.cooldownStates.get(group)
@@ -281,9 +290,12 @@ export class Cooldowns extends Analyser {
 		cooldownState.end = this.parser.currentEpochTimestamp
 
 		// TEMP
+		const color = reason === CooldownEndReason.INTERRUPTED
+			? Color('red')
+			: Color('green')
 		const row = this.tempGetTimelineRow(`group:${group}`)
 		row.addItem(new SimpleItem({
-			content: <div style={{width: '100%', height: '100%', background: '#ff000033', borderLeft: '1px solid red'}}/>,
+			content: <div style={{width: '100%', height: '100%', background: color.alpha(0.25).toString(), borderLeft: `1px solid ${color}`}}/>,
 			start: cooldownState.start - this.parser.pull.timestamp,
 			end: cooldownState.end - this.parser.pull.timestamp,
 		}))
