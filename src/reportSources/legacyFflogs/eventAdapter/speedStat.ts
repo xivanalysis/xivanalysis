@@ -21,24 +21,17 @@ interface SpeedmodWindow {
 	end?: number,
 }
 
-class GCD {
-	prepare: CastEvent | undefined
-	action: CastEvent | undefined
-
-	get isInterrupted(): boolean { return this.prepare != null && this.action == null }
-	get isInstant(): boolean { return this.action != null && this.prepare == null }
-
-	get start(): number {
-		if (this.prepare != null) { return this.prepare.timestamp }
-		if (this.action != null) { return this.action.timestamp } // Instant cast action - no prepare event
-		throw new Error('Unexpected GCD with no prepare or action event')
-	}
-
-	get actionId(): number {
-		if (this.prepare != null) { return this.prepare.ability.guid }
-		if (this.action != null) { return this.action.ability.guid }
-		throw new Error('Unexpected GCD with no prepare or action event')
-	}
+interface GCD {
+	prepare?: CastEvent
+	action?: CastEvent
+	start: number
+	actionId: number
+}
+function isInterrupted(gcd: GCD): boolean {
+	return gcd.prepare != null && gcd.action == null
+}
+function isInstant(gcd: GCD): boolean {
+	return gcd.action != null && gcd.prepare == null
 }
 
 export class SpeedStatsAdapterStep extends AdapterStep {
@@ -97,13 +90,17 @@ export class SpeedStatsAdapterStep extends AdapterStep {
 				return
 			}
 
-			const gcd = new GCD()
-			gcd.action = event
-			gcds.push(gcd)
+			gcds.push({
+				action: event,
+				start: event.timestamp,
+				actionId: event.ability.guid,
+			})
 		} else {
-			const gcd = new GCD()
-			gcd.prepare = event
-			gcds.push(gcd)
+			gcds.push({
+				prepare: event,
+				start: event.timestamp,
+				actionId: event.ability.guid,
+			})
 		}
 	}
 
@@ -158,7 +155,7 @@ export class SpeedStatsAdapterStep extends AdapterStep {
 		gcds.forEach((gcd, index) => {
 			const previous = gcds[index - 1]
 			// Skip the first iteration (no interval to compare), and skip any intervals where the user interrputed a cast since that didn't trigger a full gcd
-			if (previous == null || previous.isInterrupted) { return }
+			if (previous == null || isInterrupted(previous)) { return }
 
 			const previousAction = _.find(getActions(this.report), a => a.id === previous.actionId)
 			// Skip intervals where the leading skill's gcdRecast isn't modified by a speed stat
@@ -168,7 +165,7 @@ export class SpeedStatsAdapterStep extends AdapterStep {
 			let hasAnimationLock = false
 			let recast = previousAction.gcdRecast ?? previousAction.cooldown ?? BASE_GCD
 
-			if (!previous.isInstant) {
+			if (!isInstant(previous)) {
 				if (previousAction.castTime != null && previousAction.castTime >= BASE_GCD) {
 					hasAnimationLock = true
 					recast = previousAction.castTime
