@@ -23,9 +23,9 @@ interface LeyLinesWindows {
 }
 
 export default class Leylines extends Analyser {
-	static handle = 'leylines'
-	static title = t('blm.leylines.title')`Ley Lines`
-	static displayOrder = DISPLAY_ORDER.LEY_LINES
+	static override handle = 'leylines'
+	static override title = t('blm.leylines.title')`Ley Lines`
+	static override displayOrder = DISPLAY_ORDER.LEY_LINES
 
 	@dependency data!: Data
 	@dependency checklist!: Checklist
@@ -38,7 +38,7 @@ export default class Leylines extends Analyser {
 
 	private buffWindows: {[key: number]: LeyLinesWindows} = {}
 
-	initialise() {
+	override initialise() {
 		const leyLinesFilter = filter<Event>()
 			.source(this.parser.actor.id)
 			.status(oneOf(this.leyLinesStatuses))
@@ -152,7 +152,7 @@ export default class Leylines extends Analyser {
 		}))
 	}
 
-	output() {
+	override output() {
 		const fightEnd = this.parser.pull.timestamp + this.parser.pull.duration
 		return <Table collapsing unstackable compact="very">
 			<Table.Header>

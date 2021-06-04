@@ -54,7 +54,7 @@ const MAX_FEATHERS = 4
 
 const DNC_COLOR = Color(JOBS.DANCER.colour)
 export default class Gauge extends Analyser {
-	static handle = 'gauge'
+	static override handle = 'gauge'
 
 	@dependency private data!: Data
 	@dependency private suggestions!: Suggestions
@@ -117,7 +117,7 @@ export default class Gauge extends Analyser {
 
 	private pauseGeneration = false;
 
-	initialise() {
+	override initialise() {
 		const espritApplyFilter = filter<Event>()
 			.type('statusApply')
 			.source(this.parser.actor.id)

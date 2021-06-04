@@ -79,7 +79,7 @@ export class Death extends Analyser {
 		return actorInfo.duration + currentDeadTime
 	}
 
-	initialise() {
+	override initialise() {
 		// An actor hitting 0 HP is a sign of a death.
 		this.addEventHook({
 			type: 'actorUpdate',

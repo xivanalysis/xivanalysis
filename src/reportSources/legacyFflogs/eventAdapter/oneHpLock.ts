@@ -15,7 +15,7 @@ import {AdapterStep} from './base'
  * adapter pipeline.
  */
 export class OneHpLockAdapterStep extends AdapterStep {
-	postprocess(adaptedEvents: Event[]) {
+	override postprocess(adaptedEvents: Event[]) {
 		const zeroHp = new Map<Actor['id'], Events['actorUpdate']>()
 
 		for (const event of adaptedEvents) {

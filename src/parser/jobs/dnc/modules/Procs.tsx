@@ -4,7 +4,7 @@ import {Procs as CoreProcs} from 'parser/core/modules/Procs'
 import React from 'react'
 
 export default class Procs extends CoreProcs {
-	trackedProcs = [
+	override trackedProcs = [
 		{
 			procStatus: this.data.statuses.FLOURISHING_FAN_DANCE,
 			consumeActions: [this.data.actions.FAN_DANCE_III],
@@ -27,16 +27,16 @@ export default class Procs extends CoreProcs {
 		},
 	]
 
-	showDroppedProcSuggestion = true
-	droppedProcIcon = this.data.actions.FOUNTAINFALL.icon
-	droppedProcContent =
+	override showDroppedProcSuggestion = true
+	override droppedProcIcon = this.data.actions.FOUNTAINFALL.icon
+	override droppedProcContent =
 		<Trans id="dnc.procs.suggestions.drops.content">
 			Avoid dropping your procs unless absolutely necessary. If you have to drop one to keep your Esprit from overcapping, <ActionLink {...this.data.actions.RISING_WINDMILL} /> or <ActionLink {...this.data.actions.REVERSE_CASCADE} /> will lose the least DPS overall.
 		</Trans>
 
-	showOverwroteProcSuggestion = true
-	overwroteProcIcon = this.data.actions.REVERSE_CASCADE.icon
-	overwroteProcContent =
+	override showOverwroteProcSuggestion = true
+	override overwroteProcIcon = this.data.actions.REVERSE_CASCADE.icon
+	override overwroteProcContent =
 		<Trans id="dnc.procs.suggestions.overwrite.content">
 			Avoid overwriting your procs. Your proc actions are stronger than your normal combo, so overwriting them is a significant DPS loss.
 		</Trans>
