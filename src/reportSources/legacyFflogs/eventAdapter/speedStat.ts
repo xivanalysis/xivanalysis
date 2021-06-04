@@ -149,8 +149,10 @@ export class SpeedStatsAdapterStep extends AdapterStep {
 	}
 
 	private estimateActorSpeedStat(gcds: GCD[], actorId: string): Events['actorUpdate'] {
-		const skillSpeedIntervalGroups = new Map<number, number>()
-		const spellSpeedIntervalGroups = new Map<number, number>()
+		const intervalGroups = {
+			[Attribute.SKILL_SPEED]: new Map<number, number>(),
+			[Attribute.SPELL_SPEED]: new Map<number, number>(),
+		}
 
 		gcds.forEach((gcd, index) => {
 			const previous = gcds[index - 1]
@@ -159,7 +161,7 @@ export class SpeedStatsAdapterStep extends AdapterStep {
 
 			const previousAction = _.find(getActions(this.report), a => a.id === previous.actionId)
 			// Skip intervals where the leading skill's gcdRecast isn't modified by a speed stat
-			if (previousAction == null || previousAction.speedAttribute == null) { return }
+			if (previousAction == null || !(previousAction.speedAttribute === Attribute.SKILL_SPEED || previousAction.speedAttribute === Attribute.SPELL_SPEED)) { return }
 
 			const rawInterval = gcd.start - previous.start
 			let hasAnimationLock = false
@@ -179,30 +181,25 @@ export class SpeedStatsAdapterStep extends AdapterStep {
 			// The below debug is useful if you need to trace individual interval calculations, but will make your console really laggy if you enable it without any filter
 			//this.debug(`Actor ID: ${actorId} - Event at ${previous.start} - Raw Interval: ${rawIntervalSeconds}s - Caster Tax: ${isCasterTaxed} - Cast Time Scale: ${castTimeScale} - Speed Modifier: ${speedModifier} - Calculated Interval: ${intervalSeconds}s`)
 
-			if (previousAction.speedAttribute === Attribute.SKILL_SPEED) {
-				const count = skillSpeedIntervalGroups.get(interval) ?? 0
-				skillSpeedIntervalGroups.set(interval, count + 1)
-			} else if (previousAction.speedAttribute === Attribute.SPELL_SPEED) {
-				const count = spellSpeedIntervalGroups.get(interval) ?? 0
-				spellSpeedIntervalGroups.set(interval, count + 1)
-			}
+			const count = intervalGroups[previousAction.speedAttribute].get(interval) ?? 0
+			intervalGroups[previousAction.speedAttribute].set(interval, count + 1)
 		})
 
 		const attributes: AttributeValue[] = []
-		if (skillSpeedIntervalGroups.size > 0) {
-			this.debug(`Actor ID: ${actorId} - Skill Speed Event Intervals ${JSON.stringify(Array.from(skillSpeedIntervalGroups.entries()).sort((a, b) => b[1] - a[1]))}`)
+		if (intervalGroups[Attribute.SKILL_SPEED].size > 0) {
+			this.debug(`Actor ID: ${actorId} - Skill Speed Event Intervals ${JSON.stringify(Array.from(intervalGroups[Attribute.SKILL_SPEED].entries()).sort((a, b) => b[1] - a[1]))}`)
 			attributes.push({
 				attribute: Attribute.SKILL_SPEED,
-				value: getSpeedStat(this.getMostFrequentInterval(skillSpeedIntervalGroups)),
+				value: getSpeedStat(this.getMostFrequentInterval(intervalGroups[Attribute.SKILL_SPEED])),
 				estimated: true,
 			})
 		}
 
-		if (spellSpeedIntervalGroups.size > 0) {
-			this.debug(`Actor ID: ${actorId} - Spell Speed Event Intervals ${JSON.stringify(Array.from(spellSpeedIntervalGroups.entries()).sort((a, b) => b[1] - a[1]))}`)
+		if (intervalGroups[Attribute.SPELL_SPEED].size > 0) {
+			this.debug(`Actor ID: ${actorId} - Spell Speed Event Intervals ${JSON.stringify(Array.from(intervalGroups[Attribute.SPELL_SPEED].entries()).sort((a, b) => b[1] - a[1]))}`)
 			attributes.push({
 				attribute: Attribute.SPELL_SPEED,
-				value: getSpeedStat(this.getMostFrequentInterval(spellSpeedIntervalGroups)),
+				value: getSpeedStat(this.getMostFrequentInterval(intervalGroups[Attribute.SPELL_SPEED])),
 				estimated: true,
 			})
 		}
