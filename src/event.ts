@@ -166,14 +166,14 @@ export interface Position {
 	bearing: number
 }
 
-export enum SpeedAttributeProperty {
+export enum Attribute {
 	SKILL_SPEED,
 	SPELL_SPEED,
 }
 
 /** Actor attribute (stat value) */
-export interface Attribute {
-	name: SpeedAttributeProperty
+export interface AttributeValue {
+	attribute: Attribute
 	value: number
 	estimated?: boolean
 }
@@ -191,7 +191,7 @@ interface EventActorUpdate extends FieldsBase {
 	/** Current targetability. */
 	targetable?: boolean
 	/** Current attributes (stats) */
-	attributes?: Attribute[]
+	attributes?: AttributeValue[]
 }
 
 // Merge core events into the repository.

@@ -2,7 +2,7 @@ import {getActions} from 'data/ACTIONS'
 import {getDataBy} from 'data/getDataBy'
 import {JobKey} from 'data/JOBS'
 import {getStatuses} from 'data/STATUSES'
-import {Attribute, Event, Events, SpeedAttributeProperty} from 'event'
+import {Attribute, Event, Events, AttributeValue} from 'event'
 import {BuffEvent, CastEvent, FflogsEvent} from 'fflogs'
 import _ from 'lodash'
 import {Actor, Team} from 'report'
@@ -179,20 +179,20 @@ export class SpeedStatsAdapterStep extends AdapterStep {
 			// The below debug is useful if you need to trace individual interval calculations, but will make your console really laggy if you enable it without any filter
 			//this.debug(`Actor ID: ${actorId} - Event at ${previous.start} - Raw Interval: ${rawIntervalSeconds}s - Caster Tax: ${isCasterTaxed} - Cast Time Scale: ${castTimeScale} - Speed Modifier: ${speedModifier} - Calculated Interval: ${intervalSeconds}s`)
 
-			if (previousAction.speedAttribute === SpeedAttributeProperty.SKILL_SPEED) {
+			if (previousAction.speedAttribute === Attribute.SKILL_SPEED) {
 				const count = skillSpeedIntervalGroups.get(interval) ?? 0
 				skillSpeedIntervalGroups.set(interval, count + 1)
-			} else if (previousAction.speedAttribute === SpeedAttributeProperty.SPELL_SPEED) {
+			} else if (previousAction.speedAttribute === Attribute.SPELL_SPEED) {
 				const count = spellSpeedIntervalGroups.get(interval) ?? 0
 				spellSpeedIntervalGroups.set(interval, count + 1)
 			}
 		})
 
-		const attributes: Attribute[] = []
+		const attributes: AttributeValue[] = []
 		if (skillSpeedIntervalGroups.size > 0) {
 			this.debug(`Actor ID: ${actorId} - Skill Speed Event Intervals ${JSON.stringify(Array.from(skillSpeedIntervalGroups.entries()).sort((a, b) => b[1] - a[1]))}`)
 			attributes.push({
-				name: SpeedAttributeProperty.SKILL_SPEED,
+				attribute: Attribute.SKILL_SPEED,
 				value: getSpeedStat(this.getMostFrequentInterval(skillSpeedIntervalGroups)),
 				estimated: true,
 			})
@@ -201,7 +201,7 @@ export class SpeedStatsAdapterStep extends AdapterStep {
 		if (spellSpeedIntervalGroups.size > 0) {
 			this.debug(`Actor ID: ${actorId} - Spell Speed Event Intervals ${JSON.stringify(Array.from(spellSpeedIntervalGroups.entries()).sort((a, b) => b[1] - a[1]))}`)
 			attributes.push({
-				name: SpeedAttributeProperty.SPELL_SPEED,
+				attribute: Attribute.SPELL_SPEED,
 				value: getSpeedStat(this.getMostFrequentInterval(spellSpeedIntervalGroups)),
 				estimated: true,
 			})
