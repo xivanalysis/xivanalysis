@@ -232,21 +232,34 @@ export class Cooldowns extends Analyser {
 		//       by the relevant speed attribute value.
 
 		const groups = this.actionMapping.toGroups.get(action.id) ?? []
+
+		// Check if any of the groups triggered by this action are already on cooldown
+		// - this is technically impossible, but Square Enix™️, so we fudge it by ending
+		// the overlapping groups with a warning.
+		// TODO: This is firing frequently due to lack of adjustment of speed-affected
+		//       (re)cast times. Re-evaluate logic when that is accounted for.
+		const overlappingGroups = groups.filter(x => this.cooldownStates.has(x))
+		if (overlappingGroups.length > 0) {
+			this.debug(`Use of ${action.name} at ${this.parser.formatEpochTimestamp(this.parser.currentEpochTimestamp)} overlaps currently active groups: ${overlappingGroups.join(', ')}.`)
+			for (const group of overlappingGroups) {
+				this.endCooldownGroup(group, CooldownEndReason.OVERLAPPED)
+			}
+		}
+
+		// Start all cooldowns for the action
+		// TODO: This is starting all groups with the same cooldown - this is incorrect
+		//       in cases such as the GCD on multi-CDG actions, where the GCD CDG
+		//       will be triggered for the full duration, causing a guaranteed overlap
+		//       with the next GCD.
 		for (const group of groups) {
 			this.startCooldownGroup(group, cooldown)
 		}
 	}
 
 	private startCooldownGroup(group: CooldownGroup, duration: number) {
-		// If there is an existing cooldown state for the action, something has gone
-		// wrong (cooldowns on a group do not overlap).
-		// TODO: This is currently fudging with an endCooldownGroup. Once GCD and
-		//       cast time are integrated with this module, this fudging should be
-		//       re-examined for sanity.
 		const cooldownState = this.cooldownStates.get(group)
 		if (cooldownState != null) {
-			this.debug(`Overlapping cooldown windows: Group ${group} expected end at ${this.parser.formatEpochTimestamp(cooldownState.end)}, got start at ${this.parser.formatEpochTimestamp(this.parser.currentEpochTimestamp)}.`)
-			this.endCooldownGroup(group, CooldownEndReason.OVERLAPPED)
+			throw new Error(`Trying to start cooldown for group ${group} which has an active state.`)
 		}
 
 		// Build a new cooldown state and save it out
@@ -267,10 +280,13 @@ export class Cooldowns extends Analyser {
 		// On expiration of a CDG, all associated actions gain a charge.
 		// TODO: Consider perf of this on the GCD group - it's going to be looping
 		//       through every GCD in data only to noop most of them. Reverse the loop?
-		// TODO: This is inaccurate for actions with >1 CDG. We should only gain a
-		//       charge if _all_ CDGs for a given action are inactive.
 		const actions = this.actionMapping.fromGroup.get(group) ?? []
 		for (const action of actions) {
+			// If _all_ groups related to the action are now off CD, we can regenerate a charge.
+			const actionGroups = this.actionMapping.toGroups.get(action.id) ?? []
+			const offCooldown = actionGroups.every(group => !this.cooldownStates.has(group))
+			if (!offCooldown) { continue }
+
 			this.gainCharge(action)
 		}
 	}
