@@ -149,6 +149,7 @@ export class SpeedStatsAdapterStep extends AdapterStep {
 	}
 
 	private estimateActorSpeedStat(gcds: GCD[], actorId: string): Events['actorUpdate'] {
+		const speedAttributeKeys = [Attribute.SKILL_SPEED, Attribute.SPELL_SPEED] as const
 		const intervalGroups = {
 			[Attribute.SKILL_SPEED]: new Map<number, number>(),
 			[Attribute.SPELL_SPEED]: new Map<number, number>(),
@@ -186,22 +187,16 @@ export class SpeedStatsAdapterStep extends AdapterStep {
 		})
 
 		const attributes: AttributeValue[] = []
-		if (intervalGroups[Attribute.SKILL_SPEED].size > 0) {
-			this.debug(`Actor ID: ${actorId} - Skill Speed Event Intervals ${JSON.stringify(Array.from(intervalGroups[Attribute.SKILL_SPEED].entries()).sort((a, b) => b[1] - a[1]))}`)
-			attributes.push({
-				attribute: Attribute.SKILL_SPEED,
-				value: getSpeedStat(this.getMostFrequentInterval(intervalGroups[Attribute.SKILL_SPEED])),
-				estimated: true,
-			})
-		}
-
-		if (intervalGroups[Attribute.SPELL_SPEED].size > 0) {
-			this.debug(`Actor ID: ${actorId} - Spell Speed Event Intervals ${JSON.stringify(Array.from(intervalGroups[Attribute.SPELL_SPEED].entries()).sort((a, b) => b[1] - a[1]))}`)
-			attributes.push({
-				attribute: Attribute.SPELL_SPEED,
-				value: getSpeedStat(this.getMostFrequentInterval(intervalGroups[Attribute.SPELL_SPEED])),
-				estimated: true,
-			})
+		for (const attribute of speedAttributeKeys) {
+			const group = intervalGroups[attribute]
+			if (group.size > 0) {
+				this.debug(`Actor ID: ${actorId} - ${attribute.toString} Event Intervals ${JSON.stringify(Array.from(group.entries()).sort((a, b) => b[1] - a[1]))}`)
+				attributes.push({
+					attribute: attribute,
+					value: getSpeedStat(this.getMostFrequentInterval(group)),
+					estimated: true,
+				})
+			}
 		}
 
 		return {
