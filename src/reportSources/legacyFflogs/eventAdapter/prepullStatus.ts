@@ -1,6 +1,6 @@
 import {getDataArrayBy} from 'data'
-import {getActions, getStatuses} from 'data/layer'
-import {StatusKey} from 'data/STATUSES'
+import {getActions} from 'data/ACTIONS'
+import {StatusKey, getStatuses} from 'data/STATUSES'
 import {Event, Events} from 'event'
 import _ from 'lodash'
 import {Actor} from 'report'
