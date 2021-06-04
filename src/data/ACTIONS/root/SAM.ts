@@ -1,3 +1,4 @@
+import {Attribute} from 'event'
 import {ensureActions} from '../type'
 
 // Samurai Actions
@@ -17,7 +18,7 @@ export const SAM = ensureActions({
 		name: 'Hakazae',
 		icon: 'https://xivapi.com/i/003000/003151.png',
 		onGcd: true,
-		speedAttribute: 'SkillSpeed',
+		speedAttribute: Attribute.SKILL_SPEED,
 		potency:  200,
 		combo: {
 			start: true,
@@ -29,7 +30,7 @@ export const SAM = ensureActions({
 		name: 'Jinpu',
 		icon: 'https://xivapi.com/i/003000/003152.png',
 		onGcd: true,
-		speedAttribute: 'SkillSpeed',
+		speedAttribute: Attribute.SKILL_SPEED,
 		potency: 100,
 		combo: {
 			from: 7477,
@@ -43,7 +44,7 @@ export const SAM = ensureActions({
 		name: 'Enpi',
 		icon: 'https://xivapi.com/i/003000/003155.png',
 		onGcd: true,
-		speedAttribute: 'SkillSpeed',
+		speedAttribute: Attribute.SKILL_SPEED,
 		breaksCombo: true,
 	},
 
@@ -52,7 +53,7 @@ export const SAM = ensureActions({
 		name: 'Shifu',
 		icon: 'https://xivapi.com/i/003000/003156.png',
 		onGcd: true,
-		speedAttribute: 'SkillSpeed',
+		speedAttribute: Attribute.SKILL_SPEED,
 		potency: 100,
 		combo: {
 			from: 7477,
@@ -66,7 +67,7 @@ export const SAM = ensureActions({
 		name: 'Fuga',
 		icon: 'https://xivapi.com/i/003000/003157.png',
 		onGcd: true,
-		speedAttribute: 'SkillSpeed',
+		speedAttribute: Attribute.SKILL_SPEED,
 		combo: {
 			start: true,
 		},
@@ -77,7 +78,7 @@ export const SAM = ensureActions({
 		name: 'Iaijutsu',
 		icon: 'https://xivapi.com/i/003000/003159.png',
 		onGcd: true,
-		speedAttribute: 'SkillSpeed',
+		speedAttribute: Attribute.SKILL_SPEED,
 		castTime: 1300,
 	},
 
@@ -86,7 +87,7 @@ export const SAM = ensureActions({
 		name: 'Higanbana',
 		icon: 'https://xivapi.com/i/003000/003160.png',
 		onGcd: true,
-		speedAttribute: 'SkillSpeed',
+		speedAttribute: Attribute.SKILL_SPEED,
 		castTime: 1300,
 		statusesApplied: ['HIGANBANA'],
 	},
@@ -96,7 +97,7 @@ export const SAM = ensureActions({
 		name: 'Gekko',
 		icon: 'https://xivapi.com/i/003000/003158.png',
 		onGcd: true,
-		speedAttribute: 'SkillSpeed',
+		speedAttribute: Attribute.SKILL_SPEED,
 		potency: 100,
 		combo: {
 			from: 7478,
@@ -110,7 +111,7 @@ export const SAM = ensureActions({
 		name: 'Mangetsu',
 		icon: 'https://xivapi.com/i/003000/003163.png',
 		onGcd: true,
-		speedAttribute: 'SkillSpeed',
+		speedAttribute: Attribute.SKILL_SPEED,
 		potency: 100, // diminishing returns?
 		combo: {
 			from: 7483,
@@ -124,7 +125,7 @@ export const SAM = ensureActions({
 		name: 'Tenka Goken',
 		icon: 'https://xivapi.com/i/003000/003161.png',
 		onGcd: true,
-		speedAttribute: 'SkillSpeed',
+		speedAttribute: Attribute.SKILL_SPEED,
 		castTime: 1300,
 	},
 
@@ -133,7 +134,7 @@ export const SAM = ensureActions({
 		name: 'Kasha',
 		icon: 'https://xivapi.com/i/003000/003164.png',
 		onGcd: true,
-		speedAttribute: 'SkillSpeed',
+		speedAttribute: Attribute.SKILL_SPEED,
 		potency: 100,
 		combo: {
 			from: 7479,
@@ -147,7 +148,7 @@ export const SAM = ensureActions({
 		name: 'Oka',
 		icon: 'https://xivapi.com/i/003000/003165.png',
 		onGcd: true,
-		speedAttribute: 'SkillSpeed',
+		speedAttribute: Attribute.SKILL_SPEED,
 		potency: 100, // diminishing returns?
 		combo: {
 			from: 7483,
@@ -161,7 +162,7 @@ export const SAM = ensureActions({
 		name: 'Midare Setsugekka',
 		icon: 'https://xivapi.com/i/003000/003162.png',
 		onGcd: true,
-		speedAttribute: 'SkillSpeed',
+		speedAttribute: Attribute.SKILL_SPEED,
 		castTime: 1300,
 	},
 
@@ -170,7 +171,7 @@ export const SAM = ensureActions({
 		name: 'Yukikaze',
 		icon: 'https://xivapi.com/i/003000/003166.png',
 		onGcd: true,
-		speedAttribute: 'SkillSpeed',
+		speedAttribute: Attribute.SKILL_SPEED,
 		potency: 100,
 		combo: {
 			from: 7477,
@@ -235,7 +236,7 @@ export const SAM = ensureActions({
 		name: 'Meditate',
 		icon: 'https://xivapi.com/i/003000/003172.png',
 		onGcd: true,
-		speedAttribute: 'SkillSpeed',
+		speedAttribute: Attribute.SKILL_SPEED,
 		cooldown: 60000,
 		gcdRecast: 2500,
 		statusesApplied: ['MEDITATE', 'MEDITATION'],
@@ -298,7 +299,7 @@ export const SAM = ensureActions({
 		name: 'Tsubame Gaeshi',
 		icon: 'https://xivapi.com/i/003000/003180.png',
 		onGcd: true,
-		speedAttribute: 'SkillSpeed',
+		speedAttribute: Attribute.SKILL_SPEED,
 		cooldown: 60000,
 	},
 
@@ -307,7 +308,7 @@ export const SAM = ensureActions({
 		name: 'Kaeshi: Higanbana',
 		icon: 'https://xivapi.com/i/003000/003181.png',
 		onGcd: true,
-		speedAttribute: 'SkillSpeed',
+		speedAttribute: Attribute.SKILL_SPEED,
 		cooldown: 60000,
 		gcdRecast: 2500,
 		cooldownGroup: SAM_COOLDOWN_GROUP.TSUBAME,
@@ -319,7 +320,7 @@ export const SAM = ensureActions({
 		name: 'Kaeshi: Goken',
 		icon: 'https://xivapi.com/i/003000/003182.png',
 		onGcd: true,
-		speedAttribute: 'SkillSpeed',
+		speedAttribute: Attribute.SKILL_SPEED,
 		gcdRecast: 2500,
 		cooldown: 60000,
 		cooldownGroup: SAM_COOLDOWN_GROUP.TSUBAME,
@@ -330,7 +331,7 @@ export const SAM = ensureActions({
 		name: 'Kaeshi: Setsugekka',
 		icon: 'https://xivapi.com/i/003000/003183.png',
 		onGcd: true,
-		speedAttribute: 'SkillSpeed',
+		speedAttribute: Attribute.SKILL_SPEED,
 		gcdRecast: 2500,
 		cooldown: 60000,
 		cooldownGroup: SAM_COOLDOWN_GROUP.TSUBAME,

@@ -1,3 +1,4 @@
+import {Attribute} from 'event'
 import {ensureActions} from '../type'
 
 // Split between MRD and WAR
@@ -11,7 +12,7 @@ export const MRD = ensureActions({
 		icon: 'https://xivapi.com/i/000000/000260.png',
 		potency: 200,
 		onGcd: true,
-		speedAttribute: 'SkillSpeed',
+		speedAttribute: Attribute.SKILL_SPEED,
 		combo: {
 			start: true,
 		},
@@ -22,7 +23,7 @@ export const MRD = ensureActions({
 		name: 'Overpower',
 		icon: 'https://xivapi.com/i/000000/000254.png',
 		onGcd: true,
-		speedAttribute: 'SkillSpeed',
+		speedAttribute: Attribute.SKILL_SPEED,
 		potency: 130,
 		combo: {
 			start: true,
@@ -34,7 +35,7 @@ export const MRD = ensureActions({
 		name: 'Tomahawk',
 		icon: 'https://xivapi.com/i/000000/000261.png',
 		onGcd: true,
-		speedAttribute: 'SkillSpeed',
+		speedAttribute: Attribute.SKILL_SPEED,
 		potency: 140,
 		breaksCombo: true,
 	},
@@ -44,7 +45,7 @@ export const MRD = ensureActions({
 		name: 'Maim',
 		icon: 'https://xivapi.com/i/000000/000255.png',
 		onGcd: true,
-		speedAttribute: 'SkillSpeed',
+		speedAttribute: Attribute.SKILL_SPEED,
 		potency: 100,
 		combo: {
 			from: 31,
@@ -57,7 +58,7 @@ export const MRD = ensureActions({
 		name: 'Storm\'s Path',
 		icon: 'https://xivapi.com/i/000000/000258.png',
 		onGcd: true,
-		speedAttribute: 'SkillSpeed',
+		speedAttribute: Attribute.SKILL_SPEED,
 		potency: 100,
 		combo: {
 			from: 37,
@@ -71,7 +72,7 @@ export const MRD = ensureActions({
 		name: 'Storm\'s Eye',
 		icon: 'https://xivapi.com/i/000000/000264.png',
 		onGcd: true,
-		speedAttribute: 'SkillSpeed',
+		speedAttribute: Attribute.SKILL_SPEED,
 		potency: 100,
 		combo: {
 			from: 37,

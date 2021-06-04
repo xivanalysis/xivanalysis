@@ -1,3 +1,4 @@
+import {Attribute} from 'event'
 import {ensureActions} from '../type'
 
 export const DRG = ensureActions({
@@ -9,7 +10,7 @@ export const DRG = ensureActions({
 		name: 'Doom Spike',
 		icon: 'https://xivapi.com/i/000000/000306.png',
 		onGcd: true,
-		speedAttribute: 'SkillSpeed',
+		speedAttribute: Attribute.SKILL_SPEED,
 		potency: 170,
 		combo: {
 			start: true,
@@ -21,7 +22,7 @@ export const DRG = ensureActions({
 		name: 'Fang and Claw',
 		icon: 'https://xivapi.com/i/002000/002582.png',
 		onGcd: true,
-		speedAttribute: 'SkillSpeed',
+		speedAttribute: Attribute.SKILL_SPEED,
 		potency: 360,
 	},
 
@@ -30,7 +31,7 @@ export const DRG = ensureActions({
 		name: 'Wheeling Thrust',
 		icon: 'https://xivapi.com/i/002000/002584.png',
 		onGcd: true,
-		speedAttribute: 'SkillSpeed',
+		speedAttribute: Attribute.SKILL_SPEED,
 		potency: 360,
 	},
 
@@ -39,7 +40,7 @@ export const DRG = ensureActions({
 		name: 'Raiden Thrust',
 		icon: 'https://xivapi.com/i/002000/002592.png',
 		onGcd: true,
-		speedAttribute: 'SkillSpeed',
+		speedAttribute: Attribute.SKILL_SPEED,
 		potency: 330,
 		combo: {
 			start: true,
@@ -51,7 +52,7 @@ export const DRG = ensureActions({
 		name: 'Sonic Thrust',
 		icon: 'https://xivapi.com/i/002000/002586.png',
 		onGcd: true,
-		speedAttribute: 'SkillSpeed',
+		speedAttribute: Attribute.SKILL_SPEED,
 		potency: 100,
 		combo: {
 			from: 86,
@@ -64,7 +65,7 @@ export const DRG = ensureActions({
 		name: 'Coerthan Torment',
 		icon: 'https://xivapi.com/i/002000/002590.png',
 		onGcd: true,
-		speedAttribute: 'SkillSpeed',
+		speedAttribute: Attribute.SKILL_SPEED,
 		potency: 100,
 		combo: {
 			from: 7397,

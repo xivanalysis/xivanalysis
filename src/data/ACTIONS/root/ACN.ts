@@ -1,3 +1,4 @@
+import {Attribute} from 'event'
 import PETS from '../../PETS'
 import {ensureActions} from '../type'
 import {SMN_COOLDOWN_GROUP} from './SMN'
@@ -12,7 +13,7 @@ export const ACN = ensureActions({
 		name: 'Ruin',
 		icon: 'https://xivapi.com/i/000000/000501.png',
 		onGcd: true,
-		speedAttribute: 'SpellSpeed',
+		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 2500,
 	},
 
@@ -21,7 +22,7 @@ export const ACN = ensureActions({
 		name: 'Bio',
 		icon: 'https://xivapi.com/i/000000/000503.png',
 		onGcd: true,
-		speedAttribute: 'SpellSpeed',
+		speedAttribute: Attribute.SPELL_SPEED,
 	},
 
 	SUMMON: {
@@ -52,7 +53,7 @@ export const ACN = ensureActions({
 		name: 'Miasma',
 		icon: 'https://xivapi.com/i/000000/000505.png',
 		onGcd: true,
-		speedAttribute: 'SpellSpeed',
+		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 2500,
 	},
 
@@ -69,7 +70,7 @@ export const ACN = ensureActions({
 		name: 'Ruin II',
 		icon: 'https://xivapi.com/i/000000/000502.png',
 		onGcd: true,
-		speedAttribute: 'SpellSpeed',
+		speedAttribute: Attribute.SPELL_SPEED,
 	},
 
 	RESURRECTION: {
@@ -77,7 +78,7 @@ export const ACN = ensureActions({
 		name: 'Resurrection',
 		icon: 'https://xivapi.com/i/000000/000511.png',
 		onGcd: true,
-		speedAttribute: 'SpellSpeed',
+		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 8000,
 	},
 
@@ -93,7 +94,7 @@ export const ACN = ensureActions({
 		name: 'Bio II',
 		icon: 'https://xivapi.com/i/000000/000504.png',
 		onGcd: true,
-		speedAttribute: 'SpellSpeed',
+		speedAttribute: Attribute.SPELL_SPEED,
 	},
 
 	PHYSICK: {
@@ -101,7 +102,7 @@ export const ACN = ensureActions({
 		name: 'Physick',
 		icon: 'https://xivapi.com/i/000000/000518.png',
 		onGcd: true,
-		speedAttribute: 'SpellSpeed',
+		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 2000,
 	},
 

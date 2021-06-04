@@ -1,3 +1,4 @@
+import {Attribute} from 'event'
 import {ensureActions} from '../type'
 
 export const GNB = ensureActions({
@@ -9,7 +10,7 @@ export const GNB = ensureActions({
 		name: 'Keen Edge',
 		icon: 'https://xivapi.com/i/003000/003401.png',
 		onGcd: true,
-		speedAttribute: 'SkillSpeed',
+		speedAttribute: Attribute.SKILL_SPEED,
 		potency: 200,
 		combo: {
 			start: true,
@@ -20,7 +21,7 @@ export const GNB = ensureActions({
 		name: 'Brutal Shell',
 		icon: 'https://xivapi.com/i/003000/003403.png',
 		onGcd: true,
-		speedAttribute: 'SkillSpeed',
+		speedAttribute: Attribute.SKILL_SPEED,
 		potency: 100,
 		combo: {
 			from: 16137, // Keen Edge
@@ -33,7 +34,7 @@ export const GNB = ensureActions({
 		name: 'Solid Barrel',
 		icon: 'https://xivapi.com/i/003000/003409.png',
 		onGcd: true,
-		speedAttribute: 'SkillSpeed',
+		speedAttribute: Attribute.SKILL_SPEED,
 		potency: 100,
 		combo: {
 			from: 16139, // Brutal Shell
@@ -46,7 +47,7 @@ export const GNB = ensureActions({
 		name: 'Burst Strike',
 		icon: 'https://xivapi.com/i/003000/003426.png',
 		onGcd: true,
-		speedAttribute: 'SkillSpeed',
+		speedAttribute: Attribute.SKILL_SPEED,
 		breaksCombo: false,
 		potency: 500,
 	},
@@ -55,7 +56,7 @@ export const GNB = ensureActions({
 		name: 'Lightning Shot',
 		icon: 'https://xivapi.com/i/003000/003407.png',
 		onGcd: true,
-		speedAttribute: 'SkillSpeed',
+		speedAttribute: Attribute.SKILL_SPEED,
 		breaksCombo: true,
 		potency: 150,
 	},
@@ -64,7 +65,7 @@ export const GNB = ensureActions({
 		name: 'Gnashing Fang',
 		icon: 'https://xivapi.com/i/003000/003410.png',
 		onGcd: true,
-		speedAttribute: 'SkillSpeed',
+		speedAttribute: Attribute.SKILL_SPEED,
 		breaksCombo: false,
 		potency: 450,
 		cooldown: 30000,
@@ -75,7 +76,7 @@ export const GNB = ensureActions({
 		name: 'Savage Claw',
 		icon: 'https://xivapi.com/i/003000/003411.png',
 		onGcd: true,
-		speedAttribute: 'SkillSpeed',
+		speedAttribute: Attribute.SKILL_SPEED,
 		breaksCombo: false,
 		potency: 550,
 	},
@@ -84,7 +85,7 @@ export const GNB = ensureActions({
 		name: 'Wicked Talon',
 		icon: 'https://xivapi.com/i/003000/003414.png',
 		onGcd: true,
-		speedAttribute: 'SkillSpeed',
+		speedAttribute: Attribute.SKILL_SPEED,
 		breaksCombo: false,
 		potency: 650,
 	},
@@ -93,7 +94,7 @@ export const GNB = ensureActions({
 		name: 'Sonic Break',
 		icon: 'https://xivapi.com/i/003000/003417.png',
 		onGcd: true,
-		speedAttribute: 'SkillSpeed',
+		speedAttribute: Attribute.SKILL_SPEED,
 		breaksCombo: false,
 		potency: 300,
 		cooldown: 60000,
@@ -105,7 +106,7 @@ export const GNB = ensureActions({
 		name: 'Demon Slice',
 		icon: 'https://xivapi.com/i/003000/003405.png',
 		onGcd: true,
-		speedAttribute: 'SkillSpeed',
+		speedAttribute: Attribute.SKILL_SPEED,
 		potency: 150,
 		combo: {
 			start: true,
@@ -116,7 +117,7 @@ export const GNB = ensureActions({
 		name: 'Demon Slaughter',
 		icon: 'https://xivapi.com/i/003000/003413.png',
 		onGcd: true,
-		speedAttribute: 'SkillSpeed',
+		speedAttribute: Attribute.SKILL_SPEED,
 		potency: 100,
 		combo: {
 			from: 16141, // Demon Slice
@@ -129,7 +130,7 @@ export const GNB = ensureActions({
 		name: 'Fated Circle',
 		icon: 'https://xivapi.com/i/003000/003427.png',
 		onGcd: true,
-		speedAttribute: 'SkillSpeed',
+		speedAttribute: Attribute.SKILL_SPEED,
 		breaksCombo: false,
 		potency: 320,
 	},

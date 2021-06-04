@@ -1,3 +1,4 @@
+import {Attribute} from 'event'
 import {ensureActions} from '../type'
 
 export const DRK = ensureActions({
@@ -118,7 +119,7 @@ export const DRK = ensureActions({
 		name: 'Hard Slash',
 		icon: 'https://xivapi.com/i/003000/003051.png',
 		onGcd: true,
-		speedAttribute: 'SkillSpeed',
+		speedAttribute: Attribute.SKILL_SPEED,
 		combo: {
 			start: true,
 		},
@@ -128,7 +129,7 @@ export const DRK = ensureActions({
 		name: 'Syphon Strike',
 		icon: 'https://xivapi.com/i/003000/003054.png',
 		onGcd: true,
-		speedAttribute: 'SkillSpeed',
+		speedAttribute: Attribute.SKILL_SPEED,
 		combo: {
 			from: 3617,
 		},
@@ -138,7 +139,7 @@ export const DRK = ensureActions({
 		name: 'Souleater',
 		icon: 'https://xivapi.com/i/003000/003055.png',
 		onGcd: true,
-		speedAttribute: 'SkillSpeed',
+		speedAttribute: Attribute.SKILL_SPEED,
 		combo: {
 			from: 3623,
 			end: true,
@@ -150,7 +151,7 @@ export const DRK = ensureActions({
 		name: 'Unleash',
 		icon: 'https://xivapi.com/i/003000/003063.png',
 		onGcd: true,
-		speedAttribute: 'SpellSpeed',
+		speedAttribute: Attribute.SPELL_SPEED,
 		combo: {
 			start: true,
 		},
@@ -160,7 +161,7 @@ export const DRK = ensureActions({
 		name: 'Stalwart Soul',
 		icon: 'https://xivapi.com/i/003000/003084.png',
 		onGcd: true,
-		speedAttribute: 'SpellSpeed',
+		speedAttribute: Attribute.SPELL_SPEED,
 		combo: {
 			from: 3621,
 			end: true,
@@ -172,7 +173,7 @@ export const DRK = ensureActions({
 		name: 'Unmend',
 		icon: 'https://xivapi.com/i/003000/003062.png',
 		onGcd: true,
-		speedAttribute: 'SpellSpeed',
+		speedAttribute: Attribute.SPELL_SPEED,
 		breaksCombo: true,
 	},
 	// Blood Consumers
@@ -181,7 +182,7 @@ export const DRK = ensureActions({
 		name: 'Bloodspiller',
 		icon: 'https://xivapi.com/i/003000/003080.png',
 		onGcd: true,
-		speedAttribute: 'SkillSpeed',
+		speedAttribute: Attribute.SKILL_SPEED,
 		breaksCombo: false,
 	},
 	QUIETUS: {
@@ -189,7 +190,7 @@ export const DRK = ensureActions({
 		name: 'Quietus',
 		icon: 'https://xivapi.com/i/003000/003079.png',
 		onGcd: true,
-		speedAttribute: 'SkillSpeed',
+		speedAttribute: Attribute.SKILL_SPEED,
 		breaksCombo: false,
 	},
 	// Esteem

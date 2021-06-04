@@ -1,3 +1,4 @@
+import {Attribute} from 'event'
 import {ensureActions} from '../type'
 
 export const PLD = ensureActions({
@@ -9,7 +10,7 @@ export const PLD = ensureActions({
 		name: 'Fast Blade',
 		icon: 'https://xivapi.com/i/000000/000158.png',
 		onGcd: true,
-		speedAttribute: 'SkillSpeed',
+		speedAttribute: Attribute.SKILL_SPEED,
 		potency: 200,
 		combo: {
 			start: true,
@@ -20,7 +21,7 @@ export const PLD = ensureActions({
 		name: 'Riot Blade',
 		icon: 'https://xivapi.com/i/000000/000156.png',
 		onGcd: true,
-		speedAttribute: 'SkillSpeed',
+		speedAttribute: Attribute.SKILL_SPEED,
 		potency: 100,
 		combo: {
 			from: 9,
@@ -32,7 +33,7 @@ export const PLD = ensureActions({
 		name: 'Shield Lob',
 		icon: 'https://xivapi.com/i/000000/000164.png',
 		onGcd: true,
-		speedAttribute: 'SkillSpeed',
+		speedAttribute: Attribute.SKILL_SPEED,
 		breaksCombo: true,
 		potency: 120,
 	},
@@ -41,7 +42,7 @@ export const PLD = ensureActions({
 		name: 'Shield Bash',
 		icon: 'https://xivapi.com/i/000000/000154.png',
 		onGcd: true,
-		speedAttribute: 'SkillSpeed',
+		speedAttribute: Attribute.SKILL_SPEED,
 		breaksCombo: true,
 		potency: 110,
 	},
@@ -50,7 +51,7 @@ export const PLD = ensureActions({
 		name: 'Rage Of Halone',
 		icon: 'https://xivapi.com/i/000000/000155.png',
 		onGcd: true,
-		speedAttribute: 'SkillSpeed',
+		speedAttribute: Attribute.SKILL_SPEED,
 		potency: 100,
 		combo: {
 			from: 15,
@@ -63,7 +64,7 @@ export const PLD = ensureActions({
 		name: 'Total Eclipse',
 		icon: 'https://xivapi.com/i/002000/002511.png',
 		onGcd: true,
-		speedAttribute: 'SkillSpeed',
+		speedAttribute: Attribute.SKILL_SPEED,
 		potency: 110,
 		combo: {
 			start: true,
@@ -74,7 +75,7 @@ export const PLD = ensureActions({
 		name: 'Prominence',
 		icon: 'https://xivapi.com/i/002000/002516.png',
 		onGcd: true,
-		speedAttribute: 'SkillSpeed',
+		speedAttribute: Attribute.SKILL_SPEED,
 		potency: 100,
 		combo: {
 			from: 7381,
@@ -87,7 +88,7 @@ export const PLD = ensureActions({
 		name: 'Goring Blade',
 		icon: 'https://xivapi.com/i/002000/002506.png',
 		onGcd: true,
-		speedAttribute: 'SkillSpeed',
+		speedAttribute: Attribute.SKILL_SPEED,
 		potency: 100,
 		combo: {
 			from: 15,
@@ -101,7 +102,7 @@ export const PLD = ensureActions({
 		name: 'Clemency',
 		icon: 'https://xivapi.com/i/002000/002509.png',
 		onGcd: true,
-		speedAttribute: 'SpellSpeed',
+		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 1500,
 		breaksCombo: true,
 	},
@@ -110,7 +111,7 @@ export const PLD = ensureActions({
 		name: 'Royal Authority',
 		icon: 'https://xivapi.com/i/002000/002507.png',
 		onGcd: true,
-		speedAttribute: 'SkillSpeed',
+		speedAttribute: Attribute.SKILL_SPEED,
 		potency: 100,
 		combo: {
 			from: 15,
@@ -124,7 +125,7 @@ export const PLD = ensureActions({
 		name: 'Holy Spirit',
 		icon: 'https://xivapi.com/i/002000/002514.png',
 		onGcd: true,
-		speedAttribute: 'SpellSpeed',
+		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 1500,
 		breaksCombo: true,
 		potency: 350,
@@ -134,7 +135,7 @@ export const PLD = ensureActions({
 		name: 'Holy Circle',
 		icon: 'https://xivapi.com/i/002000/002517.png',
 		onGcd: true,
-		speedAttribute: 'SpellSpeed',
+		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 1500,
 		breaksCombo: true,
 		potency: 250,
@@ -144,7 +145,7 @@ export const PLD = ensureActions({
 		name: 'Atonement',
 		icon: 'https://xivapi.com/i/002000/002519.png',
 		onGcd: true,
-		speedAttribute: 'SkillSpeed',
+		speedAttribute: Attribute.SKILL_SPEED,
 		breaksCombo: true,
 		potency: 550,
 	},
@@ -153,7 +154,7 @@ export const PLD = ensureActions({
 		name: 'Confiteor',
 		icon: 'https://xivapi.com/i/002000/002518.png',
 		onGcd: true,
-		speedAttribute: 'SpellSpeed',
+		speedAttribute: Attribute.SPELL_SPEED,
 		breaksCombo: true,
 		potency: 800,
 	},

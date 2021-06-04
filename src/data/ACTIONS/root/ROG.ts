@@ -1,3 +1,4 @@
+import {Attribute} from 'event'
 import {ensureActions} from '../type'
 
 export const ROG = ensureActions({
@@ -10,7 +11,7 @@ export const ROG = ensureActions({
 		name: 'Spinning Edge',
 		icon: 'https://xivapi.com/i/000000/000601.png',
 		onGcd: true,
-		speedAttribute: 'SkillSpeed',
+		speedAttribute: Attribute.SKILL_SPEED,
 		potency: 220,
 		combo: {
 			start: true,
@@ -22,7 +23,7 @@ export const ROG = ensureActions({
 		name: 'Gust Slash',
 		icon: 'https://xivapi.com/i/000000/000602.png',
 		onGcd: true,
-		speedAttribute: 'SkillSpeed',
+		speedAttribute: Attribute.SKILL_SPEED,
 		potency: 100,
 		combo: {
 			from: 2240,
@@ -35,7 +36,7 @@ export const ROG = ensureActions({
 		name: 'Aeolian Edge',
 		icon: 'https://xivapi.com/i/000000/000605.png',
 		onGcd: true,
-		speedAttribute: 'SkillSpeed',
+		speedAttribute: Attribute.SKILL_SPEED,
 		potency: 100,
 		combo: {
 			from: 2242,
@@ -49,7 +50,7 @@ export const ROG = ensureActions({
 		name: 'Shadow Fang',
 		icon: 'https://xivapi.com/i/000000/000606.png',
 		onGcd: true,
-		speedAttribute: 'SkillSpeed',
+		speedAttribute: Attribute.SKILL_SPEED,
 		potency: 200,
 		cooldown: 70000,
 		gcdRecast: 2500,
@@ -61,7 +62,7 @@ export const ROG = ensureActions({
 		name: 'Death Blossom',
 		icon: 'https://xivapi.com/i/000000/000615.png',
 		onGcd: true,
-		speedAttribute: 'SkillSpeed',
+		speedAttribute: Attribute.SKILL_SPEED,
 		potency: 120,
 		combo: {
 			start: true,
@@ -73,7 +74,7 @@ export const ROG = ensureActions({
 		name: 'Throwing Dagger',
 		icon: 'https://xivapi.com/i/000000/000614.png',
 		onGcd: true,
-		speedAttribute: 'SkillSpeed',
+		speedAttribute: Attribute.SKILL_SPEED,
 		potency: 120,
 		breaksCombo: true,
 	},

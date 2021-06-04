@@ -1,3 +1,4 @@
+import {Attribute} from 'event'
 import {ensureActions} from '../type'
 
 export const WAR = ensureActions({
@@ -10,7 +11,7 @@ export const WAR = ensureActions({
 		name: 'Steel Cyclone',
 		icon: 'https://xivapi.com/i/002000/002552.png',
 		onGcd: true,
-		speedAttribute: 'SkillSpeed',
+		speedAttribute: Attribute.SKILL_SPEED,
 		potency: 220,
 		breaksCombo: false,
 	},
@@ -20,7 +21,7 @@ export const WAR = ensureActions({
 		name: 'Decimate',
 		icon: 'https://xivapi.com/i/002000/002558.png',
 		onGcd: true,
-		speedAttribute: 'SkillSpeed',
+		speedAttribute: Attribute.SKILL_SPEED,
 		potency: 250,
 		breaksCombo: false,
 	},
@@ -30,7 +31,7 @@ export const WAR = ensureActions({
 		name: 'Mythril Tempest',
 		icon: 'https://xivapi.com/i/002000/002565.png',
 		onGcd: true,
-		speedAttribute: 'SkillSpeed',
+		speedAttribute: Attribute.SKILL_SPEED,
 		potency: 100,
 		combo: {
 			from: 41,
@@ -44,7 +45,7 @@ export const WAR = ensureActions({
 		name: 'Fell Cleave',
 		icon: 'https://xivapi.com/i/002000/002557.png',
 		onGcd: true,
-		speedAttribute: 'SkillSpeed',
+		speedAttribute: Attribute.SKILL_SPEED,
 		potency: 590,
 		breaksCombo: false,
 	},
@@ -54,7 +55,7 @@ export const WAR = ensureActions({
 		name: 'Inner Beast',
 		icon: 'https://xivapi.com/i/002000/002553.png',
 		onGcd: true,
-		speedAttribute: 'SkillSpeed',
+		speedAttribute: Attribute.SKILL_SPEED,
 		potency: 350,
 		breaksCombo: false,
 	},
@@ -64,7 +65,7 @@ export const WAR = ensureActions({
 		name: 'Inner Chaos',
 		icon: 'https://xivapi.com/i/002000/002568.png',
 		onGcd: true,
-		speedAttribute: 'SkillSpeed',
+		speedAttribute: Attribute.SKILL_SPEED,
 		potency: 920,
 		breaksCombo: false,
 	},
@@ -74,7 +75,7 @@ export const WAR = ensureActions({
 		name: 'Chaotic Cyclone',
 		icon: 'https://xivapi.com/i/002000/002566.png',
 		onGcd: true,
-		speedAttribute: 'SkillSpeed',
+		speedAttribute: Attribute.SKILL_SPEED,
 		potency: 400,
 		breaksCombo: false,
 	},

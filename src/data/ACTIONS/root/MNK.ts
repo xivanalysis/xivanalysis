@@ -1,3 +1,4 @@
+import {Attribute} from 'event'
 import {ensureActions} from '../type'
 
 export const MNK = ensureActions({
@@ -10,7 +11,7 @@ export const MNK = ensureActions({
 		name: 'Rockbreaker',
 		icon: 'https://xivapi.com/i/002000/002529.png',
 		onGcd: true,
-		speedAttribute: 'SkillSpeed',
+		speedAttribute: Attribute.SKILL_SPEED,
 	},
 
 	DRAGON_KICK: {
@@ -18,7 +19,7 @@ export const MNK = ensureActions({
 		name: 'Dragon Kick',
 		icon: 'https://xivapi.com/i/002000/002528.png',
 		onGcd: true,
-		speedAttribute: 'SkillSpeed',
+		speedAttribute: Attribute.SKILL_SPEED,
 	},
 
 	FORM_SHIFT: {
@@ -26,7 +27,7 @@ export const MNK = ensureActions({
 		name: 'Form Shift',
 		icon: 'https://xivapi.com/i/002000/002536.png',
 		onGcd: true,
-		speedAttribute: 'SkillSpeed',
+		speedAttribute: Attribute.SKILL_SPEED,
 	},
 
 	MEDITATION: {
@@ -42,7 +43,7 @@ export const MNK = ensureActions({
 		name: 'Four-Point Fury',
 		icon: 'https://xivapi.com/i/002000/002544.png',
 		onGcd: true,
-		speedAttribute: 'SkillSpeed',
+		speedAttribute: Attribute.SKILL_SPEED,
 	},
 
 	SIX_SIDED_STAR: {
@@ -50,7 +51,7 @@ export const MNK = ensureActions({
 		name: 'Six-Sided Star',
 		icon: 'https://xivapi.com/i/002000/002547.png',
 		onGcd: true,
-		speedAttribute: 'SkillSpeed',
+		speedAttribute: Attribute.SKILL_SPEED,
 		cooldown: 5000,
 	},
 
@@ -130,7 +131,7 @@ export const MNK = ensureActions({
 		name: 'Anatman',
 		icon: 'https://xivapi.com/i/002000/002546.png',
 		onGcd: true,
-		speedAttribute: 'SkillSpeed',
+		speedAttribute: Attribute.SKILL_SPEED,
 		cooldown: 60000,
 		gcdRecast: 2500,
 		statusesApplied: ['ANATMAN'],
