@@ -37,7 +37,7 @@ export default class Demolish extends DoTs {
 			displayOrder: DISPLAY_ORDER.DEMOLISH,
 			requirements: [
 				new Requirement({
-				name: <Trans id="mnk.demolish.checklist.requirement.name"><ActionLink {...this.data.actions.DEMOLISH}/> uptime</Trans>,
+					name: <Trans id="mnk.demolish.checklist.requirement.name"><ActionLink {...this.data.actions.DEMOLISH}/> uptime</Trans>,
 					percent: () => this.getUptimePercent(this.data.statuses.DEMOLISH.id),
 				}),
 			],
