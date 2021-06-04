@@ -41,7 +41,7 @@ export type {Status}
 
 export function getStatuses(report: Report) {
 	const patch = new Patch(report.edition, report.timestamp / 1000)
-	return getAppliedData({root, layers, state: {patch: patch}})
+	return getAppliedData({root: correctedRoot, layers: correctedLayers, state: {patch: patch}})
 }
 // Everything below here is temp back compat
 // need to export a collated everything-applied as default for back compat
