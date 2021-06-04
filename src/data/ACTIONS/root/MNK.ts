@@ -46,7 +46,7 @@ export const MNK = ensureActions({
 		name: 'Six-Sided Star',
 		icon: 'https://xivapi.com/i/002000/002547.png',
 		onGcd: true,
-		cooldown: 5,
+		cooldown: 5000,
 	},
 
 	// -----
@@ -57,7 +57,7 @@ export const MNK = ensureActions({
 		id: 71,
 		name: 'Shoulder Tackle',
 		icon: 'https://xivapi.com/i/002000/002526.png',
-		cooldown: 30,
+		cooldown: 30000,
 		charges: 2,
 	},
 
@@ -65,35 +65,35 @@ export const MNK = ensureActions({
 		id: 63,
 		name: 'Fists of Fire',
 		icon: 'https://xivapi.com/i/000000/000205.png',
-		cooldown: 3,
+		cooldown: 3000,
 	},
 
 	THE_FORBIDDEN_CHAKRA: {
 		id: 3547,
 		name: 'The Forbidden Chakra',
 		icon: 'https://xivapi.com/i/002000/002535.png',
-		cooldown: 1,
+		cooldown: 1000,
 	},
 
 	ELIXIR_FIELD: {
 		id: 3545,
 		name: 'Elixir Field',
 		icon: 'https://xivapi.com/i/002000/002533.png',
-		cooldown: 30,
+		cooldown: 30000,
 	},
 
 	TORNADO_KICK: {
 		id: 3543,
 		name: 'Tornado Kick',
 		icon: 'https://xivapi.com/i/002000/002531.png',
-		cooldown: 10,
+		cooldown: 10000,
 	},
 
 	RIDDLE_OF_EARTH: {
 		id: 7394,
 		name: 'Riddle of Earth',
 		icon: 'https://xivapi.com/i/002000/002537.png',
-		cooldown: 60,
+		cooldown: 60000,
 		statusesApplied: ['RIDDLE_OF_EARTH', 'EARTHS_REPLY'],
 	},
 
@@ -101,7 +101,7 @@ export const MNK = ensureActions({
 		id: 7395,
 		name: 'Riddle of Fire',
 		icon: 'https://xivapi.com/i/002000/002541.png',
-		cooldown: 90,
+		cooldown: 90000,
 		statusesApplied: ['RIDDLE_OF_FIRE'],
 	},
 
@@ -109,7 +109,7 @@ export const MNK = ensureActions({
 		id: 7396,
 		name: 'Brotherhood',
 		icon: 'https://xivapi.com/i/002000/002542.png',
-		cooldown: 90,
+		cooldown: 90000,
 		statusesApplied: ['BROTHERHOOD', 'MEDITATIVE_BROTHERHOOD'],
 	},
 
@@ -117,7 +117,7 @@ export const MNK = ensureActions({
 		id: 16474,
 		name: 'Enlightenment',
 		icon: 'https://xivapi.com/i/002000/002545.png',
-		cooldown: 1,
+		cooldown: 1000,
 	},
 
 	ANATMAN: {
@@ -125,8 +125,8 @@ export const MNK = ensureActions({
 		name: 'Anatman',
 		icon: 'https://xivapi.com/i/002000/002546.png',
 		onGcd: true,
-		cooldown: 60,
-		gcdRecast: 2.5,
+		cooldown: 60000,
+		gcdRecast: 2500,
 		statusesApplied: ['ANATMAN'],
 	},
 })

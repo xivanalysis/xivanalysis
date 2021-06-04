@@ -71,7 +71,7 @@ export default class PetTimeline extends Module {
 		if (this.canPetBeCommanded) {
 			const parentrow = this.timeline.addRow(new SimpleRow({
 				label: this.timelineGroupName,
-				order: -99,
+				order: -98,
 			}))
 
 			autoRow = parentrow.addRow(new SimpleRow({
@@ -95,13 +95,13 @@ export default class PetTimeline extends Module {
 
 			autoRow = parentRow.addRow(new SimpleRow({
 				label: this.timelineGroupName,
-				order: -99,
+				order: -98,
 			}))
 
 		} else {
 			autoRow = this.timeline.addRow(new SimpleRow({
 				label: this.timelineGroupName,
-				order: -99,
+				order: -98,
 			}))
 		}
 

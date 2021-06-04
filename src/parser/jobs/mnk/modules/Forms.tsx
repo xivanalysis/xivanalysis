@@ -61,7 +61,10 @@ export default class Forms extends Module {
 			// Check the current form and stacks, or zero for no form
 			const currentForm = FORMS.find(form => this.combatants.selected.hasStatus(form)) || 0
 			const untargetable = this.lastFormChanged != null
-				? this.downtime.getDowntime(this.lastFormChanged, event.timestamp)
+				? this.downtime.getDowntime(
+					this.parser.fflogsToEpoch(this.lastFormChanged),
+					this.parser.fflogsToEpoch(event.timestamp),
+				)
 				: 0
 
 			if (action.id === this.data.actions.FORM_SHIFT.id) {

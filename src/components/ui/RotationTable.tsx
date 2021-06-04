@@ -83,7 +83,7 @@ export interface RotationTableEntry {
 	/**
 	 * Rotation to display that occurs during this entry
 	 */
-	rotation: Array<{ability: Ability}>
+	rotation: Array<{ability: Ability, isProc?: boolean}>
 }
 
 interface RotationTableProps {

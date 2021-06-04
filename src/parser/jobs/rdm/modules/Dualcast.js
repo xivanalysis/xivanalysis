@@ -66,11 +66,14 @@ export default class DualCast extends Module {
 		const abilityID = event.ability.guid
 		const action = getDataBy(ACTIONS, 'id', abilityID)
 		const castTime = action? action.castTime : 0
-		const invuln = this.downtime.getDowntime(this._castTypeLastChanged||0, event.timestamp)
+		const invuln = this.downtime.getDowntime(
+			this.parser.fflogsToEpoch(this._castTypeLastChanged||0),
+			this.parser.fflogsToEpoch(event.timestamp),
+		)
 		//console.log('Invuln:' + invuln)
 		//console.log(`Cast: ${event.ability.name}, timestamp: ${this.parser.formatTimestamp(event.timestamp)}`)
 		if (castTime > 0 && this._castType === CAST_TYPE.DualCast) {
-			this._ctIndex = this.castTime.set('all', 0)
+			this._ctIndex = this.castTime.setFflogs('all', 0)
 			if (!CORRECT_GCDS.includes(abilityID) && invuln === 0) {
 				this._wastedDualCasts += 1
 				const casts = {
@@ -96,7 +99,10 @@ export default class DualCast extends Module {
 
 	_onRemove(event) {
 		if (!this._usedCast) {
-			const invuln = this.downtime.getDowntime(this._castTypeLastChanged||0, event.timestamp)
+			const invuln = this.downtime.getDowntime(
+				this.parser.fflogsToEpoch(this._castTypeLastChanged||0),
+				this.parser.fflogsToEpoch(event.timestamp),
+			)
 			if (invuln === 0) {
 				this._missedDualCasts += 1
 			}
@@ -104,7 +110,7 @@ export default class DualCast extends Module {
 
 		this._castType = CAST_TYPE.HardCast
 		if (this._ctIndex != null) {
-			this.castTime.reset(this._ctIndex)
+			this.castTime.resetFflogs(this._ctIndex)
 		}
 		this._ctIndex = null
 		this._castTypeLastChanged = event.timestamp

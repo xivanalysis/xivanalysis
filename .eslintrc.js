@@ -134,7 +134,7 @@ module.exports = {
 		'import/order': ['error', {
 			groups: [
 				// Pull non-relative imports above relative
-				['builtin', 'external', 'internal', 'unknown', 'index', 'object'],
+				['builtin', 'external', 'internal', 'unknown', 'index', 'object', 'type'],
 			],
 			'newlines-between': 'never',
 			alphabetize: {order: 'asc', caseInsensitive: true},

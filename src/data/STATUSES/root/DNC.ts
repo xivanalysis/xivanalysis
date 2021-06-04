@@ -47,7 +47,7 @@ export const DNC = ensureStatuses({
 		id: 1821,
 		name: 'Standard Finish',
 		icon: 'https://xivapi.com/i/013000/013708.png',
-		duration: 20,
+		duration: 60,
 	},
 	TECHNICAL_FINISH: {
 		id: 1822,
@@ -89,16 +89,22 @@ export const DNC = ensureStatuses({
 		icon: 'https://xivapi.com/i/013000/013717.png',
 		duration: 15,
 	},
-	ESPRIT: {
+	ESPRIT: { // The Esprit buff sourced from Standard Finish, applies to the DNC and their Dance Partner
 		id: 1847,
 		name: 'Esprit',
 		icon: 'https://xivapi.com/i/013000/013710.png',
-		duration: 15,
+		duration: 60,
+	},
+	ESPRIT_TECHNICAL: { // The Esprit buff sourced from Technical finish. Superseded by ESPRIT
+		id: 1848,
+		name: 'Esprit',
+		icon: 'https://xivapi.com/i/013000/013711.png',
+		duration: 20,
 	},
 	STANDARD_FINISH_PARTNER: { // The standard finish buff you get when you're the DNC's partner
 		id: 2105,
 		name: 'Standard Finish',
 		icon: 'https://xivapi.com/i/013000/013708.png',
-		duration: 20,
+		duration: 60,
 	},
 })

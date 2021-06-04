@@ -27,7 +27,7 @@ const NEXT_COMBO = {
 
 const TRUE_NORTH_CHARGES = 2
 const TRUE_NORTH_CD_BUFFER = 500
-const TRUE_NORTH_CD = ACTIONS.TRUE_NORTH.cooldown * 1000 - TRUE_NORTH_CD_BUFFER
+const TRUE_NORTH_CD = ACTIONS.TRUE_NORTH.cooldown - TRUE_NORTH_CD_BUFFER
 
 export default class Positionals extends Module {
 	static handle = 'positionals'

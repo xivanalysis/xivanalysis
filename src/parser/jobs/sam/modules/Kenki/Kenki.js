@@ -9,7 +9,7 @@ import _ from 'lodash'
 import Module from 'parser/core/Module'
 import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import React from 'react'
-import DISPLAY_ORDER from './DISPLAY_ORDER'
+import DISPLAY_ORDER from '../DISPLAY_ORDER'
 import styles from './Kenki.module.css'
 import kenkiIcon from './kenki.png'
 
@@ -20,7 +20,7 @@ const KENKI_ACTIONS = {
 	[ACTIONS.HAKAZE.id]: {cast: 5},
 	[ACTIONS.JINPU.id]: {combo: 5},
 	[ACTIONS.SHIFU.id]: {combo: 5},
-	[ACTIONS.YUKIKAZE.id]: {combo: 10},
+	[ACTIONS.YUKIKAZE.id]: {combo: 15},
 	[ACTIONS.GEKKO.id]: {combo: 5, positional: 5},
 	[ACTIONS.KASHA.id]: {combo: 5, positional: 5},
 

@@ -48,11 +48,11 @@ const EXPECTED_DANCE_MOVE_COUNT = {
 }
 
 // All of the dance moves have the same cooldown, so we'll just use one of them for this...
-const DANCE_MOVE_COOLDOWN_MILLIS = ACTIONS.JETE.cooldown * 1000
+const DANCE_MOVE_COOLDOWN_MILLIS = ACTIONS.JETE.cooldown
 
 const STEP_COOLDOWN_MILLIS = {
-	[ACTIONS.STANDARD_STEP.id]: ACTIONS.STANDARD_STEP.cooldown * 1000,
-	[ACTIONS.TECHNICAL_STEP.id]: ACTIONS.TECHNICAL_STEP.cooldown * 1000,
+	[ACTIONS.STANDARD_STEP.id]: ACTIONS.STANDARD_STEP.cooldown,
+	[ACTIONS.TECHNICAL_STEP.id]: ACTIONS.TECHNICAL_STEP.cooldown,
 }
 
 const DANCE_COMPLETION_LENIENCY_MILLIS = 1000
@@ -87,7 +87,7 @@ class Dance {
 
 	public get expectedEndTime(): number {
 		const actionData = getDataBy(ACTIONS, 'id', this.initiatingStep.ability.guid) as TODO
-		return this.start + actionData.gcdRecast * 1000
+		return this.start + actionData.gcdRecast
 			+ EXPECTED_DANCE_MOVE_COUNT[this.expectedFinishId] * DANCE_MOVE_COOLDOWN_MILLIS
 			+ DANCE_COMPLETION_LENIENCY_MILLIS // Additional leniency to account for network latency
 	}
@@ -148,7 +148,11 @@ export default class DirtyDancing extends Module {
 		const stepId = event.ability.guid
 		if (this.previousUseTimestamp[stepId]) {
 			const lastUse = this.previousUseTimestamp[stepId]
-			const drift = Math.max(0, event.timestamp - lastUse - STEP_COOLDOWN_MILLIS[stepId] - this.downtime.getDowntime(lastUse, event.timestamp))
+			const downtime = this.downtime.getDowntime(
+				this.parser.fflogsToEpoch(lastUse),
+				this.parser.fflogsToEpoch(event.timestamp),
+			)
+			const drift = Math.max(0, event.timestamp - lastUse - STEP_COOLDOWN_MILLIS[stepId] - downtime)
 			this.totalDrift[stepId] += drift
 			this.previousUseTimestamp[stepId] = event.timestamp
 		}

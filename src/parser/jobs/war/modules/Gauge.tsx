@@ -44,7 +44,7 @@ const INFURIATE_REDUCERS = [
 	ACTIONS.CHAOTIC_CYCLONE.id,
 	ACTIONS.INNER_CHAOS.id,
 ]
-const INFURIATE_CDR = 5
+const INFURIATE_CDR = 5000
 
 export class Gauge extends CoreGauge {
 	static override title = t('war.gauge.title')`Beast Gauge`

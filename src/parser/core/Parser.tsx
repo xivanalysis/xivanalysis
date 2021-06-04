@@ -457,7 +457,7 @@ class Parser {
 			visited.add(handle)
 
 			const injectable = this.container[handle]
-			const constructor = injectable as typeof Injectable
+			const constructor = injectable.constructor as typeof Injectable
 
 			// TODO: Should Injectable also contain rudimentary error logic?
 			if (injectable instanceof Module) {
@@ -700,6 +700,10 @@ class Parser {
 
 	formatTimestamp(timestamp: number, secondPrecision?: number) {
 		return this.formatDuration(timestamp - this.fight.start_time, secondPrecision)
+	}
+
+	formatEpochTimestamp(timestamp: number, secondPrecision?: number) {
+		return this.formatDuration(timestamp - this.pull.timestamp, secondPrecision)
 	}
 
 	formatDuration(duration: number, secondPrecision?: number) {

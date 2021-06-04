@@ -22,7 +22,7 @@ export class Weaving extends CoreWeaving {
 				if (!gcd || !gcd.ability) {
 					maxWeaves = 2
 				} else {
-					const castTime = this.castTime.forEvent(weave.leadingGcdEvent)
+					const castTime = this.castTime.forFflogsEvent(weave.leadingGcdEvent as CastEvent)
 					maxWeaves = castTime === 0 ? 2 : 0
 				}
 			}

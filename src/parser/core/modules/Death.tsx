@@ -1,8 +1,10 @@
 import {Plural, Trans} from '@lingui/react'
-import {Event, Events, FieldsBase} from 'event'
+import {Event, Events, FieldsBase, Resource} from 'event'
 import React from 'react'
 import {Actor} from 'report'
 import {Analyser} from '../Analyser'
+import {EventHook} from '../Dispatcher'
+import {filter} from '../filter'
 import {dependency} from '../Injectable'
 import {Data} from './Data'
 import Suggestions, {SEVERITY, Suggestion} from './Suggestions'
@@ -43,6 +45,14 @@ declare module 'legacyEvent' {
 	}
 }
 
+interface ActorInfo {
+	timestampDeath?: Event['timestamp']
+	timestampTranscendent?: Event['timestamp']
+	count: number
+	duration: number
+	raiseHook?: EventHook<Events['actorUpdate']>
+}
+
 export class Death extends Analyser {
 	static override handle = 'death'
 	static override debug = true
@@ -53,23 +63,26 @@ export class Death extends Analyser {
 
 	/** Accumulated time the parsed actor has spent dead over the course of the fight. */
 	get deadTime() {
-		const timestamp = this.parser.currentEpochTimestamp
-		const currentDeadTime = timestamp - (this.currentDeathTimestamp ?? timestamp)
-		return this._deadTime + currentDeadTime
+		return this.getDuration(this.parser.actor.id)
 	}
 
-	private currentDeathTimestamp?: Event['timestamp']
-	private currentTranscendentTimestamp?: Event['timestamp']
-	private count = 0
-	private _deadTime = 0
+	private info = new Map<Actor['id'], ActorInfo>()
 
-	override initialise() {
-		// TODO: Look into generalising this to handle actors other than the parsed PC?
+	getCount(actorId: Actor['id']) {
+		return this.getActorInfo(actorId).count
+	}
 
+	getDuration(actorId: Actor['id']) {
+		const actorInfo = this.getActorInfo(actorId)
+		const timestamp = this.parser.currentEpochTimestamp
+		const currentDeadTime = timestamp - (actorInfo.timestampDeath ?? timestamp)
+		return actorInfo.duration + currentDeadTime
+	}
+
+	initialise() {
 		// An actor hitting 0 HP is a sign of a death.
 		this.addEventHook({
 			type: 'actorUpdate',
-			actor: this.parser.actor.id,
 			hp: {current: 0},
 		}, this.onDeath)
 
@@ -77,25 +90,34 @@ export class Death extends Analyser {
 		this.addEventHook({
 			type: 'statusApply',
 			status: this.data.statuses.TRANSCENDENT.id,
-			target: this.parser.actor.id,
 		}, this.onTranscendentApply)
 
 		// Any possible death events before transcendent falls off are flakes
 		this.addEventHook({
 			type: 'statusRemove',
 			status: this.data.statuses.TRANSCENDENT.id,
-			target: this.parser.actor.id,
 		}, this.onTranscendentRemove)
 
 		this.addEventHook('complete', this.onComplete)
 	}
 
+	private getActorInfo(actorId: Actor['id']): ActorInfo {
+		let actorInfo = this.info.get(actorId)
+		if (actorInfo == null) {
+			actorInfo = {count: 0, duration: 0}
+			this.info.set(actorId, actorInfo)
+		}
+		return actorInfo
+	}
+
 	private onDeath(event: Events['actorUpdate']) {
+		const actorInfo = this.getActorInfo(event.actor)
+
 		// If we already have a death being tracked, or the player is still
 		// transcendent, it's likely duplicate info, noop
 		if (
-			this.currentDeathTimestamp != null
-			|| this.currentTranscendentTimestamp != null
+			actorInfo.timestampDeath != null
+			|| actorInfo.timestampTranscendent != null
 		) { return }
 
 		const counted = this.shouldCountDeath(event)
@@ -111,8 +133,20 @@ export class Death extends Analyser {
 		// If we're not counting, can stop here
 		if (!counted) { return }
 
-		this.currentDeathTimestamp = event.timestamp
-		this.count++
+		actorInfo.timestampDeath = event.timestamp
+		actorInfo.count++
+
+		// Keep an eye out for the actor gaining health post-death - it signals that it has resurrected in some
+		// manner that bypassed the transcendent check. Transcendent itself is applied before any HP gain, so
+		// player actors will likely not trigger this hook.
+		actorInfo.raiseHook = this.addEventHook(
+			filter<Event>()
+				.type('actorUpdate')
+				.actor(event.actor)
+				.hp(filter<Resource>()
+					.current((value): value is number => value > 0)),
+			event => this.onRaise(event.actor, event.timestamp),
+		)
 	}
 
 	/**
@@ -126,50 +160,70 @@ export class Death extends Analyser {
 	}
 
 	private onTranscendentApply(event: Events['statusApply']) {
-		this.currentTranscendentTimestamp = event.timestamp
-		this.onRaise(event)
+		const actorInfo = this.getActorInfo(event.target)
+		actorInfo.timestampTranscendent = event.timestamp
+		this.onRaise(event.target, event.timestamp)
 	}
 
-	private onTranscendentRemove(_event: Events['statusRemove']) {
-		this.currentTranscendentTimestamp = undefined
+	private onTranscendentRemove(event: Events['statusRemove']) {
+		const actorInfo = this.getActorInfo(event.target)
+		actorInfo.timestampTranscendent = undefined
 	}
 
-	private onRaise(event: Event) {
+	private onRaise(actorId: Actor['id'], timestamp: Event['timestamp']) {
+		const actorInfo = this.getActorInfo(actorId)
+
 		// If there's no current death, likely duplicate info, noop
-		if (this.currentDeathTimestamp == null) { return }
+		if (actorInfo.timestampDeath == null) { return }
 
-		this.addDeathToTimeline(this.currentDeathTimestamp, event.timestamp)
+		// We only show the parsed player's deaths on the timeline itself
+		if (actorId === this.parser.actor.id) {
+			this.addDeathToTimeline(actorInfo.timestampDeath, timestamp)
+		}
+
+		actorInfo.duration += timestamp - actorInfo.timestampDeath
+		actorInfo.timestampDeath = undefined
+
+		if (actorInfo.raiseHook != null) {
+			this.removeEventHook(actorInfo.raiseHook)
+			actorInfo.raiseHook = undefined
+		}
 
 		// Queue the raise notification.
 		// Also fabricating a legacy event for backwards compatibility.
 		this.parser.queueEvent({
 			type: 'raise',
-			timestamp: event.timestamp,
-			actor: this.parser.actor.id,
-		})
-		this.parser.fabricateLegacyEvent({
-			type: 'raise',
-			timestamp: this.parser.currentTimestamp,
-			targetID: this.parser.player.id,
+			timestamp,
+			actor: actorId,
 		})
 
-		this.currentDeathTimestamp = undefined
+		// Legacy only fabricated raises for the player
+		if (actorId === this.parser.actor.id) {
+			this.parser.fabricateLegacyEvent({
+				type: 'raise',
+				timestamp: this.parser.currentTimestamp,
+				targetID: this.parser.player.id,
+			})
+		}
 	}
 
 	private onComplete(event: Events['complete']) {
-		// If the actor was dead on completion, and the pull was a wipe, refund the
-		// death. It's pretty meaningless to complain about the wipe itself.
-		if (
-			(this.parser.pull.progress ?? 0) < 100
-			&& this.currentDeathTimestamp != null
-		) {
-			this.count = Math.max(this.count - 1, 0)
+		for (const [actorId, actorInfo] of this.info) {
+			// If the actor was dead on completion, and the pull was a wipe, refund the
+			// death. It's pretty meaningless to complain about the wipe itself.
+			if (
+				(this.parser.pull.progress ?? 0) < 100
+				&& actorInfo.timestampDeath != null
+			) {
+				actorInfo.count = Math.max(actorInfo.count - 1, 0)
+			}
+
+			// Run raise cleanup in case the actor was dead on completion
+			this.onRaise(actorId, event.timestamp)
 		}
 
-		// Run raise cleanup in case the actor was dead on completion
-		this.onRaise(event)
-
-		if (this.count === 0) { return }
+		const playerInfo = this.getActorInfo(this.parser.actor.id)
+		if (playerInfo.count === 0) { return }
 
 		// Deaths are pretty morbid
 		this.suggestions.add(new Suggestion({
@@ -180,7 +234,7 @@ export class Death extends Analyser {
 			severity: SEVERITY.MORBID,
 			why: <Plural
 				id="core.deaths.why"
-				value={this.count}
+				value={playerInfo.count}
 				_1="# death"
 				other="# deaths"
 			/>,

@@ -84,7 +84,7 @@ export const LNC = ensureActions({
 		id: 83,
 		name: 'Life Surge',
 		icon: 'https://xivapi.com/i/000000/000304.png',
-		cooldown: 45,
+		cooldown: 45000,
 		statusesApplied: ['LIFE_SURGE'],
 	},
 
@@ -92,7 +92,7 @@ export const LNC = ensureActions({
 		id: 85,
 		name: 'Lance Charge',
 		icon: 'https://xivapi.com/i/000000/000309.png',
-		cooldown: 90,
+		cooldown: 90000,
 		statusesApplied: ['LANCE_CHARGE'],
 	},
 })

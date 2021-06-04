@@ -21,8 +21,8 @@ const DRIFT_GCDS = [
 ]
 
 const COOLDOWN_MS = {
-	[ACTIONS.DRILL.id]: ACTIONS.DRILL.cooldown * 1000,
-	[ACTIONS.AIR_ANCHOR.id]: ACTIONS.AIR_ANCHOR.cooldown * 1000,
+	[ACTIONS.DRILL.id]: ACTIONS.DRILL.cooldown,
+	[ACTIONS.AIR_ANCHOR.id]: ACTIONS.AIR_ANCHOR.cooldown,
 }
 
 class DriftWindow {
@@ -77,7 +77,10 @@ export default class Drift extends Module {
 
 		const window = this.currentWindows[actionId]
 		window.end = event.timestamp
-		const downtime = this.downtime.getDowntime(window.start, window.end)
+		const downtime = this.downtime.getDowntime(
+			this.parser.fflogsToEpoch(window.start),
+			this.parser.fflogsToEpoch(window.end),
+		)
 		const cd = COOLDOWN_MS[actionId]
 		window.drift = Math.max(0, window.end - window.start - cd - downtime)
 

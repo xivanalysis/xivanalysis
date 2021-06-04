@@ -70,15 +70,21 @@ export default class AlwaysBeCasting extends CoreAlwaysBeCasting {
 	protected override getUptimePercent(): number {
 		const fightDuration = this.parser.currentDuration - this.downtime.getDowntime()
 		const armyDuration = this.armyHistory.reduce((acc, army) => {
-			const downtime = this.downtime.getDowntime(army.start, army.end)
+			const downtime = this.downtime.getDowntime(
+				this.parser.fflogsToEpoch(army.start),
+				this.parser.fflogsToEpoch(army.end),
+			)
 			return acc + army.end - army.start - downtime
 		}, 0)
 
 		const uptime = this.gcd.gcds.reduce((acc, gcd) => {
 			const duration = this.gcd._getGcdLength(gcd)
 			const downtime = this.downtime.getDowntime(
-				gcd.timestamp,
-				Math.min(gcd.timestamp + duration, this.parser.eventTimeOffset + this.parser.pull.duration)
+				this.parser.fflogsToEpoch(gcd.timestamp),
+				this.parser.fflogsToEpoch(Math.min(
+					gcd.timestamp + duration,
+					this.parser.eventTimeOffset + this.parser.pull.duration
+				))
 			)
 			// Ignore GCDs while muse / paeon were up
 			if (this.isArmyBuffActive(gcd.timestamp)) {

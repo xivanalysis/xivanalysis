@@ -12,8 +12,8 @@ import {matchClosestLower} from 'utilities'
 const DEFAULT_MAX_WEAVES = 2 // Default castTime is 0
 const MAX_WEAVE_TIERS = {
 	0: 2,
-	1: 1,
-	2.5: 0,
+	1000: 1,
+	2500: 0,
 }
 
 const WEAVING_SEVERITY = {
@@ -162,7 +162,7 @@ export default class Weaving extends Module {
 			if (!weave.leadingGcdEvent.ability) {
 				maxWeaves = DEFAULT_MAX_WEAVES
 			} else {
-				const castTime = this.castTime.forEvent(weave.leadingGcdEvent)
+				const castTime = this.castTime.forFflogsEvent(weave.leadingGcdEvent)
 				const closest = matchClosestLower(MAX_WEAVE_TIERS, castTime)
 				maxWeaves = closest !== undefined? closest : DEFAULT_MAX_WEAVES
 			}

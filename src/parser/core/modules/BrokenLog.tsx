@@ -34,14 +34,21 @@ export default class BrokenLog extends Analyser {
 	 * @param key Unique key that represents the BL trigger
 	 * @param source Module that is triggering BL
 	 * @param reason Short description of why BL was triggered
+	 * @param erroneous If this trigger should be reported as an error to logs.
 	 */
-	trigger(source: Module | Analyser, key: string, reason?: React.ReactNode) {
+	trigger(
+		source: Module | Analyser,
+		key: string,
+		reason?: React.ReactNode,
+		erroneous = true,
+	) {
 		const constructor = (source.constructor as SourceConstructor)
 		const {handle} = constructor
 		const triggerKey = `${handle}.${key}`
 
 		// If this is the first time this issue has been triggered, try and report it to Sentry
 		if (
+			erroneous &&
 			!this.triggers.has(triggerKey) &&
 			!getReportPatch(this.parser.newReport).branch
 		) {
