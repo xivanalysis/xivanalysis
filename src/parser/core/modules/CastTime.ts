@@ -70,7 +70,7 @@ export default class CastTime extends Analyser {
 	 * Shorthand function for setting casts to instant (ie. Swiftcast, Triplecast)
 	 * @param actions The actions this adjustment applies to. Either an array of IDs, or the string 'all'. Defaults to 'all'
 	 * @param start The beginning of the adjustment time range. Defaults to the current epoch timestamp
-	 * @param end The beginning of the adjustment time range. Defaults to the current epoch timestamp
+	 * @param end The end of the adjustment time range. May be left null if the end of the range is not yet known
 	 * @returns The end of the adjustment time range. May be left null if the end of the range is not yet known
 	 */
 	public setInstantCastAdjustment(actions: number[] | 'all' = 'all', start: number = this.parser.currentEpochTimestamp, end?: number): number {
