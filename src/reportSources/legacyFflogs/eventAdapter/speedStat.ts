@@ -68,7 +68,10 @@ export class SpeedStatsAdapterStep extends AdapterStep {
 		})
 
 		const eventsToAdd: Array<Events['actorUpdate']> = []
-		this.actorActions.forEach((gcds, actorId) => eventsToAdd.push(this.estimateActorSpeedStat(gcds, actorId)))
+		this.actorActions.forEach((gcds, actorId) => {
+			const speedStatUpdate = this.estimateActorSpeedStat(gcds, actorId)
+			if (speedStatUpdate != null) { eventsToAdd.push(speedStatUpdate) }
+		})
 
 		return [...eventsToAdd, ...adaptedEvents]
 	}
@@ -147,7 +150,7 @@ export class SpeedStatsAdapterStep extends AdapterStep {
 		windowMap[windowMap.length-1].end = event.timestamp
 	}
 
-	private estimateActorSpeedStat(gcds: GCD[], actorId: string): Events['actorUpdate'] {
+	private estimateActorSpeedStat(gcds: GCD[], actorId: string): Events['actorUpdate'] | undefined {
 		const speedAttributeKeys = [Attribute.SKILL_SPEED, Attribute.SPELL_SPEED] as const
 		const intervalGroups = {
 			[Attribute.SKILL_SPEED]: new Map<number, number>(),
@@ -198,11 +201,13 @@ export class SpeedStatsAdapterStep extends AdapterStep {
 			}
 		}
 
-		return {
-			type: 'actorUpdate',
-			actor: actorId,
-			timestamp: this.pull.timestamp + PREPULL_OFFSETS.ATTRIBUTE_UPDATE,
-			attributes,
+		if (attributes.length > 0) {
+			return {
+				type: 'actorUpdate',
+				actor: actorId,
+				timestamp: this.pull.timestamp + PREPULL_OFFSETS.ATTRIBUTE_UPDATE,
+				attributes,
+			}
 		}
 	}
 
