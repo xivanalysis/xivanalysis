@@ -32,6 +32,12 @@ interface CooldownState {
 
 type CooldownGroup = Exclude<Action['cooldownGroup'], undefined>
 
+/** Configuration for a single cooldown group on an action. */
+interface CooldownGroupConfig {
+	group: CooldownGroup
+	duration: number
+}
+
 export class Cooldowns extends Analyser {
 	static handle = 'cooldowns2'
 	static debug = true
@@ -46,7 +52,7 @@ export class Cooldowns extends Analyser {
 	private cooldownStates = new Map<CooldownGroup, CooldownState>()
 
 	private actionMapping = {
-		toGroups: new Map<Action['id'], CooldownGroup[]>(),
+		toGroupConfigs: new Map<Action['id'], CooldownGroupConfig[]>(),
 		fromGroup: new Map<CooldownGroup, Action[]>(),
 	}
 
@@ -55,16 +61,16 @@ export class Cooldowns extends Analyser {
 	initialise() {
 		// Preemptively build a two-directional mapping between actions and cooldown groups
 		for (const action of Object.values(this.data.actions)) {
-			const toGroup: CooldownGroup[] = []
-			this.actionMapping.toGroups.set(action.id, toGroup)
+			const toGroupConfig: CooldownGroupConfig[] = []
+			this.actionMapping.toGroupConfigs.set(action.id, toGroupConfig)
 
-			for (const group of this.getActionCooldownGroups(action)) {
-				toGroup.push(group)
+			for (const config of this.getActionCooldownGroupConfig(action)) {
+				toGroupConfig.push(config)
 
-				let fromGroup = this.actionMapping.fromGroup.get(group)
+				let fromGroup = this.actionMapping.fromGroup.get(config.group)
 				if (fromGroup == null) {
 					fromGroup = []
-					this.actionMapping.fromGroup.set(group, fromGroup)
+					this.actionMapping.fromGroup.set(config.group, fromGroup)
 				}
 
 				fromGroup.push(action)
@@ -117,10 +123,10 @@ export class Cooldowns extends Analyser {
 		//       at current, there are no multi-charge or non-gcd interruptible
 		//       skills, this is a safe assumption. Re-evaluate if the above changes.
 		// TODO: This logic might make sense as a public "reset" helper.
-		const activeGroups = (this.actionMapping.toGroups.get(event.action) ?? [])
-			.filter(group => this.cooldownStates.has(group))
-		for (const group of activeGroups) {
-			this.endCooldownGroup(group, CooldownEndReason.INTERRUPTED)
+		const activeConfigs = (this.actionMapping.toGroupConfigs.get(event.action) ?? [])
+			.filter(config => this.cooldownStates.has(config.group))
+		for (const config of activeConfigs) {
+			this.endCooldownGroup(config.group, CooldownEndReason.INTERRUPTED)
 		}
 	}
 
@@ -226,26 +232,18 @@ export class Cooldowns extends Analyser {
 	}
 
 	private startGroupsForAction(action: Action) {
-		// Can't start groups if the action has no cooldown to start
-		// TODO: Is... this even possible? Should this throw?
-		const cooldown = action.cooldown
-		if (cooldown == null) { return }
-
-		// TODO: Some cooldowns (GCD, GF, etc) should have their cooldown modified
-		//       by the relevant speed attribute value.
-
-		const groups = this.actionMapping.toGroups.get(action.id) ?? []
+		const configs = this.actionMapping.toGroupConfigs.get(action.id) ?? []
 
 		// Check if any of the groups triggered by this action are already on cooldown
 		// - this is technically impossible, but Square Enix™️, so we fudge it by ending
 		// the overlapping groups with a warning.
 		// TODO: This is firing frequently due to lack of adjustment of speed-affected
 		//       (re)cast times. Re-evaluate logic when that is accounted for.
-		const overlappingGroups = groups.filter(x => this.cooldownStates.has(x))
-		if (overlappingGroups.length > 0) {
-			this.debug(`Use of ${action.name} at ${this.parser.formatEpochTimestamp(this.parser.currentEpochTimestamp)} overlaps currently active groups: ${overlappingGroups.join(', ')}.`)
-			for (const group of overlappingGroups) {
-				this.endCooldownGroup(group, CooldownEndReason.OVERLAPPED)
+		const overlappingConfigs = configs.filter(config => this.cooldownStates.has(config.group))
+		if (overlappingConfigs.length > 0) {
+			this.debug(`Use of ${action.name} at ${this.parser.formatEpochTimestamp(this.parser.currentEpochTimestamp)} overlaps currently active groups: ${overlappingConfigs.join(', ')}.`)
+			for (const config of overlappingConfigs) {
+				this.endCooldownGroup(config.group, CooldownEndReason.OVERLAPPED)
 			}
 		}
 
@@ -254,8 +252,10 @@ export class Cooldowns extends Analyser {
 		//       in cases such as the GCD on multi-CDG actions, where the GCD CDG
 		//       will be triggered for the full duration, causing a guaranteed overlap
 		//       with the next GCD.
-		for (const group of groups) {
-			this.startCooldownGroup(group, cooldown)
+		// TODO: Some cooldowns (GCD, GF, etc) should have their cooldown modified
+		//       by the relevant speed attribute value.
+		for (const config of configs) {
+			this.startCooldownGroup(config.group, config.duration)
 		}
 	}
 
@@ -286,8 +286,8 @@ export class Cooldowns extends Analyser {
 		const actions = this.actionMapping.fromGroup.get(group) ?? []
 		for (const action of actions) {
 			// If _all_ groups related to the action are now off CD, we can regenerate a charge.
-			const actionGroups = this.actionMapping.toGroups.get(action.id) ?? []
-			const offCooldown = actionGroups.every(group => !this.cooldownStates.has(group))
+			const configs = this.actionMapping.toGroupConfigs.get(action.id) ?? []
+			const offCooldown = configs.every(config => !this.cooldownStates.has(config.group))
 			if (!offCooldown) { continue }
 
 			this.gainCharge(action)
@@ -320,14 +320,22 @@ export class Cooldowns extends Analyser {
 		}))
 	}
 
-	private getActionCooldownGroups(action: Action): CooldownGroup[] {
+	private getActionCooldownGroupConfig(action: Action): CooldownGroupConfig[] {
 		// TODO: Write automated CDG extraction from the data files, current data
 		//       is pretty dumb about this stuff.
-		const groups: CooldownGroup[] = []
+		const groups: CooldownGroupConfig[] = []
+
+		// If the action has no cooldown at all (technically impossible), we can't
+		// track cooldowns for it.
+		if (action.cooldown == null) { return groups }
 
 		// GCDs all share a CDG.
 		if (action.onGcd) {
-			groups.push(GCD_COOLDOWN_GROUP)
+			groups.push({
+				group: GCD_COOLDOWN_GROUP,
+				duration: action.gcdRecast ?? action.cooldown,
+			})
+
 			// GCDs with a seperate recast are part of two CDGs.
 			if (action.gcdRecast == null) {
 				return groups
@@ -337,7 +345,10 @@ export class Cooldowns extends Analyser {
 		// Include the action's CDG. If none is specified, use the action ID to fill
 		// in (all actions must have 1+ CDGs from a game POV). Using negative to ensure
 		// that fudged CDGs do not overlap with real data.
-		groups.push(action.cooldownGroup ?? -action.id)
+		groups.push({
+			group: action.cooldownGroup ?? -action.id,
+			duration: action.cooldown,
+		})
 		return groups
 	}
 
