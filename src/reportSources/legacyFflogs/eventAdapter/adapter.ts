@@ -10,6 +10,7 @@ import {OneHpLockAdapterStep} from './oneHpLock'
 import {PrepullActionAdapterStep} from './prepullAction'
 import {PrepullStatusAdapterStep} from './prepullStatus'
 import {ReassignUnknownActorStep} from './reassignUnknownActor'
+import {SpeedStatsAdapterStep} from './speedStat'
 import {TranslateAdapterStep} from './translate'
 
 /** Adapt an array of FFLogs APIv1 events to xiva representation. */
@@ -39,6 +40,7 @@ class EventAdapter {
 			new PrepullActionAdapterStep(opts),
 			new PrepullStatusAdapterStep(opts),
 			new OneHpLockAdapterStep(opts),
+			new SpeedStatsAdapterStep(opts),
 		]
 	}
 

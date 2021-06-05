@@ -1,3 +1,4 @@
+import {Attribute} from 'event'
 import {ensureActions} from '../type'
 
 // tslint:disable:no-magic-numbers
@@ -12,6 +13,7 @@ export const MCH = ensureActions({
 		name: 'Split Shot',
 		icon: 'https://xivapi.com/i/003000/003001.png',
 		onGcd: true,
+		speedAttribute: Attribute.SKILL_SPEED,
 		potency: 180,
 		combo: {
 			start: true,
@@ -23,6 +25,7 @@ export const MCH = ensureActions({
 		name: 'Slug Shot',
 		icon: 'https://xivapi.com/i/003000/003002.png',
 		onGcd: true,
+		speedAttribute: Attribute.SKILL_SPEED,
 		potency: 100,
 		combo: {
 			from: [2866, 7411],
@@ -35,6 +38,7 @@ export const MCH = ensureActions({
 		name: 'Spread Shot',
 		icon: 'https://xivapi.com/i/003000/003014.png',
 		onGcd: true,
+		speedAttribute: Attribute.SKILL_SPEED,
 		breaksCombo: true,
 	},
 
@@ -43,6 +47,7 @@ export const MCH = ensureActions({
 		name: 'Hot Shot',
 		icon: 'https://xivapi.com/i/003000/003003.png',
 		onGcd: true,
+		speedAttribute: Attribute.SKILL_SPEED,
 		cooldown: 40000,
 		gcdRecast: 2500,
 	},
@@ -52,6 +57,7 @@ export const MCH = ensureActions({
 		name: 'Clean Shot',
 		icon: 'https://xivapi.com/i/003000/003004.png',
 		onGcd: true,
+		speedAttribute: Attribute.SKILL_SPEED,
 		potency: 100,
 		combo: {
 			from: [2868, 7412],
@@ -65,6 +71,7 @@ export const MCH = ensureActions({
 		name: 'Heated Split Shot',
 		icon: 'https://xivapi.com/i/003000/003031.png',
 		onGcd: true,
+		speedAttribute: Attribute.SKILL_SPEED,
 		potency: 220,
 		combo: {
 			start: true,
@@ -76,6 +83,7 @@ export const MCH = ensureActions({
 		name: 'Heated Slug Shot',
 		icon: 'https://xivapi.com/i/003000/003032.png',
 		onGcd: true,
+		speedAttribute: Attribute.SKILL_SPEED,
 		potency: 100,
 		combo: {
 			from: 7411,
@@ -88,6 +96,7 @@ export const MCH = ensureActions({
 		name: 'Heated Clean Shot',
 		icon: 'https://xivapi.com/i/003000/003033.png',
 		onGcd: true,
+		speedAttribute: Attribute.SKILL_SPEED,
 		potency: 100,
 		combo: {
 			from: 7412,
@@ -101,6 +110,7 @@ export const MCH = ensureActions({
 		name: 'Heat Blast',
 		icon: 'https://xivapi.com/i/003000/003030.png',
 		onGcd: true,
+		speedAttribute: Attribute.SKILL_SPEED,
 		cooldown: 1500,
 		potency: 220,
 	},
@@ -110,6 +120,7 @@ export const MCH = ensureActions({
 		name: 'Auto Crossbow',
 		icon: 'https://xivapi.com/i/003000/003042.png',
 		onGcd: true,
+		speedAttribute: Attribute.SKILL_SPEED,
 	},
 
 	DRILL: {
@@ -117,6 +128,7 @@ export const MCH = ensureActions({
 		name: 'Drill',
 		icon: 'https://xivapi.com/i/003000/003043.png',
 		onGcd: true,
+		speedAttribute: Attribute.SKILL_SPEED,
 		cooldown: 20000,
 		gcdRecast: 2500,
 	},
@@ -126,6 +138,7 @@ export const MCH = ensureActions({
 		name: 'Bioblaster',
 		icon: 'https://xivapi.com/i/003000/003044.png',
 		onGcd: true,
+		speedAttribute: Attribute.SKILL_SPEED,
 		cooldown: 20000,
 		gcdRecast: 2500,
 		statusesApplied: ['BIOBLASTER'],
@@ -136,6 +149,7 @@ export const MCH = ensureActions({
 		name: 'Air Anchor',
 		icon: 'https://xivapi.com/i/003000/003045.png',
 		onGcd: true,
+		speedAttribute: Attribute.SKILL_SPEED,
 		cooldown: 40000,
 		gcdRecast: 2500,
 	},

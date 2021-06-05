@@ -674,6 +674,7 @@ describe('Event adapter', () => {
 		])
 
 		expect(result.map(event => event.type)).toEqual([
+			'actorUpdate', // injected actor update with stats
 			'prepare', // regular cast sequence from actor 1
 			'prepare', // prep from actor 2, should not effect actor 1
 			'action',
@@ -681,7 +682,7 @@ describe('Event adapter', () => {
 			'interrupt',
 			'prepare',
 		])
-		expect(result[4] as Events['interrupt']).toEqual({
+		expect(result[5] as Events['interrupt']).toEqual({
 			type: 'interrupt',
 			timestamp: timestamp + interruptionTimestamp,
 			source: '1',
