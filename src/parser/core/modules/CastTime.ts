@@ -9,6 +9,7 @@ export interface CastTimeAdjustment {
 	actions: number[] | 'all',
 	type: 'time' | 'percentage'
 	adjustment: number,
+	affectsRecast: boolean,
 	start: number,
 	end?: number
 }
@@ -56,7 +57,7 @@ export default class CastTime extends Analyser {
 	 * @returns The index number within the cast time adjustments collection, can be used to reset/end this adjustment later
 	 */
 	public setTimeAdjustment(actions: number[] | 'all', adjustment: number, start: number = this.parser.currentEpochTimestamp, end?: number): number {
-		return this.set(actions, 'time', adjustment, start, end)
+		return this.set(actions, 'time', adjustment, false, start, end)
 	}
 
 	/**
@@ -64,7 +65,7 @@ export default class CastTime extends Analyser {
 	 * @deprecated
 	 */
 	public setInstantCastAdjustmentFflogs(actions: number[] | 'all' = 'all', start: number = this.parser.currentTimestamp, end?: number): number {
-		return this.set(actions, 'percentage', 0, this.parser.fflogsToEpoch(start), end ? this.parser.fflogsToEpoch(end) : undefined)
+		return this.set(actions, 'percentage', 0, false, this.parser.fflogsToEpoch(start), end ? this.parser.fflogsToEpoch(end) : undefined)
 	}
 	/**
 	 * Shorthand function for setting casts to instant (ie. Swiftcast, Triplecast)
@@ -74,31 +75,33 @@ export default class CastTime extends Analyser {
 	 * @returns The end of the adjustment time range. May be left null if the end of the range is not yet known
 	 */
 	public setInstantCastAdjustment(actions: number[] | 'all' = 'all', start: number = this.parser.currentEpochTimestamp, end?: number): number {
-		return this.set(actions, 'percentage', 0, start, end)
+		return this.set(actions, 'percentage', 0, false, start, end)
 	}
 	/**
 	 * setPercentageAdjustment Module-compatibility function
 	 * @deprecated
 	 */
-	public setPercentageAdjustmentFflogs(actions: number[] | 'all', reduction: number, start: number = this.parser.currentTimestamp, end?: number): number {
-		return this.setPercentageAdjustment(actions, reduction, this.parser.fflogsToEpoch(start), end ? this.parser.fflogsToEpoch(end) : undefined)
+	public setPercentageAdjustmentFflogs(actions: number[] | 'all', adjustment: number, affectsRecast: boolean = false, start: number = this.parser.currentTimestamp, end?: number): number {
+		return this.setPercentageAdjustment(actions, adjustment, affectsRecast, this.parser.fflogsToEpoch(start), end ? this.parser.fflogsToEpoch(end) : undefined)
 	}
 	/**
 	 * Sets a cast time adjustment for a percentage change per cast (See: Swiftcast, RDM's Doublecast trait, Ley Lines, etc.)
 	 * @param actions The actions this adjustment applies to. Either an array of IDs, or the string 'all'
 	 * @param adjustment The percentage multiplier to adjust the cast time to (ie 0 for instant cast, 0.85 for Ley Lines, 1.25 for a 25% slow)
+	 * @param affectsRecast Does this percentage change affect the recast time as well as the cast time? Defaults to false
 	 * @param start The beginning of the adjustment time range. Defaults to the current epoch timestamp
 	 * @param end The end of the adjustment time range. May be left null if the end of the range is not yet known
 	 * @returns The index number within the cast time adjustments collection, can be used to reset/end this adjustment later
 	 */
-	public setPercentageAdjustment(actions: number[] | 'all', adjustment: number, start: number = this.parser.currentEpochTimestamp, end?: number): number {
-		return this.set(actions, 'percentage', Math.max(adjustment, 0), start, end)
+	public setPercentageAdjustment(actions: number[] | 'all', adjustment: number, affectsRecast: boolean = false, start: number = this.parser.currentEpochTimestamp, end?: number): number {
+		return this.set(actions, 'percentage', Math.max(adjustment, 0), affectsRecast, start, end)
 	}
-	private set(actions: number[] | 'all', type: 'time' | 'percentage', adjustment: number, start: number = this.parser.currentEpochTimestamp, end?: number): number {
+	private set(actions: number[] | 'all', type: 'time' | 'percentage', adjustment: number, affectsRecast: boolean = false, start: number = this.parser.currentEpochTimestamp, end?: number): number {
 		const newLength = this.castTimes.push({
 			actions,
 			type,
 			adjustment,
+			affectsRecast,
 			start,
 			end,
 		})
@@ -142,6 +145,22 @@ export default class CastTime extends Analyser {
 	}
 
 	/**
+	 * recastForEvent Module-compatibility function
+	 * @deprecated
+	 */
+	public recastForFflogsEvent(event:CastEvent): number | undefined {
+		return this.recastForAction(event.ability.guid, this.parser.fflogsToEpoch(event.timestamp))
+	}
+	/**
+	 * Returns the effective recast time for the specified event
+	 * @param event The event in question
+	 * @returns The actual recast time, either as the default, or the modified time if any modifiers were in effect. Returns undefined i fthe action cannot be determined, or has no gcdRecast/cooldown property defined
+	 */
+	public recastForEvent(event: Events['action'] | Events['prepare']): number | undefined {
+		return this.recastForAction(event.action, event.timestamp)
+	}
+
+	/**
 	 * forAction Module-compatibility function
 	 * @deprecated
 	 */
@@ -155,6 +174,34 @@ export default class CastTime extends Analyser {
 	 * @returns The actual cast time, either as the default, or the modified time if any modifiers were in effect. Returns undefined if the action cannot be determined, or has no default cast time
 	 */
 	public forAction(actionId: number, timestamp: number = this.parser.currentEpochTimestamp): number | undefined {
+		return this.getAdjustedTime(actionId, timestamp)
+	}
+
+	/**
+	 * recastForAction Module-compatibility function
+	 * @deprecated
+	 */
+	public recastForFflogsAction(actionId: number, timestamp: number = this.parser.currentTimestamp): number | undefined {
+		return this.recastForAction(actionId, this.parser.fflogsToEpoch(timestamp))
+	}
+	/**
+	 * Returns the effective recast time for the specified action at the specified point in time
+	 * @param actionId The action in question
+	 * @param timestamp Thetimestamp in question
+	 * @returns The actual recast time, either as the default, or the modified time if any modifiers were in effect. Returns undefined if the action cannot be determined, or has no gcdRecast/cooldown property defined
+	 */
+	public recastForAction(actionId: number, timestamp: number = this.parser.currentEpochTimestamp): number | undefined {
+		return this.getAdjustedTime(actionId, timestamp, true)
+	}
+
+	/**
+	 * Returns the adjusted time (either cast or recast) for the specified action at the specified point in time
+	 * @param actionId The action in question
+	 * @param timestamp The timestamp in question
+	 * @param forRecast Do we want the recast for this action, or the cast time?
+	 * @returns The adjusted time, if any adjustments exist at this timestamp, or the default if not. Will return undefined if the base time (recast/cooldown/cast) can't be determined
+	 */
+	private getAdjustedTime(actionId: number, timestamp: number = this.parser.currentEpochTimestamp, forRecast: boolean = false): number | undefined {
 		// Get any cast time modifiers active when the event took place
 		const matchingTimes = this.castTimes.filter(ct =>
 			(ct.actions === 'all' || ct.actions.includes(actionId)) &&
@@ -164,18 +211,20 @@ export default class CastTime extends Analyser {
 
 		// Mimicking old logic w/ the undefined. Don't ask.
 		const action = this.data.getAction(actionId)
-		const defaultCastTime = action?.castTime
+		const defaultTime = forRecast ? (action?.gcdRecast != null
+			? action?.gcdRecast
+			: action?.cooldown) : action?.castTime
 
 		// If there were no modifiers, just use the default (or if the default comes back undefined or already instant, shouldn't happen but eh)
-		if (!matchingTimes.length || defaultCastTime == null || defaultCastTime === 0) {
-			return defaultCastTime
+		if (!matchingTimes.length || defaultTime == null || defaultTime === 0) {
+			return defaultTime
 		}
-
 		let flatReduction=0
 		let flatIncrease=0
 		let percentageAdjustment=1
 
 		matchingTimes.forEach(ct => {
+			if (!ct.affectsRecast && forRecast) { return }
 			if (ct.type === 'time') {
 				// Find the largest flat cast time reduction value
 				if (ct.adjustment < 0 && ct.adjustment < flatReduction) {
@@ -192,7 +241,7 @@ export default class CastTime extends Analyser {
 		})
 
 		// Calculate the final cast time based on the flat and percentage reductions we've found
-		return Math.max(defaultCastTime + flatIncrease + flatReduction, 0) * percentageAdjustment // Yes, plus flatReduction because it's already a negative value
+		return Math.max(defaultTime + flatIncrease + flatReduction, 0) * percentageAdjustment // Yes, plus flatReduction because it's already a negative value
 
 		/**
 		 * In the absence of easily-acquired slows to test with, I'm going to assume this is the right way to calculate this:
