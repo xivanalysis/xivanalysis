@@ -229,7 +229,6 @@ export abstract class Procs extends Analyser {
 	private rows = new Map()
 
 	protected castingSpellId?: number
-	protected lastCastingSpellId?: number
 
 	initialise() {
 		const playerFilter = filter<Event>().source(this.parser.actor.id)
@@ -270,6 +269,23 @@ export abstract class Procs extends Analyser {
 	}
 
 	/**
+	 * Checks to see if the event in question consumes the given proc
+	 * @param procGroup The proc that may be consumed
+	 * @param event The event that may consume the proc
+	 * @returns True if the event consumes the proc, false if it does not
+	 */
+	private checkConsumeProc(procGroup: ProcGroup, event: Events['action']): boolean {
+		// If we don't currently have this proc active, we can't possibly consume it
+		if (!this.currentWindows.has(procGroup)) { return false }
+		// If we have no idea what this action is, it doesn't consume it
+		if (this.data.getAction(event.action) == null) { return false }
+
+		// If we pass the error checks, return the value from jobSpecificCheckConsumeProc
+		// Subclasses can assume the basic error handling is dealt with and focus on only the job-specific logic
+		return this.jobSpecificCheckConsumeProc(procGroup, event)
+	}
+
+	/**
 	 * May be overridden by subclasses. Called by onCast to allow jobs to add specific logic that determines whether a proc was consumed
 	 * @param _procGroup The procGroup to check for consumption
 	 * @param _event The event to check
@@ -287,21 +303,16 @@ export abstract class Procs extends Analyser {
 
 	private onCast(event: Events['action']): void {
 		const procGroup = this.getTrackedGroupByAction(event.action)
-		this.lastCastingSpellId = this.castingSpellId
+
+		// If this action consumed a proc, log it
+		if (procGroup != null && this.checkConsumeProc(procGroup, event)) {
+			this.stopAndSave(procGroup, event, 'usage')
+
+			this.jobSpecificOnConsumeProc(procGroup, event)
+		}
+
+		// Reset the variable tracking hardcasts since we just finished casting something
 		this.castingSpellId = undefined
-
-		if (procGroup == null) { return }
-		if (!this.currentWindows.has(procGroup)) { return }
-
-		const action = this.data.getAction(event.action)
-		if (action == null) { return }
-
-		// If there is job-specific logic that needs to be run to decide if a proc is being used, do that now
-		if (!this.jobSpecificCheckConsumeProc(procGroup, event)) { return }
-
-		this.stopAndSave(procGroup, event, 'usage')
-
-		this.jobSpecificOnConsumeProc(procGroup, event)
 	}
 
 	private onProcGained(event: Events['statusApply']): void {
