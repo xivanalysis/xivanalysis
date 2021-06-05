@@ -875,7 +875,7 @@
   "smn.pets.suggestions.garuda-st.why": "Garuda-Egi was attacking a single target {0}% of the time it was active.",
   "smn.pets.suggestions.ifrit-aoe.content": "Ifrit-Egi should only be used for single target.  Use Garuda-Egi instead when multiple targets are available, as it will deal more damage.",
   "smn.pets.suggestions.ifrit-aoe.why": "Ifrit-Egi hit multiple targets with {0, plural, one {# use} other {# uses}} of <0/> or <1/>.",
-  "smn.pets.suggestions.no-pet.content": "Pets provide a <0>lot</0> of SMN's passive damage, and are essential for <1/> procs and <2/>. Make sure you have a pet summoned at all times, and keep them out of boss AoEs.",
+  "smn.pets.suggestions.no-pet.content": "Pets provide a <0>lot</0> of SMN's passive damage, and are essential for <1/> procs and <2/>. Make sure you have a pet summoned at all times.",
   "smn.pets.suggestions.no-pet.why": "No pet summoned for {noPetUptimePercent}% of the fight (<1% is recommended).",
   "smn.pets.suggestions.slipstream-ticks.content": "Ensure you use <0/> such that it can deal damage for its entire duration. Summoning another pet or recasting Slipstream will prevent any remaining ticks of a cast.",
   "smn.pets.suggestions.slipstream-ticks.why": "{missedTicks, plural, one {# missed tick} other {# missed ticks}} of Slipstream.",

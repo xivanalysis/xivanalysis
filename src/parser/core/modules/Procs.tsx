@@ -3,6 +3,7 @@ import {Trans, Plural} from '@lingui/react'
 import {Action} from 'data/ACTIONS'
 import {Status} from 'data/STATUSES'
 import {Event, Events} from 'event'
+import {CastEvent} from 'fflogs'
 import {Actors} from 'parser/core/modules/Actors'
 import Suggestions, {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import {SimpleRow, StatusItem, Timeline} from 'parser/core/modules/Timeline'
@@ -107,6 +108,31 @@ export abstract class Procs extends Analyser {
 		const procGroup = this.getTrackedGroupByStatus(status)
 		if (!procGroup) { return 0 }
 		return this.usages.get(procGroup)?.events.length || 0
+	}
+	/**
+	 * Checks to see if the specified event was a proc usage
+	 * @param event The event to check
+	 * @returns True if that event is contained in the usages group, false if not
+	 */
+	public checkEventWasProc(event: Events['action']): boolean {
+		return this.checkActionWasProc(event.action, event.timestamp)
+	}
+	/**
+	 * Module-space accessor for checkEventWasProc
+	 * @deprecated */
+	public checkFflogsEventWasProc(event: CastEvent): boolean {
+		return this.checkActionWasProc(event.ability.guid, this.parser.fflogsToEpoch(event.timestamp))
+	}
+	/**
+	 * Checks to see if the specified action consumed a proc at a given timestamp
+	 * @param actionId The action to check
+	 * @param timestamp The timestamp to check
+	 * @returns True if there was a tracked proc usage for the action at the given timestamp, false otherwise
+	 */
+	private checkActionWasProc(actionId: number, timestamp: number): boolean {
+		const procGroup = this.getTrackedGroupByAction(actionId)
+		if (procGroup == null) { return false }
+		return this.getUsagesForStatus(procGroup).some(event => event.timestamp === timestamp)
 	}
 
 	private overwrites = new Map<ProcGroup, ProcGroupEvents>()
