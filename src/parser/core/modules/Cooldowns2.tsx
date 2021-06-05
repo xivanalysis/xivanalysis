@@ -110,13 +110,16 @@ export class Cooldowns extends Analyser {
 		// Clear out current cast state
 		this.currentCast = undefined
 
-		// Reset the cooldown for the interrupted cast's group
+		// Reset cooldown for any of the interrupted cast's groups that are currently
+		// active. We avoid inactive ones explicitly, as it's possible to interrupt
+		// a cast beyond the end of all related cooldown groups (i.e. rdm long casts).
 		// NOTE: This assumes that interrupting casts refunds charges. Given that,
 		//       at current, there are no multi-charge or non-gcd interruptible
 		//       skills, this is a safe assumption. Re-evaluate if the above changes.
 		// TODO: This logic might make sense as a public "reset" helper.
-		const groups = this.actionMapping.toGroups.get(event.action) ?? []
-		for (const group of groups) {
+		const activeGroups = (this.actionMapping.toGroups.get(event.action) ?? [])
+			.filter(group => this.cooldownStates.has(group))
+		for (const group of activeGroups) {
 			this.endCooldownGroup(group, CooldownEndReason.INTERRUPTED)
 		}
 	}
