@@ -5,6 +5,7 @@ import {Event, Events} from 'event'
 import {Analyser} from 'parser/core/Analyser'
 import {filter, oneOf} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
+import CastTime from 'parser/core/modules/CastTime'
 import Checklist, {Rule, Requirement} from 'parser/core/modules/Checklist'
 import {Data} from 'parser/core/modules/Data'
 import {SimpleRow, StatusItem, Timeline} from 'parser/core/modules/Timeline'
@@ -27,9 +28,10 @@ export default class Leylines extends Analyser {
 	static title = t('blm.leylines.title')`Ley Lines`
 	static displayOrder = DISPLAY_ORDER.LEY_LINES
 
-	@dependency data!: Data
-	@dependency checklist!: Checklist
-	@dependency timeline!: Timeline
+	@dependency private data!: Data
+	@dependency private checklist!: Checklist
+	@dependency private timeline!: Timeline
+	@dependency private castTime!: CastTime
 
 	private leyLinesStatuses: number[] = [
 		this.data.statuses.LEY_LINES.id,
@@ -37,6 +39,7 @@ export default class Leylines extends Analyser {
 	]
 
 	private buffWindows: {[key: number]: LeyLinesWindows} = {}
+	private castTimeIndex: number | null = null
 
 	initialise() {
 		const leyLinesFilter = filter<Event>()
@@ -71,6 +74,10 @@ export default class Leylines extends Analyser {
 		tracker.current = {
 			start: event.timestamp,
 		}
+
+		if (status.id === this.data.statuses.CIRCLE_OF_POWER.id) {
+			this.castTimeIndex = this.castTime.setPercentageAdjustment('all', this.data.statuses.CIRCLE_OF_POWER.speedModifier, true)
+		}
 	}
 
 	private onDrop(event: Events['statusRemove']) {
@@ -97,6 +104,11 @@ export default class Leylines extends Analyser {
 		// Close dependency windows
 		if (statusId === this.data.statuses.LEY_LINES.id) {
 			this.stopAndSave(this.data.statuses.CIRCLE_OF_POWER.id, endTime)
+		}
+
+		if (statusId === this.data.statuses.CIRCLE_OF_POWER.id) {
+			this.castTime.reset(this.castTimeIndex)
+			this.castTimeIndex = null
 		}
 	}
 

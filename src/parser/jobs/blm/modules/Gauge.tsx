@@ -10,6 +10,7 @@ import {TimestampHook} from 'parser/core/Dispatcher'
 import {filter, oneOf} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
 import BrokenLog from 'parser/core/modules/BrokenLog'
+import CastTime from 'parser/core/modules/CastTime'
 import {Data} from 'parser/core/modules/Data'
 import {ResourceDatum, ResourceGraphs} from 'parser/core/modules/ResourceGraphs'
 import Suggestions, {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
@@ -17,12 +18,13 @@ import {UnableToAct} from 'parser/core/modules/UnableToAct'
 import {CompleteEvent} from 'parser/core/Parser'
 import React from 'react'
 import {isSuccessfulHit} from 'utilities'
-import {FIRE_SPELLS, ICE_SPELLS_TARGETED, ICE_SPELLS_UNTARGETED} from './Elements'
+import {FIRE_SPELLS, ICE_SPELLS, ICE_SPELLS_TARGETED, ICE_SPELLS_UNTARGETED} from './Elements'
 
 const ENOCHIAN_DURATION_REQUIRED = 30000
 const ASTRAL_UMBRAL_DURATION = 15000
 const MAX_ASTRAL_UMBRAL_STACKS = 3
 const MAX_UMBRAL_HEART_STACKS = 3
+const MAX_ASTRAL_UMBRAL_CAST_SCALAR = 0.5
 const FLARE_MAX_HEART_CONSUMPTION = 3
 const MAX_POLYGLOT_STACKS = 2
 
@@ -69,6 +71,7 @@ export default class Gauge extends Analyser {
 	@dependency private unableToAct!: UnableToAct
 	@dependency private data!: Data
 	@dependency private resourceGraphs!: ResourceGraphs
+	@dependency private castTime!: CastTime
 
 	private enochianDowntimeTracker: EnochianDowntimeTracking = {
 		history: [],
@@ -107,6 +110,8 @@ export default class Gauge extends Analyser {
 		this.data.actions.FOUL.id,
 		this.data.actions.XENOGLOSSY.id,
 	]
+
+	private castTimeIndex: number | null = null
 
 	initialise() {
 		const playerFilter = filter<Event>().source(this.parser.actor.id)
@@ -167,7 +172,7 @@ export default class Gauge extends Analyser {
 		if (abilityId == null) { return }
 
 		// Bail out if the event didn't do damage and the action needs to in order to affect gauge state
-		if (this.affectsGaugeOnDamage.includes(abilityId) && event.type === 'damage' && isSuccessfulHit(event)) { return }
+		if (this.affectsGaugeOnDamage.includes(abilityId) && event.type === 'damage' && !isSuccessfulHit(event)) { return }
 
 		switch (abilityId) {
 		case this.data.actions.ENOCHIAN.id:
@@ -263,7 +268,9 @@ export default class Gauge extends Analyser {
 			}
 		}
 
-		if (this.gaugeValuesChanged(this.gaugeHistory.get(this.lastHistoryTimestamp))) {
+		const lastGaugeState = this.gaugeHistory.get(this.lastHistoryTimestamp)
+		if (this.gaugeValuesChanged(lastGaugeState)) {
+			this.updateCastTimes(lastGaugeState)
 			this.setGaugeAndUpdateHistory()
 
 			// Queue event to tell other analysers (and modules) about the change
@@ -275,6 +282,27 @@ export default class Gauge extends Analyser {
 				type: 'blmgauge',
 				timestamp: this.parser.currentTimestamp,
 			})
+		}
+	}
+
+	private updateCastTimes(lastGaugeState?: BLMGaugeState): void {
+		const lastAstralFire = lastGaugeState?.astralFire || 0
+		const lastUmbralIce = lastGaugeState?.umbralIce || 0
+
+		// If we have gained max AF, set Blizzard spells to be fast
+		if (lastAstralFire !== MAX_ASTRAL_UMBRAL_STACKS && this.currentGaugeState.astralFire === MAX_ASTRAL_UMBRAL_STACKS) {
+			this.castTime.reset(this.castTimeIndex)
+			this.castTimeIndex = this.castTime.setPercentageAdjustment(ICE_SPELLS, MAX_ASTRAL_UMBRAL_CAST_SCALAR)
+		}
+		// If we have gained max UI, set Fire spells to be fast
+		if (lastUmbralIce !== MAX_ASTRAL_UMBRAL_STACKS && this.currentGaugeState.umbralIce === MAX_ASTRAL_UMBRAL_STACKS) {
+			this.castTime.reset(this.castTimeIndex)
+			this.castTimeIndex = this.castTime.setPercentageAdjustment(FIRE_SPELLS, MAX_ASTRAL_UMBRAL_CAST_SCALAR)
+		}
+		// If our current gauge state doesn't have either max AF or max UI, drop the cast time adjustment entirely
+		if (this.currentGaugeState.astralFire !== MAX_ASTRAL_UMBRAL_STACKS && this.currentGaugeState.umbralIce !== MAX_ASTRAL_UMBRAL_STACKS) {
+			this.castTime.reset(this.castTimeIndex)
+			this.castTimeIndex = null
 		}
 	}
 
