@@ -6,7 +6,6 @@ import OGCDDowntime from './OGCDDowntime'
 import Procs from './Procs'
 import RotationWatchdog from './RotationWatchdog'
 import Sharpcast from './Sharpcast'
-import Speedmod from './Speedmod'
 import Thunder from './Thunder'
 import BlmWeaving from './Weaving'
 
@@ -20,6 +19,5 @@ export default [
 	Procs,
 	RotationWatchdog,
 	Sharpcast,
-	Speedmod,
 	Thunder,
 ]
