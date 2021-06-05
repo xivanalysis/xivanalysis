@@ -116,9 +116,9 @@ export default class Gauge extends Analyser {
 	initialise() {
 		const playerFilter = filter<Event>().source(this.parser.actor.id)
 
-		// The execute event is sufficient for actions that don't need to do damage to affect gauge state (ie. Transpose, Enochian, Umbral Soul)
+		// The action event is sufficient for actions that don't need to do damage to affect gauge state (ie. Transpose, Enochian, Umbral Soul)
 		// Foul and Xenoglossy also fall into this category since they consume Polyglot on execution
-		this.addEventHook(playerFilter.type('execute').action(oneOf(this.affectsGaugeOnCast)), this.onCast)
+		this.addEventHook(playerFilter.type('action').action(oneOf(this.affectsGaugeOnCast)), this.onCast)
 
 		// The rest of the fire and ice spells must do damage in order to affect gauge state, so hook that event instead.
 		this.addEventHook(playerFilter.type('damage').cause(filter<Cause>().action(oneOf(this.affectsGaugeOnDamage))), this.onCast)
@@ -160,12 +160,12 @@ export default class Gauge extends Analyser {
 	}
 
 	//#region onCast and gauge state modification
-	private onCast(event: Events['execute'] | Events['damage']) {
+	private onCast(event: Events['damage'] | Events['action']) {
 		let abilityId
-		if (event.type === 'execute') {
-			abilityId = event.action
-		} else if (event.cause.type === 'action') {
+		if ('cause' in event && 'action' in event.cause) {
 			abilityId = event.cause.action
+		} else if ('action' in event) {
+			abilityId = event.action
 		}
 
 		// If we couldn't figure out what ability this is (somehow wound up here because of a DoT?), bail
@@ -260,10 +260,10 @@ export default class Gauge extends Analyser {
 
 	private addEvent() {
 		if (this.currentGaugeState.astralFire > 0 || this.currentGaugeState.umbralIce > 0) {
-			if (this.astralUmbralTimeoutHook != null) {
+			if (this.astralUmbralTimeoutHook == null) {
 				this.astralUmbralTimeoutHook = this.addTimestampHook(this.parser.currentEpochTimestamp + ASTRAL_UMBRAL_DURATION, () => this.onAstralUmbralTimeout())
 			}
-			if (this.gainPolyglotHook != null && this.currentGaugeState.enochian) {
+			if (this.gainPolyglotHook == null && this.currentGaugeState.enochian) {
 				this.gainPolyglotHook = this.addTimestampHook(this.parser.currentEpochTimestamp + ENOCHIAN_DURATION_REQUIRED, this.onGainPolyglot)
 			}
 		}
