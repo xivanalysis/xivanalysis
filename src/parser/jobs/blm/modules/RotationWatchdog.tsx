@@ -229,7 +229,7 @@ export default class RotationWatchdog extends Module {
 
 	// Handle events coming from BLM's Gauge module
 	private onGaugeEvent(event: Events['blmgauge']) {
-		const nextGaugeState = this.gauge.getGaugeState(event.timestamp)
+		const nextGaugeState = this.gauge.getFflogsGaugeState(event.timestamp)
 		if (!nextGaugeState) { return }
 
 		// If we're beginning the fire phase of this cycle, note it and save some data
