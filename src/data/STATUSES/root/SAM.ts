@@ -26,6 +26,7 @@ export const SAM = ensureStatuses({
 		name: 'Shifu',
 		icon: 'https://xivapi.com/i/013000/013302.png',
 		duration: 40,
+		speedModifier: 0.87,
 	},
 
 	MEDITATE: {

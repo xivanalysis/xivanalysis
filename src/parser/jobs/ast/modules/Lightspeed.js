@@ -86,7 +86,7 @@ export default class LIGHTSPEED extends Module {
 			casts: [],
 		}
 
-		this._ctIndex = this.castTime.setFflogs('all', LIGHTSPEED_CAST_TIME_MOD)
+		this._ctIndex = this.castTime.setTimeAdjustmentFflogs('all', LIGHTSPEED_CAST_TIME_MOD)
 	}
 
 	_stopAndSave(endTime = this.parser.currentTimestamp) {

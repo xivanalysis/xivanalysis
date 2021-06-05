@@ -157,7 +157,7 @@ export default class DWT extends Module {
 			casts: [],
 		}
 
-		this._ctIndex = this.castTime.setFflogs('all', DWT_CAST_TIME_MOD)
+		this._ctIndex = this.castTime.setTimeAdjustmentFflogs('all', DWT_CAST_TIME_MOD)
 	}
 
 	_stopAndSave(dfHits, endTime = this.parser.currentTimestamp) {
