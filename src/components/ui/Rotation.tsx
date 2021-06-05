@@ -18,14 +18,18 @@ export default class Rotation extends Component<RotationProps> {
 
 		return <div className={styles.container}>
 			{events.map((event, index) => {
-				let actionId = event.action
-				if (!actionId) {
-					if (event.ability) {
-						actionId = event.ability.guid
-					} else if (event.cause && event.cause.type === 'action') {
-						actionId = event.cause.action
-					}
-				}
+function getActionId(event): number | undefined {
+    if (event.action != null) { 
+        return event.action
+    }
+    if (event.ability != null) {
+        return event.ability.guid
+    }
+    if (event.cause != null && event.cause.type === 'action') {
+        return event.cause.action
+    }
+    return undefined
+}
 
 				const action = getDataBy(ACTIONS, 'id', actionId) as TODO
 
