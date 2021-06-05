@@ -24,7 +24,7 @@ export default class GlobalCooldown extends Module {
 	static dependencies = [
 		// We need this to normalise before us
 		'precastAction', // eslint-disable-line @xivanalysis/no-unused-dependencies
-		'castTime', // eslint-disable-line @xivanalysis/no-unused-dependencies
+		'castTime',
 		'data',
 		'downtime',
 		'speedmod',
@@ -241,9 +241,11 @@ export default class GlobalCooldown extends Module {
 	}
 
 	_getGcdLength(gcd) {
-		let cooldown = (gcd.isInstant || gcd.castTime <= gcd.cooldown)
-			? gcd.cooldown
-			: Math.max(gcd.castTime, gcd.cooldown)
+		const gcdCastTime = this.castTime.forFflogsAction(gcd.actionId, gcd.timestamp)
+		const gcdCooldown = this.castTime.recastForFflogsAction(gcd.actionId, gcd.timestamp)
+		let cooldown = (gcd.isInstant || gcdCastTime <= gcdCooldown)
+			? gcdCooldown
+			: Math.max(gcdCastTime, gcdCooldown)
 
 		// Some actions are lower than or equal to min gcd, only adjust with ratios when they are not
 		if (cooldown > MIN_GCD) {
