@@ -1,4 +1,6 @@
-import {applyLayer} from 'data/layer'
+import {applyLayer, getAppliedData} from 'data/layer'
+import {Patch} from 'data/PATCHES'
+import {Report} from 'report'
 import {layers} from './layers'
 import {ActionRoot, ITEM_ID_OFFSET, root} from './root'
 import {Action} from './type'
@@ -36,6 +38,11 @@ export {
 	ITEM_ID_OFFSET,
 }
 export type {Action}
+
+export function getActions(report: Report) {
+	const patch = new Patch(report.edition, report.timestamp / 1000)
+	return getAppliedData({root, layers, state: {patch: patch}})
+}
 
 // Everything below here is temp back compat
 // need to export a collated everything-applied as default for back compat

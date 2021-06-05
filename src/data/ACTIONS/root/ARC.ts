@@ -1,3 +1,4 @@
+import {Attribute} from 'event'
 import {ensureActions} from '../type'
 
 export const ARC = ensureActions({
@@ -6,6 +7,7 @@ export const ARC = ensureActions({
 		name: 'Heavy Shot',
 		icon: 'https://xivapi.com/i/000000/000358.png',
 		onGcd: true,
+		speedAttribute: Attribute.SKILL_SPEED,
 		potency: 180,
 	},
 	VENOMOUS_BITE: {
@@ -13,6 +15,7 @@ export const ARC = ensureActions({
 		name: 'Venomous Bite',
 		icon: 'https://xivapi.com/i/000000/000363.png',
 		onGcd: true,
+		speedAttribute: Attribute.SKILL_SPEED,
 		potency: 100,
 	},
 	QUICK_NOCK: {
@@ -20,6 +23,7 @@ export const ARC = ensureActions({
 		name: 'Quick Nock',
 		icon: 'https://xivapi.com/i/000000/000360.png',
 		onGcd: true,
+		speedAttribute: Attribute.SKILL_SPEED,
 		potency: 150,
 	},
 	BLOODLETTER: {
@@ -27,6 +31,7 @@ export const ARC = ensureActions({
 		name: 'Bloodletter',
 		icon: 'https://xivapi.com/i/000000/000361.png',
 		onGcd: false,
+		speedAttribute: Attribute.SKILL_SPEED,
 		cooldown: 15000,
 		potency: 150,
 	},
@@ -35,6 +40,7 @@ export const ARC = ensureActions({
 		name: 'Straight Shot',
 		icon: 'https://xivapi.com/i/000000/000359.png',
 		onGcd: true,
+		speedAttribute: Attribute.SKILL_SPEED,
 		potency: 200,
 	},
 	BARRAGE: {
@@ -50,6 +56,7 @@ export const ARC = ensureActions({
 		name: 'Windbite',
 		icon: 'https://xivapi.com/i/000000/000367.png',
 		onGcd: true,
+		speedAttribute: Attribute.SKILL_SPEED,
 		potency: 60,
 	},
 	RAGING_STRIKES: {

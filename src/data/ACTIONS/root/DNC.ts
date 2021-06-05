@@ -1,3 +1,4 @@
+import {Attribute} from 'event'
 import {ensureActions} from '../type'
 
 export const DNC = ensureActions({
@@ -48,6 +49,7 @@ export const DNC = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003451.png',
 		name: 'Cascade',
 		onGcd: true,
+		speedAttribute: Attribute.SKILL_SPEED,
 		combo: {
 			start: true,
 		},
@@ -57,6 +59,7 @@ export const DNC = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003452.png',
 		name: 'Fountain',
 		onGcd: true,
+		speedAttribute: Attribute.SKILL_SPEED,
 		combo: {
 			from: 15989,
 			end: true,
@@ -67,18 +70,21 @@ export const DNC = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003460.png',
 		name: 'Reverse Cascade',
 		onGcd: true,
+		speedAttribute: Attribute.SKILL_SPEED,
 	},
 	FOUNTAINFALL: {
 		id: 15992,
 		icon: 'https://xivapi.com/i/003000/003464.png',
 		name: 'Fountainfall',
 		onGcd: true,
+		speedAttribute: Attribute.SKILL_SPEED,
 	},
 	WINDMILL: {
 		id: 15993,
 		icon: 'https://xivapi.com/i/003000/003453.png',
 		name: 'Windmill',
 		onGcd: true,
+		speedAttribute: Attribute.SKILL_SPEED,
 		combo: {
 			start: true,
 		},
@@ -88,6 +94,7 @@ export const DNC = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003461.png',
 		name: 'Bladeshower',
 		onGcd: true,
+		speedAttribute: Attribute.SKILL_SPEED,
 		combo: {
 			from: 15993,
 			end: true,
@@ -98,12 +105,14 @@ export const DNC = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003463.png',
 		name: 'Rising Windmill',
 		onGcd: true,
+		speedAttribute: Attribute.SKILL_SPEED,
 	},
 	BLOODSHOWER: {
 		id: 15996,
 		icon: 'https://xivapi.com/i/003000/003465.png',
 		name: 'Bloodshower',
 		onGcd: true,
+		speedAttribute: Attribute.SKILL_SPEED,
 	},
 	STANDARD_STEP: {
 		id: 15997,
@@ -170,6 +179,7 @@ export const DNC = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003476.png',
 		name: 'Saber Dance',
 		onGcd: true,
+		speedAttribute: Attribute.SKILL_SPEED,
 	},
 	CLOSED_POSITION: {
 		id: 16006,
