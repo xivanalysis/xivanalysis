@@ -65,12 +65,6 @@ export class Analyser extends Injectable {
 	/** The style of the wrapper that analysis output should be rendered in. */
 	static displayMode = DisplayMode.COLLAPSIBLE
 
-	/**
-	 * Set to `true` to enable debug mode for this analyser, allowing the execution
-	 * of any calls to the debug method.
-	 */
-	static debug = false
-
 	/** The parser for the current analysis. */
 	protected readonly parser: Parser
 

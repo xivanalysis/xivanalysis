@@ -1,4 +1,6 @@
-import {applyLayer, LayerData} from 'data/layer'
+import {applyLayer, getAppliedData, LayerData} from 'data/layer'
+import {Patch} from 'data/PATCHES'
+import {Report} from 'report'
 import {layers} from './layers'
 import {root, StatusRoot} from './root'
 import {Status} from './type'
@@ -37,6 +39,10 @@ export {
 }
 export type {Status}
 
+export function getStatuses(report: Report) {
+	const patch = new Patch(report.edition, report.timestamp / 1000)
+	return getAppliedData({root: correctedRoot, layers: correctedLayers, state: {patch: patch}})
+}
 // Everything below here is temp back compat
 // need to export a collated everything-applied as default for back compat
 // TODO: Need to consider how data can cross-reference under the layered system - what if an ID changes? (Because of course they do)
