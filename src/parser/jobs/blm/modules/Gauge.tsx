@@ -26,7 +26,7 @@ const MAX_UMBRAL_HEART_STACKS = 3
 const FLARE_MAX_HEART_CONSUMPTION = 3
 const MAX_POLYGLOT_STACKS = 2
 
-export interface EventBLMGauge extends FieldsBase {
+interface EventBLMGauge extends FieldsBase {
 	type: 'blmgauge',
 }
 
@@ -136,7 +136,7 @@ export default class Gauge extends Analyser {
 		// First try to get the gauge state at this exact timestamp
 		let gaugeState = this.gaugeHistory.get(timestamp)
 		// If there is no gauge state for the exact timestamp, look through the historical data to find the effective state
-		if (!gaugeState) {
+		if (gaugeState == null) {
 			let historyKey = 0
 			// If anyone knows of a better way to get the last historical timestamp prior to the parameter timestamp, please tell me...
 			for (const key of this.gaugeHistory.keys()) {
@@ -156,7 +156,7 @@ export default class Gauge extends Analyser {
 
 	//#region onCast and gauge state modification
 	private onCast(event: Events['execute'] | Events['damage']) {
-		let abilityId = 0
+		let abilityId
 		if (event.type === 'execute') {
 			abilityId = event.action
 		} else if (event.cause.type === 'action') {
@@ -164,7 +164,7 @@ export default class Gauge extends Analyser {
 		}
 
 		// If we couldn't figure out what ability this is (somehow wound up here because of a DoT?), bail
-		if (abilityId === 0) { return }
+		if (abilityId == null) { return }
 
 		// Bail out if the event didn't do damage and the action needs to in order to affect gauge state
 		if (this.affectsGaugeOnDamage.includes(abilityId) && event.type === 'damage' && isSuccessfulHit(event)) { return }
@@ -255,10 +255,10 @@ export default class Gauge extends Analyser {
 
 	private addEvent() {
 		if (this.currentGaugeState.astralFire > 0 || this.currentGaugeState.umbralIce > 0) {
-			if (!this.astralUmbralTimeoutHook) {
+			if (this.astralUmbralTimeoutHook != null) {
 				this.astralUmbralTimeoutHook = this.addTimestampHook(this.parser.currentEpochTimestamp + ASTRAL_UMBRAL_DURATION, () => this.onAstralUmbralTimeout())
 			}
-			if (!this.gainPolyglotHook && this.currentGaugeState.enochian) {
+			if (this.gainPolyglotHook != null && this.currentGaugeState.enochian) {
 				this.gainPolyglotHook = this.addTimestampHook(this.parser.currentEpochTimestamp + ENOCHIAN_DURATION_REQUIRED, this.onGainPolyglot)
 			}
 		}
@@ -279,7 +279,7 @@ export default class Gauge extends Analyser {
 	}
 
 	private gaugeValuesChanged(lastGaugeEvent?: BLMGaugeState) {
-		if (!lastGaugeEvent) {
+		if (lastGaugeEvent == null) {
 			return true
 		}
 		if (lastGaugeEvent.astralFire !== this.currentGaugeState.astralFire ||
@@ -415,13 +415,15 @@ export default class Gauge extends Analyser {
 
 	private startEnochianUptime(timestamp: number) {
 		this.currentGaugeState.enochian = true
-		if (this.enochianDowntimeTracker.current) {
+
+		if (this.enochianDowntimeTracker.current != null) {
 			this.stopEnochianDowntime(timestamp)
 		}
 	}
 
 	private stopEnochianDowntime(timestamp: number) {
-		if (!this.enochianDowntimeTracker.current) { return }
+		if (this.enochianDowntimeTracker.current == null) { return }
+
 		this.enochianDowntimeTracker.current.stop = timestamp
 		this.enochianDowntimeTracker.totalDowntime += Math.max(this.enochianDowntimeTracker.current.stop - this.enochianDowntimeTracker.current.start, 0)
 		this.enochianDowntimeTracker.history.push({...this.enochianDowntimeTracker.current})
@@ -446,7 +448,7 @@ export default class Gauge extends Analyser {
 	//#endregion
 
 	private tryExpireTimestampHook(hook: TimestampHook | null): TimestampHook | null {
-		if (hook) {
+		if (hook != null) {
 			this.removeTimestampHook(hook)
 			hook = null
 		}
