@@ -2,6 +2,7 @@ import {JobKey} from 'data/JOBS'
 import {Attribute, AttributeValue, Events, Position, Resource} from 'event'
 import {Actor as ReportActor, Team} from 'report'
 import {Object} from 'ts-toolbelt'
+import {SUB_ATTRIBUTE_MINIMUM} from 'utilities/speedStatMapper'
 
 /** Representation of resources of an actor at a point in time. */
 class ActorResources {
@@ -65,7 +66,7 @@ class ActorResources {
 		const getHistoricalAttribute = (attribute: Attribute) =>
 			this.getHistoricalValue(
 				event => event.attributes?.find(eventAttr => eventAttr.attribute === attribute),
-				{attribute, value: 0, estimated: true}
+				{attribute, value: SUB_ATTRIBUTE_MINIMUM, estimated: true}
 			)
 
 		return {
