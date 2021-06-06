@@ -40,7 +40,7 @@ export default class Procs extends CoreProcs {
 
 	protected jobSpecificCheckConsumeProc(_procGroup: ProcGroup, event: Events['action']): boolean {
 		// If we were already hardcasting this spell, it does not consume the proc
-		return !(this.castingSpellId && this.castingSpellId === event.action)
+		return !(this.castingSpellId != null && this.castingSpellId === event.action)
 	}
 
 	protected jobSpecificOnConsumeProc(procGroup: ProcGroup, event: Events['action']): void {
