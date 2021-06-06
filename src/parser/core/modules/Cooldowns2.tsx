@@ -6,6 +6,7 @@ import {Analyser} from '../Analyser'
 import {TimestampHook} from '../Dispatcher'
 import {dependency} from '../Injectable'
 import {Data} from './Data'
+import {SpeedAdjustments} from './SpeedAdjustments'
 import {SimpleItem, SimpleRow, Timeline} from './Timeline'
 
 const DEFAULT_CHARGES = 1
@@ -45,6 +46,7 @@ export class Cooldowns extends Analyser {
 	// TODO: cooldownOrder
 
 	@dependency private data!: Data
+	@dependency private speedAdjustments!: SpeedAdjustments
 	@dependency private timeline!: Timeline
 
 	private currentCast?: Action['id']
@@ -102,7 +104,6 @@ export class Cooldowns extends Analyser {
 		// This is, for the sake of simplicity, assuming that charges are consumed
 		// on prepare. As it stands, no 2+ charge action actually has a cast time,
 		// so this is a pretty-safe assumption. Revisit if this ever changes.
-		// TODO: How will this play alongside interrupts?
 		this.currentCast = event.action
 		this.consumeCharge(action)
 	}
@@ -133,7 +134,6 @@ export class Cooldowns extends Analyser {
 	private onAction(event: Events['action']) {
 		// Clear out any current casting state. If we're finishing a cast that's
 		// already been tracked, noop.
-		// TODO: Work out how this will interact with interrupts.
 		const currentCast = this.currentCast
 		this.currentCast = undefined
 		if (currentCast === event.action) {
@@ -172,11 +172,8 @@ export class Cooldowns extends Analyser {
 		}
 
 		// If we're trying to consume a charge at 0 charges, something in the state
-		// is very wrong. At EOD, the parse is the source of truth, so we're fudging
-		// the current charge state to respect it.
-		// TODO: Currently, this is primarily firing on consecutive casts of the same
-		//       GCD action with a sub-2.5 GCD. Most instances of this should be
-		//       resolved with spks calculations.
+		// is very wrong (or the game is being dumb). At EOD, the parse is the source
+		// of truth, so we're fudging the current charge state to respect it.
 		if (chargeState.current <= 0) {
 			this.debug(`Attempting to consume charge of ${action.name} (${action.id}) with no charges remaining, fudging.`)
 			chargeState.current = 1
@@ -237,25 +234,38 @@ export class Cooldowns extends Analyser {
 		// Check if any of the groups triggered by this action are already on cooldown
 		// - this is technically impossible, but Square Enix™️, so we fudge it by ending
 		// the overlapping groups with a warning.
-		// TODO: This is firing frequently due to lack of adjustment of speed-affected
-		//       (re)cast times. Re-evaluate logic when that is accounted for.
+		// TODO: Even with speed adjustments, CDGs like the GCD (58) have some seriously
+		//       fuzzy timings in logs and cause considierable overlapping anyway. Look into it.
 		const overlappingConfigs = configs.filter(config => this.cooldownStates.has(config.group))
 		if (overlappingConfigs.length > 0) {
-			this.debug(`Use of ${action.name} at ${this.parser.formatEpochTimestamp(this.parser.currentEpochTimestamp)} overlaps currently active groups: ${overlappingConfigs.join(', ')}.`)
+			this.debug(({log}) => {
+				const now = this.parser.currentEpochTimestamp
+				const overlaps = overlappingConfigs
+					.map(config => {
+						const expected = this.cooldownStates.get(config.group)?.end ?? 0
+						return `${config.group} (${this.parser.formatEpochTimestamp(expected)}, delta ${now - expected})`
+					})
+					.join(', ')
+				log(`Use of ${action.name} at ${this.parser.formatEpochTimestamp(now)} overlaps currently active groups: ${overlaps}.`)
+			})
+
 			for (const config of overlappingConfigs) {
 				this.endCooldownGroup(config.group, CooldownEndReason.OVERLAPPED)
 			}
 		}
 
 		// Start all cooldowns for the action
-		// TODO: This is starting all groups with the same cooldown - this is incorrect
-		//       in cases such as the GCD on multi-CDG actions, where the GCD CDG
-		//       will be triggered for the full duration, causing a guaranteed overlap
-		//       with the next GCD.
-		// TODO: Some cooldowns (GCD, GF, etc) should have their cooldown modified
-		//       by the relevant speed attribute value.
+		const attribute = action.speedAttribute
 		for (const config of configs) {
-			this.startCooldownGroup(config.group, config.duration)
+			let duration = config.duration
+			if (attribute != null) {
+				duration = this.speedAdjustments.getAdjustedDuration({
+					duration,
+					attribute,
+				})
+			}
+
+			this.startCooldownGroup(config.group, duration)
 		}
 	}
 
