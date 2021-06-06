@@ -22,14 +22,14 @@ export function getEstimatedTime(speedStat: number, baseDuration: number): numbe
 	// BLM opposite-aspect multiplier. 100 for same asepct, 50 for opposite.
 	const astralUmbral = 100
 
-	// The base speed bonus function.
-	const fnSpeed = 1000 - floor(130 * (speedStat - SUB_ATTRIBUTE_MINIMUM) / STAT_DIVISOR)
+	// The base multiplier influenced by the user's speed attributes
+	const attributeMultiplier = 1000 - floor(130 * (speedStat - SUB_ATTRIBUTE_MINIMUM) / STAT_DIVISOR)
 
 	// Duration calculation, split for ease of reading.
-	const gcd1 = floor(fnSpeed * baseDuration / 1000)
-	const gcd2 = floor(floor(100 - selfBuff) * (100 - haste) / 100)
-	const gcd3 = floor(floor(gcd1 * gcd2 / 1000) * astralUmbral / 100)
+	const adjustedDuration = floor(attributeMultiplier * baseDuration / 1000)
+	const hasteMultiplier = floor(floor(100 - selfBuff) * (100 - haste) / 100)
+	const finalDuration = floor(floor(adjustedDuration * hasteMultiplier / 1000) * astralUmbral / 100)
 
 	// Formula calculates centiseconds, bump that down to milliseconds for consistency with xiva.
-	return gcd3 *	10
+	return finalDuration * 10
 }
