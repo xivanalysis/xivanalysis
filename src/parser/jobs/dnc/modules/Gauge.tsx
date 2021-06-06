@@ -51,6 +51,7 @@ const FEATHER_GENERATION_CHANCE = .5
 const MAX_ESPRIT = 100
 const SABER_DANCE_COST = 50
 const MAX_FEATHERS = 4
+
 export default class Gauge extends Analyser {
 	static handle = 'gauge'
 
