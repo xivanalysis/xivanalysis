@@ -52,7 +52,6 @@ const MAX_ESPRIT = 100
 const SABER_DANCE_COST = 50
 const MAX_FEATHERS = 4
 
-const DNC_COLOR = Color(JOBS.DANCER.colour)
 export default class Gauge extends Analyser {
 	static handle = 'gauge'
 
@@ -372,17 +371,18 @@ export default class Gauge extends Analyser {
 
 	/* Parse Completion and output */
 	private onComplete() {
-		this.resourceGraphs.addResource({
-			label: <Trans id="dnc.gauge.resource.esprit">Esprit</Trans>,
-			colour: DNC_COLOR,
-			data: this.espritGauge.history,
-		})
 
-		this.resourceGraphs.addResource({
+		this.resourceGraphs.addGauge({
 			label: <Trans id="dnc.gauge.resource.feathers">Feathers</Trans>,
 			// eslint-disable-next-line @typescript-eslint/no-magic-numbers
-			colour: DNC_COLOR.fade(0.6).toString(),
+			colour: Color.rgb(140.6, 161.1, 70.8).fade(0.25).toString(),
 			data: this.featherGauge.history,
+		})
+		this.resourceGraphs.addGauge({
+			label: <Trans id="dnc.gauge.resource.esprit">Esprit</Trans>,
+			// eslint-disable-next-line @typescript-eslint/no-magic-numbers
+			colour: Color(JOBS.DANCER.colour).fade(0.25).toString(),
+			data: this.espritGauge.history,
 		})
 
 		const missedSaberDances = Math.floor(this.espritGauge.overcapAmount/SABER_DANCE_COST)

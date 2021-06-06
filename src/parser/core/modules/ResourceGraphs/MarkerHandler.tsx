@@ -9,7 +9,8 @@ export type ResourceInfo =
 	& Partial<ResourceDatum>
 
 export interface MarkerHandlerProps {
-	getResources: (fightPercent: number) => ResourceInfo[]
+	handle: string,
+	getData: (fightPercent: number, handle: string) => ResourceInfo[]
 }
 
 interface MarkerPositionData {
@@ -22,14 +23,17 @@ interface MarkerState extends MarkerPositionData {
 	resources: ResourceInfo[]
 }
 
-export function MarkerHandler({getResources}: MarkerHandlerProps) {
+export function MarkerHandler(props: MarkerHandlerProps) {
+	const {handle, getData} = props
 	const [markerState, setMarkerState] = useState<MarkerState>()
 
 	const onMouseMove: MouseEventHandler<HTMLDivElement> = useCallback(event => {
 		// TODO: See if can reduce gBCR usage, it's not a cheap call.
 		const rect = event.currentTarget.getBoundingClientRect()
 
-		const resources = getResources((event.clientX - rect.left) / rect.width)
+		const fightPercent = (event.clientX - rect.left) / rect.width
+
+		const resources = getData(fightPercent, handle)
 
 		setMarkerState({
 			cursorLeft: event.clientX,
@@ -37,7 +41,7 @@ export function MarkerHandler({getResources}: MarkerHandlerProps) {
 			itemLeft: rect.left,
 			resources,
 		})
-	}, [getResources])
+	}, [handle, getData])
 
 	const onMouseLeave = useCallback(() => {
 		setMarkerState(undefined)

@@ -311,6 +311,7 @@
   "core.report-flow.report-not-found": "<0>レポートが見つかりませんでした。</0> \"{url}\"にはレポートデータは見つかりませんでした。",
   "core.report-flow.supported-patches": "パッチ {from}{0}",
   "core.report-flow.view-report": "",
+  "core.resource-graphs.gauge-label": "",
   "core.resource-graphs.resource-value": "",
   "core.resource-graphs.row-label": "",
   "core.role.developer": "開発者",
