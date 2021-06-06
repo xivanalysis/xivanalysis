@@ -26,6 +26,7 @@ import PrecastAction from './PrecastAction'
 import PrecastStatus from './PrecastStatus'
 import RaidBuffs, {RaidBuffsQuery} from './RaidBuffs'
 import {ResourceGraphs} from './ResourceGraphs'
+import {SpeedAdjustments} from './SpeedAdjustments'
 import Speedmod from './Speedmod'
 import {Statistics} from './Statistics'
 import Statuses from './Statuses'
@@ -65,6 +66,7 @@ export default [
 	RaidBuffsQuery,
 	RaidBuffs,
 	ResourceGraphs,
+	SpeedAdjustments,
 	Speedmod,
 	Statistics,
 	Statuses,

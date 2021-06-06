@@ -3,10 +3,9 @@ import {getDataBy} from 'data/getDataBy'
 import {JobKey} from 'data/JOBS'
 import {getStatuses} from 'data/STATUSES'
 import {Attribute, Event, Events, AttributeValue} from 'event'
-import {BuffEvent, CastEvent, FflogsEvent} from 'fflogs'
+import {FflogsEvent} from 'fflogs'
 import _ from 'lodash'
 import {Actor, Team} from 'report'
-import {resolveActorId} from 'reportSources/legacyFflogs/base'
 import {getSpeedStat} from 'utilities/speedStatMapper'
 import {AdapterStep, PREPULL_OFFSETS} from './base'
 
@@ -16,14 +15,15 @@ const JOB_SPEED_MODIFIERS: Partial<Record<JobKey, number>> = {
 	MONK: 0.8,
 	NINJA: 0.85,
 }
+
 interface SpeedmodWindow {
 	start: number,
 	end?: number,
 }
 
 interface GCD {
-	prepare?: CastEvent
-	action?: CastEvent
+	prepare?: Events['prepare']
+	action?: Events['action']
 	start: number
 	actionId: number
 }
@@ -42,50 +42,60 @@ export class SpeedStatsAdapterStep extends AdapterStep {
 	private endTimestamp = 0
 
 	adapt(baseEvent: FflogsEvent, adaptedEvents: Event[]) {
-		const actorId = resolveActorId({id: baseEvent.sourceID, instance: baseEvent.sourceInstance, actor: baseEvent.source})
-		if (this.actorIsFriendly(actorId)) {
-			switch (baseEvent.type) {
-			case 'begincast':
-			case 'cast':
-				this.trackGCD(baseEvent, actorId)
-				break
-			case 'applybuff':
-				this.checkStatusApply(baseEvent, actorId)
-				break
-			case 'removebuff':
-				this.checkStatusRemove(baseEvent, actorId)
-				break
-			case 'encounterend':
-				this.endTimestamp = baseEvent.timestamp
-				break
-			}
+		if (baseEvent.type === 'encounterend') {
+			this.endTimestamp = baseEvent.timestamp
 		}
 
 		return adaptedEvents
 	}
 
 	postprocess(adaptedEvents: Event[]): Event[] {
+		adaptedEvents.forEach((event) => {
+			if (!('source' in event) || !this.actorIsFriendly(event.source)) { return }
+
+			switch (event.type) {
+			case 'prepare':
+			case 'action':
+				this.trackGCD(event)
+				break
+			case 'statusApply':
+				this.checkStatusApply(event)
+				break
+			case 'statusRemove':
+				this.checkStatusRemove(event)
+				break
+			}
+		})
+
 		const eventsToAdd: Array<Events['actorUpdate']> = []
-		this.actorActions.forEach((gcds, actorId) => eventsToAdd.push(this.estimateActorSpeedStat(gcds, actorId)))
+		this.actorActions.forEach((gcds, actorId) => {
+			const speedStatUpdate = this.estimateActorSpeedStat(gcds, actorId)
+			if (speedStatUpdate != null) { eventsToAdd.push(speedStatUpdate) }
+		})
 
 		return [...eventsToAdd, ...adaptedEvents]
 	}
 
-	private trackGCD(event: CastEvent, actorId: string) {
-		const action = getDataBy(getActions(this.report), 'id', event.ability.guid)
+	private actorIsFriendly(actorId: string): boolean {
+		const actor = this.pull.actors.find(a => a.id === actorId)
+		return actor?.team === Team.FRIEND
+	}
+
+	private trackGCD(event: Events['prepare'] | Events['action']) {
+		const action = getDataBy(getActions(this.report), 'id', event.action)
 		if (!action?.onGcd) {
 			return
 		}
 
-		let gcds = this.actorActions.get(actorId)
+		let gcds = this.actorActions.get(event.source)
 		if (gcds == null) {
 			gcds = []
-			this.actorActions.set(actorId, gcds)
+			this.actorActions.set(event.source, gcds)
 		}
 
-		if (event.type === 'cast') {
+		if (event.type === 'action') {
 			const lastInterval = gcds[gcds.length - 1]
-			if (lastInterval != null && lastInterval.action == null && lastInterval.prepare != null && lastInterval.prepare.ability.guid === event.ability.guid) {
+			if (lastInterval != null && lastInterval.action == null && lastInterval.prepare != null && lastInterval.actionId === event.action) {
 				lastInterval.action = event
 				return
 			}
@@ -93,27 +103,27 @@ export class SpeedStatsAdapterStep extends AdapterStep {
 			gcds.push({
 				action: event,
 				start: event.timestamp,
-				actionId: event.ability.guid,
+				actionId: event.action,
 			})
 		} else {
 			gcds.push({
 				prepare: event,
 				start: event.timestamp,
-				actionId: event.ability.guid,
+				actionId: event.action,
 			})
 		}
 	}
 
-	private checkStatusApply(event: BuffEvent, actorId: string) {
-		const status = getDataBy(getStatuses(this.report), 'id', event.ability.guid)
+	private checkStatusApply(event: Events['statusApply']) {
+		const status = getDataBy(getStatuses(this.report), 'id', event.status)
 		if (status?.speedModifier == null) {
 			return
 		}
 
-		let windows = this.actorSpeedmodWindows.get(actorId)
+		let windows = this.actorSpeedmodWindows.get(event.target)
 		if (windows == null) {
 			windows = new Map<number, SpeedmodWindow[]>()
-			this.actorSpeedmodWindows.set(actorId, windows)
+			this.actorSpeedmodWindows.set(event.target, windows)
 		}
 		let windowMap = windows.get(status.id)
 		if (windowMap == null) {
@@ -123,13 +133,13 @@ export class SpeedStatsAdapterStep extends AdapterStep {
 		windowMap.push({start: event.timestamp})
 	}
 
-	private checkStatusRemove(event: BuffEvent, actorId: string) {
-		const status = _.find(getStatuses(this.report), s => s.id === event.ability.guid)
+	private checkStatusRemove(event: Events['statusRemove']) {
+		const status = _.find(getStatuses(this.report), s => s.id === event.status)
 		if (status?.speedModifier == null) {
 			return
 		}
 
-		const windows = this.actorSpeedmodWindows.get(actorId)
+		const windows = this.actorSpeedmodWindows.get(event.target)
 		if (windows == null) {
 			throw new Error('Received statusRemove event for an actor with no open speedmod windows')
 		}
@@ -140,12 +150,7 @@ export class SpeedStatsAdapterStep extends AdapterStep {
 		windowMap[windowMap.length-1].end = event.timestamp
 	}
 
-	private actorIsFriendly(actorId: string): boolean {
-		const actor = this.pull.actors.find(a => a.id === actorId)
-		return actor?.team === Team.FRIEND
-	}
-
-	private estimateActorSpeedStat(gcds: GCD[], actorId: string): Events['actorUpdate'] {
+	private estimateActorSpeedStat(gcds: GCD[], actorId: string): Events['actorUpdate'] | undefined {
 		const speedAttributeKeys = [Attribute.SKILL_SPEED, Attribute.SPELL_SPEED] as const
 		const intervalGroups = {
 			[Attribute.SKILL_SPEED]: new Map<number, number>(),
@@ -196,11 +201,13 @@ export class SpeedStatsAdapterStep extends AdapterStep {
 			}
 		}
 
-		return {
-			type: 'actorUpdate',
-			actor: actorId,
-			timestamp: this.pull.timestamp + PREPULL_OFFSETS.ATTRIBUTE_UPDATE,
-			attributes,
+		if (attributes.length > 0) {
+			return {
+				type: 'actorUpdate',
+				actor: actorId,
+				timestamp: this.pull.timestamp + PREPULL_OFFSETS.ATTRIBUTE_UPDATE,
+				attributes,
+			}
 		}
 	}
 
