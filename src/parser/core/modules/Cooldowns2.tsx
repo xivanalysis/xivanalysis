@@ -235,7 +235,7 @@ export class Cooldowns extends Analyser {
 		// - this is technically impossible, but Square Enix™️, so we fudge it by ending
 		// the overlapping groups with a warning.
 		// TODO: Even with speed adjustments, CDGs like the GCD (58) have some seriously
-		//       fuzzy timings in logs and cause considierable overlapping anyway. Look into it.
+		//       fuzzy timings in logs and cause considerable overlapping anyway. Look into it.
 		const overlappingConfigs = configs.filter(config => this.cooldownStates.has(config.group))
 		if (overlappingConfigs.length > 0) {
 			this.debug(({log}) => {
