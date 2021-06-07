@@ -194,9 +194,9 @@ class GaugeState {
 }
 
 export default class RotationWatchdog extends Module {
-	static handle = 'RotationWatchdog'
-	static title = t('blm.rotation-watchdog.title')`Rotation Outliers`
-	static displayOrder = DISPLAY_ORDER.ROTATION
+	static override handle = 'RotationWatchdog'
+	static override title = t('blm.rotation-watchdog.title')`Rotation Outliers`
+	static override displayOrder = DISPLAY_ORDER.ROTATION
 
 	@dependency private suggestions!: Suggestions
 	@dependency private invulnerability!: Invulnerability
@@ -213,7 +213,7 @@ export default class RotationWatchdog extends Module {
 	// counters for suggestions
 	private uptimeSouls: number = 0
 
-	protected init() {
+	protected override init() {
 		this.addEventHook('cast', {by: 'player'}, this.onCast)
 		this.addEventHook('complete', this.onComplete)
 		this.addEventHook(BLM_GAUGE_EVENT, this.onGaugeEvent)
@@ -553,7 +553,7 @@ export default class RotationWatchdog extends Module {
 		}
 	}
 
-	output() {
+	override output() {
 		const outliers: Cycle[] = this.history.filter(cycle => cycle.errorCode.priority >
 			CYCLE_ERRORS.SHORT.priority || DEBUG_SHOW_ALL_CYCLES)
 		if (outliers.length > 0) {

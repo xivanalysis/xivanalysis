@@ -7,7 +7,7 @@ import {AdapterStep} from './base'
 export class DeduplicateActorUpdateStep extends AdapterStep {
 	private actorState = new Map<Actor['id'], Events['actorUpdate']>()
 
-	adapt(baseEvent: FflogsEvent, adaptedEvents: Event[]): Event[] {
+	override adapt(baseEvent: FflogsEvent, adaptedEvents: Event[]): Event[] {
 		const out: Event[] = []
 		for (const event of adaptedEvents) {
 			const adapted = event.type === 'actorUpdate'
@@ -33,7 +33,8 @@ export class DeduplicateActorUpdateStep extends AdapterStep {
 			actor: next.actor,
 		} as const
 
-		type DeduplicatedFields = Omit<Events['actorUpdate'], keyof typeof baseFields>
+		type OmitAttributesProperty = 'attributes' // Omitting attributes property from the dedupe check because the ActorUpdate events that could have them are only synthesized in the SpeedStatAdapterStep, which runs after this adapter
+		type DeduplicatedFields = Omit<Events['actorUpdate'], keyof typeof baseFields | OmitAttributesProperty>
 		const updates = this.denseObject<DeduplicatedFields>()([
 			['hp', this.resolveResource(prev.hp, next.hp)],
 			['mp', this.resolveResource(prev.mp, next.mp)],

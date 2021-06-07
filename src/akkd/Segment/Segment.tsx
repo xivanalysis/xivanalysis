@@ -9,7 +9,7 @@ interface SegmentProps {
 export class Segment extends React.PureComponent<SegmentProps> {
 	static Expandable = ExpandableSegment
 
-	render() {
+	override render() {
 		const {children} = this.props
 		return <div className={styles.segment}>{children}</div>
 	}

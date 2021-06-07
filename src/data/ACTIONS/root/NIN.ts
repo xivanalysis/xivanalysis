@@ -1,3 +1,4 @@
+import {Attribute} from 'event'
 import {ensureActions} from '../type'
 
 export const NIN = ensureActions({
@@ -10,6 +11,7 @@ export const NIN = ensureActions({
 		name: 'Armor Crush',
 		icon: 'https://xivapi.com/i/002000/002915.png',
 		onGcd: true,
+		speedAttribute: Attribute.SKILL_SPEED,
 		potency: 100,
 		combo: {
 			from: 2242,
@@ -23,6 +25,7 @@ export const NIN = ensureActions({
 		name: 'Hakke Mujinsatsu',
 		icon: 'https://xivapi.com/i/002000/002923.png',
 		onGcd: true,
+		speedAttribute: Attribute.SKILL_SPEED,
 		potency: 100,
 		combo: {
 			from: 2254,

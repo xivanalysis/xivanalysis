@@ -86,9 +86,9 @@ class Riddle {
 }
 
 export default class RiddleOfFire extends Module {
-	static handle = 'riddleoffire'
-	static title = t('mnk.rof.title')`Riddle of Fire`
-	static displayOrder = DISPLAY_ORDER.RIDDLE_OF_FIRE
+	static override handle = 'riddleoffire'
+	static override title = t('mnk.rof.title')`Riddle of Fire`
+	static override displayOrder = DISPLAY_ORDER.RIDDLE_OF_FIRE
 
 	@dependency private data!: Data
 	@dependency private fists!: Fists
@@ -98,7 +98,7 @@ export default class RiddleOfFire extends Module {
 	private history: Riddle[] = []
 	private riddle?: Riddle
 
-	protected init(): void {
+	protected override init(): void {
 		this.addEventHook('cast', {by: 'player'}, this.onCast)
 		this.addEventHook('removebuff', {by: 'player', abilityId: this.data.statuses.RIDDLE_OF_FIRE.id}, this.onDrop)
 		this.addEventHook('complete', this.onComplete)
@@ -211,7 +211,7 @@ export default class RiddleOfFire extends Module {
 		}
 	}
 
-	output() {
+	override output() {
 		return <RotationTable
 			targets={[
 				{

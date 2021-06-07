@@ -17,8 +17,8 @@ const MISSED_SWIFTCAST_SEVERITIES: SeverityTiers = {
 }
 
 export abstract class SwiftcastModule extends BuffWindowModule {
-	static handle: string = 'swiftcast'
-	static title: MessageDescriptor = t('core.swiftcast.title')`Swiftcast Actions`
+	static override handle: string = 'swiftcast'
+	static override title: MessageDescriptor = t('core.swiftcast.title')`Swiftcast Actions`
 
 	// Don't change these – it's critical for the swiftcast module
 	buffAction: Action = ACTIONS.SWIFTCAST
@@ -28,7 +28,7 @@ export abstract class SwiftcastModule extends BuffWindowModule {
 	 * Implementing modules MAY want to override this to change the column header, but at this point
 	 * it's probably universal to call it a 'Spell'
 	 */
-	protected rotationTableHeader: JSX.Element = <Trans id="core.swiftcast.table.title">Spell</Trans>
+	protected override rotationTableHeader: JSX.Element = <Trans id="core.swiftcast.table.title">Spell</Trans>
 	/**
 	 * Implementing modules MAY want to override the suggestionContent to provide job-specific guidance.
 	 */
@@ -40,7 +40,7 @@ export abstract class SwiftcastModule extends BuffWindowModule {
 	protected severityTiers: SeverityTiers = MISSED_SWIFTCAST_SEVERITIES
 
 	// There be dragons here; I wouldn't change these because who knows what might break
-	protected expectedGCDs: BuffWindowExpectedGCDs = {
+	protected override expectedGCDs: BuffWindowExpectedGCDs = {
 		expectedPerWindow: 1,
 		suggestionContent: this.suggestionContent,
 		severityTiers: this.severityTiers,
@@ -57,7 +57,7 @@ export abstract class SwiftcastModule extends BuffWindowModule {
 		return true
 	}
 
-	protected init() {
+	protected override init() {
 		super.init()
 		// Inheriting the class doesn't update expectedGCDs's parameters when they
 		// override, so let's (re)define it here... feels mega jank tho
@@ -72,7 +72,7 @@ export abstract class SwiftcastModule extends BuffWindowModule {
 	// ~4 GCDs 'wide', we can only use one action with it anyway; this change should
 	// ding them only if they had enough time during the window to use a spell with
 	// swiftcast
-	protected reduceExpectedGCDsEndOfFight(buffWindow: BuffWindowState): number {
+	protected override reduceExpectedGCDsEndOfFight(buffWindow: BuffWindowState): number {
 		if (this.buffStatus.duration) {
 			// Check to see if this window is rushing due to end of fight - reduce expected GCDs accordingly
 			const fightTimeRemaining = this.parser.pull.duration - (buffWindow.start - this.parser.eventTimeOffset)
@@ -82,7 +82,7 @@ export abstract class SwiftcastModule extends BuffWindowModule {
 		return 0
 	}
 
-	protected considerAction(action: Action) {
+	protected override considerAction(action: Action) {
 		this.debug('Evaluating action during window:', action)
 		// ignore actions that don't have a castTime
 		if (!action.castTime) {

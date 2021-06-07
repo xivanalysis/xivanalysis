@@ -1,3 +1,4 @@
+import {Attribute} from 'event'
 import {ensureActions} from '../type'
 
 // Split between PGL and MNK
@@ -11,6 +12,7 @@ export const PGL = ensureActions({
 		name: 'Bootshine',
 		icon: 'https://xivapi.com/i/000000/000208.png',
 		onGcd: true,
+		speedAttribute: Attribute.SKILL_SPEED,
 		potency: 150,
 	},
 
@@ -19,6 +21,7 @@ export const PGL = ensureActions({
 		name: 'True Strike',
 		icon: 'https://xivapi.com/i/000000/000209.png',
 		onGcd: true,
+		speedAttribute: Attribute.SKILL_SPEED,
 		potency: 240,
 	},
 
@@ -27,6 +30,7 @@ export const PGL = ensureActions({
 		name: 'Snap Punch',
 		icon: 'https://xivapi.com/i/000000/000210.png',
 		onGcd: true,
+		speedAttribute: Attribute.SKILL_SPEED,
 	},
 
 	TWIN_SNAKES: {
@@ -34,6 +38,7 @@ export const PGL = ensureActions({
 		name: 'Twin Snakes',
 		icon: 'https://xivapi.com/i/000000/000213.png',
 		onGcd: true,
+		speedAttribute: Attribute.SKILL_SPEED,
 		potency: 170,
 		statusesApplied: ['TWIN_SNAKES'],
 	},
@@ -43,6 +48,7 @@ export const PGL = ensureActions({
 		name: 'Arm of the Destroyer',
 		icon: 'https://xivapi.com/i/000000/000215.png',
 		onGcd: true,
+		speedAttribute: Attribute.SKILL_SPEED,
 	},
 
 	DEMOLISH: {
@@ -50,6 +56,7 @@ export const PGL = ensureActions({
 		name: 'Demolish',
 		icon: 'https://xivapi.com/i/000000/000204.png',
 		onGcd: true,
+		speedAttribute: Attribute.SKILL_SPEED,
 		statusesApplied: ['DEMOLISH'],
 	},
 

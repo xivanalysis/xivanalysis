@@ -20,7 +20,7 @@ export default class Procs extends CoreProcs {
 		},
 	]
 
-	protected addJobSpecificSuggestions(): void {
+	protected override addJobSpecificSuggestions(): void {
 		const droppedFang = this.getDropCountForStatus(this.data.statuses.SHARPER_FANG_AND_CLAW.id)
 		const droppedWheeling = this.getDropCountForStatus(this.data.statuses.ENHANCED_WHEELING_THRUST.id)
 		const droppedMirage = this.getDropCountForStatus(this.data.statuses.DIVE_READY.id)

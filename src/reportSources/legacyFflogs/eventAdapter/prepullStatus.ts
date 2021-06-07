@@ -1,8 +1,6 @@
 import {getDataArrayBy} from 'data'
-import {layers as actionLayers, root as actionRoot} from 'data/ACTIONS'
-import {getAppliedData, Layer} from 'data/layer'
-import {Patch} from 'data/PATCHES'
-import {layers as statusLayers, root as statusRoot, StatusKey} from 'data/STATUSES'
+import {getActions} from 'data/ACTIONS'
+import {StatusKey, getStatuses} from 'data/STATUSES'
 import {Event, Events} from 'event'
 import _ from 'lodash'
 import {Actor} from 'report'
@@ -17,7 +15,7 @@ export class PrepullStatusAdapterStep extends AdapterStep {
 	private observedStatuses = new Map<Actor['id'], Set<number>>()
 	private precastEvents: Event[] = []
 
-	postprocess(adaptedEvents: Event[]): Event[] {
+	override postprocess(adaptedEvents: Event[]): Event[] {
 		for (const event of adaptedEvents) {
 			if (event.type !== 'statusApply' && event.type !== 'statusRemove') {
 				if (event.type === 'action') {
@@ -66,13 +64,13 @@ export class PrepullStatusAdapterStep extends AdapterStep {
 	}
 
 	private synthesizeActionIfNew(event: StatusEvent) {
-		const statusKey = _.findKey(this.getStatuses(), status => status.id === event.status) as StatusKey | undefined
+		const statusKey = _.findKey(getStatuses(this.report), status => status.id === event.status) as StatusKey | undefined
 		if (!statusKey) {
 			// This shouldn't be possible, but let's be safe and bail if there's no key
 			return
 		}
 
-		const actions = getDataArrayBy(this.getActions(), 'statusesApplied', statusKey)
+		const actions = getDataArrayBy(getActions(this.report), 'statusesApplied', statusKey)
 		if (actions.length !== 1) {
 			// No action is known to apply this status OR
 			// multiple actions can apply this status, not enough info to synth
@@ -106,19 +104,5 @@ export class PrepullStatusAdapterStep extends AdapterStep {
 		}
 
 		this.precastEvents.push(applyEvent)
-	}
-
-	// TODO: If these are needed in >1 adapter, lift to a generalised location
-	private patch = new Patch(this.report.edition, this.report.timestamp / 1000)
-
-	private getActions = () => this.getAppliedData(actionRoot, actionLayers)
-	private getStatuses = () => this.getAppliedData(statusRoot, statusLayers)
-
-	private getAppliedData<R extends object>(root: R, layers: Array<Layer<R>>) {
-		return getAppliedData({
-			root,
-			layers,
-			state: {patch: this.patch},
-		})
 	}
 }

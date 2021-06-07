@@ -25,7 +25,7 @@ const OPO_OPO_SKILLS = [
 ]
 
 export default class Forms extends Module {
-	static handle = 'forms'
+	static override handle = 'forms'
 
 	@dependency private combatants!: Combatants
 	@dependency private data!: Data
@@ -41,7 +41,7 @@ export default class Forms extends Module {
 	private lastFormDropped?: number
 	private perfectlyFresh?: number
 
-	protected init(): void {
+	protected override init(): void {
 		this.addEventHook('cast', {by: 'player'}, this.onCast)
 		this.addEventHook('applybuff', {to: 'player', abilityId: FORMS}, this.onGain)
 		this.addEventHook('refreshbuff', {to: 'player', abilityId: FORMS}, this.onGain)

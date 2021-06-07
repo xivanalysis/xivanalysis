@@ -18,7 +18,7 @@ export default class ChangeLog extends React.PureComponent<ChangeLogProps> {
 		})),
 	}
 
-	state = {
+	override state = {
 		activeIndexes: new Set(),
 	}
 
@@ -36,7 +36,7 @@ export default class ChangeLog extends React.PureComponent<ChangeLogProps> {
 		this.setState({activeIndexes: newIndexes})
 	}
 
-	render() {
+	override render() {
 		const {activeIndexes} = this.state
 
 		return <Accordion fluid styled>

@@ -16,11 +16,10 @@ export interface Statistic {
 }
 
 export class Statistics extends Analyser {
-	static handle = 'statistics'
-	// tslint:disable-next-line:variable-name
-	static title = t('core.statistics.title')`Statistics`
-	static displayOrder = DISPLAY_ORDER.STATISTICS
-	static displayMode = DisplayMode.RAW
+	static override handle = 'statistics'
+	static override title = t('core.statistics.title')`Statistics`
+	static override displayOrder = DISPLAY_ORDER.STATISTICS
+	static override displayMode = DisplayMode.RAW
 
 	private statistics: Statistic[] = []
 
@@ -28,7 +27,7 @@ export class Statistics extends Analyser {
 		this.statistics.push(statistic)
 	}
 
-	output() {
+	override output() {
 		if (!this.statistics.length) {
 			return false
 		}

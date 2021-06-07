@@ -54,8 +54,8 @@ interface ActorInfo {
 }
 
 export class Death extends Analyser {
-	static handle = 'death'
-	static debug = true
+	static override handle = 'death'
+	static override debug = true
 
 	@dependency private data!: Data
 	@dependency private suggestions!: Suggestions
@@ -79,7 +79,7 @@ export class Death extends Analyser {
 		return actorInfo.duration + currentDeadTime
 	}
 
-	initialise() {
+	override initialise() {
 		// An actor hitting 0 HP is a sign of a death.
 		this.addEventHook({
 			type: 'actorUpdate',

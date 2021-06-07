@@ -9,14 +9,14 @@ import React from 'react'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 
 export default class LanceCharge extends BuffWindowModule {
-	static handle: string = 'lancecharge'
-	static title = t('drg.lancecharge.title')`Lance Charge`
-	static displayOrder = DISPLAY_ORDER.LANCE_CHARGE
+	static override handle: string = 'lancecharge'
+	static override title = t('drg.lancecharge.title')`Lance Charge`
+	static override displayOrder = DISPLAY_ORDER.LANCE_CHARGE
 
 	buffAction = ACTIONS.LANCE_CHARGE
 	buffStatus = STATUSES.LANCE_CHARGE
 
-	expectedGCDs = {
+	override expectedGCDs = {
 		expectedPerWindow: 8,
 		suggestionContent: <Trans id="drg.lc.suggestions.missedgcd.content">
 			Try to land at least 8 GCDs during every <ActionLink {...ACTIONS.LANCE_CHARGE} /> window.
@@ -28,7 +28,7 @@ export default class LanceCharge extends BuffWindowModule {
 		},
 	}
 
-	trackedActions = {
+	override trackedActions = {
 		icon: ACTIONS.LANCE_CHARGE.icon,
 		actions: [
 			{
@@ -58,7 +58,7 @@ export default class LanceCharge extends BuffWindowModule {
 		},
 	}
 
-	protected reduceTrackedActionsEndOfFight(buffWindow: BuffWindowState): number {
+	protected override reduceTrackedActionsEndOfFight(buffWindow: BuffWindowState): number {
 		const windowDurationMillis = this.buffStatus.duration * 1000
 		const fightTimeRemaining = this.parser.pull.duration - (buffWindow.start - this.parser.eventTimeOffset)
 

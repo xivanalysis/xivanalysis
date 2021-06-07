@@ -43,8 +43,8 @@ const DEFAULT_SEVERITY_TIERS = {
 	3: SEVERITY.MAJOR,
 }
 export abstract class Procs extends Analyser {
-	static handle = 'procs'
-	static title = t('core.procs.title')`Procs`
+	static override handle = 'procs'
+	static override title = t('core.procs.title')`Procs`
 
 	@dependency private downtime!: Downtime
 	@dependency protected suggestions!: Suggestions

@@ -1,3 +1,4 @@
+import {Attribute} from 'event'
 import {ensureActions} from '../type'
 
 export const SCH = ensureActions({
@@ -10,6 +11,7 @@ export const SCH = ensureActions({
 		name: 'Biolysis',
 		icon: 'https://xivapi.com/i/002000/002820.png',
 		onGcd: true,
+		speedAttribute: Attribute.SPELL_SPEED,
 		statusesApplied: ['BIOLYSIS'],
 	},
 
@@ -18,6 +20,7 @@ export const SCH = ensureActions({
 		name: 'Adloquium',
 		icon: 'https://xivapi.com/i/002000/002801.png',
 		onGcd: true,
+		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 2000,
 		statusesApplied: ['GALVANIZE', 'CATALYZE'],
 	},
@@ -27,6 +30,7 @@ export const SCH = ensureActions({
 		name: 'Broil III',
 		icon: 'https://xivapi.com/i/002000/002821.png',
 		onGcd: true,
+		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 2500,
 	},
 
@@ -35,6 +39,7 @@ export const SCH = ensureActions({
 		name: 'Ruin II',
 		icon: 'https://xivapi.com/i/000000/000502.png',
 		onGcd: true,
+		speedAttribute: Attribute.SPELL_SPEED,
 	},
 
 	RECITATION: {
@@ -72,6 +77,7 @@ export const SCH = ensureActions({
 		name: 'Succor',
 		icon: 'https://xivapi.com/i/002000/002802.png',
 		onGcd: true,
+		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 2000,
 		statusesApplied: ['GALVANIZE'],
 	},
@@ -95,6 +101,7 @@ export const SCH = ensureActions({
 		name: 'Art of War',
 		icon: 'https://xivapi.com/i/002000/002819.png',
 		onGcd: true,
+		speedAttribute: Attribute.SPELL_SPEED,
 	},
 
 	INDOMITABILITY: {
@@ -109,6 +116,7 @@ export const SCH = ensureActions({
 		name: 'Broil',
 		icon: 'https://xivapi.com/i/002000/002807.png',
 		onGcd: true,
+		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 2500,
 	},
 
@@ -148,6 +156,7 @@ export const SCH = ensureActions({
 		name: 'Broil II',
 		icon: 'https://xivapi.com/i/002000/002814.png',
 		onGcd: true,
+		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 2500,
 	},
 
@@ -200,6 +209,7 @@ export const SCH = ensureActions({
 		name: 'Summon Eos',
 		icon: 'https://xivapi.com/i/002000/002823.png',
 		onGcd: true,
+		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 2500,
 	},
 
@@ -208,6 +218,7 @@ export const SCH = ensureActions({
 		name: 'Summon Selene',
 		icon: 'https://xivapi.com/i/002000/002824.png',
 		onGcd: true,
+		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 2500,
 	},
 

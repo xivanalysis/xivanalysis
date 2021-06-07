@@ -1,7 +1,7 @@
 import CoreCooldowns, {CooldownOrderItem} from 'parser/core/modules/Cooldowns'
 
 export default class Cooldowns extends CoreCooldowns {
-	static cooldownOrder: CooldownOrderItem[] = [
+	static override cooldownOrder: CooldownOrderItem[] = [
 		// Buffs
 		'FIGHT_OR_FLIGHT',
 		'REQUIESCAT',

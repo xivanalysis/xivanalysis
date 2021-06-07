@@ -80,5 +80,6 @@ export const WHM = ensureStatuses({
 		name: 'Presence of Mind',
 		icon: 'https://xivapi.com/i/012000/012627.png',
 		duration: 15,
+		speedModifier: 0.80,
 	},
 })

@@ -1,7 +1,8 @@
 import {JobKey} from 'data/JOBS'
-import {Events, Position, Resource} from 'event'
+import {Attribute, AttributeValue, Events, Position, Resource} from 'event'
 import {Actor as ReportActor, Team} from 'report'
 import {Object} from 'ts-toolbelt'
+import {SUB_ATTRIBUTE_MINIMUM} from 'utilities/speedStatMapper'
 
 /** Representation of resources of an actor at a point in time. */
 class ActorResources {
@@ -11,6 +12,7 @@ class ActorResources {
 	get targetable() {
 		return this.getHistoricalValue(event => event.targetable, true)
 	}
+	attributes: Readonly<Record<Attribute, AttributeValue>>
 
 	protected _history: Array<Events['actorUpdate']> = []
 	private time?: number
@@ -24,6 +26,7 @@ class ActorResources {
 		this.hp = this.buildResource('hp')
 		this.mp = this.buildResource('mp')
 		this.position = this.buildPosition()
+		this.attributes = this.buildAttributes()
 	}
 
 	// TODO: think of how to automate building these getters this is dumb
@@ -55,6 +58,23 @@ class ActorResources {
 			},
 			get bearing() {
 				return self.getHistoricalValue(event => event.position?.bearing, 0)
+			},
+		}
+	}
+
+	private buildAttributes() {
+		const getHistoricalAttribute = (attribute: Attribute) =>
+			this.getHistoricalValue(
+				event => event.attributes?.find(eventAttr => eventAttr.attribute === attribute),
+				{attribute, value: SUB_ATTRIBUTE_MINIMUM, estimated: true}
+			)
+
+		return {
+			get [Attribute.SKILL_SPEED]() {
+				return getHistoricalAttribute(Attribute.SKILL_SPEED)
+			},
+			get [Attribute.SPELL_SPEED]() {
+				return getHistoricalAttribute(Attribute.SPELL_SPEED)
 			},
 		}
 	}

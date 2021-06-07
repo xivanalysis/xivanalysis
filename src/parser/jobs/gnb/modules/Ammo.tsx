@@ -84,9 +84,9 @@ class OvercapState {
 }
 
 export default class Ammo extends Module {
-	static handle = 'ammo'
-	static title = t('gnb.ammo.title')`Cartridge Timeline`
-	static displayMode = DISPLAY_MODE.FULL
+	static override handle = 'ammo'
+	static override title = t('gnb.ammo.title')`Cartridge Timeline`
+	static override displayMode = DISPLAY_MODE.FULL
 
 	private ammo = 0
 	private currentAbility = ''
@@ -107,7 +107,7 @@ export default class Ammo extends Module {
 	@dependency private checklist!: Checklist
 	@dependency private suggestions!: Suggestions
 
-	protected init() {
+	protected override init() {
 		this.addEventHook('init', this.pushToHistory)
 		this.addEventHook(
 			'cast',
@@ -304,7 +304,7 @@ export default class Ammo extends Module {
 		</tr>
 	}
 
-	output() {
+	override output() {
 		const cartridgeWastePanels = []
 		cartridgeWastePanels.push({
 			key: 'key-wastebysource',

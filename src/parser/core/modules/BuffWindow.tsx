@@ -96,8 +96,8 @@ export interface BuffWindowTrackedAction {
 }
 
 export abstract class BuffWindowModule extends Module {
-	static handle: string = 'buffwindow'
-	static title: MessageDescriptor = t('core.buffwindow.title')`Buff Window`
+	static override handle: string = 'buffwindow'
+	static override title: MessageDescriptor = t('core.buffwindow.title')`Buff Window`
 
 	/**
 	 * Implementing modules MUST define the ACTION object for the action that initiates the buff window
@@ -168,7 +168,7 @@ export abstract class BuffWindowModule extends Module {
 		return undefined
 	}
 
-	protected init() {
+	protected override init() {
 		// ensure array
 		this.buffStatusArray = ensureArray(this.buffStatus)
 
@@ -441,7 +441,7 @@ export abstract class BuffWindowModule extends Module {
 		}
 	}
 
-	output() {
+	override output() {
 		if (this.buffWindows.length === 0) {
 			return this.generateBuffNotUsedOutput()
 		}

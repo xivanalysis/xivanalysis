@@ -63,8 +63,8 @@ class RequiescatState {
 }
 
 export default class Requiescat extends Module {
-	static handle = 'requiescat'
-	static title = t('pld.requiescat.title')`Requiescat Usage`
+	static override handle = 'requiescat'
+	static override title = t('pld.requiescat.title')`Requiescat Usage`
 
 	@dependency private suggestions!: Suggestions
 	@dependency private timeline!: Timeline
@@ -77,7 +77,7 @@ export default class Requiescat extends Module {
 		return _.last(this.requiescats)
 	}
 
-	protected init() {
+	protected override init() {
 		this.addEventHook('cast', {by: 'player'}, this.onCast)
 		this.addEventHook(
 			'applybuff',
@@ -186,7 +186,7 @@ export default class Requiescat extends Module {
 		return rotation.reduce((sum, event) => sum + (event.ability.guid === abilityId ? 1 : 0), 0)
 	}
 
-	output() {
+	override output() {
 		return <Fragment>
 			<Message>
 				<Trans id="pld.requiescat.table.note">Each of your <ActionLink {...ACTIONS.REQUIESCAT}/> windows should contain {CONSTANTS.TOTAL_GCDS.EXPECTED} spells at minimum to maintain the alignment of your rotation. Most of the time, a window should consist of {CONSTANTS.HOLY_SPIRIT.EXPECTED + 1} casts of <ActionLink {...ACTIONS.HOLY_SPIRIT}/> or <ActionLink {...ACTIONS.HOLY_CIRCLE}/> and end with a cast of <ActionLink {...ACTIONS.CONFITEOR}/>. However, under some circumstances, it is useful to drop one <ActionLink {...ACTIONS.HOLY_SPIRIT}/> per minute in order to better align your rotation with buffs or mechanics. If you don't have a specific plan to do this, you should aim for {CONSTANTS.HOLY_SPIRIT.EXPECTED + 1} casts of <ActionLink {...ACTIONS.HOLY_SPIRIT}/> per <ActionLink {...ACTIONS.REQUIESCAT}/> window.</Trans>

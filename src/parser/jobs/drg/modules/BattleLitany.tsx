@@ -46,9 +46,9 @@ class BLWindow {
 // DRG litanies will be marked.
 // Used DNC technical step as basis for this module.
 export default class BattleLitany extends Module {
-	static handle = 'battlelitany'
-	static title = t('drg.battlelitany.title')`Battle Litany`
-	static displayOrder = DISPLAY_ORDER.BATTLE_LITANY
+	static override handle = 'battlelitany'
+	static override title = t('drg.battlelitany.title')`Battle Litany`
+	static override displayOrder = DISPLAY_ORDER.BATTLE_LITANY
 
 	@dependency private timeline!: Timeline
 	@dependency private data!: Data
@@ -56,7 +56,7 @@ export default class BattleLitany extends Module {
 	private history: BLWindow[] = []
 	private lastLitFalloffTime: number = 0
 
-	protected init() {
+	protected override init() {
 		this.addEventHook('normalisedapplybuff', {to: 'player', abilityId: STATUSES.BATTLE_LITANY.id}, this.tryOpenWindow)
 		this.addEventHook('normalisedapplybuff', {by: 'player', abilityId: STATUSES.BATTLE_LITANY.id}, this.countLitBuffs)
 		this.addEventHook('removebuff', {to: 'player', abilityId: WINDOW_STATUSES}, this.tryCloseWindow)
@@ -176,7 +176,7 @@ export default class BattleLitany extends Module {
 
 	// just output, no suggestions for now.
 	// open to maybe putting a suggestion not to clip into other DRG windows? hitting everyone with litany?
-	output() {
+	override output() {
 		const tableData = this.history.map(window => {
 			const end = window.end != null ?
 				window.end - this.parser.fight.start_time :

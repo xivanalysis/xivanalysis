@@ -18,9 +18,9 @@ const SEVERITIES = {
 }
 
 export default class Demolish extends DoTs {
-	static handle = 'demolish'
+	static override handle = 'demolish'
 
-	static statusesToTrack = [
+	static override statusesToTrack = [
 		STATUSES.DEMOLISH.id,
 	]
 
@@ -28,7 +28,7 @@ export default class Demolish extends DoTs {
 	@dependency private data!: Data
 	@dependency private suggestions!: Suggestions
 
-	addChecklistRules() {
+	override addChecklistRules() {
 		this.checklist.add(new Rule({
 			name: <Trans id="mnk.demolish.checklist.name">Keep Demolish up</Trans>,
 			description: <Trans id="mnk.demolish.checklist.description">
@@ -47,7 +47,7 @@ export default class Demolish extends DoTs {
 		}))
 	}
 
-	addClippingSuggestions(clip: TODO) {
+	override addClippingSuggestions(clip: TODO) {
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.DEMOLISH.icon,
 			content: <Trans id="mnk.demolish.suggestion.content">

@@ -10,14 +10,14 @@ const GCD_TIMEOUT_MILLIS = 15000
 
 export default class Combos extends CoreCombos {
 	// Override statics
-	static suggestionIcon = ACTIONS.CASCADE.icon
+	static override suggestionIcon = ACTIONS.CASCADE.icon
 
 	@dependency private dancing!: DirtyDancing
 	@dependency private combatants!: Combatants
 
 	// Override check for allowable breaks. If two dances were started during the initial context's GCD timeout window,
 	// (ie, both Standard and Technical were danced), then we'll allow it
-	isAllowableComboBreak(event: NormalisedDamageEvent, context: NormalisedDamageEvent[]): boolean {
+	override isAllowableComboBreak(event: NormalisedDamageEvent, context: NormalisedDamageEvent[]): boolean {
 		// Shouldn't ever be the case, but protect against weird shit
 		if (context.length !== 1) {
 			return false
