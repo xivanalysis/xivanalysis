@@ -2,7 +2,7 @@ import {Event} from 'event'
 import {AdapterStep, PREPULL_OFFSETS} from './base'
 
 export class PrepullActionAdapterStep extends AdapterStep {
-	postprocess(adaptedEvents: Event[]): Event[] {
+	override postprocess(adaptedEvents: Event[]): Event[] {
 		const precastEvents: Event[] = []
 
 		for (const event of adaptedEvents) {

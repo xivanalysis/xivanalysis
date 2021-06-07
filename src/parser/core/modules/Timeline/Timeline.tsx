@@ -20,10 +20,10 @@ const INITIAL_END = 60000 // One minute
 const MINIMUM_ZOOM = 10000 // 10 seconds (~4 gcds)
 
 export class Timeline extends Analyser {
-	static handle = 'timeline'
-	static displayOrder = DISPLAY_ORDER.TIMELINE
-	static displayMode = DisplayMode.FULL
-	static title = t('core.timeline.title')`Timeline`
+	static override handle = 'timeline'
+	static override displayOrder = DISPLAY_ORDER.TIMELINE
+	static override displayMode = DisplayMode.FULL
+	static override title = t('core.timeline.title')`Timeline`
 
 	private setView?: SetViewFn
 
@@ -69,7 +69,7 @@ export class Timeline extends Analyser {
 		this.setView = handler
 	}
 
-	output() {
+	override output() {
 		return <>
 			<Trans id="core.timeline.help-text" render="span" className={styles.helpText}>
 				Scroll or click+drag to pan, ctrl+scroll or pinch to zoom.

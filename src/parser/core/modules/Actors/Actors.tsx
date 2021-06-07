@@ -8,14 +8,14 @@ import {ResourceDatum, ResourceGraphs} from '../ResourceGraphs'
 import {Actor} from './Actor'
 
 export class Actors extends Analyser {
-	static handle = 'actors'
-	static displayOrder = -Infinity
+	static override handle = 'actors'
+	static override displayOrder = -Infinity
 
 	@dependency private resourceGraphs!: ResourceGraphs
 
 	private actors = new Map<ReportActor['id'], Actor>()
 
-	initialise() {
+	override initialise() {
 		this.addEventHook('actorUpdate', this.onUpdate)
 		this.addEventHook('complete', this.onComplete)
 	}

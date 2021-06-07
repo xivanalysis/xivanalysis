@@ -35,15 +35,15 @@ const EXPECTED_USES = {
 }
 
 export default class NoMercy extends BuffWindowModule {
-	static handle = 'nomercy'
-	static title = t('gnb.nomercy.title')`No Mercy Windows`
+	static override handle = 'nomercy'
+	static override title = t('gnb.nomercy.title')`No Mercy Windows`
 
 	buffAction = ACTIONS.NO_MERCY
 	buffStatus = STATUSES.NO_MERCY
 
-	rotationTableNotesColumnHeader = <Trans id="gnb.nomercy.notes.header">Bloodfest Used</Trans>
+	override rotationTableNotesColumnHeader = <Trans id="gnb.nomercy.notes.header">Bloodfest Used</Trans>
 
-	expectedGCDs = {
+	override expectedGCDs = {
 		expectedPerWindow: EXPECTED_USES.GCD,
 		suggestionContent: <Trans id="gnb.nomercy.suggestions.gcds.content">
 			Try to land 9 GCDs during every <ActionLink {...ACTIONS.NO_MERCY} /> window. A 20 second duration is sufficient
@@ -52,7 +52,7 @@ export default class NoMercy extends BuffWindowModule {
 		severityTiers: SEVERITIES.TOO_FEW_GCDS,
 	}
 
-	trackedActions = {
+	override trackedActions = {
 		icon: ACTIONS.NO_MERCY.icon,
 		actions: [
 			{
@@ -96,7 +96,7 @@ export default class NoMercy extends BuffWindowModule {
 
 	}
 
-	changeExpectedTrackedActionClassLogic(buffWindow: BuffWindowState, action: BuffWindowTrackedAction) {
+	override changeExpectedTrackedActionClassLogic(buffWindow: BuffWindowState, action: BuffWindowTrackedAction) {
 		const Id = action.action.id
 		if (Id === ACTIONS.BURST_STRIKE.id) {
 
@@ -113,9 +113,8 @@ export default class NoMercy extends BuffWindowModule {
 		return 0
 	}
 
-	getBuffWindowNotes(buffWindow: BuffWindowState) {
+	override getBuffWindowNotes(buffWindow: BuffWindowState) {
 		return buffWindow.rotation.find(cast => cast.ability.guid === ACTIONS.BLOODFEST.id) ?
 			<Trans id="gnb.nomercy.chart.notes.yes">Yes</Trans> : <Trans id = "gnb.nomercy.chart.notes.no">No</Trans>
 	}
-
 }

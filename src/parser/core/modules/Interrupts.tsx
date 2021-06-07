@@ -20,8 +20,8 @@ interface SeverityTiers {
 const TIMELINE_UPPER_MOD: number = 30000
 
 export class Interrupts extends Module {
-	static handle: string = 'interrupts'
-	static title: MessageDescriptor = t('core.interrupts.title')`Interrupted Casts`
+	static override handle: string = 'interrupts'
+	static override title: MessageDescriptor = t('core.interrupts.title')`Interrupted Casts`
 
 	@dependency protected data!: Data
 	@dependency private globalCooldown!: GlobalCooldown
@@ -72,7 +72,7 @@ export class Interrupts extends Module {
 		return undefined
 	}
 
-	protected init() {
+	protected override init() {
 		this.addEventHook('begincast', {by: 'player'}, this.onBeginCast)
 		this.addEventHook('cast', {by: 'player'}, this.onCast)
 
@@ -117,7 +117,7 @@ export class Interrupts extends Module {
 		}))
 	}
 
-	output() {
+	override output() {
 		if (this.droppedCasts.length === 0) {
 			return this.noInterruptsOutput()
 		}

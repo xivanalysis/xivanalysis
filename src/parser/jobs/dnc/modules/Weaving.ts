@@ -13,15 +13,15 @@ const FINISH_IDS: Array<keyof ActionRoot> = [
 ]
 
 export default class Weaving extends CoreWeaving {
-	static displayOrder = DISPLAY_ORDER.WEAVING
+	static override displayOrder = DISPLAY_ORDER.WEAVING
 	private FINISH_IDS: number[] = []
 
-	protected init() {
+	protected override init() {
 		super.init()
 		this.FINISH_IDS = FINISH_IDS.map(actionKey => this.data.actions[actionKey].id)
 	}
 
-	isBadWeave(weave: WeaveInfo) {
+	override isBadWeave(weave: WeaveInfo) {
 		const leadingGcd = weave.leadingGcdEvent as CastEvent
 
 		if (leadingGcd && leadingGcd.ability && this.FINISH_IDS.includes(leadingGcd.ability.guid)) {

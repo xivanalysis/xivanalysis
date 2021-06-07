@@ -10,7 +10,7 @@ interface Medication {
 }
 
 export class Medicated extends Analyser {
-	static handle = 'medicated'
+	static override handle = 'medicated'
 
 	@dependency private data!: Data
 	@dependency private timeline!: Timeline
@@ -18,7 +18,7 @@ export class Medicated extends Analyser {
 	private pot: Medication | undefined
 	private pots: Medication[] = []
 
-	initialise() {
+	override initialise() {
 		this.addEventHook({
 			type: 'statusApply',
 			target: this.parser.actor.id,

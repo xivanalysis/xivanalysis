@@ -13,8 +13,8 @@ const DEFAULT_ALLOWED_DOWNTIME = 2180
 const MEIKYO_ALLOWED_DOWNTIME = 4360
 
 export default class OGCDDowntime extends CooldownDowntime {
-	defaultAllowedAverageDowntime = DEFAULT_ALLOWED_DOWNTIME
-	trackedCds = [
+	override defaultAllowedAverageDowntime = DEFAULT_ALLOWED_DOWNTIME
+	override trackedCds = [
 		{
 			cooldowns: [ACTIONS.MEIKYO_SHISUI],
 			firstUseOffset: FIRSTUSEOFFSET_MEIKYO,

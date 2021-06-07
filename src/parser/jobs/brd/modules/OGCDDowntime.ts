@@ -5,7 +5,7 @@ import ACTIONS from 'data/ACTIONS'
 import {CooldownDowntime} from 'parser/core/modules/CooldownDowntime'
 
 export default class OGCDDowntime extends CooldownDowntime {
-	trackedCds = [
+	override trackedCds = [
 		{
 			cooldowns: [ACTIONS.BATTLE_VOICE],
 			firstUseOffset: 4500,
@@ -27,5 +27,5 @@ export default class OGCDDowntime extends CooldownDowntime {
 		},
 	]
 
-	checklistTarget = 100
+	override checklistTarget = 100
 }

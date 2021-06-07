@@ -4,7 +4,7 @@ import CoreWeaving, {WeaveInfo} from 'parser/core/modules/Weaving'
 const TO_MILLISECONDS = 1000
 
 export default class Weaving extends CoreWeaving {
-	isBadWeave(weave: WeaveInfo) {
+	override isBadWeave(weave: WeaveInfo) {
 		let surpanakhas = 0
 		weave.weaves.forEach((value) => {
 			if (value.ability.guid === ACTIONS.SURPANAKHA.id) {

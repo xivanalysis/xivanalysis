@@ -4,22 +4,22 @@ import {Procs} from 'parser/core/modules/Procs'
 import React from 'react'
 
 export default class RefulgentProcs extends Procs {
-	trackedProcs = [
+	override trackedProcs = [
 		{
 			procStatus: this.data.statuses.STRAIGHT_SHOT_READY,
 			consumeActions: [this.data.actions.REFULGENT_ARROW],
 		},
 	]
 
-	showDroppedProcSuggestion = true
-	droppedProcIcon = this.data.actions.REFULGENT_ARROW.icon
-	droppedProcContent = <Trans id="brd.procs.suggestions.missed.content">
+	override showDroppedProcSuggestion = true
+	override droppedProcIcon = this.data.actions.REFULGENT_ARROW.icon
+	override droppedProcContent = <Trans id="brd.procs.suggestions.missed.content">
 		Try to use <ActionLink {...this.data.actions.REFULGENT_ARROW} /> whenever you have <StatusLink {...this.data.statuses.STRAIGHT_SHOT_READY} />.
 	</Trans>
 
-	showOverwroteProcSuggestion = true
-	overwroteProcIcon = this.data.actions.REFULGENT_ARROW.icon
-	overwroteProcContent = <Trans id="brd.procs.suggestions.overwritten.content">
+	override showOverwroteProcSuggestion = true
+	override overwroteProcIcon = this.data.actions.REFULGENT_ARROW.icon
+	override overwroteProcContent = <Trans id="brd.procs.suggestions.overwritten.content">
 		Avoid using actions that grant <StatusLink {...this.data.statuses.STRAIGHT_SHOT_READY} /> when you
 		could use <ActionLink {...this.data.actions.REFULGENT_ARROW} /> instead.
 	</Trans>

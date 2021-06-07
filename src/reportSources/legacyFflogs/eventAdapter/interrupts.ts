@@ -6,7 +6,7 @@ import {AdapterStep} from './base'
 export class InterruptsAdapterStep extends AdapterStep {
 	private casts = new Map<Actor['id'], number>()
 
-	adapt(baseEvent: FflogsEvent, adaptedEvents: Event[]): Event[] {
+	override adapt(baseEvent: FflogsEvent, adaptedEvents: Event[]): Event[] {
 		const interrupts: Array<Events['interrupt']> = []
 
 		for (const event of adaptedEvents) {

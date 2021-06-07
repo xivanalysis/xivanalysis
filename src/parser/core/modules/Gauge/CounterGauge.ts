@@ -121,7 +121,7 @@ export class CounterGauge extends AbstractGauge {
 	}
 
 	/** @inheritdoc */
-	generateDataset() {
+	override generateDataset() {
 		// If there's no chart options, provide nothing
 		if (!this.chartOptions) {
 			return

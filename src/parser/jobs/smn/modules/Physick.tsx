@@ -7,14 +7,14 @@ import Suggestions, {SEVERITY, Suggestion} from 'parser/core/modules/Suggestions
 import React from 'react'
 
 export default class Physick extends Module {
-	static handle = 'physick'
-	static title = t('smn.physick.title')`Physick`
+	static override handle = 'physick'
+	static override title = t('smn.physick.title')`Physick`
 
 	@dependency private suggestions!: Suggestions
 
 	private phyisckCount = 0
 
-	protected init() {
+	protected override init() {
 		this.addEventHook('cast', {by: 'player', abilityId: ACTIONS.PHYSICK.id}, this.onPhysick)
 		this.addHook('complete', this.onComplete)
 	}

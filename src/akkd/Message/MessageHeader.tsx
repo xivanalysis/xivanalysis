@@ -6,7 +6,7 @@ interface MessageHeaderProps {
 }
 
 export class MessageHeader extends React.PureComponent<MessageHeaderProps> {
-	render() {
+	override render() {
 		return (
 			<div className={styles.header}>
 				{this.props.children}

@@ -23,14 +23,14 @@ If you have any questions, suggestions, or would just like to have a chat - drop
 
 @observer
 class Home extends Component {
-	static contextType = StoreContext
+	static override contextType = StoreContext
 
-	componentDidMount() {
+	override componentDidMount() {
 		// Clean out the report state when the user returns to the home page
 		this.context.reportStore.clearReport()
 	}
 
-	render() {
+	override render() {
 		return <>
 			<div className={styles.background}/>
 

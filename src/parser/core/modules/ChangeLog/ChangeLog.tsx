@@ -5,13 +5,13 @@ import DISPLAY_ORDER from '../DISPLAY_ORDER'
 import {default as ChangelogComponent} from './Component'
 
 export default class ChangeLog extends Analyser {
-	static handle = 'changelog'
-	static displayOrder = DISPLAY_ORDER.CHANGELOG
-	static displayMode = DisplayMode.FULL
+	static override handle = 'changelog'
+	static override displayOrder = DISPLAY_ORDER.CHANGELOG
+	static override displayMode = DisplayMode.FULL
 
-	static title = t('core.changelog.title')`Changelog`
+	static override title = t('core.changelog.title')`Changelog`
 
-	output() {
+	override output() {
 		const {changelog} = this.parser.meta
 
 		if (changelog.length === 0) {

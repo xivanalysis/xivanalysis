@@ -26,7 +26,7 @@ const OTHER_GCDS: Array<keyof ActionRoot> = [
 ]
 
 export default class Reassemble extends Module {
-	static handle = 'reassemble'
+	static override handle = 'reassemble'
 
 	@dependency private combatants!: Combatants
 	@dependency private data!: Data
@@ -39,7 +39,7 @@ export default class Reassemble extends Module {
 	private REASSEMBLE_GCDS: number[] = []
 	private OTHER_GCDS: number[] = []
 
-	protected init() {
+	protected override init() {
 		this.REASSEMBLE_GCDS = REASSEMBLE_GCDS.map(key => this.data.actions[key].id)
 		this.OTHER_GCDS = OTHER_GCDS.map(key => this.data.actions[key].id)
 

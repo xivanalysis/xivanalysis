@@ -6,13 +6,13 @@ import GlobalCooldown from 'parser/core/modules/GlobalCooldown'
 import React from 'react'
 
 export default class AlwaysBeCasting extends Module {
-	static handle = 'abc'
+	static override handle = 'abc'
 
 	@dependency private checklist!: Checklist
 	@dependency protected downtime!: Downtime
 	@dependency protected gcd!: GlobalCooldown
 
-	protected init() {
+	protected override init() {
 		this.addEventHook('complete', this.onComplete)
 	}
 

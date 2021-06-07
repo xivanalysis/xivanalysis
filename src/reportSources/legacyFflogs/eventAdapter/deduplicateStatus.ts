@@ -13,7 +13,7 @@ const PERMITTED_TIME_DELTA = 0
 export class DeduplicateStatusApplicationStep extends AdapterStep {
 	private activeStatuses = new Map<string, Events['statusApply']>();
 
-	adapt(baseEvent: FflogsEvent, adaptedEvents: Event[]): Event[] {
+	override adapt(baseEvent: FflogsEvent, adaptedEvents: Event[]): Event[] {
 		const out: Event[] = []
 		for (const event of adaptedEvents) {
 			const adapted = event.type === 'statusApply'

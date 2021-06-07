@@ -117,7 +117,6 @@ export type Filter<Base, Current extends Partial<Base> = {}> =
 			DistributedKeyof<TB.Union.Select<Required<Base>, Current>>,
 			keyof Current
 		>]:
-		// @ts-expect-error TS is failing to infer that Select is creating a subset
 		FilterFunction<Base, Current, Key>
 	}
 	// Call signature for the filter

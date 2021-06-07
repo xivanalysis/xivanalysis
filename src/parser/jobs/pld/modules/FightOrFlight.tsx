@@ -90,8 +90,8 @@ class FightOrFlightErrorResult {
 }
 
 export default class FightOrFlight extends Module {
-	static handle = 'fightorflight'
-	static title = t('pld.fightorflight.title')`Fight Or Flight Usage`
+	static override handle = 'fightorflight'
+	static override title = t('pld.fightorflight.title')`Fight Or Flight Usage`
 
 	@dependency private suggestions!: Suggestions
 	@dependency private timeline!: Timeline
@@ -103,7 +103,7 @@ export default class FightOrFlight extends Module {
 	private fofRotations: TimestampRotationMap = {}
 	private fofErrorResult = new FightOrFlightErrorResult()
 
-	protected init() {
+	protected override init() {
 		this.addEventHook('cast', {by: 'player'}, this.onCast)
 		this.addEventHook(
 			'removebuff',
@@ -255,7 +255,7 @@ export default class FightOrFlight extends Module {
 		}, 0)
 	}
 
-	output() {
+	override output() {
 		return <RotationTable
 			targets={[
 				{

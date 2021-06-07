@@ -31,7 +31,7 @@ interface CooldownHistory {
 
 // Track the cooldowns on actions and shit
 export default class Cooldowns extends Module {
-	static handle = 'cooldowns'
+	static override handle = 'cooldowns'
 
 	@dependency private data!: Data
 	@dependency private downtime!: Downtime
@@ -47,7 +47,7 @@ export default class Cooldowns extends Module {
 	private _cooldowns = new Map<number, CooldownHistory>()
 	private _rows = new Map<number, ContainerRow>()
 
-	protected init() {
+	protected override init() {
 		const constructor = this.constructor as typeof Cooldowns
 		// Pre-build rows for actions explicitly set by subclasses
 		if (constructor.cooldownOrder) {

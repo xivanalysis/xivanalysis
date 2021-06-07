@@ -11,7 +11,7 @@ import React from 'react'
 export default class Procs extends CoreProcs {
 	@dependency castTime!: CastTime
 
-	trackedProcs = [
+	override trackedProcs = [
 		{
 			procStatus: this.data.statuses.THUNDERCLOUD,
 			consumeActions: [
@@ -27,7 +27,7 @@ export default class Procs extends CoreProcs {
 
 	private hasSharpcast: boolean = false
 
-	initialise() {
+	override initialise() {
 		super.initialise()
 
 		// Hacky workaround because Statuses aren't in Analyser format yet, can (and probably should) remove this when that's done
@@ -38,12 +38,12 @@ export default class Procs extends CoreProcs {
 		this.addEventHook(trackedStatusFilter.type('statusRemove'), () => { this.hasSharpcast = false })
 	}
 
-	protected jobSpecificCheckConsumeProc(_procGroup: ProcGroup, event: Events['action']): boolean {
+	protected override jobSpecificCheckConsumeProc(_procGroup: ProcGroup, event: Events['action']): boolean {
 		// If we were already hardcasting this spell, it does not consume the proc
 		return !(this.lastCastingSpellId && this.lastCastingSpellId === event.action)
 	}
 
-	protected jobSpecificOnConsumeProc(procGroup: ProcGroup, event: Events['action']): void {
+	protected override jobSpecificOnConsumeProc(procGroup: ProcGroup, event: Events['action']): void {
 		// BLM's procs are all instant-casts
 		this.castTime.setInstantCastAdjustment([event.action], event.timestamp, event.timestamp)
 
@@ -54,7 +54,7 @@ export default class Procs extends CoreProcs {
 		return
 	}
 
-	protected addJobSpecificSuggestions(): void {
+	protected override addJobSpecificSuggestions(): void {
 		const droppedThunderClouds: number = this.getDropCountForStatus(this.data.statuses.THUNDERCLOUD.id)
 		if (droppedThunderClouds > 0) {
 			this.suggestions.add(new Suggestion({

@@ -26,7 +26,7 @@ const SEVERITY_TIERS = {
 
 // Adapted from whm Overheal
 export default class Overheal extends Module {
-	static handle = 'overheal'
+	static override handle = 'overheal'
 
 	@dependency private data!: Data
 	@dependency private checklist!: Checklist
@@ -40,7 +40,7 @@ export default class Overheal extends Module {
 
 	private HOT_STATUSES: number[] = []
 
-	protected init() {
+	protected override init() {
 		HOT_STATUSES.forEach(actionKey => {
 			this.HOT_STATUSES.push(this.data.statuses[actionKey].id)
 		})
@@ -104,7 +104,7 @@ export class InvertedRequirement extends Requirement {
 		return 100 - this.percent
 	}
 
-	get content() {
+	override get content() {
 		if (this._percent !== null || this.value === null) { return `${this.percentInverted.toFixed(2)}%` }
 		return `${this.value.toFixed(0)}/${this.target.toFixed(0)}` // avoid weird floating point shit
 	}

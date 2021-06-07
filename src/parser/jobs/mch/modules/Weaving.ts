@@ -10,12 +10,12 @@ const HYPERCHARGE_ACTION_IDS: Array<keyof ActionRoot> = [
 export default class Weaving extends CoreWeaving {
 	private HYPERCHARGE_ACTION_IDS: number[] = []
 
-	protected init() {
+	protected override init() {
 		super.init()
 		this.HYPERCHARGE_ACTION_IDS = HYPERCHARGE_ACTION_IDS.map(actionKey => this.data.actions[actionKey].id)
 	}
 
-	isBadWeave(weave: WeaveInfo) {
+	override isBadWeave(weave: WeaveInfo) {
 		const leadingGcd = weave.leadingGcdEvent as CastEvent
 
 		if (leadingGcd && leadingGcd.ability && this.HYPERCHARGE_ACTION_IDS.includes(leadingGcd.ability.guid)) {
