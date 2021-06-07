@@ -59,8 +59,8 @@ class GnashingComboState {
 }
 
 export default class AmmoCombo extends Module {
-	static handle = 'Gnashing Fang Combo issues'
-	static debug = false
+	static override handle = 'Gnashing Fang Combo issues'
+	static override debug = false
 
 	@dependency private checklist!: Checklist
 	@dependency private timeline!: Timeline
@@ -75,7 +75,7 @@ export default class AmmoCombo extends Module {
 		return _.last(this.gnashingComboWindows)
 	}
 
-	protected init() {
+	protected override init() {
 		this.addEventHook('cast',
 			{
 				by: 'player',
@@ -186,7 +186,7 @@ export default class AmmoCombo extends Module {
 		}))
 	}
 
-	output() {
+	override output() {
 
 		if (this.errors !== 0) {
 

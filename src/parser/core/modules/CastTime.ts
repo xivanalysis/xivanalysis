@@ -14,14 +14,14 @@ export interface CastTimeAdjustment {
 }
 
 export default class CastTime extends Analyser {
-	static handle = 'castTime'
+	static override handle = 'castTime'
 
 	@dependency data!: Data
 
 	private castTimes: CastTimeAdjustment[] = []
 	private scIndex: number | null = null
 
-	initialise() {
+	override initialise() {
 		// Only going to deal with SC here, job-specific can do it themselves
 		const switftCastFilter = filter<Event>()
 			.target(this.parser.actor.id)

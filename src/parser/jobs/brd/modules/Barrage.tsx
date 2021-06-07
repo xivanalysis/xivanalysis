@@ -64,9 +64,9 @@ interface BarrageWindow {
 }
 
 export default class Barrage extends Module {
-	static handle = 'barrage'
-	static title = t('brd.barrage.title')`Barrage`
-	static displayOrder = DISPLAY_ORDER.BARRAGE
+	static override handle = 'barrage'
+	static override title = t('brd.barrage.title')`Barrage`
+	static override displayOrder = DISPLAY_ORDER.BARRAGE
 
 	@dependency private checklist!: Checklist
 	@dependency private combatants!: Combatants
@@ -77,7 +77,7 @@ export default class Barrage extends Module {
 
 	private BARRAGE_GCDS: number[] = []
 
-	protected init() {
+	protected override init() {
 		this.BARRAGE_GCDS = BARRAGE_GCDS.map(key => this.data.actions[key].id)
 
 		this.addEventHook('cast', {by: 'player', abilityId: this.data.actions.BARRAGE.id}, this.onBarrageCast)
@@ -208,7 +208,7 @@ export default class Barrage extends Module {
 		return <Icon name="checkmark" className="text-success"/>
 	}
 
-	output() {
+	override output() {
 		if (this.barrageHistory.length === 0) {
 			return null
 		}
@@ -256,7 +256,7 @@ class WeightedTieredRule extends TieredRule {
 		this.requirements.map(req => req.weight = req.weight / totalWeight)
 	}
 
-	public get percent(): number {
+	public override get percent(): number {
 		return this.requirements.reduce((acc, req) => acc + (req.percent * req.weight), 0)
 	}
 }

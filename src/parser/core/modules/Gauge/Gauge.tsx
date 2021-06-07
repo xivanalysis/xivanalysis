@@ -7,12 +7,12 @@ import {AbstractGauge} from './AbstractGauge'
 import {TimerGauge} from './TimerGauge'
 
 export class Gauge extends Module {
-	static handle = 'gauge'
-	static title = t('core.gauge.title')`Gauge`
+	static override handle = 'gauge'
+	static override title = t('core.gauge.title')`Gauge`
 
 	private gauges: AbstractGauge[] = []
 
-	protected init() {
+	protected override init() {
 		this.addEventHook('death', {to: 'player'}, this.onDeath)
 	}
 
@@ -34,7 +34,7 @@ export class Gauge extends Module {
 		this.gauges.forEach(gauge => gauge.reset())
 	}
 
-	output() {
+	override output() {
 		// Generate a dataset from each registered gauge
 		const datasets = this.gauges
 			.map(gauge => gauge.generateDataset())

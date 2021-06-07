@@ -1,7 +1,7 @@
 import CoreCooldowns, {CooldownOrderItem} from 'parser/core/modules/Cooldowns'
 
 export class Cooldowns extends CoreCooldowns {
-	static cooldownOrder: CooldownOrderItem[] = [
+	static override cooldownOrder: CooldownOrderItem[] = [
 		// Buffs
 		'BLOOD_WEAPON',
 		'DELIRIUM',

@@ -38,10 +38,10 @@ class DriftWindow {
 }
 
 export default class Drift extends Module {
-	static debug = false
-	static handle = 'drift'
-	static title = t('drg.drift.title')`Ability Drift`
-	static displayOrder = DISPLAY_ORDER.DRIFT
+	static override debug = false
+	static override handle = 'drift'
+	static override title = t('drg.drift.title')`Ability Drift`
+	static override displayOrder = DISPLAY_ORDER.DRIFT
 
 	@dependency private downtime!: Downtime
 	@dependency private timeline!: Timeline
@@ -53,7 +53,7 @@ export default class Drift extends Module {
 		[ACTIONS.GEIRSKOGUL.id]: new DriftWindow(ACTIONS.GEIRSKOGUL.id, this.parser.fight.start_time),
 	}
 
-	protected init() {
+	protected override init() {
 		this.addEventHook('cast', {by: 'player', abilityId: DRIFT_ABILITIES}, this.onDriftableCast)
 	}
 
@@ -129,7 +129,7 @@ export default class Drift extends Module {
 		</Table>
 	}
 
-	output() {
+	override output() {
 		// Nothing to show
 		if (!this.driftedWindows.length) { return }
 

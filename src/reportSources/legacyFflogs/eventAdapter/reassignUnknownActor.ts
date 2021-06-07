@@ -18,7 +18,7 @@ export class ReassignUnknownActorStep extends AdapterStep {
 	// Optimisation; store results of ID lookups to save looping the actors array every time
 	private knownIds = new Map<Actor['id'], boolean>()
 
-	adapt(baseEvent: FflogsEvent, adaptedEvents: Event[]): MutationAdaptionResult {
+	override adapt(baseEvent: FflogsEvent, adaptedEvents: Event[]): MutationAdaptionResult {
 		// In the common case, this chain of assignments isn't actually changing anything -
 		// we're only creating a new event object when an explicit mutation is performed.
 		let event = baseEvent

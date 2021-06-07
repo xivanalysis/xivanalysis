@@ -14,7 +14,7 @@ import React from 'react'
 const STORMS_EYE_BUFFER = 7000
 
 export default class StormsEye extends Module {
-	static handle = 'stormseye'
+	static override handle = 'stormseye'
 
 	@dependency private checklist!: Checklist
 	@dependency private combatants!: Combatants
@@ -26,7 +26,7 @@ export default class StormsEye extends Module {
 	private totalEyes: number = 0
 	private lastRefresh: number = this.parser.fight.start_time
 
-	protected init(): void {
+	protected override init(): void {
 		this.addEventHook('applybuff', {by: 'player', abilityId: STATUSES.STORMS_EYE.id}, this.onGain)
 		this.addEventHook('refreshbuff', {by: 'player', abilityId:  STATUSES.STORMS_EYE.id}, this.onGain)
 		this.addEventHook('complete', this.onComplete)

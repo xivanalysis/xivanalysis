@@ -30,8 +30,8 @@ describe('Analyser', () => {
 
 	it('cannot depend on legacy modules', () => {
 		class ThrowingAnalyser extends Analyser {
-			static handle = 'throwing'
-			static dependencies = ['analyser', 'module']
+			static override handle = 'throwing'
+			static override dependencies = ['analyser', 'module']
 		}
 
 		expect(() => new ThrowingAnalyser(parser))
@@ -44,7 +44,7 @@ describe('Analyser', () => {
 			const callback = () => { /* noop */ }
 
 			class TestAnalyser extends Analyser {
-				static handle = 'test'
+				static override handle = 'test'
 				test() { this.addEventHook(predicate, callback) }
 			}
 
@@ -64,7 +64,7 @@ describe('Analyser', () => {
 			let hook: EventHook<Event>
 
 			class TestAnalyser extends Analyser {
-				static handle = 'test'
+				static override handle = 'test'
 				add() { hook = this.addEventHook(predicate, callback) }
 				remove() { this.removeEventHook(hook) }
 			}
@@ -84,7 +84,7 @@ describe('Analyser', () => {
 			const callback = () => { /* noop */ }
 
 			class TestAnalyser extends Analyser {
-				static handle = 'test'
+				static override handle = 'test'
 				stringType() { this.addEventHook('action', callback) }
 				partialEvent() { this.addEventHook({type: 'action'}, callback) }
 			}
@@ -112,7 +112,7 @@ describe('Analyser', () => {
 			const callback = () => { /* noop */ }
 
 			class TestAnalyser extends Analyser {
-				static handle = 'test'
+				static override handle = 'test'
 				test() { this.addTimestampHook(timestamp, callback) }
 			}
 
@@ -132,7 +132,7 @@ describe('Analyser', () => {
 			let hook: TimestampHook
 
 			class TestAnalyser extends Analyser {
-				static handle = 'test'
+				static override handle = 'test'
 				add() { hook = this.addTimestampHook(timestamp, callback) }
 				remove() { this.removeTimestampHook(hook) }
 			}

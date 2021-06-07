@@ -5,9 +5,9 @@ import {Tincture as CoreTincture} from 'parser/core/modules/Tincture'
 import React from 'react'
 
 export default class Tincture extends CoreTincture {
-	buffAction = this.data.actions.INFUSION_STR
+	override buffAction = this.data.actions.INFUSION_STR
 
-	expectedGCDs = {
+	override expectedGCDs = {
 		expectedPerWindow: 13,
 		suggestionContent: <Trans id="pld.tincture.suggestions.missedgcd.content">
 			Try to land 13 GCDs during every <ActionLink {...this.data.actions.INFUSION_STR}/> window.
@@ -19,7 +19,7 @@ export default class Tincture extends CoreTincture {
 		},
 	}
 
-	trackedActions = {
+	override trackedActions = {
 		icon: this.data.actions.INFUSION_STR.icon,
 		actions: [
 			{

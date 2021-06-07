@@ -5,7 +5,7 @@ import {Data} from 'parser/core/modules/Data'
 import {NormalisedDamageEvent} from 'parser/core/modules/NormalisedEvents'
 
 export default class AoE extends AoEUsages {
-	static handle = 'aoe'
+	static override handle = 'aoe'
 
 	@dependency private combatants!: Combatants
 	@dependency private data!: Data
@@ -39,7 +39,7 @@ export default class AoE extends AoEUsages {
 		},
 	]
 
-	protected adjustMinTargets(event: NormalisedDamageEvent, minTargets: number): number {
+	protected override adjustMinTargets(event: NormalisedDamageEvent, minTargets: number): number {
 		const action = this.data.getAction(event.ability.guid)
 
 		// How in the fuck did we even get here tbh

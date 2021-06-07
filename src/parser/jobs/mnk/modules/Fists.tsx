@@ -52,9 +52,9 @@ export class Fist {
 }
 
 export default class Fists extends Module {
-	static handle = 'fists'
-	static title = t('mnk.fists.title')`Fists`
-	static displayOrder = DISPLAY_ORDER.FISTS
+	static override handle = 'fists'
+	static override title = t('mnk.fists.title')`Fists`
+	static override displayOrder = DISPLAY_ORDER.FISTS
 
 	@dependency private combatants!: Combatants
 	@dependency private data!: Data
@@ -68,7 +68,7 @@ export default class Fists extends Module {
 	//  if there's a pre-start applybuff, it'll get corrected, and if not, it's already correct
 	private activeFist: Fist = new Fist(this.data.statuses.FISTS_OF_FIRE.id, this.parser.fight.start_time)
 
-	protected init(): void {
+	protected override init(): void {
 		this.addEventHook('cast', {by: 'player'}, this.onCast)
 		this.addEventHook('applybuff', {to: 'player', abilityId: FISTS}, this.onGain)
 		this.addEventHook('removebuff', {to: 'player', abilityId: FISTS}, this.onRemove)

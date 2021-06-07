@@ -62,7 +62,7 @@ class I18nMenu extends Component {
 			{/* Site language */}
 			<Dropdown
 				className={styles.dropdown}
-				text={<>
+				trigger={<>
 					<Icon name="globe"/>
 					{siteLang ? siteLang.menu.text : 'Language'}
 				</>}
@@ -101,7 +101,7 @@ class I18nMenu extends Component {
 			<Dropdown
 				className={styles.dropdown}
 				direction="left"
-				text={<>
+				trigger={<>
 					<Icon name="gamepad"/>
 					{gameLang ? gameLang.menu.text : 'Language'}
 				</>}

@@ -8,7 +8,7 @@ const queries = Symbol('queries')
 const hasExecuted = Symbol('hasExecuted')
 
 export class AdditionalEventQueries extends Module {
-	static handle = 'additionalEventQueries'
+	static override handle = 'additionalEventQueries'
 
 	private [queries]: string[] = []
 	private [hasExecuted] = false
@@ -23,12 +23,12 @@ export class AdditionalEventQueries extends Module {
 }
 
 export class AdditionalEvents extends Module {
-	static handle = 'additionalEvents'
-	static debug = true
+	static override handle = 'additionalEvents'
+	static override debug = true
 
 	@dependency private queryModule!: AdditionalEventQueries
 
-	async normalise(events: Event[]): Promise<Event[]> {
+	override async normalise(events: Event[]): Promise<Event[]> {
 		this.queryModule[hasExecuted] = true
 
 		const registeredQueries = this.queryModule[queries]

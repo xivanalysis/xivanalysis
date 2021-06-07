@@ -51,7 +51,7 @@ export default class GeneralCDDowntime extends CooldownDowntime {
 		firstUseOffset: 6750,
 	}]
 
-	normalise(events: Event[]) {
+	override normalise(events: Event[]) {
 		// Egis will not execute an order while they are moving, so it is possible to
 		// issue a pre-pull Aetherpact and delay the Devotion cast by the pet until
 		// after the pull by running the pet in circles.  Such casts will not be detected

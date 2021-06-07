@@ -16,7 +16,7 @@ import {Analyser} from 'parser/core/Analyser'
 import {oneOf} from 'parser/core/filter'
 
 export class Data extends Analyser {
-	static handle = 'data'
+	static override handle = 'data'
 
 	get actions() {
 		return this.getAppliedData(actionRoot, actionLayers)

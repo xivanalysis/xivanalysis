@@ -66,9 +66,9 @@ const DEFAULT_CHECKLIST_TARGET = 95
 const DEFAULT_ALLOWED_AVERAGE_DOWNTIME = 1250
 
 export abstract class CooldownDowntime extends Module {
-	static handle = 'cooldownDowntime'
-	static title = t('core.cooldownDowntime.title')`Cooldown Downtime`
-	static debug = false
+	static override handle = 'cooldownDowntime'
+	static override title = t('core.cooldownDowntime.title')`Cooldown Downtime`
+	static override debug = false
 
 	@dependency private data!: Data
 	@dependency private downtime!: Downtime
@@ -107,7 +107,7 @@ export abstract class CooldownDowntime extends Module {
 		return true
 	}
 
-	protected init() {
+	protected override init() {
 		const trackedIds = this.trackedCds.map(group => group.cooldowns)
 			.reduce((acc, cur) => acc.concat(cur))
 			.map(action => action.id)
@@ -324,7 +324,7 @@ class WeightedRule extends Rule {
 		this.requirements.map(req => req.weight = req.weight / totalWeight)
 	}
 
-	public get percent(): number {
+	public override get percent(): number {
 		return this.requirements.reduce((acc, req) => acc + (req.percent * req.weight), 0)
 	}
 }

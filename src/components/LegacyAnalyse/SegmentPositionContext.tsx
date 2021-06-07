@@ -19,7 +19,7 @@ interface ProviderState extends Context {
 }
 
 export class SegmentPositionProvider extends React.PureComponent<Record<string, never>, ProviderState> {
-	readonly state: Readonly<ProviderState> = {
+	override readonly state: Readonly<ProviderState> = {
 		active: null,
 		register: this.register.bind(this),
 		unregister: this.unregister.bind(this),
@@ -28,7 +28,7 @@ export class SegmentPositionProvider extends React.PureComponent<Record<string, 
 	}
 	private readonly refMap = new Map<number, { scrollIntoView(): void }>()
 
-	componentDidUpdate(_prevProps: Readonly<Record<string, never>>, prevState: Readonly<ProviderState>) {
+	override componentDidUpdate(_prevProps: Readonly<Record<string, never>>, prevState: Readonly<ProviderState>) {
 		const {registry} = this.state
 		if (registry !== prevState.registry) {
 			const toCheck = Array.from(registry.keys()).sort((a, b) => a - b)
@@ -43,7 +43,7 @@ export class SegmentPositionProvider extends React.PureComponent<Record<string, 
 		}
 	}
 
-	render() {
+	override render() {
 		return <context.Provider value={this.state}>{this.props.children}</context.Provider>
 	}
 

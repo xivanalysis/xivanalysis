@@ -9,7 +9,7 @@ interface ContributorLabelProps {
 }
 
 export default class ContributorLabel extends PureComponent<ContributorLabelProps> {
-	render() {
+	override render() {
 		const {contributor, detail} = this.props
 
 		const {avatar, name, jobs} = contributor
