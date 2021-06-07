@@ -40,8 +40,8 @@ interface CooldownGroupConfig {
 }
 
 export class Cooldowns extends Analyser {
-	static handle = 'cooldowns2'
-	static debug = true
+	static override handle = 'cooldowns2'
+	static override debug = true
 
 	// TODO: cooldownOrder
 
@@ -60,7 +60,7 @@ export class Cooldowns extends Analyser {
 
 	private tempTimelineRow = this.timeline.addRow(new SimpleRow({label: 'cd2 temp'}))
 
-	initialise() {
+	override initialise() {
 		// Preemptively build a two-directional mapping between actions and cooldown groups
 		for (const action of Object.values(this.data.actions)) {
 			const toGroupConfig: CooldownGroupConfig[] = []
