@@ -1,6 +1,5 @@
 import {Trans} from '@lingui/react'
-import Rotation from 'components/ui/Rotation'
-import {Ability} from 'fflogs'
+import Rotation, {RotationEvent} from 'components/ui/Rotation'
 import React from 'react'
 import {Button, Table} from 'semantic-ui-react'
 import {isDefined, formatDuration} from 'utilities'
@@ -83,7 +82,7 @@ export interface RotationTableEntry {
 	/**
 	 * Rotation to display that occurs during this entry
 	 */
-	rotation: Array<{ability: Ability, isProc?: boolean}>
+	rotation: RotationEvent[]
 }
 
 interface RotationTableProps {

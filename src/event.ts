@@ -172,6 +172,18 @@ export interface Position {
 	bearing: number
 }
 
+export enum Attribute {
+	SKILL_SPEED,
+	SPELL_SPEED,
+}
+
+/** Actor attribute (stat value) */
+export interface AttributeValue {
+	attribute: Attribute
+	value: number
+	estimated?: boolean
+}
+
 /** An actors parameters have been updated. */
 interface EventActorUpdate extends FieldsBase {
 	/** ID of the updated actor. */
@@ -184,6 +196,8 @@ interface EventActorUpdate extends FieldsBase {
 	position?: Partial<Position>
 	/** Current targetability. */
 	targetable?: boolean
+	/** Current attributes (stats) */
+	attributes?: AttributeValue[]
 }
 
 // Merge core events into the repository.

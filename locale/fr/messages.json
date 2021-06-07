@@ -311,6 +311,7 @@
   "core.report-flow.report-not-found": "<0> Rapport non trouvé.</0> aucun rapport trouvé pour \"{url}\".",
   "core.report-flow.supported-patches": "Patch {from}{0}",
   "core.report-flow.view-report": "Voir le rapport sur {0}",
+  "core.resource-graphs.gauge-label": "",
   "core.resource-graphs.resource-value": "{label} : {current,number}/{maximum,number}",
   "core.resource-graphs.row-label": "Ressources",
   "core.role.developer": "Développeur",

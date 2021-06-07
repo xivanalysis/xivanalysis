@@ -45,7 +45,7 @@ export default class Procs extends CoreProcs {
 
 	protected override jobSpecificOnConsumeProc(procGroup: ProcGroup, event: Events['action']): void {
 		// BLM's procs are all instant-casts
-		this.castTime.set([event.action], 0, event.timestamp, event.timestamp)
+		this.castTime.setInstantCastAdjustment([event.action], event.timestamp, event.timestamp)
 
 		// Thunder procs used while sharpcast is up re-grant the proc status without technically removing it, so we need to forcibly add the 'removal' here to keep the 'dropped' counting correct
 		if ((event.action === this.data.actions.THUNDER_III.id || event.action === this.data.actions.THUNDER_IV.id) && this.hasSharpcast) {

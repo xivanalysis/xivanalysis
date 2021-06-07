@@ -4,6 +4,7 @@ import {Debuggable} from 'parser/core/Debuggable'
 import {Pull, Report} from 'report'
 
 export const PREPULL_OFFSETS = {
+	ATTRIBUTE_UPDATE: -4,
 	STATUS_ACTION: -3,
 	STATUS_APPLY: -2,
 	PULL_ACTION: -1,
