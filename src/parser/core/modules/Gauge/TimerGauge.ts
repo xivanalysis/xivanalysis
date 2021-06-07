@@ -176,7 +176,7 @@ export class TimerGauge extends AbstractGauge {
 	}
 
 	/** @inheritdoc */
-	generateDataset() {
+	override generateDataset() {
 		// Skip charting if they've not enabled it
 		if (!this.chartOptions) {
 			return

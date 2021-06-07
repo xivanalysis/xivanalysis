@@ -90,9 +90,9 @@ class Target {
 }
 
 export default class Snapshots extends Module {
-	static handle = 'snapshots'
-	static title = t('brd.snapshots.title')`Snapshots`
-	static displayOrder = DISPLAY_ORDER.SNAPSHOTS
+	static override handle = 'snapshots'
+	static override title = t('brd.snapshots.title')`Snapshots`
+	static override displayOrder = DISPLAY_ORDER.SNAPSHOTS
 
 	@dependency private combatants!: Combatants
 	@dependency private data!: Data
@@ -101,7 +101,7 @@ export default class Snapshots extends Module {
 
 	private targets: Map<string, Target> = new Map()
 
-	protected init() {
+	protected override init() {
 		this.addEventHook('cast', {by: 'player', abilityId: SNAPSHOTTERS}, this.onSnapshot)
 		this.addEventHook(['applydebuff', 'refreshdebuff'], this.onApply)
 		this.addEventHook('removedebuff', this.onRemove)
@@ -237,7 +237,7 @@ export default class Snapshots extends Module {
 		</Table>
 	}
 
-	output() {
+	override output() {
 		if (this.targets.size === 0) {
 			return null
 		}

@@ -53,9 +53,9 @@ export interface CardState {
 
 // TODO: Try to track for when a seal was not given on pull due to latency?
 export default class ArcanaTracking extends Module {
-	static handle = 'arcanaTracking'
-	static title = t('ast.arcana-tracking.title')`Arcana Tracking`
-	static displayOrder = DISPLAY_ORDER.ARCANA_TRACKING
+	static override handle = 'arcanaTracking'
+	static override title = t('ast.arcana-tracking.title')`Arcana Tracking`
+	static override displayOrder = DISPLAY_ORDER.ARCANA_TRACKING
 
 	@dependency private data!: Data
 	@dependency private precastStatus!: PrecastStatus
@@ -91,7 +91,7 @@ export default class ArcanaTracking extends Module {
 
 	private prepullArcanas: BuffEvent[] = []
 
-	protected init() {
+	protected override init() {
 		// Initialize grouped reference to actions/statuses data
 		PLAY.forEach(key => { this.PLAY.push(this.data.actions[key].id) })
 		ARCANA_STATUSES.forEach(key => { this.ARCANA_STATUSES.push(this.data.statuses[key].id) })
@@ -118,7 +118,7 @@ export default class ArcanaTracking extends Module {
 		this.addEventHook('death', {to: 'player'}, this.onDeath)
 	}
 
-	normalise(events: Event[]) {
+	override normalise(events: Event[]) {
 		// The whole point of this module was to support "pre-5.3" Three-card Sleeve Draw
 		if (!this.parser.patch.before('5.3')) {
 			return events

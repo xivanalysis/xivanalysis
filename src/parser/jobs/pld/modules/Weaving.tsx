@@ -15,7 +15,7 @@ export default class Weaving extends CoreWeaving {
 
 	@dependency private combatants!: Combatants
 
-	isBadWeave(weave: WeaveInfo /*, maxWeaves*/) {
+	override isBadWeave(weave: WeaveInfo /*, maxWeaves*/) {
 		// Check for if the homie opened on an oGCD for w/e reason
 		if (weave.leadingGcdEvent.type != null && weave.leadingGcdEvent.ability != null) {
 			// Requiescat makes spells instant cast, so they get 2 weaves by default.

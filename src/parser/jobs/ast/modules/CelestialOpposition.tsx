@@ -17,7 +17,7 @@ const SEVERITY_MOD = {
 
 // Lifted from WHM benison and adapted to AST and TSX
 export default class CelestialOpposition extends Module {
-	static handle = 'celestialopposition'
+	static override handle = 'celestialopposition'
 
 	@dependency private data!: Data
 	@dependency private suggestions!: Suggestions
@@ -29,7 +29,7 @@ export default class CelestialOpposition extends Module {
 
 	private activeSect: Status | undefined
 
-	protected init() {
+	protected override init() {
 		this.addEventHook('cast', {abilityId: this.data.actions.CELESTIAL_OPPOSITION.id, by: 'player'}, this.onCast)
 		this.addEventHook('applybuff', {abilityId: [this.data.statuses.DIURNAL_SECT.id, this.data.statuses.NOCTURNAL_SECT.id], by: 'player'}, this.onSect)
 		this.addEventHook('complete', this.onComplete)

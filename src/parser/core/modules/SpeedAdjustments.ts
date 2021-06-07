@@ -8,7 +8,7 @@ import {Actors} from './Actors'
 type SpeedAttribute = Attribute.SKILL_SPEED | Attribute.SPELL_SPEED
 
 export class SpeedAdjustments extends Analyser {
-	static handle = 'speedAdjustments'
+	static override handle = 'speedAdjustments'
 
 	@dependency private actors!: Actors
 

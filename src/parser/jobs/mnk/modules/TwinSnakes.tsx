@@ -41,7 +41,7 @@ class TwinState {
 }
 
 export default class TwinSnakes extends Module {
-	static handle = 'twinsnakes'
+	static override handle = 'twinsnakes'
 
 	@dependency private checklist!: Checklist
 	@dependency private combatants!: Combatants
@@ -63,7 +63,7 @@ export default class TwinSnakes extends Module {
 	// Antman used without TS active
 	private failedAnts: number = 0
 
-	protected init() {
+	protected override init() {
 		// Hook all GCDs so we can count GCDs in buff windows
 		this.addEventHook('cast', {by: 'player'}, this.onCast)
 

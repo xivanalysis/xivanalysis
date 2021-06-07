@@ -43,8 +43,8 @@ const DEFAULT_SEVERITY_TIERS = {
 	3: SEVERITY.MAJOR,
 }
 export abstract class Procs extends Analyser {
-	static handle = 'procs'
-	static title = t('core.procs.title')`Procs`
+	static override handle = 'procs'
+	static override title = t('core.procs.title')`Procs`
 
 	@dependency private downtime!: Downtime
 	@dependency protected suggestions!: Suggestions
@@ -231,7 +231,7 @@ export abstract class Procs extends Analyser {
 	protected castingSpellId: number | null = null
 	protected lastCastingSpellId: number | null = null
 
-	initialise() {
+	override initialise() {
 		this.addEventHook(filter<Event>().type('prepare').source(this.parser.actor.id), this.onPrepare)
 
 		const trackedProcActionsIds: number[] = this.trackedProcs.map(group => group.consumeActions).reduce((acc, cur) => acc.concat(cur)).map(action => action.id)

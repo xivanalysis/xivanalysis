@@ -74,8 +74,8 @@ class UnexecutedCommands {
 }
 
 export default class EgiCommands extends Module {
-	static handle = 'egicommands'
-	static title = t('smn.egicommands.title')`Unexecuted Egi Commands`
+	static override handle = 'egicommands'
+	static override title = t('smn.egicommands.title')`Unexecuted Egi Commands`
 
 	@dependency private suggestions!: Suggestions
 	@dependency private timeline!: Timeline
@@ -91,7 +91,7 @@ export default class EgiCommands extends Module {
 	private activeCommands: CastEvent[] = []
 	private unexecutedCommands: UnexecutedCommands[] = []
 
-	protected init() {
+	protected override init() {
 		this.addEventHook('cast', {by: 'player', abilityId: ACTIONS.RUIN_IV.id}, this.onRuin4)
 		this.addEventHook('cast', {by: 'player', abilityId: ACTIONS.SUMMON_BAHAMUT.id}, this.onSummonBahamut)
 		this.addEventHook('cast', {by: 'player', abilityId: ACTIONS.ASSAULT_I_EARTHEN_ARMOR.id}, this.onPlayerEarthenArmor)
@@ -236,7 +236,7 @@ export default class EgiCommands extends Module {
 		}
 	}
 
-	output() {
+	override output() {
 		if (this.unexecutedCommands.length === 0) { return false }
 
 		return <RotationTable data={this.unexecutedCommands

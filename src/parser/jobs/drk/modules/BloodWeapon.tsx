@@ -9,14 +9,14 @@ import React from 'react'
 import {DISPLAY_ORDER} from './DISPLAY_ORDER'
 
 export class BloodWeapon extends BuffWindowModule {
-	static handle = 'bloodweapon'
-	static title = t('drk.bloodweapon.title')`Blood Weapon Usage`
-	static displayOrder = DISPLAY_ORDER.BLOOD_WEAPON
+	static override handle = 'bloodweapon'
+	static override title = t('drk.bloodweapon.title')`Blood Weapon Usage`
+	static override displayOrder = DISPLAY_ORDER.BLOOD_WEAPON
 
 	buffAction = ACTIONS.BLOOD_WEAPON
 	buffStatus = STATUSES.BLOOD_WEAPON
 
-	expectedGCDs = {
+	override expectedGCDs = {
 		expectedPerWindow: 5,
 		suggestionContent: <Trans id="drk.bloodweapon.suggestions.missedgcd.content">
 			Try to land 5 GCDs during every <ActionLink {...ACTIONS.BLOOD_WEAPON} /> window.  If you cannot do this with full uptime and no clipping, consider adjusting your gearset for more Skill Speed.

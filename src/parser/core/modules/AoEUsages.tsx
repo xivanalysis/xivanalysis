@@ -42,8 +42,8 @@ interface SeverityTiers {
  * AoE combos when the number of targets may drop below the minimum during the combo.
  */
 export abstract class AoEUsages extends Module {
-	static handle = 'aoeusages'
-	static title = t('core.aoeusages.title')`Incorrect AoE Action Usage`
+	static override handle = 'aoeusages'
+	static override title = t('core.aoeusages.title')`Incorrect AoE Action Usage`
 
 	@dependency private suggestions!: Suggestions
 
@@ -72,7 +72,7 @@ export abstract class AoEUsages extends Module {
 
 	private badUsages = new Map<number, number>()
 
-	protected init() {
+	protected override init() {
 		this.addEventHook('normaliseddamage', {by: 'player', abilityId: this.trackedActions.map(a => a.aoeAction.id)}, this.onAbility)
 		this.addEventHook('complete', this.onComplete)
 	}
@@ -112,7 +112,7 @@ export abstract class AoEUsages extends Module {
 		}))
 	}
 
-	output() {
+	override output() {
 		// if no bad usages were found, do not output anything
 		if (this.badUsages.size === 0) { return }
 

@@ -13,16 +13,16 @@ import {Death} from './Death'
 const LIKELY_DUMMY_THRESHOLD = 3
 
 export class Dummy extends Analyser {
-	static title = t('core.dummy.title')`Striking Dummy`
-	static handle = 'dummy'
-	static debug = false
+	static override title = t('core.dummy.title')`Striking Dummy`
+	static override handle = 'dummy'
+	static override debug = false
 
 	@dependency private brokenLog!: BrokenLog
 	@dependency private death!: Death
 
 	private hook?: EventHook<Events['death']>
 
-	initialise() {
+	override initialise() {
 		const foeIds = this.parser.pull.actors
 			.filter(actor => actor.team === Team.FOE)
 			.map(actor => actor.id)

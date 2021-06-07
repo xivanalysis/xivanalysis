@@ -7,7 +7,7 @@ import {AdapterStep} from './base'
 export class DeduplicateActorUpdateStep extends AdapterStep {
 	private actorState = new Map<Actor['id'], Events['actorUpdate']>()
 
-	adapt(baseEvent: FflogsEvent, adaptedEvents: Event[]): Event[] {
+	override adapt(baseEvent: FflogsEvent, adaptedEvents: Event[]): Event[] {
 		const out: Event[] = []
 		for (const event of adaptedEvents) {
 			const adapted = event.type === 'actorUpdate'

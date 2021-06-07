@@ -14,8 +14,8 @@ const JUMP_FIRST_USE_OFFSET = 24500
 const LIFE_SURGE_FIRST_USE_OFFSET = 22000
 
 export default class OGCDDowntime extends CooldownDowntime {
-	defaultFirstUseOffset = BUFF_FIRST_USE_OFFSET
-	trackedCds = [
+	override defaultFirstUseOffset = BUFF_FIRST_USE_OFFSET
+	override trackedCds = [
 		{
 			cooldowns: [ACTIONS.HIGH_JUMP],
 			firstUseOffset: JUMP_FIRST_USE_OFFSET,

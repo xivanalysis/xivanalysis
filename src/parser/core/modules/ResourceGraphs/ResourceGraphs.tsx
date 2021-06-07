@@ -29,7 +29,7 @@ export interface ResourceDataGroup {
 }
 
 export class ResourceGraphs extends Analyser {
-	static handle = 'resourceGraphs'
+	static override handle = 'resourceGraphs'
 
 	@dependency private timeline!: Timeline
 

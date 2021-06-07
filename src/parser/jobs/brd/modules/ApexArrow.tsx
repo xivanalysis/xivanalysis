@@ -16,9 +16,9 @@ const APEX_POTENCY_THRESHOLDS = {
 }
 
 export default class ApexArrow extends Module {
-	static handle = 'Apex'
-	static title = t('brd.apex.title')`Apex Arrow`
-	static debug = false
+	static override handle = 'Apex'
+	static override title = t('brd.apex.title')`Apex Arrow`
+	static override debug = false
 
 	@dependency private stats!: AdditionalStats
 	@dependency private data!: Data
@@ -27,7 +27,7 @@ export default class ApexArrow extends Module {
 	private ghostedApexCasts: number = 0
 	private badApexCasts: number = 0
 
-	protected init() {
+	protected override init() {
 		this.addEventHook('normaliseddamage', {by: 'player', abilityId: this.data.actions.APEX_ARROW.id}, this.onApex)
 		this.addEventHook('complete', this.onComplete)
 	}

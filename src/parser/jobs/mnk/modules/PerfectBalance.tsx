@@ -27,10 +27,10 @@ interface Balance {
 }
 
 export default class PerfectBalance extends Module {
-	static debug = false
-	static handle = 'perfectBalance'
-	static title = t('mnk.pb.title')`Perfect Balance`
-	static displayOrder = DISPLAY_ORDER.PERFECT_BALANCE
+	static override debug = false
+	static override handle = 'perfectBalance'
+	static override title = t('mnk.pb.title')`Perfect Balance`
+	static override displayOrder = DISPLAY_ORDER.PERFECT_BALANCE
 
 	@dependency private combatants!: Combatants
 	@dependency private data!: Data
@@ -39,7 +39,7 @@ export default class PerfectBalance extends Module {
 	private current: Balance | undefined
 	private history: Balance[] = []
 
-	init() {
+	override init() {
 		this.addEventHook('cast', {by: 'player'}, this.onCast)
 		this.addEventHook('applybuffstack', {to: 'player', abilityId: PB_BAD_ACTIONS}, this.onStacc)
 		this.addEventHook('removebuff', {to: 'player', abilityId: this.data.statuses.PERFECT_BALANCE.id}, this.onDrop)

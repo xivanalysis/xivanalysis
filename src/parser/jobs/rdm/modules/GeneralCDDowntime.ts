@@ -4,9 +4,9 @@ import {CooldownDowntime} from 'parser/core/modules/CooldownDowntime'
 // Time that Jump deems ok for a OGCD to be down : ^)
 const DEFAULT_ALLOWED_DOWNTIME = 1000
 export default class GeneralCDDowntime extends CooldownDowntime {
-	defaultAllowedAverageDowntime = DEFAULT_ALLOWED_DOWNTIME
+	override defaultAllowedAverageDowntime = DEFAULT_ALLOWED_DOWNTIME
 
-	trackedCds = [
+	override trackedCds = [
 		// With the changes to Acceleration, we have a lot of instances where we should hold the skill.
 		// Since it's not really possible to always know when during analysis we give a blanket grace of 20 and
 		// hope that it's accurate enough
