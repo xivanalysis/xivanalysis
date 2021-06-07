@@ -230,7 +230,7 @@ export abstract class Procs extends Analyser {
 
 	protected castingSpellId?: number
 
-	initialise() {
+	override initialise() {
 		const playerFilter = filter<Event>().source(this.parser.actor.id)
 		this.addEventHook(playerFilter.type('prepare'), this.onPrepare)
 		this.addEventHook(playerFilter.type('interrupt'), this.onInterrupt)
