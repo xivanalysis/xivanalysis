@@ -221,7 +221,7 @@ export class RotationTable extends React.Component<RotationTableProps> {
 			}
 		</Table.Row>
 
-	render(): React.ReactNode {
+	override render(): React.ReactNode {
 		const {
 			targets,
 			notes,

@@ -6,7 +6,7 @@ import Cooldowns from './Cooldowns'
 
 // This module puts pet skills on the timeline beneath the GCD spells
 export default class PetTimeline extends Module {
-	static handle = 'pettimeline'
+	static override handle = 'pettimeline'
 
 	@dependency private data!: Data
 	@dependency private timeline!: Timeline
@@ -52,7 +52,7 @@ export default class PetTimeline extends Module {
 		return false
 	}
 
-	protected init() {
+	protected override init() {
 		this.addEventHook('cast', {by: 'pet'}, this.onCast)
 		this.addEventHook('complete', this.onComplete)
 	}

@@ -21,16 +21,16 @@ const SEVERITIES = {
 }
 
 export default class Combust extends DoTs {
-	static handle = 'combust'
+	static override handle = 'combust'
 
-	static statusesToTrack = [
+	static override statusesToTrack = [
 		STATUSES.COMBUST_III.id,
 	]
 
 	@dependency private checklist!: Checklist
 	@dependency private suggestions!: Suggestions
 
-	addChecklistRules() {
+	override addChecklistRules() {
 		this.checklist.add(new TieredRule({
 			name: <Trans id="ast.dots.rule.name">Keep your DoT up</Trans>,
 			description: <Trans id="ast.dots.rule.description">
@@ -46,7 +46,7 @@ export default class Combust extends DoTs {
 		}))
 	}
 
-	addClippingSuggestions(clip: TODO) {
+	override addClippingSuggestions(clip: TODO) {
 		// Suggestion for DoT clipping
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.COMBUST_III.icon,

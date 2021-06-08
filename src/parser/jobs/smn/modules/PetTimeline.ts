@@ -25,9 +25,9 @@ const COMMANDED_SKILLS: number[] = [
 
 export class PetTimeline extends CorePetTimeline {
 
-	protected canPetBeCommanded = true
+	protected override canPetBeCommanded = true
 
-	isCommandedEvent(event: CastEvent) {
+	override isCommandedEvent(event: CastEvent) {
 		return COMMANDED_SKILLS.includes(event.ability.guid)
 	}
 }

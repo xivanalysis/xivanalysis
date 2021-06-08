@@ -51,8 +51,9 @@ const FEATHER_GENERATION_CHANCE = .5
 const MAX_ESPRIT = 100
 const SABER_DANCE_COST = 50
 const MAX_FEATHERS = 4
+
 export default class Gauge extends Analyser {
-	static handle = 'gauge'
+	static override handle = 'gauge'
 
 	@dependency private data!: Data
 	@dependency private suggestions!: Suggestions
@@ -115,7 +116,7 @@ export default class Gauge extends Analyser {
 
 	private pauseGeneration = false;
 
-	initialise() {
+	override initialise() {
 		const espritApplyFilter = filter<Event>()
 			.type('statusApply')
 			.source(this.parser.actor.id)

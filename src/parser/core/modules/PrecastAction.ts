@@ -6,12 +6,12 @@ import {Data} from 'parser/core/modules/Data'
 // Actions that initiate a pull are only a damage event - no cast
 // Fabricate fake cast events to clean up the mess
 export default class PrecastAction extends Module {
-	static handle = 'precastAction'
-	static debug = false
+	static override handle = 'precastAction'
+	static override debug = false
 
 	@dependency private data!: Data
 
-	normalise(events: Event[]): Event[] {
+	override normalise(events: Event[]): Event[] {
 		const startTime = this.parser.eventTimeOffset
 
 		for (const event of events) {

@@ -50,7 +50,7 @@ export default class ResultSegment extends React.PureComponent<Props, State> imp
 		this.state = state
 	}
 
-	componentDidMount() {
+	override componentDidMount() {
 		// semantic-ui-react doesn't support refs at all, so we'd either need a wrapping div that's there
 		// just to be ref'd, or we need the ReactDOM hacks. We _need_ the element to have a size so we can't
 		// just jam it in as a 0-size child that wouldn't cause any trouble.
@@ -63,7 +63,7 @@ export default class ResultSegment extends React.PureComponent<Props, State> imp
 		}
 	}
 
-	componentDidUpdate(prevProps: Readonly<Props>) {
+	override componentDidUpdate(prevProps: Readonly<Props>) {
 		if (this.props.index !== prevProps.index) {
 			this.positionContext.unregister(prevProps.index)
 		}
@@ -78,7 +78,7 @@ export default class ResultSegment extends React.PureComponent<Props, State> imp
 		}
 	}
 
-	componentWillUnmount() {
+	override componentWillUnmount() {
 		if (ResultSegment.instances.get(this.props.result.handle) === this) {
 			ResultSegment.instances.delete(this.props.result.handle)
 		}
@@ -87,7 +87,7 @@ export default class ResultSegment extends React.PureComponent<Props, State> imp
 		this.positionContext.unregister(this.props.index)
 	}
 
-	render() {
+	override render() {
 		return <Consumer>{value => {
 			this.positionContext = value
 			return this.renderContent()

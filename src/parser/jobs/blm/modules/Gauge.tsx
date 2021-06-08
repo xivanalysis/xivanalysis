@@ -63,8 +63,8 @@ interface EnochianDowntimeTracking {
 }
 
 export default class Gauge extends Analyser {
-	static handle = 'gauge'
-	static title = t('blm.gauge.title')`Gauge`
+	static override handle = 'gauge'
+	static override title = t('blm.gauge.title')`Gauge`
 
 	@dependency private suggestions!: Suggestions
 	@dependency private brokenLog!: BrokenLog
@@ -113,7 +113,7 @@ export default class Gauge extends Analyser {
 
 	private castTimeIndex: number | null = null
 
-	initialise() {
+	override initialise() {
 		const playerFilter = filter<Event>().source(this.parser.actor.id)
 
 		// The action event is sufficient for actions that don't need to do damage to affect gauge state (ie. Transpose, Enochian, Umbral Soul)

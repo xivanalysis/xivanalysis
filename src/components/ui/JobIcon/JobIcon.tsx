@@ -8,7 +8,7 @@ interface Props {
 }
 
 export default class JobIcon extends React.PureComponent<Props> {
-	render() {
+	override render() {
 		const {
 			job: {icon},
 			scale = 2,

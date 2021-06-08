@@ -20,7 +20,7 @@ const OATH_MODIFIERS = new Map<number, GaugeModifier>([
 	[ACTIONS.COVER.id, {cast: -50}],
 ])
 export default class Gauge extends CoreGauge {
-	static title = t('pld.gauge.title')`Oath Gauge Usage`
+	static override title = t('pld.gauge.title')`Oath Gauge Usage`
 
 	@dependency private suggestions!: Suggestions
 
@@ -28,7 +28,7 @@ export default class Gauge extends CoreGauge {
 		chart: {label: 'Oath Gauge', color: JOBS.PALADIN.colour},
 	}))
 
-	protected init() {
+	protected override init() {
 		super.init()
 
 		this.addEventHook('cast', {by: 'player', abilityId: Array.from(OATH_MODIFIERS.keys())}, this.onOathModifying)

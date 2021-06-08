@@ -7,7 +7,7 @@ import PrecastStatus from 'parser/core/modules/PrecastStatus'
 export default class Speedmod extends PrecastStatus {
 	@dependency private data!: Data
 
-	normalise(events: Event[]): Event[] {
+	override normalise(events: Event[]): Event[] {
 		const greasedLighting = this.data.statuses.GREASED_LIGHTNING
 
 		const event: BuffEvent = {

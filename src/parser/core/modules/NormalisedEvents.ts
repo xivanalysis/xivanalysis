@@ -151,8 +151,8 @@ export class NormalisedEventFields {
 export interface NormalisedDamageEvent extends Omit<DamageEvent, 'type' | 'amount' | 'successfulHit'>, NormalisedEventFields {}
 export class NormalisedDamageEvent extends NormalisedEventFields {
 	type = 'normaliseddamage' as const
-	calculatedEvents: DamageEvent[] = []
-	confirmedEvents: DamageEvent[] = []
+	override calculatedEvents: DamageEvent[] = []
+	override confirmedEvents: DamageEvent[] = []
 
 	constructor(event: DamageEvent) {
 		super()
@@ -163,8 +163,8 @@ export class NormalisedDamageEvent extends NormalisedEventFields {
 export interface NormalisedHealEvent extends Omit<HealEvent, 'type'| 'amount' | 'successfulHit'>, NormalisedEventFields {}
 export class NormalisedHealEvent extends NormalisedEventFields {
 	type = 'normalisedheal' as const
-	calculatedEvents: HealEvent[] = []
-	confirmedEvents: HealEvent[] = []
+	override calculatedEvents: HealEvent[] = []
+	override confirmedEvents: HealEvent[] = []
 
 	constructor(event: HealEvent) {
 		super()
@@ -175,8 +175,8 @@ export class NormalisedHealEvent extends NormalisedEventFields {
 export interface NormalisedApplyBuffEvent extends Omit<BuffEvent, 'type'>, NormalisedEventFields {}
 export class NormalisedApplyBuffEvent extends NormalisedEventFields {
 	type = 'normalisedapplybuff' as const
-	calculatedEvents: BuffEvent[] = []
-	confirmedEvents: BuffEvent[] = []
+	override calculatedEvents: BuffEvent[] = []
+	override confirmedEvents: BuffEvent[] = []
 
 	constructor(event: BuffEvent) {
 		super()
@@ -187,8 +187,8 @@ export class NormalisedApplyBuffEvent extends NormalisedEventFields {
 export interface NormalisedApplyDebuffEvent extends Omit<BuffEvent, 'type'>, NormalisedEventFields {}
 export class NormalisedApplyDebuffEvent extends NormalisedEventFields {
 	type = 'normalisedapplydebuff' as const
-	calculatedEvents: BuffEvent[] = []
-	confirmedEvents: BuffEvent[] = []
+	override calculatedEvents: BuffEvent[] = []
+	override confirmedEvents: BuffEvent[] = []
 
 	constructor(event: BuffEvent) {
 		super()
@@ -199,8 +199,8 @@ export class NormalisedApplyDebuffEvent extends NormalisedEventFields {
 export interface NormalisedRemoveBuffEvent extends Omit<BuffEvent, 'type'>, NormalisedEventFields {}
 export class NormalisedRemoveBuffEvent extends NormalisedEventFields {
 	type = 'normalisedremovebuff' as const
-	calculatedEvents: BuffEvent[] = []
-	confirmedEvents: BuffEvent[] = []
+	override calculatedEvents: BuffEvent[] = []
+	override confirmedEvents: BuffEvent[] = []
 
 	constructor(event: BuffEvent) {
 		super()
@@ -211,8 +211,8 @@ export class NormalisedRemoveBuffEvent extends NormalisedEventFields {
 export interface NormalisedRemoveDebuffEvent extends Omit<BuffEvent, 'type'>, NormalisedEventFields {}
 export class NormalisedRemoveDebuffEvent extends NormalisedEventFields {
 	type = 'normalisedremovedebuff' as const
-	calculatedEvents: BuffEvent[] = []
-	confirmedEvents: BuffEvent[] = []
+	override calculatedEvents: BuffEvent[] = []
+	override confirmedEvents: BuffEvent[] = []
 
 	constructor(event: BuffEvent) {
 		super()
@@ -235,15 +235,15 @@ declare module 'legacyEvent' {
 }
 
 export class NormalisedEvents extends Module {
-	static handle = 'normalisedEvents'
-	static debug = false
+	static override handle = 'normalisedEvents'
+	static override debug = false
 
 	@dependency private hitType!: HitType // Dependency to ensure HitType properties are available for determining hit success
 	@dependency private precastStatus!: PrecastStatus // Dependency to ensure events synthed by precast status are normalised
 
 	private _normalisedEvents = new Map<string, NormalisedEvent>()
 
-	normalise(events: Event[]): Event[] {
+	override normalise(events: Event[]): Event[] {
 		events.forEach(this.normaliseEvent)
 
 		return sortEvents(events.concat(Array.from(this._normalisedEvents.values())))

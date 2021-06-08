@@ -38,10 +38,10 @@ export class SpeedStatsAdapterStep extends AdapterStep {
 	private actorActions = new Map<Actor['id'], GCD[]>()
 	private actorSpeedmodWindows = new Map<Actor['id'], Map<number, SpeedmodWindow[]>>()
 
-	static debug = false
+	static override debug = false
 	private endTimestamp = 0
 
-	adapt(baseEvent: FflogsEvent, adaptedEvents: Event[]) {
+	override adapt(baseEvent: FflogsEvent, adaptedEvents: Event[]) {
 		if (baseEvent.type === 'encounterend') {
 			this.endTimestamp = baseEvent.timestamp
 		}
@@ -49,7 +49,7 @@ export class SpeedStatsAdapterStep extends AdapterStep {
 		return adaptedEvents
 	}
 
-	postprocess(adaptedEvents: Event[]): Event[] {
+	override postprocess(adaptedEvents: Event[]): Event[] {
 		adaptedEvents.forEach((event) => {
 			if (!('source' in event) || !this.actorIsFriendly(event.source)) { return }
 

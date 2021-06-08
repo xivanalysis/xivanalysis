@@ -29,7 +29,7 @@ export class ExpandableSegment extends React.PureComponent<Props, State> {
 		}
 	}
 
-	componentDidMount() {
+	override componentDidMount() {
 		const {current} = this.ref
 		const {
 			maxHeight,
@@ -44,7 +44,7 @@ export class ExpandableSegment extends React.PureComponent<Props, State> {
 		}
 	}
 
-	componentDidUpdate(prevProps: Props) {
+	override componentDidUpdate(prevProps: Props) {
 		// Animate the expand the first time it's requested
 		if (
 			prevProps.collapsed !== false &&
@@ -78,7 +78,7 @@ export class ExpandableSegment extends React.PureComponent<Props, State> {
 		})
 	}
 
-	render() {
+	override render() {
 		const {
 			seeMore,
 			maxHeight: propHeight,

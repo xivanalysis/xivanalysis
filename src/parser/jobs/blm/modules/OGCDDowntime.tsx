@@ -10,8 +10,8 @@ const TARGETPERCENT = 95
 
 export default class OGCDDowntime extends CooldownDowntime {
 	// Time in ms that Laqi deems ok for a OGCD to be down : ^)
-	defaultAllowedAverageDowntimeDowntime = ALLOWEDDOWNTIMEALL
-	defaultFirstUseOffset = FIRSTUSEOFFSETALL
+	override defaultAllowedAverageDowntime = ALLOWEDDOWNTIMEALL
+	override defaultFirstUseOffset = FIRSTUSEOFFSETALL
 	trackedCds = [
 		{cooldowns: [ACTIONS.LEY_LINES]},
 		{
@@ -21,6 +21,6 @@ export default class OGCDDowntime extends CooldownDowntime {
 		{cooldowns: [ACTIONS.TRIPLECAST]},
 	]
 
-	checklistTarget = TARGETPERCENT
-	checklistDescription = <Trans id="blm.ogcd-downtime.ogcd-cd-metric">Always make sure to use your OGCDs when they are up but don't clip them. Utilize your procs or fast Blizzard IIIs or Fire IIIs to weave them. <Trans id="blm.ogcd-downtime.ogcd-cd-buffer">To account for random factors you are given a buffer of {ALLOWEDDOWNTIMEALL/1000} seconds per instance to hold your cooldowns.</Trans></Trans>
+	override checklistTarget = TARGETPERCENT
+	override checklistDescription = <Trans id="blm.ogcd-downtime.ogcd-cd-metric">Always make sure to use your OGCDs when they are up but don't clip them. Utilize your procs or fast Blizzard IIIs or Fire IIIs to weave them. <Trans id="blm.ogcd-downtime.ogcd-cd-buffer">To account for random factors you are given a buffer of {ALLOWEDDOWNTIMEALL/1000} seconds per instance to hold your cooldowns.</Trans></Trans>
 }

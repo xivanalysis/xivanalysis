@@ -22,9 +22,9 @@ const SHORT_WINDOW_FAULT = {
 }
 
 export default class DragonSight extends BuffWindowModule {
-	static handle = 'dragonsight'
-	static title = t('drg.dragonsight.title')`Dragon Sight`
-	static displayOrder = DISPLAY_ORDER.DRAGON_SIGHT
+	static override handle = 'dragonsight'
+	static override title = t('drg.dragonsight.title')`Dragon Sight`
+	static override displayOrder = DISPLAY_ORDER.DRAGON_SIGHT
 
 	buffAction = ACTIONS.DRAGON_SIGHT
 	buffStatus = STATUSES.RIGHT_EYE
@@ -32,7 +32,7 @@ export default class DragonSight extends BuffWindowModule {
 
 	deathTimes: number[] = []
 
-	expectedGCDs = {
+	override expectedGCDs = {
 		expectedPerWindow: 8,
 		suggestionContent: <Trans id="drg.ds.suggestions.missedgcd.content">
 			Try to land at least 8 GCDs during every <ActionLink {...ACTIONS.DRAGON_SIGHT} /> window.
@@ -44,7 +44,7 @@ export default class DragonSight extends BuffWindowModule {
 		},
 	}
 
-	trackedActions = {
+	override trackedActions = {
 		icon: ACTIONS.DRAGON_SIGHT.icon,
 		actions: [
 			{
@@ -74,7 +74,7 @@ export default class DragonSight extends BuffWindowModule {
 		},
 	}
 
-	protected init() {
+	protected override init() {
 		super.init()
 
 		this.addEventHook('death', {to: 'player'}, this.onDeath)
@@ -84,7 +84,7 @@ export default class DragonSight extends BuffWindowModule {
 		this.deathTimes.push(event.timestamp)
 	}
 
-	protected reduceTrackedActionsEndOfFight(buffWindow: BuffWindowState): number {
+	protected override reduceTrackedActionsEndOfFight(buffWindow: BuffWindowState): number {
 		const windowDurationMillis = this.buffStatus.duration * 1000
 		const fightTimeRemaining = this.parser.pull.duration - (buffWindow.start - this.parser.eventTimeOffset)
 
@@ -97,7 +97,7 @@ export default class DragonSight extends BuffWindowModule {
 	}
 
 	// ok so we don't want to penalize people for when their buff ends early because their partner died
-	protected getBaselineExpectedGCDs(buffWindow: BuffWindowState): number {
+	protected override getBaselineExpectedGCDs(buffWindow: BuffWindowState): number {
 		if (this.buffTargetDied(buffWindow) === SHORT_WINDOW_FAULT.PARTNER) {
 			// you get what you get and that's ok in this case
 			return buffWindow.gcds
@@ -113,7 +113,7 @@ export default class DragonSight extends BuffWindowModule {
 	}
 
 	// adjust expected tracked gcds for partner dying
-	protected changeExpectedTrackedActionClassLogic(buffWindow: BuffWindowState): number {
+	protected override changeExpectedTrackedActionClassLogic(buffWindow: BuffWindowState): number {
 		if (this.buffTargetDied(buffWindow) === SHORT_WINDOW_FAULT.PARTNER) {
 			return -1
 		}
@@ -123,7 +123,7 @@ export default class DragonSight extends BuffWindowModule {
 
 	// adjust highlighting for partner dying
 	// if partner dies, we reduce expected to 0 but still highlight a 0 in the table
-	protected changeComparisonClassLogic(buffWindow: BuffWindowState) {
+	protected override changeComparisonClassLogic(buffWindow: BuffWindowState) {
 		if (this.buffTargetDied(buffWindow) === SHORT_WINDOW_FAULT.PARTNER) {
 			return (actual: number, expected?: number) => {
 				if (!isDefined(expected) || actual <= expected) {
@@ -135,7 +135,7 @@ export default class DragonSight extends BuffWindowModule {
 	}
 
 	// check for a truncated window if not rushing, which would indicate that the tether partner (or the DRG) died
-	protected getBuffWindowNotes(buffWindow: BuffWindowState): JSX.Element | undefined {
+	protected override getBuffWindowNotes(buffWindow: BuffWindowState): JSX.Element | undefined {
 		const fault = this.buffTargetDied(buffWindow)
 		if (fault === SHORT_WINDOW_FAULT.PARTNER) {
 			return <Trans id="drg.ds.notes.partnerdied">Partner Died</Trans>

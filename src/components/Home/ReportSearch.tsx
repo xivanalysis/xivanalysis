@@ -30,7 +30,7 @@ class ReportSearch extends React.Component<RouteComponentProps> {
 		this.result = parseInput(this.value)
 	}
 
-	render() {
+	override render() {
 		if (this.result.valid) {
 			return <Redirect to={this.result.path}/>
 		}

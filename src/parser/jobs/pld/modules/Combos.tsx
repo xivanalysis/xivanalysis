@@ -3,5 +3,5 @@ import CoreCombos from 'parser/core/modules/Combos'
 
 export default class Combos extends CoreCombos {
 	// Overrides
-	static suggestionIcon = ACTIONS.ROYAL_AUTHORITY.icon
+	static override suggestionIcon = ACTIONS.ROYAL_AUTHORITY.icon
 }
