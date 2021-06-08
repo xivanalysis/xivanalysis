@@ -41,7 +41,7 @@ interface CooldownGroupConfig {
 
 export class Cooldowns extends Analyser {
 	static override handle = 'cooldowns2'
-	static override debug = true
+	static override debug = false
 
 	// TODO: cooldownOrder
 
