@@ -111,7 +111,8 @@ export class Cooldowns extends Analyser {
 	private onInterrupt(event: Events['interrupt']) {
 		// If the interrupt doesn't match the current cast, something has gone very wrong
 		if (this.currentCast !== event.action) {
-			throw new Error('woopsiedaisy, shit just went fucky wucky')
+			// TODO: Broken log?
+			throw new Error('Interrupted action does not match expected current cast.')
 		}
 
 		// Clear out current cast state
@@ -188,12 +189,14 @@ export class Cooldowns extends Analyser {
 		chargeState.current--
 
 		// TEMP
-		const now = this.parser.currentEpochTimestamp - this.parser.pull.timestamp
-		const row = this.tempGetTimelineRow(`charge:${action.name}`)
-		row.addItem(new SimpleItem({
-			content: '-',
-			start: now,
-		}))
+		this.debug(() => {
+			const now = this.parser.currentEpochTimestamp - this.parser.pull.timestamp
+			const row = this.tempGetTimelineRow(`charge:${action.name}`)
+			row.addItem(new SimpleItem({
+				content: '-',
+				start: now,
+			}))
+		})
 	}
 
 	private gainCharge(action: Action) {
@@ -220,12 +223,14 @@ export class Cooldowns extends Analyser {
 		}
 
 		// TEMP
-		const now = this.parser.currentEpochTimestamp - this.parser.pull.timestamp
-		const row = this.tempGetTimelineRow(`charge:${action.name}`)
-		row.addItem(new SimpleItem({
-			content: '+',
-			start: now,
-		}))
+		this.debug(() => {
+			const now = this.parser.currentEpochTimestamp - this.parser.pull.timestamp
+			const row = this.tempGetTimelineRow(`charge:${action.name}`)
+			row.addItem(new SimpleItem({
+				content: '+',
+				start: now,
+			}))
+		})
 	}
 
 	private startGroupsForAction(action: Action) {
@@ -319,15 +324,17 @@ export class Cooldowns extends Analyser {
 		cooldownState.end = this.parser.currentEpochTimestamp
 
 		// TEMP
-		const color = reason === CooldownEndReason.INTERRUPTED
-			? Color('red')
-			: Color('green')
-		const row = this.tempGetTimelineRow(`group:${group}`)
-		row.addItem(new SimpleItem({
-			content: <div style={{width: '100%', height: '100%', background: color.alpha(0.25).toString(), borderLeft: `1px solid ${color}`}}/>,
-			start: cooldownState.start - this.parser.pull.timestamp,
-			end: cooldownState.end - this.parser.pull.timestamp,
-		}))
+		this.debug(() => {
+			const color = reason === CooldownEndReason.INTERRUPTED
+				? Color('red')
+				: Color('green')
+			const row = this.tempGetTimelineRow(`group:${group}`)
+			row.addItem(new SimpleItem({
+				content: <div style={{width: '100%', height: '100%', background: color.alpha(0.25).toString(), borderLeft: `1px solid ${color}`}}/>,
+				start: cooldownState.start - this.parser.pull.timestamp,
+				end: cooldownState.end - this.parser.pull.timestamp,
+			}))
+		})
 	}
 
 	private getActionCooldownGroupConfig(action: Action): CooldownGroupConfig[] {
