@@ -206,7 +206,8 @@ export default class CastTime extends Analyser {
 		const matchingTimes = this.castTimes.filter(ct =>
 			(ct.actions === 'all' || ct.actions.includes(actionId)) &&
 			ct.start <= timestamp &&
-			(ct.end == null || ct.end >= timestamp),
+			(ct.end == null || ct.end >= timestamp) &&
+			(!forRecast || ct.affectsRecast),
 		)
 
 		// Mimicking old logic w/ the undefined. Don't ask.
@@ -224,7 +225,6 @@ export default class CastTime extends Analyser {
 		let percentageAdjustment=1
 
 		matchingTimes.forEach(ct => {
-			if (!ct.affectsRecast && forRecast) { return }
 			if (ct.type === 'time') {
 				// Find the largest flat cast time reduction value
 				if (ct.adjustment < 0 && ct.adjustment < flatReduction) {
