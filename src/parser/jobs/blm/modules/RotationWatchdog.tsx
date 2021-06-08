@@ -150,7 +150,12 @@ class Cycle {
 	public get hardT3Count(): number {
 		return this.casts.filter(cast => cast.ability.guid === ACTIONS.THUNDER_III.id && !cast.isProc).length
 	}
+	// TODO: Need to find a way to distinguish which AF/UI element the thunders were cast in, and filter out the hardcasts that happened in Ice phase...
+	// Also probably want to better calculate how many T3 hardcasts could happen without sacrificing a fire (ie, one before and after manafont, with enough starting MP) and refund that many instead of a flat one (in case of multitarget bosses)
 	public get extraT3s(): number {
+		if (!(this.missingFire4s || this.missingDespairs)) { // By definition, if you didn't miss any expected casts, you couldn't have hardcast an extra T3
+			return 0
+		}
 		if (this.firePhaseStartMP < MIN_MP_FOR_FULL_ROTATION) {
 			return this.hardT3Count
 		}
