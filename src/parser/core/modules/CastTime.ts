@@ -5,11 +5,16 @@ import {filter} from '../filter'
 import {dependency} from '../Injectable'
 import {Data} from './Data'
 
+type AffectsWhichTime =
+	| 'cast'
+	| 'recast'
+	| 'both'
+
 export interface CastTimeAdjustment {
 	actions: number[] | 'all',
 	type: 'time' | 'percentage'
 	adjustment: number,
-	affectsRecast: boolean,
+	affectsWhich: AffectsWhichTime,
 	start: number,
 	end?: number
 }
@@ -41,6 +46,7 @@ export default class CastTime extends Analyser {
 		this.scIndex = null
 	}
 
+	// TODO: Update signatures to use objects instead of param vomit, separate PR tho
 	/**
 	 * setTimeAdjustment Module-compatibility function
 	 * @deprecated
@@ -57,7 +63,7 @@ export default class CastTime extends Analyser {
 	 * @returns The index number within the cast time adjustments collection, can be used to reset/end this adjustment later
 	 */
 	public setTimeAdjustment(actions: number[] | 'all', adjustment: number, start: number = this.parser.currentEpochTimestamp, end?: number): number {
-		return this.set(actions, 'time', adjustment, false, start, end)
+		return this.set({actions, adjustment, start, end, type: 'time', affectsWhich: 'cast'})
 	}
 
 	/**
@@ -65,7 +71,7 @@ export default class CastTime extends Analyser {
 	 * @deprecated
 	 */
 	public setInstantCastAdjustmentFflogs(actions: number[] | 'all' = 'all', start: number = this.parser.currentTimestamp, end?: number): number {
-		return this.set(actions, 'percentage', 0, false, this.parser.fflogsToEpoch(start), end ? this.parser.fflogsToEpoch(end) : undefined)
+		return this.setInstantCastAdjustment(actions, this.parser.fflogsToEpoch(start), end ? this.parser.fflogsToEpoch(end) : undefined)
 	}
 	/**
 	 * Shorthand function for setting casts to instant (ie. Swiftcast, Triplecast)
@@ -75,36 +81,29 @@ export default class CastTime extends Analyser {
 	 * @returns The end of the adjustment time range. May be left null if the end of the range is not yet known
 	 */
 	public setInstantCastAdjustment(actions: number[] | 'all' = 'all', start: number = this.parser.currentEpochTimestamp, end?: number): number {
-		return this.set(actions, 'percentage', 0, false, start, end)
+		return this.setPercentageAdjustment(actions, 0, 'cast', start, end)
 	}
 	/**
 	 * setPercentageAdjustment Module-compatibility function
 	 * @deprecated
 	 */
-	public setPercentageAdjustmentFflogs(actions: number[] | 'all', adjustment: number, affectsRecast: boolean = false, start: number = this.parser.currentTimestamp, end?: number): number {
-		return this.setPercentageAdjustment(actions, adjustment, affectsRecast, this.parser.fflogsToEpoch(start), end ? this.parser.fflogsToEpoch(end) : undefined)
+	public setPercentageAdjustmentFflogs(actions: number[] | 'all', adjustment: number, affectsWhich: AffectsWhichTime = 'cast', start: number = this.parser.currentTimestamp, end?: number): number {
+		return this.setPercentageAdjustment(actions, adjustment, affectsWhich, this.parser.fflogsToEpoch(start), end ? this.parser.fflogsToEpoch(end) : undefined)
 	}
 	/**
 	 * Sets a cast time adjustment for a percentage change per cast (See: Swiftcast, RDM's Doublecast trait, Ley Lines, etc.)
 	 * @param actions The actions this adjustment applies to. Either an array of IDs, or the string 'all'
 	 * @param adjustment The percentage multiplier to adjust the cast time to (ie 0 for instant cast, 0.85 for Ley Lines, 1.25 for a 25% slow)
-	 * @param affectsRecast Does this percentage change affect the recast time as well as the cast time? Defaults to false
+	 * @param affectsWhich Does this percentage change affect the recast time, cast time, or both? Defaults to cast time
 	 * @param start The beginning of the adjustment time range. Defaults to the current epoch timestamp
 	 * @param end The end of the adjustment time range. May be left null if the end of the range is not yet known
 	 * @returns The index number within the cast time adjustments collection, can be used to reset/end this adjustment later
 	 */
-	public setPercentageAdjustment(actions: number[] | 'all', adjustment: number, affectsRecast: boolean = false, start: number = this.parser.currentEpochTimestamp, end?: number): number {
-		return this.set(actions, 'percentage', Math.max(adjustment, 0), affectsRecast, start, end)
+	public setPercentageAdjustment(actions: number[] | 'all', adjustment: number, affectsWhich: AffectsWhichTime = 'cast', start: number = this.parser.currentEpochTimestamp, end?: number): number {
+		return this.set({actions, adjustment, affectsWhich, start, end, type: 'percentage'})
 	}
-	private set(actions: number[] | 'all', type: 'time' | 'percentage', adjustment: number, affectsRecast: boolean = false, start: number = this.parser.currentEpochTimestamp, end?: number): number {
-		const newLength = this.castTimes.push({
-			actions,
-			type,
-			adjustment,
-			affectsRecast,
-			start,
-			end,
-		})
+	private set(adjustment: CastTimeAdjustment): number {
+		const newLength = this.castTimes.push(adjustment)
 
 		return newLength - 1
 	}
@@ -191,28 +190,28 @@ export default class CastTime extends Analyser {
 	 * @returns The actual recast time, either as the default, or the modified time if any modifiers were in effect. Returns undefined if the action cannot be determined, or has no gcdRecast/cooldown property defined
 	 */
 	public recastForAction(actionId: number, timestamp: number = this.parser.currentEpochTimestamp): number | undefined {
-		return this.getAdjustedTime(actionId, timestamp, true)
+		return this.getAdjustedTime(actionId, timestamp, 'recast')
 	}
 
 	/**
 	 * Returns the adjusted time (either cast or recast) for the specified action at the specified point in time
 	 * @param actionId The action in question
 	 * @param timestamp The timestamp in question
-	 * @param forRecast Do we want the recast for this action, or the cast time?
+	 * @param forWhich Do we want the recast for this action, or the cast time? Defaults to cast time
 	 * @returns The adjusted time, if any adjustments exist at this timestamp, or the default if not. Will return undefined if the base time (recast/cooldown/cast) can't be determined
 	 */
-	private getAdjustedTime(actionId: number, timestamp: number = this.parser.currentEpochTimestamp, forRecast: boolean = false): number | undefined {
+	private getAdjustedTime(actionId: number, timestamp: number = this.parser.currentEpochTimestamp, forWhich: AffectsWhichTime = 'cast'): number | undefined {
 		// Get any cast time modifiers active when the event took place
 		const matchingTimes = this.castTimes.filter(ct =>
 			(ct.actions === 'all' || ct.actions.includes(actionId)) &&
 			ct.start <= timestamp &&
 			(ct.end == null || ct.end >= timestamp) &&
-			(!forRecast || ct.affectsRecast),
+			(ct.affectsWhich === 'both' || ct.affectsWhich === forWhich),
 		)
 
 		// Mimicking old logic w/ the undefined. Don't ask.
 		const action = this.data.getAction(actionId)
-		const defaultTime = forRecast ? (action?.gcdRecast != null
+		const defaultTime = forWhich === 'recast' ? (action?.gcdRecast != null
 			? action?.gcdRecast
 			: action?.cooldown) : action?.castTime
 

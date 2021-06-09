@@ -76,7 +76,7 @@ export default class Leylines extends Analyser {
 		}
 
 		if (status.id === this.data.statuses.CIRCLE_OF_POWER.id) {
-			this.castTimeIndex = this.castTime.setPercentageAdjustment('all', this.data.statuses.CIRCLE_OF_POWER.speedModifier, true)
+			this.castTimeIndex = this.castTime.setPercentageAdjustment('all', this.data.statuses.CIRCLE_OF_POWER.speedModifier, 'both')
 		}
 	}
 
