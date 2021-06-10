@@ -342,6 +342,8 @@
   "core.weaving.why": "{0, plural, =1 {# Beispiel für falsches Weaving} other {# Beispiele für falsches Weaving}}",
   "dnc.about.description": "",
   "dnc.about.description.warning": "Beide Balken von Dancer sind hier simuliert, da es keine exakten Daten gibt. Wir haben unser Bestes gegeben, es so akkurat wie möglich zu bekommen, und im Zweifelsfall wird bei den Tipps hier zu deinen Gunsten entschieden. Falls du etwas bemerkst, das sehr falsch aussieht, schau bitte auf unserem Discord vorbei oder melde den Bug bei GitHub!",
+  "dnc.dirty-dancing.checklist.closed-position-buff.description": "",
+  "dnc.dirty-dancing.checklist.closed-position-buff.name": "",
   "dnc.dirty-dancing.checklist.standard-finish-buff.description": "Dein <0/>-Buff macht einen Großteil deines allgemeinen und <1/>-Schadens aus. Versuche diesen DoT wann immer möglich aufrecht zu halten.",
   "dnc.dirty-dancing.checklist.standard-finish-buff.name": "Halte <0/> aufrecht",
   "dnc.dirty-dancing.rotation-table.header.dirty": "Richtig ausgeführte Finale",

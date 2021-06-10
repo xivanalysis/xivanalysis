@@ -240,6 +240,15 @@ export default class DirtyDancing extends Module {
 		return (statusTime / uptime) * 100
 	}
 
+	private getClosedPositionUptimePercent() {
+		// Exclude downtime from both the status time and expected uptime
+		const statusTime = this.entityStatuses.getStatusUptime(STATUSES.CLOSED_POSITION.id, this.combatants.getEntities()) - this.downtime.getDowntime()
+		const uptime = this.parser.currentDuration - this.downtime.getDowntime()
+
+		// Don't show negative numbers, which is possible when factoring in downtime
+		return Math.max((statusTime / uptime) * 100, 0)
+	}
+
 	private onComplete() {
 		const zeroStandards = this.danceHistory.filter(dance => dance.dirty && dance.initiatingStep.ability.guid === ACTIONS.STANDARD_STEP.id &&
 			_.last(dance.rotation)?.ability.guid === ACTIONS.STANDARD_FINISH.id).length
@@ -298,6 +307,20 @@ export default class DirtyDancing extends Module {
 				new Requirement({
 					name: <Fragment><StatusLink {...STATUSES.STANDARD_FINISH} /> uptime</Fragment>,
 					percent: () => this.getStandardFinishUptimePercent(),
+				}),
+			],
+		}))
+
+		this.checklist.add(new Rule({
+			name: <Trans id="dnc.dirty-dancing.checklist.closed-position-buff.name">Choose a <StatusLink {...STATUSES.DANCE_PARTNER} /></Trans>,
+			description: <Trans id="dnc.dirty-dancing.checklist.closed-position-buff.description">
+				Choosing a <StatusLink {...STATUSES.DANCE_PARTNER} /> will also give them the <StatusLink {...STATUSES.STANDARD_FINISH_PARTNER} /> and <StatusLink {...STATUSES.DEVILMENT} /> buffs. Make sure to keep it up at all times except for rare circumstances where a switch is warranted.
+			</Trans>,
+			target: 95,
+			requirements: [
+				new Requirement({
+					name: <Fragment><StatusLink {...STATUSES.CLOSED_POSITION} /> uptime (excluding downtime)</Fragment>,
+					percent: () => this.getClosedPositionUptimePercent(),
 				}),
 			],
 		}))
