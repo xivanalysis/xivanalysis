@@ -57,8 +57,6 @@ const STEP_COOLDOWN_MILLIS = {
 
 const DANCE_COMPLETION_LENIENCY_MILLIS = 1000
 
-const CLOSED_POSITION_WARN_THRESHOLD = 0.95
-
 class Dance {
 	end?: number
 	initiatingStep: CastEvent
@@ -313,6 +311,20 @@ export default class DirtyDancing extends Module {
 			],
 		}))
 
+		this.checklist.add(new Rule({
+			name: <Trans id="dnc.dirty-dancing.checklist.closed-position-buff.name">Choose a <StatusLink {...STATUSES.DANCE_PARTNER} /></Trans>,
+			description: <Trans id="dnc.dirty-dancing.checklist.closed-position-buff.description">
+				Choosing a <StatusLink {...STATUSES.DANCE_PARTNER} /> will also give them the <StatusLink {...STATUSES.STANDARD_FINISH_PARTNER} /> and <StatusLink {...STATUSES.DEVILMENT} /> buffs. Make sure to keep it up at all times except for rare circumstances where a switch is warranted.
+			</Trans>,
+			target: 95,
+			requirements: [
+				new Requirement({
+					name: <Fragment><StatusLink {...STATUSES.CLOSED_POSITION} /> uptime (excluding downtime)</Fragment>,
+					percent: () => this.getClosedPositionUptimePercent(),
+				}),
+			],
+		}))
+
 		const driftedStandards = Math.floor(this.totalDrift[ACTIONS.STANDARD_STEP.id]/STEP_COOLDOWN_MILLIS[ACTIONS.STANDARD_STEP.id])
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.STANDARD_STEP.icon,
@@ -361,19 +373,6 @@ export default class DirtyDancing extends Module {
 				severity: SEVERITY.MAJOR,
 				why: <Trans id="dnc.dirty-dancing.suggestions.zero-technical.why">
 					<Plural value={zeroTechnicals} one="# Technical Step was" other="# Technical Steps were"/> completed with no dance steps.
-				</Trans>,
-			}))
-		}
-
-		if (this.getClosedPositionUptimePercent() < CLOSED_POSITION_WARN_THRESHOLD) {
-			this.suggestions.add(new Suggestion({
-				icon: ACTIONS.CLOSED_POSITION.icon,
-				content: <Trans id="dnc.dirty-dancing.suggestions.no-partner.content">
-					Choosing a <StatusLink {...STATUSES.DANCE_PARTNER} /> will also give them the <StatusLink {...STATUSES.STANDARD_FINISH_PARTNER} /> and <StatusLink {...STATUSES.DEVILMENT} /> buffs. Make sure to keep it up at all times except for rare circumstances where a switch is warranted.
-				</Trans>,
-				severity: SEVERITY.MAJOR,
-				why: <Trans id="dnc.dirty-dancing.suggestions.no-partner.why">
-					<StatusLink {...STATUSES.CLOSED_POSITION} /> was active for {this.getClosedPositionUptimePercent()}% of the fight, excluding downtime.
 				</Trans>,
 			}))
 		}

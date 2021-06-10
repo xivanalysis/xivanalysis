@@ -6,6 +6,11 @@ import React from 'react'
 
 export const changelog = [
 	{
+		date: new Date('2021-06-10'),
+		Changes: () => <>Warning for forgetting dance partner.</>,
+		contributors: [CONTRIBUTORS.UNKNOWNPRIORS],
+	},
+	{
 		date: new Date('2019-07-27'),
 		Changes: () => <>Suggestions for dropped and overwritten Procs, does not handle the specific cases where it is better to drop <ActionLink {...ACTIONS.RISING_WINDMILL}/>. </>,
 		contributors: [CONTRIBUTORS.TWO_BROKEN],
