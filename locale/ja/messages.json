@@ -939,5 +939,9 @@
   "whm.ogcds.title": "GCD オフ",
   "whm.overheal.assize.name": "アサイズ",
   "whm.overheal.hot.name": "HoT",
-  "whm.swiftcast.missed.suggestion.content": ""
+  "whm.swiftcast.missed.suggestion.content": "",
+  "whm.thinair.messages.explanation": "",
+  "whm.thinair.messages.no-casts": "",
+  "whm.thinair.rotation.gcd": "",
+  "whm.thinair.title": ""
 }
