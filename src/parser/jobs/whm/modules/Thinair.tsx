@@ -5,47 +5,48 @@ import Rotation from 'components/ui/Rotation'
 import {getDataBy} from 'data'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
-import {BuffEvent, CastEvent} from 'fflogs'
-import Module, {dependency} from 'parser/core/Module'
-import {Data} from 'parser/core/modules/Data'
-import {CompleteEvent} from 'parser/core/Parser'
+import {Event, Events} from 'event'
+import {Analyser} from 'parser/core/Analyser'
+import {filter} from 'parser/core/filter'
 import React, {Fragment, ReactNode} from 'react'
 import {Accordion} from 'semantic-ui-react'
 
 type ThinAirRecord = {
 	start: number,
 	end: number,
-	casts: CastEvent[],
+	casts: number[],
 	mpsaved: number,
 }
 
-export default class Thinair extends Module {
+export default class Thinair extends Analyser {
 	static override handle = 'thinair'
 	static override title = t('whm.thinair.title')`Thin Air`
-
-	@dependency private data!: Data
 
 	private active = false
 	private history: ThinAirRecord[] = []
 	private currentRecord: ThinAirRecord = {start: -1, end: -1, casts: [], mpsaved: 0}
 
-	protected override init() {
-		this.addEventHook('applybuff', {abilityId: STATUSES.THIN_AIR.id, by: 'player'}, this.onThinAirCast)
-		this.addEventHook('removebuff', {abilityId: STATUSES.THIN_AIR.id, by: 'player'}, this.onThinAirRemove)
-		this.addEventHook('cast', {by: 'player'}, this.onCast)
+	override initialise() {
+		const thinairFilter = filter<Event>()
+			.source(this.parser.actor.id)
+			.status(STATUSES.THIN_AIR.id)
+
+		this.addEventHook(thinairFilter.type('statusApply'), this.onThinAirCast)
+		this.addEventHook(thinairFilter.type('statusRemove'), this.onThinAirRemove)
+		this.addEventHook(filter<Event>().source(this.parser.actor.id).type('action'), this.onCast)
 		this.addEventHook('complete', this.onComplete)
 	}
 
-	private onThinAirCast(ev: BuffEvent) {
+	private onThinAirCast(ev: Events['statusApply']) {
 		this.startThinAir(ev.timestamp)
 	}
 
-	private onThinAirRemove(ev: BuffEvent) {
+	private onThinAirRemove(ev: Events['statusRemove']) {
 		this.stopAndSave(ev.timestamp)
 	}
 
-	private onCast(ev: CastEvent) {
-		const actionid = ev.ability.guid
+	private onCast(ev: Events['action']) {
+		const actionid = ev.action
 
 		if (actionid === ACTIONS.THIN_AIR.id) {
 			this.startThinAir(ev.timestamp)
@@ -63,7 +64,7 @@ export default class Thinair extends Module {
 		}
 
 		// Save the event
-		this.currentRecord.casts.push(ev)
+		this.currentRecord.casts.push(ev.action)
 	}
 
 	private startThinAir(timestamp: number) {
@@ -91,7 +92,7 @@ export default class Thinair extends Module {
 		this.history.push(this.currentRecord)
 	}
 
-	private onComplete(ev: CompleteEvent) {
+	private onComplete(ev: Events['complete']) {
 		if (this.active) {
 			this.stopAndSave(ev.timestamp)
 		}
@@ -106,22 +107,21 @@ export default class Thinair extends Module {
 		}
 
 		const panels = this.history.map(record => {
-			const gcds = record.casts
-				.map(cast => getDataBy(ACTIONS, 'id', cast.ability.guid))
-				.filter(action => action && action.onGcd)
+			const actions = record.casts.map(action => getDataBy(ACTIONS, 'id', action)).filter(x => !!x)
+			const gcds = actions.filter(action => action && action.onGcd)
 			const numGcds = gcds.length
 
 			return {
 				key: record.start,
 				title: {
 					content: <Fragment>
-						{this.parser.formatTimestamp(record.start)}
+						{this.parser.formatEpochTimestamp(record.start)}
 						<span> - </span>
 						<Trans id="whm.thinair.rotation.gcd"><Plural value={numGcds} one="# GCD" other="# GCDs" /></Trans>, {record.mpsaved} MP saved
 					</Fragment>,
 				},
 				content: {
-					content: <Rotation events={record.casts}/>,
+					content: <Rotation events={record.casts.map(x => ({action: x}))}/>,
 				},
 			}
 		})
