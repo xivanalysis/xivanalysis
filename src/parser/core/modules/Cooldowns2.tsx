@@ -88,13 +88,14 @@ export class Cooldowns extends Analyser {
 	}
 
 	private onPrepare(event: Events['prepare']) {
+		this.currentCast = event.action
+
 		const action = this.data.getAction(event.action)
 		if (action == null) { return }
 
 		// This is, for the sake of simplicity, assuming that charges are consumed
 		// on prepare. As it stands, no 2+ charge action actually has a cast time,
 		// so this is a pretty-safe assumption. Revisit if this ever changes.
-		this.currentCast = event.action
 		this.useAction(action)
 	}
 
