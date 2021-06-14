@@ -9,7 +9,27 @@ export function getSpeedStat(estimatedGcd: number): number {
 }
 
 export function getEstimatedTime(speedStat: number, baseDuration: number): number {
-	const speedScale = Math.floor(130 * (speedStat - SUB_ATTRIBUTE_MINIMUM) / STAT_DIVISOR + 1000)
+	const {floor} = Math
 
-	return Math.floor((2000 - speedScale) / 1000 * baseDuration)
+	// This formula is effectively 1:1 with calculations found in both Allagan
+	// Studies documentation and Orinx's speed calculator.
+	// TODO: Move to speed adjustments module and/or hook up remaining inputs.
+
+	// Personal speed buffs, as a %. i.e. Huton is 15 for this value.
+	const selfBuff = 0
+	// Explicit haste stat, as direct state value.
+	const haste = 0
+	// BLM opposite-aspect multiplier. 100 for same asepct, 50 for opposite.
+	const astralUmbral = 100
+
+	// The base multiplier influenced by the user's speed attributes
+	const attributeMultiplier = 1000 - floor(130 * (speedStat - SUB_ATTRIBUTE_MINIMUM) / STAT_DIVISOR)
+
+	// Duration calculation, split for ease of reading.
+	const adjustedDuration = floor(attributeMultiplier * baseDuration / 1000)
+	const hasteMultiplier = floor(floor(100 - selfBuff) * (100 - haste) / 100)
+	const finalDuration = floor(floor(adjustedDuration * hasteMultiplier / 1000) * astralUmbral / 100)
+
+	// Formula calculates centiseconds, bump that down to milliseconds for consistency with xiva.
+	return finalDuration * 10
 }
