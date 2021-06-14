@@ -75,7 +75,7 @@ export class Cooldowns extends Analyser {
 		)
 
 		this.addEventHook(
-			{type: 'interrupt', source: this.parser.actor.id},
+			{type: 'interrupt', target: this.parser.actor.id},
 			this.onInterrupt,
 		)
 
