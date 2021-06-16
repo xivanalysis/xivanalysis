@@ -26,11 +26,11 @@ export class Data extends Analyser {
 		return this.getAppliedData(statusRoot, statusLayers)
 	}
 
-	getAction(id: Action['id']) {
+	getAction(id: Action['id']): Action | undefined {
 		return getDataBy(this.actions, 'id', id)
 	}
 
-	getStatus(id: Status['id']) {
+	getStatus(id: Status['id']): Status | undefined {
 		return getDataBy(this.statuses, 'id', id)
 	}
 
