@@ -6,7 +6,7 @@ import {Result} from 'parser/core/Parser'
 import React from 'react'
 import ReactDOM from 'react-dom'
 import {Header, Icon} from 'semantic-ui-react'
-import {gutter} from 'theme'
+import {gutter} from 'theme/theme'
 import styles from './Analyse.module.css'
 import {Consumer, Context, Scrollable} from './SegmentPositionContext'
 

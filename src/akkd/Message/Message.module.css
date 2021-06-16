@@ -1,4 +1,4 @@
-@value gutter, themeGrey, themeBlue, themeGreen, themeYellow, themeRed from 'theme.module.css';
+@value gutter, themeGrey, themeBlue, themeGreen, themeYellow, themeRed from 'theme/theme.module.css';
 @value block from '../shared.module.css';
 
 @value backgroundLightness: 95%;

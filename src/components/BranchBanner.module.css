@@ -1,5 +1,5 @@
-@value gutter, lg from "theme.module.css";
-@value themeBackground from "theme.module.css";
+@value gutter, lg from "theme/theme.module.css";
+@value themeBackground from "theme/theme.module.css";
 
 .container {
 	display: flex;

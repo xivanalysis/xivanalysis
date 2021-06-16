@@ -1,4 +1,4 @@
-@value gutter, md, themeText, themeBackground from "theme.module.css";
+@value gutter, md, themeText, themeBackground from "theme/theme.module.css";
 
 .container {
 	position: relative;

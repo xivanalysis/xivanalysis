@@ -1,4 +1,4 @@
-@value gutter, md from 'theme.module.css';
+@value gutter, md from 'theme/theme.module.css';
 
 .container {
 	position: relative;

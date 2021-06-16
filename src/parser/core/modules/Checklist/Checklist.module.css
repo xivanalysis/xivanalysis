@@ -1,4 +1,4 @@
-@value lg from "theme.module.css";
+@value lg from "theme/theme.module.css";
 
 .title {
 	position: relative;

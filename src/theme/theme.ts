@@ -1,5 +1,5 @@
 import Color from 'color'
-import styles from 'theme.module.css'
+import styles from './theme.module.css'
 
 // Helpers
 function extractNumber(value: string): number {

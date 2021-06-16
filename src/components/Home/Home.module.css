@@ -1,4 +1,4 @@
-@value gutter, md, themeText, themeBackground from "theme.module.css";
+@value gutter, md, themeText, themeBackground from "theme/theme.module.css";
 
 .background {
 	position: fixed;
@@ -68,6 +68,10 @@
 
 .i18nMenu {
 	width: 250px;
+}
+
+.themeMenu {
+	width: 150px;
 }
 
 @media md {

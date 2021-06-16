@@ -1,4 +1,4 @@
-@value gutter, themeBackground from "theme.module.css";
+@value gutter, themeBackground from "theme/theme.module.css";
 @value block from "../shared.module.css";
 
 @value transitionDuration: .2s;
