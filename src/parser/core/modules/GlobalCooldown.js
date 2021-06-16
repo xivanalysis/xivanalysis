@@ -24,7 +24,7 @@ export default class GlobalCooldown extends Module {
 	static dependencies = [
 		// We need this to normalise before us
 		'precastAction', // eslint-disable-line @xivanalysis/no-unused-dependencies
-		'castTime', // eslint-disable-line @xivanalysis/no-unused-dependencies
+		'castTime',
 		'data',
 		'downtime',
 		'speedmod',
@@ -156,16 +156,8 @@ export default class GlobalCooldown extends Module {
 
 		const action = this.data.getAction(gcdInfo.event.ability.guid)
 		if (!action || !action.id) { return }
-		let speedMod = this.speedmod.get(gcdInfo.event.timestamp)
-		let castTime = action.castTime
-
-		// HACK NOTE TODO: Need to properly account for abilities that alter only the cast or recast of attacks.
-		// Thinking of moving this into a module like speedmod, that can be called with a timestamp to grab modified base castTime/cooldown values
-		const HACK_ASTRAL_UMBRAL_SPEED_SCALAR = 0.5
-		if (speedMod <= HACK_ASTRAL_UMBRAL_SPEED_SCALAR) {
-			speedMod /= HACK_ASTRAL_UMBRAL_SPEED_SCALAR
-			castTime *= HACK_ASTRAL_UMBRAL_SPEED_SCALAR
-		}
+		const speedMod = this.speedmod.get(gcdInfo.event.timestamp)
+		const castTime = action.castTime
 
 		let isCasterTaxed = false
 
@@ -241,9 +233,11 @@ export default class GlobalCooldown extends Module {
 	}
 
 	_getGcdLength(gcd) {
-		let cooldown = (gcd.isInstant || gcd.castTime <= gcd.cooldown)
-			? gcd.cooldown
-			: Math.max(gcd.castTime, gcd.cooldown)
+		const gcdCastTime = this.castTime.forFflogsAction(gcd.actionId, gcd.timestamp)
+		const gcdCooldown = this.castTime.recastForFflogsAction(gcd.actionId, gcd.timestamp)
+		let cooldown = (gcd.isInstant || gcdCastTime <= gcdCooldown)
+			? gcdCooldown
+			: Math.max(gcdCastTime, gcdCooldown)
 
 		// Some actions are lower than or equal to min gcd, only adjust with ratios when they are not
 		if (cooldown > MIN_GCD) {

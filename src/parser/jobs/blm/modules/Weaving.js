@@ -2,7 +2,6 @@ import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import Weaving from 'parser/core/modules/Weaving'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
-import {BLM_GAUGE_EVENT} from './Gauge'
 
 const OGCD_EXCEPTIONS = [
 	ACTIONS.LUCID_DREAMING.id,
@@ -27,7 +26,7 @@ export default class BlmWeaving extends Weaving {
 	static dependencies = [
 		...Weaving.dependencies,
 		'invulnerability',
-		'gauge', // eslint-disable-line @xivanalysis/no-unused-dependencies
+		'gauge',
 		'castTime',
 	]
 
@@ -41,7 +40,7 @@ export default class BlmWeaving extends Weaving {
 
 	constructor(...args) {
 		super(...args)
-		this.addEventHook(BLM_GAUGE_EVENT, this._onGaugeChange)
+		this.addEventHook('blmgauge', this._onGaugeChange)
 		this.addEventHook('begincast', {by: 'player', abilityId: ACTIONS.FIRE_III.id}, this._beginFire3)
 		this.addEventHook('begincast', {by: 'player', abilityId: ACTIONS.BLIZZARD_III.id}, this._beginBlizzard3)
 		this.addEventHook('applybuff', {by: 'player', abilityId: STATUSES.TRIPLECAST.id}, this._onApplyTriple)
@@ -56,8 +55,10 @@ export default class BlmWeaving extends Weaving {
 	}
 
 	_onGaugeChange(event) {
-		this._astralFireStacks = event.astralFire
-		this._umbralIceStacks = event.umbralIce
+		const gaugeState = this.gauge.getFflogsGaugeState(event.timestamp)
+		if (!gaugeState) { return }
+		this._astralFireStacks = gaugeState.astralFire
+		this._umbralIceStacks = gaugeState.umbralIce
 	}
 
 	_onApplyTriple() {
