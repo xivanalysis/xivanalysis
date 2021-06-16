@@ -272,14 +272,9 @@ export class Cooldowns extends Analyser {
 
 	private endActionCooldowns(action: Action, reason: CooldownEndReason) {
 		// Find any active cooldowns for the action and end them
-		const activeConfigs = this.getActionConfigs(action)
-			.filter(config => this.getGroupState(config).cooldown != null)
-
-		if (activeConfigs.length === 0) {
-			this.debug(`Trying to end cooldowns on ${action.name} as it was ${CooldownEndReason[reason]}, but no cooldowns are active.`)
-		}
-
-		for (const config of activeConfigs) {
+		for (const config of this.getActionConfigs(action)) {
+			const state = this.getGroupState(config)
+			if (state.cooldown == null) { continue }
 			this.endCooldown(config, reason)
 		}
 	}
