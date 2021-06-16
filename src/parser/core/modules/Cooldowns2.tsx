@@ -1,5 +1,5 @@
 import Color from 'color'
-import {Action} from 'data/ACTIONS'
+import {Action, ActionKey} from 'data/ACTIONS'
 import {Events} from 'event'
 import React from 'react'
 import {Analyser} from '../Analyser'
@@ -50,6 +50,7 @@ interface CooldownGroupState {
 enum CooldownEndReason {
 	EXPIRED,
 	INTERRUPTED,
+	REDUCED,
 	// Fudges
 	PULL_ENDED,
 	OVERLAPPED,
@@ -67,6 +68,11 @@ export class Cooldowns extends Analyser {
 
 	private currentCast?: Action['id']
 	private groupStates = new Map<CooldownGroup, CooldownGroupState>()
+
+	reset(action: Action | ActionKey) {
+		const fullAction = typeof action === 'string' ? this.data.actions[action] : action
+		this.endActionCooldowns(fullAction, CooldownEndReason.REDUCED)
+	}
 
 	override initialise() {
 		this.addEventHook(
@@ -118,12 +124,7 @@ export class Cooldowns extends Analyser {
 		// NOTE: This assumes that interrupting casts refunds charges. Given that,
 		//       at current, there are no multi-charge or non-gcd interruptible
 		//       skills, this is a safe assumption. Re-evaluate if the above changes.
-		// TODO: This logic might make sense as a public "reset" helper.
-		const activeConfigs = this.getActionConfigs(action)
-			.filter(config => this.getGroupState(config).cooldown != null)
-		for (const config of activeConfigs) {
-			this.endCooldown(config, CooldownEndReason.INTERRUPTED)
-		}
+		this.endActionCooldowns(action, CooldownEndReason.INTERRUPTED)
 	}
 
 	private onAction(event: Events['action']) {
@@ -266,6 +267,20 @@ export class Cooldowns extends Analyser {
 			hook: this.addTimestampHook(end, () => {
 				this.endCooldown(config, CooldownEndReason.EXPIRED)
 			}),
+		}
+	}
+
+	private endActionCooldowns(action: Action, reason: CooldownEndReason) {
+		// Find any active cooldowns for the action and end them
+		const activeConfigs = this.getActionConfigs(action)
+			.filter(config => this.getGroupState(config).cooldown != null)
+
+		if (activeConfigs.length === 0) {
+			this.debug(`Trying to end cooldowns on ${action.name} as it was ${CooldownEndReason[reason]}, but no cooldowns are active.`)
+		}
+
+		for (const config of activeConfigs) {
+			this.endCooldown(config, reason)
 		}
 	}
 
