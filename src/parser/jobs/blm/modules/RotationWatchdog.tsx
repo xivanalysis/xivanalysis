@@ -23,10 +23,11 @@ import Procs from './Procs'
 const DEBUG_SHOW_ALL_CYCLES = false && process.env.NODE_ENV !== 'production'
 
 const EXPECTED_FIRE4 = 6
-const NO_UH_EXPECTED_FIRE4 = 5
+const NO_UH_EXPECTED_FIRE4 = 4
 const FIRE4_FROM_MANAFONT = 1
 
-const MIN_MP_FOR_FULL_ROTATION = 9600
+const REQUIRED_MP_FOR_T3_HARDCAST = 400
+const REQUIRED_MP_FOR_FIRE_SPELLS = 800
 const ASTRAL_UMBRAL_DURATION = 15000
 
 const AF_UI_BUFF_MAX_STACK = 3
@@ -72,7 +73,8 @@ const CYCLE_ERRORS: {[key: string]: CycleErrorCode } = {
 
 interface EventActionProcable extends FieldsTargeted {
 	action: number,
-	isProc?: boolean
+	isProc?: boolean,
+	gaugeContext: BLMGaugeState
 }
 
 class Cycle {
@@ -84,6 +86,7 @@ class Cycle {
 	atypicalAFStart: boolean = false
 	firePhaseStartMP: number = 0
 
+	isInitialCycle: boolean = false
 	finalOrDowntime: boolean = false
 
 	gaugeStateBeforeFire: BLMGaugeState = {
@@ -116,17 +119,26 @@ class Cycle {
 			return
 		}
 
-		// Account for the no-UH opener/LeyLines optimization when determining the expected count of Fire 4s
+		let expectedCount = this.expectedFire4sBeforeDespair
+
+		// Adjust expected count if the cycle included manafont
+		expectedCount += this.hasManafont ? FIRE4_FROM_MANAFONT : 0
+
+		return expectedCount
+	}
+	private get expectedFire4sBeforeDespair(): number {
+
+		// Account for the no-UH opener/LeyLines/Hypermeme optimization when determining the expected count of Fire 4s
 		let expectedCount = (this.gaugeStateBeforeFire.umbralHearts === 0 && !this.events.some(event => event.action === ACTIONS.FIRE_I.id))
 			? NO_UH_EXPECTED_FIRE4 : EXPECTED_FIRE4
 
-		/**
-		 * A bit hacky but, when we are in the opener and start with F3 it will be the only cycle that doesn't include any B3, Freeze, US.
-		 * Since we are in the opener, and specifically opening with F3, we are doing the (mod) Jp Opener, which drops the expected count by 1
-		 */
-		expectedCount -= !this.events.some(event => CYCLE_ENDPOINTS.includes(event.action)) ? 1 : 0
-		// Adjust expected count if the cycle included manafont
-		expectedCount += this.hasManafont ? FIRE4_FROM_MANAFONT : 0
+		// If this is the opener, and they're performing the No B4 opener (B3 -> T3 -> F3, <F4s, no F1s>), bump the expected count up by one
+		// TODO: Technically this is also the case for Hypermeme rotations with LeyLines but how to know that...
+		expectedCount +=
+			this.events.some(event => CYCLE_ENDPOINTS.includes(event.action)) &&
+			!this.events.some(event => event.action === ACTIONS.FIRE_I.id) &&
+			this.isInitialCycle
+				? 1 : 0
 
 		return expectedCount
 	}
@@ -155,19 +167,32 @@ class Cycle {
 		return Math.max(this.events.filter(event => event.action === ACTIONS.FIRE_I.id).length - 1, 0)
 	}
 
-	public get hardT3Count(): number {
-		return this.events.filter(event => event.action === ACTIONS.THUNDER_III.id && !event.isProc).length
+	public get hardT3sInFireCount(): number {
+		return this.events.filter(event => event.action === ACTIONS.THUNDER_III.id && event.gaugeContext.astralFire > 0 && !event.isProc).length
 	}
-	// TODO: Need to find a way to distinguish which AF/UI element the thunders were cast in, and filter out the hardcasts that happened in Ice phase...
-	// Also probably want to better calculate how many T3 hardcasts could happen without sacrificing a fire (ie, one before and after manafont, with enough starting MP) and refund that many instead of a flat one (in case of multitarget bosses)
 	public get extraT3s(): number {
 		if (!(this.missingFire4s || this.missingDespairs)) { // By definition, if you didn't miss any expected casts, you couldn't have hardcast an extra T3
 			return 0
 		}
-		if (this.firePhaseStartMP < MIN_MP_FOR_FULL_ROTATION) {
-			return this.hardT3Count
+		// Determine how much MP we need to fire off all of our expected Fire spells
+		const minimumMPForExpectedFires = REQUIRED_MP_FOR_FIRE_SPELLS * // Multiply base MP cost for F1/F4/Despair by the number of them we should have
+			((this.expectedFire4sBeforeDespair + (this.events.some(event => event.action === ACTIONS.FIRE_I.id) ? 1 : 0)) // Count how many expected F4s/F1s we should hit before Despair
+			* 2 // Astral Fire makes Fire spells cost twice as much
+			- this.gaugeStateBeforeFire.umbralHearts // Refund the additional cost for each heart we have
+			+ 1) // Include Despair
+
+		// If we didn't have enough MP to get all of our fires and a hardcast, every hardcast costs us a fire spell
+		if (this.firePhaseStartMP < minimumMPForExpectedFires + REQUIRED_MP_FOR_T3_HARDCAST) {
+			return this.hardT3sInFireCount
 		}
-		return Math.max(this.hardT3Count - 1, 0)
+		// If we did have enough MP, figure out how many T3s we could hardcast with the MP not needed for Fires
+		let maxHardcastT3s = Math.floor((this.firePhaseStartMP - minimumMPForExpectedFires) / REQUIRED_MP_FOR_T3_HARDCAST)
+
+		// Manafont allows for an extra F4, T3, and Despair
+		// TODO: Technically, this will allow F3 <F4s/F1s> <2x T3s (bad)> Despair F4 Despair, but how to track...
+		maxHardcastT3s += this.hasManafont ? 1 : 0
+
+		return Math.max(this.hardT3sInFireCount - maxHardcastT3s, 0)
 	}
 
 	public get manafontBeforeDespair(): boolean {
@@ -184,14 +209,17 @@ class Cycle {
 		return this.finalOrDowntime && this.gaugeStateBeforeFire.umbralHearts > 0 && this.missingFire4s === 2
 	}
 	public get shouldSkipT3(): boolean {
-		return this.finalOrDowntime && this.hardT3Count > 0
+		return this.finalOrDowntime && this.hardT3sInFireCount > 0
 	}
 
-	constructor(start: number, gaugeState?: BLMGaugeState) {
+	public get includeInSuggestions(): boolean {
+		return this.errorCode < CYCLE_ERRORS.DIED && this.errorCode > CYCLE_ERRORS.SHORT
+	}
+
+	constructor(start: number, gaugeState: BLMGaugeState, isInitialCycle: boolean = false) {
 		this.startTime = start
-		if (gaugeState) {
-			this.gaugeStateBeforeFire = {...gaugeState}
-		}
+		this.isInitialCycle = isInitialCycle
+		this.gaugeStateBeforeFire = {...gaugeState}
 	}
 
 	public overrideErrorCode(code: CycleErrorCode): void {
@@ -220,7 +248,7 @@ export default class RotationWatchdog extends Analyser {
 		enochian: false,
 	}
 
-	private currentRotation: Cycle = new Cycle(this.parser.pull.timestamp)
+	private currentRotation: Cycle = new Cycle(this.parser.pull.timestamp, this.currentGaugeState, true)
 	private history: Cycle[] = []
 
 	private firstEvent: boolean = true
@@ -293,7 +321,7 @@ export default class RotationWatchdog extends Analyser {
 		// Note that we've recorded our first damage event once we have one
 		if (this.firstEvent && action.onGcd) { this.firstEvent = false }
 
-		this.currentRotation.events.push({...event, isProc: this.procs.checkEventWasProc(event)})
+		this.currentRotation.events.push({...event, isProc: this.procs.checkEventWasProc(event), gaugeContext: this.currentGaugeState})
 
 		if (actionId === this.data.actions.UMBRAL_SOUL.id && !this.invulnerability.isActive({types: ['invulnerable']})) {
 			this.uptimeSouls++
@@ -357,7 +385,7 @@ export default class RotationWatchdog extends Analyser {
 		}
 
 		// Suggestion for skipping T3 on rotations that are cut short by the end of the parse or downtime
-		const shouldSkipT3s = this.history.filter(cycle => cycle.shouldSkipT3).reduce<number>((sum, cycle) => sum + cycle.hardT3Count, 0)
+		const shouldSkipT3s = this.history.filter(cycle => cycle.shouldSkipT3).reduce<number>((sum, cycle) => sum + cycle.hardT3sInFireCount, 0)
 		if (shouldSkipT3s > 0) {
 			this.suggestions.add(new Suggestion({
 				icon: this.data.actions.FIRE_IV.icon,
@@ -386,7 +414,7 @@ export default class RotationWatchdog extends Analyser {
 		}))
 
 		// Suggestion to end Astral Fires with Despair
-		const astralFiresMissingDespairs = this.history.filter(cycle => cycle.missingDespairs).length
+		const astralFiresMissingDespairs = this.history.filter(cycle => cycle.missingDespairs && cycle.includeInSuggestions).length
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.DESPAIR.icon,
 			content: <Trans id="blm.rotation-watchdog.suggestions.end-with-despair.content">
@@ -432,7 +460,7 @@ export default class RotationWatchdog extends Analyser {
 		}))
 
 		// Suggestion not to icemage, but don't double-count it if they got cut short or we otherwise weren't showing it in the errors table
-		const rotationsWithoutFire = this.history.filter(cycle => cycle.isMissingFire && cycle.errorCode < CYCLE_ERRORS.DIED && cycle.errorCode.priority > CYCLE_ERRORS.SHORT.priority).length
+		const rotationsWithoutFire = this.history.filter(cycle => cycle.isMissingFire && cycle.includeInSuggestions).length
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.BLIZZARD_II.icon,
 			content: <Trans id="blm.rotation-watchdog.suggestions.icemage.content">
@@ -555,7 +583,7 @@ export default class RotationWatchdog extends Analyser {
 		}
 
 		// Check if more Fire 4s could've been cast by skipping a hardcast Thunder 3
-		if (currentRotation.hardT3Count > 0) {
+		if (currentRotation.hardT3sInFireCount > 0) {
 			currentRotation.errorCode = CYCLE_ERRORS.SHOULD_SKIP_T3
 		}
 	}
