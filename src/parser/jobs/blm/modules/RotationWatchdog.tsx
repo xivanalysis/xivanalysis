@@ -467,7 +467,7 @@ export default class RotationWatchdog extends Analyser {
 
 	// End the current cycle, send it off to error processing, and add it to the history list
 	private stopRecording(event: Events['action'] | undefined) {
-		this.currentRotation.endTime = this.parser.currentTimestamp
+		this.currentRotation.endTime = this.parser.currentEpochTimestamp
 
 		// If an event object wasn't passed, or the event was a transpose that occurred during downtime,
 		// treat this as a rotation that ended with some kind of downtime
@@ -598,10 +598,10 @@ export default class RotationWatchdog extends Analyser {
 					]}
 					data={outliers.map(cycle => {
 						return ({
-							start: cycle.startTime - this.parser.fight.start_time,
+							start: cycle.startTime - this.parser.pull.timestamp,
 							end: cycle.endTime != null ?
-								cycle.endTime - this.parser.fight.start_time :
-								cycle.startTime - this.parser.fight.start_time,
+								cycle.endTime - this.parser.pull.timestamp :
+								cycle.startTime - this.parser.pull.timestamp,
 							targetsData: {
 								fire4s: {
 									actual: cycle.actualFire4s,
