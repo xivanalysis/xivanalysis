@@ -3,16 +3,17 @@ import {Plural, Trans} from '@lingui/react'
 import {ActionLink} from 'components/ui/DbLink'
 import {RotationTable} from 'components/ui/RotationTable'
 import ACTIONS from 'data/ACTIONS'
-import {Events} from 'event'
-import {CastEvent} from 'fflogs'
-import Module, {dependency} from 'parser/core/Module'
+import {Event, Events, FieldsTargeted} from 'event'
+import {Analyser} from 'parser/core/Analyser'
+import {filter} from 'parser/core/filter'
+import {dependency} from 'parser/core/Injectable'
 import {Actors} from 'parser/core/modules/Actors'
 import {Data} from 'parser/core/modules/Data'
 import {Invulnerability} from 'parser/core/modules/Invulnerability'
 import Suggestions, {SEVERITY, Suggestion, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import {Timeline} from 'parser/core/modules/Timeline'
 import {UnableToAct} from 'parser/core/modules/UnableToAct'
-import React, {Fragment} from 'react'
+import React, {Fragment, ReactNode} from 'react'
 import {Icon, Message} from 'semantic-ui-react'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 import {FIRE_SPELLS} from './Elements'
@@ -51,7 +52,7 @@ const MIN_ROTATION_LENGTH = 3
  * NOTE: Cycles with values below ERROR_CODES.SHORT will be filtered out of the RotationTable display
  * unless the DEBUG_SHOW_ALL_CYCLES variable is set to true
  */
-interface CycleErrorCode {priority: number, message: string | JSX.Element}
+interface CycleErrorCode {priority: number, message: ReactNode}
 const CYCLE_ERRORS: {[key: string]: CycleErrorCode } = {
 	NONE: {priority: 0, message: 'No errors'},
 	FINAL_OR_DOWNTIME: {priority: 1, message: 'Ended with downtime, or last cycle'},
@@ -69,12 +70,13 @@ const CYCLE_ERRORS: {[key: string]: CycleErrorCode } = {
 	DIED: {priority: 101, message: <Trans id="blm.rotation-watchdog.error-messages.died"><ActionLink showName={false} {...ACTIONS.RAISE} /> Died</Trans>},
 }
 
-interface ProcableCastEvent extends CastEvent {
+interface EventActionProcable extends FieldsTargeted {
+	action: number,
 	isProc?: boolean
 }
 
 class Cycle {
-	casts: ProcableCastEvent[] = []
+	events: EventActionProcable[] = []
 	startTime: number
 	endTime?: number
 
@@ -115,21 +117,21 @@ class Cycle {
 		}
 
 		// Account for the no-UH opener/LeyLines optimization when determining the expected count of Fire 4s
-		let expectedCount = (this.gaugeStateBeforeFire.umbralHearts === 0 && !this.casts.some(cast => cast.ability.guid === ACTIONS.FIRE_I.id))
+		let expectedCount = (this.gaugeStateBeforeFire.umbralHearts === 0 && !this.events.some(event => event.action === ACTIONS.FIRE_I.id))
 			? NO_UH_EXPECTED_FIRE4 : EXPECTED_FIRE4
 
 		/**
 		 * A bit hacky but, when we are in the opener and start with F3 it will be the only cycle that doesn't include any B3, Freeze, US.
 		 * Since we are in the opener, and specifically opening with F3, we are doing the (mod) Jp Opener, which drops the expected count by 1
 		 */
-		expectedCount -= !this.casts.some(cast => CYCLE_ENDPOINTS.includes(cast.ability.guid)) ? 1 : 0
+		expectedCount -= !this.events.some(event => CYCLE_ENDPOINTS.includes(event.action)) ? 1 : 0
 		// Adjust expected count if the cycle included manafont
 		expectedCount += this.hasManafont ? FIRE4_FROM_MANAFONT : 0
 
 		return expectedCount
 	}
 	public get actualFire4s(): number {
-		return this.casts.filter(cast => cast.ability.guid === ACTIONS.FIRE_IV.id).length
+		return this.events.filter(event => event.action === ACTIONS.FIRE_IV.id).length
 	}
 	public get missingFire4s(): number | undefined {
 		if (!this.expectedFire4s) { return }
@@ -137,24 +139,24 @@ class Cycle {
 	}
 
 	public get hasManafont(): boolean {
-		return this.casts.some(cast => cast.ability.guid === ACTIONS.MANAFONT.id)
+		return this.events.some(event => event.action === ACTIONS.MANAFONT.id)
 	}
 	public get expectedDespairs(): number {
 		return this.hasManafont ? 2 : 1
 	}
 	public get actualDespairs(): number {
-		return this.casts.filter(cast => cast.ability.guid === ACTIONS.DESPAIR.id).length
+		return this.events.filter(event => event.action === ACTIONS.DESPAIR.id).length
 	}
 	public get missingDespairs(): number {
 		return Math.max(this.expectedDespairs - this.actualDespairs, 0)
 	}
 
 	public get extraF1s(): number {
-		return Math.max(this.casts.filter(cast => cast.ability.guid === ACTIONS.FIRE_I.id).length - 1, 0)
+		return Math.max(this.events.filter(event => event.action === ACTIONS.FIRE_I.id).length - 1, 0)
 	}
 
 	public get hardT3Count(): number {
-		return this.casts.filter(cast => cast.ability.guid === ACTIONS.THUNDER_III.id && !cast.isProc).length
+		return this.events.filter(event => event.action === ACTIONS.THUNDER_III.id && !event.isProc).length
 	}
 	// TODO: Need to find a way to distinguish which AF/UI element the thunders were cast in, and filter out the hardcasts that happened in Ice phase...
 	// Also probably want to better calculate how many T3 hardcasts could happen without sacrificing a fire (ie, one before and after manafont, with enough starting MP) and refund that many instead of a flat one (in case of multitarget bosses)
@@ -170,12 +172,12 @@ class Cycle {
 
 	public get manafontBeforeDespair(): boolean {
 		return this.hasManafont && this.actualDespairs > 0 &&
-			this.casts.findIndex(cast => cast.ability.guid === ACTIONS.MANAFONT.id) <
-			this.casts.findIndex(cast => cast.ability.guid === ACTIONS.DESPAIR.id)
+			this.events.findIndex(event => event.action === ACTIONS.MANAFONT.id) <
+			this.events.findIndex(event => event.action === ACTIONS.DESPAIR.id)
 	}
 
 	public get isMissingFire(): boolean {
-		return !this.casts.some(cast => FIRE_SPELLS.includes(cast.ability.guid))
+		return !this.events.some(event => FIRE_SPELLS.includes(event.action))
 	}
 
 	public get shouldSkipB4(): boolean {
@@ -196,7 +198,7 @@ class Cycle {
 		this._errorCode = code
 	}
 }
-export default class RotationWatchdog extends Module {
+export default class RotationWatchdog extends Analyser {
 	static override handle = 'RotationWatchdog'
 	static override title = t('blm.rotation-watchdog.title')`Rotation Outliers`
 	static override displayOrder = DISPLAY_ORDER.ROTATION
@@ -218,23 +220,26 @@ export default class RotationWatchdog extends Module {
 		enochian: false,
 	}
 
-	private currentRotation: Cycle = new Cycle(this.parser.fight.start_time)
+	private currentRotation: Cycle = new Cycle(this.parser.pull.timestamp)
 	private history: Cycle[] = []
 
 	private firstEvent: boolean = true
 	// counters for suggestions
 	private uptimeSouls: number = 0
 
-	protected override init() {
-		this.addEventHook('cast', {by: 'player'}, this.onCast)
+	override initialise() {
+		this.addEventHook(filter<Event>().source(this.parser.actor.id).type('action'), this.onCast)
 		this.addEventHook('complete', this.onComplete)
 		this.addEventHook('blmgauge', this.onGaugeEvent)
-		this.addEventHook('death', {to: 'player'}, this.onDeath)
+		this.addEventHook({
+			type: 'death',
+			actor: this.parser.actor.id,
+		}, this.onDeath)
 	}
 
 	// Handle events coming from BLM's Gauge module
 	private onGaugeEvent(event: Events['blmgauge']) {
-		const nextGaugeState = this.gauge.getFflogsGaugeState(event.timestamp)
+		const nextGaugeState = this.gauge.getGaugeState(event.timestamp)
 		if (!nextGaugeState) { return }
 
 		// If we're beginning the fire phase of this cycle, note it and save some data
@@ -267,8 +272,8 @@ export default class RotationWatchdog extends Module {
 	}
 
 	// Handle cast events and updated recording data accordingly
-	private onCast(event: CastEvent) {
-		const actionId = event.ability.guid
+	private onCast(event: Events['action']) {
+		const actionId = event.action
 
 		// If this action is signifies the beginning of a new cycle, unless this is the first
 		// cast of the log, stop the current cycle, and begin a new one. If Transposing from ice
@@ -288,7 +293,7 @@ export default class RotationWatchdog extends Module {
 		// Note that we've recorded our first damage event once we have one
 		if (this.firstEvent && action.onGcd) { this.firstEvent = false }
 
-		this.currentRotation.casts.push({...event, isProc: this.procs.checkFflogsEventWasProc(event)})
+		this.currentRotation.events.push({...event, isProc: this.procs.checkEventWasProc(event)})
 
 		if (actionId === this.data.actions.UMBRAL_SOUL.id && !this.invulnerability.isActive({types: ['invulnerable']})) {
 			this.uptimeSouls++
@@ -310,13 +315,9 @@ export default class RotationWatchdog extends Module {
 
 			const windows = this.unableToAct
 				.getWindows({
-					start: this.parser.fflogsToEpoch(cycle.startTime),
-					end: cycle.endTime && this.parser.fflogsToEpoch(cycle.endTime),
+					start: cycle.startTime,
+					end: cycle.endTime,
 				})
-				.map(window => ({
-					start: this.parser.epochToFflogs(window.start),
-					end: this.parser.epochToFflogs(window.end),
-				}))
 				.filter(window => Math.max(0, window.end - window.start) >= ASTRAL_UMBRAL_DURATION)
 
 			if (windows.length > 0) {
@@ -329,9 +330,9 @@ export default class RotationWatchdog extends Module {
 		// and reprocess it to see if there were any other errors
 		this.history.forEach(cycle => {
 			if (cycle.errorCode !== CYCLE_ERRORS.MISSING_FIRE4S) { return }
-			const cycleEnd = cycle.endTime ?? this.parser.fight.end_time
+			const cycleEnd = cycle.endTime ?? (this.parser.pull.timestamp + this.parser.pull.duration)
 			if (this.invulnerability.isActive({
-				timestamp: this.parser.fflogsToEpoch(cycleEnd + this.data.actions.FIRE_IV.castTime),
+				timestamp: cycleEnd + this.data.actions.FIRE_IV.castTime,
 				types: ['invulnerable'],
 			})) {
 				cycle.finalOrDowntime = true
@@ -458,14 +459,14 @@ export default class RotationWatchdog extends Module {
 	}
 
 	// Complete the previous cycle and start a new one
-	private startRecording(event: CastEvent) {
+	private startRecording(event: Events['action']) {
 		this.stopRecording(event)
 		// Pass in whether we've seen the first cycle endpoint to account for pre-pull buff executions (mainly Sharpcast)
 		this.currentRotation = new Cycle(event.timestamp, this.currentGaugeState)
 	}
 
 	// End the current cycle, send it off to error processing, and add it to the history list
-	private stopRecording(event: CastEvent | undefined) {
+	private stopRecording(event: Events['action'] | undefined) {
 		this.currentRotation.endTime = this.parser.currentTimestamp
 
 		// If an event object wasn't passed, or the event was a transpose that occurred during downtime,
@@ -474,9 +475,9 @@ export default class RotationWatchdog extends Module {
 			!event
 			|| (
 				event
-				&& event.ability.guid === this.data.actions.TRANSPOSE.id
+				&& event.action === this.data.actions.TRANSPOSE.id
 				&& this.invulnerability.isActive({
-					timestamp: this.parser.fflogsToEpoch(event.timestamp),
+					timestamp: event.timestamp,
 					types: ['untargetable'],
 				})
 			)
@@ -494,7 +495,7 @@ export default class RotationWatchdog extends Module {
 	private processCycle(currentRotation: Cycle) {
 		// Only process errors for rotations with more than the minimum number of casts,
 		// since fewer than that usually indicates something weird happening
-		if (currentRotation.casts.length <= MIN_ROTATION_LENGTH) {
+		if (currentRotation.events.length <= MIN_ROTATION_LENGTH) {
 			currentRotation.errorCode = CYCLE_ERRORS.SHORT
 			return
 		}
@@ -614,7 +615,7 @@ export default class RotationWatchdog extends Module {
 							notesMap: {
 								reason: <>{cycle.errorCode.message}</>,
 							},
-							rotation: cycle.casts,
+							rotation: cycle.events,
 						})
 					})}
 					onGoto={this.timeline.show}
