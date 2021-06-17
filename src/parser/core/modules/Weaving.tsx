@@ -3,7 +3,7 @@ import {Trans, Plural} from '@lingui/react'
 import NormalisedMessage from 'components/ui/NormalisedMessage'
 import Rotation from 'components/ui/Rotation'
 import {Action} from 'data/ACTIONS'
-import {Attribute, Event, Events} from 'event'
+import {Event, Events} from 'event'
 import {Analyser} from 'parser/core/Analyser'
 import {filter} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
@@ -14,7 +14,7 @@ import Suggestions, {TieredSuggestion, SEVERITY} from 'parser/core/modules/Sugge
 import React, {ReactNode} from 'react'
 import {Accordion} from 'semantic-ui-react'
 import {matchClosestLower} from 'utilities'
-import {BASE_GCD, getEstimatedTime, SUB_ATTRIBUTE_MINIMUM} from 'utilities/speedStatMapper'
+import {BASE_GCD} from 'utilities/speedStatMapper'
 
 const CAST_TIME_MAX_WEAVES = {
 	0: 2,
@@ -64,30 +64,12 @@ export class Weaving extends Analyser {
 	private trailingGcdEvent?: Events['action']
 	private badWeaves: Weave[] = []
 
-	private gcdEstimate: number = BASE_GCD
-
 	override initialise() {
 		const playerFilter = filter<Event>().source(this.parser.actor.id)
 
-		this.addEventHook(filter<Event>().type('actorUpdate').actor(this.parser.actor.id), this.onActorUpdate)
 		this.addEventHook(playerFilter.type('prepare'), this.onBeginCast)
 		this.addEventHook(playerFilter.type('action'), this.onCast)
 		this.addEventHook(filter<Event>().type('complete'), this.onComplete)
-	}
-
-	private onActorUpdate(event: Events['actorUpdate']) {
-		const speedAttributeKeys = [Attribute.SKILL_SPEED, Attribute.SPELL_SPEED]
-		if (event.attributes == null || !event.attributes.some(attribute => speedAttributeKeys.includes(attribute.attribute))) {
-			return
-		}
-
-		let speedStat = SUB_ATTRIBUTE_MINIMUM
-		for (const attribute of event.attributes) {
-			if (speedAttributeKeys.includes(attribute.attribute)) {
-				speedStat = Math.max(attribute.value, speedStat)
-			}
-		}
-		this.gcdEstimate = getEstimatedTime(speedStat, BASE_GCD)
 	}
 
 	private onBeginCast(event: Events['prepare']) {
@@ -191,8 +173,9 @@ export class Weaving extends Analyser {
 				&& event.timestamp >= this.parser.pull.timestamp,
 		).length
 
+		const recast = ((weave.leadingGcdEvent != null) ? this.castTime.recastForEvent(weave.leadingGcdEvent) : undefined) ?? BASE_GCD
 		// Check the downtime-adjusted GCD time difference for this weave - do not treat multiple weaves during downtime as bad weaves
-		return weave.gcdTimeDiff > this.gcdEstimate && weaveCount > this.getMaxWeaves(weave)
+		return weave.gcdTimeDiff > recast && weaveCount > this.getMaxWeaves(weave)
 	}
 
 	/**
@@ -211,9 +194,9 @@ export class Weaving extends Analyser {
 		}
 
 		const maxWeaves = matchClosestLower(CAST_TIME_MAX_WEAVES, castTime) ?? DEFAULT_MAX_WEAVES
-		const recastTime = this.castTime.recastForEvent(weave.leadingGcdEvent)
+		const recastTime = this.castTime.recastForEvent(weave.leadingGcdEvent) ?? BASE_GCD
 
-		return maxWeaves - (recastTime == null || recastTime >= REDUCE_MAX_WEAVES_RECAST_BELOW ? 0 : 1)
+		return maxWeaves - (recastTime < REDUCE_MAX_WEAVES_RECAST_BELOW ? 1 : 0)
 	}
 
 	override output() {
