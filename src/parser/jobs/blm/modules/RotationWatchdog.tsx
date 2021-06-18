@@ -17,7 +17,8 @@ import React, {Fragment, ReactNode} from 'react'
 import {Icon, Message} from 'semantic-ui-react'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 import {FIRE_SPELLS} from './Elements'
-import Gauge, {BLMGaugeState} from './Gauge'
+import Gauge, {ASTRAL_UMBRAL_DURATION, BLMGaugeState, MAX_UMBRAL_HEART_STACKS} from './Gauge'
+import Leylines from './Leylines'
 import Procs from './Procs'
 
 const DEBUG_SHOW_ALL_CYCLES = false && process.env.NODE_ENV !== 'production'
@@ -26,6 +27,7 @@ const EXPECTED_FIRE4 = 6
 const NO_UH_EXPECTED_FIRE4 = 4
 const FIRE4_FROM_MANAFONT = 1
 
+const EXTRA_F4_COP_THRESHHOLD = 0.5 // Feelycraft
 const REQUIRED_MP_FOR_T3_HARDCAST = 400
 const REQUIRED_MP_FOR_FIRE_SPELLS = 800
 
@@ -70,29 +72,28 @@ const CYCLE_ERRORS: {[key: string]: CycleErrorCode } = {
 
 interface CycleEvent extends FieldsTargeted {
 	action: number,
-	isProc?: boolean,
+	isProc: boolean,
 	gaugeContext: BLMGaugeState
 }
 
+interface FirePhaseMetadata {
+	startTime: number,
+	initialMP: number,
+	circleOfPowerPct: number
+	initialGaugeState: BLMGaugeState
+}
+
 class Cycle {
-	events: CycleEvent[] = []
+	private unaspectedEvents: CycleEvent[] = []
+	private icePhaseEvents: CycleEvent[] = []
+	private firePhaseEvents: CycleEvent[] = []
+	private manafontPhaseEvents: CycleEvent[] = []
 	startTime: number
 	endTime?: number
 
-	inFirePhase: boolean = false
-	atypicalAFStart: boolean = false
-	firePhaseStartMP: number = 0
+	firePhaseMetadata: FirePhaseMetadata
 
-	isInitialCycle: boolean = false
 	finalOrDowntime: boolean = false
-
-	gaugeStateBeforeFire: BLMGaugeState = {
-		astralFire: 0,
-		umbralIce: 0,
-		umbralHearts: 0,
-		polyglot: 0,
-		enochian: false,
-	}
 
 	_errorCode: CycleErrorCode = CYCLE_ERRORS.NONE
 	public set errorCode(code) {
@@ -104,18 +105,26 @@ class Cycle {
 		return this._errorCode
 	}
 
+	public get events(): CycleEvent[] {
+		return this.unaspectedEvents.concat(this.icePhaseEvents).concat(this.firePhaseEvents).concat(this.manafontPhaseEvents)
+	}
 	/**
-	 * Greatly simplified from the pre-Shadowbringers version of this function. Because Umbral Soul gives us
-	 * a proper downtime action to build UH/UI, it should be possible to enter every fire phase with a normal
-	 * gauge state, so we're no longer going to reduce the expected count based on the actual gauge state on
-	 * entering fire phase. We're still tracking the data necessary to do this again in the future if there is
-	 * value in doing so.
+	 * June 2021 revamp of this function brings back some of the pre-Shadowbringers gauge state complexity for determining expected fire counts for the following reasons:
+	 *   1. While Umbral Soul gives us a downtime action to build and maintain Umbral Hearts/Umbral Ice, it isn't foolproof. E1S's giant midfight cutscene is a forced drop.
+	 *   2. Freeze reopener after death or a forced drop is an expected 5xF4 cycle, and is more PPS than a B3 B4 [T3] F3 [Fire phase] or a Freeze B4 [T3] F3 [Fire phase] reopener, so we should allow it
+	 *   3. Alternate playstyle cycles and the No-B4-Opener rely on Ley Lines to eke out a 5th F4 without using F1, and enough BLMs are using the alternate playstyle to warrant not dinging those
+	 *   4. Separating the 'How many F4s can you get from this starting gauge state' count from the 'how many total F4s can this cycle fit with Manafont factored in' count allows for more robust thunder counts later on
+	 *
+	 * NOTE:
+	 *   This revamp does NOT account for all the complexities of the alternate playstyle transpose shenanigans.
+	 *   It only sets the baseline expected F4 count at 4, and assumes extra F4s based on the number of Umbral Hearts carried into the Astral Fire phase.
 	 */
 	public get expectedFire4s(): number | undefined {
 		if (this.finalOrDowntime) {
 			return
 		}
 
+		// Get the expected count prior to the initial despair
 		let expectedCount = this.expectedFire4sBeforeDespair
 
 		// Adjust expected count if the cycle included manafont
@@ -123,21 +132,36 @@ class Cycle {
 
 		return expectedCount
 	}
-	private get expectedFire4sBeforeDespair(): number {
+	public get expectedFire4sBeforeDespair(): number {
+		// Cycles start with a baseline of 4 Fire 4s
+		let expectedCount = NO_UH_EXPECTED_FIRE4
 
-		// Account for the no-UH opener/LeyLines/Hypermeme optimization when determining the expected count of Fire 4s
-		let expectedCount = (this.gaugeStateBeforeFire.umbralHearts === 0 && !this.events.some(event => event.action === ACTIONS.FIRE_I.id))
-			? NO_UH_EXPECTED_FIRE4 : EXPECTED_FIRE4
+		// Cycles with at least one heart get an extra F4 (5x F4 + F1 with 1 heart is the same MP cost as the standard 6F4 + F1 with 3)
+		// Note that two hearts does not give any extra F4s, though it'll hardly ever come up in practice
+		if (this.firePhaseMetadata.initialGaugeState.umbralHearts > 0) {
+			expectedCount++
+		}
 
-		// If this is the opener, and they're performing the No B4 opener (B3 -> T3 -> F3, <F4s, no F1s>), bump the expected count up by one
-		// TODO: Technically this is also the case for Hypermeme rotations with LeyLines but how to know that...
-		expectedCount +=
-			this.events.some(event => CYCLE_ENDPOINTS.includes(event.action)) &&
-			!this.events.some(event => event.action === ACTIONS.FIRE_I.id) &&
-			this.isInitialCycle
-				? 1 : 0
+		// Cycles with full hearts get two extra F4s
+		if (this.firePhaseMetadata.initialGaugeState.umbralHearts === MAX_UMBRAL_HEART_STACKS) {
+			expectedCount++
+		}
 
-		return expectedCount
+		/**
+		 * IF this cycle's Astral Fire phase began with no Umbral Hearts (either no-B4-opener, or a midfight alternate playstyle cycle),
+		 * AND it is not an opener that begins with Fire 3 (ie, the cycle includes an ice phase)
+		 * AND we have leylines for long enough to squeeze in an extra F4
+		 * THEN we increase the expected count by one
+		 */
+		if (
+			expectedCount === NO_UH_EXPECTED_FIRE4 &&
+			this.icePhaseEvents.length > 0 &&
+			(this.firePhaseMetadata?.circleOfPowerPct || 0) >= EXTRA_F4_COP_THRESHHOLD
+		) {
+			expectedCount++
+		}
+
+		return Math.min(expectedCount, EXPECTED_FIRE4) // Make sure we don't go wild and return a larger expected count than is actually possible, in case the above logic misbehaves...
 	}
 	public get actualFire4s(): number {
 		return this.events.filter(event => event.action === ACTIONS.FIRE_IV.id).length
@@ -160,42 +184,45 @@ class Cycle {
 		return Math.max(this.expectedDespairs - this.actualDespairs, 0)
 	}
 
+	private hardT3sInPhase(events: CycleEvent[]): number {
+		return events.filter(event => event.action === ACTIONS.THUNDER_III.id && !event.isProc).length
+	}
 	public get extraF1s(): number {
 		return Math.max(this.events.filter(event => event.action === ACTIONS.FIRE_I.id).length - 1, 0)
 	}
-
+	public get hardT3sBeforeManafont(): number {
+		return this.hardT3sInPhase(this.firePhaseEvents)
+	}
+	public get hardT3sAfterManafont(): number {
+		return this.hardT3sInPhase(this.manafontPhaseEvents)
+	}
 	public get hardT3sInFireCount(): number {
-		return this.events.filter(event => event.action === ACTIONS.THUNDER_III.id && event.gaugeContext.astralFire > 0 && !event.isProc).length
+		return this.hardT3sBeforeManafont + this.hardT3sAfterManafont
 	}
 	public get extraT3s(): number {
-		if (!(this.missingFire4s || this.missingDespairs)) { // By definition, if you didn't miss any expected casts, you couldn't have hardcast an extra T3
+		// By definition, if you didn't miss any expected casts, you couldn't have hardcast an extra T3
+		if (!(this.missingFire4s || this.missingDespairs)) {
 			return 0
 		}
-		// Determine how much MP we need to fire off all of our expected Fire spells
-		const minimumMPForExpectedFires = REQUIRED_MP_FOR_FIRE_SPELLS * // Multiply base MP cost for F1/F4/Despair by the number of them we should have
-			((this.expectedFire4sBeforeDespair + (this.events.some(event => event.action === ACTIONS.FIRE_I.id) ? 1 : 0)) // Count how many expected F4s/F1s we should hit before Despair
-			* 2 // Astral Fire makes Fire spells cost twice as much
-			- this.gaugeStateBeforeFire.umbralHearts // Refund the additional cost for each heart we have
-			+ 1) // Include Despair
 
-		// If we didn't have enough MP to get all of our fires and a hardcast, every hardcast costs us a fire spell
-		if (this.firePhaseStartMP < minimumMPForExpectedFires + REQUIRED_MP_FOR_T3_HARDCAST) {
-			return this.hardT3sInFireCount
-		}
-		// If we did have enough MP, figure out how many T3s we could hardcast with the MP not needed for Fires
-		let maxHardcastT3s = Math.floor((this.firePhaseStartMP - minimumMPForExpectedFires) / REQUIRED_MP_FOR_T3_HARDCAST)
+		// Determine how much MP we need to cast all of our expected Fire spells
+		const minimumMPForExpectedFires =
+			((this.expectedFire4sBeforeDespair // Count how many F4s we should have before the Despair
+				+ (this.events.some(event => event.action === ACTIONS.FIRE_I.id) ? 1 : 0)) // Feelycraft: If they included a single F1 we'll allow it. If they skipped it, that's fine too. If they have more than one, it's bad so only allow one for the MP requirement calculation.
+			* 2 // Astral Fire makes F1 and F4 cost twice as much
+			- this.firePhaseMetadata.initialGaugeState.umbralHearts // Refund the additional cost for each Umbral Heart carried into the Astral Fire phase
+			+ 1) // Despair requires a minimum MP that is the same as the base MP cost as F1 and F4 so just include one in the count
+			* REQUIRED_MP_FOR_FIRE_SPELLS // Multiply base MP cost for F1/F4/Despair by the number of them we should have
 
-		// Manafont allows for an extra F4, T3, and Despair
-		// TODO: Technically, this will allow F3 <F4s/F1s> <2x T3s (bad)> Despair F4 Despair, but how to track...
-		maxHardcastT3s += this.hasManafont ? 1 : 0
+		// Figure out how many T3s we could hardcast with the MP not needed for Fires (if any)
+		const maxHardcastT3s = Math.floor(Math.max(this.firePhaseMetadata.initialMP - minimumMPForExpectedFires, 0) / REQUIRED_MP_FOR_T3_HARDCAST)
 
-		return Math.max(this.hardT3sInFireCount - maxHardcastT3s, 0)
+		// Refund the T3s that dont lose us a Fire 4 from the pre-manafont hardcast count, as well as one from the post-manafont count
+		return Math.max(this.hardT3sBeforeManafont - maxHardcastT3s, 0) + Math.max(this.hardT3sAfterManafont - 1, 0)
 	}
 
 	public get manafontBeforeDespair(): boolean {
-		return this.hasManafont && this.actualDespairs > 0 &&
-			this.events.findIndex(event => event.action === ACTIONS.MANAFONT.id) <
-			this.events.findIndex(event => event.action === ACTIONS.DESPAIR.id)
+		return this.hasManafont && !this.firePhaseEvents.some(event => event.action === ACTIONS.DESPAIR.id)
 	}
 
 	public get isMissingFire(): boolean {
@@ -203,24 +230,41 @@ class Cycle {
 	}
 
 	public get shouldSkipB4(): boolean {
-		return this.finalOrDowntime && this.gaugeStateBeforeFire.umbralHearts > 0 && this.missingFire4s === 2
+		return this.finalOrDowntime && this.firePhaseMetadata.initialGaugeState.umbralHearts > 0 && this.missingFire4s === 2
 	}
 	public get shouldSkipT3(): boolean {
 		return this.finalOrDowntime && this.hardT3sInFireCount > 0
 	}
 
 	public get includeInSuggestions(): boolean {
-		return this.errorCode < CYCLE_ERRORS.DIED && this.errorCode > CYCLE_ERRORS.SHORT
+		return this.errorCode.priority < CYCLE_ERRORS.DIED.priority && this.errorCode.priority > CYCLE_ERRORS.SHORT.priority
 	}
 
-	constructor(start: number, gaugeState: BLMGaugeState, isInitialCycle: boolean = false) {
+	constructor(start: number, gaugeState: BLMGaugeState) {
 		this.startTime = start
-		this.isInitialCycle = isInitialCycle
-		this.gaugeStateBeforeFire = {...gaugeState}
+		this.firePhaseMetadata = {
+			startTime: 0,
+			initialMP: 0,
+			circleOfPowerPct: 0,
+			initialGaugeState: {...gaugeState},
+		}
 	}
 
 	public overrideErrorCode(code: CycleErrorCode): void {
 		this._errorCode = code
+	}
+
+	public addEvent(event: CycleEvent): void {
+		// Stash the event in the appropriate phase-specific array
+		if (event.gaugeContext.umbralIce === 0 && event.gaugeContext.astralFire === 0) {
+			this.unaspectedEvents.push(event)
+		} else if (this.firePhaseMetadata.startTime === 0) {
+			this.icePhaseEvents.push(event)
+		} else if (!this.firePhaseEvents.some(event => event.action === ACTIONS.MANAFONT.id)) {
+			this.firePhaseEvents.push(event)
+		} else {
+			this.manafontPhaseEvents.push(event)
+		}
 	}
 }
 export default class RotationWatchdog extends Analyser {
@@ -236,6 +280,7 @@ export default class RotationWatchdog extends Analyser {
 	@dependency private gauge!: Gauge
 	@dependency private data!: Data
 	@dependency private procs!: Procs
+	@dependency private leylines!: Leylines
 
 	private currentGaugeState: BLMGaugeState = {
 		astralFire: 0,
@@ -245,7 +290,7 @@ export default class RotationWatchdog extends Analyser {
 		enochian: false,
 	}
 
-	private currentRotation: Cycle = new Cycle(this.parser.pull.timestamp, this.currentGaugeState, true)
+	private currentRotation: Cycle = new Cycle(this.parser.pull.timestamp, this.currentGaugeState)
 	private history: Cycle[] = []
 
 	private firstEvent: boolean = true
@@ -269,14 +314,11 @@ export default class RotationWatchdog extends Analyser {
 
 		// If we're beginning the fire phase of this cycle, note it and save some data
 		if (this.currentGaugeState.astralFire === 0 && nextGaugeState.astralFire > 0) {
-			this.currentRotation.inFirePhase = true
-			this.currentRotation.firePhaseStartMP = this.actors.current.mp.current
+			this.currentRotation.firePhaseMetadata.startTime = event.timestamp
+			this.currentRotation.firePhaseMetadata.initialMP = this.actors.current.mp.current
 
-			// If we didn't enter fire phase with a normal gauge state of 3 UI/UH stacks, note it
-			if (this.currentRotation.gaugeStateBeforeFire.umbralIce !== AF_UI_BUFF_MAX_STACK ||
-				this.currentRotation.gaugeStateBeforeFire.umbralHearts !== AF_UI_BUFF_MAX_STACK) {
-				this.currentRotation.atypicalAFStart = true
-			}
+			// Spread the current gauge state into the fire phase metadata for future reference
+			this.currentRotation.firePhaseMetadata.initialGaugeState = {...this.currentGaugeState}
 		}
 
 		// If we no longer have enochian, flag it for display
@@ -286,14 +328,6 @@ export default class RotationWatchdog extends Analyser {
 
 		// Retrieve the GaugeState from the event
 		this.currentGaugeState = {...nextGaugeState}
-
-		// If we're in fire phase, stop processing
-		if (this.currentRotation.inFirePhase) {
-			return
-		}
-
-		// If we're in ice phase, spread the current gauge state into the pre-fire cache for later recording
-		this.currentRotation.gaugeStateBeforeFire = {...this.currentGaugeState}
 	}
 
 	// Handle cast events and updated recording data accordingly
@@ -318,7 +352,7 @@ export default class RotationWatchdog extends Analyser {
 		// Note that we've recorded our first damage event once we have one
 		if (this.firstEvent && action.onGcd) { this.firstEvent = false }
 
-		this.currentRotation.events.push({...event, isProc: this.procs.checkEventWasProc(event), gaugeContext: this.currentGaugeState})
+		this.currentRotation.addEvent({...event, isProc: this.procs.checkEventWasProc(event), gaugeContext: {...this.currentGaugeState}})
 
 		if (actionId === this.data.actions.UMBRAL_SOUL.id && !this.invulnerability.isActive({types: ['invulnerable']})) {
 			this.uptimeSouls++
@@ -457,7 +491,7 @@ export default class RotationWatchdog extends Analyser {
 		}))
 
 		// Suggestion not to icemage, but don't double-count it if they got cut short or we otherwise weren't showing it in the errors table
-		const rotationsWithoutFire = this.history.filter(cycle => cycle.isMissingFire && cycle.includeInSuggestions).length
+		const rotationsWithoutFire = this.history.filter(cycle => cycle.isMissingFire && cycle.includeInSuggestions && !cycle.finalOrDowntime).length
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.BLIZZARD_II.icon,
 			content: <Trans id="blm.rotation-watchdog.suggestions.icemage.content">
@@ -493,6 +527,10 @@ export default class RotationWatchdog extends Analyser {
 	// End the current cycle, send it off to error processing, and add it to the history list
 	private stopRecording(event: Events['action'] | undefined) {
 		this.currentRotation.endTime = this.parser.currentEpochTimestamp
+		// TODO: Replace this BS with core statuses once that's ported
+		this.currentRotation.firePhaseMetadata.circleOfPowerPct =
+			this.leylines.getStatusDurationInRange(this.data.statuses.CIRCLE_OF_POWER.id, this.currentRotation.firePhaseMetadata.startTime, this.currentRotation.endTime) /
+			(this.currentRotation.endTime - this.currentRotation.firePhaseMetadata.startTime)
 
 		// If an event object wasn't passed, or the event was a transpose that occurred during downtime,
 		// treat this as a rotation that ended with some kind of downtime
