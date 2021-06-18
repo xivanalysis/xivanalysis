@@ -60,6 +60,8 @@
   "ast.sleeve-draw.checklist.requirement.uses.name": "使用回数：<0/>",
   "ast.sleeve-draw.title": "スリーヴドロー",
   "blm.gauge.resource.astral-fire": "アストラルファイア",
+  "blm.gauge.resource.umbral-hearts": "アンブラルハート",
+  "blm.gauge.resource.umbral-ice": "アンブラルブリザード",
   "blm.gauge.suggestions.dropped-enochian.content": "<0/> をドロップすると、 <1/>や<2/>が失われたり、 <3/>のキャストが追加されたり、 <3/> および <4/> が利用できなくなったり、 <6/> が提供する与ダメージの15%アップを見逃したりする可能性があります。",
   "blm.gauge.suggestions.lost-polyglot.content": "<0/>が切れたため、ポリグロットをすべて失いました。 <1/>や<2/> は最も強力なGCDなので、キャストを常に最大化しましょう。",
   "blm.gauge.suggestions.lost-polyglot.why": "{0, plural, other {# }}つのポリグロットが失いました。",
