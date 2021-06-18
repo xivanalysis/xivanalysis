@@ -23,7 +23,7 @@ import Procs from './Procs'
 
 const DEBUG_SHOW_ALL_CYCLES = false && process.env.NODE_ENV !== 'production'
 
-const EXPECTED_FIRE4 = 6
+const MAX_POSSIBLE_FIRE4 = 6
 const NO_UH_EXPECTED_FIRE4 = 4
 const FIRE4_FROM_MANAFONT = 1
 
@@ -90,20 +90,26 @@ interface FirePhaseMetadata {
 class Cycle {
 	private data: Data
 
+	//#region Cycle events
 	// Keep track of spells cast in this cycle by which phase of the cycle they're in
 	private unaspectedEvents: CycleEvent[] = [] // This will only include events during opener or reopener cycles
 	private icePhaseEvents: CycleEvent[] = []
 	private firePhaseEvents: CycleEvent[] = []
 	private manafontPhaseEvents: CycleEvent[] = [] // Keeping track of post-manafont events separately so we can fine-tune some of the analysis logic
 
-	startTime: number
-	endTime?: number
+	// Concatenate the phased events together to produce the full event array for the cycle
+	public get events(): CycleEvent[] {
+		return this.unaspectedEvents.concat(this.icePhaseEvents).concat(this.firePhaseEvents).concat(this.manafontPhaseEvents)
+	}
+	//#endregion
 
-	firePhaseMetadata: FirePhaseMetadata
+	//#region Cycle metadata
+	public startTime: number
+	public endTime?: number
+	public firePhaseMetadata: FirePhaseMetadata
+	public finalOrDowntime: boolean = false
 
-	finalOrDowntime: boolean = false
-
-	_errorCode: CycleErrorCode = CYCLE_ERRORS.NONE
+	private _errorCode: CycleErrorCode = CYCLE_ERRORS.NONE
 	public set errorCode(code) {
 		if (code.priority > this._errorCode.priority) {
 			this._errorCode = code
@@ -112,11 +118,7 @@ class Cycle {
 	public get errorCode(): CycleErrorCode {
 		return this._errorCode
 	}
-
-	// Concatenate the phased events together to produce the full event array for the cycle
-	public get events(): CycleEvent[] {
-		return this.unaspectedEvents.concat(this.icePhaseEvents).concat(this.firePhaseEvents).concat(this.manafontPhaseEvents)
-	}
+	//#endregion
 
 	//#region Fire 4s
 	/**
@@ -167,12 +169,12 @@ class Cycle {
 		if (
 			expectedCount === NO_UH_EXPECTED_FIRE4 &&
 			this.icePhaseEvents.length > 0 &&
-			(this.firePhaseMetadata?.circleOfPowerPct || 0) >= EXTRA_F4_COP_THRESHHOLD
+			this.firePhaseMetadata.circleOfPowerPct >= EXTRA_F4_COP_THRESHHOLD
 		) {
 			expectedCount++
 		}
 
-		return Math.min(expectedCount, EXPECTED_FIRE4) // Make sure we don't go wild and return a larger expected count than is actually possible, in case the above logic misbehaves...
+		return Math.min(expectedCount, MAX_POSSIBLE_FIRE4) // Make sure we don't go wild and return a larger expected count than is actually possible, in case the above logic misbehaves...
 	}
 	public get actualFire4s(): number {
 		return this.events.filter(event => event.action === this.data.actions.FIRE_IV.id).length
