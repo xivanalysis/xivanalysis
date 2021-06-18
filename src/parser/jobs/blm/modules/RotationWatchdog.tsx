@@ -84,6 +84,8 @@ interface FirePhaseMetadata {
 }
 
 class Cycle {
+	private data: Data
+
 	private unaspectedEvents: CycleEvent[] = []
 	private icePhaseEvents: CycleEvent[] = []
 	private firePhaseEvents: CycleEvent[] = []
@@ -240,7 +242,7 @@ class Cycle {
 		return this.errorCode.priority < CYCLE_ERRORS.DIED.priority && this.errorCode.priority > CYCLE_ERRORS.SHORT.priority
 	}
 
-	constructor(start: number, gaugeState: BLMGaugeState) {
+	constructor(start: number, gaugeState: BLMGaugeState, dataRef: Data) {
 		this.startTime = start
 		this.firePhaseMetadata = {
 			startTime: 0,
@@ -248,6 +250,7 @@ class Cycle {
 			circleOfPowerPct: 0,
 			initialGaugeState: {...gaugeState},
 		}
+		this.data = dataRef
 	}
 
 	public overrideErrorCode(code: CycleErrorCode): void {
@@ -260,7 +263,7 @@ class Cycle {
 			this.unaspectedEvents.push(event)
 		} else if (this.firePhaseMetadata.startTime === 0) {
 			this.icePhaseEvents.push(event)
-		} else if (!this.firePhaseEvents.some(event => event.action === ACTIONS.MANAFONT.id)) {
+		} else if (!this.firePhaseEvents.some(event => event.action === this.data.actions.MANAFONT.id)) {
 			this.firePhaseEvents.push(event)
 		} else {
 			this.manafontPhaseEvents.push(event)
@@ -290,7 +293,7 @@ export default class RotationWatchdog extends Analyser {
 		enochian: false,
 	}
 
-	private currentRotation: Cycle = new Cycle(this.parser.pull.timestamp, this.currentGaugeState)
+	private currentRotation: Cycle = new Cycle(this.parser.pull.timestamp, this.currentGaugeState, this.data)
 	private history: Cycle[] = []
 
 	private firstEvent: boolean = true
@@ -521,7 +524,7 @@ export default class RotationWatchdog extends Analyser {
 	private startRecording(event: Events['action']) {
 		this.stopRecording(event)
 		// Pass in whether we've seen the first cycle endpoint to account for pre-pull buff executions (mainly Sharpcast)
-		this.currentRotation = new Cycle(event.timestamp, this.currentGaugeState)
+		this.currentRotation = new Cycle(event.timestamp, this.currentGaugeState, this.data)
 	}
 
 	// End the current cycle, send it off to error processing, and add it to the history list
