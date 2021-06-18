@@ -69,6 +69,39 @@ export class Cooldowns extends Analyser {
 	private currentCast?: Action['id']
 	private groupStates = new Map<CooldownGroup, CooldownGroupState>()
 
+	reduce(action: Action | ActionKey, reduction: number) {
+		const fullAction = typeof action === 'string' ? this.data.actions[action] : action
+
+		const configs = this.getActionConfigs(fullAction)
+		for (const config of configs) {
+			// If this group isn't on CD, no need to attempt to reduce it
+			const {cooldown} = this.getGroupState(config)
+			if (cooldown == null) { continue }
+
+			const newEnd = cooldown.end - reduction
+
+			// If the new end time is in the past (or precisely now), the reduction
+			// behaves like a reset with all the charge logic involved in that.
+			if (newEnd <= this.parser.currentEpochTimestamp) {
+				this.endCooldown(config, CooldownEndReason.REDUCED)
+				continue
+			}
+
+			// Otherwise, we need to adjust the expected end time and reconfigure the hook
+			cooldown.end = newEnd
+			this.removeTimestampHook(cooldown.hook)
+			cooldown.hook = this.addTimestampHook(newEnd, () => {
+				this.endCooldown(config, CooldownEndReason.EXPIRED)
+			})
+
+			const row = this.tempGetTimelineRow(`group:${config.group}`)
+			row.addItem(new SimpleItem({
+				start: this.parser.currentEpochTimestamp - this.parser.pull.timestamp,
+				content: `r ${(cooldown.end - cooldown.start)/1000}`,
+			}))
+		}
+	}
+
 	reset(action: Action | ActionKey) {
 		const fullAction = typeof action === 'string' ? this.data.actions[action] : action
 		this.endActionCooldowns(fullAction, CooldownEndReason.REDUCED)
@@ -175,6 +208,7 @@ export class Cooldowns extends Analyser {
 		// is very wrong (or the game is being dumb). At EOD, the parse is the source
 		// of truth, so we're fudging the current charge state to respect it.
 		if (chargeState.current <= 0) {
+			// todo this should probably do a full gainCharge or even endCooldown here, and make the existing startCooldown warning a throw?
 			this.debug(`Attempting to consume charge of group ${config.group} with no charges remaining, fudging.`)
 			chargeState.current = 1
 		}
@@ -192,7 +226,7 @@ export class Cooldowns extends Analyser {
 			const now = this.parser.currentEpochTimestamp - this.parser.pull.timestamp
 			const row = this.tempGetTimelineRow(`group:${config.group}`)
 			row.addItem(new SimpleItem({
-				content: '-',
+				content: `- ${chargeState.current}`,
 				start: now,
 			}))
 		})
@@ -226,7 +260,7 @@ export class Cooldowns extends Analyser {
 			const now = this.parser.currentEpochTimestamp - this.parser.pull.timestamp
 			const row = this.tempGetTimelineRow(`group:${config.group}`)
 			row.addItem(new SimpleItem({
-				content: '+',
+				content: `+ ${chargeState.current}`,
 				start: now,
 			}))
 		})
