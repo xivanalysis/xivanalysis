@@ -86,10 +86,12 @@ interface FirePhaseMetadata {
 class Cycle {
 	private data: Data
 
-	private unaspectedEvents: CycleEvent[] = []
+	// Keep track of spells cast in this cycle by which phase of the cycle they're in
+	private unaspectedEvents: CycleEvent[] = [] // This will only include events during opener or reopener cycles
 	private icePhaseEvents: CycleEvent[] = []
 	private firePhaseEvents: CycleEvent[] = []
-	private manafontPhaseEvents: CycleEvent[] = []
+	private manafontPhaseEvents: CycleEvent[] = [] // Keeping track of post-manafont events separately so we can fine-tune some of the analysis logic
+
 	startTime: number
 	endTime?: number
 
@@ -107,9 +109,12 @@ class Cycle {
 		return this._errorCode
 	}
 
+	// Concatenate the phased events together to produce the full event array for the cycle
 	public get events(): CycleEvent[] {
 		return this.unaspectedEvents.concat(this.icePhaseEvents).concat(this.firePhaseEvents).concat(this.manafontPhaseEvents)
 	}
+
+	//#region Fire 4s
 	/**
 	 * June 2021 revamp of this function brings back some of the pre-Shadowbringers gauge state complexity for determining expected fire counts for the following reasons:
 	 *   1. While Umbral Soul gives us a downtime action to build and maintain Umbral Hearts/Umbral Ice, it isn't foolproof. E1S's giant midfight cutscene is a forced drop.
@@ -166,31 +171,29 @@ class Cycle {
 		return Math.min(expectedCount, EXPECTED_FIRE4) // Make sure we don't go wild and return a larger expected count than is actually possible, in case the above logic misbehaves...
 	}
 	public get actualFire4s(): number {
-		return this.events.filter(event => event.action === ACTIONS.FIRE_IV.id).length
+		return this.events.filter(event => event.action === this.data.actions.FIRE_IV.id).length
 	}
 	public get missingFire4s(): number | undefined {
 		if (!this.expectedFire4s) { return }
 		return Math.max(this.expectedFire4s - this.actualFire4s, 0)
 	}
+	//#endregion
 
-	public get hasManafont(): boolean {
-		return this.events.some(event => event.action === ACTIONS.MANAFONT.id)
-	}
+	//#region Despairs
 	public get expectedDespairs(): number {
 		return this.hasManafont ? 2 : 1
 	}
 	public get actualDespairs(): number {
-		return this.events.filter(event => event.action === ACTIONS.DESPAIR.id).length
+		return this.events.filter(event => event.action === this.data.actions.DESPAIR.id).length
 	}
 	public get missingDespairs(): number {
 		return Math.max(this.expectedDespairs - this.actualDespairs, 0)
 	}
+	//#endregion
 
+	//#region Thunder 3s
 	private hardT3sInPhase(events: CycleEvent[]): number {
-		return events.filter(event => event.action === ACTIONS.THUNDER_III.id && !event.isProc).length
-	}
-	public get extraF1s(): number {
-		return Math.max(this.events.filter(event => event.action === ACTIONS.FIRE_I.id).length - 1, 0)
+		return events.filter(event => event.action === this.data.actions.THUNDER_III.id && !event.isProc).length
 	}
 	public get hardT3sBeforeManafont(): number {
 		return this.hardT3sInPhase(this.firePhaseEvents)
@@ -209,34 +212,49 @@ class Cycle {
 
 		// Determine how much MP we need to cast all of our expected Fire spells
 		const minimumMPForExpectedFires =
-			((this.expectedFire4sBeforeDespair // Count how many F4s we should have before the Despair
-				+ (this.events.some(event => event.action === ACTIONS.FIRE_I.id) ? 1 : 0)) // Feelycraft: If they included a single F1 we'll allow it. If they skipped it, that's fine too. If they have more than one, it's bad so only allow one for the MP requirement calculation.
+			(this.expectedFire4sBeforeDespair * this.data.actions.FIRE_IV.mpCost + // MP for the expected Fire 4s
+			(this.events.some(event => event.action === this.data.actions.FIRE_I.id) ? 1 : 0) * this.data.actions.FIRE_I.mpCost) // Feelycraft: If they included a single F1 we'll allow it. If they skipped it, that's fine too. If they have more than one, it's bad so only allow one for the MP requirement calculation.
 			* 2 // Astral Fire makes F1 and F4 cost twice as much
-			- this.firePhaseMetadata.initialGaugeState.umbralHearts // Refund the additional cost for each Umbral Heart carried into the Astral Fire phase
-			+ 1) // Despair requires a minimum MP that is the same as the base MP cost as F1 and F4 so just include one in the count
-			* REQUIRED_MP_FOR_FIRE_SPELLS // Multiply base MP cost for F1/F4/Despair by the number of them we should have
+			- this.firePhaseMetadata.initialGaugeState.umbralHearts * this.data.actions.FIRE_IV.mpCost // Refund the additional cost for each Umbral Heart carried into the Astral Fire phase
+			+ this.data.actions.FIRE_IV.mpCost // Add in the required MP cost for Despair, which happens to be the same as an F4
 
 		// Figure out how many T3s we could hardcast with the MP not needed for Fires (if any)
-		const maxHardcastT3s = Math.floor(Math.max(this.firePhaseMetadata.initialMP - minimumMPForExpectedFires, 0) / REQUIRED_MP_FOR_T3_HARDCAST)
+		const maxHardcastT3s = Math.floor(Math.max(this.firePhaseMetadata.initialMP - minimumMPForExpectedFires, 0) / this.data.actions.THUNDER_III.mpCost)
 
 		// Refund the T3s that dont lose us a Fire 4 from the pre-manafont hardcast count, as well as one from the post-manafont count
 		return Math.max(this.hardT3sBeforeManafont - maxHardcastT3s, 0) + Math.max(this.hardT3sAfterManafont - 1, 0)
 	}
+	//#endregion
 
-	public get manafontBeforeDespair(): boolean {
-		return this.hasManafont && !this.firePhaseEvents.some(event => event.action === ACTIONS.DESPAIR.id)
+	//#region Manafont
+	public get hasManafont(): boolean {
+		return this.events.some(event => event.action === this.data.actions.MANAFONT.id)
 	}
+	public get manafontBeforeDespair(): boolean {
+		return this.hasManafont && !this.firePhaseEvents.some(event => event.action === this.data.actions.DESPAIR.id)
+	}
+	//#endregion
 
+	//#region Other Fire checks
+	public get extraF1s(): number {
+		return Math.max(this.events.filter(event => event.action === this.data.actions.FIRE_I.id).length - 1, 0)
+	}
 	public get isMissingFire(): boolean {
 		return !this.events.some(event => FIRE_SPELLS.includes(event.action))
 	}
+	//#endregion
 
+	//#region Final cycle or downtime cycle checks
 	public get shouldSkipB4(): boolean {
-		return this.finalOrDowntime && this.firePhaseMetadata.initialGaugeState.umbralHearts > 0 && this.missingFire4s === 2
+		return this.finalOrDowntime // B4 should be skipped if this cycle ended in downtime or the end of the fight,
+			&& this.icePhaseEvents.some(event => event.action === this.data.actions.BLIZZARD_IV.id) // AND this cycle had a B4 cast
+			&& this.actualFire4s <= NO_UH_EXPECTED_FIRE4 // AND the Umbral Hearts gained from Blizzard 4 weren't needed
 	}
+	// Hardcasted T3's initial potency isn't worth it if the DoT is going to go to waste before the boss jumps or dies
 	public get shouldSkipT3(): boolean {
 		return this.finalOrDowntime && this.hardT3sInFireCount > 0
 	}
+	//#endregion
 
 	public get includeInSuggestions(): boolean {
 		return this.errorCode.priority < CYCLE_ERRORS.DIED.priority && this.errorCode.priority > CYCLE_ERRORS.SHORT.priority
