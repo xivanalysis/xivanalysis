@@ -1,0 +1,101 @@
+@value block from "../shared.module.css";
+@value themeBackdrop, themeBorder, successBackground, successText, errorBackground, errorText, warningBackground, warningText from 'theme.module.css';
+
+.table {
+	composes: block;
+	border-spacing: 0;
+	border: 1px solid themeBorder;
+	border-radius: 5px;
+	width: 100%;
+}
+.collapsingTable {
+	width: auto;
+}
+.collapsingCell {
+	width: 1px;
+	white-space: nowrap;
+}
+.not-compact th, .not-compact td {
+	padding: 10px;
+}
+.compact th {
+	padding: .7em;
+}
+.compact td {
+	padding: .5em .7em;
+}
+.very-compact th {
+	padding: .6em;
+}
+.very-compact td {
+	padding: .4em .6em;
+}
+
+.table tr:first-child th:first-child {
+	border-top-left-radius: 5px;
+}
+.table tr:first-child th:last-child {
+	border-top-right-radius: 5px;
+}
+.table tr:last-child td:first-child {
+	border-bottom-left-radius: 5px;
+}
+.table tr:last-child td:last-child {
+	border-bottom-right-radius: 5px;
+}
+
+.table thead {
+	background-color: themeBackdrop;
+}
+
+.no-border th, .no-border td {
+	border: 0;
+	border-bottom: 1px solid themeBorder;
+}
+.no-border tr:last-child td {
+	border-bottom: 0;
+}
+.no-border tr:only-child td {
+	border-bottom: 1px solid themeBorder;
+}
+
+.celled th, .celled td {
+	border-right: 1px solid themeBorder;
+	border-bottom: 1px solid themeBorder;
+}
+.celled td:last-child {
+	border-right: 0;
+}
+.celled th:last-child {
+	border-right: 0;
+}
+.celled tr:last-child td {
+	border-bottom: 0;
+}
+
+.positive {
+	background-color: successBackground;
+	color: successText;
+}
+
+.negative {
+	background-color: errorBackground;
+	color: errorText;
+}
+
+.warning {
+	background-color: warningBackground;
+	color: warningText;
+}
+
+.left {
+	text-align: left;
+}
+
+.center {
+	text-align: center;
+}
+
+.right {
+	text-align: right;
+}
