@@ -386,6 +386,7 @@
   "rdm.about.description": "<0>このアナライザーはあなたの数字を<1>この色</1>から<2>この色</2>へ変えるお手伝いを目的としたものです。</0><3>赤魔道士についてもっと知りたい時は<4>The Balance</4>を読んでから、<5>#rdm_questions</5>チャンネルでお話しましょう。</3>",
   "rdm.about.description.warning": "開幕、<0/>、<1/>、と<2/>の上位使用方法やルールのサポートはまだ対応していません。 ",
   "rdm.combos.suggestions.derpcombos.content": "コンボアクションは必ずルートの順番に従って使ってください。",
+  "rdm.combos.suggestions.notenoughmanacombos.why": "{notEnoughManaCount, plural, other {# 十分なマナが足りずコンボをしたため、エンチャントされているコンボは実行できなくなりました}}",
   "rdm.dualcast.suggestions.wasted.content": "<0/>が付与されたときは、<1/>や<2/>や<3/>のみをキャストしましょう",
   "rdm.dualcast.title": "連続魔",
   "rdm.gauge.suggestions.black-mana-lost-why": "過剰なホワイトマナを貯め込んだによりブラックマナが{0}ロストしました。",
