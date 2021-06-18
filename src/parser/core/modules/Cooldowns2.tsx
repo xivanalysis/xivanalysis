@@ -69,6 +69,13 @@ export class Cooldowns extends Analyser {
 	private currentCast?: Action['id']
 	private groupStates = new Map<CooldownGroup, CooldownGroupState>()
 
+	/**
+	 * Reduduce the remaining cooldown of groups associated with the specified
+	 * action by a set duration.
+	 *
+	 * @param action The action whose groups should be reduced.
+	 * @param reduction Duration in milliseconds that group cooldowns should be reduced by.
+	 */
 	reduce(action: Action | ActionKey, reduction: number) {
 		const fullAction = typeof action === 'string' ? this.data.actions[action] : action
 
@@ -102,6 +109,11 @@ export class Cooldowns extends Analyser {
 		}
 	}
 
+	/**
+	 * Reset the cooldown on any active groups assocuited with the specified action.
+	 *
+	 * @param action The action whose groups should be reset.
+	 */
 	reset(action: Action | ActionKey) {
 		const fullAction = typeof action === 'string' ? this.data.actions[action] : action
 		this.endActionCooldowns(fullAction, CooldownEndReason.REDUCED)
