@@ -10,6 +10,7 @@ declare namespace ThemeModuleCssNamespace {
     errorLight: string;
     errorText: string;
     gutter: string;
+    headerMargin: string;
     highlight: string;
     infoBackground: string;
     infoDark: string;

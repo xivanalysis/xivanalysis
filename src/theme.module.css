@@ -1,6 +1,7 @@
 /* Sizing */
 @value gutter: 20px;
 @value highlight: 4px;
+@value headerMargin: 21px 0 14px;
 
 /* Breakpoints */
 @value sm: (min-width: 576px);
