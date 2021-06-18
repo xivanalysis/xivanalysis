@@ -71,14 +71,14 @@ const CYCLE_ERRORS: {[key: string]: CycleErrorCode } = {
 	DIED: {priority: 101, message: <Trans id="blm.rotation-watchdog.error-messages.died"><ActionLink showName={false} {...ACTIONS.RAISE} /> Died</Trans>},
 }
 
-interface EventActionProcable extends FieldsTargeted {
+interface CycleEvent extends FieldsTargeted {
 	action: number,
 	isProc?: boolean,
 	gaugeContext: BLMGaugeState
 }
 
 class Cycle {
-	events: EventActionProcable[] = []
+	events: CycleEvent[] = []
 	startTime: number
 	endTime?: number
 
