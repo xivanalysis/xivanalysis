@@ -48,18 +48,6 @@ export class Thinair extends Analyser {
 	private onCast(ev: Events['action']) {
 		const actionid = ev.action
 
-		if (actionid === ACTIONS.THIN_AIR.id) {
-			// Include the action of casting thin air itself in the window just
-			// as a cosmetic preference to see it included in the gui
-			// We don't explicitly start the thinair window here since it only
-			// shapshots on status application, which is covered with the
-			// status filter. In theory this doesn't matter due to 600ms
-			// animation lock which should be plenty for status to apply, but
-			// who knows what horrors lurk beneath SE's code
-			this.currentRecord.casts.push(ev.action)
-			return
-		}
-
 		// Don't track autos
 		const action = getDataBy(ACTIONS, 'id', actionid)
 		if (!this.active || !action || action.autoAttack) {
@@ -87,6 +75,10 @@ export class Thinair extends Analyser {
 			casts: [],
 			mpsaved: 0,
 		}
+
+		// Add thin air action as the 1st element for cosmetic reasons
+		// and keeping in style with astro's lightspeed module
+		this.currentRecord.casts.push(ACTIONS.THIN_AIR.id)
 	}
 
 	private stopAndSave(timestamp: number) {
@@ -142,7 +134,7 @@ export class Thinair extends Analyser {
 
 		return <Fragment>
 			<p><Trans id="whm.thinair.messages.explanation">
-				The main use of <ActionLink {...ACTIONS.THIN_AIR} /> should be to save MP on high-MP cost phases of the fight. Don't be afraid to hold it and lose a use over the fight as long as it covers MP-heavy portions of the fight such as usages of <ActionLink {...ACTIONS.MEDICA_II}/>, <ActionLink {...ACTIONS.CURE_III}/> and <ActionLink {...ACTIONS.RAISE} />
+				The main use of <ActionLink {...ACTIONS.THIN_AIR} /> should be to save MP on high-MP cost phases of the fight. Don't be afraid to hold it and lose a use over the fight as long as it covers MP-heavy portions of the fight such as usages of <ActionLink {...ACTIONS.MEDICA_II}/>, <ActionLink {...ACTIONS.CURE_III}/>, and <ActionLink {...ACTIONS.RAISE} />
 			</Trans></p>
 			{thinairDisplay}
 		</Fragment>
