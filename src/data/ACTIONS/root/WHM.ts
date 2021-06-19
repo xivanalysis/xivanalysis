@@ -184,7 +184,7 @@ export const WHM = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 2000,
-		mpCost: 700,
+		mpCost: 1000,
 	},
 
 	CURE_III: {

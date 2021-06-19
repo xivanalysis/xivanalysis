@@ -11,14 +11,14 @@ import {filter} from 'parser/core/filter'
 import React, {Fragment, ReactNode} from 'react'
 import {Accordion} from 'semantic-ui-react'
 
-type ThinAirRecord = {
+interface ThinAirRecord {
 	start: number,
 	end: number,
 	casts: number[],
 	mpsaved: number,
 }
 
-export default class Thinair extends Analyser {
+export class Thinair extends Analyser {
 	static override handle = 'thinair'
 	static override title = t('whm.thinair.title')`Thin Air`
 
@@ -49,7 +49,15 @@ export default class Thinair extends Analyser {
 		const actionid = ev.action
 
 		if (actionid === ACTIONS.THIN_AIR.id) {
-			this.startThinAir(ev.timestamp)
+			// Include the action of casting thin air itself in the window just
+			// as a cosmetic preference to see it included in the gui
+			// We don't explicitly start the thinair window here since it only
+			// shapshots on status application, which is covered with the
+			// status filter. In theory this doesn't matter due to 600ms
+			// animation lock which should be plenty for status to apply, but
+			// who knows what horrors lurk beneath SE's code
+			this.currentRecord.casts.push(ev.action)
+			return
 		}
 
 		// Don't track autos
@@ -58,9 +66,8 @@ export default class Thinair extends Analyser {
 			return
 		}
 
-		if (action.onGcd) {
-			const mpcost = action.mpCost === undefined ? 0 : action.mpCost
-			this.currentRecord.mpsaved += mpcost
+		if (action.mpCost) {
+			this.currentRecord.mpsaved += action.mpCost
 		}
 
 		// Save the event
