@@ -722,5 +722,6 @@
   "whm.ogcds.suggestions.whyHeld": "{0} のクールダウンがあり、使用可能な{maxUses} 回中{missed} 回で使用しませんでした。",
   "whm.ogcds.title": "GCD オフ",
   "whm.overheal.assize.name": "アサイズ",
-  "whm.overheal.hot.name": "HoT"
+  "whm.overheal.hot.name": "HoT",
+  "whm.thinair.rotation.gcd": "{numGcds, plural, one {GCD使用数: #} other {GCD使用数: #}}"
 }
