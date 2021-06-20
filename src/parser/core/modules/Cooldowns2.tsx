@@ -13,6 +13,10 @@ const DEFAULT_CHARGES = 1
 const GCD_CHARGES = 1
 const GCD_COOLDOWN_GROUP = 58
 
+// Game data is fudgy at the best of times - this constant represents the maximum
+// amount of "expected" fudge time on cooldown overlapping that is worthless to report
+const OVERLAP_NOISE_THRESHOLD = 50
+
 /** Representative key of a cooldown group. */
 type CooldownGroup = Exclude<Action['cooldownGroup'], undefined>
 
@@ -214,15 +218,33 @@ export class Cooldowns extends Analyser {
 	}
 
 	private consumeCharge(config: CooldownGroupConfig) {
-		const chargeState = this.getGroupState(config).charges
+		const groupState = this.getGroupState(config)
+		const chargeState = groupState.charges
 
-		// If we're trying to consume a charge at 0 charges, something in the state
-		// is very wrong (or the game is being dumb). At EOD, the parse is the source
-		// of truth, so we're fudging the current charge state to respect it.
+		// Check if we actually have a charge to consume. It's technically impossible for
+		// this to trip, but the game (and log data) is fuzzy at the best of times, so it
+		// actually occurs quite frequently. Blame Square Enix™️. Fudging by ending current
+		// cooldown as an overlap to respect the log data and gain a charge to spend.
+		// TODO: Even with speed adjustments, CDGs like the GCD (58) have some seriously
+		//       fuzzy timings in logs and cause considerable overlapping. Look into it.
 		if (chargeState.current <= 0) {
-			// todo this should probably do a full gainCharge or even endCooldown here, and make the existing startCooldown warning a throw?
-			this.debug(`Attempting to consume charge of group ${config.group} with no charges remaining, fudging.`)
-			chargeState.current = 1
+			const now = this.parser.currentEpochTimestamp
+
+			// To be in the state of 0 charges, a cooldown _should_ be active. If it
+			// isn't, something is _immensely_ wrong.
+			const cooldownState = groupState.cooldown
+			if (cooldownState == null) {
+				throw new Error(`Attempted to consume charge of group ${config.group} at ${this.parser.formatEpochTimestamp(now)} with no charges remaining, and no active cooldown to fudge.`)
+			}
+
+			const delta = cooldownState.end - now
+			if (delta > OVERLAP_NOISE_THRESHOLD) {
+				this.debug(({log}) => {
+					log(`Use of ${config.action.name} at ${this.parser.formatEpochTimestamp(now)} consumes a charge of group ${config.group} with ${chargeState.current} charges. Expected charge gain at ${this.parser.formatEpochTimestamp(cooldownState.end)} (delta ${delta}), fudging.`)
+				})
+			}
+
+			this.endCooldown(config, CooldownEndReason.OVERLAPPED)
 		}
 
 		// If the group was at maximum charges, this usage will trip it's cooldown
@@ -281,18 +303,11 @@ export class Cooldowns extends Analyser {
 	private startCooldown(config: CooldownGroupConfig) {
 		const groupState = this.getGroupState(config)
 
-		// Check if this group is already on cooldown - this is technically impossible,
-		// but Square Enix™️, so we fudge it by ending the overlapping groups with a warning.
-		// TODO: Even with speed adjustments, CDGs like the GCD (58) have some seriously
-		//       fuzzy timings in logs and cause considerable overlapping anyway. Look into it.
+		// Groups only track one cooldown at a time. Any overlapping should be
+		// resolved by charge consumption logic.
 		const cooldownState = groupState.cooldown
 		if (cooldownState != null) {
-			this.debug(({log}) => {
-				const now = this.parser.currentEpochTimestamp
-				log(`Use of ${config.action.name} at ${this.parser.formatEpochTimestamp(now)} overlaps currently active group ${config.group} with expected expiry ${this.parser.formatEpochTimestamp(cooldownState.end)} (delta ${now - cooldownState.end})`)
-			})
-
-			this.endCooldown(config, CooldownEndReason.OVERLAPPED)
+			throw new Error(`Cannot start cooldown for already-active group ${config.group} at ${this.parser.formatEpochTimestamp(this.parser.currentEpochTimestamp)}.`)
 		}
 
 		// Calculate an adjusted duration based on the triggering action
