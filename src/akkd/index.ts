@@ -1,4 +1,5 @@
 export * from './Container'
+export * from './Button'
 export * from './List'
 export * from './Message'
 export * from './Segment'

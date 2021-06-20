@@ -1,0 +1,31 @@
+@value themeText, themeBorder from 'theme.module.css';
+
+.button {
+  background-color: themeBorder;
+  color: themeText;
+  text-align: center;
+  min-height: 1em;
+  line-height: 1em;
+  margin: 0 .25em 0 0;
+  padding: .75em 1.5em;
+  font-weight: 700;
+  border: 0;
+  outline: 0;
+  border-radius: .25rem;
+  cursor: pointer;
+  display: inline-block;
+}
+
+.pill {
+  border-radius: 10em;
+  padding: .6em 1em;
+  font-size: 13px;
+}
+
+.icon {
+  padding: .6em;
+}
+
+.nowrap {
+  white-space: nowrap;
+}
