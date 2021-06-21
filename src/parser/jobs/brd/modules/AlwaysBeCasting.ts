@@ -1,26 +1,28 @@
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
-import {BuffEvent, CastEvent} from 'fflogs'
-import CoreAlwaysBeCasting from 'parser/core/modules/AlwaysBeCasting'
+import {Event, Events} from 'event'
+import {filter, oneOf} from 'parser/core/filter'
+import {AlwaysBeCasting as CoreAlwaysBeCasting} from 'parser/core/modules/AlwaysBeCasting'
 
-// eslint-disable-next-line @typescript-eslint/no-magic-numbers
-const SONG_DURATION_MS = 30 * 1000
+const SONG_DURATION_MS = 30000
 
 interface ArmyWindow {
 	start: number,
 	end: number
 }
 
-export default class AlwaysBeCasting extends CoreAlwaysBeCasting {
+export class AlwaysBeCasting extends CoreAlwaysBeCasting {
 	armyHistory: ArmyWindow[] = []
 	currentMuse: ArmyWindow | undefined
 	currentPaeon: ArmyWindow | undefined
 
-	protected override init() {
-		super.init()
-		this.addEventHook('applybuff', {by: 'player', abilityId: [STATUSES.ARMYS_MUSE.id]}, this.onMuse)
-		this.addEventHook('removebuff', {by: 'player', abilityId: [STATUSES.ARMYS_MUSE.id]}, this.onRemoveMuse)
-		this.addEventHook('cast', {by: 'player', abilityId: [ACTIONS.THE_WANDERERS_MINUET.id, ACTIONS.MAGES_BALLAD.id, ACTIONS.ARMYS_PAEON.id]}, this.onSong)
+	override initialise() {
+		super.initialise()
+
+		const playerFilter = filter<Event>().source(this.parser.actor.id)
+		this.addEventHook(playerFilter.type('statusApply').status(STATUSES.ARMYS_MUSE.id), this.onApplyMuse)
+		this.addEventHook(playerFilter.type('statusRemove').status(STATUSES.ARMYS_MUSE.id), this.onRemoveMuse)
+		this.addEventHook(playerFilter.type('action').action(oneOf([ACTIONS.THE_WANDERERS_MINUET.id, ACTIONS.MAGES_BALLAD.id, ACTIONS.ARMYS_PAEON.id])), this.onSong)
 	}
 
 	private endMuse() {
@@ -37,62 +39,47 @@ export default class AlwaysBeCasting extends CoreAlwaysBeCasting {
 		}
 	}
 
-	private onMuse(event: BuffEvent) {
+	private onApplyMuse(event: Events['statusApply']) {
 		this.currentMuse = {
 			start: event.timestamp,
-			end: Math.min(this.parser.fight.end_time, event.timestamp + STATUSES.ARMYS_MUSE.duration),
+			end: Math.min(this.parser.pull.timestamp + this.parser.pull.duration, event.timestamp + STATUSES.ARMYS_MUSE.duration),
 		}
 	}
 
-	private onRemoveMuse(event: BuffEvent) {
+	private onRemoveMuse(event: Events['statusRemove']) {
 		if (this.currentMuse) {
 			this.currentMuse.end = event.timestamp
 			this.endMuse()
 		}
 	}
 
-	private onSong(event: CastEvent) {
-		if (event.ability.guid === ACTIONS.ARMYS_PAEON.id) {
+	private onSong(event: Events['action']) {
+		if (event.action === ACTIONS.ARMYS_PAEON.id) {
 			this.currentPaeon = {
 				start: event.timestamp,
 				end: Math.min(this.parser.fight.end_time, event.timestamp + SONG_DURATION_MS),
 			}
+			this.addTimestampHook(event.timestamp + SONG_DURATION_MS, () => this.endPaeon)
 		} else if (this.currentPaeon) {
 			this.currentPaeon.end = event.timestamp
 			this.endPaeon()
 		}
 	}
 
-	private isArmyBuffActive(timestamp: number): boolean {
-		return this.armyHistory.some(army => timestamp > army.start && timestamp < army.end)
+	override considerCast(_event: Events['action']): boolean {
+		return this.currentPaeon != null || this.currentMuse != null
 	}
 
-	protected override getUptimePercent(): number {
+	override getUptimePercent(): number {
 		const fightDuration = this.parser.currentDuration - this.downtime.getDowntime()
 		const armyDuration = this.armyHistory.reduce((acc, army) => {
 			const downtime = this.downtime.getDowntime(
-				this.parser.fflogsToEpoch(army.start),
-				this.parser.fflogsToEpoch(army.end),
+				army.start,
+				army.end,
 			)
 			return acc + army.end - army.start - downtime
 		}, 0)
 
-		const uptime = this.gcd.gcds.reduce((acc, gcd) => {
-			const duration = this.gcd._getGcdLength(gcd)
-			const downtime = this.downtime.getDowntime(
-				this.parser.fflogsToEpoch(gcd.timestamp),
-				this.parser.fflogsToEpoch(Math.min(
-					gcd.timestamp + duration,
-					this.parser.eventTimeOffset + this.parser.pull.duration
-				))
-			)
-			// Ignore GCDs while muse / paeon were up
-			if (this.isArmyBuffActive(gcd.timestamp)) {
-				return acc
-			}
-			return acc + duration - downtime
-		}, 0)
-
-		return uptime / (fightDuration - armyDuration) * 100
+		return this.gcdUptime / (fightDuration - armyDuration) * 100
 	}
 }

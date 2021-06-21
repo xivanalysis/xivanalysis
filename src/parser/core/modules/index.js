@@ -1,7 +1,7 @@
 import About from './About'
 import {Actors} from './Actors'
 import {AdditionalEvents, AdditionalEventQueries} from './AdditionalEvents'
-import AlwaysBeCasting from './AlwaysBeCasting'
+import {AlwaysBeCasting} from './AlwaysBeCasting'
 import BrokenLog from './BrokenLog'
 import CastTime from './CastTime'
 import ChangeLog from './ChangeLog'

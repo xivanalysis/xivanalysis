@@ -1,29 +1,62 @@
 import {Trans} from '@lingui/react'
-import Module, {dependency} from 'parser/core/Module'
+import {Event, Events} from 'event'
+import {Analyser} from 'parser/core/Analyser'
+import {filter} from 'parser/core/filter'
+import {dependency} from 'parser/core/Module'
+import CastTime from 'parser/core/modules/CastTime'
 import Checklist, {Requirement, Rule} from 'parser/core/modules/Checklist'
+import {Data} from 'parser/core/modules/Data'
 import Downtime from 'parser/core/modules/Downtime'
-import GlobalCooldown from 'parser/core/modules/GlobalCooldown'
 import React from 'react'
 
-export default class AlwaysBeCasting extends Module {
+export class AlwaysBeCasting extends Analyser {
 	static override handle = 'abc'
 
 	@dependency private checklist!: Checklist
 	@dependency protected downtime!: Downtime
-	@dependency protected gcd!: GlobalCooldown
+	@dependency private castTime!: CastTime
+	@dependency private data!: Data
 
-	protected override init() {
+	protected gcdUptime: number = 0
+
+	override initialise() {
+		this.addEventHook(filter<Event>()
+			.source(this.parser.actor.id)
+			.type('action'), this.onCast)
 		this.addEventHook('complete', this.onComplete)
+	}
+
+	private onCast(event: Events['action']) {
+		if (!this.considerCast(event)) {
+			return
+		}
+
+		const action = this.data.getAction(event.action)
+
+		if (action == null || action.onGcd == null || !action.onGcd) {
+			return
+		}
+
+		const castTime = this.castTime.forEvent(event) ?? 0
+		const recastTime = this.castTime.recastForEvent(event) ?? 0
+		this.gcdUptime += Math.max(castTime, recastTime)
+	}
+
+	/**
+	 * Implementing modules MAY override this to return false and exclude certain events from GCD uptime calculations
+	 * @param event Action being considered for GCD uptime
+	 */
+	protected considerCast(_event: Events['action']) {
+		return true
 	}
 
 	protected getUptimePercent(): number {
 		const fightDuration = this.parser.currentDuration - this.downtime.getDowntime()
-		return this.gcd.getUptime() / fightDuration * 100
+		return this.gcdUptime / fightDuration * 100
 	}
 
-	// Just using this for the suggestion for now
 	protected onComplete() {
-		if (!this.gcd.gcds.length) {
+		if (this.gcdUptime === 0) {
 			return
 		}
 
