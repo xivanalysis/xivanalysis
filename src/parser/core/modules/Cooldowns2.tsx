@@ -75,6 +75,27 @@ export class Cooldowns extends Analyser {
 	private groupStates = new Map<CooldownGroup, CooldownGroupState>()
 
 	/**
+	 * Get the remaining time on cooldown of the specified action, in milliseconds.
+	 *
+	 * @param action The action whose cooldown should be retrieved.
+	 */
+	remaining(action: Action | ActionKey) {
+		// TODO: maybe data needs a .resolveAction or something
+		const fullAction = typeof action === 'string' ? this.data.actions[action] : action
+		const configs = this.getActionConfigs(fullAction)
+
+		let remaining = 0
+		for (const config of configs) {
+			const {cooldown} = this.getGroupState(config)
+			if (cooldown == null) { continue }
+
+			remaining = Math.max(remaining, cooldown.end - this.parser.currentEpochTimestamp)
+		}
+
+		return remaining
+	}
+
+	/**
 	 * Reduduce the remaining cooldown of groups associated with the specified
 	 * action by a set duration.
 	 *
