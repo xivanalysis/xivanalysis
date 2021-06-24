@@ -70,6 +70,7 @@ export class Cooldowns extends Analyser {
 	@dependency private speedAdjustments!: SpeedAdjustments
 	@dependency private timeline!: Timeline
 
+	private actionConfigCache = new Map<Action, CooldownGroupConfig[]>()
 	private currentCast?: Action['id']
 	private groupStates = new Map<CooldownGroup, CooldownGroupState>()
 
@@ -393,7 +394,12 @@ export class Cooldowns extends Analyser {
 	private getActionConfigs(action: Action): CooldownGroupConfig[] {
 		// TODO: Write automated CDG extraction from the data files, current data
 		//       is pretty dumb about this stuff.
-		const groups: CooldownGroupConfig[] = []
+		let groups = this.actionConfigCache.get(action)
+		if (groups != null) {
+			return groups
+		}
+		groups = []
+		this.actionConfigCache.set(action, groups)
 
 		// If the action has no cooldown at all (technically impossible), we can't
 		// track cooldowns for it.
