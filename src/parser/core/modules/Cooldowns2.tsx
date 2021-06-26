@@ -61,13 +61,13 @@ enum CooldownEndReason {
 	OVERLAPPED,
 }
 
-/** Options for point-in-time CDG data lookups */
-export interface LookupOptions {
+/** Options for selection of groups that should be read/modified by a method. */
+export interface SelectionOptions {
 	/** Retrieve data for only the primary group of an action. Default `true`. */
 	primary: boolean
 }
 
-const DEFAULT_LOOKUP_OPTIONS: LookupOptions = {
+const DEFAULT_SELECTION_OPTIONS: SelectionOptions = {
 	primary: true,
 }
 
@@ -89,13 +89,13 @@ export class Cooldowns extends Analyser {
 	 * Get the remaining time on cooldown of the specified action, in milliseconds.
 	 *
 	 * @param action The action whose cooldown should be retrieved.
-	 * @param options Additional options to modify the result.
+	 * @param options Options to select the groups to read.
 	 */
-	remaining(action: Action | ActionKey, options?: Partial<LookupOptions>) {
-		const opts: LookupOptions = {...DEFAULT_LOOKUP_OPTIONS, ...options}
-
+	remaining(action: Action | ActionKey, options?: Partial<SelectionOptions>) {
 		// TODO: maybe data needs a .resolveAction or something
 		const fullAction = typeof action === 'string' ? this.data.actions[action] : action
+		const opts: SelectionOptions = {...DEFAULT_SELECTION_OPTIONS, ...options}
+
 		const configs = this.getActionConfigs(fullAction)
 
 		// TODO: Make a loop fn that handles options?
@@ -119,11 +119,14 @@ export class Cooldowns extends Analyser {
 	 * @param action The action whose groups should be reduced.
 	 * @param reduction Duration in milliseconds that group cooldowns should be reduced by.
 	 */
-	reduce(action: Action | ActionKey, reduction: number) {
+	reduce(action: Action | ActionKey, reduction: number, options?: Partial<SelectionOptions>) {
 		const fullAction = typeof action === 'string' ? this.data.actions[action] : action
+		const opts: SelectionOptions = {...DEFAULT_SELECTION_OPTIONS, ...options}
 
 		const configs = this.getActionConfigs(fullAction)
 		for (const config of configs) {
+			if (opts.primary && !config.primary) { continue }
+
 			// If this group isn't on CD, no need to attempt to reduce it
 			const {cooldown} = this.getGroupState(config)
 			if (cooldown == null) { continue }
@@ -156,10 +159,18 @@ export class Cooldowns extends Analyser {
 	 * Reset the cooldown on any active groups assocuited with the specified action.
 	 *
 	 * @param action The action whose groups should be reset.
+	 * @param options Options to select the groups to modify.
 	 */
-	reset(action: Action | ActionKey) {
+	reset(action: Action | ActionKey, options?: Partial<SelectionOptions>) {
 		const fullAction = typeof action === 'string' ? this.data.actions[action] : action
-		this.endActionCooldowns(fullAction, CooldownEndReason.REDUCED)
+		const opts: SelectionOptions = {...DEFAULT_SELECTION_OPTIONS, ...options}
+
+		for (const config of this.getActionConfigs(fullAction)) {
+			if (opts.primary && !config.primary) { continue }
+			const state = this.getGroupState(config)
+			if (state.cooldown == null) { continue }
+			this.endCooldown(config, CooldownEndReason.REDUCED)
+		}
 	}
 
 	override initialise() {
@@ -212,7 +223,11 @@ export class Cooldowns extends Analyser {
 		// NOTE: This assumes that interrupting casts refunds charges. Given that,
 		//       at current, there are no multi-charge or non-gcd interruptible
 		//       skills, this is a safe assumption. Re-evaluate if the above changes.
-		this.endActionCooldowns(action, CooldownEndReason.INTERRUPTED)
+		for (const config of this.getActionConfigs(action)) {
+			const state = this.getGroupState(config)
+			if (state.cooldown == null) { continue }
+			this.endCooldown(config, CooldownEndReason.INTERRUPTED)
+		}
 	}
 
 	private onAction(event: Events['action']) {
@@ -368,15 +383,6 @@ export class Cooldowns extends Analyser {
 			hook: this.addTimestampHook(end, () => {
 				this.endCooldown(config, CooldownEndReason.EXPIRED)
 			}),
-		}
-	}
-
-	private endActionCooldowns(action: Action, reason: CooldownEndReason) {
-		// Find any active cooldowns for the action and end them
-		for (const config of this.getActionConfigs(action)) {
-			const state = this.getGroupState(config)
-			if (state.cooldown == null) { continue }
-			this.endCooldown(config, reason)
 		}
 	}
 
