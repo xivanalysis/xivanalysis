@@ -23,6 +23,7 @@ type CooldownGroup = Exclude<Action['cooldownGroup'], undefined>
 /** Configuration for a single cooldown group on an action. */
 interface CooldownGroupConfig {
 	action: Action
+	primary: boolean
 	group: CooldownGroup
 	duration: number
 	maximumCharges: number
@@ -60,6 +61,16 @@ enum CooldownEndReason {
 	OVERLAPPED,
 }
 
+/** Options for point-in-time CDG data lookups */
+export interface LookupOptions {
+	/** Retrieve data for only the primary group of an action. Default `true`. */
+	primary: boolean
+}
+
+const DEFAULT_LOOKUP_OPTIONS: LookupOptions = {
+	primary: true,
+}
+
 export class Cooldowns extends Analyser {
 	static override handle = 'cooldowns2'
 	static override debug = false
@@ -78,14 +89,20 @@ export class Cooldowns extends Analyser {
 	 * Get the remaining time on cooldown of the specified action, in milliseconds.
 	 *
 	 * @param action The action whose cooldown should be retrieved.
+	 * @param options Additional options to modify the result.
 	 */
-	remaining(action: Action | ActionKey) {
+	remaining(action: Action | ActionKey, options?: Partial<LookupOptions>) {
+		const opts: LookupOptions = {...DEFAULT_LOOKUP_OPTIONS, ...options}
+
 		// TODO: maybe data needs a .resolveAction or something
 		const fullAction = typeof action === 'string' ? this.data.actions[action] : action
 		const configs = this.getActionConfigs(fullAction)
 
+		// TODO: Make a loop fn that handles options?
 		let remaining = 0
 		for (const config of configs) {
+			if (opts.primary && !config.primary) { continue }
+
 			const {cooldown} = this.getGroupState(config)
 			if (cooldown == null) { continue }
 
@@ -218,6 +235,7 @@ export class Cooldowns extends Analyser {
 		// Using fake group config, as it's pretty irrelevant at this point of the run
 		const baseConfig = {
 			action: this.data.actions.UNKNOWN,
+			primary: false,
 			duration: 0,
 			maximumCharges: DEFAULT_CHARGES,
 		}
@@ -430,6 +448,7 @@ export class Cooldowns extends Analyser {
 		if (action.onGcd) {
 			groups.push({
 				action,
+				primary: false,
 				group: GCD_COOLDOWN_GROUP,
 				duration: action.gcdRecast ?? action.cooldown,
 				maximumCharges: GCD_CHARGES,
@@ -437,6 +456,7 @@ export class Cooldowns extends Analyser {
 
 			// GCDs with a seperate recast are part of two CDGs.
 			if (action.gcdRecast == null) {
+				groups[groups.length - 1].primary = true
 				return groups
 			}
 		}
@@ -446,6 +466,7 @@ export class Cooldowns extends Analyser {
 		// that fudged CDGs do not overlap with real data.
 		groups.push({
 			action,
+			primary: true,
 			group: action.cooldownGroup ?? -action.id,
 			duration: action.cooldown,
 			maximumCharges: action.charges ?? DEFAULT_CHARGES,
