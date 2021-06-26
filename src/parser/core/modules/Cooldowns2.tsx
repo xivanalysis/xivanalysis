@@ -87,6 +87,7 @@ export class Cooldowns extends Analyser {
 
 	/**
 	 * Get the remaining time on cooldown of the specified action, in milliseconds.
+	 * If multiple groups are selected, the longest remaining cooldown will be returned.
 	 *
 	 * @param action The action whose cooldown should be retrieved.
 	 * @param options Options to select the groups to read.
@@ -96,11 +97,9 @@ export class Cooldowns extends Analyser {
 		const fullAction = typeof action === 'string' ? this.data.actions[action] : action
 		const opts: SelectionOptions = {...DEFAULT_SELECTION_OPTIONS, ...options}
 
-		const configs = this.getActionConfigs(fullAction)
-
 		// TODO: Make a loop fn that handles options?
 		let remaining = 0
-		for (const config of configs) {
+		for (const config of this.getActionConfigs(fullAction)) {
 			if (opts.primary && !config.primary) { continue }
 
 			const {cooldown} = this.getGroupState(config)
@@ -110,6 +109,30 @@ export class Cooldowns extends Analyser {
 		}
 
 		return remaining
+	}
+
+	/**
+	 * Get the remaining charges of the specifiec action. If multiple groups are
+	 * selected, the minimum remaining charges will be returned.
+	 *
+	 * @param action The action whose charges should be retrieved.
+	 * @param options Options to select the groups to read.
+	 */
+	charges(action: Action | ActionKey, options?: Partial<SelectionOptions>) {
+		const fullAction = typeof action === 'string' ? this.data.actions[action] : action
+		const opts: SelectionOptions = {...DEFAULT_SELECTION_OPTIONS, ...options}
+
+		const chargeValues = []
+		for (const config of this.getActionConfigs(fullAction)) {
+			if (opts.primary && !config.primary) { continue }
+
+			const {charges} = this.getGroupState(config)
+			chargeValues.push(charges.current)
+		}
+
+		return chargeValues.length > 0
+			? Math.min(...chargeValues)
+			: 0
 	}
 
 	/**
@@ -123,8 +146,7 @@ export class Cooldowns extends Analyser {
 		const fullAction = typeof action === 'string' ? this.data.actions[action] : action
 		const opts: SelectionOptions = {...DEFAULT_SELECTION_OPTIONS, ...options}
 
-		const configs = this.getActionConfigs(fullAction)
-		for (const config of configs) {
+		for (const config of this.getActionConfigs(fullAction)) {
 			if (opts.primary && !config.primary) { continue }
 
 			// If this group isn't on CD, no need to attempt to reduce it
@@ -266,8 +288,7 @@ export class Cooldowns extends Analyser {
 
 	private useAction(action: Action) {
 		// TODO: precompute?
-		const configs = this.getActionConfigs(action)
-		for (const config of configs) {
+		for (const config of this.getActionConfigs(action)) {
 			this.consumeCharge(config)
 		}
 	}
