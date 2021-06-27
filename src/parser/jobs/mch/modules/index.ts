@@ -8,7 +8,6 @@ import MultiHitSkills from './MultiHitSkills'
 import QueenTimeline from './QueenTimeline'
 import Reassemble from './Reassemble'
 import Tincture from './Tincture'
-import Weaving from './Weaving'
 import Wildfire from './Wildfire'
 import YassQueen from './YassQueen'
 
@@ -23,7 +22,6 @@ export default [
 	QueenTimeline,
 	Reassemble,
 	Tincture,
-	Weaving,
 	Wildfire,
 	YassQueen,
 ]

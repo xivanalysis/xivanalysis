@@ -4,6 +4,7 @@ import {Analyser} from '../Analyser'
 import {filter} from '../filter'
 import {dependency} from '../Injectable'
 import {Data} from './Data'
+import {SpeedAdjustments} from './SpeedAdjustments'
 
 type AffectsWhichTime =
 	| 'cast'
@@ -23,6 +24,7 @@ export default class CastTime extends Analyser {
 	static override handle = 'castTime'
 
 	@dependency data!: Data
+	@dependency speedAdjustments!: SpeedAdjustments
 
 	private castTimes: CastTimeAdjustment[] = []
 	private scIndex: number | null = null
@@ -209,16 +211,26 @@ export default class CastTime extends Analyser {
 			(ct.affectsWhich === 'both' || ct.affectsWhich === forWhich),
 		)
 
-		// Mimicking old logic w/ the undefined. Don't ask.
 		const action = this.data.getAction(actionId)
-		const defaultTime = forWhich === 'recast' ? (action?.gcdRecast != null
-			? action?.gcdRecast
-			: action?.cooldown) : action?.castTime
+		if (action == null) {
+			return undefined
+		}
+		let defaultTime = forWhich === 'recast' ? (action.gcdRecast != null
+			? action.gcdRecast
+			: action.cooldown) : action.castTime
 
-		// If there were no modifiers, just use the default (or if the default comes back undefined or already instant, shouldn't happen but eh)
-		if (!matchingTimes.length || defaultTime == null || defaultTime === 0) {
+		// If the default comes back undefined or already instant, no adjustments to perform
+		if (defaultTime == null || defaultTime === 0) {
 			return defaultTime
 		}
+
+		if (action.speedAttribute != null) {
+			defaultTime = this.speedAdjustments.getAdjustedDuration({
+				duration: defaultTime,
+				attribute: action.speedAttribute,
+			})
+		}
+
 		let flatReduction=0
 		let flatIncrease=0
 		let percentageAdjustment=1
