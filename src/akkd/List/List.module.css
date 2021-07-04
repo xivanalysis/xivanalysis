@@ -1,4 +1,4 @@
-@value gutter, highlight, themeHover from "theme.module.css";
+@value gutter, highlight, themeHover from "theme/theme.module.css";
 @value block from "../shared.module.css";
 
 .list {

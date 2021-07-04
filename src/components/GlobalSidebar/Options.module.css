@@ -1,4 +1,4 @@
-@value gutter from "theme.module.css";
+@value gutter from "theme/theme.module.css";
 
 .row {
 	height: 40px;

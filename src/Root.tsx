@@ -5,6 +5,7 @@ import {Provider as TooltipProvider} from 'components/ui/DbLink'
 import React from 'react'
 import {BrowserRouter as Router} from 'react-router-dom'
 import {StoreProvider} from 'store'
+import {ThemeContextProvider} from 'theme/ThemeContext'
 
 export default () => (
 	<StoreProvider>
@@ -12,7 +13,9 @@ export default () => (
 			<TooltipProvider>
 				<Router>
 					<BreadcrumbProvider>
-						<App/>
+						<ThemeContextProvider>
+							<App/>
+						</ThemeContextProvider>
 					</BreadcrumbProvider>
 				</Router>
 			</TooltipProvider>

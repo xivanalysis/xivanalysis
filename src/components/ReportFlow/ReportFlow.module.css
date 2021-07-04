@@ -1,10 +1,10 @@
-@value gutter from 'theme.module.css';
-@value messageBackground from 'theme.module.css';
-@value segmentLinkActive from 'theme.module.css';
-@value themeBackground from 'theme.module.css';
-@value themeGreen from 'theme.module.css';
-@value themeRed from 'theme.module.css';
-@value themeText from 'theme.module.css';
+@value gutter from 'theme/theme.module.css';
+@value messageBackground from 'theme/theme.module.css';
+@value segmentLinkActive from 'theme/theme.module.css';
+@value themeBackground from 'theme/theme.module.css';
+@value themeGreen from 'theme/theme.module.css';
+@value themeRed from 'theme/theme.module.css';
+@value themeText from 'theme/theme.module.css';
 
 .controls {
 	text-align: right;

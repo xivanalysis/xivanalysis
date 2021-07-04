@@ -1,6 +1,6 @@
-@value gutter from "theme.module.css";
-@value md from "theme.module.css";
-@value themeBackground from "theme.module.css";
+@value gutter from "theme/theme.module.css";
+@value md from "theme/theme.module.css";
+@value themeBackground from "theme/theme.module.css";
 
 .description,
 .meta {

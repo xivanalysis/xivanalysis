@@ -1,4 +1,4 @@
-@value gutter, md, themeText from "theme.module.css";
+@value gutter, md, themeText from "theme/theme.module.css";
 
 .sidebar {
 	display: flex;

@@ -1,6 +1,6 @@
-@value gutter from "theme.module.css";
-@value sm, lg, xl from "theme.module.css";
-@value themeBackground, themeBlue from "theme.module.css";
+@value gutter from "theme/theme.module.css";
+@value sm, lg, xl from "theme/theme.module.css";
+@value themeBackground, themeBlue from "theme/theme.module.css";
 
 .statistics {
 	display: grid;

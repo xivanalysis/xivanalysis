@@ -3,7 +3,9 @@ import {Trans} from '@lingui/react'
 import {LinkDiscord, LinkGitHub} from 'components/GlobalSidebar/Links'
 import {VersionInfo} from 'components/GlobalSidebar/Version'
 import I18nMenu from 'components/ui/I18nMenu'
+import ThemeMenu from 'components/ui/ThemeMenu'
 import TransMarkdown from 'components/ui/TransMarkdown'
+import {THEMEDEBUG} from 'data/THEMES'
 import {observer} from 'mobx-react'
 import React, {Component} from 'react'
 import {Modal} from 'semantic-ui-react'
@@ -61,7 +63,9 @@ class Home extends Component {
 
 			<div className={styles.options}>
 				<div className={styles.i18nMenu}><I18nMenu/></div>
-
+				{THEMEDEBUG &&
+					<div className={styles.themeMenu}><ThemeMenu/></div>
+				}
 				<div>
 					<LinkDiscord/>
 					<LinkGitHub/>

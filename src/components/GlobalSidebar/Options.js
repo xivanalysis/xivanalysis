@@ -1,5 +1,7 @@
 import classNames from 'classnames'
 import I18nMenu from 'components/ui/I18nMenu'
+import ThemeMenu from 'components/ui/ThemeMenu'
+import {THEMEDEBUG} from 'data/THEMES'
 import {observer} from 'mobx-react'
 import React, {useRef, useEffect, useContext} from 'react'
 import ReactDOM from 'react-dom'
@@ -27,6 +29,12 @@ export default function Options() {
 
 			<ReportLink/>
 		</div>
+
+		{THEMEDEBUG &&
+			<div className={styles.row}>
+				<ThemeMenu/>
+			</div>
+		}
 
 		<div className={styles.row}>
 			<I18nMenu/>

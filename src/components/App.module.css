@@ -1,4 +1,4 @@
-@value gutter, md, lg, themeText, themeBackground, themeInverse from "theme.module.css";
+@value gutter, md, lg, themeText, themeBackground, themeInverse from "theme/theme.module.css";
 
 @value headerHeight: 40px;
 

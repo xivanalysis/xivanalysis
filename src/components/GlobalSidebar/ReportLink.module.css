@@ -1,4 +1,4 @@
-@value themeText from "theme.module.css";
+@value themeText from "theme/theme.module.css";
 
 .reportLink {
 	display: block;

@@ -1,4 +1,4 @@
-@value gutter, themeBackground from "theme.module.css";
+@value gutter, themeBackground from "theme/theme.module.css";
 
 /* Consolidated handling for vertical spacing between content blocks */
 .verticalSpacing {

@@ -1,4 +1,4 @@
-@value themeBackdrop from "theme.module.css";
+@value themeBackdrop from "theme/theme.module.css";
 
 @value rowHeight: 24px;
 
