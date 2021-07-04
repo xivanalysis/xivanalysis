@@ -9,6 +9,7 @@ export const BLM = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 2500,
+		mpCost: 400,
 	},
 	BLIZZARD_II: {
 		id: 146,
@@ -17,6 +18,7 @@ export const BLM = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 2000,
+		mpCost: 800,
 	},
 	BLIZZARD_III: {
 		id: 154,
@@ -25,6 +27,7 @@ export const BLM = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 3500,
+		mpCost: 800,
 	},
 	BLIZZARD_IV: {
 		id: 3576,
@@ -33,6 +36,7 @@ export const BLM = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 2800,
+		mpCost: 800,
 	},
 	FREEZE: {
 		id: 159,
@@ -41,6 +45,7 @@ export const BLM = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 3000,
+		mpCost: 1000,
 	},
 	UMBRAL_SOUL: {
 		id: 16506,
@@ -56,6 +61,7 @@ export const BLM = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 2500,
+		mpCost: 800,
 	},
 	FIRE_II: {
 		id: 147,
@@ -64,6 +70,7 @@ export const BLM = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 3000,
+		mpCost: 1500,
 	},
 	FIRE_III: {
 		id: 152,
@@ -72,6 +79,7 @@ export const BLM = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 3500,
+		mpCost: 2000,
 	},
 	FIRE_IV: {
 		id: 3577,
@@ -80,6 +88,7 @@ export const BLM = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 2800,
+		mpCost: 800,
 	},
 	FLARE: {
 		id: 162,
@@ -104,6 +113,7 @@ export const BLM = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 2500,
+		mpCost: 200,
 	},
 	THUNDER_II: {
 		id: 7447,
@@ -112,6 +122,7 @@ export const BLM = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 3000,
+		mpCost: 400,
 	},
 	THUNDER_III: {
 		id: 153,
@@ -120,6 +131,7 @@ export const BLM = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 2500,
+		mpCost: 400,
 	},
 	THUNDER_IV: {
 		id: 7420,
@@ -128,6 +140,7 @@ export const BLM = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 3000,
+		mpCost: 800,
 	},
 	SCATHE: {
 		id: 156,
@@ -135,6 +148,7 @@ export const BLM = ensureActions({
 		icon: 'https://xivapi.com/i/000000/000462.png',
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
+		mpCost: 800,
 	},
 	FOUL: {
 		id: 7422,
@@ -158,6 +172,7 @@ export const BLM = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 2500,
+		mpCost: 800,
 	},
 	TRANSPOSE: {
 		id: 149,
@@ -216,30 +231,5 @@ export const BLM = ensureActions({
 		icon: 'https://xivapi.com/i/002000/002663.png',
 		cooldown: 60000,
 		statusesApplied: ['TRIPLECAST'],
-	},
-	// TODO: These shouldn't be here, really - (re)move to Procs.js or similar.
-	FIRE_III_PROC: {
-		id: -152,
-		name: 'Fire III',
-		icon: process.env.PUBLIC_URL + '/icon/action/f3p.png',
-		onGcd: true,
-	},
-	THUNDER_III_PROC: {
-		id: -1530,
-		name: 'Thunder III',
-		icon: process.env.PUBLIC_URL + '/icon/action/t3p.png',
-		onGcd: true,
-	},
-	THUNDER_III_FALSE: {
-		id: -1531,
-		name: 'Thunder III',
-		icon: process.env.PUBLIC_URL + '/icon/action/t3f.png',
-		onGcd: true,
-	},
-	THUNDER_IV_PROC: {
-		id: -742,
-		name: 'Thunder IV',
-		icon: process.env.PUBLIC_URL + '/icon/action/t4p.png',
-		onGcd: true,
 	},
 })

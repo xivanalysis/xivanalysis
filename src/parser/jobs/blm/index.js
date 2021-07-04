@@ -75,5 +75,10 @@ export default new Meta({
 		date: new Date('2021-04-08'),
 		Changes: () => <>Updated Rotation Outliers suggestions for cycles before downtimes, and Umbral Soul usage during uptime.</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
+	{
+		date: new Date('2021-06-18'),
+		Changes: () => <>Updated Astral Fire/Umbral Ice cycle tracking for improved analysis accuracy.</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
 	}],
 })
