@@ -3,15 +3,14 @@ import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
 import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
-import {Event, Events} from 'event'
+import {Attribute, Event, Events} from 'event'
 import {Analyser} from 'parser/core/Analyser'
-// TODO: uncomment once it works with Analyser
-// import GlobalCooldown from 'parser/core/modules/GlobalCooldown'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import {Timeline} from 'parser/core/modules/Timeline'
 import React from 'react'
 import {Button, Table} from 'semantic-ui-react'
-import {filter} from '../filter'
+import {getEstimatedTime} from 'utilities/speedStatMapper'
+import {exists, filter} from '../filter'
 import {dependency} from '../Injectable'
 import {Data} from './Data'
 
@@ -21,7 +20,7 @@ interface SeverityTiers {
 
 // used for timeline viewing by giving you a nice 30s window
 const TIMELINE_UPPER_MOD: number = 30000
-const GCD_ESTIMATE: number = 2600 // TODO: this can be removed once GlobalCooldown gets ported
+const GCD_ESTIMATE: number = 2500
 
 export class Interrupts extends Analyser {
 	static override handle: string = 'interrupts'
@@ -29,14 +28,13 @@ export class Interrupts extends Analyser {
 	static override debug: boolean = true
 
 	@dependency protected data!: Data
-	// TODO: uncomment once globalCooldown works with Analyser
-	// @dependency private globalCooldown!: GlobalCooldown
 	@dependency private suggestions!: Suggestions
 	@dependency private timeline!: Timeline
 
 	private currentCast?: Events['prepare']
 	private droppedCasts: Array<Events['interrupt']> = []
 	private missedTimeMS: number = 0
+	private gcdEstimate: number = GCD_ESTIMATE
 
 	/**
 	 * Implementing modules MAY override the icon to be used for the suggestion,
@@ -71,6 +69,12 @@ export class Interrupts extends Analyser {
 	}
 
 	/**
+	 * Implementing modules MAY override this to change the defualt attribute type used for lookups. I don't know why
+	 * you might do this, but more power to you.
+	 */
+	protected defaultAttributeType: Attribute = Attribute.SPELL_SPEED
+
+	/**
 	 * Implementing modules MAY override this function to provide alternative output if there's 0 interrupted
 	 * casts (in lieu of an empty table)
 	 */
@@ -79,6 +83,21 @@ export class Interrupts extends Analyser {
 	}
 
 	public override initialise() {
+		this.addEventHook(
+			filter<Event>()
+				.type('actorUpdate')
+				.actor(this.parser.actor.id)
+				.attributes(exists),
+			event => {
+				const spellSpeed = event.attributes?.find(
+					attribute => attribute.attribute === this.defaultAttributeType
+				)
+				if (spellSpeed == null) { return }
+
+				this.gcdEstimate = getEstimatedTime(spellSpeed.value, GCD_ESTIMATE)
+				this.debug(`setting gcdEstimate to ${this.gcdEstimate} from detected SPELL_SPEED`)
+			}
+		)
 		this.addEventHook(
 			filter<Event>()
 				.type('prepare')
@@ -99,11 +118,16 @@ export class Interrupts extends Analyser {
 	}
 
 	private pushDropCasts(event: Events['interrupt']) {
-		this.missedTimeMS += Math.min(
-			event.timestamp - (this.currentCast?.timestamp ?? this.parser.currentTimestamp),
-			GCD_ESTIMATE // TODO: bring back gcd estimation for abilities once that's ported
-		)
-		this.droppedCasts.push(event)
+		// we shouldn't hit this, since I'm pretty sure the underlying interrupt event needs
+		// a prepare action to compare to, but still...
+		if (this.currentCast) {
+			const action = this.data.getAction(this.currentCast.action)
+			this.missedTimeMS += Math.min(
+				event.timestamp - (this.currentCast?.timestamp ?? this.parser.currentTimestamp),
+				(action?.castTime ?? this.gcdEstimate)
+			)
+			this.droppedCasts.push(event)
+		}
 	}
 
 	private onComplete() {
