@@ -9,10 +9,10 @@ import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Sugge
 import {Timeline} from 'parser/core/modules/Timeline'
 import React from 'react'
 import {Button, Table} from 'semantic-ui-react'
-import {getEstimatedTime} from 'utilities/speedStatMapper'
-import {exists, filter} from '../filter'
+import {filter} from '../filter'
 import {dependency} from '../Injectable'
 import {Data} from './Data'
+import {SpeedAdjustments} from './SpeedAdjustments'
 
 interface SeverityTiers {
 	[key: number]: number
@@ -29,12 +29,12 @@ export class Interrupts extends Analyser {
 
 	@dependency protected data!: Data
 	@dependency private suggestions!: Suggestions
+	@dependency private speedAdjustments!: SpeedAdjustments
 	@dependency private timeline!: Timeline
 
 	private currentCast?: Events['prepare']
 	private droppedCasts: Array<Events['interrupt']> = []
 	private missedTimeMS: number = 0
-	private gcdEstimate: number = GCD_ESTIMATE
 
 	/**
 	 * Implementing modules MAY override the icon to be used for the suggestion,
@@ -85,21 +85,6 @@ export class Interrupts extends Analyser {
 	public override initialise() {
 		this.addEventHook(
 			filter<Event>()
-				.type('actorUpdate')
-				.actor(this.parser.actor.id)
-				.attributes(exists),
-			event => {
-				const spellSpeed = event.attributes?.find(
-					attribute => attribute.attribute === this.defaultAttributeType
-				)
-				if (spellSpeed == null) { return }
-
-				this.gcdEstimate = getEstimatedTime(spellSpeed.value, GCD_ESTIMATE)
-				this.debug(`setting gcdEstimate to ${this.gcdEstimate} from detected SPELL_SPEED`)
-			}
-		)
-		this.addEventHook(
-			filter<Event>()
 				.type('prepare')
 				.source(this.parser.actor.id),
 			this.onBeginCast
@@ -118,16 +103,20 @@ export class Interrupts extends Analyser {
 	}
 
 	private pushDropCasts(event: Events['interrupt']) {
-		// we shouldn't hit this, since I'm pretty sure the underlying interrupt event needs
-		// a prepare action to compare to, but still...
-		if (this.currentCast) {
-			const action = this.data.getAction(this.currentCast.action)
-			this.missedTimeMS += Math.min(
-				event.timestamp - (this.currentCast?.timestamp ?? this.parser.currentTimestamp),
-				(action?.castTime ?? this.gcdEstimate)
-			)
-			this.droppedCasts.push(event)
-		}
+		if (this.currentCast == null) { return }
+
+		const action = this.data.getAction(this.currentCast.action)
+		const castTime = this.speedAdjustments.getAdjustedDuration({
+			duration: action?.castTime ?? GCD_ESTIMATE,
+			attribute: this.defaultAttributeType,
+			actor: this.parser.actor.id,
+		})
+		this.missedTimeMS += Math.min(
+			event.timestamp - (this.currentCast?.timestamp ?? this.parser.currentTimestamp),
+			castTime
+		)
+		this.droppedCasts.push(event)
+		this.currentCast = undefined
 	}
 
 	private onComplete() {
