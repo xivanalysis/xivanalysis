@@ -71,7 +71,7 @@ function LastFightRedirect({reportStore, baseUrl}: WithReportComponentProps) {
 
 	// Filter out trash pulls
 	const pullIds = reportStore.report?.meta.fights
-		.filter(fight => getEncounterKey("legacyFflogs", fight.boss.toString()) !== "TRASH")
+		.filter(fight => getEncounterKey('legacyFflogs', fight.boss.toString()) !== 'TRASH')
 		.map(fight => fight.id.toString())
 
 	const lastPull = _.last(pullIds)
