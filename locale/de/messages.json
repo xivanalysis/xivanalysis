@@ -80,6 +80,11 @@
   "ast.synastry.suggestion.content": "Versuche <0/> zu nutzen, wenn du einen Heilzauber mit globaler Abklingzeit auf ein einzelnes Ziel wirken musst. Durch den Heilzauber mit globaler Abklingzeit verlierst du bereits Effizienz, daher solltest du ihn so stark wie möglich machen, wenn du Synastrie in naher Zukunft nicht brauchst.",
   "ast.synastry.suggestion.why": "{0, plural, one {# Heilzauber mit globaler Abklingzeit wurde auf ein einzelnes Ziel gewirkt} other {# Heilzauber mit globaler Abklingzeit wurden auf ein einzelnes Ziel gewirkt}}, ohne dass Synastrie aktiv war, obwohl es verfügbar war.",
   "blm.about.description": "Dieser Analysator zeigt dir, warum du weniger <0/> castest, als du denkst.",
+  "blm.gauge.resource.astral-fire": "",
+  "blm.gauge.resource.astral-umbral": "",
+  "blm.gauge.resource.polyglot": "",
+  "blm.gauge.resource.umbral-hearts": "",
+  "blm.gauge.resource.umbral-ice": "",
   "blm.gauge.suggestions.dropped-enochian.content": "Den <0/> Buff fallen zu lassen führt zu verlorenen <1/>, mehr clipping durch weitere Verwendungen von <2/>, nicht verfügbar sein von <3/> und <4/>, oder einfach das Fehlen des 10% Schadensbonus, den <5/> gibt.",
   "blm.gauge.suggestions.dropped-enochian.why": "{0} {1, plural, one {versäumter Henochisch Cast} other {versäumte Henochisch Casts}}.",
   "blm.gauge.suggestions.lost-polyglot.content": "Du hast Polyglott verloren, da <0/> auslief. <1/> und <2/> sind deine stärksten GCDs, stelle daher sicher, dass du sie so oft wie möglich einsetzen kannst.",
@@ -88,6 +93,7 @@
   "blm.gauge.suggestions.overwritten-polyglot.why": "Xenoglossie wurde {0, plural, one {# mal} other {# mal}} überschrieben.",
   "blm.gauge.title": "Balken",
   "blm.gauge.trigger.no-eno-b4": "<0/> wurde eingesetzt obwohl <1/> inaktiv war.",
+  "blm.gauge.trigger.no-eno-despair": "",
   "blm.gauge.trigger.no-eno-f4": "<0/> wurde eingesetzt obwohl <1/> inaktiv war.",
   "blm.gauge.trigger.no-stack-eno": "<0/> wurde angewendet, während weder Lichtfeuer- noch Schatteneis-Aufladungen vorhanden waren.",
   "blm.leylines.checklist": "",
@@ -939,5 +945,9 @@
   "whm.ogcds.title": "Anwendungen außerhalb der globalen Abklingzeit",
   "whm.overheal.assize.name": "Assise",
   "whm.overheal.hot.name": "",
-  "whm.swiftcast.missed.suggestion.content": "Wirke Zauber mit <0/> bevor es abläuft. Dadurch kannst du Angriffe mit Anwendungszeit sofort benutzen, wie beispielsweise <1/> für schnelle Wiederbelebungen oder <2/> zwischen Angriffen mit globaler Abklingzeit (zum weaven)."
+  "whm.swiftcast.missed.suggestion.content": "Wirke Zauber mit <0/> bevor es abläuft. Dadurch kannst du Angriffe mit Anwendungszeit sofort benutzen, wie beispielsweise <1/> für schnelle Wiederbelebungen oder <2/> zwischen Angriffen mit globaler Abklingzeit (zum weaven).",
+  "whm.thinair.messages.explanation": "",
+  "whm.thinair.messages.no-casts": "",
+  "whm.thinair.rotation.gcd": "",
+  "whm.thinair.title": ""
 }

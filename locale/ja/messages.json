@@ -80,6 +80,11 @@
   "ast.synastry.suggestion.content": "",
   "ast.synastry.suggestion.why": "",
   "blm.about.description": "",
+  "blm.gauge.resource.astral-fire": "",
+  "blm.gauge.resource.astral-umbral": "",
+  "blm.gauge.resource.polyglot": "",
+  "blm.gauge.resource.umbral-hearts": "",
+  "blm.gauge.resource.umbral-ice": "",
   "blm.gauge.suggestions.dropped-enochian.content": "<0/> をドロップすると、 <1/>や<2/>が失われたり、 <3/>のキャストが追加されたり、 <3/> および <4/> が利用できなくなったり、 <6/> が提供する与ダメージの15%アップを見逃したりする可能性があります。",
   "blm.gauge.suggestions.dropped-enochian.why": "落としたエノキアン回数：{droppedEno}{droppedEno, plural, other {回}}。",
   "blm.gauge.suggestions.lost-polyglot.content": "<0/>が切れたため、ポリグロットをすべて失いました。 <1/>や<2/> は最も強力なGCDなので、キャストを常に最大化しましょう。",
@@ -88,6 +93,7 @@
   "blm.gauge.suggestions.overwritten-polyglot.why": "ゼノグロシーが上書きされた回数：{0, plural, other {#回}}。",
   "blm.gauge.title": "ゲージ",
   "blm.gauge.trigger.no-eno-b4": "<0/>を<1/>がないときに詠唱しました。",
+  "blm.gauge.trigger.no-eno-despair": "",
   "blm.gauge.trigger.no-eno-f4": "<0/>を<1/>がないときに詠唱しました。",
   "blm.gauge.trigger.no-stack-eno": "<0/>を「アストラルファイア」や「アンブラルブリザード」のないときに詠唱しました。",
   "blm.leylines.checklist": "",
@@ -939,5 +945,9 @@
   "whm.ogcds.title": "GCD オフ",
   "whm.overheal.assize.name": "アサイズ",
   "whm.overheal.hot.name": "HoT",
-  "whm.swiftcast.missed.suggestion.content": ""
+  "whm.swiftcast.missed.suggestion.content": "",
+  "whm.thinair.messages.explanation": "",
+  "whm.thinair.messages.no-casts": "",
+  "whm.thinair.rotation.gcd": "",
+  "whm.thinair.title": ""
 }

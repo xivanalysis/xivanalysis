@@ -5,6 +5,7 @@ import oGCDs from './oGCDs'
 import Overheal from './Overheal'
 import Speedmod from './Speedmod'
 import Swiftcast from './Swiftcast'
+import {Thinair} from './Thinair'
 
 export default [
 	DoTs,
@@ -14,4 +15,5 @@ export default [
 	Overheal,
 	Speedmod,
 	Swiftcast,
+	Thinair,
 ]
