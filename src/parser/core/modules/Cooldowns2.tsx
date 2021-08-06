@@ -48,6 +48,8 @@ interface CooldownGroupState {
 	charges: ChargeState
 }
 
+export type ActionSpecifier = Action | ActionKey
+
 /**
  * Potential reasons for a group's cooldown to be ended. Encompasses both game-
  * truthful reasons and xiva-specific fudging.
@@ -92,17 +94,9 @@ export class Cooldowns extends Analyser {
 	 * @param action The action whose cooldown should be retrieved.
 	 * @param options Options to select the groups to read.
 	 */
-	remaining(action: Action | ActionKey, options?: Partial<SelectionOptions>) {
-		// TODO: maybe data needs a .resolveAction or something
-		const fullAction = typeof action === 'string' ? this.data.actions[action] : action
-		const opts: SelectionOptions = {...DEFAULT_SELECTION_OPTIONS, ...options}
-
-		// TODO: Make a loop fn that handles options?
+	remaining(action: ActionSpecifier, options?: Partial<SelectionOptions>) {
 		let remaining = 0
-		for (const config of this.getActionConfigs(fullAction)) {
-			if (opts.primary && !config.primary) { continue }
-
-			const {cooldown} = this.getGroupState(config)
+		for (const {state: {cooldown}} of this.iterateStates(action, options)) {
 			if (cooldown == null) { continue }
 
 			remaining = Math.max(remaining, cooldown.end - this.parser.currentEpochTimestamp)
@@ -118,15 +112,9 @@ export class Cooldowns extends Analyser {
 	 * @param action The action whose charges should be retrieved.
 	 * @param options Options to select the groups to read.
 	 */
-	charges(action: Action | ActionKey, options?: Partial<SelectionOptions>) {
-		const fullAction = typeof action === 'string' ? this.data.actions[action] : action
-		const opts: SelectionOptions = {...DEFAULT_SELECTION_OPTIONS, ...options}
-
+	charges(action: ActionSpecifier, options?: Partial<SelectionOptions>) {
 		const chargeValues = []
-		for (const config of this.getActionConfigs(fullAction)) {
-			if (opts.primary && !config.primary) { continue }
-
-			const {charges} = this.getGroupState(config)
+		for (const {state: {charges}} of this.iterateStates(action, options)) {
 			chargeValues.push(charges.current)
 		}
 
@@ -142,15 +130,9 @@ export class Cooldowns extends Analyser {
 	 * @param action The action whose groups should be reduced.
 	 * @param reduction Duration in milliseconds that group cooldowns should be reduced by.
 	 */
-	reduce(action: Action | ActionKey, reduction: number, options?: Partial<SelectionOptions>) {
-		const fullAction = typeof action === 'string' ? this.data.actions[action] : action
-		const opts: SelectionOptions = {...DEFAULT_SELECTION_OPTIONS, ...options}
-
-		for (const config of this.getActionConfigs(fullAction)) {
-			if (opts.primary && !config.primary) { continue }
-
+	reduce(action: ActionSpecifier, reduction: number, options?: Partial<SelectionOptions>) {
+		for (const {config, state: {cooldown}} of this.iterateStates(action, options)) {
 			// If this group isn't on CD, no need to attempt to reduce it
-			const {cooldown} = this.getGroupState(config)
 			if (cooldown == null) { continue }
 
 			const newEnd = cooldown.end - reduction
@@ -183,15 +165,21 @@ export class Cooldowns extends Analyser {
 	 * @param action The action whose groups should be reset.
 	 * @param options Options to select the groups to modify.
 	 */
-	reset(action: Action | ActionKey, options?: Partial<SelectionOptions>) {
+	reset(action: ActionSpecifier, options?: Partial<SelectionOptions>) {
+		for (const {config, state: {cooldown}} of this.iterateStates(action, options)) {
+			if (cooldown == null) { continue }
+			this.endCooldown(config, CooldownEndReason.REDUCED)
+		}
+	}
+
+	private *iterateStates(action: ActionSpecifier, options?: Partial<SelectionOptions>) {
 		const fullAction = typeof action === 'string' ? this.data.actions[action] : action
 		const opts: SelectionOptions = {...DEFAULT_SELECTION_OPTIONS, ...options}
 
 		for (const config of this.getActionConfigs(fullAction)) {
 			if (opts.primary && !config.primary) { continue }
-			const state = this.getGroupState(config)
-			if (state.cooldown == null) { continue }
-			this.endCooldown(config, CooldownEndReason.REDUCED)
+
+			yield {config, state: this.getGroupState(config)}
 		}
 	}
 
