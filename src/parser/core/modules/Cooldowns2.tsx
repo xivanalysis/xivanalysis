@@ -29,32 +29,11 @@ interface CooldownGroupConfig {
 	maximumCharges: number
 }
 
-/** State of a group's cooldown. */
-interface CooldownState {
-	start: number
-	end: number
-	hook: TimestampHook
-}
-
-/** State of a group's charges. */
-interface ChargeState {
-	current: number
-	maximum: number
-}
-
-/** Full state for a cooldown group. */
-interface CooldownGroupState {
-	cooldown?: CooldownState
-	charges: ChargeState
-}
-
-export type ActionSpecifier = Action | ActionKey
-
 /**
  * Potential reasons for a group's cooldown to be ended. Encompasses both game-
  * truthful reasons and xiva-specific fudging.
  */
-enum CooldownEndReason {
+export enum CooldownEndReason {
 	EXPIRED,
 	INTERRUPTED,
 	REDUCED,
@@ -62,6 +41,44 @@ enum CooldownEndReason {
 	PULL_ENDED,
 	OVERLAPPED,
 }
+
+/** Historical representation of a single completed group cooldown. */
+export interface CooldownHistoryEntry {
+	action: Action
+	start: number
+	end: number
+	endReason: CooldownEndReason
+}
+
+/** State of a group's cooldown. */
+type CooldownState =
+	& Omit<CooldownHistoryEntry, 'endReason'>
+	& {
+		hook: TimestampHook
+	}
+
+/** Point in time snapshot of a change to a group's charge state. */
+export interface ChargeHistoryEntry {
+	timestamp: number
+	action: Action
+	delta: number
+	current: number
+	maximum: number
+}
+
+/** State of a group's charges. */
+type ChargeState =
+	Omit<ChargeHistoryEntry, 'delta' | 'timestamp'>
+
+/** Full state for a cooldown group. */
+interface CooldownGroupState {
+	cooldown?: CooldownState
+	cooldownHistory: CooldownHistoryEntry[]
+	charges: ChargeState
+	chargeHistory: ChargeHistoryEntry[]
+}
+
+export type ActionSpecifier = Action | ActionKey
 
 /** Options for selection of groups that should be read/modified by a method. */
 export interface SelectionOptions {
@@ -76,8 +93,6 @@ const DEFAULT_SELECTION_OPTIONS: SelectionOptions = {
 export class Cooldowns extends Analyser {
 	static override handle = 'cooldowns2'
 	static override debug = false
-
-	// TODO: cooldownOrder
 
 	@dependency private data!: Data
 	@dependency private speedAdjustments!: SpeedAdjustments
@@ -170,6 +185,40 @@ export class Cooldowns extends Analyser {
 			if (cooldown == null) { continue }
 			this.endCooldown(config, CooldownEndReason.REDUCED)
 		}
+	}
+
+	/**
+	 * Fetch the cooldown history of the specified action.
+	 * 
+	 * @param action The action whos group's history should be retrieved.
+	 * @param options Options to select the groups to retieve.
+	 */
+	cooldownHistory(action: ActionSpecifier, options?: Partial<SelectionOptions>) {
+		const histories: CooldownHistoryEntry[] = []
+		for (const {state: {cooldownHistory}} of this.iterateStates(action, options)) {
+			histories.push(...cooldownHistory)
+		}
+		histories.sort(
+			(a, b) => a.start - b.start
+		)
+		return histories
+	}
+
+	/**
+	 * Fetch the charge history of the specified action.
+	 * 
+	 * @param action The action whos group's history should be retrieved.
+	 * @param options Options to select the groups to retieve.
+	 */
+	chargeHistory(action: ActionSpecifier, options?: Partial<SelectionOptions>) {
+		const histories: ChargeHistoryEntry[] = []
+		for (const {state: {chargeHistory}} of this.iterateStates(action, options)) {
+			histories.push(...chargeHistory)
+		}
+		histories.sort(
+			(a, b) => a.timestamp - b.timestamp
+		)
+		return histories
 	}
 
 	private *iterateStates(action: ActionSpecifier, options?: Partial<SelectionOptions>) {
@@ -284,6 +333,8 @@ export class Cooldowns extends Analyser {
 	private consumeCharge(config: CooldownGroupConfig) {
 		const groupState = this.getGroupState(config)
 		const chargeState = groupState.charges
+		
+		const now = this.parser.currentEpochTimestamp
 
 		// Check if we actually have a charge to consume. It's technically impossible for
 		// this to trip, but the game (and log data) is fuzzy at the best of times, so it
@@ -292,7 +343,6 @@ export class Cooldowns extends Analyser {
 		// TODO: Even with speed adjustments, CDGs like the GCD (58) have some seriously
 		//       fuzzy timings in logs and cause considerable overlapping. Look into it.
 		if (chargeState.current <= 0) {
-			const now = this.parser.currentEpochTimestamp
 
 			// To be in the state of 0 charges, a cooldown _should_ be active. If it
 			// isn't, something is _immensely_ wrong.
@@ -316,16 +366,21 @@ export class Cooldowns extends Analyser {
 			this.startCooldown(config)
 		}
 
-		// Consume the charge
+		// Consume the charge and add to history
 		chargeState.current--
+		chargeState.action = config.action
+		groupState.chargeHistory.push({
+			...chargeState,
+			timestamp: now,
+			delta: -1,
+		})
 
 		// TEMP
 		this.debug(() => {
-			const now = this.parser.currentEpochTimestamp - this.parser.pull.timestamp
 			const row = this.tempGetTimelineRow(`group:${config.group}`)
 			row.addItem(new SimpleItem({
 				content: `- ${chargeState.current}`,
-				start: now,
+				start: now - this.parser.pull.timestamp,
 			}))
 		})
 	}
@@ -333,7 +388,7 @@ export class Cooldowns extends Analyser {
 	private gainCharge(config: CooldownGroupConfig) {
 		// Get the current charge state for the group. If it's already at max, or
 		// there's no state (implicitly max), we can noop.
-		const chargeState = this.getGroupState(config).charges
+		const {charges: chargeState, chargeHistory} = this.getGroupState(config)
 		if (
 			chargeState == null
 			|| chargeState.current === chargeState.maximum
@@ -341,8 +396,13 @@ export class Cooldowns extends Analyser {
 			return
 		}
 
-		// Add the charge
+		// Add the charge and record
 		chargeState.current++
+		chargeHistory.push({
+			...chargeState,
+			timestamp: this.parser.currentEpochTimestamp,
+			delta: +1,
+		})
 
 		// If there are still charges left to regenerate on the action, boot up
 		// another cooldown for it.
@@ -387,6 +447,7 @@ export class Cooldowns extends Analyser {
 		const start = this.parser.currentEpochTimestamp
 		const end = start + duration
 		groupState.cooldown = {
+			action: config.action,
 			start,
 			end,
 			hook: this.addTimestampHook(end, () => {
@@ -417,6 +478,13 @@ export class Cooldowns extends Analyser {
 		this.removeTimestampHook(cooldownState.hook)
 		cooldownState.end = this.parser.currentEpochTimestamp
 
+		groupState.cooldownHistory.push({
+			action: cooldownState.action,
+			start: cooldownState.start,
+			end: cooldownState.end,
+			endReason: reason,
+		})
+
 		// TEMP
 		this.debug(() => {
 			const color = reason === CooldownEndReason.INTERRUPTED
@@ -436,10 +504,15 @@ export class Cooldowns extends Analyser {
 		let groupState = this.groupStates.get(config.group)
 		if (groupState == null) {
 			const maximum = config.maximumCharges
-			groupState = {charges: {
-				current: maximum,
-				maximum,
-			}}
+			groupState = {
+				cooldownHistory: [],
+				charges: {
+					action: this.data.actions.UNKNOWN,
+					current: maximum,
+					maximum,
+				},
+				chargeHistory: [],
+			}
 			this.groupStates.set(config.group, groupState)
 		}
 		return groupState
