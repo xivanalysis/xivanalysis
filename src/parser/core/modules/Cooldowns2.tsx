@@ -343,7 +343,6 @@ export class Cooldowns extends Analyser {
 		// TODO: Even with speed adjustments, CDGs like the GCD (58) have some seriously
 		//       fuzzy timings in logs and cause considerable overlapping. Look into it.
 		if (chargeState.current <= 0) {
-
 			// To be in the state of 0 charges, a cooldown _should_ be active. If it
 			// isn't, something is _immensely_ wrong.
 			const cooldownState = groupState.cooldown
@@ -351,12 +350,12 @@ export class Cooldowns extends Analyser {
 				throw new Error(`Attempted to consume charge of group ${config.group} at ${this.parser.formatEpochTimestamp(now)} with no charges remaining, and no active cooldown to fudge.`)
 			}
 
-			const delta = cooldownState.end - now
-			if (delta > OVERLAP_NOISE_THRESHOLD) {
-				this.debug(({log}) => {
-					log(`Use of ${config.action.name} at ${this.parser.formatEpochTimestamp(now)} consumes a charge of group ${config.group} with ${chargeState.current} charges. Expected charge gain at ${this.parser.formatEpochTimestamp(cooldownState.end)} (delta ${delta}), fudging.`)
-				})
-			}
+			this.debug(({log}) => {
+				const delta = cooldownState.end - now
+				if (delta <= OVERLAP_NOISE_THRESHOLD) { return }
+
+				log(`Use of ${config.action.name} at ${this.parser.formatEpochTimestamp(now)} consumes a charge of group ${config.group} with ${chargeState.current} charges. Expected charge gain at ${this.parser.formatEpochTimestamp(cooldownState.end)} (delta ${delta}), fudging.`)
+			})
 
 			this.endCooldown(config, CooldownEndReason.OVERLAPPED)
 		}
