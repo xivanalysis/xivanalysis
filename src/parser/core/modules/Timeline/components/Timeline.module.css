@@ -94,18 +94,18 @@ Basic diagram:
 	top: 5px;
 	left: calc(branchLabelWidth / 2);
 	transform: translateX(-50%);
-	border: 5px solid transparent;
-	border-left: 8.6px solid currentcolor;
-	border-right-width: 0;
+	border-width: 5px 0 5px 8.6px;
+	border-style: solid;
+	border-color: transparent transparent transparent currentcolor;
 }
 
 .label.collapsed::after {
 	content: '';
 	position: absolute;
 	right: 5px;
-	border: 5px solid transparent;
-	border-top: 8.6px solid currentcolor;
-	border-bottom-width: 0;
+	border-width: 8.6px 5px 0px 5px;
+	border-style: solid;
+	border-color: currentcolor transparent transparent;
 }
 
 .track {
