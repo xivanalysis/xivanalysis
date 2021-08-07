@@ -189,7 +189,7 @@ export class Cooldowns extends Analyser {
 
 	/**
 	 * Fetch the cooldown history of the specified action.
-	 * 
+	 *
 	 * @param action The action whos group's history should be retrieved.
 	 * @param options Options to select the groups to retieve.
 	 */
@@ -206,7 +206,7 @@ export class Cooldowns extends Analyser {
 
 	/**
 	 * Fetch the charge history of the specified action.
-	 * 
+	 *
 	 * @param action The action whos group's history should be retrieved.
 	 * @param options Options to select the groups to retieve.
 	 */
@@ -333,7 +333,7 @@ export class Cooldowns extends Analyser {
 	private consumeCharge(config: CooldownGroupConfig) {
 		const groupState = this.getGroupState(config)
 		const chargeState = groupState.charges
-		
+
 		const now = this.parser.currentEpochTimestamp
 
 		// Check if we actually have a charge to consume. It's technically impossible for
@@ -491,6 +491,7 @@ export class Cooldowns extends Analyser {
 				: Color('green')
 			const row = this.tempGetTimelineRow(`group:${config.group}`)
 			row.addItem(new SimpleItem({
+				// eslint-disable-next-line @typescript-eslint/no-magic-numbers
 				content: <div style={{width: '100%', height: '100%', background: color.alpha(0.25).toString(), borderLeft: `1px solid ${color}`}}/>,
 				start: cooldownState.start - this.parser.pull.timestamp,
 				end: cooldownState.end - this.parser.pull.timestamp,
