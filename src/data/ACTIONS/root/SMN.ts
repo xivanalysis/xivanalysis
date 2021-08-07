@@ -1,3 +1,4 @@
+import {Attribute} from 'event'
 import PETS from '../../PETS'
 import {ensureActions} from '../type'
 
@@ -35,6 +36,7 @@ export const SMN = ensureActions({
 		name: 'Outburst',
 		icon: 'https://xivapi.com/i/002000/002698.png',
 		onGcd: true,
+		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 2500,
 	},
 
@@ -58,6 +60,7 @@ export const SMN = ensureActions({
 		name: 'Ruin III',
 		icon: 'https://xivapi.com/i/002000/002682.png',
 		onGcd: true,
+		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 2500, // This is reduced to instant during DWT
 	},
 
@@ -97,6 +100,7 @@ export const SMN = ensureActions({
 		name: 'Bio III',
 		icon: 'https://xivapi.com/i/002000/002689.png',
 		onGcd: true,
+		speedAttribute: Attribute.SPELL_SPEED,
 		statusesApplied: ['BIO_III'],
 	},
 
@@ -105,6 +109,7 @@ export const SMN = ensureActions({
 		name: 'Miasma III',
 		icon: 'https://xivapi.com/i/002000/002690.png',
 		onGcd: true,
+		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 2500,
 		statusesApplied: ['MIASMA_III'],
 	},
@@ -114,6 +119,7 @@ export const SMN = ensureActions({
 		name: 'Ruin IV',
 		icon: 'https://xivapi.com/i/002000/002686.png',
 		onGcd: true,
+		speedAttribute: Attribute.SPELL_SPEED,
 	},
 
 	SUMMON_BAHAMUT: {
@@ -144,6 +150,7 @@ export const SMN = ensureActions({
 		name: 'Fountain Of Fire',
 		icon: 'https://xivapi.com/i/002000/002735.png',
 		onGcd: true,
+		speedAttribute: Attribute.SPELL_SPEED,
 	},
 
 	BRAND_OF_PURGATORY: {
@@ -151,6 +158,7 @@ export const SMN = ensureActions({
 		name: 'Brand Of Purgatory',
 		icon: 'https://xivapi.com/i/002000/002736.png',
 		onGcd: true,
+		speedAttribute: Attribute.SPELL_SPEED,
 	},
 
 	ENKINDLE_PHOENIX: {
@@ -168,6 +176,7 @@ export const SMN = ensureActions({
 		cooldown: 30000,
 		cooldownGroup: SMN_COOLDOWN_GROUP.EGI_ASSAULT,
 		onGcd: true,
+		speedAttribute: Attribute.SPELL_SPEED,
 		gcdRecast: 2500,
 		charges: 2,
 	},
@@ -179,6 +188,7 @@ export const SMN = ensureActions({
 		cooldown: 30000,
 		cooldownGroup: SMN_COOLDOWN_GROUP.EGI_ASSAULT,
 		onGcd: true,
+		speedAttribute: Attribute.SPELL_SPEED,
 		gcdRecast: 2500,
 		charges: 2,
 	},
@@ -190,6 +200,7 @@ export const SMN = ensureActions({
 		cooldown: 30000,
 		cooldownGroup: SMN_COOLDOWN_GROUP.EGI_ASSAULT,
 		onGcd: true,
+		speedAttribute: Attribute.SPELL_SPEED,
 		gcdRecast: 2500,
 		charges: 2,
 	},
@@ -201,6 +212,7 @@ export const SMN = ensureActions({
 		cooldown: 30000,
 		cooldownGroup: SMN_COOLDOWN_GROUP.EGI_ASSAULT_II,
 		onGcd: true,
+		speedAttribute: Attribute.SPELL_SPEED,
 		gcdRecast: 2500,
 		charges: 2,
 	},
@@ -212,6 +224,7 @@ export const SMN = ensureActions({
 		cooldown: 30000,
 		cooldownGroup: SMN_COOLDOWN_GROUP.EGI_ASSAULT_II,
 		onGcd: true,
+		speedAttribute: Attribute.SPELL_SPEED,
 		gcdRecast: 2500,
 		charges: 2,
 	},
@@ -223,6 +236,7 @@ export const SMN = ensureActions({
 		cooldown: 30000,
 		cooldownGroup: SMN_COOLDOWN_GROUP.EGI_ASSAULT_II,
 		onGcd: true,
+		speedAttribute: Attribute.SPELL_SPEED,
 		gcdRecast: 2500,
 		charges: 2,
 	},

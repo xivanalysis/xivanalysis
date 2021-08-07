@@ -37,10 +37,10 @@ interface StackState {
 }
 
 export default class Shoha extends Module {
-	static displayOrder = DISPLAY_ORDER.SHOHA
-	static handle = 'shoha'
-	static title = t('sam.shoha.title')`Meditation Timeline`
-	static displayMode = DISPLAY_MODE.FULL
+	static override displayOrder = DISPLAY_ORDER.SHOHA
+	static override handle = 'shoha'
+	static override title = t('sam.shoha.title')`Meditation Timeline`
+	static override displayMode = DISPLAY_MODE.FULL
 
 	private stacks = 0
 	private meditateStart = 0
@@ -60,7 +60,7 @@ export default class Shoha extends Module {
 	@dependency private checklist!: Checklist
 	@dependency private data!: Data
 
-	protected init() {
+	protected override init() {
 		this.addEventHook('init', this.pushToHistory)
 		this.addEventHook(
 			'cast',
@@ -215,7 +215,7 @@ export default class Shoha extends Module {
 			fluid />
 	}
 
-	output() {
+	override output() {
 		const stackColor = Color(JOBS.SAMURAI.colour)
 		/* eslint-disable @typescript-eslint/no-magic-numbers */
 		const chartData = {

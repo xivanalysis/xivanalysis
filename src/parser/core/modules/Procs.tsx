@@ -3,6 +3,7 @@ import {Trans, Plural} from '@lingui/react'
 import {Action} from 'data/ACTIONS'
 import {Status} from 'data/STATUSES'
 import {Event, Events} from 'event'
+import {CastEvent} from 'fflogs'
 import {Actors} from 'parser/core/modules/Actors'
 import Suggestions, {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import {SimpleRow, StatusItem, Timeline} from 'parser/core/modules/Timeline'
@@ -42,8 +43,8 @@ const DEFAULT_SEVERITY_TIERS = {
 	3: SEVERITY.MAJOR,
 }
 export abstract class Procs extends Analyser {
-	static handle = 'procs'
-	static title = t('core.procs.title')`Procs`
+	static override handle = 'procs'
+	static override title = t('core.procs.title')`Procs`
 
 	@dependency private downtime!: Downtime
 	@dependency protected suggestions!: Suggestions
@@ -95,7 +96,7 @@ export abstract class Procs extends Analyser {
 	 */
 	protected getUsagesForStatus(status: number | ProcGroup): Event[] {
 		const procGroup = this.getTrackedGroupByStatus(status)
-		if (!procGroup) { return [] }
+		if (procGroup == null) { return [] }
 		return this.usages.get(procGroup)?.events || []
 	}
 	/**
@@ -105,8 +106,33 @@ export abstract class Procs extends Analyser {
 	 */
 	protected getUsageCountForStatus(status: number | ProcGroup): number {
 		const procGroup = this.getTrackedGroupByStatus(status)
-		if (!procGroup) { return 0 }
+		if (procGroup == null) { return 0 }
 		return this.usages.get(procGroup)?.events.length || 0
+	}
+	/**
+	 * Checks to see if the specified event was a proc usage
+	 * @param event The event to check
+	 * @returns True if that event is contained in the usages group, false if not
+	 */
+	public checkEventWasProc(event: Events['action']): boolean {
+		return this.checkActionWasProc(event.action, event.timestamp)
+	}
+	/**
+	 * Module-space accessor for checkEventWasProc
+	 * @deprecated */
+	public checkFflogsEventWasProc(event: CastEvent): boolean {
+		return this.checkActionWasProc(event.ability.guid, this.parser.fflogsToEpoch(event.timestamp))
+	}
+	/**
+	 * Checks to see if the specified action consumed a proc at a given timestamp
+	 * @param actionId The action to check
+	 * @param timestamp The timestamp to check
+	 * @returns True if there was a tracked proc usage for the action at the given timestamp, false otherwise
+	 */
+	private checkActionWasProc(actionId: number, timestamp: number): boolean {
+		const procGroup = this.getTrackedGroupByAction(actionId)
+		if (procGroup == null) { return false }
+		return this.getUsagesForStatus(procGroup).some(event => event.timestamp === timestamp)
 	}
 
 	private overwrites = new Map<ProcGroup, ProcGroupEvents>()
@@ -117,7 +143,7 @@ export abstract class Procs extends Analyser {
 	 */
 	protected getOverwritesForStatus(status: number | ProcGroup): Event[] {
 		const procGroup = this.getTrackedGroupByStatus(status)
-		if (!procGroup) { return [] }
+		if (procGroup == null) { return [] }
 		return this.overwrites.get(procGroup)?.events || []
 	}
 	/**
@@ -127,7 +153,7 @@ export abstract class Procs extends Analyser {
 	 */
 	protected getOverwriteCountForStatus(status: number | ProcGroup): number {
 		const procGroup = this.getTrackedGroupByStatus(status)
-		if (!procGroup) { return 0 }
+		if (procGroup == null) { return 0 }
 		return this.overwrites.get(procGroup)?.events.length || 0
 	}
 
@@ -139,7 +165,7 @@ export abstract class Procs extends Analyser {
 	 */
 	protected getRemovalsForStatus(status: number | ProcGroup): Event[] {
 		const procGroup = this.getTrackedGroupByStatus(status)
-		if (!procGroup) { return [] }
+		if (procGroup == null) { return [] }
 		return this.removals.get(procGroup)?.events || []
 	}
 	/**
@@ -149,7 +175,7 @@ export abstract class Procs extends Analyser {
 	 */
 	protected getRemovalCountForStatus(status: number | ProcGroup): number {
 		const procGroup = this.getTrackedGroupByStatus(status)
-		if (!procGroup) { return 0 }
+		if (procGroup == null) { return 0 }
 		return this.removals.get(procGroup)?.events.length || 0
 	}
 
@@ -161,7 +187,7 @@ export abstract class Procs extends Analyser {
 	 */
 	protected getInvulnsForStatus(status: number | ProcGroup): Event[] {
 		const procGroup = this.getTrackedGroupByStatus(status)
-		if (!procGroup) { return [] }
+		if (procGroup == null) { return [] }
 		return this.invulns.get(procGroup)?.events || []
 	}
 	/**
@@ -171,7 +197,7 @@ export abstract class Procs extends Analyser {
 	 */
 	protected getInvulnCountForStatus(status: number | ProcGroup): number {
 		const procGroup = this.getTrackedGroupByStatus(status)
-		if (!procGroup) { return 0 }
+		if (procGroup == null) { return 0 }
 		return this.invulns.get(procGroup)?.events.length || 0
 	}
 
@@ -182,7 +208,7 @@ export abstract class Procs extends Analyser {
 	 */
 	protected getDropCountForStatus(status: number| ProcGroup): number {
 		const procGroup = this.getTrackedGroupByStatus(status)
-		if (!procGroup) { return 0 }
+		if (procGroup == null) { return 0 }
 		return this.getRemovalCountForStatus(status) - this.getUsageCountForStatus(status)
 	}
 
@@ -195,29 +221,26 @@ export abstract class Procs extends Analyser {
 	 */
 	protected getHistoryForStatus(status: number| ProcGroup): ProcBuffWindow[] {
 		const procGroup = this.getTrackedGroupByStatus(status)
-		if (!procGroup) { return [] }
+		if (procGroup == null) { return [] }
 		return this.history.get(procGroup) || []
 	}
 
 	private row!: SimpleRow
 	private rows = new Map()
 
-	protected castingSpellId: number | null = null
-	protected lastCastingSpellId: number | null = null
+	protected castingSpellId?: number
 
-	initialise() {
-		this.addEventHook(filter<Event>().type('prepare').source(this.parser.actor.id), this.onPrepare)
+	override initialise() {
+		const playerFilter = filter<Event>().source(this.parser.actor.id)
+		this.addEventHook(playerFilter.type('prepare'), this.onPrepare)
+		this.addEventHook(playerFilter.type('interrupt'), this.onInterrupt)
 
 		const trackedProcActionsIds: number[] = this.trackedProcs.map(group => group.consumeActions).reduce((acc, cur) => acc.concat(cur)).map(action => action.id)
-		const trackedActionFilter = filter<Event>()
-			.source(this.parser.actor.id)
-			.action(oneOf(trackedProcActionsIds))
+		const trackedActionFilter = playerFilter.action(oneOf(trackedProcActionsIds))
 		this.addEventHook(trackedActionFilter.type('action'), this.onCast)
 
 		const trackedProcStatusIds: number[] = this.trackedProcs.map(group => group.procStatus.id)
-		const trackedStatusFilter = filter<Event>()
-			.target(this.parser.actor.id)
-			.status(oneOf(trackedProcStatusIds))
+		const trackedStatusFilter = playerFilter.status(oneOf(trackedProcStatusIds))
 		this.addEventHook(trackedStatusFilter.type('statusApply'), this.onProcGained)
 		this.addEventHook(trackedStatusFilter.type('statusRemove'), this.onProcRemoved)
 
@@ -241,6 +264,27 @@ export abstract class Procs extends Analyser {
 		this.castingSpellId = event.action
 	}
 
+	private onInterrupt(_event: Events['interrupt']): void {
+		this.castingSpellId = undefined
+	}
+
+	/**
+	 * Checks to see if the event in question consumes the given proc
+	 * @param procGroup The proc that may be consumed
+	 * @param event The event that may consume the proc
+	 * @returns True if the event consumes the proc, false if it does not
+	 */
+	private checkConsumeProc(procGroup: ProcGroup, event: Events['action']): boolean {
+		// If we don't currently have this proc active, we can't possibly consume it
+		if (!this.currentWindows.has(procGroup)) { return false }
+		// If we have no idea what this action is, it doesn't consume it
+		if (this.data.getAction(event.action) == null) { return false }
+
+		// If we pass the error checks, return the value from jobSpecificCheckConsumeProc
+		// Subclasses can assume the basic error handling is dealt with and focus on only the job-specific logic
+		return this.jobSpecificCheckConsumeProc(procGroup, event)
+	}
+
 	/**
 	 * May be overridden by subclasses. Called by onCast to allow jobs to add specific logic that determines whether a proc was consumed
 	 * @param _procGroup The procGroup to check for consumption
@@ -259,29 +303,22 @@ export abstract class Procs extends Analyser {
 
 	private onCast(event: Events['action']): void {
 		const procGroup = this.getTrackedGroupByAction(event.action)
-		this.lastCastingSpellId = this.castingSpellId
-		this.castingSpellId = null
 
-		if (!procGroup) { return }
-		if (!this.currentWindows.has(procGroup)) { return }
+		// If this action consumed a proc, log it
+		if (procGroup != null && this.checkConsumeProc(procGroup, event)) {
+			this.stopAndSave(procGroup, event, 'usage')
 
-		const action = this.data.getAction(event.action)
-		if (!action) { return }
+			this.jobSpecificOnConsumeProc(procGroup, event)
+		}
 
-		// If there is job-specific logic that needs to be run to decide if a proc is being used, do that now
-		if (!this.jobSpecificCheckConsumeProc(procGroup, event)) { return }
-
-		this.stopAndSave(procGroup, event, 'usage')
-
-		this.jobSpecificOnConsumeProc(procGroup, event)
+		// Reset the variable tracking hardcasts since we just finished casting something
+		this.castingSpellId = undefined
 	}
 
 	private onProcGained(event: Events['statusApply']): void {
 		const procGroup = this.getTrackedGroupByStatus(event.status)
 
-		if (!procGroup) {
-			return
-		}
+		if (procGroup == null) { return }
 
 		if (this.currentWindows.has(procGroup)) {
 			// Close this window and open a fresh one so the timeline shows the re-applications correctly
@@ -295,9 +332,7 @@ export abstract class Procs extends Analyser {
 	private onProcRemoved(event: Events['statusRemove']): void {
 		const procGroup = this.getTrackedGroupByStatus(event.status)
 
-		if (!procGroup) {
-			return
-		}
+		if (procGroup == null) { return }
 
 		this.stopAndSave(procGroup, event, 'removal')
 	}
@@ -352,7 +387,7 @@ export abstract class Procs extends Analyser {
 	private onComplete(): void {
 		this.trackedProcs.forEach(procGroup => {
 			const status = procGroup.procStatus
-			if (!status) { return }
+			if (status == null) { return }
 
 			const row = this.getRowForStatus(status)
 			const fightStart = this.parser.pull.timestamp
@@ -361,7 +396,7 @@ export abstract class Procs extends Analyser {
 
 			// Add buff windows to the timeline
 			this.history.get(procGroup)?.forEach(window => {
-				if (!window.stop) { return }
+				if (window.stop == null) { return }
 				row.addItem(new StatusItem({
 					status,
 					start: window.start - fightStart,
@@ -444,7 +479,7 @@ export abstract class Procs extends Analyser {
 		if (!this.currentWindows.has(procGroup)) { return }
 
 		const currentWindow = this.currentWindows.get(procGroup)
-		if (!currentWindow) { return }
+		if (currentWindow == null) { return }
 
 		currentWindow.stop = event?.timestamp ?? this.parser.pull.timestamp + this.parser.pull.duration
 		this.history.get(procGroup)?.push(currentWindow)
@@ -480,7 +515,7 @@ export abstract class Procs extends Analyser {
 
 	/** Checks to see if the specified event timestamp already exists in that map, and if not, adds the event to the collection */
 	private tryAddEventToMap(groupEvents: ProcGroupEvents | undefined, event: Event) {
-		if (!groupEvents) { return }
+		if (groupEvents == null) { return }
 		if (groupEvents.timestamps.includes(event.timestamp)) { return }
 		groupEvents.timestamps.push(event.timestamp)
 		groupEvents.events.push(event)
@@ -488,7 +523,7 @@ export abstract class Procs extends Analyser {
 
 	private getRowForStatus(status: Status): SimpleRow {
 		let row = this.rows.get(status.id)
-		if (!row) {
+		if (row == null) {
 			row = this.row.addRow(new SimpleRow({label: status.name}))
 			this.rows.set(status.id, row)
 		}
@@ -500,6 +535,6 @@ export abstract class Procs extends Analyser {
 	}
 
 	protected getTrackedGroupByAction(actionId: number): ProcGroup | undefined {
-		return this.trackedProcs.find(group => group.consumeActions.find(action => action.id === actionId) !== undefined)
+		return this.trackedProcs.find(group => group.consumeActions.find(action => action.id === actionId) != null)
 	}
 }

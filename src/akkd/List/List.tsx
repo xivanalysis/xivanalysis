@@ -11,7 +11,7 @@ interface ListItemProps {
 }
 
 class ListItem extends React.PureComponent<ListItemProps> {
-	render() {
+	override render() {
 		const {
 			as: Component = 'div',
 			children,
@@ -40,7 +40,7 @@ interface ListProps {
 export class List extends React.PureComponent<ListProps> {
 	static Item = ListItem
 
-	render() {
+	override render() {
 		const {color, children} = this.props
 
 		return (

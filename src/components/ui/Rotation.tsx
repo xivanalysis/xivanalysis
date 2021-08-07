@@ -2,21 +2,44 @@ import cn from 'classnames'
 import {ActionLink, ItemLink} from 'components/ui/DbLink'
 import {getDataBy} from 'data'
 import ACTIONS, {ITEM_ID_OFFSET} from 'data/ACTIONS'
+import {Cause} from 'event'
 import {Ability} from 'fflogs'
 import React, {Component} from 'react'
+import overlayStyle from './Procs/ProcOverlay.module.css'
 import styles from './Rotation.module.css'
 
+export interface RotationEvent {
+	ability?: Ability,
+	cause?: Cause,
+	action?: number
+	isProc?: boolean
+}
 interface RotationProps {
-	events: Array<{ability: Ability}>
+	events: RotationEvent[]
 }
 
 export default class Rotation extends Component<RotationProps> {
-	render() {
+	getActionId(event: RotationEvent): number | undefined {
+		if (event.action != null) {
+			return event.action
+		}
+		if (event.ability != null) {
+			return event.ability.guid
+		}
+		if (event.cause != null && event.cause.type === 'action') {
+			return event.cause.action
+		}
+		return undefined
+	}
+
+	override render() {
 		const {events} = this.props
 
 		return <div className={styles.container}>
 			{events.map((event, index) => {
-				const action = getDataBy(ACTIONS, 'id', event.ability.guid) as TODO
+				const actionId = this.getActionId(event)
+
+				const action = getDataBy(ACTIONS, 'id', actionId) as TODO
 
 				// Don't bother showing the icon for autos
 				if (!action || action.autoAttack) {
@@ -33,6 +56,7 @@ export default class Rotation extends Component<RotationProps> {
 				const linkClassName = [
 					styles.link,
 					{[styles.ogcd]: !action.onGcd},
+					event.isProc ? overlayStyle.procOverlay : '',
 				]
 
 				const iconSize = action.onGcd ? styles.gcdSize : styles.ogcdSize

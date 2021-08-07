@@ -36,7 +36,6 @@ export default class Module extends Injectable {
 	static displayMode: DISPLAY_MODE
 	// TODO: Refactor this var
 	static i18n_id?: string // tslint:disable-line
-	static debug: boolean = false
 
 	private static _title: string | MessageDescriptor
 	static get title() {

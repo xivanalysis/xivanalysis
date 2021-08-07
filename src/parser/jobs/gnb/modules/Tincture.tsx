@@ -4,9 +4,9 @@ import {Tincture as CoreTincture} from 'parser/core/modules/Tincture'
 import React from 'react'
 
 export default class Tincture extends CoreTincture {
-	buffAction = this.data.actions.INFUSION_STR
+	override buffAction = this.data.actions.INFUSION_STR
 
-	trackedActions = {
+	override trackedActions = {
 		icon: this.data.actions.INFUSION_STR.icon,
 		actions: [
 			{

@@ -16,7 +16,7 @@ interface Props {
 }
 
 export class StatisticComponent extends React.PureComponent<Props> {
-	render() {
+	override render() {
 		const {statistic} = this.props
 		const colSpanClass = spanClassMap[statistic.width || 1]
 

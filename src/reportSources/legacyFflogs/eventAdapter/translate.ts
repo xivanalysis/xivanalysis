@@ -78,7 +78,7 @@ export class TranslateAdapterStep extends AdapterStep {
 			: this.adaptPostCalculatedHealEvent
 	}
 
-	adapt(baseEvent: FflogsEvent, _adaptedEvents: Event[]): Event[] {
+	override adapt(baseEvent: FflogsEvent, _adaptedEvents: Event[]): Event[] {
 		switch (baseEvent.type) {
 		case 'begincast':
 		case 'cast':

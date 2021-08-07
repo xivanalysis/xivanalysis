@@ -14,7 +14,7 @@ import {adaptReport} from './reportAdapter'
  */
 export class LegacyFflogsReportStore extends ReportStore {
 	@computed
-	get report() {
+	override get report() {
 		// If the report hasn't finished loading yet, bail early
 		const report = legacyReportStore.report
 		if (report?.loading !== false) {
@@ -29,7 +29,7 @@ export class LegacyFflogsReportStore extends ReportStore {
 		legacyReportStore.fetchReportIfNeeded(code)
 	}
 
-	requestPulls(options?: FetchOptions) {
+	override requestPulls(options?: FetchOptions) {
 		// `fetchReport` gets the full set of pulls for us, only fire fetches
 		// if bypassing the cache.
 		if (options?.bypassCache !== true) { return }
@@ -38,7 +38,7 @@ export class LegacyFflogsReportStore extends ReportStore {
 	}
 
 	// todo: clean up
-	async fetchEvents(pullId: Pull['id']) {
+	override async fetchEvents(pullId: Pull['id']) {
 		if (this.report == null) {
 			// todo: wait for report?
 			throw new Error('no report')
@@ -70,7 +70,7 @@ export class LegacyFflogsReportStore extends ReportStore {
 		return adaptEvents(report, pull, legacyEvents)
 	}
 
-	getReportLink(pullId?: Pull['id'], actorId?: Actor['id']) {
+	override getReportLink(pullId?: Pull['id'], actorId?: Actor['id']) {
 		if (this.report == null) {
 			return
 		}

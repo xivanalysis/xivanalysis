@@ -18,13 +18,16 @@ export const Items = memo(function Items({
 	const [min, max] = scales.extended.domain().map(t => t.getTime())
 	const filteredItems = []
 	for (const [index, item] of items.entries()) {
-		if (item.start > max || item.end < min) {
+		if (
+			item.start > max
+			|| (item.end ?? item.start) < min
+		) {
 			continue
 		}
 		filteredItems.push({
 			index,
 			left: scales.primary(item.start) ?? 0,
-			right: scales.primary(item.end),
+			right: item.end && scales.primary(item.end),
 			depth: item.depth,
 		})
 	}

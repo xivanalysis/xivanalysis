@@ -5,7 +5,7 @@ import CoreWeaving, {WeaveInfo} from 'parser/core/modules/Weaving'
 const PERMITTED_PHOENIX_WEAVES = 3
 
 export class Weaving extends CoreWeaving {
-	isBadWeave(weave: WeaveInfo, maxWeaves?: number) {
+	override isBadWeave(weave: WeaveInfo, maxWeaves?: number) {
 		// Permit triple weaves with Firebid Trance because Phoenix will not
 		// trigger a Scarlet Flame for the first skill if it is the last weave
 		// in a GCD and cannot always be used as the first weave.

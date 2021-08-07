@@ -1,6 +1,6 @@
 import {GameEdition} from 'data/EDITIONS'
 import {Events} from 'event'
-import {FflogsEvent, HitType, ReportLanguage} from 'fflogs'
+import {CastEvent, FflogsEvent, HitType, ReportLanguage} from 'fflogs'
 import {Actor, Pull, Report, Team} from 'report'
 import {adaptEvents} from '../eventAdapter'
 import {AdapterStep} from '../eventAdapter/base'
@@ -657,6 +657,38 @@ describe('Event adapter', () => {
 			'action',
 			'statusApply',
 		])
+	})
+
+	it('fabricates interrupts', () => {
+		const interruptedAbility = (fakeEvents.begincast[0] as CastEvent).ability
+		const interruptingAbility = {...interruptedAbility, guid: interruptedAbility.guid + 1}
+		const interruptionTimestamp = 4
+
+		const result = adaptEvents(report, pull, [
+			{...fakeEvents.begincast[0], ability: interruptedAbility, sourceID: 1, timestamp: 1} as CastEvent,
+			{...fakeEvents.begincast[0], ability: interruptedAbility, sourceID: 2, timestamp: 1} as CastEvent,
+			{...fakeEvents.cast[0], ability: interruptedAbility, sourceID: 1, timestamp: 2} as CastEvent,
+
+			{...fakeEvents.begincast[0], ability: interruptedAbility, sourceID: 1, timestamp: 3} as CastEvent,
+			{...fakeEvents.begincast[0], ability: interruptingAbility, sourceID: 1, timestamp: interruptionTimestamp} as CastEvent,
+		])
+
+		expect(result.map(event => event.type)).toEqual([
+			'actorUpdate', // injected actor update with stats
+			'prepare', // regular cast sequence from actor 1
+			'prepare', // prep from actor 2, should not effect actor 1
+			'action',
+			'prepare', // interrupted cast from actor 1
+			'interrupt',
+			'prepare',
+		])
+		expect(result[5] as Events['interrupt']).toEqual({
+			type: 'interrupt',
+			timestamp: timestamp + interruptionTimestamp,
+			source: '1',
+			target: '1',
+			action: interruptedAbility.guid,
+		})
 	})
 
 	it('synthesizes prepull actions', () => {

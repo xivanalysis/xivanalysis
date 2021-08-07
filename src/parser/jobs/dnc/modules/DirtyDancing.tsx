@@ -103,9 +103,9 @@ class Dance {
 }
 
 export default class DirtyDancing extends Module {
-	static handle = 'dirtydancing'
-	static title = t('dnc.dirty-dancing.title')`Dance Issues`
-	static displayOrder = DISPLAY_ORDER.DIRTY_DANCING
+	static override handle = 'dirtydancing'
+	static override title = t('dnc.dirty-dancing.title')`Dance Issues`
+	static override displayOrder = DISPLAY_ORDER.DIRTY_DANCING
 
 	@dependency private checklist!: CheckList
 	@dependency private suggestions!: Suggestions
@@ -129,7 +129,7 @@ export default class DirtyDancing extends Module {
 		[ACTIONS.TECHNICAL_STEP.id]: 0,
 	}
 
-	protected init() {
+	protected override init() {
 		this.addEventHook('cast', {by: 'player', abilityId: STEPS}, this.beginDance)
 		this.addEventHook('cast', {by: 'player'}, this.continueDance)
 		this.addEventHook('cast', {by: 'player', abilityId: FINISHES}, this.finishDance)
@@ -240,6 +240,15 @@ export default class DirtyDancing extends Module {
 		return (statusTime / uptime) * 100
 	}
 
+	private getClosedPositionUptimePercent() {
+		// Exclude downtime from both the status time and expected uptime
+		const statusTime = this.entityStatuses.getStatusUptime(STATUSES.CLOSED_POSITION.id, this.combatants.getEntities()) - this.downtime.getDowntime()
+		const uptime = this.parser.currentDuration - this.downtime.getDowntime()
+
+		// Don't show negative numbers, which is possible when factoring in downtime
+		return Math.max((statusTime / uptime) * 100, 0)
+	}
+
 	private onComplete() {
 		const zeroStandards = this.danceHistory.filter(dance => dance.dirty && dance.initiatingStep.ability.guid === ACTIONS.STANDARD_STEP.id &&
 			_.last(dance.rotation)?.ability.guid === ACTIONS.STANDARD_FINISH.id).length
@@ -302,6 +311,20 @@ export default class DirtyDancing extends Module {
 			],
 		}))
 
+		this.checklist.add(new Rule({
+			name: <Trans id="dnc.dirty-dancing.checklist.closed-position-buff.name">Choose a <StatusLink {...STATUSES.DANCE_PARTNER} /></Trans>,
+			description: <Trans id="dnc.dirty-dancing.checklist.closed-position-buff.description">
+				Choosing a <StatusLink {...STATUSES.DANCE_PARTNER} /> will also give them the <StatusLink {...STATUSES.STANDARD_FINISH_PARTNER} /> and <StatusLink {...STATUSES.DEVILMENT} /> buffs. Make sure to keep it up at all times except for rare circumstances where a switch is warranted.
+			</Trans>,
+			target: 95,
+			requirements: [
+				new Requirement({
+					name: <Fragment><StatusLink {...STATUSES.CLOSED_POSITION} /> uptime (excluding downtime)</Fragment>,
+					percent: () => this.getClosedPositionUptimePercent(),
+				}),
+			],
+		}))
+
 		const driftedStandards = Math.floor(this.totalDrift[ACTIONS.STANDARD_STEP.id]/STEP_COOLDOWN_MILLIS[ACTIONS.STANDARD_STEP.id])
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.STANDARD_STEP.icon,
@@ -355,7 +378,7 @@ export default class DirtyDancing extends Module {
 		}
 	}
 
-	output() {
+	override output() {
 		if (this.danceHistory.some(dance => dance.error)) {
 			return <Fragment>
 				<Message>

@@ -9,6 +9,7 @@ import Checklist from './Checklist'
 import Combatants from './Combatants'
 import Combos from './Combos'
 import Cooldowns from './Cooldowns'
+import {Cooldowns as Cooldowns2} from './Cooldowns2'
 import {Data} from './Data'
 import {Death} from './Death'
 import Downtime from './Downtime'
@@ -25,6 +26,7 @@ import PrecastAction from './PrecastAction'
 import PrecastStatus from './PrecastStatus'
 import RaidBuffs, {RaidBuffsQuery} from './RaidBuffs'
 import {ResourceGraphs} from './ResourceGraphs'
+import {SpeedAdjustments} from './SpeedAdjustments'
 import Speedmod from './Speedmod'
 import {Statistics} from './Statistics'
 import Statuses from './Statuses'
@@ -46,6 +48,7 @@ export default [
 	Combatants,
 	Combos,
 	Cooldowns,
+	Cooldowns2,
 	Data,
 	Death,
 	Downtime,
@@ -63,6 +66,7 @@ export default [
 	RaidBuffsQuery,
 	RaidBuffs,
 	ResourceGraphs,
+	SpeedAdjustments,
 	Speedmod,
 	Statistics,
 	Statuses,

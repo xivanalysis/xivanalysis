@@ -7,7 +7,7 @@ interface Props {
 }
 
 export class Container extends React.PureComponent<Props> {
-	render() {
+	override render() {
 		const {className, children} = this.props
 		return (
 			<div className={classNames(

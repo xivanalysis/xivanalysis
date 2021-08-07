@@ -4,6 +4,7 @@ export interface Status {
 	icon: string
 	duration?: number
 	stacksApplied?: number
+	speedModifier?: number
 }
 
 export const ensureStatuses = <T extends Record<string, Status>>(statuses: T): {[K in keyof T]: T[K] & Status} => statuses

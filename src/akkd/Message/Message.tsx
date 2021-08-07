@@ -26,7 +26,7 @@ interface Props extends MessageTypes {
 export class Message extends React.PureComponent<Props> {
 	static Header = MessageHeader
 
-	render() {
+	override render() {
 		const {icon, children} = this.props
 
 		// Find the first message type that's truthy

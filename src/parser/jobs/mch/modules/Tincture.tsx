@@ -12,11 +12,11 @@ const TINCTURE_BUFFER = 2500
 export default class Tincture extends CoreTincture {
 	@dependency private downtime!: Downtime
 
-	buffAction = this.data.actions.INFUSION_DEX
+	override buffAction = this.data.actions.INFUSION_DEX
 
-	petActions = [this.data.actions.PILE_BUNKER]
+	override petActions = [this.data.actions.PILE_BUNKER]
 
-	trackedActions = {
+	override trackedActions = {
 		icon: this.data.actions.INFUSION_DEX.icon,
 		actions: [
 			{
@@ -47,7 +47,7 @@ export default class Tincture extends CoreTincture {
 		},
 	}
 
-	changeExpectedTrackedActionClassLogic(buffWindow: BuffWindowState, action: BuffWindowTrackedAction): number {
+	override changeExpectedTrackedActionClassLogic(buffWindow: BuffWindowState, action: BuffWindowTrackedAction): number {
 		const bufferedWindowStart = buffWindow.start - TINCTURE_BUFFER
 
 		if (action.action === this.data.actions.PILE_BUNKER) {

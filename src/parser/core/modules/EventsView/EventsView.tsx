@@ -14,14 +14,14 @@ import styles from './EventsView.module.css'
 const rowHeight = parseInt(styles.rowHeight, 10)
 
 export class EventsView extends Analyser {
-	static title = 'Events View'
-	static handle = 'eventsView'
-	static displayOrder = DISPLAY_ORDER.EVENTS_VIEW
-	static debug = true
+	static override title = 'Events View'
+	static override handle = 'eventsView'
+	static override displayOrder = DISPLAY_ORDER.EVENTS_VIEW
+	static override debug = true
 
 	private events: Event[] = []
 
-	initialise() {
+	override initialise() {
 		this.debug(() => {
 			// Catch every event. Note: if you're reading this - don't use the predicate for logic unless you know exactly what you're doing.
 			// It's a massive anti-pattern, and I'm only doing it here as a microoptimisation for a single use case. If you're not sure, ask.
@@ -32,7 +32,7 @@ export class EventsView extends Analyser {
 		})
 	}
 
-	output() {
+	override output() {
 		if (this.events.length === 0) {
 			return null
 		}

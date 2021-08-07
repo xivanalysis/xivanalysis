@@ -25,7 +25,7 @@ const SEVERITY_MISSED_PROCS = {
 }
 
 export default class Procs extends CoreProcs {
-	static title = t('rdm.procs.title')`Proc Issues`
+	static override title = t('rdm.procs.title')`Proc Issues`
 
 	/**
 	 * Procs that a RDM gains over a fight caused by the RDM themselves
@@ -137,7 +137,7 @@ export default class Procs extends CoreProcs {
 		</Trans>
 	}
 
-	protected addJobSpecificSuggestions() {
+	protected override addJobSpecificSuggestions() {
 		const missedFire = this.getDropCountForStatus(this.data.statuses.VERFIRE_READY.id)
 		const invulnFire = this.getInvulnCountForStatus(this.data.statuses.VERFIRE_READY.id)
 		const overWrittenFire = this.getOverwriteCountForStatus(this.data.statuses.VERFIRE_READY.id)
@@ -172,7 +172,7 @@ export default class Procs extends CoreProcs {
 		}))
 	}
 
-	output() {
+	override output() {
 		const allInvulns = this.getInvulnsForStatus(this.data.statuses.VERFIRE_READY.id).concat(this.getInvulnsForStatus(this.data.statuses.VERSTONE_READY.id)).sort((a, b) => a.timestamp - b.timestamp)
 		if (allInvulns.length === 0) { return }
 

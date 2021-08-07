@@ -40,7 +40,7 @@ class Boot {
 }
 
 export default class Steppies extends Module {
-	static handle = 'steppies'
+	static override handle = 'steppies'
 
 	@dependency private checklist!: Checklist
 	@dependency private combatants!: Combatants
@@ -49,7 +49,7 @@ export default class Steppies extends Module {
 
 	private steppies: Boot[] = []
 
-	protected init(): void {
+	protected override init(): void {
 		this.addEventHook('normaliseddamage', {by: 'player', abilityId: this.data.actions.BOOTSHINE.id}, this.onDamage)
 		this.addEventHook('complete', this.onComplete)
 	}

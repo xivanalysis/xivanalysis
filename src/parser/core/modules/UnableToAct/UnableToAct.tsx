@@ -32,8 +32,8 @@ export interface WindowFilter {
 }
 
 export class UnableToAct extends Analyser {
-	static handle = 'unableToAct'
-	static debug = false
+	static override handle = 'unableToAct'
+	static override debug = false
 
 	@dependency private brokenLog!: BrokenLog
 	@dependency private timeline!: Timeline
@@ -84,7 +84,7 @@ export class UnableToAct extends Analyser {
 		}).length > 0
 	}
 
-	initialise() {
+	override initialise() {
 		const statusFilter = filter<Event>().status(oneOf(STATUS_IDS))
 		this.addEventHook(statusFilter.type('statusApply'), this.onApply)
 		this.addEventHook(statusFilter.type('statusRemove'), this.onRemove)
