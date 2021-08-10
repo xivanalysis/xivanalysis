@@ -8,7 +8,6 @@ import Module from 'parser/core/Module'
 import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import {DualStatistic} from 'parser/jobs/rdm/statistics/DualStatistic'
 import React, {Fragment} from 'react'
-//import {getCooldownRemaining} from 'parser/core/modules/Cooldowns'
 //import {ActionLink} from 'components/ui/DbLink'
 //TODO: Should possibly look into different Icons for things in Suggestions
 
@@ -154,6 +153,7 @@ export default class Gauge extends Module {
 		static title = t('rdm.gauge.title')`Gauge`
 		static dependencies = [
 			'cooldowns',
+			'cooldowns2',
 			'suggestions',
 			'statistics',
 		]
@@ -220,7 +220,9 @@ export default class Gauge extends Module {
 
 				// Manafication resets movement abilities
 				this.cooldowns.resetCooldown(ACTIONS.CORPS_A_CORPS.id)
+				this.cooldowns2.reset('CORPS_A_CORPS')
 				this.cooldowns.resetCooldown(ACTIONS.DISPLACEMENT.id)
+				this.cooldowns2.reset('DISPLACEMENT')
 			} else {
 				//Leaving this here, we have an issue where in an overkill returns an amount of 0
 				//But the game treats it as an ability that hit, this causes a trigger of our invuln logic
