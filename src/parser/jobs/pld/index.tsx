@@ -28,6 +28,13 @@ export default new Meta({
 
 	changelog: [
 		{
+			date: new Date('2021-08-13'),
+			Changes: () => <>
+				Add Atonement usage to Checklist.
+			</>,
+			contributors: [CONTRIBUTORS.RYAN],
+		},
+		{
 			date: new Date('2021-04-19'),
 			Changes: () => <>
 				Add an Oath Gauge usage module.

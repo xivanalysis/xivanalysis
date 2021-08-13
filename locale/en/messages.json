@@ -666,7 +666,7 @@
   "pld.Atonement.title": "Atonement",
   "pld.about.description": "<0>As the illegitimate child of a WHM and BLM, you chose the gory path of a shield lobbing, sword swinging Mage that also tries to help everybody out.</0><1>This analyser attempts to find just the right things to turn you into a fearsome tank that will show no <2/> to your enemies while being the true <3/> of the party.</1>",
   "pld.atonement.checklist.description": "<0/> generates 3 stacks of Sword Oath to use on <1/>, this is effectively the same as getting 3 <2/> and you should make sure to use all stacks generated.",
-  "pld.atonement.checklist.requirement.atonement.name": "<0/> uses out of total generated stacks.",
+  "pld.atonement.checklist.requirement.atonement.name": "Uses of <0/> out of possible uses",
   "pld.fightorflight.suggestions.gcds.content": "Try to land 11 physical GCDs during every <0/> window.",
   "pld.fightorflight.suggestions.gcds.why": "{0, plural, one {# physical GCD} other {# physical GCDs}} missed during <0/> windows.",
   "pld.fightorflight.suggestions.goring-blade-clip.content": "Try to refresh <0/> 9 GCDs after the first <1/> in a <2/> window.",
