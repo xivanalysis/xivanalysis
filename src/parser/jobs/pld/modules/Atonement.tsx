@@ -1,17 +1,17 @@
-import { Trans} from '@lingui/react'
-import { t } from '@lingui/macro'
-import { ActionLink } from 'components/ui/DbLink'
-import { Data } from 'parser/core/modules/Data'
-import _ from 'lodash'
-import { Analyser } from 'parser/core/Analyser'
-import Checklist, { Rule, Requirement } from 'parser/core/modules/Checklist'
+import {t} from '@lingui/macro'
+import {Trans} from '@lingui/react'
+import {ActionLink} from 'components/ui/DbLink'
+import {Data} from 'parser/core/modules/Data'
+//import _ from 'lodash'
+import {Analyser} from 'parser/core/Analyser'
+import Checklist, {Rule, Requirement} from 'parser/core/modules/Checklist'
 import React from 'react'
-import { dependency } from '../../../core/Injectable'
+import {dependency} from '../../../core/Injectable'
 
 const STACKS_GAINED = 3
 
 export default class Atonement extends Analyser {
-	static override handle = "Atonement"
+	static override handle = 'Atonement'
 	static override title = t('pld.Atonement.title')`Atonement`
 
 	@dependency private checklist!: Checklist
@@ -20,13 +20,12 @@ export default class Atonement extends Analyser {
 	protected actions: number = 0
 	protected buffs: number = 0
 
-
 	override initialise() {
 
 		this.addEventHook({
 			type: 'action',
 			source: this.parser.actor.id,
-			action: this.data.actions.ATONEMENT.id
+			action: this.data.actions.ATONEMENT.id,
 		}, this.onAtonement)
 
 		this.addEventHook({
@@ -60,7 +59,7 @@ export default class Atonement extends Analyser {
 						<ActionLink {...this.data.actions.ATONEMENT} /> uses out of total generated stacks.
 					</Trans>,
 					value: this.actions,
-					target: this.buffs
+					target: this.buffs,
 				}),
 			],
 		}))

@@ -1,4 +1,4 @@
-import { Interrupts } from 'parser/core/modules/Interrupts'
+import {Interrupts} from 'parser/core/modules/Interrupts'
 import Atonement from './Atonement'
 import Combos from './Combos'
 import Cooldowns from './Cooldowns'
