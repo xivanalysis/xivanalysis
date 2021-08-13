@@ -784,7 +784,7 @@
   "sam.kaiten.suggestion.missedkaiten.why": "You failed to Kaiten {0, plural, one {# time} other {# times}} on either <0/> or <1/>",
   "sam.kaiten.title": "Kaiten",
   "sam.kenki.suggestion.content": "Kenki is your primary resource, and a significant source of damage. Avoid wasting potential kenki by using it before you hit the maximum of {MAX_KENKI}.",
-  "sam.kenki.suggestion.why": "You wasted between {minCap} and {maxCap} kenki.",
+  "sam.kenki.suggestion.why": "You wasted between {min} and {max} kenki.",
   "sam.kenki.title": "Kenki",
   "sam.ms.suggestions.badgcd.content": "GCDs used during <0/> should be limited to sen building skills.",
   "sam.ms.suggestions.missedgcd.content": "Try to land 3 GCDs during every <0/> window.",

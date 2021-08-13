@@ -1,10 +1,9 @@
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
 import {ActionLink} from 'components/ui/DbLink'
-//import _ from 'lodash'
 import {Analyser} from 'parser/core/Analyser'
-import Checklist, { Rule, Requirement } from 'parser/core/modules/Checklist'
-import { Data } from 'parser/core/modules/Data'
+import Checklist, {Rule, Requirement} from 'parser/core/modules/Checklist'
+import {Data} from 'parser/core/modules/Data'
 import React from 'react'
 import {dependency} from '../../../core/Injectable'
 
