@@ -2,7 +2,7 @@ import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
 import {ActionLink} from 'components/ui/DbLink'
 import {Analyser} from 'parser/core/Analyser'
-import Checklist, { TieredRule, TARGET, Requirement} from 'parser/core/modules/Checklist'
+import Checklist, {TieredRule, TARGET, Requirement} from 'parser/core/modules/Checklist'
 import {Data} from 'parser/core/modules/Data'
 import React from 'react'
 import {dependency} from '../../../core/Injectable'
@@ -11,8 +11,8 @@ const STACKS_GAINED = 3
 
 // In seconds
 const UPTIME = {
-		95: TARGET.WARN,
-		100: TARGET.SUCCESS,
+	95: TARGET.WARN,
+	100: TARGET.SUCCESS,
 }
 
 export default class Atonement extends Analyser {
@@ -62,7 +62,7 @@ export default class Atonement extends Analyser {
 			requirements: [
 				new Requirement({
 					name: <Trans id="pld.atonement.checklist.requirement.atonement.name">
-						Uses of <ActionLink {...this.data.actions.ATONEMENT} /> out of possible uses 
+						Uses of <ActionLink {...this.data.actions.ATONEMENT} /> out of possible uses
 					</Trans>,
 					overrideDisplay: `${this.actions} / ${this.buffs} (${this.getPercent().toFixed(2)}%)`,
 					percent: this.getPercent(),
