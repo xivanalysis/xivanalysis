@@ -228,6 +228,7 @@
   "core.about.title": "분석에 대하여",
   "core.about.unsupported.description": "표시된 결과들은 직업별 분석이 포함되지 않았으며, 정확한 결과를 내는데 필요한 중요 데이터가 누락될 수 있습니다.",
   "core.about.unsupported.title": "이 직업은 현재 지원하지 않습니다.",
+  "core.action-timeline.label.gcd": "",
   "core.actors.resource.hp": "체력",
   "core.actors.resource.mp": "마나",
   "core.always-cast.description": "항상 무언가를 해야합니다. 재사용 대기시간이 돌아가는 동안 작은 실수를 하는 것이 정확한 딜 사이클을 천천히 사용하는 것보다 낫습니다.",

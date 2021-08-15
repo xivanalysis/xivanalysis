@@ -228,6 +228,7 @@
   "core.about.title": "À propos",
   "core.about.unsupported.description": "Le résultat illustré ci-dessous ne contient aucune analyse spécifique aux jobs. De ce fait, certaines données nécessaires pour générer un rendu précis sont manquantes.",
   "core.about.unsupported.title": "Ce job n'est pas pris en charge actuellement",
+  "core.action-timeline.label.gcd": "",
   "core.actors.resource.hp": "PV",
   "core.actors.resource.mp": "PM",
   "core.always-cast.description": "Assurez vous de toujours faire quelque chose. Il est souvent préférable de faire des petites erreurs tout en maintenant son GCD que d’exécuter une rotation correcte lentement.",

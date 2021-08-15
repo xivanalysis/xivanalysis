@@ -1,3 +1,4 @@
+import {Trans} from '@lingui/react'
 import {Action} from 'data/ACTIONS'
 import React, {ReactNode} from 'react'
 import {Analyser} from '../Analyser'
@@ -64,8 +65,7 @@ export class ActionTimeline extends Analyser {
 		// Using an IIFE because pattern matching isn't in the spec yet
 		const label = (() => {
 			if (finalConfig.label != null) { return finalConfig.label }
-			// todo: i18n
-			if (content === 'GCD')  { return 'GCD' }
+			if (content === 'GCD')  { return <Trans id="core.action-timeline.label.gcd">GCD</Trans> }
 			if (typeof content === 'string') { return this.data.actions[content].name }
 			if (typeof content === 'number') { return cooldownHistory[0]?.action.name }
 		})()

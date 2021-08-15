@@ -228,6 +228,7 @@
   "core.about.title": "About",
   "core.about.unsupported.description": "The output shown below will not contain any job-specific analysis, and may be missing critical data required to generate an accurate result.",
   "core.about.unsupported.title": "This job is currently unsupported",
+  "core.action-timeline.label.gcd": "GCD",
   "core.actors.resource.hp": "HP",
   "core.actors.resource.mp": "MP",
   "core.always-cast.description": "Make sure you're always doing something. It's often better to make small mistakes while keeping the GCD rolling than it is to perform the correct rotation slowly.",

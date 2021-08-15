@@ -228,6 +228,7 @@
   "core.about.title": "关于",
   "core.about.unsupported.description": "下面展示的输出不会包含任何职业特化分析，而且可能缺少生成准确结果所需的关键数据。",
   "core.about.unsupported.title": "尚未支持该职业。",
+  "core.action-timeline.label.gcd": "",
   "core.actors.resource.hp": "血量",
   "core.actors.resource.mp": "蓝量",
   "core.always-cast.description": "确保你一直在做些什么。保持GCD持续运转的话，就算犯一些小错误，也比慢慢打出正确循环要好。",
