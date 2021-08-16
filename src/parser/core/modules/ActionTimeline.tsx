@@ -2,6 +2,7 @@ import {Trans} from '@lingui/react'
 import {Action} from 'data/ACTIONS'
 import React, {ReactNode} from 'react'
 import {Icon} from 'semantic-ui-react'
+import {ensureArray} from 'utilities'
 import {Analyser} from '../Analyser'
 import {dependency} from '../Injectable'
 import CastTime from './CastTime'
@@ -13,7 +14,8 @@ import {ActionItem, Row, SimpleItem, SimpleRow, Timeline} from './Timeline'
 const ANIMATION_LOCK = 100
 
 // We're excluding the Action interface as it's unessecary for this config format, and complicates the discrimination later.
-export type RowSpecifier = Exclude<SelectionSpecifier, Action>
+type RowSpecifierEntry = Exclude<SelectionSpecifier, Action>
+export type RowSpecifier = RowSpecifierEntry | RowSpecifierEntry[]
 export interface ActionRowConfig {
 	content: RowSpecifier
 	label?: ReactNode
@@ -60,31 +62,32 @@ export class ActionTimeline extends Analyser {
 	private addRow(config: ActionRow) {
 		// Standardise the simple config into the main config shape
 		let finalConfig = config
-		if (typeof finalConfig !== 'object') {
+		if (typeof finalConfig !== 'object' || Array.isArray(finalConfig)) {
 			finalConfig = {content: finalConfig}
 		}
 
 		// Pre-emptively grab the cooldown history, we might need it for the label
-		const {content} = finalConfig
-		const cooldownHistory = this.cooldowns.cooldownHistory(content)
+		const content = ensureArray(finalConfig.content)
+		const cooldownHistory = content.flatMap(specifier => this.cooldowns.cooldownHistory(specifier))
 
 		// Using an IIFE because pattern matching isn't in the spec yet
+		const firstContent = content[0]
 		const label = (() => {
 			if (finalConfig.label != null) { return finalConfig.label }
-			if (content === 'GCD')  { return <Trans id="core.action-timeline.label.gcd">GCD</Trans> }
-			if (typeof content === 'string') { return this.data.actions[content].name }
-			if (typeof content === 'number') { return cooldownHistory[0]?.action.name }
+			if (firstContent === 'GCD')  { return <Trans id="core.action-timeline.label.gcd">GCD</Trans> }
+			if (typeof firstContent === 'string') { return this.data.actions[firstContent].name }
+			if (typeof firstContent === 'number') { return cooldownHistory[0]?.action.name }
 		})()
 
 		// Build the row and save it to the groups for this config
 		// TODO: collision handling?
 		const row = this.timeline.addRow(new SimpleRow({label}))
-		this.cooldowns.groups(content)
+		content.flatMap(specifier => this.cooldowns.groups(specifier))
 			.forEach(group => this.groupRows.set(group, row))
 
 		// Add all the items
 		this.addCooldownItems(row, cooldownHistory)
-		this.addChargeItems(row, this.cooldowns.chargeHistory(content))
+		this.addChargeItems(row, content.flatMap(specifier => this.cooldowns.chargeHistory(specifier)))
 	}
 
 	private addCooldownItems(row: SimpleRow, history: CooldownHistoryEntry[]) {
