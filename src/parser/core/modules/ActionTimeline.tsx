@@ -1,6 +1,7 @@
 import {Trans} from '@lingui/react'
 import {Action} from 'data/ACTIONS'
 import React, {ReactNode} from 'react'
+import {Icon} from 'semantic-ui-react'
 import {Analyser} from '../Analyser'
 import {dependency} from '../Injectable'
 import CastTime from './CastTime'
@@ -18,6 +19,11 @@ export interface ActionRowConfig {
 	label?: ReactNode
 }
 export type ActionRow = RowSpecifier | ActionRowConfig
+
+enum ItemDepth {
+	CHARGE_GAIN = 0,
+	ACTION = 1,
+}
 
 export class ActionTimeline extends Analyser {
 	static override handle = 'actionTimeline'
@@ -100,12 +106,27 @@ export class ActionTimeline extends Analyser {
 		for (const entry of history) {
 			const item = entry.delta < 0
 				? new ActionItem({
+					depth: ItemDepth.ACTION,
 					start: entry.timestamp - this.parser.pull.timestamp,
 					action: entry.action,
 				})
 				: new SimpleItem({
+					depth: ItemDepth.CHARGE_GAIN,
 					start: entry.timestamp - this.parser.pull.timestamp,
-					content: <>{entry.delta}</>,
+					content: <div style={{
+						width: 1,
+						height: '100%',
+						background: 'red',
+						position: 'relative',
+					}}>
+						<Icon name="angle double up" style={{
+							color: 'blue',
+							transform: 'translateX(-50%)',
+							position: 'absolute',
+							top: '50%',
+							lineHeight: 0,
+						}}/>
+					</div>,
 				})
 			row.addItem(item)
 		}
