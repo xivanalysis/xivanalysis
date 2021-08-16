@@ -666,6 +666,7 @@
   "pld.Atonement.title": "",
   "pld.about.description": "<0>Als das uneheliche Kind von Weiß- und Schwarzmagier hast du den blutigen Pfad des schildwerfenden, schwertschwingenden Magiers ausgesucht, das außerdem versucht jedem zu helfen.</0><1>Dieser Analysator versucht, die richtigen Dinge zu finden um dich zum furchteinflößenden Verteidiger zu machen, der keine <2/> gegenüber Feinden zeigt und gleichzeitig der wahre <3/> deiner Gruppe ist.</1>",
   "pld.atonement.checklist.description": "",
+  "pld.atonement.checklist.name": "",
   "pld.atonement.checklist.requirement.atonement.name": "",
   "pld.fightorflight.suggestions.gcds.content": "Versuche während jedes <0/>-Zeitfensters 11 physische GCD-Angriffe unterzubringen.",
   "pld.fightorflight.suggestions.gcds.why": "{0, plural, one {# physische GCD} other {# physische GCDs}} verpasst unter <0/>-Fenstern.",

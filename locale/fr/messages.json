@@ -666,6 +666,7 @@
   "pld.Atonement.title": "",
   "pld.about.description": "",
   "pld.atonement.checklist.description": "",
+  "pld.atonement.checklist.name": "",
   "pld.atonement.checklist.requirement.atonement.name": "",
   "pld.fightorflight.suggestions.gcds.content": "Essayez d'utiliser 11 GCDs physique chaque <0/> fenêtre.",
   "pld.fightorflight.suggestions.gcds.why": "{0, plural, one {# GCD physique} other {# GCDs phisiques}} perdu durant <0/> fenêtres.",
