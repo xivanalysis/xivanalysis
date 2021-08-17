@@ -1,4 +1,5 @@
 import {Interrupts} from 'parser/core/modules/Interrupts'
+import {ActionTimeline} from './ActionTimeline'
 import Combos from './Combos'
 import Cooldowns from './Cooldowns'
 import FightOrFlight from './FightOrFlight'
@@ -11,6 +12,7 @@ import Tincture from './Tincture'
 import Weaving from './Weaving'
 
 export default [
+	ActionTimeline,
 	Combos,
 	Cooldowns,
 	FightOrFlight,
