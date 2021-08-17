@@ -6,10 +6,11 @@ import CastTime from 'parser/core/modules/CastTime'
 import {ChargeHistoryEntry, CooldownEndReason, CooldownGroup, CooldownHistoryEntry, Cooldowns, SelectionSpecifier} from 'parser/core/modules/Cooldowns2'
 import {Data} from 'parser/core/modules/Data'
 import {SpeedAdjustments} from 'parser/core/modules/SpeedAdjustments'
-import {ActionItem, Row, SimpleItem, SimpleRow, Timeline} from 'parser/core/modules/Timeline'
+import {ActionItem, BaseItem, Row, SimpleItem, SimpleRow, Timeline} from 'parser/core/modules/Timeline'
 import React, {ReactNode} from 'react'
 import {Icon} from 'semantic-ui-react'
 import {ensureArray} from 'utilities'
+import styles from './ActionTimeline.module.css'
 
 const ANIMATION_LOCK = 100
 
@@ -100,7 +101,7 @@ export class ActionTimeline extends Analyser {
 			row.addItem(new SimpleItem({
 				start,
 				end,
-				content: <div style={{background: 'rgba(255, 0, 0, 0.25)', width: '100%', height: '100%'}}/>,
+				content: <div className={styles.cooldown}/>,
 			}))
 		}
 	}
@@ -113,23 +114,9 @@ export class ActionTimeline extends Analyser {
 					start: entry.timestamp - this.parser.pull.timestamp,
 					action: entry.action,
 				})
-				: new SimpleItem({
+				: new ChargeGainItem({
 					depth: ItemDepth.CHARGE_GAIN,
 					start: entry.timestamp - this.parser.pull.timestamp,
-					content: <div style={{
-						width: 1,
-						height: '100%',
-						background: 'red',
-						position: 'relative',
-					}}>
-						<Icon name="angle double up" style={{
-							color: 'blue',
-							transform: 'translateX(-50%)',
-							position: 'absolute',
-							top: '50%',
-							lineHeight: 0,
-						}}/>
-					</div>,
 				})
 			row.addItem(item)
 		}
@@ -158,4 +145,12 @@ export class ActionTimeline extends Analyser {
 
 		return duration
 	}
+}
+
+class ChargeGainItem extends BaseItem {
+	Content = () => (
+		<div className={styles.chargeGain}>
+			<Icon name="angle double up" className={styles.icon}/>
+		</div>
+	)
 }
