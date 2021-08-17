@@ -1,4 +1,5 @@
 import {Interrupts} from 'parser/core/modules/Interrupts'
+import {ActionTimeline} from './ActionTimeline'
 import {ArcanaSuggestions, ArcanaTracking} from './ArcanaTracking'
 import ArcanaUndrawUsage from './ArcanaUndrawUsage'
 import CelestialIntersection from './CelestialIntersection'
@@ -17,6 +18,7 @@ import Statuses from './Statuses'
 import Synastry from './Synastry'
 
 export default [
+	ActionTimeline,
 	ArcanaSuggestions,
 	ArcanaTracking,
 	ArcanaUndrawUsage,
