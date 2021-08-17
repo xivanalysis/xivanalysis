@@ -563,6 +563,8 @@
   "mch.wildfire.title": "Flambée",
   "mch.wildfire.trigger.no-buff-wf": "<0/> des dommages ont été enregistrés sans qu'il y ait eu un debuff correspondant <1/>.",
   "mnk.about.description": "",
+  "mnk.action-timeline.chakras": "",
+  "mnk.action-timeline.fists": "",
   "mnk.demolish.checklist.description": "",
   "mnk.demolish.checklist.name": "Garder Démolition actif",
   "mnk.demolish.checklist.requirement.name": "Temps d'activité total de <0/>",

@@ -563,6 +563,8 @@
   "mch.wildfire.title": "Detonator",
   "mch.wildfire.trigger.no-buff-wf": "<0/> Schaden wurde aufgezeichnet ohne eine korrespondierenden <1/>-Debuff.",
   "mnk.about.description": "",
+  "mnk.action-timeline.chakras": "",
+  "mnk.action-timeline.fists": "",
   "mnk.demolish.checklist.description": "<0/> ist dein stärkster Kombo-Abschluss (vorausgesetzt, mindestens 3 DoT-Ticks treffen).",
   "mnk.demolish.checklist.name": "Halte Demolieren aufrecht",
   "mnk.demolish.checklist.requirement.name": "Gesamtanwendungszeit von <0/>",
