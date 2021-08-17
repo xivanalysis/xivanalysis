@@ -159,6 +159,7 @@ export const GNB = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003420.png',
 		onGcd: false,
 		cooldown: 1000,
+		cooldownGroup: 1,
 	},
 	ABDOMEN_TEAR: {
 		id: 16157,
@@ -166,6 +167,7 @@ export const GNB = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003421.png',
 		onGcd: false,
 		cooldown: 1000,
+		cooldownGroup: 1,
 	},
 	EYE_GOUGE: {
 		id: 16158,
@@ -173,6 +175,7 @@ export const GNB = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003422.png',
 		onGcd: false,
 		cooldown: 1000,
+		cooldownGroup: 1,
 	},
 	DANGER_ZONE: {	// Note: upgrades to Blasting Zone at lvl 80
 		id: 16144,
@@ -265,5 +268,6 @@ export const GNB = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003419.png',
 		onGcd: false,
 		cooldown: 1000,
+		cooldownGroup: 1,
 	},
 })
