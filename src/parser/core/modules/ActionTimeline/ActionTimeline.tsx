@@ -1,15 +1,15 @@
 import {Trans} from '@lingui/react'
 import {Action} from 'data/ACTIONS'
+import {Analyser} from 'parser/core/Analyser'
+import {dependency} from 'parser/core/Injectable'
+import CastTime from 'parser/core/modules/CastTime'
+import {ChargeHistoryEntry, CooldownEndReason, CooldownGroup, CooldownHistoryEntry, Cooldowns, SelectionSpecifier} from 'parser/core/modules/Cooldowns2'
+import {Data} from 'parser/core/modules/Data'
+import {SpeedAdjustments} from 'parser/core/modules/SpeedAdjustments'
+import {ActionItem, Row, SimpleItem, SimpleRow, Timeline} from 'parser/core/modules/Timeline'
 import React, {ReactNode} from 'react'
 import {Icon} from 'semantic-ui-react'
 import {ensureArray} from 'utilities'
-import {Analyser} from '../Analyser'
-import {dependency} from '../Injectable'
-import CastTime from './CastTime'
-import {ChargeHistoryEntry, CooldownEndReason, CooldownGroup, CooldownHistoryEntry, Cooldowns, SelectionSpecifier} from './Cooldowns2'
-import {Data} from './Data'
-import {SpeedAdjustments} from './SpeedAdjustments'
-import {ActionItem, Row, SimpleItem, SimpleRow, Timeline} from './Timeline'
 
 const ANIMATION_LOCK = 100
 
