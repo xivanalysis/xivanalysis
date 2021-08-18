@@ -1,3 +1,4 @@
+import {ActionTimeline} from './ActionTimeline'
 import AdditionalStats from './AdditionalStats'
 import AlwaysBeCasting from './AlwaysBeCasting'
 import ApexArrow from './ApexArrow'
@@ -16,6 +17,7 @@ import Util from './Util'
 import Weaving from './Weaving'
 
 export default [
+	ActionTimeline,
 	AdditionalStats,
 	AlwaysBeCasting,
 	ApexArrow,
