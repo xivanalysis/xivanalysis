@@ -1,3 +1,4 @@
+import {ActionTimeline} from './ActionTimeline'
 import Combos from './Combos'
 import Cooldowns from './Cooldowns'
 import Drift from './Drift'
@@ -13,6 +14,7 @@ import Wildfire from './Wildfire'
 import YassQueen from './YassQueen'
 
 export default [
+	ActionTimeline,
 	Combos,
 	Cooldowns,
 	Drift,
