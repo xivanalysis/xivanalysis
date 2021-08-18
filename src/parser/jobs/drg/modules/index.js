@@ -1,3 +1,4 @@
+import {ActionTimeline} from './ActionTimeline'
 import BattleLitany from './BattleLitany'
 import BloodOfTheDragon from './BloodOfTheDragon'
 import Buffs from './Buffs'
@@ -14,6 +15,7 @@ import Tincture from './Tincture'
 import Weaving from './Weaving'
 
 export default [
+	ActionTimeline,
 	BattleLitany,
 	BloodOfTheDragon,
 	Buffs,
