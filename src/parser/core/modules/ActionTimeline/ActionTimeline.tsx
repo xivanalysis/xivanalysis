@@ -94,7 +94,11 @@ export class ActionTimeline extends Analyser {
 		// Figure out what groups have not been explicitly configured and build rows for them
 		this.cooldowns.allGroups()
 			.filter(group => !this.groupRows.has(group))
-			.forEach(group => this.addRow({content: [group]}))
+			.forEach(group => {
+				const config = {content: [group]}
+				const row = this.addRow(config)
+				this.populateRow(row, config)
+			})
 	}
 
 	private resolveConfig(config: ActionRow): InternalRowConfig {

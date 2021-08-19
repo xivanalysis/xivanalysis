@@ -21,7 +21,7 @@ const MINIMUM_ZOOM = 10000 // 10 seconds (~4 gcds)
 
 export class Timeline extends Analyser {
 	static override handle = 'timeline'
-	static override displayOrder = DISPLAY_ORDER.TIMELINE
+	static override displayOrder = -DISPLAY_ORDER.TIMELINE
 	static override displayMode = DisplayMode.FULL
 	static override title = t('core.timeline.title')`Timeline`
 
