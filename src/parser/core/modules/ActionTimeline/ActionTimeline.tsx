@@ -1,15 +1,15 @@
 import {Trans} from '@lingui/react'
-import {Action} from 'data/ACTIONS'
+import {Action, ActionKey} from 'data/ACTIONS'
 import {Analyser} from 'parser/core/Analyser'
 import {dependency} from 'parser/core/Injectable'
 import CastTime from 'parser/core/modules/CastTime'
 import {ChargeHistoryEntry, CooldownEndReason, CooldownGroup, CooldownHistoryEntry, Cooldowns, SelectionSpecifier} from 'parser/core/modules/Cooldowns2'
 import {Data} from 'parser/core/modules/Data'
 import {SpeedAdjustments} from 'parser/core/modules/SpeedAdjustments'
-import {ActionItem, BaseItem, Row, SimpleItem, SimpleRow, Timeline} from 'parser/core/modules/Timeline'
+import {ActionItem, BaseItem, ContainerRow, SimpleItem, Timeline} from 'parser/core/modules/Timeline'
 import React, {ReactNode} from 'react'
 import {Icon} from 'semantic-ui-react'
-import {ensureArray} from 'utilities'
+import {ensureArray, isDefined} from 'utilities'
 import styles from './ActionTimeline.module.css'
 
 const ANIMATION_LOCK = 100
@@ -36,6 +36,11 @@ export interface ActionRowConfig {
 /** Configuration for a single row. */
 export type ActionRow = RowSpecifier | ActionRowConfig
 
+// Internal row config used within the module
+type InternalRowConfig =
+	& Omit<ActionRowConfig, 'content'>
+	& {content: readonly SelectionSpecifier[]}
+
 enum ItemDepth {
 	CHARGE_GAIN = 0,
 	ACTION = 1,
@@ -60,63 +65,93 @@ export class ActionTimeline extends Analyser {
 	@dependency private speedAdjustments!: SpeedAdjustments
 	@dependency private timeline!: Timeline
 
-	private groupRows = new Map<CooldownGroup, Row>()
+	private resolvedRows: InternalRowConfig[] = []
+	private groupRows = new Map<CooldownGroup, ContainerRow>()
+
+	/** Retrieve the timeline row representing the specified action. */
+	getRow(action: ActionKey | Action) {
+		return this.addRow({content: [action]})
+	}
 
 	override initialise() {
+		// Add rows for all the configured entries
+		for (const config of (this.constructor as typeof ActionTimeline).rows) {
+			const resolvedConfig = this.resolveConfig(config)
+			this.resolvedRows.push(resolvedConfig)
+			this.addRow(resolvedConfig)
+		}
+
 		this.addEventHook('complete', this.onComplete)
 	}
 
 	private onComplete() {
 		// Add rows for all the configured entries
-		for (const row of (this.constructor as typeof ActionTimeline).rows) {
-			this.addRow(row)
+		for (const config of this.resolvedRows) {
+			const row = this.addRow(config)
+			this.populateRow(row, config)
 		}
 
 		// Figure out what groups have not been explicitly configured and build rows for them
 		this.cooldowns.allGroups()
 			.filter(group => !this.groupRows.has(group))
-			.forEach(group => this.addRow(group))
+			.forEach(group => this.addRow({content: [group]}))
 	}
 
-	private addRow(config: ActionRow) {
+	private resolveConfig(config: ActionRow): InternalRowConfig {
 		// Standardise the simple config into the main config shape
 		let finalConfig = config
 		if (typeof finalConfig !== 'object' || Array.isArray(finalConfig)) {
 			finalConfig = {content: finalConfig}
 		}
+		return {
+			...finalConfig,
+			content: ensureArray(finalConfig.content),
+		}
+	}
 
-		// Pre-emptively grab the cooldown history, we might need it for the label
-		const content = ensureArray(finalConfig.content)
-		const cooldownHistory = content.flatMap(specifier => this.cooldowns.cooldownHistory(specifier))
+	private addRow(config: InternalRowConfig) {
+		// If there's already a row for one of the specifiers, use it
+		const groups = config.content.flatMap(specifier => this.cooldowns.groups(specifier))
+		const existingRow = groups
+			.map(group => this.groupRows.get(group))
+			.find(isDefined)
+		if (existingRow != null) {
+			return existingRow
+		}
 
 		// Using an IIFE because pattern matching isn't in the spec yet
-		const firstContent = content[0]
+		const firstContent = config.content[0]
 		const label = (() => {
-			if (finalConfig.label != null) { return finalConfig.label }
+			if (config.label != null) { return config.label }
 			if (firstContent === 'GCD')  { return <Trans id="core.action-timeline.label.gcd">GCD</Trans> }
 			if (typeof firstContent === 'string') { return this.data.actions[firstContent].name }
-			if (typeof firstContent === 'number') { return cooldownHistory[0]?.action.name }
+			if (typeof firstContent === 'number') { return this.cooldowns.cooldownHistory(firstContent)[0]?.action.name }
 		})()
 
 		// Build the row and save it to the groups for this config
 		// TODO: collision handling?
-		const row = this.timeline.addRow(new SimpleRow({
+		const row = this.timeline.addRow(new ContainerRow({
 			label,
-			order: finalConfig.order,
+			order: config.order,
+			collapse: true,
 		}))
-		content.flatMap(specifier => this.cooldowns.groups(specifier))
-			.forEach(group => this.groupRows.set(group, row))
+		groups.forEach(group => this.groupRows.set(group, row))
 
+		return row
+	}
+
+	private populateRow(row: ContainerRow, {content}: InternalRowConfig) {
 		// Add all the items
-		this.addCooldownItems(row, cooldownHistory)
+		this.addCooldownItems(row, content.flatMap(specifier => this.cooldowns.cooldownHistory(specifier)))
 		this.addChargeItems(row, content.flatMap(specifier => this.cooldowns.chargeHistory(specifier)))
 	}
 
-	private addCooldownItems(row: SimpleRow, history: CooldownHistoryEntry[]) {
+	private addCooldownItems(row: ContainerRow, history: CooldownHistoryEntry[]) {
 		for (const entry of history) {
 			const duration = this.getCooldownDuration(entry)
 
-			// todo: with the adjusted cast time we might get some overlaps, should we try to avoid that?
+			// TODO: with the adjusted cast time we might get some overlaps, should we try to avoid that?]
+			// TODO: Add interrupt visuals. CD2 only records interrupts within the bounds of a cooldown, so we'll need to track it in some manner for long-cast actions.
 			const start = entry.start - this.parser.pull.timestamp
 			const end = start + duration
 			row.addItem(new SimpleItem({
@@ -127,7 +162,7 @@ export class ActionTimeline extends Analyser {
 		}
 	}
 
-	private addChargeItems(row: SimpleRow, history: ChargeHistoryEntry[]) {
+	private addChargeItems(row: ContainerRow, history: ChargeHistoryEntry[]) {
 		for (const entry of history) {
 			const item = entry.delta < 0
 				? new ActionItem({
