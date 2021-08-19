@@ -3,7 +3,6 @@ import BattleLitany from './BattleLitany'
 import BloodOfTheDragon from './BloodOfTheDragon'
 import Buffs from './Buffs'
 import Combos from './Combos'
-import Cooldowns from './Cooldowns'
 import Debuffs from './Debuffs'
 import DragonSight from './DragonSight'
 import Drift from './Drift'
@@ -20,7 +19,6 @@ export default [
 	BloodOfTheDragon,
 	Buffs,
 	Combos,
-	Cooldowns,
 	Debuffs,
 	DragonSight,
 	Drift,

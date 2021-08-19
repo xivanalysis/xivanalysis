@@ -1,6 +1,5 @@
 import {ActionTimeline} from './ActionTimeline'
 import Combos from './Combos'
-import Cooldowns from './Cooldowns'
 import Huton from './Huton'
 import Kassatsu from './Kassatsu'
 import Ninjutsu from './Ninjutsu'
@@ -14,7 +13,6 @@ import Weaving from './Weaving'
 export default [
 	ActionTimeline,
 	Combos,
-	Cooldowns,
 	Huton,
 	Kassatsu,
 	Ninjutsu,
