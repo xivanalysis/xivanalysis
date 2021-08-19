@@ -1,13 +1,10 @@
-import Color from 'color'
 import {Action, ActionKey} from 'data/ACTIONS'
 import {Events} from 'event'
-import React from 'react'
 import {Analyser} from '../Analyser'
 import {TimestampHook} from '../Dispatcher'
 import {dependency} from '../Injectable'
 import {Data} from './Data'
 import {SpeedAdjustments} from './SpeedAdjustments'
-import {SimpleItem, SimpleRow, Timeline} from './Timeline'
 
 const DEFAULT_CHARGES = 1
 const GCD_CHARGES = 1
@@ -97,7 +94,6 @@ export class Cooldowns extends Analyser {
 
 	@dependency private data!: Data
 	@dependency private speedAdjustments!: SpeedAdjustments
-	@dependency private timeline!: Timeline
 
 	// A few of the actions used as keys are ephemeral, using weak to prevent leaking references to them.
 	private actionConfigCache = new WeakMap<Action, CooldownGroupConfig[]>()
@@ -185,12 +181,6 @@ export class Cooldowns extends Analyser {
 			cooldown.hook = this.addTimestampHook(newEnd, () => {
 				this.endCooldown(config, CooldownEndReason.EXPIRED)
 			})
-
-			const row = this.tempGetTimelineRow(`group:${config.group}`)
-			row.addItem(new SimpleItem({
-				start: this.parser.currentEpochTimestamp - this.parser.pull.timestamp,
-				content: `r ${(cooldown.end - cooldown.start)/1000}`,
-			}))
 		}
 	}
 
@@ -410,15 +400,6 @@ export class Cooldowns extends Analyser {
 			timestamp: now,
 			delta: -1,
 		})
-
-		// TEMP
-		this.debug(() => {
-			const row = this.tempGetTimelineRow(`group:${config.group}`)
-			row.addItem(new SimpleItem({
-				content: `- ${chargeState.current}`,
-				start: now - this.parser.pull.timestamp,
-			}))
-		})
 	}
 
 	private gainCharge(config: CooldownGroupConfig) {
@@ -448,16 +429,6 @@ export class Cooldowns extends Analyser {
 		if (chargeState.current < chargeState.maximum) {
 			this.startCooldown(config)
 		}
-
-		// TEMP
-		this.debug(() => {
-			const now = this.parser.currentEpochTimestamp - this.parser.pull.timestamp
-			const row = this.tempGetTimelineRow(`group:${config.group}`)
-			row.addItem(new SimpleItem({
-				content: `+ ${chargeState.current}`,
-				start: now,
-			}))
-		})
 	}
 
 	private startCooldown(config: CooldownGroupConfig) {
@@ -519,20 +490,6 @@ export class Cooldowns extends Analyser {
 			start: cooldownState.start,
 			end: cooldownState.end,
 			endReason: reason,
-		})
-
-		// TEMP
-		this.debug(() => {
-			const color = reason === CooldownEndReason.INTERRUPTED
-				? Color('red')
-				: Color('green')
-			const row = this.tempGetTimelineRow(`group:${config.group}`)
-			row.addItem(new SimpleItem({
-				// eslint-disable-next-line @typescript-eslint/no-magic-numbers
-				content: <div style={{width: '100%', height: '100%', background: color.alpha(0.25).toString(), borderLeft: `1px solid ${color}`}}/>,
-				start: cooldownState.start - this.parser.pull.timestamp,
-				end: cooldownState.end - this.parser.pull.timestamp,
-			}))
 		})
 	}
 
@@ -597,16 +554,5 @@ export class Cooldowns extends Analyser {
 			maximumCharges: action.charges ?? DEFAULT_CHARGES,
 		})
 		return groups
-	}
-
-	private tempTimelineRow = this.timeline.addRow(new SimpleRow({label: 'cd2 temp'}))
-	private tempRows = new Map<string, SimpleRow>()
-	private tempGetTimelineRow(key:string) {
-		let row = this.tempRows.get(key)
-		if (row == null) {
-			row = this.tempTimelineRow.addRow(new SimpleRow({label: key}))
-			this.tempRows.set(key, row)
-		}
-		return row
 	}
 }
