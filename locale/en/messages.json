@@ -615,6 +615,7 @@
   "mnk.twinsnakes.suggestions.toocalm.content": "Try to get <0/> up before using <1/> to take advantage of its free refresh.",
   "mnk.twinsnakes.suggestions.toocalm.why": "{0, plural, one {# use} other {# uses}} of <0/> failed to refresh <1/>.",
   "nin.about.description": "<0>Hey there, NIN friend! Are you tired of being looked down on by your MNK and BLM peers? Wish your raid team would stop using you for your Trick Attacks and appreciate you for who you really are? Well look no further! We'll help you bring yourself all the way up from <1>this</1> to <2>this</2>*!</0><3>As NIN tends to be more fluid than rotational, this module contains mostly suggestions for ways you can improve your gameplay, rather than strict checklist requirements. If you see a lot, don't panic - just tackle them one at a time.</3><4>*Results not guaranteed. Offer void where prohibited. Please don't sue us.</4>",
+  "nin.action-timeline.mudra": "Mudra",
   "nin.huton.checklist.description": "<0/> provides you with a 15% attack speed increase and as such is a <1>huge</1> part of a NIN's personal DPS. Do your best not to let it drop, and recover it as quickly as possible if it does.",
   "nin.huton.checklist.description.warning": "As Huton is now a gauge instead of a buff, please bear in mind that this is an estimate, not an exact value. This also applies to any Huton-related suggestions below.",
   "nin.huton.checklist.name": "Keep Huton up",
