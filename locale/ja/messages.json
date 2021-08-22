@@ -450,6 +450,7 @@
   "mch.wildfire.panel-count-spoofed": "?GCD、 ダメージ: {0}",
   "mch.wildfire.suggestions.cooldown.content": "使用する<0/>の火力を最大限発揮させるために、ワイルドファイアを使用する前には必ずオーバーヒート状態に入る準備をしておくようにしましょう。ワイルドファイア効果中の1GCDは威力200に相当します。そのため、GCDを稼ぐ上で<1/>は重要なウェポンスキルになってきます。",
   "mch.wildfire.title": "ワイルドファイア",
+  "mnk.action-timeline.fists": "構え",
   "mnk.demolish.checklist.name": "破砕拳の維持率",
   "mnk.demolish.checklist.requirement.name": "アクティブ率: <0/>",
   "mnk.demolish.suggestion.why": "早すぎる更新により破砕拳が失った回数： {0} 回",
