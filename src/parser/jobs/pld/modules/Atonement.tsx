@@ -1,12 +1,11 @@
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
 import {ActionLink} from 'components/ui/DbLink'
-import { Analyser } from 'parser/core/Analyser'
+import {Analyser} from 'parser/core/Analyser'
 import {dependency} from 'parser/core/Injectable'
 import Checklist, {TieredRule, TARGET, Requirement} from 'parser/core/modules/Checklist'
 import {Data} from 'parser/core/modules/Data'
 import React from 'react'
-
 
 const STACKS_GAINED = 3
 

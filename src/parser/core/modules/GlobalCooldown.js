@@ -4,7 +4,6 @@ import math from 'mathjsCustom'
 import Module from 'parser/core/Module'
 import React from 'react'
 import {SimpleStatistic} from './Statistics'
-import {ActionItem, ContainerRow} from './Timeline'
 
 const MIN_GCD = 1500
 const MAX_GCD = 2500
@@ -29,7 +28,6 @@ export default class GlobalCooldown extends Module {
 		'downtime',
 		'speedmod',
 		'statistics',
-		'timeline',
 	]
 
 	static title = t('core.gcd.title')`Global Cooldown`
@@ -45,18 +43,10 @@ export default class GlobalCooldown extends Module {
 	}
 	gcds = []
 
-	timelineRow = null
-
 	constructor(...args) {
 		super(...args)
 
 		this.addEventHook('complete', this._onComplete)
-
-		this.timelineRow = this.timeline.addRow(new ContainerRow({
-			label: 'GCD',
-			order: -97,
-			collapse: true,
-		}))
 	}
 
 	// Using normalise so the estimate can be used throughout the parse
@@ -118,21 +108,6 @@ export default class GlobalCooldown extends Module {
 	}
 
 	_onComplete() {
-		const startTime = this.parser.eventTimeOffset
-
-		// Timeline output
-		this.gcds.forEach(gcd => {
-			const action = this.data.getAction(gcd.actionId)
-			if (!action) { return }
-
-			const start = gcd.timestamp - startTime
-			this.timelineRow.addItem(new ActionItem({
-				start,
-				end: start + this._getGcdLength(gcd),
-				action,
-			}))
-		})
-
 		// Statistic box
 		const estimate = this.getEstimate(false)
 

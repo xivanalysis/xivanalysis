@@ -72,6 +72,7 @@ export const MNK = ensureActions({
 		name: 'Fists of Fire',
 		icon: 'https://xivapi.com/i/000000/000205.png',
 		cooldown: 3000,
+		cooldownGroup: 2,
 	},
 
 	THE_FORBIDDEN_CHAKRA: {
@@ -79,6 +80,7 @@ export const MNK = ensureActions({
 		name: 'The Forbidden Chakra',
 		icon: 'https://xivapi.com/i/002000/002535.png',
 		cooldown: 1000,
+		cooldownGroup: 1,
 	},
 
 	ELIXIR_FIELD: {
@@ -124,6 +126,7 @@ export const MNK = ensureActions({
 		name: 'Enlightenment',
 		icon: 'https://xivapi.com/i/002000/002545.png',
 		cooldown: 1000,
+		cooldownGroup: 1,
 	},
 
 	ANATMAN: {

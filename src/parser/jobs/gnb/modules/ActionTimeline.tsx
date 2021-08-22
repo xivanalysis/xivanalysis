@@ -1,7 +1,9 @@
-import CoreCooldowns, {CooldownOrderItem} from 'parser/core/modules/Cooldowns'
+import {ActionRow, ActionTimeline as CoreActionTimeline} from 'parser/core/modules/ActionTimeline'
 
-export default class Cooldowns extends CoreCooldowns {
-	static override cooldownOrder: CooldownOrderItem[] = [
+export class ActionTimeline extends CoreActionTimeline {
+	static override rows: ActionRow[] = [
+		...CoreActionTimeline.rows,
+
 		// Stance
 		'ROYAL_GUARD',
 
@@ -10,14 +12,7 @@ export default class Cooldowns extends CoreCooldowns {
 		'BLOODFEST',
 
 		// Continuation
-		{
-			name: 'Continuation',
-			actions: [
-				'JUGULAR_RIP',
-				'ABDOMEN_TEAR',
-				'EYE_GOUGE',
-			],
-		},
+		'CONTINUATION',
 
 		// oGCD Damage
 		'DANGER_ZONE',

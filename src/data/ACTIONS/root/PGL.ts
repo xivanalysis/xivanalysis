@@ -69,6 +69,7 @@ export const PGL = ensureActions({
 		name: 'Fists of Earth',
 		icon: 'https://xivapi.com/i/000000/000206.png',
 		cooldown: 3000,
+		cooldownGroup: 2,
 	},
 
 	FISTS_OF_WIND: {
@@ -76,6 +77,7 @@ export const PGL = ensureActions({
 		name: 'Fists of Wind',
 		icon: 'https://xivapi.com/i/002000/002527.png',
 		cooldown: 3000,
+		cooldownGroup: 2,
 	},
 
 	MANTRA: {

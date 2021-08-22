@@ -7,6 +7,7 @@ export const AST = ensureActions({
 		name: 'Diurnal Sect',
 		icon: 'https://xivapi.com/i/003000/003133.png',
 		statusesApplied: ['DIURNAL_SECT'],
+		cooldownGroup: 5,
 	},
 
 	NOCTURNAL_SECT: {
@@ -14,6 +15,7 @@ export const AST = ensureActions({
 		name: 'Nocturnal Sect',
 		icon: 'https://xivapi.com/i/003000/003134.png',
 		statusesApplied: ['NOCTURNAL_SECT'],
+		cooldownGroup: 5,
 	},
 
 	BENEFIC: {
@@ -236,7 +238,8 @@ export const AST = ensureActions({
 		id: 17055,
 		name: 'Play',
 		icon: 'https://xivapi.com/i/003000/003102.png',
-		cooldown: 0,
+		cooldown: 1000,
+		cooldownGroup: 12,
 	},
 
 	REDRAW: {
@@ -268,6 +271,7 @@ export const AST = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003106.png',
 		cooldown: 1000,
 		statusesApplied: ['LORD_OF_CROWNS_DRAWN', 'LADY_OF_CROWNS_DRAWN'],
+		cooldownGroup: 12,
 	},
 
 	// ----
@@ -321,63 +325,71 @@ export const AST = ensureActions({
 		id: 4401,
 		name: 'The Balance',
 		icon: 'https://xivapi.com/i/003000/003110.png',
-		cooldown: 0,
+		cooldown: 1000,
 		statusesApplied: ['THE_BALANCE'],
+		cooldownGroup: 12,
 	},
 
 	THE_BOLE: {
 		id: 4404,
 		name: 'The Bole',
 		icon: 'https://xivapi.com/i/003000/003111.png',
-		cooldown: 0,
+		cooldown: 1000,
 		statusesApplied: ['THE_BOLE'],
+		cooldownGroup: 12,
 	},
 
 	THE_ARROW: {
 		id: 4402,
 		name: 'The Arrow',
 		icon: 'https://xivapi.com/i/003000/003112.png',
-		cooldown: 0,
+		cooldown: 1000,
 		statusesApplied: ['THE_ARROW'],
+		cooldownGroup: 12,
 	},
 
 	THE_SPEAR: {
 		id: 4403,
 		name: 'The Spear',
 		icon: 'https://xivapi.com/i/003000/003113.png',
-		cooldown: 0,
+		cooldown: 1000,
 		statusesApplied: ['THE_SPEAR'],
+		cooldownGroup: 12,
 	},
 
 	THE_EWER: {
 		id: 4405,
 		name: 'The Ewer',
 		icon: 'https://xivapi.com/i/003000/003114.png',
-		cooldown: 0,
+		cooldown: 1000,
 		statusesApplied: ['THE_EWER'],
+		cooldownGroup: 12,
 	},
 
 	THE_SPIRE: {
 		id: 4406,
 		name: 'The Spire',
 		icon: 'https://xivapi.com/i/003000/003115.png',
-		cooldown: 0,
+		cooldown: 1000,
 		statusesApplied: ['THE_SPIRE'],
+		cooldownGroup: 12,
 	},
 
 	LADY_OF_CROWNS: {
 		id: 7445,
 		name: 'Lady Of Crowns',
 		icon: 'https://xivapi.com/i/003000/003146.png',
-		cooldown: 0,
+		cooldown: 1000,
 		statusesApplied: ['LADY_OF_CROWNS'],
+		cooldownGroup: 12,
 	},
 
 	LORD_OF_CROWNS: {
 		id: 7444,
 		name: 'Lord Of Crowns',
 		icon: 'https://xivapi.com/i/003000/003147.png',
-		cooldown: 0,
+		cooldown: 1000,
 		statusesApplied: ['LORD_OF_CROWNS'],
+		cooldownGroup: 12,
 	},
 })

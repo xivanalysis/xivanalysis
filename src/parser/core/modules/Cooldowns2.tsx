@@ -15,7 +15,7 @@ const GCD_COOLDOWN_GROUP = 58
 const OVERLAP_NOISE_THRESHOLD = 50
 
 /** Representative key of a cooldown group. */
-type CooldownGroup = Exclude<Action['cooldownGroup'], undefined>
+export type CooldownGroup = Exclude<Action['cooldownGroup'], undefined>
 
 /** Configuration for a single cooldown group on an action. */
 interface CooldownGroupConfig {
@@ -76,6 +76,7 @@ interface CooldownGroupState {
 }
 
 export type ActionSpecifier = Action | ActionKey
+export type SelectionSpecifier = 'GCD' | CooldownGroup | ActionSpecifier
 
 /** Options for selection of groups that should be read/modified by a method. */
 export interface SelectionOptions {
@@ -94,20 +95,39 @@ export class Cooldowns extends Analyser {
 	@dependency private data!: Data
 	@dependency private speedAdjustments!: SpeedAdjustments
 
-	private actionConfigCache = new Map<Action, CooldownGroupConfig[]>()
+	// A few of the actions used as keys are ephemeral, using weak to prevent leaking references to them.
+	private actionConfigCache = new WeakMap<Action, CooldownGroupConfig[]>()
 	private currentCast?: Action['id']
 	private groupStates = new Map<CooldownGroup, CooldownGroupState>()
 
 	/**
-	 * Get the remaining time on cooldown of the specified action, in milliseconds.
-	 * If multiple groups are selected, the longest remaining cooldown will be returned.
+	 * Get the cooldown group IDs for the specified action.
 	 *
-	 * @param action The action whose cooldown should be retrieved.
+	 * @param specifier Selection specifier for groups who should be returned.
 	 * @param options Options to select the groups to read.
 	 */
-	remaining(action: ActionSpecifier, options?: Partial<SelectionOptions>) {
+	groups(specifier: SelectionSpecifier, options?: Partial<SelectionOptions>) {
+		return Array.from(
+			this.iterateStates(specifier, options),
+			({config}) => config.group
+		)
+	}
+
+	/** Get a list of all known cooldown group IDs. */
+	allGroups() {
+		return Array.from(this.groupStates.keys())
+	}
+
+	/**
+	 * Get the remaining time on cooldown of the specified group, in milliseconds.
+	 * If multiple groups are selected, the longest remaining cooldown will be returned.
+	 *
+	 * @param specifier Selection specifier for groups whose cooldown should be retrieved.
+	 * @param options Options to select the groups to read.
+	 */
+	remaining(specifier: SelectionSpecifier, options?: Partial<SelectionOptions>) {
 		let remaining = 0
-		for (const {state: {cooldown}} of this.iterateStates(action, options)) {
+		for (const {state: {cooldown}} of this.iterateStates(specifier, options)) {
 			if (cooldown == null) { continue }
 
 			remaining = Math.max(remaining, cooldown.end - this.parser.currentEpochTimestamp)
@@ -120,12 +140,12 @@ export class Cooldowns extends Analyser {
 	 * Get the remaining charges of the specifiec action. If multiple groups are
 	 * selected, the minimum remaining charges will be returned.
 	 *
-	 * @param action The action whose charges should be retrieved.
+	 * @param specifier Selection specifier for groups whose charges should be retrieved.
 	 * @param options Options to select the groups to read.
 	 */
-	charges(action: ActionSpecifier, options?: Partial<SelectionOptions>) {
+	charges(specifier: SelectionSpecifier, options?: Partial<SelectionOptions>) {
 		const chargeValues = []
-		for (const {state: {charges}} of this.iterateStates(action, options)) {
+		for (const {state: {charges}} of this.iterateStates(specifier, options)) {
 			chargeValues.push(charges.current)
 		}
 
@@ -180,12 +200,12 @@ export class Cooldowns extends Analyser {
 	/**
 	 * Fetch the cooldown history of the specified action.
 	 *
-	 * @param action The action whos group's history should be retrieved.
+	 * @param specifier Selection specifier for group whose history should be retrieved.
 	 * @param options Options to select the groups to retieve.
 	 */
-	cooldownHistory(action: ActionSpecifier, options?: Partial<SelectionOptions>) {
+	cooldownHistory(specifier: SelectionSpecifier, options?: Partial<SelectionOptions>) {
 		const histories: CooldownHistoryEntry[] = []
-		for (const {state: {cooldownHistory}} of this.iterateStates(action, options)) {
+		for (const {state: {cooldownHistory}} of this.iterateStates(specifier, options)) {
 			histories.push(...cooldownHistory)
 		}
 		histories.sort(
@@ -197,12 +217,12 @@ export class Cooldowns extends Analyser {
 	/**
 	 * Fetch the charge history of the specified action.
 	 *
-	 * @param action The action whos group's history should be retrieved.
+	 * @param specifier Selection specifier for group whose history should be retrieved.
 	 * @param options Options to select the groups to retieve.
 	 */
-	chargeHistory(action: ActionSpecifier, options?: Partial<SelectionOptions>) {
+	chargeHistory(specifier: SelectionSpecifier, options?: Partial<SelectionOptions>) {
 		const histories: ChargeHistoryEntry[] = []
-		for (const {state: {chargeHistory}} of this.iterateStates(action, options)) {
+		for (const {state: {chargeHistory}} of this.iterateStates(specifier, options)) {
 			histories.push(...chargeHistory)
 		}
 		histories.sort(
@@ -211,8 +231,25 @@ export class Cooldowns extends Analyser {
 		return histories
 	}
 
-	private *iterateStates(action: ActionSpecifier, options?: Partial<SelectionOptions>) {
-		const fullAction = typeof action === 'string' ? this.data.actions[action] : action
+	private *iterateStates(specifier: SelectionSpecifier, options?: Partial<SelectionOptions>) {
+		let fullAction = specifier
+		if (fullAction === 'GCD') {
+			// Fabricating a fake GCD action
+			fullAction = {
+				...this.data.actions.UNKNOWN,
+				onGcd: true,
+			}
+		} else if (typeof fullAction === 'number') {
+			// Cooldown group
+			fullAction = {
+				...this.data.actions.UNKNOWN,
+				cooldownGroup: fullAction,
+			}
+		} else if (typeof fullAction === 'string') {
+			// Action key
+			fullAction = this.data.actions[fullAction]
+		}
+
 		const opts: SelectionOptions = {...DEFAULT_SELECTION_OPTIONS, ...options}
 
 		for (const config of this.getActionConfigs(fullAction)) {
