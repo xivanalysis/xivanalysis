@@ -527,6 +527,7 @@
   "mch.wildfire.suggestions.fizzle.why": "{fizzledWildfires} de votre fenêtre de flambée a résolus 0 dégats.",
   "mch.wildfire.title": "Flambée",
   "mch.wildfire.trigger.no-buff-wf": "<0/> des dommages ont été enregistrés sans qu'il y ait eu un debuff correspondant <1/>.",
+  "mnk.action-timeline.fists": "Poings",
   "mnk.demolish.checklist.name": "Garder Démolition actif",
   "mnk.demolish.checklist.requirement.name": "Temps d'activité total de <0/>",
   "mnk.demolish.suggestion.why": "Vous avez perdu {0} Démolitions à cause de ré-applications précipitées.",
