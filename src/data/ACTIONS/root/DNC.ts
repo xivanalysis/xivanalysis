@@ -53,6 +53,7 @@ export const DNC = ensureActions({
 		combo: {
 			start: true,
 		},
+		statusesApplied: ['FLOURISHING_CASCADE'],
 	},
 	FOUNTAIN: {
 		id: 15990,
@@ -64,6 +65,7 @@ export const DNC = ensureActions({
 			from: 15989,
 			end: true,
 		},
+		statusesApplied: ['FLOURISHING_FOUNTAIN'],
 	},
 	REVERSE_CASCADE: {
 		id: 15991,
@@ -88,6 +90,7 @@ export const DNC = ensureActions({
 		combo: {
 			start: true,
 		},
+		statusesApplied: ['FLOURISHING_WINDMILL'],
 	},
 	BLADESHOWER: {
 		id: 15994,
@@ -99,6 +102,7 @@ export const DNC = ensureActions({
 			from: 15993,
 			end: true,
 		},
+		statusesApplied: ['FLOURISHING_SHOWER'],
 	},
 	RISING_WINDMILL: {
 		id: 15995,
@@ -194,6 +198,7 @@ export const DNC = ensureActions({
 		name: 'Fan Dance',
 		onGcd: false,
 		cooldown: 1000,
+		statusesApplied: ['FLOURISHING_FAN_DANCE'],
 	},
 	FAN_DANCE_II: {
 		id: 16008,
@@ -201,6 +206,7 @@ export const DNC = ensureActions({
 		name: 'Fan Dance II',
 		onGcd: false,
 		cooldown: 1000,
+		statusesApplied: ['FLOURISHING_FAN_DANCE'],
 	},
 	FAN_DANCE_III: {
 		id: 16009,
