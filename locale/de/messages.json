@@ -192,6 +192,7 @@
   "drg.blood.checklist.description.warning": "Bitte beachte, dass die Zahlen hier und die unten aufgeführten Drachengeist-Zeitfenster simuliert sind, da Drachenherz mittlerweile einen Balken anstatt eines Buffs hat. Daher stimmt es eventuell nicht perfekt mit der Realität überein.",
   "drg.blood.checklist.name": "Halte Drachenherz aufrecht",
   "drg.blood.checklist.requirement.name": "Gesamtanwendungszeit von <0/>",
+  "drg.blood.nastrond.preface": "Jeder der unten aufgeführten Punkte steht für ein Drachengeist-Fenster. Es wird angezeigt, wann es anfing, wie lange es angehalten hat und wie viele <0/> es beinhaltete. Im Idealfall sollte jedes Fenster mindestens 24 Sekunden lang sein und 3 Nastronds beinhalten.",
   "drg.blood.suggestions.eyes.content": "Vermeide es, <0/> zu benutzen, wenn du schon {MAX_EYES} Augen hast. Verschwendete Augen verzögern dein Drachengeist-Fenster und kosten potenziell eine Menge DPS.",
   "drg.blood.suggestions.eyes.why": "Du hast Illusionssprung {0, plural, one {# mal} other {# mal}} benutzt, während du schon {MAX_EYES} Augen hattest.",
   "drg.blood.title": "Drachengeist",
