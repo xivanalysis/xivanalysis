@@ -193,7 +193,6 @@ interface EffectEventFields extends AbilityEventFields {
 	actorPotencyRatio?: number
 	expectedCritRate?: number
 	directHitPercentage?: number
-	debugMultiplier?: number
 	multiplier?: number
 }
 
