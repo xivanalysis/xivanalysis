@@ -1,4 +1,4 @@
-import ACTIONS from 'data/ACTIONS'
+import ACTIONS, {Action} from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import {Event, Events} from 'event'
 import {filter, oneOf} from 'parser/core/filter'
@@ -66,11 +66,21 @@ export class AlwaysBeCasting extends CoreAlwaysBeCasting {
 		}
 	}
 
-	override considerCast(_event: Events['action']): boolean {
-		return this.currentPaeon != null || this.currentMuse != null
+	override considerCast(action: Action, castStart: number): boolean {
+		// Because Army's Paeon and Army's Muse reduce GCD speed by a variable amount that we can't synthesize, we exclude skills used under either buff from GCD uptime analysis
+		if (this.currentPaeon)  {
+			this.debug(`Army's Paeon active at ${this.parser.formatEpochTimestamp(castStart)}`)
+			return false
+		}
+		if (this.currentMuse) {
+			this.debug(`Army's Muse active at ${this.parser.formatEpochTimestamp(castStart)}`)
+			return false
+		}
+		return super.considerCast(action, castStart)
 	}
 
 	override getUptimePercent(): number {
+		this.debug(`Observed ${this.gcdsCounted} GCDs for a total of ${this.gcdUptime} ms of uptime`)
 		const fightDuration = this.parser.currentDuration - this.downtime.getDowntime()
 		const armyDuration = this.armyHistory.reduce((acc, army) => {
 			const downtime = this.downtime.getDowntime(
@@ -79,7 +89,10 @@ export class AlwaysBeCasting extends CoreAlwaysBeCasting {
 			)
 			return acc + army.end - army.start - downtime
 		}, 0)
+		// Because Army's Paeon and Army's Muse reduce GCD speed by a variable amount that we can't synthesize, we exclude time under either buff from GCD uptime analysis
+		const uptime = this.gcdUptime / (fightDuration - armyDuration) * 100
+		this.debug(`Total fight duration: ${this.parser.currentDuration} - Downtime: ${this.downtime.getDowntime()} - Army's Paeon or Muse active: ${armyDuration} - Uptime percentage ${uptime}`)
 
-		return this.gcdUptime / (fightDuration - armyDuration) * 100
+		return uptime
 	}
 }
