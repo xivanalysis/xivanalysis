@@ -7,9 +7,8 @@ const STATUS_APPLY_ON_PARTY_THRESHOLD_MILLISECONDS = 2 * 1000
 export default class Statuses extends Module {
 	static handle = 'statuses'
 	static dependencies = [
-		'cooldowns',
+		'actionTimeline',
 		'data',
-		'gcd',
 	]
 
 	static statusesStackMapping = {}
@@ -18,7 +17,6 @@ export default class Statuses extends Module {
 	_groups = {}
 	_rows = {}
 	_statusToActionMap = {}
-	_actionToMergeNameMap = {}
 
 	constructor(...args) {
 		super(...args)
@@ -32,14 +30,6 @@ export default class Statuses extends Module {
 		this.addEventHook(['applybuff', 'applydebuff'], byFilter, this._onApply)
 		this.addEventHook(['refreshdebuff', 'refreshbuff'], byFilter, this._onRefresh)
 		this.addEventHook(['removebuff', 'removedebuff'], byFilter, this._onRemove)
-
-		this.cooldowns.constructor.cooldownOrder.forEach(cd => {
-			if (cd && typeof cd === 'object' && cd.merge) {
-				cd.actions.forEach(ac => {
-					this._actionToMergeNameMap[ac] = cd.name
-				})
-			}
-		})
 
 		// Map statuses to actions
 		Object.values(this.data.actions).forEach(action => {
@@ -148,10 +138,7 @@ export default class Statuses extends Module {
 		const row = new SimpleRow({label: status.name, hideCollapsed: true})
 		this._rows[key] = row
 
-		const parentRow = action.onGcd
-			? this.gcd.timelineRow
-			: this.cooldowns.getActionTimelineRow(action)
-		parentRow.addRow(row)
+		this.actionTimeline.getRow(action).addRow(row)
 
 		return row
 	}

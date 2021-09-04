@@ -5,6 +5,7 @@ import ACTIONS from 'data/ACTIONS'
 import {CastEvent} from 'fflogs'
 import Module, {dependency} from 'parser/core/Module'
 import Cooldowns from 'parser/core/modules/Cooldowns'
+import {Cooldowns as Cooldowns2} from 'parser/core/modules/Cooldowns2'
 import {Data} from 'parser/core/modules/Data'
 import Suggestions, {SEVERITY, Suggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
@@ -27,6 +28,7 @@ export default class TriDisaster extends Module {
 	static override debug = true
 
 	@dependency private cooldowns!: Cooldowns
+	@dependency private cooldowns2!: Cooldowns2
 	@dependency private data!: Data
 	@dependency private suggestions!: Suggestions
 
@@ -46,6 +48,7 @@ export default class TriDisaster extends Module {
 
 	private onReset(event: CastEvent) {
 		this.cooldowns.resetCooldown(this.data.actions.TRI_DISASTER.id)
+		this.cooldowns2.reset('TRI_DISASTER')
 		this.checkCast(event)
 		this.lastTriDCast = -TRI_DISASTER_COOLDOWN
 	}

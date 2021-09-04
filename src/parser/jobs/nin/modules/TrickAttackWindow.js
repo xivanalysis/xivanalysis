@@ -14,11 +14,11 @@ const FIRST_WINDOW_BUFFER = 30000
 
 const MUDRAS = [
 	ACTIONS.TEN.id,
-	ACTIONS.TEN_NEW.id,
+	ACTIONS.TEN_KASSATSU.id,
 	ACTIONS.CHI.id,
-	ACTIONS.CHI_NEW.id,
+	ACTIONS.CHI_KASSATSU.id,
 	ACTIONS.JIN.id,
-	ACTIONS.JIN_NEW.id,
+	ACTIONS.JIN_KASSATSU.id,
 ]
 
 export default class TrickAttackWindow extends BuffWindowModule {

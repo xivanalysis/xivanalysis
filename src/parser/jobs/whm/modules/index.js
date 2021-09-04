@@ -5,6 +5,7 @@ import Lilies from './Lilies'
 import oGCDs from './oGCDs'
 import Overheal from './Overheal'
 import Swiftcast from './Swiftcast'
+import {Thinair} from './Thinair'
 
 export default [
 	CastTime,
@@ -14,4 +15,5 @@ export default [
 	oGCDs,
 	Overheal,
 	Swiftcast,
+	Thinair,
 ]

@@ -130,6 +130,13 @@ export class SpeedStatsAdapterStep extends AdapterStep {
 			windowMap = new Array<SpeedmodWindow>()
 			windows.set(status.id, windowMap)
 		}
+
+		// Some statuses (i.e. Circle of Power) re-apply regularly while active.
+		// If this application appears to be a reapplication, we can safely noop.
+		if (windowMap.length > 0 && windowMap[windowMap.length - 1].end == null) {
+			return
+		}
+
 		windowMap.push({start: event.timestamp})
 	}
 
