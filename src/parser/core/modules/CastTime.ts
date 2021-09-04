@@ -252,7 +252,9 @@ export default class CastTime extends Analyser {
 		})
 
 		// Calculate the final cast time based on the flat and percentage reductions we've found
-		return Math.max(defaultTime + flatIncrease + flatReduction, 0) * percentageAdjustment // Yes, plus flatReduction because it's already a negative value
+		const adjustedTime = Math.max(defaultTime + flatIncrease + flatReduction, 0) * percentageAdjustment // Yes, plus flatReduction because it's already a negative value
+		// eslint-disable-next-line @typescript-eslint/no-magic-numbers
+		return Math.floor(adjustedTime / 10) * 10 // adjustments are rounded down to the nearest 10ms in game
 
 		/**
 		 * In the absence of easily-acquired slows to test with, I'm going to assume this is the right way to calculate this:

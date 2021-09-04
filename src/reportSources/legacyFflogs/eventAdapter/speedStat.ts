@@ -179,10 +179,11 @@ export class SpeedStatsAdapterStep extends AdapterStep {
 
 			const castTimeScale = recast / BASE_GCD
 			const speedModifier = this.getSpeedModifierAtTimestamp(previous.start, actorId)
-			const interval = _.round((rawInterval - (hasAnimationLock ? ANIMATION_LOCK : 0)) / castTimeScale / speedModifier, 2)
+			// eslint-disable-next-line @typescript-eslint/no-magic-numbers
+			const interval = Math.round((rawInterval - (hasAnimationLock ? ANIMATION_LOCK : 0)) / castTimeScale / speedModifier / 10) * 10 // round to nearest 10ms, since game works with calculating durations to 0.01s
 
 			// The below debug is useful if you need to trace individual interval calculations, but will make your console really laggy if you enable it without any filter
-			//this.debug(`Actor ID: ${actorId} - Event at ${previous.start} - Raw Interval: ${rawIntervalSeconds}s - Caster Tax: ${isCasterTaxed} - Cast Time Scale: ${castTimeScale} - Speed Modifier: ${speedModifier} - Calculated Interval: ${intervalSeconds}s`)
+			//this.debug(`Actor ID: ${actorId} - Event at ${previous.start} - Raw Interval: ${rawInterval}ms - Caster Tax: ${hasAnimationLock} - Cast Time Scale: ${castTimeScale} - Speed Modifier: ${speedModifier} - Calculated Interval: ${interval}ms`)
 
 			const count = intervalGroups[previousAction.speedAttribute].get(interval) ?? 0
 			intervalGroups[previousAction.speedAttribute].set(interval, count + 1)
