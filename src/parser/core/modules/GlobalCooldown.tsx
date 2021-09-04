@@ -1,5 +1,5 @@
 import {Trans} from '@lingui/react'
-import JOBS from 'data/JOBS'
+import {BASE_GCD} from 'data/CONSTANTS'
 import React from 'react'
 import {Analyser} from '../Analyser'
 import {dependency} from '../Injectable'
@@ -7,8 +7,6 @@ import {Actors} from './Actors'
 import {Data} from './Data'
 import {SpeedAdjustments} from './SpeedAdjustments'
 import {SimpleStatistic, Statistics} from './Statistics'
-
-const BASE_GCD = 2500
 
 export class GlobalCooldown extends Analyser {
 	static override handle = 'gcd'
@@ -23,8 +21,7 @@ export class GlobalCooldown extends Analyser {
 	}
 
 	public getEstimate() {
-		const jobSpeedStat = JOBS[this.parser.actor.job].speedStat
-		return this.speedAdjustments.getAdjustedDuration({duration: BASE_GCD, attribute: jobSpeedStat})
+		return this.speedAdjustments.getAdjustedDuration({duration: BASE_GCD})
 	}
 
 	private onComplete() {

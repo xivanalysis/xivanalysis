@@ -6,6 +6,8 @@ import {dependency} from '../Injectable'
 import {Data} from './Data'
 import {SpeedAdjustments} from './SpeedAdjustments'
 
+const MIN_ACTION_TIME = 1500
+
 type AffectsWhichTime =
 	| 'cast'
 	| 'recast'
@@ -219,8 +221,8 @@ export default class CastTime extends Analyser {
 			? action.gcdRecast
 			: action.cooldown) : action.castTime
 
-		// If the default comes back undefined or already instant, no adjustments to perform
-		if (defaultTime == null || defaultTime === 0) {
+		// If the default comes back undefined, or already at or below the minimum action time (including instants), no adjustments to perform
+		if (defaultTime == null || defaultTime <= MIN_ACTION_TIME) {
 			return defaultTime
 		}
 
@@ -252,7 +254,19 @@ export default class CastTime extends Analyser {
 		})
 
 		// Calculate the final cast time based on the flat and percentage reductions we've found
-		const adjustedTime = Math.max(defaultTime + flatIncrease + flatReduction, 0) * percentageAdjustment // Yes, plus flatReduction because it's already a negative value
+		const flatAdjustedTime = Math.max(defaultTime + flatIncrease + flatReduction, 0) // Yes, plus flatReduction because it's already a negative value
+		if (flatAdjustedTime <= MIN_ACTION_TIME) {
+			// Flat reductions reduced value below minimum action time, percentage adjustments will not be effective
+			return flatAdjustedTime
+		}
+
+		if (percentageAdjustment === 0) {
+			// Adjusted to instant
+			return 0
+		}
+
+		// Apply percentage speed modifiers, subject to clamping at the minimum action time
+		const adjustedTime = Math.max(flatAdjustedTime * percentageAdjustment, MIN_ACTION_TIME)
 		// eslint-disable-next-line @typescript-eslint/no-magic-numbers
 		return Math.floor(adjustedTime / 10) * 10 // adjustments are rounded down to the nearest 10ms in game
 

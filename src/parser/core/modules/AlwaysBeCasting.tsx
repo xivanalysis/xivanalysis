@@ -1,5 +1,6 @@
 import {Trans} from '@lingui/react'
 import {Action} from 'data/ACTIONS'
+import {ANIMATION_LOCK, BASE_GCD} from 'data/CONSTANTS'
 import {Event, Events} from 'event'
 import {Analyser} from 'parser/core/Analyser'
 import {filter} from 'parser/core/filter'
@@ -9,15 +10,17 @@ import Checklist, {Requirement, Rule} from 'parser/core/modules/Checklist'
 import {Data} from 'parser/core/modules/Data'
 import Downtime from 'parser/core/modules/Downtime'
 import React from 'react'
+import {SpeedAdjustments} from './SpeedAdjustments'
 
 export class AlwaysBeCasting extends Analyser {
 	static override handle = 'abc'
 	static override debug = true
 
-	@dependency private checklist!: Checklist
+	@dependency protected castTime!: CastTime
+	@dependency protected checklist!: Checklist
+	@dependency protected data!: Data
 	@dependency protected downtime!: Downtime
-	@dependency private castTime!: CastTime
-	@dependency private data!: Data
+	@dependency protected speedAdjustments!: SpeedAdjustments
 
 	protected gcdUptime: number = 0
 	protected gcdsCounted: number = 0
@@ -45,13 +48,24 @@ export class AlwaysBeCasting extends Analyser {
 			return
 		}
 
-		const castTime = this.castTime.forEvent(event) ?? 0
+		let castTime = this.castTime.forEvent(event) ?? 0
+		const adjustedBaseGCD = this.speedAdjustments.getAdjustedDuration({duration: BASE_GCD})
+		if (castTime >= adjustedBaseGCD) {
+			// Account for "caster tax" - animation lock on spells with cast time equal to or greater than the GCD that prevents starting the next spell until the animation finishes
+			castTime += ANIMATION_LOCK
+		}
 		const recastTime = this.castTime.recastForEvent(event) ?? 0
 
 		const castStart = (this.lastBeginCast != null && this.lastBeginCast.action === event.action) ? this.lastBeginCast.timestamp : event.timestamp
 		if (this.considerCast(action, castStart)) {
-			this.debug(`GCD Uptime for ${action.name} at ${this.parser.formatEpochTimestamp(event.timestamp, 1)} - Cast time: ${castTime} | Recast time: ${recastTime}`)
-			this.gcdUptime += Math.max(castTime, recastTime)
+			const relativeTimestamp = event.timestamp - this.parser.pull.timestamp
+			if (castTime > relativeTimestamp) {
+				this.debug(`GCD Uptime for precast ${action.name} at ${this.parser.formatEpochTimestamp(event.timestamp, 1)} - Cast time: ${castTime} | Recast time: ${recastTime} | Time of completion: ${relativeTimestamp}`)
+				this.gcdUptime += Math.max(0, relativeTimestamp)
+			} else {
+				this.debug(`GCD Uptime for ${action.name} at ${this.parser.formatEpochTimestamp(event.timestamp, 1)} - Cast time: ${castTime} | Recast time: ${recastTime}`)
+				this.gcdUptime += Math.max(castTime, recastTime)
+			}
 			this.gcdsCounted += 1
 		} else {
 			this.debug(`Excluding cast of ${action.name} at ${this.parser.formatEpochTimestamp(event.timestamp, 1)}`)

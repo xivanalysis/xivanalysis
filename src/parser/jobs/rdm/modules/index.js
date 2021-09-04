@@ -1,6 +1,7 @@
+import {AlwaysBeCasting} from 'parser/core/modules/AlwaysBeCasting'
 import {Tincture} from 'parser/core/modules/Tincture'
 import Combos from './Combos'
-import Dualcast from './Dualcast'
+import {DualCast} from './Dualcast'
 import Gauge from './Gauge'
 import GeneralCDDowntime from './GeneralCDDowntime'
 import {Interrupts} from './Interrupts'
@@ -11,8 +12,9 @@ import Procs from './Procs'
 export {DualStatistic} from 'parser/jobs/rdm/statistics/DualStatistic'
 
 export default [
+	AlwaysBeCasting,
 	Gauge,
-	Dualcast,
+	DualCast,
 	GeneralCDDowntime,
 	Interrupts,
 	Procs,

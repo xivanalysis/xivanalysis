@@ -1,4 +1,5 @@
 import {getActions} from 'data/ACTIONS'
+import {ANIMATION_LOCK, BASE_GCD} from 'data/CONSTANTS'
 import {getDataBy} from 'data/getDataBy'
 import {JobKey} from 'data/JOBS'
 import {getStatuses} from 'data/STATUSES'
@@ -9,8 +10,6 @@ import {Actor, Team} from 'report'
 import {getSpeedStat} from 'utilities/speedStatMapper'
 import {AdapterStep, PREPULL_OFFSETS} from './base'
 
-const BASE_GCD = 2500
-const ANIMATION_LOCK = 100
 const JOB_SPEED_MODIFIERS: Partial<Record<JobKey, number>> = {
 	MONK: 0.8,
 	NINJA: 0.85,
