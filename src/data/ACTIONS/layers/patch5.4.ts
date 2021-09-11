@@ -26,5 +26,15 @@ export const patch540: Layer<ActionRoot> = {
 			from: 2240,
 			potency: 340,
 		}},
+
+		// SMN circa-5.4 changes: SPS scaling silently removed from Egi Assaults
+		EGI_ASSAULT: {speedAttribute: undefined},
+		ASSAULT_I_AERIAL_SLASH: {speedAttribute: undefined},
+		ASSAULT_I_EARTHEN_ARMOR: {speedAttribute: undefined},
+		ASSAULT_I_CRIMSON_CYCLONE: {speedAttribute: undefined},
+		EGI_ASSAULT_II: {speedAttribute: undefined},
+		ASSAULT_II_SLIIPSTREAM: {speedAttribute: undefined},
+		ASSAULT_II_MOUNTAIN_BUSTER: {speedAttribute: undefined},
+		ASSAULT_II_FLAMING_CRUSH: {speedAttribute: undefined},
 	},
 }
