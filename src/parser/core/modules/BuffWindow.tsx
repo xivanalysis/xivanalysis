@@ -13,6 +13,7 @@ import Suggestions, {TieredSuggestion} from 'parser/core/modules/Suggestions'
 import {Timeline} from 'parser/core/modules/Timeline'
 import React from 'react'
 import {ensureArray} from 'utilities'
+import {TimestampHookArguments} from '../LegacyDispatcher'
 import {Data} from './Data'
 
 const SECONDS_TO_MS: number = 1000
@@ -221,10 +222,10 @@ export abstract class BuffWindowModule extends Module {
 
 	private startNewBuffWindow(startTime: number, status: Status) {
 		this.buffWindows.push(new BuffWindowState(this.data, startTime, status))
-		this.addTimestampHook(startTime + status.duration * SECONDS_TO_MS, this.onDurationExpiration)
+		this.addTimestampHook(startTime + (status?.duration ?? 0) * SECONDS_TO_MS, this.onDurationExpiration)
 	}
 
-	private onDurationExpiration(event: any) {
+	private onDurationExpiration(event: TimestampHookArguments) {
 		this.debug(`Manually triggering the end of a window because it's gone past it's duration at ${event.timestamp}`)
 		if (this.activeBuffWindow) { // we're cancelling this because it's expected lifetime is expired
 			this.activeBuffWindow.end = event.timestamp
