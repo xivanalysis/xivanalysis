@@ -13,7 +13,10 @@ import Suggestions, {TieredSuggestion} from 'parser/core/modules/Suggestions'
 import {Timeline} from 'parser/core/modules/Timeline'
 import React from 'react'
 import {ensureArray} from 'utilities'
+import {TimestampHookArguments} from '../LegacyDispatcher'
 import {Data} from './Data'
+
+const SECONDS_TO_MS: number = 1000
 
 export class BuffWindowState {
 	start: number
@@ -98,6 +101,7 @@ export interface BuffWindowTrackedAction {
 export abstract class BuffWindowModule extends Module {
 	static override handle: string = 'buffwindow'
 	static override title: MessageDescriptor = t('core.buffwindow.title')`Buff Window`
+	static override debug = false
 
 	/**
 	 * Implementing modules MUST define the ACTION object for the action that initiates the buff window
@@ -218,6 +222,14 @@ export abstract class BuffWindowModule extends Module {
 
 	private startNewBuffWindow(startTime: number, status: Status) {
 		this.buffWindows.push(new BuffWindowState(this.data, startTime, status))
+		this.addTimestampHook(startTime + (status?.duration ?? 0) * SECONDS_TO_MS, this.onDurationExpiration)
+	}
+
+	private onDurationExpiration(event: TimestampHookArguments) {
+		this.debug(`Manually triggering the end of a window because it's gone past it's duration at ${event.timestamp}`)
+		if (this.activeBuffWindow) { // we're cancelling this because it's expected lifetime is expired
+			this.activeBuffWindow.end = event.timestamp
+		}
 	}
 
 	private onRemoveBuff(event: BuffEvent) {
