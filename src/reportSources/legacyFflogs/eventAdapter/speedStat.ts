@@ -130,6 +130,13 @@ export class SpeedStatsAdapterStep extends AdapterStep {
 			windowMap = new Array<SpeedmodWindow>()
 			windows.set(status.id, windowMap)
 		}
+
+		// Some statuses (i.e. Circle of Power) re-apply regularly while active.
+		// If this application appears to be a reapplication, we can safely noop.
+		if (windowMap.length > 0 && windowMap[windowMap.length - 1].end == null) {
+			return
+		}
+
 		windowMap.push({start: event.timestamp})
 	}
 
@@ -182,7 +189,7 @@ export class SpeedStatsAdapterStep extends AdapterStep {
 			const interval = _.round((rawInterval - (hasAnimationLock ? ANIMATION_LOCK : 0)) / castTimeScale / speedModifier, 2)
 
 			// The below debug is useful if you need to trace individual interval calculations, but will make your console really laggy if you enable it without any filter
-			//this.debug(`Actor ID: ${actorId} - Event at ${previous.start} - Raw Interval: ${rawIntervalSeconds}s - Caster Tax: ${isCasterTaxed} - Cast Time Scale: ${castTimeScale} - Speed Modifier: ${speedModifier} - Calculated Interval: ${intervalSeconds}s`)
+			// this.debug(`Actor ID: ${actorId} - Event at ${previous.start} - Raw Interval: ${rawInterval}s - Caster Tax: ${hasAnimationLock} - Cast Time Scale: ${castTimeScale} - Speed Modifier: ${speedModifier} - Calculated Interval: ${interval}s`)
 
 			const count = intervalGroups[previousAction.speedAttribute].get(interval) ?? 0
 			intervalGroups[previousAction.speedAttribute].set(interval, count + 1)

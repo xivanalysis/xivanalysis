@@ -128,7 +128,7 @@ const fakeEvents: Record<FflogsEvent['type'], FflogsEvent[]> = {
 		},
 		hitType: 2,
 		amount: 0,
-		debugMultiplier: 1.1,
+		multiplier: 1.1,
 		packetID: 16647,
 		sourceResources: {
 			hitPoints: 142411,
@@ -210,7 +210,7 @@ const fakeEvents: Record<FflogsEvent['type'], FflogsEvent[]> = {
 		},
 		hitType: 1,
 		amount: 21603,
-		debugMultiplier: 1.05,
+		multiplier: 1.05,
 		packetID: 18762,
 		targetResources: {
 			hitPoints: 73328677,

@@ -15,13 +15,13 @@ export interface Item {
 	readonly Content: ComponentType
 }
 
-interface BaseItemOptions {
+export interface BaseItemOptions {
 	start: number
 	end?: number
 	depth?: number
 }
 
-abstract class BaseItem implements Item {
+export abstract class BaseItem implements Item {
 	readonly start: number
 	readonly end?: number
 	readonly depth?: number
