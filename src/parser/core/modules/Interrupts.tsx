@@ -3,7 +3,7 @@ import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
 import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
-import {Attribute, Event, Events} from 'event'
+import {Event, Events} from 'event'
 import {Analyser} from 'parser/core/Analyser'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import {Timeline} from 'parser/core/modules/Timeline'
@@ -11,6 +11,7 @@ import React from 'react'
 import {Button, Table} from 'semantic-ui-react'
 import {filter} from '../filter'
 import {dependency} from '../Injectable'
+import CastTime from './CastTime'
 import {Data} from './Data'
 import {SpeedAdjustments} from './SpeedAdjustments'
 
@@ -20,13 +21,13 @@ interface SeverityTiers {
 
 // used for timeline viewing by giving you a nice 30s window
 const TIMELINE_UPPER_MOD: number = 30000
-const GCD_ESTIMATE: number = 2500
 
 export class Interrupts extends Analyser {
 	static override handle: string = 'interrupts'
 	static override title: MessageDescriptor = t('core.interrupts.title')`Interrupted Casts`
-	static override debug: boolean = true
+	static override debug: boolean = false
 
+	@dependency private castTime!: CastTime
 	@dependency protected data!: Data
 	@dependency private suggestions!: Suggestions
 	@dependency private speedAdjustments!: SpeedAdjustments
@@ -69,12 +70,6 @@ export class Interrupts extends Analyser {
 	}
 
 	/**
-	 * Implementing modules MAY override this to change the defualt attribute type used for lookups. I don't know why
-	 * you might do this, but more power to you.
-	 */
-	protected defaultAttributeType: Attribute = Attribute.SPELL_SPEED
-
-	/**
 	 * Implementing modules MAY override this function to provide alternative output if there's 0 interrupted
 	 * casts (in lieu of an empty table)
 	 */
@@ -105,12 +100,15 @@ export class Interrupts extends Analyser {
 	private pushDropCasts(event: Events['interrupt']) {
 		if (this.currentCast == null) { return }
 
+		let castTime = this.castTime.forAction(this.currentCast.action, this.currentCast.timestamp) ?? 0
 		const action = this.data.getAction(this.currentCast.action)
-		const castTime = this.speedAdjustments.getAdjustedDuration({
-			duration: action?.castTime ?? GCD_ESTIMATE,
-			attribute: this.defaultAttributeType,
-			actor: this.parser.actor.id,
-		})
+		if (action?.speedAttribute != null) {
+			castTime = this.speedAdjustments.getAdjustedDuration({
+				duration: castTime,
+				attribute: action.speedAttribute,
+			})
+		}
+
 		this.missedTimeMS += Math.min(
 			event.timestamp - (this.currentCast?.timestamp ?? this.parser.currentTimestamp),
 			castTime
@@ -147,7 +145,7 @@ export class Interrupts extends Analyser {
 			</Table.Header>
 			<Table.Body>
 				{
-					this.droppedCasts.map((cast) =>{
+					this.droppedCasts.map((cast) => {
 						const action = this.data.getAction(cast.action)
 						return <Table.Row key={cast.timestamp}>
 							<Table.Cell textAlign="center">
