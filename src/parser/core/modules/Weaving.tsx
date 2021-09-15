@@ -48,10 +48,11 @@ export class Weaving extends Analyser {
 
 	protected suggestionIcon: string = 'https://xivapi.com/i/001000/001785.png' // WVR Focused Synth
 
-	protected moduleLink = <a
-		style={{cursor: 'pointer'}}
-		onClick={() => this.parser.scrollTo(Weaving.handle)}><NormalisedMessage message={Weaving.title}/>
-	</a>
+	protected moduleLink = (
+		<a style={{cursor: 'pointer'}} onClick={() => this.parser.scrollTo(Weaving.handle)}>
+			<NormalisedMessage message={Weaving.title}/>
+		</a>
+	)
 	protected suggestionContent: ReactNode = <Trans id="core.weaving.content">
 		Avoid weaving more actions than you have time for in a single GCD window. Doing so will delay your next GCD, reducing possible uptime. Check the {this.moduleLink} module below for more detailed analysis.
 	</Trans>
@@ -145,7 +146,7 @@ export class Weaving extends Analyser {
 				end: this.trailingGcdEvent.timestamp,
 			})
 
-		const weave : Weave = {
+		const weave: Weave = {
 			leadingGcdEvent: this.leadingGcdEvent,
 			trailingGcdEvent: this.trailingGcdEvent,
 			gcdTimeDiff,
