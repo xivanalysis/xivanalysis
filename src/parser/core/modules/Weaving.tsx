@@ -40,7 +40,7 @@ export class Weaving extends Analyser {
 	static override handle = 'weaving'
 
 	@dependency protected castTime!: CastTime
-	@dependency private data!: Data
+	@dependency protected data!: Data
 	@dependency private invulnerability!: Invulnerability
 	@dependency private suggestions!: Suggestions
 

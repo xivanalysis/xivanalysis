@@ -1,40 +1,42 @@
 /**
  * @author Yumiya
  */
-import ACTIONS from 'data/ACTIONS'
+import {ActionKey} from 'data/ACTIONS'
 import _ from 'lodash'
 import {Weaving as CoreWeaving, Weave} from 'parser/core/modules/Weaving'
 
 const SPECIAL_WEAVE = 3
-const ALLOWED_WEAVES = [
+const ALLOWED_WEAVES: ActionKey[][] = [
 	[
-		ACTIONS.BLOODLETTER.id,
-		ACTIONS.EMPYREAL_ARROW.id,
-		ACTIONS.BLOODLETTER.id,
+		'BLOODLETTER',
+		'EMPYREAL_ARROW',
+		'BLOODLETTER',
 	],
 	[
-		ACTIONS.PITCH_PERFECT.id,
-		ACTIONS.BLOODLETTER.id,
-		ACTIONS.MAGES_BALLAD.id,
+		'PITCH_PERFECT',
+		'BLOODLETTER',
+		'MAGES_BALLAD',
 	],
 	[
-		ACTIONS.PITCH_PERFECT.id,
-		ACTIONS.MAGES_BALLAD.id,
-		ACTIONS.BLOODLETTER.id,
+		'PITCH_PERFECT',
+		'MAGES_BALLAD',
+		'BLOODLETTER',
 	],
 	[
-		ACTIONS.BLOODLETTER.id,
-		ACTIONS.PITCH_PERFECT.id,
-		ACTIONS.MAGES_BALLAD.id,
+		'BLOODLETTER',
+		'PITCH_PERFECT',
+		'MAGES_BALLAD',
 	],
 ]
 
 export default class Weaving extends CoreWeaving {
+	private allowedWeaves = ALLOWED_WEAVES.map(weave => weave.map(key => this.data.actions[key].id))
+
 	override getMaxWeaves(weave: Weave) {
 		if (weave.weaves.length === SPECIAL_WEAVE) {
 			const weaveSequence = weave.weaves.map(weave => weave.action)
 
-			if (ALLOWED_WEAVES.some((weave) => _.isEqual(weave, weaveSequence))) {
+			if (this.allowedWeaves.some((weave) => _.isEqual(weave, weaveSequence))) {
 				return SPECIAL_WEAVE
 			}
 		}

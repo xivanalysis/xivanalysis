@@ -1,4 +1,3 @@
-import ACTIONS from 'data/ACTIONS'
 import {Weaving as CoreWeaving, Weave} from 'parser/core/modules/Weaving'
 
 export default class Weaving extends CoreWeaving {
@@ -6,7 +5,7 @@ export default class Weaving extends CoreWeaving {
 		let dreams = 0
 
 		for (let i = 0; i < weave.weaves.length; i++) {
-			if (weave.weaves[i].action === ACTIONS.DREAM_WITHIN_A_DREAM.id) {
+			if (weave.weaves[i].action === this.data.actions.DREAM_WITHIN_A_DREAM.id) {
 				dreams++
 			}
 		}
