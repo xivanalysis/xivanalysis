@@ -5,7 +5,6 @@ import {dependency} from 'parser/core/Injectable'
 import CastTime from 'parser/core/modules/CastTime'
 import {ChargeHistoryEntry, CooldownEndReason, CooldownGroup, CooldownHistoryEntry, Cooldowns, SelectionSpecifier} from 'parser/core/modules/Cooldowns2'
 import {Data} from 'parser/core/modules/Data'
-import {SpeedAdjustments} from 'parser/core/modules/SpeedAdjustments'
 import {ActionItem, BaseItem, ContainerRow, SimpleItem, Timeline} from 'parser/core/modules/Timeline'
 import React, {ReactNode} from 'react'
 import {Icon} from 'semantic-ui-react'
@@ -62,7 +61,6 @@ export class ActionTimeline extends Analyser {
 	@dependency private castTime!: CastTime
 	@dependency private cooldowns!: Cooldowns
 	@dependency private data!: Data
-	@dependency private speedAdjustments!: SpeedAdjustments
 	@dependency private timeline!: Timeline
 
 	private resolvedRows: InternalRowConfig[] = []
@@ -187,16 +185,7 @@ export class ActionTimeline extends Analyser {
 
 		// If the cooldown expired naturally, it _may_ have a cast time greater than its cooldown.
 		if (entry.endReason === CooldownEndReason.EXPIRED) {
-			let castTime = this.castTime.forAction(entry.action.id, entry.start) ?? 0
-
-			// If the action has a known speed attribute, adjust for it.
-			if (entry.action.speedAttribute != null) {
-				// TODO: Speed adjustments should probably be absorbed into castTime.
-				castTime = this.speedAdjustments.getAdjustedDuration({
-					duration: castTime,
-					attribute: entry.action.speedAttribute,
-				})
-			}
+			const castTime = this.castTime.forAction(entry.action.id, entry.start) ?? 0
 
 			// We add the animation lock constant to the cast time to mimic the game's
 			// behaviour - also sometimes known as "caster tax".

@@ -9,7 +9,6 @@ import OGCDDowntime from './OGCDDowntime'
 import Requiescat from './Requiescat'
 import Statuses from './Statuses'
 import Tincture from './Tincture'
-import Weaving from './Weaving'
 
 export default [
 	ActionTimeline,
@@ -23,5 +22,4 @@ export default [
 	Requiescat,
 	Statuses,
 	Tincture,
-	Weaving,
 ]
