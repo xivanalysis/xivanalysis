@@ -13,7 +13,6 @@ import {filter} from '../filter'
 import {dependency} from '../Injectable'
 import CastTime from './CastTime'
 import {Data} from './Data'
-import {SpeedAdjustments} from './SpeedAdjustments'
 
 interface SeverityTiers {
 	[key: number]: number
@@ -30,7 +29,6 @@ export class Interrupts extends Analyser {
 	@dependency private castTime!: CastTime
 	@dependency protected data!: Data
 	@dependency private suggestions!: Suggestions
-	@dependency private speedAdjustments!: SpeedAdjustments
 	@dependency private timeline!: Timeline
 
 	private currentCast?: Events['prepare']
@@ -100,14 +98,7 @@ export class Interrupts extends Analyser {
 	private pushDropCasts(event: Events['interrupt']) {
 		if (this.currentCast == null) { return }
 
-		let castTime = this.castTime.forAction(this.currentCast.action, this.currentCast.timestamp) ?? 0
-		const action = this.data.getAction(this.currentCast.action)
-		if (action?.speedAttribute != null) {
-			castTime = this.speedAdjustments.getAdjustedDuration({
-				duration: castTime,
-				attribute: action.speedAttribute,
-			})
-		}
+		const castTime = this.castTime.forAction(this.currentCast.action, this.currentCast.timestamp) ?? 0
 
 		this.missedTimeMS += Math.min(
 			event.timestamp - (this.currentCast?.timestamp ?? this.parser.currentTimestamp),
