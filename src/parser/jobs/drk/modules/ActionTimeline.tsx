@@ -1,7 +1,9 @@
-import CoreCooldowns, {CooldownOrderItem} from 'parser/core/modules/Cooldowns'
+import {ActionRow, ActionTimeline as CoreActionTimeline} from 'parser/core/modules/ActionTimeline'
 
-export class Cooldowns extends CoreCooldowns {
-	static override cooldownOrder: CooldownOrderItem[] = [
+export class ActionTimeline extends CoreActionTimeline {
+	static override rows: ActionRow[] = [
+		...CoreActionTimeline.rows,
+
 		// Buffs
 		'BLOOD_WEAPON',
 		'DELIRIUM',

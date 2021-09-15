@@ -11,11 +11,11 @@ const OPTIMAL_GCD_COUNT = 5 // Opener should be Suiton > AE combo > SE before Tr
 
 const MUDRAS = [
 	ACTIONS.TEN.id,
-	ACTIONS.TEN_NEW.id,
+	ACTIONS.TEN_KASSATSU.id,
 	ACTIONS.CHI.id,
-	ACTIONS.CHI_NEW.id,
+	ACTIONS.CHI_KASSATSU.id,
 	ACTIONS.JIN.id,
-	ACTIONS.JIN_NEW.id,
+	ACTIONS.JIN_KASSATSU.id,
 ]
 
 export default class TrickAttackUsage extends Module {

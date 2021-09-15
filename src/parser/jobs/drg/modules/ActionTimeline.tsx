@@ -1,7 +1,8 @@
-import CoreCooldowns from 'parser/core/modules/Cooldowns'
+import {ActionRow, ActionTimeline as CoreActionTimeline} from 'parser/core/modules/ActionTimeline'
 
-export default class Cooldowns extends CoreCooldowns {
-	static cooldownOrder = [
+export class ActionTimeline extends CoreActionTimeline {
+	static override rows: ActionRow[] = [
+		...CoreActionTimeline.rows,
 		'BATTLE_LITANY',
 		'DRAGON_SIGHT',
 		'LANCE_CHARGE',

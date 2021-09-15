@@ -1,8 +1,8 @@
 import {CastEvent} from 'fflogs'
 import Module, {dependency} from 'parser/core/Module'
 import {Data} from 'parser/core/modules/Data'
-import {ActionItem, ContainerRow, SimpleRow, Timeline} from 'parser/core/modules/Timeline'
-import Cooldowns from './Cooldowns'
+import {ActionItem, SimpleRow, Timeline} from 'parser/core/modules/Timeline'
+import {ActionTimeline} from './ActionTimeline'
 
 // This module puts pet skills on the timeline beneath the GCD spells
 export default class PetTimeline extends Module {
@@ -10,7 +10,7 @@ export default class PetTimeline extends Module {
 
 	@dependency private data!: Data
 	@dependency private timeline!: Timeline
-	@dependency private cooldowns!: Cooldowns
+	@dependency private actionTimeline!: ActionTimeline
 
 	/**
 	 * Implementing modules MAY change the timeline group name.
@@ -90,8 +90,7 @@ export default class PetTimeline extends Module {
 			const summonAction = this.data.getAction(this.timelineSummonAction)
 			if (summonAction == null) { throw new Error('Timeline summon action set to an invalid action ID') }
 
-			// TOOD: Type cooldowns so this cast isn't required
-			const parentRow: ContainerRow = this.cooldowns.getActionTimelineRow(summonAction)
+			const parentRow = this.actionTimeline.getRow(summonAction)
 
 			autoRow = parentRow.addRow(new SimpleRow({
 				label: this.timelineGroupName,

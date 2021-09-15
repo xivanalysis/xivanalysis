@@ -16,8 +16,14 @@ export interface EventHook<T extends Event> {
 	callback: EventHookCallback<T>
 }
 
+/** Arguments passed to the callback for a timestamp hook. */
+export interface TimestampHookArguments {
+	/** Timestamp of the execution of this hook, in milliseconds. */
+	timestamp: number
+}
+
 /** Callback signature for timestamp hooks. */
-export type TimestampHookCallback = (opts: {timestamp: number}) => void
+export type TimestampHookCallback = (opts: TimestampHookArguments) => void
 
 /** Configuration for a timestamp hook */
 export interface TimestampHook {

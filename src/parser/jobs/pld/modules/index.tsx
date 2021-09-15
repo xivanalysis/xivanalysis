@@ -1,6 +1,7 @@
 import {Interrupts} from 'parser/core/modules/Interrupts'
+import {ActionTimeline} from './ActionTimeline'
+import Atonement from './Atonement'
 import Combos from './Combos'
-import Cooldowns from './Cooldowns'
 import FightOrFlight from './FightOrFlight'
 import Gauge from './Gauge'
 import Goring from './Goring'
@@ -10,8 +11,9 @@ import Statuses from './Statuses'
 import Tincture from './Tincture'
 
 export default [
+	ActionTimeline,
+	Atonement,
 	Combos,
-	Cooldowns,
 	FightOrFlight,
 	Goring,
 	Interrupts,
