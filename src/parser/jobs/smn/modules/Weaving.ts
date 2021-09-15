@@ -19,7 +19,7 @@ export class Weaving extends CoreWeaving {
 		}
 
 		const leadingGcdCastTime = this.castTime.forEvent(weave.leadingGcdEvent)
-		if (leadingGcdCastTime === 0 && weave.weaves[1].action === this.data.actions.FIREBIRD_TRANCE.id) {
+		if (leadingGcdCastTime === 0 && weave.weaves[1]?.action === this.data.actions.FIREBIRD_TRANCE.id) {
 			return PERMITTED_PHOENIX_WEAVES
 		}
 
