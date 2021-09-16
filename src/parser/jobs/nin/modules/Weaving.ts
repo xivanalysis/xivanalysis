@@ -11,6 +11,6 @@ export default class Weaving extends CoreWeaving {
 		}
 
 		// If duplicate DWaD events are seen, don't penalize the extra events as bad weaves - the data source generated duplicate events that we should ignore
-		return super.getMaxWeaves(weave) + Math.min(0, dreams - 1)
+		return super.getMaxWeaves(weave) + Math.max(0, dreams - 1)
 	}
 }
