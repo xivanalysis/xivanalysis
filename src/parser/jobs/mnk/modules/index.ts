@@ -1,4 +1,4 @@
-import Cooldowns from './Cooldowns'
+import {ActionTimeline} from './ActionTimeline'
 import Demolish from './Demolish'
 import Fists from './Fists'
 import Forms from './Forms'
@@ -12,7 +12,7 @@ import TwinSnakes from './TwinSnakes'
 import Weaving from './Weaving'
 
 export default [
-	Cooldowns,
+	ActionTimeline,
 	Demolish,
 	Fists,
 	Forms,

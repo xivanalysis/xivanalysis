@@ -1,6 +1,7 @@
 import {Interrupts} from 'parser/core/modules/Interrupts'
+import {ActionTimeline} from './ActionTimeline'
+import Atonement from './Atonement'
 import Combos from './Combos'
-import Cooldowns from './Cooldowns'
 import FightOrFlight from './FightOrFlight'
 import Gauge from './Gauge'
 import Goring from './Goring'
@@ -8,11 +9,11 @@ import OGCDDowntime from './OGCDDowntime'
 import Requiescat from './Requiescat'
 import Statuses from './Statuses'
 import Tincture from './Tincture'
-import Weaving from './Weaving'
 
 export default [
+	ActionTimeline,
+	Atonement,
 	Combos,
-	Cooldowns,
 	FightOrFlight,
 	Goring,
 	Interrupts,
@@ -21,5 +22,4 @@ export default [
 	Requiescat,
 	Statuses,
 	Tincture,
-	Weaving,
 ]

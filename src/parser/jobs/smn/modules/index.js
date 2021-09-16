@@ -1,6 +1,6 @@
 import {Interrupts} from 'parser/core/modules/Interrupts'
 import {Tincture} from 'parser/core/modules/Tincture'
-import Cooldowns from './Cooldowns'
+import {ActionTimeline} from './ActionTimeline'
 import Demis from './Demis'
 import Devotion from './Devotion'
 import DoTs from './DoTs'
@@ -19,7 +19,7 @@ import TriDisaster from './TriDisaster'
 import {Weaving} from './Weaving'
 
 export default [
-	Cooldowns,
+	ActionTimeline,
 	Demis,
 	Devotion,
 	DoTs,

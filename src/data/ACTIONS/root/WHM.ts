@@ -41,6 +41,7 @@ export const WHM = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		statusesApplied: ['DIA'],
+		mpCost: 400,
 	},
 
 	GLARE: {
@@ -50,6 +51,7 @@ export const WHM = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 2500,
+		mpCost: 400,
 	},
 
 	PLENARY_INDULGENCE: {
@@ -67,6 +69,7 @@ export const WHM = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 2500,
+		mpCost: 400,
 	},
 
 	TETRAGRAMMATON: {
@@ -105,6 +108,7 @@ export const WHM = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 3000,
+		mpCost: 600,
 	},
 
 	PRESENCE_OF_MIND: {
@@ -122,6 +126,7 @@ export const WHM = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 2500,
+		mpCost: 400,
 	},
 
 	DIVINE_BENISON: {
@@ -147,6 +152,7 @@ export const WHM = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 2500,
+		mpCost: 400,
 	},
 
 	MEDICA_II: {
@@ -157,6 +163,7 @@ export const WHM = ensureActions({
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 2500,
 		statusesApplied: ['MEDICA_II'],
+		mpCost: 1300,
 	},
 
 	// the following abilities are to be moved to CNJ.js
@@ -167,6 +174,7 @@ export const WHM = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 8000,
+		mpCost: 2400,
 	},
 
 	CURE_II: {
@@ -176,6 +184,7 @@ export const WHM = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 2000,
+		mpCost: 1000,
 	},
 
 	CURE_III: {
@@ -185,6 +194,7 @@ export const WHM = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 2000,
+		mpCost: 1500,
 	},
 
 	REGEN: {
@@ -194,6 +204,7 @@ export const WHM = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		statusesApplied: ['REGEN'],
+		mpCost: 400,
 	},
 
 	FLUID_AURA: {
@@ -210,6 +221,7 @@ export const WHM = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 2500,
+		mpCost: 1000,
 	},
 
 	STONE: {
@@ -219,6 +231,7 @@ export const WHM = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 2500,
+		mpCost: 400,
 	},
 
 	AERO_II: {
@@ -227,6 +240,7 @@ export const WHM = ensureActions({
 		icon: 'https://xivapi.com/i/000000/000402.png',
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
+		mpCost: 400,
 	},
 
 	AERO: {
@@ -235,6 +249,7 @@ export const WHM = ensureActions({
 		icon: 'https://xivapi.com/i/000000/000401.png',
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
+		mpCost: 400,
 	},
 
 	REPOSE: {
@@ -243,6 +258,7 @@ export const WHM = ensureActions({
 		icon: 'https://xivapi.com/i/000000/000414.png',
 		onGcd: true,
 		castTime: 2500,
+		mpCost: 600,
 	},
 
 	STONE_II: {
@@ -252,6 +268,7 @@ export const WHM = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 2500,
+		mpCost: 400,
 	},
 
 	CURE: {
@@ -261,5 +278,6 @@ export const WHM = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 1500,
+		mpCost: 400,
 	},
 })

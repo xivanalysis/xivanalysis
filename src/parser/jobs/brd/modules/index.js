@@ -1,8 +1,8 @@
+import {ActionTimeline} from './ActionTimeline'
 import AdditionalStats from './AdditionalStats'
 import AlwaysBeCasting from './AlwaysBeCasting'
 import ApexArrow from './ApexArrow'
 import Barrage from './Barrage'
-import Cooldowns from './Cooldowns'
 import DoTs from './DoTs'
 import MultiHitSkills from './MultiHitSkills'
 import OGCDDowntime from './OGCDDowntime'
@@ -16,11 +16,11 @@ import Util from './Util'
 import Weaving from './Weaving'
 
 export default [
+	ActionTimeline,
 	AdditionalStats,
 	AlwaysBeCasting,
 	ApexArrow,
 	Barrage,
-	Cooldowns,
 	DoTs,
 	MultiHitSkills,
 	OGCDDowntime,

@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-magic-numbers */
 export const SUB_ATTRIBUTE_MINIMUM = 380
-const BASE_GCD = 2500
+export const BASE_GCD = 2500
 
 const STAT_DIVISOR = 3300
 

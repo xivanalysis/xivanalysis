@@ -1,4 +1,5 @@
 import About from './About'
+import {ActionTimeline} from './ActionTimeline'
 import {Actors} from './Actors'
 import {AdditionalEvents, AdditionalEventQueries} from './AdditionalEvents'
 import AlwaysBeCasting from './AlwaysBeCasting'
@@ -33,10 +34,11 @@ import Statuses from './Statuses'
 import Suggestions from './Suggestions'
 import {Timeline} from './Timeline'
 import {UnableToAct} from './UnableToAct'
-import Weaving from './Weaving'
+import {Weaving} from './Weaving'
 
 export default [
 	About,
+	ActionTimeline,
 	Actors,
 	AdditionalEventQueries,
 	AdditionalEvents,

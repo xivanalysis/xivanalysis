@@ -1,21 +1,11 @@
 import {getDataArrayBy} from 'data'
-import {Action, ActionKey} from 'data/ACTIONS'
+import {Action} from 'data/ACTIONS'
 import {CastEvent} from 'fflogs'
 import _ from 'lodash'
 import Module from 'parser/core/Module'
 import {dependency} from '../Injectable'
 import {Data} from './Data'
 import Downtime from './Downtime'
-import {ActionItem, ContainerRow, Timeline} from './Timeline'
-
-export interface CooldownOrderGroup {
-	name: string
-	actions: ActionKey[]
-}
-
-export type CooldownOrderItem =
-	| CooldownOrderGroup
-	| ActionKey
 
 interface CooldownState {
 	timestamp: number,
@@ -35,72 +25,14 @@ export default class Cooldowns extends Module {
 
 	@dependency private data!: Data
 	@dependency private downtime!: Downtime
-	@dependency private timeline!: Timeline
-
-	// Array used to sort cooldowns in the timeline. Elements should be either IDs for
-	// top-level groups, or objects of the format {name: string, actions: array} for
-	// nested groups. Actions not specified here will be sorted by their ID below.
-	// Check the NIN and SMN modules for examples.
-	static cooldownOrder: CooldownOrderItem[] = []
 
 	private _currentAction?: Action
 	private _cooldowns = new Map<number, CooldownHistory>()
-	private _rows = new Map<number, ContainerRow>()
 
 	protected override init() {
-		const constructor = this.constructor as typeof Cooldowns
-		// Pre-build rows for actions explicitly set by subclasses
-		if (constructor.cooldownOrder) {
-			this._buildRows(constructor.cooldownOrder)
-		}
-
 		this.addEventHook('begincast', {by: 'player'}, this._onBeginCast)
 		this.addEventHook('cast', {by: 'player'}, this._onCast)
 		this.addEventHook('complete', this._onComplete)
-	}
-
-	private _buildRows(mappings: CooldownOrderItem[]) {
-		mappings.forEach((mapping, index) => {
-			const order = -(mappings.length - index)
-
-			// If it's just the ID of an action, build a row for it and bail
-			if (typeof mapping === 'string') {
-				const action = this.data.actions[mapping]
-				return this._buildRow(action.id, {label: action.name, order})
-			}
-
-			// Otherwise, it's a grouping - build a base row
-			const row = this._buildRow(undefined, {label: mapping.name, order})
-
-			// Register the group for each of the action IDs
-			mapping.actions.forEach(key => {
-				this._rows.set(this.data.actions[key].id, row)
-			})
-		})
-	}
-
-	private _buildRow(id: number | undefined, opts: {label: string, order: number}) {
-		if (id != null) {
-			const currentRow = this._rows.get(id)
-			if (currentRow != null) {
-				return currentRow
-			}
-		}
-
-		const row = this.timeline.addRow(new ContainerRow({
-			...opts,
-			collapse: true,
-		}))
-
-		if (id != null) {
-			this._rows.set(id, row)
-		}
-
-		return row
-	}
-
-	getActionTimelineRow(action: Action) {
-		return this._buildRow(action.id, {label: action.name, order: action.id})
 	}
 
 	// cooldown starts at the beginning of the casttime
@@ -128,9 +60,8 @@ export default class Cooldowns extends Module {
 	}
 
 	private _onComplete() {
-		this._cooldowns.forEach((history, actionId) => {
+		this._cooldowns.forEach((history) => {
 			this._cleanHistory(history)
-			this._addToTimeline(actionId, history)
 		})
 	}
 
@@ -139,29 +70,6 @@ export default class Cooldowns extends Module {
 		// Clean out any 'current' cooldowns into the history
 		history.history.push(history.current)
 		history.current = undefined
-	}
-
-	private _addToTimeline(actionId: number, history: CooldownHistory) {
-		// If the action is on the GCD, GlobalCooldown will be managing its own group
-		const action = this.data.getAction(actionId)
-		if (action == null || action.onGcd) {
-			return
-		}
-
-		// Ensure we've got a row for this item
-		const row = this._buildRow(actionId, {label: action.name, order: actionId})
-
-		// Add CD info to the timeline
-		history.history.forEach(use => {
-			if (use.shared) { return }
-
-			const start = use.timestamp - this.parser.eventTimeOffset
-			row.addItem(new ActionItem({
-				start,
-				end: start + use.length,
-				action,
-			}))
-		})
 	}
 
 	getCooldown(actionId: number): CooldownHistory {

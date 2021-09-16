@@ -246,7 +246,7 @@ export default class Sidewinder extends Module {
 	}
 
 	_getRawDamage(event) {
-		let fixedMultiplier = event.debugMultiplier
+		let fixedMultiplier = event.multiplier
 
 		// AND ALSO FOR RANGED TRAIT, BECAUSE APPARENTLY IT'S PHYSICAL DAMAGE ONLY REEEEEEEEEE
 		fixedMultiplier = Math.trunc((fixedMultiplier + TRAIT_STRENGTH) * 100) / 100

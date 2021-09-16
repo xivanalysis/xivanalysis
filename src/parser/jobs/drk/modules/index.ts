@@ -1,5 +1,5 @@
+import {ActionTimeline} from './ActionTimeline'
 import {BloodWeapon} from './BloodWeapon'
-import {Cooldowns} from './Cooldowns'
 import {Darkside} from './Darkside'
 import {Delirium} from './Delirium'
 import {EsteemTimeline} from './EsteemTimeline'
@@ -9,12 +9,12 @@ import ResourceSimulator from './ResourceSimulator'
 import {Statuses} from './Statuses'
 
 export default [
+	ActionTimeline,
 	Darkside,
 	BloodWeapon,
 	Delirium,
 	EsteemTimeline,
 	ResourceSimulator,
-	Cooldowns,
 	OGCDDowntime,
 	MultiHitSkills,
 	Statuses,
