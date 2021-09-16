@@ -3,9 +3,8 @@ import {Plural, Trans} from '@lingui/react'
 import {ActionLink} from 'components/ui/DbLink'
 import {RotationTable} from 'components/ui/RotationTable'
 import ACTIONS from 'data/ACTIONS'
-import {Event, Events, FieldsTargeted} from 'event'
+import {Events, FieldsTargeted} from 'event'
 import {Analyser} from 'parser/core/Analyser'
-import {filter} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
 import {Actors} from 'parser/core/modules/Actors'
 import {Data} from 'parser/core/modules/Data'
@@ -110,11 +109,13 @@ class Cycle {
 	public finalOrDowntime: boolean = false
 
 	private _errorCode: CycleErrorCode = CYCLE_ERRORS.NONE
+
 	public set errorCode(code) {
 		if (code.priority > this._errorCode.priority) {
 			this._errorCode = code
 		}
 	}
+
 	public get errorCode(): CycleErrorCode {
 		return this._errorCode
 	}
@@ -145,6 +146,7 @@ class Cycle {
 
 		return expectedCount
 	}
+
 	public get expectedFire4sBeforeDespair(): number {
 		// Cycles start with a baseline of 4 Fire 4s
 		let expectedCount = NO_UH_EXPECTED_FIRE4
@@ -174,11 +176,14 @@ class Cycle {
 			expectedCount++
 		}
 
-		return Math.min(expectedCount, MAX_POSSIBLE_FIRE4) // Make sure we don't go wild and return a larger expected count than is actually possible, in case the above logic misbehaves...
+		// Make sure we don't go wild and return a larger expected count than is actually possible, in case the above logic misbehaves...
+		return Math.min(expectedCount, MAX_POSSIBLE_FIRE4)
 	}
+
 	public get actualFire4s(): number {
 		return this.events.filter(event => event.action === this.data.actions.FIRE_IV.id).length
 	}
+
 	public get missingFire4s(): number | undefined {
 		if (!this.expectedFire4s) { return }
 		return Math.max(this.expectedFire4s - this.actualFire4s, 0)
@@ -189,9 +194,11 @@ class Cycle {
 	public get expectedDespairs(): number {
 		return this.hasManafont ? 2 : 1
 	}
+
 	public get actualDespairs(): number {
 		return this.events.filter(event => event.action === this.data.actions.DESPAIR.id).length
 	}
+
 	public get missingDespairs(): number {
 		return Math.max(this.expectedDespairs - this.actualDespairs, 0)
 	}
@@ -201,15 +208,19 @@ class Cycle {
 	private hardT3sInPhase(events: CycleEvent[]): number {
 		return events.filter(event => event.action === this.data.actions.THUNDER_III.id && !event.isProc).length
 	}
+
 	public get hardT3sBeforeManafont(): number {
 		return this.hardT3sInPhase(this.firePhaseEvents)
 	}
+
 	public get hardT3sAfterManafont(): number {
 		return this.hardT3sInPhase(this.manafontPhaseEvents)
 	}
+
 	public get hardT3sInFireCount(): number {
 		return this.hardT3sBeforeManafont + this.hardT3sAfterManafont
 	}
+
 	public get extraT3s(): number {
 		// By definition, if you didn't miss any expected casts, you couldn't have hardcast an extra T3
 		if (!(this.missingFire4s || this.missingDespairs)) {
@@ -236,6 +247,7 @@ class Cycle {
 	public get hasManafont(): boolean {
 		return this.events.some(event => event.action === this.data.actions.MANAFONT.id)
 	}
+
 	public get manafontBeforeDespair(): boolean {
 		return this.hasManafont && !this.firePhaseEvents.some(event => event.action === this.data.actions.DESPAIR.id)
 	}
@@ -245,6 +257,7 @@ class Cycle {
 	public get extraF1s(): number {
 		return Math.max(this.events.filter(event => event.action === this.data.actions.FIRE_I.id).length - 1, 0)
 	}
+
 	public get isMissingFire(): boolean {
 		return !this.events.some(event => FIRE_SPELLS.includes(event.action))
 	}
@@ -256,6 +269,7 @@ class Cycle {
 			&& this.icePhaseEvents.some(event => event.action === this.data.actions.BLIZZARD_IV.id) // AND this cycle had a B4 cast
 			&& this.actualFire4s <= NO_UH_EXPECTED_FIRE4 // AND the Umbral Hearts gained from Blizzard 4 weren't needed
 	}
+
 	// Hardcasted T3's initial potency isn't worth it if the DoT is going to go to waste before the boss jumps or dies
 	public get shouldSkipT3(): boolean {
 		return this.finalOrDowntime && this.hardT3sInFireCount > 0
@@ -294,6 +308,7 @@ class Cycle {
 		}
 	}
 }
+
 export default class RotationWatchdog extends Analyser {
 	static override handle = 'RotationWatchdog'
 	static override title = t('blm.rotation-watchdog.title')`Rotation Outliers`
@@ -325,7 +340,7 @@ export default class RotationWatchdog extends Analyser {
 	private uptimeSouls: number = 0
 
 	override initialise() {
-		this.addEventHook(filter<Event>().source(this.parser.actor.id).type('action'), this.onCast)
+		this.addEventHook({type: 'action', source: this.parser.actor.id}, this.onCast)
 		this.addEventHook('complete', this.onComplete)
 		this.addEventHook('blmgauge', this.onGaugeEvent)
 		this.addEventHook({
