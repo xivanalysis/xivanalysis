@@ -18,6 +18,11 @@ import {Data} from './Data'
 
 const SECONDS_TO_MS: number = 1000
 
+// In true XIV fashion, statuses tend to stick around for slightly longer than
+// their specified duration. It's pretty consistently about a second, so we're
+// adding that as a fudge.
+const STATUS_DURATION_FUDGE = SECONDS_TO_MS
+
 export class BuffWindowState {
 	start: number
 	end?: number
@@ -222,12 +227,14 @@ export abstract class BuffWindowModule extends Module {
 
 	private startNewBuffWindow(startTime: number, status: Status) {
 		this.buffWindows.push(new BuffWindowState(this.data, startTime, status))
-		this.addTimestampHook(startTime + (status?.duration ?? 0) * SECONDS_TO_MS, this.onDurationExpiration)
+		const duration = (status?.duration ?? 0) * SECONDS_TO_MS + STATUS_DURATION_FUDGE
+		this.addTimestampHook(startTime + duration, this.onDurationExpiration)
 	}
 
 	private onDurationExpiration(event: TimestampHookArguments) {
 		this.debug(`Manually triggering the end of a window because it's gone past it's duration at ${event.timestamp}`)
-		if (this.activeBuffWindow) { // we're cancelling this because it's expected lifetime is expired
+		// we're cancelling this because it's expected lifetime is expired
+		if (this.activeBuffWindow) {
 			this.activeBuffWindow.end = event.timestamp
 		}
 	}
