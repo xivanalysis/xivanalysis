@@ -27,7 +27,7 @@ const MAX_POSSIBLE_FIRE4 = 6
 const NO_UH_EXPECTED_FIRE4 = 4
 const FIRE4_FROM_MANAFONT = 1
 
-const EXTRA_F4_COP_THRESHHOLD = 0.5 // Feelycraft
+const EXTRA_F4_COP_THRESHOLD = 0.5 // Feelycraft
 
 const DEFAULT_SEVERITY_TIERS = {
 	1: SEVERITY.MINOR,
@@ -169,7 +169,7 @@ class Cycle {
 		if (
 			expectedCount === NO_UH_EXPECTED_FIRE4 &&
 			this.icePhaseEvents.length > 0 &&
-			this.firePhaseMetadata.circleOfPowerPct >= EXTRA_F4_COP_THRESHHOLD
+			this.firePhaseMetadata.circleOfPowerPct >= EXTRA_F4_COP_THRESHOLD
 		) {
 			expectedCount++
 		}
