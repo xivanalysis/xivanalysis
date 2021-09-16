@@ -227,8 +227,10 @@ export abstract class BuffWindowModule extends Module {
 
 	private startNewBuffWindow(startTime: number, status: Status) {
 		this.buffWindows.push(new BuffWindowState(this.data, startTime, status))
-		const duration = (status?.duration ?? 0) * SECONDS_TO_MS + STATUS_DURATION_FUDGE
-		this.addTimestampHook(startTime + duration, this.onDurationExpiration)
+		if (status.duration != null) {
+			const duration = (status.duration * SECONDS_TO_MS) + STATUS_DURATION_FUDGE
+			this.addTimestampHook(startTime + duration, this.onDurationExpiration)
+		}
 	}
 
 	private onDurationExpiration(event: TimestampHookArguments) {
