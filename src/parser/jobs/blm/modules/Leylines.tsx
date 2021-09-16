@@ -58,13 +58,24 @@ export default class Leylines extends Analyser {
 		})
 	}
 
-	public getStatusDurationInRange(statusId: number, start: number = this.parser.pull.timestamp, end: number = this.parser.pull.timestamp + this.parser.pull.duration) {
-		const windows = this.buffWindows[statusId].history.filter(window => window.stop && window.stop > start && window.start < end)
-		let duration =  windows.reduce((duration, window) => duration + Math.max(Math.min(window.stop ?? end, end) - Math.max(window.start, start), 0), 0)
+	public getStatusDurationInRange(
+		statusId: number,
+		start: number = this.parser.pull.timestamp,
+		end: number = this.parser.pull.timestamp + this.parser.pull.duration
+	) {
+		let duration = 0
+		for (const window of this.buffWindows[statusId].history) {
+			if (window.stop == null || window.stop <= start || window.start >= end) {
+				continue
+			}
+			duration += Math.max(0, Math.min(window.stop, end) - Math.max(window.start, start))
+		}
+
 		const currentWindows = this.buffWindows[statusId].current
 		if (currentWindows != null) {
 			duration += Math.max(end - Math.max(currentWindows.start, start), 0)
 		}
+
 		return duration
 	}
 
