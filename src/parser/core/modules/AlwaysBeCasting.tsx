@@ -1,6 +1,6 @@
 import {Trans} from '@lingui/react'
 import {Action} from 'data/ACTIONS'
-import {ANIMATION_LOCK, BASE_GCD} from 'data/CONSTANTS'
+import {ANIMATION_LOCK} from 'data/CONSTANTS'
 import {Event, Events} from 'event'
 import {Analyser} from 'parser/core/Analyser'
 import {filter} from 'parser/core/filter'
@@ -9,6 +9,7 @@ import CastTime from 'parser/core/modules/CastTime'
 import Checklist, {Requirement, Rule} from 'parser/core/modules/Checklist'
 import {Data} from 'parser/core/modules/Data'
 import Downtime from 'parser/core/modules/Downtime'
+import {GlobalCooldown} from 'parser/core/modules/GlobalCooldown'
 import React from 'react'
 import {SpeedAdjustments} from './SpeedAdjustments'
 
@@ -20,6 +21,7 @@ export class AlwaysBeCasting extends Analyser {
 	@dependency protected checklist!: Checklist
 	@dependency protected data!: Data
 	@dependency protected downtime!: Downtime
+	@dependency protected globalCooldown!: GlobalCooldown
 	@dependency protected speedAdjustments!: SpeedAdjustments
 
 	protected gcdUptime: number = 0
@@ -49,7 +51,7 @@ export class AlwaysBeCasting extends Analyser {
 		}
 
 		let castTime = this.castTime.forEvent(event) ?? 0
-		const adjustedBaseGCD = this.speedAdjustments.getAdjustedDuration({duration: BASE_GCD})
+		const adjustedBaseGCD = this.globalCooldown.getEstimate()
 		if (castTime >= adjustedBaseGCD) {
 			// Account for "caster tax" - animation lock on spells with cast time equal to or greater than the GCD that prevents starting the next spell until the animation finishes
 			castTime += ANIMATION_LOCK
