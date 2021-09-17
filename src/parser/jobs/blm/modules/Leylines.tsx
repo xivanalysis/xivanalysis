@@ -58,6 +58,27 @@ export default class Leylines extends Analyser {
 		})
 	}
 
+	public getStatusDurationInRange(
+		statusId: number,
+		start: number = this.parser.pull.timestamp,
+		end: number = this.parser.pull.timestamp + this.parser.pull.duration
+	) {
+		let duration = 0
+		for (const window of this.buffWindows[statusId].history) {
+			if (window.stop == null || window.stop <= start || window.start >= end) {
+				continue
+			}
+			duration += Math.max(0, Math.min(window.stop, end) - Math.max(window.start, start))
+		}
+
+		const currentWindows = this.buffWindows[statusId].current
+		if (currentWindows != null) {
+			duration += Math.max(end - Math.max(currentWindows.start, start), 0)
+		}
+
+		return duration
+	}
+
 	// Manage buff windows
 	private onGain(event: Events['statusApply']) {
 		const status = this.data.getStatus(event.status)
@@ -147,8 +168,8 @@ export default class Leylines extends Analyser {
 		})
 
 		// Get the total duration of CoP uptime and Ley Lines, so we can get the overall percentage uptime
-		const copDuration = this.buffWindows[this.data.statuses.CIRCLE_OF_POWER.id].history.reduce((duration, cop) => duration + Math.max((cop.stop || 0) - cop.start, 0), 0)
-		const linesDuration = this.buffWindows[this.data.statuses.LEY_LINES.id].history.reduce((duration, lines) => duration + Math.max((lines.stop || 0) - lines.start, 0), 0)
+		const copDuration = this.getStatusDurationInRange(this.data.statuses.CIRCLE_OF_POWER.id)
+		const linesDuration = this.getStatusDurationInRange(this.data.statuses.LEY_LINES.id)
 
 		this.checklist.add(new Rule({
 			name: <Trans id="blm.leylines.checklist-caption">Stay in your <ActionLink {...this.data.actions.LEY_LINES} /></Trans>,

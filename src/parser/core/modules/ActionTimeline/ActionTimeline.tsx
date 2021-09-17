@@ -5,7 +5,6 @@ import {dependency} from 'parser/core/Injectable'
 import CastTime from 'parser/core/modules/CastTime'
 import {ChargeHistoryEntry, CooldownEndReason, CooldownGroup, CooldownHistoryEntry, Cooldowns, SelectionSpecifier} from 'parser/core/modules/Cooldowns2'
 import {Data} from 'parser/core/modules/Data'
-import {SpeedAdjustments} from 'parser/core/modules/SpeedAdjustments'
 import {ActionItem, BaseItem, ContainerRow, SimpleItem, Timeline} from 'parser/core/modules/Timeline'
 import React, {ReactNode} from 'react'
 import {Icon} from 'semantic-ui-react'
@@ -62,7 +61,6 @@ export class ActionTimeline extends Analyser {
 	@dependency private castTime!: CastTime
 	@dependency private cooldowns!: Cooldowns
 	@dependency private data!: Data
-	@dependency private speedAdjustments!: SpeedAdjustments
 	@dependency private timeline!: Timeline
 
 	private resolvedRows: InternalRowConfig[] = []

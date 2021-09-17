@@ -217,9 +217,9 @@ export default class CastTime extends Analyser {
 		if (action == null) {
 			return undefined
 		}
-		let defaultTime = forWhich === 'recast' ? (action.gcdRecast != null
-			? action.gcdRecast
-			: action.cooldown) : action.castTime
+		let defaultTime = forWhich === 'recast'
+			? (action.gcdRecast != null ? action.gcdRecast : action.cooldown)
+			: action.castTime
 
 		// If the default comes back undefined, or already at or below the minimum action time (including instants), no adjustments to perform
 		if (defaultTime == null || defaultTime <= MIN_ACTION_TIME) {
