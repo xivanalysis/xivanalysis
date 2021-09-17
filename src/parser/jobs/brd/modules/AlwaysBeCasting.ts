@@ -1,7 +1,6 @@
-import ACTIONS, {Action} from 'data/ACTIONS'
-import STATUSES from 'data/STATUSES'
+import {Action} from 'data/ACTIONS'
 import {Event, Events} from 'event'
-import {filter, oneOf} from 'parser/core/filter'
+import {filter} from 'parser/core/filter'
 import {AlwaysBeCasting as CoreAlwaysBeCasting} from 'parser/core/modules/AlwaysBeCasting'
 
 const SONG_DURATION_MS = 30000
@@ -20,9 +19,9 @@ export class AlwaysBeCasting extends CoreAlwaysBeCasting {
 		super.initialise()
 
 		const playerFilter = filter<Event>().source(this.parser.actor.id)
-		this.addEventHook(playerFilter.type('statusApply').status(STATUSES.ARMYS_MUSE.id), this.onApplyMuse)
-		this.addEventHook(playerFilter.type('statusRemove').status(STATUSES.ARMYS_MUSE.id), this.onRemoveMuse)
-		this.addEventHook(playerFilter.type('action').action(oneOf([ACTIONS.THE_WANDERERS_MINUET.id, ACTIONS.MAGES_BALLAD.id, ACTIONS.ARMYS_PAEON.id])), this.onSong)
+		this.addEventHook(playerFilter.type('statusApply').status(this.data.statuses.ARMYS_MUSE.id), this.onApplyMuse)
+		this.addEventHook(playerFilter.type('statusRemove').status(this.data.statuses.ARMYS_MUSE.id), this.onRemoveMuse)
+		this.addEventHook(playerFilter.type('action').action(this.data.matchActionId(['THE_WANDERERS_MINUET', 'MAGES_BALLAD', 'ARMYS_PAEON'])), this.onSong)
 	}
 
 	private endMuse() {
@@ -42,7 +41,7 @@ export class AlwaysBeCasting extends CoreAlwaysBeCasting {
 	private onApplyMuse(event: Events['statusApply']) {
 		this.currentMuse = {
 			start: event.timestamp,
-			end: Math.min(this.parser.pull.timestamp + this.parser.pull.duration, event.timestamp + STATUSES.ARMYS_MUSE.duration),
+			end: Math.min(this.parser.pull.timestamp + this.parser.pull.duration, event.timestamp + this.data.statuses.ARMYS_MUSE.duration),
 		}
 	}
 
@@ -54,7 +53,7 @@ export class AlwaysBeCasting extends CoreAlwaysBeCasting {
 	}
 
 	private onSong(event: Events['action']) {
-		if (event.action === ACTIONS.ARMYS_PAEON.id) {
+		if (event.action === this.data.actions.ARMYS_PAEON.id) {
 			this.currentPaeon = {
 				start: event.timestamp,
 				end: Math.min(this.parser.fight.end_time, event.timestamp + SONG_DURATION_MS),
