@@ -10,8 +10,8 @@ import Checklist, {Requirement, Rule} from 'parser/core/modules/Checklist'
 import {Data} from 'parser/core/modules/Data'
 import Downtime from 'parser/core/modules/Downtime'
 import {GlobalCooldown} from 'parser/core/modules/GlobalCooldown'
+import {SpeedAdjustments} from 'parser/core/modules/SpeedAdjustments'
 import React from 'react'
-import {SpeedAdjustments} from './SpeedAdjustments'
 
 export class AlwaysBeCasting extends Analyser {
 	static override handle = 'abc'
@@ -27,15 +27,17 @@ export class AlwaysBeCasting extends Analyser {
 	protected gcdUptime: number = 0
 	protected gcdsCounted: number = 0
 
-	private lastBeginCast: Events['prepare'] | null = null
+	private lastBeginCast?: Events['prepare']
 
 	override initialise() {
-		this.addEventHook(filter<Event>()
-			.source(this.parser.actor.id)
-			.type('prepare'), this.onBeginCast)
-		this.addEventHook(filter<Event>()
-			.source(this.parser.actor.id)
-			.type('action'), this.onCast)
+		this.addEventHook(
+			filter<Event>().source(this.parser.actor.id).type('prepare'),
+			this.onBeginCast
+		)
+		this.addEventHook(
+			filter<Event>().source(this.parser.actor.id).type('action'),
+			this.onCast
+		)
 		this.addEventHook('complete', this.onComplete)
 	}
 
@@ -72,7 +74,7 @@ export class AlwaysBeCasting extends Analyser {
 		} else {
 			this.debug(`Excluding cast of ${action.name} at ${this.parser.formatEpochTimestamp(event.timestamp, 1)}`)
 		}
-		this.lastBeginCast = null
+		this.lastBeginCast = undefined
 	}
 
 	/**

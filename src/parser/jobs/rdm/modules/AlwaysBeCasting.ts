@@ -3,5 +3,6 @@ import {AlwaysBeCasting as CoreAlwaysBeCasting} from 'parser/core/modules/Always
 import {DualCast} from './Dualcast'
 
 export class AlwaysBeCasting extends CoreAlwaysBeCasting {
-	@dependency protected dualcast!: DualCast // Take a dependency on DualCast so that cast time adjustments for dual cast are avialable when calculating ABC time
+	// Take a dependency on DualCast so that cast time adjustments for dual cast are avialable when calculating ABC time
+	@dependency protected dualcast!: DualCast
 }

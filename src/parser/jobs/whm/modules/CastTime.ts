@@ -1,4 +1,3 @@
-import STATUSES from 'data/STATUSES'
 import {Event} from 'event'
 import {filter} from 'parser/core/filter'
 import CoreCastTime from 'parser/core/modules/CastTime'
@@ -18,10 +17,8 @@ export class CastTime extends CoreCastTime {
 	}
 
 	private onApplyPresence(): void {
-		const presence = this.data.getStatus(STATUSES.PRESENCE_OF_MIND.id)
-		if (presence != null && presence.speedModifier != null) {
-			this.pomIndex = this.setPercentageAdjustment('all', presence.speedModifier, 'both')
-		}
+		const presence = this.data.statuses.PRESENCE_OF_MIND
+		this.pomIndex = this.setPercentageAdjustment('all', presence.speedModifier, 'both')
 	}
 
 	private onRemovePresence(): void {
