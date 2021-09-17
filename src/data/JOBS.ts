@@ -1,5 +1,6 @@
 import {MessageDescriptor} from '@lingui/core'
 import {t} from '@lingui/macro'
+import {Attribute} from 'event'
 import {ActorType} from 'fflogs'
 
 export interface Role {
@@ -67,6 +68,7 @@ export const ROLES = roleData as Record<RoleKey, Role>
 export interface Job {
 	name: MessageDescriptor
 	logType: ActorType
+	speedStat: Attribute.SKILL_SPEED | Attribute.SPELL_SPEED
 	icon: string
 	colour: string
 	role: RoleKey
@@ -77,6 +79,7 @@ const JOBS = {
 	UNKNOWN: {
 		name: t('game.job.unknown')`Unknown`,
 		logType: ActorType.UNKNOWN,
+		speedStat: Attribute.SKILL_SPEED,
 		icon: '?',
 		colour: '#767676',
 		role: 'UNSUPPORTED',
@@ -86,6 +89,7 @@ const JOBS = {
 	PALADIN: {
 		name: t('game.job.paladin')`Paladin`,
 		logType: ActorType.PALADIN,
+		speedStat: Attribute.SKILL_SPEED,
 		icon: 'pld',
 		colour: '#a8d2e6',
 		role: 'TANK',
@@ -93,6 +97,7 @@ const JOBS = {
 	WARRIOR: {
 		name: t('game.job.warrior')`Warrior`,
 		logType: ActorType.WARRIOR,
+		speedStat: Attribute.SKILL_SPEED,
 		icon: 'war',
 		colour: '#cf2621',
 		role: 'TANK',
@@ -100,6 +105,7 @@ const JOBS = {
 	DARK_KNIGHT: {
 		name: t('game.job.dark-knight')`Dark Knight`,
 		logType: ActorType.DARK_KNIGHT,
+		speedStat: Attribute.SKILL_SPEED,
 		icon: 'drk',
 		colour: '#d126cc',
 		role: 'TANK',
@@ -107,6 +113,7 @@ const JOBS = {
 	GUNBREAKER: {
 		name: t('game.job.gunbreaker')`Gunbreaker`,
 		logType: ActorType.GUNBREAKER,
+		speedStat: Attribute.SKILL_SPEED,
 		icon: 'gnb',
 		colour: '#796d30',
 		role: 'TANK',
@@ -116,6 +123,7 @@ const JOBS = {
 	WHITE_MAGE: {
 		name: t('game.job.white-mage')`White Mage`,
 		logType: ActorType.WHITE_MAGE,
+		speedStat: Attribute.SPELL_SPEED,
 		icon: 'whm',
 		colour: '#fff0dc',
 		role: 'HEALER',
@@ -123,6 +131,7 @@ const JOBS = {
 	SCHOLAR: {
 		name: t('game.job.scholar')`Scholar`,
 		logType: ActorType.SCHOLAR,
+		speedStat: Attribute.SPELL_SPEED,
 		icon: 'sch',
 		colour: '#8657ff',
 		role: 'HEALER',
@@ -130,6 +139,7 @@ const JOBS = {
 	ASTROLOGIAN: {
 		name: t('game.job.astrologian')`Astrologian`,
 		logType: ActorType.ASTROLOGIAN,
+		speedStat: Attribute.SPELL_SPEED,
 		icon: 'ast',
 		colour: '#ffe74a',
 		role: 'HEALER',
@@ -139,6 +149,7 @@ const JOBS = {
 	MONK: {
 		name: t('game.job.monk')`Monk`,
 		logType: ActorType.MONK,
+		speedStat: Attribute.SKILL_SPEED,
 		icon: 'mnk',
 		colour: '#d69c00',
 		role: 'MELEE',
@@ -146,6 +157,7 @@ const JOBS = {
 	DRAGOON: {
 		name: t('game.job.dragoon')`Dragoon`,
 		logType: ActorType.DRAGOON,
+		speedStat: Attribute.SKILL_SPEED,
 		icon: 'drg',
 		colour: '#4164cd',
 		role: 'MELEE',
@@ -153,6 +165,7 @@ const JOBS = {
 	NINJA: {
 		name: t('game.job.ninja')`Ninja`,
 		logType: ActorType.NINJA,
+		speedStat: Attribute.SKILL_SPEED,
 		icon: 'nin',
 		colour: '#af1964',
 		role: 'MELEE',
@@ -160,6 +173,7 @@ const JOBS = {
 	SAMURAI: {
 		name: t('game.job.samurai')`Samurai`,
 		logType: ActorType.SAMURAI,
+		speedStat: Attribute.SKILL_SPEED,
 		icon: 'sam',
 		colour: '#e46d04',
 		role: 'MELEE',
@@ -169,6 +183,7 @@ const JOBS = {
 	BARD: {
 		name: t('game.job.bard')`Bard`,
 		logType: ActorType.BARD,
+		speedStat: Attribute.SKILL_SPEED,
 		icon: 'brd',
 		colour: '#91ba5e',
 		role: 'PHYSICAL_RANGED',
@@ -176,6 +191,7 @@ const JOBS = {
 	MACHINIST: {
 		name: t('game.job.machinist')`Machinist`,
 		logType: ActorType.MACHINIST,
+		speedStat: Attribute.SKILL_SPEED,
 		icon: 'mch',
 		colour: '#6ee1d6',
 		role: 'PHYSICAL_RANGED',
@@ -183,6 +199,7 @@ const JOBS = {
 	DANCER: {
 		name: t('game.job.dancer')`Dancer`,
 		logType: ActorType.DANCER,
+		speedStat: Attribute.SKILL_SPEED,
 		icon: 'dnc',
 		colour: '#e2b0af',
 		role: 'PHYSICAL_RANGED',
@@ -192,6 +209,7 @@ const JOBS = {
 	BLACK_MAGE: {
 		name: t('game.job.black-mage')`Black Mage`,
 		logType: ActorType.BLACK_MAGE,
+		speedStat: Attribute.SPELL_SPEED,
 		icon: 'blm',
 		colour: '#a579d6',
 		role: 'MAGICAL_RANGED',
@@ -199,6 +217,7 @@ const JOBS = {
 	SUMMONER: {
 		name: t('game.job.summoner')`Summoner`,
 		logType: ActorType.SUMMONER,
+		speedStat: Attribute.SPELL_SPEED,
 		icon: 'smn',
 		colour: '#2d9b78',
 		role: 'MAGICAL_RANGED',
@@ -206,6 +225,7 @@ const JOBS = {
 	RED_MAGE: {
 		name: t('game.job.red-mage')`Red Mage`,
 		logType: ActorType.RED_MAGE,
+		speedStat: Attribute.SPELL_SPEED,
 		icon: 'rdm',
 		colour: '#e87b7b',
 		role: 'MAGICAL_RANGED',
@@ -213,6 +233,7 @@ const JOBS = {
 	BLUE_MAGE: {
 		name: t('game.job.blue-mage')`Blue Mage`,
 		logType: ActorType.BLUE_MAGE,
+		speedStat: Attribute.SPELL_SPEED,
 		icon: 'blu',
 		colour: '#3366ff',
 		role: 'MAGICAL_RANGED',

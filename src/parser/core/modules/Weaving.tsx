@@ -3,6 +3,7 @@ import {Trans, Plural} from '@lingui/react'
 import NormalisedMessage from 'components/ui/NormalisedMessage'
 import Rotation from 'components/ui/Rotation'
 import {Action} from 'data/ACTIONS'
+import {BASE_GCD} from 'data/CONSTANTS'
 import {Event, Events} from 'event'
 import {Analyser} from 'parser/core/Analyser'
 import {filter} from 'parser/core/filter'
@@ -14,7 +15,6 @@ import Suggestions, {TieredSuggestion, SEVERITY} from 'parser/core/modules/Sugge
 import React, {ReactNode} from 'react'
 import {Accordion} from 'semantic-ui-react'
 import {matchClosestLower} from 'utilities'
-import {BASE_GCD} from 'utilities/speedStatMapper'
 
 const CAST_TIME_MAX_WEAVES = {
 	0: 2,

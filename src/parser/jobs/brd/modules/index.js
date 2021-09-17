@@ -1,6 +1,6 @@
 import {ActionTimeline} from './ActionTimeline'
 import AdditionalStats from './AdditionalStats'
-import AlwaysBeCasting from './AlwaysBeCasting'
+import {AlwaysBeCasting} from './AlwaysBeCasting'
 import ApexArrow from './ApexArrow'
 import Barrage from './Barrage'
 import DoTs from './DoTs'
