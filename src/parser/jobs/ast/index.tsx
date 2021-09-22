@@ -30,13 +30,21 @@ export default new Meta({
 	</>,
 	supportedPatches: {
 		from: '5.05',
-		to: '5.4',
+		to: '5.5',
 	},
 	contributors: [
 		{user: CONTRIBUTORS.SUSHIROU, role: ROLES.MAINTAINER},
+		{user: CONTRIBUTORS.OTOCEPHALY, role: ROLES.DEVELOPER},
 		{user: CONTRIBUTORS.CASUALSUPERMAN, role: ROLES.DEVELOPER},
 	],
 	changelog: [
+		{
+			date: new Date('2021-09-21'),
+			Changes: () => <>
+				Astrologian support updated to 5.5 and added Players Buffed by divination to Arcana Tracking
+			</>,
+			contributors: [CONTRIBUTORS.OTOCEPHALY],
+		},
 		{
 			date: new Date('2020-12-07'),
 			Changes: () => <>
