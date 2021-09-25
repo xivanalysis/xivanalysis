@@ -11,6 +11,7 @@
   "ast.arcana-suggestions.messages.time": "Temps",
   "ast.arcana-suggestions.scroll-to-top-button": "Aller au début de l'historique des Arcanes",
   "ast.arcana-suggestions.title": "Historique des Arcanes",
+  "ast.arcana-tracking.divination.playertarget": "",
   "ast.arcana-tracking.messages.death": "Mort",
   "ast.arcana-tracking.title": "Suivis des Arcanes",
   "ast.arcana-undraw-usage.suggestions.content": "Étant donné que Tirage commence son temps de recharge au moment où il est utilisé, il n’y a plus de raison de <0/> au lieu de le jouer ou de le convertir avec <1/>",
