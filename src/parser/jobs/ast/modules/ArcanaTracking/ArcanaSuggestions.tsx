@@ -3,7 +3,6 @@ import {Trans} from '@lingui/react'
 import {ActionLink} from 'components/ui/DbLink'
 import JobIcon from 'components/ui/JobIcon'
 import {getDataBy} from 'data'
-import ACTIONS from 'data/ACTIONS'
 import JOBS from 'data/JOBS'
 import STATUSES from 'data/STATUSES'
 import {ActorType, BuffEvent, CastEvent} from 'fflogs'
@@ -313,6 +312,8 @@ export default class ArcanaSuggestions extends Module {
 
 	// Helper for override output()
 	RenderAction(artifact: CardLog) {
+		const divID = this.data.actions.DIVINATION.id
+
 		if (artifact.lastEvent.type === 'cast' && this.PLAY.includes(artifact.lastEvent.ability.guid)) {
 			const targetJob = getDataBy(JOBS, 'logType', artifact.targetJob as ActorType)
 
@@ -328,7 +329,7 @@ export default class ArcanaSuggestions extends Module {
 		}
 
 		//for divination to output how many players buffed
-		if (artifact.lastEvent.type === 'cast' && artifact.lastEvent.ability.name === ACTIONS.DIVINATION.name) {
+		if (artifact.lastEvent.type === 'cast' && artifact.lastEvent.ability.guid === divID) {
 			const tableData = this.history.map(window => {
 				const end = window.end != null ?
 					window.end - this.parser.fight.start_time :
@@ -354,7 +355,8 @@ export default class ArcanaSuggestions extends Module {
 					<ActionLink {...getDataBy(this.data.actions, 'id', artifact.lastEvent.ability.guid)} />
 				</Table.Cell>
 				<Table.Cell>
-					{'Players Buffed: '}
+					<Trans id="ast.arcana-tracking.divination.playertarget">{'Players Buffed:'}</Trans>
+					{' '}
 					{playersHit}
 					{'/'}
 					{PLAYERS_HIT_TARGET}
