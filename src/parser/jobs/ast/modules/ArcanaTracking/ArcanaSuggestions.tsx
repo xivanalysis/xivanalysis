@@ -4,7 +4,6 @@ import {ActionLink} from 'components/ui/DbLink'
 import JobIcon from 'components/ui/JobIcon'
 import {getDataBy} from 'data'
 import JOBS from 'data/JOBS'
-import STATUSES from 'data/STATUSES'
 import {ActorType, BuffEvent, CastEvent} from 'fflogs'
 import _ from 'lodash'
 import Module, {dependency} from 'parser/core/Module'
@@ -97,9 +96,9 @@ export default class ArcanaSuggestions extends Module {
 		}
 
 		//used for divination tracking
-		this.addEventHook('normalisedapplybuff', {to: 'player', abilityId: STATUSES.DIVINATION.id}, this.tryOpenWindow)
-		this.addEventHook('normalisedapplybuff', {by: 'player', abilityId: STATUSES.DIVINATION.id}, this.countDIVBuffs)
-		this.addEventHook('removebuff', {to: 'player', abilityId: STATUSES.DIVINATION.id}, this.tryCloseWindow)
+		this.addEventHook('normalisedapplybuff', {to: 'player', abilityId: this.data.statuses.DIVINATION.id}, this.tryOpenWindow)
+		this.addEventHook('normalisedapplybuff', {by: 'player', abilityId: this.data.statuses.DIVINATION.id}, this.countDIVBuffs)
+		this.addEventHook('removebuff', {to: 'player', abilityId: this.data.statuses.DIVINATION.id}, this.tryCloseWindow)
 		this.addEventHook('cast', {by: 'player'}, this.onCast)
 
 		this.addEventHook('complete', this._onComplete)
@@ -161,7 +160,7 @@ export default class ArcanaSuggestions extends Module {
 
 	// Make sure all applicable statuses have fallen off before the window closes
 	private isWindowOkToClose(window: DIVWindow): boolean {
-		if (!window.buffsRemoved.includes(STATUSES.DIVINATION.id)) {
+		if (!window.buffsRemoved.includes(this.data.statuses.DIVINATION.id)) {
 			return false
 		}
 		return true
