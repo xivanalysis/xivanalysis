@@ -11,6 +11,7 @@
   "ast.arcana-suggestions.messages.time": "시간",
   "ast.arcana-suggestions.scroll-to-top-button": "아르카나 로그 처음으로 돌아가기",
   "ast.arcana-suggestions.title": "아르카나 로그",
+  "ast.arcana-tracking.divination.playertarget": "",
   "ast.arcana-tracking.messages.death": "죽음",
   "ast.arcana-tracking.title": "아르카나 트래킹",
   "ast.arcana-undraw-usage.suggestions.content": "이제 점지는 카드 여부에 상관없이 따로 쿨타임이 돌기에 <0/>을 사용할 이유가 없습니다. 덮어씌워지는것을 피하기 위해 카드를 사용하거나 <1/>로 변화시킨후 사용하십시오.",

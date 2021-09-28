@@ -11,6 +11,7 @@
   "ast.arcana-suggestions.messages.time": "时间",
   "ast.arcana-suggestions.scroll-to-top-button": "回到奥秘卡日志的开始位置",
   "ast.arcana-suggestions.title": "奥秘卡日志",
+  "ast.arcana-tracking.divination.playertarget": "",
   "ast.arcana-tracking.messages.death": "死亡",
   "ast.arcana-tracking.title": "奥秘卡记录",
   "ast.arcana-undraw-usage.suggestions.content": "由于抽出了卡就会使 抽卡 技能进入冷却，所以永远都不需要用<0/>弃卡，而是把它发出去或者用<1/>转成小奥秘卡。",

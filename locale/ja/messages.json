@@ -11,6 +11,7 @@
   "ast.arcana-suggestions.messages.time": "タイム",
   "ast.arcana-suggestions.scroll-to-top-button": "アルカナログのトップに戻る",
   "ast.arcana-suggestions.title": "アルカナ ログ",
+  "ast.arcana-tracking.divination.playertarget": "",
   "ast.arcana-tracking.messages.death": "死亡",
   "ast.arcana-tracking.title": "アルカナ トラッキング",
   "ast.arcana-undraw-usage.suggestions.content": "ドローは使用した瞬間にクールダウンを開始するため、<1/> で使用したり変換したりする代わりに、<0/> を使用する必要がなくなります。",
