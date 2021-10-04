@@ -38,7 +38,7 @@ export default class Aetherflow extends Module {
 	static handle = 'aetherflow'
 	static dependencies = [
 		'checklist',
-		'cooldowns2',
+		'cooldowns',
 		'data',
 	]
 
@@ -98,7 +98,7 @@ export default class Aetherflow extends Module {
 	}
 
 	_onComplete() {
-		const aetherflowCooldownDuration = this.cooldowns2.cooldownHistory('AETHERFLOW')
+		const aetherflowCooldownDuration = this.cooldowns.cooldownHistory('AETHERFLOW')
 			.reduce((time, entry) => time + entry.end - entry.start, 0)
 
 		// Checklist rule for aetherflow cooldown
@@ -127,10 +127,10 @@ export default class Aetherflow extends Module {
 			id: [actionId],
 		})
 
-		const aetherflows = this.cooldowns2.chargeHistory('AETHERFLOW')
+		const aetherflows = this.cooldowns.chargeHistory('AETHERFLOW')
 			.filter(filterConsumes)
 			.map(mapEntries(this.data.actions.AETHERFLOW.id))
-		const dissipations = this.cooldowns2.chargeHistory('DISSIPATION')
+		const dissipations = this.cooldowns.chargeHistory('DISSIPATION')
 			.filter(filterConsumes)
 			.map(mapEntries(this.data.actions.DISSIPATION.id))
 

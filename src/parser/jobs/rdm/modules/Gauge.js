@@ -152,7 +152,7 @@ export default class Gauge extends Module {
 		static handle = 'gauge'
 		static title = t('rdm.gauge.title')`Gauge`
 		static dependencies = [
-			'cooldowns2',
+			'cooldowns',
 			'suggestions',
 			'statistics',
 		]
@@ -218,8 +218,8 @@ export default class Gauge extends Module {
 				gaugeAction.calculateManaFicationManaGained()
 
 				// Manafication resets movement abilities
-				this.cooldowns2.reset('CORPS_A_CORPS')
-				this.cooldowns2.reset('DISPLACEMENT')
+				this.cooldowns.reset('CORPS_A_CORPS')
+				this.cooldowns.reset('DISPLACEMENT')
 			} else {
 				//Leaving this here, we have an issue where in an overkill returns an amount of 0
 				//But the game treats it as an ability that hit, this causes a trigger of our invuln logic

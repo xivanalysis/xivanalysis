@@ -41,7 +41,7 @@ export default class MeleeCombos extends Module {
 	static dependencies = [
 		'combatants',
 		'suggestions',
-		'cooldowns2',
+		'cooldowns',
 		'timeline',
 	]
 	static title = 'Melee Combos'
@@ -247,7 +247,7 @@ export default class MeleeCombos extends Module {
 				const finisherManaGain = MANA_GAIN[lowerManaState.actions.finisher.id].white || MANA_GAIN[lowerManaState.actions.finisher.id].black
 				if (!(newLowerMana + finisherManaGain - newHigherMana) > MANA_DIFFERENCE_THRESHOLD) {
 					// The proc we just cleared will result in equal mana or the cleared proc being higher but without putting us out of balance, check to see if acceleration would be available
-					const accelerationAvailable = (this.combatants.selected.hasStatus(STATUSES.ACCELERATION.id) || this.cooldowns2.remaining('ACCELERATION') <= DELAY_ACCELERATION_AVAILABLE_THRESHOLD)
+					const accelerationAvailable = (this.combatants.selected.hasStatus(STATUSES.ACCELERATION.id) || this.cooldowns.remaining('ACCELERATION') <= DELAY_ACCELERATION_AVAILABLE_THRESHOLD)
 					if (accelerationAvailable) {
 						possibleDelays.push({
 							finisher: [lowerManaState.actions.proc, higherManaState.actions.dualcast, ACTIONS.ACCELERATION, lowerManaState.actions.finisher],

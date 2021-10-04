@@ -4,7 +4,7 @@ import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
 import {CastEvent} from 'fflogs'
 import Module, {dependency} from 'parser/core/Module'
-import {Cooldowns as Cooldowns2} from 'parser/core/modules/Cooldowns2'
+import {Cooldowns} from 'parser/core/modules/Cooldowns'
 import Suggestions, {SEVERITY, Suggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
 
@@ -25,7 +25,7 @@ export default class TriDisaster extends Module {
 	static override title = t('smn.tridisaster.title')`Tri-disaster`
 	static override debug = true
 
-	@dependency private cooldowns2!: Cooldowns2
+	@dependency private cooldowns!: Cooldowns
 	@dependency private suggestions!: Suggestions
 
 	private lastTriDCast = -TRI_DISASTER_COOLDOWN
@@ -43,7 +43,7 @@ export default class TriDisaster extends Module {
 	}
 
 	private onReset(event: CastEvent) {
-		this.cooldowns2.reset('TRI_DISASTER')
+		this.cooldowns.reset('TRI_DISASTER')
 		this.checkCast(event)
 		this.lastTriDCast = -TRI_DISASTER_COOLDOWN
 	}

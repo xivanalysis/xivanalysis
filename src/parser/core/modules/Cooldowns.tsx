@@ -89,7 +89,7 @@ const DEFAULT_SELECTION_OPTIONS: SelectionOptions = {
 }
 
 export class Cooldowns extends Analyser {
-	static override handle = 'cooldowns2'
+	static override handle = 'cooldowns'
 	static override debug = false
 
 	@dependency private data!: Data
