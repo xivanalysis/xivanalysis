@@ -7,8 +7,7 @@ import {CastEvent} from 'fflogs'
 import {dependency} from 'parser/core/Module'
 import Combatants from 'parser/core/modules/Combatants'
 import {ComboEvent} from 'parser/core/modules/Combos'
-import Cooldowns from 'parser/core/modules/Cooldowns'
-import {Cooldowns as Cooldowns2} from 'parser/core/modules/Cooldowns2'
+import {Cooldowns} from 'parser/core/modules/Cooldowns'
 import {CounterGauge, Gauge as CoreGauge} from 'parser/core/modules/Gauge'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
@@ -52,7 +51,6 @@ export class Gauge extends CoreGauge {
 
 	@dependency private combatants!: Combatants
 	@dependency private cooldowns!: Cooldowns
-	@dependency private cooldowns2!: Cooldowns2
 	@dependency private suggestions!: Suggestions
 
 	private beastGauge = this.add(new CounterGauge({
@@ -71,8 +69,7 @@ export class Gauge extends CoreGauge {
 			'cast',
 			{by: 'player', abilityId: INFURIATE_REDUCERS},
 			() => {
-				this.cooldowns.reduceCooldown(ACTIONS.INFURIATE.id, INFURIATE_CDR)
-				this.cooldowns2.reduce('INFURIATE', INFURIATE_CDR)
+				this.cooldowns.reduce('INFURIATE', INFURIATE_CDR)
 			},
 		)
 		this.addEventHook('complete', this.onComplete)

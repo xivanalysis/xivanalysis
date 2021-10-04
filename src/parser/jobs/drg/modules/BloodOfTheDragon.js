@@ -28,7 +28,7 @@ export default class BloodOfTheDragon extends Module {
 		'brokenLog',
 		'checklist',
 		'combatants',
-		'cooldowns2',
+		'cooldowns',
 		'death',
 		'downtime',
 		'suggestions',
@@ -163,9 +163,9 @@ export default class BloodOfTheDragon extends Module {
 				nastronds: [],
 				stardivers: [],
 				timeToNextBuff: {
-					[ACTIONS.LANCE_CHARGE.id]: this.cooldowns2.remaining('LANCE_CHARGE'),
-					[ACTIONS.DRAGON_SIGHT.id]: this.cooldowns2.remaining('DRAGON_SIGHT'),
-					[ACTIONS.BATTLE_LITANY.id]: this.cooldowns2.remaining('BATTLE_LITANY'),
+					[ACTIONS.LANCE_CHARGE.id]: this.cooldowns.remaining('LANCE_CHARGE'),
+					[ACTIONS.DRAGON_SIGHT.id]: this.cooldowns.remaining('DRAGON_SIGHT'),
+					[ACTIONS.BATTLE_LITANY.id]: this.cooldowns.remaining('BATTLE_LITANY'),
 				},
 				activeBuffs: this.getActiveDrgBuffs(),
 			}

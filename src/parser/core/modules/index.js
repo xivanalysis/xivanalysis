@@ -9,8 +9,7 @@ import ChangeLog from './ChangeLog'
 import Checklist from './Checklist'
 import Combatants from './Combatants'
 import Combos from './Combos'
-import Cooldowns from './Cooldowns'
-import {Cooldowns as Cooldowns2} from './Cooldowns2'
+import {Cooldowns} from './Cooldowns'
 import {Data} from './Data'
 import {Death} from './Death'
 import Downtime from './Downtime'
@@ -50,7 +49,6 @@ export default [
 	Combatants,
 	Combos,
 	Cooldowns,
-	Cooldowns2,
 	Data,
 	Death,
 	Downtime,
