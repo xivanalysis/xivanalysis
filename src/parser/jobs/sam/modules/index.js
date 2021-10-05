@@ -8,8 +8,8 @@ import {Kenki} from './Kenki'
 import Meikyo from './Meikyo'
 import OGCDDowntime from './OGCDDowntime'
 import Sen from './Sen'
+import {Shifu} from './Shifu'
 import Shoha from './Shoha'
-import Speedmod from './Speedmod'
 import Statuses from './Statuses'
 import ThirdEye from './ThirdEye'
 import Tincture from './Tincture'
@@ -24,7 +24,7 @@ export default [
 	Kaiten,
 	Kenki,
 	Sen,
-	Speedmod,
+	Shifu,
 	Meikyo,
 	ThirdEye,
 	Tsubame,
