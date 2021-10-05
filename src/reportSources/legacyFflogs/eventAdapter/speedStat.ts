@@ -4,7 +4,6 @@ import {getDataBy} from 'data/getDataBy'
 import {JobKey} from 'data/JOBS'
 import {getStatuses} from 'data/STATUSES'
 import {Attribute, Event, Events, AttributeValue} from 'event'
-import {FflogsEvent} from 'fflogs'
 import _ from 'lodash'
 import {Actor, Team} from 'report'
 import {getSpeedStat} from 'utilities/speedStatMapper'
@@ -38,15 +37,7 @@ export class SpeedStatsAdapterStep extends AdapterStep {
 	private actorSpeedmodWindows = new Map<Actor['id'], Map<number, SpeedmodWindow[]>>()
 
 	static override debug = false
-	private endTimestamp = 0
-
-	override adapt(baseEvent: FflogsEvent, adaptedEvents: Event[]) {
-		if (baseEvent.type === 'encounterend') {
-			this.endTimestamp = baseEvent.timestamp
-		}
-
-		return adaptedEvents
-	}
+	private endTimestamp = this.pull.timestamp + this.pull.duration
 
 	override postprocess(adaptedEvents: Event[]): Event[] {
 		adaptedEvents.forEach((event) => {
@@ -136,6 +127,7 @@ export class SpeedStatsAdapterStep extends AdapterStep {
 			return
 		}
 
+		this.debug(`Adding speed modifier window for status ${status.name} at timestamp ${event.timestamp}`)
 		windowMap.push({start: event.timestamp})
 	}
 
