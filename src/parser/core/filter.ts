@@ -45,6 +45,13 @@ export function oneOf<T extends TB.Misc.Primitive>(values: T[] | Set<T>): Matche
 	return (objValue): objValue is T => set.has(objValue)
 }
 
+// TODO: the type guard on this isn't... quite right.
+/** Match successfully if value matches none of the provided values by reference.  */
+export function noneOf<T extends TB.Misc.Primitive>(values: T[] | Set<T>): Matcher<T> {
+	const set = Array.isArray(values) ? new Set(values) : values
+	return (objValue): objValue is T => !set.has(objValue)
+}
+
 // This will technically always return true in a filter due to lodash semantics, but hey
 /** Match successfully if value is not nullish. */
 export const exists = <T>(value?: T | null): value is T => value != null
