@@ -13,7 +13,7 @@ import Lightspeed from './Lightspeed'
 import LucidDreaming from './LucidDreaming'
 import Overheal from './Overheal'
 import Sect from './Sect'
-import Statuses from './Statuses'
+import {StatusTimeline} from './StatusTimeline'
 import Synastry from './Synastry'
 
 export default [
@@ -33,6 +33,6 @@ export default [
 	LucidDreaming,
 	Overheal,
 	Sect,
-	Statuses,
+	StatusTimeline,
 	Synastry,
 ]
