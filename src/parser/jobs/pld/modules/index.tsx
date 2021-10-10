@@ -7,7 +7,7 @@ import Gauge from './Gauge'
 import Goring from './Goring'
 import OGCDDowntime from './OGCDDowntime'
 import Requiescat from './Requiescat'
-import Statuses from './Statuses'
+import {StatusTimeline} from './StatusTimeline'
 import Tincture from './Tincture'
 
 export default [
@@ -20,6 +20,6 @@ export default [
 	Gauge,
 	OGCDDowntime,
 	Requiescat,
-	Statuses,
+	StatusTimeline,
 	Tincture,
 ]

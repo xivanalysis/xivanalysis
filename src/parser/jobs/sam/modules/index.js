@@ -10,7 +10,7 @@ import OGCDDowntime from './OGCDDowntime'
 import Sen from './Sen'
 import Shoha from './Shoha'
 import Speedmod from './Speedmod'
-import Statuses from './Statuses'
+import {StatusTimeline} from './StatusTimeline'
 import ThirdEye from './ThirdEye'
 import Tincture from './Tincture'
 import Tsubame from './Tsubame'
@@ -30,6 +30,6 @@ export default [
 	Tsubame,
 	OGCDDowntime,
 	Shoha,
-	Statuses,
+	StatusTimeline,
 	Tincture,
 ]

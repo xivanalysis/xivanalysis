@@ -19,6 +19,8 @@ interface Usage {
 export class StatusTimeline extends Analyser {
 	static override handle = 'statusTimeline'
 
+	static statusesStackMapping: Record<number, number> = {}
+
 	@dependency private actionTimeline!: ActionTimeline;
 	@dependency private data!: Data
 
@@ -39,10 +41,6 @@ export class StatusTimeline extends Analyser {
 		const actorFilter = filter<Event>()
 			.source(oneOf([this.parser.actor.id, ...playerPetIds]))
 			.target(noneOf(allPetIds))
-
-		/*this.parser.pull.actors.some(
-		actor => actor.id === event.target && actor.owner?.playerControlled === true
-		)*/
 
 		this.addEventHook(actorFilter.type('statusApply'), this.onApply)
 		this.addEventHook(actorFilter.type('statusRemove'), this.onRemove)
@@ -107,7 +105,8 @@ export class StatusTimeline extends Analyser {
 	}
 
 	private createStatusRow(status: Status) {
-		const cachedRow = this.rows.get(status.id)
+		const key = (this.constructor as typeof StatusTimeline).statusesStackMapping[status.id] ?? status.id
+		const cachedRow = this.rows.get(key)
 		if (cachedRow != null) { return cachedRow }
 
 		const action = this.statusActionMap.get(status.id)
@@ -117,7 +116,7 @@ export class StatusTimeline extends Analyser {
 			label: status.name,
 			hideCollapsed: true,
 		})
-		this.rows.set(status.id, row)
+		this.rows.set(key, row)
 
 		this.actionTimeline.getRow(action).addRow(row)
 
