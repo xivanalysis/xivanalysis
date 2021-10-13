@@ -21,7 +21,7 @@ interface EngDisTracking {
 export class EngagementDisplacementTracking extends Analyser {
 	static override handle: string = 'engdistrack'
 	static override title: MessageDescriptor = t('rdm.engdistrack.title')`Engagement/Displacement Tracking`
-	static override debug: boolean = true
+	static override debug: boolean = false
 
 	@dependency private data!: Data
 	@dependency private timeline!: Timeline
