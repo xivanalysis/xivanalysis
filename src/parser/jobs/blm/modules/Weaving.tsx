@@ -1,5 +1,8 @@
 import {ActionKey} from 'data/ACTIONS'
+import {dependency} from 'parser/core/Injectable'
 import {Weave, Weaving as CoreWeaving} from 'parser/core/modules/Weaving'
+import {FIRE_SPELLS, ICE_SPELLS} from './Elements'
+import Gauge, {MAX_ASTRAL_UMBRAL_STACKS} from './Gauge'
 
 const OGCD_EXCEPTIONS: ActionKey[] = [
 	'LUCID_DREAMING',
@@ -18,6 +21,8 @@ export default class BlmWeaving extends CoreWeaving {
 	private ogcdIds = OGCD_EXCEPTIONS.map(key => this.data.actions[key].id)
 	private openerIds = OPENER_EXCEPTIONS.map(key => this.data.actions[key].id)
 
+	@dependency private gauge!: Gauge
+
 	override getMaxWeaves(weave: Weave) {
 		const baseMaxWeaves = super.getMaxWeaves(weave)
 
@@ -32,6 +37,12 @@ export default class BlmWeaving extends CoreWeaving {
 			weave.weaves.some(weave => this.openerIds.includes(weave.action)
 			&& weave.timestamp - this.parser.pull.timestamp < OPENER_TIME_THRESHOLD)
 		) {
+			return 1
+		}
+		const gaugeState = this.gauge.getGaugeState(weave.leadingGcdEvent?.timestamp)
+		const leadingAction = weave.leadingGcdEvent?.action ?? 0
+		if (ICE_SPELLS.includes(leadingAction) && gaugeState?.astralFire === MAX_ASTRAL_UMBRAL_STACKS ||
+			FIRE_SPELLS.includes(leadingAction) && gaugeState?.umbralIce === MAX_ASTRAL_UMBRAL_STACKS) {
 			return 1
 		}
 		return 0
