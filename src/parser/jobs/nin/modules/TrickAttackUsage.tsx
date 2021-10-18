@@ -72,7 +72,7 @@ export default class TrickAttackUsage extends Analyser {
 			// lostTime is only the time they were actually holding it off CD, but we want to add in the CD time of the final cast for
 			// calculating how many theoretical casts were lost. For example, 20s of holding + last cast 40s before the end of the fight
 			// would mean that they could've squeezed in an extra cast with perfect timing.
-			const lostCasts = Math.floor((this.lostTime + (this.parser.currentTimestamp - lastCast)) / TA_COOLDOWN_MILLIS)
+			const lostCasts = Math.floor((this.lostTime + (this.parser.currentEpochTimestamp - lastCast)) / TA_COOLDOWN_MILLIS)
 			this.suggestions.add(new TieredSuggestion({
 				icon: ACTIONS.TRICK_ATTACK.icon,
 				content: <Trans id="nin.ta-usage.suggestions.missed.content">
