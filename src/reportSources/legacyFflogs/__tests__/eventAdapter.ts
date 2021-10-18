@@ -617,32 +617,6 @@ describe('Event adapter', () => {
 		}))
 	})
 
-	it('preserves event semantics for old logs', () => {
-		const result = adaptEvents(
-			{...report, timestamp: 0},
-			{...pull, timestamp: 0},
-			[
-				fakeEvents.calculateddamage[0],
-				fakeEvents.calculatedheal[0],
-				fakeEvents.damage[0],
-				fakeEvents.heal[0],
-			],
-		)
-
-		expect(result.map(event => event.type)).toEqual([
-			// calculated events should be nooped
-			'damage', // from damage event
-			'execute', // fabricated immediate execution
-			'actorUpdate',
-			'heal',
-			'execute',
-			'actorUpdate',
-		])
-		// Ensure the sequence is matched up
-		expect((result[0] as Events['damage']).sequence).toEqual((result[1] as Events['execute']).sequence)
-		expect((result[3] as Events['heal']).sequence).toEqual((result[4] as Events['execute']).sequence)
-	})
-
 	it('sorts events with identical timestamps', () => {
 		const result = adaptEvents(report, pull, [
 			{...fakeEvents.applybuff[0], timestamp: 1},
