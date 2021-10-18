@@ -2,65 +2,66 @@ import {Trans, Plural} from '@lingui/react'
 import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
-import Module from 'parser/core/Module'
-import {TieredSuggestion, Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import {Analyser} from 'parser/core/Analyser'
+import {filter, oneOf} from 'parser/core/filter'
+import {dependency} from 'parser/core/Injectable'
+import {Actors} from 'parser/core/modules/Actors'
+import Suggestions, {TieredSuggestion, Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import React from 'react'
 
 const DOTON_TICK_TARGET = 6
 const JUSTIFIABLE_DOTON_TICKS = 10
 
-export default class Ninjutsu extends Module {
-	static handle = 'ninjutsu'
-	static dependencies = [
-		'combatants',
-		'suggestions',
-	]
+export default class Ninjutsu extends Analyser {
+	static override handle = 'ninjutsu'
 
-	_hyotonCount = 0
-	_rabbitCount = 0
-	_dotonCasts = {
+	@dependency private actors!: Actors
+	@dependency private suggestions!: Suggestions
+
+	private hyotonCount: number = 0
+	private rabbitCount: number = 0
+	private dotonCasts = {
 		current: null,
 		history: [],
 	}
 
-	constructor(...args) {
-		super(...args)
-
-		this.addEventHook('cast', {by: 'player', abilityId: [ACTIONS.HYOTON.id, ACTIONS.HYOTON_TCJ.id]}, () => { this._hyotonCount++ })
-		this.addEventHook('cast', {by: 'player', abilityId: ACTIONS.RABBIT_MEDIUM.id}, () => { this._rabbitCount++ })
-		this.addEventHook('cast', {by: 'player', abilityId: [ACTIONS.DOTON.id, ACTIONS.DOTON_TCJ.id]}, this._onDotonCast)
-		this.addEventHook('normaliseddamage', {by: 'player', abilityId: STATUSES.DOTON.id}, event => { this._dotonCasts.current?.ticks.push(event.hitCount) })
-		this.addEventHook('removebuff', {by: 'player', abilityId: STATUSES.DOTON.id}, this._finishDotonWindow)
-		this.addEventHook('complete', this._onComplete)
+	override initialise() {
+		const playerFilter = filter<Event>().source(this.parser.actor.id)
+		this.addEventHook(playerFilter.type('action').action(oneOf([ACTIONS.HYOTON.id, ACTIONS.HYOTON_TCJ.id])), () => { this.hyotonCount++ })
+		this.addEventHook(playerFilter.type('action').action(ACTIONS.RABBIT_MEDIUM.id), () => { this.rabbitCount++ })
+		this.addEventHook(playerFilter.type('action').action(oneOf([ACTIONS.DOTON.id, ACTIONS.DOTON_TCJ.id])), this.onDotonCast)
+		this.addEventHook(playerFilter.type('normaliseddamage').action(STATUSES.DOTON.id), event => { this.dotonCasts.current?.ticks.push(event.hitCount) })
+		this.addEventHook(playerFilter.type('removebuff').status(STATUSES.DOTON.id), this.finishDotonWindow)
+		this.addEventHook('complete', this.onComplete)
 	}
 
-	_onDotonCast(event) {
-		this._finishDotonWindow()
+	private onDotonCast(event: Events['action']) {
+		this.finishDotonWindow()
 
-		this._dotonCasts.current = {
-			tcj: this.combatants.selected.hasStatus(STATUSES.TEN_CHI_JIN.id),
+		this.dotonCasts.current = {
+			tcj: this.actors.selected.hasStatus(STATUSES.TEN_CHI_JIN.id),
 			ticks: [],
 			prepull: event.timestamp < this.parser.fight.start_time,
 		}
 	}
 
-	_finishDotonWindow() {
-		if (!this._dotonCasts.current) {
+	private finishDotonWindow() {
+		if (!this.dotonCasts.current) {
 			return
 		}
 
-		this._dotonCasts.history.push(this._dotonCasts.current)
-		this._dotonCasts.current = null
+		this.dotonCasts.history.push(this.dotonCasts.current)
+		this.dotonCasts.current = null
 	}
 
-	_appraiseDotonCasts() {
+	private appraiseDotonCasts() {
 		const result = {
 			badTcjs: 0, // Single-target TCJ Dotons (do not do this)
 			badAoes: 0, // AoE Dotons that fell short of 6 ticks (Katon will be more damage)
 			badStds: 0, // Single-target regular Dotons (also do not do this)
 		}
 
-		this._dotonCasts.history.forEach(cast => {
+		this.dotonCasts.history.forEach(cast => {
 			if (cast.tcj && cast.ticks.every(tick => tick === 1)) {
 				// If it's a fully single-target TCJ, flag it
 				result.badTcjs++
@@ -79,8 +80,8 @@ export default class Ninjutsu extends Module {
 		return result
 	}
 
-	_onComplete() {
-		this._finishDotonWindow()
+	private onComplete() {
+		this.finishDotonWindow()
 
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.HYOTON.icon,
@@ -91,9 +92,9 @@ export default class Ninjutsu extends Module {
 				1: SEVERITY.MINOR, // Probably a fat finger
 				2: SEVERITY.MEDIUM, // Probably deliberate
 			},
-			value: this._hyotonCount,
+			value: this.hyotonCount,
 			why: <Trans id="nin.ninjutsu.suggestions.hyoton.why">
-				You cast Hyoton <Plural value={this._hyotonCount} one="# time" other="# times"/>.
+				You cast Hyoton <Plural value={this.hyotonCount} one="# time" other="# times"/>.
 			</Trans>,
 		}))
 
@@ -106,13 +107,13 @@ export default class Ninjutsu extends Module {
 				1: SEVERITY.MEDIUM, // You were having a bad day, mudra lag, etc.
 				3: SEVERITY.MAJOR, // Holy shit get better internet
 			},
-			value: this._rabbitCount,
+			value: this.rabbitCount,
 			why: <Trans id="nin.ninjutsu.suggestions.rabbit.why">
-				You cast Rabbit Medium <Plural value={this._rabbitCount} one="# time" other="# times"/>.
+				You cast Rabbit Medium <Plural value={this.rabbitCount} one="# time" other="# times"/>.
 			</Trans>,
 		}))
 
-		const {badTcjs, badAoes, badStds} = this._appraiseDotonCasts()
+		const {badTcjs, badAoes, badStds} = this.appraiseDotonCasts()
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.DOTON.icon,
 			content: <Trans id="nin.ninjutsu.suggestions.tcj-doton.content">

@@ -1,7 +1,7 @@
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
 import {ActionLink} from 'components/ui/DbLink'
-import ACTIONS from 'data/ACTIONS'
+import ACTIONS, {Action} from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import {BuffWindowModule} from 'parser/core/modules/BuffWindow'
 import {SEVERITY} from 'parser/core/modules/Suggestions'
@@ -22,15 +22,15 @@ const MUDRAS = [
 ]
 
 export default class TrickAttackWindow extends BuffWindowModule {
-	static handle = 'taWindow'
-	static title = t('nin.taWindow.title')`Trick Attack Windows`
+	static override handle = 'taWindow'
+	static override title = t('nin.taWindow.title')`Trick Attack Windows`
 
 	buffAction = ACTIONS.TRICK_ATTACK
 	buffStatus = STATUSES.TRICK_ATTACK_VULNERABILITY_UP
 
-	rotationTableNotesColumnHeader = <Trans id ="nin.taWindow.chart.notes.header">TCJ Used</Trans>
+	override rotationTableNotesColumnHeader = <Trans id ="nin.taWindow.chart.notes.header">TCJ Used</Trans>
 
-	expectedGCDs = {
+	override expectedGCDs = {
 		expectedPerWindow: BASE_GCDS_PER_WINDOW,
 		suggestionContent: <Trans id="nin.taWindow.suggestions.gcds.content">
 			While the exact number of GCDs per window will vary depending on whether <ActionLink {...ACTIONS.TEN_CHI_JIN}/> is up, every <ActionLink {...ACTIONS.TRICK_ATTACK}/> window should contain at least {BASE_GCDS_PER_WINDOW} GCDs.
@@ -41,7 +41,7 @@ export default class TrickAttackWindow extends BuffWindowModule {
 		},
 	}
 
-	trackedActions = {
+	override trackedActions = {
 		icon: ACTIONS.TRICK_ATTACK.icon,
 		actions: [
 			{
@@ -74,7 +74,7 @@ export default class TrickAttackWindow extends BuffWindowModule {
 		},
 	}
 
-	trackedBadActions = {
+	override trackedBadActions = {
 		icon: ACTIONS.ARMOR_CRUSH.icon,
 		actions: [
 			{
@@ -90,22 +90,22 @@ export default class TrickAttackWindow extends BuffWindowModule {
 		},
 	}
 
-	init() {
+	protected override init() {
 		super.init()
 		this.addEventHook('normalisedapplydebuff', {by: 'player'}, this.onApplyBuff)
 		this.addEventHook('normalisedremovedebuff', {by: 'player'}, this.onRemoveBuff)
 	}
 
-	considerAction(action) {
+	protected override considerAction(action: Action) {
 		// Ten, Chi, and Jin should be ignored for purposes of GCD counts
 		return MUDRAS.indexOf(action.id) === -1
 	}
 
-	changeExpectedGCDsClassLogic(buffWindow) {
+	protected override changeExpectedGCDsClassLogic(buffWindow: BuffWindowState) {
 		return buffWindow.rotation.find(cast => cast.ability.guid === ACTIONS.TEN_CHI_JIN.id) ? 1 : 0
 	}
 
-	changeExpectedTrackedActionClassLogic(buffWindow, action) {
+	protected override changeExpectedTrackedActionClassLogic(buffWindow: BuffWindowState, action: Action) {
 		if (action.action.id === ACTIONS.RAITON.id && buffWindow.start - this.parser.fight.start_time < FIRST_WINDOW_BUFFER) {
 			return -1
 		}
@@ -113,7 +113,7 @@ export default class TrickAttackWindow extends BuffWindowModule {
 		return 0
 	}
 
-	getBuffWindowNotes(buffWindow) {
+	protected override getBuffWindowNotes(buffWindow: BuffWindow) {
 		return buffWindow.rotation.find(cast => cast.ability.guid === ACTIONS.TEN_CHI_JIN.id) ?
 			<Trans id="nin.taWindow.chart.notes.yes">Yes</Trans> : <Trans id="nin.taWindow.chart.notes.no">No</Trans>
 	}

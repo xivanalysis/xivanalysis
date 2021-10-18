@@ -41,18 +41,18 @@ export default class OGCDDowntime extends CooldownDowntime {
 		},
 	]
 
-	_dreamTimestamps = []
+	private dreamTimestamps: number[] = []
 
-	countUsage(event) {
-		if (event.ability.guid !== ACTIONS.DREAM_WITHIN_A_DREAM.id) {
+	override countUsage(event: Events['action']) {
+		if (event.action !== ACTIONS.DREAM_WITHIN_A_DREAM.id) {
 			return true
 		}
 
-		if (this._dreamTimestamps.indexOf(event.timestamp) > -1) {
+		if (this.dreamTimestamps.indexOf(event.timestamp) > -1) {
 			return false
 		}
 
-		this._dreamTimestamps.push(event.timestamp)
+		this.dreamTimestamps.push(event.timestamp)
 		return true
 	}
 }
