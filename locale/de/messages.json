@@ -631,6 +631,7 @@
   "rdm.dualcast.suggestions.wasted.content": "Mit <0/> solltest du nur <1/>,<2/> oder <3/> benutzen",
   "rdm.dualcast.suggestions.wasted.why": "{0} {1, plural, one {Doppelzauber wurde} other {Doppelzauber wurden}} für ohnehin kurze Zauber verschwendet.",
   "rdm.dualcast.title": "Doppelzauber",
+  "rdm.engdistracking.windowTitle": "Zeit",
   "rdm.gauge.black-mana-lost-to-manafication": "Schwarz",
   "rdm.gauge.suggestions.black-mana-invuln-content": "Stelle sicher, dass du kein Ziel angreifst, dem du keinen Schaden zufügen kannst. Zauber, die keinen Schaden zufügen oder nicht treffen, generieren kein Mana, was dich eine oder mehrere Magische Kombo(s) kosten kann.",
   "rdm.gauge.suggestions.black-mana-invuln-why": "Du hast {0} Schwarzes Mana durch Zauber verloren, die verfehlt oder ein unverwundbares Ziel angegriffen haben",
