@@ -669,6 +669,8 @@
   "rdm.dualcast.suggestions.wasted.content": "Sorts utilisés alors que <0/> est actif devrait être limité à <1/>, <2/>, or <3/>",
   "rdm.dualcast.suggestions.wasted.why": "{0} {0, plural, one {Chaîne de sorts a été gâchée du à un temps de cast trop court} other {Chaînes de sorts ont été gâchées du à un temps de cast trop court}}.",
   "rdm.dualcast.title": "Chaîne de sorts",
+  "rdm.engdistrack.title": "Suivis d'engagement/déplacement",
+  "rdm.engdistracking.windowActions": "Actions d'engagement/déplacement",
   "rdm.engdistracking.windowTitle": "Temps",
   "rdm.gauge.black-mana-lost-to-manafication": "Noir",
   "rdm.gauge.suggestions.black-mana-invuln-content": "Assurez-vous de ne pas cibler un boss auquel vous ne pouvez pas infliger de dégâts avec vos sorts.  Les sorts qui n'infligent pas de dégâts à une cible invulnérable ou en raison d'un manque de mana peuvent potentiellement vous coûter un ou plusieurs combos enchantés.",
