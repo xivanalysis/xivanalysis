@@ -7,6 +7,7 @@ import {Object} from 'ts-toolbelt'
 import {SUB_ATTRIBUTE_MINIMUM} from 'utilities/speedStatMapper'
 
 export type StatusEvent = Events['statusApply'] | Events['statusRemove']
+type StatusHistory = Map<Status['id'], Map<Actor['id'], StatusEvent[]>>
 
 /** Representation of resources of an actor at a point in time. */
 class ActorResources {
@@ -19,12 +20,12 @@ class ActorResources {
 	attributes: Readonly<Record<Attribute, AttributeValue>>
 
 	protected _updateHistory: Array<Events['actorUpdate']>
-	protected statusHistory: Map<Status['id'], StatusEvent[]>
+	protected statusHistory: StatusHistory
 	private time?: number
 
 	constructor(opts: {
 		updateHistory?: Array<Events['actorUpdate']>
-		statusHistory?: Map<Status['id'], StatusEvent[]>
+		statusHistory?: StatusHistory
 		time?: number
 	}) {
 		this._updateHistory = opts.updateHistory ?? []
@@ -34,6 +35,30 @@ class ActorResources {
 		this.mp = this.buildResource('mp')
 		this.position = this.buildPosition()
 		this.attributes = this.buildAttributes()
+	}
+
+	hasStatus(statusId: Status['id']) {
+		// Grab data for the status - if there is none, we can resolve early.
+		const statusEvents = this.statusHistory.get(statusId)
+		if (statusEvents == null) {
+			return false
+		}
+
+		const time = this.time ?? Infinity
+
+		// Search sources for an open application.
+		for (const sourceEvents of statusEvents.values()) {
+			const lastEvent = _.findLast(
+				sourceEvents,
+				event => event.timestamp <= time
+			)
+
+			if (lastEvent?.type === 'statusApply') {
+				return true
+			}
+		}
+
+		return false
 	}
 
 	// TODO: think of how to automate building these getters this is dumb
@@ -160,23 +185,25 @@ export class Actor extends ActorResources implements ReportActor {
 		this._updateHistory.push(event)
 	}
 
-	addStatusEntry(statusEvent: StatusEvent) {
-		let events = this.statusHistory.get(statusEvent.status)
+	addStatusEntry(event: StatusEvent) {
+		let statusEvents = this.statusHistory.get(event.status)
+		if (statusEvents == null) {
+			statusEvents = new Map()
+			this.statusHistory.set(event.status, statusEvents)
+		}
 
-		if (events == null) {
-			events = []
-			this.statusHistory.set(statusEvent.status, events)
+		let sourceEvents = statusEvents.get(event.source)
+		if (sourceEvents == null) {
+			sourceEvents = []
+			statusEvents.set(event.source, sourceEvents)
 		}
 
 		// If the last event from this source is the same type, we can noop (apply -> apply, etc).
-		const lastSourceEvent = _.findLast(
-			events,
-			event => event.source === statusEvent.source,
-		)
-		if (lastSourceEvent != null && lastSourceEvent.type === statusEvent.type) {
+		const lastSourceEvent = _.last(sourceEvents)
+		if (lastSourceEvent != null && lastSourceEvent.type === event.type) {
 			return
 		}
 
-		events.push(statusEvent)
+		sourceEvents.push(event)
 	}
 }
