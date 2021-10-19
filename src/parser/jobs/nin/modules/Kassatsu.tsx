@@ -2,20 +2,21 @@ import {Trans, Plural} from '@lingui/react'
 import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
-import Module from 'parser/core/Module'
-import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import {CastEvent} from 'fflogs'
+import Module, {dependency} from 'parser/core/Module'
+import Combatants from 'parser/core/modules/Combatants'
+import Suggestions, {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import React from 'react'
 
 export default class Kassatsu extends Module {
-	static handle = 'kassatsu'
-	static dependencies = [
-		'combatants',
-		'suggestions',
-	]
+	static override handle = 'kassatsu'
 
-	_kassatsuSpent = false
-	_kassatsuWastes = 0
-	_kassatsuUses = {
+	@dependency private combatants!: Combatants
+	@dependency private suggestions!: Suggestions
+
+	private kassatsuSpent: boolean = false
+	private kassatsuWastes: number = 0
+	private kassatsuUses: {[key: number]: number} = {
 		[ACTIONS.FUMA_SHURIKEN.id]: 0,
 		[ACTIONS.GOKA_MEKKYAKU.id]: 0,
 		[ACTIONS.RAITON.id]: 0,
@@ -26,32 +27,31 @@ export default class Kassatsu extends Module {
 		[ACTIONS.RABBIT_MEDIUM.id]: 0,
 	}
 
-	constructor(...args) {
-		super(...args)
-		this.addEventHook('cast', {by: 'player', abilityId: Object.keys(this._kassatsuUses).map(Number)}, this._onNinjutsuCast)
-		this.addEventHook('removebuff', {by: 'player', abilityId: STATUSES.KASSATSU.id}, this._onRemoveKassatsu)
-		this.addEventHook('complete', this._onComplete)
+	protected override init() {
+		this.addEventHook('cast', {by: 'player', abilityId: Object.keys(this.kassatsuUses).map(Number)}, this.onNinjutsuCast)
+		this.addEventHook('removebuff', {by: 'player', abilityId: STATUSES.KASSATSU.id}, this.onRemoveKassatsu)
+		this.addEventHook('complete', this.onComplete)
 	}
 
-	_onNinjutsuCast(event) {
+	private onNinjutsuCast(event: CastEvent) {
 		const abilityId = event.ability.guid
 		if (this.combatants.selected.hasStatus(STATUSES.KASSATSU.id)) {
-			this._kassatsuUses[abilityId]++
-			this._kassatsuSpent = true
+			this.kassatsuUses[abilityId]++
+			this.kassatsuSpent = true
 		}
 	}
 
-	_onRemoveKassatsu() {
-		if (!this._kassatsuSpent) {
-			this._kassatsuWastes++
+	private onRemoveKassatsu() {
+		if (!this.kassatsuSpent) {
+			this.kassatsuWastes++
 		}
 
 		// Reset the flag for the next time it's cast
-		this._kassatsuSpent = false
+		this.kassatsuSpent = false
 	}
 
-	_onComplete() {
-		if (this._kassatsuWastes > 0) {
+	private onComplete() {
+		if (this.kassatsuWastes > 0) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.KASSATSU.icon,
 				content: <Trans id="nin.kassatsu.suggestions.waste.content">
@@ -59,12 +59,12 @@ export default class Kassatsu extends Module {
 				</Trans>,
 				severity: SEVERITY.MEDIUM,
 				why: <Trans id="nin.kassatsu.suggestions.waste.why">
-					You allowed Kassatsu to fall off <Plural value={this._kassatsuWastes} one="# time" other="# times"/>.
+					You allowed Kassatsu to fall off <Plural value={this.kassatsuWastes} one="# time" other="# times"/>.
 				</Trans>,
 			}))
 		}
 
-		if (this._kassatsuUses[ACTIONS.HUTON.id] > 0) {
+		if (this.kassatsuUses[ACTIONS.HUTON.id] > 0) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.HUTON.icon,
 				content: <Trans id="nin.kassatsu.suggestions.huton.content">
@@ -72,12 +72,12 @@ export default class Kassatsu extends Module {
 				</Trans>,
 				severity: SEVERITY.MAJOR,
 				why: <Trans id="nin.kassatsu.suggestions.huton.why">
-					You cast Huton <Plural value={this._kassatsuUses[ACTIONS.HUTON.id]} one="# time" other="# times"/> under Kassatsu.
+					You cast Huton <Plural value={this.kassatsuUses[ACTIONS.HUTON.id]} one="# time" other="# times"/> under Kassatsu.
 				</Trans>,
 			}))
 		}
 
-		const generalBads = this._kassatsuUses[ACTIONS.FUMA_SHURIKEN.id] + this._kassatsuUses[ACTIONS.RAITON.id] + this._kassatsuUses[ACTIONS.DOTON.id]
+		const generalBads = this.kassatsuUses[ACTIONS.FUMA_SHURIKEN.id] + this.kassatsuUses[ACTIONS.RAITON.id] + this.kassatsuUses[ACTIONS.DOTON.id]
 		if (generalBads > 0) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.FUMA_SHURIKEN.icon,
@@ -91,7 +91,7 @@ export default class Kassatsu extends Module {
 			}))
 		}
 
-		if (this._kassatsuUses[ACTIONS.SUITON.id] > 0) {
+		if (this.kassatsuUses[ACTIONS.SUITON.id] > 0) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.SUITON.icon,
 				content: <Trans id="nin.kassatsu.suggestions.suiton.content">
@@ -99,12 +99,12 @@ export default class Kassatsu extends Module {
 				</Trans>,
 				severity: SEVERITY.MEDIUM,
 				why: <Trans id="nin.kassatsu.suggestions.suiton.why">
-					You cast Suiton <Plural value={this._kassatsuUses[ACTIONS.SUITON.id]} one="# time" other="# times"/> under Kassatsu.
+					You cast Suiton <Plural value={this.kassatsuUses[ACTIONS.SUITON.id]} one="# time" other="# times"/> under Kassatsu.
 				</Trans>,
 			}))
 		}
 
-		if (this._kassatsuUses[ACTIONS.RABBIT_MEDIUM.id] > 0) {
+		if (this.kassatsuUses[ACTIONS.RABBIT_MEDIUM.id] > 0) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.RABBIT_MEDIUM.icon,
 				content: <Trans id="nin.kassatsu.suggestions.rabbit.content">
@@ -112,7 +112,7 @@ export default class Kassatsu extends Module {
 				</Trans>,
 				severity: SEVERITY.MAJOR,
 				why: <Trans id="nin.kassatsu.suggestions.rabbit.why">
-					You cast Rabbit Medium <Plural value={this._kassatsuUses[ACTIONS.RABBIT_MEDIUM.id]} one="# time" other="# times"/> under Kassatsu.
+					You cast Rabbit Medium <Plural value={this.kassatsuUses[ACTIONS.RABBIT_MEDIUM.id]} one="# time" other="# times"/> under Kassatsu.
 				</Trans>,
 			}))
 		}

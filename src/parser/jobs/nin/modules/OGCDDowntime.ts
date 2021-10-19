@@ -1,4 +1,5 @@
 import ACTIONS from 'data/ACTIONS'
+import {CastEvent} from 'fflogs'
 import {CooldownDowntime} from 'parser/core/modules/CooldownDowntime'
 
 const KASSATSU_FIRST_USE_OFFSET = 1000 // After opening Suiton
@@ -10,7 +11,7 @@ const TCJ_FIRST_USE_OFFSET = 17250 // After two Ninjutsu
 const MEISUI_FIRST_USE_OFFSET = 20750 // After TCJ
 
 export default class OGCDDowntime extends CooldownDowntime {
-	trackedCds = [
+	override trackedCds = [
 		{
 			cooldowns: [ACTIONS.KASSATSU],
 			firstUseOffset: KASSATSU_FIRST_USE_OFFSET,
@@ -41,18 +42,18 @@ export default class OGCDDowntime extends CooldownDowntime {
 		},
 	]
 
-	_dreamTimestamps = []
+	private dreamTimestamps: number[] = []
 
-	countUsage(event) {
+	override countUsage(event: CastEvent) {
 		if (event.ability.guid !== ACTIONS.DREAM_WITHIN_A_DREAM.id) {
 			return true
 		}
 
-		if (this._dreamTimestamps.indexOf(event.timestamp) > -1) {
+		if (this.dreamTimestamps.indexOf(event.timestamp) > -1) {
 			return false
 		}
 
-		this._dreamTimestamps.push(event.timestamp)
+		this.dreamTimestamps.push(event.timestamp)
 		return true
 	}
 }

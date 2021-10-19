@@ -5,14 +5,17 @@ import {ActionLink} from 'components/ui/DbLink'
 import TimeLineChart from 'components/ui/TimeLineChart'
 import ACTIONS from 'data/ACTIONS'
 import JOBS from 'data/JOBS'
-import Module, {DISPLAY_MODE} from 'parser/core/Module'
-import {Suggestion, TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import {CastEvent} from 'fflogs'
+import Module, {dependency, DISPLAY_MODE} from 'parser/core/Module'
+import {ComboEvent} from 'parser/core/modules/Combos'
+import {NormalisedDamageEvent} from 'parser/core/modules/NormalisedEvents'
+import Suggestions, {Suggestion, TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import React, {Fragment} from 'react'
 
 // Constants
 const MAX_NINKI = 100
 
-const GCD_NINKI_GAIN = {
+const ACTION_NINKI_GAIN = {
 	[ACTIONS.SPINNING_EDGE.id]: 5,
 	[ACTIONS.GUST_SLASH.id]: 5,
 	[ACTIONS.DEATH_BLOSSOM.id]: 5,
@@ -21,8 +24,6 @@ const GCD_NINKI_GAIN = {
 	[ACTIONS.AEOLIAN_EDGE.id]: 10,
 	[ACTIONS.ARMOR_CRUSH.id]: 10,
 	[ACTIONS.SHADOW_FANG.id]: 10,
-}
-const OGCD_NINKI_GAIN = {
 	[ACTIONS.MUG.id]: 40,
 	[ACTIONS.MEISUI.id]: 50,
 }
@@ -54,17 +55,21 @@ const NINKI_SPENDERS = [
 	ACTIONS.BUNSHIN.id,
 ]
 
-export default class Ninki extends Module {
-	static handle = 'ninki'
-	static title = t('nin.ninki.title')`Ninki Timeline`
-	static displayMode = DISPLAY_MODE.FULL
-	static dependencies = [
-		'suggestions',
-	]
+interface DataPoint {
+	t: number,
+	y: number,
+}
 
-	_ninki = 0
-	_ninkiHistory = []
-	_wasteBySource = {
+export default class Ninki extends Module {
+	static override handle = 'ninki'
+	static override title = t('nin.ninki.title')`Ninki Timeline`
+	static override displayMode = DISPLAY_MODE.FULL
+
+	@dependency private suggestions!: Suggestions
+
+	private ninki: number = 0
+	private ninkiHistory: DataPoint[] = []
+	private wasteBySource: {[key: number]: number} = {
 		[ACTIONS.MUG.id]: 0,
 		[ACTIONS.MEISUI.id]: 0,
 		[ACTIONS.SPINNING_EDGE.id]: 0,
@@ -76,59 +81,65 @@ export default class Ninki extends Module {
 		[ACTIONS.HAKKE_MUJINSATSU.id]: 0,
 		[ACTIONS.THROWING_DAGGER.id]: 0,
 	}
-	_erroneousFrogs = 0 // This is my new band name
+	private erroneousFrogs: number = 0 // This is my new band name
 
-	constructor(...args) {
-		super(...args)
-		this.addEventHook('cast', {by: 'player', abilityId: NINKI_GCDS}, event => this._addNinki(event, GCD_NINKI_GAIN[event.ability.guid]))
-		this.addEventHook('combo', {by: 'player', abilityId: NINKI_COMBOS}, event => this._addNinki(event, GCD_NINKI_GAIN[event.ability.guid]))
-		this.addEventHook('cast', {by: 'player', abilityId: NINKI_OGCDS}, event => this._addNinki(event, OGCD_NINKI_GAIN[event.ability.guid]))
-		this.addEventHook('cast', {by: 'pet'}, event => this._addNinki(event, BUNSHIN_NINKI_GAIN))
-		this.addEventHook('cast', {by: 'player', abilityId: NINKI_SPENDERS}, this._onSpenderCast)
-		this.addEventHook('normaliseddamage', {by: 'player', abilityId: ACTIONS.HELLFROG_MEDIUM.id}, this._onHellfrogAoe)
-		this.addEventHook('death', {to: 'player'}, this._onDeath)
-		this.addEventHook('complete', this._onComplete)
+	protected override init() {
+		this.addEventHook('cast', {by: 'player', abilityId: NINKI_GCDS}, this.onBuilderCast)
+		this.addEventHook('combo', {by: 'player', abilityId: NINKI_COMBOS}, this.onBuilderCast)
+		this.addEventHook('cast', {by: 'player', abilityId: NINKI_OGCDS}, this.onBuilderCast)
+		this.addEventHook('cast', {by: 'pet'}, this.onBunshinHit)
+		this.addEventHook('cast', {by: 'player', abilityId: NINKI_SPENDERS}, this.onSpenderCast)
+		this.addEventHook('normaliseddamage', {by: 'player', abilityId: ACTIONS.HELLFROG_MEDIUM.id}, this.onHellfrogAoe)
+		this.addEventHook('death', {to: 'player'}, this.onDeath)
+		this.addEventHook('complete', this.onComplete)
 
 	}
 
-	_addNinki(event, amount) {
+	private onBuilderCast(event: CastEvent | ComboEvent) {
 		const abilityId = event.ability.guid
+		this.addNinki(ACTION_NINKI_GAIN[abilityId], abilityId)
+	}
 
-		this._ninki += amount
-		if (this._ninki > MAX_NINKI) {
-			const waste = this._ninki - MAX_NINKI
-			this._wasteBySource[abilityId] += waste
-			this._ninki = MAX_NINKI
+	private onBunshinHit() {
+		this.addNinki(BUNSHIN_NINKI_GAIN)
+	}
+
+	private addNinki(amount: number, abilityId?: number) {
+		this.ninki += amount
+		if (this.ninki > MAX_NINKI && abilityId) {
+			const waste = this.ninki - MAX_NINKI
+			this.wasteBySource[abilityId] += waste
+			this.ninki = MAX_NINKI
 		}
 
-		this._pushToHistory()
+		this.pushToHistory()
 	}
 
-	_onSpenderCast() {
-		this._ninki = Math.max(this._ninki - SPENDER_COST, 0)
-		this._pushToHistory()
+	private onSpenderCast() {
+		this.ninki = Math.max(this.ninki - SPENDER_COST, 0)
+		this.pushToHistory()
 	}
 
-	_onHellfrogAoe(event) {
+	private onHellfrogAoe(event: NormalisedDamageEvent) {
 		if (event.hitCount === 1) {
 			// If we have a Hellfrog AoE event with only one target, it should've been a Bhava instead
-			this._erroneousFrogs++
+			this.erroneousFrogs++
 		}
 	}
 
-	_onDeath() {
+	private onDeath() {
 		// YOU DONE FUCKED UP NOW
-		this._ninki = 0
-		this._pushToHistory()
+		this.ninki = 0
+		this.pushToHistory()
 	}
 
-	_pushToHistory() {
+	private pushToHistory() {
 		const timestamp = this.parser.currentTimestamp - this.parser.fight.start_time
-		this._ninkiHistory.push({t: timestamp, y: this._ninki})
+		this.ninkiHistory.push({t: timestamp, y: this.ninki})
 	}
 
-	_onComplete() {
-		const totalWaste = Object.values(this._wasteBySource).reduce((reducer, value) => reducer + value)
+	private onComplete() {
+		const totalWaste = Object.values(this.wasteBySource).reduce((reducer, value) => reducer + value)
 		this.suggestions.add(new TieredSuggestion({
 			icon: 'https://xivapi.com/i/005000/005411.png',
 			content: <Trans id="nin.ninki.suggestions.waste.content">
@@ -144,7 +155,7 @@ export default class Ninki extends Module {
 			</Trans>,
 		}))
 
-		if (this._erroneousFrogs > 0) {
+		if (this.erroneousFrogs > 0) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.HELLFROG_MEDIUM.icon,
 				content: <Trans id="nin.ninki.suggestions.frog.content">
@@ -152,13 +163,13 @@ export default class Ninki extends Module {
 				</Trans>,
 				severity: SEVERITY.MEDIUM,
 				why: <Trans id="nin.ninki.suggestions.frog.why">
-					You used Hellfrog Medium <Plural value={this._erroneousFrogs} one="# time" other="# times"/> when other spenders were available.
+					You used Hellfrog Medium <Plural value={this.erroneousFrogs} one="# time" other="# times"/> when other spenders were available.
 				</Trans>,
 			}))
 		}
 	}
 
-	output() {
+	override output() {
 		const ninkiColor = Color(JOBS.NINJA.colour)
 
 		/* eslint-disable @typescript-eslint/no-magic-numbers */
@@ -167,7 +178,7 @@ export default class Ninki extends Module {
 				{
 					label: 'Ninki',
 					steppedLine: true,
-					data: this._ninkiHistory,
+					data: this.ninkiHistory,
 					backgroundColor: ninkiColor.fade(0.8).toString(),
 					borderColor: ninkiColor.fade(0.5).toString(),
 				},
