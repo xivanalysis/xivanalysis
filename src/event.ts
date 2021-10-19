@@ -146,14 +146,14 @@ interface EventDamage extends FieldsMultiTargeted {
 	cause: Cause
 	/** Unique numeric ID that will match this damage to its execution confirmation. If omitted, no confirmation will occur (status ticks, etc). */
 	sequence?: number
-	/** Source damage modifier. */
-	sourceModifier: SourceModifier
 	/** Effects on each target */
 	targets: MergeArrays<FieldsMultiTargeted['targets'] & Array<{
 		/** Total amount of damage dealt. */
 		amount: number
 		/** Amount of total damage that was overkill. */
 		overkill: number
+		/** Source damage modifier. */
+		sourceModifier: SourceModifier
 		/** Target damage modifier. */
 		targetModifier: TargetModifier
 	}>>
@@ -165,14 +165,14 @@ interface EventHeal extends FieldsMultiTargeted {
 	cause: Cause
 	/** Unique numeric ID that will match this heal to its execution confirmation. If omitted, no confirmation will occur (status ticks, etc). */
 	sequence?: number
-	/** Source healing modifier. */
-	sourceModifier: SourceModifier
 	/** Effects on each target */
 	targets: MergeArrays<FieldsMultiTargeted['targets'] & Array<{
 		/** Total amount of healing administered. */
 		amount: number
 		/** Amount of total healing that was overheal. */
 		overheal: number
+		/** Source healing modifier. */
+		sourceModifier: SourceModifier
 	}>>
 }
 

@@ -95,11 +95,11 @@ Array [
     },
     "sequence": 16647,
     "source": "1",
-    "sourceModifier": 2,
     "targets": Array [
       Object {
         "amount": 0,
         "overkill": 0,
+        "sourceModifier": 2,
         "target": "3",
         "targetModifier": 0,
       },
@@ -155,11 +155,11 @@ Array [
     },
     "sequence": 4570,
     "source": "3",
-    "sourceModifier": 2,
     "targets": Array [
       Object {
         "amount": 36194,
         "overheal": 0,
+        "sourceModifier": 2,
         "target": "3",
       },
     ],
@@ -210,11 +210,11 @@ Array [
     },
     "sequence": undefined,
     "source": "2",
-    "sourceModifier": 0,
     "targets": Array [
       Object {
         "amount": 4176,
         "overkill": 0,
+        "sourceModifier": 0,
         "target": "3",
         "targetModifier": 0,
       },
@@ -305,11 +305,11 @@ Array [
     },
     "sequence": undefined,
     "source": "11",
-    "sourceModifier": 0,
     "targets": Array [
       Object {
         "amount": 4588,
         "overheal": 0,
+        "sourceModifier": 0,
         "target": "8",
       },
     ],

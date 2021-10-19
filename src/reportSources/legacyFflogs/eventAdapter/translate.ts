@@ -212,12 +212,12 @@ export class TranslateAdapterStep extends AdapterStep {
 			type: 'damage',
 			cause: resolveCause(event.ability.guid),
 			sequence: event.packetID,
-			sourceModifier,
 			targets: [{
 				...resolveTargetId(event),
 				// fflogs subtracts overkill from amount, amend
 				amount: event.amount + overkill,
 				overkill,
+				sourceModifier,
 				targetModifier: targetHitType[event.hitType] ?? TargetModifier.NORMAL,
 			}],
 		}
@@ -232,12 +232,12 @@ export class TranslateAdapterStep extends AdapterStep {
 			type: 'heal',
 			cause: resolveCause(event.ability.guid),
 			sequence: event.packetID,
-			sourceModifier: sourceHitType[event.hitType] ?? SourceModifier.NORMAL,
 			targets: [{
 				...resolveTargetId(event),
 				// fflogs substracts overheal from amount, amend
 				amount: event.amount + overheal,
 				overheal: overheal,
+				sourceModifier: sourceHitType[event.hitType] ?? SourceModifier.NORMAL,
 			}],
 		}
 

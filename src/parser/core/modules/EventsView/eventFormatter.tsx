@@ -107,21 +107,31 @@ registerEventFormatter('execute', ({event, pull}) => <>
 registerEventFormatter('damage', ({event, pull}) => <>
 	{getActorName(event.source, pull.actors)}'s
 	&nbsp;{formatCause(event.cause)}
-	&nbsp;hits {getActorName(event.target, pull.actors)}
-	&nbsp;for {event.amount} damage
-	{event.overkill > 0 && <>,&nbsp;overkilling by {event.overkill}</>}.
-	{formatSourceModifier(event.sourceModifier)}
-	{formatTargetModifier(event.targetModifier)}
+	&nbsp;hits
+	{
+		event.targets.map(t => <>
+			&nbsp;{getActorName(t.target, pull.actors)}
+			&nbsp;for {t.amount} damage
+			{t.overkill > 0 && <>,&nbsp;overkilling by {t.overkill}</>}.
+			{formatSourceModifier(t.sourceModifier)}
+			{formatTargetModifier(t.targetModifier)}
+		</>)
+	}
 	{event.sequence && <>&nbsp;(seq: {event.sequence})</>}
 </>)
 
 registerEventFormatter('heal', ({event, pull}) => <>
 	{getActorName(event.source, pull.actors)}'s
 	&nbsp;{formatCause(event.cause)}
-	&nbsp;heals {getActorName(event.target, pull.actors)}
-	&nbsp;for {event.amount} HP
-	{event.overheal > 0 && <>,&nbsp;overhealing by {event.overheal}</>}.
-	{formatSourceModifier(event.sourceModifier)}
+	&nbsp;heals&nbsp;
+	{
+		event.targets.map(t => <>
+			&nbsp;{getActorName(t.target, pull.actors)}
+			&nbsp;for {t.amount} HP
+			{t.overheal > 0 && <>,&nbsp;overhealing by {t.overheal}</>}.
+			{formatSourceModifier(t.sourceModifier)}
+		</>)
+	}
 	{event.sequence && <>&nbsp;(seq: {event.sequence})</>}
 </>)
 
