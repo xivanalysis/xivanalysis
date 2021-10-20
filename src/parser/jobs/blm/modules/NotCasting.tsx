@@ -1,11 +1,12 @@
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
-import {CastEvent} from 'fflogs'
-import Module, {dependency} from 'parser/core/Module'
+import {Event, Events} from 'event'
+import {Analyser} from 'parser/core/Analyser'
+import {filter} from 'parser/core/filter'
+import {dependency} from 'parser/core/Injectable'
 import Downtime from 'parser/core/modules/Downtime'
 import {GlobalCooldown} from 'parser/core/modules/GlobalCooldown'
 import {Timeline} from 'parser/core/modules/Timeline'
-import {CompleteEvent} from 'parser/core/Parser'
 import React from 'react'
 import {Table, Button} from 'semantic-ui-react'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
@@ -21,7 +22,7 @@ interface Window {
 	stop?: number
 }
 
-export default class NotCasting extends Module {
+export default class NotCasting extends Analyser {
 	static override handle = 'notcasting'
 	static override title = t('blm.notcasting.title')`Times you did literally nothing`
 	static override displayOrder = DISPLAY_ORDER.NOTCASTING
@@ -35,14 +36,18 @@ export default class NotCasting extends Module {
 	}
 	private hardCast = false
 
-	override init() {
-		this.addEventHook('begincast', {by: 'player'}, this.onBegin)
-		this.addEventHook('cast', {by: 'player'}, this.onCast)
-		this.addEventHook('death', {to: 'player'}, this.onDeath)
+	override initialise() {
+		const playerFilter = filter<Event>().source(this.parser.actor.id)
+		this.addEventHook(playerFilter.type('prepare'), this.onBegin)
+		this.addEventHook(playerFilter.type('action'), this.onCast)
+		this.addEventHook({
+			type: 'death',
+			actor: this.parser.actor.id,
+		}, this.onDeath)
 		this.addEventHook('complete', this.onComplete)
 	}
 
-	private onCast(event: CastEvent) {
+	private onCast(event: Events['action']) {
 		//better than using 2.5s I guess
 		const gcdLength = this.gcd.getEstimate()
 		let timeStamp = event.timestamp
@@ -71,7 +76,7 @@ export default class NotCasting extends Module {
 		}
 	}
 
-	private onBegin(event: CastEvent) {
+	private onBegin(event: Events['prepare']) {
 		const gcdLength = this.gcd.getEstimate()
 		if (this.noCastWindows.current) {
 			if (event.timestamp - this.noCastWindows.current.start > gcdLength + GCD_ERROR_OFFSET) {
@@ -99,7 +104,7 @@ export default class NotCasting extends Module {
 		tracker.current = undefined
 	}
 
-	private onComplete(event: CompleteEvent) {
+	private onComplete(event: Events['complete']) {
 		const gcdLength = this.gcd.getEstimate()
 		//finish up
 		this.stopAndSave(event.timestamp)
@@ -107,8 +112,8 @@ export default class NotCasting extends Module {
 		// Filter out periods where you got stunned, boss is untargetable, etc
 		this.noCastWindows.history = this.noCastWindows.history.filter(windows => {
 			const duration = this.downtime.getDowntime(
-				this.parser.fflogsToEpoch(windows.start),
-				this.parser.fflogsToEpoch(windows.stop ?? windows.start),
+				windows.start,
+				windows.stop ?? windows.start,
 			)
 			return duration === 0
 		})
@@ -130,11 +135,11 @@ export default class NotCasting extends Module {
 			<Table.Body>
 				{this.noCastWindows.history.map(notCasting => {
 					return <Table.Row key={notCasting.start}>
-						<Table.Cell>{this.parser.formatTimestamp(notCasting.start)}</Table.Cell>
+						<Table.Cell>{this.parser.formatEpochTimestamp(notCasting.start)}</Table.Cell>
 						<Table.Cell>&ge;{this.parser.formatDuration((notCasting.stop ?? notCasting.start) -notCasting.start-gcdLength-GCD_ERROR_OFFSET)}</Table.Cell>
 						<Table.Cell>
 							<Button onClick={() =>
-								this.timeline.show(notCasting.start - this.parser.fight.start_time, (notCasting.stop ?? notCasting.start) - this.parser.fight.start_time)}>
+								this.timeline.show(notCasting.start - this.parser.pull.timestamp, (notCasting.stop ?? notCasting.start) - this.parser.pull.timestamp)}>
 								<Trans id="blm.notcasting.timelinelink-button">Jump to Timeline</Trans>
 							</Button>
 						</Table.Cell>
@@ -142,6 +147,5 @@ export default class NotCasting extends Module {
 				})}
 			</Table.Body>
 		</Table>
-
 	}
 }
