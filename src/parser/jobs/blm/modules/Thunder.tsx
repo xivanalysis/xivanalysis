@@ -45,10 +45,10 @@ interface ThunderApplicationTracker {
 	[key: string]: ThunderTargetData,
 }
 
-export default class Thunder extends Module {
+export class Thunder extends Module {
 	static override handle = 'thunder'
-    static override title = t('blm.thunder.title')`Thunder`
-    static override displayOrder = DISPLAY_ORDER.THUNDER
+	static override title = t('blm.thunder.title')`Thunder`
+	static override displayOrder = DISPLAY_ORDER.THUNDER
 
 	@dependency private checklist!: Checklist
 	@dependency private enemies!: Enemies

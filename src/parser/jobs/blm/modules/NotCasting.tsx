@@ -22,7 +22,7 @@ interface Window {
 	stop?: number
 }
 
-export default class NotCasting extends Analyser {
+export class NotCasting extends Analyser {
 	static override handle = 'notcasting'
 	static override title = t('blm.notcasting.title')`Times you did literally nothing`
 	static override displayOrder = DISPLAY_ORDER.NOTCASTING
@@ -109,16 +109,14 @@ export default class NotCasting extends Analyser {
 		//finish up
 		this.stopAndSave(event.timestamp)
 
-		// Filter out periods where you got stunned, boss is untargetable, etc
+		// Filter out periods where you got stunned, boss is untargetable, etc, or windows with negative durations
 		this.noCastWindows.history = this.noCastWindows.history.filter(windows => {
 			const duration = this.downtime.getDowntime(
 				windows.start,
 				windows.stop ?? windows.start,
 			)
-			return duration === 0
+			return duration === 0 || (windows.stop ?? windows.start) - windows.start > gcdLength + GCD_ERROR_OFFSET
 		})
-		//filter out negative durations
-		this.noCastWindows.history = this.noCastWindows.history.filter(windows => (windows.stop ?? windows.start) - windows.start > gcdLength + GCD_ERROR_OFFSET)
 	}
 
 	override output() {

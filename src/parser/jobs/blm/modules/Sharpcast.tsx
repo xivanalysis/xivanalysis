@@ -31,7 +31,7 @@ interface SharpcastTracker {
 	history: SharpcastWindow[]
 }
 
-export default class Sharpcast extends Module {
+export class Sharpcast extends Module {
 	static override handle = 'sharpcast'
 
 	@dependency private procs!: Procs
@@ -127,7 +127,7 @@ export default class Sharpcast extends Module {
 			row.addItem(new StatusItem({
 				status: STATUSES.SHARPCAST,
 				start: window.start - fightStart,
-				end: window.stop ?? window.start - fightStart,
+				end: (window.stop ?? window.start) - fightStart,
 			}))
 		})
 
