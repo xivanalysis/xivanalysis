@@ -1,99 +1,118 @@
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
 import {ActionLink} from 'components/ui/DbLink'
-import Rotation from 'components/ui/Rotation'
 import {getDataBy} from 'data'
 import ACTIONS from 'data/ACTIONS'
-import {CastEvent} from 'fflogs'
-import Module, {dependency} from 'parser/core/Module'
+import {ActionRoot} from 'data/ACTIONS/root'
+import {Event, Events} from 'event'
+import {Analyser} from 'parser/core/Analyser'
+import {filter, oneOf} from 'parser/core/filter'
+import {dependency} from 'parser/core/Injectable'
+import {Data} from 'parser/core/modules/Data'
 import Downtime from 'parser/core/modules/Downtime'
+import {Timeline} from 'parser/core/modules/Timeline'
 import React, {Fragment} from 'react'
-import {Accordion, Message} from 'semantic-ui-react'
+import {Button, Message, Table} from 'semantic-ui-react'
 
 // Buffer (ms) to forgive insignificant drift, we really only care about GCD drift here
 // and not log inconsistencies / sks issues / misguided weaving
 const DRIFT_BUFFER = 1500
 
-const DRIFT_GCDS = [
-	ACTIONS.AIR_ANCHOR.id,
-	ACTIONS.BIOBLASTER.id,
-	ACTIONS.DRILL.id,
+// Timeline padding to see the drifted GCD when you jump to the window
+const TIMELINE_PADDING = 2500
+
+// 6.0: Add chain saw
+const DRIFT_GCDS: Array<keyof ActionRoot> = [
+	'AIR_ANCHOR',
+	'BIOBLASTER',
+	'DRILL',
 ]
 
-const COOLDOWN_MS = {
-	[ACTIONS.DRILL.id]: ACTIONS.DRILL.cooldown,
-	[ACTIONS.AIR_ANCHOR.id]: ACTIONS.AIR_ANCHOR.cooldown,
-}
-
 class DriftWindow {
-	actionId: number
+	id: number
 	start: number
 	end: number = 0
 	drift: number = 0
-	gcdRotation: CastEvent[] = []
+	gcdRotation: Array<Events['action']> = []
 
-	constructor(actionId: number, start: number) {
-		this.actionId = actionId
+	constructor(id: number, start: number) {
+		this.id = id
 		this.start = start
 	}
 
-	public addGcd(event: CastEvent) {
-		const action = getDataBy(ACTIONS, 'id', event.ability.guid)
+	public addGcd(event: Events['action']) {
+		const action = getDataBy(ACTIONS, 'id', event.action)
 		if (action && action.onGcd) {
 			this.gcdRotation.push(event)
 		}
 	}
 
 	public getLastActionId(): number {
-		return this.gcdRotation.slice(-1)[0].ability.guid
+		return this.gcdRotation.slice(-1)[0].action
 	}
 }
 
-export default class Drift extends Module {
+export default class Drift extends Analyser {
 	static override handle = 'drift'
 	static override title = t('mch.drift.title')`GCD Drift`
 
+	@dependency private data!: Data
 	@dependency private downtime!: Downtime
+	@dependency private timeline!: Timeline
 
+	private driftIds: number[] = []
 	private driftedWindows: DriftWindow[] = []
 
 	private currentWindows = {
-		[ACTIONS.AIR_ANCHOR.id]: new DriftWindow(ACTIONS.AIR_ANCHOR.id, this.parser.fight.start_time),
-		[ACTIONS.DRILL.id]: new DriftWindow(ACTIONS.DRILL.id, this.parser.fight.start_time),
+		[ACTIONS.AIR_ANCHOR.id]: new DriftWindow(ACTIONS.AIR_ANCHOR.id, this.parser.pull.timestamp),
+		[ACTIONS.DRILL.cooldownGroup]: new DriftWindow(ACTIONS.DRILL.id, this.parser.pull.timestamp),
 	}
 
-	protected override init() {
-		this.addEventHook('cast', {by: 'player', abilityId: DRIFT_GCDS}, this.onDriftableCast)
-		this.addEventHook('cast', {by: 'player'}, this.onCast)
+	override initialise() {
+		this.driftIds = DRIFT_GCDS.map(actionKey => this.data.actions[actionKey].id)
+
+		const castFilter = filter<Event>()
+			.type('action')
+			.source(this.parser.actor.id)
+
+		this.addEventHook(castFilter.action(oneOf(this.driftIds)), this.onDriftableCast)
+		this.addEventHook(castFilter, this.onCast)
 	}
 
-	private onDriftableCast(event: CastEvent) {
-		let actionId: number
-		if (event.ability.guid === ACTIONS.BIOBLASTER.id) {
-			actionId = ACTIONS.DRILL.id
+	private onDriftableCast(event: Events['action']) {
+		const action = this.data.getAction(event.action)
+
+		if (!action || !action.cooldown) { return }
+
+		// Group bio and drill together
+		const id = action.cooldownGroup ?? action.id
+
+		const window = this.currentWindows[id]
+		window.end = event.timestamp
+
+		// Cap at this event's timestamp
+		const plannedUseTime = Math.min(window.start + action.cooldown, event.timestamp)
+
+		let expectedUseTime = 0
+		if (this.downtime.isDowntime(plannedUseTime)) {
+			const downtimeWindow = this.downtime.getDowntimeWindows(plannedUseTime, plannedUseTime)[0]
+			expectedUseTime = downtimeWindow.end
 		} else {
-			actionId = event.ability.guid
+			expectedUseTime = plannedUseTime
 		}
 
-		const window = this.currentWindows[actionId]
-		window.end = event.timestamp
-		const downtime = this.downtime.getDowntime(
-			this.parser.fflogsToEpoch(window.start),
-			this.parser.fflogsToEpoch(window.end),
-		)
-		const cd = COOLDOWN_MS[actionId]
-		window.drift = Math.max(0, window.end - window.start - cd - downtime)
+		window.drift = Math.max(0, window.end - expectedUseTime)
 
-		// Forgive "drift" in reopener situations
-		if (window.drift > DRIFT_BUFFER && downtime < cd) {
+		// Tolerate a small amount of drift
+		if (window.drift > DRIFT_BUFFER) {
 			this.driftedWindows.push(window)
 			window.addGcd(event)
 		}
 
-		this.currentWindows[actionId] = new DriftWindow(actionId, event.timestamp)
+		this.currentWindows[id] = new DriftWindow(id, event.timestamp)
 	}
 
-	private onCast(event: CastEvent) {
+	private onCast(event: Events['action']) {
 		for (const window of Object.values(this.currentWindows)) {
 			window.addGcd(event)
 		}
@@ -103,24 +122,33 @@ export default class Drift extends Module {
 		// Nothing to show
 		if (!this.driftedWindows.length) { return }
 
-		const panels = this.driftedWindows.map(window => {
-			return {
-				title: {
-					key: 'title-' + window.start,
-					content: <Fragment>
-						{this.parser.formatTimestamp(window.end)}
-						<span> - </span>
-						<Trans id="mch.drift.panel-drift">
-							<ActionLink {...getDataBy(ACTIONS, 'id', window.getLastActionId())}/> drifted by {this.parser.formatDuration(window.drift)}
-						</Trans>
-					</Fragment>,
-				},
-				content: {
-					key: 'content-' + window.start,
-					content: <Rotation events={window.gcdRotation}/>,
-				},
-			}
-		})
+		const driftTable = <Table collapsing unstackable compact="very">
+			<Table.Header>
+				<Table.Row>
+					<Table.HeaderCell><Trans id="mch.drift.timestamp-header">Timestamp</Trans></Table.HeaderCell>
+					<Table.HeaderCell><Trans id="mch.drift.drift-header">Drift Issue</Trans></Table.HeaderCell>
+					<Table.HeaderCell></Table.HeaderCell>
+				</Table.Row>
+			</Table.Header>
+			<Table.Body>
+				{this.driftedWindows.map(window => {
+					return <Table.Row key={window.start}>
+						<Table.Cell>{this.parser.formatEpochTimestamp(window.start)}</Table.Cell>
+						<Table.Cell>
+							<Trans id="mch.drift.drift-issue">
+								<ActionLink {...this.data.getAction(window.getLastActionId())}/> drifted by {this.parser.formatDuration(window.drift)}
+							</Trans>
+						</Table.Cell>
+						<Table.Cell>
+							<Button onClick={() =>
+								this.timeline.show(window.start - this.parser.pull.timestamp, window.end + TIMELINE_PADDING - this.parser.pull.timestamp)}>
+								<Trans id="mch.drift.timelinelink-button">Jump to Timeline</Trans>
+							</Button>
+						</Table.Cell>
+					</Table.Row>
+				})}
+			</Table.Body>
+		</Table>
 
 		return <Fragment>
 			<Message>
@@ -130,12 +158,7 @@ export default class Drift extends Module {
 					Drill or Air Anchor will come off cooldown within 8 seconds.
 				</Trans>
 			</Message>
-			<Accordion
-				exclusive={false}
-				panels={panels}
-				styled
-				fluid
-			/>
+			{driftTable}
 		</Fragment>
 	}
 }
