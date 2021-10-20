@@ -6,12 +6,17 @@ import styles from 'components/ui/Procs/ProcOverlay.module.css'
 import {getDataBy} from 'data'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
-import Module from 'parser/core/Module'
-import {Rule, Requirement} from 'parser/core/modules/Checklist'
-import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
-import React from 'react'
+import {BuffEvent, CastEvent} from 'fflogs'
+import Module, {dependency} from 'parser/core/Module'
+import Checklist, {Rule, Requirement} from 'parser/core/modules/Checklist'
+import Enemies from 'parser/core/modules/Enemies'
+import {EntityStatuses} from 'parser/core/modules/EntityStatuses'
+import {Invulnerability} from 'parser/core/modules/Invulnerability'
+import Suggestions, {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import React, {ReactNode} from 'react'
 import {Accordion, Table, Message} from 'semantic-ui-react'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
+import Procs from './Procs'
 
 // Can never be too careful :blobsweat:
 const STATUS_DURATION = {
@@ -23,101 +28,112 @@ const MAX_ALLOWED_T3_CLIPPING = 6000
 
 const MAX_ALLOWED_T3_CLIPPING_BAD_GCD_LINE_UP = 8000
 
-export default class Thunder extends Module {
-	static handle = 'thunder'
-    static title = t('blm.thunder.title')`Thunder`
-    static displayOrder = DISPLAY_ORDER.THUNDER
-	static dependencies = [
-		'checklist',
-		'enemies',
-		'entityStatuses',
-		'invulnerability',
-		'suggestions',
-		'procs',
-	]
+interface ThunderApplicationData {
+	event: BuffEvent,
+	clip?: number,
+	source: number,
+	proc: boolean
+}
+interface ThunderStatusData {
+	lastApplication: number,
+	applications: ThunderApplicationData[]
+}
+interface ThunderTargetData {
+	[key: number]: ThunderStatusData,
+}
+interface ThunderApplicationTracker {
+	[key: string]: ThunderTargetData,
+}
 
-    thunder3Casts = 0
-    _lastThunderProc = undefined
-    _lastThunderCast = undefined
-	_lastApplication = {}
-	_clip = {
+export default class Thunder extends Module {
+	static override handle = 'thunder'
+    static override title = t('blm.thunder.title')`Thunder`
+    static override displayOrder = DISPLAY_ORDER.THUNDER
+
+	@dependency private checklist!: Checklist
+	@dependency private enemies!: Enemies
+	@dependency private entityStatuses!: EntityStatuses
+	@dependency private invulnerability!: Invulnerability
+	@dependency private suggestions!: Suggestions
+	@dependency private procs!: Procs
+
+    private thunder3Casts = 0
+    private lastThunderProc: boolean = false
+    private lastThunderCast: number = STATUSES.THUNDER_III.id
+	private clip: {[key: number]: number} = {
 		[STATUSES.THUNDER_III.id]: 0,
 	}
-	_application = {}
+	private tracker: ThunderApplicationTracker = {}
 
-	constructor(...args) {
-		super(...args)
+	override init() {
 
-		const castFilter = {
-			by: 'player',
-			abilityId: ACTIONS.THUNDER_III.id,
-		}
-		this.addEventHook('cast', castFilter, this._onDotCast)
-		const statusFilter = {
-			by: 'player',
-			abilityId: STATUSES.THUNDER_III.id,
-		}
-		this.addEventHook(['applydebuff', 'refreshdebuff'], statusFilter, this._onDotApply)
-		this.addEventHook('complete', this._onComplete)
+		this.addEventHook('cast', {by: 'player', abilityId: ACTIONS.THUNDER_III.id}, this.onDotCast)
+		this.addEventHook(['applydebuff', 'refreshdebuff'],
+			{by: 'player', abilityId: STATUSES.THUNDER_III.id},
+			this.onDotApply)
+		this.addEventHook('complete', this.onComplete)
 	}
 
-	_createTargetApplicationList() {
+	private createTargetApplicationList() {
 		return {
 			[STATUSES.THUNDER_III.id]: [],
 		}
 	}
 
-	_pushApplication(targetKey, statusId, event, clip) {
-		const target = this._application[targetKey] = this._application[targetKey] || this._createTargetApplicationList()
-		const proc = this._lastThunderProc
-		const source = this._lastThunderCast
-		target[statusId].push({event, clip, source, proc})
-		this._lastThunderProc = false
+	private pushApplication(targetKey: string, statusId: number, event: BuffEvent, clip?: number) {
+		const target = this.tracker[targetKey] = this.tracker[targetKey] || this.createTargetApplicationList()
+		const proc = this.lastThunderProc
+		const source = this.lastThunderCast
+		target[statusId].applications.push({event, clip, source, proc})
+		this.lastThunderProc = false
 	}
 
-	_onDotCast(event) {
+	private onDotCast(event: CastEvent) {
 		if (event.ability.guid === ACTIONS.THUNDER_III.id) {
 			this.thunder3Casts++
 		}
 		if (this.procs.checkFflogsEventWasProc(event)) {
-			this._lastThunderProc = true
+			this.lastThunderProc = true
 		}
-		this._lastThunderCast = event.ability.guid
+		this.lastThunderCast = event.ability.guid
 	}
 
-	_onDotApply(event) {
+	private onDotApply(event: BuffEvent) {
 		const statusId = event.ability.guid
 
 		// Make sure we're tracking for this target
 		const applicationKey = `${event.targetID}|${event.targetInstance}`
-		const lastApplication = this._lastApplication[applicationKey] = this._lastApplication[applicationKey] || {}
+		const trackerInstance = this.tracker[applicationKey] = this.tracker[applicationKey] || {}
 
 		// If it's not been applied yet, set it and skip out
-		if (!lastApplication[statusId]) {
-			lastApplication[statusId] = event.timestamp
+		if (!trackerInstance[statusId]) {
+			trackerInstance[statusId] = {
+				lastApplication: event.timestamp,
+				applications: [],
+			}
 			//save the application for later use in the output
-			this._pushApplication(applicationKey, statusId, event, null)
+			this.pushApplication(applicationKey, statusId, event)
 			return
 		}
 		// Base clip calc
-		let clip = STATUS_DURATION[statusId] - (event.timestamp - lastApplication[statusId])
+		let clip = STATUS_DURATION[statusId] - (event.timestamp - trackerInstance[statusId].lastApplication)
 		clip = Math.max(0, clip)
 		// Capping clip at 0 - less than that is downtime, which is handled by the checklist requirement
-		this._clip[statusId] += clip
+		this.clip[statusId] += clip
 		//save the application for later use in the output
-		this._pushApplication(applicationKey, statusId, event, clip)
+		this.pushApplication(applicationKey, statusId, event, clip)
 
-		lastApplication[statusId] = event.timestamp
+		trackerInstance[statusId].lastApplication = event.timestamp
 	}
 
 	// Get the uptime percentage for the Thunder status debuff
-	getThunderUptime() {
+	private getThunderUptime() {
 		const statusTime = this.entityStatuses.getStatusUptime(STATUSES.THUNDER_III.id, this.enemies.getEntities())
 		const uptime = this.parser.currentDuration - this.invulnerability.getDuration({types: ['invulnerable']})
 		return (statusTime / uptime) * 100
 	}
 
-	_onComplete() {
+	private onComplete() {
 		// Checklist item for keeping Thunder 3 DoT rolling
 		this.checklist.add(new Rule({
 			name: <Trans id="blm.thunder.checklist.dots.name">Keep your <StatusLink {...STATUSES.THUNDER_III} /> DoT up</Trans>,
@@ -134,16 +150,16 @@ export default class Thunder extends Module {
 		}))
 
 		// Suggestions to not spam T3 too much
-		const sumClip = this._clip[STATUSES.THUNDER_III.id]
+		const sumClip = this.clip[STATUSES.THUNDER_III.id]
 		const maxExpectedClip = (this.thunder3Casts - 1) * MAX_ALLOWED_T3_CLIPPING
 		if (sumClip > maxExpectedClip) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.THUNDER_III.icon,
 				content: <Trans id="blm.thunder.suggestions.excess-thunder.content">
 					Casting <ActionLink {...ACTIONS.THUNDER_III} /> too frequently can cause you to lose DPS by casting fewer <ActionLink {...ACTIONS.FIRE_IV} />. Try not to cast <ActionLink showIcon={false} {...ACTIONS.THUNDER_III} /> unless your <StatusLink {...STATUSES.THUNDER_III} /> DoT or <StatusLink {...STATUSES.THUNDERCLOUD} /> proc are about to wear off.
-					Check the <a href="#" onClick={e => { e.preventDefault(); this.parser.scrollTo(this.constructor.handle) }}><NormalisedMessage message={this.constructor.title}/></a> module for more information.
+					Check the <a href="#" onClick={e => { e.preventDefault(); this.parser.scrollTo(Thunder.handle) }}><NormalisedMessage message={Thunder.title}/></a> module for more information.
 				</Trans>,
-				severity: this.sumClip > 2 * maxExpectedClip ? SEVERITY.MAJOR : SEVERITY.MEDIUM,
+				severity: sumClip > 2 * maxExpectedClip ? SEVERITY.MAJOR : SEVERITY.MEDIUM,
 				why: <Trans id="blm.thunder.suggestions.excess-thunder.why">
 					Total DoT clipping exceeded the maximum clip time of {this.parser.formatDuration(maxExpectedClip)} by {this.parser.formatDuration(sumClip-maxExpectedClip)}.
 				</Trans>,
@@ -151,7 +167,7 @@ export default class Thunder extends Module {
 		}
 	}
 
-	_createTargetStatusTable(target) {
+	private createTargetStatusTable(target: ThunderTargetData) {
 		let totalThunderClip = 0
 		return	<Table collapsing unstackable>
 			<Table.Header>
@@ -163,9 +179,10 @@ export default class Thunder extends Module {
 				</Table.Row>
 			</Table.Header>
 			<Table.Body>
-				{target[STATUSES.THUNDER_III.id].map(
+				{target[STATUSES.THUNDER_III.id].applications.map(
 					(event) => {
-						totalThunderClip += event.clip
+						const thisClip = event.clip || 0
+						totalThunderClip += thisClip
 						const action = getDataBy(ACTIONS, 'id', event.source)
 						let icon = <ActionLink showName={false} {...action} />
 						//if we have a clip, overlay the proc.png over the actionlink image
@@ -173,12 +190,12 @@ export default class Thunder extends Module {
 							icon = <div className={styles.procOverlay}><ActionLink showName={false} {...action} /></div>
 						}
 						const renderClipTime = event.clip != null ? this.parser.formatDuration(event.clip) : '-'
-						let clipSeverity = renderClipTime
+						let clipSeverity: ReactNode = renderClipTime
 						//make it white for sub 6s, yellow for 6-8s and red for >8s
-						if (event.clip > MAX_ALLOWED_T3_CLIPPING && event.clip <= MAX_ALLOWED_T3_CLIPPING_BAD_GCD_LINE_UP) {
+						if (thisClip > MAX_ALLOWED_T3_CLIPPING && thisClip <= MAX_ALLOWED_T3_CLIPPING_BAD_GCD_LINE_UP) {
 							clipSeverity = <span className="text-warning">{clipSeverity}</span>
 						}
-						if (event.clip > MAX_ALLOWED_T3_CLIPPING_BAD_GCD_LINE_UP) {
+						if (thisClip > MAX_ALLOWED_T3_CLIPPING_BAD_GCD_LINE_UP) {
 							clipSeverity = <span className="text-error">{clipSeverity}</span>
 						}
 						return <Table.Row key={event.event.timestamp}>
@@ -193,8 +210,8 @@ export default class Thunder extends Module {
 
 	}
 
-	output() {
-		const numTargets = Object.keys(this._application).length
+	override output() {
+		const numTargets = Object.keys(this.tracker).length
 
 		const disclaimer = 	<Message>
 			<Trans id="blm.thunder.clip-disclaimer">
@@ -207,7 +224,7 @@ export default class Thunder extends Module {
 		if (numTargets === 0) { return null }
 
 		if (numTargets > 1) {
-			const panels = Object.keys(this._application).map(applicationKey => {
+			const panels = Object.keys(this.tracker).map(applicationKey => {
 				const targetId = applicationKey.split('|')[0]
 				const target = this.enemies.getEntity(targetId)
 				return {
@@ -216,7 +233,7 @@ export default class Thunder extends Module {
 						content: <>{target.name}</>,
 					},
 					content: {
-						content: this._createTargetStatusTable(this._application[applicationKey]),
+						content: this.createTargetStatusTable(this.tracker[applicationKey]),
 					},
 				}
 			})
@@ -234,7 +251,7 @@ export default class Thunder extends Module {
 
 		return 	<>
 			{disclaimer}
-			{this._createTargetStatusTable(Object.values(this._application)[0])}
+			{this.createTargetStatusTable(Object.values(this.tracker)[0])}
 		</>
 	}
 }

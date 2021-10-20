@@ -183,7 +183,8 @@ export abstract class CooldownDowntime extends Module {
 		}))
 	}
 
-	protected calculateMaxUsages(group: CooldownGroup): number {
+	/** Public so Sharpcast can access to create it's Statistic display */
+	public calculateMaxUsages(group: CooldownGroup): number {
 		const gRep = group.cooldowns[0]
 		if (gRep.cooldown === undefined) {
 			return 0

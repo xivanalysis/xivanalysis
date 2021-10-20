@@ -8,10 +8,10 @@ import Procs from './Procs'
 import RotationWatchdog from './RotationWatchdog'
 import Sharpcast from './Sharpcast'
 import Thunder from './Thunder'
-import BlmWeaving from './Weaving'
+import Weaving from './Weaving'
 
 export default [
-	BlmWeaving,
+	Weaving,
 	CastTime,
 	Gauge,
 	Interrupts,

@@ -3,11 +3,14 @@ import {StatusLink, ActionLink} from 'components/ui/DbLink'
 import {getDataBy} from 'data'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
-import Module from 'parser/core/Module'
-import {SimpleStatistic} from 'parser/core/modules/Statistics'
-import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import {BuffEvent, CastEvent, DeathEvent} from 'fflogs'
+import Module, {dependency} from 'parser/core/Module'
+import {CooldownDowntime} from 'parser/core/modules/CooldownDowntime'
+import {SimpleStatistic, Statistics} from 'parser/core/modules/Statistics'
+import Suggestions, {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import {StatusItem} from 'parser/core/modules/Timeline'
 import React from 'react'
+import Procs from './Procs'
 
 const SHARPCAST_DURATION_MILLIS = STATUSES.SHARPCAST.duration * 1000
 
@@ -18,55 +21,62 @@ const SHARPCAST_CONSUMER_IDS = [
 	ACTIONS.SCATHE.id,
 ]
 
-export default class Sharpcast extends Module {
-	static handle = 'sharpcast'
-	static dependencies = [
-		'procs',
-		'suggestions',
-		'cooldownDowntime',
-		'statistics',
-	]
+interface SharpcastWindow {
+	start: number,
+	stop?: number
+}
 
-	_buffWindows = {
-		current: null,
+interface SharpcastTracker {
+	current?: SharpcastWindow,
+	history: SharpcastWindow[]
+}
+
+export default class Sharpcast extends Module {
+	static override handle = 'sharpcast'
+
+	@dependency private procs!: Procs
+	@dependency private suggestions!: Suggestions
+	@dependency private cooldownDowntime!: CooldownDowntime
+	@dependency private statistics!: Statistics
+
+	private buffWindows: SharpcastTracker = {
 		history: [],
 	}
 
-	_droppedSharpcasts = 0
-	_sharpedScathes = 0
-	_usedSharpcasts = 0
+	private droppedSharpcasts = 0
+	private sharpedScathes = 0
+	private usedSharpcasts = 0
 
-	constructor(...args) {
-		super(...args)
-		this.addEventHook('removebuff', {by: 'player', abilityId: STATUSES.SHARPCAST.id}, this._onRemoveSharpcast)
-		this.addEventHook('applybuff', {by: 'player', abilityId: STATUSES.SHARPCAST.id}, this._onGainSharpcast)
-		this.addEventHook('cast', {by: 'player', abilityId: SHARPCAST_CONSUMER_IDS}, this._onCast)
-		this.addEventHook('death', {to: 'player'}, this._onDeath)
-		this.addEventHook('complete', this._onComplete)
+	override init() {
+		this.addEventHook('removebuff', {by: 'player', abilityId: STATUSES.SHARPCAST.id}, this.onRemoveSharpcast)
+		this.addEventHook('applybuff', {by: 'player', abilityId: STATUSES.SHARPCAST.id}, this.onGainSharpcast)
+		this.addEventHook('cast', {by: 'player', abilityId: SHARPCAST_CONSUMER_IDS}, this.onCast)
+		this.addEventHook('death', {to: 'player'}, this.onDeath)
+		this.addEventHook('complete', this.onComplete)
 	}
 
-	_onRemoveSharpcast(event) {
-		this._stopAndSave(event.timestamp)
+	private onRemoveSharpcast(event: BuffEvent) {
+		this.stopAndSave(event.timestamp)
 	}
 
-	_onGainSharpcast(event) {
-		this._usedSharpcasts++
-		this._buffWindows.current = {
+	private onGainSharpcast(event: BuffEvent) {
+		this.usedSharpcasts++
+		this.buffWindows.current = {
 			start: event.timestamp,
 		}
 	}
 
 	// Consolidate old onCast functions into one central function
-	_onCast(event) {
+	private onCast(event: CastEvent) {
 		const actionId = event.ability.guid
 
 		const action = getDataBy(ACTIONS, 'id', actionId)
 		if (action && action.onGcd) {
-			this._tryConsumeSharpcast(event)
+			this.tryConsumeSharpcast(event)
 		}
 	}
 
-	_tryConsumeSharpcast(event) {
+	private tryConsumeSharpcast(event: CastEvent) {
 		const actionId = event.ability.guid
 
 		// If this action isn't affected by a proc (or something is wrong), bail out
@@ -75,37 +85,37 @@ export default class Sharpcast extends Module {
 		}
 
 		// If this proc is active, consume it
-		if (this._buffWindows.current) {
+		if (this.buffWindows.current) {
 			// Stop the buff window, and ensure it's not marked as a drop
-			this._stopAndSave(event.timestamp, false)
+			this.stopAndSave(event.timestamp, false)
 
 			if (actionId === ACTIONS.SCATHE.id) {
-				this._sharpedScathes++
+				this.sharpedScathes++
 			}
 		}
 	}
 
-	_onDeath(event) {
-		this._stopAndSave(event.timestamp)
+	private onDeath(event: DeathEvent) {
+		this.stopAndSave(event.timestamp)
 	}
 
-	_stopAndSave(endTime = this.parser.currentTimestamp, countDrops = true) {
-		if (!this._buffWindows.current) {
+	private stopAndSave(endTime = this.parser.currentTimestamp, countDrops = true) {
+		if (!this.buffWindows.current) {
 			return
 		}
 
-		this._buffWindows.current.stop = endTime
-		if (this._buffWindows.current.stop - this._buffWindows.current.start >= SHARPCAST_DURATION_MILLIS && countDrops) {
-			this._droppedSharpcasts++
+		this.buffWindows.current.stop = endTime
+		if (this.buffWindows.current.stop - this.buffWindows.current.start >= SHARPCAST_DURATION_MILLIS && countDrops) {
+			this.droppedSharpcasts++
 		}
-		this._buffWindows.history.push(this._buffWindows.current)
-		this._buffWindows.current = null
+		this.buffWindows.history.push(this.buffWindows.current)
+		this.buffWindows.current = undefined
 	}
 
-	_onComplete() {
+	private onComplete() {
 		// Finalise the buff if it was still active
-		if (this._buffWindows.current) {
-			this._stopAndSave()
+		if (this.buffWindows.current) {
+			this.stopAndSave()
 		}
 
 		const row = this.procs.getRowForStatus(STATUSES.SHARPCAST)
@@ -113,17 +123,17 @@ export default class Sharpcast extends Module {
 		const fightStart = this.parser.fight.start_time
 
 		// Add buff windows to the timeline
-		this._buffWindows.history.forEach(window => {
+		this.buffWindows.history.forEach(window => {
 			row.addItem(new StatusItem({
 				status: STATUSES.SHARPCAST,
 				start: window.start - fightStart,
-				end: window.stop - fightStart,
+				end: window.stop ?? window.start - fightStart,
 			}))
 		})
 
 		// Gather the data for actual / expected
 		const expected = this.cooldownDowntime.calculateMaxUsages({cooldowns: [ACTIONS.SHARPCAST]})
-		const actual = this._usedSharpcasts
+		const actual = this.usedSharpcasts
 		let percent = actual / expected * 100
 		if (process.env.NODE_ENV === 'production') {
 			percent = Math.min(percent, 100)
@@ -140,9 +150,9 @@ export default class Sharpcast extends Module {
 				3: SEVERITY.MEDIUM,
 				5: SEVERITY.MAJOR,
 			},
-			value: this._droppedSharpcasts,
+			value: this.droppedSharpcasts,
 			why: <Trans id="blm.sharpcast.suggestions.dropped-sharpcasts.why">
-				<Plural value={this._droppedSharpcasts} one="# Sharpcast" other="# Sharpcasts"/> expired.
+				<Plural value={this.droppedSharpcasts} one="# Sharpcast" other="# Sharpcasts"/> expired.
 			</Trans>,
 		}))
 
@@ -157,9 +167,9 @@ export default class Sharpcast extends Module {
 				4: SEVERITY.MEDIUM,
 				6: SEVERITY.MAJOR,
 			},
-			value: this._sharpedScathes,
+			value: this.sharpedScathes,
 			why: <Trans id="blm.sharpcast.suggestions.sharpcasted-scathes.why">
-				<Plural value={this._sharpedScathes} one="# Sharpcast was" other="# Sharpcasts were"/> consumed by <ActionLink {...ACTIONS.SCATHE} />.
+				<Plural value={this.sharpedScathes} one="# Sharpcast was" other="# Sharpcasts were"/> consumed by <ActionLink {...ACTIONS.SCATHE} />.
 			</Trans>,
 		}))
 

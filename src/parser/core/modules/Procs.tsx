@@ -521,7 +521,8 @@ export abstract class Procs extends Analyser {
 		groupEvents.events.push(event)
 	}
 
-	private getRowForStatus(status: Status): SimpleRow {
+	/** Gets the row for a given status, creating it if necessary. Public so Sharpcast can access it */
+	public getRowForStatus(status: Status): SimpleRow {
 		let row = this.rows.get(status.id)
 		if (row == null) {
 			row = this.row.addRow(new SimpleRow({label: status.name}))
