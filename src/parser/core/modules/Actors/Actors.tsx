@@ -1,24 +1,19 @@
 import {Trans} from '@lingui/react'
-import {Events} from 'event'
+import {Event, Events} from 'event'
 import {Analyser} from 'parser/core/Analyser'
+import {filter, oneOf} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
 import React from 'react'
 import {Actor as ReportActor} from 'report'
 import {ResourceDatum, ResourceGraphs} from '../ResourceGraphs'
-import {Actor} from './Actor'
+import {Actor, StatusEvent} from './Actor'
 
 export class Actors extends Analyser {
 	static override handle = 'actors'
-	static override displayOrder = -Infinity
 
 	@dependency private resourceGraphs!: ResourceGraphs
 
 	private actors = new Map<ReportActor['id'], Actor>()
-
-	override initialise() {
-		this.addEventHook('actorUpdate', this.onUpdate)
-		this.addEventHook('complete', this.onComplete)
-	}
 
 	/** Data for the actor currently being analysed. */
 	get current() {
@@ -45,9 +40,23 @@ export class Actors extends Analyser {
 		return actor
 	}
 
+	override initialise() {
+		this.addEventHook('actorUpdate', this.onUpdate)
+		this.addEventHook(
+			filter<Event>().type(oneOf(['statusApply', 'statusRemove'])),
+			this.onStatus,
+		)
+		this.addEventHook('complete', this.onComplete)
+	}
+
 	private onUpdate(event: Events['actorUpdate']) {
 		const actor = this.get(event.actor)
-		actor.update(event)
+		actor.addUpdateEntry(event)
+	}
+
+	private onStatus(event: StatusEvent) {
+		const actor = this.get(event.target)
+		actor.addStatusEntry(event)
 	}
 
 	private onComplete() {
@@ -55,7 +64,7 @@ export class Actors extends Analyser {
 		const hp: ResourceDatum[] = []
 		const mp: ResourceDatum[] = []
 
-		for (const event of this.current.history) {
+		for (const event of this.current.updateHistory) {
 			if (event.hp != null) {
 				hp.push({
 					...hp[hp.length - 1],
@@ -72,7 +81,7 @@ export class Actors extends Analyser {
 			}
 		}
 
-		// Colours borroed from cactbot's jobs UI
+		// Colours borrowed from cactbot's jobs UI
 		// TODO: Abstract the base colours if we need to reuse somewhere
 
 		this.resourceGraphs.addResource({
