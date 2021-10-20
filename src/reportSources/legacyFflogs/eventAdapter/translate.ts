@@ -131,34 +131,6 @@ export class TranslateAdapterStep extends AdapterStep {
 		return []
 	}
 
-	override postprocess(adaptedEvents: Event[]) {
-		const deduplicatedEvents: Event[] = []
-		let lastDamageEvent: Events['damage'] | undefined = undefined
-		let lastHealEvent: Events['heal'] | undefined = undefined
-
-		adaptedEvents.forEach(adaptedEvent => {
-			if (adaptedEvent.type === 'damage') {
-				if (lastDamageEvent != null && adaptedEvent.sequence != null && lastDamageEvent.sequence === adaptedEvent.sequence) {
-					lastDamageEvent.targets.push(adaptedEvent.targets[0])
-				} else {
-					lastDamageEvent = adaptedEvent
-					deduplicatedEvents.push(adaptedEvent)
-				}
-			} else if (adaptedEvent.type === 'heal') {
-				if (lastHealEvent != null && adaptedEvent.sequence != null && lastHealEvent.sequence === adaptedEvent.sequence) {
-					lastHealEvent.targets.push(adaptedEvent.targets[0])
-				} else {
-					lastHealEvent = adaptedEvent
-					deduplicatedEvents.push(adaptedEvent)
-				}
-			} else {
-				deduplicatedEvents.push(adaptedEvent)
-			}
-		})
-
-		return deduplicatedEvents
-	}
-
 	private adaptCastEvent(event: CastEvent): Events['prepare' | 'action'] {
 		return {
 			...this.adaptTargetedFields(event),
@@ -236,7 +208,7 @@ export class TranslateAdapterStep extends AdapterStep {
 				...resolveTargetId(event),
 				// fflogs substracts overheal from amount, amend
 				amount: event.amount + overheal,
-				overheal: overheal,
+				overheal,
 				sourceModifier: sourceHitType[event.hitType] ?? SourceModifier.NORMAL,
 			}],
 		}
