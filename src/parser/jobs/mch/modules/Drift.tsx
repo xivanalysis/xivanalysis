@@ -52,7 +52,7 @@ class DriftWindow {
 	}
 }
 
-export default class Drift extends Analyser {
+export class Drift extends Analyser {
 	static override handle = 'drift'
 	static override title = t('mch.drift.title')`GCD Drift`
 
