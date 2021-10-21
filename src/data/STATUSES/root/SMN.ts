@@ -12,7 +12,7 @@ export const SMN = ensureStatuses({
 		id: 808,
 		name: 'Dreadwyrm Trance',
 		icon: 'https://xivapi.com/i/012000/012680.png',
-		duration: 15,
+		duration: 15000,
 	},
 
 	FURTHER_RUIN: {
@@ -25,34 +25,34 @@ export const SMN = ensureStatuses({
 		id: 1213,
 		name: 'Devotion',
 		icon: 'https://xivapi.com/i/012000/012681.png',
-		duration: 15,
+		duration: 15000,
 	},
 
 	BIO_III: {
 		id: 1214,
 		name: 'Bio III',
 		icon: 'https://xivapi.com/i/012000/012682.png',
-		duration: 30,
+		duration: 30000,
 	},
 
 	MIASMA_III: {
 		id: 1215,
 		name: 'Miasma III',
 		icon: 'https://xivapi.com/i/012000/012683.png',
-		duration: 30,
+		duration: 30000,
 	},
 
 	RUINATION: {
 		id: 1291,
 		name: 'Ruination',
 		icon: 'https://xivapi.com/i/012000/012684.png',
-		duration: 30,
+		duration: 30000,
 	},
 
 	EVERLASTING_FLIGHT: {
 		id: 1868,
 		name: 'Everlasting Flight',
 		icon: 'https://xivapi.com/i/012000/012732.png',
-		duration: 21,
+		duration: 21000,
 	},
 })

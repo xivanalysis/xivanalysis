@@ -5,7 +5,7 @@ export const patch530: Layer<StatusRoot> = {
 	patch: '5.3',
 	data: {
 		// GNB 5.3 duration change
-		BRUTAL_SHELL: {duration: 30},
+		BRUTAL_SHELL: {duration: 30000},
 
 		// 5.3 AST Changes - Neutral Sect (Noct) regens
 		DIURNAL_BALANCE: {
@@ -13,6 +13,6 @@ export const patch530: Layer<StatusRoot> = {
 		},
 
 		// WAR 5.3 (max) duration changes, most logic is in the module
-		STORMS_EYE: {duration: 60},
+		STORMS_EYE: {duration: 60000},
 	},
 }
