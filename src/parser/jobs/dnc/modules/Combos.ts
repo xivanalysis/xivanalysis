@@ -4,7 +4,7 @@ import {dependency} from 'parser/core/Module'
 import Combatants from 'parser/core/modules/Combatants'
 import CoreCombos from 'parser/core/modules/Combos'
 import {NormalisedDamageEvent} from 'parser/core/modules/NormalisedEvents'
-import DirtyDancing from './DirtyDancing'
+import {DirtyDancing} from './DirtyDancing'
 
 const GCD_TIMEOUT_MILLIS = 15000
 
