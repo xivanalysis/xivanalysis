@@ -109,7 +109,7 @@ export default class TwinSnakes extends Module {
 		if (this.twinSnake && !this.twinSnake.end) {
 			// We still count TS in the GCD list of the window, just flag if it's early
 			if (action.id === this.data.actions.TWIN_SNAKES.id) {
-				const expected = this.data.statuses.TWIN_SNAKES.duration * 1000 - TWIN_SNAKES_BUFFER
+				const expected = this.data.statuses.TWIN_SNAKES.duration - TWIN_SNAKES_BUFFER
 				if (event.timestamp - this.lastRefresh < expected) { this.earlySnakes++ }
 			}
 

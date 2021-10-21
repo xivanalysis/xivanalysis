@@ -85,7 +85,7 @@ export default class DragonSight extends BuffWindowModule {
 	}
 
 	protected override reduceTrackedActionsEndOfFight(buffWindow: BuffWindowState): number {
-		const windowDurationMillis = this.buffStatus.duration * 1000
+		const windowDurationMillis = this.buffStatus.duration
 		const fightTimeRemaining = this.parser.pull.duration - (buffWindow.start - this.parser.eventTimeOffset)
 
 		// so if a drg is rushing we don't really have expectations of specific actions that get fit in the window, we just want the buff used.
@@ -152,7 +152,7 @@ export default class DragonSight extends BuffWindowModule {
 	// returns true if:
 	// - the buff ended early during the fight
 	private buffTargetDied(buffWindow: BuffWindowState): number {
-		const windowDurationMillis = this.buffStatus.duration * 1000
+		const windowDurationMillis = this.buffStatus.duration
 		const fightTimeRemaining = this.parser.pull.duration - (buffWindow.start - this.parser.eventTimeOffset)
 		const actualWindowDuration = (buffWindow?.end ?? buffWindow.start) - buffWindow.start
 

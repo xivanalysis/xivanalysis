@@ -21,7 +21,7 @@ const WINDOW_STATUSES = [
 
 // how long (or short, really) a window needs to be in order to be considered truncated
 // eslint-disable-next-line @typescript-eslint/no-magic-numbers
-const BL_TRUNCATE_DURATION = (STATUSES.BATTLE_LITANY.duration * 1000) - 2000
+const BL_TRUNCATE_DURATION = STATUSES.BATTLE_LITANY.duration - 2000
 
 class BLWindow {
 	start: number
@@ -169,7 +169,7 @@ export default class BattleLitany extends Module {
 
 		// if there was a death within an expected window duration, we can assume the player died while
 		// lit was active.
-		if (event.timestamp < lastWindow.start + STATUSES.BATTLE_LITANY.duration * 1000) {
+		if (event.timestamp < lastWindow.start + STATUSES.BATTLE_LITANY.duration) {
 			lastWindow.deathTruncated = true
 		}
 	}

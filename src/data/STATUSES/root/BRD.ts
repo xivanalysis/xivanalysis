@@ -6,33 +6,33 @@ export const BRD = ensureStatuses({
 		id: 122,
 		name: 'Straight Shot Ready',
 		icon: 'https://xivapi.com/i/010000/010365.png',
-		duration: 10,
+		duration: 10000,
 	},
 	RAGING_STRIKES: {
 		id: 125,
 		name: 'Raging Strikes',
 		icon: 'https://xivapi.com/i/010000/010354.png',
-		duration: 20,
+		duration: 20000,
 		amount: 0.1,
 	},
 	BARRAGE: {
 		id: 128,
 		name: 'Barrage',
 		icon: 'https://xivapi.com/i/010000/010356.png',
-		duration: 10,
+		duration: 10000,
 		amount: 3,
 	},
 	ARMYS_MUSE: {
 		id: 1932,
 		name: 'Army\'s Muse',
 		icon: 'https://xivapi.com/i/012000/012619.png',
-		duration: 10,
+		duration: 10000,
 	},
 	ARMYS_ETHOS: {
 		id: 1933,
 		name: 'Army\'s Ethos',
 		icon: 'https://xivapi.com/i/012000/012620.png',
-		duration: 30,
+		duration: 30000,
 	},
 
 	// Enemy statuses
@@ -41,26 +41,26 @@ export const BRD = ensureStatuses({
 		name: 'Venomous Bite',
 		icon: 'https://xivapi.com/i/010000/010352.png',
 		// Duration depends on trait
-		duration: 18,
+		duration: 18000,
 	},
 	WINDBITE: {
 		id: 129,
 		name: 'Windbite',
 		icon: 'https://xivapi.com/i/010000/010360.png',
 		// Duration depends on trait
-		duration: 18,
+		duration: 18000,
 	},
 	CAUSTIC_BITE: {
 		id: 1200,
 		name: 'Caustic Bite',
 		icon: 'https://xivapi.com/i/012000/012616.png',
-		duration: 30,
+		duration: 30000,
 	},
 	STORMBITE: {
 		id: 1201,
 		name: 'Stormbite',
 		icon: 'https://xivapi.com/i/012000/012617.png',
-		duration: 30,
+		duration: 30000,
 	},
 
 	// Ally statuses
@@ -68,24 +68,24 @@ export const BRD = ensureStatuses({
 		id: 141,
 		name: 'Battle Voice',
 		icon: 'https://xivapi.com/i/012000/012601.png',
-		duration: 20,
+		duration: 20000,
 	},
 	THE_WARDENS_PAEAN: {
 		id: 866,
 		name: 'The Warden\'s Paean',
 		icon: 'https://xivapi.com/i/012000/012611.png',
-		duration: 30,
+		duration: 30000,
 	},
 	TROUBADOUR: {
 		id: 1934,
 		name: 'Troubadour',
 		icon: 'https://xivapi.com/i/012000/012615.png',
-		duration: 15,
+		duration: 15000,
 	},
 	NATURES_MINNE: {
 		id: 1202,
 		name: 'Nature\'s Minne',
 		icon: 'https://xivapi.com/i/012000/012618.png',
-		duration: 15,
+		duration: 15000,
 	},
 })
