@@ -3,12 +3,10 @@ import {Trans} from '@lingui/react'
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
 import NormalisedMessage from 'components/ui/NormalisedMessage'
 import styles from 'components/ui/Procs/ProcOverlay.module.css'
-import {getDataBy} from 'data'
-import ACTIONS from 'data/ACTIONS'
-import STATUSES from 'data/STATUSES'
 import {BuffEvent, CastEvent} from 'fflogs'
 import Module, {dependency} from 'parser/core/Module'
 import Checklist, {Rule, Requirement} from 'parser/core/modules/Checklist'
+import {Data} from 'parser/core/modules/Data'
 import Enemies from 'parser/core/modules/Enemies'
 import {EntityStatuses} from 'parser/core/modules/EntityStatuses'
 import {Invulnerability} from 'parser/core/modules/Invulnerability'
@@ -17,12 +15,6 @@ import React, {ReactNode} from 'react'
 import {Accordion, Table, Message} from 'semantic-ui-react'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 import Procs from './Procs'
-
-// Can never be too careful :blobsweat:
-const STATUS_DURATION = {
-	[STATUSES.THUNDER_III.id]: STATUSES.THUNDER_III.duration * 1000,
-	[STATUSES.THUNDERCLOUD.id]: STATUSES.THUNDERCLOUD.duration * 1000,
-}
 
 const MAX_ALLOWED_T3_CLIPPING = 6000
 
@@ -56,27 +48,34 @@ export class Thunder extends Module {
 	@dependency private invulnerability!: Invulnerability
 	@dependency private suggestions!: Suggestions
 	@dependency private procs!: Procs
+	@dependency private data!: Data
+
+	// Can never be too careful :blobsweat:
+	private readonly STATUS_DURATION = {
+		[this.data.statuses.THUNDER_III.id]: this.data.statuses.THUNDER_III.duration * 1000,
+		[this.data.statuses.THUNDERCLOUD.id]: this.data.statuses.THUNDERCLOUD.duration * 1000,
+	}
 
     private thunder3Casts = 0
     private lastThunderProc: boolean = false
-    private lastThunderCast: number = STATUSES.THUNDER_III.id
+    private lastThunderCast: number = this.data.statuses.THUNDER_III.id
 	private clip: {[key: number]: number} = {
-		[STATUSES.THUNDER_III.id]: 0,
+		[this.data.statuses.THUNDER_III.id]: 0,
 	}
 	private tracker: ThunderApplicationTracker = {}
 
 	override init() {
 
-		this.addEventHook('cast', {by: 'player', abilityId: ACTIONS.THUNDER_III.id}, this.onDotCast)
+		this.addEventHook('cast', {by: 'player', abilityId: this.data.actions.THUNDER_III.id}, this.onDotCast)
 		this.addEventHook(['applydebuff', 'refreshdebuff'],
-			{by: 'player', abilityId: STATUSES.THUNDER_III.id},
+			{by: 'player', abilityId: this.data.statuses.THUNDER_III.id},
 			this.onDotApply)
 		this.addEventHook('complete', this.onComplete)
 	}
 
 	private createTargetApplicationList() {
 		return {
-			[STATUSES.THUNDER_III.id]: [],
+			[this.data.statuses.THUNDER_III.id]: [],
 		}
 	}
 
@@ -89,7 +88,7 @@ export class Thunder extends Module {
 	}
 
 	private onDotCast(event: CastEvent) {
-		if (event.ability.guid === ACTIONS.THUNDER_III.id) {
+		if (event.ability.guid === this.data.actions.THUNDER_III.id) {
 			this.thunder3Casts++
 		}
 		if (this.procs.checkFflogsEventWasProc(event)) {
@@ -116,7 +115,7 @@ export class Thunder extends Module {
 			return
 		}
 		// Base clip calc
-		let clip = STATUS_DURATION[statusId] - (event.timestamp - trackerInstance[statusId].lastApplication)
+		let clip = this.STATUS_DURATION[statusId] - (event.timestamp - trackerInstance[statusId].lastApplication)
 		clip = Math.max(0, clip)
 		// Capping clip at 0 - less than that is downtime, which is handled by the checklist requirement
 		this.clip[statusId] += clip
@@ -128,7 +127,7 @@ export class Thunder extends Module {
 
 	// Get the uptime percentage for the Thunder status debuff
 	private getThunderUptime() {
-		const statusTime = this.entityStatuses.getStatusUptime(STATUSES.THUNDER_III.id, this.enemies.getEntities())
+		const statusTime = this.entityStatuses.getStatusUptime(this.data.statuses.THUNDER_III.id, this.enemies.getEntities())
 		const uptime = this.parser.currentDuration - this.invulnerability.getDuration({types: ['invulnerable']})
 		return (statusTime / uptime) * 100
 	}
@@ -136,27 +135,27 @@ export class Thunder extends Module {
 	private onComplete() {
 		// Checklist item for keeping Thunder 3 DoT rolling
 		this.checklist.add(new Rule({
-			name: <Trans id="blm.thunder.checklist.dots.name">Keep your <StatusLink {...STATUSES.THUNDER_III} /> DoT up</Trans>,
+			name: <Trans id="blm.thunder.checklist.dots.name">Keep your <StatusLink {...this.data.statuses.THUNDER_III} /> DoT up</Trans>,
 			description: <Trans id="blm.thunder.checklist.dots.description">
-				Your <StatusLink {...STATUSES.THUNDER_III} /> DoT contributes significantly to your overall damage, both on its own, and from additional <StatusLink {...STATUSES.THUNDERCLOUD} /> procs. Try to keep the DoT applied.
+				Your <StatusLink {...this.data.statuses.THUNDER_III} /> DoT contributes significantly to your overall damage, both on its own, and from additional <StatusLink {...this.data.statuses.THUNDERCLOUD} /> procs. Try to keep the DoT applied.
 			</Trans>,
 			target: 95,
 			requirements: [
 				new Requirement({
-					name: <Trans id="blm.thunder.checklist.dots.requirement.name"><StatusLink {...STATUSES.THUNDER_III} /> uptime</Trans>,
+					name: <Trans id="blm.thunder.checklist.dots.requirement.name"><StatusLink {...this.data.statuses.THUNDER_III} /> uptime</Trans>,
 					percent: () => this.getThunderUptime(),
 				}),
 			],
 		}))
 
 		// Suggestions to not spam T3 too much
-		const sumClip = this.clip[STATUSES.THUNDER_III.id]
+		const sumClip = this.clip[this.data.statuses.THUNDER_III.id]
 		const maxExpectedClip = (this.thunder3Casts - 1) * MAX_ALLOWED_T3_CLIPPING
 		if (sumClip > maxExpectedClip) {
 			this.suggestions.add(new Suggestion({
-				icon: ACTIONS.THUNDER_III.icon,
+				icon: this.data.actions.THUNDER_III.icon,
 				content: <Trans id="blm.thunder.suggestions.excess-thunder.content">
-					Casting <ActionLink {...ACTIONS.THUNDER_III} /> too frequently can cause you to lose DPS by casting fewer <ActionLink {...ACTIONS.FIRE_IV} />. Try not to cast <ActionLink showIcon={false} {...ACTIONS.THUNDER_III} /> unless your <StatusLink {...STATUSES.THUNDER_III} /> DoT or <StatusLink {...STATUSES.THUNDERCLOUD} /> proc are about to wear off.
+					Casting <ActionLink {...this.data.actions.THUNDER_III} /> too frequently can cause you to lose DPS by casting fewer <ActionLink {...this.data.actions.FIRE_IV} />. Try not to cast <ActionLink showIcon={false} {...this.data.actions.THUNDER_III} /> unless your <StatusLink {...this.data.statuses.THUNDER_III} /> DoT or <StatusLink {...this.data.statuses.THUNDERCLOUD} /> proc are about to wear off.
 					Check the <a href="#" onClick={e => { e.preventDefault(); this.parser.scrollTo(Thunder.handle) }}><NormalisedMessage message={Thunder.title}/></a> module for more information.
 				</Trans>,
 				severity: sumClip > 2 * maxExpectedClip ? SEVERITY.MAJOR : SEVERITY.MEDIUM,
@@ -172,18 +171,18 @@ export class Thunder extends Module {
 		return	<Table collapsing unstackable>
 			<Table.Header>
 				<Table.Row>
-					<Table.HeaderCell><ActionLink {...ACTIONS.THUNDER_III} /> <Trans id="blm.thunder.applied">Applied</Trans></Table.HeaderCell>
+					<Table.HeaderCell><ActionLink {...this.data.actions.THUNDER_III} /> <Trans id="blm.thunder.applied">Applied</Trans></Table.HeaderCell>
 					<Table.HeaderCell><Trans id="blm.thunder.clip">Clip</Trans></Table.HeaderCell>
 					<Table.HeaderCell><Trans id="blm.thunder.total-clip">Total Clip</Trans></Table.HeaderCell>
 					<Table.HeaderCell><Trans id="blm.thunder.source">Source</Trans></Table.HeaderCell>
 				</Table.Row>
 			</Table.Header>
 			<Table.Body>
-				{target[STATUSES.THUNDER_III.id].applications.map(
+				{target[this.data.statuses.THUNDER_III.id].applications.map(
 					(event) => {
 						const thisClip = event.clip || 0
 						totalThunderClip += thisClip
-						const action = getDataBy(ACTIONS, 'id', event.source)
+						const action = this.data.getAction(event.source)
 						let icon = <ActionLink showName={false} {...action} />
 						//if we have a clip, overlay the proc.png over the actionlink image
 						if (event.proc) {
@@ -215,8 +214,8 @@ export class Thunder extends Module {
 
 		const disclaimer = 	<Message>
 			<Trans id="blm.thunder.clip-disclaimer">
-									Due to the nature of <ActionLink {...ACTIONS.THUNDER_III}/> procs, you will run into situations where you will use your <StatusLink {...STATUSES.THUNDERCLOUD} /> proc before it runs out, while your <StatusLink {...STATUSES.THUNDER_III}/> is still running on your enemy.
-									At most, this could theoretically lead to refreshing <StatusLink showIcon={false} {...STATUSES.THUNDER_III}/> a maximum of ~6 seconds early every single refresh.
+									Due to the nature of <ActionLink {...this.data.actions.THUNDER_III}/> procs, you will run into situations where you will use your <StatusLink {...this.data.statuses.THUNDERCLOUD} /> proc before it runs out, while your <StatusLink {...this.data.statuses.THUNDER_III}/> is still running on your enemy.
+									At most, this could theoretically lead to refreshing <StatusLink showIcon={false} {...this.data.statuses.THUNDER_III}/> a maximum of ~6 seconds early every single refresh.
 									Since this amount of clipping is still considered optimal, we quantify and call this the maximum clip time.
 			</Trans>
 		</Message>
