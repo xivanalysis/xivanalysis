@@ -2,10 +2,12 @@ import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
 import {ActionLink} from 'components/ui/DbLink'
 import {Action} from 'data/ACTIONS'
-import {CastEvent} from 'fflogs'
-import Module, {dependency} from 'parser/core/Module'
+import {Event, Events} from 'event'
+import {dependency} from 'parser/core/Module'
 import {Requirement, Rule} from 'parser/core/modules/Checklist'
 import React from 'react'
+import {Analyser} from '../Analyser'
+import {filter, oneOf} from '../filter'
 import Checklist from './Checklist'
 import {Data} from './Data'
 import Downtime from './Downtime'
@@ -65,22 +67,22 @@ interface CooldownGroup {
 const DEFAULT_CHECKLIST_TARGET = 95
 const DEFAULT_ALLOWED_AVERAGE_DOWNTIME = 1250
 
-export abstract class CooldownDowntime extends Module {
+export abstract class CooldownDowntime extends Analyser {
 	static override handle = 'cooldownDowntime'
 	static override title = t('core.cooldownDowntime.title')`Cooldown Downtime`
-	static override debug = false
+	static override debug = true
 
-	@dependency private data!: Data
+	@dependency protected data!: Data
 	@dependency private downtime!: Downtime
 	@dependency private checklist!: Checklist
 
 	/**
-	 * Implementing modules MUST provide a list of tracked cooldowns
+	 * Jobs MUST provide a list of tracked cooldowns
 	 */
 	protected abstract trackedCds: CooldownGroup[]
 
-	private usages = new Map<CooldownGroup, CastEvent[]>()
-	private resets = new Map<CooldownGroup, CastEvent[]>()
+	private usages = new Map<CooldownGroup, Array<Events['action']>>()
+	private resets = new Map<CooldownGroup, Array<Events['action']>>()
 
 	protected checklistName = <Trans id="core.cooldownDowntime.use-ogcd-cds">Use your cooldowns</Trans>
 	protected checklistDescription = <Trans id="core.cooldownDowntime.ogcd-cd-metric">Always make sure to use your actions
@@ -91,8 +93,7 @@ export abstract class CooldownDowntime extends Module {
 	protected defaultFirstUseOffset = 0
 
 	/**
-	 * Implementing modules MAY filter out some usages as 'fake' usages
-	 * of a cooldown.
+	 * Jobs MAY filter out some usages as 'fake' usages of a cooldown.
 	 *
 	 * The primary example of this would be NIN mudras, where any mudra
 	 * may start a usage, but further mudras while the Mudra buff or any
@@ -103,11 +104,11 @@ export abstract class CooldownDowntime extends Module {
 	 * @returns True if the event should be counted or false if the event
 	 * should not be counted as a usage of the cooldown.
 	 */
-	protected countUsage(_event: CastEvent): boolean {
+	protected countUsage(_event: Events['action']): boolean {
 		return true
 	}
 
-	protected override init() {
+	override initialise() {
 		const trackedIds = this.trackedCds.map(group => group.cooldowns)
 			.reduce((acc, cur) => acc.concat(cur))
 			.map(action => action.id)
@@ -117,8 +118,20 @@ export abstract class CooldownDowntime extends Module {
 			.reduce((acc, cur) => acc.concat(cur))
 			.map(action => action.id)
 
-		this.addEventHook('cast', {by: 'player', abilityId: trackedIds}, this.onTrackedCast)
-		this.addEventHook('cast', {by: 'player', abilityId: resetIds}, this.onResetCast)
+		this.addEventHook(
+			filter<Event>()
+				.source(this.parser.actor.id)
+				.action(oneOf(trackedIds))
+				.type('action'),
+			this.onTrackedCast
+		)
+		this.addEventHook(
+			filter<Event>()
+				.source(this.parser.actor.id)
+				.action(oneOf(resetIds))
+				.type('action'),
+			this.onResetCast
+		)
 		this.addEventHook('complete', this.onComplete)
 
 		this.trackedCds.forEach(group => {
@@ -127,12 +140,12 @@ export abstract class CooldownDowntime extends Module {
 		})
 	}
 
-	private onTrackedCast(event: CastEvent) {
+	protected onTrackedCast(event: Events['action']) {
 		if (!this.countUsage(event)) {
 			return
 		}
 
-		const group = this.getTrackedGroup(event.ability.guid)
+		const group = this.getTrackedGroup(event.action)
 		if (group === undefined) {
 			return
 		}
@@ -144,9 +157,9 @@ export abstract class CooldownDowntime extends Module {
 		return this.trackedCds.find(group => group.cooldowns.find(action => action.id === abilityId) !== undefined)
 	}
 
-	private onResetCast(event: CastEvent) {
+	private onResetCast(event: Events['action']) {
 		this.trackedCds.forEach(group => {
-			if (group.resetBy?.actions.find(action => action.id === event.ability.guid)) {
+			if (group.resetBy?.actions.find(action => action.id === event.action)) {
 				(this.resets.get(group) || []).push(event)
 			}
 		})
@@ -198,10 +211,10 @@ export abstract class CooldownDowntime extends Module {
 		const gResets = this.resets.get(group) ?? []
 		const gUsages = (this.usages.get(group) ?? [])
 		const dtUsages = gUsages
-			.filter(u => this.downtime.isDowntime(this.parser.fflogsToEpoch(u.timestamp)))
+			.filter(u => this.downtime.isDowntime(u.timestamp))
 			.map(u => {
-				const window = this.downtime.getDowntimeWindows(this.parser.fflogsToEpoch(u.timestamp))[0]
-				return {start: this.parser.epochToFflogs(window.start), end: this.parser.epochToFflogs(window.end)}
+				const window = this.downtime.getDowntimeWindows(u.timestamp)[0]
+				return {start: window.start, end: window.end}
 			})
 		const resetTime = (group.resetBy && group.resetBy.refundAmount) ? group.resetBy.refundAmount : 0
 
@@ -210,9 +223,9 @@ export abstract class CooldownDowntime extends Module {
 		this.debug(`Checking downtime for group ${gRep.name} with default first use ${group.firstUseOffset} and step ${step} and ${maxCharges} charges`)
 		let charges = maxCharges
 		let count = 0
-		const expectedFirstUseTime = this.parser.eventTimeOffset + (group.firstUseOffset ?? this.defaultFirstUseOffset)
+		const expectedFirstUseTime = this.parser.pull.timestamp + (group.firstUseOffset ?? this.defaultFirstUseOffset)
 		const actualFirstUseTime = gUsages[0]
-		const pullEndTimestamp = this.parser.pull.duration + this.parser.eventTimeOffset
+		const pullEndTimestamp = this.parser.pull.timestamp + this.parser.pull.duration
 
 		let currentTime = expectedFirstUseTime
 		if ((group.firstUseOffset ?? 0) < 0 && maxCharges === 1) {
@@ -221,26 +234,26 @@ export abstract class CooldownDowntime extends Module {
 			// exactly they were used pre-fight
 			const actualSecondUseTime = gUsages[1]
 			if (actualSecondUseTime && (actualSecondUseTime.timestamp - actualFirstUseTime.timestamp) < gRep.cooldown) {
-				this.debug(`Assumed first use of skill ${gRep.name} at ${this.parser.formatTimestamp(actualSecondUseTime.timestamp - gRep.cooldown)}`)
-				this.debug(`Actual second use of skill ${gRep.name} at ${this.parser.formatTimestamp(actualSecondUseTime.timestamp)}`)
+				this.debug(`Assumed first use of skill ${gRep.name} at ${this.parser.formatEpochTimestamp(actualSecondUseTime.timestamp - gRep.cooldown)}`)
+				this.debug(`Actual second use of skill ${gRep.name} at ${this.parser.formatEpochTimestamp(actualSecondUseTime.timestamp)}`)
 				count += 1 // add in the pre-fight usage
 				currentTime = actualSecondUseTime.timestamp
 			} else if (actualFirstUseTime) {
 				// If the actual second usage isn't early enough to suggest an actual pre-fight usage, follow normal logic.
 				// Start at the earlier of the actual first use or the expected first use
-				this.debug(`Actual first use of skill ${gRep.name} at ${this.parser.formatTimestamp(actualFirstUseTime.timestamp)}`)
+				this.debug(`Actual first use of skill ${gRep.name} at ${this.parser.formatEpochTimestamp(actualFirstUseTime.timestamp)}`)
 				currentTime = Math.min(actualFirstUseTime.timestamp, expectedFirstUseTime)
 			}
 		} else if (actualFirstUseTime) {
 			// Start at the earlier of the actual first use or the expected first use
-			this.debug(`Actual first use of skill ${gRep.name} at ${this.parser.formatTimestamp(actualFirstUseTime.timestamp)}`)
+			this.debug(`Actual first use of skill ${gRep.name} at ${this.parser.formatEpochTimestamp(actualFirstUseTime.timestamp)}`)
 			currentTime = Math.min(actualFirstUseTime.timestamp, expectedFirstUseTime)
 		}
 
 		while (currentTime < pullEndTimestamp) {
 			// spend accumulated charges
 			count += charges
-			this.debug(`Expected ${charges} usages at ${this.parser.formatTimestamp(currentTime)}. Count: ${count}`)
+			this.debug(`Expected ${charges} usages at ${this.parser.formatEpochTimestamp(currentTime)}. Count: ${count}`)
 			charges = 0
 
 			// build a new charge at the next charge time
@@ -263,22 +276,22 @@ export abstract class CooldownDowntime extends Module {
 				} else {
 					currentTime -= resetTime
 				}
-				this.debug(`Reset (${rs.ability.name}) used at ${this.parser.formatTimestamp(rs.timestamp)}. Changing next charge time from ${this.parser.formatTimestamp(previousTime)} to ${this.parser.formatTimestamp(currentTime)}`)
+				this.debug(`Reset (${this.data.getAction(rs.action)?.name}) used at ${this.parser.formatEpochTimestamp(rs.timestamp)}. Changing next charge time from ${this.parser.formatEpochTimestamp(previousTime)} to ${this.parser.formatEpochTimestamp(currentTime)}`)
 				gResets.shift()
 			}
 
 			while (
 				currentTime < pullEndTimestamp
 				&& charges < maxCharges
-				&& this.downtime.isDowntime(this.parser.fflogsToEpoch(currentTime))
+				&& this.downtime.isDowntime(currentTime)
 			) {
-				this.debug(`Saving charge during downtime at ${this.parser.formatTimestamp(currentTime)}. ${charges} charges stored`)
+				this.debug(`Saving charge during downtime at ${this.parser.formatEpochTimestamp(currentTime)}. ${charges} charges stored`)
 
-				const epochWindow = this.downtime.getDowntimeWindows(this.parser.fflogsToEpoch(currentTime))[0]
-				const window = {start: this.parser.epochToFflogs(epochWindow.start), end: this.parser.epochToFflogs(epochWindow.end)}
+				const epochWindow = this.downtime.getDowntimeWindows(currentTime)[0]
+				const window = {start: epochWindow.start, end: epochWindow.end}
 				if (window.end < currentTime + step) {
 					count += charges
-					this.debug(`Delayed charge spend at ${this.parser.formatTimestamp(window.end)}. ${charges} charges spent. No charge time lost. Count: ${count}`)
+					this.debug(`Delayed charge spend at ${this.parser.formatEpochTimestamp(window.end)}. ${charges} charges spent. No charge time lost. Count: ${count}`)
 					charges = 0
 				}
 
@@ -289,11 +302,11 @@ export abstract class CooldownDowntime extends Module {
 			// full charges were built up during a downtime.  Move to the end of the downtime to spend charges.
 			if (
 				currentTime < pullEndTimestamp
-				&& this.downtime.isDowntime(this.parser.fflogsToEpoch(currentTime))
+				&& this.downtime.isDowntime(currentTime)
 			) {
-				const epochWindow = this.downtime.getDowntimeWindows(this.parser.fflogsToEpoch(currentTime))[0]
-				const window = {start: this.parser.epochToFflogs(epochWindow.start), end: this.parser.epochToFflogs(epochWindow.end)}
-				this.debug(`Downtime detected at ${this.parser.formatTimestamp(currentTime)} in window from ${this.parser.formatTimestamp(window.start)} to ${this.parser.formatTimestamp(window.end)}`)
+				const epochWindow = this.downtime.getDowntimeWindows(currentTime)[0]
+				const window = {start: epochWindow.start, end: epochWindow.end}
+				this.debug(`Downtime detected at ${this.parser.formatEpochTimestamp(currentTime)} in window from ${this.parser.formatEpochTimestamp(window.start)} to ${this.parser.formatEpochTimestamp(window.end)}`)
 
 				const matchingDtUsage = dtUsages.find(uw => uw.end === window.end)
 				if (matchingDtUsage === undefined) {
@@ -303,7 +316,7 @@ export abstract class CooldownDowntime extends Module {
 					// if the skill comes back off cooldown during the same downtime.
 					dtUsages.splice(dtUsages.indexOf(matchingDtUsage), 1)
 
-					this.debug(`Usage detected during downtime at ${this.parser.formatTimestamp(matchingDtUsage.start)}.`)
+					this.debug(`Usage detected during downtime at ${this.parser.formatEpochTimestamp(matchingDtUsage.start)}.`)
 					currentTime = matchingDtUsage.start
 				}
 

@@ -1,5 +1,4 @@
 import {Trans} from '@lingui/react'
-import ACTIONS from 'data/ACTIONS'
 import {CooldownDowntime} from 'parser/core/modules/CooldownDowntime'
 import React from 'react'
 
@@ -13,12 +12,12 @@ export default class OGCDDowntime extends CooldownDowntime {
 	override defaultAllowedAverageDowntime = ALLOWEDDOWNTIMEALL
 	override defaultFirstUseOffset = FIRSTUSEOFFSETALL
 	trackedCds = [
-		{cooldowns: [ACTIONS.LEY_LINES]},
+		{cooldowns: [this.data.actions.LEY_LINES]},
 		{
-			cooldowns: [ACTIONS.MANAFONT],
+			cooldowns: [this.data.actions.MANAFONT],
 			firstUseOffset: 25000,
 		},
-		{cooldowns: [ACTIONS.TRIPLECAST]},
+		{cooldowns: [this.data.actions.TRIPLECAST]},
 	]
 
 	override checklistTarget = TARGETPERCENT

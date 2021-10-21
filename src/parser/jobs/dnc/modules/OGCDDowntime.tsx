@@ -1,4 +1,3 @@
-import ACTIONS from 'data/ACTIONS'
 import {CooldownDowntime} from 'parser/core/modules/CooldownDowntime'
 
 /**
@@ -11,15 +10,15 @@ const ALLOWED_DANCE_DOWNTIME = 250
 export default class OGCDDowntime extends CooldownDowntime {
 	trackedCds = [
 		{
-			cooldowns: [ACTIONS.TECHNICAL_STEP],
+			cooldowns: [this.data.actions.TECHNICAL_STEP],
 			allowedAverageDowntime: ALLOWED_DANCE_DOWNTIME,
 		},
 		{
-			cooldowns: [ACTIONS.STANDARD_STEP],
+			cooldowns: [this.data.actions.STANDARD_STEP],
 			firstUseOffset: -15000,
 			allowedAverageDowntime: ALLOWED_DANCE_DOWNTIME,
 		},
-		{cooldowns: [ACTIONS.DEVILMENT]},
-		{cooldowns: [ACTIONS.FLOURISH]},
+		{cooldowns: [this.data.actions.DEVILMENT]},
+		{cooldowns: [this.data.actions.FLOURISH]},
 	]
 }

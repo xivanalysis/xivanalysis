@@ -1,4 +1,3 @@
-import ACTIONS from 'data/ACTIONS'
 import {CooldownDowntime} from 'parser/core/modules/CooldownDowntime'
 
 // GCD timing: 2.5 seconds for first two GCDs (to get Shifu up), 2.18 seconds for all others.
@@ -16,27 +15,27 @@ export default class OGCDDowntime extends CooldownDowntime {
 	override defaultAllowedAverageDowntime = DEFAULT_ALLOWED_DOWNTIME
 	override trackedCds = [
 		{
-			cooldowns: [ACTIONS.MEIKYO_SHISUI],
+			cooldowns: [this.data.actions.MEIKYO_SHISUI],
 			firstUseOffset: FIRSTUSEOFFSET_MEIKYO,
 			allowedAverageDowntime: MEIKYO_ALLOWED_DOWNTIME,
 		},
 		{
 			cooldowns: [
-				ACTIONS.KAESHI_SETSUGEKKA,
-				ACTIONS.KAESHI_GOKEN,
-				ACTIONS.KAESHI_HIGANBANA,
+				this.data.actions.KAESHI_SETSUGEKKA,
+				this.data.actions.KAESHI_GOKEN,
+				this.data.actions.KAESHI_HIGANBANA,
 			],
 			firstUseOffset: FIRSTUSEOFFSET_TSUBAME,
 		},
 		{
 			cooldowns: [
-				ACTIONS.HISSATSU_GUREN,
-				ACTIONS.HISSATSU_SENEI,
+				this.data.actions.HISSATSU_GUREN,
+				this.data.actions.HISSATSU_SENEI,
 			],
 			firstUseOffset: FIRSTUSEOFFSET_50KENKI,
 		},
 		{
-			cooldowns: [ACTIONS.IKISHOTEN],
+			cooldowns: [this.data.actions.IKISHOTEN],
 		},
 
 	]

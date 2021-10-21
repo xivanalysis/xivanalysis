@@ -1,4 +1,3 @@
-import ACTIONS from 'data/ACTIONS'
 import {CooldownDowntime} from 'parser/core/modules/CooldownDowntime'
 
 // Allowed downtime set to 4s to account for PLD's natural rotation drift.
@@ -17,19 +16,19 @@ export default class OGCDDowntime extends CooldownDowntime {
 	static override debug = false
 	trackedCds = [
 		{
-			cooldowns: [ACTIONS.FIGHT_OR_FLIGHT],
+			cooldowns: [this.data.actions.FIGHT_OR_FLIGHT],
 			allowedAverageDowntime: ALLOWED_DOWNTIME_FOF,
 			firstUseOffset: FIRST_USE_OFFSET_FOF,
 		},
 		{
-			cooldowns: [ACTIONS.REQUIESCAT],
+			cooldowns: [this.data.actions.REQUIESCAT],
 			allowedAverageDowntime: ALLOWED_DOWNTIME_REQ,
 			firstUseOffset: FIRST_USE_OFFSET_REQ,
 		},
-		{cooldowns: [ACTIONS.SPIRITS_WITHIN]},
-		{cooldowns: [ACTIONS.CIRCLE_OF_SCORN]},
+		{cooldowns: [this.data.actions.SPIRITS_WITHIN]},
+		{cooldowns: [this.data.actions.CIRCLE_OF_SCORN]},
 		{
-			cooldowns: [ACTIONS.INTERVENE],
+			cooldowns: [this.data.actions.INTERVENE],
 			firstUseOffset: 15000,
 		},
 	]
