@@ -198,12 +198,6 @@ export class Actor extends ActorResources implements ReportActor {
 			statusEvents.set(event.source, sourceEvents)
 		}
 
-		// If the last event from this source is the same type, we can noop (apply -> apply, etc).
-		const lastSourceEvent = _.last(sourceEvents)
-		if (lastSourceEvent != null && lastSourceEvent.type === event.type) {
-			return
-		}
-
 		sourceEvents.push(event)
 	}
 }
