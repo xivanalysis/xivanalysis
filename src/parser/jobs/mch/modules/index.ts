@@ -3,7 +3,7 @@ import Combos from './Combos'
 import Drift from './Drift'
 import Gauge from './Gauge'
 import GeneralCDDowntime from './GeneralCDDowntime'
-import Heat from './Heat'
+import {Hypercharge} from './Hypercharge'
 import MultiHitSkills from './MultiHitSkills'
 import QueenTimeline from './QueenTimeline'
 import Reassemble from './Reassemble'
@@ -17,7 +17,7 @@ export default [
 	Drift,
 	Gauge,
 	GeneralCDDowntime,
-	Heat,
+	Hypercharge,
 	MultiHitSkills,
 	QueenTimeline,
 	Reassemble,
