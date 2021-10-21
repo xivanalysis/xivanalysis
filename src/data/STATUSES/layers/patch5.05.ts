@@ -5,6 +5,6 @@ export const patch505: Layer<StatusRoot> = {
 	patch: '5.05',
 	data: {
 		// AST 5.05 duration change
-		HOROSCOPE_HELIOS: {duration: 30},
+		HOROSCOPE_HELIOS: {duration: 30000},
 	},
 }

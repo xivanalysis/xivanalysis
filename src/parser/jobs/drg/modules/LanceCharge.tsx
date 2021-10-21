@@ -59,11 +59,10 @@ export default class LanceCharge extends BuffWindowModule {
 	}
 
 	protected override reduceTrackedActionsEndOfFight(buffWindow: BuffWindowState): number {
-		const windowDurationMillis = this.buffStatus.duration * 1000
 		const fightTimeRemaining = this.parser.pull.duration - (buffWindow.start - this.parser.eventTimeOffset)
 
 		// so if a drg is rushing we don't really have expectations of specific actions that get fit in the window, we just want the buff used.
-		if (windowDurationMillis >= fightTimeRemaining) {
+		if (this.buffStatus.duration >= fightTimeRemaining) {
 			return 1
 		}
 

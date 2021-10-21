@@ -30,7 +30,7 @@ export const SHARED = ensureStatuses({
 		id: 418,
 		name: 'Transcendent',
 		icon: 'https://xivapi.com/i/015000/015273.png',
-		duration: 5,
+		duration: 5000,
 	},
 
 	MEDICATED: {

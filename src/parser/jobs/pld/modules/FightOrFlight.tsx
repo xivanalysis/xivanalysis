@@ -284,7 +284,7 @@ export default class FightOrFlight extends Module {
 
 				return {
 					start: ts - this.parser.fight.start_time,
-					end: ts - this.parser.fight.start_time + (STATUSES.FIGHT_OR_FLIGHT.duration * 1000),
+					end: ts - this.parser.fight.start_time + STATUSES.FIGHT_OR_FLIGHT.duration,
 					targetsData: {
 						gcds: {
 							actual: this.countGCDs(rotation),

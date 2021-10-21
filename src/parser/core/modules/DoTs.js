@@ -29,7 +29,7 @@ export default class DoTs extends Module {
 				console.warn(`statusId ${statusId} is missing a duration property`)
 				this._statusDuration[statusId] = DEFAULT_DURATION_MILLIS
 			} else {
-				this._statusDuration[statusId] = status.duration * 1000
+				this._statusDuration[statusId] = status.duration
 			}
 		})
 		this.addEventHook(['applydebuff', 'refreshdebuff'], {by: 'player', abilityId: this.constructor.statusesToTrack}, this._onDotApply)

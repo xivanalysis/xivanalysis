@@ -71,7 +71,7 @@ export default class Wildfire extends Module {
 			))
 			this._wildfireWindows.history.push({
 				spoofed: true,
-				start: event.timestamp - (STATUSES.WILDFIRE.duration * 1000),
+				start: event.timestamp - STATUSES.WILDFIRE.duration,
 				damage: event.amount,
 			})
 		}
