@@ -10,7 +10,6 @@ import {dependency} from 'parser/core/Injectable'
 import {Data} from 'parser/core/modules/Data'
 import React, {Fragment} from 'react'
 import {Message, Accordion} from 'semantic-ui-react'
-import {isDefined} from 'utilities'
 
 const HYPERCHARGE_DURATION_MS = 8000
 const HYPERCHARGE_GCD_TARGET = 5
@@ -49,11 +48,11 @@ export class Hypercharge extends Analyser {
 
 	private endCurrentWindow() {
 		// Stop eating events, hypercharge isn't active
-		if (isDefined(this.rotationHook)) {
+		if (this.rotationHook != null) {
 			this.removeEventHook(this.rotationHook)
 		}
 
-		if (!isDefined(this.current)) { return }
+		if (this.current == null) { return }
 
 		this.windows.push(this.current)
 	}
@@ -76,7 +75,7 @@ export class Hypercharge extends Analyser {
 	}
 
 	private onCast(event: Events['action']) {
-		if (!isDefined(this.current)) { return }
+		if (this.current == null) { return }
 
 		if (event.timestamp > this.current.start + HYPERCHARGE_DURATION_MS) {
 			this.endCurrentWindow()
