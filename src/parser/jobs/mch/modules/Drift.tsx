@@ -1,7 +1,6 @@
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
 import {ActionLink} from 'components/ui/DbLink'
-import {getDataBy} from 'data'
 import ACTIONS from 'data/ACTIONS'
 import {ActionRoot} from 'data/ACTIONS/root'
 import {Event, Events} from 'event'
@@ -40,8 +39,8 @@ class DriftWindow {
 		this.start = start
 	}
 
-	public addGcd(event: Events['action']) {
-		const action = getDataBy(ACTIONS, 'id', event.action)
+	public addGcd(event: Events['action'], data: Data) {
+		const action = data.getAction(event.action)
 		if (action && action.onGcd) {
 			this.gcdRotation.push(event)
 		}
@@ -106,7 +105,7 @@ export class Drift extends Analyser {
 		// Tolerate a small amount of drift
 		if (window.drift > DRIFT_BUFFER) {
 			this.driftedWindows.push(window)
-			window.addGcd(event)
+			window.addGcd(event, this.data)
 		}
 
 		this.currentWindows[id] = new DriftWindow(id, event.timestamp)
@@ -114,7 +113,7 @@ export class Drift extends Analyser {
 
 	private onCast(event: Events['action']) {
 		for (const window of Object.values(this.currentWindows)) {
-			window.addGcd(event)
+			window.addGcd(event, this.data)
 		}
 	}
 
