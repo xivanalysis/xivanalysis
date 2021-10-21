@@ -58,7 +58,7 @@ export default class GeneralCDDowntime extends CooldownDowntime {
 		this.devotionHook = this.addEventHook(
 			filter<Event>()
 				.source(oneOf(pets))
-				.action(oneOf([this.data.actions.DEVOTION.id]))
+				.action(this.data.actions.DEVOTION.id)
 				.type('action'),
 			this.onAetherpactCast
 		)
@@ -71,13 +71,14 @@ export default class GeneralCDDowntime extends CooldownDowntime {
 		// by PrecastStatus, since the status is applied post-pull.
 
 		if (event.timestamp < this.parser.pull.timestamp) {
-			const modified = event
+			const modified = {...event}
 			modified.action = this.data.actions.SMN_AETHERPACT.id
 			this.onTrackedCast(modified)
 		}
 
-		if (this.devotionHook) {
+		if (this.devotionHook != null) {
 			this.removeEventHook(this.devotionHook)
+			this.devotionHook = undefined
 		}
 	}
 }
