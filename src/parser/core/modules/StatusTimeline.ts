@@ -98,7 +98,7 @@ export class StatusTimeline extends Analyser {
 				row.addItem(new StatusItem({
 					status,
 					start: usage.start,
-					end: usage.end ?? usage.start + (status.duration ?? 0) * 1000,
+					end: usage.end ?? usage.start + (status.duration ?? 0),
 				}))
 			}
 		}
