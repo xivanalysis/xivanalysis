@@ -2,6 +2,7 @@ import {t} from '@lingui/macro'
 import {Plural, Trans} from '@lingui/react'
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
 import {RotationTable} from 'components/ui/RotationTable'
+import {StatusKey} from 'data/STATUSES'
 import {Cause, Event, Events} from 'event'
 import _ from 'lodash'
 import {Analyser} from 'parser/core/Analyser'
@@ -222,21 +223,12 @@ export class DirtyDancing extends Analyser {
 		dance.resolved = true
 	}
 
-	private getStandardFinishUptimePercent() {
+	private getStatusUptimePercent(statusKey: StatusKey): number {
 		// Exclude downtime from both the status time and expected uptime
-		const statusTime = this.statuses.getUptime('STANDARD_FINISH', this.actors.friends) - this.downtime.getDowntime()
+		const statusTime = this.statuses.getUptime(statusKey, this.actors.friends) - this.downtime.getDowntime()
 		const uptime = this.parser.currentDuration - this.downtime.getDowntime()
 
 		return (statusTime / uptime) * 100
-	}
-
-	private getClosedPositionUptimePercent() {
-		// Exclude downtime from both the status time and expected uptime
-		const statusTime = this.statuses.getUptime('CLOSED_POSITION', this.actors.friends) - this.downtime.getDowntime()
-		const uptime = this.parser.currentDuration - this.downtime.getDowntime()
-
-		// Don't show negative numbers, which is possible when factoring in downtime
-		return Math.max((statusTime / uptime) * 100, 0)
 	}
 
 	private onComplete() {
@@ -287,6 +279,7 @@ export class DirtyDancing extends Analyser {
 			</Trans>,
 		}))
 
+		const standardFinishUptimePct = this.getStatusUptimePercent('STANDARD_FINISH')
 		this.checklist.add(new Rule({
 			name: <Trans id="dnc.dirty-dancing.checklist.standard-finish-buff.name">Keep your <StatusLink {...this.data.statuses.STANDARD_FINISH} /> buff up</Trans>,
 			description: <Trans id="dnc.dirty-dancing.checklist.standard-finish-buff.description">
@@ -296,11 +289,12 @@ export class DirtyDancing extends Analyser {
 			requirements: [
 				new Requirement({
 					name: <Fragment><StatusLink {...this.data.statuses.STANDARD_FINISH} /> uptime</Fragment>,
-					percent: () => this.getStandardFinishUptimePercent(),
+					percent: standardFinishUptimePct,
 				}),
 			],
 		}))
 
+		const closedPositionUptimePct = this.getStatusUptimePercent('CLOSED_POSITION')
 		this.checklist.add(new Rule({
 			name: <Trans id="dnc.dirty-dancing.checklist.closed-position-buff.name">Choose a <StatusLink {...this.data.statuses.DANCE_PARTNER} /></Trans>,
 			description: <Trans id="dnc.dirty-dancing.checklist.closed-position-buff.description">
@@ -310,7 +304,7 @@ export class DirtyDancing extends Analyser {
 			requirements: [
 				new Requirement({
 					name: <Fragment><StatusLink {...this.data.statuses.CLOSED_POSITION} /> uptime (excluding downtime)</Fragment>,
-					percent: () => this.getClosedPositionUptimePercent(),
+					percent: closedPositionUptimePct,
 				}),
 			],
 		}))
