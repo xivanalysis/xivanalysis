@@ -133,8 +133,7 @@ export default class ArcanaTracking extends Module {
 				// sleeve was already fabbed
 				prepullSleeveFabbed = true
 			}
-			if (event.timestamp - startTime >= (this.data.statuses.SLEEVE_DRAW.duration * 1000)
-			) {
+			if (event.timestamp - startTime >= this.data.statuses.SLEEVE_DRAW.duration) {
 				// End loop if: 1. Max duration of sleeve draw status passed
 				break
 			} else if (event.type === 'cast'
@@ -211,7 +210,7 @@ export default class ArcanaTracking extends Module {
 	 * If they had overwritten this buff, it will falsly pull back the timestamp of their prepull cast, but since we are guessing, it may as well be the same.
 	 */
 	private offPrepullArcana(event: BuffEvent) {
-		if (event.timestamp >= this.parser.fight.start_time + (this.data.statuses.THE_BALANCE.duration * 1000)) {
+		if (event.timestamp >= this.parser.fight.start_time + this.data.statuses.THE_BALANCE.duration) {
 			return
 		}
 
@@ -231,7 +230,7 @@ export default class ArcanaTracking extends Module {
 					type: 1,
 					abilityIcon: _.replace(_.replace(arcanaAction.icon, 'https://xivapi.com/i/', ''), '/', '-'),
 				},
-				timestamp: event.timestamp - (this.data.statuses.THE_BALANCE.duration * 1000),
+				timestamp: event.timestamp - this.data.statuses.THE_BALANCE.duration,
 				type: 'cast',
 				sourceIsFriendly: true,
 				targetIsFriendly: true,

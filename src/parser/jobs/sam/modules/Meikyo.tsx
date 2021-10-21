@@ -66,10 +66,9 @@ export default class MeikyoShisui extends BuffWindowModule {
 		let reduceGCDsBy = 0
 
 		// Check to see if this window is rushing due to end of fight - reduce expected GCDs accordingly
-		const windowDurationMillis = this.buffStatus.duration * 1000
 		const fightTimeRemaining = this.parser.pull.duration - (buffWindow.start - this.parser.eventTimeOffset)
 
-		if (windowDurationMillis >= fightTimeRemaining) {
+		if (this.buffStatus.duration >= fightTimeRemaining) {
 			// This is using floor instead of ceiling to grant some forgiveness to first weave slot casts at the cost of 2nd weaves might be too forgiven
 			const possibleGCDs = Math.floor(fightTimeRemaining / SAM_BASE_GCD_SPEED_BUFFED)
 
