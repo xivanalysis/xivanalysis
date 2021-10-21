@@ -1,5 +1,5 @@
-import {Plural, t} from '@lingui/macro'
-import {Trans} from '@lingui/react'
+import {t} from '@lingui/macro'
+import {Plural, Trans} from '@lingui/react'
 import {ActionLink} from 'components/ui/DbLink'
 import Rotation from 'components/ui/Rotation'
 import {Event, Events} from 'event'
