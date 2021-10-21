@@ -91,7 +91,7 @@ class Dance {
 	}
 }
 
-export default class DirtyDancing extends Analyser {
+export class DirtyDancing extends Analyser {
 	static override handle = 'dirtydancing'
 	static override title = t('dnc.dirty-dancing.title')`Dance Issues`
 	static override displayOrder = DISPLAY_ORDER.DIRTY_DANCING
