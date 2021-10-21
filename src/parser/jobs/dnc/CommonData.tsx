@@ -1,4 +1,4 @@
-import ACTIONS from 'data/ACTIONS'
+import ACTIONS, {ActionKey} from 'data/ACTIONS'
 import {SEVERITY} from 'parser/core/modules/Suggestions'
 
 export const STANDARD_FINISHES = [
@@ -25,3 +25,15 @@ export const DEFAULT_SEVERITY_TIERS  = {
 	3: SEVERITY.MEDIUM,
 	5: SEVERITY.MAJOR,
 }
+
+export const STEPS: ActionKey[] = [
+	'STANDARD_STEP',
+	'TECHNICAL_STEP',
+]
+
+export const DANCE_MOVES: ActionKey[] = [
+	'ENTRECHAT',
+	'EMBOITE',
+	'JETE',
+	'PIROUETTE',
+]
