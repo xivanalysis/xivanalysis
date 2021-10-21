@@ -1,8 +1,7 @@
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
 import {ActionLink} from 'components/ui/DbLink'
-import ACTIONS from 'data/ACTIONS'
-import {ActionRoot} from 'data/ACTIONS/root'
+import {ActionKey} from 'data/ACTIONS'
 import {Event, Events} from 'event'
 import {Analyser} from 'parser/core/Analyser'
 import {filter, oneOf} from 'parser/core/filter'
@@ -26,34 +25,21 @@ const MIN_REOPENER_DOWNTIME = 15000
 const TIMELINE_PADDING = 2500
 
 // 6.0: Add chain saw
-const DRIFT_GCDS: Array<keyof ActionRoot> = [
+const DRIFT_GCDS: ActionKey[] = [
 	'AIR_ANCHOR',
 	'BIOBLASTER',
 	'DRILL',
 ]
 
-class DriftWindow {
-	id: number
+interface DriftWindow {
 	start: number
-	end: number = 0
-	drift: number = 0
-	gcdRotation: Array<Events['action']> = []
+	casts: Array<Events['action']>
+}
 
-	constructor(id: number, start: number) {
-		this.id = id
-		this.start = start
-	}
-
-	public addGcd(event: Events['action'], data: Data) {
-		const action = data.getAction(event.action)
-		if (action && action.onGcd) {
-			this.gcdRotation.push(event)
-		}
-	}
-
-	public getLastActionId(): number {
-		return this.gcdRotation.slice(-1)[0].action
-	}
+interface ConfirmedDriftWindow extends DriftWindow {
+	driftedActionId: number
+	drift: number
+	end: number
 }
 
 export class Drift extends Analyser {
@@ -65,11 +51,17 @@ export class Drift extends Analyser {
 	@dependency private timeline!: Timeline
 
 	private driftIds: number[] = []
-	private driftedWindows: DriftWindow[] = []
+	private driftedWindows: ConfirmedDriftWindow[] = []
 
-	private currentWindows = {
-		[ACTIONS.AIR_ANCHOR.id]: new DriftWindow(ACTIONS.AIR_ANCHOR.id, this.parser.pull.timestamp),
-		[ACTIONS.DRILL.cooldownGroup]: new DriftWindow(ACTIONS.DRILL.id, this.parser.pull.timestamp),
+	private currentWindows: { [groupId: number]: DriftWindow } = {
+		[this.data.actions.AIR_ANCHOR.id]: {
+			start: this.parser.pull.timestamp,
+			casts: [],
+		},
+		[this.data.actions.DRILL.cooldownGroup]: {
+			start: this.parser.pull.timestamp,
+			casts: [],
+		},
 	}
 
 	override initialise() {
@@ -88,42 +80,48 @@ export class Drift extends Analyser {
 
 		if (!action || !action.cooldown) { return }
 
-		// Group bio and drill together
 		const id = action.cooldownGroup ?? action.id
-
 		const window = this.currentWindows[id]
-		window.end = event.timestamp
+		const observedUseTime = event.timestamp
 
-		// Cap at this event's timestamp
-		const plannedUseTime = Math.min(window.start + action.cooldown, event.timestamp)
+		// Cap at this event's timestamp, just in case
+		const earliestUseTime = Math.min(window.start + action.cooldown, observedUseTime)
 
-		let expectedUseTime = 0
-		if (this.downtime.isDowntime(plannedUseTime)) {
-			const downtimeWindow = this.downtime.getDowntimeWindows(window.start, window.end)[0]
+		let expectedUseTime = earliestUseTime
+
+		// Increase the expected use time if it was in downtime
+		if (this.downtime.isDowntime(earliestUseTime)) {
+			const downtimeWindow = this.downtime.getDowntimeWindows(window.start, observedUseTime)[0]
 			expectedUseTime = downtimeWindow.end
 
 			// Forgive "drift" due to reopening with other actions after downtime
 			if (downtimeWindow.end - downtimeWindow.start > MIN_REOPENER_DOWNTIME) {
 				expectedUseTime += REOPENER_BUFFER
 			}
-		} else {
-			expectedUseTime = plannedUseTime
 		}
 
-		window.drift = Math.max(0, window.end - expectedUseTime)
+		const drift = Math.max(0, observedUseTime - expectedUseTime)
 
 		// Forgive a small amount of drift
-		if (window.drift > DRIFT_BUFFER) {
-			this.driftedWindows.push(window)
-			window.addGcd(event, this.data)
+		if (drift > DRIFT_BUFFER) {
+			this.driftedWindows.push({
+				...window,
+				driftedActionId: event.action,
+				drift: drift,
+				end: observedUseTime,
+			})
 		}
 
-		this.currentWindows[id] = new DriftWindow(id, event.timestamp)
+		// Begin the next window
+		this.currentWindows[id] = {
+			start: observedUseTime,
+			casts: [],
+		}
 	}
 
 	private onCast(event: Events['action']) {
 		for (const window of Object.values(this.currentWindows)) {
-			window.addGcd(event, this.data)
+			window.casts.push(event)
 		}
 	}
 
@@ -145,7 +143,7 @@ export class Drift extends Analyser {
 						<Table.Cell>{this.parser.formatEpochTimestamp(window.end)}</Table.Cell>
 						<Table.Cell>
 							<Trans id="mch.drift.drift-issue">
-								<ActionLink {...this.data.getAction(window.getLastActionId())}/> drifted by {this.parser.formatDuration(window.drift)}
+								<ActionLink {...this.data.getAction(window.driftedActionId)}/> drifted by {this.parser.formatDuration(window.drift)}
 							</Trans>
 						</Table.Cell>
 						<Table.Cell>
@@ -162,8 +160,8 @@ export class Drift extends Analyser {
 		return <Fragment>
 			<Message>
 				<Trans id="mch.drift.accordion.message">
-					<ActionLink {...ACTIONS.DRILL}/> and <ActionLink {...ACTIONS.AIR_ANCHOR}/> are your strongest GCDs and ideally they should always be kept on cooldown,
-					unless you need to insert a filler GCD to adjust for skill speed. Avoid casting <ActionLink {...ACTIONS.HYPERCHARGE}/> if
+					<ActionLink {...this.data.actions.DRILL}/> and <ActionLink {...this.data.actions.AIR_ANCHOR}/> are your strongest GCDs and ideally they should always be kept on cooldown,
+					unless you need to insert a filler GCD to adjust for skill speed. Avoid casting <ActionLink {...this.data.actions.HYPERCHARGE}/> if
 					Drill or Air Anchor will come off cooldown within 8 seconds.
 				</Trans>
 			</Message>
