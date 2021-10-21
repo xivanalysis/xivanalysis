@@ -1,4 +1,3 @@
-import ACTIONS from 'data/ACTIONS'
 import {CastEvent} from 'fflogs'
 import {CooldownDowntime} from 'parser/core/modules/CooldownDowntime'
 
@@ -10,34 +9,34 @@ const DWAD_FIRST_USE_OFFSET = 12250 // After SF
 const TCJ_FIRST_USE_OFFSET = 17250 // After two Ninjutsu
 const MEISUI_FIRST_USE_OFFSET = 20750 // After TCJ
 
-export default class OGCDDowntime extends CooldownDowntime {
+export class OGCDDowntime extends CooldownDowntime {
 	override trackedCds = [
 		{
-			cooldowns: [ACTIONS.KASSATSU],
+			cooldowns: [this.data.actions.KASSATSU],
 			firstUseOffset: KASSATSU_FIRST_USE_OFFSET,
 		},
 		{
-			cooldowns: [ACTIONS.MUG],
+			cooldowns: [this.data.actions.MUG],
 			firstUseOffset: MUG_FIRST_USE_OFFSET,
 		},
 		{
-			cooldowns: [ACTIONS.BUNSHIN],
+			cooldowns: [this.data.actions.BUNSHIN],
 			firstUseOffset: BUNSHIN_FIRST_USE_OFFSET,
 		},
 		{
-			cooldowns: [ACTIONS.TRICK_ATTACK],
+			cooldowns: [this.data.actions.TRICK_ATTACK],
 			firstUseOffset: TRICK_FIRST_USE_OFFSET,
 		},
 		{
-			cooldowns: [ACTIONS.DREAM_WITHIN_A_DREAM],
+			cooldowns: [this.data.actions.DREAM_WITHIN_A_DREAM],
 			firstUseOffset: DWAD_FIRST_USE_OFFSET,
 		},
 		{
-			cooldowns: [ACTIONS.TEN_CHI_JIN],
+			cooldowns: [this.data.actions.TEN_CHI_JIN],
 			firstUseOffset: TCJ_FIRST_USE_OFFSET,
 		},
 		{
-			cooldowns: [ACTIONS.MEISUI],
+			cooldowns: [this.data.actions.MEISUI],
 			firstUseOffset: MEISUI_FIRST_USE_OFFSET,
 		},
 	]
@@ -45,7 +44,7 @@ export default class OGCDDowntime extends CooldownDowntime {
 	private dreamTimestamps: number[] = []
 
 	override countUsage(event: CastEvent) {
-		if (event.ability.guid !== ACTIONS.DREAM_WITHIN_A_DREAM.id) {
+		if (event.ability.guid !== this.data.actions.DREAM_WITHIN_A_DREAM.id) {
 			return true
 		}
 

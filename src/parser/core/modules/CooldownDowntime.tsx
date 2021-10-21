@@ -70,7 +70,7 @@ export abstract class CooldownDowntime extends Module {
 	static override title = t('core.cooldownDowntime.title')`Cooldown Downtime`
 	static override debug = false
 
-	@dependency private data!: Data
+	@dependency protected data!: Data
 	@dependency private downtime!: Downtime
 	@dependency private checklist!: Checklist
 

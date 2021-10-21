@@ -1,10 +1,9 @@
 import {Trans, Plural} from '@lingui/react'
 import {ActionLink} from 'components/ui/DbLink'
-import ACTIONS from 'data/ACTIONS'
-import STATUSES from 'data/STATUSES'
 import {CastEvent} from 'fflogs'
 import Module, {dependency} from 'parser/core/Module'
 import Combatants from 'parser/core/modules/Combatants'
+import {Data} from 'parser/core/modules/Data'
 import Suggestions, {TieredSuggestion, Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import React from 'react'
 
@@ -17,23 +16,24 @@ interface DotonCast {
 	prepull: boolean,
 }
 
-export default class Ninjutsu extends Module {
+export class Ninjutsu extends Module {
 	static override handle = 'ninjutsu'
 
 	@dependency private combatants!: Combatants
+	@dependency private data!: Data
 	@dependency private suggestions!: Suggestions
 
 	private hyotonCount: number = 0
 	private rabbitCount: number = 0
-	private current: DotonCast | null = null
+	private current?: DotonCast
 	private history: DotonCast[] = []
 
 	protected override init() {
-		this.addEventHook('cast', {by: 'player', abilityId: [ACTIONS.HYOTON.id, ACTIONS.HYOTON_TCJ.id]}, () => { this.hyotonCount++ })
-		this.addEventHook('cast', {by: 'player', abilityId: ACTIONS.RABBIT_MEDIUM.id}, () => { this.rabbitCount++ })
-		this.addEventHook('cast', {by: 'player', abilityId: [ACTIONS.DOTON.id, ACTIONS.DOTON_TCJ.id]}, this.onDotonCast)
-		this.addEventHook('normaliseddamage', {by: 'player', abilityId: STATUSES.DOTON.id}, event => { this.current?.ticks.push(event.hitCount || 0) })
-		this.addEventHook('removebuff', {by: 'player', abilityId: STATUSES.DOTON.id}, this.finishDotonWindow)
+		this.addEventHook('cast', {by: 'player', abilityId: [this.data.actions.HYOTON.id, this.data.actions.HYOTON_TCJ.id]}, () => { this.hyotonCount++ })
+		this.addEventHook('cast', {by: 'player', abilityId: this.data.actions.RABBIT_MEDIUM.id}, () => { this.rabbitCount++ })
+		this.addEventHook('cast', {by: 'player', abilityId: [this.data.actions.DOTON.id, this.data.actions.DOTON_TCJ.id]}, this.onDotonCast)
+		this.addEventHook('normaliseddamage', {by: 'player', abilityId: this.data.statuses.DOTON.id}, event => { this.current?.ticks.push(event.hitCount || 0) })
+		this.addEventHook('removebuff', {by: 'player', abilityId: this.data.statuses.DOTON.id}, this.finishDotonWindow)
 		this.addEventHook('complete', this.onComplete)
 	}
 
@@ -41,7 +41,7 @@ export default class Ninjutsu extends Module {
 		this.finishDotonWindow()
 
 		this.current = {
-			tcj: this.combatants.selected.hasStatus(STATUSES.TEN_CHI_JIN.id),
+			tcj: this.combatants.selected.hasStatus(this.data.statuses.TEN_CHI_JIN.id),
 			ticks: [],
 			prepull: event.timestamp < this.parser.fight.start_time,
 		}
@@ -53,7 +53,7 @@ export default class Ninjutsu extends Module {
 		}
 
 		this.history.push(this.current)
-		this.current = null
+		this.current = undefined
 	}
 
 	private appraiseDotonCasts() {
@@ -86,9 +86,9 @@ export default class Ninjutsu extends Module {
 		this.finishDotonWindow()
 
 		this.suggestions.add(new TieredSuggestion({
-			icon: ACTIONS.HYOTON.icon,
+			icon: this.data.actions.HYOTON.icon,
 			content: <Trans id="nin.ninjutsu.suggestions.hyoton.content">
-				Avoid using <ActionLink {...ACTIONS.HYOTON}/>, as it's the weakest of the mudra combinations and should typically never be used in raid content.
+				Avoid using <ActionLink {...this.data.actions.HYOTON}/>, as it's the weakest of the mudra combinations and should typically never be used in raid content.
 			</Trans>,
 			tiers: {
 				1: SEVERITY.MINOR, // Probably a fat finger
@@ -101,9 +101,9 @@ export default class Ninjutsu extends Module {
 		}))
 
 		this.suggestions.add(new TieredSuggestion({
-			icon: ACTIONS.RABBIT_MEDIUM.icon,
+			icon: this.data.actions.RABBIT_MEDIUM.icon,
 			content: <Trans id="nin.ninjutsu.suggestions.rabbit.content">
-				Be careful not to flub your mudras, as using <ActionLink {...ACTIONS.RABBIT_MEDIUM}/> can cost you personal DPS at best and raid DPS at worst by reducing the number of <ActionLink {...ACTIONS.TRICK_ATTACK}/>s you can do during the fight.
+				Be careful not to flub your mudras, as using <ActionLink {...this.data.actions.RABBIT_MEDIUM}/> can cost you personal DPS at best and raid DPS at worst by reducing the number of <ActionLink {...this.data.actions.TRICK_ATTACK}/>s you can do during the fight.
 			</Trans>,
 			tiers: {
 				1: SEVERITY.MEDIUM, // You were having a bad day, mudra lag, etc.
@@ -117,9 +117,9 @@ export default class Ninjutsu extends Module {
 
 		const {badTcjs, badAoes, badStds} = this.appraiseDotonCasts()
 		this.suggestions.add(new TieredSuggestion({
-			icon: ACTIONS.DOTON.icon,
+			icon: this.data.actions.DOTON.icon,
 			content: <Trans id="nin.ninjutsu.suggestions.tcj-doton.content">
-				Avoid using <ActionLink {...ACTIONS.DOTON}/> under <ActionLink {...ACTIONS.TEN_CHI_JIN}/> unless you're up against multiple targets. On a single target, using the <ActionLink {...ACTIONS.SUITON}/> combo will do equivalent or better damage and keep it aligned with <ActionLink {...ACTIONS.MEISUI}/>.
+				Avoid using <ActionLink {...this.data.actions.DOTON}/> under <ActionLink {...this.data.actions.TEN_CHI_JIN}/> unless you're up against multiple targets. On a single target, using the <ActionLink {...this.data.actions.SUITON}/> combo will do equivalent or better damage and keep it aligned with <ActionLink {...this.data.actions.MEISUI}/>.
 			</Trans>,
 			tiers: {
 				1: SEVERITY.MEDIUM,
@@ -133,9 +133,9 @@ export default class Ninjutsu extends Module {
 
 		if (badAoes > 0) {
 			this.suggestions.add(new Suggestion({
-				icon: ACTIONS.DOTON.icon,
+				icon: this.data.actions.DOTON.icon,
 				content: <Trans id="nin.ninjutsu.suggestions.aoe-doton.content">
-					<ActionLink {...ACTIONS.DOTON}/> requires at least {DOTON_TICK_TARGET} ticks to be worthwhile in an AoE setting. Use <ActionLink {...ACTIONS.KATON}/> instead against adds that will die quickly.
+					<ActionLink {...this.data.actions.DOTON}/> requires at least {DOTON_TICK_TARGET} ticks to be worthwhile in an AoE setting. Use <ActionLink {...this.data.actions.KATON}/> instead against adds that will die quickly.
 				</Trans>,
 				severity: SEVERITY.MINOR,
 				why: <Trans id="nin.ninjutsu.suggestions.aoe-doton.why">
@@ -145,9 +145,9 @@ export default class Ninjutsu extends Module {
 		}
 
 		this.suggestions.add(new TieredSuggestion({
-			icon: ACTIONS.DOTON.icon,
+			icon: this.data.actions.DOTON.icon,
 			content: <Trans id="nin.ninjutsu.suggestions.st-doton.content">
-				Avoid using <ActionLink {...ACTIONS.DOTON}/> on single targets, as it does less damage than <ActionLink {...ACTIONS.RAITON}/> if any ticks miss and uses more mudras, resulting in more GCD delay for no gain.
+				Avoid using <ActionLink {...this.data.actions.DOTON}/> on single targets, as it does less damage than <ActionLink {...this.data.actions.RAITON}/> if any ticks miss and uses more mudras, resulting in more GCD delay for no gain.
 			</Trans>,
 			tiers: {
 				1: SEVERITY.MINOR,
