@@ -17,6 +17,11 @@ import {Button, Message, Table} from 'semantic-ui-react'
 // and not log inconsistencies / sks issues / misguided weaving
 const DRIFT_BUFFER = 1500
 
+// Buffer (ms) to allow for reopeners after a downtime, since the GCD that "drifted"
+// might not have first priority
+const REOPENER_BUFFER = 12500
+const MIN_REOPENER_DOWNTIME = 15000
+
 // Timeline padding to see the drifted GCD when you jump to the window
 const TIMELINE_PADDING = 2500
 
@@ -94,15 +99,20 @@ export class Drift extends Analyser {
 
 		let expectedUseTime = 0
 		if (this.downtime.isDowntime(plannedUseTime)) {
-			const downtimeWindow = this.downtime.getDowntimeWindows(plannedUseTime, plannedUseTime)[0]
+			const downtimeWindow = this.downtime.getDowntimeWindows(window.start, window.end)[0]
 			expectedUseTime = downtimeWindow.end
+
+			// Forgive "drift" due to reopening with other actions after downtime
+			if (downtimeWindow.end - downtimeWindow.start > MIN_REOPENER_DOWNTIME) {
+				expectedUseTime += REOPENER_BUFFER
+			}
 		} else {
 			expectedUseTime = plannedUseTime
 		}
 
 		window.drift = Math.max(0, window.end - expectedUseTime)
 
-		// Tolerate a small amount of drift
+		// Forgive a small amount of drift
 		if (window.drift > DRIFT_BUFFER) {
 			this.driftedWindows.push(window)
 			window.addGcd(event, this.data)
@@ -132,7 +142,7 @@ export class Drift extends Analyser {
 			<Table.Body>
 				{this.driftedWindows.map(window => {
 					return <Table.Row key={window.start}>
-						<Table.Cell>{this.parser.formatEpochTimestamp(window.start)}</Table.Cell>
+						<Table.Cell>{this.parser.formatEpochTimestamp(window.end)}</Table.Cell>
 						<Table.Cell>
 							<Trans id="mch.drift.drift-issue">
 								<ActionLink {...this.data.getAction(window.getLastActionId())}/> drifted by {this.parser.formatDuration(window.drift)}
