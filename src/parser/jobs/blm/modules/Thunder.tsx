@@ -52,8 +52,8 @@ export class Thunder extends Module {
 
 	// Can never be too careful :blobsweat:
 	private readonly STATUS_DURATION = {
-		[this.data.statuses.THUNDER_III.id]: this.data.statuses.THUNDER_III.duration * 1000,
-		[this.data.statuses.THUNDERCLOUD.id]: this.data.statuses.THUNDERCLOUD.duration * 1000,
+		[this.data.statuses.THUNDER_III.id]: this.data.statuses.THUNDER_III.duration,
+		[this.data.statuses.THUNDERCLOUD.id]: this.data.statuses.THUNDERCLOUD.duration,
 	}
 
     private thunder3Casts = 0

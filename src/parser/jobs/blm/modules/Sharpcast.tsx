@@ -29,8 +29,6 @@ export class Sharpcast extends Module {
 	@dependency private statistics!: Statistics
 	@dependency private data!: Data
 
-	private readonly SHARPCAST_DURATION_MILLIS = this.data.statuses.SHARPCAST.duration * 1000
-
 	private readonly SHARPCAST_CONSUMER_IDS = [
 		this.data.actions.FIRE_I.id,
 		this.data.actions.THUNDER_III.id,
@@ -103,7 +101,7 @@ export class Sharpcast extends Module {
 		}
 
 		this.buffWindows.current.stop = endTime
-		if (this.buffWindows.current.stop - this.buffWindows.current.start >= this.SHARPCAST_DURATION_MILLIS && countDrops) {
+		if (this.buffWindows.current.stop - this.buffWindows.current.start >= this.data.statuses.SHARPCAST.duration && countDrops) {
 			this.droppedSharpcasts++
 		}
 		this.buffWindows.history.push(this.buffWindows.current)
