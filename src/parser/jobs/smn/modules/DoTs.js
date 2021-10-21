@@ -13,10 +13,11 @@ export default class DoTs extends Module {
 	static handle = 'dots'
 	static title = t('smn.dots.title')`DoTs`
 	static dependencies = [
+		'actors',
 		'checklist',
-		'enemies',
-		'entityStatuses',
+		'data',
 		'invulnerability',
+		'statuses',
 	]
 
 	_lastBioCast = undefined
@@ -70,7 +71,7 @@ export default class DoTs extends Module {
 		const statusId = event.ability.guid
 
 		// Make sure we're tracking for this target
-		const applicationKey = `${event.targetID}|${event.targetInstance}`
+		const applicationKey = this.parser.getFflogsEventTargetActorId(event)
 		//save the application for later use in the output
 		this._pushApplication(applicationKey, statusId, event)
 	}
@@ -108,7 +109,7 @@ export default class DoTs extends Module {
 	}
 
 	getDotUptimePercent(statusId) {
-		const statusUptime = this.entityStatuses.getStatusUptime(statusId, this.enemies.getEntities())
+		const statusUptime = this.statuses.getUptime(this.data.getStatus(statusId), this.actors.foes,)
 		const fightDuration = this.parser.currentDuration - this.invulnerability.getDuration({types: ['invulnerable']})
 
 		return (statusUptime / fightDuration) * 100
@@ -170,8 +171,7 @@ export default class DoTs extends Module {
 
 		if (numTargets > 1) {
 			const panels = Object.keys(this._application).map(applicationKey => {
-				const targetId = applicationKey.split('|')[0]
-				const target = this.enemies.getEntity(targetId)
+				const target = this.actors.get(applicationKey)
 				return {
 					key: applicationKey,
 					title: {

@@ -4,10 +4,10 @@ import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import {BuffEvent} from 'fflogs'
 import Module, {dependency} from 'parser/core/Module'
+import {Actors} from 'parser/core/modules/Actors'
 import Checklist, {Rule, Requirement} from 'parser/core/modules/Checklist'
-import Combatants from 'parser/core/modules/Combatants'
-import {EntityStatuses} from 'parser/core/modules/EntityStatuses'
 import {Invulnerability} from 'parser/core/modules/Invulnerability'
+import {Statuses} from 'parser/core/modules/Statuses'
 import Suggestions, {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import React from 'react'
 
@@ -16,10 +16,10 @@ const STORMS_EYE_BUFFER = 7000
 export default class StormsEye extends Module {
 	static override handle = 'stormseye'
 
+	@dependency private actors!: Actors
 	@dependency private checklist!: Checklist
-	@dependency private combatants!: Combatants
-	@dependency private entityStatuses!: EntityStatuses
 	@dependency private invulnerability!: Invulnerability
+	@dependency private statuses!: Statuses
 	@dependency private suggestions!: Suggestions
 
 	private earlyEyes: number = 0
@@ -77,7 +77,7 @@ export default class StormsEye extends Module {
 	}
 
 	getUptimePercent(): number {
-		const statusUptime = this.entityStatuses.getStatusUptime(STATUSES.STORMS_EYE.id, this.combatants.getEntities())
+		const statusUptime = this.statuses.getUptime('STORMS_EYE', this.actors.friends)
 		const fightUptime = this.parser.currentDuration - this.invulnerability.getDuration({types: ['invulnerable']})
 
 		return (statusUptime / fightUptime) * 100
