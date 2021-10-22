@@ -7,6 +7,7 @@ import {NormalisedDamageEvent} from 'parser/core/modules/NormalisedEvents'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
 import {Table} from 'semantic-ui-react'
+import {Data} from './Data'
 
 export interface AoEAction {
 	/**
@@ -46,6 +47,7 @@ export abstract class AoEUsages extends Module {
 	static override title = t('core.aoeusages.title')`Incorrect AoE Action Usage`
 
 	@dependency private suggestions!: Suggestions
+	@dependency protected data!: Data
 
 	/**
 	 * Implementing modules MUST define the icon to be used for the suggestion.
