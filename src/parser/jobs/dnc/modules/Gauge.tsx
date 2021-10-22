@@ -1,7 +1,7 @@
 import {Plural, Trans} from '@lingui/react'
 import Color from 'color'
 import {ActionLink} from 'components/ui/DbLink'
-import ACTIONS, {ActionKey} from 'data/ACTIONS'
+import {ActionKey} from 'data/ACTIONS'
 import JOBS from 'data/JOBS'
 import {Cause, Event, Events} from 'event'
 import _ from 'lodash'
@@ -52,7 +52,7 @@ const MAX_ESPRIT = 100
 const SABER_DANCE_COST = 50
 const MAX_FEATHERS = 4
 
-export default class Gauge extends Analyser {
+export class Gauge extends Analyser {
 	static override handle = 'gauge'
 
 	@dependency private data!: Data
@@ -83,23 +83,23 @@ export default class Gauge extends Analyser {
 
 	private espritGenerationExceptions = [
 		...FINISHES,
-		ACTIONS.FUMA_SHURIKEN.id,
-		ACTIONS.FUMA_SHURIKEN_TCJ_TEN.id,
-		ACTIONS.FUMA_SHURIKEN_TCJ_CHI.id,
-		ACTIONS.FUMA_SHURIKEN_TCJ_JIN.id,
-		ACTIONS.KATON.id,
-		ACTIONS.KATON_TCJ.id,
-		ACTIONS.RAITON_TCJ.id,
-		ACTIONS.RAITON_TCJ.id,
-		ACTIONS.HYOTON_TCJ.id,
-		ACTIONS.HYOTON_TCJ.id,
-		ACTIONS.GOKA_MEKKYAKU.id,
-		ACTIONS.HYOSHO_RANRYU.id,
-		ACTIONS.SUITON.id,
-		ACTIONS.SUITON_TCJ.id,
-		ACTIONS.KAESHI_GOKEN.id,
-		ACTIONS.KAESHI_HIGANBANA.id,
-		ACTIONS.KAESHI_SETSUGEKKA.id,
+		this.data.actions.FUMA_SHURIKEN.id,
+		this.data.actions.FUMA_SHURIKEN_TCJ_TEN.id,
+		this.data.actions.FUMA_SHURIKEN_TCJ_CHI.id,
+		this.data.actions.FUMA_SHURIKEN_TCJ_JIN.id,
+		this.data.actions.KATON.id,
+		this.data.actions.KATON_TCJ.id,
+		this.data.actions.RAITON_TCJ.id,
+		this.data.actions.RAITON_TCJ.id,
+		this.data.actions.HYOTON_TCJ.id,
+		this.data.actions.HYOTON_TCJ.id,
+		this.data.actions.GOKA_MEKKYAKU.id,
+		this.data.actions.HYOSHO_RANRYU.id,
+		this.data.actions.SUITON.id,
+		this.data.actions.SUITON_TCJ.id,
+		this.data.actions.KAESHI_GOKEN.id,
+		this.data.actions.KAESHI_HIGANBANA.id,
+		this.data.actions.KAESHI_SETSUGEKKA.id,
 	]
 
 	private featherGenerators: ActionKey[] = [
@@ -117,54 +117,23 @@ export default class Gauge extends Analyser {
 	private pauseGeneration = false;
 
 	override initialise() {
-		const espritApplyFilter = filter<Event>()
-			.type('statusApply')
-			.source(this.parser.actor.id)
-			.status(oneOf(this.espritStatuses))
-		this.addEventHook(espritApplyFilter, this.addEspritGenerationHook)
-		const espritRemoveFilter = filter<Event>()
-			.type('statusRemove')
-			.source(this.parser.actor.id)
-			.status(oneOf(this.espritStatuses))
-		this.addEventHook(espritRemoveFilter, this.removeEspritGenerationHook)
+		const playerFilter = filter<Event>().source(this.parser.actor.id)
+		const statusApplyFilter = playerFilter.type('statusApply')
+		const statusRemoveFilter = playerFilter.type('statusRemove')
+		const damageFilter = playerFilter.type('damage')
 
-		this.addEventHook({
-			type: 'statusApply',
-			source: this.parser.actor.id,
-			status: this.data.statuses.IMPROVISATION.id,
-		}, this.startImprov)
-		this.addEventHook({
-			type: 'statusApply',
-			source: this.parser.actor.id,
-			status: this.data.statuses.IMPROVISATION_HEALING.id,
-		}, this.onGainImprov)
-		this.addEventHook({
-			type: 'statusRemove',
-			source: this.parser.actor.id,
-			status: this.data.statuses.IMPROVISATION_HEALING.id,
-		}, this.onRemoveImprov)
-		this.addEventHook({
-			type: 'statusRemove',
-			source: this.parser.actor.id,
-			status: this.data.statuses.IMPROVISATION.id,
-		}, this.endImprov)
-		this.addEventHook({
-			type: 'damage',
-			source: this.parser.actor.id,
-			cause: {type: 'action', action: this.data.actions.SABER_DANCE.id},
-		}, this.onConsumeEsprit)
+		this.addEventHook(statusApplyFilter.status(oneOf(this.espritStatuses)), this.addEspritGenerationHook)
+		this.addEventHook(statusRemoveFilter.status(oneOf(this.espritStatuses)), this.removeEspritGenerationHook)
 
-		const procFilter = filter<Event>()
-			.type('damage')
-			.source(this.parser.actor.id)
-			.cause(filter<Cause>()
-				.action(this.data.matchActionId(this.featherGenerators)))
-		this.addEventHook(procFilter, this.onCastGenerator)
-		const fanDanceFilter = filter<Event>()
-			.type('action')
-			.source(this.parser.actor.id)
-			.action(oneOf(this.featherConsumers))
-		this.addEventHook(fanDanceFilter, this.onConsumeFeather)
+		this.addEventHook(statusApplyFilter.status(this.data.statuses.IMPROVISATION.id), this.startImprov)
+		this.addEventHook(statusApplyFilter.status(this.data.statuses.IMPROVISATION_HEALING.id), this.onGainImprov)
+		this.addEventHook(statusRemoveFilter.status(this.data.statuses.IMPROVISATION_HEALING.id), this.onRemoveImprov)
+		this.addEventHook(statusRemoveFilter.status(this.data.statuses.IMPROVISATION.id), this.endImprov)
+
+		this.addEventHook(damageFilter.cause(filter<Cause>().action(this.data.actions.SABER_DANCE.id)), this.onConsumeEsprit)
+
+		this.addEventHook(damageFilter.cause(filter<Cause>().action(this.data.matchActionId(this.featherGenerators))), this.onCastGenerator)
+		this.addEventHook(playerFilter.type('action').action(oneOf(this.featherConsumers)), this.onConsumeFeather)
 
 		this.addEventHook({
 			type: 'death',
@@ -193,7 +162,7 @@ export default class Gauge extends Analyser {
 	/* Esprit buff application/removal hooks */
 	private addEspritGenerationHook(event: Events['statusApply']) {
 		const eventActor = event.target
-		if (!this.espritBuffs.get(eventActor)) {
+		if (this.espritBuffs.get(eventActor) == null) {
 			const eventFilter = filter<Event>()
 				.type('damage')
 				.source(eventActor)
@@ -205,7 +174,7 @@ export default class Gauge extends Analyser {
 		const eventActor = event.target
 		if (this.espritBuffs.has(eventActor)) {
 			const eventHook = this.espritBuffs.get(eventActor)
-			if (!eventHook) {
+			if (eventHook == null) {
 				return
 			}
 			this.removeEventHook(eventHook)

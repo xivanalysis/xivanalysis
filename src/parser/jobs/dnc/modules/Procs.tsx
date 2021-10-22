@@ -3,7 +3,7 @@ import {ActionLink} from 'components/ui/DbLink'
 import {Procs as CoreProcs} from 'parser/core/modules/Procs'
 import React from 'react'
 
-export default class Procs extends CoreProcs {
+export class Procs extends CoreProcs {
 	override trackedProcs = [
 		{
 			procStatus: this.data.statuses.FLOURISHING_FAN_DANCE,
