@@ -15,7 +15,7 @@ export default class ShadowFang extends DoTs {
 		'suggestions',
 	]
 
-	static statusesToTrack = [
+	override statusesToTrack = [
 		STATUSES.SHADOW_FANG.id,
 	]
 

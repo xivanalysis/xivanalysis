@@ -19,12 +19,12 @@ const SEVERITIES = {
 export default class Goring extends DoTs {
 	static override handle = 'goring'
 
-	static override statusesToTrack = [
-		STATUSES.GORING_BLADE.id,
-	]
-
 	@dependency private checklist!: Checklist
 	@dependency private suggestions!: Suggestions
+
+	override statusesToTrack = [
+		STATUSES.GORING_BLADE.id,
+	]
 
 	override addChecklistRules() {
 		this.checklist.add(new Rule({
