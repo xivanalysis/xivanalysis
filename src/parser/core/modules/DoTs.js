@@ -13,7 +13,7 @@ export default class DoTs extends Module {
 	]
 
 	// To be overriden by submodules with an array of status IDs to track
-	static statusesToTrack = []
+	statusesToTrack = []
 
 	_lastApplication = {}
 	_clip = {}
