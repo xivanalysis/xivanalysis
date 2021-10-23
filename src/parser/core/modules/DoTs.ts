@@ -53,13 +53,13 @@ export abstract class DoTs extends Analyser {
 
 	}
 
-	/** Implementing modules should override this if a checklist is wanted.
+	/** Implementing modules MUST override this to configure the checklist.
 	 * This should be handled on a job-by-job basis rather than generically, since the description
 	 * text isn't one-size-fits-all, and some jobs may have custom targets.
 	 */
 	protected abstract addChecklistRules(): void
 
-	/** Implementing modules should override this if suggestions are wanted.
+	/** Implementing modules MUST override this to configure suggestions.
 	 * This should be handled on a job-by-job basis rather than generically, since different jobs have
 	 * different thresholds for what constitutes bad clipping with varying explanations as to why.
 	 */
