@@ -97,14 +97,14 @@ export class DirtyDancing extends Analyser {
 	static override title = t('dnc.dirty-dancing.title')`Dance Issues`
 	static override displayOrder = DISPLAY_ORDER.DIRTY_DANCING
 
-	@dependency private checklist!: CheckList
-	@dependency private suggestions!: Suggestions
-	@dependency private invulnerability!: Invulnerability
 	@dependency private actors!: Actors
-	@dependency private timeline!: Timeline
-	@dependency private downtime!: Downtime
-	@dependency private statuses!: Statuses
+	@dependency private checklist!: CheckList
 	@dependency private data!: Data
+	@dependency private downtime!: Downtime
+	@dependency private invulnerability!: Invulnerability
+	@dependency private suggestions!: Suggestions
+	@dependency private statuses!: Statuses
+	@dependency private timeline!: Timeline
 
 	private danceHistory: Dance[] = []
 	private missedDances = 0
