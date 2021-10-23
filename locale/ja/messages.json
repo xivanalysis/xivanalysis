@@ -450,6 +450,8 @@
   "gnb.continuation.checklist.requirement.continuation.name": "<0/>が<1/>コンボごとに使われた",
   "gnb.nomercy.suggestions.gcds.content": "9回のウェポンスキルを<0/>効果時間中に使うようにしましょう。使用直前のGCDタイマーの残り1/3まで待てば、20秒の効果時間は9回のウェポンスキルを収めるのに十分です。",
   "gnb.nomercy.title": "ノー・マーシー効果時間",
+  "mch.drift.timelinelink-button": "タイムラインに移動",
+  "mch.drift.timestamp-header": "タイムスタンプ",
   "mch.drift.title": "GCDの挟み込み",
   "mch.gauge.suggestions.battery-waste.why": "{0} バッテリーをゲージ超えで失っています。",
   "mch.hypercharge.panel-count": "{0, plural, one {GCD使用数: #} other {GCD使用数: #}}",
