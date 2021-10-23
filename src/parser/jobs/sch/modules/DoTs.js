@@ -23,7 +23,6 @@ const SEVERITIES = {
 
 export default class DoTs extends CoreDoTs {
 	static handle = 'biolysis'
-	static displayOrder = DISPLAY_ORDER.DOTS
 	static dependencies = [
 		...DoTs.dependencies,
 		'checklist',
@@ -40,6 +39,7 @@ export default class DoTs extends CoreDoTs {
 			description: <Trans id="sch.dots.checklist.description">
 				As a Scholar, Biolysis is a notable portion of your damage. Aim to keep it up as much as possible, so long as you can get at least 15 seconds of uptime per application.
 			</Trans>,
+			displayOrder: DISPLAY_ORDER.DOTS,
 			tiers: SEVERITIES.UPTIME,
 			requirements: [
 				new Requirement({
