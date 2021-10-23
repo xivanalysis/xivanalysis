@@ -30,7 +30,7 @@ export class Combos extends CoreCombos {
 		// Technical windows could also go Tech -> Saber -> Fountainfall -> Saber -> Standard -> Fountain drops,
 		// so just disable any drops that happened in a Technical window (still need the dances in range check since
 		// Cascade -> Standard -> Technical leaves the buff falling off before Technical Finish buff applies
-		return this.dancing.dancesInRange(this.parser.fflogsToEpoch(context[0].timestamp), this.parser.fflogsToEpoch(context[0].timestamp + GCD_TIMEOUT_MILLIS)) === 2 ||
-			this.actors.current.at(this.parser.fflogsToEpoch(context[0].timestamp + GCD_TIMEOUT_MILLIS)).hasStatus(STATUSES.TECHNICAL_FINISH.id)
+		return this.dancing.dancesInRange(context[0].timestamp, context[0].timestamp + GCD_TIMEOUT_MILLIS) === 2 ||
+			this.actors.current.at(context[0].timestamp + GCD_TIMEOUT_MILLIS).hasStatus(STATUSES.TECHNICAL_FINISH.id)
 	}
 }
