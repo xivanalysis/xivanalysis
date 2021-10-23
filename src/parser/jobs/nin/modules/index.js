@@ -1,5 +1,5 @@
 import {ActionTimeline} from './ActionTimeline'
-import Combos from './Combos'
+import {Combos} from './Combos'
 import Huton from './Huton'
 import Kassatsu from './Kassatsu'
 import Ninjutsu from './Ninjutsu'

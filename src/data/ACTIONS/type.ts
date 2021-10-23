@@ -2,11 +2,12 @@ import {StatusRoot} from 'data/STATUSES/root'
 import {Attribute} from 'event'
 import {Compute, ReplaceFrom} from 'utilities/typescript'
 
-interface ActionCombo {
-	start?: boolean
-	from?: number | number[]
-	end?: boolean
-}
+export type ActionCombo =
+	& (
+		| {start: true, from?: never}
+		| {from: number | number[], start?: never}
+	)
+	& {end?: true}
 
 export interface Action {
 	id: number

@@ -1,6 +1,6 @@
 import AoeChecker from './AoeChecker'
 import Buffs from './Buffs'
-import Combos from './Combos'
+import {Combos} from './Combos'
 import {Higanbana} from './Higanbana'
 import Interrupts from './Interrupts'
 import Kaiten from './Kaiten'
