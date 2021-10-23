@@ -73,10 +73,6 @@ export class RaidBuffs extends Analyser {
 	}
 
 	private onApply(event: Events['statusApply']) {
-		// TODO: Old module logic omitted events on "inactive" targets (mechanic
-		// actors). This isn't something we really model in the new system, look
-		// into it if it becomes meaningful to do so.
-
 		const statusId = event.status
 		const settings = this.settings.get(statusId)
 
@@ -90,10 +86,6 @@ export class RaidBuffs extends Analyser {
 	}
 
 	private onRemove(event: Events['statusRemove']) {
-		// TODO: Old module logic omitted events on "inactive" targets (mechanic
-		// actors). This isn't something we really model in the new system, look
-		// into it if it becomes meaningful to do so.
-
 		this.endStatus(event.target, event.status)
 	}
 
@@ -119,9 +111,18 @@ export class RaidBuffs extends Analyser {
 			this.timelineRows.set(rowId, row)
 		}
 
+		const start = applyTime - this.parser.pull.timestamp
+
+		// It's not uncommon for a status to be mirrored onto mechanic actors, which
+		// causes a big bunch-up of statuses in the timeline. If there's already an
+		// item for this application, skip out.
+		if (row.items[row.items.length - 1]?.start === start) {
+			return
+		}
+
 		// Add an item for the status to its row
 		row.addItem(new StatusItem({
-			start: applyTime - this.parser.pull.timestamp,
+			start,
 			end: this.parser.currentEpochTimestamp - this.parser.pull.timestamp,
 			status,
 		}))
