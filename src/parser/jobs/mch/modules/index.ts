@@ -1,6 +1,6 @@
 import {ActionTimeline} from './ActionTimeline'
 import Combos from './Combos'
-import Drift from './Drift'
+import {Drift} from './Drift'
 import Gauge from './Gauge'
 import GeneralCDDowntime from './GeneralCDDowntime'
 import {Hypercharge} from './Hypercharge'
