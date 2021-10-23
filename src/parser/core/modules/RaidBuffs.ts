@@ -1,24 +1,23 @@
 import {JobKey} from 'data/JOBS'
 import {Status, StatusKey} from 'data/STATUSES'
-import {BuffEvent} from 'fflogs'
-import {Event} from 'legacyEvent'
-import Module, {executeBeforeDoNotUseOrYouWillBeFired} from 'parser/core/Module'
-import {isDefined} from 'utilities'
+import {Event, Events} from 'event'
+import {Team} from 'report'
+import {Analyser} from '../Analyser'
+import {filter, oneOf} from '../filter'
 import {dependency} from '../Injectable'
-import {AdditionalEventQueries, AdditionalEvents} from './AdditionalEvents'
+import {Actor, Actors} from './Actors'
 import {Data} from './Data'
-import Enemies from './Enemies'
 import {SimpleRow, StatusItem, Timeline} from './Timeline'
 
 // Are other jobs going to need to add to this?
-interface RaidBuff {
+interface StatusConfig {
 	key: StatusKey
 	group?: string
 	name?: string,
 	exclude?: JobKey[]
 }
 
-const RAID_BUFFS: RaidBuff[] = [
+const TRACKED_STATUSES: StatusConfig[] = [
 	{key: 'THE_BALANCE', group: 'arcanum', name: 'Arcanum'},
 	{key: 'THE_ARROW', group: 'arcanum', name: 'Arcanum'},
 	{key: 'THE_SPEAR', group: 'arcanum', name: 'Arcanum'},
@@ -43,153 +42,113 @@ const RAID_BUFFS: RaidBuff[] = [
 	{key: 'PECULIAR_LIGHT'},
 ]
 
-// @ts-expect-error types on this are fucky, it's getting yeeted in this pr anyway
-@executeBeforeDoNotUseOrYouWillBeFired(AdditionalEvents)
-class RaidBuffsQuery extends Module {
-	static override handle = 'raidBuffsQuery'
-
-	@dependency private readonly additionalEventQueries!: AdditionalEventQueries
-	@dependency private readonly data!: Data
-	@dependency private readonly enemies!: Enemies
-
-	override normalise(events: Event[]) {
-		// Abilities we need more info on
-		const abilities = [
-			this.data.statuses.TRICK_ATTACK_VULNERABILITY_UP.id,
-			this.data.statuses.CHAIN_STRATAGEM.id,
-			this.data.statuses.RUINATION.id,
-		]
-
-		this.additionalEventQueries.registerQuery(`type in ('applydebuff','removedebuff') and ability.id in (${abilities.join(',')}) and (${this._buildActiveTargetQuery()})`)
-
-		return events
-	}
-
-	// We only want events on "active" targets - lots of mirror copies used for mechanics that fluff up the data otherwise
-	_buildActiveTargetQuery = () =>
-		Object.keys(this.enemies.activeTargets)
-			.map(actorId => {
-				const actor = this.enemies.getEntity(Number(actorId))
-				if (!actor) {
-					return
-				}
-
-				const instances = this.enemies.activeTargets[actorId]
-				let query = '(target.id=' + actor.guid
-				if (instances.size > 0) {
-					query += ` and target.instance in (${Array.from(instances).join(',')})`
-				}
-				return query + ')'
-			})
-			.filter(isDefined)
-			.join(' or ')
-}
-export {RaidBuffsQuery}
-
-export default class RaidBuffs extends Module {
+export class RaidBuffs extends Analyser {
 	static override handle = 'raidBuffs'
 
+	@dependency private readonly actors!: Actors
 	@dependency private readonly data!: Data
-	@dependency private readonly enemies!: Enemies
 	@dependency private readonly timeline!: Timeline
 
-	_buffs: Record<number, Record<number, number>> = {}
+	private applications = new Map<Actor['id'], Map<Status['id'], number>>()
+	private timelineRows = new Map<string | number, SimpleRow>()
+	private settings = new Map<Status['id'], StatusConfig>(
+		TRACKED_STATUSES.map(config => [this.data.statuses[config.key].id, config])
+	)
 
-	_buffRows = new Map()
-
-	_buffMap = new Map<Status['id'], RaidBuff>()
-
-	protected override init() {
-		RAID_BUFFS.forEach(obj => {
-			this._buffMap.set(this.data.statuses[obj.key].id, obj)
-		})
-
+	override initialise() {
 		// Event hooks
-		const filter = {abilityId: [...this._buffMap.keys()]}
-		this.addEventHook('applybuff', {...filter, to: 'player'}, this._onApply)
-		this.addEventHook('applydebuff', filter, this._onApply)
-		this.addEventHook('removebuff', {...filter, to: 'player'}, this._onRemove)
-		this.addEventHook('removedebuff', filter, this._onRemove)
-		this.addEventHook('complete', this._onComplete)
+		const statusFilter = filter<Event>()
+			.status(oneOf([...this.settings.keys()]))
+			.target((target: Actor['id']): target is Actor['id'] => {
+				// Match all foes, but only the parsed actor of the friends.
+				const actor = this.actors.get(target)
+				if (actor.team === Team.FRIEND) {
+					return actor.id === this.parser.actor.id
+				}
+				return true
+			})
+		this.addEventHook(statusFilter.type('statusApply'), this.onApply)
+		this.addEventHook(statusFilter.type('statusRemove'), this.onRemove)
+		this.addEventHook('complete', this.onComplete)
 	}
 
-	_onApply(event: BuffEvent) {
-		// Only track active enemies when it's a debuff
-		if (event.type.includes('debuff') && !this.enemies.isActive(event.targetID, event.targetInstance)) {
-			return
-		}
+	private onApply(event: Events['statusApply']) {
+		// TODO: Old module logic omitted events on "inactive" targets (mechanic
+		// actors). This isn't something we really model in the new system, look
+		// into it if it becomes meaningful to do so.
 
-		const buffs = this.getTargetBuffs(event.targetID!)
-		const statusId = event.ability.guid
-		const settings = this._buffMap.get(statusId)
+		const statusId = event.status
+		const settings = this.settings.get(statusId)
 
 		if (settings?.exclude?.includes(this.parser.actor.job)) {
 			return
 		}
 
 		// Record the start time of the status
-		buffs[statusId] = event.timestamp - this.parser.eventTimeOffset
+		const applications = this.getTargetApplications(event.target)
+		applications.set(statusId, event.timestamp)
 	}
 
-	_onRemove(event: BuffEvent) {
-		// Only track active enemies
-		if (event.type.includes('debuff') && !this.enemies.isActive(event.targetID, event.targetInstance)) {
-			return
-		}
+	private onRemove(event: Events['statusRemove']) {
+		// TODO: Old module logic omitted events on "inactive" targets (mechanic
+		// actors). This isn't something we really model in the new system, look
+		// into it if it becomes meaningful to do so.
 
-		this._endStatus(event.targetID!, event.ability.guid)
+		this.endStatus(event.target, event.status)
 	}
 
-	_endStatus(targetId: number, statusId: number) {
-		const targetBuffs = this.getTargetBuffs(targetId)
-		const applyTime = targetBuffs[statusId]
-		// This shouldn't happen, but it do.
+	private endStatus(targetId: Actor['id'], statusId: Status['id']) {
+		const applications = this.getTargetApplications(targetId)
+		const applyTime = applications.get(statusId)
 		if (!applyTime) { return }
-		delete targetBuffs[statusId]
+		applications.delete(statusId)
 
-		const removeTime = this.parser.currentTimestamp - this.parser.eventTimeOffset
-
-		const settings = this._buffMap.get(statusId)
+		const settings = this.settings.get(statusId)
 		const status = this.data.getStatus(statusId)
 		if (settings == null || status == null) { return }
 
-		// Get the row for this buff/group, creating one if it doesn't exist yet.
-		// NOTE: Using application time as order, as otherwise adding here forces ordering by end time of the first buff
-		const rowId = settings.group || statusId
-		let row = this._buffRows.get(rowId)
+		// Get the row for this status/group, creating one if it doesn't exist yet.
+		// NOTE: Using application time as order, as otherwise adding here forces ordering by end time of the first status
+		const rowId = settings.group ?? statusId
+		let row = this.timelineRows.get(rowId)
 		if (row == null) {
 			row = new SimpleRow({
-				label: settings.name || status.name,
+				label: settings.name ?? status.name,
 				order: applyTime,
 			})
-			this._buffRows.set(rowId, row)
+			this.timelineRows.set(rowId, row)
 		}
 
-		// Add an item for the buff to its row
+		// Add an item for the status to its row
 		row.addItem(new StatusItem({
-			start: applyTime,
-			end: removeTime,
+			start: applyTime - this.parser.pull.timestamp,
+			end: this.parser.currentEpochTimestamp - this.parser.pull.timestamp,
 			status,
 		}))
 	}
 
-	_onComplete() {
+	private onComplete() {
 		// Clean up any remnant statuses
-		Object.entries(this._buffs).forEach(([targetId, buffs]) =>
-			Object.keys(buffs).forEach(buffId =>
-				this._endStatus(Number(targetId), Number(buffId)),
-			),
-		)
+		for (const [targetId, statuses] of this.applications) {
+			for (const statusId of statuses.keys()) {
+				this.endStatus(targetId, statusId)
+			}
+		}
 
 		// Add the parent row. It will automatically hide if there's no children.
 		this.timeline.addRow(new SimpleRow({
 			label: 'Raid Buffs',
 			order: -100,
-			rows: Array.from(this._buffRows.values()),
+			rows: Array.from(this.timelineRows.values()),
 		}))
 	}
 
-	getTargetBuffs(targetId: number) {
-		return this._buffs[targetId] = this._buffs[targetId] || {}
+	private getTargetApplications(targetId: Actor['id']) {
+		let applications = this.applications.get(targetId)
+		if (applications == null) {
+			applications = new Map()
+			this.applications.set(targetId, applications)
+		}
+		return applications
 	}
 }

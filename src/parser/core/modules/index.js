@@ -24,7 +24,7 @@ import {Medicated} from './Medicated'
 import {NormalisedEvents} from './NormalisedEvents'
 import PrecastAction from './PrecastAction'
 import PrecastStatus from './PrecastStatus'
-import RaidBuffs, {RaidBuffsQuery} from './RaidBuffs'
+import {RaidBuffs} from './RaidBuffs'
 import {ResourceGraphs} from './ResourceGraphs'
 import {SpeedAdjustments} from './SpeedAdjustments'
 import Speedmod from './Speedmod'
@@ -64,7 +64,6 @@ export default [
 	NormalisedEvents,
 	PrecastAction,
 	PrecastStatus,
-	RaidBuffsQuery,
 	RaidBuffs,
 	ResourceGraphs,
 	SpeedAdjustments,
