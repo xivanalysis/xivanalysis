@@ -217,6 +217,7 @@ export default class BloodOfTheDragon extends Module {
 
 	_onDeath() {
 		// RIP
+		this._updateGauge()
 		this._bloodDuration = 0
 		this._lifeDuration = 0
 		this._finishLifeWindow()
@@ -225,7 +226,7 @@ export default class BloodOfTheDragon extends Module {
 
 	_onRaise(event) {
 		// So floor time doesn't count against BotD uptime
-		this._lastEvent = event.timestamp
+		this._lastEventTime = event.timestamp
 	}
 
 	_intersectsDowntime(start) {
@@ -293,6 +294,7 @@ export default class BloodOfTheDragon extends Module {
 	}
 
 	_onComplete() {
+		this._updateGauge()
 		this._finishLifeWindow()
 		this._analyzeLifeWindows()
 		const duration = this.parser.currentDuration - this.death.deadTime

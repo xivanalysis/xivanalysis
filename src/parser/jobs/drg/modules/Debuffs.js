@@ -15,7 +15,8 @@ export default class Debuffs extends DoTs {
 		'suggestions',
 	]
 
-	static statusesToTrack = [
+	// When moving to Typescript, remember to mark this with override.
+	statusesToTrack = [
 		STATUSES.CHAOS_THRUST.id,
 	]
 
