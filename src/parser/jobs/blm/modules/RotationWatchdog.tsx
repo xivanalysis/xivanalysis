@@ -108,6 +108,8 @@ class Cycle {
 	public firePhaseMetadata: FirePhaseMetadata
 	public finalOrDowntime: boolean = false
 
+	private fireSpellIds = FIRE_SPELLS.map(key => this.data.actions[key].id)
+
 	private _errorCode: CycleErrorCode = CYCLE_ERRORS.NONE
 
 	public set errorCode(code) {
@@ -259,7 +261,7 @@ class Cycle {
 	}
 
 	public get isMissingFire(): boolean {
-		return !this.events.some(event => FIRE_SPELLS.includes(event.action))
+		return !this.events.some(event => this.fireSpellIds.includes(event.action))
 	}
 	//#endregion
 
