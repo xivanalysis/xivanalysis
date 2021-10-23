@@ -48,8 +48,6 @@ const SPELLS = [
 	ACTIONS.CLEMENCY.id,
 ]
 
-const REQUIESCAT_DURATION_MILLIS = STATUSES.REQUIESCAT.duration * 1000
-
 class RequiescatState {
 	start: number
 	end: number | null = null
@@ -113,7 +111,7 @@ export default class Requiescat extends Module {
 		if (actionId === ACTIONS.REQUIESCAT.id) {
 			// Add new cast to the list
 			const reqState = new RequiescatState(event.timestamp)
-			const reqEnd = event.timestamp + REQUIESCAT_DURATION_MILLIS
+			const reqEnd = event.timestamp + STATUSES.REQUIESCAT.duration
 
 			if (reqEnd >= this.parser.fight.end_time) {
 				// If the requiescat overshoots the end of the fight, we know ahead of time it'll be a rush

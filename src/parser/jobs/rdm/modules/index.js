@@ -2,6 +2,7 @@ import {AlwaysBeCasting} from 'parser/core/modules/AlwaysBeCasting'
 import {Tincture} from 'parser/core/modules/Tincture'
 import Combos from './Combos'
 import {DualCast} from './Dualcast'
+import {EngagementDisplacementTracking} from './EngagementDisplacementTracking'
 import Gauge from './Gauge'
 import GeneralCDDowntime from './GeneralCDDowntime'
 import {Interrupts} from './Interrupts'
@@ -15,6 +16,7 @@ export default [
 	AlwaysBeCasting,
 	Gauge,
 	DualCast,
+	EngagementDisplacementTracking,
 	GeneralCDDowntime,
 	Interrupts,
 	Procs,

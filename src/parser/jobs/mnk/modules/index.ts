@@ -1,5 +1,5 @@
 import {ActionTimeline} from './ActionTimeline'
-import Demolish from './Demolish'
+import {Demolish} from './Demolish'
 import Fists from './Fists'
 import Forms from './Forms'
 import {GreasedLightning} from './GreasedLightning'

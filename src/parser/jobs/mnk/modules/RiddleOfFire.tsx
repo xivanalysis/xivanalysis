@@ -12,7 +12,7 @@ import React from 'react'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 import Fists, {FISTLESS, Fist} from './Fists'
 
-const ROF_DURATION = STATUSES.RIDDLE_OF_FIRE.duration * 1000
+const ROF_DURATION = STATUSES.RIDDLE_OF_FIRE.duration
 
 // Expected GCDs and buffs
 // technically can get 2 tacles and should as much as possible, but don't ding for it in case it's for mechanics

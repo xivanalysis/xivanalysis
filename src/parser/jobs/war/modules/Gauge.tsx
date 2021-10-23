@@ -5,7 +5,7 @@ import JOBS from 'data/JOBS'
 import STATUSES from 'data/STATUSES'
 import {CastEvent} from 'fflogs'
 import {dependency} from 'parser/core/Module'
-import Combatants from 'parser/core/modules/Combatants'
+import {Actors} from 'parser/core/modules/Actors'
 import {ComboEvent} from 'parser/core/modules/Combos'
 import {Cooldowns} from 'parser/core/modules/Cooldowns'
 import {CounterGauge, Gauge as CoreGauge} from 'parser/core/modules/Gauge'
@@ -49,7 +49,7 @@ const INFURIATE_CDR = 5000
 export class Gauge extends CoreGauge {
 	static override title = t('war.gauge.title')`Beast Gauge`
 
-	@dependency private combatants!: Combatants
+	@dependency private actors!: Actors
 	@dependency private cooldowns!: Cooldowns
 	@dependency private suggestions!: Suggestions
 
@@ -80,7 +80,7 @@ export class Gauge extends CoreGauge {
 
 		// Spenders are free during IR
 		let amount = modifiers[event.type] || 0
-		if (this.combatants.selected.hasStatus(STATUSES.INNER_RELEASE.id)) {
+		if (this.actors.current.hasStatus(STATUSES.INNER_RELEASE.id)) {
 			amount = Math.max(amount, 0)
 		}
 
