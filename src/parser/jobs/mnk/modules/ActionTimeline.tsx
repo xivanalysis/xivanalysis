@@ -12,7 +12,7 @@ export class ActionTimeline extends CoreActionTimeline {
 		},
 		{
 			label: <Trans id="mnk.action-timeline.fists">Fists</Trans>,
-			content: 	'FISTS_OF_FIRE',
+			content: 'FISTS_OF_FIRE',
 		},
 		'RIDDLE_OF_FIRE',
 		'BROTHERHOOD',

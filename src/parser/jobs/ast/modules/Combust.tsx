@@ -23,12 +23,12 @@ const SEVERITIES = {
 export default class Combust extends DoTs {
 	static override handle = 'combust'
 
-	static override statusesToTrack = [
-		STATUSES.COMBUST_III.id,
-	]
-
 	@dependency private checklist!: Checklist
 	@dependency private suggestions!: Suggestions
+
+	override statusesToTrack = [
+		STATUSES.COMBUST_III.id,
+	]
 
 	override addChecklistRules() {
 		this.checklist.add(new TieredRule({
