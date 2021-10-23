@@ -1,6 +1,5 @@
 import {Trans} from '@lingui/react'
 import {ActionLink} from 'components/ui/DbLink'
-import STATUSES from 'data/STATUSES'
 import {dependency} from 'parser/core/Module'
 import Checklist, {Requirement, Rule} from 'parser/core/modules/Checklist'
 import {Data} from 'parser/core/modules/Data'
@@ -17,16 +16,16 @@ const SEVERITIES = {
 	},
 }
 
-export default class Demolish extends DoTs {
+export class Demolish extends DoTs {
 	static override handle = 'demolish'
-
-	static override statusesToTrack = [
-		STATUSES.DEMOLISH.id,
-	]
 
 	@dependency private checklist!: Checklist
 	@dependency private data!: Data
 	@dependency private suggestions!: Suggestions
+
+	override statusesToTrack = [
+		this.data.statuses.DEMOLISH.id,
+	]
 
 	override addChecklistRules() {
 		this.checklist.add(new Rule({
