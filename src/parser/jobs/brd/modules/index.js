@@ -1,5 +1,5 @@
 import {ActionTimeline} from './ActionTimeline'
-import AdditionalStats from './AdditionalStats'
+import AdditionalStats, {AdditionalStatsQuery} from './AdditionalStats'
 import {AlwaysBeCasting} from './AlwaysBeCasting'
 import ApexArrow from './ApexArrow'
 import Barrage from './Barrage'
@@ -18,6 +18,7 @@ import Weaving from './Weaving'
 export default [
 	ActionTimeline,
 	AdditionalStats,
+	AdditionalStatsQuery,
 	AlwaysBeCasting,
 	ApexArrow,
 	Barrage,
