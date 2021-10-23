@@ -31,8 +31,8 @@ const DRIFT_SEVERITY_TIERS = {
 }
 
 const EXPECTED_DANCE_MOVE_COUNT: {[key: string]: number} = {
-	['DOUBLE_STANDARD_FINISH']: 2,
-	['QUADRUPLE_TECHNICAL_FINISH']: 4,
+	['Standard Step']: 2,
+	['Technical Step']: 4,
 }
 
 const DANCE_COMPLETION_LENIENCY_MILLIS = 1000
@@ -126,7 +126,7 @@ export class DirtyDancing extends Analyser {
 	override initialise() {
 		const playerFilter = filter<Event>().source(this.parser.actor.id)
 		this.addEventHook(playerFilter.type('action').action(oneOf(this.stepIds)), this.beginDance)
-		this.addEventHook(playerFilter.type('action'), this.continueDance)
+		this.addEventHook(playerFilter.type('action').action(oneOf(this.danceMoveIds)), this.continueDance)
 		this.addEventHook(playerFilter.type('action').action(oneOf(FINISHES)), this.finishDance)
 		this.addEventHook(playerFilter.type('damage').cause(filter<Cause>().action(oneOf(FINISHES))), this.resolveDance)
 		this.addEventHook('complete', this.onComplete)
@@ -161,11 +161,6 @@ export class DirtyDancing extends Analyser {
 	}
 
 	private continueDance(event: Events['action']) {
-		// Bail if beginDance or finishDance should be handling this event
-		if (this.stepIds.includes(event.action) || FINISHES.includes(event.action)) {
-			return
-		}
-
 		const dance = this.lastDance
 		if (dance && dance.dancing) {
 			dance.rotation.push(event)
