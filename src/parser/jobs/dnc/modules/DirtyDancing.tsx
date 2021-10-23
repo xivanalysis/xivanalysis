@@ -30,11 +30,6 @@ const DRIFT_SEVERITY_TIERS = {
 	3: SEVERITY.MAJOR,
 }
 
-const EXPECTED_DANCE_MOVE_COUNT: {[key: string]: number} = {
-	['Standard Step']: 2,
-	['Technical Step']: 4,
-}
-
 const DANCE_COMPLETION_LENIENCY_MILLIS = 1000
 
 class Dance {
@@ -76,9 +71,13 @@ class Dance {
 	}
 
 	public get expectedDanceMoves(): number {
-		const actionData = this.data.getAction(this.initiatingStep.action)
-		if (actionData == null) { return 0 }
-		return EXPECTED_DANCE_MOVE_COUNT[actionData.name]
+		if (this.initiatingStep.action === this.data.actions.STANDARD_STEP.id) {
+			return 2
+		}
+		if (this.initiatingStep.action === this.data.actions.TECHNICAL_STEP.id) {
+			return DANCE_MOVES.length
+		}
+		return 0
 	}
 
 	public get start(): number {
