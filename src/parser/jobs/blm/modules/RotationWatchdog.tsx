@@ -290,7 +290,7 @@ class Cycle {
 	}
 }
 
-export default class RotationWatchdog extends Analyser {
+export class RotationWatchdog extends Analyser {
 	static override handle = 'RotationWatchdog'
 	static override title = t('blm.rotation-watchdog.title')`Rotation Outliers`
 	static override displayOrder = DISPLAY_ORDER.ROTATION
