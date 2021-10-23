@@ -22,7 +22,7 @@ export default class DoTs extends Module {
 	constructor(...args) {
 		super(...args)
 		// NOTE: All statuses submodules track should include a duration property, otherwise the results this produces will be very fucky
-		this.constructor.statusesToTrack.forEach(statusId => {
+		this.statusesToTrack.forEach(statusId => {
 			const status = this.data.getStatus(statusId)
 			if (!status) { return }
 			if (status.duration == null) {
