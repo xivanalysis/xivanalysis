@@ -1,7 +1,7 @@
 import * as Sentry from '@sentry/browser'
 import {STATUS_ID_OFFSET} from 'data/STATUSES'
 import {Event, Events, Cause, SourceModifier, TargetModifier} from 'event'
-import {ActorResources, BuffEvent, BuffStackEvent, CastEvent, DamageEvent, DeathEvent, FflogsEvent, HealEvent, HitType, TargetabilityUpdateEvent} from 'fflogs'
+import {ActorResources, BuffEvent, BuffStackEvent, CastEvent, DamageEvent, DeathEvent, FflogsEvent, HealEvent, HitType, InstaKillEvent, TargetabilityUpdateEvent} from 'fflogs'
 import {Actor} from 'report'
 import {resolveActorId} from '../base'
 import {AdapterStep} from './base'
@@ -47,12 +47,17 @@ const FAILED_HITS = new Set([
 /** Translate an FFLogs APIv1 event to the xiva representation, if any exists. */
 export class TranslateAdapterStep extends AdapterStep {
 	private unhandledTypes = new Set<string>()
+	// Using negatives so we don't tread on fflog's positive sequence IDs
+	private nextFakeSequence = -1
 
 	override adapt(baseEvent: FflogsEvent, _adaptedEvents: Event[]): Event[] {
 		switch (baseEvent.type) {
 		case 'begincast':
 		case 'cast':
 			return [this.adaptCastEvent(baseEvent)]
+
+		case 'instakill':
+			return this.adaptInstantKillEvent(baseEvent)
 
 		case 'calculateddamage':
 			return this.adaptDamageEvent(baseEvent)
@@ -97,6 +102,8 @@ export class TranslateAdapterStep extends AdapterStep {
 		case 'limitbreakupdate':
 		// We are _technically_ limiting down to a single zone, so any zonechange should be fluff
 		case 'zonechange':
+		// We don't really use map events
+		case 'mapchange':
 		// Not My Problem™️
 		case 'checksummismatch':
 		// New event type from unreleased (as of 2021/04/26) fflogs client. Doesn't contain anything useful.
@@ -166,6 +173,44 @@ export class TranslateAdapterStep extends AdapterStep {
 		}
 
 		return [newEvent, ...this.buildActorUpdateResourceEvents(event)]
+	}
+
+	private adaptInstantKillEvent(event: InstaKillEvent): Event[] {
+		const {targetResources: target} = event
+
+		// Instant kills don't seem to include a sequence, so we're faking it
+		const sequence = this.nextFakeSequence--
+
+		// Build the primary damage event for the instakill.
+		const damageEvent: Events['damage'] = {
+			...this.adaptSourceFields(event),
+			type: 'damage',
+			cause: resolveCause(event.ability.guid),
+			sequence,
+			targets: [{
+				...resolveTargetId(event),
+				// We don't get any amount for an instakill, fake it with the target's HP.
+				amount: target.maxHitPoints,
+				overkill: target.maxHitPoints - target.hitPoints,
+				// No hit type either, just assume normal.
+				sourceModifier: SourceModifier.NORMAL,
+				targetModifier: TargetModifier.NORMAL,
+			}],
+		}
+
+		// Instakills don't seem to have an effect, so we're building one.
+		const executeEvent: Events['execute'] = {
+			...this.adaptTargetedFields(event),
+			type: 'execute',
+			action: event.ability.guid,
+			sequence,
+		}
+
+		return [
+			damageEvent,
+			...this.buildActorUpdateResourceEvents(event),
+			executeEvent,
+		]
 	}
 
 	private adaptDamageEvent(event: DamageEvent): Array<Events['damage' | 'actorUpdate']> {
@@ -239,7 +284,7 @@ export class TranslateAdapterStep extends AdapterStep {
 		}
 	}
 
-	private buildActorUpdateResourceEvents(event: DamageEvent | HealEvent) {
+	private buildActorUpdateResourceEvents(event: DamageEvent | HealEvent | InstaKillEvent) {
 		const {source, target} = resolveActorIds(event)
 
 		const newEvents: Array<Events['actorUpdate']> = []
