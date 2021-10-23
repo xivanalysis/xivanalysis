@@ -15,7 +15,8 @@ export default class ShadowFang extends DoTs {
 		'suggestions',
 	]
 
-	static statusesToTrack = [
+	// When moving to Typescript, remember to mark this with override.
+	statusesToTrack = [
 		STATUSES.SHADOW_FANG.id,
 	]
 

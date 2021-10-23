@@ -102,6 +102,8 @@ export default class AdditionalStats extends Module {
 					// Fixing the multiplier
 					// TODO: Skills should probably have a property with their type/element and category, otherwise this will only work on BRD
 					let fixedMultiplier = event.multiplier
+					if (fixedMultiplier == null) { continue }
+
 					if ( // Spells (songs)
 						event.ability.guid !== ACTIONS.THE_WANDERERS_MINUET.id
 						&& event.ability.guid !== ACTIONS.MAGES_BALLAD.id

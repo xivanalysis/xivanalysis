@@ -62,7 +62,7 @@ export class Statuses extends Analyser {
 				}
 			}
 
-			this.debug(`Status ${edge.side} at ${this.ft(edge.timestamp)}, depth=${meta.depth}`)
+			this.debug(`Status ${status.name} ${edge.side} at ${this.ft(edge.timestamp)}, depth=${meta.depth}`)
 		}
 
 		return meta.uptime
@@ -97,11 +97,11 @@ export class Statuses extends Analyser {
 
 		// If we've got a dangling apply, build edges for it.
 		if (apply != null) {
-			// Try to find a reasonable remove time for the status, if it has a duration.
+			// Try to find a reasonable remove time for the status, if it has a duration.  Cap to the end of the fight.
 			const statusDuration = this.data.getStatus(apply.status)?.duration
 			const remove = statusDuration == null
 				? this.parser.currentEpochTimestamp
-				: (refresh ?? apply).timestamp + statusDuration
+				: Math.min((refresh ?? apply).timestamp + statusDuration, this.parser.pull.timestamp + this.parser.pull.duration)
 
 			edges.push(...this.splitRangeForInvulns(
 				target,
