@@ -89,17 +89,21 @@ Array [
     "type": "action",
   },
   Object {
-    "amount": 0,
     "cause": Object {
       "action": 3554,
       "type": "action",
     },
-    "overkill": 0,
     "sequence": 16647,
     "source": "1",
-    "sourceModifier": 2,
-    "target": "3",
-    "targetModifier": 0,
+    "targets": Array [
+      Object {
+        "amount": 0,
+        "overkill": 0,
+        "sourceModifier": 2,
+        "target": "3",
+        "targetModifier": 0,
+      },
+    ],
     "timestamp": 1600008011183,
     "type": "damage",
   },
@@ -145,16 +149,20 @@ Array [
 exports[`Event adapter individual events adapts calculatedheal 1`] = `
 Array [
   Object {
-    "amount": 36194,
     "cause": Object {
       "action": 3571,
       "type": "action",
     },
-    "overheal": 0,
     "sequence": 4570,
     "source": "3",
-    "sourceModifier": 2,
-    "target": "3",
+    "targets": Array [
+      Object {
+        "amount": 36194,
+        "overheal": 0,
+        "sourceModifier": 2,
+        "target": "3",
+      },
+    ],
     "timestamp": 1600007412071,
     "type": "heal",
   },
@@ -196,17 +204,21 @@ exports[`Event adapter individual events adapts checksummismatch 1`] = `Array []
 exports[`Event adapter individual events adapts damage 1`] = `
 Array [
   Object {
-    "amount": 4176,
     "cause": Object {
       "status": 1000725,
       "type": "status",
     },
-    "overkill": 0,
     "sequence": undefined,
     "source": "2",
-    "sourceModifier": 0,
-    "target": "3",
-    "targetModifier": 0,
+    "targets": Array [
+      Object {
+        "amount": 4176,
+        "overkill": 0,
+        "sourceModifier": 0,
+        "target": "3",
+        "targetModifier": 0,
+      },
+    ],
     "timestamp": 1600008012166,
     "type": "damage",
   },
@@ -287,16 +299,20 @@ exports[`Event adapter individual events adapts encounterstart 1`] = `Array []`;
 exports[`Event adapter individual events adapts heal 1`] = `
 Array [
   Object {
-    "amount": 4588,
     "cause": Object {
       "action": 500001,
       "type": "action",
     },
-    "overheal": 0,
     "sequence": undefined,
     "source": "11",
-    "sourceModifier": 0,
-    "target": "8",
+    "targets": Array [
+      Object {
+        "amount": 4588,
+        "overheal": 0,
+        "sourceModifier": 0,
+        "target": "8",
+      },
+    ],
     "timestamp": 1600008586700,
     "type": "heal",
   },
