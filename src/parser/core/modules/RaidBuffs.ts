@@ -1,10 +1,24 @@
+import {JobKey} from 'data/JOBS'
+import {Status, StatusKey} from 'data/STATUSES'
+import {BuffEvent} from 'fflogs'
+import {Event} from 'legacyEvent'
 import Module, {executeBeforeDoNotUseOrYouWillBeFired} from 'parser/core/Module'
 import {isDefined} from 'utilities'
-import {AdditionalEvents} from './AdditionalEvents'
-import {SimpleRow, StatusItem} from './Timeline'
+import {dependency} from '../Injectable'
+import {AdditionalEventQueries, AdditionalEvents} from './AdditionalEvents'
+import {Data} from './Data'
+import Enemies from './Enemies'
+import {SimpleRow, StatusItem, Timeline} from './Timeline'
 
 // Are other jobs going to need to add to this?
-const RAID_BUFFS = [
+interface RaidBuff {
+	key: StatusKey
+	group?: string
+	name?: string,
+	exclude?: JobKey[]
+}
+
+const RAID_BUFFS: RaidBuff[] = [
 	{key: 'THE_BALANCE', group: 'arcanum', name: 'Arcanum'},
 	{key: 'THE_ARROW', group: 'arcanum', name: 'Arcanum'},
 	{key: 'THE_SPEAR', group: 'arcanum', name: 'Arcanum'},
@@ -29,16 +43,16 @@ const RAID_BUFFS = [
 	{key: 'PECULIAR_LIGHT'},
 ]
 
+// @ts-expect-error types on this are fucky, it's getting yeeted in this pr anyway
 @executeBeforeDoNotUseOrYouWillBeFired(AdditionalEvents)
 class RaidBuffsQuery extends Module {
-	static handle = 'raidBuffsQuery'
-	static dependencies = [
-		'additionalEventQueries',
-		'data',
-		'enemies',
-	]
+	static override handle = 'raidBuffsQuery'
 
-	normalise(events) {
+	@dependency private readonly additionalEventQueries!: AdditionalEventQueries
+	@dependency private readonly data!: Data
+	@dependency private readonly enemies!: Enemies
+
+	override normalise(events: Event[]) {
 		// Abilities we need more info on
 		const abilities = [
 			this.data.statuses.TRICK_ATTACK_VULNERABILITY_UP.id,
@@ -73,22 +87,19 @@ class RaidBuffsQuery extends Module {
 export {RaidBuffsQuery}
 
 export default class RaidBuffs extends Module {
-	static handle = 'raidBuffs'
-	static dependencies = [
-		'data',
-		'enemies',
-		'timeline',
-	]
+	static override handle = 'raidBuffs'
 
-	_buffs = {}
+	@dependency private readonly data!: Data
+	@dependency private readonly enemies!: Enemies
+	@dependency private readonly timeline!: Timeline
+
+	_buffs: Record<number, Record<number, number>> = {}
 
 	_buffRows = new Map()
 
-	_buffMap = new Map()
+	_buffMap = new Map<Status['id'], RaidBuff>()
 
-	constructor(...args) {
-		super(...args)
-
+	protected override init() {
 		RAID_BUFFS.forEach(obj => {
 			this._buffMap.set(this.data.statuses[obj.key].id, obj)
 		})
@@ -102,17 +113,17 @@ export default class RaidBuffs extends Module {
 		this.addEventHook('complete', this._onComplete)
 	}
 
-	_onApply(event) {
+	_onApply(event: BuffEvent) {
 		// Only track active enemies when it's a debuff
 		if (event.type.includes('debuff') && !this.enemies.isActive(event.targetID, event.targetInstance)) {
 			return
 		}
 
-		const buffs = this.getTargetBuffs(event.targetID)
+		const buffs = this.getTargetBuffs(event.targetID!)
 		const statusId = event.ability.guid
 		const settings = this._buffMap.get(statusId)
 
-		if (settings.exclude && settings.exclude.includes(this.parser.actor.job)) {
+		if (settings?.exclude?.includes(this.parser.actor.job)) {
 			return
 		}
 
@@ -120,16 +131,16 @@ export default class RaidBuffs extends Module {
 		buffs[statusId] = event.timestamp - this.parser.eventTimeOffset
 	}
 
-	_onRemove(event) {
+	_onRemove(event: BuffEvent) {
 		// Only track active enemies
 		if (event.type.includes('debuff') && !this.enemies.isActive(event.targetID, event.targetInstance)) {
 			return
 		}
 
-		this._endStatus(event.targetID, event.ability.guid)
+		this._endStatus(event.targetID!, event.ability.guid)
 	}
 
-	_endStatus(targetId, statusId) {
+	_endStatus(targetId: number, statusId: number) {
 		const targetBuffs = this.getTargetBuffs(targetId)
 		const applyTime = targetBuffs[statusId]
 		// This shouldn't happen, but it do.
@@ -140,7 +151,7 @@ export default class RaidBuffs extends Module {
 
 		const settings = this._buffMap.get(statusId)
 		const status = this.data.getStatus(statusId)
-		if (!status) { return }
+		if (settings == null || status == null) { return }
 
 		// Get the row for this buff/group, creating one if it doesn't exist yet.
 		// NOTE: Using application time as order, as otherwise adding here forces ordering by end time of the first buff
@@ -166,7 +177,7 @@ export default class RaidBuffs extends Module {
 		// Clean up any remnant statuses
 		Object.entries(this._buffs).forEach(([targetId, buffs]) =>
 			Object.keys(buffs).forEach(buffId =>
-				this._endStatus(targetId, Number(buffId)),
+				this._endStatus(Number(targetId), Number(buffId)),
 			),
 		)
 
@@ -178,7 +189,7 @@ export default class RaidBuffs extends Module {
 		}))
 	}
 
-	getTargetBuffs(targetId) {
+	getTargetBuffs(targetId: number) {
 		return this._buffs[targetId] = this._buffs[targetId] || {}
 	}
 }
