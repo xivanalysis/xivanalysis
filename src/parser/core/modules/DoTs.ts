@@ -2,10 +2,10 @@ import {Event, Events} from 'event'
 import {Analyser} from 'parser/core/Analyser'
 import {filter, oneOf} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
+import {Actors} from 'parser/core/modules/Actors'
 import {Data} from 'parser/core/modules/Data'
-import Enemies from 'parser/core/modules/Enemies'
-import {EntityStatuses} from 'parser/core/modules/EntityStatuses'
 import {Invulnerability} from 'parser/core/modules/Invulnerability'
+import {Statuses} from 'parser/core/modules/Statuses'
 
 const SECONDS_PER_MINUTE = 60
 
@@ -22,9 +22,9 @@ export abstract class DoTs extends Analyser {
 	static override handle = 'dots'
 
 	@dependency protected data!: Data
-	@dependency private enemies!: Enemies
-	@dependency private entityStatuses!: EntityStatuses
+	@dependency private actors!: Actors
 	@dependency private invulnerability!: Invulnerability
+	@dependency private statuses!: Statuses
 
 	/** Implementing modules MUST override this with a list of Status IDs. */
 	protected abstract trackedStatuses: number[] = []
@@ -127,7 +127,10 @@ export abstract class DoTs extends Analyser {
 
 	// These two functions are helpers for submodules and should be used but not overridden
 	public getUptimePercent(statusID: number) {
-		const statusUptime = this.entityStatuses.getStatusUptime(statusID, this.enemies.getEntities())
+		const status = this.data.getStatus(statusID)
+		if (status == null) { return 0 }
+
+		const statusUptime = this.statuses.getUptime(status, this.actors.foes)
 		const fightDuration = this.parser.currentDuration - this.invulnerability.getDuration({types: ['invulnerable']})
 		return (statusUptime / fightDuration) * 100
 	}
