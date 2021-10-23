@@ -40,10 +40,10 @@ const ENHANCED_SEVERITY_TIERS = {
 	3: SEVERITY.MAJOR,
 }
 
-const CYCLE_ENDPOINTS = [
-	ACTIONS.BLIZZARD_III.id,
-	ACTIONS.TRANSPOSE.id,
-	ACTIONS.FREEZE.id,
+const CYCLE_ENDPOINTS: ActionKey[] = [
+	'BLIZZARD_III',
+	'TRANSPOSE',
+	'FREEZE',
 ]
 
 // This is feelycraft at the moment. Rotations shorter than this won't be processed for errors.
@@ -335,6 +335,8 @@ export default class RotationWatchdog extends Analyser {
 		DIED: {priority: DEATH_PRIORITY, message: <Trans id="blm.rotation-watchdog.error-messages.died"><ActionLink showName={false} {...this.data.actions.RAISE} /> Died</Trans>},
 	}
 
+	private cycleEndpointIds = CYCLE_ENDPOINTS.map(key => this.data.actions[key].id)
+
 	private currentRotation: Cycle = new Cycle(this.parser.pull.timestamp, this.currentGaugeState, this.data)
 	private history: Cycle[] = []
 
@@ -382,7 +384,7 @@ export default class RotationWatchdog extends Analyser {
 		// If this action is signifies the beginning of a new cycle, unless this is the first
 		// cast of the log, stop the current cycle, and begin a new one. If Transposing from ice
 		// to fire, keep this cycle going
-		if (CYCLE_ENDPOINTS.includes(actionId) && !this.firstEvent &&
+		if (this.cycleEndpointIds.includes(actionId) && !this.firstEvent &&
 			!(actionId === this.data.actions.TRANSPOSE.id && this.currentGaugeState.umbralIce > 0)) {
 			this.startRecording(event)
 		}
