@@ -4,7 +4,7 @@ import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import {dependency} from 'parser/core/Module'
 import Checklist, {Requirement, TARGET, TieredRule} from 'parser/core/modules/Checklist'
-import DoTs from 'parser/core/modules/DoTs'
+import {DoTs, DotDurations} from 'parser/core/modules/DoTs'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
 
@@ -26,7 +26,7 @@ export default class Combust extends DoTs {
 	@dependency private checklist!: Checklist
 	@dependency private suggestions!: Suggestions
 
-	override statusesToTrack = [
+	override trackedStatuses = [
 		STATUSES.COMBUST_III.id,
 	]
 
@@ -46,7 +46,7 @@ export default class Combust extends DoTs {
 		}))
 	}
 
-	override addClippingSuggestions(clip: TODO) {
+	override addClippingSuggestions(clip: DotDurations) {
 		// Suggestion for DoT clipping
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.COMBUST_III.icon,

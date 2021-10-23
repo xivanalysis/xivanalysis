@@ -3,7 +3,7 @@ import {ActionLink, StatusLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import {TieredRule, TARGET, Requirement} from 'parser/core/modules/Checklist'
-import CoreDoTs from 'parser/core/modules/DoTs'
+import {DoTs as CoreDoTs} from 'parser/core/modules/DoTs'
 import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import React from 'react'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
@@ -30,7 +30,7 @@ export default class DoTs extends CoreDoTs {
 		'suggestions',
 	]
 
-	static statusesToTrack = [
+	static trackedStatuses = [
 		STATUSES.BIOLYSIS.id,
 	]
 
