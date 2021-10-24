@@ -1,6 +1,6 @@
 import {Weaving as CoreWeaving, Weave} from 'parser/core/modules/Weaving'
 
-export default class Weaving extends CoreWeaving {
+export class Weaving extends CoreWeaving {
 	override getMaxWeaves(weave: Weave) {
 		let dreams = 0
 
