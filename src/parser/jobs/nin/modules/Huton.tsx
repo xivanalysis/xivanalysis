@@ -108,7 +108,8 @@ export class Huton extends Module {
 		const action = this.data.getAction(event.ability.guid)
 		if (action == null) { return }
 
-		const extension = this.hutonExtensionMillis.get(action.id) || 0 // The .get() should never be undefined but we must appease the ts lint gods
+		// The .get() should never be undefined but we must appease the ts lint gods
+		const extension = this.hutonExtensionMillis.get(action.id) ?? 0 
 		this.handleHutonExtension(this.highEstimate, extension, elapsedTime)
 		this.handleHutonExtension(this.lowEstimate, extension, elapsedTime)
 		this.lastEventTime = event.timestamp

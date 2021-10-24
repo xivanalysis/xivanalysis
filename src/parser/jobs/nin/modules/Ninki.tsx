@@ -109,7 +109,8 @@ export class Ninki extends Module {
 
 	private onBuilderCast(event: CastEvent | ComboEvent) {
 		const abilityId = event.ability.guid
-		this.addNinki(this.actionNinkiGain.get(abilityId) || 0, abilityId) // The .get() should never be undefined but we must appease the ts lint gods
+		// The .get() should never be undefined but we must appease the ts lint gods
+		this.addNinki(this.actionNinkiGain.get(abilityId) ?? 0, abilityId)
 	}
 
 	private onBunshinHit() {
