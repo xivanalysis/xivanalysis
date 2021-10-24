@@ -368,7 +368,84 @@ Array [
 ]
 `;
 
+exports[`Event adapter individual events adapts instakill 1`] = `
+Array [
+  Object {
+    "action": 9899,
+    "source": "1957:4",
+    "target": "1951",
+    "timestamp": 1599999999999,
+    "type": "action",
+  },
+  Object {
+    "cause": Object {
+      "action": 9899,
+      "type": "action",
+    },
+    "sequence": -1,
+    "source": "1957:4",
+    "targets": Array [
+      Object {
+        "amount": 43259,
+        "overkill": 0,
+        "sourceModifier": 0,
+        "target": "1951",
+        "targetModifier": 0,
+      },
+    ],
+    "timestamp": 1600051935589,
+    "type": "damage",
+  },
+  Object {
+    "actor": "1951",
+    "hp": Object {
+      "current": 43259,
+      "maximum": 43259,
+    },
+    "mp": Object {
+      "current": 9700,
+      "maximum": 10000,
+    },
+    "position": Object {
+      "bearing": -562,
+      "x": -588,
+      "y": -1535,
+    },
+    "timestamp": 1600051935589,
+    "type": "actorUpdate",
+  },
+  Object {
+    "actor": "1957:4",
+    "hp": Object {
+      "current": 57250,
+      "maximum": 57250,
+    },
+    "mp": Object {
+      "current": 0,
+      "maximum": 10000,
+    },
+    "position": Object {
+      "bearing": -520,
+      "x": -631,
+      "y": -1583,
+    },
+    "timestamp": 1600051935589,
+    "type": "actorUpdate",
+  },
+  Object {
+    "action": 9899,
+    "sequence": -1,
+    "source": "1957:4",
+    "target": "1951",
+    "timestamp": 1600051935589,
+    "type": "execute",
+  },
+]
+`;
+
 exports[`Event adapter individual events adapts limitbreakupdate 1`] = `Array []`;
+
+exports[`Event adapter individual events adapts mapchange 1`] = `Array []`;
 
 exports[`Event adapter individual events adapts refreshbuff 1`] = `
 Array [
@@ -497,5 +574,9 @@ Array [
 exports[`Event adapter individual events adapts unknown 1`] = `Array []`;
 
 exports[`Event adapter individual events adapts wipecalled 1`] = `Array []`;
+
+exports[`Event adapter individual events adapts worldmarkerplaced 1`] = `Array []`;
+
+exports[`Event adapter individual events adapts worldmarkerremoved 1`] = `Array []`;
 
 exports[`Event adapter individual events adapts zonechange 1`] = `Array []`;
