@@ -34,11 +34,13 @@ export abstract class DoTs extends Analyser {
 	private statusDurations: DotDurations = {}
 
 	override initialise() {
-		this.addEventHook(filter<Event>()
-			.type('statusApply')
-			.source(this.parser.actor.id)
-			.status(oneOf(this.trackedStatuses))
-		, this.onApply)
+		this.addEventHook(
+			filter<Event>()
+				.type('statusApply')
+				.source(this.parser.actor.id)
+				.status(oneOf(this.trackedStatuses)),
+			this.onApply,
+		)
 
 		this.addEventHook('complete', this.onComplete)
 
@@ -46,26 +48,29 @@ export abstract class DoTs extends Analyser {
 		//  otherwise the results this produces will be very fucky.
 		this.trackedStatuses.forEach(statusID => {
 			const status = this.data.getStatus(statusID)
-			if (!status) { return } // return in forEach is like continue in for, don't ask me why.
+			if (status == null) { return }
 
 			this.statusDurations[statusID] = status.duration ?? 0
 		})
 
 	}
 
-	/** Implementing modules MUST override this to configure the checklist.
+	/**
+	 * Implementing modules MUST override this to configure the checklist.
 	 * This should be handled on a job-by-job basis rather than generically, since the description
 	 * text isn't one-size-fits-all, and some jobs may have custom targets.
 	 */
 	protected abstract addChecklistRules(): void
 
-	/** Implementing modules MUST override this to configure suggestions.
+	/**
+	 * Implementing modules MUST override this to configure suggestions.
 	 * This should be handled on a job-by-job basis rather than generically, since different jobs have
 	 * different thresholds for what constitutes bad clipping with varying explanations as to why.
 	 */
 	protected abstract addClippingSuggestions(_clips: DotDurations): void
 
-	/** Implementing modules can optionally exclude applications of a status from clipping calculations.
+	/**
+	 * Implementing modules can optionally exclude applications of a status from clipping calculations.
 	 * (e.g. SMN rushing)
 	 */
 	protected excludeApplication() {
