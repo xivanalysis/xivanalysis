@@ -69,6 +69,7 @@ interface FirePhaseMetadata {
 
 class Cycle {
 	private data: Data
+	private fireSpellIds: number[] = []
 
 	//#region Cycle events
 	// Keep track of spells cast in this cycle by which phase of the cycle they're in
@@ -240,7 +241,7 @@ class Cycle {
 	}
 
 	public get isMissingFire(): boolean {
-		return !this.events.some(event => FIRE_SPELLS.includes(event.action))
+		return !this.events.some(event => this.fireSpellIds.includes(event.action))
 	}
 	//#endregion
 
@@ -261,7 +262,7 @@ class Cycle {
 		return this.errorCode.priority < DEATH_PRIORITY && this.errorCode.priority > HIDDEN_PRIORITY_THRESHOLD
 	}
 
-	constructor(start: number, gaugeState: BLMGaugeState, dataRef: Data) {
+	constructor(start: number, gaugeState: BLMGaugeState, dataRef: Data, fireSpellIds: number[]) {
 		this.startTime = start
 		this.firePhaseMetadata = {
 			startTime: 0,
@@ -270,6 +271,7 @@ class Cycle {
 			initialGaugeState: {...gaugeState},
 		}
 		this.data = dataRef
+		this.fireSpellIds = fireSpellIds
 	}
 
 	public overrideErrorCode(code: CycleErrorCode): void {
@@ -337,7 +339,8 @@ export class RotationWatchdog extends Analyser {
 
 	private cycleEndpointIds = CYCLE_ENDPOINTS.map(key => this.data.actions[key].id)
 
-	private currentRotation: Cycle = new Cycle(this.parser.pull.timestamp, this.currentGaugeState, this.data)
+	private fireSpellIds = FIRE_SPELLS.map(key => this.data.actions[key].id)
+	private currentRotation: Cycle = new Cycle(this.parser.pull.timestamp, this.currentGaugeState, this.data, this.fireSpellIds)
 	private history: Cycle[] = []
 
 	private firstEvent: boolean = true
@@ -562,7 +565,7 @@ export class RotationWatchdog extends Analyser {
 	private startRecording(event: Events['action']) {
 		this.stopRecording(event)
 		// Pass in whether we've seen the first cycle endpoint to account for pre-pull buff executions (mainly Sharpcast)
-		this.currentRotation = new Cycle(event.timestamp, this.currentGaugeState, this.data)
+		this.currentRotation = new Cycle(event.timestamp, this.currentGaugeState, this.data, this.fireSpellIds)
 	}
 
 	// End the current cycle, send it off to error processing, and add it to the history list
