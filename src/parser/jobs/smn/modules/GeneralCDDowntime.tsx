@@ -1,102 +1,84 @@
-import ACTIONS from 'data/ACTIONS'
-import {AbilityType, CastEvent} from 'fflogs'
-import {Event} from 'legacyEvent'
-import {dependency} from 'parser/core/Module'
+import {Event, Events} from 'event'
+import {EventHook} from 'parser/core/Dispatcher'
+import {filter, oneOf} from 'parser/core/filter'
 import {CooldownDowntime} from 'parser/core/modules/CooldownDowntime'
-import PrecastStatus from 'parser/core/modules/PrecastStatus'
 
 export default class GeneralCDDowntime extends CooldownDowntime {
-	// Need dependency to ensure proper ordering of normalise calls
-	@dependency private precastStatus!: PrecastStatus
 
 	trackedCds = [{
 		cooldowns: [
-			ACTIONS.DREADWYRM_TRANCE,
-			ACTIONS.FIREBIRD_TRANCE,
+			this.data.actions.DREADWYRM_TRANCE,
+			this.data.actions.FIREBIRD_TRANCE,
 		],
 		firstUseOffset: 7500,
 	}, {
 		cooldowns: [
-			ACTIONS.ENERGY_DRAIN,
-			ACTIONS.ENERGY_SIPHON,
+			this.data.actions.ENERGY_DRAIN,
+			this.data.actions.ENERGY_SIPHON,
 		],
 		firstUseOffset: 2500,
 	}, {
 		cooldowns: [
-			ACTIONS.ASSAULT_I_AERIAL_SLASH,
-			ACTIONS.ASSAULT_I_EARTHEN_ARMOR,
-			ACTIONS.ASSAULT_I_CRIMSON_CYCLONE,
+			this.data.actions.ASSAULT_I_AERIAL_SLASH,
+			this.data.actions.ASSAULT_I_EARTHEN_ARMOR,
+			this.data.actions.ASSAULT_I_CRIMSON_CYCLONE,
 		],
 		firstUseOffset: 3500,
 		// isAffectedBySpeed: true,
 	}, {
 		cooldowns: [
-			ACTIONS.ASSAULT_II_SLIIPSTREAM,
-			ACTIONS.ASSAULT_II_MOUNTAIN_BUSTER,
-			ACTIONS.ASSAULT_II_FLAMING_CRUSH,
+			this.data.actions.ASSAULT_II_SLIIPSTREAM,
+			this.data.actions.ASSAULT_II_MOUNTAIN_BUSTER,
+			this.data.actions.ASSAULT_II_FLAMING_CRUSH,
 		],
 		firstUseOffset: 3500,
 		// isAffectedBySpeed: true,
 	}, {
 		cooldowns: [
-			ACTIONS.ENKINDLE_AERIAL_BLAST,
-			ACTIONS.ENKINDLE_EARTHEN_FURY,
-			ACTIONS.ENKINDLE_INFERNO,
+			this.data.actions.ENKINDLE_AERIAL_BLAST,
+			this.data.actions.ENKINDLE_EARTHEN_FURY,
+			this.data.actions.ENKINDLE_INFERNO,
 		],
 		firstUseOffset: 9250,
 	}, {
 		cooldowns: [
-			ACTIONS.SMN_AETHERPACT,
+			this.data.actions.SMN_AETHERPACT,
 		],
 		firstUseOffset: 6750,
 	}]
 
-	override normalise(events: Event[]) {
+	private devotionHook? : EventHook<Events['action']>
+
+	override initialise() {
+		super.initialise()
+
+		const pets = this.parser.pull.actors
+			.filter(actor => actor.owner === this.parser.actor)
+			.map(actor => actor.id)
+		this.devotionHook = this.addEventHook(
+			filter<Event>()
+				.source(oneOf(pets))
+				.action(this.data.actions.DEVOTION.id)
+				.type('action'),
+			this.onAetherpactCast
+		)
+	}
+
+	private onAetherpactCast(event: Events['action']) {
 		// Egis will not execute an order while they are moving, so it is possible to
 		// issue a pre-pull Aetherpact and delay the Devotion cast by the pet until
 		// after the pull by running the pet in circles.  Such casts will not be detected
 		// by PrecastStatus, since the status is applied post-pull.
 
-		for (const event of events) {
-			if (event.type !== 'cast') { continue }
-
-			const cast = event as CastEvent
-			if (!cast.ability ||
-				!(this.parser.byPlayer(cast) || this.parser.byPlayerPet(cast))
-			) {
-				continue
-			}
-
-			if (cast.ability.guid === ACTIONS.SMN_AETHERPACT.id) {
-				this.debug('Aetherpact found first')
-				// Aetherpact was found first, everything is in order
-				return events
-			}
-
-			if (cast.ability.guid === ACTIONS.DEVOTION.id) {
-				this.debug('Devotion found first')
-				// Devotion was found first, need to synth an Aetherpact
-				const preCast: CastEvent = {
-					ability: {
-						abilityIcon: ACTIONS.SMN_AETHERPACT.icon,
-						guid: ACTIONS.SMN_AETHERPACT.id,
-						name: ACTIONS.SMN_AETHERPACT.name,
-						type: AbilityType.SPECIAL,
-					},
-					sourceID: this.parser.player.id,
-					sourceIsFriendly: true,
-					target: cast.source,
-					targetID: cast.sourceID,
-					targetInstance: cast.sourceInstance,
-					targetIsFriendly: cast.sourceIsFriendly,
-					timestamp: this.parser.fight.start_time - 2,
-					type: 'cast',
-				}
-				events.splice(0, 0, preCast)
-				return events
-			}
+		if (event.timestamp < this.parser.pull.timestamp) {
+			const modified = {...event}
+			modified.action = this.data.actions.SMN_AETHERPACT.id
+			this.onTrackedCast(modified)
 		}
 
-		return events
+		if (this.devotionHook != null) {
+			this.removeEventHook(this.devotionHook)
+			this.devotionHook = undefined
+		}
 	}
 }

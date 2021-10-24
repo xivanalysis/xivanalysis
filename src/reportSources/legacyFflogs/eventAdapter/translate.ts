@@ -104,6 +104,9 @@ export class TranslateAdapterStep extends AdapterStep {
 		case 'zonechange':
 		// We don't really use map events
 		case 'mapchange':
+		// Could be interesting to do something with, but not important for analysis
+		case 'worldmarkerplaced':
+		case 'worldmarkerremoved':
 		// Not My Problem™️
 		case 'checksummismatch':
 		// New event type from unreleased (as of 2021/04/26) fflogs client. Doesn't contain anything useful.
