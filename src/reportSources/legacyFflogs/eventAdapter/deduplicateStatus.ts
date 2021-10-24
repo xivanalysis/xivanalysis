@@ -36,8 +36,8 @@ export class DeduplicateStatusApplicationStep extends AdapterStep {
 		// If there's no previous application, or it was at a different timestamp, pass on
 		const previousApply = this.activeStatuses.get(key)
 		if (
-			previousApply == null ||
-			event.timestamp - previousApply.timestamp < PERMITTED_TIME_DELTA
+			previousApply == null
+			|| event.timestamp - previousApply.timestamp > PERMITTED_TIME_DELTA
 		) {
 			return event
 		}

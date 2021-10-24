@@ -18,7 +18,7 @@ import {UnableToAct} from 'parser/core/modules/UnableToAct'
 import {CompleteEvent} from 'parser/core/Parser'
 import React from 'react'
 import {isSuccessfulHit} from 'utilities'
-import {FIRE_SPELLS, ICE_SPELLS, ICE_SPELLS_TARGETED, ICE_SPELLS_UNTARGETED} from './Elements'
+import {FIRE_SPELLS, ICE_SPELLS_TARGETED, ICE_SPELLS_UNTARGETED} from './Elements'
 
 const ENOCHIAN_DURATION_REQUIRED = 30000
 export const ASTRAL_UMBRAL_DURATION = 15000
@@ -99,12 +99,20 @@ export default class Gauge extends Analyser {
 	private astralUmbralTimeoutHook!: TimestampHook | null
 	private gainPolyglotHook!: TimestampHook | null
 
+	private fireSpellIds = FIRE_SPELLS.map(key => this.data.actions[key].id)
+	private targetedIceSpellIds = ICE_SPELLS_TARGETED.map(key => this.data.actions[key].id)
+	private untargetedIceSpellIds = ICE_SPELLS_UNTARGETED.map(key => this.data.actions[key].id)
+	private iceSpellIds = [
+		...this.targetedIceSpellIds,
+		...this.untargetedIceSpellIds,
+	]
+
 	private affectsGaugeOnDamage: number[] = [
-		...FIRE_SPELLS,
-		...ICE_SPELLS_TARGETED,
+		...this.fireSpellIds,
+		...this.targetedIceSpellIds,
 	]
 	private affectsGaugeOnCast: number[] = [
-		...ICE_SPELLS_UNTARGETED,
+		...this.untargetedIceSpellIds,
 		this.data.actions.TRANSPOSE.id,
 		this.data.actions.ENOCHIAN.id,
 		this.data.actions.FOUL.id,
@@ -292,12 +300,12 @@ export default class Gauge extends Analyser {
 		// If we have gained max AF, set Blizzard spells to be fast
 		if (lastAstralFire !== MAX_ASTRAL_UMBRAL_STACKS && this.currentGaugeState.astralFire === MAX_ASTRAL_UMBRAL_STACKS) {
 			this.castTime.reset(this.castTimeIndex)
-			this.castTimeIndex = this.castTime.setPercentageAdjustment(ICE_SPELLS, MAX_ASTRAL_UMBRAL_CAST_SCALAR)
+			this.castTimeIndex = this.castTime.setPercentageAdjustment(this.iceSpellIds, MAX_ASTRAL_UMBRAL_CAST_SCALAR)
 		}
 		// If we have gained max UI, set Fire spells to be fast
 		if (lastUmbralIce !== MAX_ASTRAL_UMBRAL_STACKS && this.currentGaugeState.umbralIce === MAX_ASTRAL_UMBRAL_STACKS) {
 			this.castTime.reset(this.castTimeIndex)
-			this.castTimeIndex = this.castTime.setPercentageAdjustment(FIRE_SPELLS, MAX_ASTRAL_UMBRAL_CAST_SCALAR)
+			this.castTimeIndex = this.castTime.setPercentageAdjustment(this.fireSpellIds, MAX_ASTRAL_UMBRAL_CAST_SCALAR)
 		}
 		// If our current gauge state doesn't have either max AF or max UI, drop the cast time adjustment entirely
 		if (this.currentGaugeState.astralFire !== MAX_ASTRAL_UMBRAL_STACKS && this.currentGaugeState.umbralIce !== MAX_ASTRAL_UMBRAL_STACKS) {
