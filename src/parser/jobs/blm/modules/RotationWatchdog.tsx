@@ -2,7 +2,7 @@ import {t} from '@lingui/macro'
 import {Plural, Trans} from '@lingui/react'
 import {ActionLink} from 'components/ui/DbLink'
 import {RotationTable} from 'components/ui/RotationTable'
-import ACTIONS from 'data/ACTIONS'
+import {ActionKey} from 'data/ACTIONS'
 import {Events, FieldsTargeted} from 'event'
 import {Analyser} from 'parser/core/Analyser'
 import {dependency} from 'parser/core/Injectable'
@@ -40,38 +40,19 @@ const ENHANCED_SEVERITY_TIERS = {
 	3: SEVERITY.MAJOR,
 }
 
-const CYCLE_ENDPOINTS = [
-	ACTIONS.BLIZZARD_III.id,
-	ACTIONS.TRANSPOSE.id,
-	ACTIONS.FREEZE.id,
+const CYCLE_ENDPOINTS: ActionKey[] = [
+	'BLIZZARD_III',
+	'TRANSPOSE',
+	'FREEZE',
 ]
 
 // This is feelycraft at the moment. Rotations shorter than this won't be processed for errors.
 const MIN_ROTATION_LENGTH = 3
 
-/**
- * Error type codes, higher values indicate higher priority errors. If you add more, adjust the IDs to ensure correct priorities.
- * Only the highest priority error will be displayed in the 'Reason' column.
- * NOTE: Cycles with values below ERROR_CODES.SHORT will be filtered out of the RotationTable display
- * unless the DEBUG_SHOW_ALL_CYCLES variable is set to true
- */
 interface CycleErrorCode {priority: number, message: ReactNode}
-const CYCLE_ERRORS: {[key: string]: CycleErrorCode } = {
-	NONE: {priority: 0, message: 'No errors'},
-	FINAL_OR_DOWNTIME: {priority: 1, message: 'Ended with downtime, or last cycle'},
-	SHORT: {priority: 2, message: 'Too short, won\'t process'},
-	// Messages below should be Trans objects since they'll be displayed to end users
-	SHOULD_SKIP_T3: {priority: 8, message: <Trans id="blm.rotation-watchdog.error-messages.should-skip-t3">Should skip hardcast <ActionLink {...ACTIONS.THUNDER_III}/></Trans>},
-	SHOULD_SKIP_B4: {priority: 9, message: <Trans id="blm.rotation-watchdog.error-messages.should-skip-b4">Should skip <ActionLink {...ACTIONS.BLIZZARD_IV}/></Trans>},
-	MISSING_FIRE4S: {priority: 10, message: <Trans id="blm.rotation-watchdog.error-messages.missing-fire4s">Missing one or more <ActionLink {...ACTIONS.FIRE_IV}/>s</Trans>}, // These two errors are lower priority since they can be determined by looking at the
-	MISSING_DESPAIRS: {priority: 15, message: <Trans id="blm.rotation-watchdog.error-messages.missing-despair">Missing one or more <ActionLink {...ACTIONS.DESPAIR}/>s</Trans>}, // target columns in the table, so we want to tell players about other errors first
-	MANAFONT_BEFORE_DESPAIR: {priority: 30, message: <Trans id="blm.rotation-watchdog.error-messages.manafont-before-despair"><ActionLink {...ACTIONS.MANAFONT}/> used before <ActionLink {...ACTIONS.DESPAIR}/></Trans>},
-	EXTRA_T3: {priority: 49, message: <Trans id="blm.rotation-watchdog.error-messages.extra-t3">Extra <ActionLink {...ACTIONS.THUNDER_III}/>s</Trans>}, // Extra T3 and Extra F1 are *very* similar in terms of per-GCD potency loss
-	EXTRA_F1: {priority: 50, message: <Trans id="blm.rotation-watchdog.error-messages.extra-f1">Extra <ActionLink {...ACTIONS.FIRE_I}/></Trans>}, // These two codes should stay close to each other
-	NO_FIRE_SPELLS: {priority: 75, message: <Trans id="blm.rotation-watchdog.error-messages.no-fire-spells">Rotation included no Fire spells</Trans>},
-	DROPPED_ENOCHIAN: {priority: 100, message: <Trans id="blm.rotation-watchdog.error-messages.dropped-enochian">Dropped <ActionLink {...ACTIONS.ENOCHIAN}/></Trans>},
-	DIED: {priority: 101, message: <Trans id="blm.rotation-watchdog.error-messages.died"><ActionLink showName={false} {...ACTIONS.RAISE} /> Died</Trans>},
-}
+const NO_ERROR: CycleErrorCode = {priority: 0, message: 'No errors'} // Still defining this out here so we can default it in Cycle
+const DEATH_PRIORITY = 101 // Define this const here so we can reference it in both classes
+const HIDDEN_PRIORITY_THRESHOLD = 2 // Same as ^
 
 interface CycleEvent extends FieldsTargeted {
 	action: number,
@@ -108,9 +89,9 @@ class Cycle {
 	public firePhaseMetadata: FirePhaseMetadata
 	public finalOrDowntime: boolean = false
 
-	private _errorCode: CycleErrorCode = CYCLE_ERRORS.NONE
+	private _errorCode: CycleErrorCode = NO_ERROR
 
-	public set errorCode(code) {
+	public set errorCode(code: CycleErrorCode) {
 		if (code.priority > this._errorCode.priority) {
 			this._errorCode = code
 		}
@@ -277,7 +258,7 @@ class Cycle {
 	//#endregion
 
 	public get includeInSuggestions(): boolean {
-		return this.errorCode.priority < CYCLE_ERRORS.DIED.priority && this.errorCode.priority > CYCLE_ERRORS.SHORT.priority
+		return this.errorCode.priority < DEATH_PRIORITY && this.errorCode.priority > HIDDEN_PRIORITY_THRESHOLD
 	}
 
 	constructor(start: number, gaugeState: BLMGaugeState, dataRef: Data) {
@@ -309,7 +290,7 @@ class Cycle {
 	}
 }
 
-export default class RotationWatchdog extends Analyser {
+export class RotationWatchdog extends Analyser {
 	static override handle = 'RotationWatchdog'
 	static override title = t('blm.rotation-watchdog.title')`Rotation Outliers`
 	static override displayOrder = DISPLAY_ORDER.ROTATION
@@ -331,6 +312,30 @@ export default class RotationWatchdog extends Analyser {
 		polyglot: 0,
 		enochian: false,
 	}
+
+	/**
+	 * Error type codes, higher values indicate higher priority errors. If you add more, adjust the IDs to ensure correct priorities.
+	 * Only the highest priority error will be displayed in the 'Reason' column.
+	 * NOTE: Cycles with values at or below HIDDEN_PRIORITY_THRESHOLD will be filtered out of the RotationTable display
+	 * unless the DEBUG_SHOW_ALL_CYCLES variable is set to true
+	 */
+	private readonly CYCLE_ERRORS: {[key: string]: CycleErrorCode } = {
+		FINAL_OR_DOWNTIME: {priority: 1, message: 'Ended with downtime, or last cycle'},
+		SHORT: {priority: HIDDEN_PRIORITY_THRESHOLD, message: 'Too short, won\'t process'},
+		// Messages below should be Trans objects since they'll be displayed to end users
+		SHOULD_SKIP_T3: {priority: 8, message: <Trans id="blm.rotation-watchdog.error-messages.should-skip-t3">Should skip hardcast <ActionLink {...this.data.actions.THUNDER_III}/></Trans>},
+		SHOULD_SKIP_B4: {priority: 9, message: <Trans id="blm.rotation-watchdog.error-messages.should-skip-b4">Should skip <ActionLink {...this.data.actions.BLIZZARD_IV}/></Trans>},
+		MISSING_FIRE4S: {priority: 10, message: <Trans id="blm.rotation-watchdog.error-messages.missing-fire4s">Missing one or more <ActionLink {...this.data.actions.FIRE_IV}/>s</Trans>}, // These two errors are lower priority since they can be determined by looking at the
+		MISSING_DESPAIRS: {priority: 15, message: <Trans id="blm.rotation-watchdog.error-messages.missing-despair">Missing one or more <ActionLink {...this.data.actions.DESPAIR}/>s</Trans>}, // target columns in the table, so we want to tell players about other errors first
+		MANAFONT_BEFORE_DESPAIR: {priority: 30, message: <Trans id="blm.rotation-watchdog.error-messages.manafont-before-despair"><ActionLink {...this.data.actions.MANAFONT}/> used before <ActionLink {...this.data.actions.DESPAIR}/></Trans>},
+		EXTRA_T3: {priority: 49, message: <Trans id="blm.rotation-watchdog.error-messages.extra-t3">Extra <ActionLink {...this.data.actions.THUNDER_III}/>s</Trans>}, // Extra T3 and Extra F1 are *very* similar in terms of per-GCD potency loss
+		EXTRA_F1: {priority: 50, message: <Trans id="blm.rotation-watchdog.error-messages.extra-f1">Extra <ActionLink {...this.data.actions.FIRE_I}/></Trans>}, // These two codes should stay close to each other
+		NO_FIRE_SPELLS: {priority: 75, message: <Trans id="blm.rotation-watchdog.error-messages.no-fire-spells">Rotation included no Fire spells</Trans>},
+		DROPPED_ENOCHIAN: {priority: 100, message: <Trans id="blm.rotation-watchdog.error-messages.dropped-enochian">Dropped <ActionLink {...this.data.actions.ENOCHIAN}/></Trans>},
+		DIED: {priority: DEATH_PRIORITY, message: <Trans id="blm.rotation-watchdog.error-messages.died"><ActionLink showName={false} {...this.data.actions.RAISE} /> Died</Trans>},
+	}
+
+	private cycleEndpointIds = CYCLE_ENDPOINTS.map(key => this.data.actions[key].id)
 
 	private currentRotation: Cycle = new Cycle(this.parser.pull.timestamp, this.currentGaugeState, this.data)
 	private history: Cycle[] = []
@@ -365,7 +370,7 @@ export default class RotationWatchdog extends Analyser {
 
 		// If we no longer have enochian, flag it for display
 		if (this.currentGaugeState.enochian && !nextGaugeState.enochian) {
-			this.currentRotation.errorCode = CYCLE_ERRORS.DROPPED_ENOCHIAN
+			this.currentRotation.errorCode = this.CYCLE_ERRORS.DROPPED_ENOCHIAN
 		}
 
 		// Retrieve the GaugeState from the event
@@ -379,7 +384,7 @@ export default class RotationWatchdog extends Analyser {
 		// If this action is signifies the beginning of a new cycle, unless this is the first
 		// cast of the log, stop the current cycle, and begin a new one. If Transposing from ice
 		// to fire, keep this cycle going
-		if (CYCLE_ENDPOINTS.includes(actionId) && !this.firstEvent &&
+		if (this.cycleEndpointIds.includes(actionId) && !this.firstEvent &&
 			!(actionId === this.data.actions.TRANSPOSE.id && this.currentGaugeState.umbralIce > 0)) {
 			this.startRecording(event)
 		}
@@ -402,7 +407,7 @@ export default class RotationWatchdog extends Analyser {
 	}
 
 	private onDeath() {
-		this.currentRotation.errorCode = CYCLE_ERRORS.DIED
+		this.currentRotation.errorCode = this.CYCLE_ERRORS.DIED
 	}
 
 	// Finish this parse and add the suggestions and checklist items
@@ -412,7 +417,7 @@ export default class RotationWatchdog extends Analyser {
 		// Override the error code for cycles that dropped enochian, when the cycle contained an unabletoact time long enough to kill it.
 		// Couldn't do this at the time of code assignment, since the downtime data wasn't fully available yet
 		for (const cycle of this.history) {
-			if (cycle.errorCode !== CYCLE_ERRORS.DROPPED_ENOCHIAN) { continue }
+			if (cycle.errorCode !== this.CYCLE_ERRORS.DROPPED_ENOCHIAN) { continue }
 
 			const windows = this.unableToAct
 				.getWindows({
@@ -422,7 +427,7 @@ export default class RotationWatchdog extends Analyser {
 				.filter(window => Math.max(0, window.end - window.start) >= ASTRAL_UMBRAL_DURATION)
 
 			if (windows.length > 0) {
-				cycle.overrideErrorCode(CYCLE_ERRORS.FINAL_OR_DOWNTIME)
+				cycle.overrideErrorCode(this.CYCLE_ERRORS.FINAL_OR_DOWNTIME)
 			}
 		}
 
@@ -430,14 +435,14 @@ export default class RotationWatchdog extends Analyser {
 		// became invunlnerable before another Fire 4 could've been cast. If so, mark it as a finalOrDowntime cycle, clear the error code
 		// and reprocess it to see if there were any other errors
 		this.history.forEach(cycle => {
-			if (cycle.errorCode !== CYCLE_ERRORS.MISSING_FIRE4S) { return }
+			if (cycle.errorCode !== this.CYCLE_ERRORS.MISSING_FIRE4S) { return }
 			const cycleEnd = cycle.endTime ?? (this.parser.pull.timestamp + this.parser.pull.duration)
 			if (this.invulnerability.isActive({
 				timestamp: cycleEnd + this.data.actions.FIRE_IV.castTime,
 				types: ['invulnerable'],
 			})) {
 				cycle.finalOrDowntime = true
-				cycle.overrideErrorCode(CYCLE_ERRORS.NONE)
+				cycle.overrideErrorCode(this.CYCLE_ERRORS.NONE)
 				this.processCycle(cycle)
 			}
 		})
@@ -595,7 +600,7 @@ export default class RotationWatchdog extends Analyser {
 		// Only process errors for rotations with more than the minimum number of casts,
 		// since fewer than that usually indicates something weird happening
 		if (currentRotation.events.length <= MIN_ROTATION_LENGTH) {
-			currentRotation.errorCode = CYCLE_ERRORS.SHORT
+			currentRotation.errorCode = this.CYCLE_ERRORS.SHORT
 			return
 		}
 
@@ -603,17 +608,17 @@ export default class RotationWatchdog extends Analyser {
 
 		// Check if the rotation included the expected number of Despair casts
 		if (currentRotation.missingDespairs) {
-			currentRotation.errorCode = CYCLE_ERRORS.MISSING_DESPAIRS
+			currentRotation.errorCode = this.CYCLE_ERRORS.MISSING_DESPAIRS
 		}
 
 		// Check whether manafont was used before despair
 		if (currentRotation.manafontBeforeDespair) {
-			currentRotation.errorCode = CYCLE_ERRORS.MANAFONT_BEFORE_DESPAIR
+			currentRotation.errorCode = this.CYCLE_ERRORS.MANAFONT_BEFORE_DESPAIR
 		}
 
 		// Check if the rotation included more than one Fire 1
 		if (currentRotation.extraF1s > 0) {
-			currentRotation.errorCode = CYCLE_ERRORS.EXTRA_F1
+			currentRotation.errorCode = this.CYCLE_ERRORS.EXTRA_F1
 		}
 
 		// If this cycle ends with downtime or is the last cycle, many of the errors we normally check for
@@ -630,38 +635,38 @@ export default class RotationWatchdog extends Analyser {
 	private processNormalCycle(currentRotation: Cycle) {
 		// Check to make sure we didn't lose Fire 4 casts due to spending MP on T3 hardcasts
 		if (currentRotation.extraT3s > 0) {
-			currentRotation.errorCode = CYCLE_ERRORS.EXTRA_T3
+			currentRotation.errorCode = this.CYCLE_ERRORS.EXTRA_T3
 		}
 
 		// Why so icemage?
 		if (currentRotation.isMissingFire) {
-			currentRotation.errorCode = CYCLE_ERRORS.NO_FIRE_SPELLS
+			currentRotation.errorCode = this.CYCLE_ERRORS.NO_FIRE_SPELLS
 		}
 
 		// If they're just missing Fire 4 because derp, note it
 		if (currentRotation.missingFire4s) {
-			currentRotation.errorCode = CYCLE_ERRORS.MISSING_FIRE4S
+			currentRotation.errorCode = this.CYCLE_ERRORS.MISSING_FIRE4S
 		}
 	}
 
 	// Process errors for a cycle that was cut short by downtime or by the fight ending
 	private processDowntimeCycle(currentRotation: Cycle) {
-		currentRotation.errorCode = CYCLE_ERRORS.FINAL_OR_DOWNTIME
+		currentRotation.errorCode = this.CYCLE_ERRORS.FINAL_OR_DOWNTIME
 
 		// Check if more Fire 4s could've been cast by skipping Blizzard 4 before this downtime
 		if (currentRotation.shouldSkipB4) {
-			currentRotation.errorCode = CYCLE_ERRORS.SHOULD_SKIP_B4
+			currentRotation.errorCode = this.CYCLE_ERRORS.SHOULD_SKIP_B4
 		}
 
 		// Check if more Fire 4s could've been cast by skipping a hardcast Thunder 3
 		if (currentRotation.hardT3sInFireCount > 0) {
-			currentRotation.errorCode = CYCLE_ERRORS.SHOULD_SKIP_T3
+			currentRotation.errorCode = this.CYCLE_ERRORS.SHOULD_SKIP_T3
 		}
 	}
 
 	override output() {
 		const outliers: Cycle[] = this.history.filter(cycle => cycle.errorCode.priority >
-			CYCLE_ERRORS.SHORT.priority || DEBUG_SHOW_ALL_CYCLES)
+			HIDDEN_PRIORITY_THRESHOLD || DEBUG_SHOW_ALL_CYCLES)
 		if (outliers.length > 0) {
 			return <Fragment>
 				<Message>
