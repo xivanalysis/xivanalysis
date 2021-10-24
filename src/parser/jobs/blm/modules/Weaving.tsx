@@ -23,6 +23,9 @@ export class Weaving extends CoreWeaving {
 
 	@dependency private gauge!: Gauge
 
+	private iceSpellIds = ICE_SPELLS.map(key => this.data.actions[key].id)
+	private fireSpellIds = FIRE_SPELLS.map(key => this.data.actions[key].id)
+
 	override getMaxWeaves(weave: Weave) {
 		const baseMaxWeaves = super.getMaxWeaves(weave)
 
@@ -41,8 +44,8 @@ export class Weaving extends CoreWeaving {
 		}
 		const gaugeState = this.gauge.getGaugeState(weave.leadingGcdEvent?.timestamp)
 		const leadingAction = weave.leadingGcdEvent?.action ?? 0
-		if (ICE_SPELLS.includes(leadingAction) && gaugeState?.astralFire === MAX_ASTRAL_UMBRAL_STACKS ||
-			FIRE_SPELLS.includes(leadingAction) && gaugeState?.umbralIce === MAX_ASTRAL_UMBRAL_STACKS) {
+		if (this.iceSpellIds.includes(leadingAction) && gaugeState?.astralFire === MAX_ASTRAL_UMBRAL_STACKS ||
+			this.fireSpellIds.includes(leadingAction) && gaugeState?.umbralIce === MAX_ASTRAL_UMBRAL_STACKS) {
 			return 1
 		}
 		return 0
