@@ -118,19 +118,17 @@ export abstract class CooldownDowntime extends Analyser {
 			.reduce((acc, cur) => acc.concat(cur))
 			.map(action => action.id)
 
+		const baseFilter = filter<Event>()
+			.type('action')
+			.source(this.parser.actor.id)
+
 		this.addEventHook(
-			filter<Event>()
-				.source(this.parser.actor.id)
-				.action(oneOf(trackedIds))
-				.type('action'),
-			this.onTrackedCast
+			baseFilter.action(oneOf(trackedIds)),
+			this.onTrackedCast,
 		)
 		this.addEventHook(
-			filter<Event>()
-				.source(this.parser.actor.id)
-				.action(oneOf(resetIds))
-				.type('action'),
-			this.onResetCast
+			baseFilter.action(oneOf(resetIds)),
+			this.onResetCast,
 		)
 		this.addEventHook('complete', this.onComplete)
 
@@ -160,7 +158,7 @@ export abstract class CooldownDowntime extends Analyser {
 	private onResetCast(event: Events['action']) {
 		this.trackedCds.forEach(group => {
 			if (group.resetBy?.actions.find(action => action.id === event.action)) {
-				(this.resets.get(group) || []).push(event)
+				(this.resets.get(group) ?? []).push(event)
 			}
 		})
 	}
@@ -169,7 +167,7 @@ export abstract class CooldownDowntime extends Analyser {
 		const cdRequirements = []
 		for (const cdGroup of this.trackedCds) {
 			const expected = this.calculateMaxUsages(cdGroup)
-			const actual = (this.usages.get(cdGroup) || []).length || 0
+			const actual = (this.usages.get(cdGroup) ?? []).length
 			let percent = actual / expected * 100
 			if (process.env.NODE_ENV === 'production') {
 				percent = Math.min(percent, 100)
@@ -212,10 +210,7 @@ export abstract class CooldownDowntime extends Analyser {
 		const gUsages = (this.usages.get(group) ?? [])
 		const dtUsages = gUsages
 			.filter(u => this.downtime.isDowntime(u.timestamp))
-			.map(u => {
-				const window = this.downtime.getDowntimeWindows(u.timestamp)[0]
-				return {start: window.start, end: window.end}
-			})
+			.map(u => this.downtime.getDowntimeWindows(u.timestamp)[0])
 		const resetTime = (group.resetBy && group.resetBy.refundAmount) ? group.resetBy.refundAmount : 0
 
 		let timeLost = 0 // TODO: this variable is for logging only and does not actually affect the final count
@@ -287,8 +282,7 @@ export abstract class CooldownDowntime extends Analyser {
 			) {
 				this.debug(`Saving charge during downtime at ${this.parser.formatEpochTimestamp(currentTime)}. ${charges} charges stored`)
 
-				const epochWindow = this.downtime.getDowntimeWindows(currentTime)[0]
-				const window = {start: epochWindow.start, end: epochWindow.end}
+				const window = this.downtime.getDowntimeWindows(currentTime)[0]
 				if (window.end < currentTime + step) {
 					count += charges
 					this.debug(`Delayed charge spend at ${this.parser.formatEpochTimestamp(window.end)}. ${charges} charges spent. No charge time lost. Count: ${count}`)
@@ -304,8 +298,7 @@ export abstract class CooldownDowntime extends Analyser {
 				currentTime < pullEndTimestamp
 				&& this.downtime.isDowntime(currentTime)
 			) {
-				const epochWindow = this.downtime.getDowntimeWindows(currentTime)[0]
-				const window = {start: epochWindow.start, end: epochWindow.end}
+				const window = this.downtime.getDowntimeWindows(currentTime)[0]
 				this.debug(`Downtime detected at ${this.parser.formatEpochTimestamp(currentTime)} in window from ${this.parser.formatEpochTimestamp(window.start)} to ${this.parser.formatEpochTimestamp(window.end)}`)
 
 				const matchingDtUsage = dtUsages.find(uw => uw.end === window.end)
