@@ -810,6 +810,42 @@ describe('Event adapter', () => {
 		expect((result[0] as Events['statusApply']).data).toBe(statusData)
 	})
 
+	it('does not merge status data at different timestamps', () => {
+		const statusData = 10
+
+		const result = adaptEvents(report, pull, [{
+			timestamp: 100,
+			type: 'applybuff',
+			sourceID: 1,
+			sourceIsFriendly: true,
+			targetID: 2,
+			targetIsFriendly: true,
+			ability: fakeAbility,
+		}, {
+			timestamp: 100,
+			type: 'applybuffstack',
+			sourceID: 1,
+			sourceIsFriendly: true,
+			targetID: 2,
+			targetIsFriendly: true,
+			ability: fakeAbility,
+			stack: statusData,
+		}, {
+			timestamp: 110,
+			type: 'applybuffstack',
+			sourceID: 1,
+			sourceIsFriendly: true,
+			targetID: 2,
+			targetIsFriendly: true,
+			ability: fakeAbility,
+			stack: 20,
+		}])
+
+		expect(result).toHaveLength(2)
+		expect(result[0].type).toBe('statusApply')
+		expect((result[0] as Events['statusApply']).data).toBe(statusData)
+	})
+
 	it('omits duplicate actor data', () => {
 		const sharedFields = {
 			...fakeHitTypeFields,
