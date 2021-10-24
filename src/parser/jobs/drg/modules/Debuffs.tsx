@@ -2,12 +2,12 @@ import {Trans} from '@lingui/react'
 import {ActionLink} from 'components/ui/DbLink'
 import {dependency} from 'parser/core/Module'
 import Checklist, {Rule, Requirement} from 'parser/core/modules/Checklist'
-import {DoTs, DotDurations} from 'parser/core/modules/DoTs'
+import {DoTs as CoreDoTs, DotDurations} from 'parser/core/modules/DoTs'
 import Suggestions, {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import React from 'react'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 
-export default class Debuffs extends DoTs {
+export default class Debuffs extends CoreDoTs {
 	@dependency private checklist!: Checklist
 	@dependency private suggestions!: Suggestions
 
