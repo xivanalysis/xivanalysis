@@ -2,8 +2,7 @@ import {Trans} from '@lingui/react'
 import {ActionLink} from 'components/ui/DbLink'
 import {dependency} from 'parser/core/Module'
 import Checklist, {Requirement, Rule} from 'parser/core/modules/Checklist'
-import {Data} from 'parser/core/modules/Data'
-import DoTs from 'parser/core/modules/DoTs'
+import {DoTs, DotDurations} from 'parser/core/modules/DoTs'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
@@ -20,10 +19,9 @@ export class Demolish extends DoTs {
 	static override handle = 'demolish'
 
 	@dependency private checklist!: Checklist
-	@dependency private data!: Data
 	@dependency private suggestions!: Suggestions
 
-	override statusesToTrack = [
+	override trackedStatuses = [
 		this.data.statuses.DEMOLISH.id,
 	]
 
@@ -46,7 +44,7 @@ export class Demolish extends DoTs {
 		}))
 	}
 
-	override addClippingSuggestions(clip: TODO) {
+	override addClippingSuggestions(clip: DotDurations) {
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.DEMOLISH.icon,
 			content: <Trans id="mnk.demolish.suggestion.content">
