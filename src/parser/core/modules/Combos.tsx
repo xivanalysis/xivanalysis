@@ -2,7 +2,7 @@
 
 import {t} from '@lingui/macro'
 import {Plural, Trans} from '@lingui/react'
-import {RotationTable} from 'components/ui/RotationTable'
+import Rotation from 'components/ui/Rotation'
 import {ActionCombo} from 'data/ACTIONS/type'
 import {Event, Events, FieldsMultiTargeted} from 'event'
 import {AbilityEventFields} from 'fflogs'
@@ -12,6 +12,7 @@ import DISPLAY_ORDER from 'parser/core/modules/DISPLAY_ORDER'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import {Timeline} from 'parser/core/modules/Timeline'
 import React from 'react'
+import {Button, Table} from 'semantic-ui-react'
 import {isSuccessfulHit} from 'utilities'
 import {Analyser} from '../Analyser'
 import {filter} from '../filter'
@@ -310,39 +311,86 @@ export class Combos extends Analyser {
 		return false
 	}
 
+	// Helper needed to make this.timeline.show behave, remove when timeline is a Sith and deals in absolutes
+	private relativeTimestamp(timestamp: number) {
+		return timestamp - this.parser.pull.timestamp
+	}
+
 	override output(): React.ReactNode {
 		if (this.issues.length <= 0) {
 			return false
 		}
 
-		const data = this.issues
-			.sort((a, b) => a.event.timestamp - b.event.timestamp)
-			.map(issue => {
-				const completeContext = [...(issue.context || []), issue.event]
+		const data = this.issues.sort((a, b) => a.event.timestamp - b.event.timestamp)
 
-				const startEvent = completeContext[0]
-				const endEvent = completeContext[completeContext.length-1]
-				const endAction = endEvent.cause.type === 'action' ? this.data.getAction(endEvent.cause.action) : undefined
-
-				return ({
-					start: startEvent.timestamp - this.parser.pull.timestamp,
-					end: endEvent.timestamp - this.parser.pull.timestamp + (endAction?.cooldown ?? DEFAULT_GCD),
-					rotation: completeContext,
-					notesMap: {
-						reason: <span style={{whiteSpace: 'nowrap'}}>{ISSUE_TYPENAMES[issue.type]}</span>,
-					},
-				})
-			})
-
-		return <RotationTable
-			notes={[
+		return <Table compact unstackable celled textAlign="center">
+			<Table.Header>
+				<Table.Row>
+					<Table.HeaderCell collapsing>
+						<strong><Trans id="core.ui.combos-table.header.starttime">Start Time</Trans></strong>
+					</Table.HeaderCell>
+					<Table.HeaderCell>
+						<strong><Trans id="core.ui.combos-table.header.comboactions">Combo Actions</Trans></strong>
+					</Table.HeaderCell>
+					<Table.HeaderCell collapsing>
+						<strong><Trans id="core.ui.combos-table.header.brokentime">Broken Time</Trans></strong>
+					</Table.HeaderCell>
+					<Table.HeaderCell>
+						<strong><Trans id="core.ui.combos-table.header.combobreaker">Combo Breaker</Trans></strong>
+					</Table.HeaderCell>
+					<Table.HeaderCell collapsing>
+						<strong><Trans id="core.ui.combos-table.header.reason">Reason</Trans></strong>
+					</Table.HeaderCell>
+				</Table.Row>
+			</Table.Header>
+			<Table.Body>
 				{
-					header: <Trans id="core.combos.rotationtable.header.reason">Reason</Trans>,
-					accessor: 'reason',
-				},
-			]}
-			data={data}
-			onGoto={this.timeline.show}
-		/>
+					data.map(issue => {
+						const completeContext = [...(issue.context || []), issue.event]
+
+						const startEvent = completeContext[0]
+						const brokenTime = issue.type !== 'timeout' ? completeContext[completeContext.length-1].timestamp : startEvent.timestamp + COMBO_TIMEOUT
+
+						return <Table.Row key={startEvent.timestamp}>
+							<Table.Cell style={{whiteSpace: 'nowrap'}}>
+								{issue.context.length > 0 &&
+									<>
+										<span>{this.parser.formatEpochTimestamp(startEvent.timestamp, 0)}</span>
+										<Button style={{marginLeft: 5}}
+											circular
+											compact
+											size="mini"
+											icon="time"
+											onClick={() => this.timeline.show(this.relativeTimestamp(startEvent.timestamp), this.relativeTimestamp(brokenTime + DEFAULT_GCD))}
+										/>
+									</>}
+							</Table.Cell>
+							<Table.Cell>
+								<Rotation events={issue.context} />
+							</Table.Cell>
+							<Table.Cell style={{whiteSpace: 'nowrap'}}>
+								<>
+									<span>{this.parser.formatEpochTimestamp(brokenTime, 0)}</span>
+									{issue.context.length === 0 &&
+									<Button style={{marginLeft: 5}}
+										circular
+										compact
+										size="mini"
+										icon="time"
+										onClick={() => this.timeline.show(this.relativeTimestamp(brokenTime - DEFAULT_GCD), this.relativeTimestamp(brokenTime + DEFAULT_GCD))}
+									/>}
+								</>
+							</Table.Cell>
+							<Table.Cell>
+								{issue.type !== 'timeout' && <Rotation events={[issue.event]}/>}
+							</Table.Cell>
+							<Table.Cell>
+								<span style={{whiteSpace: 'nowrap'}}>{ISSUE_TYPENAMES[issue.type]}</span>
+							</Table.Cell>
+						</Table.Row>
+					})
+				}
+			</Table.Body>
+		</Table>
 	}
 }
