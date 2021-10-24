@@ -93,8 +93,8 @@ export abstract class DoTs extends Analyser {
 		// Remove any untargetable time from the clip:
 		//  often want to hardcast apply after an invuln phase, but refresh with another skill shortly after.
 		clip -= this.invulnerability.getDuration({
-			start: this.parser.fflogsToEpoch(event.timestamp - this.statusDurations[statusID]),
-			end: this.parser.fflogsToEpoch(event.timestamp),
+			start: event.timestamp - this.statusDurations[statusID],
+			end: event.timestamp,
 			types: ['untargetable'],
 		})
 
@@ -103,12 +103,12 @@ export abstract class DoTs extends Analyser {
 		this.addTimestampHook(
 			Math.min(
 				event.timestamp + this.statusDurations[statusID] + clip,
-				this.parser.eventTimeOffset + this.parser.pull.duration,
+				this.parser.pull.timestamp + this.parser.pull.duration,
 			),
 			({timestamp}) => {
 				clip -= this.invulnerability.getDuration({
-					start: this.parser.fflogsToEpoch(event.timestamp),
-					end: this.parser.fflogsToEpoch(timestamp),
+					start: event.timestamp,
+					end: timestamp,
 					types: ['invulnerable'],
 				})
 
