@@ -13,7 +13,7 @@ export default class DoTs extends Module {
 	]
 
 	// To be overriden by submodules with an array of status IDs to track
-	static statusesToTrack = []
+	statusesToTrack = []
 
 	_lastApplication = {}
 	_clip = {}
@@ -22,14 +22,14 @@ export default class DoTs extends Module {
 	constructor(...args) {
 		super(...args)
 		// NOTE: All statuses submodules track should include a duration property, otherwise the results this produces will be very fucky
-		this.constructor.statusesToTrack.forEach(statusId => {
+		this.statusesToTrack.forEach(statusId => {
 			const status = this.data.getStatus(statusId)
 			if (!status) { return }
 			if (status.duration == null) {
 				console.warn(`statusId ${statusId} is missing a duration property`)
 				this._statusDuration[statusId] = DEFAULT_DURATION_MILLIS
 			} else {
-				this._statusDuration[statusId] = status.duration * 1000
+				this._statusDuration[statusId] = status.duration
 			}
 		})
 		this.addEventHook(['applydebuff', 'refreshdebuff'], {by: 'player', abilityId: this.constructor.statusesToTrack}, this._onDotApply)

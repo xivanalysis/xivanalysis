@@ -9,6 +9,10 @@ import {SUB_ATTRIBUTE_MINIMUM} from 'utilities/speedStatMapper'
 export type StatusEvent = Events['statusApply'] | Events['statusRemove']
 type StatusHistory = Map<Status['id'], Map<Actor['id'], StatusEvent[]>>
 
+type ToReadonly<T> =
+	T extends Map<infer K, infer V> ? ReadonlyMap<ToReadonly<K>, ToReadonly<V>>
+	: T
+
 /** Representation of resources of an actor at a point in time. */
 class ActorResources {
 	hp: Readonly<Resource>
@@ -20,7 +24,7 @@ class ActorResources {
 	attributes: Readonly<Record<Attribute, AttributeValue>>
 
 	protected _updateHistory: Array<Events['actorUpdate']>
-	protected statusHistory: StatusHistory
+	protected _statusHistory: StatusHistory
 	private time?: number
 
 	constructor(opts: {
@@ -29,7 +33,7 @@ class ActorResources {
 		time?: number
 	}) {
 		this._updateHistory = opts.updateHistory ?? []
-		this.statusHistory = opts.statusHistory ?? new Map()
+		this._statusHistory = opts.statusHistory ?? new Map()
 		this.time = opts.time
 		this.hp = this.buildResource('hp')
 		this.mp = this.buildResource('mp')
@@ -39,7 +43,7 @@ class ActorResources {
 
 	hasStatus(statusId: Status['id']) {
 		// Grab data for the status - if there is none, we can resolve early.
-		const statusEvents = this.statusHistory.get(statusId)
+		const statusEvents = this._statusHistory.get(statusId)
 		if (statusEvents == null) {
 			return false
 		}
@@ -153,8 +157,15 @@ export class Actor extends ActorResources implements ReportActor {
 	readonly owner?: ReportActor
 	readonly job: JobKey
 
-	/** Read-only view of the update history of this actor */
-	get updateHistory(): ReadonlyArray<Events['actorUpdate']> { return this._updateHistory }
+	/** Read-only view of the update history of this actor. */
+	get updateHistory(): ReadonlyArray<Events['actorUpdate']> {
+		return this._updateHistory
+	}
+
+	/** Read-only view of the status history of this actor. */
+	get statusHistory(): ToReadonly<StatusHistory> {
+		return this._statusHistory
+	}
 
 	constructor({actor}: ActorOptions) {
 		super({})
@@ -174,7 +185,7 @@ export class Actor extends ActorResources implements ReportActor {
 		// with a few lookups, the current impl.
 		return new ActorResources({
 			updateHistory: this._updateHistory,
-			statusHistory: this.statusHistory,
+			statusHistory: this._statusHistory,
 			time,
 		})
 	}
@@ -186,22 +197,16 @@ export class Actor extends ActorResources implements ReportActor {
 	}
 
 	addStatusEntry(event: StatusEvent) {
-		let statusEvents = this.statusHistory.get(event.status)
+		let statusEvents = this._statusHistory.get(event.status)
 		if (statusEvents == null) {
 			statusEvents = new Map()
-			this.statusHistory.set(event.status, statusEvents)
+			this._statusHistory.set(event.status, statusEvents)
 		}
 
 		let sourceEvents = statusEvents.get(event.source)
 		if (sourceEvents == null) {
 			sourceEvents = []
 			statusEvents.set(event.source, sourceEvents)
-		}
-
-		// If the last event from this source is the same type, we can noop (apply -> apply, etc).
-		const lastSourceEvent = _.last(sourceEvents)
-		if (lastSourceEvent != null && lastSourceEvent.type === event.type) {
-			return
 		}
 
 		sourceEvents.push(event)

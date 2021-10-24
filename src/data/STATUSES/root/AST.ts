@@ -17,182 +17,182 @@ export const AST = ensureStatuses({
 		id: 843,
 		name: 'Combust II',
 		icon: 'https://xivapi.com/i/013000/013214.png',
-		duration: 30,
+		duration: 30000,
 	},
 
 	COMBUST_III: {
 		id: 1881,
 		name: 'Combust III',
 		icon: 'https://xivapi.com/i/013000/013248.png',
-		duration: 30,
+		duration: 30000,
 	},
 
 	ASPECTED_BENEFIC: {
 		id: 835,
 		name: 'Aspected Benefic',
 		icon: 'https://xivapi.com/i/013000/013215.png',
-		duration: 15,
+		duration: 15000,
 	},
 
 	ASPECTED_HELIOS: {
 		id: 836,
 		name: 'Aspected Helios',
 		icon: 'https://xivapi.com/i/013000/013216.png',
-		duration: 15,
+		duration: 15000,
 	},
 
 	NOCTURNAL_FIELD: {
 		id: 837,
 		name: 'Nocturnal Field',
 		icon: 'https://xivapi.com/i/013000/013217.png',
-		duration: 30,
+		duration: 30000,
 	},
 
 	ENHANCED_BENEFIC_II: {
 		id: 815,
 		name: 'Enhanced Benefic II',
 		icon: 'https://xivapi.com/i/013000/013228.png',
-		duration: 15,
+		duration: 15000,
 	},
 
 	LIGHTSPEED: {
 		id: 841,
 		name: 'Lightspeed',
 		icon: 'https://xivapi.com/i/013000/013220.png',
-		duration: 15,
+		duration: 15000,
 	},
 
 	SYNASTRY_SELF: {
 		id: 845,
 		name: 'Synastry (self)',
 		icon: 'https://xivapi.com/i/013000/013223.png',
-		duration: 20,
+		duration: 20000,
 	},
 
 	SYNASTRY: {
 		id: 846,
 		name: 'Synastry',
 		icon: 'https://xivapi.com/i/013000/013224.png',
-		duration: 20,
+		duration: 20000,
 	},
 
 	COLLECTIVE_UNCONSCIOUS_DIURNAL_MITIGATION: {
 		id: 849,
 		name: 'Collective Unconscious (Mitigation)',
 		icon: 'https://xivapi.com/i/013000/013226.png',
-		duration: 18,
+		duration: 18000,
 	},
 
 	COLLECTIVE_UNCONSCIOUS: {
 		id: 848,
 		name: 'Collective Unconscious',
 		icon: 'https://xivapi.com/i/013000/013227.png',
-		duration: 18,
+		duration: 18000,
 	},
 
 	WHEEL_OF_FORTUNE_DIURNAL: {
 		id: 956,
 		name: 'Wheel Of Fortune (Diurnal)',
 		icon: 'https://xivapi.com/i/013000/013225.png',
-		duration: 15,
+		duration: 15000,
 	},
 
 	COLLECTIVE_UNCONSCIOUS_NOCTURNAL: {
 		id: 847,
 		name: 'Collective Unconscious (Nocturnal)',
 		icon: 'https://xivapi.com/i/013000/013227.png',
-		duration: 18,
+		duration: 18000,
 	},
 
 	WHEEL_OF_FORTUNE_NOCTURNAL: {
 		id: 1206,
 		name: 'Wheel Of Fortune (Nocturnal)',
 		icon: 'https://xivapi.com/i/013000/013226.png',
-		duration: 15,
+		duration: 15000,
 	},
 
 	EARTHLY_DOMINANCE: {
 		id: 1224,
 		name: 'Earthly Dominance',
 		icon: 'https://xivapi.com/i/013000/013241.png',
-		duration: 10,
+		duration: 10000,
 	},
 
 	GIANT_DOMINANCE: {
 		id: 1248,
 		name: 'Giant Dominance',
 		icon: 'https://xivapi.com/i/013000/013242.png',
-		duration: 10,
+		duration: 10000,
 	},
 
 	DIURNAL_OPPOSITION: {
 		id: 1879,
 		name: 'Diurnal Opposition',
 		icon: 'https://xivapi.com/i/013000/013246.png',
-		duration: 15,
+		duration: 15000,
 	},
 
 	NOCTURNAL_OPPOSITION: {
 		id: 1880,
 		name: 'Nocturnal Opposition',
 		icon: 'https://xivapi.com/i/013000/013247.png',
-		duration: 30,
+		duration: 30000,
 	},
 
 	DIURNAL_INTERSECTION: {
 		id: 1888,
 		name: 'Diurnal Intersection',
 		icon: 'https://xivapi.com/i/013000/013249.png',
-		duration: 15,
+		duration: 15000,
 	},
 
 	NOCTURNAL_INTERSECTION: {
 		id: 1889,
 		name: 'Nocturnal Intersection',
 		icon: 'https://xivapi.com/i/013000/013250.png',
-		duration: 30,
+		duration: 30000,
 	},
 
 	HOROSCOPE: {
 		id: 1890,
 		name: 'Horoscope',
 		icon: 'https://xivapi.com/i/013000/013251.png',
-		duration: 10,
+		duration: 10000,
 	},
 
 	HOROSCOPE_HELIOS: {
 		id: 1891,
 		name: 'Horoscope Helios',
 		icon: 'https://xivapi.com/i/013000/013252.png',
-		duration: 20,
+		duration: 20000,
 	},
 
 	NEUTRAL_SECT: {
 		id: 1892,
 		name: 'Neutral Sect',
 		icon: 'https://xivapi.com/i/013000/013253.png',
-		duration: 20,
+		duration: 20000,
 	},
 
 	DIURNAL_BALANCE_ASPECTED_HELIOS: {
 		id: 1247,
 		name: 'Diurnal Balance (Helios)',
 		icon: 'https://xivapi.com/i/013000/013254.png',
-		duration: 15,
+		duration: 15000,
 	},
 
 	DIURNAL_BALANCE: {
 		id: 1920,
 		name: 'Diurnal Balance',
 		icon: 'https://xivapi.com/i/013000/013254.png',
-		duration: 15,
+		duration: 15000,
 	},
 
 	NOCTURNAL_BALANCE: {
 		id: 1921,
 		name: 'Nocturnal Balance',
 		icon: 'https://xivapi.com/i/013000/013255.png',
-		duration: 30,
+		duration: 30000,
 	},
 
 	// -----
@@ -203,70 +203,70 @@ export const AST = ensureStatuses({
 		id: 1882,
 		name: 'The Balance',
 		icon: 'https://xivapi.com/i/013000/013204.png',
-		duration: 15,
+		duration: 15000,
 	},
 
 	THE_BOLE: {
 		id: 1883,
 		name: 'The Bole',
 		icon: 'https://xivapi.com/i/013000/013205.png',
-		duration: 15,
+		duration: 15000,
 	},
 
 	THE_ARROW: {
 		id: 1884,
 		name: 'The Arrow',
 		icon: 'https://xivapi.com/i/013000/013206.png',
-		duration: 15,
+		duration: 15000,
 	},
 
 	THE_SPEAR: {
 		id: 1885,
 		name: 'The Spear',
 		icon: 'https://xivapi.com/i/013000/013207.png',
-		duration: 15,
+		duration: 15000,
 	},
 
 	THE_EWER: {
 		id: 1886,
 		name: 'The Ewer',
 		icon: 'https://xivapi.com/i/013000/013208.png',
-		duration: 15,
+		duration: 15000,
 	},
 
 	THE_SPIRE: {
 		id: 1887,
 		name: 'The Spire',
 		icon: 'https://xivapi.com/i/013000/013209.png',
-		duration: 15,
+		duration: 15000,
 	},
 
 	LORD_OF_CROWNS: {
 		id: 1876,
 		name: 'Lord of Crowns',
 		icon: 'https://xivapi.com/i/013000/013243.png',
-		duration: 15,
+		duration: 15000,
 	},
 
 	LADY_OF_CROWNS: {
 		id: 1877,
 		name: 'Lady of Crowns',
 		icon: 'https://xivapi.com/i/013000/013244.png',
-		duration: 15,
+		duration: 15000,
 	},
 
 	DIVINATION: {
 		id: 1878,
 		name: 'Divination',
 		icon: 'https://xivapi.com/i/013000/013245.png',
-		duration: 15,
+		duration: 15000,
 	},
 
 	SLEEVE_DRAW: {
 		id: 1926,
 		name: 'Sleeve Draw',
 		icon: 'https://xivapi.com/i/019000/019561.png',
-		duration: 30,
+		duration: 30000,
 		stacksApplied: 2,
 	},
 

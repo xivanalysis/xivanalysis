@@ -16,12 +16,10 @@ import {ensureArray} from 'utilities'
 import {TimestampHookArguments} from '../LegacyDispatcher'
 import {Data} from './Data'
 
-const SECONDS_TO_MS: number = 1000
-
 // In true XIV fashion, statuses tend to stick around for slightly longer than
 // their specified duration. It's pretty consistently about a second, so we're
 // adding that as a fudge.
-const STATUS_DURATION_FUDGE = SECONDS_TO_MS
+const STATUS_DURATION_FUDGE = 1000
 
 export class BuffWindowState {
 	start: number
@@ -228,7 +226,7 @@ export abstract class BuffWindowModule extends Module {
 	private startNewBuffWindow(startTime: number, status: Status) {
 		this.buffWindows.push(new BuffWindowState(this.data, startTime, status))
 		if (status.duration != null) {
-			const duration = (status.duration * SECONDS_TO_MS) + STATUS_DURATION_FUDGE
+			const duration = status.duration + STATUS_DURATION_FUDGE
 			this.addTimestampHook(startTime + duration, this.onDurationExpiration)
 		}
 	}
@@ -286,7 +284,7 @@ export abstract class BuffWindowModule extends Module {
 		// the applied status is saved to the window, so we just use the duration in that object
 		if (buffWindow.status.duration) {
 			// Check to see if this window is rushing due to end of fight - reduce expected GCDs accordingly
-			const windowDurationMillis = buffWindow.status.duration * 1000
+			const windowDurationMillis = buffWindow.status.duration
 			const fightTimeRemaining = this.parser.pull.duration - (buffWindow.start - this.parser.eventTimeOffset)
 
 			if (windowDurationMillis >= fightTimeRemaining) {

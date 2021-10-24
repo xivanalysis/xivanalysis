@@ -9,8 +9,8 @@ const DWAD_FIRST_USE_OFFSET = 12250 // After SF
 const TCJ_FIRST_USE_OFFSET = 17250 // After two Ninjutsu
 const MEISUI_FIRST_USE_OFFSET = 20750 // After TCJ
 
-export default class OGCDDowntime extends CooldownDowntime {
-	trackedCds = [
+export class OGCDDowntime extends CooldownDowntime {
+	override trackedCds = [
 		{
 			cooldowns: [this.data.actions.KASSATSU],
 			firstUseOffset: KASSATSU_FIRST_USE_OFFSET,
@@ -41,18 +41,18 @@ export default class OGCDDowntime extends CooldownDowntime {
 		},
 	]
 
-	private _dreamTimestamps: number[] = []
+	private dreamTimestamps: number[] = []
 
 	override countUsage(event: Events['action']) {
 		if (event.action !== this.data.actions.DREAM_WITHIN_A_DREAM.id) {
 			return true
 		}
 
-		if (this._dreamTimestamps.indexOf(event.timestamp) > -1) {
+		if (this.dreamTimestamps.indexOf(event.timestamp) > -1) {
 			return false
 		}
 
-		this._dreamTimestamps.push(event.timestamp)
+		this.dreamTimestamps.push(event.timestamp)
 		return true
 	}
 }
