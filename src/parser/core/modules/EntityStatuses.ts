@@ -178,7 +178,7 @@ export class EntityStatuses extends Module {
 			const statusInfo = this.data.getStatus(statusEvent.ability.guid)
 			let end: number
 			if (statusInfo?.duration) {
-				end = Math.min(this.parser.currentTimestamp, statusEvent.lastRefreshed + statusInfo.duration * 1000)
+				end = Math.min(this.parser.currentTimestamp, statusEvent.lastRefreshed + statusInfo.duration)
 				this.debug(`Updating status event for status ${statusInfo.name}.  Adding ${statusInfo.duration} seconds, effective end time set to ${this.parser.formatTimestamp(end, 1)}`)
 			} else {
 				this.debug(`No matching status duration information found for status ${statusEvent.ability.guid}, setting to end of fight so invuln detection can clip the end to when the target went untargetable`)

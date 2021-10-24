@@ -9,8 +9,6 @@ import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import {StatusItem} from 'parser/core/modules/Timeline'
 import React from 'react'
 
-const SHARPCAST_DURATION_MILLIS = STATUSES.SHARPCAST.duration * 1000
-
 const SHARPCAST_CONSUMER_IDS = [
 	ACTIONS.FIRE_I.id,
 	ACTIONS.THUNDER_III.id,
@@ -95,7 +93,7 @@ export default class Sharpcast extends Module {
 		}
 
 		this._buffWindows.current.stop = endTime
-		if (this._buffWindows.current.stop - this._buffWindows.current.start >= SHARPCAST_DURATION_MILLIS && countDrops) {
+		if (this._buffWindows.current.stop - this._buffWindows.current.start >= STATUSES.SHARPCAST.duration && countDrops) {
 			this._droppedSharpcasts++
 		}
 		this._buffWindows.history.push(this._buffWindows.current)

@@ -595,6 +595,65 @@ const fakeEvents: Record<FflogsEvent['type'], FflogsEvent[]> = {
 		sourceIsFriendly: true,
 		targetIsFriendly: true,
 	}],
+	mapchange: [{
+		...fakeBaseFields,
+		timestamp: 1501472,
+		type: 'mapchange',
+		mapID: 668,
+		mapName: 'Ego Collective C',
+		mapFile: null,
+	}],
+	worldmarkerplaced: [{
+		...fakeBaseFields,
+		icon: 1,
+		mapID: 599,
+		timestamp: 7884556,
+		type: 'worldmarkerplaced',
+		x: 10004,
+		y: 8025,
+	}],
+	worldmarkerremoved: [{
+		...fakeBaseFields,
+		icon: 1,
+		timestamp: 7884556,
+		type: 'worldmarkerremoved',
+	}],
+	instakill: [{
+		ability: {name: 'Twister', guid: 9899, type: 1024, abilityIcon: '000000-000405.png'},
+		// These fields don't actually exist on the event
+		amount: Infinity,
+		hitType: 0,
+		// end
+		sourceID: 1957,
+		sourceInstance: 4,
+		sourceIsFriendly: false,
+		sourceResources: {
+			absorb: 0,
+			facing: -520,
+			hitPoints: 57250,
+			maxHitPoints: 57250,
+			maxMP: 10000,
+			maxTP: 1000,
+			mp: 0,
+			tp: 0,
+			x: -631,
+			y: -1583},
+		targetID: 1951,
+		targetIsFriendly: true,
+		targetResources: {
+			absorb: 0,
+			facing: -562,
+			hitPoints: 43259,
+			maxHitPoints: 43259,
+			maxMP: 10000,
+			maxTP: 1000,
+			mp: 9700,
+			tp: 0,
+			x: -588,
+			y: -1535},
+		timestamp: 51935589,
+		type: 'instakill',
+	}],
 }
 
 // #endregion
@@ -615,32 +674,6 @@ describe('Event adapter', () => {
 				expect(adaptEvents(report, pull, [event])).toMatchSnapshot()
 			}
 		}))
-	})
-
-	it('preserves event semantics for old logs', () => {
-		const result = adaptEvents(
-			{...report, timestamp: 0},
-			{...pull, timestamp: 0},
-			[
-				fakeEvents.calculateddamage[0],
-				fakeEvents.calculatedheal[0],
-				fakeEvents.damage[0],
-				fakeEvents.heal[0],
-			],
-		)
-
-		expect(result.map(event => event.type)).toEqual([
-			// calculated events should be nooped
-			'damage', // from damage event
-			'execute', // fabricated immediate execution
-			'actorUpdate',
-			'heal',
-			'execute',
-			'actorUpdate',
-		])
-		// Ensure the sequence is matched up
-		expect((result[0] as Events['damage']).sequence).toEqual((result[1] as Events['execute']).sequence)
-		expect((result[3] as Events['heal']).sequence).toEqual((result[4] as Events['execute']).sequence)
 	})
 
 	it('sorts events with identical timestamps', () => {
@@ -773,6 +806,42 @@ describe('Event adapter', () => {
 		}])
 
 		expect(result).toHaveLength(1)
+		expect(result[0].type).toBe('statusApply')
+		expect((result[0] as Events['statusApply']).data).toBe(statusData)
+	})
+
+	it('does not merge status data at different timestamps', () => {
+		const statusData = 10
+
+		const result = adaptEvents(report, pull, [{
+			timestamp: 100,
+			type: 'applybuff',
+			sourceID: 1,
+			sourceIsFriendly: true,
+			targetID: 2,
+			targetIsFriendly: true,
+			ability: fakeAbility,
+		}, {
+			timestamp: 100,
+			type: 'applybuffstack',
+			sourceID: 1,
+			sourceIsFriendly: true,
+			targetID: 2,
+			targetIsFriendly: true,
+			ability: fakeAbility,
+			stack: statusData,
+		}, {
+			timestamp: 110,
+			type: 'applybuffstack',
+			sourceID: 1,
+			sourceIsFriendly: true,
+			targetID: 2,
+			targetIsFriendly: true,
+			ability: fakeAbility,
+			stack: 20,
+		}])
+
+		expect(result).toHaveLength(2)
 		expect(result[0].type).toBe('statusApply')
 		expect((result[0] as Events['statusApply']).data).toBe(statusData)
 	})
