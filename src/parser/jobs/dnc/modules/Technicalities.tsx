@@ -74,8 +74,13 @@ export class Technicalities extends Analyser {
 		const techFinishFilter = filter<Event>().type('statusApply').status(this.data.statuses.TECHNICAL_FINISH.id)
 		this.addEventHook(techFinishFilter.target(this.parser.actor.id), this.tryOpenWindow)
 		this.addEventHook(techFinishFilter.source(this.parser.actor.id), this.countTechBuffs)
-		this.addEventHook(filter<Event>().type('statusRemove').target(this.parser.actor.id)
-			.status(oneOf(WINDOW_STATUSES.map(key => this.data.statuses[key].id))), this.tryCloseWindow)
+		this.addEventHook(
+			filter<Event>()
+				.type('statusRemove')
+				.target(this.parser.actor.id)
+				.status(oneOf(WINDOW_STATUSES.map(key => this.data.statuses[key].id))),
+			this.tryCloseWindow,
+		)
 		this.addEventHook(filter<Event>().type('action').source(this.parser.actor.id), this.onCast)
 		this.addEventHook('complete', this.onComplete)
 	}
