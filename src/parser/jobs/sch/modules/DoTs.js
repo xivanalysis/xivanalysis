@@ -3,7 +3,7 @@ import {ActionLink, StatusLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import {TieredRule, TARGET, Requirement} from 'parser/core/modules/Checklist'
-import CoreDoTs from 'parser/core/modules/DoTs'
+import {DoTs as CoreDoTs} from 'parser/core/modules/DoTs'
 import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import React from 'react'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
@@ -23,14 +23,13 @@ const SEVERITIES = {
 
 export default class DoTs extends CoreDoTs {
 	static handle = 'biolysis'
-	static displayOrder = DISPLAY_ORDER.DOTS
 	static dependencies = [
 		...DoTs.dependencies,
 		'checklist',
 		'suggestions',
 	]
 
-	static statusesToTrack = [
+	static trackedStatuses = [
 		STATUSES.BIOLYSIS.id,
 	]
 
@@ -40,6 +39,7 @@ export default class DoTs extends CoreDoTs {
 			description: <Trans id="sch.dots.checklist.description">
 				As a Scholar, Biolysis is a notable portion of your damage. Aim to keep it up as much as possible, so long as you can get at least 15 seconds of uptime per application.
 			</Trans>,
+			displayOrder: DISPLAY_ORDER.DOTS,
 			tiers: SEVERITIES.UPTIME,
 			requirements: [
 				new Requirement({

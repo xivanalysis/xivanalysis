@@ -240,6 +240,27 @@ export interface ZoneChangeEvent extends BaseEventFields {
 export interface WipeCalledEvent extends BaseEventFields {
 	type: 'wipecalled'
 }
+
+export interface MapChangeEvent extends BaseEventFields {
+	type: 'mapchange'
+	mapID: number
+	mapName: string
+	mapFile?: unknown
+}
+
+export interface WorldMarkerPlacedEvent extends BaseEventFields {
+	type: 'worldmarkerplaced'
+	mapID: number
+	x: number
+	y: number
+	icon: number
+}
+
+export interface WorldMarkerRemovedEvent extends BaseEventFields {
+	type: 'worldmarkerremoved'
+	icon: number
+}
+
 /* End no source/target */
 
 export interface UnknownEvent extends AbilityEventFields {
@@ -300,6 +321,12 @@ export interface DamageEvent extends EffectEventFields {
 	blocked?: number
 }
 
+// Bruh.
+export interface InstaKillEvent extends EffectEventFields {
+	type: 'instakill'
+	// Does not include "amount" and "hitType" fields.
+}
+
 const healEventTypes = [
 	'calculatedheal',
 	'heal',
@@ -318,6 +345,7 @@ type EncounterEvent =
 type EffectEvent =
 	| DamageEvent
 	| HealEvent
+	| InstaKillEvent
 
 export type AbilityEvent =
 	| EffectEvent
@@ -336,6 +364,9 @@ export type FflogsEvent =
 	| UnknownEvent
 	| DispelEvent
 	| WipeCalledEvent
+	| WorldMarkerPlacedEvent
+	| WorldMarkerRemovedEvent
+	| MapChangeEvent
 
 declare module 'legacyEvent' {
 	interface EventTypeRepository {

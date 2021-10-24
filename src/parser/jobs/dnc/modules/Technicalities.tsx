@@ -3,12 +3,13 @@ import {Plural, Trans} from '@lingui/react'
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
 import {RotationTable} from 'components/ui/RotationTable'
 import {StatusKey} from 'data/STATUSES'
-import {BuffEvent, CastEvent} from 'fflogs'
+import {Event, Events} from 'event'
 import _ from 'lodash'
-import Module, {dependency} from 'parser/core/Module'
-import Combatants from 'parser/core/modules/Combatants'
+import {Analyser} from 'parser/core/Analyser'
+import {filter, oneOf} from 'parser/core/filter'
+import {dependency} from 'parser/core/Injectable'
+import {Actors} from 'parser/core/modules/Actors'
 import {Data} from 'parser/core/modules/Data'
-import {NormalisedApplyBuffEvent} from 'parser/core/modules/NormalisedEvents'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import {Timeline} from 'parser/core/modules/Timeline'
 import React, {Fragment} from 'react'
@@ -36,9 +37,9 @@ class TechnicalWindow {
 	start: number
 	end?: number
 
-	rotation: Array<NormalisedApplyBuffEvent | CastEvent> = []
+	rotation: Array<Events['action']> = []
 	gcdCount: number = 0
-	trailingGcdEvent?: CastEvent
+	trailingGcdEvent?: Events['action']
 
 	usedDevilment: boolean = false
 	hasDevilment: boolean = false
@@ -46,7 +47,7 @@ class TechnicalWindow {
 	poolingProblem: boolean = false
 
 	buffsRemoved: number[] = []
-	playersBuffed: number = 0
+	playersBuffed: string[] = []
 	containsOtherDNC: boolean = false
 
 	constructor(start: number) {
@@ -54,12 +55,12 @@ class TechnicalWindow {
 	}
 }
 
-export class Technicalities extends Module {
+export class Technicalities extends Analyser {
 	static override handle = 'technicalities'
 	static override title = t('dnc.technicalities.title')`Technical Windows`
 	static override displayOrder = DISPLAY_ORDER.TECHNICALITIES
 
-	@dependency private combatants!: Combatants
+	@dependency private actors!: Actors
 	@dependency private suggestions!: Suggestions
 	@dependency private timeline!: Timeline
 	@dependency private gauge!: Gauge
@@ -69,32 +70,39 @@ export class Technicalities extends Module {
 	private badDevilments: number = 0
 	private lastDevilmentTimestamp: number = -1
 
-	protected override init() {
-		this.addEventHook('normalisedapplybuff', {to: 'player', abilityId: this.data.statuses.TECHNICAL_FINISH.id}, this.tryOpenWindow)
-		this.addEventHook('normalisedapplybuff', {by: 'player', abilityId: this.data.statuses.TECHNICAL_FINISH.id}, this.countTechBuffs)
-		this.addEventHook('removebuff', {to: 'player', abilityId: WINDOW_STATUSES.map(key => this.data.statuses[key].id)}, this.tryCloseWindow)
-		this.addEventHook('cast', {by: 'player'}, this.onCast)
+	override initialise() {
+		const techFinishFilter = filter<Event>().type('statusApply').status(this.data.statuses.TECHNICAL_FINISH.id)
+		this.addEventHook(techFinishFilter.target(this.parser.actor.id), this.tryOpenWindow)
+		this.addEventHook(techFinishFilter.source(this.parser.actor.id), this.countTechBuffs)
+		this.addEventHook(
+			filter<Event>()
+				.type('statusRemove')
+				.target(this.parser.actor.id)
+				.status(oneOf(WINDOW_STATUSES.map(key => this.data.statuses[key].id))),
+			this.tryCloseWindow,
+		)
+		this.addEventHook(filter<Event>().type('action').source(this.parser.actor.id), this.onCast)
 		this.addEventHook('complete', this.onComplete)
 	}
 
-	private countTechBuffs(event: NormalisedApplyBuffEvent) {
+	private countTechBuffs(event: Events['statusApply']) {
 		// Get this from tryOpenWindow. If a window wasn't open, we'll open one.
 		// If it was already open (because another Dancer went first), we'll keep using it
-		const lastWindow: TechnicalWindow | undefined = this.tryOpenWindow(event)
+		const lastWindow: TechnicalWindow = this.tryOpenWindow(event)
 
 		// Find out how many players we hit with the buff.
-		if (!lastWindow.playersBuffed) {
-			lastWindow.playersBuffed = event.confirmedEvents.filter(hit => this.parser.fightFriendlies.findIndex(f => f.id === hit.targetID) >= 0).length
+		if (!lastWindow.playersBuffed.includes(event.target) && this.actors.get(event.target).playerControlled) {
+			lastWindow.playersBuffed.push(event.target)
 		}
 	}
 
-	private tryOpenWindow(event: NormalisedApplyBuffEvent): TechnicalWindow {
+	private tryOpenWindow(event: Events['statusApply']): TechnicalWindow {
 		const lastWindow: TechnicalWindow | undefined = _.last(this.history)
 
 		// Handle multiple dancer's buffs overwriting each other, we'll have a remove then an apply with the same timestamp
 		// If that happens, re-open the last window and keep tracking
 		if (lastWindow != null) {
-			if (event.sourceID && event.sourceID !== this.parser.player.id) {
+			if (event.source !== this.parser.actor.id) {
 				lastWindow.containsOtherDNC = true
 			}
 			if (!lastWindow.end) {
@@ -111,7 +119,7 @@ export class Technicalities extends Module {
 		return newWindow
 	}
 
-	private tryCloseWindow(event: BuffEvent) {
+	private tryCloseWindow(event: Events['statusRemove']) {
 		const lastWindow: TechnicalWindow | undefined = _.last(this.history)
 
 		if (lastWindow == null) {
@@ -119,15 +127,15 @@ export class Technicalities extends Module {
 		}
 
 		// Cache whether we've seen a buff removal event for this status, just in case they happen at exactly the same timestamp
-		lastWindow.buffsRemoved.push(event.ability.guid)
+		lastWindow.buffsRemoved.push(event.status)
 
 		if (this.isWindowOkToClose(lastWindow)) {
 			lastWindow.end = event.timestamp
 
 			// Check to see if this window could've had more feathers due to possible pooling problems
-			if (this.gauge.feathersSpentInRangeLegacy(lastWindow.start, lastWindow.end) < FEATHER_THRESHHOLD) {
+			if (this.gauge.feathersSpentInRange(lastWindow.start, lastWindow.end) < FEATHER_THRESHHOLD) {
 				const previousWindow = this.history[this.history.length-2]
-				const feathersBeforeWindow = this.gauge.feathersSpentInRangeLegacy((previousWindow && previousWindow.end || this.parser.fight.start_time)
+				const feathersBeforeWindow = this.gauge.feathersSpentInRange((previousWindow && previousWindow.end || this.parser.pull.timestamp)
 					+ POST_WINDOW_GRACE_PERIOD_MILLIS, lastWindow.start)
 				lastWindow.poolingProblem = feathersBeforeWindow > 0
 			} else {
@@ -153,10 +161,10 @@ export class Technicalities extends Module {
 		return true
 	}
 
-	private onCast(event: CastEvent) {
+	private onCast(event: Events['action']) {
 		const lastWindow: TechnicalWindow | undefined = _.last(this.history)
 
-		if (event.ability.guid === this.data.actions.DEVILMENT.id) {
+		if (event.action === this.data.actions.DEVILMENT.id) {
 			this.handleDevilment(lastWindow)
 		}
 
@@ -165,7 +173,7 @@ export class Technicalities extends Module {
 			return
 		}
 
-		const action = this.data.getAction(event.ability.guid)
+		const action = this.data.getAction(event.action)
 
 		// Can't do anything else if we didn't get a valid action object
 		if (action == null) {
@@ -176,13 +184,13 @@ export class Technicalities extends Module {
 		if (!lastWindow.end) {
 			lastWindow.rotation.push(event)
 			// Check whether this window has a devilment status from before the window began
-			if (!lastWindow.hasDevilment && this.combatants.selected.hasStatus(this.data.statuses.DEVILMENT.id)) {
+			if (!lastWindow.hasDevilment && this.actors.current.hasStatus(this.data.statuses.DEVILMENT.id)) {
 				lastWindow.hasDevilment = true
 			}
 			if (action.onGcd) {
 				lastWindow.gcdCount++
 			}
-			if (TECHNICAL_FINISHES.includes(event.ability.guid) || lastWindow.playersBuffed < 1) {
+			if (TECHNICAL_FINISHES.includes(event.action) || lastWindow.playersBuffed.length < 1) {
 				lastWindow.containsOtherDNC = true
 			}
 			return
@@ -197,10 +205,10 @@ export class Technicalities extends Module {
 	private handleDevilment(lastWindow: TechnicalWindow | undefined) {
 		// Don't ding if this is the first Devilment, depending on which job the Dancer is partnered with, it may
 		// be appropriate to use Devilment early. In all other cases, Devilment should be used during Technical Finish
-		if (!this.combatants.selected.hasStatus(this.data.statuses.TECHNICAL_FINISH.id) && (this.lastDevilmentTimestamp < 0 ||
+		if (!this.actors.current.hasStatus(this.data.statuses.TECHNICAL_FINISH.id) && (this.lastDevilmentTimestamp < 0 ||
 			// If the first use we detect is after the cooldown, assume they popped it pre-pull and this 'first'
 			// Use is actually also bad
-			this.parser.currentTimestamp >= this.data.actions.DEVILMENT.cooldown)) {
+			this.parser.currentEpochTimestamp >= this.data.actions.DEVILMENT.cooldown)) {
 			this.badDevilments++
 		}
 
@@ -291,14 +299,14 @@ export class Technicalities extends Module {
 				]}
 				data={this.history.map(window => {
 					return ({
-						start: window.start - this.parser.fight.start_time,
+						start: window.start - this.parser.pull.timestamp,
 						end: window.end != null ?
-							window.end - this.parser.fight.start_time :
-							window.start - this.parser.fight.start_time,
+							window.end - this.parser.pull.timestamp :
+							window.start - this.parser.pull.timestamp,
 						notesMap: {
 							timely: <>{this.getNotesIcon(!window.timelyDevilment)}</>,
 							pooled: <>{this.getNotesIcon(window.poolingProblem)}</>,
-							buffed: <>{window.playersBuffed ? window.playersBuffed : 'N/A'}</>,
+							buffed: <>{window.playersBuffed.length > 0 ? window.playersBuffed.length : 'N/A'}</>,
 						},
 						rotation: window.rotation,
 					})

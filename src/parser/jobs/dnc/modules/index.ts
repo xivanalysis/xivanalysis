@@ -1,5 +1,5 @@
 import Combos from './Combos'
-import DirtyDancing from './DirtyDancing'
+import {DirtyDancing} from './DirtyDancing'
 import {Gauge} from './Gauge'
 import OGCDDowntime from './OGCDDowntime'
 import {Procs} from './Procs'
