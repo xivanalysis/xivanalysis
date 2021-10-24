@@ -69,6 +69,8 @@ export class Technicalities extends Module {
 	private badDevilments: number = 0
 	private lastDevilmentTimestamp: number = -1
 
+	private technicalFinishIds = TECHNICAL_FINISHES.map(key => this.data.actions[key].id)
+
 	protected override init() {
 		this.addEventHook('normalisedapplybuff', {to: 'player', abilityId: this.data.statuses.TECHNICAL_FINISH.id}, this.tryOpenWindow)
 		this.addEventHook('normalisedapplybuff', {by: 'player', abilityId: this.data.statuses.TECHNICAL_FINISH.id}, this.countTechBuffs)
@@ -182,7 +184,7 @@ export class Technicalities extends Module {
 			if (action.onGcd) {
 				lastWindow.gcdCount++
 			}
-			if (TECHNICAL_FINISHES.includes(event.ability.guid) || lastWindow.playersBuffed < 1) {
+			if (this.technicalFinishIds.includes(event.ability.guid) || lastWindow.playersBuffed < 1) {
 				lastWindow.containsOtherDNC = true
 			}
 			return
