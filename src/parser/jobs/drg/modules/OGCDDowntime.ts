@@ -1,4 +1,3 @@
-import ACTIONS from 'data/ACTIONS'
 import {CooldownDowntime} from 'parser/core/modules/CooldownDowntime'
 
 // +2s start of fight buffer added for all first use
@@ -17,27 +16,27 @@ export default class OGCDDowntime extends CooldownDowntime {
 	override defaultFirstUseOffset = BUFF_FIRST_USE_OFFSET
 	override trackedCds = [
 		{
-			cooldowns: [ACTIONS.HIGH_JUMP],
+			cooldowns: [this.data.actions.HIGH_JUMP],
 			firstUseOffset: JUMP_FIRST_USE_OFFSET,
 		},
 		{
-			cooldowns: [ACTIONS.GEIRSKOGUL],
+			cooldowns: [this.data.actions.GEIRSKOGUL],
 			firstUseOffset: JUMP_FIRST_USE_OFFSET,
 		},
 		{
-			cooldowns: [ACTIONS.SPINESHATTER_DIVE],
+			cooldowns: [this.data.actions.SPINESHATTER_DIVE],
 			firstUseOffset: JUMP_FIRST_USE_OFFSET,
 		},
 		{
-			cooldowns: [ACTIONS.DRAGONFIRE_DIVE],
+			cooldowns: [this.data.actions.DRAGONFIRE_DIVE],
 			firstUseOffset: JUMP_FIRST_USE_OFFSET,
 		},
 		{
-			cooldowns: [ACTIONS.LIFE_SURGE],
+			cooldowns: [this.data.actions.LIFE_SURGE],
 			firstUseOffset: LIFE_SURGE_FIRST_USE_OFFSET,
 		},
-		{cooldowns: [ACTIONS.LANCE_CHARGE]},
-		{cooldowns: [ACTIONS.DRAGON_SIGHT]},
-		{cooldowns: [ACTIONS.BATTLE_LITANY]},
+		{cooldowns: [this.data.actions.LANCE_CHARGE]},
+		{cooldowns: [this.data.actions.DRAGON_SIGHT]},
+		{cooldowns: [this.data.actions.BATTLE_LITANY]},
 	]
 }

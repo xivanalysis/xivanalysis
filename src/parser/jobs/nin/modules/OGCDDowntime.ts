@@ -1,4 +1,4 @@
-import {CastEvent} from 'fflogs'
+import {Events} from 'event'
 import {CooldownDowntime} from 'parser/core/modules/CooldownDowntime'
 
 const KASSATSU_FIRST_USE_OFFSET = 1000 // After opening Suiton
@@ -43,8 +43,8 @@ export class OGCDDowntime extends CooldownDowntime {
 
 	private dreamTimestamps: number[] = []
 
-	override countUsage(event: CastEvent) {
-		if (event.ability.guid !== this.data.actions.DREAM_WITHIN_A_DREAM.id) {
+	override countUsage(event: Events['action']) {
+		if (event.action !== this.data.actions.DREAM_WITHIN_A_DREAM.id) {
 			return true
 		}
 
