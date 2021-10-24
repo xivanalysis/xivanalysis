@@ -40,7 +40,7 @@ declare module 'event' {
 	}
 }
 
-interface LegacyComboEvent extends AbilityEventFields {
+export interface LegacyComboEvent extends AbilityEventFields {
 	type: 'combo'
 	hasSuccessfulHit: boolean
 }
