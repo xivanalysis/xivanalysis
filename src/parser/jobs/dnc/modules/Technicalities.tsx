@@ -70,6 +70,8 @@ export class Technicalities extends Analyser {
 	private badDevilments: number = 0
 	private lastDevilmentTimestamp: number = -1
 
+	private technicalFinishIds = TECHNICAL_FINISHES.map(key => this.data.actions[key].id)
+
 	override initialise() {
 		const techFinishFilter = filter<Event>().type('statusApply').status(this.data.statuses.TECHNICAL_FINISH.id)
 		this.addEventHook(techFinishFilter.target(this.parser.actor.id), this.tryOpenWindow)
@@ -190,7 +192,7 @@ export class Technicalities extends Analyser {
 			if (action.onGcd) {
 				lastWindow.gcdCount++
 			}
-			if (TECHNICAL_FINISHES.includes(event.action) || lastWindow.playersBuffed.length < 1) {
+			if (this.technicalFinishIds.includes(event.action) || lastWindow.playersBuffed.length < 1) {
 				lastWindow.containsOtherDNC = true
 			}
 			return
