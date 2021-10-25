@@ -180,6 +180,7 @@
   "brd.barrage.table.header.time": "タイム",
   "brd.barrage.table.header.used-on-refulgent": "<0/>に使用したか？",
   "brd.barrage.title": "乱れ撃ち",
+  "brd.dots.checklist.description": "吟遊詩人の火力のほとんどは、<0/>と<1/>から直接または間接的に得られるものです。これらのスキルが常にターゲットに適用されていることを確認してください。時間経過によるダメージ(DoT)デバフの更新に<2/>を用います。",
   "brd.dots.checklist.name": "常にDoTを切らさないようにしてください。",
   "brd.dots.checklist.requirement.caustic": "アクティブ率: <0/>",
   "brd.dots.checklist.requirement.storm": "アクティブ率: <0/>",
