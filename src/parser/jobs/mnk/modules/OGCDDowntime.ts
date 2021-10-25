@@ -10,7 +10,7 @@ const DEFAULT_AVERAGE_DOWNTIME = 2425
 // other cooldowns should be used by the 16th second of the fight tho so here we are.
 const MAX_CHAKRA_DELAY_OFFSET = 16000
 
-export default class OGCDDowntime extends CooldownDowntime {
+export class OGCDDowntime extends CooldownDowntime {
 	override defaultAllowedAverageDowntime = DEFAULT_AVERAGE_DOWNTIME
 	override trackedCds = [
 		{

@@ -1,58 +1,49 @@
 import {Plural, Trans} from '@lingui/react'
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
-import ACTIONS from 'data/ACTIONS'
-import {BuffEvent, CastEvent} from 'fflogs'
-import Module, {dependency} from 'parser/core/Module'
+import {ActionRoot} from 'data/ACTIONS/root'
+import {Event, Events} from 'event'
+import {Analyser} from 'parser/core/Analyser'
+import {EventHook} from 'parser/core/Dispatcher'
+import {filter} from 'parser/core/filter'
+import {dependency} from 'parser/core/Injectable'
+import {Actors} from 'parser/core/modules/Actors'
 import Checklist, {Requirement, Rule} from 'parser/core/modules/Checklist'
-import Combatants from 'parser/core/modules/Combatants'
 import {Data} from 'parser/core/modules/Data'
-import {EntityStatuses} from 'parser/core/modules/EntityStatuses'
 import {Invulnerability} from 'parser/core/modules/Invulnerability'
+import {Statuses} from 'parser/core/modules/Statuses'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
+import {FillActions} from './utilities'
 
 // Expected maximum time left to refresh TS
 const TWIN_SNAKES_BUFFER = 6000
 
-const TWIN_IGNORED_GCDS = [
-	ACTIONS.FORM_SHIFT.id,
-	ACTIONS.MEDITATION.id,
+const TWIN_IGNORED_GCDS: Array<keyof ActionRoot> = [
+	'FORM_SHIFT',
+	'MEDITATION',
 ]
 
-class TwinState {
-	data: Data
-	casts: CastEvent[] = []
+interface TwinState {
+	casts: Array<Events['action']>
 	start: number
 	end?: number
-
-	constructor(timestamp: number, data: Data) {
-		this.data = data
-		this.start = timestamp
-	}
-
-	// Mainly here in case we care about oGCDs being unbuffed later
-	public get gcds(): number {
-		return this.casts.filter(event => {
-			const action = this.data.getAction(event.ability.guid)
-			return action?.onGcd
-		}).length
-	}
 }
 
-export default class TwinSnakes extends Module {
+export class TwinSnakes extends Analyser {
 	static override handle = 'twinsnakes'
 
+	@dependency private actors!: Actors
 	@dependency private checklist!: Checklist
-	@dependency private combatants!: Combatants
 	@dependency private data!: Data
 	@dependency private invulnerability!: Invulnerability
+	@dependency private statuses!: Statuses
 	@dependency private suggestions!: Suggestions
-	@dependency private entityStatuses!: EntityStatuses
 
 	private history: TwinState[] = []
+	private ignoredGcds: number[] = []
 	private twinSnake?: TwinState
-	private lastRefresh: number = this.parser.fight.start_time
+	private lastRefresh: number = this.parser.pull.timestamp
 
 	// Clipping the duration
 	private earlySnakes: number = 0
@@ -63,20 +54,20 @@ export default class TwinSnakes extends Module {
 	// Antman used without TS active
 	private failedAnts: number = 0
 
-	protected override init() {
-		// Hook all GCDs so we can count GCDs in buff windows
-		this.addEventHook('cast', {by: 'player'}, this.onCast)
+	private twinHook?: EventHook<Events['action']>
 
-		// This gets weird because, we don't wanna penalise if it was from FPF...
-		this.addEventHook('applybuff', {to: 'player', abilityId: this.data.statuses.TWIN_SNAKES.id}, this.onGain)
-		this.addEventHook('refreshbuff', {to: 'player', abilityId: this.data.statuses.TWIN_SNAKES.id}, this.onRefresh)
-		this.addEventHook('removebuff', {to: 'player', abilityId: this.data.statuses.TWIN_SNAKES.id}, this.onDrop)
+	override initialise() {
+		this.ignoredGcds = FillActions(TWIN_IGNORED_GCDS, this.data)
+
+		const playerFilter = filter<Event>().source(this.parser.actor.id)
+		this.addEventHook(playerFilter.type('statusApply').status(this.data.statuses.TWIN_SNAKES.id), this.onGain)
+		this.addEventHook(playerFilter.type('statusRemove').status(this.data.statuses.TWIN_SNAKES.id), this.onDrop)
 
 		this.addEventHook('complete', this.onComplete)
 	}
 
-	private onCast(event: CastEvent): void {
-		const action = this.data.getAction(event.ability.guid)
+	private onCast(event: Events['action']): void {
+		const action = this.data.getAction(event.action)
 
 		// Only include GCDs
 		if (!action?.onGcd) {
@@ -84,13 +75,12 @@ export default class TwinSnakes extends Module {
 		}
 
 		// Ignore FS and Meditation
-		if (TWIN_IGNORED_GCDS.includes(action.id)) { return }
+		if (this.ignoredGcds.includes(action.id)) { return }
 
 		// Check for actions used without TS up. In the case of TS, the window will be opened
 		// by the gain hook, so this GCD won't count anyway. For anything else, there's no
-		// window so no need to count them. We check on status rather than window being active
-		// to make sure we don't get caught by any event ordering issues.
-		if (!this.combatants.selected.hasStatus(this.data.statuses.TWIN_SNAKES.id)) {
+		// window so no need to count them.
+		if (this.twinSnake == null) {
 			// Did Anatman refresh TS?
 			if (action.id === this.data.actions.ANATMAN.id) {
 				this.failedAnts++
@@ -106,7 +96,7 @@ export default class TwinSnakes extends Module {
 		}
 
 		// Verify the window isn't closed, and count the GCDs:
-		if (this.twinSnake && !this.twinSnake.end) {
+		if (this.twinSnake?.end != null) {
 			// We still count TS in the GCD list of the window, just flag if it's early
 			if (action.id === this.data.actions.TWIN_SNAKES.id) {
 				const expected = this.data.statuses.TWIN_SNAKES.duration - TWIN_SNAKES_BUFFER
@@ -117,25 +107,45 @@ export default class TwinSnakes extends Module {
 		}
 	}
 
-	// Only happens from TS itself
+	// // Can be TS, FPF, or Antman - new window for TS as needed, otherwise just reset the GCD count
 	// This might be better checking if the GCD before it was buffed but ehh
-	private onGain(event: BuffEvent): void {
-		this.twinSnake = new TwinState(event.timestamp, this.data)
+	private onGain(event: Events['statusApply']): void {
+		// Check if existing window or not
+		if (this.twinSnake == null) {
+			this.twinSnake = {start: event.timestamp, casts: []}
+
+			// Hook all GCDs so we can count GCDs in buff windows
+			this.twinHook = this.addEventHook(filter<Event>()
+				.source(this.parser.actor.id)
+				.type('action')
+			, this.onCast)
+		}
+
 		this.lastRefresh = event.timestamp
 	}
 
-	// Can be TS, FPF, or Antman - just reset the GCD count
-	private onRefresh(event: BuffEvent): void {
-		this.lastRefresh = event.timestamp
-	}
-
-	private onDrop(event: BuffEvent): void {
+	private onDrop(event: Events['statusRemove']): void {
 		this.stopAndSave(event.timestamp)
+	}
+
+	private stopAndSave(endTime: number = this.parser.currentEpochTimestamp): void {
+		if (this.twinSnake != null) {
+			this.twinSnake.end = endTime
+
+			this.history.push(this.twinSnake)
+
+			if (this.twinHook != null) {
+				this.removeEventHook(this.twinHook)
+				this.twinHook = undefined
+			}
+		}
+
+		this.twinSnake = undefined
 	}
 
 	private onComplete() {
 		// Close off the last window
-		this.stopAndSave(this.parser.fight.end_time)
+		this.stopAndSave(this.parser.pull.timestamp + this.parser.pull.duration)
 
 		// Calculate derped potency to early refreshes
 		const lostTruePotency = this.earlySnakes * (this.data.actions.TRUE_STRIKE.potency - this.data.actions.TWIN_SNAKES.potency)
@@ -198,15 +208,11 @@ export default class TwinSnakes extends Module {
 		}))
 	}
 
-	private stopAndSave(endTime: number = this.parser.currentTimestamp): void {
-		if (this.twinSnake) {
-			this.twinSnake.end = endTime
-			this.history.push(this.twinSnake)
-		}
-	}
-
 	private getBuffUptimePercent(statusId: number): number {
-		const statusUptime = this.entityStatuses.getStatusUptime(statusId, this.combatants.getEntities())
+		const status = this.data.getStatus(statusId)
+		if (status == null) { return 0 }
+
+		const statusUptime = this.statuses.getUptime(status, this.actors.current)
 		const fightUptime = this.parser.currentDuration - this.invulnerability.getDuration({types: ['invulnerable']})
 
 		return (statusUptime / fightUptime) * 100

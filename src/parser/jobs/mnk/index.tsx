@@ -27,6 +27,13 @@ export default new Meta({
 	],
 	changelog: [
 		{
+			date: new Date('2021-10-25'),
+			Changes: () => <>
+				Fix bug where Perfect Balance was hooking incorrect events and not printing suggestions.
+			</>,
+			contributors: [CONTRIBUTORS.ACCHAN],
+		},
+		{
 			date: new Date('2021-04-13'),
 			Changes: () => <>
 				Update MNK support for patch 5.5, fix Twin clipping bug, and allow ST in opener outside of RoF.

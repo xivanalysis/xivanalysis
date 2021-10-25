@@ -2,17 +2,16 @@ import {t} from '@lingui/macro'
 import {Plural, Trans} from '@lingui/react'
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
 import {RotationTable} from 'components/ui/RotationTable'
-import STATUSES from 'data/STATUSES'
-import {BuffEvent, CastEvent} from 'fflogs'
-import Module, {dependency} from 'parser/core/Module'
+import {Event, Events} from 'event'
+import {Analyser} from 'parser/core/Analyser'
+import {EventHook} from 'parser/core/Dispatcher'
+import {filter} from 'parser/core/filter'
+import {dependency} from 'parser/core/Injectable'
 import {Data} from 'parser/core/modules/Data'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import {Timeline} from 'parser/core/modules/Timeline'
 import React from 'react'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
-import Fists, {FISTLESS, Fist} from './Fists'
-
-const ROF_DURATION = STATUSES.RIDDLE_OF_FIRE.duration
 
 // Expected GCDs and buffs
 // technically can get 2 tacles and should as much as possible, but don't ding for it in case it's for mechanics
@@ -31,17 +30,10 @@ const SUGGESTION_TIERS = {
 
 class Riddle {
 	data: Data
-	casts: CastEvent[]
+	casts: Array<Events['action']>
 	start: number
 	end?: number
-	active: boolean = false
 	rushing: boolean = false
-	gcdsInEachFist: { [fistId: number]: number } = {
-		[FISTLESS]: 0,
-		[STATUSES.FISTS_OF_EARTH.id]: 0,
-		[STATUSES.FISTS_OF_FIRE.id]: 0,
-		[STATUSES.FISTS_OF_WIND.id]: 0,
-	}
 
 	constructor(start: number, data: Data) {
 		this.data = data
@@ -51,94 +43,109 @@ class Riddle {
 
 	get gcds() {
 		return this.casts.filter(event => {
-			const action = this.data.getAction(event.ability.guid)
+			const action = this.data.getAction(event.action)
 			return action?.onGcd
 		}).length
 	}
 
 	get chakras() {
-		return this.casts.filter(event => event.ability.guid === this.data.actions.THE_FORBIDDEN_CHAKRA.id).length
+		return this.casts.filter(event => event.action === this.data.actions.THE_FORBIDDEN_CHAKRA.id).length
 	}
 
 	get elixirFields() {
-		return this.casts.filter(event => event.ability.guid === this.data.actions.ELIXIR_FIELD.id).length
+		return this.casts.filter(event => event.action === this.data.actions.ELIXIR_FIELD.id).length
 	}
 
 	get meditations() {
-		return this.casts.filter(event => event.ability.guid === this.data.actions.MEDITATION.id).length
+		return this.casts.filter(event => event.action === this.data.actions.MEDITATION.id).length
 	}
 
 	get tackles() {
-		return this.casts.filter(event => event.ability.guid === this.data.actions.SHOULDER_TACKLE.id).length
+		return this.casts.filter(event => event.action === this.data.actions.SHOULDER_TACKLE.id).length
 	}
 
 	get tornadoKicks() {
-		return this.casts.filter(event => event.ability.guid === this.data.actions.TORNADO_KICK.id).length
+		return this.casts.filter(event => event.action === this.data.actions.TORNADO_KICK.id).length
 	}
 
 	get stars() {
-		return this.casts.filter(event => event.ability.guid === this.data.actions.SIX_SIDED_STAR.id).length
-	}
-
-	public gcdsByFist(fistId: number) {
-		return this.gcdsInEachFist[fistId]
+		return this.casts.filter(event => event.action === this.data.actions.SIX_SIDED_STAR.id).length
 	}
 }
 
-export default class RiddleOfFire extends Module {
+export class RiddleOfFire extends Analyser {
 	static override handle = 'riddleoffire'
 	static override title = t('mnk.rof.title')`Riddle of Fire`
 	static override displayOrder = DISPLAY_ORDER.RIDDLE_OF_FIRE
 
 	@dependency private data!: Data
-	@dependency private fists!: Fists
 	@dependency private suggestions!: Suggestions
 	@dependency private timeline!: Timeline
 
 	private history: Riddle[] = []
 	private riddle?: Riddle
+	private riddleHook?: EventHook<Events['action']>
 
-	protected override init(): void {
-		this.addEventHook('cast', {by: 'player'}, this.onCast)
-		this.addEventHook('removebuff', {by: 'player', abilityId: this.data.statuses.RIDDLE_OF_FIRE.id}, this.onDrop)
+	override initialise(): void {
+		const playerFilter = filter<Event>().source(this.parser.actor.id)
+		this.addEventHook(playerFilter.type('statusApply').status(this.data.statuses.RIDDLE_OF_FIRE.id), this.onGain)
+		this.addEventHook(playerFilter.type('statusRemove').status(this.data.statuses.RIDDLE_OF_FIRE.id), this.onDrop)
+
 		this.addEventHook('complete', this.onComplete)
 	}
 
-	onCast(event: CastEvent): void {
-		const action = this.data.getAction(event.ability.guid)
+	onCast(event: Events['action']): void {
+		const action = this.data.getAction(event.action)
 
-		if (!action) {
-			return
-		}
-
-		if (action.id === this.data.actions.RIDDLE_OF_FIRE.id) {
-			this.riddle = new Riddle(event.timestamp, this.data)
-
-			this.riddle.active = true
-			this.riddle.rushing = ROF_DURATION >= this.parser.fight.end_time - event.timestamp
+		if (action == null) {
 			return
 		}
 
 		// MNK mentors want the oGCDs :angryeyes:
-		if (this.riddle?.active) {
+		if (this.riddle != null) {
 			this.riddle.casts.push(event)
-
-			if (action.onGcd) {
-				const activeFist: Fist = this.fists.getActiveFist()
-				this.riddle.gcdsInEachFist[activeFist.id]++
-			}
 		}
 	}
 
-	private onDrop(event: BuffEvent): void {
+	private onGain(event: Events['statusApply']): void {
+		if (this.riddle == null) {
+			this.riddle = new Riddle(event.timestamp, this.data)
+			this.riddle.rushing = this.data.statuses.RIDDLE_OF_FIRE.duration >= (this.parser.pull.timestamp + this.parser.pull.duration) - event.timestamp
+
+			this.riddleHook = this.addEventHook(filter<Event>()
+				.source(this.parser.actor.id)
+				.type('action')
+			, this.onCast)
+		}
+	}
+
+	private onDrop(event: Events['statusRemove']): void {
 		this.stopAndSave(event.timestamp)
+	}
+
+	private stopAndSave(endTime: number = this.parser.currentEpochTimestamp): void {
+		if (this.riddle != null) {
+			this.riddle.end = endTime
+
+			this.history.push(this.riddle)
+
+			if (this.riddleHook != null) {
+				this.removeEventHook(this.riddleHook)
+				this.riddleHook = undefined
+			}
+		}
+
+		this.riddle = undefined
 	}
 
 	private onComplete(): void {
 		// Close up if RoF was active at the end of the fight
-		if (this.riddle?.active) {
+		if (this.riddle != null) {
 			this.stopAndSave()
 		}
+
+		// eslint-disable-next-line no-console
+		console.log(this.history)
 
 		const nonRushedRiddles = this.history
 			.filter(riddle => !riddle.rushing)
@@ -202,15 +209,6 @@ export default class RiddleOfFire extends Module {
 		}))
 	}
 
-	private stopAndSave(endTime: number = this.parser.currentTimestamp): void {
-		if (this.riddle?.active) {
-			this.riddle.active = false
-			this.riddle.end = endTime
-
-			this.history.push(this.riddle)
-		}
-	}
-
 	override output() {
 		return <RotationTable
 			targets={[
@@ -237,10 +235,10 @@ export default class RiddleOfFire extends Module {
 			]}
 			data={this.history
 				.map(riddle => ({
-					start: riddle.start - this.parser.fight.start_time,
+					start: riddle.start - this.parser.pull.timestamp,
 					end: riddle.end != null ?
-						riddle.end - this.parser.fight.start_time
-						: riddle.start - this.parser.fight.start_time,
+						riddle.end - this.parser.pull.timestamp
+						: riddle.start - this.parser.pull.timestamp,
 					targetsData: {
 						gcds: {
 							actual: riddle.gcds - riddle.meditations,
