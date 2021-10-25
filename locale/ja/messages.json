@@ -184,6 +184,8 @@
   "brd.dots.checklist.name": "常にDoTを切らさないようにしてください。",
   "brd.dots.checklist.requirement.caustic": "アクティブ率: <0/>",
   "brd.dots.checklist.requirement.storm": "アクティブ率: <0/>",
+  "brd.dots.suggestion.clip.content": "以前に付与した<0/>と<1/>の時間が十分な場合、更新を控えて下さい。",
+  "brd.dots.suggestion.clip.why": "毎分平均{0}個、DoTの食い込みが発生しています。",
   "brd.pitch-perfect.cast-without-max-stacks": "<0/>を3スタック以外で使って良いのは、<1/>の終了までにDoTダメージがヒットしないことが分かっているときだけです。",
   "brd.pitch-perfect.cast-without-max-stacks.potency-lost": "最大スタックと比較して<0>{0}</0>の威力を失いました",
   "brd.pitch-perfect.cast-without-max-stacks.reason": "<0/>の威力は1スタックで{0}、2スタックで{1}、最後の3スタックで{2} なので、最後まで溜めないと使いたくないですよね。",
