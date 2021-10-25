@@ -33,3 +33,25 @@ export type ReplaceFrom<Target, Source, Props extends keyof Source> =
 export type Compute<A extends any> =
 	A extends Function? A : {[K in keyof A]: A[K]} & {}
 /* eslint-enable @typescript-eslint/ban-types,@typescript-eslint/no-explicit-any */
+
+/*
+The below is a collection of types used to create a "backfilled" union - that is, a
+union of types where all _invalid_ keys that are defined elsewhere in the union are
+typed as `?:never`, allowing us to discriminate on any possible union property.
+With thanks to https://github.com/microsoft/TypeScript/issues/20863#issuecomment-520551758
+*/
+
+// For a given union U, return all possible keys available on members
+type UnionKeys<U> = U extends unknown ? keyof U : never
+
+// For the union of keys K, return an object type with each member optionally typed to never
+type InvalidKeys<K extends string | number | symbol> = { [P in K]?: never }
+
+// For each member of union U, add all _other_ possible keys available within U as InvalidKeys
+type BackfillUnionInternal<U, UAll> =
+	U extends unknown
+		? U & InvalidKeys<Exclude<UnionKeys<UAll>, keyof U>>
+		: never
+
+// Helper type used to duplicate the union U for use in the type above
+export type BackfillUnion<U> = BackfillUnionInternal<U, U>
