@@ -101,7 +101,7 @@ export class Statuses extends Analyser {
 			const statusDuration = this.data.getStatus(apply.status)?.duration
 			const remove = statusDuration == null
 				? this.parser.currentEpochTimestamp
-				: Math.min((refresh ?? apply).timestamp + statusDuration, this.parser.pull.timestamp + this.parser.pull.duration)
+				: Math.min((refresh ?? apply).timestamp + statusDuration, this.parser.currentEpochTimestamp)
 
 			edges.push(...this.splitRangeForInvulns(
 				target,
