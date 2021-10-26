@@ -2,8 +2,8 @@ import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import {Events} from 'event'
 import {dependency} from 'parser/core/Injectable'
+import {Actors} from 'parser/core/modules/Actors'
 import {AoEUsages} from 'parser/core/modules/AoEUsages'
-import Combatants from 'parser/core/modules/Combatants'
 //const GAIN_AT_3 = new Set([ACTIONS.FUGA.id, ACTIONS.OKA.id, ACTIONS.MANGETSU.id, ACTIONS.HISSATSU_KYUTEN.id])
 //const GAIN_AT_2 = new Set([ACTIONS.HISSATSU_GUREN.id, ACTIONS.TENKA_GOKEN.id, ACTIONS.KAESHI_GOKEN.id])
 
@@ -13,7 +13,7 @@ const AOE_FINISHERS = [
 ]
 
 export class AoeChecker extends AoEUsages {
-	@dependency private combatants!: Combatants
+	@dependency private actors!: Actors
 
 	suggestionIcon = ACTIONS.FUGA.icon
 
@@ -67,7 +67,7 @@ export class AoeChecker extends AoEUsages {
 			return minTargets
 		}
 
-		if (AOE_FINISHERS.includes(event.cause.action) && !(this.combatants.selected.hasStatus(STATUSES.MEIKYO_SHISUI.id))) {
+		if (AOE_FINISHERS.includes(event.cause.action) && !(this.actors.current.hasStatus(STATUSES.MEIKYO_SHISUI.id))) {
 			return 1
 		}
 
