@@ -194,7 +194,8 @@ export abstract class CooldownDowntime extends Analyser {
 		}))
 	}
 
-	protected calculateMaxUsages(group: CooldownGroup): number {
+	/** Calculates the maximum possible uses for a given cooldown group */
+	public calculateMaxUsages(group: CooldownGroup): number {
 		const gRep = group.cooldowns[0]
 		if (gRep.cooldown === undefined) {
 			return 0
