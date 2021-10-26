@@ -17,7 +17,7 @@ const OPENER_EXCEPTIONS: ActionKey[] = [
 	'TRIPLECAST',
 ]
 
-export default class BlmWeaving extends CoreWeaving {
+export class Weaving extends CoreWeaving {
 	private ogcdIds = OGCD_EXCEPTIONS.map(key => this.data.actions[key].id)
 	private openerIds = OPENER_EXCEPTIONS.map(key => this.data.actions[key].id)
 

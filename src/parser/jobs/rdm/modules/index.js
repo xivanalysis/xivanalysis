@@ -1,6 +1,6 @@
 import {AlwaysBeCasting} from 'parser/core/modules/AlwaysBeCasting'
 import {Tincture} from 'parser/core/modules/Tincture'
-import Combos from './Combos'
+import {Combos} from './Combos'
 import {DualCast} from './Dualcast'
 import {EngagementDisplacementTracking} from './EngagementDisplacementTracking'
 import Gauge from './Gauge'

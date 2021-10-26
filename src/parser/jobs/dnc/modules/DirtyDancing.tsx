@@ -121,13 +121,14 @@ export class DirtyDancing extends Analyser {
 
 	private stepIds = STEPS.map(key => this.data.actions[key].id)
 	private danceMoveIds = DANCE_MOVES.map(key => this.data.actions[key].id)
+	private finishIds = FINISHES.map(key => this.data.actions[key].id)
 
 	override initialise() {
 		const playerFilter = filter<Event>().source(this.parser.actor.id)
 		this.addEventHook(playerFilter.type('action').action(oneOf(this.stepIds)), this.beginDance)
 		this.addEventHook(playerFilter.type('action').action(oneOf(this.danceMoveIds)), this.continueDance)
-		this.addEventHook(playerFilter.type('action').action(oneOf(FINISHES)), this.finishDance)
-		this.addEventHook(playerFilter.type('damage').cause(filter<Cause>().action(oneOf(FINISHES))), this.resolveDance)
+		this.addEventHook(playerFilter.type('action').action(oneOf(this.finishIds)), this.finishDance)
+		this.addEventHook(playerFilter.type('damage').cause(filter<Cause>().action(oneOf(this.finishIds))), this.resolveDance)
 		this.addEventHook('complete', this.onComplete)
 	}
 

@@ -1,7 +1,7 @@
 import ACTIONS from 'data/ACTIONS'
-import CoreCombos from 'parser/core/modules/Combos'
+import {Combos as CoreCombos} from 'parser/core/modules/Combos'
 
-export default class Combos extends CoreCombos {
+export class Combos extends CoreCombos {
 	// Overrides
-	static override suggestionIcon = ACTIONS.ROYAL_AUTHORITY.icon
+	override suggestionIcon = ACTIONS.ROYAL_AUTHORITY.icon
 }
