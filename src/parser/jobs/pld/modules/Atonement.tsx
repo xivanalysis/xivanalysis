@@ -7,7 +7,7 @@ import Checklist, {TieredRule, TARGET, Requirement} from 'parser/core/modules/Ch
 import {Data} from 'parser/core/modules/Data'
 import React from 'react'
 
-const STACKS_GAINED = 3
+// const STACKS_GAINED = 3
 
 // In seconds
 const USE_SEVERITY = {
@@ -37,7 +37,7 @@ export default class Atonement extends Analyser {
 			type: 'statusApply',
 			target: this.parser.actor.id,
 			status: this.data.statuses.SWORD_OATH.id,
-		}, () => this.stacksGained = this.stacksGained + STACKS_GAINED)
+		}, () => this.stacksGained = this.stacksGained++)
 
 		this.addEventHook('complete', this.onComplete)
 	}
