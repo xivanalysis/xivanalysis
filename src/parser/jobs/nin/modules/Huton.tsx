@@ -5,7 +5,7 @@ import {CastEvent} from 'fflogs'
 import {Event} from 'legacyEvent'
 import Module, {dependency} from 'parser/core/Module'
 import Checklist, {Rule, Requirement} from 'parser/core/modules/Checklist'
-import {ComboEvent} from 'parser/core/modules/Combos'
+import {LegacyComboEvent} from 'parser/core/modules/Combos'
 import {Data} from 'parser/core/modules/Data'
 import {Death} from 'parser/core/modules/Death'
 import Suggestions, {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
@@ -103,7 +103,7 @@ export class Huton extends Module {
 		}
 	}
 
-	private onHutonExtension(event: ComboEvent) {
+	private onHutonExtension(event: LegacyComboEvent) {
 		const elapsedTime = (event.timestamp - this.lastEventTime)
 		const action = this.data.getAction(event.ability.guid)
 		if (action == null) { return }

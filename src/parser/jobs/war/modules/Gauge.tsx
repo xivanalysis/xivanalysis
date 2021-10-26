@@ -6,7 +6,7 @@ import STATUSES from 'data/STATUSES'
 import {CastEvent} from 'fflogs'
 import {dependency} from 'parser/core/Module'
 import {Actors} from 'parser/core/modules/Actors'
-import {ComboEvent} from 'parser/core/modules/Combos'
+import {LegacyComboEvent} from 'parser/core/modules/Combos'
 import {Cooldowns} from 'parser/core/modules/Cooldowns'
 import {CounterGauge, Gauge as CoreGauge} from 'parser/core/modules/Gauge'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
@@ -75,7 +75,7 @@ export class Gauge extends CoreGauge {
 		this.addEventHook('complete', this.onComplete)
 	}
 
-	private onGaugeModifier(event: ComboEvent | CastEvent) {
+	private onGaugeModifier(event: LegacyComboEvent | CastEvent) {
 		const modifiers = BEAST_MODIFIERS.get(event.ability.guid) || {}
 
 		// Spenders are free during IR

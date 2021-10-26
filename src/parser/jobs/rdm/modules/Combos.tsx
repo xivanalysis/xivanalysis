@@ -1,12 +1,13 @@
 import {Plural, Trans} from '@lingui/react'
 import ACTIONS from 'data/ACTIONS'
-import CoreCombos from 'parser/core/modules/Combos'
+import {Events} from 'event'
+import {Combos as CoreCombos} from 'parser/core/modules/Combos'
 import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import React from 'react'
 
-export default class Combos extends CoreCombos {
+export class Combos extends CoreCombos {
 	// Overrides
-	static suggestionIcon = ACTIONS.ENCHANTED_REDOUBLEMENT.icon
+	override suggestionIcon = ACTIONS.ENCHANTED_REDOUBLEMENT.icon
 
 	//These actions are considered a combo DERP
 	_derpComboActions = [
@@ -32,28 +33,27 @@ export default class Combos extends CoreCombos {
 	}
 
 	//Overrides
-	addJobSpecificSuggestions(comboBreakers, uncomboedGcds) {
-		//console.log('Output is Output!')
+	override addJobSpecificSuggestions(comboBreakers: Array<Events['damage']>, uncomboedGcds: Array<Events['damage']>): boolean {
 		if (comboBreakers.length === 0 && uncomboedGcds.length === 0) {
-			//console.log('Output with no breakers!')
 			return false
 		}
 
-		//const panels = []
 		let derpComboCount = 0
 		let notEnoughManaCount = 0
 
 		if (comboBreakers.length > 0) {
-			//console.log('Breaker')
 			comboBreakers.map(breaker => {
-				// const util = require('util')
-				// console.log(util.inspect(breaker, {showHidden: true, depth: null}))
-				if (this._derpComboActions.includes(breaker.ability.guid)) {
-					//console.log(`${derpComboCount}: derpComboCount`)
+				if (breaker.cause.type !== 'action') {
+					// Type narrowing safety, this shouldn't ever get hit.  Throw?
+					return
+				}
+				this.debug(`Checking combo breaker: ${JSON.stringify(breaker)}`)
+				if (this._derpComboActions.includes(breaker.cause.action)) {
+					this.debug(`${derpComboCount}: derpComboCount`)
 					derpComboCount++
 				}
-				if (this._notEnoughManaActions.includes(breaker.ability.guid)) {
-					//console.log(`${notEnoughManaCount}: notEnoughManaCount`)
+				if (this._notEnoughManaActions.includes(breaker.cause.action)) {
+					this.debug(`${notEnoughManaCount}: notEnoughManaCount`)
 					notEnoughManaCount++
 				}
 			})
@@ -86,7 +86,7 @@ export default class Combos extends CoreCombos {
 		}
 
 		const theRest = comboBreakers.length + uncomboedGcds.length - derpComboCount - notEnoughManaCount
-		//console.log(`TheRest: ${theRest}`)
+		this.debug(`TheRest: ${theRest}`)
 
 		//Process The Rest
 		if (theRest > 0) {

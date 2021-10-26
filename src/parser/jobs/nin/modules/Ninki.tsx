@@ -7,7 +7,7 @@ import {ActionKey} from 'data/ACTIONS'
 import JOBS from 'data/JOBS'
 import {CastEvent} from 'fflogs'
 import Module, {dependency, DISPLAY_MODE} from 'parser/core/Module'
-import {ComboEvent} from 'parser/core/modules/Combos'
+import {LegacyComboEvent} from 'parser/core/modules/Combos'
 import {Data} from 'parser/core/modules/Data'
 import {NormalisedDamageEvent} from 'parser/core/modules/NormalisedEvents'
 import Suggestions, {Suggestion, TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
@@ -107,7 +107,7 @@ export class Ninki extends Module {
 		this.addEventHook('complete', this.onComplete)
 	}
 
-	private onBuilderCast(event: CastEvent | ComboEvent) {
+	private onBuilderCast(event: CastEvent | LegacyComboEvent) {
 		const abilityId = event.ability.guid
 		// The .get() should never be undefined but we must appease the ts lint gods
 		this.addNinki(this.actionNinkiGain.get(abilityId) ?? 0, abilityId)
