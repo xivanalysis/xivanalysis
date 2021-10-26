@@ -1,10 +1,10 @@
+import {Events} from 'event'
 import {dependency} from 'parser/core/Module'
 import {AoEAction, AoEUsages} from 'parser/core/modules/AoEUsages'
 import Combatants from 'parser/core/modules/Combatants'
 import {Data} from 'parser/core/modules/Data'
-import {NormalisedDamageEvent} from 'parser/core/modules/NormalisedEvents'
 
-export default class AoE extends AoEUsages {
+export class AoE extends AoEUsages {
 	static override handle = 'aoe'
 
 	@dependency private combatants!: Combatants
@@ -39,8 +39,12 @@ export default class AoE extends AoEUsages {
 		},
 	]
 
-	protected override adjustMinTargets(event: NormalisedDamageEvent, minTargets: number): number {
-		const action = this.data.getAction(event.ability.guid)
+	protected override adjustMinTargets(event: Events['damage'], minTargets: number): number {
+		if (event.cause.type !== 'action') {
+			return minTargets
+		}
+
+		const action = this.data.getAction(event.cause.action)
 
 		// How in the fuck did we even get here tbh
 		if (!action) {
