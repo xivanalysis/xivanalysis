@@ -46,9 +46,9 @@ export interface LegacyComboEvent extends AbilityEventFields {
 }
 
 declare module 'legacyEvent' {
-    interface EventTypeRepository {
-        combo: LegacyComboEvent
-    }
+	interface EventTypeRepository {
+		combo: LegacyComboEvent
+	}
 }
 
 export interface ComboIssue {
