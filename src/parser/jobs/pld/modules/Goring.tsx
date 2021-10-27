@@ -4,7 +4,7 @@ import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import {dependency} from 'parser/core/Module'
 import Checklist, {Requirement, Rule} from 'parser/core/modules/Checklist'
-import DoTs from 'parser/core/modules/DoTs'
+import {DoTs, DotDurations} from 'parser/core/modules/DoTs'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
 
@@ -19,12 +19,12 @@ const SEVERITIES = {
 export default class Goring extends DoTs {
 	static override handle = 'goring'
 
-	static override statusesToTrack = [
-		STATUSES.GORING_BLADE.id,
-	]
-
 	@dependency private checklist!: Checklist
 	@dependency private suggestions!: Suggestions
+
+	override trackedStatuses = [
+		STATUSES.GORING_BLADE.id,
+	]
 
 	override addChecklistRules() {
 		this.checklist.add(new Rule({
@@ -43,7 +43,7 @@ export default class Goring extends DoTs {
 		}))
 	}
 
-	override addClippingSuggestions(clip: TODO) {
+	override addClippingSuggestions(clip: DotDurations) {
 		// Suggestion for Goring Blade DoT clipping
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.GORING_BLADE.icon,

@@ -3,7 +3,7 @@ import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import {Rule, Requirement} from 'parser/core/modules/Checklist'
-import DoTs from 'parser/core/modules/DoTs'
+import {DoTs} from 'parser/core/modules/DoTs'
 import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import React from 'react'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
@@ -15,7 +15,8 @@ export default class Debuffs extends DoTs {
 		'suggestions',
 	]
 
-	static statusesToTrack = [
+	// When moving to Typescript, remember to mark this with override.
+	trackedStatuses = [
 		STATUSES.CHAOS_THRUST.id,
 	]
 

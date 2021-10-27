@@ -9,7 +9,7 @@ import EgiCommands from './EgiCommands'
 import Gauge from './Gauge'
 import GeneralCDDowntime from './GeneralCDDowntime'
 import MissingDoTs from './MissingDoTs'
-import MultiHit from './MultiHitSkills'
+import {AoeChecker} from './MultiHitSkills'
 import Pets from './Pets'
 import {PetTimeline} from './PetTimeline'
 import Physick from './Physick'
@@ -29,7 +29,7 @@ export default [
 	GeneralCDDowntime,
 	Interrupts,
 	MissingDoTs,
-	MultiHit,
+	AoeChecker,
 	Pets,
 	PetTimeline,
 	Physick,

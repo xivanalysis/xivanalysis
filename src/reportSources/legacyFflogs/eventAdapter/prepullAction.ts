@@ -13,7 +13,7 @@ export class PrepullActionAdapterStep extends AdapterStep {
 					type: 'action',
 					action: event.cause.action,
 					source: event.source,
-					target: event.target,
+					target: event.targets[0]?.target,
 					timestamp: this.pull.timestamp + PREPULL_OFFSETS.PULL_ACTION,
 				})
 			} else if (event.type === 'action') {

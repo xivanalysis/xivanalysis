@@ -1,18 +1,19 @@
 import ACTIONS from 'data/ACTIONS'
+import {ActionCombo} from 'data/ACTIONS/type'
 import STATUSES from 'data/STATUSES'
+import {Events} from 'event'
 import {dependency} from 'parser/core/Module'
-import Combatants from 'parser/core/modules/Combatants'
-import CoreCombos, {ComboEvent} from 'parser/core/modules/Combos'
-import {NormalisedDamageEvent} from 'parser/core/modules/NormalisedEvents'
+import {Actors} from 'parser/core/modules/Actors'
+import {Combos as CoreCombos} from 'parser/core/modules/Combos'
 
-export default class Combos extends CoreCombos {
-	static override suggestionIcon = ACTIONS.HAKAZE.icon
+export class Combos extends CoreCombos {
+	override suggestionIcon = ACTIONS.HAKAZE.icon
 
-	@dependency private combatants!: Combatants
+	@dependency private actors!: Actors
 
-	override checkCombo(combo: ComboEvent, event: NormalisedDamageEvent) {
+	override checkCombo(combo: ActionCombo, event: Events['damage']) {
 		// If they've got Meikyo Shisui up, all combos are correct, and nothing combos together
-		if (this.combatants.selected.hasStatus(STATUSES.MEIKYO_SHISUI.id) && (event.ability.guid !== ACTIONS.HAKAZE.id)) {
+		if (this.actors.current.hasStatus(STATUSES.MEIKYO_SHISUI.id) && event.cause.type === 'action' && event.cause.action !== ACTIONS.HAKAZE.id) {
 			this.fabricateComboEvent(event)
 			return false
 		}

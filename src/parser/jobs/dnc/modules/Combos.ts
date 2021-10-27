@@ -1,23 +1,22 @@
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
+import {Events} from 'event'
 import {dependency} from 'parser/core/Module'
-import Combatants from 'parser/core/modules/Combatants'
-import CoreCombos from 'parser/core/modules/Combos'
-import {NormalisedDamageEvent} from 'parser/core/modules/NormalisedEvents'
-import DirtyDancing from './DirtyDancing'
+import {Actors} from 'parser/core/modules/Actors'
+import {Combos as CoreCombos} from 'parser/core/modules/Combos'
+import {DirtyDancing} from './DirtyDancing'
 
 const GCD_TIMEOUT_MILLIS = 15000
 
-export default class Combos extends CoreCombos {
-	// Override statics
-	static override suggestionIcon = ACTIONS.CASCADE.icon
+export class Combos extends CoreCombos {
+	override suggestionIcon = ACTIONS.CASCADE.icon
 
 	@dependency private dancing!: DirtyDancing
-	@dependency private combatants!: Combatants
+	@dependency private actors!: Actors
 
 	// Override check for allowable breaks. If two dances were started during the initial context's GCD timeout window,
 	// (ie, both Standard and Technical were danced), then we'll allow it
-	override isAllowableComboBreak(event: NormalisedDamageEvent, context: NormalisedDamageEvent[]): boolean {
+	override isAllowableComboBreak(event: Events['damage'], context: Array<Events['damage']>): boolean {
 		// Shouldn't ever be the case, but protect against weird shit
 		if (context.length !== 1) {
 			return false
@@ -32,6 +31,6 @@ export default class Combos extends CoreCombos {
 		// so just disable any drops that happened in a Technical window (still need the dances in range check since
 		// Cascade -> Standard -> Technical leaves the buff falling off before Technical Finish buff applies
 		return this.dancing.dancesInRange(context[0].timestamp, context[0].timestamp + GCD_TIMEOUT_MILLIS) === 2 ||
-			this.combatants.selected.hasStatus(STATUSES.TECHNICAL_FINISH.id, context[0].timestamp + GCD_TIMEOUT_MILLIS)
+			this.actors.current.at(context[0].timestamp + GCD_TIMEOUT_MILLIS).hasStatus(STATUSES.TECHNICAL_FINISH.id)
 	}
 }

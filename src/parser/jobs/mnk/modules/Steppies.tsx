@@ -1,5 +1,5 @@
 import {Plural, Trans} from '@lingui/react'
-import {ActionLink, StatusLink} from 'components/ui/DbLink'
+import {DataLink} from 'components/ui/DbLink'
 import Module, {dependency} from 'parser/core/Module'
 import Checklist, {Requirement, Rule} from 'parser/core/modules/Checklist'
 import Combatants from 'parser/core/modules/Combatants'
@@ -70,12 +70,12 @@ export default class Steppies extends Module {
 		this.checklist.add(new Rule({
 			name: <Trans id="mnk.steppies.checklist.name">Buff Bootshine</Trans>,
 			description: <Trans id="mnk.steppies.checklist.description">
-				<ActionLink {...this.data.actions.BOOTSHINE}/> is your strongest form GCD when you buff it by using <ActionLink {...this.data.actions.DRAGON_KICK} /> beforehand.
+				<DataLink action="BOOTSHINE"/> is your strongest form GCD when you buff it by using <DataLink action="DRAGON_KICK" /> beforehand.
 			</Trans>,
 			displayOrder: DISPLAY_ORDER.DRAGON_KICK,
 			requirements: [
 				new Requirement({
-					name: <Trans id="mnk.steppies.checklist.requirement.name"><StatusLink {...this.data.statuses.LEADEN_FIST}/> buff rate</Trans>,
+					name: <Trans id="mnk.steppies.checklist.requirement.name"><DataLink status="LEADEN_FIST"/> buff rate</Trans>,
 					percent: () => this.getLeadenPercent(this.steppies),
 				}),
 			],
@@ -85,10 +85,10 @@ export default class Steppies extends Module {
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.DRAGON_KICK.icon,
 			content: <Trans id="mnk.steppies.suggestions.dragon_kick.content">
-				Avoid unbuffed <ActionLink {...this.data.actions.BOOTSHINE} /> by using <ActionLink {...this.data.actions.DRAGON_KICK} /> before it.
+				Avoid unbuffed <DataLink action="BOOTSHINE"/> by using <DataLink action="DRAGON_KICK" /> before it.
 			</Trans>,
 			why: <Trans id="mnk.steppies.suggestions.dragon_kick.why">
-				{this.getUnbuffedCount(this.steppies) * (LEAD_BOOT_POTENCY - this.data.actions.BOOTSHINE.potency)} potency lost to missing <StatusLink {...this.data.statuses.LEADEN_FIST} /> buff {this.getUnbuffedCount(this.steppies)} times.
+				{this.getUnbuffedCount(this.steppies) * (LEAD_BOOT_POTENCY - this.data.actions.BOOTSHINE.potency)} potency lost to missing <DataLink status="LEADEN_FIST"/> buff {this.getUnbuffedCount(this.steppies)} times.
 			</Trans>,
 			tiers: WEAK_BOOT_SEVERITY,
 			value: this.getUnbuffedCount(this.steppies),
@@ -97,10 +97,10 @@ export default class Steppies extends Module {
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.BOOTSHINE.icon,
 			content: <Trans id="mnk.steppies.suggestions.bootshine.content">
-				Try to always hit your positional on <ActionLink {...this.data.actions.BOOTSHINE} />. Between the guaranteed critical hit under <StatusLink {...this.data.statuses.OPO_OPO_FORM} /> and the potency buff from <StatusLink {...this.data.statuses.LEADEN_FIST} />, this is essentially your strongest skill.
+				Try to always hit your positional on <DataLink action="BOOTSHINE"/>. Between the guaranteed critical hit under <DataLink status="OPO_OPO_FORM"/> and the potency buff from <DataLink status="LEADEN_FIST"/>, this is essentially your strongest skill.
 			</Trans>,
 			why: <Trans id="mnk.steppies.suggestions.bootshine.why">
-				<Plural value={this.getUncritCount(this.steppies)} one="# use of" other="# uses of" /> <ActionLink {...this.data.actions.BOOTSHINE} /> executed with incorrect position.
+				<Plural value={this.getUncritCount(this.steppies)} one="# use of" other="# uses of" /> <DataLink action="BOOTSHINE"/> executed with incorrect position.
 			</Trans>,
 			tiers: CRIT_BOOT_SEVERITY,
 			value: this.getUncritCount(this.steppies),

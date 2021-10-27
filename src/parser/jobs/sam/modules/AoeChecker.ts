@@ -1,14 +1,20 @@
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
+import {Events} from 'event'
+import {dependency} from 'parser/core/Injectable'
+import {Actors} from 'parser/core/modules/Actors'
 import {AoEUsages} from 'parser/core/modules/AoEUsages'
 //const GAIN_AT_3 = new Set([ACTIONS.FUGA.id, ACTIONS.OKA.id, ACTIONS.MANGETSU.id, ACTIONS.HISSATSU_KYUTEN.id])
 //const GAIN_AT_2 = new Set([ACTIONS.HISSATSU_GUREN.id, ACTIONS.TENKA_GOKEN.id, ACTIONS.KAESHI_GOKEN.id])
 
-export default class AoeChecker extends AoEUsages {
-	static dependencies = [
-		...AoEUsages.dependencies,
-		'combatants',
-	]
+const AOE_FINISHERS = [
+	ACTIONS.MANGETSU.id,
+	ACTIONS.OKA.id,
+]
+
+export class AoeChecker extends AoEUsages {
+	@dependency private actors!: Actors
+
 	suggestionIcon = ACTIONS.FUGA.icon
 
 	trackedActions = [
@@ -47,21 +53,24 @@ export default class AoeChecker extends AoEUsages {
 			aoeAction: ACTIONS.OKA,
 			stActions: [ACTIONS.KASHA],
 			minTargets: 3,
-
 		},
 
 		{
 			aoeAction: ACTIONS.MANGETSU,
 			stActions: [ACTIONS.GEKKO],
 			minTargets: 3,
-
 		},
 	]
 
-	adjustMinTargets(event, minTargets) {
-		if (event.ability.guid === (ACTIONS.MANGETSU.id || ACTIONS.OKA.id) && !(this.combatants.selected.hasStatus(STATUSES.MEIKYO_SHISUI.id))) {
+	protected override adjustMinTargets(event: Events['damage'], minTargets: number): number {
+		if (event.cause.type !== 'action') {
+			return minTargets
+		}
+
+		if (AOE_FINISHERS.includes(event.cause.action) && !(this.actors.current.hasStatus(STATUSES.MEIKYO_SHISUI.id))) {
 			return 1
 		}
+
 		return minTargets
 	}
 }

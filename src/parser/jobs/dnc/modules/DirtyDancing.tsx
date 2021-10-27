@@ -2,23 +2,24 @@ import {t} from '@lingui/macro'
 import {Plural, Trans} from '@lingui/react'
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
 import {RotationTable} from 'components/ui/RotationTable'
-import {getDataBy} from 'data'
-import ACTIONS from 'data/ACTIONS'
-import STATUSES from 'data/STATUSES'
-import {CastEvent} from 'fflogs'
+import {StatusKey} from 'data/STATUSES'
+import {Cause, Event, Events} from 'event'
 import _ from 'lodash'
-import Module, {dependency} from 'parser/core/Module'
+import {Analyser} from 'parser/core/Analyser'
+import {filter, oneOf} from 'parser/core/filter'
+import {dependency} from 'parser/core/Injectable'
+import {Actors} from 'parser/core/modules/Actors'
 import CheckList, {Requirement, Rule} from 'parser/core/modules/Checklist'
-import Combatants from 'parser/core/modules/Combatants'
+import {Data} from 'parser/core/modules/Data'
 import Downtime from 'parser/core/modules/Downtime'
-import {EntityStatuses} from 'parser/core/modules/EntityStatuses'
 import {Invulnerability} from 'parser/core/modules/Invulnerability'
-import {NormalisedDamageEvent} from 'parser/core/modules/NormalisedEvents'
+import {Statuses} from 'parser/core/modules/Statuses'
 import Suggestions, {SEVERITY, TieredSuggestion, Suggestion} from 'parser/core/modules/Suggestions'
 import {Timeline} from 'parser/core/modules/Timeline'
 import React, {Fragment} from 'react'
 import {Icon, Message} from 'semantic-ui-react'
-import {DEFAULT_SEVERITY_TIERS, FINISHES} from '../CommonData'
+import {isSuccessfulHit} from 'utilities'
+import {DANCE_MOVES, DEFAULT_SEVERITY_TIERS, FINISHES, STEPS} from '../CommonData'
 import DISPLAY_ORDER from '../DISPLAY_ORDER'
 
 // Slightly different than normal severity. Start at minor in case it's just a math error, but upgrade
@@ -29,44 +30,20 @@ const DRIFT_SEVERITY_TIERS = {
 	3: SEVERITY.MAJOR,
 }
 
-const STEPS = [
-	ACTIONS.STANDARD_STEP.id,
-	ACTIONS.TECHNICAL_STEP.id,
-]
-
-const DANCE_MOVES = [
-	ACTIONS.ENTRECHAT.id,
-	ACTIONS.EMBOITE.id,
-	ACTIONS.JETE.id,
-	ACTIONS.PIROUETTE.id,
-]
-
-const EXPECTED_DANCE_MOVE_COUNT = {
-	[ACTIONS.DOUBLE_STANDARD_FINISH.id]: 2,
-	[ACTIONS.QUADRUPLE_TECHNICAL_FINISH.id]: 4,
-	[-1]: 0,
-}
-
-// All of the dance moves have the same cooldown, so we'll just use one of them for this...
-const DANCE_MOVE_COOLDOWN_MILLIS = ACTIONS.JETE.cooldown
-
-const STEP_COOLDOWN_MILLIS = {
-	[ACTIONS.STANDARD_STEP.id]: ACTIONS.STANDARD_STEP.cooldown,
-	[ACTIONS.TECHNICAL_STEP.id]: ACTIONS.TECHNICAL_STEP.cooldown,
-}
-
 const DANCE_COMPLETION_LENIENCY_MILLIS = 1000
 
 class Dance {
 	end?: number
-	initiatingStep: CastEvent
-	rotation: CastEvent[] = []
+	initiatingStep: Events['action']
+	rotation: Array<Events['action']> = []
 	dancing: boolean = false
 	resolved: boolean = false
 
 	dirty: boolean = false
 	missed: boolean = false
 	footloose: boolean = false
+
+	data!: Data
 
 	public get error(): boolean {
 		return this.dirty || this.missed || this.footloose
@@ -76,44 +53,57 @@ class Dance {
 		const actualFinish = _.last(this.rotation)
 		let expectedFinish = -1
 		if (actualFinish) {
-			if (this.initiatingStep.ability.guid === ACTIONS.TECHNICAL_STEP.id) {
-				expectedFinish =  ACTIONS.QUADRUPLE_TECHNICAL_FINISH.id
-			} else if (this.initiatingStep.ability.guid === ACTIONS.STANDARD_STEP.id) {
-				expectedFinish = ACTIONS.DOUBLE_STANDARD_FINISH.id
+			if (this.initiatingStep.action === this.data.actions.TECHNICAL_STEP.id) {
+				expectedFinish =  this.data.actions.QUADRUPLE_TECHNICAL_FINISH.id
+			} else if (this.initiatingStep.action === this.data.actions.STANDARD_STEP.id) {
+				expectedFinish = this.data.actions.DOUBLE_STANDARD_FINISH.id
 			}
 		}
 		return expectedFinish
 	}
 
 	public get expectedEndTime(): number {
-		const actionData = getDataBy(ACTIONS, 'id', this.initiatingStep.ability.guid) as TODO
-		return this.start + actionData.gcdRecast
-			+ EXPECTED_DANCE_MOVE_COUNT[this.expectedFinishId] * DANCE_MOVE_COOLDOWN_MILLIS
+		const actionData = this.data.getAction(this.initiatingStep.action)
+		if (actionData == null) { return this.initiatingStep.timestamp }
+		return this.start + (actionData.gcdRecast ?? 0)
+			+ this.expectedDanceMoves * this.data.actions.JETE.cooldown // All of the dance moves have the same cooldown, so just pick one
 			+ DANCE_COMPLETION_LENIENCY_MILLIS // Additional leniency to account for network latency
+	}
+
+	public get expectedDanceMoves(): number {
+		if (this.initiatingStep.action === this.data.actions.STANDARD_STEP.id) {
+			return 2
+		}
+		if (this.initiatingStep.action === this.data.actions.TECHNICAL_STEP.id) {
+			return DANCE_MOVES.length
+		}
+		return 0
 	}
 
 	public get start(): number {
 		return this.initiatingStep.timestamp
 	}
 
-	constructor(danceEvent: CastEvent) {
+	constructor(danceEvent: Events['action'], data: Data) {
 		this.initiatingStep = danceEvent
 		this.dancing = true
+		this.data = data
 	}
 }
 
-export default class DirtyDancing extends Module {
+export class DirtyDancing extends Analyser {
 	static override handle = 'dirtydancing'
 	static override title = t('dnc.dirty-dancing.title')`Dance Issues`
 	static override displayOrder = DISPLAY_ORDER.DIRTY_DANCING
 
+	@dependency private actors!: Actors
 	@dependency private checklist!: CheckList
-	@dependency private suggestions!: Suggestions
-	@dependency private invulnerability!: Invulnerability
-	@dependency private combatants!: Combatants
-	@dependency private timeline!: Timeline
+	@dependency private data!: Data
 	@dependency private downtime!: Downtime
-	@dependency private entityStatuses!: EntityStatuses
+	@dependency private invulnerability!: Invulnerability
+	@dependency private suggestions!: Suggestions
+	@dependency private statuses!: Statuses
+	@dependency private timeline!: Timeline
 
 	private danceHistory: Dance[] = []
 	private missedDances = 0
@@ -121,19 +111,24 @@ export default class DirtyDancing extends Module {
 	private footlooseDances = 0
 
 	private previousUseTimestamp = {
-		[ACTIONS.STANDARD_STEP.id]: this.parser.fight.start_time,
-		[ACTIONS.TECHNICAL_STEP.id]: this.parser.fight.start_time,
+		[this.data.actions.STANDARD_STEP.id]: this.parser.pull.timestamp,
+		[this.data.actions.TECHNICAL_STEP.id]: this.parser.pull.timestamp,
 	}
 	private totalDrift = {
-		[ACTIONS.STANDARD_STEP.id]: 0,
-		[ACTIONS.TECHNICAL_STEP.id]: 0,
+		[this.data.actions.STANDARD_STEP.id]: 0,
+		[this.data.actions.TECHNICAL_STEP.id]: 0,
 	}
 
-	protected override init() {
-		this.addEventHook('cast', {by: 'player', abilityId: STEPS}, this.beginDance)
-		this.addEventHook('cast', {by: 'player'}, this.continueDance)
-		this.addEventHook('cast', {by: 'player', abilityId: FINISHES}, this.finishDance)
-		this.addEventHook('normaliseddamage', {by: 'player', abilityId: FINISHES}, this.resolveDance)
+	private stepIds = STEPS.map(key => this.data.actions[key].id)
+	private danceMoveIds = DANCE_MOVES.map(key => this.data.actions[key].id)
+	private finishIds = FINISHES.map(key => this.data.actions[key].id)
+
+	override initialise() {
+		const playerFilter = filter<Event>().source(this.parser.actor.id)
+		this.addEventHook(playerFilter.type('action').action(oneOf(this.stepIds)), this.beginDance)
+		this.addEventHook(playerFilter.type('action').action(oneOf(this.danceMoveIds)), this.continueDance)
+		this.addEventHook(playerFilter.type('action').action(oneOf(this.finishIds)), this.finishDance)
+		this.addEventHook(playerFilter.type('damage').cause(filter<Cause>().action(oneOf(this.finishIds))), this.resolveDance)
 		this.addEventHook('complete', this.onComplete)
 	}
 
@@ -141,18 +136,15 @@ export default class DirtyDancing extends Module {
 		return this.danceHistory.filter(dance => dance.start >= startTime && dance.start <= endTime).length
 	}
 
-	private addDanceToHistory(event: CastEvent): Dance {
-		const newDance = new Dance(event)
+	private addDanceToHistory(event: Events['action']): Dance {
+		const newDance = new Dance(event, this.data)
 		newDance.rotation.push(event)
 		this.danceHistory.push(newDance)
-		const stepId = event.ability.guid
+		const stepId = event.action
 		if (this.previousUseTimestamp[stepId]) {
 			const lastUse = this.previousUseTimestamp[stepId]
-			const downtime = this.downtime.getDowntime(
-				this.parser.fflogsToEpoch(lastUse),
-				this.parser.fflogsToEpoch(event.timestamp),
-			)
-			const drift = Math.max(0, event.timestamp - lastUse - STEP_COOLDOWN_MILLIS[stepId] - downtime)
+			const downtime = this.downtime.getDowntime(lastUse, event.timestamp)
+			const drift = Math.max(0, event.timestamp - lastUse - (this.data.getAction(stepId)?.cooldown ?? 0) - downtime)
 			this.totalDrift[stepId] += drift
 			this.previousUseTimestamp[stepId] = event.timestamp
 		}
@@ -160,7 +152,7 @@ export default class DirtyDancing extends Module {
 		return newDance
 	}
 
-	private beginDance(event: CastEvent) {
+	private beginDance(event: Events['action']) {
 		this.addDanceToHistory(event)
 	}
 
@@ -168,19 +160,14 @@ export default class DirtyDancing extends Module {
 		return _.last(this.danceHistory)
 	}
 
-	private continueDance(event: CastEvent) {
-		// Bail if beginDance or finishDance should be handling this event
-		if (STEPS.includes(event.ability.guid) || FINISHES.includes(event.ability.guid)) {
-			return
-		}
-
+	private continueDance(event: Events['action']) {
 		const dance = this.lastDance
 		if (dance && dance.dancing) {
 			dance.rotation.push(event)
 		}
 	}
 
-	private finishDance(event: CastEvent) {
+	private finishDance(event: Events['action']) {
 		let dance = this.lastDance
 		if (dance && dance.dancing) {
 			dance.rotation.push(event)
@@ -190,7 +177,7 @@ export default class DirtyDancing extends Module {
 		dance.dancing = false
 	}
 
-	private resolveDance(event: NormalisedDamageEvent) {
+	private resolveDance(event: Events['damage']) {
 		const dance = this.lastDance
 
 		if (!dance || dance.resolved) {
@@ -201,10 +188,10 @@ export default class DirtyDancing extends Module {
 		dance.end = finisher.timestamp
 
 		// Count dance as dirty if we didn't get the expected finisher, and the fight wouldn't have ended or been in an invuln window before we could have
-		if (finisher.ability.guid !== dance.expectedFinishId && dance.expectedEndTime <= this.parser.eventTimeOffset + this.parser.pull.duration) {
+		if (finisher.action !== dance.expectedFinishId && dance.expectedEndTime <= this.parser.pull.timestamp + this.parser.pull.duration) {
 			this.addTimestampHook(dance.expectedEndTime, ({timestamp}) => {
 				dance.dirty = this.invulnerability.isActive({
-					timestamp: this.parser.fflogsToEpoch(timestamp),
+					timestamp,
 					types: ['invulnerable'],
 				})
 			})
@@ -213,56 +200,46 @@ export default class DirtyDancing extends Module {
 		// If the finisher didn't hit anything, and something could've been, ding it.
 		// Don't gripe if the boss is invuln, there is use-case for finishing during the downtime
 		if (
-			!event.hasSuccessfulHit
+			!isSuccessfulHit(event)
 			&& !this.invulnerability.isActive({
-				timestamp: this.parser.fflogsToEpoch(finisher.timestamp),
+				timestamp: finisher.timestamp,
 				types: ['invulnerable'],
 			})
 		) {
 			dance.missed = true
 		}
 		// Dancer messed up if more step actions were recorded than we expected
-		const actualCount = dance.rotation.filter(step => DANCE_MOVES.includes(step.ability.guid)).length
-		const expectedCount = EXPECTED_DANCE_MOVE_COUNT[dance.expectedFinishId]
+		const actualCount = dance.rotation.filter(step => this.danceMoveIds.includes(step.action)).length
 		// Only ding if the step count is greater than expected, we're not going to catch the steps in the opener dance
-		if (actualCount > expectedCount) {
+		if (actualCount > dance.expectedDanceMoves) {
 			dance.footloose = true
 		}
 
 		dance.resolved = true
 	}
 
-	private getStandardFinishUptimePercent() {
+	private getStatusUptimePercent(statusKey: StatusKey): number {
 		// Exclude downtime from both the status time and expected uptime
-		const statusTime = this.entityStatuses.getStatusUptime(STATUSES.STANDARD_FINISH.id, this.combatants.getEntities()) - this.downtime.getDowntime()
+		const statusTime = this.statuses.getUptime(statusKey, this.actors.friends) - this.downtime.getDowntime()
 		const uptime = this.parser.currentDuration - this.downtime.getDowntime()
 
 		return (statusTime / uptime) * 100
 	}
 
-	private getClosedPositionUptimePercent() {
-		// Exclude downtime from both the status time and expected uptime
-		const statusTime = this.entityStatuses.getStatusUptime(STATUSES.CLOSED_POSITION.id, this.combatants.getEntities()) - this.downtime.getDowntime()
-		const uptime = this.parser.currentDuration - this.downtime.getDowntime()
-
-		// Don't show negative numbers, which is possible when factoring in downtime
-		return Math.max((statusTime / uptime) * 100, 0)
-	}
-
 	private onComplete() {
-		const zeroStandards = this.danceHistory.filter(dance => dance.dirty && dance.initiatingStep.ability.guid === ACTIONS.STANDARD_STEP.id &&
-			_.last(dance.rotation)?.ability.guid === ACTIONS.STANDARD_FINISH.id).length
-		const zeroTechnicals = this.danceHistory.filter(dance => dance.dirty && dance.initiatingStep.ability.guid === ACTIONS.TECHNICAL_STEP.id &&
-			_.last(dance.rotation)?.ability.guid === ACTIONS.TECHNICAL_FINISH.id).length
+		const zeroStandards = this.danceHistory.filter(dance => dance.dirty && dance.initiatingStep.action === this.data.actions.STANDARD_STEP.id &&
+			_.last(dance.rotation)?.action === this.data.actions.STANDARD_FINISH.id).length
+		const zeroTechnicals = this.danceHistory.filter(dance => dance.dirty && dance.initiatingStep.action === this.data.actions.TECHNICAL_STEP.id &&
+			_.last(dance.rotation)?.action === this.data.actions.TECHNICAL_FINISH.id).length
 		this.missedDances = this.danceHistory.filter(dance => dance.missed).length
 		this.dirtyDances = Math.max(this.danceHistory.filter(dance => dance.dirty).length - (zeroStandards + zeroTechnicals), 0)
 		this.footlooseDances = this.danceHistory.filter(dance => dance.footloose).length
 
 		// Suggest to move closer for finishers.
 		this.suggestions.add(new TieredSuggestion({
-			icon: ACTIONS.TECHNICAL_FINISH.icon,
+			icon: this.data.actions.TECHNICAL_FINISH.icon,
 			content: <Trans id="dnc.dirty-dancing.suggestions.missed-finishers.content">
-				<ActionLink {...ACTIONS.TECHNICAL_FINISH} /> and <ActionLink {...ACTIONS.STANDARD_FINISH} /> are a significant source of damage. Make sure you're in range when finishing a dance.
+				<ActionLink {...this.data.actions.TECHNICAL_FINISH} /> and <ActionLink {...this.data.actions.STANDARD_FINISH} /> are a significant source of damage. Make sure you're in range when finishing a dance.
 			</Trans>,
 			tiers: DEFAULT_SEVERITY_TIERS,
 			value: this.missedDances,
@@ -273,7 +250,7 @@ export default class DirtyDancing extends Module {
 
 		// Suggestion to get all expected finishers
 		this.suggestions.add(new TieredSuggestion({
-			icon: ACTIONS.STANDARD_FINISH.icon,
+			icon: this.data.actions.STANDARD_FINISH.icon,
 			content: <Trans id="dnc.dirty-dancing.suggestions.dirty-dances.content">
 				Performing fewer steps than expected reduces the damage of your finishes. Make sure you perform the expected number of steps.
 			</Trans>,
@@ -286,7 +263,7 @@ export default class DirtyDancing extends Module {
 
 		// Suggestion to not faff about with steps
 		this.suggestions.add(new TieredSuggestion({
-			icon: ACTIONS.EMBOITE.icon,
+			icon: this.data.actions.EMBOITE.icon,
 			content: <Trans id="dnc.dirty-dancing.suggestions.footloose.content">
 				Performing the wrong steps makes your dance take longer and leads to a loss of DPS uptime. Make sure to perform your dances correctly.
 			</Trans>,
@@ -297,38 +274,40 @@ export default class DirtyDancing extends Module {
 			</Trans>,
 		}))
 
+		const standardFinishUptimePct = this.getStatusUptimePercent('STANDARD_FINISH')
 		this.checklist.add(new Rule({
-			name: <Trans id="dnc.dirty-dancing.checklist.standard-finish-buff.name">Keep your <StatusLink {...STATUSES.STANDARD_FINISH} /> buff up</Trans>,
+			name: <Trans id="dnc.dirty-dancing.checklist.standard-finish-buff.name">Keep your <StatusLink {...this.data.statuses.STANDARD_FINISH} /> buff up</Trans>,
 			description: <Trans id="dnc.dirty-dancing.checklist.standard-finish-buff.description">
-				Your <StatusLink {...STATUSES.STANDARD_FINISH} /> buff contributes significantly to your overall damage, and the damage of your <StatusLink {...STATUSES.DANCE_PARTNER} /> as well. Make sure to keep it up at all times.
+				Your <StatusLink {...this.data.statuses.STANDARD_FINISH} /> buff contributes significantly to your overall damage, and the damage of your <StatusLink {...this.data.statuses.DANCE_PARTNER} /> as well. Make sure to keep it up at all times.
 			</Trans>,
 			target: 95,
 			requirements: [
 				new Requirement({
-					name: <Fragment><StatusLink {...STATUSES.STANDARD_FINISH} /> uptime</Fragment>,
-					percent: () => this.getStandardFinishUptimePercent(),
+					name: <Fragment><StatusLink {...this.data.statuses.STANDARD_FINISH} /> uptime</Fragment>,
+					percent: standardFinishUptimePct,
 				}),
 			],
 		}))
 
+		const closedPositionUptimePct = this.getStatusUptimePercent('CLOSED_POSITION')
 		this.checklist.add(new Rule({
-			name: <Trans id="dnc.dirty-dancing.checklist.closed-position-buff.name">Choose a <StatusLink {...STATUSES.DANCE_PARTNER} /></Trans>,
+			name: <Trans id="dnc.dirty-dancing.checklist.closed-position-buff.name">Choose a <StatusLink {...this.data.statuses.DANCE_PARTNER} /></Trans>,
 			description: <Trans id="dnc.dirty-dancing.checklist.closed-position-buff.description">
-				Choosing a <StatusLink {...STATUSES.DANCE_PARTNER} /> will also give them the <StatusLink {...STATUSES.STANDARD_FINISH_PARTNER} /> and <StatusLink {...STATUSES.DEVILMENT} /> buffs. Make sure to keep it up at all times except for rare circumstances where a switch is warranted.
+				Choosing a <StatusLink {...this.data.statuses.DANCE_PARTNER} /> will also give them the <StatusLink {...this.data.statuses.STANDARD_FINISH_PARTNER} /> and <StatusLink {...this.data.statuses.DEVILMENT} /> buffs. Make sure to keep it up at all times except for rare circumstances where a switch is warranted.
 			</Trans>,
 			target: 95,
 			requirements: [
 				new Requirement({
-					name: <Fragment><StatusLink {...STATUSES.CLOSED_POSITION} /> uptime (excluding downtime)</Fragment>,
-					percent: () => this.getClosedPositionUptimePercent(),
+					name: <Fragment><StatusLink {...this.data.statuses.CLOSED_POSITION} /> uptime (excluding downtime)</Fragment>,
+					percent: closedPositionUptimePct,
 				}),
 			],
 		}))
 
-		const driftedStandards = Math.floor(this.totalDrift[ACTIONS.STANDARD_STEP.id]/STEP_COOLDOWN_MILLIS[ACTIONS.STANDARD_STEP.id])
+		const driftedStandards = Math.floor(this.totalDrift[this.data.actions.STANDARD_STEP.id] / this.data.actions.STANDARD_STEP.cooldown)
 		this.suggestions.add(new TieredSuggestion({
-			icon: ACTIONS.STANDARD_STEP.icon,
-			content: <Trans id="dnc.dirty-dancing.suggestions.standard-drift.content">You may have lost a use of <ActionLink {...ACTIONS.STANDARD_STEP} /> by letting the cooldown drift. Try to keep it on cooldown, even if it means letting your GCD sit for a second.
+			icon: this.data.actions.STANDARD_STEP.icon,
+			content: <Trans id="dnc.dirty-dancing.suggestions.standard-drift.content">You may have lost a use of <ActionLink {...this.data.actions.STANDARD_STEP} /> by letting the cooldown drift. Try to keep it on cooldown, even if it means letting your GCD sit for a second.
 			</Trans>,
 			tiers: DRIFT_SEVERITY_TIERS,
 			value: driftedStandards,
@@ -337,10 +316,10 @@ export default class DirtyDancing extends Module {
 			</Trans>,
 		}))
 
-		const driftedTechnicals = Math.floor(this.totalDrift[ACTIONS.TECHNICAL_STEP.id]/STEP_COOLDOWN_MILLIS[ACTIONS.TECHNICAL_STEP.id])
+		const driftedTechnicals = Math.floor(this.totalDrift[this.data.actions.TECHNICAL_STEP.id] / this.data.actions.TECHNICAL_STEP.cooldown)
 		this.suggestions.add(new TieredSuggestion({
-			icon: ACTIONS.TECHNICAL_STEP.icon,
-			content: <Trans id="dnc.dirty-dancing.suggestions.technical-drift.content">You may have lost a use of <ActionLink {...ACTIONS.TECHNICAL_STEP} /> by letting the cooldown drift. Try to keep it on cooldown, even if it means letting your GCD sit for a second.
+			icon: this.data.actions.TECHNICAL_STEP.icon,
+			content: <Trans id="dnc.dirty-dancing.suggestions.technical-drift.content">You may have lost a use of <ActionLink {...this.data.actions.TECHNICAL_STEP} /> by letting the cooldown drift. Try to keep it on cooldown, even if it means letting your GCD sit for a second.
 			</Trans>,
 			tiers: DRIFT_SEVERITY_TIERS,
 			value: driftedTechnicals,
@@ -350,9 +329,9 @@ export default class DirtyDancing extends Module {
 		}))
 
 		this.suggestions.add(new TieredSuggestion({
-			icon: ACTIONS.STANDARD_STEP.icon,
+			icon: this.data.actions.STANDARD_STEP.icon,
 			content: <Trans id="dnc.dirty-dancing.suggestions.zero-standard.content">
-				Using <ActionLink {...ACTIONS.STANDARD_FINISH} /> without completing any steps provides no damage buff to you and your <StatusLink {...STATUSES.DANCE_PARTNER} />, which is a core part of the job. Make sure to perform your dances correctly.
+				Using <ActionLink {...this.data.actions.STANDARD_FINISH} /> without completing any steps provides no damage buff to you and your <StatusLink {...this.data.statuses.DANCE_PARTNER} />, which is a core part of the job. Make sure to perform your dances correctly.
 			</Trans>,
 			tiers: {
 				1: SEVERITY.MEDIUM,
@@ -366,9 +345,9 @@ export default class DirtyDancing extends Module {
 
 		if (zeroTechnicals > 0) {
 			this.suggestions.add(new Suggestion({
-				icon: ACTIONS.TECHNICAL_STEP.icon,
+				icon: this.data.actions.TECHNICAL_STEP.icon,
 				content: <Trans id="dnc.dirty-dancing.suggestions.zero-technical.content">
-					Using <ActionLink {...ACTIONS.TECHNICAL_FINISH} /> without completing any steps provides no damage buff to you and your party, which is a core part of the job. Make sure to perform your dances correctly.
+					Using <ActionLink {...this.data.actions.TECHNICAL_FINISH} /> without completing any steps provides no damage buff to you and your party, which is a core part of the job. Make sure to perform your dances correctly.
 				</Trans>,
 				severity: SEVERITY.MAJOR,
 				why: <Trans id="dnc.dirty-dancing.suggestions.zero-technical.why">
@@ -404,10 +383,10 @@ export default class DirtyDancing extends Module {
 					]}
 					data={this.danceHistory.filter(dance => dance.error).map(dance => {
 						return ({
-							start: dance.start - this.parser.fight.start_time,
+							start: dance.start - this.parser.pull.timestamp,
 							end: dance.end != null ?
-								dance.end - this.parser.fight.start_time :
-								dance.start - this.parser.fight.start_time,
+								dance.end - this.parser.pull.timestamp :
+								dance.start - this.parser.pull.timestamp,
 							notesMap: {
 								missed: <>{this.getNotesIcon(dance.missed)}</>,
 								dirty: <>{this.getNotesIcon(dance.dirty)}</>,
