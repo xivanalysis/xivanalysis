@@ -1,4 +1,4 @@
-import {AoEUsages} from 'parser/core/modules/AoEUsages'
+import {AoEUsages} from './AoEUsages'
 import {Combos} from './Combos'
 import {DirtyDancing} from './DirtyDancing'
 import {Gauge} from './Gauge'
