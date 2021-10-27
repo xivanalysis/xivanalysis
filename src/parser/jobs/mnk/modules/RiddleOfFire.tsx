@@ -194,7 +194,7 @@ export class RiddleOfFire extends Analyser {
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.SHOULDER_TACKLE.icon,
 			content: <Trans id="mnk.rof.suggestions.tackle.content">
-				Try to use both charges of <DataLink action="SHOULDER_TACKLE"/> during <DataLink statu="RIDDLE_OF_FIRE"/>, unless you need to hold a charge for strategic purposes.
+				Try to use both charges of <DataLink action="SHOULDER_TACKLE"/> during <DataLink status="RIDDLE_OF_FIRE"/>, unless you need to hold a charge for strategic purposes.
 			</Trans>,
 			tiers: {
 				2: SEVERITY.MINOR,	// Always a minor suggestion, however we start from 2 to forgive ST on pull
