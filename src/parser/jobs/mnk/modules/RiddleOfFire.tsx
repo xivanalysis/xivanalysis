@@ -1,6 +1,6 @@
 import {t} from '@lingui/macro'
 import {Plural, Trans} from '@lingui/react'
-import {ActionLink, StatusLink} from 'components/ui/DbLink'
+import {DataLink} from 'components/ui/DbLink'
 import {RotationTable} from 'components/ui/RotationTable'
 import {Event, Events} from 'event'
 import {Analyser} from 'parser/core/Analyser'
@@ -170,41 +170,38 @@ export class RiddleOfFire extends Analyser {
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.RIDDLE_OF_FIRE.icon,
 			content: <Trans id="mnk.rof.suggestions.gcd.content">
-				Aim to hit {EXPECTED.GCDS} GCDs during each <StatusLink {...this.data.statuses.RIDDLE_OF_FIRE} /> window.
+				Aim to hit {EXPECTED.GCDS} GCDs during each <DataLink status="RIDDLE_OF_FIRE"/> window.
 			</Trans>,
 			tiers: SUGGESTION_TIERS,
 			value: droppedGcds,
 			why: <Trans id="mnk.rof.suggestions.gcd.why">
-				<Plural value={droppedGcds} one="# possible GCD was" other="# possible GCDs were" /> missed or wasted on <ActionLink {...this.data.actions.MEDITATION} /> during <StatusLink {...this.data.statuses.RIDDLE_OF_FIRE} />.
+				<Plural value={droppedGcds} one="# possible GCD was" other="# possible GCDs were" /> missed or wasted on <DataLink action="MEDITATION"/> during <DataLink status="RIDDLE_OF_FIRE"/>.
 			</Trans>,
 		}))
 
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.ELIXIR_FIELD.icon,
 			content: <Trans id="mnk.rof.suggestions.ogcd.content">
-				Aim to use <ActionLink {...this.data.actions.TORNADO_KICK} />, <ActionLink {...this.data.actions.ELIXIR_FIELD} />, and at least 1 <ActionLink {...this.data.actions.SHOULDER_TACKLE} /> during each <StatusLink {...this.data.statuses.RIDDLE_OF_FIRE} />.
+				Aim to use <ADataLink action="TORNADO_KICK"/>, <DataLink action="ELIXIR_FIELD"/>, and at least 1 <DataLink action="SHOULDER_TACKLE"/> during each <DataLink status="RIDDLE_OF_FIRE"/>.
 			</Trans>,
 			tiers: SUGGESTION_TIERS,
 			value: droppedExpectedOgcds,
 			why: <Trans id="mnk.rof.suggestions.ogcd.why">
-				<Plural value={droppedExpectedOgcds} one="# expected oGCD was" other="# expected oGCDs were" /> dropped
-				during <StatusLink {...this.data.statuses.RIDDLE_OF_FIRE} />.
+				<Plural value={droppedExpectedOgcds} one="# expected oGCD was" other="# expected oGCDs were" /> dropped during <DataLink status="RIDDLE_OF_FIRE"/>.
 			</Trans>,
 		}))
 
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.SHOULDER_TACKLE.icon,
 			content: <Trans id="mnk.rof.suggestions.tackle.content">
-				Try to use both charges of <ActionLink {...this.data.actions.SHOULDER_TACKLE} /> during <StatusLink {...this.data.statuses.RIDDLE_OF_FIRE} />,
-				unless you need to hold a charge for strategic purposes.
+				Try to use both charges of <DataLink action="SHOULDER_TACKLE"/> during <DataLink statu="RIDDLE_OF_FIRE"/>, unless you need to hold a charge for strategic purposes.
 			</Trans>,
 			tiers: {
 				2: SEVERITY.MINOR,	// Always a minor suggestion, however we start from 2 to forgive ST on pull
 			},
 			value: riddlesWithOneTackle,
 			why: <Trans id="mnk.rof.suggestions.tackle.why">
-				<Plural value={riddlesWithOneTackle} one="# use" other="# uses" /> of <StatusLink {...this.data.statuses.RIDDLE_OF_FIRE} /> contained
-				only one use of <ActionLink {...this.data.actions.SHOULDER_TACKLE} />.
+				<Plural value={riddlesWithOneTackle} one="# use" other="# uses" /> of <DataLink status="RIDDLE_OF_FIRE"/> contained only one use of <DataLink action="SHOULDER_TACKLE"/>.
 			</Trans>,
 		}))
 	}
@@ -217,19 +214,19 @@ export class RiddleOfFire extends Analyser {
 					accessor: 'gcds',
 				},
 				{
-					header: <ActionLink showName={false} {...this.data.actions.THE_FORBIDDEN_CHAKRA}/>,
+					header: <DataLink showName={false} action="THE_FORBIDDEN_CHAKRA"/>,
 					accessor: 'forbiddenChakra',
 				},
 				{
-					header: <ActionLink showName={false} {...this.data.actions.TORNADO_KICK}/>,
+					header: <DataLink showName={false} action="TORNADO_KICK"/>,
 					accessor: 'tornadoKick',
 				},
 				{
-					header: <ActionLink showName={false} {...this.data.actions.ELIXIR_FIELD}/>,
+					header: <DataLink showName={false} action="ELIXIR_FIELD"/>,
 					accessor: 'elixirField',
 				},
 				{
-					header: <ActionLink showName={false} {...this.data.actions.SHOULDER_TACKLE}/>,
+					header: <DataLink showName={false} action="SHOULDER_TACKLE"/>,
 					accessor: 'shoulderTackle',
 				},
 			]}

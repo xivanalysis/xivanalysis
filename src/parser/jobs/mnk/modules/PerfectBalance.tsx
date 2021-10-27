@@ -1,6 +1,6 @@
 import {t} from '@lingui/macro'
 import {Plural, Trans} from '@lingui/react'
-import {ActionLink, StatusLink} from 'components/ui/DbLink'
+import {DataLink} from 'components/ui/DbLink'
 import {ActionRoot} from 'data/ACTIONS/root'
 import {Event, Events} from 'event'
 import {Analyser} from 'parser/core/Analyser'
@@ -123,26 +123,26 @@ export class PerfectBalance extends Analyser {
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.PERFECT_BALANCE.icon,
 			content: <Trans id="mnk.pb.suggestions.stacks.content">
-				Try to consume all 6 stacks during every <ActionLink {...this.data.actions.PERFECT_BALANCE} /> window.
+				Try to consume all 6 stacks during every <DataLink action="PERFECT_BALANCE"/> window.
 			</Trans>,
 			tiers: SUGGESTION_TIERS,
 			value: droppedGcds,
 			why: <Trans id="mnk.pb.suggestions.stacks.why">
-				<Plural value={droppedGcds} one="# possible GCD was" other="# possible GCDs were" /> missed during <StatusLink {...this.data.statuses.PERFECT_BALANCE} />.
+				<Plural value={droppedGcds} one="# possible GCD was" other="# possible GCDs were" /> missed during <DataLink status="PERFECT_BALANCE"/>.
 			</Trans>,
 		}))
 
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.PERFECT_BALANCE.icon,
 			content: <Trans id="mnk.pb.suggestions.badActions.content">
-				Using <ActionLink {...this.data.actions.FORM_SHIFT} /> or <ActionLink {...this.data.actions.ANATMAN} /> inside of <StatusLink {...this.data.statuses.PERFECT_BALANCE} /> does no damage and does not change your Form.
+				Using <DataLink action="FORM_SHIFT"/> or <DataLink action="ANATMAN"/> inside of <DataLink status="PERFECT_BALANCE"/> does no damage and does not change your Form.
 			</Trans>,
 			tiers: {
 				1: SEVERITY.MINOR,
 			},
 			value: badActions,
 			why: <Trans id="mnk.pb.suggestions.badActions.why">
-				<Plural value={badActions} one="# use of" other="# uses of"/> uses of <ActionLink {...this.data.actions.FORM_SHIFT} /> or <ActionLink {...this.data.actions.ANATMAN} /> were used during <StatusLink {...this.data.statuses.PERFECT_BALANCE} />.
+				<Plural value={badActions} one="# use of" other="# uses of"/> uses of <DataLink action="FORM_SHIFT"/> or <DataLink action="ANATMAN"/> were used during <DataLink status="PERFECT_BALANCE"/>.
 			</Trans>,
 		}))
 	}

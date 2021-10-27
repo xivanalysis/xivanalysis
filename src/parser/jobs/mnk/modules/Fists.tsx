@@ -1,6 +1,6 @@
 import {t} from '@lingui/macro'
 import {Plural, Trans} from '@lingui/react'
-import {ActionLink, StatusLink} from 'components/ui/DbLink'
+import {DataLink} from 'components/ui/DbLink'
 import JOBS from 'data/JOBS'
 import {Event, Events} from 'event'
 import _ from 'lodash'
@@ -146,7 +146,7 @@ export class Fists extends Analyser {
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.FISTS_OF_FIRE.icon,
 			content: <Trans id="mnk.fists.suggestions.stanceless.content">
-				Fist buffs are one of your biggest DPS contributors, either directly with <ActionLink {...this.data.actions.FISTS_OF_FIRE} /> or by avoiding death with <ActionLink {...this.data.actions.FISTS_OF_EARTH} />.
+				Fist buffs are one of your biggest DPS contributors, either directly with <DataLink action="FISTS_OF_FIRE"/> or by avoiding death with <DataLink action="FISTS_OF_EARTH"/>.
 			</Trans>,
 			why: <Trans id="mnk.fists.suggestions.stanceless.why">
 				<Plural value={this.getFistGCDCount(FISTLESS)} one="# GCD" other="# GCDs"	/> had no Fists buff active.
@@ -158,11 +158,11 @@ export class Fists extends Analyser {
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.FISTS_OF_EARTH.icon,
 			content: <Trans id="mnk.fists.suggestions.foe.content">
-				When using <ActionLink {...this.data.actions.FISTS_OF_EARTH} />, remember to change back to <StatusLink {...this.data.statuses.FISTS_OF_FIRE} /> as soon as possible.
+				When using <DataLink action="FISTS_OF_EARTH"/>, remember to change back to <DataLink status="FISTS_OF_FIRE"/> as soon as possible.
 			</Trans>,
 			tiers: FIST_SEVERITY.FISTS_OF_EARTH,
 			why: <Trans id="mnk.fists.suggestions.foe.why">
-				<StatusLink {...this.data.statuses.FISTS_OF_EARTH} /> was active for <Plural value={this.getFistGCDCount(this.data.statuses.FISTS_OF_EARTH.id)} one="# GCD" other="# GCDs"/>.
+				<DataLink status="FISTS_OF_EARTH"/> was active for <Plural value={this.getFistGCDCount(this.data.statuses.FISTS_OF_EARTH.id)} one="# GCD" other="# GCDs"/>.
 			</Trans>,
 			value: this.getFistGCDCount(this.data.statuses.FISTS_OF_EARTH.id),
 		}))
@@ -170,11 +170,11 @@ export class Fists extends Analyser {
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.FISTS_OF_WIND.icon,
 			content: <Trans id="mnk.fists.suggestions.fow.content">
-				Using <ActionLink {...this.data.actions.FISTS_OF_WIND} /> provides no combat benefit. Try to stay in <StatusLink {...this.data.statuses.FISTS_OF_FIRE} /> as much as possible.
+				Using <DataLink action="FISTS_OF_WIND"/> provides no combat benefit. Try to stay in <DataLink status="FISTS_OF_FIRE"/> as much as possible.
 			</Trans>,
 			tiers: FIST_SEVERITY.DOUSED,
 			why: <Trans id="mnk.fists.suggestions.fow.why">
-				<StatusLink {...this.data.statuses.FISTS_OF_WIND} /> was active for <Plural value={this.getFistGCDCount(this.data.statuses.FISTS_OF_WIND.id)} one="# GCD" other="# GCDs"/>.
+				<DataLink status="FISTS_OF_WIND"/> was active for <Plural value={this.getFistGCDCount(this.data.statuses.FISTS_OF_WIND.id)} one="# GCD" other="# GCDs"/>.
 			</Trans>,
 			value: this.getFistGCDCount(this.data.statuses.FISTS_OF_WIND.id),
 		}))

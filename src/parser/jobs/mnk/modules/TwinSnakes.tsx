@@ -1,5 +1,5 @@
 import {Plural, Trans} from '@lingui/react'
-import {ActionLink, StatusLink} from 'components/ui/DbLink'
+import {DataLink} from 'components/ui/DbLink'
 import {ActionRoot} from 'data/ACTIONS/root'
 import {Event, Events} from 'event'
 import {Analyser} from 'parser/core/Analyser'
@@ -156,7 +156,7 @@ export class TwinSnakes extends Analyser {
 			displayOrder: DISPLAY_ORDER.TWIN_SNAKES,
 			requirements: [
 				new Requirement({
-					name: <Trans id="mnk.twinsnakes.checklist.requirement.name"><ActionLink {...this.data.actions.TWIN_SNAKES} /> uptime</Trans>,
+					name: <Trans id="mnk.twinsnakes.checklist.requirement.name"><DataLink action="TWIN_SNAKES"/> uptime</Trans>,
 					percent: () => this.getBuffUptimePercent(this.data.statuses.TWIN_SNAKES.id),
 				}),
 			],
@@ -165,7 +165,7 @@ export class TwinSnakes extends Analyser {
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.TWIN_SNAKES.icon,
 			content: <Trans id="mnk.twinsnakes.suggestions.early.content">
-				Avoid refreshing <ActionLink {...this.data.actions.TWIN_SNAKES} /> signficantly before its expiration as you're losing uses of the higher potency <ActionLink {...this.data.actions.TRUE_STRIKE} />.
+				Avoid refreshing <DataLink action="TWIN_SNAKES"/> signficantly before its expiration as you're losing uses of the higher potency <DataLink action="TRUE_STRIKE"/>.
 			</Trans>,
 			tiers: {
 				1: SEVERITY.MEDIUM,
@@ -180,7 +180,7 @@ export class TwinSnakes extends Analyser {
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.FOUR_POINT_FURY.icon,
 			content: <Trans id="mnk.twinsnakes.suggestions.toocalm.content">
-				Try to get <StatusLink {...this.data.statuses.TWIN_SNAKES} /> up before using <ActionLink {...this.data.actions.FOUR_POINT_FURY} /> to take advantage of its free refresh.
+				Try to get <DataLink status="TWIN_SNAKES"/> up before using <DataLink action="FOUR_POINT_FURY"/> to take advantage of its free refresh.
 			</Trans>,
 			tiers: {
 				1: SEVERITY.MINOR,
@@ -188,14 +188,14 @@ export class TwinSnakes extends Analyser {
 			},
 			value: this.failedFury,
 			why: <Trans id="mnk.twinsnakes.suggestions.toocalm.why">
-				<Plural value={this.failedFury} one="# use" other="# uses" /> of <ActionLink {...this.data.actions.FOUR_POINT_FURY} /> failed to refresh <StatusLink {...this.data.statuses.TWIN_SNAKES} />.
+				<Plural value={this.failedFury} one="# use" other="# uses" /> of <DataLink action="FOUR_POINT_FURY"/> failed to refresh <DataLink status="TWIN_SNAKES"/>.
 			</Trans>,
 		}))
 
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.ANATMAN.icon,
 			content: <Trans id="mnk.twinsnakes.suggestions.antman.content">
-				Try to get <StatusLink {...this.data.statuses.TWIN_SNAKES} /> up before using <ActionLink {...this.data.actions.ANATMAN} /> to take advantage of its free refresh.
+				Try to get <DataLink status="TWIN_SNAKES"/> up before using <DataLink action="ANATMAN"/> to take advantage of its free refresh.
 			</Trans>,
 			tiers: {
 				1: SEVERITY.MINOR,
@@ -203,7 +203,7 @@ export class TwinSnakes extends Analyser {
 			},
 			value: this.failedAnts,
 			why: <Trans id="mnk.twinsnakes.suggestions.antman.why">
-				<Plural value={this.failedAnts} one="# use" other="# uses" /> of <ActionLink {...this.data.actions.ANATMAN} /> failed to refresh <StatusLink {...this.data.statuses.TWIN_SNAKES} />.
+				<Plural value={this.failedAnts} one="# use" other="# uses" /> of <DataLink action="ANATMAN"/> failed to refresh <DataLink status="TWIN_SNAKES"/>.
 			</Trans>,
 		}))
 	}

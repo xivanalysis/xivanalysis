@@ -1,5 +1,5 @@
 import {Plural, Trans} from '@lingui/react'
-import {ActionLink, StatusLink} from 'components/ui/DbLink'
+import {DataLink} from 'components/ui/DbLink'
 import {Event, Events} from 'event'
 import {Analyser} from 'parser/core/Analyser'
 import {EventHook} from 'parser/core/Dispatcher'
@@ -140,7 +140,7 @@ export class Forms extends Analyser {
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.FORM_SHIFT.icon,
 			content: <Trans id="mnk.forms.suggestions.formless.content">
-				Avoid using combo starters outside of <StatusLink {...this.data.statuses.OPO_OPO_FORM}/> as the Form bonus is only activated in the correct form.
+				Avoid using combo starters outside of <DataLink status="OPO_OPO_FORM"/> as the Form bonus is only activated in the correct form.
 			</Trans>,
 			tiers: {
 				1: SEVERITY.MINOR,
@@ -158,7 +158,7 @@ export class Forms extends Analyser {
 				icon: this.data.actions.FORM_SHIFT.icon,
 				severity: SEVERITY.MEDIUM,
 				content: <Trans id="mnk.forms.suggestions.reset.content">
-					Try not to cancel combos by using <ActionLink {...this.data.actions.BOOTSHINE}/>, <ActionLink {...this.data.actions.DRAGON_KICK}/>, or <ActionLink {...this.data.actions.ARM_OF_THE_DESTROYER}/> mid-rotation.
+					Try not to cancel combos by using <DataLink action="BOOTSHINE"/>, <DataLink "DRAGON_KICK"/>, or <DataLink "ARM_OF_THE_DESTROYER"/> mid-rotation.
 				</Trans>,
 				why: <Trans id="mnk.forms.suggestions.reset.why">
 					<Plural value={this.resetForms} one="# combo was" other="# combos were" /> reset by an Opo-Opo Form skill.
