@@ -158,7 +158,7 @@ export class Forms extends Analyser {
 				icon: this.data.actions.FORM_SHIFT.icon,
 				severity: SEVERITY.MEDIUM,
 				content: <Trans id="mnk.forms.suggestions.reset.content">
-					Try not to cancel combos by using <DataLink action="BOOTSHINE"/>, <DataLink "DRAGON_KICK"/>, or <DataLink "ARM_OF_THE_DESTROYER"/> mid-rotation.
+					Try not to cancel combos by using <DataLink action="BOOTSHINE"/>, <DataLink action="DRAGON_KICK"/>, or <DataLink action="ARM_OF_THE_DESTROYER"/> mid-rotation.
 				</Trans>,
 				why: <Trans id="mnk.forms.suggestions.reset.why">
 					<Plural value={this.resetForms} one="# combo was" other="# combos were" /> reset by an Opo-Opo Form skill.

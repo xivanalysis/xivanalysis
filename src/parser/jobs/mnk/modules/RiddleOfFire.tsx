@@ -182,7 +182,7 @@ export class RiddleOfFire extends Analyser {
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.ELIXIR_FIELD.icon,
 			content: <Trans id="mnk.rof.suggestions.ogcd.content">
-				Aim to use <ADataLink action="TORNADO_KICK"/>, <DataLink action="ELIXIR_FIELD"/>, and at least 1 <DataLink action="SHOULDER_TACKLE"/> during each <DataLink status="RIDDLE_OF_FIRE"/>.
+				Aim to use <DataLink action="TORNADO_KICK"/>, <DataLink action="ELIXIR_FIELD"/>, and at least 1 <DataLink action="SHOULDER_TACKLE"/> during each <DataLink status="RIDDLE_OF_FIRE"/>.
 			</Trans>,
 			tiers: SUGGESTION_TIERS,
 			value: droppedExpectedOgcds,
