@@ -1,4 +1,4 @@
-import {ActionLink, StatusLink} from 'components/ui/DbLink'
+import {DataLink} from 'components/ui/DbLink'
 import CONTRIBUTORS from 'data/CONTRIBUTORS'
 import React from 'react'
 
@@ -10,12 +10,12 @@ export const changelog = [
 	},
 	{
 		date: new Date('2019-07-27'),
-		Changes: () => <>Suggestions for dropped and overwritten Procs, does not handle the specific cases where it is better to drop <ActionLink action="RISING_WINDMILL"/>. </>,
+		Changes: () => <>Suggestions for dropped and overwritten Procs, does not handle the specific cases where it is better to drop <DataLink action="RISING_WINDMILL"/>. </>,
 		contributors: [CONTRIBUTORS.TWO_BROKEN],
 	},
 	{
 		date: new Date('2019-07-26'),
-		Changes: () => <>Baseline <StatusLink status="ESPRIT" /> gauge implementation.</>,
+		Changes: () => <>Baseline <DataLink status="ESPRIT" /> gauge implementation.</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],
 	},
 	{
@@ -30,7 +30,7 @@ export const changelog = [
 	},
 	{
 		date: new Date('2019-07-20'),
-		Changes: () => <>Suggestions for dance performances and checklist rule for <StatusLink status="STANDARD_FINISH" /> uptime.</>,
+		Changes: () => <>Suggestions for dance performances and checklist rule for <DataLink status="STANDARD_FINISH" /> uptime.</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],
 	},
 	{
