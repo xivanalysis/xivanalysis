@@ -65,7 +65,7 @@ export class Combos extends Analyser {
 	// This should be redefined by subclassing modules; the default is the basic 'Attack' icon
 	protected suggestionIcon = 'https://xivapi.com/i/000000/000405.png'
 
-	@dependency private data!: Data
+	@dependency protected data!: Data
 	@dependency private death!: Death
 	@dependency private downtime!: Downtime
 	@dependency protected suggestions!: Suggestions
