@@ -8,12 +8,13 @@ export class CastTime extends CoreCastTime {
 	override initialise() {
 		super.initialise()
 
-		const swiftCastFilter = filter<Event>()
+		const triplecastFilter = filter<Event>()
 			.target(this.parser.actor.id)
 			.status(this.data.statuses.TRIPLECAST.id)
 
-		this.addEventHook(swiftCastFilter.type('statusApply'), this.onApplyTriplecast)
-		this.addEventHook(swiftCastFilter.type('statusRemove'), this.onRemoveTriplecast)
+		this.addEventHook(filter<Event>().source(this.parser.actor.id).type('action')
+			.action(this.data.actions.TRIPLECAST.id), this.onApplyTriplecast)
+		this.addEventHook(triplecastFilter.type('statusRemove'), this.onRemoveTriplecast)
 	}
 
 	private onApplyTriplecast(): void {
