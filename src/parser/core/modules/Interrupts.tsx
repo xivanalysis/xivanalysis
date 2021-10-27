@@ -101,7 +101,7 @@ export class Interrupts extends Analyser {
 		const castTime = this.castTime.forAction(this.currentCast.action, this.currentCast.timestamp) ?? 0
 
 		this.missedTimeMS += Math.min(
-			event.timestamp - (this.currentCast?.timestamp ?? this.parser.currentTimestamp),
+			event.timestamp - (this.currentCast?.timestamp ?? this.parser.currentEpochTimestamp),
 			castTime
 		)
 		this.droppedCasts.push(event)
