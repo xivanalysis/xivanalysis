@@ -8,6 +8,7 @@ import {Status} from './type'
 export const STATUS_ID_OFFSET = 1000000
 
 export type StatusKey = keyof StatusRoot
+export type {StatusRoot}
 
 /**
  * Presumably because WoW statuses and spells share the same ID space, FFLogs adds 1m to every status ID.

@@ -8,6 +8,7 @@ import {Action} from './type'
 const DEFAULT_GCD_CASTTIME = 0
 const DEFAULT_GCD_COOLDOWN = 2500
 
+export type {ActionRoot}
 export type ActionKey = keyof ActionRoot
 
 /**
