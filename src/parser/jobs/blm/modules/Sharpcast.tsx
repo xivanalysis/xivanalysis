@@ -1,7 +1,10 @@
 import {Trans, Plural} from '@lingui/react'
-import {StatusLink, ActionLink} from 'components/ui/DbLink'
-import {BuffEvent, CastEvent, DeathEvent} from 'fflogs'
-import Module, {dependency} from 'parser/core/Module'
+import {DataLink} from 'components/ui/DbLink'
+import {ActionKey} from 'data/ACTIONS'
+import {Event, Events} from 'event'
+import {Analyser} from 'parser/core/Analyser'
+import {filter, oneOf} from 'parser/core/filter'
+import {dependency} from 'parser/core/Injectable'
 import {CooldownDowntime} from 'parser/core/modules/CooldownDowntime'
 import {Data} from 'parser/core/modules/Data'
 import {SimpleStatistic, Statistics} from 'parser/core/modules/Statistics'
@@ -9,6 +12,13 @@ import Suggestions, {TieredSuggestion, SEVERITY} from 'parser/core/modules/Sugge
 import {StatusItem} from 'parser/core/modules/Timeline'
 import React from 'react'
 import Procs from './Procs'
+
+const SHARPCAST_CONSUMERS: ActionKey[] = [
+	'FIRE_I',
+	'THUNDER_III',
+	'THUNDER_IV',
+	'SCATHE',
+]
 
 interface SharpcastWindow {
 	start: number,
@@ -20,21 +30,15 @@ interface SharpcastTracker {
 	history: SharpcastWindow[]
 }
 
-export class Sharpcast extends Module {
+export class Sharpcast extends Analyser {
 	static override handle = 'sharpcast'
 
-	@dependency private procs!: Procs
-	@dependency private suggestions!: Suggestions
 	@dependency private cooldownDowntime!: CooldownDowntime
-	@dependency private statistics!: Statistics
 	@dependency private data!: Data
+	@dependency private procs!: Procs
+	@dependency private statistics!: Statistics
+	@dependency private suggestions!: Suggestions
 
-	private readonly SHARPCAST_CONSUMER_IDS = [
-		this.data.actions.FIRE_I.id,
-		this.data.actions.THUNDER_III.id,
-		this.data.actions.THUNDER_IV.id,
-		this.data.actions.SCATHE.id,
-	]
 	private buffWindows: SharpcastTracker = {
 		history: [],
 	}
@@ -43,19 +47,26 @@ export class Sharpcast extends Module {
 	private sharpedScathes = 0
 	private usedSharpcasts = 0
 
-	override init() {
-		this.addEventHook('removebuff', {by: 'player', abilityId: this.data.statuses.SHARPCAST.id}, this.onRemoveSharpcast)
-		this.addEventHook('applybuff', {by: 'player', abilityId: this.data.statuses.SHARPCAST.id}, this.onGainSharpcast)
-		this.addEventHook('cast', {by: 'player', abilityId: this.SHARPCAST_CONSUMER_IDS}, this.onCast)
-		this.addEventHook('death', {to: 'player'}, this.onDeath)
+	private sharpcastConsumerIds = SHARPCAST_CONSUMERS.map(key => this.data.actions[key].id)
+
+	override initialise() {
+		const playerFilter = filter<Event>().source(this.parser.actor.id)
+		const sharpcastFilter = playerFilter.status(this.data.statuses.SHARPCAST.id)
+		this.addEventHook(sharpcastFilter.type('statusRemove'), this.onRemoveSharpcast)
+		this.addEventHook(sharpcastFilter.type('statusApply'), this.onGainSharpcast)
+		this.addEventHook(playerFilter.type('action').action(oneOf(this.sharpcastConsumerIds)), this.onCast)
+		this.addEventHook({
+			type: 'death',
+			actor: this.parser.actor.id,
+		}, this.onDeath)
 		this.addEventHook('complete', this.onComplete)
 	}
 
-	private onRemoveSharpcast(event: BuffEvent) {
+	private onRemoveSharpcast(event: Events['statusRemove']) {
 		this.stopAndSave(event.timestamp)
 	}
 
-	private onGainSharpcast(event: BuffEvent) {
+	private onGainSharpcast(event: Events['statusApply']) {
 		this.usedSharpcasts++
 		this.buffWindows.current = {
 			start: event.timestamp,
@@ -63,8 +74,8 @@ export class Sharpcast extends Module {
 	}
 
 	// Consolidate old onCast functions into one central function
-	private onCast(event: CastEvent) {
-		const actionId = event.ability.guid
+	private onCast(event: Events['action']) {
+		const actionId = event.action
 
 		const action = this.data.getAction(actionId)
 		if (action && action.onGcd) {
@@ -72,11 +83,11 @@ export class Sharpcast extends Module {
 		}
 	}
 
-	private tryConsumeSharpcast(event: CastEvent) {
-		const actionId = event.ability.guid
+	private tryConsumeSharpcast(event: Events['action']) {
+		const actionId = event.action
 
 		// If this action isn't affected by a proc (or something is wrong), bail out
-		if (!this.SHARPCAST_CONSUMER_IDS.includes(actionId)) {
+		if (!this.sharpcastConsumerIds.includes(actionId)) {
 			return
 		}
 
@@ -91,7 +102,7 @@ export class Sharpcast extends Module {
 		}
 	}
 
-	private onDeath(event: DeathEvent) {
+	private onDeath(event: Events['death']) {
 		this.stopAndSave(event.timestamp)
 	}
 
@@ -116,7 +127,7 @@ export class Sharpcast extends Module {
 
 		const row = this.procs.getRowForStatus(this.data.statuses.SHARPCAST)
 
-		const fightStart = this.parser.fight.start_time
+		const fightStart = this.parser.pull.timestamp
 
 		// Add buff windows to the timeline
 		this.buffWindows.history.forEach(window => {
@@ -139,7 +150,7 @@ export class Sharpcast extends Module {
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.statuses.SHARPCAST.icon,
 			content: <Trans id="blm.sharpcast.suggestions.dropped-sharpcasts.content">
-				You lost at least one guaranteed <StatusLink {...this.data.statuses.THUNDERCLOUD}/> or <StatusLink {...this.data.statuses.FIRESTARTER}/> proc by allowing <StatusLink {...this.data.statuses.SHARPCAST}/> to fall off.
+				You lost at least one guaranteed <DataLink status="THUNDERCLOUD" /> or <DataLink status="FIRESTARTER" /> proc by allowing <DataLink status="SHARPCAST" /> to fall off.
 			</Trans>,
 			tiers: {
 				1: SEVERITY.MINOR,
@@ -156,7 +167,7 @@ export class Sharpcast extends Module {
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.SCATHE.icon,
 			content: <Trans id="blm.sharpcast.suggestions.sharpcasted-scathes.content">
-				You consumed at least one <StatusLink {...this.data.statuses.SHARPCAST} /> by using <ActionLink {...this.data.actions.SCATHE} />. While it's better than letting the buff expire, you should try to avoid doing so.
+				You consumed at least one <DataLink status="SHARPCAST" /> by using <DataLink action="SCATHE" />. While it's better than letting the buff expire, you should try to avoid doing so.
 			</Trans>,
 			tiers: { // Giving one extra usage before we start dinging med/major since there's kind of a reasonable use-case
 				1: SEVERITY.MINOR,
@@ -165,7 +176,7 @@ export class Sharpcast extends Module {
 			},
 			value: this.sharpedScathes,
 			why: <Trans id="blm.sharpcast.suggestions.sharpcasted-scathes.why">
-				<Plural value={this.sharpedScathes} one="# Sharpcast was" other="# Sharpcasts were"/> consumed by <ActionLink {...this.data.actions.SCATHE} />.
+				<Plural value={this.sharpedScathes} one="# Sharpcast was" other="# Sharpcasts were"/> consumed by <DataLink action="SCATHE" />.
 			</Trans>,
 		}))
 
