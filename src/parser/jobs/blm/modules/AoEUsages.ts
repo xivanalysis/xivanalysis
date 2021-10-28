@@ -19,17 +19,5 @@ export class AoEUsages extends CoreAoE {
 			stActions: [this.data.actions.THUNDER_III],
 			minTargets: 2,
 		},
-		/* Pre-staging the following for Endwalker
-		{
-			aoeAction: this.data.actions.HIGH_FIRE_II,
-			stActions: [this.data.actions.FIRE_III, this.data.actions.FIRE_IV],
-			minTargets: 2,
-		},
-		{
-			aoeAction: this.data.actions.HIGH_BLIZZARD_II,
-			stActions: [this.data.actions.BLIZZARD_III],
-			minTargets: 2,
-		},
-		*/
 	]
 }
