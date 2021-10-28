@@ -88,9 +88,7 @@ export class Thunder extends Analyser {
 	}
 
 	private onDotCast(event: Events['action']) {
-		if (event.action === this.data.actions.THUNDER_III.id) {
-			this.thunder3Casts++
-		}
+		this.thunder3Casts++
 		if (this.procs.checkEventWasProc(event)) {
 			this.lastThunderProc = true
 		}
@@ -212,11 +210,11 @@ export class Thunder extends Analyser {
 	override output() {
 		const numTargets = Object.keys(this.tracker).length
 
-		const disclaimer = 	<Message>
+		const disclaimer = <Message>
 			<Trans id="blm.thunder.clip-disclaimer">
-									Due to the nature of <DataLink action="THUNDER_III" /> procs, you will run into situations where you will use your <DataLink status="THUNDERCLOUD" /> proc before it runs out, while your <DataLink status="THUNDER_III" /> is still running on your enemy.
-									At most, this could theoretically lead to refreshing <DataLink showIcon={false} status="THUNDER_III" /> a maximum of ~6 seconds early every single refresh.
-									Since this amount of clipping is still considered optimal, we quantify and call this the maximum clip time.
+				Due to the nature of <DataLink action="THUNDER_III" /> procs, you will run into situations where you will use your <DataLink status="THUNDERCLOUD" /> proc before it runs out, while your <DataLink status="THUNDER_III" /> is still running on your enemy.
+				At most, this could theoretically lead to refreshing <DataLink showIcon={false} status="THUNDER_III" /> a maximum of ~6 seconds early every single refresh.
+				Since this amount of clipping is still considered optimal, we quantify and call this the maximum clip time.
 			</Trans>
 		</Message>
 
@@ -224,8 +222,7 @@ export class Thunder extends Analyser {
 
 		if (numTargets > 1) {
 			const panels = Object.keys(this.tracker).map(applicationKey => {
-				const targetId = applicationKey
-				const target = this.actors.get(targetId)
+				const target = this.actors.get(applicationKey)
 				return {
 					key: applicationKey,
 					title: {
