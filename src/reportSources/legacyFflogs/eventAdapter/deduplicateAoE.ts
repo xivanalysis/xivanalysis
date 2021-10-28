@@ -12,6 +12,9 @@ export class DeduplicateAoEStep extends AdapterStep {
 	override postprocess(adaptedEvents: Event[]) {
 
 		adaptedEvents.forEach(adaptedEvent => {
+			// N.B.: For performance reasons, we are not cloning the events, just working with them as-is and keeping track of which events we want to keep in the deduplicatedEvents array
+			//   Separate array for the return so we don't mess with the iterator of our forEach, but just add the events onto the dedupe array as references - no cloning
+			//   This means that if you're debugging, the targets property of events will change in both the adaptedEvents and deduplicatedEvents arrays as you step through things
 			const matchingEvent = this.getMatchingEvent(adaptedEvent)
 			if (matchingEvent != null) {
 				if (adaptedEvent.type === 'damage') {
@@ -33,7 +36,8 @@ export class DeduplicateAoEStep extends AdapterStep {
 			return undefined
 		}
 
-		return this.deduplicatedEvents.find(e => e.type === event.type && e.sequence === event.sequence)
+		// Events with no sequence ID are from over time effects or the passive regeneration, do not deduplicate
+		return this.deduplicatedEvents.find(e => e.type === event.type && e.sequence != null && e.sequence === event.sequence)
 	}
 
 }
