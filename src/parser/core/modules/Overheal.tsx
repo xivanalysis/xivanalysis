@@ -311,12 +311,14 @@ export class Overheal extends Analyser {
 				requirements.push(new InvertedRequirement({
 					name: this.overhealName,
 					percent:  this.direct.percentInverted,
+					weight: 0,
 				}))
 
 				for (const trackedHeal of this.trackedOverheals) {
 					requirements.push(new InvertedRequirement({
 						name: trackedHeal.name,
 						percent: trackedHeal.percentInverted,
+						weight: 0,
 					}))
 				}
 			}
