@@ -76,11 +76,13 @@ export class PerfectBalance extends Analyser {
 			this.current = {bads: 0, stacks: event.data}
 
 			// Create the hook to check GCDs in PB
-			this.perfectHook = this.addEventHook(filter<Event>()
-				.source(this.parser.actor.id)
-				.type('action')
-				.action(oneOf(this.badActions))
-			, this.onCast)
+			this.perfectHook = this.addEventHook(
+				filter<Event>()
+					.source(this.parser.actor.id)
+					.type('action')
+					.action(oneOf(this.badActions)),
+				this.onCast,
+			)
 
 			return
 		}
