@@ -1,5 +1,5 @@
 import {ActionKey} from 'data/ACTIONS'
-import {Status, StatusKey} from 'data/STATUSES'
+import {StatusKey} from 'data/STATUSES'
 
 // Fists
 export const FISTLESS = 0
