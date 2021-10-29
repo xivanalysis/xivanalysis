@@ -117,10 +117,12 @@ export class Fists extends Analyser {
 			return
 		}
 
-		this.fistHook = this.addEventHook(filter<Event>()
-			.source(this.parser.actor.id)
-			.type('action')
-		, this.onCast)
+		this.fistHook = this.addEventHook(
+			filter<Event>()
+				.source(this.parser.actor.id)
+				.type('action'),
+			this.onCast,
+		)
 
 		this.handleFistChange(event.status)
 	}

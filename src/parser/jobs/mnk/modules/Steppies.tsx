@@ -50,11 +50,13 @@ export class Steppies extends Analyser {
 	private steppies: Boot[] = []
 
 	override initialise(): void {
-		this.addEventHook(filter<Event>()
-			.source(this.parser.actor.id)
-			.type('damage')
-			.cause(filter<Cause>().action(this.data.actions.BOOTSHINE.id))
-		, this.onStep)
+		this.addEventHook(
+			filter<Event>()
+				.source(this.parser.actor.id)
+				.type('damage')
+				.cause(filter<Cause>().action(this.data.actions.BOOTSHINE.id)),
+			this.onStep,
+		)
 
 		this.addEventHook('complete', this.onComplete)
 	}

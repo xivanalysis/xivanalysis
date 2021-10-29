@@ -115,10 +115,12 @@ export class TwinSnakes extends Analyser {
 			this.twinSnake = {start: event.timestamp, casts: []}
 
 			// Hook all GCDs so we can count GCDs in buff windows
-			this.twinHook = this.addEventHook(filter<Event>()
-				.source(this.parser.actor.id)
-				.type('action')
-			, this.onCast)
+			this.twinHook = this.addEventHook(
+				filter<Event>()
+					.source(this.parser.actor.id)
+					.type('action'),
+				this.onCast,
+			)
 		}
 
 		this.lastRefresh = event.timestamp

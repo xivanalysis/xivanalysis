@@ -116,10 +116,12 @@ export class Forms extends Analyser {
 	private onGain(event: Events['statusApply']): void {
 		this.lastFormChanged = event.timestamp
 
-		this.formHook = this.addEventHook(filter<Event>()
-			.source(this.parser.actor.id)
-			.type('action')
-		, this.onCast)
+		this.formHook = this.addEventHook(
+			filter<Event>()
+				.source(this.parser.actor.id)
+				.type('action'),
+			this.onCast,
+		)
 	}
 
 	private onRemove(event: Events['statusRemove']): void {

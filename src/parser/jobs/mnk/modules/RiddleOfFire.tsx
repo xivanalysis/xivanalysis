@@ -108,15 +108,17 @@ export class RiddleOfFire extends Analyser {
 	}
 
 	private onGain(event: Events['statusApply']): void {
-		if (this.riddle == null) {
-			this.riddle = new Riddle(event.timestamp, this.data)
-			this.riddle.rushing = this.data.statuses.RIDDLE_OF_FIRE.duration >= (this.parser.pull.timestamp + this.parser.pull.duration) - event.timestamp
+		if (this.riddle != null) { return }
 
-			this.riddleHook = this.addEventHook(filter<Event>()
+		this.riddle = new Riddle(event.timestamp, this.data)
+		this.riddle.rushing = this.data.statuses.RIDDLE_OF_FIRE.duration >= (this.parser.pull.timestamp + this.parser.pull.duration) - event.timestamp
+
+		this.riddleHook = this.addEventHook(
+			filter<Event>()
 				.source(this.parser.actor.id)
-				.type('action')
-			, this.onCast)
-		}
+				.type('action'),
+			this.onCast,
+		)
 	}
 
 	private onDrop(event: Events['statusRemove']): void {
