@@ -10,6 +10,7 @@ import {Table} from 'semantic-ui-react'
 import {isSuccessfulHit} from 'utilities'
 import {Analyser} from '../Analyser'
 import {filter, oneOf} from '../filter'
+import {Data} from './Data'
 
 export interface AoEAction {
 	/**
@@ -49,6 +50,7 @@ export abstract class AoEUsages extends Analyser {
 	static override title = t('core.aoeusages.title')`Incorrect AoE Action Usage`
 
 	@dependency private suggestions!: Suggestions
+	@dependency protected data!: Data
 
 	/**
 	 * Implementing modules MUST define the icon to be used for the suggestion.

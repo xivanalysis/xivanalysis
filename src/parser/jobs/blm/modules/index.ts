@@ -1,4 +1,5 @@
 import {Interrupts} from 'parser/core/modules/Interrupts'
+import {AoEUsages} from './AoEUsages'
 import {CastTime} from './CastTime'
 import Gauge from './Gauge'
 import Leylines from './Leylines'
@@ -11,6 +12,7 @@ import {Thunder} from './Thunder'
 import {Weaving} from './Weaving'
 
 export default [
+	AoEUsages,
 	Weaving,
 	CastTime,
 	Gauge,
