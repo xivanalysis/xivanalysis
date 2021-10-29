@@ -11,8 +11,8 @@ const DEFAULT_AVERAGE_DOWNTIME = 2425
 const MAX_CHAKRA_DELAY_OFFSET = 16000
 
 export class OGCDDowntime extends CooldownDowntime {
-	override defaultAllowedAverageDowntime = DEFAULT_AVERAGE_DOWNTIME
-	override trackedCds = [
+	protected override defaultAllowedAverageDowntime = DEFAULT_AVERAGE_DOWNTIME
+	protected override trackedCds = [
 		{
 			cooldowns: [this.data.actions.BROTHERHOOD],
 			firstUseOffset: 11000,
