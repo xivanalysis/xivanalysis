@@ -11,7 +11,7 @@ import Downtime from 'parser/core/modules/Downtime'
 import Suggestions, {SEVERITY, Suggestion, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
 import {FORM_TIMEOUT_MILLIS, FORMS, OPO_OPO_SKILLS} from './constants'
-import {FillActions, FillStatuses} from './utilities'
+import {fillActions, fillStatuses} from './utilities'
 
 export class Forms extends Analyser {
 	static override handle = 'forms'
@@ -36,8 +36,8 @@ export class Forms extends Analyser {
 	private formHook?: EventHook<Events['action']>
 
 	override initialise(): void {
-		this.forms = FillStatuses(FORMS, this.data)
-		this.opoOpoSkills = FillActions(OPO_OPO_SKILLS, this.data)
+		this.forms = fillStatuses(FORMS, this.data)
+		this.opoOpoSkills = fillActions(OPO_OPO_SKILLS, this.data)
 
 		const playerFilter = filter<Event>().source(this.parser.actor.id)
 		this.addEventHook(playerFilter.type('statusApply').status(oneOf(this.forms)), this.onGain)

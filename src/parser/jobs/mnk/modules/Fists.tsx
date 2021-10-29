@@ -16,7 +16,7 @@ import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Sugge
 import React from 'react'
 import {FISTLESS, FISTS} from './constants'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
-import {FillStatuses} from './utilities'
+import {fillStatuses} from './utilities'
 
 const FIST_SEVERITY = {
 	DOUSED: {
@@ -70,7 +70,7 @@ export class Fists extends Analyser {
 			[this.data.statuses.FISTS_OF_WIND.id]: JOBS.PALADIN.colour, // only good for utility
 		}
 
-		this.fists = FillStatuses(FISTS, this.data)
+		this.fists = fillStatuses(FISTS, this.data)
 
 		const playerFilter = filter<Event>().source(this.parser.actor.id)
 		this.addEventHook(playerFilter.type('statusApply').status(oneOf(this.fists)), this.onGain)

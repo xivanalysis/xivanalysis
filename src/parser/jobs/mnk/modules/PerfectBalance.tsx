@@ -1,7 +1,7 @@
 import {t} from '@lingui/macro'
 import {Plural, Trans} from '@lingui/react'
 import {DataLink} from 'components/ui/DbLink'
-import {ActionRoot} from 'data/ACTIONS/root'
+import {ActionKey} from 'data/ACTIONS'
 import {Event, Events} from 'event'
 import {Analyser} from 'parser/core/Analyser'
 import {EventHook} from 'parser/core/Dispatcher'
@@ -12,7 +12,7 @@ import {Data} from 'parser/core/modules/Data'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
-import {FillActions} from './utilities'
+import {fillActions} from './utilities'
 
 const SUGGESTION_TIERS = {
 	1: SEVERITY.MEDIUM,
@@ -20,7 +20,7 @@ const SUGGESTION_TIERS = {
 }
 
 // Naive ding on bad actions, technically some AoE or normal GCD actions are bad too, adjust if people actually care
-const PB_BAD_ACTIONS: Array<keyof ActionRoot> = [
+const PB_BAD_ACTIONS: ActionKey[] = [
 	'FORM_SHIFT',
 	'ANATMAN',
 ]
@@ -46,7 +46,7 @@ export class PerfectBalance extends Analyser {
 	private perfectHook?: EventHook<Events['action']>
 
 	override initialise() {
-		this.badActions = FillActions(PB_BAD_ACTIONS, this.data)
+		this.badActions = fillActions(PB_BAD_ACTIONS, this.data)
 
 		const playerFilter = filter<Event>().source(this.parser.actor.id)
 		this.addEventHook(playerFilter.type('statusApply').status(this.data.statuses.PERFECT_BALANCE.id), this.onStacc)

@@ -1,6 +1,6 @@
 import {Plural, Trans} from '@lingui/react'
 import {DataLink} from 'components/ui/DbLink'
-import {ActionRoot} from 'data/ACTIONS/root'
+import {ActionKey} from 'data/ACTIONS'
 import {Event, Events} from 'event'
 import {Analyser} from 'parser/core/Analyser'
 import {EventHook} from 'parser/core/Dispatcher'
@@ -14,12 +14,12 @@ import {Statuses} from 'parser/core/modules/Statuses'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
-import {FillActions} from './utilities'
+import {fillActions} from './utilities'
 
 // Expected maximum time left to refresh TS
 const TWIN_SNAKES_BUFFER = 6000
 
-const TWIN_IGNORED_GCDS: Array<keyof ActionRoot> = [
+const TWIN_IGNORED_GCDS: ActionKey[] = [
 	'FORM_SHIFT',
 	'MEDITATION',
 ]
@@ -57,7 +57,7 @@ export class TwinSnakes extends Analyser {
 	private twinHook?: EventHook<Events['action']>
 
 	override initialise() {
-		this.ignoredGcds = FillActions(TWIN_IGNORED_GCDS, this.data)
+		this.ignoredGcds = fillActions(TWIN_IGNORED_GCDS, this.data)
 
 		const playerFilter = filter<Event>().source(this.parser.actor.id)
 		this.addEventHook(playerFilter.type('statusApply').status(this.data.statuses.TWIN_SNAKES.id), this.onGain)
