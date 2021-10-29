@@ -1,5 +1,3 @@
-import ACTIONS from 'data/ACTIONS'
-import STATUSES from 'data/STATUSES'
 import {Events} from 'event'
 import {dependency} from 'parser/core/Module'
 import {Actors} from 'parser/core/modules/Actors'
@@ -9,7 +7,7 @@ import {DirtyDancing} from './DirtyDancing'
 const GCD_TIMEOUT_MILLIS = 15000
 
 export class Combos extends CoreCombos {
-	override suggestionIcon = ACTIONS.CASCADE.icon
+	override suggestionIcon = this.data.actions.CASCADE.icon
 
 	@dependency private dancing!: DirtyDancing
 	@dependency private actors!: Actors
@@ -31,6 +29,6 @@ export class Combos extends CoreCombos {
 		// so just disable any drops that happened in a Technical window (still need the dances in range check since
 		// Cascade -> Standard -> Technical leaves the buff falling off before Technical Finish buff applies
 		return this.dancing.dancesInRange(context[0].timestamp, context[0].timestamp + GCD_TIMEOUT_MILLIS) === 2 ||
-			this.actors.current.at(context[0].timestamp + GCD_TIMEOUT_MILLIS).hasStatus(STATUSES.TECHNICAL_FINISH.id)
+			this.actors.current.at(context[0].timestamp + GCD_TIMEOUT_MILLIS).hasStatus(this.data.statuses.TECHNICAL_FINISH.id)
 	}
 }

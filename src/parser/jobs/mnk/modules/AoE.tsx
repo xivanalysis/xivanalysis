@@ -2,13 +2,11 @@ import {Events} from 'event'
 import {dependency} from 'parser/core/Module'
 import {Actors} from 'parser/core/modules/Actors'
 import {AoEAction, AoEUsages} from 'parser/core/modules/AoEUsages'
-import {Data} from 'parser/core/modules/Data'
 
 export class AoE extends AoEUsages {
 	static override handle = 'aoe'
 
 	@dependency private actors!: Actors
-	@dependency private data!: Data
 
 	// You awake to find yourself enlightened to the true power of AoE
 	suggestionIcon = this.data.actions.ENLIGHTENMENT.icon
