@@ -151,7 +151,7 @@ export default class BloodOfTheDragon extends Module {
 	// end duplicate code
 
 	private finishLifeWindow() {
-		if (this.lifeWindows.current) {
+		if (this.lifeWindows.current != null) {
 			this.lifeWindows.history.push(this.lifeWindows.current)
 			this.lifeWindows.current = undefined
 		}
@@ -159,7 +159,7 @@ export default class BloodOfTheDragon extends Module {
 
 	private updateGauge() {
 		const elapsedTime = this.parser.currentTimestamp - this.lastEventTime
-		if (this.lifeWindows.current !== null) {
+		if (this.lifeWindows.current != null) {
 			this.lifeDuration -= elapsedTime
 			if (this.lifeDuration <= 0) {
 				// We're reverting out of Life
@@ -183,7 +183,7 @@ export default class BloodOfTheDragon extends Module {
 
 	private onExtenderCast() {
 		this.updateGauge()
-		if (this.lifeWindows.current === null && this.bloodDuration > 0) {
+		if (this.lifeWindows.current == null && this.bloodDuration > 0) {
 			// If we're in regular Blood, increase the duration
 			this.bloodDuration = Math.min(this.bloodDuration + BLOOD_EXTENSION_MILLIS, DRAGON_MAX_DURATION_MILLIS)
 		}
@@ -196,7 +196,7 @@ export default class BloodOfTheDragon extends Module {
 
 	onMirageDiveCast() {
 		this.updateGauge()
-		if (this.lifeWindows.current !== null || this.bloodDuration > 0) {
+		if (this.lifeWindows.current != null || this.bloodDuration > 0) {
 			// You can accrue eyes in LotD too
 			this.eyes++
 			if (this.eyes > MAX_EYES) {
@@ -239,7 +239,7 @@ export default class BloodOfTheDragon extends Module {
 	}
 
 	onNastrondCast(event: NormalisedDamageEvent) {
-		if (this.lifeWindows.current === null) {
+		if (this.lifeWindows.current == null) {
 			// Nastrond outside of LotD - gentlemen, we have us a broken log
 			this.brokenLog.trigger(this, 'no lotd nastrond', (
 				<Trans id="drg.blood.trigger.no-lotd-nastrond">

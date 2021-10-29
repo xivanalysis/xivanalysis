@@ -11,7 +11,6 @@ export default class Debuffs extends CoreDoTs {
 	@dependency private checklist!: Checklist
 	@dependency private suggestions!: Suggestions
 
-	// When moving to Typescript, remember to mark this with override.
 	override trackedStatuses = [
 		this.data.statuses.CHAOS_THRUST.id,
 	]

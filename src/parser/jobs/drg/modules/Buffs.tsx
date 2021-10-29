@@ -2,14 +2,15 @@ import {t} from '@lingui/macro'
 import {Trans, Plural} from '@lingui/react'
 import {ActionLink} from 'components/ui/DbLink'
 import {ActionKey} from 'data/ACTIONS'
-import {CastEvent} from 'fflogs'
-import Module, {dependency} from 'parser/core/Module'
+import {Cause, Event, Events} from 'event'
+import {Analyser} from 'parser/core/Analyser'
+import {filter} from 'parser/core/filter'
+import {dependency} from 'parser/core/Module'
 import Checklist, {Rule, Requirement} from 'parser/core/modules/Checklist'
 import Combatants from 'parser/core/modules/Combatants'
 import {Data} from 'parser/core/modules/Data'
 import {EntityStatuses} from 'parser/core/modules/EntityStatuses'
 import {Invulnerability} from 'parser/core/modules/Invulnerability'
-import {NormalisedDamageEvent} from 'parser/core/modules/NormalisedEvents'
 import {PieChartStatistic, Statistics} from 'parser/core/modules/Statistics'
 import Suggestions, {Suggestion, TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import React from 'react'
@@ -49,9 +50,7 @@ const CHART_COLORS: {[actionId in ActionKey]?: string} = {
 const OTHER_ACTION_COLOR: string = '#660000'
 const MIN_COT_HITS: number = 3
 
-// Analyser port notes:
-// - is there an equivalent to normalised damage
-export default class Buffs extends Module {
+export default class Buffs extends Analyser {
 	static override handle = 'buffs'
 	static override title = t('drg.buffs.title')`Buffs`
 
@@ -73,19 +72,20 @@ export default class Buffs extends Module {
 	private chartLifeSurgeConsumers = CHART_LIFE_SURGE_CONSUMERS.map(k => this.data.actions[k].id)
 	private chartColors: Record<number, string> = {}
 
-	override init() {
-		this.addEventHook('cast', {by: 'player'}, this.onCast)
+	override initialise() {
+		const playerFilter = filter<Event>().source(this.parser.actor.id)
+		this.addEventHook(playerFilter.type('action'), this.onCast)
+		this.addEventHook(playerFilter.type('statusApply').status(this.data.statuses.RIGHT_EYE_SOLO.id), () => this.soloDragonSight = true)
+		this.addEventHook(playerFilter.type('damage').cause(filter<Cause>().action(this.data.actions.COERTHAN_TORMENT.id)), this.onCot)
 		this.addEventHook('complete', this.onComplete)
-		this.addEventHook('applybuff', {by: 'player', abilityId: this.data.statuses.RIGHT_EYE_SOLO.id}, () => this.soloDragonSight = true)
-		this.addEventHook('normaliseddamage', {by: 'player', abilityId: this.data.actions.COERTHAN_TORMENT.id}, this.onCot)
 
 		for (const [k, v] of Object.entries(CHART_COLORS)) {
 			this.chartColors[this.data.actions[k as ActionKey].id] = v
 		}
 	}
 
-	private onCast(event: CastEvent) {
-		const action = this.data.getAction(event.ability.guid)
+	private onCast(event: Events['action']) {
+		const action = this.data.getAction(event.action)
 		if (action && action.onGcd) {
 			// always mark consumed buff for stat chart
 			if (this.combatants.selected.hasStatus(this.data.statuses.LIFE_SURGE.id)) {
@@ -110,10 +110,15 @@ export default class Buffs extends Module {
 		}
 	}
 
-	private onCot(event: NormalisedDamageEvent) {
+	private onCot(event: Events['damage']) {
+		// note that this doesn't track if you actually hit
+		// that's probably ok? this is just checking to make sure that you've got the idea of using LS on more
+		// than 3 targets
+		const hits = event.targets.length
+
 		// this action is pushed onto the statistic graph data by onCast, don't duplicate that
 		// if coerthan torment is life surged and hits less than three targets, it's no good
-		if (this.combatants.selected.hasStatus(this.data.statuses.LIFE_SURGE.id) && event.hitCount < MIN_COT_HITS) {
+		if (this.combatants.selected.hasStatus(this.data.statuses.LIFE_SURGE.id) && hits < MIN_COT_HITS) {
 			this.badLifeSurges++
 		}
 	}
