@@ -42,10 +42,9 @@ class Riddle {
 	}
 
 	get gcds() {
-		return this.casts.filter(event => {
-			const action = this.data.getAction(event.action)
-			return action?.onGcd
-		}).length
+		return this.casts
+			.filter(event => this.data.getAction(event.action)?.onGcd ?? false)
+			.length
 	}
 
 	get chakras() {
@@ -97,9 +96,7 @@ export class RiddleOfFire extends Analyser {
 	onCast(event: Events['action']): void {
 		const action = this.data.getAction(event.action)
 
-		if (action == null) {
-			return
-		}
+		if (action == null) { return }
 
 		// MNK mentors want the oGCDs :angryeyes:
 		if (this.riddle != null) {
@@ -142,12 +139,7 @@ export class RiddleOfFire extends Analyser {
 
 	private onComplete(): void {
 		// Close up if RoF was active at the end of the fight
-		if (this.riddle != null) {
-			this.stopAndSave()
-		}
-
-		// eslint-disable-next-line no-console
-		console.log(this.history)
+		this.stopAndSave()
 
 		const nonRushedRiddles = this.history
 			.filter(riddle => !riddle.rushing)

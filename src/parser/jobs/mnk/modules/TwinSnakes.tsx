@@ -70,9 +70,7 @@ export class TwinSnakes extends Analyser {
 		const action = this.data.getAction(event.action)
 
 		// Only include GCDs
-		if (!action?.onGcd) {
-			return
-		}
+		if (action == null || !(action.onGcd ?? false)) { return }
 
 		// Ignore FS and Meditation
 		if (this.ignoredGcds.includes(action.id)) { return }
@@ -96,7 +94,7 @@ export class TwinSnakes extends Analyser {
 		}
 
 		// Verify the window isn't closed, and count the GCDs:
-		if (this.twinSnake?.end != null) {
+		if (this.twinSnake.end != null) {
 			// We still count TS in the GCD list of the window, just flag if it's early
 			if (action.id === this.data.actions.TWIN_SNAKES.id) {
 				const expected = this.data.statuses.TWIN_SNAKES.duration - TWIN_SNAKES_BUFFER

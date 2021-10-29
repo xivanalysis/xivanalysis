@@ -50,64 +50,60 @@ export class Forms extends Analyser {
 	private onCast(event: Events['action']): void {
 		const action = this.data.getAction(event.action)
 
-		if (action == null) {
+		if (action == null || !(action.onGcd ?? false)) { return }
+
+		// Check the current form, or zero for no form
+		const currentForm = this.forms.find(form => this.actors.current.hasStatus(form)) || 0
+		const untargetable = this.lastFormChanged != null
+			? this.downtime.getDowntime(
+				this.parser.fflogsToEpoch(this.lastFormChanged),
+				this.parser.fflogsToEpoch(event.timestamp),
+			)
+			: 0
+
+		if (action.id === this.data.actions.FORM_SHIFT.id) {
+			// Only ignore Form Shift if we're in downtime
+			if (untargetable === 0) {
+				this.skippedForms++
+			}
+
 			return
 		}
 
-		if (action?.onGcd) {
-			// Check the current form, or zero for no form
-			const currentForm = this.forms.find(form => this.actors.current.hasStatus(form)) || 0
-			const untargetable = this.lastFormChanged != null
-				? this.downtime.getDowntime(
-					this.parser.fflogsToEpoch(this.lastFormChanged),
-					this.parser.fflogsToEpoch(event.timestamp),
-				)
-				: 0
+		// If we have PB/FS, we can just ignore forms
+		if (
+			this.actors.current.hasStatus(this.data.statuses.PERFECT_BALANCE.id) ||
+			this.actors.current.hasStatus(this.data.statuses.FORMLESS_FIST.id)
+		) { return }
 
-			if (action.id === this.data.actions.FORM_SHIFT.id) {
-				// Only ignore Form Shift if we're in downtime
-				if (untargetable === 0) {
-					this.skippedForms++
-				}
+		// Handle relevant actions per form
+		switch (currentForm) {
+		case this.data.statuses.OPO_OPO_FORM.id:
+			break
 
+		// Using Opo-Opo skills resets form, but we don't care if we're in PB or FS
+		case this.data.statuses.RAPTOR_FORM.id:
+		case this.data.statuses.COEURL_FORM.id:
+			if (this.opoOpoSkills.includes(action.id)) { this.resetForms++ }
+			break
+
+		default:
+			// Fresh out of PB, they'll have no form
+			if (this.perfectlyFresh != null) {
+				this.perfectlyFresh = undefined
 				return
 			}
 
-			// If we have PB/FS, we can just ignore forms
-			if (
-				this.actors.current.hasStatus(this.data.statuses.PERFECT_BALANCE.id) ||
-				this.actors.current.hasStatus(this.data.statuses.FORMLESS_FIST.id)
-			) { return }
-
-			// Handle relevant actions per form
-			switch (currentForm) {
-			case this.data.statuses.OPO_OPO_FORM.id:
-				break
-
-			// Using Opo-Opo skills resets form, but we don't care if we're in PB or FS
-			case this.data.statuses.RAPTOR_FORM.id:
-			case this.data.statuses.COEURL_FORM.id:
-				if (this.opoOpoSkills.includes(action.id)) { this.resetForms++ }
-				break
-
-			default:
-				// Fresh out of PB, they'll have no form
-				if (this.perfectlyFresh != null) {
-					this.perfectlyFresh = undefined
-					return
+			// Check if we timed out
+			if (untargetable === 0 && this.lastFormDropped != null && this.lastFormChanged != null) {
+				if ((this.lastFormDropped - this.lastFormChanged) > FORM_TIMEOUT_MILLIS) {
+					this.droppedForms++
 				}
+			}
 
-				// Check if we timed out
-				if (untargetable === 0 && this.lastFormDropped != null && this.lastFormChanged != null) {
-					if ((this.lastFormDropped - this.lastFormChanged) > FORM_TIMEOUT_MILLIS) {
-						this.droppedForms++
-					}
-				}
-
-				// No form used
-				if (this.opoOpoSkills.includes(action.id)) {
-					this.formless++
-				}
+			// No form used
+			if (this.opoOpoSkills.includes(action.id)) {
+				this.formless++
 			}
 		}
 	}

@@ -98,9 +98,7 @@ export class Fists extends Analyser {
 		const action = this.data.getAction(event.action)
 
 		// If we don't have a valid action or it's not a GCD, skip
-		if (!action?.onGcd) {
-			return
-		}
+		if (action == null || !(action.onGcd ?? false)) { return }
 
 		// Ignore Meditation and Form Shift
 		if ([this.data.actions.MEDITATION.id, this.data.actions.FORM_SHIFT.id].includes(action.id)) {

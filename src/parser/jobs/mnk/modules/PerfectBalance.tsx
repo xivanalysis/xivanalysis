@@ -58,7 +58,7 @@ export class PerfectBalance extends Analyser {
 	private onCast(event: Events['action']): void {
 		const action = this.data.getAction(event.action)
 
-		if (!action?.onGcd) {
+		if (!(action?.onGcd ?? false)) {
 			return
 		}
 
@@ -114,7 +114,8 @@ export class PerfectBalance extends Analyser {
 	}
 
 	private onComplete(): void {
-		if (this.current != null) { this.stopAndSave() }
+		// Close up if PB was active at the end of the fight
+		this.stopAndSave()
 
 		// Stacks counts down, so drops+stacks will be adding remaining stacks that are unused
 		const droppedGcds = this.history.reduce((drops, current) => drops + current.stacks, 0)
