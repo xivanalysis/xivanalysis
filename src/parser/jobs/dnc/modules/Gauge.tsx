@@ -146,12 +146,6 @@ export class Gauge extends Analyser {
 		this.addEventHook('complete', this.onComplete)
 	}
 
-	/* Public functions */
-	/** @deprecated */
-	public feathersSpentInRangeLegacy(start: number, end: number): number {
-		return this.feathersSpentInRange(this.parser.fflogsToEpoch(start), this.parser.fflogsToEpoch(end))
-	}
-
 	public feathersSpentInRange(start: number, end: number): number {
 		if (start > end) {
 			return -1
