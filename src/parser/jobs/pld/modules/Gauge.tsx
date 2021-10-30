@@ -6,9 +6,11 @@ import {Event, Events} from 'event'
 import {filter, oneOf} from 'parser/core/filter'
 import {dependency} from 'parser/core/Module'
 import {Data} from 'parser/core/modules/Data'
-import {CounterGauge, CounterGaugeModifier, Gauge as CoreGauge} from 'parser/core/modules/Gauge'
+import {CounterGauge, Gauge as CoreGauge} from 'parser/core/modules/Gauge'
 import Suggestions, {SEVERITY, Suggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
+
+type GaugeModifier = Partial<Record<Event['type'], number>>
 
 export default class Gauge extends CoreGauge {
 	static override title = t('pld.gauge.title')`Oath Gauge Usage`
@@ -19,7 +21,7 @@ export default class Gauge extends CoreGauge {
 	private oathGauge = this.add(new CounterGauge({
 		chart: {label: 'Oath Gauge', color: JOBS.PALADIN.colour},
 	}))
-	private oathModifiers = new Map<number, CounterGaugeModifier>([
+	private oathModifiers = new Map<number, GaugeModifier>([
 		[this.data.actions.ATTACK.id, {action: 5}],
 		[this.data.actions.SHELTRON.id, {action: -50}],
 		[this.data.actions.INTERVENTION.id, {action: -50}],
@@ -29,20 +31,22 @@ export default class Gauge extends CoreGauge {
 	override initialise() {
 		super.initialise()
 
-		this.addEventHook(filter<Event>()
-			.type('action')
-			.source(this.parser.actor.id)
-			.action(oneOf(Array.from(this.oathModifiers.keys()))),
-		this.onOathModifying)
+		this.addEventHook(
+			filter<Event>()
+				.type('action')
+				.source(this.parser.actor.id)
+				.action(oneOf(Array.from(this.oathModifiers.keys()))),
+			this.onOathModifying
+		)
 		this.addEventHook('complete', this.onComplete)
 	}
 
 	// HELPERS
 	private onOathModifying(event: Events['action']) {
-		const modifiers = this.oathModifiers.get(event.action)
+		const modifier = this.oathModifiers.get(event.action)
 
-		if (modifiers != null) {
-			const amount = modifiers[event.type] ?? 0
+		if (modifier != null) {
+			const amount = modifier[event.type] ?? 0
 			this.oathGauge.modify(amount)
 		}
 	}

@@ -15,7 +15,7 @@ export class Gauge extends Analyser {
 	override initialise() {
 		this.addEventHook({
 			type: 'death',
-			to: 'player',
+			actor: this.parser.actor.id,
 		}, this.onDeath)
 	}
 

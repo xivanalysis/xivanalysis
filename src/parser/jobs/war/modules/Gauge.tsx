@@ -8,9 +8,11 @@ import {dependency} from 'parser/core/Module'
 import {Actors} from 'parser/core/modules/Actors'
 import {Cooldowns} from 'parser/core/modules/Cooldowns'
 import {Data} from 'parser/core/modules/Data'
-import {CounterGauge, CounterGaugeModifier, Gauge as CoreGauge} from 'parser/core/modules/Gauge'
+import {CounterGauge, Gauge as CoreGauge} from 'parser/core/modules/Gauge'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
+
+type GaugeModifier = Partial<Record<Event['type'], number>>
 
 const BEAST_USAGE_SEVERITY = {
 	20: SEVERITY.MINOR,
@@ -36,7 +38,7 @@ export class Gauge extends CoreGauge {
 	private beastGauge = this.add(new CounterGauge({
 		chart: {label: 'Beast Gauge', color: JOBS.WARRIOR.colour},
 	}))
-	private beastGaugeModifiers = new Map<number, CounterGaugeModifier>([
+	private beastGaugeModifiers = new Map<number, GaugeModifier>([
 		// Builders
 		[this.data.actions.MAIM.id, {combo: 10}],
 		[this.data.actions.STORMS_EYE.id, {combo: 10}],
@@ -57,7 +59,12 @@ export class Gauge extends CoreGauge {
 
 		const playerFilter = filter<Event>().source(this.parser.actor.id)
 		const beastActions = Array.from(this.beastGaugeModifiers.keys())
-		this.addEventHook(playerFilter.type('action').action(oneOf(beastActions)), this.onGaugeModifier)
+		this.addEventHook(
+			playerFilter
+				.type(oneOf(['action', 'combo']))
+				.action(oneOf(beastActions)),
+			this.onGaugeModifier
+		)
 		this.addEventHook(playerFilter.type('combo').action(oneOf(beastActions)), this.onGaugeModifier)
 
 		const infuriateReducerIds = INFURIATE_REDUCERS.map(key => this.data.actions[key].id)
@@ -67,11 +74,11 @@ export class Gauge extends CoreGauge {
 	}
 
 	private onGaugeModifier(event: Events['action' | 'combo']) {
-		const modifiers = this.beastGaugeModifiers.get(event.action)
+		const modifier = this.beastGaugeModifiers.get(event.action)
 
-		if (modifiers != null) {
+		if (modifier != null) {
 			// Spenders are free during IR
-			let amount = modifiers[event.type] ?? 0
+			let amount = modifier[event.type] ?? 0
 			if (this.actors.current.hasStatus(this.data.statuses.INNER_RELEASE.id)) {
 				amount = Math.max(amount, 0)
 			}
