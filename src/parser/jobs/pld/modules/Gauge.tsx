@@ -42,7 +42,7 @@ export default class Gauge extends CoreGauge {
 		const modifiers = this.oathModifiers.get(event.action)
 
 		if (modifiers != null) {
-			const amount = modifiers[event.type] || 0
+			const amount = modifiers[event.type] ?? 0
 			this.oathGauge.modify(amount)
 		}
 	}

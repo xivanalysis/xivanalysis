@@ -1,6 +1,6 @@
 import {ChartDataSets} from 'chart.js'
 import Color from 'color'
-import {EventTypeRepository} from 'event'
+import {Event} from 'event'
 import _ from 'lodash'
 import {AbstractGauge, AbstractGaugeOptions} from './AbstractGauge'
 
@@ -11,8 +11,7 @@ interface CounterHistory {
 	maximum: number
 }
 
-type EventKeys = keyof EventTypeRepository
-export type CounterGaugeModifier = Partial<Record<EventKeys, number>>
+export type CounterGaugeModifier = Partial<Record<Event['type'], number>>
 
 export interface CounterGaugeOptions extends AbstractGaugeOptions {
 	/** Initial value of the gauge. Defaults to the minimum value of the gauge. */

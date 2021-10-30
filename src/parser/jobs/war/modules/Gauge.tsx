@@ -71,7 +71,7 @@ export class Gauge extends CoreGauge {
 
 		if (modifiers != null) {
 			// Spenders are free during IR
-			let amount = modifiers[event.type] || 0
+			let amount = modifiers[event.type] ?? 0
 			if (this.actors.current.hasStatus(this.data.statuses.INNER_RELEASE.id)) {
 				amount = Math.max(amount, 0)
 			}
