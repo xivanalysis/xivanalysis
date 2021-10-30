@@ -15,10 +15,10 @@ const PET_ACTIONS_FROM_COMMANDS: ActionKey[] = [
 export default class Pets extends PetTimeline {
 	static override handle = 'schfaerietimeline'
 
-	override canPetBeCommanded = true
+	protected override canPetBeCommanded = true
 
 	private petActionIds = PET_ACTIONS_FROM_COMMANDS.map(key => this.data.actions[key].id)
-	override isCommandedEvent(event: Events['action']): boolean {
+	protected override isCommandedEvent(event: Events['action']): boolean {
 		return this.petActionIds.includes(event.action)
 	}
 }

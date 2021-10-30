@@ -28,7 +28,7 @@ export class PetTimeline extends CorePetTimeline {
 	protected override canPetBeCommanded = true
 
 	private commandSkillsIds = COMMANDED_SKILLS.map(key => this.data.actions[key].id)
-	override isCommandedEvent(event: Events['action']): boolean {
+	protected override isCommandedEvent(event: Events['action']): boolean {
 		return this.commandSkillsIds.includes(event.action)
 	}
 }
