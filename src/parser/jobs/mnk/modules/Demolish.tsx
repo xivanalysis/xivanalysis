@@ -21,20 +21,20 @@ export class Demolish extends DoTs {
 	@dependency private checklist!: Checklist
 	@dependency private suggestions!: Suggestions
 
-	override trackedStatuses = [
+	protected override trackedStatuses = [
 		this.data.statuses.DEMOLISH.id,
 	]
 
-	override addChecklistRules() {
+	protected override addChecklistRules() {
 		this.checklist.add(new Rule({
 			name: <Trans id="mnk.demolish.checklist.name">Keep Demolish up</Trans>,
 			description: <Trans id="mnk.demolish.checklist.description">
-				<ActionLink {...this.data.actions.DEMOLISH}/> is your strongest finisher (assuming at least 3 DoT ticks hit).
+				<ActionLink action="DEMOLISH"/> is your strongest finisher (assuming at least 3 DoT ticks hit).
 			</Trans>,
 			displayOrder: DISPLAY_ORDER.DEMOLISH,
 			requirements: [
 				new Requirement({
-					name: <Trans id="mnk.demolish.checklist.requirement.name"><ActionLink {...this.data.actions.DEMOLISH}/> uptime</Trans>,
+					name: <Trans id="mnk.demolish.checklist.requirement.name"><ActionLink action="DEMOLISH"/> uptime</Trans>,
 					percent: () => this.getUptimePercent(this.data.statuses.DEMOLISH.id),
 				}),
 			],
@@ -44,11 +44,11 @@ export class Demolish extends DoTs {
 		}))
 	}
 
-	override addClippingSuggestions(clip: DotDurations) {
+	protected override addClippingSuggestions(clip: DotDurations) {
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.DEMOLISH.icon,
 			content: <Trans id="mnk.demolish.suggestion.content">
-				Avoid refreshing <ActionLink {...this.data.actions.DEMOLISH}/> significantly before its expiration. Unnecessary refreshes risk overwriting buff snapshots.
+				Avoid refreshing <ActionLink action="DEMOLISH"/> significantly before its expiration. Unnecessary refreshes risk overwriting buff snapshots.
 			</Trans>,
 			tiers: SEVERITIES.CLIPPING,
 			value: this.getClippingAmount(this.data.statuses.DEMOLISH.id),

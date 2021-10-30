@@ -45,7 +45,7 @@ export class AoE extends AoEUsages {
 		const action = this.data.getAction(event.cause.action)
 
 		// How in the fuck did we even get here tbh
-		if (!action) {
+		if (action == null) {
 			return minTargets
 		}
 

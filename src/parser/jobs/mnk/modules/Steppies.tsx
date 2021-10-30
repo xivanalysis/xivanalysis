@@ -1,10 +1,12 @@
 import {Plural, Trans} from '@lingui/react'
 import {DataLink} from 'components/ui/DbLink'
-import Module, {dependency} from 'parser/core/Module'
+import {Cause, Event, Events, SourceModifier} from 'event'
+import {Analyser} from 'parser/core/Analyser'
+import {filter} from 'parser/core/filter'
+import {dependency} from 'parser/core/Injectable'
+import {Actors} from 'parser/core/modules/Actors'
 import Checklist, {Requirement, Rule} from 'parser/core/modules/Checklist'
-import Combatants from 'parser/core/modules/Combatants'
 import {Data} from 'parser/core/modules/Data'
-import {NormalisedDamageEvent} from 'parser/core/modules/NormalisedEvents'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
@@ -19,51 +21,55 @@ const CRIT_BOOT_SEVERITY = {
 	3: SEVERITY.MAJOR,
 }
 
+const CRIT_MODIFIERS = new Set([SourceModifier.CRITICAL, SourceModifier.CRITICAL_DIRECT])
+
 // 3 is pretty much "you ruined a Perfect Balance you turkey".
 const WEAK_BOOT_SEVERITY = {
 	1: SEVERITY.MEDIUM,
 	4: SEVERITY.MAJOR,
 }
 
-class Boot {
+// Essentially allow us to work on a single target
+type EventDamageTarget = Events['damage']['targets'] extends Array<infer T> ? T : never
+
+interface Boot {
 	crit: boolean
 	opo: boolean
 	weak: boolean
 	timestamp: number
-
-	constructor(crit: boolean, opo: boolean, weak: boolean, timestamp: number) {
-		this.crit = crit
-		this.opo = opo
-		this.weak = weak
-		this.timestamp = timestamp
-	}
 }
 
-export default class Steppies extends Module {
+export class Steppies extends Analyser {
 	static override handle = 'steppies'
 
+	@dependency private actors!: Actors
 	@dependency private checklist!: Checklist
-	@dependency private combatants!: Combatants
 	@dependency private data!: Data
 	@dependency private suggestions!: Suggestions
 
 	private steppies: Boot[] = []
 
-	protected override init(): void {
-		this.addEventHook('normaliseddamage', {by: 'player', abilityId: this.data.actions.BOOTSHINE.id}, this.onDamage)
+	override initialise(): void {
+		this.addEventHook(
+			filter<Event>()
+				.source(this.parser.actor.id)
+				.type('damage')
+				.cause(filter<Cause>().action(this.data.actions.BOOTSHINE.id)),
+			this.onStep,
+		)
+
 		this.addEventHook('complete', this.onComplete)
 	}
 
-	private onDamage(event: NormalisedDamageEvent): void {
-		if (event.hitCount > 0) {
-			const boot = new Boot(
-				event.criticalHits > 0,
-				this.combatants.selected.hasStatus(this.data.statuses.OPO_OPO_FORM.id),
-				!this.combatants.selected.hasStatus(this.data.statuses.LEADEN_FIST.id),
-				event.timestamp)
-
-			this.steppies.push(boot)
+	private onStep(event: Events['damage']): void {
+		const boot: Boot = {
+			crit: event.targets.some(this.isCriticalHit),
+			opo: this.actors.current.hasStatus(this.data.statuses.OPO_OPO_FORM.id),
+			weak: !this.actors.current.hasStatus(this.data.statuses.LEADEN_FIST.id),
+			timestamp: event.timestamp,
 		}
+
+		this.steppies.push(boot)
 	}
 
 	private onComplete(): void {
@@ -112,4 +118,8 @@ export default class Steppies extends Module {
 	getUncritCount = (boots: Boot[]): number => boots.filter(boot => !boot.crit && boot.opo).length
 
 	getLeadenPercent = (boots: Boot[]): number => 100 - (this.getUnbuffedCount(boots) / boots.length) * 100
+
+	private isCriticalHit({sourceModifier}: EventDamageTarget): boolean {
+		return CRIT_MODIFIERS.has(sourceModifier)
+	}
 }
