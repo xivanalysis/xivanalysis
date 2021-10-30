@@ -104,7 +104,7 @@ export class TrackedOverheal {
 
 export class Overheal extends Analyser {
 	static override handle: string = 'overheal'
-	static override debug = true
+	static override debug = false
 
 	@dependency private checklist!: Checklist
 	@dependency private data!: Data

@@ -3,10 +3,10 @@ import {FflogsEvent, HealEvent} from 'fflogs'
 import {AdapterStep} from './base'
 
 /**
- * FFLogs models damage or healing events as "calculateddamage" or "calculatedheal" events at the time of cast (e.g. Character prepares Action on Target Amount)
- * and then as "damage" or "heal" events at the time the effect resolves (e.g. Character Action Target Amount)
- * The two separate events have the same SequenceID, but overkill / overheal is reported on the effect resolution packet only.
- * We need to add the overkill / overheal amounts to the main damage / heal events as well
+ * FFLogs models healing events as "calculatedheal" events at the time of cast (e.g. Character prepares Action on Target Amount)
+ * and then as "heal" events at the time the effect resolves (e.g. Character Action Target Amount)
+ * The two separate events have the same SequenceID, but overheal is reported on the effect resolution packet only.
+ * We need to add the overheal amounts to the main heal events as well
  *
  * IMPORTANT: This adapter MUST run before the AOE deduplication adapter, as the AOE deduplication breaks the assumption of this adapter that only one target exists per event
  */
@@ -40,14 +40,18 @@ export class AssignOverhealStep extends AdapterStep {
 
 	private populateOverheal(baseEvent: HealEvent, adaptedEvents: Event[]) {
 		const executeEvent = adaptedEvents.find((e): e is Events['execute'] => e.type === 'execute')
-		if (executeEvent != null) {
-			const eventIdentifier = this.buildIdentifierFromSingleTarget(executeEvent)
-			const healEvent = this.healEvents.get(eventIdentifier)
-			if (healEvent != null) {
-				healEvent.targets[0].overheal = baseEvent.overheal ?? 0
-				this.healEvents.delete(eventIdentifier)
-			}
+		if (executeEvent == null) {
+			return
 		}
+
+		const eventIdentifier = this.buildIdentifierFromSingleTarget(executeEvent)
+		const healEvent = this.healEvents.get(eventIdentifier)
+		if (healEvent == null) {
+			return
+		}
+
+		healEvent.targets[0].overheal = baseEvent.overheal ?? 0
+		this.healEvents.delete(eventIdentifier)
 	}
 
 	private setUnmatchedHealsToOverheal() {
