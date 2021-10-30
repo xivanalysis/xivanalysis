@@ -45,11 +45,6 @@ declare module 'event' {
 		blmgauge: EventBLMGauge
 	}
 }
-declare module 'legacyEvent' {
-	interface EventTypeRepository {
-		blmgauge: EventBLMGauge
-	}
-}
 
 interface EnochianDowntimeWindow {
 	start: number,
@@ -159,12 +154,6 @@ export default class Gauge extends Analyser {
 			gaugeState = this.gaugeHistory.get(historyKey)
 		}
 		return gaugeState
-	}
-	/**
-	 * Fflogs compatibility function to retrieve gauge state at a particular timestamp
-	 * @deprecated */
-	public getFflogsGaugeState(timestamp: number = this.parser.currentTimestamp): BLMGaugeState | undefined {
-		return this.getGaugeState(this.parser.fflogsToEpoch(timestamp))
 	}
 
 	//#region onCast and gauge state modification
@@ -285,10 +274,6 @@ export default class Gauge extends Analyser {
 			this.parser.queueEvent({
 				type: 'blmgauge',
 				timestamp: this.parser.currentEpochTimestamp,
-			})
-			this.parser.fabricateLegacyEvent({
-				type: 'blmgauge',
-				timestamp: this.parser.currentTimestamp,
 			})
 		}
 	}
