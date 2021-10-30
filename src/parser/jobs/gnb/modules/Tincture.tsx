@@ -1,30 +1,35 @@
 import {Trans} from '@lingui/react'
+import {ExpectedActionsEvaluator} from 'parser/core/modules/ActionWindow/evaluators/ExpectedActionsEvaluator'
 import {SEVERITY} from 'parser/core/modules/Suggestions'
 import {Tincture as CoreTincture} from 'parser/core/modules/Tincture'
 import React from 'react'
 
 export default class Tincture extends CoreTincture {
-	override buffAction = this.data.actions.INFUSION_STR
 
-	override trackedActions = {
-		icon: this.data.actions.INFUSION_STR.icon,
-		actions: [
-			{
-				action: this.data.actions.WICKED_TALON,
-				expectedPerWindow: 1,
+	override initialise() {
+		super.initialise()
+
+		this.addEvaluator(new ExpectedActionsEvaluator({
+			expectedActions: [
+				{
+					action: this.data.actions.WICKED_TALON,
+					expectedPerWindow: 1,
+				},
+				{
+					action: this.data.actions.BLASTING_ZONE,
+					expectedPerWindow: 1,
+				},
+			],
+			suggestionIcon: this.data.actions.INFUSION_STR.icon,
+			suggestionContent: <Trans id="gnb.tincture.suggestions.trackedActions.content">
+				Try to cover as much damage as possible with your Tinctures of Strength.
+			</Trans>,
+			windowName: this.data.actions.INFUSION_STR.name,
+			severityTiers: {
+				1: SEVERITY.MINOR,
+				2: SEVERITY.MEDIUM,
+				3: SEVERITY.MAJOR,
 			},
-			{
-				action: this.data.actions.BLASTING_ZONE,
-				expectedPerWindow: 1,
-			},
-		],
-		suggestionContent: <Trans id="gnb.tincture.suggestions.trackedActions.content">
-			Try to cover as much damage as possible with your Tinctures of Strength.
-		</Trans>,
-		severityTiers: {
-			1: SEVERITY.MINOR,
-			2: SEVERITY.MEDIUM,
-			3: SEVERITY.MAJOR,
-		},
+		}))
 	}
 }

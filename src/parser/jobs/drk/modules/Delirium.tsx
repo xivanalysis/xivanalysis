@@ -1,43 +1,58 @@
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
 import {ActionLink} from 'components/ui/DbLink'
-import ACTIONS from 'data/ACTIONS'
-import STATUSES from 'data/STATUSES'
-import {BuffWindowModule} from 'parser/core/modules/BuffWindow'
+import {dependency} from 'parser/core/Injectable'
+import {AllowedGcdsOnlyEvaluator} from 'parser/core/modules/ActionWindow/evaluators/AllowedGcdsOnlyEvaluator'
+import {ExpectedGcdCountEvaluator} from 'parser/core/modules/ActionWindow/evaluators/ExpectedGcdCountEvaluator'
+import {BuffWindow} from 'parser/core/modules/ActionWindow/windows/BuffWindow'
+import {GlobalCooldown} from 'parser/core/modules/GlobalCooldown'
 import {SEVERITY} from 'parser/core/modules/Suggestions'
 import React from 'react'
 import {DISPLAY_ORDER} from './DISPLAY_ORDER'
 
-export class Delirium extends BuffWindowModule {
+export class Delirium extends BuffWindow {
 	static override handle = 'delirium'
 	static override title = t('drk.delirium.title')`Delirium Usage`
 	static override displayOrder = DISPLAY_ORDER.DELIRIUM
 
-	buffAction = ACTIONS.DELIRIUM
-	buffStatus = STATUSES.DELIRIUM
+	@dependency globalCooldown!: GlobalCooldown
 
-	override expectedGCDs = {
-		expectedPerWindow: 5,
-		suggestionContent: <Trans id="drk.delirium.suggestions.missedgcd.content">
-			Try to land 5 GCDs during every <ActionLink {...ACTIONS.DELIRIUM} /> window.  If you cannot do this with full uptime and no clipping, consider adjusting your gearset for more Skill Speed.
-		</Trans>,
-		severityTiers: {
-			1: SEVERITY.MEDIUM,
-			3: SEVERITY.MAJOR,
-		},
-	}
-	override requiredGCDs = {
-		icon: ACTIONS.BLOODSPILLER.icon,
-		actions: [
-			ACTIONS.BLOODSPILLER,
-			ACTIONS.QUIETUS,
-		],
-		suggestionContent: <Trans id="drk.delirium.suggestions.badgcd.content">
-			GCDs used during <ActionLink {...ACTIONS.DELIRIUM}/> should be limited to <ActionLink {...ACTIONS.BLOODSPILLER}/> for optimal damage (or <ActionLink {...ACTIONS.QUIETUS}/> if three or more targets are present).
-		</Trans>,
-		severityTiers: {
-			1: SEVERITY.MEDIUM,
-			2: SEVERITY.MAJOR,
-		},
+	override buffStatus = this.data.statuses.DELIRIUM
+
+	override initialise() {
+		super.initialise()
+
+		const windowName = this.data.actions.DELIRIUM.name
+		this.addEvaluator(new ExpectedGcdCountEvaluator({
+			expectedGcds: 5,
+			globalCooldown: this.globalCooldown,
+			suggestionIcon: this.data.actions.DELIRIUM.icon,
+			suggestionContent: <Trans id="drk.delirium.suggestions.missedgcd.content">
+				Try to land 5 GCDs during every <ActionLink action="DELIRIUM" /> window.  If you cannot do this with full uptime and no clipping, consider adjusting your gearset for more Skill Speed.
+			</Trans>,
+			windowName,
+			severityTiers: {
+				1: SEVERITY.MEDIUM,
+				3: SEVERITY.MAJOR,
+			},
+		}))
+
+		this.addEvaluator(new AllowedGcdsOnlyEvaluator({
+			expectedGcdCount: 5,
+			globalCooldown: this.globalCooldown,
+			allowedGcds: [
+				this.data.actions.BLOODSPILLER.id,
+				this.data.actions.QUIETUS.id,
+			],
+			suggestionIcon: this.data.actions.BLOODSPILLER.icon,
+			suggestionContent: <Trans id="drk.delirium.suggestions.badgcd.content">
+				GCDs used during <ActionLink action="DELIRIUM"/> should be limited to <ActionLink action="BLOODSPILLER"/> for optimal damage (or <ActionLink action="QUIETUS"/> if three or more targets are present).
+			</Trans>,
+			windowName,
+			severityTiers: {
+				1: SEVERITY.MEDIUM,
+				2: SEVERITY.MAJOR,
+			},
+		}))
 	}
 }

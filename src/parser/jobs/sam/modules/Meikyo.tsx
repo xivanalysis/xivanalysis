@@ -1,82 +1,105 @@
 import {t, Trans} from '@lingui/macro'
 import {ActionLink} from 'components/ui/DbLink'
-import ACTIONS, {Action} from 'data/ACTIONS'
-import STATUSES from 'data/STATUSES'
-import {BuffWindowModule, BuffWindowState} from 'parser/core/modules/BuffWindow'
+import {ActionKey} from 'data/ACTIONS'
+import {dependency} from 'parser/core/Injectable'
+import {EvaluatedAction} from 'parser/core/modules/ActionWindow/EvaluatedAction'
+import {AllowedGcdsOnlyEvaluator} from 'parser/core/modules/ActionWindow/evaluators/AllowedGcdsOnlyEvaluator'
+import {ExpectedGcdCountEvaluator} from 'parser/core/modules/ActionWindow/evaluators/ExpectedGcdCountEvaluator'
+import {BuffWindow} from 'parser/core/modules/ActionWindow/windows/BuffWindow'
+import {GlobalCooldown} from 'parser/core/modules/GlobalCooldown'
+import {HistoryEntry} from 'parser/core/modules/History'
 import {SEVERITY} from 'parser/core/modules/Suggestions'
 import React from 'react'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 
 // Set for stuff to ignore TODO: revisit this and get it to show iaijutsu properly
 // const IGNORE_THIS = new Set([ACTIONS.MIDARE_SETSUGEKKA.id, ACTIONS.TENKA_GOKEN.id, ACTIONS.HIGANBANA.id, ACTIONS.KAESHI_SETSUGEKKA.id, ACTIONS.KAESHI_GOKEN.id, ACTIONS.KAESHI_HIGANBANA])
-const ONLY_SHOW = new Set([ACTIONS.HAKAZE.id, ACTIONS.JINPU.id, ACTIONS.ENPI.id, ACTIONS.SHIFU.id, ACTIONS.FUGA.id, ACTIONS.GEKKO.id, ACTIONS.MANGETSU.id, ACTIONS.KASHA.id, ACTIONS.OKA.id, ACTIONS.YUKIKAZE.id])
+const ONLY_SHOW: ActionKey[] = [
+	'HAKAZE',
+	'JINPU',
+	'ENPI',
+	'SHIFU',
+	'FUGA',
+	'GEKKO',
+	'MANGETSU',
+	'KASHA',
+	'OKA',
+	'YUKIKAZE',
+]
 const SEN_GCDS = 3
 
 // A set const for SAM speed with 0 speed and shifu up, not sure I like this idea tbh but Aza requested it.
 // GCD = 2.18
 const SAM_BASE_GCD_SPEED_BUFFED = 2180
 
-export default class MeikyoShisui extends BuffWindowModule {
+export class Meikyo extends BuffWindow {
 	static override displayOrder = DISPLAY_ORDER.MEIKYO
 	static override handle = 'Meikyo'
 	static override title = t('sam.ms.title')`Meikyo Shisui Windows`
 
-	buffAction = ACTIONS.MEIKYO_SHISUI
-	buffStatus = STATUSES.MEIKYO_SHISUI
+	@dependency globalCooldown!: GlobalCooldown
 
-	override expectedGCDs = {
-		expectedPerWindow: SEN_GCDS,
-		suggestionContent: <Trans id="sam.ms.suggestions.missedgcd.content">
-				Try to land 3 GCDs during every <ActionLink {...ACTIONS.MEIKYO_SHISUI} /> window. </Trans>,
-		severityTiers: {
-			1: SEVERITY.MEDIUM,
-			2: SEVERITY.MAJOR,
-		},
+	override buffStatus = this.data.statuses.MEIKYO_SHISUI
+
+	override initialise() {
+		super.initialise()
+
+		this.trackOnlyActions(ONLY_SHOW.map(k => this.data.actions[k].id))
+
+		const suggestionIcon = this.data.actions.MEIKYO_SHISUI.icon
+		const windowName = this.data.actions.MEIKYO_SHISUI.name
+		this.addEvaluator(
+			new ExpectedGcdCountEvaluator({
+				expectedGcds: SEN_GCDS,
+				globalCooldown: this.globalCooldown,
+				suggestionIcon,
+				suggestionContent: <Trans id="sam.ms.suggestions.missedgcd.content">
+					Try to land 3 GCDs during every <ActionLink action="MEIKYO_SHISUI" /> window.
+				</Trans>,
+				windowName,
+				severityTiers: {
+					1: SEVERITY.MEDIUM,
+					2: SEVERITY.MAJOR,
+				},
+				adjustCount: this.adjustExpectedGcdCount.bind(this),
+			}))
+		this.addEvaluator(
+			new AllowedGcdsOnlyEvaluator({
+				expectedGcdCount: SEN_GCDS,
+				allowedGcds: [
+					// Single Target
+					this.data.actions.GEKKO.id,
+					this.data.actions.KASHA.id,
+					this.data.actions.YUKIKAZE.id,
+
+					// AoE
+					this.data.actions.OKA.id,
+					this.data.actions.MANGETSU.id,
+				],
+				globalCooldown: this.globalCooldown,
+				suggestionIcon,
+				suggestionContent: <Trans id="sam.ms.suggestions.badgcd.content">
+					GCDs used during <ActionLink action="MEIKYO_SHISUI"/> should be limited to sen building skills.
+				</Trans>,
+				windowName,
+				severityTiers: {
+					1: SEVERITY.MAJOR,
+				},
+				adjustCount: this.adjustExpectedGcdCount.bind(this),
+			}))
 	}
 
-	override requiredGCDs = {
-		icon: ACTIONS.MEIKYO_SHISUI.icon,
-		actions: [
-			// Single Target
-			ACTIONS.GEKKO,
-			ACTIONS.KASHA,
-			ACTIONS.YUKIKAZE,
+	private adjustExpectedGcdCount(window: HistoryEntry<EvaluatedAction[]>) {
+		if (this.isRushedEndOfPullWindow(window)) {
+			const defaultEoFValue = Math.ceil(((window.end ?? window.start) - window.start) / this.globalCooldown.getEstimate())
 
-			// AoE
-			ACTIONS.OKA,
-			ACTIONS.MANGETSU,
-		],
-		suggestionContent: <Trans id="sam.ms.suggestions.badgcd.content">
-				GCDs used during <ActionLink {...ACTIONS.MEIKYO_SHISUI}/> should be limited to sen building skills. </Trans>,
-		severityTiers: {
-			1: SEVERITY.MAJOR,
-		},
-	}
-
-	// override for consider action.
-	override considerAction(action: Action) {
-		if (ONLY_SHOW.has(action.id)) {
-			return true
-		}
-		return false
-	}
-
-	// override for end of fight reducing
-	override reduceExpectedGCDsEndOfFight(buffWindow: BuffWindowState): number  {
-		let reduceGCDsBy = 0
-
-		// Check to see if this window is rushing due to end of fight - reduce expected GCDs accordingly
-		const fightTimeRemaining = this.parser.pull.duration - (buffWindow.start - this.parser.eventTimeOffset)
-
-		if (this.buffStatus.duration >= fightTimeRemaining) {
 			// This is using floor instead of ceiling to grant some forgiveness to first weave slot casts at the cost of 2nd weaves might be too forgiven
+			const fightTimeRemaining = (this.parser.pull.timestamp + this.parser.pull.duration) - window.start
 			const possibleGCDs = Math.floor(fightTimeRemaining / SAM_BASE_GCD_SPEED_BUFFED)
 
-			if (possibleGCDs < SEN_GCDS) {
-				reduceGCDsBy += (SEN_GCDS - possibleGCDs)
-			}
+			return possibleGCDs - defaultEoFValue
 		}
 
-		return reduceGCDsBy
+		return 0
 	}
 }

@@ -2,20 +2,29 @@ import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
 import {RotationTargetOutcome} from 'components/ui/RotationTable'
-import {Action} from 'data/ACTIONS'
-import {ActionRoot} from 'data/ACTIONS/root'
-import {BuffEvent, CastEvent} from 'fflogs'
+import {ActionKey} from 'data/ACTIONS'
+import {Event, Events} from 'event'
 import _ from 'lodash'
-import {BuffWindowModule, BuffWindowState, BuffWindowTrackedAction} from 'parser/core/modules/BuffWindow'
+import {filter} from 'parser/core/filter'
+import {dependency} from 'parser/core/Injectable'
+import {EvaluatedAction} from 'parser/core/modules/ActionWindow/EvaluatedAction'
+import {ExpectedActionsEvaluator} from 'parser/core/modules/ActionWindow/evaluators/ExpectedActionsEvaluator'
+import {ExpectedGcdCountEvaluator} from 'parser/core/modules/ActionWindow/evaluators/ExpectedGcdCountEvaluator'
+import {TrackedAction, TrackedActionsOptions} from 'parser/core/modules/ActionWindow/evaluators/TrackedAction'
+import {BuffWindow} from 'parser/core/modules/ActionWindow/windows/BuffWindow'
+import {Actors} from 'parser/core/modules/Actors'
+import {GlobalCooldown} from 'parser/core/modules/GlobalCooldown'
+import {HistoryEntry} from 'parser/core/modules/History'
 import {SEVERITY} from 'parser/core/modules/Suggestions'
 import React from 'react'
+import {Team} from 'report'
 import {isDefined} from 'utilities'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 
 // Minimum muse GCDs needed to expect an RS window to have 9 GCDs
 const MIN_MUSE_GCDS = 3
 
-const SUPPORT_ACTIONS: Array<keyof ActionRoot> = [
+const SUPPORT_ACTIONS: ActionKey[] = [
 	'ARMS_LENGTH',
 	'FOOT_GRAZE',
 	'HEAD_GRAZE',
@@ -34,58 +43,97 @@ interface MuseWindow {
 	end?: number | undefined,
 }
 
-export default class RagingStrikes extends BuffWindowModule {
+interface BarrageOptions extends TrackedActionsOptions {
+	barrageId: number
+	wasBarrageUsed: (window: HistoryEntry<EvaluatedAction[]>) => boolean
+}
+class BarrageEvaluator extends ExpectedActionsEvaluator {
+	// Because this class is not an Analyser, it cannot use Data directly
+	// to get the id for Barrage, so it has to take it in here.
+	private barrageId: number
+	private wasBarrageUsed: (window: HistoryEntry<EvaluatedAction[]>) => boolean
+
+	constructor(opts: BarrageOptions) {
+		super(opts)
+		this.barrageId = opts.barrageId
+		this.wasBarrageUsed = opts.wasBarrageUsed
+	}
+
+	override countUsed(window: HistoryEntry<EvaluatedAction[]>, action: TrackedAction) {
+		if (action.action.id === this.barrageId) {
+			return this.wasBarrageUsed(window) ? 1 : 0
+		}
+		return super.countUsed(window, action)
+	}
+}
+
+export default class RagingStrikes extends BuffWindow {
 	static override handle = 'rs'
 	static override title = t('brd.rs.title')`Raging Strikes`
 	static override displayOrder = DISPLAY_ORDER.RAGING_STRIKES
 
-	buffAction = this.data.actions.RAGING_STRIKES
-	buffStatus = this.data.statuses.RAGING_STRIKES
+	@dependency private globalCooldown!: GlobalCooldown
+	@dependency private actors!: Actors
+
+	override buffStatus = this.data.statuses.RAGING_STRIKES
 
 	private museHistory: MuseWindow[] = []
-	private SUPPORT_ACTIONS: number[] = []
+	private barrageRemoves: number[] = []
 
-	override expectedGCDs = {
-		expectedPerWindow: 8,
-		suggestionContent: <Trans id="brd.rs.suggestions.missedgcd.content">
-			Try to land 8 GCDs (9 GCDs with <StatusLink {...this.data.statuses.ARMYS_MUSE}/>) during every <ActionLink {...this.data.actions.RAGING_STRIKES}/> window.
-		</Trans>,
-		severityTiers: {
-			1: SEVERITY.MINOR,
-			3: SEVERITY.MEDIUM,
-			5: SEVERITY.MAJOR,
-		},
-	}
+	override initialise() {
+		super.initialise()
 
-	override trackedActions = {
-		icon: this.data.actions.BARRAGE.icon,
-		actions: [
-			{
-				action: this.data.actions.BARRAGE,
-				status: this.data.statuses.BARRAGE,
-				expectedPerWindow: 1,
+		this.ignoreActions(SUPPORT_ACTIONS.map(actionKey => this.data.actions[actionKey].id))
+
+		const playerFilter = filter<Event>().source(this.parser.actor.id)
+		const buffFilter = playerFilter.status(this.data.statuses.ARMYS_MUSE.id)
+		this.addEventHook(buffFilter.type('statusApply'), this.onApplyMuse)
+		this.addEventHook(buffFilter.type('statusRemove'), this.onRemoveMuse)
+		this.addEventHook(playerFilter.status(this.data.statuses.BARRAGE.id).type('statusRemove'), this.onRemoveBarrage)
+
+		const windowName = this.data.actions.RAGING_STRIKES.name
+		this.addEvaluator(new ExpectedGcdCountEvaluator({
+			expectedGcds: 8,
+			globalCooldown: this.globalCooldown,
+			suggestionIcon: this.data.actions.RAGING_STRIKES.icon,
+			suggestionContent: <Trans id="brd.rs.suggestions.missedgcd.content">
+				Try to land 8 GCDs (9 GCDs with <StatusLink {...this.data.statuses.ARMYS_MUSE}/>) during every <ActionLink {...this.data.actions.RAGING_STRIKES}/> window.
+			</Trans>,
+			windowName,
+			severityTiers: {
+				1: SEVERITY.MINOR,
+				3: SEVERITY.MEDIUM,
+				5: SEVERITY.MAJOR,
 			},
-			{
-				action: this.data.actions.IRON_JAWS,
-				expectedPerWindow: 1,
+			adjustCount: this.adjustExpectedGcdCount.bind(this),
+		}))
+
+		this.addEvaluator(new BarrageEvaluator({
+			expectedActions: [
+				{
+					action: this.data.actions.BARRAGE,
+					expectedPerWindow: 1,
+				},
+				{
+					action: this.data.actions.IRON_JAWS,
+					expectedPerWindow: 1,
+				},
+			],
+			suggestionIcon: this.data.actions.BARRAGE.icon,
+			suggestionContent: <Trans id="brd.rs.suggestions.trackedactions.content">
+				One use of <ActionLink {...this.data.actions.BARRAGE}/> and one use of <ActionLink {...this.data.actions.IRON_JAWS}/> should occur during every <ActionLink {...this.data.actions.RAGING_STRIKES}/> window.
+			</Trans>,
+			windowName,
+			severityTiers: {
+				1: SEVERITY.MINOR,
+				3: SEVERITY.MEDIUM,
+				5: SEVERITY.MAJOR,
 			},
-		],
-		suggestionContent: <Trans id="brd.rs.suggestions.trackedactions.content">
-			One use of <ActionLink {...this.data.actions.BARRAGE}/> and one use of <ActionLink {...this.data.actions.IRON_JAWS}/> should occur during every <ActionLink {...this.data.actions.RAGING_STRIKES}/> window.
-		</Trans>,
-		severityTiers: {
-			1: SEVERITY.MINOR,
-			3: SEVERITY.MEDIUM,
-			5: SEVERITY.MAJOR,
-		},
-	}
-
-	protected override init() {
-		super.init()
-
-		this.SUPPORT_ACTIONS = SUPPORT_ACTIONS.map(actionKey => this.data.actions[actionKey].id)
-		this.addEventHook('applybuff', {to: 'player', abilityId: [this.data.statuses.ARMYS_MUSE.id]}, this.onApplyMuse)
-		this.addEventHook('removebuff', {to: 'player', abilityId: [this.data.statuses.ARMYS_MUSE.id]}, this.onRemoveMuse)
+			adjustCount: this.adjustExpectedActionCount.bind(this),
+			adjustOutcome: this.adjustExpectedActionOutcome.bind(this),
+			barrageId: this.data.actions.BARRAGE.id,
+			wasBarrageUsed: this.wasBarageUsed.bind(this),
+		}))
 	}
 
 	private get activeMuse(): MuseWindow | undefined {
@@ -96,22 +144,24 @@ export default class RagingStrikes extends BuffWindowModule {
 		return undefined
 	}
 
-	private onApplyMuse(event: BuffEvent) {
+	private onApplyMuse(event: Events['statusApply']) {
 		this.museHistory.push({start: event.timestamp})
 	}
 
-	private onRemoveMuse(event: BuffEvent) {
+	private onRemoveMuse(event: Events['statusRemove']) {
 		if (this.activeMuse) {
 			this.activeMuse.end = event.timestamp
 		}
 	}
 
-	protected override considerAction = (action: Action) => !this.SUPPORT_ACTIONS.includes(action.id)
+	private onRemoveBarrage(event: Events['statusRemove']) {
+		this.barrageRemoves.push(event.timestamp)
+	}
 
-	protected override changeExpectedGCDsClassLogic(buffWindow: BuffWindowState): number {
+	private adjustExpectedGcdCount(window: HistoryEntry<EvaluatedAction[]>) {
 		// Check if muse was up for at least 3 GCDs in this buffWindow
 		const museOverlap = this.museHistory.some(muse => (
-			buffWindow.rotation.filter(event => this.data.getAction(event.ability.guid)?.onGcd &&
+			window.data.filter(event => this.data.getAction(event.action.id)?.onGcd &&
 					event.timestamp > muse.start && (!muse.end || event.timestamp < muse.end))
 				.length >= MIN_MUSE_GCDS
 		))
@@ -119,39 +169,30 @@ export default class RagingStrikes extends BuffWindowModule {
 		return museOverlap ? 1 : 0
 	}
 
-	private getEventTargetKey = (event: CastEvent): string => `${event.targetID}-${event.targetInstance}`
-
-	protected override getBaselineExpectedTrackedAction(buffWindow: BuffWindowState, action: BuffWindowTrackedAction): number {
-		if (action.action !== this.data.actions.IRON_JAWS) {
-			return action.expectedPerWindow || 0
-		}
-
-		// If the action was Iron Jaws, the upper limit = the number of enemies we cast something on during this RS window
-		const enemyIDs = new Set<string>()
-		buffWindow.rotation.forEach((e: CastEvent) => {
-			if (e.targetID && !e.targetIsFriendly) {
-				enemyIDs.add(this.getEventTargetKey(e))
-			}
-		})
-
-		return enemyIDs.size
-	}
-
-	protected override reduceTrackedActionsEndOfFight(buffWindow: BuffWindowState): number {
-		const fightTimeRemaining = this.parser.pull.duration - (buffWindow.start - this.parser.eventTimeOffset)
-
+	private adjustExpectedActionCount(window: HistoryEntry<EvaluatedAction[]>, action: TrackedAction) {
 		/**
 		 * IJ definitely shouldn't be used at the end of the fight, so reduce by 1
 		 * Barrage might have floated to the end of the RS window, so reduce by 1
 		 */
-		if (this.buffStatus.duration >= fightTimeRemaining) {
-			return 1
+		if (this.isRushedEndOfPullWindow(window)) {
+			return -1
 		}
 
-		return 0
+		// If the action was Iron Jaws, the upper limit = the number of enemies we cast something on during this RS window
+		if (action.action !== this.data.actions.IRON_JAWS) {
+			return 0
+		}
+
+		const enemyIDs = new Set<string>()
+		window.data
+			.filter(e => this.actors.get(e.target).team === Team.FOE)
+			.forEach(e => enemyIDs.add(e.target))
+
+		// Baseline number of allowed Iron Jaws is 1 and this function is an adjustment.
+		return Math.max(enemyIDs.size - 1, 0)
 	}
 
-	protected override changeComparisonClassLogic(buffWindow: BuffWindowState, action: BuffWindowTrackedAction) {
+	private adjustExpectedActionOutcome(window: HistoryEntry<EvaluatedAction[]>, action: TrackedAction) {
 		/**
 		 * Positive only if we had exactly one Iron Jaws in this RS
 		 * If expected > 1, we're in AoE and there is no clear rotation target, so don't highlight this cell
@@ -169,5 +210,16 @@ export default class RagingStrikes extends BuffWindowModule {
 				return RotationTargetOutcome.NEGATIVE
 			}
 		}
+	}
+
+	private wasBarageUsed(window: HistoryEntry<EvaluatedAction[]>) {
+		const gcdTimestamps = window.data
+			.filter(e => e.action.onGcd)
+			.map(e => e.timestamp)
+		if (gcdTimestamps.length === 0) { return false }
+
+		// Check to make sure at least one GCD happened before the status expired
+		const firstGcd = gcdTimestamps[0]
+		return this.barrageRemoves.some(timestamp => firstGcd <= timestamp && timestamp <= (window.end ?? window.start))
 	}
 }
