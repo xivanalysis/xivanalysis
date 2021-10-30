@@ -1,3 +1,4 @@
+import {ReactNode} from 'react'
 import {matchClosestLower} from 'utilities'
 
 export const SEVERITY = {
@@ -12,15 +13,15 @@ export const SEVERITY = {
 
 export interface SuggestionOptions {
 	icon: string
-	content: string | JSX.Element
-	why: string | JSX.Element
+	content: ReactNode
+	why: ReactNode
 	severity?: number
 }
 
 export default class Suggestion {
 	public icon: string // TODO: default image
-	public content: string | JSX.Element
-	public why: string | JSX.Element
+	public content: ReactNode
+	public why: ReactNode
 	private severityValue?: number
 
 	constructor(options: SuggestionOptions) {
@@ -48,8 +49,8 @@ export interface SeverityTiers {
 
 export interface TieredSuggestionOptions {
 	icon: string
-	content: string | JSX.Element
-	why: string | JSX.Element
+	content: ReactNode
+	why: ReactNode
 	tiers: SeverityTiers
 	value: number
 	matcher?: (tiers: SeverityTiers, value: number) => number | undefined

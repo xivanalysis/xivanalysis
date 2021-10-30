@@ -38,8 +38,6 @@ class ShortWindowEvaluator implements WindowEvaluator {
 		this.shortWindowReason = shortWindowReason
 	}
 
-	// Derived classes may decide to suggest, in which case they need the windows.
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	public suggest()  { return undefined }
 
 	public output(windows: Array<HistoryEntry<EvaluatedAction[]>>): EvaluationOutput | undefined {
