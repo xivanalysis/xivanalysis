@@ -517,8 +517,8 @@ export default class Gauge extends Analyser {
 		const droppedEno = this.droppedEnoTimestamps.filter(drop =>
 			this.unableToAct
 				.getWindows({
-					start: this.parser.fflogsToEpoch(drop),
-					end: this.parser.fflogsToEpoch(drop),
+					start: drop,
+					end: drop,
 				})
 				.filter((downtime) => Math.max(0, downtime.end - downtime.start) >= ASTRAL_UMBRAL_DURATION)
 				.length === 0
