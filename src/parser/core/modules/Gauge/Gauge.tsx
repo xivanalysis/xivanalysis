@@ -1,19 +1,22 @@
 import {t} from '@lingui/macro'
 import TimeLineChart from 'components/ui/TimeLineChart'
-import Module from 'parser/core/Module'
+import {Analyser} from 'parser/core/Analyser'
 import React from 'react'
 import {isDefined} from 'utilities'
 import {AbstractGauge} from './AbstractGauge'
 import {TimerGauge} from './TimerGauge'
 
-export class Gauge extends Module {
+export class Gauge extends Analyser {
 	static override handle = 'gauge'
 	static override title = t('core.gauge.title')`Gauge`
 
 	private gauges: AbstractGauge[] = []
 
-	protected override init() {
-		this.addEventHook('death', {to: 'player'}, this.onDeath)
+	override initialise() {
+		this.addEventHook({
+			type: 'death',
+			to: 'player',
+		}, this.onDeath)
 	}
 
 	/** Add & initialise a gauge implementation to be tracked as part of the core gauge handling. */
