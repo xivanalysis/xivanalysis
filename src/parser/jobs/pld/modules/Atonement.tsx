@@ -1,13 +1,11 @@
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
 import {ActionLink} from 'components/ui/DbLink'
-import {Events} from 'event'
 import {Analyser} from 'parser/core/Analyser'
 import {dependency} from 'parser/core/Injectable'
 import Checklist, {TieredRule, TARGET, Requirement} from 'parser/core/modules/Checklist'
 import {Data} from 'parser/core/modules/Data'
 import React from 'react'
-import {isSuccessfulHit} from 'utilities'
 
 // Yes they're the same now, but who knows what the future may bring?
 const MAX_STACKS = 3
@@ -40,19 +38,15 @@ export default class Atonement extends Analyser {
 		}, () => this.stacksUsed++)
 
 		this.addEventHook({
-			type: 'damage',
+			type: 'combo',
 			source: this.parser.actor.id,
-			cause: {
-				type: 'action',
-				action: this.data.actions.ROYAL_AUTHORITY.id,
-			},
+			action: this.data.actions.ROYAL_AUTHORITY.id,
 		}, this.onGenerateStacks)
 
 		this.addEventHook('complete', this.onComplete)
 	}
 
-	private onGenerateStacks(event: Events['damage']): void {
-		if (!isSuccessfulHit(event)) { return }
+	private onGenerateStacks(): void {
 		this.overcap += Math.max(this.currentStacks + STACKS_GAINED - MAX_STACKS, 0) // Tracking overcap in case someone wants to do something with it later
 		this.potentialStacks += STACKS_GAINED
 		this.currentStacks = Math.min(this.currentStacks + STACKS_GAINED, MAX_STACKS)
