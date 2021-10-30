@@ -1,33 +1,34 @@
-import ACTIONS from 'data/ACTIONS'
-import {CastEvent} from 'fflogs'
-import CorePetTimeline from 'parser/core/modules/PetTimeline'
+import {ActionKey} from 'data/ACTIONS'
+import {Events} from 'event'
+import {PetTimeline as CorePetTimeline} from 'parser/core/modules/PetTimeline'
 
-const COMMANDED_SKILLS: number[] = [
+const COMMANDED_SKILLS: ActionKey[] = [
 	// Egi Assault
-	ACTIONS.AERIAL_SLASH.id,
-	ACTIONS.EARTHEN_ARMOR.id,
-	ACTIONS.CRIMSON_CYCLONE.id,
+	'AERIAL_SLASH',
+	'EARTHEN_ARMOR',
+	'CRIMSON_CYCLONE',
 	// Egi Assault II
-	ACTIONS.SLIPSTREAM.id,
-	ACTIONS.SMN_MOUNTAIN_BUSTER.id,
-	ACTIONS.FLAMING_CRUSH.id,
+	'SLIPSTREAM',
+	'SMN_MOUNTAIN_BUSTER',
+	'FLAMING_CRUSH',
 	// Enkindles
-	ACTIONS.AERIAL_BLAST.id,
-	ACTIONS.EARTHEN_FURY.id,
-	ACTIONS.INFERNO.id,
+	'AERIAL_BLAST',
+	'EARTHEN_FURY',
+	'INFERNO',
 	// all egis
-	ACTIONS.DEVOTION.id,
+	'DEVOTION',
 	// Bahamut
-	ACTIONS.AKH_MORN.id,
+	'AKH_MORN',
 	// Phoenix
-	ACTIONS.REVELATION.id,
+	'REVELATION',
 ]
 
 export class PetTimeline extends CorePetTimeline {
 
 	protected override canPetBeCommanded = true
 
-	override isCommandedEvent(event: CastEvent) {
-		return COMMANDED_SKILLS.includes(event.ability.guid)
+	private commandSkillsIds = COMMANDED_SKILLS.map(key => this.data.actions[key].id)
+	protected override isCommandedEvent(event: Events['action']): boolean {
+		return this.commandSkillsIds.includes(event.action)
 	}
 }
