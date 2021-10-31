@@ -392,7 +392,6 @@
   "drg.blood.no-delay-explain": "Cette fenêtre ne peut pas être retardée en raison d'un arrêt survenu à {0}. Sinon, elle serait retardée pour un meilleur alignement des buffs.",
   "drg.blood.no-nastrond-explain": "Vous avez manquez un ou plusieurs utilisation de <0/> durant cette fenêtre.",
   "drg.blood.no-stardiver-explain": "Vous n'avez pas utiliser <0/> pendant cette fenêtre.",
-  "drg.blood.suggestions.buffed-stardiver": "Essayez de faire en sorte que <0/> s'applique toujours lorsque <1/>, <2/> ou <3/> est actif. En fonction des spécificités du combat, cela n'est pas toujours possible. Regardez le module <4><5/></4> ci-dessous pour plus de détails.",
   "drg.blood.suggestions.buffsed-stardiver.why": "Lorsque <0/> aurait pu être buffé, vous l'avez utilisé {noBuffSd} fois sans buff.",
   "drg.blood.suggestions.eyes.content": "Éviter d'utiliser <0/> quand vous avez déjà {MAX_EYES} yeux. Gâcher des yeux retarde votre fenêtre de Vie du Dragon et peut potentiellement vous faire perdre beaucoup de DPS.",
   "drg.blood.suggestions.eyes.why": "Vous avez utiliser Piqué mirage {0, plural,one {#fois}other {#fois}} quand vous aviez déja vos {MAX_EYES} yeux.",
