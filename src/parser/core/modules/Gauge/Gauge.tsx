@@ -1,14 +1,19 @@
 import {t} from '@lingui/macro'
 import TimeLineChart from 'components/ui/TimeLineChart'
 import {Analyser} from 'parser/core/Analyser'
+import {dependency} from 'parser/core/Injectable'
 import React from 'react'
 import {isDefined} from 'utilities'
+import {ResourceGraphs} from '../ResourceGraphs'
 import {AbstractGauge} from './AbstractGauge'
+import {CounterGauge} from './CounterGauge'
 import {TimerGauge} from './TimerGauge'
 
 export class Gauge extends Analyser {
 	static override handle = 'gauge'
 	static override title = t('core.gauge.title')`Gauge`
+
+	@dependency protected resourceGraphs!: ResourceGraphs
 
 	private gauges: AbstractGauge[] = []
 
@@ -29,6 +34,10 @@ export class Gauge extends Analyser {
 			gauge.setRemoveTimestampHook(this.removeTimestampHook.bind(this))
 		}
 
+		if (gauge instanceof CounterGauge) {
+			gauge.setResourceGraphs(this.resourceGraphs)
+		}
+
 		this.gauges.push(gauge)
 		return gauge
 	}
@@ -38,6 +47,8 @@ export class Gauge extends Analyser {
 	}
 
 	override output() {
+		this.gauges.forEach(gauge => gauge.generateResourceGraph())
+
 		// Generate a dataset from each registered gauge
 		const datasets = this.gauges
 			.map(gauge => gauge.generateDataset())
