@@ -6,12 +6,12 @@ import {Cause, Event, Events} from 'event'
 import {Analyser} from 'parser/core/Analyser'
 import {filter} from 'parser/core/filter'
 import {dependency} from 'parser/core/Module'
+import {Actors} from 'parser/core/modules/Actors'
 import Checklist, {Rule, Requirement} from 'parser/core/modules/Checklist'
-import Combatants from 'parser/core/modules/Combatants'
 import {Data} from 'parser/core/modules/Data'
-import {EntityStatuses} from 'parser/core/modules/EntityStatuses'
 import {Invulnerability} from 'parser/core/modules/Invulnerability'
 import {PieChartStatistic, Statistics} from 'parser/core/modules/Statistics'
+import {Statuses} from 'parser/core/modules/Statuses'
 import Suggestions, {Suggestion, TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import React from 'react'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
@@ -60,8 +60,8 @@ export default class Buffs extends Analyser {
 	private lifeSurgeCasts: number[] = []
 
 	@dependency private checklist!: Checklist
-	@dependency private combatants!: Combatants
-	@dependency private entityStatuses!: EntityStatuses
+	@dependency private actors!: Actors
+	@dependency private statuses!: Statuses
 	@dependency private invulnerability!: Invulnerability
 	@dependency private suggestions!: Suggestions
 	@dependency private data!: Data
@@ -88,21 +88,21 @@ export default class Buffs extends Analyser {
 		const action = this.data.getAction(event.action)
 		if (action && action.onGcd) {
 			// always mark consumed buff for stat chart
-			if (this.combatants.selected.hasStatus(this.data.statuses.LIFE_SURGE.id)) {
+			if (this.actors.current.hasStatus(this.data.statuses.LIFE_SURGE.id)) {
 				this.lifeSurgeCasts.push(action.id)
 			}
 
 			// 4-5 combo hit checks
 			if (this.badLifeSurgeConsumers.includes(action.id)) {
 				this.fifthGcd = false // Reset the 4-5 combo hit flag on other GCDs
-				if (this.combatants.selected.hasStatus(this.data.statuses.LIFE_SURGE.id)) {
+				if (this.actors.current.hasStatus(this.data.statuses.LIFE_SURGE.id)) {
 					this.badLifeSurges++
 				}
 			} else if (this.finalComboHits.includes(action.id)) {
 				if (!this.fifthGcd) {
 					// If we get 2 of these in a row (4-5 combo hits), only the first one is considered bad, so set a flag to ignore the next one
 					this.fifthGcd = true
-					if (this.combatants.selected.hasStatus(this.data.statuses.LIFE_SURGE.id)) {
+					if (this.actors.current.hasStatus(this.data.statuses.LIFE_SURGE.id)) {
 						this.badLifeSurges++
 					}
 				}
@@ -118,13 +118,13 @@ export default class Buffs extends Analyser {
 
 		// this action is pushed onto the statistic graph data by onCast, don't duplicate that
 		// if coerthan torment is life surged and hits less than three targets, it's no good
-		if (this.combatants.selected.hasStatus(this.data.statuses.LIFE_SURGE.id) && hits < MIN_COT_HITS) {
+		if (this.actors.current.hasStatus(this.data.statuses.LIFE_SURGE.id) && hits < MIN_COT_HITS) {
 			this.badLifeSurges++
 		}
 	}
 
 	private getDisembowelUptimePercent() {
-		const statusUptime = this.entityStatuses.getStatusUptime(this.data.statuses.DISEMBOWEL.id, this.combatants.getEntities())
+		const statusUptime = this.statuses.getUptime('DISEMBOWEL', this.actors.current)
 		const fightUptime = this.parser.currentDuration - this.invulnerability.getDuration({types: ['invulnerable']})
 		return (statusUptime / fightUptime) * 100
 	}
