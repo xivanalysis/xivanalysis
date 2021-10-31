@@ -104,10 +104,20 @@ export class CounterGauge extends AbstractGauge {
 		this.set(this._value)
 	}
 
-	private pushHistory() {
+	private pushHistory(type: GaugeEventType) {
+		// Ensure we have a gauge init event, can't do in constructor because the parser reference might not be there yet
+		if (this.history.length === 0) {
+			this.history.push({
+				timestamp: this.parser.pull.timestamp,
+				value: this.initialValue,
+				minimum: this.minimum,
+				maximum: this.maximum,
+				type: 'init',
+			})
+		}
 		const timestamp = this.parser.currentEpochTimestamp
 
-		// Ensure we're not generating multiple entries at the samt timestamp
+		// Ensure we're not generating multiple entries at the same timestamp
 		const prevTimestamp = this.history.length
 			? this.history[this.history.length - 1].timestamp
 			: NaN
@@ -120,6 +130,7 @@ export class CounterGauge extends AbstractGauge {
 			value: this._value,
 			minimum: this.minimum,
 			maximum: this.maximum,
+			type,
 		})
 	}
 
