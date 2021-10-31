@@ -81,8 +81,8 @@ export class Gauge extends Analyser {
 	private improvTickHook!: TimestampHook
 	private improvTicks: number = 0
 
-	private espritGenerationExceptions = [
-		...FINISHES,
+	private espritGenerationExceptions: number[] = [
+		...FINISHES.map(key => this.data.actions[key].id),
 		this.data.actions.FUMA_SHURIKEN.id,
 		this.data.actions.FUMA_SHURIKEN_TCJ_TEN.id,
 		this.data.actions.FUMA_SHURIKEN_TCJ_CHI.id,
