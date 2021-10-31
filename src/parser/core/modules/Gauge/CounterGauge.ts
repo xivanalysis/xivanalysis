@@ -1,11 +1,19 @@
 import _ from 'lodash'
 import {AbstractGauge, AbstractGaugeOptions, GaugeGraphOptions} from './AbstractGauge'
 
+type GaugeEventType =
+	| 'init'
+	| 'generate'
+	| 'spend'
+	| 'reset'
+	| 'changeBounds'
+
 interface CounterHistory {
 	timestamp: number
 	value: number
 	minimum: number
 	maximum: number
+	type: GaugeEventType
 }
 
 export interface CounterGaugeOptions extends AbstractGaugeOptions {
