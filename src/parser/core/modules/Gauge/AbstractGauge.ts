@@ -1,4 +1,3 @@
-import {ChartDataSets} from 'chart.js'
 import Parser from 'parser/core/Parser'
 import {ResourceGraphs} from '../ResourceGraphs'
 
@@ -43,9 +42,6 @@ export abstract class AbstractGauge {
 
 	/** Reset any values stored within the gauge to their initial state. */
 	abstract reset(): void
-
-	/** Generate a dataset suitable for use in ChartJS */
-	generateDataset(): ChartDataSets | undefined { return undefined }
 
 	generateResourceGraph(): void { return }
 }
