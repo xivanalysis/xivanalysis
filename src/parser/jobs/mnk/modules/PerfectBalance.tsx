@@ -7,10 +7,10 @@ import {Analyser} from 'parser/core/Analyser'
 import {EventHook} from 'parser/core/Dispatcher'
 import {filter, oneOf} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
-import {Actors} from 'parser/core/modules/Actors'
 import {Data} from 'parser/core/modules/Data'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
+import {FORM_SKILLS} from './constants'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 import {fillActions} from './utilities'
 
@@ -26,8 +26,9 @@ const PB_BAD_ACTIONS: ActionKey[] = [
 ]
 
 interface Balance {
-	stacks: number
 	bads: number
+	stacks: number
+	used: number
 }
 
 export class PerfectBalance extends Analyser {
@@ -36,17 +37,20 @@ export class PerfectBalance extends Analyser {
 	static override title = t('mnk.pb.title')`Perfect Balance`
 	static override displayOrder = DISPLAY_ORDER.PERFECT_BALANCE
 
-	@dependency private actors!: Actors
 	@dependency private data!: Data
 	@dependency private suggestions!: Suggestions
 
 	private badActions: number[] = []
+	private formActions: number[] = []
+
 	private current: Balance | undefined
 	private history: Balance[] = []
+
 	private perfectHook?: EventHook<Events['action']>
 
 	override initialise() {
 		this.badActions = fillActions(PB_BAD_ACTIONS, this.data)
+		this.formActions = fillActions(FORM_SKILLS, this.data)
 
 		const playerFilter = filter<Event>().source(this.parser.actor.id)
 		this.addEventHook(playerFilter.type('statusApply').status(this.data.statuses.PERFECT_BALANCE.id), this.onStacc)
@@ -58,12 +62,13 @@ export class PerfectBalance extends Analyser {
 	private onCast(event: Events['action']): void {
 		const action = this.data.getAction(event.action)
 
-		if (!(action?.onGcd ?? false)) {
-			return
-		}
+		if (action == null || !(action.onGcd ?? false)) { return }
 
-		if (this.current && this.actors.current.hasStatus(this.data.statuses.PERFECT_BALANCE.id)) {
-			this.current.bads++
+		if (this.current) {
+			this.current.used++
+
+			// Additionally flag any bad GCDs
+			if (this.badActions.includes(action.id)) { this.current.bads++ }
 		}
 	}
 
@@ -73,14 +78,14 @@ export class PerfectBalance extends Analyser {
 
 		// New window who dis - check for new window before updating just in case
 		if (event.data === this.data.statuses.PERFECT_BALANCE.stacksApplied) {
-			this.current = {bads: 0, stacks: event.data}
+			this.current = {bads: 0, stacks: event.data, used: 0}
 
 			// Create the hook to check GCDs in PB
 			this.perfectHook = this.addEventHook(
 				filter<Event>()
 					.source(this.parser.actor.id)
 					.type('action')
-					.action(oneOf(this.badActions)),
+					.action(oneOf([...this.badActions, ...this.formActions])),
 				this.onCast,
 			)
 
@@ -119,8 +124,8 @@ export class PerfectBalance extends Analyser {
 		// Close up if PB was active at the end of the fight
 		this.stopAndSave()
 
-		// Stacks counts down, so drops+stacks will be adding remaining stacks that are unused
-		const droppedGcds = this.history.reduce((drops, current) => drops + current.stacks, 0)
+		// Stacks are hard set instead of being subtracted, so we need to take used from max rather than raw remaining
+		const droppedGcds = this.history.reduce((drops, current) => drops + (current.used - this.data.statuses.PERFECT_BALANCE.stacksApplied), 0)
 		const badActions = this.history.reduce((bads, current) => bads + current.bads, 0)
 
 		this.suggestions.add(new TieredSuggestion({
