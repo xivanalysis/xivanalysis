@@ -20,6 +20,7 @@ export default class Gauge extends CoreGauge {
 
 	private oathGauge = this.add(new CounterGauge({
 		chart: {label: 'Oath Gauge', color: JOBS.PALADIN.colour},
+		graph: {label: 'Oath Gauge', color: JOBS.PALADIN.colour, collapse: false},
 	}))
 	private oathModifiers = new Map<number, GaugeModifier>([
 		[this.data.actions.ATTACK.id, {action: 5}],
