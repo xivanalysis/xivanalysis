@@ -36,7 +36,6 @@ export class Gauge extends CoreGauge {
 	@dependency private suggestions!: Suggestions
 
 	private beastGauge = this.add(new CounterGauge({
-		chart: {label: 'Beast Gauge', color: JOBS.WARRIOR.colour},
 		graph: {label: 'Beast Gauge', color: JOBS.WARRIOR.colour, collapse: false},
 	}))
 	private beastGaugeModifiers = new Map<number, GaugeModifier>([
