@@ -46,8 +46,6 @@ export class PerfectBalance extends Analyser {
 	private current: Balance | undefined
 	private history: Balance[] = []
 
-	private maxStacks: number = 0
-
 	private perfectHook?: EventHook<Events['action']>
 
 	override initialise() {
@@ -79,7 +77,7 @@ export class PerfectBalance extends Analyser {
 		if (event.data == null) { return }
 
 		// New window who dis - check for new window before updating just in case
-		if (event.data === this.maxStacks) {
+		if (event.data === this.data.statuses.PERFECT_BALANCE.stacksApplied) {
 			this.current = {bads: 0, stacks: event.data, used: 0}
 
 			// Create the hook to check GCDs in PB
@@ -127,7 +125,7 @@ export class PerfectBalance extends Analyser {
 		this.stopAndSave()
 
 		// Stacks are hard set instead of being subtracted, so we need to take used from max rather than raw remaining
-		const droppedGcds = this.history.reduce((drops, current) => drops + (current.used - this.maxStacks), 0)
+		const droppedGcds = this.history.reduce((drops, current) => drops + (current.used - this.data.statuses.PERFECT_BALANCE.stacksApplied), 0)
 		const badActions = this.history.reduce((bads, current) => bads + current.bads, 0)
 
 		this.suggestions.add(new TieredSuggestion({
