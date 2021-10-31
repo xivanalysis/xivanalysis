@@ -1,7 +1,9 @@
 import {Trans} from '@lingui/react'
-import {ActionLink} from 'components/ui/DbLink'
-import {CastEvent} from 'fflogs'
-import Module, {dependency} from 'parser/core/Module'
+import {DataLink} from 'components/ui/DbLink'
+import {Event, Events} from 'event'
+import {Analyser} from 'parser/core/Analyser'
+import {filter} from 'parser/core/filter'
+import {dependency} from 'parser/core/Injectable'
 import {Data} from 'parser/core/modules/Data'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
@@ -13,7 +15,7 @@ const SEVERITY_MOD = {
 }
 
 // Lifted from WHM benison and adapted to AST and TSX
-export default class CelestialIntersection extends Module {
+export default class CelestialIntersection extends Analyser {
 	static override handle = 'celestialintersection'
 
 	@dependency private data!: Data
@@ -23,14 +25,17 @@ export default class CelestialIntersection extends Module {
 	private uses = 0
 	private totalHeld = 0
 
-	protected override init() {
-		this.addEventHook('cast', {abilityId: this.data.actions.CELESTIAL_INTERSECTION.id, by: 'player'}, this.onCast)
+	override initialise() {
+		this.addEventHook(filter<Event>()
+			.source(this.parser.actor.id)
+			.type('action')
+			.action(this.data.actions.CELESTIAL_INTERSECTION.id), this.onCast)
 		this.addEventHook('complete', this.onComplete)
 	}
 
-	private onCast(event: CastEvent) {
+	private onCast(event: Events['action']) {
 		this.uses++
-		if (this.lastUse === 0) { this.lastUse = this.parser.fight.start_time }
+		if (this.lastUse === 0) { this.lastUse = this.parser.pull.timestamp }
 
 		const held = event.timestamp - this.lastUse - this.data.actions.CELESTIAL_INTERSECTION.cooldown
 		if (held > 0) {
@@ -43,7 +48,7 @@ export default class CelestialIntersection extends Module {
 	onComplete() {
 		const holdDuration = this.uses === 0 ? this.parser.currentDuration : this.totalHeld
 		const usesMissed = Math.floor(holdDuration / (this.data.actions.CELESTIAL_INTERSECTION.cooldown))
-		const fightDuration = this.parser.fight.end_time - this.parser.fight.start_time
+		const fightDuration = this.parser.pull.duration
 		const maxUses = (fightDuration / this.data.actions.CELESTIAL_INTERSECTION.cooldown) - 1
 
 		const WASTED_USE_TIERS = {
@@ -56,12 +61,12 @@ export default class CelestialIntersection extends Module {
 			this.suggestions.add(new TieredSuggestion({
 				icon: this.data.actions.CELESTIAL_INTERSECTION.icon,
 				content: <Trans id="ast.celestial-intersection.suggestion.content">
-					Use <ActionLink {...this.data.actions.CELESTIAL_INTERSECTION} /> more frequently. Frequent uses can heal or mitigate a large amount of damage over the course of a fight, potentially resulting in fewer required healing GCDs.
+					Use <DataLink action="CELESTIAL_INTERSECTION" /> more frequently. Frequent uses can heal or mitigate a large amount of damage over the course of a fight, potentially resulting in fewer required healing GCDs.
 				</Trans>,
 				tiers: WASTED_USE_TIERS,
 				value: this.uses === 0 ? 100 : usesMissed,
 				why: <Trans id="ast.celestial-intersection.suggestion.why">
-					About {usesMissed} uses of <ActionLink {...this.data.actions.CELESTIAL_INTERSECTION} /> were missed by holding it for at least a total of {this.parser.formatDuration(holdDuration)}.
+					About {usesMissed} uses of <DataLink action="CELESTIAL_INTERSECTION" /> were missed by holding it for at least a total of {this.parser.formatDuration(holdDuration)}.
 				</Trans>,
 			}))
 		}
