@@ -28,6 +28,7 @@ export default class Atonement extends Analyser {
 	protected potentialStacks: number = 0
 	protected currentStacks: number = 0
 	protected overcap: number = 0
+	protected droppedStacks: number = 0
 
 	override initialise() {
 
@@ -38,19 +39,37 @@ export default class Atonement extends Analyser {
 		}, () => this.stacksUsed++)
 
 		this.addEventHook({
-			type: 'combo',
-			source: this.parser.actor.id,
-			action: this.data.actions.ROYAL_AUTHORITY.id,
-		}, this.onGenerateStacks)
+			type: 'statusApply',
+			target: this.parser.actor.id,
+			status: this.data.statuses.SWORD_OATH.id,
+		}, this.onApplySwordOath)
+		this.addEventHook({
+			type: 'statusRemove',
+			target: this.parser.actor.id,
+			status: this.data.statuses.SWORD_OATH.id,
+		}, this.onRemoveSwordOath)
 
 		this.addEventHook('complete', this.onComplete)
 	}
 
-	private onGenerateStacks(): void {
-		// Tracking overcap in case someone wants to do something with it later
-		this.overcap += Math.max(this.currentStacks + STACKS_GAINED - MAX_STACKS, 0)
-		this.potentialStacks += STACKS_GAINED
-		this.currentStacks = Math.min(this.currentStacks + STACKS_GAINED, MAX_STACKS)
+	private onApplySwordOath(event: Events['statusApply']): void {
+		if (event.data == null) { return }
+
+		// Track potential uses & any overcap due to reapplication while the status was still active
+		if (event.data === this.data.statuses.SWORD_OATH.stacksApplied) {
+			this.overcap += this.currentStacks
+			this.potentialStacks += this.data.statuses.SWORD_OATH.stacksApplied
+		}
+
+		this.currentStacks = event.data
+	}
+
+	private onRemoveSwordOath(): void {
+		// If any stacks were left when the status fell off, keep track of those
+		if (this.currentStacks > 0) {
+			this.droppedStacks += this.currentStacks
+		}
+		this.currentStacks = 0
 	}
 
 	private onComplete() {
