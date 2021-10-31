@@ -832,7 +832,6 @@
   "ui.loading.report": "기록 불러오는 중",
   "war.about.description": "<0>이 분석기는 전사 실력을 늘릴 수 있도록 정보를 제공할 뿐만 아니라 전투에서 일어난 각 상황들을 자세하게 분석해드립니다.</0><1>만약 이상한 지적이 있거나 틀린정보가 있다면 저희 디스코드의 #support 채널을 통하여 리포트 해주십시오.</1>",
   "war.gauge.suggestions.loss.content": "원초 게이지가 초과되는것을 피하십시오. 전투 내내 손해본 원초 만큼 원초 기술 횟수 손해를 받습니다.",
-  "war.gauge.suggestions.loss.why": "원초 게이지 초과로 총 수치 {overCap} 를 손실함",
   "war.gauge.title": "원초 게이지",
   "war.ir.suggestions.badgcd.content": "<0/> 구간내에서 글쿨기는 오직 <1/>만 사용되어야 합니다. (적이 다수일 경우 <2/>)",
   "war.ir.suggestions.missedgcd.content": "<0/> 구간마다 5회의 글쿨기를 포함하는것을 목표하십시오. 공격을 놓치지 않고 글쿨이 밀리지 않는데도 불구하고 5회를 맞추지 못한다면 기술 시전 속도를 높여보십시오.",
