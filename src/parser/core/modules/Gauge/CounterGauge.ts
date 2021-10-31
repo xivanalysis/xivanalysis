@@ -60,7 +60,11 @@ export class CounterGauge extends AbstractGauge {
 	reset() {
 		// NOTE: This assumes counters always reset to their minimum value.
 		// Should that not be the case, probbaly needs a `resetTo` value.
-		this.set(this.minimum)
+		this.set(this.minimum, 'reset')
+	}
+
+	raise() {
+		this.set(this.minimum, 'init')
 	}
 
 	/** Modify the current value by the provided amount. Equivalent to `set(currentValue + amount)` */

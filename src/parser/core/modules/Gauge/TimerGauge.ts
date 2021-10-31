@@ -159,6 +159,8 @@ export class TimerGauge extends AbstractGauge {
 		}
 	}
 
+	raise() { /** noop */ }
+
 	private onExpiration = () => {
 		if (this.expirationCallback) {
 			this.expirationCallback()
