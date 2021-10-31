@@ -114,7 +114,7 @@ export class CounterGauge extends AbstractGauge {
 	}
 
 	private pushHistory() {
-		const timestamp = this.parser.currentTimestamp
+		const timestamp = this.parser.currentEpochTimestamp
 
 		// Ensure we're not generating multiple entries at the samt timestamp
 		const prevTimestamp = this.history.length
@@ -160,7 +160,7 @@ export class CounterGauge extends AbstractGauge {
 
 		// Map the data into something the chart will understand
 		const data = this.history.map(entry => ({
-			t: entry.timestamp - this.parser.eventTimeOffset,
+			t: entry.timestamp - this.parser.pull.timestamp,
 			y: entry.value,
 		}))
 
