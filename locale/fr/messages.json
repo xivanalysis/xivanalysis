@@ -861,7 +861,6 @@
   "ui.loading.report": "Chargement du rapport",
   "war.about.description": "<0> Cet analyseur a pour but d'identifier certaines des actions qui pourraient être utilisés pour améliorer votre gameplay WAR, ainsi que de donner un aperçu plus approfondi de ce qui s'est passé lors d'une rencontre.</0><1>Si vous remarquez quelque chose qui semble particulièrement mauvais, veuillez visiter notre serveur Discord et le signaler dans le canal #support.</1>",
   "war.gauge.suggestions.loss.content": "Évitez de laisser votre Jauge de la Bête se surcharger - les ressources perdues peuvent vous coûter l'utilisation d'une compétence sur la longueur du combat.",
-  "war.gauge.suggestions.loss.why": "{overCap} Jauge de la Bête perdue par une surcharge.",
   "war.gauge.title": "Jauge de la bête",
   "war.ir.suggestions.badgcd.content": "GCDs utilisés durant <0/> doivent être limités à <1/> pour des dégâts optimaux (ou <2/> si trois ou plus de cibles sont présentes).",
   "war.ir.suggestions.missedgcd.content": "Essayez d'utiliser 5 GCDs à chaque <0/> fenêtre . Si vous ne pouvez pas le faire avec un temps de fonctionnement complet et sans clipper, pensez à ajuster vos rotations pour plus de vitesse de lancement d’habilité.",
