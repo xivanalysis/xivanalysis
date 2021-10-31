@@ -45,9 +45,8 @@ export interface ResourceGroupOptions extends ResourceGraphOptions {
 	handle: string,
 }
 
-/** Exporting these as constants in case other code has a use for them (See CounterGauge's use of GAUGE_HANDLE) */
-export const RESOURCE_HANDLE: string = 'resources'
-export const GAUGE_HANDLE: string = 'gauges'
+const RESOURCE_HANDLE: string = 'resources'
+const GAUGE_HANDLE: string = 'gauges'
 
 export class ResourceGraphs extends Analyser {
 	static override handle = 'resourceGraphs'
