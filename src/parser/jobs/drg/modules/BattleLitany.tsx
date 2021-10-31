@@ -41,6 +41,8 @@ class BLWindow {
 	}
 }
 
+// Analyser port note:
+// - hoping to use new BuffWindow module to handle this logic
 // in this module we only want to track battle litany windows opened by
 // the character selected for analysis. windows that clip into or overwrite other
 // DRG litanies will be marked.

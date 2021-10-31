@@ -419,7 +419,7 @@
   "drg.blood.no-delay-explain": "This window cannot be delayed due to downtime occurring at {0}. This window would otherwise be delayed for better buff alignment.",
   "drg.blood.no-nastrond-explain": "You missed one or more uses of <0/> during this window.",
   "drg.blood.no-stardiver-explain": "You did not use <0/> during this window.",
-  "drg.blood.suggestions.buffed-stardiver": "Try to ensure that <0/> always lands while at least one of <1/>, <2/>, or <3/> is active. Depending on the fight specifics, this may not always be possible. See the <4><5/></4> module below for details.",
+  "drg.blood.suggestions.buffed-stardiver": "Try to ensure that <0/> always lands while at least one of <1/>, <2/>, or <3/> is active. Depending on the fight specifics, this may not always be possible. See the Timeline module below for details.",
   "drg.blood.suggestions.buffsed-stardiver.why": "When <0/> could have been buffed, you used it {noBuffSd, plural, one {# time} other {# times}} without a buff.",
   "drg.blood.suggestions.eyes.content": "Avoid using <0/> when you already have {MAX_EYES} Eyes. Wasting Eyes will delay your Life of the Dragon windows and potentially cost you a lot of DPS.",
   "drg.blood.suggestions.eyes.why": "You used Mirage Dive {0, plural, one {# time} other {# times}} when you already had {MAX_EYES} Eyes.",
