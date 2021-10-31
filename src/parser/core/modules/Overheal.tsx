@@ -107,7 +107,7 @@ export class Overheal extends Analyser {
 	static override debug = false
 
 	@dependency private checklist!: Checklist
-	@dependency private data!: Data
+	@dependency protected data!: Data
 	@dependency private suggestions!: Suggestions
 	@dependency private statistics!: Statistics
 
