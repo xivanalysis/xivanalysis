@@ -28,6 +28,27 @@ export interface ResourceDataGroup {
 	row: SimpleRow
 }
 
+/**
+ * Note: handle is not included in this interface to allow CounterGauges to opt out of passing it in.
+ * If handle is not passed, the code there will assign the data to the default Gauges group.
+ */
+export interface ResourceGraphOptions {
+	/** The label to display for this group of data */
+	label: ReactNode,
+	/** Should this group default to collapsed? If not included, the default is yes */
+	collapse?: boolean,
+	/** Should this group be forced to remain collapsed. If not included, the default is no */
+	forceCollapsed?: boolean
+}
+export interface ResourceGroupOptions extends ResourceGraphOptions {
+	/** The handle for this group of data */
+	handle: string,
+}
+
+/** Exporting these as constants in case other code has a use for them (See CounterGauge's use of GAUGE_HANDLE) */
+export const RESOURCE_HANDLE: string = 'resources'
+export const GAUGE_HANDLE: string = 'gauges'
+
 export class ResourceGraphs extends Analyser {
 	static override handle = 'resourceGraphs'
 
@@ -40,7 +61,10 @@ export class ResourceGraphs extends Analyser {
 	constructor(...args: AnalyserOptions) {
 		super(...args)
 
-		this.addDataGroup('resources', <Trans id="core.resource-graphs.row-label">Resources</Trans>)
+		this.addDataGroup({
+			handle: RESOURCE_HANDLE,
+			label: <Trans id="core.resource-graphs.row-label">Resources</Trans>,
+		})
 		const {timestamp, duration} = this.parser.pull
 
 		this.scaleX = scaleUtc()
@@ -51,20 +75,18 @@ export class ResourceGraphs extends Analyser {
 	/**
 	 * Shorthand accessor for addData with the default resources group
 	 * @param resource The ResourceData to add
-	 * @param collapse Set the default collapse state of the resources group, if the group must be created. Defaults to collapsed
 	 */
-	public addResource(resource: ResourceData, collapse: boolean = true) {
-		this.addData('resources', resource, collapse)
+	public addResource(resource: ResourceData) {
+		this.addResources(resource.label, [resource])
 	}
 
 	/**
 	 * Shorthand accessor for addDatas with the default resources group, if adding data to display on the same sub-row
 	 * @param label The sub-row label
 	 * @param resources The array of ResourceData to add
-	 * @param collapse Set the default collapse state of the resources group, if the group must be created. Defaults to collapsed
 	 */
-	public addResources(label: ReactNode, resources: ResourceData[], collapse: boolean = true) {
-		this.addDatas('resources', label, resources, collapse)
+	public addResources(label: ReactNode, resources: ResourceData[]) {
+		this.addDatas(RESOURCE_HANDLE, resources, label)
 	}
 
 	/**
@@ -83,12 +105,16 @@ export class ResourceGraphs extends Analyser {
 	 * @param collapse Set the default collapse state of the gauge group, if the group must be created. Defaults to collapsed
 	 */
 	public addGauges(label: ReactNode, gauges: ResourceData[], collapse: boolean = true) {
-		let gaugeGroup = this.dataGroups.get('gauges')
-		if (!gaugeGroup) {
-			gaugeGroup = this.addDataGroup('gauges', <Trans id="core.resource-graphs.gauge-label">Gauges</Trans>, collapse)
+		let gaugeGroup = this.dataGroups.get(GAUGE_HANDLE)
+		if (gaugeGroup == null) {
+			gaugeGroup = this.addDataGroup({
+				handle: GAUGE_HANDLE,
+				label: <Trans id="core.resource-graphs.gauge-label">Gauges</Trans>,
+				collapse,
+			})
 		}
 
-		this.addDatas('gauges', label, gauges)
+		this.addDatas(GAUGE_HANDLE, gauges, label)
 	}
 
 	/**
@@ -99,15 +125,16 @@ export class ResourceGraphs extends Analyser {
 	 * @param forceCollapsed If the group defaults to collapsed, sets whether it will be forced to stay collapsed. Defaults to false (allows expansion)
 	 * @returns A reference to the ResourceDataGroup that was added or updated
 	 */
-	public addDataGroup(handle: string, label: ReactNode, collapse: boolean = true, forceCollapsed: boolean = false): ResourceDataGroup {
+	public addDataGroup(opts: ResourceGroupOptions): ResourceDataGroup {
+		const {handle, label, collapse, forceCollapsed} = opts
 		let resourceData = this.dataGroups.get(handle)
-		if (!resourceData) {
+		if (resourceData == null) {
 			const resourceRow = new SimpleRow({
 				label,
 				order: -200,
 				height: 64,
-				collapse,
-				forceCollapsed,
+				collapse: (collapse ?? true),
+				forceCollapsed: (forceCollapsed ?? false),
 				items: [new SimpleItem({
 					content: <MarkerHandler handle={handle} getData={this.getDataByHandle} />,
 					start: 0,
@@ -130,25 +157,23 @@ export class ResourceGraphs extends Analyser {
 	}
 
 	/**
-	 * Adds one ResourceData object to the specified group, creating the group if necessary
+	 * Adds one ResourceData object to the specified group
 	 * @param handle The handle of the group to add this data to
 	 * @param data The ResourceData object to add to the group
-	 * @param collapse Set the default collapse state of the group, if the group must be created. Defaults to collapsed
 	 */
-	public addData(handle: string, data: ResourceData, collapse: boolean = true): void {
-		this.addDatas(handle, data.label, [data], collapse)
+	public addData(handle: string, data: ResourceData): void {
+		this.addDatas(handle, [data], data.label)
 	}
 	/**
-	 * Adds a list of ResourceData objects to the specified group, creating the group if necessary
+	 * Adds a list of ResourceData objects to the specified group
 	 * @param handle The handle of the group to add these data to
-	 * @param label The label for these data within the group. Will also be the label for the group if the group did not previously exist
+	 * @param label The label for these data within the group
 	 * @param data The array of ResourceData objects to add to the group
-	 * @param collapse Set the default collapse state of the group, if the group must be created. Defaults to collapsed
 	 */
-	public addDatas(handle: string, label: ReactNode, data: ResourceData[], collapse: boolean = true): void {
-		let dataGroup = this.dataGroups.get(handle)
-		if (!dataGroup) {
-			dataGroup = this.addDataGroup(handle, label, collapse)
+	public addDatas(handle: string, data: ResourceData[], label: ReactNode): void {
+		const dataGroup = this.dataGroups.get(handle)
+		if (dataGroup == null) {
+			return
 		}
 
 		data.forEach(data => dataGroup?.data.push(data))
