@@ -3,7 +3,6 @@ import {Analyser} from 'parser/core/Analyser'
 import {dependency} from 'parser/core/Injectable'
 import {ResourceGraphs} from '../ResourceGraphs'
 import {AbstractGauge} from './AbstractGauge'
-import {CounterGauge} from './CounterGauge'
 import {TimerGauge} from './TimerGauge'
 
 export class Gauge extends Analyser {
@@ -33,9 +32,7 @@ export class Gauge extends Analyser {
 			gauge.setRemoveTimestampHook(this.removeTimestampHook.bind(this))
 		}
 
-		if (gauge instanceof CounterGauge) {
-			gauge.setResourceGraphs(this.resourceGraphs)
-		}
+		gauge.setResourceGraphs(this.resourceGraphs)
 
 		this.gauges.push(gauge)
 		return gauge
