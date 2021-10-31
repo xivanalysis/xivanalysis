@@ -375,7 +375,6 @@
   "drg.blood.no-delay-explain": "이 구간은 {0} 에 발생하는 쉬는 구간 때문에 미뤄질 수 없습니다. 만약에 그렇지 않다면 파티 버프 정렬을 위해 미뤄질 수 있습니다",
   "drg.blood.no-nastrond-explain": "구간내에서최소 1회 이상 <0/> 사용을 하지 않았습니다.",
   "drg.blood.no-stardiver-explain": "해당 구간에서 <0/>를 사용하지 않았습니다.",
-  "drg.blood.suggestions.buffed-stardiver": "<0/>를 사용할 때 최소한 <1/>, <2/> 혹은 <3/>이 적용되어 있는 상황에서 사용하는것을 목표하십시오. 특정 전투에선 불가능할 수 있습니다. <4><5/></4> 모듈을 점검하여 자세한 내역을 확인해보십시오.",
   "drg.blood.suggestions.buffsed-stardiver.why": "<0/>이 버프로 강화될 수 있는데도 불구하고 {noBuffSd, plural, one {# 회} other {# 회}}를 버프 없이 사용하였습니다.",
   "drg.blood.suggestions.eyes.content": "{MAX_EYES} 개의 눈이 있는 상태에서 <0/>를 사용하지 마세요. 눈을 낭비하는 것은 붉은 용혈 구간을 늦추며 상당한 DPS 손실이 될 가능성이 큽니다.",
   "drg.blood.suggestions.eyes.why": "이미 {MAX_EYES} 개의 눈이 있는 상태에서 {0, plural, one {#회} other {#회}}의 환영 강타를 사용했습니다.",
