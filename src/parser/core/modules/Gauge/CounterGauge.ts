@@ -25,17 +25,21 @@ export interface CounterGaugeOptions extends AbstractGaugeOptions {
 	maximum?: number,
 	/** Graph options. Omit to disable graphing in the timeline for this gauge. */
 	graph?: GaugeGraphOptions
+	/** Should this gauge correct its history in the event of underflow? Must pass true to enable */
+	correctHistory?: boolean
 }
 
 export class CounterGauge extends AbstractGauge {
+	private initialValue: number
 	private _value: number
 	private minimum: number
 	private maximum: number
 	overCap: number = 0
+	private correctHistory: boolean
 
 	private graphOptions?: GaugeGraphOptions
 
-	private history: CounterHistory[] = []
+	public history: CounterHistory[] = []
 
 	get value(): number {
 		return this._value
@@ -45,8 +49,10 @@ export class CounterGauge extends AbstractGauge {
 		super(opts)
 
 		this.minimum = opts.minimum || 0
-		this._value = opts.initialValue || this.minimum
+		this.initialValue = opts.initialValue || this.minimum
+		this._value = this.initialValue
 		this.maximum = opts.maximum || 100
+		this.correctHistory = opts.correctHistory || false
 
 		this.graphOptions = opts.graph
 	}
@@ -69,20 +75,55 @@ export class CounterGauge extends AbstractGauge {
 
 	/** Modify the current value by the provided amount. Equivalent to `set(currentValue + amount)` */
 	modify(amount: number) {
-		this.set(this._value + amount)
+		if (amount === 0) { return }
+		this.set(this._value + amount, undefined, Math.abs(amount))
 	}
 
 	/** Set the current value of the gauge. Value will automatically be bounded to valid values. Value over the maximum will be tracked as overcap. */
-	set(value: number) {
-		this._value = Math.min(Math.max(value, this.minimum), this.maximum)
-
-		// TODO: underflow means tracking was out of sync - look into backtracking to adjust history?
-		const diff = value - this._value
-		if (diff > 0) {
-			this.overCap += diff
+	set(value: number, type?: GaugeEventType, delta?: number) {
+		if (type == null) {
+			if (value > this.value) {
+				type = 'generate'
+			} else {
+				type = 'spend'
+			}
 		}
 
-		this.pushHistory()
+		const newValue = Math.min(Math.max(value, this.minimum), this.maximum)
+
+		const diff = value - newValue
+		if (diff > 0) {
+			this.overCap += diff
+		} else if (diff < 0 && delta != null && this.correctHistory) {
+			this.correctGaugeHistory(delta, this._value)
+		}
+
+		this._value = newValue
+		this.pushHistory(type)
+	}
+
+	private correctGaugeHistory(spenderCost: number, currentGauge: number) {
+		// Get the last generation event we've recorded
+		const lastGeneratorIndex = _.findLastIndex(this.history, event => event.type === 'generate' || event.type === 'init')
+
+		// Add the amount we underran the simulation by to the last generation event, and all events through the current one
+		const underrunAmount = Math.abs(currentGauge - spenderCost)
+		for (let i = lastGeneratorIndex; i < this.history.length; i++) {
+			this.history[i].value += underrunAmount
+		}
+
+		// If the last generator was also the first event (dungeons with stocked resources, etc.), we're done
+		if (lastGeneratorIndex === 0) {
+			return
+		}
+
+		// Find the first spender or init event previous to the last generator we already found, and smooth the graph between the two events by adding a proportional amount of the underrun value to each event
+		const previousSpenderIndex = _.findLastIndex(this.history.slice(0, lastGeneratorIndex), event =>
+			(event.type === 'spend' || event.type === 'init' || event.type === 'changeBounds'))
+		const adjustmentPerEvent = underrunAmount / (lastGeneratorIndex - previousSpenderIndex)
+		for (let i = previousSpenderIndex + 1; i < lastGeneratorIndex; i ++) {
+			this.history[i].value += adjustmentPerEvent * (i - previousSpenderIndex)
+		}
 	}
 
 	/** Set a new minimum value for the gauge. Equivalent to `setBounds(newMin, currentMax)`. */
