@@ -358,7 +358,6 @@
   "drg.blood.no-delay-explain": "Dieses Zeitfenster can nicht verzögert werden wegen der untätigen Zeit während {0}. Ansonsten würde dieses Zeitfenster verzögert werden für besseres Aneinanderreihen von Buffs.",
   "drg.blood.no-nastrond-explain": "Du hast einen oder mehrere Nutzen von <0/> während dieses Zeitfensters verpasst.",
   "drg.blood.no-stardiver-explain": "Du hast nicht <0/> während dieses Zeitfensters genutzt.",
-  "drg.blood.suggestions.buffed-stardiver": "Versuche sicherzugehen, dass <0/> trifft während wenigsten eines von <1/>, <2/> oder <3/> aktiv ist. Abhängig vom Kampf kann das eventuell nicht möglich sein. Siehe <4><5/></4> für Details.",
   "drg.blood.suggestions.buffsed-stardiver.why": "Als <0/> gebufft werden könnte, hast du es {noBuffSd, plural, one {# time} other {# mal}} nicht gebufft genutzt.",
   "drg.blood.suggestions.eyes.content": "Vermeide es, <0/> zu benutzen, wenn du schon {MAX_EYES} Augen hast. Verschwendete Augen verzögern dein Drachengeist-Fenster und kosten potenziell eine Menge DPS.",
   "drg.blood.suggestions.eyes.why": "Du hast Illusionssprung {0, plural, one {# mal} other {# mal}} benutzt, während du schon {MAX_EYES} Augen hattest.",
