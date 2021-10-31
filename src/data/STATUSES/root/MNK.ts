@@ -7,6 +7,7 @@ export const MNK = ensureStatuses({
 		name: 'Perfect Balance',
 		icon: 'https://xivapi.com/i/010000/010217.png',
 		duration: 10000,
+		stacksApplied: 0,
 	},
 
 	OPO_OPO_FORM: {
