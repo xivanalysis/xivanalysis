@@ -101,7 +101,7 @@ export class CounterGauge extends AbstractGauge {
 		this.maximum = maximum
 
 		// Ensure the value remains within bounds by re-setting it
-		this.set(this._value)
+		this.set(this._value, 'changeBounds')
 	}
 
 	private pushHistory(type: GaugeEventType) {
