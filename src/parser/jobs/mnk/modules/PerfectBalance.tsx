@@ -58,14 +58,6 @@ export class PerfectBalance extends Analyser {
 		this.addEventHook(playerFilter.type('statusApply').status(this.data.statuses.PERFECT_BALANCE.id), this.onStacc)
 		this.addEventHook(playerFilter.type('statusRemove').status(this.data.statuses.PERFECT_BALANCE.id), this.onDrop)
 
-		// Hook death because we can't share a filter with statusRemove due to lack of status on death
-		this.addEventHook(
-			filter<Event>()
-				.type('death')
-				.actor(this.parser.actor.id),
-			this.onDrop,
-		)
-
 		this.addEventHook('complete', this.onComplete)
 	}
 
