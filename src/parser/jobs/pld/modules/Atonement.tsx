@@ -47,7 +47,8 @@ export default class Atonement extends Analyser {
 	}
 
 	private onGenerateStacks(): void {
-		this.overcap += Math.max(this.currentStacks + STACKS_GAINED - MAX_STACKS, 0) // Tracking overcap in case someone wants to do something with it later
+		// Tracking overcap in case someone wants to do something with it later
+		this.overcap += Math.max(this.currentStacks + STACKS_GAINED - MAX_STACKS, 0)
 		this.potentialStacks += STACKS_GAINED
 		this.currentStacks = Math.min(this.currentStacks + STACKS_GAINED, MAX_STACKS)
 	}
