@@ -1,7 +1,5 @@
-import Color from 'color'
 import _ from 'lodash'
-import {GAUGE_HANDLE, ResourceGraphOptions} from '../ResourceGraphs/ResourceGraphs'
-import {AbstractGauge, AbstractGaugeOptions} from './AbstractGauge'
+import {AbstractGauge, AbstractGaugeOptions, GaugeGraphOptions} from './AbstractGauge'
 
 interface CounterHistory {
 	timestamp: number
@@ -18,14 +16,7 @@ export interface CounterGaugeOptions extends AbstractGaugeOptions {
 	/** Maximum value of the gauge. Defaults to 100. Value over the maximum will be considered over cap, and tracked if enabled. */
 	maximum?: number,
 	/** Graph options. Omit to disable graphing in the timeline for this gauge. */
-	graph?: CounterGraphOptions
-}
-
-export interface CounterGraphOptions extends ResourceGraphOptions {
-	/** The handle of the timeline group to display this gauge data in. If not passed, will use the default "Gauges" group */
-	handle?: string
-	/** The color to draw the data set in */
-	color: string | Color
+	graph?: GaugeGraphOptions
 }
 
 export class CounterGauge extends AbstractGauge {
@@ -34,7 +25,7 @@ export class CounterGauge extends AbstractGauge {
 	private maximum: number
 	overCap: number = 0
 
-	private graphOptions?: CounterGraphOptions
+	private graphOptions?: GaugeGraphOptions
 
 	private history: CounterHistory[] = []
 
@@ -124,19 +115,19 @@ export class CounterGauge extends AbstractGauge {
 	override generateResourceGraph() {
 		if (this.graphOptions == null) { return }
 
+		const {handle, color, label, collapse} = this.graphOptions
 		const graphData = {
-			label: this.graphOptions.label,
-			colour: this.graphOptions.color,
+			label,
+			colour: color,
 			data: this.history.map(entry => {
 				return {time: entry.timestamp, current: entry.value, maximum: entry.maximum}
 			}),
 		}
-		if (this.graphOptions.handle != null) {
-			this.resourceGraphs.addDataGroup({...this.graphOptions, handle: this.graphOptions.handle})
-			this.resourceGraphs.addData(this.graphOptions.handle, graphData)
+		if (handle != null) {
+			this.resourceGraphs.addDataGroup({...this.graphOptions, handle})
+			this.resourceGraphs.addData(handle, graphData)
 		} else {
-			this.graphOptions.handle = GAUGE_HANDLE
-			this.resourceGraphs.addGauge(graphData, this.graphOptions.collapse)
+			this.resourceGraphs.addGauge(graphData, collapse)
 		}
 	}
 }

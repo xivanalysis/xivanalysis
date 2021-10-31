@@ -1,7 +1,6 @@
-import {ChartDataSets} from 'chart.js'
-import Color from 'color'
 import {Analyser} from 'parser/core/Analyser'
-import {AbstractGauge, AbstractGaugeOptions} from './AbstractGauge'
+import {ResourceDatum} from '../ResourceGraphs'
+import {AbstractGauge, AbstractGaugeOptions, GaugeGraphOptions} from './AbstractGauge'
 
 function expectExist<T>(value?: T) {
 	if (!value) {
@@ -24,17 +23,8 @@ export interface TimerGaugeOptions extends AbstractGaugeOptions {
 	/** Callback executed when the timer expires. */
 	onExpiration?: () => void
 
-	/** Chart options. Omit to disable charting for this gauge. */
-	chart?: TimerChartOptions,
-}
-
-// TODO: Some of this will be shared config with counter, etc. - look into sharing?
-export interface TimerChartOptions {
-	/** Label to display on the data set. */
-	label: string
-
-	/** Colour to draw the data set in. Defaults to grey. */
-	color?: string | Color
+	/** Graph options. Omit to disable graphing for this gauge. */
+	graph?: GaugeGraphOptions,
 }
 
 export class TimerGauge extends AbstractGauge {
@@ -42,7 +32,7 @@ export class TimerGauge extends AbstractGauge {
 	private readonly minimum = 0
 	private readonly maximum: number
 	private readonly expirationCallback?: () => void
-	private readonly chartOptions?: TimerChartOptions
+	private readonly graphOptions?: GaugeGraphOptions
 
 	private hook?: ReturnType<Analyser['addTimestampHook']>
 	private history: State[] = []
@@ -99,7 +89,7 @@ export class TimerGauge extends AbstractGauge {
 
 		this.maximum = opts.maximum
 		this.expirationCallback = opts.onExpiration
-		this.chartOptions = opts.chart
+		this.graphOptions = opts.graph
 	}
 
 	/** @inheritdoc */
@@ -176,33 +166,33 @@ export class TimerGauge extends AbstractGauge {
 	}
 
 	/** @inheritdoc */
-	override generateDataset() {
+	override generateResourceGraph() {
 		// Skip charting if they've not enabled it
-		if (!this.chartOptions) {
+		if (!this.graphOptions) {
 			return
 		}
 
 		// Translate state history into a dataset that makes sense for the chart
 		const startTime = this.parser.eventTimeOffset
 		const endTime = startTime + this.parser.pull.duration
-		const data: Array<{t: number, y?: number}> = []
+		const data: ResourceDatum[] = []
 		this.history.forEach(entry => {
 			const relativeTimestamp = entry.timestamp - startTime
 
 			// Adjust preceeding data for the start of this state's window
 			const {length} = data
-			if (length > 0 && relativeTimestamp < data[length - 1].t) {
+			if (length > 0 && relativeTimestamp < data[length - 1].time) {
 				// If we're updating prior to the previous entry's expiration, update the previous entry
 				// with its state at this point in time - we'll end up with two points showing the update on
 				// this timestamp.
 				const prev = data[length - 1]
-				prev.y = (prev.y || this.minimum / 1000) + ((prev.t - relativeTimestamp) / 1000)
-				prev.t = relativeTimestamp
+				prev.current = (prev.current || this.minimum / 1000) + ((prev.time - relativeTimestamp) / 1000)
+				prev.time = relativeTimestamp
 
 			} else {
 				// This window is starting fresh, not extending - insert a blank entry so the chart doesn't
 				// render a line from the previous.
-				data.push({t: relativeTimestamp})
+				data.push({time: relativeTimestamp, current: 0, maximum: this.maximum})
 			}
 
 			// Insert the data point for the start of this window.
@@ -210,8 +200,9 @@ export class TimerGauge extends AbstractGauge {
 			const chartY = (this.minimum + entry.remaining) / 1000
 			if (!entry.paused) {
 				data.push({
-					t: relativeTimestamp,
-					y: chartY,
+					time: relativeTimestamp,
+					current: chartY,
+					maximum: this.maximum,
 				})
 			}
 
@@ -221,28 +212,25 @@ export class TimerGauge extends AbstractGauge {
 				const time = Math.min(relativeTimestamp + entry.remaining, endTime - startTime)
 				const timeDelta = time - relativeTimestamp
 				data.push({
-					t: time,
-					y: (this.minimum + entry.remaining - timeDelta) / 1000,
+					time,
+					current: (this.minimum + entry.remaining - timeDelta) / 1000,
+					maximum: this.maximum,
 				})
 			}
 		})
 
-		const {label, color} = this.chartOptions
-		const dataSet: ChartDataSets = {
+		const {handle, label, color, collapse} = this.graphOptions
+		const graphData = {
 			label,
+			colour: color,
 			data,
-			lineTension: 0,
 		}
-
-		if (color) {
-			/* eslint-disable @typescript-eslint/no-magic-numbers */
-			const chartColor = Color(color)
-			dataSet.backgroundColor = chartColor.fade(0.8).toString()
-			dataSet.borderColor = chartColor.fade(0.5).toString()
-			/* eslint-enable @typescript-eslint/no-magic-numbers */
+		if (handle != null) {
+			this.resourceGraphs.addDataGroup({...this.graphOptions, handle})
+			this.resourceGraphs.addData(handle, graphData)
+		} else {
+			this.resourceGraphs.addGauge(graphData, collapse)
 		}
-
-		return dataSet
 	}
 
 	// Junk I wish I didn't need
