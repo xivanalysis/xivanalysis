@@ -6,7 +6,7 @@ import {EngagementDisplacementTracking} from './EngagementDisplacementTracking'
 import Gauge from './Gauge'
 import GeneralCDDowntime from './GeneralCDDowntime'
 import {Interrupts} from './Interrupts'
-import MeleeCombos from './MeleeCombos'
+//import MeleeCombos from './MeleeCombos'
 import MovementSkills from './MovementSkills'
 import Procs from './Procs'
 
@@ -21,7 +21,7 @@ export default [
 	Interrupts,
 	Procs,
 	Combos,
-	MeleeCombos,
+	//MeleeCombos,
 	MovementSkills,
 	Tincture,
 ]
