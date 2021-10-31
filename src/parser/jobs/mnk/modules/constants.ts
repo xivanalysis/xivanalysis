@@ -36,3 +36,9 @@ export const COEURL_SKILLS: ActionKey[] = [
 	'DEMOLISH',
 	'ROCKBREAKER',
 ]
+
+export const FORM_SKILLS: ActionKey[] = [
+	...OPO_OPO_SKILLS,
+	...RAPTOR_SKILLS,
+	...COEURL_SKILLS,
+]
