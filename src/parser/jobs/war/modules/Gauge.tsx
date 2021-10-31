@@ -65,7 +65,6 @@ export class Gauge extends CoreGauge {
 				.action(oneOf(beastActions)),
 			this.onGaugeModifier
 		)
-		this.addEventHook(playerFilter.type('combo').action(oneOf(beastActions)), this.onGaugeModifier)
 
 		const infuriateReducerIds = INFURIATE_REDUCERS.map(key => this.data.actions[key].id)
 		this.addEventHook(playerFilter.type('action').action(oneOf(infuriateReducerIds)), () => this.cooldowns.reduce('INFURIATE', INFURIATE_CDR))
@@ -88,17 +87,16 @@ export class Gauge extends CoreGauge {
 	}
 
 	private onComplete() {
-		const {overCap} = this.beastGauge
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.INFURIATE.icon,
 			content: <Trans id="war.gauge.suggestions.loss.content">
 					Avoid letting your Beast Gauge overcap - the wasted resources may cost you uses of your spenders over the course of the fight.
 			</Trans>,
 			why: <Trans id="war.gauge.suggestions.loss.why">
-				{overCap} beast gauge lost to an overcapped gauge.
+				{this.beastGauge.overCap} beast gauge lost to an overcapped gauge.
 			</Trans>,
 			tiers: BEAST_USAGE_SEVERITY,
-			value: overCap,
+			value: this.beastGauge.overCap,
 		}))
 	}
 }
