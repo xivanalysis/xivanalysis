@@ -1,4 +1,3 @@
-import math from 'mathjsCustom'
 import {DISPLAY_ORDER} from 'parser/core/Module'
 import {matchClosestLower} from 'utilities'
 
@@ -25,10 +24,9 @@ export default class Rule {
 	}
 
 	get percent() {
-		// WoWA has a bunch of different modes for this stuff, I'm just going to use mean for now. Because I'm mean. Hue.
-		// TODO: different requirement modes
-		const percents = this.requirements.map(requirement => requirement.percent)
-		return percents.length? math.mean(percents) : 0
+		const weightedPercents = this.requirements.reduce((aggregate, requirement) => aggregate + requirement.percent * requirement.weight, 0)
+		const totalWeight = this.requirements.reduce((aggregate, requirement) => aggregate + requirement.weight, 0)
+		return totalWeight !== 0 ? weightedPercents / totalWeight : 0
 	}
 
 	constructor(options) {

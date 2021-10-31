@@ -158,7 +158,7 @@ Array [
     "targets": Array [
       Object {
         "amount": 36194,
-        "overheal": 0,
+        "overheal": 36194,
         "sourceModifier": 2,
         "target": "3",
       },
@@ -363,6 +363,37 @@ Array [
       "y": 9999,
     },
     "timestamp": 1600107457863,
+    "type": "actorUpdate",
+  },
+]
+`;
+
+exports[`Event adapter individual events adapts heal 3`] = `
+Array [
+  Object {
+    "action": 3571,
+    "sequence": 4570,
+    "source": "3",
+    "target": "3",
+    "timestamp": 1600007412071,
+    "type": "execute",
+  },
+  Object {
+    "actor": "3",
+    "hp": Object {
+      "current": 122214,
+      "maximum": 122214,
+    },
+    "mp": Object {
+      "current": 9800,
+      "maximum": 10000,
+    },
+    "position": Object {
+      "bearing": -208,
+      "x": 9887,
+      "y": 10642,
+    },
+    "timestamp": 1600007412071,
     "type": "actorUpdate",
   },
 ]

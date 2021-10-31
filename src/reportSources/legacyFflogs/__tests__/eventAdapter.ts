@@ -328,6 +328,37 @@ const fakeEvents: Record<FflogsEvent['type'], FflogsEvent[]> = {
 			absorb: 43,
 		},
 		...fakeHitTypeFields,
+	},
+	{
+		timestamp: 7412071,
+		type: 'heal',
+		sourceID: 3,
+		sourceIsFriendly: true,
+		targetID: 3,
+		targetIsFriendly: true,
+		ability: {
+			name: 'Assize',
+			guid: 3571,
+			type: 1024,
+			abilityIcon: '002000-002634.png',
+		},
+		hitType: 2,
+		amount: 10000,
+		overheal: 26194,
+		packetID: 4570,
+		targetResources: {
+			hitPoints: 122214,
+			maxHitPoints: 122214,
+			mp: 9800,
+			maxMP: 10000,
+			tp: 0,
+			maxTP: 1000,
+			x: 9887,
+			y: 10642,
+			facing: -208,
+			absorb: 0,
+		},
+		...fakeHitTypeFields,
 	}],
 	begincast: [{
 		timestamp: 7446878,
@@ -920,5 +951,26 @@ describe('Event adapter', () => {
 			position: {x: 150, y: 50},
 		}])
 		/* eslint-enable @typescript-eslint/no-magic-numbers */
+	})
+
+	it('merges overheal from heal effect events to the matching heal event', () => {
+		const result = adaptEvents(report, pull, [
+			fakeEvents.calculatedheal[0],
+			fakeEvents.heal[2],
+		])
+
+		const heal = result.filter((event): event is Events['heal'] => event.type === 'heal')
+		// eslint-disable-next-line @typescript-eslint/no-magic-numbers
+		expect(heal[0].targets[0].overheal).toEqual(26194)
+	})
+
+	it('marks unmatched heal events as fully overheal', () => {
+		const result = adaptEvents(report, pull, [
+			fakeEvents.calculatedheal[0],
+		])
+
+		const heal = result.filter((event): event is Events['heal'] => event.type === 'heal')
+		// eslint-disable-next-line @typescript-eslint/no-magic-numbers
+		expect(heal[0].targets[0].overheal).toEqual(36194)
 	})
 })

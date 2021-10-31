@@ -1,8 +1,11 @@
 import {Trans} from '@lingui/react'
 import ACTIONS from 'data/ACTIONS'
-import {HealEvent} from 'fflogs'
-import Module, {dependency} from 'parser/core/Module'
+import {Event, Events} from 'event'
+import {Analyser} from 'parser/core/Analyser'
+import {filter, oneOf} from 'parser/core/filter'
+import {dependency} from 'parser/core/Injectable'
 import Checklist, {Requirement, TARGET, TieredRule} from 'parser/core/modules/Checklist'
+import {Data} from 'parser/core/modules/Data'
 import {DataSet, PieChartStatistic, Statistics} from 'parser/core/modules/Statistics'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
@@ -57,7 +60,7 @@ export class TrackedOverheal {
 	 * Get current overheal as a percentage
 	 */
 	get percent(): number {
-		if (this.heal > 0) { return 100 * (this.overheal) / (this.heal + this.overheal) }
+		if (this.heal > 0) { return 100 * (this.overheal / this.heal) }
 		return 0
 	}
 
@@ -93,16 +96,18 @@ export class TrackedOverheal {
 	 * Pushes a heal event in for tracking
 	 * @param event - The heal event to track
 	 */
-	pushHeal(event: HealEvent) {
-		this.heal += event.amount
-		this.overheal += event.overheal || 0
+	pushHeal(event: Events['heal']) {
+		this.heal += event.targets.reduce((total, target) => total + target.amount, 0)
+		this.overheal += event.targets.reduce((total, target) => total + target.overheal, 0)
 	}
 }
 
-export class CoreOverheal extends Module {
+export class Overheal extends Analyser {
 	static override handle: string = 'overheal'
+	static override debug = false
 
 	@dependency private checklist!: Checklist
+	@dependency private data!: Data
 	@dependency private suggestions!: Suggestions
 	@dependency private statistics!: Statistics
 
@@ -185,7 +190,7 @@ export class CoreOverheal extends Module {
 		return <Trans id="core.overheal.suggestion.why">You had an overheal of { overhealPercent.toFixed(2) }%</Trans>
 	}
 
-	protected override init() {
+	override initialise() {
 		this.direct = new TrackedOverheal({
 			name: this.overhealName,
 			color: this.overhealColor,
@@ -194,8 +199,12 @@ export class CoreOverheal extends Module {
 			this.trackedOverheals.push(new TrackedOverheal(healCategoryOpts))
 		}
 
-		this.addEventHook('heal', {by: 'player'}, this.onHeal)
-		this.addEventHook('heal', {by: 'pet'}, this.onPetHeal)
+		this.addEventHook(filter<Event>().type('heal').source(this.parser.actor.id), this.onHeal)
+
+		const actorPets = this.parser.pull.actors
+			.filter(actor => actor.owner != null && actor.owner.id === this.parser.actor.id)
+			.map(pet => pet.id)
+		this.addEventHook(filter<Event>().type('heal').source(oneOf(actorPets)), this.onPetHeal)
 		this.addEventHook('complete', this.onComplete)
 	}
 
@@ -205,7 +214,7 @@ export class CoreOverheal extends Module {
 	 * false ignores the heal entirely.
 	 * @param event
 	 */
-	protected considerHeal(_event: HealEvent, _pet: boolean = false): boolean {
+	protected considerHeal(_event: Events['heal'], _pet: boolean = false): boolean {
 		return true
 	}
 
@@ -217,26 +226,27 @@ export class CoreOverheal extends Module {
 		return <Trans id="core.overheal.rule.description">Avoid healing your party for more than is needed. Cut back on unnecessary heals and coordinate with your co-healer to plan resources efficiently.</Trans>
 	}
 
-	private isRegeneration(event: HealEvent): boolean {
-		return event.ability.guid === REGENERATION_ID
+	private isRegeneration(event: Events['heal']): boolean {
+		return event.cause.type === 'action' && event.cause.action === REGENERATION_ID
 	}
 
-	private onHeal(event: HealEvent, petHeal: boolean = false) {
+	private onHeal(event: Events['heal'], petHeal: boolean = false) {
 		if (this.isRegeneration(event) || ! this.considerHeal(event, petHeal)) { return }
 
-		const guid = event.ability.guid
+		const guid = event.cause.type === 'action' ? event.cause.action : event.cause.status
+		const name = event.cause.type === 'action' ? this.data.getAction(guid)?.name : this.data.getStatus(guid)?.name
 		for (const trackedHeal of this.trackedOverheals) {
 			if (trackedHeal.idIsTracked(guid)) {
-				this.debug(`Heal from ${event.ability.name} (${event.ability.guid}) at ${event.timestamp} matched into category ${trackedHeal.name.props.defaults}`)
+				this.debug(`Heal from ${name} (${guid}) at ${event.timestamp} matched into category ${trackedHeal.name.props.defaults}`)
 				trackedHeal.pushHeal(event)
 				return
 			}
 		}
-		this.debug(`Heal from ${event.ability.name} (${event.ability.guid}) at ${event.timestamp} matched into direct healing`)
+		this.debug(`Heal from ${name} (${guid}) at ${event.timestamp} matched into direct healing`)
 		this.direct.pushHeal(event)
 	}
 
-	private onPetHeal(event: HealEvent) {
+	private onPetHeal(event: Events['heal']) {
 		this.onHeal(event, true)
 	}
 
@@ -254,7 +264,7 @@ export class CoreOverheal extends Module {
 				overhealtotal += x.overheal
 			}
 		})
-		const overallOverhealPercent: number = 100 * overhealtotal / (healtotal + overhealtotal)
+		const overallOverhealPercent: number = 100 * overhealtotal / healtotal
 
 		if (this.displayPieChart) {
 			const directPercentage = this.percentageOf(this.direct.overheal, overhealtotal)
@@ -301,12 +311,14 @@ export class CoreOverheal extends Module {
 				requirements.push(new InvertedRequirement({
 					name: this.overhealName,
 					percent:  this.direct.percentInverted,
+					weight: 0,
 				}))
 
 				for (const trackedHeal of this.trackedOverheals) {
 					requirements.push(new InvertedRequirement({
 						name: trackedHeal.name,
 						percent: trackedHeal.percentInverted,
+						weight: 0,
 					}))
 				}
 			}
