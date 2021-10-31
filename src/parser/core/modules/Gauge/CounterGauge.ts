@@ -163,7 +163,11 @@ export class CounterGauge extends AbstractGauge {
 			? this.history[this.history.length - 1].timestamp
 			: NaN
 		if (timestamp === prevTimestamp) {
-			this.history.pop()
+			const prevEvent = this.history.pop()
+			// If we both spent and generated gauge at this timestamp, call it a spend to keep from backtracking past it
+			if (prevEvent?.type === 'spend') {
+				type = 'spend'
+			}
 		}
 
 		this.history.push({
