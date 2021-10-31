@@ -401,7 +401,6 @@
   "drg.blood.no-delay-explain": "この効果時間は{0} に発生する攻撃不可区間のため遅らせることができませんが、それが無ければバフに合わせるために遅らせます。",
   "drg.blood.no-nastrond-explain": "効果時間中に1回以上の<0/>使用ミスをしました。",
   "drg.blood.no-stardiver-explain": "<0/>を使いませんでした。",
-  "drg.blood.suggestions.buffed-stardiver": "<0/>を使用するときは<1/>, <2/>,<3/>のうち、少なくとも1つが有効かどうか確認するようにしてみてください。戦闘状況によってはこれは必ずしも可能ではないかもしれません。<4><5/></4>セクションで詳細を確認してください。",
   "drg.blood.suggestions.buffsed-stardiver.why": "<0/>をバフありで使えたときに、{noBuffSd, plural, other {# 回}}バフなしで使いました。",
   "drg.blood.suggestions.eyes.content": "</>がプロックしている時は<0/> と</> の使用は避けて下さい。使用すると上書きされ、紅の竜血になることを遅延させ、潜在的に多くのDPSを犠牲にする可能性があります。",
   "drg.blood.suggestions.eyes.why": "{MAX_EYES} があったのに、ミラージュダイブを {0, plural, other {# 回}}使ってしまいました。",
