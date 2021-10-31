@@ -55,10 +55,7 @@ export class Forms extends Analyser {
 		// Check the current form, or zero for no form
 		const currentForm = this.forms.find(form => this.actors.current.hasStatus(form)) || 0
 		const untargetable = this.lastFormChanged != null
-			? this.downtime.getDowntime(
-				this.parser.fflogsToEpoch(this.lastFormChanged),
-				this.parser.fflogsToEpoch(event.timestamp),
-			)
+			? this.downtime.getDowntime(this.lastFormChanged, event.timestamp)
 			: 0
 
 		if (action.id === this.data.actions.FORM_SHIFT.id) {
