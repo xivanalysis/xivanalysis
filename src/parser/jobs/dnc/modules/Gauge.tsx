@@ -1,6 +1,6 @@
 import {Plural, Trans} from '@lingui/react'
 import Color from 'color'
-import {ActionLink} from 'components/ui/DbLink'
+import {DataLink} from 'components/ui/DbLink'
 import {ActionKey} from 'data/ACTIONS'
 import JOBS from 'data/JOBS'
 import {StatusKey} from 'data/STATUSES'
@@ -259,7 +259,7 @@ export class Gauge extends CoreGauge {
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.SABER_DANCE.icon,
 			content: <Trans id="dnc.esprit.suggestions.overcapped-esprit.content">
-				You may have lost uses of <ActionLink {...this.data.actions.SABER_DANCE} /> due to overcapping your Esprit gauge. Make sure you use it, especially if your gauge is above 80.
+				You may have lost uses of <DataLink action="SABER_DANCE" /> due to overcapping your Esprit gauge. Make sure you use it, especially if your gauge is above 80.
 			</Trans>,
 			tiers: GAUGE_SEVERITY_TIERS,
 			value: missedSaberDances,
@@ -272,7 +272,7 @@ export class Gauge extends CoreGauge {
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.FAN_DANCE_III.icon,
 			content: <Trans id="dnc.feather-gauge.suggestions.overcapped-feathers.content">
-				You may have lost uses of your <ActionLink {...this.data.actions.FAN_DANCE} />s due to using one of your procs while already holding four feathers. Make sure to use a feather with <ActionLink showIcon={false} {...this.data.actions.FAN_DANCE} /> or <ActionLink showIcon={false} {...this.data.actions.FAN_DANCE_II} /> before using a proc to prevent overcapping.
+				You may have lost uses of your <DataLink action="FAN_DANCE" />s due to using one of your procs while already holding four feathers. Make sure to use a feather with <DataLink showIcon={false} action="FAN_DANCE" /> or <DataLink showIcon={false} action="FAN_DANCE_II" /> before using a proc to prevent overcapping.
 			</Trans>,
 			tiers: GAUGE_SEVERITY_TIERS,
 			value: featherOvercap,
