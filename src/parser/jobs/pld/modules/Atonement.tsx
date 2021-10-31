@@ -7,6 +7,8 @@ import Checklist, {TieredRule, TARGET, Requirement} from 'parser/core/modules/Ch
 import {Data} from 'parser/core/modules/Data'
 import React from 'react'
 
+// Yes they're the same now, but who knows what the future may bring?
+const MAX_STACKS = 3
 const STACKS_GAINED = 3
 
 // In seconds
@@ -23,7 +25,9 @@ export default class Atonement extends Analyser {
 	@dependency private data!: Data
 
 	protected stacksUsed: number = 0
-	protected stacksGained: number = 0
+	protected potentialStacks: number = 0
+	protected currentStacks: number = 0
+	protected overcap: number = 0
 
 	override initialise() {
 
@@ -34,12 +38,19 @@ export default class Atonement extends Analyser {
 		}, () => this.stacksUsed++)
 
 		this.addEventHook({
-			type: 'statusApply',
-			target: this.parser.actor.id,
-			status: this.data.statuses.SWORD_OATH.id,
-		}, () => this.stacksGained = this.stacksGained + STACKS_GAINED)
+			type: 'combo',
+			source: this.parser.actor.id,
+			action: this.data.actions.ROYAL_AUTHORITY.id,
+		}, this.onGenerateStacks)
 
 		this.addEventHook('complete', this.onComplete)
+	}
+
+	private onGenerateStacks(): void {
+		// Tracking overcap in case someone wants to do something with it later
+		this.overcap += Math.max(this.currentStacks + STACKS_GAINED - MAX_STACKS, 0)
+		this.potentialStacks += STACKS_GAINED
+		this.currentStacks = Math.min(this.currentStacks + STACKS_GAINED, MAX_STACKS)
 	}
 
 	private onComplete() {
@@ -56,7 +67,7 @@ export default class Atonement extends Analyser {
 					name: <Trans id="pld.atonement.checklist.requirement.atonement.name">
 						Uses of <ActionLink {...this.data.actions.ATONEMENT} /> out of possible uses
 					</Trans>,
-					overrideDisplay: `${this.stacksUsed} / ${this.stacksGained} (${this.getPercent().toFixed(2)}%)`,
+					overrideDisplay: `${this.stacksUsed} / ${this.potentialStacks} (${this.getPercent().toFixed(2)}%)`,
 					percent: this.getPercent(),
 				}),
 			],
@@ -65,7 +76,7 @@ export default class Atonement extends Analyser {
 
 	private getPercent() {
 		const actual = this.stacksUsed
-		const possible = this.stacksGained
+		const possible = this.potentialStacks
 		return ((actual/possible) * 100)
 	}
 
