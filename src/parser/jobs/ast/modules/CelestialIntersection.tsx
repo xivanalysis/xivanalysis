@@ -48,8 +48,8 @@ export default class CelestialIntersection extends Analyser {
 	onComplete() {
 		const holdDuration = this.uses === 0 ? this.parser.currentDuration : this.totalHeld
 		const usesMissed = Math.floor(holdDuration / (this.data.actions.CELESTIAL_INTERSECTION.cooldown))
-		const fightDuration = this.parser.pull.duration
-		const maxUses = (fightDuration / this.data.actions.CELESTIAL_INTERSECTION.cooldown) - 1
+		//TODO update max uses to not use the whole duration such as when there are no available targets
+		const maxUses = (this.parser.pull.duration / this.data.actions.CELESTIAL_INTERSECTION.cooldown) - 1
 
 		const WASTED_USE_TIERS = {
 			[maxUses * SEVERITY_MOD.MINOR]: SEVERITY.MINOR,
