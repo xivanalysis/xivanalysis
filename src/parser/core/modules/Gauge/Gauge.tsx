@@ -39,6 +39,7 @@ export class Gauge extends Analyser {
 		}
 
 		gauge.setResourceGraphs(this.resourceGraphs)
+		gauge.init()
 
 		this.gauges.push(gauge)
 		return gauge

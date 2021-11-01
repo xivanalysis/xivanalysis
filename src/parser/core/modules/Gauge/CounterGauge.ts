@@ -73,6 +73,19 @@ export class CounterGauge extends AbstractGauge {
 		this.set(this.minimum, 'init')
 	}
 
+	init() {
+		// Ensure we have a gauge init event, can't do in constructor because the parser reference might not be there yet
+		if (this.history.length === 0) {
+			this.history.push({
+				timestamp: this.parser.pull.timestamp,
+				value: this.initialValue,
+				minimum: this.minimum,
+				maximum: this.maximum,
+				type: 'init',
+			})
+		}
+	}
+
 	/** Modify the current value by the provided amount. Equivalent to `set(currentValue + amount)` */
 	modify(amount: number) {
 		if (amount === 0) { return }
@@ -146,16 +159,6 @@ export class CounterGauge extends AbstractGauge {
 	}
 
 	private pushHistory(type: GaugeEventType) {
-		// Ensure we have a gauge init event, can't do in constructor because the parser reference might not be there yet
-		if (this.history.length === 0) {
-			this.history.push({
-				timestamp: this.parser.pull.timestamp,
-				value: this.initialValue,
-				minimum: this.minimum,
-				maximum: this.maximum,
-				type: 'init',
-			})
-		}
 		const timestamp = this.parser.currentEpochTimestamp
 
 		// Ensure we're not generating multiple entries at the same timestamp

@@ -54,5 +54,7 @@ export abstract class AbstractGauge {
 
 	abstract raise(): void
 
+	abstract init(): void
+
 	generateResourceGraph(): void { return }
 }
