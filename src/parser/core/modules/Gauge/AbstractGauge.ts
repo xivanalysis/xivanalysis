@@ -1,3 +1,4 @@
+import {ChartDataSets} from 'chart.js'
 import Color from 'color'
 import Parser from 'parser/core/Parser'
 import {ResourceGraphs} from '../ResourceGraphs'
@@ -53,4 +54,6 @@ export abstract class AbstractGauge {
 	abstract reset(): void
 
 	generateResourceGraph(): void { return }
+
+	generateDataset(): ChartDataSets | undefined { return }
 }

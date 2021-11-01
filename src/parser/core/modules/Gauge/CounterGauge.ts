@@ -1,3 +1,5 @@
+import {ChartDataSets} from 'chart.js'
+import Color from 'color'
 import _ from 'lodash'
 import {AbstractGauge, AbstractGaugeOptions, GaugeGraphOptions} from './AbstractGauge'
 
@@ -15,8 +17,17 @@ export interface CounterGaugeOptions extends AbstractGaugeOptions {
 	minimum?: number,
 	/** Maximum value of the gauge. Defaults to 100. Value over the maximum will be considered over cap, and tracked if enabled. */
 	maximum?: number,
+	/** Chart options. Omit to disable charting for this gauge. */
+	chart?: CounterChartOptions,
 	/** Graph options. Omit to disable graphing in the timeline for this gauge. */
 	graph?: GaugeGraphOptions
+}
+
+export interface CounterChartOptions {
+	/** Label to display on the data set. */
+	label: string
+	/** Color to draw the data set in. Defaults to grey. */
+	color?: string | Color
 }
 
 export class CounterGauge extends AbstractGauge {
@@ -25,6 +36,7 @@ export class CounterGauge extends AbstractGauge {
 	private maximum: number
 	overCap: number = 0
 
+	private chartOptions?: CounterChartOptions
 	private graphOptions?: GaugeGraphOptions
 
 	private history: CounterHistory[] = []
@@ -40,6 +52,7 @@ export class CounterGauge extends AbstractGauge {
 		this._value = opts.initialValue || this.minimum
 		this.maximum = opts.maximum || 100
 
+		this.chartOptions = opts.chart
 		this.graphOptions = opts.graph
 	}
 
@@ -129,5 +142,37 @@ export class CounterGauge extends AbstractGauge {
 		} else {
 			this.resourceGraphs.addGauge(graphData, collapse)
 		}
+	}
+
+	/** @inheritdoc */
+	override generateDataset() {
+		// If there's no chart options, provide nothing
+		if (!this.chartOptions) {
+			return
+		}
+
+		// Map the data into something the chart will understand
+		const data = this.history.map(entry => ({
+			t: entry.timestamp - this.parser.pull.timestamp,
+			y: entry.value,
+		}))
+
+		// Build the final data set
+		const {label, color} = this.chartOptions
+		const dataSet: ChartDataSets = {
+			label,
+			data,
+			steppedLine: true,
+		}
+
+		if (color) {
+			/* eslint-disable @typescript-eslint/no-magic-numbers */
+			const chartColor = Color(color)
+			dataSet.backgroundColor = chartColor.fade(0.8).toString()
+			dataSet.borderColor = chartColor.fade(0.5).toString()
+			/* eslint-enable @typescript-eslint/no-magic-numbers */
+		}
+
+		return dataSet
 	}
 }
