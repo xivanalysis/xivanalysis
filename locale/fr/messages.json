@@ -14,8 +14,6 @@
   "ast.arcana-tracking.divination.playertarget": "Bonus des joueurs :",
   "ast.arcana-tracking.messages.death": "Mort",
   "ast.arcana-tracking.title": "Suivis des Arcanes",
-  "ast.arcana-undraw-usage.suggestions.content": "Étant donné que Tirage commence son temps de recharge au moment où il est utilisé, il n’y a plus de raison de <0/> au lieu de le jouer ou de le convertir avec <1/>",
-  "ast.arcana-undraw-usage.suggestions.why": "{0} cas d'utilisation de Défausse.",
   "ast.celestial-intersection.suggestion.content": "Utilisez <0/> plus souvent. Un usage fréquent permet de mitiger un montant de dégâts non négligeable durant un combat, impliquant moins de GCDs requis pour soigner.",
   "ast.celestial-intersection.suggestion.why": "Environ {usesMissed} utilisations de <0/> ont été manquées en le conservant pendant {0}.",
   "ast.celestial-opposition.suggestion.content.diurnal": "Utiliser <0/> plus fréquemment. En <1/>, le soin et la régéneration combinées s'additionnent pour atteindre la même puissance que <2/> sur chaque joueur. En faisant confiance aux sorts de régenération pour remonter votre équipe vous pourrez économiser des points de mana et des temps de lancement de sort le soin.",
