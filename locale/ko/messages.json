@@ -14,8 +14,6 @@
   "ast.arcana-tracking.divination.playertarget": "버프를 받은 파티원들:",
   "ast.arcana-tracking.messages.death": "죽음",
   "ast.arcana-tracking.title": "아르카나 트래킹",
-  "ast.arcana-undraw-usage.suggestions.content": "이제 점지는 카드 여부에 상관없이 따로 쿨타임이 돌기에 <0/>을 사용할 이유가 없습니다. 덮어씌워지는것을 피하기 위해 카드를 사용하거나 <1/>로 변화시킨후 사용하십시오.",
-  "ast.arcana-undraw-usage.suggestions.why": "점지 취소를 {0} 회 사용하였습니다.",
   "ast.celestial-intersection.suggestion.content": "<0/>을 자주 사용하십시오. 빈도 높은 사용은 전투에서 많은 양의 피해를 치유하고 장기적으로 글쿨힐을 아낄 수 있습니다.",
   "ast.celestial-intersection.suggestion.why": "{usesMissed} 회의 <0/>이 {0} 동안 방치되어 사용되지 못했습니다.",
   "ast.celestial-opposition.suggestion.content.diurnal": "<0/> 사용 빈도를 늘리십시오. <1/>의 효과를 받을시 총 치유량이 <2/>에 걸맞으며 제떄 사용시 마나를 아낄 수 있으며 또한 글쿨힐을 덜 사용할 수 있습니다.",
