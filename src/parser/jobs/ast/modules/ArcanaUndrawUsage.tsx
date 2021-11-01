@@ -10,16 +10,12 @@ import React from 'react'
 
 export default class ArcanaUndrawUsage extends Analyser {
 	static override handle = 'arcanaundraws'
-	static override dependencies = [
-		'suggestions',
-	]
 	private _badUndraws: number = 0
 
 	@dependency private data!: Data
 	@dependency private suggestions!: Suggestions
 
 	override initialise() {
-
 		this.addEventHook(filter<Event>()
 			.source(this.parser.actor.id)
 			.type('action')
@@ -29,9 +25,7 @@ export default class ArcanaUndrawUsage extends Analyser {
 	}
 
 	_onCast(event: Events['action']) {
-
 		this._saveIfBadUndraw(event)
-
 	}
 
 	_saveIfBadUndraw(event: Events['action']) {
@@ -44,7 +38,6 @@ export default class ArcanaUndrawUsage extends Analyser {
 	}
 
 	_onComplete() {
-
 		if (this._badUndraws > 0) {
 			this.suggestions.add(new Suggestion({
 				icon: this.data.actions.UNDRAW.icon,
@@ -54,7 +47,7 @@ export default class ArcanaUndrawUsage extends Analyser {
 				severity: SEVERITY.MAJOR,
 				value: this._badUndraws,
 				why: <Trans id="ast.arcana-undraw-usage.suggestions.why">
-					<Plural value={this._badUndraws} one="instance" other="instances" /> of using undraw.
+					<Plural value={this._badUndraws} one="# instance" other="# instances" /> of using undraw.
 				</Trans>,
 			}))
 		}
