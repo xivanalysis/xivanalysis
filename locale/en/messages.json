@@ -553,7 +553,6 @@
   "mch.gauge.suggestions.heat-waste.content": "Try not to let your Heat gauge overcap, as it may cost you Overheat windows over the course of the fight.",
   "mch.gauge.suggestions.heat-waste.why": "You lost {0} Heat to an overcapped gauge.",
   "mch.gauge.title": "Heat & Battery Gauge",
-  "mch.gauge.trigger.negative-heat": "<0/> was used when the simulated Heat gauge was at {0}.",
   "mch.hypercharge.accordion.message": "Every overheat window should ideally include {HYPERCHARGE_GCD_TARGET} casts of <0/> and enough casts of <1/> and <2/> to avoid overcapping their charges. If you clip a lot while weaving, overcapping is still preferable to dropping a Heat Blast. Each overheat window below indicates how many GCDs it contained and will display all the casts in the window if expanded.",
   "mch.hypercharge.panel-count": "{0, plural, one {GCD} other {GCDs}}",
   "mch.hypercharge.title": "Hypercharge Windows",

@@ -553,7 +553,6 @@
   "mch.gauge.suggestions.heat-waste.content": "Versuch, deinen Hitzebalken nicht überlaufen zu lassen, da es dich im Laufe des Kampfes eventuell Hyperladung-Fenster kosten kann.",
   "mch.gauge.suggestions.heat-waste.why": "Du hast {0} Hitze durch einen überlaufenden Balken verloren.",
   "mch.gauge.title": "Hitze- und Batteriebalken",
-  "mch.gauge.trigger.negative-heat": "<0/> wurde benutzt, während der simulierte Hitzebalken auf {0} war.",
   "mch.hypercharge.accordion.message": "Während Hyperladung aktiv ist, solltest du <0/> mindestens {OVERHEAT_GCD_TARGET}-mal ausführen und <1/> und <2/> oft genug benutzen, sodass keine generierten Aufladungen verschwendet werden. Solltest du jedoch zwischen Angriffen oft in der Animation gefangen sein, ist es ratsam, lieber Aufladungen verschwenden, anstatt eine Hitzeschuss-Aktivierung zu verpassen. Jedes Zeitfenster unten zeigt an, wie viele Fähigkeiten mit globaler Abklingzeit darin enthalten waren. (Um alle benutzten Fähigkeiten zusehen, klappe das Fenster aus.)",
   "mch.hypercharge.panel-count": "{0, plural, one {GCD} other {GCDs}}",
   "mch.hypercharge.title": "Hyperladung-Fenster",

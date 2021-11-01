@@ -553,7 +553,6 @@
   "mch.gauge.suggestions.heat-waste.content": "不要让热量槽溢出，不然会影响过热技能的使用。",
   "mch.gauge.suggestions.heat-waste.why": "因为热量溢出，你浪费了{0}热量",
   "mch.gauge.title": "热量和电量槽",
-  "mch.gauge.trigger.negative-heat": "热量值（模拟）为{0} 时使用了<0/>。",
   "mch.hypercharge.accordion.message": "每次过热都应该包括{OVERHEAT_GCD_TARGET} 次的<0/>以及尽可能多的<1/>和<2/>，以避免层数溢出。如果你经常卡GCD，宁肯层数溢出也要打<0/>。下面的表格展示了每次过热中所包含的GCD技能，展开后可看到全部内容。",
   "mch.hypercharge.panel-count": "{0} 个 GCD",
   "mch.hypercharge.title": "过热阶段",

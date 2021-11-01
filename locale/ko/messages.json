@@ -553,7 +553,6 @@
   "mch.gauge.suggestions.heat-waste.content": "열기를 초과하지 마십시오. 초과할시 과열 상태 진입 횟수를 놓칠 수 있습니다.",
   "mch.gauge.suggestions.heat-waste.why": "열기가 {0} 만큼 초과하였습니다.",
   "mch.gauge.title": "열기 및 충전지 게이지",
-  "mch.gauge.trigger.negative-heat": "예상 열기 수치가 {0} 인 상태에서 <0/>가 사용되었습니다",
   "mch.hypercharge.accordion.message": "과열 구간에 진입할때마다 반드시 {OVERHEAT_GCD_TARGET} 회의 <0/> 그리고 스택을 낭비하지 않을정도까지 최대한 자주 <1/> 및 <2/>를 사용하십시오. 끼워넣을 때 마다 글쿨이 밀린다면 스택 사용 빈도를 줄이는 감수를 하는것이 열기 분사를 놓치는것보다 낫습니다. 아래에서 각 과열 구간마다 몇회의 글쿨기가 사용되었는지 알려주며 클릭시 모든 사용 기술을 표기합니다.",
   "mch.hypercharge.panel-count": "{0, plural, one {#글쿨} other {#글쿨}}",
   "mch.hypercharge.title": "과열 구간",

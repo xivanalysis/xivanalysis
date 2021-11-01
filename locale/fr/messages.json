@@ -553,7 +553,6 @@
   "mch.gauge.suggestions.heat-waste.content": "Essayez de ne pas laisser votre jauge de chaleur surcharger, car cela peut vous coûter des utilisations d'Hypercharge au cours du combat.",
   "mch.gauge.suggestions.heat-waste.why": "Vous avez perdus {0} chaleur pour avoir dépasser le maximum stockable.",
   "mch.gauge.title": "Jauge de chaleur et de batterie",
-  "mch.gauge.trigger.negative-heat": "<0/> a été utilisé(e) quand la jauge de chaleur simulée était à {0}.",
   "mch.hypercharge.accordion.message": "Chaque fenêtre de surchauffe devrait idéalement inclure{OVERHEAT_GCD_TARGET} lancement de <0/> et assez de lancement de <1/> et <2/> pour éviter de surcharger leurs charges. Si vous clipper beaucoup pendant le weaving, l'overcapping est toujours préférable à la chute d'un Pyro-explosion. Chaque fenêtre de surchauffe ci-dessous indique le nombre de GCD qu'elle contient et affiche tous les modèles de la fenêtre si elle est étendue.",
   "mch.hypercharge.panel-count": "{0, plural, one {GCD} other {GCDs}}",
   "mch.hypercharge.title": "Fenêtre d'utilisation de surchauffe",
