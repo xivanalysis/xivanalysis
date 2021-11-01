@@ -15,7 +15,7 @@
   "ast.arcana-tracking.messages.death": "Death",
   "ast.arcana-tracking.title": "Arcana Tracking",
   "ast.arcana-undraw-usage.suggestions.content": "Due to Draw starting its cooldown the moment it's used, there is no longer any reason to <0/> instead of playing it or converting it with <1/>.",
-  "ast.arcana-undraw-usage.suggestions.why": "{0, plural, one {instance} other {instances}} of using undraw.",
+  "ast.arcana-undraw-usage.suggestions.why": "{0, plural, one {# instance} other {# instances}} of using undraw.",
   "ast.celestial-intersection.suggestion.content": "Use <0/> more frequently. Frequent uses can heal or mitigate a large amount of damage over the course of a fight, potentially resulting in fewer required healing GCDs.",
   "ast.celestial-intersection.suggestion.why": "About {usesMissed} uses of <0/> were missed by holding it for at least a total of {0}.",
   "ast.celestial-opposition.suggestion.content.diurnal": "Use <0/> more frequently. In <1/>, the heal and regen combined add up to the same potency of a <2/> on each player it reaches. Trusting the regens to top off the party HP will save MP and GCDs on healing.",
