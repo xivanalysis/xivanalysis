@@ -26,17 +26,6 @@ const OTHER_GCDS: ActionKey[] = [
 	'HEATED_CLEAN_SHOT',
 ]
 
-interface ReassembleState {
-	active: boolean
-	lastGcdTime: number
-	gcdHook?: EventHook<Events['action']>
-}
-
-interface ReassembleHistory {
-	badUses: number
-	droppedUses: number
-}
-
 const SEVERITIES = {
 	BAD_USES: {
 		1: SEVERITY.MINOR,
@@ -47,6 +36,17 @@ const SEVERITIES = {
 		1: SEVERITY.MEDIUM,
 		2: SEVERITY.MAJOR,
 	},
+}
+
+interface ReassembleState {
+	active: boolean
+	lastGcdTime: number
+	gcdHook?: EventHook<Events['action']>
+}
+
+interface ReassembleHistory {
+	badUses: number
+	droppedUses: number
 }
 
 export class Reassemble extends Analyser {
