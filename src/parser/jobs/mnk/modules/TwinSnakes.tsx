@@ -167,8 +167,11 @@ export class TwinSnakes extends Analyser {
 	}
 
 	private onUnbalanced(event: Events['statusRemove']): void {
+		// Reset our state tracking
 		this.unbalanced = event.timestamp
+		this.unbalancedHistory = []
 
+		// Hook any GCDs after PB drops, using Twin will remove this
 		this.unbalancedHook = this.addEventHook(
 			filter<Event>()
 				.source(this.parser.actor.id)
