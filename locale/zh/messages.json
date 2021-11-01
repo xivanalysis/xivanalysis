@@ -14,8 +14,6 @@
   "ast.arcana-tracking.divination.playertarget": "收到增益的玩家：",
   "ast.arcana-tracking.messages.death": "死亡",
   "ast.arcana-tracking.title": "奥秘卡记录",
-  "ast.arcana-undraw-usage.suggestions.content": "由于抽出了卡就会使 抽卡 技能进入冷却，所以永远都不需要用<0/>弃卡，而是把它发出去或者用<1/>转成小奥秘卡。",
-  "ast.arcana-undraw-usage.suggestions.why": "用了{0} 次弃卡技能。",
   "ast.celestial-intersection.suggestion.content": "你需要更频繁地使用<0/>。<0/>可以在整场战斗中治疗或吸收很多伤害，节省下用于治疗的 GCD。",
   "ast.celestial-intersection.suggestion.why": "因为<0/>的 CD 空转了至少 {0}，你大约损失了 {usesMissed} 次 <0/> 的使用机会。",
   "ast.celestial-opposition.suggestion.content.diurnal": "请使用更多的<0/>。在<1/>下，它所产生的直接治疗与持续治疗的恢复力之和与一个<2/>相同。依靠持续治疗来修整全队血量能节约GCD和蓝量。",
