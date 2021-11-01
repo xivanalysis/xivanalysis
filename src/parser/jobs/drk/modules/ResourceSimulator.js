@@ -4,7 +4,6 @@ import Color from 'color'
 import {ActionLink} from 'components/ui/DbLink'
 import TimeLineChart from 'components/ui/TimeLineChart'
 import ACTIONS from 'data/ACTIONS'
-import JOBS from 'data/JOBS'
 import STATUSES from 'data/STATUSES'
 import Module, {DISPLAY_MODE} from 'parser/core/Module'
 import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
@@ -14,7 +13,6 @@ import {DISPLAY_ORDER} from './DISPLAY_ORDER'
 // -----
 // UI stuff
 // -----
-const BLOODSPILLER_BLOOD_COST = 50
 const FLOOD_EDGE_MP_COST = 3000
 
 // -----
@@ -25,50 +23,39 @@ const MP_AFTER_RAISE = 2000
 const MP_REGEN_PER_TICK = 200
 const TICK_RATE = 3000
 
-const MAX_BLOOD = 100
-
 const RESOURCE_SPENDERS = {
-	[ACTIONS.THE_BLACKEST_NIGHT.id]: {mp: -3000, blood: 0},
-	[ACTIONS.FLOOD_OF_SHADOW.id]: {mp: -3000, blood: 0},
-	[ACTIONS.EDGE_OF_SHADOW.id]: {mp: -3000, blood: 0},
-	[ACTIONS.BLOODSPILLER.id]: {mp: 0, blood: -50, affectsWithDelirium: true},
-	[ACTIONS.QUIETUS.id]: {mp: 0, blood: -50, affectsWithDelirium: true},
-	[ACTIONS.LIVING_SHADOW.id]: {mp: 0, blood: -50},
-}
-const RESOURCE_GENERATORS = {
-	[ACTIONS.CARVE_AND_SPIT.id]: {mp: 600, blood: 0, requiresCombo: false},
-	[ACTIONS.SYPHON_STRIKE.id]: {mp: 600, blood: 0, requiresCombo: true},
-	[ACTIONS.SOULEATER.id]: {mp: 0, blood: 20, requiresCombo: true},
-	[ACTIONS.STALWART_SOUL.id]: {mp: 600, blood: 20, requiresCombo: true},
+	[ACTIONS.THE_BLACKEST_NIGHT.id]: {mp: -3000},
+	[ACTIONS.FLOOD_OF_SHADOW.id]: {mp: -3000},
+	[ACTIONS.EDGE_OF_SHADOW.id]: {mp: -3000},
 }
 
-// Actions that generate blood and mana under blood weapon
+const RESOURCE_GENERATORS = {
+	[ACTIONS.CARVE_AND_SPIT.id]: {mp: 600, requiresCombo: false},
+	[ACTIONS.SYPHON_STRIKE.id]: {mp: 600, requiresCombo: true},
+	[ACTIONS.STALWART_SOUL.id]: {mp: 600, requiresCombo: true},
+}
+
+// Actions that generate mana under blood weapon
 const BLOOD_WEAPON_GENERATORS = {
-	[ACTIONS.HARD_SLASH.id]: {mp: 600, blood: 10},
-	[ACTIONS.SYPHON_STRIKE.id]: {mp: 600, blood: 10},
-	[ACTIONS.SOULEATER.id]: {mp: 600, blood: 10},
-	[ACTIONS.BLOODSPILLER.id]: {mp: 600, blood: 10},
-	[ACTIONS.QUIETUS.id]: {mp: 600, blood: 10},
-	[ACTIONS.UNMEND.id]: {mp: 600, blood: 10},
-	[ACTIONS.UNLEASH.id]: {mp: 600, blood: 10},
-	[ACTIONS.STALWART_SOUL.id]: {mp: 600, blood: 10},
+	[ACTIONS.HARD_SLASH.id]: {mp: 600},
+	[ACTIONS.SYPHON_STRIKE.id]: {mp: 600},
+	[ACTIONS.SOULEATER.id]: {mp: 600},
+	[ACTIONS.BLOODSPILLER.id]: {mp: 600},
+	[ACTIONS.QUIETUS.id]: {mp: 600},
+	[ACTIONS.UNMEND.id]: {mp: 600},
+	[ACTIONS.UNLEASH.id]: {mp: 600},
+	[ACTIONS.STALWART_SOUL.id]: {mp: 600},
 }
 
 const DELIRIUM_GENERATORS = {
-	[ACTIONS.BLOODSPILLER.id]: {mp: 200, blood: 0},
-	[ACTIONS.QUIETUS.id]: {mp: 500, blood: 0},
+	[ACTIONS.BLOODSPILLER.id]: {mp: 200},
+	[ACTIONS.QUIETUS.id]: {mp: 500},
 }
 
 // Tiered suggestion severities
 const SEVERITY_THE_BLACKEST_NIGHT = {
 	1: SEVERITY.MEDIUM,
 	2: SEVERITY.MAJOR,
-}
-
-const SEVERITY_WASTED_BLOOD_ACTIONS = {
-	1: SEVERITY.MINOR,
-	2: SEVERITY.MEDIUM,
-	4: SEVERITY.MAJOR,
 }
 
 const SEVERITY_WASTED_MP_ACTIONS = {
@@ -90,14 +77,11 @@ export default class Resources extends Module {
 	// -----
 	// Resource utilities
 	// -----
-	_currentBlood = 0
-	_wastedBlood = 0
 	_currentMP = 0
 	_wastedMP = 0
 	// tracker stacks
 	_history = {
 		mp: [],
-		blood: [],
 	}
 	// -----
 	// Internal tracking of generator events for MP overcap calculations
@@ -177,27 +161,6 @@ export default class Resources extends Module {
 		this._pushToMPGraph()
 	}
 
-	checkBloodOvercap(actionBloodChange) {
-		this._currentBlood += actionBloodChange
-
-		if (this._currentBlood > MAX_BLOOD) {
-			// Check to determine if blood was overcapped by gain, mark as wasted if so
-			this._wastedBlood += this._currentBlood - MAX_BLOOD
-			this._currentBlood = MAX_BLOOD
-		}
-		if (this._currentBlood < 0) {
-			// Sanity check - if blood drops below 0 from a spender, floor blood count at 0
-			this._currentBlood = 0
-		}
-
-		this._pushToBloodGraph()
-	}
-
-	_pushToBloodGraph() {
-		const timestamp = this.parser.currentTimestamp - this.parser.fight.start_time
-		this._history.blood.push({t: timestamp, y: this._currentBlood})
-	}
-
 	_pushToMPGraph() {
 		const timestamp = this.parser.currentTimestamp - this.parser.fight.start_time
 		this._history.mp.push({t: timestamp, y: this._currentMP})
@@ -209,10 +172,7 @@ export default class Resources extends Module {
 
 	_onDeath() {
 		this._wastedMP += this._currentMP
-		this._wastedBlood += this._currentBlood
 		this._currentMP = 0
-		this._currentBlood = 0
-		this._pushToBloodGraph()
 		this._pushToMPGraph()
 	}
 
@@ -223,17 +183,9 @@ export default class Resources extends Module {
 
 	_onEvent(event) {
 		const abilityId = event.ability.guid
-		let actionBloodGain = 0
 		let actionMPGain = 0
 
 		if (RESOURCE_SPENDERS[abilityId] != null) {
-			if (RESOURCE_SPENDERS[abilityId].blood < 0 && this.combatants.selected.hasStatus(STATUSES.DELIRIUM.id) && RESOURCE_SPENDERS[abilityId].affectsWithDelirium) {
-				// Blood spender under delirium - no change
-				actionBloodGain += 0
-			} else {
-				actionBloodGain += RESOURCE_SPENDERS[abilityId].blood
-			}
-
 			if (RESOURCE_SPENDERS[abilityId].mp < 0 && this._darkArtsProc) {
 				// MP Spending attack (Edge/Flood of Shadow) - free with Dark Arts proc
 				actionMPGain += 0
@@ -246,7 +198,6 @@ export default class Resources extends Module {
 		if (event.hasSuccessfulHit && (event.type !== 'combo' && this.combatants.selected.hasStatus(STATUSES.BLOOD_WEAPON.id) && BLOOD_WEAPON_GENERATORS[abilityId] != null)) {
 			// Actions that did not hit do not generate resources
 			// Don't double count blood weapon gains on comboed events
-			actionBloodGain += BLOOD_WEAPON_GENERATORS[abilityId].blood
 			actionMPGain += BLOOD_WEAPON_GENERATORS[abilityId].mp
 		}
 
@@ -255,12 +206,9 @@ export default class Resources extends Module {
 			const actionInfo = RESOURCE_GENERATORS[abilityId]
 			if ((!actionInfo.requiresCombo && event.type !== 'combo') || event.type === 'combo') {
 			// Only gain resources if the action does not require a combo or is in a valid combo
-				actionBloodGain += RESOURCE_GENERATORS[abilityId].blood
 				actionMPGain += RESOURCE_GENERATORS[abilityId].mp
 			}
 		}
-
-		this.checkBloodOvercap(actionBloodGain)
 
 		const afterActionMP = event.sourceResources?.mp ?? 0
 		this.checkMPOvercap(event, afterActionMP, actionMPGain)
@@ -305,19 +253,6 @@ export default class Resources extends Module {
 			}))
 		}
 
-		const wastedBloodActions = Math.floor(this._wastedBlood / BLOODSPILLER_BLOOD_COST)
-		this.suggestions.add(new TieredSuggestion({
-			icon: ACTIONS.BLOODSPILLER.icon,
-			content: <Trans id="drk.resourceanalyzer.wastedblood.content">
-				Your blood gauge allows you to use <ActionLink {...ACTIONS.BLOODSPILLER}/> or other spenders, which are among your strongest attacks.  Be sure to spend your blood before exceeding the cap of 100.
-			</Trans>,
-			tiers: SEVERITY_WASTED_BLOOD_ACTIONS,
-			value: wastedBloodActions,
-			why: <Trans id="drk.resourceanalyzer.wastedblood.why">
-				You lost a total of <Plural value={wastedBloodActions} one="# blood spending skill" other="# blood spending skills" /> from gaining blood over the cap or from death.
-			</Trans>,
-		}))
-
 		const wastedMPActions = Math.floor(this._wastedMP / FLOOD_EDGE_MP_COST)
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.EDGE_OF_SHADOW.icon,
@@ -334,24 +269,12 @@ export default class Resources extends Module {
 	}
 
 	output() {
-		// Mana usage and blood usage modules
+		// Mana usage module
 		// make this into a pretty table
 		// also include spenders and generators
-		const _bloodColor = Color(JOBS.DARK_KNIGHT.colour)
 		const _mpColor = Color('#f266a2')
 
 		/* eslint-disable @typescript-eslint/no-magic-numbers */
-		const bloodchartdata = {
-			datasets: [
-				{
-					label: 'Blood',
-					steppedLine: true,
-					data: this._history.blood,
-					backgroundColor: _bloodColor.fade(0.8).toString(),
-					borderColor: _bloodColor.fade(0.5).toString(),
-				},
-			],
-		}
 		const mpchartdata = {
 			datasets: [
 				{
@@ -376,23 +299,8 @@ export default class Resources extends Module {
 				}],
 			},
 		}
-		const bloodChartOptions = {
-			scales: {
-				yAxes: [{
-					ticks: {
-						beginAtZero: true,
-						min: 0,
-						max: 100,
-					},
-				}],
-			},
-		}
 
 		return <Fragment>
-			<TimeLineChart
-				data={bloodchartdata}
-				options={bloodChartOptions}
-			/>
 			<TimeLineChart
 				data={mpchartdata}
 				options={mpChartOptions}

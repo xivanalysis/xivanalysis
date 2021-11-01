@@ -3,6 +3,7 @@ import {BloodWeapon} from './BloodWeapon'
 import {Darkside} from './Darkside'
 import {Delirium} from './Delirium'
 import {EsteemTimeline} from './EsteemTimeline'
+import {Gauge} from './Gauge'
 import {MultiHitSkills} from './MultiHitSkills'
 import {OGCDDowntime} from './OGCDDowntime'
 import ResourceSimulator from './ResourceSimulator'
@@ -14,6 +15,7 @@ export default [
 	BloodWeapon,
 	Delirium,
 	EsteemTimeline,
+	Gauge,
 	ResourceSimulator,
 	OGCDDowntime,
 	MultiHitSkills,
