@@ -48,6 +48,7 @@ export class TwinSnakes extends Analyser {
 	private ignoredGcds: number[] = []
 	private twinSnake?: TwinState
 	private lastRefresh: number = this.parser.pull.timestamp
+	private lastDrop: number = this.parser.pull.timestamp
 
 	// Clipping the duration
 	private earlySnakes: number = 0
@@ -138,9 +139,9 @@ export class TwinSnakes extends Analyser {
 			const secondGcd = this.unbalancedHistory[1]
 			const secondAction = this.data.getAction(secondGcd)
 
-			// Sanity check
-			if (secondAction != null) {
-				const timeDelta = event.timestamp - this.unbalanced
+			// Sanity check that action exists and Twin dropped after PB did
+			if (secondAction != null && this.lastDrop >= this.unbalanced) {
+				const timeDelta = event.timestamp - this.lastDrop
 
 				if (timeDelta <= UNBALANCED_BUFFER && secondAction.id === this.data.actions.TWIN_SNAKES.id) {
 					this.allowedDowntime += timeDelta
@@ -160,6 +161,8 @@ export class TwinSnakes extends Analyser {
 	}
 
 	private onDrop(event: Events['statusRemove']): void {
+		// Only account for the drop here, not at end of fight cleanup
+		this.lastDrop = event.timestamp
 		this.stopAndSave(event.timestamp)
 	}
 
