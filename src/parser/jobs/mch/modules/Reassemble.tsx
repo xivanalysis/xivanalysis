@@ -37,6 +37,18 @@ interface ReassembleHistory {
 	droppedUses: number
 }
 
+const SEVERITIES = {
+	BAD_USES: {
+		1: SEVERITY.MINOR,
+		2: SEVERITY.MEDIUM,
+		3: SEVERITY.MAJOR,
+	},
+	DROPPED_USES: {
+		1: SEVERITY.MEDIUM,
+		2: SEVERITY.MAJOR,
+	},
+}
+
 export class Reassemble extends Analyser {
 	static override handle = 'reassemble'
 
@@ -95,11 +107,7 @@ export class Reassemble extends Analyser {
 			content: <Trans id="mch.reassemble.suggestions.bad-gcds.content">
 				On single targets <DataLink action="REASSEMBLE" /> should only ever be used on <DataLink action="DRILL" /> and <DataLink action="AIR_ANCHOR" />, as they're your strongest GCDs by a large margin.
 			</Trans>,
-			tiers: {
-				1: SEVERITY.MINOR,
-				2: SEVERITY.MEDIUM,
-				3: SEVERITY.MAJOR,
-			},
+			tiers: SEVERITIES.BAD_USES,
 			value: this.history.badUses,
 			why: <Trans id="mch.reassemble.suggestions.bad-gcds.why">
 				You used Reassemble on a non-optimal GCD <Plural value={this.history.badUses} one="# time" other="# times"/>.
@@ -111,10 +119,7 @@ export class Reassemble extends Analyser {
 			content: <Trans id="mch.reassemble.suggestions.dropped.content">
 				Avoid using <DataLink action="REASSEMBLE" /> when a boss is about to go untargetable so you don't waste the buff.
 			</Trans>,
-			tiers: {
-				1: SEVERITY.MEDIUM,
-				2: SEVERITY.MAJOR,
-			},
+			tiers: SEVERITIES.DROPPED_USES,
 			value: this.history.droppedUses,
 			why: <Trans id="mch.reassemble.suggestions.dropped.why">
 				You allowed Reassemble to fall off unused <Plural value={this.history.droppedUses} one="# time" other="# times"/>.
