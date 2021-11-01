@@ -22,6 +22,7 @@ export default class Atonement extends Analyser {
 	@dependency private data!: Data
 
 	protected stacksUsed: number = 0
+	protected stacksUsedSinceApplication: number = 0
 	protected potentialStacks: number = 0
 	protected currentStacks: number = 0
 	protected overcap: number = 0
@@ -33,7 +34,7 @@ export default class Atonement extends Analyser {
 			type: 'action',
 			source: this.parser.actor.id,
 			action: this.data.actions.ATONEMENT.id,
-		}, () => this.stacksUsed++)
+		}, this.onAtonement)
 
 		this.addEventHook({
 			type: 'statusApply',
@@ -49,6 +50,11 @@ export default class Atonement extends Analyser {
 		this.addEventHook('complete', this.onComplete)
 	}
 
+	private onAtonement() {
+		this.stacksUsed++
+		this.stacksUsedSinceApplication++
+	}
+
 	private onApplySwordOath(event: Events['statusApply']): void {
 		if (event.data == null) { return }
 
@@ -56,6 +62,7 @@ export default class Atonement extends Analyser {
 		if (event.data === this.data.statuses.SWORD_OATH.stacksApplied) {
 			this.overcap += this.currentStacks
 			this.potentialStacks += this.data.statuses.SWORD_OATH.stacksApplied
+			this.stacksUsedSinceApplication = 0
 		}
 
 		this.currentStacks = event.data
@@ -63,8 +70,8 @@ export default class Atonement extends Analyser {
 
 	private onRemoveSwordOath(): void {
 		// If any stacks were left when the status fell off, keep track of those
-		if (this.currentStacks > 0) {
-			this.droppedStacks += this.currentStacks
+		if (this.stacksUsedSinceApplication < this.data.statuses.SWORD_OATH.stacksApplied) {
+			this.droppedStacks += Math.max(this.data.statuses.SWORD_OATH.stacksApplied - this.stacksUsedSinceApplication, 0)
 		}
 		this.currentStacks = 0
 	}
