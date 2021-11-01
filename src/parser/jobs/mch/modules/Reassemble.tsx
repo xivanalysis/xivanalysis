@@ -3,6 +3,7 @@ import {DataLink} from 'components/ui/DbLink'
 import {ActionKey} from 'data/ACTIONS'
 import {Event, Events} from 'event'
 import {Analyser} from 'parser/core/Analyser'
+import {EventHook} from 'parser/core/Dispatcher'
 import {filter, oneOf} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
 import {Data} from 'parser/core/modules/Data'
@@ -15,9 +16,6 @@ const REASSEMBLE_GCDS: ActionKey[] = [
 	'AUTO_CROSSBOW',
 	'DRILL',
 	'SPREAD_SHOT',
-	// 6.0:
-	//'CHAIN_SAW',
-	//'SCATTER_GUN',
 ]
 
 const OTHER_GCDS: ActionKey[] = [
@@ -28,58 +26,67 @@ const OTHER_GCDS: ActionKey[] = [
 	'HEATED_CLEAN_SHOT',
 ]
 
+interface ReassembleState {
+	active: boolean
+	lastGcdTime: number
+	gcdHook?: EventHook<Events['action']>
+}
+
+interface ReassembleHistory {
+	badUses: number
+	droppedUses: number
+}
+
 export class Reassemble extends Analyser {
 	static override handle = 'reassemble'
 
 	@dependency private data!: Data
 	@dependency private suggestions!: Suggestions
 
-	private badReassembles = 0
-	private droppedReassembles = 0
-	private lastGcd = 0
-	private reassembleActive = false
+	private state: ReassembleState = {active: false, lastGcdTime: 0}
+	private history: ReassembleHistory = {badUses: 0, droppedUses: 0}
 
-	private REASSEMBLE_GCDS: number[] = []
-	private OTHER_GCDS: number[] = []
+	private reassembleGcdIds = REASSEMBLE_GCDS.map(key => this.data.actions[key].id)
+	private otherGcdIds = OTHER_GCDS.map(key => this.data.actions[key].id)
+
+	private gcdFilter = filter<Event>()
+		.source(this.parser.actor.id)
+		.type('action')
+		.action(oneOf([...this.reassembleGcdIds, ...this.otherGcdIds]))
 
 	override initialise() {
-		this.REASSEMBLE_GCDS = REASSEMBLE_GCDS.map(key => this.data.actions[key].id)
-		this.OTHER_GCDS = OTHER_GCDS.map(key => this.data.actions[key].id)
-
 		const reassembleFilter = filter<Event>()
 			.source(this.parser.actor.id)
 			.status(this.data.statuses.REASSEMBLED.id)
 
-		const gcdFilter = filter<Event>()
-			.source(this.parser.actor.id)
-			.type('action')
-			.action(oneOf([...this.REASSEMBLE_GCDS, ...this.OTHER_GCDS]))
-
 		this.addEventHook(reassembleFilter.type('statusApply'), this.onReassemble)
-		this.addEventHook(gcdFilter, this.onCast)
 		this.addEventHook(reassembleFilter.type('statusRemove'), this.onRemove)
 		this.addEventHook('complete', this.onComplete)
 	}
 
 	private onReassemble() {
-		if (this.reassembleActive) {
-			this.droppedReassembles++
+		if (this.state.active) {
+			this.history.droppedUses += 1
 		}
-		this.reassembleActive = true
+		this.state.gcdHook = this.addEventHook(this.gcdFilter, this.onCast)
+		this.state.active = true
 	}
 
 	private onCast(event: Events['action']) {
-		if (this.reassembleActive && !this.REASSEMBLE_GCDS.includes(event.action)) {
-			this.badReassembles += 1
+		if (this.state.active && !this.reassembleGcdIds.includes(event.action)) {
+			this.history.badUses += 1
 		}
-		this.lastGcd = event.timestamp
+		this.state.lastGcdTime = event.timestamp
 	}
 
 	private onRemove(event: Events['statusRemove']) {
-		if (event.timestamp !== this.lastGcd) {
-			this.droppedReassembles++
+		if (event.timestamp !== this.state.lastGcdTime) {
+			this.history.droppedUses += 1
 		}
-		this.reassembleActive = false
+		if (!(this.state.gcdHook == null)) {
+			this.removeEventHook(this.state.gcdHook)
+		}
+		this.state.active = false
 	}
 
 	onComplete() {
@@ -93,9 +100,9 @@ export class Reassemble extends Analyser {
 				2: SEVERITY.MEDIUM,
 				3: SEVERITY.MAJOR,
 			},
-			value: this.badReassembles,
+			value: this.history.badUses,
 			why: <Trans id="mch.reassemble.suggestions.bad-gcds.why">
-				You used Reassemble on a non-optimal GCD <Plural value={this.badReassembles} one="# time" other="# times"/>.
+				You used Reassemble on a non-optimal GCD <Plural value={this.history.badUses} one="# time" other="# times"/>.
 			</Trans>,
 		}))
 
@@ -108,9 +115,9 @@ export class Reassemble extends Analyser {
 				1: SEVERITY.MEDIUM,
 				2: SEVERITY.MAJOR,
 			},
-			value: this.droppedReassembles,
+			value: this.history.droppedUses,
 			why: <Trans id="mch.reassemble.suggestions.dropped.why">
-				You allowed Reassemble to fall off unused <Plural value={this.droppedReassembles} one="# time" other="# times"/>.
+				You allowed Reassemble to fall off unused <Plural value={this.history.droppedUses} one="# time" other="# times"/>.
 			</Trans>,
 		}))
 	}
