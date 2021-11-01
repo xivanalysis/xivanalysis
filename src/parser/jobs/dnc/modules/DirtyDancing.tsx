@@ -118,6 +118,7 @@ export class DirtyDancing extends Analyser {
 		[this.data.actions.STANDARD_STEP.id]: 0,
 		[this.data.actions.TECHNICAL_STEP.id]: 0,
 	}
+	private danceMoveIds = DANCE_MOVES.map(key => this.data.actions[key].id)
 
 	override initialise() {
 		const playerFilter = filter<Event>().source(this.parser.actor.id)
@@ -205,8 +206,7 @@ export class DirtyDancing extends Analyser {
 			dance.missed = true
 		}
 		// Dancer messed up if more step actions were recorded than we expected
-		const danceMoveIds = DANCE_MOVES.map(key => this.data.actions[key].id)
-		const actualCount = dance.rotation.filter(step => danceMoveIds.includes(step.action)).length
+		const actualCount = dance.rotation.filter(step => this.danceMoveIds.includes(step.action)).length
 		// Only ding if the step count is greater than expected, we're not going to catch the steps in the opener dance
 		if (actualCount > dance.expectedDanceMoves) {
 			dance.footloose = true
