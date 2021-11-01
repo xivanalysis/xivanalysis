@@ -14,8 +14,6 @@
   "ast.arcana-tracking.divination.playertarget": "バフを与えられた人数:",
   "ast.arcana-tracking.messages.death": "死亡",
   "ast.arcana-tracking.title": "アルカナ トラッキング",
-  "ast.arcana-undraw-usage.suggestions.content": "ドローは使用した瞬間にクールダウンを開始するため、<1/> で使用したり変換したりする代わりに、<0/> を使用する必要がなくなります。",
-  "ast.arcana-undraw-usage.suggestions.why": "アルカナ破棄を {0} 回使用した。",
   "ast.celestial-intersection.suggestion.content": "より頻繁に<0/>を使用してください。 頻繁に使用すると、戦闘中に大量のダメージを回復または軽減できるため、回復に使うGCDが少なくなる可能性があります。",
   "ast.celestial-intersection.suggestion.why": "約 {usesMissed} の <0/> の使用は、少なくとも合計 {0} 保持することで見逃されました。",
   "ast.celestial-opposition.suggestion.content.diurnal": "より頻繁に<0/>を使用してください。 <1/>では、ヒールとリジェネを組み合わせた結果、<2/>を使ったのと同様に各プレイヤーを回復することができます。 パーティーのHPを最大にするためにリジェネに頼ることで、MPとGCDでのヒーリングを節約できます。",
