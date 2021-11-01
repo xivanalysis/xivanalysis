@@ -12,7 +12,10 @@ import {DualStatistic} from 'parser/jobs/rdm/statistics/DualStatistic'
 import React, {Fragment} from 'react'
 import {isSuccessfulHit} from 'utilities'
 
-type GaugeModifier = Partial<Record<Event['type'], {white: number, black: number}>>
+interface IGaugeModifier {
+	white: number,
+	black: number
+}
 
 export default class Gauge extends CoreGauge {
 	static override title = t('rdm.gauge.title')`Mana Gauge Usage`
@@ -31,26 +34,26 @@ export default class Gauge extends CoreGauge {
 		maximum: 100,
 		minimum: 0,
 	}))
-	private _gaugeModifiers = new Map<number, GaugeModifier>([
-		[this.data.actions.VERAERO.id, {action: {white: 11, black: 0}}],
-		[this.data.actions.VERAERO_II.id, {action: {white: 7, black: 0}}],
-		[this.data.actions.VERSTONE.id, {action: {white: 9, black: 0}}],
-		[this.data.actions.VERHOLY.id, {action: {white: 21, black: 0}}],
-		[this.data.actions.VERTHUNDER.id, {action: {white: 0, black: 11}}],
-		[this.data.actions.VERTHUNDER_II.id, {action: {white: 0, black: 7}}],
-		[this.data.actions.VERFIRE.id, {action: {white: 0, black: 9}}],
-		[this.data.actions.VERFLARE.id, {action: {white: 0, black: 21}}],
-		[this.data.actions.JOLT.id, {action: {white: 3, black: 3}}],
-		[this.data.actions.JOLT_II.id, {action: {white: 3, black: 3}}],
-		[this.data.actions.IMPACT.id, {action: {white: 3, black: 3}}],
-		[this.data.actions.SCORCH.id, {action: {white: 7, black: 7}}],
+	private _gaugeModifiers = new Map<number, IGaugeModifier>([
+		[this.data.actions.VERAERO.id, {white: 11, black: 0}],
+		[this.data.actions.VERAERO_II.id, {white: 7, black: 0}],
+		[this.data.actions.VERSTONE.id, {white: 9, black: 0}],
+		[this.data.actions.VERHOLY.id, {white: 21, black: 0}],
+		[this.data.actions.VERTHUNDER.id, {white: 0, black: 11}],
+		[this.data.actions.VERTHUNDER_II.id, {white: 0, black: 7}],
+		[this.data.actions.VERFIRE.id, {white: 0, black: 9}],
+		[this.data.actions.VERFLARE.id, {white: 0, black: 21}],
+		[this.data.actions.JOLT.id, {white: 3, black: 3}],
+		[this.data.actions.JOLT_II.id, {white: 3, black: 3}],
+		[this.data.actions.IMPACT.id, {white: 3, black: 3}],
+		[this.data.actions.SCORCH.id, {white: 7, black: 7}],
 	])
-	private _spenderModifiers = new Map<number, GaugeModifier>([
-		[this.data.actions.ENCHANTED_REPRISE.id, {action: {white: -5, black: -5}}],
-		[this.data.actions.ENCHANTED_MOULINET.id, {action: {white: -20, black: -20}}],
-		[this.data.actions.ENCHANTED_RIPOSTE.id, {action: {white: -30, black: -30}}],
-		[this.data.actions.ENCHANTED_ZWERCHHAU.id, {action: {white: -25, black: -25}}],
-		[this.data.actions.ENCHANTED_REDOUBLEMENT.id, {action: {white: -25, black: -25}}],
+	private _spenderModifiers = new Map<number, IGaugeModifier>([
+		[this.data.actions.ENCHANTED_REPRISE.id, {white: -5, black: -5}],
+		[this.data.actions.ENCHANTED_MOULINET.id, {white: -20, black: -20}],
+		[this.data.actions.ENCHANTED_RIPOSTE.id, {white: -30, black: -30}],
+		[this.data.actions.ENCHANTED_ZWERCHHAU.id, {white: -25, black: -25}],
+		[this.data.actions.ENCHANTED_REDOUBLEMENT.id, {white: -25, black: -25}],
 	])
 	private _severityWastedMana = {
 		1: SEVERITY.MINOR,
@@ -87,59 +90,62 @@ export default class Gauge extends CoreGauge {
 			filter<Event>()
 				.type('damage')
 				.source(this.parser.actor.id),
-			this.OnGaugeModifying
+			this.onGaugeModifying
 		)
 		this.addEventHook(
 			filter<Event>()
 				.type('action')
 				.source(this.parser.actor.id)
 				.action(oneOf(Array.from(this._spenderModifiers.keys()))),
-			this.OnGaugeSpender
+			this.onGaugeSpender
 		)
 		this.addEventHook(
 			filter<Event>()
 				.type('action')
 				.source(this.parser.actor.id)
 				.action(this.data.actions.MANAFICATION.id),
-			this.OnManafication
+			this.onManafication
 		)
-		this.addEventHook('complete', this.OnComplete)
+		this.addEventHook('complete', this.onComplete)
 	}
 
-	private OnGaugeModifying(event: Events['damage']) {
+	private onGaugeModifying(event: Events['damage']) {
 		if (event.cause.type !== 'action') {
 			return
 		}
 		const modifier = this._gaugeModifiers.get(event.cause.action)
 
-		if (modifier != null) {
-			const amount = modifier.action ?? {white: 0, black: 0}
-			const penalized = this.IsOutOfBalance()
-			const whiteModified = penalized.white ? Math.ceil(amount.white/this._manaLostDivisor) : amount.white
-			const blackModified = penalized.black ? Math.ceil(amount.black/this._manaLostDivisor) : amount.black
-
-			if (!isSuccessfulHit(event)) {
-				//Then we lost this mana, add to statistics and move along.
-				this._manaStatistics.white.invulnLoss = whiteModified
-				this._manaStatistics.black.invulnLoss = blackModified
-				return
-			}
-
-			this._whiteManaGauge.modify(whiteModified)
-			this._blackManaGauge.modify(blackModified)
-			//Statistics Gathering
-			if (penalized.white) {
-				this._manaStatistics.white.imbalanceLoss = whiteModified
-			}
-			if (penalized.black) {
-				this._manaStatistics.black.imbalanceLoss = blackModified
-			}
+		if (modifier == null) {
+			return
 		}
+
+		const amount = modifier
+		const penalized = this.isOutOfBalance()
+		const whiteModified = penalized.white ? Math.ceil(amount.white/this._manaLostDivisor) : amount.white
+		const blackModified = penalized.black ? Math.ceil(amount.black/this._manaLostDivisor) : amount.black
+
+		if (!isSuccessfulHit(event)) {
+			//Then we lost this mana, add to statistics and move along.
+			this._manaStatistics.white.invulnLoss = whiteModified
+			this._manaStatistics.black.invulnLoss = blackModified
+			return
+		}
+
+		this._whiteManaGauge.modify(whiteModified)
+		this._blackManaGauge.modify(blackModified)
+		//Statistics Gathering
+		if (penalized.white) {
+			this._manaStatistics.white.imbalanceLoss = whiteModified
+		}
+		if (penalized.black) {
+			this._manaStatistics.black.imbalanceLoss = blackModified
+		}
+
 	}
 
-	private OnManafication() {
-		let whiteModifier = this.GetWhiteMana() * this._manaficationMultiplier
-		let blackModifier = this.GetBlackMana() * this._manaficationMultiplier
+	private onManafication() {
+		let whiteModifier = this.getWhiteMana() * this._manaficationMultiplier
+		let blackModifier = this.getBlackMana() * this._manaficationMultiplier
 
 		//Now calculate and store overcap if any.  This way we can still utilize the Overcap
 		//From core, but track this loss separately.
@@ -158,21 +164,22 @@ export default class Gauge extends CoreGauge {
 		this._blackManaGauge.set(blackModifier)
 	}
 
-	private OnGaugeSpender(event: Events['action']) {
+	private onGaugeSpender(event: Events['action']) {
 		const modifier = this._spenderModifiers.get(event.action)
 
-		if (modifier != null) {
-			const amount = modifier[event.type] ?? {white: 0, black: 0}
-
-			this._whiteManaGauge.modify(amount.white)
-			this._blackManaGauge.modify(amount.black)
+		if (modifier == null) {
+			return
 		}
+		const amount = modifier
+
+		this._whiteManaGauge.modify(amount.white)
+		this._blackManaGauge.modify(amount.black)
 	}
 
 	//Returns which Mana should be penalized, white, black, or neither
-	private IsOutOfBalance() : {white: boolean, black: boolean} {
-		const whiteMana = this.GetWhiteMana()
-		const blackMana = this.GetBlackMana()
+	private isOutOfBalance() : {white: boolean, black: boolean} {
+		const whiteMana = this.getWhiteMana()
+		const blackMana = this.getBlackMana()
 
 		if (whiteMana && (blackMana - whiteMana > this._manaDifferenceThreshold)) {
 			//If we have more than 30 Black Mana over White, our White gains are halved.
@@ -187,7 +194,7 @@ export default class Gauge extends CoreGauge {
 		return {white: false, black: false}
 	}
 
-	private OnComplete() {
+	private onComplete() {
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.VERHOLY.icon,
 			content: <Fragment>
@@ -276,11 +283,11 @@ export default class Gauge extends CoreGauge {
 		}))
 	}
 
-	public GetWhiteMana() {
+	public getWhiteMana() {
 		return this._whiteManaGauge.value
 	}
 
-	public GetBlackMana() {
+	public getBlackMana() {
 		return this._blackManaGauge.value
 	}
 }
