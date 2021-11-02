@@ -17,7 +17,7 @@ export interface CounterGaugeOptions extends AbstractGaugeOptions {
 	minimum?: number,
 	/** Maximum value of the gauge. Defaults to 100. Value over the maximum will be considered over cap, and tracked if enabled. */
 	maximum?: number,
-	/** Chart options. Omit to disable charting for this gauge. */
+	/** Chart options. Omit to disable charting for this gauge. Superseded by graph if both are provided */
 	chart?: CounterChartOptions,
 	/** Graph options. Omit to disable graphing in the timeline for this gauge. */
 	graph?: GaugeGraphOptions
@@ -146,8 +146,8 @@ export class CounterGauge extends AbstractGauge {
 
 	/** @inheritdoc */
 	override generateDataset() {
-		// If there's no chart options, provide nothing
-		if (!this.chartOptions) {
+		// If there's no chart options, or if there are graph options, provide nothing (prefer graph)
+		if (this.chartOptions == null || this.graphOptions != null) {
 			return
 		}
 
