@@ -38,7 +38,7 @@ interface QueenUsage {
 	rotation: QueenAttack[]
 }
 
-export default class YassQueen extends Analyser {
+export class YassQueen extends Analyser {
 	static override handle = 'queen'
 	static override title = t('mch.queen.title')`Automaton Queen Usage`
 
@@ -127,7 +127,7 @@ export default class YassQueen extends Analyser {
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.AUTOMATON_QUEEN.icon,
 			content: <Trans id="mch.queen.suggestions.missing-bunker.content">
-				Try to time your <ActionLink action="AUTOMATON_QUEEN"/> windows so that they end while the boss is targetable, as Pile Bunker is a significant chunk of its damage. If the boss is about to jump or die, use <ActionLink {...this.data.actions.QUEEN_OVERDRIVE}/> to end it early and get the hit in.
+				Try to time your <ActionLink action="AUTOMATON_QUEEN"/> windows so that they end while the boss is targetable, as Pile Bunker is a significant chunk of its damage. If the boss is about to jump or die, use <ActionLink action="QUEEN_OVERDRIVE"/> to end it early and get the hit in.
 			</Trans>,
 			tiers: {
 				1: SEVERITY.MEDIUM,
@@ -149,7 +149,7 @@ export default class YassQueen extends Analyser {
 				title: {
 					key: 'title-' + queen.start,
 					content: <Fragment>
-						{this.parser.formatTimestamp(queen.start)}
+						{this.parser.formatEpochTimestamp(queen.start)}
 						<span> - </span>
 						{queen.battery} Battery spent ({this.parser.formatDuration(queen.battery * BATTERY_TO_MILLIS_FACTOR)}), {totalDamage} total damage
 					</Fragment>,
@@ -163,7 +163,7 @@ export default class YassQueen extends Analyser {
 
 		return <Fragment>
 			<Message>
-				<Trans id="mch.queen.accordion.message">The list below contains every <ActionLink {...this.data.actions.AUTOMATON_QUEEN}/> window from the fight, indicating when it started, its Battery cost and duration, and how much total damage the Queen did to its target. Expanding an individual window below will display every cast by the Automaton Queen made during it.</Trans>
+				<Trans id="mch.queen.accordion.message">The list below contains every <ActionLink action="AUTOMATON_QUEEN"/> window from the fight, indicating when it started, its Battery cost and duration, and how much total damage the Queen did to its target. Expanding an individual window below will display every cast by the Automaton Queen made during it.</Trans>
 			</Message>
 			<Accordion
 				exclusive={false}
