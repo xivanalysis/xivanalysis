@@ -33,14 +33,6 @@ export class History<T> {
 	private dataInitializer: () => T
 
 	/**
-	 * Determines if there is a currently open entry.
-	 */
-	public isEntryOpen() {
-		const last = _.last(this.entries)
-		return last != null && last.end == null
-	}
-
-	/**
 	 * Gets the currently open entry or returns undefined if there is
 	 * no currently open entry.
 	 */
@@ -77,11 +69,7 @@ export class History<T> {
 	 * @param timestamp The timestamp at which a new entry will be started if a new one is opened.
 	 */
 	public getCurrentOrOpenNew(timestamp: number) {
-		const last = _.last(this.entries)
-		if (last != null && last.end == null) {
-			return last
-		}
-		return this.open(timestamp)
+		return this.getCurrent() ?? this.open(timestamp)
 	}
 
 	/**
