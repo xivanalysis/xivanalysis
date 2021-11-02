@@ -117,14 +117,12 @@ export class ResourceGraphs extends Analyser {
 	}
 
 	/**
-	 * Adds a new data group and displays it on the timeline. Updates the label and collapse state if the group already exists in the collection
-	 * @param handle The handle for this data group
-	 * @param label The label to display for this group
-	 * @param collapse Set the default collapse state of the group. Defaults to collapsed
-	 * @param forceCollapsed If the group defaults to collapsed, sets whether it will be forced to stay collapsed. Defaults to false (allows expansion)
+	 * Adds a new data group and displays it on the timeline. Updates the group if already present and allowUpdate isn't false
+	 * @param opts The ResourceGroupOptions defining this group
+	 * @param allowUpdate If group is already present, indicates whether the group may be updated or not
 	 * @returns A reference to the ResourceDataGroup that was added or updated
 	 */
-	public addDataGroup(opts: ResourceGroupOptions): ResourceDataGroup {
+	public addDataGroup(opts: ResourceGroupOptions, allowUpdate: boolean = true): ResourceDataGroup {
 		const {handle, label, collapse, forceCollapsed} = opts
 		let resourceData = this.dataGroups.get(handle)
 		if (resourceData == null) {
@@ -148,7 +146,7 @@ export class ResourceGraphs extends Analyser {
 				row: resourceRow,
 			}
 			this.dataGroups.set(handle, resourceData)
-		} else {
+		} else if (allowUpdate) {
 			resourceData.row.label = label
 			resourceData.row.collapse = collapse
 		}

@@ -137,7 +137,7 @@ export class CounterGauge extends AbstractGauge {
 			}),
 		}
 		if (handle != null) {
-			this.resourceGraphs.addDataGroup({...this.graphOptions, handle})
+			this.resourceGraphs.addDataGroup({...this.graphOptions, handle}, false)
 			this.resourceGraphs.addData(handle, graphData)
 		} else {
 			this.resourceGraphs.addGauge(graphData, collapse)
