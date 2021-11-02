@@ -48,12 +48,12 @@ export class Gauge extends Analyser {
 		return gauge
 	}
 
-	private onDeath() {
+	protected onDeath() {
 		this.pauseGeneration = true
 		this.gauges.forEach(gauge => gauge.reset())
 	}
 
-	private onRaise() {
+	protected onRaise() {
 		this.pauseGeneration = false
 		this.gauges.forEach(gauge => gauge.raise())
 	}
