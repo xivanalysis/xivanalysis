@@ -87,8 +87,8 @@ export class Gauge extends CoreGauge {
 
 			if (event.action === this.data.actions.AUTOMATON_QUEEN.id) {
 				// Ensure queen consumes its minimum cost at least
-				this._lastQueenCost = Math.min(amount, -gauge.value)
-				gauge.modify(this.lastQueenCost)
+				this._lastQueenCost = Math.max(-amount, gauge.value)
+				gauge.modify(-this.lastQueenCost)
 
 			} else {
 				gauge.modify(amount)
