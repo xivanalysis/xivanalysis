@@ -33,7 +33,7 @@ export default class ArcanaUndrawUsage extends Analyser {
 
 		// It's a OGCD Arcana Undraw. GET IT.
 		if (actionId === this.data.actions.UNDRAW.id) {
-			this._badUndraws =+ 1
+			this._badUndraws += 1
 		}
 	}
 
