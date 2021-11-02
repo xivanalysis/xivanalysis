@@ -659,7 +659,6 @@
   "nin.taWindow.title": "背刺",
   "pld.Atonement.title": "赎罪剑",
   "pld.about.description": "<0>作为黑魔与白魔不被承认的后代，你选择了一条“沥血”之路，成为了一名举着盾牌，挥舞宝剑的法师，试着去帮助所有队友。</0><1>\n这个分析器会帮助你成为一名令人畏惧的坦克，面对敌人时你没有丝毫的“<2/>”，同时作为真正的“<3/>”激励着你的团队。</1>",
-  "pld.atonement.checklist.description": "<0/> 会附加3层忠义之剑状态让你可以使用<1/>，这和得到3层<2/>是等效的，你应该确保用光所有生成的层数。",
   "pld.atonement.checklist.name": "使用王权剑生成的赎罪",
   "pld.atonement.checklist.requirement.atonement.name": "<0/>的使用次数超限",
   "pld.fightorflight.suggestions.gcds.content": "尝试在每个<0/>的持续时间内插入11个GCD技能。",
