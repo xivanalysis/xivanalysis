@@ -1,6 +1,7 @@
 import {ChartDataSets} from 'chart.js'
 import Color from 'color'
 import _ from 'lodash'
+import {GAUGE_HANDLE} from '../ResourceGraphs/ResourceGraphs'
 import {AbstractGauge, AbstractGaugeOptions, GaugeGraphOptions} from './AbstractGauge'
 
 type GaugeEventType =
@@ -199,7 +200,7 @@ export class CounterGauge extends AbstractGauge {
 	override generateResourceGraph() {
 		if (this.graphOptions == null) { return }
 
-		const {handle, color, label, collapse} = this.graphOptions
+		const {handle, color, label} = this.graphOptions
 		const graphData = {
 			label,
 			colour: color,
@@ -208,10 +209,10 @@ export class CounterGauge extends AbstractGauge {
 			}),
 		}
 		if (handle != null) {
-			this.resourceGraphs.addDataGroup({...this.graphOptions, handle}, false)
+			this.resourceGraphs.addDataGroup({...this.graphOptions, handle})
 			this.resourceGraphs.addData(handle, graphData)
 		} else {
-			this.resourceGraphs.addGauge(graphData, collapse)
+			this.resourceGraphs.addGauge(graphData, {...this.graphOptions, handle: GAUGE_HANDLE})
 		}
 	}
 
