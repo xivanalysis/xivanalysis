@@ -57,7 +57,7 @@ export class Gauge extends CoreGauge {
 		[this.data.actions.AUTOMATON_QUEEN.id, {action: -50}],
 	])
 
-	public lastQueenCost = 0
+	private _lastQueenCost = 0
 
 	override initialise() {
 		super.initialise()
@@ -74,6 +74,10 @@ export class Gauge extends CoreGauge {
 		this.addEventHook('complete', this.onComplete)
 	}
 
+	public get lastQueenCost(): number {
+		return this._lastQueenCost
+	}
+
 	private onModifier(gauge: CounterGauge, modifiers: Map<number, GaugeModifier>) {
 		return (event: Events['action']) => {
 			const modifier = modifiers.get(event.action)
@@ -83,7 +87,7 @@ export class Gauge extends CoreGauge {
 
 			if (event.action === this.data.actions.AUTOMATON_QUEEN.id) {
 				// Ensure queen consumes its minimum cost at least
-				this.lastQueenCost = Math.min(amount, -gauge.value)
+				this._lastQueenCost = Math.min(amount, -gauge.value)
 				gauge.modify(this.lastQueenCost)
 
 			} else {
