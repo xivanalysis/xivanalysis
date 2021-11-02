@@ -2,7 +2,7 @@
 import {t} from '@lingui/macro'
 import {Trans, Plural} from '@lingui/react'
 import Color from 'color'
-import {ActionLink} from 'components/ui/DbLink'
+import {DataLink} from 'components/ui/DbLink'
 import JOBS from 'data/JOBS'
 import {Cause, Event, Events, FieldsBase} from 'event'
 import {filter, oneOf} from 'parser/core/filter'
@@ -13,7 +13,6 @@ import {Data} from 'parser/core/modules/Data'
 import {CounterGauge, TimerGauge, Gauge as CoreGauge} from 'parser/core/modules/Gauge'
 import Suggestions, {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import {UnableToAct} from 'parser/core/modules/UnableToAct'
-import {CompleteEvent} from 'parser/core/Parser'
 import React from 'react'
 import {isSuccessfulHit} from 'utilities'
 import {FIRE_SPELLS, ICE_SPELLS_TARGETED, ICE_SPELLS_UNTARGETED} from './Elements'
@@ -44,17 +43,6 @@ declare module 'event' {
 	}
 }
 
-interface EnochianDowntimeWindow {
-	start: number,
-	stop?: number,
-}
-
-interface EnochianDowntimeTracking {
-	current?: EnochianDowntimeWindow,
-	history: EnochianDowntimeWindow[],
-	totalDowntime: number
-}
-
 export class Gauge extends CoreGauge {
 	static override handle = 'gauge'
 	static override title = t('blm.gauge.title')`Gauge`
@@ -64,11 +52,6 @@ export class Gauge extends CoreGauge {
 	@dependency private unableToAct!: UnableToAct
 	@dependency private data!: Data
 	@dependency private castTime!: CastTime
-
-	private enochianDowntimeTracker: EnochianDowntimeTracking = {
-		history: [],
-		totalDowntime: 0,
-	}
 
 	private droppedEnoTimestamps: number[] = []
 	private lostPolyglot: number = 0
@@ -203,12 +186,12 @@ export class Gauge extends CoreGauge {
 			if (!this.astralFireGauge.value && !this.umbralIceGauge.value) {
 				this.brokenLog.trigger(this, 'no stack eno', (
 					<Trans id="blm.gauge.trigger.no-stack-eno">
-						<ActionLink {...this.data.actions.ENOCHIAN}/> was cast without any Astral Fire or Umbral Ice stacks detected.
+						<DataLink action="ENOCHIAN"/> was cast without any Astral Fire or Umbral Ice stacks detected.
 					</Trans>
 				))
 			}
 			if (this.enochianGauge.value <= 1) {
-				this.startEnochianUptime(event.timestamp)
+				this.startEnochianUptime()
 				this.addEvent()
 			}
 			break
@@ -225,10 +208,10 @@ export class Gauge extends CoreGauge {
 			if (this.enochianGauge.value <= 0) {
 				this.brokenLog.trigger(this, 'no eno b4', (
 					<Trans id="blm.gauge.trigger.no-eno-b4">
-						<ActionLink {...this.data.actions.BLIZZARD_IV}/> was cast while <ActionLink {...this.data.actions.ENOCHIAN}/> was deemed inactive.
+						<DataLink action="BLIZZARD_IV"/> was cast while <DataLink action="ENOCHIAN"/> was deemed inactive.
 					</Trans>
 				))
-				this.startEnochianUptime(event.timestamp)
+				this.startEnochianUptime()
 			}
 			this.umbralHeartsGauge.set(MAX_UMBRAL_HEART_STACKS)
 			this.addEvent()
@@ -250,10 +233,10 @@ export class Gauge extends CoreGauge {
 			if (this.enochianGauge.value <= 0) {
 				this.brokenLog.trigger(this, 'no eno f4', (
 					<Trans id="blm.gauge.trigger.no-eno-f4">
-						<ActionLink {...this.data.actions.FIRE_IV}/> was cast while <ActionLink {...this.data.actions.ENOCHIAN}/> was deemed inactive.
+						<DataLink action="FIRE_IV"/> was cast while <DataLink action="ENOCHIAN"/> was deemed inactive.
 					</Trans>
 				))
-				this.startEnochianUptime(event.timestamp)
+				this.startEnochianUptime()
 			}
 			this.tryConsumeUmbralHearts(1)
 			break
@@ -261,10 +244,10 @@ export class Gauge extends CoreGauge {
 			if (this.enochianGauge.value <= 0) {
 				this.brokenLog.trigger(this, 'no eno despair', (
 					<Trans id="blm.gauge.trigger.no-eno-despair">
-						<ActionLink {...this.data.actions.DESPAIR}/> was cast while <ActionLink {...this.data.actions.ENOCHIAN}/> was deemed inactive.
+						<DataLink action="DESPAIR"/> was cast while <DataLink action="ENOCHIAN"/> was deemed inactive.
 					</Trans>
 				))
-				this.startEnochianUptime(event.timestamp)
+				this.startEnochianUptime()
 			}
 			this.onGainAstralFireStacks(MAX_ASTRAL_UMBRAL_STACKS, false)
 			break
@@ -421,7 +404,6 @@ export class Gauge extends CoreGauge {
 		this.polyglotTimer.reset()
 
 		if (this.enochianGauge.value > 0 && flagIssues) {
-			this.enochianDowntimeTracker.current = {start: this.parser.currentEpochTimestamp}
 			this.droppedEnoTimestamps.push(this.parser.currentEpochTimestamp)
 		}
 
@@ -454,23 +436,9 @@ export class Gauge extends CoreGauge {
 		this.addEvent()
 	}
 
-	private startEnochianUptime(timestamp: number) {
+	private startEnochianUptime() {
 		this.enochianGauge.set(1)
 		this.polyglotTimer.start()
-
-		if (this.enochianDowntimeTracker.current != null) {
-			this.stopEnochianDowntime(timestamp)
-		}
-	}
-
-	private stopEnochianDowntime(timestamp: number) {
-		if (this.enochianDowntimeTracker.current == null) { return }
-
-		this.enochianDowntimeTracker.current.stop = timestamp
-		this.enochianDowntimeTracker.totalDowntime += Math.max(this.enochianDowntimeTracker.current.stop - this.enochianDowntimeTracker.current.start, 0)
-		this.enochianDowntimeTracker.history.push({...this.enochianDowntimeTracker.current})
-		//reset the timer again to prevent weirdness/errors
-		this.enochianDowntimeTracker.current = undefined
 	}
 
 	// Refund unable-to-act time if the downtime window was longer than the AF/UI timer
@@ -486,7 +454,7 @@ export class Gauge extends CoreGauge {
 					refundTime += endOfDowntime - downtime.start // If the end of this enochian downtime occurred during an unableToAct time frame that lasted longer than the AF/UI timeout, refund that downtime
 				}
 			})
-		return Math.floor(Math.max(0, time - refundTime)/ENOCHIAN_DURATION_REQUIRED)
+		return Math.floor(Math.max(0, time - refundTime) / ENOCHIAN_DURATION_REQUIRED)
 	}
 	//#endregion
 
@@ -495,12 +463,8 @@ export class Gauge extends CoreGauge {
 		this.onAstralUmbralTimeout(false)
 	}
 
-	private onComplete(event: CompleteEvent) {
-		if (this.enochianDowntimeTracker.current) {
-			this.stopEnochianDowntime(event.timestamp)
-		}
-
-		this.lostPolyglot = this.countLostPolyglots(this.enochianDowntimeTracker.totalDowntime)
+	private onComplete() {
+		const lostPolyglot = this.countLostPolyglots(this.polyglotTimer.getDowntime(this.data.actions.FIRE_IV.castTime))
 
 		// Find out how many of the enochian drops ocurred during times where the player could not act for longer than the AF/UI buff timer. If they could act, they could've kept it going, so warn about those.
 		const droppedEno = this.droppedEnoTimestamps.filter(drop =>
@@ -512,41 +476,41 @@ export class Gauge extends CoreGauge {
 				.filter((downtime) => Math.max(0, downtime.end - downtime.start) >= ASTRAL_UMBRAL_DURATION)
 				.length === 0
 		).length
-		if (droppedEno) {
+		if (droppedEno > 0) {
 			this.suggestions.add(new Suggestion({
 				icon: this.data.actions.ENOCHIAN.icon,
 				content: <Trans id="blm.gauge.suggestions.dropped-enochian.content">
-					Dropping <ActionLink {...this.data.actions.ENOCHIAN}/> may lead to lost <ActionLink {...this.data.actions.XENOGLOSSY}/> or <ActionLink {...this.data.actions.FOUL}/> casts, more clipping because of additional <ActionLink {...this.data.actions.ENOCHIAN}/> casts, unavailability of <ActionLink {...this.data.actions.FIRE_IV}/> and <ActionLink {...this.data.actions.BLIZZARD_IV}/> or straight up missing out on the 15% damage bonus that <ActionLink {...this.data.actions.ENOCHIAN}/> provides.
+					Dropping <DataLink action="ENOCHIAN"/> may lead to lost <DataLink action="XENOGLOSSY"/> or <DataLink action="FOUL"/> casts, more clipping because of additional <DataLink action="ENOCHIAN"/> casts, unavailability of <DataLink action="FIRE_IV"/> and <DataLink action="BLIZZARD_IV"/> or straight up missing out on the 15% damage bonus that <DataLink action="ENOCHIAN"/> provides.
 				</Trans>,
 				severity: SEVERITY.MEDIUM,
 				why: <Trans id="blm.gauge.suggestions.dropped-enochian.why">
-					<ActionLink showIcon={false} {...this.data.actions.ENOCHIAN} /> was dropped <Plural value={droppedEno} one="# time" other="# times"/>.
+					<DataLink showIcon={false} action="ENOCHIAN"/> was dropped <Plural value={droppedEno} one="# time" other="# times"/>.
 				</Trans>,
 			}))
 		}
 
-		if (this.lostPolyglot) {
+		if (lostPolyglot > 0) {
 			this.suggestions.add(new Suggestion({
 				icon: this.data.actions.XENOGLOSSY.icon,
 				content: <Trans id="blm.gauge.suggestions.lost-polyglot.content">
-					You lost Polyglot due to dropped <ActionLink {...this.data.actions.ENOCHIAN}/>. <ActionLink {...this.data.actions.XENOGLOSSY}/> and <ActionLink {...this.data.actions.FOUL}/> are your strongest GCDs, so always maximize their casts.
+					You lost Polyglot due to dropped <DataLink action="ENOCHIAN"/>. <DataLink action="XENOGLOSSY"/> and <DataLink action="FOUL"/> are your strongest GCDs, so always maximize their casts.
 				</Trans>,
 				severity: SEVERITY.MAJOR,
 				why: <Trans id="blm.gauge.suggestions.lost-polyglot.why">
-					<Plural value={this.lostPolyglot} one="# Polyglot stack was" other="# Polyglot stacks were"/> lost.
+					<Plural value={lostPolyglot} one="# Polyglot stack was" other="# Polyglot stacks were"/> lost.
 				</Trans>,
 			}))
 		}
 
-		if (this.overwrittenPolyglot) {
+		if (this.overwrittenPolyglot > 0) {
 			this.suggestions.add(new Suggestion({
 				icon: this.data.actions.XENOGLOSSY.icon,
 				content: <Trans id="blm.gauge.suggestions.overwritten-polyglot.content">
-					You overwrote Polyglot due to not casting <ActionLink {...this.data.actions.XENOGLOSSY} /> or <ActionLink {...this.data.actions.FOUL}/> for 30s after gaining a second stack. <ActionLink {...this.data.actions.XENOGLOSSY}/> and <ActionLink {...this.data.actions.FOUL}/> are your strongest GCDs, so always maximize their casts.
+					You overwrote Polyglot due to not casting <DataLink action="XENOGLOSSY"/> or <DataLink action="FOUL"/> for 30s after gaining a second stack. <DataLink action="XENOGLOSSY"/> and <DataLink action="FOUL"/> are your strongest GCDs, so always maximize their casts.
 				</Trans>,
 				severity: SEVERITY.MAJOR,
 				why: <Trans id="blm.gauge.suggestions.overwritten-polyglot.why">
-					<ActionLink showIcon={false} {...this.data.actions.XENOGLOSSY} /> got overwritten <Plural value={this.overwrittenPolyglot} one="# time" other="# times"/>.
+					<DataLink showIcon={false} action="XENOGLOSSY"/> got overwritten <Plural value={this.overwrittenPolyglot} one="# time" other="# times"/>.
 				</Trans>,
 			}))
 		}
