@@ -21,6 +21,20 @@ const GAUGE_SEVERITY_TIERS = {
 	10: SEVERITY.MAJOR,
 }
 
+/** Feather configuration */
+const FEATHER_GENERATORS: ActionKey[] = [
+	'REVERSE_CASCADE',
+	'FOUNTAINFALL',
+	'RISING_WINDMILL',
+	'BLOODSHOWER',
+]
+const FEATHER_CONSUMERS: ActionKey[] = [
+	'FAN_DANCE',
+	'FAN_DANCE_II',
+]
+const FEATHER_GENERATION_CHANCE = .5
+const MAX_FEATHERS = 4
+
 /** Esprit configuration */
 const ESPRIT_STATUSES: StatusKey[] = [
 	'ESPRIT',
@@ -56,19 +70,11 @@ const MAX_IMPROV_TICKS = 5
 
 const SABER_DANCE_COST = 50
 
-/** Feather configuration */
-const FEATHER_GENERATORS: ActionKey[] = [
-	'REVERSE_CASCADE',
-	'FOUNTAINFALL',
-	'RISING_WINDMILL',
-	'BLOODSHOWER',
-]
-const FEATHER_CONSUMERS: ActionKey[] = [
-	'FAN_DANCE',
-	'FAN_DANCE_II',
-]
-const FEATHER_GENERATION_CHANCE = .5
-const MAX_FEATHERS = 4
+/** Graph colors */
+/* eslint-disable @typescript-eslint/no-magic-numbers */
+const ESRPIT_COLOR = Color(JOBS.DANCER.colour).fade(0.25).toString()
+const FEATHERS_COLOR = Color.rgb(140.6, 161.1, 70.8).fade(0.25).toString()
+/* eslint-enable @typescript-eslint/no-magic-numbers */
 
 export class Gauge extends CoreGauge {
 	@dependency private data!: Data
@@ -78,16 +84,14 @@ export class Gauge extends CoreGauge {
 		maximum: MAX_FEATHERS,
 		graph: {
 			label: <Trans id="dnc.gauge.resource.feathers">Feathers</Trans>,
-			// eslint-disable-next-line @typescript-eslint/no-magic-numbers
-			color: Color.rgb(140.6, 161.1, 70.8).fade(0.25).toString(),
+			color: FEATHERS_COLOR,
 		},
 		correctHistory: true,
 	}))
 	private espritGauge = this.add(new CounterGauge({
 		graph: {
 			label: <Trans id="dnc.gauge.resource.esprit">Esprit</Trans>,
-			// eslint-disable-next-line @typescript-eslint/no-magic-numbers
-			color: Color(JOBS.DANCER.colour).fade(0.25).toString(),
+			color: ESRPIT_COLOR,
 		},
 		correctHistory: true,
 	}))
