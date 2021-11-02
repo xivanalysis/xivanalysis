@@ -185,7 +185,7 @@ export class ResourceGraphs extends Analyser {
 		// relatively simple to slice the graph into multiple smaller items which can be windowed.
 		dataGroup.row.addRow(new SimpleRow({
 			label,
-			height: 64,
+			height: (dataGroup.row.height ?? DEFAULT_ROW_HEIGHT),
 			items: data.map(data => {
 				return new SimpleItem({
 					content: <Graph resource={data} scaleX={this.scaleX}/>,
