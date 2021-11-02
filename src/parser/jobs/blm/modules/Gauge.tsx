@@ -476,15 +476,16 @@ export class Gauge extends CoreGauge {
 	// Refund unable-to-act time if the downtime window was longer than the AF/UI timer
 	private countLostPolyglots(time: number) {
 		let refundTime = 0
-		this.enochianDowntimeTracker.history.forEach(downtime => {
-			if (this.unableToAct.getWindows({
-				start: downtime.start,
-				end: downtime.start,
-			}).filter((uta) => Math.max(0, uta.end - uta.start) >= ASTRAL_UMBRAL_DURATION).length > 0) {
-				const endOfDowntime = downtime.stop || (this.parser.pull.timestamp + this.parser.pull.duration)
-				refundTime += endOfDowntime - downtime.start // If the end of this enochian downtime occurred during an unableToAct time frame that lasted longer than the AF/UI timeout, refund that downtime
-			}
-		})
+		this.polyglotTimer.getDowntimeWindows().filter(window => window.start - this.parser.pull.timestamp > this.data.actions.FIRE_IV.castTime)
+			.forEach(downtime => {
+				if (this.unableToAct.getWindows({
+					start: downtime.start,
+					end: downtime.start,
+				}).filter((uta) => Math.max(0, uta.end - uta.start) >= ASTRAL_UMBRAL_DURATION).length > 0) {
+					const endOfDowntime = downtime.end || (this.parser.pull.timestamp + this.parser.pull.duration)
+					refundTime += endOfDowntime - downtime.start // If the end of this enochian downtime occurred during an unableToAct time frame that lasted longer than the AF/UI timeout, refund that downtime
+				}
+			})
 		return Math.floor(Math.max(0, time - refundTime)/ENOCHIAN_DURATION_REQUIRED)
 	}
 	//#endregion
