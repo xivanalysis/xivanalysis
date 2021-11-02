@@ -86,8 +86,8 @@ export default class Atonement extends Analyser {
 		if (this.currentSwordOath == null) { return }
 
 		// If any stacks were left when the status fell off, keep track of those
-		if (this.currentSwordOath.used < this.data.statuses.SWORD_OATH.stacksApplied) {
-			this.droppedStacks += Math.max(this.data.statuses.SWORD_OATH.stacksApplied - this.currentSwordOath.used, 0)
+		if (this.currentSwordOath.used < this.currentSwordOath.initial) {
+			this.droppedStacks += Math.max(this.currentSwordOath.initial - this.currentSwordOath.used, 0)
 		}
 
 		this.closeSwordOath()
