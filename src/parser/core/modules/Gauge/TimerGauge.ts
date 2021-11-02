@@ -1,5 +1,6 @@
 import {Analyser} from 'parser/core/Analyser'
 import {ResourceDatum} from '../ResourceGraphs'
+import {GAUGE_HANDLE} from '../ResourceGraphs/ResourceGraphs'
 import {AbstractGauge, AbstractGaugeOptions, GaugeGraphOptions} from './AbstractGauge'
 
 function expectExist<T>(value?: T) {
@@ -219,7 +220,7 @@ export class TimerGauge extends AbstractGauge {
 			}
 		})
 
-		const {handle, label, color, collapse} = this.graphOptions
+		const {handle, label, color} = this.graphOptions
 		const graphData = {
 			label,
 			colour: color,
@@ -229,7 +230,7 @@ export class TimerGauge extends AbstractGauge {
 			this.resourceGraphs.addDataGroup({...this.graphOptions, handle})
 			this.resourceGraphs.addData(handle, graphData)
 		} else {
-			this.resourceGraphs.addGauge(graphData, collapse)
+			this.resourceGraphs.addGauge(graphData, {...this.graphOptions, handle: GAUGE_HANDLE})
 		}
 	}
 

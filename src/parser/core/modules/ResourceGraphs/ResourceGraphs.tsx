@@ -39,14 +39,19 @@ export interface ResourceGraphOptions {
 	collapse?: boolean,
 	/** Should this group be forced to remain collapsed. If not included, the default is no */
 	forceCollapsed?: boolean
+	/** The height of the row for the group. If not included, defaults to 64 px */
+	height?: number
 }
+
+const DEFAULT_ROW_HEIGHT: number = 64
+
 export interface ResourceGroupOptions extends ResourceGraphOptions {
 	/** The handle for this group of data */
 	handle: string,
 }
 
-const RESOURCE_HANDLE: string = 'resources'
-const GAUGE_HANDLE: string = 'gauges'
+export const RESOURCE_HANDLE: string = 'resources'
+export const GAUGE_HANDLE: string = 'gauges'
 
 export class ResourceGraphs extends Analyser {
 	static override handle = 'resourceGraphs'
@@ -91,25 +96,25 @@ export class ResourceGraphs extends Analyser {
 	/**
 	 * Shorthand accessor for addData with the default gauges group, creating the group if necessary
 	 * @param gauge The gauge ResourceData to add
-	 * @param collapse Set the default collapse state of the gauge group, if the group must be created. Defaults to collapsed
+	 * @param opts The ResourceGroupOptions defining this group
 	 */
-	public addGauge(gauge: ResourceData, collapse: boolean = true) {
-		this.addGauges(gauge.label, [gauge], collapse)
+	public addGauge(gauge: ResourceData, opts?: ResourceGroupOptions) {
+		this.addGauges(gauge.label, [gauge], opts)
 	}
 
 	/**
 	 * Shorthand accessor for addDatas with the default resources group, if adding data to display on the same sub-row, creating the group if necessary
 	 * @param label The sub-row label
 	 * @param gauges The array of gauge ResourceData to add
-	 * @param collapse Set the default collapse state of the gauge group, if the group must be created. Defaults to collapsed
+	 * @param opts The ResourceGroupOptions defining this group
 	 */
-	public addGauges(label: ReactNode, gauges: ResourceData[], collapse: boolean = true) {
+	public addGauges(label: ReactNode, gauges: ResourceData[], opts?: ResourceGroupOptions) {
 		let gaugeGroup = this.dataGroups.get(GAUGE_HANDLE)
 		if (gaugeGroup == null) {
 			gaugeGroup = this.addDataGroup({
+				...opts,
 				handle: GAUGE_HANDLE,
 				label: <Trans id="core.resource-graphs.gauge-label">Gauges</Trans>,
-				collapse,
 			})
 		}
 
@@ -119,17 +124,16 @@ export class ResourceGraphs extends Analyser {
 	/**
 	 * Adds a new data group and displays it on the timeline. Updates the group if already present and allowUpdate isn't false
 	 * @param opts The ResourceGroupOptions defining this group
-	 * @param allowUpdate If group is already present, indicates whether the group may be updated or not
 	 * @returns A reference to the ResourceDataGroup that was added or updated
 	 */
-	public addDataGroup(opts: ResourceGroupOptions, allowUpdate: boolean = true): ResourceDataGroup {
-		const {handle, label, collapse, forceCollapsed} = opts
+	public addDataGroup(opts: ResourceGroupOptions): ResourceDataGroup {
+		const {handle, label, collapse, forceCollapsed, height} = opts
 		let resourceData = this.dataGroups.get(handle)
 		if (resourceData == null) {
 			const resourceRow = new SimpleRow({
 				label,
 				order: -200,
-				height: 64,
+				height: (height ?? DEFAULT_ROW_HEIGHT),
 				collapse: (collapse ?? true),
 				forceCollapsed: (forceCollapsed ?? false),
 				items: [new SimpleItem({
@@ -146,9 +150,10 @@ export class ResourceGraphs extends Analyser {
 				row: resourceRow,
 			}
 			this.dataGroups.set(handle, resourceData)
-		} else if (allowUpdate) {
-			resourceData.row.label = label
-			resourceData.row.collapse = collapse
+		} else {
+			resourceData.row.collapse = collapse ?? resourceData.row.collapse
+			resourceData.row.height = height ?? resourceData.row.height
+			resourceData.row.forceCollapsed = forceCollapsed ?? resourceData.row.forceCollapsed
 		}
 		return resourceData
 	}
