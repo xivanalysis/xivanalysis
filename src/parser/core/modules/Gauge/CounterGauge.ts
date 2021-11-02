@@ -1,6 +1,7 @@
 import {ChartDataSets} from 'chart.js'
 import Color from 'color'
 import _ from 'lodash'
+import {GAUGE_HANDLE} from '../ResourceGraphs/ResourceGraphs'
 import {AbstractGauge, AbstractGaugeOptions, GaugeGraphOptions} from './AbstractGauge'
 
 type GaugeEventType =
@@ -9,6 +10,7 @@ type GaugeEventType =
 	| 'spend'
 	| 'reset'
 	| 'changeBounds'
+	| 'notSpecified'
 
 interface CounterHistory {
 	timestamp: number
@@ -102,18 +104,26 @@ export class CounterGauge extends AbstractGauge {
 	/** Modify the current value by the provided amount. Equivalent to `set(currentValue + amount)` */
 	modify(amount: number) {
 		if (amount === 0) { return }
-		this.set(this._value + amount, undefined, Math.abs(amount))
+		this.set(this._value + amount, amount > 0 ? 'generate' : 'spend', Math.abs(amount))
+	}
+
+	/** Increase the current value by the provided amount. */
+	generate(amount: number) {
+		if (amount === 0) { return }
+		amount = Math.abs(amount)
+		this.set(this._value + amount, 'generate', amount)
+	}
+
+	/** Decrease the current value by the provided amount. */
+	spend(amount: number) {
+		if (amount === 0) { return }
+		amount = Math.abs(amount)
+		this.set(this._value - amount, 'spend', amount)
 	}
 
 	/** Set the current value of the gauge. Value will automatically be bounded to valid values. Value over the maximum will be tracked as overcap. */
 	set(value: number, type?: GaugeEventType, delta?: number) {
-		if (type == null) {
-			if (value > this.value) {
-				type = 'generate'
-			} else {
-				type = 'spend'
-			}
-		}
+		type = type ?? 'notSpecified'
 
 		const newValue = Math.min(Math.max(value, this.minimum), this.maximum)
 
@@ -199,7 +209,7 @@ export class CounterGauge extends AbstractGauge {
 	override generateResourceGraph() {
 		if (this.graphOptions == null) { return }
 
-		const {handle, color, label, collapse} = this.graphOptions
+		const {handle, color, label} = this.graphOptions
 		const graphData = {
 			label,
 			colour: color,
@@ -208,10 +218,10 @@ export class CounterGauge extends AbstractGauge {
 			}),
 		}
 		if (handle != null) {
-			this.resourceGraphs.addDataGroup({...this.graphOptions, handle}, false)
+			this.resourceGraphs.addDataGroup({...this.graphOptions, handle})
 			this.resourceGraphs.addData(handle, graphData)
 		} else {
-			this.resourceGraphs.addGauge(graphData, collapse)
+			this.resourceGraphs.addGauge(graphData, {...this.graphOptions, handle: GAUGE_HANDLE})
 		}
 	}
 

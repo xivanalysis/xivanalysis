@@ -187,7 +187,7 @@ export class Gauge extends CoreGauge {
 		const expectedGenerationChance = event.source === this.parser.actor.id ? ESPRIT_RATE_SELF : ESPRIT_RATE_PARTY
 		const generatedAmt = ESPRIT_GENERATION_AMOUNT * expectedGenerationChance
 
-		this.espritGauge.modify(generatedAmt)
+		this.espritGauge.generate(generatedAmt)
 	}
 
 	// Reset current improvisatio data when the action is executed
@@ -237,7 +237,7 @@ export class Gauge extends CoreGauge {
 	private onTickImprov() {
 		const improviserCount = this.improvisers.length
 		const generatedAmt = 2 + improviserCount
-		this.espritGauge.modify(generatedAmt)
+		this.espritGauge.generate(generatedAmt)
 
 		// Technically we don't need this check since we'll remove the hook in endImprov but eh
 		if (++this.improvTicks < MAX_IMPROV_TICKS) {
@@ -246,15 +246,15 @@ export class Gauge extends CoreGauge {
 	}
 
 	private onConsumeEsprit() {
-		this.espritGauge.modify(-1 * SABER_DANCE_COST)
+		this.espritGauge.spend(SABER_DANCE_COST)
 	}
 
 	private onCastGenerator() {
-		this.featherGauge.modify(FEATHER_GENERATION_CHANCE)
+		this.featherGauge.generate(FEATHER_GENERATION_CHANCE)
 	}
 
 	private onConsumeFeather() {
-		this.featherGauge.modify(-1)
+		this.featherGauge.spend(1)
 	}
 
 	/* Parse Completion and output */
