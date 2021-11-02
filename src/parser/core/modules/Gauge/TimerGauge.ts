@@ -16,6 +16,11 @@ interface State {
 	paused: boolean
 }
 
+interface TimerDownWindow {
+	start: number
+	end: number
+}
+
 export interface TimerGaugeOptions extends AbstractGaugeOptions {
 	/** Maxiumum duration of the gauge, in milliseconds. */
 	maximum: number
@@ -138,7 +143,7 @@ export class TimerGauge extends AbstractGauge {
 
 	/** Set the time remaining on the timer to the given duration. Value will be bounded by provided maximum. */
 	set(duration: number, paused: boolean = false) {
-		const timestamp = this.parser.currentTimestamp
+		const timestamp = this.parser.currentEpochTimestamp
 		const remaining = Math.max(this.minimum, Math.min(duration, this.maximum))
 
 		// Push a new state onto the history
@@ -248,5 +253,55 @@ export class TimerGauge extends AbstractGauge {
 
 	setRemoveTimestampHook(value: Analyser['removeTimestampHook']) {
 		this._removeTimestampHook = value
+	}
+
+	private internalDowntime(start = this.parser.pull.timestamp, end = this.parser.currentEpochTimestamp) {
+		let currentStart: number | undefined = undefined
+		const downtimeWindows: TimerDownWindow[] = []
+
+		this.history.forEach(entry => {
+			if (entry.remaining <= this.minimum && currentStart == null) {
+				currentStart = entry.timestamp
+			}
+			if (entry.remaining > this.minimum && currentStart != null) {
+				downtimeWindows.push({start: currentStart, end: entry.timestamp})
+				currentStart = undefined
+			}
+		})
+
+		if (downtimeWindows.length === 0) { return [] }
+
+		const finalDowntimes: TimerDownWindow[] = []
+		downtimeWindows.forEach(dt => {
+			if (dt.end > start || dt.start < end) {
+				finalDowntimes.push(dt)
+			}
+		})
+
+		return finalDowntimes
+	}
+
+	public isDowntime(when = this.parser.currentEpochTimestamp) {
+		return this.internalDowntime(when, when).length > 0
+	}
+
+	public getDowntime(start = this.parser.pull.timestamp, end = this.parser.currentEpochTimestamp) {
+		return this.internalDowntime(start, end).reduce(
+			(totalDowntime, currentWindow) => totalDowntime + Math.min(currentWindow.end, end) - Math.max(currentWindow.start, start),
+			0,
+		)
+	}
+
+	public getDowntimeWindows(start = this.parser.pull.timestamp, end = this.parser.currentEpochTimestamp) {
+		return this.internalDowntime(start, end).reduce<TimerDownWindow[]>(
+			(windows, window) => {
+				windows.push({
+					start: Math.max(window.start, start),
+					end: Math.min(window.end, end),
+				})
+				return windows
+			},
+			[],
+		)
 	}
 }
