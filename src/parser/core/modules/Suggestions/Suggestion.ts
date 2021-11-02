@@ -10,41 +10,39 @@ export const SEVERITY = {
 	// The matchClosest fall back to undefined, so let's use that for ignore too
 	IGNORE: undefined,
 }
+type Severity = typeof SEVERITY[keyof typeof SEVERITY]
 
 export interface SuggestionOptions {
 	icon: string
 	content: ReactNode
 	why: ReactNode
-	severity?: number
+	severity: number
 }
 
 export default class Suggestion {
 	public icon: string // TODO: default image
 	public content: ReactNode
 	public why: ReactNode
-	private severityValue?: number
+	private severityValue: Severity
 
 	constructor(options: SuggestionOptions) {
 		this.icon = options.icon
 		this.content = options.content
 		this.why = options.why
-		// This gets a default even though it is number | undefined.
-		// The undefined option is for TieredSuggestions to be able
-		// to return SEVERITY.IGNORED.
-		this.severityValue = options.severity ?? SEVERITY.MEDIUM
+		this.severityValue = options.severity
 	}
 
-	get severity() {
+	get severity(): Severity {
 		return this.severityValue
 	}
 
 	set severity(value) {
-		this.severityValue = value
+		this.severityValue = value ?? SEVERITY.MEDIUM
 	}
 }
 
 export interface SeverityTiers {
-	[key: number]: number
+	[key: number]: Severity
 }
 
 export interface TieredSuggestionOptions {
@@ -53,16 +51,16 @@ export interface TieredSuggestionOptions {
 	why: ReactNode
 	tiers: SeverityTiers
 	value: number
-	matcher?: (tiers: SeverityTiers, value: number) => number | undefined
+	matcher?: (tiers: SeverityTiers, value: number) => Severity
 }
 
 export class TieredSuggestion extends Suggestion {
 	public tiers: SeverityTiers
 	public value: number
-	public matcher: (tiers: SeverityTiers, value: number) => number | undefined
+	public matcher: (tiers: SeverityTiers, value: number) => Severity
 
 	constructor(options: TieredSuggestionOptions) {
-		super(options)
+		super({...options, severity: SEVERITY.MINOR})
 
 		this.tiers = options.tiers
 		this.value = options.value
