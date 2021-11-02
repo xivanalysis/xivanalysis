@@ -95,7 +95,7 @@ export class Reassemble extends Analyser {
 		if (event.timestamp !== this.state.lastGcdTime) {
 			this.history.droppedUses += 1
 		}
-		if (!(this.state.gcdHook == null)) {
+		if (this.state.gcdHook != null) {
 			this.removeEventHook(this.state.gcdHook)
 		}
 		this.state.active = false
