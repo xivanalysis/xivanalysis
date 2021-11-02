@@ -5,14 +5,12 @@ import Color from 'color'
 import {ActionLink} from 'components/ui/DbLink'
 import JOBS from 'data/JOBS'
 import {Cause, Event, Events, FieldsBase} from 'event'
-import {Analyser} from 'parser/core/Analyser'
-import {TimestampHook} from 'parser/core/Dispatcher'
 import {filter, oneOf} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
 import BrokenLog from 'parser/core/modules/BrokenLog'
 import CastTime from 'parser/core/modules/CastTime'
 import {Data} from 'parser/core/modules/Data'
-import {ResourceDatum, ResourceGraphs} from 'parser/core/modules/ResourceGraphs'
+import {CounterGauge, TimerGauge, Gauge as CoreGauge} from 'parser/core/modules/Gauge'
 import Suggestions, {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import {UnableToAct} from 'parser/core/modules/UnableToAct'
 import {CompleteEvent} from 'parser/core/Parser'
@@ -27,7 +25,7 @@ export const MAX_UMBRAL_HEART_STACKS = 3
 const MAX_ASTRAL_UMBRAL_CAST_SCALAR = 0.5
 const FLARE_MAX_HEART_CONSUMPTION = 3
 const MAX_POLYGLOT_STACKS = 2
-
+const ASTRAL_UMBRAL_HANDLE: string = 'astralumbral'
 interface EventBLMGauge extends FieldsBase {
 	type: 'blmgauge',
 }
@@ -57,7 +55,7 @@ interface EnochianDowntimeTracking {
 	totalDowntime: number
 }
 
-export default class Gauge extends Analyser {
+export class Gauge extends CoreGauge {
 	static override handle = 'gauge'
 	static override title = t('blm.gauge.title')`Gauge`
 
@@ -65,7 +63,6 @@ export default class Gauge extends Analyser {
 	@dependency private brokenLog!: BrokenLog
 	@dependency private unableToAct!: UnableToAct
 	@dependency private data!: Data
-	@dependency private resourceGraphs!: ResourceGraphs
 	@dependency private castTime!: CastTime
 
 	private enochianDowntimeTracker: EnochianDowntimeTracking = {
@@ -77,22 +74,7 @@ export default class Gauge extends Analyser {
 	private lostPolyglot: number = 0
 	private overwrittenPolyglot: number = 0
 
-	private gaugeHistory: Map<number, BLMGaugeState> = new Map<number, BLMGaugeState>()
 	private lastHistoryTimestamp!: number
-	private currentGaugeState: BLMGaugeState = {
-		astralFire: 0,
-		umbralIce: 0,
-		umbralHearts: 0,
-		polyglot: 0,
-		enochian: false,
-	}
-	private polyglotHistory: ResourceDatum[] = []
-	private astralFireHistory: ResourceDatum[] = []
-	private umbralIceHistory: ResourceDatum[] = []
-	private umbralHeartHistory: ResourceDatum[] = []
-
-	private astralUmbralTimeoutHook!: TimestampHook | null
-	private gainPolyglotHook!: TimestampHook | null
 
 	private fireSpellIds = FIRE_SPELLS.map(key => this.data.actions[key].id)
 	private targetedIceSpellIds = ICE_SPELLS_TARGETED.map(key => this.data.actions[key].id)
@@ -116,7 +98,55 @@ export default class Gauge extends Analyser {
 
 	private castTimeIndex: number | null = null
 
+	private astralFireGauge = this.add(new CounterGauge({
+		maximum: MAX_ASTRAL_UMBRAL_STACKS,
+		graph: {
+			handle: ASTRAL_UMBRAL_HANDLE,
+			label: <Trans id="blm.gauge.resource.astral-fire">Astral Fire</Trans>,
+			// eslint-disable-next-line @typescript-eslint/no-magic-numbers
+			color: Color.rgb(210, 62, 38).fade(0.5).toString(),
+		},
+	}))
+	private umbralIceGauge = this.add(new CounterGauge({
+		maximum: MAX_ASTRAL_UMBRAL_STACKS,
+		graph: {
+			handle: ASTRAL_UMBRAL_HANDLE,
+			label: <Trans id="blm.gauge.resource.umbral-ice">Umbral Ice</Trans>,
+			// eslint-disable-next-line @typescript-eslint/no-magic-numbers
+			color: Color.rgb(47, 113, 177).fade(0.5).toString(),
+		},
+	}))
+	private umbralHeartsGauge = this.add(new CounterGauge({
+		maximum: MAX_UMBRAL_HEART_STACKS,
+		graph: {
+			label: <Trans id="blm.gauge.resource.umbral-hearts">Umbral Hearts</Trans>,
+			// eslint-disable-next-line @typescript-eslint/no-magic-numbers
+			color: Color.rgb(47, 113, 177).fade(0.25).toString(),
+		},
+	}))
+	private polyglotGauge = this.add(new CounterGauge({
+		maximum: MAX_POLYGLOT_STACKS,
+		graph: {
+			label: <Trans id="blm.gauge.resource.polyglot">Polyglot</Trans>,
+			// eslint-disable-next-line @typescript-eslint/no-magic-numbers
+			color: Color(JOBS.BLACK_MAGE.colour).fade(0.25).toString(),
+		},
+	}))
+	private enochianGauge = this.add(new CounterGauge({
+		maximum: 1,
+	}))
+	private astralUmbralTimer = this.add(new TimerGauge({
+		maximum: ASTRAL_UMBRAL_DURATION,
+		onExpiration: this.onAstralUmbralTimeout.bind(this),
+	}))
+	private polyglotTimer = this.add(new TimerGauge({
+		maximum: ENOCHIAN_DURATION_REQUIRED,
+		onExpiration: this.onGainPolyglot.bind(this),
+	}))
+
 	override initialise() {
+		super.initialise()
+
 		const playerFilter = filter<Event>().source(this.parser.actor.id)
 
 		// The action event is sufficient for actions that don't need to do damage to affect gauge state (ie. Transpose, Enochian, Umbral Soul)
@@ -126,13 +156,16 @@ export default class Gauge extends Analyser {
 		// The rest of the fire and ice spells must do damage in order to affect gauge state, so hook that event instead.
 		this.addEventHook(playerFilter.type('damage').cause(filter<Cause>().action(oneOf(this.affectsGaugeOnDamage))), this.onCast)
 
-		this.addEventHook({
-			type: 'death',
-			actor: this.parser.actor.id,
-		}, this.onDeath)
 		this.addEventHook('complete', this.onComplete)
 
 		this.setGaugeAndUpdateHistory(this.parser.pull.timestamp)
+
+		this.resourceGraphs.addDataGroup({
+			handle: ASTRAL_UMBRAL_HANDLE,
+			label: <Trans id="blm.gauge.resource.astral-umbral">Astral Fire and<br></br>Umbral Ice</Trans>,
+			collapse: true,
+			forceCollapsed: true,
+		})
 	}
 
 	/**
@@ -141,19 +174,13 @@ export default class Gauge extends Analyser {
 	 * @returns The BLMGaugeState object for this timestamp, or undefined if not found
 	*/
 	public getGaugeState(timestamp: number = this.parser.currentEpochTimestamp): BLMGaugeState | undefined {
-		// First try to get the gauge state at this exact timestamp
-		let gaugeState = this.gaugeHistory.get(timestamp)
-		// If there is no gauge state for the exact timestamp, look through the historical data to find the effective state
-		if (gaugeState == null) {
-			let historyKey = 0
-			// If anyone knows of a better way to get the last historical timestamp prior to the parameter timestamp, please tell me...
-			for (const key of this.gaugeHistory.keys()) {
-				if (key > timestamp) { break }
-				historyKey = key
-			}
-			gaugeState = this.gaugeHistory.get(historyKey)
+		return {
+			astralFire: this.astralFireGauge.getValueAt(timestamp),
+			umbralIce: this.umbralIceGauge.getValueAt(timestamp),
+			umbralHearts: this.umbralHeartsGauge.getValueAt(timestamp),
+			polyglot: this.polyglotGauge.getValueAt(timestamp),
+			enochian: this.enochianGauge.getValueAt(timestamp) > 0,
 		}
-		return gaugeState
 	}
 
 	//#region onCast and gauge state modification
@@ -173,14 +200,14 @@ export default class Gauge extends Analyser {
 
 		switch (abilityId) {
 		case this.data.actions.ENOCHIAN.id:
-			if (!this.currentGaugeState.astralFire && !this.currentGaugeState.umbralIce) {
+			if (!this.astralFireGauge.value && !this.umbralIceGauge.value) {
 				this.brokenLog.trigger(this, 'no stack eno', (
 					<Trans id="blm.gauge.trigger.no-stack-eno">
 						<ActionLink {...this.data.actions.ENOCHIAN}/> was cast without any Astral Fire or Umbral Ice stacks detected.
 					</Trans>
 				))
 			}
-			if (!this.currentGaugeState.enochian) {
+			if (this.enochianGauge.value <= 1) {
 				this.startEnochianUptime(event.timestamp)
 				this.addEvent()
 			}
@@ -195,7 +222,7 @@ export default class Gauge extends Analyser {
 			this.onGainUmbralIceStacks(MAX_ASTRAL_UMBRAL_STACKS, false)
 			break
 		case this.data.actions.BLIZZARD_IV.id:
-			if (!this.currentGaugeState.enochian) {
+			if (this.enochianGauge.value <= 0) {
 				this.brokenLog.trigger(this, 'no eno b4', (
 					<Trans id="blm.gauge.trigger.no-eno-b4">
 						<ActionLink {...this.data.actions.BLIZZARD_IV}/> was cast while <ActionLink {...this.data.actions.ENOCHIAN}/> was deemed inactive.
@@ -203,7 +230,7 @@ export default class Gauge extends Analyser {
 				))
 				this.startEnochianUptime(event.timestamp)
 			}
-			this.currentGaugeState.umbralHearts = MAX_UMBRAL_HEART_STACKS
+			this.umbralHeartsGauge.set(MAX_UMBRAL_HEART_STACKS)
 			this.addEvent()
 			break
 		case this.data.actions.UMBRAL_SOUL.id:
@@ -220,7 +247,7 @@ export default class Gauge extends Analyser {
 			this.onGainAstralFireStacks(MAX_ASTRAL_UMBRAL_STACKS, false)
 			break
 		case this.data.actions.FIRE_IV.id:
-			if (!this.currentGaugeState.enochian) {
+			if (this.enochianGauge.value <= 0) {
 				this.brokenLog.trigger(this, 'no eno f4', (
 					<Trans id="blm.gauge.trigger.no-eno-f4">
 						<ActionLink {...this.data.actions.FIRE_IV}/> was cast while <ActionLink {...this.data.actions.ENOCHIAN}/> was deemed inactive.
@@ -231,7 +258,7 @@ export default class Gauge extends Analyser {
 			this.tryConsumeUmbralHearts(1)
 			break
 		case this.data.actions.DESPAIR.id:
-			if (!this.currentGaugeState.enochian) {
+			if (this.enochianGauge.value <= 0) {
 				this.brokenLog.trigger(this, 'no eno despair', (
 					<Trans id="blm.gauge.trigger.no-eno-despair">
 						<ActionLink {...this.data.actions.DESPAIR}/> was cast while <ActionLink {...this.data.actions.ENOCHIAN}/> was deemed inactive.
@@ -256,16 +283,16 @@ export default class Gauge extends Analyser {
 	}
 
 	private addEvent() {
-		if (this.currentGaugeState.astralFire > 0 || this.currentGaugeState.umbralIce > 0) {
-			if (this.astralUmbralTimeoutHook == null) {
-				this.astralUmbralTimeoutHook = this.addTimestampHook(this.parser.currentEpochTimestamp + ASTRAL_UMBRAL_DURATION, () => this.onAstralUmbralTimeout())
+		if (this.astralFireGauge.value > 0 || this.umbralIceGauge.value > 0) {
+			if (this.astralUmbralTimer.expired) {
+				this.astralUmbralTimer.start()
 			}
-			if (this.gainPolyglotHook == null && this.currentGaugeState.enochian) {
-				this.gainPolyglotHook = this.addTimestampHook(this.parser.currentEpochTimestamp + ENOCHIAN_DURATION_REQUIRED, this.onGainPolyglot)
+			if (this.polyglotTimer.expired && this.enochianGauge.value > 0) {
+				this.polyglotTimer.start()
 			}
 		}
 
-		const lastGaugeState = this.gaugeHistory.get(this.lastHistoryTimestamp)
+		const lastGaugeState = this.getGaugeState(this.lastHistoryTimestamp)
 		if (this.gaugeValuesChanged(lastGaugeState)) {
 			this.updateCastTimes(lastGaugeState)
 			this.setGaugeAndUpdateHistory()
@@ -283,17 +310,17 @@ export default class Gauge extends Analyser {
 		const lastUmbralIce = lastGaugeState?.umbralIce || 0
 
 		// If we have gained max AF, set Blizzard spells to be fast
-		if (lastAstralFire !== MAX_ASTRAL_UMBRAL_STACKS && this.currentGaugeState.astralFire === MAX_ASTRAL_UMBRAL_STACKS) {
+		if (lastAstralFire !== MAX_ASTRAL_UMBRAL_STACKS && this.astralFireGauge.value === MAX_ASTRAL_UMBRAL_STACKS) {
 			this.castTime.reset(this.castTimeIndex)
 			this.castTimeIndex = this.castTime.setPercentageAdjustment(this.iceSpellIds, MAX_ASTRAL_UMBRAL_CAST_SCALAR)
 		}
 		// If we have gained max UI, set Fire spells to be fast
-		if (lastUmbralIce !== MAX_ASTRAL_UMBRAL_STACKS && this.currentGaugeState.umbralIce === MAX_ASTRAL_UMBRAL_STACKS) {
+		if (lastUmbralIce !== MAX_ASTRAL_UMBRAL_STACKS && this.umbralIceGauge.value === MAX_ASTRAL_UMBRAL_STACKS) {
 			this.castTime.reset(this.castTimeIndex)
 			this.castTimeIndex = this.castTime.setPercentageAdjustment(this.fireSpellIds, MAX_ASTRAL_UMBRAL_CAST_SCALAR)
 		}
 		// If our current gauge state doesn't have either max AF or max UI, drop the cast time adjustment entirely
-		if (this.currentGaugeState.astralFire !== MAX_ASTRAL_UMBRAL_STACKS && this.currentGaugeState.umbralIce !== MAX_ASTRAL_UMBRAL_STACKS) {
+		if (this.astralFireGauge.value !== MAX_ASTRAL_UMBRAL_STACKS && this.umbralIceGauge.value !== MAX_ASTRAL_UMBRAL_STACKS) {
 			this.castTime.reset(this.castTimeIndex)
 			this.castTimeIndex = null
 		}
@@ -303,11 +330,11 @@ export default class Gauge extends Analyser {
 		if (lastGaugeEvent == null) {
 			return true
 		}
-		if (lastGaugeEvent.astralFire !== this.currentGaugeState.astralFire ||
-			lastGaugeEvent.umbralIce !== this.currentGaugeState.umbralIce ||
-			lastGaugeEvent.umbralHearts !== this.currentGaugeState.umbralHearts ||
-			lastGaugeEvent.enochian !== this.currentGaugeState.enochian ||
-			lastGaugeEvent.polyglot !== this.currentGaugeState.polyglot
+		if (lastGaugeEvent.astralFire !== this.astralFireGauge.value ||
+			lastGaugeEvent.umbralIce !== this.umbralIceGauge.value ||
+			lastGaugeEvent.umbralHearts !== this.umbralHeartsGauge.value ||
+			lastGaugeEvent.enochian !== this.enochianGauge.value > 0 ||
+			lastGaugeEvent.polyglot !== this.polyglotGauge.value
 		) {
 			return true
 		}
@@ -315,66 +342,56 @@ export default class Gauge extends Analyser {
 	}
 
 	private setGaugeAndUpdateHistory(timestamp: number = this.parser.currentEpochTimestamp) {
-		// Update the gauge history
-		this.gaugeHistory.set(timestamp, {...this.currentGaugeState})
-
-		// Store resource data and update the last history timestamp
-		this.polyglotHistory.push({time: timestamp, current: this.currentGaugeState.polyglot, maximum: MAX_POLYGLOT_STACKS})
-		this.astralFireHistory.push({time: timestamp, current: this.currentGaugeState.astralFire, maximum: MAX_ASTRAL_UMBRAL_STACKS})
-		this.umbralIceHistory.push({time: timestamp, current: this.currentGaugeState.umbralIce, maximum: MAX_ASTRAL_UMBRAL_STACKS})
-		this.umbralHeartHistory.push({time: timestamp, current: this.currentGaugeState.umbralHearts, maximum: MAX_UMBRAL_HEART_STACKS})
-
 		this.lastHistoryTimestamp = timestamp
 	}
 	//#endregion
 
 	//#region Astral Fire and Umbral Ice
 	private onAstralUmbralTimeout(flagIssues: boolean = true) {
-		this.astralUmbralTimeoutHook = this.tryExpireTimestampHook(this.astralUmbralTimeoutHook)
-
-		this.currentGaugeState.astralFire = 0
-		this.currentGaugeState.umbralIce = 0
+		this.astralUmbralTimer.reset()
+		this.astralFireGauge.reset()
+		this.umbralIceGauge.reset()
 
 		this.onEnochianTimeout(flagIssues)
 	}
 
 	private onGainAstralFireStacks(stackCount: number, dropsElementOnSwap: boolean = true) {
-		if (this.currentGaugeState.umbralIce > 0 && dropsElementOnSwap) {
+		if (this.umbralIceGauge.value > 0 && dropsElementOnSwap) {
 			this.onAstralUmbralTimeout()
 		} else {
-			this.astralUmbralTimeoutHook = this.tryExpireTimestampHook(this.astralUmbralTimeoutHook)
+			this.astralUmbralTimer.refresh()
 
-			this.currentGaugeState.umbralIce = 0
-			this.currentGaugeState.astralFire = Math.min(this.currentGaugeState.astralFire + stackCount, MAX_ASTRAL_UMBRAL_STACKS)
+			this.umbralIceGauge.reset()
+			this.astralFireGauge.modify(stackCount)
 
 			this.addEvent()
 		}
 	}
 
 	private onGainUmbralIceStacks(stackCount: number, dropsElementOnSwap: boolean = true) {
-		if (this.currentGaugeState.astralFire > 0 && dropsElementOnSwap) {
+		if (this.astralFireGauge.value > 0 && dropsElementOnSwap) {
 			this.onAstralUmbralTimeout()
 		} else {
-			this.astralUmbralTimeoutHook = this.tryExpireTimestampHook(this.astralUmbralTimeoutHook)
+			this.astralUmbralTimer.refresh()
 
-			this.currentGaugeState.astralFire = 0
-			this.currentGaugeState.umbralIce = Math.min(this.currentGaugeState.umbralIce + stackCount, MAX_ASTRAL_UMBRAL_STACKS)
+			this.astralFireGauge.reset()
+			this.umbralIceGauge.modify(stackCount)
 
 			this.addEvent()
 		}
 	}
 
 	private onTransposeStacks() {
-		if (this.currentGaugeState.astralFire <= 0 && this.currentGaugeState.umbralIce <= 0) { return }
+		if (this.astralFireGauge.value <= 0 && this.umbralIceGauge.value <= 0) { return }
 
-		this.astralUmbralTimeoutHook = this.tryExpireTimestampHook(this.astralUmbralTimeoutHook)
+		this.astralUmbralTimer.refresh()
 
-		if (this.currentGaugeState.astralFire > 0) {
-			this.currentGaugeState.astralFire = 0
-			this.currentGaugeState.umbralIce = 1
+		if (this.astralFireGauge.value > 0) {
+			this.astralFireGauge.reset()
+			this.umbralIceGauge.set(1)
 		} else {
-			this.currentGaugeState.astralFire = 1
-			this.currentGaugeState.umbralIce = 0
+			this.astralFireGauge.set(1)
+			this.umbralIceGauge.reset()
 		}
 
 		this.addEvent()
@@ -383,59 +400,63 @@ export default class Gauge extends Analyser {
 
 	//#region Umbral Hearts
 	private tryGainUmbralHearts(count: number) {
-		if (this.currentGaugeState.umbralIce <= 0) { return }
+		if (this.umbralIceGauge.value <= 0) { return }
 
-		this.currentGaugeState.umbralHearts = Math.min(this.currentGaugeState.umbralHearts + count, MAX_UMBRAL_HEART_STACKS)
+		this.umbralHeartsGauge.modify(count)
 
 		this.addEvent()
 	}
 
 	private tryConsumeUmbralHearts(count:  number, force: boolean = false) {
-		if (!(this.currentGaugeState.umbralHearts > 0 && (this.currentGaugeState.astralFire > 0 || force))) { return }
+		if (!(this.umbralHeartsGauge.value > 0 && (this.astralFireGauge.value > 0 || force))) { return }
 
-		this.currentGaugeState.umbralHearts = Math.max(this.currentGaugeState.umbralHearts - count, 0)
+		this.umbralHeartsGauge.modify(-1 * count)
+
 		this.addEvent()
 	}
 	//#endregion
 
 	//#region Polyglot
 	private onEnochianTimeout(flagIssues: boolean = true) {
-		this.gainPolyglotHook = this.tryExpireTimestampHook(this.gainPolyglotHook)
+		this.polyglotTimer.reset()
 
-		if (this.currentGaugeState.enochian && flagIssues) {
+		if (this.enochianGauge.value > 0 && flagIssues) {
 			this.enochianDowntimeTracker.current = {start: this.parser.currentEpochTimestamp}
 			this.droppedEnoTimestamps.push(this.parser.currentEpochTimestamp)
 		}
 
-		this.currentGaugeState.enochian = false
-		this.currentGaugeState.umbralHearts = 0
+		this.enochianGauge.reset()
+		this.umbralHeartsGauge.reset()
 
 		this.addEvent()
 	}
 
 	private onGainPolyglot() {
-		this.gainPolyglotHook = this.tryExpireTimestampHook(this.gainPolyglotHook)
+		this.polyglotTimer.refresh()
 
-		this.currentGaugeState.polyglot++
-		if (this.currentGaugeState.polyglot > MAX_POLYGLOT_STACKS) {
+		if (this.polyglotGauge.value >= MAX_POLYGLOT_STACKS) {
 			this.overwrittenPolyglot++
 		}
-		this.currentGaugeState.polyglot = Math.min(this.currentGaugeState.polyglot, MAX_POLYGLOT_STACKS)
+
+		this.polyglotGauge.modify(1)
 
 		this.addEvent()
 	}
 
 	private onConsumePolyglot() {
-		if (this.currentGaugeState.polyglot <= 0 && this.overwrittenPolyglot > 0) {
+		if (this.polyglotGauge.value <= 0 && this.overwrittenPolyglot > 0) {
 			// Safety to catch ordering issues where Foul is used late enough to trigger our overwrite check but happens before Poly actually overwrites
 			this.overwrittenPolyglot--
 		}
-		this.currentGaugeState.polyglot = Math.max(this.currentGaugeState.polyglot - 1, 0)
+
+		this.polyglotGauge.modify(-1)
+
 		this.addEvent()
 	}
 
 	private startEnochianUptime(timestamp: number) {
-		this.currentGaugeState.enochian = true
+		this.enochianGauge.set(1)
+		this.polyglotTimer.start()
 
 		if (this.enochianDowntimeTracker.current != null) {
 			this.stopEnochianDowntime(timestamp)
@@ -468,15 +489,7 @@ export default class Gauge extends Analyser {
 	}
 	//#endregion
 
-	private tryExpireTimestampHook(hook: TimestampHook | null): TimestampHook | null {
-		if (hook != null) {
-			this.removeTimestampHook(hook)
-			hook = null
-		}
-		return hook
-	}
-
-	private onDeath() {
+	override onDeath() {
 		// Not counting the loss towards the rest of the gauge loss, that'll just double up on the suggestions
 		this.onAstralUmbralTimeout(false)
 	}
@@ -486,36 +499,6 @@ export default class Gauge extends Analyser {
 			this.stopEnochianDowntime(event.timestamp)
 		}
 
-		this.resourceGraphs.addDataGroup({
-			handle: 'astralumbral',
-			label: <Trans id="blm.gauge.resource.astral-umbral">Astral Fire and<br></br>Umbral Ice</Trans>,
-			collapse: true,
-			forceCollapsed: true,
-		})
-		this.resourceGraphs.addData('astralumbral', {
-			label: <Trans id="blm.gauge.resource.astral-fire">Astral Fire</Trans>,
-			// eslint-disable-next-line @typescript-eslint/no-magic-numbers
-			colour: Color.rgb(210, 62, 38).fade(0.5).toString(),
-			data: this.astralFireHistory,
-		})
-		this.resourceGraphs.addData('astralumbral', {
-			label: <Trans id="blm.gauge.resource.umbral-ice">Umbral Ice</Trans>,
-			// eslint-disable-next-line @typescript-eslint/no-magic-numbers
-			colour: Color.rgb(47, 113, 177).fade(0.5).toString(),
-			data: this.umbralIceHistory,
-		})
-		this.resourceGraphs.addGauge({
-			label: <Trans id="blm.gauge.resource.umbral-hearts">Umbral Hearts</Trans>,
-			// eslint-disable-next-line @typescript-eslint/no-magic-numbers
-			colour: Color.rgb(47, 113, 177).fade(0.25).toString(),
-			data: this.umbralHeartHistory,
-		})
-		this.resourceGraphs.addGauge({
-			label: <Trans id="blm.gauge.resource.polyglot">Polyglot</Trans>,
-			// eslint-disable-next-line @typescript-eslint/no-magic-numbers
-			colour: Color(JOBS.BLACK_MAGE.colour).fade(0.25).toString(),
-			data: this.polyglotHistory,
-		})
 		this.lostPolyglot = this.countLostPolyglots(this.enochianDowntimeTracker.totalDowntime)
 
 		// Find out how many of the enochian drops ocurred during times where the player could not act for longer than the AF/UI buff timer. If they could act, they could've kept it going, so warn about those.
