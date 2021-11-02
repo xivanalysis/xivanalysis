@@ -12,8 +12,8 @@ import {DualStatistic} from 'parser/jobs/rdm/statistics/DualStatistic'
 import React, {Fragment} from 'react'
 import {isSuccessfulHit} from 'utilities'
 
-interface IGaugeModifier {
-	white: number,
+interface GaugeModifier {
+	white: number
 	black: number
 }
 
@@ -34,7 +34,7 @@ export default class Gauge extends CoreGauge {
 		maximum: 100,
 		minimum: 0,
 	}))
-	private _gaugeModifiers = new Map<number, IGaugeModifier>([
+	private _gaugeModifiers = new Map<number, GaugeModifier>([
 		[this.data.actions.VERAERO.id, {white: 11, black: 0}],
 		[this.data.actions.VERAERO_II.id, {white: 7, black: 0}],
 		[this.data.actions.VERSTONE.id, {white: 9, black: 0}],
@@ -48,7 +48,7 @@ export default class Gauge extends CoreGauge {
 		[this.data.actions.IMPACT.id, {white: 3, black: 3}],
 		[this.data.actions.SCORCH.id, {white: 7, black: 7}],
 	])
-	private _spenderModifiers = new Map<number, IGaugeModifier>([
+	private _spenderModifiers = new Map<number, GaugeModifier>([
 		[this.data.actions.ENCHANTED_REPRISE.id, {white: -5, black: -5}],
 		[this.data.actions.ENCHANTED_MOULINET.id, {white: -20, black: -20}],
 		[this.data.actions.ENCHANTED_RIPOSTE.id, {white: -30, black: -30}],
