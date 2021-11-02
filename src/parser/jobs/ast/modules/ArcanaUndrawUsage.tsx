@@ -35,7 +35,6 @@ export default class ArcanaUndrawUsage extends Analyser {
 						Due to Draw starting its cooldown the moment it's used, there is no longer any reason to <DataLink action="UNDRAW" /> instead of playing it or converting it with <DataLink action="MINOR_ARCANA" />.
 				</Trans>,
 				severity: SEVERITY.MAJOR,
-				value: this.undraws,
 				why: <Trans id="ast.arcana-undraw-usage.suggestions.why">
 					<Plural value={this.undraws} one="# instance" other="# instances" /> of using undraw.
 				</Trans>,
