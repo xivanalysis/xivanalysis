@@ -1,5 +1,5 @@
 import {t} from '@lingui/macro'
-import {Trans} from '@lingui/react'
+import {Trans, Plural} from '@lingui/react'
 import {ActionLink} from 'components/ui/DbLink'
 import {ActionKey} from 'data/ACTIONS'
 import {dependency} from 'parser/core/Injectable'
@@ -72,7 +72,7 @@ export class TrickAttackWindow extends BuffWindow {
 			globalCooldown: this.globalCooldown,
 			suggestionIcon,
 			suggestionContent: <Trans id="nin.taWindow.suggestions.gcds.content">
-				While the exact number of GCDs per window will vary depending on whether <ActionLink action="TEN_CHI_JIN"/> is up, every <ActionLink action="TRICK_ATTACK"/> window should contain at least {BASE_GCDS_PER_WINDOW} GCDs.
+				While the exact number of GCDs per window will vary depending on whether <ActionLink action="TEN_CHI_JIN"/> is up, every <ActionLink action="TRICK_ATTACK"/> window should contain at least <Plural value={BASE_GCDS_PER_WINDOW} one="# GCD" other="# GCDs" />.
 			</Trans>,
 			windowName,
 			severityTiers: {

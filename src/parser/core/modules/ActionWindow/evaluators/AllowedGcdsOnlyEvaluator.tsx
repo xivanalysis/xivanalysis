@@ -69,7 +69,7 @@ export class AllowedGcdsOnlyEvaluator implements WindowEvaluator {
 			tiers: this.severityTiers,
 			value: invalidGCDs,
 			why: <Trans id="core.buffwindow.suggestions.badgcd.why">
-				{invalidGCDs} incorrect <Plural value={invalidGCDs} one="GCD was" other="GCDs were" /> used during {this.windowName} windows.
+				<Plural value={invalidGCDs} one="# incorrect GCD was" other="# incorrect GCDs were" /> used during {this.windowName} windows.
 			</Trans>,
 		})
 	}

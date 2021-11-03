@@ -65,7 +65,7 @@ export class ExpectedGcdCountEvaluator implements WindowEvaluator {
 			tiers: this.severityTiers,
 			value: missedGCDs,
 			why: <Trans id="core.buffwindow.suggestions.missedgcd.why">
-				{missedGCDs} <Plural value={missedGCDs} one="GCD was" other="GCDs were" /> missed during {this.windowName} windows.
+				<Plural value={missedGCDs} one="# GCD was" other="# GCDs were" /> missed during {this.windowName} windows.
 			</Trans>,
 		})
 	}
