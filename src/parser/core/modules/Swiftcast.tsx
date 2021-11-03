@@ -8,10 +8,8 @@ import {SEVERITY, SeverityTiers} from 'parser/core/modules/Suggestions'
 import React from 'react'
 import {filter} from '../filter'
 import {dependency} from '../Injectable'
-import {EvaluatedAction} from './ActionWindow/EvaluatedAction'
-import {ExpectedGcdCountEvaluator} from './ActionWindow/evaluators/ExpectedGcdCountEvaluator'
+import {BuffWindow, EvaluatedAction, ExpectedGcdCountEvaluator} from './ActionWindow'
 import {HistoryEntry} from './ActionWindow/History'
-import {BuffWindow} from './ActionWindow/windows/BuffWindow'
 import {GlobalCooldown} from './GlobalCooldown'
 
 // Global default

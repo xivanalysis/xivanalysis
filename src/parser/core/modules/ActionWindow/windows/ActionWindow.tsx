@@ -10,7 +10,7 @@ import {filter, noneOf, oneOf} from '../../../filter'
 import {Data} from '../../Data'
 import Suggestions from '../../Suggestions'
 import {EvaluatedAction} from '../EvaluatedAction'
-import {WindowEvaluator} from '../evaluators/WindowEvaluator'
+import {EvaluationOutput, WindowEvaluator} from '../evaluators/WindowEvaluator'
 import {History, HistoryEntry} from '../History'
 
 /**

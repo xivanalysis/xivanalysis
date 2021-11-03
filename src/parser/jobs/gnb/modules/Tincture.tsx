@@ -1,5 +1,5 @@
 import {Trans} from '@lingui/react'
-import {ExpectedActionsEvaluator} from 'parser/core/modules/ActionWindow/evaluators/ExpectedActionsEvaluator'
+import {ExpectedActionsEvaluator} from 'parser/core/modules/ActionWindow'
 import {SEVERITY} from 'parser/core/modules/Suggestions'
 import {Tincture as CoreTincture} from 'parser/core/modules/Tincture'
 import React from 'react'
