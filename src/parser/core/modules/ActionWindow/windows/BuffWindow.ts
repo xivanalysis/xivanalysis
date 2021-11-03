@@ -41,8 +41,7 @@ export abstract class BuffWindow extends ActionWindow {
 	override initialise() {
 		super.initialise()
 
-		// need to check source and target due to buff mirroring. Check for noneOf pets
-		// to allow debuff based windows such as Trick Attack to work through this class.
+		// need to exclude pets to avoid getting duplicate window starts due to pet buff mirroring.
 		const pets = this.parser.pull.actors
 			.filter(actor => actor.owner === this.parser.actor)
 			.map(actor => actor.id)
