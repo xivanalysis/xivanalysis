@@ -78,9 +78,8 @@ export class History<T> {
 	 * @param timestamp The timestamp at which the entry is closed.
 	 */
 	public closeCurrent(timestamp: number) {
-		const last = _.last(this.entries)
-		if (last == null || last.end != null) { return }
-		last.end = timestamp
+		const current = this.getCurrent()
+		if (current != null) { current.end = timestamp }
 	}
 
 	/**
