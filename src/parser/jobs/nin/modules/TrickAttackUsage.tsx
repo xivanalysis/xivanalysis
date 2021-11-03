@@ -40,6 +40,7 @@ export class TrickAttackUsage extends Analyser {
 		this.mudraActions = MUDRAS.map(k => this.data.actions[k].id)
 
 		const playerFilter = filter<Event>().source(this.parser.actor.id)
+		// Hook to track casts before the first Trick for the opener timing suggestion
 		this.castHook = this.addEventHook(playerFilter.type('action'), this.onCast)
 		this.addEventHook(playerFilter.type('action').action(this.data.actions.TRICK_ATTACK.id), this.onTrickAttack)
 		this.addEventHook('complete', this.onComplete)
@@ -47,7 +48,7 @@ export class TrickAttackUsage extends Analyser {
 
 	private onCast(event: Events['action']) {
 		const action = this.data.getAction(event.action)
-		if (event.timestamp >= this.parser.fight.start_time && action && action.onGcd && this.mudraActions.indexOf(action.id) === -1) {
+		if (event.timestamp >= this.parser.fight.start_time && action?.onGcd && !this.mudraActions.includes(action.id)) {
 			// Don't count the individual mudras as GCDs for this - they'll make the count screw if Suiton wasn't set up pre-pull
 			this.gcdCount++
 		}
@@ -82,7 +83,7 @@ export class TrickAttackUsage extends Analyser {
 			this.suggestions.add(new TieredSuggestion({
 				icon: this.data.actions.TRICK_ATTACK.icon,
 				content: <Trans id="nin.ta-usage.suggestions.missed.content">
-					Avoid holding <ActionLink {...this.data.actions.TRICK_ATTACK}/> for extended periods of time. It's typically ideal to use it as close to on cooldown as possible in order to keep it aligned with all the other raid buffs and personal burst windows, as well as maximizing the number of uses per fight.
+					Avoid holding <ActionLink action="TRICK_ATTACK"/> for extended periods of time. It's typically ideal to use it as close to on cooldown as possible in order to keep it aligned with all the other raid buffs and personal burst windows, as well as maximizing the number of uses per fight.
 				</Trans>,
 				value: lostCasts,
 				tiers: {
@@ -98,7 +99,7 @@ export class TrickAttackUsage extends Analyser {
 			this.suggestions.add(new TieredSuggestion({
 				icon: this.data.actions.TRICK_ATTACK.icon,
 				content: <Trans id="nin.ta-usage.suggestions.opener.content">
-					Avoid unconventional timings for your first <ActionLink {...this.data.actions.TRICK_ATTACK}/> of the fight in order to line it up with all the other raid and personal buffs. In most openers, Trick Attack should be weaved in approximately 8-9 seconds into the fight.
+					Avoid unconventional timings for your first <ActionLink action="TRICK_ATTACK"/> of the fight in order to line it up with all the other raid and personal buffs. In most openers, Trick Attack should be weaved in approximately 8-9 seconds into the fight.
 				</Trans>,
 				value: distanceFromOptimal,
 				tiers: {
@@ -114,7 +115,7 @@ export class TrickAttackUsage extends Analyser {
 			this.suggestions.add(new Suggestion({
 				icon: this.data.actions.TRICK_ATTACK.icon,
 				content: <Trans id="nin.ta-usage.suggestions.none.content">
-					<ActionLink {...this.data.actions.TRICK_ATTACK}/> is the single most powerful raid buff in your kit and should be used on cooldown, or as close to it as possible depending on the flow of the fight.
+					<ActionLink action="TRICK_ATTACK"/> is the single most powerful raid buff in your kit and should be used on cooldown, or as close to it as possible depending on the flow of the fight.
 				</Trans>,
 				severity: SEVERITY.MAJOR,
 				why: <Trans id="nin.ta-usage.suggestions.none.why">
