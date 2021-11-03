@@ -1,8 +1,9 @@
 import {Action} from 'data/ACTIONS'
+import {Actor} from '../Actors'
 
 export interface EvaluatedAction {
 	action: Action
-	source: string
-	target: string
+	source: Actor['id']
+	target: Actor['id']
 	timestamp: number
 }

@@ -1,7 +1,7 @@
-import {Action} from 'data/ACTIONS'
 import {Event} from 'event'
 import {ensureArray} from 'utilities'
 import {filter, oneOf} from '../../../filter'
+import {ActionSpecifier} from '../../Cooldowns'
 import {ActionWindow} from './ActionWindow'
 
 /**
@@ -14,12 +14,13 @@ export abstract class RestartWindow extends ActionWindow {
 	/**
 	 * Implementing modules MUST define the ACTION object that starts a window.
 	 */
-	abstract startAction: Action | Action[]
+	abstract startAction: ActionSpecifier | ActionSpecifier[]
 
 	override initialise() {
 		super.initialise()
 
-		const startIds = ensureArray(this.startAction).map(a => a.id)
+		const startIds = ensureArray(this.startAction)
+			.map(action => typeof action === 'string' ? this.data.actions[action].id : action.id)
 		this.addEventHook(
 			filter<Event>().source(this.parser.actor.id)
 				.action(oneOf(startIds))
