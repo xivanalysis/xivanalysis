@@ -2,7 +2,7 @@ import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
 import {ActionLink} from 'components/ui/DbLink'
 import {RotationTargetOutcome} from 'components/ui/RotationTable'
-import {DeathEvent} from 'fflogs'
+import {Events} from 'event'
 import {dependency} from 'parser/core/Injectable'
 import {EvaluatedAction} from 'parser/core/modules/ActionWindow/EvaluatedAction'
 import {ExpectedActionsEvaluator} from 'parser/core/modules/ActionWindow/evaluators/ExpectedActionsEvaluator'
@@ -84,7 +84,7 @@ export default class DragonSight extends BuffWindow {
 	override initialise() {
 		super.initialise()
 
-		this.addEventHook({type: 'death', to: 'player'}, this.onDeath)
+		this.addEventHook({type: 'death', actor: this.parser.actor.id}, this.onDeath)
 
 		const suggestionIcon = this.data.actions.DRAGON_SIGHT.icon
 		const windowName = this.data.actions.DRAGON_SIGHT.name
@@ -140,7 +140,7 @@ export default class DragonSight extends BuffWindow {
 		this.addEvaluator(new ShortWindowEvaluator(this.buffTargetDied.bind(this)))
 	}
 
-	private onDeath(event: DeathEvent) {
+	private onDeath(event: Events['death']) {
 		this.deathTimes.push(event.timestamp)
 	}
 
