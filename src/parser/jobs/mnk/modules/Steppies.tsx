@@ -10,24 +10,27 @@ import {Data} from 'parser/core/modules/Data'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
+import {severityMap} from './types'
 
 const LEAD_BOOT_POTENCY = 370
 
-// Typically a player with lag can derp positional in opener, this usually happens 2 times per fight.
-// With 3 charges of RoE for a 6s no positionals buff, and True North every 45s tho, this shouldn't be
-// an issue even if the player is lagging worse than the author of this comment.
-const CRIT_BOOT_SEVERITY = {
-	1: SEVERITY.MEDIUM,
-	3: SEVERITY.MAJOR,
+const SUGGESTION_TIERS: severityMap = {
+	// Typically a player with lag can derp positional in opener, this usually happens 2 times per fight.
+	// With 3 charges of RoE for a 6s no positionals buff, and True North every 45s tho, this shouldn't be
+	// an issue even if the player is lagging worse than the author of this comment.
+	CRIT: {
+		1: SEVERITY.MEDIUM,
+		3: SEVERITY.MAJOR,
+	},
+
+	// 3 is pretty much "you ruined a Perfect Balance you turkey".
+	WEAK: {
+		1: SEVERITY.MEDIUM,
+		4: SEVERITY.MAJOR,
+	},
 }
 
 const CRIT_MODIFIERS = new Set([SourceModifier.CRITICAL, SourceModifier.CRITICAL_DIRECT])
-
-// 3 is pretty much "you ruined a Perfect Balance you turkey".
-const WEAK_BOOT_SEVERITY = {
-	1: SEVERITY.MEDIUM,
-	4: SEVERITY.MAJOR,
-}
 
 // Essentially allow us to work on a single target
 type EventDamageTarget = Events['damage']['targets'] extends Array<infer T> ? T : never
@@ -96,7 +99,7 @@ export class Steppies extends Analyser {
 			why: <Trans id="mnk.steppies.suggestions.dragon_kick.why">
 				{this.getUnbuffedCount(this.steppies) * (LEAD_BOOT_POTENCY - this.data.actions.BOOTSHINE.potency)} potency lost to missing <DataLink status="LEADEN_FIST"/> buff {this.getUnbuffedCount(this.steppies)} times.
 			</Trans>,
-			tiers: WEAK_BOOT_SEVERITY,
+			tiers: SUGGESTION_TIERS.WEAK,
 			value: this.getUnbuffedCount(this.steppies),
 		}))
 
@@ -108,7 +111,7 @@ export class Steppies extends Analyser {
 			why: <Trans id="mnk.steppies.suggestions.bootshine.why">
 				<Plural value={this.getUncritCount(this.steppies)} one="# use of" other="# uses of" /> <DataLink action="BOOTSHINE"/> executed with incorrect position.
 			</Trans>,
-			tiers: CRIT_BOOT_SEVERITY,
+			tiers: SUGGESTION_TIERS.CRIT,
 			value: this.getUncritCount(this.steppies),
 		}))
 	}

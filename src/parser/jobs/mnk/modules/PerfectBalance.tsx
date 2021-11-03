@@ -1,7 +1,7 @@
 import {t} from '@lingui/macro'
 import {Plural, Trans} from '@lingui/react'
 import {DataLink} from 'components/ui/DbLink'
-import {ActionKey} from 'data/ACTIONS'
+import {Action, ActionKey} from 'data/ACTIONS'
 import {Event, Events} from 'event'
 import {Analyser} from 'parser/core/Analyser'
 import {EventHook} from 'parser/core/Dispatcher'
@@ -12,9 +12,10 @@ import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Sugge
 import React from 'react'
 import {FORM_SKILLS} from './constants'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
+import {severityList} from './types'
 import {fillActions} from './utilities'
 
-const SUGGESTION_TIERS = {
+const SUGGESTION_TIERS: severityList = {
 	1: SEVERITY.MEDIUM,
 	2: SEVERITY.MAJOR,
 }
@@ -40,8 +41,8 @@ export class PerfectBalance extends Analyser {
 	@dependency private data!: Data
 	@dependency private suggestions!: Suggestions
 
-	private badActions: number[] = []
-	private formActions: number[] = []
+	private badActions: Array<Action['id']> = []
+	private formActions: Array<Action['id']> = []
 
 	private current: Balance | undefined
 	private history: Balance[] = []

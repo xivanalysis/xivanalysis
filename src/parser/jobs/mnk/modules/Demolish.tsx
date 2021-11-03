@@ -6,8 +6,9 @@ import {DoTs, DotDurations} from 'parser/core/modules/DoTs'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
+import {severityMap} from './types'
 
-const SEVERITIES = {
+const SUGGESTION_TIERS: severityMap = {
 	CLIPPING: {
 		7: SEVERITY.MINOR,
 		10: SEVERITY.MEDIUM,
@@ -50,7 +51,7 @@ export class Demolish extends DoTs {
 			content: <Trans id="mnk.demolish.suggestion.content">
 				Avoid refreshing <ActionLink action="DEMOLISH"/> significantly before its expiration. Unnecessary refreshes risk overwriting buff snapshots.
 			</Trans>,
-			tiers: SEVERITIES.CLIPPING,
+			tiers: SUGGESTION_TIERS.CLIPPING,
 			value: this.getClippingAmount(this.data.statuses.DEMOLISH.id),
 			why: <Trans id="mnk.demolish.suggestion.why">
 				You lost {this.parser.formatDuration(clip[this.data.statuses.DEMOLISH.id] ?? 0)} of Demolish to early refreshes.
