@@ -259,7 +259,6 @@
   "core.buffwindow.suggestions.trackedaction.why": "在{0} 窗口期内缺失了 {missedActions, plural, one {# 次应打出的技能} other {# 次应打出的技能}} 。",
   "core.buffwindow.suggestions.trackedbadaction.why": "在 {0} 期间打出了 {badActions, plural,other {# 次应当避免使用的技能。}}",
   "core.buffwindow.table.header.gcds": "GCD技能",
-  "core.buffwindow.title": "增益窗口",
   "core.changelog.title": "更新日志",
   "core.checklist.title": "清单",
   "core.combos.content": "<0>避免连击被中断，技能没有成功连上会极大降低dps，并且它们的特殊效果也无法触发。</0><1>用了错误的连击技能，或者在连击时用了会打断连击的技能，miss或者只打到了无敌的目标都会中断你的连击。</1>",

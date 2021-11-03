@@ -259,7 +259,6 @@
   "core.buffwindow.suggestions.trackedaction.why": "Die empfohlene Aktion wurde {missedActions, plural, one {# use of a recommended action was} other {# mal}} nicht genutzt während {0} Zeitfenstern.",
   "core.buffwindow.suggestions.trackedbadaction.why": "{badActions, plural, one {Eine Cooldown} other {# Cooldowns}} benutzt, die während {0} aktiv ist, vermieden werden sollten.",
   "core.buffwindow.table.header.gcds": "GCDs",
-  "core.buffwindow.title": "Buff-Zeitfenster",
   "core.changelog.title": "Patch Details",
   "core.checklist.title": "Checkliste",
   "core.combos.content": "<0>Versuche keine Combos zu unterbrechen, da unterbrochene Combos deinen möglichen Schadensoutput veringern und wichtige Nebeneffekte nicht aktivieren.</0><1>Eine Kombo gilt als unterbrochen, wenn du eine Kombo-Aktion zum falschen Zeitpunkt einsetzt; eine nicht-Kombo-gebundene Aktion innerhalb einer Kombo einsetzt; oder ein unverwundbares Ziel angreifst.</1>",

@@ -259,7 +259,6 @@
   "core.buffwindow.suggestions.trackedaction.why": "{missedActions, plural, other {# 回の推奨スキルを}} {0} の効果時間中に使いませんでした。",
   "core.buffwindow.suggestions.trackedbadaction.why": "{badActions, plural, other {# 回の}} 使うべきでないスキルを{0} の効果時間中に使用しました。",
   "core.buffwindow.table.header.gcds": "GCDs",
-  "core.buffwindow.title": "バフ効果時間",
   "core.changelog.title": "変更履歴",
   "core.checklist.title": "チェックリスト",
   "core.combos.content": "<0>コンボを途中で止めないようにしましょう。コンボを完了できないと、多量のDPSと重要な副次効果を失います。</0><1>コンボそのものを間違えたり、コンボ中にコンボ外のGCDスキルを使ったり、攻撃不可のターゲットを攻撃したりするとコンボが中断してしまいます。</1>",

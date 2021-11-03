@@ -259,7 +259,6 @@
   "core.buffwindow.suggestions.trackedaction.why": "{0} 구간내에서 사용해야하는 기술을 {missedActions, plural, one {# 회} other {# 회}} 놓쳤습니다.",
   "core.buffwindow.suggestions.trackedbadaction.why": "{0} 구간내에서 사용을 피해야할 기술을 {badActions, plural, one {# 회} other {# 회}} 사용하였습니다.",
   "core.buffwindow.table.header.gcds": "글쿨기",
-  "core.buffwindow.title": "버프 구간",
   "core.changelog.title": "갱신 이력",
   "core.checklist.title": "체크리스트",
   "core.combos.content": "<0>기술 콤보가 끊기지않게 주의하십시오. 콤보가 끊길 때마다 상당한 딜 손실을 입으며 콤보에서 파생되는 이로운 효과를 받지 못하게 됩니다. </0><1>글쿨기를 잘못된 순서로 사용, 콤보 순서에 포함되지않는 글쿨기 사용, 빗나감, 혹은 무적 상태에게 공격할시 콤보가 끊기게 됩니다.</1>",
