@@ -3,10 +3,9 @@ import {t, Trans} from '@lingui/macro'
 import {ActionLink} from 'components/ui/DbLink'
 import {Action} from 'data/ACTIONS'
 import {Status} from 'data/STATUSES'
-import {Event, Events} from 'event'
+import {Events} from 'event'
 import {SEVERITY, SeverityTiers} from 'parser/core/modules/Suggestions'
 import React from 'react'
-import {filter} from '../filter'
 import {dependency} from '../Injectable'
 import {BuffWindow, EvaluatedAction, ExpectedGcdCountEvaluator} from './ActionWindow'
 import {HistoryEntry} from './ActionWindow/History'
@@ -27,9 +26,6 @@ export abstract class Swiftcast extends BuffWindow {
 
 	override initialise() {
 		super.initialise()
-
-		this.removeDefaultActionHook()
-		this.addEventHook(filter<Event>().source(this.parser.actor.id).type('action'), this.onCast)
 
 		this.addEvaluator(new ExpectedGcdCountEvaluator({
 			expectedGcds: 1,
@@ -78,7 +74,7 @@ export abstract class Swiftcast extends BuffWindow {
 		return (fightTimeRemaining > gcdEstimate) ? 0 : 1
 	}
 
-	private onCast(event: Events['action']) {
+	override onWindowAction(event: Events['action']) {
 		this.debug('Evaluating action during window:', event.action)
 		// ignore actions that don't have a castTime
 		const action = this.data.getAction(event.action)
@@ -89,6 +85,6 @@ export abstract class Swiftcast extends BuffWindow {
 		) {
 			return
 		}
-		this.onWindowAction(event)
+		super.onWindowAction(event)
 	}
 }

@@ -5,7 +5,7 @@ import {Timeline} from 'parser/core/modules/Timeline'
 import React from 'react'
 import {ensureArray, isDefined} from 'utilities'
 import {Analyser} from '../../../Analyser'
-import {EventHook} from '../../../Dispatcher'
+import {EventFilterPredicate, EventHook} from '../../../Dispatcher'
 import {filter, noneOf, oneOf} from '../../../filter'
 import {Data} from '../../Data'
 import Suggestions from '../../Suggestions'
@@ -28,10 +28,14 @@ export abstract class ActionWindow extends Analyser {
 	 */
 	private history = new History<Array<Events['action']>>(() => [])
 	/**
-	 * The default event hook for all actions.  This can be removed via removeDefaultEventHook
-	 * by classes that want to limit which actions are included in a window.
+	 * The event filter used to capture events while a window is open.
+	 * The default filter will capture all actions.
 	 */
-	private defaultEventHook?: EventHook<Events['action']>
+	private eventFilter: EventFilterPredicate<Events['action']> = filter<Event>().source(this.parser.actor.id).type('action')
+	/**
+	 * The event hook for actions being captured.
+	 */
+	private eventHook?: EventHook<Events['action']>
 	/**
 	 * The evaluators used to generate suggestions and output for the windows.
 	 */
@@ -56,6 +60,11 @@ export abstract class ActionWindow extends Analyser {
 	 * @param timestamp The timestamp at which the new window starts.
 	 */
 	protected onWindowStart(timestamp: number) {
+		// The event hook may already be set if multiple onWindowStart calls happen
+		// before a call to onWindowEnd
+		if (this.eventHook == null) {
+			this.eventHook = this.addEventHook(this.eventFilter, this.onWindowAction)
+		}
 		this.history.getCurrentOrOpenNew(timestamp)
 	}
 	/**
@@ -63,12 +72,17 @@ export abstract class ActionWindow extends Analyser {
 	 * @param timestamp The timestamp at which the window ends.
 	 */
 	protected onWindowEnd(timestamp: number) {
+		// The event hook may already be cleared if multiple onWindowEnd calls happen
+		// before a call to onWindowStart
+		if (this.eventHook != null) {
+			this.removeEventHook(this.eventHook)
+			this.eventHook = undefined
+		}
 		this.history.closeCurrent(timestamp)
 	}
 	/**
 	 * Adds an action to the current window if one is open.
 	 * If no window is open, the event is ignored.
-	 * Implementing moudles MUST call removeDefaultActionHook before calling this method directly.
 	 * @param event The event to be added to the window.
 	 */
 	protected onWindowAction(event: Events['action']) {
@@ -76,59 +90,44 @@ export abstract class ActionWindow extends Analyser {
 	}
 
 	/**
-	 * Removes the default event hook that captures all actions by the player.
-	 * Implementing modules should call this method if they have logic to only
-	 * include some actions in a window.
-	 * Implmenting modules MUST register their own hook that calls onWindowAction
-	 * after calling this method.
-	 */
-	protected removeDefaultActionHook() {
-		if (this.defaultEventHook != null) {
-			this.removeEventHook(this.defaultEventHook)
-			this.defaultEventHook = undefined
-		}
-	}
-	/**
-	 * Adjusts the default event hook to ignore certain actions.
-	 * Implementing modules MAY call this method if all casts of certain
-	 * actions should be ignored in a window.
+	 * Adjusts the event filter to ignore certain actions.
+	 * Call this method if all casts of certain actions should be ignored
+	 * in a window.
 	 * If actions are only ignored in some conditions, this method is
-	 * not suitable, and you will need to register your own hook and callback
-	 * that only calls onWindowAction when the conditions are met.
-	 * Calling this method will override previous calls to trackOnlyActions.
+	 * not suitable, and you will need to register your own hook via setEventFilter.
 	 * @param actionsToIgnore The ids of the actions to ignore.
 	 */
 	protected ignoreActions(actionsToIgnore: number[]) {
-		this.removeDefaultActionHook()
-		this.defaultEventHook = this.addEventHook(
-			filter<Event>()
-				.source(this.parser.actor.id)
-				.action(noneOf(actionsToIgnore))
-				.type('action'),
-			this.onWindowAction)
+		this.eventFilter = filter<Event>()
+			.source(this.parser.actor.id)
+			.action(noneOf(actionsToIgnore))
+			.type('action')
 	}
 	/**
-	 * Adjusts the default event hook to only track certain actions.
-	 * Implementing modules MAY call this method if only some actions should
-	 * be tracked in a window.
+	 * Adjusts the event filter to only track certain actions.
+	 * Call this method if only some actions should be tracked in a window.
 	 * If other actions should be tracked in some conditions, this method is
-	 * not suitable, and you will need to register your own hook and callback
-	 * that only calls onWindowAction when the conditions are met.
-	 * Calling this method will override previous calls to ignoreActions.
+	 * not suitable, and you will need to register your own hook via
+	 * setEventFilter.
 	 * @param actionsToTrack The ids of the actions to track.
 	 */
 	protected trackOnlyActions(actionsToTrack: number[]) {
-		this.removeDefaultActionHook()
-		this.defaultEventHook = this.addEventHook(
-			filter<Event>()
-				.source(this.parser.actor.id)
-				.action(oneOf(actionsToTrack))
-				.type('action'),
-			this.onWindowAction)
+		this.eventFilter = filter<Event>()
+			.source(this.parser.actor.id)
+			.action(oneOf(actionsToTrack))
+			.type('action')
+	}
+
+	/**
+	 * Sets a custom event filter for the actions to capture during
+	 * a window.
+	 * @param filter The filter for actions to capture during a window
+	 */
+	protected setEventFilter(filter: EventFilterPredicate<Events['action']>) {
+		this.eventFilter = filter
 	}
 
 	override initialise() {
-		this.defaultEventHook = this.addEventHook(filter<Event>().source(this.parser.actor.id).type('action'), this.onWindowAction)
 		this.addEventHook('complete', this.onComplete)
 	}
 
