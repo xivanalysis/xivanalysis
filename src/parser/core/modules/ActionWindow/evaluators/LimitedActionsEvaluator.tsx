@@ -30,7 +30,7 @@ export class LimitedActionsEvaluator implements WindowEvaluator {
 	}
 
 	public suggest(windows: Array<HistoryEntry<EvaluatedAction[]>>) {
-		const extraCount = windows
+		const badActions = windows
 			.reduce((total, window) => {
 				const missingInWindow = this.expectedActions.reduce((subTotal, action) => {
 					return subTotal + Math.max(0, this.countUsed(window, action) - (action.expectedPerWindow + this.adjustCount(window, action)))
@@ -42,9 +42,9 @@ export class LimitedActionsEvaluator implements WindowEvaluator {
 			icon: this.suggestionIcon,
 			content: this.suggestionContent,
 			tiers: this.severityTiers,
-			value: extraCount,
+			value: badActions,
 			why: <Trans id="core.buffwindow.suggestions.trackedbadaction.why">
-				<Plural value={extraCount} one="# use of" other="# uses of"/> actions that should be avoided during {this.suggestionWindowName} windows.
+				<Plural value={badActions} one="# use of" other="# uses of"/> actions that should be avoided during {this.suggestionWindowName} windows.
 			</Trans>,
 		})
 	}

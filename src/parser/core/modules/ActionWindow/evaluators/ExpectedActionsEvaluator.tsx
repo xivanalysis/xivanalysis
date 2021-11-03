@@ -32,7 +32,7 @@ export class ExpectedActionsEvaluator implements WindowEvaluator {
 	}
 
 	public suggest(windows: Array<HistoryEntry<EvaluatedAction[]>>) {
-		const missedCount = windows
+		const missedActions = windows
 			.reduce((total, window) => {
 				const missingInWindow = this.expectedActions.reduce((subTotal, action) => {
 					const actual = this.countUsed(window, action)
@@ -50,9 +50,9 @@ export class ExpectedActionsEvaluator implements WindowEvaluator {
 			icon: this.suggestionIcon,
 			content: this.suggestionContent,
 			tiers: this.severityTiers,
-			value: missedCount,
+			value: missedActions,
 			why: <Trans id="core.buffwindow.suggestions.trackedaction.why">
-				<Plural value={missedCount} one="# use of a recommended action was" other="# uses of recommended actions were"/> missed during {this.suggestionWindowName} windows.
+				<Plural value={missedActions} one="# use of a recommended action was" other="# uses of recommended actions were"/> missed during {this.suggestionWindowName} windows.
 			</Trans>,
 		})
 	}
