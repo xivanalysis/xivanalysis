@@ -1,8 +1,10 @@
 import {Trans, Plural} from '@lingui/react'
 import {ActionLink} from 'components/ui/DbLink'
-import {CastEvent} from 'fflogs'
-import Module, {dependency} from 'parser/core/Module'
-import Combatants from 'parser/core/modules/Combatants'
+import {Event, Events} from 'event'
+import {Analyser} from 'parser/core/Analyser'
+import {filter, oneOf} from 'parser/core/filter'
+import {dependency} from 'parser/core/Injectable'
+import {Actors} from 'parser/core/modules/Actors'
 import {Data} from 'parser/core/modules/Data'
 import Suggestions, {TieredSuggestion, Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import React from 'react'
@@ -16,10 +18,10 @@ interface DotonCast {
 	prepull: boolean,
 }
 
-export class Ninjutsu extends Module {
+export class Ninjutsu extends Analyser {
 	static override handle = 'ninjutsu'
 
-	@dependency private combatants!: Combatants
+	@dependency private actors!: Actors
 	@dependency private data!: Data
 	@dependency private suggestions!: Suggestions
 
@@ -28,27 +30,28 @@ export class Ninjutsu extends Module {
 	private current?: DotonCast
 	private history: DotonCast[] = []
 
-	protected override init() {
-		this.addEventHook('cast', {by: 'player', abilityId: [this.data.actions.HYOTON.id, this.data.actions.HYOTON_TCJ.id]}, () => { this.hyotonCount++ })
-		this.addEventHook('cast', {by: 'player', abilityId: this.data.actions.RABBIT_MEDIUM.id}, () => { this.rabbitCount++ })
-		this.addEventHook('cast', {by: 'player', abilityId: [this.data.actions.DOTON.id, this.data.actions.DOTON_TCJ.id]}, this.onDotonCast)
-		this.addEventHook('normaliseddamage', {by: 'player', abilityId: this.data.statuses.DOTON.id}, event => { this.current?.ticks.push(event.hitCount || 0) })
-		this.addEventHook('removebuff', {by: 'player', abilityId: this.data.statuses.DOTON.id}, this.finishDotonWindow)
+	override initialise() {
+		const playerFilter = filter<Event>().source(this.parser.actor.id)
+		this.addEventHook(playerFilter.type('action').action(oneOf([this.data.actions.HYOTON.id, this.data.actions.HYOTON_TCJ.id])), () => { this.hyotonCount++ })
+		this.addEventHook(playerFilter.type('action').action(this.data.actions.RABBIT_MEDIUM.id), () => { this.rabbitCount++ })
+		this.addEventHook(playerFilter.type('action').action(oneOf([this.data.actions.DOTON.id, this.data.actions.DOTON_TCJ.id])), this.onDotonCast)
+		this.addEventHook(playerFilter.type('damage').cause(this.data.matchCauseStatus(['DOTON'])), event => { this.current?.ticks.push(event.targets.length || 0) })
+		this.addEventHook(playerFilter.type('statusRemove').status(this.data.statuses.DOTON.id), this.finishDotonWindow)
 		this.addEventHook('complete', this.onComplete)
 	}
 
-	private onDotonCast(event: CastEvent) {
+	private onDotonCast(event: Events['action']) {
 		this.finishDotonWindow()
 
 		this.current = {
-			tcj: this.combatants.selected.hasStatus(this.data.statuses.TEN_CHI_JIN.id),
+			tcj: this.actors.current.hasStatus(this.data.statuses.TEN_CHI_JIN.id),
 			ticks: [],
 			prepull: event.timestamp < this.parser.fight.start_time,
 		}
 	}
 
 	private finishDotonWindow() {
-		if (!this.current) {
+		if (this.current == null) {
 			return
 		}
 
