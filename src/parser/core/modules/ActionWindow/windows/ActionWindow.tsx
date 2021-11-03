@@ -137,20 +137,26 @@ export abstract class ActionWindow extends Analyser {
 
 		const actionHistory = this.mapHistoryActions()
 		this.evaluators
-			.map(ev => ev.suggest(actionHistory))
-			.filter(isDefined)
-			.forEach(s => this.suggestions.add(s))
+			.forEach(ev => {
+				const suggestion = ev.suggest(actionHistory)
+				if (suggestion != null) {
+					this.suggestions.add(suggestion)
+				}
+			})
 	}
 
 	override output() {
 		if (this.history.entries.length === 0) { return undefined }
 
 		const actionHistory = this.mapHistoryActions()
-		const evalColumns = this.evaluators
-			.map(ev => ev.output(actionHistory))
-			.filter(isDefined)
-			.map(ensureArray)
-			.flat()
+		const evalColumns: EvaluationOutput[]  = []
+		for (const ev of this.evaluators) {
+			const maybeColumns = ev.output(actionHistory)
+			if (maybeColumns == null) { continue }
+			for (const column of ensureArray(maybeColumns)) {
+				evalColumns.push(column)
+			}
+		}
 
 		const rotationTargets = evalColumns.filter(column => column.format === 'table').map(column => column.header)
 		const notesData = evalColumns.filter(column => column.format === 'notes').map(column => column.header)
