@@ -10,9 +10,9 @@ import {filter} from '../filter'
 import {dependency} from '../Injectable'
 import {EvaluatedAction} from './ActionWindow/EvaluatedAction'
 import {ExpectedGcdCountEvaluator} from './ActionWindow/evaluators/ExpectedGcdCountEvaluator'
+import {HistoryEntry} from './ActionWindow/History'
 import {BuffWindow} from './ActionWindow/windows/BuffWindow'
 import {GlobalCooldown} from './GlobalCooldown'
-import {HistoryEntry} from './History'
 
 // Global default
 const MISSED_SWIFTCAST_SEVERITIES: SeverityTiers = {

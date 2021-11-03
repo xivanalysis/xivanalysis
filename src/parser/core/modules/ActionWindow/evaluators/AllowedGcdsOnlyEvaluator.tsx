@@ -1,9 +1,9 @@
 import {Plural, Trans} from '@lingui/react'
 import React from 'react'
 import {GlobalCooldown} from '../../GlobalCooldown'
-import {HistoryEntry} from '../../History'
 import {SeverityTiers, TieredSuggestion} from '../../Suggestions/Suggestion'
 import {EvaluatedAction} from '../EvaluatedAction'
+import {HistoryEntry} from '../History'
 import {calculateExpectedGcdsForTime} from './ExpectedGcdCountEvaluator'
 import {EvaluationOutput, WindowEvaluator} from './WindowEvaluator'
 

@@ -1,8 +1,8 @@
 import {RotationTargetOutcome} from 'components/ui/RotationTable'
 import {Action} from 'data/ACTIONS'
-import {HistoryEntry} from '../../History'
 import {SeverityTiers} from '../../Suggestions/Suggestion'
 import {EvaluatedAction} from '../EvaluatedAction'
+import {HistoryEntry} from '../History'
 
 export type OutcomeCalculator = (actual: number, expected?: number) => RotationTargetOutcome
 

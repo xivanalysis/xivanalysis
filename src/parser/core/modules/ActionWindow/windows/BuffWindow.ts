@@ -3,8 +3,8 @@ import {Event, Events} from 'event'
 import {TimestampHook, TimestampHookArguments} from 'parser/core/Dispatcher'
 import {ensureArray} from 'utilities'
 import {filter, noneOf, oneOf} from '../../../filter'
-import {HistoryEntry} from '../../History'
 import {EvaluatedAction} from '../EvaluatedAction'
+import {HistoryEntry} from '../History'
 import {ActionWindow} from './ActionWindow'
 
 const SECONDS_TO_MS: number = 1000

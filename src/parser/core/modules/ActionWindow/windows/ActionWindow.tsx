@@ -8,10 +8,10 @@ import {Analyser} from '../../../Analyser'
 import {EventHook} from '../../../Dispatcher'
 import {filter, noneOf, oneOf} from '../../../filter'
 import {Data} from '../../Data'
-import {History, HistoryEntry} from '../../History'
 import Suggestions from '../../Suggestions'
 import {EvaluatedAction} from '../EvaluatedAction'
 import {WindowEvaluator} from '../evaluators/WindowEvaluator'
+import {History, HistoryEntry} from '../History'
 
 /**
  * Tracks actions that occur within a window.

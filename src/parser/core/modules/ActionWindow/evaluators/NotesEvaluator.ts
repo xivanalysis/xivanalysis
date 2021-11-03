@@ -1,7 +1,7 @@
 import {RotationTarget} from 'components/ui/RotationTable'
-import {HistoryEntry} from '../../History'
 import {Suggestion} from '../../Suggestions'
 import {EvaluatedAction} from '../EvaluatedAction'
+import {HistoryEntry} from '../History'
 import {EvaluationOutput, WindowEvaluator} from './WindowEvaluator'
 
 export abstract class NotesEvaluator implements WindowEvaluator {

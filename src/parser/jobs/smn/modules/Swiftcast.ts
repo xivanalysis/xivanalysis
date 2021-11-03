@@ -1,7 +1,7 @@
 import {Action} from 'data/ACTIONS'
 import {Event, Events} from 'event'
 import {filter} from 'parser/core/filter'
-import {History} from 'parser/core/modules/History'
+import {History} from 'parser/core/modules/ActionWindow/History'
 import {SEVERITY} from 'parser/core/modules/Suggestions'
 import {Swiftcast as CoreSwiftcast} from 'parser/core/modules/Swiftcast'
 import {DWT_CAST_TIME_MOD, DWT_LENGTH} from './DWT'

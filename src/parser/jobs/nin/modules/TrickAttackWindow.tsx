@@ -9,9 +9,9 @@ import {ExpectedGcdCountEvaluator} from 'parser/core/modules/ActionWindow/evalua
 import {LimitedActionsEvaluator} from 'parser/core/modules/ActionWindow/evaluators/LimitedActionsEvaluator'
 import {NotesEvaluator} from 'parser/core/modules/ActionWindow/evaluators/NotesEvaluator'
 import {TrackedAction} from 'parser/core/modules/ActionWindow/evaluators/TrackedAction'
+import {HistoryEntry} from 'parser/core/modules/ActionWindow/History'
 import {BuffWindow} from 'parser/core/modules/ActionWindow/windows/BuffWindow'
 import {GlobalCooldown} from 'parser/core/modules/GlobalCooldown'
-import {HistoryEntry} from 'parser/core/modules/History'
 import {SEVERITY} from 'parser/core/modules/Suggestions'
 import React from 'react'
 

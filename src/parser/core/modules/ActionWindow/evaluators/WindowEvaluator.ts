@@ -1,7 +1,7 @@
 import {RotationTarget, RotationTargetData} from 'components/ui/RotationTable'
-import {HistoryEntry} from '../../History'
 import {Suggestion} from '../../Suggestions'
 import {EvaluatedAction} from '../EvaluatedAction'
+import {HistoryEntry} from '../History'
 
 interface TableOutput  {
 	format: 'table'
