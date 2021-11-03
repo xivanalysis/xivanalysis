@@ -656,7 +656,7 @@
   "nin.ninki.suggestions.frog.content": "Avoid using <0/> when you only have one target, as <1/> has higher potency and can be used freely.",
   "nin.ninki.suggestions.frog.why": "You used Hellfrog Medium {0, plural, one {# time} other {# times}} when other spenders were available.",
   "nin.ninki.suggestions.waste.content": "Avoid using <0/> and <1/> when above 40 Ninki and holding your Ninki spenders when near or at cap (with a few small exceptions) in order to maximize the number of spenders you can use over the course of a fight.",
-  "nin.ninki.suggestions.waste.why": "Overcapping caused you to lose {totalWaste} Ninki over the fight.",
+  "nin.ninki.suggestions.waste.why": "Overcapping caused you to lose {0} Ninki over the fight.",
   "nin.ninki.title": "Ninki Timeline",
   "nin.ta-usage.suggestions.missed.content": "Avoid holding <0/> for extended periods of time. It's typically ideal to use it as close to on cooldown as possible in order to keep it aligned with all the other raid buffs and personal burst windows, as well as maximizing the number of uses per fight.",
   "nin.ta-usage.suggestions.missed.why": "You delayed Trick Attack for a cumulative {0}, costing you {lostCasts, plural, one {# potential use} other {# potential uses}}.",
