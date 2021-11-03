@@ -58,7 +58,7 @@ export class Kassatsu extends Analyser {
 			this.suggestions.add(new Suggestion({
 				icon: this.data.actions.KASSATSU.icon,
 				content: <Trans id="nin.kassatsu.suggestions.waste.content">
-					Be careful not to let <ActionLink {...this.data.actions.KASSATSU}/> fall off, as it wastes a 30% potency buff and means that you're delaying your Ninjutsu casts significantly.
+					Be careful not to let <ActionLink action="KASSATSU"/> fall off, as it wastes a 30% potency buff and means that you're delaying your Ninjutsu casts significantly.
 				</Trans>,
 				severity: SEVERITY.MEDIUM,
 				why: <Trans id="nin.kassatsu.suggestions.waste.why">
@@ -71,7 +71,7 @@ export class Kassatsu extends Analyser {
 			this.suggestions.add(new Suggestion({
 				icon: this.data.actions.HUTON.icon,
 				content: <Trans id="nin.kassatsu.suggestions.huton.content">
-					Avoid using <ActionLink {...this.data.actions.HUTON}/> under <ActionLink {...this.data.actions.KASSATSU}/>, as it does no damage and completely wastes the 30% potency buff Kassatsu provides.
+					Avoid using <ActionLink action="HUTON"/> under <ActionLink action="KASSATSU"/>, as it does no damage and completely wastes the 30% potency buff Kassatsu provides.
 				</Trans>,
 				severity: SEVERITY.MAJOR,
 				why: <Trans id="nin.kassatsu.suggestions.huton.why">
@@ -85,7 +85,7 @@ export class Kassatsu extends Analyser {
 			this.suggestions.add(new Suggestion({
 				icon: this.data.actions.FUMA_SHURIKEN.icon,
 				content: <Trans id="nin.kassatsu.suggestions.generalbads.content">
-					Avoid using <ActionLink {...this.data.actions.FUMA_SHURIKEN}/>, <ActionLink {...this.data.actions.RAITON}/>, and <ActionLink {...this.data.actions.DOTON}/> under <ActionLink {...this.data.actions.KASSATSU}/>. For raw damage, <ActionLink {...this.data.actions.HYOSHO_RANRYU}/> and <ActionLink {...this.data.actions.GOKA_MEKKYAKU}/> should always be used in single-target and AoE situations respectively.
+					Avoid using <ActionLink action="FUMA_SHURIKEN"/>, <ActionLink action="RAITON"/>, and <ActionLink action="DOTON"/> under <ActionLink action="KASSATSU"/>. For raw damage, <ActionLink action="HYOSHO_RANRYU"/> and <ActionLink action="GOKA_MEKKYAKU"/> should always be used in single-target and AoE situations respectively.
 				</Trans>,
 				severity: SEVERITY.MAJOR,
 				why: <Trans id="nin.kassatsu.suggestions.generalbads.why">
@@ -98,7 +98,7 @@ export class Kassatsu extends Analyser {
 			this.suggestions.add(new Suggestion({
 				icon: this.data.actions.SUITON.icon,
 				content: <Trans id="nin.kassatsu.suggestions.suiton.content">
-					Avoid using <ActionLink {...this.data.actions.SUITON}/> under <ActionLink {...this.data.actions.KASSATSU}/> unless using it to set up for a critically important <ActionLink {...this.data.actions.TRICK_ATTACK}/>. It's generally best to use it on <ActionLink {...this.data.actions.HYOSHO_RANRYU}/> while Trick Attack is up, as its cooldown should align it with every window.
+					Avoid using <ActionLink action="SUITON"/> under <ActionLink action="KASSATSU"/> unless using it to set up for a critically important <ActionLink action="TRICK_ATTACK"/>. It's generally best to use it on <ActionLink action="HYOSHO_RANRYU"/> while Trick Attack is up, as its cooldown should align it with every window.
 				</Trans>,
 				severity: SEVERITY.MEDIUM,
 				why: <Trans id="nin.kassatsu.suggestions.suiton.why">
@@ -111,7 +111,7 @@ export class Kassatsu extends Analyser {
 			this.suggestions.add(new Suggestion({
 				icon: this.data.actions.RABBIT_MEDIUM.icon,
 				content: <Trans id="nin.kassatsu.suggestions.rabbit.content">
-					Be especially careful not to flub your mudras under <ActionLink {...this.data.actions.KASSATSU}/>, as <ActionLink {...this.data.actions.RABBIT_MEDIUM}/> does no damage and completely wastes the 30% potency buff Kassatsu provides.
+					Be especially careful not to flub your mudras under <ActionLink action="KASSATSU"/>, as <ActionLink action="RABBIT_MEDIUM"/> does no damage and completely wastes the 30% potency buff Kassatsu provides.
 				</Trans>,
 				severity: SEVERITY.MAJOR,
 				why: <Trans id="nin.kassatsu.suggestions.rabbit.why">
