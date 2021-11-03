@@ -9,7 +9,6 @@ import {filter, oneOf} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
 import BrokenLog from 'parser/core/modules/BrokenLog'
 import CastTime from 'parser/core/modules/CastTime'
-import {Data} from 'parser/core/modules/Data'
 import {CounterGauge, TimerGauge, Gauge as CoreGauge} from 'parser/core/modules/Gauge'
 import Suggestions, {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import {UnableToAct} from 'parser/core/modules/UnableToAct'
@@ -50,7 +49,6 @@ export class Gauge extends CoreGauge {
 	@dependency private suggestions!: Suggestions
 	@dependency private brokenLog!: BrokenLog
 	@dependency private unableToAct!: UnableToAct
-	@dependency private data!: Data
 	@dependency private castTime!: CastTime
 
 	private droppedEnoTimestamps: number[] = []

@@ -8,7 +8,6 @@ import {Cause, Event, Events} from 'event'
 import {EventHook, TimestampHook} from 'parser/core/Dispatcher'
 import {filter} from 'parser/core/filter'
 import {dependency} from 'parser/core/Module'
-import {Data} from 'parser/core/modules/Data'
 import {CounterGauge, Gauge as CoreGauge} from 'parser/core/modules/Gauge'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
@@ -77,7 +76,6 @@ const FEATHERS_COLOR = Color.rgb(140.6, 161.1, 70.8).fade(0.25).toString()
 /* eslint-enable @typescript-eslint/no-magic-numbers */
 
 export class Gauge extends CoreGauge {
-	@dependency private data!: Data
 	@dependency private suggestions!: Suggestions
 
 	private featherGauge = this.add(new CounterGauge({
