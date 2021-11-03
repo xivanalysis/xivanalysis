@@ -53,7 +53,7 @@ class TCJEvaluator extends NotesEvaluator {
 }
 
 export class TrickAttackWindow extends BuffWindow {
-	static override handle = 'taWindow2'
+	static override handle = 'taWindow'
 	static override title = t('nin.taWindow.title')`Trick Attack Windows`
 
 	@dependency globalCooldown!: GlobalCooldown
