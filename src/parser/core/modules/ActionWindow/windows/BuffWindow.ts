@@ -1,8 +1,7 @@
 import {Status} from 'data/STATUSES'
 import {Event, Events} from 'event'
 import {TimestampHook, TimestampHookArguments} from 'parser/core/Dispatcher'
-import {ensureArray} from 'utilities'
-import {filter, noneOf, oneOf} from '../../../filter'
+import {filter, noneOf} from '../../../filter'
 import {EvaluatedAction} from '../EvaluatedAction'
 import {HistoryEntry} from '../History'
 import {ActionWindow} from './ActionWindow'
@@ -20,9 +19,9 @@ const STATUS_DURATION_FUDGE = SECONDS_TO_MS
 export abstract class BuffWindow extends ActionWindow {
 
 	/**
-	 * Implementing modules MUST define the STATUS object for the status that represents the buff window.
+	 * The status that the buff window tracks.
 	 */
-	abstract buffStatus: Status | Status[]
+	abstract buffStatus: Status
 
 	/**
 	 * Determines if a window ended early due to the end of the pull.
@@ -31,7 +30,7 @@ export abstract class BuffWindow extends ActionWindow {
 	 * of the pull; false otherwise.
 	 */
 	protected isRushedEndOfPullWindow(window: HistoryEntry<EvaluatedAction[]>) {
-		const expectedDuration = ensureArray(this.buffStatus)[0].duration ?? 0
+		const expectedDuration = this.buffStatus.duration ?? 0
 		const fightTimeRemaining = (this.parser.pull.timestamp + this.parser.pull.duration) - window.start
 		return expectedDuration >= fightTimeRemaining
 	}
@@ -46,7 +45,7 @@ export abstract class BuffWindow extends ActionWindow {
 			.filter(actor => actor.owner === this.parser.actor)
 			.map(actor => actor.id)
 		const playerFilter = filter<Event>().source(this.parser.actor.id).target(noneOf(pets))
-		const buffFilter = playerFilter.status(oneOf(ensureArray(this.buffStatus).map(s => s.id)))
+		const buffFilter = playerFilter.status(this.buffStatus.id)
 
 		this.addEventHook(buffFilter.type('statusApply'), this.startWindowAndTimeout)
 		this.addEventHook(buffFilter.type('statusRemove'), this.endWindowByStatus)
@@ -54,7 +53,7 @@ export abstract class BuffWindow extends ActionWindow {
 
 	private startWindowAndTimeout(event: Events['statusApply']) {
 		this.onWindowStart(event.timestamp)
-		const duration = ensureArray(this.buffStatus)[0].duration
+		const duration = this.buffStatus.duration
 		if (duration == null) { return }
 		if (this.durationHook != null) {
 			this.removeTimestampHook(this.durationHook)
