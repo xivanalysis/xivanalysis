@@ -36,7 +36,7 @@ export abstract class Swiftcast extends BuffWindow {
 			globalCooldown: this.globalCooldown,
 			suggestionIcon: this.data.actions.SWIFTCAST.icon,
 			suggestionContent: this.suggestionContent,
-			windowName: this.data.actions.SWIFTCAST.name,
+			suggestionWindowName: <ActionLink action="SWIFTCAST" showIcon={false} />,
 			severityTiers: this.severityTiers,
 			adjustCount: this.adjustExpectedGcdCount.bind(this),
 		}))

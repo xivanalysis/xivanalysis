@@ -44,7 +44,7 @@ export class Meikyo extends BuffWindow {
 		this.trackOnlyActions(ONLY_SHOW.map(k => this.data.actions[k].id))
 
 		const suggestionIcon = this.data.actions.MEIKYO_SHISUI.icon
-		const windowName = this.data.actions.MEIKYO_SHISUI.name
+		const suggestionWindowName = <ActionLink action="MEIKYO_SHISUI" showIcon={false}/>
 		this.addEvaluator(
 			new ExpectedGcdCountEvaluator({
 				expectedGcds: SEN_GCDS,
@@ -53,7 +53,7 @@ export class Meikyo extends BuffWindow {
 				suggestionContent: <Trans id="sam.ms.suggestions.missedgcd.content">
 					Try to land 3 GCDs during every <ActionLink action="MEIKYO_SHISUI" /> window.
 				</Trans>,
-				windowName,
+				suggestionWindowName,
 				severityTiers: {
 					1: SEVERITY.MEDIUM,
 					2: SEVERITY.MAJOR,
@@ -78,7 +78,7 @@ export class Meikyo extends BuffWindow {
 				suggestionContent: <Trans id="sam.ms.suggestions.badgcd.content">
 					GCDs used during <ActionLink action="MEIKYO_SHISUI"/> should be limited to sen building skills.
 				</Trans>,
-				windowName,
+				suggestionWindowName,
 				severityTiers: {
 					1: SEVERITY.MAJOR,
 				},

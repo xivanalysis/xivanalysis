@@ -22,7 +22,7 @@ export default class LanceCharge extends BuffWindow {
 		super.initialise()
 
 		const suggestionIcon = this.data.actions.LANCE_CHARGE.icon
-		const windowName = this.data.actions.LANCE_CHARGE.name
+		const suggestionWindowName = <ActionLink action="LANCE_CHARGE" showIcon={false}/>
 		this.addEvaluator(new ExpectedGcdCountEvaluator({
 			expectedGcds: 8,
 			globalCooldown: this.globalCooldown,
@@ -30,7 +30,7 @@ export default class LanceCharge extends BuffWindow {
 			suggestionContent: <Trans id="drg.lc.suggestions.missedgcd.content">
 				Try to land at least 8 GCDs during every <ActionLink action="LANCE_CHARGE" /> window.
 			</Trans>,
-			windowName,
+			suggestionWindowName,
 			severityTiers: {
 				1: SEVERITY.MINOR,
 				2: SEVERITY.MEDIUM,
@@ -61,7 +61,7 @@ export default class LanceCharge extends BuffWindow {
 			suggestionContent: <Trans id="drg.lc.suggestions.trackedactions.content">
 				Each <ActionLink action="LANCE_CHARGE" /> window should contain at least one use each of <ActionLink action="CHAOS_THRUST" />, <ActionLink action="FULL_THRUST" />, <ActionLink action="FANG_AND_CLAW" />, and <ActionLink action="WHEELING_THRUST" />. In order to ensure that these actions fall within the buff window, try to avoid using <ActionLink action="LANCE_CHARGE" /> after <ActionLink action="CHAOS_THRUST" /> or <ActionLink action="FULL_THRUST" />.
 			</Trans>,
-			windowName,
+			suggestionWindowName,
 			severityTiers: {
 				1: SEVERITY.MINOR,
 				3: SEVERITY.MEDIUM,

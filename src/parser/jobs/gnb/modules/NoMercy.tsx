@@ -70,7 +70,7 @@ export default class NoMercy extends BuffWindow {
 		super.initialise()
 
 		const suggestionIcon = this.data.actions.NO_MERCY.icon
-		const windowName = this.data.actions.NO_MERCY.name
+		const suggestionWindowName = <ActionLink action="NO_MERCY" showIcon={false}/>
 		this.addEvaluator(new ExpectedGcdCountEvaluator({
 			expectedGcds: EXPECTED_USES.GCD,
 			globalCooldown: this.globalCooldown,
@@ -79,7 +79,7 @@ export default class NoMercy extends BuffWindow {
 				Try to land 9 GCDs during every <ActionLink action="NO_MERCY" /> window. A 20 second duration is sufficient
 					to comfortably fit 9 GCDs with full uptime if you wait until the last one-third of your GCD timer to activate it.
 			</Trans>,
-			windowName,
+			suggestionWindowName,
 			severityTiers: SEVERITIES.TOO_FEW_GCDS,
 		}))
 
@@ -122,7 +122,7 @@ export default class NoMercy extends BuffWindow {
 					your off-GCD skills <ActionLink action="BLASTING_ZONE" />, <ActionLink action="BOW_SHOCK" />, and at least one
 					charge of <ActionLink action="ROUGH_DIVIDE" /> under the buff duration.
 			</Trans>,
-			windowName,
+			suggestionWindowName,
 			severityTiers: SEVERITIES.MISSING_EXPECTED_USES,
 			adjustCount: this.adjustExpectedActionCount.bind(this),
 		}))

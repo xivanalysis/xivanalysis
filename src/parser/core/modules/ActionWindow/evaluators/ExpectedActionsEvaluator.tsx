@@ -16,7 +16,7 @@ export class ExpectedActionsEvaluator implements WindowEvaluator {
 	private expectedActions: TrackedAction[]
 	private suggestionIcon: string
 	private suggestionContent: JSX.Element
-	private windowName: string
+	private suggestionWindowName: JSX.Element
 	private severityTiers: SeverityTiers
 	private adjustCount : (window: HistoryEntry<EvaluatedAction[]>, action: TrackedAction) => number
 	private adjustOutcome : (window: HistoryEntry<EvaluatedAction[]>, action: TrackedAction) => OutcomeCalculator | undefined
@@ -25,7 +25,7 @@ export class ExpectedActionsEvaluator implements WindowEvaluator {
 		this.expectedActions = opts.expectedActions
 		this.suggestionIcon = opts.suggestionIcon
 		this.suggestionContent = opts.suggestionContent
-		this.windowName = opts.windowName
+		this.suggestionWindowName = opts.suggestionWindowName
 		this.severityTiers = opts.severityTiers
 		this.adjustCount = opts.adjustCount ?? (() => 0)
 		this.adjustOutcome = opts.adjustOutcome ?? (() => undefined)
@@ -52,7 +52,7 @@ export class ExpectedActionsEvaluator implements WindowEvaluator {
 			tiers: this.severityTiers,
 			value: missedCount,
 			why: <Trans id="core.buffwindow.suggestions.trackedaction.why">
-				<Plural value={missedCount} one="# use of a recommended action was" other="# uses of recommended actions were"/> missed during {this.windowName} windows.
+				<Plural value={missedCount} one="# use of a recommended action was" other="# uses of recommended actions were"/> missed during {this.suggestionWindowName} windows.
 			</Trans>,
 		})
 	}

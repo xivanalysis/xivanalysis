@@ -87,7 +87,7 @@ export default class RagingStrikes extends BuffWindow {
 		this.addEventHook(buffFilter.type('statusRemove'), this.onRemoveMuse)
 		this.addEventHook(playerFilter.status(this.data.statuses.BARRAGE.id).type('statusRemove'), this.onRemoveBarrage)
 
-		const windowName = this.data.actions.RAGING_STRIKES.name
+		const suggestionWindowName = <ActionLink action="RAGING_STRIKES" showIcon={false} />
 		this.addEvaluator(new ExpectedGcdCountEvaluator({
 			expectedGcds: 8,
 			globalCooldown: this.globalCooldown,
@@ -95,7 +95,7 @@ export default class RagingStrikes extends BuffWindow {
 			suggestionContent: <Trans id="brd.rs.suggestions.missedgcd.content">
 				Try to land 8 GCDs (9 GCDs with <StatusLink {...this.data.statuses.ARMYS_MUSE}/>) during every <ActionLink {...this.data.actions.RAGING_STRIKES}/> window.
 			</Trans>,
-			windowName,
+			suggestionWindowName,
 			severityTiers: {
 				1: SEVERITY.MINOR,
 				3: SEVERITY.MEDIUM,
@@ -119,7 +119,7 @@ export default class RagingStrikes extends BuffWindow {
 			suggestionContent: <Trans id="brd.rs.suggestions.trackedactions.content">
 				One use of <ActionLink {...this.data.actions.BARRAGE}/> and one use of <ActionLink {...this.data.actions.IRON_JAWS}/> should occur during every <ActionLink {...this.data.actions.RAGING_STRIKES}/> window.
 			</Trans>,
-			windowName,
+			suggestionWindowName,
 			severityTiers: {
 				1: SEVERITY.MINOR,
 				3: SEVERITY.MEDIUM,

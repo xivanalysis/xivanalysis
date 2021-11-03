@@ -1,4 +1,5 @@
 import {Trans} from '@lingui/react'
+import {DataLink} from 'components/ui/DbLink'
 import {ExpectedActionsEvaluator} from 'parser/core/modules/ActionWindow'
 import {SEVERITY} from 'parser/core/modules/Suggestions'
 import {Tincture as CoreTincture} from 'parser/core/modules/Tincture'
@@ -24,7 +25,7 @@ export default class Tincture extends CoreTincture {
 			suggestionContent: <Trans id="gnb.tincture.suggestions.trackedActions.content">
 				Try to cover as much damage as possible with your Tinctures of Strength.
 			</Trans>,
-			windowName: this.data.actions.INFUSION_STR.name,
+			suggestionWindowName: <DataLink action="INFUSION_STR" showIcon={false}/>,
 			severityTiers: {
 				1: SEVERITY.MINOR,
 				2: SEVERITY.MEDIUM,

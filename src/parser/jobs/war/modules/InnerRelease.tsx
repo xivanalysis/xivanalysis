@@ -18,7 +18,7 @@ export default class InnerRelease extends BuffWindow {
 	override initialise() {
 		super.initialise()
 
-		const windowName = this.data.actions.INNER_RELEASE.name
+		const suggestionWindowName = <ActionLink action="INNER_RELEASE" showIcon={false}/>
 		this.addEvaluator(new ExpectedGcdCountEvaluator({
 			expectedGcds: 5,
 			globalCooldown: this.globalCooldown,
@@ -26,7 +26,7 @@ export default class InnerRelease extends BuffWindow {
 			suggestionContent: <Trans id="war.ir.suggestions.missedgcd.content">
 				Try to land 5 GCDs during every <ActionLink action="INNER_RELEASE"/> window. If you cannot do this with full uptime and no clipping, consider adjusting your gearset for more Skill Speed.
 			</Trans>,
-			windowName,
+			suggestionWindowName,
 			severityTiers: {
 				1: SEVERITY.MAJOR,
 			},
@@ -43,7 +43,7 @@ export default class InnerRelease extends BuffWindow {
 			suggestionContent: <Trans id="war.ir.suggestions.badgcd.content">
 				GCDs used during <ActionLink action="INNER_RELEASE"/> should be limited to <ActionLink action="FELL_CLEAVE"/> for optimal damage (or <ActionLink action="DECIMATE"/> if three or more targets are present).
 			</Trans>,
-			windowName,
+			suggestionWindowName,
 			severityTiers: {
 				1: SEVERITY.MAJOR,
 			},
@@ -64,7 +64,7 @@ export default class InnerRelease extends BuffWindow {
 			suggestionContent: <Trans id="war.ir.suggestions.trackedActions.content">
 				One use of <ActionLink action="UPHEAVAL"/> and one use of <ActionLink action="ONSLAUGHT"/> should occur during every <ActionLink action="INNER_RELEASE"/> window.
 			</Trans>,
-			windowName,
+			suggestionWindowName,
 			severityTiers: {
 				1: SEVERITY.MEDIUM,
 			},
@@ -85,7 +85,7 @@ export default class InnerRelease extends BuffWindow {
 			suggestionContent: <Trans id="war.ir.suggestions.trackedBadActions.content">
 				Using <ActionLink action="INNER_CHAOS" /> or <ActionLink action="CHAOTIC_CYCLONE" /> inside of <ActionLink action="INNER_RELEASE" /> should be avoided at all costs. These abilities are guaranteed to be a critical direct hit, and make no use of <ActionLink showIcon={false} action="INNER_RELEASE"/>'s benefits.
 			</Trans>,
-			windowName,
+			suggestionWindowName,
 			severityTiers: {
 				1: SEVERITY.MAJOR,
 			},

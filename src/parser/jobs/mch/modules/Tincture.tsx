@@ -1,4 +1,5 @@
 import {Trans} from '@lingui/react'
+import {DataLink} from 'components/ui/DbLink'
 import {Event, Events} from 'event'
 import {filter, oneOf} from 'parser/core/filter'
 import {dependency} from 'parser/core/Module'
@@ -78,7 +79,7 @@ export default class Tincture extends CoreTincture {
 			suggestionContent: <Trans id="mch.tincture.suggestions.trackedActions.content">
 				Try to cover as much damage as possible with your Tinctures of Dexterity.
 			</Trans>,
-			windowName: this.data.actions.INFUSION_DEX.name,
+			suggestionWindowName: <DataLink action="INFUSION_DEX" showIcon={false} />,
 			severityTiers: {
 				2: SEVERITY.MINOR,
 				4: SEVERITY.MEDIUM,

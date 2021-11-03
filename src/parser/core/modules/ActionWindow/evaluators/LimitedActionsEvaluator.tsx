@@ -16,7 +16,7 @@ export class LimitedActionsEvaluator implements WindowEvaluator {
 	private expectedActions: TrackedAction[]
 	private suggestionIcon: string
 	private suggestionContent: JSX.Element
-	private windowName: string
+	private suggestionWindowName: JSX.Element
 	private severityTiers: SeverityTiers
 	private adjustCount : (window: HistoryEntry<EvaluatedAction[]>, action: TrackedAction) => number
 
@@ -24,7 +24,7 @@ export class LimitedActionsEvaluator implements WindowEvaluator {
 		this.expectedActions = opts.expectedActions
 		this.suggestionIcon = opts.suggestionIcon
 		this.suggestionContent = opts.suggestionContent
-		this.windowName = opts.windowName
+		this.suggestionWindowName = opts.suggestionWindowName
 		this.severityTiers = opts.severityTiers
 		this.adjustCount = opts.adjustCount ?? (() => 0)
 	}
@@ -44,7 +44,7 @@ export class LimitedActionsEvaluator implements WindowEvaluator {
 			tiers: this.severityTiers,
 			value: extraCount,
 			why: <Trans id="core.buffwindow.suggestions.trackedbadaction.why">
-				<Plural value={extraCount} one="# use of" other="# uses of"/> actions that should be avoided during {this.windowName} windows.
+				<Plural value={extraCount} one="# use of" other="# uses of"/> actions that should be avoided during {this.suggestionWindowName} windows.
 			</Trans>,
 		})
 	}

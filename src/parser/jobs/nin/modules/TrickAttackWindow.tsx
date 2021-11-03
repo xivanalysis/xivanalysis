@@ -60,7 +60,7 @@ export class TrickAttackWindow extends BuffWindow {
 		this.ignoreActions(MUDRAS.map(k => this.data.actions[k].id))
 
 		const suggestionIcon = this.data.actions.TRICK_ATTACK.icon
-		const windowName = this.data.actions.TRICK_ATTACK.name
+		const suggestionWindowName = <ActionLink action="TRICK_ATTACK" showIcon={false}/>
 		this.addEvaluator(new ExpectedGcdCountEvaluator({
 			expectedGcds: BASE_GCDS_PER_WINDOW,
 			globalCooldown: this.globalCooldown,
@@ -68,7 +68,7 @@ export class TrickAttackWindow extends BuffWindow {
 			suggestionContent: <Trans id="nin.taWindow.suggestions.gcds.content">
 				While the exact number of GCDs per window will vary depending on whether <ActionLink action="TEN_CHI_JIN"/> is up, every <ActionLink action="TRICK_ATTACK"/> window should contain at least <Plural value={BASE_GCDS_PER_WINDOW} one="# GCD" other="# GCDs" />.
 			</Trans>,
-			windowName,
+			suggestionWindowName,
 			severityTiers: {
 				1: SEVERITY.MEDIUM,
 				2: SEVERITY.MAJOR,
@@ -103,7 +103,7 @@ export class TrickAttackWindow extends BuffWindow {
 			suggestionContent: <Trans id="nin.taWindow.suggestions.trackedactions.content">
 				Every <ActionLink action="TRICK_ATTACK"/> window should contain <ActionLink action="SHADOW_FANG"/>, <ActionLink action="HYOSHO_RANRYU"/>, 2 <ActionLink action="RAITON"/> casts (or 1 if it's your opener), and <ActionLink action="DREAM_WITHIN_A_DREAM"/> in order to maximize damage.
 			</Trans>,
-			windowName,
+			suggestionWindowName,
 			severityTiers: {
 				1: SEVERITY.MEDIUM,
 				3: SEVERITY.MAJOR,
@@ -122,7 +122,7 @@ export class TrickAttackWindow extends BuffWindow {
 			suggestionContent: <Trans id="nin.taWindow.suggestions.badtrackedactions.content">
 				Avoid using <ActionLink action="ARMOR_CRUSH"/> under <ActionLink action="TRICK_ATTACK"/> unless <ActionLink action="HUTON"/> is about to fall off or you can only hit the flank positional, as <ActionLink action="AEOLIAN_EDGE"/> is otherwise a higher potency finisher.
 			</Trans>,
-			windowName,
+			suggestionWindowName,
 			severityTiers: {
 				1: SEVERITY.MINOR,
 			},

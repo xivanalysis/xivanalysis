@@ -83,7 +83,7 @@ export default class DragonSight extends BuffWindow {
 		this.addEventHook({type: 'death', actor: this.parser.actor.id}, this.onDeath)
 
 		const suggestionIcon = this.data.actions.DRAGON_SIGHT.icon
-		const windowName = this.data.actions.DRAGON_SIGHT.name
+		const suggestionWindowName = <ActionLink action="DRAGON_SIGHT" showIcon={false}/>
 		this.addEvaluator(new ExpectedGcdCountEvaluator({
 			expectedGcds: EXPECTED_GCD_COUNT,
 			globalCooldown: this.globalCooldown,
@@ -91,7 +91,7 @@ export default class DragonSight extends BuffWindow {
 			suggestionContent: <Trans id="drg.ds.suggestions.missedgcd.content">
 				Try to land at least 8 GCDs during every <ActionLink action="DRAGON_SIGHT" /> window.
 			</Trans>,
-			windowName,
+			suggestionWindowName,
 			severityTiers: {
 				1: SEVERITY.MINOR,
 				2: SEVERITY.MEDIUM,
@@ -123,7 +123,7 @@ export default class DragonSight extends BuffWindow {
 			suggestionContent: <Trans id="drg.ds.suggestions.trackedactions.content">
 				Each <ActionLink action="DRAGON_SIGHT" /> window should contain at least one use each of <ActionLink action="CHAOS_THRUST" />, <ActionLink action="FULL_THRUST" />, <ActionLink action="FANG_AND_CLAW" />, and <ActionLink action="WHEELING_THRUST" />. In order to ensure that these actions fall within the buff window, try to avoid using <ActionLink action="DRAGON_SIGHT" /> after <ActionLink action="CHAOS_THRUST" /> or <ActionLink action="FULL_THRUST" />.
 			</Trans>,
-			windowName,
+			suggestionWindowName,
 			severityTiers: {
 				1: SEVERITY.MINOR,
 				3: SEVERITY.MEDIUM,

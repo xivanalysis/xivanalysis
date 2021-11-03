@@ -15,7 +15,7 @@ export default class Tincture extends CoreTincture {
 		super.initialise()
 
 		const suggestionIcon = this.data.actions.INFUSION_STR.icon
-		const windowName = this.data.actions.INFUSION_STR.name
+		const suggestionWindowName = <ActionLink action="INFUSION_STR" showIcon={false}/>
 		this.addEvaluator(new ExpectedGcdCountEvaluator({
 			expectedGcds: 13,
 			globalCooldown: this.globalCooldown,
@@ -23,7 +23,7 @@ export default class Tincture extends CoreTincture {
 			suggestionContent: <Trans id="pld.tincture.suggestions.missedgcd.content">
 				Try to land 13 GCDs during every <ActionLink {...this.data.actions.INFUSION_STR}/> window.
 			</Trans>,
-			windowName,
+			suggestionWindowName,
 			severityTiers: {
 				2: SEVERITY.MINOR,
 				4: SEVERITY.MEDIUM,
@@ -46,7 +46,7 @@ export default class Tincture extends CoreTincture {
 			suggestionContent: <Trans id="pld.tincture.suggestions.trackedactions.content">
 				One use of <ActionLink {...this.data.actions.SPIRITS_WITHIN}/> and at least one use of <ActionLink {...this.data.actions.CIRCLE_OF_SCORN}/> should occur during every <ActionLink {...this.data.actions.INFUSION_STR}/> window.
 			</Trans>,
-			windowName,
+			suggestionWindowName,
 			severityTiers: {
 				2: SEVERITY.MINOR,
 				4: SEVERITY.MEDIUM,
