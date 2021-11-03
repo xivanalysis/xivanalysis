@@ -12,7 +12,7 @@ import {ActionWindow} from './ActionWindow'
 export abstract class RestartWindow extends ActionWindow {
 
 	/**
-	 * Implementing modules MUST define the ACTION object that starts a window.
+	 * One or more actions that start a window.
 	 */
 	abstract startAction: ActionSpecifier | ActionSpecifier[]
 

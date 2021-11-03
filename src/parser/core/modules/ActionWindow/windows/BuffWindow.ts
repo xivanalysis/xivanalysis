@@ -44,8 +44,10 @@ export abstract class BuffWindow extends ActionWindow {
 		const pets = this.parser.pull.actors
 			.filter(actor => actor.owner === this.parser.actor)
 			.map(actor => actor.id)
-		const playerFilter = filter<Event>().source(this.parser.actor.id).target(noneOf(pets))
-		const buffFilter = playerFilter.status(this.buffStatus.id)
+		const buffFilter = filter<Event>()
+			.source(this.parser.actor.id)
+			.target(noneOf(pets))
+			.status(this.buffStatus.id)
 
 		this.addEventHook(buffFilter.type('statusApply'), this.startWindowAndTimeout)
 		this.addEventHook(buffFilter.type('statusRemove'), this.endWindowByStatus)
