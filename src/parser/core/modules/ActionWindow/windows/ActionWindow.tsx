@@ -20,7 +20,7 @@ import {WindowEvaluator} from '../evaluators/WindowEvaluator'
 export abstract class ActionWindow extends Analyser {
 
 	@dependency protected data!: Data
-	@dependency suggestions!: Suggestions
+	@dependency private suggestions!: Suggestions
 	@dependency private timeline!: Timeline
 
 	/**
