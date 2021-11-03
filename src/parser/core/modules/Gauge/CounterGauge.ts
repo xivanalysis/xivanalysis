@@ -4,20 +4,20 @@ import _ from 'lodash'
 import {GAUGE_HANDLE} from '../ResourceGraphs/ResourceGraphs'
 import {AbstractGauge, AbstractGaugeOptions, GaugeGraphOptions} from './AbstractGauge'
 
-type GaugeEventType =
+type GaugeEventReason =
 	| 'init'
 	| 'generate'
 	| 'spend'
 	| 'reset'
 	| 'changeBounds'
-	| 'notSpecified'
 
 interface CounterHistory {
 	timestamp: number
 	value: number
 	minimum: number
 	maximum: number
-	type: GaugeEventType
+	delta: number
+	reason: GaugeEventReason
 }
 
 export interface CounterGaugeOptions extends AbstractGaugeOptions {
@@ -96,51 +96,48 @@ export class CounterGauge extends AbstractGauge {
 				value: this.initialValue,
 				minimum: this.minimum,
 				maximum: this.maximum,
-				type: 'init',
+				delta: 0,
+				reason: 'init',
 			})
 		}
 	}
 
 	/** Modify the current value by the provided amount. Equivalent to `set(currentValue + amount)` */
 	modify(amount: number) {
-		if (amount === 0) { return }
-		this.set(this._value + amount, amount > 0 ? 'generate' : 'spend', Math.abs(amount))
+		this.set(this._value + amount)
 	}
 
 	/** Increase the current value by the provided amount. */
-	generate(amount: number) {
-		if (amount === 0) { return }
-		amount = Math.abs(amount)
-		this.set(this._value + amount, 'generate', amount)
-	}
+	generate = (amount: number) => this.modify(amount)
 
 	/** Decrease the current value by the provided amount. */
-	spend(amount: number) {
-		if (amount === 0) { return }
-		amount = Math.abs(amount)
-		this.set(this._value - amount, 'spend', amount)
-	}
+	spend = (amount: number) => this.modify(-amount)
 
 	/** Set the current value of the gauge. Value will automatically be bounded to valid values. Value over the maximum will be tracked as overcap. */
-	set(value: number, type?: GaugeEventType, delta?: number) {
-		type = type ?? 'notSpecified'
+	set(value: number, reason?: GaugeEventReason) {
+		const delta = Math.abs(value - this.value)
+		if (delta === 0 && reason != null) { return }
+
+		if (reason == null) {
+			reason = delta > 0 ? 'generate' : 'spend'
+		}
 
 		const newValue = Math.min(Math.max(value, this.minimum), this.maximum)
 
 		const diff = value - newValue
 		if (diff > 0) {
 			this.overCap += diff
-		} else if (diff < 0 && delta != null && this.correctHistory) {
+		} else if (diff < 0 && this.correctHistory) {
 			this.correctGaugeHistory(delta, this._value)
 		}
 
 		this._value = newValue
-		this.pushHistory(type)
+		this.pushHistory(reason, delta)
 	}
 
 	private correctGaugeHistory(spenderCost: number, currentGauge: number) {
-		// Get the last generation event we've recorded
-		const lastGeneratorIndex = _.findLastIndex(this.history, event => event.type === 'generate' || event.type === 'init')
+		// Get the last generation or initialisation event we've recorded
+		const lastGeneratorIndex = _.findLastIndex(this.history, event => event.reason === 'generate' || event.reason === 'init')
 
 		// Add the amount we underran the simulation by to the last generation event, and all events through the current one
 		const underrunAmount = Math.abs(currentGauge - spenderCost)
@@ -153,9 +150,8 @@ export class CounterGauge extends AbstractGauge {
 			return
 		}
 
-		// Find the first spender or init event previous to the last generator we already found, and smooth the graph between the two events by adding a proportional amount of the underrun value to each event
-		const previousSpenderIndex = _.findLastIndex(this.history.slice(0, lastGeneratorIndex), event =>
-			(event.type === 'spend' || event.type === 'init' || event.type === 'changeBounds'))
+		// Find the last non-generation event previous to the last generator we already found, and smooth the graph between the two events by adding a proportional amount of the underrun value to each event
+		const previousSpenderIndex = _.findLastIndex(this.history.slice(0, lastGeneratorIndex), event => event.reason !== 'generate')
 		const adjustmentPerEvent = underrunAmount / (lastGeneratorIndex - previousSpenderIndex)
 		for (let i = previousSpenderIndex + 1; i < lastGeneratorIndex; i ++) {
 			this.history[i].value += adjustmentPerEvent * (i - previousSpenderIndex)
@@ -181,7 +177,7 @@ export class CounterGauge extends AbstractGauge {
 		this.set(this._value, 'changeBounds')
 	}
 
-	private pushHistory(type: GaugeEventType) {
+	private pushHistory(reason: GaugeEventReason, delta: number) {
 		const timestamp = this.parser.currentEpochTimestamp
 
 		// Ensure we're not generating multiple entries at the same timestamp
@@ -191,8 +187,8 @@ export class CounterGauge extends AbstractGauge {
 		if (timestamp === prevTimestamp) {
 			const prevEvent = this.history.pop()
 			// If we both spent and generated gauge at this timestamp, call it a spend to keep from backtracking past it
-			if (prevEvent?.type === 'spend') {
-				type = 'spend'
+			if (prevEvent?.reason === 'spend') {
+				reason = 'spend'
 			}
 		}
 
@@ -201,7 +197,8 @@ export class CounterGauge extends AbstractGauge {
 			value: this._value,
 			minimum: this.minimum,
 			maximum: this.maximum,
-			type,
+			delta,
+			reason,
 		})
 	}
 
