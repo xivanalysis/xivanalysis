@@ -62,45 +62,38 @@ export abstract class ActionWindow extends Analyser {
 	/**
 	 * Adds an action to the current window if one is open.
 	 * If no window is open, the event is ignored.
-	 * Implementing moudles MUST call removeDefaultActionHook before calling this method directly.
 	 * @param event The event to be added to the window.
 	 */
 	protected onWindowAction(event: Events['action']) { /* .. */ }
 
 	/**
-	 * Removes the default event hook that captures all actions by the player.
-	 * Implementing modules should call this method if they have logic to only
-	 * include some actions in a window.
-	 * Implmenting modules MUST register their own hook that calls onWindowAction
-	 * after calling this method.
-	 */
-	protected removeDefaultActionHook() { /* .. */ }
-	/**
-	 * Adjusts the default event hook to ignore certain actions.
-	 * Implementing modules MAY call this method if all casts of certain
-	 * actions should be ignored in a window.
+	 * Adjusts the event filter to ignore certain actions.
+	 * Call this method if all casts of certain actions should be ignored
+	 * in a window.
 	 * If actions are only ignored in some conditions, this method is
-	 * not suitable, and you will need to register your own hook and callback
-	 * that only calls onWindowAction when the conditions are met.
-	 * Calling this method will override previous calls to trackOnlyActions.
+	 * not suitable, and you will need to register your own hook via setEventFilter.
 	 * @param actionsToIgnore The ids of the actions to ignore.
 	 */
 	protected ignoreActions(actionsToIgnore: number[]) { /* .. */ }
 	/**
-	 * Adjusts the default event hook to only track certain actions.
-	 * Implementing modules MAY call this method if only some actions should
-	 * be tracked in a window.
+	 * Adjusts the event filter to only track certain actions.
+	 * Call this method if only some actions should be tracked in a window.
 	 * If other actions should be tracked in some conditions, this method is
-	 * not suitable, and you will need to register your own hook and callback
-	 * that only calls onWindowAction when the conditions are met.
-	 * Calling this method will override previous calls to ignoreActions.
+	 * not suitable, and you will need to register your own hook via
+	 * setEventFilter.
 	 * @param actionsToTrack The ids of the actions to track.
 	 */
 	protected trackOnlyActions(actionsToTrack: number[]) { /* .. */ }
 
+	/**
+	 * Sets a custom event filter for the actions to capture during
+	 * a window.
+	 * @param filter The filter for actions to capture during a window
+	 */
+	protected setEventFilter(filter: EventFilterPredicate<Events['action']>) { /* .. */ }
+
 	// Very important, you must call super.initialise() in any implementing module.
 	override initialise() { /* .. */ }
-
 }
 ```
 
@@ -108,7 +101,7 @@ One more override property has snuck in here, the override for the header of the
 
 The most important function here is `addEvaluator`. There are a variety of pre-built WindowEvaluators that cover the common evaluations. Implementing modules will need to call `addEvaluator` for each evaluation they want to perform in their `initialise` method.
 
-If you do not wish to track all actions within a window, you may replace the default event hook in a few ways. ActionWindow provides `ignoreActions` and `trackOnlyActions` to cover the common cases. If you have other logic that is not covered by these cases, call `removeDefaultActionHook` and add your own event hook that calls `onWindowAction` for only the casts you want to track.
+If you do not wish to track all actions within a window, you may replace the default event filter in a few ways. ActionWindow provides `ignoreActions` and `trackOnlyActions` to cover the common cases. If you have other logic that is not covered by these cases, call `setEventFilter` with your own event filter for only the casts you want to track.
 
 I'll talk more about other possible windows beyond just buff windows after I go over evaluators.
 
