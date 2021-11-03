@@ -5,7 +5,7 @@ import {Kassatsu} from './Kassatsu'
 import {Ninjutsu} from './Ninjutsu'
 import {Ninki} from './Ninki'
 import {OGCDDowntime} from './OGCDDowntime'
-import TrickAttackUsage from './TrickAttackUsage'
+import {TrickAttackUsage} from './TrickAttackUsage'
 import {TrickAttackWindow} from './TrickAttackWindow'
 import {Weaving} from './Weaving'
 
