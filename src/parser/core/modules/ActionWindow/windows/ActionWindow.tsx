@@ -187,17 +187,15 @@ export abstract class ActionWindow extends Analyser {
 
 	private mapHistoryActions(): Array<HistoryEntry<EvaluatedAction[]>> {
 		return this.history.entries
-			.map(entry => {
-				return {start: entry.start,
-					end: entry.end,
-					data: entry.data
-						.map(ev => {
-							const action = this.data.getAction(ev.action)
-							if (action == null) { return undefined }
-							return {...ev, action}
-						})
-						.filter(isDefined),
-				}
-			})
+			.map(entry => ({start: entry.start,
+				end: entry.end,
+				data: entry.data
+					.map(ev => {
+						const action = this.data.getAction(ev.action)
+						if (action == null) { return undefined }
+						return {...ev, action}
+					})
+					.filter(isDefined),
+			}))
 	}
 }

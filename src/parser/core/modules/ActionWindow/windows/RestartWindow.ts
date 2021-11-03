@@ -25,7 +25,8 @@ export abstract class RestartWindow extends ActionWindow {
 			filter<Event>().source(this.parser.actor.id)
 				.action(oneOf(startIds))
 				.type('action'),
-			(event) => this.onWindowStart(event.timestamp))
+			event => this.onWindowStart(event.timestamp),
+		)
 		// No explicit end hook. Windows continue until the next cast or end of pull.
 	}
 }
