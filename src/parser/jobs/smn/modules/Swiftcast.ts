@@ -3,7 +3,7 @@ import {Event, Events} from 'event'
 import {filter} from 'parser/core/filter'
 import {History} from 'parser/core/modules/History'
 import {SEVERITY} from 'parser/core/modules/Suggestions'
-import {SwiftcastModule} from 'parser/core/modules/Swiftcast'
+import {Swiftcast as CoreSwiftcast} from 'parser/core/modules/Swiftcast'
 import {DWT_CAST_TIME_MOD, DWT_LENGTH} from './DWT'
 
 const MISSED_SEVERITIES = {
@@ -12,7 +12,7 @@ const MISSED_SEVERITIES = {
 	3: SEVERITY.MAJOR,
 }
 
-export default class Swiftcast extends SwiftcastModule {
+export default class Swiftcast extends CoreSwiftcast {
 	static override  handle = 'swiftcast'
 
 	// DWT is being tracked here to avoid having to modify multiple

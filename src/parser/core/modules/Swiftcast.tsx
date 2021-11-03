@@ -19,7 +19,7 @@ const MISSED_SWIFTCAST_SEVERITIES: SeverityTiers = {
 	1: SEVERITY.MAJOR,
 }
 
-export abstract class SwiftcastModule extends BuffWindow {
+export abstract class Swiftcast extends BuffWindow {
 	static override handle: string = 'swiftcast'
 	static override title: MessageDescriptor = t('core.swiftcast.title')`Swiftcast Actions`
 
