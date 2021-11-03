@@ -132,7 +132,7 @@ export default class RagingStrikes extends BuffWindow {
 			adjustCount: this.adjustExpectedActionCount.bind(this),
 			adjustOutcome: this.adjustExpectedActionOutcome.bind(this),
 			barrageId: this.data.actions.BARRAGE.id,
-			wasBarrageUsed: this.wasBarageUsed.bind(this),
+			wasBarrageUsed: this.wasBarrageUsed.bind(this),
 		}))
 	}
 
@@ -212,7 +212,7 @@ export default class RagingStrikes extends BuffWindow {
 		}
 	}
 
-	private wasBarageUsed(window: HistoryEntry<EvaluatedAction[]>) {
+	private wasBarrageUsed(window: HistoryEntry<EvaluatedAction[]>) {
 		const gcdTimestamps = window.data
 			.filter(event => event.action.onGcd)
 			.map(event => event.timestamp)
