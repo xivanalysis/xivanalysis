@@ -1,16 +1,18 @@
 import {Trans, Plural} from '@lingui/react'
 import {ActionLink} from 'components/ui/DbLink'
-import {CastEvent} from 'fflogs'
-import Module, {dependency} from 'parser/core/Module'
-import Combatants from 'parser/core/modules/Combatants'
+import {Event, Events} from 'event'
+import {Analyser} from 'parser/core/Analyser'
+import {filter, oneOf} from 'parser/core/filter'
+import {dependency} from 'parser/core/Injectable'
+import {Actors} from 'parser/core/modules/Actors'
 import {Data} from 'parser/core/modules/Data'
 import Suggestions, {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import React from 'react'
 
-export class Kassatsu extends Module {
+export class Kassatsu extends Analyser {
 	static override handle = 'kassatsu'
 
-	@dependency private combatants!: Combatants
+	@dependency private actors!: Actors
 	@dependency private data!: Data
 	@dependency private suggestions!: Suggestions
 
@@ -27,15 +29,16 @@ export class Kassatsu extends Module {
 		[this.data.actions.RABBIT_MEDIUM.id]: 0,
 	}
 
-	protected override init() {
-		this.addEventHook('cast', {by: 'player', abilityId: Object.keys(this.kassatsuUses).map(Number)}, this.onNinjutsuCast)
-		this.addEventHook('removebuff', {by: 'player', abilityId: this.data.statuses.KASSATSU.id}, this.onRemoveKassatsu)
+	override initialise() {
+		const playerFilter = filter<Event>().source(this.parser.actor.id)
+		this.addEventHook(playerFilter.type('action').action(oneOf(Object.keys(this.kassatsuUses).map(Number))), this.onNinjutsuCast)
+		this.addEventHook(playerFilter.type('statusRemove').status(this.data.statuses.KASSATSU.id), this.onRemoveKassatsu)
 		this.addEventHook('complete', this.onComplete)
 	}
 
-	private onNinjutsuCast(event: CastEvent) {
-		const abilityId = event.ability.guid
-		if (this.combatants.selected.hasStatus(this.data.statuses.KASSATSU.id)) {
+	private onNinjutsuCast(event: Events['action']) {
+		const abilityId = event.action
+		if (this.actors.current.hasStatus(this.data.statuses.KASSATSU.id)) {
 			this.kassatsuUses[abilityId]++
 			this.kassatsuSpent = true
 		}
