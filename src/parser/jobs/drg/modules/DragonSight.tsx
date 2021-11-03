@@ -197,9 +197,6 @@ export default class DragonSight extends BuffWindow {
 		// if the window duration does not match the actual time (within a reasonable threshold)
 		// mark it
 		if (actualWindowDuration < (windowDurationMillis - SHORT_WINDOW_BUFFER)) {
-			// activate the header because something's up
-			//this.rotationTableNotesColumnHeader = <Trans id="drg.ds.notes.header">Short Window Cause</Trans>
-
 			// ok now check to see if a player death happened within the expected window.
 			const playerDeath = this.deathTimes.filter(deathTime => {
 				// check if time is within reasonable distance of the window end

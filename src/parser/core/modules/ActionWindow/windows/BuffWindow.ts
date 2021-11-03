@@ -31,7 +31,7 @@ export abstract class BuffWindow extends ActionWindow {
 	 * of the pull; false otherwise.
 	 */
 	protected isRushedEndOfPullWindow(window: HistoryEntry<EvaluatedAction[]>) {
-		const expectedDuration = (ensureArray(this.buffStatus)[0].duration ?? 0)
+		const expectedDuration = ensureArray(this.buffStatus)[0].duration ?? 0
 		const fightTimeRemaining = (this.parser.pull.timestamp + this.parser.pull.duration) - window.start
 		return expectedDuration >= fightTimeRemaining
 	}

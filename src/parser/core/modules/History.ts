@@ -18,19 +18,19 @@ export interface HistoryEntry<T> {
 export class History<T> {
 
 	/**
+	 * Contains all entries created by the tracker.
+	 */
+	public entries: Array<HistoryEntry<T>> = []
+
+	private dataInitializer: () => T
+
+	/**
 	 * Creates a tracker with the specified initialization function
 	 * @param initializer Creates data for a new entry when one is opened.
 	 */
 	constructor(initializer: () => T) {
 		this.dataInitializer = initializer
 	}
-
-	/**
-	 * Contains all entries created by the tracker.
-	 */
-	public entries: Array<HistoryEntry<T>> = []
-
-	private dataInitializer: () => T
 
 	/**
 	 * Gets the currently open entry or returns undefined if there is

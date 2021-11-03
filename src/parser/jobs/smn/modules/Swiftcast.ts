@@ -26,7 +26,8 @@ export default class Swiftcast extends SwiftcastModule {
 	override initialise() {
 		super.initialise()
 
-		const playerFilter = filter<Event>().source(this.parser.actor.id)
+		const playerFilter = filter<Event>()
+			.source(this.parser.actor.id)
 		this.addEventHook(playerFilter
 			.action(this.data.actions.DREADWYRM_TRANCE.id)
 			.type('action'),

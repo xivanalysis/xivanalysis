@@ -30,7 +30,7 @@ interface ExpectedGcdCountOptions {
 	 * @returns An adjustment to add to the baseline expected GCD count. A positive number INCREASES the
 	 * number of expected GCDs; a negative number DECREASES the number of expected GCDs
 	 */
-	adjustCount? : (window: HistoryEntry<EvaluatedAction[]>) => number
+	adjustCount?: (window: HistoryEntry<EvaluatedAction[]>) => number
 }
 /**
  * Checks if a window contains the maximum possible number of GCDs based on the estimated GCD speed.

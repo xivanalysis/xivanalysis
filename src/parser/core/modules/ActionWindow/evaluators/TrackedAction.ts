@@ -40,7 +40,7 @@ export interface TrackedActionsOptions {
 	 * @returns An adjustment to add to the expected count. A positive number INCREASES the
 	 * number of expected uses; a negative number DECREASES the number of expected uses.
 	 */
-	adjustCount? : (window: HistoryEntry<EvaluatedAction[]>, action: TrackedAction) => number
+	adjustCount?: (window: HistoryEntry<EvaluatedAction[]>, action: TrackedAction) => number
 	/**
 	 * This method MAY be provided to adjust the highlighting outcome of an evaluation for a tracked action within a given window.
 	 * @param buffWindow The window for which the tracked action outcome will be adjusted
@@ -48,5 +48,5 @@ export interface TrackedActionsOptions {
 	 * @returns A function that takes actual and expected uses and return the adjusted RotationTargetOutcome or
 	 * undefined to use the default logic for this window and action combination.
 	 */
-	adjustOutcome? : (window: HistoryEntry<EvaluatedAction[]>, action: TrackedAction) => OutcomeCalculator | undefined
+	adjustOutcome?: (window: HistoryEntry<EvaluatedAction[]>, action: TrackedAction) => OutcomeCalculator | undefined
 }
