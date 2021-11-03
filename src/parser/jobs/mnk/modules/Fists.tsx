@@ -18,10 +18,9 @@ import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Sugge
 import React from 'react'
 import {FISTLESS, FISTS} from './constants'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
-import {severityMap} from './types'
 import {fillStatuses} from './utilities'
 
-const SUGGESTION_TIERS: severityMap = {
+const SUGGESTION_TIERS = {
 	DOUSED: {
 		1: SEVERITY.MAJOR,
 	},

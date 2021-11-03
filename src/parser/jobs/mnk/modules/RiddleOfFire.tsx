@@ -12,18 +12,17 @@ import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Sugge
 import {Timeline} from 'parser/core/modules/Timeline'
 import React from 'react'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
-import {severityList} from './types'
 
 // Expected GCDs and buffs
 // technically can get 2 tacles and should as much as possible, but don't ding for it in case it's for mechanics
-const EXPECTED: { [key: string]: number } = {
+const EXPECTED = {
 	GCDS: 11,
 	ELIXIRS: 1,
 	TACKLES: 1,
 	TORNADOES: 1,
 }
 
-const SUGGESTION_TIERS: severityList = {
+const SUGGESTION_TIERS = {
 	1: SEVERITY.MINOR,
 	2: SEVERITY.MEDIUM,
 	5: SEVERITY.MAJOR,

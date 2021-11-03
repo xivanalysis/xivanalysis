@@ -6,9 +6,8 @@ import {DoTs, DotDurations} from 'parser/core/modules/DoTs'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
-import {severityMap} from './types'
 
-const SUGGESTION_TIERS: severityMap = {
+const SUGGESTION_TIERS = {
 	CLIPPING: {
 		7: SEVERITY.MINOR,
 		10: SEVERITY.MEDIUM,

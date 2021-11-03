@@ -12,10 +12,9 @@ import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Sugge
 import React from 'react'
 import {FORM_SKILLS} from './constants'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
-import {severityList} from './types'
 import {fillActions} from './utilities'
 
-const SUGGESTION_TIERS: severityList = {
+const SUGGESTION_TIERS = {
 	1: SEVERITY.MEDIUM,
 	2: SEVERITY.MAJOR,
 }
