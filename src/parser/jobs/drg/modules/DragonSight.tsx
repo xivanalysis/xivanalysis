@@ -41,7 +41,7 @@ class ShortWindowEvaluator implements WindowEvaluator {
 	public suggest()  { return undefined }
 
 	public output(windows: Array<HistoryEntry<EvaluatedAction[]>>): EvaluationOutput | undefined {
-		const faults = windows.map(w => this.shortWindowReason(w))
+		const faults = windows.map(window => this.shortWindowReason(window))
 		if (faults.every(fault => fault === SHORT_WINDOW_FAULT.NONE)) {
 			return undefined
 		}

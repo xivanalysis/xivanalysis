@@ -214,8 +214,8 @@ export default class RagingStrikes extends BuffWindow {
 
 	private wasBarageUsed(window: HistoryEntry<EvaluatedAction[]>) {
 		const gcdTimestamps = window.data
-			.filter(e => e.action.onGcd)
-			.map(e => e.timestamp)
+			.filter(event => event.action.onGcd)
+			.map(event => event.timestamp)
 		if (gcdTimestamps.length === 0) { return false }
 
 		// Check to make sure at least one GCD happened before the status expired

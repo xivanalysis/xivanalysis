@@ -33,11 +33,11 @@ export class ExpectedActionsEvaluator implements WindowEvaluator {
 
 	public suggest(windows: Array<HistoryEntry<EvaluatedAction[]>>) {
 		const missedCount = windows
-			.reduce((total, w) => {
+			.reduce((total, window) => {
 				const missingInWindow = this.expectedActions.reduce((subTotal, action) => {
-					const actual = this.countUsed(w, action)
-					const expected = this.determineExpected(w, action)
-					const comparator = this.adjustOutcome(w, action)
+					const actual = this.countUsed(window, action)
+					const expected = this.determineExpected(window, action)
+					const comparator = this.adjustOutcome(window, action)
 					// If a custom comparator is defined for this action, and it didn't return negative, don't count this window
 					const currentLoss = (comparator != null && comparator(actual, expected) !== RotationTargetOutcome.NEGATIVE) ?
 						0 : Math.max(0, expected - actual)
@@ -58,18 +58,18 @@ export class ExpectedActionsEvaluator implements WindowEvaluator {
 	}
 
 	public output(windows: Array<HistoryEntry<EvaluatedAction[]>>): EvaluationOutput[]  {
-		return this.expectedActions.map(ea => {
+		return this.expectedActions.map(action => {
 			return {
 				format: 'table',
 				header: {
-					header: <ActionLink showName={false} {...ea.action}/>,
-					accessor: ea.action.name,
+					header: <ActionLink showName={false} {...action.action}/>,
+					accessor: action.action.name,
 				},
-				rows: windows.map(w => {
+				rows: windows.map(window => {
 					return {
-						actual: this.countUsed(w, ea),
-						expected: this.determineExpected(w, ea),
-						targetComparator: this.adjustOutcome(w, ea),
+						actual: this.countUsed(window, action),
+						expected: this.determineExpected(window, action),
+						targetComparator: this.adjustOutcome(window, action),
 					}
 				}),
 			}
@@ -77,7 +77,7 @@ export class ExpectedActionsEvaluator implements WindowEvaluator {
 	}
 
 	protected countUsed(window: HistoryEntry<EvaluatedAction[]>, action: TrackedAction) {
-		return window.data.filter(ta => ta.action.id === action.action.id).length
+		return window.data.filter(cast => cast.action.id === action.action.id).length
 	}
 
 	private determineExpected(window: HistoryEntry<EvaluatedAction[]>, action: TrackedAction) {

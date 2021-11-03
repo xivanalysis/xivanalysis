@@ -61,7 +61,7 @@ export class AllowedGcdsOnlyEvaluator implements WindowEvaluator {
 	// table output lists x/y in a column to show that <required skill> was used x times out of the
 	// expected y times (the possible number of gcds) in a given window.
 	public suggest(windows: Array<HistoryEntry<EvaluatedAction[]>>) {
-		const invalidGCDs = windows.reduce((acc, w) => acc + this.calculateBadGcdsForWindow(w), 0)
+		const invalidGCDs = windows.reduce((acc, window) => acc + this.calculateBadGcdsForWindow(window), 0)
 
 		return new TieredSuggestion({
 			icon: this.suggestionIcon,
@@ -81,17 +81,17 @@ export class AllowedGcdsOnlyEvaluator implements WindowEvaluator {
 				header: <img src={this.suggestionIcon} alt="" style={{height: '20px'}}/>,
 				accessor: 'badgcd',
 			},
-			rows: windows.map(w => {
+			rows: windows.map(window => {
 				return {
-					actual: this.countAllowedGcdsInWindow(w),
-					expected: this.calculateExpectedGcdsForWindow(w),
+					actual: this.countAllowedGcdsInWindow(window),
+					expected: this.calculateExpectedGcdsForWindow(window),
 				}
 			}),
 		}
 	}
 
 	private calculateBadGcdsForWindow(window: HistoryEntry<EvaluatedAction[]>) {
-		return window.data.filter(ta => ta.action.onGcd && !this.allowedGcds.includes(ta.action.id)).length
+		return window.data.filter(cast => cast.action.onGcd && !this.allowedGcds.includes(cast.action.id)).length
 	}
 
 	private calculateExpectedGcdsForWindow(window: HistoryEntry<EvaluatedAction[]>) {
@@ -99,7 +99,7 @@ export class AllowedGcdsOnlyEvaluator implements WindowEvaluator {
 	}
 
 	private countAllowedGcdsInWindow(window: HistoryEntry<EvaluatedAction[]>) {
-		return window.data.filter(ta => ta.action.onGcd && this.allowedGcds.includes(ta.action.id)).length
+		return window.data.filter(cast => cast.action.onGcd && this.allowedGcds.includes(cast.action.id)).length
 	}
 
 }

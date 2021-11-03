@@ -152,26 +152,26 @@ export abstract class ActionWindow extends Analyser {
 			.map(ensureArray)
 			.flat()
 
-		const rotationTargets = evalColumns.filter(c => c.format === 'table').map(c => c.header)
-		const notesData = evalColumns.filter(c => c.format === 'notes').map(c => c.header)
+		const rotationTargets = evalColumns.filter(column => column.format === 'table').map(column => column.header)
+		const notesData = evalColumns.filter(column => column.format === 'notes').map(column => column.header)
 		const rotationData = this.history.entries
-			.map((w, idx) => {
+			.map((window, idx) => {
 				const targetsData: RotationTableTargetData = {}
 				const notesMap: RotationTableNotesMap = {}
-				evalColumns.forEach(c => {
-					if (typeof c.header.accessor !== 'string') { return }
-					const colName = c.header.accessor
-					if (c.format === 'table') {
-						targetsData[colName] = c.rows[idx]
+				evalColumns.forEach(column => {
+					if (typeof column.header.accessor !== 'string') { return }
+					const colName = column.header.accessor
+					if (column.format === 'table') {
+						targetsData[colName] = column.rows[idx]
 					} else {
-						notesMap[colName] = c.rows[idx]
+						notesMap[colName] = column.rows[idx]
 					}
 				})
 				return {
-					start: w.start - this.parser.pull.timestamp,
-					end: (w.end ?? w.start) - this.parser.pull.timestamp,
+					start: window.start - this.parser.pull.timestamp,
+					end: (window.end ?? window.start) - this.parser.pull.timestamp,
 					targetsData,
-					rotation: w.data.map(e => { return {action: e.action} }),
+					rotation: window.data.map(event => { return {action: event.action} }),
 					notesMap,
 				}
 			})

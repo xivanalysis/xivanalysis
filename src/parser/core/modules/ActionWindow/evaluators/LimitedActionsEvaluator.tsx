@@ -31,9 +31,9 @@ export class LimitedActionsEvaluator implements WindowEvaluator {
 
 	public suggest(windows: Array<HistoryEntry<EvaluatedAction[]>>) {
 		const extraCount = windows
-			.reduce((total, w) => {
+			.reduce((total, window) => {
 				const missingInWindow = this.expectedActions.reduce((subTotal, action) => {
-					return subTotal + Math.max(0, this.countUsed(w, action) - (action.expectedPerWindow + this.adjustCount(w, action)))
+					return subTotal + Math.max(0, this.countUsed(window, action) - (action.expectedPerWindow + this.adjustCount(window, action)))
 				}, 0)
 				return total + missingInWindow
 			}, 0)
@@ -52,7 +52,7 @@ export class LimitedActionsEvaluator implements WindowEvaluator {
 	public output(): undefined { return undefined }
 
 	private countUsed(window: HistoryEntry<EvaluatedAction[]>, action: TrackedAction) {
-		return window.data.filter(ta => ta.action.id === action.action.id).length
+		return window.data.filter(cast => cast.action.id === action.action.id).length
 	}
 
 }

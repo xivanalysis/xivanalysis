@@ -15,7 +15,7 @@ export abstract class NotesEvaluator implements WindowEvaluator {
 		return {
 			format: 'notes',
 			header: this.header,
-			rows: windows.map(w => this.generateNotes(w)),
+			rows: windows.map(window => this.generateNotes(window)),
 		}
 	}
 }

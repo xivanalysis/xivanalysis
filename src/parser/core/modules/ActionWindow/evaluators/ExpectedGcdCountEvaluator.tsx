@@ -57,7 +57,7 @@ export class ExpectedGcdCountEvaluator implements WindowEvaluator {
 	}
 
 	public suggest(windows: Array<HistoryEntry<EvaluatedAction[]>>) {
-		const missedGCDs = windows.reduce((acc, w) => acc + this.calculateMissingGcdsForWindow(w), 0)
+		const missedGCDs = windows.reduce((acc, window) => acc + this.calculateMissingGcdsForWindow(window), 0)
 
 		return new TieredSuggestion({
 			icon: this.suggestionIcon,
@@ -77,10 +77,10 @@ export class ExpectedGcdCountEvaluator implements WindowEvaluator {
 				header: <Trans id="core.buffwindow.table.header.gcds">GCDs</Trans>,
 				accessor: 'missedgcd',
 			},
-			rows: windows.map(w => {
+			rows: windows.map(window => {
 				return {
-					actual: this.countGcdsInWindow(w),
-					expected: this.calculateExpectedGcdsForWindow(w),
+					actual: this.countGcdsInWindow(window),
+					expected: this.calculateExpectedGcdsForWindow(window),
 				}
 			}),
 		}
@@ -97,7 +97,7 @@ export class ExpectedGcdCountEvaluator implements WindowEvaluator {
 	}
 
 	private countGcdsInWindow(window: HistoryEntry<EvaluatedAction[]>) {
-		return window.data.filter(ta => ta.action.onGcd).length
+		return window.data.filter(cast => cast.action.onGcd).length
 	}
 
 }
