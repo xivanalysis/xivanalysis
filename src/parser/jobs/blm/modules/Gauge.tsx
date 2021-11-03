@@ -54,10 +54,9 @@ export class Gauge extends CoreGauge {
 	@dependency private castTime!: CastTime
 
 	private droppedEnoTimestamps: number[] = []
-	private lostPolyglot: number = 0
 	private overwrittenPolyglot: number = 0
 
-	private lastHistoryTimestamp!: number
+	private lastHistoryTimestamp: number = this.parser.pull.timestamp
 
 	private fireSpellIds = FIRE_SPELLS.map(key => this.data.actions[key].id)
 	private targetedIceSpellIds = ICE_SPELLS_TARGETED.map(key => this.data.actions[key].id)
@@ -140,8 +139,6 @@ export class Gauge extends CoreGauge {
 		this.addEventHook(playerFilter.type('damage').cause(filter<Cause>().action(oneOf(this.affectsGaugeOnDamage))), this.onCast)
 
 		this.addEventHook('complete', this.onComplete)
-
-		this.setGaugeAndUpdateHistory(this.parser.pull.timestamp)
 
 		this.resourceGraphs.addDataGroup({
 			handle: ASTRAL_UMBRAL_HANDLE,
@@ -278,9 +275,9 @@ export class Gauge extends CoreGauge {
 		const lastGaugeState = this.getGaugeState(this.lastHistoryTimestamp)
 		if (this.gaugeValuesChanged(lastGaugeState)) {
 			this.updateCastTimes(lastGaugeState)
-			this.setGaugeAndUpdateHistory()
+			this.lastHistoryTimestamp = this.parser.currentEpochTimestamp
 
-			// Queue event to tell other analysers (and modules) about the change
+			// Queue event to tell other analysers about the change
 			this.parser.queueEvent({
 				type: 'blmgauge',
 				timestamp: this.parser.currentEpochTimestamp,
@@ -322,10 +319,6 @@ export class Gauge extends CoreGauge {
 			return true
 		}
 		return false
-	}
-
-	private setGaugeAndUpdateHistory(timestamp: number = this.parser.currentEpochTimestamp) {
-		this.lastHistoryTimestamp = timestamp
 	}
 	//#endregion
 
