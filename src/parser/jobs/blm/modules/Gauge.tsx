@@ -203,6 +203,8 @@ export class Gauge extends CoreGauge {
 			break
 		case this.data.actions.BLIZZARD_I.id:
 		case this.data.actions.BLIZZARD_II.id:
+			this.onGainUmbralIceStacks(1)
+			break
 		case this.data.actions.FREEZE.id:
 			this.onGainUmbralIceStacks(MAX_ASTRAL_UMBRAL_STACKS, false)
 			this.tryGainUmbralHearts(1)
