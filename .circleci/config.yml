@@ -118,6 +118,8 @@ workflows:
               ignore:
                 - i18n-master
                 - i18n-stormblood
+                - i18n-shadowbringers
+                - i18n-endwalker
       - lint:
           requires:
             - setup
