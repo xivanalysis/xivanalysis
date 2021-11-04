@@ -46,7 +46,7 @@ export class Ninjutsu extends Analyser {
 		this.current = {
 			tcj: this.actors.current.hasStatus(this.data.statuses.TEN_CHI_JIN.id),
 			ticks: [],
-			prepull: event.timestamp < this.parser.fight.start_time,
+			prepull: event.timestamp < this.parser.pull.timestamp,
 		}
 	}
 

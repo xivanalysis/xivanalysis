@@ -2,7 +2,7 @@ import {t} from '@lingui/macro'
 import {Trans, Plural} from '@lingui/react'
 import {ActionLink} from 'components/ui/DbLink'
 import JOBS from 'data/JOBS'
-import {Event, Events} from 'event'
+import {Cause, Event, Events} from 'event'
 import {filter, oneOf} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
 import {Data} from 'parser/core/modules/Data'
@@ -62,7 +62,7 @@ export class Ninki extends CoreGauge {
 		const pets = this.parser.pull.actors.filter(actor => actor.owner === this.parser.actor).map(actor => actor.id)
 		this.addEventHook(playerFilter.type(oneOf(['action', 'combo'])).action(oneOf(Array.from(this.ninkiModifiers.keys()))), this.onGaugeModifier)
 		this.addEventHook(filter<Event>().source(oneOf(pets)).type('action'), this.onBunshinHit)
-		this.addEventHook(playerFilter.type('damage').action(this.data.actions.HELLFROG_MEDIUM.id), this.onHellfrog)
+		this.addEventHook(playerFilter.type('damage').cause(filter<Cause>().action(this.data.actions.HELLFROG_MEDIUM.id)), this.onHellfrog)
 		this.addEventHook('complete', this.onComplete)
 	}
 
