@@ -49,7 +49,7 @@ export const MRD = ensureActions({
 		potency: 100,
 		combo: {
 			from: 31,
-			potency: 300,
+			potency: 320,
 		},
 	},
 
@@ -62,7 +62,7 @@ export const MRD = ensureActions({
 		potency: 100,
 		combo: {
 			from: 37,
-			potency: 380,
+			potency: 420,
 			end: true,
 		},
 	},
@@ -76,7 +76,7 @@ export const MRD = ensureActions({
 		potency: 100,
 		combo: {
 			from: 37,
-			potency: 380,
+			potency: 420,
 			end: true,
 		},
 		statusesApplied: ['STORMS_EYE'],

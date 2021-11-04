@@ -23,7 +23,7 @@ export const DRG = ensureActions({
 		icon: 'https://xivapi.com/i/002000/002582.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		potency: 360,
+		potency: 380,
 	},
 
 	WHEELING_THRUST: {
@@ -32,7 +32,7 @@ export const DRG = ensureActions({
 		icon: 'https://xivapi.com/i/002000/002584.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		potency: 360,
+		potency: 380,
 	},
 
 	RAIDEN_THRUST: {

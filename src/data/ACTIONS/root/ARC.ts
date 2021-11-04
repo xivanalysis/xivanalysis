@@ -16,7 +16,7 @@ export const ARC = ensureActions({
 		icon: 'https://xivapi.com/i/000000/000363.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		potency: 100,
+		potency: 30,
 	},
 	QUICK_NOCK: {
 		id: 106,
@@ -58,7 +58,7 @@ export const ARC = ensureActions({
 		icon: 'https://xivapi.com/i/000000/000367.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		potency: 60,
+		potency: 40,
 	},
 	RAGING_STRIKES: {
 		id: 101,

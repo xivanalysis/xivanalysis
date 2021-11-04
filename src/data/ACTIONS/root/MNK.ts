@@ -94,15 +94,16 @@ export const MNK = ensureActions({
 		id: 3543,
 		name: 'Tornado Kick',
 		icon: 'https://xivapi.com/i/002000/002531.png',
-		cooldown: 10000,
+		cooldown: 45000,
 	},
 
 	RIDDLE_OF_EARTH: {
 		id: 7394,
 		name: 'Riddle of Earth',
 		icon: 'https://xivapi.com/i/002000/002537.png',
-		cooldown: 60000,
-		statusesApplied: ['RIDDLE_OF_EARTH', 'EARTHS_REPLY'],
+		charges: 3,
+		cooldown: 30000,
+		statusesApplied: ['RIDDLE_OF_EARTH'],
 	},
 
 	RIDDLE_OF_FIRE: {

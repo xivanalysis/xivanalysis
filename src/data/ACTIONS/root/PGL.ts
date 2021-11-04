@@ -13,7 +13,7 @@ export const PGL = ensureActions({
 		icon: 'https://xivapi.com/i/000000/000208.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		potency: 150,
+		potency: 200,
 	},
 
 	TRUE_STRIKE: {
@@ -22,7 +22,7 @@ export const PGL = ensureActions({
 		icon: 'https://xivapi.com/i/000000/000209.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		potency: 240,
+		potency: 300,
 	},
 
 	SNAP_PUNCH: {
@@ -39,7 +39,7 @@ export const PGL = ensureActions({
 		icon: 'https://xivapi.com/i/000000/000213.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		potency: 170,
+		potency: 260,
 		statusesApplied: ['TWIN_SNAKES'],
 	},
 
@@ -92,7 +92,7 @@ export const PGL = ensureActions({
 		id: 69,
 		name: 'Perfect Balance',
 		icon: 'https://xivapi.com/i/000000/000217.png',
-		cooldown: 120000,
+		cooldown: 90000,
 		statusesApplied: ['PERFECT_BALANCE'],
 	},
 })
