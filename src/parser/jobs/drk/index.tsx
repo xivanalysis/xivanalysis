@@ -17,10 +17,10 @@ export default new Meta({
 				and grants a free use of Edge of Shadow or Flood of Shadow as long as the shield is fully consumed.</p>
 		</Trans>
 	</>,
-	supportedPatches: {
-		from: '5.0',
-		to: '5.5',
-	},
+	// supportedPatches: {
+	// 	from: '6.0',
+	// 	to: '6.0',
+	// },
 	contributors: [
 		{user: CONTRIBUTORS.ACRI, role: ROLES.THEORYCRAFT},
 		{user: CONTRIBUTORS.AZARIAH, role: ROLES.MAINTAINER},

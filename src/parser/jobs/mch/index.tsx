@@ -11,10 +11,10 @@ export default new Meta({
 			<p>This module aims to help you improve your MCH gameplay by analyzing things that are difficult to spot in raw logs and pointing out ways to keep your rotation tight, keep your tools on cooldown, make your Wildfire windows as strong as possible, and get the most out of the best pet any job has right now.</p>
 		</Trans>
 	</>,
-	supportedPatches: {
-		from: '5.0',
-		to: '5.5',
-	},
+	// supportedPatches: {
+	// 	from: '6.0',
+	// 	to: '6.0',
+	// },
 	contributors: [
 		{user: CONTRIBUTORS.TOASTDEIB, role: ROLES.MAINTAINER},
 		{user: CONTRIBUTORS.YUMIYAFANGIRL, role: ROLES.DEVELOPER},

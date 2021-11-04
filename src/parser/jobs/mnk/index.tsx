@@ -16,10 +16,10 @@ export default new Meta({
 			<p>If you notice anything that looks wrong or have a feature idea, please visit our Discord server and report it in the #fb-monk channel.</p>
 		</Trans>
 	</>,
-	supportedPatches: {
-		from: '5.4',
-		to: '5.5',
-	},
+	// supportedPatches: {
+	// 	from: '6.0',
+	// 	to: '6.0',
+	// },
 
 	contributors: [
 		{user: CONTRIBUTORS.ACCHAN, role: ROLES.MAINTAINER},

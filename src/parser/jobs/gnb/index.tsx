@@ -20,10 +20,10 @@ export default new Meta({
 
 	Description: () => <TransMarkdown source={description}/>,
 
-	supportedPatches: {
-		from: '5.0',
-		to: '5.5',
-	},
+	// supportedPatches: {
+	// 	from: '6.0',
+	// 	to: '6.0',
+	// },
 
 	contributors: [
 		{user: CONTRIBUTORS.LHEA, role: ROLES.DEVELOPER},

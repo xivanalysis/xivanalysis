@@ -28,10 +28,10 @@ export default new Meta({
 			</Message.Content>
 		</Message>
 	</>,
-	supportedPatches: {
-		from: '5.05',
-		to: '5.5',
-	},
+	// supportedPatches: {
+	// 	from: '6.0',
+	// 	to: '6.0',
+	// },
 	contributors: [
 		{user: CONTRIBUTORS.SUSHIROU, role: ROLES.MAINTAINER},
 		{user: CONTRIBUTORS.CASUALSUPERMAN, role: ROLES.DEVELOPER},
