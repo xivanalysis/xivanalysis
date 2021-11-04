@@ -1,5 +1,4 @@
 import {ensureStatuses} from '../type'
-import {SHARED} from './SHARED'
 
 export const MNK = ensureStatuses({
 	PERFECT_BALANCE: {
