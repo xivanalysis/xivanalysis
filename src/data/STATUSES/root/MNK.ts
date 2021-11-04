@@ -6,8 +6,8 @@ export const MNK = ensureStatuses({
 		id: 110,
 		name: 'Perfect Balance',
 		icon: 'https://xivapi.com/i/010000/010217.png',
-		duration: 10000,
-		stacksApplied: 0,
+		duration: 15000,
+		stacksApplied: 6,
 	},
 
 	OPO_OPO_FORM: {
@@ -68,14 +68,8 @@ export const MNK = ensureStatuses({
 		id: 1179,
 		name: 'Riddle of Earth',
 		icon: 'https://xivapi.com/i/012000/012527.png',
-		duration: 30000,
-	},
-
-	EARTHS_REPLY: {
-		id: 1180,
-		name: 'Earth\'s Reply',
-		icon: 'https://xivapi.com/i/012000/012531.png',
-		duration: 30000,
+		duration: 10000,
+		stacksApplied: 3,
 	},
 
 	FISTS_OF_FIRE: {
@@ -109,28 +103,6 @@ export const MNK = ensureStatuses({
 		id: 111,
 		name: 'Greased Lightning',
 		icon: 'https://xivapi.com/i/010000/010207.png',
-		duration: 16000,
-	},
-
-	GREASED_LIGHTNING_II: {
-		id: 112,
-		name: 'Greased Lightning II',
-		icon: 'https://xivapi.com/i/010000/010208.png',
-		duration: 16000,
-	},
-
-	GREASED_LIGHTNING_III: {
-		id: 113,
-		name: 'Greased Lightning III',
-		icon: 'https://xivapi.com/i/010000/010209.png',
-		duration: 16000,
-	},
-
-	GREASED_LIGHTNING_IV: {
-		id: 30000,
-		name: 'Greased Lightning IV',
-		icon: 'https://xivapi.com/i/010000/010207.png',
-		duration: 16000,
 	},
 
 	LEADEN_FIST: {
@@ -147,5 +119,10 @@ export const MNK = ensureStatuses({
 		duration: 30000,
 	},
 
-	FORMLESS_FIST: SHARED.UNKNOWN,
+	FORMLESS_FIST: {
+		id: 2513,
+		name: 'Formless Fist',
+		icon: 'https://xivapi.com/i/012000/012535.png',
+		duration: 15000,
+	},
 })
