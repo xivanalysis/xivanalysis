@@ -21,7 +21,7 @@ const WINDOW_STATUSES = [
 
 // how long (or short, really) a window needs to be in order to be considered truncated
 // eslint-disable-next-line @typescript-eslint/no-magic-numbers
-const BL_TRUNCATE_DURATION = (STATUSES.BATTLE_LITANY.duration * 1000) - 2000
+const BL_TRUNCATE_DURATION = STATUSES.BATTLE_LITANY.duration - 2000
 
 class BLWindow {
 	start: number
@@ -41,6 +41,8 @@ class BLWindow {
 	}
 }
 
+// Analyser port note:
+// - hoping to use new BuffWindow module to handle this logic
 // in this module we only want to track battle litany windows opened by
 // the character selected for analysis. windows that clip into or overwrite other
 // DRG litanies will be marked.
@@ -169,7 +171,7 @@ export default class BattleLitany extends Module {
 
 		// if there was a death within an expected window duration, we can assume the player died while
 		// lit was active.
-		if (event.timestamp < lastWindow.start + STATUSES.BATTLE_LITANY.duration * 1000) {
+		if (event.timestamp < lastWindow.start + STATUSES.BATTLE_LITANY.duration) {
 			lastWindow.deathTruncated = true
 		}
 	}

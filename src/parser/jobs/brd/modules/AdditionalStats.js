@@ -5,7 +5,9 @@ import {getDataBy} from 'data'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import math from 'mathjsCustom'
-import Module from 'parser/core/Module'
+import Module, {executeBeforeDoNotUseOrYouWillBeFired} from 'parser/core/Module'
+import {AdditionalEvents} from 'parser/core/modules/AdditionalEvents'
+import {isDefined} from 'utilities'
 
 // Relevant crit buffs
 const CRIT_MODIFIERS = [
@@ -32,6 +34,54 @@ const DEVIATION_PRECISION = 3
 const BASE_SUBSTAT_80 = 380
 const LEVEL_MOD_80 = 3300
 const BASE_CRIT_PROBABILITY = 50 //5%
+
+// TODO: Remove this.
+// This only exists to fetch chain strat on the primary targets of the fight.
+// It's been copied wholesale from the original raidbuffs implementation, which
+// no longer needs it. Additional events are not nessecary under the new event
+// system, as all events for the pull are fetched anyway. When updating this
+// module to analyser, please ping ackwell so they can clean up some stuff in
+// core once this is removed.
+@executeBeforeDoNotUseOrYouWillBeFired(AdditionalEvents)
+class AdditionalStatsQuery extends Module {
+	static handle = 'additionalStatsQuery'
+	static dependencies = [
+		'additionalEventQueries',
+		'data',
+		'enemies',
+	]
+
+	normalise(events) {
+		// Abilities we need more info on
+		const abilities = [
+			this.data.statuses.CHAIN_STRATAGEM.id,
+		]
+
+		this.additionalEventQueries.registerQuery(`type in ('applydebuff','removedebuff') and ability.id in (${abilities.join(',')}) and (${this._buildActiveTargetQuery()})`)
+
+		return events
+	}
+
+	// We only want events on "active" targets - lots of mirror copies used for mechanics that fluff up the data otherwise
+	_buildActiveTargetQuery = () =>
+		Object.keys(this.enemies.activeTargets)
+			.map(actorId => {
+				const actor = this.enemies.getEntity(Number(actorId))
+				if (!actor) {
+					return
+				}
+
+				const instances = this.enemies.activeTargets[actorId]
+				let query = '(target.id=' + actor.guid
+				if (instances.size > 0) {
+					query += ` and target.instance in (${Array.from(instances).join(',')})`
+				}
+				return query + ')'
+			})
+			.filter(isDefined)
+			.join(' or ')
+}
+export {AdditionalStatsQuery}
 
 export default class AdditionalStats extends Module {
 	static handle = 'additionalStats'
@@ -101,7 +151,9 @@ export default class AdditionalStats extends Module {
 				if (!event.tick) {
 					// Fixing the multiplier
 					// TODO: Skills should probably have a property with their type/element and category, otherwise this will only work on BRD
-					let fixedMultiplier = event.debugMultiplier
+					let fixedMultiplier = event.multiplier
+					if (fixedMultiplier == null) { continue }
+
 					if ( // Spells (songs)
 						event.ability.guid !== ACTIONS.THE_WANDERERS_MINUET.id
 						&& event.ability.guid !== ACTIONS.MAGES_BALLAD.id

@@ -1,7 +1,9 @@
 import {Attribute} from 'event'
 import {ensureActions} from '../type'
 
-// tslint:disable:no-magic-numbers
+const MCH_COOLDOWN_GROUP = {
+	DRILL: 16498,
+}
 
 export const MCH = ensureActions({
 	// -----
@@ -130,6 +132,7 @@ export const MCH = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		cooldown: 20000,
+		cooldownGroup: MCH_COOLDOWN_GROUP.DRILL,
 		gcdRecast: 2500,
 	},
 
@@ -140,6 +143,7 @@ export const MCH = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		cooldown: 20000,
+		cooldownGroup: MCH_COOLDOWN_GROUP.DRILL,
 		gcdRecast: 2500,
 		statusesApplied: ['BIOBLASTER'],
 	},
@@ -238,7 +242,7 @@ export const MCH = ensureActions({
 		id: 7418,
 		name: 'Flamethrower',
 		icon: 'https://xivapi.com/i/003000/003038.png',
-		onGcd: false,
+		onGcd: true,
 		cooldown: 60000,
 		statusesApplied: ['FLAMETHROWER'],
 	},

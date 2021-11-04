@@ -1,9 +1,10 @@
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
 import {ActionLink} from 'components/ui/DbLink'
-import ACTIONS from 'data/ACTIONS'
-import STATUSES from 'data/STATUSES'
-import {BuffWindowModule, BuffWindowState, BuffWindowTrackedAction} from 'parser/core/modules/BuffWindow'
+import {dependency} from 'parser/core/Injectable'
+import {BuffWindow, EvaluatedAction, ExpectedActionsEvaluator, ExpectedGcdCountEvaluator, NotesEvaluator, TrackedAction} from 'parser/core/modules/ActionWindow'
+import {HistoryEntry} from 'parser/core/modules/ActionWindow/History'
+import {GlobalCooldown} from 'parser/core/modules/GlobalCooldown'
 import {SEVERITY} from 'parser/core/modules/Suggestions'
 import React from 'react'
 
@@ -34,87 +35,111 @@ const EXPECTED_USES = {
 	// Don't check for correctness on the Gnashing Fang combo; that's covered by the built-in Combo tracker.
 }
 
-export default class NoMercy extends BuffWindowModule {
+class BloodfestEvaluator extends NotesEvaluator {
+
+	// Because this class is not an Analyser, it cannot use Data directly
+	// to get the id for Bloodfest, so it has to take it in here.
+	private bloodfestId: number
+
+	constructor(bloodfestId: number) {
+		super()
+		this.bloodfestId = bloodfestId
+	}
+
+	header = {
+		header: <Trans id="gnb.nomercy.notes.header">Bloodfest Used</Trans>,
+		accessor: 'bloodfestused',
+	}
+
+	override generateNotes(window: HistoryEntry<EvaluatedAction[]>) {
+		return window.data.find(cast => cast.action.id === this.bloodfestId) ?
+			<Trans id="gnb.nomercy.chart.notes.yes">Yes</Trans> : <Trans id = "gnb.nomercy.chart.notes.no">No</Trans>
+
+	}
+}
+
+export default class NoMercy extends BuffWindow {
 	static override handle = 'nomercy'
 	static override title = t('gnb.nomercy.title')`No Mercy Windows`
 
-	buffAction = ACTIONS.NO_MERCY
-	buffStatus = STATUSES.NO_MERCY
+	@dependency globalCooldown!: GlobalCooldown
 
-	override rotationTableNotesColumnHeader = <Trans id="gnb.nomercy.notes.header">Bloodfest Used</Trans>
+	override buffStatus = this.data.statuses.NO_MERCY
 
-	override expectedGCDs = {
-		expectedPerWindow: EXPECTED_USES.GCD,
-		suggestionContent: <Trans id="gnb.nomercy.suggestions.gcds.content">
-			Try to land 9 GCDs during every <ActionLink {...ACTIONS.NO_MERCY} /> window. A 20 second duration is sufficient
-				to comfortably fit 9 GCDs with full uptime if you wait until the last one-third of your GCD timer to activate it.
-		</Trans>,
-		severityTiers: SEVERITIES.TOO_FEW_GCDS,
+	override initialise() {
+		super.initialise()
+
+		const suggestionIcon = this.data.actions.NO_MERCY.icon
+		const suggestionWindowName = <ActionLink action="NO_MERCY" showIcon={false}/>
+		this.addEvaluator(new ExpectedGcdCountEvaluator({
+			expectedGcds: EXPECTED_USES.GCD,
+			globalCooldown: this.globalCooldown,
+			suggestionIcon,
+			suggestionContent: <Trans id="gnb.nomercy.suggestions.gcds.content">
+				Try to land 9 GCDs during every <ActionLink action="NO_MERCY" /> window. A 20 second duration is sufficient
+					to comfortably fit 9 GCDs with full uptime if you wait until the last one-third of your GCD timer to activate it.
+			</Trans>,
+			suggestionWindowName,
+			severityTiers: SEVERITIES.TOO_FEW_GCDS,
+		}))
+
+		this.addEvaluator(new ExpectedActionsEvaluator({
+			expectedActions: [
+				{
+					action: this.data.actions.GNASHING_FANG,
+					expectedPerWindow: EXPECTED_USES.GNASHING_FANG,
+				},
+
+				{
+					action: this.data.actions.BURST_STRIKE,
+					expectedPerWindow: EXPECTED_USES.BURST_STRIKE,
+				},
+
+				{
+					action: this.data.actions.SONIC_BREAK,
+					expectedPerWindow: EXPECTED_USES.SONIC_BREAK,
+				},
+
+				{
+					action: this.data.actions.BLASTING_ZONE,
+					expectedPerWindow: EXPECTED_USES.BLASTING_ZONE,
+				},
+
+				{
+					action: this.data.actions.BOW_SHOCK,
+					expectedPerWindow: EXPECTED_USES.BOW_SHOCK,
+				},
+
+				{
+					action: this.data.actions.ROUGH_DIVIDE,
+					expectedPerWindow: EXPECTED_USES.ROUGH_DIVIDE,
+				},
+			],
+			suggestionIcon,
+			suggestionContent: <Trans id="gnb.nomercy.suggestions.expected-uses.content">
+				Watch your uses of certain abilities during <ActionLink action="NO_MERCY" />. Under ideal conditions, you should
+					be using <ActionLink action="SONIC_BREAK" />, a full <ActionLink action="GNASHING_FANG" /> combo, and all of
+					your off-GCD skills <ActionLink action="BLASTING_ZONE" />, <ActionLink action="BOW_SHOCK" />, and at least one
+					charge of <ActionLink action="ROUGH_DIVIDE" /> under the buff duration.
+			</Trans>,
+			suggestionWindowName,
+			severityTiers: SEVERITIES.MISSING_EXPECTED_USES,
+			adjustCount: this.adjustExpectedActionCount.bind(this),
+		}))
+
+		this.addEvaluator(new BloodfestEvaluator(this.data.actions.BLOODFEST.id))
 	}
 
-	override trackedActions = {
-		icon: ACTIONS.NO_MERCY.icon,
-		actions: [
-			{
-				action: ACTIONS.GNASHING_FANG,
-				expectedPerWindow: EXPECTED_USES.GNASHING_FANG,
-			},
+	private adjustExpectedActionCount(window: HistoryEntry<EvaluatedAction[]>, action: TrackedAction) {
+		if (action.action.id !== this.data.actions.BURST_STRIKE.id) { return 0 }
 
-			{
-				action: ACTIONS.BURST_STRIKE,
-				expectedPerWindow: EXPECTED_USES.BURST_STRIKE,
-			},
-
-			{
-				action: ACTIONS.SONIC_BREAK,
-				expectedPerWindow: EXPECTED_USES.SONIC_BREAK,
-			},
-
-			{
-				action: ACTIONS.BLASTING_ZONE,
-				expectedPerWindow: EXPECTED_USES.BLASTING_ZONE,
-			},
-
-			{
-				action: ACTIONS.BOW_SHOCK,
-				expectedPerWindow: EXPECTED_USES.BOW_SHOCK,
-			},
-
-			{
-				action: ACTIONS.ROUGH_DIVIDE,
-				expectedPerWindow: EXPECTED_USES.ROUGH_DIVIDE,
-			},
-		],
-
-		suggestionContent: <Trans id="gnb.nomercy.suggestions.expected-uses.content">
-			Watch your uses of certain abilities during <ActionLink {...ACTIONS.NO_MERCY} />. Under ideal conditions, you should
-				be using <ActionLink {...ACTIONS.SONIC_BREAK} />, a full <ActionLink {...ACTIONS.GNASHING_FANG} /> combo, and all of
-				your off-GCD skills <ActionLink {...ACTIONS.BLASTING_ZONE} />, <ActionLink {...ACTIONS.BOW_SHOCK} />, and at least one
-				charge of <ActionLink {...ACTIONS.ROUGH_DIVIDE} /> under the buff duration.
-		</Trans>,
-		severityTiers: SEVERITIES.MISSING_EXPECTED_USES,
-
-	}
-
-	override changeExpectedTrackedActionClassLogic(buffWindow: BuffWindowState, action: BuffWindowTrackedAction) {
-		const Id = action.action.id
-		if (Id === ACTIONS.BURST_STRIKE.id) {
-
-			if (buffWindow.rotation.find(cast => cast.ability.guid === ACTIONS.BLOODFEST.id)
-				&& (this.getBaselineExpectedTrackedAction(buffWindow, action) === 2)) {
-
-				return 1
-				//In fights with minimal downtime, it is possible to hit 4/4 bloodfests,
-				//however I feel it is better to leave it at 3 / 3 for the adjusted rinfest window which seems to be more common
-			}
-
+		if (window.data.find(cast => cast.action.id === this.data.actions.BLOODFEST.id)) {
+			//In fights with minimal downtime, it is possible to hit 4/4 bloodfests,
+			//however I feel it is better to leave it at 3 / 3 for the adjusted rinfest window which seems to be more common
+			return 1
 		}
 
 		return 0
 	}
 
-	override getBuffWindowNotes(buffWindow: BuffWindowState) {
-		return buffWindow.rotation.find(cast => cast.ability.guid === ACTIONS.BLOODFEST.id) ?
-			<Trans id="gnb.nomercy.chart.notes.yes">Yes</Trans> : <Trans id = "gnb.nomercy.chart.notes.no">No</Trans>
-	}
 }

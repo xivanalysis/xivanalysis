@@ -3,13 +3,15 @@ import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
 import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
-import {CastEvent} from 'fflogs'
-import Module, {dependency} from 'parser/core/Module'
-import GlobalCooldown from 'parser/core/modules/GlobalCooldown'
+import {Event, Events} from 'event'
+import {Analyser} from 'parser/core/Analyser'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import {Timeline} from 'parser/core/modules/Timeline'
 import React from 'react'
 import {Button, Table} from 'semantic-ui-react'
+import {filter} from '../filter'
+import {dependency} from '../Injectable'
+import CastTime from './CastTime'
 import {Data} from './Data'
 
 interface SeverityTiers {
@@ -19,17 +21,18 @@ interface SeverityTiers {
 // used for timeline viewing by giving you a nice 30s window
 const TIMELINE_UPPER_MOD: number = 30000
 
-export class Interrupts extends Module {
+export class Interrupts extends Analyser {
 	static override handle: string = 'interrupts'
 	static override title: MessageDescriptor = t('core.interrupts.title')`Interrupted Casts`
+	static override debug: boolean = false
 
+	@dependency private castTime!: CastTime
 	@dependency protected data!: Data
-	@dependency private globalCooldown!: GlobalCooldown
 	@dependency private suggestions!: Suggestions
 	@dependency private timeline!: Timeline
 
-	private currentCast?: CastEvent
-	private droppedCasts: CastEvent[] = []
+	private currentCast?: Events['prepare']
+	private droppedCasts: Array<Events['interrupt']> = []
 	private missedTimeMS: number = 0
 
 	/**
@@ -60,7 +63,7 @@ export class Interrupts extends Module {
 	 * @param missedTime The approximate time wasted via interrupts
 	 * @returns JSX that conforms to your suggestion content
 	 */
-	protected suggestionWhy(missedCasts: CastEvent[], missedTime: number): JSX.Element {
+	protected suggestionWhy(missedCasts: Array<Events['interrupt']>, missedTime: number): JSX.Element {
 		return <Trans id="core.interrupts.suggestion.why">You missed { missedCasts.length } casts (approximately { this.parser.formatDuration(missedTime) } of total casting time) due to interruption.</Trans>
 	}
 
@@ -72,39 +75,37 @@ export class Interrupts extends Module {
 		return undefined
 	}
 
-	protected override init() {
-		this.addEventHook('begincast', {by: 'player'}, this.onBeginCast)
-		this.addEventHook('cast', {by: 'player'}, this.onCast)
-
+	public override initialise() {
+		this.addEventHook(
+			filter<Event>()
+				.type('prepare')
+				.source(this.parser.actor.id),
+			this.onBeginCast
+		)
+		this.addEventHook(
+			filter<Event>()
+				.type('interrupt')
+				.source(this.parser.actor.id),
+			this.pushDropCasts
+		)
 		this.addEventHook('complete', this.onComplete)
 	}
 
-	private onBeginCast(event: CastEvent) {
-		// if they started casting something, then cancel and start something else,
-		// that's definitely an interrupted cast
-		if (this.currentCast) {
-			this.pushDropCasts(event)
-		}
+	private onBeginCast(event: Events['prepare']) {
 		this.currentCast = event
 	}
 
-	private onCast(event: CastEvent) {
-		const guid = event.ability.guid
-		// if the thing they started casting doesn't match up with what they cast, then
-		// that's an interrupted cast. Also, ignore attacks, since those can apparently happy during
-		// casting events..
-		if (this.currentCast && guid !== this.currentCast.ability.guid && guid !== ACTIONS.ATTACK.id) {
-			this.pushDropCasts(event)
-		}
-		this.currentCast = undefined
-	}
+	private pushDropCasts(event: Events['interrupt']) {
+		if (this.currentCast == null) { return }
 
-	private pushDropCasts(event: CastEvent) {
-		// we shouldn't hit this, since there has to be a valid event to compare to, but check just to be safe
-		if (this.currentCast) {
-			this.missedTimeMS += Math.min(this.globalCooldown.getEstimate(), event.timestamp - this.currentCast.timestamp)
-			this.droppedCasts.push(this.currentCast)
-		}
+		const castTime = this.castTime.forAction(this.currentCast.action, this.currentCast.timestamp) ?? 0
+
+		this.missedTimeMS += Math.min(
+			event.timestamp - (this.currentCast?.timestamp ?? this.parser.currentEpochTimestamp),
+			castTime
+		)
+		this.droppedCasts.push(event)
+		this.currentCast = undefined
 	}
 
 	private onComplete() {
@@ -135,23 +136,24 @@ export class Interrupts extends Module {
 			</Table.Header>
 			<Table.Body>
 				{
-					this.droppedCasts.map((cast) =>
-						<Table.Row key={cast.timestamp}>
+					this.droppedCasts.map((cast) => {
+						const action = this.data.getAction(cast.action)
+						return <Table.Row key={cast.timestamp}>
 							<Table.Cell textAlign="center">
-								<span style={{marginRight: 5}}>{this.parser.formatTimestamp(cast.timestamp)}</span>
+								<span style={{marginRight: 5}}>{this.parser.formatEpochTimestamp(cast.timestamp)}</span>
 								<Button
 									circular
 									compact
 									size="mini"
 									icon="time"
-									onClick={() => this.timeline.show(cast.timestamp - this.parser.eventTimeOffset, cast.timestamp - this.parser.eventTimeOffset + TIMELINE_UPPER_MOD)}
+									onClick={() => this.timeline.show(cast.timestamp - this.parser.pull.timestamp, cast.timestamp - this.parser.pull.timestamp + TIMELINE_UPPER_MOD)}
 								/>
 							</Table.Cell>
 							<Table.Cell>
-								<ActionLink {...this.data.getAction(cast.ability.guid)} />
+								<ActionLink {...action} />
 							</Table.Cell>
-						</Table.Row>,
-					)
+						</Table.Row>
+					})
 				}
 			</Table.Body>
 		</Table>

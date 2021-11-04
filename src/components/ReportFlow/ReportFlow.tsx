@@ -1,10 +1,11 @@
 import {Trans} from '@lingui/react'
 import {Message} from 'akkd'
+import {DataContextProvider} from 'components/DataContext'
 import {BreadcrumbsBanner, Breadcrumb, ReportLinkContent} from 'components/GlobalSidebar'
 import {GameEdition} from 'data/EDITIONS'
 import {getDutyBanner} from 'data/ENCOUNTERS'
-import {getPatch} from 'data/PATCHES'
-import React from 'react'
+import {getPatch, Patch} from 'data/PATCHES'
+import React, {ReactNode, useMemo} from 'react'
 import {Switch, useRouteMatch, Route, useParams} from 'react-router-dom'
 import {Report} from 'report'
 import {ReportStore} from 'reportSources'
@@ -63,32 +64,52 @@ export function ReportFlow({reportStore}: ReportFlowProps) {
 	}
 
 	return <>
-		<Route path={path}>
-			<ReportCrumb report={reportStore.report}/>
-		</Route>
-		<Route path={`${path}/:pullId`}>
-			<PullCrumb report={reportStore.report}/>
-		</Route>
-		<Route path={`${path}/:pullId/:actorId`}>
-			<ActorCrumb report={reportStore.report}/>
-		</Route>
-
-		<Route path={`${path}/:pullId?/:actorId?`}>
-			<ReportLink reportStore={reportStore}/>
-		</Route>
-
-		<Switch>
-			<Route path={`${path}/:pullId/:actorId`}>
-				<Analyse reportStore={reportStore}/>
+		<DataProvider report={reportStore.report}>
+			<Route path={path}>
+				<ReportCrumb report={reportStore.report}/>
 			</Route>
 			<Route path={`${path}/:pullId`}>
-				<ActorList reportStore={reportStore}/>
+				<PullCrumb report={reportStore.report}/>
 			</Route>
-			<Route path={path}>
-				<PullList reportStore={reportStore}/>
+			<Route path={`${path}/:pullId/:actorId`}>
+				<ActorCrumb report={reportStore.report}/>
 			</Route>
-		</Switch>
+
+			<Route path={`${path}/:pullId?/:actorId?`}>
+				<ReportLink reportStore={reportStore}/>
+			</Route>
+
+			<Switch>
+				<Route path={`${path}/:pullId/:actorId`}>
+					<Analyse reportStore={reportStore}/>
+				</Route>
+				<Route path={`${path}/:pullId`}>
+					<ActorList reportStore={reportStore}/>
+				</Route>
+				<Route path={path}>
+					<PullList reportStore={reportStore}/>
+				</Route>
+			</Switch>
+		</DataProvider>
 	</>
+}
+
+interface DataProviderProps {
+	children?: ReactNode
+	report: Report
+}
+
+function DataProvider({children, report}:DataProviderProps) {
+	const patch = useMemo(
+		() => new Patch(report.edition, report.timestamp),
+		[report],
+	)
+
+	return (
+		<DataContextProvider patch={patch}>
+			{children}
+		</DataContextProvider>
+	)
 }
 
 interface CrumbProps {

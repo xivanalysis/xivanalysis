@@ -7,7 +7,7 @@ import ACTIONS from 'data/ACTIONS'
 import {CastEvent} from 'fflogs'
 import _ from 'lodash'
 import Module, {dependency} from 'parser/core/Module'
-import {ComboEvent} from 'parser/core/modules/Combos'
+import {LegacyComboEvent} from 'parser/core/modules/Combos'
 import Suggestions, {SEVERITY, TieredSuggestion, Suggestion} from 'parser/core/modules/Suggestions'
 import {Timeline} from 'parser/core/modules/Timeline'
 import React, {Fragment} from 'react'
@@ -184,7 +184,7 @@ export default class Sen extends Module {
 	}
 
 	// Handles Sen Gen
-	private onSenGen(event: ComboEvent) {
+	private onSenGen(event: LegacyComboEvent) {
 		const action = event.ability.guid
 
 		const lastSenState = this.lastSenState

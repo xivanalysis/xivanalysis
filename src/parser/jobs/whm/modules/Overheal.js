@@ -1,7 +1,7 @@
 import {Trans} from '@lingui/react'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
-import {CoreOverheal, SuggestedColors} from 'parser/core/modules/Overheal'
+import {Overheal as CoreOverheal, SuggestedColors} from 'parser/core/modules/Overheal'
 import React from 'react'
 
 export default class Overheal extends CoreOverheal {

@@ -1,0 +1,25 @@
+@value backgroundColour from "parser/core/modules/Timeline/config/Item.module.css";
+
+@value chargeColor: color(backgroundColour a(100%) l(-20%));
+
+.cooldown {
+  width: 100%;
+  height: 100%;
+  background: backgroundColour;
+}
+
+.chargeGain {
+  position: relative;
+  width: 1px;
+  height: 100%;
+  background: chargeColor;
+}
+
+.chargeGain .icon {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translateX(-50%);
+  color: chargeColor;
+  line-height: 0;
+}

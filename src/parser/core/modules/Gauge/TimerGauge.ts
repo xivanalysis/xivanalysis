@@ -1,6 +1,6 @@
 import {ChartDataSets} from 'chart.js'
 import Color from 'color'
-import Module from 'parser/core/Module'
+import {Analyser} from 'parser/core/Analyser'
 import {AbstractGauge, AbstractGaugeOptions} from './AbstractGauge'
 
 function expectExist<T>(value?: T) {
@@ -44,14 +44,14 @@ export class TimerGauge extends AbstractGauge {
 	private readonly expirationCallback?: () => void
 	private readonly chartOptions?: TimerChartOptions
 
-	private hook?: ReturnType<Module['addTimestampHook']>
+	private hook?: ReturnType<Analyser['addTimestampHook']>
 	private history: State[] = []
 
 	// TODO: Work out how to remove this reliance on having it passed down
-	private _addTimestampHook?: Module['addTimestampHook']
+	private _addTimestampHook?: Analyser['addTimestampHook']
 	private get addTimestampHook() { return expectExist(this._addTimestampHook) }
 
-	private _removeTimestampHook?: Module['removeTimestampHook']
+	private _removeTimestampHook?: Analyser['removeTimestampHook']
 	private get removeTimestampHook() { return expectExist(this._removeTimestampHook) }
 
 	/** The most recent state  */
@@ -246,11 +246,11 @@ export class TimerGauge extends AbstractGauge {
 	}
 
 	// Junk I wish I didn't need
-	setAddTimestampHook(value: Module['addTimestampHook']) {
+	setAddTimestampHook(value: Analyser['addTimestampHook']) {
 		this._addTimestampHook = value
 	}
 
-	setRemoveTimestampHook(value: Module['removeTimestampHook']) {
+	setRemoveTimestampHook(value: Analyser['removeTimestampHook']) {
 		this._removeTimestampHook = value
 	}
 }

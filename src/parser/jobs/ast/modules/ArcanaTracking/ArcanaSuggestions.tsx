@@ -4,10 +4,12 @@ import {ActionLink} from 'components/ui/DbLink'
 import JobIcon from 'components/ui/JobIcon'
 import {getDataBy} from 'data'
 import JOBS from 'data/JOBS'
-import {ActorType} from 'fflogs'
+import {ActorType, BuffEvent, CastEvent} from 'fflogs'
+import _ from 'lodash'
 import Module, {dependency} from 'parser/core/Module'
 import Combatants from 'parser/core/modules/Combatants'
 import {Data} from 'parser/core/modules/Data'
+import {NormalisedApplyBuffEvent} from 'parser/core/modules/NormalisedEvents'
 import {Timeline} from 'parser/core/modules/Timeline'
 import React from 'react'
 import {Button, Table} from 'semantic-ui-react'
@@ -20,6 +22,27 @@ import sealLunar from './seal_lunar.png'
 import sealSolar from './seal_solar.png'
 
 const TIMELINE_UPPER_MOD = 30000 // in ms
+
+// set-up for divination players hit tracking
+const PLAYERS_HIT_TARGET = 8
+
+class DIVWindow {
+	start: number
+	end?: number
+
+	rotation: Array<NormalisedApplyBuffEvent | CastEvent> = []
+	gcdCount: number = 0
+	trailingGcdEvent?: CastEvent
+
+	buffsRemoved: number[] = []
+	playersBuffed: number = 0
+	containsOtherAST: boolean = false
+
+	constructor(start: number) {
+		this.start = start
+	}
+}
+//end set-up for div
 
 const SEAL_ICON = {
 	[SealType.NOTHING]: '',
@@ -55,6 +78,12 @@ export default class ArcanaSuggestions extends Module {
 
 	private SLEEVE_ICON: SleeveIcon = {}
 
+	//div privates for output
+	private history: DIVWindow[] = []
+	private lastDIVFalloffTime: number = 0
+	private divCast: number = 0
+	//end div privates
+
 	protected override init() {
 		PLAY.forEach(actionKey => {
 			this.PLAY.push(this.data.actions[actionKey].id)
@@ -66,8 +95,111 @@ export default class ArcanaSuggestions extends Module {
 			[SleeveType.TWO_STACK]: 'https://xivapi.com/i/019000/019562.png',
 		}
 
+		//used for divination tracking
+		this.addEventHook('normalisedapplybuff', {to: 'player', abilityId: this.data.statuses.DIVINATION.id}, this.tryOpenWindow)
+		this.addEventHook('normalisedapplybuff', {by: 'player', abilityId: this.data.statuses.DIVINATION.id}, this.countDIVBuffs)
+		this.addEventHook('removebuff', {to: 'player', abilityId: this.data.statuses.DIVINATION.id}, this.tryCloseWindow)
+		this.addEventHook('cast', {by: 'player'}, this.onCast)
+
 		this.addEventHook('complete', this._onComplete)
 	}
+
+	//functions for divination buff counting
+	private countDIVBuffs(event: NormalisedApplyBuffEvent) {
+		// Get this from tryOpenWindow. If a window wasn't open, we'll open one.
+		const lastWindow: DIVWindow | undefined = this.tryOpenWindow(event)
+
+		// Find out how many players we hit with the buff.
+		if (lastWindow) {
+			lastWindow.playersBuffed += event.confirmedEvents.filter(hit => this.parser.fightFriendlies.findIndex(f => f.id === hit.targetID) >= 0).length
+		}
+	}
+
+	private tryOpenWindow(event: NormalisedApplyBuffEvent): DIVWindow | undefined {
+		const lastWindow: DIVWindow | undefined = _.last(this.history)
+
+		if (lastWindow && !lastWindow.end) {
+			return lastWindow
+		}
+
+		if (event.sourceID && event.sourceID === this.parser.player.id) {
+			const newWindow = new DIVWindow(event.timestamp)
+
+			// Handle multiple AST's buffs overwriting each other, we'll have a remove then an apply with the same timestamp
+			// If that happens, mark the window and return
+			newWindow.containsOtherAST = this.lastDIVFalloffTime === event.timestamp
+			//TODO use this to track if overwritten. Consider moving this tip to suggestions
+
+			this.history.push(newWindow)
+			return newWindow
+		}
+
+		return undefined
+	}
+
+	private tryCloseWindow(event: BuffEvent) {
+		// for determining overwrite, cache the status falloff time
+		this.lastDIVFalloffTime = event.timestamp
+
+		// only track the things one player added
+		if (event.sourceID && event.sourceID !== this.parser.player.id) { return }
+
+		const lastWindow: DIVWindow | undefined = _.last(this.history)
+
+		if (!lastWindow) {
+			return
+		}
+
+		// Cache whether we've seen a buff removal event for this status, just in case they happen at exactly the same timestamp
+		lastWindow.buffsRemoved.push(event.ability.guid)
+
+		if (this.isWindowOkToClose(lastWindow)) {
+			lastWindow.end = event.timestamp
+		}
+	}
+
+	// Make sure all applicable statuses have fallen off before the window closes
+	private isWindowOkToClose(window: DIVWindow): boolean {
+		if (!window.buffsRemoved.includes(this.data.statuses.DIVINATION.id)) {
+			return false
+		}
+		return true
+	}
+
+	private onCast(event: CastEvent) {
+		const lastWindow: DIVWindow | undefined = _.last(this.history)
+
+		// If we don't have a window, bail
+		if (!lastWindow) {
+			return
+		}
+
+		const action = this.data.getAction(event.ability.guid)
+
+		// Can't do anything else if we didn't get a valid action object
+		if (!action) {
+			return
+		}
+
+		// If this window isn't done yet add the action to the list
+		if (!lastWindow.end) {
+			lastWindow.rotation.push(event)
+
+			if (action.onGcd) {
+				lastWindow.gcdCount++
+			}
+			if (lastWindow.playersBuffed < 1) {
+				lastWindow.containsOtherAST = true
+			}
+			return
+		}
+
+		// If we haven't recorded a trailing GCD event for this closed window, do so now
+		if (lastWindow.end && !lastWindow.trailingGcdEvent && action.onGcd) {
+			lastWindow.trailingGcdEvent = event
+		}
+	}
+	//end divination functions
 
 	private _onComplete() {
 		const combatants = this.combatants.getEntities()
@@ -153,6 +285,7 @@ export default class ArcanaSuggestions extends Module {
 						const start = artifact.lastEvent.timestamp - this.parser.fight.start_time
 						const end = start + TIMELINE_UPPER_MOD
 						const formattedTime = this.parser.formatTimestamp(artifact.lastEvent.timestamp)
+
 						return <Table.Row key={artifact.lastEvent.timestamp} className={styles.cardActionRow}>
 							<Table.Cell>
 								{start >= 0 && <Button
@@ -178,6 +311,8 @@ export default class ArcanaSuggestions extends Module {
 
 	// Helper for override output()
 	RenderAction(artifact: CardLog) {
+		const divID = this.data.actions.DIVINATION.id
+
 		if (artifact.lastEvent.type === 'cast' && this.PLAY.includes(artifact.lastEvent.ability.guid)) {
 			const targetJob = getDataBy(JOBS, 'logType', artifact.targetJob as ActorType)
 
@@ -188,6 +323,42 @@ export default class ArcanaSuggestions extends Module {
 				<Table.Cell>
 					{targetJob && <JobIcon job={targetJob}/>}
 					{artifact.targetName}
+				</Table.Cell>
+			</>
+		}
+
+		//for divination to output how many players buffed
+		if (artifact.lastEvent.type === 'cast' && artifact.lastEvent.ability.guid === divID) {
+			const tableData = this.history.map(window => {
+				const end = window.end != null ?
+					window.end - this.parser.fight.start_time :
+					window.start - this.parser.fight.start_time
+				const start = window.start - this.parser.fight.start_time
+
+				return ({
+					start,
+					end,
+					targetsData: {
+						buffed: {
+							actual: window.playersBuffed,
+						},
+					},
+				})
+			})
+			//whole table was taken even though only playersBuffed is read in case we want separate times noted.
+
+			const playersHit = tableData.map(t=> t.targetsData.buffed.actual)[this.divCast]
+			this.divCast += 1
+			return <>
+				<Table.Cell>
+					<ActionLink {...getDataBy(this.data.actions, 'id', artifact.lastEvent.ability.guid)} />
+				</Table.Cell>
+				<Table.Cell>
+					<Trans id="ast.arcana-tracking.divination.playertarget">{'Players Buffed:'}</Trans>
+					{' '}
+					{playersHit}
+					{'/'}
+					{PLAYERS_HIT_TARGET}
 				</Table.Cell>
 			</>
 		}

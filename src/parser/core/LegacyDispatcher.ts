@@ -20,7 +20,11 @@ export interface EventHook<T extends Event> {
 	callback: EventHookCallback<T>
 }
 
-export type TimestampHookCallback = (opts: {timestamp: number}) => void
+export interface TimestampHookArguments {
+	timestamp: number
+}
+
+export type TimestampHookCallback = (opts: TimestampHookArguments) => void
 
 export interface TimestampHook {
 	timestamp: number

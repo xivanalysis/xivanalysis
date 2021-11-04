@@ -247,6 +247,7 @@
   "core.combos.content": "<0>Ne cassez pas vos combos, car ne pas faire un combo complètement réduit d'une quantité non négligeable votre DPS et cause d'importants effets secondaires.</0><1>L'utilisation d'un combo de GCD à la mauvaise étape du combo, d'une compétence GCDs ne faisant pas parti du combo courant, louper son coup, ou attaquer une cible qui est invulnérable provoqueront la rupture de votre combo.</1>",
   "core.combos.issuetypenames.combobreak": "Combo interrompu",
   "core.combos.issuetypenames.failed": "Manqué ou Invulnérable",
+  "core.combos.issuetypenames.timeout": "",
   "core.combos.issuetypenames.uncomboed": "Hors combo",
   "core.combos.title": "Problème de combos",
   "core.combos.why": "{0, plural,one {Vous avez mal utilisé # action de combo.} other {Vous avez mal utilisé # actions de combo.}}",

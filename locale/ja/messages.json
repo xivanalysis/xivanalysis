@@ -258,6 +258,7 @@
   "core.combos.content": "<0>コンボを途中で止めないようにしましょう。コンボを完了できないと、多量のDPSと重要な副次効果を失います。</0><1>コンボそのものを間違えたり、コンボ中にコンボ外のGCDスキルを使ったり、攻撃不可のターゲットを攻撃したりするとコンボが中断してしまいます。</1>",
   "core.combos.issuetypenames.combobreak": "コンボの中断",
   "core.combos.issuetypenames.failed": "攻撃ミスやターゲットが無敵",
+  "core.combos.issuetypenames.timeout": "",
   "core.combos.issuetypenames.uncomboed": "コンボではない",
   "core.combos.title": "コンボの問題",
   "core.combos.why": "{0, plural, one {スキルコンボを # 回破ってしまいました。} other {スキルコンボを # 回破ってしまいました。}}",

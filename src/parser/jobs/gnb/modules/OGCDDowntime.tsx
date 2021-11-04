@@ -1,4 +1,3 @@
-import ACTIONS from 'data/ACTIONS'
 import {CooldownDowntime} from 'parser/core/modules/CooldownDowntime'
 
 /*
@@ -22,27 +21,27 @@ export default class AbilityDowntime extends CooldownDowntime {
 
 	trackedCds = [
 		{
-			cooldowns: [ACTIONS.NO_MERCY],
+			cooldowns: [this.data.actions.NO_MERCY],
 			firstUseOffset: FIRST_USE_OFFSET_NO_MERCY,
 		},
 		{
-			cooldowns: [ACTIONS.BLOODFEST],
+			cooldowns: [this.data.actions.BLOODFEST],
 			firstUseOffset: FIRST_USE_OFFSET_BLOODFEST,
 		},
 		{
-			cooldowns: [ACTIONS.SONIC_BREAK],
+			cooldowns: [this.data.actions.SONIC_BREAK],
 			firseUseOffset: FIRST_USE_OFFSET_SONIC_BREAK,
 		},
 		{
-			cooldowns: [ACTIONS.BLASTING_ZONE, ACTIONS.DANGER_ZONE],
+			cooldowns: [this.data.actions.BLASTING_ZONE, this.data.actions.DANGER_ZONE],
 			firstUseOffset: FIRST_USE_OFFSET_PEWPEWZONE,
 		},
 		{
-			cooldowns: [ACTIONS.BOW_SHOCK],
+			cooldowns: [this.data.actions.BOW_SHOCK],
 			firstUseOffset: FIRST_USE_OFFSET_BOWSHOCK,
 		},
 		{
-			cooldowns: [ACTIONS.ROUGH_DIVIDE],
+			cooldowns: [this.data.actions.ROUGH_DIVIDE],
 			firstUseOffset: FIRST_USE_OFFSET_DIVIDE, // but not by 0.
 		},
 	]

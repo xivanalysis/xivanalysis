@@ -1,10 +1,12 @@
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
 import {ActionLink} from 'components/ui/DbLink'
-import {getDataBy} from 'data'
-import ACTIONS from 'data/ACTIONS'
-import {CastEvent} from 'fflogs'
-import Module, {dependency} from 'parser/core/Module'
+import {ActionKey} from 'data/ACTIONS'
+import {Event, Events} from 'event'
+import {Analyser} from 'parser/core/Analyser'
+import {filter, oneOf} from 'parser/core/filter'
+import {dependency} from 'parser/core/Module'
+import {Data} from 'parser/core/modules/Data'
 import Downtime from 'parser/core/modules/Downtime'
 import {Timeline} from 'parser/core/modules/Timeline'
 import React, {Fragment} from 'react'
@@ -15,15 +17,10 @@ import DISPLAY_ORDER from './DISPLAY_ORDER'
 // and not log inconsistencies / sks issues / misguided weaving
 const DRIFT_BUFFER = 1250
 
-const DRIFT_ABILITIES = [
-	ACTIONS.HIGH_JUMP.id,
-	ACTIONS.GEIRSKOGUL.id,
+const DRIFT_ABILITIES: ActionKey[] = [
+	'HIGH_JUMP',
+	'GEIRSKOGUL',
 ]
-
-const COOLDOWN_MS = {
-	[ACTIONS.HIGH_JUMP.id]: ACTIONS.HIGH_JUMP.cooldown,
-	[ACTIONS.GEIRSKOGUL.id]: ACTIONS.GEIRSKOGUL.cooldown,
-}
 
 class DriftWindow {
 	actionId: number
@@ -37,7 +34,7 @@ class DriftWindow {
 	}
 }
 
-export default class Drift extends Module {
+export default class Drift extends Analyser {
 	static override debug = false
 	static override handle = 'drift'
 	static override title = t('drg.drift.title')`Ability Drift`
@@ -45,23 +42,31 @@ export default class Drift extends Module {
 
 	@dependency private downtime!: Downtime
 	@dependency private timeline!: Timeline
+	@dependency private data!: Data
 
 	private driftedWindows: DriftWindow[] = []
 
-	private currentWindows = {
-		[ACTIONS.HIGH_JUMP.id]: new DriftWindow(ACTIONS.HIGH_JUMP.id, this.parser.fight.start_time),
-		[ACTIONS.GEIRSKOGUL.id]: new DriftWindow(ACTIONS.GEIRSKOGUL.id, this.parser.fight.start_time),
+	private driftAbilities = DRIFT_ABILITIES.map(k => this.data.actions[k].id)
+	private cooldownMs: Record<number, number> = {}
+
+	private currentWindows: Record<number, DriftWindow> = {}
+
+	override initialise() {
+		const playerFilter = filter<Event>().source(this.parser.actor.id)
+		this.addEventHook(playerFilter.type('action').action(oneOf(this.driftAbilities)), this.onDriftableCast)
+
+		DRIFT_ABILITIES.forEach(id => {
+			const action = this.data.actions[id]
+			this.cooldownMs[action.id] = action.cooldown ?? 0
+			this.currentWindows[action.id] = new DriftWindow(action.id, this.parser.fight.start_time)
+		})
 	}
 
-	protected override init() {
-		this.addEventHook('cast', {by: 'player', abilityId: DRIFT_ABILITIES}, this.onDriftableCast)
-	}
-
-	private onDriftableCast(event: CastEvent) {
+	private onDriftableCast(event: Events['action']) {
 		// Get skill info.
-		const actionId = event.ability.guid
+		const actionId = event.action
 
-		const cooldown = COOLDOWN_MS[actionId]
+		const cooldown = this.cooldownMs[actionId]
 		// this.debug(cooldown)
 
 		// Calculate drift
@@ -70,16 +75,15 @@ export default class Drift extends Module {
 
 		// Cap at this event's timestamp, as if we used before it came off CD, it's certainly driftless! (ms-range negative drift is common)
 		const plannedUseTime = Math.min(window.start + cooldown, event.timestamp)
-		this.debug(this.parser.formatTimestamp(plannedUseTime))
+		this.debug(this.parser.formatEpochTimestamp(plannedUseTime))
 
 		let expectedUseTime = 0
 
-		const plannedUseEpochTime = this.parser.fflogsToEpoch(plannedUseTime)
-		if (this.downtime.isDowntime(plannedUseEpochTime)) {
-			const downtimeWindow = this.downtime.getDowntimeWindows(plannedUseEpochTime, plannedUseEpochTime)[0]
+		if (this.downtime.isDowntime(plannedUseTime)) {
+			const downtimeWindow = this.downtime.getDowntimeWindows(plannedUseTime, plannedUseTime)[0]
 
 			// in theory the second case shouldn't trigger, but just in case since we've had this break before...
-			expectedUseTime = this.parser.epochToFflogs(downtimeWindow?.end ?? plannedUseEpochTime)
+			expectedUseTime = downtimeWindow?.end ?? plannedUseTime
 		} else {
 			expectedUseTime = plannedUseTime
 		}
@@ -97,8 +101,8 @@ export default class Drift extends Module {
 			compact
 			icon="time"
 			size="small"
-			onClick={() => this.timeline.show(timestamp - this.parser.fight.start_time, timestamp - this.parser.fight.start_time)}
-			content={this.parser.formatTimestamp(timestamp)}
+			onClick={() => this.timeline.show(timestamp - this.parser.pull.timestamp, timestamp - this.parser.pull.timestamp)}
+			content={this.parser.formatEpochTimestamp(timestamp)}
 		/>
 	}
 
@@ -107,7 +111,7 @@ export default class Drift extends Module {
 		if (casts.length === 0) { // Don't draw table if nothing was cast.
 			return
 		}
-		const action = getDataBy(ACTIONS, 'id', casts[0].actionId)
+		const action = this.data.getAction(casts[0].actionId)
 		return <Table>
 			<Table.Header>
 				<Table.Row>
@@ -139,12 +143,12 @@ export default class Drift extends Module {
 					<Table.Row>
 						<Table.Cell style={{verticalAlign: 'top'}}>
 							{this.createDriftTable(this.driftedWindows.filter((ability) => {
-								return ability.actionId === ACTIONS.HIGH_JUMP.id
+								return ability.actionId === this.data.actions.HIGH_JUMP.id
 							}))}
 						</Table.Cell>
 						<Table.Cell style={{verticalAlign: 'top'}}>
 							{this.createDriftTable(this.driftedWindows.filter((ability) => {
-								return ability.actionId === ACTIONS.GEIRSKOGUL.id
+								return ability.actionId === this.data.actions.GEIRSKOGUL.id
 							}))}
 						</Table.Cell>
 					</Table.Row>

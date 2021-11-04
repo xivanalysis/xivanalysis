@@ -4,6 +4,9 @@ import {Analyser} from '../Analyser'
 import {filter} from '../filter'
 import {dependency} from '../Injectable'
 import {Data} from './Data'
+import {SpeedAdjustments} from './SpeedAdjustments'
+
+const MIN_ACTION_TIME = 1500
 
 type AffectsWhichTime =
 	| 'cast'
@@ -23,6 +26,7 @@ export default class CastTime extends Analyser {
 	static override handle = 'castTime'
 
 	@dependency data!: Data
+	@dependency speedAdjustments!: SpeedAdjustments
 
 	private castTimes: CastTimeAdjustment[] = []
 	private scIndex: number | null = null
@@ -209,16 +213,26 @@ export default class CastTime extends Analyser {
 			(ct.affectsWhich === 'both' || ct.affectsWhich === forWhich),
 		)
 
-		// Mimicking old logic w/ the undefined. Don't ask.
 		const action = this.data.getAction(actionId)
-		const defaultTime = forWhich === 'recast' ? (action?.gcdRecast != null
-			? action?.gcdRecast
-			: action?.cooldown) : action?.castTime
+		if (action == null) {
+			return undefined
+		}
+		let defaultTime = forWhich === 'recast'
+			? (action.gcdRecast != null ? action.gcdRecast : action.cooldown)
+			: action.castTime
 
-		// If there were no modifiers, just use the default (or if the default comes back undefined or already instant, shouldn't happen but eh)
-		if (!matchingTimes.length || defaultTime == null || defaultTime === 0) {
+		// If the default comes back undefined, or already at or below the minimum action time (including instants), no adjustments to perform
+		if (defaultTime == null || defaultTime <= MIN_ACTION_TIME) {
 			return defaultTime
 		}
+
+		if (action.speedAttribute != null) {
+			defaultTime = this.speedAdjustments.getAdjustedDuration({
+				duration: defaultTime,
+				attribute: action.speedAttribute,
+			})
+		}
+
 		let flatReduction=0
 		let flatIncrease=0
 		let percentageAdjustment=1
@@ -240,7 +254,21 @@ export default class CastTime extends Analyser {
 		})
 
 		// Calculate the final cast time based on the flat and percentage reductions we've found
-		return Math.max(defaultTime + flatIncrease + flatReduction, 0) * percentageAdjustment // Yes, plus flatReduction because it's already a negative value
+		const flatAdjustedTime = Math.max(defaultTime + flatIncrease + flatReduction, 0) // Yes, plus flatReduction because it's already a negative value
+		if (flatAdjustedTime <= MIN_ACTION_TIME) {
+			// Flat reductions reduced value below minimum action time, percentage adjustments will not be effective
+			return flatAdjustedTime
+		}
+
+		if (percentageAdjustment === 0) {
+			// Adjusted to instant
+			return 0
+		}
+
+		// Apply percentage speed modifiers, subject to clamping at the minimum action time
+		const adjustedTime = Math.max(flatAdjustedTime * percentageAdjustment, MIN_ACTION_TIME)
+		// eslint-disable-next-line @typescript-eslint/no-magic-numbers
+		return Math.floor(adjustedTime / 10) * 10 // adjustments are rounded down to the nearest 10ms in game
 
 		/**
 		 * In the absence of easily-acquired slows to test with, I'm going to assume this is the right way to calculate this:

@@ -3,7 +3,6 @@ import {Trans, Plural} from '@lingui/react'
 import {Action} from 'data/ACTIONS'
 import {Status} from 'data/STATUSES'
 import {Event, Events} from 'event'
-import {CastEvent} from 'fflogs'
 import {Actors} from 'parser/core/modules/Actors'
 import Suggestions, {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import {SimpleRow, StatusItem, Timeline} from 'parser/core/modules/Timeline'
@@ -116,12 +115,6 @@ export abstract class Procs extends Analyser {
 	 */
 	public checkEventWasProc(event: Events['action']): boolean {
 		return this.checkActionWasProc(event.action, event.timestamp)
-	}
-	/**
-	 * Module-space accessor for checkEventWasProc
-	 * @deprecated */
-	public checkFflogsEventWasProc(event: CastEvent): boolean {
-		return this.checkActionWasProc(event.ability.guid, this.parser.fflogsToEpoch(event.timestamp))
 	}
 	/**
 	 * Checks to see if the specified action consumed a proc at a given timestamp
@@ -521,7 +514,8 @@ export abstract class Procs extends Analyser {
 		groupEvents.events.push(event)
 	}
 
-	private getRowForStatus(status: Status): SimpleRow {
+	/** Gets the row for a given status, creating it if necessary. Public so Sharpcast can access it */
+	public getRowForStatus(status: Status): SimpleRow {
 		let row = this.rows.get(status.id)
 		if (row == null) {
 			row = this.row.addRow(new SimpleRow({label: status.name}))

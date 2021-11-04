@@ -1,4 +1,3 @@
-import ACTIONS from 'data/ACTIONS'
 import {CooldownDowntime} from 'parser/core/modules/CooldownDowntime'
 
 // Approximate downtime window to account for aligning GCDs and unreliable FBC procs:
@@ -11,31 +10,31 @@ const DEFAULT_AVERAGE_DOWNTIME = 2425
 // other cooldowns should be used by the 16th second of the fight tho so here we are.
 const MAX_CHAKRA_DELAY_OFFSET = 16000
 
-export default class OGCDDowntime extends CooldownDowntime {
-	override defaultAllowedAverageDowntime = DEFAULT_AVERAGE_DOWNTIME
-	override trackedCds = [
+export class OGCDDowntime extends CooldownDowntime {
+	protected override defaultAllowedAverageDowntime = DEFAULT_AVERAGE_DOWNTIME
+	protected override trackedCds = [
 		{
-			cooldowns: [ACTIONS.BROTHERHOOD],
+			cooldowns: [this.data.actions.BROTHERHOOD],
 			firstUseOffset: 11000,
 		},
 		{
-			cooldowns: [ACTIONS.ELIXIR_FIELD],
+			cooldowns: [this.data.actions.ELIXIR_FIELD],
 			firstUseOffset: MAX_CHAKRA_DELAY_OFFSET,
 		},
 		{
-			cooldowns: [ACTIONS.PERFECT_BALANCE],
+			cooldowns: [this.data.actions.PERFECT_BALANCE],
 			firstUseOffset: 9000,
 		},
 		{
-			cooldowns: [ACTIONS.RIDDLE_OF_FIRE],
+			cooldowns: [this.data.actions.RIDDLE_OF_FIRE],
 			firstUseOffset: 5000,
 		},
 		{
-			cooldowns: [ACTIONS.SHOULDER_TACKLE],
+			cooldowns: [this.data.actions.SHOULDER_TACKLE],
 			firstUseOffset: 2000,
 		},
 		{
-			cooldowns: [ACTIONS.TORNADO_KICK],
+			cooldowns: [this.data.actions.TORNADO_KICK],
 			firstUseOffset: MAX_CHAKRA_DELAY_OFFSET,
 		},
 	]

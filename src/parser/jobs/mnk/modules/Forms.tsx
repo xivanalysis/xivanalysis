@@ -1,36 +1,28 @@
 import {Plural, Trans} from '@lingui/react'
-import {ActionLink, StatusLink} from 'components/ui/DbLink'
-import ACTIONS from 'data/ACTIONS'
-import STATUSES from 'data/STATUSES'
-import {BuffEvent, CastEvent} from 'fflogs'
-import Module, {dependency} from 'parser/core/Module'
-import Combatants from 'parser/core/modules/Combatants'
+import {DataLink} from 'components/ui/DbLink'
+import {Event, Events} from 'event'
+import {Analyser} from 'parser/core/Analyser'
+import {EventHook} from 'parser/core/Dispatcher'
+import {filter, oneOf} from 'parser/core/filter'
+import {dependency} from 'parser/core/Injectable'
+import {Actors} from 'parser/core/modules/Actors'
 import {Data} from 'parser/core/modules/Data'
 import Downtime from 'parser/core/modules/Downtime'
 import Suggestions, {SEVERITY, Suggestion, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
+import {FORM_TIMEOUT_MILLIS, FORMS, OPO_OPO_SKILLS} from './constants'
+import {fillActions, fillStatuses} from './utilities'
 
-const FORM_TIMEOUT_MILLIS = 15000
-
-export const FORMS = [
-	STATUSES.OPO_OPO_FORM.id,
-	STATUSES.RAPTOR_FORM.id,
-	STATUSES.COEURL_FORM.id,
-]
-
-const OPO_OPO_SKILLS = [
-	ACTIONS.BOOTSHINE.id,
-	ACTIONS.DRAGON_KICK.id,
-	ACTIONS.ARM_OF_THE_DESTROYER.id,
-]
-
-export default class Forms extends Module {
+export class Forms extends Analyser {
 	static override handle = 'forms'
 
-	@dependency private combatants!: Combatants
+	@dependency private actors!: Actors
 	@dependency private data!: Data
 	@dependency private downtime!: Downtime
 	@dependency private suggestions!: Suggestions
+
+	private forms: number[] = []
+	private opoOpoSkills: number[] = []
 
 	private formless: number = 0
 	private resetForms: number = 0
@@ -41,90 +33,100 @@ export default class Forms extends Module {
 	private lastFormDropped?: number
 	private perfectlyFresh?: number
 
-	protected override init(): void {
-		this.addEventHook('cast', {by: 'player'}, this.onCast)
-		this.addEventHook('applybuff', {to: 'player', abilityId: FORMS}, this.onGain)
-		this.addEventHook('refreshbuff', {to: 'player', abilityId: FORMS}, this.onGain)
-		this.addEventHook('removebuff', {to: 'player', abilityId: FORMS}, this.onRemove)
-		this.addEventHook('removebuff', {to: 'player', abilityId: this.data.statuses.PERFECT_BALANCE.id}, this.onPerfectOut)
+	private formHook?: EventHook<Events['action']>
+
+	override initialise(): void {
+		this.forms = fillStatuses(FORMS, this.data)
+		this.opoOpoSkills = fillActions(OPO_OPO_SKILLS, this.data)
+
+		const playerFilter = filter<Event>().source(this.parser.actor.id)
+		this.addEventHook(playerFilter.type('statusApply').status(oneOf(this.forms)), this.onGain)
+		this.addEventHook(playerFilter.type('statusRemove').status(oneOf(this.forms)), this.onRemove)
+		this.addEventHook(playerFilter.type('statusRemove').status(this.data.statuses.PERFECT_BALANCE.id), this.onPerfectOut)
+
 		this.addEventHook('complete', this.onComplete)
 	}
 
-	private onCast(event: CastEvent): void {
-		const action = this.data.getAction(event.ability.guid)
+	private onCast(event: Events['action']): void {
+		const action = this.data.getAction(event.action)
 
-		if (!action) {
+		if (action == null || !(action.onGcd ?? false)) { return }
+
+		// Check the current form, or zero for no form
+		const currentForm = this.forms.find(form => this.actors.current.hasStatus(form)) || 0
+		const untargetable = this.lastFormChanged != null
+			? this.downtime.getDowntime(this.lastFormChanged, event.timestamp)
+			: 0
+
+		if (action.id === this.data.actions.FORM_SHIFT.id) {
+			// Only ignore Form Shift if we're in downtime
+			if (untargetable === 0) {
+				this.skippedForms++
+			}
+
 			return
 		}
 
-		if (action.onGcd) {
-			// Check the current form and stacks, or zero for no form
-			const currentForm = FORMS.find(form => this.combatants.selected.hasStatus(form)) || 0
-			const untargetable = this.lastFormChanged != null
-				? this.downtime.getDowntime(
-					this.parser.fflogsToEpoch(this.lastFormChanged),
-					this.parser.fflogsToEpoch(event.timestamp),
-				)
-				: 0
+		// If we have PB/FS, we can just ignore forms
+		if (
+			this.actors.current.hasStatus(this.data.statuses.PERFECT_BALANCE.id) ||
+			this.actors.current.hasStatus(this.data.statuses.FORMLESS_FIST.id)
+		) { return }
 
-			if (action.id === this.data.actions.FORM_SHIFT.id) {
-				// Only ignore Form Shift if we're in downtime
-				if (untargetable === 0) {
-					this.skippedForms++
-				}
+		// Handle relevant actions per form
+		switch (currentForm) {
+		case this.data.statuses.OPO_OPO_FORM.id:
+			break
 
+		// Using Opo-Opo skills resets form, but we don't care if we're in PB or FS
+		case this.data.statuses.RAPTOR_FORM.id:
+		case this.data.statuses.COEURL_FORM.id:
+			if (this.opoOpoSkills.includes(action.id)) { this.resetForms++ }
+			break
+
+		default:
+			// Fresh out of PB, they'll have no form
+			if (this.perfectlyFresh != null) {
+				this.perfectlyFresh = undefined
 				return
 			}
 
-			// If we have PB/FS, we can just ignore forms
-			if (
-				this.combatants.selected.hasStatus(this.data.statuses.PERFECT_BALANCE.id) ||
-				this.combatants.selected.hasStatus(this.data.statuses.FORMLESS_FIST.id)
-			) { return }
-
-			// Handle relevant actions per form
-			switch (currentForm) {
-			case this.data.statuses.OPO_OPO_FORM.id:
-				break
-
-			// Using Opo-Opo skills resets form
-			case this.data.statuses.RAPTOR_FORM.id:
-			case this.data.statuses.COEURL_FORM.id:
-				if (OPO_OPO_SKILLS.includes(action.id)) { this.resetForms++ }
-				break
-
-			default:
-				// Fresh out of PB, they'll have no form
-				if (this.perfectlyFresh) {
-					this.perfectlyFresh = undefined
-					return
+			// Check if we timed out
+			if (untargetable === 0 && this.lastFormDropped != null && this.lastFormChanged != null) {
+				if ((this.lastFormDropped - this.lastFormChanged) > FORM_TIMEOUT_MILLIS) {
+					this.droppedForms++
 				}
+			}
 
-				// Check if we timed out
-				if (untargetable === 0 && this.lastFormDropped && this.lastFormChanged) {
-					if ((this.lastFormDropped - this.lastFormChanged) > FORM_TIMEOUT_MILLIS) {
-						this.droppedForms++
-					}
-				}
-
-				// No form used
-				if (OPO_OPO_SKILLS.includes(action.id)) {
-					this.formless++
-				}
+			// No form used
+			if (this.opoOpoSkills.includes(action.id)) {
+				this.formless++
 			}
 		}
 	}
 
 	// Anatman doesn't freeze, it just refreshes every tick, so it's the same as a gain
-	private onGain(event: BuffEvent): void {
+	private onGain(event: Events['statusApply']): void {
 		this.lastFormChanged = event.timestamp
+
+		this.formHook = this.addEventHook(
+			filter<Event>()
+				.source(this.parser.actor.id)
+				.type('action'),
+			this.onCast,
+		)
 	}
 
-	private onRemove(event: BuffEvent): void {
+	private onRemove(event: Events['statusRemove']): void {
 		this.lastFormDropped = event.timestamp
+
+		if (this.formHook != null) {
+			this.removeEventHook(this.formHook)
+			this.formHook = undefined
+		}
 	}
 
-	private onPerfectOut(event: BuffEvent): void {
+	private onPerfectOut(event: Events['statusRemove']): void {
 		this.perfectlyFresh = event.timestamp
 	}
 
@@ -133,7 +135,7 @@ export default class Forms extends Module {
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.FORM_SHIFT.icon,
 			content: <Trans id="mnk.forms.suggestions.formless.content">
-				Avoid using combo starters outside of <StatusLink {...this.data.statuses.OPO_OPO_FORM}/> as the Form bonus is only activated in the correct form.
+				Avoid using combo starters outside of <DataLink status="OPO_OPO_FORM"/> as the Form bonus is only activated in the correct form.
 			</Trans>,
 			tiers: {
 				1: SEVERITY.MINOR,
@@ -151,7 +153,7 @@ export default class Forms extends Module {
 				icon: this.data.actions.FORM_SHIFT.icon,
 				severity: SEVERITY.MEDIUM,
 				content: <Trans id="mnk.forms.suggestions.reset.content">
-					Try not to cancel combos by using <ActionLink {...this.data.actions.BOOTSHINE}/>, <ActionLink {...this.data.actions.DRAGON_KICK}/>, or <ActionLink {...this.data.actions.ARM_OF_THE_DESTROYER}/> mid-rotation.
+					Try not to cancel combos by using <DataLink action="BOOTSHINE"/>, <DataLink action="DRAGON_KICK"/>, or <DataLink action="ARM_OF_THE_DESTROYER"/> mid-rotation.
 				</Trans>,
 				why: <Trans id="mnk.forms.suggestions.reset.why">
 					<Plural value={this.resetForms} one="# combo was" other="# combos were" /> reset by an Opo-Opo Form skill.

@@ -1,8 +1,8 @@
+import {ActionTimeline} from './ActionTimeline'
 import BattleLitany from './BattleLitany'
 import BloodOfTheDragon from './BloodOfTheDragon'
 import Buffs from './Buffs'
-import Combos from './Combos'
-import Cooldowns from './Cooldowns'
+import {Combos} from './Combos'
 import Debuffs from './Debuffs'
 import DragonSight from './DragonSight'
 import Drift from './Drift'
@@ -14,11 +14,11 @@ import Tincture from './Tincture'
 import Weaving from './Weaving'
 
 export default [
+	ActionTimeline,
 	BattleLitany,
 	BloodOfTheDragon,
 	Buffs,
 	Combos,
-	Cooldowns,
 	Debuffs,
 	DragonSight,
 	Drift,

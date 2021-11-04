@@ -18,12 +18,12 @@ import {UnableToAct} from 'parser/core/modules/UnableToAct'
 import {CompleteEvent} from 'parser/core/Parser'
 import React from 'react'
 import {isSuccessfulHit} from 'utilities'
-import {FIRE_SPELLS, ICE_SPELLS, ICE_SPELLS_TARGETED, ICE_SPELLS_UNTARGETED} from './Elements'
+import {FIRE_SPELLS, ICE_SPELLS_TARGETED, ICE_SPELLS_UNTARGETED} from './Elements'
 
 const ENOCHIAN_DURATION_REQUIRED = 30000
-const ASTRAL_UMBRAL_DURATION = 15000
-const MAX_ASTRAL_UMBRAL_STACKS = 3
-const MAX_UMBRAL_HEART_STACKS = 3
+export const ASTRAL_UMBRAL_DURATION = 15000
+export const MAX_ASTRAL_UMBRAL_STACKS = 3
+export const MAX_UMBRAL_HEART_STACKS = 3
 const MAX_ASTRAL_UMBRAL_CAST_SCALAR = 0.5
 const FLARE_MAX_HEART_CONSUMPTION = 3
 const MAX_POLYGLOT_STACKS = 2
@@ -41,11 +41,6 @@ export interface BLMGaugeState {
 }
 
 declare module 'event' {
-	interface EventTypeRepository {
-		blmgauge: EventBLMGauge
-	}
-}
-declare module 'legacyEvent' {
 	interface EventTypeRepository {
 		blmgauge: EventBLMGauge
 	}
@@ -99,12 +94,20 @@ export default class Gauge extends Analyser {
 	private astralUmbralTimeoutHook!: TimestampHook | null
 	private gainPolyglotHook!: TimestampHook | null
 
+	private fireSpellIds = FIRE_SPELLS.map(key => this.data.actions[key].id)
+	private targetedIceSpellIds = ICE_SPELLS_TARGETED.map(key => this.data.actions[key].id)
+	private untargetedIceSpellIds = ICE_SPELLS_UNTARGETED.map(key => this.data.actions[key].id)
+	private iceSpellIds = [
+		...this.targetedIceSpellIds,
+		...this.untargetedIceSpellIds,
+	]
+
 	private affectsGaugeOnDamage: number[] = [
-		...FIRE_SPELLS,
-		...ICE_SPELLS_TARGETED,
+		...this.fireSpellIds,
+		...this.targetedIceSpellIds,
 	]
 	private affectsGaugeOnCast: number[] = [
-		...ICE_SPELLS_UNTARGETED,
+		...this.untargetedIceSpellIds,
 		this.data.actions.TRANSPOSE.id,
 		this.data.actions.ENOCHIAN.id,
 		this.data.actions.FOUL.id,
@@ -151,12 +154,6 @@ export default class Gauge extends Analyser {
 			gaugeState = this.gaugeHistory.get(historyKey)
 		}
 		return gaugeState
-	}
-	/**
-	 * Fflogs compatibility function to retrieve gauge state at a particular timestamp
-	 * @deprecated */
-	public getFflogsGaugeState(timestamp: number = this.parser.currentTimestamp): BLMGaugeState | undefined {
-		return this.getGaugeState(this.parser.fflogsToEpoch(timestamp))
 	}
 
 	//#region onCast and gauge state modification
@@ -278,10 +275,6 @@ export default class Gauge extends Analyser {
 				type: 'blmgauge',
 				timestamp: this.parser.currentEpochTimestamp,
 			})
-			this.parser.fabricateLegacyEvent({
-				type: 'blmgauge',
-				timestamp: this.parser.currentTimestamp,
-			})
 		}
 	}
 
@@ -292,12 +285,12 @@ export default class Gauge extends Analyser {
 		// If we have gained max AF, set Blizzard spells to be fast
 		if (lastAstralFire !== MAX_ASTRAL_UMBRAL_STACKS && this.currentGaugeState.astralFire === MAX_ASTRAL_UMBRAL_STACKS) {
 			this.castTime.reset(this.castTimeIndex)
-			this.castTimeIndex = this.castTime.setPercentageAdjustment(ICE_SPELLS, MAX_ASTRAL_UMBRAL_CAST_SCALAR)
+			this.castTimeIndex = this.castTime.setPercentageAdjustment(this.iceSpellIds, MAX_ASTRAL_UMBRAL_CAST_SCALAR)
 		}
 		// If we have gained max UI, set Fire spells to be fast
 		if (lastUmbralIce !== MAX_ASTRAL_UMBRAL_STACKS && this.currentGaugeState.umbralIce === MAX_ASTRAL_UMBRAL_STACKS) {
 			this.castTime.reset(this.castTimeIndex)
-			this.castTimeIndex = this.castTime.setPercentageAdjustment(FIRE_SPELLS, MAX_ASTRAL_UMBRAL_CAST_SCALAR)
+			this.castTimeIndex = this.castTime.setPercentageAdjustment(this.fireSpellIds, MAX_ASTRAL_UMBRAL_CAST_SCALAR)
 		}
 		// If our current gauge state doesn't have either max AF or max UI, drop the cast time adjustment entirely
 		if (this.currentGaugeState.astralFire !== MAX_ASTRAL_UMBRAL_STACKS && this.currentGaugeState.umbralIce !== MAX_ASTRAL_UMBRAL_STACKS) {
@@ -524,8 +517,8 @@ export default class Gauge extends Analyser {
 		const droppedEno = this.droppedEnoTimestamps.filter(drop =>
 			this.unableToAct
 				.getWindows({
-					start: this.parser.fflogsToEpoch(drop),
-					end: this.parser.fflogsToEpoch(drop),
+					start: drop,
+					end: drop,
 				})
 				.filter((downtime) => Math.max(0, downtime.end - downtime.start) >= ASTRAL_UMBRAL_DURATION)
 				.length === 0
