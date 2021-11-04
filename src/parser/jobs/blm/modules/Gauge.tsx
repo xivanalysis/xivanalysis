@@ -16,6 +16,7 @@ import React from 'react'
 import {isSuccessfulHit} from 'utilities'
 import {FIRE_SPELLS, ICE_SPELLS_TARGETED, ICE_SPELLS_UNTARGETED} from './Elements'
 
+/** Configuration */
 const ENOCHIAN_DURATION_REQUIRED = 30000
 export const ASTRAL_UMBRAL_DURATION = 15000
 export const MAX_ASTRAL_UMBRAL_STACKS = 3
@@ -23,11 +24,9 @@ export const MAX_UMBRAL_HEART_STACKS = 3
 const MAX_ASTRAL_UMBRAL_CAST_SCALAR = 0.5
 const FLARE_MAX_HEART_CONSUMPTION = 3
 const MAX_POLYGLOT_STACKS = 2
-const ASTRAL_UMBRAL_HANDLE: string = 'astralumbral'
-interface EventBLMGauge extends FieldsBase {
-	type: 'blmgauge',
-}
+const ASTRAL_UMBRAL_HANDLE = 'astralumbral'
 
+/** Gauge state interface for consumers */
 export interface BLMGaugeState {
 	astralFire: number,
 	umbralIce: number,
@@ -36,6 +35,10 @@ export interface BLMGaugeState {
 	enochian: boolean,
 }
 
+/** BLM Gauge Event interface & include in Event repository */
+interface EventBLMGauge extends FieldsBase {
+	type: 'blmgauge',
+}
 declare module 'event' {
 	interface EventTypeRepository {
 		blmgauge: EventBLMGauge
