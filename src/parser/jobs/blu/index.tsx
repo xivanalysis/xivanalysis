@@ -10,7 +10,7 @@ const description = t('blu.about.description')`This is a limited analyzer for a 
 This analyzer will focus on DoTs, uptime, and proper usage of [~action/BRISTLE],[~action/MOON_FLUTE], and [~action/SURPANAKHA].
 `
 
-export default new Meta({
+export const BLUE_MAGE = new Meta({
 	modules: () => import('./modules' /* webpackChunkName: "jobs-blu" */),
 	Description: () => <>
 		<TransMarkdown source={description}/>

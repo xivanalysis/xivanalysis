@@ -11,7 +11,7 @@ Due to the nature of how SMN plays, there may be a near _overwhelming_ number of
 If you would like to learn more about SMN, check the guides over at [Akhmorning](http://www.akhmorning.com/guide/intro/), the resources at [The Balance](https://thebalanceffxiv.com/), and have a chat in the #smn channels.
 `
 
-export default new Meta({
+export const SUMMONER = new Meta({
 	modules: () => import('./modules' /* webpackChunkName: "jobs-smn" */),
 
 	Description: () => <>

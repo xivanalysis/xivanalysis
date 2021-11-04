@@ -2,7 +2,7 @@ import {Trans} from '@lingui/react'
 import {Meta} from 'parser/core/Meta'
 import React from 'react'
 
-export default new Meta({
+export const DRAGOON = new Meta({
 	modules: () => import('./modules' /* webpackChunkName: "jobs-drg" */),
 	Description: () => <>
 		<Trans id="drg.about.description">

@@ -9,7 +9,7 @@ This analyser aims to identify some of the low-hanging fruit that could be used 
 If you would like to learn more about SCH, check the guides over at [The Balance](https://thebalanceffxiv.com/), and have a chat in the #sch_questions channel.
 `
 
-export default new Meta({
+export const SCHOLAR = new Meta({
 	modules: () => import('./modules' /* webpackChunkName: "jobs-sch" */),
 
 	Description: () => <>

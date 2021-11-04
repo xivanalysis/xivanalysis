@@ -9,7 +9,7 @@ You can write the description for the job here. It supports a superset of
 [markdown](https://commonmark.org/).
 `
 
-export default new Meta({
+export const REAPER = new Meta({
 	modules: () => import('./modules' /* webpackChunkName: "jobs-rpr" */),
 
 	Description: () => <TransMarkdown source={description}/>,

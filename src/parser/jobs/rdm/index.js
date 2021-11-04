@@ -3,7 +3,7 @@ import {Meta} from 'parser/core/Meta'
 import React from 'react'
 import {Icon, Message} from 'semantic-ui-react'
 
-export default new Meta({
+export const RED_MAGE = new Meta({
 	modules: () => import('./modules' /* webpackChunkName: "jobs-rdm" */),
 
 	Description: () => <>

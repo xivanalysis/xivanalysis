@@ -12,7 +12,7 @@ The core parts of dancer are proper performance of your dances, preventing your 
 If you would like to learn more about dancer, check out the [comprehensive gameplay guide](https://saltedxiv.com/guides/dnc) by Ringabel Dim.
 `
 
-export default new Meta({
+export const DANCER = new Meta({
 	modules: () => import('./modules' /* webpackChunkName: "jobs-dnc" */),
 
 	Description: () => <>

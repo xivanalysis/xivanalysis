@@ -14,7 +14,7 @@ If you're looking to learn about how exactly the job plays and functions from th
 If you have any suggestions about the module, feel free to join the XIVA discord and use the feedback channels.
 `
 
-export default new Meta({
+export const GUNBREAKER = new Meta({
 	modules: () => import('./modules' /* webpackChunkName: "jobs-gnb" */),
 
 	Description: () => <TransMarkdown source={description}/>,

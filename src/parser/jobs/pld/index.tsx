@@ -4,7 +4,7 @@ import ACTIONS from 'data/ACTIONS'
 import {Meta} from 'parser/core/Meta'
 import React from 'react'
 
-export default new Meta({
+export const PALADIN = new Meta({
 	modules: () => import('./modules' /* webpackChunkName: "jobs-pld" */),
 
 	Description: () => <>

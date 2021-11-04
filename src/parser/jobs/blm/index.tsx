@@ -4,7 +4,7 @@ import ACTIONS from 'data/ACTIONS'
 import {Meta} from 'parser/core/Meta'
 import React from 'react'
 
-export default new Meta({
+export const BLACK_MAGE = new Meta({
 	modules: () => import('./modules' /* webpackChunkName: "jobs-blm" */),
 
 	Description: () => <>

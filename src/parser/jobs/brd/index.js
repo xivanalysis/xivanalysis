@@ -4,7 +4,7 @@ import {Meta} from 'parser/core/Meta'
 import React from 'react'
 import {changelog} from './changelog'
 
-export default new Meta({
+export const BARD = new Meta({
 	modules: () => import('./modules' /* webpackChunkName: "jobs-brd" */),
 
 	Description: () => <>

@@ -2,7 +2,7 @@ import {Trans} from '@lingui/react'
 import {Meta} from 'parser/core/Meta'
 import React from 'react'
 
-export default new Meta({
+export const WARRIOR = new Meta({
 	modules: () => import('./modules' /* webpackChunkName: "jobs-war" */),
 
 	Description: () => <>

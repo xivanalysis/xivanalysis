@@ -2,7 +2,7 @@ import {Trans} from '@lingui/macro'
 import {Meta} from 'parser/core/Meta'
 import React from 'react'
 
-export default new Meta({
+export const MONK = new Meta({
 	modules: () => import('./modules' /* webpackChunkName: "jobs-mnk" */),
 
 	Description: () => <>

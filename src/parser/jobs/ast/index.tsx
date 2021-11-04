@@ -11,7 +11,7 @@ const description = t('ast.about.description-2')`
 Playing any healer requires you to carefully manage your MP and cooldowns to efficiently keep your party alive. If you plan out your heals and communicate with your co-healer, you will naturally end up putting out more DPS with the extra GCDs gained.
 `
 
-export default new Meta({
+export const ASTROLOGIAN = new Meta({
 	modules: () => import('./modules' /*webpackChunkName: "jobs-ast" */),
 
 	Description: () =><>

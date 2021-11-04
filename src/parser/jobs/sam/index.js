@@ -12,7 +12,7 @@ const samDescript = t('sam.about.description')`So you study the blade do you? We
 - [Visual Guide to Samurai rotation](https://i.imgur.com/N52Dliz.png)
 `
 
-export default new Meta({
+export const SAMURAI = new Meta({
 	modules: () => import('./modules' /*webpackChunkName: "jobs-sam" */),
 
 	Description: () => <>

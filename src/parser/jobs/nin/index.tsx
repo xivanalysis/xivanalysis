@@ -2,7 +2,7 @@ import {Trans} from '@lingui/react'
 import {Meta} from 'parser/core/Meta'
 import React from 'react'
 
-export default new Meta({
+export const NINJA = new Meta({
 	modules: () => import('./modules' /* webpackChunkName: "jobs-nin" */),
 	Description: () => <>
 		<Trans id="nin.about.description">

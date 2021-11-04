@@ -5,7 +5,7 @@ import {Actor as FflogsActor, Fight} from 'fflogs'
 import {Report, Pull, Actor} from 'report'
 import {Report as LegacyReport} from 'store/report'
 import {isDefined} from 'utilities'
-import AVAILABLE_MODULES from './AVAILABLE_MODULES'
+import {AVAILABLE_MODULES} from './AVAILABLE_MODULES'
 import Parser, {Result} from './core/Parser'
 
 export class Conductor {

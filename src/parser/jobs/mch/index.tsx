@@ -2,7 +2,7 @@ import {Trans} from '@lingui/macro'
 import {Meta} from 'parser/core/Meta'
 import React from 'react'
 
-export default new Meta({
+export const MACHINIST = new Meta({
 	modules: () => import('./modules' /* webpackChunkName: "jobs-mch" */),
 	Description: () => <>
 		<Trans id="mch.about.description">

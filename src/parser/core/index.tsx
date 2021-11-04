@@ -5,7 +5,7 @@ import {Meta} from './Meta'
 const DEBUG_IS_APRIL_FIRST: boolean = false
 const JS_APRIL_MONTH: number = 3 // JS months start at 0 because reasons
 
-export default new Meta({
+export const CORE = new Meta({
 	modules: () => import('./modules' /* webpackChunkName: "core" */),
 	Description: getIsAprilFirst()
 		? AprilFoolsDescription

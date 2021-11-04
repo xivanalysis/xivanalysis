@@ -13,7 +13,7 @@ Currently this module can track DoT uptime, note when your healing lily gauge is
 Healing analysis can be very subjective - even if some of the below suggestions do not apply to you, they can help inform you about things you may have missed
 `
 
-export default new Meta({
+export const WHITE_MAGE = new Meta({
 	modules: () => import('./modules' /* webpackChunkName: "jobs-whm" */),
 	Description: () => <>
 		<TransMarkdown source={description}/>
