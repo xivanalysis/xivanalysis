@@ -3,7 +3,7 @@ import {Trans} from '@lingui/react'
 import {ActionLink} from 'components/ui/DbLink'
 import JobIcon from 'components/ui/JobIcon'
 import {getDataBy} from 'data'
-import JOBS from 'data/JOBS'
+import {JOBS} from 'data/JOBS'
 import {ActorType, BuffEvent, CastEvent} from 'fflogs'
 import _ from 'lodash'
 import Module, {dependency} from 'parser/core/Module'
@@ -314,7 +314,7 @@ export default class ArcanaSuggestions extends Module {
 		const divID = this.data.actions.DIVINATION.id
 
 		if (artifact.lastEvent.type === 'cast' && this.PLAY.includes(artifact.lastEvent.ability.guid)) {
-			const targetJob = getDataBy(JOBS, 'logType', artifact.targetJob as ActorType)
+			const targetJob = getDataBy(JOBS, 'logType', (artifact.targetJob ?? ActorType.UNKNOWN) as ActorType)
 
 			return <>
 				<Table.Cell>

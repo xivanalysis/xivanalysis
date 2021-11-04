@@ -1,7 +1,7 @@
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
 import {DataLink} from 'components/ui/DbLink'
-import JOBS from 'data/JOBS'
+import {JOBS} from 'data/JOBS'
 import {Event, Events} from 'event'
 import {filter, oneOf} from 'parser/core/filter'
 import {dependency} from 'parser/core/Module'

@@ -1,5 +1,5 @@
 import {Attribute} from 'event'
-import PETS from '../../PETS'
+import {PETS} from '../../PETS'
 import {ensureActions} from '../type'
 
 // use action id of a skill id in the group to avoid potential duplications
