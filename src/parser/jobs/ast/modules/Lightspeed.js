@@ -126,16 +126,12 @@ export default class LIGHTSPEED extends Module {
 				.filter(action => action && action.onGcd)
 			const numGcds = gcdActions.length
 
-			// pre-5.3 mp savings calcuation
-			const mpSavingsDisplay = <>&nbsp;-&nbsp; {gcdActions.reduce((totalSavings, action) => action.mpCost / 2 + totalSavings, 0)} <Trans id="ast.lightspeed.rotation.mp-saved">MP saved</Trans></>
-
 			return {
 				key: lightspeed.start,
 				title: {
 					content: <>
 						{this.parser.formatTimestamp(lightspeed.start)}
 						&nbsp;-&nbsp;<Trans id="ast.lightspeed.rotation.gcd"><Plural value={numGcds} one="# GCD" other="# GCDs"/></Trans>
-						{this.parser.patch.before('5.3') && mpSavingsDisplay}
 					</>,
 				},
 				content: {
@@ -151,12 +147,6 @@ export default class LIGHTSPEED extends Module {
 			fluid
 		/>
 
-		const pre5_3message = <Trans id="ast.lightspeed.messages.explanation">
-			The main use of <ActionLink {...ACTIONS.LIGHTSPEED} /> should be for weaving card actions during <ActionLink {...ACTIONS.DIVINATION} /> and <ActionLink {...ACTIONS.SLEEVE_DRAW} /> windows.<br />
-				It can also be used for MP savings on heavy healing segments, keeping casts up while on the move and other specific scenarios.<br />
-				Each fight calls for a different strategy, but try to utilize it as much as possible.<br /><br />
-				Unless it's being used for <ActionLink {...ACTIONS.ASCEND} />, lightspeed should fit at least 6 GCDs.
-		</Trans>
 		const message = <Trans id="ast.lightspeed.messages.explanation.post5_3">
 			The main use of <ActionLink {...ACTIONS.LIGHTSPEED} /> should be for weaving card actions during <ActionLink {...ACTIONS.DIVINATION} /> and <ActionLink {...ACTIONS.SLEEVE_DRAW} /> windows.<br />
 				It can also be used for keeping casts up while on the move and other specific scenarios.<br />
@@ -166,7 +156,7 @@ export default class LIGHTSPEED extends Module {
 
 		return <Fragment>
 			<p>
-				{this.parser.patch.before('5.3') ? pre5_3message : message}
+				{message}
 			</p>
 			{panels.length > 0 ? lightspeedDisplay : noCastsMessage}
 

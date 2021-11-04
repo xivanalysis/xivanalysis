@@ -78,16 +78,9 @@ export default class DoTs extends Module {
 
 	_onComplete() {
 		// Checklist rule for dot uptime
-		let description = <></>
-		if (this.parser.patch.before('5.08')) {
-			description = <Trans id="smn.dots.checklist.description_505">
-				As a Summoner, DoTs are significant portion of your sustained damage, and are required for optimal damage from your Ruin spells and <ActionLink {...ACTIONS.FESTER} />, your primary stack spender. Aim to keep them up at all times.
-			</Trans>
-		} else {
-			description = <Trans id="smn.dots.checklist.description">
-				As a Summoner, DoTs are significant portion of your sustained damage, and are required for optimal damage from <ActionLink {...ACTIONS.FESTER} />, your primary stack spender. Aim to keep them up at all times.
-			</Trans>
-		}
+		const description = <Trans id="smn.dots.checklist.description">
+			As a Summoner, DoTs are significant portion of your sustained damage, and are required for optimal damage from <ActionLink {...ACTIONS.FESTER} />, your primary stack spender. Aim to keep them up at all times.
+		</Trans>
 		this.checklist.add(new Rule({
 			name: <Trans id="smn.dots.checklist.name">Keep your DoTs up</Trans>,
 			description: description,
