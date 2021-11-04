@@ -418,15 +418,6 @@ export default class ArcanaTracking extends Module {
 		return sealState
 	}
 
-	private startSleeve(): SleeveType {
-		return SleeveType.TWO_STACK
-	}
-
-	private consumeSleeve(sleeveState: SleeveType): SleeveType {
-		sleeveState--
-		return _.clamp(sleeveState, SleeveType.NOTHING, SleeveType.TWO_STACK)
-	}
-
 	/**
 	 * Flips an arcana action id to the matching arcana status id
 	 *

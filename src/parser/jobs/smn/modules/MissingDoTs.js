@@ -82,7 +82,7 @@ export default class MissingDoTs extends Module {
 		const totalPotencyLost = badCasts.reduce((acc, skill) => acc + skill.totalPotencyLost(), 0)
 		const numBadCasts = badCasts.reduce((acc, skill) => acc + skill.totalBadCasts(), 0)
 
-		let content = <Trans id="smn.dots.suggestions.missing_dot_cast.content">
+		const content = <Trans id="smn.dots.suggestions.missing_dot_cast.content">
 			To get the most potency out of your <ActionLink {...ACTIONS.FESTER}/>s, ensure both <StatusLink {...STATUSES.BIO_III}/> and <StatusLink {...STATUSES.MIASMA_III}/> are applied to your target.
 		</Trans>
 		this.suggestions.add(new TieredSuggestion({
