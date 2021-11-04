@@ -1,7 +1,8 @@
 import {ChartDataSets} from 'chart.js'
 import Color from 'color'
 import _ from 'lodash'
-import {AbstractGauge, AbstractGaugeOptions} from './AbstractGauge'
+import {GAUGE_HANDLE} from '../ResourceGraphs/ResourceGraphs'
+import {AbstractGauge, AbstractGaugeOptions, GaugeGraphOptions} from './AbstractGauge'
 
 interface CounterHistory {
 	timestamp: number
@@ -17,8 +18,10 @@ export interface CounterGaugeOptions extends AbstractGaugeOptions {
 	minimum?: number,
 	/** Maximum value of the gauge. Defaults to 100. Value over the maximum will be considered over cap, and tracked if enabled. */
 	maximum?: number,
-	/** Chart options. Omit to disable charting for this gauge. */
+	/** Chart options. Omit to disable charting for this gauge. Superseded by graph if both are provided */
 	chart?: CounterChartOptions,
+	/** Graph options. Omit to disable graphing in the timeline for this gauge. */
+	graph?: GaugeGraphOptions
 }
 
 export interface CounterChartOptions {
@@ -35,6 +38,7 @@ export class CounterGauge extends AbstractGauge {
 	overCap: number = 0
 
 	private chartOptions?: CounterChartOptions
+	private graphOptions?: GaugeGraphOptions
 
 	private history: CounterHistory[] = []
 
@@ -50,6 +54,7 @@ export class CounterGauge extends AbstractGauge {
 		this.maximum = opts.maximum || 100
 
 		this.chartOptions = opts.chart
+		this.graphOptions = opts.graph
 	}
 
 	getValueAt(timestamp: number) {
@@ -102,7 +107,7 @@ export class CounterGauge extends AbstractGauge {
 	}
 
 	private pushHistory() {
-		const timestamp = this.parser.currentTimestamp
+		const timestamp = this.parser.currentEpochTimestamp
 
 		// Ensure we're not generating multiple entries at the samt timestamp
 		const prevTimestamp = this.history.length
@@ -121,15 +126,35 @@ export class CounterGauge extends AbstractGauge {
 	}
 
 	/** @inheritdoc */
+	override generateResourceGraph() {
+		if (this.graphOptions == null) { return }
+
+		const {handle, color, label} = this.graphOptions
+		const graphData = {
+			label,
+			colour: color,
+			data: this.history.map(entry => {
+				return {time: entry.timestamp, current: entry.value, maximum: entry.maximum}
+			}),
+		}
+		if (handle != null) {
+			this.resourceGraphs.addDataGroup({...this.graphOptions, handle})
+			this.resourceGraphs.addData(handle, graphData)
+		} else {
+			this.resourceGraphs.addGauge(graphData, {...this.graphOptions, handle: GAUGE_HANDLE})
+		}
+	}
+
+	/** @inheritdoc */
 	override generateDataset() {
-		// If there's no chart options, provide nothing
-		if (!this.chartOptions) {
+		// If there's no chart options, or if there are graph options, provide nothing (prefer graph)
+		if (this.chartOptions == null || this.graphOptions != null) {
 			return
 		}
 
 		// Map the data into something the chart will understand
 		const data = this.history.map(entry => ({
-			t: entry.timestamp - this.parser.eventTimeOffset,
+			t: entry.timestamp - this.parser.pull.timestamp,
 			y: entry.value,
 		}))
 
