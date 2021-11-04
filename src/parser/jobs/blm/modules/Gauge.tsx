@@ -42,6 +42,18 @@ declare module 'event' {
 	}
 }
 
+/** Graph colors */
+/* eslint-disable @typescript-eslint/no-magic-numbers */
+const STANCE_FADE = 0.5
+const GAUGE_FADE = 0.25
+const ICE_COLOR = Color.rgb(47, 113, 177)
+const FIRE_COLOR = Color.rgb(210, 62, 38)
+const POLYGLOT_COLOR = Color(JOBS.BLACK_MAGE.colour).fade(GAUGE_FADE).toString()
+const UMBRAL_ICE_COLOR = ICE_COLOR.fade(STANCE_FADE).toString()
+const ASTRAL_FIRE_COLOR = FIRE_COLOR.fade(STANCE_FADE).toString()
+const UMBRAL_HEARTS_COLOR = ICE_COLOR.fade(GAUGE_FADE).toString()
+/* eslint-enable @typescript-eslint/no-magic-numbers */
+
 export class Gauge extends CoreGauge {
 	static override handle = 'gauge'
 	static override title = t('blm.gauge.title')`Gauge`
@@ -83,8 +95,7 @@ export class Gauge extends CoreGauge {
 		graph: {
 			handle: ASTRAL_UMBRAL_HANDLE,
 			label: <Trans id="blm.gauge.resource.astral-fire">Astral Fire</Trans>,
-			// eslint-disable-next-line @typescript-eslint/no-magic-numbers
-			color: Color.rgb(210, 62, 38).fade(0.5).toString(),
+			color: ASTRAL_FIRE_COLOR,
 		},
 	}))
 	private umbralIceGauge = this.add(new CounterGauge({
@@ -92,24 +103,21 @@ export class Gauge extends CoreGauge {
 		graph: {
 			handle: ASTRAL_UMBRAL_HANDLE,
 			label: <Trans id="blm.gauge.resource.umbral-ice">Umbral Ice</Trans>,
-			// eslint-disable-next-line @typescript-eslint/no-magic-numbers
-			color: Color.rgb(47, 113, 177).fade(0.5).toString(),
+			color: UMBRAL_ICE_COLOR,
 		},
 	}))
 	private umbralHeartsGauge = this.add(new CounterGauge({
 		maximum: MAX_UMBRAL_HEART_STACKS,
 		graph: {
 			label: <Trans id="blm.gauge.resource.umbral-hearts">Umbral Hearts</Trans>,
-			// eslint-disable-next-line @typescript-eslint/no-magic-numbers
-			color: Color.rgb(47, 113, 177).fade(0.25).toString(),
+			color: UMBRAL_HEARTS_COLOR,
 		},
 	}))
 	private polyglotGauge = this.add(new CounterGauge({
 		maximum: MAX_POLYGLOT_STACKS,
 		graph: {
 			label: <Trans id="blm.gauge.resource.polyglot">Polyglot</Trans>,
-			// eslint-disable-next-line @typescript-eslint/no-magic-numbers
-			color: Color(JOBS.BLACK_MAGE.colour).fade(0.25).toString(),
+			color: POLYGLOT_COLOR,
 		},
 	}))
 	private enochianGauge = this.add(new CounterGauge({
