@@ -8,8 +8,9 @@ import {filter} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
 import {Data} from 'parser/core/modules/Data'
 import Downtime from 'parser/core/modules/Downtime'
-import Suggestions, {Suggestion, TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import Suggestions, {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import React from 'react'
+import {matchClosestHigher} from 'utilities'
 
 const OPTIMAL_GCD_COUNT = 5 // Opener should be Suiton > AE combo > SE before Trick
 
@@ -63,10 +64,7 @@ export class TrickAttackUsage extends Analyser {
 		if (this.taCasts.length > 0) {
 			const lastCast = this.taCasts[this.taCasts.length - 1]
 			const taAvailable = lastCast + this.data.actions.TRICK_ATTACK.cooldown
-			const downtime = this.downtime.getDowntime(
-				this.parser.fflogsToEpoch(taAvailable),
-				this.parser.fflogsToEpoch(event.timestamp),
-			)
+			const downtime = this.downtime.getDowntime(taAvailable, event.timestamp)
 			this.lostTime += Math.max((event.timestamp - taAvailable) - downtime, 0)
 		}
 
@@ -110,18 +108,22 @@ export class TrickAttackUsage extends Analyser {
 					Your first Trick Attack was <Plural value={this.gcdCount} one="# GCD" other="# GCDs"/> into your opener.
 				</Trans>,
 			}))
-		} else {
-			// WHY ARE YOU EVEN PLAYING THIS JOB
-			this.suggestions.add(new Suggestion({
-				icon: this.data.actions.TRICK_ATTACK.icon,
-				content: <Trans id="nin.ta-usage.suggestions.none.content">
-					<ActionLink action="TRICK_ATTACK"/> is the single most powerful raid buff in your kit and should be used on cooldown, or as close to it as possible depending on the flow of the fight.
-				</Trans>,
-				severity: SEVERITY.MAJOR,
-				why: <Trans id="nin.ta-usage.suggestions.none.why">
-					You didn't use Trick Attack once the entire fight.
-				</Trans>,
-			}))
 		}
+
+		// WHY ARE YOU EVEN PLAYING THIS JOB
+		this.suggestions.add(new TieredSuggestion({
+			icon: this.data.actions.TRICK_ATTACK.icon,
+			content: <Trans id="nin.ta-usage.suggestions.none.content">
+				<ActionLink action="TRICK_ATTACK"/> is the single most powerful raid buff in your kit and should be used on cooldown, or as close to it as possible depending on the flow of the fight.
+			</Trans>,
+			value: this.taCasts.length,
+			tiers: {
+				0: SEVERITY.MAJOR,
+			},
+			matcher: matchClosestHigher,
+			why: <Trans id="nin.ta-usage.suggestions.none.why">
+				You didn't use Trick Attack once the entire fight.
+			</Trans>,
+		}))
 	}
 }
