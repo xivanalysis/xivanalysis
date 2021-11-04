@@ -1,5 +1,4 @@
 import {ACN} from './ACN'
-import {ARC} from './ARC'
 import {AST} from './AST'
 import {BLM} from './BLM'
 import {BLU} from './BLU'
@@ -11,15 +10,11 @@ import {DUTY} from './DUTY'
 import {GNB} from './GNB'
 import {ITEM_ID_OFFSET, ITEMS} from './ITEMS'
 import {LIMIT_BREAK} from './LIMIT_BREAK'
-import {LNC} from './LNC'
 import {MCH} from './MCH'
 import {MNK} from './MNK'
-import {MRD} from './MRD'
 import {NIN} from './NIN'
-import {PGL} from './PGL'
 import {PLD} from './PLD'
 import {RDM} from './RDM'
-import {ROG} from './ROG'
 import {ROLE} from './ROLE'
 import {SAM} from './SAM'
 import {SCH} from './SCH'
@@ -37,12 +32,7 @@ export const root = {
 	...ITEMS,
 	...LIMIT_BREAK,
 
-	...ROG,
-	...ARC,
 	...ACN,
-	...MRD,
-	...PGL,
-	...LNC,
 
 	...PLD,
 	...WAR,
