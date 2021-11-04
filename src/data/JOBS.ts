@@ -144,6 +144,14 @@ const JOBS = {
 		colour: '#ffe74a',
 		role: 'HEALER',
 	},
+	SAGE: {
+		name: t('game.job.sage')`Sage`,
+		logType: ActorType.SAGE,
+		speedStat: Attribute.SPELL_SPEED,
+		icon: 'sge',
+		colour: '#000000', // TODO
+		role: 'HEALER',
+	},
 
 	// Melee
 	MONK: {
@@ -176,6 +184,14 @@ const JOBS = {
 		speedStat: Attribute.SKILL_SPEED,
 		icon: 'sam',
 		colour: '#e46d04',
+		role: 'MELEE',
+	},
+	REAPER: {
+		name: t('game.job.reaper')`Reaper`,
+		logType: ActorType.REAPER,
+		speedStat: Attribute.SKILL_SPEED,
+		icon: 'rpr',
+		colour: '#000000', // TODO
 		role: 'MELEE',
 	},
 

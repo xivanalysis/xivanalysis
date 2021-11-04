@@ -15,8 +15,10 @@ import MONK from './jobs/mnk'
 import NINJA from './jobs/nin'
 import PALADIN from './jobs/pld'
 import RED_MAGE from './jobs/rdm'
+import REAPER from './jobs/rpr'
 import SAMURAI from './jobs/sam'
 import SCHOLAR from './jobs/sch'
+import SAGE from './jobs/sge'
 import SUMMONER from './jobs/smn'
 import WARRIOR from './jobs/war'
 import WHITE_MAGE from './jobs/whm'
@@ -39,11 +41,13 @@ const AVAILABLE_MODULES: AvailableModules = {
 		WHITE_MAGE,
 		SCHOLAR,
 		ASTROLOGIAN,
+		SAGE,
 
 		MONK,
 		DRAGOON,
 		NINJA,
 		SAMURAI,
+		REAPER,
 
 		BARD,
 		MACHINIST,
