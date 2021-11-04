@@ -12,7 +12,7 @@ export default new Meta({
 		: undefined,
 	changelog,
 	supportedPatches: {
-		from: '5.08',
+		from: '6.0',
 		to: 'Perpetuity - CORE ONLY',
 	},
 })
