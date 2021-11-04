@@ -2,7 +2,6 @@ import {t} from '@lingui/macro'
 import {getDataBy} from 'data'
 import {ActionRoot} from 'data/ACTIONS/root'
 import {BuffEvent, CastEvent, DeathEvent} from 'fflogs'
-import {Event} from 'legacyEvent'
 import _ from 'lodash'
 import Module, {dependency} from 'parser/core/Module'
 import {Data} from 'parser/core/modules/Data'
@@ -116,62 +115,6 @@ export default class ArcanaTracking extends Module {
 		this.addEventHook('applybuff', {abilityId: this.DRAWN_ARCANA, by: 'player'}, this.onDrawnStatus)
 		this.addEventHook('removebuff', {abilityId: this.DRAWN_ARCANA, by: 'player'}, this.offDrawnStatus)
 		this.addEventHook('death', {to: 'player'}, this.onDeath)
-	}
-
-	override normalise(events: Event[]) {
-		// The whole point of this module was to support "pre-5.3" Three-card Sleeve Draw
-		if (!this.parser.patch.before('5.3')) {
-			return events
-		}
-
-		const startTime = this.parser.fight.start_time
-		let prepullSleeve = true
-		let prepullSleeveFabbed = false
-		const sleeveDrawLog: CastEvent[] = []
-		for (const event of events) {
-			if (event.timestamp < startTime && event.type === 'cast' && this.data.actions.SLEEVE_DRAW.id === event.ability.guid) {
-				// sleeve was already fabbed
-				prepullSleeveFabbed = true
-			}
-			if (event.timestamp - startTime >= this.data.statuses.SLEEVE_DRAW.duration) {
-				// End loop if: 1. Max duration of sleeve draw status passed
-				break
-			} else if (event.type === 'cast'
-				&& this.data.actions.SLEEVE_DRAW.id === event.ability.guid
-				&& event.timestamp >= startTime) {
-				// they used sleeve so it can't have been prepull
-				prepullSleeve = false
-			} else if (event.type === 'cast' && this.data.actions.DRAW.id === event.ability.guid) {
-				sleeveDrawLog.push(event)
-			} else {
-				continue
-			}
-		}
-
-		// if they drew 2-3 cards in the first 30 sec, we can assume they had a sleeve draw
-		if (prepullSleeve && _.inRange(sleeveDrawLog.length, SleeveType.TWO_STACK, SleeveType.TWO_STACK + 2)) {
-			this.cardStateLog[0].sleeveState = sleeveDrawLog.length
-			// prefab a sleeve draw if there isn't already
-			if (!prepullSleeveFabbed) {
-				events.splice(0, 0, {
-					ability: {
-						abilityIcon: sleeveDrawLog.length > 2 ? '019000/019562.png' : '019000/019561.png',
-						guid: 7448,
-						name: 'Sleeve Draw',
-						type: 1,
-					},
-					sourceID: this.parser.player.id,
-					sourceIsFriendly: true,
-					targetID: this.parser.player.id,
-					targetIsFriendly: true,
-					type: 'cast',
-					timestamp: startTime,
-				})
-			}
-		}
-
-		return events
-
 	}
 
 	public get cardLogs() {
@@ -337,10 +280,6 @@ export default class ArcanaTracking extends Module {
 			}
 			const sealState = [...cardStateItem.sealState]
 			cardStateItem.sealState = this.addSeal(sealObtained, sealState)
-
-			if (cardStateItem.sleeveState > SleeveType.NOTHING && this.parser.patch.before('5.3')) {
-				cardStateItem.sleeveState = this.consumeSleeve(cardStateItem.sleeveState)
-			}
 		}
 
 		if (actionId === this.data.actions.DIVINATION.id) {
@@ -349,11 +288,6 @@ export default class ArcanaTracking extends Module {
 
 		if (actionId === this.data.actions.UNDRAW.id) {
 			cardStateItem.drawState = undefined
-		}
-
-		if (actionId === this.data.actions.SLEEVE_DRAW.id && this.parser.patch.before('5.3')) {
-			// only happens pre 5.3
-			cardStateItem.sleeveState = this.startSleeve()
 		}
 
 		this.cardStateLog.push(cardStateItem)
@@ -434,9 +368,10 @@ export default class ArcanaTracking extends Module {
 		// We can skip search+replace for the latest card event if that was a way to lose a card in draw slot.
 		// 1. The standard ways of losing something in draw slot.
 		// 2. If they used Draw while holding a Minor Arcana or Draw
-		if ([this.data.actions.UNDRAW.id, ...this.PLAY, this.data.actions.REDRAW.id].includes(latestActionId)
+		if (
+			[this.data.actions.UNDRAW.id, ...this.PLAY, this.data.actions.REDRAW.id].includes(latestActionId)
 			|| (this.data.actions.DRAW.id === latestActionId && lastLog.drawState && this.DRAWN_ARCANA.includes(lastLog.drawState))
-			|| (this.parser.patch.before('5.1') && [this.data.actions.MINOR_ARCANA.id].includes(latestActionId))) {
+		) {
 			searchLatest = false
 		}
 
@@ -456,7 +391,7 @@ export default class ArcanaTracking extends Module {
 			// Modify log, they were holding onto this card since index
 			// Differenciate depending on searchLatest
 			let arcanaStatus: number | undefined
-			if (!this.parser.patch.before('5.1') && this.lastDrawnBuff && this.CROWN_PLAYS.includes(cardActionId)) {
+			if (this.lastDrawnBuff && this.CROWN_PLAYS.includes(cardActionId)) {
 				arcanaStatus = this.lastDrawnBuff.ability.guid
 			} else {
 				arcanaStatus = this.arcanaActionToStatus(cardActionId)

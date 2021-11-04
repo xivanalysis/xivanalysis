@@ -24,7 +24,6 @@ export default class StormsEye extends Module {
 
 	private earlyEyes: number = 0
 	private totalEyes: number = 0
-	private lastRefresh: number = this.parser.fight.start_time
 
 	protected override init(): void {
 		this.addEventHook('applybuff', {by: 'player', abilityId: STATUSES.STORMS_EYE.id}, this.onGain)
@@ -32,19 +31,11 @@ export default class StormsEye extends Module {
 		this.addEventHook('complete', this.onComplete)
 	}
 
-	onGain(event: BuffEvent): void {
-		this.lastRefresh = event.timestamp
+	onGain(): void {
 		this.totalEyes++
 
 		if (this.totalEyes < 2) {
 			return
-		}
-
-		if (this.parser.patch.before('5.3')) {
-			const remaining = event.timestamp - this.lastRefresh
-			if (remaining < STATUSES.STORMS_EYE.duration - STORMS_EYE_BUFFER) {
-				this.earlyEyes++
-			}
 		}
 	}
 
