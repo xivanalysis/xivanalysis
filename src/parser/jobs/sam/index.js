@@ -1,7 +1,6 @@
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
 import TransMarkdown from 'components/ui/TransMarkdown'
-import CONTRIBUTORS, {ROLES} from 'data/CONTRIBUTORS'
 import {Meta} from 'parser/core/Meta'
 import React from 'react'
 import {Icon, Message} from 'semantic-ui-react'
@@ -13,7 +12,7 @@ const samDescript = t('sam.about.description')`So you study the blade do you? We
 - [Visual Guide to Samurai rotation](https://i.imgur.com/N52Dliz.png)
 `
 
-export default new Meta({
+export const SAMURAI = new Meta({
 	modules: () => import('./modules' /*webpackChunkName: "jobs-sam" */),
 
 	Description: () => <>
@@ -24,115 +23,20 @@ export default new Meta({
 		</Message>
 	</>,
 
-	supportedPatches: {
-		from: '5.1',
-		to: '5.5',
-	},
+	// supportedPatches: {
+	// 	from: '6.0',
+	// 	to: '6.0',
+	// },
 
 	contributors: [
-		{user: CONTRIBUTORS.RYAN, role: ROLES.MAINTAINER},
+		// {user: CONTRIBUTORS.YOU, role: ROLES.DEVELOPER},
 	],
 
-	changelog: [{
-		date: new Date('2020-12-17'),
-		Changes: () => <>
-			Samurai Support updated to 5.4
-		</>,
-		contributors: [CONTRIBUTORS.RYAN],
-	},	{
-		date: new Date('2020-8-10'),
-		Changes: () => <>
-			Samurai support updated to 5.3
-		</>,
-		contributors: [CONTRIBUTORS.RYAN],
-	}, {
-		date: new Date('2020-6-9'),
-		Changes: () => <>
-			Added a visual history of Higanbana that shows when and on what the dot was applied to and clipping
-		</>,
-		contributors: [CONTRIBUTORS.RYAN],
-	}, {
-		date: new Date('2020-5-14'),
-		Changes: () => <>
-			Updated feedback on Samurai Sen usage, also updated the header with text guides
-		</>,
-		contributors: [CONTRIBUTORS.RYAN],
-	}, {
-		date: new Date('2020-3-30'),
-		Changes: () => <>
-			Updated SAM support to include the interrupt module recently added to core.
-		</>,
-		contributors: [CONTRIBUTORS.RYAN],
-	}, {
-		date: new Date('2020-2-21'),
-		Changes: () => <>
-			Updated SAM support for patch 5.2 along with some backend changes
-			<ul>
-				<li> Shoha tracking has been fixed after the gauge move. Damn you SE and hiding data! </li>
-				<li> AoE usage has been converted to core as requested </li>
-				<li> Guren/Senei has been moved to OGCD Tracker </li>
-			</ul>
-		</>,
-		contributors: [CONTRIBUTORS.RYAN],
-	}, {
-		date: new Date('2019-11-12'),
-		Changes: () => <>
-			Updated SAM support for patch 5.1 along with some user requested changes
-			<ul>
-				<li> Shoha tracking has been added along with visual </li>
-				<li> Meikyo visual has been changed to show just the GCDs done under it, minus iaijutsu </li>
-				<li> Changed data for patch 5.1 </li>
-			</ul>
-		</>,
-		contributors: [CONTRIBUTORS.RYAN],
-	}, {
-		date: new Date('2019-9-16'),
-		Changes: () => <>
-			Updated SAM support based on feedback/feature requests.
-			<ul>
-				<li> AOE checker has been added. </li>
-				<li> Meikyo now works off core so there's a nice visual </li>
-				<li> Updated suggestion feedback to all minor for third eye proc spending due to small impact in the grand scheme of things </li>
-			</ul>
-		</>,
-		contributors: [CONTRIBUTORS.RYAN],
-	}, {
-		date: new Date('2019-8-19'),
-		Changes: () => <>
-			5.05 SAM support plus some logic changes, including:&nbsp;
-			<ul>
-				<li>OGCD drift checks moved to core instead of SAM-only logic</li>
-				<li>Removal of Sen overwritten allowance and returning of Hagakure</li>
-				<li>Removal of Missed/Drift seconds suggestions</li>
-			</ul>
-		</>,
-		contributors: [CONTRIBUTORS.RYAN],
-	}, {
-		date: new Date('2019-7-29'),
-		Changes: () => <> Fixed bugs with combos and a few typos </>,
-		contributors: [CONTRIBUTORS.RYAN],
-	}, {
-		date: new Date('2019-7-27'),
-		Changes: () => <> Added Drift check and use check to Tsubame, cleaned up some displays, offical Sam support enabled </>,
-		contributors: [CONTRIBUTORS.RYAN],
-	}, {
-		date: new Date('2019-7-24'),
-		Changes: () => <>Added Drift check to Meikyo Shisui along with use check. </>,
-		contributors: [CONTRIBUTORS.RYAN],
-	}, {
-		date: new Date('2019-07-22'),
-		Changes: () => <>Fixed speed buff provided by Shifu. GCD estimations should be improved.</>,
-		contributors: [CONTRIBUTORS.ACKWELL],
-	}, {
-		date: new Date('2019-07-21'),
-		Changes: () => <>
-			Initial support for 5.0 SAM, including:&nbsp;
-			<ul>
-				<li>Checks for overwritten sen, with allowance for forced wastage due to Tsubame.</li>
-				<li>Stricter checks for Third Eye.</li>
-				<li>Removing Hagakure logic.</li>
-			</ul>
-		</>,
-		contributors: [CONTRIBUTORS.RYAN],
-	}],
+	changelog: [
+		// {
+		// 	date: new Date('2021-11-19'),
+		// 	Changes: () => <>The changes you made</>,
+		// 	contrubutors: [CONTRIBUTORS.YOU],
+		// },
+	],
 })

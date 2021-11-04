@@ -164,7 +164,7 @@ export const AST = ensureStatuses({
 		id: 1891,
 		name: 'Horoscope Helios',
 		icon: 'https://xivapi.com/i/013000/013252.png',
-		duration: 20000,
+		duration: 30000,
 	},
 
 	NEUTRAL_SECT: {
@@ -183,7 +183,7 @@ export const AST = ensureStatuses({
 
 	DIURNAL_BALANCE: {
 		id: 1920,
-		name: 'Diurnal Balance',
+		name: 'Diurnal Balance (Benefic)',
 		icon: 'https://xivapi.com/i/013000/013254.png',
 		duration: 15000,
 	},

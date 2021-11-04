@@ -1,9 +1,8 @@
 import {Trans} from '@lingui/react'
-import CONTRIBUTORS, {ROLES} from 'data/CONTRIBUTORS'
 import {Meta} from 'parser/core/Meta'
 import React from 'react'
 
-export default new Meta({
+export const NINJA = new Meta({
 	modules: () => import('./modules' /* webpackChunkName: "jobs-nin" */),
 	Description: () => <>
 		<Trans id="nin.about.description">
@@ -12,41 +11,18 @@ export default new Meta({
 			<p>*Results not guaranteed. Offer void where prohibited. Please don't sue us.</p>
 		</Trans>
 	</>,
-	supportedPatches: {
-		from: '5.1',
-		to: '5.5',
-	},
+	// supportedPatches: {
+	// 	from: '6.0',
+	// 	to: '6.0',
+	// },
 	contributors: [
-		{user: CONTRIBUTORS.TOASTDEIB, role: ROLES.MAINTAINER},
+		// {user: CONTRIBUTORS.YOU, role: ROLES.DEVELOPER},
 	],
-	changelog: [{
-		date: new Date('2021-02-27'),
-		Changes: () => <>Corrected cases where Trick Attack windows could be improperly split in Shadowkeeper..</>,
-		contributors: [CONTRIBUTORS.KELOS],
-	},
-	{
-		date: new Date('2020-05-25'),
-		Changes: () => <>Included OGCD usage tracking in the checklist.</>,
-		contributors: [CONTRIBUTORS.TOASTDEIB],
-	},
-	{
-		date: new Date('2019-11-22'),
-		Changes: () => <>Updated the Kassatsu module to check for Fuma/Raiton uses.</>,
-		contributors: [CONTRIBUTORS.TOASTDEIB],
-	},
-	{
-		date: new Date('2019-11-05'),
-		Changes: () => <>Updated modules for 5.1 support.</>,
-		contributors: [CONTRIBUTORS.TOASTDEIB],
-	},
-	{
-		date: new Date('2019-07-21'),
-		Changes: () => <>Updated a number of modules with small correctness tweaks for Shadowbringers action changes.</>,
-		contributors: [CONTRIBUTORS.TOASTDEIB],
-	},
-	{
-		date: new Date('2019-07-07'),
-		Changes: () => <>Double weaving is no longer frowned upon, plus small bugfixes for the Hellfrog and Kassatsu suggestions.</>,
-		contributors: [CONTRIBUTORS.TOASTDEIB],
-	}],
+	changelog: [
+		// {
+		// 	date: new Date('2021-11-19'),
+		// 	Changes: () => <>The changes you made</>,
+		// 	contrubutors: [CONTRIBUTORS.YOU],
+		// },
+	],
 })

@@ -6,7 +6,7 @@ import JobIcon from 'components/ui/JobIcon'
 import NormalisedMessage from 'components/ui/NormalisedMessage'
 import JOBS, {Role, RoleKey, ROLES, JobKey} from 'data/JOBS'
 import {patchSupported} from 'data/PATCHES'
-import AVAILABLE_MODULES from 'parser/AVAILABLE_MODULES'
+import {AVAILABLE_MODULES} from 'parser/AVAILABLE_MODULES'
 import React, {ReactNode, useCallback} from 'react'
 import {useRouteMatch, Link, useParams} from 'react-router-dom'
 import {Report, Actor, Pull} from 'report'
@@ -148,12 +148,13 @@ interface ActorLinkProps {
 function ActorLink({actor}: ActorLinkProps) {
 	const {url} = useRouteMatch()
 
-	let meta = AVAILABLE_MODULES.CORE
-
 	const job = JOBS[actor.job]
-	const jobMeta = AVAILABLE_MODULES.JOBS[actor.job]
-	if (jobMeta != null) {
-		meta = meta.merge(jobMeta)
+	let meta = AVAILABLE_MODULES.JOBS[actor.job]
+
+	// We avoid merging core if there's no supported patch so we don't end up
+	// showing core's support range on unsupported jobs.
+	if (meta?.supportedPatches != null) {
+		meta = AVAILABLE_MODULES.CORE.merge(meta)
 	}
 
 	let supportedPatches: ReactNode

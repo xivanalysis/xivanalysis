@@ -1,6 +1,5 @@
 import {t, Trans} from '@lingui/macro'
 import TransMarkdown from 'components/ui/TransMarkdown'
-import CONTRIBUTORS, {ROLES} from 'data/CONTRIBUTORS'
 import {Meta} from 'parser/core/Meta'
 import React from 'react'
 import {Icon, Message} from 'semantic-ui-react'
@@ -13,7 +12,7 @@ The core parts of dancer are proper performance of your dances, preventing your 
 If you would like to learn more about dancer, check out the [comprehensive gameplay guide](https://saltedxiv.com/guides/dnc) by Ringabel Dim.
 `
 
-export default new Meta({
+export const DANCER = new Meta({
 	modules: () => import('./modules' /* webpackChunkName: "jobs-dnc" */),
 
 	Description: () => <>
@@ -26,14 +25,13 @@ export default new Meta({
 		</Message>
 	</>,
 
-	supportedPatches: {
-		from: '5.0',
-		to: '5.5',
-	},
+	// supportedPatches: {
+	// 	from: '6.0',
+	// 	to: '6.0',
+	// },
 
 	contributors: [
-		{user: CONTRIBUTORS.AKAIRYU, role: ROLES.MAINTAINER},
-		{user: CONTRIBUTORS.TWO_BROKEN, role: ROLES.DEVELOPER},
+		// {user: CONTRIBUTORS.YOU, role: ROLES.DEVELOPER},
 	],
 
 	changelog,

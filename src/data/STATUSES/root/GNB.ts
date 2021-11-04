@@ -11,7 +11,7 @@ export const GNB = ensureStatuses({
 		id: 1898,
 		name: 'Brutal Shell',
 		icon: 'https://xivapi.com/i/013000/013614.png',
-		duration: 10000,
+		duration: 30000,
 	},
 	BOW_SHOCK: {
 		id: 1838,

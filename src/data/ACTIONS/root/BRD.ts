@@ -4,6 +4,82 @@ import {ensureActions} from '../type'
 // tslint:disable:no-magic-numbers
 
 export const BRD = ensureActions({
+	// Archer
+	HEAVY_SHOT: {
+		id: 97,
+		name: 'Heavy Shot',
+		icon: 'https://xivapi.com/i/000000/000358.png',
+		onGcd: true,
+		speedAttribute: Attribute.SKILL_SPEED,
+		potency: 180,
+	},
+	VENOMOUS_BITE: {
+		id: 100,
+		name: 'Venomous Bite',
+		icon: 'https://xivapi.com/i/000000/000363.png',
+		onGcd: true,
+		speedAttribute: Attribute.SKILL_SPEED,
+		potency: 30,
+	},
+	QUICK_NOCK: {
+		id: 106,
+		name: 'Quick Nock',
+		icon: 'https://xivapi.com/i/000000/000360.png',
+		onGcd: true,
+		speedAttribute: Attribute.SKILL_SPEED,
+		potency: 150,
+	},
+	BLOODLETTER: {
+		id: 110,
+		name: 'Bloodletter',
+		icon: 'https://xivapi.com/i/000000/000361.png',
+		onGcd: false,
+		speedAttribute: Attribute.SKILL_SPEED,
+		cooldown: 15000,
+		potency: 150,
+		cooldownGroup: 5,
+	},
+	STRAIGHT_SHOT: {
+		id: 98,
+		name: 'Straight Shot',
+		icon: 'https://xivapi.com/i/000000/000359.png',
+		onGcd: true,
+		speedAttribute: Attribute.SKILL_SPEED,
+		potency: 200,
+	},
+	BARRAGE: {
+		id: 107,
+		name: 'Barrage',
+		icon: 'https://xivapi.com/i/000000/000353.png',
+		onGcd: false,
+		cooldown: 80000,
+		statusesApplied: ['BARRAGE'],
+	},
+	WINDBITE: {
+		id: 113,
+		name: 'Windbite',
+		icon: 'https://xivapi.com/i/000000/000367.png',
+		onGcd: true,
+		speedAttribute: Attribute.SKILL_SPEED,
+		potency: 40,
+	},
+	RAGING_STRIKES: {
+		id: 101,
+		name: 'Raging Strikes',
+		icon: 'https://xivapi.com/i/000000/000352.png',
+		onGcd: false,
+		cooldown: 80000,
+		statusesApplied: ['RAGING_STRIKES'],
+	},
+	REPELLING_SHOT: {
+		id: 112,
+		name: 'Repelling Shot',
+		icon: 'https://xivapi.com/i/000000/000366.png',
+		onGcd: false,
+		cooldown: 30000,
+	},
+
+	// Bard
 	MAGES_BALLAD: {
 		id: 114,
 		name: 'Mage\'s Ballad',
@@ -75,7 +151,7 @@ export const BRD = ensureActions({
 		icon: 'https://xivapi.com/i/002000/002610.png',
 		onGcd: false,
 		cooldown: 60000,
-		potency: [100, 175, 260],
+		potency: [100, 200, 300],
 		cooldownGroup: 13,
 	},
 	PITCH_PERFECT: {
@@ -91,7 +167,7 @@ export const BRD = ensureActions({
 		name: 'Troubadour',
 		icon: 'https://xivapi.com/i/002000/002612.png',
 		onGcd: false,
-		cooldown: 180000,
+		cooldown: 120000,
 		statusesApplied: ['TROUBADOUR'],
 	},
 	CAUSTIC_BITE: {
@@ -100,7 +176,7 @@ export const BRD = ensureActions({
 		icon: 'https://xivapi.com/i/002000/002613.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		potency: 150,
+		potency: 40,
 		statusesApplied: ['CAUSTIC_BITE'],
 	},
 	STORMBITE: {
@@ -108,7 +184,7 @@ export const BRD = ensureActions({
 		name: 'Stormbite',
 		icon: 'https://xivapi.com/i/002000/002614.png',
 		onGcd: true,
-		potency: 100,
+		potency: 50,
 		statusesApplied: ['STORMBITE'],
 	},
 	NATURES_MINNE: {
@@ -133,7 +209,7 @@ export const BRD = ensureActions({
 		icon: 'https://xivapi.com/i/002000/002617.png',
 		onGcd: false,
 		cooldown: 60000,
-		potency: [100, 160, 220],
+		potency: [100, 200, 350],
 		cooldownGroup: 13,
 	},
 	BURST_SHOT: {
@@ -142,7 +218,7 @@ export const BRD = ensureActions({
 		icon: 'https://xivapi.com/i/002000/002618.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		potency: 230,
+		potency: 250,
 	},
 	APEX_ARROW: {
 		id: 16496,

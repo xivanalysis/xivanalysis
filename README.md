@@ -6,7 +6,7 @@
 	<a href="https://discord.gg/jVbVe44" title="Discord"><img src="https://img.shields.io/discord/441414116914233364.svg?style=flat-square&amp;logo=discord&amp;colorB=7289DA" alt="Discord"></a>
 </p>
 
-Automated performance analysis and suggestion platform for Final Fantasy XIV: Shadowbringers, using data sourced from [FF Logs](https://www.fflogs.com/).
+Automated performance analysis and suggestion platform for Final Fantasy XIV, using data sourced from [FF Logs](https://www.fflogs.com/).
 
 If you'd like to contribute, check past [our developer documentation](https://docs.xivanalysis.com/) for an introduction to the project and steps to get started!
 

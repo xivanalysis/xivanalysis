@@ -2,16 +2,12 @@ import {Trans} from '@lingui/react'
 import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
-import {BuffEvent} from 'fflogs'
 import Module, {dependency} from 'parser/core/Module'
 import {Actors} from 'parser/core/modules/Actors'
 import Checklist, {Rule, Requirement} from 'parser/core/modules/Checklist'
 import {Invulnerability} from 'parser/core/modules/Invulnerability'
 import {Statuses} from 'parser/core/modules/Statuses'
-import Suggestions, {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import React from 'react'
-
-const STORMS_EYE_BUFFER = 7000
 
 export default class StormsEye extends Module {
 	static override handle = 'stormseye'
@@ -20,11 +16,8 @@ export default class StormsEye extends Module {
 	@dependency private checklist!: Checklist
 	@dependency private invulnerability!: Invulnerability
 	@dependency private statuses!: Statuses
-	@dependency private suggestions!: Suggestions
 
-	private earlyEyes: number = 0
 	private totalEyes: number = 0
-	private lastRefresh: number = this.parser.fight.start_time
 
 	protected override init(): void {
 		this.addEventHook('applybuff', {by: 'player', abilityId: STATUSES.STORMS_EYE.id}, this.onGain)
@@ -32,19 +25,11 @@ export default class StormsEye extends Module {
 		this.addEventHook('complete', this.onComplete)
 	}
 
-	onGain(event: BuffEvent): void {
-		this.lastRefresh = event.timestamp
+	onGain(): void {
 		this.totalEyes++
 
 		if (this.totalEyes < 2) {
 			return
-		}
-
-		if (this.parser.patch.before('5.3')) {
-			const remaining = event.timestamp - this.lastRefresh
-			if (remaining < STATUSES.STORMS_EYE.duration - STORMS_EYE_BUFFER) {
-				this.earlyEyes++
-			}
 		}
 	}
 
@@ -59,20 +44,6 @@ export default class StormsEye extends Module {
 					percent: () => this.getUptimePercent(),
 				}),
 			],
-		}))
-
-		this.suggestions.add(new TieredSuggestion({
-			icon: ACTIONS.STORMS_EYE.icon,
-			content: <Trans id="war.suggestions.stormseye.content">
-					Avoid refreshing {ACTIONS.STORMS_EYE.name} significantly before its expiration -- That might be making you possibly lose <ActionLink {...ACTIONS.STORMS_PATH} /> uses.
-			</Trans>,
-			tiers: {
-				1: SEVERITY.MEDIUM,
-			},
-			value: this.earlyEyes,
-			why: <Trans id="war.suggestions.stormseye.why">
-				{this.earlyEyes} reapplications that were {STORMS_EYE_BUFFER / 1000} or more seconds before expiration.
-			</Trans>,
 		}))
 	}
 

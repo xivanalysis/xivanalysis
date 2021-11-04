@@ -14,8 +14,10 @@ import {NIN} from './NIN'
 import {PLD} from './PLD'
 import {RDM} from './RDM'
 import {ROLE} from './ROLE'
+import {RPR} from './RPR'
 import {SAM} from './SAM'
 import {SCH} from './SCH'
+import {SGE} from './SGE'
 import {SHARED} from './SHARED'
 import {SMN} from './SMN'
 import {WAR} from './WAR'
@@ -35,11 +37,13 @@ export const root = {
 	...SCH,
 	...AST,
 	...WHM,
+	...SGE,
 
 	...MNK,
 	...DRG,
 	...NIN,
 	...SAM,
+	...RPR,
 
 	...BRD,
 	...MCH,

@@ -35,7 +35,7 @@ export const AST = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 2000,
-		mpCost: 900,
+		mpCost: 700,
 	},
 
 	ASCEND: {
@@ -83,7 +83,7 @@ export const AST = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 0,
-		mpCost: 500,
+		mpCost: 400,
 	},
 
 	COMBUST_III: {
@@ -103,7 +103,7 @@ export const AST = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 1500,
-		mpCost: 700,
+		mpCost: 600,
 	},
 
 	ESSENTIAL_DIGNITY: {
@@ -121,7 +121,7 @@ export const AST = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 2000,
-		mpCost: 1000,
+		mpCost: 800,
 	},
 
 	ASPECTED_HELIOS_NOCTURNAL: {
@@ -141,7 +141,7 @@ export const AST = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 0,
-		mpCost: 500,
+		mpCost: 400,
 	},
 
 	ASPECTED_BENEFIC_NOCTURNAL: {
@@ -151,7 +151,7 @@ export const AST = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 0,
-		mpCost: 900,
+		mpCost: 700,
 	},
 
 	HELIOS: {
@@ -161,7 +161,7 @@ export const AST = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 2000,
-		mpCost: 900,
+		mpCost: 700,
 	},
 
 	SYNASTRY: {
@@ -176,11 +176,13 @@ export const AST = ensureActions({
 		id: 3613,
 		name: 'Collective Unconscious',
 		icon: 'https://xivapi.com/i/003000/003140.png',
-		cooldown: 90000,
+		cooldown: 60000,
 		statusesApplied: [
 			'COLLECTIVE_UNCONSCIOUS_DIURNAL_MITIGATION',
 			'COLLECTIVE_UNCONSCIOUS',
 			'WHEEL_OF_FORTUNE_DIURNAL',
+			'COLLECTIVE_UNCONSCIOUS_NOCTURNAL',
+			'WHEEL_OF_FORTUNE_NOCTURNAL',
 		],
 	},
 

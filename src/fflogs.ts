@@ -48,10 +48,12 @@ export enum ActorType {
 	WHITE_MAGE = 'WhiteMage',
 	SCHOLAR = 'Scholar',
 	ASTROLOGIAN = 'Astrologian',
+	SAGE = 'Sage', // TODO: Check
 	MONK = 'Monk',
 	DRAGOON = 'Dragoon',
 	NINJA = 'Ninja',
 	SAMURAI = 'Samurai',
+	REAPER = 'Reaper', // TODO: Check
 	BARD = 'Bard',
 	MACHINIST = 'Machinist',
 	DANCER = 'Dancer',

@@ -35,63 +35,19 @@ const patchData = {
 			baseUrl: 'https://stormblood.xivanalysis.com',
 		},
 	},
-	'5.0': {
+	'Shadowbringers': {
 		date: {
 			[GameEdition.GLOBAL]: 1561712400, // 28/06/19 09:00:00 GMT
+			[GameEdition.KOREAN]: 1575360000, // 03/12/19 08:00:00 GMT
 			[GameEdition.CHINESE]: 1571126400, // 15/10/19 08:00:00 GMT
 		},
-	},
-	'5.01': {
-		date: {
-			[GameEdition.GLOBAL]: 1563267600, // 16/07/19 09:00:00 GMT
-			[GameEdition.CHINESE]: 1574150400, // 19/11/19 08:00:00 GMT
+		branch: {
+			baseUrl: 'https://shadowbringers.xivanalysis.com',
 		},
 	},
-	'5.05': {
+	'6.0': {
 		date: {
-			[GameEdition.GLOBAL]: 1564477200, // 30/07/19 09:00:00 GMT
-			[GameEdition.CHINESE]: 1577174400, // 24/12/19 08:00:00 GMT
-		},
-	},
-	'5.08': {
-		date: {
-			[GameEdition.GLOBAL]: 1567069200, // 29/08/19 09:00:00 GMT
-			[GameEdition.KOREAN]: 1575360000, // 03/12/19 08:00:00 GMT
-		},
-	},
-	'5.1': {
-		date: {
-			[GameEdition.GLOBAL]: 1572339600, // 29/10/19 09:00:00 GMT
-			[GameEdition.KOREAN]: 1585036800, // 24/03/20 08:00:00 GMT
-			[GameEdition.CHINESE]: 1580803200, // 04/02/20 08:00:00 GMT
-		},
-	},
-	'5.2': {
-		date: {
-			[GameEdition.GLOBAL]: 1582016400, // 08/02/20 09:00:00 GMT
-			[GameEdition.KOREAN]: 1598947200, // 01/09/20 08:00:00 GMT
-			[GameEdition.CHINESE]: 1595318400, // 21/07/20 08:00:00 GMT
-		},
-	},
-	'5.3': {
-		date: {
-			[GameEdition.GLOBAL]: 1597136400, // 11/08/20 09:00:00 GMT
-			[GameEdition.KOREAN]: 1610438400, // 12/01/21 08:00:00 GMT
-			[GameEdition.CHINESE]: 1606809600, // 01/12/20 08:00:00 GMT
-		},
-	},
-	'5.4': {
-		date: {
-			[GameEdition.GLOBAL]: 1607418000, // 08/12/20 09:00:00 GMT
-			[GameEdition.KOREAN]: 1621324800, // 18/05/21 08:00:00 GMT
-			[GameEdition.CHINESE]: 1619078400, // 16/04/21 08:00:00 GMT
-		},
-	},
-	'5.5': {
-		date: {
-			[GameEdition.GLOBAL]: 1618304400, // 13/04/21 09:00:00 GMT
-			[GameEdition.KOREAN]: 1631606400, // 14/09/21 08:00:00 GMT
-			[GameEdition.CHINESE]: 1628582400, // 10/08/21 08:00:00 GMT
+			[GameEdition.GLOBAL]: 1637312400, // 19/11/21 09:00:00 GMT
 		},
 	},
 	// Do not add new patches beneath this point.
