@@ -148,12 +148,13 @@ interface ActorLinkProps {
 function ActorLink({actor}: ActorLinkProps) {
 	const {url} = useRouteMatch()
 
-	let meta = AVAILABLE_MODULES.CORE
-
 	const job = JOBS[actor.job]
-	const jobMeta = AVAILABLE_MODULES.JOBS[actor.job]
-	if (jobMeta != null) {
-		meta = meta.merge(jobMeta)
+	let meta = AVAILABLE_MODULES.JOBS[actor.job]
+
+	// We avoid merging core if there's no supported patch so we don't end up
+	// showing core's support range on unsupported jobs.
+	if (meta?.supportedPatches != null) {
+		meta = AVAILABLE_MODULES.CORE.merge(meta)
 	}
 
 	let supportedPatches: ReactNode
