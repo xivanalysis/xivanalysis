@@ -934,8 +934,6 @@
   "war.stormseye.checklist.description": "L'action Œil de la tempête augmente vos dégâts de 10%. C'est une part importante des dégâts d'un Guerrier.",
   "war.stormseye.checklist.name": "Gardez Œil de la tempête toujours actif",
   "war.stormseye.checklist.uptime": "Temps d'activité total de <0/>",
-  "war.suggestions.stormseye.content": "Évitez de rafraîchir {0} trop tôt avant son expiration – Cela peut potentiellement vous coûter des utilisations de <0/>.",
-  "war.suggestions.stormseye.why": "{0} utilisations étaient avant {1} secondes ou plus avant expiration.",
   "whm.about.description": "\nCet analyseur a pour but d'identifier certains des fruits à portée de main qui pourraient être utilisés pour améliorer votre gameplay WHM, ainsi que de donner un aperçu plus approfondi de ce qui s'est passé lors d'une rencontre.\n\nSi vous souhaitez en savoir plus sur le jeu WHM, consultez les guides sur [The Balance] (https://thebalanceffxiv.com/), et discutez sur le canal #whm_questions.\n\nActuellement, ce module peut suivre le temps de fonctionnement du DoT, noter quand votre jauge de lys de soin est pleine, détecter les coupures, détecter les lancements de sort interrompus et signaler les utilisations d'oGCD manqués.\n\nL'analyse des soins peut être très subjective - même si certaines des suggestions ci-dessous ne s'appliquent pas à vous, elles peuvent vous aider à vous informer sur des choses que vous avez peut-être manquées\n",
   "whm.dots.requirement.uptime-dia.name": "Temps total d'application de <0/>",
   "whm.dots.rule.description": "En tant que Mage Blanc, une grande partie de vos dégâts viennent de Lumen. Essayez de le garder actif au maximum sur le boss.",
