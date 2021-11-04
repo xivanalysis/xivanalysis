@@ -1,6 +1,5 @@
 import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
-import CONTRIBUTORS, {ROLES} from 'data/CONTRIBUTORS'
 import {Meta} from 'parser/core/Meta'
 import React from 'react'
 import {changelog} from './changelog'
@@ -19,9 +18,7 @@ export default new Meta({
 	// 	to: '6.0',
 	// },
 	contributors: [
-		{user: CONTRIBUTORS.YUMIYAFANGIRL, role: ROLES.MAINTAINER},
-		{user: CONTRIBUTORS.YUMIYA, role: ROLES.DEVELOPER},
-		{user: CONTRIBUTORS.RIRIAN, role: ROLES.DEVELOPER},
+		// {user: CONTRIBUTORS.YOU, role: ROLES.DEVELOPER},
 	],
 	changelog,
 })

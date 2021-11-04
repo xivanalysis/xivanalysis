@@ -1,7 +1,6 @@
 import {Trans} from '@lingui/macro'
 import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
-import CONTRIBUTORS, {ROLES} from 'data/CONTRIBUTORS'
 import {Meta} from 'parser/core/Meta'
 import React from 'react'
 
@@ -22,60 +21,13 @@ export default new Meta({
 	// 	to: '6.0',
 	// },
 	contributors: [
-		{user: CONTRIBUTORS.ACRI, role: ROLES.THEORYCRAFT},
-		{user: CONTRIBUTORS.AZARIAH, role: ROLES.MAINTAINER},
+		// {user: CONTRIBUTORS.YOU, role: ROLES.DEVELOPER},
 	],
 	changelog: [
-		{
-			date: new Date('2021-04-13'),
-			contributors: [CONTRIBUTORS.ACCHAN],
-			Changes: () => <>
-				Mark patch 5.5 supported.
-			</>,
-		},
-		{
-			date: new Date('2020-12-08'),
-			Changes: () => <>
-				Mark patch 5.4 supported.
-			</>,
-			contributors: [CONTRIBUTORS.ACCHAN],
-		},
-		{
-			date: new Date('2020-08-11'),
-			Changes: () => <>
-				Mark patch 5.3 supported.
-			</>,
-			contributors: [CONTRIBUTORS.ACCHAN],
-		},
-		{
-			date: new Date('2020-07-27'),
-			Changes: () => <>Add table to output times that Darkside dropped</>,
-			contributors: [CONTRIBUTORS.AZARIAH],
-		},
-		{
-			date: new Date('2020-04-05'),
-			Changes: () => <>Add Esteem actions to Living Shadow timeline group</>,
-			contributors: [CONTRIBUTORS.ACCHAN],
-		},
-		{
-			date: new Date('2019-07-28'),
-			Changes: () => <>Add i18n support</>,
-			contributors: [CONTRIBUTORS.AZARIAH],
-		},
-		{
-			date: new Date('2019-07-27'),
-			Changes: () => <>Add tracking for Blood Weapon windows</>,
-			contributors: [CONTRIBUTORS.AZARIAH],
-		},
-		{
-			date: new Date('2019-07-20'),
-			Changes: () => <>Fix issues with gauge calculation and AOE skill tracking</>,
-			contributors: [CONTRIBUTORS.AZARIAH],
-		},
-		{
-			date: new Date('2019-07-06'),
-			Changes: () => <>Initial release of 5.0 support for Dark Knight</>,
-			contributors: [CONTRIBUTORS.AZARIAH],
-		},
+		// {
+		// 	date: new Date('2021-11-19'),
+		// 	Changes: () => <>The changes you made</>,
+		// 	contrubutors: [CONTRIBUTORS.YOU],
+		// },
 	],
 })

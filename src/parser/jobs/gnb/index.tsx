@@ -1,6 +1,5 @@
 import {t} from '@lingui/macro'
 import TransMarkdown from 'components/ui/TransMarkdown'
-import CONTRIBUTORS, {ROLES} from 'data/CONTRIBUTORS'
 import {Meta} from 'parser/core/Meta'
 import React from 'react'
 import {changelog} from './changelog'
@@ -26,9 +25,7 @@ export default new Meta({
 	// },
 
 	contributors: [
-		{user: CONTRIBUTORS.LHEA, role: ROLES.DEVELOPER},
-		{user: CONTRIBUTORS.QAPHLA, role: ROLES.DEVELOPER},
-		{user: CONTRIBUTORS.RYAN, role: ROLES.MAINTAINER},
+		// {user: CONTRIBUTORS.YOU, role: ROLES.DEVELOPER},
 	],
 
 	changelog,

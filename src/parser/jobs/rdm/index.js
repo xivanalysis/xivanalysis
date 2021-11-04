@@ -1,5 +1,4 @@
 import {Trans} from '@lingui/react'
-import CONTRIBUTORS, {ROLES} from 'data/CONTRIBUTORS'
 import {Meta} from 'parser/core/Meta'
 import React from 'react'
 import {Icon, Message} from 'semantic-ui-react'
@@ -24,86 +23,14 @@ export default new Meta({
 	// 	to: '6.0',
 	// },
 	contributors: [
-		{user: CONTRIBUTORS.LEYLIA, role: ROLES.MAINTAINER},
-		{user: CONTRIBUTORS.JUMP, role: ROLES.THEORYCRAFT},
-		{user: CONTRIBUTORS.AZARIAH, role: ROLES.DEVELOPER},
+		// {user: CONTRIBUTORS.YOU, role: ROLES.DEVELOPER},
 	],
 
 	changelog: [
-		{
-			date: new Date('2021-04-14'),
-			Changes: () => <>Removed Swift Cast from General CD Usage as it's no longer suggested to use on CD</>,
-			contributors: [CONTRIBUTORS.LEYLIA],
-		},
-		{
-			date: new Date('2021-02-11'),
-			Changes: () => <>Severity for all broken melee combos is now Major</>,
-			contributors: [CONTRIBUTORS.LEYLIA],
-		},
-		{
-			date: new Date('2020-12-07'),
-			Changes: () => <>Bump up for patch 5.4</>,
-			contributors: [CONTRIBUTORS.LEYLIA],
-		},
-		{
-			date: new Date('2020-09-29'),
-			Changes: () => <>Changed Severity ratings for Missed Dualcasts 1 missed is now medium, 2 missed is now major.</>,
-			contributors: [CONTRIBUTORS.LEYLIA],
-		},
-		{
-			date: new Date('2020-08-10'),
-			Changes: () => <>Added support for patch 5.3</>,
-			contributors: [CONTRIBUTORS.LEYLIA],
-		},
-		{
-			date: new Date('2020-05-05'),
-			Changes: () => <>Adjusted Combo Severity when you aren't 80|80 going in to always be major.  Fixed a typo; added the Tincture module.</>,
-			contributors: [CONTRIBUTORS.LEYLIA],
-		},
-		{
-			date: new Date('2020-02-27'),
-			Changes: () => <>Added Verstone and Verfire procs to the Timeline</>,
-			contributors: [CONTRIBUTORS.LEYLIA],
-		},
-		{
-			date: new Date('2020-02-26'),
-			Changes: () => <>Bump up supported version to 5.2</>,
-			contributors: [CONTRIBUTORS.LEYLIA],
-		},
-		{
-			date: new Date('2020-01-02'),
-			Changes: () => <>Adjusted Cooldown Downtime handling based on 3-8 Standard opener</>,
-			contributors: [CONTRIBUTORS.LEYLIA],
-		},
-		{
-			date: new Date('2019-11-03'),
-			Changes: () => <>Added basic support for 5.1.  Resolved issue with manafication overcap statistic</>,
-			contributors: [CONTRIBUTORS.LEYLIA],
-		},
-		{
-			date: new Date('2019-08-12'),
-			Changes: () => <>Added handling for Displacement/engagement and Corps-a-corps related to manafication.  Removed manafication from overcap suggestion, added it as 2 small statistics.</>,
-			contributors: [CONTRIBUTORS.LEYLIA],
-		},
-		{
-			date: new Date('2019-08-05'),
-			Changes: () => <>Removed Lucid Dream from oGCD checklist, Displacement now takes Engagement into consideration in the oGCD checklist</>,
-			contributors: [CONTRIBUTORS.LEYLIA],
-		},
-		{
-			date: new Date('2019-07-30'),
-			Changes: () => <>Reprise Cost updated, resolved negative mana issue in Gauge tracking</>,
-			contributors: [CONTRIBUTORS.LEYLIA],
-		},
-		{
-			date: new Date('2019-07-26'),
-			Changes: () => <>Fix an issue with Moulinet Mana costs</>,
-			contributors: [CONTRIBUTORS.LEYLIA],
-		},
-		{
-			date: new Date('2019-07-14'),
-			Changes: () => <>Initial update of existing logic for 5.0 (no new stuff)</>,
-			contributors: [CONTRIBUTORS.LEYLIA],
-		},
+		// {
+		// 	date: new Date('2021-11-19'),
+		// 	Changes: () => <>The changes you made</>,
+		// 	contrubutors: [CONTRIBUTORS.YOU],
+		// },
 	],
 })

@@ -1,6 +1,5 @@
 import {t, Trans} from '@lingui/macro'
 import TransMarkdown from 'components/ui/TransMarkdown'
-import CONTRIBUTORS, {ROLES} from 'data/CONTRIBUTORS'
 import {Meta} from 'parser/core/Meta'
 import React from 'react'
 import {Icon, Message} from 'semantic-ui-react'
@@ -27,7 +26,7 @@ export default new Meta({
 		to: '✖',
 	},
 	contributors: [
-		{user: CONTRIBUTORS.PAIGE_404, role: ROLES.DEVELOPER},
+		// {user: CONTRIBUTORS.YOU, role: ROLES.DEVELOPER},
 	],
 	changelog,
 })
