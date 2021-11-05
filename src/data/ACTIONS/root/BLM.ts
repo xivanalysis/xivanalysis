@@ -156,7 +156,6 @@ export const BLM = ensureActions({
 		icon: 'https://xivapi.com/i/002000/002664.png',
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
-		castTime: 2500,
 	},
 	XENOGLOSSY: {
 		id: 16507,
