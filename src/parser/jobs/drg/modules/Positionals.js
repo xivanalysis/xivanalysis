@@ -29,6 +29,7 @@ const TRUE_NORTH_CHARGES = 2
 const TRUE_NORTH_CD_BUFFER = 500
 const TRUE_NORTH_CD = ACTIONS.TRUE_NORTH.cooldown - TRUE_NORTH_CD_BUFFER
 
+// I'm not going to update this module because it's getting deleted in EW -Fal
 export default class Positionals extends Module {
 	static handle = 'positionals'
 	static title = t('drg.positionals.title')`Positionals`
