@@ -9,16 +9,12 @@ import {Data} from 'parser/core/modules/Data'
 import {CounterGauge, Gauge as CoreGauge} from 'parser/core/modules/Gauge'
 import Suggestions, {Suggestion, TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import React from 'react'
+import {isSuccessfulHit} from 'utilities'
 
 type GaugeModifier = Partial<Record<Event['type'], number>>
 
 // Constants
-const GCD_GAIN = 5
-const FINISHER_GAIN = 10
-const MUG_GAIN = 40
-const MEISUI_GAIN = 50
 const BUNSHIN_GAIN = 5
-const SPENDER_COST = -50
 
 const OVERCAP_SEVERITY = {
 	20: SEVERITY.MINOR,
@@ -35,22 +31,44 @@ export class Ninki extends CoreGauge {
 		chart: {label: 'Ninki', color: JOBS.NINJA.colour},
 	}))
 
+	private ninkiFilters = {
+		action: [
+			this.data.actions.BHAVACAKRA.id,
+			this.data.actions.HELLFROG_MEDIUM.id,
+			this.data.actions.BUNSHIN.id,
+			this.data.actions.MEISUI.id,
+		],
+		combo: [
+			this.data.actions.SPINNING_EDGE.id,
+			this.data.actions.GUST_SLASH.id,
+			this.data.actions.AEOLIAN_EDGE.id,
+			this.data.actions.ARMOR_CRUSH.id,
+			this.data.actions.DEATH_BLOSSOM.id,
+			this.data.actions.HAKKE_MUJINSATSU.id,
+		],
+		damage: [
+			this.data.actions.SHADOW_FANG.id,
+			this.data.actions.THROWING_DAGGER.id,
+			this.data.actions.MUG.id,
+		],
+	}
+
 	private ninkiModifiers = new Map<number, GaugeModifier>([
 		// Builders
-		[this.data.actions.SPINNING_EDGE.id, {action: GCD_GAIN}],
-		[this.data.actions.GUST_SLASH.id, {combo: GCD_GAIN}],
-		[this.data.actions.AEOLIAN_EDGE.id, {combo: FINISHER_GAIN}],
-		[this.data.actions.ARMOR_CRUSH.id, {combo: FINISHER_GAIN}],
-		[this.data.actions.SHADOW_FANG.id, {action: FINISHER_GAIN}],
-		[this.data.actions.DEATH_BLOSSOM.id, {action: GCD_GAIN}],
-		[this.data.actions.HAKKE_MUJINSATSU.id, {combo: GCD_GAIN}],
-		[this.data.actions.THROWING_DAGGER.id, {action: GCD_GAIN}],
-		[this.data.actions.MUG.id, {action: MUG_GAIN}],
-		[this.data.actions.MEISUI.id, {action: MEISUI_GAIN}],
+		[this.data.actions.SPINNING_EDGE.id, {combo: 5}],
+		[this.data.actions.GUST_SLASH.id, {combo: 5}],
+		[this.data.actions.AEOLIAN_EDGE.id, {combo: 10}],
+		[this.data.actions.ARMOR_CRUSH.id, {combo: 10}],
+		[this.data.actions.DEATH_BLOSSOM.id, {combo: 5}],
+		[this.data.actions.HAKKE_MUJINSATSU.id, {combo: 5}],
+		[this.data.actions.SHADOW_FANG.id, {damage: 10}],
+		[this.data.actions.THROWING_DAGGER.id, {damage: 5}],
+		[this.data.actions.MUG.id, {damage: 40}],
+		[this.data.actions.MEISUI.id, {action: 50}],
 		// Spenders
-		[this.data.actions.BHAVACAKRA.id, {action: SPENDER_COST}],
-		[this.data.actions.HELLFROG_MEDIUM.id, {action: SPENDER_COST}],
-		[this.data.actions.BUNSHIN.id, {action: SPENDER_COST}],
+		[this.data.actions.BHAVACAKRA.id, {action: -50}],
+		[this.data.actions.HELLFROG_MEDIUM.id, {action: -50}],
+		[this.data.actions.BUNSHIN.id, {action: -50}],
 	])
 
 	private erroneousFrogs: number = 0 // This is my new band name
@@ -60,7 +78,9 @@ export class Ninki extends CoreGauge {
 
 		const playerFilter = filter<Event>().source(this.parser.actor.id)
 		const pets = this.parser.pull.actors.filter(actor => actor.owner === this.parser.actor).map(actor => actor.id)
-		this.addEventHook(playerFilter.type(oneOf(['action', 'combo'])).action(oneOf(Array.from(this.ninkiModifiers.keys()))), this.onGaugeModifier)
+		this.addEventHook(playerFilter.type('action').action(oneOf(this.ninkiFilters.action)), this.onGaugeModifier)
+		this.addEventHook(playerFilter.type('combo').action(oneOf(this.ninkiFilters.combo)), this.onGaugeModifier)
+		this.addEventHook(playerFilter.type('damage').cause(filter<Cause>().action(oneOf(this.ninkiFilters.damage))), this.onDamage)
 		this.addEventHook(filter<Event>().source(oneOf(pets)).type('action'), this.onBunshinHit)
 		this.addEventHook(playerFilter.type('damage').cause(filter<Cause>().action(this.data.actions.HELLFROG_MEDIUM.id)), this.onHellfrog)
 		this.addEventHook('complete', this.onComplete)
@@ -68,6 +88,18 @@ export class Ninki extends CoreGauge {
 
 	private onBunshinHit() {
 		this.ninkiGauge.modify(BUNSHIN_GAIN)
+	}
+
+	private onDamage(event: Events['damage']) {
+		if (!isSuccessfulHit(event) || event.cause.type !== 'action') {
+			return
+		}
+
+		const modifier = this.ninkiModifiers.get(event.cause.action)
+		if (modifier != null) {
+			const amount = modifier[event.type] ?? 0
+			this.ninkiGauge.modify(amount)
+		}
 	}
 
 	private onGaugeModifier(event: Events['action' | 'combo']) {

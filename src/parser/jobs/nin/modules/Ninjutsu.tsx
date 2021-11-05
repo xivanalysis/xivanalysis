@@ -35,7 +35,7 @@ export class Ninjutsu extends Analyser {
 		this.addEventHook(playerFilter.type('action').action(oneOf([this.data.actions.HYOTON.id, this.data.actions.HYOTON_TCJ.id])), () => { this.hyotonCount++ })
 		this.addEventHook(playerFilter.type('action').action(this.data.actions.RABBIT_MEDIUM.id), () => { this.rabbitCount++ })
 		this.addEventHook(playerFilter.type('action').action(oneOf([this.data.actions.DOTON.id, this.data.actions.DOTON_TCJ.id])), this.onDotonCast)
-		this.addEventHook(playerFilter.type('damage').cause(this.data.matchCauseStatus(['DOTON'])), event => { this.current?.ticks.push(event.targets.length || 0) })
+		this.addEventHook(playerFilter.type('damage').cause(this.data.matchCauseStatus(['DOTON'])), event => { this.current?.ticks.push(event.targets.length ?? 0) })
 		this.addEventHook(playerFilter.type('statusRemove').status(this.data.statuses.DOTON.id), this.finishDotonWindow)
 		this.addEventHook('complete', this.onComplete)
 	}
