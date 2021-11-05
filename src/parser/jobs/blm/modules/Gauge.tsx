@@ -486,7 +486,12 @@ export default class Gauge extends Analyser {
 			this.stopEnochianDowntime(event.timestamp)
 		}
 
-		this.resourceGraphs.addDataGroup('astralumbral', <Trans id="blm.gauge.resource.astral-umbral">Astral Fire and<br></br>Umbral Ice</Trans>, true, true)
+		this.resourceGraphs.addDataGroup({
+			handle: 'astralumbral',
+			label: <Trans id="blm.gauge.resource.astral-umbral">Astral Fire and<br></br>Umbral Ice</Trans>,
+			collapse: true,
+			forceCollapsed: true,
+		})
 		this.resourceGraphs.addData('astralumbral', {
 			label: <Trans id="blm.gauge.resource.astral-fire">Astral Fire</Trans>,
 			// eslint-disable-next-line @typescript-eslint/no-magic-numbers

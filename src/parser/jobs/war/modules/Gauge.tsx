@@ -14,7 +14,7 @@ import React from 'react'
 
 type GaugeModifier = Partial<Record<Event['type'], number>>
 
-const BEAST_USAGE_SEVERITY = {
+const SUGGESTION_TIERS = {
 	20: SEVERITY.MINOR,
 	50: SEVERITY.MAJOR,
 }
@@ -38,6 +38,7 @@ export class Gauge extends CoreGauge {
 	private beastGauge = this.add(new CounterGauge({
 		chart: {label: 'Beast Gauge', color: JOBS.WARRIOR.colour},
 	}))
+
 	private beastGaugeModifiers = new Map<number, GaugeModifier>([
 		// Builders
 		[this.data.actions.MAIM.id, {combo: 10}],
@@ -57,17 +58,11 @@ export class Gauge extends CoreGauge {
 	override initialise() {
 		super.initialise()
 
-		const playerFilter = filter<Event>().source(this.parser.actor.id)
 		const beastActions = Array.from(this.beastGaugeModifiers.keys())
-		this.addEventHook(
-			playerFilter
-				.type(oneOf(['action', 'combo']))
-				.action(oneOf(beastActions)),
-			this.onGaugeModifier
-		)
-		this.addEventHook(playerFilter.type('combo').action(oneOf(beastActions)), this.onGaugeModifier)
-
 		const infuriateReducerIds = INFURIATE_REDUCERS.map(key => this.data.actions[key].id)
+
+		const playerFilter = filter<Event>().source(this.parser.actor.id)
+		this.addEventHook(playerFilter.type(oneOf(['action', 'combo'])).action(oneOf(beastActions)), this.onGaugeModifier)
 		this.addEventHook(playerFilter.type('action').action(oneOf(infuriateReducerIds)), () => this.cooldowns.reduce('INFURIATE', INFURIATE_CDR))
 
 		this.addEventHook('complete', this.onComplete)
@@ -88,17 +83,16 @@ export class Gauge extends CoreGauge {
 	}
 
 	private onComplete() {
-		const {overCap} = this.beastGauge
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.INFURIATE.icon,
 			content: <Trans id="war.gauge.suggestions.loss.content">
 					Avoid letting your Beast Gauge overcap - the wasted resources may cost you uses of your spenders over the course of the fight.
 			</Trans>,
 			why: <Trans id="war.gauge.suggestions.loss.why">
-				{overCap} beast gauge lost to an overcapped gauge.
+				{this.beastGauge.overCap} beast gauge lost to an overcapped gauge.
 			</Trans>,
-			tiers: BEAST_USAGE_SEVERITY,
-			value: overCap,
+			tiers: SUGGESTION_TIERS,
+			value: this.beastGauge.overCap,
 		}))
 	}
 }

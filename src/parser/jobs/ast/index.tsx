@@ -38,6 +38,13 @@ export default new Meta({
 	],
 	changelog: [
 		{
+			date: new Date('2021-10-31'),
+			Changes: () => <>
+				Fix Undraw improperly not showing up in checklist.
+			</>,
+			contributors: [CONTRIBUTORS.OTOCEPHALY],
+		},
+		{
 			date: new Date('2021-09-24'),
 			Changes: () => <>
 				Astrologian support updated to 5.5 and added Players Buffed by divination to Arcana Tracking
