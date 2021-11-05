@@ -291,6 +291,7 @@ export const MCH = ensureActions({
 		name: 'Roller Dash',
 		icon: 'https://xivapi.com/i/003000/003505.png',
 		onGcd: true, // These aren't technically on -our- GCD but it makes them look nicer in the rotation display
+		speedAttribute: Attribute.SKILL_SPEED,
 	},
 
 	ARM_PUNCH: {
