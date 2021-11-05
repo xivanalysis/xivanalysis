@@ -23,13 +23,10 @@ export class Gauge extends Analyser {
 			type: 'death',
 			actor: this.parser.actor.id,
 		}, this.onDeath)
-<<<<<<< HEAD
 		this.addEventHook({
 			type: 'raise',
 			actor: this.parser.actor.id,
 		}, this.onRaise)
-=======
->>>>>>> 7413661b92328f63b9e14ab5771206c5c16c91a2
 
 		this.addEventHook('complete', () => this.gauges.forEach(gauge => gauge.generateResourceGraph()))
 	}
@@ -45,10 +42,7 @@ export class Gauge extends Analyser {
 		}
 
 		gauge.setResourceGraphs(this.resourceGraphs)
-<<<<<<< HEAD
 		gauge.init()
-=======
->>>>>>> 7413661b92328f63b9e14ab5771206c5c16c91a2
 
 		this.gauges.push(gauge)
 		return gauge

@@ -53,13 +53,10 @@ export abstract class AbstractGauge {
 	/** Reset any values stored within the gauge to their initial state. */
 	abstract reset(): void
 
-<<<<<<< HEAD
 	abstract raise(): void
 
 	abstract init(): void
 
-=======
->>>>>>> 7413661b92328f63b9e14ab5771206c5c16c91a2
 	generateResourceGraph(): void { return }
 
 	generateDataset(): ChartDataSets | undefined { return }
