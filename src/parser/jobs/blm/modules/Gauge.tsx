@@ -2,7 +2,7 @@
 import {t} from '@lingui/macro'
 import {Trans, Plural} from '@lingui/react'
 import Color from 'color'
-import {ActionLink} from 'components/ui/DbLink'
+import {DataLink} from 'components/ui/DbLink'
 import JOBS from 'data/JOBS'
 import {Cause, Event, Events, FieldsBase} from 'event'
 import {Analyser} from 'parser/core/Analyser'
@@ -109,7 +109,6 @@ export default class Gauge extends Analyser {
 	private affectsGaugeOnCast: number[] = [
 		...this.untargetedIceSpellIds,
 		this.data.actions.TRANSPOSE.id,
-		this.data.actions.ENOCHIAN.id,
 		this.data.actions.FOUL.id,
 		this.data.actions.XENOGLOSSY.id,
 	]
@@ -172,19 +171,6 @@ export default class Gauge extends Analyser {
 		if (this.affectsGaugeOnDamage.includes(abilityId) && event.type === 'damage' && !isSuccessfulHit(event)) { return }
 
 		switch (abilityId) {
-		case this.data.actions.ENOCHIAN.id:
-			if (!this.currentGaugeState.astralFire && !this.currentGaugeState.umbralIce) {
-				this.brokenLog.trigger(this, 'no stack eno', (
-					<Trans id="blm.gauge.trigger.no-stack-eno">
-						<ActionLink {...this.data.actions.ENOCHIAN}/> was cast without any Astral Fire or Umbral Ice stacks detected.
-					</Trans>
-				))
-			}
-			if (!this.currentGaugeState.enochian) {
-				this.startEnochianUptime(event.timestamp)
-				this.addEvent()
-			}
-			break
 		case this.data.actions.BLIZZARD_I.id:
 		case this.data.actions.BLIZZARD_II.id:
 		case this.data.actions.FREEZE.id:
@@ -195,10 +181,10 @@ export default class Gauge extends Analyser {
 			this.onGainUmbralIceStacks(MAX_ASTRAL_UMBRAL_STACKS, false)
 			break
 		case this.data.actions.BLIZZARD_IV.id:
-			if (!this.currentGaugeState.enochian) {
+			if (!this.currentGaugeState.umbralIce) {
 				this.brokenLog.trigger(this, 'no eno b4', (
 					<Trans id="blm.gauge.trigger.no-eno-b4">
-						<ActionLink {...this.data.actions.BLIZZARD_IV}/> was cast while <ActionLink {...this.data.actions.ENOCHIAN}/> was deemed inactive.
+						<DataLink action="BLIZZARD_IV"/> was cast while Umbral Ice was deemed inactive.
 					</Trans>
 				))
 				this.startEnochianUptime(event.timestamp)
@@ -220,10 +206,10 @@ export default class Gauge extends Analyser {
 			this.onGainAstralFireStacks(MAX_ASTRAL_UMBRAL_STACKS, false)
 			break
 		case this.data.actions.FIRE_IV.id:
-			if (!this.currentGaugeState.enochian) {
+			if (!this.currentGaugeState.astralFire) {
 				this.brokenLog.trigger(this, 'no eno f4', (
 					<Trans id="blm.gauge.trigger.no-eno-f4">
-						<ActionLink {...this.data.actions.FIRE_IV}/> was cast while <ActionLink {...this.data.actions.ENOCHIAN}/> was deemed inactive.
+						<DataLink action="FIRE_IV"/> was cast while Astral Fire was deemed inactive.
 					</Trans>
 				))
 				this.startEnochianUptime(event.timestamp)
@@ -231,10 +217,10 @@ export default class Gauge extends Analyser {
 			this.tryConsumeUmbralHearts(1)
 			break
 		case this.data.actions.DESPAIR.id:
-			if (!this.currentGaugeState.enochian) {
+			if (!this.currentGaugeState.astralFire) {
 				this.brokenLog.trigger(this, 'no eno despair', (
 					<Trans id="blm.gauge.trigger.no-eno-despair">
-						<ActionLink {...this.data.actions.DESPAIR}/> was cast while <ActionLink {...this.data.actions.ENOCHIAN}/> was deemed inactive.
+						<DataLink action="DESPAIR"/> was cast while Astral Fire was deemed inactive.
 					</Trans>
 				))
 				this.startEnochianUptime(event.timestamp)
@@ -525,13 +511,13 @@ export default class Gauge extends Analyser {
 		).length
 		if (droppedEno) {
 			this.suggestions.add(new Suggestion({
-				icon: this.data.actions.ENOCHIAN.icon,
+				icon: this.data.actions.FOUL.icon,
 				content: <Trans id="blm.gauge.suggestions.dropped-enochian.content">
-					Dropping <ActionLink {...this.data.actions.ENOCHIAN}/> may lead to lost <ActionLink {...this.data.actions.XENOGLOSSY}/> or <ActionLink {...this.data.actions.FOUL}/> casts, more clipping because of additional <ActionLink {...this.data.actions.ENOCHIAN}/> casts, unavailability of <ActionLink {...this.data.actions.FIRE_IV}/> and <ActionLink {...this.data.actions.BLIZZARD_IV}/> or straight up missing out on the 15% damage bonus that <ActionLink {...this.data.actions.ENOCHIAN}/> provides.
+					Dropping Astral Fire or Umbral Ice may lead to lost <DataLink action="XENOGLOSSY"/> or <DataLink action="FOUL"/> casts.
 				</Trans>,
 				severity: SEVERITY.MEDIUM,
 				why: <Trans id="blm.gauge.suggestions.dropped-enochian.why">
-					<ActionLink showIcon={false} {...this.data.actions.ENOCHIAN} /> was dropped <Plural value={droppedEno} one="# time" other="# times"/>.
+					Astral Fire or Umbral Ice was dropped <Plural value={droppedEno} one="# time" other="# times"/>.
 				</Trans>,
 			}))
 		}
@@ -540,7 +526,7 @@ export default class Gauge extends Analyser {
 			this.suggestions.add(new Suggestion({
 				icon: this.data.actions.XENOGLOSSY.icon,
 				content: <Trans id="blm.gauge.suggestions.lost-polyglot.content">
-					You lost Polyglot due to dropped <ActionLink {...this.data.actions.ENOCHIAN}/>. <ActionLink {...this.data.actions.XENOGLOSSY}/> and <ActionLink {...this.data.actions.FOUL}/> are your strongest GCDs, so always maximize their casts.
+					You lost Polyglot due to dropped Astral Fire or Umbral Ice. <DataLink action="XENOGLOSSY"/> and <DataLink action="FOUL"/> are your strongest GCDs, so always maximize their casts.
 				</Trans>,
 				severity: SEVERITY.MAJOR,
 				why: <Trans id="blm.gauge.suggestions.lost-polyglot.why">
@@ -553,11 +539,11 @@ export default class Gauge extends Analyser {
 			this.suggestions.add(new Suggestion({
 				icon: this.data.actions.XENOGLOSSY.icon,
 				content: <Trans id="blm.gauge.suggestions.overwritten-polyglot.content">
-					You overwrote Polyglot due to not casting <ActionLink {...this.data.actions.XENOGLOSSY} /> or <ActionLink {...this.data.actions.FOUL}/> for 30s after gaining a second stack. <ActionLink {...this.data.actions.XENOGLOSSY}/> and <ActionLink {...this.data.actions.FOUL}/> are your strongest GCDs, so always maximize their casts.
+					You overwrote Polyglot due to not casting <DataLink action="XENOGLOSSY"/> or <DataLink action="FOUL"/> for 30s after gaining a second stack. <DataLink action="XENOGLOSSY"/> and <DataLink action="FOUL"/> are your strongest GCDs, so always maximize their casts.
 				</Trans>,
 				severity: SEVERITY.MAJOR,
 				why: <Trans id="blm.gauge.suggestions.overwritten-polyglot.why">
-					<ActionLink showIcon={false} {...this.data.actions.XENOGLOSSY} /> got overwritten <Plural value={this.overwrittenPolyglot} one="# time" other="# times"/>.
+					<DataLink showIcon={false} action="XENOGLOSSY"/> got overwritten <Plural value={this.overwrittenPolyglot} one="# time" other="# times"/>.
 				</Trans>,
 			}))
 		}
