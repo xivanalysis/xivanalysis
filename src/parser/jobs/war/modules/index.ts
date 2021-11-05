@@ -7,9 +7,9 @@ import {StormsEye} from './StormsEye'
 
 export default [
 	ActionTimeline,
+	AoE,
 	Gauge,
 	InnerRelease,
-	AoE,
 	OGCDDowntime,
 	StormsEye,
 ]
