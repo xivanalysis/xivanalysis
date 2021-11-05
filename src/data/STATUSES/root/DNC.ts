@@ -83,7 +83,7 @@ export const DNC = ensureStatuses({
 		icon: 'https://xivapi.com/i/013000/013716.png',
 		duration: 15000,
 	},
-	RISING_RHYTHM: { // Was this replaced by Rising Rhythm or is it adjacent to it?
+	RISING_RHYTHM: {
 		id: 182718271827, // Needs real ID
 		name: 'Rising Rhythm',
 		icon: 'https://xivapi.com/i/013000/013716.png', // Needs real icon
