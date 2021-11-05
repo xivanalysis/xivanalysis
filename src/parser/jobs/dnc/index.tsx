@@ -1,5 +1,6 @@
 import {t, Trans} from '@lingui/macro'
 import TransMarkdown from 'components/ui/TransMarkdown'
+import CONTRIBUTORS, {ROLES} from 'data/CONTRIBUTORS'
 import {Meta} from 'parser/core/Meta'
 import React from 'react'
 import {Icon, Message} from 'semantic-ui-react'
@@ -32,6 +33,7 @@ export const DANCER = new Meta({
 
 	contributors: [
 		// {user: CONTRIBUTORS.YOU, role: ROLES.DEVELOPER},
+		{user: CONTRIBUTORS.AKAIRYU, role: ROLES.MAINTAINER},
 	],
 
 	changelog,
