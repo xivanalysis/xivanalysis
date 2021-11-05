@@ -112,7 +112,6 @@ export const MCH = ensureActions({
 		name: 'Heat Blast',
 		icon: 'https://xivapi.com/i/003000/003030.png',
 		onGcd: true,
-		speedAttribute: Attribute.SKILL_SPEED,
 		cooldown: 1500,
 		potency: 220,
 	},
@@ -122,7 +121,6 @@ export const MCH = ensureActions({
 		name: 'Auto Crossbow',
 		icon: 'https://xivapi.com/i/003000/003042.png',
 		onGcd: true,
-		speedAttribute: Attribute.SKILL_SPEED,
 	},
 
 	DRILL: {
