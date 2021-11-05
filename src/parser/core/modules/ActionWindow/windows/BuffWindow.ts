@@ -1,7 +1,9 @@
 import {Status} from 'data/STATUSES'
 import {Event, Events} from 'event'
+import _ from 'lodash'
 import {TimestampHook, TimestampHookArguments} from 'parser/core/Dispatcher'
-import {filter, noneOf} from '../../../filter'
+import {ensureArray} from 'utilities'
+import {filter, noneOf, oneOf} from '../../../filter'
 import {EvaluatedAction} from '../EvaluatedAction'
 import {HistoryEntry} from '../History'
 import {ActionWindow} from './ActionWindow'
@@ -21,7 +23,7 @@ export abstract class BuffWindow extends ActionWindow {
 	/**
 	 * The status that the buff window tracks.
 	 */
-	abstract buffStatus: Status
+	abstract buffStatus: Status | Status[]
 
 	/**
 	 * Determines if a window ended early due to the end of the pull.
@@ -30,7 +32,7 @@ export abstract class BuffWindow extends ActionWindow {
 	 * of the pull; false otherwise.
 	 */
 	protected isRushedEndOfPullWindow(window: HistoryEntry<EvaluatedAction[]>) {
-		const expectedDuration = this.buffStatus.duration ?? 0
+		const expectedDuration = _.max(ensureArray(this.buffStatus).map(s => s.duration)) ?? 0
 		const fightTimeRemaining = (this.parser.pull.timestamp + this.parser.pull.duration) - window.start
 		return expectedDuration >= fightTimeRemaining
 	}
@@ -47,7 +49,7 @@ export abstract class BuffWindow extends ActionWindow {
 		const buffFilter = filter<Event>()
 			.source(this.parser.actor.id)
 			.target(noneOf(pets))
-			.status(this.buffStatus.id)
+			.status(oneOf(ensureArray(this.buffStatus).map(s => s.id)))
 
 		this.addEventHook(buffFilter.type('statusApply'), this.startWindowAndTimeout)
 		this.addEventHook(buffFilter.type('statusRemove'), this.endWindowByStatus)
@@ -55,7 +57,7 @@ export abstract class BuffWindow extends ActionWindow {
 
 	private startWindowAndTimeout(event: Events['statusApply']) {
 		this.onWindowStart(event.timestamp)
-		const duration = this.buffStatus.duration
+		const duration = _.max(ensureArray(this.buffStatus).map(s => s.duration))
 		if (duration == null) { return }
 		if (this.durationHook != null) {
 			this.removeTimestampHook(this.durationHook)
