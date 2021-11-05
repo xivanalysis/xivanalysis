@@ -6,9 +6,11 @@ import TimeLineChart from 'components/ui/TimeLineChart'
 import ACTIONS from 'data/ACTIONS'
 import JOBS from 'data/JOBS'
 import {CastEvent} from 'fflogs'
-import Module, {dependency, DISPLAY_MODE} from 'parser/core/Module'
+import {Analyser} from 'parser/core/Analyser'
+import {dependency, DISPLAY_MODE} from 'parser/core/Module'
 import Checklist, {Requirement, Rule} from 'parser/core/modules/Checklist'
 import {ComboEvent} from 'parser/core/modules/Combos'
+import {Data} from 'parser/core/modules/Data'
 import {NormalisedDamageEvent} from 'parser/core/modules/NormalisedEvents'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import React, {Fragment} from 'react'
@@ -83,7 +85,7 @@ class OvercapState {
 	}
 }
 
-export default class Ammo extends Module {
+export default class Ammo extends Analyser {
 	static override handle = 'ammo'
 	static override title = t('gnb.ammo.title')`Cartridge Timeline`
 	static override displayMode = DISPLAY_MODE.FULL
@@ -106,16 +108,23 @@ export default class Ammo extends Module {
 
 	@dependency private checklist!: Checklist
 	@dependency private suggestions!: Suggestions
+	@dependency private Data!: Data
 
-	protected override init() {
+	override initialise() {
+		//Filters
+		const LoadFilter = filter<Event>()
+			.type('damage')
+			.source(this.parser.actor.id)
+			.cause(filter<Cause>()
+				.action(this.Data.matchActionId.this.OnCaseGene))
 		this.addEventHook('init', this.pushToHistory)
 		this.addEventHook(
-			'cast',
+			'action',
 			{
-				by: 'player',
-				abilityId: Object.keys(ON_CAST_GENERATORS).map(Number),
+				source: this.parser.actor.id,
+				cause: Object.keys(ON_CAST_GENERATORS).map(Number),
 			},
-			this.onCastGenerator,
+			this.onCastGenerator
 		)
 		this.addEventHook(
 			'combo',
