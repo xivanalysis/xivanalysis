@@ -11,7 +11,7 @@ export const BLM = ensureActions({
 		castTime: 2500,
 		mpCost: 400,
 	},
-	BLIZZARD_II: {
+	BLIZZARD_II: { // May need new ID/icon since it's technically being changed
 		id: 146,
 		name: 'Blizzard II',
 		icon: 'https://xivapi.com/i/000000/000455.png',
@@ -165,15 +165,6 @@ export const BLM = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 	},
-	SLEEP: {
-		id: 145,
-		name: 'Sleep',
-		icon: 'https://xivapi.com/i/000000/000465.png',
-		onGcd: true,
-		speedAttribute: Attribute.SPELL_SPEED,
-		castTime: 2500,
-		mpCost: 800,
-	},
 	TRANSPOSE: {
 		id: 149,
 		name: 'Transpose',
@@ -184,7 +175,7 @@ export const BLM = ensureActions({
 		id: 158,
 		name: 'Manafont',
 		icon: 'https://xivapi.com/i/002000/002651.png',
-		cooldown: 180000,
+		cooldown: 120000,
 	},
 	MANAWARD: {
 		id: 157,
@@ -212,12 +203,7 @@ export const BLM = ensureActions({
 		icon: 'https://xivapi.com/i/002000/002657.png',
 		cooldown: 30000,
 		statusesApplied: ['SHARPCAST'],
-	},
-	ENOCHIAN: {
-		id: 3575,
-		name: 'Enochian',
-		icon: 'https://xivapi.com/i/002000/002658.png',
-		cooldown: 30000,
+		charges: 2,
 	},
 	BETWEEN_THE_LINES: {
 		id: 7419,
@@ -231,5 +217,38 @@ export const BLM = ensureActions({
 		icon: 'https://xivapi.com/i/002000/002663.png',
 		cooldown: 60000,
 		statusesApplied: ['TRIPLECAST'],
+	},
+	HIGH_FIRE_II: {
+		id: 147147147, // Needs real ID
+		name: 'High Fire II',
+		icon: 'https://xivapi.com/i/000000/000452.png', // Needs real icon, currently Fire II
+		onGcd: true,
+		speedAttribute: Attribute.SPELL_SPEED,
+		castTime: 3000,
+		mpCost: 1500,
+	},
+	HIGH_BLIZZARD_II: {
+		id: 146146146, // Needs real ID
+		name: 'High Blizzard II',
+		icon: 'https://xivapi.com/i/000000/000455.png', // Needs real icon, currently old Blizzard II
+		onGcd: true,
+		speedAttribute: Attribute.SPELL_SPEED,
+		castTime: 3000,
+		mpCost: 800,
+	},
+	AMPLIFIER: {
+		id: 35753575, // Needs real ID
+		name: 'Amplifier',
+		icon: 'https://xivapi.com/i/002000/002658.png', // Needs real icon, currently Enochian
+		cooldown: 12000,
+	},
+	PARADOX: {
+		id: 1650516505, // Needs real ID
+		name: 'Paradox',
+		icon: 'https://xivapi.com/i/002000/002665.png', // Needs real icon, currently Despair
+		onGcd: true,
+		speedAttribute: Attribute.SPELL_SPEED,
+		castTime: 2500,
+		mpCost: 1600,
 	},
 })
