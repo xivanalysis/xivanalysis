@@ -49,7 +49,6 @@ class Fist {
 }
 
 export class Fists extends Analyser {
-	static override debug = true
 	static override handle = 'fists'
 	static override title = t('mnk.fists.title')`Fists`
 	static override displayOrder = DISPLAY_ORDER.FISTS
@@ -202,8 +201,6 @@ export class Fists extends Analyser {
 				] as const,
 			}
 		}).filter(datum => datum.value > 0)
-
-		this.debug(uptimeKeys)
 
 		this.statistics.add(new PieChartStatistic({
 			headings: ['Fist', 'Uptime', '%'],
