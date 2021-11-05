@@ -57,7 +57,7 @@ export abstract class BuffWindow extends ActionWindow {
 
 	private startWindowAndTimeout(event: Events['statusApply']) {
 		this.onWindowStart(event.timestamp)
-		const duration = _.max(ensureArray(this.buffStatus).map(s => s.duration))
+		const duration = this.data.getStatus(event.status)?.duration
 		if (duration == null) { return }
 		if (this.durationHook != null) {
 			this.removeTimestampHook(this.durationHook)
