@@ -82,7 +82,7 @@ export class RiddleOfFire extends Analyser {
 	@dependency private timeline!: Timeline
 
 	private history: Riddle[] = []
-	private riddle: Riddle | undefined
+	private riddle?: Riddle
 	private riddleHook?: EventHook<Events['action']>
 
 	override initialise(): void {
