@@ -442,7 +442,6 @@ export default class BloodOfTheDragon extends Module {
 				content: <Trans id="drg.blood.suggestions.buffed-stardiver">
 					Try to ensure that <ActionLink {...this.data.actions.STARDIVER} /> always lands while at least one of <ActionLink {...this.data.actions.LANCE_CHARGE} />, <ActionLink {...this.data.actions.DRAGON_SIGHT} />, or <ActionLink {...this.data.actions.BATTLE_LITANY} /> is active. Depending on the fight specifics, this may not always be possible. See the Timeline module below for details.
 				</Trans>,
-				value: noBuffSd,
 				severity: SEVERITY.MINOR,
 				why: <Trans id="drg.blood.suggestions.buffsed-stardiver.why">
 					When <ActionLink {...this.data.actions.STARDIVER} /> could have been buffed, you used it <Plural value={noBuffSd} one="# time" other="# times" /> without a buff.

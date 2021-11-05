@@ -3,6 +3,7 @@ import Color from 'color'
 import _ from 'lodash'
 import {GAUGE_HANDLE} from '../ResourceGraphs/ResourceGraphs'
 import {AbstractGauge, AbstractGaugeOptions, GaugeGraphOptions} from './AbstractGauge'
+<<<<<<< HEAD
 
 type GaugeEventReason =
 	| 'init'
@@ -10,6 +11,8 @@ type GaugeEventReason =
 	| 'spend'
 	| 'reset'
 	| 'changeBounds'
+=======
+>>>>>>> 7413661b92328f63b9e14ab5771206c5c16c91a2
 
 interface CounterHistory {
 	timestamp: number
@@ -31,8 +34,11 @@ export interface CounterGaugeOptions extends AbstractGaugeOptions {
 	chart?: CounterChartOptions,
 	/** Graph options. Omit to disable graphing in the timeline for this gauge. */
 	graph?: GaugeGraphOptions
+<<<<<<< HEAD
 	/** Should this gauge correct its history in the event of underflow? Must pass true to enable */
 	correctHistory?: boolean
+=======
+>>>>>>> 7413661b92328f63b9e14ab5771206c5c16c91a2
 }
 
 export interface CounterChartOptions {
@@ -177,7 +183,11 @@ export class CounterGauge extends AbstractGauge {
 		this.set(this._value, 'changeBounds')
 	}
 
+<<<<<<< HEAD
 	private pushHistory(reason: GaugeEventReason, delta: number) {
+=======
+	private pushHistory() {
+>>>>>>> 7413661b92328f63b9e14ab5771206c5c16c91a2
 		const timestamp = this.parser.currentEpochTimestamp
 
 		// Ensure we're not generating multiple entries at the same timestamp

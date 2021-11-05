@@ -12,8 +12,9 @@ import {
 	Status,
 	StatusKey,
 } from 'data/STATUSES'
+import {Cause} from 'event'
 import {Analyser} from 'parser/core/Analyser'
-import {oneOf} from 'parser/core/filter'
+import {filter, oneOf} from 'parser/core/filter'
 
 export class Data extends Analyser {
 	static override handle = 'data'
@@ -38,8 +39,16 @@ export class Data extends Analyser {
 		return oneOf(keys.map(key => this.actions[key].id))
 	}
 
+	matchCauseAction(keys: ActionKey[]) {
+		return filter<Cause>().type('action').action(this.matchActionId(keys))
+	}
+
 	matchStatusId(keys: StatusKey[]) {
 		return oneOf(keys.map(key => this.statuses[key].id))
+	}
+
+	matchCauseStatus(keys: StatusKey[]) {
+		return filter<Cause>().type('status').status(this.matchStatusId(keys))
 	}
 
 	private getAppliedData<R extends object>(root: R, layers: Array<Layer<R>>): R {
