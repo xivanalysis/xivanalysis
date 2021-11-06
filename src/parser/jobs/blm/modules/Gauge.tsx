@@ -104,7 +104,7 @@ export class Gauge extends CoreGauge {
 		onExpiration: this.onAstralUmbralTimeout.bind(this),
 		graph: {
 			handle: ASTRAL_UMBRAL_HANDLE,
-			label: 'Astral Fire Timer',
+			label: <Trans id="blm.gauge.resource.astral-timer">Astral Fire Timer</Trans>,
 			color: FIRE_COLOR.fade(TIMER_FADE)
 		}
 	}))
@@ -122,7 +122,7 @@ export class Gauge extends CoreGauge {
 		onExpiration: this.onAstralUmbralTimeout.bind(this),
 		graph: {
 			handle: ASTRAL_UMBRAL_HANDLE,
-			label: 'Umbral Ice Timer',
+			label: <Trans id="blm.gauge.resource.umbral-timer">Umbral Ice Timer</Trans>,
 			color: ICE_COLOR.fade(TIMER_FADE)
 		}
 	}))
@@ -148,7 +148,7 @@ export class Gauge extends CoreGauge {
 		maximum: ENOCHIAN_DURATION_REQUIRED,
 		onExpiration: this.onGainPolyglot.bind(this),
 		graph: {
-			label: 'Polyglot Timer',
+			label: <Trans id="blm.gauge.resource.polyglot-timer">Polyglot Timer</Trans>,
 			color: POLYGLOT_COLOR.fade(TIMER_FADE)
 		}
 	}))
