@@ -36,15 +36,15 @@ const BLACK_MANA_ACTIONS = {
 // 4 seconds for 2 GCDs minus a 1 second window to activate before finisher
 const DELAY_ACCELERATION_AVAILABLE_THRESHOLD = 4
 
-export default class MeleeCombos extends Module {
-	static handle = 'meleecombos'
+export default class MeleeCombos1 extends Module {
+	static handle = 'meleecombos1'
 	static dependencies = [
 		'combatants',
 		'suggestions',
 		'cooldowns',
 		'timeline',
 	]
-	static title = 'Melee Combos'
+	static title = 'Melee Combos1'
 
 	constructor(...args) {
 		super(...args)
