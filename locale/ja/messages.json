@@ -597,7 +597,6 @@
   "nin.ninjutsu.suggestions.st-doton.content": "単体の敵に<0/>を使用するのは避けましょう。継続ダメージを1度でもミスすれば<1/>よりもダメージが少なく、より多くの印を必要とするので何の得もなしにGCDを遅らせることになります。",
   "nin.ninjutsu.suggestions.st-doton.why": "敵１匹しか当たってない土遁の術を {badStds, plural, other {# 回}} やっちゃいましたよ！",
   "nin.ninki.suggestions.waste.content": "忍気が60以上そして上限近い忍気のときに <0/>を使うのは避けてください(いくつかの例外はのぞきます)。あなたが戦いの過程で使うことができる消費を最大にするためにです。",
-  "nin.ninki.suggestions.waste.why": "上限に達したことで{totalWaste} の忍気を失いました。",
   "nin.ninki.title": "忍気タイムライン",
   "nin.ta-usage.suggestions.missed.content": "<0/>を長時間温存するのは避けましょう。一般的には、他のバフやバーストに合わせると同時に使用回数を最大化するために、できる限りリキャストタイムに合わせて使用することが理想的です。",
   "nin.ta-usage.suggestions.missed.why": "あなたはだまし討ちを合計{0} 遅らせ、{lostCasts, plural, other {#回分の使用回数を}} 失いました。",
