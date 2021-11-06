@@ -153,7 +153,7 @@ export class CounterGauge extends AbstractGauge {
 	private correctGaugeHistory(spenderCost: number, currentGauge: number) {
 		spenderCost = Math.abs(spenderCost)
 
-		// Get the initialisation event (or generation event if this gauge isn't deterministic) we've recorded
+		// Get the most recent initialisation event (or generation event if this gauge isn't deterministic) we've recorded
 		const lastGeneratorIndex = _.findLastIndex(this.history, event => (!this.deterministic && event.reason === 'generate') || event.reason === 'init')
 
 		// Add the amount we underran the simulation by to the last generation event, and all events through the current one
