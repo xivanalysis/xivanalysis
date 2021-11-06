@@ -71,7 +71,7 @@ export default class Gauge extends CoreGauge {
 		20: SEVERITY.MEDIUM,
 		80: SEVERITY.MAJOR,
 	}
-	private readonly _manaDifferenceThreshold = 30
+	public readonly _manaDifferenceThreshold = 30
 	private readonly _manaLostDivisor = 2
 	private readonly _manaficationMultiplier = 2
 	private readonly _manaCap = 100
