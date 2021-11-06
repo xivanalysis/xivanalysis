@@ -580,7 +580,6 @@
   "nin.ninki.suggestions.frog.content": "단일 대상에게 <0/> 사용을 기피하십시오. <1/>이 오히려 자유롭게 사용할 수 있을 뿐만 아니라 더 위력이 높습니다.",
   "nin.ninki.suggestions.frog.why": "다른 기술을 사용할 수 있을 때 두꺼비 소환술을 {0, plural, one {#회} other {#회}} 사용했습니다.",
   "nin.ninki.suggestions.waste.content": "인법이 60 이상일 때 <0/>을 쓰거나, 인법이 거의 찼을 때 소모 기술을 사용하지 않는 것은 특수한 경우가 아니면 피해야 합니다.",
-  "nin.ninki.suggestions.waste.why": "총 {totalWaste} 의 인법을 낭비했습니다.",
   "nin.ninki.title": "인법 사용표",
   "nin.ta-usage.suggestions.missed.content": "<0/>은 쿨이 돌 때 최대한 바로 씁니다. 파티 버프와 개인 딜사이클 정렬, 사용 횟수 증가를 위해 최대한 바로 쓰는 것이 이상적입니다.",
   "nin.ta-usage.suggestions.missed.why": "속임수 공격을 {0} 만큼 지연시켜 {lostCasts, plural,one {#회}other {#회}}의 속임수 공격을 놓쳤습니다.",
