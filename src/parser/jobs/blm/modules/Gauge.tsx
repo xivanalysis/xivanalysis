@@ -37,7 +37,7 @@ const AFFECTS_GAUGE_ON_CAST: ActionKey[] = [
 	'TRANSPOSE',
 	'FOUL',
 	'XENOGLOSSY',
-	'ENOCHIAN'
+	'ENOCHIAN',
 ]
 
 /** Gauge state interface for consumers */
@@ -63,8 +63,10 @@ declare module 'event' {
 const STANCE_FADE = 0.5
 const GAUGE_FADE = 0.25
 const TIMER_FADE = 0.75
+/* eslint-disable @typescript-eslint/no-magic-numbers */
 const ICE_COLOR = Color.rgb(47, 113, 177)
 const FIRE_COLOR = Color.rgb(210, 62, 38)
+/* eslint-enable @typescript-eslint/no-magic-numbers */
 const POLYGLOT_COLOR = Color(JOBS.BLACK_MAGE.colour)
 
 export class Gauge extends CoreGauge {
@@ -105,8 +107,8 @@ export class Gauge extends CoreGauge {
 		graph: {
 			handle: ASTRAL_UMBRAL_HANDLE,
 			label: <Trans id="blm.gauge.resource.astral-timer">Astral Fire Timer</Trans>,
-			color: FIRE_COLOR.fade(TIMER_FADE)
-		}
+			color: FIRE_COLOR.fade(TIMER_FADE),
+		},
 	}))
 	/** Umbral Ice */
 	private umbralIceGauge = this.add(new CounterGauge({
@@ -123,8 +125,8 @@ export class Gauge extends CoreGauge {
 		graph: {
 			handle: ASTRAL_UMBRAL_HANDLE,
 			label: <Trans id="blm.gauge.resource.umbral-timer">Umbral Ice Timer</Trans>,
-			color: ICE_COLOR.fade(TIMER_FADE)
-		}
+			color: ICE_COLOR.fade(TIMER_FADE),
+		},
 	}))
 
 	/** Umbral Hearts */
@@ -149,8 +151,8 @@ export class Gauge extends CoreGauge {
 		onExpiration: this.onGainPolyglot.bind(this),
 		graph: {
 			label: <Trans id="blm.gauge.resource.polyglot-timer">Polyglot Timer</Trans>,
-			color: POLYGLOT_COLOR.fade(TIMER_FADE)
-		}
+			color: POLYGLOT_COLOR.fade(TIMER_FADE),
+		},
 	}))
 	private enochianGauge = this.add(new CounterGauge({
 		maximum: 1,

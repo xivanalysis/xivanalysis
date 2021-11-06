@@ -41,6 +41,7 @@ export const PLD = ensureStatuses({
 		name: 'Sword Oath',
 		icon: 'https://xivapi.com/i/019000/019461.png',
 		duration: 15000,
+		stacksApplied: 3,
 	},
 	SHELTRON: {
 		id: 1856,

@@ -59,7 +59,6 @@ export default class Gauge extends CoreGauge {
 				A total of {this.oathGauge.overCap} gauge was lost due to exceeding the cap.
 			</Trans>,
 			severity: SEVERITY.MINOR,
-			value: this.oathGauge.overCap,
 		}))
 	}
 }

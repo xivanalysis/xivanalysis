@@ -27,6 +27,13 @@ export default new Meta({
 	],
 	changelog: [
 		{
+			date: new Date('2021-11-01'),
+			Changes: () => <>
+				Account for intentional dropping of Twin Snakes for the 2 GCDs after Perfect Balance GCDs in uptime checklist.
+			</>,
+			contributors: [CONTRIBUTORS.ACCHAN],
+		},
+		{
 			date: new Date('2021-10-25'),
 			Changes: () => <>
 				Fix bug where Perfect Balance was hooking incorrect events and not printing suggestions.

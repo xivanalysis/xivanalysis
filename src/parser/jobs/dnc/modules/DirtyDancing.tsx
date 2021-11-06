@@ -3,10 +3,10 @@ import {Plural, Trans} from '@lingui/react'
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
 import {RotationTable} from 'components/ui/RotationTable'
 import {StatusKey} from 'data/STATUSES'
-import {Cause, Event, Events} from 'event'
+import {Event, Events} from 'event'
 import _ from 'lodash'
 import {Analyser} from 'parser/core/Analyser'
-import {filter, oneOf} from 'parser/core/filter'
+import {filter} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
 import {Actors} from 'parser/core/modules/Actors'
 import CheckList, {Requirement, Rule} from 'parser/core/modules/Checklist'
@@ -118,17 +118,14 @@ export class DirtyDancing extends Analyser {
 		[this.data.actions.STANDARD_STEP.id]: 0,
 		[this.data.actions.TECHNICAL_STEP.id]: 0,
 	}
-
-	private stepIds = STEPS.map(key => this.data.actions[key].id)
 	private danceMoveIds = DANCE_MOVES.map(key => this.data.actions[key].id)
-	private finishIds = FINISHES.map(key => this.data.actions[key].id)
 
 	override initialise() {
 		const playerFilter = filter<Event>().source(this.parser.actor.id)
-		this.addEventHook(playerFilter.type('action').action(oneOf(this.stepIds)), this.beginDance)
-		this.addEventHook(playerFilter.type('action').action(oneOf(this.danceMoveIds)), this.continueDance)
-		this.addEventHook(playerFilter.type('action').action(oneOf(this.finishIds)), this.finishDance)
-		this.addEventHook(playerFilter.type('damage').cause(filter<Cause>().action(oneOf(this.finishIds))), this.resolveDance)
+		this.addEventHook(playerFilter.type('action').action(this.data.matchActionId(STEPS)), this.beginDance)
+		this.addEventHook(playerFilter.type('action').action(this.data.matchActionId(DANCE_MOVES)), this.continueDance)
+		this.addEventHook(playerFilter.type('action').action(this.data.matchActionId(FINISHES)), this.finishDance)
+		this.addEventHook(playerFilter.type('damage').cause(this.data.matchCauseAction(FINISHES)), this.resolveDance)
 		this.addEventHook('complete', this.onComplete)
 	}
 
