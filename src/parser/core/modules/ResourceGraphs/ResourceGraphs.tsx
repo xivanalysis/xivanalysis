@@ -210,11 +210,21 @@ export class ResourceGraphs extends Analyser {
 		const {duration, timestamp: pullTimestamp} = this.parser.pull
 		const timestamp = pullTimestamp + (duration * fightPercent)
 
-		const info = dataGroup.data.map(datum => ({
-			label: datum.label,
-			colour: datum.colour,
-			..._.findLast(datum.data, datum => datum.time <= timestamp),
-		}))
+		const info = dataGroup.data.map(datum => {
+			const lastData = {..._.findLast(datum.data, datum => datum.time <= timestamp)}
+			if (datum.linear && lastData != null) {
+				const lastTimestamp = lastData.time ?? pullTimestamp
+				const {current: nextCurrent, time: nextTimestamp} = _.find(datum.data, datum => datum.time > timestamp) || {current: 0, time: pullTimestamp + duration}
+				const delta = nextCurrent - (lastData.current ?? 0)
+				const timePct = (timestamp - lastTimestamp) / (nextTimestamp - lastTimestamp)
+				lastData.current = (lastData.current ?? 0) + delta * timePct
+			}
+			return ({
+				label: datum.label,
+				colour: datum.colour,
+				...lastData,
+			})
+		})
 
 		return info
 	}
