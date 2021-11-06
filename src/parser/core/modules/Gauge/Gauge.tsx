@@ -16,11 +16,17 @@ export class Gauge extends Analyser {
 
 	private gauges: AbstractGauge[] = []
 
+	protected pauseGeneration = false;
+
 	override initialise() {
 		this.addEventHook({
 			type: 'death',
 			actor: this.parser.actor.id,
 		}, this.onDeath)
+		this.addEventHook({
+			type: 'raise',
+			actor: this.parser.actor.id,
+		}, this.onRaise)
 
 		this.addEventHook('complete', () => this.gauges.forEach(gauge => gauge.generateResourceGraph()))
 	}
@@ -36,13 +42,20 @@ export class Gauge extends Analyser {
 		}
 
 		gauge.setResourceGraphs(this.resourceGraphs)
+		gauge.init()
 
 		this.gauges.push(gauge)
 		return gauge
 	}
 
 	private onDeath() {
+		this.pauseGeneration = true
 		this.gauges.forEach(gauge => gauge.reset())
+	}
+
+	private onRaise() {
+		this.pauseGeneration = false
+		this.gauges.forEach(gauge => gauge.raise())
 	}
 
 	override output() {
