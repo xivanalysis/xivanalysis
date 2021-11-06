@@ -39,6 +39,13 @@ export interface CounterGaugeOptions extends AbstractGaugeOptions {
 	 *   an onComplete hook, or within the calling class's output function
 	 */
 	correctHistory?: boolean
+	/**
+	 * Are gauge generation events deterministic (always the same amount when they occur)? Defaults to true if not specified
+	 * Used by the history correction algorithm to decide how far back to look when underflow is detected
+	 * Examples of deterministic gauges: NIN's Ninki, RDM's mana
+	 * Examples of non-deterministic gauges: DNC's Feathers and Esprit, SAM's Kenki
+	 */
+	deterministic?: boolean
 }
 
 export interface CounterChartOptions {
@@ -55,6 +62,7 @@ export class CounterGauge extends AbstractGauge {
 	private maximum: number
 	overCap: number = 0
 	private correctHistory: boolean
+	private deterministic: boolean
 
 	private chartOptions?: CounterChartOptions
 	private graphOptions?: GaugeGraphOptions
@@ -68,11 +76,12 @@ export class CounterGauge extends AbstractGauge {
 	constructor(opts: CounterGaugeOptions = {}) {
 		super(opts)
 
-		this.minimum = opts.minimum || 0
-		this.initialValue = opts.initialValue || this.minimum
+		this.minimum = opts.minimum ?? 0
+		this.initialValue = opts.initialValue ?? this.minimum
 		this._value = this.initialValue
-		this.maximum = opts.maximum || 100
-		this.correctHistory = opts.correctHistory || false
+		this.maximum = opts.maximum ?? 100
+		this.correctHistory = opts.correctHistory ?? false
+		this.deterministic = opts.deterministic ?? true
 
 		this.chartOptions = opts.chart
 		this.graphOptions = opts.graph
@@ -125,7 +134,7 @@ export class CounterGauge extends AbstractGauge {
 		if (delta === 0 && reason != null) { return }
 
 		if (reason == null) {
-			reason = delta > 0 ? 'generate' : 'spend'
+			reason = value > this._value ? 'generate' : 'spend'
 		}
 
 		const newValue = Math.min(Math.max(value, this.minimum), this.maximum)
@@ -142,8 +151,8 @@ export class CounterGauge extends AbstractGauge {
 	}
 
 	private correctGaugeHistory(spenderCost: number, currentGauge: number) {
-		// Get the last generation or initialisation event we've recorded
-		const lastGeneratorIndex = _.findLastIndex(this.history, event => event.reason === 'generate' || event.reason === 'init')
+		// Get the initialisation event (or generation event if this gauge isn't deterministic) we've recorded
+		const lastGeneratorIndex = _.findLastIndex(this.history, event => (!this.deterministic && event.reason === 'generate') || event.reason === 'init')
 
 		// Add the amount we underran the simulation by to the last generation event, and all events through the current one
 		const underrunAmount = Math.abs(currentGauge - spenderCost)

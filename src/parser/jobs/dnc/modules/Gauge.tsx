@@ -87,6 +87,7 @@ export class Gauge extends CoreGauge {
 			color: FEATHERS_COLOR,
 		},
 		correctHistory: true,
+		deterministic: false,
 	}))
 	private espritGauge = this.add(new CounterGauge({
 		graph: {
@@ -94,6 +95,7 @@ export class Gauge extends CoreGauge {
 			color: ESRPIT_COLOR,
 		},
 		correctHistory: true,
+		deterministic: false,
 	}))
 
 	private espritBuffs: Map<string, EventHook<Events['damage']>> = new Map<string, EventHook<Events['damage']>>()
