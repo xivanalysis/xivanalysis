@@ -31,7 +31,13 @@ export interface CounterGaugeOptions extends AbstractGaugeOptions {
 	chart?: CounterChartOptions,
 	/** Graph options. Omit to disable graphing in the timeline for this gauge. */
 	graph?: GaugeGraphOptions
-	/** Should this gauge correct its history in the event of underflow? Must pass true to enable */
+	/**
+	 * Should this gauge correct its history in the event of underflow? Must pass true to enable
+	 * Important note:
+	 *   This WILL mutate the history array, but will not re-run any additional logic done partway through the analysis.
+	 *   If you are driving suggestions or other logic off gauge values at specific points in time, that should be run during
+	 *   an onComplete hook, or within the calling class's output function
+	 */
 	correctHistory?: boolean
 }
 
