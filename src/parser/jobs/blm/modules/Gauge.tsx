@@ -3,6 +3,7 @@ import {t} from '@lingui/macro'
 import {Trans, Plural} from '@lingui/react'
 import Color from 'color'
 import {DataLink} from 'components/ui/DbLink'
+import {ActionKey} from 'data/ACTIONS'
 import JOBS from 'data/JOBS'
 import {Cause, Event, Events, FieldsBase} from 'event'
 import {filter, oneOf} from 'parser/core/filter'
@@ -26,6 +27,19 @@ const FLARE_MAX_HEART_CONSUMPTION = 3
 const MAX_POLYGLOT_STACKS = 2
 const ASTRAL_UMBRAL_HANDLE = 'astralumbral'
 
+const AFFECTS_GAUGE_ON_DAMAGE: ActionKey[] = [
+	...FIRE_SPELLS,
+	...ICE_SPELLS_TARGETED,
+]
+
+const AFFECTS_GAUGE_ON_CAST: ActionKey[] = [
+	...ICE_SPELLS_UNTARGETED,
+	'TRANSPOSE',
+	'FOUL',
+	'XENOGLOSSY',
+	'ENOCHIAN'
+]
+
 /** Gauge state interface for consumers */
 export interface BLMGaugeState {
 	astralFire: number,
@@ -45,17 +59,13 @@ declare module 'event' {
 	}
 }
 
-/** Graph colors */
-/* eslint-disable @typescript-eslint/no-magic-numbers */
+/** Graph colors/fade settings */
 const STANCE_FADE = 0.5
 const GAUGE_FADE = 0.25
+const TIMER_FADE = 0.75
 const ICE_COLOR = Color.rgb(47, 113, 177)
 const FIRE_COLOR = Color.rgb(210, 62, 38)
-const POLYGLOT_COLOR = Color(JOBS.BLACK_MAGE.colour).fade(GAUGE_FADE).toString()
-const UMBRAL_ICE_COLOR = ICE_COLOR.fade(STANCE_FADE).toString()
-const ASTRAL_FIRE_COLOR = FIRE_COLOR.fade(STANCE_FADE).toString()
-const UMBRAL_HEARTS_COLOR = ICE_COLOR.fade(GAUGE_FADE).toString()
-/* eslint-enable @typescript-eslint/no-magic-numbers */
+const POLYGLOT_COLOR = Color(JOBS.BLACK_MAGE.colour)
 
 export class Gauge extends CoreGauge {
 	static override handle = 'gauge'
@@ -72,67 +82,78 @@ export class Gauge extends CoreGauge {
 	private lastHistoryTimestamp: number = this.parser.pull.timestamp
 
 	private fireSpellIds = FIRE_SPELLS.map(key => this.data.actions[key].id)
-	private targetedIceSpellIds = ICE_SPELLS_TARGETED.map(key => this.data.actions[key].id)
-	private untargetedIceSpellIds = ICE_SPELLS_UNTARGETED.map(key => this.data.actions[key].id)
 	private iceSpellIds = [
-		...this.targetedIceSpellIds,
-		...this.untargetedIceSpellIds,
+		...ICE_SPELLS_TARGETED.map(key => this.data.actions[key].id),
+		...ICE_SPELLS_UNTARGETED.map(key => this.data.actions[key].id),
 	]
-
-	private affectsGaugeOnDamage: number[] = [
-		...this.fireSpellIds,
-		...this.targetedIceSpellIds,
-	]
-	private affectsGaugeOnCast: number[] = [
-		...this.untargetedIceSpellIds,
-		this.data.actions.TRANSPOSE.id,
-		this.data.actions.ENOCHIAN.id,
-		this.data.actions.FOUL.id,
-		this.data.actions.XENOGLOSSY.id,
-	]
+	private affectsGaugeOnDamage = AFFECTS_GAUGE_ON_DAMAGE.map(key => this.data.actions[key].id)
 
 	private castTimeIndex: number | null = null
 
+	/** Astral Fire */
 	private astralFireGauge = this.add(new CounterGauge({
 		maximum: MAX_ASTRAL_UMBRAL_STACKS,
 		graph: {
 			handle: ASTRAL_UMBRAL_HANDLE,
 			label: <Trans id="blm.gauge.resource.astral-fire">Astral Fire</Trans>,
-			color: ASTRAL_FIRE_COLOR,
+			color: FIRE_COLOR.fade(STANCE_FADE),
 		},
 	}))
+	private astralFireTimer = this.add(new TimerGauge({
+		maximum: ASTRAL_UMBRAL_DURATION,
+		onExpiration: this.onAstralUmbralTimeout.bind(this),
+		graph: {
+			handle: ASTRAL_UMBRAL_HANDLE,
+			label: 'Astral Fire Timer',
+			color: FIRE_COLOR.fade(TIMER_FADE)
+		}
+	}))
+	/** Umbral Ice */
 	private umbralIceGauge = this.add(new CounterGauge({
 		maximum: MAX_ASTRAL_UMBRAL_STACKS,
 		graph: {
 			handle: ASTRAL_UMBRAL_HANDLE,
 			label: <Trans id="blm.gauge.resource.umbral-ice">Umbral Ice</Trans>,
-			color: UMBRAL_ICE_COLOR,
+			color: ICE_COLOR.fade(STANCE_FADE),
 		},
 	}))
+	private umbralIceTimer = this.add(new TimerGauge({
+		maximum: ASTRAL_UMBRAL_DURATION,
+		onExpiration: this.onAstralUmbralTimeout.bind(this),
+		graph: {
+			handle: ASTRAL_UMBRAL_HANDLE,
+			label: 'Umbral Ice Timer',
+			color: ICE_COLOR.fade(TIMER_FADE)
+		}
+	}))
+
+	/** Umbral Hearts */
 	private umbralHeartsGauge = this.add(new CounterGauge({
 		maximum: MAX_UMBRAL_HEART_STACKS,
 		graph: {
 			label: <Trans id="blm.gauge.resource.umbral-hearts">Umbral Hearts</Trans>,
-			color: UMBRAL_HEARTS_COLOR,
+			color: ICE_COLOR.fade(GAUGE_FADE),
 		},
 	}))
+
+	/** Polyglot */
 	private polyglotGauge = this.add(new CounterGauge({
 		maximum: MAX_POLYGLOT_STACKS,
 		graph: {
 			label: <Trans id="blm.gauge.resource.polyglot">Polyglot</Trans>,
-			color: POLYGLOT_COLOR,
+			color: POLYGLOT_COLOR.fade(GAUGE_FADE),
 		},
-	}))
-	private enochianGauge = this.add(new CounterGauge({
-		maximum: 1,
-	}))
-	private astralUmbralTimer = this.add(new TimerGauge({
-		maximum: ASTRAL_UMBRAL_DURATION,
-		onExpiration: this.onAstralUmbralTimeout.bind(this),
 	}))
 	private polyglotTimer = this.add(new TimerGauge({
 		maximum: ENOCHIAN_DURATION_REQUIRED,
 		onExpiration: this.onGainPolyglot.bind(this),
+		graph: {
+			label: 'Polyglot Timer',
+			color: POLYGLOT_COLOR.fade(TIMER_FADE)
+		}
+	}))
+	private enochianGauge = this.add(new CounterGauge({
+		maximum: 1,
 	}))
 
 	override initialise() {
@@ -142,7 +163,7 @@ export class Gauge extends CoreGauge {
 
 		// The action event is sufficient for actions that don't need to do damage to affect gauge state (ie. Transpose, Enochian, Umbral Soul)
 		// Foul and Xenoglossy also fall into this category since they consume Polyglot on execution
-		this.addEventHook(playerFilter.type('action').action(oneOf(this.affectsGaugeOnCast)), this.onCast)
+		this.addEventHook(playerFilter.type('action').action(this.data.matchActionId(AFFECTS_GAUGE_ON_CAST)), this.onCast)
 
 		// The rest of the fire and ice spells must do damage in order to affect gauge state, so hook that event instead.
 		this.addEventHook(playerFilter.type('damage').cause(filter<Cause>().action(oneOf(this.affectsGaugeOnDamage))), this.onCast)
@@ -274,13 +295,14 @@ export class Gauge extends CoreGauge {
 	}
 
 	private addEvent() {
-		if (this.astralFireGauge.value > 0 || this.umbralIceGauge.value > 0) {
-			if (this.astralUmbralTimer.expired) {
-				this.astralUmbralTimer.start()
-			}
-			if (this.polyglotTimer.expired && this.enochianGauge.value > 0) {
-				this.polyglotTimer.start()
-			}
+		if (this.astralFireGauge.value > 0 && this.astralFireTimer.expired) {
+			this.astralFireTimer.start()
+		}
+		if (this.umbralIceGauge.value > 0 && this.umbralIceTimer.expired) {
+			this.umbralIceTimer.start()
+		}
+		if (this.enochianGauge.value > 0 && this.polyglotTimer.expired) {
+			this.polyglotTimer.start()
 		}
 
 		const lastGaugeState = this.getGaugeState(this.lastHistoryTimestamp)
@@ -335,8 +357,10 @@ export class Gauge extends CoreGauge {
 
 	//#region Astral Fire and Umbral Ice
 	private onAstralUmbralTimeout(flagIssues: boolean = true) {
-		this.astralUmbralTimer.reset()
+		this.astralFireTimer.reset()
 		this.astralFireGauge.reset()
+
+		this.umbralIceTimer.reset()
 		this.umbralIceGauge.reset()
 
 		this.onEnochianTimeout(flagIssues)
@@ -346,9 +370,10 @@ export class Gauge extends CoreGauge {
 		if (this.umbralIceGauge.value > 0 && dropsElementOnSwap) {
 			this.onAstralUmbralTimeout()
 		} else {
-			this.astralUmbralTimer.refresh()
-
+			this.umbralIceTimer.reset()
 			this.umbralIceGauge.reset()
+
+			this.astralFireTimer.start()
 			this.astralFireGauge.modify(stackCount)
 
 			this.addEvent()
@@ -359,9 +384,10 @@ export class Gauge extends CoreGauge {
 		if (this.astralFireGauge.value > 0 && dropsElementOnSwap) {
 			this.onAstralUmbralTimeout()
 		} else {
-			this.astralUmbralTimer.refresh()
-
+			this.astralFireTimer.reset()
 			this.astralFireGauge.reset()
+
+			this.umbralIceTimer.start()
 			this.umbralIceGauge.modify(stackCount)
 
 			this.addEvent()
@@ -369,16 +395,14 @@ export class Gauge extends CoreGauge {
 	}
 
 	private onTransposeStacks() {
+		// If we're in neither stance, Transpose is a no-op
 		if (this.astralFireGauge.value <= 0 && this.umbralIceGauge.value <= 0) { return }
 
-		this.astralUmbralTimer.refresh()
-
+		// If we're currently in Fire, we're swapping to Ice
 		if (this.astralFireGauge.value > 0) {
-			this.astralFireGauge.reset()
-			this.umbralIceGauge.set(1)
-		} else {
-			this.astralFireGauge.set(1)
-			this.umbralIceGauge.reset()
+			this.onGainUmbralIceStacks(1)
+		} else { // Otherwise, we're swapping to fire
+			this.onGainAstralFireStacks(1)
 		}
 
 		this.addEvent()
