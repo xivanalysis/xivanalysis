@@ -187,26 +187,23 @@ export class TimerGauge extends AbstractGauge {
 		}
 
 		// Translate state history into a dataset that makes sense for the chart
-		const startTime = this.parser.eventTimeOffset
-		const endTime = startTime + this.parser.pull.duration
+		const endTime = this.parser.pull.timestamp + this.parser.pull.duration
 		const data: ResourceDatum[] = []
 		this.history.forEach(entry => {
-			const relativeTimestamp = entry.timestamp - startTime
-
 			// Adjust preceeding data for the start of this state's window
 			const {length} = data
-			if (length > 0 && relativeTimestamp < data[length - 1].time) {
+			if (length > 0 && entry.timestamp < data[length - 1].time) {
 				// If we're updating prior to the previous entry's expiration, update the previous entry
 				// with its state at this point in time - we'll end up with two points showing the update on
 				// this timestamp.
 				const prev = data[length - 1]
-				prev.current = (prev.current || this.minimum / 1000) + ((prev.time - relativeTimestamp) / 1000)
-				prev.time = relativeTimestamp
+				prev.current = (prev.current || this.minimum / 1000) + ((prev.time - entry.timestamp) / 1000)
+				prev.time = entry.timestamp - 1
 
 			} else {
 				// This window is starting fresh, not extending - insert a blank entry so the chart doesn't
 				// render a line from the previous.
-				data.push({time: relativeTimestamp, current: 0, maximum: this.maximum})
+				data.push({time: entry.timestamp, current: 0, maximum: this.maximum / 1000})
 			}
 
 			// Insert the data point for the start of this window.
@@ -214,21 +211,21 @@ export class TimerGauge extends AbstractGauge {
 			const chartY = (this.minimum + entry.remaining) / 1000
 			if (!entry.paused) {
 				data.push({
-					time: relativeTimestamp,
+					time: entry.timestamp,
 					current: chartY,
-					maximum: this.maximum,
+					maximum: this.maximum / 1000,
 				})
 			}
 
 			// If the state isn't paused, insert a data point for the time it will expire.
 			// This data point will be updated in the event of an extension.
 			if (!entry.paused && entry.remaining > 0) {
-				const time = Math.min(relativeTimestamp + entry.remaining, endTime - startTime)
-				const timeDelta = time - relativeTimestamp
+				const time = Math.min(entry.timestamp + entry.remaining, endTime)
+				const timeDelta = time - entry.timestamp
 				data.push({
 					time,
 					current: (this.minimum + entry.remaining - timeDelta) / 1000,
-					maximum: this.maximum,
+					maximum: this.maximum / 1000,
 				})
 			}
 		})
@@ -238,6 +235,7 @@ export class TimerGauge extends AbstractGauge {
 			label,
 			colour: color,
 			data,
+			linear: true,
 		}
 		if (handle != null) {
 			this.resourceGraphs.addDataGroup({...this.graphOptions, handle})

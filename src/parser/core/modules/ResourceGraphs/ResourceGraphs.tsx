@@ -13,6 +13,7 @@ import {MarkerHandler, ResourceInfo} from './MarkerHandler'
 export interface ResourceMeta {
 	label: ReactNode
 	colour: string | Color
+	linear?: boolean
 }
 
 export interface ResourceDatum extends Resource {
