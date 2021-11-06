@@ -354,6 +354,7 @@
   "core.weaving.why": "{0, plural, other {不適切な挟み込み回数：#回}}",
   "dnc.about.description": "踊り子になったけど、金冠のピルエッテと緑葉のジュテの区別がつかない…！なんて事はありませんか？このページではみんなが思わず立ち上がって拍手を送りたくなるような踊り方についての方法を学べます！\n\n踊り子の重要な部分はダンスの適切なパフォーマンス、ゲージの超過を防ぐこと、そしてプロックの使い方です。これらを最大限に活用するための提案をします。\n\n踊り子について、もっと知りたいという方はこちらのガイドをチェックしてみてください。\n* [FAQ by Tsuki](https://docs.google.com/document/d/1eNAxyjxvG4u8jEBARCD3FXWUfkK2RgCjEvKSPOUCSOQ/edit?usp=sharing)\n* [Write up by Ellunavi](https://docs.google.com/document/d/1iktjQ-kW7Vp-iWy_xEWh6t62FaXqjfGELGmcWOtPQfM/edit?usp=sharing)\n",
   "dnc.about.description.warning": "踊り子の幻扇シンボルとエスプリゲージはどちらも正確なデータを取得できないので、ここでは予測しています。できるだけ正確なデータを取得するために最善を尽くしていますが、もし、著しく間違っているようならばDiscordチャンネルに立ち寄るか、GitHubのリポジトリにバグを報告してください。",
+  "dnc.dirty-dancing.checklist.closed-position-buff.name": "<0/>を選ぶ",
   "dnc.dirty-dancing.checklist.standard-finish-buff.description": "あなたの<0/>バフは自身のダメージに大きく貢献するだけでなく、<1/>のダメージにも貢献します。常に保つようにしましょう。",
   "dnc.dirty-dancing.checklist.standard-finish-buff.name": "<0/> のバフを維持してください",
   "dnc.dirty-dancing.rotation-table.header.dirty": "正しいフィニッシュ",
