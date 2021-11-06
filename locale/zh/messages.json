@@ -639,7 +639,6 @@
   "nin.ninki.suggestions.frog.content": "避免在其他忍气技能可以使用时用 <0/> (除非有多目标)，因为它在三者中单体威力最低。",
   "nin.ninki.suggestions.frog.why": "在其他忍气技能可使用时，你使用了 {0, plural, one {# 次} other {# 次}}通灵之术·大虾蟆.",
   "nin.ninki.suggestions.waste.content": "避免在60+忍气时使用<0/>或者任由忍气溢出(少数情况允许) 以最大化整场战斗的忍气技能次数。",
-  "nin.ninki.suggestions.waste.why": "忍气溢出导致你整个战斗流程损失了{totalWaste} 点忍气。",
   "nin.ninki.title": "忍气时间轴",
   "nin.ta-usage.suggestions.missed.content": "避免延后<0/> 太久。理论来说，尽量卡CD打使其对齐其他团辅Buff和个人爆发，最大化它的使用次数。",
   "nin.ta-usage.suggestions.missed.why": "你延后了攻其不备 {0} 秒，导致你少了 {lostCasts, plural, one {# potential use} other {# 次使用次数}}。",
