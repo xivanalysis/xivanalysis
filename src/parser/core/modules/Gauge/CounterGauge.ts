@@ -130,11 +130,11 @@ export class CounterGauge extends AbstractGauge {
 
 	/** Set the current value of the gauge. Value will automatically be bounded to valid values. Value over the maximum will be tracked as overcap. */
 	set(value: number, reason?: GaugeEventReason) {
-		const delta = Math.abs(value - this.value)
+		const delta = value - this.value
 		if (delta === 0 && reason != null) { return }
 
 		if (reason == null) {
-			reason = value > this._value ? 'generate' : 'spend'
+			reason = delta > 0 ? 'generate' : 'spend'
 		}
 
 		const newValue = Math.min(Math.max(value, this.minimum), this.maximum)
@@ -151,6 +151,8 @@ export class CounterGauge extends AbstractGauge {
 	}
 
 	private correctGaugeHistory(spenderCost: number, currentGauge: number) {
+		spenderCost = Math.abs(spenderCost)
+
 		// Get the initialisation event (or generation event if this gauge isn't deterministic) we've recorded
 		const lastGeneratorIndex = _.findLastIndex(this.history, event => (!this.deterministic && event.reason === 'generate') || event.reason === 'init')
 
