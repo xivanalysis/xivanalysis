@@ -3,7 +3,7 @@ import {Trans} from '@lingui/react'
 import JOBS from 'data/JOBS'
 import {Event, Events} from 'event'
 import {filter, oneOf} from 'parser/core/filter'
-import {dependency} from 'parser/core/Module'
+import {dependency} from 'parser/core/Injectable'
 import {Data} from 'parser/core/modules/Data'
 import {CounterGauge, Gauge as CoreGauge} from 'parser/core/modules/Gauge'
 import {Statistics} from 'parser/core/modules/Statistics'
@@ -25,12 +25,18 @@ export default class Gauge extends CoreGauge {
 	@dependency private statistics!: Statistics
 
 	private _whiteManaGauge = this.add(new CounterGauge({
-		chart: {label: 'White Mana', color: JOBS.WHITE_MAGE.colour},
+		graph: {
+			label: <Trans id="rdm.gauge.resource.whitemana">White Mana</Trans>,
+			color: JOBS.WHITE_MAGE.colour,
+		},
 		maximum: 100,
 		minimum: 0,
 	}))
 	private _blackManaGauge = this.add(new CounterGauge({
-		chart: {label: 'Black Mana', color: JOBS.BLACK_MAGE.colour},
+		graph: {
+			label: <Trans id="rdm.gauge.resource.blackmana">Black Mana</Trans>,
+			color: JOBS.BLACK_MAGE.colour,
+		},
 		maximum: 100,
 		minimum: 0,
 	}))
@@ -287,7 +293,15 @@ export default class Gauge extends CoreGauge {
 		return this._whiteManaGauge.value
 	}
 
+	public getWhiteManaAt(timestamp: number) {
+		return this._whiteManaGauge.getValueAt(timestamp)
+	}
+
 	public getBlackMana() {
 		return this._blackManaGauge.value
+	}
+
+	public getBlackManaAt(timestamp: number) {
+		return this._blackManaGauge.getValueAt(timestamp)
 	}
 }
