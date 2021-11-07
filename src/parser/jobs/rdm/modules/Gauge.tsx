@@ -40,7 +40,7 @@ export default class Gauge extends CoreGauge {
 		maximum: 100,
 		minimum: 0,
 	}))
-	private _gaugeModifiers = new Map<number, GaugeModifier>([
+	public _gaugeModifiers = new Map<number, GaugeModifier>([
 		[this.data.actions.VERAERO.id, {white: 11, black: 0}],
 		[this.data.actions.VERAERO_II.id, {white: 7, black: 0}],
 		[this.data.actions.VERSTONE.id, {white: 9, black: 0}],
@@ -74,7 +74,7 @@ export default class Gauge extends CoreGauge {
 	public readonly _manaDifferenceThreshold = 30
 	private readonly _manaLostDivisor = 2
 	private readonly _manaficationMultiplier = 2
-	private readonly _manaCap = 100
+	public readonly _manaCap = 100
 
 	_manaStatistics = {
 		white: {
