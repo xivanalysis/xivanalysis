@@ -71,7 +71,7 @@ export class TimerGauge extends AbstractGauge {
 			return this.lastKnownState.remaining
 		}
 
-		const delta = this.parser.currentTimestamp - this.lastKnownState.timestamp
+		const delta = this.parser.currentEpochTimestamp - this.lastKnownState.timestamp
 		return Math.max(this.minimum, this.lastKnownState.remaining - delta)
 	}
 
@@ -189,9 +189,11 @@ export class TimerGauge extends AbstractGauge {
 		// Translate state history into a dataset that makes sense for the chart
 		const endTime = this.parser.pull.timestamp + this.parser.pull.duration
 		const data: ResourceDatum[] = []
+		let previousPaused = false
 		this.history.forEach(entry => {
 			// Adjust preceeding data for the start of this state's window
 			const {length} = data
+			const chartY = (this.minimum + entry.remaining) / 1000
 			if (length > 0 && entry.timestamp < data[length - 1].time) {
 				// If we're updating prior to the previous entry's expiration, update the previous entry
 				// with its state at this point in time - we'll end up with two points showing the update on
@@ -200,16 +202,15 @@ export class TimerGauge extends AbstractGauge {
 				prev.current = (prev.current || this.minimum / 1000) + ((prev.time - entry.timestamp) / 1000)
 				prev.time = entry.timestamp - 1
 
-			} else {
+			} else if (length > 0) {
 				// This window is starting fresh, not extending - insert a blank entry so the chart doesn't
 				// render a line from the previous.
-				data.push({time: entry.timestamp, current: 0, maximum: this.maximum / 1000})
+				data.push({time: entry.timestamp, current: previousPaused ? chartY : 0, maximum: this.maximum / 1000})
 			}
 
 			// Insert the data point for the start of this window.
-			// Skip for pauses, as the updated previous point will represent the start point of the pause
-			const chartY = (this.minimum + entry.remaining) / 1000
-			if (!entry.paused) {
+			// Skip for pausing/unpausing, as the points added/updated in the above code will represent the bounds of the pause
+			if (!entry.paused && !previousPaused) {
 				data.push({
 					time: entry.timestamp,
 					current: chartY,
@@ -228,6 +229,8 @@ export class TimerGauge extends AbstractGauge {
 					maximum: this.maximum / 1000,
 				})
 			}
+
+			previousPaused = entry.paused
 		})
 
 		const {handle, label, color} = this.graphOptions
