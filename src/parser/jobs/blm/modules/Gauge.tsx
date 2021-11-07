@@ -402,9 +402,9 @@ export class Gauge extends CoreGauge {
 
 		// If we're currently in Fire, we're swapping to Ice
 		if (this.astralFireGauge.value > 0) {
-			this.onGainUmbralIceStacks(1)
+			this.onGainUmbralIceStacks(1, false)
 		} else { // Otherwise, we're swapping to fire
-			this.onGainAstralFireStacks(1)
+			this.onGainAstralFireStacks(1, false)
 		}
 
 		this.addEvent()
