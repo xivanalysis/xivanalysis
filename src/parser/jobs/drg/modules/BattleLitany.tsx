@@ -41,7 +41,7 @@ class BLWindow {
 }
 
 // Analyser port note:
-// - hoping to use new BuffWindow module to handle this logic
+// - currently investigating: using new BuffWindow module to handle this logic
 // in this module we only want to track battle litany windows opened by
 // the character selected for analysis. windows that clip into or overwrite other
 // DRG litanies will be marked.
@@ -72,14 +72,6 @@ export default class BattleLitany extends Analyser {
 		this.addEventHook(filter<Event>().type('action').source(this.parser.actor.id), this.onCast)
 		this.addEventHook(filter<Event>().type('death').actor(this.parser.actor.id), this.onDeath)
 	}
-
-	// protected override init() {
-	// 	this.addEventHook('normalisedapplybuff', {to: 'player', abilityId: STATUSES.BATTLE_LITANY.id}, this.tryOpenWindow)
-	// 	this.addEventHook('normalisedapplybuff', {by: 'player', abilityId: STATUSES.BATTLE_LITANY.id}, this.countLitBuffs)
-	// 	this.addEventHook('removebuff', {to: 'player', abilityId: WINDOW_STATUSES}, this.tryCloseWindow)
-	// 	this.addEventHook('death', {to: 'player'}, this.onDeath)
-	// 	this.addEventHook('cast', {by: 'player'}, this.onCast)
-	// }
 
 	private countLitBuffs(event: Events['statusApply']) {
 		// Get this from tryOpenWindow. If a window wasn't open, we'll open one.
