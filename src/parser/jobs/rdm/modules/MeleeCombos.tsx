@@ -17,12 +17,12 @@ import {Timeline} from 'parser/core/modules/Timeline'
 import Gauge from 'parser/jobs/rdm/modules/Gauge'
 import {DualStatistic} from 'parser/jobs/rdm/statistics/DualStatistic'
 import React, {Fragment} from 'react'
-import {isSuccessfulHit} from 'utilities'
+import {formatDuration, isDefined, ensureArray, isSuccessfulHit} from 'utilities'
 import {Button, Table} from 'semantic-ui-react'
 import Rotation from 'components/ui/Rotation'
-import {ensureArray, isDefined} from 'utilities'
-import { RotationTable, RotationTableNotesMap, RotationTableTargetData } from 'components/ui/RotationTable'
+import { RotationTable, RotationTableNotesMap, RotationTableTargetData, RotationTargetData, RotationTarget, RotationNotes, RotationTargetOutcome } from 'components/ui/RotationTable'
 import { Action } from 'data/ACTIONS/type'
+import { Status } from 'data/STATUSES/type'
 
 type MeleeCombo = {
 	events: Array<Events['action']>,
@@ -31,9 +31,13 @@ type MeleeCombo = {
 		 used: number,
 		 recommendedActions: Action[],
 		 recommendation: JSX.Element
-	 }
+	 },
+	procs: Status[]
 	broken: boolean,
-	initialized: boolean,
+	startingMana: {
+		white: number,
+		black: number
+	}
 }
 
 interface ManaActions {
@@ -79,6 +83,7 @@ export default class MeleeCombos extends Analyser {
 		finisher: this.data.actions.VERFLARE.id,
 	}
 	private readonly _ignoreFinisherProcsManaThreshold = 4
+	private readonly _upperComboTimeFrame = 13
 	//4 seconds for 2 GCD minus a 1 second window to activate before finisher
 	private readonly _delayAccelerationAvailableThreshold = 4
 	private _meleeCombos = new History<MeleeCombo>(() => ({
@@ -89,8 +94,12 @@ export default class MeleeCombos extends Analyser {
 			 recommendedActions: [],
 		 recommendation: <Trans></Trans>
 		 },
+		 procs: [],
 		broken: false,
-		initialized: false, }))
+		startingMana: {
+			white: 0,
+			black: 0
+		}, }))
 	private _incorrectFinishers = {
 		verholy: 0,
 		verflare: 0,
@@ -227,50 +236,105 @@ export default class MeleeCombos extends Analyser {
 			}))
 	}
 
+	// Helper needed to make this.timeline.show behave, remove when timeline is a Sith and deals in absolutes
+	private relativeTimestamp(timestamp: number) {
+		return timestamp - this.parser.pull.timestamp
+	}
+
+	private endTimestampCap(timestamp: number) {
+		const fightEnd = this.parser.pull.duration + this.parser.pull.timestamp
+		if (timestamp > fightEnd) {
+			return fightEnd
+		}
+		else {
+			return timestamp
+		}
+	}
+
 	override output() {
 		if (this._meleeCombos.entries.length === 0) { return undefined }
+		console.log(this._meleeCombos)
 
-		const actionHistory = this.mapHistoryActions()
-		const evalColumns: EvaluationOutput[]  = []
-		for (const ev of this.evaluators) {
-			const maybeColumns = ev.output(actionHistory)
-			if (maybeColumns == null) { continue }
-			for (const column of ensureArray(maybeColumns)) {
-				evalColumns.push(column)
-			}
-		}
+		return (
+			<Table compact unstackable celled>
+				<Table.Header>
+					<Table.Row>
+						<Table.HeaderCell collapsing>
+							<strong><Trans id="rdm.meleecombos.table.header.time">Time</Trans></strong>
+						</Table.HeaderCell>
+						<Table.HeaderCell collapsing>
+							<strong><Trans id="rdm.meleecombos.table.header.starting-mana">Starting Mana</Trans></strong>
+						</Table.HeaderCell>
+						<Table.HeaderCell collapsing>
+							<strong><Trans id="rdm.meleecombos.table.header.starting-procs">Starting Procs</Trans></strong>
+						</Table.HeaderCell>
+						<Table.HeaderCell collapsing>
+							<strong><Trans id="rdm.meleecombos.table.header.rotation">Rotation</Trans></strong>
+						</Table.HeaderCell>
+						<Table.HeaderCell collapsing>
+							<strong><Trans id="rdm.meleecombos.table.header.recommended">Recommended</Trans></strong>
+						</Table.HeaderCell>
+					</Table.Row>
+				</Table.Header>
+				<Table.Body>
+					{
+						this._meleeCombos.entries.map(combo => {
+							//console.log(util.inspect(timestamp, {showHidden: true, depth: null}))
+							const white = combo.data.startingMana.white
+							const black = combo.data.startingMana.black
+							//const rotation = combo.data.events
 
-		const rotationTargets = evalColumns.filter(column => column.format === 'table').map(column => column.header)
-		const notesData = evalColumns.filter(column => column.format === 'notes').map(column => column.header)
-		const rotationData = this._meleeCombos.entries
-			.map((window, idx) => {
-				const targetsData: RotationTableTargetData = {}
-				const notesMap: RotationTableNotesMap = {}
-				evalColumns.forEach(column => {
-					if (typeof column.header.accessor !== 'string') { return }
-					const colName = column.header.accessor
-					if (column.format === 'table') {
-						targetsData[colName] = column.rows[idx]
-					} else {
-						notesMap[colName] = column.rows[idx]
+							// Prevent null reference errors with broken combos - start with empty values and load with finisher data if exists
+							const recommendedActions = (combo.data.finisher) ? combo.data.finisher.recommendedActions : []
+							const recommendation = (combo.data.finisher) ? combo.data.finisher.recommendation : ''
+
+							//console.log(util.inspect(rotation, {showHidden: true, depth: null}))
+
+							return (<Table.Row key={combo.start}>
+								<Table.Cell textAlign="center">
+									<span style={{marginRight: 5}}>{this.parser.formatEpochTimestamp(combo.start)}</span>
+									{<Button
+										circular
+										compact
+										size="mini"
+										icon="time"
+										onClick={() => this.timeline.show(this.relativeTimestamp(combo.start), this.relativeTimestamp(this.endTimestampCap(combo.end ?? combo.start + this._upperComboTimeFrame)))}
+									/>}
+								</Table.Cell>
+								<Table.Cell>
+									<span style={{whiteSpace: 'nowrap'}}>{white} White | {black} Black</span>
+								</Table.Cell>
+								<Table.Cell>
+								<span>{
+										combo.data.procs.map((key) => {
+											switch (key) {
+											case this.data.statuses.VERSTONE_READY:
+												return (<StatusLink key="verstone" showName={false} {...this.data.statuses.VERSTONE_READY}/>)
+											case this.data.statuses.VERFIRE_READY:
+												return (<StatusLink key="verfire" showName={false} {...this.data.statuses.VERFIRE_READY}/>)
+											case this.data.statuses.ACCELERATION:
+												return (<StatusLink key="acceleration" showName={false} {...this.data.statuses.ACCELERATION}/>)
+											}
+										})
+									}</span>
+								</Table.Cell>
+								<Table.Cell>
+									<span style={{whiteSpace: 'nowrap'}}><Rotation events={combo.data.events} /></span>
+								</Table.Cell>
+								<Table.Cell>
+									{
+										recommendedActions.map((action) => {
+											return (<ActionLink key={action.id} showName={false} {...action}/>)
+										})
+									}
+									<br />{recommendation}
+								</Table.Cell>
+							</Table.Row>)
+						})
 					}
-				})
-				return {
-					start: window.start - this.parser.pull.timestamp,
-					end: (window.end ?? window.start) - this.parser.pull.timestamp,
-					targetsData,
-					rotation: window.data.events.map(event => { return {action: event.action} }),
-					notesMap,
-				}
-			})
-
-		return <RotationTable
-			targets={rotationTargets}
-			data={rotationData}
-			notes={notesData}
-			onGoto={this.timeline.show}
-			headerTitle={<Trans id="rdm.meleecombos.rotationtable.content"/>}
-		/>
+				</Table.Body>
+			</Table>
+		)
 	}
 
 	private startCombo(event: Events['action']) {
@@ -279,6 +343,18 @@ export default class MeleeCombos extends Analyser {
 		if (current) {
 			current.data.events.push(event)
 			current.data.lastAction = event
+			if ((this.actors.current.at(event.timestamp).hasStatus(this.data.statuses.ACCELERATION.id)) ||
+			this.cooldowns.remaining('ACCELERATION') <= this._delayAccelerationAvailableThreshold) {
+				current.data.procs.push(this.data.statuses.ACCELERATION)
+			}
+			if (this.actors.current.at(event.timestamp).hasStatus(this.data.statuses.VERSTONE_READY.id)) {
+				current.data.procs.push(this.data.statuses.VERSTONE_READY)
+			}
+			if (this.actors.current.at(event.timestamp).hasStatus(this.data.statuses.VERFIRE_READY.id)) {
+				current.data.procs.push(this.data.statuses.VERFIRE_READY)
+			}
+			current.data.startingMana.white = this.gauge.getWhiteManaAt(event.timestamp - 1)
+			current.data.startingMana.black = this.gauge.getBlackManaAt(event.timestamp - 1)
 		}
 	}
 

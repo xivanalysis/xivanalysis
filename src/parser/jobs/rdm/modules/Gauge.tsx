@@ -54,7 +54,7 @@ export default class Gauge extends CoreGauge {
 		[this.data.actions.IMPACT.id, {white: 3, black: 3}],
 		[this.data.actions.SCORCH.id, {white: 7, black: 7}],
 	])
-	private _spenderModifiers = new Map<number, GaugeModifier>([
+	public _spenderModifiers = new Map<number, GaugeModifier>([
 		[this.data.actions.ENCHANTED_REPRISE.id, {white: -5, black: -5}],
 		[this.data.actions.ENCHANTED_MOULINET.id, {white: -20, black: -20}],
 		[this.data.actions.ENCHANTED_RIPOSTE.id, {white: -30, black: -30}],
