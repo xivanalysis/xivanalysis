@@ -74,7 +74,9 @@ export class Gauge extends Analyser {
 	private onPauseTimers() {
 		this.gauges.forEach(gauge => {
 			if (gauge instanceof TimerGauge) {
-				gauge.pause()
+				if (!gauge.paused) {
+					gauge.pause()
+				}
 			}
 		})
 	}
