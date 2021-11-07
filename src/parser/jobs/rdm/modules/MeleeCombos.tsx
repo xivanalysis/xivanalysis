@@ -1,26 +1,20 @@
 import {t} from '@lingui/macro'
 import {Trans, Plural} from '@lingui/react'
-import JOBS from 'data/JOBS'
 import {Event, Events} from 'event'
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
 import {Analyser} from 'parser/core/Analyser'
-import {filter, oneOf} from 'parser/core/filter'
+import {filter} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
-import {AllowedGcdsOnlyEvaluator, ActionWindow, ExpectedActionsEvaluator, ExpectedGcdCountEvaluator, LimitedActionsEvaluator, EvaluationOutput, EvaluatedAction, WindowEvaluator} from 'parser/core/modules/ActionWindow'
-import { History, HistoryEntry } from 'parser/core/modules/ActionWindow/History'
+import { History } from 'parser/core/modules/ActionWindow/History'
 import {Actors} from 'parser/core/modules/Actors'
 import {Cooldowns} from 'parser/core/modules/Cooldowns'
 import {Data} from 'parser/core/modules/Data'
-import {Statistics} from 'parser/core/modules/Statistics'
 import Suggestions, {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import {Timeline} from 'parser/core/modules/Timeline'
 import Gauge from 'parser/jobs/rdm/modules/Gauge'
-import {DualStatistic} from 'parser/jobs/rdm/statistics/DualStatistic'
-import React, {Fragment} from 'react'
-import {formatDuration, isDefined, ensureArray, isSuccessfulHit} from 'utilities'
+import React from 'react'
 import {Button, Table} from 'semantic-ui-react'
 import Rotation from 'components/ui/Rotation'
-import { RotationTable, RotationTableNotesMap, RotationTableTargetData, RotationTargetData, RotationTarget, RotationNotes, RotationTargetOutcome } from 'components/ui/RotationTable'
 import { Action } from 'data/ACTIONS/type'
 import { Status } from 'data/STATUSES/type'
 
@@ -105,10 +99,6 @@ export default class MeleeCombos extends Analyser {
 		verflare: 0,
 		delay: 0,
 	}
-	/**
-	 * The evaluators used to generate suggestions and output for the windows.
-	 */
-	 private evaluators: WindowEvaluator[] = []
 
 	override initialise() {
 		super.initialise()
@@ -222,25 +212,12 @@ export default class MeleeCombos extends Analyser {
 		}))
 	}
 
-	private mapHistoryActions(): Array<HistoryEntry<EvaluatedAction[]>> {
-		return this._meleeCombos.entries
-			.map(entry => ({start: entry.start,
-				end: entry.end,
-				data: entry.data.events
-					.map(ev => {
-						const action = this.data.getAction(ev.action)
-						if (action == null) { return undefined }
-						return {...ev, action}
-					})
-					.filter(isDefined),
-			}))
-	}
-
 	// Helper needed to make this.timeline.show behave, remove when timeline is a Sith and deals in absolutes
 	private relativeTimestamp(timestamp: number) {
 		return timestamp - this.parser.pull.timestamp
 	}
 
+	//Helper to ensure we never attempt to navigate the timeline beyond the ending bound of the fight
 	private endTimestampCap(timestamp: number) {
 		const fightEnd = this.parser.pull.duration + this.parser.pull.timestamp
 		if (timestamp > fightEnd) {
@@ -279,16 +256,12 @@ export default class MeleeCombos extends Analyser {
 				<Table.Body>
 					{
 						this._meleeCombos.entries.map(combo => {
-							//console.log(util.inspect(timestamp, {showHidden: true, depth: null}))
 							const white = combo.data.startingMana.white
 							const black = combo.data.startingMana.black
-							//const rotation = combo.data.events
 
 							// Prevent null reference errors with broken combos - start with empty values and load with finisher data if exists
 							const recommendedActions = (combo.data.finisher) ? combo.data.finisher.recommendedActions : []
 							const recommendation = (combo.data.finisher) ? combo.data.finisher.recommendation : ''
-
-							//console.log(util.inspect(rotation, {showHidden: true, depth: null}))
 
 							return (<Table.Row key={combo.start}>
 								<Table.Cell textAlign="center">
@@ -375,13 +348,13 @@ export default class MeleeCombos extends Analyser {
 		if (!combo){return}
 
 		const whiteState = {
-			amount: this.gauge.getWhiteManaAt(combo.start),
-			procReady: this.actors.current.at(combo.start).hasStatus(this._whiteManaActions.proc),
+			amount: combo.data.startingMana.white,
+			procReady: combo.data.procs.includes(this.data.statuses.VERSTONE_READY),
 			actions: this._whiteManaActions
 		} as ManaState
 		const blackState = {
-			amount: this.gauge.getBlackManaAt(combo.start),
-			procReady: this.actors.current.at(combo.start).hasStatus(this._blackManaActions.proc),
+			amount: combo.data.startingMana.black,
+			procReady: combo.data.procs.includes(this.data.statuses.VERFIRE_READY),
 			actions: this._blackManaActions
 		} as ManaState
 		const finisherAction = this.data.getAction(combo.data.finisher.used)
