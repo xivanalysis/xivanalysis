@@ -376,7 +376,7 @@ export class Gauge extends CoreGauge {
 			this.umbralIceGauge.reset()
 
 			this.astralFireTimer.start()
-			this.astralFireGauge.modify(stackCount)
+			this.astralFireGauge.generate(stackCount)
 
 			this.addEvent()
 		}
@@ -390,7 +390,7 @@ export class Gauge extends CoreGauge {
 			this.astralFireGauge.reset()
 
 			this.umbralIceTimer.start()
-			this.umbralIceGauge.modify(stackCount)
+			this.umbralIceGauge.generate(stackCount)
 
 			this.addEvent()
 		}
@@ -415,7 +415,7 @@ export class Gauge extends CoreGauge {
 	private tryGainUmbralHearts(count: number) {
 		if (this.umbralIceGauge.value <= 0) { return }
 
-		this.umbralHeartsGauge.modify(count)
+		this.umbralHeartsGauge.generate(count)
 
 		this.addEvent()
 	}
@@ -423,7 +423,7 @@ export class Gauge extends CoreGauge {
 	private tryConsumeUmbralHearts(count:  number, force: boolean = false) {
 		if (!(this.umbralHeartsGauge.value > 0 && (this.astralFireGauge.value > 0 || force))) { return }
 
-		this.umbralHeartsGauge.modify(-1 * count)
+		this.umbralHeartsGauge.spend(count)
 
 		this.addEvent()
 	}
@@ -450,7 +450,7 @@ export class Gauge extends CoreGauge {
 			this.overwrittenPolyglot++
 		}
 
-		this.polyglotGauge.modify(1)
+		this.polyglotGauge.generate(1)
 
 		this.addEvent()
 	}
@@ -461,7 +461,7 @@ export class Gauge extends CoreGauge {
 			this.overwrittenPolyglot--
 		}
 
-		this.polyglotGauge.modify(-1)
+		this.polyglotGauge.spend(1)
 
 		this.addEvent()
 	}
