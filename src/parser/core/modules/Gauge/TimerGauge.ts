@@ -274,9 +274,9 @@ export class TimerGauge extends AbstractGauge {
 		if (downtimeWindows.length === 0) { return [] }
 
 		const finalDowntimes: TimerDownWindow[] = []
-		downtimeWindows.forEach(dt => {
-			if (dt.end > start || dt.start < end) {
-				finalDowntimes.push(dt)
+		downtimeWindows.forEach(downtime => {
+			if (downtime.end > start || downtime.start < end) {
+				finalDowntimes.push(downtime)
 			}
 		})
 
