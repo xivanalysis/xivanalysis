@@ -37,6 +37,11 @@ export class Gauge extends Analyser {
 			actor: this.parser.actor.id,
 		}, this.onRaise)
 
+		/**
+		 * Rigging up a core hook for statuses that cause timers to pause, since the TimerGauges can't do it internally.
+		 * Currently this is just TEA's Temporal Displacement, but if we ever encounter another
+		 * mechanic like that again in a future fight, we'll have the capability to handle it.
+		 */
 		const pauseTimerFilter = filter<Event>().target(this.parser.actor.id).status(this.data.matchStatusId(PAUSES_TIMER_GAUGE_STATUSES))
 		this.addEventHook(pauseTimerFilter.type('statusApply'), this.onPauseTimers)
 		this.addEventHook(pauseTimerFilter.type('statusRemove'), this.onResumeTimers)
