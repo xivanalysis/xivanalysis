@@ -13,7 +13,8 @@ import {AbstractGauge} from './AbstractGauge'
 import {TimerGauge} from './TimerGauge'
 
 const PAUSES_TIMER_GAUGE_STATUSES: StatusKey[] = [
-	'TEMPORAL_DISPLACEMENT_TIME_STOP',
+	'TEMPORAL_DISPLACEMENT_INTERMISSION',
+	'TEMPORAL_DISPLACEMENT_ENRAGE',
 ]
 
 export class Gauge extends Analyser {
