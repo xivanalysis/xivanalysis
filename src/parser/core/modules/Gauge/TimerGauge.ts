@@ -90,6 +90,11 @@ export class TimerGauge extends AbstractGauge {
 		return this.lastKnownState.paused
 	}
 
+	/** Whether the gauge is currently running */
+	get active(): boolean {
+		return !(this.expired || this.paused)
+	}
+
 	constructor(opts: TimerGaugeOptions) {
 		super(opts)
 
@@ -194,11 +199,11 @@ export class TimerGauge extends AbstractGauge {
 			// Adjust preceeding data for the start of this state's window
 			const {length} = data
 			const chartY = (this.minimum + entry.remaining) / 1000
-			if (length > 0 && entry.timestamp < data[length - 1].time) {
+			const prev = data[length - 1]
+			if (length > 0 && entry.timestamp < prev.time) {
 				// If we're updating prior to the previous entry's expiration, update the previous entry
 				// with its state at this point in time - we'll end up with two points showing the update on
 				// this timestamp.
-				const prev = data[length - 1]
 				prev.current = (prev.current || this.minimum / 1000) + ((prev.time - entry.timestamp) / 1000)
 				prev.time = entry.timestamp - 1
 
