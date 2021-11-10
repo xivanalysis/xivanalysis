@@ -83,14 +83,14 @@ export class MeleeCombos extends Analyser {
 	//4 seconds for 2 GCD minus a 1 second window to activate before finisher
 	private readonly _delayAccelerationAvailableThreshold = 4
 	private _meleeCombos = new History<MeleeCombo>(() => ({
-		  events: [],
-		  lastAction: {} as Events['action'],
-		 finisher: {
-			 used: 0,
-			 recommendedActions: [],
-		 recommendation: <Trans></Trans>
-		 },
-		 procs: [],
+		events: [],
+		lastAction: {} as Events['action'],
+		finisher: {
+			used: 0,
+			recommendedActions: [],
+		recommendation: <Trans></Trans>
+		},
+		procs: [],
 		broken: false,
 		startingMana: {
 			white: 0,
