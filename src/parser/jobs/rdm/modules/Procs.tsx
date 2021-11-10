@@ -24,7 +24,7 @@ const SEVERITY_MISSED_PROCS = {
 	7: SEVERITY.MAJOR,
 }
 
-export default class Procs extends CoreProcs {
+export class Procs extends CoreProcs {
 	static override title = t('rdm.procs.title')`Proc Issues`
 
 	/**

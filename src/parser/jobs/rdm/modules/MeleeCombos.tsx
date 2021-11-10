@@ -11,7 +11,7 @@ import {Cooldowns} from 'parser/core/modules/Cooldowns'
 import {Data} from 'parser/core/modules/Data'
 import Suggestions, {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import {Timeline} from 'parser/core/modules/Timeline'
-import Gauge from 'parser/jobs/rdm/modules/Gauge'
+import {Gauge} from 'parser/jobs/rdm/modules/Gauge'
 import React from 'react'
 import {Button, Table} from 'semantic-ui-react'
 import Rotation from 'components/ui/Rotation'
@@ -47,7 +47,7 @@ interface ManaState {
 	actions: ManaActions,
 }
 
-export default class MeleeCombos extends Analyser {
+export class MeleeCombos extends Analyser {
 	static override handle = 'mlc'
 	static override title = t('rdm.meleecombos.title')`Melee Combos`
 	static override displayOrder = DisplayOrder.MeleeCombo

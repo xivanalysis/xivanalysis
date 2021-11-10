@@ -17,7 +17,7 @@ interface GaugeModifier {
 	black: number
 }
 
-export default class Gauge extends CoreGauge {
+export class Gauge extends CoreGauge {
 	static override title = t('rdm.gauge.title')`Mana Gauge Usage`
 
 	@dependency private data!: Data
