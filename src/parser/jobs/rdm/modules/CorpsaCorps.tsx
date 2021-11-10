@@ -2,7 +2,7 @@ import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
 import {ActionLink} from 'components/ui/DbLink'
 import {Event, Events} from 'event'
-import { filter } from 'parser/core/filter'
+import {filter} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
 import {ActionWindow, ExpectedActionsEvaluator} from 'parser/core/modules/ActionWindow'
 import {GlobalCooldown} from 'parser/core/modules/GlobalCooldown'
@@ -34,7 +34,7 @@ export class CorpsaCorps extends ActionWindow {
 				{
 					action: this.data.actions.CORPS_A_CORPS,
 					expectedPerWindow: 3,
-				}
+				},
 			],
 			suggestionIcon: this.data.actions.CORPS_A_CORPS.icon,
 			suggestionContent: <Trans id="rdm.cac.suggestions.trackedActions.content">
@@ -43,7 +43,7 @@ export class CorpsaCorps extends ActionWindow {
 			suggestionWindowName: windowName,
 			severityTiers: {
 				1: SEVERITY.MAJOR,
-				2: SEVERITY.MEDIUM
+				2: SEVERITY.MEDIUM,
 			},
 		}))
 	}

@@ -1,32 +1,32 @@
 import {t} from '@lingui/macro'
 import {Trans, Plural} from '@lingui/react'
-import {Event, Events} from 'event'
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
+import Rotation from 'components/ui/Rotation'
+import {Action} from 'data/ACTIONS/type'
+import {Status} from 'data/STATUSES/type'
+import {Event, Events} from 'event'
 import {Analyser} from 'parser/core/Analyser'
 import {filter} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
-import { History } from 'parser/core/modules/ActionWindow/History'
+import {History} from 'parser/core/modules/ActionWindow/History'
 import {Actors} from 'parser/core/modules/Actors'
 import {Cooldowns} from 'parser/core/modules/Cooldowns'
 import {Data} from 'parser/core/modules/Data'
 import Suggestions, {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import {Timeline} from 'parser/core/modules/Timeline'
+import {DisplayOrder} from 'parser/jobs/rdm/modules/DisplayOrder'
 import {Gauge} from 'parser/jobs/rdm/modules/Gauge'
 import React from 'react'
 import {Button, Table} from 'semantic-ui-react'
-import Rotation from 'components/ui/Rotation'
-import { Action } from 'data/ACTIONS/type'
-import { Status } from 'data/STATUSES/type'
-import {DisplayOrder} from 'parser/jobs/rdm/modules/DisplayOrder'
 
 type MeleeCombo = {
 	events: Array<Events['action']>,
 	lastAction: Events['action'],
 	finisher: {
-		 used: number,
-		 recommendedActions: Action[],
-		 recommendation: JSX.Element
-	 },
+		used: number,
+		recommendedActions: Action[],
+		recommendation: JSX.Element
+	},
 	procs: Status[]
 	broken: boolean,
 	startingMana: {
@@ -61,7 +61,7 @@ export class MeleeCombos extends Analyser {
 
 	private readonly _finishers = [
 		this.data.actions.VERHOLY.id,
-		this.data.actions.VERFLARE.id
+		this.data.actions.VERFLARE.id,
 	]
 	private readonly _severityWastedFinisher = {
 		1: SEVERITY.MINOR,
@@ -88,14 +88,14 @@ export class MeleeCombos extends Analyser {
 		finisher: {
 			used: 0,
 			recommendedActions: [],
-		recommendation: <Trans></Trans>
+			recommendation: <Trans></Trans>,
 		},
 		procs: [],
 		broken: false,
 		startingMana: {
 			white: 0,
-			black: 0
-		}, }))
+			black: 0,
+		}}))
 	private _incorrectFinishers = {
 		verholy: 0,
 		verflare: 0,
@@ -118,7 +118,7 @@ export class MeleeCombos extends Analyser {
 		)
 		this.addEventHook(
 			filter<Event>()
-			.type('complete'),
+				.type('complete'),
 			this.onComplete
 		)
 	}
@@ -144,19 +144,19 @@ export class MeleeCombos extends Analyser {
 				if (action.combo.from) {
 					const fromOptions = Array.isArray(action.combo.from) ? action.combo.from : [action.combo.from]
 					if (current) {
-					if (!fromOptions.includes(current.data.lastAction.action ?? 0)) {
-						current.data.broken = true
-						this.endCombo(event.timestamp)
-					} else {
-						current.data.events.push(event)
-						current.data.lastAction = event
-						if (action.combo.end) {
-							current.data.finisher.used = event.action
-							this.handleFinisher()
+						if (!fromOptions.includes(current.data.lastAction.action ?? 0)) {
+							current.data.broken = true
 							this.endCombo(event.timestamp)
+						} else {
+							current.data.events.push(event)
+							current.data.lastAction = event
+							if (action.combo.end) {
+								current.data.finisher.used = event.action
+								this.handleFinisher()
+								this.endCombo(event.timestamp)
+							}
 						}
 					}
-				}
 				}
 			}
 		}
@@ -226,14 +226,13 @@ export class MeleeCombos extends Analyser {
 		if (timestamp > fightEnd) {
 			return fightEnd
 		}
-		else {
-			return timestamp
-		}
+
+		return timestamp
+
 	}
 
 	override output() {
 		if (this._meleeCombos.entries.length === 0) { return undefined }
-		console.log(this._meleeCombos)
 
 		return (
 			<Table compact unstackable celled>
@@ -281,7 +280,7 @@ export class MeleeCombos extends Analyser {
 									<span style={{whiteSpace: 'nowrap'}}>{white} White | {black} Black</span>
 								</Table.Cell>
 								<Table.Cell>
-								<span>{
+									<span>{
 										combo.data.procs.map((key) => {
 											switch (key) {
 											case this.data.statuses.VERSTONE_READY:
@@ -345,17 +344,17 @@ export class MeleeCombos extends Analyser {
 
 	private handleFinisher() {
 		const combo = this._meleeCombos.getCurrent()
-		if (!combo){return}
+		if (!combo) { return }
 
 		const whiteState = {
 			amount: combo.data.startingMana.white,
 			procReady: combo.data.procs.includes(this.data.statuses.VERSTONE_READY),
-			actions: this._whiteManaActions
+			actions: this._whiteManaActions,
 		} as ManaState
 		const blackState = {
 			amount: combo.data.startingMana.black,
 			procReady: combo.data.procs.includes(this.data.statuses.VERFIRE_READY),
-			actions: this._blackManaActions
+			actions: this._blackManaActions,
 		} as ManaState
 		const finisherAction = this.data.getAction(combo.data.finisher.used)
 		if (finisherAction == null) {
