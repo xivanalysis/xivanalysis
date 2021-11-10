@@ -135,13 +135,14 @@ export class MeleeCombos extends Analyser {
 				this.breakComboIfExists(event.timestamp)
 				this.startCombo(event)
 			} else {
-				if (this._meleeCombos.getCurrent() == null) {
+				const current = this._meleeCombos.getCurrent()
+
+				if (current == null) {
 					return
 				}
 
 				if (action.combo.from) {
 					const fromOptions = Array.isArray(action.combo.from) ? action.combo.from : [action.combo.from]
-					const current = this._meleeCombos.getCurrent()
 					if (current) {
 					if (!fromOptions.includes(current.data.lastAction.action ?? 0)) {
 						current.data.broken = true
@@ -313,24 +314,21 @@ export class MeleeCombos extends Analyser {
 	}
 
 	private startCombo(event: Events['action']) {
-		this._meleeCombos.openNew(event.timestamp)
-		const current = this._meleeCombos.getCurrent()
-		if (current) {
-			current.data.events.push(event)
-			current.data.lastAction = event
-			if ((this.actors.current.at(event.timestamp).hasStatus(this.data.statuses.ACCELERATION.id)) ||
-			this.cooldowns.remaining('ACCELERATION') <= this._delayAccelerationAvailableThreshold) {
-				current.data.procs.push(this.data.statuses.ACCELERATION)
-			}
-			if (this.actors.current.at(event.timestamp).hasStatus(this.data.statuses.VERSTONE_READY.id)) {
-				current.data.procs.push(this.data.statuses.VERSTONE_READY)
-			}
-			if (this.actors.current.at(event.timestamp).hasStatus(this.data.statuses.VERFIRE_READY.id)) {
-				current.data.procs.push(this.data.statuses.VERFIRE_READY)
-			}
-			current.data.startingMana.white = this.gauge.getWhiteManaAt(event.timestamp - 1)
-			current.data.startingMana.black = this.gauge.getBlackManaAt(event.timestamp - 1)
+		const current = this._meleeCombos.openNew(event.timestamp)
+		current.data.events.push(event)
+		current.data.lastAction = event
+		if ((this.actors.current.at(event.timestamp).hasStatus(this.data.statuses.ACCELERATION.id)) ||
+		this.cooldowns.remaining('ACCELERATION') <= this._delayAccelerationAvailableThreshold) {
+			current.data.procs.push(this.data.statuses.ACCELERATION)
 		}
+		if (this.actors.current.at(event.timestamp).hasStatus(this.data.statuses.VERSTONE_READY.id)) {
+			current.data.procs.push(this.data.statuses.VERSTONE_READY)
+		}
+		if (this.actors.current.at(event.timestamp).hasStatus(this.data.statuses.VERFIRE_READY.id)) {
+			current.data.procs.push(this.data.statuses.VERFIRE_READY)
+		}
+		current.data.startingMana.white = this.gauge.getWhiteManaAt(event.timestamp - 1)
+		current.data.startingMana.black = this.gauge.getBlackManaAt(event.timestamp - 1)
 	}
 
 	private breakComboIfExists(timestamp: number) {
