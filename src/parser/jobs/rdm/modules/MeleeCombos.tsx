@@ -17,6 +17,7 @@ import {Button, Table} from 'semantic-ui-react'
 import Rotation from 'components/ui/Rotation'
 import { Action } from 'data/ACTIONS/type'
 import { Status } from 'data/STATUSES/type'
+import {DisplayOrder} from 'parser/jobs/rdm/modules/DisplayOrder'
 
 type MeleeCombo = {
 	events: Array<Events['action']>,
@@ -49,6 +50,7 @@ interface ManaState {
 export default class MeleeCombos extends Analyser {
 	static override handle = 'mlc'
 	static override title = t('rdm.meleecombos.title')`Melee Combos`
+	static override displayOrder = DisplayOrder.MeleeCombo
 
 	@dependency private data!: Data
 	@dependency private suggestions!: Suggestions
@@ -245,7 +247,7 @@ export default class MeleeCombos extends Analyser {
 						<Table.HeaderCell collapsing>
 							<strong><Trans id="rdm.meleecombos.table.header.starting-procs">Starting Procs</Trans></strong>
 						</Table.HeaderCell>
-						<Table.HeaderCell collapsing>
+						<Table.HeaderCell>
 							<strong><Trans id="rdm.meleecombos.table.header.rotation">Rotation</Trans></strong>
 						</Table.HeaderCell>
 						<Table.HeaderCell collapsing>

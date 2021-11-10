@@ -13,6 +13,7 @@ import Downtime from 'parser/core/modules/Downtime'
 import Suggestions, {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import React, {Fragment} from 'react'
 import {Accordion} from 'semantic-ui-react'
+import {DisplayOrder} from './DisplayOrder'
 
 const SEVERITY_EXPIRED_DUALCAST = {
 	1: SEVERITY.MEDIUM,
@@ -28,6 +29,7 @@ const SEVERITY_WASTED_DUALCAST = {
 export class DualCast extends Analyser {
 	static override handle = 'dualCast'
 	static override title = t('rdm.dualcast.title')`Dualcast`
+	static override displayOrder = DisplayOrder.DualCast
 
 	@dependency private castTime!: CastTime
 	@dependency private data!: Data
