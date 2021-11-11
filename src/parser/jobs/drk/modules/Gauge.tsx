@@ -28,18 +28,20 @@ export class Gauge extends CoreGauge {
 	private bloodGauge = this.add(new CounterGauge({
 		chart: {label: 'Blood Gauge', color: JOBS.DARK_KNIGHT.colour},
 	}))
-	private bloodGaugeModifiers = new Map<number, Partial<Record<Event['type'], number>>>([
-		// Builders
-		[this.data.actions.SOULEATER.id, {combo: 20}],
-		[this.data.actions.STALWART_SOUL.id, {combo: 20}],
-		[this.data.actions.STORMS_PATH.id, {combo: 20}],
-		[this.data.actions.MYTHRIL_TEMPEST.id, {combo: 20}],
-		[this.data.actions.INFURIATE.id, {action: 50}],
-		// Spenders
-		[this.data.actions.LIVING_SHADOW.id, {action: -50}],
-		[this.data.actions.QUIETUS.id, {action: -50}],
-		[this.data.actions.BLOODSPILLER.id, {action: -50}],
+	/* eslint-disable @typescript-eslint/no-magic-numbers */
+	private onComboModifiers = new Map<number, number>([
+		[this.data.actions.SOULEATER.id, 20],
+		[this.data.actions.STALWART_SOUL.id, 20],
+		[this.data.actions.STORMS_PATH.id, 20],
+		[this.data.actions.MYTHRIL_TEMPEST.id, 20],
 	])
+	private onActionModifiers = new Map<number, number>([
+		[this.data.actions.INFURIATE.id, 50],
+		[this.data.actions.LIVING_SHADOW.id, -50],
+		[this.data.actions.QUIETUS.id, -50],
+		[this.data.actions.BLOODSPILLER.id, -50],
+	])
+	/* eslint-enable @typescript-eslint/no-magic-numbers */
 	private deliriumFreeCasts = [
 		this.data.actions.QUIETUS.id,
 		this.data.actions.BLOODSPILLER.id,
@@ -50,12 +52,8 @@ export class Gauge extends CoreGauge {
 		super.initialise()
 
 		const playerFilter = filter<Event>().source(this.parser.actor.id)
-		this.addEventHook(
-			playerFilter
-				.type(oneOf(['action', 'combo']))
-				.action(oneOf(Array.from(this.bloodGaugeModifiers.keys()))),
-			this.onGaugeModifier
-		)
+		this.addEventHook(playerFilter.type('action').action(oneOf([...this.onActionModifiers.keys()])), this.onModifier(this.onActionModifiers))
+		this.addEventHook(playerFilter.type('combo').action(oneOf([...this.onComboModifiers.keys()])), this.onModifier(this.onComboModifiers))
 
 		this.addEventHook(playerFilter.type('statusApply').status(this.data.statuses.BLOOD_WEAPON.id), this.onApplyBloodWeapon)
 		this.addEventHook(playerFilter.type('statusRemove').status(this.data.statuses.BLOOD_WEAPON.id), this.onRemoveBloodWeapon)
@@ -63,17 +61,11 @@ export class Gauge extends CoreGauge {
 		this.addEventHook('complete', this.onComplete)
 	}
 
-	private onGaugeModifier(event: Events['action' | 'combo']) {
-		const modifier = this.bloodGaugeModifiers.get(event.action)
-
-		if (modifier != null) {
-			let amount = modifier[event.type] ?? 0
-			if (this.actors.current.hasStatus(this.data.statuses.DELIRIUM.id) && this.deliriumFreeCasts.includes(event.action)) {
-				// Quietus and Bloodspiller are free during Delirium
-				amount = 0
-			}
-
-			this.bloodGauge.modify(amount)
+	private onModifier(modifiers: Map<number, number>) {
+		return (event: Events['action' | 'combo']) => {
+			const modifier = modifiers.get(event.action) ?? 0
+			const freeBloodAction = this.actors.current.hasStatus(this.data.statuses.DELIRIUM.id) && this.deliriumFreeCasts.includes(event.action)
+			this.bloodGauge.modify(freeBloodAction ? 0 : modifier)
 		}
 	}
 

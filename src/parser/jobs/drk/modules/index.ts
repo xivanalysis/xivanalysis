@@ -4,9 +4,9 @@ import {Darkside} from './Darkside'
 import {Delirium} from './Delirium'
 import {EsteemTimeline} from './EsteemTimeline'
 import {Gauge} from './Gauge'
+import {MPUsage} from './MPUsage'
 import {MultiHitSkills} from './MultiHitSkills'
 import {OGCDDowntime} from './OGCDDowntime'
-import ResourceSimulator from './ResourceSimulator'
 import {StatusTimeline} from './StatusTimeline'
 
 export default [
@@ -16,8 +16,8 @@ export default [
 	Delirium,
 	EsteemTimeline,
 	Gauge,
-	ResourceSimulator,
-	OGCDDowntime,
+	MPUsage,
 	MultiHitSkills,
+	OGCDDowntime,
 	StatusTimeline,
 ]

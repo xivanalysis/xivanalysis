@@ -43,12 +43,20 @@ export class Data extends Analyser {
 		return filter<Cause>().type('action').action(this.matchActionId(keys))
 	}
 
+	matchCauseActionId(keys: number[]) {
+		return filter<Cause>().type('action').action(oneOf(keys))
+	}
+
 	matchStatusId(keys: StatusKey[]) {
 		return oneOf(keys.map(key => this.statuses[key].id))
 	}
 
 	matchCauseStatus(keys: StatusKey[]) {
 		return filter<Cause>().type('status').status(this.matchStatusId(keys))
+	}
+
+	matchCauseStatusId(keys: number[]) {
+		return filter<Cause>().type('status').status(oneOf(keys))
 	}
 
 	private getAppliedData<R extends object>(root: R, layers: Array<Layer<R>>): R {
