@@ -486,7 +486,7 @@
   "drk.gauge.suggestions.loss.content": "Avoid letting your Blood Gauge overcap - the wasted resources may cost you uses of your spenders over the course of the fight.",
   "drk.gauge.suggestions.loss.why": "{0} blood gauge lost to an overcapped gauge.",
   "drk.gauge.title": "Blood Gauge",
-  "drk.resourceanalyzer.blackestnight.content": "When the shield from <0/> is fully consumed, you gain Dark Arts, which allows free use of <1/> or <2/>. You should make sure each usage of <3/> will fully consume the shield, and that you use each Dark Arts proc before using <4/> again.",
+  "drk.resourceanalyzer.blackestnight.content": "When the shield from <0/> is fully consumed you gain a Dark Arts proc, which allows free use of <1/> or <2/>. You should make sure each usage of <3/> will fully consume the shield, and that you use each Dark Arts proc before using <4/> again.",
   "drk.resourceanalyzer.blackestnight.why": "You missed out on {wastedDarkArts, plural, one {# Dark Arts use} other {# Dark Arts uses}} due to <0/> applications that did not consume the shield.",
   "drk.resourceanalyzer.title": "Resource Analyzer",
   "drk.resourceanalyzer.wastedmp.content": "Your MP allows you to use <0/>, a strong attack that gives you a persistent damage up buff, as well as the strong mitigation of <1/>. Be sure to consistently use your MP so you can benefit from natural regeneration and MP gain from your main combo skills.",

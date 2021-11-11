@@ -505,6 +505,7 @@ Array [
 exports[`Event adapter individual events adapts removebuff 1`] = `
 Array [
   Object {
+    "absorbed": undefined,
     "action": 3539,
     "source": "1",
     "status": 1001902,
@@ -513,6 +514,7 @@ Array [
     "type": "action",
   },
   Object {
+    "absorbed": undefined,
     "source": "1",
     "status": 1001902,
     "target": "1",
@@ -520,6 +522,7 @@ Array [
     "type": "statusApply",
   },
   Object {
+    "absorbed": undefined,
     "source": "1",
     "status": 1001902,
     "target": "1",
@@ -554,6 +557,7 @@ Array [
 exports[`Event adapter individual events adapts removedebuff 1`] = `
 Array [
   Object {
+    "absorbed": undefined,
     "action": 7436,
     "source": "9",
     "status": 1001221,
@@ -562,6 +566,7 @@ Array [
     "type": "action",
   },
   Object {
+    "absorbed": undefined,
     "source": "9",
     "status": 1001221,
     "target": "2",
@@ -569,6 +574,7 @@ Array [
     "type": "statusApply",
   },
   Object {
+    "absorbed": undefined,
     "source": "9",
     "status": 1001221,
     "target": "2",
