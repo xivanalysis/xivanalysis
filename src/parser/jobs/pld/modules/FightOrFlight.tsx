@@ -12,7 +12,6 @@ import {Invulnerability} from 'parser/core/modules/Invulnerability'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import {Timeline} from 'parser/core/modules/Timeline'
 import React from 'react'
-import {matchClosestLower} from 'utilities'
 
 interface TimestampRotationMap {
 	[timestamp: number]: CastEvent[]
@@ -229,7 +228,6 @@ export default class FightOrFlight extends Module {
 
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.GORING_BLADE.icon,
-			severity: matchClosestLower(SEVERITIES.MISSED_GCD, this.fofErrorResult.goringTooCloseCounter),
 			content: <Trans id="pld.fightorflight.suggestions.goring-blade-clip.content">
 				Try to refresh <ActionLink {...ACTIONS.GORING_BLADE}/> 9 GCDs after the
 				first <ActionLink {...ACTIONS.GORING_BLADE}/> in

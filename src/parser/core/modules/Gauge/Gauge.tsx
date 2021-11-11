@@ -1,8 +1,10 @@
 import {t} from '@lingui/macro'
 import TimeLineChart from 'components/ui/TimeLineChart'
 import {Analyser} from 'parser/core/Analyser'
+import {dependency} from 'parser/core/Injectable'
 import React from 'react'
 import {isDefined} from 'utilities'
+import {ResourceGraphs} from '../ResourceGraphs'
 import {AbstractGauge} from './AbstractGauge'
 import {TimerGauge} from './TimerGauge'
 
@@ -10,13 +12,23 @@ export class Gauge extends Analyser {
 	static override handle = 'gauge'
 	static override title = t('core.gauge.title')`Gauge`
 
+	@dependency protected resourceGraphs!: ResourceGraphs
+
 	private gauges: AbstractGauge[] = []
+
+	protected pauseGeneration = false;
 
 	override initialise() {
 		this.addEventHook({
 			type: 'death',
 			actor: this.parser.actor.id,
 		}, this.onDeath)
+		this.addEventHook({
+			type: 'raise',
+			actor: this.parser.actor.id,
+		}, this.onRaise)
+
+		this.addEventHook('complete', () => this.gauges.forEach(gauge => gauge.generateResourceGraph()))
 	}
 
 	/** Add & initialise a gauge implementation to be tracked as part of the core gauge handling. */
@@ -29,12 +41,21 @@ export class Gauge extends Analyser {
 			gauge.setRemoveTimestampHook(this.removeTimestampHook.bind(this))
 		}
 
+		gauge.setResourceGraphs(this.resourceGraphs)
+		gauge.init()
+
 		this.gauges.push(gauge)
 		return gauge
 	}
 
 	private onDeath() {
+		this.pauseGeneration = true
 		this.gauges.forEach(gauge => gauge.reset())
+	}
+
+	private onRaise() {
+		this.pauseGeneration = false
+		this.gauges.forEach(gauge => gauge.raise())
 	}
 
 	override output() {

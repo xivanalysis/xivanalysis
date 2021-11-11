@@ -1,6 +1,7 @@
 import {Plural, Trans} from '@lingui/react'
 import {DataLink} from 'components/ui/DbLink'
-import {ActionKey} from 'data/ACTIONS'
+import {Action, ActionKey} from 'data/ACTIONS'
+import {Status} from 'data/STATUSES'
 import {Event, Events} from 'event'
 import {Analyser} from 'parser/core/Analyser'
 import {EventHook} from 'parser/core/Dispatcher'
@@ -16,13 +17,17 @@ import React from 'react'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 import {fillActions} from './utilities'
 
-// Expected maximum time left to refresh TS
+// Expected maximum time left to refresh TS - this is the slowest possible GCD for a full set of forms
 const TWIN_SNAKES_BUFFER = 6000
 
 const TWIN_IGNORED_GCDS: ActionKey[] = [
 	'FORM_SHIFT',
 	'MEDITATION',
 ]
+
+// Expected time unbuffed post-PB, maximum possible time (2.50s base GCD at GL4 is 2.00s, and we allow for 2 GCDs)
+// The extra second here is to allow for latency in status application after actually using PB
+const UNBALANCED_BUFFER = 5000
 
 interface TwinState {
 	casts: Array<Events['action']>
@@ -41,9 +46,10 @@ export class TwinSnakes extends Analyser {
 	@dependency private suggestions!: Suggestions
 
 	private history: TwinState[] = []
-	private ignoredGcds: number[] = []
-	private twinSnake?: TwinState
+	private ignoredGcds: Array<Action['id']> = []
+	private twinSnake: TwinState | undefined
 	private lastRefresh: number = this.parser.pull.timestamp
+	private lastDrop: number = this.parser.pull.timestamp
 
 	// Clipping the duration
 	private earlySnakes: number = 0
@@ -54,6 +60,13 @@ export class TwinSnakes extends Analyser {
 	// Antman used without TS active
 	private failedAnts: number = 0
 
+	// Tracking when PB dropped intentionally for uptime adjustment
+	// Initialising PB drop time to 0 because we aren't considering start-of-fight downtime and prefer to not undef it
+	private unbalanced: number = 0
+	private unbalancedHistory: number[] = []
+	private unbalancedHook?: EventHook<Events['action']>
+	private allowedDowntime: number = 0
+
 	private twinHook?: EventHook<Events['action']>
 
 	override initialise() {
@@ -62,6 +75,7 @@ export class TwinSnakes extends Analyser {
 		const playerFilter = filter<Event>().source(this.parser.actor.id)
 		this.addEventHook(playerFilter.type('statusApply').status(this.data.statuses.TWIN_SNAKES.id), this.onGain)
 		this.addEventHook(playerFilter.type('statusRemove').status(this.data.statuses.TWIN_SNAKES.id), this.onDrop)
+		this.addEventHook(playerFilter.type('statusRemove').status(this.data.statuses.PERFECT_BALANCE.id), this.onUnbalanced)
 
 		this.addEventHook('complete', this.onComplete)
 	}
@@ -105,8 +119,7 @@ export class TwinSnakes extends Analyser {
 		}
 	}
 
-	// // Can be TS, FPF, or Antman - new window for TS as needed, otherwise just reset the GCD count
-	// This might be better checking if the GCD before it was buffed but ehh
+	// Can be TS, FPF, or Antman - new window for TS as needed, otherwise just reset the GCD count
 	private onGain(event: Events['statusApply']): void {
 		// Check if existing window or not
 		if (this.twinSnake == null) {
@@ -121,11 +134,66 @@ export class TwinSnakes extends Analyser {
 			)
 		}
 
+		// We allow downtime post-PB if it's resolved at the 2nd GCD and that GCD is Twin
+		// If they applied Twin on the first GCD, something has gone wrong, and it's not allowed anyway
+		if (this.unbalancedHistory.length === 2) {
+			const secondGcd = this.unbalancedHistory[1]
+			const secondAction = this.data.getAction(secondGcd)
+
+			// Sanity check that action exists and Twin dropped after PB did
+			if (secondAction != null && this.lastDrop >= this.unbalanced) {
+				const timeDelta = event.timestamp - this.lastDrop
+
+				if (timeDelta <= UNBALANCED_BUFFER && secondAction.id === this.data.actions.TWIN_SNAKES.id) {
+					this.allowedDowntime += timeDelta
+				}
+			}
+
+			// Reset the array and cleanup in case user took forever to apply Twin
+			this.unbalancedHistory = []
+			if (this.unbalancedHook != null) {
+				this.removeEventHook(this.unbalancedHook)
+				this.unbalancedHook = undefined
+			}
+		}
+
+		// Set the time for Twin refresh
 		this.lastRefresh = event.timestamp
 	}
 
 	private onDrop(event: Events['statusRemove']): void {
+		// Only account for the drop here, not at end of fight cleanup
+		this.lastDrop = event.timestamp
 		this.stopAndSave(event.timestamp)
+	}
+
+	private onUnbalanced(event: Events['statusRemove']): void {
+		// Reset our state tracking
+		this.unbalanced = event.timestamp
+		this.unbalancedHistory = []
+
+		// Hook any GCDs after PB drops, using Twin will remove this
+		this.unbalancedHook = this.addEventHook(
+			filter<Event>()
+				.source(this.parser.actor.id)
+				.type('action'),
+			this.onUnbalancedCast,
+		)
+	}
+
+	private onUnbalancedCast(event: Events['action']): void {
+		// Prune out non-GCDs
+		const action = this.data.getAction(event.action)
+		if (action?.onGcd == null) { return }
+
+		// Push the GCD to history so we can use it in the onGain hook
+		this.unbalancedHistory.push(event.action)
+
+		// If we use Twin, we no longer need to capture GCDs
+		if (action.id === this.data.actions.TWIN_SNAKES.id && this.unbalancedHook != null) {
+			this.removeEventHook(this.unbalancedHook)
+			this.unbalancedHook = undefined
+		}
 	}
 
 	private stopAndSave(endTime: number = this.parser.currentEpochTimestamp): void {
@@ -208,12 +276,12 @@ export class TwinSnakes extends Analyser {
 		}))
 	}
 
-	private getBuffUptimePercent(statusId: number): number {
+	private getBuffUptimePercent(statusId: Status['id']): number {
 		const status = this.data.getStatus(statusId)
 		if (status == null) { return 0 }
 
 		const statusUptime = this.statuses.getUptime(status, this.actors.current)
-		const fightUptime = this.parser.currentDuration - this.invulnerability.getDuration({types: ['invulnerable']})
+		const fightUptime = this.parser.currentDuration - this.invulnerability.getDuration({types: ['invulnerable']}) - this.allowedDowntime
 
 		return (statusUptime / fightUptime) * 100
 	}
