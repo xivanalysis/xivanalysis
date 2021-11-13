@@ -16,7 +16,7 @@ interface State {
 	paused: boolean
 }
 
-interface TimerDownWindow {
+interface Window {
 	start: number
 	end: number
 }
@@ -232,45 +232,80 @@ export class TimerGauge extends AbstractGauge {
 		this._removeTimestampHook = value
 	}
 
-	private internalExpirationTime(start = this.parser.pull.timestamp, end = this.parser.currentEpochTimestamp) {
+	private internalExpirationTime(start: number = this.parser.pull.timestamp, end: number = this.parser.currentEpochTimestamp, utaWindows: Window[] = [], forgiveUta: number = 0) {
 		let currentStart: number | undefined = undefined
-		const expirationWindows: TimerDownWindow[] = []
+		const expirationWindows: Window[] = []
 
 		this.history.forEach(entry => {
 			if (entry.remaining <= this.minimum && currentStart == null) {
 				currentStart = entry.timestamp
 			}
 			if (entry.remaining > this.minimum && currentStart != null) {
-				expirationWindows.push({start: currentStart, end: entry.timestamp})
+				// Don't clutter the windows if the expiration of the timer may also restart it (Polyglot, Lilies, etc.)
+				if (entry.timestamp > currentStart) {
+					expirationWindows.push({start: currentStart, end: entry.timestamp})
+				}
 				currentStart = undefined
 			}
 		})
 
 		if (expirationWindows.length === 0) { return [] }
 
-		const expirations: TimerDownWindow[] = []
+		const expirations: Window[] = []
 		expirationWindows.forEach(expiration => {
-			if (expiration.end > start || expiration.start < end) {
-				expirations.push(expiration)
+			// If the expiration had some duration within the time range we're asking about, we'll add it
+			if ((expiration.end > start || expiration.start < end)) {
+				/**
+				 * If we were given any UTA windows, check if this expiration started within one, and change the effective start of the expiration
+				 * to the end of the UTA window, plus any additional leniency if specified
+				 */
+				if (utaWindows.length > 0) {
+					utaWindows.filter(uta => expiration.start >= uta.start && expiration.start <= uta.end)
+						.forEach(uta => expiration.start = Math.min(expiration.end, uta.end + forgiveUta))
+				}
+				// If the window still has any effective duration, we'll return it
+				if (expiration.start > expiration.end) {
+					expirations.push(expiration)
+				}
 			}
 		})
 
 		return expirations
 	}
 
-	public isExpired(when = this.parser.currentEpochTimestamp) {
+	/**
+	 * Gets whether the timer was expired at a particular time
+	 * @param when The timestamp in question
+	 * @returns True if the timer was expired at this timestamp, false if it was active or paused
+	 */
+	public isExpired(when: number = this.parser.currentEpochTimestamp) {
 		return this.internalExpirationTime(when, when).length > 0
 	}
 
-	public getExpirationTime(start = this.parser.pull.timestamp, end = this.parser.currentEpochTimestamp) {
-		return this.internalExpirationTime(start, end).reduce(
+	/**
+	 * Gets the total amount of time that the timer was expired during a given time range.
+	 * @param start The start of the time range. To forgive time at the start of the fight, set this to this.parser.pull.timestamp + forgivenness amount
+	 * @param end The end of the time range.
+	 * @param utaWindows Pass to forgive any expirations that began within one of these windows of time. The start of any affected expiration will be reset to the end of the affecting window
+	 * @param forgiveUta Pass to grant additional leniency when an expiration occurred during a UTA window. This is added to the end of the window when recalculating the expiration start time
+	 * @returns The total effective time that the timer was expired for
+	 */
+	public getExpirationTime(start: number = this.parser.pull.timestamp, end: number = this.parser.currentEpochTimestamp, utaWindows: Window[] = [], forgiveUta: number = 0) {
+		return this.internalExpirationTime(start, end, utaWindows, forgiveUta).reduce(
 			(totalExpiration, currentWindow) => totalExpiration + Math.min(currentWindow.end, end) - Math.max(currentWindow.start, start),
 			0,
 		)
 	}
-
-	public getExpirationWindows(start = this.parser.pull.timestamp, end = this.parser.currentEpochTimestamp) {
-		return this.internalExpirationTime(start, end).reduce<TimerDownWindow[]>(
+	/**
+	 * Gets the array of windows that the timer was expired for during a given time range.
+	 * @param start The start of the time range. To forgive time at the start of the fight, set this to this.parser.pull.timestamp + forgivenness amount
+	 * @param end The end of the time range.
+	 * @param utaWindows Pass to forgive any expirations that began within one of these windows of time. The start of any affected expiration will be reset to the end of the affecting window
+	 * @param forgiveUta Pass to grant additional leniency when an expiration occurred during a UTA window. This is added to the end of the window when recalculating the expiration start time
+	 * @returns The array of expiration windows
+	 */
+	public getExpirationWindows(start: number = this.parser.pull.timestamp, end: number = this.parser.currentEpochTimestamp, utaWindows: Window[] = [], forgiveUta: number = 0) {
+		return this.internalExpirationTime(start, end, utaWindows, forgiveUta).reduce<Window[]>(
 			(windows, window) => {
 				windows.push({
 					start: Math.max(window.start, start),

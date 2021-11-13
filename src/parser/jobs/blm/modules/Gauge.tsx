@@ -471,18 +471,7 @@ export class Gauge extends CoreGauge {
 
 	// Refund unable-to-act time if the downtime window was longer than the AF/UI timer
 	private countLostPolyglots(time: number) {
-		let refundTime = 0
-		this.polyglotTimer.getExpirationWindows().filter(window => window.start - this.parser.pull.timestamp > this.data.actions.FIRE_IV.castTime)
-			.forEach(downtime => {
-				if (this.unableToAct.getWindows({
-					start: downtime.start,
-					end: downtime.start,
-				}).filter(uta => Math.max(0, uta.end - uta.start) >= ASTRAL_UMBRAL_DURATION).length > 0) {
-					const endOfDowntime = downtime.end || (this.parser.pull.timestamp + this.parser.pull.duration)
-					refundTime += endOfDowntime - downtime.start // If the end of this enochian downtime occurred during an unableToAct time frame that lasted longer than the AF/UI timeout, refund that downtime
-				}
-			})
-		return Math.floor(Math.max(0, time - refundTime) / ENOCHIAN_DURATION_REQUIRED)
+		return Math.floor(time / ENOCHIAN_DURATION_REQUIRED)
 	}
 	//#endregion
 
@@ -492,7 +481,11 @@ export class Gauge extends CoreGauge {
 	}
 
 	private onComplete() {
-		const lostPolyglot = this.countLostPolyglots(this.polyglotTimer.getExpirationTime(this.data.actions.FIRE_IV.castTime))
+		const fightStartLeniency = this.parser.pull.timestamp + this.data.actions.FIRE_IV.castTime // Give the player a bit of time at the start to get Enochian up. Using F4's cast time as a proxy for this
+		const forceDropUtaWindows = this.unableToAct.getWindows().filter(uta => Math.max(0, uta.end - uta.start) >= ASTRAL_UMBRAL_DURATION)
+		const forceDropForgive = this.data.actions.BLIZZARD_III.castTime + 1000 // Allow a Blizzard III cast time's worth of time (plus a second's worth of jitter) to get Enochian back up after a UTA
+		const polyGlotExpirationTime = this.polyglotTimer.getExpirationTime(fightStartLeniency, this.parser.currentEpochTimestamp, forceDropUtaWindows, forceDropForgive)
+		const lostPolyglot = this.countLostPolyglots(polyGlotExpirationTime)
 
 		// Find out how many of the enochian drops ocurred during times where the player could not act for longer than the AF/UI buff timer. If they could act, they could've kept it going, so warn about those.
 		const droppedEno = this.droppedEnoTimestamps.filter(drop =>
