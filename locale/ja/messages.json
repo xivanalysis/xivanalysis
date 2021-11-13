@@ -84,7 +84,6 @@
   "blm.gauge.suggestions.dropped-enochian.content": "<0/> をドロップすると、 <1/>や<2/>が失われたり、 <3/>のキャストが追加されたり、 <3/> および <4/> が利用できなくなったり、 <6/> が提供する与ダメージの15%アップを見逃したりする可能性があります。",
   "blm.gauge.suggestions.dropped-enochian.why": "<0/>が切れました。{droppedEno, plural, one {# time} other {# times}}",
   "blm.gauge.suggestions.lost-polyglot.content": "<0/>が切れたため、ポリグロットをすべて失いました。 <1/>や<2/> は最も強力なGCDなので、キャストを常に最大化しましょう。",
-  "blm.gauge.suggestions.lost-polyglot.why": "{0, plural, other {# }}つのポリグロットが失いました。",
   "blm.gauge.suggestions.overwritten-polyglot.content": "ポリグロットが２つの状態に30秒以上<0/>や<1/>を詠唱しなかったから、ポリグロットが上書きされた。<2/>や<3/>は最も強力なGCDなので、キャストを常に最大化しましょう。",
   "blm.gauge.suggestions.overwritten-polyglot.why": "<0/> が上書きされました。 {0, plural, one {# time} other {# times}}",
   "blm.gauge.title": "ゲージ",
