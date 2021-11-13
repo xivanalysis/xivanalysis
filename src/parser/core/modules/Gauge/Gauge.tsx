@@ -26,8 +26,6 @@ export class Gauge extends Analyser {
 
 	private gauges: AbstractGauge[] = []
 
-	protected pauseGeneration = false;
-
 	override initialise() {
 		this.addEventHook({
 			type: 'death',
@@ -68,12 +66,10 @@ export class Gauge extends Analyser {
 	}
 
 	protected onDeath() {
-		this.pauseGeneration = true
 		this.gauges.forEach(gauge => gauge.reset())
 	}
 
 	protected onRaise() {
-		this.pauseGeneration = false
 		this.gauges.forEach(gauge => gauge.raise())
 	}
 

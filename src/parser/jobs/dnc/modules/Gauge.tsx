@@ -103,6 +103,7 @@ export class Gauge extends CoreGauge {
 	private improvTicks: number = 0
 
 	private espritGenerationExceptions: number[] = ESPRIT_EXCEPTIONS.map(key => this.data.actions[key].id)
+	protected pauseGeneration = false;
 
 	override initialise() {
 		super.initialise()
@@ -127,6 +128,16 @@ export class Gauge extends CoreGauge {
 		this.addEventHook(playerFilter.type('action').action(this.data.matchActionId(FEATHER_CONSUMERS)), this.onConsumeFeather)
 
 		this.addEventHook('complete', this.onComplete)
+	}
+
+	override onDeath() {
+		super.onDeath()
+		this.pauseGeneration = true
+	}
+
+	override onRaise() {
+		super.onRaise()
+		this.pauseGeneration = false
 	}
 
 	public feathersSpentInRange(start: number, end: number): number {
