@@ -1,11 +1,11 @@
 import {t} from '@lingui/macro'
 import {BuffWindow} from 'parser/core/modules/ActionWindow'
-import {DisplayOrder} from './DisplayOrder'
+import {DISPLAY_ORDER} from './DISPLAY_ORDER'
 
 export class Embolden extends BuffWindow {
 	static override handle = 'embolden'
 	static override title = t('rdm.embolden.title')`Embolden`
-	static override displayOrder = DisplayOrder.Embolden
+	static override displayOrder = DISPLAY_ORDER.EMBOLDEN
 
 	override buffStatus = this.data.statuses.EMBOLDEN_MAGIC
 

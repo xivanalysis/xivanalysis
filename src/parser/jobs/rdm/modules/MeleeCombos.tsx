@@ -14,8 +14,8 @@ import {Cooldowns} from 'parser/core/modules/Cooldowns'
 import {Data} from 'parser/core/modules/Data'
 import Suggestions, {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import {Timeline} from 'parser/core/modules/Timeline'
-import {DisplayOrder} from 'parser/jobs/rdm/modules/DisplayOrder'
-import {Gauge} from 'parser/jobs/rdm/modules/Gauge'
+import {DISPLAY_ORDER} from 'parser/jobs/rdm/modules/DISPLAY_ORDER'
+import {Gauge, MANA_DIFFERENCE_THRESHOLD, MANA_CAP} from 'parser/jobs/rdm/modules/Gauge'
 import React from 'react'
 import {Button, Table} from 'semantic-ui-react'
 
@@ -50,7 +50,7 @@ interface ManaState {
 export class MeleeCombos extends Analyser {
 	static override handle = 'mlc'
 	static override title = t('rdm.meleecombos.title')`Melee Combos`
-	static override displayOrder = DisplayOrder.MeleeCombo
+	static override displayOrder = DISPLAY_ORDER.MELEE_COMBO
 
 	@dependency private data!: Data
 	@dependency private suggestions!: Suggestions
@@ -143,18 +143,16 @@ export class MeleeCombos extends Analyser {
 
 				if (action.combo.from) {
 					const fromOptions = Array.isArray(action.combo.from) ? action.combo.from : [action.combo.from]
-					if (current) {
-						if (!fromOptions.includes(current.data.lastAction.action ?? 0)) {
-							current.data.broken = true
+					if (!fromOptions.includes(current.data.lastAction.action ?? 0)) {
+						current.data.broken = true
+						this.endCombo(event.timestamp)
+					} else {
+						current.data.events.push(event)
+						current.data.lastAction = event
+						if (action.combo.end) {
+							current.data.finisher.used = event.action
+							this.handleFinisher()
 							this.endCombo(event.timestamp)
-						} else {
-							current.data.events.push(event)
-							current.data.lastAction = event
-							if (action.combo.end) {
-								current.data.finisher.used = event.action
-								this.handleFinisher()
-								this.endCombo(event.timestamp)
-							}
 						}
 					}
 				}
@@ -411,8 +409,8 @@ export class MeleeCombos extends Analyser {
 		const comboDelayResults = this.manaLossToDelayCombo(lowerManaState, higherManaState, comboStart)
 		if (!higherManaState.procReady) {
 			// no proc of the higher mana spell, check accleration and potential out of balance to make recommendation
-			const finisherManaGain = (this.gauge._gaugeModifiers.get(higherManaState.actions.finisher)?.white ?? 0) || (this.gauge._gaugeModifiers.get(higherManaState.actions.finisher)?.black ?? 0)
-			if (higherManaState.amount - lowerManaState.amount + finisherManaGain > this.gauge._manaDifferenceThreshold) {
+			const finisherManaGain = (this.gauge.gaugeModifiers.get(higherManaState.actions.finisher)?.white ?? 0) || (this.gauge.gaugeModifiers.get(higherManaState.actions.finisher)?.black ?? 0)
+			if (higherManaState.amount - lowerManaState.amount + finisherManaGain > MANA_DIFFERENCE_THRESHOLD) {
 				// We will go out of balance if we use the finisher of the higher mana, check to see if delaying combo would have been better
 				if (comboDelayResults !== null && comboDelayResults.manaLoss <= this._ignoreFinisherProcsManaThreshold) {
 					// return null (delay combo) if below threshold
@@ -481,13 +479,13 @@ export class MeleeCombos extends Analyser {
 				This case is valid whether or not the higherManaProc exists
 				Overwriting the higherManaProc with the 50% chance while dumping is no net loss of procs compared to not delaying */
 			// Net benefit: +1 proc gained (lowerMana) for effective potency of +34.8 (8 Mana)
-			let newLowerMana = lowerManaState.amount + (this.gauge._gaugeModifiers.get(lowerManaState.actions.proc)?.white ?? 0) || (this.gauge._gaugeModifiers.get(lowerManaState.actions.proc)?.black ?? 0)
-			let newHigherMana = higherManaState.amount + (this.gauge._gaugeModifiers.get(higherManaState.actions.dualcast)?.white ?? 0) || (this.gauge._gaugeModifiers.get(higherManaState.actions.dualcast)?.black ?? 0)
+			let newLowerMana = lowerManaState.amount + (this.gauge.gaugeModifiers.get(lowerManaState.actions.proc)?.white ?? 0) || (this.gauge.gaugeModifiers.get(lowerManaState.actions.proc)?.black ?? 0)
+			let newHigherMana = higherManaState.amount + (this.gauge.gaugeModifiers.get(higherManaState.actions.dualcast)?.white ?? 0) || (this.gauge.gaugeModifiers.get(higherManaState.actions.dualcast)?.black ?? 0)
 
 			// Determine how much mana would be wasted to cap with this delay, then adjust post-delay mana totals to cap before further comparisons
-			const manaLoss = Math.max(newLowerMana - this.gauge._manaCap, 0) + Math.max(newHigherMana - this.gauge._manaCap, 0)
-			newLowerMana = Math.min(newLowerMana, this.gauge._manaCap)
-			newHigherMana = Math.min(newHigherMana, this.gauge._manaCap)
+			const manaLoss = Math.max(newLowerMana - MANA_CAP, 0) + Math.max(newHigherMana - MANA_CAP, 0)
+			newLowerMana = Math.min(newLowerMana, MANA_CAP)
+			newHigherMana = Math.min(newHigherMana, MANA_CAP)
 
 			if (newLowerMana < newHigherMana) {
 				// The proc we just cleared is still the lower mana, valid clear option, push onto stack
@@ -497,8 +495,8 @@ export class MeleeCombos extends Analyser {
 				})
 			} else {
 				// Verify that using the finisher of the proc we just cleared won't put us out of balance at the end
-				const finisherManaGain = (this.gauge._gaugeModifiers.get(lowerManaState.actions.finisher)?.white ?? 0) || (this.gauge._gaugeModifiers.get(lowerManaState.actions.finisher)?.black ?? 0)
-				if ((newLowerMana + finisherManaGain - newHigherMana) > this.gauge._manaDifferenceThreshold) {
+				const finisherManaGain = (this.gauge.gaugeModifiers.get(lowerManaState.actions.finisher)?.white ?? 0) || (this.gauge.gaugeModifiers.get(lowerManaState.actions.finisher)?.black ?? 0)
+				if ((newLowerMana + finisherManaGain - newHigherMana) > MANA_DIFFERENCE_THRESHOLD) {
 					// The proc we just cleared will result in equal mana or the cleared proc being higher but without putting us out of balance, check to see if acceleration would be available
 					const accelerationAvailable = (this.actors.current.at(comboStart).hasStatus(this.data.statuses.ACCELERATION.id) || this.cooldowns.remaining('ACCELERATION') <= this._delayAccelerationAvailableThreshold)
 					if (accelerationAvailable) {
@@ -515,13 +513,13 @@ export class MeleeCombos extends Analyser {
 					This is an additional and separate case to just clearing and "wasting" the higherManaProc in the case of both procs being up
 					and can result in less mana loss than the lowerProc -> higherDualcast dump of the above case (e.g. when starting at 80|100) */
 				// Net benefit: +1 proc gained (higherMana) for effective potency of +34.8 (8 Mana)
-				let newLowerMana = lowerManaState.amount + ((this.gauge._gaugeModifiers.get(lowerManaState.actions.proc)?.white ?? 0) || (this.gauge._gaugeModifiers.get(lowerManaState.actions.proc)?.black ?? 0)) + ((this.gauge._gaugeModifiers.get(lowerManaState.actions.dualcast)?.white ?? 0) || (this.gauge._gaugeModifiers.get(lowerManaState.actions.dualcast)?.black ?? 0))
+				let newLowerMana = lowerManaState.amount + ((this.gauge.gaugeModifiers.get(lowerManaState.actions.proc)?.white ?? 0) || (this.gauge.gaugeModifiers.get(lowerManaState.actions.proc)?.black ?? 0)) + ((this.gauge.gaugeModifiers.get(lowerManaState.actions.dualcast)?.white ?? 0) || (this.gauge.gaugeModifiers.get(lowerManaState.actions.dualcast)?.black ?? 0))
 				let newHigherMana = higherManaState.amount
 
 				// Determine how much mana would be wasted to cap with this delay, then adjust post-delay mana totals to cap before further comparisons
-				const manaLoss = Math.max(newLowerMana - this.gauge._manaCap, 0) + Math.max(newHigherMana - this.gauge._manaCap, 0)
-				newLowerMana = Math.min(newLowerMana, this.gauge._manaCap)
-				newHigherMana = Math.min(newHigherMana, this.gauge._manaCap)
+				const manaLoss = Math.max(newLowerMana - MANA_CAP, 0) + Math.max(newHigherMana - MANA_CAP, 0)
+				newLowerMana = Math.min(newLowerMana, MANA_CAP)
+				newHigherMana = Math.min(newHigherMana, MANA_CAP)
 
 				if (newHigherMana < newLowerMana) {
 					// Mana rebalancing resulted in the original higherMana becoming the lower total (guaranteed proc), valid option, push onto stack
@@ -531,8 +529,8 @@ export class MeleeCombos extends Analyser {
 					})
 				} else {
 					// Verify that using the finisher of higherMana won't put us out of balance at the end
-					const finisherManaGain = (this.gauge._gaugeModifiers.get(higherManaState.actions.finisher)?.white ?? 0) || (this.gauge._gaugeModifiers.get(higherManaState.actions.finisher)?.black ?? 0)
-					if (!((newHigherMana + finisherManaGain - newLowerMana) > this.gauge._manaDifferenceThreshold)) {
+					const finisherManaGain = (this.gauge.gaugeModifiers.get(higherManaState.actions.finisher)?.white ?? 0) || (this.gauge.gaugeModifiers.get(higherManaState.actions.finisher)?.black ?? 0)
+					if (!((newHigherMana + finisherManaGain - newLowerMana) > MANA_DIFFERENCE_THRESHOLD)) {
 						// This is a net gain whether or not acceleration would be available - we can now fish for an additional proc of higherMana, push onto stack
 						possibleDelays.push({
 							finisher: [lowerManaState.actions.proc, lowerManaState.actions.dualcast, this.data.actions.ACCELERATION, higherManaState.actions.finisher],
@@ -545,13 +543,13 @@ export class MeleeCombos extends Analyser {
 			// These cases should only be hit if lowerMana == higherMana (we were in balance at start of combo), to test benefits of delaying combo to imbalance mana
 			// If lowerManaProc isn't available and lowerMana < higherMana, recommendation will always be the lowerManaActions.finisher
 			if (higherManaState.procReady) { // eslint-disable-line no-lonely-if
-				let newLowerMana = lowerManaState.amount + ((this.gauge._gaugeModifiers.get(lowerManaState.actions.dualcast)?.white ?? 0) || (this.gauge._gaugeModifiers.get(lowerManaState.actions.dualcast)?.black ?? 0))
-				let newHigherMana = higherManaState.amount + ((this.gauge._gaugeModifiers.get(higherManaState.actions.proc)?.white ?? 0) || (this.gauge._gaugeModifiers.get(higherManaState.actions.proc)?.black ?? 0))
+				let newLowerMana = lowerManaState.amount + ((this.gauge.gaugeModifiers.get(lowerManaState.actions.dualcast)?.white ?? 0) || (this.gauge.gaugeModifiers.get(lowerManaState.actions.dualcast)?.black ?? 0))
+				let newHigherMana = higherManaState.amount + ((this.gauge.gaugeModifiers.get(higherManaState.actions.proc)?.white ?? 0) || (this.gauge.gaugeModifiers.get(higherManaState.actions.proc)?.black ?? 0))
 
 				// Determine how much mana would be wasted to cap with this delay, then adjust post-delay mana totals to cap before further comparisons
-				const manaLoss = Math.max(newLowerMana - this.gauge._manaCap, 0) + Math.max(newHigherMana - this.gauge._manaCap, 0)
-				newLowerMana = Math.min(newLowerMana, this.gauge._manaCap)
-				newHigherMana = Math.min(newHigherMana, this.gauge._manaCap)
+				const manaLoss = Math.max(newLowerMana - MANA_CAP, 0) + Math.max(newHigherMana - MANA_CAP, 0)
+				newLowerMana = Math.min(newLowerMana, MANA_CAP)
+				newHigherMana = Math.min(newHigherMana, MANA_CAP)
 
 				if (newHigherMana < newLowerMana) {
 					// Mana rebalancing resulted in the original higherMana becoming the lower total (guaranteed proc), valid option, push onto stack
@@ -562,14 +560,14 @@ export class MeleeCombos extends Analyser {
 				}
 			} else {
 				// Neither proc is up, check with using Jolt  + higherMana's dualcast spell to delay so that lowerMana will get guaranteed proc
-				let newLowerMana = lowerManaState.amount + (this.gauge._gaugeModifiers.get(this.data.actions.JOLT_II.id)?.white ?? 0)
-				let newHigherMana = higherManaState.amount + (this.gauge._gaugeModifiers.get(this.data.actions.JOLT_II.id)?.black ?? 0) + ((this.gauge._gaugeModifiers.get(higherManaState.actions.dualcast)?.white ?? 0) || (this.gauge._gaugeModifiers.get(higherManaState.actions.dualcast)?.black ?? 0))
+				let newLowerMana = lowerManaState.amount + (this.gauge.gaugeModifiers.get(this.data.actions.JOLT_II.id)?.white ?? 0)
+				let newHigherMana = higherManaState.amount + (this.gauge.gaugeModifiers.get(this.data.actions.JOLT_II.id)?.black ?? 0) + ((this.gauge.gaugeModifiers.get(higherManaState.actions.dualcast)?.white ?? 0) || (this.gauge.gaugeModifiers.get(higherManaState.actions.dualcast)?.black ?? 0))
 				const firstDelaySkill = this.data.actions.JOLT_II
 
 				// Determine how much mana would be wasted to cap with this delay, then adjust post-delay mana totals to cap before further comparisons
-				const manaLoss = Math.max(newLowerMana - this.gauge._manaCap, 0) + Math.max(newHigherMana - this.gauge._manaCap, 0)
-				newLowerMana = Math.min(newLowerMana, this.gauge._manaCap)
-				newHigherMana = Math.min(newHigherMana, this.gauge._manaCap)
+				const manaLoss = Math.max(newLowerMana - MANA_CAP, 0) + Math.max(newHigherMana - MANA_CAP, 0)
+				newLowerMana = Math.min(newLowerMana, MANA_CAP)
+				newHigherMana = Math.min(newHigherMana, MANA_CAP)
 				if (newLowerMana < newHigherMana) {
 					// Mana rebalancing resulted in the original higherMana becoming the lower total (guaranteed proc), valid option, push onto stack
 					possibleDelays.push({
@@ -578,14 +576,14 @@ export class MeleeCombos extends Analyser {
 					})
 				} else {
 					// Check if using Jolt  + lowerMana's dualcast spell to delay so that higherMana will get guaranteed proc
-					let newLowerMana = lowerManaState.amount + (this.gauge._gaugeModifiers.get(this.data.actions.JOLT_II.id)?.white ?? 0) + ((this.gauge._gaugeModifiers.get(lowerManaState.actions.dualcast)?.white ?? 0) || (this.gauge._gaugeModifiers.get(lowerManaState.actions.dualcast)?.black ?? 0))
-					let newHigherMana = higherManaState.amount + (this.gauge._gaugeModifiers.get(this.data.actions.JOLT_II.id)?.black ?? 0)
+					let newLowerMana = lowerManaState.amount + (this.gauge.gaugeModifiers.get(this.data.actions.JOLT_II.id)?.white ?? 0) + ((this.gauge.gaugeModifiers.get(lowerManaState.actions.dualcast)?.white ?? 0) || (this.gauge.gaugeModifiers.get(lowerManaState.actions.dualcast)?.black ?? 0))
+					let newHigherMana = higherManaState.amount + (this.gauge.gaugeModifiers.get(this.data.actions.JOLT_II.id)?.black ?? 0)
 					const firstDelaySkill = this.data.actions.JOLT_II
 
 					// Determine how much mana would be wasted to cap with this delay, then adjust post-delay mana totals to cap before further comparisons
-					const manaLoss = Math.max(newLowerMana - this.gauge._manaCap, 0) + Math.max(newHigherMana - this.gauge._manaCap, 0)
-					newLowerMana = Math.min(newLowerMana, this.gauge._manaCap)
-					newHigherMana = Math.min(newHigherMana, this.gauge._manaCap)
+					const manaLoss = Math.max(newLowerMana - MANA_CAP, 0) + Math.max(newHigherMana - MANA_CAP, 0)
+					newLowerMana = Math.min(newLowerMana, MANA_CAP)
+					newHigherMana = Math.min(newHigherMana, MANA_CAP)
 					if (newHigherMana < newLowerMana) {
 						// Mana rebalancing resulted in the original higherMana becoming the lower total (guaranteed proc), valid option, push onto stack
 						possibleDelays.push({

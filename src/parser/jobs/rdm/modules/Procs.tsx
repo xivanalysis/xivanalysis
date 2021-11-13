@@ -60,7 +60,7 @@ export class Procs extends CoreProcs {
 	private getMissedProcWhy(missedFire: number, missedStone: number) {
 		if (missedFire > 0 && missedStone > 0) {
 			return <Trans id="rdm.procs.suggestions.missed.why">
-				You missed <Plural value={missedFire} one="# Verfire proc" other="# Verfire procs" />, and <Plural value={missedStone} one="# Verstone proc" other="# Verstone procs" />.
+				You missed <Plural value={missedFire} one="# Verfire proc" other="# Verfire procs" /> and <Plural value={missedStone} one="# Verstone proc" other="# Verstone procs" />.
 			</Trans>
 		}
 		if (missedFire > 0) {
@@ -92,7 +92,7 @@ export class Procs extends CoreProcs {
 	private getOverwrittenProcWhy(overWrittenFire: number, overWrittenStone: number) {
 		if (overWrittenFire > 0 && overWrittenStone > 0) {
 			return <Trans id="rdm.procs.suggestions.overwritten.why">
-				<Plural value={overWrittenFire} one="# Verfire proc" other="# Verfire procs" />, and <Plural value={overWrittenStone} one="# Verstone proc" other="# Verstone procs" /> were lost due to being overwritten.
+				<Plural value={overWrittenFire} one="# Verfire proc" other="# Verfire procs" /> and <Plural value={overWrittenStone} one="# Verstone proc" other="# Verstone procs" /> were lost due to being overwritten.
 			</Trans>
 		}
 		if (overWrittenFire > 0) {
@@ -108,7 +108,7 @@ export class Procs extends CoreProcs {
 	private getInvulnProcContent(invulnFire: number, invulnStone: number) {
 		if (invulnFire > 0 && invulnStone > 0) {
 			return <Trans id="rdm.procs.suggestions.invuln.content">
-				Try not to use <ActionLink {...this.data.actions.VERFIRE} />, and <ActionLink {...this.data.actions.VERSTONE} /> while the boss is invulnerable.
+				Try not to use <ActionLink {...this.data.actions.VERFIRE} /> and <ActionLink {...this.data.actions.VERSTONE} /> while the boss is invulnerable.
 			</Trans>
 		}
 		if (invulnFire > 0) {
@@ -124,7 +124,7 @@ export class Procs extends CoreProcs {
 	private getInvulnProcWhy(invulnFire: number, invulnStone: number) {
 		if (invulnFire > 0 && invulnStone > 0) {
 			return <Trans id="rdm.procs.suggestions.invuln.why">
-				You used <Plural value={invulnFire} one="# Verfire proc" other="# Verfire procs" />, and <Plural value={invulnStone} one="# Verstone proc" other="# Verstone procs" /> on an invulnerable boss.
+				You used <Plural value={invulnFire} one="# Verfire proc" other="# Verfire procs" /> and <Plural value={invulnStone} one="# Verstone proc" other="# Verstone procs" /> on an invulnerable boss.
 			</Trans>
 		}
 		if (invulnFire > 0) {
