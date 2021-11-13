@@ -1,4 +1,4 @@
-import TERMS from 'data/GLOSSARY'
+import {TERMS} from 'data/GLOSSARY'
 import * as PropTypes from 'prop-types'
 import React, {PureComponent} from 'react'
 import {Popup, Icon} from 'semantic-ui-react'
