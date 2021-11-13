@@ -75,7 +75,6 @@
   "blm.about.description": "Dieser Analysator zeigt dir, warum du weniger <0/> castest, als du denkst.",
   "blm.gauge.suggestions.dropped-enochian.content": "Den <0/> Buff fallen zu lassen führt zu verlorenen <1/>, mehr clipping durch weitere Verwendungen von <2/>, nicht verfügbar sein von <3/> und <4/>, oder einfach das Fehlen des 10% Schadensbonus, den <5/> gibt.",
   "blm.gauge.suggestions.lost-polyglot.content": "Du hast Polyglott verloren, da <0/> auslief. <1/> und <2/> sind deine stärksten GCDs, stelle daher sicher, dass du sie so oft wie möglich einsetzen kannst.",
-  "blm.gauge.suggestions.lost-polyglot.why": "{0} Polyglott-Aufladungen verloren.",
   "blm.gauge.suggestions.overwritten-polyglot.content": "Polyglott wurde überschrieben, da 30 Sekunden nach dem Erhalten des zweiten Stacks weder <0/> noch <1/> gecastet wurden. <2/> und <3/> sind deine stärksten GCDs, stelle daher sicher, dass du sie so oft wie möglich einsetzen kannst.",
   "blm.gauge.title": "Balken",
   "blm.gauge.trigger.no-eno-b4": "<0/> wurde eingesetzt obwohl <1/> inaktiv war.",
