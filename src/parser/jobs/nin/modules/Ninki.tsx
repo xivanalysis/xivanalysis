@@ -5,7 +5,6 @@ import JOBS from 'data/JOBS'
 import {Cause, Event, Events} from 'event'
 import {filter, oneOf} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
-import {Data} from 'parser/core/modules/Data'
 import {CounterGauge, Gauge as CoreGauge} from 'parser/core/modules/Gauge'
 import Suggestions, {Suggestion, TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import React from 'react'
@@ -24,7 +23,6 @@ const OVERCAP_SEVERITY = {
 export class Ninki extends CoreGauge {
 	static override title = t('nin.ninki.title')`Ninki Timeline`
 
-	@dependency private data!: Data
 	@dependency private suggestions!: Suggestions
 
 	private ninkiGauge = this.add(new CounterGauge({

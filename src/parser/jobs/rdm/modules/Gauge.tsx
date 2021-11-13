@@ -4,7 +4,6 @@ import JOBS from 'data/JOBS'
 import {Event, Events} from 'event'
 import {filter, oneOf} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
-import {Data} from 'parser/core/modules/Data'
 import {CounterGauge, Gauge as CoreGauge} from 'parser/core/modules/Gauge'
 import {Statistics} from 'parser/core/modules/Statistics'
 import Suggestions, {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
@@ -23,7 +22,6 @@ export const MANA_CAP = 100
 export class Gauge extends CoreGauge {
 	static override title = t('rdm.gauge.title')`Mana Gauge Usage`
 
-	@dependency private data!: Data
 	@dependency private suggestions!: Suggestions
 	@dependency private statistics!: Statistics
 

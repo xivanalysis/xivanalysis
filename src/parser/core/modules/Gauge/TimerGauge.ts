@@ -1,5 +1,4 @@
 import {Analyser} from 'parser/core/Analyser'
-import {ResourceDatum} from '../ResourceGraphs'
 import {GAUGE_HANDLE} from '../ResourceGraphs/ResourceGraphs'
 import {AbstractGauge, AbstractGaugeOptions, GaugeGraphOptions} from './AbstractGauge'
 
@@ -15,6 +14,11 @@ interface State {
 	timestamp: number
 	remaining: number
 	paused: boolean
+}
+
+interface Window {
+	start: number
+	end: number
 }
 
 export interface TimerGaugeOptions extends AbstractGaugeOptions {
@@ -66,7 +70,7 @@ export class TimerGauge extends AbstractGauge {
 			return this.lastKnownState.remaining
 		}
 
-		const delta = this.parser.currentTimestamp - this.lastKnownState.timestamp
+		const delta = this.parser.currentEpochTimestamp - this.lastKnownState.timestamp
 		return Math.max(this.minimum, this.lastKnownState.remaining - delta)
 	}
 
@@ -83,6 +87,11 @@ export class TimerGauge extends AbstractGauge {
 		}
 
 		return this.lastKnownState.paused
+	}
+
+	/** Whether the gauge is currently running */
+	get active(): boolean {
+		return !(this.expired || this.paused)
 	}
 
 	constructor(opts: TimerGaugeOptions) {
@@ -118,7 +127,7 @@ export class TimerGauge extends AbstractGauge {
 
 	/**
 	 * Add time to the gauge. Time over the maxium will be lost.
-	 * If the gauge has edxpired, this will have no effect.
+	 * If the gauge has expired, this will have no effect.
 	 */
 	extend(duration: number) {
 		if (this.expired) {
@@ -139,7 +148,15 @@ export class TimerGauge extends AbstractGauge {
 
 	/** Set the time remaining on the timer to the given duration. Value will be bounded by provided maximum. */
 	set(duration: number, paused: boolean = false) {
-		const timestamp = this.parser.currentTimestamp
+		const timestamp = this.parser.currentEpochTimestamp
+
+		// Push the timer state prior to the event into the history
+		this.history.push({
+			timestamp,
+			remaining: this.remaining,
+			paused: this.paused,
+		})
+
 		const remaining = Math.max(this.minimum, Math.min(duration, this.maximum))
 
 		// Push a new state onto the history
@@ -172,6 +189,11 @@ export class TimerGauge extends AbstractGauge {
 		if (this.expirationCallback) {
 			this.expirationCallback()
 		}
+		this.history.push({
+			timestamp: this.parser.currentEpochTimestamp,
+			remaining: this.remaining,
+			paused: false,
+		})
 	}
 
 	/** @inheritdoc */
@@ -181,58 +203,17 @@ export class TimerGauge extends AbstractGauge {
 			return
 		}
 
-		// Translate state history into a dataset that makes sense for the chart
-		const startTime = this.parser.eventTimeOffset
-		const endTime = startTime + this.parser.pull.duration
-		const data: ResourceDatum[] = []
-		this.history.forEach(entry => {
-			const relativeTimestamp = entry.timestamp - startTime
-
-			// Adjust preceeding data for the start of this state's window
-			const {length} = data
-			if (length > 0 && relativeTimestamp < data[length - 1].time) {
-				// If we're updating prior to the previous entry's expiration, update the previous entry
-				// with its state at this point in time - we'll end up with two points showing the update on
-				// this timestamp.
-				const prev = data[length - 1]
-				prev.current = (prev.current || this.minimum / 1000) + ((prev.time - relativeTimestamp) / 1000)
-				prev.time = relativeTimestamp
-
-			} else {
-				// This window is starting fresh, not extending - insert a blank entry so the chart doesn't
-				// render a line from the previous.
-				data.push({time: relativeTimestamp, current: 0, maximum: this.maximum})
-			}
-
-			// Insert the data point for the start of this window.
-			// Skip for pauses, as the updated previous point will represent the start point of the pause
-			const chartY = (this.minimum + entry.remaining) / 1000
-			if (!entry.paused) {
-				data.push({
-					time: relativeTimestamp,
-					current: chartY,
-					maximum: this.maximum,
-				})
-			}
-
-			// If the state isn't paused, insert a data point for the time it will expire.
-			// This data point will be updated in the event of an extension.
-			if (!entry.paused && entry.remaining > 0) {
-				const time = Math.min(relativeTimestamp + entry.remaining, endTime - startTime)
-				const timeDelta = time - relativeTimestamp
-				data.push({
-					time,
-					current: (this.minimum + entry.remaining - timeDelta) / 1000,
-					maximum: this.maximum,
-				})
-			}
-		})
+		// Insert a data point at the end of the timeline
+		this.pause()
 
 		const {handle, label, color} = this.graphOptions
 		const graphData = {
 			label,
 			colour: color,
-			data,
+			data: this.history.map(entry => {
+				return {time: entry.timestamp, current: entry.remaining / 1000, maximum: this.maximum / 1000}
+			}),
+			linear: true,
 		}
 		if (handle != null) {
 			this.resourceGraphs.addDataGroup({...this.graphOptions, handle})
@@ -249,5 +230,90 @@ export class TimerGauge extends AbstractGauge {
 
 	setRemoveTimestampHook(value: Analyser['removeTimestampHook']) {
 		this._removeTimestampHook = value
+	}
+
+	private internalExpirationTime(start: number = this.parser.pull.timestamp, end: number = this.parser.currentEpochTimestamp, utaWindows: Window[] = [], forgiveUta: number = 0) {
+		let currentStart: number | undefined = undefined
+		const expirationWindows: Window[] = []
+
+		this.history.forEach(entry => {
+			if (entry.remaining <= this.minimum && currentStart == null) {
+				currentStart = entry.timestamp
+			}
+			if (entry.remaining > this.minimum && currentStart != null) {
+				// Don't clutter the windows if the expiration of the timer may also restart it (Polyglot, Lilies, etc.)
+				if (entry.timestamp > currentStart) {
+					expirationWindows.push({start: currentStart, end: entry.timestamp})
+				}
+				currentStart = undefined
+			}
+		})
+
+		if (expirationWindows.length === 0) { return [] }
+
+		const expirations: Window[] = []
+		expirationWindows.forEach(expiration => {
+			// If the expiration had some duration within the time range we're asking about, we'll add it
+			if ((expiration.end > start || expiration.start < end)) {
+				/**
+				 * If we were given any UTA windows, check if this expiration started within one, and change the effective start of the expiration
+				 * to the end of the UTA window, plus any additional leniency if specified
+				 */
+				if (utaWindows.length > 0) {
+					utaWindows.filter(uta => expiration.start >= uta.start && expiration.start <= uta.end)
+						.forEach(uta => expiration.start = Math.min(expiration.end, uta.end + forgiveUta))
+				}
+				// If the window still has any effective duration, we'll return it
+				if (expiration.start < expiration.end) {
+					expirations.push(expiration)
+				}
+			}
+		})
+
+		return expirations
+	}
+
+	/**
+	 * Gets whether the timer was expired at a particular time
+	 * @param when The timestamp in question
+	 * @returns True if the timer was expired at this timestamp, false if it was active or paused
+	 */
+	public isExpired(when: number = this.parser.currentEpochTimestamp) {
+		return this.internalExpirationTime(when, when).length > 0
+	}
+
+	/**
+	 * Gets the total amount of time that the timer was expired during a given time range.
+	 * @param start The start of the time range. To forgive time at the start of the fight, set this to this.parser.pull.timestamp + forgivenness amount
+	 * @param end The end of the time range.
+	 * @param utaWindows Pass to forgive any expirations that began within one of these windows of time. The start of any affected expiration will be reset to the end of the affecting window
+	 * @param forgiveUta Pass to grant additional leniency when an expiration occurred during a UTA window. This is added to the end of the window when recalculating the expiration start time
+	 * @returns The total effective time that the timer was expired for
+	 */
+	public getExpirationTime(start: number = this.parser.pull.timestamp, end: number = this.parser.currentEpochTimestamp, utaWindows: Window[] = [], forgiveUta: number = 0) {
+		return this.internalExpirationTime(start, end, utaWindows, forgiveUta).reduce(
+			(totalExpiration, currentWindow) => totalExpiration + Math.min(currentWindow.end, end) - Math.max(currentWindow.start, start),
+			0,
+		)
+	}
+	/**
+	 * Gets the array of windows that the timer was expired for during a given time range.
+	 * @param start The start of the time range. To forgive time at the start of the fight, set this to this.parser.pull.timestamp + forgivenness amount
+	 * @param end The end of the time range.
+	 * @param utaWindows Pass to forgive any expirations that began within one of these windows of time. The start of any affected expiration will be reset to the end of the affecting window
+	 * @param forgiveUta Pass to grant additional leniency when an expiration occurred during a UTA window. This is added to the end of the window when recalculating the expiration start time
+	 * @returns The array of expiration windows
+	 */
+	public getExpirationWindows(start: number = this.parser.pull.timestamp, end: number = this.parser.currentEpochTimestamp, utaWindows: Window[] = [], forgiveUta: number = 0) {
+		return this.internalExpirationTime(start, end, utaWindows, forgiveUta).reduce<Window[]>(
+			(windows, window) => {
+				windows.push({
+					start: Math.max(window.start, start),
+					end: Math.min(window.end, end),
+				})
+				return windows
+			},
+			[],
+		)
 	}
 }
