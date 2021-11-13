@@ -82,7 +82,6 @@
   "blm.gauge.suggestions.dropped-enochian.content": "断<0/>会造成<1/>和<2/>的损失，并且额外开<3/>卡GCD，无法使用<4/>和<5/>，同时直接损失<6/>提供的15%伤害加成。",
   "blm.gauge.suggestions.dropped-enochian.why": "<0/>断了{droppedEno, plural, one {#次} other {#次}}。",
   "blm.gauge.suggestions.lost-polyglot.content": "因为断<0/>，你损失了你的所有通晓资源，<1/>和<2/>是你的最强GCD技能，请不要浪费它们。",
-  "blm.gauge.suggestions.lost-polyglot.why": "损失了{0, plural, one {# 个通晓} other {# 个通晓}} .",
   "blm.gauge.suggestions.overwritten-polyglot.content": "因为在获得第二层通晓状态后的30秒内没用使用过<0/>或<1/>，你的通晓状态被覆盖了。<2/>和<3/>是你的最强的GCD技能，请不要浪费它们。",
   "blm.gauge.suggestions.overwritten-polyglot.why": "<0/>被覆盖了{0, plural, one {#次} other {#次}}。",
   "blm.gauge.title": "职业量谱",
