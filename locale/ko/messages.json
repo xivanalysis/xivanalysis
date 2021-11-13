@@ -82,7 +82,6 @@
   "blm.gauge.suggestions.dropped-enochian.content": "<0/>이 끊길시 <1/> 혹은 <2/> 시전 횟수에 영향을 끼치며 <3/> 추가 사용으로 인한 글쿨 밀림현상을 겪게 됩니다. 그 뿐 아니라 <4/>과 <5/> 사용불가, 최종적으로 <6/>의 15% 추가 데미지 버프 또한 끊기므로 실질적인 총 손해는 상당합니다.",
   "blm.gauge.suggestions.dropped-enochian.why": "<0/> 유지를 {droppedEno, plural, one {# 번} other {# 번}} 실패하였습니다.",
   "blm.gauge.suggestions.lost-polyglot.content": "<0/>이 끊겨 언어 통달을 잃어버렸습니다. 강력한 위력을 가진 <1/>과 <2/>을 사용해 언어 통달 스택을 효율적으로 사용하십시오.",
-  "blm.gauge.suggestions.lost-polyglot.why": "언어 통달 스택을 {0, plural, one {#회} other {#회}} 놓쳤습니다.",
   "blm.gauge.suggestions.overwritten-polyglot.content": "2차 언어 통달을 얻은 이후 30초 동안 <0/> 혹은 <1/>을 사용하지않아 초과하였습니다. 가장 위력이 높은 <2/>과 <3/>을 사용해 초과하여 언어 통달 스택을 잃는 손해를 피하십시오.",
   "blm.gauge.suggestions.overwritten-polyglot.why": "<0/>을 {0, plural, one {#회} other {#회}} 미처 사용하지 못하고 갱신하였습니다.",
   "blm.gauge.title": "극성과 언어",
