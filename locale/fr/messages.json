@@ -81,7 +81,6 @@
   "blm.gauge.resource.umbral-ice": "Glace ombrale",
   "blm.gauge.suggestions.dropped-enochian.content": "Perdre son <0/> peut conduire à gâcher le lancement de <1/>, si vous réactivez un <2/> supplémentaire, ceci résultera à des pertes de <3/> et <4/> et très certainement à la perte du bonus de dégâts de 10% apporté par <5/>.",
   "blm.gauge.suggestions.lost-polyglot.content": "Vous avez perdu <0/> car <1/> a expiré, <2/> est votre meilleur GCD, essayez de l'utiliser au maximum.",
-  "blm.gauge.suggestions.lost-polyglot.why": "{0, plural, one {# stack de Polyglotte a été perdue} other {# stacks de Polyglotte ont été perdues}}.",
   "blm.gauge.suggestions.overwritten-polyglot.content": "Vous avez écrasé un Polyglot car vous n'avez lancé aucun <0/> ou <1/> 30 secondes après en avoir eu le précédent. <2/> et <3/> sont vos plus puissants sorts, essayez de toujours maximiser leur utilisation.",
   "blm.gauge.title": "Jauge",
   "blm.gauge.trigger.no-eno-b4": "<0/> a été lancé pendant que <1/> était considéré inactive.",
