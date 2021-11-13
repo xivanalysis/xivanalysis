@@ -2,7 +2,7 @@ import {CooldownDowntime} from 'parser/core/modules/CooldownDowntime'
 
 // Time that Jump deems ok for a OGCD to be down : ^)
 const DEFAULT_ALLOWED_DOWNTIME = 1000
-export default class GeneralCDDowntime extends CooldownDowntime {
+export class GeneralCDDowntime extends CooldownDowntime {
 	override defaultAllowedAverageDowntime = DEFAULT_ALLOWED_DOWNTIME
 
 	override trackedCds = [
