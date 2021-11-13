@@ -264,7 +264,7 @@ export class TimerGauge extends AbstractGauge {
 						.forEach(uta => expiration.start = Math.min(expiration.end, uta.end + forgiveUta))
 				}
 				// If the window still has any effective duration, we'll return it
-				if (expiration.start > expiration.end) {
+				if (expiration.start < expiration.end) {
 					expirations.push(expiration)
 				}
 			}
