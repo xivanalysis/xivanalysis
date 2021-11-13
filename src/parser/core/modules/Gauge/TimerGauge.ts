@@ -1,5 +1,4 @@
 import {Analyser} from 'parser/core/Analyser'
-import {ResourceDatum} from '../ResourceGraphs'
 import {GAUGE_HANDLE} from '../ResourceGraphs/ResourceGraphs'
 import {AbstractGauge, AbstractGaugeOptions, GaugeGraphOptions} from './AbstractGauge'
 
@@ -128,7 +127,7 @@ export class TimerGauge extends AbstractGauge {
 
 	/**
 	 * Add time to the gauge. Time over the maxium will be lost.
-	 * If the gauge has edxpired, this will have no effect.
+	 * If the gauge has expired, this will have no effect.
 	 */
 	extend(duration: number) {
 		if (this.expired) {
@@ -150,6 +149,14 @@ export class TimerGauge extends AbstractGauge {
 	/** Set the time remaining on the timer to the given duration. Value will be bounded by provided maximum. */
 	set(duration: number, paused: boolean = false) {
 		const timestamp = this.parser.currentEpochTimestamp
+
+		// Push the timer state prior to the event into the history
+		this.history.push({
+			timestamp,
+			remaining: this.remaining,
+			paused: this.paused,
+		})
+
 		const remaining = Math.max(this.minimum, Math.min(duration, this.maximum))
 
 		// Push a new state onto the history
@@ -182,6 +189,11 @@ export class TimerGauge extends AbstractGauge {
 		if (this.expirationCallback) {
 			this.expirationCallback()
 		}
+		this.history.push({
+			timestamp: this.parser.currentEpochTimestamp,
+			remaining: this.remaining,
+			paused: false,
+		})
 	}
 
 	/** @inheritdoc */
@@ -191,58 +203,16 @@ export class TimerGauge extends AbstractGauge {
 			return
 		}
 
-		// Translate state history into a dataset that makes sense for the chart
-		const endTime = this.parser.pull.timestamp + this.parser.pull.duration
-		const data: ResourceDatum[] = []
-		let previousPaused = false
-		this.history.forEach(entry => {
-			// Adjust preceeding data for the start of this state's window
-			const {length} = data
-			const chartY = (this.minimum + entry.remaining) / 1000
-			const prev = data[length - 1]
-			if (length > 0 && entry.timestamp < prev.time) {
-				// If we're updating prior to the previous entry's expiration, update the previous entry
-				// with its state at this point in time - we'll end up with two points showing the update on
-				// this timestamp.
-				prev.current = (prev.current || this.minimum / 1000) + ((prev.time - entry.timestamp) / 1000)
-				prev.time = entry.timestamp - 1
-
-			} else if (length > 0) {
-				// This window is starting fresh, not extending - insert a blank entry so the chart doesn't
-				// render a line from the previous.
-				data.push({time: entry.timestamp, current: previousPaused ? chartY : 0, maximum: this.maximum / 1000})
-			}
-
-			// Insert the data point for the start of this window.
-			// Skip for pausing/unpausing, as the points added/updated in the above code will represent the bounds of the pause
-			if (!entry.paused && !previousPaused) {
-				data.push({
-					time: entry.timestamp,
-					current: chartY,
-					maximum: this.maximum / 1000,
-				})
-			}
-
-			// If the state isn't paused, insert a data point for the time it will expire.
-			// This data point will be updated in the event of an extension.
-			if (!entry.paused && entry.remaining > 0) {
-				const time = Math.min(entry.timestamp + entry.remaining, endTime)
-				const timeDelta = time - entry.timestamp
-				data.push({
-					time,
-					current: (this.minimum + entry.remaining - timeDelta) / 1000,
-					maximum: this.maximum / 1000,
-				})
-			}
-
-			previousPaused = entry.paused
-		})
+		// Insert a data point at the end of the timeline
+		this.pause()
 
 		const {handle, label, color} = this.graphOptions
 		const graphData = {
 			label,
 			colour: color,
-			data,
+			data: this.history.map(entry => {
+				return {time: entry.timestamp, current: entry.remaining / 1000, maximum: this.maximum / 1000}
+			}),
 			linear: true,
 		}
 		if (handle != null) {
