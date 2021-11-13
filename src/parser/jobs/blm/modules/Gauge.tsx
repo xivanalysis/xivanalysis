@@ -472,7 +472,7 @@ export class Gauge extends CoreGauge {
 	// Refund unable-to-act time if the downtime window was longer than the AF/UI timer
 	private countLostPolyglots(time: number) {
 		let refundTime = 0
-		this.polyglotTimer.getDowntimeWindows().filter(window => window.start - this.parser.pull.timestamp > this.data.actions.FIRE_IV.castTime)
+		this.polyglotTimer.getExpirationWindows().filter(window => window.start - this.parser.pull.timestamp > this.data.actions.FIRE_IV.castTime)
 			.forEach(downtime => {
 				if (this.unableToAct.getWindows({
 					start: downtime.start,
@@ -492,7 +492,7 @@ export class Gauge extends CoreGauge {
 	}
 
 	private onComplete() {
-		const lostPolyglot = this.countLostPolyglots(this.polyglotTimer.getDowntime(this.data.actions.FIRE_IV.castTime))
+		const lostPolyglot = this.countLostPolyglots(this.polyglotTimer.getExpirationTime(this.data.actions.FIRE_IV.castTime))
 
 		// Find out how many of the enochian drops ocurred during times where the player could not act for longer than the AF/UI buff timer. If they could act, they could've kept it going, so warn about those.
 		const droppedEno = this.droppedEnoTimestamps.filter(drop =>

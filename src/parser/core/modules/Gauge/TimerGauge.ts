@@ -232,45 +232,45 @@ export class TimerGauge extends AbstractGauge {
 		this._removeTimestampHook = value
 	}
 
-	private internalDowntime(start = this.parser.pull.timestamp, end = this.parser.currentEpochTimestamp) {
+	private internalExpirationTime(start = this.parser.pull.timestamp, end = this.parser.currentEpochTimestamp) {
 		let currentStart: number | undefined = undefined
-		const downtimeWindows: TimerDownWindow[] = []
+		const expirationWindows: TimerDownWindow[] = []
 
 		this.history.forEach(entry => {
 			if (entry.remaining <= this.minimum && currentStart == null) {
 				currentStart = entry.timestamp
 			}
 			if (entry.remaining > this.minimum && currentStart != null) {
-				downtimeWindows.push({start: currentStart, end: entry.timestamp})
+				expirationWindows.push({start: currentStart, end: entry.timestamp})
 				currentStart = undefined
 			}
 		})
 
-		if (downtimeWindows.length === 0) { return [] }
+		if (expirationWindows.length === 0) { return [] }
 
-		const finalDowntimes: TimerDownWindow[] = []
-		downtimeWindows.forEach(downtime => {
-			if (downtime.end > start || downtime.start < end) {
-				finalDowntimes.push(downtime)
+		const expirations: TimerDownWindow[] = []
+		expirationWindows.forEach(expiration => {
+			if (expiration.end > start || expiration.start < end) {
+				expirations.push(expiration)
 			}
 		})
 
-		return finalDowntimes
+		return expirations
 	}
 
-	public isDowntime(when = this.parser.currentEpochTimestamp) {
-		return this.internalDowntime(when, when).length > 0
+	public isExpired(when = this.parser.currentEpochTimestamp) {
+		return this.internalExpirationTime(when, when).length > 0
 	}
 
-	public getDowntime(start = this.parser.pull.timestamp, end = this.parser.currentEpochTimestamp) {
-		return this.internalDowntime(start, end).reduce(
-			(totalDowntime, currentWindow) => totalDowntime + Math.min(currentWindow.end, end) - Math.max(currentWindow.start, start),
+	public getExpirationTime(start = this.parser.pull.timestamp, end = this.parser.currentEpochTimestamp) {
+		return this.internalExpirationTime(start, end).reduce(
+			(totalExpiration, currentWindow) => totalExpiration + Math.min(currentWindow.end, end) - Math.max(currentWindow.start, start),
 			0,
 		)
 	}
 
-	public getDowntimeWindows(start = this.parser.pull.timestamp, end = this.parser.currentEpochTimestamp) {
-		return this.internalDowntime(start, end).reduce<TimerDownWindow[]>(
+	public getExpirationWindows(start = this.parser.pull.timestamp, end = this.parser.currentEpochTimestamp) {
+		return this.internalExpirationTime(start, end).reduce<TimerDownWindow[]>(
 			(windows, window) => {
 				windows.push({
 					start: Math.max(window.start, start),
