@@ -130,8 +130,8 @@ export class Gauge extends CoreGauge {
 		this.addEventHook('complete', this.onComplete)
 	}
 
-	override onDeath() {
-		super.onDeath()
+	override onDeath(event: Events['death']) {
+		super.onDeath(event)
 		this.pauseGeneration = true
 	}
 
