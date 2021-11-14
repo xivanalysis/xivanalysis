@@ -1,4 +1,5 @@
 import {Analyser} from 'parser/core/Analyser'
+import {TimestampHookArguments, TimestampHookCallback} from 'parser/core/Dispatcher'
 import {GAUGE_HANDLE} from '../ResourceGraphs/ResourceGraphs'
 import {AbstractGauge, AbstractGaugeOptions, GaugeGraphOptions} from './AbstractGauge'
 
@@ -26,7 +27,7 @@ export interface TimerGaugeOptions extends AbstractGaugeOptions {
 	maximum: number
 
 	/** Callback executed when the timer expires. */
-	onExpiration?: () => void
+	onExpiration?: TimestampHookCallback
 
 	/** Graph options. Omit to disable graphing for this gauge. */
 	graph?: GaugeGraphOptions,
@@ -36,7 +37,7 @@ export class TimerGauge extends AbstractGauge {
 	// Just in case I ever have to change it lmao
 	private readonly minimum = 0
 	private readonly maximum: number
-	private readonly expirationCallback?: () => void
+	private readonly expirationCallback?: TimestampHookCallback
 	private readonly graphOptions?: GaugeGraphOptions
 
 	private hook?: ReturnType<Analyser['addTimestampHook']>
@@ -118,8 +119,8 @@ export class TimerGauge extends AbstractGauge {
 	 * Refresh the gauge to its maximum value.
 	 * If the gauge has expired, this will have no effect.
 	 */
-	refresh() {
-		if (this.expired) {
+	refresh(onlyIfRunning: boolean = true) {
+		if (this.expired && onlyIfRunning) {
 			return
 		}
 		this.start()
@@ -129,8 +130,8 @@ export class TimerGauge extends AbstractGauge {
 	 * Add time to the gauge. Time over the maxium will be lost.
 	 * If the gauge has expired, this will have no effect.
 	 */
-	extend(duration: number) {
-		if (this.expired) {
+	extend(duration: number, onlyIfRunning: boolean = true) {
+		if (this.expired && onlyIfRunning) {
 			return
 		}
 		this.set(this.remaining + duration)
@@ -185,9 +186,9 @@ export class TimerGauge extends AbstractGauge {
 		}
 	}
 
-	private onExpiration = () => {
+	private onExpiration = (args: TimestampHookArguments) => {
 		if (this.expirationCallback) {
-			this.expirationCallback()
+			this.expirationCallback(args)
 		}
 		this.history.push({
 			timestamp: this.parser.currentEpochTimestamp,
@@ -232,7 +233,7 @@ export class TimerGauge extends AbstractGauge {
 		this._removeTimestampHook = value
 	}
 
-	private internalExpirationTime(start: number = this.parser.pull.timestamp, end: number = this.parser.currentEpochTimestamp, utaWindows: Window[] = [], forgiveUta: number = 0) {
+	private internalExpirationTime(start: number = this.parser.pull.timestamp, end: number = this.parser.currentEpochTimestamp, downtimeWindows: Window[] = [], reapplyAfterDowntime: number = 0) {
 		let currentStart: number | undefined = undefined
 		const expirationWindows: Window[] = []
 
@@ -256,12 +257,12 @@ export class TimerGauge extends AbstractGauge {
 			// If the expiration had some duration within the time range we're asking about, we'll add it
 			if ((expiration.end > start || expiration.start < end)) {
 				/**
-				 * If we were given any UTA windows, check if this expiration started within one, and change the effective start of the expiration
-				 * to the end of the UTA window, plus any additional leniency if specified
+				 * If we were given any downtime windows, check if this expiration started within one, and change the effective start of the expiration
+				 * to the end of the downtime window, plus any additional leniency if specified
 				 */
-				if (utaWindows.length > 0) {
-					utaWindows.filter(uta => expiration.start >= uta.start && expiration.start <= uta.end)
-						.forEach(uta => expiration.start = Math.min(expiration.end, uta.end + forgiveUta))
+				if (downtimeWindows.length > 0) {
+					downtimeWindows.filter(uta => expiration.start >= uta.start && expiration.start <= uta.end)
+						.forEach(uta => expiration.start = Math.min(expiration.end, uta.end + reapplyAfterDowntime))
 				}
 				// If the window still has any effective duration, we'll return it
 				if (expiration.start < expiration.end) {
@@ -286,12 +287,14 @@ export class TimerGauge extends AbstractGauge {
 	 * Gets the total amount of time that the timer was expired during a given time range.
 	 * @param start The start of the time range. To forgive time at the start of the fight, set this to this.parser.pull.timestamp + forgivenness amount
 	 * @param end The end of the time range.
-	 * @param utaWindows Pass to forgive any expirations that began within one of these windows of time. The start of any affected expiration will be reset to the end of the affecting window
-	 * @param forgiveUta Pass to grant additional leniency when an expiration occurred during a UTA window. This is added to the end of the window when recalculating the expiration start time
+	 * @param downtimeWindows Pass to forgive any expirations that began within one of these windows of time. The start of any affected expiration will be reset to the end of the affecting window
+	 *     When using a timer that should only forgive expirations when you are completely unable to act, use the windows from UnableToAct.getWindows()
+	 *     To also forgive expirations due to death or due to no enemy being targetable, use the windows from Downtime.getWindows()
+	 * @param reapplyAfterDowntime Pass to grant additional leniency when an expiration occurred during a downtime window. This is added to the end of the window when recalculating the expiration start time
 	 * @returns The total effective time that the timer was expired for
 	 */
-	public getExpirationTime(start: number = this.parser.pull.timestamp, end: number = this.parser.currentEpochTimestamp, utaWindows: Window[] = [], forgiveUta: number = 0) {
-		return this.internalExpirationTime(start, end, utaWindows, forgiveUta).reduce(
+	public getExpirationTime(start: number = this.parser.pull.timestamp, end: number = this.parser.currentEpochTimestamp, downtimeWindows: Window[] = [], reapplyAfterDowntime: number = 0) {
+		return this.internalExpirationTime(start, end, downtimeWindows, reapplyAfterDowntime).reduce(
 			(totalExpiration, currentWindow) => totalExpiration + Math.min(currentWindow.end, end) - Math.max(currentWindow.start, start),
 			0,
 		)
@@ -300,12 +303,14 @@ export class TimerGauge extends AbstractGauge {
 	 * Gets the array of windows that the timer was expired for during a given time range.
 	 * @param start The start of the time range. To forgive time at the start of the fight, set this to this.parser.pull.timestamp + forgivenness amount
 	 * @param end The end of the time range.
-	 * @param utaWindows Pass to forgive any expirations that began within one of these windows of time. The start of any affected expiration will be reset to the end of the affecting window
-	 * @param forgiveUta Pass to grant additional leniency when an expiration occurred during a UTA window. This is added to the end of the window when recalculating the expiration start time
+	 * @param downtimeWindows Pass to forgive any expirations that began within one of these windows of time. The start of any affected expiration will be reset to the end of the affecting window
+	 *     When using a timer that should only forgive expirations when you are completely unable to act, use the windows from UnableToAct.getWindows()
+	 *     To also forgive expirations due to death or due to no enemy being targetable, use the windows from Downtime.getWindows()
+	 * @param reapplyAfterDowntime Pass to grant additional leniency when an expiration occurred during a downtime window. This is added to the end of the window when recalculating the expiration start time
 	 * @returns The array of expiration windows
 	 */
-	public getExpirationWindows(start: number = this.parser.pull.timestamp, end: number = this.parser.currentEpochTimestamp, utaWindows: Window[] = [], forgiveUta: number = 0) {
-		return this.internalExpirationTime(start, end, utaWindows, forgiveUta).reduce<Window[]>(
+	public getExpirationWindows(start: number = this.parser.pull.timestamp, end: number = this.parser.currentEpochTimestamp, downtimeWindows: Window[] = [], reapplyAfterDowntime: number = 0) {
+		return this.internalExpirationTime(start, end, downtimeWindows, reapplyAfterDowntime).reduce<Window[]>(
 			(windows, window) => {
 				windows.push({
 					start: Math.max(window.start, start),
