@@ -1,6 +1,7 @@
 import {Plural, Trans} from '@lingui/react'
 import {DataLink} from 'components/ui/DbLink'
-import {ActionKey} from 'data/ACTIONS'
+import {Action, ActionKey} from 'data/ACTIONS'
+import {Status} from 'data/STATUSES'
 import {Event, Events} from 'event'
 import {Analyser} from 'parser/core/Analyser'
 import {EventHook} from 'parser/core/Dispatcher'
@@ -45,8 +46,8 @@ export class TwinSnakes extends Analyser {
 	@dependency private suggestions!: Suggestions
 
 	private history: TwinState[] = []
-	private ignoredGcds: number[] = []
-	private twinSnake?: TwinState
+	private ignoredGcds: Array<Action['id']> = []
+	private twinSnake: TwinState | undefined
 	private lastRefresh: number = this.parser.pull.timestamp
 	private lastDrop: number = this.parser.pull.timestamp
 
@@ -275,7 +276,7 @@ export class TwinSnakes extends Analyser {
 		}))
 	}
 
-	private getBuffUptimePercent(statusId: number): number {
+	private getBuffUptimePercent(statusId: Status['id']): number {
 		const status = this.data.getStatus(statusId)
 		if (status == null) { return 0 }
 
