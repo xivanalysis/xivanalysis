@@ -551,7 +551,6 @@
   "mch.gauge.suggestions.heat-waste.content": "",
   "mch.gauge.suggestions.heat-waste.why": "",
   "mch.gauge.title": "",
-  "mch.gauge.trigger.negative-heat": "",
   "mch.hypercharge.accordion.message": "",
   "mch.hypercharge.panel-count": "{0, plural, one {GCD使用数: #} other {GCD使用数: #}}",
   "mch.hypercharge.title": "",

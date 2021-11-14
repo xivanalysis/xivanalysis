@@ -551,7 +551,6 @@
   "mch.gauge.suggestions.heat-waste.content": "Essayez de ne pas laisser votre jauge de chaleur surcharger, car cela peut vous coûter des utilisations d'Hypercharge au cours du combat.",
   "mch.gauge.suggestions.heat-waste.why": "Vous avez perdus {0} chaleur pour avoir dépasser le maximum stockable.",
   "mch.gauge.title": "Jauge de chaleur et de batterie",
-  "mch.gauge.trigger.negative-heat": "<0/> a été utilisé(e) quand la jauge de chaleur simulée était à {0}.",
   "mch.hypercharge.accordion.message": "",
   "mch.hypercharge.panel-count": "{0, plural, one {GCD} other {GCDs}}",
   "mch.hypercharge.title": "",
