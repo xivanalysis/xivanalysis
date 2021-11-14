@@ -5,7 +5,6 @@ import {DataLink} from 'components/ui/DbLink'
 import {Cause, Event, Events} from 'event'
 import {filter, oneOf} from 'parser/core/filter'
 import {dependency} from 'parser/core/Module'
-import {Data} from 'parser/core/modules/Data'
 import {CounterGauge, Gauge as CoreGauge} from 'parser/core/modules/Gauge'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
@@ -37,7 +36,6 @@ type GaugeMap = Map<number, GaugeModifier>
 export class Gauge extends CoreGauge {
 	static override title = t('mch.gauge.title')`Heat & Battery Gauge`
 
-	@dependency private data!: Data
 	@dependency private suggestions!: Suggestions
 
 	private heat = this.add(new CounterGauge({
