@@ -77,7 +77,7 @@ export class Gauge extends CoreGauge {
 
 		const baseFilter = filter<Event>().source(this.parser.actor.id)
 
-		const castFilter = baseFilter
+		const actionFilter = baseFilter
 			.type(oneOf(['action', 'combo']))
 			.action(oneOf(castActions))
 
@@ -88,7 +88,7 @@ export class Gauge extends CoreGauge {
 				.action(oneOf(damageActions))
 			)
 
-		this.addEventHook(castFilter, this.onCast(gauge, modifiers))
+		this.addEventHook(actionFilter, this.onAction(gauge, modifiers))
 		this.addEventHook(damageFilter, this.onDamage(gauge, modifiers))
 	}
 
@@ -104,7 +104,7 @@ export class Gauge extends CoreGauge {
 		return this._lastQueenCost
 	}
 
-	private onCast(gauge: CounterGauge, modifiers: GaugeMap) {
+	private onAction(gauge: CounterGauge, modifiers: GaugeMap) {
 		return (event: Events['action' | 'combo']) => {
 			const modifier = modifiers.get(event.action)
 
