@@ -37,7 +37,7 @@ export class Darkside extends Gauge {
 
 	private darksideGauge = this.add(new TimerGauge({
 		maximum: DARKSIDE_MAX_DURATION,
-		onExpiration: this.onDarksideExpiration,
+		onExpiration: this.onDarksideExpiration.bind(this),
 	}))
 	private darksideDrops: DarksideDrop[] = []
 
@@ -103,7 +103,7 @@ export class Darkside extends Gauge {
 					{this.darksideDrops
 						.map((d, idx) => {
 							return <Table.Row key={`darksidedrop-${idx}`}>
-								<Table.Cell>{this.parser.formatTimestamp(d.timestamp)}</Table.Cell>
+								<Table.Cell>{this.parser.formatEpochTimestamp(d.timestamp)}</Table.Cell>
 								<Table.Cell><NormalisedMessage message={d.reason}/></Table.Cell>
 							</Table.Row>
 						})
