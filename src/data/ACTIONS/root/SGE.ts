@@ -19,13 +19,13 @@ export const SGE = ensureActions({
 		name: 'Eukrasian Diagnosis',
 		icon: '',
 		onGcd: true,
-		speedAttribute: Attribute.SPELL_SPEED,
 		gcdRecast: 1500,
 		mpCost: 1000,
+		statusesApplied: ['EUKRASIAN_DIAGNOSIS', 'DIFFERENTIAL_DIAGNOSIS'],
 	},
 	HAIMA: {
 		id: SGE_STUB + 3,
-		name: 'Diagnosis',
+		name: 'Haima',
 		icon: '',
 		cooldown: 120000,
 		statusesApplied: ['HAIMATINON'],
@@ -55,9 +55,9 @@ export const SGE = ensureActions({
 		name: 'Eukrasian Prognosis',
 		icon: '',
 		onGcd: true,
-		speedAttribute: Attribute.SPELL_SPEED,
 		gcdRecast: 1500,
 		mpCost: 1100,
+		statusesApplied: ['EUKRASIAN_PROGNOSIS'],
 	},
 	PANHAIMA: {
 		id: SGE_STUB + 7,
@@ -135,7 +135,7 @@ export const SGE = ensureActions({
 		statusesApplied: ['KRASIS'],
 	},
 
-	/** Addersgall consumers */
+	/** Addersgall abilities */
 	RIZOMATA: {
 		id: SGE_STUB + 18,
 		name: 'Rizomata',
