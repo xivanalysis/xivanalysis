@@ -75,6 +75,7 @@
   "ast.synastry.suggestion.why": "{0, plural,one {#mono-cible GCD de heal a été utilisé}other {#mono-cible gcd de heal ont été utilisé}} sans synastrie, même si elle était disponible.",
   "blm.about.description": "Cet analyseur a pour but d'identifier à quel point vous n'utilisez pas <0/> autant que vous le pensez.",
   "blm.gauge.resource.astral-fire": "Feu astral",
+  "blm.gauge.resource.astral-timer": "Minuteur de feu astral",
   "blm.gauge.resource.astral-umbral": "Feu Astral et <0></0> Glace Ombrale",
   "blm.gauge.resource.polyglot": "Polyglotte",
   "blm.gauge.resource.umbral-hearts": "Cœur ombral",
