@@ -1,9 +1,9 @@
 import {ActionTimeline} from './ActionTimeline'
+import {BloodGauge} from './BloodGauge'
 import {BloodWeapon} from './BloodWeapon'
 import {Darkside} from './Darkside'
 import {Delirium} from './Delirium'
 import {EsteemTimeline} from './EsteemTimeline'
-import {Gauge} from './Gauge'
 import {MPUsage} from './MPUsage'
 import {MultiHitSkills} from './MultiHitSkills'
 import {OGCDDowntime} from './OGCDDowntime'
@@ -11,11 +11,11 @@ import {StatusTimeline} from './StatusTimeline'
 
 export default [
 	ActionTimeline,
-	Darkside,
+	BloodGauge,
 	BloodWeapon,
+	Darkside,
 	Delirium,
 	EsteemTimeline,
-	Gauge,
 	MPUsage,
 	MultiHitSkills,
 	OGCDDowntime,

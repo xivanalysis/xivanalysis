@@ -18,7 +18,7 @@ const BLOOD_OVERCAP_SEVERITY = {
 	200: SEVERITY.MAJOR,
 }
 
-export class Gauge extends CoreGauge {
+export class BloodGauge extends CoreGauge {
 	static override title = t('drk.gauge.title')`Blood Gauge`
 
 	@dependency private actors!: Actors
@@ -95,7 +95,7 @@ export class Gauge extends CoreGauge {
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.DELIRIUM.icon,
 			content: <Trans id="drk.gauge.suggestions.loss.content">
-					Avoid letting your Blood Gauge overcap - the wasted resources may cost you uses of your spenders over the course of the fight.
+				Avoid letting your Blood Gauge overcap - the wasted resources may cost you uses of your spenders over the course of the fight.
 			</Trans>,
 			why: <Trans id="drk.gauge.suggestions.loss.why">
 				{this.bloodGauge.overCap} blood gauge lost to an overcapped gauge.
