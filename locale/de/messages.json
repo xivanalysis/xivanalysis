@@ -548,7 +548,6 @@
   "mch.gauge.suggestions.heat-waste.content": "Versuch, deinen Hitzebalken nicht überlaufen zu lassen, da es dich im Laufe des Kampfes eventuell Hyperladung-Fenster kosten kann.",
   "mch.gauge.suggestions.heat-waste.why": "Du hast {0} Hitze durch einen überlaufenden Balken verloren.",
   "mch.gauge.title": "Hitze- und Batteriebalken",
-  "mch.gauge.trigger.negative-heat": "<0/> wurde benutzt, während der simulierte Hitzebalken auf {0} war.",
   "mch.hypercharge.accordion.message": "",
   "mch.hypercharge.panel-count": "{0, plural, one {GCD} other {GCDs}}",
   "mch.hypercharge.title": "",
