@@ -1,7 +1,7 @@
 import {t} from '@lingui/macro'
 import TimeLineChart from 'components/ui/TimeLineChart'
 import {StatusKey} from 'data/STATUSES'
-import {Event} from 'event'
+import {Event, Events} from 'event'
 import {Analyser} from 'parser/core/Analyser'
 import {filter} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
@@ -65,7 +65,7 @@ export class Gauge extends Analyser {
 		return gauge
 	}
 
-	protected onDeath() {
+	protected onDeath(_event: Events['death']) {
 		this.gauges.forEach(gauge => gauge.reset())
 	}
 

@@ -6,6 +6,7 @@ import {DataLink} from 'components/ui/DbLink'
 import {ActionKey} from 'data/ACTIONS'
 import JOBS from 'data/JOBS'
 import {Cause, Event, Events, FieldsBase} from 'event'
+import {TimestampHookArguments} from 'parser/core/Dispatcher'
 import {filter, oneOf} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
 import BrokenLog from 'parser/core/modules/BrokenLog'
@@ -356,7 +357,11 @@ export class Gauge extends CoreGauge {
 	//#endregion
 
 	//#region Astral Fire and Umbral Ice
-	private onAstralUmbralTimeout(flagIssues: boolean = true) {
+	private onAstralUmbralTimeout(_args: TimestampHookArguments) {
+		this.onAstralUmbralEnd(true)
+	}
+
+	private onAstralUmbralEnd(flagIssues: boolean) {
 		this.astralFireTimer.reset()
 		this.astralFireGauge.reset()
 
@@ -368,7 +373,7 @@ export class Gauge extends CoreGauge {
 
 	private onGainAstralFireStacks(stackCount: number, dropsElementOnSwap: boolean = true) {
 		if (!this.umbralIceGauge.empty && dropsElementOnSwap) {
-			this.onAstralUmbralTimeout()
+			this.onAstralUmbralEnd(true)
 		} else {
 			this.umbralIceTimer.reset()
 			this.umbralIceGauge.reset()
@@ -382,7 +387,7 @@ export class Gauge extends CoreGauge {
 
 	private onGainUmbralIceStacks(stackCount: number, dropsElementOnSwap: boolean = true) {
 		if (!this.astralFireGauge.empty && dropsElementOnSwap) {
-			this.onAstralUmbralTimeout()
+			this.onAstralUmbralEnd(true)
 		} else {
 			this.astralFireTimer.reset()
 			this.astralFireGauge.reset()
@@ -477,7 +482,7 @@ export class Gauge extends CoreGauge {
 
 	override onDeath() {
 		// Not counting the loss towards the rest of the gauge loss, that'll just double up on the suggestions
-		this.onAstralUmbralTimeout(false)
+		this.onAstralUmbralEnd(false)
 	}
 
 	private onComplete() {
