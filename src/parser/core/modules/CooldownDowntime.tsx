@@ -81,7 +81,7 @@ export abstract class CooldownDowntime extends Analyser {
 	 */
 	protected abstract trackedCds: CooldownGroup[]
 
-	private usages = new Map<CooldownGroup, Array<Events['action']>>()
+	protected usages = new Map<CooldownGroup, Array<Events['action']>>()
 	private resets = new Map<CooldownGroup, Array<Events['action']>>()
 
 	protected checklistName = <Trans id="core.cooldownDowntime.use-ogcd-cds">Use your cooldowns</Trans>
@@ -192,6 +192,13 @@ export abstract class CooldownDowntime extends Analyser {
 			requirements: cdRequirements,
 			target: this.checklistTarget,
 		}))
+
+		this.addJobSuggestions()
+	}
+
+	/** Override to provide additional suggestions (intended for jobs that track skills that should not have weight in the checklist, like healer mitigation cooldowns) */
+	protected addJobSuggestions() {
+		return
 	}
 
 	/** Calculates the maximum possible uses for a given cooldown group */
