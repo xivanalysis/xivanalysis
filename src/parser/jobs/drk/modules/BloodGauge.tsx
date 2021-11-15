@@ -6,7 +6,6 @@ import {EventHook} from 'parser/core/Dispatcher'
 import {filter, oneOf} from 'parser/core/filter'
 import {dependency} from 'parser/core/Module'
 import {Actors} from 'parser/core/modules/Actors'
-import {Data} from 'parser/core/modules/Data'
 import {CounterGauge, Gauge as CoreGauge} from 'parser/core/modules/Gauge'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
@@ -22,7 +21,6 @@ export class BloodGauge extends CoreGauge {
 	static override title = t('drk.gauge.title')`Blood Gauge`
 
 	@dependency private actors!: Actors
-	@dependency private data!: Data
 	@dependency private suggestions!: Suggestions
 
 	private bloodGauge = this.add(new CounterGauge({
