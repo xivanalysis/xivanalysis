@@ -81,7 +81,7 @@ export abstract class CooldownDowntime extends Analyser {
 	 */
 	protected abstract trackedCds: CooldownGroup[]
 
-	protected usages = new Map<CooldownGroup, Array<Events['action']>>()
+	private usages = new Map<CooldownGroup, Array<Events['action']>>()
 	private resets = new Map<CooldownGroup, Array<Events['action']>>()
 
 	protected checklistName = <Trans id="core.cooldownDowntime.use-ogcd-cds">Use your cooldowns</Trans>
@@ -167,7 +167,7 @@ export abstract class CooldownDowntime extends Analyser {
 		const cdRequirements = []
 		for (const cdGroup of this.trackedCds) {
 			const expected = this.calculateMaxUsages(cdGroup)
-			const actual = (this.usages.get(cdGroup) ?? []).length
+			const actual = this.calculateUsageCount(cdGroup)
 			let percent = actual / expected * 100
 			if (process.env.NODE_ENV === 'production') {
 				percent = Math.min(percent, 100)
@@ -199,6 +199,10 @@ export abstract class CooldownDowntime extends Analyser {
 	/** Override to provide additional suggestions (intended for jobs that track skills that should not have weight in the checklist, like healer mitigation cooldowns) */
 	protected addJobSuggestions() {
 		return
+	}
+
+	protected calculateUsageCount(group: CooldownGroup): number {
+		return (this.usages.get(group) ?? []).length
 	}
 
 	/** Calculates the maximum possible uses for a given cooldown group */

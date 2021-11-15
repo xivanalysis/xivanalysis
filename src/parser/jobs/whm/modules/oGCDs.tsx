@@ -57,7 +57,7 @@ export default class OGCDs extends CooldownDowntime {
 
 			// set up for suggestion(s)
 			const maxUses = this.calculateMaxUsages(cooldownGroup)
-			const uses = this.usages.get(cooldownGroup)?.length ?? 0
+			const uses = this.calculateUsageCount(cooldownGroup)
 			const missed = maxUses - uses
 
 			const why = <Fragment>
