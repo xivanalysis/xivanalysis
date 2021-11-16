@@ -16,7 +16,7 @@ const SEVERITIES = {
 	},
 }
 
-export default class Goring extends DoTs {
+export class Goring extends DoTs {
 	static override handle = 'goring'
 
 	@dependency private checklist!: Checklist
