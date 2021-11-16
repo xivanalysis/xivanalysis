@@ -8,6 +8,7 @@ import {HistoryEntry} from 'parser/core/modules/ActionWindow/History'
 import {GlobalCooldown} from 'parser/core/modules/GlobalCooldown'
 import {SEVERITY} from 'parser/core/modules/Suggestions'
 import React from 'react'
+import {ensureArray} from 'utilities'
 
 // Opener has 5 Ninjutsu + 3 weaponskills, non-TCJ windows will likely have 2-3 Ninjutsu + 4-5 weaponskills
 const BASE_GCDS_PER_WINDOW = 7
@@ -136,7 +137,7 @@ export class TrickAttackWindow extends BuffWindow {
 	}
 
 	private adjustExpectedActionCount(window: HistoryEntry<EvaluatedAction[]>, action: TrackedAction) {
-		if (action.action.id === this.data.actions.RAITON.id && window.start - this.parser.pull.timestamp < FIRST_WINDOW_BUFFER) {
+		if (ensureArray(action.action)[0].id === this.data.actions.RAITON.id && window.start - this.parser.pull.timestamp < FIRST_WINDOW_BUFFER) {
 			return -1
 		}
 

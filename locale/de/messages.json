@@ -699,7 +699,6 @@
   "pld.requiescat.suggestions.nobuff.content": "<0/> sollte nur benutzt werden, wenn du mehr als 80% MP hast. Ansonsten bekommst du den <1/>-Buff nicht, der dir 50% mehr magischen Schaden und keine Castzeit gibt, und dir erlaubt <2/> zu casten.",
   "pld.requiescat.suggestions.nobuff.why": "{missedRequiescatBuffs, plural, other {#-mal}} unter 80% MP benutzt.",
   "pld.requiescat.suggestions.wrong-gcd.content": "Während <0/> sollten deine benutzten GCDs aus 3-4 Nutzen von <1/> (oder 4-mal <2/> auf mehreren Zielen) und einmal <3/> bestehen für optimalen Schaden.",
-  "pld.requiescat.suggestions.wrong-gcd.why": "{missedCasts, plural, one {# verpasster Cast} other {# verpasste Casts}} während des <0/>-Fensters.",
   "pld.requiescat.table.note": "Jedes deiner <0/>-Fenster sollte mindestens {0} Zauber enthalten, um deine Rotation aufrechtzuerhalten. Meistens sollte ein Fenster aus {1} Casts von <1/> oder <2/> bestehen und mit einem Cast von <3/> enden. Unter manchen Umständen kann es allerdings besser sein, ein <4/> pro Minute wegzulassen, um deine Rotation besser mit Buffs oder Boss-Mechaniken abzupassen. Wenn du allerdings keine spezifischen Pläne dafür hast, dann solltest du versuchen {2} Casts von <5/> in jedem <6/>-Fenster zu haben.",
   "pld.requiescat.title": "Requiescat-Benutzung",
   "pld.tincture.suggestions.missedgcd.content": "Versuche während jedes <0/>-Zeitfensters 13 Angriffe mit globaler Abklingzeit unterzubringen.",

@@ -14,7 +14,7 @@ import {GlobalCooldown} from 'parser/core/modules/GlobalCooldown'
 import {SEVERITY} from 'parser/core/modules/Suggestions'
 import React from 'react'
 import {Team} from 'report'
-import {isDefined} from 'utilities'
+import {ensureArray, isDefined} from 'utilities'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 
 // Minimum muse GCDs needed to expect an RS window to have 9 GCDs
@@ -56,7 +56,7 @@ class BarrageEvaluator extends ExpectedActionsEvaluator {
 	}
 
 	override countUsed(window: HistoryEntry<EvaluatedAction[]>, action: TrackedAction) {
-		if (action.action.id === this.barrageId) {
+		if (ensureArray(action.action)[0].id === this.barrageId) {
 			return this.wasBarrageUsed(window) ? 1 : 0
 		}
 		return super.countUsed(window, action)

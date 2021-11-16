@@ -699,7 +699,6 @@
   "pld.requiescat.suggestions.nobuff.content": "<0/>은 마나가 80%이상 있을 때 만 사용하십시오. 이하일 때 사용할 시 마법 데미지 50% 증가, 즉시 시전, 그리고 <2/> 사용을 부여하는 <1/> 버프를 놓칠것입니다.",
   "pld.requiescat.suggestions.nobuff.why": "{missedRequiescatBuffs, plural, one {#번} other {#번}}의 안식 기도가 MP 80% 이하일 때 사용되었습니다.",
   "pld.requiescat.suggestions.wrong-gcd.content": "<0/> 구간내 글쿨은 반드시 3~4회의 <1/> (다수 대상일시 4회의 <2/>) 그리고 1회의 <3/>가 포함되어야 합니다.",
-  "pld.requiescat.suggestions.wrong-gcd.why": "<0/> 구간에서 시전 횟수를 총 {missedCasts, plural, other {#회}} 놓쳤습니다.",
   "pld.requiescat.table.note": "매 <0/> 구간마다 반드시 {0} 회의 마법을 시전하여 딜싸이클이 어긋나지 않도록 유지시켜줘야합니다. 대부분의 경우 {1} 회의 <1/> 혹은 <2/> 그리고 마무리를 항상 <3/>으로 하는것이 일반적이지만 특수한 경우 일부러 분당 <4/> 1회를 줄여 딜싸이클이 기믹이나 버프 구간과 어긋나게 하지않도록 맞출 수 있습니다. 특별한 택틱을 미리 짜놓지 않았다면 매 <6/> 구간마다 {2} 회의 <5/>를 목표하십시오.",
   "pld.requiescat.title": "안식기도 사용기록",
   "pld.tincture.suggestions.missedgcd.content": "<0/> 구간 마다 반드시 13회의 글쿨기를 포함하십시오.",

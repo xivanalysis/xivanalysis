@@ -699,7 +699,6 @@
   "pld.requiescat.suggestions.nobuff.content": "<0/>只能在MP达到80%以上时使用，否则你不会获得<1/>buff。这个buff能够提高你50%的魔法伤害，使你的魔法瞬发，并让你能够使用<2/>。",
   "pld.requiescat.suggestions.nobuff.why": "在蓝量低于80%时使用了{missedRequiescatBuffs, plural, one {#次安魂祈祷} other {#次安魂祈祷}}。",
   "pld.requiescat.suggestions.wrong-gcd.content": "为了最大化伤害，<0/>持续时间内的GCD应当由3到4个<1/>（多目标时用<2/>）以及1个<3/>构成。",
-  "pld.requiescat.suggestions.wrong-gcd.why": "在<0/>的持续时间内打了{missedCasts, plural, one {#个错误的技能} other {#个错误的技能}}。",
   "pld.requiescat.table.note": "在你的每一个<0/>都应该包括最少覆盖{0}个技能来保证对齐你的循环。在大部分的时间，在每一个循环都应该包括<1/>或<2/>，最后以<3/>结尾。然而，在某些情况下，每分钟施放{1}个<4/>将会有效的帮助你将循环对其团辅与机制。如果你没有特定的规划去做这件事，你应该在每一个<6/>对齐{2}个<5/>。",
   "pld.requiescat.title": "安魂祈祷的使用",
   "pld.tincture.suggestions.missedgcd.content": "尝试在每个<0/>的持续时间内插入13个GCD技能。",

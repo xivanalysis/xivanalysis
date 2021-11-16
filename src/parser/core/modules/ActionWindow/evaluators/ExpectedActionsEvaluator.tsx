@@ -2,6 +2,7 @@ import {Plural, Trans} from '@lingui/react'
 import {ActionLink} from 'components/ui/DbLink'
 import {RotationTargetOutcome} from 'components/ui/RotationTable'
 import React from 'react'
+import {ensureArray} from 'utilities'
 import {SeverityTiers, TieredSuggestion} from '../../Suggestions/Suggestion'
 import {EvaluatedAction} from '../EvaluatedAction'
 import {HistoryEntry} from '../History'
@@ -62,8 +63,8 @@ export class ExpectedActionsEvaluator implements WindowEvaluator {
 			return {
 				format: 'table',
 				header: {
-					header: <ActionLink showName={false} {...action.action}/>,
-					accessor: action.action.name,
+					header: <ActionLink showName={false} {...ensureArray(action.action)[0]}/>,
+					accessor: ensureArray(action.action)[0].name,
 				},
 				rows: windows.map(window => {
 					return {
@@ -77,7 +78,7 @@ export class ExpectedActionsEvaluator implements WindowEvaluator {
 	}
 
 	protected countUsed(window: HistoryEntry<EvaluatedAction[]>, action: TrackedAction) {
-		return window.data.filter(cast => cast.action.id === action.action.id).length
+		return window.data.filter(cast => ensureArray(action.action).map(a => a.id).includes(cast.action.id)).length
 	}
 
 	private determineExpected(window: HistoryEntry<EvaluatedAction[]>, action: TrackedAction) {

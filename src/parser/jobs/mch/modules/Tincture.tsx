@@ -9,6 +9,7 @@ import Downtime from 'parser/core/modules/Downtime'
 import {SEVERITY} from 'parser/core/modules/Suggestions'
 import {Tincture as CoreTincture} from 'parser/core/modules/Tincture'
 import React from 'react'
+import {ensureArray} from 'utilities'
 
 // Arbitrary 1 GCD buffer for the tincture buff application
 const TINCTURE_BUFFER = 2500
@@ -30,7 +31,7 @@ class ReassembleEvaluator extends ExpectedActionsEvaluator {
 	}
 
 	override countUsed(window: HistoryEntry<EvaluatedAction[]>, action: TrackedAction) {
-		if (action.action.id === this.reassembleId) {
+		if (ensureArray(action.action)[0].id === this.reassembleId) {
 			return this.wasReassembleUsed(window) ? 1 : 0
 		}
 		return super.countUsed(window, action)

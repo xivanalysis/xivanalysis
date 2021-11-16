@@ -1,5 +1,6 @@
 import {Plural, Trans} from '@lingui/react'
 import React from 'react'
+import {ensureArray} from 'utilities'
 import {SeverityTiers, TieredSuggestion} from '../../Suggestions/Suggestion'
 import {EvaluatedAction} from '../EvaluatedAction'
 import {HistoryEntry} from '../History'
@@ -52,7 +53,7 @@ export class LimitedActionsEvaluator implements WindowEvaluator {
 	public output(): undefined { return undefined }
 
 	private countUsed(window: HistoryEntry<EvaluatedAction[]>, action: TrackedAction) {
-		return window.data.filter(cast => cast.action.id === action.action.id).length
+		return window.data.filter(cast => ensureArray(action.action).map(a => a.id).includes(cast.action.id)).length
 	}
 
 }

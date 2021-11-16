@@ -699,7 +699,6 @@
   "pld.requiescat.suggestions.nobuff.content": "",
   "pld.requiescat.suggestions.nobuff.why": "",
   "pld.requiescat.suggestions.wrong-gcd.content": "",
-  "pld.requiescat.suggestions.wrong-gcd.why": "",
   "pld.requiescat.table.note": "<0/>効果時間中にはスキル回しに合わせるために最低{0} 回の魔法が使用されている必要があります。ほとんどの場合、{1} 回の<1/>か<2/>後、 <3/>で締めることになります。しかし状況によっては、バフやギミックに合わせるために1分に1回は<4/>を抜くことが有効な場合もあります。特段そういう狙いがないのであれば<6/>の効果時間中に{2} 回<5/>を使用するようにしましょう。",
   "pld.requiescat.title": "レクイエスカットの使用状況",
   "pld.tincture.suggestions.missedgcd.content": "<0/>の効果時間中に13回のウェポンスキルを使いましょう。",

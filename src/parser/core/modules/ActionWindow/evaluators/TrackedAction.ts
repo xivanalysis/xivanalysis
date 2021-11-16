@@ -13,8 +13,9 @@ export type OutcomeCalculator = (actual: number, expected?: number) => RotationT
 export interface TrackedAction {
 	/**
 	 * The action to track.
+	 * If multiple actions can be used interchangeably, supply an array of valid actions (the icon & name for the first action will be used in the table)
 	 */
-	action: Action
+	action: Action | Action[]
 	/**
 	 * The number of uses expected per window.
 	 * This may be a minimum or maximum depending on the evaluator.

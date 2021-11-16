@@ -7,6 +7,7 @@ import {HistoryEntry} from 'parser/core/modules/ActionWindow/History'
 import {GlobalCooldown} from 'parser/core/modules/GlobalCooldown'
 import {SEVERITY} from 'parser/core/modules/Suggestions'
 import React from 'react'
+import {ensureArray} from 'utilities'
 
 const SEVERITIES = {
 	MISSING_EXPECTED_USES: {
@@ -131,7 +132,7 @@ export default class NoMercy extends BuffWindow {
 	}
 
 	private adjustExpectedActionCount(window: HistoryEntry<EvaluatedAction[]>, action: TrackedAction) {
-		if (action.action.id !== this.data.actions.BURST_STRIKE.id) { return 0 }
+		if (ensureArray(action.action)[0].id !== this.data.actions.BURST_STRIKE.id) { return 0 }
 
 		if (window.data.find(cast => cast.action.id === this.data.actions.BLOODFEST.id)) {
 			//In fights with minimal downtime, it is possible to hit 4/4 bloodfests,
