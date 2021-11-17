@@ -557,7 +557,7 @@
   "mch.hypercharge.title": "Hypercharge Windows",
   "mch.queen.accordion.message": "The list below contains every <0/> window from the fight, indicating when it started, its Battery cost and duration, and how much total damage the Queen did to its target. Expanding an individual window below will display every cast by the Automaton Queen made during it.",
   "mch.queen.suggestions.missing-bunker.content": "Try to time your <0/> windows so that they end while the boss is targetable, as Pile Bunker is a significant chunk of its damage. If the boss is about to jump or die, use <1/> to end it early and get the hit in.",
-  "mch.queen.suggestions.missing-bunker.why": "{missingBunkers} of your Automaton Queen windows ended without a Pile Bunker.",
+  "mch.queen.suggestions.missing-bunker.why": "{missedPileBunkers} of your Automaton Queen windows ended without a Pile Bunker.",
   "mch.queen.title": "Automaton Queen Usage",
   "mch.queen.trigger.queenless-queen-attack": "A cast of <0/> was recorded without the Automaton Queen on the field.",
   "mch.reassemble.suggestions.bad-gcds.content": "On single targets <0/> should only ever be used on <1/> and <2/>, as they're your strongest GCDs by a large margin.",
