@@ -67,7 +67,7 @@
   "ast.sect.info": "The choice of Sect boils down to the content being played, group composition and player preference.<0/><1/> provides more potency per heal from regens, and is most effective in dungeons and 8-man content if damage taken does not exceed maximum HP.<2/><3/> is essential if shields are necessary for survival that <4/> cannot cover. Noct shields cannot be stacked with Scholar's and is not recommended when healing alongside one.",
   "ast.sect.info.no-sect-detected": "No sect detected",
   "ast.sect.suggestions.no-sect.content": "Don't start without <0/> or <1/>. There are several abilities that can't be used without one of these stances.",
-  "ast.sect.suggestions.no-sect.why": "There was no sect detected at the start of the fight.",
+  "ast.sect.suggestions.no-sect.why": "There was no sect detected at the start of the fight or the sect was applied right before the fight began. In the case where a sect was applied right before the fight began, an Astrologian risks shifting a GCD or being unprepared for the start of the fight.",
   "ast.sect.suggestions.noct-with-sch.content": "It is counter-productive to use this Sect with this composition. The main shields <0/> from <1/> do not stack with Scholar's main shield <2/>.",
   "ast.sect.suggestions.noct-with-sch.why": "Nocturnal Sect was used with a Scholar in the party.",
   "ast.sleeve-draw.checklist.description": "More Sleeve Draw uses mean more cards, and we want as many of those as possible.",
