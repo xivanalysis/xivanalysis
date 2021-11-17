@@ -1,40 +1,21 @@
 import {Trans} from '@lingui/react'
-import {ActionLink, StatusLink} from 'components/ui/DbLink'
-import {getDataBy} from 'data'
-import ACTIONS from 'data/ACTIONS'
-import STATUSES from 'data/STATUSES'
-import {BuffEvent, CastEvent} from 'fflogs'
-import {Event} from 'legacyEvent'
-import _ from 'lodash'
-import Module, {dependency} from 'parser/core/Module'
-import PrecastAction from 'parser/core/modules/PrecastAction'
+import {DataLink} from 'components/ui/DbLink'
+import {Event, Events} from 'event'
+import {Analyser} from 'parser/core/Analyser'
+import {filter, oneOf} from 'parser/core/filter'
+import {dependency} from 'parser/core/Injectable'
+import {Data} from 'parser/core/modules/Data'
 import {Statistics} from 'parser/core/modules/Statistics'
 import Suggestions, {SEVERITY, Suggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
 import SectStatistic from './SectStatistic'
 
-const NO_SECT_ICON = 'https://xivapi.com/i/064000/064017.png'
-
+/* unused AST related sectsy stuff. left here in case someone needs them in the future; however bleak sects' futures will be.
 const ASPECTED_ACTIONS = [
 	ACTIONS.ASPECTED_BENEFIC.id,
 	ACTIONS.ASPECTED_HELIOS.id,
 	ACTIONS.CELESTIAL_INTERSECTION.id,
 	ACTIONS.CELESTIAL_OPPOSITION.id,
-]
-
-const DIURNAL_SECT_STATUSES = [
-	STATUSES.ASPECTED_BENEFIC.id,
-	STATUSES.ASPECTED_HELIOS.id,
-	STATUSES.DIURNAL_OPPOSITION.id,
-	STATUSES.NOCTURNAL_INTERSECTION.id,
-	STATUSES.NOCTURNAL_BALANCE.id,
-]
-
-const NOCTURNAL_SECT_STATUSES = [
-	STATUSES.NOCTURNAL_FIELD.id,
-	STATUSES.NOCTURNAL_OPPOSITION.id,
-	STATUSES.DIURNAL_INTERSECTION.id,
-	STATUSES.DIURNAL_BALANCE.id,
 ]
 
 const ACTION_STATUS_MAP = {
@@ -61,11 +42,6 @@ const SECT_ACTIONS = [
 	ACTIONS.NOCTURNAL_SECT.id,
 ]
 
-const SECT_STATUSES = [
-	STATUSES.DIURNAL_SECT.id,
-	STATUSES.NOCTURNAL_SECT.id,
-]
-
 const DIURNAL_SECT_BUFF_ABILITY = {
 	name: STATUSES.DIURNAL_SECT.name,
 	guid: STATUSES.DIURNAL_SECT.id,
@@ -78,85 +54,83 @@ const NOCTURNAL_SECT_BUFF_ABILITY = {
 	guid: STATUSES.NOCTURNAL_SECT.id,
 	type: 1,
 	abilityIcon: _.replace(_.replace(STATUSES.NOCTURNAL_SECT.icon, 'https://xivapi.com/i/', ''), '/', '-'),
-}
+} */
+
+const NO_SECT_ICON = 'https://xivapi.com/i/064000/064017.png'
 
 // Determine sect by checking the result of an aspected spell/ability
-export default class Sect extends Module {
+export default class Sect extends Analyser {
 	static override handle = 'sect'
 
 	@dependency private statistics!: Statistics
-	@dependency private precastAction!: PrecastAction
 	@dependency private suggestions!: Suggestions
+	@dependency private data!: Data
 
 	private pullWithoutSect = false
-	private activeSectId: string | number | undefined = undefined
+	private activeSectId: number | undefined = undefined
 	private gaveup = false
+	private DIURNAL_SECT_STATUSES: number[] | undefined = undefined
+	private NOCTURNAL_SECT_STATUSES: number[] | undefined = undefined
+	private SECT_STATUSES: number[] | undefined = undefined
 
-	protected override init() {
-		this.addEventHook('cast', {abilityId: [...SECT_ACTIONS], by: 'player'}, this.onCast)
-		this.addEventHook('applybuff', {abilityId: [...SECT_STATUSES], by: 'player'}, this.onApplySect)
+	override initialise() {
+
+		//this section sets up the statuses using this.data.statuses
+		this.SECT_STATUSES = [
+			this.data.statuses.DIURNAL_SECT.id,
+			this.data.statuses.NOCTURNAL_SECT.id,
+		]
+
+		this.DIURNAL_SECT_STATUSES = [
+			this.data.statuses.ASPECTED_BENEFIC.id,
+			this.data.statuses.ASPECTED_HELIOS.id,
+			this.data.statuses.DIURNAL_OPPOSITION.id,
+			this.data.statuses.NOCTURNAL_INTERSECTION.id,
+			this.data.statuses.NOCTURNAL_BALANCE.id,
+		]
+
+		this.NOCTURNAL_SECT_STATUSES = [
+			this.data.statuses.NOCTURNAL_FIELD.id,
+			this.data.statuses.NOCTURNAL_OPPOSITION.id,
+			this.data.statuses.DIURNAL_INTERSECTION.id,
+			this.data.statuses.DIURNAL_BALANCE.id,
+		]
+
+		//this section uses hooks to go through the various functions
+		this.addEventHook(filter<Event>()
+			.source(this.parser.actor.id)
+			.type('statusApply')
+			.status(oneOf([...this.SECT_STATUSES, ...this.NOCTURNAL_SECT_STATUSES, ...this.DIURNAL_SECT_STATUSES]))
+		, this.onApplyStatus)
 		this.addEventHook('complete', this.onComplete)
 	}
 
-	override normalise(events: Event[]) {
-		const startTime = this.parser.fight.start_time
-		let aspectedCast: CastEvent | null = null
+	//to look for the sect buff or any relating sects statuses we would expect
+	private onApplyStatus(event: Events['statusApply']) {
 
-		for (const event of events) {
-			if (event.type === 'applybuff' && SECT_STATUSES.includes(event.ability.guid)) {
-				// They started the fight without a sect and switched it on mid-fight :blobsweat: we gud here
-				break
+		//if they switched it mid-fight, this section will pick it up
+		if (typeof this.SECT_STATUSES !== 'undefined' && this.SECT_STATUSES.includes(event.status)) {
+			if (!this.activeSectId) {
+				//specifically used to check whether a sect status existed by previous status as noted below. if it didn't exist before this status, then we assume they didn't have it to begin with since sect cannot be changed in combat
+				//note: this will pick up instances where the sect is changed moments before the prepull as the sect takes approx 3.5 seconds to be applied; the sect will at least take 1 oGCD plus risks not being prepared for the pull.
+				this.pullWithoutSect = true
 			}
-
-			if (!aspectedCast && event.type === 'cast' && ASPECTED_ACTIONS.includes(event.ability.guid)) {
-				// Detecting a cast of an aspected action, so now we examine what comes out of it
-				aspectedCast = event
-
-			} else if (aspectedCast
-				&& (event.type === 'applybuff' || event.type === 'refreshbuff') && [...NOCTURNAL_SECT_STATUSES, ...DIURNAL_SECT_STATUSES].includes(event.ability.guid)) {
-				// This is an applybuff event of a sect buff that came after an aspected action
-
-				if (this.mapCastToBuff(aspectedCast.ability.guid).includes(event.ability.guid)
-					&& [...DIURNAL_SECT_STATUSES, ...NOCTURNAL_SECT_STATUSES].includes(event.ability.guid)) {
-
-					const SECT_ABILITY = DIURNAL_SECT_STATUSES.includes(event.ability.guid) ? DIURNAL_SECT_BUFF_ABILITY : NOCTURNAL_SECT_BUFF_ABILITY
-
-					// Fab a sect buff event at the start of the fight
-					events.splice(0, 0, {
-						...event,
-						timestamp: startTime - 1,
-						type: 'applybuff',
-						ability: SECT_ABILITY,
-						targetID: event.sourceID,
-						targetIsFriendly: true,
-					})
-					break
-				}
-			} else {
-				continue
-			}
-
+			this.activeSectId = event.status === this.data.statuses.DIURNAL_SECT.id ? this.data.actions.DIURNAL_SECT.id
+				: event.status === this.data.statuses.NOCTURNAL_SECT.id ? this.data.actions.NOCTURNAL_SECT.id
+					: undefined //I don't trust myself lol
 		}
 
-		return events
-	}
-
-	private onCast(event: CastEvent) {
-		// If they used a sect after the fight started, it means they pulled without one on; otherwise, we probably added it in normalize.
-		this.pullWithoutSect = event.timestamp >= this.parser.fight.start_time
-
-		const sect = getDataBy(ACTIONS, 'id', event.ability.guid)
-		if (sect) {
-			this.activeSectId = sect.id
-		}
-	}
-
-	// Looking for the sect buff that we fabricated, but if they switched it on mid-fight that'll get picked up too
-	private onApplySect(event: BuffEvent) {
-		if (!this.activeSectId) {
-			const sect = getDataBy(ACTIONS, 'id', this.mapBuffToCast(event.ability.guid))
-			if (sect) {
-				this.activeSectId = sect.id
+		//otherwise, if the status has been applied relating to one of the mapped statuses, then we fabricate the sect if it hadn't already been fabricated
+		//using only !this.activeSectId will take out anything after the first buff which will not work in the case when noct/diurnal is used as part of the pre-pull actions and sect change happens prior to 0. Ideally as AST, I would like to see the sect used throughout the fight
+		if ((typeof this.NOCTURNAL_SECT_STATUSES !== 'undefined' && this.NOCTURNAL_SECT_STATUSES.includes(event.status))
+		|| (typeof this.DIURNAL_SECT_STATUSES !== 'undefined' && this.DIURNAL_SECT_STATUSES.includes(event.status))) {
+			if (typeof this.DIURNAL_SECT_STATUSES !== 'undefined' && this.DIURNAL_SECT_STATUSES.includes(event.status)
+			&& (this.activeSectId !== this.data.actions.DIURNAL_SECT.id || !this.activeSectId)) {
+				this.activeSectId = this.data.actions.DIURNAL_SECT.id
+			}
+			if (typeof this.NOCTURNAL_SECT_STATUSES !== 'undefined' && this.NOCTURNAL_SECT_STATUSES.includes(event.status)
+			&& (this.activeSectId !== this.data.actions.NOCTURNAL_SECT.id || !this.activeSectId)) {
+				this.activeSectId = this.data.actions.NOCTURNAL_SECT.id
 			}
 		}
 	}
@@ -168,12 +142,12 @@ export default class Sect extends Module {
 		*/
 		if (!this.gaveup && (this.pullWithoutSect || !this.activeSectId)) {
 			this.suggestions.add(new Suggestion({
-				icon: !this.activeSectId || ACTIONS.DIURNAL_SECT.id === this.activeSectId ? ACTIONS.DIURNAL_SECT.icon : ACTIONS.NOCTURNAL_SECT.icon,
+				icon: !this.activeSectId || this.data.actions.DIURNAL_SECT.id === this.activeSectId ? this.data.actions.DIURNAL_SECT.icon : this.data.actions.NOCTURNAL_SECT.icon,
 				content: <Trans id="ast.sect.suggestions.no-sect.content">
-					Don't start without <ActionLink {...ACTIONS.DIURNAL_SECT} /> or <ActionLink {...ACTIONS.NOCTURNAL_SECT} />. There are several abilities that can't be used without one of these stances.
+					Don't start without <DataLink action="DIURNAL_SECT" /> or <DataLink action="NOCTURNAL_SECT" />. There are several abilities that can't be used without one of these stances.
 				</Trans>,
 				why: <Trans id="ast.sect.suggestions.no-sect.why">
-					There was no sect detected at the start of the fight.
+					There was no sect detected at the start of the fight or the sect was applied right before the fight began. In the case where a sect was applied right before the fight began, an Astrologian risks shifting a GCD or being unprepared for the start of the fight.
 				</Trans>,
 				severity: SEVERITY.MAJOR,
 			}))
@@ -183,11 +157,11 @@ export default class Sect extends Module {
 			SUGGESTION: Noct with Scholar
 		*/
 		const withScholar = this.parser.fightFriendlies.some(friendly => friendly.type === 'Scholar')
-		if (this.activeSectId === ACTIONS.NOCTURNAL_SECT.id && withScholar) {
+		if (this.activeSectId === this.data.actions.NOCTURNAL_SECT.id && withScholar) {
 			this.suggestions.add(new Suggestion({
-				icon: ACTIONS.NOCTURNAL_SECT.icon,
+				icon: this.data.actions.NOCTURNAL_SECT.icon,
 				content: <Trans id="ast.sect.suggestions.noct-with-sch.content">
-					It is counter-productive to use this Sect with this composition. The main shields <StatusLink {...STATUSES.NOCTURNAL_FIELD} /> from <ActionLink {...ACTIONS.NOCTURNAL_SECT}/> do not stack with Scholar's main shield <StatusLink {...STATUSES.GALVANIZE} />.
+					It is counter-productive to use this Sect with this composition. The main shields <DataLink status="NOCTURNAL_FIELD" /> from <DataLink action="NOCTURNAL_SECT"/> do not stack with Scholar's main shield <DataLink status="GALVANIZE" />.
 				</Trans>,
 				why: <Trans id="ast.sect.suggestions.noct-with-sch.why">
 					Nocturnal Sect was used with a Scholar in the party.
@@ -198,41 +172,21 @@ export default class Sect extends Module {
 
 		// Statistic box
 		const icon = !this.activeSectId ? NO_SECT_ICON
-			: ACTIONS.DIURNAL_SECT.id === this.activeSectId ? ACTIONS.DIURNAL_SECT.icon
-				: ACTIONS.NOCTURNAL_SECT.icon
+			: this.data.actions.DIURNAL_SECT.id === this.activeSectId ? this.data.actions.DIURNAL_SECT.icon
+				: this.data.actions.NOCTURNAL_SECT.icon
 		const noSectValue = <Trans id="ast.sect.info.no-sect-detected">No sect detected</Trans>
-		const value = !this.activeSectId ? noSectValue :
-			ACTIONS.DIURNAL_SECT.id === this.activeSectId ? ACTIONS.DIURNAL_SECT.name
-				: ACTIONS.NOCTURNAL_SECT.name
+		const value = !this.activeSectId ? noSectValue
+			: this.data.actions.DIURNAL_SECT.id === this.activeSectId ? this.data.actions.DIURNAL_SECT.name
+				: this.data.actions.NOCTURNAL_SECT.name
 		this.statistics.add(new SectStatistic({
 			icon,
 			value,
 			info: (<Trans id="ast.sect.info">
 				The choice of Sect boils down to the content being played, group composition and player preference.<br/>
-				<ActionLink {...ACTIONS.DIURNAL_SECT}/> provides more potency per heal from regens, and is most effective in dungeons and 8-man content if damage taken does not exceed maximum HP.<br/>
-				<ActionLink {...ACTIONS.NOCTURNAL_SECT}/> is essential if shields are necessary for survival that <ActionLink {...ACTIONS.NEUTRAL_SECT}/> cannot cover. Noct shields cannot be stacked with Scholar's and is not recommended when healing alongside one.
+				<DataLink action="DIURNAL_SECT" /> provides more potency per heal from regens, and is most effective in dungeons and 8-man content if damage taken does not exceed maximum HP.<br/>
+				<DataLink action="NOCTURNAL_SECT" /> is essential if shields are necessary for survival that <DataLink action="NEUTRAL_SECT"/> cannot cover. Noct shields cannot be stacked with Scholar's and is not recommended when healing alongside one.
 			</Trans>),
 		}))
 
 	}
-
-	// Helpers
-	public mapCastToBuff(actionId: number) {
-		if (ASPECTED_ACTIONS.includes(actionId)) {
-			return ACTION_STATUS_MAP[actionId]
-		}
-		return []
-	}
-
-	public mapBuffToCast(statusId: number) {
-		switch (statusId) {
-		case STATUSES.NOCTURNAL_SECT.id:
-			return ACTIONS.NOCTURNAL_SECT.id
-		case STATUSES.DIURNAL_SECT.id:
-			return ACTIONS.DIURNAL_SECT.id
-		default:
-			return -1
-		}
-	}
-
 }
