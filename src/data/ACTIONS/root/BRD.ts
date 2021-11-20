@@ -27,6 +27,7 @@ export const BRD = ensureActions({
 		onGcd: false,
 		cooldown: 15000,
 		potency: 130,
+		cooldownGroup: 5,
 	},
 	BATTLE_VOICE: {
 		id: 118,
@@ -75,7 +76,7 @@ export const BRD = ensureActions({
 		onGcd: false,
 		cooldown: 60000,
 		potency: [100, 175, 260],
-		cooldownGroup: 3562, // Sidewinder Group
+		cooldownGroup: 13,
 	},
 	PITCH_PERFECT: {
 		id: 7404,
@@ -133,7 +134,7 @@ export const BRD = ensureActions({
 		onGcd: false,
 		cooldown: 60000,
 		potency: [100, 160, 220],
-		cooldownGroup: 3562, // Sidewinder Group
+		cooldownGroup: 13,
 	},
 	BURST_SHOT: {
 		id: 16495,

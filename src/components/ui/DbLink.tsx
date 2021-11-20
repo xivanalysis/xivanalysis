@@ -7,15 +7,17 @@ import {
 	TooltipProvider,
 	useGameData,
 } from '@xivanalysis/tooltips'
-import {ITEM_ID_OFFSET} from 'data/ACTIONS'
+import {useDataContext} from 'components/DataContext'
+import {ActionKey, ITEM_ID_OFFSET} from 'data/ACTIONS'
 import {Language} from 'data/LANGUAGES'
-import {STATUS_ID_OFFSET} from 'data/STATUSES'
+import {StatusKey, STATUS_ID_OFFSET} from 'data/STATUSES'
 import {useObserver} from 'mobx-react'
 import React, {CSSProperties, memo, ReactNode, useContext, useState} from 'react'
 import {createPortal} from 'react-dom'
 import {Manager, Popper, Reference} from 'react-popper'
 import {Icon} from 'semantic-ui-react'
 import {StoreContext} from 'store'
+import {BackfillUnion} from 'utilities'
 import styles from './DbLink.module.css'
 
 export interface ProviderProps {
@@ -154,22 +156,82 @@ function Label({
 }
 
 // Helpers, because akk is incredibly lazy, and _incredibly_ proud of it.
-export type TooltipHelperProps = Omit<TooltipProps, 'sheet'>
-export const ActionLink = (props: TooltipHelperProps) => <Tooltip {...props} sheet="Action"/>
-export const StatusLink = (props: TooltipHelperProps) => (
-	<Tooltip
-		{...props}
-		sheet="Status"
-		id={props.id && (props.id > STATUS_ID_OFFSET ? props.id - STATUS_ID_OFFSET : props.id)}
-	/>
-)
-export const ItemLink = (props: TooltipHelperProps) => (
-	<Tooltip
-		{...props}
-		sheet="Item"
-		id={props.id && props.id - ITEM_ID_OFFSET}
-	/>
-)
+type TooltipHelperProps = Omit<TooltipProps, 'sheet'>
+
+export type DataLinkProps =
+	& TooltipHelperProps
+	& BackfillUnion<
+		| {action: ActionKey}
+		| {status: StatusKey}
+		| {item: ActionKey}
+	>
+
+export function DataLink(props: DataLinkProps) {
+	if (props.action != null) {
+		return <ActionLink {...props}/>
+	}
+
+	if (props.status != null) {
+		return <StatusLink {...props}/>
+	}
+
+	if (props.item != null) {
+		return <ItemLink {...props}/>
+	}
+
+	throw new Error('Invalid DataLink props')
+}
+
+export type ActionLinkProps =
+	& TooltipHelperProps
+	& {action?: ActionKey}
+
+export function ActionLink({action, ...props}: ActionLinkProps) {
+	const {actions} = useDataContext()
+	const actionData = action && actions[action]
+	return (
+		<Tooltip
+			{...actionData}
+			{...props}
+			sheet="Action"
+		/>
+	)
+}
+
+export type StatusLinkProps =
+	& TooltipHelperProps
+	& {status?: StatusKey}
+
+export function StatusLink({status, ...props}: StatusLinkProps) {
+	const {statuses} = useDataContext()
+	const statusData = status && statuses[status]
+	const data = {...statusData, ...props}
+	return  (
+		<Tooltip
+			{...data}
+			sheet="Status"
+			id={data.id && (data.id > STATUS_ID_OFFSET ? data.id - STATUS_ID_OFFSET : data.id)}
+		/>
+	)
+}
+
+// Items are currently mushed in with actions.
+export type ItemLinkProps =
+	& TooltipHelperProps
+	& {item?: ActionKey}
+
+export function ItemLink({item, ...props}: ItemLinkProps) {
+	const {actions} = useDataContext()
+	const itemData = item && actions[item]
+	const data = {...itemData, ...props}
+	return (
+		<Tooltip
+			{...data}
+			sheet="Item"
+			id={data.id && data.id - ITEM_ID_OFFSET}
+		/>
+	)
+}
 
 /** @deprecated */
 export default Tooltip

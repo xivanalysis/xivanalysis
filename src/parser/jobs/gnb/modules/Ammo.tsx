@@ -9,8 +9,7 @@ import {CastEvent} from 'fflogs'
 import {Analyser} from 'parser/core/Analyser'
 import {dependency, DISPLAY_MODE} from 'parser/core/Module'
 import Checklist, {Requirement, Rule} from 'parser/core/modules/Checklist'
-import {ComboEvent} from 'parser/core/modules/Combos'
-import {Data} from 'parser/core/modules/Data'
+import {LegacyComboEvent} from 'parser/core/modules/Combos'
 import {NormalisedDamageEvent} from 'parser/core/modules/NormalisedEvents'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import React, {Fragment} from 'react'
@@ -161,7 +160,7 @@ export default class Ammo extends Analyser {
 		this.addGeneratedAmmoAndPush(generatedAmmo, abilityId)
 	}
 
-	private onComboGenerator(event: ComboEvent) {
+	private onComboGenerator(event: LegacyComboEvent) {
 		const abilityId = event.ability.guid
 		const generatedAmmo = ON_COMBO_GENERATORS[abilityId]
 		this.currentAbility = event.ability.name

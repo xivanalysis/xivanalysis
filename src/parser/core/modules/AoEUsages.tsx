@@ -2,11 +2,15 @@ import {t} from '@lingui/macro'
 import {Plural, Trans} from '@lingui/react'
 import {ActionLink} from 'components/ui/DbLink'
 import {Action} from 'data/ACTIONS'
-import Module, {dependency} from 'parser/core/Module'
-import {NormalisedDamageEvent} from 'parser/core/modules/NormalisedEvents'
+import {Cause, Event, Events} from 'event'
+import {dependency} from 'parser/core/Injectable'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
 import {Table} from 'semantic-ui-react'
+import {isSuccessfulHit} from 'utilities'
+import {Analyser} from '../Analyser'
+import {filter, oneOf} from '../filter'
+import {Data} from './Data'
 
 export interface AoEAction {
 	/**
@@ -41,11 +45,12 @@ interface SeverityTiers {
  * actions of the AoE and single target combos.  This is to provide leeway to finishing
  * AoE combos when the number of targets may drop below the minimum during the combo.
  */
-export abstract class AoEUsages extends Module {
+export abstract class AoEUsages extends Analyser {
 	static override handle = 'aoeusages'
 	static override title = t('core.aoeusages.title')`Incorrect AoE Action Usage`
 
 	@dependency private suggestions!: Suggestions
+	@dependency protected data!: Data
 
 	/**
 	 * Implementing modules MUST define the icon to be used for the suggestion.
@@ -72,8 +77,14 @@ export abstract class AoEUsages extends Module {
 
 	private badUsages = new Map<number, number>()
 
-	protected override init() {
-		this.addEventHook('normaliseddamage', {by: 'player', abilityId: this.trackedActions.map(a => a.aoeAction.id)}, this.onAbility)
+	override initialise() {
+		const trackedActionFilter = filter<Cause>().type('action').action(oneOf(this.trackedActions.map(a => a.aoeAction.id)))
+		this.addEventHook(filter<Event>()
+			.source(this.parser.actor.id)
+			.type('damage')
+			.cause(trackedActionFilter)
+		, this.onAbility)
+
 		this.addEventHook('complete', this.onComplete)
 	}
 
@@ -83,18 +94,22 @@ export abstract class AoEUsages extends Module {
 	 * @param event The event for which the number of minimum targets is being adjusted.
 	 * @param minTargets The default number of minimum targets for the action as defined in trackedActions.
 	 */
-	protected adjustMinTargets(event: NormalisedDamageEvent, minTargets: number) {
+	protected adjustMinTargets(event: Events['damage'], minTargets: number) {
 		return minTargets
 	}
 
-	private onAbility(event: NormalisedDamageEvent) {
-		const tracked = this.trackedActions.find(a => a.aoeAction.id === event.ability.guid)
+	private onAbility(event: Events['damage']) {
+		if (event.cause.type !== 'action') {
+			return
+		}
+		const actionId = event.cause.action
+		const tracked = this.trackedActions.find(a => event.cause.type === 'action' && a.aoeAction.id === actionId)
 
 		if (tracked === undefined) { return }
 
 		const minTargets = this.adjustMinTargets(event, tracked.minTargets)
-		if (event.hasSuccessfulHit && event.hitCount < minTargets) {
-			this.badUsages.set(event.ability.guid, (this.badUsages.get(event.ability.guid) || 0) + 1)
+		if (isSuccessfulHit(event) && event.targets.length < minTargets) {
+			this.badUsages.set(actionId, (this.badUsages.get(actionId) || 0) + 1)
 		}
 	}
 

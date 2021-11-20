@@ -58,7 +58,7 @@ export default class Procs extends CoreProcs {
 		const droppedThunderClouds: number = this.getDropCountForStatus(this.data.statuses.THUNDERCLOUD.id)
 		if (droppedThunderClouds > 0) {
 			this.suggestions.add(new Suggestion({
-				icon: this.data.actions.THUNDER_III_PROC.icon,
+				icon:  process.env.PUBLIC_URL + '/icon/action/t3p.png',
 				content: <Trans id="blm.procs.suggestions.dropped-t3ps.content">
 					You lost at least one <ActionLink {...this.data.actions.THUNDER_III}/> proc by allowing <StatusLink {...this.data.statuses.THUNDERCLOUD}/> to expire without using it.
 				</Trans>,
@@ -72,7 +72,7 @@ export default class Procs extends CoreProcs {
 		const droppedFireStarters: number = this.getDropCountForStatus(this.data.statuses.FIRESTARTER.id)
 		if (droppedFireStarters > 0) {
 			this.suggestions.add(new Suggestion({
-				icon: this.data.actions.FIRE_III_PROC.icon,
+				icon: process.env.PUBLIC_URL + '/icon/action/f3p.png',
 				content: <Trans id="blm.procs.suggestions.dropped-f3ps.content">
 					You lost at least  one <ActionLink {...this.data.actions.FIRE_III}/> proc by allowing <StatusLink {...this.data.statuses.FIRESTARTER}/> to expire without using it.
 				</Trans>,

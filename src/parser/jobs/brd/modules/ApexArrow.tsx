@@ -36,9 +36,9 @@ export default class ApexArrow extends Module {
 	 * Summons the yumicode, hopefully this will be rewritten at some point but for now it's a necessary evil
 	 */
 	private getRawDamage(event: NormalisedDamageEvent): number {
-		if (!event.debugMultiplier) { return 0 }
+		if (!event.multiplier) { return 0 }
 
-		const fixedMultiplier = Math.trunc((event.debugMultiplier + TRAIT_STRENGTH) * 100) / 100
+		const fixedMultiplier = Math.trunc((event.multiplier + TRAIT_STRENGTH) * 100) / 100
 
 		const bestEvent = event.confirmedEvents.reduce((max, curr) =>
 			(curr.amount > max.amount ? curr : max), event.confirmedEvents[0])

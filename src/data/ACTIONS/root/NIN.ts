@@ -42,15 +42,15 @@ export const NIN = ensureActions({
 		cooldown: 20000,
 		gcdRecast: 500,
 		charges: 2,
+		cooldownGroup: 9,
 	},
 
-	TEN_NEW: {
+	TEN_KASSATSU: {
 		id: 18805,
 		name: 'Ten',
 		icon: 'https://xivapi.com/i/002000/002901.png',
 		onGcd: true,
-		cooldown: 20000,
-		gcdRecast: 500,
+		cooldown: 500,
 	},
 
 	CHI: {
@@ -61,16 +61,15 @@ export const NIN = ensureActions({
 		cooldown: 20000,
 		gcdRecast: 500,
 		charges: 2,
+		cooldownGroup: 9,
 	},
 
-	CHI_NEW: {
+	CHI_KASSATSU: {
 		id: 18806,
 		name: 'Chi',
 		icon: 'https://xivapi.com/i/002000/002902.png',
 		onGcd: true,
-		cooldown: 20000,
-		gcdRecast: 500,
-		charges: 2,
+		cooldown: 500,
 	},
 
 	JIN: {
@@ -81,16 +80,15 @@ export const NIN = ensureActions({
 		cooldown: 20000,
 		gcdRecast: 500,
 		charges: 2,
+		cooldownGroup: 9,
 	},
 
-	JIN_NEW: {
+	JIN_KASSATSU: {
 		id: 18807,
 		name: 'Jin',
 		icon: 'https://xivapi.com/i/002000/002903.png',
 		onGcd: true,
-		cooldown: 20000,
-		gcdRecast: 500,
-		charges: 2,
+		cooldown: 500,
 	},
 
 	NINJUTSU: {
@@ -98,7 +96,7 @@ export const NIN = ensureActions({
 		name: 'Ninjutsu',
 		icon: 'https://xivapi.com/i/002000/002904.png',
 		onGcd: true,
-		gcdRecast: 1500,
+		cooldown: 1500,
 	},
 
 	FUMA_SHURIKEN: {
@@ -106,7 +104,7 @@ export const NIN = ensureActions({
 		name: 'Fuma Shuriken',
 		icon: 'https://xivapi.com/i/002000/002907.png',
 		onGcd: true,
-		gcdRecast: 1500,
+		cooldown: 1500,
 	},
 
 	// I swear to shit, SE
@@ -115,7 +113,7 @@ export const NIN = ensureActions({
 		name: 'Fuma Shuriken',
 		icon: 'https://xivapi.com/i/002000/002907.png',
 		onGcd: true,
-		gcdRecast: 1000,
+		cooldown: 1000,
 	},
 
 	FUMA_SHURIKEN_TCJ_CHI: {
@@ -123,7 +121,7 @@ export const NIN = ensureActions({
 		name: 'Fuma Shuriken',
 		icon: 'https://xivapi.com/i/002000/002907.png',
 		onGcd: true,
-		gcdRecast: 1000,
+		cooldown: 1000,
 	},
 
 	FUMA_SHURIKEN_TCJ_JIN: {
@@ -131,7 +129,7 @@ export const NIN = ensureActions({
 		name: 'Fuma Shuriken',
 		icon: 'https://xivapi.com/i/002000/002907.png',
 		onGcd: true,
-		gcdRecast: 1000,
+		cooldown: 1000,
 	},
 
 	KATON: {
@@ -139,7 +137,7 @@ export const NIN = ensureActions({
 		name: 'Katon',
 		icon: 'https://xivapi.com/i/002000/002908.png',
 		onGcd: true,
-		gcdRecast: 1500,
+		cooldown: 1500,
 	},
 
 	KATON_TCJ: {
@@ -147,7 +145,7 @@ export const NIN = ensureActions({
 		name: 'Katon',
 		icon: 'https://xivapi.com/i/002000/002908.png',
 		onGcd: true,
-		gcdRecast: 1000,
+		cooldown: 1000,
 	},
 
 	GOKA_MEKKYAKU: {
@@ -155,7 +153,7 @@ export const NIN = ensureActions({
 		name: 'Goka Mekkyaku',
 		icon: 'https://xivapi.com/i/002000/002925.png',
 		onGcd: true,
-		gcdRecast: 1500,
+		cooldown: 1500,
 	},
 
 	RAITON: {
@@ -163,7 +161,7 @@ export const NIN = ensureActions({
 		name: 'Raiton',
 		icon: 'https://xivapi.com/i/002000/002912.png',
 		onGcd: true,
-		gcdRecast: 1500,
+		cooldown: 1500,
 	},
 
 	RAITON_TCJ: {
@@ -171,7 +169,7 @@ export const NIN = ensureActions({
 		name: 'Raiton',
 		icon: 'https://xivapi.com/i/002000/002912.png',
 		onGcd: true,
-		gcdRecast: 1000,
+		cooldown: 1000,
 	},
 
 	HYOTON: {
@@ -179,7 +177,7 @@ export const NIN = ensureActions({
 		name: 'Hyoton',
 		icon: 'https://xivapi.com/i/002000/002909.png',
 		onGcd: true,
-		gcdRecast: 1500,
+		cooldown: 1500,
 	},
 
 	HYOTON_TCJ: {
@@ -187,7 +185,7 @@ export const NIN = ensureActions({
 		name: 'Hyoton',
 		icon: 'https://xivapi.com/i/002000/002909.png',
 		onGcd: true,
-		gcdRecast: 1000,
+		cooldown: 1000,
 	},
 
 	HYOSHO_RANRYU: {
@@ -195,7 +193,7 @@ export const NIN = ensureActions({
 		name: 'Hyosho Ranryu',
 		icon: 'https://xivapi.com/i/002000/002926.png',
 		onGcd: true,
-		gcdRecast: 1500,
+		cooldown: 1500,
 	},
 
 	HUTON: {
@@ -203,7 +201,7 @@ export const NIN = ensureActions({
 		name: 'Huton',
 		icon: 'https://xivapi.com/i/002000/002910.png',
 		onGcd: true,
-		gcdRecast: 1500,
+		cooldown: 1500,
 	},
 
 	HUTON_TCJ: {
@@ -211,7 +209,7 @@ export const NIN = ensureActions({
 		name: 'Huton',
 		icon: 'https://xivapi.com/i/002000/002910.png',
 		onGcd: true,
-		gcdRecast: 1500,
+		cooldown: 1500,
 	},
 
 	DOTON: {
@@ -219,7 +217,7 @@ export const NIN = ensureActions({
 		name: 'Doton',
 		icon: 'https://xivapi.com/i/002000/002911.png',
 		onGcd: true,
-		gcdRecast: 1500,
+		cooldown: 1500,
 		statusesApplied: ['DOTON'],
 	},
 
@@ -228,7 +226,7 @@ export const NIN = ensureActions({
 		name: 'Doton',
 		icon: 'https://xivapi.com/i/002000/002911.png',
 		onGcd: true,
-		gcdRecast: 1500,
+		cooldown: 1500,
 		statusesApplied: ['DOTON'],
 	},
 
@@ -237,7 +235,7 @@ export const NIN = ensureActions({
 		name: 'Suiton',
 		icon: 'https://xivapi.com/i/002000/002913.png',
 		onGcd: true,
-		gcdRecast: 1500,
+		cooldown: 1500,
 		statusesApplied: ['SUITON'],
 	},
 
@@ -246,7 +244,7 @@ export const NIN = ensureActions({
 		name: 'Suiton',
 		icon: 'https://xivapi.com/i/002000/002913.png',
 		onGcd: true,
-		gcdRecast: 1500,
+		cooldown: 1500,
 		statusesApplied: ['SUITON'],
 	},
 
@@ -255,7 +253,7 @@ export const NIN = ensureActions({
 		name: 'Rabbit Medium',
 		icon: 'https://xivapi.com/i/002000/002914.png',
 		onGcd: true,
-		gcdRecast: 1500,
+		cooldown: 1500,
 	},
 
 	// -----

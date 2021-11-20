@@ -1,7 +1,7 @@
-import {ChartDataSets} from 'chart.js'
-import Color from 'color'
-import Module from 'parser/core/Module'
-import {AbstractGauge, AbstractGaugeOptions} from './AbstractGauge'
+import {Analyser} from 'parser/core/Analyser'
+import {TimestampHookArguments, TimestampHookCallback} from 'parser/core/Dispatcher'
+import {GAUGE_HANDLE} from '../ResourceGraphs/ResourceGraphs'
+import {AbstractGauge, AbstractGaugeOptions, GaugeGraphOptions} from './AbstractGauge'
 
 function expectExist<T>(value?: T) {
 	if (!value) {
@@ -17,41 +17,37 @@ interface State {
 	paused: boolean
 }
 
+interface Window {
+	start: number
+	end: number
+}
+
 export interface TimerGaugeOptions extends AbstractGaugeOptions {
 	/** Maxiumum duration of the gauge, in milliseconds. */
 	maximum: number
 
 	/** Callback executed when the timer expires. */
-	onExpiration?: () => void
+	onExpiration?: TimestampHookCallback
 
-	/** Chart options. Omit to disable charting for this gauge. */
-	chart?: TimerChartOptions,
-}
-
-// TODO: Some of this will be shared config with counter, etc. - look into sharing?
-export interface TimerChartOptions {
-	/** Label to display on the data set. */
-	label: string
-
-	/** Colour to draw the data set in. Defaults to grey. */
-	color?: string | Color
+	/** Graph options. Omit to disable graphing for this gauge. */
+	graph?: GaugeGraphOptions,
 }
 
 export class TimerGauge extends AbstractGauge {
 	// Just in case I ever have to change it lmao
 	private readonly minimum = 0
 	private readonly maximum: number
-	private readonly expirationCallback?: () => void
-	private readonly chartOptions?: TimerChartOptions
+	private readonly expirationCallback?: TimestampHookCallback
+	private readonly graphOptions?: GaugeGraphOptions
 
-	private hook?: ReturnType<Module['addTimestampHook']>
+	private hook?: ReturnType<Analyser['addTimestampHook']>
 	private history: State[] = []
 
 	// TODO: Work out how to remove this reliance on having it passed down
-	private _addTimestampHook?: Module['addTimestampHook']
+	private _addTimestampHook?: Analyser['addTimestampHook']
 	private get addTimestampHook() { return expectExist(this._addTimestampHook) }
 
-	private _removeTimestampHook?: Module['removeTimestampHook']
+	private _removeTimestampHook?: Analyser['removeTimestampHook']
 	private get removeTimestampHook() { return expectExist(this._removeTimestampHook) }
 
 	/** The most recent state  */
@@ -75,7 +71,7 @@ export class TimerGauge extends AbstractGauge {
 			return this.lastKnownState.remaining
 		}
 
-		const delta = this.parser.currentTimestamp - this.lastKnownState.timestamp
+		const delta = this.parser.currentEpochTimestamp - this.lastKnownState.timestamp
 		return Math.max(this.minimum, this.lastKnownState.remaining - delta)
 	}
 
@@ -94,12 +90,17 @@ export class TimerGauge extends AbstractGauge {
 		return this.lastKnownState.paused
 	}
 
+	/** Whether the gauge is currently running */
+	get active(): boolean {
+		return !(this.expired || this.paused)
+	}
+
 	constructor(opts: TimerGaugeOptions) {
 		super(opts)
 
 		this.maximum = opts.maximum
 		this.expirationCallback = opts.onExpiration
-		this.chartOptions = opts.chart
+		this.graphOptions = opts.graph
 	}
 
 	/** @inheritdoc */
@@ -118,8 +119,8 @@ export class TimerGauge extends AbstractGauge {
 	 * Refresh the gauge to its maximum value.
 	 * If the gauge has expired, this will have no effect.
 	 */
-	refresh() {
-		if (this.expired) {
+	refresh(onlyIfRunning: boolean = true) {
+		if (this.expired && onlyIfRunning) {
 			return
 		}
 		this.start()
@@ -127,10 +128,10 @@ export class TimerGauge extends AbstractGauge {
 
 	/**
 	 * Add time to the gauge. Time over the maxium will be lost.
-	 * If the gauge has edxpired, this will have no effect.
+	 * If the gauge has expired, this will have no effect.
 	 */
-	extend(duration: number) {
-		if (this.expired) {
+	extend(duration: number, onlyIfRunning: boolean = true) {
+		if (this.expired && onlyIfRunning) {
 			return
 		}
 		this.set(this.remaining + duration)
@@ -148,7 +149,15 @@ export class TimerGauge extends AbstractGauge {
 
 	/** Set the time remaining on the timer to the given duration. Value will be bounded by provided maximum. */
 	set(duration: number, paused: boolean = false) {
-		const timestamp = this.parser.currentTimestamp
+		const timestamp = this.parser.currentEpochTimestamp
+
+		// Push the timer state prior to the event into the history
+		this.history.push({
+			timestamp,
+			remaining: this.remaining,
+			paused: this.paused,
+		})
+
 		const remaining = Math.max(this.minimum, Math.min(duration, this.maximum))
 
 		// Push a new state onto the history
@@ -169,88 +178,147 @@ export class TimerGauge extends AbstractGauge {
 		}
 	}
 
-	private onExpiration = () => {
-		if (this.expirationCallback) {
-			this.expirationCallback()
+	raise() { /** noop */ }
+
+	init() {
+		if (this.history.length === 0) {
+			this.reset()
 		}
+	}
+
+	private onExpiration = (args: TimestampHookArguments) => {
+		if (this.expirationCallback) {
+			this.expirationCallback(args)
+		}
+		this.history.push({
+			timestamp: this.parser.currentEpochTimestamp,
+			remaining: this.remaining,
+			paused: false,
+		})
 	}
 
 	/** @inheritdoc */
-	override generateDataset() {
+	override generateResourceGraph() {
 		// Skip charting if they've not enabled it
-		if (!this.chartOptions) {
+		if (!this.graphOptions) {
 			return
 		}
 
-		// Translate state history into a dataset that makes sense for the chart
-		const startTime = this.parser.eventTimeOffset
-		const endTime = startTime + this.parser.pull.duration
-		const data: Array<{t: number, y?: number}> = []
-		this.history.forEach(entry => {
-			const relativeTimestamp = entry.timestamp - startTime
+		// Insert a data point at the end of the timeline
+		this.pause()
 
-			// Adjust preceeding data for the start of this state's window
-			const {length} = data
-			if (length > 0 && relativeTimestamp < data[length - 1].t) {
-				// If we're updating prior to the previous entry's expiration, update the previous entry
-				// with its state at this point in time - we'll end up with two points showing the update on
-				// this timestamp.
-				const prev = data[length - 1]
-				prev.y = (prev.y || this.minimum / 1000) + ((prev.t - relativeTimestamp) / 1000)
-				prev.t = relativeTimestamp
-
-			} else {
-				// This window is starting fresh, not extending - insert a blank entry so the chart doesn't
-				// render a line from the previous.
-				data.push({t: relativeTimestamp})
-			}
-
-			// Insert the data point for the start of this window.
-			// Skip for pauses, as the updated previous point will represent the start point of the pause
-			const chartY = (this.minimum + entry.remaining) / 1000
-			if (!entry.paused) {
-				data.push({
-					t: relativeTimestamp,
-					y: chartY,
-				})
-			}
-
-			// If the state isn't paused, insert a data point for the time it will expire.
-			// This data point will be updated in the event of an extension.
-			if (!entry.paused && entry.remaining > 0) {
-				const time = Math.min(relativeTimestamp + entry.remaining, endTime - startTime)
-				const timeDelta = time - relativeTimestamp
-				data.push({
-					t: time,
-					y: (this.minimum + entry.remaining - timeDelta) / 1000,
-				})
-			}
-		})
-
-		const {label, color} = this.chartOptions
-		const dataSet: ChartDataSets = {
+		const {handle, label, color} = this.graphOptions
+		const graphData = {
 			label,
-			data,
-			lineTension: 0,
+			colour: color,
+			data: this.history.map(entry => {
+				return {time: entry.timestamp, current: entry.remaining / 1000, maximum: this.maximum / 1000}
+			}),
+			linear: true,
 		}
-
-		if (color) {
-			/* eslint-disable @typescript-eslint/no-magic-numbers */
-			const chartColor = Color(color)
-			dataSet.backgroundColor = chartColor.fade(0.8).toString()
-			dataSet.borderColor = chartColor.fade(0.5).toString()
-			/* eslint-enable @typescript-eslint/no-magic-numbers */
+		if (handle != null) {
+			this.resourceGraphs.addDataGroup({...this.graphOptions, handle})
+			this.resourceGraphs.addData(handle, graphData)
+		} else {
+			this.resourceGraphs.addGauge(graphData, {...this.graphOptions, handle: GAUGE_HANDLE})
 		}
-
-		return dataSet
 	}
 
 	// Junk I wish I didn't need
-	setAddTimestampHook(value: Module['addTimestampHook']) {
+	setAddTimestampHook(value: Analyser['addTimestampHook']) {
 		this._addTimestampHook = value
 	}
 
-	setRemoveTimestampHook(value: Module['removeTimestampHook']) {
+	setRemoveTimestampHook(value: Analyser['removeTimestampHook']) {
 		this._removeTimestampHook = value
+	}
+
+	private internalExpirationTime(start: number = this.parser.pull.timestamp, end: number = this.parser.currentEpochTimestamp, downtimeWindows: Window[] = [], reapplyAfterDowntime: number = 0) {
+		let currentStart: number | undefined = undefined
+		const expirationWindows: Window[] = []
+
+		this.history.forEach(entry => {
+			if (entry.remaining <= this.minimum && currentStart == null) {
+				currentStart = entry.timestamp
+			}
+			if (entry.remaining > this.minimum && currentStart != null) {
+				// Don't clutter the windows if the expiration of the timer may also restart it (Polyglot, Lilies, etc.)
+				if (entry.timestamp > currentStart) {
+					expirationWindows.push({start: currentStart, end: entry.timestamp})
+				}
+				currentStart = undefined
+			}
+		})
+
+		if (expirationWindows.length === 0) { return [] }
+
+		const expirations: Window[] = []
+		expirationWindows.forEach(expiration => {
+			// If the expiration had some duration within the time range we're asking about, we'll add it
+			if ((expiration.end > start || expiration.start < end)) {
+				/**
+				 * If we were given any downtime windows, check if this expiration started within one, and change the effective start of the expiration
+				 * to the end of the downtime window, plus any additional leniency if specified
+				 */
+				if (downtimeWindows.length > 0) {
+					downtimeWindows.filter(uta => expiration.start >= uta.start && expiration.start <= uta.end)
+						.forEach(uta => expiration.start = Math.min(expiration.end, uta.end + reapplyAfterDowntime))
+				}
+				// If the window still has any effective duration, we'll return it
+				if (expiration.start < expiration.end) {
+					expirations.push(expiration)
+				}
+			}
+		})
+
+		return expirations
+	}
+
+	/**
+	 * Gets whether the timer was expired at a particular time
+	 * @param when The timestamp in question
+	 * @returns True if the timer was expired at this timestamp, false if it was active or paused
+	 */
+	public isExpired(when: number = this.parser.currentEpochTimestamp) {
+		return this.internalExpirationTime(when, when).length > 0
+	}
+
+	/**
+	 * Gets the total amount of time that the timer was expired during a given time range.
+	 * @param start The start of the time range. To forgive time at the start of the fight, set this to this.parser.pull.timestamp + forgivenness amount
+	 * @param end The end of the time range.
+	 * @param downtimeWindows Pass to forgive any expirations that began within one of these windows of time. The start of any affected expiration will be reset to the end of the affecting window
+	 *     When using a timer that should only forgive expirations when you are completely unable to act, use the windows from UnableToAct.getWindows()
+	 *     To also forgive expirations due to death or due to no enemy being targetable, use the windows from Downtime.getWindows()
+	 * @param reapplyAfterDowntime Pass to grant additional leniency when an expiration occurred during a downtime window. This is added to the end of the window when recalculating the expiration start time
+	 * @returns The total effective time that the timer was expired for
+	 */
+	public getExpirationTime(start: number = this.parser.pull.timestamp, end: number = this.parser.currentEpochTimestamp, downtimeWindows: Window[] = [], reapplyAfterDowntime: number = 0) {
+		return this.internalExpirationTime(start, end, downtimeWindows, reapplyAfterDowntime).reduce(
+			(totalExpiration, currentWindow) => totalExpiration + Math.min(currentWindow.end, end) - Math.max(currentWindow.start, start),
+			0,
+		)
+	}
+	/**
+	 * Gets the array of windows that the timer was expired for during a given time range.
+	 * @param start The start of the time range. To forgive time at the start of the fight, set this to this.parser.pull.timestamp + forgivenness amount
+	 * @param end The end of the time range.
+	 * @param downtimeWindows Pass to forgive any expirations that began within one of these windows of time. The start of any affected expiration will be reset to the end of the affecting window
+	 *     When using a timer that should only forgive expirations when you are completely unable to act, use the windows from UnableToAct.getWindows()
+	 *     To also forgive expirations due to death or due to no enemy being targetable, use the windows from Downtime.getWindows()
+	 * @param reapplyAfterDowntime Pass to grant additional leniency when an expiration occurred during a downtime window. This is added to the end of the window when recalculating the expiration start time
+	 * @returns The array of expiration windows
+	 */
+	public getExpirationWindows(start: number = this.parser.pull.timestamp, end: number = this.parser.currentEpochTimestamp, downtimeWindows: Window[] = [], reapplyAfterDowntime: number = 0) {
+		return this.internalExpirationTime(start, end, downtimeWindows, reapplyAfterDowntime).reduce<Window[]>(
+			(windows, window) => {
+				windows.push({
+					start: Math.max(window.start, start),
+					end: Math.min(window.end, end),
+				})
+				return windows
+			},
+			[],
+		)
 	}
 }

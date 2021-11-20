@@ -2,8 +2,10 @@ import {Event} from 'event'
 import {FflogsEvent} from 'fflogs'
 import {sortEvents} from 'parser/core/EventSorting'
 import {Pull, Report} from 'report'
+import {AssignOverhealStep} from './assignOverheal'
 import {AdapterOptions, AdapterStep} from './base'
 import {DeduplicateActorUpdateStep} from './deduplicateActorUpdates'
+import {DeduplicateAoEStep} from './deduplicateAoE'
 import {DeduplicateStatusApplicationStep} from './deduplicateStatus'
 import {InterruptsAdapterStep} from './interrupts'
 import {OneHpLockAdapterStep} from './oneHpLock'
@@ -34,7 +36,9 @@ class EventAdapter {
 		this.adaptionSteps = [
 			new ReassignUnknownActorStep(opts),
 			new TranslateAdapterStep(opts),
+			new AssignOverhealStep(opts),
 			new InterruptsAdapterStep(opts),
+			new DeduplicateAoEStep(opts),
 			new DeduplicateStatusApplicationStep(opts),
 			new DeduplicateActorUpdateStep(opts),
 			new PrepullActionAdapterStep(opts),

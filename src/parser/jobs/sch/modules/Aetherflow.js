@@ -39,6 +39,7 @@ export default class Aetherflow extends Module {
 	static dependencies = [
 		'checklist',
 		'cooldowns',
+		'data',
 	]
 
 	_totalAetherflowCasts = 0
@@ -97,6 +98,9 @@ export default class Aetherflow extends Module {
 	}
 
 	_onComplete() {
+		const aetherflowCooldownDuration = this.cooldowns.cooldownHistory('AETHERFLOW')
+			.reduce((time, entry) => time + entry.end - entry.start, 0)
+
 		// Checklist rule for aetherflow cooldown
 		this.checklist.add(new Rule({
 			name: <Fragment><Trans id="sch.aetherflow.checklist.name">Use <ActionLink {...ACTIONS.AETHERFLOW} /> on cooldown.</Trans></Fragment>,
@@ -106,7 +110,7 @@ export default class Aetherflow extends Module {
 			requirements: [
 				new Requirement({
 					name: <Fragment><Trans id="sch.aetherflow.checklist.requirement.uptime.name"><ActionLink {...ACTIONS.AETHERFLOW} /> cooldown uptime</Trans></Fragment>,
-					percent: (this.cooldowns.getTimeOnCooldown(ACTIONS.AETHERFLOW.id) / this._durationWithAetherflowOnCooldown()) * 100,
+					percent: (aetherflowCooldownDuration / this._durationWithAetherflowOnCooldown()) * 100,
 				}),
 				new Requirement({
 					name: <Fragment><Trans id="sch.aetherflow.checklist.requirement.uses.name">Total <ActionLink {...ACTIONS.AETHERFLOW} /> casts: {this._totalAetherflowCasts} out of {this._possibleAetherflowCasts()} possible</Trans></Fragment>,
@@ -117,10 +121,19 @@ export default class Aetherflow extends Module {
 	}
 
 	output() {
-		const aetherflows = this.cooldowns.getCooldown(ACTIONS.AETHERFLOW.id).history
-			.map(h => ({timestamp: [h.timestamp], id: [ACTIONS.AETHERFLOW.id]}))
-		const dissipations = this.cooldowns.getCooldown(ACTIONS.DISSIPATION.id).history
-			.map(h => ({timestamp: [h.timestamp], id: [ACTIONS.DISSIPATION.id]}))
+		const filterConsumes = entry => entry.delta < 0
+		const mapEntries = actionId => entry => ({
+			timestamp: [this.parser.epochToFflogs(entry.timestamp)],
+			id: [actionId],
+		})
+
+		const aetherflows = this.cooldowns.chargeHistory('AETHERFLOW')
+			.filter(filterConsumes)
+			.map(mapEntries(this.data.actions.AETHERFLOW.id))
+		const dissipations = this.cooldowns.chargeHistory('DISSIPATION')
+			.filter(filterConsumes)
+			.map(mapEntries(this.data.actions.DISSIPATION.id))
+
 		const uses = this._uses
 
 		let totalDrift = 0

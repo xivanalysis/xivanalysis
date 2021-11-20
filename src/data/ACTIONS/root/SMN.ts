@@ -4,12 +4,12 @@ import {ensureActions} from '../type'
 
 // use action id of a skill id in the group to avoid potential duplications
 export const SMN_COOLDOWN_GROUP = {
-	SUMMON: 180,
-	ENERGY: 16510,
-	TRANCE: 3581,
-	EGI_ASSAULT: 16797,
-	EGI_ASSAULT_II: 16798,
-	ENKINDLE: 16802,
+	SUMMON: 4,
+	ENERGY: 8,
+	TRANCE: 15,
+	EGI_ASSAULT: 9,
+	EGI_ASSAULT_II: 10,
+	ENKINDLE: 24,
 }
 
 export const SMN = ensureActions({
@@ -169,6 +169,18 @@ export const SMN = ensureActions({
 	},
 
 	// Egi Assault, Egi Assault II, and Enkindle have unique ids depending on the summoned pet.
+	EGI_ASSAULT: {
+		id: 16509,
+		name: 'Egi Assault',
+		icon: 'https://xivapi.com/i/002000/002695.png',
+		cooldown: 30000,
+		cooldownGroup: SMN_COOLDOWN_GROUP.EGI_ASSAULT,
+		onGcd: true,
+		speedAttribute: Attribute.SPELL_SPEED,
+		gcdRecast: 2500,
+		charges: 2,
+	},
+
 	ASSAULT_I_AERIAL_SLASH: {
 		id: 16797,
 		name: 'Assault I: Aerial Slash',
@@ -199,6 +211,18 @@ export const SMN = ensureActions({
 		icon: 'https://xivapi.com/i/002000/002726.png',
 		cooldown: 30000,
 		cooldownGroup: SMN_COOLDOWN_GROUP.EGI_ASSAULT,
+		onGcd: true,
+		speedAttribute: Attribute.SPELL_SPEED,
+		gcdRecast: 2500,
+		charges: 2,
+	},
+
+	EGI_ASSAULT_II: {
+		id: 16512,
+		name: 'Egi Assault II',
+		icon: 'https://xivapi.com/i/002000/002696.png',
+		cooldown: 30000,
+		cooldownGroup: SMN_COOLDOWN_GROUP.EGI_ASSAULT_II,
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		gcdRecast: 2500,
@@ -239,6 +263,14 @@ export const SMN = ensureActions({
 		speedAttribute: Attribute.SPELL_SPEED,
 		gcdRecast: 2500,
 		charges: 2,
+	},
+
+	ENKINDLE: {
+		id: 184,
+		name: 'Enkindle',
+		icon: 'https://xivapi.com/i/002000/002677.png',
+		cooldown: 120000,
+		cooldownGroup: SMN_COOLDOWN_GROUP.ENKINDLE,
 	},
 
 	ENKINDLE_AERIAL_BLAST: {

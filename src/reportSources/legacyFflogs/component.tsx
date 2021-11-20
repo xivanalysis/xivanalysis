@@ -1,5 +1,6 @@
 import {ReportFlow, buildReportFlowPath} from 'components/ReportFlow'
 import {ReportLoader} from 'components/ui/SharedLoaders'
+import {getEncounterKey} from 'data/ENCOUNTERS'
 import _ from 'lodash'
 import {observer} from 'mobx-react'
 import React, {useEffect} from 'react'
@@ -68,7 +69,12 @@ const WithReport = observer(function WithCode(
 function LastFightRedirect({reportStore, baseUrl}: WithReportComponentProps) {
 	const {code, source} = useParams<LastFightRedirectParams>()
 
-	const lastPull = _.last(reportStore.report?.pulls)?.id
+	// Filter out trash pulls
+	const pullIds = reportStore.report?.meta.fights
+		.filter(fight => getEncounterKey('legacyFflogs', fight.boss.toString()) !== 'TRASH')
+		.map(fight => fight.id.toString())
+
+	const lastPull = _.last(pullIds)
 	const path = `${baseUrl}/${code}${buildReportFlowPath(lastPull, source)}`
 
 	return <Redirect to={path}/>

@@ -98,7 +98,7 @@ export default class PitchPerfect extends Module {
 	_onPPDamage(event) {
 		const potencyDamageRatio = this.additionalStats.potencyDamageRatio
 
-		let fixedMultiplier = event.debugMultiplier
+		let fixedMultiplier = event.multiplier
 
 		// AND ALSO FOR RANGED TRAIT, BECAUSE APPARENTLY IT'S PHYSICAL DAMAGE ONLY REEEEEEEEEE
 		fixedMultiplier = Math.trunc((fixedMultiplier + TRAIT_STRENGTH) * 100) / 100

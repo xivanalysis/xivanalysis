@@ -2,7 +2,7 @@ import {t} from '@lingui/macro'
 import {Plural, Trans} from '@lingui/react'
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
 import Module, {dependency} from 'parser/core/Module'
-import Cooldowns from 'parser/core/modules/Cooldowns'
+import {Cooldowns} from 'parser/core/modules/Cooldowns'
 import {Data} from 'parser/core/modules/Data'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
@@ -55,7 +55,7 @@ export default class Horoscope extends Module {
 	}
 
 	private onHeliosCast() {
-		if (this.cooldowns.getCooldownRemaining(this.data.actions.HOROSCOPE.id) > 0) {
+		if (this.cooldowns.remaining('HOROSCOPE') > 0) {
 			return
 		}
 		this.nonHoroscopeHeals++

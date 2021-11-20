@@ -30,6 +30,11 @@ export default new Meta({
 	],
 	changelog: [
 		{
+			date: new Date('2021-10-28'),
+			Changes: () => <>Improve overheal calculations to better consider casts that fully overheal.</>,
+			contributors: [CONTRIBUTORS.AZARIAH],
+		},
+		{
 			date: new Date('2021-05-21'),
 			Changes: () => <>Add 5.5 support for WHM</>,
 			contributors: [CONTRIBUTORS.ASHE],

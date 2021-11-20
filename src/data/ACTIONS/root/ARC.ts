@@ -34,6 +34,7 @@ export const ARC = ensureActions({
 		speedAttribute: Attribute.SKILL_SPEED,
 		cooldown: 15000,
 		potency: 150,
+		cooldownGroup: 5,
 	},
 	STRAIGHT_SHOT: {
 		id: 98,

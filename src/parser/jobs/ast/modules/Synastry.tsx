@@ -3,7 +3,7 @@ import {ActionLink} from 'components/ui/DbLink'
 import {ActionRoot} from 'data/ACTIONS/root'
 import Module, {dependency} from 'parser/core/Module'
 import Combatants from 'parser/core/modules/Combatants'
-import Cooldowns from 'parser/core/modules/Cooldowns'
+import {Cooldowns} from 'parser/core/modules/Cooldowns'
 import {Data} from 'parser/core/modules/Data'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
@@ -44,7 +44,7 @@ export default class Synastry extends Module {
 
 	private onSingleTargetHealCast() {
 		// Ignore if Synastry is still on CD or we already have it up
-		if (this.cooldowns.getCooldownRemaining(this.data.actions.SYNASTRY.id) > 0) {
+		if (this.cooldowns.remaining('SYNASTRY') > 0) {
 			return
 		}
 		this.nonSynastryHeals++

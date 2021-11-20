@@ -84,11 +84,14 @@ const patchData = {
 		date: {
 			[GameEdition.GLOBAL]: 1607418000, // 08/12/20 09:00:00 GMT
 			[GameEdition.KOREAN]: 1621324800, // 18/05/21 08:00:00 GMT
+			[GameEdition.CHINESE]: 1619078400, // 16/04/21 08:00:00 GMT
 		},
 	},
 	'5.5': {
 		date: {
 			[GameEdition.GLOBAL]: 1618304400, // 13/04/21 09:00:00 GMT
+			[GameEdition.KOREAN]: 1631606400, // 14/09/21 08:00:00 GMT
+			[GameEdition.CHINESE]: 1628582400, // 10/08/21 08:00:00 GMT
 		},
 	},
 	// Do not add new patches beneath this point.

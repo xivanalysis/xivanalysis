@@ -1,9 +1,8 @@
-import ACTIONS from 'data/ACTIONS'
 import {CooldownDowntime} from 'parser/core/modules/CooldownDowntime'
 
 // Time that Jump deems ok for a OGCD to be down : ^)
 const DEFAULT_ALLOWED_DOWNTIME = 1000
-export default class GeneralCDDowntime extends CooldownDowntime {
+export class GeneralCDDowntime extends CooldownDowntime {
 	override defaultAllowedAverageDowntime = DEFAULT_ALLOWED_DOWNTIME
 
 	override trackedCds = [
@@ -11,22 +10,22 @@ export default class GeneralCDDowntime extends CooldownDowntime {
 		// Since it's not really possible to always know when during analysis we give a blanket grace of 20 and
 		// hope that it's accurate enough
 		{
-			cooldowns: [ACTIONS.ACCELERATION],
+			cooldowns: [this.data.actions.ACCELERATION],
 			allowedAverageDowntime: 4000,
 		},
 		{
-			cooldowns: [ACTIONS.MANAFICATION],
+			cooldowns: [this.data.actions.MANAFICATION],
 			firstUseOffset: 17500,
 		},
 		{
-			cooldowns: [ACTIONS.EMBOLDEN],
+			cooldowns: [this.data.actions.EMBOLDEN],
 			firstUseOffset: 7500,
 		},
 		{
-			cooldowns: [ACTIONS.FLECHE],
+			cooldowns: [this.data.actions.FLECHE],
 		},
 		{
-			cooldowns: [ACTIONS.CONTRE_SIXTE],
+			cooldowns: [this.data.actions.CONTRE_SIXTE],
 		},
 	]
 }

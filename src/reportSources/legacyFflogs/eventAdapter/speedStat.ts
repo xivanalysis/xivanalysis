@@ -1,16 +1,14 @@
 import {getActions} from 'data/ACTIONS'
+import {ANIMATION_LOCK, BASE_GCD} from 'data/CONSTANTS'
 import {getDataBy} from 'data/getDataBy'
 import {JobKey} from 'data/JOBS'
 import {getStatuses} from 'data/STATUSES'
 import {Attribute, Event, Events, AttributeValue} from 'event'
-import {FflogsEvent} from 'fflogs'
 import _ from 'lodash'
 import {Actor, Team} from 'report'
 import {getSpeedStat} from 'utilities/speedStatMapper'
 import {AdapterStep, PREPULL_OFFSETS} from './base'
 
-const BASE_GCD = 2500
-const ANIMATION_LOCK = 100
 const JOB_SPEED_MODIFIERS: Partial<Record<JobKey, number>> = {
 	MONK: 0.8,
 	NINJA: 0.85,
@@ -39,15 +37,7 @@ export class SpeedStatsAdapterStep extends AdapterStep {
 	private actorSpeedmodWindows = new Map<Actor['id'], Map<number, SpeedmodWindow[]>>()
 
 	static override debug = false
-	private endTimestamp = 0
-
-	override adapt(baseEvent: FflogsEvent, adaptedEvents: Event[]) {
-		if (baseEvent.type === 'encounterend') {
-			this.endTimestamp = baseEvent.timestamp
-		}
-
-		return adaptedEvents
-	}
+	private endTimestamp = this.pull.timestamp + this.pull.duration
 
 	override postprocess(adaptedEvents: Event[]): Event[] {
 		adaptedEvents.forEach((event) => {
@@ -130,6 +120,14 @@ export class SpeedStatsAdapterStep extends AdapterStep {
 			windowMap = new Array<SpeedmodWindow>()
 			windows.set(status.id, windowMap)
 		}
+
+		// Some statuses (i.e. Circle of Power) re-apply regularly while active.
+		// If this application appears to be a reapplication, we can safely noop.
+		if (windowMap.length > 0 && windowMap[windowMap.length - 1].end == null) {
+			return
+		}
+
+		this.debug(`Adding speed modifier window for status ${status.name} at timestamp ${event.timestamp}`)
 		windowMap.push({start: event.timestamp})
 	}
 
@@ -179,10 +177,12 @@ export class SpeedStatsAdapterStep extends AdapterStep {
 
 			const castTimeScale = recast / BASE_GCD
 			const speedModifier = this.getSpeedModifierAtTimestamp(previous.start, actorId)
-			const interval = _.round((rawInterval - (hasAnimationLock ? ANIMATION_LOCK : 0)) / castTimeScale / speedModifier, 2)
+			// round to nearest 10ms, since game works with calculating durations to 0.01s
+			// eslint-disable-next-line @typescript-eslint/no-magic-numbers
+			const interval = Math.round((rawInterval - (hasAnimationLock ? ANIMATION_LOCK : 0)) / castTimeScale / speedModifier / 10) * 10
 
 			// The below debug is useful if you need to trace individual interval calculations, but will make your console really laggy if you enable it without any filter
-			//this.debug(`Actor ID: ${actorId} - Event at ${previous.start} - Raw Interval: ${rawIntervalSeconds}s - Caster Tax: ${isCasterTaxed} - Cast Time Scale: ${castTimeScale} - Speed Modifier: ${speedModifier} - Calculated Interval: ${intervalSeconds}s`)
+			//this.debug(`Actor ID: ${actorId} - Event at ${previous.start} - Raw Interval: ${rawInterval}ms - Caster Tax: ${hasAnimationLock} - Cast Time Scale: ${castTimeScale} - Speed Modifier: ${speedModifier} - Calculated Interval: ${interval}ms`)
 
 			const count = intervalGroups[previousAction.speedAttribute].get(interval) ?? 0
 			intervalGroups[previousAction.speedAttribute].set(interval, count + 1)

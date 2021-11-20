@@ -3,6 +3,7 @@ export default class Requirement {
 	_percent = null
 	value = null
 	target = 100
+	_weight = 1
 	overrideDisplay = null
 
 	get content() {
@@ -19,6 +20,12 @@ export default class Requirement {
 	}
 	set percent(value) {
 		this._percent = value
+	}
+	get weight() {
+		return this._weight
+	}
+	set weight(value) {
+		this._weight = value
 	}
 
 	constructor(options) {

@@ -1,7 +1,5 @@
-import ACTIONS from 'data/ACTIONS'
-import CoreCombos from 'parser/core/modules/Combos'
+import {Combos as CoreCombos} from 'parser/core/modules/Combos'
 
-export default class Combos extends CoreCombos {
-	// Overrides
-	static override suggestionIcon = ACTIONS.MAIM.icon
+export class Combos extends CoreCombos {
+	override suggestionIcon = this.data.actions.MAIM.icon
 }

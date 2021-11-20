@@ -1,6 +1,6 @@
 import {Interrupts} from 'parser/core/modules/Interrupts'
 import {Tincture} from 'parser/core/modules/Tincture'
-import Cooldowns from './Cooldowns'
+import {ActionTimeline} from './ActionTimeline'
 import Demis from './Demis'
 import Devotion from './Devotion'
 import DoTs from './DoTs'
@@ -9,7 +9,7 @@ import EgiCommands from './EgiCommands'
 import Gauge from './Gauge'
 import GeneralCDDowntime from './GeneralCDDowntime'
 import MissingDoTs from './MissingDoTs'
-import MultiHit from './MultiHitSkills'
+import {AoeChecker} from './MultiHitSkills'
 import Pets from './Pets'
 import {PetTimeline} from './PetTimeline'
 import Physick from './Physick'
@@ -19,7 +19,7 @@ import TriDisaster from './TriDisaster'
 import {Weaving} from './Weaving'
 
 export default [
-	Cooldowns,
+	ActionTimeline,
 	Demis,
 	Devotion,
 	DoTs,
@@ -29,7 +29,7 @@ export default [
 	GeneralCDDowntime,
 	Interrupts,
 	MissingDoTs,
-	MultiHit,
+	AoeChecker,
 	Pets,
 	PetTimeline,
 	Physick,

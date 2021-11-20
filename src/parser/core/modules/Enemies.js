@@ -11,6 +11,7 @@ export default class Enemies extends Entities {
 
 	// XIV seems to use a lot of copies of the boss to handle certain mechanics... which wouldn't be an issue if it wasn't for debuffs being mirrored to them to generate tonnes of crap.
 	// Using normaliser to get instances that were _directly_ interacted with
+	/** @type {Object.<string, Set.<number>>} */
 	activeTargets = {}
 	normalise(events) {
 		const targets = {}

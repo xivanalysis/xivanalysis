@@ -1,4 +1,5 @@
 import {Actor} from 'report'
+import {Compute} from 'utilities/typescript'
 
 /*
 Welcome to the *｡･ﾟ★｡ magic ☆ﾟ･｡° event file!
@@ -62,6 +63,15 @@ export interface FieldsTargeted extends FieldsBase {
 	target: Actor['id']
 }
 
+export interface FieldsMultiTargeted extends FieldsBase {
+	/** Actor ID of the source of this event */
+	source: Actor['id']
+	/** Array of targets of this event
+	 * Interfaces that extend this should merge additional properties into this array
+	 */
+	targets: Array<{ target: Actor['id'] }>
+}
+
 /** An actor has begun preparing an action with a cast time. */
 interface EventPrepare extends FieldsTargeted {
 	/** XIV Action ID */
@@ -94,6 +104,8 @@ interface EventStatusApply extends FieldsTargeted {
 interface EventStatusRemove extends FieldsTargeted {
 	/** XIV Status ID */
 	status: number
+	/** Amount absorbed by this status (if it's a shield) */
+	absorbed?: number
 }
 
 /** The server has confirmed the execution of an action on its target. */
@@ -128,35 +140,42 @@ export enum TargetModifier {
 	// TODO: Reflect?
 }
 
+type MergeArrays<T> = T extends unknown[] ? Array<Compute<T[number]>> : never
+
 /** An actor has taken damage. */
-interface EventDamage extends FieldsTargeted {
+interface EventDamage extends FieldsMultiTargeted {
 	/** Cause of this damage. */
 	cause: Cause
-	/** Total amount of damage dealt. */
-	amount: number
-	/** Amount of total damage that was overkill. */
-	overkill: number
 	/** Unique numeric ID that will match this damage to its execution confirmation. If omitted, no confirmation will occur (status ticks, etc). */
 	sequence?: number
-	// TODO: Are these exclusive? Merge?
-	/** Source damage modifier. */
-	sourceModifier: SourceModifier
-	/** Target damage modifier. */
-	targetModifier: TargetModifier
+	/** Effects on each target */
+	targets: MergeArrays<FieldsMultiTargeted['targets'] & Array<{
+		/** Total amount of damage dealt. */
+		amount: number
+		/** Amount of total damage that was overkill. */
+		overkill: number
+		/** Source damage modifier. */
+		sourceModifier: SourceModifier
+		/** Target damage modifier. */
+		targetModifier: TargetModifier
+	}>>
 }
 
 /** An actor has been healed. */
-interface EventHeal extends FieldsTargeted {
+interface EventHeal extends FieldsMultiTargeted {
 	/** Cause of this heal. */
 	cause: Cause
-	/** Total amount of healing administered. */
-	amount: number
-	/** Amount of total healing that was overheal. */
-	overheal: number
 	/** Unique numeric ID that will match this heal to its execution confirmation. If omitted, no confirmation will occur (status ticks, etc). */
 	sequence?: number
-	/** Source healing modifier. */
-	sourceModifier: SourceModifier
+	/** Effects on each target */
+	targets: MergeArrays<FieldsMultiTargeted['targets'] & Array<{
+		/** Total amount of healing administered. */
+		amount: number
+		/** Amount of total healing that was overheal. */
+		overheal: number
+		/** Source healing modifier. */
+		sourceModifier: SourceModifier
+	}>>
 }
 
 /** Status of a single numeric resource. */

@@ -1,11 +1,10 @@
 import * as Sentry from '@sentry/browser'
-import {Patch, PatchNumber} from 'data/PATCHES'
 import {STATUS_ID_OFFSET} from 'data/STATUSES'
 import {Event, Events, Cause, SourceModifier, TargetModifier} from 'event'
-import {ActorResources, BuffEvent, BuffStackEvent, CastEvent, DamageEvent, DeathEvent, FflogsEvent, HealEvent, HitType, TargetabilityUpdateEvent} from 'fflogs'
+import {ActorResources, BuffEvent, BuffStackEvent, CastEvent, DamageEvent, DeathEvent, FflogsEvent, HealEvent, HitType, InstaKillEvent, TargetabilityUpdateEvent} from 'fflogs'
 import {Actor} from 'report'
 import {resolveActorId} from '../base'
-import {AdapterOptions, AdapterStep} from './base'
+import {AdapterStep} from './base'
 
 /*
 NOTES:
@@ -45,44 +44,20 @@ const FAILED_HITS = new Set([
 ])
 /* eslint-enable @typescript-eslint/no-magic-numbers */
 
-// Calculated damage/heal events were not added to FF Logs until during 5.05 ish.
-// To ensure the xiva event model remains sane, we patch up events to match them together.
-const CALCULATED_DAMAGE_UPDATE: PatchNumber = '5.08'
-
 /** Translate an FFLogs APIv1 event to the xiva representation, if any exists. */
 export class TranslateAdapterStep extends AdapterStep {
 	private unhandledTypes = new Set<string>()
-
-	private falseSequence = 0
-	private adaptEffectEvent: (event: DamageEvent | HealEvent) => Event[]
-	private adaptDamageEvent: (event: DamageEvent) => Event[]
-	private adaptHealEvent: (event: HealEvent) => Event[]
-
-	constructor(opts: AdapterOptions) {
-		super(opts)
-
-		// TODO: Remove this logic in 6.0.
-		const patch = new Patch(this.report.edition, this.report.timestamp/1000)
-		const beforeCalculateDamageUpdate = patch.before(CALCULATED_DAMAGE_UPDATE)
-		this.adaptEffectEvent = beforeCalculateDamageUpdate
-			? this.adaptPreCalculatedEffectEvent
-			: this.adaptPostCalculatedEffectEvent
-
-		// While the above should be enough, we noop the calculated* events just in
-		// case they slip through, to preserve event stream sanity.
-		this.adaptDamageEvent = beforeCalculateDamageUpdate
-			? this.adaptNothing
-			: this.adaptPostCalculatedDamageEvent
-		this.adaptHealEvent = beforeCalculateDamageUpdate
-			? this.adaptNothing
-			: this.adaptPostCalculatedHealEvent
-	}
+	// Using negatives so we don't tread on fflog's positive sequence IDs
+	private nextFakeSequence = -1
 
 	override adapt(baseEvent: FflogsEvent, _adaptedEvents: Event[]): Event[] {
 		switch (baseEvent.type) {
 		case 'begincast':
 		case 'cast':
 			return [this.adaptCastEvent(baseEvent)]
+
+		case 'instakill':
+			return this.adaptInstantKillEvent(baseEvent)
 
 		case 'calculateddamage':
 			return this.adaptDamageEvent(baseEvent)
@@ -127,6 +102,11 @@ export class TranslateAdapterStep extends AdapterStep {
 		case 'limitbreakupdate':
 		// We are _technically_ limiting down to a single zone, so any zonechange should be fluff
 		case 'zonechange':
+		// We don't really use map events
+		case 'mapchange':
+		// Could be interesting to do something with, but not important for analysis
+		case 'worldmarkerplaced':
+		case 'worldmarkerremoved':
 		// Not My Problem™️
 		case 'checksummismatch':
 		// New event type from unreleased (as of 2021/04/26) fflogs client. Doesn't contain anything useful.
@@ -161,8 +141,6 @@ export class TranslateAdapterStep extends AdapterStep {
 		return []
 	}
 
-	private adaptNothing(_event: FflogsEvent): Event[] { return [] }
-
 	private adaptCastEvent(event: CastEvent): Events['prepare' | 'action'] {
 		return {
 			...this.adaptTargetedFields(event),
@@ -171,32 +149,7 @@ export class TranslateAdapterStep extends AdapterStep {
 		}
 	}
 
-	private adaptPreCalculatedEffectEvent(event: DamageEvent | HealEvent): Event[] {
-		// Adapt the event into the primary effect event
-		let adaptedEvents: Event[] | undefined
-		if (event.type === 'damage') { adaptedEvents = this.adaptPostCalculatedDamageEvent(event) }
-		if (event.type === 'heal') { adaptedEvents = this.adaptPostCalculatedHealEvent(event) }
-		if (adaptedEvents == null) {
-			throw new Error(`Unexpected event type "${event.type}" when adapting old effect event.`)
-		}
-
-		const primaryEventIndex = adaptedEvents
-			.findIndex(adaptedEvent => adaptedEvent.type === 'damage' || adaptedEvent.type === 'heal')
-
-		// We don't get explicit execution, fabricate an execute to preserve event stream semantics
-		const sequence = this.falseSequence++
-		(adaptedEvents[primaryEventIndex] as Events['damage' | 'heal']).sequence = sequence
-		adaptedEvents.splice(primaryEventIndex+1, 0, {
-			...this.adaptTargetedFields(event),
-			type: 'execute',
-			action: event.ability.guid,
-			sequence,
-		})
-
-		return adaptedEvents
-	}
-
-	private adaptPostCalculatedEffectEvent(event: DamageEvent | HealEvent): Array<Events['execute' | 'damage' | 'heal' | 'actorUpdate']> {
+	private adaptEffectEvent(event: DamageEvent | HealEvent): Array<Events['execute' | 'damage' | 'heal' | 'actorUpdate']> {
 		// Calc events should all have a packet ID for sequence purposes. Let sentry catch outliers.
 		const sequence = event.packetID
 		if (sequence == null) {
@@ -208,8 +161,8 @@ export class TranslateAdapterStep extends AdapterStep {
 				|| EFFECT_ONLY_ACTIONS.has(event.ability.guid)
 				|| FAILED_HITS.has(event.hitType)
 			) {
-				if (event.type === 'damage') { return this.adaptPostCalculatedDamageEvent(event) }
-				if (event.type === 'heal') { return this.adaptPostCalculatedHealEvent(event) }
+				if (event.type === 'damage') { return this.adaptDamageEvent(event) }
+				if (event.type === 'heal') { return this.adaptHealEvent(event) }
 			}
 			throw new Error('FFLogs Effect event encountered with no packet ID, did not match to over time status effect (DoT/HoT)')
 		}
@@ -225,7 +178,45 @@ export class TranslateAdapterStep extends AdapterStep {
 		return [newEvent, ...this.buildActorUpdateResourceEvents(event)]
 	}
 
-	private adaptPostCalculatedDamageEvent(event: DamageEvent): Array<Events['damage' | 'actorUpdate']> {
+	private adaptInstantKillEvent(event: InstaKillEvent): Event[] {
+		const {targetResources: target} = event
+
+		// Instant kills don't seem to include a sequence, so we're faking it
+		const sequence = this.nextFakeSequence--
+
+		// Build the primary damage event for the instakill.
+		const damageEvent: Events['damage'] = {
+			...this.adaptSourceFields(event),
+			type: 'damage',
+			cause: resolveCause(event.ability.guid),
+			sequence,
+			targets: [{
+				...resolveTargetId(event),
+				// We don't get any amount for an instakill, fake it with the target's HP.
+				amount: target.maxHitPoints,
+				overkill: target.maxHitPoints - target.hitPoints,
+				// No hit type either, just assume normal.
+				sourceModifier: SourceModifier.NORMAL,
+				targetModifier: TargetModifier.NORMAL,
+			}],
+		}
+
+		// Instakills don't seem to have an effect, so we're building one.
+		const executeEvent: Events['execute'] = {
+			...this.adaptTargetedFields(event),
+			type: 'execute',
+			action: event.ability.guid,
+			sequence,
+		}
+
+		return [
+			damageEvent,
+			...this.buildActorUpdateResourceEvents(event),
+			executeEvent,
+		]
+	}
+
+	private adaptDamageEvent(event: DamageEvent): Array<Events['damage' | 'actorUpdate']> {
 		// Calculate source modifier
 		let sourceModifier = sourceHitType[event.hitType] ?? SourceModifier.NORMAL
 		if (event.multistrike) {
@@ -237,30 +228,37 @@ export class TranslateAdapterStep extends AdapterStep {
 		// Build the new event
 		const overkill = event.overkill ?? 0
 		const newEvent: Events['damage'] = {
-			...this.adaptTargetedFields(event),
+			...this.adaptSourceFields(event),
 			type: 'damage',
 			cause: resolveCause(event.ability.guid),
-			// fflogs subtracts overkill from amount, amend
-			amount: event.amount + overkill,
-			overkill,
 			sequence: event.packetID,
-			sourceModifier,
-			targetModifier: targetHitType[event.hitType] ?? TargetModifier.NORMAL,
+			targets: [{
+				...resolveTargetId(event),
+				// fflogs subtracts overkill from amount, amend
+				amount: event.amount + overkill,
+				overkill,
+				sourceModifier,
+				targetModifier: targetHitType[event.hitType] ?? TargetModifier.NORMAL,
+			}],
 		}
 
 		return [newEvent, ...this.buildActorUpdateResourceEvents(event)]
 	}
 
-	private adaptPostCalculatedHealEvent(event: HealEvent): Array<Events['heal' | 'actorUpdate']> {
+	private adaptHealEvent(event: HealEvent): Array<Events['heal' | 'actorUpdate']> {
 		const overheal = event.overheal ?? 0
 		const newEvent: Events['heal'] = {
-			...this.adaptTargetedFields(event),
+			...this.adaptSourceFields(event),
 			type: 'heal',
 			cause: resolveCause(event.ability.guid),
-			amount: event.amount + overheal,
-			overheal,
 			sequence: event.packetID,
-			sourceModifier: sourceHitType[event.hitType] ?? SourceModifier.NORMAL,
+			targets: [{
+				...resolveTargetId(event),
+				// fflogs substracts overheal from amount, amend
+				amount: event.amount + overheal,
+				overheal,
+				sourceModifier: sourceHitType[event.hitType] ?? SourceModifier.NORMAL,
+			}],
 		}
 
 		return [newEvent, ...this.buildActorUpdateResourceEvents(event)]
@@ -286,10 +284,11 @@ export class TranslateAdapterStep extends AdapterStep {
 			...this.adaptTargetedFields(event),
 			type: 'statusRemove',
 			status: resolveStatusId(event.ability.guid),
+			absorbed: event.absorbed,
 		}
 	}
 
-	private buildActorUpdateResourceEvents(event: DamageEvent | HealEvent) {
+	private buildActorUpdateResourceEvents(event: DamageEvent | HealEvent | InstaKillEvent) {
 		const {source, target} = resolveActorIds(event)
 
 		const newEvents: Array<Events['actorUpdate']> = []
@@ -355,17 +354,32 @@ export class TranslateAdapterStep extends AdapterStep {
 		}
 	}
 
+	private adaptSourceFields(event: FflogsEvent) {
+		return {
+			...this.adaptBaseFields(event),
+			...resolveSourceId(event),
+		}
+	}
+
 	private adaptBaseFields(event: FflogsEvent) {
 		return {timestamp: this.report.timestamp + event.timestamp}
 	}
 }
 
 const resolveActorIds = (event: FflogsEvent) => ({
+	...resolveSourceId(event),
+	...resolveTargetId(event),
+})
+
+const resolveSourceId = (event: FflogsEvent) => ({
 	source: resolveActorId({
 		id: event.sourceID,
 		instance: event.sourceInstance,
 		actor: event.source,
 	}),
+})
+
+const resolveTargetId = (event: FflogsEvent) => ({
 	target: resolveActorId({
 		id: event.targetID,
 		instance: event.targetInstance,

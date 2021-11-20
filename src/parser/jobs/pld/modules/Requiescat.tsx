@@ -7,6 +7,7 @@ import STATUSES from 'data/STATUSES'
 import {BuffEvent, CastEvent} from 'fflogs'
 import _ from 'lodash'
 import Module, {dependency} from 'parser/core/Module'
+import CastTime from 'parser/core/modules/CastTime'
 import {Invulnerability} from 'parser/core/modules/Invulnerability'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import {Timeline} from 'parser/core/modules/Timeline'
@@ -40,7 +41,12 @@ const HOLY_SPIRIT_AND_CIRCLE_IDS = [
 	ACTIONS.HOLY_CIRCLE.id,
 ]
 
-const REQUIESCAT_DURATION_MILLIS = STATUSES.REQUIESCAT.duration * 1000
+const SPELLS = [
+	ACTIONS.HOLY_SPIRIT.id,
+	ACTIONS.HOLY_CIRCLE.id,
+	ACTIONS.CONFITEOR.id,
+	ACTIONS.CLEMENCY.id,
+]
 
 class RequiescatState {
 	start: number
@@ -69,9 +75,12 @@ export default class Requiescat extends Module {
 	@dependency private suggestions!: Suggestions
 	@dependency private timeline!: Timeline
 	@dependency private invulnerability!: Invulnerability
+	@dependency private castTime!: CastTime
 
 	// Requiescat Casts
 	private requiescats: RequiescatState[] = []
+	// Track currently active cast time adjustment for when Requiescat is active
+	private castTimeIndex: number | null = null
 
 	private get lastRequiescat(): RequiescatState | undefined {
 		return _.last(this.requiescats)
@@ -102,7 +111,7 @@ export default class Requiescat extends Module {
 		if (actionId === ACTIONS.REQUIESCAT.id) {
 			// Add new cast to the list
 			const reqState = new RequiescatState(event.timestamp)
-			const reqEnd = event.timestamp + REQUIESCAT_DURATION_MILLIS
+			const reqEnd = event.timestamp + STATUSES.REQUIESCAT.duration
 
 			if (reqEnd >= this.parser.fight.end_time) {
 				// If the requiescat overshoots the end of the fight, we know ahead of time it'll be a rush
@@ -129,6 +138,8 @@ export default class Requiescat extends Module {
 	}
 
 	private onApplyRequiescat() {
+		this.castTimeIndex = this.castTime.setInstantCastAdjustment(SPELLS)
+
 		const lastRequiescat = this.lastRequiescat
 
 		if (lastRequiescat != null) {
@@ -137,6 +148,11 @@ export default class Requiescat extends Module {
 	}
 
 	private onRemoveRequiescat(event: BuffEvent) {
+		if (this.castTimeIndex != null) {
+			this.castTime.reset(this.castTimeIndex)
+			this.castTimeIndex = null
+		}
+
 		const lastRequiescat = this.lastRequiescat
 
 		if (lastRequiescat != null) {

@@ -1,21 +1,23 @@
+import {ActionTimeline} from './ActionTimeline'
+import {BloodGauge} from './BloodGauge'
 import {BloodWeapon} from './BloodWeapon'
-import {Cooldowns} from './Cooldowns'
 import {Darkside} from './Darkside'
 import {Delirium} from './Delirium'
 import {EsteemTimeline} from './EsteemTimeline'
+import {MPUsage} from './MPUsage'
 import {MultiHitSkills} from './MultiHitSkills'
 import {OGCDDowntime} from './OGCDDowntime'
-import ResourceSimulator from './ResourceSimulator'
-import {Statuses} from './Statuses'
+import {StatusTimeline} from './StatusTimeline'
 
 export default [
-	Darkside,
+	ActionTimeline,
+	BloodGauge,
 	BloodWeapon,
+	Darkside,
 	Delirium,
 	EsteemTimeline,
-	ResourceSimulator,
-	Cooldowns,
-	OGCDDowntime,
+	MPUsage,
 	MultiHitSkills,
-	Statuses,
+	OGCDDowntime,
+	StatusTimeline,
 ]

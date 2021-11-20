@@ -1,78 +1,97 @@
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
 import {ActionLink} from 'components/ui/DbLink'
-import ACTIONS from 'data/ACTIONS'
-import STATUSES from 'data/STATUSES'
-import {BuffWindowModule} from 'parser/core/modules/BuffWindow'
+import {dependency} from 'parser/core/Injectable'
+import {AllowedGcdsOnlyEvaluator, BuffWindow, ExpectedActionsEvaluator, ExpectedGcdCountEvaluator, LimitedActionsEvaluator} from 'parser/core/modules/ActionWindow'
+import {GlobalCooldown} from 'parser/core/modules/GlobalCooldown'
 import {SEVERITY} from 'parser/core/modules/Suggestions'
 import React from 'react'
 
-export default class InnerRelease extends BuffWindowModule {
+export class InnerRelease extends BuffWindow {
 	static override handle = 'ir'
 	static override title = t('war.ir.title')`Inner Release`
 
-	buffAction = ACTIONS.INNER_RELEASE
-	buffStatus = STATUSES.INNER_RELEASE
+	@dependency globalCooldown!: GlobalCooldown
 
-	override expectedGCDs = {
-		expectedPerWindow: 5,
-		suggestionContent: <Trans id="war.ir.suggestions.missedgcd.content">
-			Try to land 5 GCDs during every <ActionLink {...ACTIONS.INNER_RELEASE}/> window. If you cannot do this with full uptime and no clipping, consider adjusting your gearset for more Skill Speed.
-		</Trans>,
-		severityTiers: {
-			1: SEVERITY.MAJOR,
-		},
-	}
-	override requiredGCDs = {
-		icon: ACTIONS.FELL_CLEAVE.icon,
-		actions: [
-			ACTIONS.FELL_CLEAVE,
-			ACTIONS.DECIMATE,
-		],
-		suggestionContent: <Trans id="war.ir.suggestions.badgcd.content">
-			GCDs used during <ActionLink {...ACTIONS.INNER_RELEASE}/> should be limited to <ActionLink {...ACTIONS.FELL_CLEAVE}/> for optimal damage (or <ActionLink {...ACTIONS.DECIMATE}/> if three or more targets are present).
-		</Trans>,
-		severityTiers: {
-			1: SEVERITY.MAJOR,
-		},
-	}
-	override trackedActions = {
-		icon: ACTIONS.UPHEAVAL.icon,
-		actions: [
-			{
-				action: ACTIONS.UPHEAVAL,
-				expectedPerWindow: 1,
+	override buffStatus = this.data.statuses.INNER_RELEASE
+
+	override initialise() {
+		super.initialise()
+
+		const windowName = <ActionLink action="INNER_RELEASE" showIcon={false}/>
+
+		this.addEvaluator(new ExpectedGcdCountEvaluator({
+			expectedGcds: 5,
+			globalCooldown: this.globalCooldown,
+			suggestionIcon: this.data.actions.INNER_RELEASE.icon,
+			suggestionContent: <Trans id="war.ir.suggestions.missedgcd.content">
+				Try to land 5 GCDs during every <ActionLink action="INNER_RELEASE"/> window. If you cannot do this with full uptime and no clipping, consider adjusting your gearset for more Skill Speed.
+			</Trans>,
+			suggestionWindowName: windowName,
+			severityTiers: {
+				1: SEVERITY.MAJOR,
 			},
-			{
-				action: ACTIONS.ONSLAUGHT,
-				expectedPerWindow: 1,
+		}))
+
+		this.addEvaluator(new AllowedGcdsOnlyEvaluator({
+			expectedGcdCount: 5,
+			allowedGcds: [
+				this.data.actions.FELL_CLEAVE.id,
+				this.data.actions.DECIMATE.id,
+			],
+			globalCooldown: this.globalCooldown,
+			suggestionIcon: this.data.actions.FELL_CLEAVE.icon,
+			suggestionContent: <Trans id="war.ir.suggestions.badgcd.content">
+				GCDs used during <ActionLink action="INNER_RELEASE"/> should be limited to <ActionLink action="FELL_CLEAVE"/> for optimal damage (or <ActionLink action="DECIMATE"/> if three or more targets are present).
+			</Trans>,
+			suggestionWindowName: windowName,
+			severityTiers: {
+				1: SEVERITY.MAJOR,
 			},
-		],
-		suggestionContent: <Trans id="war.ir.suggestions.trackedActions.content">
-			One use of <ActionLink {...ACTIONS.UPHEAVAL}/> and one use of <ActionLink {...ACTIONS.ONSLAUGHT}/> should occur during every <ActionLink {...ACTIONS.INNER_RELEASE}/> window.
-		</Trans>,
-		severityTiers: {
-			1: SEVERITY.MEDIUM,
-		},
+		}))
+
+		this.addEvaluator(new ExpectedActionsEvaluator({
+			expectedActions: [
+				{
+					action: this.data.actions.UPHEAVAL,
+					expectedPerWindow: 1,
+				},
+				{
+					action: this.data.actions.ONSLAUGHT,
+					expectedPerWindow: 1,
+				},
+			],
+			suggestionIcon: this.data.actions.UPHEAVAL.icon,
+			suggestionContent: <Trans id="war.ir.suggestions.trackedActions.content">
+				One use of <ActionLink action="UPHEAVAL"/> and one use of <ActionLink action="ONSLAUGHT"/> should occur during every <ActionLink action="INNER_RELEASE"/> window.
+			</Trans>,
+			suggestionWindowName: windowName,
+			severityTiers: {
+				1: SEVERITY.MEDIUM,
+			},
+		}))
+
+		this.addEvaluator(new LimitedActionsEvaluator({
+			expectedActions: [
+				{
+					action: this.data.actions.INNER_CHAOS,
+					expectedPerWindow: 0,
+				},
+				{
+					action: this.data.actions.CHAOTIC_CYCLONE,
+					expectedPerWindow: 0,
+				},
+			],
+			suggestionIcon: this.data.actions.INNER_CHAOS.icon,
+			suggestionContent: <Trans id="war.ir.suggestions.trackedBadActions.content">
+				Using <ActionLink action="INNER_CHAOS" /> or <ActionLink action="CHAOTIC_CYCLONE" /> inside of <ActionLink action="INNER_RELEASE" /> should be avoided at all costs.
+				These abilities are guaranteed to be a critical direct hit, and make no use of <ActionLink showIcon={false} action="INNER_RELEASE"/>'s benefits.
+			</Trans>,
+			suggestionWindowName: windowName,
+			severityTiers: {
+				1: SEVERITY.MAJOR,
+			},
+		}))
 	}
 
-	override trackedBadActions = {
-		icon: ACTIONS.INNER_CHAOS.icon,
-		actions: [
-			{
-				action: ACTIONS.INNER_CHAOS,
-				expectedPerWindow: 0,
-			},
-			{
-				action: ACTIONS.CHAOTIC_CYCLONE,
-				expectedPerWindow: 0,
-			},
-		],
-		suggestionContent: <Trans id="war.ir.suggestions.trackedBadActions.content">
-			Using <ActionLink {...ACTIONS.INNER_CHAOS} /> or <ActionLink {...ACTIONS.CHAOTIC_CYCLONE} /> inside of <ActionLink {...ACTIONS.INNER_RELEASE} /> should be avoided at all costs. These abilities are guaranteed to be a critical direct hit, and make no use of <ActionLink showIcon={false} {...ACTIONS.INNER_RELEASE}/>'s benefits.
-		</Trans>,
-		severityTiers: {
-			1: SEVERITY.MAJOR,
-		},
-	}
 }

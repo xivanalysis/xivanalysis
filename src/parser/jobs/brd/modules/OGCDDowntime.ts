@@ -1,27 +1,26 @@
 /**
  * @author Yumiya
  */
-import ACTIONS from 'data/ACTIONS'
 import {CooldownDowntime} from 'parser/core/modules/CooldownDowntime'
 
 export default class OGCDDowntime extends CooldownDowntime {
 	override trackedCds = [
 		{
-			cooldowns: [ACTIONS.BATTLE_VOICE],
+			cooldowns: [this.data.actions.BATTLE_VOICE],
 			firstUseOffset: 4500,
 		},
 		{
-			cooldowns: [ACTIONS.RAGING_STRIKES],
+			cooldowns: [this.data.actions.RAGING_STRIKES],
 			firstUseOffset: -1000,
 		},
 		{
-			cooldowns: [ACTIONS.BARRAGE],
+			cooldowns: [this.data.actions.BARRAGE],
 			firstUseOffset: 12000,
 		},
 		{
 			cooldowns: [
-				ACTIONS.SIDEWINDER,
-				ACTIONS.SHADOWBITE,
+				this.data.actions.SIDEWINDER,
+				this.data.actions.SHADOWBITE,
 			],
 			firstUseOffset: 12000,
 		},
