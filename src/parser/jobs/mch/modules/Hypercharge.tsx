@@ -7,6 +7,7 @@ import {Analyser} from 'parser/core/Analyser'
 import {EventHook} from 'parser/core/Dispatcher'
 import {filter} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
+import {History} from 'parser/core/modules/ActionWindow/History'
 import {Data} from 'parser/core/modules/Data'
 import React, {Fragment} from 'react'
 import {Message, Accordion} from 'semantic-ui-react'
@@ -16,20 +17,13 @@ const HYPERCHARGE_GCD_TARGET = 5
 const HYPERCHARGE_GCD_WARNING = 4
 const HYPERCHARGE_GCD_ERROR = 0
 
-interface HyperchargeWindow {
-	start: number
-	casts: Array<Events['action']>
-}
-
 export class Hypercharge extends Analyser {
 	static override handle = 'hypercharge'
 	static override title = t('mch.hypercharge.title')`Hypercharge Windows`
 
 	@dependency private data!: Data
 
-	private windows: HyperchargeWindow[] = []
-	private current: HyperchargeWindow | undefined
-
+	private history: History<Array<Events['action']>> = new History(() => [])
 	private rotationHook: EventHook<Events['action']> | undefined
 
 	override initialise() {
@@ -46,21 +40,16 @@ export class Hypercharge extends Analyser {
 		this.addEventHook('complete', this.endCurrentWindow)
 	}
 
-	private endCurrentWindow() {
-		// Stop eating events, hypercharge isn't active
-		if (this.rotationHook != null) {
+	private endCurrentWindow(event: Event) {
+		if (this.rotationHook) {
 			this.removeEventHook(this.rotationHook)
+			this.rotationHook = undefined
 		}
 
-		if (this.current == null) { return }
-
-		this.windows.push(this.current)
+		this.history.closeCurrent(event.timestamp)
 	}
 
 	private onHypercharge(event: Events['action']) {
-		// Just in case
-		this.endCurrentWindow()
-
 		this.rotationHook = this.addEventHook(
 			filter<Event>()
 				.source(this.parser.actor.id)
@@ -68,21 +57,20 @@ export class Hypercharge extends Analyser {
 			this.onCast
 		)
 
-		this.current = {
-			start: event.timestamp,
-			casts: [],
-		}
+		this.history.openNew(event.timestamp)
 	}
 
 	private onCast(event: Events['action']) {
-		if (this.current == null) { return }
+		const currentWindow = this.history.getCurrent()
 
-		if (event.timestamp > this.current.start + HYPERCHARGE_DURATION_MS) {
-			this.endCurrentWindow()
+		if (currentWindow == null) { return }
+
+		if (event.timestamp > currentWindow.start + HYPERCHARGE_DURATION_MS) {
+			this.endCurrentWindow(event)
 			return
 		}
 
-		this.current.casts.push(event)
+		currentWindow.data.push(event)
 	}
 
 	private formatGcdCount(count: number) {
@@ -98,10 +86,10 @@ export class Hypercharge extends Analyser {
 	}
 
 	override output() {
-		if (this.windows.length === 0) { return }
+		if (this.history.entries.length === 0) { return }
 
-		const panels = this.windows.map(window => {
-			const gcdCount = window.casts
+		const panels = this.history.entries.map(window => {
+			const gcdCount = window.data
 				.map(cast => this.data.getAction(cast.action))
 				.filter(action => action?.onGcd)
 				.length
@@ -112,12 +100,12 @@ export class Hypercharge extends Analyser {
 					content: <Fragment>
 						{this.parser.formatEpochTimestamp(window.start)}
 						<span> - </span>
-						{this.formatGcdCount(gcdCount)} / {HYPERCHARGE_GCD_TARGET} <Plural id="mch.hypercharge.panel-count" value={window.casts.length} one="GCD" other="GCDs"/>
+						{this.formatGcdCount(gcdCount)} / {HYPERCHARGE_GCD_TARGET} <Plural id="mch.hypercharge.panel-count" value={window.data.length} one="GCD" other="GCDs"/>
 					</Fragment>,
 				},
 				content: {
 					key: 'content-' + window.start,
-					content: <Rotation events={window.casts} />,
+					content: <Rotation events={window.data} />,
 				},
 			}
 		})
