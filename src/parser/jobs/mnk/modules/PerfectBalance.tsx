@@ -1,7 +1,7 @@
 import {t} from '@lingui/macro'
 import {Plural, Trans} from '@lingui/react'
 import {DataLink} from 'components/ui/DbLink'
-import {ActionKey} from 'data/ACTIONS'
+import {Action, ActionKey} from 'data/ACTIONS'
 import {Event, Events} from 'event'
 import {Analyser} from 'parser/core/Analyser'
 import {EventHook} from 'parser/core/Dispatcher'
@@ -40,8 +40,8 @@ export class PerfectBalance extends Analyser {
 	@dependency private data!: Data
 	@dependency private suggestions!: Suggestions
 
-	private badActions: number[] = []
-	private formActions: number[] = []
+	private badActions: Array<Action['id']> = []
+	private formActions: Array<Action['id']> = []
 
 	private current: Balance | undefined
 	private history: Balance[] = []

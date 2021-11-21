@@ -1,3 +1,4 @@
+import {ensureRecord} from 'utilities'
 import {GameEdition} from '../EDITIONS'
 
 // Using global as a source of truth on the order of patch keys
@@ -16,7 +17,7 @@ export interface PatchInfo {
 
 // This is all right from /PatchList - should be easy to sync Eventually™
 export const FALLBACK_KEY = '✖'
-const patchData = {
+export const PATCHES = ensureRecord<PatchInfo>()({
 	// Not going to support pre-4.0 at all
 	[FALLBACK_KEY]: {
 		date: {
@@ -58,7 +59,6 @@ const patchData = {
 			[GameEdition.CHINESE]: Infinity,
 		},
 	},
-}
+})
 
-export type PatchNumber = keyof typeof patchData
-export const PATCHES = patchData as Record<PatchNumber, PatchInfo>
+export type PatchNumber = keyof typeof PATCHES

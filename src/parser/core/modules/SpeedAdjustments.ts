@@ -1,4 +1,4 @@
-import JOBS from 'data/JOBS'
+import {JOBS} from 'data/JOBS'
 import {Attribute} from 'event'
 import {Actor} from 'report'
 import {getEstimatedTime} from 'utilities/speedStatMapper'

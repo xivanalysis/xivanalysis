@@ -20,6 +20,21 @@ export function enumify(obj: SortaEnum): Readonly<SortaEnum> {
 	return Object.freeze(obj)
 }
 
+/**
+ * Ensure that the values in the provided record match at _least_ the requested data shape.
+ *
+ * @example
+ * ```ts
+ * interface Data { example: number }
+ * const data = ensureRecord<Data>()({KEY: {example: 1}})
+ * ```
+ */
+export const ensureRecord =
+	<TData, TIssues extends keyof TData = never>() =>
+	<TInput extends Record<string, TData>>(values: TInput): {
+		[K in keyof TInput]: ReplaceFrom<TInput[K] & TData, TData, TIssues>
+	} => values
+
 // Type utilities, some partially stole from ts-toolbelt. Maybe I should just add it...
 
 /**

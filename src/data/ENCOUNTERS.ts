@@ -1,13 +1,12 @@
 import _ from 'lodash'
 import {ReportMetaKey} from 'report'
+import {ensureRecord} from 'utilities'
 
 export interface Encounter {
 	ids?: Partial<Record<ReportMetaKey, string>>
 }
 
-const ensureEncounters = <T extends Record<string, Encounter>>(encounters: T): {[K in keyof T]: T[K] & Encounter} => encounters
-
-export const ENCOUNTERS = ensureEncounters({
+export const ENCOUNTERS = ensureRecord<Encounter>()({
 	TRASH: {ids: {legacyFflogs: '0'}},
 })
 
@@ -23,9 +22,7 @@ export interface Duty {
 	territoryType: number
 }
 
-const ensureDuties = <T extends Record<string, Duty>>(duties: T): {[K in keyof T]: T[K] & Duty} => duties
-
-export const DUTIES = ensureDuties({
+export const DUTIES = ensureRecord<Duty>()({
 })
 
 export const getDutyBanner = (territoryType: number) =>
