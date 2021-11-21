@@ -1,14 +1,11 @@
 import {t} from '@lingui/macro'
 import {Trans, Plural} from '@lingui/react'
-import { ActionLink } from 'components/ui/DbLink'
-import {ActionKey} from 'data/ACTIONS'
+import {ActionLink} from 'components/ui/DbLink'
 import JOBS from 'data/JOBS'
 import {Event, Events} from 'event'
 import {filter, oneOf} from 'parser/core/filter'
 import {dependency} from 'parser/core/Module'
-import {Actors} from 'parser/core/modules/Actors'
 import Checklist, {Rule, Requirement} from 'parser/core/modules/Checklist'
-import {Cooldowns} from 'parser/core/modules/Cooldowns'
 import {CounterGauge, Gauge as CoreGauge} from 'parser/core/modules/Gauge'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
@@ -38,7 +35,7 @@ export class Ammo extends CoreGauge {
 			handle: 'ammo',
 			label: <Trans id="gnb.gauge.resource.ammoLabel"> Ammo </Trans>,
 			color: JOBS.GUNBREAKER.colour,
-		}
+		},
 	}))
 
 	// Used for Checklist as CounterGauge seems to lack total tracking at this time.
