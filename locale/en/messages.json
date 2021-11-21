@@ -524,7 +524,7 @@
   "glossary.proc.title": "proc",
   "gnb.about.description": "This analyzer looks for the low-hanging, easy to spot issues in your gameplay that can be fixed to improve your damage across a fight as Gunbreaker.\nIf you're looking to learn about how exactly the job plays and functions from the ground up, take a look at a few basic guides:\n\n* [General tanking guide by Aletin](https://goo.gl/nYzAnq)\n* [Gunbreaker guide on SaltedXIV](https://saltedxiv.com/guides/gnb)\n* [No Mercy Windows by Rin Karigani](https://i.imgur.com/o8hza9e.png)\n\nIf you have any suggestions about the module, feel free to join the XIVA discord and use the feedback channels.\n",
   "gnb.ammo.checklist.requirement.waste.name": "Use as many of your loaded cartridges as possible.",
-  "gnb.ammo.leftover-ammo.content": "Avoid having leftover ammo at the end of a fight, consider using the ammo earlier if possible. <0/> is more potency than any of your<1/> combo.",
+  "gnb.ammo.leftover-ammo.content": "Avoid having leftover ammo at the end of a fight, consider using the ammo earlier if possible. <0/> is more potency than any of your <1/> combo.",
   "gnb.ammo.leftover-ammo.why": "You had {0, plural, one {# cartridge} other {# cartridges}} remaining at the end of the fight.",
   "gnb.ammo.title": "Cartridge Timeline",
   "gnb.ammo.waste.content": "Wasted cartridge generation, ending the fight with cartridges loaded, or dying with cartridges loaded is a direct potency loss. Use <0/>(or <1/> if there is more than one target) to avoid wasting cartridges.",
