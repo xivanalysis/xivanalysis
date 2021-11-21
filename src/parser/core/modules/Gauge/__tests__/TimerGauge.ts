@@ -7,7 +7,7 @@ const MockedParser = Parser as jest.Mock<Parser>
 /* eslint-disable @typescript-eslint/no-magic-numbers */
 
 describe('TimerGauge', () => {
-	let currentTimestamp: number
+	let currentEpochTimestamp: number
 	const timestampHooks: Array<{timestamp: number}> = []
 	let parser: Parser
 	let addTimestampHook: jest.Mock
@@ -15,20 +15,17 @@ describe('TimerGauge', () => {
 	let gauge: TimerGauge
 
 	beforeEach(() => {
-		currentTimestamp = 100
+		currentEpochTimestamp = 100
 		parser = new MockedParser()
-		Object.defineProperty(parser, 'currentTimestamp', {
-			get: () => currentTimestamp,
+		Object.defineProperty(parser, 'currentEpochTimestamp', {
+			get: () => currentEpochTimestamp,
 		})
 		Object.defineProperty(parser, 'pull', {
 			get: () => ({timestamp: 0, duration: 1000}),
 		})
-		Object.defineProperty(parser, 'eventTimeOffset', {
-			get: () => 0,
-		})
 
 		addTimestampHook = jest.fn().mockImplementation(() => {
-			const hook = {timestamp: currentTimestamp}
+			const hook = {timestamp: currentEpochTimestamp}
 			timestampHooks.push(hook)
 			return hook
 		})
@@ -50,10 +47,10 @@ describe('TimerGauge', () => {
 		gauge.set(100)
 		expect(gauge.remaining).toBe(100)
 
-		currentTimestamp += 50
+		currentEpochTimestamp += 50
 		expect(gauge.remaining).toBe(50)
 
-		currentTimestamp += 100
+		currentEpochTimestamp += 100
 		expect(gauge.remaining).toBe(0)
 	})
 
@@ -63,7 +60,7 @@ describe('TimerGauge', () => {
 		expect(addTimestampHook).toHaveBeenCalledTimes(1)
 		expect(addTimestampHook.mock.calls[0][0]).toBe(200)
 
-		currentTimestamp += 50
+		currentEpochTimestamp += 50
 		gauge.set(100)
 		expect(removeTimestampHook).toHaveBeenCalledTimes(1)
 		expect(removeTimestampHook.mock.calls[0][0]).toEqual(timestampHooks[0])
@@ -74,15 +71,15 @@ describe('TimerGauge', () => {
 	it('pauses and resumes', () => {
 		gauge.set(100)
 
-		currentTimestamp += 50
+		currentEpochTimestamp += 50
 		expect(gauge.remaining).toBe(50)
 
 		gauge.pause()
-		currentTimestamp += 200
+		currentEpochTimestamp += 200
 		expect(gauge.remaining).toBe(50)
 
 		gauge.resume()
-		currentTimestamp += 25
+		currentEpochTimestamp += 25
 		expect(gauge.remaining).toBe(25)
 	})
 })

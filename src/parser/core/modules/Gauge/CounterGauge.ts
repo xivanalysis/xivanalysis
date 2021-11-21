@@ -73,6 +73,14 @@ export class CounterGauge extends AbstractGauge {
 		return this._value
 	}
 
+	get capped(): boolean {
+		return this._value >= this.maximum
+	}
+
+	get empty(): boolean {
+		return this._value <= this.minimum
+	}
+
 	constructor(opts: CounterGaugeOptions = {}) {
 		super(opts)
 
