@@ -145,7 +145,7 @@ export default class BloodOfTheDragon extends Analyser {
 			compact
 			icon="time"
 			size="small"
-			onClick={() => this.timeline.show(timestamp - this.parser.fight.start_time, timestamp - this.parser.fight.start_time)}
+			onClick={() => this.timeline.show(timestamp - this.parser.pull.timestamp, timestamp - this.parser.pull.timestamp)}
 			content={this.parser.formatEpochTimestamp(timestamp)}
 		/>
 	}
