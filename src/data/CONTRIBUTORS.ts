@@ -26,7 +26,7 @@ const CONTRIBUTORS = ensureRecord<Contributor>()({
 	},
 })
 
-export default CONTRIBUTORS as Record<keyof typeof CONTRIBUTORS, Contributor>
+export default CONTRIBUTORS
 
 export interface Role {
 	text: MessageDescriptor
