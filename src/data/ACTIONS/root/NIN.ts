@@ -24,10 +24,10 @@ export const NIN = ensureActions({
 		icon: 'https://xivapi.com/i/000000/000602.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		potency: 100,
+		potency: 150,
 		combo: {
 			from: 2240,
-			potency: 340,
+			potency: 330,
 		},
 	},
 
@@ -40,21 +40,9 @@ export const NIN = ensureActions({
 		potency: 100,
 		combo: {
 			from: 2242,
-			potency: 480, // TODO - *Cries in positionals*
+			potency: 420, // TODO - *Cries in positionals*
 			end: true,
 		},
-	},
-
-	SHADOW_FANG: {
-		id: 2257,
-		name: 'Shadow Fang',
-		icon: 'https://xivapi.com/i/000000/000606.png',
-		onGcd: true,
-		speedAttribute: Attribute.SKILL_SPEED,
-		potency: 200,
-		cooldown: 70000,
-		gcdRecast: 2500,
-		statusesApplied: ['SHADOW_FANG'],
 	},
 
 	DEATH_BLOSSOM: {
@@ -63,7 +51,7 @@ export const NIN = ensureActions({
 		icon: 'https://xivapi.com/i/000000/000615.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		potency: 120,
+		potency: 100,
 		combo: {
 			start: true,
 		},
@@ -76,7 +64,6 @@ export const NIN = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		potency: 120,
-		breaksCombo: true,
 	},
 
 	ARMOR_CRUSH: {
@@ -88,7 +75,7 @@ export const NIN = ensureActions({
 		potency: 100,
 		combo: {
 			from: 2242,
-			potency: 460,
+			potency: 400,
 			end: true,
 		},
 	},
@@ -102,9 +89,45 @@ export const NIN = ensureActions({
 		potency: 100,
 		combo: {
 			from: 2254,
-			potency: 140,
+			potency: 120,
 			end: true,
 		},
+	},
+
+	HURAIJIN: {
+		id: 1491401, // TODO
+		name: 'Huraijin',
+		icon: 'TODO',
+		onGcd: true,
+		speedAttribute: Attribute.SKILL_SPEED,
+		potency: 200,
+	},
+
+	FORKED_RAIJU: {
+		id: 1491402, // TODO
+		name: 'Forked Raiju',
+		icon: 'TODO',
+		onGcd: true,
+		speedAttribute: Attribute.SKILL_SPEED,
+		potency: 400,
+	},
+
+	FLEETING_RAIJU: {
+		id: 1491403, // TODO
+		name: 'Fleeting Raiju',
+		icon: 'TODO',
+		onGcd: true,
+		speedAttribute: Attribute.SKILL_SPEED,
+		potency: 450,
+	},
+
+	PHANTOM_KAMAITACHI: {
+		id: 1491404, // TODO
+		name: 'Phantom Kamaitachi',
+		icon: 'TODO',
+		onGcd: true,
+		speedAttribute: Attribute.SKILL_SPEED,
+		potency: 550,
 	},
 
 	TEN: {

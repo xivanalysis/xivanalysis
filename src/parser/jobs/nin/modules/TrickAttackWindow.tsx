@@ -40,6 +40,7 @@ class TCJEvaluator extends NotesEvaluator {
 	}
 
 	override generateNotes(window: HistoryEntry<EvaluatedAction[]>) {
+		// TODO - Add a note in here about Meisui-buffed Bhava, maybe?
 		return window.data.find(cast => cast.action.id === this.tcjId) ?
 			<Trans id="nin.taWindow.chart.notes.yes">Yes</Trans> :
 			<Trans id="nin.taWindow.chart.notes.no">No</Trans>
@@ -79,10 +80,6 @@ export class TrickAttackWindow extends BuffWindow {
 		this.addEvaluator(new ExpectedActionsEvaluator({
 			expectedActions: [
 				{
-					action: this.data.actions.SHADOW_FANG,
-					expectedPerWindow: 1,
-				},
-				{
 					action: this.data.actions.HYOSHO_RANRYU,
 					expectedPerWindow: 1,
 				},
@@ -94,14 +91,11 @@ export class TrickAttackWindow extends BuffWindow {
 					action: this.data.actions.DREAM_WITHIN_A_DREAM,
 					expectedPerWindow: 1,
 				},
-				{
-					action: this.data.actions.ASSASSINATE,
-					expectedPerWindow: 1,
-				},
 			],
 			suggestionIcon,
+			// TODO - This will likely change going forward; I'm expecting that it'll be one full Raiton combo per window now instead, but I'll revisit once I talk to a theorycrafter about it
 			suggestionContent: <Trans id="nin.taWindow.suggestions.trackedactions.content">
-				Every <ActionLink action="TRICK_ATTACK"/> window should contain <ActionLink action="SHADOW_FANG"/>, <ActionLink action="HYOSHO_RANRYU"/>, 2 <ActionLink action="RAITON"/> casts (or 1 if it's your opener), and <ActionLink action="DREAM_WITHIN_A_DREAM"/> in order to maximize damage.
+				Every <ActionLink action="TRICK_ATTACK"/> window should contain <ActionLink action="HYOSHO_RANRYU"/>, 2 <ActionLink action="RAITON"/> casts (or 1 if it's your opener), and <ActionLink action="DREAM_WITHIN_A_DREAM"/> in order to maximize damage.
 			</Trans>,
 			suggestionWindowName,
 			severityTiers: {

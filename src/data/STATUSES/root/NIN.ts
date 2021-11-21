@@ -8,13 +8,6 @@ export const NIN = ensureStatuses({
 		duration: 15000,
 	},
 
-	SHADOW_FANG: {
-		id: 508,
-		name: 'Shadow Fang',
-		icon: 'https://xivapi.com/i/010000/010612.png',
-		duration: 30000,
-	},
-
 	KASSATSU: {
 		id: 497,
 		name: 'Kassatsu',
@@ -48,13 +41,6 @@ export const NIN = ensureStatuses({
 		name: 'Bunshin',
 		icon: 'https://xivapi.com/i/012000/012912.png',
 		duration: 30000,
-	},
-
-	ASSASSINATE_READY: {
-		id: 1955,
-		name: 'Assassinate Ready',
-		icon: 'https://xivapi.com/i/012000/012913.png',
-		duration: 15000,
 	},
 
 	SHADE_SHIFT: {

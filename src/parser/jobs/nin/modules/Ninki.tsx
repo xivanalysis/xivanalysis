@@ -45,7 +45,7 @@ export class Ninki extends CoreGauge {
 			this.data.actions.HAKKE_MUJINSATSU.id,
 		],
 		damage: [
-			this.data.actions.SHADOW_FANG.id,
+			this.data.actions.FORKED_RAIJU.id,
 			this.data.actions.THROWING_DAGGER.id,
 			this.data.actions.MUG.id,
 		],
@@ -55,11 +55,11 @@ export class Ninki extends CoreGauge {
 		// Builders
 		[this.data.actions.SPINNING_EDGE.id, {combo: 5}],
 		[this.data.actions.GUST_SLASH.id, {combo: 5}],
-		[this.data.actions.AEOLIAN_EDGE.id, {combo: 10}],
-		[this.data.actions.ARMOR_CRUSH.id, {combo: 10}],
+		[this.data.actions.AEOLIAN_EDGE.id, {combo: 15}],
+		[this.data.actions.ARMOR_CRUSH.id, {combo: 15}],
 		[this.data.actions.DEATH_BLOSSOM.id, {combo: 5}],
 		[this.data.actions.HAKKE_MUJINSATSU.id, {combo: 5}],
-		[this.data.actions.SHADOW_FANG.id, {damage: 10}],
+		[this.data.actions.FORKED_RAIJU.id, {damage: 5}],
 		[this.data.actions.THROWING_DAGGER.id, {damage: 5}],
 		[this.data.actions.MUG.id, {damage: 40}],
 		[this.data.actions.MEISUI.id, {action: 50}],
