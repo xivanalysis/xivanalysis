@@ -38,7 +38,6 @@ const AFFECTS_GAUGE_ON_CAST: ActionKey[] = [
 	'TRANSPOSE',
 	'FOUL',
 	'XENOGLOSSY',
-	'ENOCHIAN',
 ]
 
 /** Gauge state interface for consumers */
