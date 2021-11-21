@@ -49,7 +49,7 @@ export class TrickAttackUsage extends Analyser {
 
 	private onCast(event: Events['action']) {
 		const action = this.data.getAction(event.action)
-		if (event.timestamp >= this.parser.fight.start_time && action?.onGcd && !this.mudraActions.includes(action.id)) {
+		if (event.timestamp >= this.parser.pull.timestamp && action?.onGcd && !this.mudraActions.includes(action.id)) {
 			// Don't count the individual mudras as GCDs for this - they'll make the count screw if Suiton wasn't set up pre-pull
 			this.gcdCount++
 		}

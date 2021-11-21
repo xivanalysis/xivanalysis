@@ -284,6 +284,7 @@ export class TranslateAdapterStep extends AdapterStep {
 			...this.adaptTargetedFields(event),
 			type: 'statusRemove',
 			status: resolveStatusId(event.ability.guid),
+			absorbed: event.absorbed,
 		}
 	}
 

@@ -3,13 +3,14 @@ import {Trans} from '@lingui/react'
 import {ActionLink} from 'components/ui/DbLink'
 import {RotationTargetOutcome} from 'components/ui/RotationTable'
 import {Events} from 'event'
+import _ from 'lodash'
 import {dependency} from 'parser/core/Injectable'
 import {BuffWindow, calculateExpectedGcdsForTime, EvaluatedAction, EvaluationOutput, ExpectedActionsEvaluator, ExpectedGcdCountEvaluator, WindowEvaluator} from 'parser/core/modules/ActionWindow'
 import {HistoryEntry} from 'parser/core/modules/ActionWindow/History'
 import {GlobalCooldown} from 'parser/core/modules/GlobalCooldown'
 import {SEVERITY} from 'parser/core/modules/Suggestions'
 import React from 'react'
-import {isDefined} from 'utilities'
+import {ensureArray, isDefined} from 'utilities'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 
 // give it a gcd for marking as truncated window
@@ -72,8 +73,7 @@ export default class DragonSight extends BuffWindow {
 	@dependency globalCooldown!: GlobalCooldown
 
 	buffAction = this.data.actions.DRAGON_SIGHT
-	override buffStatus = this.data.statuses.RIGHT_EYE
-	private secondaryBuffStatus = this.data.statuses.RIGHT_EYE_SOLO
+	override buffStatus = [this.data.statuses.RIGHT_EYE, this.data.statuses.RIGHT_EYE_SOLO]
 
 	deathTimes: number[] = []
 
@@ -180,13 +180,12 @@ export default class DragonSight extends BuffWindow {
 	// returns true if:
 	// - the buff ended early during the fight
 	private buffTargetDied(buffWindow: HistoryEntry<EvaluatedAction[]>): number {
-		const windowDurationMillis = this.buffStatus.duration
-		const fightTimeRemaining = this.parser.pull.duration - (buffWindow.start - this.parser.eventTimeOffset)
+		const windowDurationMillis = _.max(ensureArray(this.buffStatus).map(s => s.duration)) ?? 0
 		const actualWindowDuration = (buffWindow?.end ?? buffWindow.start) - buffWindow.start
 
 		// first check if the window would go past the end, and then check if the actual buff duration was
 		// shorter than expected
-		if (windowDurationMillis >= fightTimeRemaining && actualWindowDuration < fightTimeRemaining) {
+		if (this.isRushedEndOfPullWindow(buffWindow)) {
 			return SHORT_WINDOW_FAULT.NONE
 		}
 
