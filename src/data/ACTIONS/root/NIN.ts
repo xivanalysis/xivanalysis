@@ -12,7 +12,6 @@ export const NIN = ensureActions({
 		icon: 'https://xivapi.com/i/000000/000601.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		potency: 230,
 		combo: {
 			start: true,
 		},
@@ -24,10 +23,8 @@ export const NIN = ensureActions({
 		icon: 'https://xivapi.com/i/000000/000602.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		potency: 150,
 		combo: {
 			from: 2240,
-			potency: 330,
 		},
 	},
 
@@ -37,10 +34,8 @@ export const NIN = ensureActions({
 		icon: 'https://xivapi.com/i/000000/000605.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		potency: 100,
 		combo: {
 			from: 2242,
-			potency: 420, // TODO - *Cries in positionals*
 			end: true,
 		},
 	},
@@ -51,7 +46,6 @@ export const NIN = ensureActions({
 		icon: 'https://xivapi.com/i/000000/000615.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		potency: 100,
 		combo: {
 			start: true,
 		},
@@ -63,7 +57,6 @@ export const NIN = ensureActions({
 		icon: 'https://xivapi.com/i/000000/000614.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		potency: 120,
 	},
 
 	ARMOR_CRUSH: {
@@ -72,10 +65,8 @@ export const NIN = ensureActions({
 		icon: 'https://xivapi.com/i/002000/002915.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		potency: 100,
 		combo: {
 			from: 2242,
-			potency: 400,
 			end: true,
 		},
 	},
@@ -86,10 +77,8 @@ export const NIN = ensureActions({
 		icon: 'https://xivapi.com/i/002000/002923.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		potency: 100,
 		combo: {
 			from: 2254,
-			potency: 120,
 			end: true,
 		},
 	},
@@ -100,7 +89,6 @@ export const NIN = ensureActions({
 		icon: 'TODO',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		potency: 200,
 	},
 
 	FORKED_RAIJU: {
@@ -109,7 +97,7 @@ export const NIN = ensureActions({
 		icon: 'TODO',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		potency: 400,
+		statusesApplied: ['FLEETING_RAIJU_READY'],
 	},
 
 	FLEETING_RAIJU: {
@@ -118,7 +106,6 @@ export const NIN = ensureActions({
 		icon: 'TODO',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		potency: 450,
 	},
 
 	PHANTOM_KAMAITACHI: {
@@ -127,7 +114,6 @@ export const NIN = ensureActions({
 		icon: 'TODO',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		potency: 550,
 	},
 
 	TEN: {
@@ -258,6 +244,7 @@ export const NIN = ensureActions({
 		icon: 'https://xivapi.com/i/002000/002912.png',
 		onGcd: true,
 		cooldown: 1500,
+		statusesApplied: ['FORKED_RAIJU_READY'],
 	},
 
 	RAITON_TCJ: {
@@ -405,7 +392,6 @@ export const NIN = ensureActions({
 		icon: 'https://xivapi.com/i/002000/002918.png',
 		onGcd: false,
 		cooldown: 60000,
-		statusesApplied: ['ASSASSINATE_READY'],
 	},
 
 	HELLFROG_MEDIUM: {
@@ -448,6 +434,7 @@ export const NIN = ensureActions({
 		icon: 'https://xivapi.com/i/002000/002924.png',
 		onGcd: false,
 		cooldown: 120000,
+		statusesApplied: ['MEISUI'],
 	},
 
 	BUNSHIN: {
