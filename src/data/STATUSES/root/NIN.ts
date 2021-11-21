@@ -49,4 +49,25 @@ export const NIN = ensureStatuses({
 		icon: 'https://xivapi.com/i/010000/010605.png',
 		duration: 20000,
 	},
+
+	FORKED_RAIJU_READY: {
+		id: 1491405,
+		name: 'Forked Raiju Ready',
+		icon: 'TODO',
+		duration: 30000,
+	},
+
+	FLEETING_RAIJU_READY: {
+		id: 1491406,
+		name: 'Fleeting Raiju Ready',
+		icon: 'TODO',
+		duration: 15000,
+	},
+
+	MEISUI: {
+		id: 1491407,
+		name: 'Meisui',
+		icon: 'TODO',
+		duration: 30000,
+	},
 })
