@@ -1,40 +1,19 @@
 import {t} from '@lingui/macro'
-import {Plural, Trans} from '@lingui/react'
-import Color from 'color'
-import {ActionLink} from 'components/ui/DbLink'
-import TimeLineChart from 'components/ui/TimeLineChart'
-import ACTIONS from 'data/ACTIONS'
+import {Trans, Plural} from '@lingui/react'
+import { ActionLink } from 'components/ui/DbLink'
+import {ActionKey} from 'data/ACTIONS'
 import JOBS from 'data/JOBS'
-import {CastEvent} from 'fflogs'
-import {Analyser} from 'parser/core/Analyser'
-import {dependency, DISPLAY_MODE} from 'parser/core/Module'
-import Checklist, {Requirement, Rule} from 'parser/core/modules/Checklist'
-import {LegacyComboEvent} from 'parser/core/modules/Combos'
-import {NormalisedDamageEvent} from 'parser/core/modules/NormalisedEvents'
+import {Event, Events} from 'event'
+import {filter, oneOf} from 'parser/core/filter'
+import {dependency} from 'parser/core/Module'
+import {Actors} from 'parser/core/modules/Actors'
+import Checklist, {Rule, Requirement} from 'parser/core/modules/Checklist'
+import {Cooldowns} from 'parser/core/modules/Cooldowns'
+import {CounterGauge, Gauge as CoreGauge} from 'parser/core/modules/Gauge'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
-import React, {Fragment} from 'react'
-import {Accordion} from 'semantic-ui-react'
+import React from 'react'
 
-const ON_CAST_GENERATORS = {
-	[ACTIONS.BLOODFEST.id]: 2,
-}
-
-const ON_COMBO_GENERATORS = {
-	[ACTIONS.SOLID_BARREL.id]: 1,
-	[ACTIONS.DEMON_SLAUGHTER.id]: 1,
-}
-
-const AMMO_SPENDERS = {
-	[ACTIONS.GNASHING_FANG.id]: 1,
-	[ACTIONS.BURST_STRIKE.id]: 1,
-	[ACTIONS.FATED_CIRCLE.id]: 1,
-}
-
-const SINGLE_TARGET_CIRCLE_SEVERITY_TIERS = {
-	1: SEVERITY.MINOR,
-	2: SEVERITY.MEDIUM,
-	4: SEVERITY.MAJOR,
-}
+type GaugeModifier = Partial<Record<Event['type'], number>>
 
 const LEFTOVER_AMMO_SEVERITY_TIERS = {
 	1: SEVERITY.MINOR,
@@ -43,232 +22,82 @@ const LEFTOVER_AMMO_SEVERITY_TIERS = {
 
 const MAX_AMMO = 2
 
-const TimelineDatasetIndex = Object.freeze({
-	AMMO_HISTORY: 0,
-	OVERCAP_HISTORY: 1,
-})
-
-const ActionImpact = Object.freeze({
-	GENERATOR: 1,
-	SPENDER: -1,
-})
-
-const OvercapTiming = Object.freeze({
-	BEFORE: -1,
-	AFTER: 1,
-})
-
-class AmmoState {
-	t?: number
-	y?: number
-	source: string
-	action: number
-
-	constructor() {
-		this.source = ''
-		this.action = 0
-	}
-}
-
-class OvercapState {
-	t?: number
-	y?: number
-	wasted: number
-	source: string
-	timing: number
-
-	constructor() {
-		this.wasted = 0
-		this.source = ''
-		this.timing = 0
-	}
-}
-
-export default class Ammo extends Analyser {
+export class Ammo extends CoreGauge {
 	static override handle = 'ammo'
 	static override title = t('gnb.ammo.title')`Cartridge Timeline`
-	static override displayMode = DISPLAY_MODE.FULL
 
-	private ammo = 0
-	private currentAbility = ''
-	private currentAbilityImpact = 0
-	private ammoHistory: AmmoState[] = []
-	private overcapHistory: OvercapState[] = []
-	private wasteBySource = {
-		[ACTIONS.SOLID_BARREL.id]: 0,
-		[ACTIONS.DEMON_SLAUGHTER.id]: 0,
-		[ACTIONS.BLOODFEST.id]: 0,
-		[ACTIONS.RAISE.id]: 0,
-	}
-	private ammoMaxWithOvercap = MAX_AMMO
-	private leftoverAmmo = 0
-	private totalGeneratedAmmo = 0 // Keep track of the total amount of generated ammo over the fight
-	private erroneousCircles = 0 // This is my new NEW band name.
-
-	@dependency private checklist!: Checklist
 	@dependency private suggestions!: Suggestions
-	@dependency private Data!: Data
+	@dependency private checklist!: Checklist
+
+	private ammoGauge = this.add(new CounterGauge({
+		maximum: MAX_AMMO,
+		/* We'll see how people like it being in the timeline over a seperate chart.
+		I've grown to prefer it on the timeline myself
+		chart: {label: 'Ammo', color: JOBS.GUNBREAKER.colour}, */
+		graph: {
+			handle: 'ammo',
+			label: <Trans id="gnb.gauge.resource.ammoLabel"> Ammo </Trans>,
+			color: JOBS.GUNBREAKER.colour,
+		}
+	}))
+
+	// Used for Checklist as CounterGauge seems to lack total tracking at this time.
+	private totalGeneratedAmmo = 0
+
+	private ammoModifiers = new Map<number, GaugeModifier>([
+		//Builders. Well more of loaders
+		[this.data.actions.SOLID_BARREL.id, {combo: 1}],
+		[this.data.actions.DEMON_SLAUGHTER.id, {combo: 1}],
+		[this.data.actions.BLOODFEST.id, {action: MAX_AMMO}],
+		//Spenders/Unloaders
+		[this.data.actions.BURST_STRIKE.id, {action: -1}],
+		[this.data.actions.FATED_CIRCLE.id, {action: -1}],
+		[this.data.actions.GNASHING_FANG.id, {action: -1}],
+
+	])
 
 	override initialise() {
-		//Filters
-		const LoadFilter = filter<Event>()
-			.type('damage')
-			.source(this.parser.actor.id)
-			.cause(filter<Cause>()
-				.action(this.Data.matchActionId.this.OnCaseGene))
-		this.addEventHook('init', this.pushToHistory)
-		this.addEventHook(
-			'action',
-			{
-				source: this.parser.actor.id,
-				cause: Object.keys(ON_CAST_GENERATORS).map(Number),
-			},
-			this.onCastGenerator
-		)
-		this.addEventHook(
-			'combo',
-			{
-				by: 'player',
-				abilityId: Object.keys(ON_COMBO_GENERATORS).map(Number),
-			},
-			this.onComboGenerator,
-		)
-		this.addEventHook(
-			'cast',
-			{
-				by: 'player',
-				abilityId: Object.keys(AMMO_SPENDERS).map(Number),
-			},
-			this.onSpender,
-		)
-		this.addEventHook('normaliseddamage', {by: 'player', abilityId: ACTIONS.FATED_CIRCLE.id}, this.onFatedCircle)
-		this.addEventHook('death', {to: 'player'}, this.onDeath)
+		super.initialise()
+
+		const ammoActions = Array.from(this.ammoModifiers.keys())
+
+		const playerFilter = filter<Event>().source(this.parser.actor.id)
+		this.addEventHook(playerFilter.type(oneOf(['action', 'combo'])).action(oneOf(ammoActions)), this.onGaugeModifier)
+
 		this.addEventHook('complete', this.onComplete)
 	}
 
-	private onFatedCircle(event: NormalisedDamageEvent) {
-		if (event.hitCount < 2) {
-			this.erroneousCircles++
-		}
-	}
+	private onGaugeModifier(event: Events['action' | 'combo']) {
+		const modifier = this.ammoModifiers.get(event.action)
 
-	private onCastGenerator(event: CastEvent) {
-		const abilityId = event.ability.guid
-		const generatedAmmo = ON_CAST_GENERATORS[abilityId]
-		this.currentAbility = event.ability.name
+		if (modifier != null) {
+			let amount = modifier[event.type] ?? 0
 
-		this.addGeneratedAmmoAndPush(generatedAmmo, abilityId)
-	}
-
-	private onComboGenerator(event: LegacyComboEvent) {
-		const abilityId = event.ability.guid
-		const generatedAmmo = ON_COMBO_GENERATORS[abilityId]
-		this.currentAbility = event.ability.name
-
-		this.addGeneratedAmmoAndPush(generatedAmmo, abilityId)
-	}
-
-	private addGeneratedAmmoAndPush(generatedAmmo: number, abilityId: number) {
-		const originalAmmo = this.ammo
-		this.ammo += generatedAmmo
-		this.totalGeneratedAmmo += generatedAmmo
-		if (this.ammo > MAX_AMMO) {
-			const waste = this.ammo - MAX_AMMO
-			this.wasteBySource[abilityId] += waste
-			this.ammo = MAX_AMMO
-
-			this.pushToOvercapHistory(originalAmmo, 0, OvercapTiming.BEFORE)
-			this.pushToOvercapHistory(originalAmmo + generatedAmmo, waste, OvercapTiming.AFTER)
-		}
-
-		this.currentAbilityImpact = ActionImpact.GENERATOR
-		this.pushToHistory()
-	}
-
-	private onSpender(event: CastEvent) {
-		this.ammo = this.ammo - AMMO_SPENDERS[event.ability.guid]
-		this.currentAbility = event.ability.name
-		this.currentAbilityImpact = ActionImpact.SPENDER
-		this.pushToHistory()
-	}
-
-	private onDeath() {
-		this.wasteBySource[ACTIONS.RAISE.id] += this.ammo
-		this.dumpRemainingResources()
-	}
-
-	private dumpRemainingResources() {
-		this.leftoverAmmo = this.ammo
-		this.ammo = 0
-		this.currentAbility = 'Death'
-		this.currentAbilityImpact = ActionImpact.SPENDER
-		this.pushToHistory()
-	}
-
-	private pushToHistory() {
-		const timestamp = this.parser.currentTimestamp - this.parser.fight.start_time
-		this.ammoHistory.push({
-			t: timestamp,
-			y: this.ammo,
-			source: this.currentAbility,
-			action: this.currentAbilityImpact,
-		})
-	}
-
-	private pushToOvercapHistory(ammo: number, waste: number, timing: number) {
-		const timestamp = this.parser.currentTimestamp - this.parser.fight.start_time
-		this.overcapHistory.push({
-			t: timestamp,
-			y: ammo,
-			wasted: waste,
-			source: this.currentAbility,
-			timing: timing,
-		})
-
-		if (this.ammoMaxWithOvercap < ammo) {
-			this.ammoMaxWithOvercap = ammo
+			if (amount > 0) {
+				this.totalGeneratedAmmo += amount //Increment total tracker for generated ammo
+			}
+			this.ammoGauge.modify(amount)
 		}
 	}
 
 	private onComplete() {
-		this.dumpRemainingResources()
-
-		const totalWaste = Object.keys(this.wasteBySource)
-			.map(Number)
-			.filter(source => source !== ACTIONS.RAISE.id) // don't include death for suggestions
-			.reduce((sum, source) => sum + this.wasteBySource[source], 0)
-			+ this.leftoverAmmo
-
 		this.suggestions.add(new TieredSuggestion({
-			icon: ACTIONS.FATED_CIRCLE.icon,
-			content: <Trans id="gnb.ammo.single-target-circle.content">
-				Avoid using <ActionLink {...ACTIONS.FATED_CIRCLE}/> when it would deal damage to only a single target.
-			</Trans>,
-			why: <Trans id="gnb.ammo.single-target-circle.why">
-				<Plural value={this.erroneousCircles} one="# use" other="# uses"/> of <ActionLink {...ACTIONS.FATED_CIRCLE}/> dealt
-				damage to only one target.
-			</Trans>,
-			tiers: SINGLE_TARGET_CIRCLE_SEVERITY_TIERS,
-			value: this.erroneousCircles,
-		}))
-
-		this.suggestions.add(new TieredSuggestion({
-			icon: ACTIONS.BLOODFEST.icon,
+			icon: this.data.actions.BLOODFEST.icon,
 			content: <Trans id="gnb.ammo.leftover-ammo.content">
-				Avoid having leftover ammo at the end of a fight, consider using the ammo earlier if possible. <ActionLink {...ACTIONS.BURST_STRIKE}/> is more potency than any of your <ActionLink {...ACTIONS.SOLID_BARREL}/> combo.
+				Avoid having leftover ammo at the end of a fight, consider using the ammo earlier if possible. <ActionLink action="BURST_STRIKE"/> is more potency than any of your <ActionLink action="SOLID_BARREL"/> combo.
 			</Trans>,
 			why: <Trans id="gnb.ammo.leftover-ammo.why">
-				You had <Plural value={this.leftoverAmmo} one="# cartridge" other="# cartridges"/> remaining at the end of the fight.
+				You had <Plural value={this.ammoGauge.value} one="# cartridge" other="# cartridges"/> remaining at the end of the fight.
 			</Trans>,
 			tiers: LEFTOVER_AMMO_SEVERITY_TIERS,
-			value: this.leftoverAmmo,
+			value: this.ammoGauge.value,
 		}))
 
 		this.checklist.add(new Rule({
 			name: 'Cartridge Usage',
 			description: <Trans id="gnb.ammo.waste.content">
 				Wasted cartridge generation, ending the fight with cartridges loaded, or dying with cartridges loaded is a
-				direct potency loss. Use <ActionLink {...ACTIONS.BURST_STRIKE}/> (or <ActionLink {...ACTIONS.FATED_CIRCLE}/> if
+				direct potency loss. Use <ActionLink action="BURST_STRIKE"/>(or <ActionLink action="FATED_CIRCLE"/> if
 				there is more than one target) to avoid wasting cartridges.
 			</Trans>,
 			requirements: [
@@ -276,145 +105,10 @@ export default class Ammo extends Analyser {
 					name: <Trans id="gnb.ammo.checklist.requirement.waste.name">
 						Use as many of your loaded cartridges as possible.
 					</Trans>,
-					value: this.totalGeneratedAmmo - totalWaste,
+					value: this.totalGeneratedAmmo - this.ammoGauge.overCap,
 					target: this.totalGeneratedAmmo,
 				}),
 			],
 		}))
-	}
-
-	private convertWasteMapToTable() {
-		const rows = [
-			this.convertWasteEntryToRow(ACTIONS.SOLID_BARREL),
-			this.convertWasteEntryToRow(ACTIONS.DEMON_SLAUGHTER),
-			this.convertWasteEntryToRow(ACTIONS.BLOODFEST),
-			this.convertWasteEntryToRow(ACTIONS.RAISE),
-		]
-
-		return <Fragment key="wasteBySource-fragment">
-			<table key="wasteBySource-table">
-				<tbody key="wasteBySource-tbody">
-					{rows}
-				</tbody>
-			</table>
-		</Fragment>
-	}
-
-	private convertWasteEntryToRow(action: TODO) {
-		let actionName = action.name
-		if (action === ACTIONS.RAISE) {
-			actionName = 'Death'
-		}
-
-		return <tr key={action.id + '-row'} style={{margin: 0, padding: 0}}>
-			<td key={action.id + '-name'}><ActionLink name={actionName} {...action}/></td>
-			<td key={action.id + '-value'}>{this.wasteBySource[action.id]}</td>
-		</tr>
-	}
-
-	override output() {
-		const cartridgeWastePanels = []
-		cartridgeWastePanels.push({
-			key: 'key-wastebysource',
-			title: {
-				key: 'title-wastebysource',
-				content: <Trans id="gnb.ammo.waste.by-source.key">Cartridge Waste By Source</Trans>,
-			},
-			content: {
-				key: 'content-wastebysource',
-				content: this.convertWasteMapToTable(),
-			},
-		})
-
-		const ammoColor = Color(JOBS.GUNBREAKER.colour)
-		/* eslint-disable @typescript-eslint/no-magic-numbers */
-		const chartData = {
-			datasets: [
-				{
-					label: 'Cartridges',
-					steppedLine: true,
-					data: this.ammoHistory,
-					backgroundColor: ammoColor.fade(0.8).toString(),
-					borderColor: ammoColor.fade(0.5).toString(),
-				},
-				{
-					label: 'Overcap',
-					steppedLine: true,
-					data: this.overcapHistory,
-					backgroundColor: Color('#db2828').fade(0.8).toString(),
-					borderColor: Color('#db2828').fade(0.5).toString(),
-				},
-			],
-		}
-
-		const chartOptions = {
-			scales: {
-				yAxes: [{
-					ticks: {
-						beginAtZero: true,
-						min: 0,
-						max: this.ammoMaxWithOvercap,
-						callback: ((value: number) => {
-							if (value % 1 === 0) {
-								return value
-							}
-						}),
-					},
-				}],
-			},
-			/* eslint-disable @typescript-eslint/no-explicit-any */
-			tooltips: {
-				callbacks: {
-					label: function (tooltipItem: any, data: any) {
-						const datasetIndex = tooltipItem.datasetIndex
-						const valueIndex = tooltipItem.index
-						const hoveredHistory = data.datasets[datasetIndex].data[valueIndex]
-
-						if (datasetIndex === TimelineDatasetIndex.OVERCAP_HISTORY &&
-							hoveredHistory.timing === OvercapTiming.BEFORE) {
-							return ' ' + hoveredHistory.y + ' Before <' + hoveredHistory.source + '> Overcapping'
-						}
-						return ' ' + hoveredHistory.y + ' After <' + hoveredHistory.source + '>'
-					},
-					afterBody: function(tooltipItems: any, data: any) {
-						const datasetIndex = tooltipItems[0].datasetIndex
-						const valueIndex = tooltipItems[0].index
-
-						if (datasetIndex === TimelineDatasetIndex.AMMO_HISTORY) {
-							const hoveredAmmoHistory = data.datasets[datasetIndex].data[valueIndex]
-
-							if (hoveredAmmoHistory.action === ActionImpact.GENERATOR) {
-								return '(Generator)'
-							}
-							if (hoveredAmmoHistory.action === ActionImpact.SPENDER) {
-								return '(Spender)'
-							}
-						} else if (datasetIndex === TimelineDatasetIndex.OVERCAP_HISTORY) {
-							const hoveredOvercapHistory = data.datasets[datasetIndex].data[valueIndex]
-
-							if (hoveredOvercapHistory.timing === OvercapTiming.AFTER) {
-								return '(Wasted ' + hoveredOvercapHistory.wasted + ' Cartridge)'
-							}
-						}
-
-						return ''
-					},
-				},
-			},
-		}
-		/* eslint-enable @typescript-eslint/no-explicit-any */
-		/* eslint-enable @typescript-eslint/no-magic-numbers */
-
-		return <Fragment>
-			<TimeLineChart
-				data={chartData}
-				options={chartOptions} />
-			<Accordion
-				exclusive={false}
-				panels={cartridgeWastePanels}
-				styled
-				fluid
-			/>
-		</Fragment>
 	}
 }
