@@ -7,15 +7,12 @@ import {Data} from 'parser/core/modules/Data'
 import {Invulnerability} from 'parser/core/modules/Invulnerability'
 import {Statuses} from 'parser/core/modules/Statuses'
 
-const SECONDS_PER_MINUTE = 60
+const MILLISECONDS_PER_MINUTE = 60000
 
-/** Mapping of a status ID to the duration it was up. */
-export interface DotDurations {
-	[statusID: number]: number
-}
-
-interface DotTargets {
-	[targetID: string]: DotDurations
+export type DotTracking = Map<number, Map<string, DotTargetTracking>>
+interface DotTargetTracking {
+	lastApplied: number
+	totalClipping: number
 }
 
 export abstract class DoTs extends Analyser {
@@ -29,9 +26,7 @@ export abstract class DoTs extends Analyser {
 	/** Implementing modules MUST override this with a list of Status IDs. */
 	protected abstract trackedStatuses: number[] = []
 
-	private clips: DotDurations = {}
-	private statusApplications: DotTargets = {}
-	private statusDurations: DotDurations = {}
+	private statusApplications: DotTracking = new Map<number, Map<string, DotTargetTracking>>()
 
 	override initialise() {
 		this.addEventHook(
@@ -43,16 +38,6 @@ export abstract class DoTs extends Analyser {
 		)
 
 		this.addEventHook('complete', this.onComplete)
-
-		// NOTE: All statuses submodules track should include a duration property,
-		//  otherwise the results this produces will be very fucky.
-		this.trackedStatuses.forEach(statusID => {
-			const status = this.data.getStatus(statusID)
-			if (status == null) { return }
-
-			this.statusDurations[statusID] = status.duration ?? 0
-		})
-
 	}
 
 	/**
@@ -67,7 +52,7 @@ export abstract class DoTs extends Analyser {
 	 * This should be handled on a job-by-job basis rather than generically, since different jobs have
 	 * different thresholds for what constitutes bad clipping with varying explanations as to why.
 	 */
-	protected abstract addClippingSuggestions(_clips: DotDurations): void
+	protected abstract addClippingSuggestions(_clips: DotTracking): void
 
 	/**
 	 * Implementing modules can optionally exclude applications of a status from clipping calculations.
@@ -79,74 +64,63 @@ export abstract class DoTs extends Analyser {
 
 	private onApply(event: Events['statusApply']) {
 		const status = this.data.getStatus(event.status)
-		const statusID = status?.id
-		if (statusID == null) { return }
+		// Cannot track for statuses that are not defined with a duration
+		if (status == null || status.duration == null) { return }
 
-		// Make sure we're tracking for this target
+		// Get the tracking object for this status
+		let trackedStatus = this.statusApplications.get(status.id)
+		if (trackedStatus == null) {
+			trackedStatus = new Map<string, DotTargetTracking>()
+			this.statusApplications.set(status.id, trackedStatus)
+		}
+
+		// Get the tracking object for this status on this target
 		const target = event.target
-		const lastApplication = this.statusApplications[target] ?? {}
+		let trackedStatusOnTarget = trackedStatus.get(target)
+		if (trackedStatusOnTarget == null) {
+			trackedStatusOnTarget = {lastApplied: 0, totalClipping: 0}
+			trackedStatus.set(target, trackedStatusOnTarget)
+		}
 
 		// If it's not been applied yet or should be excluded per job-specific logic (if any), set it and skip out
-		if (lastApplication[statusID] == null || this.excludeApplication()) {
-			lastApplication[statusID] = event.timestamp
+		if (trackedStatusOnTarget.lastApplied === 0 || this.excludeApplication()) {
+			trackedStatusOnTarget.lastApplied = event.timestamp
 			return
 		}
 
 		// Base clip calc
-		let clip = this.statusDurations[statusID] - (event.timestamp - lastApplication[statusID])
-
-		// Remove any untargetable time from the clip:
-		//  often want to hardcast apply after an invuln phase, but refresh with another skill shortly after.
-		clip -= this.invulnerability.getDuration({
-			start: event.timestamp - this.statusDurations[statusID],
-			end: event.timestamp,
-			types: ['untargetable'],
-		})
-
-		// Wait for when the status would typically drop without clipping:
-		//  clipping a dot early isn't as problematic if it would just push it into invuln time.
-		this.addTimestampHook(
-			Math.min(
-				event.timestamp + this.statusDurations[statusID] + clip,
-				this.parser.pull.timestamp + this.parser.pull.duration,
-			),
-			({timestamp}) => {
-				clip -= this.invulnerability.getDuration({
-					start: event.timestamp,
-					end: timestamp,
-					types: ['invulnerable'],
-				})
-
-				// Clamp clips at 0 - less than that is downtime, which is handled by the checklist requirement.
-				this.clips[statusID] = (this.clips[statusID] ?? 0) + Math.max(0, clip)
-			},
-		)
-
-		lastApplication[statusID] = event.timestamp
+		const clip = status.duration - (event.timestamp - trackedStatusOnTarget.lastApplied)
+		// Cap clip at 0 - less than that is downtime, which is handled by the checklist requirement
+		trackedStatusOnTarget.totalClipping += Math.max(0, clip)
+		trackedStatusOnTarget.lastApplied = event.timestamp
 	}
 
 	private onComplete() {
 		this.addChecklistRules()
-		this.addClippingSuggestions(this.clips)
+		this.addClippingSuggestions(this.statusApplications)
 	}
 
 	// These two functions are helpers for submodules and should be used but not overridden
-	public getUptimePercent(statusID: number) {
-		const status = this.data.getStatus(statusID)
+	protected getUptimePercent(statusId: number) {
+		const status = this.data.getStatus(statusId)
 		if (status == null) { return 0 }
 
 		const statusUptime = this.statuses.getUptime(status, this.actors.foes)
-		const fightDuration = this.parser.currentDuration - this.invulnerability.getDuration({types: ['invulnerable']})
+		const fightDuration = this.parser.pull.duration - this.invulnerability.getDuration({types: ['invulnerable']})
 		return (statusUptime / fightDuration) * 100
 	}
 
-	public getClippingAmount(statusID: number) {
+	protected getClippingAmount(statusId: number) {
 		// This normalises clipping as seconds clipped per minute,
 		// since some level of clipping is expected and we need tiers that work for both long and short fights
-		const fightDurationMillis = (this.parser.currentDuration - this.invulnerability.getDuration({types: ['invulnerable']}))
+		const fightDurationMillis = (this.parser.pull.duration - this.invulnerability.getDuration({types: ['invulnerable']}))
 		if (fightDurationMillis <= 0) { return 0 }
 
-		const clipSecsPerMin = Math.round(((this.clips[statusID] ?? 0) * SECONDS_PER_MINUTE) / fightDurationMillis)
+		const statusApplications = this.statusApplications.get(statusId)
+		if (statusApplications == null) { return 0 }
+
+		const totalClipping = Array.from(statusApplications.values()).reduce((clip, target) => clip + target.totalClipping, 0)
+		const clipSecsPerMin = Math.round(totalClipping / (fightDurationMillis / MILLISECONDS_PER_MINUTE))
 		return clipSecsPerMin
 	}
 }

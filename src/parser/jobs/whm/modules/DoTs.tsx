@@ -2,7 +2,7 @@ import {Trans} from '@lingui/react'
 import {DataLink} from 'components/ui/DbLink'
 import {dependency} from 'parser/core/Injectable'
 import Checklist, {Requirement, TARGET, TieredRule} from 'parser/core/modules/Checklist'
-import {DotDurations, DoTs as CoreDoTs} from 'parser/core/modules/DoTs'
+import {DoTs as CoreDoTs} from 'parser/core/modules/DoTs'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
 
@@ -28,6 +28,7 @@ export class DoTs extends CoreDoTs {
 	]
 
 	protected override addChecklistRules() {
+		const uptimePercent = this.getUptimePercent(this.data.statuses.DIA.id)
 		this.checklist.add(new TieredRule({
 			name: <Trans id="whm.dots.rule.name">Keep your DoTs up </Trans>,
 			description: <Trans id="whm.dots.rule.description">
@@ -37,14 +38,14 @@ export class DoTs extends CoreDoTs {
 			requirements: [
 				new Requirement({
 					name: <Trans id="whm.dots.requirement.uptime-dia.name"><DataLink status="DIA" /> uptime</Trans>,
-					percent: () => this.getUptimePercent(this.data.statuses.DIA.id),
+					percent: uptimePercent,
 				}),
 			],
 		}))
 	}
 
-	protected addClippingSuggestions(_clips: DotDurations) {
-		const clippingPerMinute = this.getClippingAmount(this.data.statuses.CAUSTIC_BITE.id)
+	protected addClippingSuggestions() {
+		const clippingPerMinute = this.getClippingAmount(this.data.statuses.DIA.id)
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.DIA.icon,
 			content: <Trans id="whm.dots.suggestion.clip-dia.content">
