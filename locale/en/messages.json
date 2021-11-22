@@ -20,7 +20,7 @@
   "ast.celestial-intersection.suggestion.why": "About {usesMissed} uses of <0/> were missed by holding it for at least a total of {0}.",
   "ast.celestial-opposition.suggestion.content.diurnal": "Use <0/> more frequently. In <1/>, the heal and regen combined add up to the same potency of a <2/> on each player it reaches. Trusting the regens to top off the party HP will save MP and GCDs on healing.",
   "ast.celestial-opposition.suggestion.content.noct": "Use <0/> more frequently. In <1/>, the shield is the same potency as from <2/>, so it can save MP and GCDs casting it. Since shields last 30 seconds it can be cast much earlier than incoming damage and allow the cooldown to refresh sooner.",
-  "ast.celestial-opposition.suggestion.why": "About {usesMissed} uses of <0/> were missed by holding it for at least a total of {0}.",
+  "ast.celestial-opposition.suggestion.why": "About {missedUses} uses of <0/> were missed by holding it for at least a total of {0}.",
   "ast.dots.requirement.uptime.name": "<0/> uptime",
   "ast.dots.rule.description": "Combust III makes up a good portion of your damage. Aim to keep this DoT up at all times. It also can be used to weave (<0/>) and manage cards, or maneuver around without dropping GCD uptime.",
   "ast.dots.rule.name": "Keep your DoT up",
