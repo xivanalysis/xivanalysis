@@ -1,6 +1,5 @@
 import {Trans} from '@lingui/react'
 import {DataLink} from 'components/ui/DbLink'
-import {getDataBy} from 'data'
 import {Event, Events} from 'event'
 import {Analyser} from 'parser/core/Analyser'
 import {filter} from 'parser/core/filter'
@@ -15,7 +14,7 @@ const SEVERITY_MOD = {
 	MAJOR: 0.5,
 }
 
-interface Status {
+interface Sect_Status {
 	id: number
 	name: string
 	icon: string
@@ -35,7 +34,7 @@ export default class CelestialOpposition extends Analyser {
 	private uses: number = 0
 	private totalHeld: number = 0
 
-	private activeSect: Status | undefined
+	private activeSect: Sect_Status | undefined
 
 	override initialise() {
 		this.addEventHook(filter<Event>()
@@ -65,12 +64,12 @@ export default class CelestialOpposition extends Analyser {
 	}
 
 	private onSect(event: Events['statusApply']) {
-		this.activeSect = getDataBy(this.data.statuses, 'id', event.status)
+		this.activeSect = this.data.getStatus(event.status)
 	}
 
 	onComplete() {
 		const holdDuration = this.uses === 0 ? this.parser.currentDuration : this.totalHeld
-		const usesMissed = Math.floor(holdDuration / (this.data.actions.CELESTIAL_INTERSECTION.cooldown))
+		const missedUses = Math.floor(holdDuration / (this.data.actions.CELESTIAL_INTERSECTION.cooldown))
 		//TODO update max uses to not use the whole duration such as when there are no available targets
 		const maxUses = (this.parser.pull.duration / this.data.actions.CELESTIAL_INTERSECTION.cooldown) - 1
 
@@ -90,14 +89,14 @@ export default class CelestialOpposition extends Analyser {
 
 		const content = this.activeSect && this.activeSect.id === this.data.statuses.NOCTURNAL_SECT.id ? suggestContentNoct : suggestContentDiurnal
 
-		if (usesMissed > 1 || this.uses === 0) {
+		if (missedUses > 1 || this.uses === 0) {
 			this.suggestions.add(new TieredSuggestion({
 				icon: this.data.actions.CELESTIAL_OPPOSITION.icon,
 				content,
 				tiers: WASTED_USE_TIERS,
-				value: this.uses === 0 ? 100 : usesMissed,
+				value: this.uses === 0 ? 100 : missedUses,
 				why: <Trans id="ast.celestial-opposition.suggestion.why">
-					About {usesMissed} uses of <DataLink action="CELESTIAL_OPPOSITION" /> were missed by holding it for at least a total of {this.parser.formatDuration(holdDuration)}.
+					About {missedUses} uses of <DataLink action="CELESTIAL_OPPOSITION" /> were missed by holding it for at least a total of {this.parser.formatDuration(holdDuration)}.
 				</Trans>,
 			}))
 		}
