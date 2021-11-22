@@ -472,6 +472,7 @@
   "drk.delirium.suggestions.badgcd.content": "<0/>中のGCDは、ダメージ最大化のために<1/>(もしくは敵が3体以上いれば<2/>) のみを使用しましょう。",
   "drk.delirium.suggestions.missedgcd.content": "<0/>の効果時間中に5GCDを回すようにしてみましょう。食い込みなしでウェポンスキルを回しても5GCDを達成できない場合は、装備のスキルスピードを見直してみましょう。",
   "drk.delirium.title": "ブラッドデリリアムの使用状況",
+  "drk.gauge.title": "ブラッドゲージ",
   "drk.resourceanalyzer.title": "リソースアナライザー",
   "drk.resourceanalyzer.wastedmp.content": "MPを消費することによって強力な与ダメージと与ダメージUPのバフを得られる<0/>と、強力な被ダメージ軽減効果を持つ<1/>を使うことが出来ます。\n自然回復やメインコンボスキルによるMP回復の恩恵を必ず得られるようにするために、常にMPを消費してください。",
   "game.job.astrologian": "占星術師",
