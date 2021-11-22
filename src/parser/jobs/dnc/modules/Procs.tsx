@@ -25,6 +25,10 @@ export class Procs extends CoreProcs {
 			procStatus: this.data.statuses.FLOURISHING_STARFALL,
 			consumeActions: [this.data.actions.STARFALL_DANCE],
 		},
+		{
+			procStatus: this.data.statuses.FLOURISHING_FINISH,
+			consumeActions: [this.data.actions.TILLANA],
+		},
 	]
 
 	override showDroppedProcSuggestion = true

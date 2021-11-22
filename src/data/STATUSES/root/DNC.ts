@@ -55,6 +55,12 @@ export const DNC = ensureStatuses({
 		icon: 'https://xivapi.com/i/013000/013709.png',
 		duration: 20000,
 	},
+	FLOURISHING_FINISH: {
+		id: 182218221822, // Needs real ID
+		name: 'Flourishing Finish',
+		icon: 'https://xivapi.com/i/013000/013709.png', // Needs real icon
+		duration: 30000,
+	},
 	CLOSED_POSITION: {
 		id: 1823,
 		name: 'Closed Position',
