@@ -11,7 +11,7 @@ import React from 'react'
 
 type GaugeModifier = Partial<Record<Event['type'], number>>
 
-export default class Gauge extends CoreGauge {
+export class Gauge extends CoreGauge {
 	static override title = t('pld.gauge.title')`Oath Gauge Usage`
 
 	@dependency private suggestions!: Suggestions

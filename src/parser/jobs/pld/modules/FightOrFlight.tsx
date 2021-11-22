@@ -1,21 +1,14 @@
 import {t} from '@lingui/macro'
 import {Plural, Trans} from '@lingui/react'
-import {ActionLink, StatusLink} from 'components/ui/DbLink'
-import {RotationTable, RotationTableEntry} from 'components/ui/RotationTable'
-import {getDataBy} from 'data'
-import ACTIONS from 'data/ACTIONS'
-import STATUSES from 'data/STATUSES'
-import {BuffEvent, CastEvent} from 'fflogs'
+import {DataLink} from 'components/ui/DbLink'
+import {Action, ActionKey} from 'data/ACTIONS'
 import _ from 'lodash'
-import Module, {dependency} from 'parser/core/Module'
-import {Invulnerability} from 'parser/core/modules/Invulnerability'
-import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
-import {Timeline} from 'parser/core/modules/Timeline'
+import {dependency} from 'parser/core/Injectable'
+import {BuffWindow, EvaluatedAction, ExpectedActionsEvaluator, ExpectedGcdCountEvaluator, WindowEvaluator} from 'parser/core/modules/ActionWindow'
+import {HistoryEntry} from 'parser/core/modules/ActionWindow/History'
+import {GlobalCooldown} from 'parser/core/modules/GlobalCooldown'
+import {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
-
-interface TimestampRotationMap {
-	[timestamp: number]: CastEvent[]
-}
 
 const SEVERITIES = {
 	MISSED_OGCDS: {
@@ -40,275 +33,105 @@ const SEVERITIES = {
 	},
 }
 
-const CONSTANTS = {
-	GORING: {
-		MINIMUM_DISTANCE: 9,
-		EXPECTED: 2,
-	},
-	SPIRITS_WITHIN: {
-		EXPECTED: 1,
-	},
-	CIRCLE_OF_SCORN: {
-		EXPECTED: 1,
-	},
-	INTERVENE: {
-		EXPECTED: 1,
-	},
-	GCD: {
-		EXPECTED: 11,
-	},
-}
+const MINIMUM_GORING_DISTANCE = 9
 
 // These GCDs should not count towards the FoF GCD counter, as they are not
 // physical damage (weaponskill) GCDs.
-const EXCLUDED_GCD_IDS = [
-	ACTIONS.CLEMENCY.id,
-	ACTIONS.HOLY_SPIRIT.id,
-	ACTIONS.HOLY_CIRCLE.id,
-	ACTIONS.CONFITEOR.id,
+const EXCLUDED_GCDS: ActionKey[] = [
+	'CLEMENCY',
+	'HOLY_SPIRIT',
+	'HOLY_CIRCLE',
+	'CONFITEOR',
 ]
 
-class FightOrFlightState {
-	start: number | null = null
-	lastGoringGcd: number | null = null
-	gcdCounter: number = 0
-	goringCounter: number = 0
-	circleOfScornCounter: number = 0
-	spiritsWithinCounter: number = 0
-	interveneCounter: number = 0
-	goringTooCloseCounter: number = 0
+class GoringBladeSpacingEvaluator implements WindowEvaluator {
+	// Because this class is not an Analyser, it cannot use Data directly to get the id or icon for Goring Blade, so require the action object in the constructor
+	private goringBlade: Action
+
+	constructor (goringBlade: Action) {
+		this.goringBlade = goringBlade
+	}
+
+	suggest(windows: Array<HistoryEntry<EvaluatedAction[]>>) {
+		const goringTooClose = windows
+			.reduce((total, window) => {
+				const gcdsInWindow = window.data.filter(cast => (cast.action.onGcd ?? false))
+				const firstGoring = _.findIndex(gcdsInWindow, gcd => gcd.action.id === this.goringBlade.id)
+				if (firstGoring === -1) {
+					return total
+				}
+
+				const secondGoring = _.findIndex(gcdsInWindow, gcd => gcd.action.id === this.goringBlade.id, firstGoring + 1)
+				if (secondGoring === -1) {
+					return total
+				}
+
+				return total + ((secondGoring - firstGoring) < MINIMUM_GORING_DISTANCE ? 1 : 0)
+			}, 0)
+
+		return new TieredSuggestion({
+			icon: this.goringBlade.icon,
+			content: <Trans id="pld.fightorflight.suggestions.goring-blade-clip.content">
+				Try to refresh <DataLink action="GORING_BLADE" /> 9 GCDs after the
+				first <DataLink action="GORING_BLADE" /> in
+				a <DataLink action="FIGHT_OR_FLIGHT" /> window.
+			</Trans>,
+			why: <Trans id="pld.fightorflight.suggestions.goring-blade-clip.why">
+				<Plural value={goringTooClose} one="# application was" other="# applications were"/> refreshed too early during <DataLink status="FIGHT_OR_FLIGHT" /> windows.
+			</Trans>,
+			tiers: SEVERITIES.GORING_CLIP,
+			value: goringTooClose,
+		})
+	}
+
+	output() {
+		return undefined
+	}
 }
 
-class FightOrFlightErrorResult {
-	missedGcds: number = 0
-	missedGorings: number = 0
-	missedSpiritWithins: number = 0
-	missedCircleOfScorns: number = 0
-	missedIntervenes: number = 0
-	goringTooCloseCounter: number = 0
-}
-
-export default class FightOrFlight extends Module {
+export class FightOrFlight extends BuffWindow {
 	static override handle = 'fightorflight'
 	static override title = t('pld.fightorflight.title')`Fight Or Flight Usage`
 
-	@dependency private suggestions!: Suggestions
-	@dependency private timeline!: Timeline
-	@dependency private invulnerability!: Invulnerability
+	@dependency globalCooldown!: GlobalCooldown
 
-	// Internal State Counters
-	// ToDo: Merge some of these, so instead of saving rotations, make the rotation part of FoFState, so we can reduce the error result out of the saved rotations
-	private fofState = new FightOrFlightState()
-	private fofRotations: TimestampRotationMap = {}
-	private fofErrorResult = new FightOrFlightErrorResult()
+	override buffStatus = this.data.statuses.FIGHT_OR_FLIGHT
 
-	protected override init() {
-		this.addEventHook('cast', {by: 'player'}, this.onCast)
-		this.addEventHook(
-			'removebuff',
-			{
-				by: 'player',
-				to: 'player',
-				abilityId: [STATUSES.FIGHT_OR_FLIGHT.id],
-			},
-			this.onRemoveFightOrFlight,
-		)
-		this.addEventHook('complete', this.onComplete)
-	}
+	override initialise() {
+		super.initialise()
 
-	private onCast(event: CastEvent) {
-		const actionId = event.ability.guid
+		const suggestionWindowName = <DataLink action="FIGHT_OR_FLIGHT" showIcon={false} />
 
-		if (actionId === ACTIONS.ATTACK.id) {
-			return
-		}
+		this.ignoreActions(EXCLUDED_GCDS.map(g => this.data.actions[g].id))
 
-		if (actionId === ACTIONS.FIGHT_OR_FLIGHT.id) {
-			this.fofState.start = event.timestamp
-		}
-
-		if (this.fofState.start) {
-			const action = getDataBy(ACTIONS, 'id', actionId) as TODO // Should be an Action type
-			if (!action) { return }
-
-			if (action.onGcd && !EXCLUDED_GCD_IDS.includes(action.id)) {
-				this.fofState.gcdCounter++
-			}
-
-			switch (actionId) {
-			case ACTIONS.GORING_BLADE.id:
-				this.fofState.goringCounter++
-
-				if (this.fofState.lastGoringGcd !== null) {
-					if (this.fofState.gcdCounter - this.fofState.lastGoringGcd < CONSTANTS.GORING.MINIMUM_DISTANCE) {
-						this.fofState.goringTooCloseCounter++
-					}
-				}
-				this.fofState.lastGoringGcd = this.fofState.gcdCounter
-				break
-			case ACTIONS.CIRCLE_OF_SCORN.id:
-				this.fofState.circleOfScornCounter++
-				break
-			case ACTIONS.SPIRITS_WITHIN.id:
-				this.fofState.spiritsWithinCounter++
-				break
-			case ACTIONS.INTERVENE.id:
-				this.fofState.interveneCounter++
-				break
-			}
-
-			if (!Array.isArray(this.fofRotations[this.fofState.start])) {
-				this.fofRotations[this.fofState.start] = []
-			}
-
-			this.fofRotations[this.fofState.start].push(event)
-		}
-	}
-
-	private onRemoveFightOrFlight(event: BuffEvent) {
-		// If the enemy is untargetable at the end of FoF, the player was rushed - forgive missed hits.
-		// While technically this will never be called beyond the end of the fight, let's be really sure
-		const epochTimestamp = this.parser.fflogsToEpoch(event.timestamp)
-		const wasRushed = event.timestamp >= this.parser.eventTimeOffset + this.parser.pull.duration
-			|| this.invulnerability.isActive({timestamp: epochTimestamp, types: ['invulnerable']})
-			|| this.invulnerability.isActive({timestamp: epochTimestamp, types: ['untargetable']})
-
-		if (!wasRushed) {
-			this.fofErrorResult.missedGcds += Math.max(0, CONSTANTS.GCD.EXPECTED - this.fofState.gcdCounter)
-			this.fofErrorResult.missedGorings += Math.max(0, CONSTANTS.GORING.EXPECTED - this.fofState.goringCounter)
-			this.fofErrorResult.missedSpiritWithins += Math.max(0, CONSTANTS.SPIRITS_WITHIN.EXPECTED - this.fofState.spiritsWithinCounter)
-			this.fofErrorResult.missedCircleOfScorns += Math.max(0, CONSTANTS.CIRCLE_OF_SCORN.EXPECTED - this.fofState.circleOfScornCounter)
-			this.fofErrorResult.missedIntervenes += Math.max(0, CONSTANTS.INTERVENE.EXPECTED - this.fofState.interveneCounter)
-			this.fofErrorResult.goringTooCloseCounter += this.fofState.goringTooCloseCounter
-		}
-
-		this.fofState = new FightOrFlightState()
-	}
-
-	private onComplete() {
-		const missedOgcds = this.fofErrorResult.missedSpiritWithins + this.fofErrorResult.missedCircleOfScorns + this.fofErrorResult.missedIntervenes
-
-		this.suggestions.add(new TieredSuggestion({
-			icon: ACTIONS.FIGHT_OR_FLIGHT.icon,
-			content: <Trans id="pld.fightorflight.suggestions.gcds.content">
-				Try to land 11 physical GCDs during every <ActionLink {...ACTIONS.FIGHT_OR_FLIGHT}/> window.
+		this.addEvaluator(new ExpectedGcdCountEvaluator({
+			expectedGcds: 11,
+			globalCooldown: this.globalCooldown,
+			suggestionIcon: this.data.actions.FIGHT_OR_FLIGHT.icon,
+			suggestionContent: <Trans id="pld.fightorflight.suggestions.gcds.content">
+				Try to land 11 physical GCDs during every <DataLink action="FIGHT_OR_FLIGHT" /> window.
 			</Trans>,
-			why: <Trans id="pld.fightorflight.suggestions.gcds.why">
-				<Plural value={this.fofErrorResult.missedGcds} one="# physical GCD" other="# physical GCDs"/> missed during <StatusLink {...STATUSES.FIGHT_OR_FLIGHT}/> windows.
-			</Trans>,
-			tiers: SEVERITIES.MISSED_GCD,
-			value: this.fofErrorResult.missedGcds,
+			suggestionWindowName,
+			severityTiers: SEVERITIES.MISSED_GCD,
 		}))
 
-		this.suggestions.add(new TieredSuggestion({
-			icon: ACTIONS.GORING_BLADE.icon,
-			content: <Trans id="pld.fightorflight.suggestions.goring-blade.content">
-				Try to land 2 <ActionLink {...ACTIONS.GORING_BLADE}/> applications during
-				every <ActionLink {...ACTIONS.FIGHT_OR_FLIGHT}/> window: one at the beginning and one at the end.
+		this.addEvaluator(new ExpectedActionsEvaluator({
+			expectedActions: [
+				{action: this.data.actions.SPIRITS_WITHIN, expectedPerWindow: 1},
+				{action: this.data.actions.CIRCLE_OF_SCORN, expectedPerWindow: 1},
+				{action: this.data.actions.INTERVENE, expectedPerWindow: 1},
+				{action: this.data.actions.GORING_BLADE, expectedPerWindow: 2},
+			],
+			suggestionIcon: this.data.actions.SPIRITS_WITHIN.icon,
+			suggestionContent: <Trans id="pld.fightorflight.suggestions.ogcds.content">
+				Try to land at least one cast of each of your physical off-GCD skills (<DataLink action="SPIRITS_WITHIN" />,
+				<DataLink action="CIRCLE_OF_SCORN" />, and <DataLink action="INTERVENE" />) and two <DataLink action="GORING_BLADE" /> applications
+				during every <DataLink action="FIGHT_OR_FLIGHT" /> window.
 			</Trans>,
-			why: <Trans id="pld.fightorflight.suggestions.goring-blade.why">
-				<Plural value={this.fofErrorResult.missedGorings} one="# application" other="# applications"/> missed during <StatusLink {...STATUSES.FIGHT_OR_FLIGHT}/> windows.
-			</Trans>,
-			tiers: SEVERITIES.MISSED_GORING,
-			value: this.fofErrorResult.missedGorings,
+			suggestionWindowName,
+			severityTiers: SEVERITIES.MISSED_OGCDS,
 		}))
 
-		this.suggestions.add(new TieredSuggestion({
-			icon: ACTIONS.SPIRITS_WITHIN.icon,
-			content: <Trans id="pld.fightorflight.suggestions.ogcds.content">
-				Try to land at least one cast of each of your physical off-GCD skills (<ActionLink {...ACTIONS.SPIRITS_WITHIN}/> and
-				<ActionLink {...ACTIONS.CIRCLE_OF_SCORN}/>) during every <ActionLink {...ACTIONS.FIGHT_OR_FLIGHT}/> window.
-			</Trans>,
-			why: <Trans id="pld.fightorflight.suggestions.ogcds.why">
-				<Plural value={missedOgcds} one="# usage" other="# usages"/> missed during <StatusLink {...STATUSES.FIGHT_OR_FLIGHT}/> windows.
-			</Trans>,
-			tiers: SEVERITIES.MISSED_OGCDS,
-			value: missedOgcds,
-		}))
-
-		this.suggestions.add(new TieredSuggestion({
-			icon: ACTIONS.GORING_BLADE.icon,
-			content: <Trans id="pld.fightorflight.suggestions.goring-blade-clip.content">
-				Try to refresh <ActionLink {...ACTIONS.GORING_BLADE}/> 9 GCDs after the
-				first <ActionLink {...ACTIONS.GORING_BLADE}/> in
-				a <ActionLink {...ACTIONS.FIGHT_OR_FLIGHT}/> window.
-			</Trans>,
-			why: <Trans id="pld.fightorflight.suggestions.goring-blade-clip.why">
-				<Plural value={this.fofErrorResult.goringTooCloseCounter} one="# application was" other="# applications were"/> refreshed too early during <StatusLink {...STATUSES.FIGHT_OR_FLIGHT}/> windows.
-			</Trans>,
-			tiers: SEVERITIES.GORING_CLIP,
-			value: this.fofErrorResult.goringTooCloseCounter,
-		}))
-	}
-
-	private countAbility(rotation: CastEvent[], abilityId: number) {
-		return rotation.reduce((sum, event) => sum + (event.ability.guid === abilityId ? 1 : 0), 0)
-	}
-
-	private countGCDs(rotation: CastEvent[]) {
-		return rotation.reduce((sum, event) => {
-			const action = getDataBy(ACTIONS, 'id', event.ability.guid) as TODO
-			const include = (action.onGcd && !EXCLUDED_GCD_IDS.includes(action.id)) ? 1 : 0
-			return sum + include
-		}, 0)
-	}
-
-	override output() {
-		return <RotationTable
-			targets={[
-				{
-					header: <Trans id="pld.fightorflight.table.header.gcds">GCDs</Trans>,
-					accessor: 'gcds',
-				},
-				{
-					header: <ActionLink showName={false} {...ACTIONS.SPIRITS_WITHIN}/>,
-					accessor: 'spiritsWithin',
-				},
-				{
-					header: <ActionLink showName={false} {...ACTIONS.CIRCLE_OF_SCORN}/>,
-					accessor: 'circleOfScorn',
-				},
-				{
-					header: <ActionLink showName={false} {...ACTIONS.INTERVENE}/>,
-					accessor: 'intervene',
-				},
-				{
-					header: <ActionLink showName={false} {...ACTIONS.GORING_BLADE}/>,
-					accessor: 'goring',
-				},
-			]}
-			data={_.map(this.fofRotations, (rotation, timestamp): RotationTableEntry => {
-				const ts = _.toNumber(timestamp)
-
-				return {
-					start: ts - this.parser.fight.start_time,
-					end: ts - this.parser.fight.start_time + STATUSES.FIGHT_OR_FLIGHT.duration,
-					targetsData: {
-						gcds: {
-							actual: this.countGCDs(rotation),
-							expected: CONSTANTS.GCD.EXPECTED,
-						},
-						spiritsWithin: {
-							actual: this.countAbility(rotation, ACTIONS.SPIRITS_WITHIN.id),
-							expected: CONSTANTS.SPIRITS_WITHIN.EXPECTED,
-						},
-						circleOfScorn: {
-							actual: this.countAbility(rotation, ACTIONS.CIRCLE_OF_SCORN.id),
-							expected: CONSTANTS.CIRCLE_OF_SCORN.EXPECTED,
-						},
-						intervene: {
-							actual: this.countAbility(rotation, ACTIONS.INTERVENE.id),
-							expected: CONSTANTS.INTERVENE.EXPECTED,
-						},
-						goring: {
-							actual: this.countAbility(rotation, ACTIONS.GORING_BLADE.id),
-							expected: CONSTANTS.GORING.EXPECTED,
-						},
-					},
-					rotation,
-				}
-			})}
-			onGoto={this.timeline.show}
-		/>
+		this.addEvaluator(new GoringBladeSpacingEvaluator(this.data.actions.GORING_BLADE))
 	}
 }
