@@ -20,7 +20,7 @@ interface SwordOath {
 	used: number
 }
 
-export default class Atonement extends Analyser {
+export class Atonement extends Analyser {
 	static override handle = 'Atonement'
 	static override title = t('pld.Atonement.title')`Atonement`
 

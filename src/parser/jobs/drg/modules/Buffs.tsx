@@ -59,8 +59,8 @@ export default class Buffs extends Analyser {
 	private soloDragonSight: boolean = false
 	private lifeSurgeCasts: number[] = []
 
-	@dependency private checklist!: Checklist
 	@dependency private actors!: Actors
+	@dependency private checklist!: Checklist
 	@dependency private statuses!: Statuses
 	@dependency private invulnerability!: Invulnerability
 	@dependency private suggestions!: Suggestions
