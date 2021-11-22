@@ -11,7 +11,7 @@ export const legacyFflogsSearchHandlers: SearchHandler[] = [
 	 * 1234567890abcdef#fight=1&source=1
 	 */
 	{
-		regexp: /^(?:.*fflogs\.com\/reports\/)?(?<code>(?:a:)?[a-zA-Z0-9]{16})\/?(?:#(?=(?:.*fight=(?<fight>[^&]*))?)(?=(?:.*source=(?<source>[^&]*))?).*)?$/,
+		regexp: /^(?:.*(?:fflogs\.com|ffxivlogs\.cn)\/reports\/)?(?<code>(?:a:)?[a-zA-Z0-9]{16})\/?(?:#(?=(?:.*fight=(?<fight>[^&]*))?)(?=(?:.*source=(?<source>[^&]*))?).*)?$/,
 		handler: ({code, fight, source}) => {
 			if (fight === 'last') {
 				return {

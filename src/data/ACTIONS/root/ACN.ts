@@ -1,5 +1,5 @@
 import {Attribute} from 'event'
-import PETS from '../../PETS'
+import {PETS} from '../../PETS'
 import {ensureActions} from '../type'
 import {SMN_COOLDOWN_GROUP} from './SMN'
 

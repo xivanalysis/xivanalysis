@@ -1,5 +1,7 @@
 import {Plural, Trans} from '@lingui/react'
 import {DataLink} from 'components/ui/DbLink'
+import {Action} from 'data/ACTIONS'
+import {Status} from 'data/STATUSES'
 import {Event, Events} from 'event'
 import {Analyser} from 'parser/core/Analyser'
 import {EventHook} from 'parser/core/Dispatcher'
@@ -21,16 +23,16 @@ export class Forms extends Analyser {
 	@dependency private downtime!: Downtime
 	@dependency private suggestions!: Suggestions
 
-	private forms: number[] = []
-	private opoOpoSkills: number[] = []
+	private forms: Array<Status['id']> = []
+	private opoOpoSkills: Array<Action['id']> = []
 
 	private formless: number = 0
 	private resetForms: number = 0
 	private skippedForms: number = 0
 	private droppedForms: number = 0
 
-	private lastFormChanged?: number
-	private lastFormDropped?: number
+	private lastFormChanged: number | undefined
+	private lastFormDropped: number | undefined
 	private perfectlyFresh?: number
 
 	private formHook?: EventHook<Events['action']>

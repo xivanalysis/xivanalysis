@@ -1,6 +1,6 @@
 import {StatusRoot} from 'data/STATUSES/root'
 import {Attribute} from 'event'
-import {Compute, ReplaceFrom} from 'utilities/typescript'
+import {ensureRecord} from 'utilities/typescript'
 
 export type ActionCombo =
 	& (
@@ -37,9 +37,7 @@ export interface Action {
 */
 type TroublesomeProperties = 'statusesApplied'
 
-type EnsuredActions<T extends Record<string, Action>> = {
-	[K in keyof T]: Compute<ReplaceFrom<T[K] & Action, Action, TroublesomeProperties>>
-}
-
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const ensureActions = <T extends Record<string, Action>>(actions: T): EnsuredActions<T> => actions as any // trust me
+// export const ensureActions = <T extends Record<string, Action>>(actions: T): EnsuredActions<T> => actions as any // trust me
+
+export const ensureActions = ensureRecord<Action, TroublesomeProperties>()

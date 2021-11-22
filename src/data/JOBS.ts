@@ -2,10 +2,10 @@ import {MessageDescriptor} from '@lingui/core'
 import {t} from '@lingui/macro'
 import {Attribute} from 'event'
 import {ActorType} from 'fflogs'
+import {ensureRecord} from 'utilities'
 
 export interface Role {
 	id: number
-	i18n_id: string
 	name: MessageDescriptor
 	colour: string
 }
@@ -17,7 +17,7 @@ const colors = {
 	misc: '#767676',
 }
 
-const roleData = {
+export const ROLES = ensureRecord<Role>()({
 	TANK: {
 		id: 1,
 		name: t('game.roles.tank')`Tank`,
@@ -60,10 +60,9 @@ const roleData = {
 		name: t('game.roles.unsupported')`Unsupported`,
 		colour: colors.misc,
 	},
-}
+})
 
-export type RoleKey = keyof typeof roleData
-export const ROLES = roleData as Record<RoleKey, Role>
+export type RoleKey = keyof typeof ROLES
 
 export interface Job {
 	name: MessageDescriptor
@@ -75,7 +74,7 @@ export interface Job {
 }
 
 // Yeah I know there's lots of repetition but they're all different apis and endpoints and shit and I don't wanna pull it apart later to fix a desync
-const JOBS = {
+export const JOBS = ensureRecord<Job, 'logType'>()({
 	UNKNOWN: {
 		name: t('game.job.unknown')`Unknown`,
 		logType: ActorType.UNKNOWN,
@@ -254,7 +253,6 @@ const JOBS = {
 		colour: '#3366ff',
 		role: 'MAGICAL_RANGED',
 	},
-}
+})
 
 export type JobKey = keyof typeof JOBS
-export default JOBS as Record<JobKey, Job>

@@ -1,6 +1,7 @@
 import {MessageDescriptor} from '@lingui/core'
 import {t} from '@lingui/macro'
-import {Job} from './JOBS'
+import {ensureRecord} from 'utilities'
+import {JOBS, Job} from './JOBS'
 
 export interface Contributor {
 	name: string
@@ -8,7 +9,7 @@ export interface Contributor {
 	jobs: Job[]
 }
 
-const CONTRIBUTORS = {
+const CONTRIBUTORS = ensureRecord<Contributor>()({
 	// KEY: {
 	// 	name: 'Your Name',
 	// 	avatar: require('./avatar/filename.jpg'),
@@ -16,14 +17,21 @@ const CONTRIBUTORS = {
 	// 		JOBS.SOME_JOB,
 	// 	],
 	// },
-}
-export default CONTRIBUTORS as Record<keyof typeof CONTRIBUTORS, Contributor>
+	TOASTDEIB: {
+		name: 'Toastdeib',
+		avatar: require('./avatar/toastdeib.png'),
+		jobs: [
+			JOBS.NINJA,
+		],
+	},
+})
+export default CONTRIBUTORS
 
 export interface Role {
 	text: MessageDescriptor
 }
 
-const roleData = {
+export const ROLES = ensureRecord<Role>()({
 	MAINTAINER: {
 		text: t('core.role.maintainer')`Maintainer`,
 	},
@@ -33,6 +41,4 @@ const roleData = {
 	DEVELOPER: {
 		text: t('core.role.developer')`Developer`,
 	},
-}
-
-export const ROLES = roleData as Record<keyof typeof roleData, Role>
+})
