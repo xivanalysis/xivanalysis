@@ -8,6 +8,11 @@ export const DNC = ensureActions({
 		name: 'Single Standard Finish',
 		onGcd: true,
 		cooldown: 1500,
+		statusesApplied: [
+			'STANDARD_FINISH',
+			'STANDARD_FINISH_PARTNER',
+			'ESPRIT',
+		],
 	},
 	DOUBLE_STANDARD_FINISH: {
 		id: 16192,
@@ -15,6 +20,11 @@ export const DNC = ensureActions({
 		name: 'Double Standard Finish',
 		onGcd: true,
 		cooldown: 1500,
+		statusesApplied: [
+			'STANDARD_FINISH',
+			'STANDARD_FINISH_PARTNER',
+			'ESPRIT',
+		],
 	},
 	SINGLE_TECHNICAL_FINISH: {
 		id: 16193,
@@ -22,6 +32,11 @@ export const DNC = ensureActions({
 		name: 'Single Technical Finish',
 		onGcd: true,
 		cooldown: 1500,
+		statusesApplied: [
+			'TECHNICAL_FINISH',
+			'ESPRIT_TECHNICAL',
+			'FLOURISHING_FINISH',
+		],
 	},
 	DOUBLE_TECHNICAL_FINISH: {
 		id: 16194,
@@ -29,6 +44,11 @@ export const DNC = ensureActions({
 		name: 'Double Technical Finish',
 		onGcd: true,
 		cooldown: 1500,
+		statusesApplied: [
+			'TECHNICAL_FINISH',
+			'ESPRIT_TECHNICAL',
+			'FLOURISHING_FINISH',
+		],
 	},
 	TRIPLE_TECHNICAL_FINISH: {
 		id: 16195,
@@ -36,6 +56,11 @@ export const DNC = ensureActions({
 		name: 'Triple Technical Finish',
 		onGcd: true,
 		cooldown: 1500,
+		statusesApplied: [
+			'TECHNICAL_FINISH',
+			'ESPRIT_TECHNICAL',
+			'FLOURISHING_FINISH',
+		],
 	},
 	QUADRUPLE_TECHNICAL_FINISH: {
 		id: 16196,
@@ -43,6 +68,11 @@ export const DNC = ensureActions({
 		name: 'Quadruple Technical Finish',
 		onGcd: true,
 		cooldown: 1500,
+		statusesApplied: [
+			'TECHNICAL_FINISH',
+			'ESPRIT_TECHNICAL',
+			'FLOURISHING_FINISH',
+		],
 	},
 	CASCADE: {
 		id: 15989,
@@ -170,6 +200,11 @@ export const DNC = ensureActions({
 		name: 'Standard Finish',
 		onGcd: true,
 		cooldown: 1500,
+		statusesApplied: [
+			'STANDARD_FINISH',
+			'STANDARD_FINISH_PARTNER',
+			'ESPRIT',
+		],
 	},
 	TECHNICAL_FINISH: {
 		id: 16004,
@@ -177,6 +212,11 @@ export const DNC = ensureActions({
 		name: 'Technical Finish',
 		onGcd: true,
 		cooldown: 1500,
+		statusesApplied: [
+			'TECHNICAL_FINISH',
+			'ESPRIT_TECHNICAL',
+			'FLOURISHING_FINISH',
+		],
 	},
 	TILLANA: {
 		id: 1600416004, // Need real id
@@ -184,6 +224,11 @@ export const DNC = ensureActions({
 		name: 'Tillana',
 		onGcd: true,
 		cooldown: 1500,
+		statusesApplied: [
+			'STANDARD_FINISH',
+			'STANDARD_FINISH_PARTNER',
+			'ESPRIT',
+		],
 	},
 	SABER_DANCE: {
 		id: 16005,
@@ -279,7 +324,11 @@ export const DNC = ensureActions({
 		name: 'Improvisation',
 		onGcd: false,
 		cooldown: 120000,
-		statusesApplied: ['IMPROVISATION', 'IMPROVISATION_HEALING', 'RISING_RHYTHM'], // Confirm statuses
+		statusesApplied: [
+			'IMPROVISATION',
+			'IMPROVISATION_HEALING',
+			'RISING_RHYTHM',
+		], // Confirm statuses
 	},
 	IMPROVISED_FINISH: {
 		id: 1601416014, // Need real ID
