@@ -12,7 +12,6 @@ export const NIN = ensureActions({
 		icon: 'https://xivapi.com/i/000000/000601.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		potency: 230,
 		combo: {
 			start: true,
 		},
@@ -24,10 +23,8 @@ export const NIN = ensureActions({
 		icon: 'https://xivapi.com/i/000000/000602.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		potency: 100,
 		combo: {
 			from: 2240,
-			potency: 340,
 		},
 	},
 
@@ -37,24 +34,10 @@ export const NIN = ensureActions({
 		icon: 'https://xivapi.com/i/000000/000605.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		potency: 100,
 		combo: {
 			from: 2242,
-			potency: 480, // TODO - *Cries in positionals*
 			end: true,
 		},
-	},
-
-	SHADOW_FANG: {
-		id: 2257,
-		name: 'Shadow Fang',
-		icon: 'https://xivapi.com/i/000000/000606.png',
-		onGcd: true,
-		speedAttribute: Attribute.SKILL_SPEED,
-		potency: 200,
-		cooldown: 70000,
-		gcdRecast: 2500,
-		statusesApplied: ['SHADOW_FANG'],
 	},
 
 	DEATH_BLOSSOM: {
@@ -63,7 +46,6 @@ export const NIN = ensureActions({
 		icon: 'https://xivapi.com/i/000000/000615.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		potency: 120,
 		combo: {
 			start: true,
 		},
@@ -75,8 +57,6 @@ export const NIN = ensureActions({
 		icon: 'https://xivapi.com/i/000000/000614.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		potency: 120,
-		breaksCombo: true,
 	},
 
 	ARMOR_CRUSH: {
@@ -85,10 +65,8 @@ export const NIN = ensureActions({
 		icon: 'https://xivapi.com/i/002000/002915.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		potency: 100,
 		combo: {
 			from: 2242,
-			potency: 460,
 			end: true,
 		},
 	},
@@ -99,12 +77,43 @@ export const NIN = ensureActions({
 		icon: 'https://xivapi.com/i/002000/002923.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		potency: 100,
 		combo: {
 			from: 2254,
-			potency: 140,
 			end: true,
 		},
+	},
+
+	HURAIJIN: {
+		id: 1491401, // TODO
+		name: 'Huraijin',
+		icon: 'TODO',
+		onGcd: true,
+		speedAttribute: Attribute.SKILL_SPEED,
+	},
+
+	FORKED_RAIJU: {
+		id: 1491402, // TODO
+		name: 'Forked Raiju',
+		icon: 'TODO',
+		onGcd: true,
+		speedAttribute: Attribute.SKILL_SPEED,
+		statusesApplied: ['FLEETING_RAIJU_READY'],
+	},
+
+	FLEETING_RAIJU: {
+		id: 1491403, // TODO
+		name: 'Fleeting Raiju',
+		icon: 'TODO',
+		onGcd: true,
+		speedAttribute: Attribute.SKILL_SPEED,
+	},
+
+	PHANTOM_KAMAITACHI: {
+		id: 1491404, // TODO
+		name: 'Phantom Kamaitachi',
+		icon: 'TODO',
+		onGcd: true,
+		speedAttribute: Attribute.SKILL_SPEED,
 	},
 
 	TEN: {
@@ -235,6 +244,7 @@ export const NIN = ensureActions({
 		icon: 'https://xivapi.com/i/002000/002912.png',
 		onGcd: true,
 		cooldown: 1500,
+		statusesApplied: ['FORKED_RAIJU_READY'],
 	},
 
 	RAITON_TCJ: {
@@ -382,7 +392,6 @@ export const NIN = ensureActions({
 		icon: 'https://xivapi.com/i/002000/002918.png',
 		onGcd: false,
 		cooldown: 60000,
-		statusesApplied: ['ASSASSINATE_READY'],
 	},
 
 	HELLFROG_MEDIUM: {
@@ -425,6 +434,7 @@ export const NIN = ensureActions({
 		icon: 'https://xivapi.com/i/002000/002924.png',
 		onGcd: false,
 		cooldown: 120000,
+		statusesApplied: ['MEISUI'],
 	},
 
 	BUNSHIN: {
