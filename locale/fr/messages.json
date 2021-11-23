@@ -61,6 +61,7 @@
   "ast.ogcd-downtime.divination.description": "<0/> permet à l'Astromancien d'augmenter drastiquement les dégâts de l'équipe lorsqu'utilisé en combinaison avec des cartes. L'augmentation des dégâts se fait de manière multiplicative, il est donc recommandé d'utiliser <1/>. Essayez de vous synchroniser avec les buffs et phases de DPS des autres membres de l'équipe. Il est plus important de l'utiliser au bon moment plutôt que d'attendre d'avoir trois symboles différents.",
   "ast.ogcd-downtime.divination.name": "Utilisez Divination",
   "ast.overheal.earthlystar.name": "Étoile Terrestre",
+  "ast.overheal.hot.name": "Soin sur la durée",
   "ast.sect.info": "Le choix de la Secte dépend du contenu auquel vous êtes confronté, de la composition du groupe et de vos préférences. <0/><1/> fournit plus de puissance de soin grâce aux sorts de régénération, et est bien plus efficace dans les donjons à 4 et les raids à 8, à partir du moment où les dégâts encaissés ne dépassent pas le montant maximal des PV des joueurs. <2/><3/> est essentiel si vous avez besoin de mettre des boucliers afin de survivre à des attaques que <4/> ne permet pas d'encaisser. Attention toutefois, les boucliers de la Secte Nocture ne peuvent pas s'ajouter aux à ceux de l'Erudit, il n'est donc pas recommandé de jouer cette Secte avec un tel binôme.",
   "ast.sect.info.no-sect-detected": "Aucun stance utilisée",
   "ast.sect.suggestions.no-sect.content": "Ne commencez pas sans <0/> ou <1/>. Il y a plusieurs compétences qui ne peuvent pas être utilisées sans l'une de ces postures.",
