@@ -3,6 +3,11 @@ import {ensureStatuses} from '../type'
 const SGE_STUB = 190705000
 
 export const SGE = ensureStatuses({
+	EUKRASIA: {
+		id: SGE_STUB,
+		name: 'Eukrasia',
+		icon: '',
+	},
 	EUKRASIAN_DIAGNOSIS: {
 		id: SGE_STUB + 1,
 		name: 'Eukrasian Diagnosis',
@@ -12,6 +17,12 @@ export const SGE = ensureStatuses({
 	DIFFERENTIAL_DIAGNOSIS: {
 		id: SGE_STUB + 2,
 		name: 'Differential Diagnosis',
+		icon: '',
+		duration: 30000,
+	},
+	HAIMA: {
+		id: SGE_STUB + 20,
+		name: 'Haima',
 		icon: '',
 		duration: 30000,
 	},
@@ -27,9 +38,15 @@ export const SGE = ensureStatuses({
 		icon: '',
 		duration: 30000,
 	},
+	PANHAIMA: {
+		id: SGE_STUB + 21,
+		name: 'Panhaima',
+		icon: '',
+		duration: 30000,
+	},
 	PANHAIMATINON: {
 		id: SGE_STUB + 5,
-		name: 'Panaimatinon',
+		name: 'Panhaimatinon',
 		icon: '',
 		duration: 30000,
 	},
@@ -79,9 +96,9 @@ export const SGE = ensureStatuses({
 		icon: '',
 		duration: 15000,
 	},
-	KERACHOLE_REGEN: {
+	KERAKEIA: { // Not sure which of these is the damage taken and which is the regen portion of Kerachole
 		id: SGE_STUB + 14,
-		name: 'Kerachole Regen', // TODO: Find out what this is actually called, if it is indeed separate from the damage taken component
+		name: 'Kerakeia',
 		icon: '',
 		duration: 15000,
 	},
