@@ -116,7 +116,7 @@ export default class Sect extends Analyser {
 		const withScholar = this.parser.fightFriendlies.some(friendly => friendly.type === 'Scholar')
 		if (this.activeSectId === this.data.statuses.NOCTURNAL_SECT.id && withScholar) {
 			this.suggestions.add(new Suggestion({
-				icon,
+				icon: this.data.actions.NOCTURNAL_SECT.icon,
 				content: <Trans id="ast.sect.suggestions.noct-with-sch.content">
 					It is counter-productive to use this Sect with this composition. The main shields <DataLink status="NOCTURNAL_FIELD" /> from <DataLink action="NOCTURNAL_SECT"/> do not stack with Scholar's main shield <DataLink status="GALVANIZE" />.
 				</Trans>,
