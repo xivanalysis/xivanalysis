@@ -1,26 +1,18 @@
 import {Trans} from '@lingui/react'
 import {DataLink} from 'components/ui/DbLink'
+import {Status} from 'data/STATUSES'
 import {Event, Events} from 'event'
 import {Analyser} from 'parser/core/Analyser'
-import {filter} from 'parser/core/filter'
+import {filter, oneOf} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
 import {Data} from 'parser/core/modules/Data'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
 
-const SEVERITY_MOD = {
-	MINOR: 0.1,
-	MEDIUM: 0.3,
-	MAJOR: 0.5,
-}
-
-interface Sect_Status {
-	id: number
-	name: string
-	icon: string
-	duration?: number
-	stacksApplied?: number
-	speedModifier?: number
+const severityMod = {
+	minor: 0.1,
+	medium: 0.3,
+	major: 0.5,
 }
 
 // Lifted from WHM benison and adapted to AST and TSX
@@ -34,20 +26,20 @@ export default class CelestialOpposition extends Analyser {
 	private uses: number = 0
 	private totalHeld: number = 0
 
-	private activeSect: Sect_Status | undefined
+	private activeSect: Status['id'] = -1
 
 	override initialise() {
 		this.addEventHook(filter<Event>()
 			.source(this.parser.actor.id)
 			.type('action')
-			.action(this.data.actions.CELESTIAL_OPPOSITION.id)
-		, this.onCast)
+			.action(this.data.actions.CELESTIAL_OPPOSITION.id),
+		this.onCast)
 
 		this.addEventHook(filter<Event>()
 			.source(this.parser.actor.id)
 			.type('statusApply')
-			.status(this.data.statuses.NOCTURNAL_SECT.id)
-		, this.onSect)
+			.status(oneOf([this.data.statuses.NOCTURNAL_OPPOSITION.id, this.data.statuses.DIURNAL_OPPOSITION.id])),
+		this.onSect)
 		this.addEventHook('complete', this.onComplete)
 	}
 
@@ -64,19 +56,23 @@ export default class CelestialOpposition extends Analyser {
 	}
 
 	private onSect(event: Events['statusApply']) {
-		this.activeSect = this.data.getStatus(event.status)
+		if (event.status === this.data.statuses.DIURNAL_OPPOSITION.id) {
+			this.activeSect = this.data.actions.DIURNAL_SECT.id
+		} else {
+			this.activeSect = this.data.actions.NOCTURNAL_SECT.id
+		}
 	}
 
 	onComplete() {
-		const holdDuration = this.uses === 0 ? this.parser.currentDuration : this.totalHeld
-		const missedUses = Math.floor(holdDuration / (this.data.actions.CELESTIAL_INTERSECTION.cooldown))
-		//TODO update max uses to not use the whole duration such as when there are no available targets
-		const maxUses = (this.parser.pull.duration / this.data.actions.CELESTIAL_INTERSECTION.cooldown) - 1
+		const holdDuration = this.uses === 0 ? this.parser.pull.duration : this.totalHeld
+		const missedUses = Math.floor(holdDuration / (this.data.actions.CELESTIAL_OPPOSITION.cooldown))
+		// TODO: update max uses to not use the whole duration such as when there are no available targets
+		const maxUses = (this.parser.pull.duration / this.data.actions.CELESTIAL_OPPOSITION.cooldown) - 1
 
 		const WASTED_USE_TIERS = {
-			[maxUses * SEVERITY_MOD.MINOR]: SEVERITY.MINOR,
-			[maxUses * SEVERITY_MOD.MEDIUM]: SEVERITY.MEDIUM,
-			[maxUses * SEVERITY_MOD.MAJOR]: SEVERITY.MAJOR, // if not used at all, it'll be set to 100 for severity checking
+			[maxUses * severityMod.minor]: SEVERITY.MINOR,
+			[maxUses * severityMod.medium]: SEVERITY.MEDIUM,
+			[maxUses * severityMod.major]: SEVERITY.MAJOR, // if not used at all, it'll be set to 100 for severity checking
 		}
 		const suggestContentDiurnal = <Trans id="ast.celestial-opposition.suggestion.content.diurnal">
 				Use <DataLink action="CELESTIAL_OPPOSITION" /> more frequently. In <DataLink status="DIURNAL_SECT" />, the heal and regen combined add up to the same potency of a <DataLink action="BENEFIC_II" /> on each player it reaches.
@@ -87,7 +83,7 @@ export default class CelestialOpposition extends Analyser {
 				so it can save MP and GCDs casting it. Since shields last 30 seconds it can be cast much earlier than incoming damage and allow the cooldown to refresh sooner.
 		</Trans>
 
-		const content = this.activeSect && this.activeSect.id === this.data.statuses.NOCTURNAL_SECT.id ? suggestContentNoct : suggestContentDiurnal
+		const content = this.activeSect !== -1 && this.activeSect === this.data.actions.NOCTURNAL_SECT.id ? suggestContentNoct : suggestContentDiurnal
 
 		if (missedUses > 1 || this.uses === 0) {
 			this.suggestions.add(new TieredSuggestion({
