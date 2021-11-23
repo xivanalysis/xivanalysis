@@ -1,17 +1,15 @@
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
-import {ActionLink, DataLink} from 'components/ui/DbLink'
+import {ActionLink} from 'components/ui/DbLink'
 import JobIcon from 'components/ui/JobIcon'
 import {getDataBy} from 'data'
 import JOBS from 'data/JOBS'
-import {Event, Events} from 'event'
-import {ActorType} from 'fflogs'
+import {ActorType, BuffEvent, CastEvent} from 'fflogs'
 import _ from 'lodash'
-import {Analyser} from 'parser/core/Analyser'
-import {filter} from 'parser/core/filter'
-import {dependency} from 'parser/core/Injectable'
-import {Actors} from 'parser/core/modules/Actors'
+import Module, {dependency} from 'parser/core/Module'
+import Combatants from 'parser/core/modules/Combatants'
 import {Data} from 'parser/core/modules/Data'
+import {NormalisedApplyBuffEvent} from 'parser/core/modules/NormalisedEvents'
 import {Timeline} from 'parser/core/modules/Timeline'
 import React from 'react'
 import {Button, Table} from 'semantic-ui-react'
@@ -28,16 +26,16 @@ const TIMELINE_UPPER_MOD = 30000 // in ms
 // set-up for divination players hit tracking
 const PLAYERS_HIT_TARGET = 8
 
-class DivinationWindow {
+class DIVWindow {
 	start: number
 	end?: number
 
-	rotation: Array<Events['action']> = []
+	rotation: Array<NormalisedApplyBuffEvent | CastEvent> = []
 	gcdCount: number = 0
-	trailingGcdEvent?: Events['action']
+	trailingGcdEvent?: CastEvent
 
 	buffsRemoved: number[] = []
-	playersBuffed: string[] = []
+	playersBuffed: number = 0
 	containsOtherAST: boolean = false
 
 	constructor(start: number) {
@@ -58,31 +56,35 @@ interface SleeveIcon {
 }
 
 interface CardLog extends CardState {
-	targetName: string | null
-	targetJob: string | null
+	targetName?: string
+	targetJob?: string
 }
 
-export default class ArcanaSuggestions extends Analyser {
+export default class ArcanaSuggestions extends Module {
 	static override handle = 'arcanaSuggestions'
 
 	static override title = t('ast.arcana-suggestions.title')`Arcana Logs`
 	static override displayOrder = DISPLAY_ORDER.ARCANA_TRACKING
 
 	@dependency private data!: Data
+	@dependency private combatants!: Combatants
 	@dependency private arcanaTracking!: ArcanaTracking
 	@dependency private timeline!: Timeline
-	@dependency private actors!: Actors
 
 	private cardLogs: CardLog[] = []
+	private partyComp: string[] = []
+
 	private PLAY: number[] = []
+
 	private SLEEVE_ICON: SleeveIcon = {}
 
 	//div privates for output
-	private history: DivinationWindow[] = []
+	private history: DIVWindow[] = []
+	private lastDIVFalloffTime: number = 0
 	private divCast: number = 0
 	//end div privates
 
-	override initialise() {
+	protected override init() {
 		PLAY.forEach(actionKey => {
 			this.PLAY.push(this.data.actions[actionKey].id)
 		})
@@ -94,65 +96,62 @@ export default class ArcanaSuggestions extends Analyser {
 		}
 
 		//used for divination tracking
-		const divinationFilter = filter<Event>().type('statusApply').status(this.data.statuses.DIVINATION.id)
-		this.addEventHook(divinationFilter.target(this.parser.actor.id), this.tryOpenWindow)
-		this.addEventHook(divinationFilter.source(this.parser.actor.id), this.countDivinationBuffs)
-		this.addEventHook(
-			filter<Event>()
-				.type('statusRemove')
-				.target(this.parser.actor.id)
-				.status(this.data.statuses.DIVINATION.id),
-			this.tryCloseWindow,
-		)
-		this.addEventHook(filter<Event>().type('action').source(this.parser.actor.id), this.onCast)
+		this.addEventHook('normalisedapplybuff', {to: 'player', abilityId: this.data.statuses.DIVINATION.id}, this.tryOpenWindow)
+		this.addEventHook('normalisedapplybuff', {by: 'player', abilityId: this.data.statuses.DIVINATION.id}, this.countDIVBuffs)
+		this.addEventHook('removebuff', {to: 'player', abilityId: this.data.statuses.DIVINATION.id}, this.tryCloseWindow)
+		this.addEventHook('cast', {by: 'player'}, this.onCast)
 
 		this.addEventHook('complete', this._onComplete)
 	}
 
 	//functions for divination buff counting
-	private countDivinationBuffs(event: Events['statusApply']) {
+	private countDIVBuffs(event: NormalisedApplyBuffEvent) {
 		// Get this from tryOpenWindow. If a window wasn't open, we'll open one.
-		// If it was already open (because another Astrologian went first), we'll keep using it
-		const lastWindow: DivinationWindow = this.tryOpenWindow(event)
+		const lastWindow: DIVWindow | undefined = this.tryOpenWindow(event)
 
 		// Find out how many players we hit with the buff.
-		if (!lastWindow.playersBuffed.includes(event.target) && this.actors.get(event.target).playerControlled) {
-			lastWindow.playersBuffed.push(event.target)
+		if (lastWindow) {
+			lastWindow.playersBuffed += event.confirmedEvents.filter(hit => this.parser.fightFriendlies.findIndex(f => f.id === hit.targetID) >= 0).length
 		}
 	}
 
-	private tryOpenWindow(event: Events['statusApply']): DivinationWindow {
-		const lastWindow: DivinationWindow | undefined = _.last(this.history)
+	private tryOpenWindow(event: NormalisedApplyBuffEvent): DIVWindow | undefined {
+		const lastWindow: DIVWindow | undefined = _.last(this.history)
 
-		// Handle multiple Astrologian's buffs overwriting each other, we'll have a remove then an apply with the same timestamp
-		// If that happens, re-open the last window and keep tracking
-		if (lastWindow != null) {
-			if (event.source !== this.parser.actor.id) {
-				lastWindow.containsOtherAST = true
-			}
-			if (!lastWindow.end) {
-				return lastWindow
-			}
-			if (lastWindow.end === event.timestamp) {
-				lastWindow.end = undefined
-				return lastWindow
-			}
+		if (lastWindow && !lastWindow.end) {
+			return lastWindow
 		}
 
-		const newWindow = new DivinationWindow(event.timestamp)
-		this.history.push(newWindow)
-		return newWindow
+		if (event.sourceID && event.sourceID === this.parser.player.id) {
+			const newWindow = new DIVWindow(event.timestamp)
+
+			// Handle multiple AST's buffs overwriting each other, we'll have a remove then an apply with the same timestamp
+			// If that happens, mark the window and return
+			newWindow.containsOtherAST = this.lastDIVFalloffTime === event.timestamp
+			//TODO use this to track if overwritten. Consider moving this tip to suggestions
+
+			this.history.push(newWindow)
+			return newWindow
+		}
+
+		return undefined
 	}
 
-	private tryCloseWindow(event: Events['statusRemove']) {
-		const lastWindow: DivinationWindow | undefined = _.last(this.history)
+	private tryCloseWindow(event: BuffEvent) {
+		// for determining overwrite, cache the status falloff time
+		this.lastDIVFalloffTime = event.timestamp
 
-		if (lastWindow == null) {
+		// only track the things one player added
+		if (event.sourceID && event.sourceID !== this.parser.player.id) { return }
+
+		const lastWindow: DIVWindow | undefined = _.last(this.history)
+
+		if (!lastWindow) {
 			return
 		}
 
 		// Cache whether we've seen a buff removal event for this status, just in case they happen at exactly the same timestamp
-		lastWindow.buffsRemoved.push(event.status)
+		lastWindow.buffsRemoved.push(event.ability.guid)
 
 		if (this.isWindowOkToClose(lastWindow)) {
 			lastWindow.end = event.timestamp
@@ -160,35 +159,36 @@ export default class ArcanaSuggestions extends Analyser {
 	}
 
 	// Make sure all applicable statuses have fallen off before the window closes
-	private isWindowOkToClose(window: DivinationWindow): boolean {
+	private isWindowOkToClose(window: DIVWindow): boolean {
 		if (!window.buffsRemoved.includes(this.data.statuses.DIVINATION.id)) {
 			return false
 		}
 		return true
 	}
 
-	private onCast(event: Events['action']) {
-		const lastWindow: DivinationWindow | undefined = _.last(this.history)
+	private onCast(event: CastEvent) {
+		const lastWindow: DIVWindow | undefined = _.last(this.history)
 
 		// If we don't have a window, bail
-		if (lastWindow == null) {
+		if (!lastWindow) {
 			return
 		}
 
-		const action = this.data.getAction(event.action)
+		const action = this.data.getAction(event.ability.guid)
 
 		// Can't do anything else if we didn't get a valid action object
-		if (action == null) {
+		if (!action) {
 			return
 		}
 
 		// If this window isn't done yet add the action to the list
 		if (!lastWindow.end) {
 			lastWindow.rotation.push(event)
+
 			if (action.onGcd) {
 				lastWindow.gcdCount++
 			}
-			if (event.action === this.data.actions.DIVINATION.id || lastWindow.playersBuffed.length < 1) {
+			if (lastWindow.playersBuffed < 1) {
 				lastWindow.containsOtherAST = true
 			}
 			return
@@ -202,18 +202,26 @@ export default class ArcanaSuggestions extends Analyser {
 	//end divination functions
 
 	private _onComplete() {
-		this.cardLogs = this.arcanaTracking.cardLogs.map(artifact => {
+		const combatants = this.combatants.getEntities()
+		for (const [, combatant] of Object.entries(combatants)) {
+			if (combatant.type === 'LimitBreak') {
+				continue
+			}
+			this.partyComp.push(combatant.type)
+		}
 
-			const targetId = artifact.lastEvent.type === 'action'
-				? artifact.lastEvent.target
+		this.cardLogs = this.arcanaTracking.cardLogs.map(artifact => {
+			const targetId = artifact.lastEvent.type !== 'init'
+				? artifact.lastEvent.targetID
 				: undefined
-			const target = artifact.lastEvent.type === 'action' && targetId != null ? this.actors.get(targetId) : undefined
+			const target = targetId !== this.parser.player.id
+				? this.combatants.getEntity(targetId)
+				: this.combatants.selected
 
 			const cardLog: CardLog = {
 				...artifact,
-				targetName: target != null ? target.name : null,
-				targetJob: target != null ? target.job
-					: null,
+				targetName: target ? target.name : null,
+				targetJob: target ? target.type : null,
 			}
 			return cardLog
 		})
@@ -228,7 +236,7 @@ export default class ArcanaSuggestions extends Analyser {
 			</p>
 			<p>
 				<Trans id="ast.arcana-suggestions.messages.footnote">
-				* No pre-pull actions are being represented aside from <DataLink action="PLAY" />, and this is only an approximation based on the buff duration.
+				* No pre-pull actions are being represented aside from <ActionLink {...this.data.actions.PLAY} />, and this is only an approximation based on the buff duration.
 				</Trans>
 			</p>
 			<Table collapsing unstackable className={styles.cardActionTable}>
@@ -262,7 +270,7 @@ export default class ArcanaSuggestions extends Analyser {
 										icon="time"
 										onClick={() => this.timeline.show(0, TIMELINE_UPPER_MOD)}
 									/>
-									{this.parser.formatDuration(artifact.lastEvent.timestamp - this.parser.pull.timestamp)}</Table.Cell>
+									{this.parser.formatTimestamp(artifact.lastEvent.timestamp)}</Table.Cell>
 								<Table.Cell>
 									<Trans id="ast.arcana-suggestions.messages.pull">
 												Pull
@@ -274,9 +282,9 @@ export default class ArcanaSuggestions extends Analyser {
 							</Table.Row>
 						}
 
-						const start = artifact.lastEvent.timestamp - this.parser.pull.timestamp
+						const start = artifact.lastEvent.timestamp - this.parser.fight.start_time
 						const end = start + TIMELINE_UPPER_MOD
-						const formattedTime = this.parser.formatDuration(start)
+						const formattedTime = this.parser.formatTimestamp(artifact.lastEvent.timestamp)
 
 						return <Table.Row key={artifact.lastEvent.timestamp} className={styles.cardActionRow}>
 							<Table.Cell>
@@ -303,13 +311,14 @@ export default class ArcanaSuggestions extends Analyser {
 
 	// Helper for override output()
 	RenderAction(artifact: CardLog) {
-		if (artifact.lastEvent.type === 'action' && this.PLAY.includes(artifact.lastEvent.action) && artifact.targetJob != null) {
-			const targetJob_format_for_actortype = this.StringRemoveSpaceCapitalize(artifact.targetJob)
-			const targetJob = getDataBy(JOBS, 'logType', targetJob_format_for_actortype as ActorType)
+		const divID = this.data.actions.DIVINATION.id
+
+		if (artifact.lastEvent.type === 'cast' && this.PLAY.includes(artifact.lastEvent.ability.guid)) {
+			const targetJob = getDataBy(JOBS, 'logType', artifact.targetJob as ActorType)
 
 			return <>
 				<Table.Cell>
-					<ActionLink {...getDataBy(this.data.actions, 'id', artifact.lastEvent.action)}/>
+					<ActionLink {...getDataBy(this.data.actions, 'id', artifact.lastEvent.ability.guid)} />
 				</Table.Cell>
 				<Table.Cell>
 					{targetJob && <JobIcon job={targetJob}/>}
@@ -319,19 +328,19 @@ export default class ArcanaSuggestions extends Analyser {
 		}
 
 		//for divination to output how many players buffed
-		if (artifact.lastEvent.type === 'action' && artifact.lastEvent.action === this.data.actions.DIVINATION.id) {
+		if (artifact.lastEvent.type === 'cast' && artifact.lastEvent.ability.guid === divID) {
 			const tableData = this.history.map(window => {
 				const end = window.end != null ?
-					window.end - this.parser.pull.timestamp :
-					window.start - this.parser.pull.timestamp
-				const start = window.start - this.parser.pull.timestamp
+					window.end - this.parser.fight.start_time :
+					window.start - this.parser.fight.start_time
+				const start = window.start - this.parser.fight.start_time
 
 				return ({
 					start,
 					end,
 					targetsData: {
 						buffed: {
-							actual: window.playersBuffed.length,
+							actual: window.playersBuffed,
 						},
 					},
 				})
@@ -342,7 +351,7 @@ export default class ArcanaSuggestions extends Analyser {
 			this.divCast += 1
 			return <>
 				<Table.Cell>
-					<ActionLink {...getDataBy(this.data.actions, 'id', artifact.lastEvent.action)} />
+					<ActionLink {...getDataBy(this.data.actions, 'id', artifact.lastEvent.ability.guid)} />
 				</Table.Cell>
 				<Table.Cell>
 					<Trans id="ast.arcana-tracking.divination.playertarget">{'Players Buffed:'}</Trans>
@@ -354,10 +363,10 @@ export default class ArcanaSuggestions extends Analyser {
 			</>
 		}
 
-		if (artifact.lastEvent.type === 'action') {
+		if (artifact.lastEvent.type === 'cast') {
 			return <>
 				<Table.Cell>
-					<ActionLink {...getDataBy(this.data.actions, 'id', artifact.lastEvent.action)} />
+					<ActionLink {...getDataBy(this.data.actions, 'id', artifact.lastEvent.ability.guid)} />
 				</Table.Cell>
 				<Table.Cell>
 				</Table.Cell>
@@ -410,15 +419,5 @@ export default class ArcanaSuggestions extends Analyser {
 				/>}
 			</span>
 		</Table.Cell>
-	}
-
-	//Helper for string mismatch since this.parser.actor.job is not the same format as JOBS in ActorType
-	public StringRemoveSpaceCapitalize(s: string) {
-		const search_char = s.search('_')
-		if (search_char !== -1) {
-			return s.charAt(0).toUpperCase() + s.slice(1, search_char).toLowerCase()
-				+ s.charAt(search_char+1).toUpperCase() + s.slice(search_char+2).toLowerCase()
-		}
-		return s.charAt(0).toUpperCase() + s.slice(1).toLowerCase()
 	}
 }
