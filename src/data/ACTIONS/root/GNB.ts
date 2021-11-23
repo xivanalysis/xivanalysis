@@ -1,6 +1,7 @@
 import {Attribute} from 'event'
 import {ensureActions} from '../type'
 
+const fakeId = 80085 //Anything with this ID after EW Launch needs updating
 export const GNB = ensureActions({
 	// -----
 	// Player GCDs
@@ -11,7 +12,6 @@ export const GNB = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003401.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		potency: 200,
 		combo: {
 			start: true,
 		},
@@ -22,10 +22,8 @@ export const GNB = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003403.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		potency: 100,
 		combo: {
 			from: 16137, // Keen Edge
-			potency: 300,
 		},
 		statusesApplied: ['BRUTAL_SHELL'],
 	},
@@ -35,10 +33,8 @@ export const GNB = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003409.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		potency: 100,
 		combo: {
 			from: 16139, // Brutal Shell
-			potency: 400,
 			end: true,
 		},
 	},
@@ -49,7 +45,6 @@ export const GNB = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		breaksCombo: false,
-		potency: 500,
 	},
 	LIGHTNING_SHOT: {
 		id: 16143,
@@ -58,7 +53,6 @@ export const GNB = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		breaksCombo: true,
-		potency: 150,
 	},
 	GNASHING_FANG: {
 		id: 16146,
@@ -67,7 +61,6 @@ export const GNB = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		breaksCombo: false,
-		potency: 450,
 		cooldown: 30000,
 		gcdRecast: 2500,
 	},
@@ -78,7 +71,6 @@ export const GNB = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		breaksCombo: false,
-		potency: 550,
 	},
 	WICKED_TALON: { // Technically combos from Savage Claw, but breaks combo functionality if we record it as such.
 		id: 16150,
@@ -87,7 +79,6 @@ export const GNB = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		breaksCombo: false,
-		potency: 650,
 	},
 	SONIC_BREAK: {
 		id: 16153,
@@ -96,7 +87,6 @@ export const GNB = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		breaksCombo: false,
-		potency: 300,
 		cooldown: 60000,
 		gcdRecast: 2500,
 		statusesApplied: ['SONIC_BREAK'],
@@ -107,7 +97,6 @@ export const GNB = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003405.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		potency: 150,
 		combo: {
 			start: true,
 		},
@@ -118,10 +107,8 @@ export const GNB = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003413.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		potency: 100,
 		combo: {
 			from: 16141, // Demon Slice
-			potency: 250,
 			end: true,
 		},
 	},
@@ -132,7 +119,14 @@ export const GNB = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		breaksCombo: false,
-		potency: 320,
+	},
+	DOUBLE_DOWN: {
+		id: fakeId,
+		name: 'Double Down',
+		icon: '',
+		onGcd: true,
+		cooldown: 6000,
+		speedAttribute: Attribute.SKILL_SPEED,
 	},
 
 	// -----
@@ -270,4 +264,21 @@ export const GNB = ensureActions({
 		cooldown: 1000,
 		cooldownGroup: 1,
 	},
+	HYPERVELOCITY: {
+		id: fakeId,
+		name: 'Hypervelocity',
+		icon: '',
+		onGcd: false,
+		cooldown: 1000,
+		cooldownGroup: 1,
+	},
+	HEART_OF_CORUNDUM: { //More like Corun Dumb!
+		id: fakeId,
+		name: 'Heart of Corundum',
+		icon: '',
+		onGcd: false,
+		cooldown: 2500,
+		statusesApplied: ['HEART_OF_CORUNDUM'],
+	},
+
 })
