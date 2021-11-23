@@ -1,4 +1,3 @@
-import {Events} from 'event'
 import {AoEAction, AoEUsages} from 'parser/core/modules/AoEUsages'
 
 export class AoE extends AoEUsages {
@@ -37,19 +36,5 @@ export class AoE extends AoEUsages {
 		},
 	]
 
-	protected override adjustMinTargets(event: Events['damage'], minTargets: number): number {
-		if (event.cause.type !== 'action') {
-			return minTargets
-		}
-
-		const action = this.data.getAction(event.cause.action)
-
-		// How in the fuck did we even get here tbh
-		if (action == null) {
-			return minTargets
-		}
-
-		return minTargets
-	}
 }
 

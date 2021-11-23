@@ -33,7 +33,7 @@ export class Ammo extends CoreGauge {
 		chart: {label: 'Ammo', color: JOBS.GUNBREAKER.colour}, */
 		graph: {
 			handle: 'ammo',
-			label: <Trans id="gnb.gauge.resource.ammoLabel"> Ammo </Trans>,
+			label: <Trans id="gnb.gauge.resource.ammoLabel">Ammo</Trans>,
 			color: JOBS.GUNBREAKER.colour,
 		},
 	}))
@@ -58,8 +58,8 @@ export class Ammo extends CoreGauge {
 
 		const ammoActions = Array.from(this.ammoModifiers.keys())
 
-		const playerFilter = filter<Event>().source(this.parser.actor.id)
-		this.addEventHook(playerFilter.type(oneOf(['action', 'combo'])).action(oneOf(ammoActions)), this.onGaugeModifier)
+		this.addEventHook(filter<Event>().source(this.parser.actor.id).type(oneOf(['action', 'combo']))
+			.action(oneOf(ammoActions)), this.onGaugeModifier)
 
 		this.addEventHook('complete', this.onComplete)
 	}
@@ -68,7 +68,7 @@ export class Ammo extends CoreGauge {
 		const modifier = this.ammoModifiers.get(event.action)
 
 		if (modifier != null) {
-			let amount = modifier[event.type] ?? 0
+			const amount = modifier[event.type] ?? 0
 
 			if (amount > 0) {
 				this.totalGeneratedAmmo += amount //Increment total tracker for generated ammo
