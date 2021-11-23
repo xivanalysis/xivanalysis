@@ -59,11 +59,11 @@ export class Ammo extends CoreGauge {
 		const ammoActions = Array.from(this.ammoModifiers.keys())
 
 		this.addEventHook(
-				filter<Event>()
-						.source(this.parser.actor.id)
-						.type(oneOf(['action', 'combo']))
-						.action(oneOf(ammoActions)),
-				this.onGaugeModifier,
+			filter<Event>()
+				.source(this.parser.actor.id)
+				.type(oneOf(['action', 'combo']))
+				.action(oneOf(ammoActions)),
+			this.onGaugeModifier,
 		)
 
 		this.addEventHook('complete', this.onComplete)
