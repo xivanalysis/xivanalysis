@@ -1,5 +1,7 @@
 import {ensureStatuses} from '../type'
 
+const fakeId = 80085
+
 export const GNB = ensureStatuses({
 	SONIC_BREAK: {
 		id: 1837,
@@ -59,6 +61,12 @@ export const GNB = ensureStatuses({
 		id: 1839,
 		name: 'Heart of Light',
 		icon: 'https://xivapi.com/i/013000/013609.png',
+		duration: 15000,
+	},
+	HEART_OF_CORUNDUM: {
+		id: fakeId,
+		name: 'Heart of Corundum',
+		icon: '',
 		duration: 15000,
 	},
 	CAMOUFLAGE: {
