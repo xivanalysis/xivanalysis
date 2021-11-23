@@ -11,7 +11,7 @@ import Suggestions, {SEVERITY, Suggestion} from 'parser/core/modules/Suggestions
 import React from 'react'
 import SectStatistic from './SectStatistic'
 
-const noSectIcon = 'https://xivapi.com/i/064000/064017.png'
+const NO_SECT_ICON = 'https://xivapi.com/i/064000/064017.png'
 
 const SECT_STATUSES: StatusKey[] = [
 	'DIURNAL_SECT',
@@ -42,7 +42,7 @@ export default class Sect extends Analyser {
 	@dependency private data!: Data
 
 	private pullWithoutSect = false
-	private activeSectId: Status['id'] = 0
+	private activeSectId: Status['id'] | undefined = undefined
 	private gaveup = false
 
 	//this section sets up the statuses using this.data.status
@@ -70,32 +70,36 @@ export default class Sect extends Analyser {
 
 		//if they switched it mid-fight, this section will pick it up
 		if (this.sectStatuses.includes(event.status)) {
-			if (this.activeSectId !== 0) {
+			if (this.activeSectId == null) {
 				//specifically used to check whether a sect status existed by previous status as noted below. if it didn't exist before this status, then we assume they didn't have it to begin with since sect cannot be changed in combat
 				//note: this will pick up instances where the sect is changed moments before the prepull as the sect takes approx 3.5 seconds to be applied; the sect will at least take 1 oGCD plus risks not being prepared for the pull.
 				this.pullWithoutSect = true
 			}
-			this.activeSectId = event.status === this.data.statuses.DIURNAL_SECT.id ? this.data.actions.DIURNAL_SECT.id
-				: this.data.actions.NOCTURNAL_SECT.id
+			this.activeSectId = event.status === this.data.statuses.DIURNAL_SECT.id ? this.data.statuses.DIURNAL_SECT.id
+				: this.data.statuses.NOCTURNAL_SECT.id
 		}
 
 		//otherwise, if the status has been applied relating to one of the mapped statuses, then we fabricate the sect if it hadn't already been fabricated
-		//using only !this.activeSectId will take out anything after the first buff which will not work in the case when noct/diurnal is used as part of the pre-pull actions and sect change happens prior to 0. Ideally as AST, I would like to see the sect used throughout the fight
-		if (this.nocturnalSectStatuses.includes(event.status) && this.activeSectId !== this.data.actions.NOCTURNAL_SECT.id) {
-			this.activeSectId = this.data.actions.NOCTURNAL_SECT.id
-		} else if (this.diurnalSectStatuses.includes(event.status) && this.activeSectId !== this.data.actions.DIURNAL_SECT.id) {
-			this.activeSectId = this.data.actions.DIURNAL_SECT.id
+		//using only this.activeSectId == null will take out anything after the first buff which will not work in the case when noct/diurnal is used as part of the pre-pull actions and sect change happens prior to 0. Ideally as AST, I would like to see the sect used throughout the fight
+		if (this.nocturnalSectStatuses.includes(event.status) && this.activeSectId !== this.data.statuses.NOCTURNAL_SECT.id) {
+			this.activeSectId = this.data.statuses.NOCTURNAL_SECT.id
+		} else if (this.diurnalSectStatuses.includes(event.status) && this.activeSectId !== this.data.statuses.DIURNAL_SECT.id) {
+			this.activeSectId = this.data.statuses.DIURNAL_SECT.id
 		}
 	}
 
 	private onComplete() {
+		// Statistic box
+		const icon = this.data.statuses.DIURNAL_SECT.id === this.activeSectId ? this.data.actions.DIURNAL_SECT.icon
+			: this.data.statuses.NOCTURNAL_SECT.id === this.activeSectId ? this.data.actions.NOCTURNAL_SECT.icon
+				: NO_SECT_ICON
 
 		/*
 			SUGGESTION: Pulled without Sect
 		*/
-		if (!this.gaveup && (this.pullWithoutSect || this.activeSectId === 0)) {
+		if (this.gaveup === false && (this.pullWithoutSect !== false || this.activeSectId == null)) {
 			this.suggestions.add(new Suggestion({
-				icon: this.activeSectId !== 0 || this.data.actions.DIURNAL_SECT.id === this.activeSectId ? this.data.actions.DIURNAL_SECT.icon : this.data.actions.NOCTURNAL_SECT.icon,
+				icon,
 				content: <Trans id="ast.sect.suggestions.no-sect.content">
 					Don't start without <DataLink action="DIURNAL_SECT" /> or <DataLink action="NOCTURNAL_SECT" />. There are several abilities that can't be used without one of these stances.
 				</Trans>,
@@ -110,9 +114,9 @@ export default class Sect extends Analyser {
 			SUGGESTION: Noct with Scholar
 		*/
 		const withScholar = this.parser.fightFriendlies.some(friendly => friendly.type === 'Scholar')
-		if (this.activeSectId === this.data.actions.NOCTURNAL_SECT.id && withScholar) {
+		if (this.activeSectId === this.data.statuses.NOCTURNAL_SECT.id && withScholar) {
 			this.suggestions.add(new Suggestion({
-				icon: this.data.actions.NOCTURNAL_SECT.icon,
+				icon,
 				content: <Trans id="ast.sect.suggestions.noct-with-sch.content">
 					It is counter-productive to use this Sect with this composition. The main shields <DataLink status="NOCTURNAL_FIELD" /> from <DataLink action="NOCTURNAL_SECT"/> do not stack with Scholar's main shield <DataLink status="GALVANIZE" />.
 				</Trans>,
@@ -124,13 +128,10 @@ export default class Sect extends Analyser {
 		}
 
 		// Statistic box
-		const icon = this.activeSectId === 0 ? noSectIcon
-			: this.data.actions.DIURNAL_SECT.id === this.activeSectId ? this.data.actions.DIURNAL_SECT.icon
-				: this.data.actions.NOCTURNAL_SECT.icon
 		const noSectValue = <Trans id="ast.sect.info.no-sect-detected">No sect detected</Trans>
-		const value = this.activeSectId === 0 ? noSectValue
-			: this.data.actions.DIURNAL_SECT.id === this.activeSectId ? this.data.actions.DIURNAL_SECT.name
-				: this.data.actions.NOCTURNAL_SECT.name
+		const value = this.data.statuses.DIURNAL_SECT.id === this.activeSectId ? this.data.statuses.DIURNAL_SECT.name
+			: this.data.statuses.NOCTURNAL_SECT.id === this.activeSectId ? this.data.statuses.NOCTURNAL_SECT.name
+				: noSectValue
 		this.statistics.add(new SectStatistic({
 			icon,
 			value,
