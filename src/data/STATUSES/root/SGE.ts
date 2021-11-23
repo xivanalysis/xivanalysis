@@ -62,6 +62,12 @@ export const SGE = ensureStatuses({
 		icon: '',
 		duration: 15000,
 	},
+	AUTOPHYSIS: { // Appears to be the healing buff component
+		id: SGE_STUB + 22,
+		name: 'Autophysis',
+		icon: '',
+		duration: 15000,
+	},
 	KARDIA: { // The buff the SGE receives when Kardia is active
 		id: SGE_STUB + 8,
 		name: 'Kardia',

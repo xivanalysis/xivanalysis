@@ -78,7 +78,7 @@ export const SGE = ensureActions({
 		name: 'Physis II',
 		icon: '',
 		cooldown: 180000,
-		statusesApplied: ['PHYSIS_II'],
+		statusesApplied: ['PHYSIS_II', 'AUTOPHYSIS'],
 	},
 	HOLOS: {
 		id: SGE_STUB + 10,
