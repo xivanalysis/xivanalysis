@@ -6,7 +6,7 @@
 - [X] Fix bug where uncomboed Solid Barrel counts toward Cartridge generation
 - [X] Log waste by source somewhere in output
 - [ ] Include End of Fight as a potential waste source
-	[Ryan note: because of the fact that we use action.ids for that, I am unsure of how to add that to waste, but I did add a suggestion if you have ammo leftover]
+
 
 ## Continuation
 - [ ] Add checks for if the next Continuation was even usable before the fight ended - if not, don't penalize
