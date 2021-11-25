@@ -82,7 +82,9 @@ export class RaidBuffs extends Analyser {
 
 		// Record the start time of the status
 		const applications = this.getTargetApplications(event.target)
-		applications.set(statusId, event.timestamp)
+		if (!applications.has(statusId)) {
+			applications.set(statusId, event.timestamp)
+		}
 	}
 
 	private onRemove(event: Events['statusRemove']) {
