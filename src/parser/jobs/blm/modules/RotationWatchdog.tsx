@@ -445,7 +445,7 @@ export class RotationWatchdog extends Analyser {
 				types: ['invulnerable'],
 			})) {
 				cycle.finalOrDowntime = true
-				cycle.overrideErrorCode(this.CYCLE_ERRORS.NONE)
+				cycle.overrideErrorCode(NO_ERROR)
 				this.processCycle(cycle)
 			}
 		})
