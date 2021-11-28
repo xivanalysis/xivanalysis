@@ -18,6 +18,8 @@ export default class OGCDDowntime extends CooldownDowntime {
 			firstUseOffset: 25000,
 		},
 		{cooldowns: [this.data.actions.TRIPLECAST]},
+		{cooldowns: [this.data.actions.AMPLIFIER]},
+		{cooldowns: [this.data.actions.SHARPCAST]},
 	]
 
 	override checklistTarget = TARGETPERCENT
