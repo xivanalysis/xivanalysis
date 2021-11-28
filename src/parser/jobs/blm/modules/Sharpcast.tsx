@@ -49,7 +49,7 @@ export class Sharpcast extends Analyser {
 		const sharpcastFilter = playerFilter.status(this.data.statuses.SHARPCAST.id)
 		this.addEventHook(sharpcastFilter.type('statusRemove'), this.onRemoveSharpcast)
 		this.addEventHook(sharpcastFilter.type('statusApply'), this.onGainSharpcast)
-		this.addEventHook(playerFilter.type('action').action(oneOf(this.sharpcastConsumerIds)), this.onCast)
+		this.addEventHook(playerFilter.type('action').action(oneOf(this.sharpcastConsumerIds)), this.tryConsumeSharpcast)
 		this.addEventHook({
 			type: 'death',
 			actor: this.parser.actor.id,
