@@ -14,6 +14,7 @@ import {Timeline} from 'parser/core/modules/Timeline'
 import {UnableToAct} from 'parser/core/modules/UnableToAct'
 import React, {Fragment, ReactNode} from 'react'
 import {Icon, Message} from 'semantic-ui-react'
+import {ensureRecord} from 'utilities'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 import {FIRE_SPELLS} from './Elements'
 import {Gauge, ASTRAL_UMBRAL_DURATION, BLMGaugeState, UMBRAL_HEARTS_MAX_STACKS} from './Gauge'
@@ -59,7 +60,7 @@ const HIDDEN_PRIORITY_THRESHOLD = 2 // Same as ^
  * NOTE: Cycles with values at or below HIDDEN_PRIORITY_THRESHOLD will be filtered out of the RotationTable display
  * unless the DEBUG_SHOW_ALL_CYCLES variable is set to true
  */
-const CYCLE_ERRORS: {[key: string]: CycleErrorCode } = {
+const CYCLE_ERRORS = ensureRecord<CycleErrorCode>()({
 	NO_ERROR: {priority: 0, message: 'No errors'},
 	FINAL_OR_DOWNTIME: {priority: 1, message: 'Ended with downtime, or last cycle'},
 	SHORT: {priority: HIDDEN_PRIORITY_THRESHOLD, message: 'Too short, won\'t process'},
@@ -74,7 +75,7 @@ const CYCLE_ERRORS: {[key: string]: CycleErrorCode } = {
 	NO_FIRE_SPELLS: {priority: 75, message: <Trans id="blm.rotation-watchdog.error-messages.no-fire-spells">Rotation included no Fire spells</Trans>},
 	DROPPED_AF_UI: {priority: 100, message: <Trans id="blm.rotation-watchdog.error-messages.dropped-astral-umbral">Dropped Astral Fire or Umbral Ice</Trans>},
 	DIED: {priority: DEATH_PRIORITY, message: <Trans id="blm.rotation-watchdog.error-messages.died"><DataLink showName={false} action="RAISE"/> Died</Trans>},
-}
+})
 
 interface CycleEvent extends FieldsTargeted {
 	action: number,
@@ -361,7 +362,6 @@ export class RotationWatchdog extends Analyser {
 	// Handle events coming from BLM's Gauge module
 	private onGaugeEvent(event: Events['blmgauge']) {
 		const nextGaugeState = this.gauge.getGaugeState(event.timestamp)
-		if (!nextGaugeState) { return }
 
 		// If we're beginning the fire phase of this cycle, note it and save some data
 		if (this.currentGaugeState.astralFire === 0 && nextGaugeState.astralFire > 0) {
@@ -374,7 +374,7 @@ export class RotationWatchdog extends Analyser {
 
 		// If we no longer have enochian, flag it for display
 		if (this.currentGaugeState.enochian && !nextGaugeState.enochian) {
-			this.currentRotation.errorCode = CYCLE_ERRORS.DROPPED_ENOCHIAN
+			this.currentRotation.errorCode = CYCLE_ERRORS.DROPPED_AF_UI
 		}
 
 		// Retrieve the GaugeState from the event
@@ -421,7 +421,7 @@ export class RotationWatchdog extends Analyser {
 		// Override the error code for cycles that dropped enochian, when the cycle contained an unabletoact time long enough to kill it.
 		// Couldn't do this at the time of code assignment, since the downtime data wasn't fully available yet
 		for (const cycle of this.history) {
-			if (cycle.errorCode !== CYCLE_ERRORS.DROPPED_ENOCHIAN) { continue }
+			if (cycle.errorCode !== CYCLE_ERRORS.DROPPED_AF_UI) { continue }
 
 			const windows = this.unableToAct
 				.getWindows({
@@ -446,7 +446,7 @@ export class RotationWatchdog extends Analyser {
 				types: ['invulnerable'],
 			})) {
 				cycle.finalOrDowntime = true
-				cycle.overrideErrorCode(CYCLE_ERRORS.NONE)
+				cycle.overrideErrorCode(CYCLE_ERRORS.NO_ERROR)
 				this.processCycle(cycle)
 			}
 		})
