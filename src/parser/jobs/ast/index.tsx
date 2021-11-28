@@ -1,8 +1,7 @@
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
-import {ActionLink} from 'components/ui/DbLink'
+import {DataLink} from 'components/ui/DbLink'
 import TransMarkdown from 'components/ui/TransMarkdown'
-import ACTIONS from 'data/ACTIONS'
 import CONTRIBUTORS, {ROLES} from 'data/CONTRIBUTORS'
 import {Meta} from 'parser/core/Meta'
 import React from 'react'
@@ -16,7 +15,7 @@ export default new Meta({
 	modules: () => import('./modules' /*webpackChunkName: "jobs-ast" */),
 
 	Description: () =><>
-		<p><Trans id="ast.about.description-1">The biggest <ActionLink {...ACTIONS.DRAW} /> to an Astrologian is their ability to buff their party DPS with Arcanum.
+		<p><Trans id="ast.about.description-1">The biggest <DataLink action="DRAW" /> to an Astrologian is their ability to buff their party DPS with Arcanum.
 		This analyzer will show you how the stars work for you and not the other way around</Trans></p>
 		<TransMarkdown source={description} key="ast.about.description-2"/>
 		<Message warning icon>
@@ -35,8 +34,33 @@ export default new Meta({
 	contributors: [
 		{user: CONTRIBUTORS.SUSHIROU, role: ROLES.MAINTAINER},
 		{user: CONTRIBUTORS.CASUALSUPERMAN, role: ROLES.DEVELOPER},
+		{user: CONTRIBUTORS.OTOCEPHALY, role: ROLES.DEVELOPER},
 	],
 	changelog: [
+		{
+			date: new Date('2021-11-24'),
+			Changes: () => <>
+				<strong>Updated underlying code structures, sect suggestion, and <DataLink action="LIGHTSPEED" /> structure.</strong>:
+				<ul>
+					<li>Code structures have been updated for the following modules:</li>
+					<ul>
+						<li>Arcana Tracking,</li>
+						<li><DataLink action="CELESTIAL_INTERSECTION"/>,</li>
+						<li><DataLink action="CELESTIAL_OPPOSITION"/>,</li>
+						<li><DataLink action="EARTHLY_STAR"/>,</li>
+						<li><DataLink action="HOROSCOPE"/>,</li>
+						<li><DataLink action="LIGHTSPEED"/>,</li>
+						<li><DataLink action="LUCID_DREAMING"/>,</li>
+						<li>Sect,</li>
+						<li><DataLink action="SYNASTRY"/>,</li>
+						<li>and other modules.</li>
+					</ul>
+					<li><DataLink action="LIGHTSPEED"/> now shows actual casts and total possible uses.</li>
+					<li>Sect now has an updated suggestion to show possibility of using sect very close leading to unpreparedness. (i.e. using sect at the same time as the pull would be the same as using an oGCD which wastes time that could be spent starting your <DataLink action="MALEFIC_III" /> or other action cast.)</li>
+				</ul>
+			</>,
+			contributors: [CONTRIBUTORS.OTOCEPHALY],
+		},
 		{
 			date: new Date('2021-10-31'),
 			Changes: () => <>
@@ -61,14 +85,14 @@ export default new Meta({
 		{
 			date: new Date('2020-12-01'),
 			Changes: () => <>
-				Fix incorrect action ID and timeline view for Diurnal Sect <ActionLink {...ACTIONS.ASPECTED_BENEFIC} />.
+				Fix incorrect action ID and timeline view for Diurnal Sect <DataLink action="ASPECTED_BENEFIC" />.
 			</>,
 			contributors: [CONTRIBUTORS.CASUALSUPERMAN],
 		},
 		{
 			date: new Date('2020-10-05'),
 			Changes: () => <>
-				Fixed <ActionLink {...ACTIONS.EARTHLY_STAR} /> drift calculation.
+				Fixed <DataLink action="EARTHLY_STAR" /> drift calculation.
 			</>,
 			contributors: [CONTRIBUTORS.CASUALSUPERMAN],
 		},
@@ -103,7 +127,7 @@ export default new Meta({
 		{
 			date: new Date('2019-09-25'),
 			Changes: () => <>
-				<ActionLink {...ACTIONS.SYNASTRY} /> now triggers a minor suggestion for single-target heals without it despite it being available.
+				<DataLink action="SYNASTRY" /> now triggers a minor suggestion for single-target heals without it despite it being available.
 			</>,
 			contributors: [CONTRIBUTORS.SUSHIROU],
 		},
@@ -111,8 +135,8 @@ export default new Meta({
 
 			date: new Date('2019-09-01'),
 			Changes: () => <>
-				<ActionLink {...ACTIONS.CELESTIAL_OPPOSITION} /> now triggers a suggestion for dropping uses.
-				<ActionLink {...ACTIONS.DIVINATION} /> gets its own checklist tracker.
+				<DataLink action="CELESTIAL_OPPOSITION" /> now triggers a suggestion for dropping uses.
+				<DataLink action="DIVINATION" /> gets its own checklist tracker.
 			</>,
 			contributors: [CONTRIBUTORS.SUSHIROU],
 		},
@@ -120,7 +144,7 @@ export default new Meta({
 
 			date: new Date('2019-08-10'),
 			Changes: () => <>
-				<ActionLink {...ACTIONS.HOROSCOPE} /> reworked tracking for accuracy
+				<DataLink action="HOROSCOPE" /> reworked tracking for accuracy
 			</>,
 			contributors: [CONTRIBUTORS.SUSHIROU],
 		},
@@ -130,8 +154,8 @@ export default new Meta({
 			Changes: () => <>
 				<strong>Get more of those cards</strong>:
 				<ul>
-					<li>Calculation for number of <ActionLink {...ACTIONS.PLAY} /> in a fight</li>
-					<li>Suggestions for not keeping (<ActionLink {...ACTIONS.DRAW} /><ActionLink {...ACTIONS.SLEEVE_DRAW} />) on cooldown</li>
+					<li>Calculation for number of <DataLink action="PLAY" /> in a fight</li>
+					<li>Suggestions for not keeping (<DataLink action="DRAW" /><DataLink action="SLEEVE_DRAW" />) on cooldown</li>
 				</ul>
 			</>,
 			contributors: [CONTRIBUTORS.SUSHIROU],
@@ -143,7 +167,7 @@ export default new Meta({
 				<strong>5.05 Support</strong>:
 				<ul>
 					<li>Ability cast times and cooldowns updated for 5.05</li>
-					<li>(<ActionLink {...ACTIONS.SLEEVE_DRAW} />) Arcana logs updated for 5.05</li>
+					<li>(<DataLink action="SLEEVE_DRAW" />) Arcana logs updated for 5.05</li>
 				</ul>
 			</>,
 			contributors: [CONTRIBUTORS.SUSHIROU],
@@ -154,7 +178,7 @@ export default new Meta({
 			Changes: () => <>
 				<strong>Overheal and Celestial Intersection modules</strong>:
 				<ul>
-					<li>(<ActionLink {...ACTIONS.CELESTIAL_INTERSECTION} />) Throws a suggestion for infrequent usage</li>
+					<li>(<DataLink action="CELESTIAL_INTERSECTION" />) Throws a suggestion for infrequent usage</li>
 					<li>Added an overheal checklist, which counts both heals and HoT percentage overheals for better clarity into the matter.</li>
 				</ul>
 			</>,
@@ -165,8 +189,8 @@ export default new Meta({
 			Changes: () => <>
 				<strong>Sect detection and Combust improvements</strong>:
 				<ul>
-					<li>(<ActionLink {...ACTIONS.COMBUST_III} />) Added warn tier at 85-90%</li>
-					<li>(<ActionLink {...ACTIONS.DIURNAL_SECT} /><ActionLink {...ACTIONS.NOCTURNAL_SECT} />) Added support for modules to make Sect specific suggestions. <br/>
+					<li>(<DataLink action="COMBUST_III" />) Added warn tier at 85-90%</li>
+					<li>(<DataLink action="DIURNAL_SECT" /><DataLink action="NOCTURNAL_SECT" />) Added support for modules to make Sect specific suggestions. <br/>
 					Triggers a suggestion if player pulled without a sect on, and if they used Noct while healing with a Scholar</li>
 				</ul>
 			</>,
@@ -177,7 +201,7 @@ export default new Meta({
 			Changes: () => <>
 				<strong>Arcana play logs support for Shadowbringers</strong>:
 				<ul>
-					<li>(<ActionLink {...ACTIONS.PLAY} />) Arcana Logs are back up, now includes prepull Plays</li>
+					<li>(<DataLink action="PLAY" />) Arcana Logs are back up, now includes prepull Plays</li>
 				</ul>
 			</>,
 			contributors: [CONTRIBUTORS.SUSHIROU],
@@ -187,11 +211,11 @@ export default new Meta({
 			Changes: () => <>
 				<strong>Basic support for Shadowbringers</strong>:
 				<ul>
-					<li>(<ActionLink {...ACTIONS.COMBUST_III} />) DoT update</li>
-					<li>(<ActionLink {...ACTIONS.UNDRAW} />) Using it triggers suggestion not to use it</li>
-					<li>(<ActionLink {...ACTIONS.LUCID_DREAMING} />, <ActionLink {...ACTIONS.LIGHTSPEED} />) Message update</li>
-					<li>(<ActionLink {...ACTIONS.HOROSCOPE} />) Failing to read the cards again triggers suggestion</li>
-					<li>(<ActionLink {...ACTIONS.PLAY} />) Coming soon™</li>
+					<li>(<DataLink action="COMBUST_III" />) DoT update</li>
+					<li>(<DataLink action="UNDRAW" />) Using it triggers suggestion not to use it</li>
+					<li>(<DataLink action="LUCID_DREAMING" />, <DataLink action="LIGHTSPEED" />) Message update</li>
+					<li>(<DataLink action="HOROSCOPE" />) Failing to read the cards again triggers suggestion</li>
+					<li>(<DataLink action="PLAY" />) Coming soon™</li>
 					<li>Made improvements to timeline CD display - merged draw actions, displaying horoscope and earthly detonations</li>
 				</ul>
 			</>,
