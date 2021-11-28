@@ -12,4 +12,9 @@ export const changelog = [
 		Changes: () => <>Initial data scaffolding and basic updates to handle removal of Enochian ability.</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],
 	},
+	{
+		date: new Date('2021-11-27'),
+		Changes: () => <>Update cooldown tracking checklist to include Amplifier and Sharpcast, drop separate Sharpcast usage statistic, and add handling for Paradox consuming Sharpcast while in Astral Fire.</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
 ]

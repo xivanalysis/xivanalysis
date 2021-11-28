@@ -136,8 +136,6 @@
   "blm.rotation-watchdog.suggestions.wrong-t3.content": "Ne lancez jamais <0/> manuellement plus d'une fois pendant votre phase de Feu Astral, car cela coûterait du mana qui pourrait être utilisé pour lancer plus de <1/>.",
   "blm.rotation-watchdog.suggestions.wrong-t3.why": "",
   "blm.rotation-watchdog.title": "Défauts de rotation",
-  "blm.sharpcast.statistic.info": "Le nombre de dynamisation utilisés par rapport au nombre d'utilisations possibles . On s'attend généralement à moins de 100 %, mais une utilisation particulièrement faible pourrait indiquer une mauvaise utilisation du temps de recharge.",
-  "blm.sharpcast.statistic.title": "Utilisez dynamisation",
   "blm.sharpcast.suggestions.dropped-sharpcasts.content": "Vous avez perdu au moins un proc de <0/> ou <1/> garantie en laissant <2/> expirer.",
   "blm.sharpcast.suggestions.dropped-sharpcasts.why": "{0, plural, one {# Dynamisation expirée} other {# Dynamisations expirées}}.",
   "blm.sharpcast.suggestions.sharpcasted-scathes.content": "Vous avez consommé au moins un <0/> en utilisant <1/>. Même si c'est mieux que de laisser le buff expirer, vous devriez éviter de faire cela.",
