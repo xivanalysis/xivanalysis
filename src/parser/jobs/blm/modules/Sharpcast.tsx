@@ -5,9 +5,7 @@ import {Event, Events} from 'event'
 import {Analyser} from 'parser/core/Analyser'
 import {filter, oneOf} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
-import {CooldownDowntime} from 'parser/core/modules/CooldownDowntime'
 import {Data} from 'parser/core/modules/Data'
-import {SimpleStatistic, Statistics} from 'parser/core/modules/Statistics'
 import Suggestions, {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import {StatusItem} from 'parser/core/modules/Timeline'
 import React from 'react'
@@ -33,10 +31,8 @@ interface SharpcastTracker {
 export class Sharpcast extends Analyser {
 	static override handle = 'sharpcast'
 
-	@dependency private cooldownDowntime!: CooldownDowntime
 	@dependency private data!: Data
 	@dependency private procs!: Procs
-	@dependency private statistics!: Statistics
 	@dependency private suggestions!: Suggestions
 
 	private buffWindows: SharpcastTracker = {
@@ -45,7 +41,6 @@ export class Sharpcast extends Analyser {
 
 	private droppedSharpcasts = 0
 	private sharpedScathes = 0
-	private usedSharpcasts = 0
 
 	private sharpcastConsumerIds = SHARPCAST_CONSUMERS.map(key => this.data.actions[key].id)
 
@@ -67,19 +62,8 @@ export class Sharpcast extends Analyser {
 	}
 
 	private onGainSharpcast(event: Events['statusApply']) {
-		this.usedSharpcasts++
 		this.buffWindows.current = {
 			start: event.timestamp,
-		}
-	}
-
-	// Consolidate old onCast functions into one central function
-	private onCast(event: Events['action']) {
-		const actionId = event.action
-
-		const action = this.data.getAction(actionId)
-		if (action && action.onGcd) {
-			this.tryConsumeSharpcast(event)
 		}
 	}
 
@@ -138,14 +122,6 @@ export class Sharpcast extends Analyser {
 			}))
 		})
 
-		// Gather the data for actual / expected
-		const expected = this.cooldownDowntime.calculateMaxUsages({cooldowns: [this.data.actions.SHARPCAST]})
-		const actual = this.usedSharpcasts
-		let percent = actual / expected * 100
-		if (process.env.NODE_ENV === 'production') {
-			percent = Math.min(percent, 100)
-		}
-
 		// Suggestions to use sharpcasts that wore off.
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.statuses.SHARPCAST.icon,
@@ -178,18 +154,6 @@ export class Sharpcast extends Analyser {
 			why: <Trans id="blm.sharpcast.suggestions.sharpcasted-scathes.why">
 				<Plural value={this.sharpedScathes} one="# Sharpcast was" other="# Sharpcasts were"/> consumed by <DataLink action="SCATHE" />.
 			</Trans>,
-		}))
-
-		//add a statistic for used sharps
-		this.statistics.add(new SimpleStatistic({
-			title: <Trans id="blm.sharpcast.statistic.title">Used Sharpcasts</Trans>,
-			icon: this.data.actions.SHARPCAST.icon,
-			value: `${actual}/${expected} (${percent.toFixed(1)}%)`,
-			info: (
-				<Trans id="blm.sharpcast.statistic.info">
-					The number of Sharpcasts used versus the number of possible Sharpcast uses. Less than 100% is generally expected, but especially low usage could indicate misuse of the cooldown.
-				</Trans>
-			),
 		}))
 	}
 }
