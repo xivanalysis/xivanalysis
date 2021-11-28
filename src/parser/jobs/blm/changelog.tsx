@@ -14,7 +14,7 @@ export const changelog = [
 	},
 	{
 		date: new Date('2021-11-27'),
-		Changes: () => <>Preliminary updates to gauge state tracking and suggestion not to waste Paradoxes.</>,
+		Changes: () => <>Preliminary updates to gauge state and rotation tracking, including suggestion not to waste Paradoxes.</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],
 	},
 ]
