@@ -1,3 +1,4 @@
+import {Gauge} from './Gauge'
 export default [
-	// TODO: Put your modules here
+	Gauge,
 ]
