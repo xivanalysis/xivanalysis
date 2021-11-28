@@ -41,6 +41,7 @@ const ESPRIT_STATUSES: StatusKey[] = [
 ]
 const ESPRIT_EXCEPTIONS: ActionKey[] = [
 	...FINISHES,
+	'TILLANA', // TODO: I'm assuming this won't generate Esprit since it's classed as an Ability in the tooltip
 	'FUMA_SHURIKEN',
 	'FUMA_SHURIKEN_TCJ_TEN',
 	'FUMA_SHURIKEN_TCJ_CHI',
@@ -60,17 +61,25 @@ const ESPRIT_EXCEPTIONS: ActionKey[] = [
 	'KAESHI_SETSUGEKKA',
 ]
 
+const PROC_ACTIONS: ActionKey[] = [
+	'REVERSE_CASCADE',
+	'RISING_WINDMILL',
+	'FOUNTAINFALL',
+	'BLOODSHOWER',
+	'FAN_DANCE_IV',
+	'STARFALL_DANCE', // TBD if this has the guaranteed 10 Esprit effect that the others do
+]
+
 const ESPRIT_GENERATION_AMOUNT = 10
-const ESPRIT_RATE_SELF = 0.3
+const ESPRIT_RATE_SELF_NON_PROC = 0.5
 const ESPRIT_RATE_PARTY = 0.2
 
 const SABER_DANCE_COST = 50
 
 /** Graph colors */
-/* eslint-disable @typescript-eslint/no-magic-numbers */
-const ESRPIT_COLOR = Color(JOBS.DANCER.colour).fade(0.25).toString()
-const FEATHERS_COLOR = Color.rgb(140.6, 161.1, 70.8).fade(0.25).toString()
-/* eslint-enable @typescript-eslint/no-magic-numbers */
+const FADE_AMOUNT = 0.25
+const ESRPIT_COLOR = Color(JOBS.DANCER.colour).fade(FADE_AMOUNT)
+const FEATHERS_COLOR = Color('#8DA147').fade(FADE_AMOUNT)
 
 export class Gauge extends CoreGauge {
 	@dependency private suggestions!: Suggestions
