@@ -13,7 +13,6 @@ const OGCD_EXCEPTIONS: ActionKey[] = [
 
 const OPENER_TIME_THRESHOLD = 10000
 const OPENER_EXCEPTIONS: ActionKey[] = [
-	'ENOCHIAN',
 	'TRIPLECAST',
 ]
 

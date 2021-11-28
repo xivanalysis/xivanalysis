@@ -1,29 +1,35 @@
 import {ensureStatuses} from '../type'
 
 export const DNC = ensureStatuses({
-	FLOURISHING_CASCADE: {
-		id: 1814,
-		name: 'Flourishing Cascade',
-		icon: 'https://xivapi.com/i/013000/013701.png',
-		duration: 20000,
+	FLOURISHING_SYMMETRY: {
+		id: 1814, // Needs new ID
+		name: 'Flourishing Symmetry',
+		icon: 'https://xivapi.com/i/013000/013701.png', // Needs new icon
+		duration: 30000,
 	},
-	FLOURISHING_FOUNTAIN: {
-		id: 1815,
-		name: 'Flourishing Fountain',
-		icon: 'https://xivapi.com/i/013000/013702.png',
-		duration: 20000,
+	FLOURISHING_FLOW: {
+		id: 1815, // Needs new ID
+		name: 'Flourishing Flow',
+		icon: 'https://xivapi.com/i/013000/013702.png', // Needs new icon
+		duration: 30000,
 	},
-	FLOURISHING_WINDMILL: {
-		id: 1816,
-		name: 'Flourishing Windmill',
-		icon: 'https://xivapi.com/i/013000/013703.png',
-		duration: 20000,
+	THREEFOLD_FAN_DANCE: {
+		id: 1820, // Probably needs new ID
+		name: 'Threefold Fan Dance',
+		icon: 'https://xivapi.com/i/013000/013707.png', // Check icon
+		duration: 30000,
 	},
-	FLOURISHING_SHOWER: {
-		id: 1817,
-		name: 'Flourishing Shower',
-		icon: 'https://xivapi.com/i/013000/013704.png',
-		duration: 20000,
+	FOURFOLD_FAN_DANCE: {
+		id: 1817, // Needs new ID
+		name: 'Fourfold Fan Dance',
+		icon: 'https://xivapi.com/i/013000/013704.png', // Needs new icon
+		duration: 30000,
+	},
+	FLOURISHING_STARFALL: {
+		id: 181718171817, // Needs real ID
+		name: 'Flourishing Starfall',
+		icon: 'https://xivapi.com/i/013000/013704.png', // Needs real icon
+		duration: 30000,
 	},
 	STANDARD_STEP: {
 		id: 1818,
@@ -37,12 +43,6 @@ export const DNC = ensureStatuses({
 		icon: 'https://xivapi.com/i/013000/013706.png',
 		duration: 15000,
 	},
-	FLOURISHING_FAN_DANCE: {
-		id: 1820,
-		name: 'Flourishing Fan Dance',
-		icon: 'https://xivapi.com/i/013000/013707.png',
-		duration: 20000,
-	},
 	STANDARD_FINISH: {
 		id: 1821,
 		name: 'Standard Finish',
@@ -54,6 +54,12 @@ export const DNC = ensureStatuses({
 		name: 'Technical Finish',
 		icon: 'https://xivapi.com/i/013000/013709.png',
 		duration: 20000,
+	},
+	FLOURISHING_FINISH: {
+		id: 182218221822, // Needs real ID
+		name: 'Flourishing Finish',
+		icon: 'https://xivapi.com/i/013000/013709.png', // Needs real icon
+		duration: 30000,
 	},
 	CLOSED_POSITION: {
 		id: 1823,
@@ -77,17 +83,29 @@ export const DNC = ensureStatuses({
 		icon: 'https://xivapi.com/i/013000/013715.png',
 		duration: 15000,
 	},
-	IMPROVISATION: {
+	IMPROVISATION: { // Was this replaced by Rising Rhythm or is it adjacent to it?
 		id: 1827,
 		name: 'Improvisation',
 		icon: 'https://xivapi.com/i/013000/013716.png',
 		duration: 15000,
 	},
-	IMPROVISATION_HEALING: {
+	RISING_RHYTHM: {
+		id: 182718271827, // Needs real ID
+		name: 'Rising Rhythm',
+		icon: 'https://xivapi.com/i/013000/013716.png', // Needs real icon
+		duration: 15000,
+	},
+	IMPROVISATION_HEALING: { // Does this still exist? Converted to the HoT?
 		id: 1828,
 		name: 'Improvisation',
 		icon: 'https://xivapi.com/i/013000/013717.png',
 		duration: 15000,
+	},
+	IMPROVISED_FINISH: { // The barrier from improvised finish
+		id: 18281828, // Need real ID
+		name: 'Improvised Finish', // Confirm name
+		icon: 'https://xivapi.com/i/013000/013717.png', // Need icon
+		duration: 30000,
 	},
 	ESPRIT: { // The Esprit buff sourced from Standard Finish, applies to the DNC and their Dance Partner
 		id: 1847,

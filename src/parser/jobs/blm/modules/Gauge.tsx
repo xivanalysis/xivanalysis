@@ -38,7 +38,6 @@ const AFFECTS_GAUGE_ON_CAST: ActionKey[] = [
 	'TRANSPOSE',
 	'FOUL',
 	'XENOGLOSSY',
-	'ENOCHIAN',
 ]
 
 /** Gauge state interface for consumers */
@@ -210,19 +209,6 @@ export class Gauge extends CoreGauge {
 		if (this.affectsGaugeOnDamage.includes(abilityId) && event.type === 'damage' && !isSuccessfulHit(event)) { return }
 
 		switch (abilityId) {
-		case this.data.actions.ENOCHIAN.id:
-			if (this.astralFireGauge.empty && this.umbralIceGauge.empty) {
-				this.brokenLog.trigger(this, 'no stack eno', (
-					<Trans id="blm.gauge.trigger.no-stack-eno">
-						<DataLink action="ENOCHIAN"/> was cast without any Astral Fire or Umbral Ice stacks detected.
-					</Trans>
-				))
-			}
-			if (!this.enochianActive) {
-				this.startEnochianUptime()
-				this.addEvent()
-			}
-			break
 		case this.data.actions.BLIZZARD_I.id:
 		case this.data.actions.BLIZZARD_II.id:
 			this.onGainUmbralIceStacks(1)
@@ -235,10 +221,10 @@ export class Gauge extends CoreGauge {
 			this.onGainUmbralIceStacks(MAX_ASTRAL_UMBRAL_STACKS, false)
 			break
 		case this.data.actions.BLIZZARD_IV.id:
-			if (!this.enochianActive) {
+			if (this.umbralIceGauge.empty) {
 				this.brokenLog.trigger(this, 'no eno b4', (
 					<Trans id="blm.gauge.trigger.no-eno-b4">
-						<DataLink action="BLIZZARD_IV"/> was cast while <DataLink action="ENOCHIAN"/> was deemed inactive.
+						<DataLink action="BLIZZARD_IV"/> was cast while Umbral Ice was deemed inactive.
 					</Trans>
 				))
 				this.startEnochianUptime()
@@ -260,10 +246,10 @@ export class Gauge extends CoreGauge {
 			this.onGainAstralFireStacks(MAX_ASTRAL_UMBRAL_STACKS, false)
 			break
 		case this.data.actions.FIRE_IV.id:
-			if (!this.enochianActive) {
+			if (this.astralFireGauge.empty) {
 				this.brokenLog.trigger(this, 'no eno f4', (
 					<Trans id="blm.gauge.trigger.no-eno-f4">
-						<DataLink action="FIRE_IV"/> was cast while <DataLink action="ENOCHIAN"/> was deemed inactive.
+						<DataLink action="FIRE_IV"/> was cast while Astral Fire was deemed inactive.
 					</Trans>
 				))
 				this.startEnochianUptime()
@@ -271,10 +257,10 @@ export class Gauge extends CoreGauge {
 			this.tryConsumeUmbralHearts(1)
 			break
 		case this.data.actions.DESPAIR.id:
-			if (!this.enochianActive) {
+			if (this.astralFireGauge.empty) {
 				this.brokenLog.trigger(this, 'no eno despair', (
 					<Trans id="blm.gauge.trigger.no-eno-despair">
-						<DataLink action="DESPAIR"/> was cast while <DataLink action="ENOCHIAN"/> was deemed inactive.
+						<DataLink action="DESPAIR"/> was cast while Astral Fire was deemed inactive.
 					</Trans>
 				))
 				this.startEnochianUptime()
@@ -504,13 +490,13 @@ export class Gauge extends CoreGauge {
 		).length
 		if (droppedEno > 0) {
 			this.suggestions.add(new Suggestion({
-				icon: this.data.actions.ENOCHIAN.icon,
+				icon: this.data.actions.FOUL.icon,
 				content: <Trans id="blm.gauge.suggestions.dropped-enochian.content">
-					Dropping <DataLink action="ENOCHIAN"/> may lead to lost <DataLink action="XENOGLOSSY"/> or <DataLink action="FOUL"/> casts, more clipping because of additional <DataLink action="ENOCHIAN"/> casts, unavailability of <DataLink action="FIRE_IV"/> and <DataLink action="BLIZZARD_IV"/> or straight up missing out on the 15% damage bonus that <DataLink action="ENOCHIAN"/> provides.
+					Dropping Astral Fire or Umbral Ice may lead to lost <DataLink action="XENOGLOSSY"/> or <DataLink action="FOUL"/> casts.
 				</Trans>,
 				severity: SEVERITY.MEDIUM,
 				why: <Trans id="blm.gauge.suggestions.dropped-enochian.why">
-					<DataLink showIcon={false} action="ENOCHIAN"/> was dropped <Plural value={droppedEno} one="# time" other="# times"/>.
+					Astral Fire or Umbral Ice was dropped <Plural value={droppedEno} one="# time" other="# times"/>.
 				</Trans>,
 			}))
 		}
@@ -519,7 +505,7 @@ export class Gauge extends CoreGauge {
 			this.suggestions.add(new Suggestion({
 				icon: this.data.actions.XENOGLOSSY.icon,
 				content: <Trans id="blm.gauge.suggestions.lost-polyglot.content">
-					You lost Polyglot due to dropped <DataLink action="ENOCHIAN"/>. <DataLink action="XENOGLOSSY"/> and <DataLink action="FOUL"/> are your strongest GCDs, so always maximize their casts.
+					You lost Polyglot due to dropped Astral Fire or Umbral Ice. <DataLink action="XENOGLOSSY"/> and <DataLink action="FOUL"/> are your strongest GCDs, so always maximize their casts.
 				</Trans>,
 				severity: SEVERITY.MAJOR,
 				why: <Trans id="blm.gauge.suggestions.lost-polyglot.why">

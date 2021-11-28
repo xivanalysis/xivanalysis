@@ -1,6 +1,6 @@
 import {t} from '@lingui/macro'
 import {Plural, Trans} from '@lingui/react'
-import {ActionLink} from 'components/ui/DbLink'
+import {DataLink} from 'components/ui/DbLink'
 import {RotationTable} from 'components/ui/RotationTable'
 import {ActionKey} from 'data/ACTIONS'
 import {Events, FieldsTargeted} from 'event'
@@ -50,9 +50,30 @@ const CYCLE_ENDPOINTS: ActionKey[] = [
 const MIN_ROTATION_LENGTH = 3
 
 interface CycleErrorCode {priority: number, message: ReactNode}
-const NO_ERROR: CycleErrorCode = {priority: 0, message: 'No errors'} // Still defining this out here so we can default it in Cycle
 const DEATH_PRIORITY = 101 // Define this const here so we can reference it in both classes
 const HIDDEN_PRIORITY_THRESHOLD = 2 // Same as ^
+/**
+ * Error type codes, higher values indicate higher priority errors. If you add more, adjust the IDs to ensure correct priorities.
+ * Only the highest priority error will be displayed in the 'Reason' column.
+ * NOTE: Cycles with values at or below HIDDEN_PRIORITY_THRESHOLD will be filtered out of the RotationTable display
+ * unless the DEBUG_SHOW_ALL_CYCLES variable is set to true
+ */
+const CYCLE_ERRORS: {[key: string]: CycleErrorCode } = {
+	NO_ERROR: {priority: 0, message: 'No errors'},
+	FINAL_OR_DOWNTIME: {priority: 1, message: 'Ended with downtime, or last cycle'},
+	SHORT: {priority: HIDDEN_PRIORITY_THRESHOLD, message: 'Too short, won\'t process'},
+	// Messages below should be Trans objects since they'll be displayed to end users
+	SHOULD_SKIP_T3: {priority: 8, message: <Trans id="blm.rotation-watchdog.error-messages.should-skip-t3">Should skip hardcast <DataLink action="THUNDER_III"/></Trans>},
+	SHOULD_SKIP_B4: {priority: 9, message: <Trans id="blm.rotation-watchdog.error-messages.should-skip-b4">Should skip <DataLink action="BLIZZARD_IV"/></Trans>},
+	MISSING_FIRE4S: {priority: 10, message: <Trans id="blm.rotation-watchdog.error-messages.missing-fire4s">Missing one or more <DataLink action="FIRE_IV"/>s</Trans>}, // These two errors are lower priority since they can be determined by looking at the
+	MISSING_DESPAIRS: {priority: 15, message: <Trans id="blm.rotation-watchdog.error-messages.missing-despair">Missing one or more <DataLink action="DESPAIR"/>s</Trans>}, // target columns in the table, so we want to tell players about other errors first
+	MANAFONT_BEFORE_DESPAIR: {priority: 30, message: <Trans id="blm.rotation-watchdog.error-messages.manafont-before-despair"><DataLink action="MANAFONT"/> used before <DataLink action="DESPAIR"/></Trans>},
+	EXTRA_T3: {priority: 49, message: <Trans id="blm.rotation-watchdog.error-messages.extra-t3">Extra <DataLink action="THUNDER_III"/>s</Trans>}, // Extra T3 and Extra F1 are *very* similar in terms of per-GCD potency loss
+	EXTRA_F1: {priority: 50, message: <Trans id="blm.rotation-watchdog.error-messages.extra-f1">Extra <DataLink action="FIRE_I"/></Trans>}, // These two codes should stay close to each other
+	NO_FIRE_SPELLS: {priority: 75, message: <Trans id="blm.rotation-watchdog.error-messages.no-fire-spells">Rotation included no Fire spells</Trans>},
+	DROPPED_AF_UI: {priority: 100, message: <Trans id="blm.rotation-watchdog.error-messages.dropped-astral-umbral">Dropped Astral Fire or Umbral Ice</Trans>},
+	DIED: {priority: DEATH_PRIORITY, message: <Trans id="blm.rotation-watchdog.error-messages.died"><DataLink showName={false} action="RAISE"/> Died</Trans>},
+}
 
 interface CycleEvent extends FieldsTargeted {
 	action: number,
@@ -90,7 +111,7 @@ class Cycle {
 	public firePhaseMetadata: FirePhaseMetadata
 	public finalOrDowntime: boolean = false
 
-	private _errorCode: CycleErrorCode = NO_ERROR
+	private _errorCode: CycleErrorCode = CYCLE_ERRORS.NO_ERROR
 
 	public set errorCode(code: CycleErrorCode) {
 		if (code.priority > this._errorCode.priority) {
@@ -315,28 +336,6 @@ export class RotationWatchdog extends Analyser {
 		enochian: false,
 	}
 
-	/**
-	 * Error type codes, higher values indicate higher priority errors. If you add more, adjust the IDs to ensure correct priorities.
-	 * Only the highest priority error will be displayed in the 'Reason' column.
-	 * NOTE: Cycles with values at or below HIDDEN_PRIORITY_THRESHOLD will be filtered out of the RotationTable display
-	 * unless the DEBUG_SHOW_ALL_CYCLES variable is set to true
-	 */
-	private readonly CYCLE_ERRORS: {[key: string]: CycleErrorCode } = {
-		FINAL_OR_DOWNTIME: {priority: 1, message: 'Ended with downtime, or last cycle'},
-		SHORT: {priority: HIDDEN_PRIORITY_THRESHOLD, message: 'Too short, won\'t process'},
-		// Messages below should be Trans objects since they'll be displayed to end users
-		SHOULD_SKIP_T3: {priority: 8, message: <Trans id="blm.rotation-watchdog.error-messages.should-skip-t3">Should skip hardcast <ActionLink {...this.data.actions.THUNDER_III}/></Trans>},
-		SHOULD_SKIP_B4: {priority: 9, message: <Trans id="blm.rotation-watchdog.error-messages.should-skip-b4">Should skip <ActionLink {...this.data.actions.BLIZZARD_IV}/></Trans>},
-		MISSING_FIRE4S: {priority: 10, message: <Trans id="blm.rotation-watchdog.error-messages.missing-fire4s">Missing one or more <ActionLink {...this.data.actions.FIRE_IV}/>s</Trans>}, // These two errors are lower priority since they can be determined by looking at the
-		MISSING_DESPAIRS: {priority: 15, message: <Trans id="blm.rotation-watchdog.error-messages.missing-despair">Missing one or more <ActionLink {...this.data.actions.DESPAIR}/>s</Trans>}, // target columns in the table, so we want to tell players about other errors first
-		MANAFONT_BEFORE_DESPAIR: {priority: 30, message: <Trans id="blm.rotation-watchdog.error-messages.manafont-before-despair"><ActionLink {...this.data.actions.MANAFONT}/> used before <ActionLink {...this.data.actions.DESPAIR}/></Trans>},
-		EXTRA_T3: {priority: 49, message: <Trans id="blm.rotation-watchdog.error-messages.extra-t3">Extra <ActionLink {...this.data.actions.THUNDER_III}/>s</Trans>}, // Extra T3 and Extra F1 are *very* similar in terms of per-GCD potency loss
-		EXTRA_F1: {priority: 50, message: <Trans id="blm.rotation-watchdog.error-messages.extra-f1">Extra <ActionLink {...this.data.actions.FIRE_I}/></Trans>}, // These two codes should stay close to each other
-		NO_FIRE_SPELLS: {priority: 75, message: <Trans id="blm.rotation-watchdog.error-messages.no-fire-spells">Rotation included no Fire spells</Trans>},
-		DROPPED_ENOCHIAN: {priority: 100, message: <Trans id="blm.rotation-watchdog.error-messages.dropped-enochian">Dropped <ActionLink {...this.data.actions.ENOCHIAN}/></Trans>},
-		DIED: {priority: DEATH_PRIORITY, message: <Trans id="blm.rotation-watchdog.error-messages.died"><ActionLink showName={false} {...this.data.actions.RAISE} /> Died</Trans>},
-	}
-
 	private cycleEndpointIds = CYCLE_ENDPOINTS.map(key => this.data.actions[key].id)
 
 	private fireSpellIds = FIRE_SPELLS.map(key => this.data.actions[key].id)
@@ -373,7 +372,7 @@ export class RotationWatchdog extends Analyser {
 
 		// If we no longer have enochian, flag it for display
 		if (this.currentGaugeState.enochian && !nextGaugeState.enochian) {
-			this.currentRotation.errorCode = this.CYCLE_ERRORS.DROPPED_ENOCHIAN
+			this.currentRotation.errorCode = CYCLE_ERRORS.DROPPED_ENOCHIAN
 		}
 
 		// Retrieve the GaugeState from the event
@@ -410,7 +409,7 @@ export class RotationWatchdog extends Analyser {
 	}
 
 	private onDeath() {
-		this.currentRotation.errorCode = this.CYCLE_ERRORS.DIED
+		this.currentRotation.errorCode = CYCLE_ERRORS.DIED
 	}
 
 	// Finish this parse and add the suggestions and checklist items
@@ -420,7 +419,7 @@ export class RotationWatchdog extends Analyser {
 		// Override the error code for cycles that dropped enochian, when the cycle contained an unabletoact time long enough to kill it.
 		// Couldn't do this at the time of code assignment, since the downtime data wasn't fully available yet
 		for (const cycle of this.history) {
-			if (cycle.errorCode !== this.CYCLE_ERRORS.DROPPED_ENOCHIAN) { continue }
+			if (cycle.errorCode !== CYCLE_ERRORS.DROPPED_ENOCHIAN) { continue }
 
 			const windows = this.unableToAct
 				.getWindows({
@@ -430,7 +429,7 @@ export class RotationWatchdog extends Analyser {
 				.filter(window => Math.max(0, window.end - window.start) >= ASTRAL_UMBRAL_DURATION)
 
 			if (windows.length > 0) {
-				cycle.overrideErrorCode(this.CYCLE_ERRORS.FINAL_OR_DOWNTIME)
+				cycle.overrideErrorCode(CYCLE_ERRORS.FINAL_OR_DOWNTIME)
 			}
 		}
 
@@ -438,14 +437,14 @@ export class RotationWatchdog extends Analyser {
 		// became invunlnerable before another Fire 4 could've been cast. If so, mark it as a finalOrDowntime cycle, clear the error code
 		// and reprocess it to see if there were any other errors
 		this.history.forEach(cycle => {
-			if (cycle.errorCode !== this.CYCLE_ERRORS.MISSING_FIRE4S) { return }
+			if (cycle.errorCode !== CYCLE_ERRORS.MISSING_FIRE4S) { return }
 			const cycleEnd = cycle.endTime ?? (this.parser.pull.timestamp + this.parser.pull.duration)
 			if (this.invulnerability.isActive({
 				timestamp: cycleEnd + this.data.actions.FIRE_IV.castTime,
 				types: ['invulnerable'],
 			})) {
 				cycle.finalOrDowntime = true
-				cycle.overrideErrorCode(this.CYCLE_ERRORS.NONE)
+				cycle.overrideErrorCode(CYCLE_ERRORS.NONE)
 				this.processCycle(cycle)
 			}
 		})
@@ -455,12 +454,12 @@ export class RotationWatchdog extends Analyser {
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.FIRE_IV.icon,
 			content: <Trans id="blm.rotation-watchdog.suggestions.should-skip-b4.content">
-				You lost at least one <ActionLink {...this.data.actions.FIRE_IV}/> by not skipping <ActionLink {...this.data.actions.BLIZZARD_IV}/> in an Umbral Ice phase before the fight finished or a phase transition occurred.
+				You lost at least one <DataLink action="FIRE_IV"/> by not skipping <DataLink action="BLIZZARD_IV"/> in an Umbral Ice phase before the fight finished or a phase transition occurred.
 			</Trans>,
 			tiers: ENHANCED_SEVERITY_TIERS,
 			value: shouldSkipB4s,
 			why: <Trans id="blm.rotation-watchdog.suggestions.should-skip-b4.why">
-				You should have skipped <ActionLink showIcon={false} {...this.data.actions.BLIZZARD_IV} /> <Plural value={shouldSkipB4s} one="# time" other="# times"/>.
+				You should have skipped <DataLink showIcon={false} action="BLIZZARD_IV"/> <Plural value={shouldSkipB4s} one="# time" other="# times"/>.
 			</Trans>,
 		}))
 
@@ -469,12 +468,12 @@ export class RotationWatchdog extends Analyser {
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.FIRE_IV.icon,
 			content: <Trans id="blm.rotation-watchdog.suggestions.should-skip-t3.content">
-				You lost at least one <ActionLink {...this.data.actions.FIRE_IV}/> by hard casting <ActionLink {...this.data.actions.THUNDER_III} /> before the fight finished or a phase transition occurred.
+				You lost at least one <DataLink action="FIRE_IV"/> by hard casting <DataLink action="THUNDER_III"/> before the fight finished or a phase transition occurred.
 			</Trans>,
 			tiers: ENHANCED_SEVERITY_TIERS,
 			value: shouldSkipT3s,
 			why: <Trans id="blm.rotation-watchdog.suggestions.should-skip-t3.why">
-				You should have skipped <ActionLink showIcon={false} {...this.data.actions.THUNDER_III} /> <Plural value={shouldSkipT3s} one="# time" other="# times"/>.
+				You should have skipped <DataLink showIcon={false} action="THUNDER_III"/> <Plural value={shouldSkipT3s} one="# time" other="# times"/>.
 			</Trans>,
 		}))
 
@@ -483,12 +482,12 @@ export class RotationWatchdog extends Analyser {
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.FIRE_I.icon,
 			content: <Trans id="blm.rotation-watchdog.suggestions.extra-f1s.content">
-				Casting more than one <ActionLink {...this.data.actions.FIRE_I}/> per Astral Fire cycle is a crutch that should be avoided by better pre-planning of the encounter.
+				Casting more than one <DataLink action="FIRE_I"/> per Astral Fire cycle is a crutch that should be avoided by better pre-planning of the encounter.
 			</Trans>,
 			tiers: DEFAULT_SEVERITY_TIERS,
 			value: extraF1s,
 			why: <Trans id="blm.rotation-watchdog.suggestions.extra-f1s.why">
-				You cast an extra <ActionLink showIcon={false} {...this.data.actions.FIRE_I} /> <Plural value={extraF1s} one="# time" other="# times"/>.
+				You cast an extra <DataLink showIcon={false} action="FIRE_I"/> <Plural value={extraF1s} one="# time" other="# times"/>.
 			</Trans>,
 		}))
 
@@ -497,12 +496,12 @@ export class RotationWatchdog extends Analyser {
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.DESPAIR.icon,
 			content: <Trans id="blm.rotation-watchdog.suggestions.end-with-despair.content">
-				Once you can no longer cast another spell in Astral Fire and remain above 800 MP, you should use your remaining MP by casting <ActionLink {...this.data.actions.DESPAIR} />.
+				Once you can no longer cast another spell in Astral Fire and remain above 800 MP, you should use your remaining MP by casting <DataLink action="DESPAIR"/>.
 			</Trans>,
 			tiers: DEFAULT_SEVERITY_TIERS,
 			value: astralFiresMissingDespairs,
 			why: <Trans id="blm.rotation-watchdog.suggestions.end-with-despair.why">
-				<Plural value={astralFiresMissingDespairs} one="# Astral Fire phase was" other="# Astral Fire phases were"/> missing at least one <ActionLink showIcon={false} {...this.data.actions.DESPAIR} />.
+				<Plural value={astralFiresMissingDespairs} one="# Astral Fire phase was" other="# Astral Fire phases were"/> missing at least one <DataLink showIcon={false} action="DESPAIR"/>.
 			</Trans>,
 		}))
 
@@ -511,12 +510,12 @@ export class RotationWatchdog extends Analyser {
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.MANAFONT.icon,
 			content: <Trans id="blm.rotation-watchdog.suggestions.mf-before-despair.content">
-				Using <ActionLink {...this.data.actions.MANAFONT} /> before <ActionLink {...this.data.actions.DESPAIR} /> leads to fewer <ActionLink showIcon={false} {...this.data.actions.DESPAIR} />s than possible being cast. Try to avoid that since <ActionLink showIcon={false} {...this.data.actions.DESPAIR} /> is stronger than <ActionLink {...this.data.actions.FIRE_IV} />.
+				Using <DataLink action="MANAFONT"/> before <DataLink action="DESPAIR"/> leads to fewer <DataLink showIcon={false} action="DESPAIR"/>s than possible being cast. Try to avoid that since <DataLink showIcon={false} action="DESPAIR"/> is stronger than <DataLink action="FIRE_IV"/>.
 			</Trans>,
 			tiers: ENHANCED_SEVERITY_TIERS,
 			value: manafontsBeforeDespair,
 			why: <Trans id="blm.rotation-watchdog.suggestions.mf-before-despair.why">
-				<ActionLink showIcon={false} {...this.data.actions.MANAFONT} /> was used before <ActionLink {...this.data.actions.DESPAIR} /> <Plural value={manafontsBeforeDespair} one="# time" other="# times"/>.
+				<DataLink showIcon={false} action="MANAFONT"/> was used before <DataLink action="DESPAIR"/> <Plural value={manafontsBeforeDespair} one="# time" other="# times"/>.
 			</Trans>,
 		}))
 
@@ -525,12 +524,12 @@ export class RotationWatchdog extends Analyser {
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.THUNDER_III.icon,
 			content: <Trans id="blm.rotation-watchdog.suggestions.wrong-t3.content">
-				Don't hard cast more than one <ActionLink {...this.data.actions.THUNDER_III}/> in your Astral Fire phase, since that costs MP which could be used for more <ActionLink {...this.data.actions.FIRE_IV}/>s.
+				Don't hard cast more than one <DataLink action="THUNDER_III"/> in your Astral Fire phase, since that costs MP which could be used for more <DataLink action="FIRE_IV"/>s.
 			</Trans>,
 			tiers: DEFAULT_SEVERITY_TIERS,
 			value: extraT3s,
 			why: <Trans id="blm.rotation-watchdog.suggestions.wrong-t3.why">
-				<ActionLink showIcon={false} {...this.data.actions.THUNDER_III} /> was hard casted under Astral Fire <Plural value={extraT3s} one="# extra time" other="# extra times"/>.
+				<DataLink showIcon={false} action="THUNDER_III"/> was hard casted under Astral Fire <Plural value={extraT3s} one="# extra time" other="# extra times"/>.
 			</Trans>,
 		}))
 
@@ -539,7 +538,7 @@ export class RotationWatchdog extends Analyser {
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.BLIZZARD_II.icon,
 			content: <Trans id="blm.rotation-watchdog.suggestions.icemage.content">
-				Avoid spending significant amounts of time in Umbral Ice. The majority of your damage comes from your Astral Fire phase, so you should maximize the number of <ActionLink {...this.data.actions.FIRE_IV}/>s cast during the fight.
+				Avoid spending significant amounts of time in Umbral Ice. The majority of your damage comes from your Astral Fire phase, so you should maximize the number of <DataLink action="FIRE_IV"/>s cast during the fight.
 			</Trans>,
 			tiers: DEFAULT_SEVERITY_TIERS,
 			value: rotationsWithoutFire,
@@ -551,12 +550,12 @@ export class RotationWatchdog extends Analyser {
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.UMBRAL_SOUL.icon,
 			content: <Trans id="blm.rotation-watchdog.suggestions.uptime-souls.content">
-				Avoid using <ActionLink {...this.data.actions.UMBRAL_SOUL} /> when there is a target available to hit with a damaging ability. <ActionLink showIcon={false} {...this.data.actions.UMBRAL_SOUL} /> does no damage and prevents you from using other GCD skills. It should be reserved for downtime.
+				Avoid using <DataLink action="UMBRAL_SOUL"/> when there is a target available to hit with a damaging ability. <DataLink showIcon={false} action="UMBRAL_SOUL"/> does no damage and prevents you from using other GCD skills. It should be reserved for downtime.
 			</Trans>,
 			tiers: DEFAULT_SEVERITY_TIERS,
 			value: this.uptimeSouls,
 			why: <Trans id="blm.rotation-watchdog.suggestions.uptime-souls.why">
-				<ActionLink showIcon={false} {...this.data.actions.UMBRAL_SOUL} /> was performed during uptime <Plural value={this.uptimeSouls} one="# time" other="# times"/>.
+				<DataLink showIcon={false} action="UMBRAL_SOUL"/> was performed during uptime <Plural value={this.uptimeSouls} one="# time" other="# times"/>.
 			</Trans>,
 		}))
 	}
@@ -603,7 +602,7 @@ export class RotationWatchdog extends Analyser {
 		// Only process errors for rotations with more than the minimum number of casts,
 		// since fewer than that usually indicates something weird happening
 		if (currentRotation.events.length <= MIN_ROTATION_LENGTH) {
-			currentRotation.errorCode = this.CYCLE_ERRORS.SHORT
+			currentRotation.errorCode = CYCLE_ERRORS.SHORT
 			return
 		}
 
@@ -611,17 +610,17 @@ export class RotationWatchdog extends Analyser {
 
 		// Check if the rotation included the expected number of Despair casts
 		if (currentRotation.missingDespairs) {
-			currentRotation.errorCode = this.CYCLE_ERRORS.MISSING_DESPAIRS
+			currentRotation.errorCode = CYCLE_ERRORS.MISSING_DESPAIRS
 		}
 
 		// Check whether manafont was used before despair
 		if (currentRotation.manafontBeforeDespair) {
-			currentRotation.errorCode = this.CYCLE_ERRORS.MANAFONT_BEFORE_DESPAIR
+			currentRotation.errorCode = CYCLE_ERRORS.MANAFONT_BEFORE_DESPAIR
 		}
 
 		// Check if the rotation included more than one Fire 1
 		if (currentRotation.extraF1s > 0) {
-			currentRotation.errorCode = this.CYCLE_ERRORS.EXTRA_F1
+			currentRotation.errorCode = CYCLE_ERRORS.EXTRA_F1
 		}
 
 		// If this cycle ends with downtime or is the last cycle, many of the errors we normally check for
@@ -638,32 +637,32 @@ export class RotationWatchdog extends Analyser {
 	private processNormalCycle(currentRotation: Cycle) {
 		// Check to make sure we didn't lose Fire 4 casts due to spending MP on T3 hardcasts
 		if (currentRotation.extraT3s > 0) {
-			currentRotation.errorCode = this.CYCLE_ERRORS.EXTRA_T3
+			currentRotation.errorCode = CYCLE_ERRORS.EXTRA_T3
 		}
 
 		// Why so icemage?
 		if (currentRotation.isMissingFire) {
-			currentRotation.errorCode = this.CYCLE_ERRORS.NO_FIRE_SPELLS
+			currentRotation.errorCode = CYCLE_ERRORS.NO_FIRE_SPELLS
 		}
 
 		// If they're just missing Fire 4 because derp, note it
 		if (currentRotation.missingFire4s) {
-			currentRotation.errorCode = this.CYCLE_ERRORS.MISSING_FIRE4S
+			currentRotation.errorCode = CYCLE_ERRORS.MISSING_FIRE4S
 		}
 	}
 
 	// Process errors for a cycle that was cut short by downtime or by the fight ending
 	private processDowntimeCycle(currentRotation: Cycle) {
-		currentRotation.errorCode = this.CYCLE_ERRORS.FINAL_OR_DOWNTIME
+		currentRotation.errorCode = CYCLE_ERRORS.FINAL_OR_DOWNTIME
 
 		// Check if more Fire 4s could've been cast by skipping Blizzard 4 before this downtime
 		if (currentRotation.shouldSkipB4) {
-			currentRotation.errorCode = this.CYCLE_ERRORS.SHOULD_SKIP_B4
+			currentRotation.errorCode = CYCLE_ERRORS.SHOULD_SKIP_B4
 		}
 
 		// Check if more Fire 4s could've been cast by skipping a hardcast Thunder 3
 		if (currentRotation.hardT3sInFireCount > 0) {
-			currentRotation.errorCode = this.CYCLE_ERRORS.SHOULD_SKIP_T3
+			currentRotation.errorCode = CYCLE_ERRORS.SHOULD_SKIP_T3
 		}
 	}
 
@@ -674,7 +673,7 @@ export class RotationWatchdog extends Analyser {
 			return <Fragment>
 				<Message>
 					<Trans id="blm.rotation-watchdog.rotation-table.message">
-						The core of BLM consists of six <ActionLink {...this.data.actions.FIRE_IV} />s and one <ActionLink {...this.data.actions.DESPAIR} /> per rotation (seven <ActionLink {...this.data.actions.FIRE_IV} />s and two <ActionLink {...this.data.actions.DESPAIR} />s with <ActionLink {...this.data.actions.MANAFONT} />).<br/>
+						The core of BLM consists of six <DataLink action="FIRE_IV"/>s and one <DataLink action="DESPAIR"/> per rotation (seven <DataLink showIcon={false} action="FIRE_IV"/>s and two <DataLink showIcon={false} action="DESPAIR"/>s with <DataLink action="MANAFONT"/>).<br/>
 						Avoid missing Fire IV casts where possible.
 					</Trans>
 				</Message>
@@ -689,11 +688,11 @@ export class RotationWatchdog extends Analyser {
 				<RotationTable
 					targets={[
 						{
-							header: <ActionLink showName={false} {...this.data.actions.FIRE_IV} />,
+							header: <DataLink showName={false} action="FIRE_IV"/>,
 							accessor: 'fire4s',
 						},
 						{
-							header: <ActionLink showName={false} {...this.data.actions.DESPAIR} />,
+							header: <DataLink showName={false} action="DESPAIR"/>,
 							accessor: 'despairs',
 						},
 					]}

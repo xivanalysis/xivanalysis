@@ -17,6 +17,13 @@ const CONTRIBUTORS = ensureRecord<Contributor>()({
 	// 		JOBS.SOME_JOB,
 	// 	],
 	// },
+	AKAIRYU: {
+		name: 'Akairyu',
+		avatar: require('./avatar/Akairyu.png'),
+		jobs: [
+			JOBS.BLACK_MAGE, JOBS.DANCER,
+		],
+	},
 	TOASTDEIB: {
 		name: 'Toastdeib',
 		avatar: require('./avatar/toastdeib.png'),
@@ -25,6 +32,7 @@ const CONTRIBUTORS = ensureRecord<Contributor>()({
 		],
 	},
 })
+
 export default CONTRIBUTORS
 
 export interface Role {
