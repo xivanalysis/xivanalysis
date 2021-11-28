@@ -35,7 +35,7 @@ export class Procs extends CoreProcs {
 	override droppedProcIcon = this.data.actions.FOUNTAINFALL.icon
 	override droppedProcContent =
 		<Trans id="dnc.procs.suggestions.drops.content">
-			Avoid dropping your procs unless absolutely necessary. If you have to drop one to keep your Esprit from overcapping, <DataLink action="RISING_WINDMILL" /> or <DataLink action="REVERSE_CASCADE" /> will lose the least DPS overall.
+			Avoid dropping your procs unless absolutely necessary. If you have to drop one to keep your Esprit from overcapping, <DataLink status="FLOURISHING_SYMMETRY"/> will lose the least DPS overall.
 		</Trans>
 
 	override showOverwroteProcSuggestion = true
