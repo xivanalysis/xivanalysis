@@ -43,7 +43,8 @@ const ENHANCED_SEVERITY_TIERS = {
 const CYCLE_ENDPOINTS: ActionKey[] = [
 	'BLIZZARD_III',
 	'TRANSPOSE',
-	'FREEZE',
+	'BLIZZARD_II',
+	'HIGH_BLIZZARD_II',
 ]
 
 // This is feelycraft at the moment. Rotations shorter than this won't be processed for errors.
