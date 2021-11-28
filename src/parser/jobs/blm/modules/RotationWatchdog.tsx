@@ -132,15 +132,9 @@ class Cycle {
 
 	//#region Fire 4s
 	/**
-	 * June 2021 revamp of this function brings back some of the pre-Shadowbringers gauge state complexity for determining expected fire counts for the following reasons:
-	 *   1. While Umbral Soul gives us a downtime action to build and maintain Umbral Hearts/Umbral Ice, it isn't foolproof. E1S's giant midfight cutscene is a forced drop.
-	 *   2. Freeze reopener after death or a forced drop is an expected 5xF4 cycle, and is more PPS than a B3 B4 [T3] F3 [Fire phase] or a Freeze B4 [T3] F3 [Fire phase] reopener, so we should allow it
-	 *   3. Alternate playstyle cycles and the No-B4-Opener rely on Ley Lines to eke out a 5th F4 without using F1, and enough BLMs are using the alternate playstyle to warrant not dinging those
-	 *   4. Separating the 'How many F4s can you get from this starting gauge state' count from the 'how many total F4s can this cycle fit with Manafont factored in' count allows for more robust thunder counts later on
-	 *
+	 * Determines how many Fire 4s the player should have been able to cast during this cycle.
 	 * NOTE:
-	 *   This revamp does NOT account for all the complexities of the alternate playstyle transpose shenanigans.
-	 *   It only sets the baseline expected F4 count at 4, and assumes extra F4s based on the number of Umbral Hearts carried into the Astral Fire phase.
+	 *   This function does NOT account for all the complexities of any alternative playstyles.
 	 */
 	public get expectedFire4s(): number | undefined {
 		if (this.finalOrDowntime) {
