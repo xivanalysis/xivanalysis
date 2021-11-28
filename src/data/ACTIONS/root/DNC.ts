@@ -2,17 +2,19 @@ import {Attribute} from 'event'
 import {ensureActions} from '../type'
 
 export const DNC = ensureActions({
+	STANDARD_FINISH: {
+		id: 16003,
+		icon: 'https://xivapi.com/i/003000/003459.png',
+		name: 'Standard Finish',
+		onGcd: true,
+		cooldown: 1500,
+	},
 	SINGLE_STANDARD_FINISH: {
 		id: 16191,
 		icon: 'https://xivapi.com/i/003000/003459.png',
 		name: 'Single Standard Finish',
 		onGcd: true,
 		cooldown: 1500,
-		statusesApplied: [
-			'STANDARD_FINISH',
-			'STANDARD_FINISH_PARTNER',
-			'ESPRIT',
-		],
 	},
 	DOUBLE_STANDARD_FINISH: {
 		id: 16192,
@@ -26,17 +28,19 @@ export const DNC = ensureActions({
 			'ESPRIT',
 		],
 	},
+	TECHNICAL_FINISH: {
+		id: 16004,
+		icon: 'https://xivapi.com/i/003000/003474.png',
+		name: 'Technical Finish',
+		onGcd: true,
+		cooldown: 1500,
+	},
 	SINGLE_TECHNICAL_FINISH: {
 		id: 16193,
 		icon: 'https://xivapi.com/i/003000/003474.png',
 		name: 'Single Technical Finish',
 		onGcd: true,
 		cooldown: 1500,
-		statusesApplied: [
-			'TECHNICAL_FINISH',
-			'ESPRIT_TECHNICAL',
-			'FLOURISHING_FINISH',
-		],
 	},
 	DOUBLE_TECHNICAL_FINISH: {
 		id: 16194,
@@ -44,11 +48,6 @@ export const DNC = ensureActions({
 		name: 'Double Technical Finish',
 		onGcd: true,
 		cooldown: 1500,
-		statusesApplied: [
-			'TECHNICAL_FINISH',
-			'ESPRIT_TECHNICAL',
-			'FLOURISHING_FINISH',
-		],
 	},
 	TRIPLE_TECHNICAL_FINISH: {
 		id: 16195,
@@ -56,11 +55,6 @@ export const DNC = ensureActions({
 		name: 'Triple Technical Finish',
 		onGcd: true,
 		cooldown: 1500,
-		statusesApplied: [
-			'TECHNICAL_FINISH',
-			'ESPRIT_TECHNICAL',
-			'FLOURISHING_FINISH',
-		],
 	},
 	QUADRUPLE_TECHNICAL_FINISH: {
 		id: 16196,
@@ -73,6 +67,13 @@ export const DNC = ensureActions({
 			'ESPRIT_TECHNICAL',
 			'FLOURISHING_FINISH',
 		],
+	},
+	TILLANA: {
+		id: 1600416004, // Need real id
+		icon: 'https://xivapi.com/i/003000/003474.png', // Need real icon
+		name: 'Tillana',
+		onGcd: true,
+		cooldown: 1500,
 	},
 	CASCADE: {
 		id: 15989,
@@ -193,42 +194,6 @@ export const DNC = ensureActions({
 		name: 'Pirouette',
 		onGcd: true,
 		cooldown: 1000,
-	},
-	STANDARD_FINISH: {
-		id: 16003,
-		icon: 'https://xivapi.com/i/003000/003459.png',
-		name: 'Standard Finish',
-		onGcd: true,
-		cooldown: 1500,
-		statusesApplied: [
-			'STANDARD_FINISH',
-			'STANDARD_FINISH_PARTNER',
-			'ESPRIT',
-		],
-	},
-	TECHNICAL_FINISH: {
-		id: 16004,
-		icon: 'https://xivapi.com/i/003000/003474.png',
-		name: 'Technical Finish',
-		onGcd: true,
-		cooldown: 1500,
-		statusesApplied: [
-			'TECHNICAL_FINISH',
-			'ESPRIT_TECHNICAL',
-			'FLOURISHING_FINISH',
-		],
-	},
-	TILLANA: {
-		id: 1600416004, // Need real id
-		icon: 'https://xivapi.com/i/003000/003474.png', // Need real icon
-		name: 'Tillana',
-		onGcd: true,
-		cooldown: 1500,
-		statusesApplied: [
-			'STANDARD_FINISH',
-			'STANDARD_FINISH_PARTNER',
-			'ESPRIT',
-		],
 	},
 	SABER_DANCE: {
 		id: 16005,
