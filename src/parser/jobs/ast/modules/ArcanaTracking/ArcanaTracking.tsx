@@ -70,10 +70,10 @@ export default class ArcanaTracking extends Analyser {
 	private lunarSealArcana: Array<Action['id']> = []
 	private solarSealArcana: Array<Action['id']> = []
 
-	private playToStatusLookup: { [playID: Action['id']]: Status['id'] } = {}
-	private statusToDrawnLookup: { [key: Status['id']]: Status['id'] } = {}
-	private statusToPlayLookup: { [key: Status['id']]: Action['id'] } = {}
-	private drawnToPlayLookup: { [key: Status['id']]: Action['id'] } = {}
+	private playToStatusLookup: { [key: number]: number } = {}
+	private statusToDrawnLookup: { [key: number]: number } = {}
+	private statusToPlayLookup: { [key: number]: number } = {}
+	private drawnToPlayLookup: { [key: number]: number } = {}
 
 	private cardStateLog: CardState[] = [{
 		lastEvent: {
