@@ -7,7 +7,7 @@ const ALLOWEDDOWNTIMEALL = 5000
 const FIRSTUSEOFFSETALL = 15000
 const TARGETPERCENT = 95
 
-export default class OGCDDowntime extends CooldownDowntime {
+export class OGCDDowntime extends CooldownDowntime {
 	// Time in ms that Laqi deems ok for a OGCD to be down : ^)
 	override defaultAllowedAverageDowntime = ALLOWEDDOWNTIMEALL
 	override defaultFirstUseOffset = FIRSTUSEOFFSETALL
