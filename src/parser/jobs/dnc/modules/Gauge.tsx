@@ -105,6 +105,7 @@ export class Gauge extends CoreGauge {
 	private espritBuffs: Map<string, EventHook<Events['damage']>> = new Map<string, EventHook<Events['damage']>>()
 
 	private espritGenerationExceptions: number[] = ESPRIT_EXCEPTIONS.map(key => this.data.actions[key].id)
+	private fullEspritActions = PROC_ACTIONS.map(key => this.data.actions[key].id)
 	protected pauseGeneration = false;
 
 	override initialise() {
@@ -191,8 +192,13 @@ export class Gauge extends CoreGauge {
 		}
 
 		// Transform the probabilistic esprit generation chance into an expected value
-		// As far as we know, the chance of the DNC themselves generating Esprit is slightly higher than the chance for party members to do so
-		const expectedGenerationChance = event.source === this.parser.actor.id ? ESPRIT_RATE_SELF : ESPRIT_RATE_PARTY
+		const expectedGenerationChance = event.source === this.parser.actor.id ?
+			// If the dancer is generating Esprit for themselves from a proc, they gain the full ten Esprit every time
+			(this.fullEspritActions.includes(ability) ? 1 :
+			// Otherwise, the dancer generates 5 Esprit for themselves with each action
+				ESPRIT_RATE_SELF_NON_PROC) :
+			// Party members with either the Standard Finish or Technical Finish-sourced Esprit buff generate ten Esprit at a 20% chance
+			ESPRIT_RATE_PARTY
 		const generatedAmt = ESPRIT_GENERATION_AMOUNT * expectedGenerationChance
 
 		this.espritGauge.generate(generatedAmt)
