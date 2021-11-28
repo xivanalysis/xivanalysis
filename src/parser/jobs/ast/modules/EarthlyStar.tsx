@@ -1,10 +1,12 @@
 import {t} from '@lingui/macro'
 import {Plural, Trans} from '@lingui/react'
-import {ActionLink} from 'components/ui/DbLink'
-import {CastEvent} from 'fflogs'
-import Module, {dependency} from 'parser/core/Module'
+import {DataLink} from 'components/ui/DbLink'
+import {Action} from 'data/ACTIONS'
+import {Event, Events} from 'event'
+import {Analyser} from 'parser/core/Analyser'
+import {filter, oneOf} from 'parser/core/filter'
+import {dependency} from 'parser/core/Injectable'
 import {Data} from 'parser/core/modules/Data'
-import PrecastStatus from 'parser/core/modules/PrecastStatus'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
 
@@ -22,16 +24,12 @@ const SEVERETIES = {
 	},
 }
 
-// const PLAYER_CASTS = [ACTIONS.EARTHLY_STAR.id, ACTIONS.STELLAR_DETONATION.id]
-// const PLAYER_STATUSES = [STATUSES.EARTHLY_DOMINANCE.id, STATUSES.GIANT_DOMINANCE.id]
-
-export default class EarthlyStar extends Module {
+export default class EarthlyStar extends Analyser {
 	static override handle = 'earthlystar'
 	static override title = t('ast.earthly-star.title')`Earthly Star`
 
 	@dependency private data!: Data
 	@dependency private suggestions!: Suggestions
-	@dependency private precastStatus!: PrecastStatus
 
 	private prepull = false
 	private uses = 0
@@ -39,34 +37,39 @@ export default class EarthlyStar extends Module {
 	private totalHeld = 0
 	private earlyBurstCount = 0
 
-	private PET_CASTS: number[] = [this.data.actions.STELLAR_BURST.id, this.data.actions.STELLAR_EXPLOSION.id]
+	private petCasts: Array<Action['id']> = [this.data.actions.STELLAR_BURST.id, this.data.actions.STELLAR_EXPLOSION.id]
 
-	protected override init() {
-		this.addEventHook('cast', {abilityId: this.data.actions.EARTHLY_STAR.id, by: 'player'}, this.onPlace)
-		this.addEventHook('cast', {abilityId: this.PET_CASTS, by: 'pet'}, this.onPetCast)
-		// this.addHook('applybuff', {abilityId: PLAYER_STATUSES, by: 'player'}, this._onDominance)
+	override initialise() {
+		this.addEventHook(filter<Event>()
+			.source(this.parser.actor.id)
+			.type('action')
+			.action(this.data.actions.EARTHLY_STAR.id), this.onPlace)
+		this.addEventHook(filter<Event>()
+			.source('pet')
+			.type('action')
+			.action(oneOf(this.petCasts)), this.onPetCast)
 
 		this.addEventHook('complete', this._onComplete)
 	}
 
-	private onPlace(event: CastEvent) {
+	private onPlace(event: Events['action']) {
 		this.uses++
 
 		// this was prepull
-		if (event.timestamp < this.parser.fight.start_time) {
+		if (event.timestamp < this.parser.pull.timestamp) {
 			this.prepull = true
 		}
 
 		// TODO: Instead determine how far back they used it prepull by checking explosion time.
 		if (this.lastUse === 0) {
-			this.lastUse = this.parser.fight.start_time
+			this.lastUse = this.parser.pull.timestamp
 		}
 
 		let drift = 0
 
 		if (this.uses === 1 && !this.prepull) {
 			// The first use, take holding as from the start of the fight
-			drift = event.timestamp - this.parser.fight.start_time
+			drift = event.timestamp - this.parser.pull.timestamp
 		} else {
 			// Take holding as from the time it comes off cooldown
 			drift = event.timestamp - this.lastUse - this.data.actions.EARTHLY_STAR.cooldown
@@ -79,8 +82,8 @@ export default class EarthlyStar extends Module {
 		this.lastUse = event.timestamp
 	}
 
-	private onPetCast(event: CastEvent) {
-		const actionID = event.ability.guid
+	private onPetCast(event: Events['action']) {
+		const actionID = event.action
 
 		if (actionID === this.data.actions.STELLAR_BURST.id) {
 			this.earlyBurstCount++
@@ -97,7 +100,7 @@ export default class EarthlyStar extends Module {
 			this.suggestions.add(new TieredSuggestion({
 				icon: this.data.actions.STELLAR_DETONATION.icon,
 				content: <Trans id="ast.earthly-star.suggestion.uncooked.content">
-					Plan your <ActionLink {...this.data.actions.EARTHLY_STAR} /> placements so that it's always cooked enough for the full potency when you need it.
+					Plan your <DataLink action="EARTHLY_STAR" /> placements so that it's always cooked enough for the full potency when you need it.
 				</Trans>,
 				why: <Trans id="ast.earthly-star.suggestion.uncooked.why">
 					<Plural value={earlyBurstCount} one="# detonation" other="# detonations" /> of an uncooked Earthly Star.
@@ -108,19 +111,19 @@ export default class EarthlyStar extends Module {
 		}
 
 		// If they stopped using Star at any point in the fight, this'll calculate the drift "accurately"
-		if (this.parser.fight.end_time - this.lastUse > this.data.actions.EARTHLY_STAR.cooldown) {
-			this.totalHeld += (this.parser.fight.end_time - (this.lastUse + this.data.actions.EARTHLY_STAR.cooldown))
+		if (this.parser.pull.duration + this.parser.pull.timestamp - this.lastUse > this.data.actions.EARTHLY_STAR.cooldown) {
+			this.totalHeld += (this.parser.pull.duration + this.parser.pull.timestamp - (this.lastUse + this.data.actions.EARTHLY_STAR.cooldown))
 		}
 
 		/*
 			SUGGESTION: Missed uses
 		*/
-		const holdDuration = this.uses === 0 ? this.parser.currentDuration : this.totalHeld
+		const holdDuration = this.uses === 0 ? this.parser.pull.duration : this.totalHeld
 		const usesMissed = Math.floor(holdDuration / this.data.actions.EARTHLY_STAR.cooldown)
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.EARTHLY_STAR.icon,
 			content: <Trans id="ast.earthly-star.suggestion.missed-use.content">
-				Use <ActionLink {...this.data.actions.EARTHLY_STAR} /> more frequently. It may save a healing GCD and results in more damage output.
+				Use <DataLink action="EARTHLY_STAR" /> more frequently. It may save a healing GCD and results in more damage output.
 			</Trans>,
 			tiers: SEVERETIES.USES_MISSED,
 			value: usesMissed,
