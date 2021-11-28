@@ -230,11 +230,25 @@ export default class Draw extends Analyser {
 			],
 		}))
 
-		/*
-			SUGGESTION: Didn't use draw enough
-		*/
 		const drawsMissed = Math.floor(this.drawTotalDrift / this.data.actions.DRAW.cooldown)
-		if (this.draws > 0 && drawsMissed > 0) {
+		if (this.draws === 0) {
+		/*
+		SUGGESTION: Didn't use draw at all
+		*/
+			this.suggestions.add(new Suggestion({
+				icon: this.data.actions.DRAW.icon,
+				content: <Trans id="ast.draw.suggestions.draw-no-usage.content">
+						No uses of <DataLink action="DRAW" /> at all.
+				</Trans>,
+				why: <Trans id="ast.draw.suggestions.draw-no-usage.why">
+					No draws used.
+				</Trans>,
+				severity: SEVERITY.MAJOR,
+			}))
+		} else {
+		/*
+		SUGGESTION: Didn't use draw enough
+		*/
 			this.suggestions.add(new TieredSuggestion({
 				icon: this.data.actions.DRAW.icon,
 				content: <Trans id="ast.draw.suggestions.draw-uses.content">
@@ -247,31 +261,31 @@ export default class Draw extends Analyser {
 				</Trans>,
 			}))
 		}
+
+		const sleevesMissed = Math.floor(this.sleeveTotalDrift / this.data.actions.SLEEVE_DRAW.cooldown)
+		if (this.sleevesUsed === 0) {
 		/*
-			SUGGESTION: Didn't use draw at all
+		SUGGESTION: Didn't use sleeve draw at all
 		*/
-		if (this.draws === 0) {
 			this.suggestions.add(new Suggestion({
-				icon: this.data.actions.DRAW.icon,
-				content: <Trans id="ast.draw.suggestions.draw-no-usage.content">
-						No uses of <DataLink action="DRAW" /> at all.
+				icon: this.data.actions.SLEEVE_DRAW.icon,
+				content: <Trans id="ast.draw.suggestions.sleeve-no-usage.content">
+					No uses of <DataLink action="SLEEVE_DRAW" /> at all.
+					<DataLink action="SLEEVE_DRAW" /> should be paired with every other <DataLink action="DIVINATION" /> to stack buffs at the same time. <DataLink action="LIGHTSPEED" /> can be used to weave card abilities.
 				</Trans>,
-				why: <Trans id="ast.draw.suggestions.draw-no-usage.why">
-					No draws used.
+				why: <Trans id="ast.draw.suggestions.sleeve-no-usage.why">
+					No sleeve draws were used.
 				</Trans>,
 				severity: SEVERITY.MAJOR,
 			}))
-		}
-
 		/*
-			SUGGESTION: Didn't use sleeve draw enough
+		SUGGESTION: Didn't use sleeve draw enough
 		*/
-		const sleevesMissed = Math.floor(this.sleeveTotalDrift / this.data.actions.SLEEVE_DRAW.cooldown)
-		if (this.sleevesUsed > 0 && sleevesMissed > 0) {
+		} else {
 			this.suggestions.add(new TieredSuggestion({
 				icon: this.data.actions.SLEEVE_DRAW.icon,
 				content: <Trans id="ast.draw.suggestions.sleeve-uses.content">
-						Use <DataLink action="SLEEVE_DRAW" /> more frequently. It should be paired with every other <DataLink action="DIVINATION" /> to stack buffs at the same time. <DataLink action="LIGHTSPEED" /> can be used to weave card abilities.
+						Try to use <DataLink action="SLEEVE_DRAW" /> more frequently. It should be paired with every other <DataLink action="DIVINATION" /> to stack buffs at the same time. <DataLink action="LIGHTSPEED" /> can be used to weave card abilities.
 				</Trans>,
 				tiers: SEVERITIES.SLEEVE_DRAW_HOLDING,
 				value: sleevesMissed,
@@ -280,22 +294,5 @@ export default class Draw extends Analyser {
 				</Trans>,
 			}))
 		}
-		/*
-			SUGGESTION: Didn't use sleeve draw at all
-		*/
-		if (this.sleevesUsed === 0) {
-			this.suggestions.add(new Suggestion({
-				icon: this.data.actions.SLEEVE_DRAW.icon,
-				content: <Trans id="ast.draw.suggestions.sleeve-no-usage.content">
-						No uses of <DataLink action="SLEEVE_DRAW" /> at all.
-						It should be paired with every other <DataLink action="DIVINATION" /> to stack buffs at the same time. <DataLink action="LIGHTSPEED" /> can be used to weave card abilities.
-				</Trans>,
-				why: <Trans id="ast.draw.suggestions.sleeve-no-usage.why">
-					No sleeve draws used.
-				</Trans>,
-				severity: SEVERITY.MAJOR,
-			}))
-		}
-
 	}
 }

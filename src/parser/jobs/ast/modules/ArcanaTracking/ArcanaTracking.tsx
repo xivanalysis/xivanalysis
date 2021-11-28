@@ -1,5 +1,4 @@
 import {t} from '@lingui/macro'
-import {getDataBy} from 'data'
 import {Action} from 'data/ACTIONS'
 import {ActionRoot} from 'data/ACTIONS/root'
 import {Status} from 'data/STATUSES'
@@ -53,16 +52,6 @@ export interface CardState {
 	sleeveState: SleeveType
 }
 
-interface statusApplyWindow {
-	data: Data
-	status: Array<Events['statusApply']>
-}
-
-interface statusRemoveWindow {
-	data: Data
-	status: Array<Events['statusRemove']>
-}
-
 // TODO: Try to track for when a seal was not given on pull due to latency?
 export default class ArcanaTracking extends Analyser {
 	static override handle = 'arcanaTracking'
@@ -81,10 +70,10 @@ export default class ArcanaTracking extends Analyser {
 	private lunarSealArcana: Array<Action['id']> = []
 	private solarSealArcana: Array<Action['id']> = []
 
-	private playToStatusLookup: { [key: number]: number } = {}
-	private statusToDrawnLookup: { [key: number]: number } = {}
-	private statusToPlayLookup: { [key: number]: number } = {}
-	private drawnToPlayLookup: { [key: number]: number } = {}
+	private playToStatusLookup: { [playID: Action['id']]: Status['id'] } = {}
+	private statusToDrawnLookup: { [key: Status['id']]: Status['id'] } = {}
+	private statusToPlayLookup: { [key: Status['id']]: Action['id'] } = {}
+	private drawnToPlayLookup: { [key: Status['id']]: Action['id'] } = {}
 
 	private cardStateLog: CardState[] = [{
 		lastEvent: {
@@ -100,47 +89,47 @@ export default class ArcanaTracking extends Analyser {
 	private pullStateInitialized = false
 	private pullIndex = 0
 
-	private on_prepullArcanas?: statusApplyWindow
-	private off_prepullArcanas?: statusRemoveWindow
+	private on_prepullArcanas?: Array<Events['statusApply']>
+	private off_prepullArcanas?: Array<Events['statusRemove']>
 
 	override initialise() {
 		// Initialize grouped reference to actions/statuses data
-		PLAY.forEach(key => { this.play.push(this.data.actions[key].id) })
-		ARCANA_STATUSES.forEach(key => { this.arcanaStatuses.push(this.data.statuses[key].id) })
-		CARD_GRANTING_ABILITIES.forEach(key => { this.cardGrantingAbilities.push(this.data.actions[key].id) })
-		CARD_ACTIONS.forEach(key => { this.cardActions.push(this.data.actions[key].id) })
-		CROWN_PLAYS.forEach(key => { this.crownPlays.push(this.data.actions[key].id) })
-		DRAWN_ARCANA.forEach(key => { this.drawnArcana.push(this.data.statuses[key].id) })
-		CELESTIAL_SEAL_ARCANA.forEach(key => { this.celestialSealArcana.push(this.data.actions[key].id) })
-		LUNAR_SEAL_ARCANA.forEach(key => { this.lunarSealArcana.push(this.data.actions[key].id) })
-		SOLAR_SEAL_ARCANA.forEach(key => { this.solarSealArcana.push(this.data.actions[key].id) })
+		this.play = PLAY.map(actionKey => this.data.actions[actionKey].id)
+		this.arcanaStatuses = ARCANA_STATUSES.map(statusKey => this.data.statuses[statusKey].id)
+		this.cardGrantingAbilities = CARD_GRANTING_ABILITIES.map(actionKey => this.data.actions[actionKey].id)
+		this.cardActions = CARD_ACTIONS.map(actionKey => this.data.actions[actionKey].id)
+		this.crownPlays = CROWN_PLAYS.map(actionKey => this.data.actions[actionKey].id)
+		this.drawnArcana = DRAWN_ARCANA.map(statusKey => this.data.statuses[statusKey].id)
+		this.celestialSealArcana = CELESTIAL_SEAL_ARCANA.map(actionKey => this.data.actions[actionKey].id)
+		this.lunarSealArcana = LUNAR_SEAL_ARCANA.map(actionKey => this.data.actions[actionKey].id)
+		this.solarSealArcana = SOLAR_SEAL_ARCANA.map(actionKey => this.data.actions[actionKey].id)
 
 		this.playToStatusLookup = _.zipObject(this.play, this.drawnArcana)
 		this.statusToDrawnLookup = _.zipObject(this.arcanaStatuses, this.drawnArcana)
 		this.statusToPlayLookup = _.zipObject(this.arcanaStatuses, this.play)
 		this.drawnToPlayLookup = _.zipObject(this.drawnArcana, this.play)
 
-		const player_filter = filter<Event>().source(this.parser.actor.id)
+		const playerFilter = filter<Event>().source(this.parser.actor.id)
 
-		this.addEventHook(player_filter
+		this.addEventHook(playerFilter
 			.type('action')
 			.action(oneOf(this.cardActions))
 		, this.onCast)
 
-		this.addEventHook(player_filter
+		this.addEventHook(playerFilter
 			.type('statusApply')
 			.status(oneOf(this.arcanaStatuses))
 		, this.onPrepullArcana)
-		this.addEventHook(player_filter
+		this.addEventHook(playerFilter
 			.type('statusRemove')
 			.status(oneOf(this.arcanaStatuses))
 		, this.offPrepullArcana)
 
-		this.addEventHook(player_filter
+		this.addEventHook(playerFilter
 			.type('statusApply')
 			.status(oneOf(this.drawnArcana))
 		, this.onDrawnStatus)
-		this.addEventHook(player_filter
+		this.addEventHook(playerFilter
 			.type('statusRemove')
 			.status(oneOf(this.drawnArcana))
 		, this.offDrawnStatus)
@@ -182,7 +171,7 @@ export default class ArcanaTracking extends Analyser {
 			return
 		}
 		if (this.on_prepullArcanas != null) {
-			this.on_prepullArcanas.status.push(event)
+			this.on_prepullArcanas.push(event)
 		}
 	}
 
@@ -195,12 +184,12 @@ export default class ArcanaTracking extends Analyser {
 			return
 		}
 		if (this.off_prepullArcanas != null) {
-			this.off_prepullArcanas.status.forEach(arcanaBuff => {
+			this.off_prepullArcanas.forEach(arcanaBuff => {
 				if (!(arcanaBuff.status === event.status
 				&& arcanaBuff.target === event.target)) { return }
 
 				const cardStateItem: CardState = {..._.last(this.cardStateLog)} as CardState
-				const arcanaAction = getDataBy(this.data.actions, 'id', this.arcanaStatusToPlay(event.status))
+				const arcanaAction = this.data.getAction(this.arcanaStatusToPlay(event.status))
 
 				if (arcanaAction == null) { return }
 
@@ -225,7 +214,7 @@ export default class ArcanaTracking extends Analyser {
 
 	// Just saves a class var for the last drawn status buff event for reference, to help minor arcana plays
 	private onDrawnStatus(event: Events['statusApply']) {
-		if (typeof event.data !== 'undefined' && !this.drawnArcana.includes(event.data)) {
+		if (!this.drawnArcana.includes(event.status)) {
 			return
 		}
 		this.lastDrawnBuff = event

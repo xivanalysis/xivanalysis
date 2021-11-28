@@ -5,13 +5,13 @@ import JobIcon from 'components/ui/JobIcon'
 import {getDataBy} from 'data'
 import {Action} from 'data/ACTIONS'
 import JOBS from 'data/JOBS'
+import {Status} from 'data/STATUSES'
 import {Event, Events} from 'event'
-import {ActorType} from 'fflogs'
 import _ from 'lodash'
 import {Analyser} from 'parser/core/Analyser'
 import {filter} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
-import {Actors} from 'parser/core/modules/Actors'
+import {Actor, Actors} from 'parser/core/modules/Actors'
 import {Data} from 'parser/core/modules/Data'
 import {Timeline} from 'parser/core/modules/Timeline'
 import React from 'react'
@@ -37,9 +37,8 @@ class DivinationWindow {
 	gcdCount: number = 0
 	trailingGcdEvent?: Events['action']
 
-	buffsRemoved: number[] = []
-	playersBuffed: string[] = []
-	containsOtherAST: boolean = false
+	buffsRemoved: Array<Status['id']> = []
+	playersBuffed: Array<Actor['id']> = []
 
 	constructor(start: number) {
 		this.start = start
@@ -59,8 +58,8 @@ interface SleeveIcon {
 }
 
 interface CardLog extends CardState {
-	targetName: string | null
-	targetJob: string | null
+	targetName: Actor['name']
+	targetJob: Actor['job']
 }
 
 export default class ArcanaSuggestions extends Analyser {
@@ -94,7 +93,7 @@ export default class ArcanaSuggestions extends Analyser {
 
 		//used for divination tracking
 		const divinationFilter = filter<Event>().type('statusApply').status(this.data.statuses.DIVINATION.id)
-		this.addEventHook(divinationFilter.target(this.parser.actor.id), this.tryOpenWindow)
+		//this.addEventHook(divinationFilter.target(this.parser.actor.id), this.tryOpenWindow)
 		this.addEventHook(divinationFilter.source(this.parser.actor.id), this.countDivinationBuffs)
 		this.addEventHook(
 			filter<Event>()
@@ -103,7 +102,6 @@ export default class ArcanaSuggestions extends Analyser {
 				.status(this.data.statuses.DIVINATION.id),
 			this.tryCloseWindow,
 		)
-		this.addEventHook(filter<Event>().type('action').source(this.parser.actor.id), this.onCast)
 
 		this.addEventHook('complete', this._onComplete)
 	}
@@ -126,9 +124,6 @@ export default class ArcanaSuggestions extends Analyser {
 		// Handle multiple Astrologian's buffs overwriting each other, we'll have a remove then an apply with the same timestamp
 		// If that happens, re-open the last window and keep tracking
 		if (lastWindow != null) {
-			if (event.source !== this.parser.actor.id) {
-				lastWindow.containsOtherAST = true
-			}
 			if (lastWindow.end == null) {
 				return lastWindow
 			}
@@ -165,54 +160,24 @@ export default class ArcanaSuggestions extends Analyser {
 		}
 		return true
 	}
-
-	private onCast(event: Events['action']) {
-		const lastWindow: DivinationWindow | undefined = _.last(this.history)
-
-		// If we don't have a window, bail
-		if (lastWindow == null) {
-			return
-		}
-
-		const action = this.data.getAction(event.action)
-
-		// Can't do anything else if we didn't get a valid action object
-		if (action == null) {
-			return
-		}
-
-		// If this window isn't done yet add the action to the list
-		if (lastWindow.end == null) {
-			lastWindow.rotation.push(event)
-			if (action.onGcd != null) {
-				lastWindow.gcdCount++
-			}
-			if (event.action === this.data.actions.DIVINATION.id || lastWindow.playersBuffed.length < 1) {
-				lastWindow.containsOtherAST = true
-			}
-			return
-		}
-
-		// If we haven't recorded a trailing GCD event for this closed window, do so now
-		if (lastWindow.end != null && lastWindow.trailingGcdEvent == null && action.onGcd) {
-			lastWindow.trailingGcdEvent = event
-		}
-	}
 	//end divination functions
 
 	private _onComplete() {
 		this.cardLogs = this.arcanaTracking.cardLogs.map(artifact => {
-
-			const targetId = artifact.lastEvent.type === 'action'
-				? artifact.lastEvent.target
-				: undefined
-			const target = artifact.lastEvent.type === 'action' && targetId != null ? this.actors.get(targetId) : undefined
-
+			if (artifact.lastEvent.type === 'action') {
+				const targetId = artifact.lastEvent.target
+				const target = this.actors.get(targetId)
+				const cardLog: CardLog = {
+					...artifact,
+					targetName: target.name,
+					targetJob: target.job,
+				}
+				return cardLog
+			}
 			const cardLog: CardLog = {
 				...artifact,
-				targetName: target != null ? target.name : null,
-				targetJob: target != null ? target.job
-					: null,
+				targetName: '',
+				targetJob: 'UNKNOWN',
 			}
 			return cardLog
 		})
@@ -303,8 +268,7 @@ export default class ArcanaSuggestions extends Analyser {
 	// Helper for override output()
 	RenderAction(artifact: CardLog) {
 		if (artifact.lastEvent.type === 'action' && this.play.includes(artifact.lastEvent.action) && artifact.targetJob != null) {
-			const targetJob_format_for_actortype = this.StringRemoveSpaceCapitalize(artifact.targetJob) //converted due to formating difference
-			const targetJob = getDataBy(JOBS, 'logType', targetJob_format_for_actortype as ActorType)
+			const targetJob = JOBS[artifact.targetJob]
 
 			return <>
 				<Table.Cell>
@@ -409,15 +373,5 @@ export default class ArcanaSuggestions extends Analyser {
 				/>}
 			</span>
 		</Table.Cell>
-	}
-
-	//Helper for string mismatch since this.parser.actor.job is not the same format as JOBS in ActorType and because I am too dumb to fix otherwise lol
-	public StringRemoveSpaceCapitalize(s: string) {
-		const searchChar = s.search('_')
-		if (searchChar !== -1) {
-			return s.charAt(0).toUpperCase() + s.slice(1, searchChar).toLowerCase()
-				+ s.charAt(searchChar+1).toUpperCase() + s.slice(searchChar+2).toLowerCase()
-		}
-		return s.charAt(0).toUpperCase() + s.slice(1).toLowerCase()
 	}
 }
