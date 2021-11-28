@@ -233,7 +233,7 @@ export default class ArcanaTracking extends Analyser {
 	 */
 	private offDrawnStatus(event: Events['statusRemove']) {
 
-		if (event.status != null && !this.drawnArcana.includes(event.status)) {
+		if (!this.drawnArcana.includes(event.status)) {
 			return
 		}
 

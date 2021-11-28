@@ -35,7 +35,6 @@ class DivinationWindow {
 
 	rotation: Array<Events['action']> = []
 	gcdCount: number = 0
-	trailingGcdEvent?: Events['action']
 
 	buffsRemoved: Array<Status['id']> = []
 	playersBuffed: Array<Actor['id']> = []
