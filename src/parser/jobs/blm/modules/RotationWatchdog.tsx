@@ -16,7 +16,7 @@ import React, {Fragment, ReactNode} from 'react'
 import {Icon, Message} from 'semantic-ui-react'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 import {FIRE_SPELLS} from './Elements'
-import {Gauge, ASTRAL_UMBRAL_DURATION, BLMGaugeState, MAX_UMBRAL_HEART_STACKS} from './Gauge'
+import {Gauge, ASTRAL_UMBRAL_DURATION, BLMGaugeState, UMBRAL_HEARTS_MAX_STACKS} from './Gauge'
 import Leylines from './Leylines'
 import Procs from './Procs'
 
@@ -161,7 +161,7 @@ class Cycle {
 		}
 
 		// Cycles with full hearts get two extra F4s
-		if (this.firePhaseMetadata.initialGaugeState.umbralHearts === MAX_UMBRAL_HEART_STACKS) {
+		if (this.firePhaseMetadata.initialGaugeState.umbralHearts === UMBRAL_HEARTS_MAX_STACKS) {
 			expectedCount++
 		}
 
@@ -301,7 +301,7 @@ class Cycle {
 
 	public addEvent(event: CycleEvent): void {
 		// Stash the event in the appropriate phase-specific array
-		if (event.gaugeContext.umbralIce === 0 && event.gaugeContext.astralFire === 0) {
+		if (!event.gaugeContext.enochian) {
 			this.unaspectedEvents.push(event)
 		} else if (this.firePhaseMetadata.startTime === 0) {
 			this.icePhaseEvents.push(event)
@@ -334,6 +334,7 @@ export class RotationWatchdog extends Analyser {
 		umbralHearts: 0,
 		polyglot: 0,
 		enochian: false,
+		paradox: 0,
 	}
 
 	private cycleEndpointIds = CYCLE_ENDPOINTS.map(key => this.data.actions[key].id)
