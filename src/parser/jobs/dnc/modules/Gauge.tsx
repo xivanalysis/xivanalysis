@@ -64,9 +64,6 @@ const ESPRIT_GENERATION_AMOUNT = 10
 const ESPRIT_RATE_SELF = 0.3
 const ESPRIT_RATE_PARTY = 0.2
 
-const TICK_FREQUENCY = 3000
-const MAX_IMPROV_TICKS = 5
-
 const SABER_DANCE_COST = 50
 
 /** Graph colors */
@@ -97,10 +94,6 @@ export class Gauge extends CoreGauge {
 	}))
 
 	private espritBuffs: Map<string, EventHook<Events['damage']>> = new Map<string, EventHook<Events['damage']>>()
-	private improvisers: string[] = []
-	private everImproviser: string[] = []
-	private improvTickHook!: TimestampHook
-	private improvTicks: number = 0
 
 	private espritGenerationExceptions: number[] = ESPRIT_EXCEPTIONS.map(key => this.data.actions[key].id)
 	protected pauseGeneration = false;
@@ -194,61 +187,6 @@ export class Gauge extends CoreGauge {
 		const generatedAmt = ESPRIT_GENERATION_AMOUNT * expectedGenerationChance
 
 		this.espritGauge.generate(generatedAmt)
-	}
-
-	// Reset current improvisatio data when the action is executed
-	private startImprov() {
-		this.improvTicks = 0
-		this.improvisers = []
-		this.everImproviser = []
-	}
-
-	// When a party member gains the healing buff from improvisation, keep track of them
-	private onGainImprov(event: Events['statusApply']) {
-		const eventActor = event.target
-		// If the party member isn't in the current list of improvisers, add them
-		if (this.improvisers.indexOf(eventActor) <= -1) {
-			this.improvisers.push(eventActor)
-		}
-		// If the party member hasn't yet been hit by this improvisation window note that as well
-		if (this.everImproviser.indexOf(eventActor) <= -1) {
-			this.everImproviser.push(eventActor)
-
-			// If we haven't yet recorded a tic of Esprit generation from Improv, move the timestamp hook ahead a bit to make sure the first tic accounts for everyone that receives the initial buff
-			if (this.improvTicks === 0) {
-				if (this.improvTickHook) {
-					this.removeTimestampHook(this.improvTickHook)
-				}
-				// eslint-disable-next-line @typescript-eslint/no-magic-numbers
-				this.improvTickHook = this.addTimestampHook(event.timestamp + 5, this.onTickImprov) // Set this just a bit in the future in case of latency weirdness with the status applications
-			}
-		}
-	}
-
-	// When a party member loses the healing buff from improvisation, drop them from the list of current improvisers
-	private onRemoveImprov(event: Events['statusRemove']) {
-		const eventActor = event.target
-		const actorIndex = this.improvisers.indexOf(eventActor)
-		if (actorIndex > -1) {
-			this.improvisers.splice(actorIndex, 1)
-		}
-	}
-
-	// When the player loses the Improvisation buff, remove the remaining timestamp hook
-	private endImprov() {
-		this.removeTimestampHook(this.improvTickHook)
-	}
-
-	// When improvisation ticks, generate Esprit and set up the next tick if necessary
-	private onTickImprov() {
-		const improviserCount = this.improvisers.length
-		const generatedAmt = 2 + improviserCount
-		this.espritGauge.generate(generatedAmt)
-
-		// Technically we don't need this check since we'll remove the hook in endImprov but eh
-		if (++this.improvTicks < MAX_IMPROV_TICKS) {
-			this.addTimestampHook(this.parser.currentTimestamp + TICK_FREQUENCY, this.onTickImprov)
-		}
 	}
 
 	private onConsumeEsprit() {
