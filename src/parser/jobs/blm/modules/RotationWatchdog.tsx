@@ -99,9 +99,14 @@ class Cycle {
 	private firePhaseEvents: CycleEvent[] = []
 	private manafontPhaseEvents: CycleEvent[] = [] // Keeping track of post-manafont events separately so we can fine-tune some of the analysis logic
 
+	// Concatenate the fire and manafont events together to get the event array for the full astral fire phase
+	public get fullFirePhaseEvents(): CycleEvent[] {
+		return this.firePhaseEvents.concat(this.manafontPhaseEvents)
+	}
+
 	// Concatenate the phased events together to produce the full event array for the cycle
 	public get events(): CycleEvent[] {
-		return this.unaspectedEvents.concat(this.icePhaseEvents).concat(this.firePhaseEvents).concat(this.manafontPhaseEvents)
+		return this.unaspectedEvents.concat(this.icePhaseEvents).concat(this.fullFirePhaseEvents)
 	}
 	//#endregion
 
@@ -233,7 +238,7 @@ class Cycle {
 		// Determine how much MP we need to cast all of our expected Fire spells
 		const minimumMPForExpectedFires =
 			(this.expectedFire4sBeforeDespair * this.data.actions.FIRE_IV.mpCost + // MP for the expected Fire 4s
-			(this.events.some(event => event.action === this.data.actions.FIRE_I.id) ? 1 : 0) * this.data.actions.FIRE_I.mpCost) // Feelycraft: If they included a single F1 we'll allow it. If they skipped it, that's fine too. If they have more than one, it's bad so only allow one for the MP requirement calculation.
+			(this.fullFirePhaseEvents.some(event => event.action === this.data.actions.FIRE_I.id || event.action === this.data.actions.PARADOX.id) ? 1 : 0) * this.data.actions.FIRE_I.mpCost) // Feelycraft: If they included a single F1/Paradox we'll allow it. If they skipped it, that's fine too. If they have more than one, it's bad so only allow one for the MP requirement calculation.
 			* 2 // Astral Fire makes F1 and F4 cost twice as much
 			- this.firePhaseMetadata.initialGaugeState.umbralHearts * this.data.actions.FIRE_IV.mpCost // Refund the additional cost for each Umbral Heart carried into the Astral Fire phase
 			+ this.data.actions.FIRE_IV.mpCost // Add in the required MP cost for Despair, which happens to be the same as an F4
@@ -258,7 +263,8 @@ class Cycle {
 
 	//#region Other Fire checks
 	public get extraF1s(): number {
-		return Math.max(this.events.filter(event => event.action === this.data.actions.FIRE_I.id).length - 1, 0)
+		// Paradox counts against the allowed F1 count if used in Fire phase
+		return Math.max(this.fullFirePhaseEvents.filter(event => event.action === this.data.actions.FIRE_I.id || event.action === this.data.actions.PARADOX.id).length - 1, 0)
 	}
 
 	public get isMissingFire(): boolean {
