@@ -117,14 +117,9 @@ export class Gauge extends CoreGauge {
 		this.addEventHook(statusApplyFilter.status(espritStatusMatcher), this.addEspritGenerationHook)
 		this.addEventHook(statusRemoveFilter.status(espritStatusMatcher), this.removeEspritGenerationHook)
 
-		this.addEventHook(statusApplyFilter.status(this.data.statuses.IMPROVISATION.id), this.startImprov)
-		this.addEventHook(statusApplyFilter.status(this.data.statuses.IMPROVISATION_HEALING.id), this.onGainImprov)
-		this.addEventHook(statusRemoveFilter.status(this.data.statuses.IMPROVISATION_HEALING.id), this.onRemoveImprov)
-		this.addEventHook(statusRemoveFilter.status(this.data.statuses.IMPROVISATION.id), this.endImprov)
+		this.addEventHook(damageFilter.cause(this.data.matchCauseActionId([this.data.actions.SABER_DANCE.id])), this.onConsumeEsprit)
 
-		this.addEventHook(damageFilter.cause(filter<Cause>().action(this.data.actions.SABER_DANCE.id)), this.onConsumeEsprit)
-
-		this.addEventHook(damageFilter.cause(filter<Cause>().action(this.data.matchActionId(FEATHER_GENERATORS))), this.onCastGenerator)
+		this.addEventHook(damageFilter.cause(this.data.matchCauseAction(FEATHER_GENERATORS)), this.onCastGenerator)
 		this.addEventHook(playerFilter.type('action').action(this.data.matchActionId(FEATHER_CONSUMERS)), this.onConsumeFeather)
 
 		this.addEventHook('complete', this.onComplete)
