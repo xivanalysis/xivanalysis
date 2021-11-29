@@ -689,6 +689,7 @@
   "pld.goring.checklist.goringblade.requirement.uptime": "Gesamtanwendungszeit von <0/>",
   "pld.goring.suggestions.goringblade.content": "Vermeide es <0/> zu erneuern, wenn es noch über eine lange Restlaufzeit verfügt.",
   "pld.goring.suggestions.goringblade.why": "{0} von <0/> durch zu frühes Reaktivieren verloren.",
+  "pld.requiescat.suggestions.missed-confiteor.content": "",
   "pld.requiescat.suggestions.nobuff.content": "<0/> sollte nur benutzt werden, wenn du mehr als 80% MP hast. Ansonsten bekommst du den <1/>-Buff nicht, der dir 50% mehr magischen Schaden und keine Castzeit gibt, und dir erlaubt <2/> zu casten.",
   "pld.requiescat.suggestions.nobuff.why": "{missedRequiescatBuffs, plural, other {#-mal}} unter 80% MP benutzt.",
   "pld.requiescat.suggestions.wrong-gcd.content": "Während <0/> sollten deine benutzten GCDs aus 3-4 Nutzen von <1/> (oder 4-mal <2/> auf mehreren Zielen) und einmal <3/> bestehen für optimalen Schaden.",

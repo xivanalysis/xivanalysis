@@ -689,6 +689,7 @@
   "pld.goring.checklist.goringblade.requirement.uptime": "<0/> 지속시간",
   "pld.goring.suggestions.goringblade.content": "이전에 부여한 <0/> 의 시간이 충분할 경우 갱신을 피하세요.",
   "pld.goring.suggestions.goringblade.why": "<0/>을 너무 이르게 갱신하여 {0} 만큼의 지속시간을 낭비하였습니다.",
+  "pld.requiescat.suggestions.missed-confiteor.content": "",
   "pld.requiescat.suggestions.nobuff.content": "<0/>은 마나가 80%이상 있을 때 만 사용하십시오. 이하일 때 사용할 시 마법 데미지 50% 증가, 즉시 시전, 그리고 <2/> 사용을 부여하는 <1/> 버프를 놓칠것입니다.",
   "pld.requiescat.suggestions.nobuff.why": "{missedRequiescatBuffs, plural, one {#번} other {#번}}의 안식 기도가 MP 80% 이하일 때 사용되었습니다.",
   "pld.requiescat.suggestions.wrong-gcd.content": "<0/> 구간내 글쿨은 반드시 3~4회의 <1/> (다수 대상일시 4회의 <2/>) 그리고 1회의 <3/>가 포함되어야 합니다.",
