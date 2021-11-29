@@ -1,6 +1,6 @@
 import {t} from '@lingui/macro'
 import {Trans, Plural} from '@lingui/react'
-import {ActionLink} from 'components/ui/DbLink'
+import {ActionLink, StatusLink} from 'components/ui/DbLink'
 import {ActionKey} from 'data/ACTIONS'
 import {Cause, Event, Events} from 'event'
 import {Analyser} from 'parser/core/Analyser'
@@ -124,16 +124,16 @@ export default class Buffs extends Analyser {
 	}
 
 	private getDisembowelUptimePercent() {
-		const statusUptime = this.statuses.getUptime('DISEMBOWEL', this.actors.current)
+		const statusUptime = this.statuses.getUptime('POWER_SURGE', this.actors.current)
 		const fightUptime = this.parser.currentDuration - this.invulnerability.getDuration({types: ['invulnerable']})
 		return (statusUptime / fightUptime) * 100
 	}
 
 	private onComplete() {
 		this.checklist.add(new Rule({
-			name: <Trans id="drg.buffs.checklist.name">Keep {this.data.actions.DISEMBOWEL.name} up</Trans>,
+			name: <Trans id="drg.buffs.checklist.name">Keep {this.data.statuses.POWER_SURGE.name} up</Trans>,
 			description: <Trans id="drg.buffs.checklist.description">
-				<ActionLink {...this.data.actions.DISEMBOWEL}/> provides a 10% boost to your personal damage and should always be kept up.
+				<ActionLink {...this.data.actions.DISEMBOWEL}/> grants <StatusLink status="POWER_SURGE" /> which provides a 10% boost to your personal damage and should always be kept up.
 			</Trans>,
 			displayOrder: DISPLAY_ORDER.DISEMBOWEL,
 			requirements: [

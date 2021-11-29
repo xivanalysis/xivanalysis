@@ -7,7 +7,7 @@ import {CastEvent} from 'fflogs'
 import {Event} from 'legacyEvent'
 import Module, {dependency} from 'parser/core/Module'
 import BrokenLog from 'parser/core/modules/BrokenLog'
-import Checklist, {Rule, Requirement} from 'parser/core/modules/Checklist'
+import Checklist from 'parser/core/modules/Checklist'
 import Combatants from 'parser/core/modules/Combatants'
 import {Cooldowns} from 'parser/core/modules/Cooldowns'
 import {Data} from 'parser/core/modules/Data'
@@ -20,9 +20,7 @@ import React, {Fragment} from 'react'
 import {Icon, Message, Table, Accordion, Button} from 'semantic-ui-react'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 
-const DRAGON_MAX_DURATION_MILLIS = 30000
-const DRAGON_DEFAULT_DURATION_MILLIS = 30000
-const BLOOD_EXTENSION_MILLIS = 10000
+const DRAGON_DURATION_MILLIS = 30000
 const LOTD_BUFF_DELAY_MIN = 30000
 const LOTD_BUFF_DELAY_MAX = 60000
 
@@ -57,13 +55,9 @@ interface LifeWindows {
 	history: LifeWindow[]
 }
 
-// TS port notes:
-// - pretty straight-forward port. Would like to use new BuffWindow module to handle some of the stardiver
-//   count logic, so will take another look at the module when that's ready
-// port to analyser requires:
-// - core combo event
-// EW changes:
-// - gauge tracking will be removed (botd now a trait)
+// EW notes:
+// - looking at BuffWindow module to see if lotd tracking can be done through that. Not planning on doing that
+//   port until basic EW support is in place
 export default class BloodOfTheDragon extends Module {
 	static override handle = 'bloodOfTheDragon'
 	static override title = t('drg.blood.title')`Life of the Dragon`
@@ -83,8 +77,6 @@ export default class BloodOfTheDragon extends Module {
 	// Null assumption, in case they precast. In all likelyhood, this will actually be incorrect, but there's no harm if
 	// that's the case since BotD should be the very first weave in the fight and that'll reset the duration to 30s anyway.
 	// Also, this way we don't count the first second of the fight as erroneous downtime.
-	private bloodDuration = DRAGON_DEFAULT_DURATION_MILLIS
-	private bloodDowntime = 0
 	private lifeDuration = 0
 	private lifeWindows: LifeWindows = {
 		current: undefined,
@@ -94,19 +86,7 @@ export default class BloodOfTheDragon extends Module {
 	private eyes = 0
 	private lostEyes = 0
 
-	private extenderActions = [
-		this.data.actions.FANG_AND_CLAW.id,
-		this.data.actions.WHEELING_THRUST.id,
-	]
-
-	private extenderCombos = [
-		this.data.actions.SONIC_THRUST.id,
-	]
-
 	protected override init() {
-		this.addEventHook('cast', {by: 'player', abilityId: this.extenderActions}, this.onExtenderCast)
-		this.addEventHook('combo', {by: 'player', abilityId: this.extenderCombos}, this.onExtenderCast)
-		this.addEventHook('cast', {by: 'player', abilityId: this.data.actions.BLOOD_OF_THE_DRAGON.id}, this.onBloodCast)
 		this.addEventHook('cast', {by: 'player', abilityId: this.data.actions.MIRAGE_DIVE.id}, this.onMirageDiveCast)
 		this.addEventHook('normaliseddamage', {by: 'player', abilityId: this.data.actions.GEIRSKOGUL.id}, this.onGeirskogulCast)
 		this.addEventHook('normaliseddamage', {by: 'player', abilityId: this.data.actions.NASTROND.id}, this.onNastrondCast)
@@ -164,45 +144,21 @@ export default class BloodOfTheDragon extends Module {
 			if (this.lifeDuration <= 0) {
 				// We're reverting out of Life
 				this.finishLifeWindow()
-				this.bloodDuration = DRAGON_DEFAULT_DURATION_MILLIS + this.lifeDuration // Actually subtraction
 				this.lifeDuration = 0
 			}
-		} else {
-			this.bloodDuration -= elapsedTime
-		}
-
-		if (this.bloodDuration <= 0) {
-			// Blood fell off; reset everything
-			this.bloodDowntime -= this.bloodDuration // Actually addition
-			this.bloodDuration = 0
-			this.eyes = 0
 		}
 
 		this.lastEventTime = this.parser.currentTimestamp
 	}
 
-	private onExtenderCast() {
-		this.updateGauge()
-		if (this.lifeWindows.current == null && this.bloodDuration > 0) {
-			// If we're in regular Blood, increase the duration
-			this.bloodDuration = Math.min(this.bloodDuration + BLOOD_EXTENSION_MILLIS, DRAGON_MAX_DURATION_MILLIS)
-		}
-	}
-
-	onBloodCast() {
-		this.updateGauge()
-		this.bloodDuration = DRAGON_DEFAULT_DURATION_MILLIS
-	}
-
 	onMirageDiveCast() {
 		this.updateGauge()
-		if (this.lifeWindows.current != null || this.bloodDuration > 0) {
-			// You can accrue eyes in LotD too
-			this.eyes++
-			if (this.eyes > MAX_EYES) {
-				this.lostEyes += this.eyes - MAX_EYES
-				this.eyes = MAX_EYES
-			}
+
+		// You can accrue eyes in LotD too
+		this.eyes++
+		if (this.eyes > MAX_EYES) {
+			this.lostEyes += this.eyes - MAX_EYES
+			this.eyes = MAX_EYES
 		}
 	}
 
@@ -211,7 +167,7 @@ export default class BloodOfTheDragon extends Module {
 
 		if (this.eyes === MAX_EYES) {
 			// LotD tiiiiiime~
-			this.lifeDuration = DRAGON_DEFAULT_DURATION_MILLIS
+			this.lifeDuration = DRAGON_DURATION_MILLIS
 			this.lifeWindows.current = {
 				start: this.parser.currentTimestamp,
 				duration: this.lifeDuration,
@@ -289,9 +245,10 @@ export default class BloodOfTheDragon extends Module {
 	onDeath() {
 		// RIP
 		this.updateGauge()
-		this.bloodDuration = 0
 		this.lifeDuration = 0
 		this.finishLifeWindow()
+
+		// TODO: check if you lose eyes on death
 		this.eyes = 0
 	}
 
@@ -306,7 +263,7 @@ export default class BloodOfTheDragon extends Module {
 				start: this.parser.epochToFflogs(window.start),
 				end: this.parser.epochToFflogs(window.end),
 			}))
-		const end = start + DRAGON_DEFAULT_DURATION_MILLIS
+		const end = start + DRAGON_DURATION_MILLIS
 
 		for (const dtWindow of windows) {
 			if (dtWindow.start < end) {
@@ -366,32 +323,9 @@ export default class BloodOfTheDragon extends Module {
 		this.updateGauge()
 		this.finishLifeWindow()
 		this.analyzeLifeWindows()
-		const duration = this.parser.currentDuration - this.death.deadTime
-		const uptime = ((duration - this.bloodDowntime) / duration) * 100
 		const noBuffSd = this.lifeWindows.history.filter(window => !window.isLast && window.missedSdBuff).length
 		const noLifeSd = this.lifeWindows.history.filter(window => !window.isLast && window.stardivers.length === 0).length
 		const noFullNsLife = this.lifeWindows.history.filter(window => !window.isLast && window.nastronds.length < EXPECTED_NASTRONDS_PER_WINDOW).length
-
-		this.checklist.add(new Rule({
-			name: <Trans id="drg.blood.checklist.name">Keep Blood of the Dragon up</Trans>,
-			description: <Fragment>
-				<Trans id="drg.blood.checklist.description"><ActionLink {...this.data.actions.BLOOD_OF_THE_DRAGON}/> is at the heart of the DRG rotation and should be kept up at all times. Without it, your jumps are weakened and you can't use <ActionLink {...this.data.actions.NASTROND}/>.</Trans>
-				<Message warning icon>
-					<Icon name="warning sign"/>
-					<Message.Content>
-						<Trans id="drg.blood.checklist.description.warning">As Blood of the Dragon is now a gauge instead of a buff, please bear in mind that the numbers here and in the Life of the Dragon windows below are simulated. As such, it may not line up perfectly with reality.</Trans>
-					</Message.Content>
-				</Message>
-			</Fragment>,
-			displayOrder: DISPLAY_ORDER.BLOOD_OF_THE_DRAGON_CHECKLIST,
-			requirements: [
-				new Requirement({
-					name: <Trans id="drg.blood.checklist.requirement.name"><ActionLink {...this.data.actions.BLOOD_OF_THE_DRAGON}/> uptime</Trans>,
-					percent: () => uptime,
-				}),
-			],
-			target: 98,
-		}))
 
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.MIRAGE_DIVE.icon,
