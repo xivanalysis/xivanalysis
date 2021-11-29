@@ -2,19 +2,19 @@ import {Trans} from '@lingui/react'
 import {DataLink} from 'components/ui/DbLink'
 import {dependency} from 'parser/core/Module'
 import Checklist, {Requirement, TARGET, TieredRule} from 'parser/core/modules/Checklist'
-import {DoTs, DotDurations} from 'parser/core/modules/DoTs'
+import {DoTs} from 'parser/core/modules/DoTs'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
 
 const SEVERITIES = {
 	CLIPPING: {
-		2: SEVERITY.MINOR,
-		4: SEVERITY.MEDIUM,
-		6: SEVERITY.MAJOR,
+		6: SEVERITY.MINOR,
+		9: SEVERITY.MEDIUM,
+		12: SEVERITY.MAJOR,
 	},
 	UPTIME: {
-		84: TARGET.WARN,
-		91: TARGET.SUCCESS,
+		90: TARGET.WARN,
+		95: TARGET.SUCCESS,
 	},
 }
 
@@ -44,7 +44,8 @@ export default class Combust extends DoTs {
 		}))
 	}
 
-	override addClippingSuggestions(clip: DotDurations) {
+	override addClippingSuggestions() {
+		const combustClipPerMinute = this.getClippingAmount(this.data.statuses.COMBUST_III.id)
 		// Suggestion for DoT clipping
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.COMBUST_III.icon,
@@ -52,10 +53,10 @@ export default class Combust extends DoTs {
 					Avoid refreshing <DataLink action="COMBUST_III" /> significantly before it expires.
 			</Trans>,
 			why: <Trans id="ast.dots.suggestion.clip.why">
-						An average of {this.parser.formatDuration(this.getClippingAmount(this.data.statuses.COMBUST_III.id) * 1000)} of Combust clipped every minute, for a total of {this.parser.formatDuration(clip[this.data.statuses.COMBUST_III.id] ?? 0)} lost to early refreshes.
+				An average of {this.parser.formatDuration(combustClipPerMinute, 1)} seconds of <DataLink status="COMBUST_III" /> per minute lost to early refreshes.
 			</Trans>,
 			tiers: SEVERITIES.CLIPPING,
-			value: this.getClippingAmount(this.data.statuses.COMBUST_III.id),
+			value: combustClipPerMinute,
 		}))
 	}
 

@@ -1,8 +1,8 @@
 import {Trans} from '@lingui/react'
-import {ActionLink} from 'components/ui/DbLink'
+import {ActionLink, DataLink} from 'components/ui/DbLink'
 import {dependency} from 'parser/core/Module'
 import Checklist, {Requirement, Rule} from 'parser/core/modules/Checklist'
-import {DoTs, DotDurations} from 'parser/core/modules/DoTs'
+import {DoTs} from 'parser/core/modules/DoTs'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
@@ -44,16 +44,18 @@ export class Demolish extends DoTs {
 		}))
 	}
 
-	protected override addClippingSuggestions(clip: DotDurations) {
+	protected override addClippingSuggestions() {
+		const demolishClipPerMinute = this.getClippingAmount(this.data.statuses.DEMOLISH.id)
+
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.DEMOLISH.icon,
 			content: <Trans id="mnk.demolish.suggestion.content">
 				Avoid refreshing <ActionLink action="DEMOLISH"/> significantly before its expiration. Unnecessary refreshes risk overwriting buff snapshots.
 			</Trans>,
 			tiers: SUGGESTION_TIERS.CLIPPING,
-			value: this.getClippingAmount(this.data.statuses.DEMOLISH.id),
+			value: demolishClipPerMinute,
 			why: <Trans id="mnk.demolish.suggestion.why">
-				You lost {this.parser.formatDuration(clip[this.data.statuses.DEMOLISH.id] ?? 0)} of Demolish to early refreshes.
+				An average of {this.parser.formatDuration(demolishClipPerMinute, 1)} seconds of <DataLink status="DEMOLISH" /> per minute lost to early refreshes.
 			</Trans>,
 		}))
 	}

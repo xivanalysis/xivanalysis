@@ -2,7 +2,7 @@ import {Trans} from '@lingui/react'
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
 import {dependency} from 'parser/core/Injectable'
 import Checklist, {Requirement, TARGET, TieredRule} from 'parser/core/modules/Checklist'
-import {DotDurations, DoTs as CoreDoTs} from 'parser/core/modules/DoTs'
+import {DoTs as CoreDoTs} from 'parser/core/modules/DoTs'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
 
@@ -48,7 +48,7 @@ export class DoTs extends CoreDoTs {
 		}))
 	}
 
-	protected addClippingSuggestions(_clips: DotDurations) {
+	protected addClippingSuggestions() {
 		// DoTs are meant to be refreshed together, so just average their clip
 		const meanClip = (this.getClippingAmount(this.data.statuses.CAUSTIC_BITE.id) + this.getClippingAmount(this.data.statuses.STORMBITE.id)) / 2
 

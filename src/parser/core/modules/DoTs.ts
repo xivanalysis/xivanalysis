@@ -9,7 +9,7 @@ import {Statuses} from 'parser/core/modules/Statuses'
 
 const MILLISECONDS_PER_MINUTE = 60000
 
-export type DotTracking = Map<number, Map<string, DotTargetTracking>>
+type DotTracking = Map<number, Map<string, DotTargetTracking>>
 interface DotTargetTracking {
 	lastApplied: number
 	totalClipping: number
@@ -52,7 +52,7 @@ export abstract class DoTs extends Analyser {
 	 * This should be handled on a job-by-job basis rather than generically, since different jobs have
 	 * different thresholds for what constitutes bad clipping with varying explanations as to why.
 	 */
-	protected abstract addClippingSuggestions(_clips: DotTracking): void
+	protected abstract addClippingSuggestions(): void
 
 	/**
 	 * Implementing modules can optionally exclude applications of a status from clipping calculations.
@@ -97,7 +97,7 @@ export abstract class DoTs extends Analyser {
 
 	private onComplete() {
 		this.addChecklistRules()
-		this.addClippingSuggestions(this.statusApplications)
+		this.addClippingSuggestions()
 	}
 
 	// These two functions are helpers for submodules and should be used but not overridden

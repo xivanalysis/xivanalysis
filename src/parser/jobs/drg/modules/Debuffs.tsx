@@ -1,8 +1,8 @@
 import {Trans} from '@lingui/react'
-import {ActionLink} from 'components/ui/DbLink'
+import {ActionLink, DataLink} from 'components/ui/DbLink'
 import {dependency} from 'parser/core/Module'
 import Checklist, {Rule, Requirement} from 'parser/core/modules/Checklist'
-import {DoTs as CoreDoTs, DotDurations} from 'parser/core/modules/DoTs'
+import {DoTs as CoreDoTs} from 'parser/core/modules/DoTs'
 import Suggestions, {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import React from 'react'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
@@ -32,7 +32,8 @@ export default class Debuffs extends CoreDoTs {
 		}))
 	}
 
-	addClippingSuggestions(clip: DotDurations) {
+	addClippingSuggestions() {
+		const chaosThrustClipPerMinute = this.getClippingAmount(this.data.statuses.CHAOS_THRUST.id)
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.CHAOS_THRUST.icon,
 			content: <Trans id="drg.debuffs.suggestions.clipping.content">
@@ -43,9 +44,9 @@ export default class Debuffs extends CoreDoTs {
 				10: SEVERITY.MEDIUM,
 				15: SEVERITY.MAJOR,
 			},
-			value: this.getClippingAmount(this.data.statuses.CHAOS_THRUST.id),
+			value: chaosThrustClipPerMinute,
 			why: <Trans id="drg.debuffs.suggestions.clipping.why">
-				You lost {this.parser.formatDuration(clip[this.data.statuses.CHAOS_THRUST.id] ?? 0)} of Chaos Thrust to early refreshes.
+				An average of {this.parser.formatDuration(chaosThrustClipPerMinute, 1)} seconds of <DataLink status="CHAOS_THRUST" /> per minute lost to early refreshes.
 			</Trans>,
 		}))
 	}

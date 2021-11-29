@@ -1,10 +1,11 @@
 import {Trans} from '@lingui/react'
-import {ActionLink, StatusLink} from 'components/ui/DbLink'
+import {DataLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
-import {TieredRule, TARGET, Requirement} from 'parser/core/modules/Checklist'
+import {dependency} from 'parser/core/Injectable'
+import Checklist, {TieredRule, TARGET, Requirement} from 'parser/core/modules/Checklist'
 import {DoTs as CoreDoTs} from 'parser/core/modules/DoTs'
-import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import Suggestions, {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import React from 'react'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 
@@ -16,20 +17,16 @@ const SEVERITIES = {
 		12: SEVERITY.MAJOR,
 	},
 	UPTIME: {
-		84: TARGET.WARN,
-		94: TARGET.SUCCESS,
+		90: TARGET.WARN,
+		95: TARGET.SUCCESS,
 	},
 }
 
 export default class DoTs extends CoreDoTs {
-	static handle = 'biolysis'
-	static dependencies = [
-		...DoTs.dependencies,
-		'checklist',
-		'suggestions',
-	]
+	@dependency private checklist!: Checklist
+	@dependency private suggestions!: Suggestions
 
-	static trackedStatuses = [
+	protected override trackedStatuses = [
 		STATUSES.BIOLYSIS.id,
 	]
 
@@ -43,14 +40,14 @@ export default class DoTs extends CoreDoTs {
 			tiers: SEVERITIES.UPTIME,
 			requirements: [
 				new Requirement({
-					name: <Trans id="sch.dots.checklist.requirement.bio-ii.name"><ActionLink {...ACTIONS.BIOLYSIS} /> uptime</Trans>,
+					name: <Trans id="sch.dots.checklist.requirement.bio-ii.name"><DataLink action="BIOLYSIS" /> uptime</Trans>,
 					percent: () => this.getUptimePercent(STATUSES.BIOLYSIS.id),
 				}),
 			],
 		}))
 	}
 
-	addClippingSuggestions(clip) {
+	addClippingSuggestions() {
 		const clipPerMinute = this.getClippingAmount(STATUSES.BIOLYSIS.id)
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.BIOLYSIS.icon,
@@ -60,7 +57,7 @@ export default class DoTs extends CoreDoTs {
 			tiers: SEVERITIES.CLIPPING,
 			value: clipPerMinute,
 			why: <Trans id="sch.dots.suggestions.clipping.why">
-				An average of {this.parser.formatDuration(clipPerMinute * 1000)} of <StatusLink {...STATUSES.BIOLYSIS}/> clipped every minute, for a total of {this.parser.formatDuration(clip[STATUSES.BIOLYSIS.id] ?? 0)} lost to early refreshes.
+				An average of {this.parser.formatDuration(clipPerMinute, 1)} seconds of <DataLink status="BIOLYSIS" /> per minute lost to early refreshes.
 			</Trans>,
 		}))
 	}
