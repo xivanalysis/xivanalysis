@@ -82,8 +82,6 @@ export class Gauge extends CoreGauge {
 	private droppedEnoTimestamps: number[] = []
 	private overwrittenPolyglot: number = 0
 
-	private lastHistoryTimestamp: number = this.parser.pull.timestamp
-
 	private fireSpellIds = FIRE_SPELLS.map(key => this.data.actions[key].id)
 	private iceSpellIds = [
 		...ICE_SPELLS_TARGETED.map(key => this.data.actions[key].id),
@@ -166,6 +164,8 @@ export class Gauge extends CoreGauge {
 		},
 		correctHistory: true,
 	}))
+
+	private previousGaugeState: BLMGaugeState = this.getGaugeState(this.parser.pull.timestamp)
 
 	override initialise() {
 		super.initialise()
@@ -293,11 +293,10 @@ export class Gauge extends CoreGauge {
 			this.polyglotTimer.start()
 		}
 
-		const lastGaugeState = this.getGaugeState(this.lastHistoryTimestamp)
-		if (this.gaugeValuesChanged(lastGaugeState)) {
-			this.tryGainParadox(lastGaugeState)
-			this.updateCastTimes(lastGaugeState)
-			this.lastHistoryTimestamp = this.parser.currentEpochTimestamp
+		if (this.gaugeValuesChanged(this.previousGaugeState)) {
+			this.tryGainParadox(this.previousGaugeState)
+			this.updateCastTimes(this.previousGaugeState)
+			this.previousGaugeState = this.getGaugeState(this.parser.currentEpochTimestamp)
 
 			// Queue event to tell other analysers about the change
 			this.parser.queueEvent({
