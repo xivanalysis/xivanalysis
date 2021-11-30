@@ -1,13 +1,11 @@
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
-import {ActionLink, DataLink} from 'components/ui/DbLink'
+import {ActionLink} from 'components/ui/DbLink'
 import JobIcon from 'components/ui/JobIcon'
-import {getDataBy} from 'data'
 import {Action} from 'data/ACTIONS'
 import JOBS from 'data/JOBS'
 import {Status} from 'data/STATUSES'
 import {Event, Events} from 'event'
-import _ from 'lodash'
 import {Analyser} from 'parser/core/Analyser'
 import {filter} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
@@ -29,19 +27,12 @@ const TIMELINE_UPPER_MOD = 30000 // in ms
 // set-up for divination players hit tracking
 const PLAYERS_HIT_TARGET = 8
 
-class DivinationWindow {
+interface DivinationWindow {
 	start: number
 	end?: number
 
-	rotation: Array<Events['action']> = []
-	gcdCount: number = 0
-
-	buffsRemoved: Array<Status['id']> = []
-	playersBuffed: Array<Actor['id']> = []
-
-	constructor(start: number) {
-		this.start = start
-	}
+	buffsRemoved: Array<Status['id']>
+	playersBuffed: Array<Actor['id']>
 }
 //end set-up for divination
 
@@ -78,6 +69,7 @@ export default class ArcanaSuggestions extends Analyser {
 
 	//div privates for output
 	private history: DivinationWindow[] = []
+	private currentWindow: DivinationWindow | undefined = undefined
 	private divinationCast: number = 0
 	//end div privates
 
@@ -109,46 +101,51 @@ export default class ArcanaSuggestions extends Analyser {
 	private countDivinationBuffs(event: Events['statusApply']) {
 		// Get this from tryOpenWindow. If a window wasn't open, we'll open one.
 		// If it was already open (because another Astrologian went first), we'll keep using it
-		const lastWindow: DivinationWindow = this.tryOpenWindow(event)
+		this.tryOpenWindow(event)
 
 		// Find out how many players we hit with the buff.
-		if (!lastWindow.playersBuffed.includes(event.target) && this.actors.get(event.target).playerControlled) {
-			lastWindow.playersBuffed.push(event.target)
+		if (this.currentWindow != null && !this.currentWindow.playersBuffed.includes(event.target) && this.actors.get(event.target).playerControlled) {
+			this.currentWindow.playersBuffed.push(event.target)
 		}
 	}
 
 	private tryOpenWindow(event: Events['statusApply']): DivinationWindow {
-		const lastWindow: DivinationWindow | undefined = _.last(this.history)
-
-		// Handle multiple Astrologian's buffs overwriting each other, we'll have a remove then an apply with the same timestamp
-		// If that happens, re-open the last window and keep tracking
-		if (lastWindow != null) {
-			if (lastWindow.end == null) {
-				return lastWindow
-			}
-			if (lastWindow.end === event.timestamp) {
-				lastWindow.end = undefined
-				return lastWindow
+		if (this.currentWindow === undefined) {
+			this.currentWindow = {
+				start: event.timestamp,
+				buffsRemoved: [],
+				playersBuffed: [],
 			}
 		}
 
-		const newWindow = new DivinationWindow(event.timestamp)
-		this.history.push(newWindow)
-		return newWindow
+		// Handle multiple Astrologian's buffs overwriting each other, we'll have a remove then an apply with the same timestamp
+		// If that happens, re-open the last window and keep tracking
+		if (this.currentWindow != null) {
+			if (this.currentWindow.end == null) {
+				return this.currentWindow
+			}
+			if (this.currentWindow.end === event.timestamp) {
+				this.currentWindow.end = undefined
+				return this.currentWindow
+			}
+		}
+
+		return this.currentWindow
 	}
 
 	private tryCloseWindow(event: Events['statusRemove']) {
-		const lastWindow: DivinationWindow | undefined = _.last(this.history)
 
-		if (lastWindow == null) {
+		if (this.currentWindow == null) {
 			return
 		}
 
 		// Cache whether we've seen a buff removal event for this status, just in case they happen at exactly the same timestamp
-		lastWindow.buffsRemoved.push(event.status)
+		this.currentWindow.buffsRemoved.push(event.status)
 
-		if (this.isWindowOkToClose(lastWindow)) {
-			lastWindow.end = event.timestamp
+		if (this.isWindowOkToClose(this.currentWindow)) {
+			this.currentWindow.end = event.timestamp
+			this.history.push(this.currentWindow)
+			this.currentWindow = undefined
 		}
 	}
 
@@ -191,7 +188,7 @@ export default class ArcanaSuggestions extends Analyser {
 			</p>
 			<p>
 				<Trans id="ast.arcana-suggestions.messages.footnote">
-				* No pre-pull actions are being represented aside from <DataLink action="PLAY" />, and this is only an approximation based on the buff duration.
+				* No pre-pull actions are being represented aside from <ActionLink action="PLAY" />, and this is only an approximation based on the buff duration.
 				</Trans>
 			</p>
 			<Table collapsing unstackable className={styles.cardActionTable}>
@@ -271,7 +268,7 @@ export default class ArcanaSuggestions extends Analyser {
 
 			return <>
 				<Table.Cell>
-					<ActionLink {...getDataBy(this.data.actions, 'id', artifact.lastEvent.action)}/>
+					<ActionLink {...this.data.getAction(artifact.lastEvent.action)}/>
 				</Table.Cell>
 				<Table.Cell>
 					{targetJob && <JobIcon job={targetJob}/>}
@@ -304,7 +301,7 @@ export default class ArcanaSuggestions extends Analyser {
 			this.divinationCast += 1
 			return <>
 				<Table.Cell>
-					<ActionLink {...getDataBy(this.data.actions, 'id', artifact.lastEvent.action)} />
+					<ActionLink {...this.data.getAction(artifact.lastEvent.action)} />
 				</Table.Cell>
 				<Table.Cell>
 					<Trans id="ast.arcana-tracking.divination.playertarget">{'Players Buffed:'}</Trans>
@@ -319,7 +316,7 @@ export default class ArcanaSuggestions extends Analyser {
 		if (artifact.lastEvent.type === 'action') {
 			return <>
 				<Table.Cell>
-					<ActionLink {...getDataBy(this.data.actions, 'id', artifact.lastEvent.action)} />
+					<ActionLink {...this.data.getAction(artifact.lastEvent.action)} />
 				</Table.Cell>
 				<Table.Cell>
 				</Table.Cell>

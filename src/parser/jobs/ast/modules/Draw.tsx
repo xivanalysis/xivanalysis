@@ -59,12 +59,12 @@ export default class Draw extends Analyser {
 	private prepullPrepped = false
 	private prepullSleeve = false
 
-	private play: Array<Action['id']> = []
+	private playActions: Array<Action['id']> = []
 	private arcanaStatuses: Array<Status['id']> = []
 
 	override initialise() {
 
-		this.play = PLAY.map(actionKey => this.data.actions[actionKey].id)
+		this.playActions = PLAY.map(actionKey => this.data.actions[actionKey].id)
 		this.arcanaStatuses = ARCANA_STATUSES.map(statusKey => this.data.statuses[statusKey].id)
 
 		const playerFilter = filter<Event>().source(this.parser.actor.id)
@@ -79,7 +79,7 @@ export default class Draw extends Analyser {
 		, this.onSleeveDraw)
 		this.addEventHook(playerFilter
 			.type('action')
-			.action(oneOf(this.play))
+			.action(oneOf(this.playActions))
 		, this.onPlay)
 
 		this.addEventHook(playerFilter
