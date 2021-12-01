@@ -1,15 +1,16 @@
+import {Status} from 'data/STATUSES'
 import {Event, Events} from 'event'
 import {Analyser} from 'parser/core/Analyser'
 import {filter, oneOf} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
-import {Actors} from 'parser/core/modules/Actors'
+import {Actor, Actors} from 'parser/core/modules/Actors'
 import {Data} from 'parser/core/modules/Data'
 import {Invulnerability} from 'parser/core/modules/Invulnerability'
 import {Statuses} from 'parser/core/modules/Statuses'
 
 const MILLISECONDS_PER_MINUTE = 60000
 
-type DotTracking = Map<number, Map<string, DotTargetTracking>>
+type DotTracking = Map<Status['id'], Map<Actor['id'], DotTargetTracking>>
 interface DotTargetTracking {
 	lastApplied: number
 	totalClipping: number
@@ -65,7 +66,7 @@ export abstract class DoTs extends Analyser {
 	private onApply(event: Events['statusApply']) {
 		const status = this.data.getStatus(event.status)
 		// Cannot track for statuses that are not defined with a duration
-		if (status == null || status.duration == null) { return }
+		if (status?.duration == null) { return }
 
 		// Get the tracking object for this status
 		let trackedStatus = this.statusApplications.get(status.id)
@@ -110,17 +111,17 @@ export abstract class DoTs extends Analyser {
 		return (statusUptime / fightDuration) * 100
 	}
 
+	// This normalises clipping as milliseconds clipped per minute,
+	// since some level of clipping is expected and we need tiers that work for both long and short fights
 	protected getClippingAmount(statusId: number) {
-		// This normalises clipping as seconds clipped per minute,
-		// since some level of clipping is expected and we need tiers that work for both long and short fights
-		const fightDurationMillis = (this.parser.pull.duration - this.invulnerability.getDuration({types: ['invulnerable']}))
-		if (fightDurationMillis <= 0) { return 0 }
+		const fightDuration = (this.parser.pull.duration - this.invulnerability.getDuration({types: ['invulnerable']}))
+		if (fightDuration <= 0) { return 0 }
 
 		const statusApplications = this.statusApplications.get(statusId)
 		if (statusApplications == null) { return 0 }
 
 		const totalClipping = Array.from(statusApplications.values()).reduce((clip, target) => clip + target.totalClipping, 0)
-		const clipSecsPerMin = Math.round(totalClipping / (fightDurationMillis / MILLISECONDS_PER_MINUTE))
-		return clipSecsPerMin
+		const clipMSPerMin = Math.round(totalClipping / (fightDuration / MILLISECONDS_PER_MINUTE))
+		return clipMSPerMin
 	}
 }

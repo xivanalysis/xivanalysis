@@ -9,9 +9,9 @@ import React from 'react'
 const SEVERITIES = {
 	// Clipping warnings in seconds per minute
 	CLIPPING: {
-		6: SEVERITY.MINOR,
-		9: SEVERITY.MEDIUM,
-		12: SEVERITY.MAJOR,
+		6000: SEVERITY.MINOR,
+		9000: SEVERITY.MEDIUM,
+		12000: SEVERITY.MAJOR,
 	},
 	UPTIME: {
 		90: TARGET.WARN,

@@ -40,9 +40,9 @@ export default class Debuffs extends CoreDoTs {
 				Avoid refreshing <ActionLink {...this.data.actions.CHAOS_THRUST} /> significantly earlier or later than its expiration, as it usually indicates rotational errors. DRG's strict 10-GCD rotation should have you refreshing Chaos Thrust within 2 seconds before or after expiry, depending on your skill speed.
 			</Trans>,
 			tiers: {
-				5: SEVERITY.MINOR,
-				10: SEVERITY.MEDIUM,
-				15: SEVERITY.MAJOR,
+				5000: SEVERITY.MINOR,
+				10000: SEVERITY.MEDIUM,
+				15000: SEVERITY.MAJOR,
 			},
 			value: chaosThrustClipPerMinute,
 			why: <Trans id="drg.debuffs.suggestions.clipping.why">

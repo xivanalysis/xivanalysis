@@ -10,8 +10,8 @@ import React from 'react'
 // 6.x: bard clips ~15s every 120s rotationally
 const SEVERITIES = {
 	CLIPPING: {
-		10: SEVERITY.MEDIUM,
-		15: SEVERITY.MAJOR,
+		10000: SEVERITY.MEDIUM,
+		15000: SEVERITY.MAJOR,
 	},
 	UPTIME: {
 		85: TARGET.WARN,

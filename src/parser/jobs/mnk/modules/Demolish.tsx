@@ -1,5 +1,5 @@
 import {Trans} from '@lingui/react'
-import {ActionLink, DataLink} from 'components/ui/DbLink'
+import {DataLink} from 'components/ui/DbLink'
 import {dependency} from 'parser/core/Module'
 import Checklist, {Requirement, Rule} from 'parser/core/modules/Checklist'
 import {DoTs} from 'parser/core/modules/DoTs'
@@ -9,9 +9,9 @@ import DISPLAY_ORDER from './DISPLAY_ORDER'
 
 const SUGGESTION_TIERS = {
 	CLIPPING: {
-		7: SEVERITY.MINOR,
-		10: SEVERITY.MEDIUM,
-		12: SEVERITY.MAJOR,
+		7000: SEVERITY.MINOR,
+		10000: SEVERITY.MEDIUM,
+		12000: SEVERITY.MAJOR,
 	},
 }
 
@@ -29,12 +29,12 @@ export class Demolish extends DoTs {
 		this.checklist.add(new Rule({
 			name: <Trans id="mnk.demolish.checklist.name">Keep Demolish up</Trans>,
 			description: <Trans id="mnk.demolish.checklist.description">
-				<ActionLink action="DEMOLISH"/> is your strongest finisher (assuming at least 3 DoT ticks hit).
+				<DataLink action="DEMOLISH"/> is your strongest finisher (assuming at least 3 DoT ticks hit).
 			</Trans>,
 			displayOrder: DISPLAY_ORDER.DEMOLISH,
 			requirements: [
 				new Requirement({
-					name: <Trans id="mnk.demolish.checklist.requirement.name"><ActionLink action="DEMOLISH"/> uptime</Trans>,
+					name: <Trans id="mnk.demolish.checklist.requirement.name"><DataLink action="DEMOLISH"/> uptime</Trans>,
 					percent: () => this.getUptimePercent(this.data.statuses.DEMOLISH.id),
 				}),
 			],
@@ -50,7 +50,7 @@ export class Demolish extends DoTs {
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.DEMOLISH.icon,
 			content: <Trans id="mnk.demolish.suggestion.content">
-				Avoid refreshing <ActionLink action="DEMOLISH"/> significantly before its expiration. Unnecessary refreshes risk overwriting buff snapshots.
+				Avoid refreshing <DataLink action="DEMOLISH"/> significantly before its expiration. Unnecessary refreshes risk overwriting buff snapshots.
 			</Trans>,
 			tiers: SUGGESTION_TIERS.CLIPPING,
 			value: demolishClipPerMinute,
