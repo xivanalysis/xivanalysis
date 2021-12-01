@@ -445,7 +445,7 @@
   "drg.lancecharge.title": "Lance Charge",
   "drg.lc.suggestions.missedgcd.content": "Try to land at least 8 GCDs during every <0/> window.",
   "drg.lc.suggestions.trackedactions.content": "Each <0/> window should contain at least one use each of <1/>, <2/>, <3/>, and <4/>. In order to ensure that these actions fall within the buff window, try to avoid using <5/> after <6/> or <7/>.",
-  "drg.procs.suggestions.extenders.content": "Avoid interrupting your combos at the <0/> and <1/> stages, as it causes you to lose the procs that allow you to cast them, costing you both the cast and the <2/> duration that comes with it.",
+  "drg.procs.suggestions.extenders.content": "Avoid interrupting your combos at the <0/> and <1/> stages, as it causes you to lose the procs that allow you to cast them.",
   "drg.procs.suggestions.extenders.why": "You dropped {droppedFang, plural, one {# Fang and Claw proc} other {# Fang and Claw procs}} and {droppedWheeling, plural, one {# Wheeling Thrust proc} other {# Wheeling Thrust procs}}.",
   "drg.procs.suggestions.mirage-dropped.content": "Avoid letting your <0/> procs fall off, as it can delay your Life of the Dragon windows and potentially cost you a lot of DPS.",
   "drg.procs.suggestions.mirage-dropped.why": "You dropped {droppedMirage, plural, one {# Mirage Dive proc} other {# Mirage Dive procs}}.",
