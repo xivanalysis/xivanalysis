@@ -4,7 +4,7 @@ import {t} from '@lingui/macro'
 import {Plural, Trans} from '@lingui/react'
 import Rotation from 'components/ui/Rotation'
 import {ActionCombo} from 'data/ACTIONS/type'
-import {Event, Events, FieldsMultiTargeted} from 'event'
+import {Event, Events, FieldsMultiTargeted, SourceModifier} from 'event'
 import {AbilityEventFields} from 'fflogs'
 import _ from 'lodash'
 import {dependency} from 'parser/core/Injectable'
@@ -238,8 +238,8 @@ export class Combos extends Analyser {
 
 		// If it's a combo action, run it through the combo checking logic
 		if (action.combo) {
-			if (!isSuccessfulHit(event)) {
-				// Failed attacks break combo
+			if (event.targets.every(t => t.sourceModifier === SourceModifier.MISS)) {
+				// Misses break combo
 				this.recordFailedCombo(event, this.currentComboChain)
 				return
 			}

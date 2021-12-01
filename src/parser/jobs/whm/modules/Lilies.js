@@ -1,7 +1,7 @@
 import {Trans, Plural} from '@lingui/react'
-import {ActionLink} from 'components/ui/DbLink'
+import {DataLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
-import Module from 'parser/core/Module'
+import {Analyser} from 'parser/core/Analyser'
 import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import React, {Fragment} from 'react'
 
@@ -11,7 +11,7 @@ const LILY_INTERVAL = 30000 // 1 lily every 30 seconds
 const BLOOD_LILY_BLOOM = 3 // 1 blood lily for every 3 lilies spent
 const WASTED_BLOOD_LILIES_MAX_MEDIUM = 2
 
-export default class Lilies extends Module {
+export default class Lilies extends Analyser {
 	static handle = 'lilies'
 	static dependencies = [
 		'suggestions',
@@ -28,16 +28,13 @@ export default class Lilies extends Module {
 	constructor(...args) {
 		super(...args)
 
-		this.addEventHook('cast', {by: 'player'}, this._onCast)
+		this.addEventHook({type: 'action', source: this.parser.actor.id}, this._onCast)
 		this.addEventHook('complete', this._onComplete)
-		this.addEventHook('death', {to: 'player'}, this._onDeath)
+		this.addEventHook({type: 'death', actor: this.parser.actor.id}, this._onDeath)
 	}
 
 	_onCast(event) {
-		// this._calculateLilies(event)
-		const abilityId = event.ability.guid
-
-		if (LILY_CONSUMERS.includes(abilityId)) {
+		if (LILY_CONSUMERS.includes(event.action)) {
 			this._liliesConsumed++
 
 			if (this._blooming === BLOOD_LILY_BLOOM) {
@@ -48,7 +45,7 @@ export default class Lilies extends Module {
 			}
 		}
 
-		if (BLOOD_LILY_CONSUMERS.includes(abilityId)) {
+		if (BLOOD_LILY_CONSUMERS.includes(event.action)) {
 			// reset our blood lilies
 			this._blooming = 0
 			this._bloodLiliesConsumed++
@@ -75,7 +72,7 @@ export default class Lilies extends Module {
 				icon: ACTIONS.AFFLATUS_SOLACE.icon,
 				content: <Fragment>
 					<Trans id="whm.lily-cap.suggestion.content">
-						Use <ActionLink {...ACTIONS.AFFLATUS_RAPTURE} /> or <ActionLink {...ACTIONS.AFFLATUS_SOLACE} /> before using other GCD heals. It's okay to cap your lilies if you don't need to heal, move, or weave with them.
+						Use <DataLink action="AFFLATUS_RAPTURE" /> or <DataLink action="AFFLATUS_SOLACE" /> before using other GCD heals. It's okay to cap your lilies if you don't need to heal, move, or weave with them.
 					</Trans>
 				</Fragment>,
 				severity: SEVERITY.MINOR,
@@ -96,7 +93,7 @@ export default class Lilies extends Module {
 				icon: ACTIONS.AFFLATUS_MISERY.icon,
 				content: <Fragment>
 					<Trans id="whm.lily-blood.suggestion.content">
-						Use <ActionLink {...ACTIONS.AFFLATUS_MISERY} /> to avoid wasting blood lily growth.
+						Use <DataLink action="AFFLATUS_MISERY" /> to avoid wasting blood lily growth.
 					</Trans>
 				</Fragment>,
 				severity: this._bloodLiliesWasted > WASTED_BLOOD_LILIES_MAX_MEDIUM ? SEVERITY.MAJOR : SEVERITY.MEDIUM,
