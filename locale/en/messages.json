@@ -688,7 +688,7 @@
   "pld.goring.checklist.goringblade.description": "As a Paladin, <0/> is a significant portion of your sustained damage, and is required to kept up for as much as possible, for the best damage output.",
   "pld.goring.checklist.goringblade.requirement.uptime": "<0/> uptime",
   "pld.goring.suggestions.goringblade.content": "Avoid refreshing <0/> significantly before it's expiration.",
-  "pld.goring.suggestions.goringblade.why": "{0} of <0/> lost to early refreshes.",
+  "pld.goring.suggestions.goringblade.why": "An average of {0} seconds of <0/> per minute lost to early refreshes.",
   "pld.requiescat.suggestions.missed-confiteor.content": "Be sure to end each <0/> window with <1/> for optimal damage.",
   "pld.requiescat.suggestions.nobuff.content": "<0/> should only be used when over 80% MP. Otherwise, you will not get the <1/> buff, which provides 50% increased magic damage, instant cast times, and allows you to cast <2/>.",
   "pld.requiescat.suggestions.nobuff.why": "{missedRequiescatBuffs, plural, one {# usage} other {# usages}} while under 80% MP.",
