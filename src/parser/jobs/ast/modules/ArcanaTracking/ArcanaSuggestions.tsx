@@ -84,8 +84,7 @@ export default class ArcanaSuggestions extends Analyser {
 
 		//used for divination tracking
 		const divinationFilter = filter<Event>().type('statusApply').status(this.data.statuses.DIVINATION.id)
-		//this.addEventHook(divinationFilter.target(this.parser.actor.id), this.tryOpenWindow)
-		this.addEventHook(divinationFilter.source(this.parser.actor.id), this.countDivinationBuffs)
+		this.addEventHook(divinationFilter.source(this.parser.actor.id), this.tryOpenWindow)
 		this.addEventHook(
 			filter<Event>()
 				.type('statusRemove')
@@ -97,19 +96,7 @@ export default class ArcanaSuggestions extends Analyser {
 		this.addEventHook('complete', this._onComplete)
 	}
 
-	//functions for divination buff counting
-	private countDivinationBuffs(event: Events['statusApply']) {
-		// Get this from tryOpenWindow. If a window wasn't open, we'll open one.
-		// If it was already open (because another Astrologian went first), we'll keep using it
-		this.tryOpenWindow(event)
-
-		// Find out how many players we hit with the buff.
-		if (this.currentWindow != null && !this.currentWindow.playersBuffed.includes(event.target) && this.actors.get(event.target).playerControlled) {
-			this.currentWindow.playersBuffed.push(event.target)
-		}
-	}
-
-	private tryOpenWindow(event: Events['statusApply']): DivinationWindow {
+	private tryOpenWindow(event: Events['statusApply']) {
 		if (this.currentWindow === undefined) {
 			this.currentWindow = {
 				start: event.timestamp,
@@ -120,17 +107,13 @@ export default class ArcanaSuggestions extends Analyser {
 
 		// Handle multiple Astrologian's buffs overwriting each other, we'll have a remove then an apply with the same timestamp
 		// If that happens, re-open the last window and keep tracking
-		if (this.currentWindow != null) {
-			if (this.currentWindow.end == null) {
-				return this.currentWindow
-			}
-			if (this.currentWindow.end === event.timestamp) {
-				this.currentWindow.end = undefined
-				return this.currentWindow
-			}
+		if (this.currentWindow.end != null && this.currentWindow.end === event.timestamp) {
+			this.currentWindow.end = undefined
 		}
 
-		return this.currentWindow
+		if (this.currentWindow != null && !this.currentWindow.playersBuffed.includes(event.target) && this.actors.get(event.target).playerControlled) {
+			this.currentWindow.playersBuffed.push(event.target)
+		}
 	}
 
 	private tryCloseWindow(event: Events['statusRemove']) {
@@ -142,19 +125,11 @@ export default class ArcanaSuggestions extends Analyser {
 		// Cache whether we've seen a buff removal event for this status, just in case they happen at exactly the same timestamp
 		this.currentWindow.buffsRemoved.push(event.status)
 
-		if (this.isWindowOkToClose(this.currentWindow)) {
+		if (this.currentWindow.buffsRemoved.includes(this.data.statuses.DIVINATION.id)) {
 			this.currentWindow.end = event.timestamp
 			this.history.push(this.currentWindow)
 			this.currentWindow = undefined
 		}
-	}
-
-	// Make sure all applicable statuses have fallen off before the window closes
-	private isWindowOkToClose(window: DivinationWindow): boolean {
-		if (!window.buffsRemoved.includes(this.data.statuses.DIVINATION.id)) {
-			return false
-		}
-		return true
 	}
 	//end divination functions
 
