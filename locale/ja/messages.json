@@ -618,7 +618,6 @@
   "pld.goring.checklist.goringblade.requirement.uptime": "アクティブ率: <0/>",
   "pld.goring.suggestions.goringblade.content": "以前に付与した <0/> の時間が十分な場合、更新を控えて下さい。",
   "pld.goring.suggestions.goringblade.why": "早すぎる更新により{0}回の<0/>を失いました。",
-  "pld.requiescat.table.note": "<0/>効果時間中にはスキル回しに合わせるために最低{0} 回の魔法が使用されている必要があります。ほとんどの場合、{1} 回の<1/>か<2/>後、 <3/>で締めることになります。しかし状況によっては、バフやギミックに合わせるために1分に1回は<4/>を抜くことが有効な場合もあります。特段そういう狙いがないのであれば<6/>の効果時間中に{2} 回<5/>を使用するようにしましょう。",
   "pld.requiescat.title": "レクイエスカットの使用状況",
   "pld.tincture.suggestions.missedgcd.content": "<0/>の効果時間中に13回のウェポンスキルを使いましょう。",
   "rdm.about.description": "<0>このアナライザーはあなたの数字を<1>この色</1>から<2>この色</2>へ変えるお手伝いを目的としたものです。</0><3>赤魔道士についてもっと知りたい時は<4>The Balance</4>を読んでから、<5>#rdm_questions</5>チャンネルでお話しましょう。</3>",
