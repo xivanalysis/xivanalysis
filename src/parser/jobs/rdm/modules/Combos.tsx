@@ -4,10 +4,12 @@ import {Events} from 'event'
 import {Combos as CoreCombos} from 'parser/core/modules/Combos'
 import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import React from 'react'
+import {DISPLAY_ORDER} from './DISPLAY_ORDER'
 
 export class Combos extends CoreCombos {
 	// Overrides
 	override suggestionIcon = ACTIONS.ENCHANTED_REDOUBLEMENT.icon
+	static override displayOrder = DISPLAY_ORDER.COMBO_ISSUES
 
 	//These actions are considered a combo DERP
 	_derpComboActions = [

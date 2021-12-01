@@ -2,7 +2,7 @@ import {ActionKey} from 'data/ACTIONS'
 import {StatusKey} from 'data/STATUSES'
 
 // Fists
-export const FISTLESS = 0
+export const FISTLESS = Symbol('FISTLESS')
 
 export const FISTS: StatusKey[] = [
 	'FISTS_OF_EARTH',

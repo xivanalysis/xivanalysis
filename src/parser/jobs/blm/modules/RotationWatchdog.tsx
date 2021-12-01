@@ -16,7 +16,7 @@ import React, {Fragment, ReactNode} from 'react'
 import {Icon, Message} from 'semantic-ui-react'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 import {FIRE_SPELLS} from './Elements'
-import Gauge, {ASTRAL_UMBRAL_DURATION, BLMGaugeState, MAX_UMBRAL_HEART_STACKS} from './Gauge'
+import {Gauge, ASTRAL_UMBRAL_DURATION, BLMGaugeState, MAX_UMBRAL_HEART_STACKS} from './Gauge'
 import Leylines from './Leylines'
 import Procs from './Procs'
 
@@ -445,7 +445,7 @@ export class RotationWatchdog extends Analyser {
 				types: ['invulnerable'],
 			})) {
 				cycle.finalOrDowntime = true
-				cycle.overrideErrorCode(this.CYCLE_ERRORS.NONE)
+				cycle.overrideErrorCode(NO_ERROR)
 				this.processCycle(cycle)
 			}
 		})

@@ -3,6 +3,13 @@ import React from 'react'
 
 export const changelog = [
 	{
+		date: new Date('2021-11-22'),
+		contributors: [CONTRIBUTORS.RYAN],
+		Changes: () => <>
+			Converted Ammo to Core Gauge and added a Aoe checker for bad uses of Demon Slice and Fated Circle.
+		</>,
+	},
+	{
 		date: new Date('2021-04-28'),
 		contributors: [CONTRIBUTORS.RYAN],
 		Changes: () => <>

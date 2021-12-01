@@ -2,7 +2,7 @@ import {useId} from '@reach/auto-id'
 import {PatternLines} from '@visx/pattern'
 import {Area} from '@visx/shape'
 import {scaleLinear, ScaleTime} from 'd3-scale'
-import {curveStepAfter} from 'd3-shape'
+import {curveLinear, curveStepAfter} from 'd3-shape'
 import _ from 'lodash'
 import React, {ReactNode} from 'react'
 import {ResourceData} from './ResourceGraphs'
@@ -42,7 +42,7 @@ export function Graph({resource, scaleX}: GraphProps) {
 		<ClipPath id={`${id}-current-path`}>
 			<Area
 				data={data}
-				curve={curveStepAfter}
+				curve={(resource.linear ?? false) ? curveLinear : curveStepAfter}
 				x={datum => scaleX(datum.time)}
 				y0={scaleY(0)}
 				y1={datum => scaleY(datum.current)}
@@ -69,7 +69,7 @@ export function Graph({resource, scaleX}: GraphProps) {
 			<ClipPath id={`${id}-maximum-path`} >
 				<Area
 					data={data}
-					curve={curveStepAfter}
+					curve={(resource.linear ?? false) ? curveLinear :curveStepAfter}
 					x={datum => scaleX(datum.time)}
 					y0={scaleY(maximumY)}
 					y1={datum => scaleY(datum.maximum)}
