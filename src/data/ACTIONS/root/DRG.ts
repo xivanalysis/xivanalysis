@@ -174,7 +174,7 @@ export const DRG = ensureActions({
 		speedAttribute: Attribute.SKILL_SPEED,
 		potency: 100,
 		combo: {
-			from: 86, // TODO: combo from draconian fury
+			from: 86, // TODO: combo from draconian fury, need id
 			potency: 120,
 		},
 	},
@@ -203,6 +203,7 @@ export const DRG = ensureActions({
 		icon: 'https://xivapi.com/i/000000/000304.png',
 		cooldown: 45000,
 		statusesApplied: ['LIFE_SURGE'],
+		charges: 2,
 	},
 
 	LANCE_CHARGE: {
