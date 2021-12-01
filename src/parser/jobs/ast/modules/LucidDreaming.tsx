@@ -5,10 +5,17 @@ import {Analyser} from 'parser/core/Analyser'
 import {filter} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
 import {Data} from 'parser/core/modules/Data'
-import Suggestions, {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import React, {Fragment} from 'react'
 
-const WASTED_USES_MAX_MEDIUM = 2
+//assumptions listed after each severity
+const SEVERITIES = {
+	USE_PERCENT_THRESHOLD: {
+		0.8: SEVERITY.MAJOR, //less than 20% of the available time is close to not using it at all or barely
+		0.4: SEVERITY.MEDIUM, //60% is not using it enough -- risks not having enough mana throughout the fight, but with cards, this may not be as applicable
+		0.2: SEVERITY.MINOR, //80% of the time is used to keep it on the radar, but not punish
+	},
+}
 
 export default class LucidDreaming extends Analyser {
 	static override handle = 'lucid'
@@ -28,11 +35,11 @@ export default class LucidDreaming extends Analyser {
 		this.addEventHook(filter<Event>()
 			.source(this.parser.actor.id)
 			.type('action')
-			.action(this.data.actions.LUCID_DREAMING.id), this._onCastLucid)
-		this.addEventHook('complete', this._onComplete)
+			.action(this.data.actions.LUCID_DREAMING.id), this.onCastLucid)
+		this.addEventHook('complete', this.onComplete)
 	}
 
-	_onCastLucid(event: Events['action']) {
+	private onCastLucid(event: Events['action']) {
 		this.uses++
 
 		if (this.lastUse === 0) { this.lastUse = this.parser.pull.timestamp }
@@ -54,27 +61,27 @@ export default class LucidDreaming extends Analyser {
 		this.lastUse = event.timestamp
 	}
 
-	_onComplete() {
+	private onComplete() {
 		//uses missed reported in 1 decimal
-		const holdDuration = this.uses === 0 ? this.parser.currentDuration : this.totalHeld
-		const _usesMissed = Math.floor(holdDuration / this.data.actions.LUCID_DREAMING.cooldown)
+		const holdDuration = this.uses === 0 ? this.parser.pull.duration : this.totalHeld
+		const usesMissed = Math.floor(holdDuration / this.data.actions.LUCID_DREAMING.cooldown)
+		const notUsesPercent = usesMissed === 0 ? 0 : holdDuration/this.parser.pull.duration
 
-		if (_usesMissed > 1 || this.uses === 0) {
-			this.suggestions.add(new Suggestion({
-				icon: this.data.actions.LUCID_DREAMING.icon,
-				content: <Fragment>
-					<Trans id="ast.lucid-dreaming.suggestion.content">
-					Keep <DataLink action="LUCID_DREAMING" /> on cooldown for better MP management.
-					</Trans>
-				</Fragment>,
-				severity: this.uses === 0 || _usesMissed > WASTED_USES_MAX_MEDIUM ? SEVERITY.MAJOR : SEVERITY.MEDIUM,
-				why: <Fragment>
-					<Trans id="ast.lucid-dreaming.suggestion.why">
-						<Plural value={_usesMissed} one="# use" other="# uses" /> of Lucid Dreaming were missed by holding it for at least a total of {this.parser.formatDuration(holdDuration)}.
-					</Trans>
-				</Fragment>,
-			}))
-		}
+		this.suggestions.add(new TieredSuggestion({
+			icon: this.data.actions.LUCID_DREAMING.icon,
+			content: <Fragment>
+				<Trans id="ast.lucid-dreaming.suggestion.content">
+				Try to keep <DataLink action="LUCID_DREAMING" /> on cooldown for better MP management.
+				</Trans>
+			</Fragment>,
+			tiers: SEVERITIES.USE_PERCENT_THRESHOLD,
+			why: <Fragment>
+				<Trans id="ast.lucid-dreaming.suggestion.why">
+					<Plural value={usesMissed} one="# use" other="# uses" /> of Lucid Dreaming <Plural value={usesMissed} one="was" other="were" /> missed by holding it for at least a total of {this.parser.formatDuration(holdDuration)}.
+				</Trans>
+			</Fragment>,
+			value: notUsesPercent,
+		}))
 
 	}
 

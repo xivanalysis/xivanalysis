@@ -4,33 +4,29 @@ import {DataLink} from 'components/ui/DbLink'
 import {RotationTable} from 'components/ui/RotationTable'
 import {Status} from 'data/STATUSES'
 import {Event, Events} from 'event'
-import _ from 'lodash'
 import {Analyser} from 'parser/core/Analyser'
+import {EventHook} from 'parser/core/Dispatcher'
 import {filter} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
 import {Data} from 'parser/core/modules/Data'
 import {Timeline} from 'parser/core/modules/Timeline'
 import React, {Fragment} from 'react'
-import {Icon} from 'semantic-ui-react'
+import {Icon, Message} from 'semantic-ui-react'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 
 const BASE_GCDS_PER_WINDOW = 6
 
-class LIGHTSPEED_Window {
+interface LIGHTSPEED_Window {
 	start: number
 	end?: number
 
-	rotation: Array<Events['action']> = []
-	gcdCount: number = 0
-	mpSavings: number = 0
+	rotation: Array<Events['action']>
+	gcdCount: number
+	mpSavings: number
 	trailingGcdEvent?: Events['action']
 
-	buffsRemoved: Array<Status['id']> = []
-	deathTruncated: boolean = false
-
-	constructor(start: number) {
-		this.start = start
-	}
+	buffsRemoved: Array<Status['id']>
+	deathTruncated: boolean
 }
 
 // in this module we only want to track Lightspeed windows opened by
@@ -46,6 +42,8 @@ export default class Lightspeed extends Analyser {
 	@dependency private data!: Data
 
 	private history: LIGHTSPEED_Window[] = []
+	private currentWindow: LIGHTSPEED_Window | undefined = undefined
+	private castHook?: EventHook<Events['action']>
 
 	override initialise() {
 		const lightspeedFilter = filter<Event>().status(this.data.statuses.LIGHTSPEED.id)
@@ -55,56 +53,61 @@ export default class Lightspeed extends Analyser {
 		this.addEventHook(lightspeedFilter.type('statusRemove')
 			.target(this.parser.actor.id), this.tryCloseWindow)
 
-		this.addEventHook(filter<Event>().source(this.parser.actor.id).type('action'), this.onCast)
+		//this.addEventHook(filter<Event>().source(this.parser.actor.id).type('action'), this.onCast)
 	}
 
-	private tryOpenWindow(event: Events['statusApply']): LIGHTSPEED_Window {
-		const lastWindow: LIGHTSPEED_Window | undefined = _.last(this.history)
+	private tryOpenWindow(event: Events['statusApply']) {
+		if (this.currentWindow === undefined) {
+			this.currentWindow = {
+				start: event.timestamp,
+				rotation: [],
+				gcdCount: 0,
+				mpSavings: 0,
 
-		// If that happens, re-open the last window and keep tracking
-		if (lastWindow != null) {
-			if (!lastWindow.end) {
-				return lastWindow
+				buffsRemoved: [],
+				deathTruncated: false,
+
 			}
-			if (lastWindow.end === event.timestamp) {
-				lastWindow.end = undefined
-				return lastWindow
-			}
+			this.castHook = this.addEventHook(
+				filter<Event>()
+					.source(this.parser.actor.id)
+					.type('action'),
+				this.onCast,
+			)
 		}
 
-		const newWindow = new LIGHTSPEED_Window(event.timestamp)
-		this.history.push(newWindow)
-		return newWindow
+		// If that happens, re-open the last window and keep tracking
+		if (this.currentWindow.end != null && this.currentWindow.end === event.timestamp) {
+			this.currentWindow.end = undefined
+		}
+		return this.currentWindow
 	}
 
 	private tryCloseWindow(event: Events['statusRemove']) {
-		const lastWindow: LIGHTSPEED_Window | undefined = _.last(this.history)
 
-		if (lastWindow == null) {
+		if (this.currentWindow == null) {
 			return
 		}
 
 		// Cache whether we've seen a buff removal event for this status, just in case they happen at exactly the same timestamp
-		lastWindow.buffsRemoved.push(event.status)
+		this.currentWindow.buffsRemoved.push(event.status)
 
-		if (this.isWindowOkToClose(lastWindow)) {
-			lastWindow.end = event.timestamp
+		// Make sure all applicable statuses have fallen off before the window closes
+		if (this.currentWindow.buffsRemoved.includes(this.data.statuses.LIGHTSPEED.id)) {
+			this.currentWindow.end = event.timestamp
+			this.history.push(this.currentWindow)
+			this.currentWindow = undefined
+			if (this.castHook != null) {
+				this.removeEventHook(this.castHook)
+				this.castHook = undefined
+			}
 		}
-	}
-
-	// Make sure all applicable statuses have fallen off before the window closes
-	private isWindowOkToClose(window: LIGHTSPEED_Window): boolean {
-		if (!window.buffsRemoved.includes(this.data.statuses.LIGHTSPEED.id)) {
-			return false
-		}
-		return true
 	}
 
 	private onCast(event: Events['action']) {
-		const lastWindow: LIGHTSPEED_Window | undefined = _.last(this.history)
 
 		// If we don't have a window, bail
-		if (lastWindow == null) {
+		if (this.currentWindow == null) {
 			return
 		}
 
@@ -116,19 +119,19 @@ export default class Lightspeed extends Analyser {
 		}
 
 		// If this window isn't done yet add the action to the list
-		if (!lastWindow.end) {
-			lastWindow.rotation.push(event)
+		if (this.currentWindow.end == null) {
+			this.currentWindow.rotation.push(event)
 			if (action.onGcd) {
-				lastWindow.gcdCount++
+				this.currentWindow.gcdCount++
 			}
 			if (this.parser.patch.before('5.3') && action.mpCost != null) {
-				lastWindow.mpSavings = lastWindow.mpSavings + action.mpCost/2
+				this.currentWindow.mpSavings = this.currentWindow.mpSavings + action.mpCost/2
 			}
 		}
 
 		// If we haven't recorded a trailing GCD event for this closed window, do so now
-		if (lastWindow.end && !lastWindow.trailingGcdEvent && action.onGcd) {
-			lastWindow.trailingGcdEvent = event
+		if (this.currentWindow.end && !this.currentWindow.trailingGcdEvent && action.onGcd) {
+			this.currentWindow.trailingGcdEvent = event
 		}
 	}
 
@@ -171,14 +174,14 @@ export default class Lightspeed extends Analyser {
 		const noCastsMessage = <p><span className="text-error"><Trans id="ast.lightspeed.messages.no-casts"> There were no casts recorded for <DataLink action="LIGHTSPEED" />.</Trans></span></p>
 		const castsMessage = <p><Trans id="ast.lightspeed.messages.num-casts"> There were a total of {actualCasts} out of a possible {totalPossibleCasts} <DataLink action="LIGHTSPEED" /> casts noted.</Trans></p>
 
-		const pre5_3message = <p><Trans id="ast.lightspeed.messages.explanation">
+		const pre5_3message = <p><Trans id="ast.lightspeed.messages.explanation.pre5_3">
 		The main use of <DataLink action="LIGHTSPEED" /> should be for weaving card actions during <DataLink action="DIVINATION" /> and <DataLink action="SLEEVE_DRAW" /> windows.<br />
 		It can also be used for MP savings on heavy healing segments, keeping casts up while on the move and other specific scenarios.<br />
 		Each fight calls for a different strategy, but try to utilize it as much as possible.<br />
 		Unless it's being used for <DataLink action="ASCEND" />, lightspeed should fit at least 6 GCDs.<br />
 		</Trans></p>
 
-		const message = <p><Trans id="ast.lightspeed.messages.explanation.ost5_3">
+		const message = <p><Trans id="ast.lightspeed.messages.explanation">
 		The main use of <DataLink action="LIGHTSPEED" /> should be for weaving card actions during <DataLink action="DIVINATION" /> and <DataLink action="SLEEVE_DRAW" /> windows.<br />
 		It can also be used for keeping casts up while on the move and other specific scenarios.<br />
 		Each fight calls for a different strategy, but try to utilize it as much as possible.<br />
@@ -189,7 +192,7 @@ export default class Lightspeed extends Analyser {
 
 			return <Fragment>
 				{pre5_3message}
-				{actualCasts > 0 ? castsMessage : noCastsMessage}
+				<Message>{actualCasts > 0 ? castsMessage : noCastsMessage}</Message>
 				{actualCasts > 0 ?
 					<RotationTable
 						notes={[
@@ -200,7 +203,7 @@ export default class Lightspeed extends Analyser {
 						]}
 						targets={[
 							{
-								header: <Trans id="ast.LIGHTSPEED.rotation-table.header.gcd-count">GCDs</Trans>,
+								header: <Trans id="ast.lightspeed.rotation-table.header.gcd-count">GCDs</Trans>,
 								accessor: 'gcds',
 							},
 						]}
@@ -213,12 +216,12 @@ export default class Lightspeed extends Analyser {
 
 		return <Fragment>
 			{message}
-			{actualCasts > 0 ? castsMessage : noCastsMessage}
+			<Message>{actualCasts > 0 ? castsMessage : noCastsMessage}</Message>
 			{actualCasts > 0 ?
 				<RotationTable
 					targets={[
 						{
-							header: <Trans id="ast.LIGHTSPEED.rotation-table.header.gcd-count">GCDs</Trans>,
+							header: <Trans id="ast.lightspeed.rotation-table.header.gcd-count">GCDs</Trans>,
 							accessor: 'gcds',
 						},
 					]}

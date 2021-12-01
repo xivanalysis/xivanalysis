@@ -38,23 +38,10 @@ export default new Meta({
 	],
 	changelog: [
 		{
-			date: new Date('2021-11-24'),
+			date: new Date('2021-11-30'),
 			Changes: () => <>
-				<strong>Updated underlying code structures, sect suggestion, and <DataLink action="LIGHTSPEED" /> structure.</strong>:
+				<strong>Updated sect suggestion, and <DataLink action="LIGHTSPEED" /> structure.</strong>:
 				<ul>
-					<li>Code structures have been updated for the following modules:</li>
-					<ul>
-						<li>Arcana Tracking,</li>
-						<li><DataLink action="CELESTIAL_INTERSECTION"/>,</li>
-						<li><DataLink action="CELESTIAL_OPPOSITION"/>,</li>
-						<li><DataLink action="EARTHLY_STAR"/>,</li>
-						<li><DataLink action="HOROSCOPE"/>,</li>
-						<li><DataLink action="LIGHTSPEED"/>,</li>
-						<li><DataLink action="LUCID_DREAMING"/>,</li>
-						<li>Sect,</li>
-						<li><DataLink action="SYNASTRY"/>,</li>
-						<li>and other modules.</li>
-					</ul>
 					<li><DataLink action="LIGHTSPEED"/> now shows actual casts and total possible uses.</li>
 					<li>Sect now has an updated suggestion to show possibility of using sect very close leading to unpreparedness. (i.e. using sect at the same time as the pull would be the same as using an oGCD which wastes time that could be spent starting your <DataLink action="MALEFIC_III" /> or other action cast.)</li>
 				</ul>

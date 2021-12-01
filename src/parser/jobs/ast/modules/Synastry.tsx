@@ -1,7 +1,6 @@
 import {Plural, Trans} from '@lingui/react'
 import {DataLink} from 'components/ui/DbLink'
-import {Action} from 'data/ACTIONS'
-import {ActionRoot} from 'data/ACTIONS/root'
+import {Action, ActionKey} from 'data/ACTIONS'
 import {Event} from 'event'
 import {Analyser} from 'parser/core/Analyser'
 import {filter, oneOf} from 'parser/core/filter'
@@ -18,7 +17,7 @@ const SEVERITIES = {
 	},
 }
 
-const GCD_ST_HEAL: Array<keyof ActionRoot> = [
+const GCD_ST_HEAL: ActionKey[] = [
 	'BENEFIC',
 	'BENEFIC_II',
 ]
