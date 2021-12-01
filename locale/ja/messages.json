@@ -689,6 +689,7 @@
   "pld.goring.checklist.goringblade.requirement.uptime": "アクティブ率: <0/>",
   "pld.goring.suggestions.goringblade.content": "以前に付与した <0/> の時間が十分な場合、更新を控えて下さい。",
   "pld.goring.suggestions.goringblade.why": "早すぎる更新により{0}回の<0/>を失いました。",
+  "pld.requiescat.suggestions.missed-confiteor.content": "",
   "pld.requiescat.suggestions.nobuff.content": "",
   "pld.requiescat.suggestions.nobuff.why": "",
   "pld.requiescat.suggestions.wrong-gcd.content": "",

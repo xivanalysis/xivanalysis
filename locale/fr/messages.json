@@ -689,6 +689,7 @@
   "pld.goring.checklist.goringblade.requirement.uptime": "Temps total d'application de <0/>",
   "pld.goring.suggestions.goringblade.content": "Évitez de rafraîchir <0/> avant qu'il expire.",
   "pld.goring.suggestions.goringblade.why": "{0} de <0/> perdu car rafraîchi trop tôt.",
+  "pld.requiescat.suggestions.missed-confiteor.content": "",
   "pld.requiescat.suggestions.nobuff.content": "<0/> ne dervait-être utilisé qu'au dessus de 80% MP. Autrement, vous n'aurez pas le buff de <1/>, qui donne 50% de dégâts magique en plus, casts instantané et permet de cast <2/>.",
   "pld.requiescat.suggestions.nobuff.why": "{missedRequiescatBuffs, plural, one {# usage} other {# usages}} en dessous de 80% de vos PM.",
   "pld.requiescat.suggestions.wrong-gcd.content": "Les GCD utilisés pendant <0/>> doivent consister en 3-4 utilisations de <1/> (ou 4 utilisations en multi-cibles <2/>) et 1 utilisation de <3/> pour un dommage optimal.",
