@@ -32,19 +32,6 @@ declare module 'event' {
 	}
 }
 
-// Legacy events for backwards compat
-interface LegacyRaiseEvent {
-	type: 'raise'
-	timestamp: number
-	targetID: number
-}
-
-declare module 'legacyEvent' {
-	interface EventTypeRepository {
-		death: LegacyRaiseEvent
-	}
-}
-
 interface ActorInfo {
 	timestampDeath?: Event['timestamp']
 	timestampTranscendent?: Event['timestamp']
@@ -196,15 +183,6 @@ export class Death extends Analyser {
 			timestamp,
 			actor: actorId,
 		})
-
-		// Legacy only fabricated raises for the player
-		if (actorId === this.parser.actor.id) {
-			this.parser.fabricateLegacyEvent({
-				type: 'raise',
-				timestamp: this.parser.currentTimestamp,
-				targetID: this.parser.player.id,
-			})
-		}
 	}
 
 	private onComplete(event: Events['complete']) {

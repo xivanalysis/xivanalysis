@@ -47,12 +47,6 @@ export interface CompleteEvent {
 	timestamp: number
 }
 
-declare module 'legacyEvent' {
-	interface EventTypeRepository {
-		parser: InitEvent | CompleteEvent
-	}
-}
-
 class Parser {
 	// -----
 	// Properties
@@ -233,24 +227,6 @@ class Parser {
 	// Event handling
 	// -----
 
-	async normalise(events: LegacyEvent[]) {
-		// Run normalisers
-		// This intentionally does not have error handling - modules may be relying on normalisers without even realising it. If something goes wrong, it could totally throw off results.
-		for (const handle of this.executionOrder) {
-			const injectable = this.container[handle]
-
-			// TODO: Not a fan of needing to special case every way of normalising -
-			//       resolve this more generically
-			if (injectable instanceof Analyser) {
-				// No.
-			} else {
-				throw new Error(`Unhandled injectable type for normalisation: ${handle}`)
-			}
-		}
-
-		return events
-	}
-
 	parseEvents({events}: {events: Event[]}) {
 		this._triggerModules = this.executionOrder.slice(0)
 
@@ -355,7 +331,6 @@ class Parser {
 		mod: string,
 		_source: 'event' | 'output',
 		_error: Error,
-		_event?: LegacyEvent,
 	): [Record<string, unknown>, Array<[string, Error]>] {
 		const output: Record<string, unknown> = {}
 		const errors: Array<[string, Error]> = []
@@ -470,7 +445,7 @@ class Parser {
 		error: Error,
 		type: 'event' | 'output',
 		module: string,
-		event?: Event | LegacyEvent,
+		event?: Event,
 	}) {
 		// Bypass error handling in dev
 		if (process.env.NODE_ENV === 'development') {

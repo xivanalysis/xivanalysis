@@ -13,7 +13,6 @@ import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Sugge
 import {Timeline} from 'parser/core/modules/Timeline'
 import React from 'react'
 import {Button, Table} from 'semantic-ui-react'
-import {isSuccessfulHit} from 'utilities'
 import {Analyser} from '../Analyser'
 import {filter} from '../filter'
 import {Data} from './Data'
@@ -43,12 +42,6 @@ declare module 'event' {
 export interface LegacyComboEvent extends AbilityEventFields {
 	type: 'combo'
 	hasSuccessfulHit: boolean
-}
-
-declare module 'legacyEvent' {
-	interface EventTypeRepository {
-		combo: LegacyComboEvent
-	}
 }
 
 export interface ComboIssue {
@@ -116,21 +109,6 @@ export class Combos extends Analyser {
 			action: event.cause.action,
 			source: event.source,
 			targets: event.targets,
-		})
-
-		this.parser.fabricateLegacyEvent({
-			type: 'combo',
-			ability: {
-				abilityIcon: '',
-				guid: event.cause.action,
-				name: '',
-				type: 1,
-			},
-			sourceID: this.parser.player.id,
-			timestamp: this.parser.currentTimestamp,
-			sourceIsFriendly: true,
-			targetIsFriendly: false,
-			hasSuccessfulHit: isSuccessfulHit(event),
 		})
 	}
 
