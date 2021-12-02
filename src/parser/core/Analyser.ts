@@ -8,6 +8,12 @@ import Parser from './Parser'
 
 const DEFAULT_DISPLAY_ORDER = 50
 
+export enum DisplayOrder {
+	TOP = 0,
+	DEFAULT = 50,
+	BOTTOM = 100,
+}
+
 export enum DisplayMode {
 	COLLAPSIBLE,
 	FULL,
