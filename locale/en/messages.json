@@ -1,5 +1,4 @@
 {
-  "ast.Lightspeed.title": "Lightspeed",
   "ast.about.description-1": "The biggest <0/> to an Astrologian is their ability to buff their party DPS with Arcanum. This analyzer will show you how the stars work for you and not the other way around",
   "ast.about.description-2": "\nPlaying any healer requires you to carefully manage your MP and cooldowns to efficiently keep your party alive. If you plan out your heals and communicate with your co-healer, you will naturally end up putting out more DPS with the extra GCDs gained.\n",
   "ast.about.description.warning.development": "There's still lots more work to be done for this tool to be comprehensive! If you have a suggestion for what is worth tracking please pop by our Discord channel!",
@@ -59,6 +58,7 @@
   "ast.lightspeed.messages.num-casts": "There were a total of {actualCasts} out of a possible {totalPossibleCasts} <0/> casts noted.",
   "ast.lightspeed.rotation-table.header.gcd-count": "GCDs",
   "ast.lightspeed.rotation.mp-saved": "MP saved",
+  "ast.lightspeed.title": "Lightspeed",
   "ast.lucid-dreaming.suggestion.content": "Try to keep <0/> on cooldown for better MP management.",
   "ast.lucid-dreaming.suggestion.why": "{usesMissed, plural, one {# use} other {# uses}} of Lucid Dreaming {usesMissed, plural, one {was} other {were}} missed by holding it for at least a total of {0}.",
   "ast.ogcd-downtime.divination.description": "<0/> provides Astrologian with a strong amount of raid DPS when stacked together with arcanum. Damage percentage bonuses stack multiplicatively, so it's most optimal to stack it with cards from <1/>. Try to time the usage to match raid buffs and high output phases of other party members - it's more important to use it on time rather than hold it in an attempt to have 3 different seals.",
