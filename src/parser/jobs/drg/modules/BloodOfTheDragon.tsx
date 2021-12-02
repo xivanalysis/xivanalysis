@@ -302,11 +302,7 @@ export default class BloodOfTheDragon extends Analyser {
 	}
 
 	intersectsDowntime(start: number) {
-		const windows = this.downtime.getDowntimeWindows(this.parser.fflogsToEpoch(start))
-			.map(window => ({
-				start: this.parser.epochToFflogs(window.start),
-				end: this.parser.epochToFflogs(window.end),
-			}))
+		const windows = this.downtime.getDowntimeWindows(start)
 		const end = start + DRAGON_DEFAULT_DURATION_MILLIS
 
 		for (const dtWindow of windows) {
@@ -507,7 +503,7 @@ export default class BloodOfTheDragon extends Analyser {
 			)}
 			{lifeWindow.showNoDelayNote && (
 				<Message info>
-					<p><Trans id="drg.blood.no-delay-explain">This window cannot be delayed due to downtime occurring at {this.parser.formatTimestamp(lifeWindow.dtOverlapTime ?? 0)}. This window would otherwise be delayed for better buff alignment.</Trans></p>
+					<p><Trans id="drg.blood.no-delay-explain">This window cannot be delayed due to downtime occurring at {this.parser.formatEpochTimestamp(lifeWindow.dtOverlapTime ?? 0)}. This window would otherwise be delayed for better buff alignment.</Trans></p>
 				</Message>
 			)}
 			<Table>
@@ -529,7 +525,7 @@ export default class BloodOfTheDragon extends Analyser {
 		// - a window that could be delayed but wasn't
 		const windowWarning = lifeWindow.shouldDelay || lifeWindow.missedSdBuff
 		const windowError = lifeWindow.stardivers.length === 0 || lifeWindow.nastronds.length < EXPECTED_NASTRONDS_PER_WINDOW
-		const title = <>{this.parser.formatTimestamp(lifeWindow.start)} <span> - </span> <Trans id="drg.blood.windows.hits"><Plural value={lifeWindow.nastronds.length} one="# Nastrond" other="# Nastronds" />, <Plural value={lifeWindow.stardivers.length} one="# Stardiver" other="# Stardivers" /></Trans></>
+		const title = <>{this.parser.formatEpochTimestamp(lifeWindow.start)} <span> - </span> <Trans id="drg.blood.windows.hits"><Plural value={lifeWindow.nastronds.length} one="# Nastrond" other="# Nastronds" />, <Plural value={lifeWindow.stardivers.length} one="# Stardiver" other="# Stardivers" /></Trans></>
 
 		if (windowError) {
 			return <span className="text-error">{title}</span>

@@ -7,10 +7,8 @@ import {getReportPatch, Patch} from 'data/PATCHES'
 import {DependencyCascadeError, ModulesNotFoundError} from 'errors'
 import {Event} from 'event'
 import type {Actor as FflogsActor, Fight, Pet} from 'fflogs'
-import type {Event as LegacyEvent} from 'legacyEvent'
 import React from 'react'
 import {Report, Pull, Actor} from 'report'
-import {resolveActorId} from 'reportSources/legacyFflogs/base'
 import {Report as LegacyReport} from 'store/report'
 import toposort from 'toposort'
 import {extractErrorContext, isDefined, formatDuration} from 'utilities'
@@ -495,72 +493,6 @@ class Parser {
 	// -----
 	// Utilities
 	// -----
-
-	byPlayer(event: {sourceID?: number}, playerId = this.player.id) {
-		return event.sourceID === playerId
-	}
-
-	toPlayer(event: {targetID?: number}, playerId = this.player.id) {
-		return event.targetID === playerId
-	}
-
-	byPlayerPet(event: {sourceID?: number}, playerId = this.player.id) {
-		const pet = this.report.friendlyPets.find(pet => pet.id === event.sourceID)
-		return pet && pet.petOwner === playerId
-	}
-
-	toPlayerPet(event: {targetID?: number}, playerId = this.player.id) {
-		const pet = this.report.friendlyPets.find(pet => pet.id === event.targetID)
-		return pet && pet.petOwner === playerId
-	}
-
-	/**
-	 * Convert an fflogs event timestamp for the current pull to an epoch timestamp
-	 * compatible with logic running in the new analysis system. Do ***not*** use this
-	 * outside the above scenario.
-	 * @deprecated
-	 */
-	fflogsToEpoch = (timestamp: number) =>
-		timestamp - this.eventTimeOffset + this.pull.timestamp
-
-	/**
-	 * Convert a unix epoch timestamp to a report-relative timestamp compatible
-	 * with logic running in the old analysis system. Do ***not*** use this
-	 * outside the above scenario.
-	 * @deprecated
-	 */
-	epochToFflogs = (timestamp: number) =>
-		timestamp - this.pull.timestamp + this.eventTimeOffset
-
-	/**
-	 * Get an actor ID compatible with the new analysis system from the target of
-	 * a legacy fflogs event. This should ***only*** be utilised in old modules that
-	 * need to interop with the new system.
-	 * @deprecated
-	 */
-	getFflogsEventSourceActorId = (event: LegacyEvent) =>
-		resolveActorId({
-			id: event.sourceID,
-			instance: event.sourceInstance,
-			actor: event.source,
-		})
-
-	/**
-	 * Get an actor ID compatible with the new analysis system from the target of
-	 * a legacy fflogs event. This should ***only*** be utilised in old modules that
-	 * need to interop with the new system.
-	 * @deprecated
-	 */
-	getFflogsEventTargetActorId = (event: LegacyEvent) =>
-		resolveActorId({
-			id: event.targetID,
-			instance: event.targetInstance,
-			actor: event.target,
-		})
-
-	formatTimestamp(timestamp: number, secondPrecision?: number) {
-		return this.formatDuration(timestamp - this.fight.start_time, secondPrecision)
-	}
 
 	formatEpochTimestamp(timestamp: number, secondPrecision?: number) {
 		return this.formatDuration(timestamp - this.pull.timestamp, secondPrecision)
