@@ -1,4 +1,3 @@
-import {getFflogsEvents} from 'api'
 import * as Errors from 'errors'
 import {Event} from 'event'
 import {Actor as FflogsActor, Fight} from 'fflogs'
@@ -87,20 +86,10 @@ export class Conductor {
 		// Clear the cache ahead of time
 		this.resultsCache = undefined
 
-		// Fetch events
-		const events = await getFflogsEvents(
-			this.legacyReport,
-			this.fight,
-			{actorid: this.combatant.id},
-		)
-
-		// Normalise & parse
+		// Parse
 		// TODO: Batching?
-		// TODO: Normalise report flow?
-		const normalisedEvents = await this.parser.normalise(events)
 		this.parser.parseEvents({
 			events: reportFlowEvents,
-			legacyEvents: normalisedEvents,
 		})
 	}
 

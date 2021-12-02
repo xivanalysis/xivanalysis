@@ -146,7 +146,7 @@ describe('Parser', () => {
 
 	it('dispatches events', async () => {
 		await parser.configure()
-		parser.parseEvents({events: [event], legacyEvents: []})
+		parser.parseEvents({events: [event]})
 
 		expect(dispatcher.dispatch).toHaveBeenCalledTimes(2)
 		const {calls} = dispatcher.dispatch.mock
@@ -164,7 +164,6 @@ describe('Parser', () => {
 				{type: 'test', timestamp: 50},
 				{type: 'test', timestamp: 60},
 			],
-			legacyEvents: [],
 		})
 
 		const {calls} = dispatcher.dispatch.mock
@@ -190,7 +189,7 @@ describe('Parser', () => {
 		dispatcher = Dispatcher.mock.instances[1]
 		dispatcher.dispatch.mockReturnValueOnce([{handle: 'test_basic', error: new Error('test')}])
 		await parser.configure()
-		parser.parseEvents({events: [event], legacyEvents: []})
+		parser.parseEvents({events: [event]})
 
 		const {calls} = dispatcher.dispatch.mock
 		expect(calls[0][1]).toEqual(['test_renamed', 'test_basic', 'test_dependent'])
@@ -202,7 +201,7 @@ describe('Parser', () => {
 		dispatcher = Dispatcher.mock.instances[1]
 		dispatcher.dispatch.mockReturnValueOnce([{handle: 'test_renamed', error: new Error('test')}])
 		await parser.configure()
-		parser.parseEvents({events: [event], legacyEvents: []})
+		parser.parseEvents({events: [event]})
 
 		const {calls} = dispatcher.dispatch.mock
 		expect(calls[0][1]).toEqual(['test_renamed', 'test_basic', 'test_dependent'])
@@ -233,7 +232,6 @@ describe('Parser', () => {
 				{timestamp: NEW_EVENT_OFFSET+50, type: '__sourceEvent'},
 				{timestamp: NEW_EVENT_OFFSET+100, type: '__sourceEvent'},
 			],
-			legacyEvents: [],
 		})
 
 		expect(dispatchedEvents.map(({event}) => event.type)).toEqual([

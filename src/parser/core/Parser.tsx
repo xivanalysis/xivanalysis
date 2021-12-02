@@ -76,8 +76,6 @@ class Parser {
 	_triggerModules: string[] = []
 	_moduleErrors: Record<string, Error/* | {toString(): string } */> = {}
 
-	private legacyFabricationQueue: LegacyEvent[] = []
-
 	// Stored soonest-last for performance
 	private eventDispatchQueue: Event[] = []
 
@@ -253,37 +251,11 @@ class Parser {
 		return events
 	}
 
-	parseEvents({
-		events,
-		legacyEvents,
-	}: {
-		events: Event[],
-		legacyEvents: LegacyEvent[],
-	}) {
-		// Required for legacy execution.
+	parseEvents({events}: {events: Event[]}) {
 		this._triggerModules = this.executionOrder.slice(0)
 
-		const xivaIterator = this.iterateXivaEvents(events)[Symbol.iterator]()
-		const legacyIterator = this.iterateLegacyEvents(legacyEvents)[Symbol.iterator]()
-
-		let xivaResult = xivaIterator.next()
-		let legacyResult = legacyIterator.next()
-
-		while (!xivaResult.done || !legacyResult.done) {
-			const xivaTimestamp = xivaResult.done ? Infinity : xivaResult.value.timestamp
-			const legacyTimestamp = legacyResult.done
-				? Infinity
-				: legacyResult.value.timestamp + this.report.start
-
-			// Preference xiva events when equal timestamps, as we're doing a trunk-first migration.
-			if (!xivaResult.done && xivaTimestamp <= legacyTimestamp) {
-				this.dispatchXivaEvent(xivaResult.value)
-				xivaResult = xivaIterator.next()
-			} else if (!legacyResult.done && legacyTimestamp < xivaTimestamp) {
-				legacyResult = legacyIterator.next()
-			} else {
-				throw new Error('Impossible condition in event interleaving.')
-			}
+		for (const event of this.iterateXivaEvents(events)) {
+			this.dispatchXivaEvent(event)
 		}
 	}
 
@@ -333,33 +305,6 @@ class Parser {
 		}
 	}
 
-	private *iterateLegacyEvents(events: LegacyEvent[]): Iterable<LegacyEvent> {
-		const eventIterator = events[Symbol.iterator]()
-
-		// Start the parse with an 'init' fab
-		yield {
-			type: 'init',
-			timestamp: this.fight.start_time,
-		}
-
-		let obj = eventIterator.next()
-		while (!obj.done) {
-			// Iterate over the actual event first
-			yield obj.value
-			obj = eventIterator.next()
-
-			// Iterate over any fabrications arising from the event and clear the queue
-			yield* this.legacyFabricationQueue
-			this.legacyFabricationQueue = []
-		}
-
-		// Finish with 'complete' fab
-		yield {
-			type: 'complete',
-			timestamp: this.fight.end_time,
-		}
-	}
-
 	queueEvent(event: Event) {
 		// If the event is in the past, noop.
 		if (event.timestamp < this.currentEpochTimestamp) {
@@ -378,10 +323,6 @@ class Parser {
 		} else {
 			this.eventDispatchQueue.splice(index, 0, event)
 		}
-	}
-
-	fabricateLegacyEvent(event: LegacyEvent) {
-		this.legacyFabricationQueue.push(event)
 	}
 
 	private _setModuleError(mod: string, error: Error) {
