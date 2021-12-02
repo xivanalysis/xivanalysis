@@ -80,7 +80,6 @@ export default class Lightspeed extends Analyser {
 		if (this.currentWindow.end != null && this.currentWindow.end === event.timestamp) {
 			this.currentWindow.end = undefined
 		}
-		return this.currentWindow
 	}
 
 	private tryCloseWindow(event: Events['statusRemove']) {
@@ -137,10 +136,21 @@ export default class Lightspeed extends Analyser {
 
 	// just output, no suggestions for now.
 	override output() {
+
+		//in the case when the encounter ends prior to status remove. splicing the event to log it. note: since close event checks for null, this will not be applicable if the window isn't already open
+		const eventClose: Events['statusRemove'] = {
+			timestamp: this.parser.pull.duration,
+			status: this.data.statuses.LIGHTSPEED.id,
+			type: 'statusRemove',
+			source: this.parser.actor.id,
+			target: this.parser.actor.id,
+		}
+		this.tryCloseWindow(eventClose)
+
 		const tableData = this.history.map(window => {
 			const end = window.end != null ?
 				window.end - this.parser.pull.timestamp :
-				window.start - this.parser.pull.timestamp
+				this.parser.pull.duration
 			const start = window.start - this.parser.pull.timestamp
 			// how long (or short, really) a window needs to be in order to be considered truncated
 			// eslint-disable-next-line @typescript-eslint/no-magic-numbers
