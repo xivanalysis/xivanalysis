@@ -2,11 +2,9 @@ import {GameEdition} from 'data/EDITIONS'
 import {Team} from 'report'
 import {Analyser} from '../Analyser'
 import {Dispatcher} from '../Dispatcher'
-import {LegacyDispatcher} from '../LegacyDispatcher'
 import {Meta} from '../Meta'
 import Parser from '../Parser'
 
-jest.mock('../LegacyDispatcher')
 jest.mock('../Dispatcher')
 
 /* eslint-disable @xivanalysis/no-unused-dependencies, @typescript-eslint/no-magic-numbers */
@@ -53,10 +51,6 @@ const fight = {
 	start_time: PULL_START_TIME_OFFSET,
 	end_time: PULL_START_TIME_OFFSET+100,
 }
-const event = {
-	type: '__testLegacy',
-	timestamp: 50,
-}
 
 const actor = {
 	id: '1',
@@ -82,11 +76,12 @@ const newReport = {
 	pulls: [pull],
 	meta: {source: '__test'},
 }
+const event = {
+	type: '__test',
+	timestamp: REPORT_START_TIME+PULL_START_TIME_OFFSET+50,
+}
 
 const buildParser = (modules = []) => {
-	const legacyDispatcher = new LegacyDispatcher()
-	legacyDispatcher.timestamp = 0
-
 	const dispatcher = new Dispatcher()
 	dispatcher.timestamp = 0
 	dispatcher.dispatch.mockReturnValue([])
@@ -101,7 +96,6 @@ const buildParser = (modules = []) => {
 		pull,
 		actor,
 
-		legacyDispatcher,
 		dispatcher,
 	})
 }
@@ -109,16 +103,13 @@ const buildParser = (modules = []) => {
 describe('Parser', () => {
 	let parser
 	let dispatcher
-	let legacyDispatcher
 
 	beforeEach(() => {
 		Dispatcher.mockClear()
-		LegacyDispatcher.mockClear()
 
 		parser = buildParser()
 
 		dispatcher = Dispatcher.mock.instances[0]
-		legacyDispatcher = LegacyDispatcher.mock.instances[0]
 	})
 
 	it('exposes metadata', () => {
@@ -130,13 +121,11 @@ describe('Parser', () => {
 
 	it('starts at beginning of fight', () => {
 		dispatcher.timestamp = -Infinity
-		legacyDispatcher.timestamp = -Infinity
 		expect(parser.currentTimestamp).toBe(fight.start_time)
 	})
 
 	it('does not exceed fight end time', () => {
 		dispatcher.timestamp = Infinity
-		legacyDispatcher.timestamp = Infinity
 		expect(parser.currentTimestamp).toBe(fight.end_time)
 		expect(parser.fightDuration).toBe(fight.end_time - fight.start_time)
 	})
@@ -157,13 +146,12 @@ describe('Parser', () => {
 
 	it('dispatches events', async () => {
 		await parser.configure()
-		parser.parseEvents({events: [], legacyEvents: [event]})
+		parser.parseEvents({events: [event], legacyEvents: []})
 
-		expect(legacyDispatcher.dispatch).toHaveBeenCalledTimes(3)
-		const {calls} = legacyDispatcher.dispatch.mock
-		expect(calls[0][0]).toContainEntry(['type', 'init'])
-		expect(calls[1][0]).toEqual(event)
-		expect(calls[2][0]).toContainEntry(['type', 'complete'])
+		expect(dispatcher.dispatch).toHaveBeenCalledTimes(2)
+		const {calls} = dispatcher.dispatch.mock
+		expect(calls[0][0]).toEqual(event)
+		expect(calls[1][0]).toContainEntry(['type', 'complete'])
 	})
 
 	it('stops dispatching to analysers that error', async () => {
@@ -199,24 +187,24 @@ describe('Parser', () => {
 
 	it('cascades errors to dependents', async () => {
 		parser = buildParser([BasicAnalyser, RenamedAnalyser, DependentAnalyser])
-		legacyDispatcher = LegacyDispatcher.mock.instances[1]
-		legacyDispatcher.dispatch.mockReturnValueOnce({test_basic: new Error('test')})
+		dispatcher = Dispatcher.mock.instances[1]
+		dispatcher.dispatch.mockReturnValueOnce([{handle: 'test_basic', error: new Error('test')}])
 		await parser.configure()
-		parser.parseEvents({events: [], legacyEvents: [event]})
+		parser.parseEvents({events: [event], legacyEvents: []})
 
-		const {calls} = legacyDispatcher.dispatch.mock
+		const {calls} = dispatcher.dispatch.mock
 		expect(calls[0][1]).toEqual(['test_renamed', 'test_basic', 'test_dependent'])
 		expect(calls[1][1]).toEqual(['test_renamed'])
 	})
 
 	it('cascades errors to dependents while renamed', async () => {
 		parser = buildParser([BasicAnalyser, RenamedAnalyser, DependentAnalyser])
-		legacyDispatcher = LegacyDispatcher.mock.instances[1]
-		legacyDispatcher.dispatch.mockReturnValueOnce({test_renamed: new Error('test')})
+		dispatcher = Dispatcher.mock.instances[1]
+		dispatcher.dispatch.mockReturnValueOnce([{handle: 'test_renamed', error: new Error('test')}])
 		await parser.configure()
-		parser.parseEvents({events: [], legacyEvents: [event]})
+		parser.parseEvents({events: [event], legacyEvents: []})
 
-		const {calls} = legacyDispatcher.dispatch.mock
+		const {calls} = dispatcher.dispatch.mock
 		expect(calls[0][1]).toEqual(['test_renamed', 'test_basic', 'test_dependent'])
 		expect(calls[1][1]).toEqual(['test_basic'])
 	})
@@ -258,68 +246,5 @@ describe('Parser', () => {
 		])
 		expect(dispatchedEvents.map(({timestamp}) => timestamp))
 			.toEqual([0, 50, 50, 70, 100, 100].map(n => OLD_EVENT_OFFSET+n))
-	})
-
-	describe('event migration', () => {
-		[{
-			name: 'equal timestamp',
-			events: [{timestamp: NEW_EVENT_OFFSET+50, type: '__rfEvent'}],
-			legacyEvents: [{timestamp: OLD_EVENT_OFFSET+50, type: '__lEvent'}],
-			expected: {
-				type: ['init', '__rfEvent', '__lEvent', 'complete', 'complete'],
-				timestamp: [0, 50, 50, 100, 100].map(n => OLD_EVENT_OFFSET+n),
-			},
-		}, {
-			name: 'flow first',
-			events: [{timestamp: NEW_EVENT_OFFSET-100, type: '__rfEvent'}],
-			legacyEvents: [{timestamp: OLD_EVENT_OFFSET+50, type: '__lEvent'}],
-			expected: {
-				type: ['__rfEvent', 'init', '__lEvent', 'complete', 'complete'],
-				timestamp: [0, 0, 50, 100, 100].map(n => OLD_EVENT_OFFSET+n),
-			},
-		}, {
-			name: 'flow last',
-			events: [{timestamp: NEW_EVENT_OFFSET+200, type: '__rfEvent'}],
-			legacyEvents: [{timestamp: OLD_EVENT_OFFSET+50, type: '__lEvent'}],
-			expected: {
-				type: ['init', '__lEvent', 'complete', '__rfEvent', 'complete'],
-				timestamp: [0, 50, 100, 100, 100].map(n => OLD_EVENT_OFFSET+n),
-			},
-		}, {
-			name: 'no flow',
-			events: [],
-			legacyEvents: [{timestamp: OLD_EVENT_OFFSET+50, type: '__lEvent'}],
-			expected: {
-				type: ['init', '__lEvent', 'complete', 'complete'],
-				timestamp: [0, 50, 100, 100].map(n => OLD_EVENT_OFFSET+n),
-			},
-		}, {
-			name: 'no legacy',
-			events: [{timestamp: NEW_EVENT_OFFSET+50, type: '__rfEvent'}],
-			legacyEvents: [],
-			expected: {
-				type: ['init', '__rfEvent', 'complete', 'complete'],
-				timestamp: [0, 50, 100, 100].map(n => OLD_EVENT_OFFSET+n),
-			},
-		}].forEach(opts => it(`interleaves events: ${opts.name}`, async () => {
-			const dispatchedEvents = []
-
-			function mockDispatch(event) {
-				this.timestamp = event.timestamp
-				dispatchedEvents.push({event, timestamp: parser.currentTimestamp})
-				return []
-			}
-			dispatcher.dispatch.mockImplementation(mockDispatch)
-			legacyDispatcher.dispatch.mockImplementation(mockDispatch)
-
-			await parser.configure()
-			parser.parseEvents({
-				events: opts.events,
-				legacyEvents: opts.legacyEvents,
-			})
-
-			expect(dispatchedEvents.map(({event}) => event.type)).toEqual(opts.expected.type)
-			expect(dispatchedEvents.map(({timestamp}) => timestamp)).toEqual(opts.expected.timestamp)
-		}))
 	})
 })

@@ -17,7 +17,6 @@ import {extractErrorContext, isDefined, formatDuration} from 'utilities'
 import {Analyser, DisplayMode} from './Analyser'
 import {Dispatcher} from './Dispatcher'
 import {Injectable, MappedDependency} from './Injectable'
-import {LegacyDispatcher} from './LegacyDispatcher'
 import {Meta} from './Meta'
 
 interface Player extends FflogsActor {
@@ -59,7 +58,6 @@ class Parser {
 	// Properties
 	// -----
 	readonly dispatcher: Dispatcher
-	readonly legacyDispatcher: LegacyDispatcher
 
 	readonly report: LegacyReport
 	readonly fight: Fight
@@ -87,12 +85,7 @@ class Parser {
 	get currentEpochTimestamp() {
 		const start = this.pull.timestamp
 		const end = start + this.pull.duration
-
-		// Adjust for fflog's bullshit
-		const legacyTimestamp = this.legacyDispatcher.timestamp + this.report.start
-
-		const timestamp = Math.max(this.dispatcher.timestamp, legacyTimestamp)
-		return Math.min(end, Math.max(start, timestamp))
+		return Math.min(end, Math.max(start, this.dispatcher.timestamp))
 	}
 
 	/**
@@ -153,10 +146,8 @@ class Parser {
 		actor: Actor,
 
 		dispatcher?: Dispatcher
-		legacyDispatcher?: LegacyDispatcher,
 	}) {
 		this.dispatcher = opts.dispatcher ?? new Dispatcher()
-		this.legacyDispatcher = opts.legacyDispatcher ?? new LegacyDispatcher()
 
 		this.meta = opts.meta
 		this.report = opts.report
@@ -289,7 +280,6 @@ class Parser {
 				this.dispatchXivaEvent(xivaResult.value)
 				xivaResult = xivaIterator.next()
 			} else if (!legacyResult.done && legacyTimestamp < xivaTimestamp) {
-				this.dispatchLegacyEvent(legacyResult.value)
 				legacyResult = legacyIterator.next()
 			} else {
 				throw new Error('Impossible condition in event interleaving.')
@@ -367,24 +357,6 @@ class Parser {
 		yield {
 			type: 'complete',
 			timestamp: this.fight.end_time,
-		}
-	}
-
-	private dispatchLegacyEvent(event: LegacyEvent) {
-		const moduleErrors = this.legacyDispatcher.dispatch(event, this._triggerModules)
-
-		for (const handle in moduleErrors) {
-			if (moduleErrors[handle] == null) { continue }
-			const error = moduleErrors[handle]
-
-			this.captureError({
-				error,
-				type: 'event',
-				module: handle,
-				event,
-			})
-
-			this._setModuleError(handle, error)
 		}
 	}
 
