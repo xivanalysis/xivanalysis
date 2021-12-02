@@ -1,7 +1,10 @@
 import {t} from '@lingui/macro'
 import {Plural, Trans} from '@lingui/react'
-import {ActionLink, StatusLink} from 'components/ui/DbLink'
-import Module, {dependency} from 'parser/core/Module'
+import {DataLink} from 'components/ui/DbLink'
+import {Event} from 'event'
+import {Analyser} from 'parser/core/Analyser'
+import {filter, oneOf} from 'parser/core/filter'
+import {dependency} from 'parser/core/Injectable'
 import {Cooldowns} from 'parser/core/modules/Cooldowns'
 import {Data} from 'parser/core/modules/Data'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
@@ -22,7 +25,7 @@ const SEVERITIES = {
 	},
 }
 
-export default class Horoscope extends Module {
+export default class Horoscope extends Analyser {
 	static override handle = 'horoscope'
 	static override title = t('ast.horoscope.title')`Horoscope`
 
@@ -34,16 +37,20 @@ export default class Horoscope extends Module {
 	private activations = 0
 	private nonHoroscopeHeals = 0
 
-	protected override init() {
+	override initialise() {
 
 		const HELIOS_CASTS = [
 			this.data.actions.HELIOS.id,
 			this.data.actions.ASPECTED_HELIOS.id,
 		]
+		const playerTypeFilter = filter<Event>().source(this.parser.actor.id).type('action')
 
-		this.addEventHook('cast', {abilityId: HELIOS_CASTS, by: 'player'}, this.onHeliosCast)
-		this.addEventHook('cast', {abilityId: this.data.actions.HOROSCOPE.id, by: 'player'}, this.onHoroscope)
-		this.addEventHook('cast', {abilityId: this.data.actions.HOROSCOPE_ACTIVATION.id, by: 'player'}, this.onActivate)
+		this.addEventHook(playerTypeFilter
+			.action(oneOf(HELIOS_CASTS)), this.onHeliosCast)
+		this.addEventHook(playerTypeFilter
+			.action(this.data.actions.HOROSCOPE.id), this.onHoroscope)
+		this.addEventHook(playerTypeFilter
+			.action(this.data.actions.HOROSCOPE_ACTIVATION.id), this.onActivate)
 		this.addEventHook('complete', this.onComplete)
 	}
 
@@ -71,7 +78,7 @@ export default class Horoscope extends Module {
 			this.suggestions.add(new TieredSuggestion({
 				icon: this.data.actions.HOROSCOPE_ACTIVATION.icon,
 				content: <Trans id="ast.horoscope.suggestion.expired.content">
-					<ActionLink {...this.data.actions.HOROSCOPE} /> does not activate by itself, so don't forget to use it again or it will expire for no potency.
+					<DataLink action="HOROSCOPE" /> does not activate by itself, so don't forget to use it again or it will expire for no potency.
 				</Trans>,
 				why: <Trans id="ast.horoscope.suggestion.expired.why">
 					<Plural value={missedActivations} one="# expiration" other="# expirations" />  of Horoscope without reading fortunes again.
@@ -87,8 +94,8 @@ export default class Horoscope extends Module {
 			this.suggestions.add(new TieredSuggestion({
 				icon: this.data.actions.HOROSCOPE.icon,
 				content: <Trans id="ast.horoscope.suggestion.usage.content">
-					Try to plan your <ActionLink {...this.data.actions.HOROSCOPE} /> usages to have it up before you need to cast <ActionLink {...this.data.actions.HELIOS} /> or <ActionLink {...this.data.actions.ASPECTED_HELIOS} />.
-					<StatusLink {...this.data.statuses.HOROSCOPE_HELIOS} /> may help to cover more damage later without needing to cast more AOE heals.
+					Try to plan your <DataLink action="HOROSCOPE" /> usages to have it up before you need to cast <DataLink action="HELIOS" /> or <DataLink action="ASPECTED_HELIOS" />.
+					<DataLink status="HOROSCOPE_HELIOS" /> may help to cover more damage later without needing to cast more AOE heals.
 				</Trans>,
 				tiers: SEVERITIES.WASTED_AOE_HEAL_TIERS,
 				value: this.nonHoroscopeHeals,
