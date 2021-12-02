@@ -177,7 +177,6 @@ export class Death extends Analyser {
 		}
 
 		// Queue the raise notification.
-		// Also fabricating a legacy event for backwards compatibility.
 		this.parser.queueEvent({
 			type: 'raise',
 			timestamp,

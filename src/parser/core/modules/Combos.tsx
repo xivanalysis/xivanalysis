@@ -5,7 +5,6 @@ import {Plural, Trans} from '@lingui/react'
 import Rotation from 'components/ui/Rotation'
 import {ActionCombo} from 'data/ACTIONS/type'
 import {Event, Events, FieldsMultiTargeted, SourceModifier} from 'event'
-import {AbilityEventFields} from 'fflogs'
 import _ from 'lodash'
 import {dependency} from 'parser/core/Injectable'
 import DISPLAY_ORDER from 'parser/core/modules/DISPLAY_ORDER'
@@ -37,11 +36,6 @@ declare module 'event' {
 	interface EventTypeRepository {
 		combo: EventCombo
 	}
-}
-
-export interface LegacyComboEvent extends AbilityEventFields {
-	type: 'combo'
-	hasSuccessfulHit: boolean
 }
 
 export interface ComboIssue {
