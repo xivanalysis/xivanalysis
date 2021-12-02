@@ -72,11 +72,6 @@ class Parser {
 		return this.currentEpochTimestamp - this.pull.timestamp
 	}
 
-	get parseDate() {
-		// TODO: normalise time to ms across the board
-		return Math.round(this.pull.timestamp / 1000)
-	}
-
 	// -----
 	// Constructor
 	// -----
@@ -100,7 +95,7 @@ class Parser {
 
 		this.patch = new Patch(
 			opts.report.edition,
-			this.parseDate,
+			this.pull.timestamp / 1000,
 		)
 	}
 

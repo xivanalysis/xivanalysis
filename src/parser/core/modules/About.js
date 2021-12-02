@@ -67,7 +67,7 @@ export default class About extends Analyser {
 			this.parser.report.edition,
 			from,
 			to,
-			this.parser.parseDate,
+			this.parser.pull.timestamp / 1000,
 		)
 
 		const {Description} = this
