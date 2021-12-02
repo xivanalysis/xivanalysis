@@ -2,7 +2,6 @@ import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
 import {DataLink} from 'components/ui/DbLink'
 import {RotationTable} from 'components/ui/RotationTable'
-import {Status} from 'data/STATUSES'
 import {Event, Events} from 'event'
 import {Analyser} from 'parser/core/Analyser'
 import {EventHook} from 'parser/core/Dispatcher'
@@ -25,7 +24,6 @@ interface LIGHTSPEED_Window {
 	mpSavings: number
 	trailingGcdEvent?: Events['action']
 
-	buffsRemoved: Array<Status['id']>
 	deathTruncated: boolean
 }
 
@@ -64,7 +62,6 @@ export default class Lightspeed extends Analyser {
 				gcdCount: 0,
 				mpSavings: 0,
 
-				buffsRemoved: [],
 				deathTruncated: false,
 
 			}
@@ -75,11 +72,6 @@ export default class Lightspeed extends Analyser {
 				this.onCast,
 			)
 		}
-
-		// If that happens, re-open the last window and keep tracking
-		if (this.currentWindow.end != null && this.currentWindow.end === event.timestamp) {
-			this.currentWindow.end = undefined
-		}
 	}
 
 	private tryCloseWindow(event: Events['statusRemove']) {
@@ -88,18 +80,14 @@ export default class Lightspeed extends Analyser {
 			return
 		}
 
-		// Cache whether we've seen a buff removal event for this status, just in case they happen at exactly the same timestamp
-		this.currentWindow.buffsRemoved.push(event.status)
-
 		// Make sure all applicable statuses have fallen off before the window closes
-		if (this.currentWindow.buffsRemoved.includes(this.data.statuses.LIGHTSPEED.id)) {
-			this.currentWindow.end = event.timestamp
-			this.history.push(this.currentWindow)
-			this.currentWindow = undefined
-			if (this.castHook != null) {
-				this.removeEventHook(this.castHook)
-				this.castHook = undefined
-			}
+		this.currentWindow.end = event.timestamp
+		this.history.push(this.currentWindow)
+		this.currentWindow = undefined
+		if (this.castHook != null) {
+			this.removeEventHook(this.castHook)
+			this.castHook = undefined
+
 		}
 	}
 
@@ -117,15 +105,13 @@ export default class Lightspeed extends Analyser {
 			return
 		}
 
-		// If this window isn't done yet add the action to the list
-		if (this.currentWindow.end == null) {
-			this.currentWindow.rotation.push(event)
-			if (action.onGcd) {
-				this.currentWindow.gcdCount++
-			}
-			if (this.parser.patch.before('5.3') && action.mpCost != null) {
-				this.currentWindow.mpSavings = this.currentWindow.mpSavings + action.mpCost/2
-			}
+		// Add the action to the list
+		this.currentWindow.rotation.push(event)
+		if (action.onGcd) {
+			this.currentWindow.gcdCount++
+		}
+		if (this.parser.patch.before('5.3') && action.mpCost != null) {
+			this.currentWindow.mpSavings = this.currentWindow.mpSavings + action.mpCost/2
 		}
 
 		// If we haven't recorded a trailing GCD event for this closed window, do so now
