@@ -49,7 +49,7 @@ export class Conductor {
 		const parser = new Parser({
 			meta,
 
-			newReport: this.report,
+			report: this.report,
 			pull: this.pull,
 			actor: this.actor,
 		})

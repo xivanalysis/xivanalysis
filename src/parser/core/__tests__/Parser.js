@@ -46,7 +46,7 @@ const pull = {
 	},
 	actors: [actor],
 }
-const newReport = {
+const report = {
 	timestamp: REPORT_START_TIME,
 	edition: GameEdition.GLOBAL,
 	name: 'Test report',
@@ -66,7 +66,7 @@ const buildParser = (modules = []) => {
 	return new Parser({
 		meta: new Meta({modules: () => Promise.resolve({default: modules})}),
 
-		newReport,
+		report,
 		pull,
 		actor,
 
@@ -88,7 +88,7 @@ describe('Parser', () => {
 
 	it('exposes metadata', () => {
 		// Just making sure that modules will have access to it
-		expect(parser.newReport).toMatchObject(newReport)
+		expect(parser.report).toMatchObject(report)
 		expect(parser.pull).toMatchObject(pull)
 		expect(parser.actor).toMatchObject(actor)
 	})

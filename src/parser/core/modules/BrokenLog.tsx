@@ -47,7 +47,7 @@ export default class BrokenLog extends Analyser {
 		if (
 			erroneous &&
 			!this.triggers.has(triggerKey) &&
-			!getReportPatch(this.parser.newReport).branch
+			!getReportPatch(this.parser.report).branch
 		) {
 			const job = this.parser.actor.job
 
@@ -57,7 +57,7 @@ export default class BrokenLog extends Analyser {
 					module: handle,
 				})
 				scope.setExtras({
-					source: this.parser.newReport.meta.source,
+					source: this.parser.report.meta.source,
 					pull: this.parser.pull.id,
 					actor: this.parser.actor.id,
 				})

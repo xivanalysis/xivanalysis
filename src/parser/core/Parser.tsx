@@ -46,7 +46,7 @@ class Parser {
 
 	readonly patch: Patch
 
-	readonly newReport: Report
+	readonly report: Report
 	readonly pull: Pull
 	readonly actor: Actor
 
@@ -84,7 +84,7 @@ class Parser {
 	constructor(opts: {
 		meta: Meta,
 
-		newReport: Report,
+		report: Report,
 		pull: Pull,
 		actor: Actor,
 
@@ -94,12 +94,12 @@ class Parser {
 
 		this.meta = opts.meta
 
-		this.newReport = opts.newReport
+		this.report = opts.report
 		this.pull = opts.pull
 		this.actor = opts.actor
 
 		this.patch = new Patch(
-			opts.newReport.edition,
+			opts.report.edition,
 			this.parseDate,
 		)
 	}
@@ -393,7 +393,7 @@ class Parser {
 		}
 
 		// If the log should be analysed on a different branch, we'll probably be getting a bunch of errors - safe to ignore, as the logic will be fundamentally different.
-		if (getReportPatch(this.newReport).branch) {
+		if (getReportPatch(this.report).branch) {
 			return
 		}
 
@@ -405,7 +405,7 @@ class Parser {
 		}
 
 		const extra: Record<string, unknown> = {
-			source: this.newReport.meta.source,
+			source: this.report.meta.source,
 			pull: this.pull.id,
 			actor: this.actor.id,
 			event: opts.event,
