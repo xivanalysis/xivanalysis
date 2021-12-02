@@ -4,7 +4,6 @@ import * as Sentry from '@sentry/browser'
 import {Message, Segment} from 'akkd'
 import NormalisedMessage from 'components/ui/NormalisedMessage'
 import {getReportPatch} from 'data/PATCHES'
-import Module from 'parser/core/Module'
 import React from 'react'
 import {Table} from 'semantic-ui-react'
 import {Analyser, DisplayMode} from '../Analyser'
@@ -12,10 +11,8 @@ import {dependency} from '../Injectable'
 import {Data} from './Data'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 
-type SourceConstructor = typeof Module | typeof Analyser
-
 interface Trigger {
-	source: SourceConstructor
+	source: typeof Analyser
 	reason?: React.ReactNode
 }
 
@@ -37,12 +34,12 @@ export default class BrokenLog extends Analyser {
 	 * @param erroneous If this trigger should be reported as an error to logs.
 	 */
 	trigger(
-		source: Module | Analyser,
+		source: Analyser,
 		key: string,
 		reason?: React.ReactNode,
 		erroneous = true,
 	) {
-		const constructor = (source.constructor as SourceConstructor)
+		const constructor = (source.constructor as typeof Analyser)
 		const {handle} = constructor
 		const triggerKey = `${handle}.${key}`
 

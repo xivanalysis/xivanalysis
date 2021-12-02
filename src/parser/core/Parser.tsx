@@ -14,12 +14,11 @@ import {resolveActorId} from 'reportSources/legacyFflogs/base'
 import {Report as LegacyReport} from 'store/report'
 import toposort from 'toposort'
 import {extractErrorContext, isDefined, formatDuration} from 'utilities'
-import {Analyser} from './Analyser'
+import {Analyser, DisplayMode} from './Analyser'
 import {Dispatcher} from './Dispatcher'
-import {Injectable} from './Injectable'
+import {Injectable, MappedDependency} from './Injectable'
 import {LegacyDispatcher} from './LegacyDispatcher'
 import {Meta} from './Meta'
-import Module, {DISPLAY_MODE, MappedDependency} from './Module'
 
 interface Player extends FflogsActor {
 	pets: Pet[]
@@ -29,7 +28,7 @@ export interface Result {
 	i18n_id?: string
 	handle: string
 	name: string | MessageDescriptor
-	mode: DISPLAY_MODE
+	mode: DisplayMode
 	order: number
 	markup: React.ReactNode
 }
@@ -206,9 +205,7 @@ class Parser {
 			const injectable = new constructors[handle](this)
 			this.container[handle] = injectable
 
-			if (injectable instanceof Module) {
-				injectable.doTheMagicInitDance()
-			} else if (injectable instanceof Analyser) {
+			if (injectable instanceof Analyser) {
 				injectable.initialise()
 			} else {
 				throw new Error(`Unhandled injectable type for initialisation: ${handle}`)
@@ -255,9 +252,7 @@ class Parser {
 
 			// TODO: Not a fan of needing to special case every way of normalising -
 			//       resolve this more generically
-			if (injectable instanceof Module) {
-				events = await injectable.normalise(events)
-			} else if (injectable instanceof Analyser) {
+			if (injectable instanceof Analyser) {
 				// No.
 			} else {
 				throw new Error(`Unhandled injectable type for normalisation: ${handle}`)
@@ -445,9 +440,9 @@ class Parser {
 	 */
 	private _gatherErrorContext(
 		mod: string,
-		source: 'event' | 'output',
-		error: Error,
-		event?: LegacyEvent,
+		_source: 'event' | 'output',
+		_error: Error,
+		_event?: LegacyEvent,
 	): [Record<string, unknown>, Array<[string, Error]>] {
 		const output: Record<string, unknown> = {}
 		const errors: Array<[string, Error]> = []
@@ -460,13 +455,6 @@ class Parser {
 			const constructor = injectable.constructor as typeof Injectable
 
 			// TODO: Should Injectable also contain rudimentary error logic?
-			if (injectable instanceof Module) {
-				try {
-					output[handle] = injectable.getErrorContext(source, error, event)
-				} catch (error) {
-					errors.push([handle, error])
-				}
-			}
 
 			if (output[handle] === undefined) {
 				output[handle] = extractErrorContext(injectable)
@@ -537,18 +525,6 @@ class Parser {
 	}
 
 	private getResultMeta(injectable: Injectable): Result {
-		if (injectable instanceof Module) {
-			const constructor = injectable.constructor as typeof Module
-			return {
-				name: constructor.title,
-				handle: constructor.handle,
-				mode: constructor.displayMode,
-				order: constructor.displayOrder,
-				i18n_id: constructor.i18n_id,
-				markup: null,
-			}
-		}
-
 		if (injectable instanceof Analyser) {
 			const constructor = injectable.constructor as typeof Analyser
 			return {
@@ -565,10 +541,6 @@ class Parser {
 	}
 
 	private getOutput(injectable: Injectable): React.ReactNode {
-		if (injectable instanceof Module) {
-			return injectable.output()
-		}
-
 		if (injectable instanceof Analyser) {
 			return injectable.output?.()
 		}

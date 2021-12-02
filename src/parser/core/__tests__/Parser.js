@@ -4,7 +4,6 @@ import {Analyser} from '../Analyser'
 import {Dispatcher} from '../Dispatcher'
 import {LegacyDispatcher} from '../LegacyDispatcher'
 import {Meta} from '../Meta'
-import Module from '../Module'
 import Parser from '../Parser'
 
 jest.mock('../LegacyDispatcher')
@@ -13,24 +12,18 @@ jest.mock('../Dispatcher')
 /* eslint-disable @xivanalysis/no-unused-dependencies, @typescript-eslint/no-magic-numbers */
 
 // Testing modules
-class BasicModule extends Module {
+class BasicAnalyser extends Analyser {
 	static handle = 'test_basic'
-	normalise = jest.fn(events => events)
 }
-class RenamedModule extends Module {
+class RenamedAnalyser extends Analyser {
 	static handle = 'test_renamed'
 }
-class DependentModule extends Module {
+class DependentAnalyser extends Analyser {
 	static handle = 'test_dependent'
 	static dependencies = [
 		'test_basic',
 		{handle: 'test_renamed', prop: 'renamed'},
 	]
-}
-
-// Testing analysers
-class BasicAnalyser extends Analyser {
-	static handle = 'basic_analyser'
 }
 
 const REPORT_START_TIME = 10000
@@ -154,22 +147,12 @@ describe('Parser', () => {
 			.not.toContain(friendlyNotInFight)
 	})
 
-	it('loads modules', async () => {
-		parser = buildParser([BasicModule])
+	it('loads analysers', async () => {
+		parser = buildParser([BasicAnalyser])
 		await parser.configure()
 
 		expect(parser.container).toHaveProperty('test_basic')
-		expect(parser.container.test_basic).toBeInstanceOf(BasicModule)
-	})
-
-	it('runs normalisers', async () => {
-		parser = buildParser([BasicModule])
-		await parser.configure()
-		parser.normalise([event])
-
-		const mock = parser.container.test_basic.normalise.mock
-		expect(mock.calls).toHaveLength(1)
-		expect(mock.calls[0][0]).toEqual([event])
+		expect(parser.container.test_basic).toBeInstanceOf(BasicAnalyser)
 	})
 
 	it('dispatches events', async () => {
@@ -183,22 +166,10 @@ describe('Parser', () => {
 		expect(calls[2][0]).toContainEntry(['type', 'complete'])
 	})
 
-	it('stops dispatching to modules that error', async () => {
-		parser = buildParser([BasicModule])
-		legacyDispatcher = LegacyDispatcher.mock.instances[1]
-		legacyDispatcher.dispatch.mockReturnValueOnce({test_basic: new Error('test')})
-		await parser.configure()
-		parser.parseEvents({events: [], legacyEvents: [event]})
-
-		const {calls} = legacyDispatcher.dispatch.mock
-		expect(calls[0][1]).toEqual(['test_basic'])
-		expect(calls[1][1]).toEqual([])
-	})
-
 	it('stops dispatching to analysers that error', async () => {
 		parser = buildParser([BasicAnalyser])
 		dispatcher = Dispatcher.mock.instances[1]
-		dispatcher.dispatch.mockReturnValueOnce([{handle: 'basic_analyser', error: new Error('test')}])
+		dispatcher.dispatch.mockReturnValueOnce([{handle: 'test_basic', error: new Error('test')}])
 		await parser.configure()
 		parser.parseEvents({
 			events: [
@@ -209,25 +180,25 @@ describe('Parser', () => {
 		})
 
 		const {calls} = dispatcher.dispatch.mock
-		expect(calls[0][1]).toEqual(['basic_analyser'])
+		expect(calls[0][1]).toEqual(['test_basic'])
 		expect(calls[1][1]).toEqual([])
 	})
 
 	it('links dependencies', async () => {
-		parser = buildParser([BasicModule, DependentModule, RenamedModule])
+		parser = buildParser([BasicAnalyser, DependentAnalyser, RenamedAnalyser])
 		await parser.configure()
 
 		const module = parser.container.test_dependent
 		expect(module.test_basic)
-			.toBeInstanceOf(BasicModule)
+			.toBeInstanceOf(BasicAnalyser)
 			.toBe(parser.container.test_basic)
 		expect(module.renamed)
-			.toBeInstanceOf(RenamedModule)
+			.toBeInstanceOf(RenamedAnalyser)
 			.toBe(parser.container.test_renamed)
 	})
 
 	it('cascades errors to dependents', async () => {
-		parser = buildParser([BasicModule, RenamedModule, DependentModule])
+		parser = buildParser([BasicAnalyser, RenamedAnalyser, DependentAnalyser])
 		legacyDispatcher = LegacyDispatcher.mock.instances[1]
 		legacyDispatcher.dispatch.mockReturnValueOnce({test_basic: new Error('test')})
 		await parser.configure()
@@ -239,7 +210,7 @@ describe('Parser', () => {
 	})
 
 	it('cascades errors to dependents while renamed', async () => {
-		parser = buildParser([BasicModule, RenamedModule, DependentModule])
+		parser = buildParser([BasicAnalyser, RenamedAnalyser, DependentAnalyser])
 		legacyDispatcher = LegacyDispatcher.mock.instances[1]
 		legacyDispatcher.dispatch.mockReturnValueOnce({test_renamed: new Error('test')})
 		await parser.configure()

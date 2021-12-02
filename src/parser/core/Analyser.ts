@@ -4,14 +4,16 @@ import _ from 'lodash'
 import {Compute} from 'utilities'
 import {EventFilterPredicate, EventHook, EventHookCallback, TimestampHook, TimestampHookCallback} from './Dispatcher'
 import {Injectable} from './Injectable'
-import Module, {DISPLAY_MODE as DisplayMode} from './Module'
 import Parser from './Parser'
 
 const DEFAULT_DISPLAY_ORDER = 50
 
-// This needs to be imported from the legacy module file due to dependency cycles.
-// TODO:  When Module is removed, it should be moved here, or to the parser.
-export {DisplayMode}
+export enum DisplayMode {
+	COLLAPSIBLE,
+	FULL,
+	/** Don't use this unless you know what you're doing, and you've run it past me. */
+	RAW,
+}
 
 /** Resolve F to a Partial<Event> if it is a plain string type. */
 type ResolveType<F> =
@@ -73,16 +75,6 @@ export class Analyser extends Injectable {
 
 		// Save reference to the parser for later use
 		this.parser = parser
-
-		// Due to dispatch order, analysers must _never_ depend on modules, but the
-		// reverse is fine. Throw if any illegal dependencies are found.
-		const analyser = this.constructor as typeof Analyser
-		const illegalDependencies = analyser.dependencies
-			.map(dependency => typeof dependency === 'string' ? dependency : dependency.handle)
-			.filter(handle => parser.container[handle] instanceof Module)
-		if (illegalDependencies.length > 0) {
-			throw new Error(`Analysers must never depend on legacy modules. Illegal dependencies found on ${analyser.handle}: ${illegalDependencies.join(', ')}.`)
-		}
 	}
 
 	/**
