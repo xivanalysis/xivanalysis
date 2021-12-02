@@ -2,24 +2,17 @@ import {MessageDescriptor} from '@lingui/core'
 import * as Sentry from '@sentry/browser'
 import ResultSegment from 'components/LegacyAnalyse/ResultSegment'
 import ErrorMessage from 'components/ui/ErrorMessage'
-import {languageToEdition} from 'data/EDITIONS'
 import {getReportPatch, Patch} from 'data/PATCHES'
 import {DependencyCascadeError, ModulesNotFoundError} from 'errors'
 import {Event} from 'event'
-import type {Actor as FflogsActor, Fight, Pet} from 'fflogs'
 import React from 'react'
 import {Report, Pull, Actor} from 'report'
-import {Report as LegacyReport} from 'store/report'
 import toposort from 'toposort'
 import {extractErrorContext, isDefined, formatDuration} from 'utilities'
 import {Analyser, DisplayMode} from './Analyser'
 import {Dispatcher} from './Dispatcher'
 import {Injectable, MappedDependency} from './Injectable'
 import {Meta} from './Meta'
-
-interface Player extends FflogsActor {
-	pets: Pet[]
-}
 
 export interface Result {
 	i18n_id?: string
@@ -51,9 +44,6 @@ class Parser {
 	// -----
 	readonly dispatcher: Dispatcher
 
-	readonly report: LegacyReport
-	readonly fight: Fight
-	readonly player: Player
 	readonly patch: Patch
 
 	readonly newReport: Report
@@ -78,47 +68,13 @@ class Parser {
 		return Math.min(end, Math.max(start, this.dispatcher.timestamp))
 	}
 
-	/**
-	 * Get the current timestamp as per the legacy event system. Values are
-	 * zeroed to the start of the legacy FF Logs report.
-	 *
-	 * If writing an Analyser for the new event system, you should use
-	 * currentEpochTimestamp.
-	 */
-	get currentTimestamp() {
-		return this.currentEpochTimestamp - this.report.start
-	}
-
 	get currentDuration() {
 		return this.currentEpochTimestamp - this.pull.timestamp
-	}
-
-	// TODO: REMOVE
-	get fightDuration() {
-		if (process.env.NODE_ENV === 'development') {
-			throw new Error('Please migrate your calls to `parser.fightDuration` to either `parser.pull.duration` (if you need the full pull duration) or `parser.currentDuration` if you need the zeroed current timestamp.')
-		}
-		return this.currentDuration
-	}
-
-	// Get the friendlies that took part in the current fight
-	get fightFriendlies() {
-		return this.report.friendlies.filter(
-			friend => friend.fights.some(fight => fight.id === this.fight.id),
-		)
 	}
 
 	get parseDate() {
 		// TODO: normalise time to ms across the board
 		return Math.round(this.pull.timestamp / 1000)
-	}
-
-	/** Offset for events to zero their timestamp to the start of the pull being analysed. */
-	get eventTimeOffset() {
-		// TODO: This is _wholly_ reliant on fflog's timestamp handling. Once everyone
-		// is using this instead of start_time, we can start normalising event timestamps
-		// at the source level.
-		return this.pull.timestamp - this.newReport.timestamp
 	}
 
 	// -----
@@ -127,9 +83,6 @@ class Parser {
 
 	constructor(opts: {
 		meta: Meta,
-		report: LegacyReport,
-		fight: Fight,
-		fflogsActor: FflogsActor,
 
 		newReport: Report,
 		pull: Pull,
@@ -140,24 +93,13 @@ class Parser {
 		this.dispatcher = opts.dispatcher ?? new Dispatcher()
 
 		this.meta = opts.meta
-		this.report = opts.report
-		this.fight = opts.fight
 
 		this.newReport = opts.newReport
 		this.pull = opts.pull
 		this.actor = opts.actor
 
-		// Get a list of the current player's pets and set it on the player instance for easy reference
-		const pets = opts.report.friendlyPets
-			.filter(pet => pet.petOwner === opts.fflogsActor.id)
-
-		this.player = {
-			...opts.fflogsActor,
-			pets,
-		}
-
 		this.patch = new Patch(
-			languageToEdition(opts.report.lang),
+			opts.newReport.edition,
 			this.parseDate,
 		)
 	}
@@ -283,7 +225,7 @@ class Parser {
 		// If the event is in the past, noop.
 		if (event.timestamp < this.currentEpochTimestamp) {
 			if (process.env.NODE_ENV === 'development') {
-				console.warn(`Attempted to queue an event in the past. Current timestamp: ${this.currentTimestamp}. Event: ${JSON.stringify(event)}`)
+				console.warn(`Attempted to queue an event in the past. Current timestamp: ${this.currentEpochTimestamp}. Event: ${JSON.stringify(event)}`)
 			}
 			return
 		}

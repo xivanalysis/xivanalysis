@@ -88,7 +88,7 @@ export default class BloodOfTheDragon extends Analyser {
 		current: undefined,
 		history: [],
 	}
-	private lastEventTime = this.parser.fight.start_time
+	private lastEventTime = this.parser.pull.timestamp
 	private eyes = 0
 	private lostEyes = 0
 
@@ -159,7 +159,7 @@ export default class BloodOfTheDragon extends Analyser {
 	}
 
 	private updateGauge() {
-		const elapsedTime = this.parser.currentTimestamp - this.lastEventTime
+		const elapsedTime = this.parser.currentEpochTimestamp - this.lastEventTime
 		if (this.lifeWindows.current != null) {
 			this.lifeDuration -= elapsedTime
 			if (this.lifeDuration <= 0) {
@@ -179,7 +179,7 @@ export default class BloodOfTheDragon extends Analyser {
 			this.eyes = 0
 		}
 
-		this.lastEventTime = this.parser.currentTimestamp
+		this.lastEventTime = this.parser.currentEpochTimestamp
 	}
 
 	private onExtenderCast() {
@@ -214,7 +214,7 @@ export default class BloodOfTheDragon extends Analyser {
 			// LotD tiiiiiime~
 			this.lifeDuration = DRAGON_DEFAULT_DURATION_MILLIS
 			this.lifeWindows.current = {
-				start: this.parser.currentTimestamp,
+				start: this.parser.currentEpochTimestamp,
 				duration: this.lifeDuration,
 				nastronds: [],
 				stardivers: [],
@@ -319,11 +319,11 @@ export default class BloodOfTheDragon extends Analyser {
 			// downtime overlap
 			lifeWindow.dtOverlapTime = this.intersectsDowntime(Math.min(
 				lifeWindow.start + this.data.actions.HIGH_JUMP.cooldown,
-				this.parser.eventTimeOffset + this.parser.pull.duration,
+				this.parser.pull.timestamp + this.parser.pull.duration,
 			))
 
 			// flag for last life window
-			lifeWindow.isLast = lifeWindow.start + lifeWindow.duration > this.parser.fight.end_time
+			lifeWindow.isLast = lifeWindow.start + lifeWindow.duration > (this.parser.pull.timestamp + this.parser.pull.duration)
 
 			// A window should be delayed if:
 			// - there are no buffs off cooldown at any point in this window
@@ -331,7 +331,7 @@ export default class BloodOfTheDragon extends Analyser {
 			// - there are buffs off cooldown in the theoretical delayed window
 			// - there could be another window in 30s (end of fight check)
 			let activeBuffsInWindow = lifeWindow.activeBuffs.length > 0
-			const shouldBeDelayed = lifeWindow.activeBuffs.length === 0 && lifeWindow.dtOverlapTime === null && lifeWindow.start + LOTD_BUFF_DELAY_MAX < this.parser.fight.end_time
+			const shouldBeDelayed = lifeWindow.activeBuffs.length === 0 && lifeWindow.dtOverlapTime === null && lifeWindow.start + LOTD_BUFF_DELAY_MAX < (this.parser.pull.timestamp + this.parser.pull.duration)
 
 			let buffsExistInDelayWindow = false
 

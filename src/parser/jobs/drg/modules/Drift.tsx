@@ -58,7 +58,7 @@ export default class Drift extends Analyser {
 		DRIFT_ABILITIES.forEach(id => {
 			const action = this.data.actions[id]
 			this.cooldownMs[action.id] = action.cooldown ?? 0
-			this.currentWindows[action.id] = new DriftWindow(action.id, this.parser.fight.start_time)
+			this.currentWindows[action.id] = new DriftWindow(action.id, this.parser.pull.timestamp)
 		})
 	}
 

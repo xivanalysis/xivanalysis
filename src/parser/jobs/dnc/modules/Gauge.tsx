@@ -252,7 +252,7 @@ export class Gauge extends CoreGauge {
 
 		// Technically we don't need this check since we'll remove the hook in endImprov but eh
 		if (++this.improvTicks < MAX_IMPROV_TICKS) {
-			this.addTimestampHook(this.parser.currentTimestamp + TICK_FREQUENCY, this.onTickImprov)
+			this.addTimestampHook(this.parser.currentEpochTimestamp + TICK_FREQUENCY, this.onTickImprov)
 		}
 	}
 

@@ -1,4 +1,4 @@
-import {Boss} from 'data/BOSSES'
+import {EncounterKey} from 'data/ENCOUNTERS'
 import {JobKey} from 'data/JOBS'
 import {CORE} from './core'
 import {Meta} from './core/Meta'
@@ -26,7 +26,7 @@ import {WHITE_MAGE} from './jobs/whm'
 interface AvailableModules {
 	CORE: Meta
 	JOBS: Partial<Record<JobKey, Meta>>
-	BOSSES: Partial<Record<Boss['logId'], Meta>>
+	BOSSES: Partial<Record<EncounterKey, Meta>>
 }
 
 export const AVAILABLE_MODULES: AvailableModules = {
@@ -60,6 +60,6 @@ export const AVAILABLE_MODULES: AvailableModules = {
 	},
 
 	BOSSES: {
-		// [BOSSES.BOSSKEY.logId]: importedBossMeta
+		// BOSSKEY: importedBossMeta
 	},
 }

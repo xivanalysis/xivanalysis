@@ -26,32 +26,9 @@ class DependentAnalyser extends Analyser {
 
 const REPORT_START_TIME = 10000
 const PULL_START_TIME_OFFSET = 1000
-const OLD_EVENT_OFFSET = PULL_START_TIME_OFFSET
 const NEW_EVENT_OFFSET = REPORT_START_TIME + PULL_START_TIME_OFFSET
 
 // Bunch of basic testing data
-const friendlyInFight = {
-	id: 1,
-	name: 'In Fight',
-	fights: [{id: 1}],
-}
-const friendlyNotInFight = {
-	id: 2,
-	name: 'Not-in Fight',
-	fights: [{id: 9000}],
-}
-const report = {
-	lang: 'en',
-	start: REPORT_START_TIME,
-	friendlies: [friendlyInFight, friendlyNotInFight],
-	friendlyPets: [],
-}
-const fight = {
-	id: 1,
-	start_time: PULL_START_TIME_OFFSET,
-	end_time: PULL_START_TIME_OFFSET+100,
-}
-
 const actor = {
 	id: '1',
 	name: 'In Fight',
@@ -61,7 +38,7 @@ const actor = {
 }
 const pull = {
 	id: '1',
-	timestamp: REPORT_START_TIME+PULL_START_TIME_OFFSET,
+	timestamp: NEW_EVENT_OFFSET,
 	duration: 100,
 	encounter: {
 		name: 'Test encounter',
@@ -78,7 +55,7 @@ const newReport = {
 }
 const event = {
 	type: '__test',
-	timestamp: REPORT_START_TIME+PULL_START_TIME_OFFSET+50,
+	timestamp: NEW_EVENT_OFFSET+50,
 }
 
 const buildParser = (modules = []) => {
@@ -88,9 +65,6 @@ const buildParser = (modules = []) => {
 
 	return new Parser({
 		meta: new Meta({modules: () => Promise.resolve({default: modules})}),
-		report,
-		fight,
-		fflogsActor: friendlyInFight,
 
 		newReport,
 		pull,
@@ -114,26 +88,19 @@ describe('Parser', () => {
 
 	it('exposes metadata', () => {
 		// Just making sure that modules will have access to it
-		expect(parser.report).toMatchObject(report)
-		expect(parser.fight).toMatchObject(fight)
-		expect(parser.player).toMatchObject(friendlyInFight)
+		expect(parser.newReport).toMatchObject(newReport)
+		expect(parser.pull).toMatchObject(pull)
+		expect(parser.actor).toMatchObject(actor)
 	})
 
 	it('starts at beginning of fight', () => {
 		dispatcher.timestamp = -Infinity
-		expect(parser.currentTimestamp).toBe(fight.start_time)
+		expect(parser.currentEpochTimestamp).toBe(pull.timestamp)
 	})
 
 	it('does not exceed fight end time', () => {
 		dispatcher.timestamp = Infinity
-		expect(parser.currentTimestamp).toBe(fight.end_time)
-		expect(parser.fightDuration).toBe(fight.end_time - fight.start_time)
-	})
-
-	it('filters to friendlies in fight', () => {
-		expect(parser.fightFriendlies)
-			.toContain(friendlyInFight)
-			.not.toContain(friendlyNotInFight)
+		expect(parser.currentEpochTimestamp).toBe(pull.timestamp + pull.duration)
 	})
 
 	it('loads analysers', async () => {
@@ -218,7 +185,7 @@ describe('Parser', () => {
 
 		function mockDispatch(event) {
 			this.timestamp = event.timestamp
-			dispatchedEvents.push({event, timestamp: parser.currentTimestamp})
+			dispatchedEvents.push({event, timestamp: parser.currentEpochTimestamp})
 			if (toQueue.length > 0) { parser.queueEvent(toQueue.shift()) }
 			return []
 		}
@@ -243,6 +210,6 @@ describe('Parser', () => {
 			'complete',
 		])
 		expect(dispatchedEvents.map(({timestamp}) => timestamp))
-			.toEqual([0, 50, 50, 70, 100, 100].map(n => OLD_EVENT_OFFSET+n))
+			.toEqual([0, 50, 50, 70, 100, 100].map(n => NEW_EVENT_OFFSET+n))
 	})
 })

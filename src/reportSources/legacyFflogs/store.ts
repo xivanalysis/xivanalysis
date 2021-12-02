@@ -64,9 +64,6 @@ export class LegacyFflogsReportStore extends ReportStore {
 			true,
 		)
 
-		// We're cloning the events going into the adapter, such that any mutations from it do not effect the
-		// legacy event parser run.
-		// TODO: Remove this cloning when we're migrated fully onto the report source for events.
 		return adaptEvents(report, pull, legacyEvents)
 	}
 
