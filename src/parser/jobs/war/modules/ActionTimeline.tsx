@@ -14,7 +14,7 @@ export class ActionTimeline extends CoreActionTimeline {
 		'VENGEANCE',
 		'RAMPART',
 		'NASCENT_FLASH',
-		'RAW_INTUITION',
+		'BLOODWHETTING',
 		'THRILL_OF_BATTLE',
 		'EQUILIBRIUM',
 		'HOLMGANG',
