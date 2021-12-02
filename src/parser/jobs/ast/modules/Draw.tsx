@@ -1,8 +1,12 @@
 import {t} from '@lingui/macro'
 import {Plural, Trans} from '@lingui/react'
-import {ActionLink} from 'components/ui/DbLink'
-import {BuffEvent, CastEvent} from 'fflogs'
-import Module, {dependency} from 'parser/core/Module'
+import {DataLink} from 'components/ui/DbLink'
+import {Action} from 'data/ACTIONS'
+import {Status} from 'data/STATUSES'
+import {Event, Events} from 'event'
+import {Analyser} from 'parser/core/Analyser'
+import {filter, oneOf} from 'parser/core/filter'
+import {dependency} from 'parser/core/Injectable'
 import Checklist, {Requirement, TARGET, TieredRule} from 'parser/core/modules/Checklist'
 import {Data} from 'parser/core/modules/Data'
 import Suggestions, {SEVERITY, Suggestion, TieredSuggestion} from 'parser/core/modules/Suggestions'
@@ -11,7 +15,7 @@ import React from 'react'
 import {ARCANA_STATUSES, PLAY} from './ArcanaGroups'
 import ArcanaTracking from './ArcanaTracking/ArcanaTracking'
 
-// TODO THINGS TO TRACK:
+// TODO: THINGS TO TRACK:
 // Track them using Draw when they still have a minor arcana (oopsie) or a card in the spread
 
 const CARD_DURATION = 15000
@@ -33,7 +37,7 @@ const SEVERITIES = {
 	},
 }
 
-export default class Draw extends Module {
+export default class Draw extends Analyser {
 	static override handle = 'draw'
 	static override title = t('ast.draw.title')`Draw`
 
@@ -46,44 +50,54 @@ export default class Draw extends Module {
 	private draws = 0
 	private drawDrift = 0
 	private drawTotalDrift = 0
-
 	private plays = 0
-	private prepullPrepped = false
-
 	private lastSleeveTimestamp = 0
-	private sleeveUses = 0
+	private sleevesUsed = 0
 	private sleeveDrift = 0
 	private sleeveTotalDrift = 0
 
+	private prepullPrepped = false
 	private prepullSleeve = false
 
-	private PLAY: number[] = []
-	private ARCANA_STATUSES: number[] = []
+	private playActions: Array<Action['id']> = []
+	private arcanaStatuses: Array<Status['id']> = []
 
-	protected override init() {
+	override initialise() {
 
-		PLAY.forEach(actionKey => {
-			this.PLAY.push(this.data.actions[actionKey].id)
-		})
+		this.playActions = PLAY.map(actionKey => this.data.actions[actionKey].id)
+		this.arcanaStatuses = ARCANA_STATUSES.map(statusKey => this.data.statuses[statusKey].id)
 
-		ARCANA_STATUSES.forEach(statusKey => {
-			this.ARCANA_STATUSES.push(this.data.statuses[statusKey].id)
-		})
+		const playerFilter = filter<Event>().source(this.parser.actor.id)
 
-		this.addEventHook('cast', {abilityId: this.data.actions.DRAW.id, by: 'player'}, this.onDraw)
-		this.addEventHook('cast', {abilityId: this.data.actions.SLEEVE_DRAW.id, by: 'player'}, this.onSleeveDraw)
-		this.addEventHook('cast', {abilityId: this.PLAY, by: 'player'}, this.onPlay)
+		this.addEventHook(playerFilter
+			.type('action')
+			.action(this.data.actions.DRAW.id)
+		, this.onDraw)
+		this.addEventHook(playerFilter
+			.type('action')
+			.action(this.data.actions.SLEEVE_DRAW.id)
+		, this.onSleeveDraw)
+		this.addEventHook(playerFilter
+			.type('action')
+			.action(oneOf(this.playActions))
+		, this.onPlay)
 
-		this.addEventHook('applybuff', {abilityId: this.data.statuses.SLEEVE_DRAW.id, by: 'player'}, this.onSleeveBuff)
-		this.addEventHook('applybuff', {abilityId: this.ARCANA_STATUSES, by: 'player'}, this.onPlayBuff)
+		this.addEventHook(playerFilter
+			.type('statusApply')
+			.status(this.data.statuses.SLEEVE_DRAW.id)
+		, this.onSleeveBuff)
+		this.addEventHook(playerFilter
+			.type('statusApply')
+			.status(oneOf(this.arcanaStatuses))
+		, this.onPlayBuff)
 
 		this.addEventHook('complete', this.onComplete)
 	}
 
-	private onDraw(event: CastEvent) {
+	private onDraw(event: Events['action']) {
 
 		// ignore precasted draws
-		if (event.timestamp < this.parser.fight.start_time) {
+		if (event.timestamp < this.parser.pull.timestamp) {
 			return
 		}
 
@@ -91,8 +105,7 @@ export default class Draw extends Module {
 
 		if (this.draws === 1) {
 			// The first use, take holding as from the start of the fight
-			this.drawDrift = event.timestamp - this.parser.fight.start_time
-
+			this.drawDrift = event.timestamp - this.parser.pull.timestamp
 		} else {
 			// Take holding as from the time it comes off cooldown
 			this.drawDrift = event.timestamp - this.lastDrawTimestamp - this.data.actions.DRAW.cooldown
@@ -111,21 +124,20 @@ export default class Draw extends Module {
 		this.plays++
 	}
 
-	private onPlayBuff(event: BuffEvent) {
-		if (event.timestamp > this.parser.fight.start_time) {
+	private onPlayBuff(event: Events['statusApply']) {
+		if (event.timestamp > this.parser.pull.timestamp) {
 			return
 		}
 		this.prepullPrepped = true
 		this.plays++
 	}
 
-	private onSleeveDraw(event: CastEvent) {
-		this.sleeveUses++
+	private onSleeveDraw(event: Events['action']) {
+		this.sleevesUsed++
 
-		if (this.sleeveUses === 1 && !this.prepullSleeve) {
+		if (this.sleevesUsed === 1 && !this.prepullSleeve) {
 			// The first use, take holding as from the start of the fight
-			this.sleeveDrift = event.timestamp - this.parser.fight.start_time
-
+			this.sleeveDrift = event.timestamp - this.parser.pull.timestamp
 		} else {
 			// Take holding as from the time it comes off cooldown
 			this.sleeveDrift = event.timestamp - this.lastSleeveTimestamp - this.data.actions.SLEEVE_DRAW.cooldown
@@ -140,13 +152,13 @@ export default class Draw extends Module {
 		this.lastSleeveTimestamp = event.timestamp
 	}
 
-	private onSleeveBuff(event: BuffEvent) {
-		if (event.timestamp > this.parser.fight.start_time) {
+	private onSleeveBuff(event: Events['statusApply']) {
+		if (event.timestamp > this.parser.pull.timestamp) {
 			return
 		}
 		this.prepullSleeve = true
-		this.sleeveUses++
-		this.lastSleeveTimestamp = this.parser.fight.start_time
+		this.sleevesUsed++
+		this.lastSleeveTimestamp = this.parser.pull.timestamp
 	}
 
 	private onComplete() {
@@ -155,13 +167,13 @@ export default class Draw extends Module {
 			: SLEEVE_DRAW_PLAYS_GIVEN_530
 
 		// If they stopped using Sleeve at any point in the fight, this'll calculate the drift "accurately"
-		if (this.parser.fight.end_time - this.lastSleeveTimestamp > this.data.actions.SLEEVE_DRAW.cooldown) {
-			this.sleeveTotalDrift += (this.parser.fight.end_time - (this.lastSleeveTimestamp + this.data.actions.SLEEVE_DRAW.cooldown))
+		if (this.parser.pull.duration + this.parser.pull.timestamp - this.lastSleeveTimestamp > this.data.actions.SLEEVE_DRAW.cooldown) {
+			this.sleeveTotalDrift += (this.parser.pull.duration + this.parser.pull.timestamp - (this.lastSleeveTimestamp + this.data.actions.SLEEVE_DRAW.cooldown))
 		}
 
 		// If they stopped using Draw at any point in the fight, this'll calculate the drift "accurately"
-		if (this.parser.fight.end_time - this.lastDrawTimestamp > this.data.actions.DRAW.cooldown) {
-			this.drawTotalDrift += (this.parser.fight.end_time - (this.lastDrawTimestamp + this.data.actions.DRAW.cooldown))
+		if (this.parser.pull.duration + this.parser.pull.timestamp - this.lastDrawTimestamp > this.data.actions.DRAW.cooldown) {
+			this.drawTotalDrift += (this.parser.pull.duration + this.parser.pull.timestamp - (this.lastDrawTimestamp + this.data.actions.DRAW.cooldown))
 		}
 
 		// Max plays:
@@ -173,10 +185,9 @@ export default class Draw extends Module {
 		// Prepull consideration: + 1 play
 
 		// Begin Theoretical Max Plays calc
-		const fightDuration = this.parser.pull.duration
-		const maxSleeveUses = Math.floor(Math.max(0, (fightDuration - (CARD_DURATION*2))) / this.data.actions.SLEEVE_DRAW.cooldown) + 1
+		const maxSleeveUses = Math.floor(Math.max(0, (this.parser.pull.duration - (CARD_DURATION*2))) / this.data.actions.SLEEVE_DRAW.cooldown) + 1
 		const playsFromSleeveDraw = maxSleeveUses * SLEEVE_DRAW_PLAYS_GIVEN
-		const playsFromDraw = Math.floor(Math.max(0, (fightDuration - CARD_DURATION)) / this.data.actions.DRAW.cooldown) + 1
+		const playsFromDraw = Math.floor(Math.max(0, (this.parser.pull.duration - CARD_DURATION)) / this.data.actions.DRAW.cooldown) + 1
 		const theoreticalMaxPlays = playsFromDraw + playsFromSleeveDraw + 1
 
 		// TODO: Include downtime calculation for each fight??
@@ -186,7 +197,7 @@ export default class Draw extends Module {
 		const pullState = this.arcanaTracking.getPullState()
 		this.prepullPrepped = !!pullState.drawState
 
-		const totalCardsObtained = (this.prepullPrepped ? 1 : 0) + this.draws + (this.sleeveUses * SLEEVE_DRAW_PLAYS_GIVEN)
+		const totalCardsObtained = (this.prepullPrepped ? 1 : 0) + this.draws + (this.sleevesUsed * SLEEVE_DRAW_PLAYS_GIVEN)
 
 		/*
 			CHECKLIST: Number of cards played
@@ -199,19 +210,19 @@ export default class Draw extends Module {
 				Play as many cards as possible
 			</Trans>,
 			description: <><Trans id="ast.draw.checklist.description">
-				Playing cards will let you collect seals for <ActionLink {...this.data.actions.DIVINATION} /> and contribute to party damage.
+				Playing cards will let you collect seals for <DataLink action="DIVINATION" /> and contribute to party damage.
 			</Trans>
 			<ul>
 				<li><Trans id="ast.draw.checklist.description.prepull">Prepared before pull:</Trans>&nbsp;{this.prepullPrepped ? 1 : 0}/1</li>
-				<li><Trans id="ast.draw.checklist.description.draws">Obtained from <ActionLink {...this.data.actions.DRAW} />:</Trans>&nbsp;{this.draws}/{playsFromDraw}</li>
-				<li><Trans id="ast.draw.checklist.description.sleeve-draws">Obtained from <ActionLink {...this.data.actions.SLEEVE_DRAW} />:</Trans>&nbsp;{this.sleeveUses * SLEEVE_DRAW_PLAYS_GIVEN}/{playsFromSleeveDraw}</li>
+				<li><Trans id="ast.draw.checklist.description.draws">Obtained from <DataLink action="DRAW" />:</Trans>&nbsp;{this.draws}/{playsFromDraw}</li>
+				<li><Trans id="ast.draw.checklist.description.sleeve-draws">Obtained from <DataLink action="SLEEVE_DRAW" />:</Trans>&nbsp;{this.sleevesUsed * SLEEVE_DRAW_PLAYS_GIVEN}/{playsFromSleeveDraw}</li>
 				<li><Trans id="ast.draw.checklist.description.total">Total cards obtained:</Trans>&nbsp;{totalCardsObtained}/{theoreticalMaxPlays}</li>
 			</ul></>,
 			tiers: {[warnTarget]: TARGET.WARN, [failTarget]: TARGET.FAIL, [100]: TARGET.SUCCESS},
 			requirements: [
 				new Requirement({
 					name: <Trans id="ast.draw.checklist.requirement.name">
-						<ActionLink {...this.data.actions.PLAY} /> uses
+						<DataLink action="PLAY" /> uses
 					</Trans>,
 					value: this.plays,
 					target: theoreticalMaxPlays,
@@ -219,72 +230,69 @@ export default class Draw extends Module {
 			],
 		}))
 
-		/*
-			SUGGESTION: Didn't use draw enough
-		*/
 		const drawsMissed = Math.floor(this.drawTotalDrift / this.data.actions.DRAW.cooldown)
-		if (this.draws > 0 && drawsMissed > 0) {
-			this.suggestions.add(new TieredSuggestion({
-				icon: this.data.actions.DRAW.icon,
-				content: <Trans id="ast.draw.suggestions.draw-uses.content">
-						Use <ActionLink {...this.data.actions.DRAW} /> as soon as its available to maximize both MP regen and the number of cards played.
-				</Trans>,
-				tiers: SEVERITIES.DRAW_HOLDING,
-				value: drawsMissed,
-				why: <Trans id="ast.draw.suggestions.draw-uses.why">
-					About <Plural value={drawsMissed} one="# use" other="# uses" /> of <ActionLink {...this.data.actions.DRAW} /> were missed by holding it for at least a total of {this.parser.formatDuration(this.drawTotalDrift)}.
-				</Trans>,
-			}))
-		}
-		/*
-			SUGGESTION: Didn't use draw at all
-		*/
 		if (this.draws === 0) {
+		/*
+		SUGGESTION: Didn't use draw at all
+		*/
 			this.suggestions.add(new Suggestion({
 				icon: this.data.actions.DRAW.icon,
 				content: <Trans id="ast.draw.suggestions.draw-no-usage.content">
-						No uses of <ActionLink {...this.data.actions.DRAW} /> at all.
+						No uses of <DataLink action="DRAW" /> at all.
 				</Trans>,
 				why: <Trans id="ast.draw.suggestions.draw-no-usage.why">
 					No draws used.
 				</Trans>,
 				severity: SEVERITY.MAJOR,
 			}))
+		} else {
+		/*
+		SUGGESTION: Didn't use draw enough
+		*/
+			this.suggestions.add(new TieredSuggestion({
+				icon: this.data.actions.DRAW.icon,
+				content: <Trans id="ast.draw.suggestions.draw-uses.content">
+						Use <DataLink action="DRAW" /> as soon as its available to maximize both MP regen and the number of cards played.
+				</Trans>,
+				tiers: SEVERITIES.DRAW_HOLDING,
+				value: drawsMissed,
+				why: <Trans id="ast.draw.suggestions.draw-uses.why">
+					About <Plural value={drawsMissed} one="# use" other="# uses" /> of <DataLink action="DRAW" /> were missed by holding it for at least a total of {this.parser.formatDuration(this.drawTotalDrift)}.
+				</Trans>,
+			}))
 		}
 
-		/*
-			SUGGESTION: Didn't use sleeve draw enough
-		*/
 		const sleevesMissed = Math.floor(this.sleeveTotalDrift / this.data.actions.SLEEVE_DRAW.cooldown)
-		if (this.sleeveUses > 0 && sleevesMissed > 0) {
+		if (this.sleevesUsed === 0) {
+		/*
+		SUGGESTION: Didn't use sleeve draw at all
+		*/
+			this.suggestions.add(new Suggestion({
+				icon: this.data.actions.SLEEVE_DRAW.icon,
+				content: <Trans id="ast.draw.suggestions.sleeve-no-usage.content">
+					No uses of <DataLink action="SLEEVE_DRAW" /> at all.
+					<DataLink action="SLEEVE_DRAW" /> should be paired with every other <DataLink action="DIVINATION" /> to stack buffs at the same time. <DataLink action="LIGHTSPEED" /> can be used to weave card abilities.
+				</Trans>,
+				why: <Trans id="ast.draw.suggestions.sleeve-no-usage.why">
+					No sleeve draws were used.
+				</Trans>,
+				severity: SEVERITY.MAJOR,
+			}))
+		/*
+		SUGGESTION: Didn't use sleeve draw enough
+		*/
+		} else {
 			this.suggestions.add(new TieredSuggestion({
 				icon: this.data.actions.SLEEVE_DRAW.icon,
 				content: <Trans id="ast.draw.suggestions.sleeve-uses.content">
-						Use <ActionLink {...this.data.actions.SLEEVE_DRAW} /> more frequently. It should be paired with every other <ActionLink {...this.data.actions.DIVINATION} /> to stack buffs at the same time. <ActionLink {...this.data.actions.LIGHTSPEED} /> can be used to weave card abilities.
+						Try to use <DataLink action="SLEEVE_DRAW" /> more frequently. It should be paired with every other <DataLink action="DIVINATION" /> to stack buffs at the same time. <DataLink action="LIGHTSPEED" /> can be used to weave card abilities.
 				</Trans>,
 				tiers: SEVERITIES.SLEEVE_DRAW_HOLDING,
 				value: sleevesMissed,
 				why: <Trans id="ast.draw.suggestions.sleeve-uses.why">
-					About <Plural value={sleevesMissed} one=" # use" other="# uses" /> of <ActionLink {...this.data.actions.SLEEVE_DRAW} /> were missed by holding it for at least a total of {this.parser.formatDuration(this.sleeveTotalDrift)}.
+					About <Plural value={sleevesMissed} one=" # use" other="# uses" /> of <DataLink action="SLEEVE_DRAW" /> were missed by holding it for at least a total of {this.parser.formatDuration(this.sleeveTotalDrift)}.
 				</Trans>,
 			}))
 		}
-		/*
-			SUGGESTION: Didn't use sleeve draw at all
-		*/
-		if (this.sleeveUses === 0) {
-			this.suggestions.add(new Suggestion({
-				icon: this.data.actions.SLEEVE_DRAW.icon,
-				content: <Trans id="ast.draw.suggestions.sleeve-no-usage.content">
-						No uses of <ActionLink {...this.data.actions.SLEEVE_DRAW} /> at all.
-						It should be paired with every other <ActionLink {...this.data.actions.DIVINATION} /> to stack buffs at the same time. <ActionLink {...this.data.actions.LIGHTSPEED} /> can be used to weave card abilities.
-				</Trans>,
-				why: <Trans id="ast.draw.suggestions.sleeve-no-usage.why">
-					No sleeve draws used.
-				</Trans>,
-				severity: SEVERITY.MAJOR,
-			}))
-		}
-
 	}
 }
