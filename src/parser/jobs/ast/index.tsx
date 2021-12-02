@@ -43,7 +43,7 @@ export default new Meta({
 				<strong>Updated sect suggestion, and <DataLink action="LIGHTSPEED" /> structure.</strong>:
 				<ul>
 					<li><DataLink action="LIGHTSPEED"/> now shows actual casts and total possible uses.</li>
-					<li>Sect now has an updated suggestion to show possibility of using sect very close leading to unpreparedness. (i.e. using sect at the same time as the pull would be the same as using an oGCD which wastes time that could be spent starting your <DataLink action="MALEFIC_III" /> or other action cast.)</li>
+					<li>Sect now has an updated suggestion to show possibility of using sect very close to the beginning of the encounter leading to unpreparedness. (i.e. using sect at the same time as the pull would be the same as using an oGCD which wastes time that could be spent starting your <DataLink action="MALEFIC_III" /> or other action cast.)</li>
 				</ul>
 			</>,
 			contributors: [CONTRIBUTORS.OTOCEPHALY],
