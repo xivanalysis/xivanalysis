@@ -4,20 +4,19 @@ import {ActionLink} from 'components/ui/DbLink'
 import {RotationTable} from 'components/ui/RotationTable'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
-import {BuffEvent, CastEvent, DeathEvent} from 'fflogs'
+import {Event, Events} from 'event'
 import _ from 'lodash'
-import Module, {dependency} from 'parser/core/Module'
+import {Analyser} from 'parser/core/Analyser'
+import {filter} from 'parser/core/filter'
+import {dependency} from 'parser/core/Module'
+import {Actors} from 'parser/core/modules/Actors'
 import {Data} from 'parser/core/modules/Data'
-import {NormalisedApplyBuffEvent} from 'parser/core/modules/NormalisedEvents'
 import {Timeline} from 'parser/core/modules/Timeline'
 import React, {Fragment} from 'react'
 import {Message, Icon} from 'semantic-ui-react'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 
 const BL_GCD_TARGET = 8
-const WINDOW_STATUSES = [
-	STATUSES.BATTLE_LITANY.id,
-]
 
 // how long (or short, really) a window needs to be in order to be considered truncated
 // eslint-disable-next-line @typescript-eslint/no-magic-numbers
@@ -27,12 +26,12 @@ class BLWindow {
 	start: number
 	end?: number
 
-	rotation: Array<NormalisedApplyBuffEvent | CastEvent> = []
+	rotation: Array<Events['action']> = []
 	gcdCount: number = 0
-	trailingGcdEvent?: CastEvent
+	trailingGcdEvent?: Events['action']
 
 	buffsRemoved: number[] = []
-	playersBuffed: number = 0
+	playersBuffed: string[] = []
 	containsOtherDRG: boolean = false
 	deathTruncated: boolean = false
 
@@ -42,49 +41,57 @@ class BLWindow {
 }
 
 // Analyser port note:
-// - hoping to use new BuffWindow module to handle this logic
+// - currently investigating: using new BuffWindow module to handle this logic
 // in this module we only want to track battle litany windows opened by
 // the character selected for analysis. windows that clip into or overwrite other
 // DRG litanies will be marked.
 // Used DNC technical step as basis for this module.
-export default class BattleLitany extends Module {
+export default class BattleLitany extends Analyser {
 	static override handle = 'battlelitany'
 	static override title = t('drg.battlelitany.title')`Battle Litany`
 	static override displayOrder = DISPLAY_ORDER.BATTLE_LITANY
 
+	@dependency private actors!: Actors
 	@dependency private timeline!: Timeline
 	@dependency private data!: Data
 
 	private history: BLWindow[] = []
 	private lastLitFalloffTime: number = 0
 
-	protected override init() {
-		this.addEventHook('normalisedapplybuff', {to: 'player', abilityId: STATUSES.BATTLE_LITANY.id}, this.tryOpenWindow)
-		this.addEventHook('normalisedapplybuff', {by: 'player', abilityId: STATUSES.BATTLE_LITANY.id}, this.countLitBuffs)
-		this.addEventHook('removebuff', {to: 'player', abilityId: WINDOW_STATUSES}, this.tryCloseWindow)
-		this.addEventHook('death', {to: 'player'}, this.onDeath)
-		this.addEventHook('cast', {by: 'player'}, this.onCast)
+	override initialise() {
+		const battleLitFilter = filter<Event>().type('statusApply').status(this.data.statuses.BATTLE_LITANY.id)
+		this.addEventHook(battleLitFilter.target(this.parser.actor.id), this.tryOpenWindow)
+		this.addEventHook(battleLitFilter.source(this.parser.actor.id), this.countLitBuffs)
+		this.addEventHook(
+			filter<Event>()
+				.type('statusRemove')
+				.target(this.parser.actor.id)
+				.status(this.data.statuses.BATTLE_LITANY.id),
+			this.tryCloseWindow
+		)
+		this.addEventHook(filter<Event>().type('action').source(this.parser.actor.id), this.onCast)
+		this.addEventHook(filter<Event>().type('death').actor(this.parser.actor.id), this.onDeath)
 	}
 
-	private countLitBuffs(event: NormalisedApplyBuffEvent) {
+	private countLitBuffs(event: Events['statusApply']) {
 		// Get this from tryOpenWindow. If a window wasn't open, we'll open one.
 		const lastWindow: BLWindow | undefined = this.tryOpenWindow(event)
 
 		// Find out how many players we hit with the buff.
 		// BL has two normalized windows? seems weird...
-		if (lastWindow) {
-			lastWindow.playersBuffed += event.confirmedEvents.filter(hit => this.parser.fightFriendlies.findIndex(f => f.id === hit.targetID) >= 0).length
+		if (lastWindow && !lastWindow.playersBuffed.includes(event.target) && this.actors.get(event.target).playerControlled) {
+			lastWindow.playersBuffed.push(event.target)
 		}
 	}
 
-	private tryOpenWindow(event: NormalisedApplyBuffEvent): BLWindow | undefined {
+	private tryOpenWindow(event: Events['statusApply']): BLWindow | undefined {
 		const lastWindow: BLWindow | undefined = _.last(this.history)
 
 		if (lastWindow && !lastWindow.end) {
 			return lastWindow
 		}
 
-		if (event.sourceID && event.sourceID === this.parser.player.id) {
+		if (event.source === this.parser.actor.id) {
 			const newWindow = new BLWindow(event.timestamp)
 
 			// Handle multiple drg's buffs overwriting each other, we'll have a remove then an apply with the same timestamp
@@ -98,12 +105,12 @@ export default class BattleLitany extends Module {
 		return undefined
 	}
 
-	private tryCloseWindow(event: BuffEvent) {
+	private tryCloseWindow(event: Events['statusRemove']) {
 		// for determining overwrite, cache the status falloff time
 		this.lastLitFalloffTime = event.timestamp
 
 		// only track the things one player added
-		if (event.sourceID && event.sourceID !== this.parser.player.id) { return }
+		if (event.source !== this.parser.actor.id) { return }
 
 		const lastWindow: BLWindow | undefined = _.last(this.history)
 
@@ -112,7 +119,7 @@ export default class BattleLitany extends Module {
 		}
 
 		// Cache whether we've seen a buff removal event for this status, just in case they happen at exactly the same timestamp
-		lastWindow.buffsRemoved.push(event.ability.guid)
+		lastWindow.buffsRemoved.push(event.status)
 
 		if (this.isWindowOkToClose(lastWindow)) {
 			lastWindow.end = event.timestamp
@@ -127,7 +134,7 @@ export default class BattleLitany extends Module {
 		return true
 	}
 
-	private onCast(event: CastEvent) {
+	private onCast(event: Events['action']) {
 		const lastWindow: BLWindow | undefined = _.last(this.history)
 
 		// If we don't have a window, bail
@@ -135,7 +142,7 @@ export default class BattleLitany extends Module {
 			return
 		}
 
-		const action = this.data.getAction(event.ability.guid)
+		const action = this.data.getAction(event.action)
 
 		// Can't do anything else if we didn't get a valid action object
 		if (!action) {
@@ -149,9 +156,6 @@ export default class BattleLitany extends Module {
 			if (action.onGcd) {
 				lastWindow.gcdCount++
 			}
-			if (lastWindow.playersBuffed < 1) {
-				lastWindow.containsOtherDRG = true
-			}
 			return
 		}
 
@@ -161,7 +165,7 @@ export default class BattleLitany extends Module {
 		}
 	}
 
-	private onDeath(event: DeathEvent) {
+	private onDeath(event: Events['death']) {
 		// end the window and set a flag to not count as overlapping if times are different
 		const lastWindow: BLWindow | undefined = _.last(this.history)
 
@@ -180,10 +184,10 @@ export default class BattleLitany extends Module {
 	// open to maybe putting a suggestion not to clip into other DRG windows? hitting everyone with litany?
 	override output() {
 		const tableData = this.history.map(window => {
+			const start = window.start - this.parser.pull.timestamp
 			const end = window.end != null ?
-				window.end - this.parser.fight.start_time :
-				window.start - this.parser.fight.start_time
-			const start = window.start - this.parser.fight.start_time
+				window.end - this.parser.pull.timestamp :
+				start
 
 			// overlapped if: we detected an overwrite of this player onto another player, or if
 			// this player's buff had a duration that was too short and they didn't die
@@ -203,7 +207,7 @@ export default class BattleLitany extends Module {
 						expected: BL_GCD_TARGET,
 					},
 					buffed: {
-						actual: window.playersBuffed,
+						actual: window.playersBuffed.length,
 						expected: 8,
 					},
 				},

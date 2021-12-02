@@ -4,7 +4,7 @@ import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import {dependency} from 'parser/core/Module'
 import Checklist, {Requirement, Rule} from 'parser/core/modules/Checklist'
-import {DoTs, DotDurations} from 'parser/core/modules/DoTs'
+import {DoTs} from 'parser/core/modules/DoTs'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
 
@@ -16,7 +16,7 @@ const SEVERITIES = {
 	},
 }
 
-export default class Goring extends DoTs {
+export class Goring extends DoTs {
 	static override handle = 'goring'
 
 	@dependency private checklist!: Checklist
@@ -43,7 +43,9 @@ export default class Goring extends DoTs {
 		}))
 	}
 
-	override addClippingSuggestions(clip: DotDurations) {
+	override addClippingSuggestions() {
+		const goringClipPerMinute = this.getClippingAmount(this.data.statuses.GORING_BLADE.id)
+
 		// Suggestion for Goring Blade DoT clipping
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.GORING_BLADE.icon,
@@ -51,11 +53,10 @@ export default class Goring extends DoTs {
 				Avoid refreshing <ActionLink {...ACTIONS.GORING_BLADE} /> significantly before it's expiration.
 			</Trans>,
 			why: <Trans id="pld.goring.suggestions.goringblade.why">
-				{this.parser.formatDuration(clip[STATUSES.GORING_BLADE.id] ?? 0)} of <StatusLink {...STATUSES.GORING_BLADE}/> lost
-				to early refreshes.
+				An average of {this.parser.formatDuration(goringClipPerMinute, 1)} seconds of <StatusLink {...STATUSES.GORING_BLADE}/> per minute lost to early refreshes.
 			</Trans>,
 			tiers: SEVERITIES.CLIPPING,
-			value: this.getClippingAmount(STATUSES.GORING_BLADE.id),
+			value: goringClipPerMinute,
 		}))
 	}
 }
