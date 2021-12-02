@@ -485,6 +485,7 @@
   "game.roles.physical-ranged-dps": "遠隔物理DPS",
   "game.roles.tank": "タンク",
   "game.roles.unsupported": "未サポート",
+  "glossary.proc.description": "Procは、ゲームで使用される用語で、特定のアクション実行後に一定確率で付与される追加効果 (または手順) を指します。\n\n例えば、 [~action/VERTHUNDER] を詠唱時に50%の確率で [~status/VERFIRE_READY] が付与されます。",
   "glossary.proc.title": "プロック",
   "gnb.ammo.checklist.requirement.waste.name": "蓄積したソイルをできるだけ多く消費してください。",
   "gnb.ammo.leftover-ammo.content": "チャージアクションを戦闘終了時に残さないようにし，可能であれば早めに使うことを検討してください。<0/>はどの<1/>コンボよりも高威力です。",
