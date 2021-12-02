@@ -33,7 +33,7 @@ interface LIGHTSPEED_Window {
 // Used DNC Technicalities as basis for this module. Rewritten from previous module for consistency purposes
 export default class Lightspeed extends Analyser {
 	static override handle = 'Lightspeed'
-	static override title = t('ast.Lightspeed.title')`Lightspeed`
+	static override title = t('ast.lightspeed.title')`Lightspeed`
 	static override displayOrder = DISPLAY_ORDER.LIGHTSPEED
 
 	@dependency private timeline!: Timeline
@@ -107,16 +107,17 @@ export default class Lightspeed extends Analyser {
 
 		// Add the action to the list
 		this.currentWindow.rotation.push(event)
-		if (action.onGcd) {
-			this.currentWindow.gcdCount++
-		}
+
 		if (this.parser.patch.before('5.3') && action.mpCost != null) {
 			this.currentWindow.mpSavings = this.currentWindow.mpSavings + action.mpCost/2
 		}
+		if (action.onGcd) {
+			this.currentWindow.gcdCount++
 
-		// If we haven't recorded a trailing GCD event for this closed window, do so now
-		if (this.currentWindow.end && !this.currentWindow.trailingGcdEvent && action.onGcd) {
-			this.currentWindow.trailingGcdEvent = event
+			// If we haven't recorded a trailing GCD event for this closed window, do so now
+			if (this.currentWindow.end != null && this.currentWindow.trailingGcdEvent == null) {
+				this.currentWindow.trailingGcdEvent = event
+			}
 		}
 	}
 
