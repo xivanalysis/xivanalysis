@@ -633,6 +633,7 @@
   "smn.dots.checklist.name": "Halte deine DoTs aufrecht",
   "smn.dots.checklist.requirement.bio-iii.name": "Gesamtanwendungszeit von <0/>",
   "smn.dots.checklist.requirement.miasma-iii.name": "Gesamtanwendungszeit von <0/>",
+  "smn.dots.source": "Quelle",
   "smn.dots.suggestions.missing_dot_cast.content": "Um das größte Schadenspotenzial von <0/> zu erreichen, stelle sicher, dass du sowohl <1/> als auch <2/> auf dein Ziel angewendet hast.",
   "smn.dots.suggestions.missing_dot_cast.content_505": "Um das größte Schadenspotenzial von <0/> und deinen Ruin-Zaubern zu erreichen, stelle sicher, dass du sowohl <1/> als auch <2/> auf dein Ziel angewendet hast. Vermeide es Schwäre direkt nach der Anwendung eines DoTs zu benutzen, da Statuseffekte einen kurzen Zeitraum benötigen, ehe sie am Ziel wirken.",
   "smn.dots.suggestions.missing_dot_cast.why": "{totalPotencyLost} Angriffspotenz durch {numBadCasts, plural, one {# Aktivierung} other {# Aktivierungen}} mit fehlenden DoTs am Ziel verloren.",
