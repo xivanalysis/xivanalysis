@@ -87,28 +87,28 @@ export class PrimalChaos extends Analyser {
 	private onComplete() {
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.INNER_CHAOS.icon,
-			content: <Trans id="">
+			content: <Trans id="war.timeouts.chaos.content">
 				Try to consume <DataLink status="NASCENT_CHAOS"/> before it expires, as <DataLink action="INNER_CHAOS"/> and <DataLink action="CHAOTIC_CYCLONE"/> are two of your strongest skills.
 			</Trans>,
 			tiers: {
 				1: SEVERITY.MAJOR,
 			},
 			value: this.droppedChaos,
-			why: <Trans id="">
+			why: <Trans id="war.timeouts.chaos.why">
 				<DataLink status="NASCENT_CHAOS"/> timed out <Plural value={this.droppedChaos} one="# time" other="# times"/>.
 			</Trans>,
 		}))
 
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.PRIMAL_REND.icon,
-			content: <Trans id="">
+			content: <Trans id="war.timeouts.rend.content">
 				Try to consume <DataLink status="PRIMAL_REND_READY"/> before it expires as <DataLink action="PRIMAL_REND"/> is your single strongest skill.
 			</Trans>,
 			tiers: {
 				1: SEVERITY.MAJOR,
 			},
 			value: this.droppedRends,
-			why: <Trans id="">
+			why: <Trans id="war.timeouts.rend.why">
 				<DataLink status="PRIMAL_REND_READY"/> timed out <Plural value={this.droppedRends} one="# time" other="# times"/>.
 			</Trans>,
 		}))
