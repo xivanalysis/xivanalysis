@@ -5,7 +5,7 @@ import {ActionKey} from 'data/ACTIONS'
 import {Event, Events} from 'event'
 import {Analyser} from 'parser/core/Analyser'
 import {filter, oneOf} from 'parser/core/filter'
-import {dependency} from 'parser/core/Module'
+import {dependency} from 'parser/core/Injectable'
 import {Data} from 'parser/core/modules/Data'
 import Downtime from 'parser/core/modules/Downtime'
 import {Timeline} from 'parser/core/modules/Timeline'
@@ -58,7 +58,7 @@ export default class Drift extends Analyser {
 		DRIFT_ABILITIES.forEach(id => {
 			const action = this.data.actions[id]
 			this.cooldownMs[action.id] = action.cooldown ?? 0
-			this.currentWindows[action.id] = new DriftWindow(action.id, this.parser.fight.start_time)
+			this.currentWindows[action.id] = new DriftWindow(action.id, this.parser.pull.timestamp)
 		})
 	}
 
