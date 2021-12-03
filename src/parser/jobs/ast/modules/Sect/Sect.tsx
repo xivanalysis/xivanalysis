@@ -9,6 +9,7 @@ import {Data} from 'parser/core/modules/Data'
 import {Statistics} from 'parser/core/modules/Statistics'
 import Suggestions, {SEVERITY, Suggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
+import {Team} from 'report'
 import SectStatistic from './SectStatistic'
 
 const NO_SECT_ICON = 'https://xivapi.com/i/064000/064017.png'
@@ -113,7 +114,7 @@ export default class Sect extends Analyser {
 		/*
 			SUGGESTION: Noct with Scholar
 		*/
-		const withScholar = this.parser.fightFriendlies.some(friendly => friendly.type === 'Scholar')
+		const withScholar = this.parser.pull.actors.some(actor => actor.team === Team.FRIEND && actor.job === 'SCHOLAR')
 		if (this.activeSectId === this.data.statuses.NOCTURNAL_SECT.id && withScholar) {
 			this.suggestions.add(new Suggestion({
 				icon: this.data.actions.NOCTURNAL_SECT.icon,

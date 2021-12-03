@@ -1,5 +1,5 @@
 import {Events} from 'event'
-import {dependency} from 'parser/core/Module'
+import {dependency} from 'parser/core/Injectable'
 import {Actors} from 'parser/core/modules/Actors'
 import {AoEAction, AoEUsages} from 'parser/core/modules/AoEUsages'
 
