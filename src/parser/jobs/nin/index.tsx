@@ -21,6 +21,11 @@ export const NINJA = new Meta({
 	],
 	changelog: [
 		{
+			date: new Date('2021-12-02'),
+			Changes: () => <>Updated Ninki-generated actions in the gauge simulation.</>,
+			contributors: [CONTRIBUTORS.TOASTDEIB],
+		},
+		{
 			date: new Date('2021-11-21'),
 			Changes: () => <>Removed Shadow Fang and Assassinate as expected actions under Trick Attack.</>,
 			contributors: [CONTRIBUTORS.TOASTDEIB],
