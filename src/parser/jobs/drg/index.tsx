@@ -20,8 +20,8 @@ export const DRAGOON = new Meta({
 	changelog: [
 		{
 			date: new Date('2021-11-30'),
-			Changes: () => <>Performed preliminary data update, removed gauge tracking from Blood of the Dragon, deleted the Positionals module.</>,
-			contrubutors: [CONTRIBUTORS.FALINDRITH],
+			Changes: () => <>Performed data update, removed gauge tracking from Blood of the Dragon, deleted the Positionals module, updated checklist with new statuses.</>,
+			contributors: [CONTRIBUTORS.FALINDRITH],
 		},
 	],
 })
