@@ -19,7 +19,7 @@ If your module has `output`, it should also be given a translated title. This ti
 
 ```typescript
 import {t} from '@lingui/macro'
-import {Analyser} from 'parser/core/Module'
+import {Analyser} from 'parser/core/Analyser'
 
 export default class MyModule extends Analyser {
 	// ...

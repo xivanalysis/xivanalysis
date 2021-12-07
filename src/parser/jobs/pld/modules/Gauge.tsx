@@ -4,14 +4,14 @@ import {DataLink} from 'components/ui/DbLink'
 import {JOBS} from 'data/JOBS'
 import {Event, Events} from 'event'
 import {filter, oneOf} from 'parser/core/filter'
-import {dependency} from 'parser/core/Module'
+import {dependency} from 'parser/core/Injectable'
 import {CounterGauge, Gauge as CoreGauge} from 'parser/core/modules/Gauge'
 import Suggestions, {SEVERITY, Suggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
 
 type GaugeModifier = Partial<Record<Event['type'], number>>
 
-export default class Gauge extends CoreGauge {
+export class Gauge extends CoreGauge {
 	static override title = t('pld.gauge.title')`Oath Gauge Usage`
 
 	@dependency private suggestions!: Suggestions

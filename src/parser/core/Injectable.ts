@@ -1,4 +1,5 @@
 import {Debuggable} from 'parser/core/Debuggable'
+import 'reflect-metadata'
 
 /**
  * Mark the decorated property as a dependency. The dependency will be injected

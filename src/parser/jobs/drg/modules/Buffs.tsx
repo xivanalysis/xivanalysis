@@ -5,7 +5,7 @@ import {ActionKey} from 'data/ACTIONS'
 import {Cause, Event, Events} from 'event'
 import {Analyser} from 'parser/core/Analyser'
 import {filter} from 'parser/core/filter'
-import {dependency} from 'parser/core/Module'
+import {dependency} from 'parser/core/Injectable'
 import {Actors} from 'parser/core/modules/Actors'
 import Checklist, {Rule, Requirement} from 'parser/core/modules/Checklist'
 import {Data} from 'parser/core/modules/Data'
@@ -61,8 +61,8 @@ export default class Buffs extends Analyser {
 	private soloDragonSight: boolean = false
 	private lifeSurgeCasts: number[] = []
 
-	@dependency private checklist!: Checklist
 	@dependency private actors!: Actors
+	@dependency private checklist!: Checklist
 	@dependency private statuses!: Statuses
 	@dependency private invulnerability!: Invulnerability
 	@dependency private suggestions!: Suggestions
