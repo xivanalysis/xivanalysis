@@ -31,9 +31,9 @@ export const DRG = ensureStatuses({
 	},
 
 	POWER_SURGE: {
-		id: 0,  // TODO: real id
+		id: 2720,
 		name: 'Power Surge',
-		icon: 'https://xivapi.com/i/012000/012576.png', // TODO: Real icon
+		icon: 'https://xivapi.com/i/010000/010303.png',
 		duration: 30000,
 	},
 
@@ -65,6 +65,13 @@ export const DRG = ensureStatuses({
 		duration: 24000,
 	},
 
+	CHAOTIC_SPRING: {
+		id: 2719,
+		name: 'Chaotic Spring',
+		icon: 'https://xivapi.com/i/012000/012586.png',
+		duration: 24000,
+	},
+
 	DIVE_READY: {
 		id: 1243,
 		name: 'Dive Ready',
@@ -79,17 +86,10 @@ export const DRG = ensureStatuses({
 		duration: 5000,
 	},
 
-	RAIDEN_THRUST_READY: {
-		id: 1863,
-		name: 'Raiden Thrust Ready',
-		icon: 'https://xivapi.com/i/012000/012584.png',
-		duration: 10000,
-	},
-
 	DRACONIAN_FIRE: {
-		id: 0, // todo: real id
+		id: 1863,
 		name: 'Draconian Fire',
-		icon: 'https://xivapi.com/i/012000/012584.png', // todo: real id
+		icon: 'https://xivapi.com/i/012000/012585.png',
 		duration: 30000,
 	},
 })

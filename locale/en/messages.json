@@ -419,7 +419,7 @@
   "drg.blood.trigger.no-lotd-nastrond": "<0/> was cast while Life of the Dragon was deemed inactive.",
   "drg.blood.trigger.no-lotd-stardiver": "<0/> was cast while Life of the Dragon was deemed inactive.",
   "drg.blood.windows.hits": "{0, plural, one {# Nastrond} other {# Nastronds}}, {1, plural, one {# Stardiver} other {# Stardivers}}",
-  "drg.buffs.checklist.description": "<0/> grants <1/> which provides a 10% boost to your personal damage and should always be kept up.",
+  "drg.buffs.checklist.description": "<0/> and <1/> grant <2/> which provides a 10% boost to your personal damage and should always be kept up.",
   "drg.buffs.checklist.name": "Keep {0} up",
   "drg.buffs.checklist.requirement.name": "<0/> uptime",
   "drg.buffs.suggestions.life-surge.content": "<0/> should be used on <1/>, your highest potency ability, as much as possible. In order to keep <2/> on cooldown, it may sometimes be necessary to use it on a 5th combo hit. In multi-target scenarios, <3/> can be used on <4/> if you hit at least three targets.",

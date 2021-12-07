@@ -55,9 +55,9 @@ export const DRG = ensureActions({
 	},
 
 	HEAVENS_THRUST: {
-		id: 0, // TODO: real id
+		id: 25771,
 		name: 'Heavens\' Thrust',
-		icon: 'https://xivapi.com/i/000000/000314.png', // TODO: real icon
+		icon: 'https://xivapi.com/i/002000/002595.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		potency: 100,
@@ -98,9 +98,9 @@ export const DRG = ensureActions({
 	},
 
 	CHAOTIC_SPRING: {
-		id: 0, // TODO: real id
+		id: 25772,
 		name: 'Chaotic Spring',
-		icon: 'https://xivapi.com/i/000000/000308.png', // TODO: real icon
+		icon: 'https://xivapi.com/i/002000/002596.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		potency: 100,
@@ -109,7 +109,7 @@ export const DRG = ensureActions({
 			potency: 260,
 			end: true,
 		},
-		statusesApplied: ['CHAOS_THRUST'],
+		statusesApplied: ['CHAOTIC_SPRING'],
 	},
 
 	DOOM_SPIKE: {
@@ -125,9 +125,9 @@ export const DRG = ensureActions({
 	},
 
 	DRACONIAN_FURY: {
-		id: 0, // TODO: real id
+		id: 25770,
 		name: 'Draconian Fury',
-		icon: 'https://xivapi.com/i/000000/000306.png', // TODO: real icon
+		icon: 'https://xivapi.com/i/002000/002594.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		potency: 130,
@@ -174,7 +174,7 @@ export const DRG = ensureActions({
 		speedAttribute: Attribute.SKILL_SPEED,
 		potency: 100,
 		combo: {
-			from: 86, // TODO: combo from draconian fury, need id
+			from: [86, 25770],
 			potency: 120,
 		},
 	},
@@ -210,7 +210,7 @@ export const DRG = ensureActions({
 		id: 85,
 		name: 'Lance Charge',
 		icon: 'https://xivapi.com/i/000000/000309.png',
-		cooldown: 90000,
+		cooldown: 60000,
 		statusesApplied: ['LANCE_CHARGE'],
 	},
 
@@ -300,9 +300,9 @@ export const DRG = ensureActions({
 	},
 
 	WYRMWIND_THRUST: {
-		id: 0, // TODO: real id
+		id: 25773,
 		name: 'Whyrmwind Thrust',
-		icon: 'https://xivapi.com/i/002000/002593.png', // TODO: real icon
+		icon: 'https://xivapi.com/i/002000/002597.png',
 		cooldown: 10000,
 		potency: 370,
 	},

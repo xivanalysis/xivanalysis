@@ -12,21 +12,21 @@ export default class Debuffs extends CoreDoTs {
 	@dependency private suggestions!: Suggestions
 
 	override trackedStatuses = [
-		this.data.statuses.CHAOS_THRUST.id,
+		this.data.statuses.CHAOTIC_SPRING.id,
 	]
 
 	addChecklistRules() {
 		this.checklist.add(new Rule({
 			name: <Trans id="drg.debuffs.checklist.name">Keep your debuffs up</Trans>,
 			description: <Trans id="drg.debuffs.checklist.description">
-				<ActionLink {...this.data.actions.CHAOS_THRUST} /> provides a potent DoT which should be maintained at all times.
+				<ActionLink {...this.data.actions.CHAOTIC_SPRING} /> provides a potent DoT which should be maintained at all times.
 			</Trans>,
 			displayOrder: DISPLAY_ORDER.DEBUFFS,
 			target: 90,
 			requirements: [
 				new Requirement({
-					name: <Trans id="drg.debuffs.checklist.requirement.chaos-thrust.name"><ActionLink {...this.data.actions.CHAOS_THRUST} /> uptime</Trans>,
-					percent: () => this.getUptimePercent(this.data.statuses.CHAOS_THRUST.id),
+					name: <Trans id="drg.debuffs.checklist.requirement.chaos-thrust.name"><ActionLink {...this.data.actions.CHAOTIC_SPRING} /> uptime</Trans>,
+					percent: () => this.getUptimePercent(this.data.statuses.CHAOTIC_SPRING.id),
 				}),
 			],
 		}))
@@ -36,16 +36,16 @@ export default class Debuffs extends CoreDoTs {
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.CHAOS_THRUST.icon,
 			content: <Trans id="drg.debuffs.suggestions.clipping.content">
-				Avoid refreshing <ActionLink {...this.data.actions.CHAOS_THRUST} /> significantly earlier or later than its expiration, as it usually indicates rotational errors. DRG's strict 10-GCD rotation should have you refreshing Chaos Thrust within 2 seconds before or after expiry, depending on your skill speed.
+				Avoid refreshing <ActionLink {...this.data.actions.CHAOTIC_SPRING} /> significantly earlier or later than its expiration, as it usually indicates rotational errors. DRG's strict 10-GCD rotation should have you refreshing Chaos Thrust within 2 seconds before or after expiry, depending on your skill speed.
 			</Trans>,
 			tiers: {
 				5: SEVERITY.MINOR,
 				10: SEVERITY.MEDIUM,
 				15: SEVERITY.MAJOR,
 			},
-			value: this.getClippingAmount(this.data.statuses.CHAOS_THRUST.id),
+			value: this.getClippingAmount(this.data.statuses.CHAOTIC_SPRING.id),
 			why: <Trans id="drg.debuffs.suggestions.clipping.why">
-				You lost {this.parser.formatDuration(clip[this.data.statuses.CHAOS_THRUST.id] ?? 0)} of Chaos Thrust to early refreshes.
+				You lost {this.parser.formatDuration(clip[this.data.statuses.CHAOTIC_SPRING.id] ?? 0)} of Chaos Thrust to early refreshes.
 			</Trans>,
 		}))
 	}

@@ -35,6 +35,7 @@ const FINAL_COMBO_HITS: ActionKey[] = [
 // these are the consumers we care to show in the chart
 const CHART_LIFE_SURGE_CONSUMERS: ActionKey[] = [
 	'FULL_THRUST',
+	'HEAVENS_THRUST',
 	'FANG_AND_CLAW',
 	'WHEELING_THRUST',
 	'COERTHAN_TORMENT',
@@ -42,6 +43,7 @@ const CHART_LIFE_SURGE_CONSUMERS: ActionKey[] = [
 
 const CHART_COLORS: {[actionId in ActionKey]?: string} = {
 	'FULL_THRUST': '#0e81f7',
+	'HEAVENS_THRUST': '#0e81f7',
 	'FANG_AND_CLAW': '#b36b00',
 	'WHEELING_THRUST': '#b36b00',
 	'COERTHAN_TORMENT': '#b36b00',
@@ -123,7 +125,7 @@ export default class Buffs extends Analyser {
 		}
 	}
 
-	private getDisembowelUptimePercent() {
+	private getPowerSurgeUptimePercent() {
 		const statusUptime = this.statuses.getUptime('POWER_SURGE', this.actors.current)
 		const fightUptime = this.parser.currentDuration - this.invulnerability.getDuration({types: ['invulnerable']})
 		return (statusUptime / fightUptime) * 100
@@ -133,13 +135,13 @@ export default class Buffs extends Analyser {
 		this.checklist.add(new Rule({
 			name: <Trans id="drg.buffs.checklist.name">Keep {this.data.statuses.POWER_SURGE.name} up</Trans>,
 			description: <Trans id="drg.buffs.checklist.description">
-				<ActionLink {...this.data.actions.DISEMBOWEL}/> grants <StatusLink status="POWER_SURGE" /> which provides a 10% boost to your personal damage and should always be kept up.
+				<ActionLink {...this.data.actions.DISEMBOWEL}/> and <ActionLink action="COERTHAN_TORMENT" /> grant <StatusLink status="POWER_SURGE" /> which provides a 10% boost to your personal damage and should always be kept up.
 			</Trans>,
 			displayOrder: DISPLAY_ORDER.DISEMBOWEL,
 			requirements: [
 				new Requirement({
-					name: <Trans id="drg.buffs.checklist.requirement.name"><ActionLink {...this.data.actions.DISEMBOWEL}/> uptime</Trans>,
-					percent: () => this.getDisembowelUptimePercent(),
+					name: <Trans id="drg.buffs.checklist.requirement.name"><StatusLink {...this.data.statuses.POWER_SURGE}/> uptime</Trans>,
+					percent: () => this.getPowerSurgeUptimePercent(),
 				}),
 			],
 		}))
@@ -147,7 +149,7 @@ export default class Buffs extends Analyser {
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.LIFE_SURGE.icon,
 			content: <Trans id="drg.buffs.suggestions.life-surge.content">
-				<ActionLink {...this.data.actions.LIFE_SURGE}/> should be used on <ActionLink {...this.data.actions.FULL_THRUST}/>, your highest potency ability, as much as possible. In order to keep <ActionLink {...this.data.actions.LIFE_SURGE} /> on cooldown, it may sometimes be necessary to use it on a 5th combo hit. In multi-target scenarios, <ActionLink {...this.data.actions.LIFE_SURGE} /> can be used on <ActionLink {...this.data.actions.COERTHAN_TORMENT} /> if you hit at least three targets.
+				<ActionLink {...this.data.actions.LIFE_SURGE}/> should be used on <ActionLink {...this.data.actions.HEAVENS_THRUST}/>, your highest potency ability, as much as possible. In order to keep <ActionLink {...this.data.actions.LIFE_SURGE} /> on cooldown, it may sometimes be necessary to use it on a 5th combo hit. In multi-target scenarios, <ActionLink {...this.data.actions.LIFE_SURGE} /> can be used on <ActionLink {...this.data.actions.COERTHAN_TORMENT} /> if you hit at least three targets.
 			</Trans>,
 			tiers: {
 				1: SEVERITY.MINOR,
