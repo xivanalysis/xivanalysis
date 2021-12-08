@@ -39,7 +39,7 @@ export const BLM = ensureStatuses({
 		id: 164,
 		name: 'Thundercloud',
 		icon: 'https://xivapi.com/i/010000/010461.png',
-		duration: 21000,
+		duration: 40000,
 	},
 	LEY_LINES: {
 		id: 737,
@@ -66,9 +66,9 @@ export const BLM = ensureStatuses({
 		duration: 20000,
 	},
 	ENHANCED_FLARE: {
-		id: 168168168, // Need real ID
+		id: 2960,
 		name: 'Enhanced Flare',
-		icon: 'https://xivapi.com/i/010000/010460.png', // Need real icon
+		icon: 'https://xivapi.com/i/012000/012659.png',
 		duration: 30000,
 	},
 })
