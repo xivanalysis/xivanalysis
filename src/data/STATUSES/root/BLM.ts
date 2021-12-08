@@ -69,6 +69,5 @@ export const BLM = ensureStatuses({
 		id: 2960,
 		name: 'Enhanced Flare',
 		icon: 'https://xivapi.com/i/012000/012659.png',
-		duration: 30000,
 	},
 })
