@@ -112,7 +112,7 @@ export class YassQueen extends Analyser {
 			damage: event.targets[0].amount,
 		})
 
-		if (event.cause.action === this.data.actions.PILE_BUNKER.id) {
+		if (event.cause.action === this.data.actions.CROWNED_COLLIDER.id) {
 			this.activeQueen.end = event.timestamp
 		}
 	}
