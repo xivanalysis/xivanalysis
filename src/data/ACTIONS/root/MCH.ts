@@ -156,6 +156,26 @@ export const MCH = ensureActions({
 		gcdRecast: 2500,
 	},
 
+	SCATTERGUN: {
+		id: 25786,
+		name: 'Scattergun',
+		icon: 'https://xivapi.com/i/003000/003046.png',
+		onGcd: true,
+		speedAttribute: Attribute.SKILL_SPEED,
+		gcdRecast: 2500,
+		breaksCombo: true,
+	},
+
+	CHAIN_SAW: {
+		id: 25788,
+		name: 'Chain Saw',
+		icon: 'https://xivapi.com/i/003000/003048.png',
+		onGcd: true,
+		speedAttribute: Attribute.SKILL_SPEED,
+		cooldown: 60000,
+		gcdRecast: 2500,
+	},
+
 	// -----
 	// Player OGCDs
 	// -----
@@ -166,6 +186,7 @@ export const MCH = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003022.png',
 		onGcd: false,
 		cooldown: 55000,
+		charges: 2,
 		statusesApplied: ['REASSEMBLED'],
 	},
 
@@ -305,6 +326,13 @@ export const MCH = ensureActions({
 		id: 16503,
 		name: 'Pile Bunker',
 		icon: 'https://xivapi.com/i/003000/003503.png',
+		onGcd: true,
+	},
+
+	CROWNED_COLLIDER: {
+		id: 25787,
+		name: 'Crowned Collider',
+		icon: 'https://xivapi.com/i/003000/003047.png',
 		onGcd: true,
 	},
 })

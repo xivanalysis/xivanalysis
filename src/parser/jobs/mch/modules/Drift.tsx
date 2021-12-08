@@ -29,6 +29,7 @@ const DRIFT_GCDS: ActionKey[] = [
 	'AIR_ANCHOR',
 	'BIOBLASTER',
 	'DRILL',
+	'CHAIN_SAW',
 ]
 
 interface DriftWindow {
@@ -59,6 +60,10 @@ export class Drift extends Analyser {
 			casts: [],
 		},
 		[this.data.actions.DRILL.cooldownGroup]: {
+			start: this.parser.pull.timestamp,
+			casts: [],
+		},
+		[this.data.actions.CHAIN_SAW.id]: {
 			start: this.parser.pull.timestamp,
 			casts: [],
 		},
