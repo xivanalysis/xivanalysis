@@ -1,5 +1,6 @@
 export type {EvaluatedAction} from './EvaluatedAction'
 
+export type {AllowedGcdsOnlyOptions} from './evaluators/AllowedGcdsOnlyEvaluator'
 export {AllowedGcdsOnlyEvaluator} from './evaluators/AllowedGcdsOnlyEvaluator'
 export {ExpectedActionsEvaluator} from './evaluators/ExpectedActionsEvaluator'
 export {calculateExpectedGcdsForTime, ExpectedGcdCountEvaluator} from './evaluators/ExpectedGcdCountEvaluator'

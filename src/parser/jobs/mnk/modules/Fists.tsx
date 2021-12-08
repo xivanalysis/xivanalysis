@@ -2,6 +2,7 @@ import {t} from '@lingui/macro'
 import {Plural, Trans} from '@lingui/react'
 import {DataLink} from 'components/ui/DbLink'
 import {JOBS} from 'data/JOBS'
+import {Status} from 'data/STATUSES'
 import {Event, Events} from 'event'
 import _ from 'lodash'
 import {Analyser} from 'parser/core/Analyser'
@@ -10,6 +11,7 @@ import {filter, oneOf} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
 import {Actors} from 'parser/core/modules/Actors'
 import {Data} from 'parser/core/modules/Data'
+import {Invulnerability} from 'parser/core/modules/Invulnerability'
 import {PieChartStatistic, Statistics} from 'parser/core/modules/Statistics'
 import {Statuses} from 'parser/core/modules/Statuses'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
@@ -18,7 +20,7 @@ import {FISTLESS, FISTS} from './constants'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 import {fillStatuses} from './utilities'
 
-const FIST_SEVERITY = {
+const SUGGESTION_TIERS = {
 	DOUSED: {
 		1: SEVERITY.MAJOR,
 	},
@@ -28,19 +30,23 @@ const FIST_SEVERITY = {
 	},
 }
 
+type FistId = Status['id'] | typeof FISTLESS
+
+type ChartColours = {
+	[key in FistId]: string
+}
+
 class Fist {
-	id: number = FISTLESS
+	id: FistId = FISTLESS
 	start: number = 0
 	end?: number
 	gcdCounter: number = 0
 
-	constructor(fistId: number, start: number) {
+	constructor(fistId: FistId, start: number) {
 		this.id = fistId
 		this.start = start
 	}
 }
-
-interface ChartColours { [fistId: number]: string}
 
 export class Fists extends Analyser {
 	static override handle = 'fists'
@@ -49,12 +55,13 @@ export class Fists extends Analyser {
 
 	@dependency private actors!: Actors
 	@dependency private data!: Data
+	@dependency private invulnerability!: Invulnerability
 	@dependency private statistics!: Statistics
 	@dependency private statuses!: Statuses
 	@dependency private suggestions!: Suggestions
 
-	private chartColours: ChartColours = {}
-	private fists: number[] = []
+	private chartColours: ChartColours = {[FISTLESS]: '#888'}
+	private fists: Array<Status['id']> = []
 	private fistory: Fist[] = []
 	private fistHook?: EventHook<Events['action']>
 
@@ -64,7 +71,7 @@ export class Fists extends Analyser {
 
 	override initialise(): void {
 		this.chartColours = {
-			[FISTLESS]: '#888',
+			...this.chartColours,
 			[this.data.statuses.FISTS_OF_EARTH.id]: JOBS.MONK.colour,   // idk it matches
 			[this.data.statuses.FISTS_OF_FIRE.id]: JOBS.WARRIOR.colour, // POWER
 			[this.data.statuses.FISTS_OF_WIND.id]: JOBS.PALADIN.colour, // only good for utility
@@ -79,7 +86,7 @@ export class Fists extends Analyser {
 		this.addEventHook('complete', this.onComplete)
 	}
 
-	private handleFistChange(fistId: number): void {
+	private handleFistChange(fistId: FistId): void {
 		// Initial state correction, set it and dip out
 		if (this.parser.currentEpochTimestamp <= this.parser.pull.timestamp) {
 			this.activeFist = new Fist(fistId, this.parser.currentEpochTimestamp)
@@ -141,8 +148,6 @@ export class Fists extends Analyser {
 		// Flush the last stance
 		this.fistory.push({...this.activeFist, end: this.parser.pull.timestamp + this.parser.pull.duration})
 
-		const unknownFist = this.fistory.length === 1
-
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.FISTS_OF_FIRE.icon,
 			content: <Trans id="mnk.fists.suggestions.stanceless.content">
@@ -151,7 +156,7 @@ export class Fists extends Analyser {
 			why: <Trans id="mnk.fists.suggestions.stanceless.why">
 				<Plural value={this.getFistGCDCount(FISTLESS)} one="# GCD" other="# GCDs"	/> had no Fists buff active.
 			</Trans>,
-			tiers: FIST_SEVERITY.DOUSED,
+			tiers: SUGGESTION_TIERS.DOUSED,
 			value: this.getFistGCDCount(FISTLESS),
 		}))
 
@@ -160,7 +165,7 @@ export class Fists extends Analyser {
 			content: <Trans id="mnk.fists.suggestions.foe.content">
 				When using <DataLink action="FISTS_OF_EARTH"/>, remember to change back to <DataLink status="FISTS_OF_FIRE"/> as soon as possible.
 			</Trans>,
-			tiers: FIST_SEVERITY.FISTS_OF_EARTH,
+			tiers: SUGGESTION_TIERS.FISTS_OF_EARTH,
 			why: <Trans id="mnk.fists.suggestions.foe.why">
 				<DataLink status="FISTS_OF_EARTH"/> was active for <Plural value={this.getFistGCDCount(this.data.statuses.FISTS_OF_EARTH.id)} one="# GCD" other="# GCDs"/>.
 			</Trans>,
@@ -172,7 +177,7 @@ export class Fists extends Analyser {
 			content: <Trans id="mnk.fists.suggestions.fow.content">
 				Using <DataLink action="FISTS_OF_WIND"/> provides no combat benefit. Try to stay in <DataLink status="FISTS_OF_FIRE"/> as much as possible.
 			</Trans>,
-			tiers: FIST_SEVERITY.DOUSED,
+			tiers: SUGGESTION_TIERS.DOUSED,
 			why: <Trans id="mnk.fists.suggestions.fow.why">
 				<DataLink status="FISTS_OF_WIND"/> was active for <Plural value={this.getFistGCDCount(this.data.statuses.FISTS_OF_WIND.id)} one="# GCD" other="# GCDs"/>.
 			</Trans>,
@@ -190,9 +195,9 @@ export class Fists extends Analyser {
 				value,
 				color: this.chartColours[id],
 				columns: [
-					this.getFistName(id, unknownFist),
+					this.getFistName(id),
 					this.parser.formatDuration(value),
-					this.getFistUptimePercent(id, unknownFist) + '%',
+					this.getFistUptimePercent(id) + '%',
 				] as const,
 			}
 		}).filter(datum => datum.value > 0)
@@ -203,39 +208,53 @@ export class Fists extends Analyser {
 		}))
 	}
 
-	getFistGCDCount(fistId: number): number {
+	getFistGCDCount(fistId: FistId): number {
 		return this.fistory
 			.filter(fist => fist.id === fistId)
 			.reduce((total, current) => total + current.gcdCounter, 0)
 	}
 
-	getFistUptimePercent(fistId: number, unknownFist: boolean): string {
-		const status = this.data.getStatus(fistId)
-		if (status == null) { return '0' }
+	getFistUptimePercent(fistId: FistId): string {
+		const fightUptime = this.parser.currentDuration - this.invulnerability.getDuration({types: ['invulnerable']})
+		let statusUptime: number = 0
 
-		const statusUptime = this.statuses.getUptime(status, this.actors.current)
+		// Check for a real status first, because Fistless will need to check total time against all the others
+		if (fistId === FISTLESS) {
+			const fistUptime = this.fists.reduce((total, fist) => {
+				const status = this.data.getStatus(fist)
+				if (status == null) { return total }
 
-		if (unknownFist && statusUptime === 0) {
-			// No status events for this fist, assume 100% uptime
+				return total + this.statuses.getUptime(status, this.actors.current)
+			}, 0)
+
+			statusUptime = fightUptime - fistUptime
+		} else {
+			const status = this.data.getStatus(fistId)
+			if (status == null) { return '0' }
+
+			statusUptime = this.statuses.getUptime(status, this.actors.current)
+
+		}
+
+		// No status events for this fist, assume 100% uptime
+		if (statusUptime === 0) {
 			return '100'
 		}
 
-		return ((statusUptime / this.parser.currentDuration) * 100).toFixed(2)
+		return ((statusUptime / fightUptime) * 100).toFixed(2)
 	}
 
-	getFistName(fistId: number, missingData: boolean): string {
-		if (!missingData) {
-			if (fistId === FISTLESS) {
-				// NOTE: Do /not/ return a <Trans> here - it will cause Chart.js to try and clone the entire react tree.
-				// TODO: Work out how to translate this shit.
-				return 'Fistless'
-			}
+	getFistName(fistId: FistId): string {
+		if (fistId === FISTLESS) {
+			// NOTE: Do /not/ return a <Trans> here - it will cause Chart.js to try and clone the entire react tree.
+			// TODO: Work out how to translate this shit.
+			return 'Fistless'
+		}
 
-			const status = this.data.getStatus(fistId)
+		const status = this.data.getStatus(fistId)
 
-			if (status != null) {
-				return status.name
-			}
+		if (status != null && this.fists.includes(status.id)) {
+			return status.name
 		}
 
 		return 'Unknown'

@@ -3,17 +3,17 @@ import {Trans, Plural} from '@lingui/react'
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
 import {ActionKey} from 'data/ACTIONS'
 import {StatusKey} from 'data/STATUSES'
-import {CastEvent} from 'fflogs'
-import {Event} from 'legacyEvent'
-import Module, {dependency} from 'parser/core/Module'
+import {Event, Events} from 'event'
+import {Analyser} from 'parser/core/Analyser'
+import {filter, oneOf} from 'parser/core/filter'
+import {dependency} from 'parser/core/Injectable'
+import {Actors} from 'parser/core/modules/Actors'
 import BrokenLog from 'parser/core/modules/BrokenLog'
 import Checklist, {Rule, Requirement} from 'parser/core/modules/Checklist'
-import Combatants from 'parser/core/modules/Combatants'
 import {Cooldowns} from 'parser/core/modules/Cooldowns'
 import {Data} from 'parser/core/modules/Data'
 import {Death} from 'parser/core/modules/Death'
 import Downtime from 'parser/core/modules/Downtime'
-import {NormalisedDamageEvent} from 'parser/core/modules/NormalisedEvents'
 import Suggestions, {TieredSuggestion, Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import {Timeline} from 'parser/core/modules/Timeline'
 import React, {Fragment} from 'react'
@@ -59,18 +59,16 @@ interface LifeWindows {
 
 // TS port notes:
 // - pretty straight-forward port. Would like to use new BuffWindow module to handle some of the stardiver
-//   count logic, so will take another look at the module when that's ready
-// port to analyser requires:
-// - core combo event
+//   count logic, so will take another look at the module after porting everything to Analyser
 // EW changes:
 // - gauge tracking will be removed (botd now a trait)
-export default class BloodOfTheDragon extends Module {
+export default class BloodOfTheDragon extends Analyser {
 	static override handle = 'bloodOfTheDragon'
 	static override title = t('drg.blood.title')`Life of the Dragon`
 
+	@dependency private actors!: Actors
 	@dependency private brokenLog!: BrokenLog
 	@dependency private checklist!: Checklist
-	@dependency private combatants!: Combatants
 	@dependency private cooldowns!: Cooldowns
 	@dependency private data!: Data
 	@dependency private death!: Death
@@ -90,7 +88,7 @@ export default class BloodOfTheDragon extends Module {
 		current: undefined,
 		history: [],
 	}
-	private lastEventTime = this.parser.fight.start_time
+	private lastEventTime = this.parser.pull.timestamp
 	private eyes = 0
 	private lostEyes = 0
 
@@ -103,34 +101,37 @@ export default class BloodOfTheDragon extends Module {
 		this.data.actions.SONIC_THRUST.id,
 	]
 
-	protected override init() {
-		this.addEventHook('cast', {by: 'player', abilityId: this.extenderActions}, this.onExtenderCast)
-		this.addEventHook('combo', {by: 'player', abilityId: this.extenderCombos}, this.onExtenderCast)
-		this.addEventHook('cast', {by: 'player', abilityId: this.data.actions.BLOOD_OF_THE_DRAGON.id}, this.onBloodCast)
-		this.addEventHook('cast', {by: 'player', abilityId: this.data.actions.MIRAGE_DIVE.id}, this.onMirageDiveCast)
-		this.addEventHook('normaliseddamage', {by: 'player', abilityId: this.data.actions.GEIRSKOGUL.id}, this.onGeirskogulCast)
-		this.addEventHook('normaliseddamage', {by: 'player', abilityId: this.data.actions.NASTROND.id}, this.onNastrondCast)
-		this.addEventHook('cast', {by: 'player', abilityId: this.data.actions.STARDIVER.id}, this.onStardiverCast)
-		this.addEventHook('death', {to: 'player'}, this.onDeath)
-		this.addEventHook('raise', {to: 'player'}, this.onRaise)
+	override initialise() {
+		const playerFilter = filter<Event>().source(this.parser.actor.id)
+
+		this.addEventHook(playerFilter.type('action').action(oneOf(this.extenderActions)), this.onExtenderCast)
+		this.addEventHook(playerFilter.type('combo').action(oneOf(this.extenderCombos)), this.onExtenderCast)
+		this.addEventHook(playerFilter.type('action').action(this.data.actions.BLOOD_OF_THE_DRAGON.id), this.onBloodCast)
+		this.addEventHook(playerFilter.type('action').action(this.data.actions.MIRAGE_DIVE.id), this.onMirageDiveCast)
+		this.addEventHook(playerFilter.type('action').action(this.data.actions.GEIRSKOGUL.id), this.onGeirskogulCast)
+		this.addEventHook(playerFilter.type('action').action(this.data.actions.NASTROND.id), this.onNastrondCast)
+		this.addEventHook(playerFilter.type('action').action(this.data.actions.STARDIVER.id), this.onStardiverCast)
+		this.addEventHook(filter<Event>().actor(this.parser.actor.id).type('death'), this.onDeath)
+		this.addEventHook(filter<Event>().actor(this.parser.actor.id).type('raise'), this.onRaise)
 		this.addEventHook('complete', this.onComplete)
+
 	}
 
 	// duplicate code from other PRs
 	private getActiveDrgBuffs(): StatusKey[] {
 		const active: StatusKey[] = []
 
-		if (this.combatants.selected.hasStatus(this.data.statuses.LANCE_CHARGE.id)) {
+		if (this.actors.current.hasStatus(this.data.statuses.LANCE_CHARGE.id)) {
 			active.push('LANCE_CHARGE')
 		}
 
-		if (this.combatants.selected.hasStatus(this.data.statuses.BATTLE_LITANY.id)) {
+		if (this.actors.current.hasStatus(this.data.statuses.BATTLE_LITANY.id)) {
 			active.push('BATTLE_LITANY')
 		}
 
 		if (
-			this.combatants.selected.hasStatus(this.data.statuses.RIGHT_EYE.id) ||
-			this.combatants.selected.hasStatus(this.data.statuses.RIGHT_EYE_SOLO.id)
+			this.actors.current.hasStatus(this.data.statuses.RIGHT_EYE.id) ||
+			this.actors.current.hasStatus(this.data.statuses.RIGHT_EYE_SOLO.id)
 		) {
 			active.push('RIGHT_EYE')
 		}
@@ -144,8 +145,8 @@ export default class BloodOfTheDragon extends Module {
 			compact
 			icon="time"
 			size="small"
-			onClick={() => this.timeline.show(timestamp - this.parser.fight.start_time, timestamp - this.parser.fight.start_time)}
-			content={this.parser.formatTimestamp(timestamp)}
+			onClick={() => this.timeline.show(timestamp - this.parser.pull.timestamp, timestamp - this.parser.pull.timestamp)}
+			content={this.parser.formatEpochTimestamp(timestamp)}
 		/>
 	}
 	// end duplicate code
@@ -158,7 +159,7 @@ export default class BloodOfTheDragon extends Module {
 	}
 
 	private updateGauge() {
-		const elapsedTime = this.parser.currentTimestamp - this.lastEventTime
+		const elapsedTime = this.parser.currentEpochTimestamp - this.lastEventTime
 		if (this.lifeWindows.current != null) {
 			this.lifeDuration -= elapsedTime
 			if (this.lifeDuration <= 0) {
@@ -178,7 +179,7 @@ export default class BloodOfTheDragon extends Module {
 			this.eyes = 0
 		}
 
-		this.lastEventTime = this.parser.currentTimestamp
+		this.lastEventTime = this.parser.currentEpochTimestamp
 	}
 
 	private onExtenderCast() {
@@ -213,7 +214,7 @@ export default class BloodOfTheDragon extends Module {
 			// LotD tiiiiiime~
 			this.lifeDuration = DRAGON_DEFAULT_DURATION_MILLIS
 			this.lifeWindows.current = {
-				start: this.parser.currentTimestamp,
+				start: this.parser.currentEpochTimestamp,
 				duration: this.lifeDuration,
 				nastronds: [],
 				stardivers: [],
@@ -238,7 +239,7 @@ export default class BloodOfTheDragon extends Module {
 		}
 	}
 
-	onNastrondCast(event: NormalisedDamageEvent) {
+	onNastrondCast(event: Events['action']) {
 		if (this.lifeWindows.current == null) {
 			// Nastrond outside of LotD - gentlemen, we have us a broken log
 			this.brokenLog.trigger(this, 'no lotd nastrond', (
@@ -262,7 +263,7 @@ export default class BloodOfTheDragon extends Module {
 		}
 	}
 
-	onStardiverCast(event: CastEvent) {
+	onStardiverCast(event: Events['action']) {
 		if (this.lifeWindows.current === null) {
 			// Stardiver outside of LotD is also a sign of a broken log
 			this.brokenLog.trigger(this, 'no lotd stardiver', (
@@ -301,11 +302,7 @@ export default class BloodOfTheDragon extends Module {
 	}
 
 	intersectsDowntime(start: number) {
-		const windows = this.downtime.getDowntimeWindows(this.parser.fflogsToEpoch(start))
-			.map(window => ({
-				start: this.parser.epochToFflogs(window.start),
-				end: this.parser.epochToFflogs(window.end),
-			}))
+		const windows = this.downtime.getDowntimeWindows(start)
 		const end = start + DRAGON_DEFAULT_DURATION_MILLIS
 
 		for (const dtWindow of windows) {
@@ -322,11 +319,11 @@ export default class BloodOfTheDragon extends Module {
 			// downtime overlap
 			lifeWindow.dtOverlapTime = this.intersectsDowntime(Math.min(
 				lifeWindow.start + this.data.actions.HIGH_JUMP.cooldown,
-				this.parser.eventTimeOffset + this.parser.pull.duration,
+				this.parser.pull.timestamp + this.parser.pull.duration,
 			))
 
 			// flag for last life window
-			lifeWindow.isLast = lifeWindow.start + lifeWindow.duration > this.parser.fight.end_time
+			lifeWindow.isLast = lifeWindow.start + lifeWindow.duration > (this.parser.pull.timestamp + this.parser.pull.duration)
 
 			// A window should be delayed if:
 			// - there are no buffs off cooldown at any point in this window
@@ -334,7 +331,7 @@ export default class BloodOfTheDragon extends Module {
 			// - there are buffs off cooldown in the theoretical delayed window
 			// - there could be another window in 30s (end of fight check)
 			let activeBuffsInWindow = lifeWindow.activeBuffs.length > 0
-			const shouldBeDelayed = lifeWindow.activeBuffs.length === 0 && lifeWindow.dtOverlapTime === null && lifeWindow.start + LOTD_BUFF_DELAY_MAX < this.parser.fight.end_time
+			const shouldBeDelayed = lifeWindow.activeBuffs.length === 0 && lifeWindow.dtOverlapTime === null && lifeWindow.start + LOTD_BUFF_DELAY_MAX < (this.parser.pull.timestamp + this.parser.pull.duration)
 
 			let buffsExistInDelayWindow = false
 
@@ -506,7 +503,7 @@ export default class BloodOfTheDragon extends Module {
 			)}
 			{lifeWindow.showNoDelayNote && (
 				<Message info>
-					<p><Trans id="drg.blood.no-delay-explain">This window cannot be delayed due to downtime occurring at {this.parser.formatTimestamp(lifeWindow.dtOverlapTime ?? 0)}. This window would otherwise be delayed for better buff alignment.</Trans></p>
+					<p><Trans id="drg.blood.no-delay-explain">This window cannot be delayed due to downtime occurring at {this.parser.formatEpochTimestamp(lifeWindow.dtOverlapTime ?? 0)}. This window would otherwise be delayed for better buff alignment.</Trans></p>
 				</Message>
 			)}
 			<Table>
@@ -528,7 +525,7 @@ export default class BloodOfTheDragon extends Module {
 		// - a window that could be delayed but wasn't
 		const windowWarning = lifeWindow.shouldDelay || lifeWindow.missedSdBuff
 		const windowError = lifeWindow.stardivers.length === 0 || lifeWindow.nastronds.length < EXPECTED_NASTRONDS_PER_WINDOW
-		const title = <>{this.parser.formatTimestamp(lifeWindow.start)} <span> - </span> <Trans id="drg.blood.windows.hits"><Plural value={lifeWindow.nastronds.length} one="# Nastrond" other="# Nastronds" />, <Plural value={lifeWindow.stardivers.length} one="# Stardiver" other="# Stardivers" /></Trans></>
+		const title = <>{this.parser.formatEpochTimestamp(lifeWindow.start)} <span> - </span> <Trans id="drg.blood.windows.hits"><Plural value={lifeWindow.nastronds.length} one="# Nastrond" other="# Nastronds" />, <Plural value={lifeWindow.stardivers.length} one="# Stardiver" other="# Stardivers" /></Trans></>
 
 		if (windowError) {
 			return <span className="text-error">{title}</span>

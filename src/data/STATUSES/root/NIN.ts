@@ -8,13 +8,6 @@ export const NIN = ensureStatuses({
 		duration: 15000,
 	},
 
-	SHADOW_FANG: {
-		id: 508,
-		name: 'Shadow Fang',
-		icon: 'https://xivapi.com/i/010000/010612.png',
-		duration: 30000,
-	},
-
 	KASSATSU: {
 		id: 497,
 		name: 'Kassatsu',
@@ -50,17 +43,31 @@ export const NIN = ensureStatuses({
 		duration: 30000,
 	},
 
-	ASSASSINATE_READY: {
-		id: 1955,
-		name: 'Assassinate Ready',
-		icon: 'https://xivapi.com/i/012000/012913.png',
-		duration: 15000,
-	},
-
 	SHADE_SHIFT: {
 		id: 488,
 		name: 'Shade Shift',
 		icon: 'https://xivapi.com/i/010000/010605.png',
 		duration: 20000,
+	},
+
+	FORKED_RAIJU_READY: {
+		id: 1491405,
+		name: 'Forked Raiju Ready',
+		icon: 'TODO',
+		duration: 30000,
+	},
+
+	FLEETING_RAIJU_READY: {
+		id: 1491406,
+		name: 'Fleeting Raiju Ready',
+		icon: 'TODO',
+		duration: 15000,
+	},
+
+	MEISUI: {
+		id: 1491407,
+		name: 'Meisui',
+		icon: 'TODO',
+		duration: 30000,
 	},
 })

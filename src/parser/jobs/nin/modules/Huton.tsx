@@ -1,11 +1,12 @@
 import {Trans, Plural} from '@lingui/react'
 import {ActionLink} from 'components/ui/DbLink'
 import {ActionKey} from 'data/ACTIONS'
-import {CastEvent} from 'fflogs'
-import {Event} from 'legacyEvent'
-import Module, {dependency} from 'parser/core/Module'
+import {EncounterKey} from 'data/ENCOUNTERS'
+import {Event, Events} from 'event'
+import {Analyser} from 'parser/core/Analyser'
+import {filter, oneOf} from 'parser/core/filter'
+import {dependency} from 'parser/core/Injectable'
 import Checklist, {Rule, Requirement} from 'parser/core/modules/Checklist'
-import {LegacyComboEvent} from 'parser/core/modules/Combos'
 import {Data} from 'parser/core/modules/Data'
 import {Death} from 'parser/core/modules/Death'
 import Suggestions, {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
@@ -30,8 +31,8 @@ const HUTON_EXTENSION_MILLIS: Array<[ActionKey, number]> = [
 const DOWNTIME_DIFFERENCE_TOLERANCE = 10000 // If the downtime estimates are off by more than this, we can probably toss the low estimate
 
 // Some bosses *coughChadarnookcough* require fucky pulls that result in your Huton timer being lower than normal when the fight starts
-const BOSS_ADJUSTMENTS: {[key: number]: number} = {
-	// [BOSSES.DEMON_CHADARNOOK.logId]: 15000,
+const BOSS_ADJUSTMENTS: Partial<Record<EncounterKey, number>> = {
+	// DEMON_CHADARNOOK: 15000,
 }
 
 interface HutonEstimate {
@@ -41,7 +42,7 @@ interface HutonEstimate {
 	badAcs: number,
 }
 
-export class Huton extends Module {
+export class Huton extends Analyser {
 	static override handle = 'huton'
 
 	@dependency private checklist!: Checklist
@@ -54,24 +55,25 @@ export class Huton extends Module {
 	))
 
 	private highEstimate: HutonEstimate = {
-		current: HUTON_START_DURATION_MILLIS_HIGH - (BOSS_ADJUSTMENTS[this.parser.fight.boss] || 0),
+		current: HUTON_START_DURATION_MILLIS_HIGH - (BOSS_ADJUSTMENTS[this.parser.pull.encounter.key ?? 'TRASH'] || 0),
 		clipped: 0,
 		downtime: 0,
 		badAcs: 0,
 	}
 	private lowEstimate: HutonEstimate = {
-		current: HUTON_START_DURATION_MILLIS_LOW - (BOSS_ADJUSTMENTS[this.parser.fight.boss] || 0),
+		current: HUTON_START_DURATION_MILLIS_LOW - (BOSS_ADJUSTMENTS[this.parser.pull.encounter.key ?? 'TRASH'] || 0),
 		clipped: 0,
 		downtime: 0,
 		badAcs: 0,
 	}
-	private lastEventTime: number = this.parser.fight.start_time // This one is shared
+	private lastEventTime: number = this.parser.pull.timestamp // This one is shared
 
-	protected override init() {
-		this.addEventHook('cast', {by: 'player', abilityId: this.data.actions.HUTON.id}, this.onHutonCast)
-		this.addEventHook('combo', {by: 'player', abilityId: HUTON_EXTENSION_MILLIS.map(pair => this.data.actions[pair[0]].id)}, this.onHutonExtension)
-		this.addEventHook('death', {to: 'player'}, this.onDeath)
-		this.addEventHook('raise', {to: 'player'}, this.onRaise)
+	override initialise() {
+		const playerFilter = filter<Event>().source(this.parser.actor.id)
+		this.addEventHook(playerFilter.type('action').action(this.data.actions.HUTON.id), this.onHutonCast)
+		this.addEventHook(playerFilter.type('combo').action(oneOf(HUTON_EXTENSION_MILLIS.map(pair => this.data.actions[pair[0]].id))), this.onHutonExtension)
+		this.addEventHook({type: 'death', actor: this.parser.actor.id}, this.onDeath)
+		this.addEventHook({type: 'raise', actor: this.parser.actor.id}, this.onRaise)
 		this.addEventHook('complete', this.onComplete)
 	}
 
@@ -83,7 +85,7 @@ export class Huton extends Module {
 		estimate.current = HUTON_MAX_DURATION_MILLIS
 	}
 
-	private onHutonCast(event: CastEvent) {
+	private onHutonCast(event: Events['action']) {
 		const elapsedTime = (event.timestamp - this.lastEventTime)
 		this.handleHutonRecast(this.highEstimate, elapsedTime)
 		this.handleHutonRecast(this.lowEstimate, elapsedTime)
@@ -103,9 +105,9 @@ export class Huton extends Module {
 		}
 	}
 
-	private onHutonExtension(event: LegacyComboEvent) {
+	private onHutonExtension(event: Events['combo']) {
 		const elapsedTime = (event.timestamp - this.lastEventTime)
-		const action = this.data.getAction(event.ability.guid)
+		const action = this.data.getAction(event.action)
 		if (action == null) { return }
 
 		// The .get() should never be undefined but we must appease the ts lint gods
@@ -121,7 +123,7 @@ export class Huton extends Module {
 		this.lowEstimate.current = 0
 	}
 
-	private onRaise(event: Event) {
+	private onRaise(event: Events['raise']) {
 		// So floor time doesn't count against Huton uptime
 		this.lastEventTime = event.timestamp
 	}
@@ -151,7 +153,7 @@ export class Huton extends Module {
 		this.checklist.add(new Rule({
 			name: <Trans id="nin.huton.checklist.name">Keep Huton up</Trans>,
 			description: <Fragment>
-				<Trans id="nin.huton.checklist.description"><ActionLink {...this.data.actions.HUTON}/> provides you with a 15% attack speed increase and as such is a <em>huge</em> part of a NIN's personal DPS. Do your best not to let it drop, and recover it as quickly as possible if it does.</Trans>
+				<Trans id="nin.huton.checklist.description"><ActionLink action="HUTON"/> provides you with a 15% attack speed increase and as such is a <em>huge</em> part of a NIN's personal DPS. Do your best not to let it drop, and recover it as quickly as possible if it does.</Trans>
 				<Message warning icon>
 					<Icon name="warning sign"/>
 					<Message.Content>
@@ -162,7 +164,7 @@ export class Huton extends Module {
 			displayOrder: DISPLAY_ORDER.HUTON,
 			requirements: [
 				new Requirement({
-					name: <Trans id="nin.huton.checklist.requirement.name"><ActionLink {...this.data.actions.HUTON}/> uptime</Trans>,
+					name: <Trans id="nin.huton.checklist.requirement.name"><ActionLink action="HUTON"/> uptime</Trans>,
 					percent: () => uptime,
 				}),
 			],
@@ -172,7 +174,7 @@ export class Huton extends Module {
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.HUTON.icon,
 			content: <Trans id="nin.huton.suggestions.clipping.content">
-				Avoid using <ActionLink {...this.data.actions.ARMOR_CRUSH}/> when <ActionLink {...this.data.actions.HUTON}/> has more than 40 seconds left on its duration. The excess time is wasted, so using <ActionLink {...this.data.actions.AEOLIAN_EDGE}/> is typically the better option.
+				Avoid using <ActionLink action="ARMOR_CRUSH"/> when <ActionLink action="HUTON"/> has more than 40 seconds left on its duration. The excess time is wasted, so using <ActionLink action="AEOLIAN_EDGE"/> is typically the better option.
 			</Trans>,
 			tiers: {
 				5000: SEVERITY.MINOR,
@@ -188,7 +190,7 @@ export class Huton extends Module {
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.ARMOR_CRUSH.icon,
 			content: <Trans id="nin.huton.suggestions.futile-ac.content">
-				Avoid using <ActionLink {...this.data.actions.ARMOR_CRUSH}/> when <ActionLink {...this.data.actions.HUTON}/> is down, as it provides no benefit and does less DPS than your other combo finishers.
+				Avoid using <ActionLink action="ARMOR_CRUSH"/> when <ActionLink action="HUTON"/> is down, as it provides no benefit and does less DPS than your other combo finishers.
 			</Trans>,
 			tiers: {
 				1: SEVERITY.MINOR,

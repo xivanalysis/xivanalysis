@@ -1,8 +1,10 @@
 import {Plural, Trans} from '@lingui/react'
-import {ActionLink} from 'components/ui/DbLink'
-import {ActionRoot} from 'data/ACTIONS/root'
-import Module, {dependency} from 'parser/core/Module'
-import Combatants from 'parser/core/modules/Combatants'
+import {DataLink} from 'components/ui/DbLink'
+import {Action, ActionKey} from 'data/ACTIONS'
+import {Event} from 'event'
+import {Analyser} from 'parser/core/Analyser'
+import {filter, oneOf} from 'parser/core/filter'
+import {dependency} from 'parser/core/Injectable'
 import {Cooldowns} from 'parser/core/modules/Cooldowns'
 import {Data} from 'parser/core/modules/Data'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
@@ -15,30 +17,32 @@ const SEVERITIES = {
 	},
 }
 
-const GCD_ST_HEAL: Array<keyof ActionRoot> = [
+const GCD_ST_HEAL: ActionKey[] = [
 	'BENEFIC',
 	'BENEFIC_II',
 ]
 
 // Ripped off from WHM and converted to TSX
-export default class Synastry extends Module {
+export default class Synastry extends Analyser {
 	static override handle = 'synastry'
 
 	@dependency private data!: Data
-	@dependency private combatants!: Combatants
 	@dependency private suggestions!: Suggestions
 	@dependency private cooldowns!: Cooldowns
 
 	private nonSynastryHeals = 0
 
-	private GCD_ST_HEAL: number[] = []
+	private gcdStHeal: Array<Action['id']> = []
 
-	protected override init() {
+	override initialise() {
 		GCD_ST_HEAL.forEach(actionKey => {
-			this.GCD_ST_HEAL.push(this.data.actions[actionKey].id)
+			this.gcdStHeal.push(this.data.actions[actionKey].id)
 		})
 
-		this.addEventHook('cast', {abilityId: this.GCD_ST_HEAL, by: 'player'}, this.onSingleTargetHealCast)
+		this.addEventHook(filter<Event>()
+			.source(this.parser.actor.id)
+			.type('action')
+			.action(oneOf(this.gcdStHeal)), this.onSingleTargetHealCast)
 		this.addEventHook('complete', this.onComplete)
 	}
 
@@ -54,7 +58,7 @@ export default class Synastry extends Module {
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.SYNASTRY.icon,
 			content: <Trans id="ast.synastry.suggestion.content">
-				Try to use <ActionLink {...this.data.actions.SYNASTRY} /> if you need to cast a single-target GCD heal. The GCD heal itself is already an efficiency loss, so it's better to make it as strong as possible if Synastry is not needed soon.
+				Try to use <DataLink action="SYNASTRY" /> if you need to cast a single-target GCD heal. The GCD heal itself is already an efficiency loss, so it's better to make it as strong as possible if Synastry is not needed soon.
 			</Trans>,
 			tiers: SEVERITIES.WASTED_ST_HEAL_TIERS,
 			value: this.nonSynastryHeals,

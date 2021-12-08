@@ -9,5 +9,15 @@ export class AoEUsages extends CoreAoE {
 			stActions: [this.data.actions.CASCADE],
 			minTargets: 2,
 		},
+		{
+			aoeAction: this.data.actions.RISING_WINDMILL,
+			stActions: [this.data.actions.REVERSE_CASCADE],
+			minTargets: 2,
+		},
+		{
+			aoeAction: this.data.actions.BLOODSHOWER,
+			stActions: [this.data.actions.FOUNTAINFALL],
+			minTargets: 2,
+		},
 	]
 }

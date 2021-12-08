@@ -42,14 +42,14 @@ export default class Downtime extends Analyser {
 		}
 
 		const finalDowntimes = [firstElement]
-		downtimePeriods.forEach(dt => {
+		downtimePeriods.forEach(downtime => {
 			const last = finalDowntimes[finalDowntimes.length - 1]
-			if (dt.start <= last.end) {
-				if (dt.end > last.end) {
-					last.end = dt.end
+			if (downtime.start <= last.end) {
+				if (downtime.end > last.end) {
+					last.end = downtime.end
 				}
 			} else {
-				finalDowntimes.push(dt)
+				finalDowntimes.push(downtime)
 			}
 		})
 

@@ -4,22 +4,20 @@ import {DataLink} from 'components/ui/DbLink'
 import {JOBS} from 'data/JOBS'
 import {Event, Events} from 'event'
 import {filter, oneOf} from 'parser/core/filter'
-import {dependency} from 'parser/core/Module'
-import {Data} from 'parser/core/modules/Data'
+import {dependency} from 'parser/core/Injectable'
 import {CounterGauge, Gauge as CoreGauge} from 'parser/core/modules/Gauge'
 import Suggestions, {SEVERITY, Suggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
 
 type GaugeModifier = Partial<Record<Event['type'], number>>
 
-export default class Gauge extends CoreGauge {
+export class Gauge extends CoreGauge {
 	static override title = t('pld.gauge.title')`Oath Gauge Usage`
 
-	@dependency private data!: Data
 	@dependency private suggestions!: Suggestions
 
 	private oathGauge = this.add(new CounterGauge({
-		chart: {label: 'Oath Gauge', color: JOBS.PALADIN.colour},
+		graph: {label: 'Oath Gauge', color: JOBS.PALADIN.colour, collapse: false},
 	}))
 	private oathModifiers = new Map<number, GaugeModifier>([
 		[this.data.actions.ATTACK.id, {action: 5}],

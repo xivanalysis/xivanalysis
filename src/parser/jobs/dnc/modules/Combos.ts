@@ -1,5 +1,5 @@
 import {Events} from 'event'
-import {dependency} from 'parser/core/Module'
+import {dependency} from 'parser/core/Injectable'
 import {Actors} from 'parser/core/modules/Actors'
 import {Combos as CoreCombos} from 'parser/core/modules/Combos'
 import {DirtyDancing} from './DirtyDancing'

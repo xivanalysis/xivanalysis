@@ -214,7 +214,7 @@ export class Technicalities extends Analyser {
 			this.badDevilments++
 		}
 
-		this.lastDevilmentTimestamp = this.parser.currentTimestamp
+		this.lastDevilmentTimestamp = this.parser.currentEpochTimestamp
 
 		// If we don't have a window for some reason, bail
 		if (lastWindow == null || lastWindow.end) {

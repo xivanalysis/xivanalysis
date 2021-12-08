@@ -64,10 +64,10 @@ export default class About extends Analyser {
 		// Work out the supported patch range (and if we're in it)
 		const {from, to = from} = this.supportedPatches
 		const supported = patchSupported(
-			this.parser.newReport.edition,
+			this.parser.report.edition,
 			from,
 			to,
-			this.parser.parseDate,
+			this.parser.pull.timestamp / 1000,
 		)
 
 		const {Description} = this

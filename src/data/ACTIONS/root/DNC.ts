@@ -2,6 +2,13 @@ import {Attribute} from 'event'
 import {ensureActions} from '../type'
 
 export const DNC = ensureActions({
+	STANDARD_FINISH: {
+		id: 16003,
+		icon: 'https://xivapi.com/i/003000/003459.png',
+		name: 'Standard Finish',
+		onGcd: true,
+		cooldown: 1500,
+	},
 	SINGLE_STANDARD_FINISH: {
 		id: 16191,
 		icon: 'https://xivapi.com/i/003000/003459.png',
@@ -13,6 +20,18 @@ export const DNC = ensureActions({
 		id: 16192,
 		icon: 'https://xivapi.com/i/003000/003459.png',
 		name: 'Double Standard Finish',
+		onGcd: true,
+		cooldown: 1500,
+		statusesApplied: [
+			'STANDARD_FINISH',
+			'STANDARD_FINISH_PARTNER',
+			'ESPRIT',
+		],
+	},
+	TECHNICAL_FINISH: {
+		id: 16004,
+		icon: 'https://xivapi.com/i/003000/003474.png',
+		name: 'Technical Finish',
 		onGcd: true,
 		cooldown: 1500,
 	},
@@ -43,6 +62,18 @@ export const DNC = ensureActions({
 		name: 'Quadruple Technical Finish',
 		onGcd: true,
 		cooldown: 1500,
+		statusesApplied: [
+			'TECHNICAL_FINISH',
+			'ESPRIT_TECHNICAL',
+			'FLOURISHING_FINISH',
+		],
+	},
+	TILLANA: {
+		id: 1600416004, // Need real id
+		icon: 'https://xivapi.com/i/003000/003474.png', // Need real icon
+		name: 'Tillana',
+		onGcd: true,
+		cooldown: 1500,
 	},
 	CASCADE: {
 		id: 15989,
@@ -53,7 +84,7 @@ export const DNC = ensureActions({
 		combo: {
 			start: true,
 		},
-		statusesApplied: ['FLOURISHING_CASCADE'],
+		statusesApplied: ['FLOURISHING_SYMMETRY'],
 	},
 	FOUNTAIN: {
 		id: 15990,
@@ -65,7 +96,7 @@ export const DNC = ensureActions({
 			from: 15989,
 			end: true,
 		},
-		statusesApplied: ['FLOURISHING_FOUNTAIN'],
+		statusesApplied: ['FLOURISHING_FLOW'],
 	},
 	REVERSE_CASCADE: {
 		id: 15991,
@@ -90,7 +121,7 @@ export const DNC = ensureActions({
 		combo: {
 			start: true,
 		},
-		statusesApplied: ['FLOURISHING_WINDMILL'],
+		statusesApplied: ['FLOURISHING_SYMMETRY'],
 	},
 	BLADESHOWER: {
 		id: 15994,
@@ -102,7 +133,7 @@ export const DNC = ensureActions({
 			from: 15993,
 			end: true,
 		},
-		statusesApplied: ['FLOURISHING_SHOWER'],
+		statusesApplied: ['FLOURISHING_FLOW'],
 	},
 	RISING_WINDMILL: {
 		id: 15995,
@@ -164,20 +195,6 @@ export const DNC = ensureActions({
 		onGcd: true,
 		cooldown: 1000,
 	},
-	STANDARD_FINISH: {
-		id: 16003,
-		icon: 'https://xivapi.com/i/003000/003459.png',
-		name: 'Standard Finish',
-		onGcd: true,
-		cooldown: 1500,
-	},
-	TECHNICAL_FINISH: {
-		id: 16004,
-		icon: 'https://xivapi.com/i/003000/003474.png',
-		name: 'Technical Finish',
-		onGcd: true,
-		cooldown: 1500,
-	},
 	SABER_DANCE: {
 		id: 16005,
 		icon: 'https://xivapi.com/i/003000/003476.png',
@@ -198,7 +215,7 @@ export const DNC = ensureActions({
 		name: 'Fan Dance',
 		onGcd: false,
 		cooldown: 1000,
-		statusesApplied: ['FLOURISHING_FAN_DANCE'],
+		statusesApplied: ['THREEFOLD_FAN_DANCE'],
 	},
 	FAN_DANCE_II: {
 		id: 16008,
@@ -206,12 +223,19 @@ export const DNC = ensureActions({
 		name: 'Fan Dance II',
 		onGcd: false,
 		cooldown: 1000,
-		statusesApplied: ['FLOURISHING_FAN_DANCE'],
+		statusesApplied: ['THREEFOLD_FAN_DANCE'],
 	},
 	FAN_DANCE_III: {
 		id: 16009,
 		icon: 'https://xivapi.com/i/003000/003472.png',
 		name: 'Fan Dance III',
+		onGcd: false,
+		cooldown: 1000,
+	},
+	FAN_DANCE_IV: {
+		id: 1600916009, // Need real ID
+		icon: 'https://xivapi.com/i/003000/003472.png', // Need real icon
+		name: 'Fan Dance IV',
 		onGcd: false,
 		cooldown: 1000,
 	},
@@ -229,7 +253,14 @@ export const DNC = ensureActions({
 		name: 'Devilment',
 		onGcd: false,
 		cooldown: 120000,
-		statusesApplied: ['DEVILMENT'],
+		statusesApplied: ['DEVILMENT', 'FLOURISHING_STARFALL'],
+	},
+	STARFALL_DANCE: {
+		id: 1601116011,
+		icon: 'https://xivapi.com/i/003000/003471.png',
+		name: 'Starfall Dance',
+		onGcd: true,
+		speedAttribute: Attribute.SKILL_SPEED,
 	},
 	SHIELD_SAMBA: {
 		id: 16012,
@@ -246,11 +277,10 @@ export const DNC = ensureActions({
 		onGcd: false,
 		cooldown: 60000,
 		statusesApplied: [
-			'FLOURISHING_CASCADE',
-			'FLOURISHING_FOUNTAIN',
-			'FLOURISHING_WINDMILL',
-			'FLOURISHING_SHOWER',
-			'FLOURISHING_FAN_DANCE',
+			'FLOURISHING_SYMMETRY',
+			'FLOURISHING_FLOW',
+			'THREEFOLD_FAN_DANCE',
+			'FOURFOLD_FAN_DANCE',
 		],
 	},
 	IMPROVISATION: {
@@ -259,7 +289,19 @@ export const DNC = ensureActions({
 		name: 'Improvisation',
 		onGcd: false,
 		cooldown: 120000,
-		statusesApplied: ['IMPROVISATION', 'IMPROVISATION_HEALING'],
+		statusesApplied: [
+			'IMPROVISATION',
+			'IMPROVISATION_HEALING',
+			'RISING_RHYTHM',
+		], // Confirm statuses
+	},
+	IMPROVISED_FINISH: {
+		id: 1601416014, // Need real ID
+		icon: 'https://xivapi.com/i/003000/003477.png', // Need real icon
+		name: 'Improvised Finish',
+		onGcd: false,
+		cooldown: 120000,
+		statusesApplied: ['IMPROVISED_FINISH'],
 	},
 	CURING_WALTZ: {
 		id: 16015,

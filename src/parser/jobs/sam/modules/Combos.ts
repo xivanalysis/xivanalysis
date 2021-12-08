@@ -2,7 +2,7 @@ import ACTIONS from 'data/ACTIONS'
 import {ActionCombo} from 'data/ACTIONS/type'
 import STATUSES from 'data/STATUSES'
 import {Events} from 'event'
-import {dependency} from 'parser/core/Module'
+import {dependency} from 'parser/core/Injectable'
 import {Actors} from 'parser/core/modules/Actors'
 import {Combos as CoreCombos} from 'parser/core/modules/Combos'
 

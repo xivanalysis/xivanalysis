@@ -33,13 +33,13 @@ export const BLM = ensureStatuses({
 		id: 165,
 		name: 'Firestarter',
 		icon: 'https://xivapi.com/i/010000/010460.png',
-		duration: 18000,
+		duration: 30000,
 	},
 	THUNDERCLOUD: {
 		id: 164,
 		name: 'Thundercloud',
 		icon: 'https://xivapi.com/i/010000/010461.png',
-		duration: 18000,
+		duration: 21000,
 	},
 	LEY_LINES: {
 		id: 737,
@@ -64,5 +64,11 @@ export const BLM = ensureStatuses({
 		name: 'Manaward',
 		icon: 'https://xivapi.com/i/010000/010456.png',
 		duration: 20000,
+	},
+	ENHANCED_FLARE: {
+		id: 168168168, // Need real ID
+		name: 'Enhanced Flare',
+		icon: 'https://xivapi.com/i/010000/010460.png', // Need real icon
+		duration: 30000,
 	},
 })

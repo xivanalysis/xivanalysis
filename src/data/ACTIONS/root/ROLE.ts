@@ -1,3 +1,4 @@
+import {Attribute} from 'event'
 import {ensureActions} from '../type'
 
 // Putting all role actions in one file 'cus a lot of them are shared between multiple roles
@@ -133,6 +134,15 @@ export const ROLE = ensureActions({
 		icon: 'https://xivapi.com/i/000000/000861.png',
 		cooldown: 90000,
 		statusesApplied: ['ADDLE'],
+	},
+	SLEEP: {
+		id: 145, // ID may have changed since this is role now, rather than BLM
+		name: 'Sleep',
+		icon: 'https://xivapi.com/i/000000/000465.png',
+		onGcd: true,
+		speedAttribute: Attribute.SPELL_SPEED,
+		castTime: 2500,
+		mpCost: 800,
 	},
 
 	// Melee DPS

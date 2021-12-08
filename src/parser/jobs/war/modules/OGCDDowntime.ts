@@ -1,6 +1,6 @@
 import {CooldownDowntime} from 'parser/core/modules/CooldownDowntime'
 
-export default class OGCDDowntime extends CooldownDowntime {
+export class OGCDDowntime extends CooldownDowntime {
 	trackedCds = [
 		{
 			cooldowns: [this.data.actions.INFURIATE],

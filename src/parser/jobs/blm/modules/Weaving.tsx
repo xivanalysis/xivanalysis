@@ -2,7 +2,7 @@ import {ActionKey} from 'data/ACTIONS'
 import {dependency} from 'parser/core/Injectable'
 import {Weave, Weaving as CoreWeaving} from 'parser/core/modules/Weaving'
 import {FIRE_SPELLS, ICE_SPELLS} from './Elements'
-import Gauge, {MAX_ASTRAL_UMBRAL_STACKS} from './Gauge'
+import {Gauge, MAX_ASTRAL_UMBRAL_STACKS} from './Gauge'
 
 const OGCD_EXCEPTIONS: ActionKey[] = [
 	'LUCID_DREAMING',
@@ -13,7 +13,6 @@ const OGCD_EXCEPTIONS: ActionKey[] = [
 
 const OPENER_TIME_THRESHOLD = 10000
 const OPENER_EXCEPTIONS: ActionKey[] = [
-	'ENOCHIAN',
 	'TRIPLECAST',
 ]
 
