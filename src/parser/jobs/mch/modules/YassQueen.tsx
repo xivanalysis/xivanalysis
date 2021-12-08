@@ -18,8 +18,9 @@ import {Gauge} from './Gauge'
 
 const QUEEN_WEAPONSKILLS: ActionKey[] = [
 	'ARM_PUNCH',
-	'PILE_BUNKER',
 	'ROLLER_DASH',
+	'PILE_BUNKER',
+	'CROWNED_COLLIDER',
 ]
 
 // Duration = Battery/5 seconds <=> Battery*200 milliseconds
@@ -120,22 +121,22 @@ export class YassQueen extends Analyser {
 	private onComplete() {
 		this.summons.forEach(q => this.debug(q))
 
-		const missedPileBunkers = this.summons
-			.filter(queen => _.last(queen.rotation)?.action !== this.data.actions.PILE_BUNKER.id)
+		const missedColliders = this.summons
+			.filter(queen => _.last(queen.rotation)?.action !== this.data.actions.CROWNED_COLLIDER.id)
 			.length
 
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.AUTOMATON_QUEEN.icon,
-			content: <Trans id="mch.queen.suggestions.missing-bunker.content">
-				Try to time your <ActionLink action="AUTOMATON_QUEEN"/> windows so that they end while the boss is targetable, as Pile Bunker is a significant chunk of its damage. If the boss is about to jump or die, use <ActionLink action="QUEEN_OVERDRIVE"/> to end it early and get the hit in.
+			content: <Trans id="mch.queen.suggestions.missing-collider.content">
+				Try to time your <ActionLink action="AUTOMATON_QUEEN"/> windows so that they end while the boss is targetable, as Crowned Collider is a significant chunk of its damage. If the boss is about to jump or die, use <ActionLink action="QUEEN_OVERDRIVE"/> to end the window early and get the hit in.
 			</Trans>,
 			tiers: {
 				1: SEVERITY.MEDIUM,
 				3: SEVERITY.MAJOR,
 			},
-			value: missedPileBunkers,
-			why: <Trans id="mch.queen.suggestions.missing-bunker.why">
-				{missedPileBunkers} of your Automaton Queen windows ended without a Pile Bunker.
+			value: missedColliders,
+			why: <Trans id="mch.queen.suggestions.missing-collider.why">
+				{missedColliders} of your Automaton Queen windows ended without a Crowned Collider.
 			</Trans>,
 		}))
 	}
