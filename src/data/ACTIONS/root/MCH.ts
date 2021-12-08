@@ -162,7 +162,6 @@ export const MCH = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003046.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		gcdRecast: 2500,
 		breaksCombo: true,
 	},
 
