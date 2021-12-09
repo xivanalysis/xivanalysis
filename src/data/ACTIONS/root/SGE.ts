@@ -82,7 +82,8 @@ export const SGE = ensureActions({
 		id: 24310,
 		name: 'Holos',
 		icon: 'https://xivapi.com/i/003000/003678.png',
-		cooldown: 60000,
+		cooldown: 120000,
+		statusesApplied: ['HOLOS'],
 	},
 	PEPSIS: {
 		id: 24301,

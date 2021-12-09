@@ -136,4 +136,10 @@ export const SGE = ensureStatuses({
 		icon: 'https://xivapi.com/i/012000/012969.png',
 		duration: 20000,
 	},
+	HOLOS: {
+		id: 3003,
+		name: 'Holos',
+		icon: 'https://xivapi.com/i/012000/012971.png',
+		duration: 20000,
+	},
 })
