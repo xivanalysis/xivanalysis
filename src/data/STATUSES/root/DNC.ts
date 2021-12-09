@@ -2,34 +2,34 @@ import {ensureStatuses} from '../type'
 
 export const DNC = ensureStatuses({
 	FLOURISHING_SYMMETRY: {
-		id: 1814, // Needs new ID
+		id: 2963,
 		name: 'Flourishing Symmetry',
-		icon: 'https://xivapi.com/i/013000/013701.png', // Needs new icon
+		icon: 'https://xivapi.com/i/013000/013718.png',
 		duration: 30000,
 	},
 	FLOURISHING_FLOW: {
-		id: 1815, // Needs new ID
+		id: 2694,
 		name: 'Flourishing Flow',
-		icon: 'https://xivapi.com/i/013000/013702.png', // Needs new icon
+		icon: 'https://xivapi.com/i/013000/013719.png',
 		duration: 30000,
 	},
 	THREEFOLD_FAN_DANCE: {
-		id: 1820, // Probably needs new ID
+		id: 1820,
 		name: 'Threefold Fan Dance',
-		icon: 'https://xivapi.com/i/013000/013707.png', // Check icon
+		icon: 'https://xivapi.com/i/013000/013707.png',
 		duration: 30000,
 	},
 	FOURFOLD_FAN_DANCE: {
-		id: 1817, // Needs new ID
+		id: 2699,
 		name: 'Fourfold Fan Dance',
-		icon: 'https://xivapi.com/i/013000/013704.png', // Needs new icon
+		icon: 'https://xivapi.com/i/013000/013723.png',
 		duration: 30000,
 	},
 	FLOURISHING_STARFALL: {
-		id: 181718171817, // Needs real ID
+		id: 2700,
 		name: 'Flourishing Starfall',
-		icon: 'https://xivapi.com/i/013000/013704.png', // Needs real icon
-		duration: 30000,
+		icon: 'https://xivapi.com/i/013000/013724.png',
+		duration: 20000,
 	},
 	STANDARD_STEP: {
 		id: 1818,
@@ -56,9 +56,9 @@ export const DNC = ensureStatuses({
 		duration: 20000,
 	},
 	FLOURISHING_FINISH: {
-		id: 182218221822, // Needs real ID
+		id: 2698,
 		name: 'Flourishing Finish',
-		icon: 'https://xivapi.com/i/013000/013709.png', // Needs real icon
+		icon: 'https://xivapi.com/i/013000/013722.png',
 		duration: 30000,
 	},
 	CLOSED_POSITION: {
@@ -83,28 +83,28 @@ export const DNC = ensureStatuses({
 		icon: 'https://xivapi.com/i/013000/013715.png',
 		duration: 15000,
 	},
-	IMPROVISATION: { // Was this replaced by Rising Rhythm or is it adjacent to it?
+	IMPROVISATION: {
 		id: 1827,
 		name: 'Improvisation',
 		icon: 'https://xivapi.com/i/013000/013716.png',
 		duration: 15000,
 	},
 	RISING_RHYTHM: {
-		id: 182718271827, // Needs real ID
+		id: 2696,
 		name: 'Rising Rhythm',
-		icon: 'https://xivapi.com/i/013000/013716.png', // Needs real icon
+		icon: '	https://xivapi.com/i/017000/017350.png',
 		duration: 15000,
 	},
-	IMPROVISATION_HEALING: { // Does this still exist? Converted to the HoT?
-		id: 1828,
+	IMPROVISATION_REGEN: {
+		id: 2695,
 		name: 'Improvisation',
-		icon: 'https://xivapi.com/i/013000/013717.png',
+		icon: 'https://xivapi.com/i/013000/013720.png',
 		duration: 15000,
 	},
-	IMPROVISED_FINISH: { // The barrier from improvised finish
-		id: 18281828, // Need real ID
-		name: 'Improvised Finish', // Confirm name
-		icon: 'https://xivapi.com/i/013000/013717.png', // Need icon
+	IMPROVISED_FINISH: {
+		id: 2697,
+		name: 'Improvised Finish',
+		icon: 'https://xivapi.com/i/013000/013721.png',
 		duration: 30000,
 	},
 	ESPRIT: { // The Esprit buff sourced from Standard Finish, applies to the DNC and their Dance Partner
