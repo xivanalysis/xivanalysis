@@ -1,8 +1,6 @@
 import {Attribute} from 'event'
 import {ensureActions} from '../type'
 
-const SGE_STUB = 190705000
-
 export const SGE = ensureActions({
 	/** Single-Target Heals/Shields */
 	DIAGNOSIS: {

@@ -1,7 +1,5 @@
 import {ensureStatuses} from '../type'
 
-const SGE_STUB = 190705000
-
 export const SGE = ensureStatuses({
 	EUKRASIA: {
 		id: 2606,
