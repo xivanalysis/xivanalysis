@@ -20,7 +20,7 @@ export const SGE = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003659.png',
 		onGcd: true,
 		gcdRecast: 1500,
-		mpCost: 1000,
+		mpCost: 900,
 		statusesApplied: ['EUKRASIAN_DIAGNOSIS', 'DIFFERENTIAL_DIAGNOSIS'],
 	},
 	HAIMA: {
@@ -48,7 +48,7 @@ export const SGE = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 2000,
-		mpCost: 1000,
+		mpCost: 800,
 	},
 	EUKRASIAN_PROGNOSIS: {
 		id: 24292,
@@ -56,7 +56,7 @@ export const SGE = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003660.png',
 		onGcd: true,
 		gcdRecast: 1500,
-		mpCost: 1100,
+		mpCost: 900,
 		statusesApplied: ['EUKRASIAN_PROGNOSIS'],
 	},
 	PANHAIMA: {
@@ -77,6 +77,7 @@ export const SGE = ensureActions({
 		id: 24302,
 		name: 'Physis II',
 		icon: 'https://xivapi.com/i/003000/003670.png',
+		cooldown: 60000,
 		statusesApplied: ['PHYSIS_II', 'AUTOPHYSIS'],
 	},
 	HOLOS: {
@@ -298,7 +299,7 @@ export const SGE = ensureActions({
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 1500,
 		cooldown: 120000,
-		mpCost: 600,
+		mpCost: 700,
 		statusesApplied: ['PNEUMA'],
 	},
 })

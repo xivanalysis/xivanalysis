@@ -24,11 +24,13 @@ export const SGE = ensureStatuses({
 		id: 2612,
 		name: 'Haima',
 		icon: 'https://xivapi.com/i/012000/012958.png',
+		duration: 15000,
 	},
 	HAIMATINON: {
 		id: 2642,
 		name: 'Haimatinon',
 		icon: 'https://xivapi.com/i/017000/017585.png',
+		duration: 15000,
 	},
 	EUKRASIAN_PROGNOSIS: {
 		id: 2609,
@@ -40,16 +42,19 @@ export const SGE = ensureStatuses({
 		id: 2613,
 		name: 'Panhaima',
 		icon: 'https://xivapi.com/i/012000/012959.png',
+		duration: 15000,
 	},
 	PANHAIMATINON: {
 		id: 2643,
 		name: 'Panhaimatinon',
 		icon: 'https://xivapi.com/i/017000/017355.png',
+		duration: 15000,
 	},
 	PHYSIS: {
 		id: 2617,
 		name: 'Physis',
 		icon: 'https://xivapi.com/i/012000/012963.png',
+		duration: 15000,
 	},
 	PHYSIS_II: {
 		id: 2620,
@@ -61,6 +66,7 @@ export const SGE = ensureStatuses({
 		id: 2621,
 		name: 'Autophysis',
 		icon: 'https://xivapi.com/i/012000/012967.png',
+		duration: 10000,
 	},
 	KARDIA: {
 		id: 2604,
@@ -76,6 +82,7 @@ export const SGE = ensureStatuses({
 		id: 2610,
 		name: 'Soteria',
 		icon: 'https://xivapi.com/i/012000/012956.png',
+		duration: 15000,
 	},
 	ZOE: {
 		id: 2611,
