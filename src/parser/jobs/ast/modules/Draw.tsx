@@ -15,10 +15,8 @@ import React from 'react'
 import {ARCANA_STATUSES, PLAY} from './ArcanaGroups'
 import ArcanaTracking from './ArcanaTracking/ArcanaTracking'
 
-// TODO: THINGS TO TRACK:
-// Track them using Draw when they still have a minor arcana (oopsie) or a card in the spread
+const oGCD_ALLOWANCE = 7500 //used in case the last draw comes up in the last second of the fight. Since plays are typically done in a separate weave, a full GCD would be needed to play the card. Takes another second to cast PLAY and therefore an AST would not DRAW if they couldn't even PLAY. Additionally, an AST would not play if not even a GCD could be cast before the end of the fight. Therefore, the oGCD_ALLOWANCE should be approcimately 3 GCDs (2 for AST to cast, 1 for job to do an action) = 3 * 2500
 
-const oGCD_ALLOWANCE = 2000 //used in case the last draw comes up in the last second of the fight. takes another second to cast PLAY and therefore an AST would not DRAW if they couldn't even PLAY
 const WARN_TARGET_MAXPLAYS = 2
 const FAIL_TARGET_MAXPLAYS = 3
 
