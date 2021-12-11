@@ -94,46 +94,49 @@ export default class AmmoCombo extends Analyser {
 
 		const action = this.data.getAction(event.action)
 
-		// If ain't a combo or a breaker IDGAF
-		if (!this.COMBO_ACTIONS.includes(action)  || (!this.COMBO_BREAKERS.includes(action))) {
-			return
-		}
+		if (action) { //If it ain't defined I don't want it
 
-		let lastGnashingCombo = this.lastGnashingCombo
+			// If ain't a combo or a breaker IDGAF
+			if (!this.COMBO_ACTIONS.includes(action.id)  || (!this.COMBO_BREAKERS.includes(action.id))) {
+				return
+			}
 
-		this.debug(`Checking if action ${action?.name} (${action}) is a Gnashing Fang action`)
+			let lastGnashingCombo = this.lastGnashingCombo
 
-		if (action === this.data.actions.GNASHING_FANG.id) {
+			this.debug(`Checking if action ${action?.name} (${action}) is a Gnashing Fang action`)
 
-			this.debug(`Action ${action?.name} (${action}) is a Gnashing Fang action`)
+			if (action === this.data.actions.GNASHING_FANG) {
 
-			if (lastGnashingCombo != null && lastGnashingCombo.endTime == null) { // They dropped the combo via timeout
+				this.debug(`Action ${action?.name} (${action}) is a Gnashing Fang action`)
+
+				if (lastGnashingCombo != null && lastGnashingCombo.endTime == null) { // They dropped the combo via timeout
+					this.onEndGnashingCombo(event)
+				}
+
+				const gnashingComboState = new GnashingComboState(event.timestamp)
+				this.gnashingComboWindows.push(gnashingComboState)
+			}
+
+			if (this.COMBO_BREAKERS.includes(action.id)) {
+
 				this.onEndGnashingCombo(event)
 			}
 
-			const gnashingComboState = new GnashingComboState(event.timestamp)
-			this.gnashingComboWindows.push(gnashingComboState)
-		}
+			// If the action is a gnashingCombo one, log it
 
-		if (this.COMBO_BREAKERS.includes(action)) {
+			lastGnashingCombo = this.lastGnashingCombo
 
-			this.onEndGnashingCombo(event)
-		}
+			if (lastGnashingCombo != null && lastGnashingCombo.endTime == null) {
 
-		// If the action is a gnashingCombo one, log it
+				if (this.COMBO_ACTIONS.includes(action.id)) {
+					lastGnashingCombo.rotation.push(event)
 
-		lastGnashingCombo = this.lastGnashingCombo
-
-		if (lastGnashingCombo != null && lastGnashingCombo.endTime == null) {
-
-			if (this.COMBO_ACTIONS.includes(action)) {
-				lastGnashingCombo.rotation.push(event)
-
-				if (action === this.data.actions.EYE_GOUGE.id) {
-					this.onEndGnashingCombo(event)
+					if (action === this.data.actions.EYE_GOUGE) {
+						this.onEndGnashingCombo(event)
+					}
 				}
-			}
 
+			}
 		}
 	}
 
