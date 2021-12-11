@@ -2,6 +2,7 @@ import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
 import {DataLink} from 'components/ui/DbLink'
 import TransMarkdown from 'components/ui/TransMarkdown'
+import CONTRIBUTORS, {ROLES} from 'data/CONTRIBUTORS'
 import {Meta} from 'parser/core/Meta'
 import React from 'react'
 import {Icon, Message} from 'semantic-ui-react'
@@ -31,13 +32,23 @@ export const ASTROLOGIAN = new Meta({
 	// 	to: '6.0',
 	// },
 	contributors: [
-		// {user: CONTRIBUTORS.YOU, role: ROLES.DEVELOPER},
+		{user: CONTRIBUTORS.OTOCEPHALY, role: ROLES.DEVELOPER},
 	],
 	changelog: [
-		// {
-		// 	date: new Date('2021-11-19'),
-		// 	Changes: () => <>The changes you made</>,
-		// 	contrubutors: [CONTRIBUTORS.YOU],
-		// },
+		{
+			date: new Date('2021-12-03'),
+			Changes: () => <>
+				<strong>Endwalker Preparation</strong>
+				<ul>
+					<li> Deleted Sect and Sleeve Draw references.</li>
+					<li> Updated actions and statuses from Astrologians.</li>
+					<li> Updated arcana tracking to exclude <DataLink action="DIVINATION" /> and <DataLink action="CROWN_PLAY" /></li>
+					<li> Updated overheal to include name changes of some healing actions.</li>
+					<li> Some minor wording changes including replacing <DataLink action="DIVINATION" /> with <DataLink action="ASTRODYNE" /> where appropriate.</li>
+					<li> Added myself as contributor.</li>
+				</ul>
+			</>,
+			contributors: [CONTRIBUTORS.OTOCEPHALY],
+		},
 	],
 })
