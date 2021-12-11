@@ -1,9 +1,8 @@
 import {Trans} from '@lingui/react'
 import {DataLink} from 'components/ui/DbLink'
-import {Status} from 'data/STATUSES'
 import {Event, Events} from 'event'
 import {Analyser} from 'parser/core/Analyser'
-import {filter, oneOf} from 'parser/core/filter'
+import {filter} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
 import {Data} from 'parser/core/modules/Data'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
@@ -26,8 +25,6 @@ export default class CelestialOpposition extends Analyser {
 	private uses: number = 0
 	private totalHeld: number = 0
 
-	private activeSect: Status['id'] | undefined = undefined
-
 	override initialise() {
 		this.addEventHook(filter<Event>()
 			.source(this.parser.actor.id)
@@ -35,11 +32,6 @@ export default class CelestialOpposition extends Analyser {
 			.action(this.data.actions.CELESTIAL_OPPOSITION.id),
 		this.onCast)
 
-		this.addEventHook(filter<Event>()
-			.source(this.parser.actor.id)
-			.type('statusApply')
-			.status(oneOf([this.data.statuses.NOCTURNAL_OPPOSITION.id, this.data.statuses.DIURNAL_OPPOSITION.id])),
-		this.onSect)
 		this.addEventHook('complete', this.onComplete)
 	}
 
@@ -55,10 +47,6 @@ export default class CelestialOpposition extends Analyser {
 		this.lastUse = event.timestamp
 	}
 
-	private onSect(event: Events['statusApply']) {
-		this.activeSect = event.status
-	}
-
 	onComplete() {
 		const holdDuration = this.uses === 0 ? this.parser.pull.duration : this.totalHeld
 		const missedUses = Math.floor(holdDuration / (this.data.actions.CELESTIAL_OPPOSITION.cooldown))
@@ -70,16 +58,11 @@ export default class CelestialOpposition extends Analyser {
 			[maxUses * SEVERITY_MOD.MEDIUM]: SEVERITY.MEDIUM,
 			[maxUses * SEVERITY_MOD.MAJOR]: SEVERITY.MAJOR, // if not used at all, it'll be set to 100 for severity checking
 		}
-		const suggestContentDiurnal = <Trans id="ast.celestial-opposition.suggestion.content.diurnal">
-				Use <DataLink action="CELESTIAL_OPPOSITION" /> more frequently. In <DataLink status="DIURNAL_SECT" />, the heal and regen combined add up to the same potency of a <DataLink action="BENEFIC_II" /> on each player it reaches.
+		const content = <Trans id="ast.celestial-opposition.suggestion.content">
+				Consider using <DataLink action="CELESTIAL_OPPOSITION" /> more frequently.
+				The heal and regen combined add up to the same potency of a <DataLink action="BENEFIC_II" /> on each player it reaches.
 				Trusting the regens to top off the party HP will save MP and GCDs on healing.
 		</Trans>
-		const suggestContentNoct = <Trans id="ast.celestial-opposition.suggestion.content.noct">
-				Use <DataLink action="CELESTIAL_OPPOSITION" /> more frequently. In <DataLink status="NOCTURNAL_SECT" />, the shield is the same potency as from <DataLink action="ASPECTED_HELIOS" />,
-				so it can save MP and GCDs casting it. Since shields last 30 seconds it can be cast much earlier than incoming damage and allow the cooldown to refresh sooner.
-		</Trans>
-
-		const content = this.activeSect != null && this.activeSect === this.data.statuses.NOCTURNAL_OPPOSITION.id ? suggestContentNoct : suggestContentDiurnal
 
 		if (missedUses > 1 || this.uses === 0) {
 			this.suggestions.add(new TieredSuggestion({
