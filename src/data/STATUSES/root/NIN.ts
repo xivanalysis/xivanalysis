@@ -50,6 +50,13 @@ export const NIN = ensureStatuses({
 		duration: 20000,
 	},
 
+	MEISUI: {
+		id: 2689,
+		name: 'Meisui',
+		icon: 'https://xivapi.com/i/012000/012914.png',
+		duration: 30000,
+	},
+
 	FORKED_RAIJU_READY: {
 		id: 2690,
 		name: 'Forked Raiju Ready',
@@ -64,10 +71,10 @@ export const NIN = ensureStatuses({
 		duration: 15000,
 	},
 
-	MEISUI: {
-		id: 2689,
+	PHANTOM_KAMAITACHI_READY: {
+		id: 2723,
 		name: 'Meisui',
-		icon: 'https://xivapi.com/i/012000/012914.png',
+		icon: 'https://xivapi.com/i/012000/012917.png',
 		duration: 30000,
 	},
 })
