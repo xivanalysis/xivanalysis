@@ -442,6 +442,8 @@
   "gnb.ammo.leftover-ammo.why": "Il vous restait {0, plural,one {# cartouche}other {# cartouches}} à la fin du combat.",
   "gnb.ammo.title": "Chronologie des cartouches",
   "gnb.ammo.waste.content": "",
+  "gnb.continuation.checklist.description": "",
+  "gnb.continuation.checklist.requirement.continuation.name": "",
   "gnb.gauge.resource.ammoLabel": "",
   "gnb.nomercy.chart.notes.no": "Non",
   "gnb.nomercy.chart.notes.yes": "Oui",

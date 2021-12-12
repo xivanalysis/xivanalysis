@@ -442,6 +442,8 @@
   "gnb.ammo.leftover-ammo.why": "戦闘終了時にソイルが{0,plural,other{#つ}}残っていました。",
   "gnb.ammo.title": "ソイル装弾タイムライン",
   "gnb.ammo.waste.content": "ソイルを溢れさせてしまったり、ソイルを残したまま死亡したり戦闘を終えてしまったりしてソイルを失ってしまうなどの行動は直接的な威力の損失に繋がってしまいます。ソイルを無駄にしないように<0/>を(敵が2体以上いる場合<1/>を) 使用しましょう。",
+  "gnb.continuation.checklist.description": "",
+  "gnb.continuation.checklist.requirement.continuation.name": "",
   "gnb.gauge.resource.ammoLabel": "",
   "gnb.nomercy.chart.notes.no": "いいえ",
   "gnb.nomercy.chart.notes.yes": "はい",
