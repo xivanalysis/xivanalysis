@@ -1,5 +1,6 @@
 import {t} from '@lingui/macro'
 import TransMarkdown from 'components/ui/TransMarkdown'
+import CONTRIBUTORS, {ROLES} from 'data/CONTRIBUTORS'
 import {Meta} from 'parser/core/Meta'
 import React from 'react'
 import {changelog} from './changelog'
@@ -25,8 +26,24 @@ export const GUNBREAKER = new Meta({
 	// },
 
 	contributors: [
-		// {user: CONTRIBUTORS.YOU, role: ROLES.DEVELOPER},
+		{user: CONTRIBUTORS.RYAN, role: ROLES.DEVELOPER},
 	],
 
-	changelog,
+	changelog: [
+		// {
+		// 	date: new Date('2020-04-20'),
+		// 	Changes: () => <>The changes you made</>,
+		// 	contrubutors: [CONTRIBUTORS.YOU],
+		// },
+		{
+			date: new Date('2021-12-11'),
+			Changes: () => <>
+				<ul>
+					<li>GNB updated to include 6.0 Actions/Statues on timeline.</li>
+					<li>Cooldown adjusted to include Double Down / New Opener.</li>
+				</ul>,
+			</>,
+			contributors: [CONTRIBUTORS.RYAN],
+		},
+	],
 })
