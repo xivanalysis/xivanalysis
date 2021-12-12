@@ -45,6 +45,12 @@ export const GNB = ensureStatuses({
 		icon: 'https://xivapi.com/i/013000/013613.png',
 		duration: 10000,
 	},
+	READY_TO_BLAST: {
+		id: 2686,
+		name: 'Ready to Blast',
+		icon: 'https://xivapi.com/i/013000/013618_hr1.png',
+		duration: 10000,
+	},
 	AURORA: {
 		id: 1835,
 		name: 'Aurora',
@@ -64,10 +70,16 @@ export const GNB = ensureStatuses({
 		duration: 15000,
 	},
 	HEART_OF_CORUNDUM: {
-		id: fakeId,
+		id: 2683,
 		name: 'Heart of Corundum',
-		icon: '',
+		icon: 'https://xivapi.com/i/013000/013615_hr1.png',
 		duration: 15000,
+	},
+	CATHARSIS_OF_CORUNDUM: {
+		id: 2685,
+		name: 'Catharsis of Corundum',
+		icon: 'https://xivapi.com/i/013000/013617_hr1.png',
+		duration: 4000,
 	},
 	CAMOUFLAGE: {
 		id: 1832,
