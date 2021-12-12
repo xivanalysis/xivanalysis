@@ -1,21 +1,22 @@
 import {CooldownDowntime} from 'parser/core/modules/CooldownDowntime'
 
 /*
-*Current offsets are based off: 5.21 openers
+*Current offsets are based off: 6.0 Opener (https://media.discordapp.net/attachments/879555876648812554/919201930583109632/123NMGF.jpg?width=1193&height=671)
 *All values are seperate in case the current ones fall out of favor in the future
 */
 
-const FIRST_USE_OFFSET_NO_MERCY = 2500 // Current openers have no mercy be pre-pull or first GCD
+const FIRST_USE_OFFSET_NO_MERCY = 7500 // Current opener has No mercy as 3after 3rd ogcd slot
 
-const FIRST_USE_OFFSET_BLOODFEST = 2500 // Current Openers have bloodfest by after the first GCD
+const FIRST_USE_OFFSET_BLOODFEST = 10000 // Current Opener have bloodfest by after the 4th gcd
 
-const FIRST_USE_OFFSET_PEWPEWZONE = 10000 // Current openers have Zone being used somewhere between after 2nd GCD to after 4th GCD, set to maximum
+const FIRST_USE_OFFSET_PEWPEWZONE = 12500 // Current Opener has Blasting and Bow after 5th
+const FIRST_USE_OFFSET_BOWSHOCK = 12500
 
-const FIRST_USE_OFFSET_BOWSHOCK = 10000 // Current Openers have Bowblast being used somewhere between after 2nd GCD to after 4th GCD, set to maximum
+const FIRST_USE_OFFSET_DOUBLE_DOWN = 12500 //Curent Opener has double being used as 5th GCD. *GCD Skill*
 
-const FIRST_USE_OFFSET_DIVIDE = 7500 // Current Openers have rough divide at 3rd GCD or literally on pull. set to 3rd GCD
+const FIRST_USE_OFFSET_DIVIDE = 15000 //Current Opener has rough divide set to be after 6th GCD
 
-const FIRST_USE_OFFSET_SONIC_BREAK = 12500 // Current Openers have the longest delay for Sonic break being on 5th GCD (Raid Buffer Opener)
+const FIRST_USE_OFFSET_SONIC_BREAK = 15000 //Current Opener has Sonic Break as 6th GCD *GCD Skill*
 
 export default class AbilityDowntime extends CooldownDowntime {
 
@@ -27,6 +28,10 @@ export default class AbilityDowntime extends CooldownDowntime {
 		{
 			cooldowns: [this.data.actions.BLOODFEST],
 			firstUseOffset: FIRST_USE_OFFSET_BLOODFEST,
+		},
+		{
+			cooldowns: [this.data.actions.DOUBLE_DOWN],
+			firstUseOffset: FIRST_USE_OFFSET_DOUBLE_DOWN,
 		},
 		{
 			cooldowns: [this.data.actions.SONIC_BREAK],

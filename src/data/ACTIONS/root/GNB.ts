@@ -1,7 +1,6 @@
 import {Attribute} from 'event'
 import {ensureActions} from '../type'
 
-const fakeId = 80085 //Anything with this ID after EW Launch needs updating
 export const GNB = ensureActions({
 	// -----
 	// Player GCDs
@@ -121,11 +120,11 @@ export const GNB = ensureActions({
 		breaksCombo: false,
 	},
 	DOUBLE_DOWN: {
-		id: fakeId,
+		id: 25760,
 		name: 'Double Down',
-		icon: '',
+		icon: 'https://xivapi.com/i/003000/003432_hr1.png',
 		onGcd: true,
-		cooldown: 6000,
+		cooldown: 60000,
 		speedAttribute: Attribute.SKILL_SPEED,
 	},
 
@@ -167,6 +166,14 @@ export const GNB = ensureActions({
 		id: 16158,
 		name: 'Eye Gouge',
 		icon: 'https://xivapi.com/i/003000/003422.png',
+		onGcd: false,
+		cooldown: 1000,
+		cooldownGroup: 1,
+	},
+	HYPERVELOCITY: {
+		id: 25759,
+		name: 'Hypervelocity',
+		icon: 'https://xivapi.com/i/003000/003431_hr1.png',
 		onGcd: false,
 		cooldown: 1000,
 		cooldownGroup: 1,
@@ -264,21 +271,13 @@ export const GNB = ensureActions({
 		cooldown: 1000,
 		cooldownGroup: 1,
 	},
-	HYPERVELOCITY: {
-		id: fakeId,
-		name: 'Hypervelocity',
-		icon: '',
-		onGcd: false,
-		cooldown: 1000,
-		cooldownGroup: 1,
-	},
 	HEART_OF_CORUNDUM: { //More like Corun Dumb!
-		id: fakeId,
+		id: 25758,
 		name: 'Heart of Corundum',
-		icon: '',
+		icon: 'https://xivapi.com/i/003000/003430_hr1.png',
 		onGcd: false,
-		cooldown: 2500,
-		statusesApplied: ['HEART_OF_CORUNDUM'],
+		cooldown: 25000,
+		statusesApplied: ['HEART_OF_CORUNDUM', 'CATHARSIS_OF_CORUNDUM'],
 	},
 
 })

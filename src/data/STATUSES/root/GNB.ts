@@ -1,7 +1,5 @@
 import {ensureStatuses} from '../type'
 
-const fakeId = 80085
-
 export const GNB = ensureStatuses({
 	SONIC_BREAK: {
 		id: 1837,

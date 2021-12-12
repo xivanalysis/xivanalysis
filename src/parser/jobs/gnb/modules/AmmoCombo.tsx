@@ -80,8 +80,8 @@ export default class AmmoCombo extends Analyser {
 	override initialise() {
 		super.initialise()
 
-		const RELEVANT_ACTIONS = [this.data.actions.JUGULAR_RIP.id, this.data.actions.ABDOMEN_TEAR.id, this.data.actions.EYE_GOUGE.id]
-		const RELEVANT_STATUSES = [this.data.statuses.READY_TO_TEAR.id, this.data.statuses.READY_TO_TEAR.id, this.data.statuses.READY_TO_GOUGE.id]
+		const RELEVANT_ACTIONS = [this.data.actions.JUGULAR_RIP.id, this.data.actions.ABDOMEN_TEAR.id, this.data.actions.EYE_GOUGE.id, this.data.actions.HYPERVELOCITY.id]
+		const RELEVANT_STATUSES = [this.data.statuses.READY_TO_TEAR.id, this.data.statuses.READY_TO_RIP.id, this.data.statuses.READY_TO_GOUGE.id, this.data.statuses.READY_TO_BLAST.id]
 
 		const playerFilter = filter<Event>().source(this.parser.actor.id)
 

@@ -1,17 +1,19 @@
 import {ActionTimeline} from './ActionTimeline'
 import {Ammo} from './Ammo'
+import AmmoCombo from './AmmoCombo'
 import {AoE} from './AoE'
 import {Combos} from './Combos'
+import AbilityDowntime from './Cooldowns'
 import NoMercy from './NoMercy'
-import OGCDDowntime from './OGCDDowntime'
 import Tincture from './Tincture'
 
 export default [
+	AbilityDowntime,
 	ActionTimeline,
 	Ammo,
+	AmmoCombo,
 	AoE,
 	Combos,
 	NoMercy,
-	OGCDDowntime,
 	Tincture,
 ]
