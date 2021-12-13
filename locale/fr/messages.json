@@ -109,7 +109,6 @@
   "blm.thunder.checklist.dots.name": "Gardez votre <0/> DoT appliqué",
   "blm.thunder.checklist.dots.requirement.name": "Temps total d'application de <0/>",
   "blm.thunder.clip": "Clip",
-  "blm.thunder.clip-disclaimer": "En raison de la nature des <0/> procs, vous vous retrouverez dans des situations où vous utiliserez votre <1/> proc avant qu'il ne soit épuisé, alors que votre <2/> est encore en train d'être actif sur votre ennemi. Tout au plus, cela pourrait théoriquement conduire à un rafraîchissement du <3/> avec un maximum de ~6 secondes d'avance à chaque rafraîchissement. Comme cette quantité de clipping est toujours considérée comme optimale, nous quantifions et appelons cela la durée maximale de clipping.",
   "blm.thunder.source": "Source",
   "blm.thunder.suggestions.excess-thunder.content": "Lancer le sort <0/> trop fréquemment vous fait perdre du DPS car vous lancez moins de <1/>. Essayer de ne pas caster <2/> à moins que <3/> DoT ou votre proc de <4/> soient sur le point de disparaître. Controlez les modules <5><6/></5> pour plus d'information.",
   "blm.thunder.suggestions.excess-thunder.why": "L'utilisation total du DoT a dépassé la durée maximale d'utilisation de {0} par {1}.",
