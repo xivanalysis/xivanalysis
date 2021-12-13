@@ -11,6 +11,7 @@ import {SimpleStatistic, Statistics} from 'parser/core/modules/Statistics'
 import Suggestions, {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import {StatusItem} from 'parser/core/modules/Timeline'
 import React from 'react'
+import {Gauge} from './Gauge'
 import Procs from './Procs'
 
 const SHARPCAST_CONSUMERS: ActionKey[] = [
@@ -18,6 +19,7 @@ const SHARPCAST_CONSUMERS: ActionKey[] = [
 	'THUNDER_III',
 	'THUNDER_IV',
 	'SCATHE',
+	'PARADOX',
 ]
 
 interface SharpcastWindow {
@@ -38,6 +40,7 @@ export class Sharpcast extends Analyser {
 	@dependency private procs!: Procs
 	@dependency private statistics!: Statistics
 	@dependency private suggestions!: Suggestions
+	@dependency private gauge!: Gauge
 
 	private buffWindows: SharpcastTracker = {
 		history: [],
@@ -54,7 +57,7 @@ export class Sharpcast extends Analyser {
 		const sharpcastFilter = playerFilter.status(this.data.statuses.SHARPCAST.id)
 		this.addEventHook(sharpcastFilter.type('statusRemove'), this.onRemoveSharpcast)
 		this.addEventHook(sharpcastFilter.type('statusApply'), this.onGainSharpcast)
-		this.addEventHook(playerFilter.type('action').action(oneOf(this.sharpcastConsumerIds)), this.onCast)
+		this.addEventHook(playerFilter.type('action').action(oneOf(this.sharpcastConsumerIds)), this.tryConsumeSharpcast)
 		this.addEventHook({
 			type: 'death',
 			actor: this.parser.actor.id,
@@ -86,8 +89,8 @@ export class Sharpcast extends Analyser {
 	private tryConsumeSharpcast(event: Events['action']) {
 		const actionId = event.action
 
-		// If this action isn't affected by a proc (or something is wrong), bail out
-		if (!this.sharpcastConsumerIds.includes(actionId)) {
+		// Paradox doesn't produce a Firestarter proc if not in Astral Fire
+		if (actionId === this.data.actions.PARADOX && this.gauge.getGaugeState(event.timestamp).astralFire <= 0) {
 			return
 		}
 
