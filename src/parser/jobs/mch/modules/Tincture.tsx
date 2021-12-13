@@ -2,10 +2,8 @@ import {Trans} from '@lingui/react'
 import {DataLink} from 'components/ui/DbLink'
 import {Event, Events} from 'event'
 import {filter, oneOf} from 'parser/core/filter'
-import {dependency} from 'parser/core/Injectable'
 import {EvaluatedAction, ExpectedActionsEvaluator, TrackedAction, TrackedActionsOptions} from 'parser/core/modules/ActionWindow'
 import {HistoryEntry} from 'parser/core/modules/ActionWindow/History'
-import Downtime from 'parser/core/modules/Downtime'
 import {SEVERITY} from 'parser/core/modules/Suggestions'
 import {Tincture as CoreTincture} from 'parser/core/modules/Tincture'
 import React from 'react'
@@ -37,9 +35,7 @@ class ReassembleEvaluator extends ExpectedActionsEvaluator {
 	}
 }
 
-export default class Tincture extends CoreTincture {
-	@dependency private downtime!: Downtime
-
+export class Tincture extends CoreTincture {
 	private reassembledRemoves: number[] = []
 
 	override initialise() {
@@ -67,12 +63,16 @@ export default class Tincture extends CoreTincture {
 					expectedPerWindow: 1,
 				},
 				{
-					action: this.data.actions.PILE_BUNKER,
+					action: this.data.actions.CROWNED_COLLIDER,
 					expectedPerWindow: 1,
 				},
 				{
 					action: this.data.actions.DRILL,
 					expectedPerWindow: 2,
+				},
+				{
+					action: this.data.actions.CHAIN_SAW,
+					expectedPerWindow: 1,
 				},
 			],
 			suggestionIcon: this.data.actions.INFUSION_DEX.icon,
