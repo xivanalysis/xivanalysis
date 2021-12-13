@@ -27,4 +27,9 @@ export const changelog = [
 		Changes: () => <>Update cooldown tracking checklist to include Amplifier and Sharpcast, drop separate Sharpcast usage statistic, and add handling for Paradox consuming Sharpcast while in Astral Fire.</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],
 	},
+	{
+		date: new Date('2021-12-12'),
+		Changes: () => <>Handle Paradox being instant-cast in Umbral Ice.</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
 ]

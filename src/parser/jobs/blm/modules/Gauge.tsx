@@ -90,6 +90,7 @@ export class Gauge extends CoreGauge {
 	private affectsGaugeOnDamage = AFFECTS_GAUGE_ON_DAMAGE.map(key => this.data.actions[key].id)
 
 	private castTimeIndex: number | null = null
+	private paradoxInstantIndex: number | null = null
 
 	/** Astral Fire */
 	private astralFireGauge = this.add(new CounterGauge({
@@ -336,6 +337,16 @@ export class Gauge extends CoreGauge {
 		if (this.astralFireGauge.value !== ASTRAL_UMBRAL_MAX_STACKS && this.umbralIceGauge.value !== ASTRAL_UMBRAL_MAX_STACKS) {
 			this.castTime.reset(this.castTimeIndex)
 			this.castTimeIndex = null
+		}
+
+		// If we're in Umbral Ice, Paradox is always instant
+		if (!this.umbralIceGauge.empty && this.paradoxInstantIndex == null) {
+			this.paradoxInstantIndex = this.castTime.setInstantCastAdjustment([this.data.actions.PARADOX.id])
+		}
+		// If we're not in Umbral Ice, Paradox has a cast time
+		if (this.umbralIceGauge.empty && this.paradoxInstantIndex != null) {
+			this.castTime.reset(this.paradoxInstantIndex)
+			this.paradoxInstantIndex = null
 		}
 	}
 
