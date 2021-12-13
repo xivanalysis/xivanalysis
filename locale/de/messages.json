@@ -87,7 +87,6 @@
   "blm.thunder.checklist.dots.name": "Halte deinen <0/> DoT aufrecht",
   "blm.thunder.checklist.dots.requirement.name": "Gesamtanwendungszeit von <0/>",
   "blm.thunder.clip": "Überschrieben",
-  "blm.thunder.clip-disclaimer": "Aufgrund der Natur von <0/> procs wirst du manchmal in Situationen kommen, in denen du deinen <1/> proc benutzt während dein <2/> immer noch auf dem Gegner ist. Dies kann allerhöchstens dazu führen, dass du das erneute Auftragen von <3/> maximal ~6 Sekunden zu früh in jedem Zyklus ausführen musst. Diese Menge an Überschneidung (Clipping) ist immer noch optimal und wird maximale Clipping-Zeit genannt.",
   "blm.thunder.source": "Quelle",
   "blm.thunder.suggestions.excess-thunder.content": "<0/> zu oft zu benutzen kann zu Schadensverlust führen, da du weniger <1/> einsetzt. Nutze <2/> nur, wenn dein <3/> DoT oder <4/> Proc kurz davor sind auszulaufen. Schau in die Module <5><6/></5> für mehr Information.",
   "blm.thunder.suggestions.excess-thunder.why": "Die absolute DoT Clipping-Zeit hat die maximale von {0} bei {1} überschritten.",
