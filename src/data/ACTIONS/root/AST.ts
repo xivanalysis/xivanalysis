@@ -234,7 +234,7 @@ export const AST = ensureActions({
 		name: 'Crown Play',
 		icon: 'https://xivapi.com/i/003000/003557.png',
 		cooldown: 1000,
-		cooldownGroup: 12,
+		cooldownGroup: 13,
 	},
 
 	REDRAW: {
@@ -254,9 +254,8 @@ export const AST = ensureActions({
 		id: 7443,
 		name: 'Minor Arcana',
 		icon: 'https://xivapi.com/i/003000/003106.png',
-		cooldown: 1000,
+		cooldown: 60000,
 		statusesApplied: ['LORD_OF_CROWNS_DRAWN', 'LADY_OF_CROWNS_DRAWN'],
-		cooldownGroup: 12,
 	},
 
 	// ----
@@ -405,7 +404,7 @@ export const AST = ensureActions({
 		name: 'Lady Of Crowns',
 		icon: 'https://xivapi.com/i/003000/003146.png',
 		cooldown: 1000,
-		cooldownGroup: 12,
+		cooldownGroup: 13,
 	},
 
 	LORD_OF_CROWNS: {
@@ -413,6 +412,6 @@ export const AST = ensureActions({
 		name: 'Lord Of Crowns',
 		icon: 'https://xivapi.com/i/003000/003147.png',
 		cooldown: 1000,
-		cooldownGroup: 12,
+		cooldownGroup: 13,
 	},
 })
