@@ -47,7 +47,9 @@ export class Tincture extends CoreTincture {
 			.filter(actor => actor.owner === this.parser.actor)
 			.map(actor => actor.id)
 		this.addEventHook(
-			filter<Event>().source(oneOf(pets)).action(this.data.actions.PILE_BUNKER.id)
+			filter<Event>()
+				.source(oneOf(pets))
+				.action(oneOf([this.data.actions.PILE_BUNKER.id, this.data.actions.CROWNED_COLLIDER.id]))
 				.type('action'),
 			this.onWindowAction
 		)
