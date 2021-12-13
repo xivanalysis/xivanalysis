@@ -120,8 +120,6 @@
   "blm.rotation-watchdog.suggestions.wrong-t3.content": "천상의 화염 상태에서 효과 향상이 안된 <0/>에 마나를 낭비하지 말고 <1/>을 시전하십시오.",
   "blm.rotation-watchdog.suggestions.wrong-t3.why": "",
   "blm.rotation-watchdog.title": "이상점 딜사이클",
-  "blm.sharpcast.statistic.info": "이론상 최대 마력 각성 사용 횟수와 실제 사용 횟수를 비교합니다. 일반적으로 100% 미만 비율로 가정하지만 지나치게 낮을 경우 올바르게 사용되지 않고 있다고 분석될 수 있습니다.",
-  "blm.sharpcast.statistic.title": "마력 각성 사용처",
   "blm.sharpcast.suggestions.dropped-sharpcasts.content": "<2/> 효과를 만료시켜 <0/> 혹은 <1/> 프록을 놓쳤습니다.",
   "blm.sharpcast.suggestions.dropped-sharpcasts.why": "신속마 시전후 스킬 미사용 {0, plural, other {#회}} ",
   "blm.sharpcast.suggestions.sharpcasted-scathes.content": "<0/> 스택을 최소 1회 이상 <1/>로 낭비하엿습니다. 스택을 사용하지 않고 잃어버리는 것보다 낫지만 불필요 합니다.",

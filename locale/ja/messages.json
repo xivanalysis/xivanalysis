@@ -120,8 +120,6 @@
   "blm.rotation-watchdog.suggestions.wrong-t3.content": "アストラルファイアフェーズで<0/>をprocなしの詠唱で一回だけ使ってください。MPのコストがかかるため、それをより多くの<1/>に使用できます。",
   "blm.rotation-watchdog.suggestions.wrong-t3.why": "アストラルファイア中に<0/>が詠唱された。{extraT3s, plural, one {# extra time} other {# extra times}}",
   "blm.rotation-watchdog.title": "スキル回しエラー",
-  "blm.sharpcast.statistic.info": "一般的には、激成魔を使用した回数とその使用可能回数の比率は100%に期待されていなかった。ただし、使用率が低いになるとリキャストタイムが無駄にされる。",
-  "blm.sharpcast.statistic.title": "使った激成魔",
   "blm.sharpcast.suggestions.dropped-sharpcasts.content": "<2/>が撃ち漏らしたため、少なくとも一回の<0/>や<1/>が失いました。",
   "blm.sharpcast.suggestions.dropped-sharpcasts.why": "{0, plural, other {# 回の激成魔}}が消費していないまま期限切れた。",
   "blm.sharpcast.suggestions.sharpcasted-scathes.content": "<0/>を<1/>に消費しました。激成魔を無駄にするよりは良いのですが、それをしないようにしましょう。",

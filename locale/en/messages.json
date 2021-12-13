@@ -120,8 +120,6 @@
   "blm.rotation-watchdog.suggestions.wrong-t3.content": "Don't hard cast more than one <0/> in your Astral Fire phase, since that costs MP which could be used for more <1/>s.",
   "blm.rotation-watchdog.suggestions.wrong-t3.why": "<0/> was hard casted under Astral Fire {extraT3s, plural, one {# extra time} other {# extra times}}.",
   "blm.rotation-watchdog.title": "Rotation Outliers",
-  "blm.sharpcast.statistic.info": "The number of Sharpcasts used versus the number of possible Sharpcast uses. Less than 100% is generally expected, but especially low usage could indicate misuse of the cooldown.",
-  "blm.sharpcast.statistic.title": "Used Sharpcasts",
   "blm.sharpcast.suggestions.dropped-sharpcasts.content": "You lost at least one guaranteed <0/> or <1/> proc by allowing <2/> to fall off.",
   "blm.sharpcast.suggestions.dropped-sharpcasts.why": "{0, plural, one {# Sharpcast} other {# Sharpcasts}} expired.",
   "blm.sharpcast.suggestions.sharpcasted-scathes.content": "You consumed at least one <0/> by using <1/>. While it's better than letting the buff expire, you should try to avoid doing so.",
