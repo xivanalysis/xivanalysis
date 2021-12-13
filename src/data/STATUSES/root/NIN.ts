@@ -50,24 +50,31 @@ export const NIN = ensureStatuses({
 		duration: 20000,
 	},
 
-	FORKED_RAIJU_READY: {
-		id: 1491405,
-		name: 'Forked Raiju Ready',
-		icon: 'TODO',
+	MEISUI: {
+		id: 2689,
+		name: 'Meisui',
+		icon: 'https://xivapi.com/i/012000/012914.png',
 		duration: 30000,
 	},
 
-	FLEETING_RAIJU_READY: {
-		id: 1491406,
-		name: 'Fleeting Raiju Ready',
-		icon: 'TODO',
+	FORKED_RAIJU_READY: {
+		id: 2690,
+		name: 'Forked Raiju Ready',
+		icon: 'https://xivapi.com/i/017000/017597.png',
 		duration: 15000,
 	},
 
-	MEISUI: {
-		id: 1491407,
+	FLEETING_RAIJU_READY: {
+		id: 2691,
+		name: 'Fleeting Raiju Ready',
+		icon: 'https://xivapi.com/i/012000/012916.png',
+		duration: 15000,
+	},
+
+	PHANTOM_KAMAITACHI_READY: {
+		id: 2723,
 		name: 'Meisui',
-		icon: 'TODO',
+		icon: 'https://xivapi.com/i/012000/012917.png',
 		duration: 30000,
 	},
 })

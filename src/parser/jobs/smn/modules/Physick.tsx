@@ -2,21 +2,31 @@ import {t} from '@lingui/macro'
 import {Plural, Trans} from '@lingui/react'
 import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
-import Module, {dependency} from 'parser/core/Module'
+import {Event} from 'event'
+import {Analyser} from 'parser/core/Analyser'
+import {filter} from 'parser/core/filter'
+import {dependency} from 'parser/core/Injectable'
+import {Data} from 'parser/core/modules/Data'
 import Suggestions, {SEVERITY, Suggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
 
-export default class Physick extends Module {
+export class Physick extends Analyser {
 	static override handle = 'physick'
 	static override title = t('smn.physick.title')`Physick`
 
+	@dependency private data!: Data
 	@dependency private suggestions!: Suggestions
 
 	private phyisckCount = 0
 
-	protected override init() {
-		this.addEventHook('cast', {by: 'player', abilityId: ACTIONS.PHYSICK.id}, this.onPhysick)
-		this.addHook('complete', this.onComplete)
+	override initialise() {
+		this.addEventHook(
+			filter<Event>().source(this.parser.actor.id)
+				.action(this.data.actions.PHYSICK.id)
+				.type('action'),
+			this.onPhysick
+		)
+		this.addEventHook('complete', this.onComplete)
 	}
 
 	private onPhysick() {

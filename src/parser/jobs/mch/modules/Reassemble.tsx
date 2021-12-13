@@ -12,15 +12,16 @@ import React from 'react'
 
 // These are the only GCDs that should be reassembled under normal circumstances
 const REASSEMBLE_GCDS: ActionKey[] = [
+	'CHAIN_SAW',
 	'AIR_ANCHOR',
-	'AUTO_CROSSBOW',
 	'DRILL',
-	'SPREAD_SHOT',
+	'SCATTERGUN',
 ]
 
 const OTHER_GCDS: ActionKey[] = [
 	'BIOBLASTER',
 	'HEAT_BLAST',
+	'AUTO_CROSSBOW',
 	'HEATED_SPLIT_SHOT',
 	'HEATED_SLUG_SHOT',
 	'HEATED_CLEAN_SHOT',

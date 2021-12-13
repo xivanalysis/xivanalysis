@@ -25,10 +25,14 @@ Parser - PLD:
   - src/parser/jobs/pld/**/*
 Parser - RDM:
   - src/parser/jobs/rdm/**/*
+Parser - RPR:
+  - src/parser/jobs/rpr/**/*
 Parser - SAM:
   - src/parser/jobs/sam/**/*
 Parser - SCH:
   - src/parser/jobs/sch/**/*
+Parser - SGE:
+  - src/parser/jobs/sge/**/*
 Parser - SMN:
   - src/parser/jobs/smn/**/*
 Parser - WAR:

@@ -1,16 +1,12 @@
 import {t} from '@lingui/macro'
 import {Plural, Trans} from '@lingui/react'
-import {ActionLink, StatusLink} from 'components/ui/DbLink'
-import {RotationTable} from 'components/ui/RotationTable'
-import ACTIONS from 'data/ACTIONS'
-import STATUSES from 'data/STATUSES'
-import {BuffEvent, CastEvent} from 'fflogs'
-import _ from 'lodash'
-import Module, {dependency} from 'parser/core/Module'
-import CastTime from 'parser/core/modules/CastTime'
-import {Invulnerability} from 'parser/core/modules/Invulnerability'
-import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
-import {Timeline} from 'parser/core/modules/Timeline'
+import {DataLink} from 'components/ui/DbLink'
+import {dependency} from 'parser/core/Injectable'
+import {AllowedGcdsOnlyEvaluator, AllowedGcdsOnlyOptions, BuffWindow, calculateExpectedGcdsForTime, EvaluatedAction, ExpectedActionsEvaluator, WindowEvaluator} from 'parser/core/modules/ActionWindow'
+import {HistoryEntry} from 'parser/core/modules/ActionWindow/History'
+import Downtime from 'parser/core/modules/Downtime'
+import {GlobalCooldown} from 'parser/core/modules/GlobalCooldown'
+import {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import React, {Fragment} from 'react'
 import {Message} from 'semantic-ui-react'
 
@@ -23,223 +19,164 @@ const SEVERITIES = {
 		1: SEVERITY.MAJOR,
 	},
 }
+const EXPECTED_REQUIESCAT_CASTS = 4
+// When calculating rushing, adjust the start of the window by 1.5 seconds to allow for using Requiescat in the first weave slot
+const WINDOW_START_FORGIVENESS_FOR_RUSHING = 1500
+const REQUIESCAT_DURATION = 12000
 
-const CONSTANTS = {
-	HOLY_SPIRIT: {
-		EXPECTED: 3,
-	},
-	CONFITEOR: {
-		EXPECTED: 1,
-	},
-	TOTAL_GCDS: {
-		EXPECTED: 4,
-	},
-}
+class RequiescatUsageEvaluator implements WindowEvaluator {
+	// Because this class is not an Analyser, it cannot use Data directly to get the id or icon for Goring Blade, so require the action object in the constructor
+	private requiescatIcon: string
+	private requiescatUsages: {casts: number, buffs: number}
 
-const HOLY_SPIRIT_AND_CIRCLE_IDS = [
-	ACTIONS.HOLY_SPIRIT.id,
-	ACTIONS.HOLY_CIRCLE.id,
-]
-
-const SPELLS = [
-	ACTIONS.HOLY_SPIRIT.id,
-	ACTIONS.HOLY_CIRCLE.id,
-	ACTIONS.CONFITEOR.id,
-	ACTIONS.CLEMENCY.id,
-]
-
-class RequiescatState {
-	start: number
-	end: number | null = null
-	rotation: CastEvent[] = []
-	hasAssociatedBuff: boolean = false
-	isRushing: boolean = false
-
-	constructor(start: number) {
-		this.start = start
+	constructor (requiescatUsages: {casts: number, buffs: number}, requiescatIcon: string) {
+		this.requiescatUsages = requiescatUsages
+		this.requiescatIcon = requiescatIcon
 	}
 
-	get holySpirits(): number {
-		return this.rotation.filter(event => HOLY_SPIRIT_AND_CIRCLE_IDS.includes(event.ability.guid)).length
-	}
+	suggest() {
+		const missedRequiescatBuffs = this.requiescatUsages.casts - this.requiescatUsages.buffs
 
-	get confiteors(): number {
-		return this.rotation.filter(event => event.ability.guid === ACTIONS.CONFITEOR.id).length
-	}
-}
-
-export default class Requiescat extends Module {
-	static override handle = 'requiescat'
-	static override title = t('pld.requiescat.title')`Requiescat Usage`
-
-	@dependency private suggestions!: Suggestions
-	@dependency private timeline!: Timeline
-	@dependency private invulnerability!: Invulnerability
-	@dependency private castTime!: CastTime
-
-	// Requiescat Casts
-	private requiescats: RequiescatState[] = []
-	// Track currently active cast time adjustment for when Requiescat is active
-	private castTimeIndex: number | null = null
-
-	private get lastRequiescat(): RequiescatState | undefined {
-		return _.last(this.requiescats)
-	}
-
-	protected override init() {
-		this.addEventHook('cast', {by: 'player'}, this.onCast)
-		this.addEventHook(
-			'applybuff',
-			{by: 'player', abilityId: STATUSES.REQUIESCAT.id},
-			this.onApplyRequiescat,
-		)
-		this.addEventHook(
-			'removebuff',
-			{by: 'player', abilityId: STATUSES.REQUIESCAT.id},
-			this.onRemoveRequiescat,
-		)
-		this.addEventHook('complete', this.onComplete)
-	}
-
-	private onCast(event: CastEvent) {
-		const actionId = event.ability.guid
-
-		if (actionId === ACTIONS.ATTACK.id) {
-			return
-		}
-
-		if (actionId === ACTIONS.REQUIESCAT.id) {
-			// Add new cast to the list
-			const reqState = new RequiescatState(event.timestamp)
-			const reqEnd = event.timestamp + STATUSES.REQUIESCAT.duration
-
-			if (reqEnd >= this.parser.fight.end_time) {
-				// If the requiescat overshoots the end of the fight, we know ahead of time it'll be a rush
-				reqState.isRushing = true
-			} else {
-				// Otherwise, wait for the expected end time and check invuln status
-				this.addTimestampHook(reqEnd, ({timestamp}) => {
-					const epochTimestamp = this.parser.fflogsToEpoch(timestamp)
-					reqState.isRushing = false
-						|| this.invulnerability.isActive({timestamp: epochTimestamp, types: ['invulnerable']})
-						|| this.invulnerability.isActive({timestamp: epochTimestamp, types: ['untargetable']})
-				})
-			}
-
-			this.requiescats.push(reqState)
-		}
-
-		const lastRequiescat = this.lastRequiescat
-
-		// If we're still in the considered window, log our actions to it
-		if (lastRequiescat != null && lastRequiescat.end == null) {
-			lastRequiescat.rotation.push(event)
-		}
-	}
-
-	private onApplyRequiescat() {
-		this.castTimeIndex = this.castTime.setInstantCastAdjustment(SPELLS)
-
-		const lastRequiescat = this.lastRequiescat
-
-		if (lastRequiescat != null) {
-			lastRequiescat.hasAssociatedBuff = true
-		}
-	}
-
-	private onRemoveRequiescat(event: BuffEvent) {
-		if (this.castTimeIndex != null) {
-			this.castTime.reset(this.castTimeIndex)
-			this.castTimeIndex = null
-		}
-
-		const lastRequiescat = this.lastRequiescat
-
-		if (lastRequiescat != null) {
-			lastRequiescat.end = event.timestamp
-		}
-	}
-
-	private onComplete() {
-		// The difference between Holy Spirit and Confiteor is massive (450 potency before multipliers). For this reason, it condenses suggestions
-		// to just log any missed Confiteor as a missed Holy Spirit, since Confiteor functionally just doubles your last Holy Spirit.
-		const missedCasts = this.requiescats
-			.filter(requiescat => requiescat.hasAssociatedBuff && !requiescat.isRushing)
-			.reduce((sum, requiescat) =>
-				sum + Math.max(0, CONSTANTS.HOLY_SPIRIT.EXPECTED - requiescat.holySpirits) + Math.max(0, CONSTANTS.CONFITEOR.EXPECTED - requiescat.confiteors), 0)
-		const missedRequiescatBuffs = this.requiescats.filter(requiescat => !requiescat.hasAssociatedBuff).length
-
-		this.suggestions.add(new TieredSuggestion({
-			icon: ACTIONS.HOLY_SPIRIT.icon,
-			why: <Trans id="pld.requiescat.suggestions.wrong-gcd.why">
-				<Plural value={missedCasts} one="# missing cast" other="# missing casts"/> during the <StatusLink {...STATUSES.REQUIESCAT}/> buff window.
-			</Trans>,
-			content: <Trans id="pld.requiescat.suggestions.wrong-gcd.content">
-				GCDs used during <ActionLink {...ACTIONS.REQUIESCAT}/> should consist of 3-4 uses of <ActionLink {...ACTIONS.HOLY_SPIRIT}/> (or 4 uses of
-				multi-hit <ActionLink {...ACTIONS.HOLY_CIRCLE}/>) and 1 use of <ActionLink {...ACTIONS.CONFITEOR}/> for optimal damage.
-			</Trans>,
-			tiers: SEVERITIES.MISSED_CASTS,
-			value: missedCasts,
-		}))
-
-		this.suggestions.add(new TieredSuggestion({
-			icon: ACTIONS.REQUIESCAT.icon,
+		return new TieredSuggestion({
+			icon: this.requiescatIcon,
 			why: <Trans id="pld.requiescat.suggestions.nobuff.why">
 				<Plural value={missedRequiescatBuffs} one="# usage" other="# usages"/> while under 80% MP.
 			</Trans>,
 			content: <Trans id="pld.requiescat.suggestions.nobuff.content">
-				<ActionLink {...ACTIONS.REQUIESCAT}/> should only be used when over 80% MP.
-				Otherwise, you will not get the <StatusLink {...STATUSES.REQUIESCAT}/> buff,
+				<DataLink action="REQUIESCAT"/> should only be used when over 80% MP.
+				Otherwise, you will not get the <DataLink status="REQUIESCAT"/> buff,
 				which provides 50% increased magic damage, instant cast times,
-				and allows you to cast <ActionLink {...ACTIONS.CONFITEOR}/>.
+				and allows you to cast <DataLink action="CONFITEOR"/>.
 			</Trans>,
 			tiers: SEVERITIES.MISSED_BUFF_REQUIESCAT,
 			value: missedRequiescatBuffs,
-		}))
+		})
 	}
 
-	private countAbility(rotation: CastEvent[], abilityId: number) {
-		return rotation.reduce((sum, event) => sum + (event.ability.guid === abilityId ? 1 : 0), 0)
+	output() {
+		return undefined
+	}
+}
+
+interface RequiescatGcdsOptions extends AllowedGcdsOnlyOptions {
+	downtime: Downtime
+}
+
+class RequiescatGcdsEvaluator extends AllowedGcdsOnlyEvaluator {
+	private downtime: Downtime
+
+	constructor(opts: RequiescatGcdsOptions) {
+		super(opts)
+		this.downtime = opts.downtime
+	}
+
+	override suggest(windows: Array<HistoryEntry<EvaluatedAction[]>>) {
+		const missedCasts = windows.reduce((acc, window) => acc + this.calculateMissedGcdsForWindow(window), 0)
+
+		return new TieredSuggestion({
+			icon: this.suggestionIcon,
+			content: this.suggestionContent,
+			tiers: this.severityTiers,
+			value: missedCasts,
+			why: <Trans id="pld.requiescat.suggestions.wrong-gcd.why">
+				<Plural value={missedCasts} one="# missing cast" other="# missing casts"/> during the {this.suggestionWindowName} buff window.
+			</Trans>,
+		})
+	}
+
+	private calculateMissedGcdsForWindow(window: HistoryEntry<EvaluatedAction[]>) {
+		const expectedGCDs = this.calculateExpectedGcdsForWindow(window)
+		const usedRequiescatGCDs = window.data.filter(cast => cast.action.onGcd && this.allowedGcds.includes(cast.action.id)).length
+		return Math.max(0, expectedGCDs - usedRequiescatGCDs)
+	}
+
+	override calculateExpectedGcdsForWindow(window: HistoryEntry<EvaluatedAction[]>) {
+		const originalWindowEnd = window.start + REQUIESCAT_DURATION
+		const downtimeInWindow = this.downtime.getDowntime(window.start, originalWindowEnd)
+		const adjustedWindowEnd = originalWindowEnd - downtimeInWindow
+		const adjustedWindowStart = window.start + WINDOW_START_FORGIVENESS_FOR_RUSHING
+
+		// Reduce calculated amount by 1 to not report the Confietor cast as an expected Holy Spirit/Circle cast
+		return calculateExpectedGcdsForTime(EXPECTED_REQUIESCAT_CASTS, this.globalCooldown.getEstimate(), adjustedWindowStart, adjustedWindowEnd) - 1
+	}
+}
+export class Requiescat extends BuffWindow {
+	static override handle = 'requiescat'
+	static override title = t('pld.requiescat.title')`Requiescat Usage`
+
+	@dependency downtime!: Downtime
+	@dependency globalCooldown!: GlobalCooldown
+
+	override buffStatus = this.data.statuses.REQUIESCAT
+
+	private requiescatUsages = {
+		casts: 0,
+		buffs: 0,
+	}
+
+	override initialise() {
+		super.initialise()
+
+		this.addEvaluator(new RequiescatGcdsEvaluator({
+			expectedGcdCount: 3,
+			allowedGcds: [
+				this.data.actions.HOLY_SPIRIT.id,
+				this.data.actions.HOLY_CIRCLE.id,
+			],
+			downtime: this.downtime,
+			globalCooldown: this.globalCooldown,
+			suggestionIcon: this.data.actions.HOLY_SPIRIT.icon,
+			suggestionContent: <Trans id="pld.requiescat.suggestions.wrong-gcd.content">
+				GCDs used during <DataLink action="REQUIESCAT" /> should consist of 3-4 uses of <DataLink action="HOLY_SPIRIT" /> (or
+				multi-hit <DataLink action="HOLY_CIRCLE" />) and 1 use of <DataLink action="CONFITEOR" /> for optimal damage.
+			</Trans>,
+			suggestionWindowName: <DataLink action="REQUIESCAT" showIcon={false} />,
+			severityTiers: SEVERITIES.MISSED_CASTS,
+		}))
+		this.addEvaluator(new ExpectedActionsEvaluator({
+			expectedActions: [
+				{action: this.data.actions.CONFITEOR, expectedPerWindow: 1},
+			],
+			suggestionIcon: this.data.actions.CONFITEOR.icon,
+			suggestionContent: <Trans id="pld.requiescat.suggestions.missed-confiteor.content">
+				Be sure to end each <DataLink status="REQUIESCAT" /> window with <DataLink action="CONFITEOR" /> for optimal damage.
+			</Trans>,
+			suggestionWindowName: <DataLink action="REQUIESCAT" showIcon={false} />,
+			severityTiers: SEVERITIES.MISSED_BUFF_REQUIESCAT,
+			adjustCount: this.adjustExpectedConfiteorCount.bind(this),
+		}))
+
+		this.addEventHook({type: 'action', source: this.parser.actor.id, action: this.data.actions.REQUIESCAT.id}, () => this.requiescatUsages.casts++)
+		this.addEventHook({type: 'statusApply', target: this.parser.actor.id, status: this.data.statuses.REQUIESCAT.id}, () => this.requiescatUsages.buffs++)
+
+		this.addEvaluator(new RequiescatUsageEvaluator(this.requiescatUsages, this.data.actions.REQUIESCAT.icon))
+	}
+
+	private adjustExpectedConfiteorCount(window: HistoryEntry<EvaluatedAction[]>) {
+		if (window.end == null) {
+			return 0
+		}
+
+		const originalWindowEnd = window.start + REQUIESCAT_DURATION
+		const downtimeInWindow = this.downtime.getDowntime(window.start, originalWindowEnd)
+		const adjustedWindowEnd = originalWindowEnd - downtimeInWindow
+		const adjustedWindowDuration = adjustedWindowEnd - window.start
+		if (adjustedWindowDuration < this.globalCooldown.getEstimate()) {
+			return -1
+		}
+
+		return 0
 	}
 
 	override output() {
 		return <Fragment>
 			<Message>
-				<Trans id="pld.requiescat.table.note">Each of your <ActionLink {...ACTIONS.REQUIESCAT}/> windows should contain {CONSTANTS.TOTAL_GCDS.EXPECTED} spells at minimum to maintain the alignment of your rotation. Most of the time, a window should consist of {CONSTANTS.HOLY_SPIRIT.EXPECTED + 1} casts of <ActionLink {...ACTIONS.HOLY_SPIRIT}/> or <ActionLink {...ACTIONS.HOLY_CIRCLE}/> and end with a cast of <ActionLink {...ACTIONS.CONFITEOR}/>. However, under some circumstances, it is useful to drop one <ActionLink {...ACTIONS.HOLY_SPIRIT}/> per minute in order to better align your rotation with buffs or mechanics. If you don't have a specific plan to do this, you should aim for {CONSTANTS.HOLY_SPIRIT.EXPECTED + 1} casts of <ActionLink {...ACTIONS.HOLY_SPIRIT}/> per <ActionLink {...ACTIONS.REQUIESCAT}/> window.</Trans>
+				<Trans id="pld.requiescat.table.note">Each of your <DataLink status="REQUIESCAT" /> windows should contain 4 spells at minimum to maintain the alignment of your rotation.
+				Most of the time, a window should consist of 4 casts of <DataLink action="HOLY_SPIRIT" /> or <DataLink action="HOLY_CIRCLE" /> and end with a cast of <DataLink action="CONFITEOR" />.
+				However, under some circumstances, it is useful to drop one <DataLink action="HOLY_SPIRIT"/> per minute in order to better align your rotation with buffs or mechanics.
+				If you don't have a specific plan to do this, you should aim for 4 casts of <DataLink action="HOLY_SPIRIT" /> per <DataLink status="REQUIESCAT" /> window.</Trans>
 			</Message>
-			<RotationTable
-				targets={[
-					{
-						header: <ActionLink showName={false} {...ACTIONS.HOLY_SPIRIT}/>,
-						accessor: 'holySpirit',
-					},
-					{
-						header: <ActionLink showName={false} {...ACTIONS.CONFITEOR}/>,
-						accessor: 'confiteor',
-					},
-				]}
-				data={this.requiescats
-					.filter(requiescat => requiescat.hasAssociatedBuff)
-					.map(requiescat => ({
-						start: requiescat.start - this.parser.fight.start_time,
-						end: requiescat.end != null ?
-							requiescat.end - this.parser.fight.start_time
-							: requiescat.start - this.parser.fight.start_time,
-						targetsData: {
-							holySpirit: {
-								actual: requiescat.holySpirits,
-								expected: CONSTANTS.HOLY_SPIRIT.EXPECTED,
-							},
-							confiteor: {
-								actual: requiescat.confiteors,
-								expected: CONSTANTS.CONFITEOR.EXPECTED,
-							},
-						},
-						rotation: requiescat.rotation,
-					}))
-				}
-				onGoto={this.timeline.show}
-			/>
+			<>{super.output()}</>
 		</Fragment>
 	}
 }

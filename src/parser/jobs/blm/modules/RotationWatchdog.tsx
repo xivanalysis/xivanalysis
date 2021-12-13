@@ -14,9 +14,10 @@ import {Timeline} from 'parser/core/modules/Timeline'
 import {UnableToAct} from 'parser/core/modules/UnableToAct'
 import React, {Fragment, ReactNode} from 'react'
 import {Icon, Message} from 'semantic-ui-react'
+import {ensureRecord} from 'utilities'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 import {FIRE_SPELLS} from './Elements'
-import {Gauge, ASTRAL_UMBRAL_DURATION, BLMGaugeState, MAX_UMBRAL_HEART_STACKS} from './Gauge'
+import {Gauge, ASTRAL_UMBRAL_DURATION, BLMGaugeState, UMBRAL_HEARTS_MAX_STACKS} from './Gauge'
 import Leylines from './Leylines'
 import Procs from './Procs'
 
@@ -43,7 +44,8 @@ const ENHANCED_SEVERITY_TIERS = {
 const CYCLE_ENDPOINTS: ActionKey[] = [
 	'BLIZZARD_III',
 	'TRANSPOSE',
-	'FREEZE',
+	'BLIZZARD_II',
+	'HIGH_BLIZZARD_II',
 ]
 
 // This is feelycraft at the moment. Rotations shorter than this won't be processed for errors.
@@ -58,7 +60,7 @@ const HIDDEN_PRIORITY_THRESHOLD = 2 // Same as ^
  * NOTE: Cycles with values at or below HIDDEN_PRIORITY_THRESHOLD will be filtered out of the RotationTable display
  * unless the DEBUG_SHOW_ALL_CYCLES variable is set to true
  */
-const CYCLE_ERRORS: {[key: string]: CycleErrorCode } = {
+const CYCLE_ERRORS = ensureRecord<CycleErrorCode>()({
 	NO_ERROR: {priority: 0, message: 'No errors'},
 	FINAL_OR_DOWNTIME: {priority: 1, message: 'Ended with downtime, or last cycle'},
 	SHORT: {priority: HIDDEN_PRIORITY_THRESHOLD, message: 'Too short, won\'t process'},
@@ -73,7 +75,7 @@ const CYCLE_ERRORS: {[key: string]: CycleErrorCode } = {
 	NO_FIRE_SPELLS: {priority: 75, message: <Trans id="blm.rotation-watchdog.error-messages.no-fire-spells">Rotation included no Fire spells</Trans>},
 	DROPPED_AF_UI: {priority: 100, message: <Trans id="blm.rotation-watchdog.error-messages.dropped-astral-umbral">Dropped Astral Fire or Umbral Ice</Trans>},
 	DIED: {priority: DEATH_PRIORITY, message: <Trans id="blm.rotation-watchdog.error-messages.died"><DataLink showName={false} action="RAISE"/> Died</Trans>},
-}
+})
 
 interface CycleEvent extends FieldsTargeted {
 	action: number,
@@ -99,9 +101,14 @@ class Cycle {
 	private firePhaseEvents: CycleEvent[] = []
 	private manafontPhaseEvents: CycleEvent[] = [] // Keeping track of post-manafont events separately so we can fine-tune some of the analysis logic
 
+	// Concatenate the fire and manafont events together to get the event array for the full astral fire phase
+	public get fullFirePhaseEvents(): CycleEvent[] {
+		return this.firePhaseEvents.concat(this.manafontPhaseEvents)
+	}
+
 	// Concatenate the phased events together to produce the full event array for the cycle
 	public get events(): CycleEvent[] {
-		return this.unaspectedEvents.concat(this.icePhaseEvents).concat(this.firePhaseEvents).concat(this.manafontPhaseEvents)
+		return this.unaspectedEvents.concat(this.icePhaseEvents).concat(this.fullFirePhaseEvents)
 	}
 	//#endregion
 
@@ -126,15 +133,9 @@ class Cycle {
 
 	//#region Fire 4s
 	/**
-	 * June 2021 revamp of this function brings back some of the pre-Shadowbringers gauge state complexity for determining expected fire counts for the following reasons:
-	 *   1. While Umbral Soul gives us a downtime action to build and maintain Umbral Hearts/Umbral Ice, it isn't foolproof. E1S's giant midfight cutscene is a forced drop.
-	 *   2. Freeze reopener after death or a forced drop is an expected 5xF4 cycle, and is more PPS than a B3 B4 [T3] F3 [Fire phase] or a Freeze B4 [T3] F3 [Fire phase] reopener, so we should allow it
-	 *   3. Alternate playstyle cycles and the No-B4-Opener rely on Ley Lines to eke out a 5th F4 without using F1, and enough BLMs are using the alternate playstyle to warrant not dinging those
-	 *   4. Separating the 'How many F4s can you get from this starting gauge state' count from the 'how many total F4s can this cycle fit with Manafont factored in' count allows for more robust thunder counts later on
-	 *
+	 * Determines how many Fire 4s the player should have been able to cast during this cycle.
 	 * NOTE:
-	 *   This revamp does NOT account for all the complexities of the alternate playstyle transpose shenanigans.
-	 *   It only sets the baseline expected F4 count at 4, and assumes extra F4s based on the number of Umbral Hearts carried into the Astral Fire phase.
+	 *   This function does NOT account for all the complexities of any alternative playstyles.
 	 */
 	public get expectedFire4s(): number | undefined {
 		if (this.finalOrDowntime) {
@@ -161,7 +162,7 @@ class Cycle {
 		}
 
 		// Cycles with full hearts get two extra F4s
-		if (this.firePhaseMetadata.initialGaugeState.umbralHearts === MAX_UMBRAL_HEART_STACKS) {
+		if (this.firePhaseMetadata.initialGaugeState.umbralHearts === UMBRAL_HEARTS_MAX_STACKS) {
 			expectedCount++
 		}
 
@@ -233,7 +234,7 @@ class Cycle {
 		// Determine how much MP we need to cast all of our expected Fire spells
 		const minimumMPForExpectedFires =
 			(this.expectedFire4sBeforeDespair * this.data.actions.FIRE_IV.mpCost + // MP for the expected Fire 4s
-			(this.events.some(event => event.action === this.data.actions.FIRE_I.id) ? 1 : 0) * this.data.actions.FIRE_I.mpCost) // Feelycraft: If they included a single F1 we'll allow it. If they skipped it, that's fine too. If they have more than one, it's bad so only allow one for the MP requirement calculation.
+			(this.fullFirePhaseEvents.some(event => event.action === this.data.actions.FIRE_I.id || event.action === this.data.actions.PARADOX.id) ? 1 : 0) * this.data.actions.FIRE_I.mpCost) // Feelycraft: If they included a single F1/Paradox we'll allow it. If they skipped it, that's fine too. If they have more than one, it's bad so only allow one for the MP requirement calculation.
 			* 2 // Astral Fire makes F1 and F4 cost twice as much
 			- this.firePhaseMetadata.initialGaugeState.umbralHearts * this.data.actions.FIRE_IV.mpCost // Refund the additional cost for each Umbral Heart carried into the Astral Fire phase
 			+ this.data.actions.FIRE_IV.mpCost // Add in the required MP cost for Despair, which happens to be the same as an F4
@@ -258,7 +259,8 @@ class Cycle {
 
 	//#region Other Fire checks
 	public get extraF1s(): number {
-		return Math.max(this.events.filter(event => event.action === this.data.actions.FIRE_I.id).length - 1, 0)
+		// Paradox counts against the allowed F1 count if used in Fire phase
+		return Math.max(this.fullFirePhaseEvents.filter(event => event.action === this.data.actions.FIRE_I.id || event.action === this.data.actions.PARADOX.id).length - 1, 0)
 	}
 
 	public get isMissingFire(): boolean {
@@ -301,7 +303,7 @@ class Cycle {
 
 	public addEvent(event: CycleEvent): void {
 		// Stash the event in the appropriate phase-specific array
-		if (event.gaugeContext.umbralIce === 0 && event.gaugeContext.astralFire === 0) {
+		if (!event.gaugeContext.enochian) {
 			this.unaspectedEvents.push(event)
 		} else if (this.firePhaseMetadata.startTime === 0) {
 			this.icePhaseEvents.push(event)
@@ -334,6 +336,7 @@ export class RotationWatchdog extends Analyser {
 		umbralHearts: 0,
 		polyglot: 0,
 		enochian: false,
+		paradox: 0,
 	}
 
 	private cycleEndpointIds = CYCLE_ENDPOINTS.map(key => this.data.actions[key].id)
@@ -359,7 +362,6 @@ export class RotationWatchdog extends Analyser {
 	// Handle events coming from BLM's Gauge module
 	private onGaugeEvent(event: Events['blmgauge']) {
 		const nextGaugeState = this.gauge.getGaugeState(event.timestamp)
-		if (!nextGaugeState) { return }
 
 		// If we're beginning the fire phase of this cycle, note it and save some data
 		if (this.currentGaugeState.astralFire === 0 && nextGaugeState.astralFire > 0) {
@@ -372,7 +374,7 @@ export class RotationWatchdog extends Analyser {
 
 		// If we no longer have enochian, flag it for display
 		if (this.currentGaugeState.enochian && !nextGaugeState.enochian) {
-			this.currentRotation.errorCode = CYCLE_ERRORS.DROPPED_ENOCHIAN
+			this.currentRotation.errorCode = CYCLE_ERRORS.DROPPED_AF_UI
 		}
 
 		// Retrieve the GaugeState from the event
@@ -419,7 +421,7 @@ export class RotationWatchdog extends Analyser {
 		// Override the error code for cycles that dropped enochian, when the cycle contained an unabletoact time long enough to kill it.
 		// Couldn't do this at the time of code assignment, since the downtime data wasn't fully available yet
 		for (const cycle of this.history) {
-			if (cycle.errorCode !== CYCLE_ERRORS.DROPPED_ENOCHIAN) { continue }
+			if (cycle.errorCode !== CYCLE_ERRORS.DROPPED_AF_UI) { continue }
 
 			const windows = this.unableToAct
 				.getWindows({
@@ -444,7 +446,7 @@ export class RotationWatchdog extends Analyser {
 				types: ['invulnerable'],
 			})) {
 				cycle.finalOrDowntime = true
-				cycle.overrideErrorCode(CYCLE_ERRORS.NONE)
+				cycle.overrideErrorCode(CYCLE_ERRORS.NO_ERROR)
 				this.processCycle(cycle)
 			}
 		})

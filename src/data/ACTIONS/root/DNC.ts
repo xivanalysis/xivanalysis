@@ -69,8 +69,8 @@ export const DNC = ensureActions({
 		],
 	},
 	TILLANA: {
-		id: 1600416004, // Need real id
-		icon: 'https://xivapi.com/i/003000/003474.png', // Need real icon
+		id: 25790,
+		icon: 'https://xivapi.com/i/003000/003480.png',
 		name: 'Tillana',
 		onGcd: true,
 		cooldown: 1500,
@@ -233,8 +233,8 @@ export const DNC = ensureActions({
 		cooldown: 1000,
 	},
 	FAN_DANCE_IV: {
-		id: 1600916009, // Need real ID
-		icon: 'https://xivapi.com/i/003000/003472.png', // Need real icon
+		id: 25791,
+		icon: 'https://xivapi.com/i/003000/003481.png',
 		name: 'Fan Dance IV',
 		onGcd: false,
 		cooldown: 1000,
@@ -256,8 +256,8 @@ export const DNC = ensureActions({
 		statusesApplied: ['DEVILMENT', 'FLOURISHING_STARFALL'],
 	},
 	STARFALL_DANCE: {
-		id: 1601116011,
-		icon: 'https://xivapi.com/i/003000/003471.png',
+		id: 25792,
+		icon: 'https://xivapi.com/i/003000/003482.png',
 		name: 'Starfall Dance',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
@@ -267,7 +267,7 @@ export const DNC = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003469.png',
 		name: 'Shield Samba',
 		onGcd: false,
-		cooldown: 180000,
+		cooldown: 90000,
 		statusesApplied: ['SHIELD_SAMBA'],
 	},
 	FLOURISH: {
@@ -291,13 +291,13 @@ export const DNC = ensureActions({
 		cooldown: 120000,
 		statusesApplied: [
 			'IMPROVISATION',
-			'IMPROVISATION_HEALING',
+			'IMPROVISATION_REGEN',
 			'RISING_RHYTHM',
-		], // Confirm statuses
+		],
 	},
 	IMPROVISED_FINISH: {
-		id: 1601416014, // Need real ID
-		icon: 'https://xivapi.com/i/003000/003477.png', // Need real icon
+		id: 25789,
+		icon: 'https://xivapi.com/i/003000/003479.png',
 		name: 'Improvised Finish',
 		onGcd: false,
 		cooldown: 120000,
