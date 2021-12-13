@@ -12,12 +12,37 @@ export class AoEUsages extends CoreAoE {
 		{
 			aoeAction: this.data.actions.FLARE,
 			stActions: [this.data.actions.DESPAIR],
-			minTargets: 2,
+			minTargets: 3,
 		},
 		{
 			aoeAction: this.data.actions.THUNDER_IV,
 			stActions: [this.data.actions.THUNDER_III],
 			minTargets: 2,
+		},
+		{
+			aoeAction: this.data.actions.BLIZZARD_II,
+			stActions: [this.data.actions.BLIZZARD_III],
+			minTargets: 3,
+		},
+		{
+			aoeAction: this.data.actions.HIGH_BLIZZARD_II,
+			stActions: [this.data.actions.BLIZZARD_III],
+			minTargets: 3,
+		},
+		{
+			aoeAction: this.data.actions.FIRE_II,
+			stActions: [this.data.actions.FIRE_III, this.data.actions.FIRE_IV],
+			minTargets: 3,
+		},
+		{
+			aoeAction: this.data.actions.HIGH_FIRE_II,
+			stActions: [this.data.actions.FIRE_III, this.data.actions.FIRE_IV],
+			minTargets: 3,
+		},
+		{
+			aoeAction: this.data.actions.FREEZE,
+			stActions: [this.data.actions.BLIZZARD_IV],
+			minTargets: 3,
 		},
 	]
 }
