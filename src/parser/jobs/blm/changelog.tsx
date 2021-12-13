@@ -25,6 +25,6 @@ export const changelog = [
 	{
 		date: new Date('2021-11-27'),
 		Changes: () => <>Update cooldown tracking checklist to include Amplifier and Sharpcast, drop separate Sharpcast usage statistic, and add handling for Paradox consuming Sharpcast while in Astral Fire.</>,
-    contributors: [CONTRIBUTORS.AKAIRYU],
+		contributors: [CONTRIBUTORS.AKAIRYU],
 	},
 ]
