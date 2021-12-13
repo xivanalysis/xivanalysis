@@ -24,8 +24,6 @@ const TRACKED_STATUSES: StatusConfig[] = [
 	{key: 'THE_BOLE', group: 'arcanum', name: 'Arcanum'},
 	{key: 'THE_EWER', group: 'arcanum', name: 'Arcanum'},
 	{key: 'THE_SPIRE', group: 'arcanum', name: 'Arcanum'},
-	{key: 'LORD_OF_CROWNS', group: 'arcanum', name: 'Arcanum'},
-	{key: 'LADY_OF_CROWNS', group: 'arcanum', name: 'Arcanum'},
 	{key: 'DIVINATION'},
 	{key: 'BATTLE_LITANY'},
 	{key: 'BATTLE_VOICE', exclude: ['BARD']},
@@ -82,7 +80,9 @@ export class RaidBuffs extends Analyser {
 
 		// Record the start time of the status
 		const applications = this.getTargetApplications(event.target)
-		applications.set(statusId, event.timestamp)
+		if (!applications.has(statusId)) {
+			applications.set(statusId, event.timestamp)
+		}
 	}
 
 	private onRemove(event: Events['statusRemove']) {

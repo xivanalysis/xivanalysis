@@ -7,7 +7,7 @@ import {StatusKey} from 'data/STATUSES'
 import {Cause, Event, Events} from 'event'
 import {EventHook, TimestampHook} from 'parser/core/Dispatcher'
 import {filter} from 'parser/core/filter'
-import {dependency} from 'parser/core/Module'
+import {dependency} from 'parser/core/Injectable'
 import {CounterGauge, Gauge as CoreGauge} from 'parser/core/modules/Gauge'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
@@ -252,7 +252,7 @@ export class Gauge extends CoreGauge {
 
 		// Technically we don't need this check since we'll remove the hook in endImprov but eh
 		if (++this.improvTicks < MAX_IMPROV_TICKS) {
-			this.addTimestampHook(this.parser.currentTimestamp + TICK_FREQUENCY, this.onTickImprov)
+			this.addTimestampHook(this.parser.currentEpochTimestamp + TICK_FREQUENCY, this.onTickImprov)
 		}
 	}
 

@@ -12,7 +12,6 @@ import Horoscope from './Horoscope'
 import Lightspeed from './Lightspeed'
 import LucidDreaming from './LucidDreaming'
 import {Overheal} from './Overheal'
-import Sect from './Sect'
 import {StatusTimeline} from './StatusTimeline'
 import Synastry from './Synastry'
 
@@ -32,7 +31,6 @@ export default [
 	Lightspeed,
 	LucidDreaming,
 	Overheal,
-	Sect,
 	StatusTimeline,
 	Synastry,
 ]

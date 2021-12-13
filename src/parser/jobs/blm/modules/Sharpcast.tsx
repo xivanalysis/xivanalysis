@@ -109,7 +109,7 @@ export class Sharpcast extends Analyser {
 		this.stopAndSave(event.timestamp)
 	}
 
-	private stopAndSave(endTime = this.parser.currentTimestamp, countDrops = true) {
+	private stopAndSave(endTime = this.parser.currentEpochTimestamp, countDrops = true) {
 		if (!this.buffWindows.current) {
 			return
 		}

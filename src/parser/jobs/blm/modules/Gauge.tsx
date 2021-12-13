@@ -167,6 +167,8 @@ export class Gauge extends CoreGauge {
 
 	private previousGaugeState: BLMGaugeState = this.getGaugeState(this.parser.pull.timestamp)
 
+	private previousGaugeState: BLMGaugeState | undefined = this.getGaugeState(this.parser.pull.timestamp)
+
 	override initialise() {
 		super.initialise()
 

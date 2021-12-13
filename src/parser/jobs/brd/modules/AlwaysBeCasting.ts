@@ -56,7 +56,7 @@ export class AlwaysBeCasting extends CoreAlwaysBeCasting {
 		if (event.action === this.data.actions.ARMYS_PAEON.id) {
 			this.currentPaeon = {
 				start: event.timestamp,
-				end: Math.min(this.parser.fight.end_time, event.timestamp + SONG_DURATION_MS),
+				end: Math.min(this.parser.pull.timestamp + this.parser.pull.duration, event.timestamp + SONG_DURATION_MS),
 			}
 			this.addTimestampHook(event.timestamp + SONG_DURATION_MS, () => this.endPaeon)
 		} else if (this.currentPaeon) {
