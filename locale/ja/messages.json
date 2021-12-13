@@ -119,7 +119,6 @@
   "blm.thunder.checklist.dots.name": "常に <0/> のDoTを切らさないようにしてください。",
   "blm.thunder.checklist.dots.requirement.name": "アクティブ率: <0/>",
   "blm.thunder.clip": "重複時間",
-  "blm.thunder.clip-disclaimer": "<0/> procのギミックによると、<2/>が敵に付与している間で、効果時間が終了前に<1/> procを使用する状況を遭遇しまいます。理論的には、毎回リフレッシュするべき時間に最大で約6秒早く、<3/>をリフレッシュする可能性があります。この重複時間を理想に思われ、定量化し、最大重複時間と呼びます。",
   "blm.thunder.source": "ソース",
   "blm.thunder.suggestions.excess-thunder.content": "<0/>を頻繁にキャストすると、キャストする<1/>がすくなくなり、DPSが失われる可能性があります。<3/>のDoTや<4/>のprocが切れそうなときでなければ、<2/>を使うのは避けましょう。<5><6/></5>モジュールをご確認ください。",
   "blm.thunder.suggestions.excess-thunder.why": "DoTの合計重複回数が最大重複回数{0} より{1} 回超えた。",
