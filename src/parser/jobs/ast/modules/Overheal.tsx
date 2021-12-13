@@ -15,12 +15,9 @@ export class Overheal extends CoreOverheal {
 			color: SuggestedColors[1],
 			trackedHealIds: [
 				this.data.statuses.ASPECTED_HELIOS.id,
-				this.data.statuses.WHEEL_OF_FORTUNE_DIURNAL.id,
-				this.data.statuses.WHEEL_OF_FORTUNE_NOCTURNAL.id,
+				this.data.statuses.WHEEL_OF_FORTUNE.id,
 				this.data.statuses.ASPECTED_BENEFIC.id,
-				this.data.statuses.DIURNAL_OPPOSITION.id,
-				this.data.statuses.DIURNAL_INTERSECTION.id,
-				this.data.statuses.DIURNAL_BALANCE.id,
+				this.data.statuses.OPPOSITION.id,
 			],
 		},
 		{

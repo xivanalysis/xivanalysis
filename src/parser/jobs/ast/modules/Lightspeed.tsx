@@ -169,9 +169,9 @@ export default class Lightspeed extends Analyser {
 		const castsMessage = <p><Trans id="ast.lightspeed.messages.num-casts"> There were a total of {actualCasts} out of a possible {totalPossibleCasts} <DataLink action="LIGHTSPEED" /> casts noted.</Trans></p>
 
 		const message = <p><Trans id="ast.lightspeed.messages.explanation">
-		The main use of <DataLink action="LIGHTSPEED" /> should be for weaving card actions during <DataLink action="DIVINATION" /> and <DataLink action="SLEEVE_DRAW" /> windows.<br />
+		The main use of <DataLink action="LIGHTSPEED" /> should be for weaving card actions during <DataLink action="DIVINATION" /> and <DataLink action="ASTRODYNE" /> windows.<br />
 		It can also be used for keeping casts up while on the move and other specific scenarios.<br />
-		Each fight calls for a different strategy, but try to utilize it as much as possible.<br />
+		Each fight calls for a different strategy, but consider utilizing it as much as possible.<br />
 		Unless it's being used for <DataLink action="ASCEND" />, lightspeed can fit at least 6 GCDs.<br />
 		</Trans></p>
 
