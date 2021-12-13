@@ -4,8 +4,7 @@ import {t} from '@lingui/macro'
 import {Plural, Trans} from '@lingui/react'
 import Rotation from 'components/ui/Rotation'
 import {ActionCombo} from 'data/ACTIONS/type'
-import {Event, Events, FieldsMultiTargeted} from 'event'
-import {AbilityEventFields} from 'fflogs'
+import {Event, Events, FieldsMultiTargeted, SourceModifier} from 'event'
 import _ from 'lodash'
 import {dependency} from 'parser/core/Injectable'
 import DISPLAY_ORDER from 'parser/core/modules/DISPLAY_ORDER'
@@ -13,7 +12,6 @@ import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Sugge
 import {Timeline} from 'parser/core/modules/Timeline'
 import React from 'react'
 import {Button, Table} from 'semantic-ui-react'
-import {isSuccessfulHit} from 'utilities'
 import {Analyser} from '../Analyser'
 import {filter} from '../filter'
 import {Data} from './Data'
@@ -21,7 +19,7 @@ import {Death} from './Death'
 import Downtime from './Downtime'
 
 const DEFAULT_GCD = 2500
-const COMBO_TIMEOUT = 15000
+const COMBO_TIMEOUT = 30000
 const CONTINUE_AFTER_DOWNTIME_GRACE = 1000
 const ISSUE_TYPENAMES = {
 	uncomboed: <Trans id="core.combos.issuetypenames.uncomboed">Uncomboed</Trans>,
@@ -37,17 +35,6 @@ interface EventCombo extends FieldsMultiTargeted {
 declare module 'event' {
 	interface EventTypeRepository {
 		combo: EventCombo
-	}
-}
-
-export interface LegacyComboEvent extends AbilityEventFields {
-	type: 'combo'
-	hasSuccessfulHit: boolean
-}
-
-declare module 'legacyEvent' {
-	interface EventTypeRepository {
-		combo: LegacyComboEvent
 	}
 }
 
@@ -116,21 +103,6 @@ export class Combos extends Analyser {
 			action: event.cause.action,
 			source: event.source,
 			targets: event.targets,
-		})
-
-		this.parser.fabricateLegacyEvent({
-			type: 'combo',
-			ability: {
-				abilityIcon: '',
-				guid: event.cause.action,
-				name: '',
-				type: 1,
-			},
-			sourceID: this.parser.player.id,
-			timestamp: this.parser.currentTimestamp,
-			sourceIsFriendly: true,
-			targetIsFriendly: false,
-			hasSuccessfulHit: isSuccessfulHit(event),
 		})
 	}
 
@@ -238,8 +210,8 @@ export class Combos extends Analyser {
 
 		// If it's a combo action, run it through the combo checking logic
 		if (action.combo) {
-			if (!isSuccessfulHit(event)) {
-				// Failed attacks break combo
+			if (event.targets.every(t => t.sourceModifier === SourceModifier.MISS)) {
+				// Misses break combo
 				this.recordFailedCombo(event, this.currentComboChain)
 				return
 			}

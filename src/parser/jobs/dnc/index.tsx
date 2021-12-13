@@ -8,10 +8,7 @@ import {changelog} from './changelog'
 
 const description = t('dnc.about.description')`So, you've become a dancer, but you don't know your Jetes from your Pirouettes? This module will help you learn how to Improvise your way to a standing ovation!
 
-The core parts of dancer are proper performance of your dances, preventing your gauges from overcapping, and using your procs. We'll provide suggestions to help you use these to their best effect.
-
-If you would like to learn more about dancer, check out the [comprehensive gameplay guide](https://saltedxiv.com/guides/dnc) by Ringabel Dim.
-`
+The core parts of dancer are proper performance of your dances, preventing your gauges from overcapping, and using your procs. We'll provide suggestions to help you use these to their best effect.`
 
 export const DANCER = new Meta({
 	modules: () => import('./modules' /* webpackChunkName: "jobs-dnc" */),

@@ -1,6 +1,7 @@
 import {Trans, Plural} from '@lingui/react'
 import {ActionLink} from 'components/ui/DbLink'
 import {ActionKey} from 'data/ACTIONS'
+import {EncounterKey} from 'data/ENCOUNTERS'
 import {Event, Events} from 'event'
 import {Analyser} from 'parser/core/Analyser'
 import {filter, oneOf} from 'parser/core/filter'
@@ -30,8 +31,8 @@ const HUTON_EXTENSION_MILLIS: Array<[ActionKey, number]> = [
 const DOWNTIME_DIFFERENCE_TOLERANCE = 10000 // If the downtime estimates are off by more than this, we can probably toss the low estimate
 
 // Some bosses *coughChadarnookcough* require fucky pulls that result in your Huton timer being lower than normal when the fight starts
-const BOSS_ADJUSTMENTS: {[key: number]: number} = {
-	// [BOSSES.DEMON_CHADARNOOK.logId]: 15000,
+const BOSS_ADJUSTMENTS: Partial<Record<EncounterKey, number>> = {
+	// DEMON_CHADARNOOK: 15000,
 }
 
 interface HutonEstimate {
@@ -54,13 +55,13 @@ export class Huton extends Analyser {
 	))
 
 	private highEstimate: HutonEstimate = {
-		current: HUTON_START_DURATION_MILLIS_HIGH - (BOSS_ADJUSTMENTS[this.parser.fight.boss] || 0),
+		current: HUTON_START_DURATION_MILLIS_HIGH - (BOSS_ADJUSTMENTS[this.parser.pull.encounter.key ?? 'TRASH'] || 0),
 		clipped: 0,
 		downtime: 0,
 		badAcs: 0,
 	}
 	private lowEstimate: HutonEstimate = {
-		current: HUTON_START_DURATION_MILLIS_LOW - (BOSS_ADJUSTMENTS[this.parser.fight.boss] || 0),
+		current: HUTON_START_DURATION_MILLIS_LOW - (BOSS_ADJUSTMENTS[this.parser.pull.encounter.key ?? 'TRASH'] || 0),
 		clipped: 0,
 		downtime: 0,
 		badAcs: 0,
