@@ -144,7 +144,7 @@
   "blm.thunder.checklist.dots.name": "Keep your <0/> DoT up",
   "blm.thunder.checklist.dots.requirement.name": "<0/> uptime",
   "blm.thunder.clip": "Clip",
-  "blm.thunder.clip-disclaimer": "Due to the nature of <0/> procs, you will run into situations where you will use your <1/> proc before it runs out, while your <2/> is still running on your enemy. At most, this could theoretically lead to refreshing <3/> a maximum of ~6 seconds early every single refresh. Since this amount of clipping is still considered optimal, we quantify and call this the maximum clip time.",
+  "blm.thunder.clip-disclaimer": "Due to the nature of <0/> procs, you will run into situations where you will use your <1/> proc before it runs out, while your <2/> is still running on your enemy. At most, this could theoretically lead to refreshing <3/> a maximum of ~3 seconds early every single refresh. Since this amount of clipping is still considered optimal, we quantify and call this the maximum clip time.",
   "blm.thunder.source": "Source",
   "blm.thunder.suggestions.excess-thunder.content": "Casting <0/> too frequently can cause you to lose DPS by casting fewer <1/>. Try not to cast <2/> unless your <3/> DoT or <4/> proc are about to wear off. Check the <5><6/></5> module for more information.",
   "blm.thunder.suggestions.excess-thunder.why": "Total DoT clipping exceeded the maximum clip time of {0} by {1}.",
