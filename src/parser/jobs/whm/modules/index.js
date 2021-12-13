@@ -1,5 +1,5 @@
 import {CastTime} from './CastTime'
-import DoTs from './DoTs'
+import {DoTs} from './DoTs'
 import Interrupts from './Interrupts'
 import Lilies from './Lilies'
 import oGCDs from './oGCDs'

@@ -8,7 +8,6 @@ import DragonSight from './DragonSight'
 import Drift from './Drift'
 import LanceCharge from './LanceCharge'
 import OGCDDowntime from './OGCDDowntime'
-import Positionals from './Positionals'
 import Procs from './Procs'
 import Tincture from './Tincture'
 import Weaving from './Weaving'
@@ -24,7 +23,6 @@ export default [
 	Drift,
 	LanceCharge,
 	OGCDDowntime,
-	Positionals,
 	Procs,
 	Tincture,
 	Weaving,

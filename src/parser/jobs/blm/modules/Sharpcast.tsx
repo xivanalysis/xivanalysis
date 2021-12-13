@@ -9,6 +9,7 @@ import {Data} from 'parser/core/modules/Data'
 import Suggestions, {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import {StatusItem} from 'parser/core/modules/Timeline'
 import React from 'react'
+import {Gauge} from './Gauge'
 import Procs from './Procs'
 
 const SHARPCAST_CONSUMERS: ActionKey[] = [
@@ -16,6 +17,7 @@ const SHARPCAST_CONSUMERS: ActionKey[] = [
 	'THUNDER_III',
 	'THUNDER_IV',
 	'SCATHE',
+	'PARADOX',
 ]
 
 interface SharpcastWindow {
@@ -34,6 +36,7 @@ export class Sharpcast extends Analyser {
 	@dependency private data!: Data
 	@dependency private procs!: Procs
 	@dependency private suggestions!: Suggestions
+	@dependency private gauge!: Gauge
 
 	private buffWindows: SharpcastTracker = {
 		history: [],
@@ -70,8 +73,8 @@ export class Sharpcast extends Analyser {
 	private tryConsumeSharpcast(event: Events['action']) {
 		const actionId = event.action
 
-		// If this action isn't affected by a proc (or something is wrong), bail out
-		if (!this.sharpcastConsumerIds.includes(actionId)) {
+		// Paradox doesn't produce a Firestarter proc if not in Astral Fire
+		if (actionId === this.data.actions.PARADOX && this.gauge.getGaugeState(event.timestamp).astralFire <= 0) {
 			return
 		}
 
@@ -90,7 +93,7 @@ export class Sharpcast extends Analyser {
 		this.stopAndSave(event.timestamp)
 	}
 
-	private stopAndSave(endTime = this.parser.currentTimestamp, countDrops = true) {
+	private stopAndSave(endTime = this.parser.currentEpochTimestamp, countDrops = true) {
 		if (!this.buffWindows.current) {
 			return
 		}

@@ -12,7 +12,7 @@ const ALLOWED_DOWNTIME_REQ = 4000
 const FIRST_USE_OFFSET_FOF = 24000
 const FIRST_USE_OFFSET_REQ = 31000
 
-export default class OGCDDowntime extends CooldownDowntime {
+export class OGCDDowntime extends CooldownDowntime {
 	static override debug = false
 	trackedCds = [
 		{

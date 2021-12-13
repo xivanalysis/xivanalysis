@@ -7,7 +7,7 @@ import {SEVERITY} from 'parser/core/modules/Suggestions'
 import {Tincture as CoreTincture} from 'parser/core/modules/Tincture'
 import React from 'react'
 
-export default class Tincture extends CoreTincture {
+export class Tincture extends CoreTincture {
 
 	@dependency private globalCooldown!: GlobalCooldown
 
