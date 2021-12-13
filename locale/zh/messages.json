@@ -119,7 +119,6 @@
   "blm.thunder.checklist.dots.name": "保持<0/>DoT常驻",
   "blm.thunder.checklist.dots.requirement.name": "<0/> 覆盖率",
   "blm.thunder.clip": "覆盖",
-  "blm.thunder.clip-disclaimer": "由于<0/>的触发特性，玩家可能会遇到这样的情况：在<1/>倒计时结束之前使用了<1/>，但<2/>仍然存在于目标身上。理论上，这种情况会带来最大6秒左右<3/>的提前更新。这种更新方式依然是足够优化的，我们量化这个指标，称其为最大提前更新时间。",
   "blm.thunder.source": "来源",
   "blm.thunder.suggestions.excess-thunder.content": "用<0/>次数太多会导致你用<1/>的次数太少而损失输出。除非你的<3/>或者<4/>要没了，否则请尽可能不要使用<2/>。<5><6/></5>模块将会有详细的分析。",
   "blm.thunder.suggestions.excess-thunder.why": "总dot提前更新时间超过{0} 的最大更新时间{1}。",
