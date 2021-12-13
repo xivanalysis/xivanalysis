@@ -325,13 +325,11 @@ export const MCH = ensureActions({
 		id: 16503,
 		name: 'Pile Bunker',
 		icon: 'https://xivapi.com/i/003000/003503.png',
-		onGcd: true,
 	},
 
 	CROWNED_COLLIDER: {
 		id: 25787,
 		name: 'Crowned Collider',
 		icon: 'https://xivapi.com/i/003000/003047.png',
-		onGcd: true,
 	},
 })
