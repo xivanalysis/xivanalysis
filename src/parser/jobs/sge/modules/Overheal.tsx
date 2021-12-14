@@ -1,5 +1,5 @@
 import {Trans} from '@lingui/macro'
-import {DataLink} from 'components/ui/DbLink'
+import {Events} from 'event'
 import {Overheal as CoreOverheal, SuggestedColors} from 'parser/core/modules/Overheal'
 import React from 'react'
 
@@ -17,7 +17,7 @@ export class Overheal extends CoreOverheal {
 			trackedHealIds: [
 				this.data.statuses.PHYSIS.id,
 				this.data.statuses.PHYSIS_II.id,
-				this.data.statuses.KERAKEIA.id, // TODO: Assuming Kerakeia is the additional regen affect, since Taurochole doesn't have that
+				this.data.statuses.KERAKEIA.id,
 			],
 		},
 		{
@@ -28,15 +28,23 @@ export class Overheal extends CoreOverheal {
 				this.data.actions.IXOCHOLE.id,
 				this.data.actions.TAUROCHOLE.id,
 				this.data.actions.HOLOS.id,
-				this.data.actions.PEPSIS.id,
 			],
 		},
 		{
-			name: <DataLink showIcon={false} status="KARDION"/>,
+			name: <Trans id="sge.overheal.haima.name">Haima &amp; Panhaima Expiration</Trans>,
 			color: SuggestedColors[3],
 			trackedHealIds: [
-				this.data.statuses.KARDION.id,
+				this.data.statuses.HAIMATINON.id,
+				this.data.statuses.PANHAIMATINON.id,
 			],
 		},
 	]
+
+	override considerHeal(event: Events['heal'], _pet: boolean = false): boolean {
+		// Filter out Kardia heals, the SGE isn't exactly going to stop DPSing if the tank is full HP...
+		if (event.cause.type === 'status') {
+			return event.cause.status !== this.data.statuses.KARDIA.id
+		}
+		return true
+	}
 }
