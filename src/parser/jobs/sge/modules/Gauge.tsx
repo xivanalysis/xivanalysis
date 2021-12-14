@@ -51,7 +51,7 @@ const ADDERSTING_COLOR = Color('#9e2dca')
 export class Gauge extends CoreGauge {
 	@dependency private actors!: Actors
 
-	private diagnoses: {[key: string]: DiagnosisData | undefined} = {}
+	private diagnoses: Partial<Record<Actor['id'], DiagnosisData>> = {}
 
 	private addersgallGauge = this.add(new CounterGauge({
 		maximum: ADDERSGALL_MAX_STACKS,
