@@ -32,6 +32,12 @@ interface DiagnosisData {
 	consumedOrOverwritten?: boolean
 }
 
+/** Graph colors/fade settings */
+const GAUGE_FADE = 0.25
+const TIMER_FADE = 0.75
+const ADDERSGALL_COLOR = Color(JOBS.SAGE.colour)
+const ADDERSTING_COLOR = Color('#9e2dca')
+
 export class Gauge extends CoreGauge {
 	@dependency private actors!: Actors
 
@@ -42,7 +48,7 @@ export class Gauge extends CoreGauge {
 		initialValue: ADDERSGALL_MAX_STACKS,
 		graph: {
 			label: <Trans id="sge.gauge.resource.addsergall">Addersgall</Trans>,
-			color: '',
+			color: ADDERSGALL_COLOR.fade(GAUGE_FADE),
 		},
 		correctHistory: true,
 	}))
@@ -51,14 +57,14 @@ export class Gauge extends CoreGauge {
 		onExpiration: this.onCompleteAddersgallTimer.bind(this),
 		graph: {
 			label: <Trans id="sge.gauge.resource.addersgall-timer">Addersgall Timer</Trans>,
-			color: '',
+			color: ADDERSGALL_COLOR.fade(TIMER_FADE),
 		},
 	}))
 	private adderstingGauge = this.add(new CounterGauge({
 		maximum: ADDERSTING_MAX_STACKS,
 		graph: {
 			label: <Trans id="sge.gauge.resource.addersting">Addersting</Trans>,
-			color: '',
+			color: ADDERSTING_COLOR.fade(GAUGE_FADE),
 		},
 		correctHistory: true,
 	}))
