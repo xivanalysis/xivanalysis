@@ -110,7 +110,7 @@ export const SGE = ensureActions({
 	},
 	SOTERIA: {
 		id: 24294,
-		name: 'Kardia',
+		name: 'Soteria',
 		icon: 'https://xivapi.com/i/003000/003662.png',
 		cooldown: 90000,
 		statusesApplied: ['SOTERIA'],
