@@ -98,6 +98,7 @@ export class Gauge extends CoreGauge {
 			.status(this.data.statuses.EUKRASIAN_DIAGNOSIS.id), this.onShieldOverwrite)
 		this.addEventHook(partyFilter.type('statusApply').status(this.data.matchStatusId(OVERWRITES_DIAGNOSIS)), this.onShieldOverwrite)
 		this.addEventHook(playerFilter.action(this.data.actions.PEPSIS.id), this.onPepsis)
+		this.addEventHook(playerFilter.type('action').action(this.data.matchActionId(ADDERSTING_CONSUMERS)), () => this.adderstingGauge.spend(1))
 	}
 
 	/** Addersgall is weird, the timer restarts immediately on death, not after raising, at least in the media tour build */
