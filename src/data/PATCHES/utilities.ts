@@ -33,7 +33,7 @@ export function patchSupported(
 	edition: GameEdition,
 	from: PatchNumber,
 	to: PatchNumber,
-	at = (new Date()).getTime(),
+	at = (new Date()).getTime() / 1000,
 ) {
 	if (!from) { return false }
 

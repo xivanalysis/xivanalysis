@@ -7,9 +7,8 @@ import {Hypercharge} from './Hypercharge'
 import MultiHitSkills from './MultiHitSkills'
 import QueenTimeline from './QueenTimeline'
 import {Reassemble} from './Reassemble'
-import Tincture from './Tincture'
-import Wildfire from './Wildfire'
-import YassQueen from './YassQueen'
+import {Tincture} from './Tincture'
+import {YassQueen} from './YassQueen'
 
 export default [
 	ActionTimeline,
@@ -22,6 +21,5 @@ export default [
 	QueenTimeline,
 	Reassemble,
 	Tincture,
-	Wildfire,
 	YassQueen,
 ]

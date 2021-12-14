@@ -7,7 +7,7 @@ import {HistoryEntry} from '../History'
 import {calculateExpectedGcdsForTime} from './ExpectedGcdCountEvaluator'
 import {EvaluationOutput, WindowEvaluator} from './WindowEvaluator'
 
-interface AllowedGcdsOnlyOptions {
+export interface AllowedGcdsOnlyOptions {
 	expectedGcdCount: number
 	allowedGcds: number[]
 	/**
@@ -42,12 +42,12 @@ interface AllowedGcdsOnlyOptions {
 export class AllowedGcdsOnlyEvaluator implements WindowEvaluator {
 
 	private expectedGcdCount: number
-	private allowedGcds: number[]
-	private globalCooldown: GlobalCooldown
-	private suggestionIcon: string
-	private suggestionContent: JSX.Element
-	private suggestionWindowName: JSX.Element
-	private severityTiers: SeverityTiers
+	protected allowedGcds: number[]
+	protected globalCooldown: GlobalCooldown
+	protected suggestionIcon: string
+	protected suggestionContent: JSX.Element
+	protected suggestionWindowName: JSX.Element
+	protected severityTiers: SeverityTiers
 	private adjustCount: (window: HistoryEntry<EvaluatedAction[]>) => number
 
 	constructor(opts: AllowedGcdsOnlyOptions) {
@@ -98,7 +98,7 @@ export class AllowedGcdsOnlyEvaluator implements WindowEvaluator {
 		return window.data.filter(cast => cast.action.onGcd && !this.allowedGcds.includes(cast.action.id)).length
 	}
 
-	private calculateExpectedGcdsForWindow(window: HistoryEntry<EvaluatedAction[]>) {
+	protected calculateExpectedGcdsForWindow(window: HistoryEntry<EvaluatedAction[]>) {
 		return calculateExpectedGcdsForTime(this.expectedGcdCount, this.globalCooldown.getEstimate(), window.start, window.end) + this.adjustCount(window)
 	}
 

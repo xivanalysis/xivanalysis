@@ -14,6 +14,11 @@ export const changelog = [
 	},
 	{
 		date: new Date('2021-11-27'),
+		Changes: () => <>Removed combo drop leniency around back-to-back Standard/Technical Steps due to lengthened combo timeout.</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
+	{
+		date: new Date('2021-11-27'),
 		Changes: () => <>Updated Esprit gauge generation simulation.</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],
 	},

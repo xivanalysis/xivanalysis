@@ -48,7 +48,6 @@ class Analyse extends Component {
 		try {
 			conductor = new Conductor({
 				report,
-				legacyReport,
 				pullId,
 				actorId,
 			})
