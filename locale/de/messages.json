@@ -338,6 +338,7 @@
   "gnb.ammo.leftover-ammo.content": "Vermeide es, am Ende eines Kampfes noch Patronen übrig zu haben. Nutze sie während des Kampfes. <0/> macht mehr Schaden als jeder Part deiner <1/> Kombo.",
   "gnb.ammo.leftover-ammo.why": "Du hattest {0, plural, one {# Patrone} other {# Patronen}} am Ende des Kampfes übrig.",
   "gnb.ammo.title": "Patronen-Zeitleiste",
+  "gnb.continuation.checklist.requirement.continuation.name": "<0/>-Nutzen pro <1/>-Kombo-Aktion",
   "gnb.nomercy.chart.notes.no": "Nein",
   "gnb.nomercy.chart.notes.yes": "Ja",
   "gnb.nomercy.suggestions.gcds.content": "Versuch, 9 GCDs in jedem <0/>-Fenster zu landen. Eine Dauer von 20 Sekunden ist genug, um 9 GCDs mit voller Uptime unterzubringen, wenn du bis zum letzten Drittel von jedem GCD-Timer wartest.",
