@@ -376,6 +376,7 @@
   "gnb.ammo.leftover-ammo.content": "Évitez d'avoir des restes de munitions à la fin d'un combat, envisagez d'utiliser les munitions plus tôt si possible. <0/> est plus puissant que n'importe lequel de vos combo <1/>.",
   "gnb.ammo.leftover-ammo.why": "Il vous restait {0, plural,one {# cartouche}other {# cartouches}} à la fin du combat.",
   "gnb.ammo.title": "Chronologie des cartouches",
+  "gnb.continuation.checklist.requirement.continuation.name": "<0/> utilisation par <1/> action de combo",
   "gnb.nomercy.chart.notes.no": "Non",
   "gnb.nomercy.chart.notes.yes": "Oui",
   "gnb.nomercy.notes.header": "Cartouche de sang",
