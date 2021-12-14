@@ -38,6 +38,7 @@ export const BRD = ensureActions({
 		cooldown: 15000,
 		potency: 110,
 		cooldownGroup: 5,
+		charges: 3,
 	},
 	STRAIGHT_SHOT: {
 		id: 98,
@@ -104,6 +105,7 @@ export const BRD = ensureActions({
 		cooldown: 15000,
 		potency: 100,
 		cooldownGroup: 5,
+		charges: 3,
 	},
 	BATTLE_VOICE: {
 		id: 118,
