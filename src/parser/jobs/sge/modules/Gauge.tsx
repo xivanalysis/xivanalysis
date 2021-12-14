@@ -86,8 +86,8 @@ export class Gauge extends CoreGauge {
 		const partyIds = this.actors.friends.filter(friend => friend.playerControlled).map(friend => friend.id)
 		const partyFilter = filter<Event>().target(oneOf(partyIds))
 		const playerDiagnosisPartyFilter = partyFilter.source(this.parser.actor.id).status(this.data.statuses.EUKRASIAN_DIAGNOSIS.id)
-		this.addEventHook(playerFilter.action(this.data.matchActionId(ADDERSGALL_CONSUMERS)), this.onConsumeAddersgall)
-		this.addEventHook(playerFilter.action(this.data.actions.RIZOMATA.id), () => this.addersgallGauge.generate(1))
+		this.addEventHook(playerFilter.type('action').action(this.data.matchActionId(ADDERSGALL_CONSUMERS)), this.onConsumeAddersgall)
+		this.addEventHook(playerFilter.action(this.data.actions.RHIZOMATA.id), () => this.addersgallGauge.generate(1))
 
 		// Hook shield applications/removals that could generate Addersting
 		this.addEventHook(playerDiagnosisPartyFilter.type('statusApply'), this.onShieldApply)
@@ -119,7 +119,7 @@ export class Gauge extends CoreGauge {
 	private onCompleteAddersgallTimer() {
 		this.addersgallGauge.generate(1)
 		if (!this.addersgallGauge.capped) {
-			this.addersgallTimer.refresh()
+			this.addersgallTimer.start()
 		}
 	}
 	//#endregion
