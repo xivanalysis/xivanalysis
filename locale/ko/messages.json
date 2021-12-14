@@ -440,6 +440,8 @@
   "gnb.ammo.leftover-ammo.why": "{0, plural, other {# 개의 소일을}} 남긴 상태에서 전투를 종료하였습니다.",
   "gnb.ammo.title": "소일 사용표",
   "gnb.ammo.waste.content": "",
+  "gnb.continuation.checklist.description": "",
+  "gnb.continuation.checklist.requirement.continuation.name": "",
   "gnb.gauge.resource.ammoLabel": "",
   "gnb.nomercy.chart.notes.no": "비적용",
   "gnb.nomercy.chart.notes.yes": "적용",

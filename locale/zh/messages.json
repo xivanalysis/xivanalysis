@@ -440,6 +440,8 @@
   "gnb.ammo.leftover-ammo.why": "战斗结束时，你剩了{0, plural,one {# 个}other {#个}}晶壤。",
   "gnb.ammo.title": "晶壤的使用记录",
   "gnb.ammo.waste.content": "",
+  "gnb.continuation.checklist.description": "",
+  "gnb.continuation.checklist.requirement.continuation.name": "",
   "gnb.gauge.resource.ammoLabel": "",
   "gnb.nomercy.chart.notes.no": "否",
   "gnb.nomercy.chart.notes.yes": "是",

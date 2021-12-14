@@ -440,6 +440,8 @@
   "gnb.ammo.leftover-ammo.why": "Du hattest {0, plural, one {# Patrone} other {# Patronen}} am Ende des Kampfes übrig.",
   "gnb.ammo.title": "Patronen-Zeitleiste",
   "gnb.ammo.waste.content": "",
+  "gnb.continuation.checklist.description": "",
+  "gnb.continuation.checklist.requirement.continuation.name": "",
   "gnb.gauge.resource.ammoLabel": "",
   "gnb.nomercy.chart.notes.no": "Nein",
   "gnb.nomercy.chart.notes.yes": "Ja",
