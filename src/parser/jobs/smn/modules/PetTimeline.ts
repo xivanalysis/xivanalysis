@@ -3,20 +3,12 @@ import {Events} from 'event'
 import {PetTimeline as CorePetTimeline} from 'parser/core/modules/PetTimeline'
 
 const COMMANDED_SKILLS: ActionKey[] = [
-	// Egi Assault
-	'AERIAL_SLASH',
-	'EARTHEN_ARMOR',
-	'CRIMSON_CYCLONE',
-	// Egi Assault II
-	'SLIPSTREAM',
-	'SMN_MOUNTAIN_BUSTER',
-	'FLAMING_CRUSH',
-	// Enkindles
+	// Summons
 	'AERIAL_BLAST',
 	'EARTHEN_FURY',
 	'INFERNO',
 	// all egis
-	'DEVOTION',
+	'SEARING_LIGHT',
 	// Bahamut
 	'AKH_MORN',
 	// Phoenix

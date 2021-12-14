@@ -2,11 +2,11 @@ import ACTIONS from 'data/ACTIONS'
 import {AoEUsages} from 'parser/core/modules/AoEUsages'
 
 export class AoeChecker extends AoEUsages {
-	suggestionIcon = ACTIONS.OUTBURST.icon
+	suggestionIcon = ACTIONS.TRI_DISASTER.icon
 
 	trackedActions = [
 		{
-			aoeAction: ACTIONS.OUTBURST,
+			aoeAction: ACTIONS.TRI_DISASTER,
 			stActions: [ACTIONS.RUIN_III],
 			minTargets: 3,
 		},
@@ -17,7 +17,7 @@ export class AoeChecker extends AoEUsages {
 		},
 		{
 			aoeAction: ACTIONS.ENERGY_SIPHON,
-			stActions: [ACTIONS.ENERGY_DRAIN],
+			stActions: [ACTIONS.SMN_ENERGY_DRAIN],
 			minTargets: 3,
 		},
 	]

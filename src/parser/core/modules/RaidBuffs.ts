@@ -32,7 +32,7 @@ const TRACKED_STATUSES: StatusConfig[] = [
 	{key: 'EMBOLDEN_PHYSICAL'}, // phys only?
 	{key: 'LEFT_EYE', exclude: ['DRAGOON']}, // notDRG
 	{key: 'TRICK_ATTACK_VULNERABILITY_UP', name: 'Trick Attack'},
-	{key: 'DEVOTION'},
+	{key: 'SEARING_LIGHT'},
 	{key: 'TECHNICAL_FINISH'},
 	{key: 'STANDARD_FINISH_PARTNER'},
 	{key: 'DEVILMENT'},

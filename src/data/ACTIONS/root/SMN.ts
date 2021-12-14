@@ -1,58 +1,87 @@
 import {Attribute} from 'event'
-import {PETS} from '../../PETS'
 import {ensureActions} from '../type'
 
 // use action id of a skill id in the group to avoid potential duplications
 export const SMN_COOLDOWN_GROUP = {
-	SUMMON: 4,
 	ENERGY: 8,
-	TRANCE: 15,
-	EGI_ASSAULT: 9,
-	EGI_ASSAULT_II: 10,
-	ENKINDLE: 24,
+	DEMI: 15,
 }
 
 export const SMN = ensureActions({
-	// -----
-	// Player
-	// -----
-	SUMMON_III: {
-		id: 180,
-		name: 'Summon III',
-		icon: 'https://xivapi.com/i/002000/002680.png',
-		cooldown: 3000,
-		cooldownGroup: SMN_COOLDOWN_GROUP.SUMMON,
+	SUMMON_CARBUNCLE: {
+		id: 25798,
+		name: 'Summon Carbuncle',
+		icon: 'https://xivapi.com/i/000000/000516.png',
+		onGcd: true,
+		speedAttribute: Attribute.SPELL_SPEED,
+		castTime: 2500,
+	},
+
+	RADIANT_AEGIS: {
+		id: 25799,
+		name: 'Radiant Aegis',
+		icon: 'https://xivapi.com/i/002000/002750.png',
+		cooldown: 30000,
+		charges: 2,
+	},
+
+	SMN_PHYSICK: {
+		id: 16230,
+		name: 'Physick',
+		icon: 'https://xivapi.com/i/000000/000518.png',
+		onGcd: true,
+		speedAttribute: Attribute.SPELL_SPEED,
+		castTime: 1500,
+	},
+
+	GEMSHINE: {
+		id: 25883,
+		name: 'Gemshine',
+		icon: 'https://xivapi.com/i/002000/002777.png',
+		onGcd: true,
+		speedAttribute: Attribute.SPELL_SPEED,
+		castTime: 2500,
 	},
 
 	FESTER: {
 		id: 181,
 		name: 'Fester',
 		icon: 'https://xivapi.com/i/002000/002676.png',
-		cooldown: 5000,
+		cooldown: 1000,
 	},
 
-	OUTBURST: {
-		id: 16511,
-		name: 'Outburst',
-		icon: 'https://xivapi.com/i/002000/002698.png',
+	SMN_ENERGY_DRAIN: {
+		id: 16508,
+		name: 'Energy Drain',
+		icon: 'https://xivapi.com/i/000000/000514.png',
+		cooldown: 60000,
+		cooldownGroup: SMN_COOLDOWN_GROUP.ENERGY,
+		statusesApplied: ['FURTHER_RUIN'],
+	},
+
+	PRECIOUS_BRILLIANCE: {
+		id: 25884,
+		name: 'Precious Brilliance',
+		icon: 'https://xivapi.com/i/002000/002778.png',
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 2500,
-	},
-
-	ENERGY_SIPHON: {
-		id: 16510,
-		name: 'Energy Siphon',
-		icon: 'https://xivapi.com/i/002000/002697.png',
-		cooldown: 30000,
-		cooldownGroup: SMN_COOLDOWN_GROUP.ENERGY,
 	},
 
 	PAINFLARE: {
 		id: 3578,
 		name: 'Painflare',
 		icon: 'https://xivapi.com/i/002000/002681.png',
-		cooldown: 5000,
+		cooldown: 1000,
+	},
+
+	ENERGY_SIPHON: {
+		id: 16510,
+		name: 'Energy Siphon',
+		icon: 'https://xivapi.com/i/002000/002697.png',
+		cooldown: 60000,
+		cooldownGroup: SMN_COOLDOWN_GROUP.ENERGY,
+		statusesApplied: ['FURTHER_RUIN'],
 	},
 
 	RUIN_III: {
@@ -61,57 +90,38 @@ export const SMN = ensureActions({
 		icon: 'https://xivapi.com/i/002000/002682.png',
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
-		castTime: 2500, // This is reduced to instant during DWT
+		castTime: 1500,
 	},
 
-	TRI_DISASTER: {
-		id: 3580,
-		name: 'Tri-disaster',
-		icon: 'https://xivapi.com/i/002000/002683.png',
-		cooldown: 50000,
-		statusesApplied: ['BIO_III', 'MIASMA_III'],
+	ASTRAL_IMPULSE: {
+		id: 25820,
+		name: 'Astral Impulse',
+		icon: 'https://xivapi.com/i/002000/002757.png',
+		onGcd: true,
+		speedAttribute: Attribute.SPELL_SPEED,
 	},
 
-	DREADWYRM_TRANCE: {
-		id: 3581,
-		name: 'Dreadwyrm Trance',
-		icon: 'https://xivapi.com/i/002000/002684.png',
-		cooldown: 55000,
-		cooldownGroup: SMN_COOLDOWN_GROUP.TRANCE,
+	ASTRAL_FLARE: {
+		id: 25821,
+		name: 'Astral Impulse',
+		icon: 'https://xivapi.com/i/002000/002758.png',
+		onGcd: true,
+		speedAttribute: Attribute.SPELL_SPEED,
+	},
+
+	ASTRAL_FLOW: {
+		id: 25822,
+		name: 'Astral Flow',
+		icon: 'https://xivapi.com/i/002000/002759.png',
+		onGcd: true,
+		speedAttribute: Attribute.SPELL_SPEED,
 	},
 
 	DEATHFLARE: {
 		id: 3582,
 		name: 'Deathflare',
 		icon: 'https://xivapi.com/i/002000/002685.png',
-		cooldown: 15000,
-	},
-
-	// Both SMN and SCH have Aetherpact, but they're different skills
-	SMN_AETHERPACT: {
-		id: 7423,
-		name: 'Aetherpact',
-		icon: 'https://xivapi.com/i/002000/002687.png',
-		cooldown: 180000,
-	},
-
-	BIO_III: {
-		id: 7424,
-		name: 'Bio III',
-		icon: 'https://xivapi.com/i/002000/002689.png',
-		onGcd: true,
-		speedAttribute: Attribute.SPELL_SPEED,
-		statusesApplied: ['BIO_III'],
-	},
-
-	MIASMA_III: {
-		id: 7425,
-		name: 'Miasma III',
-		icon: 'https://xivapi.com/i/002000/002690.png',
-		onGcd: true,
-		speedAttribute: Attribute.SPELL_SPEED,
-		castTime: 2500,
-		statusesApplied: ['MIASMA_III'],
+		cooldown: 20000,
 	},
 
 	RUIN_IV: {
@@ -122,27 +132,62 @@ export const SMN = ensureActions({
 		speedAttribute: Attribute.SPELL_SPEED,
 	},
 
+	SEARING_LIGHT: {
+		id: 25801,
+		name: 'Searing Light',
+		icon: 'https://xivapi.com/i/002000/002752.png',
+		cooldown: 120000,
+	},
+
 	SUMMON_BAHAMUT: {
 		id: 7427,
 		name: 'Summon Bahamut',
 		icon: 'https://xivapi.com/i/002000/002691.png',
-		cooldown: 30000,
+		onGcd: true,
+		speedAttribute: Attribute.SPELL_SPEED,
+		cooldown: 60000,
+		cooldownGroup: SMN_COOLDOWN_GROUP.DEMI,
 	},
 
 	ENKINDLE_BAHAMUT: {
 		id: 7429,
 		name: 'Enkindle Bahamut',
 		icon: 'https://xivapi.com/i/002000/002693.png',
-		cooldown: 10000,
+		cooldown: 20000,
 	},
 
-	FIREBIRD_TRANCE: {
-		id: 16549,
-		name: 'Firebird Trance',
-		icon: 'https://xivapi.com/i/002000/002734.png',
-		cooldown: 55000,
-		cooldownGroup: SMN_COOLDOWN_GROUP.TRANCE,
-		statusesApplied: ['EVERLASTING_FLIGHT'],
+	RUBY_RITE: {
+		id: 25823,
+		name: 'Ruby Rite',
+		icon: 'https://xivapi.com/i/002000/002760.png',
+		onGcd: true,
+		speedAttribute: Attribute.SPELL_SPEED,
+		castTime: 2800,
+	},
+
+	TOPAZ_RITE: {
+		id: 25824,
+		name: 'Topaz Rite',
+		icon: 'https://xivapi.com/i/002000/002761.png',
+		onGcd: true,
+		speedAttribute: Attribute.SPELL_SPEED,
+	},
+
+	EMERALD_RITE: {
+		id: 25825,
+		name: 'Emerald Rite',
+		icon: 'https://xivapi.com/i/002000/002762.png',
+		onGcd: true,
+		cooldown: 1500,
+	},
+
+	TRI_DISASTER: {
+		id: 25826,
+		name: 'Tri-Disaster',
+		icon: 'https://xivapi.com/i/002000/002763.png',
+		onGcd: true,
+		speedAttribute: Attribute.SPELL_SPEED,
+		castTime: 1500,
 	},
 
 	FOUNTAIN_OF_FIRE: {
@@ -161,259 +206,129 @@ export const SMN = ensureActions({
 		speedAttribute: Attribute.SPELL_SPEED,
 	},
 
+	SUMMON_PHOENIX: {
+		id: 25831,
+		name: 'Summon Phoenix',
+		icon: 'https://xivapi.com/i/002000/002765.png',
+		onGcd: true,
+		speedAttribute: Attribute.SPELL_SPEED,
+		cooldown: 60000,
+		cooldownGroup: SMN_COOLDOWN_GROUP.DEMI,
+		statusesApplied: ['EVERLASTING_FLIGHT'],
+	},
+
 	ENKINDLE_PHOENIX: {
 		id: 16516,
 		name: 'Enkindle Phoenix',
 		icon: 'https://xivapi.com/i/002000/002737.png',
-		cooldown: 10000,
+		cooldown: 20000,
 	},
 
-	// Egi Assault, Egi Assault II, and Enkindle have unique ids depending on the summoned pet.
-	EGI_ASSAULT: {
-		id: 16509,
-		name: 'Egi Assault',
-		icon: 'https://xivapi.com/i/002000/002695.png',
-		cooldown: 30000,
-		cooldownGroup: SMN_COOLDOWN_GROUP.EGI_ASSAULT,
+	REKINDLE: {
+		id: 25830,
+		name: 'Rekindle',
+		icon: 'https://xivapi.com/i/002000/002764.png',
+		cooldown: 20000,
+		statusesApplied: ['REKINDLE', 'UNDYING_FLAME'],
+	},
+
+	RUBY_CATASTROPHE: {
+		id: 25832,
+		name: 'Ruby Catastrophe',
+		icon: 'https://xivapi.com/i/002000/002766.png',
 		onGcd: true,
-		gcdRecast: 2500,
-		charges: 2,
+		speedAttribute: Attribute.SPELL_SPEED,
+		castTime: 2800,
 	},
 
-	ASSAULT_I_AERIAL_SLASH: {
-		id: 16797,
-		name: 'Assault I: Aerial Slash',
-		icon: 'https://xivapi.com/i/002000/002717.png',
-		cooldown: 30000,
-		cooldownGroup: SMN_COOLDOWN_GROUP.EGI_ASSAULT,
+	TOPAZ_CATASTROPHE: {
+		id: 25833,
+		name: 'Topaz Catastrophe',
+		icon: 'https://xivapi.com/i/002000/002767.png',
 		onGcd: true,
-		gcdRecast: 2500,
-		charges: 2,
+		speedAttribute: Attribute.SPELL_SPEED,
 	},
 
-	ASSAULT_I_EARTHEN_ARMOR: {
-		id: 16795,
-		name: 'Assault I: Earthen Armor',
-		icon: 'https://xivapi.com/i/002000/002707.png',
-		cooldown: 30000,
-		cooldownGroup: SMN_COOLDOWN_GROUP.EGI_ASSAULT,
+	EMERALD_CATASTROPHE: {
+		id: 25834,
+		name: 'Emerald Catastrophe',
+		icon: 'https://xivapi.com/i/002000/002768.png',
 		onGcd: true,
-		gcdRecast: 2500,
-		charges: 2,
+		cooldown: 1500,
 	},
 
-	ASSAULT_I_CRIMSON_CYCLONE: {
-		id: 16799,
-		name: 'Assault I: Crimson Cyclone',
-		icon: 'https://xivapi.com/i/002000/002726.png',
-		cooldown: 30000,
-		cooldownGroup: SMN_COOLDOWN_GROUP.EGI_ASSAULT,
+	CRIMSON_CYCLONE: {
+		id: 25835,
+		name: 'Crimson Cyclone',
+		icon: 'https://xivapi.com/i/002000/002769.png',
 		onGcd: true,
-		gcdRecast: 2500,
-		charges: 2,
+		speedAttribute: Attribute.SPELL_SPEED,
 	},
 
-	EGI_ASSAULT_II: {
-		id: 16512,
-		name: 'Egi Assault II',
-		icon: 'https://xivapi.com/i/002000/002696.png',
-		cooldown: 30000,
-		cooldownGroup: SMN_COOLDOWN_GROUP.EGI_ASSAULT_II,
+	CRIMSON_STRIKE: {
+		id: 25885,
+		name: 'Crimson Strike',
+		icon: 'https://xivapi.com/i/002000/002779.png',
 		onGcd: true,
-		gcdRecast: 2500,
-		charges: 2,
+		speedAttribute: Attribute.SPELL_SPEED,
 	},
 
-	ASSAULT_II_SLIIPSTREAM: {
-		id: 16798,
-		name: 'Assault II: Slipstream',
-		icon: 'https://xivapi.com/i/002000/002718.png',
-		cooldown: 30000,
-		cooldownGroup: SMN_COOLDOWN_GROUP.EGI_ASSAULT_II,
+	SMN_MOUNTAIN_BUSTER: {
+		id: 25836,
+		name: 'Mountain Buster',
+		icon: 'https://xivapi.com/i/002000/002770.png',
+		cooldown: 1000,
+	},
+
+	SLIPSTREAM: {
+		id: 25837,
+		name: 'Slipstream',
+		icon: 'https://xivapi.com/i/002000/002771.png',
 		onGcd: true,
-		gcdRecast: 2500,
-		charges: 2,
+		speedAttribute: Attribute.SPELL_SPEED,
+		castTime: 3000,
+		cooldown: 3500,
+		statusesApplied: ['SLIPSTREAM'],
 	},
 
-	ASSAULT_II_MOUNTAIN_BUSTER: {
-		id: 16796,
-		name: 'Assault II: Mountain Buster',
-		icon: 'https://xivapi.com/i/002000/002708.png',
-		cooldown: 30000,
-		cooldownGroup: SMN_COOLDOWN_GROUP.EGI_ASSAULT_II,
+	SUMMON_IFRIT_II: {
+		id: 25838,
+		name: 'Summon Ifrit II',
+		icon: 'https://xivapi.com/i/002000/002772.png',
 		onGcd: true,
-		gcdRecast: 2500,
-		charges: 2,
+		speedAttribute: Attribute.SPELL_SPEED,
 	},
 
-	ASSAULT_II_FLAMING_CRUSH: {
-		id: 16800,
-		name: 'Assault II: Flaming Crush',
-		icon: 'https://xivapi.com/i/002000/002727.png',
-		cooldown: 30000,
-		cooldownGroup: SMN_COOLDOWN_GROUP.EGI_ASSAULT_II,
+	SUMMON_TITAN_II: {
+		id: 25839,
+		name: 'Summon Titan II',
+		icon: 'https://xivapi.com/i/002000/002773.png',
 		onGcd: true,
-		gcdRecast: 2500,
-		charges: 2,
+		speedAttribute: Attribute.SPELL_SPEED,
 	},
 
-	ENKINDLE: {
-		id: 184,
-		name: 'Enkindle',
-		icon: 'https://xivapi.com/i/002000/002677.png',
-		cooldown: 120000,
-		cooldownGroup: SMN_COOLDOWN_GROUP.ENKINDLE,
-	},
-
-	ENKINDLE_AERIAL_BLAST: {
-		id: 16802,
-		name: 'Enkindle: Aerial Blast',
-		icon: 'https://xivapi.com/i/002000/002719.png',
-		cooldown: 120000,
-		cooldownGroup: SMN_COOLDOWN_GROUP.ENKINDLE,
-	},
-
-	ENKINDLE_EARTHEN_FURY: {
-		id: 16801,
-		name: 'Enkindle: Earthen Fury',
-		icon: 'https://xivapi.com/i/002000/002709.png',
-		cooldown: 120000,
-		cooldownGroup: SMN_COOLDOWN_GROUP.ENKINDLE,
-	},
-
-	ENKINDLE_INFERNO: {
-		id: 16803,
-		name: 'Enkindle: Inferno',
-		icon: 'https://xivapi.com/i/002000/002728.png',
-		cooldown: 120000,
-		cooldownGroup: SMN_COOLDOWN_GROUP.ENKINDLE,
+	SUMMON_GARUDA_II: {
+		id: 25840,
+		name: 'Summon Garuda II',
+		icon: 'https://xivapi.com/i/002000/002774.png',
+		onGcd: true,
+		speedAttribute: Attribute.SPELL_SPEED,
 	},
 
 	// -----
 	// Pet
 	// -----
-	// Garuda-egi
-	WIND_BLADE: {
-		id: 792,
-		name: 'Wind Blade',
-		icon: 'https://xivapi.com/i/002000/002711.png',
-		pet: PETS.GARUDA_EGI.id,
-	},
-
-	AERIAL_SLASH: {
-		id: 794,
-		name: 'Aerial Slash',
-		icon: 'https://xivapi.com/i/002000/002712.png',
-		pet: PETS.GARUDA_EGI.id,
-	},
-
-	SLIPSTREAM: {
-		id: 16523,
-		name: 'Slipstream',
-		icon: 'https://xivapi.com/i/002000/002716.png',
-		pet: PETS.GARUDA_EGI.id,
-	},
-
-	AERIAL_BLAST: {
-		id: 796,
-		name: 'Aerial Blast',
-		icon: 'https://xivapi.com/i/002000/002715.png',
-		pet: PETS.GARUDA_EGI.id,
-	},
-
-	// Titan-egi
-	TITAN_EGI_ATTACK: {
-		id: 1346,
-		name: 'Attack',
-		icon: '',
-		pet: PETS.TITAN_EGI.id,
-	},
-
-	ROCK_BUSTER: {
-		id: 787,
-		name: 'Rock Buster',
-		icon: 'https://xivapi.com/i/002000/002701.png',
-		pet: PETS.TITAN_EGI.id,
-	},
-
-	SMN_MOUNTAIN_BUSTER: {
-		id: 788,
-		name: 'Mountain Buster',
-		icon: 'https://xivapi.com/i/002000/002702.png',
-		pet: PETS.TITAN_EGI.id,
-	},
-
-	EARTHEN_ARMOR: {
-		id: 16522,
-		name: 'Earthen Armor',
-		icon: 'https://xivapi.com/i/002000/002706.png',
-		pet: PETS.TITAN_EGI.id,
-	},
-
-	EARTHEN_FURY: {
-		id: 791,
-		name: 'Earthen Fury',
-		icon: 'https://xivapi.com/i/002000/002705.png',
-		pet: PETS.TITAN_EGI.id,
-	},
-
-	// Ifrit-egi
-	IFRIT_EGI_ATTACK: {
-		id: 1347,
-		name: 'Attack',
-		icon: '',
-		pet: PETS.IFRIT_EGI.id,
-	},
-
-	CRIMSON_CYCLONE: {
-		id: 797,
-		name: 'Crimson Cyclone',
-		icon: 'https://xivapi.com/i/002000/002721.png',
-		pet: PETS.IFRIT_EGI.id,
-	},
-
-	BURNING_STRIKE: {
-		id: 798,
-		name: 'Burning Strike',
-		icon: 'https://xivapi.com/i/002000/002722.png',
-		pet: PETS.IFRIT_EGI.id,
-	},
-
-	FLAMING_CRUSH: {
-		id: 800,
-		name: 'Flaming Crush',
-		icon: 'https://xivapi.com/i/002000/002724.png',
-		pet: PETS.IFRIT_EGI.id,
-	},
-
-	INFERNO: {
-		id: 801,
-		name: 'Inferno',
-		icon: 'https://xivapi.com/i/002000/002725.png',
-		pet: PETS.IFRIT_EGI.id,
-	},
-
-	// Any pet 'cus it's weirdass
-	DEVOTION: {
-		id: 7450,
-		name: 'Devotion',
-		icon: 'https://xivapi.com/i/002000/002688.png',
-		statusesApplied: ['DEVOTION'],
-	},
-
 	// Demi-bahamut
 	WYRMWAVE: {
 		id: 7428,
 		name: 'Wyrmwave',
 		icon: 'https://xivapi.com/i/002000/002692.png',
-		pet: PETS.DEMI_BAHAMUT.id,
 	},
 
 	AKH_MORN: {
 		id: 7449,
 		name: 'Akh Morn',
 		icon: 'https://xivapi.com/i/002000/002694.png',
-		pet: PETS.DEMI_BAHAMUT.id,
 	},
 
 	// Demi-Phoenix
@@ -421,13 +336,54 @@ export const SMN = ensureActions({
 		id: 16519,
 		name: 'Scarlet Flame',
 		icon: 'https://xivapi.com/i/002000/002733.png',
-		pet: PETS.DEMI_PHOENIX.id,
 	},
 
 	REVELATION: {
 		id: 16518,
 		name: 'Revelation',
 		icon: 'https://xivapi.com/i/002000/002732.png',
-		pet: PETS.DEMI_PHOENIX.id,
+	},
+
+	EVERLASTING_FLIGHT: {
+		id: 16517,
+		name: 'Everlasting Flight',
+		icon: 'https://xivapi.com/i/002000/002731.png',
+		statusesApplied: ['EVERLASTING_FLIGHT'],
+	},
+
+	// Ifrit
+	INFERNO: {
+		id: 25852,
+		name: 'Inferno',
+		icon: 'https://xivapi.com/i/002000/002772.png',
+	},
+
+	// Titan
+	EARTHEN_FURY: {
+		id: 25853,
+		name: 'Earthen Fury',
+		icon: 'https://xivapi.com/i/002000/002773.png',
+	},
+
+	// Garuda
+	AERIAL_BLAST: {
+		id: 25854,
+		name: 'Aerial Blast',
+		icon: 'https://xivapi.com/i/002000/002774.png',
+	},
+
+	// Carbuncle
+	PET_RADIANT_AEGIS: {
+		id: 25841,
+		name: 'Radiant Aegis',
+		icon: 'https://xivapi.com/i/002000/002775.png',
+		statusesApplied: ['RADIANT_AEGIS'],
+	},
+
+	PET_SEARING_LIGHT: {
+		id: 25842,
+		name: 'Searing Light',
+		icon: 'https://xivapi.com/i/002000/002776.png',
+		statusesApplied: ['SEARING_LIGHT'],
 	},
 })

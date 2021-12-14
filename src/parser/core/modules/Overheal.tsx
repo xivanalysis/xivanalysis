@@ -141,7 +141,7 @@ export class Overheal extends Analyser {
 	/**
 	 * Implementing modules MAY change this to set the suggestion icon
 	 */
-	protected suggestionIcon: string = ACTIONS.PHYSICK.icon
+	protected suggestionIcon: string = ACTIONS.SCH_PHYSICK.icon
 	/**
 	 * Implementing mdoules MAY change this to set the suggestion text
 	 */

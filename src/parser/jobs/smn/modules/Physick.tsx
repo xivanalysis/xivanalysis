@@ -22,7 +22,7 @@ export class Physick extends Analyser {
 	override initialise() {
 		this.addEventHook(
 			filter<Event>().source(this.parser.actor.id)
-				.action(this.data.actions.PHYSICK.id)
+				.action(this.data.actions.SMN_PHYSICK.id)
 				.type('action'),
 			this.onPhysick
 		)
@@ -36,10 +36,10 @@ export class Physick extends Analyser {
 	private onComplete() {
 		if (this.phyisckCount > 0) {
 			this.suggestions.add(new Suggestion({
-				icon: ACTIONS.PHYSICK.icon,
+				icon: ACTIONS.SMN_PHYSICK.icon,
 				severity: SEVERITY.MAJOR,
 				content: <Trans id="smn.physick.suggestion.content">
-					Do not cast <ActionLink {...ACTIONS.PHYSICK} /> in group content.
+					Do not cast <ActionLink {...ACTIONS.SMN_PHYSICK} /> in group content.
 					The heal is too small to justify casting over a damaging GCD.
 				</Trans>,
 				why: <Trans id="smn.physick.suggestion.why">
