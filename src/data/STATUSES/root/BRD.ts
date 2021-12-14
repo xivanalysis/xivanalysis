@@ -13,7 +13,7 @@ export const BRD = ensureStatuses({
 		name: 'Raging Strikes',
 		icon: 'https://xivapi.com/i/010000/010354.png',
 		duration: 20000,
-		amount: 0.1,
+		amount: 0.15,
 	},
 	BARRAGE: {
 		id: 128,
