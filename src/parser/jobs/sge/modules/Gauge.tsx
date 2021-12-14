@@ -1,5 +1,7 @@
 import {Trans} from '@lingui/react'
+import Color from 'color'
 import {ActionKey} from 'data/ACTIONS'
+import {JOBS} from 'data/JOBS'
 import {StatusKey} from 'data/STATUSES'
 import {Event, Events} from 'event'
 import {filter, noneOf, oneOf} from 'parser/core/filter'
@@ -8,9 +10,9 @@ import {Actors} from 'parser/core/modules/Actors'
 import {CounterGauge, Gauge as CoreGauge, TimerGauge} from 'parser/core/modules/Gauge'
 import React from 'react'
 
+/** Addersgall configuration */
 const ADDERSGALL_MAX_STACKS = 3
 const ADDERSGALL_TIME_REQUIRED = 20000
-const ADDERSTING_MAX_STACKS = 3
 
 const ADDERSGALL_CONSUMERS: ActionKey[] = [
 	'DRUOCHOLE',
@@ -22,9 +24,17 @@ const ADDERSGALL_CONSUMERS: ActionKey[] = [
 const OVERWRITES_DIAGNOSIS: StatusKey[] = [
 	'EUKRASIAN_PROGNOSIS',
 	'GALVANIZE',
-	'NOCTURNAL_FIELD',
 ]
 
+/** Addersting configuration */
+const ADDERSTING_MAX_STACKS = 3
+
+const ADDERSTING_CONSUMERS: ActionKey[] = [
+	'TOXIKON',
+	'TOXIKON_II',
+]
+
+/** Diagnosis-tracking object interface */
 interface DiagnosisData {
 	applyTimestamp?: number,
 	removeTimestamp?: number,
