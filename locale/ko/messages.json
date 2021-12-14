@@ -356,6 +356,7 @@
   "gnb.ammo.leftover-ammo.content": "전투 종료전에 소일이 남게되는 상황을 최대한 기피하십시오. 기존의 <1/> 콤보보다 <0/>의 위력이 더 높으므로 종료전에 최대한 남은 소일을 마저 사용하십시오.",
   "gnb.ammo.leftover-ammo.why": "{0, plural, other {# 개의 소일을}} 남긴 상태에서 전투를 종료하였습니다.",
   "gnb.ammo.title": "소일 사용표",
+  "gnb.continuation.checklist.requirement.continuation.name": "<1/> 콤보 마다 사용된 <0/>",
   "gnb.nomercy.chart.notes.no": "비적용",
   "gnb.nomercy.chart.notes.yes": "적용",
   "gnb.nomercy.suggestions.gcds.content": "<0/> 구간마다 9회의 글쿨기를 사용하십시오. 글쿨기 콤보의 3번쨰 기술과 병행하면 20초의 지속 시간은 총 9회의 글쿨기를 사용할 수 있을정도로 넉넉할것입니다.",
