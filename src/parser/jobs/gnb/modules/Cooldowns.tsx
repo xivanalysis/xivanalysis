@@ -18,7 +18,7 @@ const FIRST_USE_OFFSET_DIVIDE = 15000 //Current Opener has rough divide set to b
 
 const FIRST_USE_OFFSET_SONIC_BREAK = 15000 //Current Opener has Sonic Break as 6th GCD *GCD Skill*
 
-export default class AbilityDowntime extends CooldownDowntime {
+export class AbilityDowntime extends CooldownDowntime {
 
 	trackedCds = [
 		{

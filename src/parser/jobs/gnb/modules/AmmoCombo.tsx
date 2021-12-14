@@ -32,31 +32,11 @@ class GnashingComboState {
 		this.startTime = start
 		this.rotation = []
 	}
-
 	public get totalHits(): number { return this.rotation.length }
 
-	public get actualJug() : number {
-		return this.rotation.filter(event => event.action === ACTIONS.JUGULAR_RIP.id).length
-	}
-
-	public get actualSavage(): number {
-		return this.rotation.filter(event => event.action === ACTIONS.SAVAGE_CLAW.id).length
-	}
-
-	public get actualTear(): number {
-		return this.rotation.filter(event => event.action === ACTIONS.ABDOMEN_TEAR.id).length
-	}
-
-	public get actualTalon(): number {
-		return this.rotation.filter(event => event.action === ACTIONS.WICKED_TALON.id).length
-	}
-
-	public get actualEye(): number {
-		return this.rotation.filter(event => event.action === ACTIONS.EYE_GOUGE.id).length
-	}
 }
 
-export default class AmmoCombo extends Analyser {
+export class AmmoCombo extends Analyser {
 	static override handle = 'Gnashing Fang Combo issues'
 	static override debug = false
 
@@ -191,24 +171,8 @@ export default class AmmoCombo extends Analyser {
 			return <RotationTable
 				targets={[
 					{
-						header: <ActionLink showName={false} {...ACTIONS.JUGULAR_RIP}/>,
-						accessor: 'jugularRip',
-					},
-					{
-						header: <ActionLink showName={false} {...ACTIONS.SAVAGE_CLAW}/>,
-						accessor: 'savageClaw',
-					},
-					{
-						header: <ActionLink showName={false} {...ACTIONS.ABDOMEN_TEAR}/>,
-						accessor: 'abdomenTear',
-					},
-					{
-						header: <ActionLink showName={false} {...ACTIONS.WICKED_TALON}/>,
-						accessor: 'wickedTalon',
-					},
-					{
-						header: <ActionLink showName={false} {...ACTIONS.EYE_GOUGE}/>,
-						accessor: 'eyeGouge',
+						header: <ActionLink showName={false} {...ACTIONS.GNASHING_FANG}/>,
+						accessor: 'TotalActions',
 					},
 				]}
 				data={this.gnashingComboWindows
@@ -218,26 +182,11 @@ export default class AmmoCombo extends Analyser {
 							start: window.startTime - this.parser.pull.timestamp,
 							end: window.endTime != null ? window.endTime - this.parser.pull.timestamp : window.startTime - this.parser.pull.timestamp,
 							targetsData: {
-								jugularRip: {
-									actual: window.actualJug,
-									expected: EXPECTED_USES.JUGULAR_RIP,
+								TotalActions: {
+									actual: window.totalHits,
+									expected: EXPECTED_USES.TOTAL_SKILLS_PER_COMBO,
 								},
-								savageClaw: {
-									actual: window.actualSavage,
-									expected: EXPECTED_USES.SAVAGE_CLAW,
-								},
-								abdomenTear: {
-									actual: window.actualTear,
-									expected: EXPECTED_USES.ABDOMEN_TEAR,
-								},
-								wickedTalon: {
-									actual: window.actualTalon,
-									expected: EXPECTED_USES.WICKED_TALON,
-								},
-								eyeGouge: {
-									actual: window.actualEye,
-									expected: EXPECTED_USES.EYE_GOUGE,
-								},
+
 							},
 							rotation: window.rotation,
 						})
