@@ -6,7 +6,7 @@ import {StatusKey} from 'data/STATUSES'
 import {Event, Events} from 'event'
 import {filter, noneOf, oneOf} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
-import {Actors} from 'parser/core/modules/Actors'
+import {Actor, Actors} from 'parser/core/modules/Actors'
 import {CounterGauge, Gauge as CoreGauge, TimerGauge} from 'parser/core/modules/Gauge'
 import React from 'react'
 
