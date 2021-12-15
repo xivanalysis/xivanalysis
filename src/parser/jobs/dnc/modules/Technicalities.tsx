@@ -68,7 +68,6 @@ export class Technicalities extends Analyser {
 
 	private history: TechnicalWindow[] = []
 	private badDevilments: number = 0
-	private lastDevilmentTimestamp: number = -1
 
 	private technicalFinishIds = TECHNICAL_FINISHES.map(key => this.data.actions[key].id)
 
@@ -143,12 +142,6 @@ export class Technicalities extends Analyser {
 			} else {
 				lastWindow.poolingProblem = false
 			}
-
-			// If this is the first window, and we didn't catch a devilment use in the window, but we *have* used it,
-			// treat it as a timely usage due to party composition
-			if (this.history.length === 1 && !lastWindow.usedDevilment && this.lastDevilmentTimestamp > 0) {
-				lastWindow.timelyDevilment = true
-			}
 		}
 	}
 
@@ -204,17 +197,11 @@ export class Technicalities extends Analyser {
 		}
 	}
 
+	/** Check to see if Devilment was used at the proper time. In Endwalker, it should immediately follow Technical Finish */
 	private handleDevilment(lastWindow: TechnicalWindow | undefined) {
-		// Don't ding if this is the first Devilment, depending on which job the Dancer is partnered with, it may
-		// be appropriate to use Devilment early. In all other cases, Devilment should be used during Technical Finish
-		if (!this.actors.current.hasStatus(this.data.statuses.TECHNICAL_FINISH.id) && (this.lastDevilmentTimestamp < 0 ||
-			// If the first use we detect is after the cooldown, assume they popped it pre-pull and this 'first'
-			// Use is actually also bad
-			this.parser.currentEpochTimestamp >= this.data.actions.DEVILMENT.cooldown)) {
+		if (!this.actors.current.hasStatus(this.data.statuses.TECHNICAL_FINISH.id)) {
 			this.badDevilments++
 		}
-
-		this.lastDevilmentTimestamp = this.parser.currentEpochTimestamp
 
 		// If we don't have a window for some reason, bail
 		if (lastWindow == null || lastWindow.end) {
@@ -223,8 +210,7 @@ export class Technicalities extends Analyser {
 
 		lastWindow.usedDevilment = true
 
-		// Note if the Devilment was used after the second GCD
-		if (lastWindow.gcdCount <= 1) {
+		if (lastWindow.gcdCount === 0) {
 			lastWindow.timelyDevilment = true
 		}
 	}
