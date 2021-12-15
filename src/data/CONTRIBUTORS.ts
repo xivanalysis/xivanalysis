@@ -31,12 +31,27 @@ const CONTRIBUTORS = ensureRecord<Contributor>()({
 			JOBS.NINJA,
 		],
 	},
+	HINT: {
+		name: 'Hint',
+		avatar: require('./avatar/Hint.png'),
+		jobs: [
+			JOBS.MACHINIST, JOBS.BARD,
+		],
+	},
 	OTOCEPHALY: {
 		name: 'Otocephaly',
 		avatar: require('./avatar/Otocephaly.png'),
 		jobs: [
 			JOBS.ASTROLOGIAN,
 			JOBS.WHITE_MAGE,
+		],
+	},
+	RYAN: {
+		name: 'Ryan',
+		avatar: require('./avatar/Rjb99.png'),
+		jobs: [
+			JOBS.GUNBREAKER,
+			JOBS.SAMURAI,
 		],
 	},
 })
