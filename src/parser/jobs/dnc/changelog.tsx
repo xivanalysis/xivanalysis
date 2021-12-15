@@ -22,4 +22,9 @@ export const changelog = [
 		Changes: () => <>Updated Esprit gauge generation simulation.</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],
 	},
+	{
+		date: new Date('2021-12-15'),
+		Changes: () => <>Update Devilment timing suggestion, and mark job as supported for Endwalker.</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
 ]
