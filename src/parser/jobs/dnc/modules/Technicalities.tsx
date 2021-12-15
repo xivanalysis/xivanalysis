@@ -1,6 +1,6 @@
 import {t} from '@lingui/macro'
 import {Plural, Trans} from '@lingui/react'
-import {ActionLink, StatusLink} from 'components/ui/DbLink'
+import {DataLink} from 'components/ui/DbLink'
 import {RotationTable} from 'components/ui/RotationTable'
 import {StatusKey} from 'data/STATUSES'
 import {Event, Events} from 'event'
@@ -220,12 +220,12 @@ export class Technicalities extends Analyser {
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.DEVILMENT.icon,
 			content: <Trans id="dnc.technicalities.suggestions.bad-devilments.content">
-				Using <ActionLink {...this.data.actions.DEVILMENT} /> outside of your <StatusLink {...this.data.statuses.TECHNICAL_FINISH} /> windows leads to an avoidable loss in DPS. Aside from certain opener situations, you should be using <ActionLink {...this.data.actions.DEVILMENT} /> at the beginning of your <StatusLink {...this.data.statuses.TECHNICAL_FINISH} /> windows.
+				Using <DataLink action="DEVILMENT" /> outside of your <DataLink status="TECHNICAL_FINISH" /> windows leads to an avoidable loss in DPS. Aside from certain opener situations, you should be using <DataLink action="DEVILMENT" /> at the beginning of your <DataLink status="TECHNICAL_FINISH" /> windows.
 			</Trans>,
 			tiers: TECHNICAL_SEVERITY_TIERS,
 			value: this.badDevilments,
 			why: <Trans id="dnc.technicalities.suggestions.bad-devilments.why">
-				<Plural value={this.badDevilments} one="# Devilment" other="# Devilments"/> used outside <StatusLink {...this.data.statuses.TECHNICAL_FINISH} />.
+				<Plural value={this.badDevilments} one="# Devilment" other="# Devilments"/> used outside <DataLink status="TECHNICAL_FINISH" />.
 			</Trans>,
 		}))
 
@@ -234,7 +234,7 @@ export class Technicalities extends Analyser {
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.DEVILMENT.icon,
 			content: <Trans id="dnc.technicalities.suggestions.late-devilments.content">
-				Using <ActionLink {...this.data.actions.DEVILMENT} /> as early as possible during your <StatusLink {...this.data.statuses.TECHNICAL_FINISH} /> windows allows you to maximize the multiplicative bonuses that both statuses give you. Try to use it within the first two GCDs of your window.
+				Using <DataLink action="DEVILMENT" /> as early as possible during your <DataLink status="TECHNICAL_FINISH" /> windows allows you to maximize the multiplicative bonuses that both statuses give you. It should be used immediately after <DataLink action="TECHNICAL_FINISH" />.
 			</Trans>,
 			tiers: TECHNICAL_SEVERITY_TIERS,
 			value: lateDevilments,
@@ -248,12 +248,12 @@ export class Technicalities extends Analyser {
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.FAN_DANCE.icon,
 			content: <Trans id="dnc.technicalities.suggestions.unpooled.content">
-				Pooling your Feathers before going into a <StatusLink {...this.data.statuses.TECHNICAL_FINISH} /> window allows you to use more <ActionLink {...this.data.actions.FAN_DANCE} />s with the multiplicative bonuses active, increasing their effectiveness. Try to build and hold on to at least three feathers between windows.
+				Pooling your Feathers before going into a <DataLink status="TECHNICAL_FINISH" /> window allows you to use more <DataLink action="FAN_DANCE" />s with the multiplicative bonuses active, increasing their effectiveness. Try to build and hold on to at least three feathers between windows.
 			</Trans>,
 			tiers: TECHNICAL_SEVERITY_TIERS,
 			value: unpooledWindows,
 			why: <Trans id="dnc.technicalities.suggestions.unpooled.why">
-				<Plural value={unpooledWindows} one="# window" other="# windows"/> were missing potential <ActionLink {...this.data.actions.FAN_DANCE} />s.
+				<Plural value={unpooledWindows} one="# window" other="# windows"/> were missing potential <DataLink action="FAN_DANCE" />s.
 			</Trans>,
 		}))
 	}
@@ -264,8 +264,8 @@ export class Technicalities extends Analyser {
 			{otherDancers && (
 				<Message>
 					<Trans id="dnc.technicalities.rotation-table.message">
-						This log contains <ActionLink showIcon={false} {...this.data.actions.TECHNICAL_STEP}/> windows that were started or extended by other Dancers.<br />
-						Use your best judgement about which windows you should be dumping <ActionLink showIcon={false} {...this.data.actions.DEVILMENT}/>, Feathers, and Esprit under.<br />
+						This log contains <DataLink showIcon={false} action="TECHNICAL_STEP" /> windows that were started or extended by other Dancers.<br />
+						Use your best judgement about which windows you should be dumping <DataLink showIcon={false} action="DEVILMENT" />, Feathers, and Esprit under.<br />
 						Try to make sure they line up with other raid buffs to maximize damage.
 					</Trans>
 				</Message>
@@ -273,11 +273,11 @@ export class Technicalities extends Analyser {
 			<RotationTable
 				notes={[
 					{
-						header: <Trans id="dnc.technicalities.rotation-table.header.missed"><ActionLink showName={false} {...this.data.actions.DEVILMENT}/> On Time?</Trans>,
+						header: <Trans id="dnc.technicalities.rotation-table.header.missed"><DataLink showName={false} action="DEVILMENT" /> On Time?</Trans>,
 						accessor: 'timely',
 					},
 					{
-						header: <Trans id="dnc.technicalities.rotation-table.header.pooled"><ActionLink showName={false} {...this.data.actions.FAN_DANCE}/> Pooled?</Trans>,
+						header: <Trans id="dnc.technicalities.rotation-table.header.pooled"><DataLink showName={false} action="FAN_DANCE" /> Pooled?</Trans>,
 						accessor: 'pooled',
 					},
 					{
