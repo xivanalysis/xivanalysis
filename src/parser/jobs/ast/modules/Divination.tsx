@@ -18,7 +18,7 @@ import DISPLAY_ORDER from './DISPLAY_ORDER'
 const BASE_GCDS_PER_WINDOW = 6
 const PLAYERS_BUFFED_TARGET = 8
 
-interface DIVINATION_Window {
+interface DivinationWindow {
 	start: number
 	end?: number
 	source: Actor['id']
@@ -34,7 +34,7 @@ interface DIVINATION_Window {
 // the character selected for analysis. windows that clip into
 // AST Divination will be marked.
 // Used DNC Technicalities as basis for this module. Rewritten from previous module for consistency purposes
-export default class Divination extends Analyser {
+export class Divination extends Analyser {
 	static override handle = 'Divination'
 	static override title = t('ast.divination.title')`Divination`
 	static override displayOrder = DISPLAY_ORDER.DIVINATION
@@ -44,8 +44,8 @@ export default class Divination extends Analyser {
 	@dependency private suggestions!: Suggestions
 	@dependency private actors!: Actors
 
-	private history: DIVINATION_Window[] = []
-	private currentWindow: DIVINATION_Window | undefined = undefined
+	private history: DivinationWindow[] = []
+	private currentWindow: DivinationWindow | undefined = undefined
 	private castHook?: EventHook<Events['action']>
 
 	private otherAst: {
@@ -83,16 +83,9 @@ export default class Divination extends Analyser {
 		if (this.parser.actor.id !== event.source) {
 			this.otherAst.active = true
 			this.otherAst.start = event.timestamp
-			//if window was open. close it prematurely :(
+			//if window was open. close it prematurely since now dealing with other AST window :(
 			if (this.currentWindow != null) {
-				const eventClose: Events['statusRemove'] = {
-					timestamp: event.timestamp,
-					status: this.data.statuses.DIVINATION.id,
-					type: 'statusRemove',
-					source: event.source,
-					target: this.parser.actor.id,
-				}
-				this.tryCloseWindow(eventClose)
+				this.forceCloseWindow(event.timestamp)
 			}
 		}
 
@@ -128,21 +121,24 @@ export default class Divination extends Analyser {
 
 	private tryCloseWindow(event: Events['statusRemove']) {
 		//note: closing other AST window handled in open window since closing the window doesn't catch what we need because status remove happens before status apply
+		//close window and push to history
+		if (event.source === this.parser.actor.id) {
+			this.forceCloseWindow(event.timestamp)
+		}
+	}
 
+	private forceCloseWindow(timestamp: number) {
 		//to stop using function if window isn't even open. used when splicing
 		if (this.currentWindow == null) {
 			return
 		}
 
-		//close window and push to history
-		if (event.source === this.parser.actor.id) {
-			this.currentWindow.end = event.timestamp
-			this.history.push(this.currentWindow)
-			this.currentWindow = undefined
-			if (this.castHook != null) {
-				this.removeEventHook(this.castHook)
-				this.castHook = undefined
-			}
+		this.currentWindow.end = timestamp
+		this.history.push(this.currentWindow)
+		this.currentWindow = undefined
+		if (this.castHook != null) {
+			this.removeEventHook(this.castHook)
+			this.castHook = undefined
 		}
 	}
 
@@ -185,24 +181,16 @@ export default class Divination extends Analyser {
 				</Trans>,
 				severity: SEVERITY.MAJOR,
 				why: <Trans id="ast.divination.suggestion.usage.why">
-					About {this.otherAst.countOverwritten} <Plural value={this.otherAst.countOverwritten} one="cast" other="casts" /> of <DataLink action="DIVINATION" /> were overwritten resulting in a loss of at least {this.parser.formatDuration(this.otherAst.timeOverwritten)}.
+					{this.otherAst.countOverwritten} <Plural value={this.otherAst.countOverwritten} one="cast" other="casts" /> of <DataLink action="DIVINATION" /> were overwritten resulting in a loss of at least {this.parser.formatDuration(this.otherAst.timeOverwritten)}.
 				</Trans>,
 			}))
 		}
 	}
 
-	// just output, no suggestions for now.
 	override output() {
 
 		//in the case when the encounter ends prior to status remove. splicing the event to log it. note: since close event checks for null, this will not be applicable if the window isn't already open
-		const eventClose: Events['statusRemove'] = {
-			timestamp: this.parser.pull.duration,
-			status: this.data.statuses.DIVINATION.id,
-			type: 'statusRemove',
-			source: this.parser.actor.id,
-			target: this.parser.actor.id,
-		}
-		this.tryCloseWindow(eventClose)
+		this.forceCloseWindow(this.parser.pull.duration)
 
 		const tableData = this.history.map(window => {
 			const end = window.end != null ?
@@ -236,7 +224,6 @@ export default class Divination extends Analyser {
 		//for now, the message is copied directly from DivinationDowntime
 		const message = <p><Trans id="ast.ogcd-downtime.divination.description">
 			<DataLink action="DIVINATION" /> provides Astrologian with a strong amount of raid DPS when stacked together with arcanum.
-			Damage percentage bonuses stack multiplicatively, so it's most optimal to stack it with cards from <DataLink action="DRAW" /> and an Astrologian's <DataLink action="ASTRODYNE" /> when 3 unique seals are obtained. <br/>
 			Try to time the usage to match raid buffs and high output phases of other party members - it's more important to use it on time rather than hold it.
 		</Trans></p>
 
