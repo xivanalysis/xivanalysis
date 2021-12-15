@@ -633,7 +633,7 @@
   "rdm.gauge.suggestions.mana-lost-why": "You lost {0} White Mana and {1} Black Mana due to overage of black Mana",
   "rdm.gauge.suggestions.mana-wasted-content": "Ensure you don't overcap your White Mana before a combo, overcapping White Mana indicates your balance was off; and you potentially lost out on Enchanted Combo damage.  You should look to execute at 80/80 or as close to it as possible.",
   "rdm.gauge.suggestions.mana-wasted-why": "You lost {0} White Mana and {1} Black Mana due to capped Gauge resources",
-  "rdm.gauge.suggestions.wastedprocs.content": "Do not enter your combo with your finisher's proc up when <0/> is down, consider dumping a proc before entering the melee combo as long as you waste less than 8 mana to overcapping",
+  "rdm.gauge.suggestions.wastedprocs.content": "Do not enter your combo with your finisher's proc up. Consider dumping a proc before entering the melee combo as long as you waste less than 8 mana to overcapping.",
   "rdm.gauge.suggestions.wastedprocs.why": "{0, plural, one {# Proc cast was lost due to entering the melee combo with the finisher proc up.} other {# Procs casts were lost due to entering the melee combo with the finisher proc up.}}",
   "rdm.gauge.suggestions.wastedverflare.content": "You should use <0/> over <1/> in the following situations in order of importance<2><3>When your black mana is lower</3><4>Your mana is even and you have <5/> (Use <6/> if available!)</4><7>Black mana is higher by 9 or less and <8/> is available with <9/></7></2>",
   "rdm.gauge.suggestions.wastedverflare.why": "{0, plural, one {# Verfire cast was lost due to using Verholy incorrectly} other {# Verfire casts were lost due to using Verholy incorrectly}}",

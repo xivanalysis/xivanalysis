@@ -633,7 +633,7 @@
   "rdm.gauge.suggestions.mana-lost-why": "由于黑魔元过高而损失{0}白魔元和{1}黑魔元。",
   "rdm.gauge.suggestions.mana-wasted-content": "在你使用连击前，请确保你的白魔元没有超过上限，白魔元超过上限表示你打破了平衡，有可能会因魔元损失失去后续的魔连击伤害。你应尽可能在 80 / 80 点黑白魔元附近进行连击。",
   "rdm.gauge.suggestions.mana-wasted-why": "溢出了{0}白魔元和{1}黑魔元。",
-  "rdm.gauge.suggestions.wastedprocs.content": "当黑白魔元>80，但是<0/>在CD时，如果魔元较低一方有触发，考虑将这个触发打掉再进入近战连。较高一方魔元溢出<8都可以接受。",
+  "rdm.gauge.suggestions.wastedprocs.content": "",
   "rdm.gauge.suggestions.wastedprocs.why": "由于在魔元较低的一方有触发时进入魔连击而损失了 {0} 次触发。",
   "rdm.gauge.suggestions.wastedverflare.content": "在以下情况应该使用<0/> 而非 <1/> （按优先级排序）：<2><3>黑魔元较低</3><4>黑白平衡，且有<5/> (<6/>有就用)</4><7>黑魔元不高出9点，<8/>可用，且有<9/>效果</7></2>",
   "rdm.gauge.suggestions.wastedverflare.why": "由于赤神圣打错而损失 {0, plural, other {# 次}}赤火炎.",

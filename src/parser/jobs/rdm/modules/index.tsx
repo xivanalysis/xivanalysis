@@ -17,8 +17,6 @@ export default [
 	Embolden,
 	Gauge,
 	DualCast,
-	//I've been asked to disconnect this for now until it's decided exactly what it should be
-	//EngagementDisplacementTracking,
 	GeneralCDDowntime,
 	Interrupts,
 	Procs,
@@ -26,6 +24,4 @@ export default [
 	MeleeCombos,
 	Tincture,
 	Weaving,
-	//I've been asked to disconnect this for now until it's decided exactly what it should be
-	//CorpsaCorps,
 ]

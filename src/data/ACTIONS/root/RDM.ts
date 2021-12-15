@@ -20,6 +20,7 @@ export const RDM = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003214.png',
 		cooldown: 55000,
 		statusesApplied: ['ACCELERATION'],
+		charges: 2,
 	},
 	MANAFICATION: {
 		id: 7521,
@@ -390,5 +391,13 @@ export const RDM = ensureActions({
 		cooldown: 2500,
 		castTime: 10000,
 		breaksCombo: true,
+	},
+	MAGICK_BARRIER: {
+		id: 25857,
+		name: 'Magick Barrier',
+		icon: 'https://xivapi.com/i/003000/003237.png',
+		speedAttribute: Attribute.SPELL_SPEED,
+		cooldown: 120000,
+		statusesApplied: ['MAGICK_BARRIER'],
 	},
 })

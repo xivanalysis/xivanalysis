@@ -633,7 +633,7 @@
   "rdm.gauge.suggestions.mana-lost-why": "",
   "rdm.gauge.suggestions.mana-wasted-content": "콤보를 사용하기 전에 백마나를 최대치 이상으로 획득하지 않도록 하세요. 백마나를 최대치 이상으로 획득했다는 것은 마나가 불균형했음을 가리킵니다. 이것은 잠재적으로 강화 콤보 피해량의 손실을 가져올 수 있습니다. 가능한 한 80/80에 가까운 상태에서 콤보 기술을 사용해야 합니다.",
   "rdm.gauge.suggestions.mana-wasted-why": "",
-  "rdm.gauge.suggestions.wastedprocs.content": "<0/> 상태가 아닐 때, 콤보의 마지막 공격으로 프록을 덮어쓰지 않도록 하세요. 프록을 소모하는 것으로 인해 낭비하는 마나가 8 이하라면, 근접 콤보를 사용하기 전 프록을 소모하는 것을 고려해 보세요.",
+  "rdm.gauge.suggestions.wastedprocs.content": "",
   "rdm.gauge.suggestions.wastedprocs.why": "{0, plural, one {# 개의 프록이 같은 속성의 근접 콤보 마지막 공격으로 인해 손실되었습니다.} other {# 개의 프록이 같은 속성의 근접 콤보 마지막 공격으로 인해 손실되었습니다.}}",
   "rdm.gauge.suggestions.wastedverflare.content": "다음과 같은 상황일 때 <1/>보다는 <0/>을 사용합니다. 중요한 순서대로 나열되었습니다.<2><3>흑마나가 백마나보다 낮을 때</3><4>흑마나와 백마나가 같고 <5/>가 있을 때(만약 가능하다면, <6/>을 사용!)</4><7>흑마나가 백마나보다 9 이하만큼 높고, <9/>가 있으면서 <8/>를 사용할 수 있을 때</7></2>",
   "rdm.gauge.suggestions.wastedverflare.why": "잘못된 버홀리 시전으로 인해 {0}개의 버파이어 프록을 획득하지 못했습니다.",

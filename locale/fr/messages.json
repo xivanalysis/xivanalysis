@@ -633,7 +633,7 @@
   "rdm.gauge.suggestions.mana-lost-why": "",
   "rdm.gauge.suggestions.mana-wasted-content": "Assurez-vous de ne pas surcharger votre Mana Blanche avant un combo, la surcharge de Mana Blanche indique l'absence de balance entre les types de Mana; et vous avez potentiellement perdu un peu de dommage dans votre Combo Enchanté. Vous devriez viser le 80/80 ou autant proche de ce seuil que possible.",
   "rdm.gauge.suggestions.mana-wasted-why": "",
-  "rdm.gauge.suggestions.wastedprocs.content": "Ne commencez pas votre combo avec votre proc de fin quand <0/> est bas, envisagez de sauter une proc avant d’entrer dans votre combo de mêlée tant que vous perdez moins de 8 mana pour y arriver",
+  "rdm.gauge.suggestions.wastedprocs.content": "Ne commencez pas votre combo avec votre proc de fin. Envisagez de sauter une proc avant d’entrer dans votre combo de mêlée tant que vous perdez moins de 8 mana pour y arriver",
   "rdm.gauge.suggestions.wastedprocs.why": "{0, plural, one {# Proc casté perdu à cause d'un commencent du combo de mêlée avec votre proc de finisher actif.} other {# Procs castés perdus à cause d'un commencent du combo de mêlée avec votre proc de finisher actif.}}",
   "rdm.gauge.suggestions.wastedverflare.content": "Vous devriez utiliser <0/> sur <1/> dans les cas suivants par ordre d’importance <2><3>quand votre mana noire est plus basse</3> <4>quand votre mana est la même et que vous avez <5/> (utilisez <6/> si disponible !)</4> <7>quand votre mana noire est supérieure de 9 ou moins et que <8/> est disponible avec <9/></7></2>",
   "rdm.gauge.suggestions.wastedverflare.why": "{0, plural, one {# VerFeu casté perdu due à l’utilisation incorrecte de VerMiracle} other {# VerFeu castés perdus due à l’utilisation incorrecte de VerMiracle}}",
