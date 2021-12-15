@@ -43,6 +43,7 @@ export const RDM = ensureActions({
 		cooldown: 35000,
 		potency: 180,
 		cooldownGroup: 10,
+		charges: 2,
 	},
 	ENGAGEMENT: {
 		id: 16527,
@@ -51,6 +52,7 @@ export const RDM = ensureActions({
 		cooldown: 35000,
 		potency: 180,
 		cooldownGroup: 10,
+		charges: 2,
 	},
 	CORPS_A_CORPS: {
 		id: 7506,
@@ -58,6 +60,7 @@ export const RDM = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003204.png',
 		cooldown: 35000,
 		potency: 130,
+		charges: 2,
 	},
 	FLECHE: {
 		id: 7517,
