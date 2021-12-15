@@ -7,7 +7,7 @@ export class Embolden extends BuffWindow {
 	static override title = t('rdm.embolden.title')`Embolden`
 	static override displayOrder = DISPLAY_ORDER.EMBOLDEN
 
-	override buffStatus = this.data.statuses.EMBOLDEN_MAGIC
+	override buffStatus = this.data.statuses.EMBOLDEN_SELF
 
 	override initialise() {
 		super.initialise()

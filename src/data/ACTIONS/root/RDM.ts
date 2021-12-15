@@ -12,7 +12,7 @@ export const RDM = ensureActions({
 		name: 'Embolden',
 		icon: 'https://xivapi.com/i/003000/003218.png',
 		cooldown: 120000,
-		statusesApplied: ['EMBOLDEN_MAGIC', 'EMBOLDEN_PHYSICAL'],
+		statusesApplied: ['EMBOLDEN_SELF', 'EMBOLDEN_PARTY'],
 	},
 	ACCELERATION: {
 		id: 7518,
@@ -34,14 +34,14 @@ export const RDM = ensureActions({
 		name: 'Contre Sixte',
 		icon: 'https://xivapi.com/i/003000/003217.png',
 		cooldown: 35000,
-		potency: 300, // Note 2nd enemy and others takes 50% less
+		potency: 360,
 	},
 	DISPLACEMENT: {
 		id: 7515,
 		name: 'Displacement',
 		icon: 'https://xivapi.com/i/003000/003211.png',
 		cooldown: 35000,
-		potency: 200,
+		potency: 180,
 		cooldownGroup: 10,
 	},
 	ENGAGEMENT: {
@@ -49,14 +49,14 @@ export const RDM = ensureActions({
 		name: 'Engagement',
 		icon: 'https://xivapi.com/i/003000/003231.png',
 		cooldown: 35000,
-		potency: 150,
+		potency: 180,
 		cooldownGroup: 10,
 	},
 	CORPS_A_CORPS: {
 		id: 7506,
 		name: 'Corps-a-corps',
 		icon: 'https://xivapi.com/i/003000/003204.png',
-		cooldown: 40000,
+		cooldown: 35000,
 		potency: 130,
 	},
 	FLECHE: {
@@ -64,7 +64,7 @@ export const RDM = ensureActions({
 		name: 'Fleche',
 		icon: 'https://xivapi.com/i/003000/003212.png',
 		cooldown: 25000,
-		potency: 420,
+		potency: 460,
 	},
 
 	// -----
@@ -88,7 +88,7 @@ export const RDM = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003225.png',
 		onGcd: true,
 		cooldown: 1500,
-		potency: 220, // consumes 30 white, 30 black
+		potency: 220, // consumes 20 white, 20 black
 		combo: {
 			start: true,
 		},
@@ -112,7 +112,7 @@ export const RDM = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003226.png',
 		onGcd: true,
 		cooldown: 1500,
-		potency: 100, // consumes 25 white, 25 black
+		potency: 100, // consumes 15 white, 15 black
 		combo: {
 			from: 7527,
 			potency: 290,
@@ -139,7 +139,7 @@ export const RDM = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		cooldown: 2200,
-		potency: 100, // consumes 25 white, 25 black
+		potency: 100, // consumes 15 white, 15 black
 		combo: {
 			from: 7528,
 			potency: 470,
@@ -160,8 +160,8 @@ export const RDM = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003232.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		cooldown: 2200,
-		potency: 300, // consumes 10 white, 10 black
+		cooldown: 2500,
+		potency: 330, // consumes 10 white, 10 black
 	},
 	VERFLARE: {
 		id: 7525,
@@ -170,10 +170,10 @@ export const RDM = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		cooldown: 2500,
-		potency: 600, // Gains 21 Black Mana, if Black is lower 100% Verfire ready
+		potency: 580, // Gains 11 Black Mana, if Black is lower 100% Verfire ready
 		combo: {
 			from: 7529,
-			potency: 600,
+			potency: 580,
 		},
 	},
 	VERHOLY: {
@@ -183,10 +183,10 @@ export const RDM = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		cooldown: 2500,
-		potency: 600, // Gains 21 white, if White is lower 100% Verstone ready
+		potency: 580, // Gains 11 white, if White is lower 100% Verstone ready
 		combo: {
 			from: 7529,
-			potency: 600,
+			potency: 580,
 		},
 	},
 	SCORCH: {
@@ -196,10 +196,23 @@ export const RDM = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		cooldown: 2500,
-		potency: 700, // Gains 7 white and black
+		potency: 680, // Gains 7 white and black
 		combo: {
 			from: [7525, 7526],
-			potency: 700,
+			potency: 680,
+		},
+	},
+	RESOLUTION: {
+		id: 25858,
+		name: 'Resolution',
+		icon: 'https://xivapi.com/i/003000/003238.png',
+		onGcd: true,
+		speedAttribute: Attribute.SPELL_SPEED,
+		cooldown: 2500,
+		potency: 750, // Increase White and Black by 4
+		combo: {
+			from: 16530,
+			potency: 750,
 			end: true,
 		},
 	},
@@ -210,8 +223,8 @@ export const RDM = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		cooldown: 2500,
-		potency: 180,
-		castTime: 2000, // Increase White and Black by 3
+		potency: 170,
+		castTime: 2000, // Increase White and Black by 2
 		breaksCombo: true,
 	},
 	JOLT_II: {
@@ -222,19 +235,9 @@ export const RDM = ensureActions({
 		speedAttribute: Attribute.SPELL_SPEED,
 		cooldown: 2500,
 		castTime: 2000,
-		potency: 290, // Increase White and Black by 3
+		potency: 310, // Increase White and Black by 2
 		breaksCombo: true,
 	},
-	// IMPACT: {
-	// 	id: 7522,
-	// 	name: 'Impact',
-	// 	icon: 'https://xivapi.com/i/003000/003222.png',
-	// 	onGcd: true,
-	// 	cooldown: 2500,
-	// 	castTime: 5000,
-	// 	potency: 220, //Increase White and Black by 3
-	// 	breaksCombo: true,
-	// },
 	IMPACT: {
 		id: 16526,
 		name: 'Impact',
@@ -243,7 +246,7 @@ export const RDM = ensureActions({
 		speedAttribute: Attribute.SPELL_SPEED,
 		cooldown: 2500,
 		castTime: 5000,
-		potency: 250, // Increase White and Black by 3
+		potency: 210, // Increase White and Black by 3
 		breaksCombo: true,
 	},
 	VERTHUNDER: {
@@ -254,7 +257,7 @@ export const RDM = ensureActions({
 		speedAttribute: Attribute.SPELL_SPEED,
 		cooldown: 2500,
 		castTime: 5000,
-		potency: 350, // Increase Black by 11
+		potency: 360, // Increase Black by 6
 		breaksCombo: true,
 	},
 	VERTHUNDER_II: {
@@ -265,7 +268,18 @@ export const RDM = ensureActions({
 		speedAttribute: Attribute.SPELL_SPEED,
 		cooldown: 2500,
 		castTime: 2000,
-		potency: 120, // Increase Black by 7
+		potency: 140, // Increase Black by 7
+		breaksCombo: true,
+	},
+	VERTHUNDER_III: {
+		id: 25855,
+		name: 'Verthunder III',
+		icon: 'https://xivapi.com/i/003000/003235.png',
+		onGcd: true,
+		speedAttribute: Attribute.SPELL_SPEED,
+		cooldown: 2500,
+		castTime: 5000,
+		potency: 350, // Increase Black by 6
 		breaksCombo: true,
 	},
 	VERFIRE: {
@@ -276,7 +290,7 @@ export const RDM = ensureActions({
 		speedAttribute: Attribute.SPELL_SPEED,
 		cooldown: 2500,
 		castTime: 2000,
-		potency: 310, // Increase Black by 9
+		potency: 330, // Increase Black by 5
 		breaksCombo: true,
 	},
 	VERAERO: {
@@ -287,7 +301,7 @@ export const RDM = ensureActions({
 		speedAttribute: Attribute.SPELL_SPEED,
 		cooldown: 2500,
 		castTime: 5000,
-		potency: 350, // Increase White by 11
+		potency: 360, // Increase White by 6
 		breaksCombo: true,
 	},
 	VERAERO_II: {
@@ -298,7 +312,18 @@ export const RDM = ensureActions({
 		speedAttribute: Attribute.SPELL_SPEED,
 		cooldown: 2500,
 		castTime: 2000,
-		potency: 120, // Increase White by 7
+		potency: 140, // Increase White by 7
+		breaksCombo: true,
+	},
+	VERAERO_III: {
+		id: 25856,
+		name: 'Verareo III',
+		icon: 'https://xivapi.com/i/003000/003236.png',
+		onGcd: true,
+		speedAttribute: Attribute.SPELL_SPEED,
+		cooldown: 2500,
+		castTime: 5000,
+		potency: 380, // Increase White by 6
 		breaksCombo: true,
 	},
 	VERSTONE: {
@@ -309,17 +334,7 @@ export const RDM = ensureActions({
 		speedAttribute: Attribute.SPELL_SPEED,
 		cooldown: 2500,
 		castTime: 2000,
-		potency: 310, // Increase White by 9
-		breaksCombo: true,
-	},
-	TETHER: {
-		id: 7508,
-		name: 'Tether',
-		icon: 'https://xivapi.com/i/003000/003206.png',
-		onGcd: true,
-		speedAttribute: Attribute.SPELL_SPEED,
-		cooldown: 2500,
-		castTime: 2500,
+		potency: 330, // Increase White by 5
 		breaksCombo: true,
 	},
 	SCATTER: {
@@ -330,7 +345,7 @@ export const RDM = ensureActions({
 		speedAttribute: Attribute.SPELL_SPEED,
 		cooldown: 2500,
 		castTime: 5000,
-		potency: 200, // Increase White and black by 3
+		potency: 120, // Increase White and black by 3
 		breaksCombo: true,
 	},
 	MOULINET: {
@@ -349,7 +364,7 @@ export const RDM = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003228.png',
 		onGcd: true,
 		cooldown: 1500,
-		potency: 200, // Costs 30 White and Black
+		potency: 130, // Costs 20 White and Black
 		breaksCombo: true,
 	},
 	VERCURE: {
