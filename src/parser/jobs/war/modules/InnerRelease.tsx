@@ -1,97 +1,176 @@
 import {t} from '@lingui/macro'
-import {Trans} from '@lingui/react'
-import {ActionLink} from 'components/ui/DbLink'
+import {Plural, Trans} from '@lingui/react'
+import {DataLink} from 'components/ui/DbLink'
+import {Action, ActionKey} from 'data/ACTIONS'
+import {Event, Events} from 'event'
+import {Analyser} from 'parser/core/Analyser'
+import {EventHook} from 'parser/core/Dispatcher'
+import {filter} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
-import {AllowedGcdsOnlyEvaluator, BuffWindow, ExpectedActionsEvaluator, ExpectedGcdCountEvaluator, LimitedActionsEvaluator} from 'parser/core/modules/ActionWindow'
-import {GlobalCooldown} from 'parser/core/modules/GlobalCooldown'
-import {SEVERITY} from 'parser/core/modules/Suggestions'
+import {Actors} from 'parser/core/modules/Actors'
+import {Data} from 'parser/core/modules/Data'
+import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
 
-export class InnerRelease extends BuffWindow {
+const IR_STACKS_APPLIED = 3
+
+const CHAOS_GCDS: ActionKey[] = [
+	'INNER_CHAOS',
+	'CHAOTIC_CYCLONE',
+]
+
+const GOOD_GCDS: ActionKey[] = [
+	'FELL_CLEAVE',
+	'DECIMATE',
+]
+
+interface ReleaseWindow {
+	start: number
+	end?: number
+	casts: Array<Action['id']>
+}
+
+export class InnerRelease extends Analyser {
 	static override handle = 'ir'
 	static override title = t('war.ir.title')`Inner Release`
 
-	@dependency globalCooldown!: GlobalCooldown
+	@dependency private actors!: Actors
+	@dependency data!: Data
+	@dependency suggestions!: Suggestions
 
-	override buffStatus = this.data.statuses.INNER_RELEASE
+	private current: ReleaseWindow | undefined
+	private history: ReleaseWindow[] = []
+
+	private innerHook?: EventHook<Events['action']>
 
 	override initialise() {
-		super.initialise()
+		const playerFilter = filter<Event>().source(this.parser.actor.id)
 
-		const windowName = <ActionLink action="INNER_RELEASE" showIcon={false}/>
+		// Only track IR gain since IR gives PRR anyway and PrimalChaos handles missed PRs
+		this.addEventHook(playerFilter.type('statusApply').status(this.data.statuses.INNER_RELEASE.id), this.onGain)
+		this.addEventHook(playerFilter.type('statusRemove').status(this.data.statuses.INNER_RELEASE.id), this.onDrop)
 
-		this.addEvaluator(new ExpectedGcdCountEvaluator({
-			expectedGcds: 5,
-			globalCooldown: this.globalCooldown,
-			suggestionIcon: this.data.actions.INNER_RELEASE.icon,
-			suggestionContent: <Trans id="war.ir.suggestions.missedgcd.content">
-				Try to land 5 GCDs during every <ActionLink action="INNER_RELEASE"/> window. If you cannot do this with full uptime and no clipping, consider adjusting your gearset for more Skill Speed.
+		this.addEventHook('complete', this.onComplete)
+	}
+
+	private onCast(event: Events['action']): void {
+		// No window so why are we here?
+		if (this.current == null) { return }
+
+		const action = this.data.getAction(event.action)
+
+		// Only include GCDs
+		if (action == null || !(action.onGcd ?? false)) { return }
+
+		// Verify the window isn't closed, and count the GCDs
+		if (this.current.end == null) {
+			this.current.casts.push(action.id)
+		}
+	}
+
+	private onGain(event: Events['statusApply']): void {
+		// Check if existing window or not - mostly since we don't really care about stack count
+		if (this.current == null) {
+			this.current = {start: event.timestamp, casts: []}
+
+			this.innerHook = this.addEventHook(
+				filter<Event>()
+					.source(this.parser.actor.id)
+					.type('action'),
+				this.onCast,
+			)
+		}
+	}
+
+	private onDrop(event: Events['statusRemove']): void {
+		this.stopAndSave(event.timestamp)
+	}
+
+	private stopAndSave(endTime: number = this.parser.currentEpochTimestamp): void {
+		if (this.current != null) {
+			this.current.end = endTime
+
+			this.history.push(this.current)
+
+			if (this.innerHook != null) {
+				this.removeEventHook(this.innerHook)
+				this.innerHook = undefined
+			}
+		}
+
+		this.current = undefined
+	}
+
+	private onComplete() {
+		// Close off the last window
+		this.stopAndSave(this.parser.pull.timestamp + this.parser.pull.duration)
+
+		// Build our GCD filters
+		const chaosGcds = CHAOS_GCDS.map(actionKey => this.data.actions[actionKey].id)
+		const goodGcds = GOOD_GCDS.map(actionKey => this.data.actions[actionKey].id)
+
+		// Extract our suggestion metrics from history
+		const missedGcds = this.history.reduce((total, current) => total + (IR_STACKS_APPLIED - current.casts.filter(id => id !== this.data.actions.PRIMAL_REND.id).length), 0)
+		const badGcds = this.history.reduce((total, current) => total + (IR_STACKS_APPLIED - this.accountGcds(current, goodGcds)), 0)
+		const veryBadGcds = this.history.reduce((total, current) => total + this.accountGcds(current, chaosGcds), 0)
+
+		this.suggestions.add(new TieredSuggestion({
+			icon: this.data.actions.INNER_RELEASE.icon,
+			content: <Trans id="war.ir.suggestions.missedgcd.content">
+				Try to land {IR_STACKS_APPLIED} GCDs during every <DataLink status="INNER_RELEASE"/> window.
 			</Trans>,
-			suggestionWindowName: windowName,
-			severityTiers: {
-				1: SEVERITY.MAJOR,
-			},
-		}))
-
-		this.addEvaluator(new AllowedGcdsOnlyEvaluator({
-			expectedGcdCount: 5,
-			allowedGcds: [
-				this.data.actions.FELL_CLEAVE.id,
-				this.data.actions.DECIMATE.id,
-			],
-			globalCooldown: this.globalCooldown,
-			suggestionIcon: this.data.actions.FELL_CLEAVE.icon,
-			suggestionContent: <Trans id="war.ir.suggestions.badgcd.content">
-				GCDs used during <ActionLink action="INNER_RELEASE"/> should be limited to <ActionLink action="FELL_CLEAVE"/> for optimal damage (or <ActionLink action="DECIMATE"/> if three or more targets are present).
-			</Trans>,
-			suggestionWindowName: windowName,
-			severityTiers: {
-				1: SEVERITY.MAJOR,
-			},
-		}))
-
-		this.addEvaluator(new ExpectedActionsEvaluator({
-			expectedActions: [
-				{
-					action: this.data.actions.UPHEAVAL,
-					expectedPerWindow: 1,
-				},
-				{
-					action: this.data.actions.ONSLAUGHT,
-					expectedPerWindow: 1,
-				},
-			],
-			suggestionIcon: this.data.actions.UPHEAVAL.icon,
-			suggestionContent: <Trans id="war.ir.suggestions.trackedActions.content">
-				One use of <ActionLink action="UPHEAVAL"/> and one use of <ActionLink action="ONSLAUGHT"/> should occur during every <ActionLink action="INNER_RELEASE"/> window.
-			</Trans>,
-			suggestionWindowName: windowName,
-			severityTiers: {
+			tiers: {
 				1: SEVERITY.MEDIUM,
+				2: SEVERITY.MAJOR,
 			},
+			value: badGcds,
+			why: <Trans id="war.ir.suggestions.missedgcd.why">
+				<Plural value={missedGcds} one="# stack" other="# stacks"/> of <DataLink showIcon={false} status="INNER_RELEASE"/> <Plural value={missedGcds} one="wasn't" other="weren't"/> used.
+			</Trans>,
 		}))
 
-		this.addEvaluator(new LimitedActionsEvaluator({
-			expectedActions: [
-				{
-					action: this.data.actions.INNER_CHAOS,
-					expectedPerWindow: 0,
-				},
-				{
-					action: this.data.actions.CHAOTIC_CYCLONE,
-					expectedPerWindow: 0,
-				},
-			],
-			suggestionIcon: this.data.actions.INNER_CHAOS.icon,
-			suggestionContent: <Trans id="war.ir.suggestions.trackedBadActions.content">
-				Using <ActionLink action="INNER_CHAOS" /> or <ActionLink action="CHAOTIC_CYCLONE" /> inside of <ActionLink action="INNER_RELEASE" /> should be avoided at all costs.
-				These abilities are guaranteed to be a critical direct hit, and make no use of <ActionLink showIcon={false} action="INNER_RELEASE"/>'s benefits.
+		this.suggestions.add(new TieredSuggestion({
+			icon: this.data.actions.FELL_CLEAVE.icon,
+			content: <Trans id="war.ir.suggestions.badgcd.content">
+				GCDs used during <DataLink action="INNER_RELEASE"/> should be limited to <DataLink action="FELL_CLEAVE"/> for optimal damage (or <DataLink action="DECIMATE"/> if three or more targets are present).
 			</Trans>,
-			suggestionWindowName: windowName,
-			severityTiers: {
+			tiers: {
 				1: SEVERITY.MAJOR,
 			},
+			value: badGcds,
+			why: <Trans id="war.ir.suggestions.badgcd.why">
+				<Plural value={badGcds} one="# GCD" other="# GCDs"/> wasted <DataLink showIcon={false} status="INNER_RELEASE"/> stacks.
+			</Trans>,
+		}))
+
+		this.suggestions.add(new TieredSuggestion({
+			icon: this.data.actions.INNER_CHAOS.icon,
+			content: <Trans id="war.ir.suggestions.verybadgcd.content">
+				Avoid using <DataLink action="INNER_CHAOS"/> or <DataLink action="CHAOTIC_CYCLONE"/> inside of <DataLink status="INNER_RELEASE"/> unless pushing downtime. These abilities are guaranteed to be a critical direct hit, and make no use of <DataLink showIcon={false} status="INNER_RELEASE"/>'s benefits.
+			</Trans>,
+			tiers: {
+				1: SEVERITY.MAJOR,
+			},
+			value: veryBadGcds,
+			why: <Trans id="war.ir.suggestions.verybadgcd.why">
+				<Plural value={veryBadGcds} one="# stack" other="# stacks"/> of <DataLink status="INNER_RELEASE"/> <Plural value={veryBadGcds} one="was" other="were"/> lost to <DataLink action="INNER_CHAOS"/> or <DataLink action="CHAOTIC_CYCLONE"/>.
+			</Trans>,
 		}))
 	}
 
+	private accountGcds(window: ReleaseWindow, targetGcds: Array<Action['id']>): number {
+		let count = 0
+		let hits = 0
+
+		// Skip PR since it doesn't eat stacks
+		for (const id of window.casts) {
+			if (id === this.data.actions.PRIMAL_REND.id) { continue }
+			if (targetGcds.includes(id)) { hits++ }
+			count++
+
+			if (count >= IR_STACKS_APPLIED) { break }
+		}
+
+		return hits
+	}
 }
