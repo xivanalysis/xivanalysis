@@ -8,13 +8,6 @@ export const RPR = ensureStatuses({
 		duration: 30000,
 	},
 
-	ARCANE_CIRCLE: {
-		id: 2599,
-		name: 'Arcane Circle',
-		icon: 'https://xivapi.com/i/012000/012936.png',
-		duration: 20000,
-	},
-
 	// TODO: find out the duration on this, might be a pseudo-stance tho
 	SOULSOW: {
 		id: 2594,
@@ -62,6 +55,13 @@ export const RPR = ensureStatuses({
 		name: 'Enhanced Gibbet',
 		icon: 'https://xivapi.com/i/012000/012927.png',
 		duration: 60000,
+	},
+
+	ARCANE_CIRCLE: {
+		id: 2599,
+		name: 'Arcane Circle',
+		icon: 'https://xivapi.com/i/012000/012936.png',
+		duration: 20000,
 	},
 
 	CIRCLE_OF_SACRIFICE: {
