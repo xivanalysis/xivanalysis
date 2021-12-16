@@ -16,6 +16,8 @@ const INFURIATE_REDUCERS: ActionKey[] = [
 const INFURIATE_CDR = 5000
 
 export class Infuriate extends Analyser {
+	static override handle = 'infuriate'
+
 	@dependency private cooldowns!: Cooldowns
 	@dependency private data!: Data
 
