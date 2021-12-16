@@ -71,10 +71,10 @@ export const RPR = ensureStatuses({
 		duration: 6000,
 	},
 
-	IMMPORTAL_SACRIFICE: {
+	IMMORTAL_SACRIFICE: {
 		id: 2592,
 		name: 'Immortal Sacrifice',
-		icon: 'https://xivapi.com/i/017000/17287.png',
+		icon: 'https://xivapi.com/i/017000/017287.png',
 		duration: 30000,
 	},
 
