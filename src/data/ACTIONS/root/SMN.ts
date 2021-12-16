@@ -393,6 +393,14 @@ export const SMN = ensureActions({
 		pet: PETS.IFRIT_EGI.id,
 	},
 
+	// Any pet 'cus it's weirdass
+	DEVOTION: {
+		id: 7450,
+		name: 'Devotion',
+		icon: 'https://xivapi.com/i/002000/002688.png',
+		statusesApplied: ['DEVOTION'],
+	},
+
 	// Demi-bahamut
 	WYRMWAVE: {
 		id: 7428,
