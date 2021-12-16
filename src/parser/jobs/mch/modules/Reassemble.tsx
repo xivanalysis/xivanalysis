@@ -106,7 +106,7 @@ export class Reassemble extends Analyser {
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.REASSEMBLE.icon,
 			content: <Trans id="mch.reassemble.suggestions.bad-gcds.content">
-				On single targets <DataLink action="REASSEMBLE" /> should only ever be used on <DataLink action="DRILL" /> and <DataLink action="AIR_ANCHOR" />, as they're your strongest GCDs by a large margin.
+				On single targets <DataLink action="REASSEMBLE" /> should only ever be used on <DataLink action="CHAIN_SAW" />, <DataLink action="DRILL" />, or <DataLink action="AIR_ANCHOR" />, as they're your strongest GCDs. On multiple targets, you can also use it on <DataLink action="SCATTERGUN" />.
 			</Trans>,
 			tiers: SEVERITIES.BAD_USES,
 			value: this.history.badUses,

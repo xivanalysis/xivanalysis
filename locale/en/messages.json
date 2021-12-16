@@ -470,7 +470,7 @@
   "mch.queen.suggestions.missing-collider.why": "{missedColliders} of your Automaton Queen windows ended without a Crowned Collider.",
   "mch.queen.title": "Automaton Queen Usage",
   "mch.queen.trigger.queenless-queen-attack": "A cast of <0/> was recorded without the Automaton Queen on the field.",
-  "mch.reassemble.suggestions.bad-gcds.content": "On single targets <0/> should only ever be used on <1/> and <2/>, as they're your strongest GCDs by a large margin.",
+  "mch.reassemble.suggestions.bad-gcds.content": "On single targets <0/> should only ever be used on <1/>, <2/>, or <3/>, as they're your strongest GCDs. On multiple targets, you can also use it on <4/>.",
   "mch.reassemble.suggestions.bad-gcds.why": "You used Reassemble on a non-optimal GCD {0, plural, one {# time} other {# times}}.",
   "mch.reassemble.suggestions.dropped.content": "Avoid using <0/> when a boss is about to go untargetable so you don't waste the buff.",
   "mch.reassemble.suggestions.dropped.why": "You allowed Reassemble to fall off unused {0, plural, one {# time} other {# times}}.",
