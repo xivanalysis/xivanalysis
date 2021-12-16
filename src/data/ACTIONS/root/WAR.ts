@@ -138,9 +138,9 @@ export const WAR = ensureActions({
 	},
 
 	PRIMAL_REND: {
-		id: 0,
+		id: 25753,
 		name: 'Primal Rend',
-		icon: 'https://xivapi.com/i/002000/000000.png',
+		icon: 'https://xivapi.com/i/002000/002571.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		potency: 700,
@@ -183,11 +183,11 @@ export const WAR = ensureActions({
 	},
 
 	BLOODWHETTING: {
-		id: 0,
+		id: 25751,
 		name: 'Bloodwhetting',
-		icon: 'https://xivapi.com/i/002000/000000.png',
+		icon: 'https://xivapi.com/i/002000/002569.png',
 		cooldown: 25000,
-		cooldownGroup: 9,
+		cooldownGroup: 4,
 		statusesApplied: ['BLOODWHETTING', 'STEM_THE_FLOW', 'STEM_THE_TIDE'],
 	},
 
@@ -196,7 +196,7 @@ export const WAR = ensureActions({
 		name: 'Nascent Flash',
 		icon: 'https://xivapi.com/i/002000/002567.png',
 		cooldown: 25000,
-		cooldownGroup: 9,
+		cooldownGroup: 4,
 		statusesApplied: ['NASCENT_FLASH', 'NASCENT_GLINT', 'STEM_THE_FLOW', 'STEM_THE_TIDE'],
 	},
 
@@ -217,22 +217,21 @@ export const WAR = ensureActions({
 		potency: 150,
 	},
 
-	// TODO: update cooldown group shared with Orogeny
 	UPHEAVAL: {
 		id: 7387,
 		name: 'Upheaval',
 		icon: 'https://xivapi.com/i/002000/002562.png',
 		cooldown: 30000,
-		cooldownGroup: 0,
+		cooldownGroup: 6,
 		potency: 350,
 	},
 
 	OROGENY: {
-		id: 0,
+		id: 25752,
 		name: 'Orogeny',
-		icon: 'https://xivapi.com/i/002000/000000.png',
+		icon: 'https://xivapi.com/i/002000/002570.png',
 		cooldown: 30000,
-		cooldownGroup: 0,
+		cooldownGroup: 6,
 		potency: 150,
 	},
 
@@ -258,7 +257,7 @@ export const WAR = ensureActions({
 		name: 'Defiance',
 		icon: 'https://xivapi.com/i/002000/002551.png',
 		cooldown: 10000,
-		cooldownGroup: 1,
+		cooldownGroup: 3,
 		statusesApplied: ['DEFIANCE'],
 	},
 })

@@ -8,16 +8,16 @@ export const WAR = ensureStatuses({
 	},
 
 	SURGING_TEMPEST: {
-		id: 90,
+		id: 2677,
 		name: 'Surging Tempest',
-		icon: 'https://xivapi.com/i/010000/010263.png',
+		icon: 'https://xivapi.com/i/012000/012561.png',
 		duration: 60000,
 	},
 
 	EQUILIBRIUM: {
-		id: 0,
-		name: 'Equilibrium?',
-		icon: '',
+		id: 2681,
+		name: 'Equilibrium',
+		icon: 'https://xivapi.com/i/012000/012565.png',
 		duration: 15000,
 	},
 
@@ -31,7 +31,7 @@ export const WAR = ensureStatuses({
 	HOLMGANG: {
 		id: 409,
 		name: 'Holmgang',
-		icon: 'https://xivapi.com/i/000000/000266.png',
+		icon: 'https://xivapi.com/i/010000/010266.png',
 		duration: 10000,
 	},
 
@@ -43,23 +43,23 @@ export const WAR = ensureStatuses({
 	},
 
 	BLOODWHETTING: {
-		id: 0,
+		id: 2678,
 		name: 'Bloodwhetting',
-		icon: '',
+		icon: 'https://xivapi.com/i/012000/012562.png',
 		duration: 8000,
 	},
 
 	STEM_THE_FLOW: {
-		id: 0,
+		id: 2679,
 		name: 'Stem the Flow',
-		icon: '',
+		icon: 'https://xivapi.com/i/012000/012563.png',
 		duration: 4000,
 	},
 
 	STEM_THE_TIDE: {
-		id: 0,
+		id: 2680,
 		name: 'Stem the Tide',
-		icon: '',
+		icon: 'https://xivapi.com/i/012000/012564.png',
 		duration: 20000,
 	},
 
@@ -80,7 +80,7 @@ export const WAR = ensureStatuses({
 	SHAKE_IT_OFF: {
 		id: 1457,
 		name: 'Shake It Off',
-		icon: 'https://xivapi.com/i/002000/002563.png',
+		icon: 'https://xivapi.com/i/012000/012557.png',
 		duration: 15000,
 	},
 
@@ -94,15 +94,15 @@ export const WAR = ensureStatuses({
 	INNER_RELEASE: {
 		id: 1177,
 		name: 'Inner Release',
-		icon: 'https://xivapi.com/i/012000/012556.png',
+		icon: 'https://xivapi.com/i/017000/017247.png',
 		duration: 15000,
 		stacksApplied: 3,
 	},
 
 	PRIMAL_REND_READY: {
-		id: 0,
+		id: 2624,
 		name: 'Primal Rend Ready',
-		icon: '',
+		icon: 'https://xivapi.com/i/012000/012566.png',
 		duration: 30000,
 	},
 })
