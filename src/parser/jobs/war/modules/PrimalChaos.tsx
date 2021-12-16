@@ -36,6 +36,7 @@ export class PrimalChaos extends Analyser {
 
 		this.addEventHook(playerFilter.type('statusApply').status(oneOf(dropsyStatuses)), this.onGain)
 		this.addEventHook(playerFilter.type('statusRemove').status(oneOf(dropsyStatuses)), this.onDrop)
+		this.addEventHook('complete', this.onComplete)
 	}
 
 	private onGain(event: Events['statusApply']) {
