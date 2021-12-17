@@ -4,6 +4,7 @@ declare namespace RotationModuleCssNamespace {
   export interface IRotationModuleCss {
     container: string;
     gcdSize: string;
+    ghostOverlay: string;
     link: string;
     ogcd: string;
     ogcdSize: string;
