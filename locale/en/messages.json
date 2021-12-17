@@ -384,7 +384,7 @@
   "drg.ds.suggestions.missedgcd.content": "Try to land at least 8 GCDs during every <0/> window.",
   "drg.ds.suggestions.trackedactions.content": "Each <0/> window should contain at least one use each of <1/>, <2/>, <3/>, and <4/>. In order to ensure that these actions fall within the buff window, try to avoid using <5/> after <6/> or <7/>.",
   "drg.gauge.resource.fmf": "Firstminds' Focus",
-  "drg.gauge.suggestions.overcapped-fmf.content": "You lost uses of <0/> due to using <1/> or <2/> while already having two charges of Firstminds' Focus.",
+  "drg.gauge.suggestions.overcapped-fmf.content": "Make sure to use <0/> before <1/> or <2/> when you already have two charges of Firstminds' Focus to prevent losing uses of <3/> by overcapping.",
   "drg.gauge.suggestions.overcapped-fmf.why": "{fmfOvercap, plural, one {# Firstminds' Focus charge} other {# Firstminds' Focus charges}} were lost.",
   "drg.lancecharge.title": "Lance Charge",
   "drg.lc.suggestions.missedgcd.content": "Try to land at least 8 GCDs during every <0/> window.",

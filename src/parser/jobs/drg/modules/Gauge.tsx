@@ -25,8 +25,6 @@ const FMF_GENERATORS: ActionKey[] = [
 
 // todo:
 // - check how this handles situations where drg carried over a fmf charge
-// - check if dying removes fmf stacks
-// - actually check if overcapping flags stuff
 export class Gauge extends CoreGauge {
 	@dependency private suggestions!: Suggestions
 
@@ -48,6 +46,8 @@ export class Gauge extends CoreGauge {
 
 		this.addEventHook(playerFilter.type('action').action(this.data.matchActionId(FMF_GENERATORS)), this.onGeneratorCast)
 		this.addEventHook(playerFilter.type('action').action(this.data.actions.WYRMWIND_THRUST.id), this.onWwtCast)
+
+		this.addEventHook('complete', this.onComplete)
 	}
 
 	private onGeneratorCast() {
@@ -63,7 +63,7 @@ export class Gauge extends CoreGauge {
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.WYRMWIND_THRUST.icon,
 			content: <Trans id="drg.gauge.suggestions.overcapped-fmf.content">
-				You lost uses of <DataLink action="WYRMWIND_THRUST" /> due to using <DataLink action="RAIDEN_THRUST" /> or <DataLink action="DRACONIAN_FURY" /> while already having two charges of Firstminds' Focus.
+				Make sure to use <DataLink action="WYRMWIND_THRUST" /> before <DataLink action="RAIDEN_THRUST" /> or <DataLink action="DRACONIAN_FURY" /> when you already have two charges of Firstminds' Focus to prevent losing uses of <DataLink action="WYRMWIND_THRUST" /> by overcapping.
 			</Trans>,
 			tiers: {
 				1: SEVERITY.MEDIUM,
