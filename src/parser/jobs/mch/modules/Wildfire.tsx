@@ -1,14 +1,13 @@
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
 import {ActionLink} from 'components/ui/DbLink'
-import {RotationEvent} from 'components/ui/Rotation'
 import {RotationTable} from 'components/ui/RotationTable'
 import {Event, Events} from 'event'
 import {Analyser} from 'parser/core/Analyser'
 import {EventHook} from 'parser/core/Dispatcher'
 import {filter} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
-import {History, HistoryEntry} from 'parser/core/modules/ActionWindow/History'
+import {History} from 'parser/core/modules/ActionWindow/History'
 import {Data} from 'parser/core/modules/Data'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import {Timeline} from 'parser/core/modules/Timeline'
@@ -31,7 +30,7 @@ const SEVERITIES = {
 }
 
 interface WildfireWindow {
-	actionEvents: Array<Events['action']>
+	events: Array<Events['action']>
 	stacks: number
 	damage?: number
 }
@@ -46,7 +45,7 @@ export class Wildfire extends Analyser {
 
 	private history = new History<WildfireWindow>(
 		() => ({
-			actionEvents: [],
+			events: [],
 			stacks: 0,
 		})
 	)
@@ -58,20 +57,19 @@ export class Wildfire extends Analyser {
 		.type('action')
 
 	override initialise() {
-		this.addEventHook(filter<Event>()
-			.source(this.parser.actor.id)
+		const playerFilter = filter<Event>().source(this.parser.actor.id)
+
+		this.addEventHook(playerFilter
 			.type('statusApply')
 			.status(this.data.statuses.WILDFIRE.id)
 		, this.onApply)
 
-		this.addEventHook(filter<Event>()
-			.source(this.parser.actor.id)
+		this.addEventHook(playerFilter
 			.type('statusRemove')
 			.status(this.data.statuses.WILDFIRE.id)
 		, this.onRemove)
 
-		this.addEventHook(filter<Event>()
-			.source(this.parser.actor.id)
+		this.addEventHook(playerFilter
 			.type('damage')
 			.cause(this.data.matchCauseStatusId([this.data.statuses.WILDFIRE.id]))
 		, this.onDamage)
@@ -107,7 +105,7 @@ export class Wildfire extends Analyser {
 	}
 
 	private onAction(event: Events['action']) {
-		this.history.doIfOpen(current => current.actionEvents.push(event))
+		this.history.doIfOpen(current => current.events.push(event))
 	}
 
 	private onComplete() {
@@ -146,21 +144,6 @@ export class Wildfire extends Analyser {
 		}))
 	}
 
-	private getRotation(wildfire: HistoryEntry<WildfireWindow>): RotationEvent[] {
-		let gcds = 0
-		return wildfire.data.actionEvents.map(event => {
-			const action = this.data.getAction(event.action)
-			if (action?.onGcd) {
-				gcds++
-				if (gcds > wildfire.data.stacks) {
-					// This GCD must have ghosted since it didn't generate a debuff stack
-					return {action: event.action, ghosted: true}
-				}
-			}
-			return {action: event.action}
-		})
-	}
-
 	override output() {
 		if (this.history.entries.length === 0) { return undefined }
 
@@ -186,12 +169,12 @@ export class Wildfire extends Analyser {
 			notesMap: {
 				damage: wildfire.data.damage ?? 0,
 			},
-			rotation: this.getRotation(wildfire),
+			rotation: wildfire.data.events.map(event => ({action: event.action})),
 		}))
 
 		return <Fragment>
 			<Message>
-				<Trans id="mch.wildfire.table.message">Every <ActionLink action="WILDFIRE"/> window should ideally include {EXPECTED_GCDS} GCDs to maximize the debuff's potency. Transparent GCDs in the table below were <i>ghosted</i>, meaning they did not count toward Wildfire's damage.</Trans>
+				<Trans id="mch.wildfire.table.message">Every <ActionLink action="WILDFIRE"/> window should ideally include {EXPECTED_GCDS} GCDs to maximize the debuff's potency. Note that a GCD only counts toward Wildfire if the damage lands on the target before Wildfire expires.</Trans>
 			</Message>
 			<RotationTable
 				targets={[gcdHeader]}

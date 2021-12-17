@@ -15,9 +15,3 @@
 .container .link.ogcd {
 	margin-top: 0;
 }
-
-.ghostOverlay {
-	position: relative;
-    display: inline-block;
-	filter: grayscale(50%) opacity(50%);
-}
