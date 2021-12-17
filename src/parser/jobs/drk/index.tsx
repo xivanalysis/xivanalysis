@@ -1,6 +1,7 @@
 import {Trans} from '@lingui/macro'
 import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
+import CONTRIBUTORS, {ROLES} from 'data/CONTRIBUTORS'
 import {Meta} from 'parser/core/Meta'
 import React from 'react'
 
@@ -21,13 +22,13 @@ export const DARK_KNIGHT = new Meta({
 	// 	to: '6.0',
 	// },
 	contributors: [
-		// {user: CONTRIBUTORS.YOU, role: ROLES.DEVELOPER},
+		{user: CONTRIBUTORS.AZARIAH, role: ROLES.MAINTAINER},
 	],
 	changelog: [
-		// {
-		// 	date: new Date('2021-11-19'),
-		// 	Changes: () => <>The changes you made</>,
-		// 	contrubutors: [CONTRIBUTORS.YOU],
-		// },
+		{
+			date: new Date('2021-12-13'),
+			Changes: () => <>Initial support for new actions, adjust Abyssal Drain to be an AoE alternative for Carve &amp; Spit</>,
+			contributors: [CONTRIBUTORS.AZARIAH],
+		},
 	],
 })

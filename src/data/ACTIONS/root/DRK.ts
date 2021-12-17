@@ -35,6 +35,14 @@ export const DRK = ensureActions({
 		cooldown: 300000,
 		statusesApplied: ['LIVING_DEAD', 'WALKING_DEAD'],
 	},
+	OBLATION: {
+		id: 25754,
+		name: 'Oblation',
+		icon: 'https://xivapi.com/i/003000/003089.png',
+		coolodwn: 60000,
+		statusesApplied: ['OBLATION'],
+		charges: 2,
+	},
 	// Party Defensive
 	DARK_MISSIONARY: {
 		id: 16471,
@@ -109,6 +117,19 @@ export const DRK = ensureActions({
 		name: 'Edge of Shadow',
 		icon: 'https://xivapi.com/i/003000/003086.png',
 		cooldown: 2000,
+	},
+	SALT_AND_DARKNESS: {
+		id: 25756,
+		name: 'Salt and Darkness',
+		icon: 'https://xivapi.com/i/003000/003090.png',
+		cooldown: 20000,
+	},
+	SHADOWBRINGER: {
+		id: 25757,
+		name: 'Shadowbringer',
+		icon: 'https://xivapi.com/i/003000/003091.png',
+		cooldown: 60000,
+		charges: 2,
 	},
 	// -----
 	// GCDs

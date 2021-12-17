@@ -59,4 +59,10 @@ export const DRK = ensureStatuses({
 		icon: 'https://xivapi.com/i/013000/013121.png',
 		duration: 10000,
 	},
+	OBLATION: {
+		id: 2682,
+		name: 'Oblation',
+		icon: 'https://xivapi.com/i/013000/013123.png',
+		duration: 10000,
+	},
 })
