@@ -58,6 +58,7 @@ export default class Rotation extends Component<RotationProps> {
 					styles.link,
 					{[styles.ogcd]: !action.onGcd},
 					event.isProc ? overlayStyle.procOverlay : '',
+					event.ghosted ? styles.ghostOverlay : '',
 				]
 
 				const iconSize = action.onGcd ? styles.gcdSize : styles.ogcdSize
