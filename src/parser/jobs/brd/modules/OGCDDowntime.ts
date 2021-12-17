@@ -7,21 +7,23 @@ export default class OGCDDowntime extends CooldownDowntime {
 	override trackedCds = [
 		{
 			cooldowns: [this.data.actions.BATTLE_VOICE],
-			firstUseOffset: 4500,
+			firstUseOffset: 7500,
+		},
+		{
+			cooldowns: [this.data.actions.RADIANT_FINALE],
+			firstUseOffset: 7500,
+			allowedAverageDowntime: 10000,
 		},
 		{
 			cooldowns: [this.data.actions.RAGING_STRIKES],
-			firstUseOffset: -1000,
+			firstUseOffset: 2500,
 		},
 		{
 			cooldowns: [this.data.actions.BARRAGE],
 			firstUseOffset: 12000,
 		},
 		{
-			cooldowns: [
-				this.data.actions.SIDEWINDER,
-				this.data.actions.SHADOWBITE,
-			],
+			cooldowns: [this.data.actions.SIDEWINDER],
 			firstUseOffset: 12000,
 		},
 	]
