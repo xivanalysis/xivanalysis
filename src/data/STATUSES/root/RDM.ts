@@ -26,15 +26,15 @@ export const RDM = ensureStatuses({
 		duration: 20000,
 		stacksApplied: 3,
 	},
-	EMBOLDEN_PHYSICAL: {
-		// Note that this is the Embolden that boosts Physical Damage - what other people receive from RDM
+	EMBOLDEN_PARTY: {
+		// Note that this is the Embolden that other people receive from RDM
 		id: 1297,
 		name: 'Embolden',
 		icon: 'https://xivapi.com/i/018000/018941.png',
 		duration: 20000,
 	},
-	EMBOLDEN_MAGIC: {
-		// Note that this is the Embolden that boosts Magic Damage - what the RDM casting receives
+	EMBOLDEN_SELF: {
+		// Note that this is the Embolden that the RDM casting receives
 		id: 1239,
 		name: 'Embolden',
 		icon: 'https://xivapi.com/i/018000/018921.png',

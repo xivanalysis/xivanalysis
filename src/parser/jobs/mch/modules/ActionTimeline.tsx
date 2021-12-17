@@ -4,15 +4,18 @@ export class ActionTimeline extends CoreActionTimeline {
 	static override rows: ActionRow[] = [
 		...CoreActionTimeline.rows,
 		'AUTOMATON_QUEEN',
+		'QUEEN_OVERDRIVE',
 		'WILDFIRE',
 		'DETONATOR',
+		'BARREL_STABILIZER',
+		'HYPERCHARGE',
 		'GAUSS_ROUND',
 		'RICOCHET',
-		'HYPERCHARGE',
-		'BARREL_STABILIZER',
 		'REASSEMBLE',
-		'QUEEN_OVERDRIVE',
-		'TACTICIAN',
+		'CHAIN_SAW',
+		'AIR_ANCHOR',
+		'DRILL',
 		'FLAMETHROWER',
+		'TACTICIAN',
 	]
 }

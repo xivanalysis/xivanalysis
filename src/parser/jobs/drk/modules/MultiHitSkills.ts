@@ -1,23 +1,27 @@
-import ACTIONS from 'data/ACTIONS'
 import {AoEUsages} from 'parser/core/modules/AoEUsages'
 
 export class MultiHitSkills extends AoEUsages {
-	suggestionIcon = ACTIONS.QUIETUS.icon
+	suggestionIcon = this.data.actions.QUIETUS.icon
 
 	trackedActions = [
 		{
-			aoeAction: ACTIONS.FLOOD_OF_SHADOW,
-			stActions: [ACTIONS.EDGE_OF_SHADOW],
-			minTargets: 2,
-		},
-		{
-			aoeAction: ACTIONS.QUIETUS,
-			stActions: [ACTIONS.BLOODSPILLER],
+			aoeAction: this.data.actions.FLOOD_OF_SHADOW,
+			stActions: [this.data.actions.EDGE_OF_SHADOW],
 			minTargets: 3,
 		},
 		{
-			aoeAction: ACTIONS.UNLEASH,
-			stActions: [ACTIONS.HARD_SLASH],
+			aoeAction: this.data.actions.QUIETUS,
+			stActions: [this.data.actions.BLOODSPILLER],
+			minTargets: 3,
+		},
+		{
+			aoeAction: this.data.actions.ABYSSAL_DRAIN,
+			stActions: [this.data.actions.CARVE_AND_SPIT],
+			minTargets: 4,
+		},
+		{
+			aoeAction: this.data.actions.UNLEASH,
+			stActions: [this.data.actions.HARD_SLASH],
 			minTargets: 2,
 		},
 	]
