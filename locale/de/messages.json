@@ -357,7 +357,6 @@
   "mch.queen.accordion.message": "Die Liste unten enthält jedes <0/>-Fenster aus dem Kampf, wann es gestartet wurde, die Batterie-Kosten und Dauer, und wie viel Schaden die DAME ihrem Ziel zugefügt hat. Wenn du eins der Fenster expandierst, dann zeigt es dir jeden einzelnen Cast der DAME an.",
   "mch.queen.title": "Nutzen von Automaton DAME",
   "mch.queen.trigger.queenless-queen-attack": "Ein Cast von <0/> wurde aufgezeichnet, ohne dass Automaton DAME aktiv war.",
-  "mch.reassemble.suggestions.bad-gcds.content": "Mit einem Ziel sollte <0/> immer nur für <1/> und <2/> genutzt werden, da sie mit Abstand deine stärksten GCDs sind.",
   "mch.reassemble.suggestions.bad-gcds.why": "Du hast Justieren {0, plural, one {#-Mal} other {#-Mal}} für einen nicht-optimalen GCD benutzt.",
   "mch.reassemble.suggestions.dropped.content": "Vermeide es, <0/> zu nutzen, wenn der Boss kurz darauf unverwundbar wird, um den Buff nicht zu verschwenden.",
   "mch.reassemble.suggestions.dropped.why": "Du hast Justieren {0, plural, one {#-Mal} other {#-Mal}} ungenutzt auslaufen lassen.",
