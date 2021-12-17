@@ -27,6 +27,4 @@ export default class OGCDDowntime extends CooldownDowntime {
 			firstUseOffset: 12000,
 		},
 	]
-
-	override checklistTarget = 100
 }

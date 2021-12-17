@@ -5,7 +5,6 @@ import MultiHitSkills from './MultiHitSkills'
 import OGCDDowntime from './OGCDDowntime'
 import RagingStrikes from './RagingStrikes'
 import RefulgentProcs from './RefulgentProcs'
-import Weaving from './Weaving'
 
 export default [
 	ActionTimeline,
@@ -15,5 +14,4 @@ export default [
 	OGCDDowntime,
 	RagingStrikes,
 	RefulgentProcs,
-	Weaving,
 ]
