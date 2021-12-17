@@ -375,7 +375,6 @@
   "mch.queen.accordion.message": "아래는 전투 동안 사용된 <0/> 구간들입니다. 진입한 시간, 배터리 유지시간 및 사용 그리고 구간마다 적에게 입힌 데미지를 표시하며 각 구간마다 클릭할 시 자동인형 퀸의 사용된 스킬들을 표시할 수 있습니다.",
   "mch.queen.title": "자동인형 퀸 사용",
   "mch.queen.trigger.queenless-queen-attack": "자동인형 퀸이 존재하지 않는 상태에서 <0/>을 사용하였습니다.",
-  "mch.reassemble.suggestions.bad-gcds.content": "단일 대상에겐 반드시 <0/>을 글쿨기중 위력이 가장 높은<1/>과 <2/>으로 사용해야합니다.",
   "mch.reassemble.suggestions.bad-gcds.why": "정비를 올바르지않은 글쿨기에 총 {0, plural, other {#회}} 사용하엿습니다.",
   "mch.reassemble.suggestions.dropped.content": "대상이 곧 무적 상태로 진입할시 <0/>을 사용하는것을 피하십시오. 버프가 무의미해집니다.",
   "mch.reassemble.suggestions.dropped.why": "정비를 총 {0, plural, other {#회}}를 사용 후 끊어지게 놔두었습니다.",
