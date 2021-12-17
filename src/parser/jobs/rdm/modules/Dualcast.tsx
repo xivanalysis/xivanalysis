@@ -85,7 +85,7 @@ export class DualCast extends Analyser {
 			this.suggestions.add(new TieredSuggestion({
 				icon: this.data.statuses.DUALCAST.icon,
 				content: <Trans id="rdm.dualcast.suggestions.wasted.content">
-					Spells used while <StatusLink {...this.data.statuses.DUALCAST}/> is up should be limited to <ActionLink {...this.data.actions.VERAERO}/>, <ActionLink {...this.data.actions.VERTHUNDER}/>, or <ActionLink {...this.data.actions.VERRAISE}/>
+					Spells used while <StatusLink {...this.data.statuses.DUALCAST}/> is up should be limited to <ActionLink {...this.data.actions.VERAERO_III}/>, <ActionLink {...this.data.actions.VERTHUNDER_III}/>, or <ActionLink {...this.data.actions.VERRAISE}/>
 				</Trans>,
 				tiers: SEVERITY_WASTED_DUALCAST,
 				value: this.wastedDualCasts.length,

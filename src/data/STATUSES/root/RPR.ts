@@ -2,86 +2,93 @@ import {ensureStatuses} from '../type'
 
 export const RPR = ensureStatuses({
 	DEATHS_DESIGN: {
-		id: 0,
+		id: 2586,
 		name: 'Death\'s Design',
-		icon: '',
+		icon: 'https://xivapi.com/i/012000/012926.png',
 		duration: 30000,
 	},
 
 	// TODO: find out the duration on this, might be a pseudo-stance tho
 	SOULSOW: {
-		id: 0,
+		id: 2594,
 		name: 'Soulsow',
-		icon: '',
+		icon: 'https://xivapi.com/i/012000/012932.png',
 	},
 
 	SOUL_REAVER: {
-		id: 0,
+		id: 2587,
 		name: 'Soul Reaver',
-		icon: '',
+		icon: 'https://xivapi.com/i/017000/17097.png',
 		duration: 30000,
 	},
 
+	ENHANCED_HARPE: {
+		id: 2545,
+		name: 'Enhanced Harpe',
+		icon: 'https://xivapi.com/i/012000/012939.png',
+		duration: 15000,
+	},
+
 	ENHANCED_CROSS_REAPING: {
-		id: 0,
+		id: 2591,
 		name: 'Enhanced Cross Reaping',
-		icon: '',
+		icon: 'https://xivapi.com/i/012000/12930.png',
 		duration: 30000,
 	},
 
 	ENHANCED_VOID_REAPING: {
-		id: 0,
+		id: 2590,
 		name: 'Enhanced Void Reaping',
-		icon: '',
+		icon: 'https://xivapi.com/i/012000/012929.png',
 		duration: 30000,
 	},
 
 	ENHANCED_GALLOWS: {
-		id: 0,
+		id: 2589,
 		name: 'Enhanced Gallows',
-		icon: '',
+		icon: 'https://xivapi.com/i/012000/012928.png',
 		duration: 60000,
 	},
 
 	ENHANCED_GIBBET: {
-		id: 0,
+		id: 2588,
 		name: 'Enhanced Gibbet',
-		icon: '',
+		icon: 'https://xivapi.com/i/012000/012927.png',
 		duration: 60000,
 	},
 
 	CIRCLE_OF_SACRIFICE: {
-		id: 0,
+		id: 2600,
 		name: 'Circle of Sacrifice',
-		icon: '',
+		icon: 'https://xivapi.com/i/012000/012937.png',
 		duration: 5000,
 	},
 
 	BLOODSOWN_CIRCLE: {
-		id: 0,
+		id: 2601,
 		name: 'Bloodsown Circle',
-		icon: '',
+		icon: 'https://xivapi.com/i/012000/012938.png',
 		duration: 6000,
 	},
 
-	IMMPORTAL_SACRIFICE: {
-		id: 0,
+	IMMORTAL_SACRIFICE: {
+		id: 2592,
 		name: 'Immortal Sacrifice',
-		icon: '',
+		icon: 'https://xivapi.com/i/017000/017287.png',
 		duration: 30000,
 	},
 
 	CREST_OF_TIME_BORROWED: {
-		id: 0,
+		id: 2597,
 		name: 'Crest of Time Borrowed',
-		icon: '',
+		icon: 'https://xivapi.com/i/012000/012934.png',
 		duration: 5000,
 	},
 
 	CREST_OF_TIME_RETURNED: {
-		id: 0,
+		id: 2598,
 		name: 'Crest of Time Returned',
-		icon: '',
+		icon: 'https://xivapi.com/i/012000/12935.png',
 		duration: 15000,
 	},
 })

@@ -29,7 +29,8 @@ const TRACKED_STATUSES: StatusConfig[] = [
 	{key: 'BATTLE_VOICE', exclude: ['BARD']},
 	{key: 'BROTHERHOOD'},
 	{key: 'CHAIN_STRATAGEM'},
-	{key: 'EMBOLDEN_PHYSICAL'}, // phys only?
+	{key: 'EMBOLDEN_SELF'}, // tracking the self buff so it appears on the RDM's perspective
+	{key: 'EMBOLDEN_PARTY'},
 	{key: 'LEFT_EYE', exclude: ['DRAGOON']}, // notDRG
 	{key: 'TRICK_ATTACK_VULNERABILITY_UP', name: 'Trick Attack'},
 	{key: 'DEVOTION'},

@@ -101,11 +101,6 @@ export const DNC = ensureStatuses({
 		icon: 'https://xivapi.com/i/013000/013720.png',
 		duration: 15000,
 	},
-	IMPROVISATION_HEALING: { // Stubbing to satisfy lint types until Gauge update removes reference to it
-		id: 269526952695,
-		name: '',
-		icon: '',
-	},
 	IMPROVISED_FINISH: {
 		id: 2697,
 		name: 'Improvised Finish',
