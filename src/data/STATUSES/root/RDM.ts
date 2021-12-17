@@ -47,7 +47,7 @@ export const RDM = ensureStatuses({
 		duration: 10000,
 	},
 	MAGICK_BARRIER: {
-		id: 1971,
+		id: 2707,
 		name: 'Magick Barrier',
 		icon: 'https://xivapi.com/i/013000/013408.png',
 		duration: 10000,
