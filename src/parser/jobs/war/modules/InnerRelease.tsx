@@ -110,7 +110,7 @@ export class InnerRelease extends Analyser {
 		const goodGcds = GOOD_GCDS.map(actionKey => this.data.actions[actionKey].id)
 
 		// Extract our suggestion metrics from history
-		const missedGcds = this.history.reduce((total, current) => total + (IR_STACKS_APPLIED - current.casts.filter(id => id !== this.data.actions.PRIMAL_REND.id).length), 0)
+		const missedGcds = this.history.reduce((total, current) => total + Math.max(0, (IR_STACKS_APPLIED - current.casts.filter(id => id !== this.data.actions.PRIMAL_REND.id).length)), 0)
 		const badGcds = this.history.reduce((total, current) => total + (IR_STACKS_APPLIED - this.accountGcds(current, goodGcds)), 0)
 		const veryBadGcds = this.history.reduce((total, current) => total + this.accountGcds(current, chaosGcds), 0)
 
@@ -171,6 +171,7 @@ export class InnerRelease extends Analyser {
 			if (count >= IR_STACKS_APPLIED) { break }
 		}
 
-		return hits
+		// Ensure we're capped at max stacks, it shouldn't be possible to go over but better safe than sorry
+		return Math.min(IR_STACKS_APPLIED, hits)
 	}
 }
