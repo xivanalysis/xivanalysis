@@ -11,7 +11,7 @@ export class OGCDDowntime extends CooldownDowntime {
 		},
 		{
 			cooldowns: [this.data.actions.DELIRIUM],
-			firstUseOffset: 5000,
+			firstUseOffset: 7500,
 		},
 		{cooldowns: [this.data.actions.PLUNGE]},
 		{
