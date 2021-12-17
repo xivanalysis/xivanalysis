@@ -397,7 +397,6 @@
   "mch.queen.accordion.message": "La liste ci-dessous contient toutes les fenêtres <0/> du combat, indiquant quand il a commencé, le coût et la durée de sa Batterie, et combien de dégâts totaux l'Automate Reine a fait à sa cible. L'agrandissement d'une fenêtre individuelle ci-dessous affichera tous les utilisations réalisés par l'Automate Reine au cours de cette période.",
   "mch.queen.title": "Utilisation Automate Reine",
   "mch.queen.trigger.queenless-queen-attack": "Un casting de <0/> a été enregistré sans la Reine des automates sur le terrain.",
-  "mch.reassemble.suggestions.bad-gcds.content": "Sur des cibles uniques <0/> ne doit être utilisé que sur <1/> et <2/>, car ce sont vos GCDs les plus puissants et de loin.",
   "mch.reassemble.suggestions.bad-gcds.why": "Vous avez utilisé Réassemblage sur un GCD non optimal {0, plural, one {# fois} other {# fois}}.",
   "mch.reassemble.suggestions.dropped.content": "Évitez d'utiliser <0/> lorsqu'un boss est sur le point de devenir non ciblable pour ne pas gaspiller le buff.",
   "mch.reassemble.suggestions.dropped.why": "Vous avez laissé tombé l'effet de Réassemblage{0, plural,one {# fois}other {# fois}}.",
