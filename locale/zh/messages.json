@@ -137,6 +137,7 @@
   "blm.thunder.total-clip": "合计覆盖",
   "blu.about.description": "这只是一个对于有限职业的有限分析。它还未准备就绪，敬请期待。\n\n该项分析将会着眼于持续伤害，技能覆盖率以及 [~action/BRISTLE] 的正确使用[~action/MOON_FLUTE]，和[~action/SURPANAKHA]。",
   "blu.about.description.warning": "这个模块正在开发，尚未发布。",
+  "brd.about.description": "",
   "brd.dots.checklist.description": "吟游诗人绝大部分的DPS都直接或间接地来自<0/> 和 <1/>。确保你的目标身上永远有这两种技能效果。使用 <2/> 刷新持续伤害(DoT)的剩余时间。",
   "brd.dots.checklist.name": "保持DoT不断",
   "brd.dots.checklist.requirement.caustic": "<0/> 覆盖率",

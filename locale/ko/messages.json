@@ -137,6 +137,7 @@
   "blm.thunder.total-clip": "총 손실시간",
   "blu.about.description": "리미트 잡을 위한 리미티드 분석기는 아직 완전하지 않습니다만 많이 기대해주세요.\n\n이 분석기는 도트 데미지 유지, 전투 적용 시간, 그리고 [~action/BRISTLE],[~action/MOON_FLUTE] 와 [~action/SURPANKHA] 의 올바른 사용을 점검해줍니다.\n",
   "blu.about.description.warning": "이 모듈은 아직 개발단계에 머물고 있는 비공개 모듈입니다.",
+  "brd.about.description": "",
   "brd.dots.checklist.description": "",
   "brd.dots.checklist.name": "항상 도트가 유지되도록 하십시오.",
   "brd.dots.checklist.requirement.caustic": "적용시간 <0/>",
