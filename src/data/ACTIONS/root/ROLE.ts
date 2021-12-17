@@ -136,9 +136,9 @@ export const ROLE = ensureActions({
 		statusesApplied: ['ADDLE'],
 	},
 	SLEEP: {
-		id: 145, // ID may have changed since this is role now, rather than BLM
+		id: 25880,
 		name: 'Sleep',
-		icon: 'https://xivapi.com/i/000000/000465.png',
+		icon: 'https://xivapi.com/i/000000/000871.png',
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 2500,

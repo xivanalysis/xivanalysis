@@ -7,9 +7,9 @@ export const RPR = ensureActions({
 	// -----
 
 	SLICE: {
-		id: 0,
+		id: 24373,
 		name: 'Slice',
-		icon: '',
+		icon: 'https://xivapi.com/i/003000/003601.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		combo: {
@@ -18,50 +18,50 @@ export const RPR = ensureActions({
 	},
 
 	WAXING_SLICE: {
-		id: 0,
+		id: 24374,
 		name: 'Waxing Slice',
-		icon: '',
+		icon: 'https://xivapi.com/i/003000/003602.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		combo: {
-			from: 0, // slice
+			from: 24373,
 		},
 	},
 
 	INFERNAL_SLICE: {
-		id: 0,
+		id: 24375,
 		name: 'Infernal Slice',
-		icon: '',
+		icon: 'https://xivapi.com/i/003000/003603.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		combo: {
-			from: 0, // waxing slice
+			from: 24374,
+			end: true,
 		},
 	},
 
 	SHADOW_OF_DEATH: {
-		id: 0,
+		id: 24378,
 		name: 'Shadow of Death',
-		icon: '',
+		icon: 'https://xivapi.com/i/003000/003606.png',
 		onGcd: true,
-		cooldownGroup: 0, // shared with whorl of death
 		speedAttribute: Attribute.SKILL_SPEED,
 		statusesApplied: ['DEATHS_DESIGN'],
 	},
 
 	HARPE: {
-		id: 0,
+		id: 24386,
 		name: 'Harpe',
-		icon: '',
+		icon: 'https://xivapi.com/i/003000/003614.png',
 		onGcd: true,
 		castTime: 1300,
 		speedAttribute: Attribute.SPELL_SPEED,
 	},
 
 	SPINNING_SCYTHE: {
-		id: 0,
+		id: 24376,
 		name: 'Spinning Scythe',
-		icon: '',
+		icon: 'https://xivapi.com/i/003000/003604.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		combo: {
@@ -70,47 +70,46 @@ export const RPR = ensureActions({
 	},
 
 	NIGHTMARE_SCYTHE: {
-		id: 0,
+		id: 24377,
 		name: 'Nightmare Scythe',
-		icon: '',
+		icon: 'https://xivapi.com/i/003000/003605.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		combo: {
-			from: 0, // spinning scythe
+			from: 24376,
 		},
 	},
 
 	WHORL_OF_DEATH: {
-		id: 0,
+		id: 24379,
 		name: 'Whorl of Death',
-		icon: '',
+		icon: 'https://xivapi.com/i/003000/003607.png',
 		onGcd: true,
-		cooldownGroup: 0, // shared with shadow of death
 		speedAttribute: Attribute.SKILL_SPEED,
 		statusesApplied: ['DEATHS_DESIGN'],
 	},
 
 	SOULSOW: {
-		id: 0,
+		id: 24387,
 		name: 'Soulsow',
-		icon: '',
+		icon: 'https://xivapi.com/i/003000/003615.png',
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		statusesApplied: ['SOULSOW'],
 	},
 
 	HARVEST_MOON: {
-		id: 0,
+		id: 24388,
 		name: 'Harvest Moon',
-		icon: '',
+		icon: 'https://xivapi.com/i/003000/003616.png',
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 	},
 
 	PLENTIFUL_HARVEST: {
-		id: 0,
+		id: 24385,
 		name: 'Plentiful Harvest',
-		icon: '',
+		icon: 'https://xivapi.com/i/003000/003613.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 	},
@@ -120,9 +119,9 @@ export const RPR = ensureActions({
 	// -----
 
 	VOID_REAPING: {
-		id: 0,
+		id: 24395,
 		name: 'Void Reaping',
-		icon: '',
+		icon: 'https://xivapi.com/i/003000/003623.png',
 		onGcd: true,
 		cooldown: 1500,
 		speedAttribute: Attribute.SKILL_SPEED,
@@ -130,9 +129,9 @@ export const RPR = ensureActions({
 	},
 
 	CROSS_REAPING: {
-		id: 0,
+		id: 24396,
 		name: 'Cross Reaping',
-		icon: '',
+		icon: 'https://xivapi.com/i/003000/003624.png',
 		onGcd: true,
 		cooldown: 1500,
 		speedAttribute: Attribute.SKILL_SPEED,
@@ -140,18 +139,18 @@ export const RPR = ensureActions({
 	},
 
 	GRIM_REAPING: {
-		id: 0,
+		id: 24397,
 		name: 'Grim Reaping',
-		icon: '',
+		icon: 'https://xivapi.com/i/003000/003625.png',
 		onGcd: true,
 		cooldown: 1500,
 		speedAttribute: Attribute.SKILL_SPEED,
 	},
 
 	COMMUNIO: {
-		id: 0,
+		id: 24398,
 		name: 'Communio',
-		icon: '',
+		icon: 'https://xivapi.com/i/003000/003626.png',
 		onGcd: true,
 		cooldown: 1500,
 		castTime: 1300,
@@ -163,88 +162,92 @@ export const RPR = ensureActions({
 	// -----
 
 	GALLOWS: {
-		id: 0,
+		id: 24383,
 		name: 'Gallows',
-		icon: '',
+		icon: 'https://xivapi.com/i/003000/003611.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		statusesApplied: ['ENHANCED_GIBBET'],
 	},
 
 	GIBBET: {
-		id: 0,
+		id: 24382,
 		name: 'Gibbet',
-		icon: '',
+		icon: 'https://xivapi.com/i/003000/003610.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		statusesApplied: ['ENHANCED_GALLOWS'],
 	},
 
 	GUILLOTINE: {
-		id: 0,
+		id: 24384,
 		name: 'Guillotine',
-		icon: '',
+		icon: 'https://xivapi.com/i/003000/003612.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
+	},
+
+	SOUL_SLICE: {
+		id: 24380,
+		name: 'Soul Slice',
+		icon: 'https://xivapi.com/i/003000/003608.png',
+		onGcd: true,
+		cooldown: 30000,
+		cooldownGroup: 5,
+		charges: 2,
+	},
+
+	SOUL_SCYTHE: {
+		id: 24381,
+		name: 'Soul Scythe',
+		icon: 'https://xivapi.com/i/003000/003609.png',
+		onGcd: true,
+		cooldown: 30000,
+		cooldownGroup: 5,
+		charges: 2,
 	},
 
 	// -----
 	// Player OGCDs
 	// -----
 
-	SOUL_SLICE: {
-		id: 0,
-		name: 'Soul Slice',
-		icon: '',
-		cooldown: 30000,
-		cooldownGroup: 0, // shared with soul scythe
-		charges: 2,
-	},
-
-	SOUL_SCYTHE: {
-		id: 0,
-		name: 'Soul Scythe',
-		icon: '',
-		cooldown: 30000,
-		cooldownGroup: 0, // shared with soul slice
-		charges: 2,
-	},
-
 	HELLS_INGRESS: {
-		id: 0,
+		id: 24401,
 		name: 'Hell\'s Ingress',
-		icon: '',
+		icon: 'https://xivapi.com/i/003000/003630.png',
 		cooldown: 20000,
-		cooldownGroup: 0, // shared with hell's egress
+		cooldownGroup: 4,
+		statusesApplied: ['ENHANCED_HARPE'],
 	},
 
 	HELLS_EGRESS: {
-		id: 0,
+		id: 24402,
 		name: 'Hell\'s Egress',
-		icon: '',
+		icon: 'https://xivapi.com/i/003000/003630.png',
 		cooldown: 20000,
-		cooldownGroup: 0, // shared with hell's ingress
+		cooldownGroup: 4,
+		statusesApplied: ['ENHANCED_HARPE'],
 	},
 
 	REGRESS: {
-		id: 0,
+		id: 24403,
 		name: 'Regress',
-		icon: '',
+		icon: 'https://xivapi.com/i/003000/003631.png',
 		cooldown: 10000,
 	},
 
 	ARCANE_CIRCLE: {
-		id: 0,
+		id: 24405,
 		name: 'Arcane Circle',
-		icon: '',
+		icon: 'https://xivapi.com/i/003000/003633.png',
 		cooldown: 120000,
-		statusesApplied: ['CIRCLE_OF_SACRIFICE', 'BLOODSOWN_CIRCLE', 'IMMPORTAL_SACRIFICE'],
+		statusesApplied: ['CIRCLE_OF_SACRIFICE', 'BLOODSOWN_CIRCLE', 'IMMORTAL_SACRIFICE'],
 	},
 
 	ARCANE_CREST: {
-		id: 0,
+		id: 24404,
 		name: 'Arcane Crest',
-		icon: '',
+		icon: 'https://xivapi.com/i/003000/003632.png',
 		cooldown: 30000,
 		statusesApplied: ['CREST_OF_TIME_BORROWED'],
 	},
@@ -254,23 +257,23 @@ export const RPR = ensureActions({
 	// -----
 
 	ENSHROUD: {
-		id: 0,
+		id: 24394,
 		name: 'Enshroud',
-		icon: '',
+		icon: 'https://xivapi.com/i/003000/003622.png',
 		cooldown: 15000,
 	},
 
 	LEMURES_SLICE: {
-		id: 0,
+		id: 24399,
 		name: 'Lemure\'s Slice',
-		icon: '',
+		icon: 'https://xivapi.com/i/003000/003627.png',
 		cooldown: 1000,
 	},
 
 	LEMURES_SCYTHE: {
-		id: 0,
+		id: 24400,
 		name: 'Lemure\'s Scythe',
-		icon: '',
+		icon: 'https://xivapi.com/i/003000/003628.png',
 		cooldown: 1000,
 	},
 
@@ -279,41 +282,39 @@ export const RPR = ensureActions({
 	// -----
 
 	GLUTTONY: {
-		id: 0,
+		id: 24393,
 		name: 'Gluttony',
-		icon: '',
+		icon: 'https://xivapi.com/i/003000/003621.png',
 		cooldown: 60000,
 		statusesApplied: ['SOUL_REAVER'],
 	},
 
 	BLOOD_STALK: {
-		id: 0,
+		id: 24389,
 		name: 'Blood Stalk',
-		icon: '',
+		icon: 'https://xivapi.com/i/003000/003617.png',
 		cooldown: 1000,
 		statusesApplied: ['SOUL_REAVER'],
 	},
 
 	UNVEILED_GALLOWS: {
-		id: 0,
+		id: 24391,
 		name: 'Unveiled Gallows',
-		icon: '',
-		cooldown: 1000,
+		icon: 'https://xivapi.com/i/003000/003619.png',
 		statusesApplied: ['SOUL_REAVER'],
 	},
 
 	UNVEILED_GIBBET: {
-		id: 0,
+		id: 24390,
 		name: 'Unveiled Gibbet',
-		icon: '',
-		cooldown: 1000,
+		icon: 'https://xivapi.com/i/003000/003618.png',
 		statusesApplied: ['SOUL_REAVER'],
 	},
 
 	GRIM_SWATHE: {
-		id: 0,
+		id: 24392,
 		name: 'Grim Swathe',
-		icon: '',
+		icon: 'https://xivapi.com/i/003000/003620.png',
 		cooldown: 1000,
 		statusesApplied: ['SOUL_REAVER'],
 	},
