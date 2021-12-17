@@ -14,7 +14,7 @@ export const ACN = ensureActions({
 		icon: 'https://xivapi.com/i/000000/000501.png',
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
-		castTime: 2500,
+		castTime: 1500,
 	},
 
 	BIO: {
@@ -103,7 +103,7 @@ export const ACN = ensureActions({
 		icon: 'https://xivapi.com/i/000000/000518.png',
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
-		castTime: 2000,
+		castTime: 1500,
 	},
 
 	// -----
