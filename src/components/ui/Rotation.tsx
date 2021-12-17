@@ -13,6 +13,7 @@ export interface RotationEvent {
 	cause?: Cause,
 	action?: number
 	isProc?: boolean
+	ghosted?: boolean
 }
 interface RotationProps {
 	events: RotationEvent[]
