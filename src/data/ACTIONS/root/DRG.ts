@@ -11,7 +11,7 @@ export const DRG = ensureActions({
 		icon: 'https://xivapi.com/i/000000/000310.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		potency: 290,
+		potency: 230,
 		combo: {
 			start: true,
 		},
@@ -26,7 +26,7 @@ export const DRG = ensureActions({
 		potency: 140,
 		combo: {
 			from: [75, 16479],
-			potency: 350,
+			potency: 280,
 		},
 	},
 
@@ -36,7 +36,8 @@ export const DRG = ensureActions({
 		icon: 'https://xivapi.com/i/000000/000315.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		potency: 150,
+		potency: 130,
+		breaksCombo: false,
 	},
 
 	FULL_THRUST: {
@@ -48,7 +49,21 @@ export const DRG = ensureActions({
 		potency: 100,
 		combo: {
 			from: 78,
-			potency: 530,
+			potency: 430,
+			end: true,
+		},
+	},
+
+	HEAVENS_THRUST: {
+		id: 25771,
+		name: 'Heavens\' Thrust',
+		icon: 'https://xivapi.com/i/002000/002595.png',
+		onGcd: true,
+		speedAttribute: Attribute.SKILL_SPEED,
+		potency: 100,
+		combo: {
+			from: 78,
+			potency: 430,
 			end: true,
 		},
 	},
@@ -59,12 +74,12 @@ export const DRG = ensureActions({
 		icon: 'https://xivapi.com/i/000000/000317.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		potency: 150,
+		potency: 140,
 		combo: {
 			from: [75, 16479],
-			potency: 320,
+			potency: 250,
 		},
-		statusesApplied: ['DISEMBOWEL'],
+		statusesApplied: ['POWER_SURGE'],
 	},
 
 	CHAOS_THRUST: {
@@ -76,10 +91,25 @@ export const DRG = ensureActions({
 		potency: 100,
 		combo: {
 			from: 87,
-			potency: 330,
+			potency: 260,
 			end: true,
 		},
 		statusesApplied: ['CHAOS_THRUST'],
+	},
+
+	CHAOTIC_SPRING: {
+		id: 25772,
+		name: 'Chaotic Spring',
+		icon: 'https://xivapi.com/i/002000/002596.png',
+		onGcd: true,
+		speedAttribute: Attribute.SKILL_SPEED,
+		potency: 100,
+		combo: {
+			from: 87,
+			potency: 260,
+			end: true,
+		},
+		statusesApplied: ['CHAOTIC_SPRING'],
 	},
 
 	DOOM_SPIKE: {
@@ -88,7 +118,19 @@ export const DRG = ensureActions({
 		icon: 'https://xivapi.com/i/000000/000306.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		potency: 170,
+		potency: 110,
+		combo: {
+			start: true,
+		},
+	},
+
+	DRACONIAN_FURY: {
+		id: 25770,
+		name: 'Draconian Fury',
+		icon: 'https://xivapi.com/i/002000/002594.png',
+		onGcd: true,
+		speedAttribute: Attribute.SKILL_SPEED,
+		potency: 130,
 		combo: {
 			start: true,
 		},
@@ -100,7 +142,7 @@ export const DRG = ensureActions({
 		icon: 'https://xivapi.com/i/002000/002582.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		potency: 380,
+		potency: 260,
 	},
 
 	WHEELING_THRUST: {
@@ -109,7 +151,7 @@ export const DRG = ensureActions({
 		icon: 'https://xivapi.com/i/002000/002584.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		potency: 380,
+		potency: 260,
 	},
 
 	RAIDEN_THRUST: {
@@ -118,7 +160,7 @@ export const DRG = ensureActions({
 		icon: 'https://xivapi.com/i/002000/002592.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		potency: 330,
+		potency: 260,
 		combo: {
 			start: true,
 		},
@@ -132,8 +174,8 @@ export const DRG = ensureActions({
 		speedAttribute: Attribute.SKILL_SPEED,
 		potency: 100,
 		combo: {
-			from: 86,
-			potency: 200,
+			from: [86, 25770],
+			potency: 120,
 		},
 	},
 
@@ -146,9 +188,10 @@ export const DRG = ensureActions({
 		potency: 100,
 		combo: {
 			from: 7397,
-			potency: 230,
+			potency: 150,
 			end: true,
 		},
+		statusesApplied: ['DRACONIAN_FIRE'],
 	},
 
 	// -----
@@ -160,13 +203,14 @@ export const DRG = ensureActions({
 		icon: 'https://xivapi.com/i/000000/000304.png',
 		cooldown: 45000,
 		statusesApplied: ['LIFE_SURGE'],
+		charges: 2,
 	},
 
 	LANCE_CHARGE: {
 		id: 85,
 		name: 'Lance Charge',
 		icon: 'https://xivapi.com/i/000000/000309.png',
-		cooldown: 90000,
+		cooldown: 60000,
 		statusesApplied: ['LANCE_CHARGE'],
 	},
 
@@ -175,6 +219,7 @@ export const DRG = ensureActions({
 		name: 'Jump',
 		icon: 'https://xivapi.com/i/002000/002576.png',
 		cooldown: 30000,
+		statusesApplied: ['DIVE_READY'],
 	},
 
 	HIGH_JUMP: {
@@ -197,6 +242,7 @@ export const DRG = ensureActions({
 		name: 'Spineshatter Dive',
 		icon: 'https://xivapi.com/i/002000/002580.png',
 		cooldown: 60000,
+		charges: 2,
 	},
 
 	DRAGONFIRE_DIVE: {
@@ -204,22 +250,14 @@ export const DRG = ensureActions({
 		name: 'Dragonfire Dive',
 		icon: 'https://xivapi.com/i/002000/002578.png',
 		cooldown: 120000,
-
 	},
 
 	BATTLE_LITANY: {
 		id: 3557,
 		name: 'Battle Litany',
 		icon: 'https://xivapi.com/i/002000/002585.png',
-		cooldown: 180000,
+		cooldown: 120000,
 		statusesApplied: ['BATTLE_LITANY'],
-	},
-
-	BLOOD_OF_THE_DRAGON: {
-		id: 3553,
-		name: 'Blood Of The Dragon',
-		icon: 'https://xivapi.com/i/002000/002581.png',
-		cooldown: 25000,
 	},
 
 	GEIRSKOGUL: {
@@ -258,6 +296,14 @@ export const DRG = ensureActions({
 		name: 'Stardiver',
 		icon: 'https://xivapi.com/i/002000/002593.png',
 		cooldown: 30000,
-		potency: 600,
+		potency: 500,
+	},
+
+	WYRMWIND_THRUST: {
+		id: 25773,
+		name: 'Whyrmwind Thrust',
+		icon: 'https://xivapi.com/i/002000/002597.png',
+		cooldown: 10000,
+		potency: 370,
 	},
 })
