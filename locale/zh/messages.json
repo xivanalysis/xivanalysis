@@ -431,7 +431,6 @@
   "mch.queen.accordion.message": "这个表格展示了每次<0/>的使用，其中包括它的启动时间，启动时的电池电量和持续时间，还有机器人对谁造成了多少伤害。展开可以显示机器人使用了的所有技能。",
   "mch.queen.title": "机器人的使用记录",
   "mch.queen.trigger.queenless-queen-attack": "机器人在场上时使用了<0/>。",
-  "mch.reassemble.suggestions.bad-gcds.content": "在打单体目标时，<0/>永远只能用在<1/>和<2/>。它们是你的最强单体战技。",
   "mch.reassemble.suggestions.bad-gcds.why": "{0, plural, one {# 次} other {# 次}}整备没有用在正确的技能上.",
   "mch.reassemble.suggestions.dropped.content": "在Boss下一秒即将进入不可选中状态时，不要使用<0/>，避免浪费掉这个buff。",
   "mch.reassemble.suggestions.dropped.why": "你有 {0, plural, one {# time} other {# 次}}整备buff结束了都没使用过战技。",
