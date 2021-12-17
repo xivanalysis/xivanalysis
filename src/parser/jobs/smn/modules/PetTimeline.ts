@@ -7,7 +7,7 @@ const COMMANDED_SKILLS: ActionKey[] = [
 	'AERIAL_BLAST',
 	'EARTHEN_FURY',
 	'INFERNO',
-	// all egis
+	// Carbuncle
 	'SEARING_LIGHT',
 	// Bahamut
 	'AKH_MORN',
