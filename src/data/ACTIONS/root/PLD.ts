@@ -276,7 +276,7 @@ export const PLD = ensureActions({
 		icon: 'https://xivapi.com/i/002000/002512.png',
 		onGcd: false,
 		cooldown: 10000,
-		statusesApplied: ['INTERVENTION', 'KNIGHTS_RESOLVE', 'KNIGHTS_BENEDICTION'],
+		statusesApplied: ['INTERVENTION'],
 	},
 	REQUIESCAT: {
 		id: 7383,
