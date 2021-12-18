@@ -137,6 +137,7 @@
   "blm.thunder.total-clip": "Insgesamt Überschrieben",
   "blu.about.description": "Dies ist eine beschränkte Analyse für einen beschränkten Job. Sie ist noch nicht bereit, freut euch darauf.\n\nDiese Analyse wird sich auf DoTs, Uptime und dem richtigem Gebrauch von [~action/BRISTLE], [~action/MOON_FLUTE] und [~action/SURPANAKHA] konzentrieren.\n",
   "blu.about.description.warning": "Dieses Modul wird noch entwickelt und ist noch nicht bereit zur Veröffentlichung.",
+  "brd.about.description": "",
   "brd.dots.checklist.description": "",
   "brd.dots.checklist.name": "Halte deine DoTs aufrecht",
   "brd.dots.checklist.requirement.caustic": "Gesamtanwendungszeit von <0/>",

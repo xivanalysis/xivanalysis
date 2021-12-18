@@ -137,6 +137,7 @@
   "blm.thunder.total-clip": "Temps total de clipping",
   "blu.about.description": "Il s'agit d'un analyseur limité pour un job limité. Il n'est pas encore prêt, mais merci de votre compréhension.\n\nCet analyseur se concentrera sur les DoTs, le temps de fonctionnement et l'utilisation correcte de [~action/BRISTLE],[~action/MOON_FLUTE], et [~action/SURPANAKHA].\n",
   "blu.about.description.warning": "Ce module est actuellement en développement et n'est donc pas encore prête pour le public.",
+  "brd.about.description": "",
   "brd.dots.checklist.description": "",
   "brd.dots.checklist.name": "Vérifiez bien que vos DoTs sont bien appliqués à votre cible",
   "brd.dots.checklist.requirement.caustic": "Temps total d'application de <0/>",
