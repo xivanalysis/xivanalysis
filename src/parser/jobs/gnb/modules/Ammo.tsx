@@ -17,7 +17,7 @@ const LEFTOVER_AMMO_SEVERITY_TIERS = {
 	2: SEVERITY.MEDIUM,
 }
 
-const MAX_AMMO = 2
+const MAX_AMMO = 3
 
 export class Ammo extends CoreGauge {
 	static override handle = 'ammo'

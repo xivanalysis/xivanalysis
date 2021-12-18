@@ -19,6 +19,7 @@ import DISPLAY_ORDER from './DISPLAY_ORDER'
 import Procs from './Procs'
 
 const MAX_ALLOWED_BAD_GCD_THRESHOLD = 2000
+const MAX_ALLOWED_T3_CLIPPING = 3000
 
 interface ThunderApplicationData {
 	event: Events['statusApply'],
@@ -49,8 +50,6 @@ export class Thunder extends Analyser {
 	@dependency private procs!: Procs
 	@dependency private statuses!: Statuses
 	@dependency private suggestions!: Suggestions
-
-	private readonly maxAllowedT3Clipping = Math.max(this.data.statuses.THUNDER_III.duration - this.data.statuses.THUNDERCLOUD.duration, 0)
 
 	// Can never be too careful :blobsweat:
 	private readonly STATUS_DURATION = {
@@ -148,7 +147,7 @@ export class Thunder extends Analyser {
 
 		// Suggestions to not spam T3 too much
 		const sumClip = this.clip[this.data.statuses.THUNDER_III.id]
-		const maxExpectedClip = (this.thunder3Casts - 1) * this.maxAllowedT3Clipping
+		const maxExpectedClip = (this.thunder3Casts - 1) * MAX_ALLOWED_T3_CLIPPING
 		if (sumClip > maxExpectedClip) {
 			this.suggestions.add(new Suggestion({
 				icon: this.data.actions.THUNDER_III.icon,
@@ -189,10 +188,10 @@ export class Thunder extends Analyser {
 						const renderClipTime = event.clip != null ? this.parser.formatDuration(event.clip) : '-'
 						let clipSeverity: ReactNode = renderClipTime
 						// Make it white for expected clipping, yellow if the GCD aligned poorly, and red if it was definitely clipped too hard
-						if (thisClip > this.maxAllowedT3Clipping && thisClip <= this.maxAllowedT3Clipping + MAX_ALLOWED_BAD_GCD_THRESHOLD) {
+						if (thisClip > MAX_ALLOWED_T3_CLIPPING && thisClip <= MAX_ALLOWED_T3_CLIPPING + MAX_ALLOWED_BAD_GCD_THRESHOLD) {
 							clipSeverity = <span className="text-warning">{clipSeverity}</span>
 						}
-						if (thisClip > this.maxAllowedT3Clipping + MAX_ALLOWED_BAD_GCD_THRESHOLD) {
+						if (thisClip > MAX_ALLOWED_T3_CLIPPING + MAX_ALLOWED_BAD_GCD_THRESHOLD) {
 							clipSeverity = <span className="text-error">{clipSeverity}</span>
 						}
 						return <Table.Row key={event.event.timestamp}>

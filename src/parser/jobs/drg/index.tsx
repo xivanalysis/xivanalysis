@@ -1,4 +1,5 @@
 import {Trans} from '@lingui/react'
+import CONTRIBUTORS, {ROLES} from 'data/CONTRIBUTORS'
 import {Meta} from 'parser/core/Meta'
 import React from 'react'
 
@@ -14,13 +15,13 @@ export const DRAGOON = new Meta({
 	// 	to: '6.0',
 	// },
 	contributors: [
-		// {user: CONTRIBUTORS.YOU, role: ROLES.DEVELOPER},
+		{user: CONTRIBUTORS.FALINDRITH, role: ROLES.MAINTAINER},
 	],
 	changelog: [
-		// {
-		// 	date: new Date('2021-11-19'),
-		// 	Changes: () => <>The changes you made</>,
-		// 	contrubutors: [CONTRIBUTORS.YOU],
-		// },
+		{
+			date: new Date('2021-11-30'),
+			Changes: () => <>Performed data update, removed gauge tracking from Blood of the Dragon, deleted the Positionals module, updated checklist with new statuses.</>,
+			contributors: [CONTRIBUTORS.FALINDRITH],
+		},
 	],
 })
