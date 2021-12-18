@@ -36,7 +36,7 @@ export const DRG = ensureActions({
 		icon: 'https://xivapi.com/i/000000/000315.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		potency: 130,
+		potency: 150,
 		breaksCombo: false,
 	},
 
@@ -49,7 +49,7 @@ export const DRG = ensureActions({
 		potency: 100,
 		combo: {
 			from: 78,
-			potency: 430,
+			potency: 400,
 			end: true,
 		},
 	},
@@ -74,7 +74,7 @@ export const DRG = ensureActions({
 		icon: 'https://xivapi.com/i/000000/000317.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		potency: 140,
+		potency: 250,
 		combo: {
 			from: [75, 16479],
 			potency: 250,
@@ -106,7 +106,7 @@ export const DRG = ensureActions({
 		potency: 100,
 		combo: {
 			from: 87,
-			potency: 260,
+			potency: 280,
 			end: true,
 		},
 		statusesApplied: ['CHAOTIC_SPRING'],
