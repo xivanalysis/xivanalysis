@@ -53,6 +53,14 @@ export class Gauge extends CoreGauge {
 
 	private diagnoses: Partial<Record<Actor['id'], DiagnosisData>> = {}
 
+	private adderstingGauge = this.add(new CounterGauge({
+		maximum: ADDERSTING_MAX_STACKS,
+		graph: {
+			label: <Trans id="sge.gauge.resource.addersting">Addersting</Trans>,
+			color: ADDERSTING_COLOR.fade(GAUGE_FADE),
+		},
+		correctHistory: true,
+	}))
 	private addersgallGauge = this.add(new CounterGauge({
 		maximum: ADDERSGALL_MAX_STACKS,
 		initialValue: ADDERSGALL_MAX_STACKS,
