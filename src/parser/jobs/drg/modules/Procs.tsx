@@ -28,7 +28,7 @@ export default class Procs extends CoreProcs {
 		this.suggestions.add(new TieredSuggestion({
 			icon: droppedFang >= droppedWheeling ? this.data.actions.FANG_AND_CLAW.icon : this.data.actions.WHEELING_THRUST.icon,
 			content: <Trans id="drg.procs.suggestions.extenders.content">
-				Avoid interrupting your combos at the <ActionLink {...this.data.actions.FANG_AND_CLAW}/> and <ActionLink {...this.data.actions.WHEELING_THRUST}/> stages, as it causes you to lose the procs that allow you to cast them, costing you both the cast and the <ActionLink {...this.data.actions.BLOOD_OF_THE_DRAGON}/> duration that comes with it.
+				Avoid interrupting your combos at the <ActionLink {...this.data.actions.FANG_AND_CLAW}/> and <ActionLink {...this.data.actions.WHEELING_THRUST}/> stages, as it causes you to lose the procs that allow you to cast them.
 			</Trans>,
 			tiers: {
 				1: SEVERITY.MINOR,

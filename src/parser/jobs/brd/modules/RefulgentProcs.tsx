@@ -3,7 +3,7 @@ import {ActionLink, StatusLink} from 'components/ui/DbLink'
 import {Procs} from 'parser/core/modules/Procs'
 import React from 'react'
 
-export default class RefulgentProcs extends Procs {
+export class RefulgentProcs extends Procs {
 	override trackedProcs = [
 		{
 			procStatus: this.data.statuses.STRAIGHT_SHOT_READY,

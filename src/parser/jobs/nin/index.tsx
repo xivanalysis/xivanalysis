@@ -26,6 +26,11 @@ export const NINJA = new Meta({
 			contributors: [CONTRIBUTORS.TOASTDEIB],
 		},
 		{
+			date: new Date('2021-12-17'),
+			Changes: () => <>Updated Huton analyser for 6.0.</>,
+			contributors: [CONTRIBUTORS.TOASTDEIB],
+		},
+		{
 			date: new Date('2021-12-11'),
 			Changes: () => <>Added an analyser for tracking dropped Forked/Fleeting Raiju Ready buffs.</>,
 			contributors: [CONTRIBUTORS.TOASTDEIB],

@@ -250,7 +250,7 @@ export const BRD = ensureActions({
 		name: 'Radiant Finale',
 		icon: 'https://xivapi.com/i/002000/002622.png',
 		onGcd: false,
-		cooldown: 120000,
+		cooldown: 110000,
 		statusesApplied: ['RADIANT_FINALE'],
 	},
 })
