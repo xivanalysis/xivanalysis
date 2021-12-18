@@ -70,12 +70,12 @@ export class MeleeCombos extends Analyser {
 	}
 	private _whiteManaActions: ManaActions = {
 		proc: this.data.actions.VERSTONE.id,
-		dualcast: this.data.actions.VERAERO.id,
+		dualcast: this.data.actions.VERAERO_III.id,
 		finisher: this.data.actions.VERHOLY.id,
 	}
 	private _blackManaActions: ManaActions = {
 		proc: this.data.actions.VERFIRE.id,
-		dualcast: this.data.actions.VERTHUNDER.id,
+		dualcast: this.data.actions.VERTHUNDER_III.id,
 		finisher: this.data.actions.VERFLARE.id,
 	}
 	private readonly _ignoreFinisherProcsManaThreshold = 4
