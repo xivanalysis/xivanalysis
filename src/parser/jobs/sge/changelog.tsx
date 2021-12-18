@@ -12,4 +12,9 @@ export const changelog = [
 		Changes: () => <>Preliminary gauge state and overheal tracking</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],
 	},
+	{
+		date: new Date('2021-12-15'),
+		Changes: () => <>Added DoT, Interrupts, and Swiftcast analysis for Sage</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
 ]
