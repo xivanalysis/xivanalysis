@@ -28,6 +28,13 @@ export const SMN = ensureStatuses({
 		duration: 15000,
 	},
 
+	SEARING_LIGHT: {
+		id: 2703,
+		name: 'Searing Light',
+		icon: 'https://xivapi.com/i/012000/012692.png',
+		duration: 30000,
+	},
+
 	BIO_III: {
 		id: 1214,
 		name: 'Bio III',

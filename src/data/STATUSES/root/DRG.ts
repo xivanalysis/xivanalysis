@@ -5,7 +5,7 @@ export const DRG = ensureStatuses({
 		id: 786,
 		name: 'Battle Litany',
 		icon: 'https://xivapi.com/i/012000/012578.png',
-		duration: 20000,
+		duration: 15000,
 	},
 
 	RIGHT_EYE: {
@@ -30,10 +30,10 @@ export const DRG = ensureStatuses({
 		duration: 20000,
 	},
 
-	DISEMBOWEL: {
-		id: 1914,
-		name: 'Disembowel',
-		icon: 'https://xivapi.com/i/012000/012576.png',
+	POWER_SURGE: {
+		id: 2720,
+		name: 'Power Surge',
+		icon: 'https://xivapi.com/i/010000/010303.png',
 		duration: 30000,
 	},
 
@@ -65,6 +65,13 @@ export const DRG = ensureStatuses({
 		duration: 24000,
 	},
 
+	CHAOTIC_SPRING: {
+		id: 2719,
+		name: 'Chaotic Spring',
+		icon: 'https://xivapi.com/i/012000/012586.png',
+		duration: 24000,
+	},
+
 	DIVE_READY: {
 		id: 1243,
 		name: 'Dive Ready',
@@ -79,10 +86,10 @@ export const DRG = ensureStatuses({
 		duration: 5000,
 	},
 
-	RAIDEN_THRUST_READY: {
+	DRACONIAN_FIRE: {
 		id: 1863,
-		name: 'Raiden Thrust Ready',
-		icon: 'https://xivapi.com/i/012000/012584.png',
-		duration: 10000,
+		name: 'Draconian Fire',
+		icon: 'https://xivapi.com/i/012000/012585.png',
+		duration: 30000,
 	},
 })
