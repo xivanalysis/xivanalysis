@@ -19,15 +19,21 @@ export const RED_MAGE = new Meta({
 			</Message.Content>
 		</Message>
 	</>,
-	// supportedPatches: {
-	// 	from: '6.0',
-	// 	to: '6.0',
-	// },
+	supportedPatches: {
+		from: '6.0',
+		to: '6.0',
+	},
 	contributors: [
+		{user: CONTRIBUTORS.LEYLIA, role: ROLES.DEVELOPER},
 		{user: CONTRIBUTORS.MYPS, role: ROLES.DEVELOPER},
 	],
 
 	changelog: [
+		{
+			date: new Date('2021-12-18'),
+			Changes: () => <>Minor fixes to suggestion text and shown abilities.  Endwalker now supported</>,
+			contributors: [CONTRIBUTORS.LEYLIA],
+		},
 		{
 			date: new Date('2021-12-15'),
 			Changes: () => <>Initial Endwalker data update.</>,
