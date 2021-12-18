@@ -15,7 +15,7 @@ const UPTIME_SEVERITY = {
 }
 
 export class DeathsDesign extends Analyser {
-	static override handle = 'design'
+	static override handle = 'deathsdesign'
 
 	@dependency private actors!: Actors
 	@dependency private checklist!: Checklist
@@ -35,14 +35,14 @@ export class DeathsDesign extends Analyser {
 
 	private onComplete() {
 		this.checklist.add(new TieredRule({
-			name: <Trans id="rpr.design.rule.name">Keep <DataLink status="DEATHS_DESIGN"/> up</Trans>,
-			description: <Trans id="rpr.design.rule.description">
+			name: <Trans id="rpr.deathsdesign.rule.name">Keep <DataLink status="DEATHS_DESIGN"/> up</Trans>,
+			description: <Trans id="rpr.deathsdesign.rule.description">
 				Death's Design increases all damage you deal to the target by 10%. Aim to keep this debuff up at all times.
 			</Trans>,
 			tiers: UPTIME_SEVERITY,
 			requirements: [
 				new Requirement({
-					name: <Trans id="rpr.design.requirement.uptime.name"><DataLink status="DEATHS_DESIGN"/> uptime</Trans>,
+					name: <Trans id="rpr.deathsdesign.requirement.uptime.name"><DataLink status="DEATHS_DESIGN"/> uptime</Trans>,
 					percent: () => this.getUptimePercent(),
 				}),
 			],
