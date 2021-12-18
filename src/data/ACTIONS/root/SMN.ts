@@ -2,7 +2,7 @@ import {Attribute} from 'event'
 import {ensureActions} from '../type'
 
 // use action id of a skill id in the group to avoid potential duplications
-export const SMN_COOLDOWN_GROUP = {
+const SMN_COOLDOWN_GROUP = {
 	ENERGY: 8,
 	DEMI: 15,
 }
