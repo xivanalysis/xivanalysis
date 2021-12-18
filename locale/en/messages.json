@@ -541,7 +541,7 @@
   "nin.huton.checklist.description.warning": "As Huton is now a gauge instead of a buff, please bear in mind that this is an estimate, not an exact value. This also applies to any Huton-related suggestions below.",
   "nin.huton.checklist.name": "Keep Huton up",
   "nin.huton.checklist.requirement.name": "<0/> uptime",
-  "nin.huton.suggestions.clipping.content": "Avoid using <0/> when <1/> has more than 40 seconds left on its duration. The excess time is wasted, so using <2/> is typically the better option.",
+  "nin.huton.suggestions.clipping.content": "Avoid using <0/> when <1/> has more than 30 seconds left on its duration. The excess time is wasted, so using <2/> is typically the better option.",
   "nin.huton.suggestions.clipping.why": "You clipped {0} of Huton with early Armor Crushes.",
   "nin.huton.suggestions.futile-ac.content": "Avoid using <0/> when <1/> is down, as it provides no benefit and does less DPS than your other combo finishers.",
   "nin.huton.suggestions.futile-ac.why": "You used Armor Crush {badAcs, plural, one {# time} other {# times}} when Huton was down.",
