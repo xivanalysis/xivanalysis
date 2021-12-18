@@ -9,17 +9,20 @@ export class ActionTimeline extends CoreActionTimeline {
 		'DELIRIUM',
 		// oGCD Damage
 		'LIVING_SHADOW',
+		'SHADOWBRINGER',
 		'EDGE_OF_SHADOW',
 		'FLOOD_OF_SHADOW',
 		'CARVE_AND_SPIT',
 		'ABYSSAL_DRAIN',
 		'PLUNGE',
 		'SALTED_EARTH',
+		'SALT_AND_DARKNESS',
 		// Personal Mitigation
 		'LIVING_DEAD',
 		'SHADOW_WALL',
 		'RAMPART',
 		'DARK_MIND',
+		'OBLATION',
 		// Party Mitigation
 		'THE_BLACKEST_NIGHT',
 		'REPRISAL',

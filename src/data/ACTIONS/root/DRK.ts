@@ -119,7 +119,7 @@ export const DRK = ensureActions({
 		cooldown: 2000,
 	},
 	SALT_AND_DARKNESS: {
-		id: 25756,
+		id: 25755,
 		name: 'Salt and Darkness',
 		icon: 'https://xivapi.com/i/003000/003090.png',
 		cooldown: 20000,
@@ -195,7 +195,7 @@ export const DRK = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003062.png',
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
-		breaksCombo: true,
+		breaksCombo: false,
 	},
 	// Blood Consumers
 	BLOODSPILLER: {
