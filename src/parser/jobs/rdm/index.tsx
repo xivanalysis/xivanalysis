@@ -24,13 +24,12 @@ export const RED_MAGE = new Meta({
 		to: '6.0',
 	},
 	contributors: [
-		// {user: CONTRIBUTORS.YOU, role: ROLES.DEVELOPER},
 		{user: CONTRIBUTORS.LEYLIA, role: ROLES.DEVELOPER},
 	],
 
 	changelog: [
 		{
-			date: new Date('2021-12-17'),
+			date: new Date('2021-12-18'),
 			Changes: () => <>Minor fixes to suggestion text and shown abilities</>,
 			contributors: [CONTRIBUTORS.LEYLIA],
 		},
