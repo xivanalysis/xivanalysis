@@ -11,7 +11,6 @@ export const DRG = ensureActions({
 		icon: 'https://xivapi.com/i/000000/000310.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		potency: 230,
 		combo: {
 			start: true,
 		},
@@ -23,10 +22,8 @@ export const DRG = ensureActions({
 		icon: 'https://xivapi.com/i/000000/000312.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		potency: 140,
 		combo: {
 			from: [75, 16479],
-			potency: 280,
 		},
 	},
 
@@ -36,7 +33,6 @@ export const DRG = ensureActions({
 		icon: 'https://xivapi.com/i/000000/000315.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		potency: 150,
 		breaksCombo: false,
 	},
 
@@ -46,10 +42,8 @@ export const DRG = ensureActions({
 		icon: 'https://xivapi.com/i/000000/000314.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		potency: 100,
 		combo: {
 			from: 78,
-			potency: 400,
 			end: true,
 		},
 	},
@@ -60,10 +54,8 @@ export const DRG = ensureActions({
 		icon: 'https://xivapi.com/i/002000/002595.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		potency: 100,
 		combo: {
 			from: 78,
-			potency: 430,
 			end: true,
 		},
 	},
@@ -74,10 +66,8 @@ export const DRG = ensureActions({
 		icon: 'https://xivapi.com/i/000000/000317.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		potency: 140,
 		combo: {
 			from: [75, 16479],
-			potency: 250,
 		},
 		statusesApplied: ['POWER_SURGE'],
 	},
@@ -88,10 +78,8 @@ export const DRG = ensureActions({
 		icon: 'https://xivapi.com/i/000000/000308.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		potency: 100,
 		combo: {
 			from: 87,
-			potency: 260,
 			end: true,
 		},
 		statusesApplied: ['CHAOS_THRUST'],
@@ -103,10 +91,8 @@ export const DRG = ensureActions({
 		icon: 'https://xivapi.com/i/002000/002596.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		potency: 100,
 		combo: {
 			from: 87,
-			potency: 280,
 			end: true,
 		},
 		statusesApplied: ['CHAOTIC_SPRING'],
@@ -118,7 +104,6 @@ export const DRG = ensureActions({
 		icon: 'https://xivapi.com/i/000000/000306.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		potency: 110,
 		combo: {
 			start: true,
 		},
@@ -130,7 +115,6 @@ export const DRG = ensureActions({
 		icon: 'https://xivapi.com/i/002000/002594.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		potency: 130,
 		combo: {
 			start: true,
 		},
@@ -142,7 +126,6 @@ export const DRG = ensureActions({
 		icon: 'https://xivapi.com/i/002000/002582.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		potency: 260,
 	},
 
 	WHEELING_THRUST: {
@@ -151,7 +134,6 @@ export const DRG = ensureActions({
 		icon: 'https://xivapi.com/i/002000/002584.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		potency: 260,
 	},
 
 	RAIDEN_THRUST: {
@@ -160,7 +142,6 @@ export const DRG = ensureActions({
 		icon: 'https://xivapi.com/i/002000/002592.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		potency: 260,
 		combo: {
 			start: true,
 		},
@@ -172,10 +153,8 @@ export const DRG = ensureActions({
 		icon: 'https://xivapi.com/i/002000/002586.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		potency: 100,
 		combo: {
 			from: [86, 25770],
-			potency: 120,
 		},
 	},
 
@@ -185,10 +164,8 @@ export const DRG = ensureActions({
 		icon: 'https://xivapi.com/i/002000/002590.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		potency: 100,
 		combo: {
 			from: 7397,
-			potency: 150,
 			end: true,
 		},
 		statusesApplied: ['DRACONIAN_FIRE'],
@@ -265,7 +242,6 @@ export const DRG = ensureActions({
 		name: 'Geirskogul',
 		icon: 'https://xivapi.com/i/002000/002583.png',
 		cooldown: 30000,
-		potency: 300,
 	},
 
 	DRAGON_SIGHT: {
@@ -281,7 +257,6 @@ export const DRG = ensureActions({
 		name: 'Mirage Dive',
 		icon: 'https://xivapi.com/i/002000/002588.png',
 		cooldown: 1000,
-		potency: 300,
 	},
 
 	NASTROND: {
@@ -296,7 +271,6 @@ export const DRG = ensureActions({
 		name: 'Stardiver',
 		icon: 'https://xivapi.com/i/002000/002593.png',
 		cooldown: 30000,
-		potency: 500,
 	},
 
 	WYRMWIND_THRUST: {
@@ -304,6 +278,5 @@ export const DRG = ensureActions({
 		name: 'Wyrmwind Thrust',
 		icon: 'https://xivapi.com/i/002000/002597.png',
 		cooldown: 10000,
-		potency: 370,
 	},
 })
