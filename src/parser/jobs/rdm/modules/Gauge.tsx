@@ -42,25 +42,28 @@ export class Gauge extends CoreGauge {
 		minimum: 0,
 	}))
 	public gaugeModifiers = new Map<number, GaugeModifier>([
-		[this.data.actions.VERAERO.id, {white: 11, black: 0}],
+		[this.data.actions.VERAERO.id, {white: 6, black: 0}],
 		[this.data.actions.VERAERO_II.id, {white: 7, black: 0}],
-		[this.data.actions.VERSTONE.id, {white: 9, black: 0}],
-		[this.data.actions.VERHOLY.id, {white: 21, black: 0}],
-		[this.data.actions.VERTHUNDER.id, {white: 0, black: 11}],
+		[this.data.actions.VERAERO_III.id, {white: 6, black: 0}],
+		[this.data.actions.VERSTONE.id, {white: 5, black: 0}],
+		[this.data.actions.VERHOLY.id, {white: 11, black: 0}],
+		[this.data.actions.VERTHUNDER.id, {white: 0, black: 6}],
 		[this.data.actions.VERTHUNDER_II.id, {white: 0, black: 7}],
-		[this.data.actions.VERFIRE.id, {white: 0, black: 9}],
-		[this.data.actions.VERFLARE.id, {white: 0, black: 21}],
-		[this.data.actions.JOLT.id, {white: 3, black: 3}],
-		[this.data.actions.JOLT_II.id, {white: 3, black: 3}],
+		[this.data.actions.VERTHUNDER_III.id, {white: 0, black: 6}],
+		[this.data.actions.VERFIRE.id, {white: 0, black: 5}],
+		[this.data.actions.VERFLARE.id, {white: 0, black: 11}],
+		[this.data.actions.JOLT.id, {white: 2, black: 2}],
+		[this.data.actions.JOLT_II.id, {white: 2, black: 2}],
 		[this.data.actions.IMPACT.id, {white: 3, black: 3}],
-		[this.data.actions.SCORCH.id, {white: 7, black: 7}],
+		[this.data.actions.SCORCH.id, {white: 4, black: 4}],
+		[this.data.actions.RESOLUTION.id, {white: 4, black: 4}],
 	])
 	public spenderModifiers = new Map<number, GaugeModifier>([
 		[this.data.actions.ENCHANTED_REPRISE.id, {white: -5, black: -5}],
 		[this.data.actions.ENCHANTED_MOULINET.id, {white: -20, black: -20}],
-		[this.data.actions.ENCHANTED_RIPOSTE.id, {white: -30, black: -30}],
-		[this.data.actions.ENCHANTED_ZWERCHHAU.id, {white: -25, black: -25}],
-		[this.data.actions.ENCHANTED_REDOUBLEMENT.id, {white: -25, black: -25}],
+		[this.data.actions.ENCHANTED_RIPOSTE.id, {white: -20, black: -20}],
+		[this.data.actions.ENCHANTED_ZWERCHHAU.id, {white: -15, black: -15}],
+		[this.data.actions.ENCHANTED_REDOUBLEMENT.id, {white: -15, black: -15}],
 	])
 	private severityWastedMana = {
 		1: SEVERITY.MINOR,
@@ -74,7 +77,7 @@ export class Gauge extends CoreGauge {
 	}
 
 	private readonly manaLostDivisor = 2
-	private readonly manaficationMultiplier = 2
+	private readonly manaficationManaGain = 50
 
 	manaStatistics = {
 		white: {
@@ -145,12 +148,11 @@ export class Gauge extends CoreGauge {
 	}
 
 	private onManafication() {
-		let whiteModifier = this.getWhiteMana() *  this.manaficationMultiplier
-		let blackModifier = this.getBlackMana() *  this.manaficationMultiplier
+		let whiteModifier = this.getWhiteMana() + this.manaficationManaGain
+		let blackModifier = this.getBlackMana() + this.manaficationManaGain
 
 		//Now calculate and store overcap if any.  This way we can still utilize the Overcap
 		//From core, but track this loss separately.
-		//In EW we will still track this separately even though it will no longer be a multiplier but flat 50|50
 		if (whiteModifier > MANA_CAP) 		{
 			this.manaStatistics.white.manaficationLoss = whiteModifier - MANA_CAP
 			whiteModifier = MANA_CAP
@@ -199,7 +201,7 @@ export class Gauge extends CoreGauge {
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.whiteManaGauge.overCap > this.blackManaGauge.overCap ? this.data.actions.VERHOLY.icon : this.data.actions.VERFLARE.icon,
 			content: <Fragment>
-				<Trans id="rdm.gauge.suggestions.mana-wasted-content">Ensure you don't overcap your White Mana before a combo, overcapping White Mana indicates your balance was off; and you potentially lost out on Enchanted Combo damage.  You should look to execute at 80/80 or as close to it as possible.</Trans>
+				<Trans id="rdm.gauge.suggestions.mana-wasted-content">Ensure you don't overcap your Mana before a combo; overcapping Mana indicates your balance was off, and you potentially lost out on Enchanted Combo damage.</Trans>
 			</Fragment>,
 			tiers:  this.severityWastedMana,
 			value:  this.whiteManaGauge.overCap + this.blackManaGauge.overCap,
@@ -211,7 +213,7 @@ export class Gauge extends CoreGauge {
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.manaStatistics.white.imbalanceLoss > this.manaStatistics.black.imbalanceLoss ? this.data.actions.VERHOLY.icon : this.data.actions.VERFLARE.icon,
 			content: <Fragment>
-				<Trans id="rdm.gauge.suggestions.mana-lost-content">Ensure you don't allow a difference of more than 30 betwen mana types, you lost white Mana due to Imbalance which reduces your overall mana gain and potentially costs you one or more Enchanted Combos</Trans>
+				<Trans id="rdm.gauge.suggestions.mana-lost-content">Ensure you don't allow a difference of more than 30 betwen mana types. You lost Mana due to Imbalance which reduces your overall mana gain and potentially costs you one or more Enchanted Combos.</Trans>
 			</Fragment>,
 			tiers:  this.severityLostMana,
 			value:  this.manaStatistics.white.imbalanceLoss + this.manaStatistics.black.imbalanceLoss,

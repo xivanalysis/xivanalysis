@@ -1,3 +1,7 @@
+import {Gauge} from './Gauge'
+import {Overheal} from './Overheal'
+
 export default [
-	// TODO: Put your modules here
+	Gauge,
+	Overheal,
 ]
