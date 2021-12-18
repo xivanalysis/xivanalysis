@@ -3,7 +3,7 @@
  */
 import {CooldownDowntime} from 'parser/core/modules/CooldownDowntime'
 
-export default class OGCDDowntime extends CooldownDowntime {
+export class OGCDDowntime extends CooldownDowntime {
 	override trackedCds = [
 		{
 			cooldowns: [this.data.actions.BATTLE_VOICE],
