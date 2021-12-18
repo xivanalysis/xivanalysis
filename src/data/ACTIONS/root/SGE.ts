@@ -297,6 +297,7 @@ export const SGE = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 1500,
+		gcdRecast: 2500,
 		cooldown: 120000,
 		mpCost: 700,
 		statusesApplied: ['PNEUMA'],
