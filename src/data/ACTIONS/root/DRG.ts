@@ -301,7 +301,7 @@ export const DRG = ensureActions({
 
 	WYRMWIND_THRUST: {
 		id: 25773,
-		name: 'Whyrmwind Thrust',
+		name: 'Wyrmwind Thrust',
 		icon: 'https://xivapi.com/i/002000/002597.png',
 		cooldown: 10000,
 		potency: 370,
