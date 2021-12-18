@@ -41,11 +41,11 @@ export default class LanceCharge extends BuffWindow {
 		this.addEvaluator(new ExpectedActionsEvaluator({
 			expectedActions: [
 				{
-					action: this.data.actions.CHAOS_THRUST,
+					action: this.data.actions.CHAOTIC_SPRING,
 					expectedPerWindow: 1,
 				},
 				{
-					action: this.data.actions.FULL_THRUST,
+					action: this.data.actions.HEAVENS_THRUST,
 					expectedPerWindow: 1,
 				},
 				{
@@ -59,7 +59,7 @@ export default class LanceCharge extends BuffWindow {
 			],
 			suggestionIcon,
 			suggestionContent: <Trans id="drg.lc.suggestions.trackedactions.content">
-				Each <ActionLink action="LANCE_CHARGE" /> window should contain at least one use each of <ActionLink action="CHAOS_THRUST" />, <ActionLink action="FULL_THRUST" />, <ActionLink action="FANG_AND_CLAW" />, and <ActionLink action="WHEELING_THRUST" />. In order to ensure that these actions fall within the buff window, try to avoid using <ActionLink action="LANCE_CHARGE" /> after <ActionLink action="CHAOS_THRUST" /> or <ActionLink action="FULL_THRUST" />.
+				Each <ActionLink action="LANCE_CHARGE" /> window should contain at least one use each of <ActionLink action="CHAOTIC_SPRING" />, <ActionLink action="HEAVENS_THRUST" />, <ActionLink action="FANG_AND_CLAW" />, and <ActionLink action="WHEELING_THRUST" />. In order to ensure that these actions fall within the buff window, try to avoid using <ActionLink action="LANCE_CHARGE" /> after <ActionLink action="CHAOTIC_SPRING" /> or <ActionLink action="HEAVENS_THRUST" />.
 			</Trans>,
 			suggestionWindowName,
 			severityTiers: {

@@ -19,7 +19,7 @@ import {Death} from './Death'
 import Downtime from './Downtime'
 
 const DEFAULT_GCD = 2500
-const COMBO_TIMEOUT = 15000
+const COMBO_TIMEOUT = 30000
 const CONTINUE_AFTER_DOWNTIME_GRACE = 1000
 const ISSUE_TYPENAMES = {
 	uncomboed: <Trans id="core.combos.issuetypenames.uncomboed">Uncomboed</Trans>,

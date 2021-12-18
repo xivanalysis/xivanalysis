@@ -15,8 +15,6 @@ const COMMANDED_SKILLS: ActionKey[] = [
 	'AERIAL_BLAST',
 	'EARTHEN_FURY',
 	'INFERNO',
-	// all egis
-	'DEVOTION',
 	// Bahamut
 	'AKH_MORN',
 	// Phoenix

@@ -129,10 +129,6 @@ export class DirtyDancing extends Analyser {
 		this.addEventHook('complete', this.onComplete)
 	}
 
-	dancesInRange(startTime: number, endTime: number) {
-		return this.danceHistory.filter(dance => dance.start >= startTime && dance.start <= endTime).length
-	}
-
 	private addDanceToHistory(event: Events['action']): Dance {
 		const newDance = new Dance(event, this.data)
 		newDance.rotation.push(event)
