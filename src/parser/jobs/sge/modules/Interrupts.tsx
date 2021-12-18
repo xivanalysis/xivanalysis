@@ -3,7 +3,7 @@ import {DataLink} from 'components/ui/DbLink'
 import {Interrupts as CoreInterrupts} from 'parser/core/modules/Interrupts'
 import React from 'react'
 
-export default class Interrupts extends CoreInterrupts {
+export class Interrupts extends CoreInterrupts {
 	override suggestionContent = <Trans id="sge.interrupts.suggestion.content">
 		Avoid interrupting casts by either prepositioning yourself or utilizing slidecasting where possible.
 		Use windows created by normal <DataLink action="EUKRASIAN_DOSIS_III" /> refreshes to move in advance of mechanics.
