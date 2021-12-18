@@ -110,6 +110,7 @@ export const SCH = ensureActions({
 		name: 'Art of War',
 		icon: 'https://xivapi.com/i/002000/002819.png',
 		onGcd: true,
+		speedAttribute: Attribute.SPELL_SPEED,
 	},
 
 	ART_OF_WAR_II: {
@@ -117,6 +118,7 @@ export const SCH = ensureActions({
 		name: 'Art of War II',
 		icon: 'https://xivapi.com/i/002000/002876.png',
 		onGcd: true,
+		speedAttribute: Attribute.SPELL_SPEED,
 	},
 
 	PROTRACTION: {
