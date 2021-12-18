@@ -24,7 +24,7 @@ const FMF_GENERATORS: ActionKey[] = [
 ]
 
 // todo:
-// - check how this handles situations where drg carried over a fmf charge
+// - check how this handles situations where drg carried over a fmf stack
 export class Gauge extends CoreGauge {
 	@dependency private suggestions!: Suggestions
 
@@ -63,7 +63,7 @@ export class Gauge extends CoreGauge {
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.WYRMWIND_THRUST.icon,
 			content: <Trans id="drg.gauge.suggestions.overcapped-fmf.content">
-				Make sure to use <DataLink action="WYRMWIND_THRUST" /> before <DataLink action="RAIDEN_THRUST" /> or <DataLink action="DRACONIAN_FURY" /> when you already have two charges of Firstminds' Focus to prevent losing uses of <DataLink action="WYRMWIND_THRUST" /> by overcapping.
+				Make sure to use <DataLink action="WYRMWIND_THRUST" /> before <DataLink action="RAIDEN_THRUST" /> or <DataLink action="DRACONIAN_FURY" /> when you already have two stacks of Firstminds' Focus to prevent losing uses of <DataLink action="WYRMWIND_THRUST" /> by overcapping.
 			</Trans>,
 			tiers: {
 				1: SEVERITY.MEDIUM,
@@ -71,7 +71,7 @@ export class Gauge extends CoreGauge {
 			},
 			value: fmfOvercap,
 			why: <Trans id="drg.gauge.suggestions.overcapped-fmf.why">
-				<Plural value={fmfOvercap} one="# Firstminds' Focus charge" other="# Firstminds' Focus charges" /> were lost.
+				<Plural value={fmfOvercap} one="# Firstminds' Focus stack" other="# Firstminds' Focus stacks" /> were lost.
 			</Trans>,
 		}))
 	}

@@ -74,7 +74,7 @@ export const DRG = ensureActions({
 		icon: 'https://xivapi.com/i/000000/000317.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		potency: 250,
+		potency: 140,
 		combo: {
 			from: [75, 16479],
 			potency: 250,
