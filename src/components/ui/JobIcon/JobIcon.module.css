@@ -1,13 +1,13 @@
 @font-face {
-  font-family: 'job-icons';
-  src:  url('./job-icons.eot?hnrnv1');
-  src:  url('./job-icons.eot?hnrnv1#iefix') format('embedded-opentype'),
-    url('./job-icons.ttf?hnrnv1') format('truetype'),
-    url('./job-icons.woff?hnrnv1') format('woff'),
-    url('./job-icons.svg?hnrnv1#job-icons') format('svg');
-  font-weight: normal;
-  font-style: normal;
-  font-display: block;
+	font-family: 'job-icons';
+	src:  url('./job-icons.eot?hnrnv1');
+	src:  url('./job-icons.eot?hnrnv1#iefix') format('embedded-opentype'),
+		url('./job-icons.ttf?hnrnv1') format('truetype'),
+		url('./job-icons.woff?hnrnv1') format('woff'),
+		url('./job-icons.svg?hnrnv1#job-icons') format('svg');
+	font-weight: normal;
+	font-style: normal;
+	font-display: block;
 }
 
 .icon {
@@ -16,7 +16,7 @@
 
 	/* use !important to prevent issues with browser extensions that change fonts */
 	font-family: 'job-icons', sans-serif !important;
-  speak: never;
+	speak: never;
 	font-style: normal;
 	font-weight: normal;
 	font-variant: normal;
