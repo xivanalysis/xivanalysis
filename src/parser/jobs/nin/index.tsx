@@ -22,6 +22,11 @@ export const NINJA = new Meta({
 	changelog: [
 		{
 			date: new Date('2021-12-17'),
+			Changes: () => <>Fixed a false positive bug in the Raiju analyser.</>,
+			contributors: [CONTRIBUTORS.TOASTDEIB],
+		},
+		{
+			date: new Date('2021-12-17'),
 			Changes: () => <>Updated Huton analyser for 6.0.</>,
 			contributors: [CONTRIBUTORS.TOASTDEIB],
 		},
