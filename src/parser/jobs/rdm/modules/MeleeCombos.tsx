@@ -80,8 +80,7 @@ export class MeleeCombos extends Analyser {
 	}
 	private readonly _ignoreFinisherProcsManaThreshold = 4
 	private readonly _upperComboTimeFrame = 13
-	//4 seconds for 2 GCD minus a 1 second window to activate before finisher
-	private readonly _delayAccelerationAvailableThreshold = 4
+
 	private _meleeCombos = new History<MeleeCombo>(() => ({
 		events: [],
 		lastAction: {} as Events['action'],
@@ -173,39 +172,19 @@ export class MeleeCombos extends Analyser {
 		this.breakComboIfExists(event.timestamp)
 
 		this.suggestions.add(new TieredSuggestion({
-			icon: this.data.actions.VERHOLY.icon,
-			content: <Trans id="rdm.gauge.suggestions.wastedverholy.content">
-				You should use <ActionLink {...this.data.actions.VERHOLY} /> over <ActionLink {...this.data.actions.VERFLARE} /> in the following situations in order of importance
-				<ol>
-					<li>When your white mana is lower</li>
-					<li>Your mana is even and you have <StatusLink {...this.data.statuses.VERFIRE_READY} /> (Use <ActionLink {...this.data.actions.ACCELERATION} /> if available!)</li>
-					<li>White mana is higher by 9 or less and <ActionLink {...this.data.actions.ACCELERATION} /> is available with <StatusLink {...this.data.statuses.VERFIRE_READY} /></li>
-				</ol>
-			</Trans>,
-			why: <Plural id="rdm.gauge.suggestions.wastedverholy.why" value={this._incorrectFinishers.verflare} one="# Verstone cast was lost due to using Verflare incorrectly" other="# Verstone casts were lost due to using Verflare incorrectly" />,
-			tiers: this._severityWastedFinisher,
-			value: this._incorrectFinishers.verflare,
-		}))
-
-		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.VERFLARE.icon,
-			content: <Trans id="rdm.gauge.suggestions.wastedverflare.content">
-				You should use <ActionLink {...this.data.actions.VERFLARE} /> over <ActionLink {...this.data.actions.VERHOLY}/> in the following situations in order of importance
-				<ol>
-					<li>When your black mana is lower</li>
-					<li>Your mana is even and you have <StatusLink {...this.data.statuses.VERSTONE_READY} /> (Use <ActionLink {...this.data.actions.ACCELERATION} /> if available!)</li>
-					<li>Black mana is higher by 9 or less and <ActionLink {...this.data.actions.ACCELERATION} /> is available with <StatusLink {...this.data.statuses.VERSTONE_READY} /></li>
-				</ol>
+			content: <Trans id="rdm.gauge.suggestions.wrongfinisher.content">
+				You should use <ActionLink {...this.data.actions.VERFLARE} /> when your black mana is lower or <ActionLink {...this.data.actions.VERHOLY}/> when your white mana is lower.
 			</Trans>,
-			why: <Plural id="rdm.gauge.suggestions.wastedverflare.why" value={this._incorrectFinishers.verholy} one="# Verfire cast was lost due to using Verholy incorrectly" other="# Verfire casts were lost due to using Verholy incorrectly" />,
+			why: <Plural id="rdm.gauge.suggestions.wrongfinisher.why" value={this._incorrectFinishers.verholy + this._incorrectFinishers.verflare} one="# Verfire/Verstone cast was lost due to using the incorrect finisher." other="# Verfire/Verstone casts were lost due to using the incorrect finisher." />,
 			tiers: this._severityWastedFinisher,
-			value: this._incorrectFinishers.verholy,
+			value: this._incorrectFinishers.verholy + this._incorrectFinishers.verflare,
 		}))
 
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.VERSTONE.icon,
 			content: <Trans id="rdm.gauge.suggestions.wastedprocs.content">
-				Do not enter your combo with your finisher's proc up when <ActionLink {...this.data.actions.ACCELERATION}/> is down, consider dumping a proc before entering the melee combo as long as you waste less than 8 mana to overcapping
+				Do not enter your combo with your finisher's proc up. Consider dumping a proc before entering the melee combo as long as you waste less than 8 mana to overcapping.
 			</Trans>,
 			why: <Plural id="rdm.gauge.suggestions.wastedprocs.why" value={this._incorrectFinishers.delay} one="# Proc cast was lost due to entering the melee combo with the finisher proc up." other="# Procs casts were lost due to entering the melee combo with the finisher proc up." />,
 			tiers: this._severityWastedFinisher,
@@ -285,8 +264,6 @@ export class MeleeCombos extends Analyser {
 												return (<StatusLink key="verstone" showName={false} {...this.data.statuses.VERSTONE_READY}/>)
 											case this.data.statuses.VERFIRE_READY:
 												return (<StatusLink key="verfire" showName={false} {...this.data.statuses.VERFIRE_READY}/>)
-											case this.data.statuses.ACCELERATION:
-												return (<StatusLink key="acceleration" showName={false} {...this.data.statuses.ACCELERATION}/>)
 											}
 										})
 									}</span>
@@ -314,10 +291,6 @@ export class MeleeCombos extends Analyser {
 		const current = this._meleeCombos.openNew(event.timestamp)
 		current.data.events.push(event)
 		current.data.lastAction = event
-		if ((this.actors.current.at(event.timestamp).hasStatus(this.data.statuses.ACCELERATION.id)) ||
-		this.cooldowns.remaining('ACCELERATION') <= this._delayAccelerationAvailableThreshold) {
-			current.data.procs.push(this.data.statuses.ACCELERATION)
-		}
 		if (this.actors.current.at(event.timestamp).hasStatus(this.data.statuses.VERSTONE_READY.id)) {
 			current.data.procs.push(this.data.statuses.VERSTONE_READY)
 		}
@@ -361,11 +334,11 @@ export class MeleeCombos extends Analyser {
 
 		let recommendedFinisher = null
 		if (whiteState.amount < blackState.amount) {
-			recommendedFinisher = this.outOfBalanceFinisher(whiteState, blackState, combo.start)
+			recommendedFinisher = this.outOfBalanceFinisher(whiteState, blackState)
 		} else if (blackState.amount < whiteState.amount) {
-			recommendedFinisher = this.outOfBalanceFinisher(blackState, whiteState, combo.start)
+			recommendedFinisher = this.outOfBalanceFinisher(blackState, whiteState)
 		} else {
-			recommendedFinisher = this.inBalanceFinisher(blackState, whiteState, combo.start)
+			recommendedFinisher = this.inBalanceFinisher(blackState, whiteState)
 		}
 
 		if (recommendedFinisher instanceof Array) {
@@ -398,15 +371,13 @@ export class MeleeCombos extends Analyser {
 		}
 	}
 
-	private outOfBalanceFinisher(lowerManaState: ManaState, higherManaState: ManaState, comboStart: number) {
-		const isAccelerationUp = this.actors.current.at(comboStart).hasStatus(this.data.statuses.ACCELERATION.id)
-
+	private outOfBalanceFinisher(lowerManaState: ManaState, higherManaState: ManaState) {
 		if (!lowerManaState.procReady) {
 			// no proc of the lower mana spell, use that finisher
 			return lowerManaState.actions.finisher
 		}
 
-		const comboDelayResults = this.manaLossToDelayCombo(lowerManaState, higherManaState, comboStart)
+		const comboDelayResults = this.manaLossToDelayCombo(lowerManaState, higherManaState)
 		if (!higherManaState.procReady) {
 			// no proc of the higher mana spell, check accleration and potential out of balance to make recommendation
 			const finisherManaGain = (this.gauge.gaugeModifiers.get(higherManaState.actions.finisher)?.white ?? 0) || (this.gauge.gaugeModifiers.get(higherManaState.actions.finisher)?.black ?? 0)
@@ -420,12 +391,7 @@ export class MeleeCombos extends Analyser {
 				return lowerManaState.actions.finisher
 			}
 
-			// We won't go out of balance if we use the finisher of the higher mana, check to see if acceleration is up
-			if (isAccelerationUp) {
-				// Acceleration is up, use higherManaFinisher
-				return higherManaState.actions.finisher
-			}
-			// Acceleration not on, check to see if delaying combo would have been better
+			// Check to see if delaying combo would have been better
 			if (comboDelayResults !== null && comboDelayResults.manaLoss <= this._ignoreFinisherProcsManaThreshold) {
 				// return null (delay combo) if below threshold
 				return comboDelayResults.finisher
@@ -443,12 +409,11 @@ export class MeleeCombos extends Analyser {
 		return this._finishers
 	}
 
-	private inBalanceFinisher(firstManaState: ManaState, secondManaState: ManaState, comboStart: number) {
-		const isAccelerationUp = this.actors.current.at(comboStart).hasStatus(this.data.statuses.ACCELERATION.id)
+	private inBalanceFinisher(firstManaState: ManaState, secondManaState: ManaState) {
 
-		if (!isAccelerationUp || (firstManaState.procReady && secondManaState.procReady)) {
-			// Acceleration is not up or both procs are up, check to see if delaying combo would have been better
-			const comboDelayResults = this.manaLossToDelayCombo(firstManaState, secondManaState, comboStart)
+		if (firstManaState.procReady && secondManaState.procReady) {
+			// Both procs are up, check to see if delaying combo would have been better
+			const comboDelayResults = this.manaLossToDelayCombo(firstManaState, secondManaState)
 			// Safeguard against null return if no valid delays were found
 			if (comboDelayResults !== null && comboDelayResults.manaLoss <= this._ignoreFinisherProcsManaThreshold) {
 				// return null (delay combo) if below threshold
@@ -456,7 +421,7 @@ export class MeleeCombos extends Analyser {
 			}
 		}
 
-		// Acceleration is up or delaying combo is not better, return finisher of proc that isn't available (fishing for 20% is better than overwriting a proc or delaying)
+		// Delaying combo is not better, return finisher of proc that isn't available (fishing for 20% is better than overwriting a proc or delaying)
 		if (!firstManaState.procReady && !secondManaState.procReady) {
 			// Neither proc is up - return both finishers (finisher doesn't matter)
 			return this._finishers
@@ -471,7 +436,7 @@ export class MeleeCombos extends Analyser {
 		return this._finishers
 	}
 
-	private manaLossToDelayCombo(lowerManaState: ManaState, higherManaState: ManaState, comboStart: number) {
+	private manaLossToDelayCombo(lowerManaState: ManaState, higherManaState: ManaState) {
 		const possibleDelays = []
 
 		if (lowerManaState.procReady) {
@@ -493,19 +458,6 @@ export class MeleeCombos extends Analyser {
 					finisher: [lowerManaState.actions.proc, higherManaState.actions.dualcast, lowerManaState.actions.finisher],
 					manaLoss: manaLoss,
 				})
-			} else {
-				// Verify that using the finisher of the proc we just cleared won't put us out of balance at the end
-				const finisherManaGain = (this.gauge.gaugeModifiers.get(lowerManaState.actions.finisher)?.white ?? 0) || (this.gauge.gaugeModifiers.get(lowerManaState.actions.finisher)?.black ?? 0)
-				if ((newLowerMana + finisherManaGain - newHigherMana) > MANA_DIFFERENCE_THRESHOLD) {
-					// The proc we just cleared will result in equal mana or the cleared proc being higher but without putting us out of balance, check to see if acceleration would be available
-					const accelerationAvailable = (this.actors.current.at(comboStart).hasStatus(this.data.statuses.ACCELERATION.id) || this.cooldowns.remaining('ACCELERATION') <= this._delayAccelerationAvailableThreshold)
-					if (accelerationAvailable) {
-						possibleDelays.push({
-							finisher: [lowerManaState.actions.proc, higherManaState.actions.dualcast, this.data.actions.ACCELERATION, lowerManaState.actions.finisher],
-							manaLoss: manaLoss,
-						})
-					}
-				}
 			}
 
 			if (!higherManaState.procReady) {
@@ -531,9 +483,9 @@ export class MeleeCombos extends Analyser {
 					// Verify that using the finisher of higherMana won't put us out of balance at the end
 					const finisherManaGain = (this.gauge.gaugeModifiers.get(higherManaState.actions.finisher)?.white ?? 0) || (this.gauge.gaugeModifiers.get(higherManaState.actions.finisher)?.black ?? 0)
 					if (!((newHigherMana + finisherManaGain - newLowerMana) > MANA_DIFFERENCE_THRESHOLD)) {
-						// This is a net gain whether or not acceleration would be available - we can now fish for an additional proc of higherMana, push onto stack
+						// This is a net gain - we can now fish for an additional proc of higherMana, push onto stack
 						possibleDelays.push({
-							finisher: [lowerManaState.actions.proc, lowerManaState.actions.dualcast, this.data.actions.ACCELERATION, higherManaState.actions.finisher],
+							finisher: [lowerManaState.actions.proc, lowerManaState.actions.dualcast, higherManaState.actions.finisher],
 							manaLoss: manaLoss,
 						})
 					}
