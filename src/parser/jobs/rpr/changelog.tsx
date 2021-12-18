@@ -9,7 +9,7 @@ export const changelog = [
 	// },
 	{
 		date: new Date('2021-12-18'),
-		Changes: () => <>Added a Tincture module.</>,
+		Changes: () => <>Add a Tincture module.</>,
 		contributors: [CONTRIBUTORS.HINT],
 	},
 ]
