@@ -211,11 +211,11 @@ export class Gauge extends CoreGauge {
 		if (rhizomataLostStacks > 0) {
 			this.suggestions.add(new Suggestion({
 				icon: this.data.actions.KERACHOLE.icon,
-				content: <Trans id="sge.gauge.suggestions.lost-addersgall.content">
+				content: <Trans id="sge.gauge.suggestions.lost-to-rhizomata.content">
 					You lost Addersgall due to capping the gauge with <DataLink action="RHIZOMATA" />, which wastes the time already spent charging the third stack. Try to use <DataLink showIcon={false} action="RHIZOMATA" /> when you are at one stack or less to keep from losing timer progress.
 				</Trans>,
 				severity: SEVERITY.MINOR,
-				why: <Trans id="sge.gauge.suggestions.lost-addersgall.why">
+				why: <Trans id="sge.gauge.suggestions.lost-to-rhizomata.why">
 					<Plural value={rhizomataLostStacks} one="# Addersgall stack was" other="# Addersgall stacks were"/> lost to capping the gauge with <DataLink showIcon={false} action="RHIZOMATA" />.
 				</Trans>,
 			}))
