@@ -10,7 +10,7 @@ export const changelog = [
 	// },
 	{
 		date: new Date('2021-12-18'),
-		Changes: () => <>Added a checklist for <DataLink status="DEATHS_DESIGN"/> uptime.</>,
+		Changes: () => <>Add a checklist for <DataLink status="DEATHS_DESIGN"/> uptime.</>,
 		contributors: [CONTRIBUTORS.HINT],
 	},
 ]
