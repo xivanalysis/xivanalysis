@@ -664,6 +664,7 @@
   "rdm.procs.suggestions.overwritten.why": "",
   "rdm.procs.title": "プロックの問題",
   "rpr.about.description": "",
+  "rpr.tincture.suggestions.trackedActions.content": "",
   "sam.about.description": "",
   "sam.about.description.info": "<0>注意</0> 残念ながら、現在はプレイヤーの位置を追跡できないため、剣気の獲得量は<1>推定</1>です。 なるべく正確に記載するようにしていますが、いくつか不正確な点があるかもしれません。",
   "sam.interrupts.suggestion.content": "<0/>の詠唱中断を避けてください。キャストタイムが短いにも関わらず，早く移動してしまうと，詠唱が中断され再詠唱する時間が無駄になります。",

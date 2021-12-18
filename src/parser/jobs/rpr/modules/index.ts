@@ -1,3 +1,5 @@
+import {Tincture} from './Tincture'
+
 export default [
-	// TODO: Put your modules here
+	Tincture,
 ]
