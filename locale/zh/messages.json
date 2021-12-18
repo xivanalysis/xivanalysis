@@ -667,8 +667,6 @@
   "rpr.design.requirement.uptime.name": "",
   "rpr.design.rule.description": "",
   "rpr.design.rule.name": "",
-  "rpr.design.suggestion.clip.content": "",
-  "rpr.design.suggestion.clip.why": "",
   "sam.about.description": "所以你是个研究武士刀的？把这个分析看成是考试，来考考你到底了解了多少武士的基础吧。这个工具会追踪你的闪和剑气的获取/使用情况，从而发现你是否少获取了资源，或者是没有充分利用你在整场战斗中获取的资源。\n备考指南：\n- [Bushido, a PVE Samurai Guide](http://bit.ly/SAM-Guide)\n\n- [Visual Guide to Samurai rotation](https://i.imgur.com/N52Dliz.png)\n",
   "sam.about.description.info": "<0>注意</0> 很遗憾，目前还无法追踪身位。因此，剑气的值是<1>估算</1>的。我们已经尽可能使它保持准确，但仍可能存在误差。",
   "sam.interrupts.suggestion.content": "避免打断<0/>的咏唱，尽管咏唱时间很短，但移动太早依然会打断咏唱导致需要浪费额外的时间来再次施放技能",

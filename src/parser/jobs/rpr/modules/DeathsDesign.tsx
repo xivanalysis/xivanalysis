@@ -1,62 +1,51 @@
 import {Trans} from '@lingui/react'
 import {DataLink} from 'components/ui/DbLink'
+import {Analyser} from 'parser/core/Analyser'
 import {dependency} from 'parser/core/Injectable'
+import {Actors} from 'parser/core/modules/Actors'
 import Checklist, {Requirement, TARGET, TieredRule} from 'parser/core/modules/Checklist'
-import {DoTs} from 'parser/core/modules/DoTs'
-import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
+import {Data} from 'parser/core/modules/Data'
+import {Invulnerability} from 'parser/core/modules/Invulnerability'
+import {Statuses} from 'parser/core/modules/Statuses'
 import React from 'react'
 
-const SEVERITIES = {
-	UPTIME: {
-		90: TARGET.WARN,
-		95: TARGET.SUCCESS,
-	},
-	CLIPPING: {
-		6000: SEVERITY.MINOR,
-		9000: SEVERITY.MEDIUM,
-		12000: SEVERITY.MAJOR,
-	},
+const UPTIME_SEVERITY = {
+	90: TARGET.WARN,
+	95: TARGET.SUCCESS,
 }
 
-export class DeathsDesign extends DoTs {
+export class DeathsDesign extends Analyser {
 	static override handle = 'design'
 
+	@dependency private actors!: Actors
 	@dependency private checklist!: Checklist
-	@dependency private suggestions!: Suggestions
+	@dependency private data!: Data
+	@dependency private invulnerability!: Invulnerability
+	@dependency private statuses!: Statuses
 
-	override trackedStatuses = [
-		this.data.statuses.DEATHS_DESIGN.id,
-	]
+	override initialise() {
+		this.addEventHook('complete', this.onComplete)
+	}
 
-	override addChecklistRules() {
+	private getUptimePercent() {
+		const uptime = this.statuses.getUptime(this.data.statuses.DEATHS_DESIGN, this.actors.foes)
+		const duration = this.parser.pull.duration - this.invulnerability.getDuration({types: ['invulnerable']})
+		return (uptime / duration) * 100
+	}
+
+	private onComplete() {
 		this.checklist.add(new TieredRule({
 			name: <Trans id="rpr.design.rule.name">Keep <DataLink status="DEATHS_DESIGN"/> up</Trans>,
 			description: <Trans id="rpr.design.rule.description">
 				Death's Design increases all damage you deal to the target by 10%. Aim to keep this debuff up at all times.
 			</Trans>,
-			tiers: SEVERITIES.UPTIME,
+			tiers: UPTIME_SEVERITY,
 			requirements: [
 				new Requirement({
 					name: <Trans id="rpr.design.requirement.uptime.name"><DataLink status="DEATHS_DESIGN"/> uptime</Trans>,
-					percent: () => this.getUptimePercent(this.data.statuses.DEATHS_DESIGN.id),
+					percent: () => this.getUptimePercent(),
 				}),
 			],
-		}))
-	}
-
-	override addClippingSuggestions() {
-		const clipPerMinute = this.getClippingAmount(this.data.statuses.DEATHS_DESIGN.id)
-
-		this.suggestions.add(new TieredSuggestion({
-			icon: this.data.actions.SHADOW_OF_DEATH.icon,
-			content: <Trans id="rpr.design.suggestion.clip.content">
-				Avoid refreshing <DataLink status="DEATHS_DESIGN" /> significantly before it expires.
-			</Trans>,
-			why: <Trans id="rpr.design.suggestion.clip.why">
-				An average of {this.parser.formatDuration(clipPerMinute, 1)} seconds of <DataLink status="DEATHS_DESIGN"/> per minute lost to early refreshes.
-			</Trans>,
-			tiers: SEVERITIES.CLIPPING,
-			value: clipPerMinute,
 		}))
 	}
 }
