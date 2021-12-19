@@ -116,6 +116,14 @@ export const NIN = ensureActions({
 		speedAttribute: Attribute.SKILL_SPEED,
 	},
 
+	PHANTOM_KAMAITACHI_BUNSHIN: {
+		id: 25775,
+		name: 'Phantom Kamaitachi',
+		icon: 'https://xivapi.com/i/002000/002929.png',
+		onGcd: true,
+		speedAttribute: Attribute.SKILL_SPEED,
+	},
+
 	TEN: {
 		id: 2259,
 		name: 'Ten',

@@ -2,7 +2,7 @@
 defaults: &defaults
   working_directory: /tmp/xiva-client
   docker:
-    - image: cimg/node:lts
+    - image: cimg/node:16.13
 
 version: 2
 jobs:
