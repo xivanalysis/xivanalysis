@@ -7,7 +7,7 @@ import {getDutyBanner} from 'data/ENCOUNTERS'
 import {getPatch, Patch} from 'data/PATCHES'
 import React, {ReactNode, useMemo} from 'react'
 import {Switch, useRouteMatch, Route, useParams} from 'react-router-dom'
-import {Report} from 'report'
+import {Actor, Pull, Report} from 'report'
 import {ReportStore} from 'reportSources'
 import {Icon} from 'semantic-ui-react'
 import {formatDuration} from 'utilities'
@@ -28,12 +28,12 @@ export function buildReportFlowPath(pullId?: string, actorId?: string) {
 }
 
 export interface ActorListRouteParams {
-	pullId: string
+	pullId: Pull['id']
 }
 
 export interface AnalyseRouteParams {
-	pullId: string
-	actorId: string
+	pullId: Pull['id']
+	actorId: Actor['id']
 }
 
 type ReportLinkRouteParams = Partial<AnalyseRouteParams>
@@ -45,7 +45,7 @@ export interface ReportFlowProps {
 /**
  * Generic report flow component, to be nested inside a report source providing
  * source-specific report handling. Parent report sources must provide a report
- * store over context for consumption by the flow.
+ * store for consumption by the flow.
  */
 export function ReportFlow({reportStore}: ReportFlowProps) {
 	const {path, url} = useRouteMatch()
