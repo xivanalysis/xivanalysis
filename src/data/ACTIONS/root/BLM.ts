@@ -240,7 +240,7 @@ export const BLM = ensureActions({
 		id: 25796,
 		name: 'Amplifier',
 		icon: 'https://xivapi.com/i/002000/002671.png',
-		cooldown: 12000,
+		cooldown: 120000,
 	},
 	PARADOX: {
 		id: 25797,

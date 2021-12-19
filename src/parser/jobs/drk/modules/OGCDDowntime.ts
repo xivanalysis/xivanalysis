@@ -1,6 +1,6 @@
 import {CooldownDowntime} from 'parser/core/modules/CooldownDowntime'
 
-const DEFAULT_FIRST_USE_OFFSET = 17500
+const DEFAULT_FIRST_USE_OFFSET = 15000
 
 export class OGCDDowntime extends CooldownDowntime {
 	override defaultFirstUseOffset = DEFAULT_FIRST_USE_OFFSET
@@ -11,12 +11,15 @@ export class OGCDDowntime extends CooldownDowntime {
 		},
 		{
 			cooldowns: [this.data.actions.DELIRIUM],
-			firstUseOffset: 15000,
+			firstUseOffset: 7500,
 		},
 		{cooldowns: [this.data.actions.PLUNGE]},
-		{cooldowns: [this.data.actions.SALTED_EARTH]},
-		{cooldowns: [this.data.actions.CARVE_AND_SPIT]},
-		{cooldowns: [this.data.actions.ABYSSAL_DRAIN]},
+		{
+			cooldowns: [this.data.actions.SALTED_EARTH],
+			firstUseOffset: 10000,
+		},
+		{cooldowns: [this.data.actions.CARVE_AND_SPIT, this.data.actions.ABYSSAL_DRAIN]},
+		{cooldowns: [this.data.actions.SHADOWBRINGER]},
 		{
 			cooldowns: [this.data.actions.LIVING_SHADOW],
 			firstUseOffset: 10000,

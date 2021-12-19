@@ -17,7 +17,8 @@ export const PLD = ensureStatuses({
 		id: 1368,
 		name: 'Requiescat',
 		icon: 'https://xivapi.com/i/012000/012514.png',
-		duration: 12000,
+		duration: 30000,
+		stacksApplied: 5,
 	},
 	FIGHT_OR_FLIGHT: {
 		id: 76,
@@ -34,13 +35,13 @@ export const PLD = ensureStatuses({
 		id: 74,
 		name: 'Sentinel',
 		icon: 'https://xivapi.com/i/010000/010151.png',
-		duration: 10000,
+		duration: 15000,
 	},
 	SWORD_OATH: {
 		id: 1902,
 		name: 'Sword Oath',
 		icon: 'https://xivapi.com/i/019000/019461.png',
-		duration: 15000,
+		duration: 30000,
 		stacksApplied: 3,
 	},
 	SHELTRON: {
@@ -90,5 +91,29 @@ export const PLD = ensureStatuses({
 		name: 'Hallowed Ground',
 		icon: 'https://xivapi.com/i/012000/012504.png',
 		duration: 10000,
+	},
+	HOLY_SHELTRON: {
+		id: 2674,
+		name: 'Holy Sheltron',
+		icon: 'https://xivapi.com/i/012000/012515.png',
+		duration: 8000,
+	},
+	KNIGHTS_RESOLVE: {
+		id: 2675,
+		name: 'Knight\'s Resolve',
+		icon: 'https://xivapi.com/i/012000/012516.png',
+		duration: 4000,
+	},
+	KNIGHTS_BENEDICTION: {
+		id: 2676,
+		name: 'Knight\'s Benediction',
+		icon: 'https://xivapi.com/i/012000/012517.png',
+		duration: 12000,
+	},
+	BLADE_OF_VALOR: {
+		id: 2721,
+		name: 'Blade of Valor',
+		icon: 'https://xivapi.com/i/012000/012518.png',
+		duration: 21000,
 	},
 })

@@ -3,7 +3,7 @@ import {Event, Events} from 'event'
 import {filter} from 'parser/core/filter'
 import {AlwaysBeCasting as CoreAlwaysBeCasting} from 'parser/core/modules/AlwaysBeCasting'
 
-const SONG_DURATION_MS = 30000
+const SONG_DURATION_MS = 45000
 
 interface ArmyWindow {
 	start: number,

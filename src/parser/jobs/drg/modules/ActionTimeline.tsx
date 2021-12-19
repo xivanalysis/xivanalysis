@@ -15,7 +15,6 @@ export class ActionTimeline extends CoreActionTimeline {
 		'SPINESHATTER_DIVE',
 		'DRAGONFIRE_DIVE',
 		'LIFE_SURGE',
-		'BLOOD_OF_THE_DRAGON',
 		'ELUSIVE_JUMP',
 	]
 }

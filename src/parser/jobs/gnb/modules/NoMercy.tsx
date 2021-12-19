@@ -58,7 +58,7 @@ class BloodfestEvaluator extends NotesEvaluator {
 	}
 }
 
-export default class NoMercy extends BuffWindow {
+export class NoMercy extends BuffWindow {
 	static override handle = 'nomercy'
 	static override title = t('gnb.nomercy.title')`No Mercy Windows`
 

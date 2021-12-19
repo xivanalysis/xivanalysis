@@ -129,6 +129,16 @@ export class Gauge extends CoreGauge {
 		},
 	}))
 
+	/** Paradox */
+	private paradoxGauge = this.add(new CounterGauge({
+		maximum: PARADOX_MAX_STACKS,
+		graph: {
+			label: <Trans id="blm.gauge.resource.paradox">Paradox</Trans>,
+			color: FIRE_COLOR.fade(GAUGE_FADE),
+		},
+		correctHistory: true,
+	}))
+
 	/** Umbral Hearts */
 	private umbralHeartsGauge = this.add(new CounterGauge({
 		maximum: UMBRAL_HEARTS_MAX_STACKS,
@@ -154,16 +164,6 @@ export class Gauge extends CoreGauge {
 			label: <Trans id="blm.gauge.resource.polyglot-timer">Polyglot Timer</Trans>,
 			color: POLYGLOT_COLOR.fade(TIMER_FADE),
 		},
-	}))
-
-	/** Paradox */
-	private paradoxGauge = this.add(new CounterGauge({
-		maximum: PARADOX_MAX_STACKS,
-		graph: {
-			label: <Trans id="blm.gauge.resource.paradox">Paradox</Trans>,
-			color: FIRE_COLOR.fade(GAUGE_FADE),
-		},
-		correctHistory: true,
 	}))
 
 	private previousGaugeState: BLMGaugeState = this.getGaugeState(this.parser.pull.timestamp)
