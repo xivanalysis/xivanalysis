@@ -86,7 +86,7 @@ export const DRK = ensureActions({
 		name: 'Carve And Spit',
 		icon: 'https://xivapi.com/i/003000/003058.png',
 		cooldown: 60000,
-		cooldownGroup: 1,
+		cooldownGroup: 14,
 	},
 	SALTED_EARTH: {
 		id: 3639,
@@ -100,7 +100,7 @@ export const DRK = ensureActions({
 		name: 'Abyssal Drain',
 		icon: 'https://xivapi.com/i/003000/003064.png',
 		cooldown: 60000,
-		cooldownGroup: 1,
+		cooldownGroup: 14,
 	},
 	LIVING_SHADOW: {
 		id: 16472,
