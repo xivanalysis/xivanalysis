@@ -1,4 +1,5 @@
 import {Attribute} from 'event'
+import {ArcanaTracking} from 'parser/jobs/ast/modules/ArcanaTracking'
 import {ensureActions} from '../type'
 
 // Samurai Actions
@@ -36,7 +37,7 @@ export const SAM = ensureActions({
 			from: 7477,
 			potency: 320,
 		},
-		statusesApplied: ['JINPU'],
+		statusesApplied: ['FUGETSU'],
 	},
 
 	ENPI: {
@@ -59,7 +60,7 @@ export const SAM = ensureActions({
 			from: 7477,
 			potency: 320,
 		},
-		statusesApplied: ['SHIFU'],
+		statusesApplied: ['FUKA'],
 	},
 
 	FUGA: {
@@ -118,6 +119,7 @@ export const SAM = ensureActions({
 			potency: 200,
 			end: true,
 		},
+		statusesApplied: ['FUGETSU'],
 	},
 
 	TENKA_GOKEN: {
@@ -155,6 +157,7 @@ export const SAM = ensureActions({
 			potency: 200,
 			end: true,
 		},
+		statusesApplied: ['FUKA'],
 	},
 
 	MIDARE_SETSUGEKKA: {
@@ -180,6 +183,14 @@ export const SAM = ensureActions({
 		},
 	},
 
+	OGI_NAMIKIRI: {
+		id: 25781,
+		name: 'Ogi Namikiri',
+		icon: 'https://xivapi.com/i/003000/003187_hr1.png',
+		onGcd: true,
+		speedAttribute: Attribute.SKILL_SPEED,
+	},
+
 	// -----
 	// Player OGCDs
 	// -----
@@ -189,7 +200,7 @@ export const SAM = ensureActions({
 		name: 'Third Eye',
 		icon: 'https://xivapi.com/i/003000/003153.png',
 		cooldown: 15000,
-		statusesApplied: ['THIRD_EYE', 'EYES_OPEN'],
+		statusesApplied: ['THIRD_EYE'],
 	},
 
 	MEIKYO_SHISUI: {
@@ -198,6 +209,7 @@ export const SAM = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003167.png',
 		cooldown: 55000,
 		statusesApplied: ['MEIKYO_SHISUI'],
+		charges: 2,
 	},
 
 	HISSATSU_KAITEN: {
@@ -223,14 +235,6 @@ export const SAM = ensureActions({
 		statusesApplied: ['ENHANCED_ENPI'],
 	},
 
-	MERCIFUL_EYES: {
-		id: 7502,
-		name: 'Merciful Eyes',
-		icon: 'https://xivapi.com/i/003000/003171.png',
-		cooldown: 1000,
-		cooldownGroup: 24,
-	},
-
 	MEDITATE: {
 		id: 7497,
 		name: 'Meditate',
@@ -254,14 +258,6 @@ export const SAM = ensureActions({
 		name: 'Hissatsu: Kyuten',
 		icon: 'https://xivapi.com/i/003000/003174.png',
 		cooldown: 1000,
-	},
-
-	HISSATSU_SEIGAN: {
-		id: 7501,
-		name: 'Hissatsu: Seigan',
-		icon: 'https://xivapi.com/i/003000/003175.png',
-		cooldown: 1000,
-		cooldownGroup: 24,
 	},
 
 	HAGAKURE: {
@@ -301,6 +297,7 @@ export const SAM = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		cooldown: 60000,
+		charges: 2,
 	},
 
 	KAESHI_HIGANBANA: {

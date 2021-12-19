@@ -8,23 +8,17 @@ export const SAM = ensureStatuses({
 		duration: 3000,
 	},
 
-	EYES_OPEN: {
-		id: 1252,
-		name: 'Eyes Open',
-		icon: 'https://xivapi.com/i/013000/013308.png',
-		duration: 15000,
-	},
-	JINPU: {
+	FUGETSU: {
 		id: 1298,
-		name: 'Jinpu',
-		icon: 'https://xivapi.com/i/013000/013301.png',
+		name: 'Fugetsu',
+		icon: 'https://xivapi.com/i/013000/013311_hr1.png',
 		duration: 40000,
 	},
 
-	SHIFU: {
+	FUKA: {
 		id: 1299,
-		name: 'Shifu',
-		icon: 'https://xivapi.com/i/013000/013302.png',
+		name: 'Fuka',
+		icon: 'https://xivapi.com/i/013000/013312_hr1.png',
 		duration: 40000,
 		speedModifier: 0.87,
 	},
