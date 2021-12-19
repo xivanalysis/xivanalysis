@@ -22,9 +22,9 @@ export class ActionTimeline extends CoreActionTimeline {
 		'SHADOW_WALL',
 		'RAMPART',
 		'DARK_MIND',
-		'OBLATION',
 		// Party Mitigation
 		'THE_BLACKEST_NIGHT',
+		'OBLATION',
 		'REPRISAL',
 		'DARK_MISSIONARY',
 		// Tank Utility

@@ -26,6 +26,11 @@ export const DARK_KNIGHT = new Meta({
 	changelog: [
 		{
 			date: new Date('2021-12-18'),
+			Changes: () => <>Initial Endwalker support</>,
+			contributors: [CONTRIBUTORS.AZARIAH],
+		},
+		{
+			date: new Date('2021-12-18'),
 			Changes: () => <>Verify Salt and Darkness used once per Salted Earth and hits targets, update Delirium tracking to handle 3 stacks per use</>,
 			contributors: [CONTRIBUTORS.AZARIAH],
 		},
