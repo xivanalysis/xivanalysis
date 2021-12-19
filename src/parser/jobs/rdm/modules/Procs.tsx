@@ -76,16 +76,16 @@ export class Procs extends CoreProcs {
 	private getOverwrittenProcContent(overWrittenFire: number, overWrittenStone: number) {
 		if (overWrittenFire > 0 && overWrittenStone > 0) {
 			return <Trans id="rdm.procs.suggestions.overwritten.content">
-				Don't cast <ActionLink {...this.data.actions.VERTHUNDER} /> when you have <StatusLink {...this.data.statuses.VERFIRE_READY} /> or <ActionLink {...this.data.actions.VERAERO} /> when you have <StatusLink {...this.data.statuses.VERSTONE_READY} />.
+				Don't cast <ActionLink {...this.data.actions.VERTHUNDER_III} /> when you have <StatusLink {...this.data.statuses.VERFIRE_READY} /> or <ActionLink {...this.data.actions.VERAERO_III} /> when you have <StatusLink {...this.data.statuses.VERSTONE_READY} />.
 			</Trans>
 		}
 		if (overWrittenFire > 0) {
 			return <Trans id="rdm.procs.suggestions.overwritten-fire.content">
-				Don't cast <ActionLink {...this.data.actions.VERTHUNDER} /> when you have <StatusLink {...this.data.statuses.VERFIRE_READY} />.
+				Don't cast <ActionLink {...this.data.actions.VERTHUNDER_III} /> when you have <StatusLink {...this.data.statuses.VERFIRE_READY} />.
 			</Trans>
 		}
 		return <Trans id="rdm.procs.suggestions.overwritten-stone.content">
-			Don't cast <ActionLink {...this.data.actions.VERAERO} /> when you have <StatusLink {...this.data.statuses.VERSTONE_READY} />.
+			Don't cast <ActionLink {...this.data.actions.VERAERO_III} /> when you have <StatusLink {...this.data.statuses.VERSTONE_READY} />.
 		</Trans>
 	}
 

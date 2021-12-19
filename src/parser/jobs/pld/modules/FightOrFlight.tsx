@@ -117,14 +117,14 @@ export class FightOrFlight extends BuffWindow {
 
 		this.addEvaluator(new ExpectedActionsEvaluator({
 			expectedActions: [
-				{action: this.data.actions.SPIRITS_WITHIN, expectedPerWindow: 1},
+				{action: this.data.actions.EXPIACION, expectedPerWindow: 1},
 				{action: this.data.actions.CIRCLE_OF_SCORN, expectedPerWindow: 1},
 				{action: this.data.actions.INTERVENE, expectedPerWindow: 1},
 				{action: this.data.actions.GORING_BLADE, expectedPerWindow: 2},
 			],
-			suggestionIcon: this.data.actions.SPIRITS_WITHIN.icon,
+			suggestionIcon: this.data.actions.EXPIACION.icon,
 			suggestionContent: <Trans id="pld.fightorflight.suggestions.ogcds.content">
-				Try to land at least one cast of each of your physical off-GCD skills (<DataLink action="SPIRITS_WITHIN" />,
+				Try to land at least one cast of each of your physical off-GCD skills (<DataLink action="EXPIACION" />,
 				<DataLink action="CIRCLE_OF_SCORN" />, and <DataLink action="INTERVENE" />) and two <DataLink action="GORING_BLADE" /> applications
 				during every <DataLink action="FIGHT_OR_FLIGHT" /> window.
 			</Trans>,

@@ -17,6 +17,7 @@ export class Gauge extends CoreGauge {
 	@dependency private suggestions!: Suggestions
 
 	private oathGauge = this.add(new CounterGauge({
+		initialValue: 100,
 		graph: {label: 'Oath Gauge', color: JOBS.PALADIN.colour, collapse: false},
 	}))
 	private oathModifiers = new Map<number, GaugeModifier>([
@@ -24,6 +25,7 @@ export class Gauge extends CoreGauge {
 		[this.data.actions.SHELTRON.id, {action: -50}],
 		[this.data.actions.INTERVENTION.id, {action: -50}],
 		[this.data.actions.COVER.id, {action: -50}],
+		[this.data.actions.HOLY_SHELTRON.id, {action: -50}],
 	])
 
 	override initialise() {
