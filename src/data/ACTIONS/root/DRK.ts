@@ -70,7 +70,7 @@ export const DRK = ensureActions({
 		id: 7390,
 		name: 'Delirium',
 		icon: 'https://xivapi.com/i/003000/003078.png',
-		cooldown: 90000,
+		cooldown: 60000,
 		statusesApplied: ['DELIRIUM'],
 	},
 	// Damage
