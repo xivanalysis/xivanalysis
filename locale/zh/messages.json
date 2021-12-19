@@ -392,6 +392,7 @@
   "drk.darkside.drop.reason.timeout": "超时",
   "drk.darkside.title": "暗黑",
   "drk.darkside.uptime": "暗黑持续时间",
+  "drk.darkside.uptime.name": "",
   "drk.darkside.uptime.why": "暗黑通过<0/>或<1/>获得，它可以提高10%的伤害。DRK不能没有它，请尽量保持常驻。",
   "drk.delirium.checklist.description": "",
   "drk.delirium.checklist.name": "",

@@ -392,6 +392,7 @@
   "drk.darkside.drop.reason.timeout": "Zeitüberschreitung",
   "drk.darkside.title": "Dunkle Seite",
   "drk.darkside.uptime": "Dunkle Seite-Phasen",
+  "drk.darkside.uptime.name": "",
   "drk.darkside.uptime.why": "Dunkle Seite wird durch das Nutzen von <0/> oder <1/> aktiviert und liefert dir einen 10% Schadensbonus. Daher ist diese Fähigkeit ein wichtiger Bestandteil des DRK's DPS. Versuche dein möglichstes, diesen Buff nie zu verlieren und so schnell wie möglich wiederherzustellen, sollte es mal dazu kommen.",
   "drk.delirium.checklist.description": "",
   "drk.delirium.checklist.name": "",

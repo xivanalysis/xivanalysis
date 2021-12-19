@@ -392,6 +392,7 @@
   "drk.darkside.drop.reason.timeout": "タイムアウト",
   "drk.darkside.title": "ダークサイド",
   "drk.darkside.uptime": "ダークサイドのアクティブ率",
+  "drk.darkside.uptime.name": "",
   "drk.darkside.uptime.why": "暗黒は<0/>もしくは<1/>を使用した際に得られる、自身の与ダメージを10%増加させる強力なバフです。これは暗黒騎士の個人DPSに大きく関わってくる重要な要素です。\n暗黒を切らさないよう全力を尽くし、もしも切らしてしまった場合は可能な限り早く付け直しましょう。",
   "drk.delirium.checklist.description": "",
   "drk.delirium.checklist.name": "",

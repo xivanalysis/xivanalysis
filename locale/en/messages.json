@@ -392,6 +392,7 @@
   "drk.darkside.drop.reason.timeout": "Timeout",
   "drk.darkside.title": "Darkside",
   "drk.darkside.uptime": "Darkside Uptime",
+  "drk.darkside.uptime.name": "Keep Darkside up",
   "drk.darkside.uptime.why": "Darkside is gained by using <0/> or <1/> and provides you with a 10% damage increase.  As such, it is a significant part of a DRK's personal DPS.  Do your best not to let it drop, and recover it as quickly as possible if it does.",
   "drk.delirium.checklist.description": "<0/> grants {0} stacks to use on <1/> (or <2/> on 3 or more targets). Be sure to use all stacks generated.",
   "drk.delirium.checklist.name": "Use All Delirium Stacks",

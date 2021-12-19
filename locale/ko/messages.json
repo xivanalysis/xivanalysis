@@ -392,6 +392,7 @@
   "drk.darkside.drop.reason.timeout": "시간 만료",
   "drk.darkside.title": "암흑",
   "drk.darkside.uptime": "암흑 유지시간",
+  "drk.darkside.uptime.name": "",
   "drk.darkside.uptime.why": "암흑 버프는 <0/>이나 <1/>을 사용하여 10% 데미지 버프를 받을 수 있습니다. 이에 따라 암흑은 암흑기사 딜의 상당한 기여를 하며 최대한 유지 및 사용 횟수를 늘리십시오.",
   "drk.delirium.checklist.description": "",
   "drk.delirium.checklist.name": "",
