@@ -1,4 +1,3 @@
-import * as Errors from 'errors'
 import {Event} from 'event'
 import {Report, Pull, Actor} from 'report'
 import {isDefined} from 'utilities'
@@ -15,23 +14,12 @@ export class Conductor {
 
 	constructor(opts: {
 		report: Report,
-		pullId: string,
-		actorId: string,
+		pull: Pull,
+		actor: Actor,
 	}) {
 		this.report = opts.report
-
-		// TODO: Move pull/actor logic up to final analyse component?
-		const pull = this.report.pulls.find(pull => pull.id === opts.pullId)
-		if (pull == null) {
-			throw new Errors.NotFoundError({type: 'pull'})
-		}
-		this.pull = pull
-
-		const actor = pull.actors.find(actor => actor.id === opts.actorId)
-		if (actor == null) {
-			throw new Errors.NotFoundError({type: 'friendly combatant'})
-		}
-		this.actor = actor
+		this.pull = opts.pull
+		this.actor = opts.actor
 	}
 
 	async configure() {

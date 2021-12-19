@@ -1,18 +1,15 @@
 import {Trans} from '@lingui/react'
 import {Message, Segment} from 'akkd'
-import classNames from 'classnames'
 import Color from 'color'
 import {JobIcon} from 'components/ui/JobIcon'
 import NormalisedMessage from 'components/ui/NormalisedMessage'
 import {Role, RoleKey, ROLES, JobKey, JOBS} from 'data/JOBS'
 import {patchSupported} from 'data/PATCHES'
 import {AVAILABLE_MODULES} from 'parser/AVAILABLE_MODULES'
-import React, {ReactNode, useCallback} from 'react'
-import {useRouteMatch, Link, useParams} from 'react-router-dom'
+import React, {ReactNode} from 'react'
+import {useRouteMatch, Link} from 'react-router-dom'
 import {Report, Actor, Pull} from 'report'
 import {ReportStore} from 'reportSources'
-import {Icon} from 'semantic-ui-react'
-import {ActorListRouteParams} from './ReportFlow'
 import styles from './ReportFlow.module.css'
 
 interface RoleGroupData {
@@ -27,36 +24,13 @@ const UNSUPPORTED_ROLES = [
 
 export interface ActorListProps {
 	reportStore: ReportStore
+	report: Report
+	pull: Pull
 }
 
-export function ActorList({reportStore}: ActorListProps) {
-	const {pullId} = useParams<ActorListRouteParams>()
-
-	const onRefreshPulls = useCallback(
-		() => reportStore.requestPulls({bypassCache: true}),
-		[reportStore],
-	)
-
-	const {report} = reportStore
-	const pull = report?.pulls.find(pull => pull.id === pullId)
-	if (report == null || pull == null) {
-		return (
-			<Message warning icon="warning sign">
-				<Trans id="core.report-flow.pull-not-found">
-					<Message.Header>Pull not found.</Message.Header>
-					No pull was found with ID "{pullId}". If this report has been updated recently, it may have been cached - try pressing Refresh to retrieve the latest data.
-				</Trans>
-
-				<button className={classNames(styles.refresh, styles.block)} onClick={onRefreshPulls}>
-					<Icon name="refresh"/>
-					<Trans id="core.report-flow.refresh">Refresh</Trans>
-				</button>
-			</Message>
-		)
-	}
-
+export function ActorList({reportStore, report, pull}: ActorListProps) {
 	// Ensure actors are up to date
-	reportStore.requestActors(pullId)
+	reportStore.requestActors(pull.id)
 
 	const actors = pull.actors
 		.filter(actor => actor.playerControlled)
