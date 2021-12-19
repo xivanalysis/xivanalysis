@@ -20,6 +20,7 @@ const IGNORED_ACTIONS: ActionKey[] = [
 	'FEINT',
 	'HELLS_EGRESS',
 	'HELLS_INGRESS',
+	'REGRESS',
 	'SECOND_WIND',
 ]
 
