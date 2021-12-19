@@ -2,7 +2,7 @@ import {Event, Events} from 'event'
 import {ActionKey} from 'data/ACTIONS'
 import {isSuccessfulHit} from 'utilities'
 import {Analyser} from 'parser/core/Analyser'
-import {filter} from 'parser/core/filter'
+import {filter, oneOf} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
 import {Cooldowns} from 'parser/core/modules/Cooldowns'
 import {Data} from 'parser/core/modules/Data'
@@ -20,12 +20,7 @@ export class Plunge extends Analyser {
 	@dependency private data!: Data
 
 	override initialise() {
-		this.addEventHook(filter<Event>().source(this.parser.actor.id).type('damage').cause(this.data.matchCauseAction(PLUNGE_REDUCERS)), this.onPlungeReducer)
-	}
-
-	private onPlungeReducer(event: Events['damage']) {
-		if (isSuccessfulHit(event)) {
-			this.cooldowns.reduce('PLUNGE', PLUNGE_CDR)
-		}
+		const reducerIDs = PLUNGE_REDUCERS.map(key => this.data.actions[key].id)
+		this.addEventHook(filter<Event>().source(this.parser.actor.id).type('action').action(oneOf(reducerIDs)), () => this.cooldowns.reduce('PLUNGE', PLUNGE_CDR))
 	}
 }
