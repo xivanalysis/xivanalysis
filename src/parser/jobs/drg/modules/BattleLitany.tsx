@@ -16,7 +16,7 @@ import React, {Fragment} from 'react'
 import {Message, Icon} from 'semantic-ui-react'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 
-const BL_GCD_TARGET = 8
+const BL_GCD_TARGET = 6
 
 // how long (or short, really) a window needs to be in order to be considered truncated
 // eslint-disable-next-line @typescript-eslint/no-magic-numbers

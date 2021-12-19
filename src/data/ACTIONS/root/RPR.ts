@@ -77,6 +77,7 @@ export const RPR = ensureActions({
 		speedAttribute: Attribute.SKILL_SPEED,
 		combo: {
 			from: 24376,
+			end: true,
 		},
 	},
 
