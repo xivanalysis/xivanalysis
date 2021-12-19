@@ -17,7 +17,7 @@ export class OGCDDowntime extends CooldownDowntime {
 			cooldowns: [this.data.actions.PLUNGE],
 			resetBy: {
 				actions: [this.data.actions.UNMEND],
-				refundAmount: 5,
+				refundAmount: 5000,
 			},
 		},
 		{
