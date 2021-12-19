@@ -6,6 +6,31 @@ export const SCH = ensureActions({
 	// Player
 	// -----
 
+	AETHERFLOW: {
+		id: 166,
+		name: 'Aetherflow',
+		icon: 'https://xivapi.com/i/000000/000510.png',
+		cooldown: 60000,
+	},
+
+	RESURRECTION: {
+		id: 173,
+		name: 'Resurrection',
+		icon: 'https://xivapi.com/i/000000/000511.png',
+		onGcd: true,
+		speedAttribute: Attribute.SPELL_SPEED,
+		castTime: 8000,
+	},
+
+	SCH_PHYSICK: {
+		id: 190,
+		name: 'Physick',
+		icon: 'https://xivapi.com/i/000000/000518.png',
+		onGcd: true,
+		speedAttribute: Attribute.SPELL_SPEED,
+		castTime: 1500,
+	},
+
 	BIOLYSIS: {
 		id: 16540,
 		name: 'Biolysis',
