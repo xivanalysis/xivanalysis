@@ -4,13 +4,14 @@ import {JobIcon} from 'components/ui/JobIcon'
 import NormalisedMessage from 'components/ui/NormalisedMessage'
 import {AnalysisLoader} from 'components/ui/SharedLoaders'
 import {JOBS, ROLES} from 'data/JOBS'
-import {Conductor} from 'parser/Conductor'
-import {Result} from 'parser/core/Parser'
+import {AVAILABLE_MODULES} from 'parser/AVAILABLE_MODULES'
+import Parser, {Result} from 'parser/core/Parser'
 import React, {useContext, useState} from 'react'
 import {Actor, Pull, Report} from 'report'
 import {ReportStore} from 'reportSources'
 import {Header} from 'semantic-ui-react'
 import {StoreContext} from 'store'
+import {isDefined} from 'utilities'
 import styles from './Analyse.module.css'
 import {ResultSegment} from './ResultSegment'
 import {SegmentLinkItem} from './SegmentLinkItem'
@@ -77,27 +78,38 @@ export function Analyse({reportStore, report, pull, actor}: AnalyseProps) {
 	)
 }
 
-// TODO: Conductor can probably be flattened into this eventually
 async function analyseReport(
 	reportStore: ReportStore,
 	report: Report,
 	pull: Pull,
 	actor: Actor
 ) {
-	// Set up the parser for this analysis
-	const conductor = new Conductor({
+	// Build the final meta representation
+	const rawMetas = [
+		AVAILABLE_MODULES.CORE,
+		AVAILABLE_MODULES.BOSSES[pull.encounter.key ?? 'TRASH'],
+		AVAILABLE_MODULES.JOBS[actor.job],
+	]
+	const meta = rawMetas
+		.filter(isDefined)
+		.reduce((acc, cur) => acc.merge(cur))
+
+	// Build the base parser instance
+	const parser = new Parser({
+		meta,
 		report,
 		pull,
 		actor,
 	})
 
-	// Conductor configuration and event fetching can be executed simultaneously
+	// Parser configuration and event fetching can be executed simultaneously
 	const [events] = await Promise.all([
 		reportStore.fetchEvents(pull.id, actor.id),
-		conductor.configure(),
+		parser.configure(),
 	])
 
-	await conductor.parse({reportFlowEvents: events})
+	// TODO: Batching?
+	parser.parseEvents({events})
 
-	return conductor.getResults()
+	return parser.generateResults()
 }
