@@ -17,7 +17,7 @@ export default class GeneralCDDowntime extends CooldownDowntime {
 	}, {
 		cooldowns: [this.data.actions.AIR_ANCHOR],
 		allowedAverageDowntime: DOWNTIME_ALLOWED_GCD,
-		firstUseOffset: 9000,
+		firstUseOffset: 0,
 		// Currently, this property is not used due to the low reliability of GCD estimates.
 		// isAffectedBySpeed: true,
 	}, {
@@ -26,7 +26,12 @@ export default class GeneralCDDowntime extends CooldownDowntime {
 			this.data.actions.BIOBLASTER,
 		],
 		allowedAverageDowntime: DOWNTIME_ALLOWED_GCD,
-		firstUseOffset: 0,
+		firstUseOffset: 2500,
+		// isAffectedBySpeed: true,
+	}, {
+		cooldowns: [this.data.actions.CHAIN_SAW],
+		allowedAverageDowntime: DOWNTIME_ALLOWED_GCD,
+		firstUseOffset: 12500,
 		// isAffectedBySpeed: true,
 	}, {
 		cooldowns: [this.data.actions.GAUSS_ROUND],

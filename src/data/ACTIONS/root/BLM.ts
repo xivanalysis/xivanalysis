@@ -11,13 +11,13 @@ export const BLM = ensureActions({
 		castTime: 2500,
 		mpCost: 400,
 	},
-	BLIZZARD_II: { // May need new ID/icon since it's technically being changed
-		id: 146,
+	BLIZZARD_II: {
+		id: 25793,
 		name: 'Blizzard II',
-		icon: 'https://xivapi.com/i/000000/000455.png',
+		icon: 'https://xivapi.com/i/002000/002668.png',
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
-		castTime: 2000,
+		castTime: 3000,
 		mpCost: 800,
 	},
 	BLIZZARD_III: {
@@ -35,7 +35,7 @@ export const BLM = ensureActions({
 		icon: 'https://xivapi.com/i/002000/002659.png',
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
-		castTime: 2800,
+		castTime: 2500,
 		mpCost: 800,
 	},
 	FREEZE: {
@@ -44,7 +44,7 @@ export const BLM = ensureActions({
 		icon: 'https://xivapi.com/i/002000/002653.png',
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
-		castTime: 3000,
+		castTime: 2800,
 		mpCost: 1000,
 	},
 	UMBRAL_SOUL: {
@@ -121,7 +121,7 @@ export const BLM = ensureActions({
 		icon: 'https://xivapi.com/i/000000/000468.png',
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
-		castTime: 3000,
+		castTime: 2500,
 		mpCost: 400,
 	},
 	THUNDER_III: {
@@ -139,7 +139,7 @@ export const BLM = ensureActions({
 		icon: 'https://xivapi.com/i/002000/002662.png',
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
-		castTime: 3000,
+		castTime: 2500,
 		mpCost: 800,
 	},
 	SCATHE: {
@@ -193,7 +193,7 @@ export const BLM = ensureActions({
 		id: 3573,
 		name: 'Ley Lines',
 		icon: 'https://xivapi.com/i/002000/002656.png',
-		cooldown: 90000,
+		cooldown: 120000,
 		statusesApplied: ['LEY_LINES'],
 	},
 	SHARPCAST: {
@@ -216,35 +216,36 @@ export const BLM = ensureActions({
 		icon: 'https://xivapi.com/i/002000/002663.png',
 		cooldown: 60000,
 		statusesApplied: ['TRIPLECAST'],
+		charges: 2,
 	},
 	HIGH_FIRE_II: {
-		id: 147147147, // Needs real ID
+		id: 25794,
 		name: 'High Fire II',
-		icon: 'https://xivapi.com/i/000000/000452.png', // Needs real icon, currently Fire II
+		icon: 'https://xivapi.com/i/002000/002669.png',
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 3000,
 		mpCost: 1500,
 	},
 	HIGH_BLIZZARD_II: {
-		id: 146146146, // Needs real ID
+		id: 25795,
 		name: 'High Blizzard II',
-		icon: 'https://xivapi.com/i/000000/000455.png', // Needs real icon, currently old Blizzard II
+		icon: 'https://xivapi.com/i/002000/002670.png',
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 3000,
 		mpCost: 800,
 	},
 	AMPLIFIER: {
-		id: 35753575, // Needs real ID
+		id: 25796,
 		name: 'Amplifier',
-		icon: 'https://xivapi.com/i/002000/002658.png', // Needs real icon, currently Enochian
-		cooldown: 12000,
+		icon: 'https://xivapi.com/i/002000/002671.png',
+		cooldown: 120000,
 	},
 	PARADOX: {
-		id: 1650516505, // Needs real ID
+		id: 25797,
 		name: 'Paradox',
-		icon: 'https://xivapi.com/i/002000/002665.png', // Needs real icon, currently Despair
+		icon: 'https://xivapi.com/i/002000/002672.png',
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 2500,

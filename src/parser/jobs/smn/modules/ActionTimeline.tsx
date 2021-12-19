@@ -3,26 +3,22 @@ import {ActionRow, ActionTimeline as CoreActionTimeline} from 'parser/core/modul
 export class ActionTimeline extends CoreActionTimeline {
 	static override rows: ActionRow[] = [
 		...CoreActionTimeline.rows,
+		'SMN_MOUNTAIN_BUSTER',
 		{
 			label: 'Energy Drain/Siphon',
-			content: 'ENERGY_DRAIN',
+			content: 'SMN_ENERGY_DRAIN',
 		},
 		'FESTER',
 		'PAINFLARE',
-		'BANE',
 		{
-			label: 'Trance',
-			content: 'DREADWYRM_TRANCE',
+			label: 'Demi',
+			content: 'SUMMON_BAHAMUT',
 		},
 		'DEATHFLARE',
-		'SUMMON_BAHAMUT',
 		'ENKINDLE_BAHAMUT',
 		'ENKINDLE_PHOENIX',
-		'SUMMON',
-		'EGI_ASSAULT',
-		'EGI_ASSAULT_II',
-		'ENKINDLE',
-		'SMN_AETHERPACT',
-		'TRI_DISASTER',
+		'REKINDLE',
+		'SEARING_LIGHT',
+		'RADIANT_AEGIS',
 	]
 }

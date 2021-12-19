@@ -26,18 +26,21 @@ const TRACKED_STATUSES: StatusConfig[] = [
 	{key: 'THE_SPIRE', group: 'arcanum', name: 'Arcanum'},
 	{key: 'DIVINATION'},
 	{key: 'BATTLE_LITANY'},
-	{key: 'BATTLE_VOICE', exclude: ['BARD']},
+	{key: 'BATTLE_VOICE'},
 	{key: 'BROTHERHOOD'},
 	{key: 'CHAIN_STRATAGEM'},
-	{key: 'EMBOLDEN_PHYSICAL'}, // phys only?
+	{key: 'EMBOLDEN_SELF'}, // tracking the self buff so it appears on the RDM's perspective
+	{key: 'EMBOLDEN_PARTY'},
 	{key: 'LEFT_EYE', exclude: ['DRAGOON']}, // notDRG
 	{key: 'TRICK_ATTACK_VULNERABILITY_UP', name: 'Trick Attack'},
-	{key: 'DEVOTION'},
 	{key: 'TECHNICAL_FINISH'},
 	{key: 'STANDARD_FINISH_PARTNER'},
 	{key: 'DEVILMENT'},
 	{key: 'OFF_GUARD'},
 	{key: 'PECULIAR_LIGHT'},
+	{key: 'ARCANE_CIRCLE'},
+	{key: 'SEARING_LIGHT'},
+	{key: 'RADIANT_FINALE'},
 ]
 
 export class RaidBuffs extends Analyser {

@@ -84,34 +84,42 @@ export const NIN = ensureActions({
 	},
 
 	HURAIJIN: {
-		id: 1491401, // TODO
+		id: 25876,
 		name: 'Huraijin',
-		icon: 'TODO',
+		icon: 'https://xivapi.com/i/002000/002928.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 	},
 
 	FORKED_RAIJU: {
-		id: 1491402, // TODO
+		id: 25777,
 		name: 'Forked Raiju',
-		icon: 'TODO',
+		icon: 'https://xivapi.com/i/002000/002931.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		statusesApplied: ['FLEETING_RAIJU_READY'],
 	},
 
 	FLEETING_RAIJU: {
-		id: 1491403, // TODO
+		id: 25778,
 		name: 'Fleeting Raiju',
-		icon: 'TODO',
+		icon: 'https://xivapi.com/i/002000/002932.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 	},
 
 	PHANTOM_KAMAITACHI: {
-		id: 1491404, // TODO
+		id: 25774,
 		name: 'Phantom Kamaitachi',
-		icon: 'TODO',
+		icon: 'https://xivapi.com/i/002000/002929.png',
+		onGcd: true,
+		speedAttribute: Attribute.SKILL_SPEED,
+	},
+
+	PHANTOM_KAMAITACHI_BUNSHIN: {
+		id: 25775,
+		name: 'Phantom Kamaitachi',
+		icon: 'https://xivapi.com/i/002000/002929.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 	},

@@ -1,5 +1,6 @@
 import {AlwaysBeCasting} from 'parser/core/modules/AlwaysBeCasting'
 import {Tincture} from 'parser/core/modules/Tincture'
+import {CastTime} from './CastTime'
 import {Combos} from './Combos'
 import {DualCast} from './Dualcast'
 import {Embolden} from './Embolden'
@@ -16,9 +17,8 @@ export default [
 	AlwaysBeCasting,
 	Embolden,
 	Gauge,
+	CastTime,
 	DualCast,
-	//I've been asked to disconnect this for now until it's decided exactly what it should be
-	//EngagementDisplacementTracking,
 	GeneralCDDowntime,
 	Interrupts,
 	Procs,
@@ -26,6 +26,4 @@ export default [
 	MeleeCombos,
 	Tincture,
 	Weaving,
-	//I've been asked to disconnect this for now until it's decided exactly what it should be
-	//CorpsaCorps,
 ]

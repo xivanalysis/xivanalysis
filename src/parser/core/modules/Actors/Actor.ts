@@ -41,28 +41,35 @@ class ActorResources {
 		this.attributes = this.buildAttributes()
 	}
 
-	hasStatus(statusId: Status['id']) {
-		// Grab data for the status - if there is none, we can resolve early.
+	hasStatus(statusId: Status['id'], source?: Actor['id']) {
+		return this.getStatusApplication(statusId, source) != null
+	}
+
+	getStatusData(statusId: Status['id'], source?: Actor['id']) {
+		return this.getStatusApplication(statusId, source)?.data
+	}
+
+	private getStatusApplication(statusId: Status['id'], source?: Actor['id']) {
+		// Grab data for the requested status - if there is none, we can resolve early.
 		const statusEvents = this._statusHistory.get(statusId)
 		if (statusEvents == null) {
-			return false
+			return
 		}
+
+		// Narrow to a single source if requested
+		const requestedSourceEvents = source != null
+			? [statusEvents.get(source) ?? []]
+			: statusEvents.values()
 
 		const time = this.time ?? Infinity
 
-		// Search sources for an open application.
-		for (const sourceEvents of statusEvents.values()) {
-			const lastEvent = _.findLast(
-				sourceEvents,
-				event => event.timestamp <= time
-			)
-
+		// Search sources for an open application
+		for (const sourceEvents of requestedSourceEvents) {
+			const lastEvent = _.findLast(sourceEvents, event => event.timestamp <= time)
 			if (lastEvent?.type === 'statusApply') {
-				return true
+				return lastEvent
 			}
 		}
-
-		return false
 	}
 
 	// TODO: think of how to automate building these getters this is dumb

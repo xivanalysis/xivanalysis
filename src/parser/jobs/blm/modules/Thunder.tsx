@@ -18,9 +18,8 @@ import {Accordion, Table, Message} from 'semantic-ui-react'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 import Procs from './Procs'
 
-const MAX_ALLOWED_T3_CLIPPING = 6000
-
-const MAX_ALLOWED_T3_CLIPPING_BAD_GCD_LINE_UP = 8000
+const MAX_ALLOWED_BAD_GCD_THRESHOLD = 2000
+const MAX_ALLOWED_T3_CLIPPING = 3000
 
 interface ThunderApplicationData {
 	event: Events['statusApply'],
@@ -188,11 +187,11 @@ export class Thunder extends Analyser {
 						}
 						const renderClipTime = event.clip != null ? this.parser.formatDuration(event.clip) : '-'
 						let clipSeverity: ReactNode = renderClipTime
-						//make it white for sub 6s, yellow for 6-8s and red for >8s
-						if (thisClip > MAX_ALLOWED_T3_CLIPPING && thisClip <= MAX_ALLOWED_T3_CLIPPING_BAD_GCD_LINE_UP) {
+						// Make it white for expected clipping, yellow if the GCD aligned poorly, and red if it was definitely clipped too hard
+						if (thisClip > MAX_ALLOWED_T3_CLIPPING && thisClip <= MAX_ALLOWED_T3_CLIPPING + MAX_ALLOWED_BAD_GCD_THRESHOLD) {
 							clipSeverity = <span className="text-warning">{clipSeverity}</span>
 						}
-						if (thisClip > MAX_ALLOWED_T3_CLIPPING_BAD_GCD_LINE_UP) {
+						if (thisClip > MAX_ALLOWED_T3_CLIPPING + MAX_ALLOWED_BAD_GCD_THRESHOLD) {
 							clipSeverity = <span className="text-error">{clipSeverity}</span>
 						}
 						return <Table.Row key={event.event.timestamp}>
@@ -213,7 +212,7 @@ export class Thunder extends Analyser {
 		const disclaimer = <Message>
 			<Trans id="blm.thunder.clip-disclaimer">
 				Due to the nature of <DataLink action="THUNDER_III" /> procs, you will run into situations where you will use your <DataLink status="THUNDERCLOUD" /> proc before it runs out, while your <DataLink status="THUNDER_III" /> is still running on your enemy.
-				At most, this could theoretically lead to refreshing <DataLink showIcon={false} status="THUNDER_III" /> a maximum of ~6 seconds early every single refresh.
+				At most, this could theoretically lead to refreshing <DataLink showIcon={false} status="THUNDER_III" /> a maximum of ~3 seconds early every single refresh.
 				Since this amount of clipping is still considered optimal, we quantify and call this the maximum clip time.
 			</Trans>
 		</Message>

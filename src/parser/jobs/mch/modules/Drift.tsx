@@ -29,6 +29,7 @@ const DRIFT_GCDS: ActionKey[] = [
 	'AIR_ANCHOR',
 	'BIOBLASTER',
 	'DRILL',
+	'CHAIN_SAW',
 ]
 
 interface DriftWindow {
@@ -59,6 +60,10 @@ export class Drift extends Analyser {
 			casts: [],
 		},
 		[this.data.actions.DRILL.cooldownGroup]: {
+			start: this.parser.pull.timestamp,
+			casts: [],
+		},
+		[this.data.actions.CHAIN_SAW.id]: {
 			start: this.parser.pull.timestamp,
 			casts: [],
 		},
@@ -160,9 +165,9 @@ export class Drift extends Analyser {
 		return <Fragment>
 			<Message>
 				<Trans id="mch.drift.accordion.message">
-					<ActionLink {...this.data.actions.DRILL}/> and <ActionLink {...this.data.actions.AIR_ANCHOR}/> are your strongest GCDs and ideally they should always be kept on cooldown,
-					unless you need to insert a filler GCD to adjust for skill speed. Avoid casting <ActionLink {...this.data.actions.HYPERCHARGE}/> if
-					Drill or Air Anchor will come off cooldown within 8 seconds.
+					<ActionLink action="CHAIN_SAW"/>, <ActionLink action="AIR_ANCHOR"/>, and <ActionLink action="DRILL"/> are your strongest GCDs and ideally they should always be kept on cooldown,
+					unless you need to insert a filler GCD to adjust for skill speed. Avoid casting <ActionLink action="HYPERCHARGE"/> if
+					Chain Saw, Air Anchor, or Drill will come off cooldown within 8 seconds.
 				</Trans>
 			</Message>
 			{driftTable}
