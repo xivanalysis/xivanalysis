@@ -195,7 +195,7 @@ export class Summons extends Analyser {
 			content: <Trans id="smn.summons.demigcds.content">Be sure to get {EXPECTED_DEMI_GCDS} uses of the demi GCDs each time you summon them.
 				(<ActionLink action="ASTRAL_IMPULSE"/> or <ActionLink action="ASTRAL_FLARE" /> for Bahamut and <ActionLink action="FOUNTAIN_OF_FIRE"/>
 				or <ActionLink action="BRAND_OF_PURGATORY"/> for Phoenix)</Trans>,
-			why: <Trans id="smn.summons.demigcds.why">You missed <Plural value={missed} one="# demi GCDs" other="# demi GCD"/>.</Trans>,
+			why: <Trans id="smn.summons.demigcds.why">You missed <Plural value={missed} one="# demi GCD" other="# demi GCDs"/>.</Trans>,
 			value: missed,
 			tiers: {
 				1: SEVERITY.MINOR,

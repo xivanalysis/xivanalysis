@@ -736,7 +736,7 @@
   "smn.summons.deathflare.content": "Be sure to use <0/> each time you summon Bahamut.",
   "smn.summons.deathflare.why": "You failed to cast Deathflare {missed, plural, one {# time} other {# times}}.",
   "smn.summons.demigcds.content": "Be sure to get {EXPECTED_DEMI_GCDS} uses of the demi GCDs each time you summon them. (<0/> or <1/> for Bahamut and <2/>or <3/> for Phoenix)",
-  "smn.summons.demigcds.why": "You missed {missed, plural, one {# demi GCDs} other {# demi GCD}}.",
+  "smn.summons.demigcds.why": "You missed {missed, plural, one {# demi GCD} other {# demi GCDs}}.",
   "smn.summons.disclaimer": "You should aim to use all three Arcanums between each summoning of Bahamut and Phoenix.  You should also aim to use all of the Attunement and Favor stacks of each summon.  However, this will not be possible when the boss goes invulnerable for extended periods of time.",
   "smn.summons.enkindle.content": "Be sure to use <0/> each time you summon Bahamut and <1/> each time you summon Phoenix.",
   "smn.summons.enkindle.why": "You failed to cast an Enkindle ability {missed, plural, one {# time} other {# times}}.",
