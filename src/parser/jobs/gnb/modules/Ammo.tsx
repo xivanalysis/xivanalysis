@@ -50,6 +50,7 @@ export class Ammo extends CoreGauge {
 		[this.data.actions.BURST_STRIKE.id, {action: -1}],
 		[this.data.actions.FATED_CIRCLE.id, {action: -1}],
 		[this.data.actions.GNASHING_FANG.id, {action: -1}],
+		[this.data.actions.DOUBLE_DOWN.id, {action: -2}],
 
 	])
 
