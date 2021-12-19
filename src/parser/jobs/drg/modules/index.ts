@@ -6,6 +6,7 @@ import {Combos} from './Combos'
 import Debuffs from './Debuffs'
 import DragonSight from './DragonSight'
 import Drift from './Drift'
+import {Gauge} from './Gauge'
 import LanceCharge from './LanceCharge'
 import OGCDDowntime from './OGCDDowntime'
 import Procs from './Procs'
@@ -23,6 +24,7 @@ export default [
 	Drift,
 	LanceCharge,
 	OGCDDowntime,
+	Gauge,
 	Procs,
 	Tincture,
 	Weaving,

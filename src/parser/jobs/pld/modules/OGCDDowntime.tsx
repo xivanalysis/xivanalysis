@@ -25,7 +25,7 @@ export class OGCDDowntime extends CooldownDowntime {
 			allowedAverageDowntime: ALLOWED_DOWNTIME_REQ,
 			firstUseOffset: FIRST_USE_OFFSET_REQ,
 		},
-		{cooldowns: [this.data.actions.SPIRITS_WITHIN]},
+		{cooldowns: [this.data.actions.EXPIACION]},
 		{cooldowns: [this.data.actions.CIRCLE_OF_SCORN]},
 		{
 			cooldowns: [this.data.actions.INTERVENE],
