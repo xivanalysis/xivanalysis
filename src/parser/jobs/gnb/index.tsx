@@ -25,6 +25,7 @@ export const GUNBREAKER = new Meta({
 
 	contributors: [
 		{user: CONTRIBUTORS.RYAN, role: ROLES.DEVELOPER},
+		{user: CONTRIBUTORS.JONNIX, role: ROLES.DEVELOPER},
 	],
 
 	changelog: [
@@ -42,6 +43,15 @@ export const GUNBREAKER = new Meta({
 				</ul>,
 			</>,
 			contributors: [CONTRIBUTORS.RYAN],
+		},
+		{
+			date: new Date('2021-12-19'),
+			Changes: () => <>
+				<ul>
+					<li>Added cartridge usage for Double Down to Ammo module</li>
+				</ul>,
+			</>,
+			contributors: [CONTRIBUTORS.JONNIX],
 		},
 	],
 })
