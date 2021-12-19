@@ -1,6 +1,5 @@
-import {Event, Events} from 'event'
+import {Event} from 'event'
 import {ActionKey} from 'data/ACTIONS'
-import {isSuccessfulHit} from 'utilities'
 import {Analyser} from 'parser/core/Analyser'
 import {filter, oneOf} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
