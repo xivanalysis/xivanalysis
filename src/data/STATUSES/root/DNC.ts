@@ -2,7 +2,7 @@ import {ensureStatuses} from '../type'
 
 export const DNC = ensureStatuses({
 	FLOURISHING_SYMMETRY: {
-		id: 2963,
+		id: 2693,
 		name: 'Flourishing Symmetry',
 		icon: 'https://xivapi.com/i/013000/013718.png',
 		duration: 30000,
