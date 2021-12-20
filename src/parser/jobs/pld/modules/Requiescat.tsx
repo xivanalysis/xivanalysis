@@ -24,41 +24,6 @@ const EXPECTED_REQUIESCAT_CASTS = 5
 const WINDOW_START_FORGIVENESS_FOR_RUSHING = 1500
 const REQUIESCAT_DURATION = 30000
 
-class RequiescatUsageEvaluator implements WindowEvaluator {
-	// Because this class is not an Analyser, it cannot use Data directly to get the id or icon for Requiescat, so require the action object in the constructor
-	private requiescatIcon: string
-	private requiescatUsages: number
-
-	constructor (requiescatUsages: number, requiescatIcon: string) {
-		this.requiescatUsages = requiescatUsages
-		this.requiescatIcon = requiescatIcon
-	}
-
-	//As far as I can tell, this only exists to be overridden later, so I'm not too concerned about its contents.
-	suggest() {
-		const missedRequiescatBuffs = this.requiescatUsages
-
-		return new TieredSuggestion({
-			icon: this.requiescatIcon,
-			why: <Trans id="pld.requiescat.suggestions.nobuff.why">
-				<Plural value={missedRequiescatBuffs} one="# usage" other="# usages"/> while under 80% MP.
-			</Trans>,
-			content: <Trans id="pld.requiescat.suggestions.nobuff.content">
-				<DataLink action="REQUIESCAT"/> should only be used when over 80% MP.
-				Otherwise, you will not get the <DataLink status="REQUIESCAT"/> buff,
-				which provides 50% increased magic damage, instant cast times,
-				and allows you to cast <DataLink action="CONFITEOR"/>.
-			</Trans>,
-			tiers: SEVERITIES.MISSED_CONFITEORS,
-			value: missedRequiescatBuffs,
-		})
-	}
-
-	output() {
-		return undefined
-	}
-}
-
 interface RequiescatGcdsOptions extends AllowedGcdsOnlyOptions {
 	downtime: Downtime
 }
@@ -144,8 +109,6 @@ export class Requiescat extends BuffWindow {
 		}))
 
 		this.addEventHook({type: 'action', source: this.parser.actor.id, action: this.data.actions.REQUIESCAT.id}, () => this.requiescatUsages++)
-
-		this.addEvaluator(new RequiescatUsageEvaluator(this.requiescatUsages, this.data.actions.REQUIESCAT.icon))
 	}
 
 	private adjustExpectedConfiteorCount(window: HistoryEntry<EvaluatedAction[]>) {
@@ -167,7 +130,7 @@ export class Requiescat extends BuffWindow {
 	override output() {
 		return <Fragment>
 			<Message>
-				<Trans id="pld.requiescat.table.note">Each of your <DataLink status="REQUIESCAT" /> windows should contain 5 spells, consisting of 4 casts of <DataLink action="HOLY_SPIRIT" /> or <DataLink action="HOLY_CIRCLE" /> and endING with a cast of <DataLink action="CONFITEOR" />.</Trans>
+				<Trans id="pld.requiescat.table.note">Each of your <DataLink status="REQUIESCAT" /> windows should contain 5 spells, consisting of 4 casts of <DataLink action="HOLY_SPIRIT" /> or <DataLink action="HOLY_CIRCLE" /> and ending with a cast of <DataLink action="CONFITEOR" />.</Trans>
 			</Message>
 			<>{super.output()}</>
 		</Fragment>
