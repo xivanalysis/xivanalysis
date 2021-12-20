@@ -15,42 +15,26 @@ const SEVERITIES = {
 		1: SEVERITY.MEDIUM,
 		5: SEVERITY.MAJOR,
 	},
-	MISSED_BUFF_REQUIESCAT: {
+	MISSED_CONFITEORS: {
 		1: SEVERITY.MAJOR,
 	},
 }
-const EXPECTED_REQUIESCAT_CASTS = 4
+const EXPECTED_REQUIESCAT_CASTS = 5
 // When calculating rushing, adjust the start of the window by 1.5 seconds to allow for using Requiescat in the first weave slot
 const WINDOW_START_FORGIVENESS_FOR_RUSHING = 1500
-const REQUIESCAT_DURATION = 12000
+const REQUIESCAT_DURATION = 30000
 
 class RequiescatUsageEvaluator implements WindowEvaluator {
-	// Because this class is not an Analyser, it cannot use Data directly to get the id or icon for Goring Blade, so require the action object in the constructor
+	// Because this class is not an Analyser, it cannot use Data directly to get the id or icon for Requiescat, so require the action object in the constructor
 	private requiescatIcon: string
-	private requiescatUsages: {casts: number, buffs: number}
+	private requiescatUsages: number
 
-	constructor (requiescatUsages: {casts: number, buffs: number}, requiescatIcon: string) {
+	constructor (requiescatUsages: number, requiescatIcon: string) {
 		this.requiescatUsages = requiescatUsages
 		this.requiescatIcon = requiescatIcon
 	}
 
 	suggest() {
-		const missedRequiescatBuffs = this.requiescatUsages.casts - this.requiescatUsages.buffs
-
-		return new TieredSuggestion({
-			icon: this.requiescatIcon,
-			why: <Trans id="pld.requiescat.suggestions.nobuff.why">
-				<Plural value={missedRequiescatBuffs} one="# usage" other="# usages"/> while under 80% MP.
-			</Trans>,
-			content: <Trans id="pld.requiescat.suggestions.nobuff.content">
-				<DataLink action="REQUIESCAT"/> should only be used when over 80% MP.
-				Otherwise, you will not get the <DataLink status="REQUIESCAT"/> buff,
-				which provides 50% increased magic damage, instant cast times,
-				and allows you to cast <DataLink action="CONFITEOR"/>.
-			</Trans>,
-			tiers: SEVERITIES.MISSED_BUFF_REQUIESCAT,
-			value: missedRequiescatBuffs,
-		})
 	}
 
 	output() {
@@ -109,16 +93,13 @@ export class Requiescat extends BuffWindow {
 
 	override buffStatus = this.data.statuses.REQUIESCAT
 
-	private requiescatUsages = {
-		casts: 0,
-		buffs: 0,
-	}
+	private requiescatUsages: 0
 
 	override initialise() {
 		super.initialise()
-
+		
 		this.addEvaluator(new RequiescatGcdsEvaluator({
-			expectedGcdCount: 3,
+			expectedGcdCount: 4,
 			allowedGcds: [
 				this.data.actions.HOLY_SPIRIT.id,
 				this.data.actions.HOLY_CIRCLE.id,
@@ -127,7 +108,7 @@ export class Requiescat extends BuffWindow {
 			globalCooldown: this.globalCooldown,
 			suggestionIcon: this.data.actions.HOLY_SPIRIT.icon,
 			suggestionContent: <Trans id="pld.requiescat.suggestions.wrong-gcd.content">
-				GCDs used during <DataLink action="REQUIESCAT" /> should consist of 3-4 uses of <DataLink action="HOLY_SPIRIT" /> (or
+				GCDs used during <DataLink action="REQUIESCAT" /> should consist of 4 uses of <DataLink action="HOLY_SPIRIT" /> (or
 				multi-hit <DataLink action="HOLY_CIRCLE" />) and 1 use of <DataLink action="CONFITEOR" /> for optimal damage.
 			</Trans>,
 			suggestionWindowName: <DataLink action="REQUIESCAT" showIcon={false} />,
@@ -142,12 +123,11 @@ export class Requiescat extends BuffWindow {
 				Be sure to end each <DataLink status="REQUIESCAT" /> window with <DataLink action="CONFITEOR" /> for optimal damage.
 			</Trans>,
 			suggestionWindowName: <DataLink action="REQUIESCAT" showIcon={false} />,
-			severityTiers: SEVERITIES.MISSED_BUFF_REQUIESCAT,
+			severityTiers: SEVERITIES.MISSED_CONFITEORS,
 			adjustCount: this.adjustExpectedConfiteorCount.bind(this),
 		}))
 
-		this.addEventHook({type: 'action', source: this.parser.actor.id, action: this.data.actions.REQUIESCAT.id}, () => this.requiescatUsages.casts++)
-		this.addEventHook({type: 'statusApply', target: this.parser.actor.id, status: this.data.statuses.REQUIESCAT.id}, () => this.requiescatUsages.buffs++)
+		this.addEventHook({type: 'action', source: this.parser.actor.id, action: this.data.actions.REQUIESCAT.id}, () => this.requiescatUsages++)
 
 		this.addEvaluator(new RequiescatUsageEvaluator(this.requiescatUsages, this.data.actions.REQUIESCAT.icon))
 	}
@@ -171,10 +151,7 @@ export class Requiescat extends BuffWindow {
 	override output() {
 		return <Fragment>
 			<Message>
-				<Trans id="pld.requiescat.table.note">Each of your <DataLink status="REQUIESCAT" /> windows should contain 4 spells at minimum to maintain the alignment of your rotation.
-				Most of the time, a window should consist of 4 casts of <DataLink action="HOLY_SPIRIT" /> or <DataLink action="HOLY_CIRCLE" /> and end with a cast of <DataLink action="CONFITEOR" />.
-				However, under some circumstances, it is useful to drop one <DataLink action="HOLY_SPIRIT"/> per minute in order to better align your rotation with buffs or mechanics.
-				If you don't have a specific plan to do this, you should aim for 4 casts of <DataLink action="HOLY_SPIRIT" /> per <DataLink status="REQUIESCAT" /> window.</Trans>
+				<Trans id="pld.requiescat.table.note">Each of your <DataLink status="REQUIESCAT" /> windows should contain 5 spells, consisting of 4 casts of <DataLink action="HOLY_SPIRIT" /> or <DataLink action="HOLY_CIRCLE" /> and endING with a cast of <DataLink action="CONFITEOR" />.</Trans>
 			</Message>
 			<>{super.output()}</>
 		</Fragment>

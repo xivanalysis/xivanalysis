@@ -605,8 +605,6 @@
   "pld.goring.suggestions.goringblade.content": "避免在<0/>消失前过早地刷新持续时间。",
   "pld.goring.suggestions.goringblade.why": "",
   "pld.requiescat.suggestions.missed-confiteor.content": "",
-  "pld.requiescat.suggestions.nobuff.content": "<0/>只能在MP达到80%以上时使用，否则你不会获得<1/>buff。这个buff能够提高你50%的魔法伤害，使你的魔法瞬发，并让你能够使用<2/>。",
-  "pld.requiescat.suggestions.nobuff.why": "在蓝量低于80%时使用了{missedRequiescatBuffs, plural, one {#次安魂祈祷} other {#次安魂祈祷}}。",
   "pld.requiescat.suggestions.wrong-gcd.content": "",
   "pld.requiescat.suggestions.wrong-gcd.why": "",
   "pld.requiescat.table.note": "",
