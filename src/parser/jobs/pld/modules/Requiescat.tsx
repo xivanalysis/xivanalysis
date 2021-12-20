@@ -49,7 +49,7 @@ class RequiescatUsageEvaluator implements WindowEvaluator {
 				which provides 50% increased magic damage, instant cast times,
 				and allows you to cast <DataLink action="CONFITEOR"/>.
 			</Trans>,
-			tiers: SEVERITIES.MISSED_BUFF_REQUIESCAT,
+			tiers: SEVERITIES.MISSED_CONFITEORS,
 			value: missedRequiescatBuffs,
 		})
 	}
@@ -110,7 +110,7 @@ export class Requiescat extends BuffWindow {
 
 	override buffStatus = this.data.statuses.REQUIESCAT
 
-	private requiescatUsages: 0
+	private requiescatUsages = 0
 
 	override initialise() {
 		super.initialise()
