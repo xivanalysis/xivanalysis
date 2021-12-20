@@ -331,8 +331,6 @@
   "drk.darkside.title": "Ténèbres intérieures",
   "drk.darkside.uptime": "Uptime Ténèbres Intérieurs",
   "drk.darkside.uptime.why": "Ténèbres intérieures sont acquises en utilisant <0/> ou <1/> et vous octroie 10% de dégâts en plus. C'est donc une partie importante du DPS personnel d'un DRK.  Faites de votre mieux pour les garder, et récupérez les le plus vite possible.",
-  "drk.delirium.suggestions.badgcd.content": "GCDs utilisés durant <0/> doivent être limités à <1/> pour des dégâts optimaux (ou <2/> si trois ou plus de cibles sont présentes).",
-  "drk.delirium.suggestions.missedgcd.content": "Essayez d'utiliser 5 GCDs à chaque <0/> fenêtre. Si vous ne pouvez pas le faire avec un temps de fonctionnement complet et sans clipper, pensez à ajuster vos rotations pour plus de vitesse de lancement d’habilité.",
   "drk.delirium.title": "Utilisation de delirium de sang",
   "drk.resourceanalyzer.title": "Analyseur de Ressource",
   "drk.resourceanalyzer.wastedmp.content": "Votre PM vous permet d'utiliser <0/>, une attaque forte qui vous donne un buff persistant, ainsi qu'une forte atténuation de <1/>. Assurez-vous d'utiliser régulièrement votre PM afin de bénéficier de la régénération naturelle et du gain PM de vos compétences principales en combo.",
