@@ -35,6 +35,22 @@ class RequiescatUsageEvaluator implements WindowEvaluator {
 	}
 
 	suggest() {
+		const missedRequiescatBuffs = this.requiescatUsages.casts - this.requiescatUsages.buffs
+
+		return new TieredSuggestion({
+			icon: this.requiescatIcon,
+			why: <Trans id="pld.requiescat.suggestions.nobuff.why">
+				<Plural value={missedRequiescatBuffs} one="# usage" other="# usages"/> while under 80% MP.
+			</Trans>,
+			content: <Trans id="pld.requiescat.suggestions.nobuff.content">
+				<DataLink action="REQUIESCAT"/> should only be used when over 80% MP.
+				Otherwise, you will not get the <DataLink status="REQUIESCAT"/> buff,
+				which provides 50% increased magic damage, instant cast times,
+				and allows you to cast <DataLink action="CONFITEOR"/>.
+			</Trans>,
+			tiers: SEVERITIES.MISSED_BUFF_REQUIESCAT,
+			value: missedRequiescatBuffs,
+		})
 	}
 
 	output() {
@@ -97,7 +113,6 @@ export class Requiescat extends BuffWindow {
 
 	override initialise() {
 		super.initialise()
-		
 		this.addEvaluator(new RequiescatGcdsEvaluator({
 			expectedGcdCount: 4,
 			allowedGcds: [
