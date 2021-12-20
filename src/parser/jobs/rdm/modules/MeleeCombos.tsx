@@ -295,7 +295,7 @@ export class MeleeCombos extends Analyser {
 					}
 				</Table.Body>
 			</Table>
-			<Message>
+			{this._footnoteIndexes.length > 0 && <Message>
 				{
 					this._footnoteIndexes.map((key, index) => {
 						return (<Fragment key={key}>
@@ -304,7 +304,7 @@ export class MeleeCombos extends Analyser {
 						</Fragment>)
 					})
 				}
-			</Message>
+			</Message>}
 		</Fragment>)
 	}
 
