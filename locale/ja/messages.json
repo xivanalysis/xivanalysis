@@ -358,8 +358,6 @@
   "drk.darkside.title": "ダークサイド",
   "drk.darkside.uptime": "ダークサイドのアクティブ率",
   "drk.darkside.uptime.why": "暗黒は<0/>もしくは<1/>を使用した際に得られる、自身の与ダメージを10%増加させる強力なバフです。これは暗黒騎士の個人DPSに大きく関わってくる重要な要素です。\n暗黒を切らさないよう全力を尽くし、もしも切らしてしまった場合は可能な限り早く付け直しましょう。",
-  "drk.delirium.suggestions.badgcd.content": "<0/>中のGCDは、ダメージ最大化のために<1/>(もしくは敵が3体以上いれば<2/>) のみを使用しましょう。",
-  "drk.delirium.suggestions.missedgcd.content": "<0/>の効果時間中に5GCDを回すようにしてみましょう。食い込みなしでウェポンスキルを回しても5GCDを達成できない場合は、装備のスキルスピードを見直してみましょう。",
   "drk.delirium.title": "ブラッドデリリアムの使用状況",
   "drk.gauge.suggestions.loss.content": "インナービーストのゲージを溢れさせるのは避けましょう。リソースを無駄にしたせいで、戦闘を通してインナービースト使用に影響があるかもしれません。",
   "drk.gauge.suggestions.loss.why": "{0} のインナービーストゲージを上限を超えたため失いました。",
