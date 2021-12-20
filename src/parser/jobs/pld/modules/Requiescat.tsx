@@ -34,8 +34,10 @@ class RequiescatUsageEvaluator implements WindowEvaluator {
 		this.requiescatIcon = requiescatIcon
 	}
 
+
+	//As far as I can tell, this only exists to be overridden later, so I'm not too concerned about its contents.
 	suggest() {
-		const missedRequiescatBuffs = this.requiescatUsages.casts - this.requiescatUsages.buffs
+		const missedRequiescatBuffs = this.requiescatUsages
 
 		return new TieredSuggestion({
 			icon: this.requiescatIcon,
