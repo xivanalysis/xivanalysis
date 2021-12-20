@@ -53,5 +53,14 @@ export const GUNBREAKER = new Meta({
 			</>,
 			contributors: [CONTRIBUTORS.JONNIX],
 		},
+		{
+			date: new Date('2021-12-19'),
+			Changes: () => <>
+				<ul>
+					<li>Fix Lightning Shot breaking combo</li>
+				</ul>,
+			</>,
+			contributors: [CONTRIBUTORS.RYAN],
+		},
 	],
 })
