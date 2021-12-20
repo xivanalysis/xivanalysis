@@ -34,7 +34,7 @@ export class Tincture extends CoreTincture {
 		this.addEvaluator(new ExpectedActionsEvaluator({
 			expectedActions: [
 				{
-					action: this.data.actions.SPIRITS_WITHIN,
+					action: this.data.actions.EXPIACION,
 					expectedPerWindow: 1,
 				},
 				{
@@ -44,7 +44,7 @@ export class Tincture extends CoreTincture {
 			],
 			suggestionIcon,
 			suggestionContent: <Trans id="pld.tincture.suggestions.trackedactions.content">
-				One use of <ActionLink {...this.data.actions.SPIRITS_WITHIN}/> and at least one use of <ActionLink {...this.data.actions.CIRCLE_OF_SCORN}/> should occur during every <ActionLink {...this.data.actions.INFUSION_STR}/> window.
+				One use of <ActionLink {...this.data.actions.EXPIACION}/> and at least one use of <ActionLink {...this.data.actions.CIRCLE_OF_SCORN}/> should occur during every <ActionLink {...this.data.actions.INFUSION_STR}/> window.
 			</Trans>,
 			suggestionWindowName,
 			severityTiers: {
