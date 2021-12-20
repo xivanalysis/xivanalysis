@@ -612,6 +612,8 @@
   "pld.goring.suggestions.goringblade.content": "Vermeide es <0/> zu erneuern, wenn es noch über eine lange Restlaufzeit verfügt.",
   "pld.goring.suggestions.goringblade.why": "",
   "pld.requiescat.suggestions.missed-confiteor.content": "",
+  "pld.requiescat.suggestions.nobuff.content": "",
+  "pld.requiescat.suggestions.nobuff.why": "",
   "pld.requiescat.suggestions.wrong-gcd.content": "",
   "pld.requiescat.suggestions.wrong-gcd.why": "",
   "pld.requiescat.table.note": "",
