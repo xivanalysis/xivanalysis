@@ -523,7 +523,6 @@
   "rdm.gauge.title": "バランスゲージ",
   "rdm.gauge.title-mana-lost-to-manafication": "マナフィケーションの損失：",
   "rdm.gauge.white-mana-lost-to-manafication": "白い",
-  "rdm.meleecombos.recommendation.delay": "オーバーフローによるマナの損失が{0} 以下になりそうな場合は、ヴァルフレア/ホーリーの発動で生じるProcを確定させるために魔法剣コンボの開始を少し遅らせましょう。",
   "rdm.meleecombos.table.header.recommended": "提案",
   "rdm.meleecombos.table.header.rotation": "スキル回し",
   "rdm.meleecombos.table.header.starting-mana": "開始時のマナ",
