@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {ReactNode} from 'react'
 
 export interface Scrollable {
 	scrollIntoView(): void
@@ -14,11 +14,15 @@ export interface Context {
 const context = React.createContext<Context>(undefined as never)
 export const {Consumer} = context
 
+interface ProviderProps {
+	children?: ReactNode
+}
+
 interface ProviderState extends Context {
 	registry: ReadonlyMap<number, boolean>
 }
 
-export class SegmentPositionProvider extends React.PureComponent<Record<string, never>, ProviderState> {
+export class SegmentPositionProvider extends React.PureComponent<ProviderProps, ProviderState> {
 	override readonly state: Readonly<ProviderState> = {
 		active: null,
 		register: this.register.bind(this),
@@ -28,7 +32,7 @@ export class SegmentPositionProvider extends React.PureComponent<Record<string, 
 	}
 	private readonly refMap = new Map<number, { scrollIntoView(): void }>()
 
-	override componentDidUpdate(_prevProps: Readonly<Record<string, never>>, prevState: Readonly<ProviderState>) {
+	override componentDidUpdate(_prevProps: Readonly<ProviderProps>, prevState: Readonly<ProviderState>) {
 		const {registry} = this.state
 		if (registry !== prevState.registry) {
 			const toCheck = Array.from(registry.keys()).sort((a, b) => a - b)

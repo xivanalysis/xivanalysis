@@ -64,6 +64,27 @@ export const SCH = ensureStatuses({
 		duration: 45000,
 	},
 
+	PROTRACTION: {
+		id: 2710,
+		name: 'Protraction',
+		icon: 'https://xivapi.com/i/012000/012815.png',
+		duration: 10000,
+	},
+
+	DESPERATE_MEASURES: {
+		id: 2711,
+		name: 'Desperate Measures',
+		icon: 'https://xivapi.com/i/012000/012816.png',
+		duration: 20000,
+	},
+
+	EXPEDIENCE: {
+		id: 2712,
+		name: 'Expedience',
+		icon: 'https://xivapi.com/i/012000/012817.png',
+		duration: 20000,
+	},
+
 	// -----
 	// PET
 	// -----
