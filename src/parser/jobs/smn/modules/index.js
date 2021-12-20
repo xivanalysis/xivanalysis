@@ -1,11 +1,11 @@
 import {Interrupts} from 'parser/core/modules/Interrupts'
+import {PetTimeline} from 'parser/core/modules/PetTimeline'
 import {Tincture} from 'parser/core/modules/Tincture'
+import {Weaving} from 'parser/core/modules/Weaving'
 import {ActionTimeline} from './ActionTimeline'
 import GeneralCDDowntime from './GeneralCDDowntime'
 import {AoeChecker} from './MultiHitSkills'
-import {PetTimeline} from './PetTimeline'
 import {Physick} from './Physick'
-import {Weaving} from './Weaving'
 
 export default [
 	ActionTimeline,

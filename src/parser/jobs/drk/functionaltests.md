@@ -1,15 +1,27 @@
-Log for functional testing of DRK as of 5.0 is available at: https://www.fflogs.com/reports/pkGqAXfKBdC1gQMH/
+Please see below for DRK functional testing logs
 
 ##Cases tested
 
+- Test case #1: https://www.fflogs.com/reports/x6DLhGWjbYRkgw9d/
 ###Should generate warnings
-- [x] Derlirum window with too few blood skills (including a non-blood skill)
 - [x] Overcap MP
 - [x] Overcap Blood
 - [x] Let Darkside fall off
+- [x] Fewer than 5 GCDs in a Blood Weapon window
 - [x] Break combo
 - [x] Use uncomboed skills
 - [x] Use Flood of Shadow on a single target
+- [x] Use Quietus on a single target
 
-### Should not generate warnings
-- [x] Combo that runs across a delirium window
+###Should not generate warnings
+- [x] Using Bloodspiller, Quietus, or Unmend inside a combo (does not break combo - see actions at 2:50 - 3:05)
+
+- Test case #2: https://www.fflogs.com/reports/m7qGfCbHAT9hdaFc/
+###Should generate warnings
+- [x] Used Salted Earth without using Salt and Darkness
+- [x] Used Salt and Darkness with no enemies in the Salted Earth area of effect
+- [x] Used Delirium and let one or more stacks expire
+
+- Test case #3: https://www.fflogs.com/reports/6dtpNqAC3wD492kg/#fight=last
+###Should generate warnings
+- [x] Used Salt and Darkness with only invulnerable enemies in the Salted Earth area of effect

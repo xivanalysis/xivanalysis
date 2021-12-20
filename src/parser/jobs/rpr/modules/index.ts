@@ -1,3 +1,5 @@
+import {DeathsDesign} from './DeathsDesign'
+
 export default [
-	// TODO: Put your modules here
+	DeathsDesign,
 ]

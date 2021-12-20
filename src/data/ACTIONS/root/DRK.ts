@@ -70,7 +70,7 @@ export const DRK = ensureActions({
 		id: 7390,
 		name: 'Delirium',
 		icon: 'https://xivapi.com/i/003000/003078.png',
-		cooldown: 90000,
+		cooldown: 60000,
 		statusesApplied: ['DELIRIUM'],
 	},
 	// Damage
@@ -86,6 +86,7 @@ export const DRK = ensureActions({
 		name: 'Carve And Spit',
 		icon: 'https://xivapi.com/i/003000/003058.png',
 		cooldown: 60000,
+		cooldownGroup: 14,
 	},
 	SALTED_EARTH: {
 		id: 3639,
@@ -99,6 +100,7 @@ export const DRK = ensureActions({
 		name: 'Abyssal Drain',
 		icon: 'https://xivapi.com/i/003000/003064.png',
 		cooldown: 60000,
+		cooldownGroup: 14,
 	},
 	LIVING_SHADOW: {
 		id: 16472,
@@ -119,7 +121,7 @@ export const DRK = ensureActions({
 		cooldown: 2000,
 	},
 	SALT_AND_DARKNESS: {
-		id: 25756,
+		id: 25755,
 		name: 'Salt and Darkness',
 		icon: 'https://xivapi.com/i/003000/003090.png',
 		cooldown: 20000,
@@ -195,7 +197,7 @@ export const DRK = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003062.png',
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
-		breaksCombo: true,
+		breaksCombo: false,
 	},
 	// Blood Consumers
 	BLOODSPILLER: {
@@ -249,5 +251,10 @@ export const DRK = ensureActions({
 		id: 17906,
 		name: 'Quietus',
 		icon: 'https://xivapi.com/i/003000/003079.png',
+	},
+	ESTEEM_SHADOWBRINGER: {
+		id: 25881,
+		name: 'Shadowbringer',
+		icon: 'https://xivapi.com/i/003000/003091.png',
 	},
 })
