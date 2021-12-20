@@ -23,7 +23,7 @@ const SEVERITIES = {
 }
 
 const EXPECTED_USES = {
-	BURST_STRIKE: 2, //This is assuming that you enter NM with 2 carts: 1st cart: Gnashing, 2nd cart: Burst, 3rd cart gained from combo mid NM: Burst
+	DOUBLE_DOWN: 1, //This is assuming that you enter NM with 3 carts: 1 cart: Gnashing, 2 carts: Double Down
 	GNASHING_FANG: 1,
 	SONIC_BREAK: 1,
 	ROUGH_DIVIDE: 1,
@@ -91,8 +91,8 @@ export class NoMercy extends BuffWindow {
 				},
 
 				{
-					action: this.data.actions.BURST_STRIKE,
-					expectedPerWindow: EXPECTED_USES.BURST_STRIKE,
+					action: this.data.actions.DOUBLE_DOWN,
+					expectedPerWindow: EXPECTED_USES.DOUBLE_DOWN,
 				},
 
 				{
