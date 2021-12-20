@@ -467,7 +467,6 @@
   "rdm.dualcast.title": "Doppelzauber",
   "rdm.gauge.black-mana-lost-to-manafication": "Schwarz",
   "rdm.gauge.suggestions.mana-invuln-content": "Stelle sicher, dass du kein Ziel angreifst, dem du keinen Schaden zufügen kannst. Zauber, die keinen Schaden zufügen oder nicht treffen, generieren kein Mana, was dich eine oder mehrere Magische Kombo(s) kosten kann.",
-  "rdm.gauge.suggestions.wastedprocs.why": "{0, plural, one {# Proc ist durch Starten der Nahkampf-Kombo verloren gegangen.} other {# Procs sind durch Starten der Nahkampf-Kombo verloren gegangen.}}",
   "rdm.gauge.title-mana-lost-to-manafication": "Verlust bei Manafizierung:",
   "rdm.gauge.white-mana-lost-to-manafication": "Weiß",
   "rdm.gauge.white-mana-lost-to-manafication-statistics": "Über den gesamten Kampf verteilt, ist es nicht schlimm, durch das Benutzen von Manafizierung überschüssiges Mana zu generieren. Du solltest jedoch versuchen, diese Zahl möglichst gering zu halten.",
