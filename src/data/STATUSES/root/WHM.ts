@@ -6,8 +6,9 @@ export const WHM = ensureStatuses({
 		name: 'Liturgy of the Bell',
 		icon: 'https://xivapi.com/i/018000/018373.png',
 		duration: 15000,
+		stacksApplied: 5,
 	},
-	
+
 	AQUAVEIL: {
 		id: 2708,
 		name: 'Aquaveil',

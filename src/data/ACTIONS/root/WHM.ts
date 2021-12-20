@@ -26,7 +26,7 @@ export const WHM = ensureActions({
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 2500,
 		mpCost: 400,
-    	},
+	},
 
 	GLARE_III: {
 		id: 25859,
@@ -171,7 +171,7 @@ export const WHM = ensureActions({
 		icon: 'https://xivapi.com/i/002000/002638.png',
 		cooldown: 30000,
 		statusesApplied: ['DIVINE_BENISON'],
-        charges: 2,
+		charges: 2,
 	},
 
 	THIN_AIR: {
@@ -180,7 +180,7 @@ export const WHM = ensureActions({
 		icon: 'https://xivapi.com/i/002000/002636.png',
 		cooldown: 120000,
 		statusesApplied: ['THIN_AIR'],
-        charges: 2,
+		charges: 2,
 	},
 
 	AERO_III: {
