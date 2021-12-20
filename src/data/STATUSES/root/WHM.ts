@@ -1,6 +1,20 @@
 import {ensureStatuses} from '../type'
 
 export const WHM = ensureStatuses({
+	LITURGY_OF_THE_BELL: {
+		id: 2709,
+		name: 'Liturgy of the Bell',
+		icon: 'https://xivapi.com/i/018000/018373.png',
+		duration: 15000,
+	},
+	
+	AQUAVEIL: {
+		id: 2708,
+		name: 'Aquaveil',
+		icon: 'https://xivapi.com/i/012000/012638.png',
+		duration: 8000,
+	},
+
 	DIA: {
 		id: 1871,
 		name: 'Dia',
