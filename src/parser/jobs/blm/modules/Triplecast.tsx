@@ -42,7 +42,7 @@ export class Triplecast extends Analyser {
 				5: SEVERITY.MAJOR,
 			},
 			value: this.overwrittenTriples,
-			why: <Trans id="blm.triplecast.suggestions.overwrote-triplecasts.content">
+			why: <Trans id="blm.triplecast.suggestions.overwrote-triplecasts.why">
 				You overwrote <DataLink showIcon={false} status="TRIPLECAST" /> <Plural value={this.overwrittenTriples} one="# time" other="# times" />.
 			</Trans>,
 		}))

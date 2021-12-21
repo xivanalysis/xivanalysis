@@ -175,7 +175,7 @@ export class Sharpcast extends Analyser {
 				5: SEVERITY.MAJOR,
 			},
 			value: this.overwrittenSharpcasts,
-			why: <Trans id="blm.sharpcast.suggestions.overwrote-sharpcasts.content">
+			why: <Trans id="blm.sharpcast.suggestions.overwrote-sharpcasts.why">
 				You overwrote <DataLink showIcon={false} status="SHARPCAST" /> <Plural value={this.overwrittenSharpcasts} one="# time" other="# times" />.
 			</Trans>,
 		}))
