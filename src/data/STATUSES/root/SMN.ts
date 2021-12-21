@@ -2,50 +2,24 @@ import {ensureStatuses} from '../type'
 
 // TODO: Fill in the rest of this
 export const SMN = ensureStatuses({
-	GALE_ENFORCER: {
-		id: 1869,
-		name: 'Gale Enforcer',
-		icon: 'https://xivapi.com/i/012000/012721.png',
-	},
-
-	DREADWYRM_TRANCE: {
-		id: 808,
-		name: 'Dreadwyrm Trance',
-		icon: 'https://xivapi.com/i/012000/012680.png',
-		duration: 15000,
+	RADIANT_AEGIS: {
+		id: 2702,
+		name: 'Radiant Aegis',
+		icon: 'https://xivapi.com/i/012000/012691.png',
+		duration: 30000,
 	},
 
 	FURTHER_RUIN: {
 		id: 1212,
 		name: 'Further Ruin',
 		icon: 'https://xivapi.com/i/012000/012685.png',
+		duration: 60000,
 	},
 
-	DEVOTION: {
-		id: 1213,
-		name: 'Devotion',
-		icon: 'https://xivapi.com/i/012000/012681.png',
-		duration: 15000,
-	},
-
-	BIO_III: {
-		id: 1214,
-		name: 'Bio III',
-		icon: 'https://xivapi.com/i/012000/012682.png',
-		duration: 30000,
-	},
-
-	MIASMA_III: {
-		id: 1215,
-		name: 'Miasma III',
-		icon: 'https://xivapi.com/i/012000/012683.png',
-		duration: 30000,
-	},
-
-	RUINATION: {
-		id: 1291,
-		name: 'Ruination',
-		icon: 'https://xivapi.com/i/012000/012684.png',
+	SEARING_LIGHT: {
+		id: 2703,
+		name: 'Searing Light',
+		icon: 'https://xivapi.com/i/012000/012692.png',
 		duration: 30000,
 	},
 
@@ -54,5 +28,26 @@ export const SMN = ensureStatuses({
 		name: 'Everlasting Flight',
 		icon: 'https://xivapi.com/i/012000/012732.png',
 		duration: 21000,
+	},
+
+	REKINDLE: {
+		id: 2704,
+		name: 'Rekindle',
+		icon: 'https://xivapi.com/i/012000/012693.png',
+		duration: 30000,
+	},
+
+	UNDYING_FLAME: {
+		id: 2705,
+		name: 'Undying Flame',
+		icon: 'https://xivapi.com/i/012000/012694.png',
+		duration: 15000,
+	},
+
+	SLIPSTREAM: {
+		id: 2706,
+		name: 'Slipstream',
+		icon: 'https://xivapi.com/i/012000/012695.png',
+		duration: 15000,
 	},
 })

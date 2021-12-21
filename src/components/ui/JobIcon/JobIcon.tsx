@@ -2,25 +2,18 @@ import {Job} from 'data/JOBS'
 import React from 'react'
 import styles from './JobIcon.module.css'
 
-interface Props {
+export interface JobIconProps {
 	job: Job,
 	scale?: number,
 }
 
-export default class JobIcon extends React.PureComponent<Props> {
-	override render() {
-		const {
-			job: {icon},
-			scale = 2,
-		} = this.props
-
-		return (
-			<span
-				className={styles.icon}
-				style={{fontSize: `${scale}em`}}
-			>
-				{icon}
-			</span>
-		)
-	}
+export function JobIcon({job: {icon}, scale=2}: JobIconProps) {
+	return (
+		<span
+			className={styles.icon}
+			style={{fontSize: `${scale}em`}}
+		>
+			{icon}
+		</span>
+	)
 }

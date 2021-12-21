@@ -77,6 +77,7 @@ export const RPR = ensureActions({
 		speedAttribute: Attribute.SKILL_SPEED,
 		combo: {
 			from: 24376,
+			end: true,
 		},
 	},
 
@@ -152,7 +153,6 @@ export const RPR = ensureActions({
 		name: 'Communio',
 		icon: 'https://xivapi.com/i/003000/003626.png',
 		onGcd: true,
-		cooldown: 1500,
 		castTime: 1300,
 		speedAttribute: Attribute.SPELL_SPEED,
 	},

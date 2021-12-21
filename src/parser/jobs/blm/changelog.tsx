@@ -32,4 +32,9 @@ export const changelog = [
 		Changes: () => <>Handle Paradox being instant-cast in Umbral Ice.</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],
 	},
+	{
+		date: new Date('2021-12-15'),
+		Changes: () => <>Miscellaneous bug fixes, and marking supported for Endwalker.</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
 ]

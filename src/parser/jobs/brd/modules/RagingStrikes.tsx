@@ -63,7 +63,7 @@ class BarrageEvaluator extends ExpectedActionsEvaluator {
 	}
 }
 
-export default class RagingStrikes extends BuffWindow {
+export class RagingStrikes extends BuffWindow {
 	static override handle = 'rs'
 	static override title = t('brd.rs.title')`Raging Strikes`
 	static override displayOrder = DISPLAY_ORDER.RAGING_STRIKES

@@ -5,6 +5,17 @@ export const WAR = ensureActions({
 	// -----
 	// Player GCDs
 	// -----
+
+	TOMAHAWK: {
+		id: 46,
+		name: 'Tomahawk',
+		icon: 'https://xivapi.com/i/000000/000261.png',
+		onGcd: true,
+		speedAttribute: Attribute.SKILL_SPEED,
+		potency: 100,
+		breaksCombo: false,
+	},
+
 	HEAVY_SWING: {
 		id: 31,
 		name: 'Heavy Swing',
@@ -17,38 +28,16 @@ export const WAR = ensureActions({
 		},
 	},
 
-	OVERPOWER: {
-		id: 41,
-		name: 'Overpower',
-		icon: 'https://xivapi.com/i/000000/000254.png',
-		onGcd: true,
-		speedAttribute: Attribute.SKILL_SPEED,
-		potency: 130,
-		combo: {
-			start: true,
-		},
-	},
-
-	TOMAHAWK: {
-		id: 46,
-		name: 'Tomahawk',
-		icon: 'https://xivapi.com/i/000000/000261.png',
-		onGcd: true,
-		speedAttribute: Attribute.SKILL_SPEED,
-		potency: 140,
-		breaksCombo: true,
-	},
-
 	MAIM: {
 		id: 37,
 		name: 'Maim',
 		icon: 'https://xivapi.com/i/000000/000255.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		potency: 100,
+		potency: 130,
 		combo: {
 			from: 31,
-			potency: 320,
+			potency: 280,
 		},
 	},
 
@@ -58,10 +47,10 @@ export const WAR = ensureActions({
 		icon: 'https://xivapi.com/i/000000/000258.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		potency: 100,
+		potency: 120,
 		combo: {
 			from: 37,
-			potency: 420,
+			potency: 400,
 			end: true,
 		},
 	},
@@ -72,45 +61,11 @@ export const WAR = ensureActions({
 		icon: 'https://xivapi.com/i/000000/000264.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		potency: 100,
+		statusesApplied: ['SURGING_TEMPEST'],
+		potency: 120,
 		combo: {
 			from: 37,
-			potency: 420,
-			end: true,
-		},
-		statusesApplied: ['STORMS_EYE'],
-	},
-
-	STEEL_CYCLONE: {
-		id: 51,
-		name: 'Steel Cyclone',
-		icon: 'https://xivapi.com/i/002000/002552.png',
-		onGcd: true,
-		speedAttribute: Attribute.SKILL_SPEED,
-		potency: 220,
-		breaksCombo: false,
-	},
-
-	DECIMATE: {
-		id: 3550,
-		name: 'Decimate',
-		icon: 'https://xivapi.com/i/002000/002558.png',
-		onGcd: true,
-		speedAttribute: Attribute.SKILL_SPEED,
-		potency: 250,
-		breaksCombo: false,
-	},
-
-	MYTHRIL_TEMPEST: {
-		id: 16462,
-		name: 'Mythril Tempest',
-		icon: 'https://xivapi.com/i/002000/002565.png',
-		onGcd: true,
-		speedAttribute: Attribute.SKILL_SPEED,
-		potency: 100,
-		combo: {
-			from: 41,
-			potency: 200,
+			potency: 400,
 			end: true,
 		},
 	},
@@ -121,17 +76,7 @@ export const WAR = ensureActions({
 		icon: 'https://xivapi.com/i/002000/002557.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		potency: 590,
-		breaksCombo: false,
-	},
-
-	INNER_BEAST: {
-		id: 49,
-		name: 'Inner Beast',
-		icon: 'https://xivapi.com/i/002000/002553.png',
-		onGcd: true,
-		speedAttribute: Attribute.SKILL_SPEED,
-		potency: 350,
+		potency: 460,
 		breaksCombo: false,
 	},
 
@@ -141,7 +86,44 @@ export const WAR = ensureActions({
 		icon: 'https://xivapi.com/i/002000/002568.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		potency: 920,
+		potency: 650,
+		breaksCombo: false,
+	},
+
+	OVERPOWER: {
+		id: 41,
+		name: 'Overpower',
+		icon: 'https://xivapi.com/i/000000/000254.png',
+		onGcd: true,
+		speedAttribute: Attribute.SKILL_SPEED,
+		potency: 110,
+		combo: {
+			start: true,
+		},
+	},
+
+	MYTHRIL_TEMPEST: {
+		id: 16462,
+		name: 'Mythril Tempest',
+		icon: 'https://xivapi.com/i/002000/002565.png',
+		onGcd: true,
+		speedAttribute: Attribute.SKILL_SPEED,
+		statusesApplied: ['SURGING_TEMPEST'],
+		potency: 150,
+		combo: {
+			from: 41,
+			potency: 150,
+			end: true,
+		},
+	},
+
+	DECIMATE: {
+		id: 3550,
+		name: 'Decimate',
+		icon: 'https://xivapi.com/i/002000/002558.png',
+		onGcd: true,
+		speedAttribute: Attribute.SKILL_SPEED,
+		potency: 200,
 		breaksCombo: false,
 	},
 
@@ -151,20 +133,36 @@ export const WAR = ensureActions({
 		icon: 'https://xivapi.com/i/002000/002566.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		potency: 400,
+		potency: 320,
+		breaksCombo: false,
+	},
+
+	PRIMAL_REND: {
+		id: 25753,
+		name: 'Primal Rend',
+		icon: 'https://xivapi.com/i/002000/002571.png',
+		onGcd: true,
+		speedAttribute: Attribute.SKILL_SPEED,
+		potency: 700,
 		breaksCombo: false,
 	},
 
 	// -----
 	// Player OGCDs
 	// -----
+	EQUILIBRIUM: {
+		id: 3552,
+		name: 'Equilibrium',
+		icon: 'https://xivapi.com/i/002000/002560.png',
+		cooldown: 60000,
+		statusesApplied: ['EQUILIBRIUM'],
+	},
 
 	THRILL_OF_BATTLE: {
 		id: 40,
 		name: 'Thrill of Battle',
 		icon: 'https://xivapi.com/i/000000/000263.png',
 		cooldown: 90000,
-		onGcd: false,
 		statusesApplied: ['THRILL_OF_BATTLE'],
 	},
 
@@ -173,7 +171,6 @@ export const WAR = ensureActions({
 		name: 'Holmgang',
 		icon: 'https://xivapi.com/i/000000/000266.png',
 		cooldown: 240000,
-		onGcd: false,
 		statusesApplied: ['HOLMGANG'],
 	},
 
@@ -182,80 +179,16 @@ export const WAR = ensureActions({
 		name: 'Vengeance',
 		icon: 'https://xivapi.com/i/000000/000267.png',
 		cooldown: 120000,
-		onGcd: false,
 		statusesApplied: ['VENGEANCE'],
 	},
 
-	RAW_INTUITION: {
-		id: 3551,
-		name: 'Raw Intuition',
-		icon: 'https://xivapi.com/i/002000/002559.png',
+	BLOODWHETTING: {
+		id: 25751,
+		name: 'Bloodwhetting',
+		icon: 'https://xivapi.com/i/002000/002569.png',
 		cooldown: 25000,
-		onGcd: false,
-		statusesApplied: ['RAW_INTUITION'],
-	},
-
-	SHAKE_IT_OFF: {
-		id: 7388,
-		name: 'Shake It Off',
-		icon: 'https://xivapi.com/i/002000/002563.png',
-		cooldown: 90000,
-		onGcd: false,
-		statusesApplied: ['SHAKE_IT_OFF'],
-	},
-
-	ONSLAUGHT: {
-		id: 7386,
-		name: 'Onslaught',
-		icon: 'https://xivapi.com/i/002000/002561.png',
-		cooldown: 10000,
-		potency: 100,
-		onGcd: false,
-	},
-
-	UPHEAVAL: {
-		id: 7387,
-		name: 'Upheaval',
-		icon: 'https://xivapi.com/i/002000/002562.png',
-		cooldown: 30000,
-		potency: 450,
-		onGcd: false,
-	},
-
-	EQUILIBRIUM: {
-		id: 3552,
-		name: 'Equilibrium',
-		icon: 'https://xivapi.com/i/002000/002560.png',
-		cooldown: 60000,
-		onGcd: false,
-	},
-
-	DEFIANCE: {
-		id: 48,
-		name: 'Defiance',
-		icon: 'https://xivapi.com/i/002000/002551.png',
-		cooldown: 10000,
-		cooldownGroup: 1,
-		onGcd: false,
-	},
-
-	INNER_RELEASE: {
-		id: 7389,
-		name: 'Inner Release',
-		icon: 'https://xivapi.com/i/002000/002564.png',
-		cooldown: 90000,
-		onGcd: false,
-		statusesApplied: ['INNER_RELEASE'],
-	},
-
-	INFURIATE: {
-		id: 52,
-		name: 'Infuriate',
-		icon: 'https://xivapi.com/i/002000/002555.png',
-		cooldown: 60000,
-		onGcd: false,
-		charges: 2,
-		statusesApplied: ['NASCENT_CHAOS'],
+		cooldownGroup: 4,
+		statusesApplied: ['BLOODWHETTING', 'STEM_THE_FLOW', 'STEM_THE_TIDE'],
 	},
 
 	NASCENT_FLASH: {
@@ -263,7 +196,68 @@ export const WAR = ensureActions({
 		name: 'Nascent Flash',
 		icon: 'https://xivapi.com/i/002000/002567.png',
 		cooldown: 25000,
-		cooldownGroup: 9,
-		statusesApplied: ['NASCENT_FLASH', 'NASCENT_GLINT'],
+		cooldownGroup: 4,
+		statusesApplied: ['NASCENT_FLASH', 'NASCENT_GLINT', 'STEM_THE_FLOW', 'STEM_THE_TIDE'],
+	},
+
+	SHAKE_IT_OFF: {
+		id: 7388,
+		name: 'Shake It Off',
+		icon: 'https://xivapi.com/i/002000/002563.png',
+		cooldown: 90000,
+		statusesApplied: ['SHAKE_IT_OFF'],
+	},
+
+	ONSLAUGHT: {
+		id: 7386,
+		name: 'Onslaught',
+		icon: 'https://xivapi.com/i/002000/002561.png',
+		cooldown: 30000,
+		charges: 3,
+		potency: 150,
+	},
+
+	UPHEAVAL: {
+		id: 7387,
+		name: 'Upheaval',
+		icon: 'https://xivapi.com/i/002000/002562.png',
+		cooldown: 30000,
+		cooldownGroup: 6,
+		potency: 350,
+	},
+
+	OROGENY: {
+		id: 25752,
+		name: 'Orogeny',
+		icon: 'https://xivapi.com/i/002000/002570.png',
+		cooldown: 30000,
+		cooldownGroup: 6,
+		potency: 150,
+	},
+
+	INNER_RELEASE: {
+		id: 7389,
+		name: 'Inner Release',
+		icon: 'https://xivapi.com/i/002000/002564.png',
+		cooldown: 60000,
+		statusesApplied: ['INNER_RELEASE', 'PRIMAL_REND_READY'],
+	},
+
+	INFURIATE: {
+		id: 52,
+		name: 'Infuriate',
+		icon: 'https://xivapi.com/i/002000/002555.png',
+		cooldown: 60000,
+		charges: 2,
+		statusesApplied: ['NASCENT_CHAOS'],
+	},
+
+	DEFIANCE: {
+		id: 48,
+		name: 'Defiance',
+		icon: 'https://xivapi.com/i/002000/002551.png',
+		cooldown: 10000,
+		cooldownGroup: 3,
+		statusesApplied: ['DEFIANCE'],
 	},
 })

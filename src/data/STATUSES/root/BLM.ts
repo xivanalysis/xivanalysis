@@ -16,7 +16,7 @@ export const BLM = ensureStatuses({
 		id: 163,
 		name: 'Thunder III',
 		icon: 'https://xivapi.com/i/010000/010459.png',
-		duration: 24000,
+		duration: 30000,
 	},
 	THUNDER_IV: {
 		id: 1210,
@@ -57,7 +57,7 @@ export const BLM = ensureStatuses({
 		id: 867,
 		name: 'Sharpcast',
 		icon: 'https://xivapi.com/i/012000/012655.png',
-		duration: 15000,
+		duration: 30000,
 	},
 	MANAWARD: {
 		id: 168,

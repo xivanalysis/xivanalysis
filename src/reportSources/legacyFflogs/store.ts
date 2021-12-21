@@ -37,6 +37,13 @@ export class LegacyFflogsReportStore extends ReportStore {
 		legacyReportStore.refreshReport()
 	}
 
+	override requestActors(_pullId: Pull['id'], options?: FetchOptions) {
+		// Same story as requestPulls
+		if (options?.bypassCache !== true) { return }
+
+		legacyReportStore.refreshReport()
+	}
+
 	// todo: clean up
 	override async fetchEvents(pullId: Pull['id']) {
 		if (this.report == null) {

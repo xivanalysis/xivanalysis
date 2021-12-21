@@ -6,12 +6,12 @@ import {DoTs as CoreDoTs} from 'parser/core/modules/DoTs'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
 
-// 5.x: Bard clips 10s every 80s rotationally
-// 6.x: bard clips ~15s every 120s rotationally
+// Bard clips ~15s every 120s rotationally
 const SEVERITIES = {
 	CLIPPING: {
-		10000: SEVERITY.MEDIUM,
-		15000: SEVERITY.MAJOR,
+		10000: SEVERITY.MINOR,
+		15000: SEVERITY.MEDIUM,
+		20000: SEVERITY.MAJOR,
 	},
 	UPTIME: {
 		85: TARGET.WARN,

@@ -57,6 +57,13 @@ export const RPR = ensureStatuses({
 		duration: 60000,
 	},
 
+	ARCANE_CIRCLE: {
+		id: 2599,
+		name: 'Arcane Circle',
+		icon: 'https://xivapi.com/i/012000/012936.png',
+		duration: 20000,
+	},
+
 	CIRCLE_OF_SACRIFICE: {
 		id: 2600,
 		name: 'Circle of Sacrifice',

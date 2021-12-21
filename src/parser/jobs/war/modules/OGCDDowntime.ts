@@ -19,15 +19,26 @@ export class OGCDDowntime extends CooldownDowntime {
 
 		{
 			cooldowns: [this.data.actions.INNER_RELEASE],
-			// IR can sit for up to 4 GCDs, enough to reapply Eye and avoid overcapping gauge
-			allowedAverageDowntime: 10000,
-			// IR can be delayed in the double IC opener, as late as just before the 6th GCD
+			// IR can sit for up to 2 GCDs, enough to be ready to reapply Eye with the safety of IR extending it
+			allowedAverageDowntime: 2500,
+			// IR can be delayed in the double IC opener, as late as just before the 7th GCD
 			firstUseOffset: 15000,
 		},
 
 		{
-			cooldowns: [this.data.actions.UPHEAVAL],
-			// With weaving a defence CD, 2nd weavable CD in delayed IR or 3rd in normal (ie before 9th GCD)
+			cooldowns: [
+				this.data.actions.UPHEAVAL,
+				this.data.actions.OROGENY,
+			],
+			// With weaving a defence CD, and getting the CD rolling before IR starts (where you spam Onslaught)
+			firstUseOffset: 12500,
+		},
+
+		{
+			cooldowns: [
+				this.data.actions.ONSLAUGHT,
+			],
+			// Weaving after IR is up, after the first FC or PR
 			firstUseOffset: 18500,
 		},
 	]

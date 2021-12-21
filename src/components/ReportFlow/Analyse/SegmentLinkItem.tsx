@@ -10,7 +10,7 @@ interface Props {
 	result: Result
 }
 
-export default function SegmentLinkItem({result, index}: Props) {
+export function SegmentLinkItem({result, index}: Props) {
 	return <Consumer>{({active, scrollToId}) => (
 		<div
 			className={classnames(

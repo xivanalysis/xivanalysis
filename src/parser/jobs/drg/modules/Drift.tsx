@@ -123,7 +123,7 @@ export default class Drift extends Analyser {
 			<Table.Body>
 				{casts.map((event, index) => {
 					totalDrift += (index > 0) ? event.drift : 0
-					return <Table.Row key={event.end} warning={event.drift > DRIFT_BUFFER}>
+					return <Table.Row key={event.end} warning={index > 0 && event.drift > DRIFT_BUFFER}>
 						<Table.Cell>{this.createTimelineButton(event.end)}</Table.Cell>
 						<Table.Cell>{event.drift !== null && index > 0 ? this.parser.formatDuration(event.drift) : '-'}</Table.Cell>
 						<Table.Cell>{totalDrift ? this.parser.formatDuration(totalDrift) : '-'}</Table.Cell>

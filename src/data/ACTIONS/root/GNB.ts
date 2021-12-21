@@ -51,7 +51,7 @@ export const GNB = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003407.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		breaksCombo: true,
+		breaksCombo: false,
 	},
 	GNASHING_FANG: {
 		id: 16146,
