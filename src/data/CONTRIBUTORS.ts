@@ -103,7 +103,7 @@ const CONTRIBUTORS = ensureRecord<Contributor>()({
 		jobs: [
 			JOBS.PALADIN,
 		],
-	}
+	},
 })
 
 export default CONTRIBUTORS
