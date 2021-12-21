@@ -37,4 +37,9 @@ export const changelog = [
 		Changes: () => <>Miscellaneous bug fixes, and marking supported for Endwalker.</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],
 	},
+	{
+		date: new Date('2021-12-21'),
+		Changes: () => <>Suggestions not to overwrite Sharpcast or Triplecast while the statuses are still active.</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
 ]
