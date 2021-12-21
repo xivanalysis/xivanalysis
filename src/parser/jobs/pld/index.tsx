@@ -1,9 +1,9 @@
 import {Trans} from '@lingui/macro'
 import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
+import CONTRIBUTORS, {ROLES} from 'data/CONTRIBUTORS'
 import {Meta} from 'parser/core/Meta'
 import React from 'react'
-import CONTRIBUTORS, {ROLES} from 'data/CONTRIBUTORS'
 import {changelog} from './changelog'
 
 export const PALADIN = new Meta({
@@ -23,7 +23,7 @@ export const PALADIN = new Meta({
 	// },
 	contributors: [
 		// {user: CONTRIBUTORS.YOU, role: ROLES.DEVELOPER},
-			{user: CONTRIBUTORS.ARIA, role: ROLES.MAINTAINER},
+		{user: CONTRIBUTORS.ARIA, role: ROLES.MAINTAINER},
 	],
 
 	changelog,
