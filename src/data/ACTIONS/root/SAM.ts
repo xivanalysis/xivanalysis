@@ -1,5 +1,4 @@
 import {Attribute} from 'event'
-import {ArcanaTracking} from 'parser/jobs/ast/modules/ArcanaTracking'
 import {ensureActions} from '../type'
 
 // Samurai Actions
@@ -183,10 +182,26 @@ export const SAM = ensureActions({
 		},
 	},
 
+	FUKO: {
+		id: 25780,
+		name: 'Fuko',
+		icon: 'https://xivapi.com/i/003000/003189_hr1.png',
+		onGcd: true,
+		speedAttribute: Attribute.SKILL_SPEED,
+	},
+
 	OGI_NAMIKIRI: {
 		id: 25781,
 		name: 'Ogi Namikiri',
 		icon: 'https://xivapi.com/i/003000/003187_hr1.png',
+		onGcd: true,
+		speedAttribute: Attribute.SKILL_SPEED,
+	},
+
+	KAESHI_NAMIKIRI: {
+		id: 25782,
+		name: 'Kaeshi: Namikiri',
+		icon: 'https://xivapi.com/i/003000/003188_hr1.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 	},
@@ -339,6 +354,13 @@ export const SAM = ensureActions({
 		id: 16487,
 		name: 'Shoha',
 		icon: 'https://xivapi.com/i/003000/003184.png',
+		cooldown: 15000,
+	},
+
+	SHOHA_II: { //WHY SE WHY
+		id: 25779,
+		name: 'Shoha II',
+		icon: 'https://xivapi.com/i/003000/003185_hr1.png',
 		cooldown: 15000,
 	},
 })

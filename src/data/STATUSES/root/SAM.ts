@@ -64,4 +64,11 @@ export const SAM = ensureStatuses({
 		icon: 'https://xivapi.com/i/013000/013310.png',
 		duration: 15000,
 	},
+
+	OGI_NAMIKIRI_READY: {
+		id: 2959,
+		name: 'Ogi Namikiri Ready',
+		icon: 'https://xivapi.com/i/013000/013313_hr1.png',
+		duration: 30000,
+	},
 })
