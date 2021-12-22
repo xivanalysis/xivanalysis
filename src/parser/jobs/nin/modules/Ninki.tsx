@@ -14,6 +14,7 @@ type GaugeModifier = Partial<Record<Event['type'], number>>
 
 // Constants
 const BUNSHIN_GAIN = 5
+const BUNSHIN_GAIN_KAMAITACHI = 10
 
 const OVERCAP_SEVERITY = {
 	20: SEVERITY.MINOR,
@@ -48,7 +49,6 @@ export class Ninki extends CoreGauge {
 			this.data.actions.HURAIJIN.id,
 			this.data.actions.FORKED_RAIJU.id,
 			this.data.actions.FLEETING_RAIJU.id,
-			this.data.actions.PHANTOM_KAMAITACHI.id,
 			this.data.actions.THROWING_DAGGER.id,
 			this.data.actions.MUG.id,
 		],
@@ -65,7 +65,6 @@ export class Ninki extends CoreGauge {
 		[this.data.actions.HURAIJIN.id, {damage: 5}],
 		[this.data.actions.FORKED_RAIJU.id, {damage: 5}],
 		[this.data.actions.FLEETING_RAIJU.id, {damage: 5}],
-		[this.data.actions.PHANTOM_KAMAITACHI.id, {damage: 5}],
 		[this.data.actions.THROWING_DAGGER.id, {damage: 5}],
 		[this.data.actions.MUG.id, {damage: 40}],
 		[this.data.actions.MEISUI.id, {action: 50}],
@@ -85,13 +84,17 @@ export class Ninki extends CoreGauge {
 		this.addEventHook(playerFilter.type('action').action(oneOf(this.ninkiFilters.action)), this.onGaugeModifier)
 		this.addEventHook(playerFilter.type('combo').action(oneOf(this.ninkiFilters.combo)), this.onGaugeModifier)
 		this.addEventHook(playerFilter.type('damage').cause(filter<Cause>().action(oneOf(this.ninkiFilters.damage))), this.onDamage)
-		this.addEventHook(filter<Event>().source(oneOf(pets)).type('action'), this.onBunshinHit)
+		this.addEventHook(filter<Event>().source(oneOf(pets)).type('damage'), this.onBunshinHit)
 		this.addEventHook(playerFilter.type('damage').cause(filter<Cause>().action(this.data.actions.HELLFROG_MEDIUM.id)), this.onHellfrog)
 		this.addEventHook('complete', this.onComplete)
 	}
 
-	private onBunshinHit() {
-		this.ninkiGauge.modify(BUNSHIN_GAIN)
+	private onBunshinHit(event: Events['damage']) {
+		if (event.cause.type === 'action' && event.cause.action === this.data.actions.PHANTOM_KAMAITACHI_BUNSHIN.id) {
+			this.ninkiGauge.modify(BUNSHIN_GAIN_KAMAITACHI)
+		} else {
+			this.ninkiGauge.modify(BUNSHIN_GAIN)
+		}
 	}
 
 	private onDamage(event: Events['damage']) {

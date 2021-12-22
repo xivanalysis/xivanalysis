@@ -49,7 +49,7 @@ interface WithReportProps {
 	baseUrl: string
 }
 
-const WithReport = observer(function WithCode(
+const WithReport = observer(function WithReport(
 	{Component, baseUrl}: WithReportProps,
 ) {
 	const {code} = useParams<WithCodeParams>()

@@ -1,4 +1,3 @@
-import {ACN} from './ACN'
 import {AST} from './AST'
 import {BLM} from './BLM'
 import {BLU} from './BLU'
@@ -27,7 +26,6 @@ export const root = {
 	...ENEMY,
 	...ROLE,
 	...SHARED,
-	...ACN,
 
 	...PLD,
 	...WAR,

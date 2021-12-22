@@ -27,5 +27,14 @@ export class GeneralCDDowntime extends CooldownDowntime {
 		{
 			cooldowns: [this.data.actions.CONTRE_SIXTE],
 		},
+		{
+			cooldowns: [this.data.actions.CORPS_A_CORPS],
+		},
+		{
+			cooldowns: [
+				this.data.actions.ENGAGEMENT,
+				this.data.actions.DISPLACEMENT,
+			],
+		},
 	]
 }

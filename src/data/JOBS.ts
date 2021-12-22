@@ -148,7 +148,7 @@ export const JOBS = ensureRecord<Job, 'logType'>()({
 		logType: ActorType.SAGE,
 		speedStat: Attribute.SPELL_SPEED,
 		icon: 'sge',
-		colour: '#000000', // TODO
+		colour: '#80a0f0',
 		role: 'HEALER',
 	},
 
@@ -190,7 +190,7 @@ export const JOBS = ensureRecord<Job, 'logType'>()({
 		logType: ActorType.REAPER,
 		speedStat: Attribute.SKILL_SPEED,
 		icon: 'rpr',
-		colour: '#000000', // TODO
+		colour: '#965a90',
 		role: 'MELEE',
 	},
 
