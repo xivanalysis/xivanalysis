@@ -83,6 +83,7 @@ export class MeleeCombos extends Analyser {
 	}
 	private readonly _ignoreFinisherProcsManaThreshold = 4
 	private readonly _upperComboTimeFrame = 13
+	private readonly _openerDelayForgivenessDuration = 15000
 
 	private readonly _suggestionText: Record<SuggestionKey, JSX.Element> = {
 		[SuggestionKey.WRONG_FINISHER]: <Trans id="rdm.meleecombos.recommendation.wrongfinisher">
@@ -288,7 +289,10 @@ export class MeleeCombos extends Analyser {
 											return (<ActionLink key={action.id} showName={false} {...action}/>)
 										})
 									}
-									<br />{recommendation}
+									{
+										recommendedActions.length > 0 && <br />
+									}
+									{recommendation}
 								</Table.Cell>
 							</Table.Row>)
 						})
@@ -366,6 +370,10 @@ export class MeleeCombos extends Analyser {
 			if (recommendedFinisher === this._finishers) {
 				// a recommendation of both finishers means ignore the finisher, either one is valid
 				combo.data.finisher.recommendedActions.push(finisherAction)
+			} else if (combo.start - this.parser.pull.timestamp < this._openerDelayForgivenessDuration) {
+				combo.data.finisher.recommendation = <Fragment>
+					<Trans id="rdm.meleecombos.recommendation.opener.short">It's okay to lose procs in the opener.</Trans>
+				</Fragment>
 			} else {
 				// a recommendation of an array of actions is to delay the combo
 				Array.prototype.push.apply(combo.data.finisher.recommendedActions, recommendedFinisher)
