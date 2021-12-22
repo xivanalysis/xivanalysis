@@ -45,7 +45,7 @@ export const SAM = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003155.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		breaksCombo: true,
+		breaksCombo: false,
 	},
 
 	SHIFU: {
