@@ -9,7 +9,8 @@ import {EarthlyStar} from './EarthlyStar'
 import {Horoscope} from './Horoscope'
 import {Lightspeed} from './Lightspeed'
 import {LucidDreaming} from './LucidDreaming'
-import {oGCDs} from './oGCDs'
+import {oGCDs_DPS} from './oGCDs_DPS'
+import {oGCDs_HEALS} from './oGCDs_HEALS'
 import {Overheal} from './Overheal'
 import {StatusTimeline} from './StatusTimeline'
 import {Synastry} from './Synastry'
@@ -23,7 +24,8 @@ export default [
 	Divination,
 	Draw,
 	EarthlyStar,
-	oGCDs,
+	oGCDs_DPS,
+	oGCDs_HEALS,
 	Horoscope,
 	Interrupts,
 	Lightspeed,
