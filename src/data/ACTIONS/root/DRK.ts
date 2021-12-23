@@ -126,6 +126,12 @@ export const DRK = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003090.png',
 		cooldown: 20000,
 	},
+	SALT_AND_DARKNESS_DAMAGE: {
+		id: 25756,
+		name: 'Salt and Darkness',
+		icon: 'https://xivapi.com/i/003000/003090.png',
+		cooldown: 20000,
+	},
 	SHADOWBRINGER: {
 		id: 25757,
 		name: 'Shadowbringer',
