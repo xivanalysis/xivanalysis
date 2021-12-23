@@ -19,12 +19,13 @@ export class ActionTimeline extends CoreActionTimeline {
 		'CELESTIAL_OPPOSITION',
 		['EARTHLY_STAR', 'STELLAR_DETONATION'],
 		//Delayed oGCD Heals
+		['MACROCOSMOS', 'MICROCOSMOS'],
 		'EXALTATION',
 		['HOROSCOPE', 'HOROSCOPE_ACTIVATION'],
-		// Party mitigation
-		'COLLECTIVE_UNCONSCIOUS',
 		// Healing buff
 		'NEUTRAL_SECT',
+		// Party mitigation
+		'COLLECTIVE_UNCONSCIOUS',
 		// Role actions
 		'LUCID_DREAMING',
 	]
