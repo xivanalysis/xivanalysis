@@ -114,7 +114,7 @@ export const SAM = ensureActions({
 		speedAttribute: Attribute.SKILL_SPEED,
 		potency: 100, // diminishing returns?
 		combo: {
-			from: 7483,
+			from: [7483, 25780],
 			potency: 200,
 			end: true,
 		},
@@ -152,7 +152,7 @@ export const SAM = ensureActions({
 		speedAttribute: Attribute.SKILL_SPEED,
 		potency: 100, // diminishing returns?
 		combo: {
-			from: 7483,
+			from: [7483, 25780],
 			potency: 200,
 			end: true,
 		},
@@ -325,6 +325,7 @@ export const SAM = ensureActions({
 		gcdRecast: 2500,
 		cooldownGroup: SAM_COOLDOWN_GROUP.TSUBAME,
 		statusesApplied: ['HIGANBANA'],
+		charges: 2, //I have to give All Tsubame actions 2 charges for CDDT to function properly.
 	},
 
 	KAESHI_GOKEN: {
@@ -336,6 +337,7 @@ export const SAM = ensureActions({
 		gcdRecast: 2500,
 		cooldown: 60000,
 		cooldownGroup: SAM_COOLDOWN_GROUP.TSUBAME,
+		charges: 2, //I have to give All Tsubame actions 2 charges for CDDT to function properly.
 	},
 
 	KAESHI_SETSUGEKKA: {
@@ -347,6 +349,7 @@ export const SAM = ensureActions({
 		gcdRecast: 2500,
 		cooldown: 60000,
 		cooldownGroup: SAM_COOLDOWN_GROUP.TSUBAME,
+		charges: 2, //I have to give All Tsubame actions 2 charges for CDDT to function properly.
 
 	},
 
