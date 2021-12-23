@@ -220,6 +220,7 @@ export const AST = ensureStatuses({
 		name: 'Harmony of Body',
 		icon: 'https://xivapi.com/i/013000/013260.png',
 		duration: 15000,
+		speedModifier: 0.90,
 	},
 
 	HARMONY_OF_MIND: {

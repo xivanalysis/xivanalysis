@@ -2,6 +2,7 @@ import {Interrupts} from 'parser/core/modules/Interrupts'
 import {ActionTimeline} from './ActionTimeline'
 import {ArcanaSuggestions, ArcanaTracking} from './ArcanaTracking'
 import {ArcanaUndrawUsage} from './ArcanaUndrawUsage'
+import {CastTime} from './CastTime'
 import {Combust} from './Combust'
 import {Divination} from './Divination'
 import Draw from './Draw'
@@ -20,6 +21,7 @@ export default [
 	ArcanaSuggestions,
 	ArcanaTracking,
 	ArcanaUndrawUsage,
+	CastTime,
 	Combust,
 	Divination,
 	Draw,
