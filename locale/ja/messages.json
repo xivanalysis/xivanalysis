@@ -764,6 +764,5 @@
   "whm.swiftcast.missed.suggestion.content": "",
   "whm.thinair.messages.explanation": "",
   "whm.thinair.messages.no-casts": "",
-  "whm.thinair.rotation.gcd": "{numGcds, plural, one {GCD使用数: #} other {GCD使用数: #}}",
   "whm.thinair.title": ""
 }

@@ -1,5 +1,5 @@
 import {t} from '@lingui/macro'
-import {Plural, Trans} from '@lingui/react'
+import {Trans} from '@lingui/react'
 import {ActionLink} from 'components/ui/DbLink'
 import Rotation from 'components/ui/Rotation'
 import {getDataBy} from 'data'
@@ -16,6 +16,12 @@ interface ThinAirRecord {
 	end: number,
 	casts: number[],
 	mpsaved: number,
+}
+
+const USAGE = {
+	BAD: 'red',
+	OKAY: 'yellow',
+	GOOD: 'green',
 }
 
 export class Thinair extends Analyser {
@@ -97,6 +103,16 @@ export class Thinair extends Analyser {
 		}
 	}
 
+	private getSavingsColor(amount: number) {
+		if (amount < 1000) {
+			return USAGE.BAD
+		}
+		if (amount === 1000) {
+			return USAGE.OKAY
+		}
+		return USAGE.GOOD
+	}
+
 	override output(): ReactNode {
 		const casts = this.history.length
 		if (casts === 0) {
@@ -106,17 +122,15 @@ export class Thinair extends Analyser {
 		}
 
 		const panels = this.history.map(record => {
-			const actions = record.casts.map(action => getDataBy(ACTIONS, 'id', action)).filter(x => !!x)
-			const gcds = actions.filter(action => action && action.onGcd)
-			const numGcds = gcds.length
-
 			return {
 				key: record.start,
 				title: {
 					content: <Fragment>
-						{this.parser.formatEpochTimestamp(record.start)}
-						<span> - </span>
-						<Trans id="whm.thinair.rotation.gcd"><Plural value={numGcds} one="# GCD" other="# GCDs" /></Trans>, {record.mpsaved} MP saved
+						<span style={{color: this.getSavingsColor(record.mpsaved)}}>
+							{this.parser.formatEpochTimestamp(record.start)}
+							<span> - </span>
+							{record.mpsaved} MP saved
+						</span>
 					</Fragment>,
 				},
 				content: {
@@ -134,7 +148,7 @@ export class Thinair extends Analyser {
 
 		return <Fragment>
 			<p><Trans id="whm.thinair.messages.explanation">
-				The main use of <ActionLink {...ACTIONS.THIN_AIR} /> should be to save MP on high-MP cost phases of the fight. Don't be afraid to hold it and lose a use over the fight as long as it covers MP-heavy portions of the fight such as usages of <ActionLink {...ACTIONS.MEDICA_II}/>, <ActionLink {...ACTIONS.CURE_III}/>, and <ActionLink {...ACTIONS.RAISE} />
+				The main use of <ActionLink {...ACTIONS.THIN_AIR} /> should be to save MP on high MP-cost spells. Don't be afraid to hold it and lose a use over the fight as long as it covers an MP-heavy spell such as usages of <ActionLink {...ACTIONS.MEDICA_II}/>, <ActionLink {...ACTIONS.CURE_III}/>, and <ActionLink {...ACTIONS.RAISE} />. Usages that did not save a considerable amount of MP are marked red.
 			</Trans></p>
 			{thinairDisplay}
 		</Fragment>
