@@ -286,7 +286,7 @@ export const SAM = ensureActions({
 		id: 16482,
 		name: 'Ikishoten',
 		icon: 'https://xivapi.com/i/003000/003179.png',
-		cooldown: 60000,
+		cooldown: 120000,
 	},
 
 	HISSATSU_GUREN: {
