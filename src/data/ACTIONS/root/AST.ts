@@ -83,7 +83,7 @@ export const AST = ensureActions({
 
 	COMBUST_III: {
 		id: 16554,
-		name: 'Combust II',
+		name: 'Combust III',
 		icon: 'https://xivapi.com/i/003000/003554.png',
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
@@ -211,13 +211,13 @@ export const AST = ensureActions({
 		cooldown: 30000,
 		charges: 2,
 		statusesApplied: [
+			'CLARIFYING_DRAW',
 			'BALANCE_DRAWN',
 			'BOLE_DRAWN',
 			'ARROW_DRAWN',
 			'SPEAR_DRAWN',
 			'EWER_DRAWN',
 			'SPIRE_DRAWN',
-			'CLARIFYING_DRAW',
 		],
 	},
 
@@ -329,7 +329,11 @@ export const AST = ensureActions({
 		id: 25874,
 		name: 'Macrocosmos',
 		icon: 'https://xivapi.com/i/003000/003562.png',
+		onGcd: true,
+		speedAttribute: Attribute.SPELL_SPEED,
+		castTime: 0,
 		cooldown: 180000,
+		gcdRecast: 2500,
 		mpCost: 600,
 		statusesApplied: ['MACROCOSMOS'],
 	},

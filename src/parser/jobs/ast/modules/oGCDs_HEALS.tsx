@@ -22,10 +22,7 @@ export class oGCDs_HEALS extends CooldownDowntime_copy {
 	override checklistTarget = 50 //50% chosen since healing can be fairly contextual relying on the fight, party, and co-healer
 
 	private COOLDOWNS_TRACKED = [
-		//healing actions
-		{
-			cooldowns: [this.data.actions.MACROCOSMOS],
-		},
+		//healing oGCD actions
 		{
 			cooldowns: [this.data.actions.EXALTATION],
 		},

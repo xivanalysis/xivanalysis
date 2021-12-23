@@ -18,8 +18,7 @@ export class ActionTimeline extends CoreActionTimeline {
 		// oGCD AoE heals
 		'CELESTIAL_OPPOSITION',
 		['EARTHLY_STAR', 'STELLAR_DETONATION'],
-		//Delayed Heals
-		['MACROCOSMOS', 'MICROCOSMOS'],
+		//Delayed oGCD Heals
 		'EXALTATION',
 		['HOROSCOPE', 'HOROSCOPE_ACTIVATION'],
 		// Party mitigation

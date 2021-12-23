@@ -222,7 +222,7 @@ export class Divination extends Analyser {
 		const noCastsMessage = <p><span className="text-error"><Trans id="ast.divination.messages.no-casts"> There were no casts recorded for <DataLink action="DIVINATION" />.</Trans></span></p>
 
 		//for now, the message is copied directly from DivinationDowntime
-		const message = <p><Trans id="ast.ogcd-downtime.divination.description">
+		const message = <p><Trans id="ast.divination.description">
 			<DataLink action="DIVINATION" /> provides Astrologian with a strong amount of raid DPS when stacked together with arcanum.
 			Try to time the usage to match raid buffs and high output phases of other party members - it's more important to use it on time rather than hold it.
 		</Trans></p>
