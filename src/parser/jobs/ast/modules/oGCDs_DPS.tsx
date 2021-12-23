@@ -20,6 +20,7 @@ export class oGCDs_DPS extends CooldownDowntime {
 			content: <Trans id="ast.ogcds_dps.divination.content">
 				Consider using <DataLink action="DIVINATION" /> more frequently. <DataLink action="DIVINATION" /> provides an Astrologian with a strong amount of raid DPS.
 			</Trans>,
+			allowedAverageDowntime: 2500,
 		},
 	]
 	override trackedCds = this.COOLDOWNS_TRACKED
