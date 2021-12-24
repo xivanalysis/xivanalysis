@@ -490,8 +490,6 @@
   "pld.goring.checklist.goringblade.description": "En tant que Paladin, <0/> occupe une place importante de vos dégâts infligés, et devrait être actif autant que possible.",
   "pld.goring.checklist.goringblade.requirement.uptime": "Temps total d'application de <0/>",
   "pld.goring.suggestions.goringblade.content": "Évitez de rafraîchir <0/> avant qu'il expire.",
-  "pld.requiescat.suggestions.nobuff.content": "<0/> ne dervait-être utilisé qu'au dessus de 80% MP. Autrement, vous n'aurez pas le buff de <1/>, qui donne 50% de dégâts magique en plus, casts instantané et permet de cast <2/>.",
-  "pld.requiescat.suggestions.nobuff.why": "{missedRequiescatBuffs, plural, one {# usage} other {# usages}} en dessous de 80% de vos PM.",
   "pld.requiescat.title": "Utilisation de Requiescat",
   "pld.tincture.suggestions.missedgcd.content": "Essayez d'utiliser 13 GCDs durant chaque <0/>.",
   "pld.tincture.suggestions.trackedactions.content": "Une utilisation de <0/> et au moins une utilisation de <1/> doit se produire à chaque phase de <2/>.",
