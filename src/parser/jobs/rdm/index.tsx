@@ -35,6 +35,11 @@ export const RED_MAGE = new Meta({
 			contributors: [CONTRIBUTORS.MYPS],
 		},
 		{
+			date: new Date('2021-12-22'),
+			Changes: () => <>Updated suggestions to allow procs to be overwritten during the opener.</>,
+			contributors: [CONTRIBUTORS.MYPS],
+		},
+		{
 			date: new Date('2021-12-18'),
 			Changes: () => <>Showing recommended actions in cases where melee combo should be delayed.</>,
 			contributors: [CONTRIBUTORS.MYPS],

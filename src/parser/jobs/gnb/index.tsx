@@ -26,6 +26,7 @@ export const GUNBREAKER = new Meta({
 	contributors: [
 		{user: CONTRIBUTORS.RYAN, role: ROLES.DEVELOPER},
 		{user: CONTRIBUTORS.JONNIX, role: ROLES.DEVELOPER},
+		{user: CONTRIBUTORS.EDEN, role: ROLES.DEVELOPER},
 	],
 
 	changelog: [
@@ -61,6 +62,15 @@ export const GUNBREAKER = new Meta({
 				</ul>,
 			</>,
 			contributors: [CONTRIBUTORS.RYAN],
+		},
+		{
+			date: new Date('2021-12-21'),
+			Changes: () => <>
+				<ul>
+					<li>Reorder Heart of Corundum in Timeline together with other party mitigations.</li>
+				</ul>
+			</>,
+			contributors: [CONTRIBUTORS.EDEN],
 		},
 	],
 })
