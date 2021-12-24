@@ -633,6 +633,7 @@
   "rdm.dualcast.suggestions.wasted.content": "Sorts utilisés alors que <0/> est actif devrait être limité à <1/>, <2/>, or <3/>",
   "rdm.dualcast.suggestions.wasted.why": "{0} {0, plural, one {Chaîne de sorts a été gâchée du à un temps de cast trop court} other {Chaînes de sorts ont été gâchées du à un temps de cast trop court}}.",
   "rdm.dualcast.title": "Chaîne de sorts",
+  "rdm.embolden.rotation-table.header.buffed": "Buff du joueurs",
   "rdm.embolden.title": "",
   "rdm.gauge.black-mana-lost-to-manafication": "Noir",
   "rdm.gauge.resource.blackmana": "",
