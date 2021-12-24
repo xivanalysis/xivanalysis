@@ -12,6 +12,6 @@ export default [
 	Combos,
 	CooldownDowntime,
 	DeathsDesign,
-  Tincture,
+	Tincture,
 	Weaving,
 ]
