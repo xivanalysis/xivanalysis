@@ -1,6 +1,6 @@
 import {t} from '@lingui/macro'
 import {Trans, Plural} from '@lingui/react'
-import {ActionLink, DataLink, StatusLink} from 'components/ui/DbLink'
+import {ActionLink, DataLink} from 'components/ui/DbLink'
 import Rotation from 'components/ui/Rotation'
 import {Action} from 'data/ACTIONS/type'
 import {Status} from 'data/STATUSES/type'
@@ -272,9 +272,9 @@ export class MeleeCombos extends Analyser {
 										combo.data.procs.map((key) => {
 											switch (key) {
 											case this.data.statuses.VERSTONE_READY:
-												return (<StatusLink key="verstone" showName={false} {...this.data.statuses.VERSTONE_READY}/>)
+												return (<DataLink key="verstone" showName={false} status="VERSTONE_READY"/>)
 											case this.data.statuses.VERFIRE_READY:
-												return (<StatusLink key="verfire" showName={false} {...this.data.statuses.VERFIRE_READY}/>)
+												return (<DataLink key="verfire" showName={false} status="VERFIRE_READY"/>)
 											}
 										})
 									}</span>
