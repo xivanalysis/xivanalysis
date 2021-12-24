@@ -196,7 +196,6 @@ export const PLD = ensureActions({
 		statusesApplied: ['BLADE_OF_VALOR'],
 	},
 
-
 	// -----
 	// Player oGCDs
 	// -----

@@ -614,8 +614,6 @@
   "pld.goring.suggestions.goringblade.content": "이전에 부여한 <0/> 의 시간이 충분할 경우 갱신을 피하세요.",
   "pld.goring.suggestions.goringblade.why": "",
   "pld.requiescat.suggestions.missed-confiteor.content": "",
-  "pld.requiescat.suggestions.nobuff.content": "<0/>은 마나가 80%이상 있을 때 만 사용하십시오. 이하일 때 사용할 시 마법 데미지 50% 증가, 즉시 시전, 그리고 <2/> 사용을 부여하는 <1/> 버프를 놓칠것입니다.",
-  "pld.requiescat.suggestions.nobuff.why": "{missedRequiescatBuffs, plural, one {#번} other {#번}}의 안식 기도가 MP 80% 이하일 때 사용되었습니다.",
   "pld.requiescat.suggestions.wrong-gcd.content": "",
   "pld.requiescat.suggestions.wrong-gcd.why": "",
   "pld.requiescat.table.note": "",
