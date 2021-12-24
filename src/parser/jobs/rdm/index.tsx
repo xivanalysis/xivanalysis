@@ -30,6 +30,11 @@ export const RED_MAGE = new Meta({
 
 	changelog: [
 		{
+			date: new Date('2021-12-23'),
+			Changes: () => <>Allowing Manafication usage mid-combo (immediately before Verflare/Verholy).</>,
+			contributors: [CONTRIBUTORS.MYPS],
+		},
+		{
 			date: new Date('2021-12-18'),
 			Changes: () => <>Showing recommended actions in cases where melee combo should be delayed.</>,
 			contributors: [CONTRIBUTORS.MYPS],
