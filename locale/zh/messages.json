@@ -546,8 +546,6 @@
   "pld.goring.checklist.goringblade.description": "作为一名骑士，<0/>是你输出的重要组成部分之一。它应当保证尽可能高的覆盖率，以达到最佳的输出效果。",
   "pld.goring.checklist.goringblade.requirement.uptime": "<0/>覆盖率",
   "pld.goring.suggestions.goringblade.content": "避免在<0/>消失前过早地刷新持续时间。",
-  "pld.requiescat.suggestions.nobuff.content": "<0/>只能在MP达到80%以上时使用，否则你不会获得<1/>buff。这个buff能够提高你50%的魔法伤害，使你的魔法瞬发，并让你能够使用<2/>。",
-  "pld.requiescat.suggestions.nobuff.why": "在蓝量低于80%时使用了{missedRequiescatBuffs, plural, one {#次安魂祈祷} other {#次安魂祈祷}}。",
   "pld.requiescat.title": "安魂祈祷的使用",
   "pld.tincture.suggestions.missedgcd.content": "尝试在每个<0/>的持续时间内插入13个GCD技能。",
   "pld.tincture.suggestions.trackedactions.content": "每次<2/>里都应该用一次<0/>和至少一次<1/>。",
