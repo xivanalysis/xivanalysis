@@ -29,6 +29,7 @@ export class ActionTimeline extends CoreActionTimeline {
 		// Party Mitigation
 		'HEART_OF_LIGHT',
 		'HEART_OF_STONE',
+		'HEART_OF_CORUNDUM',
 		'AURORA',
 		'REPRISAL',
 

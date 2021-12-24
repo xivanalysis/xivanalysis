@@ -1,6 +1,6 @@
 import {t} from '@lingui/macro'
 import {Trans, Plural} from '@lingui/react'
-import {ActionLink, StatusLink} from 'components/ui/DbLink'
+import {DataLink} from 'components/ui/DbLink'
 import Rotation from 'components/ui/Rotation'
 import {BASE_GCD} from 'data/CONSTANTS'
 import {Event, Events} from 'event'
@@ -80,7 +80,7 @@ export class DualCast extends Analyser {
 			this.suggestions.add(new TieredSuggestion({
 				icon: this.data.statuses.DUALCAST.icon,
 				content: <Trans id="rdm.dualcast.suggestions.wasted.content">
-					Spells used while <StatusLink {...this.data.statuses.DUALCAST}/> is up should be limited to <ActionLink {...this.data.actions.VERAERO_III}/>, <ActionLink {...this.data.actions.VERTHUNDER_III}/>, or <ActionLink {...this.data.actions.VERRAISE}/>
+					Spells used while <DataLink status="DUALCAST"/> is up should be limited to <DataLink action="VERAERO_III"/>, <DataLink action="VERTHUNDER_III"/>, or <DataLink action="VERRAISE"/>
 				</Trans>,
 				tiers: SEVERITY_WASTED_DUALCAST,
 				value: this.wastedDualCasts.length,

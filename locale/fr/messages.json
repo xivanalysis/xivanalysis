@@ -649,6 +649,7 @@
   "rdm.meleecombos.recommendation.delaycombo": "Ne commencez pas votre combo avec votre proc de fin. Envisagez de sauter une proc avant d’entrer dans votre combo de mêlée tant que vous perdez moins de <0/> mana pour y arriver",
   "rdm.meleecombos.recommendation.delaycombo.short": "",
   "rdm.meleecombos.recommendation.delaycombo.why": "{0, plural, one {# Proc casté perdu à cause d'un commencent du combo de mêlée avec votre proc de finisher actif.} other {# Procs castés perdus à cause d'un commencent du combo de mêlée avec votre proc de finisher actif.}}",
+  "rdm.meleecombos.recommendation.opener.short": "",
   "rdm.meleecombos.recommendation.wrongfinisher": "",
   "rdm.meleecombos.recommendation.wrongfinisher.short": "",
   "rdm.meleecombos.recommendation.wrongfinisher.why": "",
