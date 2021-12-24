@@ -665,6 +665,7 @@
   "rdm.meleecombos.recommendation.delaycombo": "",
   "rdm.meleecombos.recommendation.delaycombo.short": "",
   "rdm.meleecombos.recommendation.delaycombo.why": "由于在魔元较低的一方有触发时进入魔连击而损失了 {0} 次触发。",
+  "rdm.meleecombos.recommendation.opener.short": "",
   "rdm.meleecombos.recommendation.wrongfinisher": "",
   "rdm.meleecombos.recommendation.wrongfinisher.short": "",
   "rdm.meleecombos.recommendation.wrongfinisher.why": "",

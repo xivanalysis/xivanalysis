@@ -665,6 +665,7 @@
   "rdm.meleecombos.recommendation.delaycombo": "Do not enter your combo with your finisher's proc up. Consider dumping a proc before entering the melee combo as long as you waste less than {0} mana to overcapping.",
   "rdm.meleecombos.recommendation.delaycombo.short": "Delay combo",
   "rdm.meleecombos.recommendation.delaycombo.why": "{0, plural, one {# Proc cast was lost due to entering the melee combo with the finisher proc up.} other {# Proc casts were lost due to entering the melee combo with the finisher proc up.}}",
+  "rdm.meleecombos.recommendation.opener.short": "It's okay to lose procs in the opener.",
   "rdm.meleecombos.recommendation.wrongfinisher": "You should use <0/> when your black mana is lower or <1/> when your white mana is lower.",
   "rdm.meleecombos.recommendation.wrongfinisher.short": "Wrong finisher",
   "rdm.meleecombos.recommendation.wrongfinisher.why": "{0, plural, one {# Verfire/Verstone cast was lost due to using the incorrect finisher.} other {# Verfire/Verstone casts were lost due to using the incorrect finisher.}}",

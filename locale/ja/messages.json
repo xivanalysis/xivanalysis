@@ -665,6 +665,7 @@
   "rdm.meleecombos.recommendation.delaycombo": "オーバーフローによるマナの損失が{0} 以下になりそうな場合は、ヴァルフレア/ホーリーの発動で生じるProcを確定させるために魔法剣コンボの開始を少し遅らせましょう。",
   "rdm.meleecombos.recommendation.delaycombo.short": "",
   "rdm.meleecombos.recommendation.delaycombo.why": "",
+  "rdm.meleecombos.recommendation.opener.short": "",
   "rdm.meleecombos.recommendation.wrongfinisher": "",
   "rdm.meleecombos.recommendation.wrongfinisher.short": "",
   "rdm.meleecombos.recommendation.wrongfinisher.why": "",
