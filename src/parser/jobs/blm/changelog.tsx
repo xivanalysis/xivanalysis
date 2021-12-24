@@ -37,4 +37,9 @@ export const changelog = [
 		Changes: () => <>Miscellaneous bug fixes, and marking supported for Endwalker.</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],
 	},
+	{
+		date: new Date('2021-12-20'),
+		Changes: () => <>Keep track of Manaward and Addle usage.</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
 ]
