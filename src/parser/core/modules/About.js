@@ -4,6 +4,7 @@ import {Message, Segment} from 'akkd'
 import ContributorLabel from 'components/ui/ContributorLabel'
 import NormalisedMessage from 'components/ui/NormalisedMessage'
 import {patchSupported} from 'data/PATCHES'
+import {AVAILABLE_MODULES} from 'parser/AVAILABLE_MODULES'
 import {Analyser, DisplayMode} from 'parser/core/Analyser'
 import React from 'react'
 import {Header} from 'semantic-ui-react'
@@ -38,10 +39,12 @@ export default class About extends Analyser {
 		super(...args)
 
 		// Merge the parser's metadata in
-		const fields = ['Description', 'contributors', 'supportedPatches']
+		const fields = ['Description', 'contributors']
 		fields.forEach(field => {
 			this[field] = this.parser.meta[field]
 		})
+
+		this.supportedPatches = AVAILABLE_MODULES.JOBS[this.parser.actor.job].supportedPatches
 	}
 
 	output() {

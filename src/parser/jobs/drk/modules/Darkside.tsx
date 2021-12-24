@@ -72,7 +72,7 @@ export class Darkside extends Gauge {
 		const uptime = ((adjustedFightDuration - expiredDuration) / adjustedFightDuration) * 100
 
 		this.checklist.add(new Rule({
-			name: 'Keep Darkside up',
+			name: <Trans id="drk.darkside.uptime.name">Keep Darkside up</Trans>,
 			description: <Trans id="drk.darkside.uptime.why">
 				Darkside is gained by using <DataLink action="EDGE_OF_SHADOW"/> or <DataLink action="FLOOD_OF_SHADOW"/> and provides you with a 10% damage increase.  As such, it is a significant part of a DRK's personal DPS.  Do your best not to let it drop, and recover it as quickly as possible if it does.
 			</Trans>,

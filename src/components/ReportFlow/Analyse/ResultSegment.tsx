@@ -23,7 +23,7 @@ export const OFFSET_FROM_VIEWPORT_TOP = gutter
 const MODULE_HEIGHT_MAX = 400
 const MODULE_HEIGHT_LEEWAY = 200
 
-export default class ResultSegment extends React.PureComponent<Props, State> implements Scrollable {
+export class ResultSegment extends React.PureComponent<Props, State> implements Scrollable {
 	private static instances = new Map<string, ResultSegment>()
 	public static scrollIntoView(handle: string) {
 		const instance = this.instances.get(handle)
