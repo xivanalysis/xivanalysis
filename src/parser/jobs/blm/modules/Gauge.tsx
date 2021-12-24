@@ -491,12 +491,12 @@ export class Gauge extends CoreGauge {
 			this.paradoxGauge.spend(1)
 		} else if (event.type === 'damage') {
 			// We checked isSuccessfulHit back in onCast, so we don't need to check it again here
-			// Refresh whichever timer isn't expired
+			// Add a stack for whichever timer isn't expired
 			if (!this.umbralIceTimer.expired) {
-				this.umbralIceTimer.refresh()
+				this.onGainUmbralIceStacks(1)
 			}
 			if (!this.astralFireTimer.expired) {
-				this.astralFireTimer.refresh()
+				this.onGainAstralFireStacks(1)
 			}
 		}
 	}
