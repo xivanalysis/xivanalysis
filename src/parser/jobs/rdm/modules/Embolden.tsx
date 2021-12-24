@@ -89,7 +89,7 @@ export class Embolden extends Analyser {
 	// Get the existing open buff window, or open a new one
 	private tryOpenWindow(event: Events['statusApply']): EmboldenWindow {
 		const lastWindow: EmboldenWindow | undefined = _.last(this.history)
-		if (lastWindow && !lastWindow.end) {
+		if (lastWindow != null && lastWindow.end == null) {
 			return lastWindow
 		}
 
@@ -100,7 +100,7 @@ export class Embolden extends Analyser {
 
 	private buffRemoved(event: Events['statusRemove']) {
 		const lastWindow: EmboldenWindow | undefined = _.last(this.history)
-		if (!lastWindow) {
+		if (lastWindow == null) {
 			return
 		}
 
@@ -109,12 +109,12 @@ export class Embolden extends Analyser {
 
 	private onCast(event: Events['action']) {
 		const lastWindow: EmboldenWindow | undefined = _.last(this.history)
-		if (!lastWindow || lastWindow.end) {
+		if (lastWindow == null || lastWindow.end != null) {
 			return
 		}
 
 		const action = this.data.getAction(event.action)
-		if (action && !this.IGNORE_ACTIONS.includes(action.id)) {
+		if (action != null && !this.IGNORE_ACTIONS.includes(action.id)) {
 			lastWindow.rotation.push(event)
 		}
 	}
