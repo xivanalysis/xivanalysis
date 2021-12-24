@@ -40,7 +40,7 @@ export class SaltAndDarkness extends Analyser {
 		const playerFilter = filter<Event>().source(this.parser.actor.id)
 		this.addEventHook(playerFilter.type('action').action(this.data.actions.SALTED_EARTH.id), () => this.saltedEarthUsed++)
 		this.addEventHook(playerFilter.type('action').action(this.data.actions.SALT_AND_DARKNESS.id), () => this.saltAndDarknessUsed++)
-		this.addEventHook(playerFilter.type('damage').cause(this.data.matchCauseAction(['SALT_AND_DARKNESS'])), this.onSaltDarknessDamage)
+		this.addEventHook(playerFilter.type('damage').cause(this.data.matchCauseAction(['SALT_AND_DARKNESS_DAMAGE'])), this.onSaltDarknessDamage)
 		this.addEventHook('complete', this.onComplete)
 	}
 

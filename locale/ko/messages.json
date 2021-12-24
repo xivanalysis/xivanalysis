@@ -649,6 +649,7 @@
   "rdm.meleecombos.recommendation.delaycombo": "",
   "rdm.meleecombos.recommendation.delaycombo.short": "",
   "rdm.meleecombos.recommendation.delaycombo.why": "{0, plural, one {# 개의 프록이 같은 속성의 근접 콤보 마지막 공격으로 인해 손실되었습니다.} other {# 개의 프록이 같은 속성의 근접 콤보 마지막 공격으로 인해 손실되었습니다.}}",
+  "rdm.meleecombos.recommendation.opener.short": "",
   "rdm.meleecombos.recommendation.wrongfinisher": "",
   "rdm.meleecombos.recommendation.wrongfinisher.short": "",
   "rdm.meleecombos.recommendation.wrongfinisher.why": "",
