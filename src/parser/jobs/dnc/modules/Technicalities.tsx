@@ -73,8 +73,23 @@ export class Technicalities extends Analyser {
 
 	override initialise() {
 		const techFinishFilter = filter<Event>().type('statusApply').status(this.data.statuses.TECHNICAL_FINISH.id)
-		this.addEventHook(techFinishFilter.target(this.parser.actor.id), this.tryOpenWindow)
-		this.addEventHook(techFinishFilter.source(this.parser.actor.id), this.countTechBuffs)
+
+		// Ignore any actors besides players
+		const playerCharacters = this.parser.pull.actors
+			.filter(actor => actor.playerControlled)
+			.map(actor => actor.id)
+
+		this.addEventHook(
+			techFinishFilter
+				.target(this.parser.actor.id),
+			this.tryOpenWindow)
+
+		this.addEventHook(
+			techFinishFilter
+				.source(this.parser.actor.id)
+				.target(oneOf(playerCharacters)),
+			this.countTechBuffs)
+
 		this.addEventHook(
 			filter<Event>()
 				.type('statusRemove')

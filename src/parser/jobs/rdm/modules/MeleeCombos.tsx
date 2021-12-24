@@ -1,6 +1,6 @@
 import {t} from '@lingui/macro'
 import {Trans, Plural} from '@lingui/react'
-import {ActionLink, DataLink, StatusLink} from 'components/ui/DbLink'
+import {ActionLink, DataLink} from 'components/ui/DbLink'
 import Rotation from 'components/ui/Rotation'
 import {Action} from 'data/ACTIONS/type'
 import {Status} from 'data/STATUSES/type'
@@ -83,6 +83,7 @@ export class MeleeCombos extends Analyser {
 	}
 	private readonly _ignoreFinisherProcsManaThreshold = 4
 	private readonly _upperComboTimeFrame = 13
+	private readonly _openerDelayForgivenessDuration = 15000
 
 	private readonly _suggestionText: Record<SuggestionKey, JSX.Element> = {
 		[SuggestionKey.WRONG_FINISHER]: <Trans id="rdm.meleecombos.recommendation.wrongfinisher">
@@ -142,13 +143,13 @@ export class MeleeCombos extends Analyser {
 			return
 		}
 
+		const current = this._meleeCombos.getCurrent()
+
 		if (action.combo) {
 			if (action.combo.start) {
 				this.breakComboIfExists(event.timestamp)
 				this.startCombo(event)
 			} else {
-				const current = this._meleeCombos.getCurrent()
-
 				if (current == null) {
 					return
 				}
@@ -174,6 +175,15 @@ export class MeleeCombos extends Analyser {
 		}
 
 		if (action.breaksCombo) {
+			/*
+			Manafication does break combos, but the way we are currently modeling the full RDM combo isn't accurate anymore.
+			A full fix for this entails modeling mana stacks, splitting the full combo into two, and fixing the UI to display that info in a reasonable way.
+			However, as more people are starting to use Manafication after EncRedoublement (to fit multiple combos under buffs), this is a band-aid fix for now.
+			*/
+			if (action.id === this.data.actions.MANAFICATION.id &&
+				current && current.data.lastAction.action === this.data.actions.ENCHANTED_REDOUBLEMENT.id) {
+				return
+			}
 			this.breakComboIfExists(event.timestamp)
 		}
 	}
@@ -272,9 +282,9 @@ export class MeleeCombos extends Analyser {
 										combo.data.procs.map((key) => {
 											switch (key) {
 											case this.data.statuses.VERSTONE_READY:
-												return (<StatusLink key="verstone" showName={false} {...this.data.statuses.VERSTONE_READY}/>)
+												return (<DataLink key="verstone" showName={false} status="VERSTONE_READY"/>)
 											case this.data.statuses.VERFIRE_READY:
-												return (<StatusLink key="verfire" showName={false} {...this.data.statuses.VERFIRE_READY}/>)
+												return (<DataLink key="verfire" showName={false} status="VERFIRE_READY"/>)
 											}
 										})
 									}</span>
@@ -288,7 +298,10 @@ export class MeleeCombos extends Analyser {
 											return (<ActionLink key={action.id} showName={false} {...action}/>)
 										})
 									}
-									<br />{recommendation}
+									{
+										recommendedActions.length > 0 && <br />
+									}
+									{recommendation}
 								</Table.Cell>
 							</Table.Row>)
 						})
@@ -366,6 +379,10 @@ export class MeleeCombos extends Analyser {
 			if (recommendedFinisher === this._finishers) {
 				// a recommendation of both finishers means ignore the finisher, either one is valid
 				combo.data.finisher.recommendedActions.push(finisherAction)
+			} else if (combo.start - this.parser.pull.timestamp < this._openerDelayForgivenessDuration) {
+				combo.data.finisher.recommendation = <Fragment>
+					<Trans id="rdm.meleecombos.recommendation.opener.short">It's okay to lose procs in the opener.</Trans>
+				</Fragment>
 			} else {
 				// a recommendation of an array of actions is to delay the combo
 				Array.prototype.push.apply(combo.data.finisher.recommendedActions, recommendedFinisher)
