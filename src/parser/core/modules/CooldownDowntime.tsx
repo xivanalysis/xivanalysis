@@ -199,16 +199,20 @@ export abstract class CooldownDowntime extends Analyser {
 			target: this.checklistTarget,
 		}))
 
-		const defensiveRequirements = []
-		for (const cdGroup of this.defensiveCooldowns) {
-			defensiveRequirements.push(this.createRequirement(cdGroup))
+		// If the job has provided a list of defensive cooldowns, build that checklist display
+		if (this.defensiveCooldowns.length > 0) {
+			const defensiveRequirements = []
+			for (const cdGroup of this.defensiveCooldowns) {
+				defensiveRequirements.push(this.createRequirement(cdGroup))
+			}
+
+			this.checklist.add(new TieredRule({
+				name: this.defenseChecklistName,
+				description: this.defenseChecklistDescription,
+				requirements: defensiveRequirements,
+				tiers: this.defenseChecklistTiers,
+			}))
 		}
-		this.checklist.add(new TieredRule({
-			name: this.defenseChecklistName,
-			description: this.defenseChecklistDescription,
-			requirements: defensiveRequirements,
-			tiers: this.defenseChecklistTiers,
-		}))
 
 		this.addJobSuggestions()
 	}
