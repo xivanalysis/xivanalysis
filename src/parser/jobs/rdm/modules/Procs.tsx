@@ -1,6 +1,6 @@
 import {t} from '@lingui/macro'
 import {Trans, Plural} from '@lingui/react'
-import {ActionLink, StatusLink} from 'components/ui/DbLink'
+import {DataLink} from 'components/ui/DbLink'
 import {Events} from 'event'
 import {Procs as CoreProcs} from 'parser/core/modules/Procs'
 import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
@@ -44,16 +44,16 @@ export class Procs extends CoreProcs {
 	private getMissedProcContent(missedFire: number, missedStone: number) {
 		if (missedFire > 0 && missedStone > 0) {
 			return <Trans id="rdm.procs.suggestions.missed.content">
-				Try to use <ActionLink {...this.data.actions.VERFIRE} /> whenever you have <StatusLink {...this.data.statuses.VERFIRE_READY} /> or <ActionLink {...this.data.actions.VERSTONE} /> whenever you have <StatusLink {...this.data.statuses.VERSTONE_READY} /> to avoid losing out on mana gains.
+				Try to use <DataLink action="VERFIRE" /> whenever you have <DataLink status="VERFIRE_READY"/> or <DataLink action="VERSTONE" /> whenever you have <DataLink status="VERSTONE_READY"/> to avoid losing out on mana gains.
 			</Trans>
 		}
 		if (missedFire > 0) {
 			return <Trans id="rdm.procs.suggestions.missed-fire.content">
-				Try to use <ActionLink {...this.data.actions.VERFIRE} /> whenever you have <StatusLink {...this.data.statuses.VERFIRE_READY} /> to avoid losing out on mana gains.
+				Try to use <DataLink action="VERFIRE" /> whenever you have <DataLink status="VERFIRE_READY"/> to avoid losing out on mana gains.
 			</Trans>
 		}
 		return <Trans id="rdm.procs.suggestions.missed-stone.content">
-			Try to use <ActionLink {...this.data.actions.VERSTONE} /> whenever you have <StatusLink {...this.data.statuses.VERSTONE_READY} /> to avoid losing out on mana gains.
+			Try to use <DataLink action="VERSTONE" /> whenever you have <DataLink status="VERSTONE_READY"/> to avoid losing out on mana gains.
 		</Trans>
 	}
 
@@ -76,16 +76,16 @@ export class Procs extends CoreProcs {
 	private getOverwrittenProcContent(overWrittenFire: number, overWrittenStone: number) {
 		if (overWrittenFire > 0 && overWrittenStone > 0) {
 			return <Trans id="rdm.procs.suggestions.overwritten.content">
-				Don't cast <ActionLink {...this.data.actions.VERTHUNDER_III} /> when you have <StatusLink {...this.data.statuses.VERFIRE_READY} /> or <ActionLink {...this.data.actions.VERAERO_III} /> when you have <StatusLink {...this.data.statuses.VERSTONE_READY} />.
+				Don't cast <DataLink action="VERTHUNDER_III"/> when you have <DataLink status="VERFIRE_READY"/> or <DataLink action="VERAERO_III"/> when you have <DataLink status="VERSTONE_READY"/>.
 			</Trans>
 		}
 		if (overWrittenFire > 0) {
 			return <Trans id="rdm.procs.suggestions.overwritten-fire.content">
-				Don't cast <ActionLink {...this.data.actions.VERTHUNDER_III} /> when you have <StatusLink {...this.data.statuses.VERFIRE_READY} />.
+				Don't cast <DataLink action="VERTHUNDER_III" /> when you have <DataLink status="VERFIRE_READY"/>.
 			</Trans>
 		}
 		return <Trans id="rdm.procs.suggestions.overwritten-stone.content">
-			Don't cast <ActionLink {...this.data.actions.VERAERO_III} /> when you have <StatusLink {...this.data.statuses.VERSTONE_READY} />.
+			Don't cast <DataLink action="VERAERO_III" /> when you have <DataLink status="VERSTONE_READY"/>.
 		</Trans>
 	}
 
@@ -108,16 +108,16 @@ export class Procs extends CoreProcs {
 	private getInvulnProcContent(invulnFire: number, invulnStone: number) {
 		if (invulnFire > 0 && invulnStone > 0) {
 			return <Trans id="rdm.procs.suggestions.invuln.content">
-				Try not to use <ActionLink {...this.data.actions.VERFIRE} /> and <ActionLink {...this.data.actions.VERSTONE} /> while the boss is invulnerable.
+				Try not to use <DataLink action="VERFIRE"/> and <DataLink action="VERSTONE"/> while the boss is invulnerable.
 			</Trans>
 		}
 		if (invulnFire > 0) {
 			return <Trans id="rdm.procs.suggestions.invuln-fire.content">
-				Try not to use <ActionLink {...this.data.actions.VERFIRE} /> while the boss is invulnerable.
+				Try not to use <DataLink action="VERFIRE"/> while the boss is invulnerable.
 			</Trans>
 		}
 		return <Trans id="rdm.procs.suggestions.invuln-stone.content">
-			Try not to use <ActionLink {...this.data.actions.VERSTONE} /> while the boss is invulnerable.
+			Try not to use <DataLink action="VERSTONE"/> while the boss is invulnerable.
 		</Trans>
 	}
 

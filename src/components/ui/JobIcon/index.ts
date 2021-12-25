@@ -1,1 +1,1 @@
-export {default} from './JobIcon'
+export {JobIcon} from './JobIcon'

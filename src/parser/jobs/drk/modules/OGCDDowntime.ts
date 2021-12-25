@@ -13,7 +13,13 @@ export class OGCDDowntime extends CooldownDowntime {
 			cooldowns: [this.data.actions.DELIRIUM],
 			firstUseOffset: 7500,
 		},
-		{cooldowns: [this.data.actions.PLUNGE]},
+		{
+			cooldowns: [this.data.actions.PLUNGE],
+			resetBy: {
+				actions: [this.data.actions.UNMEND],
+				refundAmount: 5000,
+			},
+		},
 		{
 			cooldowns: [this.data.actions.SALTED_EARTH],
 			firstUseOffset: 10000,
