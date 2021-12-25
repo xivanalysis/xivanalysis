@@ -24,6 +24,40 @@ const EXPECTED_REQUIESCAT_CASTS = 5
 const WINDOW_START_FORGIVENESS_FOR_RUSHING = 1500
 const REQUIESCAT_DURATION = 30000
 
+const EXCLUDED_ACTIONS: ActionKey[] = [
+	'FAST_BLADE',
+	'FIGHT_OR_FLIGHT',
+	'RIOT_BLADE',
+	'TOTAL_ECLIPSE',
+	'SHIELD_BASH',
+	'IRON_WILL',
+	'SHIELD_LOB',
+	'SPIRITS_WITHIN',
+	'SHELTRON',
+	'SENTINEL',
+	'PROMINENCE',
+	'COVER',
+	'CIRCLE_OF_SCORN',
+	'HALLOWED_GROUND',
+	'GORING_BLADE',
+	'DIVINE_VEIL',
+	'CLEMENCY',
+	'ROYAL_AUTHORITY',
+	'INTERVENTION',
+	'PASSAGE_OF_ARMS',
+	'INTERVENE',
+	'ATONEMENT',
+	'HOLY_SHELTRON',
+	'EXPIACION',
+	'RAMPART',
+	'LOW_BLOW',
+	'PROVOKE',
+	'INTERJECT',
+	'REPRISAL',
+	'ARMS_LENGTH',
+	'SHIRK',
+]
+
 interface RequiescatGcdsOptions extends AllowedGcdsOnlyOptions {
 	downtime: Downtime
 }
@@ -79,6 +113,7 @@ export class Requiescat extends BuffWindow {
 
 	override initialise() {
 		super.initialise()
+		this.ignoreActions(EXCLUDED_ACTIONS.map(g => this.data.actions[g].id))
 		this.addEvaluator(new RequiescatGcdsEvaluator({
 			expectedGcdCount: 4,
 			allowedGcds: [
