@@ -74,7 +74,7 @@ const DEFAULT_DEFENSE_CHECKLIST_TIERS = {
 	80: TARGET.SUCCESS,
 }
 
-export abstract class CooldownDowntime extends Analyser {
+export abstract class CooldownDowntime_copy extends Analyser {
 	static override handle = 'cooldownDowntime'
 	static override title = t('core.cooldownDowntime.title.copy')`Cooldown Downtime Copy`
 	static override debug = false
