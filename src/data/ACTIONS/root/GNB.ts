@@ -51,7 +51,7 @@ export const GNB = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003407.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		breaksCombo: true,
+		breaksCombo: false,
 	},
 	GNASHING_FANG: {
 		id: 16146,
@@ -124,6 +124,7 @@ export const GNB = ensureActions({
 		name: 'Double Down',
 		icon: 'https://xivapi.com/i/003000/003432_hr1.png',
 		onGcd: true,
+		gcdRecast: 2500,
 		cooldown: 60000,
 		speedAttribute: Attribute.SKILL_SPEED,
 	},

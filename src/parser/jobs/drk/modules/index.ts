@@ -7,6 +7,7 @@ import {EsteemTimeline} from './EsteemTimeline'
 import {MPUsage} from './MPUsage'
 import {MultiHitSkills} from './MultiHitSkills'
 import {OGCDDowntime} from './OGCDDowntime'
+import {SaltAndDarkness} from './SaltAndDarkness'
 import {StatusTimeline} from './StatusTimeline'
 
 export default [
@@ -19,5 +20,6 @@ export default [
 	MPUsage,
 	MultiHitSkills,
 	OGCDDowntime,
+	SaltAndDarkness,
 	StatusTimeline,
 ]

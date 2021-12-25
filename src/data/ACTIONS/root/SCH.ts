@@ -6,6 +6,15 @@ export const SCH = ensureActions({
 	// Player
 	// -----
 
+	BROIL_IV: {
+		id: 25865,
+		name: 'Broil IV',
+		icon: 'https://xivapi.com/i/002000/002875.png',
+		onGcd: true,
+		speedAttribute: Attribute.SPELL_SPEED,
+		castTime: 1500,
+	},
+
 	AETHERFLOW: {
 		id: 166,
 		name: 'Aetherflow',
@@ -56,7 +65,7 @@ export const SCH = ensureActions({
 		icon: 'https://xivapi.com/i/002000/002821.png',
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
-		castTime: 2500,
+		castTime: 1500,
 	},
 
 	SCH_RUIN_II: {
@@ -129,6 +138,30 @@ export const SCH = ensureActions({
 		speedAttribute: Attribute.SPELL_SPEED,
 	},
 
+	ART_OF_WAR_II: {
+		id: 25866,
+		name: 'Art of War II',
+		icon: 'https://xivapi.com/i/002000/002876.png',
+		onGcd: true,
+		speedAttribute: Attribute.SPELL_SPEED,
+	},
+
+	PROTRACTION: {
+		id: 25867,
+		name: 'Protraction',
+		icon: 'https://xivapi.com/i/002000/002877.png',
+		cooldown: 60000,
+		statusesApplied: ['PROTRACTION'],
+	},
+
+	EXPEDIENT: {
+		id: 25868,
+		name: 'Expedient',
+		icon: 'https://xivapi.com/i/002000/002878.png',
+		cooldown: 120000,
+		statusesApplied: ['EXPEDIENCE', 'DESPERATE_MEASURES'],
+	},
+
 	INDOMITABILITY: {
 		id: 3583,
 		name: 'Indomitability',
@@ -142,14 +175,14 @@ export const SCH = ensureActions({
 		icon: 'https://xivapi.com/i/002000/002807.png',
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
-		castTime: 2500,
+		castTime: 1500,
 	},
 
 	DEPLOYMENT_TACTICS: {
 		id: 3585,
 		name: 'Deployment Tactics',
 		icon: 'https://xivapi.com/i/002000/002808.png',
-		cooldown: 120000,
+		cooldown: 90000,
 	},
 
 	EMERGENCY_TACTICS: {
@@ -182,7 +215,7 @@ export const SCH = ensureActions({
 		icon: 'https://xivapi.com/i/002000/002814.png',
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
-		castTime: 2500,
+		castTime: 1500,
 	},
 
 	CHAIN_STRATAGEM: {
@@ -226,7 +259,7 @@ export const SCH = ensureActions({
 		id: 167,
 		name: 'Energy Drain',
 		icon: 'https://xivapi.com/i/000000/000514.png',
-		cooldown: 3000,
+		cooldown: 1000,
 	},
 
 	SUMMON_EOS: {
@@ -235,7 +268,7 @@ export const SCH = ensureActions({
 		icon: 'https://xivapi.com/i/002000/002823.png',
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
-		castTime: 2500,
+		castTime: 1500,
 	},
 
 	SUMMON_SELENE: {
@@ -244,7 +277,7 @@ export const SCH = ensureActions({
 		icon: 'https://xivapi.com/i/002000/002824.png',
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
-		castTime: 2500,
+		castTime: 1500,
 	},
 
 	// -----

@@ -13,7 +13,7 @@ export const WAR = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		potency: 100,
-		breaksCombo: true,
+		breaksCombo: false,
 	},
 
 	HEAVY_SWING: {
