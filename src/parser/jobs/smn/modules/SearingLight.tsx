@@ -75,9 +75,18 @@ export class SearingLight extends Analyser {
 			this.onPetCast
 		)
 
+		// this hook is for counting targets
 		this.addEventHook(
 			petsFilter.status(this.data.statuses.SEARING_LIGHT.id).type('statusApply'),
 			this.countTargets
+		)
+		// this hook is for just the player to start the window
+		this.addEventHook(
+			filter<Event>()
+				.target(this.parser.actor.id)
+				.status(this.data.statuses.SEARING_LIGHT.id)
+				.type('statusApply'),
+			this.onBuffApplied
 		)
 		this.addEventHook(
 			filter<Event>()
@@ -126,19 +135,48 @@ export class SearingLight extends Analyser {
 	}
 
 	private onPetCast(event: Events['action']) {
-		// If there is no active window, open one.
-		// This method can get called multiple times for what should
-		// be the same window due to pet action duping, so reuse the
-		// window in that case.
-		// If the active window is old enough that it should have closed
-		// but didn't for some reason, close it and open a new one.
-
-		this.hookPlayerCasts()
-		const current = this.history.getCurrentOrOpenNew(event.timestamp)
-		if (current.start + MAX_BUFF_DURATION < event.timestamp) {
-			this.history.openNew(event.timestamp)
-		}
+		this.tryStartNewWindow(event.timestamp)
 		this.slPending = 0
+	}
+
+	private onBuffApplied(event: Events['statusApply']) {
+		this.tryStartNewWindow(event.timestamp)
+		// do not clear slPending here, since this could be from another summoner
+
+		// Do add the player to the list of targets hit in this window.  In the
+		// case of multi-summoner windows, this may get missed by the other apply hook.
+		this.history.doIfOpen(current => {
+			current.playersHit = current.playersHit.add(event.target)
+		})
+	}
+
+	private tryStartNewWindow(timestamp: number) {
+		this.hookPlayerCasts()
+		// Check for an active window
+		// This method can get called multiple times for what should
+		// be the same window due to pet action duping or multiple
+		// summoners, so reuse the window in that case.
+		const current = this.history.getCurrent()
+		if (current == null) {
+			// If there is no active window, see if the last window just ended
+			// at the exact same timestamp.  If it did, this is likely due to
+			// having multiple summoners, so reopen the last window
+			if (this.history.entries.length > 0) {
+				const last = this.history.entries[this.history.entries.length - 1]
+				if ((last.end ?? 0) === timestamp) {
+					last.end = undefined
+					return
+				}
+			}
+
+			// If there is no last window or it is not the same one, start a new one
+			this.history.openNew(timestamp)
+		} else if (current.start + MAX_BUFF_DURATION < timestamp) {
+			// If the active window is old enough that it should have closed
+			// but didn't for some reason, close it and open a new one.
+			this.history.openNew(timestamp)
+		}
+		// If the active window is new enough, no action needs to be taken here
 	}
 
 	private countTargets(event: Events['statusApply']) {
