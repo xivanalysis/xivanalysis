@@ -1,6 +1,7 @@
 import {t} from '@lingui/macro'
 import {Plural, Trans} from '@lingui/react'
 import {DataLink} from 'components/ui/DbLink'
+import {Action, ActionKey} from 'data/ACTIONS'
 import {dependency} from 'parser/core/Injectable'
 import {AllowedGcdsOnlyEvaluator, AllowedGcdsOnlyOptions, BuffWindow, calculateExpectedGcdsForTime, EvaluatedAction, ExpectedActionsEvaluator} from 'parser/core/modules/ActionWindow'
 import {HistoryEntry} from 'parser/core/modules/ActionWindow/History'
