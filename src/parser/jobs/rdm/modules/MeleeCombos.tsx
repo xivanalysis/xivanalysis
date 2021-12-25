@@ -143,13 +143,13 @@ export class MeleeCombos extends Analyser {
 			return
 		}
 
+		const current = this._meleeCombos.getCurrent()
+
 		if (action.combo) {
 			if (action.combo.start) {
 				this.breakComboIfExists(event.timestamp)
 				this.startCombo(event)
 			} else {
-				const current = this._meleeCombos.getCurrent()
-
 				if (current == null) {
 					return
 				}
@@ -175,6 +175,15 @@ export class MeleeCombos extends Analyser {
 		}
 
 		if (action.breaksCombo) {
+			/*
+			Manafication does break combos, but the way we are currently modeling the full RDM combo isn't accurate anymore.
+			A full fix for this entails modeling mana stacks, splitting the full combo into two, and fixing the UI to display that info in a reasonable way.
+			However, as more people are starting to use Manafication after EncRedoublement (to fit multiple combos under buffs), this is a band-aid fix for now.
+			*/
+			if (action.id === this.data.actions.MANAFICATION.id &&
+				current && current.data.lastAction.action === this.data.actions.ENCHANTED_REDOUBLEMENT.id) {
+				return
+			}
 			this.breakComboIfExists(event.timestamp)
 		}
 	}

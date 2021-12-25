@@ -27,4 +27,9 @@ export const changelog = [
 		Changes: () => <>Update Devilment timing suggestion, and mark job as supported for Endwalker.</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],
 	},
+	{
+		date: new Date('2021-12-23'),
+		Changes: () => <>Bugfix for Technical Finish windows opening due to non-player-controlled units spawning.</>,
+		contributors: [CONTRIBUTORS.MYPS],
+	},
 ]
