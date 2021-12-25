@@ -4,6 +4,7 @@ import {AoE} from './AoE'
 import {Combos} from './Combos'
 import {CooldownDowntime} from './CooldownDowntime'
 import {DeathsDesign} from './DeathsDesign'
+import {Tincture} from './Tincture'
 
 export default [
 	ActionTimeline,
@@ -11,5 +12,6 @@ export default [
 	Combos,
 	CooldownDowntime,
 	DeathsDesign,
+	Tincture,
 	Weaving,
 ]
