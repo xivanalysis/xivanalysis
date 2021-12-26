@@ -1,15 +1,6 @@
 import {ActionKey} from 'data/ACTIONS'
 import {StatusKey} from 'data/STATUSES'
 
-// Fists
-export const FISTLESS = Symbol('FISTLESS')
-
-export const FISTS: StatusKey[] = [
-	'FISTS_OF_EARTH',
-	'FISTS_OF_FIRE',
-	'FISTS_OF_WIND',
-]
-
 export const FORM_TIMEOUT_MILLIS = 15000
 
 // Forms

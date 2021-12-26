@@ -535,7 +535,7 @@
   "mnk.steppies.suggestions.bootshine.why": "<0/>は対象の背中から{0, plural, other {#回}}実行できませんでした。",
   "mnk.steppies.suggestions.dragon_kick.content": "バフされていない<0/>を遠慮してください。先に必ず<1/>を実行してください。",
   "mnk.steppies.suggestions.dragon_kick.why": "<0/>のバフが {1} 回追加していないため、{0} 威力がなくなりました。",
-  "mnk.twinsnakes.checklist.description": "双掌打は10％のバフを加えることができます。",
+  "mnk.twinsnakes.checklist.description": "双掌打は15％のバフを加えることができます。",
   "mnk.twinsnakes.checklist.name": "双掌打の維持率",
   "mnk.twinsnakes.checklist.requirement.name": "アクティブ率: <0/>",
   "mnk.twinsnakes.suggestions.antman.content": "<1/>を使う前、先に<0/>の効果を追加してください。",

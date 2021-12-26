@@ -535,7 +535,7 @@
   "mnk.steppies.suggestions.bootshine.why": "{0, plural, one {# 次用} other {# 次用}} <0/> 打中错误的身位.",
   "mnk.steppies.suggestions.dragon_kick.content": "避免在使用 <1/> 之前使用 <0/> 。",
   "mnk.steppies.suggestions.dragon_kick.why": "{1} 次因为没有 <0/> Buff，损失了 {0} 的技能威力。",
-  "mnk.twinsnakes.checklist.description": "双掌打能让自己的所有伤害直接提高10%。",
+  "mnk.twinsnakes.checklist.description": "双掌打能让自己的所有伤害直接提高15%。",
   "mnk.twinsnakes.checklist.name": "保持双掌打 Buff",
   "mnk.twinsnakes.checklist.requirement.name": "<0/> 覆盖率",
   "mnk.twinsnakes.suggestions.antman.content": "让<0/>覆盖<1/>来利用它的免费刷新。",

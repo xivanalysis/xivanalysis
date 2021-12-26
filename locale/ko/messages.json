@@ -535,7 +535,7 @@
   "mnk.steppies.suggestions.bootshine.why": "{0, plural, other {# 회}}의 <0/>가 후방 보너스를 받지 못하였습니다.",
   "mnk.steppies.suggestions.dragon_kick.content": "<1/> 사용 후 버프를 받지 못한 <0/>을 사용을 피하십시오.",
   "mnk.steppies.suggestions.dragon_kick.why": "<0/> 버프를 {1} 회 놓쳐 총 {0} 위력을 잃었습니다.",
-  "mnk.twinsnakes.checklist.description": "쌍장타는 DPS를 위해 간단하게 추가할 수 있는 10% 버프입니다.",
+  "mnk.twinsnakes.checklist.description": "쌍장타는 DPS를 위해 간단하게 추가할 수 있는 15% 버프입니다.",
   "mnk.twinsnakes.checklist.name": "항상 쌍장타가 유지되도록 하십시오",
   "mnk.twinsnakes.checklist.requirement.name": "<0/> 지속시간",
   "mnk.twinsnakes.suggestions.antman.content": "<1/>을 사용하기전 <0/>을 사용하여 갱신 효과를 받으십시오.",

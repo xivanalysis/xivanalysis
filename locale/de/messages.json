@@ -535,7 +535,7 @@
   "mnk.steppies.suggestions.bootshine.why": "{0}-mal <0/> an der falschen Position angesetzt.",
   "mnk.steppies.suggestions.dragon_kick.content": "Verhindere <0/> ohne <1/>-Buff einzusetzen.",
   "mnk.steppies.suggestions.dragon_kick.why": "{0} Angriffspotenz durch {1}-mal nicht-aktivierten <0/>-Buff verloren.",
-  "mnk.twinsnakes.checklist.description": "Doppelviper erhöht deinen ausgeteilten Schaden schnell um 10%.",
+  "mnk.twinsnakes.checklist.description": "<0/> deinen ausgeteilten Schaden schnell um 15%.",
   "mnk.twinsnakes.checklist.name": "Halte Doppelviper aktiv",
   "mnk.twinsnakes.checklist.requirement.name": "<0/> Gesamtanwendungszeit",
   "mnk.twinsnakes.suggestions.antman.content": "Versuche <0/> vor <1/> zu aktivieren, um von der gratis Auffrischung zu profitieren.",

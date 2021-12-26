@@ -10,18 +10,14 @@ export class ActionTimeline extends CoreActionTimeline {
 			label: <Trans id="mnk.action-timeline.chakras">Chakras</Trans>,
 			content: 'THE_FORBIDDEN_CHAKRA',
 		},
-		{
-			label: <Trans id="mnk.action-timeline.fists">Fists</Trans>,
-			content: 'FISTS_OF_FIRE',
-		},
 		'RIDDLE_OF_FIRE',
 		'BROTHERHOOD',
 		'PERFECT_BALANCE',
 		'ELIXIR_FIELD',
 		'TORNADO_KICK',
-		'SHOULDER_TACKLE',
 		'ANATMAN',
 		'RIDDLE_OF_EARTH',
 		'MANTRA',
+		'RIDDLE_OF_WIND',
 	]
 }

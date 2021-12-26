@@ -535,7 +535,7 @@
   "mnk.steppies.suggestions.bootshine.why": "{0, plural,one {#utilisation de }other {#utilisations de}}<0/> exécuter avec des positions incorrect.",
   "mnk.steppies.suggestions.dragon_kick.content": "Évitez les <0/> non buffée en utilisant <1/> avant.",
   "mnk.steppies.suggestions.dragon_kick.why": "{0} puissance perdue en raison de l'absence de <0/> buff {1} fois.",
-  "mnk.twinsnakes.checklist.description": "Utiliser Serpents Jumeaux permet d'augmenter facilement vos dégâts de 10%.",
+  "mnk.twinsnakes.checklist.description": "Utiliser <0/> permet d'augmenter facilement vos dégâts de 15%.",
   "mnk.twinsnakes.checklist.name": "Garder Serpent Jumeaux actif",
   "mnk.twinsnakes.checklist.requirement.name": "<0/> temps d'activité",
   "mnk.twinsnakes.suggestions.antman.content": "Essayez d'attendre <0/> avant d'utiliser <1/> pour profiter de son rafraîchissement gratuit.",

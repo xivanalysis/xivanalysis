@@ -1,9 +1,8 @@
 import {ActionTimeline} from './ActionTimeline'
 import {AoE} from './AoE'
 import {Demolish} from './Demolish'
-import {Fists} from './Fists'
 import {Forms} from './Forms'
-import {GreasedLightning} from './GreasedLightning'
+import {GlobalCooldown} from './GlobalCooldown'
 import {OGCDDowntime} from './OGCDDowntime'
 import {PerfectBalance} from './PerfectBalance'
 import {RiddleOfFire} from './RiddleOfFire'
@@ -15,13 +14,12 @@ export default [
 	ActionTimeline,
 	AoE,
 	Demolish,
-	Fists,
 	Forms,
-	GreasedLightning,
 	OGCDDowntime,
 	PerfectBalance,
 	RiddleOfFire,
 	Steppies,
 	TwinSnakes,
 	Weaving,
+	GlobalCooldown,
 ]

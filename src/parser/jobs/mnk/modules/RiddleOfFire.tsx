@@ -18,7 +18,6 @@ import DISPLAY_ORDER from './DISPLAY_ORDER'
 const EXPECTED = {
 	GCDS: 11,
 	ELIXIRS: 1,
-	TACKLES: 1,
 	TORNADOES: 1,
 }
 
@@ -57,10 +56,6 @@ class Riddle {
 
 	get meditations() {
 		return this.casts.filter(event => event.action === this.data.actions.MEDITATION.id).length
-	}
-
-	get tackles() {
-		return this.casts.filter(event => event.action === this.data.actions.SHOULDER_TACKLE.id).length
 	}
 
 	get tornadoKicks() {
@@ -155,11 +150,7 @@ export class RiddleOfFire extends Analyser {
 		const droppedTornadoKicks = (nonRushedRiddles.length) // should be 1 per Riddle
 		- nonRushedRiddles.reduce((sum, riddle) => sum + riddle.tornadoKicks, 0)
 
-		// Keep these seperate for different suggestions; our baseline is 1 charge, but the MNK mentors
-		// want a minor suggestion to track Riddles that only had 1 Tackle
-		const riddlesWithOneTackle = nonRushedRiddles.filter(riddle => riddle.tackles === 1).length
-		const riddlesWithZeroTackles = nonRushedRiddles.filter(riddle => riddle.tackles === 0).length
-		const droppedExpectedOgcds = droppedElixirFields + droppedTornadoKicks + riddlesWithZeroTackles
+		const droppedExpectedOgcds = droppedElixirFields + droppedTornadoKicks
 
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.RIDDLE_OF_FIRE.icon,
@@ -176,26 +167,12 @@ export class RiddleOfFire extends Analyser {
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.ELIXIR_FIELD.icon,
 			content: <Trans id="mnk.rof.suggestions.ogcd.content">
-				Aim to use <DataLink action="TORNADO_KICK"/>, <DataLink action="ELIXIR_FIELD"/>, and at least 1 <DataLink action="SHOULDER_TACKLE"/> during each <DataLink status="RIDDLE_OF_FIRE"/>.
+				Aim to use <DataLink action="TORNADO_KICK"/>, <DataLink action="ELIXIR_FIELD"/>, and at least 1 <DataLink action="THUNDERCLAP"/> during each <DataLink status="RIDDLE_OF_FIRE"/>.
 			</Trans>,
 			tiers: SUGGESTION_TIERS,
 			value: droppedExpectedOgcds,
 			why: <Trans id="mnk.rof.suggestions.ogcd.why">
 				<Plural value={droppedExpectedOgcds} one="# expected oGCD was" other="# expected oGCDs were" /> dropped during <DataLink status="RIDDLE_OF_FIRE"/>.
-			</Trans>,
-		}))
-
-		this.suggestions.add(new TieredSuggestion({
-			icon: this.data.actions.SHOULDER_TACKLE.icon,
-			content: <Trans id="mnk.rof.suggestions.tackle.content">
-				Try to use both charges of <DataLink action="SHOULDER_TACKLE"/> during <DataLink status="RIDDLE_OF_FIRE"/>, unless you need to hold a charge for strategic purposes.
-			</Trans>,
-			tiers: {
-				2: SEVERITY.MINOR,	// Always a minor suggestion, however we start from 2 to forgive ST on pull
-			},
-			value: riddlesWithOneTackle,
-			why: <Trans id="mnk.rof.suggestions.tackle.why">
-				<Plural value={riddlesWithOneTackle} one="# use" other="# uses" /> of <DataLink status="RIDDLE_OF_FIRE"/> contained only one use of <DataLink action="SHOULDER_TACKLE"/>.
 			</Trans>,
 		}))
 	}
@@ -219,10 +196,6 @@ export class RiddleOfFire extends Analyser {
 					header: <DataLink showName={false} action="ELIXIR_FIELD"/>,
 					accessor: 'elixirField',
 				},
-				{
-					header: <DataLink showName={false} action="SHOULDER_TACKLE"/>,
-					accessor: 'shoulderTackle',
-				},
 			]}
 			data={this.history
 				.map(riddle => ({
@@ -245,10 +218,6 @@ export class RiddleOfFire extends Analyser {
 						elixirField: {
 							actual: riddle.elixirFields,
 							expected: EXPECTED.ELIXIRS,
-						},
-						shoulderTackle: {
-							actual: riddle.tackles,
-							expected: EXPECTED.TACKLES,
 						},
 					},
 					rotation: riddle.casts,

@@ -37,10 +37,10 @@ export const MNK = ensureStatuses({
 		duration: 15000,
 	},
 
-	TWIN_SNAKES: {
-		id: 101,
-		name: 'Twin Snakes',
-		icon: 'https://xivapi.com/i/010000/010216.png',
+	DISCIPLINED_FIST: {
+		id: 3001,
+		name: 'Disciplined Fist',
+		icon: 'https://xivapi.com/i/012000/012538.png',
 		duration: 15000,
 	},
 
@@ -51,30 +51,12 @@ export const MNK = ensureStatuses({
 		duration: 18000,
 	},
 
-	FISTS_OF_WIND: {
-		id: 105,
-		name: 'Fists of Wind',
-		icon: 'https://xivapi.com/i/012000/012526.png',
-	},
-
-	FISTS_OF_EARTH: {
-		id: 104,
-		name: 'Fists of Earth',
-		icon: 'https://xivapi.com/i/010000/010203.png',
-	},
-
 	RIDDLE_OF_EARTH: {
 		id: 1179,
 		name: 'Riddle of Earth',
 		icon: 'https://xivapi.com/i/012000/012527.png',
 		duration: 10000,
 		stacksApplied: 3,
-	},
-
-	FISTS_OF_FIRE: {
-		id: 103,
-		name: 'Fists of Fire',
-		icon: 'https://xivapi.com/i/010000/010202.png',
 	},
 
 	RIDDLE_OF_FIRE: {
@@ -98,12 +80,6 @@ export const MNK = ensureStatuses({
 		duration: 15000,
 	},
 
-	GREASED_LIGHTNING: {
-		id: 111,
-		name: 'Greased Lightning',
-		icon: 'https://xivapi.com/i/010000/010207.png',
-	},
-
 	LEADEN_FIST: {
 		id: 1861,
 		name: 'Leaden Fist',
@@ -122,6 +98,13 @@ export const MNK = ensureStatuses({
 		id: 2513,
 		name: 'Formless Fist',
 		icon: 'https://xivapi.com/i/012000/012535.png',
+		duration: 30000,
+	},
+
+	RIDDLE_OF_WIND: {
+		id: 2687,
+		name: 'Riddle of Wind',
+		icon: 'https://xivapi.com/i/012000/012537.png',
 		duration: 15000,
 	},
 })
