@@ -11,7 +11,7 @@ import {dependency} from 'parser/core/Injectable'
 import {History} from 'parser/core/modules/ActionWindow/History'
 import {Actor, Actors} from 'parser/core/modules/Actors'
 import {Data} from 'parser/core/modules/Data'
-import Suggestions, {TieredSuggestion, SEVERITY, Suggestion} from 'parser/core/modules/Suggestions'
+import Suggestions, {SEVERITY, Suggestion} from 'parser/core/modules/Suggestions'
 import {Timeline} from 'parser/core/modules/Timeline'
 import React from 'react'
 import {Icon} from 'semantic-ui-react'
@@ -19,11 +19,6 @@ import {Icon} from 'semantic-ui-react'
 const PLAYERS_HIT_TARGET = 8
 const PLAYERS_HIT_SUGGESTION_THRESHOLD = 7
 const MAX_BUFF_DURATION = 30000
-const PLAYERS_MISSED_SEVERITY = {
-	1: SEVERITY.MINOR,
-	4: SEVERITY.MEDIUM,
-	8: SEVERITY.MAJOR,
-}
 
 const OTHER_PET_ACTIONS: ActionKey[] = [
 	'INFERNO',
@@ -75,9 +70,18 @@ export class SearingLight extends Analyser {
 			this.onPetCast
 		)
 
+		// this hook is for counting targets
 		this.addEventHook(
 			petsFilter.status(this.data.statuses.SEARING_LIGHT.id).type('statusApply'),
 			this.countTargets
+		)
+		// this hook is for just the player to start the window
+		this.addEventHook(
+			filter<Event>()
+				.target(this.parser.actor.id)
+				.status(this.data.statuses.SEARING_LIGHT.id)
+				.type('statusApply'),
+			this.onBuffApplied
 		)
 		this.addEventHook(
 			filter<Event>()
@@ -126,19 +130,48 @@ export class SearingLight extends Analyser {
 	}
 
 	private onPetCast(event: Events['action']) {
-		// If there is no active window, open one.
-		// This method can get called multiple times for what should
-		// be the same window due to pet action duping, so reuse the
-		// window in that case.
-		// If the active window is old enough that it should have closed
-		// but didn't for some reason, close it and open a new one.
-
-		this.hookPlayerCasts()
-		const current = this.history.getCurrentOrOpenNew(event.timestamp)
-		if (current.start + MAX_BUFF_DURATION < event.timestamp) {
-			this.history.openNew(event.timestamp)
-		}
+		this.tryStartNewWindow(event.timestamp)
 		this.slPending = 0
+	}
+
+	private onBuffApplied(event: Events['statusApply']) {
+		this.tryStartNewWindow(event.timestamp)
+		// do not clear slPending here, since this could be from another summoner
+
+		// Do add the player to the list of targets hit in this window.  In the
+		// case of multi-summoner windows, this may get missed by the other apply hook.
+		this.history.doIfOpen(current => {
+			current.playersHit = current.playersHit.add(event.target)
+		})
+	}
+
+	private tryStartNewWindow(timestamp: number) {
+		this.hookPlayerCasts()
+		// Check for an active window
+		// This method can get called multiple times for what should
+		// be the same window due to pet action duping or multiple
+		// summoners, so reuse the window in that case.
+		const current = this.history.getCurrent()
+		if (current == null) {
+			// If there is no active window, see if the last window just ended
+			// at the exact same timestamp.  If it did, this is likely due to
+			// having multiple summoners, so reopen the last window
+			if (this.history.entries.length > 0) {
+				const last = this.history.entries[this.history.entries.length - 1]
+				if ((last.end ?? 0) === timestamp) {
+					last.end = undefined
+					return
+				}
+			}
+
+			// If there is no last window or it is not the same one, start a new one
+			this.history.openNew(timestamp)
+		} else if (current.start + MAX_BUFF_DURATION < timestamp) {
+			// If the active window is old enough that it should have closed
+			// but didn't for some reason, close it and open a new one.
+			this.history.openNew(timestamp)
+		}
+		// If the active window is new enough, no action needs to be taken here
 	}
 
 	private countTargets(event: Events['statusApply']) {
@@ -181,17 +214,18 @@ export class SearingLight extends Analyser {
 				return totalMissed + ((slUse.data.ghosted) ? 0 :  PLAYERS_HIT_TARGET - slUse.data.playersHit.size)
 			}, 0)
 
-		this.suggestions.add(new TieredSuggestion({
-			icon: this.data.actions.SEARING_LIGHT.icon,
-			content: <Trans id="smn.searinglight.suggestions.missed-players.content">
-				Try to make sure your <StatusLink status="SEARING_LIGHT"/> casts buff your full party with each use. Failing to do so is a raid damage loss.
-			</Trans>,
-			tiers: PLAYERS_MISSED_SEVERITY,
-			value: totalMissedPlayers,
-			why: <Trans id="smn.searinglight.suggestions.missed-players.why">
-				{missedPlayersWindows} of your Searing Light uses did not buff the full party.
-			</Trans>,
-		}))
+		if (totalMissedPlayers > 0) {
+			this.suggestions.add(new Suggestion({
+				icon: this.data.actions.SEARING_LIGHT.icon,
+				content: <Trans id="smn.searinglight.suggestions.missed-players.content">
+					Try to make sure your <StatusLink status="SEARING_LIGHT"/> casts buff your full party with each use. Failing to do so is a raid damage loss.
+				</Trans>,
+				severity: SEVERITY.MINOR,
+				why: <Trans id="smn.searinglight.suggestions.missed-players.why">
+					{missedPlayersWindows} of your Searing Light uses did not buff the full party.
+				</Trans>,
+			}))
+		}
 
 		const ghostedWindows = this.history.entries.filter(slUse => slUse.data.ghosted).length
 		if (ghostedWindows) {
