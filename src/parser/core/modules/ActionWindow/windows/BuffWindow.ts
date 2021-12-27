@@ -26,6 +26,13 @@ export abstract class BuffWindow extends ActionWindow {
 	abstract buffStatus: Status | Status[]
 
 	/**
+	 * Determines if the window opens and closes based on status application to the
+	 * player who used it. Used for eliminating duplicate applications and pet
+	 * mirroring on raid buffs like Battle Litany.
+	 */
+	trackSelfOnly: boolean = false
+
+	/**
 	 * Determines if a window ended early due to the end of the pull.
 	 * @param window The window to check
 	 * @returns True if the window is shorter than the expected duration of the buff because of the end
@@ -48,7 +55,7 @@ export abstract class BuffWindow extends ActionWindow {
 			.map(actor => actor.id)
 		const buffFilter = filter<Event>()
 			.source(this.parser.actor.id)
-			.target(noneOf(pets))
+			.target(this.trackSelfOnly ? this.parser.actor.id : noneOf(pets))
 			.status(oneOf(ensureArray(this.buffStatus).map(s => s.id)))
 
 		this.addEventHook(buffFilter.type('statusApply'), this.startWindowAndTimeout)
