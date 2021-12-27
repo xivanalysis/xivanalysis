@@ -73,7 +73,7 @@ class DoubleDrgEvaluator implements WindowEvaluator {
 		return {
 			format: 'notes',
 			header: {
-				header: <Trans id="drg.battlelitany.rotation-table.header.buffed">Window Interference</Trans>,
+				header: <Trans id="drg.battlelitany.rotation-table.header.interference">Window Interference</Trans>,
 				accessor: 'interference',
 			},
 			rows: notes.map(n => {
@@ -129,7 +129,7 @@ export class BattleLitany extends BuffWindow {
 		this.addEventHook(blStatusFilter, this.onBlStatusApply)
 
 		const suggestionIcon = this.data.actions.BATTLE_LITANY.icon
-		const suggestionWindowName = <ActionLink action="DRAGON_SIGHT" showIcon={false} />
+		const suggestionWindowName = <ActionLink action="BATTLE_LITANY" showIcon={false} />
 		this.addEvaluator(new ExpectedGcdCountEvaluator({
 			expectedGcds: BL_GCD_TARGET,
 			globalCooldown: this.globalCooldown,
