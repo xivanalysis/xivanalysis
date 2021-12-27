@@ -1,6 +1,6 @@
 import {t} from '@lingui/macro'
 import {Plural, Trans} from '@lingui/react'
-import {ActionLink, DataLink, StatusLink} from 'components/ui/DbLink'
+import {DataLink} from 'components/ui/DbLink'
 import {RotationTargetOutcome} from 'components/ui/RotationTable'
 import {ActionKey} from 'data/ACTIONS'
 import {Event, Events} from 'event'
@@ -167,13 +167,13 @@ export class RagingStrikes extends BuffWindow {
 		this.addEventHook(buffFilter.type('statusRemove'), this.onRemoveMuse)
 		this.addEventHook(playerFilter.status(this.data.statuses.BARRAGE.id).type('statusRemove'), this.onRemoveBarrage)
 
-		const suggestionWindowName = <ActionLink action="RAGING_STRIKES" showIcon={false} />
+		const suggestionWindowName = <DataLink action="RAGING_STRIKES" showIcon={false} />
 		this.addEvaluator(new ExpectedGcdCountEvaluator({
 			expectedGcds: 8,
 			globalCooldown: this.globalCooldown,
 			suggestionIcon: this.data.actions.RAGING_STRIKES.icon,
 			suggestionContent: <Trans id="brd.rs.suggestions.missedgcd.content">
-				Try to land 8 GCDs (9 GCDs with <StatusLink {...this.data.statuses.ARMYS_MUSE}/>) during every <ActionLink {...this.data.actions.RAGING_STRIKES}/> window.
+				Try to land 8 GCDs (9 GCDs with <DataLink status="ARMYS_MUSE"/>) during every <DataLink action="RAGING_STRIKES"/> window.
 			</Trans>,
 			suggestionWindowName,
 			severityTiers: {
@@ -197,7 +197,7 @@ export class RagingStrikes extends BuffWindow {
 			],
 			suggestionIcon: this.data.actions.BARRAGE.icon,
 			suggestionContent: <Trans id="brd.rs.suggestions.trackedactions.content">
-				One use of <ActionLink {...this.data.actions.BARRAGE}/> and one use of <ActionLink {...this.data.actions.IRON_JAWS}/> should occur during every <ActionLink {...this.data.actions.RAGING_STRIKES}/> window.
+				One use of <DataLink action="BARRAGE"/> and one use of <DataLink action="IRON_JAWS"/> should occur during every <DataLink action="RAGING_STRIKES"/> window.
 			</Trans>,
 			suggestionWindowName,
 			severityTiers: {
@@ -313,23 +313,19 @@ export class RagingStrikes extends BuffWindow {
 	private wasActionUsedInTime = (action: ActionKey, bestBeforeGCD: number, window: HistoryEntry<EvaluatedAction[]>): boolean => {
 		const buffAction = _.first(window.data.filter(it => it.action.id === this.data.actions[action].id))
 
-		if (buffAction) {
-			const gcdThreshold = _.last(
-				window.data
-					.filter(it => it.action.onGcd)
-					.slice(0, bestBeforeGCD)
-			)
-
-			if (gcdThreshold) {
-				// Used in time if it was used before specified GCD
-				return buffAction.timestamp < gcdThreshold.timestamp
-			}
-
-			// There's no limiting GCD in the window, so can only assume it was used in time
-			return true
-		}
-
 		// Buff was not used, thus it was not in time
-		return false
+		if (buffAction === undefined) { return false }
+
+		const gcdThreshold = _.last(
+			window.data
+				.filter(it => it.action.onGcd)
+				.slice(0, bestBeforeGCD)
+		)
+
+		// There's no limiting GCD in the window, so can only assume it was used in time
+		if (gcdThreshold === undefined) { return true }
+
+		// Used in time if it was used before specified GCD
+		return buffAction.timestamp < gcdThreshold.timestamp
 	}
 }
