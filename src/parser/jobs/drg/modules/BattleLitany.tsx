@@ -78,7 +78,7 @@ class DoubleDrgEvaluator implements WindowEvaluator {
 			},
 			rows: notes.map(n => {
 				if (n === BL_DOUBLE_DRG_ERROR.THEY_OVERWROTE) {
-					return <Trans id="drg.battlelitany.notes.they-overwrote">Truncated by Other DRG</Trans>
+					return <Trans id="drg.battlelitany.notes.they-overwrote">Overwritten by Other DRG</Trans>
 				}
 
 				if (n === BL_DOUBLE_DRG_ERROR.YOU_OVERWROTE) {

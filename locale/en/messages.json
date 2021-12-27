@@ -325,7 +325,7 @@
   "dnc.technicalities.suggestions.unpooled.why": "{unpooledWindows, plural, one {# window} other {# windows}} were missing potential <0/>s.",
   "dnc.technicalities.title": "Technical Windows",
   "drg.about.description": "<0>This analyzer aims to help you beat the stereotypes, stay off the floor, and dish out some big juicy numbers. As the DRG rotation is pretty strict, the suggestions you see will focus mostly on keeping that rotation flowing smoothly, as well as picking out issues related to your Life of the Dragon windows and buff alignment.</0>",
-  "drg.battlelitany.notes.they-overwrote": "Truncated by Other DRG",
+  "drg.battlelitany.notes.they-overwrote": "Overwritten by Other DRG",
   "drg.battlelitany.notes.you-overwrote": "You Overwrote an Existing Window",
   "drg.battlelitany.rotation-table.header.buffed": "Players Buffed",
   "drg.battlelitany.rotation-table.header.interference": "Window Interference",
