@@ -1,24 +1,36 @@
 import {t} from '@lingui/macro'
-import {Trans} from '@lingui/react'
-import {ActionLink, StatusLink} from 'components/ui/DbLink'
+import {Plural, Trans} from '@lingui/react'
+import {ActionLink, DataLink, StatusLink} from 'components/ui/DbLink'
 import {RotationTargetOutcome} from 'components/ui/RotationTable'
 import {ActionKey} from 'data/ACTIONS'
 import {Event, Events} from 'event'
 import _ from 'lodash'
 import {filter} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
-import {BuffWindow, EvaluatedAction, ExpectedActionsEvaluator, ExpectedGcdCountEvaluator, TrackedAction, TrackedActionsOptions} from 'parser/core/modules/ActionWindow'
+import {
+	BuffWindow,
+	EvaluatedAction,
+	EvaluationOutput,
+	ExpectedActionsEvaluator,
+	ExpectedGcdCountEvaluator,
+	TrackedAction,
+	TrackedActionsOptions, WindowEvaluator,
+} from 'parser/core/modules/ActionWindow'
 import {HistoryEntry} from 'parser/core/modules/ActionWindow/History'
 import {Actors} from 'parser/core/modules/Actors'
 import {GlobalCooldown} from 'parser/core/modules/GlobalCooldown'
 import {SEVERITY} from 'parser/core/modules/Suggestions'
-import React from 'react'
+import {SeverityTiers, TieredSuggestion} from 'parser/core/modules/Suggestions/Suggestion'
+import React, {ReactNode} from 'react'
 import {Team} from 'report'
+import {Icon} from 'semantic-ui-react'
 import {isDefined} from 'utilities'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 
 // Minimum muse GCDs needed to expect an RS window to have 9 GCDs
 const MIN_MUSE_GCDS = 3
+
+const BUFF_BEST_USED_BEFORE_GCD = 3
 
 const SUPPORT_ACTIONS: ActionKey[] = [
 	'ARMS_LENGTH',
@@ -43,6 +55,7 @@ interface BarrageOptions extends TrackedActionsOptions {
 	barrageId: number
 	wasBarrageUsed: (window: HistoryEntry<EvaluatedAction[]>) => boolean
 }
+
 class BarrageEvaluator extends ExpectedActionsEvaluator {
 	// Because this class is not an Analyser, it cannot use Data directly
 	// to get the id for Barrage, so it has to take it in here.
@@ -60,6 +73,73 @@ class BarrageEvaluator extends ExpectedActionsEvaluator {
 			return this.wasBarrageUsed(window) ? 1 : 0
 		}
 		return super.countUsed(window, action)
+	}
+}
+
+interface BuffEvaluatorOptions {
+	actions: ActionKey[]
+	predicate: (action: ActionKey, bestBeforeGCD: number, window: HistoryEntry<EvaluatedAction[]>) => boolean
+
+	suggestionIcon: string
+	severityTiers: SeverityTiers
+}
+
+class BuffEvaluator implements WindowEvaluator, BuffEvaluatorOptions {
+	actions: ActionKey[]
+	predicate: (action: ActionKey, bestBeforeGCD: number, window: HistoryEntry<EvaluatedAction[]>) => boolean
+
+	suggestionIcon: string
+	suggestionWhy: ReactNode
+	severityTiers: SeverityTiers
+
+	constructor(opt: BuffEvaluatorOptions) {
+		this.actions = opt.actions
+		this.predicate = opt.predicate
+		this.suggestionIcon = opt.suggestionIcon
+		this.severityTiers = opt.severityTiers
+	}
+
+	output(windows: Array<HistoryEntry<EvaluatedAction[]>>): EvaluationOutput[] {
+		return this.actions.map(it => {
+			const header = {
+				header: <Trans id="brd.rs.rotation-table.header.on-time"><DataLink showName={false} action={it} /> On Time?</Trans>,
+				accessor: String(it),
+			}
+
+			return {
+				format: 'notes',
+				header: header,
+				rows: windows.map(window => this.generateNotes(it, window)),
+			}
+		})
+	}
+
+	generateNotes(action: ActionKey, window: HistoryEntry<EvaluatedAction[]>) {
+		const usedInTime = this.predicate(action, BUFF_BEST_USED_BEFORE_GCD, window)
+		return <Icon
+			name={usedInTime ? 'checkmark' : 'remove'}
+			className={usedInTime ? 'text-success' : 'text-error'}
+		/>
+	}
+
+	suggest(windows: Array<HistoryEntry<EvaluatedAction[]>>) {
+		const wrongUsages = this.actions.map(action =>
+			// For each action, counts the amount of times skill was not used in time in every window
+			windows.map(window => Number(!this.predicate(action, BUFF_BEST_USED_BEFORE_GCD, window)))
+				.reduce((acc, it) => acc + it, 0)
+		).reduce((acc, it) => acc + it, 0)
+
+		return new TieredSuggestion({
+			icon: this.suggestionIcon,
+			content: <Trans id="brd.rs.suggestions.buff-evaluator.content">
+				Using <DataLink action="RADIANT_FINALE" /> and <DataLink action="BATTLE_VOICE" /> within the first two GCDs of <DataLink action="RAGING_STRIKES" /> windows allows you to better align their duration and maximize the multiplicative bonuses these statuses give you.
+			</Trans>,
+			tiers: this.severityTiers,
+			value: wrongUsages,
+			why: <Trans id="brd.rs.suggestions.buff-evaluator.why">
+				<Plural value={wrongUsages} one="# cast of Battle Voice or Radiant Finale was" other="# casts of Battle Voice or Radiant Finale were"/> used later than optimal, or not at all.
+			</Trans>,
+		})
 	}
 }
 
@@ -129,6 +209,17 @@ export class RagingStrikes extends BuffWindow {
 			adjustOutcome: this.adjustExpectedActionOutcome.bind(this),
 			barrageId: this.data.actions.BARRAGE.id,
 			wasBarrageUsed: this.wasBarrageUsed.bind(this),
+		}))
+
+		this.addEvaluator(new BuffEvaluator({
+			actions: ['BATTLE_VOICE', 'RADIANT_FINALE'],
+			predicate: this.wasActionUsedInTime,
+			suggestionIcon: this.data.actions.RADIANT_FINALE.icon,
+			severityTiers: {
+				1: SEVERITY.MINOR,
+				2: SEVERITY.MEDIUM,
+				3: SEVERITY.MAJOR,
+			},
 		}))
 	}
 
@@ -217,5 +308,28 @@ export class RagingStrikes extends BuffWindow {
 		// Check to make sure at least one GCD happened before the status expired
 		const firstGcd = gcdTimestamps[0]
 		return this.barrageRemoves.some(timestamp => firstGcd <= timestamp && timestamp <= (window.end ?? window.start))
+	}
+
+	private wasActionUsedInTime = (action: ActionKey, bestBeforeGCD: number, window: HistoryEntry<EvaluatedAction[]>): boolean => {
+		const buffAction = _.first(window.data.filter(it => it.action.id === this.data.actions[action].id))
+
+		if (buffAction) {
+			const gcdThreshold = _.last(
+				window.data
+					.filter(it => it.action.onGcd)
+					.slice(0, bestBeforeGCD)
+			)
+
+			if (gcdThreshold) {
+				// Used in time if it was used before specified GCD
+				return buffAction.timestamp < gcdThreshold.timestamp
+			}
+
+			// There's no limiting GCD in the window, so can only assume it was used in time
+			return true
+		}
+
+		// Buff was not used, thus it was not in time
+		return false
 	}
 }
