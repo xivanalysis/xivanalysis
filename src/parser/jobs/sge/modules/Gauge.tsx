@@ -9,9 +9,11 @@ import {filter, noneOf, oneOf} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
 import {Actor, Actors} from 'parser/core/modules/Actors'
 import {CounterGauge, Gauge as CoreGauge, TimerGauge} from 'parser/core/modules/Gauge'
+import {SimpleStatistic, Statistics} from 'parser/core/modules/Statistics'
 import Suggestions, {SEVERITY, Suggestion, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import {UnableToAct} from 'parser/core/modules/UnableToAct'
 import React from 'react'
+import {CooldownDowntime} from './CooldownDowntime'
 
 /** Addersgall configuration */
 const ADDERSGALL_MAX_STACKS = 3
@@ -53,6 +55,8 @@ const ADDERSTING_COLOR = Color('#9e2dca')
 
 export class Gauge extends CoreGauge {
 	@dependency private actors!: Actors
+	@dependency private cooldownDowntime!: CooldownDowntime
+	@dependency private statistics!: Statistics
 	@dependency private suggestions!: Suggestions
 	@dependency private unableToAct!: UnableToAct
 
@@ -235,6 +239,17 @@ export class Gauge extends CoreGauge {
 			why: <Trans id="sge.gauge.suggestions.addersting-overcap.why">
 				<Plural value={this.adderstingGauge.overCap} one="# Addersting stack" other="# Addersting stacks"/> lost due to overcap.
 			</Trans>,
+		}))
+
+		// Calculate the number of possible addersgall stacks the player could have used: Initial max stacks, plus the maximum possible stacks if they kept the timer rolling the entire fight (aside from first-use leniency), and maximum usage of Rhizomata
+		const potentialAddersgalls = ADDERSGALL_MAX_STACKS + Math.floor((this.parser.pull.duration - addersgallLeniency)  / ADDERSGALL_TIME_REQUIRED) + this.cooldownDowntime.calculateMaxUsages({cooldowns: [this.data.actions.RHIZOMATA]})
+		this.statistics.add(new SimpleStatistic({
+			title: <Trans id="sge.gauge.statistics.addersgall-used">Addersgall Stacks Used</Trans>,
+			icon: this.data.actions.DRUOCHOLE.icon,
+			value: <>{this.addersgallGauge.totalSpent} / {potentialAddersgalls}</>,
+			info: (
+				<Trans id="sge.gauge.statistics.addersgall-used.info">The denominator is calculated as if you kept the Addersgall timer running essentially the entire fight, and maximized your uses of <DataLink action="RHIZOMATA" />.</Trans>
+			),
 		}))
 	}
 }
