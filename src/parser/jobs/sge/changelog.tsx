@@ -22,4 +22,9 @@ export const changelog = [
 		Changes: () => <>Added cooldown tracking for Phlegma III and the non-Addersgall healing and mitigation cooldowns</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],
 	},
+	{
+		date: new Date('2021-12-27'),
+		Changes: () => <>Added tracking for Tincture and Zoe usage, and marked as supported for Endwalker</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
 ]
