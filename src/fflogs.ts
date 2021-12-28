@@ -1,5 +1,3 @@
-import {Event} from 'legacyEvent'
-
 // -----
 // Fight
 // -----
@@ -279,7 +277,7 @@ const castEventTypes = [
 	'begincast',
 	'cast',
 ] as const
-export const isCastEvent = (event: Event): event is CastEvent =>
+export const isCastEvent = (event: FflogsEvent): event is CastEvent =>
 	(castEventTypes as readonly unknown[]).includes(event.type)
 export interface CastEvent extends AbilityEventFields {
 	type: typeof castEventTypes[number]
@@ -314,7 +312,7 @@ const damageEventTypes = [
 	'calculateddamage',
 	'damage',
 ] as const
-export const isDamageEvent = (event: Event): event is DamageEvent =>
+export const isDamageEvent = (event: FflogsEvent): event is DamageEvent =>
 	(damageEventTypes as readonly unknown[]).includes(event.type)
 export interface DamageEvent extends EffectEventFields {
 	type: typeof damageEventTypes[number]
@@ -334,7 +332,7 @@ const healEventTypes = [
 	'calculatedheal',
 	'heal',
 ] as const
-export const isHealEvent = (event: Event): event is HealEvent =>
+export const isHealEvent = (event: FflogsEvent): event is HealEvent =>
 	(healEventTypes as readonly unknown[]).includes(event.type)
 export interface HealEvent extends EffectEventFields {
 	type: typeof healEventTypes[number]
@@ -370,12 +368,6 @@ export type FflogsEvent =
 	| WorldMarkerPlacedEvent
 	| WorldMarkerRemovedEvent
 	| MapChangeEvent
-
-declare module 'legacyEvent' {
-	interface EventTypeRepository {
-		fflogs: FflogsEvent
-	}
-}
 
 // -----
 // Misc
