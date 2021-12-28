@@ -9,6 +9,11 @@ export const changelog = [
 	// 	contributors: [CONTRIBUTORS.YOU],
 	// },
 	{
+		date: new Date('2021-12-28'),
+		Changes: () => <>Fix how Always be casting counts Soul Slice and Soul Scythe.</>,
+		contributors: [CONTRIBUTORS.KELOS],
+	},
+	{
 		date: new Date('2021-12-18'),
 		Changes: () => <>Add a Tincture module.</>,
 		contributors: [CONTRIBUTORS.HINT],
