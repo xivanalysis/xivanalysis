@@ -1,7 +1,7 @@
-import {languageToEdition} from 'data/EDITIONS'
+import {GameEdition} from 'data/EDITIONS'
 import {getEncounterKey} from 'data/ENCOUNTERS'
 import {JobKey, JOBS} from 'data/JOBS'
-import {ActorType, Actor as FflogsActor, Fight, ActorFightInstance} from 'fflogs'
+import {ActorType, Actor as FflogsActor, Fight, ActorFightInstance, ReportLanguage} from 'fflogs'
 import {toJS} from 'mobx'
 import {Actor, Pull, Report, Team} from 'report'
 import {resolveActorId} from './base'
@@ -159,3 +159,27 @@ for (const [key, job] of Object.entries(JOBS)) {
 }
 const convertActorType = (actorType: ActorType) =>
 	actorTypeMap.get(actorType) ?? 'UNKNOWN'
+
+function languageToEdition(lang: ReportLanguage): GameEdition {
+	switch (lang) {
+	case ReportLanguage.JAPANESE:
+	case ReportLanguage.ENGLISH:
+	case ReportLanguage.GERMAN:
+	case ReportLanguage.FRENCH:
+		return GameEdition.GLOBAL
+
+	case ReportLanguage.KOREAN:
+		return GameEdition.KOREAN
+
+	case ReportLanguage.CHINESE:
+		return GameEdition.CHINESE
+
+		// Fallback case for when fflogs borks
+		// TODO: This probably will crop up in other places. Look into solving it higher up the chain.
+	case ReportLanguage.UNKNOWN:
+	case undefined:
+		return GameEdition.GLOBAL
+	}
+
+	throw new Error(`Unknown report language "${lang}" received.`)
+}
