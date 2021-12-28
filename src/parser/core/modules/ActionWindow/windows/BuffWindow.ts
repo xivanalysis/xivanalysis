@@ -3,7 +3,7 @@ import {Event, Events} from 'event'
 import _ from 'lodash'
 import {TimestampHook, TimestampHookArguments} from 'parser/core/Dispatcher'
 import {ensureArray} from 'utilities'
-import {filter, noneOf, oneOf} from '../../../filter'
+import {filter, oneOf} from '../../../filter'
 import {EvaluatedAction} from '../EvaluatedAction'
 import {HistoryEntry} from '../History'
 import {ActionWindow} from './ActionWindow'
@@ -26,13 +26,6 @@ export abstract class BuffWindow extends ActionWindow {
 	abstract buffStatus: Status | Status[]
 
 	/**
-	 * Determines if the window opens and closes based on status application to the
-	 * player who used it. Used for eliminating duplicate applications and pet
-	 * mirroring on raid buffs like Battle Litany.
-	 */
-	trackSelfOnly: boolean = false
-
-	/**
 	 * Determines if a window ended early due to the end of the pull.
 	 * @param window The window to check
 	 * @returns True if the window is shorter than the expected duration of the buff because of the end
@@ -49,13 +42,18 @@ export abstract class BuffWindow extends ActionWindow {
 	override initialise() {
 		super.initialise()
 
-		// need to exclude pets to avoid getting duplicate window starts due to pet buff mirroring.
-		const pets = this.parser.pull.actors
-			.filter(actor => actor.owner === this.parser.actor)
+		// buff windows are either active on the parser's actor
+		// or on an enemy actor (trick attack)
+		// enemies are not on the same team as the parser actor
+		const enemyTargets = this.parser.pull.actors
+			.filter(actor => actor.team !== this.parser.actor.team)
 			.map(actor => actor.id)
+
+		const targets = [this.parser.actor.id, ...enemyTargets]
+
 		const buffFilter = filter<Event>()
 			.source(this.parser.actor.id)
-			.target(this.trackSelfOnly ? this.parser.actor.id : noneOf(pets))
+			.target(oneOf(targets))
 			.status(oneOf(ensureArray(this.buffStatus).map(s => s.id)))
 
 		this.addEventHook(buffFilter.type('statusApply'), this.startWindowAndTimeout)

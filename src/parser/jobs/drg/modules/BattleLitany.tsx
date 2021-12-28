@@ -108,13 +108,6 @@ export class BattleLitany extends BuffWindow {
 	buffAction = this.data.actions.BATTLE_LITANY
 	buffStatus = this.data.statuses.BATTLE_LITANY
 
-	// this is a raid buff that mirrors during its duration on all
-	// party members and their pets. This window is centered around the
-	// DRG who cast it though, so we don't care about those for
-	// buff window tracking purposes.
-	// (we do care about number of players hit though that's a different part)
-	override trackSelfOnly = true
-
 	// track the buff applications to players by all drgs
 	private buffApplications: Array<{
 		timestamp: number
