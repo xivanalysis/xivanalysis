@@ -202,7 +202,7 @@ export class Gauge extends CoreGauge {
 			this.suggestions.add(new Suggestion({
 				icon: this.data.actions.KERACHOLE.icon,
 				content: <Trans id="sge.gauge.suggestions.lost-addersgall.content">
-					You lost Addersgall due to capping the gauge and letting the timer stop. Your Addersgall actions are your primary healing and mitigation tools, so you should try to use another one before regaining your third stack.
+					You lost Addersgall due to capping the gauge and letting the timer stop. Your Addersgall actions are your primary healing and mitigation tools, as well as contributing to your MP recovery, so you should try to use another one before regaining your third stack.
 				</Trans>,
 				severity: SEVERITY.MEDIUM,
 				why: <Trans id="sge.gauge.suggestions.lost-addersgall.why">

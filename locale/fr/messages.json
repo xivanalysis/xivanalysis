@@ -721,6 +721,8 @@
   "sge.gauge.resource.addersgall-timer": "",
   "sge.gauge.resource.addersting": "",
   "sge.gauge.resource.addsergall": "",
+  "sge.gauge.statistics.addersgall-used": "",
+  "sge.gauge.statistics.addersgall-used.info": "",
   "sge.gauge.suggestions.addersting-overcap.content": "",
   "sge.gauge.suggestions.addersting-overcap.why": "",
   "sge.gauge.suggestions.lost-addersgall.content": "",
