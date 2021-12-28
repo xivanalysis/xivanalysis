@@ -62,39 +62,39 @@ export class MeleeCombos extends Analyser {
 	@dependency private actors!: Actors
 	@dependency private gauge!: Gauge
 
-	private readonly _finishers = [
+	private readonly finishers = [
 		this.data.actions.VERHOLY.id,
 		this.data.actions.VERFLARE.id,
 	]
-	private readonly _severityWastedFinisher = {
+	private readonly severityWastedFinisher = {
 		1: SEVERITY.MINOR,
 		2: SEVERITY.MEDIUM,
 		3: SEVERITY.MAJOR,
 	}
-	private readonly _whiteManaActions: ManaActions = {
+	private readonly whiteManaActions: ManaActions = {
 		proc: this.data.actions.VERSTONE,
 		dualcast: this.data.actions.VERAERO_III,
 		finisher: this.data.actions.VERHOLY,
 	}
-	private readonly _blackManaActions: ManaActions = {
+	private readonly blackManaActions: ManaActions = {
 		proc: this.data.actions.VERFIRE,
 		dualcast: this.data.actions.VERTHUNDER_III,
 		finisher: this.data.actions.VERFLARE,
 	}
-	private readonly _ignoreFinisherProcsManaThreshold = 4
-	private readonly _upperComboTimeFrame = 13
-	private readonly _openerDelayForgivenessDuration = 15000
+	private readonly ignoreFinisherProcsManaThreshold = 4
+	private readonly upperComboTimeFrame = 13
+	private readonly openerDelayForgivenessDuration = 15000
 
-	private readonly _suggestionText: Record<SuggestionKey, JSX.Element> = {
+	private readonly suggestionText: Record<SuggestionKey, JSX.Element> = {
 		[SuggestionKey.WRONG_FINISHER]: <Trans id="rdm.meleecombos.recommendation.wrongfinisher">
 			You should use <DataLink action="VERFLARE"/> when your black mana is lower or <DataLink action="VERHOLY"/> when your white mana is lower.
 		</Trans>,
 		[SuggestionKey.DELAY_COMBO]: <Trans id="rdm.meleecombos.recommendation.delaycombo">
-			Do not enter your combo with your finisher's proc up. Consider dumping a proc before entering the melee combo as long as you waste less than {this._ignoreFinisherProcsManaThreshold} mana to overcapping.
+			Do not enter your combo with your finisher's proc up. Consider dumping a proc before entering the melee combo as long as you waste less than {this.ignoreFinisherProcsManaThreshold} mana to overcapping.
 		</Trans>,
 	}
 
-	private _meleeCombos = new History<MeleeCombo>(() => ({
+	private meleeCombos = new History<MeleeCombo>(() => ({
 		events: [],
 		lastAction: {} as Events['action'],
 		finisher: {
@@ -108,12 +108,12 @@ export class MeleeCombos extends Analyser {
 			white: 0,
 			black: 0,
 		}}))
-	private _incorrectFinishers = {
+	private incorrectFinishers = {
 		verholy: 0,
 		verflare: 0,
 		delay: 0,
 	}
-	private _footnoteIndexes: SuggestionKey[] = [];
+	private footnoteIndexes: SuggestionKey[] = [];
 
 	override initialise() {
 		super.initialise()
@@ -143,10 +143,11 @@ export class MeleeCombos extends Analyser {
 			return
 		}
 
-		const current = this._meleeCombos.getCurrent()
+		const current = this.meleeCombos.getCurrent()
 
 		if (action.combo) {
-			if (action.combo.start) {
+			//We still want to merge the regular and finisher combos, so lets not make a new row for the finisher
+			if (action.combo.start && !this.finishers.includes(action.id)) {
 				this.breakComboIfExists(event.timestamp)
 				this.startCombo(event)
 			} else {
@@ -154,18 +155,19 @@ export class MeleeCombos extends Analyser {
 					return
 				}
 
-				if (action.combo.from) {
+				if (action.combo.from || this.finishers.includes(action.id)) {
 					const fromOptions = Array.isArray(action.combo.from) ? action.combo.from : [action.combo.from]
-					if (!fromOptions.includes(current.data.lastAction.action ?? 0)) {
+					if (!fromOptions.includes(current.data.lastAction.action ?? 0) && !this.finishers.includes(action.id)) {
 						current.data.broken = true
 						this.endCombo(event.timestamp)
 					} else {
 						current.data.events.push(event)
 						current.data.lastAction = event
-						if (this._finishers.includes(action.id)) {
+						if (this.finishers.includes(action.id)) {
 							current.data.finisher.used = event.action
 						}
-						if (action.combo.end) {
+						//Only handle finisher if this is Resolution
+						if (action.combo.end && event.action === this.data.actions.RESOLUTION.id) {
 							this.handleFinisher()
 							this.endCombo(event.timestamp)
 						}
@@ -175,15 +177,8 @@ export class MeleeCombos extends Analyser {
 		}
 
 		if (action.breaksCombo) {
-			/*
-			Manafication does break combos, but the way we are currently modeling the full RDM combo isn't accurate anymore.
-			A full fix for this entails modeling mana stacks, splitting the full combo into two, and fixing the UI to display that info in a reasonable way.
-			However, as more people are starting to use Manafication after EncRedoublement (to fit multiple combos under buffs), this is a band-aid fix for now.
-			*/
-			if (action.id === this.data.actions.MANAFICATION.id &&
-				current && current.data.lastAction.action === this.data.actions.ENCHANTED_REDOUBLEMENT.id) {
-				return
-			}
+			//Removed the special manafication handling to prevent combo breaking between the melee and finisher combo
+			//They are now defined in data as separate combos and the upstream logic handles for ensuring we still maintain them being together
 			this.breakComboIfExists(event.timestamp)
 		}
 	}
@@ -198,18 +193,18 @@ export class MeleeCombos extends Analyser {
 
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.VERFLARE.icon,
-			content: this._suggestionText.WRONG_FINISHER,
-			why: <Plural id="rdm.meleecombos.recommendation.wrongfinisher.why" value={this._incorrectFinishers.verholy + this._incorrectFinishers.verflare} one="# Verfire/Verstone cast was lost due to using the incorrect finisher." other="# Verfire/Verstone casts were lost due to using the incorrect finisher." />,
-			tiers: this._severityWastedFinisher,
-			value: this._incorrectFinishers.verholy + this._incorrectFinishers.verflare,
+			content: this.suggestionText.WRONG_FINISHER,
+			why: <Plural id="rdm.meleecombos.recommendation.wrongfinisher.why" value={this.incorrectFinishers.verholy + this.incorrectFinishers.verflare} one="# Verfire/Verstone cast was lost due to using the incorrect finisher." other="# Verfire/Verstone casts were lost due to using the incorrect finisher." />,
+			tiers: this.severityWastedFinisher,
+			value: this.incorrectFinishers.verholy + this.incorrectFinishers.verflare,
 		}))
 
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.VERSTONE.icon,
-			content: this._suggestionText.DELAY_COMBO,
-			why: <Plural id="rdm.meleecombos.recommendation.delaycombo.why" value={this._incorrectFinishers.delay} one="# Proc cast was lost due to entering the melee combo with the finisher proc up." other="# Proc casts were lost due to entering the melee combo with the finisher proc up." />,
-			tiers: this._severityWastedFinisher,
-			value: this._incorrectFinishers.delay,
+			content: this.suggestionText.DELAY_COMBO,
+			why: <Plural id="rdm.meleecombos.recommendation.delaycombo.why" value={this.incorrectFinishers.delay} one="# Proc cast was lost due to entering the melee combo with the finisher proc up." other="# Proc casts were lost due to entering the melee combo with the finisher proc up." />,
+			tiers: this.severityWastedFinisher,
+			value: this.incorrectFinishers.delay,
 		}))
 	}
 
@@ -230,7 +225,7 @@ export class MeleeCombos extends Analyser {
 	}
 
 	override output() {
-		if (this._meleeCombos.entries.length === 0) { return undefined }
+		if (this.meleeCombos.entries.length === 0) { return undefined }
 
 		return (<Fragment>
 			<Table compact unstackable celled>
@@ -255,7 +250,7 @@ export class MeleeCombos extends Analyser {
 				</Table.Header>
 				<Table.Body>
 					{
-						this._meleeCombos.entries.map(combo => {
+						this.meleeCombos.entries.map(combo => {
 							const white = combo.data.startingMana.white
 							const black = combo.data.startingMana.black
 
@@ -271,7 +266,7 @@ export class MeleeCombos extends Analyser {
 										compact
 										size="mini"
 										icon="time"
-										onClick={() => this.timeline.show(this.relativeTimestamp(combo.start), this.relativeTimestamp(this.endTimestampCap(combo.end ?? combo.start + this._upperComboTimeFrame)))}
+										onClick={() => this.timeline.show(this.relativeTimestamp(combo.start), this.relativeTimestamp(this.endTimestampCap(combo.end ?? combo.start + this.upperComboTimeFrame)))}
 									/>}
 								</Table.Cell>
 								<Table.Cell>
@@ -308,12 +303,12 @@ export class MeleeCombos extends Analyser {
 					}
 				</Table.Body>
 			</Table>
-			{this._footnoteIndexes.length > 0 && <Message>
+			{this.footnoteIndexes.length > 0 && <Message>
 				{
-					this._footnoteIndexes.map((key, index) => {
+					this.footnoteIndexes.map((key, index) => {
 						return (<Fragment key={key}>
-							<sup>{index + 1}</sup> {this._suggestionText[key]}
-							{index < this._footnoteIndexes.length - 1 && <br />}
+							<sup>{index + 1}</sup> {this.suggestionText[key]}
+							{index < this.footnoteIndexes.length - 1 && <br />}
 						</Fragment>)
 					})
 				}
@@ -322,7 +317,7 @@ export class MeleeCombos extends Analyser {
 	}
 
 	private startCombo(event: Events['action']) {
-		const current = this._meleeCombos.openNew(event.timestamp)
+		const current = this.meleeCombos.openNew(event.timestamp)
 		current.data.events.push(event)
 		current.data.lastAction = event
 		if (this.actors.current.at(event.timestamp).hasStatus(this.data.statuses.VERSTONE_READY.id)) {
@@ -336,7 +331,7 @@ export class MeleeCombos extends Analyser {
 	}
 
 	private breakComboIfExists(timestamp: number) {
-		const current = this._meleeCombos.getCurrent()
+		const current = this.meleeCombos.getCurrent()
 		if (current) {
 			current.data.broken = true
 			this.endCombo(timestamp)
@@ -344,22 +339,22 @@ export class MeleeCombos extends Analyser {
 	}
 
 	private endCombo(timestamp: number) {
-		this._meleeCombos.closeCurrent(timestamp)
+		this.meleeCombos.closeCurrent(timestamp)
 	}
 
 	private handleFinisher() {
-		const combo = this._meleeCombos.getCurrent()
+		const combo = this.meleeCombos.getCurrent()
 		if (!combo) { return }
 
 		const whiteState = {
 			amount: combo.data.startingMana.white,
 			procReady: combo.data.procs.includes(this.data.statuses.VERSTONE_READY),
-			actions: this._whiteManaActions,
+			actions: this.whiteManaActions,
 		} as ManaState
 		const blackState = {
 			amount: combo.data.startingMana.black,
 			procReady: combo.data.procs.includes(this.data.statuses.VERFIRE_READY),
-			actions: this._blackManaActions,
+			actions: this.blackManaActions,
 		} as ManaState
 		const finisherAction = this.data.getAction(combo.data.finisher.used)
 		if (finisherAction == null) {
@@ -376,17 +371,17 @@ export class MeleeCombos extends Analyser {
 		}
 
 		if (recommendedFinisher instanceof Array) {
-			if (recommendedFinisher === this._finishers) {
+			if (recommendedFinisher === this.finishers) {
 				// a recommendation of both finishers means ignore the finisher, either one is valid
 				combo.data.finisher.recommendedActions.push(finisherAction)
-			} else if (combo.start - this.parser.pull.timestamp < this._openerDelayForgivenessDuration) {
+			} else if (combo.start - this.parser.pull.timestamp < this.openerDelayForgivenessDuration) {
 				combo.data.finisher.recommendation = <Fragment>
 					<Trans id="rdm.meleecombos.recommendation.opener.short">It's okay to lose procs in the opener.</Trans>
 				</Fragment>
 			} else {
 				// a recommendation of an array of actions is to delay the combo
 				Array.prototype.push.apply(combo.data.finisher.recommendedActions, recommendedFinisher)
-				this._incorrectFinishers.delay++
+				this.incorrectFinishers.delay++
 				combo.data.finisher.recommendation = <Fragment>
 					<Trans id="rdm.meleecombos.recommendation.delaycombo.short">Delay combo</Trans><sup>{this.assignOrGetFootnoteIndex(SuggestionKey.DELAY_COMBO)}</sup>
 				</Fragment>
@@ -401,10 +396,10 @@ export class MeleeCombos extends Analyser {
 			if (combo.data.finisher.used !== recommendedFinisher.id) {
 				// wrong finisher was used, add an incorrect finisher tally
 				if (combo.data.finisher.used === this.data.actions.VERHOLY.id) {
-					this._incorrectFinishers.verholy++
+					this.incorrectFinishers.verholy++
 				}
 				if (combo.data.finisher.used === this.data.actions.VERFLARE.id) {
-					this._incorrectFinishers.verflare++
+					this.incorrectFinishers.verflare++
 				}
 				combo.data.finisher.recommendation = <Fragment>
 					<Trans id="rdm.meleecombos.recommendation.wrongfinisher.short">Wrong finisher</Trans><sup>{this.assignOrGetFootnoteIndex(SuggestionKey.WRONG_FINISHER)}</sup>
@@ -425,7 +420,7 @@ export class MeleeCombos extends Analyser {
 			const finisherManaGain = (this.gauge.gaugeModifiers.get(higherManaState.actions.finisher.id)?.white ?? 0) || (this.gauge.gaugeModifiers.get(higherManaState.actions.finisher.id)?.black ?? 0)
 			if (higherManaState.amount - lowerManaState.amount + finisherManaGain > MANA_DIFFERENCE_THRESHOLD) {
 				// We will go out of balance if we use the finisher of the higher mana, check to see if delaying combo would have been better
-				if (comboDelayResults !== null && comboDelayResults.manaLoss <= this._ignoreFinisherProcsManaThreshold) {
+				if (comboDelayResults !== null && comboDelayResults.manaLoss <= this.ignoreFinisherProcsManaThreshold) {
 					// return null (delay combo) if below threshold
 					return comboDelayResults.finisher
 				}
@@ -434,7 +429,7 @@ export class MeleeCombos extends Analyser {
 			}
 
 			// Check to see if delaying combo would have been better
-			if (comboDelayResults !== null && comboDelayResults.manaLoss <= this._ignoreFinisherProcsManaThreshold) {
+			if (comboDelayResults !== null && comboDelayResults.manaLoss <= this.ignoreFinisherProcsManaThreshold) {
 				// return null (delay combo) if below threshold
 				return comboDelayResults.finisher
 			}
@@ -443,12 +438,12 @@ export class MeleeCombos extends Analyser {
 		}
 
 		// Both procs are up, check to see if delaying combo would have been better
-		if (comboDelayResults !== null && comboDelayResults.manaLoss <= this._ignoreFinisherProcsManaThreshold) {
+		if (comboDelayResults !== null && comboDelayResults.manaLoss <= this.ignoreFinisherProcsManaThreshold) {
 			// return null (delay combo) if below threshold
 			return comboDelayResults.finisher
 		}
 		// return both finishers (finisher doesn't matter) if above the threshold where the mana loss from delaying outweighs benefit of forced proc
-		return this._finishers
+		return this.finishers
 	}
 
 	private inBalanceFinisher(firstManaState: ManaState, secondManaState: ManaState) {
@@ -457,7 +452,7 @@ export class MeleeCombos extends Analyser {
 			// Both procs are up, check to see if delaying combo would have been better
 			const comboDelayResults = this.manaLossToDelayCombo(firstManaState, secondManaState)
 			// Safeguard against null return if no valid delays were found
-			if (comboDelayResults !== null && comboDelayResults.manaLoss <= this._ignoreFinisherProcsManaThreshold) {
+			if (comboDelayResults !== null && comboDelayResults.manaLoss <= this.ignoreFinisherProcsManaThreshold) {
 				// return null (delay combo) if below threshold
 				return comboDelayResults.finisher
 			}
@@ -466,7 +461,7 @@ export class MeleeCombos extends Analyser {
 		// Delaying combo is not better, return finisher of proc that isn't available (fishing for 20% is better than overwriting a proc or delaying)
 		if (!firstManaState.procReady && !secondManaState.procReady) {
 			// Neither proc is up - return both finishers (finisher doesn't matter)
-			return this._finishers
+			return this.finishers
 		}
 		if (!firstManaState.procReady) {
 			return firstManaState.actions.finisher
@@ -475,7 +470,7 @@ export class MeleeCombos extends Analyser {
 			return secondManaState.actions.finisher
 		}
 		// Both procs are up and it's not worthwhile to delay combo, return both finishers (finisher doesn't matter)
-		return this._finishers
+		return this.finishers
 	}
 
 	private manaLossToDelayCombo(lowerManaState: ManaState, higherManaState: ManaState) {
@@ -614,9 +609,9 @@ export class MeleeCombos extends Analyser {
 	}
 
 	private assignOrGetFootnoteIndex(key: SuggestionKey) {
-		if (!this._footnoteIndexes.includes(key)) {
-			this._footnoteIndexes.push(key)
+		if (!this.footnoteIndexes.includes(key)) {
+			this.footnoteIndexes.push(key)
 		}
-		return this._footnoteIndexes.indexOf(key) + 1
+		return this.footnoteIndexes.indexOf(key) + 1
 	}
 }

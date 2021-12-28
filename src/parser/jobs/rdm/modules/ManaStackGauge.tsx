@@ -5,7 +5,10 @@ import {Event, Events} from 'event'
 import {filter, oneOf} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
 import {CounterGauge, Gauge as CoreGauge} from 'parser/core/modules/Gauge'
+import {Statistics} from 'parser/core/modules/Statistics'
 import Suggestions, {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import {Gauge} from 'parser/jobs/rdm/modules/Gauge'
+import {DualStatistic} from 'parser/jobs/rdm/statistics/DualStatistic'
 import React, {Fragment} from 'react'
 
 interface ManaStackGaugeModifier {
@@ -22,8 +25,11 @@ export const MAXIMUM = 3
 export class ManaStackGauge extends CoreGauge {
 	static override handle = 'manaStackGauge'
 	static override title = t('rdm.manaStackgauge.title')`Mana Stack Gauge Usage`
+	static override debug = false
 
 	@dependency private suggestions!: Suggestions
+	@dependency private statistics!: Statistics
+	@dependency private gauge!: Gauge
 
 	private manaStackGauge = this.add(new CounterGauge({
 		graph: {
@@ -64,6 +70,14 @@ export class ManaStackGauge extends CoreGauge {
 	severity = {
 		1: SEVERITY.MAJOR,
 	}
+	manaStatistics = {
+		white: {
+			overcapLoss: 0,
+		},
+		black: {
+			overcapLoss: 0,
+		},
+	}
 
 	override initialise() {
 		super.initialise()
@@ -71,8 +85,8 @@ export class ManaStackGauge extends CoreGauge {
 		this.addEventHook(
 			filter<Event>()
 				.type('action')
-				.source(this.parser.actor.id)
-				.action(oneOf(Array.from(this.gaugeModifiers.keys()))),
+				.source(this.parser.actor.id),
+			//.action(oneOf(Array.from(this.gaugeModifiers.keys()))),
 			this.onGaugeModifying
 		)
 		this.addEventHook(
@@ -98,6 +112,17 @@ export class ManaStackGauge extends CoreGauge {
 			return
 		}
 
+		if (this.manaStackGauge.capped) {
+			const manaSpender = this.gauge.spenderModifiers.get(event.action)
+			this.debug(`Gauge is Broken by action ${this.data.getAction(event.action)?.name}`)
+			this.debug(`manaSpender is ${manaSpender} white mana value of ${manaSpender?.white} and black mana value of ${manaSpender?.black}`)
+			this.debug(`Time the Overcap happened ${this.parser.formatEpochTimestamp(event.timestamp)}`)
+			if (manaSpender != null) {
+				this.manaStatistics.white.overcapLoss += Math.abs(manaSpender.white)
+				this.manaStatistics.black.overcapLoss += Math.abs(manaSpender.black)
+			}
+		}
+
 		this.manaStackGauge.modify(modifier.manaStack)
 	}
 
@@ -113,6 +138,7 @@ export class ManaStackGauge extends CoreGauge {
 	}
 
 	private onGaugeBreak(event: Events['action']) {
+		this.debug(`manaStackGauge is ${this.manaStackGauge.value} and the action is ${this.data.getAction(event.action)?.name} with id ${event.action} and it's included? ${this.gaugeBreakers.includes(event.action)}`)
 		//It's only a break if we're above the minimum
 		if (this.gaugeBreakers.includes(event.action) && this.manaStackGauge.value > MINIMUM) {
 			const breaker = {} as GaugeBreaker
@@ -121,6 +147,7 @@ export class ManaStackGauge extends CoreGauge {
 			breaker.manaStacksLost = this.manaStackGauge.value
 			this.gaugeBreak.push(breaker)
 			this.manaStackGauge.reset()
+
 			return true
 		}
 
@@ -152,6 +179,21 @@ export class ManaStackGauge extends CoreGauge {
 			why: <Fragment>
 				<Trans id="rdm.manaStackgauge.suggestions.manaStack-loss-why">You lost { manaStacksLost} ManaStacks due to using a non Enchanted GCD</Trans>
 			</Fragment>,
+		}))
+
+		this.statistics.add(new DualStatistic({
+			label: <Trans id="rdm.manaStackgauge.title-mana-lost-to-overcap">Mana Stack Overcap Loss:</Trans>,
+			title: <Trans id="rdm.manaStackgauge.white-mana-lost-to-overcap">White</Trans>,
+			title2: <Trans id="rdm.manaStackgauge.black-mana-lost-to-overcap">Black</Trans>,
+			icon: this.data.actions.VERHOLY.icon,
+			icon2: this.data.actions.VERFLARE.icon,
+			value:  this.manaStatistics.white.overcapLoss,
+			value2:  this.manaStatistics.black.overcapLoss,
+			info: (
+				<Trans id="rdm.manaStackgauge.white-mana-lost-to-overcap-statistics">
+					You should never overcap your Mana Stacks
+				</Trans>
+			),
 		}))
 	}
 
