@@ -81,6 +81,10 @@ export class CounterGauge extends AbstractGauge {
 		return this._value <= this.minimum
 	}
 
+	get totalSpent(): number {
+		return this.history.filter(entry => entry.reason === 'spend').reduce((total, entry) => total + Math.abs(entry.delta), 0)
+	}
+
 	constructor(opts: CounterGaugeOptions = {}) {
 		super(opts)
 
