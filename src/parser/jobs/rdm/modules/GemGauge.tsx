@@ -20,6 +20,7 @@ export const MINIMUM = 0
 export const MAXIMUM = 3
 
 export class GemGauge extends CoreGauge {
+	static override handle = 'gemGauge'
 	static override title = t('rdm.gemgauge.title')`Gem Gauge Usage`
 
 	@dependency private suggestions!: Suggestions
