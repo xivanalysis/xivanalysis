@@ -2,7 +2,6 @@ import {configure} from 'mobx'
 import React, {ReactNode} from 'react'
 import {globalErrorStore} from './globalError'
 import {i18nStore} from './i18n'
-import {reportStore} from './report'
 import {settingsStore} from './settings'
 import {sidebarStore} from './sidebar'
 import {configureStorage} from './storage'
@@ -12,7 +11,6 @@ configure({
 })
 
 export const stores = {
-	reportStore,
 	globalErrorStore,
 	i18nStore,
 	settingsStore,

@@ -5,7 +5,7 @@ import ky from 'ky'
 import _ from 'lodash'
 import {action, observable, runInAction} from 'mobx'
 import {globalErrorStore} from 'store/globalError'
-import {settingsStore} from './settings'
+import {settingsStore} from 'store/settings'
 
 interface UnloadedReport {
 	loading: true

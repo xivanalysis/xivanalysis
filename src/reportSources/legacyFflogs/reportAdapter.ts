@@ -4,8 +4,8 @@ import {JobKey, JOBS} from 'data/JOBS'
 import {ActorType, Actor as FflogsActor, Fight, ActorFightInstance} from 'fflogs'
 import {toJS} from 'mobx'
 import {Actor, Pull, Report, Team} from 'report'
-import {Report as LegacyReport} from 'store/report'
 import {resolveActorId} from './base'
+import {Report as LegacyReport} from './legacyStore'
 
 // Some actor types represent NPCs, but show up in the otherwise player-controlled "friendlies" array.
 const NPC_FRIENDLY_TYPES: ActorType[] = [
