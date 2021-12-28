@@ -5,6 +5,7 @@ import {Combos} from './Combos'
 import {DualCast} from './Dualcast'
 import {Embolden} from './Embolden'
 import {Gauge} from './Gauge'
+import {GemGauge} from './GemGauge'
 import {GeneralCDDowntime} from './GeneralCDDowntime'
 import {Interrupts} from './Interrupts'
 import {MeleeCombos} from './MeleeCombos'
@@ -17,6 +18,7 @@ export default [
 	AlwaysBeCasting,
 	Embolden,
 	Gauge,
+	GemGauge,
 	CastTime,
 	DualCast,
 	GeneralCDDowntime,
