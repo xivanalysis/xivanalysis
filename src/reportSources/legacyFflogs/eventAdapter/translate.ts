@@ -92,6 +92,10 @@ export class TranslateAdapterStep extends AdapterStep {
 		case 'targetabilityupdate':
 			return [this.adaptTargetableEvent(baseEvent)]
 
+		// TODO: Use this. There's some great info, such as level (so we can automate under-cap ulti checks), full stat info for the logging player, etc.
+		case 'combatantinfo':
+			break
+
 		/* eslint-disable no-fallthrough */
 		// Dispels are already modelled by other events, and aren't something we really care about
 		case 'dispel':

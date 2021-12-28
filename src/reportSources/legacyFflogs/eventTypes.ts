@@ -46,12 +46,12 @@ export enum ActorType {
 	WHITE_MAGE = 'WhiteMage',
 	SCHOLAR = 'Scholar',
 	ASTROLOGIAN = 'Astrologian',
-	SAGE = 'Sage', // TODO: Check
+	SAGE = 'Sage',
 	MONK = 'Monk',
 	DRAGOON = 'Dragoon',
 	NINJA = 'Ninja',
 	SAMURAI = 'Samurai',
-	REAPER = 'Reaper', // TODO: Check
+	REAPER = 'Reaper',
 	BARD = 'Bard',
 	MACHINIST = 'Machinist',
 	DANCER = 'Dancer',
@@ -263,6 +263,38 @@ export interface WorldMarkerRemovedEvent extends BaseEventFields {
 
 /* End no source/target */
 
+export interface CombatantInfoAura {
+	ability: number
+	icon: string
+	name: string
+	source: number
+	stacks: number
+}
+
+export interface CombatantInfoEvent extends BaseEventFields {
+	type: 'combatantinfo'
+	auras: CombatantInfoAura[]
+	gear: [] // unused in xiv
+	level: number
+
+	// Only present on logger
+	attack?: number
+	attackMagicPotency?: number
+	criticalHit?: number
+	determination?: number
+	dexterity?: number
+	directHit?: number
+	healMagicPotency?: number
+	intelligence?: number
+	mind?: number
+	piety?: number
+	skillSpeed?: number
+	spellSpeed?: number
+	strength?: number
+	tenacity?: number
+	vitality?: number
+}
+
 export interface UnknownEvent extends AbilityEventFields {
 	type: 'unknown'
 }
@@ -368,6 +400,7 @@ export type FflogsEvent =
 	| WorldMarkerPlacedEvent
 	| WorldMarkerRemovedEvent
 	| MapChangeEvent
+	| CombatantInfoEvent
 
 // -----
 // Misc

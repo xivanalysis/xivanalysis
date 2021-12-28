@@ -201,6 +201,8 @@ Array [
 
 exports[`Event adapter individual events adapts checksummismatch 1`] = `Array []`;
 
+exports[`Event adapter individual events adapts combatantinfo 1`] = `Array []`;
+
 exports[`Event adapter individual events adapts damage 1`] = `
 Array [
   Object {
