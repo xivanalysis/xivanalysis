@@ -1,7 +1,7 @@
 import {Event} from 'event'
-import {FflogsEvent} from 'fflogs'
 import {Actor} from 'report'
 import {resolveActorId} from '../base'
+import {FflogsEvent} from '../eventTypes'
 import {AdapterStep, MutationAdaptionResult} from './base'
 
 /**

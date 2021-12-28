@@ -1,6 +1,6 @@
 import {Event} from 'event'
-import {FflogsEvent} from 'fflogs'
 import {Pull, Report} from 'report'
+import {FflogsEvent} from '../eventTypes'
 import {AssignOverhealStep} from './assignOverheal'
 import {AdapterOptions, AdapterStep} from './base'
 import {DeduplicateActorUpdateStep} from './deduplicateActorUpdates'

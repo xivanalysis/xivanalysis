@@ -1,7 +1,7 @@
 import {ReportProcessingError} from 'errors'
 import ky, {Options} from 'ky'
 import _ from 'lodash'
-import {FflogsEvent, Fight, Pet, ReportEventsQuery, ReportEventsResponse} from '../../fflogs'
+import {FflogsEvent, Fight, Pet, ReportEventsQuery, ReportEventsResponse} from './eventTypes'
 import {Report} from './legacyStore'
 
 const options: Options = {

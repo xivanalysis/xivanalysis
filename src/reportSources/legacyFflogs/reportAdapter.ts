@@ -1,10 +1,10 @@
 import {GameEdition} from 'data/EDITIONS'
 import {getEncounterKey} from 'data/ENCOUNTERS'
 import {JobKey} from 'data/JOBS'
-import {ActorType, Actor as FflogsActor, Fight, ActorFightInstance, ReportLanguage} from 'fflogs'
 import {toJS} from 'mobx'
 import {Actor, Pull, Report, Team} from 'report'
 import {resolveActorId} from './base'
+import {ActorType, Actor as FflogsActor, Fight, ActorFightInstance, ReportLanguage} from './eventTypes'
 import {Report as LegacyReport} from './legacyStore'
 
 // Some actor types represent NPCs, but show up in the otherwise player-controlled "friendlies" array.

@@ -1,5 +1,5 @@
-import {FflogsEvent} from 'fflogs'
 import stable from 'stable'
+import {FflogsEvent} from '../eventTypes'
 
 const EVENT_TYPE_ORDER: Partial<Record<FflogsEvent['type'], number>> = {
 	death: -4,

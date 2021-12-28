@@ -1,10 +1,10 @@
 import {GameEdition} from 'data/EDITIONS'
 import {Events} from 'event'
-import {CastEvent, FflogsEvent, HitType, ReportLanguage} from 'fflogs'
 import {Actor, Pull, Report, Team} from 'report'
 import {adaptEvents} from '../eventAdapter'
 import {AdapterStep} from '../eventAdapter/base'
 import {ReassignUnknownActorStep} from '../eventAdapter/reassignUnknownActor'
+import {CastEvent, FflogsEvent, HitType, ReportLanguage} from '../eventTypes'
 
 // "Mock" the reassign unknown actor step with its real implementation. We use this mock handling later
 // to disable the step on a test-by-test basis.
