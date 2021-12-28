@@ -17,7 +17,7 @@ const SEVERITIES = {
 	},
 }
 
-export default class LucidDreaming extends Analyser {
+export class LucidDreaming extends Analyser {
 	static override handle = 'lucid'
 	static override dependencies = [
 		'suggestions',

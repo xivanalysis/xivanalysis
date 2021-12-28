@@ -109,14 +109,14 @@ export const AST = ensureStatuses({
 
 	NEUTRAL_SECT: {
 		id: 1892,
-		name: 'Neutral Sect',
+		name: 'Neutral Sect (Healing Potency)',
 		icon: 'https://xivapi.com/i/013000/013253.png',
 		duration: 20000,
 	},
 
 	NEUTRAL_SECT_OTHERS: {
 		id: 1921,
-		name: 'Neutral Sect',
+		name: 'Neutral Sect (Barrier)',
 		icon: 'https://xivapi.com/i/013000/013253.png',
 		duration: 30000,
 	},
@@ -220,6 +220,7 @@ export const AST = ensureStatuses({
 		name: 'Harmony of Body',
 		icon: 'https://xivapi.com/i/013000/013260.png',
 		duration: 15000,
+		speedModifier: 0.90,
 	},
 
 	HARMONY_OF_MIND: {

@@ -15,7 +15,7 @@ import DISPLAY_ORDER from './DISPLAY_ORDER'
 
 const BASE_GCDS_PER_WINDOW = 6
 
-interface LIGHTSPEED_Window {
+interface LightspeedWindow {
 	start: number
 	end?: number
 
@@ -31,7 +31,7 @@ interface LIGHTSPEED_Window {
 // the character selected for analysis. windows that clip into
 // AST Lightspeed will be marked.
 // Used DNC Technicalities as basis for this module. Rewritten from previous module for consistency purposes
-export default class Lightspeed extends Analyser {
+export class Lightspeed extends Analyser {
 	static override handle = 'Lightspeed'
 	static override title = t('ast.lightspeed.title')`Lightspeed`
 	static override displayOrder = DISPLAY_ORDER.LIGHTSPEED
@@ -39,8 +39,8 @@ export default class Lightspeed extends Analyser {
 	@dependency private timeline!: Timeline
 	@dependency private data!: Data
 
-	private history: LIGHTSPEED_Window[] = []
-	private currentWindow: LIGHTSPEED_Window | undefined = undefined
+	private history: LightspeedWindow[] = []
+	private currentWindow: LightspeedWindow | undefined = undefined
 	private castHook?: EventHook<Events['action']>
 
 	override initialise() {
