@@ -1,6 +1,6 @@
 import {GameEdition} from 'data/EDITIONS'
 import {getEncounterKey} from 'data/ENCOUNTERS'
-import {JobKey, JOBS} from 'data/JOBS'
+import {JobKey} from 'data/JOBS'
 import {ActorType, Actor as FflogsActor, Fight, ActorFightInstance, ReportLanguage} from 'fflogs'
 import {toJS} from 'mobx'
 import {Actor, Pull, Report, Team} from 'report'
@@ -153,10 +153,29 @@ function getFightProgress(fight: Fight) {
 }
 
 // Build a mapping between fflogs actor types and our internal job keys
-const actorTypeMap = new Map<ActorType, JobKey>()
-for (const [key, job] of Object.entries(JOBS)) {
-	actorTypeMap.set(job.logType, key as JobKey)
-}
+const actorTypeMap = new Map<ActorType, JobKey>([
+	[ActorType.UNKNOWN, 'UNKNOWN'],
+	[ActorType.PALADIN, 'PALADIN'],
+	[ActorType.WARRIOR, 'WARRIOR'],
+	[ActorType.DARK_KNIGHT, 'DARK_KNIGHT'],
+	[ActorType.GUNBREAKER, 'GUNBREAKER'],
+	[ActorType.WHITE_MAGE, 'WHITE_MAGE'],
+	[ActorType.SCHOLAR, 'SCHOLAR'],
+	[ActorType.ASTROLOGIAN, 'ASTROLOGIAN'],
+	[ActorType.SAGE, 'SAGE'],
+	[ActorType.MONK, 'MONK'],
+	[ActorType.DRAGOON, 'DRAGOON'],
+	[ActorType.NINJA, 'NINJA'],
+	[ActorType.SAMURAI, 'SAMURAI'],
+	[ActorType.REAPER, 'REAPER'],
+	[ActorType.BARD, 'BARD'],
+	[ActorType.MACHINIST, 'MACHINIST'],
+	[ActorType.DANCER, 'DANCER'],
+	[ActorType.BLACK_MAGE, 'BLACK_MAGE'],
+	[ActorType.SUMMONER, 'SUMMONER'],
+	[ActorType.RED_MAGE, 'RED_MAGE'],
+	[ActorType.BLUE_MAGE, 'BLUE_MAGE'],
+])
 const convertActorType = (actorType: ActorType) =>
 	actorTypeMap.get(actorType) ?? 'UNKNOWN'
 
