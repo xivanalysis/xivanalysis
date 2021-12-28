@@ -24,6 +24,7 @@ const SEVERITIES = {
 
 const EXPECTED_USES = {
 	DOUBLE_DOWN: 1, //This is assuming that you enter NM with 3 carts: 1 cart: Gnashing, 2 carts: Double Down
+	BURST_STRIKE: 1,
 	GNASHING_FANG: 1,
 	SONIC_BREAK: 1,
 	ROUGH_DIVIDE: 1,
@@ -94,7 +95,10 @@ export class NoMercy extends BuffWindow {
 					action: this.data.actions.DOUBLE_DOWN,
 					expectedPerWindow: EXPECTED_USES.DOUBLE_DOWN,
 				},
-
+				{
+					action: this.data.actions.BURST_STRIKE,
+					expectedPerWindow: EXPECTED_USES.BURST_STRIKE,
+				},
 				{
 					action: this.data.actions.SONIC_BREAK,
 					expectedPerWindow: EXPECTED_USES.SONIC_BREAK,
@@ -130,13 +134,14 @@ export class NoMercy extends BuffWindow {
 		this.addEvaluator(new BloodfestEvaluator(this.data.actions.BLOODFEST.id))
 	}
 
+
 	private adjustExpectedActionCount(window: HistoryEntry<EvaluatedAction[]>, action: TrackedAction) {
 		if (action.action.id !== this.data.actions.BURST_STRIKE.id) { return 0 }
 
 		if (window.data.find(cast => cast.action.id === this.data.actions.BLOODFEST.id)) {
 			//In fights with minimal downtime, it is possible to hit 4/4 bloodfests,
 			//however I feel it is better to leave it at 3 / 3 for the adjusted rinfest window which seems to be more common
-			return 1
+			return 2
 		}
 
 		return 0
