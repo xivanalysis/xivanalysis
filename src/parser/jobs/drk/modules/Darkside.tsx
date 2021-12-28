@@ -42,11 +42,15 @@ export class Darkside extends Gauge {
 	private darksideDrops: DarksideDrop[] = []
 
 	override initialise() {
-		this.addEventHook(filter<Event>().type('damage').cause(this.data.matchCauseAction(DARKSIDE_EXTENSION_ACTIONS)), (event) => {
-			if (event.cause.type === 'action' && isSuccessfulHit(event)) {
-				this.darksideGauge.extend(DARKSIDE_EXTENSION_TIME, false)
-			}
-		})
+		this.addEventHook(
+			filter<Event>()
+				.source(this.parser.actor.id)
+				.type('damage')
+				.cause(this.data.matchCauseAction(DARKSIDE_EXTENSION_ACTIONS)), (event) => {
+				if (event.cause.type === 'action' && isSuccessfulHit(event)) {
+					this.darksideGauge.extend(DARKSIDE_EXTENSION_TIME, false)
+				}
+			})
 		this.addEventHook('complete', this.onComplete)
 	}
 
