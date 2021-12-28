@@ -1,8 +1,8 @@
 import {ReportProcessingError} from 'errors'
 import ky, {Options} from 'ky'
 import _ from 'lodash'
-import {Report} from 'reportSources/legacyFflogs/legacyStore'
-import {FflogsEvent, Fight, Pet, ReportEventsQuery, ReportEventsResponse} from './fflogs'
+import {FflogsEvent, Fight, Pet, ReportEventsQuery, ReportEventsResponse} from '../../fflogs'
+import {Report} from './legacyStore'
 
 const options: Options = {
 	prefixUrl: process.env.REACT_APP_FFLOGS_V1_BASE_URL,

@@ -1,10 +1,10 @@
-import {getFflogsEvents} from 'api'
 import {computed, toJS} from 'mobx'
 import {Pull, Actor} from 'report'
 import {isDefined} from 'utilities'
 import {ReportStore, FetchOptions} from '../base'
 import {adaptEvents} from './eventAdapter'
 import fflogsIcon from './fflogs.png'
+import {getFflogsEvents} from './fflogsApi'
 import {reportStore as legacyReportStore} from './legacyStore'
 import {adaptReport} from './reportAdapter'
 
