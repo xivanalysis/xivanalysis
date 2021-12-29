@@ -220,6 +220,13 @@ export interface DeathEvent extends BaseEventFields {
 }
 
 /* These likewise do not have source/target fields */
+export interface InstanceSealUpdateEvent extends BaseEventFields {
+	type: 'instancesealupdate'
+	placeID: number
+	placeName: string
+	sealType: number
+}
+
 export interface LimitBreakUpdateEvent extends BaseEventFields {
 	type: 'limitbreakupdate'
 	bars: number
@@ -402,6 +409,7 @@ export type FflogsEvent =
 	| WorldMarkerRemovedEvent
 	| MapChangeEvent
 	| CombatantInfoEvent
+	| InstanceSealUpdateEvent
 
 // -----
 // Misc

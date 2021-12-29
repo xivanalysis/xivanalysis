@@ -107,6 +107,8 @@ export class TranslateAdapterStep extends AdapterStep {
 		case 'encounterend':
 		case 'dungeonstart':
 		case 'dungeonend':
+		// Seems to be related to instance seals in i.e. 24mans?
+		case 'instancesealupdate':
 		// We don't have much need for limit break, at least for now
 		case 'limitbreakupdate':
 		// We are _technically_ limiting down to a single zone, so any zonechange should be fluff

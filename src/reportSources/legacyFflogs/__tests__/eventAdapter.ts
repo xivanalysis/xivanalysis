@@ -738,6 +738,14 @@ const fakeEvents: Record<FflogsEvent['type'], FflogsEvent[]> = {
 		spellSpeed: 400,
 		tenacity: 909,
 	}],
+	instancesealupdate: [{
+		...fakeBaseFields,
+		placeID: 3659,
+		placeName: 'Staging Node D',
+		sealType: 1,
+		timestamp: 1058060,
+		type: 'instancesealupdate',
+	}],
 }
 
 // #endregion
