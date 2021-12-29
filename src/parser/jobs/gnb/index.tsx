@@ -72,5 +72,14 @@ export const GUNBREAKER = new Meta({
 			</>,
 			contributors: [CONTRIBUTORS.EDEN],
 		},
+		{
+			date: new Date('2021-12-28'),
+			Changes: () => <>
+				<ul>
+					<li>Add Double Down to No Mercy window, and update Blast Shot GCD counts</li>
+				</ul>,
+			</>,
+			contributors: [CONTRIBUTORS.JONNIX],
+		},
 	],
 })

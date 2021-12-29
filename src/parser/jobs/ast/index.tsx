@@ -36,6 +36,20 @@ export const ASTROLOGIAN = new Meta({
 	],
 	changelog: [
 		{
+			date: new Date('2021-12-22'),
+			Changes: () => <>
+				<strong>More Endwalker Preparation</strong>
+				<ul>
+					<li> Fixed some underlying Actions and Statuses to show up on the timeline view properly among other minor changes.</li>
+					<li> Updated Overheals to include Delayed Heals. </li>
+					<li> Added a section specific to <DataLink action="DIVINATION" /> to show players buffed, GCDs during window, and a warning if cast with another AST.</li>
+					<li> Added oGCD heals section on the checklist to show a snapshot of possible rebalancing of healing rotations.</li>
+					<li> Reordered Action Timeline specifically separating <DataLink action="MINOR_ARCANA" /> from <DataLink action="PLAY" /> and fixing <DataLink action="MACROCOSMOS" />. </li>
+				</ul>
+			</>,
+			contributors: [CONTRIBUTORS.OTOCEPHALY],
+		},
+		{
 			date: new Date('2021-12-03'),
 			Changes: () => <>
 				<strong>Endwalker Preparation</strong>

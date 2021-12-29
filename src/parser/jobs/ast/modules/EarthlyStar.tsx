@@ -24,7 +24,7 @@ const SEVERETIES = {
 	},
 }
 
-export default class EarthlyStar extends Analyser {
+export class EarthlyStar extends Analyser {
 	static override handle = 'earthlystar'
 	static override title = t('ast.earthly-star.title')`Earthly Star`
 
