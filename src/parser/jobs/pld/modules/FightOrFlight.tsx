@@ -13,8 +13,8 @@ import React from 'react'
 const SEVERITIES = {
 	MISSED_OGCDS: {
 		1: SEVERITY.MINOR,
-		4: SEVERITY.MEDIUM,
-		8: SEVERITY.MAJOR,
+		5: SEVERITY.MEDIUM,
+		10: SEVERITY.MAJOR,
 	},
 	MISSED_GORING: {
 		1: SEVERITY.MINOR,
@@ -37,11 +37,15 @@ const MINIMUM_GORING_DISTANCE = 9
 
 // These GCDs should not count towards the FoF GCD counter, as they are not
 // physical damage (weaponskill) GCDs.
-const EXCLUDED_GCDS: ActionKey[] = [
+const EXCLUDED_ACTIONS: ActionKey[] = [
 	'CLEMENCY',
 	'HOLY_SPIRIT',
 	'HOLY_CIRCLE',
 	'CONFITEOR',
+	'BLADE_OF_FAITH',
+	'BLADE_OF_TRUTH',
+	'BLADE_OF_VALOR',
+	'REQUIESCAT',
 ]
 
 class GoringBladeSpacingEvaluator implements WindowEvaluator {
@@ -102,7 +106,7 @@ export class FightOrFlight extends BuffWindow {
 
 		const suggestionWindowName = <DataLink action="FIGHT_OR_FLIGHT" showIcon={false} />
 
-		this.ignoreActions(EXCLUDED_GCDS.map(g => this.data.actions[g].id))
+		this.ignoreActions(EXCLUDED_ACTIONS.map(g => this.data.actions[g].id))
 
 		this.addEvaluator(new ExpectedGcdCountEvaluator({
 			expectedGcds: 11,
@@ -121,11 +125,12 @@ export class FightOrFlight extends BuffWindow {
 				{action: this.data.actions.CIRCLE_OF_SCORN, expectedPerWindow: 1},
 				{action: this.data.actions.INTERVENE, expectedPerWindow: 1},
 				{action: this.data.actions.GORING_BLADE, expectedPerWindow: 2},
+				{action: this.data.actions.ATONEMENT, expectedPerWindow: 3},
 			],
 			suggestionIcon: this.data.actions.EXPIACION.icon,
 			suggestionContent: <Trans id="pld.fightorflight.suggestions.ogcds.content">
 				Try to land at least one cast of each of your physical off-GCD skills (<DataLink action="EXPIACION" />,
-				<DataLink action="CIRCLE_OF_SCORN" />, and <DataLink action="INTERVENE" />) and two <DataLink action="GORING_BLADE" /> applications
+				<DataLink action="CIRCLE_OF_SCORN" />, and <DataLink action="INTERVENE" />), two <DataLink action="GORING_BLADE" /> applications, and three casts of <DataLink action ="ATONEMENT" />
 				during every <DataLink action="FIGHT_OR_FLIGHT" /> window.
 			</Trans>,
 			suggestionWindowName,

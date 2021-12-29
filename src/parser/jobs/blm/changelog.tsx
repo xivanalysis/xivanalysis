@@ -38,8 +38,18 @@ export const changelog = [
 		contributors: [CONTRIBUTORS.AKAIRYU],
 	},
 	{
+		date: new Date('2021-12-20'),
+		Changes: () => <>Keep track of Manaward and Addle usage.</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
+	{
 		date: new Date('2021-12-21'),
 		Changes: () => <>Suggestions not to overwrite Sharpcast or Triplecast while the statuses are still active.</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
+	{
+		date: new Date('2021-12-24'),
+		Changes: () => <>Correct Paradox gauge handling to grant a stack of the active stance, instead of just a timer refresh.</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],
 	},
 ]

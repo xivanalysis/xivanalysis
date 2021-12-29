@@ -8,11 +8,11 @@ export class ActionTimeline extends CoreActionTimeline {
 		'FIGHT_OR_FLIGHT',
 		'REQUIESCAT',
 		// oGCD Damage
-		'SPIRITS_WITHIN',
+		'EXPIACION',
 		'CIRCLE_OF_SCORN',
 		'INTERVENE',
 		// Gauge Mitigation
-		'SHELTRON',
+		'HOLY_SHELTRON',
 		'INTERVENTION',
 		// Personal Mitigation
 		'HALLOWED_GROUND',

@@ -21,7 +21,7 @@ const SEVERITIES = {
 	},
 }
 
-export default class Horoscope extends Analyser {
+export class Horoscope extends Analyser {
 	static override handle = 'horoscope'
 	static override title = t('ast.horoscope.title')`Horoscope`
 

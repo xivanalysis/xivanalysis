@@ -8,7 +8,7 @@ import {Data} from 'parser/core/modules/Data'
 import Suggestions, {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import React from 'react'
 
-export default class ArcanaUndrawUsage extends Analyser {
+export class ArcanaUndrawUsage extends Analyser {
 	static override handle = 'arcanaundraws'
 	private undraws: number = 0
 
