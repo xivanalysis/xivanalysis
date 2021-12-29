@@ -8,23 +8,17 @@ export const SAM = ensureStatuses({
 		duration: 3000,
 	},
 
-	EYES_OPEN: {
-		id: 1252,
-		name: 'Eyes Open',
-		icon: 'https://xivapi.com/i/013000/013308.png',
-		duration: 15000,
-	},
-	JINPU: {
+	FUGETSU: {
 		id: 1298,
-		name: 'Jinpu',
-		icon: 'https://xivapi.com/i/013000/013301.png',
+		name: 'Fugetsu',
+		icon: 'https://xivapi.com/i/013000/013311.png',
 		duration: 40000,
 	},
 
-	SHIFU: {
+	FUKA: {
 		id: 1299,
-		name: 'Shifu',
-		icon: 'https://xivapi.com/i/013000/013302.png',
+		name: 'Fuka',
+		icon: 'https://xivapi.com/i/013000/013312.png',
 		duration: 40000,
 		speedModifier: 0.87,
 	},
@@ -69,5 +63,12 @@ export const SAM = ensureStatuses({
 		name: 'Enhanced Enpi',
 		icon: 'https://xivapi.com/i/013000/013310.png',
 		duration: 15000,
+	},
+
+	OGI_NAMIKIRI_READY: {
+		id: 2959,
+		name: 'Ogi Namikiri Ready',
+		icon: 'https://xivapi.com/i/013000/013313.png',
+		duration: 30000,
 	},
 })
