@@ -21,7 +21,7 @@ export const NINJA = new Meta({
 	],
 	changelog: [
 		{
-			date: new Date('2021-12-20'),
+			date: new Date('2021-12-29'),
 			Changes: () => <>Updated suggestions for Raiton use under Trick Attack and Hellfrog use on too few targets.</>,
 			contributors: [CONTRIBUTORS.TOASTDEIB],
 		},
