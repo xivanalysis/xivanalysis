@@ -4,7 +4,6 @@ import {Demolish} from './Demolish'
 import {Forms} from './Forms'
 import {GreasedLightning} from './GreasedLightning'
 import {OGCDDowntime} from './OGCDDowntime'
-import {PerfectBalance} from './PerfectBalance'
 import {RiddleOfFire} from './RiddleOfFire'
 import {Steppies} from './Steppies'
 import {TwinSnakes} from './TwinSnakes'
@@ -17,7 +16,6 @@ export default [
 	Forms,
 	GreasedLightning,
 	OGCDDowntime,
-	PerfectBalance,
 	RiddleOfFire,
 	Steppies,
 	TwinSnakes,
