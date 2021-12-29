@@ -32,4 +32,9 @@ export const changelog = [
 		Changes: () => <>Added tracking for Tincture and Zoe usage, and marked as supported for Endwalker</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],
 	},
+	{
+		date: new Date('2021-12-29'),
+		Changes: () => <>Refine overheal categories, and fix a bug in the DoT clipping calculation</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
 ]
