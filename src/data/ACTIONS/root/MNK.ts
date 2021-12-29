@@ -41,9 +41,8 @@ export const MNK = ensureActions({
 		statusesApplied: ['DISCIPLINED_FIST'],
 	},
 
-	// TODO: update ID and icon
 	SHADOW_OF_THE_DESTROYER: {
-		id: 62,
+		id: 25767,
 		name: 'Shadow of the Destroyer',
 		icon: 'https://xivapi.com/i/000000/000215.png',
 		onGcd: true,
@@ -133,7 +132,7 @@ export const MNK = ensureActions({
 	CELESTIAL_REVOLUTION: {
 		id: 25765,
 		name: 'Celestial Revolution',
-		icon: 'https://xivapi.com/002000/000000.png',
+		icon: 'https://xivapi.com/i/002000/002977.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		statusesApplied: ['FORMLESS_FIST'],
@@ -142,7 +141,7 @@ export const MNK = ensureActions({
 	RISING_PHOENIX: {
 		id: 25768,
 		name: 'Rising Phoenix',
-		icon: 'https://xivapi.com/002000/000000.png',
+		icon: 'https://xivapi.com/i/002000/002980.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		statusesApplied: ['FORMLESS_FIST'],
@@ -151,7 +150,7 @@ export const MNK = ensureActions({
 	PHANTOM_RUSH: {
 		id: 25769,
 		name: 'Phantom Rush',
-		icon: 'https://xivapi.com/002000/000000.png',
+		icon: 'https://xivapi.com/i/002000/002981.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		statusesApplied: ['FORMLESS_FIST'],
@@ -206,7 +205,7 @@ export const MNK = ensureActions({
 	RIDDLE_OF_WIND: {
 		id: 25766,
 		name: 'Riddle of Wind',
-		icon: 'https://xivapi.com/i/002000/000000.png',
+		icon: 'https://xivapi.com/i/002000/002978.png',
 		cooldown: 90000,
 		statusesApplied: ['RIDDLE_OF_WIND'],
 	},
@@ -241,7 +240,7 @@ export const MNK = ensureActions({
 	THUNDERCLAP: {
 		id: 25762,
 		name: 'Thunderclap',
-		icon: 'https://xivapi.com/i/002000/000000.png',
+		icon: 'https://xivapi.com/i/002000/002975.png',
 		cooldown: 30000,
 		charges: 3,
 	},

@@ -24,8 +24,8 @@ export const MNK = ensureStatuses({
 
 	DISCIPLINED_FIST: {
 		id: 3001,
-		name: 'Twin Snakes',
-		icon: 'https://xivapi.com/i/010000/010216.png',
+		name: 'Disciplined Fist',
+		icon: 'https://xivapi.com/i/012000/012538.png',
 		duration: 15000,
 	},
 
@@ -83,7 +83,7 @@ export const MNK = ensureStatuses({
 	RIDDLE_OF_WIND: {
 		id: 2687,
 		name: 'Riddle of Wind',
-		icon: 'https://xivapi.com/i/012000/000000.png',
+		icon: 'https://xivapi.com/i/012000/012537.png',
 		duration: 15000,
 	},
 
