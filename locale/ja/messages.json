@@ -204,7 +204,6 @@
   "core.dummy.broken-log": "レポートに一つかそれ以上のターゲットは木人らしいです。木人のHPはxivanalysisの仮定ルールと一致していませんので、計算は間違う可能性があります。",
   "core.dummy.title": "木人",
   "core.error.generic": "おや、何か大変なことになりましたね。すでに開発者にアラートを送りましたのでご安心ください。",
-  "core.find.refresh": "更新",
   "core.gauge.title": "ゲージ",
   "core.gcd.estimated-gcd": "推定GCD",
   "core.gcd.no-statistics": "残念ながら現時点でFFLogsからのプレイヤー統計情報はご利用頂けません。従って以下に計算されたGCDの長さはまだ<0>推定段階</0>で正確さが低い可能性があります。分析にGCDの長さ実際のGCD<1>より長い</1>と報告されたら、次にGCDを止まらず回すことを目標としましょう。",

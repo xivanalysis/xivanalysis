@@ -204,7 +204,6 @@
   "core.dummy.broken-log": "One or more actors in this pull appear to be striking dummies. The behaviour of dummy health pools breaks a number of assumptions made by xivanalysis, which can lead to subtly incorrect results.",
   "core.dummy.title": "Striking Dummy",
   "core.error.generic": "Looks like something has gone wrong. The code monkies have been notified.",
-  "core.find.refresh": "Refresh",
   "core.gauge.title": "Gauge",
   "core.gcd.estimated-gcd": "Estimated GCD",
   "core.gcd.no-statistics": "Unfortunately, player statistics are not available from FF Logs. As such, the calculated GCD length is an <0>estimate</0>, and may well be incorrect. If it is reporting a GCD length <1>longer</1> than reality, you likely need to focus on keeping your GCD rolling.",

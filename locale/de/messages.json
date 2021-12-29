@@ -204,7 +204,6 @@
   "core.dummy.broken-log": "",
   "core.dummy.title": "",
   "core.error.generic": "Sieht aus, als ob etwas falsch gelaufen ist. Unser hoch motiviertes Team von Programmierern wurde benachrichtigt.",
-  "core.find.refresh": "Aktualisieren",
   "core.gauge.title": "Balken",
   "core.gcd.estimated-gcd": "Geschätzte globale Abklingzeit",
   "core.gcd.no-statistics": "Leider sind Spielerstatistiken nicht von FF Logs einsehbar. Daher ist die berechnete globale Abklingzeit eine <0>Abschätzung</0> und kann durchaus von der tatsächlichen Zeit abweichen. Wenn die Abschätzung <1>länger</1> als die tatsächliche Zeit ist, solltest du sehr wahrscheinlich darauf achten, deine globale Abklingzeit auszunutzen.",

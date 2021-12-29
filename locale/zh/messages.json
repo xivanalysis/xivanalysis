@@ -204,7 +204,6 @@
   "core.dummy.broken-log": "这场战斗中的一个或多个目标似乎是木人。木人血量槽的表现与xivanalysis做出的一些假设不符，这可能会导致错误的分析结果。",
   "core.dummy.title": "木人",
   "core.error.generic": "好像出了点问题。程序猿已经接到报警。",
-  "core.find.refresh": "刷新",
   "core.gauge.title": "职业量谱",
   "core.gcd.estimated-gcd": "预估GCD复唱时间",
   "core.gcd.no-statistics": "遗憾的是，我们无法从FFlogs获得玩家属性。因此这里的GCD时间是<0>估算值</0>，很可能不准。如果报告的GCD比实际值<1>长</1>，你很可能需要注意别让你的GCD空转了",
