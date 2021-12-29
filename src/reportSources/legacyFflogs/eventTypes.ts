@@ -46,12 +46,12 @@ export enum ActorType {
 	WHITE_MAGE = 'WhiteMage',
 	SCHOLAR = 'Scholar',
 	ASTROLOGIAN = 'Astrologian',
-	SAGE = 'Sage', // TODO: Check
+	SAGE = 'Sage',
 	MONK = 'Monk',
 	DRAGOON = 'Dragoon',
 	NINJA = 'Ninja',
 	SAMURAI = 'Samurai',
-	REAPER = 'Reaper', // TODO: Check
+	REAPER = 'Reaper',
 	BARD = 'Bard',
 	MACHINIST = 'Machinist',
 	DANCER = 'Dancer',
@@ -201,16 +201,17 @@ interface EffectEventFields extends AbilityEventFields {
 // -----
 
 export interface EncounterStartEvent extends EncounterFields {
-	type: 'encounterstart'
+	type: 'encounterstart' | 'dungeonstart'
 	affixes: unknown[]
 	level: number
 }
 
 export interface EncounterEndEvent extends EncounterFields {
-	type: 'encounterend'
+	type: 'encounterend' | 'dungeonend'
 	completion?: number
 	difficulty: number
 	kill: boolean
+	medal?: number
 }
 
 export interface DeathEvent extends BaseEventFields {
@@ -219,6 +220,13 @@ export interface DeathEvent extends BaseEventFields {
 }
 
 /* These likewise do not have source/target fields */
+export interface InstanceSealUpdateEvent extends BaseEventFields {
+	type: 'instancesealupdate'
+	placeID: number
+	placeName: string
+	sealType: number
+}
+
 export interface LimitBreakUpdateEvent extends BaseEventFields {
 	type: 'limitbreakupdate'
 	bars: number
@@ -263,6 +271,38 @@ export interface WorldMarkerRemovedEvent extends BaseEventFields {
 
 /* End no source/target */
 
+export interface CombatantInfoAura {
+	ability: number
+	icon: string
+	name: string
+	source: number
+	stacks: number
+}
+
+export interface CombatantInfoEvent extends BaseEventFields {
+	type: 'combatantinfo'
+	auras: CombatantInfoAura[]
+	gear: [] // unused in xiv
+	level: number
+
+	// Only present on logger
+	attack?: number
+	attackMagicPotency?: number
+	criticalHit?: number
+	determination?: number
+	dexterity?: number
+	directHit?: number
+	healMagicPotency?: number
+	intelligence?: number
+	mind?: number
+	piety?: number
+	skillSpeed?: number
+	spellSpeed?: number
+	strength?: number
+	tenacity?: number
+	vitality?: number
+}
+
 export interface UnknownEvent extends AbilityEventFields {
 	type: 'unknown'
 }
@@ -271,6 +311,11 @@ export interface DispelEvent extends AbilityEventFields {
 	type: 'dispel',
 	extraAbility: Ability,
 	isBuff: boolean,
+}
+
+export interface InterruptEvent extends AbilityEventFields {
+	type: 'interrupt'
+	extraAbility: Ability
 }
 
 const castEventTypes = [
@@ -354,6 +399,8 @@ export type AbilityEvent =
 	| BuffEvent
 	| BuffStackEvent
 	| TargetabilityUpdateEvent
+	| DispelEvent
+	| InterruptEvent
 
 export type FflogsEvent =
 	| EncounterEvent
@@ -363,11 +410,12 @@ export type FflogsEvent =
 	| ChecksumMismatchEvent
 	| ZoneChangeEvent
 	| UnknownEvent
-	| DispelEvent
 	| WipeCalledEvent
 	| WorldMarkerPlacedEvent
 	| WorldMarkerRemovedEvent
 	| MapChangeEvent
+	| CombatantInfoEvent
+	| InstanceSealUpdateEvent
 
 // -----
 // Misc
