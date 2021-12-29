@@ -12,14 +12,19 @@ export const NINJA = new Meta({
 			<p>*Results not guaranteed. Offer void where prohibited. Please don't sue us.</p>
 		</Trans>
 	</>,
-	// supportedPatches: {
-	//		from: '6.0',
-	//		to: '6.0',
-	// },
+	supportedPatches: {
+		from: '6.0',
+		to: '6.0',
+	},
 	contributors: [
 		{user: CONTRIBUTORS.TOASTDEIB, role: ROLES.MAINTAINER},
 	],
 	changelog: [
+		{
+			date: new Date('2021-12-29'),
+			Changes: () => <>Updated suggestions for Raiton use under Trick Attack and Hellfrog use on too few targets.</>,
+			contributors: [CONTRIBUTORS.TOASTDEIB],
+		},
 		{
 			date: new Date('2021-12-17'),
 			Changes: () => <>Fixed a false positive bug in the Raiju analyser.</>,
