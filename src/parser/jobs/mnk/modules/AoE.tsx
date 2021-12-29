@@ -11,14 +11,12 @@ export class AoE extends AoEUsages {
 	// You awake to find yourself enlightened to the true power of AoE
 	suggestionIcon = this.data.actions.ENLIGHTENMENT.icon
 
-	// Assuming user is in the correct Form
-	// Technically, FPF is 3 however if the buff is about to fall off, it's 2.
-	// Tracking remaining duration is kind of a pain here due to Anatman so eh.
+	// SotD is on-par with DK at 2 targets, but needs 3 to beat out Boot
 	trackedActions: AoEAction[] = [
 		{
-			aoeAction: this.data.actions.ARM_OF_THE_DESTROYER,
+			aoeAction: this.data.actions.SHADOW_OF_THE_DESTROYER,
 			stActions: [this.data.actions.BOOTSHINE, this.data.actions.DRAGON_KICK],
-			minTargets: 3,
+			minTargets: 2,
 		},
 		{
 			aoeAction: this.data.actions.FOUR_POINT_FURY,
@@ -28,7 +26,7 @@ export class AoE extends AoEUsages {
 		{
 			aoeAction: this.data.actions.ROCKBREAKER,
 			stActions: [this.data.actions.DEMOLISH, this.data.actions.SNAP_PUNCH],
-			minTargets: 2,
+			minTargets: 3,
 		},
 		{
 			aoeAction: this.data.actions.ENLIGHTENMENT,
@@ -50,7 +48,7 @@ export class AoE extends AoEUsages {
 		}
 
 		// If Leaden Fist is up, Boot is extra strong
-		if (action.id === this.data.actions.ARM_OF_THE_DESTROYER.id && this.actors.current.hasStatus(this.data.statuses.LEADEN_FIST.id)) {
+		if (action.id === this.data.actions.SHADOW_OF_THE_DESTROYER.id && this.actors.current.hasStatus(this.data.statuses.LEADEN_FIST.id)) {
 			return minTargets + 1
 		}
 
