@@ -65,7 +65,6 @@ export type RoleKey = keyof typeof ROLES
 
 export interface Job {
 	name: MessageDescriptor
-	// logType: ActorType
 	speedStat: Attribute.SKILL_SPEED | Attribute.SPELL_SPEED
 	icon: string
 	colour: string
