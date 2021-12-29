@@ -44,6 +44,9 @@ const FAILED_HITS = new Set([
 ])
 /* eslint-enable @typescript-eslint/no-magic-numbers */
 
+// Equivalent to an UnreachableException, but as a noop function
+const ensureNever = (arg: never) => arg
+
 /** Translate an FFLogs APIv1 event to the xiva representation, if any exists. */
 export class TranslateAdapterStep extends AdapterStep {
 	private unhandledTypes = new Set<string>()
@@ -102,6 +105,8 @@ export class TranslateAdapterStep extends AdapterStep {
 		// Encounter events don't expose anything particularly useful for us
 		case 'encounterstart':
 		case 'encounterend':
+		case 'dungeonstart':
+		case 'dungeonend':
 		// We don't have much need for limit break, at least for now
 		case 'limitbreakupdate':
 		// We are _technically_ limiting down to a single zone, so any zonechange should be fluff
@@ -122,7 +127,7 @@ export class TranslateAdapterStep extends AdapterStep {
 
 		default: {
 			// Anything that reaches this point is unknown. If we've already notified, just noop
-			const unknownEvent = baseEvent as {type: string}
+			const unknownEvent = ensureNever(baseEvent) as {type: string}
 			if (this.unhandledTypes.has(unknownEvent.type)) {
 				break
 			}

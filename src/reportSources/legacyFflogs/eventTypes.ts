@@ -201,16 +201,17 @@ interface EffectEventFields extends AbilityEventFields {
 // -----
 
 export interface EncounterStartEvent extends EncounterFields {
-	type: 'encounterstart'
+	type: 'encounterstart' | 'dungeonstart'
 	affixes: unknown[]
 	level: number
 }
 
 export interface EncounterEndEvent extends EncounterFields {
-	type: 'encounterend'
+	type: 'encounterend' | 'dungeonend'
 	completion?: number
 	difficulty: number
 	kill: boolean
+	medal?: number
 }
 
 export interface DeathEvent extends BaseEventFields {

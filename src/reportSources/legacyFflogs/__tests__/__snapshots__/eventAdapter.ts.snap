@@ -294,6 +294,10 @@ Array [
 
 exports[`Event adapter individual events adapts dispel 1`] = `Array []`;
 
+exports[`Event adapter individual events adapts dungeonend 1`] = `Array []`;
+
+exports[`Event adapter individual events adapts dungeonstart 1`] = `Array []`;
+
 exports[`Event adapter individual events adapts encounterend 1`] = `Array []`;
 
 exports[`Event adapter individual events adapts encounterstart 1`] = `Array []`;
