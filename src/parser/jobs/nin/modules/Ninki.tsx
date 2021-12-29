@@ -6,7 +6,7 @@ import {Cause, Event, Events} from 'event'
 import {filter, oneOf} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
 import {CounterGauge, Gauge as CoreGauge} from 'parser/core/modules/Gauge'
-import Suggestions, {Suggestion, TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import Suggestions, {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import React from 'react'
 import {isSuccessfulHit} from 'utilities'
 
@@ -15,10 +15,14 @@ type GaugeModifier = Partial<Record<Event['type'], number>>
 // Constants
 const BUNSHIN_GAIN = 5
 const BUNSHIN_GAIN_KAMAITACHI = 10
+const HELLFROG_TARGET_MINIMUM = 3
 
 const OVERCAP_SEVERITY = {
 	20: SEVERITY.MINOR,
 	50: SEVERITY.MAJOR,
+}
+const FROG_SEVERITY = {
+	1: SEVERITY.MEDIUM,
 }
 
 export class Ninki extends CoreGauge {
@@ -118,8 +122,8 @@ export class Ninki extends CoreGauge {
 	}
 
 	private onHellfrog(event: Events['damage']) {
-		if (event.targets.length === 1) {
-			// If we have a Hellfrog event with only one target, it should've been a Bhava instead
+		if (event.targets.length < HELLFROG_TARGET_MINIMUM) {
+			// If we have a Hellfrog event with fewer than 3 targets, it should've been a Bhava instead
 			this.erroneousFrogs++
 		}
 	}
@@ -137,17 +141,16 @@ export class Ninki extends CoreGauge {
 			</Trans>,
 		}))
 
-		if (this.erroneousFrogs > 0) {
-			this.suggestions.add(new Suggestion({
-				icon: this.data.actions.HELLFROG_MEDIUM.icon,
-				content: <Trans id="nin.ninki.suggestions.frog.content">
-					Avoid using <ActionLink action="HELLFROG_MEDIUM"/> when you only have one target, as <ActionLink action="BHAVACAKRA"/> has higher potency and can be used freely.
-				</Trans>,
-				severity: SEVERITY.MEDIUM,
-				why: <Trans id="nin.ninki.suggestions.frog.why">
-					You used Hellfrog Medium <Plural value={this.erroneousFrogs} one="# time" other="# times"/> when other spenders were available.
-				</Trans>,
-			}))
-		}
+		this.suggestions.add(new TieredSuggestion({
+			icon: this.data.actions.HELLFROG_MEDIUM.icon,
+			content: <Trans id="nin.ninki.suggestions.frog.content">
+				Avoid using <ActionLink action="HELLFROG_MEDIUM"/> when you have fewer than three targets, as <ActionLink action="BHAVACAKRA"/> is otherwise a potency gain.
+			</Trans>,
+			tiers: FROG_SEVERITY,
+			value: this.erroneousFrogs,
+			why: <Trans id="nin.ninki.suggestions.frog.why">
+				You used Hellfrog Medium <Plural value={this.erroneousFrogs} one="# time" other="# times"/> when other spenders were available.
+			</Trans>,
+		}))
 	}
 }
