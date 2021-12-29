@@ -16,7 +16,7 @@ export class AoE extends AoEUsages {
 		{
 			aoeAction: this.data.actions.SHADOW_OF_THE_DESTROYER,
 			stActions: [this.data.actions.BOOTSHINE, this.data.actions.DRAGON_KICK],
-			minTargets: 2,
+			minTargets: 3,
 		},
 		{
 			aoeAction: this.data.actions.FOUR_POINT_FURY,
