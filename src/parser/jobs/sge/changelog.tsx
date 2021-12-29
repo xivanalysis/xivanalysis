@@ -19,7 +19,7 @@ export const changelog = [
 	},
 	{
 		date: new Date('2021-12-18'),
-		Changes: () => <>Added suggestions for not overcapping Addersgall and Addersting gauges.</>,
+		Changes: () => <>Added suggestions for not overcapping Addersgall and Addersting gauges</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],
 	},
 	{
@@ -28,7 +28,7 @@ export const changelog = [
 		contributors: [CONTRIBUTORS.AKAIRYU],
 	},
 	{
-		date: new Date('2021-12-27'),
+		date: new Date('2021-12-28'),
 		Changes: () => <>Added tracking for Tincture and Zoe usage, and marked as supported for Endwalker</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],
 	},
