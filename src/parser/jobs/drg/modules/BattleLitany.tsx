@@ -91,12 +91,9 @@ class DoubleDrgEvaluator implements WindowEvaluator {
 	}
 }
 
-// Analyser port note:
-// - currently investigating: using new BuffWindow module to handle this logic
-// in this module we only want to track battle litany windows opened by
-// the character selected for analysis. windows that clip into or overwrite other
-// DRG litanies will be marked.
-// Used DNC technical step as basis for this module.
+// this implementation of Battle Litany derives from core BuffWindow with a
+// set of custom evaluators that track number of players buffed and whether or
+// not the window overwrote (or was overwritten by) windows started by other DRGs
 export class BattleLitany extends BuffWindow {
 	static override handle = 'battlelitany'
 	static override title = t('drg.battlelitany.title')`Battle Litany`
