@@ -1,6 +1,7 @@
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
 import TransMarkdown from 'components/ui/TransMarkdown'
+import CONTRIBUTORS, {ROLES} from 'data/CONTRIBUTORS'
 import {Meta} from 'parser/core/Meta'
 import React from 'react'
 import {Icon, Message} from 'semantic-ui-react'
@@ -29,7 +30,7 @@ export const SAMURAI = new Meta({
 	// },
 
 	contributors: [
-		// {user: CONTRIBUTORS.YOU, role: ROLES.DEVELOPER},
+		{user: CONTRIBUTORS.RYAN, role: ROLES.DEVELOPER},
 	],
 
 	changelog: [
@@ -38,5 +39,10 @@ export const SAMURAI = new Meta({
 		// 	Changes: () => <>The changes you made</>,
 		// 	contrubutors: [CONTRIBUTORS.YOU],
 		// },
+		{
+			date: new Date('2021-11-19'),
+			Changes: () => <>Adjust Buff uptime to use new Fugetsu and Fuka Statuses</>,
+			contrubutors: [CONTRIBUTORS.RYAN],
+		},
 	],
 })

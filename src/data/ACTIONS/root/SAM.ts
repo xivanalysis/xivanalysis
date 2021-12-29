@@ -19,7 +19,6 @@ export const SAM = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003151.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		potency:  200,
 		combo: {
 			start: true,
 		},
@@ -31,10 +30,8 @@ export const SAM = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003152.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		potency: 100,
 		combo: {
 			from: 7477,
-			potency: 320,
 		},
 		statusesApplied: ['FUGETSU'],
 	},
@@ -54,10 +51,8 @@ export const SAM = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003156.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		potency: 100,
 		combo: {
 			from: 7477,
-			potency: 320,
 		},
 		statusesApplied: ['FUKA'],
 	},
@@ -98,10 +93,8 @@ export const SAM = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003158.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		potency: 100,
 		combo: {
 			from: 7478,
-			potency: 480,
 			end: true,
 		},
 	},
@@ -112,10 +105,8 @@ export const SAM = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003163.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		potency: 100, // diminishing returns?
 		combo: {
 			from: [7483, 25780],
-			potency: 200,
 			end: true,
 		},
 		statusesApplied: ['FUGETSU'],
@@ -136,10 +127,8 @@ export const SAM = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003164.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		potency: 100,
 		combo: {
 			from: 7479,
-			potency: 480,
 			end: true,
 		},
 	},
@@ -150,10 +139,8 @@ export const SAM = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003165.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		potency: 100, // diminishing returns?
 		combo: {
 			from: [7483, 25780],
-			potency: 200,
 			end: true,
 		},
 		statusesApplied: ['FUKA'],
@@ -174,10 +161,8 @@ export const SAM = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003166.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		potency: 100,
 		combo: {
 			from: 7477,
-			potency: 360,
 			end: true,
 		},
 	},
@@ -185,7 +170,7 @@ export const SAM = ensureActions({
 	FUKO: {
 		id: 25780,
 		name: 'Fuko',
-		icon: 'https://xivapi.com/i/003000/003189_hr1.png',
+		icon: 'https://xivapi.com/i/003000/003189.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 	},
@@ -193,7 +178,7 @@ export const SAM = ensureActions({
 	OGI_NAMIKIRI: {
 		id: 25781,
 		name: 'Ogi Namikiri',
-		icon: 'https://xivapi.com/i/003000/003187_hr1.png',
+		icon: 'https://xivapi.com/i/003000/003187.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 	},
@@ -201,7 +186,7 @@ export const SAM = ensureActions({
 	KAESHI_NAMIKIRI: {
 		id: 25782,
 		name: 'Kaeshi: Namikiri',
-		icon: 'https://xivapi.com/i/003000/003188_hr1.png',
+		icon: 'https://xivapi.com/i/003000/003188.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 	},
@@ -363,7 +348,7 @@ export const SAM = ensureActions({
 	SHOHA_II: { //WHY SE WHY
 		id: 25779,
 		name: 'Shoha II',
-		icon: 'https://xivapi.com/i/003000/003185_hr1.png',
+		icon: 'https://xivapi.com/i/003000/003185.png',
 		cooldown: 15000,
 	},
 })

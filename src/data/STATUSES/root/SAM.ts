@@ -11,14 +11,14 @@ export const SAM = ensureStatuses({
 	FUGETSU: {
 		id: 1298,
 		name: 'Fugetsu',
-		icon: 'https://xivapi.com/i/013000/013311_hr1.png',
+		icon: 'https://xivapi.com/i/013000/013311.png',
 		duration: 40000,
 	},
 
 	FUKA: {
 		id: 1299,
 		name: 'Fuka',
-		icon: 'https://xivapi.com/i/013000/013312_hr1.png',
+		icon: 'https://xivapi.com/i/013000/013312.png',
 		duration: 40000,
 		speedModifier: 0.87,
 	},
@@ -68,7 +68,7 @@ export const SAM = ensureStatuses({
 	OGI_NAMIKIRI_READY: {
 		id: 2959,
 		name: 'Ogi Namikiri Ready',
-		icon: 'https://xivapi.com/i/013000/013313_hr1.png',
+		icon: 'https://xivapi.com/i/013000/013313.png',
 		duration: 30000,
 	},
 })
