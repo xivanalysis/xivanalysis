@@ -1,11 +1,11 @@
-import {fflogsApi} from 'api'
 import * as Errors from 'errors'
-import {ProcessedReportFightsResponse, ReportFightsQuery, ReportFightsResponse} from 'fflogs'
 import ky from 'ky'
 import _ from 'lodash'
 import {action, observable, runInAction} from 'mobx'
 import {globalErrorStore} from 'store/globalError'
-import {settingsStore} from './settings'
+import {settingsStore} from 'store/settings'
+import {ProcessedReportFightsResponse, ReportFightsQuery, ReportFightsResponse} from './eventTypes'
+import {fflogsApi} from './fflogsApi'
 
 interface UnloadedReport {
 	loading: true

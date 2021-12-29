@@ -1,14 +1,10 @@
-import {Trans} from '@lingui/react'
 import * as Sentry from '@sentry/browser'
-import classNames from 'classnames'
-import {NotFoundError} from 'errors'
 import {action, observable} from 'mobx'
 import {observer} from 'mobx-react'
 import * as PropTypes from 'prop-types'
 import React, {Component} from 'react'
-import {Container, Header, Icon} from 'semantic-ui-react'
+import {Container} from 'semantic-ui-react'
 import {StoreContext} from 'store'
-import styles from './ErrorBoundary.module.css'
 import ErrorMessage from './ui/ErrorMessage'
 
 @observer
@@ -18,28 +14,6 @@ class ErrorBoundary extends Component {
 	}
 
 	static contextType = StoreContext
-
-	refreshFights = () => {
-		const {reportStore} = this.context
-		reportStore.refreshReport()
-	}
-
-	renderRefreshButton = (error) => {
-		if (!(error instanceof NotFoundError)) {
-			return ''
-		}
-
-		return <Header>
-			<div className={classNames(styles.refreshHeader, 'pull-right')}>
-				<span className={styles.refresh} onClick={this.refreshFights}>
-					<Icon name="refresh"/>
-					<Trans id="core.find.refresh">
-					Refresh
-					</Trans>
-				</span>
-			</div>
-		</Header>
-	}
 
 	@observable componentError
 
@@ -61,7 +35,6 @@ class ErrorBoundary extends Component {
 
 		return (
 			<Container style={{marginTop: '1em'}}>
-				{this.renderRefreshButton(error)}
 				<ErrorMessage error={error}/>
 			</Container>
 		)

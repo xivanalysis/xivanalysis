@@ -1,6 +1,7 @@
 import {Trans} from '@lingui/react'
 import {Message} from 'akkd'
 import classNames from 'classnames'
+import {BranchBanner} from 'components/BranchBanner'
 import {DataContextProvider} from 'components/DataContext'
 import {BreadcrumbsBanner, Breadcrumb, ReportLinkContent} from 'components/GlobalSidebar'
 import {GameEdition} from 'data/EDITIONS'
@@ -62,6 +63,8 @@ export function ReportFlow({reportStore}: ReportFlowProps) {
 
 	return (
 		<DataProvider report={report}>
+			<BranchBanner report={report}/>
+
 			<Route path={`${path}/:pullId?/:actorId?`}>
 				<ReportLink reportStore={reportStore}/>
 			</Route>

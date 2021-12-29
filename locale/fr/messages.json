@@ -213,7 +213,6 @@
   "core.dummy.broken-log": "Un ou plusieurs acteurs dans ce pull semblent être des mannequins d'entraînement. Le comportement de la jauge de vie des mannequins va a l'encontre d'un certain nombre d'hypothèses faites par xivanalysis, ce qui peut engendrer des résultats subtilement incorrects.",
   "core.dummy.title": "Mannequin d'entraînement",
   "core.error.generic": "On dirait que quelque tourne pas rond. Notre équipe de développeurs hautement qualifiée à été notifiée.",
-  "core.find.refresh": "Actualiser",
   "core.gauge.title": "Jauge",
   "core.gcd.estimated-gcd": "GCD estimé",
   "core.gcd.no-statistics": "Malheureusement, les statistiques du joueur ne sont pas disponibles depuis FF Logs. Ainsi, le temps de GCD calculé est une <0>estimation</0>, et peut être incorrect. Si la valeur affichée est plus <1>élevée</1> que la réalité, vous devriez peut-être faire plus attention au maintien de votre GCD.",

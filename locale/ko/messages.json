@@ -213,7 +213,6 @@
   "core.dummy.broken-log": "",
   "core.dummy.title": "",
   "core.error.generic": "무언가 잘못되었습니다만 코드깎는 노인들이 이미 작업중입니다.",
-  "core.find.refresh": "새로고침",
   "core.gauge.title": "게이지",
   "core.gcd.estimated-gcd": "FFLOG 기준 글로벌 쿨타임",
   "core.gcd.no-statistics": "FFLogs는 개인 통계를 기록하지 않으며 이에 따라 실질적인 글로벌 쿨다운 길이를 정확히 판단 할 수 업습니다. <0>분석한</0> 글로벌 쿨다운 길이가 실제보다 <1>느리게</1> 보고되었다면 이는 글쿨이 그만큼 밀렸다는 뜻이므로 이에 주의하여야 합니다.",
