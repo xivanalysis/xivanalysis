@@ -187,7 +187,7 @@ export class RiddleOfFire extends Analyser {
 						blitzes: {
 							actual: riddle.casts.filter(event => this.blitzActions.includes(event.action)).length,
 							expected: EXPECTED.BLITZES,
-						}
+						},
 					},
 					rotation: riddle.casts,
 				}))
