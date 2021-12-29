@@ -40,7 +40,7 @@ export const SAMURAI = new Meta({
 		// 	contrubutors: [CONTRIBUTORS.YOU],
 		// },
 		{
-			date: new Date('2021-11-19'),
+			date: new Date('2021-12-28'),
 			Changes: () => <>Adjust Buff uptime to use new Fugetsu and Fuka Statuses</>,
 			contrubutors: [CONTRIBUTORS.RYAN],
 		},
