@@ -38,8 +38,8 @@ export class Triplecast extends Analyser {
 			</Trans>,
 			tiers: {
 				1: SEVERITY.MINOR,
-				3: SEVERITY.MEDIUM,
-				5: SEVERITY.MAJOR,
+				2: SEVERITY.MEDIUM,
+				4: SEVERITY.MAJOR,
 			},
 			value: this.overwrittenTriples,
 			why: <Trans id="blm.triplecast.suggestions.overwrote-triplecasts.why">
