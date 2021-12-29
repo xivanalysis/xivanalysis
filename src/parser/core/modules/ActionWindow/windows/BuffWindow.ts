@@ -3,7 +3,7 @@ import {Event, Events} from 'event'
 import _ from 'lodash'
 import {TimestampHook, TimestampHookArguments} from 'parser/core/Dispatcher'
 import {ensureArray} from 'utilities'
-import {filter, noneOf, oneOf} from '../../../filter'
+import {filter, oneOf} from '../../../filter'
 import {EvaluatedAction} from '../EvaluatedAction'
 import {HistoryEntry} from '../History'
 import {ActionWindow} from './ActionWindow'
@@ -42,13 +42,18 @@ export abstract class BuffWindow extends ActionWindow {
 	override initialise() {
 		super.initialise()
 
-		// need to exclude pets to avoid getting duplicate window starts due to pet buff mirroring.
-		const pets = this.parser.pull.actors
-			.filter(actor => actor.owner === this.parser.actor)
+		// buff windows are either active on the parser's actor
+		// or on an enemy actor (trick attack)
+		// enemies are not on the same team as the parser actor
+		const enemyTargets = this.parser.pull.actors
+			.filter(actor => actor.team !== this.parser.actor.team)
 			.map(actor => actor.id)
+
+		const targets = [this.parser.actor.id, ...enemyTargets]
+
 		const buffFilter = filter<Event>()
 			.source(this.parser.actor.id)
-			.target(noneOf(pets))
+			.target(oneOf(targets))
 			.status(oneOf(ensureArray(this.buffStatus).map(s => s.id)))
 
 		this.addEventHook(buffFilter.type('statusApply'), this.startWindowAndTimeout)
