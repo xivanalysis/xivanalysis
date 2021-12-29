@@ -489,7 +489,6 @@
   "nin.taWindow.chart.notes.no": "いいえ",
   "nin.taWindow.chart.notes.yes": "はい",
   "nin.taWindow.suggestions.badtrackedactions.content": "<2/>が切れそうなときや、側面しか取れないときでなければ、<0/>を<1/>効果中に使うのは避けましょう。<3/>の方が威力が高いです。",
-  "nin.taWindow.suggestions.trackedactions.content": "最大ダメージを与えるためには、<0/>の効果時間中に<1/>, <2/>, 2回の<3/>(開幕は1回) そして<4/>を使う必要があります。",
   "nin.taWindow.title": "だまし討ち",
   "pld.Atonement.title": "ロイエ",
   "pld.fightorflight.suggestions.gcds.content": "<0/>の効果時間中に11回のウェポンスキルを使いましょう。",
