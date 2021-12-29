@@ -539,6 +539,8 @@
   "rpr.deathsdesign.requirement.uptime.name": "アクティブ率: <0/>",
   "rpr.deathsdesign.rule.name": "<0/> を維持しましょう",
   "sam.about.description.info": "<0>注意</0> 残念ながら、現在はプレイヤーの位置を追跡できないため、剣気の獲得量は<1>推定</1>です。 なるべく正確に記載するようにしていますが、いくつか不正確な点があるかもしれません。",
+  "sam.buffs.checklist.requirement.fugetsu.name": "アクティブ率: <0/>",
+  "sam.buffs.checklist.requirement.fuka.name": "アクティブ率: <0/>",
   "sam.interrupts.suggestion.content": "<0/>の詠唱中断を避けてください。キャストタイムが短いにも関わらず，早く移動してしまうと，詠唱が中断され再詠唱する時間が無駄になります。",
   "sam.ms.suggestions.badgcd.content": "<0/>中に使用されるウェポンスキルは、閃を付与するスキルのみに限定するべきです。",
   "sam.ms.suggestions.missedgcd.content": "<0/>の効果時間中に3回のウェポンスキルを使いましょう。",
