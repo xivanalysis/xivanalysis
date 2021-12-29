@@ -643,6 +643,26 @@ const fakeEvents: Record<FflogsEvent['type'], FflogsEvent[]> = {
 		},
 		isBuff: false,
 	}],
+	interrupt: [{
+		timestamp: 14636863,
+		type: 'interrupt',
+		sourceID: 210,
+		sourceIsFriendly: true,
+		targetID: 218,
+		targetIsFriendly: false,
+		ability: {
+			name: 'Head Graze',
+			guid: 7551,
+			type: 1,
+			abilityIcon: '000000-000848.png',
+		},
+		extraAbility: {
+			name: 'Haste',
+			guid: 744,
+			type: 1,
+			abilityIcon: '000000-000405.png',
+		},
+	}],
 	wipecalled: [{
 		timestamp: 100000000,
 		type: 'wipecalled',

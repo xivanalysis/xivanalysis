@@ -482,6 +482,8 @@ Array [
 
 exports[`Event adapter individual events adapts instancesealupdate 1`] = `Array []`;
 
+exports[`Event adapter individual events adapts interrupt 1`] = `Array []`;
+
 exports[`Event adapter individual events adapts limitbreakupdate 1`] = `Array []`;
 
 exports[`Event adapter individual events adapts mapchange 1`] = `Array []`;

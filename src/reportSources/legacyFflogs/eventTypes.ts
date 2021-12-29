@@ -313,6 +313,11 @@ export interface DispelEvent extends AbilityEventFields {
 	isBuff: boolean,
 }
 
+export interface InterruptEvent extends AbilityEventFields {
+	type: 'interrupt'
+	extraAbility: Ability
+}
+
 const castEventTypes = [
 	'begincast',
 	'cast',
@@ -394,6 +399,8 @@ export type AbilityEvent =
 	| BuffEvent
 	| BuffStackEvent
 	| TargetabilityUpdateEvent
+	| DispelEvent
+	| InterruptEvent
 
 export type FflogsEvent =
 	| EncounterEvent
@@ -403,7 +410,6 @@ export type FflogsEvent =
 	| ChecksumMismatchEvent
 	| ZoneChangeEvent
 	| UnknownEvent
-	| DispelEvent
 	| WipeCalledEvent
 	| WorldMarkerPlacedEvent
 	| WorldMarkerRemovedEvent

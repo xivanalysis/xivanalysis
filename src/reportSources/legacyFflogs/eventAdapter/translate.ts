@@ -102,6 +102,7 @@ export class TranslateAdapterStep extends AdapterStep {
 		/* eslint-disable no-fallthrough */
 		// Dispels are already modelled by other events, and aren't something we really care about
 		case 'dispel':
+		case 'interrupt':
 		// Encounter events don't expose anything particularly useful for us
 		case 'encounterstart':
 		case 'encounterend':
