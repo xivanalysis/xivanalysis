@@ -1,7 +1,6 @@
 import {ActionTimeline} from './ActionTimeline'
 import {AoE} from './AoE'
 import {Demolish} from './Demolish'
-import {Fists} from './Fists'
 import {Forms} from './Forms'
 import {GreasedLightning} from './GreasedLightning'
 import {OGCDDowntime} from './OGCDDowntime'
@@ -15,7 +14,6 @@ export default [
 	ActionTimeline,
 	AoE,
 	Demolish,
-	Fists,
 	Forms,
 	GreasedLightning,
 	OGCDDowntime,
