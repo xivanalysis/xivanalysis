@@ -1,6 +1,7 @@
 import {t} from '@lingui/macro'
 import {Plural, Trans} from '@lingui/react'
 import {DataLink} from 'components/ui/DbLink'
+import {ActionKey} from 'data/ACTIONS'
 import {dependency} from 'parser/core/Injectable'
 import {AllowedGcdsOnlyEvaluator, AllowedGcdsOnlyOptions, BuffWindow, calculateExpectedGcdsForTime, EvaluatedAction, ExpectedActionsEvaluator} from 'parser/core/modules/ActionWindow'
 import {HistoryEntry} from 'parser/core/modules/ActionWindow/History'
@@ -23,6 +24,12 @@ const EXPECTED_REQUIESCAT_CASTS = 5
 // When calculating rushing, adjust the start of the window by 1.5 seconds to allow for using Requiescat in the first weave slot
 const WINDOW_START_FORGIVENESS_FOR_RUSHING = 1500
 const REQUIESCAT_DURATION = 30000
+
+const REQUIESCAT_ACTIONS: ActionKey[] = [
+	'HOLY_SPIRIT',
+	'HOLY_CIRCLE',
+	'CONFITEOR',
+]
 
 interface RequiescatGcdsOptions extends AllowedGcdsOnlyOptions {
 	downtime: Downtime
@@ -79,6 +86,7 @@ export class Requiescat extends BuffWindow {
 
 	override initialise() {
 		super.initialise()
+		this.trackOnlyActions(REQUIESCAT_ACTIONS.map(g => this.data.actions[g].id))
 		this.addEvaluator(new RequiescatGcdsEvaluator({
 			expectedGcdCount: 4,
 			allowedGcds: [
