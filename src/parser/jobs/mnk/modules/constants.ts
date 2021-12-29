@@ -34,6 +34,7 @@ export const FORM_SKILLS: ActionKey[] = [
 	...COEURL_SKILLS,
 ]
 
+// Blitzes
 export const BLITZ_SKILLS: ActionKey[] = [
 	'ELIXIR_FIELD',
 	'CELESTIAL_REVOLUTION',
