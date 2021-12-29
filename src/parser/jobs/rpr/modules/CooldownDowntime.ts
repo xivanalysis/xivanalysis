@@ -9,8 +9,7 @@ export class CooldownDowntime extends CoreCooldownDowntime {
 		},
 
 		{
-			cooldowns: [this.data.actions.SOUL_SLICE,
-				this.data.actions.SOUL_SCYTHE],
+			cooldowns: [this.data.actions.SOUL_SLICE, this.data.actions.SOUL_SCYTHE],
 			// Both openers use this as 2nd GCD
 			firstUseOffset: 4000,
 		},
