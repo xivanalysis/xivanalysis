@@ -19,12 +19,17 @@ export const changelog = [
 	},
 	{
 		date: new Date('2021-12-18'),
-		Changes: () => <>Added suggestions for not overcapping Addersgall and Addersting gauges.</>,
+		Changes: () => <>Added suggestions for not overcapping Addersgall and Addersting gauges</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],
 	},
 	{
 		date: new Date('2021-12-20'),
 		Changes: () => <>Added cooldown tracking for Phlegma III and the non-Addersgall healing and mitigation cooldowns</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
+	{
+		date: new Date('2021-12-28'),
+		Changes: () => <>Added tracking for Tincture and Zoe usage, and marked as supported for Endwalker</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],
 	},
 ]
