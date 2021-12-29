@@ -18,7 +18,7 @@ const SEVERITIES = {
 	},
 }
 
-export default class Combust extends DoTs {
+export class Combust extends DoTs {
 	static override handle = 'combust'
 
 	@dependency private checklist!: Checklist

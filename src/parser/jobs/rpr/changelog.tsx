@@ -3,14 +3,15 @@ import CONTRIBUTORS from 'data/CONTRIBUTORS'
 import React from 'react'
 
 export const changelog = [
-	// {
-	// 	date: new Date('2021-12-03'),
-	// 	Changes: () => <>The changes you made</>,
-	// 	contributors: [CONTRIBUTORS.YOU],
-	// },
 	{
 		date: new Date('2021-12-28'),
-		Changes: () => <>Fix how Always be casting counts Soul Slice and Soul Scythe.</>,
+		Changes: () => <>Fix Always Be Casting accounting for Soul Slice and Soul Scythe.</>,
+		contributors: [CONTRIBUTORS.KELOS],
+	},
+
+	{
+		date: new Date('2021-12-28'),
+		Changes: () => <>Replace Enshroud with Soul Slice and Soul Scythe in Cooldowns checklist.</>,
 		contributors: [CONTRIBUTORS.KELOS],
 	},
 	{
