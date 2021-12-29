@@ -180,6 +180,7 @@ export const SAM = ensureActions({
 		name: 'Ogi Namikiri',
 		icon: 'https://xivapi.com/i/003000/003187.png',
 		onGcd: true,
+		castTime: 1300,
 		speedAttribute: Attribute.SKILL_SPEED,
 	},
 
