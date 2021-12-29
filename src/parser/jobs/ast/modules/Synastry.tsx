@@ -23,7 +23,7 @@ const GCD_ST_HEAL: ActionKey[] = [
 ]
 
 // Ripped off from WHM and converted to TSX
-export default class Synastry extends Analyser {
+export class Synastry extends Analyser {
 	static override handle = 'synastry'
 
 	@dependency private data!: Data

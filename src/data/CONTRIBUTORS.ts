@@ -52,6 +52,13 @@ const CONTRIBUTORS = ensureRecord<Contributor>()({
 			JOBS.NINJA,
 		],
 	},
+	KELOS: {
+		name: 'Kelos',
+		avatar: require('./avatar/kelos.png'),
+		jobs: [
+			JOBS.SUMMONER,
+		],
+	},
 	HINT: {
 		name: 'Hint',
 		avatar: require('./avatar/Hint.png'),
@@ -93,6 +100,20 @@ const CONTRIBUTORS = ensureRecord<Contributor>()({
 	JONNIX: {
 		name: 'Jonnix',
 		avatar: require('./avatar/jonnix.png'),
+		jobs: [
+			JOBS.GUNBREAKER,
+		],
+	},
+	ARIA: {
+		name: 'Aria',
+		avatar: require('./avatar/aria.png'),
+		jobs: [
+			JOBS.PALADIN,
+		],
+	},
+	EDEN: {
+		name: 'Eden',
+		avatar: require('./avatar/Eden.png'),
 		jobs: [
 			JOBS.GUNBREAKER,
 		],

@@ -34,7 +34,6 @@ export const PLD = ensureActions({
 		icon: 'https://xivapi.com/i/000000/000164.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		breaksCombo: true,
 		potency: 100,
 	},
 	SHIELD_BASH: {
@@ -195,7 +194,6 @@ export const PLD = ensureActions({
 		},
 		statusesApplied: ['BLADE_OF_VALOR'],
 	},
-
 
 	// -----
 	// Player oGCDs
