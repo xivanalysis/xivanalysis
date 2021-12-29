@@ -140,7 +140,6 @@
   "core.deaths.content": "Sterbe nicht. Ob untätige Zeit, verlorene Job-Balken und Ressourcen oder Wiederbelebungsstatus, Tode sind absolut <0>vernichtend</0> zum Schadensausstoß.",
   "core.deaths.why": "{0, plural, =1 {# Tod} other {# Tode}}",
   "core.error.generic": "Sieht aus, als ob etwas falsch gelaufen ist. Unser hoch motiviertes Team von Programmierern wurde benachrichtigt.",
-  "core.find.refresh": "Aktualisieren",
   "core.gauge.title": "Balken",
   "core.gcd.estimated-gcd": "Geschätzte globale Abklingzeit",
   "core.gcd.no-statistics": "Leider sind Spielerstatistiken nicht von FF Logs einsehbar. Daher ist die berechnete globale Abklingzeit eine <0>Abschätzung</0> und kann durchaus von der tatsächlichen Zeit abweichen. Wenn die Abschätzung <1>länger</1> als die tatsächliche Zeit ist, solltest du sehr wahrscheinlich darauf achten, deine globale Abklingzeit auszunutzen.",
