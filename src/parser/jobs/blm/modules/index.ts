@@ -9,6 +9,7 @@ import Procs from './Procs'
 import {RotationWatchdog} from './RotationWatchdog'
 import {Sharpcast} from './Sharpcast'
 import {Thunder} from './Thunder'
+import {Triplecast} from './Triplecast'
 import {Weaving} from './Weaving'
 
 export default [
@@ -24,4 +25,5 @@ export default [
 	RotationWatchdog,
 	Sharpcast,
 	Thunder,
+	Triplecast,
 ]
