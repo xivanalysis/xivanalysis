@@ -2,6 +2,7 @@ import {t} from '@lingui/macro'
 import {Plural, Trans} from '@lingui/react'
 import {DataLink} from 'components/ui/DbLink'
 import {RotationTable} from 'components/ui/RotationTable'
+import {Action} from 'data/ACTIONS'
 import {Event, Events} from 'event'
 import {Analyser} from 'parser/core/Analyser'
 import {EventHook} from 'parser/core/Dispatcher'
@@ -11,15 +12,15 @@ import {Data} from 'parser/core/modules/Data'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import {Timeline} from 'parser/core/modules/Timeline'
 import React from 'react'
-import DISPLAY_ORDER from './DISPLAY_ORDER'
+import {BLITZ_SKILLS} from './constants'
+import {DISPLAY_ORDER} from './DISPLAY_ORDER'
+import {fillActions} from './utilities'
 
 // Expected GCDs and buffs
 // technically can get 2 tacles and should as much as possible, but don't ding for it in case it's for mechanics
 const EXPECTED = {
 	GCDS: 11,
-	ELIXIRS: 1,
-	TACKLES: 1,
-	TORNADOES: 1,
+	BLITZES: 1,
 }
 
 const SUGGESTION_TIERS = {
@@ -51,20 +52,8 @@ class Riddle {
 		return this.casts.filter(event => event.action === this.data.actions.THE_FORBIDDEN_CHAKRA.id).length
 	}
 
-	get elixirFields() {
-		return this.casts.filter(event => event.action === this.data.actions.ELIXIR_FIELD.id).length
-	}
-
 	get meditations() {
 		return this.casts.filter(event => event.action === this.data.actions.MEDITATION.id).length
-	}
-
-	get tackles() {
-		return this.casts.filter(event => event.action === this.data.actions.SHOULDER_TACKLE.id).length
-	}
-
-	get tornadoKicks() {
-		return this.casts.filter(event => event.action === this.data.actions.TORNADO_KICK.id).length
 	}
 
 	get stars() {
@@ -85,7 +74,10 @@ export class RiddleOfFire extends Analyser {
 	private riddle?: Riddle
 	private riddleHook?: EventHook<Events['action']>
 
+	private blitzActions: Array<Action['id']> = []
+
 	override initialise(): void {
+		this.blitzActions = fillActions(BLITZ_SKILLS, this.data)
 		const playerFilter = filter<Event>().source(this.parser.actor.id)
 		this.addEventHook(playerFilter.type('statusApply').status(this.data.statuses.RIDDLE_OF_FIRE.id), this.onGain)
 		this.addEventHook(playerFilter.type('statusRemove').status(this.data.statuses.RIDDLE_OF_FIRE.id), this.onDrop)
@@ -149,18 +141,6 @@ export class RiddleOfFire extends Analyser {
 		const droppedGcds = (nonRushedRiddles.length * EXPECTED.GCDS)
 			- nonRushedRiddles.reduce((sum, riddle) => sum + riddle.gcds + riddle.stars - riddle.meditations, 0)
 
-		const droppedElixirFields = (nonRushedRiddles.length) // should be 1 per Riddle
-			- nonRushedRiddles.reduce((sum, riddle) => sum + riddle.elixirFields, 0)
-
-		const droppedTornadoKicks = (nonRushedRiddles.length) // should be 1 per Riddle
-		- nonRushedRiddles.reduce((sum, riddle) => sum + riddle.tornadoKicks, 0)
-
-		// Keep these seperate for different suggestions; our baseline is 1 charge, but the MNK mentors
-		// want a minor suggestion to track Riddles that only had 1 Tackle
-		const riddlesWithOneTackle = nonRushedRiddles.filter(riddle => riddle.tackles === 1).length
-		const riddlesWithZeroTackles = nonRushedRiddles.filter(riddle => riddle.tackles === 0).length
-		const droppedExpectedOgcds = droppedElixirFields + droppedTornadoKicks + riddlesWithZeroTackles
-
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.RIDDLE_OF_FIRE.icon,
 			content: <Trans id="mnk.rof.suggestions.gcd.content">
@@ -170,32 +150,6 @@ export class RiddleOfFire extends Analyser {
 			value: droppedGcds,
 			why: <Trans id="mnk.rof.suggestions.gcd.why">
 				<Plural value={droppedGcds} one="# possible GCD was" other="# possible GCDs were" /> missed or wasted on <DataLink action="MEDITATION"/> during <DataLink status="RIDDLE_OF_FIRE"/>.
-			</Trans>,
-		}))
-
-		this.suggestions.add(new TieredSuggestion({
-			icon: this.data.actions.ELIXIR_FIELD.icon,
-			content: <Trans id="mnk.rof.suggestions.ogcd.content">
-				Aim to use <DataLink action="TORNADO_KICK"/>, <DataLink action="ELIXIR_FIELD"/>, and at least 1 <DataLink action="SHOULDER_TACKLE"/> during each <DataLink status="RIDDLE_OF_FIRE"/>.
-			</Trans>,
-			tiers: SUGGESTION_TIERS,
-			value: droppedExpectedOgcds,
-			why: <Trans id="mnk.rof.suggestions.ogcd.why">
-				<Plural value={droppedExpectedOgcds} one="# expected oGCD was" other="# expected oGCDs were" /> dropped during <DataLink status="RIDDLE_OF_FIRE"/>.
-			</Trans>,
-		}))
-
-		this.suggestions.add(new TieredSuggestion({
-			icon: this.data.actions.SHOULDER_TACKLE.icon,
-			content: <Trans id="mnk.rof.suggestions.tackle.content">
-				Try to use both charges of <DataLink action="SHOULDER_TACKLE"/> during <DataLink status="RIDDLE_OF_FIRE"/>, unless you need to hold a charge for strategic purposes.
-			</Trans>,
-			tiers: {
-				2: SEVERITY.MINOR,	// Always a minor suggestion, however we start from 2 to forgive ST on pull
-			},
-			value: riddlesWithOneTackle,
-			why: <Trans id="mnk.rof.suggestions.tackle.why">
-				<Plural value={riddlesWithOneTackle} one="# use" other="# uses" /> of <DataLink status="RIDDLE_OF_FIRE"/> contained only one use of <DataLink action="SHOULDER_TACKLE"/>.
 			</Trans>,
 		}))
 	}
@@ -212,16 +166,8 @@ export class RiddleOfFire extends Analyser {
 					accessor: 'forbiddenChakra',
 				},
 				{
-					header: <DataLink showName={false} action="TORNADO_KICK"/>,
-					accessor: 'tornadoKick',
-				},
-				{
-					header: <DataLink showName={false} action="ELIXIR_FIELD"/>,
-					accessor: 'elixirField',
-				},
-				{
-					header: <DataLink showName={false} action="SHOULDER_TACKLE"/>,
-					accessor: 'shoulderTackle',
+					header: <DataLink showName={false} action="MASTERFUL_BLITZ"/>,
+					accessor: 'blitzes',
 				},
 			]}
 			data={this.history
@@ -238,18 +184,10 @@ export class RiddleOfFire extends Analyser {
 						forbiddenChakra: {
 							actual: riddle.chakras,
 						},
-						tornadoKick: {
-							actual: riddle.tornadoKicks,
-							expected: EXPECTED.TORNADOES,
-						},
-						elixirField: {
-							actual: riddle.elixirFields,
-							expected: EXPECTED.ELIXIRS,
-						},
-						shoulderTackle: {
-							actual: riddle.tackles,
-							expected: EXPECTED.TACKLES,
-						},
+						blitzes: {
+							actual: riddle.casts.filter(event => this.blitzActions.includes(event.action)).length,
+							expected: EXPECTED.BLITZES,
+						}
 					},
 					rotation: riddle.casts,
 				}))

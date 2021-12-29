@@ -33,3 +33,10 @@ export const FORM_SKILLS: ActionKey[] = [
 	...RAPTOR_SKILLS,
 	...COEURL_SKILLS,
 ]
+
+export const BLITZ_SKILLS: ActionKey[] = [
+	'ELIXIR_FIELD',
+	'CELESTIAL_REVOLUTION',
+	'RISING_PHOENIX',
+	'PHANTOM_RUSH',
+]
