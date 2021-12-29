@@ -2,11 +2,12 @@ import {t} from '@lingui/macro'
 import {Plural, Trans} from '@lingui/react'
 import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
-import {Event} from 'event'
+import {Event, Events} from 'event'
 import {Analyser} from 'parser/core/Analyser'
 import {filter} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
 import {Data} from 'parser/core/modules/Data'
+import Downtime from 'parser/core/modules/Downtime'
 import Suggestions, {SEVERITY, Suggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
 
@@ -15,6 +16,7 @@ export class Physick extends Analyser {
 	static override title = t('smn.physick.title')`Physick`
 
 	@dependency private data!: Data
+	@dependency private downtime!: Downtime
 	@dependency private suggestions!: Suggestions
 
 	private phyisckCount = 0
@@ -29,8 +31,10 @@ export class Physick extends Analyser {
 		this.addEventHook('complete', this.onComplete)
 	}
 
-	private onPhysick() {
-		this.phyisckCount += 1
+	private onPhysick(event: Events['action']) {
+		if (!this.downtime.isDowntime(event.timestamp)) {
+			this.phyisckCount += 1
+		}
 	}
 
 	private onComplete() {
