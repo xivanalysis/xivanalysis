@@ -176,10 +176,10 @@ export class Goring extends Analyser {
 	private getDotUptime(statusId: Status['id']) {
 		const status = this.data.getStatus(statusId)
 		if (status == null) { return 0 }
-		
+
 		const statusTime = this.statuses.getUptime(status, this.actors.foes)
 		const uptime = this.parser.currentDuration - this.invulnerability.getDuration({types: ['invulnerable']})
-		
+
 		return (statusTime / uptime) * 100
 	}
 
@@ -202,7 +202,7 @@ export class Goring extends Analyser {
 	private createTargetStatusTable(target: DotTargetData) {
 		let totalMajorDotClip = 0
 
-		let combinedDotStatuses = target[this.data.statuses.GORING_BLADE.id].applications.concat(target[this.data.statuses.BLADE_OF_VALOR.id].applications)
+		const combinedDotStatuses = target[this.data.statuses.GORING_BLADE.id].applications.concat(target[this.data.statuses.BLADE_OF_VALOR.id].applications)
 		combinedDotStatuses.sort(
 			(firstEvent, secondEvent) => (firstEvent.event.timestamp > secondEvent.event.timestamp ? 1 : -1)
 		)
