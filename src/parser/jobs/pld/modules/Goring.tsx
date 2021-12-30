@@ -208,7 +208,7 @@ export class Goring extends Analyser {
 	private createTargetStatusTable(target: DotTargetData) {
 		let totalMajorDotClip = 0
 
-		let combinedDotStatuses: DotStatusData[]
+		let combinedDotStatuses: DotApplicationData[]
 		// combine the DotStatusData of Goring and Valor, then sort it by timestamp
 		if (target[this.data.statuses.GORING_BLADE.id] && target[this.data.statuses.BLADE_OF_VALOR.id]) {
 			combinedDotStatuses = target[this.data.statuses.GORING_BLADE.id].applications.concat(target[this.data.statuses.BLADE_OF_VALOR.id].applications)
