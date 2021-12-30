@@ -40,17 +40,17 @@ export class ManaStackGauge extends CoreGauge {
 		minimum: MINIMUM,
 	}))
 	public gaugeModifiers = new Map<number, ManaStackGaugeModifier>([
-		[this.data.actions.ENCHANTED_REPRISE.id, {manaStack: 1}],
+		[this.data.actions.ENCHANTED_REPRISE.id, {manaStack: 0}],
 		[this.data.actions.ENCHANTED_MOULINET.id, {manaStack: 1}],
 		[this.data.actions.ENCHANTED_RIPOSTE.id, {manaStack: 1}],
 		[this.data.actions.ENCHANTED_ZWERCHHAU.id, {manaStack: 1}],
 		[this.data.actions.ENCHANTED_REDOUBLEMENT.id, {manaStack: 1}],
 	])
 	public spenderModifiers = new Map<number, ManaStackGaugeModifier>([
-		[this.data.actions.VERHOLY.id, {manaStack: -1}],
-		[this.data.actions.VERFLARE.id, {manaStack: -1}],
-		[this.data.actions.SCORCH.id, {manaStack: -1}],
-		[this.data.actions.RESOLUTION.id, {manaStack: -1}],
+		[this.data.actions.VERHOLY.id, {manaStack: -3}],
+		[this.data.actions.VERFLARE.id, {manaStack: -3}],
+		[this.data.actions.SCORCH.id, {manaStack: -0}],
+		[this.data.actions.RESOLUTION.id, {manaStack: -0}],
 	])
 	public gaugeBreakers: number[] = [
 		this.data.actions.VERAERO.id,
@@ -111,7 +111,7 @@ export class ManaStackGauge extends CoreGauge {
 
 		//Always check it we should break
 		if (this.onGaugeBreak(event)) {
-			//We won't modify the gauge if this skill broke it.
+			//No further modifications to the gauge if this skill broke it.
 			return
 		}
 
