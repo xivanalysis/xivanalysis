@@ -1,5 +1,6 @@
 import {t} from '@lingui/macro'
 import TransMarkdown from 'components/ui/TransMarkdown'
+import CONTRIBUTORS, {ROLES} from 'data/CONTRIBUTORS'
 import {Meta} from 'parser/core/Meta'
 import React from 'react'
 
@@ -24,6 +25,7 @@ export const WHITE_MAGE = new Meta({
 	// },
 	contributors: [
 		// {user: CONTRIBUTORS.YOU, role: ROLES.DEVELOPER},
+		{user: CONTRIBUTORS.INNI, role: ROLES.DEVELOPER},
 	],
 	changelog: [
 		// {
@@ -31,5 +33,10 @@ export const WHITE_MAGE = new Meta({
 		// 	Changes: () => <>The changes you made</>,
 		// 	contrubutors: [CONTRIBUTORS.YOU],
 		// },
+		{
+			date: new Date('2021-12-30'),
+			Changes: () => <>Updated Thin Air Module for charge-based usage, added some weighting on MP saved per cast</>,
+			contributors: [CONTRIBUTORS.INNI],
+		},
 	],
 })
