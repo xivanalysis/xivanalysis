@@ -49,7 +49,7 @@ class Riddle {
 	}
 
 	get chakras() {
-		return this.casts.filter(event => event.action === this.data.actions.THE_FORBIDDEN_CHAKRA.id).length
+		return this.casts.filter(event => [this.data.actions.THE_FORBIDDEN_CHAKRA.id, this.data.actions.ENLIGHTENMENT.id].includes(event.action)).length
 	}
 
 	get meditations() {
