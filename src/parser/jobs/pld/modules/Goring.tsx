@@ -1,7 +1,6 @@
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
 import {DataLink, ActionLink} from 'components/ui/DbLink'
-import NormalisedMessage from 'components/ui/NormalisedMessage'
 import {Event, Events} from 'event'
 import {Analyser} from 'parser/core/Analyser'
 import {filter} from 'parser/core/filter'
@@ -11,9 +10,9 @@ import Checklist, {Rule, Requirement} from 'parser/core/modules/Checklist'
 import {Data} from 'parser/core/modules/Data'
 import {Invulnerability} from 'parser/core/modules/Invulnerability'
 import {Statuses} from 'parser/core/modules/Statuses'
-import Suggestions, {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import Suggestions from 'parser/core/modules/Suggestions'
 import React, {ReactNode} from 'react'
-import {Accordion, Table, Message} from 'semantic-ui-react'
+import {Accordion, Table} from 'semantic-ui-react'
 
 const MAX_ALLOWED_CLIPPING = 3000
 
@@ -39,19 +38,18 @@ interface DotApplicationTracker {
 export class Goring extends Analyser {
 	static override handle = 'goring'
 	static override title = t('pld.goring.title')`Goring Blade and Blade of Valor`
-	
 	@dependency private actors!: Actors
 	@dependency private checklist!: Checklist
 	@dependency private data!: Data
 	@dependency private invulnerability!: Invulnerability
 	@dependency private statuses!: Statuses
 	@dependency private suggestions!: Suggestions
-	
+
 	private readonly STATUS_DURATION = {
 		[this.data.statuses.GORING_BLADE.id]: this.data.statuses.GORING_BLADE.duration,
 		[this.data.statuses.BLADE_OF_VALOR.id]: this.data.statuses.BLADE_OF_VALOR.duration,
 	}
-	
+
     private lastDotCast: number = this.data.statuses.GORING_BLADE.id
 	private clip: {[key: number]: number} = {
 		[this.data.statuses.GORING_BLADE.id]: 0,
@@ -59,7 +57,7 @@ export class Goring extends Analyser {
 	}
 	private tracker: DotApplicationTracker = {}
 	private trackedClipping: boolean = false;
-	
+
 	override initialise() {
 		const playerFilter = filter<Event>().source(this.parser.actor.id)
 		this.addEventHook(playerFilter.type('action').action(this.data.actions.GORING_BLADE.id), this.onGoringCast)
@@ -85,11 +83,11 @@ export class Goring extends Analyser {
 	private onGoringCast(event: Events['action']) {
 		this.lastDotCast = event.action
 	}
-	
+
 	private onValorCast(event: Events['action']) {
 		this.lastDotCast = event.action
 	}
-	
+
 	private onGoringApply(event: Events['statusApply']) {
 		const statusId = event.status
 
@@ -107,7 +105,7 @@ export class Goring extends Analyser {
 			this.pushApplication(applicationKey, statusId, event)
 			return
 		}
-		
+
 		// If only the opposite DoT has been used on this target, initialize data and move to clip calculation
 		if (!trackerInstance[statusId] && trackerInstance[this.data.statuses.BLADE_OF_VALOR.id]) {
 			trackerInstance[statusId] = {
@@ -115,7 +113,7 @@ export class Goring extends Analyser {
 				applications: [],
 			}
 		}
-		
+
 		// If Blade of Valor has been used on this target, get most recent previous DoT application timestamp
 		let lastDotApplication = trackerInstance[statusId].lastApplication
 		if (trackerInstance[this.data.statuses.BLADE_OF_VALOR.id]) {
@@ -133,7 +131,7 @@ export class Goring extends Analyser {
 			this.trackedClipping = true
 		}
 	}
-	
+
 	private onValorApply(event: Events['statusApply']) {
 		const statusId = event.status
 
@@ -151,7 +149,7 @@ export class Goring extends Analyser {
 			this.pushApplication(applicationKey, statusId, event)
 			return
 		}
-		
+
 		// If only the opposite DoT has been used on this target, initialize data and move to clip calculation
 		if (!trackerInstance[statusId] && trackerInstance[this.data.statuses.GORING_BLADE.id]) {
 			trackerInstance[statusId] = {
@@ -159,7 +157,7 @@ export class Goring extends Analyser {
 				applications: [],
 			}
 		}
-		
+
 		// If Goring Blade has been used on this target, get most recent previous DoT application timestamp
 		let lastDotApplication = trackerInstance[statusId].lastApplication
 		if (trackerInstance[this.data.statuses.GORING_BLADE.id]) {
@@ -177,7 +175,7 @@ export class Goring extends Analyser {
 		}
 		trackerInstance[statusId].lastApplication = event.timestamp
 	}
-	
+
 	// calculating separately in case we ever decide to split the outputs
 	private getGoringUptime() {
 		const statusTime = this.statuses.getUptime(this.data.statuses.GORING_BLADE, this.actors.foes)
@@ -209,22 +207,20 @@ export class Goring extends Analyser {
 
 	private createTargetStatusTable(target: DotTargetData) {
 		let totalMajorDotClip = 0
-		
-		let combinedDotStatuses: DotStatusData[];
+
+		let combinedDotStatuses: DotStatusData[]
 		// combine the DotStatusData of Goring and Valor, then sort it by timestamp
 		if (target[this.data.statuses.GORING_BLADE.id] && target[this.data.statuses.BLADE_OF_VALOR.id]) {
 			combinedDotStatuses = target[this.data.statuses.GORING_BLADE.id].applications.concat(target[this.data.statuses.BLADE_OF_VALOR.id].applications)
 			combinedDotStatuses.sort(
 				(firstEvent, secondEvent) => (firstEvent.event.timestamp > secondEvent.event.timestamp ? 1 : -1)
 			)
-		}
-		else if (target[this.data.statuses.GORING_BLADE.id]) {
+		}else if (target[this.data.statuses.GORING_BLADE.id]) {
 			combinedDotStatuses = target[this.data.statuses.GORING_BLADE.id].applications
-		}
-		else {
+		}else {
 			combinedDotStatuses = target[this.data.statuses.BLADE_OF_VALOR.id].applications
 		}
-		let targetTable = <Table collapsing unstackable>
+		const targetTable = <Table collapsing unstackable>
 			<Table.Header>
 				<Table.Row>
 					<Table.HeaderCell><Trans id="pld.goring.applied">DoT Applied</Trans></Table.HeaderCell>
@@ -238,21 +234,20 @@ export class Goring extends Analyser {
 					(event) => {
 						const thisClip = event.clip || 0
 						const action = this.data.getAction(event.source)
-						let icon = <ActionLink showName={false} {...action} />
+						const icon = <ActionLink showName={false} {...action} />
 						const renderClipTime = event.clip != null ? this.parser.formatDuration(event.clip) : '-'
 						let clipSeverity: ReactNode = renderClipTime
 						if (thisClip > MAX_ALLOWED_CLIPPING) {
 							totalMajorDotClip += thisClip
 							clipSeverity = <span className="text-error">{clipSeverity}</span>
-						
 							return <React.Fragment key={event.event.timestamp}>
 								<Table.Row>
 								<Table.Cell>{this.parser.formatEpochTimestamp(event.event.timestamp)}</Table.Cell>
 								<Table.Cell>{clipSeverity}</Table.Cell>
 								<Table.Cell>{totalMajorDotClip ? this.parser.formatDuration(totalMajorDotClip) : '-'}</Table.Cell>
 								<Table.Cell style={{textAlign: 'center'}}>{icon}</Table.Cell>
-							</Table.Row>
-							</React.Fragment>
+								</Table.Row>
+								</React.Fragment>
 						}
 					})}
 			</Table.Body>
@@ -260,10 +255,9 @@ export class Goring extends Analyser {
 		if (totalMajorDotClip === 0) {
 			return null
 		}
-		
 		return targetTable
 	}
-	
+
 	override output() {
 		const numTargets = Object.keys(this.tracker).length
 		if (numTargets === 0) { return null }
@@ -272,11 +266,10 @@ export class Goring extends Analyser {
 		if (!this.trackedClipping) {
 			return null
 		}
-		
+
 		if (numTargets > 1) {
 			const panels = Object.keys(this.tracker).map(applicationKey => {
 				if (!this.createTargetStatusTable(this.tracker[applicationKey])) {
-					console.log("returning null")
 					return null
 				}
 				const target = this.actors.get(applicationKey)
