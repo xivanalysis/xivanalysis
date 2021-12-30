@@ -24,7 +24,7 @@ export const MAXIMUM = 3
 
 export class ManaStackGauge extends CoreGauge {
 	static override handle = 'manaStackGauge'
-	static override title = t('rdm.manaStackgauge.title')`Mana Stack Gauge Usage`
+	static override title = t('rdm.manaStackGauge.title')`Mana Stack Gauge Usage`
 	static override debug = false
 
 	@dependency private suggestions!: Suggestions
@@ -33,7 +33,7 @@ export class ManaStackGauge extends CoreGauge {
 
 	private manaStackGauge = this.add(new CounterGauge({
 		graph: {
-			label: <Trans id="rdm.manaStackgauge.resource.manaStacks">Mana Stacks</Trans>,
+			label: <Trans id="rdm.manaStackGauge.resource.manaStacks">Mana Stacks</Trans>,
 			color: JOBS.RED_MAGE.colour,
 		},
 		maximum: MAXIMUM,
@@ -85,8 +85,15 @@ export class ManaStackGauge extends CoreGauge {
 		this.addEventHook(
 			filter<Event>()
 				.type('action')
-				.source(this.parser.actor.id),
-			//.action(oneOf(Array.from(this.gaugeModifiers.keys()))),
+				.source(this.parser.actor.id)
+				.action(oneOf(Array.from(this.gaugeModifiers.keys()))),
+			this.onGaugeModifying
+		)
+		this.addEventHook(
+			filter<Event>()
+				.type('action')
+				.source(this.parser.actor.id)
+				.action(oneOf(this.gaugeBreakers)),
 			this.onGaugeModifying
 		)
 		this.addEventHook(
@@ -158,12 +165,12 @@ export class ManaStackGauge extends CoreGauge {
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.RESOLUTION.icon,
 			content: <Fragment>
-				<Trans id="rdm.manaStackgauge.suggestions.manaStack-wasted-content">Ensure you don't overcap your ManaStacks before using your finisher combo; overcapping ManaStacks means you used more than 3 enchanted skills in a row.</Trans>
+				<Trans id="rdm.manaStackGauge.suggestions.manaStack-wasted-content">Ensure you don't overcap your ManaStacks before using your finisher combo; overcapping ManaStacks means you used more than 3 enchanted skills in a row.</Trans>
 			</Fragment>,
 			tiers:  this.severity,
 			value:  this.manaStackGauge.overCap,
 			why: <Fragment>
-				<Trans id="rdm.manaStackgauge.suggestions.manaStack-wasted-why">You lost { this.manaStackGauge.overCap} ManaStacks due to capped Gauge resources</Trans>
+				<Trans id="rdm.manaStackGauge.suggestions.manaStack-wasted-why">You lost { this.manaStackGauge.overCap} ManaStacks due to capped Gauge resources</Trans>
 			</Fragment>,
 		}))
 
@@ -172,25 +179,25 @@ export class ManaStackGauge extends CoreGauge {
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.RESOLUTION.icon,
 			content: <Fragment>
-				<Trans id="rdm.manaStackgauge.suggestions.manaStack-loss-content">Ensure that you don't use a non Enchanted GCD when you have ManaStacks, otherwise you lose them all</Trans>
+				<Trans id="rdm.manaStackGauge.suggestions.manaStack-loss-content">Ensure that you don't use a non Enchanted GCD when you have ManaStacks, otherwise you lose them all</Trans>
 			</Fragment>,
 			tiers:  this.severity,
 			value:  manaStacksLost,
 			why: <Fragment>
-				<Trans id="rdm.manaStackgauge.suggestions.manaStack-loss-why">You lost { manaStacksLost} ManaStacks due to using a non Enchanted GCD</Trans>
+				<Trans id="rdm.manaStackGauge.suggestions.manaStack-loss-why">You lost { manaStacksLost} ManaStacks due to using a non Enchanted GCD</Trans>
 			</Fragment>,
 		}))
 
 		this.statistics.add(new DualStatistic({
-			label: <Trans id="rdm.manaStackgauge.title-mana-lost-to-overcap">Mana Stack Overcap Loss:</Trans>,
-			title: <Trans id="rdm.manaStackgauge.white-mana-lost-to-overcap">White</Trans>,
-			title2: <Trans id="rdm.manaStackgauge.black-mana-lost-to-overcap">Black</Trans>,
+			label: <Trans id="rdm.manaStackGauge.title-mana-lost-to-overcap">Mana Stack Overcap Loss:</Trans>,
+			title: <Trans id="rdm.manaStackGauge.white-mana-lost-to-overcap">White</Trans>,
+			title2: <Trans id="rdm.manaStackGauge.black-mana-lost-to-overcap">Black</Trans>,
 			icon: this.data.actions.VERHOLY.icon,
 			icon2: this.data.actions.VERFLARE.icon,
 			value:  this.manaStatistics.white.overcapLoss,
 			value2:  this.manaStatistics.black.overcapLoss,
 			info: (
-				<Trans id="rdm.manaStackgauge.white-mana-lost-to-overcap-statistics">
+				<Trans id="rdm.manaStackGauge.white-mana-lost-to-overcap-statistics">
 					You should never overcap your Mana Stacks
 				</Trans>
 			),

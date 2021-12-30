@@ -155,8 +155,10 @@ export class MeleeCombos extends Analyser {
 					return
 				}
 
+				//Again we need to check against the finishers list, we still want one merged row with finisher calculations
 				if (action.combo.from || this.finishers.includes(action.id)) {
 					const fromOptions = Array.isArray(action.combo.from) ? action.combo.from : [action.combo.from]
+					//Make certain not to end the combo as broken if we're starting the finisher combo.
 					if (!fromOptions.includes(current.data.lastAction.action ?? 0) && !this.finishers.includes(action.id)) {
 						current.data.broken = true
 						this.endCombo(event.timestamp)
@@ -166,7 +168,7 @@ export class MeleeCombos extends Analyser {
 						if (this.finishers.includes(action.id)) {
 							current.data.finisher.used = event.action
 						}
-						//Only handle finisher if this is Resolution
+						//Only handle finisher if this is Resolution, since if we're here we shouldn't be broken.
 						if (action.combo.end && event.action === this.data.actions.RESOLUTION.id) {
 							this.handleFinisher()
 							this.endCombo(event.timestamp)
@@ -177,8 +179,17 @@ export class MeleeCombos extends Analyser {
 		}
 
 		if (action.breaksCombo) {
-			//Removed the special manafication handling to prevent combo breaking between the melee and finisher combo
-			//They are now defined in data as separate combos and the upstream logic handles for ensuring we still maintain them being together
+			/*
+			Manafication does break combos, but the way we are currently modeling the full RDM combo isn't accurate anymore.
+			A full fix for this entails modeling mana stacks, splitting the full combo into two, and fixing the UI to display that info in a reasonable way.
+			However, as more people are starting to use Manafication after EncRedoublement (to fit multiple combos under buffs), this is a band-aid fix for now.
+			Additional Note: Event though we've now modeled the underlying combos differently, to accurately handle finishers we fabricate them appearing similar to
+			how they were when they were one large combo.  As such for now this fix is no longer a bandaid but a permanent fixture.
+			*/
+			if (action.id === this.data.actions.MANAFICATION.id &&
+				current && current.data.lastAction.action === this.data.actions.ENCHANTED_REDOUBLEMENT.id) {
+				return
+			}
 			this.breakComboIfExists(event.timestamp)
 		}
 	}
@@ -379,12 +390,16 @@ export class MeleeCombos extends Analyser {
 					<Trans id="rdm.meleecombos.recommendation.opener.short">It's okay to lose procs in the opener.</Trans>
 				</Fragment>
 			} else {
+				//We've been requested at least for now to not recommend delays for combos, we're not certain if this goes away
+				//entirely or not, as such I'm just commenting out the final push of the recommendation but leaving the logic in place for now
+				//Instead we'll just push it as if the first check was correct, that the finisher used was the correct one to utilize.
+				combo.data.finisher.recommendedActions.push(finisherAction)
 				// a recommendation of an array of actions is to delay the combo
-				Array.prototype.push.apply(combo.data.finisher.recommendedActions, recommendedFinisher)
-				this.incorrectFinishers.delay++
-				combo.data.finisher.recommendation = <Fragment>
-					<Trans id="rdm.meleecombos.recommendation.delaycombo.short">Delay combo</Trans><sup>{this.assignOrGetFootnoteIndex(SuggestionKey.DELAY_COMBO)}</sup>
-				</Fragment>
+				// Array.prototype.push.apply(combo.data.finisher.recommendedActions, recommendedFinisher)
+				// this.incorrectFinishers.delay++
+				// combo.data.finisher.recommendation = <Fragment>
+				// 	<Trans id="rdm.meleecombos.recommendation.delaycombo.short">Delay combo</Trans><sup>{this.assignOrGetFootnoteIndex(SuggestionKey.DELAY_COMBO)}</sup>
+				// </Fragment>
 			}
 		} else {
 			const finisherAction = recommendedFinisher

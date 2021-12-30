@@ -80,7 +80,7 @@ export class Combos extends CoreCombos {
 				icon: ACTIONS.RESOLUTION.icon,
 				why: <Plural id="rdm.combos.suggestions.notenoughmanacombos.why" value={notEnoughManaCount} one="# enchanted combo was lost due to entering the combo before having enough mana" other= "# enchanted combos were lost due to entering the combo before having enough mana" />,
 				content: <Trans id="rdm.combos.suggestions.notenoughmanacombos.content">
-					Be sure not to enter your combo before having 80|80 mana
+					Be sure not to enter your combo before having 50|50 mana
 				</Trans>,
 				tiers: this._severityNotEnoughManaActions,
 				value: notEnoughManaCount,
