@@ -6,6 +6,7 @@ import {Analyser} from 'parser/core/Analyser'
 import {filter} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
 import {Actor, Actors} from 'parser/core/modules/Actors'
+import {Status} from 'data/STATUSES'
 import Checklist, {Rule, Requirement} from 'parser/core/modules/Checklist'
 import {Data} from 'parser/core/modules/Data'
 import {Invulnerability} from 'parser/core/modules/Invulnerability'
@@ -19,7 +20,7 @@ const MAX_ALLOWED_CLIPPING = 3000
 interface DotApplicationData {
 	event: Events['statusApply'],
 	clip?: number,
-	source: Actor['id']
+	action: Action['id']
 }
 
 interface DotStatusData {
@@ -72,8 +73,8 @@ export class Goring extends Analyser {
 
 	private pushApplication(targetKey: string, statusId: number, event: Events['statusApply'], clip?: number) {
 		const target = this.tracker[targetKey] = this.tracker[targetKey] || this.createTargetApplicationList()
-		const source = this.lastDotCast
-		target[statusId].applications.push({event, clip, source})
+		const action = this.lastDotCast
+		target[statusId].applications.push({event, clip, action})
 	}
 
 	private onGoringCast(event: Events['action']) {
@@ -219,7 +220,7 @@ export class Goring extends Analyser {
 				{combinedDotStatuses.map(
 					(event) => {
 						const thisClip = event.clip || 0
-						const action = this.data.getAction(event.source)
+						const action = this.data.getAction(event.action)
 						const icon = <ActionLink showName={false} {...action} />
 						const renderClipTime = event.clip != null ? this.parser.formatDuration(event.clip) : '-'
 						let clipSeverity: ReactNode = renderClipTime
