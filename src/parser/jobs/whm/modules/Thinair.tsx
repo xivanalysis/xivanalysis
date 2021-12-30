@@ -20,9 +20,11 @@ interface ThinAirRecord {
 
 const USAGE = {
 	BAD: 'red',
-	OKAY: 'yellow',
+	OKAY: 'orange',
 	GOOD: 'green',
 }
+
+const MP_INTERVAL = 900
 
 export class Thinair extends Analyser {
 	static override handle = 'thinair'
@@ -104,10 +106,10 @@ export class Thinair extends Analyser {
 	}
 
 	private getSavingsColor(amount: number) {
-		if (amount < 1000) {
+		if (amount < MP_INTERVAL) {
 			return USAGE.BAD
 		}
-		if (amount === 1000) {
+		if (amount === MP_INTERVAL) {
 			return USAGE.OKAY
 		}
 		return USAGE.GOOD
@@ -125,13 +127,12 @@ export class Thinair extends Analyser {
 			return {
 				key: record.start,
 				title: {
-					content: <Fragment>
+					content:
 						<span style={{color: this.getSavingsColor(record.mpsaved)}}>
 							{this.parser.formatEpochTimestamp(record.start)}
 							<span> - </span>
 							{record.mpsaved} MP saved
-						</span>
-					</Fragment>,
+						</span>,
 				},
 				content: {
 					content: <Rotation events={record.casts.map(x => ({action: x}))}/>,
