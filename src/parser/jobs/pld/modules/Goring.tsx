@@ -215,9 +215,9 @@ export class Goring extends Analyser {
 			combinedDotStatuses.sort(
 				(firstEvent, secondEvent) => (firstEvent.event.timestamp > secondEvent.event.timestamp ? 1 : -1)
 			)
-		}else if (target[this.data.statuses.GORING_BLADE.id]) {
+		} else if (target[this.data.statuses.GORING_BLADE.id]) {
 			combinedDotStatuses = target[this.data.statuses.GORING_BLADE.id].applications
-		}else {
+		} else {
 			combinedDotStatuses = target[this.data.statuses.BLADE_OF_VALOR.id].applications
 		}
 		const targetTable = <Table collapsing unstackable>
@@ -242,12 +242,12 @@ export class Goring extends Analyser {
 							clipSeverity = <span className="text-error">{clipSeverity}</span>
 							return <React.Fragment key={event.event.timestamp}>
 								<Table.Row>
-								<Table.Cell>{this.parser.formatEpochTimestamp(event.event.timestamp)}</Table.Cell>
-								<Table.Cell>{clipSeverity}</Table.Cell>
-								<Table.Cell>{totalMajorDotClip ? this.parser.formatDuration(totalMajorDotClip) : '-'}</Table.Cell>
-								<Table.Cell style={{textAlign: 'center'}}>{icon}</Table.Cell>
+									<Table.Cell>{this.parser.formatEpochTimestamp(event.event.timestamp)}</Table.Cell>
+									<Table.Cell>{clipSeverity}</Table.Cell>
+									<Table.Cell>{totalMajorDotClip ? this.parser.formatDuration(totalMajorDotClip) : '-'}</Table.Cell>
+									<Table.Cell style={{textAlign: 'center'}}>{icon}</Table.Cell>
 								</Table.Row>
-								</React.Fragment>
+							</React.Fragment>
 						}
 					})}
 			</Table.Body>
