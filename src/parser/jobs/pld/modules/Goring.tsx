@@ -19,7 +19,7 @@ const MAX_ALLOWED_CLIPPING = 3000
 interface DotApplicationData {
 	event: Events['statusApply'],
 	clip?: number,
-	source: number
+	source: Actor['id']
 }
 
 interface DotStatusData {
@@ -27,13 +27,9 @@ interface DotStatusData {
 	applications: DotApplicationData []
 }
 
-interface DotTargetData {
-	[key: number]: DotStatusData,
-}
+type DotTargetData = Record<Status['id'], DotStatusData>
 
-interface DotApplicationTracker {
-	[key: string]: DotTargetData,
-}
+type DotApplicationTracker = Record<Actor['id'], DotTargetData>
 
 export class Goring extends Analyser {
 	static override handle = 'goring'
@@ -45,13 +41,13 @@ export class Goring extends Analyser {
 	@dependency private statuses!: Statuses
 	@dependency private suggestions!: Suggestions
 
-	private readonly STATUS_DURATION = {
+	private readonly statusDuration = {
 		[this.data.statuses.GORING_BLADE.id]: this.data.statuses.GORING_BLADE.duration,
 		[this.data.statuses.BLADE_OF_VALOR.id]: this.data.statuses.BLADE_OF_VALOR.duration,
 	}
 
-    private lastDotCast: number = this.data.statuses.GORING_BLADE.id
-	private clip: {[key: number]: number} = {
+	private lastDotCast: Status['id'] = this.data.statuses.GORING_BLADE.id
+	private clip: Record<Status['id'], number> = {
 		[this.data.statuses.GORING_BLADE.id]: 0,
 		[this.data.statuses.BLADE_OF_VALOR.id]: 0,
 	}
@@ -96,7 +92,7 @@ export class Goring extends Analyser {
 		const trackerInstance = this.tracker[applicationKey] = this.tracker[applicationKey] || {}
 
 		// If neither dot has been applied yet, initialize data and return
-		if (!trackerInstance[statusId] && !trackerInstance[this.data.statuses.BLADE_OF_VALOR.id]) {
+		if (trackerInstance[statusId] == null && trackerInstance[this.data.statuses.BLADE_OF_VALOR.id] == null) {
 			trackerInstance[statusId] = {
 				lastApplication: event.timestamp,
 				applications: [],
@@ -107,7 +103,7 @@ export class Goring extends Analyser {
 		}
 
 		// If only the opposite DoT has been used on this target, initialize data and move to clip calculation
-		if (!trackerInstance[statusId] && trackerInstance[this.data.statuses.BLADE_OF_VALOR.id]) {
+		if (trackerInstance[statusId] == null && trackerInstance[this.data.statuses.BLADE_OF_VALOR.id] != null) {
 			trackerInstance[statusId] = {
 				lastApplication: 0,
 				applications: [],
@@ -116,11 +112,11 @@ export class Goring extends Analyser {
 
 		// If Blade of Valor has been used on this target, get most recent previous DoT application timestamp
 		let lastDotApplication = trackerInstance[statusId].lastApplication
-		if (trackerInstance[this.data.statuses.BLADE_OF_VALOR.id]) {
+		if (trackerInstance[this.data.statuses.BLADE_OF_VALOR.id] != null) {
 			lastDotApplication = Math.max(lastDotApplication, trackerInstance[this.data.statuses.BLADE_OF_VALOR.id].lastApplication)
 		}
 		// Base clip calc
-		let clip = this.STATUS_DURATION[statusId] - (event.timestamp - lastDotApplication)
+		let clip = this.statusDuration[statusId] - (event.timestamp - lastDotApplication)
 		clip = Math.max(0, clip)
 		// Capping clip at 0 - less than that is downtime, which is handled by the checklist requirement
 		this.clip[statusId] += clip
@@ -140,7 +136,7 @@ export class Goring extends Analyser {
 		const trackerInstance = this.tracker[applicationKey] = this.tracker[applicationKey] || {}
 
 		// If it's not been applied yet, set it and skip out
-		if (!trackerInstance[statusId] && !trackerInstance[this.data.statuses.GORING_BLADE.id]) {
+		if (trackerInstance[statusId] == null && trackerInstance[this.data.statuses.GORING_BLADE.id] == null) {
 			trackerInstance[statusId] = {
 				lastApplication: event.timestamp,
 				applications: [],
@@ -151,7 +147,7 @@ export class Goring extends Analyser {
 		}
 
 		// If only the opposite DoT has been used on this target, initialize data and move to clip calculation
-		if (!trackerInstance[statusId] && trackerInstance[this.data.statuses.GORING_BLADE.id]) {
+		if (trackerInstance[statusId] == null && trackerInstance[this.data.statuses.GORING_BLADE.id] != null) {
 			trackerInstance[statusId] = {
 				lastApplication: 0,
 				applications: [],
@@ -160,11 +156,11 @@ export class Goring extends Analyser {
 
 		// If Goring Blade has been used on this target, get most recent previous DoT application timestamp
 		let lastDotApplication = trackerInstance[statusId].lastApplication
-		if (trackerInstance[this.data.statuses.GORING_BLADE.id]) {
+		if (trackerInstance[this.data.statuses.GORING_BLADE.id] != null) {
 			lastDotApplication = Math.max(lastDotApplication, trackerInstance[this.data.statuses.GORING_BLADE.id].lastApplication)
 		}
 		// Base clip calc
-		let clip = this.STATUS_DURATION[statusId] - (event.timestamp - lastDotApplication)
+		let clip = this.statusDuration[statusId] - (event.timestamp - lastDotApplication)
 		clip = Math.max(0, clip)
 		// Capping clip at 0 - less than that is downtime, which is handled by the checklist requirement
 		this.clip[statusId] += clip
@@ -177,15 +173,13 @@ export class Goring extends Analyser {
 	}
 
 	// calculating separately in case we ever decide to split the outputs
-	private getGoringUptime() {
-		const statusTime = this.statuses.getUptime(this.data.statuses.GORING_BLADE, this.actors.foes)
+	private getDotUptime(statusId: Status['id']) {
+		const status = this.data.getStatus(statusId)
+		if (status == null) { return 0 }
+		
+		const statusTime = this.statuses.getUptime(status, this.actors.foes)
 		const uptime = this.parser.currentDuration - this.invulnerability.getDuration({types: ['invulnerable']})
-		return (statusTime / uptime) * 100
-	}
-
-	private getValorUptime() {
-		const statusTime = this.statuses.getUptime(this.data.statuses.BLADE_OF_VALOR, this.actors.foes)
-		const uptime = this.parser.currentDuration - this.invulnerability.getDuration({types: ['invulnerable']})
+		
 		return (statusTime / uptime) * 100
 	}
 
@@ -199,7 +193,7 @@ export class Goring extends Analyser {
 			requirements: [
 				new Requirement({
 					name: <Trans id="pld.goring.checklist.dots.requirement.name">Combined DoT uptime</Trans>,
-					percent: () => this.getGoringUptime() + this.getValorUptime(),
+					percent: () => this.getDotUptime(this.data.statuses.GORING_BLADE.id) + this.getDotUptime(this.data.statuses.BLADE_OF_VALOR.id),
 				}),
 			],
 		}))
@@ -208,18 +202,10 @@ export class Goring extends Analyser {
 	private createTargetStatusTable(target: DotTargetData) {
 		let totalMajorDotClip = 0
 
-		let combinedDotStatuses: DotApplicationData[]
-		// combine the DotStatusData of Goring and Valor, then sort it by timestamp
-		if (target[this.data.statuses.GORING_BLADE.id] && target[this.data.statuses.BLADE_OF_VALOR.id]) {
-			combinedDotStatuses = target[this.data.statuses.GORING_BLADE.id].applications.concat(target[this.data.statuses.BLADE_OF_VALOR.id].applications)
-			combinedDotStatuses.sort(
-				(firstEvent, secondEvent) => (firstEvent.event.timestamp > secondEvent.event.timestamp ? 1 : -1)
-			)
-		} else if (target[this.data.statuses.GORING_BLADE.id]) {
-			combinedDotStatuses = target[this.data.statuses.GORING_BLADE.id].applications
-		} else {
-			combinedDotStatuses = target[this.data.statuses.BLADE_OF_VALOR.id].applications
-		}
+		let combinedDotStatuses = target[this.data.statuses.GORING_BLADE.id].applications.concat(target[this.data.statuses.BLADE_OF_VALOR.id].applications)
+		combinedDotStatuses.sort(
+			(firstEvent, secondEvent) => (firstEvent.event.timestamp > secondEvent.event.timestamp ? 1 : -1)
+		)
 		const targetTable = <Table collapsing unstackable>
 			<Table.Header>
 				<Table.Row>
