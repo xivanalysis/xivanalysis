@@ -110,7 +110,8 @@ export class ManaStackGauge extends CoreGauge {
 		const modifier = this.gaugeModifiers.get(event.action)
 
 		//Always check it we should break
-		if (this.onGaugeBreak(event)) {
+		if (this.shouldGaugeBreak(event)) {
+			this.onGaugeBreak(event)
 			//No further modifications to the gauge if this skill broke it.
 			return
 		}
@@ -137,7 +138,9 @@ export class ManaStackGauge extends CoreGauge {
 		const modifier = this.spenderModifiers.get(event.action)
 
 		if (modifier == null) {
-			this.onGaugeBreak(event)
+			if (this.shouldGaugeBreak(event)) {
+				this.onGaugeBreak(event)
+			}
 			return
 		}
 
@@ -145,20 +148,17 @@ export class ManaStackGauge extends CoreGauge {
 	}
 
 	private onGaugeBreak(event: Events['action']) {
+		const breaker = {} as GaugeBreaker
+		breaker.action = event.action
+		breaker.timestamp = event.timestamp
+		breaker.manaStacksLost = this.manaStackGauge.value
+		this.gaugeBreak.push(breaker)
+		this.manaStackGauge.reset()
+	}
+
+	private shouldGaugeBreak(event: Events['action']) {
 		this.debug(`manaStackGauge is ${this.manaStackGauge.value} and the action is ${this.data.getAction(event.action)?.name} with id ${event.action} and it's included? ${this.gaugeBreakers.includes(event.action)}`)
-		//It's only a break if we're above the minimum
-		if (this.gaugeBreakers.includes(event.action) && this.manaStackGauge.value > MINIMUM) {
-			const breaker = {} as GaugeBreaker
-			breaker.action = event.action
-			breaker.timestamp = event.timestamp
-			breaker.manaStacksLost = this.manaStackGauge.value
-			this.gaugeBreak.push(breaker)
-			this.manaStackGauge.reset()
-
-			return true
-		}
-
-		return false
+		return this.gaugeBreakers.includes(event.action) && this.manaStackGauge.value > MINIMUM
 	}
 
 	private onComplete() {
