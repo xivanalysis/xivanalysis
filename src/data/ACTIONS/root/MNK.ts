@@ -88,7 +88,7 @@ export const MNK = ensureActions({
 		name: 'Meditation',
 		icon: 'https://xivapi.com/i/002000/002534.png',
 		onGcd: true,
-		cooldown: 1200,
+		cooldown: 1000,
 	},
 
 	FOUR_POINT_FURY: {
