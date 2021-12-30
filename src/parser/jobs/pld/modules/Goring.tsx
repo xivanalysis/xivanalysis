@@ -251,7 +251,7 @@ export class Goring extends Analyser {
 		if (numTargets === 0) { return null }
 
 		// If there's no clipping worth mentioning, don't display a table
-		if (this.trackedClipping == false) {
+		if (this.trackedClipping === false) {
 			return null
 		}
 
