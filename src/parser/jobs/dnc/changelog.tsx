@@ -32,4 +32,9 @@ export const changelog = [
 		Changes: () => <>Bugfix for Technical Finish windows opening due to non-player-controlled units spawning.</>,
 		contributors: [CONTRIBUTORS.MYPS],
 	},
+	{
+		date: new Date('2021-12-30'),
+		Changes: () => <>Add defensive cooldown checklist for Dancer.</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
 ]
