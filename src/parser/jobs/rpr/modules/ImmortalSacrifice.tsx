@@ -66,7 +66,7 @@ export default class ImmortalSacrifice extends Analyser {
 	private onPlentifulHarvest(event: Events['action']) {
 		const window = this.getOpenWindow()
 
-		if (window === null) {
+		if (window == null) {
 			this.brokenLog.trigger(this, 'PH without immortal sacrifice stack',
 				<Trans id="rpr.immortal-sacrifice.trigger.no-immortal-sacrifice">
 					<DataLink action="PLENTIFUL_HARVEST"/> was executed but there were
