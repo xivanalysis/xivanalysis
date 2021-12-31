@@ -49,8 +49,8 @@ export class ManaStackGauge extends CoreGauge {
 	public spenderModifiers = new Map<number, ManaStackGaugeModifier>([
 		[this.data.actions.VERHOLY.id, {manaStack: -3}],
 		[this.data.actions.VERFLARE.id, {manaStack: -3}],
-		[this.data.actions.SCORCH.id, {manaStack: -0}],
-		[this.data.actions.RESOLUTION.id, {manaStack: -0}],
+		[this.data.actions.SCORCH.id, {manaStack: 0}],
+		[this.data.actions.RESOLUTION.id, {manaStack: 0}],
 	])
 	public gaugeBreakers: number[] = [
 		this.data.actions.VERAERO.id,
