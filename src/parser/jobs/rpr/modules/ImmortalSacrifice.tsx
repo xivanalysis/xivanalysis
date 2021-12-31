@@ -49,7 +49,7 @@ export default class ImmortalSacrifice extends Analyser {
 	private onImmortalSacrificeStack(event: Events['statusApply']) {
 		let window = this.getOpenWindow()
 
-		if (window === null) {
+		if (window == null) {
 			window = {
 				startTime: event.timestamp,
 				closed: false,
