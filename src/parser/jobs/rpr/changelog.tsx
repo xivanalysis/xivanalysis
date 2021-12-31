@@ -4,6 +4,11 @@ import React from 'react'
 
 export const changelog = [
 	{
+		date: new Date('2021-12-31'),
+		Changes: () => <>Added checklist for <DataLink status="IMMORTAL_SACRIFICE"/> consumption.</>,
+		contributors: [CONTRIBUTORS.MR_RAZOR],
+	},
+	{
 		date: new Date('2021-12-28'),
 		Changes: () => <>Fix Always Be Casting accounting for Soul Slice and Soul Scythe.</>,
 		contributors: [CONTRIBUTORS.KELOS],
