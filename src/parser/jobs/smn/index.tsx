@@ -28,6 +28,11 @@ export const SUMMONER = new Meta({
 
 	changelog: [
 		{
+			date: new Date('2021-12-28'),
+			Changes: () => <>No longer consider Physick casts during downtime as bad.</>,
+			contributors: [CONTRIBUTORS.KELOS],
+		},
+		{
 			date: new Date('2021-12-24'),
 			Changes: () => <>Improved Searing Light checks when the party contains multiple Summoners.</>,
 			contributors: [CONTRIBUTORS.KELOS],

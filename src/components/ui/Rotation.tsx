@@ -3,13 +3,11 @@ import {ActionLink, ItemLink} from 'components/ui/DbLink'
 import {getDataBy} from 'data'
 import ACTIONS, {ITEM_ID_OFFSET} from 'data/ACTIONS'
 import {Cause} from 'event'
-import {Ability} from 'fflogs'
 import React, {Component} from 'react'
 import overlayStyle from './Procs/ProcOverlay.module.css'
 import styles from './Rotation.module.css'
 
 export interface RotationEvent {
-	ability?: Ability,
 	cause?: Cause,
 	action?: number
 	isProc?: boolean
@@ -22,9 +20,6 @@ export default class Rotation extends Component<RotationProps> {
 	getActionId(event: RotationEvent): number | undefined {
 		if (event.action != null) {
 			return event.action
-		}
-		if (event.ability != null) {
-			return event.ability.guid
 		}
 		if (event.cause != null && event.cause.type === 'action') {
 			return event.cause.action

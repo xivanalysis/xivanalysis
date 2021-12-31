@@ -1,10 +1,10 @@
 import {GameEdition} from 'data/EDITIONS'
 import {Events} from 'event'
-import {CastEvent, FflogsEvent, HitType, ReportLanguage} from 'fflogs'
 import {Actor, Pull, Report, Team} from 'report'
 import {adaptEvents} from '../eventAdapter'
 import {AdapterStep} from '../eventAdapter/base'
 import {ReassignUnknownActorStep} from '../eventAdapter/reassignUnknownActor'
+import {CastEvent, FflogsEvent, HitType, ReportLanguage} from '../eventTypes'
 
 // "Mock" the reassign unknown actor step with its real implementation. We use this mock handling later
 // to disable the step on a test-by-test basis.
@@ -112,6 +112,29 @@ const fakeEvents: Record<FflogsEvent['type'], FflogsEvent[]> = {
 		difficulty: 0,
 		size: 8,
 		kill: true,
+	}],
+	dungeonstart: [{
+		...fakeBaseFields,
+		affixes: [],
+		difficulty: 10,
+		encounterID: 10616,
+		level: 0,
+		name: 'Shisui of the Violet Tides',
+		size: 4,
+		timestamp: 653442,
+		type: 'dungeonstart',
+	}],
+	dungeonend: [{
+		...fakeBaseFields,
+		completion: 0,
+		difficulty: 10,
+		encounterID: 10616,
+		kill: true,
+		medal: 0,
+		name: '',
+		size: 4,
+		timestamp: 1463276,
+		type: 'dungeonend',
 	}],
 	calculateddamage: [{
 		timestamp: 8011183,
@@ -620,6 +643,26 @@ const fakeEvents: Record<FflogsEvent['type'], FflogsEvent[]> = {
 		},
 		isBuff: false,
 	}],
+	interrupt: [{
+		timestamp: 14636863,
+		type: 'interrupt',
+		sourceID: 210,
+		sourceIsFriendly: true,
+		targetID: 218,
+		targetIsFriendly: false,
+		ability: {
+			name: 'Head Graze',
+			guid: 7551,
+			type: 1,
+			abilityIcon: '000000-000848.png',
+		},
+		extraAbility: {
+			name: 'Haste',
+			guid: 744,
+			type: 1,
+			abilityIcon: '000000-000405.png',
+		},
+	}],
 	wipecalled: [{
 		timestamp: 100000000,
 		type: 'wipecalled',
@@ -684,6 +727,44 @@ const fakeEvents: Record<FflogsEvent['type'], FflogsEvent[]> = {
 			y: -1535},
 		timestamp: 51935589,
 		type: 'instakill',
+	}],
+	combatantinfo: [{
+		...fakeBaseFields,
+		timestamp: 2865189,
+		type: 'combatantinfo',
+		sourceID: 15,
+		gear: [],
+		auras: [
+			{source: 15, ability: 1000743, stacks: 1, icon: '013000-013108.png', name: 'Grit'},
+			{source: 17, ability: 1000297, stacks: 1, icon: '012000-012801.png', name: 'Galvanize'},
+			{source: 16, ability: 1000727, stacks: 1, icon: '012000-012509.png', name: 'Divine Veil'},
+			{source: 20, ability: 1001218, stacks: 1, icon: '012000-012632.png', name: 'Divine Benison'},
+			{source: 20, ability: 1000158, stacks: 1, icon: '012000-012626.png', name: 'Regen'},
+		],
+		level: 90,
+		strength: 2357,
+		dexterity: 391,
+		vitality: 2412,
+		intelligence: 244,
+		mind: 162,
+		piety: 390,
+		attack: 2357,
+		directHit: 544,
+		criticalHit: 1760,
+		attackMagicPotency: 244,
+		healMagicPotency: 162,
+		determination: 1384,
+		skillSpeed: 675,
+		spellSpeed: 400,
+		tenacity: 909,
+	}],
+	instancesealupdate: [{
+		...fakeBaseFields,
+		placeID: 3659,
+		placeName: 'Staging Node D',
+		sealType: 1,
+		timestamp: 1058060,
+		type: 'instancesealupdate',
 	}],
 }
 

@@ -83,7 +83,7 @@ export const AST = ensureActions({
 
 	COMBUST_III: {
 		id: 16554,
-		name: 'Combust II',
+		name: 'Combust III',
 		icon: 'https://xivapi.com/i/003000/003554.png',
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
@@ -211,13 +211,13 @@ export const AST = ensureActions({
 		cooldown: 30000,
 		charges: 2,
 		statusesApplied: [
+			'CLARIFYING_DRAW',
 			'BALANCE_DRAWN',
 			'BOLE_DRAWN',
 			'ARROW_DRAWN',
 			'SPEAR_DRAWN',
 			'EWER_DRAWN',
 			'SPIRE_DRAWN',
-			'CLARIFYING_DRAW',
 		],
 	},
 
@@ -234,7 +234,7 @@ export const AST = ensureActions({
 		name: 'Crown Play',
 		icon: 'https://xivapi.com/i/003000/003557.png',
 		cooldown: 1000,
-		cooldownGroup: 12,
+		cooldownGroup: 13,
 	},
 
 	REDRAW: {
@@ -254,9 +254,8 @@ export const AST = ensureActions({
 		id: 7443,
 		name: 'Minor Arcana',
 		icon: 'https://xivapi.com/i/003000/003106.png',
-		cooldown: 1000,
+		cooldown: 60000,
 		statusesApplied: ['LORD_OF_CROWNS_DRAWN', 'LADY_OF_CROWNS_DRAWN'],
-		cooldownGroup: 12,
 	},
 
 	// ----
@@ -330,7 +329,11 @@ export const AST = ensureActions({
 		id: 25874,
 		name: 'Macrocosmos',
 		icon: 'https://xivapi.com/i/003000/003562.png',
+		onGcd: true,
+		speedAttribute: Attribute.SPELL_SPEED,
+		castTime: 0,
 		cooldown: 180000,
+		gcdRecast: 2500,
 		mpCost: 600,
 		statusesApplied: ['MACROCOSMOS'],
 	},
@@ -405,7 +408,7 @@ export const AST = ensureActions({
 		name: 'Lady Of Crowns',
 		icon: 'https://xivapi.com/i/003000/003146.png',
 		cooldown: 1000,
-		cooldownGroup: 12,
+		cooldownGroup: 13,
 	},
 
 	LORD_OF_CROWNS: {
@@ -413,6 +416,6 @@ export const AST = ensureActions({
 		name: 'Lord Of Crowns',
 		icon: 'https://xivapi.com/i/003000/003147.png',
 		cooldown: 1000,
-		cooldownGroup: 12,
+		cooldownGroup: 13,
 	},
 })

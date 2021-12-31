@@ -1,32 +1,24 @@
 import {Trans} from '@lingui/react'
 import {Segment} from 'akkd'
-import {languageToEdition} from 'data/EDITIONS'
 import PATCHES, {getPatch} from 'data/PATCHES'
 import {observer} from 'mobx-react'
 import React from 'react'
 import {RouteComponentProps, withRouter} from 'react-router'
+import {Report} from 'report'
 import {Header} from 'semantic-ui-react'
-import {StoreContext} from 'store'
 import styles from './BranchBanner.module.css'
 
+type BranchBannerProps =
+	& RouteComponentProps
+	& {report: Report}
+
 @observer
-class BranchBannerComponent extends React.Component<RouteComponentProps> {
-	static override contextType = StoreContext
-	declare context: React.ContextType<typeof StoreContext>
-
+class BranchBannerComponent extends React.Component<BranchBannerProps> {
 	override render() {
-		const {reportStore} = this.context
-		const {location} = this.props
-		const {report} = reportStore
-
-		// If there's no report, or it's still loading, there's not much we can display
-		if (!report || report.loading) {
-			return null
-		}
+		const {location, report} = this.props
 
 		// Get the patch data for the report
-		const edition = languageToEdition(report.lang)
-		const patchKey = getPatch(edition, report.start / 1000)
+		const patchKey = getPatch(report.edition, report.timestamp / 1000)
 		const patch = PATCHES[patchKey]
 
 		// If there's no branch data, we don't need to do anything

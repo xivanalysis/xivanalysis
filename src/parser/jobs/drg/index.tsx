@@ -19,6 +19,11 @@ export const DRAGOON = new Meta({
 	],
 	changelog: [
 		{
+			date: new Date('2021-12-27'),
+			Changes: () => <>Fixed issues with Battle Litany module incorrectly opening and closing windows due to pets mirroring statuses.</>,
+			contributors: [CONTRIBUTORS.FALINDRITH],
+		},
+		{
 			date: new Date('2021-12-13'),
 			Changes: () => <>Added support for tracking Wyrmwind Thrust. Updated expected GCD count for Battle Litany. Marked DRG as supported for 6.0.</>,
 			contributors: [CONTRIBUTORS.FALINDRITH],

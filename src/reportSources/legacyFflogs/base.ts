@@ -1,5 +1,5 @@
-import {EventActor} from 'fflogs'
 import {Actor} from 'report'
+import {EventActor} from './eventTypes'
 
 export function resolveActorId(opts: {
 	id?: number | string,

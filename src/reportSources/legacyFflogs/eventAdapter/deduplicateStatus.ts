@@ -1,5 +1,5 @@
 import {Event, Events} from 'event'
-import {FflogsEvent} from 'fflogs'
+import {FflogsEvent} from '../eventTypes'
 import {AdapterStep} from './base'
 
 // Time between the apply and the applystack permitted for merging

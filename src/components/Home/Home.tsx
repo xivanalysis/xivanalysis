@@ -7,7 +7,6 @@ import TransMarkdown from 'components/ui/TransMarkdown'
 import {observer} from 'mobx-react'
 import React, {Component} from 'react'
 import {Modal} from 'semantic-ui-react'
-import {StoreContext} from 'store'
 import styles from './Home.module.css'
 import ReportSearch from './ReportSearch'
 
@@ -23,13 +22,6 @@ If you have any questions, suggestions, or would just like to have a chat - drop
 
 @observer
 class Home extends Component {
-	static override contextType = StoreContext
-
-	override componentDidMount() {
-		// Clean out the report state when the user returns to the home page
-		this.context.reportStore.clearReport()
-	}
-
 	override render() {
 		return <>
 			<div className={styles.background}/>
