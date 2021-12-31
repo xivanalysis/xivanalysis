@@ -17,6 +17,7 @@ const ONLY_SHOW: ActionKey[] = [
 	'ENPI',
 	'SHIFU',
 	'FUGA',
+	'FUKO',
 	'GEKKO',
 	'MANGETSU',
 	'KASHA',
