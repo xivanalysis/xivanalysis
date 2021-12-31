@@ -6,6 +6,7 @@ import {Event, Events} from '../../../../event'
 import {Analyser} from '../../../core/Analyser'
 import {filter} from '../../../core/filter'
 import {dependency} from '../../../core/Injectable'
+import BrokenLog from '../../../core/modules/BrokenLog'
 import Checklist, {Requirement, Rule} from '../../../core/modules/Checklist'
 import {Data} from '../../../core/modules/Data'
 import {DISPLAY_ORDER} from './DISPLAY_ORDER'
@@ -27,6 +28,7 @@ export default class ImmortalSacrifice extends Analyser {
 	static override title = t('rpr.immortal-sacrifice.title')`Immortal Sacrifice stacks consumed`
 	static override debug = false
 
+	@dependency private brokenLog!: BrokenLog
 	@dependency private data!: Data
 	@dependency private checklist!: Checklist
 
@@ -47,7 +49,7 @@ export default class ImmortalSacrifice extends Analyser {
 	private onImmortalSacrificeStack(event: Events['statusApply']) {
 		let window = this.getOpenWindow()
 
-		if (!window) {
+		if (window === null) {
 			window = {
 				startTime: event.timestamp,
 				closed: false,
@@ -58,14 +60,18 @@ export default class ImmortalSacrifice extends Analyser {
 			this.windows.push(window)
 		}
 
-		window.stackCount = event.data || window.stackCount + 1
+		window.stackCount = event.data ?? window.stackCount + 1
 	}
 
 	private onPlentifulHarvest(event: Events['action']) {
 		const window = this.getOpenWindow()
 
-		if (!window) {
-			this.debug(`Plentiful Harvest executed but there were no immortal sacrifice window open: ${this.windows}`)
+		if (window === null) {
+			this.brokenLog.trigger(this, 'PH without immortal sacrifice stack',
+				<Trans id="rpr.immortal-sacrifice.trigger.no-immortal-sacrifice">
+					<DataLink action="PLENTIFUL_HARVEST"/> was executed but there were
+					no <DataLink status="IMMORTAL_SACRIFICE"/> stacks.
+				</Trans>)
 			return
 		}
 
@@ -80,7 +86,7 @@ export default class ImmortalSacrifice extends Analyser {
 		const window = this.getOpenWindow()
 
 		// valid case, means it was consumed
-		if (!window) {
+		if (window === null) {
 			return
 		}
 
@@ -110,7 +116,7 @@ export default class ImmortalSacrifice extends Analyser {
 
 			this.windows.forEach(w => {
 				const start = this.parser.formatEpochTimestamp(w.startTime)
-				const end = w.endTime ? this.parser.formatEpochTimestamp(w.endTime) : '<Not Closed>'
+				const end = w.endTime != null ? this.parser.formatEpochTimestamp(w.endTime) : '<Not Closed>'
 
 				this.debug(`Start: ${start}, End: ${end}, Closed: ${w.closed}, Consumed: ${w.consumed}, Stack Count: ${w.stackCount}`)
 			})
@@ -128,15 +134,16 @@ export default class ImmortalSacrifice extends Analyser {
 		this.checklist.add(new Rule({
 			name: <Trans id="rpr.immortal-sacrifice.checklist.title">Uses all Immortal Sacrifices stack</Trans>,
 			description: <Trans id="rpr.immortal-sacrifice.checklist.description">
-				Immortal Sacrifices stacks will be generated when you use <DataLink action="ARCANE_CIRCLE"/>,
-				you can then consume those stacks by using <DataLink action="PLENTIFUL_HARVEST"/>, not only it's a high
-				potency skill, it also grants enough Shroud gauge for a <DataLink action="ENSHROUD"/> usage.
+				<DataLink status="IMMORTAL_SACRIFICE"/> stacks will be generated when you
+				use <DataLink action="ARCANE_CIRCLE"/>, you can then consume those stacks by
+				using <DataLink action="PLENTIFUL_HARVEST"/>, not only it's a high potency skill, it also grants enough
+				Shroud gauge for a <DataLink action="ENSHROUD"/> usage.
 			</Trans>,
 			displayOrder: DISPLAY_ORDER.IMMORTAL_SACRIFICE,
 			requirements: [
 				new Requirement({
 					name: <Trans id="rpr.immortal-sacrifice.checklist.requirement.name">
-						Immortal Sacrifices stack consumed
+						<DataLink status="IMMORTAL_SACRIFICE"/> stacks consumed
 					</Trans>,
 					overrideDisplay: `${consumedImmortalSacrifices} / ${totalImmortalSacrifices} (${percentUsed}%)`,
 					percent: percentUsed,
