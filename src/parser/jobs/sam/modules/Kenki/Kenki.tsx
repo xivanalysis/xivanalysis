@@ -60,7 +60,7 @@ export class Kenki extends CoreGauge {
 		[this.data.actions.HISSATSU_YATEN.id, {action: -10}],
 	])
 
-	private damageHook?: EventHook
+	private damageHook?: EventHook<Events['damage']>
 
 	meditateStart = -1
 
@@ -100,8 +100,9 @@ export class Kenki extends CoreGauge {
 	}
 
 	private onRemoveEye() {
-		this.removeEventHook(this.damageHook)
-
+		if (this.damageHook !== undefined) {
+			this.removeEventHook(this.damageHook)
+		}
 	}
 
 	private onGaugeModifier(event: Events['action' | 'combo']) {
