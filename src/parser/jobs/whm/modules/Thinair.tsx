@@ -13,7 +13,7 @@ import {Accordion} from 'semantic-ui-react'
 
 interface ThinAirRecord {
 	start: number,
-	end: number,
+	end?: number,
 	casts: Array<Action['id']>,
 	mpsaved: number,
 }
@@ -60,7 +60,7 @@ export class Thinair extends Analyser {
 
 		// Don't track autos
 		const action = this.data.getAction(actionid)
-		if (!this.active || !action || action.autoAttack) {
+		if (!this.active || action == null || action.autoAttack) {
 			return
 		}
 
@@ -81,7 +81,6 @@ export class Thinair extends Analyser {
 		this.active = true
 		this.currentRecord = {
 			start: timestamp,
-			end: -1,
 			casts: [],
 			mpsaved: 0,
 		}
