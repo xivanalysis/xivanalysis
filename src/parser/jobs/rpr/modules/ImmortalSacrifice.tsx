@@ -1,14 +1,14 @@
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
+import {DataLink} from 'components/ui/DbLink'
+import {Event, Events} from 'event'
+import {Analyser} from 'parser/core/Analyser'
+import {filter} from 'parser/core/filter'
+import {dependency} from 'parser/core/Injectable'
+import BrokenLog from 'parser/core/modules/BrokenLog'
+import Checklist, {Requirement, Rule} from 'parser/core/modules/Checklist'
+import {Data} from 'parser/core/modules/Data'
 import React from 'react'
-import {DataLink} from '../../../../components/ui/DbLink'
-import {Event, Events} from '../../../../event'
-import {Analyser} from '../../../core/Analyser'
-import {filter} from '../../../core/filter'
-import {dependency} from '../../../core/Injectable'
-import BrokenLog from '../../../core/modules/BrokenLog'
-import Checklist, {Requirement, Rule} from '../../../core/modules/Checklist'
-import {Data} from '../../../core/modules/Data'
 import {DISPLAY_ORDER} from './DISPLAY_ORDER'
 
 interface ImmortalSacrificeWindow {
@@ -22,7 +22,7 @@ interface ImmortalSacrificeWindow {
 	consumed: boolean,
 }
 
-export default class ImmortalSacrifice extends Analyser {
+export class ImmortalSacrifice extends Analyser {
 
 	static override handle = 'immortalsacrifice'
 	static override title = t('rpr.immortal-sacrifice.title')`Immortal Sacrifice stacks consumed`
