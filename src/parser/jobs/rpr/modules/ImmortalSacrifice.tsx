@@ -86,7 +86,7 @@ export default class ImmortalSacrifice extends Analyser {
 		const window = this.getOpenWindow()
 
 		// valid case, means it was consumed
-		if (window === null) {
+		if (window == null) {
 			return
 		}
 
