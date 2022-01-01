@@ -57,7 +57,7 @@
   "ast.earthly-star.suggestion.uncooked.why": "{earlyBurstCount, plural, one {# detonation} other {# detonations}} of an uncooked Earthly Star.",
   "ast.earthly-star.title": "Earthly Star",
   "ast.horoscope.suggestion.usage.content": "Try to plan your <0/> or <1/> usages to have either up before you need to cast <2/> or <3/>.<4/> and <5/> may help to cover more damage later without needing to cast additional AOE heals.",
-  "ast.horoscope.suggestion.usage.why": "{0, plural, one {# AOE GCD heal was cast} other {# AOE GCD heals were cast}} without <0/> or <1/> even though one of the two supplements were available.",
+  "ast.horoscope.suggestion.usage.why": "{0, plural, one {# AOE GCD heal was cast} other {# AOE GCD heals were cast}} without <0/> or <1/> even though one of the two abilities were available.",
   "ast.horoscope.title": "Horoscope",
   "ast.lightspeed.messages.explanation": "The main use of <0/> should be for weaving card actions during <1/> and <2/> windows.<3/>It can also be used for keeping casts up while on the move and other specific scenarios.<4/>Each fight calls for a different strategy, but consider utilizing it as much as possible.<5/>Unless it's being used for <6/>, lightspeed can fit at least 6 GCDs.<7/>",
   "ast.lightspeed.messages.no-casts": "There were no casts recorded for <0/>.",
