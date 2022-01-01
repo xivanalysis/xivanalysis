@@ -118,7 +118,7 @@ export class InnerRelease extends Analyser {
 		// We ignore rushed windows for missed GCDs, also IC as a user might push for higher potency at end of fight
 		const missedGcds = nonRushedReleases.reduce((total, current) => total + Math.max(0, (IR_STACKS_APPLIED - current.casts.filter(id => id !== this.data.actions.PRIMAL_REND.id).length)), 0)
 		const badGcds = this.history.reduce((total, current) => total + (IR_STACKS_APPLIED - this.accountGcds(current, goodGcds)), 0)
-		const veryBadGcds = this.history.reduce((total, current) => total + this.accountGcds(current, chaosGcds), 0)
+		const veryBadGcds = nonRushedReleases.reduce((total, current) => total + this.accountGcds(current, chaosGcds), 0)
 
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.INNER_RELEASE.icon,
