@@ -567,6 +567,5 @@
   "whm.ogcds.suggestions.temperance.content": "被ダメージの軽減や，回復魔法の回復力を上昇させるために，<0/>を積極的に使用しましょう。",
   "whm.ogcds.suggestions.why": "使用可能だった{maxUses} 回中{missed} 回で使用しませんでした。",
   "whm.overheal.assize.name": "アサイズ",
-  "whm.overheal.hot.name": "HoT",
-  "whm.thinair.rotation.gcd": "{numGcds, plural, one {GCD使用数: #} other {GCD使用数: #}}"
+  "whm.overheal.hot.name": "HoT"
 }
