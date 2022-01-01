@@ -1,6 +1,6 @@
 import {Event, Events} from 'event'
-import {FflogsEvent} from 'fflogs'
 import {Actor} from 'report'
+import {FflogsEvent} from '../eventTypes'
 import {AdapterStep} from './base'
 
 export class InterruptsAdapterStep extends AdapterStep {

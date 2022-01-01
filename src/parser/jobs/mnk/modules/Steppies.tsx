@@ -9,9 +9,10 @@ import Checklist, {Requirement, Rule} from 'parser/core/modules/Checklist'
 import {Data} from 'parser/core/modules/Data'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
-import DISPLAY_ORDER from './DISPLAY_ORDER'
+import {DISPLAY_ORDER} from './DISPLAY_ORDER'
 
-const LEAD_BOOT_POTENCY = 370
+const LITE_BOOT_POTENCY = 210
+const LEAD_BOOT_POTENCY = 310
 
 const SUGGESTION_TIERS = {
 	// Typically a player with lag can derp positional in opener, this usually happens 2 times per fight.
@@ -96,7 +97,7 @@ export class Steppies extends Analyser {
 				Avoid unbuffed <DataLink action="BOOTSHINE"/> by using <DataLink action="DRAGON_KICK" /> before it.
 			</Trans>,
 			why: <Trans id="mnk.steppies.suggestions.dragon_kick.why">
-				{this.getUnbuffedCount(this.steppies) * (LEAD_BOOT_POTENCY - this.data.actions.BOOTSHINE.potency)} potency lost to missing <DataLink status="LEADEN_FIST"/> buff {this.getUnbuffedCount(this.steppies)} times.
+				{this.getUnbuffedCount(this.steppies) * (LEAD_BOOT_POTENCY - LITE_BOOT_POTENCY)} potency lost to missing <DataLink status="LEADEN_FIST"/> buff {this.getUnbuffedCount(this.steppies)} times.
 			</Trans>,
 			tiers: SUGGESTION_TIERS.WEAK,
 			value: this.getUnbuffedCount(this.steppies),

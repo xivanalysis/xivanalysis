@@ -3,7 +3,7 @@ import {Trans, Plural} from '@lingui/react'
 import {ActionLink} from 'components/ui/DbLink'
 import {ActionKey} from 'data/ACTIONS'
 import {dependency} from 'parser/core/Injectable'
-import {BuffWindow, EvaluatedAction, ExpectedActionsEvaluator, ExpectedGcdCountEvaluator, LimitedActionsEvaluator, NotesEvaluator, TrackedAction} from 'parser/core/modules/ActionWindow'
+import {BuffWindow, EvaluatedAction, ExpectedActionsEvaluator, ExpectedGcdCountEvaluator, LimitedActionsEvaluator, NotesEvaluator} from 'parser/core/modules/ActionWindow'
 import {HistoryEntry} from 'parser/core/modules/ActionWindow/History'
 import {GlobalCooldown} from 'parser/core/modules/GlobalCooldown'
 import {SEVERITY} from 'parser/core/modules/Suggestions'
@@ -11,8 +11,6 @@ import React from 'react'
 
 // Opener has 5 Ninjutsu + 3 weaponskills, non-TCJ windows will likely have 2-3 Ninjutsu + 4-5 weaponskills
 const BASE_GCDS_PER_WINDOW = 7
-
-const FIRST_WINDOW_BUFFER = 30000
 
 const MUDRAS: ActionKey[] = [
 	'TEN',
@@ -93,16 +91,14 @@ export class TrickAttackWindow extends BuffWindow {
 				},
 			],
 			suggestionIcon,
-			// TODO - This will likely change going forward; I'm expecting that it'll be one full Raiton combo per window now instead, but I'll revisit once I talk to a theorycrafter about it
 			suggestionContent: <Trans id="nin.taWindow.suggestions.trackedactions.content">
-				Every <ActionLink action="TRICK_ATTACK"/> window should contain <ActionLink action="HYOSHO_RANRYU"/>, 2 <ActionLink action="RAITON"/> casts (or 1 if it's your opener), and <ActionLink action="DREAM_WITHIN_A_DREAM"/> in order to maximize damage.
+				Every <ActionLink action="TRICK_ATTACK"/> window should contain <ActionLink action="HYOSHO_RANRYU"/>, 2 <ActionLink action="RAITON"/> casts, and <ActionLink action="DREAM_WITHIN_A_DREAM"/> in order to maximize damage.
 			</Trans>,
 			suggestionWindowName,
 			severityTiers: {
 				1: SEVERITY.MEDIUM,
 				3: SEVERITY.MAJOR,
 			},
-			adjustCount: this.adjustExpectedActionCount.bind(this),
 		}))
 
 		this.addEvaluator(new LimitedActionsEvaluator({
@@ -127,13 +123,5 @@ export class TrickAttackWindow extends BuffWindow {
 
 	private adjustExpectedGcdCount(window: HistoryEntry<EvaluatedAction[]>) {
 		return window.data.find(cast => cast.action.id === this.data.actions.TEN_CHI_JIN.id) ? 1 : 0
-	}
-
-	private adjustExpectedActionCount(window: HistoryEntry<EvaluatedAction[]>, action: TrackedAction) {
-		if (action.action.id === this.data.actions.RAITON.id && window.start - this.parser.pull.timestamp < FIRST_WINDOW_BUFFER) {
-			return -1
-		}
-
-		return 0
 	}
 }

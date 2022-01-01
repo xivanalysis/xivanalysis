@@ -14,7 +14,6 @@ export class ActionTimeline extends CoreActionTimeline {
 		'TEN_CHI_JIN',
 		'TRICK_ATTACK',
 		'DREAM_WITHIN_A_DREAM',
-		'ASSASSINATE',
 		'BUNSHIN',
 		'BHAVACAKRA',
 		'MUG',

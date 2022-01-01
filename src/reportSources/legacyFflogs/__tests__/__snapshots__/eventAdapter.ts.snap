@@ -201,6 +201,8 @@ Array [
 
 exports[`Event adapter individual events adapts checksummismatch 1`] = `Array []`;
 
+exports[`Event adapter individual events adapts combatantinfo 1`] = `Array []`;
+
 exports[`Event adapter individual events adapts damage 1`] = `
 Array [
   Object {
@@ -291,6 +293,10 @@ Array [
 `;
 
 exports[`Event adapter individual events adapts dispel 1`] = `Array []`;
+
+exports[`Event adapter individual events adapts dungeonend 1`] = `Array []`;
+
+exports[`Event adapter individual events adapts dungeonstart 1`] = `Array []`;
 
 exports[`Event adapter individual events adapts encounterend 1`] = `Array []`;
 
@@ -473,6 +479,10 @@ Array [
   },
 ]
 `;
+
+exports[`Event adapter individual events adapts instancesealupdate 1`] = `Array []`;
+
+exports[`Event adapter individual events adapts interrupt 1`] = `Array []`;
 
 exports[`Event adapter individual events adapts limitbreakupdate 1`] = `Array []`;
 

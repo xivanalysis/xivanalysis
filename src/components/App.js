@@ -8,7 +8,6 @@ import {reportSources} from 'reportSources'
 import {Icon} from 'semantic-ui-react'
 import {StoreContext} from 'store'
 import styles from './App.module.css'
-import {BranchBanner} from './BranchBanner'
 import ErrorBoundary from './ErrorBoundary'
 import GlobalSidebar from './GlobalSidebar'
 import Home from './Home'
@@ -106,8 +105,6 @@ class App extends Component {
 				</div>
 
 				<Container className={styles.content}>
-					<BranchBanner/>
-
 					<ErrorBoundary>
 						<Switch>
 							<Route exact path="/"><Home/></Route>

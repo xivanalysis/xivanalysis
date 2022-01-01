@@ -43,6 +43,7 @@ export class Sharpcast extends Analyser {
 	}
 
 	private droppedSharpcasts = 0
+	private overwrittenSharpcasts = 0
 	private sharpedScathes = 0
 
 	private sharpcastConsumerIds = SHARPCAST_CONSUMERS.map(key => this.data.actions[key].id)
@@ -65,6 +66,9 @@ export class Sharpcast extends Analyser {
 	}
 
 	private onGainSharpcast(event: Events['statusApply']) {
+		if (this.buffWindows.current != null) {
+			this.overwrittenSharpcasts++
+		}
 		this.buffWindows.current = {
 			start: event.timestamp,
 		}
@@ -156,6 +160,23 @@ export class Sharpcast extends Analyser {
 			value: this.sharpedScathes,
 			why: <Trans id="blm.sharpcast.suggestions.sharpcasted-scathes.why">
 				<Plural value={this.sharpedScathes} one="# Sharpcast was" other="# Sharpcasts were"/> consumed by <DataLink action="SCATHE" />.
+			</Trans>,
+		}))
+
+		// Suggestion not to overwrite Sharpcast
+		this.suggestions.add(new TieredSuggestion({
+			icon: this.data.actions.SHARPCAST.icon,
+			content: <Trans id="blm.sharpcast.suggestions.overwrote-sharpcasts.content">
+				You lost at least one guaranteed <DataLink status="THUNDERCLOUD" /> or <DataLink status="FIRESTARTER" /> proc by using <DataLink action="SHARPCAST" /> while the status was already active.
+			</Trans>,
+			tiers: {
+				1: SEVERITY.MINOR,
+				3: SEVERITY.MEDIUM,
+				5: SEVERITY.MAJOR,
+			},
+			value: this.overwrittenSharpcasts,
+			why: <Trans id="blm.sharpcast.suggestions.overwrote-sharpcasts.why">
+				You overwrote <DataLink showIcon={false} status="SHARPCAST" /> <Plural value={this.overwrittenSharpcasts} one="# time" other="# times" />.
 			</Trans>,
 		}))
 	}

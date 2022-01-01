@@ -1,9 +1,9 @@
 import * as Sentry from '@sentry/browser'
 import {STATUS_ID_OFFSET} from 'data/STATUSES'
 import {Event, Events, Cause, SourceModifier, TargetModifier} from 'event'
-import {ActorResources, BuffEvent, BuffStackEvent, CastEvent, DamageEvent, DeathEvent, FflogsEvent, HealEvent, HitType, InstaKillEvent, TargetabilityUpdateEvent} from 'fflogs'
 import {Actor} from 'report'
 import {resolveActorId} from '../base'
+import {ActorResources, BuffEvent, BuffStackEvent, CastEvent, DamageEvent, DeathEvent, FflogsEvent, HealEvent, HitType, InstaKillEvent, TargetabilityUpdateEvent} from '../eventTypes'
 import {AdapterStep} from './base'
 
 /*
@@ -43,6 +43,9 @@ const FAILED_HITS = new Set([
 	HitType.RESIST,
 ])
 /* eslint-enable @typescript-eslint/no-magic-numbers */
+
+// Equivalent to an UnreachableException, but as a noop function
+const ensureNever = (arg: never) => arg
 
 /** Translate an FFLogs APIv1 event to the xiva representation, if any exists. */
 export class TranslateAdapterStep extends AdapterStep {
@@ -92,12 +95,21 @@ export class TranslateAdapterStep extends AdapterStep {
 		case 'targetabilityupdate':
 			return [this.adaptTargetableEvent(baseEvent)]
 
+		// TODO: Use this. There's some great info, such as level (so we can automate under-cap ulti checks), full stat info for the logging player, etc.
+		case 'combatantinfo':
+			break
+
 		/* eslint-disable no-fallthrough */
 		// Dispels are already modelled by other events, and aren't something we really care about
 		case 'dispel':
+		case 'interrupt':
 		// Encounter events don't expose anything particularly useful for us
 		case 'encounterstart':
 		case 'encounterend':
+		case 'dungeonstart':
+		case 'dungeonend':
+		// Seems to be related to instance seals in i.e. 24mans?
+		case 'instancesealupdate':
 		// We don't have much need for limit break, at least for now
 		case 'limitbreakupdate':
 		// We are _technically_ limiting down to a single zone, so any zonechange should be fluff
@@ -118,7 +130,7 @@ export class TranslateAdapterStep extends AdapterStep {
 
 		default: {
 			// Anything that reaches this point is unknown. If we've already notified, just noop
-			const unknownEvent = baseEvent as {type: string}
+			const unknownEvent = ensureNever(baseEvent) as {type: string}
 			if (this.unhandledTypes.has(unknownEvent.type)) {
 				break
 			}

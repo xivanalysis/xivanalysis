@@ -1,7 +1,7 @@
 import {Event, Events, Position, Resource} from 'event'
-import {FflogsEvent} from 'fflogs'
 import _ from 'lodash'
 import {Actor} from 'report'
+import {FflogsEvent} from '../eventTypes'
 import {AdapterStep} from './base'
 
 export class DeduplicateActorUpdateStep extends AdapterStep {
