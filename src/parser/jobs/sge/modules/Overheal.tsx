@@ -12,22 +12,22 @@ export class Overheal extends CoreOverheal {
 
 	override trackedHealCategories = [
 		{
-			name: <Trans id="sge.overheal.hot.name">HoTs</Trans>,
+			name: <Trans id="sge.overheal.addersgall.name">Addersgall</Trans>,
 			color: SuggestedColors[1],
 			trackedHealIds: [
-				this.data.statuses.PHYSIS.id,
-				this.data.statuses.PHYSIS_II.id,
 				this.data.statuses.KERAKEIA.id,
+				this.data.actions.DRUOCHOLE.id,
+				this.data.actions.IXOCHOLE.id,
+				this.data.actions.TAUROCHOLE.id,
 			],
 		},
 		{
 			name: <Trans id="sge.overheal.cooldowns.name">Cooldowns</Trans>,
 			color: SuggestedColors[2],
 			trackedHealIds: [
-				this.data.actions.DRUOCHOLE.id,
-				this.data.actions.IXOCHOLE.id,
-				this.data.actions.TAUROCHOLE.id,
 				this.data.actions.HOLOS.id,
+				this.data.statuses.PHYSIS.id,
+				this.data.statuses.PHYSIS_II.id,
 			],
 		},
 		{

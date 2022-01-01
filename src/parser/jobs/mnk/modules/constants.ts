@@ -1,18 +1,9 @@
 import {ActionKey} from 'data/ACTIONS'
 import {StatusKey} from 'data/STATUSES'
 
-// Fists
-export const FISTLESS = Symbol('FISTLESS')
-
-export const FISTS: StatusKey[] = [
-	'FISTS_OF_EARTH',
-	'FISTS_OF_FIRE',
-	'FISTS_OF_WIND',
-]
-
-export const FORM_TIMEOUT_MILLIS = 15000
-
 // Forms
+export const FORM_TIMEOUT_MILLIS = 30000
+
 export const FORMS: StatusKey[] = [
 	'OPO_OPO_FORM',
 	'RAPTOR_FORM',
@@ -22,7 +13,7 @@ export const FORMS: StatusKey[] = [
 export const OPO_OPO_SKILLS: ActionKey[] = [
 	'BOOTSHINE',
 	'DRAGON_KICK',
-	'ARM_OF_THE_DESTROYER',
+	'SHADOW_OF_THE_DESTROYER',
 ]
 
 export const RAPTOR_SKILLS: ActionKey[] = [
@@ -41,4 +32,12 @@ export const FORM_SKILLS: ActionKey[] = [
 	...OPO_OPO_SKILLS,
 	...RAPTOR_SKILLS,
 	...COEURL_SKILLS,
+]
+
+// Blitzes
+export const BLITZ_SKILLS: ActionKey[] = [
+	'ELIXIR_FIELD',
+	'CELESTIAL_REVOLUTION',
+	'RISING_PHOENIX',
+	'PHANTOM_RUSH',
 ]

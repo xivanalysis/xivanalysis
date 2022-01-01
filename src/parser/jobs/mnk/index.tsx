@@ -1,6 +1,8 @@
 import {Trans} from '@lingui/macro'
+import CONTRIBUTORS, {ROLES} from 'data/CONTRIBUTORS'
 import {Meta} from 'parser/core/Meta'
 import React from 'react'
+import {changelog} from './changelog'
 
 export const MONK = new Meta({
 	modules: () => import('./modules' /* webpackChunkName: "jobs-mnk" */),
@@ -21,13 +23,8 @@ export const MONK = new Meta({
 	// },
 
 	contributors: [
-		// {user: CONTRIBUTORS.YOU, role: ROLES.DEVELOPER},
+		{user: CONTRIBUTORS.AY, role: ROLES.MAINTAINER},
 	],
-	changelog: [
-		// {
-		// 	date: new Date('2021-11-19'),
-		// 	Changes: () => <>The changes you made</>,
-		// 	contrubutors: [CONTRIBUTORS.YOU],
-		// },
-	],
+
+	changelog,
 })

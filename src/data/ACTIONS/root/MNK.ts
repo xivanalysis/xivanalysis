@@ -12,7 +12,6 @@ export const MNK = ensureActions({
 		icon: 'https://xivapi.com/i/000000/000208.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		potency: 200,
 	},
 
 	TRUE_STRIKE: {
@@ -38,13 +37,13 @@ export const MNK = ensureActions({
 		icon: 'https://xivapi.com/i/000000/000213.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		potency: 260,
-		statusesApplied: ['TWIN_SNAKES'],
+		potency: 280,
+		statusesApplied: ['DISCIPLINED_FIST'],
 	},
 
-	ARM_OF_THE_DESTROYER: {
-		id: 62,
-		name: 'Arm of the Destroyer',
+	SHADOW_OF_THE_DESTROYER: {
+		id: 25767,
+		name: 'Shadow of the Destroyer',
 		icon: 'https://xivapi.com/i/000000/000215.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
@@ -81,6 +80,7 @@ export const MNK = ensureActions({
 		icon: 'https://xivapi.com/i/002000/002536.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
+		statusesApplied: ['FORMLESS_FIST'],
 	},
 
 	MEDITATION: {
@@ -88,7 +88,7 @@ export const MNK = ensureActions({
 		name: 'Meditation',
 		icon: 'https://xivapi.com/i/002000/002534.png',
 		onGcd: true,
-		cooldown: 1.2,
+		cooldown: 1000,
 	},
 
 	FOUR_POINT_FURY: {
@@ -109,24 +109,56 @@ export const MNK = ensureActions({
 	},
 
 	// -----
-	// Player OGCDs
+	// Masterful Blitz GCDs
 	// -----
 
-	FISTS_OF_EARTH: {
-		id: 60,
-		name: 'Fists of Earth',
-		icon: 'https://xivapi.com/i/000000/000206.png',
-		cooldown: 3000,
-		cooldownGroup: 2,
+	MASTERFUL_BLITZ: {
+		id: 25764,
+		name: 'Masterful Blitz',
+		icon: 'https://xivapi.com/i/002000/002976.png',
+		onGcd: true,
+		speedAttribute: Attribute.SKILL_SPEED,
 	},
 
-	FISTS_OF_WIND: {
-		id: 73,
-		name: 'Fists of Wind',
-		icon: 'https://xivapi.com/i/002000/002527.png',
-		cooldown: 3000,
-		cooldownGroup: 2,
+	ELIXIR_FIELD: {
+		id: 3545,
+		name: 'Elixir Field',
+		icon: 'https://xivapi.com/i/002000/002533.png',
+		onGcd: true,
+		speedAttribute: Attribute.SKILL_SPEED,
+		statusesApplied: ['FORMLESS_FIST'],
 	},
+
+	CELESTIAL_REVOLUTION: {
+		id: 25765,
+		name: 'Celestial Revolution',
+		icon: 'https://xivapi.com/i/002000/002977.png',
+		onGcd: true,
+		speedAttribute: Attribute.SKILL_SPEED,
+		statusesApplied: ['FORMLESS_FIST'],
+	},
+
+	RISING_PHOENIX: {
+		id: 25768,
+		name: 'Rising Phoenix',
+		icon: 'https://xivapi.com/i/002000/002980.png',
+		onGcd: true,
+		speedAttribute: Attribute.SKILL_SPEED,
+		statusesApplied: ['FORMLESS_FIST'],
+	},
+
+	PHANTOM_RUSH: {
+		id: 25769,
+		name: 'Phantom Rush',
+		icon: 'https://xivapi.com/i/002000/002981.png',
+		onGcd: true,
+		speedAttribute: Attribute.SKILL_SPEED,
+		statusesApplied: ['FORMLESS_FIST'],
+	},
+
+	// -----
+	// Player OGCDs
+	// -----
 
 	MANTRA: {
 		id: 65,
@@ -140,46 +172,17 @@ export const MNK = ensureActions({
 		id: 69,
 		name: 'Perfect Balance',
 		icon: 'https://xivapi.com/i/000000/000217.png',
-		cooldown: 90000,
+		cooldown: 40000,
+		charges: 2,
 		statusesApplied: ['PERFECT_BALANCE'],
 	},
 
-	SHOULDER_TACKLE: {
-		id: 71,
-		name: 'Shoulder Tackle',
-		icon: 'https://xivapi.com/i/002000/002526.png',
-		cooldown: 30000,
-		charges: 2,
-	},
-
-	FISTS_OF_FIRE: {
-		id: 63,
-		name: 'Fists of Fire',
-		icon: 'https://xivapi.com/i/000000/000205.png',
-		cooldown: 3000,
-		cooldownGroup: 2,
-	},
-
-	THE_FORBIDDEN_CHAKRA: {
-		id: 3547,
-		name: 'The Forbidden Chakra',
-		icon: 'https://xivapi.com/i/002000/002535.png',
-		cooldown: 1000,
-		cooldownGroup: 1,
-	},
-
-	ELIXIR_FIELD: {
-		id: 3545,
-		name: 'Elixir Field',
-		icon: 'https://xivapi.com/i/002000/002533.png',
-		cooldown: 30000,
-	},
-
-	TORNADO_KICK: {
-		id: 3543,
-		name: 'Tornado Kick',
-		icon: 'https://xivapi.com/i/002000/002531.png',
-		cooldown: 45000,
+	BROTHERHOOD: {
+		id: 7396,
+		name: 'Brotherhood',
+		icon: 'https://xivapi.com/i/002000/002542.png',
+		cooldown: 120000,
+		statusesApplied: ['BROTHERHOOD', 'MEDITATIVE_BROTHERHOOD'],
 	},
 
 	RIDDLE_OF_EARTH: {
@@ -195,16 +198,24 @@ export const MNK = ensureActions({
 		id: 7395,
 		name: 'Riddle of Fire',
 		icon: 'https://xivapi.com/i/002000/002541.png',
-		cooldown: 90000,
+		cooldown: 60000,
 		statusesApplied: ['RIDDLE_OF_FIRE'],
 	},
 
-	BROTHERHOOD: {
-		id: 7396,
-		name: 'Brotherhood',
-		icon: 'https://xivapi.com/i/002000/002542.png',
+	RIDDLE_OF_WIND: {
+		id: 25766,
+		name: 'Riddle of Wind',
+		icon: 'https://xivapi.com/i/002000/002978.png',
 		cooldown: 90000,
-		statusesApplied: ['BROTHERHOOD', 'MEDITATIVE_BROTHERHOOD'],
+		statusesApplied: ['RIDDLE_OF_WIND'],
+	},
+
+	THE_FORBIDDEN_CHAKRA: {
+		id: 3547,
+		name: 'The Forbidden Chakra',
+		icon: 'https://xivapi.com/i/002000/002535.png',
+		cooldown: 1000,
+		cooldownGroup: 1,
 	},
 
 	ENLIGHTENMENT: {
@@ -224,5 +235,13 @@ export const MNK = ensureActions({
 		cooldown: 60000,
 		gcdRecast: 2500,
 		statusesApplied: ['ANATMAN'],
+	},
+
+	THUNDERCLAP: {
+		id: 25762,
+		name: 'Thunderclap',
+		icon: 'https://xivapi.com/i/002000/002975.png',
+		cooldown: 30000,
+		charges: 3,
 	},
 })
