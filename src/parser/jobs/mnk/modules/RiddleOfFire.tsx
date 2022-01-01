@@ -79,7 +79,6 @@ export class RiddleOfFire extends Analyser {
 	override initialise(): void {
 		this.blitzActions = fillActions(BLITZ_SKILLS, this.data)
 		const playerFilter = filter<Event>().source(this.parser.actor.id)
-
 		this.addEventHook(playerFilter.type('statusApply').status(this.data.statuses.RIDDLE_OF_FIRE.id), this.onGain)
 		this.addEventHook(playerFilter.type('statusRemove').status(this.data.statuses.RIDDLE_OF_FIRE.id), this.onDrop)
 
