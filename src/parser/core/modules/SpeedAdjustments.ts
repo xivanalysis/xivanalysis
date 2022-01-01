@@ -6,7 +6,7 @@ import {Analyser} from '../Analyser'
 import {dependency} from '../Injectable'
 import {Actors} from './Actors'
 
-type SpeedAttribute = Attribute.SKILL_SPEED | Attribute.SPELL_SPEED
+export type SpeedAttribute = Attribute.SKILL_SPEED | Attribute.SPELL_SPEED
 
 export class SpeedAdjustments extends Analyser {
 	static override handle = 'speedAdjustments'
