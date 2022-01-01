@@ -823,6 +823,5 @@
   "whm.swiftcast.missed.suggestion.content": "<0/> 지속시간이 만료되기전에 사용하십시오. <1/>과 병행하여 빠른 부활 혹은 <2/>와 병행하여 논글쿨기를 끼워넣는 응용을 할 수 있습니다.",
   "whm.thinair.messages.explanation": "",
   "whm.thinair.messages.no-casts": "",
-  "whm.thinair.rotation.gcd": "구간내 글쿨 기술 횟수 {numGcds, plural, other {# 회}}",
   "whm.thinair.title": ""
 }
