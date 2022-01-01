@@ -123,7 +123,7 @@ export class InnerRelease extends Analyser {
 				1: SEVERITY.MEDIUM,
 				2: SEVERITY.MAJOR,
 			},
-			value: badGcds,
+			value: missedGcds,
 			why: <Trans id="war.ir.suggestions.missedgcd.why">
 				<Plural value={missedGcds} one="# stack" other="# stacks"/> of <DataLink showIcon={false} status="INNER_RELEASE"/> <Plural value={missedGcds} one="wasn't" other="weren't"/> used.
 			</Trans>,
