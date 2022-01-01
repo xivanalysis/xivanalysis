@@ -12,143 +12,144 @@ import React from 'react'
 import {DISPLAY_ORDER} from './DISPLAY_ORDER'
 
 interface ImmortalSacrificeWindow {
-	startTime: number,
-	endTime?: number,
-	/**
-	 * If this window was closed, by consuming the stacks, or it expired
-	 */
-	closed: boolean,
 	stackCount: number,
+	/**
+	 * If the stacks were consumed via Plentful harvest or dropped due to expiration or death
+	 */
 	consumed: boolean,
 }
 
 export class ImmortalSacrifice extends Analyser {
 
 	static override handle = 'immortalsacrifice'
-	static override title = t('rpr.immortal-sacrifice.title')`Immortal Sacrifice stacks consumed`
+	static override title = t('rpr.immortal-sacrifice.title')`Immortal Sacrifice`
 	static override debug = false
 
 	@dependency private brokenLog!: BrokenLog
 	@dependency private data!: Data
 	@dependency private checklist!: Checklist
 
-	private windows: ImmortalSacrificeWindow[] = []
+	private closedWindows: ImmortalSacrificeWindow[] = []
+	private openWindow?: ImmortalSacrificeWindow
 
 	override initialise() {
 		super.initialise()
 
 		const playerFilter = filter<Event>().source(this.parser.actor.id)
 
-		this.addEventHook(playerFilter.type('statusApply').status(this.data.statuses.IMMORTAL_SACRIFICE.id), this.onImmortalSacrificeStack)
-		this.addEventHook(playerFilter.type('statusRemove').status(this.data.statuses.IMMORTAL_SACRIFICE.id), this.onImmortalSacrificeExpiration)
+		this.addEventHook(playerFilter.type('statusApply').status(this.data.statuses.IMMORTAL_SACRIFICE.id), this.onStatusApply)
+		this.addEventHook(playerFilter.type('statusRemove').status(this.data.statuses.IMMORTAL_SACRIFICE.id), this.onStatusRemove)
 		this.addEventHook(playerFilter.type('action').action(this.data.actions.PLENTIFUL_HARVEST.id), this.onPlentifulHarvest)
 
 		this.addEventHook('complete', this.onComplete)
 	}
 
-	private onImmortalSacrificeStack(event: Events['statusApply']) {
-		let window = this.getOpenWindow()
-
-		if (window == null) {
-			window = {
-				startTime: event.timestamp,
-				closed: false,
+	private onStatusApply(event: Events['statusApply']) {
+		if (this.openWindow == null) {
+			this.openWindow = {
 				consumed: false,
 				stackCount: 0,
 			}
-
-			this.windows.push(window)
 		}
 
-		window.stackCount = event.data ?? window.stackCount + 1
+		this.openWindow.stackCount = event.data ?? this.openWindow.stackCount + 1
 	}
 
-	private onPlentifulHarvest(event: Events['action']) {
-		const window = this.getOpenWindow()
-
-		if (window == null) {
+	private onPlentifulHarvest() {
+		if (this.openWindow == null) {
 			this.brokenLog.trigger(this, 'PH without immortal sacrifice stack',
-				<Trans id="rpr.immortal-sacrifice.trigger.no-immortal-sacrifice">
+				<Trans id="rpr.immortal-sacrifice.checklist.trigger.no-immortal-sacrifice">
 					<DataLink action="PLENTIFUL_HARVEST"/> was executed but there were
 					no <DataLink status="IMMORTAL_SACRIFICE"/> stacks.
 				</Trans>)
 			return
 		}
 
-		this.debug('Closing window because plentiful harvest were used', window)
-
-		window.closed = true
-		window.endTime = event.timestamp
-		window.consumed = true
+		this.debug('Closing window because plentiful harvest was used', this.openWindow)
+		this.onWindowClose(true)
 	}
 
-	private onImmortalSacrificeExpiration(event: Events['statusRemove']) {
-		const window = this.getOpenWindow()
-
+	private onStatusRemove() {
 		// valid case, means it was consumed
-		if (window == null) {
+		if (this.openWindow == null) {
 			return
 		}
 
-		this.debug('Closing window that was expired before consumption', window)
-
-		window.closed = true
-		window.consumed = false
-		window.endTime = event.timestamp
+		this.debug('Closing window that was expired before consumption', this.openWindow)
+		this.onWindowClose(false)
 	}
 
-	private getOpenWindow() {
-		if (this.windows.length > 0) {
-			const w = this.windows[this.windows.length - 1]
-
-			if (!w.closed) {
-				return w
-			}
-
+	private onWindowClose(consumed: boolean) {
+		if (this.openWindow == null) {
+			return
 		}
 
-		return null
+		this.openWindow.consumed = consumed
+
+		this.closedWindows.push(this.openWindow)
+		this.openWindow = undefined
 	}
 
 	private onComplete() {
-		this.debug(() => {
-			this.debug('Immortal sacrifice windows')
+		const totalWindows = this.closedWindows.length
 
-			this.windows.forEach(w => {
-				const start = this.parser.formatEpochTimestamp(w.startTime)
-				const end = w.endTime != null ? this.parser.formatEpochTimestamp(w.endTime) : '<Not Closed>'
+		if (totalWindows > 0) {
+			let plentifulHarvestUses = 0
+			let totalStacks = 0
+			let stacksConsumed = 0
 
-				this.debug(`Start: ${start}, End: ${end}, Closed: ${w.closed}, Consumed: ${w.consumed}, Stack Count: ${w.stackCount}`)
-			})
-		})
+			for (const closedWindow of this.closedWindows) {
+				totalStacks += closedWindow.stackCount
 
-		const totalImmortalSacrifices = this.windows.length
+				if (closedWindow.consumed) {
+					stacksConsumed += closedWindow.stackCount
+					plentifulHarvestUses += 1
+				}
+			}
 
-		if (totalImmortalSacrifices <= 0) {
-			return
+			const phUsesPercent = (plentifulHarvestUses / totalWindows * 100).toFixed(2)
+			const stacksConsumedPercent = (stacksConsumed / totalStacks * 100).toFixed(2)
+
+			this.checklist.add(new Rule({
+				name: <Trans id="rpr.immortal-sacrifice.checklist.title">
+					Uses Immortal Sacrifices via <DataLink action="PLENTIFUL_HARVEST"/>
+				</Trans>,
+				description: <Trans id="rpr.immortal-sacrifice.checklist.description">
+					<DataLink status="IMMORTAL_SACRIFICE"/> stacks will be generated when you
+					use <DataLink action="ARCANE_CIRCLE"/>, you can then consume those stacks by
+					using <DataLink action="PLENTIFUL_HARVEST"/>. On top of being a high potency skill, it also grants
+					enough Shroud gauge to immediately use <DataLink action="ENSHROUD"/>.
+				</Trans>,
+				displayOrder: DISPLAY_ORDER.IMMORTAL_SACRIFICE,
+				requirements: [
+					new Requirement({
+						name: <Trans id="rpr.immortal-sacrifice.checklist.plentiful-harvest.requirement.name">
+							<DataLink action="PLENTIFUL_HARVEST"/> uses
+						</Trans>,
+						overrideDisplay: `${plentifulHarvestUses} / ${totalWindows} (${phUsesPercent}%)`,
+						percent: phUsesPercent,
+					}),
+					new Requirement({
+						name: <Trans id="rpr.immortal-sacrifice.checklist.requirement.name">
+							<DataLink status="IMMORTAL_SACRIFICE"/> stacks used
+						</Trans>,
+						overrideDisplay: `${stacksConsumed} / ${totalStacks} (${stacksConsumedPercent})`,
+						percent: stacksConsumedPercent,
+					}),
+				],
+			}))
+		} else {
+			this.checklist.add(new Rule({
+				name: <Trans id="rpr.immortal-sacrifice.no-usage.checklist.title">
+					Immortal Sacrifices stacks generation
+				</Trans>,
+				description: <Trans id="rpr.immortal-sacrifice.no-usage.checklist.description">
+					Make sure you use <DataLink action="ARCANE_CIRCLE"/> in the fight and it hit your party members
+					to help generating <DataLink status="IMMORTAL_SACRIFICE"/>, and make sure to use those stacks
+					via <DataLink action="PLENTIFUL_HARVEST"/> before they expire.
+				</Trans>,
+				displayOrder: DISPLAY_ORDER.IMMORTAL_SACRIFICE,
+			}))
 		}
-
-		const consumedImmortalSacrifices = this.windows.filter(w => w.consumed).length
-		const percentUsed = (consumedImmortalSacrifices / totalImmortalSacrifices * 100).toFixed(2)
-
-		this.checklist.add(new Rule({
-			name: <Trans id="rpr.immortal-sacrifice.checklist.title">Uses all Immortal Sacrifices stack</Trans>,
-			description: <Trans id="rpr.immortal-sacrifice.checklist.description">
-				<DataLink status="IMMORTAL_SACRIFICE"/> stacks will be generated when you
-				use <DataLink action="ARCANE_CIRCLE"/>, you can then consume those stacks by
-				using <DataLink action="PLENTIFUL_HARVEST"/>, not only it's a high potency skill, it also grants enough
-				Shroud gauge for a <DataLink action="ENSHROUD"/> usage.
-			</Trans>,
-			displayOrder: DISPLAY_ORDER.IMMORTAL_SACRIFICE,
-			requirements: [
-				new Requirement({
-					name: <Trans id="rpr.immortal-sacrifice.checklist.requirement.name">
-						<DataLink status="IMMORTAL_SACRIFICE"/> stacks consumed
-					</Trans>,
-					overrideDisplay: `${consumedImmortalSacrifices} / ${totalImmortalSacrifices} (${percentUsed}%)`,
-					percent: percentUsed,
-				}),
-			],
-		}))
 	}
 }
