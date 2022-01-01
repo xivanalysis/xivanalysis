@@ -28,6 +28,7 @@ interface ReleaseWindow {
 	start: number
 	end?: number
 	casts: Array<Action['id']>
+	rushing: boolean
 }
 
 export class InnerRelease extends Analyser {
@@ -71,7 +72,9 @@ export class InnerRelease extends Analyser {
 	private onGain(event: Events['statusApply']): void {
 		// Check if existing window or not - mostly since we don't really care about stack count
 		if (this.current == null) {
-			this.current = {start: event.timestamp, casts: []}
+			this.current = {start: event.timestamp, casts: [], rushing: false}
+
+			this.current.rushing = this.data.statuses.INNER_RELEASE.duration >= (this.parser.pull.timestamp + this.parser.pull.duration) - event.timestamp
 
 			this.innerHook = this.addEventHook(
 				filter<Event>()
@@ -109,8 +112,11 @@ export class InnerRelease extends Analyser {
 		const chaosGcds = CHAOS_GCDS.map(actionKey => this.data.actions[actionKey].id)
 		const goodGcds = GOOD_GCDS.map(actionKey => this.data.actions[actionKey].id)
 
+		const nonRushedReleases = this.history.filter(release => !release.rushing)
+
 		// Extract our suggestion metrics from history
-		const missedGcds = this.history.reduce((total, current) => total + Math.max(0, (IR_STACKS_APPLIED - current.casts.filter(id => id !== this.data.actions.PRIMAL_REND.id).length)), 0)
+		// We ignore rushed windows for missed GCDs, also IC as a user might push for higher potency at end of fight
+		const missedGcds = nonRushedReleases.reduce((total, current) => total + Math.max(0, (IR_STACKS_APPLIED - current.casts.filter(id => id !== this.data.actions.PRIMAL_REND.id).length)), 0)
 		const badGcds = this.history.reduce((total, current) => total + (IR_STACKS_APPLIED - this.accountGcds(current, goodGcds)), 0)
 		const veryBadGcds = this.history.reduce((total, current) => total + this.accountGcds(current, chaosGcds), 0)
 
