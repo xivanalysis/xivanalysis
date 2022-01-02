@@ -134,6 +134,13 @@ const CONTRIBUTORS = ensureRecord<Contributor>()({
 			JOBS.BLACK_MAGE,
 		],
 	},
+	MALP: {
+		name: 'Malp',
+		avatar: require('./avatar/Malp.png'),
+		jobs: [
+			JOBS.MONK,
+		],
+	},
 })
 
 export default CONTRIBUTORS

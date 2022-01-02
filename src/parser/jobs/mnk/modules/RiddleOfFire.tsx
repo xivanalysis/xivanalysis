@@ -1,198 +1,198 @@
 import {t} from '@lingui/macro'
 import {Plural, Trans} from '@lingui/react'
-import {DataLink} from 'components/ui/DbLink'
-import {RotationTable} from 'components/ui/RotationTable'
+import {ActionLink, DataLink} from 'components/ui/DbLink'
 import {Action} from 'data/ACTIONS'
-import {Event, Events} from 'event'
-import {Analyser} from 'parser/core/Analyser'
-import {EventHook} from 'parser/core/Dispatcher'
-import {filter} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
-import {Data} from 'parser/core/modules/Data'
-import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
-import {Timeline} from 'parser/core/modules/Timeline'
+import {
+	BuffWindow,
+	EvaluatedAction,
+	EvaluationOutput,
+	ExpectedGcdCountEvaluator,
+	LimitedActionsEvaluator,
+	WindowEvaluator,
+} from 'parser/core/modules/ActionWindow'
+import {HistoryEntry} from 'parser/core/modules/ActionWindow/History'
+import {GlobalCooldown} from 'parser/core/modules/GlobalCooldown'
+import {SEVERITY, Suggestion, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
-import {BLITZ_SKILLS} from './constants'
 import {DISPLAY_ORDER} from './DISPLAY_ORDER'
-import {fillActions} from './utilities'
 
-// Expected GCDs and buffs
-// technically can get 2 tacles and should as much as possible, but don't ding for it in case it's for mechanics
+const TOTAL_GCD_AMOUNT = {
+	10: SEVERITY.MINOR,
+	9: SEVERITY.MEDIUM,
+	6: SEVERITY.MAJOR,
+}
+
+const MISSED_BROTHERHOOD_SEVERITY = {
+	1: SEVERITY.MEDIUM,
+	2: SEVERITY.MAJOR,
+}
+
+const MEDITATION_DURING_ROF_SEVERITY = {
+	1: SEVERITY.MEDIUM,
+	3: SEVERITY.MAJOR,
+}
+
 const EXPECTED = {
 	GCDS: 11,
-	BLITZES: 1,
 }
 
-const SUGGESTION_TIERS = {
-	1: SEVERITY.MINOR,
-	2: SEVERITY.MEDIUM,
-	5: SEVERITY.MAJOR,
-}
+class MasterfulBlitzEvaluator implements WindowEvaluator {
+	private _blitzSkills: Action[]
+	private _celestialRevolution: Action
+	private _masterfulBlitz: Action
 
-class Riddle {
-	data: Data
-	casts: Array<Events['action']>
-	start: number
-	end?: number
-	rushing: boolean = false
-
-	constructor(start: number, data: Data) {
-		this.data = data
-		this.start = start
-		this.casts = []
+	constructor(blitzSkills: Action[], celestialRevolution: Action, masterfulBlitz: Action) {
+		this._blitzSkills = blitzSkills
+		this._celestialRevolution = celestialRevolution
+		this._masterfulBlitz = masterfulBlitz
 	}
 
-	get gcds() {
-		return this.casts
-			.filter(event => this.data.getAction(event.action)?.onGcd ?? false)
+	suggest(windows: Array<HistoryEntry<EvaluatedAction[]>>) {
+		const celestialRevolutionUsages = windows.map(previousValue => previousValue.data)
+			.reduce((previousValue, currentValue) => previousValue.concat(currentValue))
+			.filter(value => value.action === this._celestialRevolution)
 			.length
+
+		if (celestialRevolutionUsages > 0) {
+			return new Suggestion({
+				icon: this._celestialRevolution.icon,
+				content: <Trans id="mnk.rof.suggestions.celestialrevolution.content">Avoid using <ActionLink
+					action="CELESTIAL_REVOLUTION"/>.</Trans>,
+				severity: SEVERITY.MAJOR,
+				why: <Trans id="mnk.rof.suggestions.celestialrevolution.why"><ActionLink
+					action="RISING_PHOENIX"/> and <ActionLink action="ELIXIR_FIELD"/> do more potency along with
+					AoE.</Trans>,
+			})
+		}
 	}
 
-	get chakras() {
-		return this.casts.filter(event => [this.data.actions.THE_FORBIDDEN_CHAKRA.id, this.data.actions.ENLIGHTENMENT.id].includes(event.action)).length
+	output(windows: Array<HistoryEntry<EvaluatedAction[]>>): EvaluationOutput {
+		return {
+			format: 'table',
+			header: {
+				header: <ActionLink showName={false} action={'MASTERFUL_BLITZ'}/>,
+				accessor: 'masterfulblitz',
+			},
+			rows: windows.map((window, i) => {
+				return {
+					actual: this.countBlitzSkills(window),
+					expected: this.numberOfBlitzExpectedInWindow(i),
+				}
+			}),
+		}
 	}
 
-	get meditations() {
-		return this.casts.filter(event => event.action === this.data.actions.MEDITATION.id).length
+	private countBlitzSkills(window: HistoryEntry<EvaluatedAction[]>): number {
+		return window.data.filter(value => this._blitzSkills.includes(value.action)).length
 	}
 
-	get stars() {
-		return this.casts.filter(event => event.action === this.data.actions.SIX_SIDED_STAR.id).length
+	private numberOfBlitzExpectedInWindow(windowIndex: number): number {
+		// 2 on odds and 1 on evens
+		return 2 - windowIndex % 2
 	}
 }
 
-export class RiddleOfFire extends Analyser {
+class BrotherhoodEvaluator implements WindowEvaluator {
+	private brotherhood: Action
+
+	constructor(brotherhood: Action) {
+		this.brotherhood = brotherhood
+	}
+
+	suggest(windows: Array<HistoryEntry<EvaluatedAction[]>>) {
+		const missedBrotherhoodUsages = windows.filter((value, index) => index % 2 === 0)
+			.map(previousValue => previousValue.data.filter(value => value.action === this.brotherhood))
+			.filter(value => value.length === 0).length
+
+		return new TieredSuggestion({
+			icon: this.brotherhood.icon,
+			tiers: MISSED_BROTHERHOOD_SEVERITY,
+			value: missedBrotherhoodUsages,
+			content: <Trans id="mnk.rof.suggestions.brotherhood.content">Missed <ActionLink action="BROTHERHOOD"/>
+				usage during <ActionLink action="RIDDLE_OF_FIRE"/>
+				<Plural value={missedBrotherhoodUsages} one="# time" other="# times"/>.
+			</Trans>,
+			why: <Trans id="mnk.rof.suggestions.brotherhood.why"><ActionLink
+				action="BROTHERHOOD"/> has a shorter duration than <ActionLink action="RIDDLE_OF_FIRE"/>.</Trans>,
+		})
+	}
+
+	output(windows: Array<HistoryEntry<EvaluatedAction[]>>): EvaluationOutput {
+		return {
+			format: 'table',
+			header: {
+				header: <ActionLink showName={false} action={'BROTHERHOOD'}/>,
+				accessor: 'brotherhood',
+			},
+			rows: windows.map((window, i) => {
+				return {
+					actual: this.countBrotherhood(window),
+					expected: this.numberOfBrotherhoodsExpectedInWindow(i),
+				}
+			}),
+		}
+	}
+
+	private countBrotherhood(window: HistoryEntry<EvaluatedAction[]>): number {
+		return window.data.filter(value => this.brotherhood === value.action).length
+	}
+
+	private numberOfBrotherhoodsExpectedInWindow(windowIndex: number): number {
+		// 1 on odds and 0 on evens
+		return 1 - windowIndex % 2
+	}
+}
+
+export class RiddleOfFire extends BuffWindow {
 	static override handle = 'riddleoffire'
 	static override title = t('mnk.rof.title')`Riddle of Fire`
 	static override displayOrder = DISPLAY_ORDER.RIDDLE_OF_FIRE
 
-	@dependency private data!: Data
-	@dependency private suggestions!: Suggestions
-	@dependency private timeline!: Timeline
+	@dependency globalCooldown!: GlobalCooldown
 
-	private history: Riddle[] = []
-	private riddle?: Riddle
-	private riddleHook?: EventHook<Events['action']>
+	blitzSkills = [this.data.actions.ELIXIR_FIELD, this.data.actions.RISING_PHOENIX, this.data.actions.PHANTOM_RUSH]
 
-	private blitzActions: Array<Action['id']> = []
+	buffStatus = this.data.statuses.RIDDLE_OF_FIRE
 
-	override initialise(): void {
-		this.blitzActions = fillActions(BLITZ_SKILLS, this.data)
-		const playerFilter = filter<Event>().source(this.parser.actor.id)
-		this.addEventHook(playerFilter.type('statusApply').status(this.data.statuses.RIDDLE_OF_FIRE.id), this.onGain)
-		this.addEventHook(playerFilter.type('statusRemove').status(this.data.statuses.RIDDLE_OF_FIRE.id), this.onDrop)
+	override initialise() {
+		super.initialise()
 
-		this.addEventHook('complete', this.onComplete)
-	}
+		const suggestionWindowName = <ActionLink action="RIDDLE_OF_FIRE"/>
 
-	onCast(event: Events['action']): void {
-		const action = this.data.getAction(event.action)
-
-		if (action == null) { return }
-
-		// MNK mentors want the oGCDs :angryeyes:
-		if (this.riddle != null) {
-			this.riddle.casts.push(event)
-		}
-	}
-
-	private onGain(event: Events['statusApply']): void {
-		if (this.riddle != null) { return }
-
-		this.riddle = new Riddle(event.timestamp, this.data)
-		this.riddle.rushing = this.data.statuses.RIDDLE_OF_FIRE.duration >= (this.parser.pull.timestamp + this.parser.pull.duration) - event.timestamp
-
-		this.riddleHook = this.addEventHook(
-			filter<Event>()
-				.source(this.parser.actor.id)
-				.type('action'),
-			this.onCast,
-		)
-	}
-
-	private onDrop(event: Events['statusRemove']): void {
-		this.stopAndSave(event.timestamp)
-	}
-
-	private stopAndSave(endTime: number = this.parser.currentEpochTimestamp): void {
-		if (this.riddle != null) {
-			this.riddle.end = endTime
-
-			this.history.push(this.riddle)
-
-			if (this.riddleHook != null) {
-				this.removeEventHook(this.riddleHook)
-				this.riddleHook = undefined
-			}
-		}
-
-		this.riddle = undefined
-	}
-
-	private onComplete(): void {
-		// Close up if RoF was active at the end of the fight
-		this.stopAndSave()
-
-		const nonRushedRiddles = this.history
-			.filter(riddle => !riddle.rushing)
-
-		// We count 6SS as 2 GCDs, since it's sometimes not a bad thing
-		// We remove Meditation since it's effectively a dropped GCD anyway
-		const droppedGcds = (nonRushedRiddles.length * EXPECTED.GCDS)
-			- nonRushedRiddles.reduce((sum, riddle) => sum + riddle.gcds + riddle.stars - riddle.meditations, 0)
-
-		this.suggestions.add(new TieredSuggestion({
-			icon: this.data.actions.RIDDLE_OF_FIRE.icon,
-			content: <Trans id="mnk.rof.suggestions.gcd.content">
-				Aim to hit {EXPECTED.GCDS} GCDs during each <DataLink status="RIDDLE_OF_FIRE"/> window.
+		this.addEvaluator(new MasterfulBlitzEvaluator(this.blitzSkills, this.data.actions.CELESTIAL_REVOLUTION, this.data.actions.MASTERFUL_BLITZ))
+		this.addEvaluator(new BrotherhoodEvaluator(this.data.actions.BROTHERHOOD))
+		this.addEvaluator(new ExpectedGcdCountEvaluator({
+			expectedGcds: EXPECTED.GCDS,
+			globalCooldown: this.globalCooldown,
+			suggestionIcon: this.data.actions.RIDDLE_OF_FIRE.icon,
+			severityTiers: TOTAL_GCD_AMOUNT,
+			suggestionWindowName: suggestionWindowName,
+			suggestionContent: <Trans id="mnk.rof.suggestions.gcd.content">Aim to hit {EXPECTED.GCDS} GCDs during
+				each <DataLink status="RIDDLE_OF_FIRE"/> window.</Trans>,
+			adjustCount: window => {
+				// 6SS counts as 2 GCDs
+				return -this.numberOfSixSidedStarInWindow(window)
+			},
+		}))
+		this.addEvaluator(new LimitedActionsEvaluator({
+			expectedActions: [
+				{
+					action: this.data.actions.MEDITATION,
+					expectedPerWindow: 0,
+				},
+			],
+			suggestionIcon: this.data.actions.MEDITATION.icon,
+			suggestionContent: <Trans id="mnk.rof.suggestions.meditation.content">
+				Avoid using <ActionLink action="MEDITATION"/> under <ActionLink action="RIDDLE_OF_FIRE"/> as this is
+				essentially wasting a GCD.
 			</Trans>,
-			tiers: SUGGESTION_TIERS,
-			value: droppedGcds,
-			why: <Trans id="mnk.rof.suggestions.gcd.why">
-				<Plural value={droppedGcds} one="# possible GCD was" other="# possible GCDs were" /> missed or wasted on <DataLink action="MEDITATION"/> during <DataLink status="RIDDLE_OF_FIRE"/>.
-			</Trans>,
+			suggestionWindowName,
+			severityTiers: MEDITATION_DURING_ROF_SEVERITY,
 		}))
 	}
 
-	override output() {
-		return <RotationTable
-			targets={[
-				{
-					header: <Trans id="mnk.rof.table.header.gcds">GCDs</Trans>,
-					accessor: 'gcds',
-				},
-				{
-					header: <DataLink showName={false} action="THE_FORBIDDEN_CHAKRA"/>,
-					accessor: 'forbiddenChakra',
-				},
-				{
-					header: <DataLink showName={false} action="MASTERFUL_BLITZ"/>,
-					accessor: 'blitzes',
-				},
-			]}
-			data={this.history
-				.map(riddle => ({
-					start: riddle.start - this.parser.pull.timestamp,
-					end: riddle.end != null ?
-						riddle.end - this.parser.pull.timestamp
-						: riddle.start - this.parser.pull.timestamp,
-					targetsData: {
-						gcds: {
-							actual: riddle.gcds - riddle.meditations,
-							expected: EXPECTED.GCDS - riddle.stars,
-						},
-						forbiddenChakra: {
-							actual: riddle.chakras,
-						},
-						blitzes: {
-							actual: riddle.casts.filter(event => this.blitzActions.includes(event.action)).length,
-							expected: EXPECTED.BLITZES,
-						},
-					},
-					rotation: riddle.casts,
-				}))
-			}
-			onGoto={this.timeline.show}
-		/>
+	private numberOfSixSidedStarInWindow(window: HistoryEntry<EvaluatedAction[]>): number {
+		return window.data.filter(value => value.action.id === this.data.actions.SIX_SIDED_STAR.id).length
 	}
 }

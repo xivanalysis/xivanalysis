@@ -3,6 +3,11 @@ import React from 'react'
 
 export const changelog = [
 	{
+		date: new Date('2022-01-02'),
+		Changes: () => <>Migrated Riddle of Fire analyser to BuffWindow.</>,
+		contributors: [CONTRIBUTORS.MALP],
+	},
+	{
 		date: new Date('2022-01-01'),
 		Changes: () => <>Fix GL speed modifier bug.</>,
 		contributors: [CONTRIBUTORS.AY],
