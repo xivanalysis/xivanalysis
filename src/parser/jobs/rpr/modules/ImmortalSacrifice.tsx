@@ -8,6 +8,7 @@ import {dependency} from 'parser/core/Injectable'
 import BrokenLog from 'parser/core/modules/BrokenLog'
 import Checklist, {Requirement, Rule} from 'parser/core/modules/Checklist'
 import {Data} from 'parser/core/modules/Data'
+import Suggestions, {SEVERITY, Suggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
 import {DISPLAY_ORDER} from './DISPLAY_ORDER'
 
@@ -28,6 +29,7 @@ export class ImmortalSacrifice extends Analyser {
 	@dependency private brokenLog!: BrokenLog
 	@dependency private data!: Data
 	@dependency private checklist!: Checklist
+	@dependency private suggestions!: Suggestions
 
 	private closedWindows: ImmortalSacrificeWindow[] = []
 	private openWindow?: ImmortalSacrificeWindow
@@ -139,16 +141,17 @@ export class ImmortalSacrifice extends Analyser {
 				],
 			}))
 		} else {
-			this.checklist.add(new Rule({
-				name: <Trans id="rpr.immortal-sacrifice.no-usage.checklist.title">
-					Immortal Sacrifices stacks generation
-				</Trans>,
-				description: <Trans id="rpr.immortal-sacrifice.no-usage.checklist.description">
+			this.suggestions.add(new Suggestion({
+				icon: this.data.actions.ARCANE_CIRCLE.icon,
+				severity: SEVERITY.MAJOR,
+				content: <Trans id="rpr.immortal-sacrifice.suggestion.no-usage.content">
 					Make sure you use <DataLink action="ARCANE_CIRCLE"/> in the fight and it hit your party members
 					to help generating <DataLink status="IMMORTAL_SACRIFICE"/>, and make sure to use those stacks
 					via <DataLink action="PLENTIFUL_HARVEST"/> before they expire.
 				</Trans>,
-				displayOrder: DISPLAY_ORDER.IMMORTAL_SACRIFICE,
+				why: <Trans id="rpr.immortal-sacrifice.suggestion.no-usage.why">
+					No stacks of <DataLink status="IMMORTAL_SACRIFICE"/> were generated during the fight.
+				</Trans>,
 			}))
 		}
 	}
