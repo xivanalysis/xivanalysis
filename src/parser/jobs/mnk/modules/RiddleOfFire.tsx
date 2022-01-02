@@ -1,6 +1,6 @@
 import {t} from '@lingui/macro'
 import {Plural, Trans} from '@lingui/react'
-import {ActionLink, DataLink} from 'components/ui/DbLink'
+import {ActionLink} from 'components/ui/DbLink'
 import {Action} from 'data/ACTIONS'
 import {dependency} from 'parser/core/Injectable'
 import {
@@ -15,6 +15,7 @@ import {HistoryEntry} from 'parser/core/modules/ActionWindow/History'
 import {GlobalCooldown} from 'parser/core/modules/GlobalCooldown'
 import {SEVERITY, Suggestion, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
+import {BLITZ_SKILLS} from './constants'
 import {DISPLAY_ORDER} from './DISPLAY_ORDER'
 
 const TOTAL_GCD_AMOUNT = {
@@ -38,25 +39,25 @@ const EXPECTED = {
 }
 
 class MasterfulBlitzEvaluator implements WindowEvaluator {
-	private _blitzSkills: Action[]
-	private _celestialRevolution: Action
-	private _masterfulBlitz: Action
+	private blitzSkills: Action[]
+	private celestialRevolution: Action
+	private masterfulBlitz: Action
 
 	constructor(blitzSkills: Action[], celestialRevolution: Action, masterfulBlitz: Action) {
-		this._blitzSkills = blitzSkills
-		this._celestialRevolution = celestialRevolution
-		this._masterfulBlitz = masterfulBlitz
+		this.blitzSkills = blitzSkills
+		this.celestialRevolution = celestialRevolution
+		this.masterfulBlitz = masterfulBlitz
 	}
 
 	suggest(windows: Array<HistoryEntry<EvaluatedAction[]>>) {
 		const celestialRevolutionUsages = windows.map(previousValue => previousValue.data)
 			.reduce((previousValue, currentValue) => previousValue.concat(currentValue))
-			.filter(value => value.action === this._celestialRevolution)
+			.filter(value => value.action === this.celestialRevolution)
 			.length
 
 		if (celestialRevolutionUsages > 0) {
 			return new Suggestion({
-				icon: this._celestialRevolution.icon,
+				icon: this.celestialRevolution.icon,
 				content: <Trans id="mnk.rof.suggestions.celestialrevolution.content">Avoid using <ActionLink
 					action="CELESTIAL_REVOLUTION"/>.</Trans>,
 				severity: SEVERITY.MAJOR,
@@ -77,19 +78,27 @@ class MasterfulBlitzEvaluator implements WindowEvaluator {
 			rows: windows.map((window, i) => {
 				return {
 					actual: this.countBlitzSkills(window),
-					expected: this.numberOfBlitzExpectedInWindow(i),
+					expected: this.numberOfBlitzExpectedInWindow(i, windows),
 				}
 			}),
 		}
 	}
 
 	private countBlitzSkills(window: HistoryEntry<EvaluatedAction[]>): number {
-		return window.data.filter(value => this._blitzSkills.includes(value.action)).length
+		return window.data.filter(value => this.blitzSkills.includes(value.action)).length
 	}
 
-	private numberOfBlitzExpectedInWindow(windowIndex: number): number {
-		// 2 on odds and 1 on evens
-		return 2 - windowIndex % 2
+	private numberOfBlitzExpectedInWindow(windowIndex: number, windows: Array<HistoryEntry<EvaluatedAction[]>>): number {
+		// First window should always contain 2 blitz
+		if (windowIndex === 0) {
+			return 2
+		}
+
+		const blitzSkillsInLastWindow = this.countBlitzSkills(windows[windowIndex - 1])
+		if (blitzSkillsInLastWindow === 2) {
+			return 1
+		}
+		return 2
 	}
 }
 
@@ -152,7 +161,7 @@ export class RiddleOfFire extends BuffWindow {
 
 	@dependency globalCooldown!: GlobalCooldown
 
-	blitzSkills = [this.data.actions.ELIXIR_FIELD, this.data.actions.RISING_PHOENIX, this.data.actions.PHANTOM_RUSH]
+	blitzSkills = BLITZ_SKILLS.map(key => this.data.actions[key])
 
 	buffStatus = this.data.statuses.RIDDLE_OF_FIRE
 
@@ -170,7 +179,7 @@ export class RiddleOfFire extends BuffWindow {
 			severityTiers: TOTAL_GCD_AMOUNT,
 			suggestionWindowName: suggestionWindowName,
 			suggestionContent: <Trans id="mnk.rof.suggestions.gcd.content">Aim to hit {EXPECTED.GCDS} GCDs during
-				each <DataLink status="RIDDLE_OF_FIRE"/> window.</Trans>,
+				each <ActionLink action="RIDDLE_OF_FIRE"/> window.</Trans>,
 			adjustCount: window => {
 				// 6SS counts as 2 GCDs
 				return -this.numberOfSixSidedStarInWindow(window)

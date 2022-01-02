@@ -4,7 +4,7 @@ import React from 'react'
 export const changelog = [
 	{
 		date: new Date('2022-01-02'),
-		Changes: () => <>Migrated Riddle of Fire analyser to BuffWindow.</>,
+		Changes: () => <>Migrate Riddle of Fire module to BuffWindow.</>,
 		contributors: [CONTRIBUTORS.MALP],
 	},
 	{
