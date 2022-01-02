@@ -21,7 +21,7 @@ interface ImmortalSacrificeWindow {
 
 export class ImmortalSacrifice extends Analyser {
 
-	static override handle = 'immortalsacrifice'
+	static override handle = 'immortal-sacrifice'
 	static override title = t('rpr.immortal-sacrifice.title')`Immortal Sacrifice`
 	static override debug = false
 
