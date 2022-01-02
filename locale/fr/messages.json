@@ -838,6 +838,5 @@
   "whm.swiftcast.missed.suggestion.content": "Lancer un sort avec <0/> avant qu'il expire. Cela vous permet d'utiliser directement un sort avec un temps de lancement, tel que <1/> pour une résurrection rapide , ou <2/> pour weave.",
   "whm.thinair.messages.explanation": "",
   "whm.thinair.messages.no-casts": "",
-  "whm.thinair.rotation.gcd": "{numGcds, plural, one {# GCD} other {# GCDs}}",
   "whm.thinair.title": ""
 }

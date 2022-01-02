@@ -1,26 +1,36 @@
 import {t} from '@lingui/macro'
-import {Plural, Trans} from '@lingui/react'
+import {Trans} from '@lingui/react'
 import {ActionLink} from 'components/ui/DbLink'
 import Rotation from 'components/ui/Rotation'
-import {getDataBy} from 'data'
-import ACTIONS from 'data/ACTIONS'
-import STATUSES from 'data/STATUSES'
+import {Action} from 'data/ACTIONS'
 import {Event, Events} from 'event'
 import {Analyser} from 'parser/core/Analyser'
 import {filter} from 'parser/core/filter'
+import {dependency} from 'parser/core/Injectable'
+import {Data} from 'parser/core/modules/Data'
 import React, {Fragment, ReactNode} from 'react'
 import {Accordion} from 'semantic-ui-react'
 
 interface ThinAirRecord {
 	start: number,
-	end: number,
-	casts: number[],
+	end?: number,
+	casts: Array<Action['id']>,
 	mpsaved: number,
 }
+
+const USAGE = {
+	BAD: 'red',
+	OKAY: 'orange',
+	GOOD: 'green',
+}
+
+const MP_MARGIN = 900
 
 export class Thinair extends Analyser {
 	static override handle = 'thinair'
 	static override title = t('whm.thinair.title')`Thin Air`
+
+	@dependency private data!: Data
 
 	private active = false
 	private history: ThinAirRecord[] = []
@@ -29,7 +39,7 @@ export class Thinair extends Analyser {
 	override initialise() {
 		const thinairFilter = filter<Event>()
 			.source(this.parser.actor.id)
-			.status(STATUSES.THIN_AIR.id)
+			.status(this.data.statuses.THIN_AIR.id)
 
 		this.addEventHook(thinairFilter.type('statusApply'), this.onThinAirCast)
 		this.addEventHook(thinairFilter.type('statusRemove'), this.onThinAirRemove)
@@ -49,8 +59,8 @@ export class Thinair extends Analyser {
 		const actionid = ev.action
 
 		// Don't track autos
-		const action = getDataBy(ACTIONS, 'id', actionid)
-		if (!this.active || !action || action.autoAttack) {
+		const action = this.data.getAction(actionid)
+		if (!this.active || action == null || action.autoAttack) {
 			return
 		}
 
@@ -71,14 +81,13 @@ export class Thinair extends Analyser {
 		this.active = true
 		this.currentRecord = {
 			start: timestamp,
-			end: -1,
 			casts: [],
 			mpsaved: 0,
 		}
 
 		// Add thin air action as the 1st element for cosmetic reasons
 		// and keeping in style with astro's lightspeed module
-		this.currentRecord.casts.push(ACTIONS.THIN_AIR.id)
+		this.currentRecord.casts.push(this.data.actions.THIN_AIR.id)
 	}
 
 	private stopAndSave(timestamp: number) {
@@ -97,27 +106,35 @@ export class Thinair extends Analyser {
 		}
 	}
 
+	private getSavingsColor(amount: number) {
+		//Check how much MP was saved
+		if (amount < MP_MARGIN) {
+			return USAGE.BAD
+		}
+		if (amount === MP_MARGIN) {
+			return USAGE.OKAY
+		}
+		return USAGE.GOOD
+	}
+
 	override output(): ReactNode {
 		const casts = this.history.length
 		if (casts === 0) {
 			return <Fragment>
-				<p><span><Trans id="whm.thinair.messages.no-casts">No casts recorded for <ActionLink {...ACTIONS.THIN_AIR}/></Trans></span></p>
+				<p><span><Trans id="whm.thinair.messages.no-casts">No casts recorded for <ActionLink {...this.data.actions.THIN_AIR}/></Trans></span></p>
 			</Fragment>
 		}
 
 		const panels = this.history.map(record => {
-			const actions = record.casts.map(action => getDataBy(ACTIONS, 'id', action)).filter(x => !!x)
-			const gcds = actions.filter(action => action && action.onGcd)
-			const numGcds = gcds.length
-
 			return {
 				key: record.start,
 				title: {
-					content: <Fragment>
-						{this.parser.formatEpochTimestamp(record.start)}
-						<span> - </span>
-						<Trans id="whm.thinair.rotation.gcd"><Plural value={numGcds} one="# GCD" other="# GCDs" /></Trans>, {record.mpsaved} MP saved
-					</Fragment>,
+					content:
+						<span style={{color: this.getSavingsColor(record.mpsaved)}}>
+							{this.parser.formatEpochTimestamp(record.start)}
+							<span> - </span>
+							{record.mpsaved} MP saved
+						</span>,
 				},
 				content: {
 					content: <Rotation events={record.casts.map(x => ({action: x}))}/>,
@@ -134,7 +151,7 @@ export class Thinair extends Analyser {
 
 		return <Fragment>
 			<p><Trans id="whm.thinair.messages.explanation">
-				The main use of <ActionLink {...ACTIONS.THIN_AIR} /> should be to save MP on high-MP cost phases of the fight. Don't be afraid to hold it and lose a use over the fight as long as it covers MP-heavy portions of the fight such as usages of <ActionLink {...ACTIONS.MEDICA_II}/>, <ActionLink {...ACTIONS.CURE_III}/>, and <ActionLink {...ACTIONS.RAISE} />
+				The main use of <ActionLink {...this.data.actions.THIN_AIR} /> should be to save MP on high MP-cost spells. Don't be afraid to hold it and lose a use over the fight as long as it covers an MP-heavy spell such as usages of <ActionLink {...this.data.actions.MEDICA_II}/>, <ActionLink {...this.data.actions.CURE_III}/>, and <ActionLink {...this.data.actions.RAISE} />. Usages that did not save a considerable amount of MP are marked red.
 			</Trans></p>
 			{thinairDisplay}
 		</Fragment>
