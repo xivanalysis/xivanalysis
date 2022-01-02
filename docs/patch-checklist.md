@@ -12,3 +12,6 @@ Some patches will require more work and changes than others - to facilitate, the
 ## `X._0` Major patches
 
 ## `_.00` Expansions
+
+- Update the speed attribute constants in `src/utilities/speedStatMapper.ts`. These two constants, `SUB_ATTRIBUTE_MINIMUM` and `STAT_DIVISOR`, form a key part in calculations for converting speed attribute values into cast times and visa versa. The correct values can be found in the `ParamGrow` sheet in the game's data. <br/>
+Make sure to sanity check the function results, as the underlying algorithm may have changed. If it has, contact Allagan Studies for updated formulas.

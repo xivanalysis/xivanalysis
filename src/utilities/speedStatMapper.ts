@@ -1,9 +1,12 @@
 import {BASE_GCD} from 'data/CONSTANTS'
 
 /* eslint-disable @typescript-eslint/no-magic-numbers */
-export const SUB_ATTRIBUTE_MINIMUM = 380
 
-const STAT_DIVISOR = 3300
+// NOTE: The location of these constants (and indeed, the logic below), must be kept up to date in `docs/patch-checklist.md`.
+
+export const SUB_ATTRIBUTE_MINIMUM = 400
+
+const STAT_DIVISOR = 1900
 
 export function getSpeedStat(estimatedGcd: number): number {
 	return Math.floor(1/130 * STAT_DIVISOR * (1000 - (1000 * estimatedGcd) / BASE_GCD) + SUB_ATTRIBUTE_MINIMUM)
