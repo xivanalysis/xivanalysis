@@ -46,6 +46,7 @@ export const ASTROLOGIAN = new Meta({
 					<li> Added <DataLink action="MACROCOSMOS" /> suggestions based on either <DataLink action="MACROCOSMOS" showIcon={false} /> or <DataLink action="GRAVITY_II" /> usage. </li>
 					<li> Removed <DataLink action="HOROSCOPE" /> and <DataLink action="NEUTRAL_SECT" /> from healing oGCDs section as they supplement helios and aren't solely oGCDs. </li>
 					<li> Updated <DataLink action="HOROSCOPE" /> to include <DataLink action="NEUTRAL_SECT" /> as part of a <DataLink action="HELIOS" /> section as the two skills complement each other. </li>
+					<li> Updated wording for <DataLink action="UNDRAW" /> to remove reference to <DataLink action="MINOR_ARCANA" />. </li>
 				</ul>
 			</>,
 			contributors: [CONTRIBUTORS.OTOCEPHALY],
