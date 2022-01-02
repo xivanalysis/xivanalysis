@@ -1,19 +1,17 @@
 import {t} from '@lingui/macro'
 import {Trans, Plural} from '@lingui/react'
+import Color from 'color'
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
 import {ActionKey} from 'data/ACTIONS'
 import {StatusKey} from 'data/STATUSES'
 import {Event, Events} from 'event'
-import {Analyser} from 'parser/core/Analyser'
 import {filter} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
 import {Actors} from 'parser/core/modules/Actors'
 import BrokenLog from 'parser/core/modules/BrokenLog'
-import Checklist from 'parser/core/modules/Checklist'
 import {Cooldowns} from 'parser/core/modules/Cooldowns'
-import {Data} from 'parser/core/modules/Data'
-import {Death} from 'parser/core/modules/Death'
 import Downtime from 'parser/core/modules/Downtime'
+import {CounterGauge, Gauge as CoreGauge} from 'parser/core/modules/Gauge'
 import Suggestions, {TieredSuggestion, Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import {Timeline} from 'parser/core/modules/Timeline'
 import React, {Fragment} from 'react'
@@ -24,7 +22,6 @@ const DRAGON_DURATION_MILLIS = 30000
 const LOTD_BUFF_DELAY_MIN = 30000
 const LOTD_BUFF_DELAY_MAX = 60000
 
-const MAX_EYES = 2
 const EXPECTED_NASTRONDS_PER_WINDOW = 3
 
 type DrgTrackedBuffs = 'LANCE_CHARGE' | 'RIGHT_EYE' | 'BATTLE_LITANY'
@@ -55,19 +52,25 @@ interface LifeWindows {
 	history: LifeWindow[]
 }
 
+// gauge constants
+const MAX_EYES = 2
+const EYES_PER_CAST = 1
+const LOTD_COST = 2
+
+// this is like a light blue, similar to the color of mirage dive
+// eslint-disable-next-line @typescript-eslint/no-magic-numbers
+const EYE_COLOR = Color.rgb(61, 135, 255).fade(0.25).toString()
+
 // EW notes:
 // - looking at BuffWindow module to see if lotd tracking can be done through that. Not planning on doing that
 //   port until basic EW support is in place
-export default class BloodOfTheDragon extends Analyser {
+export default class BloodOfTheDragon extends CoreGauge {
 	static override handle = 'bloodOfTheDragon'
 	static override title = t('drg.blood.title')`Life of the Dragon`
 
 	@dependency private actors!: Actors
 	@dependency private brokenLog!: BrokenLog
-	@dependency private checklist!: Checklist
 	@dependency private cooldowns!: Cooldowns
-	@dependency private data!: Data
-	@dependency private death!: Death
 	@dependency private downtime!: Downtime
 	@dependency private suggestions!: Suggestions
 	@dependency private timeline!: Timeline
@@ -83,18 +86,28 @@ export default class BloodOfTheDragon extends Analyser {
 		history: [],
 	}
 	private lastEventTime = this.parser.pull.timestamp
-	private eyes = 0
-	private lostEyes = 0
+
+	private eyeGauge = this.add(new CounterGauge({
+		maximum: MAX_EYES,
+		graph: {
+			label: <Trans id="drg.gauge.resource.eyes">First Brood's Gaze</Trans>,
+			color: EYE_COLOR,
+		},
+		correctHistory: true,	// correct for carryover in alliance raids
+		deterministic: true,
+	}))
 
 	override initialise() {
+		super.initialise()
+
 		const playerFilter = filter<Event>().source(this.parser.actor.id)
 
 		this.addEventHook(playerFilter.type('action').action(this.data.actions.MIRAGE_DIVE.id), this.onMirageDiveCast)
 		this.addEventHook(playerFilter.type('action').action(this.data.actions.GEIRSKOGUL.id), this.onGeirskogulCast)
 		this.addEventHook(playerFilter.type('action').action(this.data.actions.NASTROND.id), this.onNastrondCast)
 		this.addEventHook(playerFilter.type('action').action(this.data.actions.STARDIVER.id), this.onStardiverCast)
-		this.addEventHook(filter<Event>().actor(this.parser.actor.id).type('death'), this.onDeath)
-		this.addEventHook(filter<Event>().actor(this.parser.actor.id).type('raise'), this.onRaise)
+		this.addEventHook(filter<Event>().actor(this.parser.actor.id).type('death'), this.onDeathLotd)
+		this.addEventHook(filter<Event>().actor(this.parser.actor.id).type('raise'), this.onRaiseLotd)
 		this.addEventHook('complete', this.onComplete)
 
 	}
@@ -158,17 +171,13 @@ export default class BloodOfTheDragon extends Analyser {
 		this.updateGauge()
 
 		// You can accrue eyes in LotD too
-		this.eyes++
-		if (this.eyes > MAX_EYES) {
-			this.lostEyes += this.eyes - MAX_EYES
-			this.eyes = MAX_EYES
-		}
+		this.eyeGauge.generate(EYES_PER_CAST)
 	}
 
 	onGeirskogulCast() {
 		this.updateGauge()
 
-		if (this.eyes === MAX_EYES) {
+		if (this.eyeGauge.value === MAX_EYES) {
 			// LotD tiiiiiime~
 			this.lifeDuration = DRAGON_DURATION_MILLIS
 			this.lifeWindows.current = {
@@ -193,7 +202,7 @@ export default class BloodOfTheDragon extends Analyser {
 				showNoDelayNote: false,
 				missedSdBuff: false,
 			}
-			this.eyes = 0
+			this.eyeGauge.spend(LOTD_COST)
 		}
 	}
 
@@ -245,17 +254,14 @@ export default class BloodOfTheDragon extends Analyser {
 		}
 	}
 
-	onDeath() {
+	onDeathLotd() {
 		// RIP
 		this.updateGauge()
 		this.lifeDuration = 0
 		this.finishLifeWindow()
-
-		// TODO: check if you lose eyes on death
-		this.eyes = 0
 	}
 
-	onRaise(event: Event) {
+	onRaiseLotd(event: Event) {
 		// So floor time doesn't count against BotD uptime
 		this.lastEventTime = event.timestamp
 	}
@@ -331,13 +337,13 @@ export default class BloodOfTheDragon extends Analyser {
 			content: <Trans id="drg.blood.suggestions.eyes.content">
 				Avoid using <ActionLink {...this.data.actions.MIRAGE_DIVE}/> when you already have {MAX_EYES} Eyes. Wasting Eyes will delay your Life of the Dragon windows and potentially cost you a lot of DPS.
 			</Trans>,
-			value: this.lostEyes,
+			value: this.eyeGauge.overCap,
 			tiers: {
 				1: SEVERITY.MEDIUM,
 				2: SEVERITY.MAJOR,
 			},
 			why: <Trans id="drg.blood.suggestions.eyes.why">
-				You used Mirage Dive <Plural value={this.lostEyes} one="# time" other="# times"/> when you already had {MAX_EYES} Eyes.
+				You used Mirage Dive <Plural value={this.eyeGauge.overCap} one="# time" other="# times"/> when you already had {MAX_EYES} Eyes.
 			</Trans>,
 		}))
 
