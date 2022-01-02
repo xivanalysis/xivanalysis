@@ -53,9 +53,9 @@ export class Gauge extends CoreGauge {
 
 	private onComplete() {
 		this.suggestions.add(new Suggestion({
-			icon: this.data.actions.HOLY_SHELTRON.icon,
+			icon: this.data.actions.SHELTRON.icon,
 			content: <Trans id="pld.gauge.waste.suggestion.content">
-					Using <DataLink action="HOLY_SHELTRON"/> on yourself or <DataLink action="INTERVENTION"/> on a tank partner in case you're off tanking could reduce incoming damage from abilities or auto-attacks.
+					Using <DataLink action="SHELTRON"/> on yourself or <DataLink action="INTERVENTION"/> on a tank partner in case you're off tanking could reduce incoming damage from abilities or auto-attacks.
 			</Trans>,
 			why: <Trans id="pld.gauge.waste.suggestion.why">
 				A total of {this.oathGauge.overCap} gauge was lost due to exceeding the cap.
