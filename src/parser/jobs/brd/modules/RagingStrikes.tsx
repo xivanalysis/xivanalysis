@@ -1,8 +1,8 @@
 import {t} from '@lingui/macro'
 import {Plural, Trans} from '@lingui/react'
-import {DataLink} from 'components/ui/DbLink'
+import {ActionLink, DataLink} from 'components/ui/DbLink'
 import {RotationTargetOutcome} from 'components/ui/RotationTable'
-import {ActionKey} from 'data/ACTIONS'
+import {Action, ActionKey} from 'data/ACTIONS'
 import {Event, Events} from 'event'
 import _ from 'lodash'
 import {filter} from 'parser/core/filter'
@@ -14,7 +14,8 @@ import {
 	ExpectedActionsEvaluator,
 	ExpectedGcdCountEvaluator,
 	TrackedAction,
-	TrackedActionsOptions, WindowEvaluator,
+	TrackedActionsOptions,
+	WindowEvaluator,
 } from 'parser/core/modules/ActionWindow'
 import {HistoryEntry} from 'parser/core/modules/ActionWindow/History'
 import {Actors} from 'parser/core/modules/Actors'
@@ -76,25 +77,33 @@ class BarrageEvaluator extends ExpectedActionsEvaluator {
 	}
 }
 
+interface ActionIdKey {
+	id: number
+	key: ActionKey
+}
+
 interface BuffEvaluatorOptions {
-	actions: ActionKey[]
-	predicate: (action: ActionKey, bestBeforeGCD: number, window: HistoryEntry<EvaluatedAction[]>) => boolean
+	actions: Action[]
+	gcdThreshold: number
 
 	suggestionIcon: string
+	suggestionContent: ReactNode
 	severityTiers: SeverityTiers
 }
 
 class BuffEvaluator implements WindowEvaluator, BuffEvaluatorOptions {
-	actions: ActionKey[]
-	predicate: (action: ActionKey, bestBeforeGCD: number, window: HistoryEntry<EvaluatedAction[]>) => boolean
+	actions: Action[]
+	gcdThreshold: number
 
 	suggestionIcon: string
+	suggestionContent: ReactNode
 	suggestionWhy: ReactNode
 	severityTiers: SeverityTiers
 
 	constructor(opt: BuffEvaluatorOptions) {
 		this.actions = opt.actions
-		this.predicate = opt.predicate
+		this.gcdThreshold = opt.gcdThreshold
+		this.suggestionContent = opt.suggestionContent
 		this.suggestionIcon = opt.suggestionIcon
 		this.severityTiers = opt.severityTiers
 	}
@@ -102,20 +111,20 @@ class BuffEvaluator implements WindowEvaluator, BuffEvaluatorOptions {
 	output(windows: Array<HistoryEntry<EvaluatedAction[]>>): EvaluationOutput[] {
 		return this.actions.map(it => {
 			const header = {
-				header: <Trans id="brd.rs.rotation-table.header.on-time"><DataLink showName={false} action={it} /> On Time?</Trans>,
-				accessor: String(it),
+				header: <Trans id="brd.rs.rotation-table.header.on-time"><ActionLink showName={false} {...it} /> On Time?</Trans>,
+				accessor: it.name,
 			}
 
 			return {
 				format: 'notes',
 				header: header,
-				rows: windows.map(window => this.generateNotes(it, window)),
+				rows: windows.map(window => this.generateNotes(it.id, window)),
 			}
 		})
 	}
 
-	generateNotes(action: ActionKey, window: HistoryEntry<EvaluatedAction[]>) {
-		const usedInTime = this.predicate(action, BUFF_BEST_USED_BEFORE_GCD, window)
+	generateNotes(actionId: number, window: HistoryEntry<EvaluatedAction[]>) {
+		const usedInTime = this.wasActionUsedInTime(actionId, this.gcdThreshold, window)
 		return <Icon
 			name={usedInTime ? 'checkmark' : 'remove'}
 			className={usedInTime ? 'text-success' : 'text-error'}
@@ -125,21 +134,44 @@ class BuffEvaluator implements WindowEvaluator, BuffEvaluatorOptions {
 	suggest(windows: Array<HistoryEntry<EvaluatedAction[]>>) {
 		const wrongUsages = this.actions.map(action =>
 			// For each action, counts the amount of times skill was not used in time in every window
-			windows.map(window => Number(!this.predicate(action, BUFF_BEST_USED_BEFORE_GCD, window)))
+			windows.map(window => Number(!this.wasActionUsedInTime(action.id, this.gcdThreshold, window)))
 				.reduce((acc, it) => acc + it, 0)
 		).reduce((acc, it) => acc + it, 0)
 
 		return new TieredSuggestion({
 			icon: this.suggestionIcon,
-			content: <Trans id="brd.rs.suggestions.buff-evaluator.content">
-				Using <DataLink action="RADIANT_FINALE" /> and <DataLink action="BATTLE_VOICE" /> within the first two GCDs of <DataLink action="RAGING_STRIKES" /> windows allows you to better align their duration and maximize the multiplicative bonuses these statuses give you.
-			</Trans>,
+			content: this.suggestionContent,
 			tiers: this.severityTiers,
 			value: wrongUsages,
 			why: <Trans id="brd.rs.suggestions.buff-evaluator.why">
-				<Plural value={wrongUsages} one="# cast of Battle Voice or Radiant Finale was" other="# casts of Battle Voice or Radiant Finale were"/> used later than optimal, or not at all.
+				<Plural value={wrongUsages} one="# cast of recommended actions was" other="# casts of recommended actions were"/> used later than optimal, or not at all.
 			</Trans>,
 		})
+	}
+
+	/**
+	 * Checks if given {actionId} was used before GCD #{gcdThreshold}
+	 * @param actionId
+	 * @param gcdThreshold
+	 * @param window
+	 */
+	private wasActionUsedInTime = (actionId: number, gcdThreshold: number, window: HistoryEntry<EvaluatedAction[]>): boolean => {
+		const buffAction = _.first(window.data.filter(it => it.action.id === actionId))
+
+		// Buff was not used, thus it was not in time
+		if (buffAction === undefined) { return false }
+
+		const gcdThresholdAction = _.last(
+			window.data
+				.filter(it => it.action.onGcd)
+				.slice(0, gcdThreshold)
+		)
+
+		// There's no limiting GCD in the window, so can only assume it was used in time
+		if (gcdThresholdAction === undefined) { return true }
+
+		// Used in time if it was used before specified GCD
+		return buffAction.timestamp < gcdThresholdAction.timestamp
 	}
 }
 
@@ -212,8 +244,13 @@ export class RagingStrikes extends BuffWindow {
 		}))
 
 		this.addEvaluator(new BuffEvaluator({
-			actions: ['BATTLE_VOICE', 'RADIANT_FINALE'],
-			predicate: this.wasActionUsedInTime,
+			actions: [this.data.actions.BATTLE_VOICE,
+				this.data.actions.RADIANT_FINALE,
+			],
+			gcdThreshold: BUFF_BEST_USED_BEFORE_GCD,
+			suggestionContent: <Trans id="brd.rs.suggestions.buff-evaluator.content">
+				Using <DataLink action="RADIANT_FINALE" /> and <DataLink action="BATTLE_VOICE" /> within the first two GCDs of <DataLink action="RAGING_STRIKES" /> windows allows you to better align their duration and maximize the multiplicative bonuses these statuses give you.
+			</Trans>,
 			suggestionIcon: this.data.actions.RADIANT_FINALE.icon,
 			severityTiers: {
 				1: SEVERITY.MINOR,
@@ -308,24 +345,5 @@ export class RagingStrikes extends BuffWindow {
 		// Check to make sure at least one GCD happened before the status expired
 		const firstGcd = gcdTimestamps[0]
 		return this.barrageRemoves.some(timestamp => firstGcd <= timestamp && timestamp <= (window.end ?? window.start))
-	}
-
-	private wasActionUsedInTime = (action: ActionKey, bestBeforeGCD: number, window: HistoryEntry<EvaluatedAction[]>): boolean => {
-		const buffAction = _.first(window.data.filter(it => it.action.id === this.data.actions[action].id))
-
-		// Buff was not used, thus it was not in time
-		if (buffAction === undefined) { return false }
-
-		const gcdThreshold = _.last(
-			window.data
-				.filter(it => it.action.onGcd)
-				.slice(0, bestBeforeGCD)
-		)
-
-		// There's no limiting GCD in the window, so can only assume it was used in time
-		if (gcdThreshold === undefined) { return true }
-
-		// Used in time if it was used before specified GCD
-		return buffAction.timestamp < gcdThreshold.timestamp
 	}
 }

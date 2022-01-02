@@ -24,7 +24,7 @@ export const BARD = new Meta({
 	],
 	changelog: [
 		{
-			date: new Date('2021-12-27'),
+			date: new Date('2022-01-01'),
 			Changes: () => <>Added Radiant Finale and Battle Voice tracker in Raging Strikes module, as well as suggestion to use them in a timely manner.</>,
 			contributors: [CONTRIBUTORS.YUMIYA],
 		},

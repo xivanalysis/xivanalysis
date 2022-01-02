@@ -161,7 +161,7 @@
   "brd.procs.suggestions.overwritten.content": "Avoid using actions that grant <0/> when you could use <1/> instead.",
   "brd.rs.rotation-table.header.on-time": "<0/> On Time?",
   "brd.rs.suggestions.buff-evaluator.content": "Using <0/> and <1/> within the first two GCDs of <2/> windows allows you to better align their duration and maximize the multiplicative bonuses these statuses give you.",
-  "brd.rs.suggestions.buff-evaluator.why": "{wrongUsages, plural, one {# cast of Battle Voice or Radiant Finale was} other {# casts of Battle Voice or Radiant Finale were}} used later than optimal, or not at all.",
+  "brd.rs.suggestions.buff-evaluator.why": "{wrongUsages, plural, one {# cast of recommended actions was} other {# casts of recommended actions were}} used later than optimal, or not at all.",
   "brd.rs.suggestions.missedgcd.content": "Try to land 8 GCDs (9 GCDs with <0/>) during every <1/> window.",
   "brd.rs.suggestions.trackedactions.content": "One use of <0/> and one use of <1/> should occur during every <2/> window.",
   "brd.rs.title": "Raging Strikes",
