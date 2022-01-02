@@ -8,7 +8,7 @@ import CrownPlay from './CrownPlay'
 import {Divination} from './Divination'
 import Draw from './Draw'
 import {EarthlyStar} from './EarthlyStar'
-import {HeliosSupport} from './HeliosSupport'
+import {Helios} from './Helios'
 import {Lightspeed} from './Lightspeed'
 import {LucidDreaming} from './LucidDreaming'
 import {Macrocosmos} from './Macrocosmos'
@@ -29,7 +29,7 @@ export default [
 	CrownPlay,
 	EarthlyStar,
 	oGCDs,
-	HeliosSupport,
+	Helios,
 	Interrupts,
 	Lightspeed,
 	LucidDreaming,

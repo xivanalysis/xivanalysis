@@ -21,7 +21,7 @@ const SEVERITIES = {
 	},
 }
 
-export class HeliosSupport extends Analyser {
+export class Helios extends Analyser {
 	static override handle = 'horoscope'
 	static override title = t('ast.horoscope.title')`Horoscope`
 
