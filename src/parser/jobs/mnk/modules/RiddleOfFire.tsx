@@ -109,9 +109,10 @@ class BrotherhoodEvaluator implements WindowEvaluator {
 			icon: this.brotherhood.icon,
 			tiers: MISSED_BROTHERHOOD_SEVERITY,
 			value: missedBrotherhoodUsages,
-			content: <Trans id="mnk.rof.suggestions.brotherhood.content">Missed <ActionLink action="BROTHERHOOD"/>
-				usage during <ActionLink action="RIDDLE_OF_FIRE"/>
-				<Plural value={missedBrotherhoodUsages} one="# time" other="# times"/>.
+			content: <Trans id="mnk.rof.suggestions.brotherhood.content">Missed {missedBrotherhoodUsages} <ActionLink
+				action="BROTHERHOOD"/> <Plural
+				value={missedBrotherhoodUsages} one="usage" other="usages"/> in <ActionLink
+				action="RIDDLE_OF_FIRE"/> window.
 			</Trans>,
 			why: <Trans id="mnk.rof.suggestions.brotherhood.why"><ActionLink
 				action="BROTHERHOOD"/> has a shorter duration than <ActionLink action="RIDDLE_OF_FIRE"/>.</Trans>,
