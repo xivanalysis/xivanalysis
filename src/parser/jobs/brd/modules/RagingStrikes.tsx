@@ -77,11 +77,6 @@ class BarrageEvaluator extends ExpectedActionsEvaluator {
 	}
 }
 
-interface ActionIdKey {
-	id: number
-	key: ActionKey
-}
-
 interface BuffEvaluatorOptions {
 	actions: Action[]
 	gcdThreshold: number
@@ -286,7 +281,7 @@ export class RagingStrikes extends BuffWindow {
 		// Check if muse was up for at least 3 GCDs in this buffWindow
 		const museOverlap = this.museHistory.some(muse => (
 			window.data.filter(event => this.data.getAction(event.action.id)?.onGcd &&
-					event.timestamp > muse.start && (!muse.end || event.timestamp < muse.end))
+				event.timestamp > muse.start && (!muse.end || event.timestamp < muse.end))
 				.length >= MIN_MUSE_GCDS
 		))
 
