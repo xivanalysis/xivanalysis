@@ -19,6 +19,11 @@ export const DRAGOON = new Meta({
 	],
 	changelog: [
 		{
+			date: new Date('2022-01-01'),
+			Changes: () => <>Corrected a data issue where a pre-pull use of Coerthan Torment was being synthesized and displayed on the Timeline.</>,
+			contributors: [CONTRIBUTORS.FALINDRITH],
+		},
+		{
 			date: new Date('2021-12-27'),
 			Changes: () => <>Fixed issues with Battle Litany module incorrectly opening and closing windows due to pets mirroring statuses.</>,
 			contributors: [CONTRIBUTORS.FALINDRITH],
