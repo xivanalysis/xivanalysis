@@ -1,3 +1,4 @@
 export const DISPLAY_ORDER = {
 	INTERRUPTS: 20,
+	HARVEST_MOON: 15,
 }
