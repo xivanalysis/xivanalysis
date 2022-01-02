@@ -201,7 +201,27 @@ Array [
 
 exports[`Event adapter individual events adapts checksummismatch 1`] = `Array []`;
 
-exports[`Event adapter individual events adapts combatantinfo 1`] = `Array []`;
+exports[`Event adapter individual events adapts combatantinfo 1`] = `
+Array [
+  Object {
+    "actor": "15",
+    "attributes": Array [
+      Object {
+        "attribute": 0,
+        "estimated": false,
+        "value": 675,
+      },
+      Object {
+        "attribute": 1,
+        "estimated": false,
+        "value": 400,
+      },
+    ],
+    "timestamp": 1600002865189,
+    "type": "actorUpdate",
+  },
+]
+`;
 
 exports[`Event adapter individual events adapts damage 1`] = `
 Array [
