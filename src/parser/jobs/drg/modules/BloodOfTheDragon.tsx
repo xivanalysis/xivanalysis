@@ -22,6 +22,9 @@ const DRAGON_DURATION_MILLIS = 30000
 const LOTD_BUFF_DELAY_MIN = 30000
 const LOTD_BUFF_DELAY_MAX = 60000
 
+const LOTD_SHOULD_RUSH_THRESHOLD = 5000		// two GCDs
+const LOTD_LATE_WINDOW_THRESHOLD = 10000	// Nastrond CD
+
 const EXPECTED_NASTRONDS_PER_WINDOW = 3
 
 type DrgTrackedBuffs = 'LANCE_CHARGE' | 'RIGHT_EYE' | 'BATTLE_LITANY'
@@ -352,8 +355,8 @@ export default class BloodOfTheDragon extends CoreGauge {
 				// if the amount of time left in the fight would've allowed at least one nastrond, we should've rushed
 				const remaining = this.parser.pull.duration - (this.lastMdTime - this.parser.pull.timestamp)
 
-				// todo: remove magic number, should have room for two gcds at least, give a little buffer
-				if (remaining > 5000) {
+				// if we had room for like two GCDs we could've fit at least one additional nastrond (stonks)
+				if (remaining > LOTD_SHOULD_RUSH_THRESHOLD) {
 					return END_OF_FIGHT_ERROR.SHOULD_HAVE_RUSHED
 				}
 			}
@@ -362,6 +365,7 @@ export default class BloodOfTheDragon extends CoreGauge {
 		// second condition:
 		// - we actually did open a window but it got severely truncated by the fight
 		// in order for this to be possible, we need to have had two eyes when mirage dive was last cast
+		// see this log for a rather extreme example of this: https://www.fflogs.com/reports/B4Q16j3WG9DFygNR#fight=13&source=124
 		if (this.eyeGauge.getValueAt(this.lastMdTime) === MAX_EYES) {
 			const lastWindow = this.lifeWindows.history[this.lifeWindows.history.length - 1]
 
@@ -369,7 +373,8 @@ export default class BloodOfTheDragon extends CoreGauge {
 			const remainingTimeForLife = this.parser.pull.duration - (this.lastMdTime - this.parser.pull.timestamp)
 
 			// if we had a significant amount of time left we could've been in life instead
-			if (remainingTimeForLife - lastWindow.duration > 5000) {
+			// this should probably be at least 10 seconds, since that's the nastrond CD, potentially indicating a lost cast
+			if (remainingTimeForLife - lastWindow.duration > LOTD_LATE_WINDOW_THRESHOLD) {
 				// we had time to do this
 				return END_OF_FIGHT_ERROR.OPENED_TOO_LATE
 			}
