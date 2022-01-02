@@ -13,7 +13,7 @@ export default [
 	Combos,
 	CooldownDowntime,
 	DeathsDesign,
+	HarvestMoon,
 	Tincture,
 	Weaving,
-	HarvestMoon,
 ]
