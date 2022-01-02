@@ -19,6 +19,11 @@ export const DRAGOON = new Meta({
 	],
 	changelog: [
 		{
+			date: new Date('2022-01-02'),
+			Changes: () => <>Updated Life of the Dragon. First Brood's Gaze gauge now displays on the Timeline. Added suggestions for errors related to unused or late Life of the Dragon windows at the end of a fight.</>,
+			contributors: [CONTRIBUTORS.FALINDRITH],
+		},
+		{
 			date: new Date('2021-12-27'),
 			Changes: () => <>Fixed issues with Battle Litany module incorrectly opening and closing windows due to pets mirroring statuses.</>,
 			contributors: [CONTRIBUTORS.FALINDRITH],
