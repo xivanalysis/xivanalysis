@@ -68,6 +68,13 @@ const CONTRIBUTORS = ensureRecord<Contributor>()({
 			JOBS.MACHINIST, JOBS.BARD,
 		],
 	},
+	INNI: {
+		name: 'Inni',
+		avatar: require('./avatar/Inni.png'),
+		jobs: [
+			JOBS.WHITE_MAGE,
+		],
+	},
 	OTOCEPHALY: {
 		name: 'Otocephaly',
 		avatar: require('./avatar/Otocephaly.png'),
@@ -118,6 +125,13 @@ const CONTRIBUTORS = ensureRecord<Contributor>()({
 		avatar: require('./avatar/Eden.png'),
 		jobs: [
 			JOBS.GUNBREAKER,
+		],
+	},
+	FURST: {
+		name: 'Fürst',
+		avatar: require('./avatar/Furst.png'),
+		jobs: [
+			JOBS.BLACK_MAGE,
 		],
 	},
 	YUMIYA: {

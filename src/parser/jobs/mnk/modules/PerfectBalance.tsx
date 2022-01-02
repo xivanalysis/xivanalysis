@@ -11,7 +11,7 @@ import {Data} from 'parser/core/modules/Data'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
 import {FORM_SKILLS} from './constants'
-import DISPLAY_ORDER from './DISPLAY_ORDER'
+import {DISPLAY_ORDER} from './DISPLAY_ORDER'
 import {fillActions} from './utilities'
 
 const SUGGESTION_TIERS = {
