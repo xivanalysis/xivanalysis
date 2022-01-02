@@ -820,6 +820,7 @@
   "whm.ogcds.suggestions.why": "Ungefähr {missed} Casts von {maxUses} möglichen Anwendungen verpasst.",
   "whm.overheal.assize.name": "Assise",
   "whm.overheal.hot.name": "",
+  "whm.overheal.liturgyofthebell.name": "",
   "whm.swiftcast.missed.suggestion.content": "Wirke Zauber mit <0/> bevor es abläuft. Dadurch kannst du Angriffe mit Anwendungszeit sofort benutzen, wie beispielsweise <1/> für schnelle Wiederbelebungen oder <2/> zwischen Angriffen mit globaler Abklingzeit (zum weaven).",
   "whm.thinair.messages.explanation": "",
   "whm.thinair.messages.no-casts": "",

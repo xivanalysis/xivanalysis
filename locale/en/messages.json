@@ -820,6 +820,7 @@
   "whm.ogcds.suggestions.why": "You missed about {missed} out of a possible {maxUses} casts.",
   "whm.overheal.assize.name": "Assize",
   "whm.overheal.hot.name": "Healing Over Time",
+  "whm.overheal.liturgyofthebell.name": "Liturgy of the bell",
   "whm.swiftcast.missed.suggestion.content": "Cast a spell with <0/> before it expires. This allows you to instantly cast spells with a cast times, such as <1/> for a quick revive, or <2/> for weaving.",
   "whm.thinair.messages.explanation": "The main use of <0/> should be to save MP on high MP-cost spells. Don't be afraid to hold it and lose a use over the fight as long as it covers an MP-heavy spell such as usages of <1/>, <2/>, and <3/>. Usages that did not save a considerable amount of MP are marked red.",
   "whm.thinair.messages.no-casts": "No casts recorded for <0/>",
