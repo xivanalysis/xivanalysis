@@ -23,7 +23,7 @@ export class Overheal extends CoreOverheal {
 			trackedHealIds: [this.data.actions.ASSIZE.id],
 		},
 		{
-			name: <Trans id="whm.overheal.LiturgyBell.name">Liturgy of the bell</Trans>,
+			name: <Trans id="whm.overheal.LiturgyBell.name">Liturgy of the Bell</Trans>,
 			color: SuggestedColors[3],
 			trackedHealIds: [
 				this.data.actions.LITURGY_OF_THE_BELL_ON_DAMAGE.id,
