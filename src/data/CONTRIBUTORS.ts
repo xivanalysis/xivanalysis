@@ -17,6 +17,15 @@ const CONTRIBUTORS = ensureRecord<Contributor>()({
 	// 		JOBS.SOME_JOB,
 	// 	],
 	// },
+	ACKWELL: {
+		name: 'ackwell',
+		avatar: 'https://secure.gravatar.com/avatar/383e78034167fdfe8303231a6dad33e5?s=100',
+		jobs: [
+			JOBS.SUMMONER,
+			JOBS.RED_MAGE,
+			JOBS.GUNBREAKER,
+		],
+	},
 	AKAIRYU: {
 		name: 'Akairyu',
 		avatar: require('./avatar/Akairyu.png'),
