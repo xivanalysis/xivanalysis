@@ -4,16 +4,12 @@ import React from 'react'
 export const changelog = [
 	{
 		date: new Date('2022-01-01'),
-		Changes: () => <>
-			Fix bugged Inner Release rushed window handling in suggestions.
-		</>,
+		Changes: () => <>Fix GL speed modifier bug.</>,
 		contributors: [CONTRIBUTORS.AY],
 	},
 	{
-		date: new Date('2021-12-03'),
-		Changes: () => <>
-			Add support for Endwalker.
-		</>,
+		date: new Date('2021-12-19'),
+		Changes: () => <>Update basic buffs and cooldown tracking, and add new actions.</>,
 		contributors: [CONTRIBUTORS.AY],
 	},
 ]
