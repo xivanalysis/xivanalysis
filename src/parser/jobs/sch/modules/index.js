@@ -2,7 +2,7 @@ import DoTs from './DoTs'
 import Interrupts from './Interrupts'
 import Overheal from './Overheal'
 import Pets from './Pets'
-import ScholarCooldownDowntime from './ScholarCooldownDowntime'
+import CooldownDowntime from './CooldownDowntime'
 import Swiftcast from './Swiftcast'
 import Tincture from './Tincture'
 import Weaving from './Weaving'
@@ -12,7 +12,7 @@ export default [
 	Interrupts,
 	Overheal,
 	Pets,
-	ScholarCooldownDowntime,
+	CooldownDowntime,
 	Swiftcast,
 	Tincture,
 	Weaving,

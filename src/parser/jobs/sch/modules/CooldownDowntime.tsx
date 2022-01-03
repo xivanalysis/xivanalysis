@@ -1,9 +1,9 @@
 import {Trans} from '@lingui/react'
 import {ActionLink} from 'components/ui/DbLink'
-import {CooldownDowntime} from 'parser/core/modules/CooldownDowntime'
+import {CooldownDowntime as CooldownDowntimeCore} from 'parser/core/modules/CooldownDowntime'
 import React, {Fragment} from 'react'
 
-export default class ScholarCooldownDowntime extends CooldownDowntime {
+export default class CooldownDowntime extends CooldownDowntimeCore {
 	override trackedCds = [
 		{
 			cooldowns: [this.data.actions.CHAIN_STRATAGEM],
