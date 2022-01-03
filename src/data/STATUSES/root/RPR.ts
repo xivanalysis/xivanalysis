@@ -32,7 +32,7 @@ export const RPR = ensureStatuses({
 	ENHANCED_CROSS_REAPING: {
 		id: 2591,
 		name: 'Enhanced Cross Reaping',
-		icon: 'https://xivapi.com/i/012000/12930.png',
+		icon: 'https://xivapi.com/i/012000/012930.png',
 		duration: 30000,
 	},
 
@@ -72,7 +72,7 @@ export const RPR = ensureStatuses({
 	},
 
 	BLOODSOWN_CIRCLE: {
-		id: 2601,
+		id: 2972,
 		name: 'Bloodsown Circle',
 		icon: 'https://xivapi.com/i/012000/012938.png',
 		duration: 6000,
