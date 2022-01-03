@@ -1,7 +1,7 @@
 import {JOBS} from 'data/JOBS'
 import {Attribute} from 'event'
 import {Actor} from 'report'
-import {getEstimatedTime} from 'utilities/speedStatMapper'
+import {getSpeedStatAdjustedDuration} from 'utilities/speedStatMapper'
 import {Analyser} from '../Analyser'
 import {dependency} from '../Injectable'
 import {Actors} from './Actors'
@@ -15,8 +15,8 @@ export class SpeedAdjustments extends Analyser {
 
 	getAdjustedDuration({
 		duration,
-		attribute = JOBS[this.parser.actor.job].speedStat,
-		actor = this.parser.actor.id,
+		attribute: maybeAttribute,
+		actor: actorId = this.parser.actor.id,
 	}: {
 		duration: number,
 		attribute?: SpeedAttribute,
@@ -24,7 +24,8 @@ export class SpeedAdjustments extends Analyser {
 	}) {
 		// TODO: Pull the full algorithm in here, and track actions that adjust speeds
 		//       to plug into it.
-		const attrValue = this.actors.get(actor).attributes[attribute]
-		return getEstimatedTime(attrValue.value, duration)
+		const actor = this.actors.get(actorId)
+		const attribute = actor.attributes[maybeAttribute ?? JOBS[actor.job].speedStat]
+		return getSpeedStatAdjustedDuration(attribute.value, duration)
 	}
 }

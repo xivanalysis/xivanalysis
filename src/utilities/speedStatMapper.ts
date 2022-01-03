@@ -12,7 +12,7 @@ export function getSpeedStat(estimatedGcd: number): number {
 	return Math.floor(1/130 * STAT_DIVISOR * (1000 - (1000 * estimatedGcd) / BASE_GCD) + SUB_ATTRIBUTE_MINIMUM)
 }
 
-export function getEstimatedTime(speedStat: number, baseDuration: number): number {
+export function getSpeedStatAdjustedDuration(speedStat: number, baseDuration: number): number {
 	const {floor} = Math
 
 	// This formula is effectively 1:1 with calculations found in both Allagan
