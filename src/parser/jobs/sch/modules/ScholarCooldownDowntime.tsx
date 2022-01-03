@@ -1,7 +1,7 @@
 import {Trans} from '@lingui/react'
 import {ActionLink} from 'components/ui/DbLink'
 import {CooldownDowntime} from 'parser/core/modules/CooldownDowntime'
-import React, { Fragment } from 'react'
+import React, {Fragment} from 'react'
 
 export default class ScholarCooldownDowntime extends CooldownDowntime {
 	override trackedCds = [
