@@ -2,6 +2,18 @@ import {Attribute} from 'event'
 import {ensureActions} from '../type'
 
 export const WHM = ensureActions({
+	LITURGY_OF_THE_BELL_ON_EXPIRY: {
+		id: 25864,
+		name: 'Liturgy of the Bell',
+		icon: 'https://xivapi.com/i/002000/002649.png',
+	},
+
+	LITURGY_OF_THE_BELL_ON_DAMAGE: {
+		id: 25863,
+		name: 'Liturgy of the Bell',
+		icon: 'https://xivapi.com/i/002000/002649.png',
+	},
+
 	LITURGY_OF_THE_BELL: {
 		id: 25862,
 		name: 'Liturgy of the Bell',
