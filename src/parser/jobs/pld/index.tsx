@@ -17,10 +17,10 @@ export const PALADIN = new Meta({
 			</p>
 		</Trans>
 	</>,
-	// supportedPatches: {
-	// 	from: '6.0',
-	// 	to: '6.0',
-	// },
+	supportedPatches: {
+		from: '6.0',
+		to: '6.0',
+	},
 	contributors: [
 		// {user: CONTRIBUTORS.YOU, role: ROLES.DEVELOPER},
 		{user: CONTRIBUTORS.ARIA, role: ROLES.MAINTAINER},
