@@ -3,6 +3,11 @@ import React from 'react'
 
 export const changelog = [
 	{
+		date: new Date('2022-01-03'),
+		Changes: () => <>Update Twin Snakes buff description, and adjust timeline order.</>,
+		contributors: [CONTRIBUTORS.AY],
+	},
+	{
 		date: new Date('2022-01-01'),
 		Changes: () => <>Fix GL speed modifier bug.</>,
 		contributors: [CONTRIBUTORS.AY],

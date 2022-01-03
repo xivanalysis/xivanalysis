@@ -536,7 +536,7 @@
   "mnk.steppies.suggestions.bootshine.why": "{0, plural, one {# use of} other {# uses of}} <0/> executed with incorrect position.",
   "mnk.steppies.suggestions.dragon_kick.content": "Avoid unbuffed <0/> by using <1/> before it.",
   "mnk.steppies.suggestions.dragon_kick.why": "{0} potency lost to missing <0/> buff {1} times.",
-  "mnk.twinsnakes.checklist.description": "Twin Snakes is an easy 10% buff to your DPS.",
+  "mnk.twinsnakes.checklist.description": "Disciplined Fist is an easy 15% buff to your DPS.",
   "mnk.twinsnakes.checklist.name": "Keep <0/> up",
   "mnk.twinsnakes.checklist.requirement.name": "<0/> uptime",
   "mnk.twinsnakes.suggestions.antman.content": "Try to get <0/> up before using <1/> to take advantage of its free refresh.",
