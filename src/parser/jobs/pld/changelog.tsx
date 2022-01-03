@@ -3,6 +3,20 @@ import React from 'react'
 
 export const changelog = [
 	{
+		date: new Date('2021-12-29'),
+		Changes: () => <>
+			Added support for Endwalker.
+		</>,
+		contributors: [CONTRIBUTORS.ARIA],
+	},
+	{
+		date: new Date('2021-12-29'),
+		Changes: () => <>
+			Updated Goring and Valor tracking.
+		</>,
+		contributors: [CONTRIBUTORS.ARIA],
+	},
+	{
 		date: new Date('2021-12-24'),
 		Changes: () => <>
 			Updated various buff windows and ability thresholds.

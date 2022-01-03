@@ -125,7 +125,6 @@ export const RPR = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003623.png',
 		onGcd: true,
 		cooldown: 1500,
-		speedAttribute: Attribute.SKILL_SPEED,
 		statusesApplied: ['ENHANCED_CROSS_REAPING'],
 	},
 
@@ -135,7 +134,6 @@ export const RPR = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003624.png',
 		onGcd: true,
 		cooldown: 1500,
-		speedAttribute: Attribute.SKILL_SPEED,
 		statusesApplied: ['ENHANCED_VOID_REAPING'],
 	},
 
@@ -145,7 +143,6 @@ export const RPR = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003625.png',
 		onGcd: true,
 		cooldown: 1500,
-		speedAttribute: Attribute.SKILL_SPEED,
 	},
 
 	COMMUNIO: {
