@@ -200,7 +200,7 @@ export enum Attribute {
 export interface AttributeValue {
 	attribute: Attribute
 	value: number
-	estimated?: boolean
+	estimated: boolean
 }
 
 /** An actors parameters have been updated. */
