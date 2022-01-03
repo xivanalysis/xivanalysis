@@ -155,7 +155,6 @@
   "core.error.generic": "무언가 잘못되었습니다만 코드깎는 노인들이 이미 작업중입니다.",
   "core.gauge.title": "게이지",
   "core.gcd.estimated-gcd": "FFLOG 기준 글로벌 쿨타임",
-  "core.gcd.no-statistics": "FFLogs는 개인 통계를 기록하지 않으며 이에 따라 실질적인 글로벌 쿨다운 길이를 정확히 판단 할 수 업습니다. <0>분석한</0> 글로벌 쿨다운 길이가 실제보다 <1>느리게</1> 보고되었다면 이는 글쿨이 그만큼 밀렸다는 뜻이므로 이에 주의하여야 합니다.",
   "core.home.about.content": "\nxivanalysis는 각종 계산 및 조언을 통해 _당신_의 실력 향상을 목표하는 툴입니다. 잡에 상관없이 \"죽지마세요\"같은 절대불변의 법칙부터 시작해서 플레이하시는 주직에 따라 맞춤형 조언 및 분석을 쉽게 해드립니다.\n\n이걸 가능케하기 위해선 FFLogs (이하 프프로그)(https://www.fflogs.com/)를 통해 얻어지는 로그를 필요로합니다. 아직 프프로그를 사용해보지 않으셨다면 [here](https://github.com/FFXIV-ACT/setup-guide#readme) 및 [here](http://www.fflogs.com/client/download)를 확인해주십시오.\n",
   "core.home.about.link": "이 사이트에 대해서",
   "core.home.about.title": "xivanalysis에 대하여",
