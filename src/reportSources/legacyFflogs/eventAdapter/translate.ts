@@ -361,14 +361,14 @@ export class TranslateAdapterStep extends AdapterStep {
 	private adaptCombatantInfoEvent(event: CombatantInfoEvent): Array<Events['actorUpdate']> {
 		// TODO: Use more info in here. We're currently extracting the speed attribute values for the logging player, but there's also player level, prepull statuses, and more in there.
 
-		const foo: Array<[number | undefined, Attribute]> = [
+		const attributeMapping: Array<[number | undefined, Attribute]> = [
 			[event.skillSpeed, Attribute.SKILL_SPEED],
 			[event.spellSpeed, Attribute.SPELL_SPEED],
 		]
 
 		const attributes: AttributeValue[] = []
 
-		for (const [value, attribute] of foo) {
+		for (const [value, attribute] of attributeMapping) {
 			if (value == null) { continue }
 			attributes.push({attribute, value, estimated: false})
 		}
