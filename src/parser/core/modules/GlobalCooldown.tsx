@@ -18,7 +18,7 @@ export class GlobalCooldown extends Analyser {
 		this.addEventHook('complete', this.onComplete)
 	}
 
-	public getEstimate() {
+	public getDuration() {
 		return this.speedAdjustments.getAdjustedDuration({duration: BASE_GCD})
 	}
 
@@ -26,7 +26,7 @@ export class GlobalCooldown extends Analyser {
 		this.statistics.add(new SimpleStatistic({
 			title: <Trans id="core.gcd.estimated-gcd">Estimated GCD</Trans>,
 			icon: this.data.actions.ATTACK.icon,
-			value: this.parser.formatDuration(this.getEstimate()),
+			value: this.parser.formatDuration(this.getDuration()),
 			info: (
 				<Trans id="core.gcd.no-statistics">
 					Unfortunately, player statistics are not available from FF Logs. As such, the calculated GCD length is an <em>estimate</em>, and may well be incorrect. If it is reporting a GCD length <em>longer</em> than reality, you likely need to focus on keeping your GCD rolling.
