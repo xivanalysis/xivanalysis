@@ -1,5 +1,6 @@
 import {Trans} from '@lingui/react'
 import Color from 'color'
+import {DataLink} from 'components/ui/DbLink'
 import {ActionKey} from 'data/ACTIONS'
 import {Event, Events} from 'event'
 import {filter} from 'parser/core/filter'
@@ -7,7 +8,6 @@ import {dependency} from 'parser/core/Injectable'
 import {CounterGauge, Gauge as CoreGauge} from 'parser/core/modules/Gauge'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
-import {DataLink} from '../../../../components/ui/DbLink'
 
 const SOUL_MAX_VALUE = 100
 const SHROUD_MAX_VALUE = 100
@@ -78,19 +78,25 @@ export class Gauge extends CoreGauge {
 	])
 
 	private soulGauge = this.add(new CounterGauge({
+		minimum: 0,
 		maximum: SOUL_MAX_VALUE,
-		chart: {
+		graph: {
 			label: 'Soul Gauge',
 			color: SOUL_GAUGE_COLOR,
 		},
+		correctHistory: true,
+		deterministic: false,
 	}))
 
 	private shroudGauge = this.add(new CounterGauge({
+		minimum: 0,
 		maximum: SHROUD_MAX_VALUE,
-		chart: {
+		graph: {
 			label: 'Shroud Gauge',
 			color: SHROUD_GAUGE_COLOR,
 		},
+		correctHistory: true,
+		deterministic: false,
 	}))
 
 	override initialise() {
