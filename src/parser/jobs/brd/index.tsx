@@ -20,8 +20,14 @@ export const BARD = new Meta({
 	},
 	contributors: [
 		{user: CONTRIBUTORS.HINT, role: ROLES.MAINTAINER},
+		{user: CONTRIBUTORS.YUMIYA, role: ROLES.DEVELOPER},
 	],
 	changelog: [
+		{
+			date: new Date('2022-01-01'),
+			Changes: () => <>Added Radiant Finale and Battle Voice tracker in Raging Strikes module, as well as suggestion to use them in a timely manner.</>,
+			contributors: [CONTRIBUTORS.YUMIYA],
+		},
 		{
 			date: new Date('2021-12-17'),
 			Changes: () => <>Updated Bard modules for Endwalker.</>,
