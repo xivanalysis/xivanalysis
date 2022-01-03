@@ -1,7 +1,7 @@
 import {CooldownDowntime} from 'parser/core/modules/CooldownDowntime'
 
 // Allowed downtime set to 2s to account for PLD's natural rotation drift.
-const ALLOWED_DOWNTIME_FOF = 3000
+const ALLOWED_DOWNTIME_FOF = 2000
 const ALLOWED_DOWNTIME_REQ = 2000
 
 const FIRST_USE_OFFSET_REQ = 15000

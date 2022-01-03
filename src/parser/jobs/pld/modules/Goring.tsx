@@ -48,7 +48,6 @@ export class Goring extends Analyser {
 		[this.data.statuses.BLADE_OF_VALOR.id]: this.data.statuses.BLADE_OF_VALOR.duration,
 	}
 
-	private lastDotCast: Status['id'] = this.data.statuses.GORING_BLADE.id
 	private clip: Record<Status['id'], number> = {
 		[this.data.statuses.GORING_BLADE.id]: 0,
 		[this.data.statuses.BLADE_OF_VALOR.id]: 0,
@@ -58,8 +57,6 @@ export class Goring extends Analyser {
 
 	override initialise() {
 		const playerFilter = filter<Event>().source(this.parser.actor.id)
-		this.addEventHook(playerFilter.type('action').action(this.data.actions.GORING_BLADE.id), this.onGoringCast)
-		this.addEventHook(playerFilter.type('action').action(this.data.actions.BLADE_OF_VALOR.id), this.onValorCast)
 		this.addEventHook(playerFilter.type('statusApply').status(this.data.statuses.GORING_BLADE.id), this.onGoringApply)
 		this.addEventHook(playerFilter.type('statusApply').status(this.data.statuses.BLADE_OF_VALOR.id), this.onValorApply)
 		this.addEventHook('complete', this.onComplete)
@@ -92,14 +89,6 @@ export class Goring extends Analyser {
 
 		target.applicationHistory[event.status].applications.push({event, clip})
 		target.lastApplicationExpires = event.timestamp + appliedDotDuration
-	}
-
-	private onGoringCast(event: Events['action']) {
-		this.lastDotCast = event.action
-	}
-
-	private onValorCast(event: Events['action']) {
-		this.lastDotCast = event.action
 	}
 
 	private onGoringApply(event: Events['statusApply']) {
