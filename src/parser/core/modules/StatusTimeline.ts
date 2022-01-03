@@ -6,14 +6,18 @@ import {Analyser} from '../Analyser'
 import {filter, noneOf, oneOf} from '../filter'
 import {dependency} from '../Injectable'
 import {ActionTimeline} from './ActionTimeline'
+import {Actor, Actors} from './Actors'
 import {Data} from './Data'
 import {SimpleRow, StatusItem} from './Timeline'
-
-const STATUS_APPLY_ON_PARTY_THRESHOLD = 2 * 1000
 
 interface Usage {
 	start: number
 	end?: number
+}
+
+interface StatusTarget {
+	usages: Usage[]
+	row: SimpleRow
 }
 
 export class StatusTimeline extends Analyser {
@@ -22,11 +26,12 @@ export class StatusTimeline extends Analyser {
 	static statusesStackMapping: Record<number, number> = {}
 
 	@dependency private actionTimeline!: ActionTimeline;
+	@dependency private actors!: Actors;
 	@dependency private data!: Data
 
-	private statusActionMap = new Map<number, Action>();
-	private usages = new Map<number, Usage[]>()
-	private rows = new Map<number, SimpleRow>()
+	private statusActionMap = new Map<Status['id'], Action>();
+	private usages = new Map<Status['id'], Map<Actor['id'], StatusTarget>>()
+	private rows = new Map<string, SimpleRow>()
 
 	override initialise() {
 		// Hook status events
@@ -57,69 +62,99 @@ export class StatusTimeline extends Analyser {
 	}
 
 	private onApply(event: Events['statusApply']) {
-		let usages = this.usages.get(event.status)
-		if (usages == null) {
-			usages = []
-			this.usages.set(event.status, usages)
+		let statusUsages = this.usages.get(event.status)
+		if (statusUsages == null) {
+			statusUsages = new Map()
+			this.usages.set(event.status, statusUsages)
 		}
 
-		// If there was another application of this status within a short time frame, it can be assumed to be multiple applies from a single action, and can be ignored.
-		if (usages.some(usage =>
-			Math.abs(event.timestamp - this.parser.pull.timestamp - usage.start)
-			<= STATUS_APPLY_ON_PARTY_THRESHOLD
-		)) {
+		let statusTarget = statusUsages.get(event.target)
+		if (statusTarget == null) {
+			const row = this.createStatusTargetRow(event.status, event.target)
+			if (row == null) { return }
+			statusTarget = {
+				usages: [],
+				row,
+			}
+			statusUsages.set(event.target, statusTarget)
+		}
+
+		// If there's an existing usage on the target, this can be considered to be a refresh
+		const lastUsage = _.last(statusTarget.usages)
+		if (lastUsage != null && lastUsage.end == null) {
 			return
 		}
 
-		usages.push({
-			start: event.timestamp - this.parser.pull.timestamp,
+		statusTarget.usages.push({
+			start: event.timestamp,
 		})
 	}
 
 	private onRemove(event: Events['statusRemove']) {
-		const usages = this.usages.get(event.status)
-		if (usages == null) { return }
+		const lastUsage = _.last(this.usages.get(event.status)?.get(event.target)?.usages)
+		if (lastUsage == null) { return }
 
-		const last = _.last(usages)
-		if (last == null || last.end != null) { return }
-
-		last.end = event.timestamp - this.parser.pull.timestamp
+		lastUsage.end = event.timestamp
 	}
 
 	private onComplete() {
-		for (const [statusId, usages] of this.usages) {
+		for (const [statusId, statusUsages] of this.usages) {
 			const status = this.data.getStatus(statusId)
 			if (status == null) { continue }
 
-			const row = this.createStatusRow(status)
-			if (row == null) { continue }
-
-			for (const usage of usages) {
-				row.addItem(new StatusItem({
-					status,
-					start: usage.start,
-					end: usage.end ?? usage.start + (status.duration ?? 0),
-				}))
+			for (const statusTarget of statusUsages.values()) {
+				for (const usage of statusTarget.usages) {
+					statusTarget.row.addItem(new StatusItem({
+						status,
+						start: usage.start - this.parser.pull.timestamp,
+						end: (usage.end ?? this.parser.pull.timestamp + this.parser.pull.duration) - this.parser.pull.timestamp,
+					}))
+				}
 			}
 		}
 	}
 
-	private createStatusRow(status: Status) {
-		const key = (this.constructor as typeof StatusTimeline).statusesStackMapping[status.id] ?? status.id
-		const cachedRow = this.rows.get(key)
+	private createStatusTargetRow(statusId: Status['id'], targetId: Actor['id']) {
+		const mapping = (this.constructor as typeof StatusTimeline).statusesStackMapping
+		const remappedStatusId = mapping[statusId] ?? statusId
+
+		const rowKey = this.getRowKey(remappedStatusId, targetId)
+
+		const cachedRow = this.rows.get(rowKey)
 		if (cachedRow != null) { return cachedRow }
 
-		const action = this.statusActionMap.get(status.id)
-		if (action == null) { return }
+		const statusRow = this.createStatusRow2(remappedStatusId)
+		if (statusRow == null) { return }
 
-		const row = new SimpleRow({
-			label: status.name,
-			hideCollapsed: true,
-		})
-		this.rows.set(key, row)
+		const actor = this.actors.get(targetId)
 
-		this.actionTimeline.getRow(action).addRow(row)
+		const row = statusRow.addRow(new SimpleRow({
+			label: actor.name,
+		}))
 
+		this.rows.set(rowKey, row)
 		return row
 	}
+
+	private createStatusRow2(statusId: Status['id']) {
+		const rowKey = this.getRowKey(statusId)
+
+		const cachedRow = this.rows.get(rowKey)
+		if (cachedRow != null) { return cachedRow }
+
+		const action = this.statusActionMap.get(statusId)
+		if (action == null) { return }
+
+		const row = this.actionTimeline.getRow(action).addRow(new SimpleRow({
+			label: this.data.getStatus(statusId)?.name ?? statusId,
+			hideCollapsed: true,
+			collapse: true,
+		}))
+
+		this.rows.set(rowKey, row)
+		return row
+	}
+
+	private getRowKey = (statusId: Status['id'], targetId?: Actor['id']) =>
+		`${statusId}:${targetId}`
 }
