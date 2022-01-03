@@ -36,6 +36,8 @@ const EXPECTED_USES = {
 	// Don't check for correctness on the Gnashing Fang combo; that's covered by the built-in Combo tracker.
 }
 
+const openerGracePeriod = 22500 //Perhaps I'm being overly generous, but after 9 regular gcds a proper full burst could be done.
+
 class BloodfestEvaluator extends NotesEvaluator {
 
 	// Because this class is not an Analyser, it cannot use Data directly
@@ -134,11 +136,10 @@ export class NoMercy extends BuffWindow {
 		this.addEvaluator(new BloodfestEvaluator(this.data.actions.BLOODFEST.id))
 	}
 
-
 	private adjustExpectedActionCount(window: HistoryEntry<EvaluatedAction[]>, action: TrackedAction) {
 		if (action.action.id !== this.data.actions.BURST_STRIKE.id) { return 0 }
 
-		if (window.data.find(cast => cast.action.id === this.data.actions.BLOODFEST.id)) {
+		if (window.data.find(cast => cast.action.id === this.data.actions.BLOODFEST.id) && window.start > (this.parser.pull.timestamp + openerGracePeriod)) {
 			//In fights with minimal downtime, it is possible to hit 4/4 bloodfests,
 			//however I feel it is better to leave it at 3 / 3 for the adjusted rinfest window which seems to be more common
 			return 2
