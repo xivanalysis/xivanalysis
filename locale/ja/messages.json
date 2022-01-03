@@ -820,6 +820,7 @@
   "whm.ogcds.suggestions.why": "使用可能だった{maxUses} 回中{missed} 回で使用しませんでした。",
   "whm.overheal.assize.name": "アサイズ",
   "whm.overheal.hot.name": "HoT",
+  "whm.overheal.liturgyofthebell.name": "",
   "whm.swiftcast.missed.suggestion.content": "",
   "whm.thinair.messages.explanation": "",
   "whm.thinair.messages.no-casts": "",
