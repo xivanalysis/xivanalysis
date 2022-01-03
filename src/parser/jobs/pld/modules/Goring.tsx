@@ -1,7 +1,6 @@
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
-import {DataLink, ActionLink} from 'components/ui/DbLink'
-import {Action} from 'data/ACTIONS'
+import {DataLink, StatusLink} from 'components/ui/DbLink'
 import {Status} from 'data/STATUSES'
 import {Event, Events} from 'event'
 import {Analyser} from 'parser/core/Analyser'
@@ -21,15 +20,16 @@ const MAX_ALLOWED_CLIPPING = 3000
 interface DotApplicationData {
 	event: Events['statusApply'],
 	clip?: number,
-	action: Action['id']
 }
 
 interface DotStatusData {
-	lastApplication: number,
 	applications: DotApplicationData []
 }
 
-type DotTargetData = Record<Status['id'], DotStatusData>
+type DotTargetData = {
+	lastApplicationExpires: number,
+	applicationHistory: Record<Status['id'], DotStatusData>
+}
 
 type DotApplicationTracker = Record<Actor['id'], DotTargetData>
 
@@ -65,17 +65,33 @@ export class Goring extends Analyser {
 		this.addEventHook('complete', this.onComplete)
 	}
 
-	private createTargetApplicationList() {
+	private createDotTargetTracker(): DotTargetData {
 		return {
-			[this.data.statuses.GORING_BLADE.id]: [],
-			[this.data.statuses.BLADE_OF_VALOR.id]: [],
+			lastApplicationExpires: 0,
+			applicationHistory: {
+				[this.data.statuses.GORING_BLADE.id]: {applications: []},
+				[this.data.statuses.BLADE_OF_VALOR.id]: {applications: []},
+			},
 		}
 	}
 
-	private pushApplication(targetKey: string, statusId: number, event: Events['statusApply'], clip?: number) {
-		const target = this.tracker[targetKey] = this.tracker[targetKey] || this.createTargetApplicationList()
-		const action = this.lastDotCast
-		target[statusId].applications.push({event, clip, action})
+	private pushApplication(event: Events['statusApply'], appliedDotDuration: number) {
+		const targetKey = event.target
+		let target = this.tracker[targetKey]
+		if (target == null) {
+			target = this.createDotTargetTracker()
+			this.tracker[targetKey] = target
+		}
+
+		let clip = 0
+		clip = target.lastApplicationExpires - event.timestamp
+		clip = Math.max(0, clip)
+		if (clip > MAX_ALLOWED_CLIPPING) {
+			this.trackedClipping = true
+		}
+
+		target.applicationHistory[event.status].applications.push({event, clip})
+		target.lastApplicationExpires = event.timestamp + appliedDotDuration
 	}
 
 	private onGoringCast(event: Events['action']) {
@@ -87,94 +103,13 @@ export class Goring extends Analyser {
 	}
 
 	private onGoringApply(event: Events['statusApply']) {
-		const statusId = event.status
-
-		// Make sure we're tracking for this target
-		const applicationKey = event.target
-		const trackerInstance = this.tracker[applicationKey] = this.tracker[applicationKey] || {}
-
-		// If neither dot has been applied yet, initialize data and return
-		if (trackerInstance[statusId] == null && trackerInstance[this.data.statuses.BLADE_OF_VALOR.id] == null) {
-			trackerInstance[statusId] = {
-				lastApplication: event.timestamp,
-				applications: [],
-			}
-			//save the application for later use in the output
-			this.pushApplication(applicationKey, statusId, event)
-			return
-		}
-
-		// If only the opposite DoT has been used on this target, initialize data and move to clip calculation
-		if (trackerInstance[statusId] == null && trackerInstance[this.data.statuses.BLADE_OF_VALOR.id] != null) {
-			trackerInstance[statusId] = {
-				lastApplication: 0,
-				applications: [],
-			}
-		}
-
-		// If Blade of Valor has been used on this target, get most recent previous DoT application timestamp
-		let lastDotApplication = trackerInstance[statusId].lastApplication
-		if (trackerInstance[this.data.statuses.BLADE_OF_VALOR.id] != null) {
-			lastDotApplication = Math.max(lastDotApplication, trackerInstance[this.data.statuses.BLADE_OF_VALOR.id].lastApplication)
-		}
-		// Base clip calc
-		let clip = this.statusDuration[statusId] - (event.timestamp - lastDotApplication)
-		clip = Math.max(0, clip)
-		// Capping clip at 0 - less than that is downtime, which is handled by the checklist requirement
-		this.clip[statusId] += clip
-		//save the application for later use in the output
-		this.pushApplication(applicationKey, statusId, event, clip)
-		trackerInstance[statusId].lastApplication = event.timestamp
-		if (clip > MAX_ALLOWED_CLIPPING) {
-			this.trackedClipping = true
-		}
+		this.pushApplication(event, this.data.statuses.GORING_BLADE.duration)
 	}
 
 	private onValorApply(event: Events['statusApply']) {
-		const statusId = event.status
-
-		// Make sure we're tracking for this target
-		const applicationKey = event.target
-		const trackerInstance = this.tracker[applicationKey] = this.tracker[applicationKey] || {}
-
-		// If it's not been applied yet, set it and skip out
-		if (trackerInstance[statusId] == null && trackerInstance[this.data.statuses.GORING_BLADE.id] == null) {
-			trackerInstance[statusId] = {
-				lastApplication: event.timestamp,
-				applications: [],
-			}
-			//save the application for later use in the output
-			this.pushApplication(applicationKey, statusId, event)
-			return
-		}
-
-		// If only the opposite DoT has been used on this target, initialize data and move to clip calculation
-		if (trackerInstance[statusId] == null && trackerInstance[this.data.statuses.GORING_BLADE.id] != null) {
-			trackerInstance[statusId] = {
-				lastApplication: 0,
-				applications: [],
-			}
-		}
-
-		// If Goring Blade has been used on this target, get most recent previous DoT application timestamp
-		let lastDotApplication = trackerInstance[statusId].lastApplication
-		if (trackerInstance[this.data.statuses.GORING_BLADE.id] != null) {
-			lastDotApplication = Math.max(lastDotApplication, trackerInstance[this.data.statuses.GORING_BLADE.id].lastApplication)
-		}
-		// Base clip calc
-		let clip = this.statusDuration[statusId] - (event.timestamp - lastDotApplication)
-		clip = Math.max(0, clip)
-		// Capping clip at 0 - less than that is downtime, which is handled by the checklist requirement
-		this.clip[statusId] += clip
-		//save the application for later use in the output
-		this.pushApplication(applicationKey, statusId, event, clip)
-		if (clip > MAX_ALLOWED_CLIPPING) {
-			this.trackedClipping = true
-		}
-		trackerInstance[statusId].lastApplication = event.timestamp
+		this.pushApplication(event, this.data.statuses.BLADE_OF_VALOR.duration)
 	}
 
-	// calculating separately in case we ever decide to split the outputs
 	private getDotUptime(statusId: Status['id']) {
 		const status = this.data.getStatus(statusId)
 		if (status == null) { return 0 }
@@ -204,7 +139,15 @@ export class Goring extends Analyser {
 	private createTargetStatusTable(target: DotTargetData) {
 		let totalMajorDotClip = 0
 
-		const combinedDotStatuses = target[this.data.statuses.GORING_BLADE.id].applications.concat(target[this.data.statuses.BLADE_OF_VALOR.id].applications)
+		let combinedDotStatuses = []
+
+		if (target.applicationHistory[this.data.statuses.GORING_BLADE.id] != null && target.applicationHistory[this.data.statuses.BLADE_OF_VALOR.id] != null) {
+			combinedDotStatuses = target.applicationHistory[this.data.statuses.GORING_BLADE.id].applications.concat(target.applicationHistory[this.data.statuses.BLADE_OF_VALOR.id].applications)
+		} else if (target.applicationHistory[this.data.statuses.GORING_BLADE.id] != null) {
+			combinedDotStatuses = target.applicationHistory[this.data.statuses.GORING_BLADE.id].applications
+		} else {
+			combinedDotStatuses = target.applicationHistory[this.data.statuses.BLADE_OF_VALOR.id].applications
+		}
 		combinedDotStatuses.sort(
 			(firstEvent, secondEvent) => (firstEvent.event.timestamp > secondEvent.event.timestamp ? 1 : -1)
 		)
@@ -221,8 +164,8 @@ export class Goring extends Analyser {
 				{combinedDotStatuses.map(
 					(event) => {
 						const thisClip = event.clip || 0
-						const action = this.data.getAction(event.action)
-						const icon = <ActionLink showName={false} {...action} />
+						const status = this.data.getStatus(event.event.status)
+						const icon = <StatusLink showName={false} {...status} />
 						const renderClipTime = event.clip != null ? this.parser.formatDuration(event.clip) : '-'
 						let clipSeverity: ReactNode = renderClipTime
 						if (thisClip > MAX_ALLOWED_CLIPPING) {
@@ -257,7 +200,7 @@ export class Goring extends Analyser {
 
 		if (numTargets > 1) {
 			const panels = Object.keys(this.tracker).map(applicationKey => {
-				if (!this.createTargetStatusTable(this.tracker[applicationKey])) {
+				if (this.createTargetStatusTable(this.tracker[applicationKey]) == null) {
 					return null
 				}
 				const target = this.actors.get(applicationKey)
