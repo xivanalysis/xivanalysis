@@ -18,8 +18,18 @@ export class GlobalCooldown extends Analyser {
 		this.addEventHook('complete', this.onComplete)
 	}
 
+	/**
+	 * Get the base recast time of the parsed actor's GCD cooldown group, in milliseconds.
+	 * The value returned from this function _may_ be an estimate - check {@link GlobalCooldown.isEstimated}
+	 * to see if it is.
+	 */
 	public getDuration() {
 		return this.speedAdjustments.getAdjustedDuration({duration: BASE_GCD})
+	}
+
+	/** Returns whether the GCD duration calculated by this module is an estimate. */
+	public isEstimated() {
+		return this.speedAdjustments.isAdjustmentEstimated()
 	}
 
 	private onComplete() {
