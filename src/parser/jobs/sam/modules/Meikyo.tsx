@@ -88,7 +88,7 @@ export class Meikyo extends BuffWindow {
 
 	private adjustExpectedGcdCount(window: HistoryEntry<EvaluatedAction[]>) {
 		if (this.isRushedEndOfPullWindow(window)) {
-			const defaultEoFValue = Math.ceil(((window.end ?? window.start) - window.start) / this.globalCooldown.getEstimate())
+			const defaultEoFValue = Math.ceil(((window.end ?? window.start) - window.start) / this.globalCooldown.getDuration())
 
 			// This is using floor instead of ceiling to grant some forgiveness to first weave slot casts at the cost of 2nd weaves might be too forgiven
 			const fightTimeRemaining = (this.parser.pull.timestamp + this.parser.pull.duration) - window.start

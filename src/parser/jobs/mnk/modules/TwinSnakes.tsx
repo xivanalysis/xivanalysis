@@ -148,11 +148,11 @@ export class TwinSnakes extends Analyser {
 
 		this.checklist.add(new Rule({
 			name: <Trans id="mnk.twinsnakes.checklist.name">Keep <DataLink status="DISCIPLINED_FIST" showIcon={false}/> up</Trans>,
-			description: <Trans id="mnk.twinsnakes.checklist.description">Twin Snakes is an easy 10% buff to your DPS.</Trans>,
+			description: <Trans id="mnk.twinsnakes.checklist.description">Disciplined Fist is an easy 15% buff to your DPS.</Trans>,
 			displayOrder: DISPLAY_ORDER.TWIN_SNAKES,
 			requirements: [
 				new Requirement({
-					name: <Trans id="mnk.twinsnakes.checklist.requirement.name"><DataLink action="TWIN_SNAKES"/> uptime</Trans>,
+					name: <Trans id="mnk.twinsnakes.checklist.requirement.name"><DataLink status="DISCIPLINED_FIST"/> uptime</Trans>,
 					percent: () => this.getBuffUptimePercent(this.data.statuses.DISCIPLINED_FIST.id),
 				}),
 			],

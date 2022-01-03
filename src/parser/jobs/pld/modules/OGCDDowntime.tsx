@@ -1,16 +1,10 @@
 import {CooldownDowntime} from 'parser/core/modules/CooldownDowntime'
 
-// Allowed downtime set to 4s to account for PLD's natural rotation drift.
-const ALLOWED_DOWNTIME_FOF = 4000
-const ALLOWED_DOWNTIME_REQ = 4000
+// Allowed downtime set to 2s to account for PLD's natural rotation drift.
+const ALLOWED_DOWNTIME_FOF = 2000
+const ALLOWED_DOWNTIME_REQ = 2000
 
-/* These first use offsets are large to allow for both Requiescat-first and
- * Fight or Flight-first openers --- the former delays Fight or Flight to
- * 23-24s, and the latter delays Requiescat to 30-31s, depending on whether
- * or not a holy spirit was used on pull.
- */
-const FIRST_USE_OFFSET_FOF = 24000
-const FIRST_USE_OFFSET_REQ = 31000
+const FIRST_USE_OFFSET_REQ = 15000
 
 export class OGCDDowntime extends CooldownDowntime {
 	static override debug = false
@@ -18,7 +12,6 @@ export class OGCDDowntime extends CooldownDowntime {
 		{
 			cooldowns: [this.data.actions.FIGHT_OR_FLIGHT],
 			allowedAverageDowntime: ALLOWED_DOWNTIME_FOF,
-			firstUseOffset: FIRST_USE_OFFSET_FOF,
 		},
 		{
 			cooldowns: [this.data.actions.REQUIESCAT],
