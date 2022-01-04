@@ -52,4 +52,9 @@ export const changelog = [
 		Changes: () => <>Correct Paradox gauge handling to grant a stack of the active stance, instead of just a timer refresh.</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],
 	},
+	{
+		date: new Date('2021-01-04'),
+		Changes: () => <>Mark as supported for 6.05.</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
 ]
