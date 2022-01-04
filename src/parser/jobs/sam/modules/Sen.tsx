@@ -219,7 +219,7 @@ export class Sen extends Analyser {
 
 		let lastSenState = this.lastSenState
 
-		if ((typeof lastSenState === 'undefined') || (lastSenState.isDone === true)) {
+		if ((lastSenState == null) || (lastSenState.isDone === true)) {
 
 			this.senStateMaker(event)
 		}
