@@ -108,7 +108,7 @@ export class Kenki extends CoreGauge {
 	private onGaugeModifier(event: Events['action' | 'combo']) {
 		const modifier = this.kenkiGaugeModifiers.get(event.action)
 
-		if (modifier !== undefined)	{
+		if (modifier != null)	{
 			const amount = modifier[event.type] ?? 0
 			this.kenkiGauge.modify(amount)
 		}
