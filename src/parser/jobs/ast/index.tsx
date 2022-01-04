@@ -27,14 +27,30 @@ export const ASTROLOGIAN = new Meta({
 			</Message.Content>
 		</Message>
 	</>,
-	// supportedPatches: {
-	// 	from: '6.0',
-	// 	to: '6.0',
-	// },
+	supportedPatches: {
+		from: '6.0',
+		to: '6.0',
+	},
 	contributors: [
 		{user: CONTRIBUTORS.OTOCEPHALY, role: ROLES.DEVELOPER},
 	],
 	changelog: [
+		{
+			date: new Date('2021-12-31'),
+			Changes: () => <>
+				<strong>Last 6.0 EW Preparation before 6.05</strong>
+				<ul>
+					<li> Fixed Arcana Tracking to keep seals on death. </li>
+					<li> Added <DataLink action="MINOR_ARCANA" /> section to track <DataLink action="LORD_OF_CROWNS" /> and <DataLink action="LADY_OF_CROWNS" /> usages. </li>
+					<li> Fixed capped draw math to calculate appropriately given two charges and reworded suggestion to show it relates to cooldown cap. </li>
+					<li> Added <DataLink action="MACROCOSMOS" /> suggestions based on either <DataLink action="MACROCOSMOS" showIcon={false} /> or <DataLink action="GRAVITY_II" /> usage. </li>
+					<li> Removed <DataLink action="HOROSCOPE" /> and <DataLink action="NEUTRAL_SECT" /> from healing oGCDs section as they supplement helios and aren't solely oGCDs. </li>
+					<li> Updated <DataLink action="HOROSCOPE" /> to include <DataLink action="NEUTRAL_SECT" /> as part of a <DataLink action="HELIOS" /> section as the two skills complement each other. </li>
+					<li> Updated wording for <DataLink action="UNDRAW" /> to remove reference to <DataLink action="MINOR_ARCANA" />. </li>
+				</ul>
+			</>,
+			contributors: [CONTRIBUTORS.OTOCEPHALY],
+		},
 		{
 			date: new Date('2021-12-22'),
 			Changes: () => <>
