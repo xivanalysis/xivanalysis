@@ -4,9 +4,9 @@ import {CastTime} from './CastTime'
 import {Combos} from './Combos'
 import {DualCast} from './Dualcast'
 import {Embolden} from './Embolden'
-import {Gauge} from './Gauge'
 import {GeneralCDDowntime} from './GeneralCDDowntime'
 import {Interrupts} from './Interrupts'
+import {ManaGauge} from './ManaGauge'
 import {ManaStackGauge} from './ManaStackGauge'
 import {MeleeCombos} from './MeleeCombos'
 import {Procs} from './Procs'
@@ -17,7 +17,7 @@ export {DualStatistic} from 'parser/jobs/rdm/statistics/DualStatistic'
 export default [
 	AlwaysBeCasting,
 	Embolden,
-	Gauge,
+	ManaGauge,
 	ManaStackGauge,
 	CastTime,
 	DualCast,

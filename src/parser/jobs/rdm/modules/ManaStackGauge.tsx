@@ -7,7 +7,7 @@ import {dependency} from 'parser/core/Injectable'
 import {CounterGauge, Gauge as CoreGauge} from 'parser/core/modules/Gauge'
 import {Statistics} from 'parser/core/modules/Statistics'
 import Suggestions, {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
-import {Gauge} from 'parser/jobs/rdm/modules/Gauge'
+import {ManaGauge} from 'parser/jobs/rdm/modules/ManaGauge'
 import {DualStatistic} from 'parser/jobs/rdm/statistics/DualStatistic'
 import React, {Fragment} from 'react'
 
@@ -29,7 +29,7 @@ export class ManaStackGauge extends CoreGauge {
 
 	@dependency private suggestions!: Suggestions
 	@dependency private statistics!: Statistics
-	@dependency private gauge!: Gauge
+	@dependency private manaGauge!: ManaGauge
 
 	private manaStackGauge = this.add(new CounterGauge({
 		graph: {
@@ -107,8 +107,6 @@ export class ManaStackGauge extends CoreGauge {
 	}
 
 	private onGaugeModifying(event: Events['action']) {
-		const modifier = this.gaugeModifiers.get(event.action)
-
 		//Always check it we should break
 		if (this.shouldGaugeBreak(event)) {
 			this.onGaugeBreak(event)
@@ -116,13 +114,14 @@ export class ManaStackGauge extends CoreGauge {
 			return
 		}
 
+		const modifier = this.gaugeModifiers.get(event.action)
+
 		if (modifier == null) {
 			return
 		}
 
 		if (this.manaStackGauge.capped) {
-			const manaSpender = this.gauge.spenderModifiers.get(event.action)
-			this.debug(`Gauge is Broken by action ${this.data.getAction(event.action)?.name}`)
+			const manaSpender = this.manaGauge.spenderModifiers.get(event.action)
 			this.debug(`manaSpender is ${manaSpender} white mana value of ${manaSpender?.white} and black mana value of ${manaSpender?.black}`)
 			this.debug(`Time the Overcap happened ${this.parser.formatEpochTimestamp(event.timestamp)}`)
 			if (manaSpender != null) {
@@ -138,9 +137,6 @@ export class ManaStackGauge extends CoreGauge {
 		const modifier = this.spenderModifiers.get(event.action)
 
 		if (modifier == null) {
-			if (this.shouldGaugeBreak(event)) {
-				this.onGaugeBreak(event)
-			}
 			return
 		}
 
