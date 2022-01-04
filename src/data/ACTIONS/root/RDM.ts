@@ -147,6 +147,7 @@ export const RDM = ensureActions({
 		combo: {
 			from: 7528,
 			potency: 470,
+			end: true,
 		},
 	},
 	REPRISE: {
@@ -176,8 +177,7 @@ export const RDM = ensureActions({
 		cooldown: 2500,
 		potency: 580, // Gains 11 Black Mana, if Black is lower 100% Verfire ready
 		combo: {
-			from: 7529,
-			potency: 580,
+			start: true,
 		},
 	},
 	VERHOLY: {
@@ -189,8 +189,7 @@ export const RDM = ensureActions({
 		cooldown: 2500,
 		potency: 580, // Gains 11 white, if White is lower 100% Verstone ready
 		combo: {
-			from: 7529,
-			potency: 580,
+			start: true,
 		},
 	},
 	SCORCH: {
