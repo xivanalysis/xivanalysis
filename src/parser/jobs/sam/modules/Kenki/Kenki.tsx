@@ -100,7 +100,7 @@ export class Kenki extends CoreGauge {
 	}
 
 	private onRemoveEye() {
-		if (this.damageHook !== undefined) {
+		if (this.damageHook != null) {
 			this.removeEventHook(this.damageHook)
 		}
 	}
