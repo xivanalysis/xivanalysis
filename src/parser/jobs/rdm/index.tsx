@@ -21,7 +21,7 @@ export const RED_MAGE = new Meta({
 	</>,
 	supportedPatches: {
 		from: '6.0',
-		to: '6.0',
+		to: '6.05',
 	},
 	contributors: [
 		{user: CONTRIBUTORS.LEYLIA, role: ROLES.DEVELOPER},
