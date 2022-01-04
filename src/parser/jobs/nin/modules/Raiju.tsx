@@ -31,13 +31,13 @@ export class Raiju extends Analyser {
 
 	override initialise() {
 		const playerFilter = filter<Event>().source(this.parser.actor.id)
-		this.addEventHook(playerFilter.type('statusApply').status(this.data.statuses.RAIJU_READY.id), this.onForkedRaijuReady)
+		this.addEventHook(playerFilter.type('statusApply').status(this.data.statuses.RAIJU_READY.id), this.onRaijuReady)
 		this.addEventHook(playerFilter.type('statusRemove').status(this.data.statuses.RAIJU_READY.id), () => this.currentStacks = 0)
 		this.addEventHook(playerFilter.type('action').action(oneOf(this.breakingGcds)), this.onBreakingGcd)
 		this.addEventHook('complete', this.onComplete)
 	}
 
-	private onForkedRaijuReady(event: Events['statusApply']) {
+	private onRaijuReady(event: Events['statusApply']) {
 		this.currentStacks = event.data ?? 1
 	}
 
@@ -58,7 +58,7 @@ export class Raiju extends Analyser {
 			},
 			value: this.droppedStacks,
 			why: <Trans id="nin.raiju.suggestions.dropped.why">
-				You dropped <Plural value={this.droppedStacks} one="# stack" other="# stacks"/> of Forked Raiju Ready.
+				You dropped <Plural value={this.droppedStacks} one="# stack" other="# stacks"/> of Raiju Ready.
 			</Trans>,
 		}))
 	}
