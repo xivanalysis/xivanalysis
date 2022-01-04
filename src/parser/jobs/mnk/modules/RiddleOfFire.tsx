@@ -17,33 +17,32 @@ import {SEVERITY, Suggestion, TieredSuggestion} from 'parser/core/modules/Sugges
 import React from 'react'
 import {BLITZ_SKILLS} from './constants'
 import {DISPLAY_ORDER} from './DISPLAY_ORDER'
+import {fillActions} from './utilities'
 
-const TOTAL_GCD_AMOUNT = {
+const TOTAL_GCD_DURING_ROF_SEVERITY = {
 	10: SEVERITY.MINOR,
 	9: SEVERITY.MEDIUM,
 	6: SEVERITY.MAJOR,
 }
 
-const MISSED_BROTHERHOOD_SEVERITY = {
+const BROTHERHOOD_OUTSIDE_ROF_SEVERITY = {
 	1: SEVERITY.MEDIUM,
 	2: SEVERITY.MAJOR,
 }
 
-const MEDITATION_DURING_ROF_SEVERITY = {
+const BAD_GCD_DURING_ROF_SEVERITY = {
 	1: SEVERITY.MEDIUM,
-	3: SEVERITY.MAJOR,
+	2: SEVERITY.MAJOR,
 }
 
-const EXPECTED = {
-	GCDS: 11,
-}
+const EXPECTED_GCDS = 11
 
 class MasterfulBlitzEvaluator implements WindowEvaluator {
-	private blitzSkills: Action[]
+	private blitzSkills: Array<Action['id']>
 	private celestialRevolution: Action
 	private masterfulBlitz: Action
 
-	constructor(blitzSkills: Action[], celestialRevolution: Action, masterfulBlitz: Action) {
+	constructor(blitzSkills: Array<Action['id']>, celestialRevolution: Action, masterfulBlitz: Action) {
 		this.blitzSkills = blitzSkills
 		this.celestialRevolution = celestialRevolution
 		this.masterfulBlitz = masterfulBlitz
@@ -85,7 +84,7 @@ class MasterfulBlitzEvaluator implements WindowEvaluator {
 	}
 
 	private countBlitzSkills(window: HistoryEntry<EvaluatedAction[]>): number {
-		return window.data.filter(value => this.blitzSkills.includes(value.action)).length
+		return window.data.filter(value => this.blitzSkills.includes(value.action.id)).length
 	}
 
 	private numberOfBlitzExpectedInWindow(windowIndex: number, windows: Array<HistoryEntry<EvaluatedAction[]>>): number {
@@ -116,7 +115,7 @@ class BrotherhoodEvaluator implements WindowEvaluator {
 
 		return new TieredSuggestion({
 			icon: this.brotherhood.icon,
-			tiers: MISSED_BROTHERHOOD_SEVERITY,
+			tiers: BROTHERHOOD_OUTSIDE_ROF_SEVERITY,
 			value: missedBrotherhoodUsages,
 			content: <Trans id="mnk.rof.suggestions.brotherhood.content">Missed {missedBrotherhoodUsages} <ActionLink
 				action="BROTHERHOOD"/> <Plural
@@ -161,7 +160,7 @@ export class RiddleOfFire extends BuffWindow {
 
 	@dependency globalCooldown!: GlobalCooldown
 
-	blitzSkills = BLITZ_SKILLS.map(key => this.data.actions[key])
+	blitzSkills = fillActions(BLITZ_SKILLS, this.data)
 
 	buffStatus = this.data.statuses.RIDDLE_OF_FIRE
 
@@ -173,12 +172,12 @@ export class RiddleOfFire extends BuffWindow {
 		this.addEvaluator(new MasterfulBlitzEvaluator(this.blitzSkills, this.data.actions.CELESTIAL_REVOLUTION, this.data.actions.MASTERFUL_BLITZ))
 		this.addEvaluator(new BrotherhoodEvaluator(this.data.actions.BROTHERHOOD))
 		this.addEvaluator(new ExpectedGcdCountEvaluator({
-			expectedGcds: EXPECTED.GCDS,
+			expectedGcds: EXPECTED_GCDS,
 			globalCooldown: this.globalCooldown,
 			suggestionIcon: this.data.actions.RIDDLE_OF_FIRE.icon,
-			severityTiers: TOTAL_GCD_AMOUNT,
+			severityTiers: TOTAL_GCD_DURING_ROF_SEVERITY,
 			suggestionWindowName: suggestionWindowName,
-			suggestionContent: <Trans id="mnk.rof.suggestions.gcd.content">Aim to hit {EXPECTED.GCDS} GCDs during
+			suggestionContent: <Trans id="mnk.rof.suggestions.gcd.content">Aim to hit {EXPECTED_GCDS} GCDs during
 				each <ActionLink action="RIDDLE_OF_FIRE"/> window.</Trans>,
 			adjustCount: window => {
 				// 6SS counts as 2 GCDs
@@ -191,6 +190,14 @@ export class RiddleOfFire extends BuffWindow {
 					action: this.data.actions.MEDITATION,
 					expectedPerWindow: 0,
 				},
+				{
+					action: this.data.actions.ANATMAN,
+					expectedPerWindow: 0,
+				},
+				{
+					action: this.data.actions.FORM_SHIFT,
+					expectedPerWindow: 0,
+				},
 			],
 			suggestionIcon: this.data.actions.MEDITATION.icon,
 			suggestionContent: <Trans id="mnk.rof.suggestions.meditation.content">
@@ -198,7 +205,7 @@ export class RiddleOfFire extends BuffWindow {
 				essentially wasting a GCD.
 			</Trans>,
 			suggestionWindowName,
-			severityTiers: MEDITATION_DURING_ROF_SEVERITY,
+			severityTiers: BAD_GCD_DURING_ROF_SEVERITY,
 		}))
 	}
 
