@@ -20,7 +20,7 @@ export const GUNBREAKER = new Meta({
 
 	supportedPatches: {
 		from: '6.0',
-		to: '6.0',
+		to: '6.05',
 	},
 
 	contributors: [
@@ -87,6 +87,15 @@ export const GUNBREAKER = new Meta({
 				<ul>
 					<li>Fixed Bug with GNB Opener expecting full burst</li>
 					<li>Updated GNB info links and mark as supported for 6.0</li>
+				</ul>,
+			</>,
+			contributors: [CONTRIBUTORS.RYAN],
+		},
+		{
+			date: new Date('2022-1-04'),
+			Changes: () => <>
+				<ul>
+					<li>Mark Gunbreaker as supported for 6.05</li>
 				</ul>,
 			</>,
 			contributors: [CONTRIBUTORS.RYAN],
