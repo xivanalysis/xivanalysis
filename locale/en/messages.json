@@ -599,7 +599,7 @@
   "nin.ninki.suggestions.waste.why": "Overcapping caused you to lose {0} Ninki over the fight.",
   "nin.ninki.title": "Ninki Timeline",
   "nin.raiju.suggestions.dropped.content": "Avoid using any of your non-Raiju melee GCDs while you have stacks of <0/>, as it will cause the stacks to fall off.",
-  "nin.raiju.suggestions.dropped.why": "You dropped {0, plural, one {# stack} other {# stacks}} of Forked Raiju Ready.",
+  "nin.raiju.suggestions.dropped.why": "You dropped {0, plural, one {# stack} other {# stacks}} of Raiju Ready.",
   "nin.ta-usage.suggestions.missed.content": "Avoid holding <0/> for extended periods of time. It's typically ideal to use it as close to on cooldown as possible in order to keep it aligned with all the other raid buffs and personal burst windows, as well as maximizing the number of uses per fight.",
   "nin.ta-usage.suggestions.missed.why": "You delayed Trick Attack for a cumulative {0}, costing you {lostCasts, plural, one {# potential use} other {# potential uses}}.",
   "nin.ta-usage.suggestions.none.content": "<0/> is the single most powerful raid buff in your kit and should be used on cooldown, or as close to it as possible depending on the flow of the fight.",
