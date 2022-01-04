@@ -27,5 +27,10 @@ export const changelog: ChangelogEntry[] = [
 		Changes: () => <>Added Arcane Circle, Radiant Finale, and Searing Light raid buffs to the timeline.</>,
 		contributors: [CONTRIBUTORS.HINT],
 	},
+	{
+		date: new Date('2022-1-3'),
+		Changes: () => <>Fixed a bug causing errors in gauge value simulations under certain circumstances.</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
 
 ]
