@@ -7,17 +7,11 @@ export default class CooldownDowntime extends CooldownDowntimeCore {
 	override trackedCds = [
 		{
 			cooldowns: [this.data.actions.CHAIN_STRATAGEM],
-			allowedAverageDowntime: 7500,
-			firstUseOffset: 10000,
+			firstUseOffset: 8500,
 		},
 		{
 			cooldowns: [this.data.actions.AETHERFLOW],
-			allowedAverageDowntime: 5000,
-			firstUseOffset: 10000,
+			firstUseOffset: 2500,
 		},
 	]
-	override checklistDescription = <Fragment>
-		<div><Trans id="sch.cooldown.chainstrat.description">Try to use <ActionLink {...this.data.actions.CHAIN_STRATAGEM}/> on cooldown throughout the fight, particularly when your team has other buffs up for maximum effect.</Trans></div>
-		<div><Trans id="sch.cooldown.aetherflow.description">Try to use <ActionLink {...this.data.actions.AETHERFLOW}/> on cooldown throughout the fight. If you have extra Aetherflow charges, cast Energy Drain to do additional damage before casting <ActionLink {...this.data.actions.AETHERFLOW}/>.</Trans></div>
-	</Fragment>
 }
