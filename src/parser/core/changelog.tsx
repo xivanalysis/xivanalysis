@@ -10,6 +10,11 @@ export const changelog: ChangelogEntry[] = [
 	// },
 	{
 		date: new Date('2022-01-03'),
+		Changes: () => <>Fixed a bug causing errors in gauge value simulations under certain circumstances.</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
+	{
+		date: new Date('2022-01-03'),
 		Changes: () => <>
 			Use report-provided attribute values to calculate GCD recast time.
 			These values are only available for the player who logged and uploaded the report.
