@@ -3,9 +3,14 @@ import React from 'react'
 
 export const changelog = [
 	{
-		date: new Date('2022-01-02'),
+		date: new Date('2022-01-04'),
 		Changes: () => <>Migrate Riddle of Fire module to BuffWindow.</>,
 		contributors: [CONTRIBUTORS.MALP],
+	},
+	{
+		date: new Date('2022-01-03'),
+		Changes: () => <>Update Twin Snakes buff description, and adjust timeline order.</>,
+		contributors: [CONTRIBUTORS.AY],
 	},
 	{
 		date: new Date('2022-01-01'),

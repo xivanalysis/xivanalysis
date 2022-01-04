@@ -1,9 +1,9 @@
 import * as Sentry from '@sentry/browser'
 import {STATUS_ID_OFFSET} from 'data/STATUSES'
-import {Event, Events, Cause, SourceModifier, TargetModifier} from 'event'
+import {Event, Events, Cause, SourceModifier, TargetModifier, AttributeValue, Attribute} from 'event'
 import {Actor} from 'report'
 import {resolveActorId} from '../base'
-import {ActorResources, BuffEvent, BuffStackEvent, CastEvent, DamageEvent, DeathEvent, FflogsEvent, HealEvent, HitType, InstaKillEvent, TargetabilityUpdateEvent} from '../eventTypes'
+import {ActorResources, BuffEvent, BuffStackEvent, CastEvent, CombatantInfoEvent, DamageEvent, DeathEvent, FflogsEvent, HealEvent, HitType, InstaKillEvent, TargetabilityUpdateEvent} from '../eventTypes'
 import {AdapterStep} from './base'
 
 /*
@@ -95,9 +95,8 @@ export class TranslateAdapterStep extends AdapterStep {
 		case 'targetabilityupdate':
 			return [this.adaptTargetableEvent(baseEvent)]
 
-		// TODO: Use this. There's some great info, such as level (so we can automate under-cap ulti checks), full stat info for the logging player, etc.
 		case 'combatantinfo':
-			break
+			return this.adaptCombatantInfoEvent(baseEvent)
 
 		/* eslint-disable no-fallthrough */
 		// Dispels are already modelled by other events, and aren't something we really care about
@@ -357,6 +356,37 @@ export class TranslateAdapterStep extends AdapterStep {
 			}),
 			targetable: !!event.targetable,
 		}
+	}
+
+	private adaptCombatantInfoEvent(event: CombatantInfoEvent): Array<Events['actorUpdate']> {
+		// TODO: Use more info in here. We're currently extracting the speed attribute values for the logging player, but there's also player level, prepull statuses, and more in there.
+
+		const attributeMapping: Array<[number | undefined, Attribute]> = [
+			[event.skillSpeed, Attribute.SKILL_SPEED],
+			[event.spellSpeed, Attribute.SPELL_SPEED],
+		]
+
+		const attributes: AttributeValue[] = []
+
+		for (const [value, attribute] of attributeMapping) {
+			if (value == null) { continue }
+			attributes.push({attribute, value, estimated: false})
+		}
+
+		if (attributes.length === 0) {
+			return []
+		}
+
+		return [{
+			...this.adaptBaseFields(event),
+			type: 'actorUpdate',
+			attributes,
+			actor: resolveActorId({
+				id: event.sourceID,
+				instance: event.sourceInstance,
+				actor: event.source,
+			}),
+		}]
 	}
 
 	private adaptTargetedFields(event: FflogsEvent) {

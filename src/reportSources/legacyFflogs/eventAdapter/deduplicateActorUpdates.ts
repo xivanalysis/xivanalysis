@@ -1,4 +1,4 @@
-import {Event, Events, Position, Resource} from 'event'
+import {AttributeValue, Event, Events, Position, Resource} from 'event'
 import _ from 'lodash'
 import {Actor} from 'report'
 import {FflogsEvent} from '../eventTypes'
@@ -33,13 +33,13 @@ export class DeduplicateActorUpdateStep extends AdapterStep {
 			actor: next.actor,
 		} as const
 
-		type OmitAttributesProperty = 'attributes' // Omitting attributes property from the dedupe check because the ActorUpdate events that could have them are only synthesized in the SpeedStatAdapterStep, which runs after this adapter
-		type DeduplicatedFields = Omit<Events['actorUpdate'], keyof typeof baseFields | OmitAttributesProperty>
+		type DeduplicatedFields = Omit<Events['actorUpdate'], keyof typeof baseFields>
 		const updates = this.denseObject<DeduplicatedFields>()([
 			['hp', this.resolveResource(prev.hp, next.hp)],
 			['mp', this.resolveResource(prev.mp, next.mp)],
 			['position', this.resolvePosition(prev.position, next.position)],
 			['targetable', this.resolveValue(prev.targetable, next.targetable)],
+			['attributes', this.resolveAttributes(prev.attributes, next.attributes)],
 		])
 
 		// If nothing has changed, we can noop this entire event
@@ -47,7 +47,7 @@ export class DeduplicateActorUpdateStep extends AdapterStep {
 			return undefined
 		}
 
-		this.actorState.set(next.actor, _.merge({}, prev, updates))
+		this.actorState.set(next.actor, this.mergeUpdates(prev, next))
 
 		return {
 			...baseFields,
@@ -80,6 +80,25 @@ export class DeduplicateActorUpdateStep extends AdapterStep {
 		return next !== prev ? next : undefined
 	}
 
+	private resolveAttributes(
+		prev?: AttributeValue[],
+		next?: AttributeValue[],
+	) {
+		// If previous is null, next is accurate regardless of null status.
+		// If next is null, nothing has changed and we can noop with a null.
+		if (prev == null || next == null) { return next }
+
+		const attributes: AttributeValue[] = []
+		for (const nextAttr of next) {
+			const prevAttr = prev.find(prevAttr => prevAttr.attribute === nextAttr.attribute)
+			if (prevAttr != null && prevAttr.value === nextAttr.value) {
+				continue
+			}
+			attributes.push(nextAttr)
+		}
+		return attributes.length > 0 ? attributes : undefined
+	}
+
 	private denseObject<T extends object>() {
 		// If you're getting red squigglies up above when calling this function, it's
 		// almost certainly because a new field has been added to one of the interfaces,
@@ -95,5 +114,20 @@ export class DeduplicateActorUpdateStep extends AdapterStep {
 				? undefined
 				: Object.fromEntries(filtered) as Partial<T>
 		}
+	}
+
+	private mergeUpdates(
+		prev: Events['actorUpdate'],
+		next: Events['actorUpdate'],
+	) {
+		return _.mergeWith({}, prev, next, (prevValue, nextValue, key) => {
+			// If it's the attributes array, do a bit of a smarter merge
+			if (key !== 'attributes' || prevValue == null || nextValue == null) { return }
+
+			return _.values(_.merge(
+				_.keyBy(prevValue, 'attribute'),
+				_.keyBy(nextValue, 'attribute'),
+			))
+		})
 	}
 }

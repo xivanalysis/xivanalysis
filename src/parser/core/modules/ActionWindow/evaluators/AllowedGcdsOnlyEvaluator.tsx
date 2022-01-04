@@ -99,7 +99,7 @@ export class AllowedGcdsOnlyEvaluator implements WindowEvaluator {
 	}
 
 	protected calculateExpectedGcdsForWindow(window: HistoryEntry<EvaluatedAction[]>) {
-		return calculateExpectedGcdsForTime(this.expectedGcdCount, this.globalCooldown.getEstimate(), window.start, window.end) + this.adjustCount(window)
+		return calculateExpectedGcdsForTime(this.expectedGcdCount, this.globalCooldown.getDuration(), window.start, window.end) + this.adjustCount(window)
 	}
 
 	private countAllowedGcdsInWindow(window: HistoryEntry<EvaluatedAction[]>) {

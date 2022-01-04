@@ -1,10 +1,10 @@
 import {GameEdition} from 'data/EDITIONS'
-import {Events} from 'event'
+import {Attribute, Events} from 'event'
 import {Actor, Pull, Report, Team} from 'report'
 import {adaptEvents} from '../eventAdapter'
 import {AdapterStep} from '../eventAdapter/base'
 import {ReassignUnknownActorStep} from '../eventAdapter/reassignUnknownActor'
-import {CastEvent, FflogsEvent, HitType, ReportLanguage} from '../eventTypes'
+import {CastEvent, CombatantInfoAura, FflogsEvent, HitType, ReportLanguage} from '../eventTypes'
 
 // "Mock" the reassign unknown actor step with its real implementation. We use this mock handling later
 // to disable the step on a test-by-test basis.
@@ -1030,6 +1030,53 @@ describe('Event adapter', () => {
 			actor: '1',
 			mp: {current: 300, maximum: 15000},
 			position: {x: 150, y: 50},
+		}])
+		/* eslint-enable @typescript-eslint/no-magic-numbers */
+	})
+
+	it('omits duplicate actor attributes', () => {
+		const sharedFields = {
+			type: 'combatantinfo' as const,
+			sourceID: 1,
+			auras: [] as CombatantInfoAura[],
+			gear: [] as [],
+			level: 90,
+			sourceIsFriendly: true,
+			targetIsFriendly: true,
+		}
+		const result = adaptEvents(report, pull, [{
+			...sharedFields,
+			timestamp: 100,
+			skillSpeed: 100,
+			spellSpeed: 100,
+		}, {
+			...sharedFields,
+			timestamp: 200,
+			skillSpeed: 100,
+			spellSpeed: 200,
+		}, {
+			...sharedFields,
+			timestamp: 300,
+			skillSpeed: 100,
+			spellSpeed: 200,
+		}])
+
+		/* eslint-disable @typescript-eslint/no-magic-numbers */
+		expect(result).toEqual([{
+			timestamp: timestamp + 100,
+			type: 'actorUpdate',
+			actor: '1',
+			attributes: [
+				{attribute: Attribute.SKILL_SPEED, value: 100, estimated: false},
+				{attribute: Attribute.SPELL_SPEED, value: 100, estimated: false},
+			],
+		}, {
+			timestamp: timestamp + 200,
+			type: 'actorUpdate',
+			actor: '1',
+			attributes: [
+				{attribute: Attribute.SPELL_SPEED, value: 200, estimated: false},
+			],
 		}])
 		/* eslint-enable @typescript-eslint/no-magic-numbers */
 	})
