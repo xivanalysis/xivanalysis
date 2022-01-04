@@ -30,6 +30,11 @@ export const RED_MAGE = new Meta({
 
 	changelog: [
 		{
+			date: new Date('2021-01-04'),
+			Changes: () => <>Mark as supported for 6.05.</>,
+			contributors: [CONTRIBUTORS.LEYLIA],
+		},
+		{
 			date: new Date('2021-12-29'),
 			Changes: () => <>Added Mana Stack Gauge and special handling for Melee and Finisher combo breaks</>,
 			contributors: [CONTRIBUTORS.LEYLIA],
