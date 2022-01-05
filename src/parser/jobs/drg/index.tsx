@@ -12,7 +12,7 @@ export const DRAGOON = new Meta({
 	</>,
 	supportedPatches: {
 		from: '6.0',
-		to: '6.0',
+		to: '6.05',
 	},
 	contributors: [
 		{user: CONTRIBUTORS.FALINDRITH, role: ROLES.MAINTAINER},

@@ -97,7 +97,7 @@ export class ExpectedGcdCountEvaluator implements WindowEvaluator {
 	}
 
 	private calculateExpectedGcdsForWindow(window: HistoryEntry<EvaluatedAction[]>) {
-		return calculateExpectedGcdsForTime(this.expectedGcds, this.globalCooldown.getEstimate(), window.start, window.end) + this.adjustCount(window)
+		return calculateExpectedGcdsForTime(this.expectedGcds, this.globalCooldown.getDuration(), window.start, window.end) + this.adjustCount(window)
 	}
 
 	private countGcdsInWindow(window: HistoryEntry<EvaluatedAction[]>) {

@@ -70,7 +70,7 @@ class RequiescatGcdsEvaluator extends AllowedGcdsOnlyEvaluator {
 		const adjustedWindowStart = window.start + WINDOW_START_FORGIVENESS_FOR_RUSHING
 
 		// Reduce calculated amount by 1 to not report the Confietor cast as an expected Holy Spirit/Circle cast
-		return calculateExpectedGcdsForTime(EXPECTED_REQUIESCAT_CASTS, this.globalCooldown.getEstimate(), adjustedWindowStart, adjustedWindowEnd) - 1
+		return calculateExpectedGcdsForTime(EXPECTED_REQUIESCAT_CASTS, this.globalCooldown.getDuration(), adjustedWindowStart, adjustedWindowEnd) - 1
 	}
 }
 export class Requiescat extends BuffWindow {
@@ -128,7 +128,7 @@ export class Requiescat extends BuffWindow {
 		const downtimeInWindow = this.downtime.getDowntime(window.start, originalWindowEnd)
 		const adjustedWindowEnd = originalWindowEnd - downtimeInWindow
 		const adjustedWindowDuration = adjustedWindowEnd - window.start
-		if (adjustedWindowDuration < this.globalCooldown.getEstimate()) {
+		if (adjustedWindowDuration < this.globalCooldown.getDuration()) {
 			return -1
 		}
 

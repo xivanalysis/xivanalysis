@@ -97,7 +97,6 @@ export const NIN = ensureActions({
 		icon: 'https://xivapi.com/i/002000/002931.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		statusesApplied: ['FLEETING_RAIJU_READY'],
 	},
 
 	FLEETING_RAIJU: {
@@ -252,7 +251,7 @@ export const NIN = ensureActions({
 		icon: 'https://xivapi.com/i/002000/002912.png',
 		onGcd: true,
 		cooldown: 1500,
-		statusesApplied: ['FORKED_RAIJU_READY'],
+		statusesApplied: ['RAIJU_READY'],
 	},
 
 	RAITON_TCJ: {
