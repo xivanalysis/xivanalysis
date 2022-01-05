@@ -13,10 +13,10 @@ export class ActionTimeline extends CoreActionTimeline {
 		'RIDDLE_OF_FIRE',
 		'BROTHERHOOD',
 		'PERFECT_BALANCE',
-		'THUNDERCLAP',
 		'RIDDLE_OF_WIND',
 		'RIDDLE_OF_EARTH',
 		'MANTRA',
+		'THUNDERCLAP',
 		'ANATMAN',
 	]
 }

@@ -38,5 +38,10 @@ export const WHITE_MAGE = new Meta({
 			Changes: () => <>Updated Thin Air Module for charge-based usage, added some weighting on MP saved per cast</>,
 			contributors: [CONTRIBUTORS.INNI],
 		},
+		{
+			date: new Date('2022-01-02'),
+			Changes: () => <>Updated Overhealing Module to include Liturgy of the bell</>,
+			contributors: [CONTRIBUTORS.KERRIS],
+		},
 	],
 })

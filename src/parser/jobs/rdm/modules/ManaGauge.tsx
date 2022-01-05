@@ -19,7 +19,7 @@ interface GaugeModifier {
 export const MANA_DIFFERENCE_THRESHOLD = 30
 export const MANA_CAP = 100
 
-export class Gauge extends CoreGauge {
+export class ManaGauge extends CoreGauge {
 	static override title = t('rdm.gauge.title')`Mana Gauge Usage`
 
 	@dependency private suggestions!: Suggestions

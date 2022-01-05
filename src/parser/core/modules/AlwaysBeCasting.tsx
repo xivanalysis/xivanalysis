@@ -53,7 +53,7 @@ export class AlwaysBeCasting extends Analyser {
 		}
 
 		let castTime = this.castTime.forEvent(event) ?? 0
-		const adjustedBaseGCD = this.globalCooldown.getEstimate()
+		const adjustedBaseGCD = this.globalCooldown.getDuration()
 		if (castTime >= adjustedBaseGCD) {
 			// Account for "caster tax" - animation lock on spells with cast time equal to or greater than the GCD that prevents starting the next spell until the animation finishes
 			castTime += ANIMATION_LOCK
