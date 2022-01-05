@@ -53,7 +53,7 @@ export const changelog = [
 		contributors: [CONTRIBUTORS.AKAIRYU],
 	},
 	{
-		date: new Date('2021-01-04'),
+		date: new Date('2022-01-04'),
 		Changes: () => <>Mark as supported for 6.05.</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],
 	},
