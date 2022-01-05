@@ -699,8 +699,6 @@
   "sam.ms.suggestions.missedgcd.content": "<0/>の効果時間中に3回のウェポンスキルを使いましょう。",
   "sam.ms.title": "明鏡止水の使用先",
   "sch.about.description": "\nこのアナライザーは戦闘中に起きたことについてのより深い洞察を提供するとともに、学者の操作を手軽に改善できるようにすることを目指しています。\n\nもっと学者について知りたい場合は、[The Balance](https://thebalanceffxiv.com/)上のガイドをチェックして、#sch_questionsチャンネルに入ってください。\n",
-  "sch.cooldown.aetherflow.description": "",
-  "sch.cooldown.chainstrat.description": "<0/>はリキャスト毎に使うようにしましょう。他のバフが重なるときは最大の効果を得られるので特にです。",
   "sch.dots.checklist.description": "学者にとって蠱毒法は主要なダメージ源です。可能な限り維持するように心がけ、1回の使用ごとに最低でも15秒の効果時間を得られるようにしましょう。",
   "sch.dots.checklist.name": "常にDoTを切らさないようにしてください。",
   "sch.dots.checklist.requirement.bio-ii.name": "アクティブ率: <0/>",
