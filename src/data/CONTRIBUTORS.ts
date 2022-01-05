@@ -139,8 +139,8 @@ const CONTRIBUTORS = ensureRecord<Contributor>()({
 		avatar: require('./avatar/dthomash.png'),
 		jobs: [
 			JOBS.SCHOLAR,
-		]
-	}
+		],
+	},
 })
 
 export default CONTRIBUTORS
