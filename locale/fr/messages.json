@@ -60,6 +60,7 @@
   "ast.lightspeed.rotation.mp-saved": "PM sauvés",
   "ast.lightspeed.title": "Vitesse de la lumière",
   "ast.lucid-dreaming.suggestion.content": "Essayez de garder <0/> en temps de recharge pour mieux gérer vos PM.",
+  "ast.lucid-dreaming.suggestion.why": "{usesMissed, plural, one {# utilisation} other {# utilisations}} de Rêve lucide {usesMissed, plural, one {manquée} other {manquées}} en le retenant pendant au moins {0}.",
   "ast.ogcd-downtime.divination.description": "<0/> permet à l'Astromancien d'augmenter drastiquement les dégâts de l'équipe lorsqu'utilisé en combinaison avec des cartes. L'augmentation des dégâts se fait de manière multiplicative, il est donc recommandé d'utiliser <1/>. Essayez de vous synchroniser avec les buffs et phases de DPS des autres membres de l'équipe. Il est plus important de l'utiliser au bon moment plutôt que d'attendre d'avoir trois symboles différents.",
   "ast.ogcd-downtime.divination.name": "Utilisez Divination",
   "ast.overheal.earthlystar.name": "Étoile Terrestre",
