@@ -51,7 +51,6 @@ export class DoTs extends CoreDoTs {
 	protected addClippingSuggestions() {
 		// DoTs are meant to be refreshed together, so just average their clip
 		const meanClip = (this.getClippingAmount(this.data.statuses.CAUSTIC_BITE.id) + this.getClippingAmount(this.data.statuses.STORMBITE.id)) / 2
-		console.log(meanClip)
 
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.IRON_JAWS.icon,
