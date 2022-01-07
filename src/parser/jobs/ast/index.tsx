@@ -36,12 +36,11 @@ export const ASTROLOGIAN = new Meta({
 	],
 	changelog: [
 		{
-			date: new Date('2022-01-04'),
+			date: new Date('2022-01-06'),
 			Changes: () => <>
 				<strong>6.05 Support</strong>
 				<ul>
 					<li> Actually fixed <DataLink action="DRAW" /> math instead of whatever the other person (it was me T.T ) did. </li>
-					<li> Updated <DataLink action="LUCID_DREAMING" /> thresholds to be higher since AST manamanagement is better utilized using <DataLink action="DRAW" /> and <DataLink action="ASTRODYNE" />. </li>
 					<li> Updated to 6.05 support which didn't involve a whole lot for AST. </li>
 				</ul>
 			</>,
