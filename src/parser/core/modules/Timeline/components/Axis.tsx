@@ -41,7 +41,7 @@ export const Axis = memo(function Axis({
 			}}
 		>
 			{ticks.map((tick, index) => (
-				<Item key={index} left={lefts[index]}>
+				<Item key={tick.getTime()} left={lefts[index]}>
 					<div className={classNames(
 						styles.gridLine,
 						isMajorTick(tick) && styles.major,
@@ -59,7 +59,7 @@ export const Axis = memo(function Axis({
 				height: AXIS_ROW_HEIGHT,
 			}}
 		>
-			{ticks.map((tick, index) => <Fragment key={index}>
+			{ticks.map((tick, index) => <Fragment key={tick.getTime()}>
 				<Item left={lefts[index]}>
 					{/* Second ticks */}
 					<div className={styles.axisTick}>
