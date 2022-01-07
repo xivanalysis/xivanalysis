@@ -73,7 +73,7 @@ const EYE_COLOR = Color.rgb(61, 135, 255).fade(0.25).toString()
 
 // Eye gauge is tracked with core gauge (apparently it's called "First Brood's Gaze" which I did not know until EW)
 // Life of the dragon windows are manually tracked and analyzed.
-export default class BloodOfTheDragon extends CoreGauge {
+export class BloodOfTheDragon extends CoreGauge {
 	static override handle = 'bloodOfTheDragon'
 	static override title = t('drg.blood.title')`Life of the Dragon`
 
