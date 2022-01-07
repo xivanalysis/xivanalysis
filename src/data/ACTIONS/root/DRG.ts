@@ -168,7 +168,6 @@ export const DRG = ensureActions({
 			from: 7397,
 			end: true,
 		},
-		statusesApplied: ['DRACONIAN_FIRE'],
 	},
 
 	// -----

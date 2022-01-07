@@ -13,7 +13,7 @@ export const PLAY: Array<keyof ActionRoot> = [
 	'THE_SPIRE',
 ]
 
-export const CROWN_PLAY: Array<keyof ActionRoot> = [
+export const MINOR_ARCANA: Array<keyof ActionRoot> = [
 	'LORD_OF_CROWNS',
 	'LADY_OF_CROWNS',
 ]

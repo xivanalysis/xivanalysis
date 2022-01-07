@@ -8,7 +8,7 @@ const description = t('gnb.about.description')`This analyzer looks for the low-h
 If you're looking to learn about how exactly the job plays and functions from the ground up, take a look at a few basic guides:
 
 * [General tanking guide by Aletin](https://goo.gl/nYzAnq)
-* [No Mercy Windows by Rin Karigani](https://i.imgur.com/o8hza9e.png)
+* [No Mercy Windows by Rin Karigani](https://media.discordapp.net/attachments/879555876648812554/919201930583109632/123NMGF.jpg?width=1193&height=671)
 
 If you have any suggestions about the module, feel free to join the XIVA discord and use the feedback channels.
 `
@@ -18,10 +18,10 @@ export const GUNBREAKER = new Meta({
 
 	Description: () => <TransMarkdown source={description}/>,
 
-	// supportedPatches: {
-	// 	from: '6.0',
-	// 	to: '6.0',
-	// },
+	supportedPatches: {
+		from: '6.0',
+		to: '6.05',
+	},
 
 	contributors: [
 		{user: CONTRIBUTORS.RYAN, role: ROLES.DEVELOPER},
@@ -80,6 +80,25 @@ export const GUNBREAKER = new Meta({
 				</ul>,
 			</>,
 			contributors: [CONTRIBUTORS.JONNIX],
+		},
+		{
+			date: new Date('2022-1-02'),
+			Changes: () => <>
+				<ul>
+					<li>Fixed Bug with GNB Opener expecting full burst</li>
+					<li>Updated GNB info links and mark as supported for 6.0</li>
+				</ul>,
+			</>,
+			contributors: [CONTRIBUTORS.RYAN],
+		},
+		{
+			date: new Date('2022-1-04'),
+			Changes: () => <>
+				<ul>
+					<li>Mark Gunbreaker as supported for 6.05</li>
+				</ul>,
+			</>,
+			contributors: [CONTRIBUTORS.RYAN],
 		},
 	],
 })

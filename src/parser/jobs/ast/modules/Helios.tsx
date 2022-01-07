@@ -21,7 +21,7 @@ const SEVERITIES = {
 	},
 }
 
-export class Horoscope extends Analyser {
+export class Helios extends Analyser {
 	static override handle = 'horoscope'
 	static override title = t('ast.horoscope.title')`Horoscope`
 
@@ -29,7 +29,7 @@ export class Horoscope extends Analyser {
 	@dependency private cooldowns!: Cooldowns
 	@dependency private suggestions!: Suggestions
 
-	private nonHoroscopeHeals = 0
+	private nonHoroscopeHeals: number = 0
 
 	override initialise() {
 
@@ -37,34 +37,38 @@ export class Horoscope extends Analyser {
 			this.data.actions.HELIOS.id,
 			this.data.actions.ASPECTED_HELIOS.id,
 		]
-		const playerTypeFilter = filter<Event>().source(this.parser.actor.id).type('action')
 
-		this.addEventHook(playerTypeFilter
+		const playerFilter = filter<Event>().source(this.parser.actor.id)
+
+		this.addEventHook(playerFilter
+			.type('action')
 			.action(oneOf(HELIOS_CASTS)), this.onHeliosCast)
 		this.addEventHook('complete', this.onComplete)
 	}
 
 	private onHeliosCast() {
-		if (this.cooldowns.remaining('HOROSCOPE') > 0) {
+		if (this.data.actions.HOROSCOPE.cooldown -  this.cooldowns.remaining('HOROSCOPE') < this.data.statuses.HOROSCOPE.duration //checks whether horoscope was just used
+		|| this.data.actions.NEUTRAL_SECT.cooldown -  this.cooldowns.remaining('NEUTRAL_SECT') < this.data.statuses.NEUTRAL_SECT.duration //checks whether neutral sect was just used
+		|| (this.cooldowns.remaining('NEUTRAL_SECT') > 0 && this.cooldowns.remaining('HOROSCOPE') > 0)) { //if neither were just used, check if they're on CD
 			return
 		}
 		this.nonHoroscopeHeals++
 	}
 
-	onComplete() {
+	private onComplete() {
 		/*
 			SUGGESTION: AOE heal without horoscope
 		*/
 		this.suggestions.add(new TieredSuggestion({
-			icon: this.data.actions.HOROSCOPE.icon,
+			icon: this.data.actions.HELIOS.icon,
 			content: <Trans id="ast.horoscope.suggestion.usage.content">
-				Try to plan your <DataLink action="HOROSCOPE" /> usages to have it up before you need to cast <DataLink action="HELIOS" /> or <DataLink action="ASPECTED_HELIOS" />.
-				<DataLink status="HOROSCOPE_HELIOS" /> may help to cover more damage later without needing to cast more AOE heals.
+				Try to plan your <DataLink action="HOROSCOPE" /> or <DataLink action="NEUTRAL_SECT" /> usages to have either up before you need to cast <DataLink action="HELIOS" /> or <DataLink action="ASPECTED_HELIOS" />.
+				<DataLink status="HOROSCOPE_HELIOS" showIcon={false} /> and <DataLink action="NEUTRAL_SECT" showIcon={false} /> may help to cover more damage later without needing to cast additional AOE heals.
 			</Trans>,
 			tiers: SEVERITIES.WASTED_AOE_HEAL_TIERS,
 			value: this.nonHoroscopeHeals,
 			why: <Trans id="ast.horoscope.suggestion.usage.why">
-				<Plural value={this.nonHoroscopeHeals} one="# AOE GCD heal was cast" other="# AOE GCD heals were cast" /> without horoscope even though it was available.
+				<Plural value={this.nonHoroscopeHeals} one="# AOE GCD heal was cast" other="# AOE GCD heals were cast" /> without <DataLink action="HOROSCOPE" /> or <DataLink action="NEUTRAL_SECT" /> even though one of the two abilities were available.
 			</Trans>,
 		}))
 	}

@@ -296,7 +296,7 @@ export class Summons extends Analyser {
 		if (window.end != null && window.end < demiEnd) {
 			downtimeDuringDemi += demiEnd - window.end
 		}
-		return EXPECTED_DEMI_GCDS - Math.ceil(downtimeDuringDemi / this.globalCooldown.getEstimate())
+		return EXPECTED_DEMI_GCDS - Math.ceil(downtimeDuringDemi / this.globalCooldown.getDuration())
 	}
 
 	private buildPanel(summon: HistoryEntry<SummonWindow>) {

@@ -7,6 +7,8 @@ import {Attribute, Event, Events, AttributeValue} from 'event'
 import _ from 'lodash'
 import {Actor, Team} from 'report'
 import {getSpeedStat} from 'utilities/speedStatMapper'
+import {resolveActorId} from '../base'
+import {FflogsEvent} from '../eventTypes'
 import {AdapterStep, PREPULL_OFFSETS} from './base'
 
 const JOB_SPEED_MODIFIERS: Partial<Record<JobKey, number>> = {
@@ -33,15 +35,35 @@ function isInstant(gcd: GCD): boolean {
 }
 
 export class SpeedStatsAdapterStep extends AdapterStep {
+	private sourceProvidedActors = new Set<Actor['id']>()
 	private actorActions = new Map<Actor['id'], GCD[]>()
 	private actorSpeedmodWindows = new Map<Actor['id'], Map<number, SpeedmodWindow[]>>()
 
 	static override debug = false
 	private endTimestamp = this.pull.timestamp + this.pull.duration
 
+	override adapt(baseEvent: FflogsEvent, adaptedEvents: Event[]) {
+		if (
+			baseEvent.type === 'combatantinfo'
+			&& baseEvent.skillSpeed != null
+			&& baseEvent.spellSpeed != null
+		) {
+			this.sourceProvidedActors.add(resolveActorId({
+				id: baseEvent.sourceID,
+				instance: baseEvent.sourceInstance,
+				actor: baseEvent.source,
+			}))
+		}
+		return adaptedEvents
+	}
+
 	override postprocess(adaptedEvents: Event[]): Event[] {
 		adaptedEvents.forEach((event) => {
-			if (!('source' in event) || !this.actorIsFriendly(event.source)) { return }
+			if (
+				!('source' in event)
+				|| !this.actorIsFriendly(event.source)
+				|| this.sourceProvidedActors.has(event.source)
+			) { return }
 
 			switch (event.type) {
 			case 'prepare':
