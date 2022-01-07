@@ -37,10 +37,8 @@ export default class Draw extends Analyser {
 	@dependency private suggestions!: Suggestions
 	@dependency private arcanaTracking!: ArcanaTracking
 
-	private chargesRemaining: number = this.data.actions.DRAW.charges
-	private lastDrawTimestamp: number = 0
 	private draws: number = 0
-	private drawDrift: number = 0
+	private cooldownEndTime: number = this.parser.pull.timestamp
 	private drawTotalDrift: number = 0
 	private plays: number = 0
 
@@ -75,32 +73,15 @@ export default class Draw extends Analyser {
 
 	private onDraw(event: Events['action']) {
 
-		//update charges
-		this.chargesRemaining = Math.min(this.data.actions.DRAW.charges, this.chargesRemaining + (event.timestamp - this.lastDrawTimestamp)/this.data.actions.DRAW.cooldown)
-
 		// ignore precasted draws
-		if (event.timestamp < this.parser.pull.timestamp) {
-			return
+		if (event.timestamp > this.parser.pull.timestamp) {
+
+			this.drawTotalDrift += Math.max(0, event.timestamp - this.cooldownEndTime)
+
+			// update the last use
+			this.cooldownEndTime = this.data.actions.DRAW.cooldown + Math.max(this.cooldownEndTime, event.timestamp)
+			this.draws++
 		}
-
-		this.draws++
-		this.chargesRemaining--
-
-		if (this.lastDrawTimestamp === 0) {
-			// The first use, take holding as from the start of the fight. assumes that draw is not on CD
-			this.drawDrift = event.timestamp - this.parser.pull.timestamp
-		} else {
-			// Take holding as from the time it comes off cooldown if the second draw hasn't been played
-			this.drawDrift = event.timestamp - this.lastDrawTimestamp - this.data.actions.DRAW.cooldown * (this.chargesRemaining + 1)
-		}
-
-		// Keep track of total drift time not using Draw
-		if (this.drawDrift > 0) {
-			this.drawTotalDrift += this.drawDrift
-		}
-
-		// update the last use
-		this.lastDrawTimestamp = event.timestamp
 	}
 
 	private onPlay() {
@@ -119,12 +100,8 @@ export default class Draw extends Analyser {
 
 		// If they stopped using Draw at any point in the fight, this'll calculate the drift "accurately"
 		const fightEnd = this.parser.pull.duration + this.parser.pull.timestamp
-		this.chargesRemaining = Math.min(this.data.actions.DRAW.charges, this.chargesRemaining + (fightEnd - oGCD_ALLOWANCE - this.lastDrawTimestamp)/this.data.actions.DRAW.cooldown)
-		if (this.lastDrawTimestamp === 0) {
-			this.drawTotalDrift = this.parser.pull.duration
-		} else {
-			this.drawTotalDrift += Math.max(0, fightEnd - this.lastDrawTimestamp - this.data.actions.DRAW.cooldown * (this.chargesRemaining + 1))
-		}
+		this.drawTotalDrift += Math.max(0, fightEnd - this.cooldownEndTime) - oGCD_ALLOWANCE
+		this.drawTotalDrift = Math.min(this.parser.pull.duration, this.drawTotalDrift)
 
 		// Max plays:
 		// [(fight time / 30s draw time + 1) - 1 if fight time doesn't end between xx:05-xx:29s, and xx:45-xx:60s]
@@ -201,7 +178,7 @@ export default class Draw extends Analyser {
 				tiers: SEVERITIES.DRAW_HOLDING,
 				value: drawsMissed,
 				why: <Trans id="ast.draw.suggestions.draw-uses.why">
-					About <Plural value={drawsMissed} one="# use" other="# uses" /> of <DataLink action="DRAW" /> were missed by holding two cards on full cooldown for at least a total of {this.parser.formatDuration(this.drawTotalDrift)}.
+					About <Plural value={drawsMissed} one="# use" other="# uses" /> of <DataLink action="DRAW" /> <Plural value={drawsMissed} one="was" other="were" /> missed by holding two cards on full cooldown for at least a total of {this.parser.formatDuration(this.drawTotalDrift)}.
 				</Trans>,
 			}))
 		}

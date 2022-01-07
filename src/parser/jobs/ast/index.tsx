@@ -29,12 +29,24 @@ export const ASTROLOGIAN = new Meta({
 	</>,
 	supportedPatches: {
 		from: '6.0',
-		to: '6.0',
+		to: '6.05',
 	},
 	contributors: [
 		{user: CONTRIBUTORS.OTOCEPHALY, role: ROLES.DEVELOPER},
 	],
 	changelog: [
+		{
+			date: new Date('2022-01-04'),
+			Changes: () => <>
+				<strong>6.05 Support</strong>
+				<ul>
+					<li> Actually fixed <DataLink action="DRAW" /> math instead of whatever the other person (it was me T.T ) did. </li>
+					<li> Updated <DataLink action="LUCID_DREAMING" /> thresholds to be higher since AST manamanagement is better utilized using <DataLink action="DRAW" /> and <DataLink action="ASTRODYNE" />. </li>
+					<li> Updated to 6.05 support which didn't involve a whole lot for AST. </li>
+				</ul>
+			</>,
+			contributors: [CONTRIBUTORS.OTOCEPHALY],
+		},
 		{
 			date: new Date('2021-12-31'),
 			Changes: () => <>

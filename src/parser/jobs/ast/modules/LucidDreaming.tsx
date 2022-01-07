@@ -12,7 +12,7 @@ import React, {Fragment} from 'react'
 const SEVERITIES = {
 	USE_PERCENT_THRESHOLD: {
 		0.8: SEVERITY.MAJOR, //less than 20% of the available time is close to not using it at all or barely
-		0.4: SEVERITY.MEDIUM, //60% is not using it enough -- risks not having enough mana throughout the fight, but with cards, this may not be as applicable
+		0.6: SEVERITY.MEDIUM, //40% is not using it enough -- risks not having enough mana throughout the fight, but with cards, this may not be as applicable
 		0.2: SEVERITY.MINOR, //80% of the time is used to keep it on the radar, but not punish
 	},
 }
