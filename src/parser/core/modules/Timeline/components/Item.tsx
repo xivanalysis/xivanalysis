@@ -66,7 +66,7 @@ export const Item = memo(function Item({
 		<div
 			className={styles.item}
 			style={{
-				left,
+				transform: `translateX(${left}px)`,
 				width: right != null ? right - left : undefined,
 				zIndex: depth,
 			}}
