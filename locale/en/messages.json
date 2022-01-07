@@ -49,7 +49,7 @@
   "ast.draw.suggestions.draw-no-usage.content": "No uses of <0/> at all.",
   "ast.draw.suggestions.draw-no-usage.why": "No draws used.",
   "ast.draw.suggestions.draw-uses.content": "Consider casting <0/> as soon as its available to maximize both MP regen and the number of cards played.",
-  "ast.draw.suggestions.draw-uses.why": "About {drawsMissed, plural, one {# use} other {# uses}} of <0/> were missed by holding two cards on full cooldown for at least a total of {0}.",
+  "ast.draw.suggestions.draw-uses.why": "About {drawsMissed, plural, one {# use} other {# uses}} of <0/> {drawsMissed, plural, one {was} other {were}} missed by holding two cards on full cooldown for at least a total of {0}.",
   "ast.draw.title": "Draw",
   "ast.earthly-star.suggestion.missed-use.content": "Use <0/> more frequently. It may save a healing GCD and results in more damage output.",
   "ast.earthly-star.suggestion.missed-use.why": "About {usesMissed} uses of Earthly Star were missed by holding it for at least a total of {0}.",
