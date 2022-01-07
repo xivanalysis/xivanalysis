@@ -302,7 +302,7 @@ export default class BloodOfTheDragon extends CoreGauge {
 			))
 
 			// flag for last life window
-			lifeWindow.isLast = lifeWindow.start + lifeWindow.duration > (this.parser.pull.timestamp + this.parser.pull.duration)
+			lifeWindow.isLast = lifeWindow.start + lifeWindow.duration >= (this.parser.pull.timestamp + this.parser.pull.duration)
 
 			// A window should be delayed if:
 			// - there are no buffs off cooldown at any point in this window
@@ -370,12 +370,11 @@ export default class BloodOfTheDragon extends CoreGauge {
 
 		// second condition:
 		// - we actually did open a window but it got severely truncated by the fight
-		// in order for this to be possible, we need to have had two eyes when mirage dive was last cast
+		// in order for this to be possible, we need to actually be in a lotd that was cut short by the end of the fight
 		// see this log for a rather extreme example of this: https://www.fflogs.com/reports/B4Q16j3WG9DFygNR#fight=13&source=124
-		if (this.eyeGauge.getValueAt(this.lastMdTime) === MAX_EYES) {
-			const lastWindow = this.lifeWindows.history[this.lifeWindows.history.length - 1]
-
-			// check the duration from last mirage dive time, assuming we had max eyes
+		const lastWindow = this.lifeWindows.history[this.lifeWindows.history.length - 1]
+		if (lastWindow.duration < DRAGON_DURATION_MILLIS) {
+			// check the duration from last mirage dive time, assuming we had max eyes because we're now in life
 			const remainingTimeForLife = this.parser.pull.duration - (this.lastMdTime - this.parser.pull.timestamp)
 
 			// if we had a significant amount of time left we could've been in life instead
