@@ -346,6 +346,12 @@ export default class BloodOfTheDragon extends CoreGauge {
 	 * This function does a check to see if there was room to rush a final window.
 	 */
 	private shouldRushFinalWindow() {
+		// just in case someone uses 0 lotd windows???
+		if (this.lifeWindows.history.length < 1) {
+			// this feels "technically correct"
+			return END_OF_FIGHT_ERROR.NONE
+		}
+
 		// there's actually two conditions here
 		// first condition: if we still have two eyes at the end of the fight
 		if (this.eyeGauge.value === MAX_EYES) {
@@ -380,7 +386,7 @@ export default class BloodOfTheDragon extends CoreGauge {
 			}
 		}
 
-		return false
+		return END_OF_FIGHT_ERROR.NONE
 	}
 
 	onComplete() {
@@ -461,10 +467,11 @@ export default class BloodOfTheDragon extends CoreGauge {
 			const remainingTimeForLife = (this.parser.pull.duration - (this.lastMdTime - this.parser.pull.timestamp)) / 1000
 			const lastWindowDuration = this.lifeWindows.history[this.lifeWindows.history.length - 1].duration / 1000
 
+			// medium severity, they did use it but it got cutoff
 			this.suggestions.add(new Suggestion({
 				icon: this.data.actions.NASTROND.icon,
 				content: <Trans id="drg.blood.suggestions.late-window">Avoid entering Life of the Dragon right before the end of the fight. Try to enter Life of the Dragon earlier, even if it does not align with your buffs, in order to get as many uses of <DataLink action="NASTROND" /> and <DataLink action="STARDIVER" /> as possible before the end of the fight.</Trans>,
-				severity: SEVERITY.MAJOR,
+				severity: SEVERITY.MEDIUM,
 				why: <Trans id="drg.blood.suggestions.rush.late-window.why">
 					Your final Life of the Dragon window lasted {lastWindowDuration.toFixed(1)}s, but could have been used {remainingTimeForLife.toFixed(1)}s before the end of the fight.
 				</Trans>,

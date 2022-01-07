@@ -19,8 +19,8 @@ export const DRAGOON = new Meta({
 	],
 	changelog: [
 		{
-			date: new Date('2022-01-02'),
-			Changes: () => <>Updated Life of the Dragon. First Brood's Gaze gauge now displays on the Timeline. Added suggestions for errors related to unused or late Life of the Dragon windows at the end of a fight.</>,
+			date: new Date('2022-06-02'),
+			Changes: () => <>Added First Brood's Gaze gauge to the Timeline. Added suggestions for errors related to unused or truncated Life of the Dragon windows at the end of a fight.</>,
 			contributors: [CONTRIBUTORS.FALINDRITH],
 		},
 		{
