@@ -26,6 +26,7 @@ export const WHITE_MAGE = new Meta({
 	contributors: [
 		// {user: CONTRIBUTORS.YOU, role: ROLES.DEVELOPER},
 		{user: CONTRIBUTORS.INNI, role: ROLES.DEVELOPER},
+		{user: CONTRIBUTORS.KERRIS, role: ROLES.DEVELOPER},
 	],
 	changelog: [
 		// {
@@ -41,6 +42,11 @@ export const WHITE_MAGE = new Meta({
 		{
 			date: new Date('2022-01-02'),
 			Changes: () => <>Updated Overhealing Module to include Liturgy of the bell</>,
+			contributors: [CONTRIBUTORS.KERRIS],
+		},
+		{
+			date: new Date('2022-01-04'),
+			Changes: () => <>Updated to add defensive cooldowns and include Liturgy of the bell and Aquaveil</>,
 			contributors: [CONTRIBUTORS.KERRIS],
 		},
 	],
