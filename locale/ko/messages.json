@@ -77,7 +77,6 @@
   "blm.rotation-watchdog.error-messages.missing-fire4s": "<0/>을 1회 이상 놓침",
   "blm.rotation-watchdog.error-messages.no-fire-spells": "딜사이클에 화염 마법이 없음",
   "blm.rotation-watchdog.rotation-table.header.reason": "상이한 차이를 보이는 이유",
-  "blm.rotation-watchdog.rotation-table.message": "흑마도사 딜사이클의 핵심은 사이클당 <0/> 6회 그리고 <1/> 1회 사용하는 것에 있습니다 (<2/> 7회, <4/>를 병행한 <3/> 2회). <5/> 파이쟈 시전 기회를 절대로 놓치지 마십시오.",
   "blm.rotation-watchdog.suggestions.end-with-despair.content": "천상의 화염 구간내에서 800 마나 이상을 보유하고도 더이상 마법을 시전할 수 없다면 <0/>를 사용해서 나머지 마나를 마저 사용하십시오.",
   "blm.rotation-watchdog.suggestions.extra-f1s.content": "천상의 화염 상태에서 2회 이상의 <0/>을 사용하는 것은 사전에 계획하여 되도록 피해야 합니다.",
   "blm.rotation-watchdog.suggestions.icemage.content": "저승의 냉기를 장시간 유지하지 마십시오. <0/>를 최대한 많이 시전하는것이 중요합니다.",
