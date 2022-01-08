@@ -126,7 +126,6 @@
   "blm.rotation-watchdog.error-messages.should-skip-t3": "Devrait sauter le hardcast de <0/>",
   "blm.rotation-watchdog.rotation-table.disclaimer": "Ce module part du principe que vous utilisez le style de jeu standard du BLM. <0/>Si vous suivez un style de jeu non-standard, ce rapport et beaucoup de suggestions ne sont pas applicables.",
   "blm.rotation-watchdog.rotation-table.header.reason": "Raisons des défauts",
-  "blm.rotation-watchdog.rotation-table.message": "Le principe de base du gameplay du Mage Noir est de lancer 6 <0/> et un <1/> par rotation (7 <2/> et deux <3/> si vous utilisez <4/>). <5/>Évitez de manquer l'utilisation de Giga-Feu sauf si les mécaniques l'imposent.",
   "blm.rotation-watchdog.suggestions.end-with-despair.content": "Quand vous ne pouvez plus caster un autre sort en Feu Astral et que vous rester au-dessus de 800 PM, vous devriez utiliser vos MP restant en utilisnt <0/>.",
   "blm.rotation-watchdog.suggestions.end-with-despair.why": "{astralFiresMissingDespairs, plural, one {# phase de Feu Astral ne comportait pas} other {# phases de Feu Astral ne comportaient pas}} au moins un <0/>.",
   "blm.rotation-watchdog.suggestions.extra-f1s.content": "Incanter plus d'un <0/> pendant votre phase de Feu Astral est une perte qui devrait être évitée grâce a une meilleure connaissance des mécaniques du combat.",
