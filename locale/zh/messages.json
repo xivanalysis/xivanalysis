@@ -88,7 +88,6 @@
   "blm.rotation-watchdog.error-messages.should-skip-t3": "应跳过咏唱<0/>",
   "blm.rotation-watchdog.rotation-table.disclaimer": "这个模块假设你玩黑魔的方式是正常的黑魔玩法。<0/>假如你用不寻常的玩法玩黑魔的话，这份报告和其中的很多建议都不适用。",
   "blm.rotation-watchdog.rotation-table.header.reason": "错误原因",
-  "blm.rotation-watchdog.rotation-table.message": "每个黑魔的基础循环是由6个<0/>和一个<1/>（如果有<4/>则是7个<2/>和2个<3/>）组成的。<5/>请根据此原则避免少用炽炎。",
   "blm.rotation-watchdog.suggestions.end-with-despair.content": "在星极火里，如果用了下一个技能会使你的MP低于800以下，你应该跳过这个技能，立刻用<0/>。",
   "blm.rotation-watchdog.suggestions.end-with-despair.why": "{astralFiresMissingDespairs, plural, one {# 次星极火状态} other {# 次星极火状态}}结束前没有使用过<0/>.",
   "blm.rotation-watchdog.suggestions.extra-f1s.content": "在每次星极火循环中咏唱多于一个<0/>就会损失输出。可以通过规划副本时间轴来改善。",
