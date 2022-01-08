@@ -89,7 +89,6 @@
   "blm.rotation-watchdog.error-messages.should-skip-t3": "procのない<0/>はスキップするべき",
   "blm.rotation-watchdog.rotation-table.disclaimer": "このモジュールは、スタンダードプレイスタイルに従っていることを仮定します。<0/>特殊なスキル回しを従っていたら、このレポートや提案はほとんど適用できないかもしれません。",
   "blm.rotation-watchdog.rotation-table.header.reason": "エラー理由",
-  "blm.rotation-watchdog.rotation-table.message": "黒魔道士の詠唱は、1回のローテーションにつき6つの<0/>と1つの<1/>で構成されます。(<4/>を使用した場合は7つの<2/>と2つの<3/>)。<5/>可能な場合は、ファイジャの詠唱の中断を避けてください。",
   "blm.rotation-watchdog.suggestions.end-with-despair.content": "アストラルファイアの状態では、次のスキルをキャストしたらMPが800未満になる場合は、このスキルをスキップして、すぐに<0/>をキャストしよう。",
   "blm.rotation-watchdog.suggestions.end-with-despair.why": "<0/>をキャストせずにアストラルファイアが終了したのは{astralFiresMissingDespairs, plural, other {# 回}}ありました。",
   "blm.rotation-watchdog.suggestions.extra-f1s.content": "1回のアストラルファイアのローテーションで2回以上の<0/>に頼るのを避けてください。戦闘前により良いスキル回しを計画しましょう。",
