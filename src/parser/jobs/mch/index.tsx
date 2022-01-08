@@ -13,12 +13,17 @@ export const MACHINIST = new Meta({
 	</>,
 	supportedPatches: {
 		from: '6.0',
-		to: '6.0',
+		to: '6.05',
 	},
 	contributors: [
 		{user: CONTRIBUTORS.HINT, role: ROLES.MAINTAINER},
 	],
 	changelog: [
+		{
+			date: new Date('2021-01-06'),
+			Changes: () => <>Marked as supported for 6.05.</>,
+			contributors: [CONTRIBUTORS.HINT],
+		},
 		{
 			date: new Date('2021-12-17'),
 			Changes: () => <>Added a new Wildfire module.</>,
