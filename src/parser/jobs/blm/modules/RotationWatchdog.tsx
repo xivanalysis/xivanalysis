@@ -68,12 +68,12 @@ const CYCLE_ERRORS = ensureRecord<CycleErrorCode>()({
 	SHOULD_SKIP_T3: {priority: 8, message: <Trans id="blm.rotation-watchdog.error-messages.should-skip-t3">Should skip hardcast <DataLink action="THUNDER_III"/></Trans>},
 	SHOULD_SKIP_B4: {priority: 9, message: <Trans id="blm.rotation-watchdog.error-messages.should-skip-b4">Should skip <DataLink action="BLIZZARD_IV"/></Trans>},
 	MISSING_FIRE4S: {priority: 10, message: <Trans id="blm.rotation-watchdog.error-messages.missing-fire4s">Missing one or more <DataLink action="FIRE_IV"/>s</Trans>}, // These two errors are lower priority since they can be determined by looking at the
-	MISSED_ICE_PARADOX: {priority: 13, message: <Trans id="blm.rotation-watchdog.error-messages.missed-ice-paradox">Missed <DataLink action="PARADOX"/> in Umbral Ice</Trans>},
-	MISSING_DESPAIRS: {priority: 15, message: <Trans id="blm.rotation-watchdog.error-messages.missing-despair">Missing one or more <DataLink action="DESPAIR"/>s</Trans>}, // target columns in the table, so we want to tell players about other errors first
-	MANAFONT_BEFORE_DESPAIR: {priority: 30, message: <Trans id="blm.rotation-watchdog.error-messages.manafont-before-despair"><DataLink action="MANAFONT"/> used before <DataLink action="DESPAIR"/></Trans>},
-	EXTRA_T3: {priority: 49, message: <Trans id="blm.rotation-watchdog.error-messages.extra-t3">Extra <DataLink action="THUNDER_III"/>s</Trans>}, // Extra T3 and Extra F1 are *very* similar in terms of per-GCD potency loss
-	EXTRA_F1: {priority: 50, message: <Trans id="blm.rotation-watchdog.error-messages.extra-f1">Extra <DataLink action="FIRE_I"/></Trans>}, // These two codes should stay close to each other
-	NO_FIRE_SPELLS: {priority: 75, message: <Trans id="blm.rotation-watchdog.error-messages.no-fire-spells">Rotation included no Fire spells</Trans>},
+	MISSED_ICE_PARADOX: {priority: 15, message: <Trans id="blm.rotation-watchdog.error-messages.missed-ice-paradox">Missed <DataLink action="PARADOX"/> in Umbral Ice</Trans>},
+	MISSING_DESPAIRS: {priority: 20, message: <Trans id="blm.rotation-watchdog.error-messages.missing-despair">Missing one or more <DataLink action="DESPAIR"/>s</Trans>}, // target columns in the table, so we want to tell players about other errors first
+	MANAFONT_BEFORE_DESPAIR: {priority: 40, message: <Trans id="blm.rotation-watchdog.error-messages.manafont-before-despair"><DataLink action="MANAFONT"/> used before <DataLink action="DESPAIR"/></Trans>},
+	EXTRA_T3: {priority: 59, message: <Trans id="blm.rotation-watchdog.error-messages.extra-t3">Extra <DataLink action="THUNDER_III"/>s</Trans>}, // Extra T3 and Extra F1 are *very* similar in terms of per-GCD potency loss
+	EXTRA_F1: {priority: 60, message: <Trans id="blm.rotation-watchdog.error-messages.extra-f1">Extra <DataLink action="FIRE_I"/></Trans>}, // These two codes should stay close to each other
+	NO_FIRE_SPELLS: {priority: 80, message: <Trans id="blm.rotation-watchdog.error-messages.no-fire-spells">Rotation included no Fire spells</Trans>},
 	DROPPED_AF_UI: {priority: 100, message: <Trans id="blm.rotation-watchdog.error-messages.dropped-astral-umbral">Dropped Astral Fire or Umbral Ice</Trans>},
 	DIED: {priority: DEATH_PRIORITY, message: <Trans id="blm.rotation-watchdog.error-messages.died"><DataLink showName={false} action="RAISE"/> Died</Trans>},
 })
