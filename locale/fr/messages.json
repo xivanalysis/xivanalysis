@@ -119,6 +119,7 @@
   "blm.rotation-watchdog.error-messages.extra-f1": "Extra <0/>",
   "blm.rotation-watchdog.error-messages.extra-t3": "Extra <0/>s",
   "blm.rotation-watchdog.error-messages.manafont-before-despair": "<0/> utilisé avant <1/>",
+  "blm.rotation-watchdog.error-messages.missed-ice-paradox": "",
   "blm.rotation-watchdog.error-messages.missing-despair": "Il manque un ou plusieurs<0/>s",
   "blm.rotation-watchdog.error-messages.missing-fire4s": "Il manque un ou plusieurs<0/>s",
   "blm.rotation-watchdog.error-messages.no-fire-spells": "Rotation sans sort de Feu",

@@ -119,6 +119,7 @@
   "blm.rotation-watchdog.error-messages.extra-f1": "<0/> 사용 초과",
   "blm.rotation-watchdog.error-messages.extra-t3": "<0/> 사용 초과",
   "blm.rotation-watchdog.error-messages.manafont-before-despair": "<1/>이전에 <0/>을 사용",
+  "blm.rotation-watchdog.error-messages.missed-ice-paradox": "",
   "blm.rotation-watchdog.error-messages.missing-despair": "<0/>을 1회 이상 놓침",
   "blm.rotation-watchdog.error-messages.missing-fire4s": "<0/>을 1회 이상 놓침",
   "blm.rotation-watchdog.error-messages.no-fire-spells": "딜사이클에 화염 마법이 없음",
