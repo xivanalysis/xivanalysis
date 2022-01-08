@@ -17,7 +17,7 @@ import {Icon, Message} from 'semantic-ui-react'
 import {ensureRecord} from 'utilities'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 import {FIRE_SPELLS} from './Elements'
-import {Gauge, ASTRAL_UMBRAL_DURATION, BLMGaugeState, UMBRAL_HEARTS_MAX_STACKS} from './Gauge'
+import {Gauge, ASTRAL_UMBRAL_DURATION, BLMGaugeState, UMBRAL_HEARTS_MAX_STACKS, ASTRAL_UMBRAL_MAX_STACKS} from './Gauge'
 import Leylines from './Leylines'
 import Procs from './Procs'
 
@@ -68,6 +68,7 @@ const CYCLE_ERRORS = ensureRecord<CycleErrorCode>()({
 	SHOULD_SKIP_T3: {priority: 8, message: <Trans id="blm.rotation-watchdog.error-messages.should-skip-t3">Should skip hardcast <DataLink action="THUNDER_III"/></Trans>},
 	SHOULD_SKIP_B4: {priority: 9, message: <Trans id="blm.rotation-watchdog.error-messages.should-skip-b4">Should skip <DataLink action="BLIZZARD_IV"/></Trans>},
 	MISSING_FIRE4S: {priority: 10, message: <Trans id="blm.rotation-watchdog.error-messages.missing-fire4s">Missing one or more <DataLink action="FIRE_IV"/>s</Trans>}, // These two errors are lower priority since they can be determined by looking at the
+	MISSED_ICE_PARADOX: {priority: 13, message: <Trans id="blm.rotation-watchdog.error-messages.missed-ice-paradox">Missed <DataLink action="PARADOX"/> in Umbral Ice</Trans>},
 	MISSING_DESPAIRS: {priority: 15, message: <Trans id="blm.rotation-watchdog.error-messages.missing-despair">Missing one or more <DataLink action="DESPAIR"/>s</Trans>}, // target columns in the table, so we want to tell players about other errors first
 	MANAFONT_BEFORE_DESPAIR: {priority: 30, message: <Trans id="blm.rotation-watchdog.error-messages.manafont-before-despair"><DataLink action="MANAFONT"/> used before <DataLink action="DESPAIR"/></Trans>},
 	EXTRA_T3: {priority: 49, message: <Trans id="blm.rotation-watchdog.error-messages.extra-t3">Extra <DataLink action="THUNDER_III"/>s</Trans>}, // Extra T3 and Extra F1 are *very* similar in terms of per-GCD potency loss
@@ -609,6 +610,13 @@ export class RotationWatchdog extends Analyser {
 		}
 
 		// Check for errors that apply for all cycles
+
+		// Check if the rotation overwrote a Paradox from the ice phase
+		if (currentRotation.firePhaseMetadata.initialGaugeState.paradox > 0 &&
+			currentRotation.firePhaseMetadata.initialGaugeState.umbralIce === ASTRAL_UMBRAL_MAX_STACKS &&
+			currentRotation.firePhaseMetadata.initialGaugeState.umbralHearts === UMBRAL_HEARTS_MAX_STACKS) {
+			currentRotation.errorCode = CYCLE_ERRORS.MISSED_ICE_PARADOX
+		}
 
 		// Check if the rotation included the expected number of Despair casts
 		if (currentRotation.missingDespairs) {
