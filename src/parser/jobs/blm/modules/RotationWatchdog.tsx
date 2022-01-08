@@ -683,7 +683,8 @@ export class RotationWatchdog extends Analyser {
 			return <Fragment>
 				<Message>
 					<Trans id="blm.rotation-watchdog.rotation-table.message">
-						The core of BLM consists of six <DataLink action="FIRE_IV"/>s and one <DataLink action="DESPAIR"/> per rotation (seven <DataLink showIcon={false} action="FIRE_IV"/>s and two <DataLink showIcon={false} action="DESPAIR"/>s with <DataLink action="MANAFONT"/>).<br/>
+						The core of BLM consists of six casts of <DataLink action="FIRE_IV"/>, two casts of <DataLink action="PARADOX"/> and one cast <DataLink action="DESPAIR"/> per rotation.<br/>
+						With <DataLink action="MANAFONT"/>, an extra cast each of <DataLink action="FIRE_IV"/> and <DataLink action="DESPAIR"/> are expected.<br/>
 						Avoid missing Fire IV casts where possible.
 					</Trans>
 				</Message>
