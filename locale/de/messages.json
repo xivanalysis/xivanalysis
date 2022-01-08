@@ -67,7 +67,6 @@
   "blm.rotation-watchdog.error-messages.missing-fire4s": "Ein oder mehr verpasste <0/>",
   "blm.rotation-watchdog.error-messages.no-fire-spells": "Keine Feuerzauber in der Rota",
   "blm.rotation-watchdog.rotation-table.header.reason": "Abweichungen",
-  "blm.rotation-watchdog.rotation-table.message": "Der Schwarzmagier besteht hauptsächlich aus 6x <0/> und 1x <1/> pro Rotation (bei aktiviertem <4/> sind es 7x <2/> und 2x <3/>).<5/>Versuche Feuga so oft wie möglich einzusetzen.",
   "blm.rotation-watchdog.suggestions.end-with-despair.content": "Sobald du unter dem Effekt von Lichtfeuer stehst, keinen weiteren Zauber casten kannst und über 800 MP bist, solltest du deine verbleibenden MP mit <0/> aufbrauchen.",
   "blm.rotation-watchdog.suggestions.extra-f1s.content": "Das benutzen von mehr als einem <0/> pro Lichtfeuer Zyklus ist eine Hilfestellung die durch besseres Vorrausplanen des Kampfes vermieden werden sollte.",
   "blm.rotation-watchdog.suggestions.icemage.content": "Vermeide langen Zeit Schatteneis aktiv zu haben. Der Großteil deines Schadens entsteht während deiner Lichtfeuer-Phasen, daher versuche <0/> so oft wie im Kampf möglich zu casten.",
