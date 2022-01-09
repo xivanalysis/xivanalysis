@@ -15,7 +15,7 @@ const AOE_FINISHERS = [
 export class AoeChecker extends AoEUsages {
 	@dependency private actors!: Actors
 
-	suggestionIcon = ACTIONS.FUGA.icon
+	suggestionIcon = ACTIONS.FUKO.icon
 
 	trackedActions = [
 		{
@@ -43,7 +43,7 @@ export class AoeChecker extends AoEUsages {
 		},
 
 		{
-			aoeAction: ACTIONS.FUGA,
+			aoeAction: ACTIONS.FUKO,
 			stActions: [ACTIONS.HAKAZE],
 			minTargets: 3,
 
