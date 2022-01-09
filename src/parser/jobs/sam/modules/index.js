@@ -4,6 +4,7 @@ import {Combos} from './Combos'
 import {Fuka} from './Fuka'
 import {Higanbana} from './Higanbana'
 import Interrupts from './Interrupts'
+import {Kaiten} from './Kaiten'
 import {Kenki} from './Kenki'
 import {Meikyo} from './Meikyo'
 import OGCDDowntime from './OGCDDowntime'
@@ -15,6 +16,7 @@ export default [
 	Buffs,
 	Combos,
 	Fuka,
+	Kaiten,
 	Kenki,
 	Higanbana,
 	Interrupts,
