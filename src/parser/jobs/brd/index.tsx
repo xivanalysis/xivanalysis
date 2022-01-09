@@ -16,13 +16,18 @@ export const BARD = new Meta({
 	</>,
 	supportedPatches: {
 		from: '6.0',
-		to: '6.0',
+		to: '6.05',
 	},
 	contributors: [
 		{user: CONTRIBUTORS.HINT, role: ROLES.MAINTAINER},
 		{user: CONTRIBUTORS.YUMIYA, role: ROLES.DEVELOPER},
 	],
 	changelog: [
+		{
+			date: new Date('2022-01-06'),
+			Changes: () => <>Marked as supported for 6.05.</>,
+			contributors: [CONTRIBUTORS.HINT],
+		},
 		{
 			date: new Date('2022-01-01'),
 			Changes: () => <>Added Radiant Finale and Battle Voice tracker in Raging Strikes module, as well as suggestion to use them in a timely manner.</>,

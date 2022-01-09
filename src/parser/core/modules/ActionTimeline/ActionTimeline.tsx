@@ -83,15 +83,21 @@ export class ActionTimeline extends Analyser {
 	}
 
 	private onComplete() {
+		// Track the groups with configured rows so backfill doesn't duplicate
+		const populatedGroups = new Set<number>()
+
 		// Add rows for all the configured entries
 		for (const config of this.resolvedRows) {
 			const row = this.addRow(config)
 			this.populateRow(row, config)
+			config.content.forEach(specifier =>
+				this.cooldowns.groups(specifier).forEach(group => populatedGroups.add(group))
+			)
 		}
 
 		// Figure out what groups have not been explicitly configured and build rows for them
 		this.cooldowns.allGroups()
-			.filter(group => !this.groupRows.has(group))
+			.filter(group => !populatedGroups.has(group))
 			.forEach(group => {
 				const config = {content: [group]}
 				const row = this.addRow(config)
@@ -128,6 +134,7 @@ export class ActionTimeline extends Analyser {
 			if (firstContent === 'GCD')  { return <Trans id="core.action-timeline.label.gcd">GCD</Trans> }
 			if (typeof firstContent === 'string') { return this.data.actions[firstContent].name }
 			if (typeof firstContent === 'number') { return this.cooldowns.cooldownHistory(firstContent)[0]?.action.name }
+			return firstContent.name
 		})()
 
 		// Build the row and save it to the groups for this config

@@ -1,3 +1,4 @@
+import {DataLink} from 'components/ui/DbLink'
 import CONTRIBUTORS from 'data/CONTRIBUTORS'
 import React from 'react'
 import {ChangelogEntry} from './Meta'
@@ -8,6 +9,16 @@ export const changelog: ChangelogEntry[] = [
 	// 	Changes: () => <>The changes you made</>,
 	// 	contributors: [CONTRIBUTORS.YOU],
 	// },
+	{
+		date: new Date('2022-01-09'),
+		Changes: () => <>Fixed a bug causing some player cooldowns that apply statuses to be missing from the timeline.</>,
+		contributors: [CONTRIBUTORS.ACKWELL],
+	},
+	{
+		date: new Date('2022-01-05'),
+		Changes: () => <>Improved display of action-applied statuses in the timeline. This fixes durations on statuses such as <DataLink status="DEATHS_DESIGN"/>, and shows applications on a target-by-target basis.</>,
+		contributors: [CONTRIBUTORS.ACKWELL],
+	},
 	{
 		date: new Date('2022-01-03'),
 		Changes: () => <>Fixed a bug causing errors in gauge value simulations under certain circumstances.</>,

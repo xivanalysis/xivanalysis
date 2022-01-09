@@ -8,7 +8,8 @@ export class ActionTimeline extends CoreActionTimeline {
 		'ENSHROUD',
 		['LEMURES_SLICE', 'LEMURES_SCYTHE'],
 		'GLUTTONY',
-		['HELLS_INGRESS', 'HELLS_EGRESS', 'REGRESS'],
+		// Ingress and Egress share a CDG - we don't need to specify both to combine.
+		['HELLS_INGRESS', 'REGRESS'],
 		'ARCANE_CREST',
 	]
 }
