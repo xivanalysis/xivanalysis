@@ -21,7 +21,7 @@ export const SMN = ensureActions({
 		id: 25799,
 		name: 'Radiant Aegis',
 		icon: 'https://xivapi.com/i/002000/002750.png',
-		cooldown: 30000,
+		cooldown: 60000,
 		charges: 2,
 	},
 
