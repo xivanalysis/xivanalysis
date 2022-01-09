@@ -24,13 +24,14 @@ export const RED_MAGE = new Meta({
 		to: '6.05',
 	},
 	contributors: [
+		{user: CONTRIBUTORS.LAILLE, role: ROLES.DEVELOPER},
 		{user: CONTRIBUTORS.LEYLIA, role: ROLES.DEVELOPER},
 		{user: CONTRIBUTORS.MYPS, role: ROLES.DEVELOPER},
 	],
 
 	changelog: [
 		{
-			date: new Date('2021-01-08'),
+			date: new Date('2022-01-08'),
 			Changes: () => <>Update proc overwrite severities to reflect 6.0 rotations.</>,
 			contributors: [CONTRIBUTORS.LAILLE],
 		},
