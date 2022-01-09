@@ -23,7 +23,7 @@ export const RPR = ensureStatuses({
 	},
 
 	ENHANCED_HARPE: {
-		id: 2545,
+		id: 2845,
 		name: 'Enhanced Harpe',
 		icon: 'https://xivapi.com/i/012000/012939.png',
 		duration: 15000,

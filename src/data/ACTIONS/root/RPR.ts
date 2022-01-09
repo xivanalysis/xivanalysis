@@ -213,7 +213,7 @@ export const RPR = ensureActions({
 	HELLS_INGRESS: {
 		id: 24401,
 		name: 'Hell\'s Ingress',
-		icon: 'https://xivapi.com/i/003000/003630.png',
+		icon: 'https://xivapi.com/i/003000/003629.png',
 		cooldown: 20000,
 		cooldownGroup: 4,
 		statusesApplied: ['ENHANCED_HARPE'],
