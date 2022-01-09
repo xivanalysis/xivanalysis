@@ -8,7 +8,9 @@ import {Kaiten} from './Kaiten'
 import {Kenki} from './Kenki'
 import {Meikyo} from './Meikyo'
 import OGCDDowntime from './OGCDDowntime'
+import {Ogi} from './Ogi'
 import {Sen} from './Sen'
+import {Shoha} from './Shoha'
 import Tincture from './Tincture'
 
 export default [
@@ -22,6 +24,8 @@ export default [
 	Interrupts,
 	Meikyo,
 	OGCDDowntime,
+	Ogi,
 	Sen,
+	Shoha,
 	Tincture,
 ]
