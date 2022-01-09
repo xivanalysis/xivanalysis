@@ -134,6 +134,7 @@ export class ActionTimeline extends Analyser {
 			if (firstContent === 'GCD')  { return <Trans id="core.action-timeline.label.gcd">GCD</Trans> }
 			if (typeof firstContent === 'string') { return this.data.actions[firstContent].name }
 			if (typeof firstContent === 'number') { return this.cooldowns.cooldownHistory(firstContent)[0]?.action.name }
+			return firstContent.name
 		})()
 
 		// Build the row and save it to the groups for this config
