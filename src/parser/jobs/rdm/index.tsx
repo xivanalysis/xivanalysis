@@ -24,6 +24,7 @@ export const RED_MAGE = new Meta({
 		to: '6.05',
 	},
 	contributors: [
+		{user: CONTRIBUTORS.LAILLE, role: ROLES.DEVELOPER},
 		{user: CONTRIBUTORS.LEYLIA, role: ROLES.DEVELOPER},
 		{user: CONTRIBUTORS.MYPS, role: ROLES.DEVELOPER},
 	],
