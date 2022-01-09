@@ -30,6 +30,11 @@ export const RED_MAGE = new Meta({
 
 	changelog: [
 		{
+			date: new Date('2021-01-08'),
+			Changes: () => <>Change proc overwrite severities.</>,
+			contributors: [CONTRIBUTORS.LAILLE],
+		},
+		{
 			date: new Date('2021-01-04'),
 			Changes: () => <>Mark as supported for 6.05.</>,
 			contributors: [CONTRIBUTORS.LEYLIA],
