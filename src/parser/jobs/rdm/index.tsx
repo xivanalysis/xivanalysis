@@ -30,6 +30,11 @@ export const RED_MAGE = new Meta({
 
 	changelog: [
 		{
+			date: new Date('2021-01-08'),
+			Changes: () => <>Update proc overwrite severities to reflect 6.0 rotations.</>,
+			contributors: [CONTRIBUTORS.LAILLE],
+		},
+		{
 			date: new Date('2021-01-04'),
 			Changes: () => <>Mark as supported for 6.05.</>,
 			contributors: [CONTRIBUTORS.LEYLIA],
