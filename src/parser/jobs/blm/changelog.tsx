@@ -58,7 +58,7 @@ export const changelog = [
 		contributors: [CONTRIBUTORS.AKAIRYU],
 	},
 	{
-		date: new Date('2021-01-08'),
+		date: new Date('2022-01-08'),
 		Changes: () => <>Mark missed Umbral Ice Paradoxes as a cycle error and update the Rotation Outliers table header copy.</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],
 	},
