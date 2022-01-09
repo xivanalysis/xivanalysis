@@ -35,7 +35,7 @@ export const RED_MAGE = new Meta({
 			contributors: [CONTRIBUTORS.LAILLE],
 		},
 		{
-			date: new Date('2021-01-04'),
+			date: new Date('2022-01-04'),
 			Changes: () => <>Mark as supported for 6.05.</>,
 			contributors: [CONTRIBUTORS.LEYLIA],
 		},

@@ -20,7 +20,7 @@ export const MACHINIST = new Meta({
 	],
 	changelog: [
 		{
-			date: new Date('2021-01-06'),
+			date: new Date('2022-01-06'),
 			Changes: () => <>Marked as supported for 6.05.</>,
 			contributors: [CONTRIBUTORS.HINT],
 		},
