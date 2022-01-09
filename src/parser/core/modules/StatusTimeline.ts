@@ -123,7 +123,7 @@ export class StatusTimeline extends Analyser {
 		const cachedRow = this.rows.get(rowKey)
 		if (cachedRow != null) { return cachedRow }
 
-		const statusRow = this.createStatusRow2(remappedStatusId)
+		const statusRow = this.createStatusRow(remappedStatusId)
 		if (statusRow == null) { return }
 
 		const actor = this.actors.get(targetId)
@@ -136,7 +136,7 @@ export class StatusTimeline extends Analyser {
 		return row
 	}
 
-	private createStatusRow2(statusId: Status['id']) {
+	private createStatusRow(statusId: Status['id']) {
 		const rowKey = this.getRowKey(statusId)
 
 		const cachedRow = this.rows.get(rowKey)
