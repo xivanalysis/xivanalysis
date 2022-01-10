@@ -118,7 +118,6 @@ export class BloodOfTheDragon extends CoreGauge {
 		this.addEventHook(playerFilter.type('action').action(this.data.actions.NASTROND.id), this.onNastrondCast)
 		this.addEventHook(playerFilter.type('action').action(this.data.actions.STARDIVER.id), this.onStardiverCast)
 		this.addEventHook(filter<Event>().actor(this.parser.actor.id).type('death'), this.onDeathLotd)
-		this.addEventHook(filter<Event>().actor(this.parser.actor.id).type('raise'), this.onRaiseLotd)
 		this.addEventHook('complete', this.onComplete)
 
 	}
@@ -273,11 +272,6 @@ export class BloodOfTheDragon extends CoreGauge {
 		this.updateGauge()
 		this.lifeDuration = 0
 		this.finishLifeWindow()
-	}
-
-	onRaiseLotd(event: Event) {
-		// So floor time doesn't count against BotD uptime
-		this.lastEventTime = event.timestamp
 	}
 
 	intersectsDowntime(start: number) {
