@@ -9,6 +9,10 @@ Some patches will require more work and changes than others - to facilitate, the
 
 ## `X.X_` Minor patches
 
+### Run data generation scripts
+
+Some of the data used in XIVA is automatically generated from game files or sources such as XIVAPI. Run `yarn generate` to re-run the scripts and update any such data.
+
 ### Verify invulnerability windows for new content
 
 While most bosses are served well by the default invulnerability checks, some bosses (especially door bosses and similar) do not. Check a few logs for each new boss in a local build, with `src/parser/core/modules/Invulerability.ts`'s `debug` enabled. The timeline will contain a readout of all the invunerability windows it has detected (if any).
