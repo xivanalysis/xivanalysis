@@ -6,8 +6,9 @@ import {Analyser} from 'parser/core/Analyser'
 import {filter, oneOf} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
 import {Data} from 'parser/core/modules/Data'
+import {Timeline} from 'parser/core/modules/Timeline'
 import React from 'react'
-import {Grid, Table} from 'semantic-ui-react'
+import {Button, Grid, Table} from 'semantic-ui-react'
 
 export class Aetherflow extends Analyser {
 	static override handle = 'aetherflow'
@@ -20,6 +21,7 @@ export class Aetherflow extends Analyser {
 	private prevDissipationWindow?: AetherflowWindow;
 
 	@dependency private data!: Data
+	@dependency private timeline!: Timeline
 
 	private readonly AETHERFLOW_GENERATE_ACTIONS: number[] = [
 		this.data.actions.AETHERFLOW.id,
@@ -42,7 +44,8 @@ export class Aetherflow extends Analyser {
 	];
 
 	private readonly AETHERFLOW_CHARGES_PER_CAST = 3;
-	private readonly FIRST_AETHERFLOW_CAST_TIME = 7500;
+	private readonly AETHERFLOW_TIMELINE_START_PADDING = 5000;
+	private readonly AETHERFLOW_TIMELINE_END_PADDING = 65000;
 
 	override initialise() {
 		const generateAetherflowFilter = filter<Event>()
@@ -76,7 +79,7 @@ export class Aetherflow extends Analyser {
 			<Table.Header>
 				<Table.Row>
 					<Table.HeaderCell></Table.HeaderCell>
-					<Table.HeaderCell><Trans id="sch.aetherflow.cast-time">Cast Times</Trans></Table.HeaderCell>
+					<Table.HeaderCell><Trans id="sch.aetherflow.cast-time">Cast Time</Trans></Table.HeaderCell>
 					<Table.HeaderCell><Trans id="sch.aetherflow.cooldown">CD</Trans></Table.HeaderCell>
 					<Table.HeaderCell><Trans id="sch.aetherflow.drift">Drift</Trans></Table.HeaderCell>
 					<Table.HeaderCell><Trans id="sch.aetherflow.abilities-used">Abilities Used</Trans></Table.HeaderCell>
@@ -87,13 +90,32 @@ export class Aetherflow extends Analyser {
 				{this.aetherflowWindows.map(aetherflowWindow => {
 					return <Table.Row key={aetherflowWindow.timestamp}>
 						<Table.Cell><ActionLink {...this.data.getAction(aetherflowWindow.aetherflowGenerateActionId)}/></Table.Cell>
-						<Table.Cell>{this.parser.formatEpochTimestamp(aetherflowWindow.timestamp)}</Table.Cell>
+						<Table.Cell>
+							<Button
+								circular
+								compact
+								size="mini"
+								icon="time"
+								onClick={() => this.scrollToAetherflowTimeline(aetherflowWindow.timestamp)}
+							/>{this.parser.formatEpochTimestamp(aetherflowWindow.timestamp)}</Table.Cell>
 						<Table.Cell>{aetherflowWindow.downtime > 0 && this.parser.formatDuration(aetherflowWindow.downtime)}</Table.Cell>
 						<Table.Cell>{aetherflowWindow.drift > 0 && this.parser.formatDuration(aetherflowWindow.drift)}</Table.Cell>
 						<Table.Cell>
 							<Grid>
-								{aetherflowWindow.aetherflowConsumeActions.map((actionId, index) => <Grid.Column key={index} width={5}>
-									<ActionLink {...this.data.getAction(actionId)}/>
+								{aetherflowWindow.aetherflowConsumeActions.map((action, index) => <Grid.Column key={index} width={5}>
+									<Grid.Row>
+										<ActionLink {...this.data.getAction(action.actionId)}/>
+									</Grid.Row>
+									<Grid.Row>
+										<Button
+											circular
+											compact
+											size="mini"
+											icon="time"
+											onClick={() => this.scrollToAetherflowTimeline(aetherflowWindow.timestamp)}
+										/>
+										{this.parser.formatEpochTimestamp(action.timestamp)}
+									</Grid.Row>
 								</Grid.Column>)}
 							</Grid>
 						</Table.Cell>
@@ -140,7 +162,10 @@ export class Aetherflow extends Analyser {
 	private onConsumeAetherflow(event: Events['action']) {
 		// If recitation is inactive, or if the aetherflow action is not a recitation action add the action to the aetherflow window
 		if (!this.recticationActive || !this.RECITATION_ACTIONS.some(recitationActionId => recitationActionId === event.action)) {
-			this.aetherflowWindows[this.aetherflowWindows.length - 1].aetherflowConsumeActions.push(event.action)
+			this.aetherflowWindows[this.aetherflowWindows.length - 1].aetherflowConsumeActions.push({
+				actionId: event.action,
+				timestamp: event.timestamp,
+			})
 			this.totalAetherflowConsumeActions++
 		}
 	}
@@ -152,6 +177,12 @@ export class Aetherflow extends Analyser {
 	private recitationRemoved() {
 		this.recticationActive = false
 	}
+
+	private scrollToAetherflowTimeline(timestamp: number) {
+		const start = timestamp - this.parser.pull.timestamp - this.AETHERFLOW_TIMELINE_START_PADDING
+		const end = timestamp - this.parser.pull.timestamp + this.AETHERFLOW_TIMELINE_END_PADDING
+		this.timeline.show(start, end)
+	}
 }
 
 interface AetherflowWindow {
@@ -159,5 +190,5 @@ interface AetherflowWindow {
 	timestamp: number
 	downtime: number
 	drift: number
-	aetherflowConsumeActions: number[]
+	aetherflowConsumeActions: Array<{actionId: number, timestamp: number}>
 }
