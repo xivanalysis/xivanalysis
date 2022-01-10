@@ -1,3 +1,4 @@
+import {Aetherflow} from './Aetherflow'
 import ChainStrat from './ChainStrat'
 import DoTs from './DoTs'
 import Interrupts from './Interrupts'
@@ -8,6 +9,7 @@ import Tincture from './Tincture'
 import Weaving from './Weaving'
 
 export default [
+	Aetherflow,
 	ChainStrat,
 	DoTs,
 	Interrupts,
