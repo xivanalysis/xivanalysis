@@ -3,6 +3,7 @@ import {Trans} from '@lingui/react'
 import {DataLink} from 'components/ui/DbLink'
 import {JOBS} from 'data/JOBS'
 import {Event, Events} from 'event'
+import {DisplayOrder} from 'parser/core/Analyser'
 import {filter, oneOf} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
 import Checklist, {Requirement, Rule} from 'parser/core/modules/Checklist'
@@ -98,6 +99,7 @@ export class Shoha extends CoreGauge {
 		}
 		this.checklist.add(new Rule({
 			name: 'Use Meditation Stacks',
+			displayOrder: DISPLAY_ORDER.SHOHA,
 			description: <Trans id="sam.shoha.waste.content">
 				Wasted meditation generation, ending the fight with stacks fully charged, or dying with stacks charged is a
 				direct potency loss. Use <DataLink action = "SHOHA"/> or <DataLink action = "SHOHA_II"/> to avoid wasting stacks.
