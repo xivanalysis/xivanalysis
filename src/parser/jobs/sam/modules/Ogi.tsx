@@ -43,11 +43,11 @@ export class Ogi extends Analyser {
 	}
 
 	private onOgiReady() {
-		this.OgiReadys++
+		this.ogiReadys++
 	}
 
 	private onOgi()	{
-		this.OgisDone++
+		this.ogisDone++
 	}
 
 	private onComplete() {
@@ -63,8 +63,8 @@ export class Ogi extends Analyser {
 					name: <Trans id="sam.ogi.checklist.requirement.waste.name">
 						Use as many of your meditation stacks as possible.
 					</Trans>,
-					value: this.OgisDone,
-					target: (this.OgiReadys * 2),
+					value: this.ogisDone,
+					target: (this.ogiReadys * 2),
 				}),
 			],
 		}))
