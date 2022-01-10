@@ -3,7 +3,6 @@ import {Trans} from '@lingui/react'
 import {DataLink} from 'components/ui/DbLink'
 import {JOBS} from 'data/JOBS'
 import {Event, Events} from 'event'
-import {DisplayOrder} from 'parser/core/Analyser'
 import {filter, oneOf} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
 import Checklist, {Requirement, Rule} from 'parser/core/modules/Checklist'
@@ -34,6 +33,13 @@ export class Shoha extends CoreGauge {
 
 	private MeditateGauge = this.add(new CounterGauge({
 		chart: {label: 'Meditate Stacks', color: JOBS.SAMURAI.colour},
+		/*
+		graph: {
+			handle: 'Meditation',
+			label: <Trans id="sam.gauge.resource.meditationLabel">Meditation</Trans>,
+			color: JOBS.SAMURAI.colour,
+		},
+		*/
 		maximum: MAX_MEDITATE_STACKS,
 	}))
 
