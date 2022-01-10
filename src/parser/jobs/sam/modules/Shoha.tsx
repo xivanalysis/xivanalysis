@@ -66,7 +66,7 @@ export class Shoha extends CoreGauge {
 		this.addEventHook(
 			playerFilter
 				.type(oneOf(['action']))
-				.action(oneOf(MeditateActions)),
+				.action(oneOf(meditateActions)),
 			this.onGaugeModifier,
 		)
 
