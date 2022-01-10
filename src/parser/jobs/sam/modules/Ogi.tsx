@@ -14,8 +14,8 @@ export class Ogi extends Analyser {
 	@dependency private checklist!: Checklist
 	@dependency private data!: Data
 
-	private OgiReadys = 0
-	private OgisDone = 0
+	private ogiReadys = 0
+	private ogisDone = 0
 
 	Ogis = [
 		this.data.actions.OGI_NAMIKIRI.id,
