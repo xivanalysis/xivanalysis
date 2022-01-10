@@ -24,6 +24,11 @@ export const BARD = new Meta({
 	],
 	changelog: [
 		{
+			date: new Date('2022-01-09'),
+			Changes: () => <>Added Empyreal Arrow drift module and tracker for Bloodletter/Rain of Death in Raging Strikes windows.</>,
+			contributors: [CONTRIBUTORS.YUMIYA],
+		},
+		{
 			date: new Date('2022-01-06'),
 			Changes: () => <>Marked as supported for 6.05.</>,
 			contributors: [CONTRIBUTORS.HINT],

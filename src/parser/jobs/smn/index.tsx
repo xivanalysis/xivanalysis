@@ -30,6 +30,10 @@ export const SUMMONER = new Meta({
 		{
 			date: new Date('2022-01-09'),
 			Changes: () => <>Adjusted module display order and now start Summon windows with errors opened.</>,
+		},
+    {
+			date: new Date('2022-01-09'),
+			Changes: () => <>Corrected the cooldown of Radiant Aegis.</>,
 			contributors: [CONTRIBUTORS.KELOS],
 		},
 		{

@@ -40,9 +40,14 @@ export const SAMURAI = new Meta({
 		// 	contrubutors: [CONTRIBUTORS.YOU],
 		// },
 		{
+			date: new Date('2021-12-31'),
+			Changes: () => <>Added Sen and Kenki back to the Analysis. Fixed Fuko not comboing.</>,
+			contributors: [CONTRIBUTORS.RYAN],
+		},
+		{
 			date: new Date('2021-12-28'),
-			Changes: () => <>Adjust Buff uptime to use new Fugetsu and Fuka Statuses</>,
-			contrubutors: [CONTRIBUTORS.RYAN],
+			Changes: () => <>Adjusted Buff uptime to use new Fugetsu and Fuka Statuses</>,
+			contributors: [CONTRIBUTORS.RYAN],
 		},
 	],
 })

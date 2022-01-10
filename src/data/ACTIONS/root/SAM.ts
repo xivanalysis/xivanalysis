@@ -57,17 +57,6 @@ export const SAM = ensureActions({
 		statusesApplied: ['FUKA'],
 	},
 
-	FUGA: {
-		id: 7483,
-		name: 'Fuga',
-		icon: 'https://xivapi.com/i/003000/003157.png',
-		onGcd: true,
-		speedAttribute: Attribute.SKILL_SPEED,
-		combo: {
-			start: true,
-		},
-	},
-
 	IAIJUTSU: {
 		id: 7867,
 		name: 'Iaijutsu',
@@ -106,7 +95,7 @@ export const SAM = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		combo: {
-			from: [7483, 25780],
+			from: [25780],
 			end: true,
 		},
 		statusesApplied: ['FUGETSU'],

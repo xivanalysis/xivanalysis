@@ -31,7 +31,7 @@ export class DoTs extends CoreDoTs {
 	protected override addChecklistRules() {
 		this.checklist.add(new TieredRule({
 			name: <Trans id="brd.dots.checklist.name">Keep your DoTs up</Trans>,
-			description: <Trans id="brd.dots.checklist.description">Most of Bard's DPS comes either directly or indirectly from <ActionLink {...this.data.actions.CAUSTIC_BITE}/> and <ActionLink {...this.data.actions.STORMBITE}/>.
+			description: <Trans id="brd.dots.checklist.description">A significant amount of Bard's DPS comes from <ActionLink {...this.data.actions.CAUSTIC_BITE}/> and <ActionLink {...this.data.actions.STORMBITE}/>.
 				Make sure you have these skills applied on the target at all times. Use <ActionLink {...this.data.actions.IRON_JAWS}/> to refresh the timer on the Damage over Time (DoT) debuff.
 			</Trans>,
 			tiers: SEVERITIES.UPTIME,
