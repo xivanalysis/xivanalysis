@@ -49,7 +49,6 @@ export class Medicated extends Analyser {
 	}
 
 	private onComplete() {
-		const status = this.data.statuses.MEDICATED
 
 		// Add a pot that is still up before end of pull
 		if (this.pot && !this.pot.end) {
@@ -63,6 +62,7 @@ export class Medicated extends Analyser {
 				order: -99,
 			})
 
+			const status = this.data.statuses.MEDICATED
 			this.pots.forEach(pot => row.addItem(new StatusItem({
 				status,
 				start: pot.start - this.parser.pull.timestamp,
