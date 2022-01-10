@@ -56,7 +56,6 @@ const TIMELINE_PADDING = 2500
 
 interface DriftWindow {
 	start: number
-	casts: Array<Events['action']>
 }
 
 interface ConfirmedDriftWindow extends DriftWindow {
@@ -77,7 +76,6 @@ export class DriftingEa extends Analyser {
 
 	private currentWindow: DriftWindow =  {
 		start: this.parser.pull.timestamp,
-		casts: [],
 	}
 
 	override initialise() {
@@ -88,7 +86,6 @@ export class DriftingEa extends Analyser {
 			.source(this.parser.actor.id)
 
 		this.addEventHook(castFilter.action(eaId), this.onDriftableCast)
-		this.addEventHook(castFilter, this.onCast)
 	}
 
 	private onDriftableCast(event: Events['action']) {
@@ -130,12 +127,7 @@ export class DriftingEa extends Analyser {
 		// Begin the next window
 		this.currentWindow = {
 			start: observedUseTime,
-			casts: [],
 		}
-	}
-
-	private onCast(event: Events['action']) {
-		this.currentWindow.casts.push(event)
 	}
 
 	override output() {
