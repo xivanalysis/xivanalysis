@@ -64,7 +64,7 @@ export class Medicated extends Analyser {
 			})
 
 			this.pots.forEach(pot => row.addItem(new StatusItem({
-				status: status,
+				status,
 				start: pot.start - this.parser.pull.timestamp,
 				end: pot.end != null ? pot.end - this.parser.pull.timestamp : this.parser.pull.duration,
 			})))
