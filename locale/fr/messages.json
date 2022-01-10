@@ -754,7 +754,6 @@
   "sam.sen.suggestion.why": "",
   "sam.sen.title": "",
   "sch.about.description": "\nCet analyseur a pour but d'identifier certains sorts qui pourraient être utilisés pour améliorer votre gameplay Erudit, ainsi que de donner un aperçu plus profond de ce qui s'est passé pendant une rencontre.\n\nSi vous voulez en savoir plus sur Erudit, consultez les guides à[The Balance] (https://thebalanceffxiv.com/), et discutez dans le canal #sch_questions.\n",
-  "sch.chainstrat.cooldown.description": "Essayer d'utiliser <0/> en cooldown durant le combat, particulièrement quand votre équipe a d'autre buffs pour maximiser les effets.",
   "sch.dots.checklist.description": "En tant que'érudit, la Loi de l'infection est un aspect important de vos dommages. Essayez de le maintenir le plus possible, tant que vous pouvez obtenir au moins 15 secondes de temps d'utilisation par application.",
   "sch.dots.checklist.name": "Vérifiez que vos DoTs soient bien appliqués à votre cible en permanence",
   "sch.dots.checklist.requirement.bio-ii.name": "Temps d'activité total de <0/>",

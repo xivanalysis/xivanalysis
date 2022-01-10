@@ -1,4 +1,4 @@
-import ChainStrat from './ChainStrat'
+import {CooldownDowntime} from './CooldownDowntime'
 import DoTs from './DoTs'
 import Interrupts from './Interrupts'
 import Overheal from './Overheal'
@@ -8,7 +8,7 @@ import Tincture from './Tincture'
 import Weaving from './Weaving'
 
 export default [
-	ChainStrat,
+	CooldownDowntime,
 	DoTs,
 	Interrupts,
 	Overheal,

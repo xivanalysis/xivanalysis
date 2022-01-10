@@ -754,7 +754,6 @@
   "sam.sen.suggestion.why": "You wasted {0} sen.",
   "sam.sen.title": "Non-Standard Sen Windows",
   "sch.about.description": "\nThis analyser aims to identify some of the low-hanging fruit that could be used to improve your SCH gameplay, as well as give a deeper insight into what happened during an encounter.\n\nIf you would like to learn more about SCH, check the guides over at [The Balance](https://thebalanceffxiv.com/), and have a chat in the #sch_questions channel.\n",
-  "sch.chainstrat.cooldown.description": "Try to use <0/> on cooldown throughout the fight, particularly when your team has other buffs up for maximum effect.",
   "sch.dots.checklist.description": "As a Scholar, Biolysis is a notable portion of your damage. Aim to keep it up as much as possible, so long as you can get at least 15 seconds of uptime per application.",
   "sch.dots.checklist.name": "Keep your DoT up",
   "sch.dots.checklist.requirement.bio-ii.name": "<0/> uptime",
