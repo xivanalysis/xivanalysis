@@ -9,7 +9,6 @@ import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Sugge
 import React from 'react'
 
 const SEVERITY_TIERS = {
-	0: SEVERITY.IGNORE,
 	1: SEVERITY.MINOR,
 	3: SEVERITY.MEDIUM,
 	5: SEVERITY.MAJOR,
@@ -114,7 +113,7 @@ export class Kaiten extends Analyser {
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.HISSATSU_KAITEN.icon,
 			content: <Trans id = "sam.kaiten.suggestion.badkaiten.content">
-				Avoid using <DataLink action="HISSATSU_KAITEN"/> on any GCDs besides <DataLink action ="IAIJUTSU"/> moves and <DataLink action = "OGI_NAMIKIRI"/>. These actions are worth it because of the potency gain per kenki spent.
+				Avoid using <DataLink action="HISSATSU_KAITEN"/> on any GCDs besides <DataLink action ="IAIJUTSU"/> moves and <DataLink action = "OGI_NAMIKIRI"/>. These actions are worth it because of the potency gained per kenki spent.
 			</Trans>,
 			tiers: SEVERITY_TIERS,
 			why: <Trans id ="sam.suggestion.badkaiten.why">
