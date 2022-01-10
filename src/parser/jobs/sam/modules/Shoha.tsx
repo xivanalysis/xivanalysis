@@ -79,7 +79,7 @@ export class Shoha extends CoreGauge {
 	private onGaugeModifier(event: Events['action']) {
 		const modifier = this.MeditateGaugeModifiers.get(event.action)
 
-		if (modifier !== undefined)	{
+		if (modifier != null)	{
 			const amount = modifier[event.type] ?? 0
 			this.MeditateGauge.modify(amount)
 
