@@ -43,13 +43,19 @@ export class Medicated extends Analyser {
 			throw new Error('potion instance not found')
 		}
 
-		this.pots.push({end: event.timestamp, ...this.pot})
+		this.pots.push({ ...this.pot, end: event.timestamp })
 
 		this.pot = undefined
 	}
 
 	private onComplete() {
 		const status = this.data.statuses.MEDICATED
+
+		// Add a pot that is still up before end of pull
+		if (this.pot && !this.pot.end) {
+			this.pots.push(this.pot)
+			this.pot = undefined
+		}
 
 		if (this.pots.length > 0) {
 			const row = new SimpleRow({
