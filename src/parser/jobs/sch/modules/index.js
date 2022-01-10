@@ -1,5 +1,5 @@
 import {Aetherflow} from './Aetherflow'
-import ChainStrat from './ChainStrat'
+import {CooldownDowntime} from './CooldownDowntime'
 import DoTs from './DoTs'
 import Interrupts from './Interrupts'
 import Overheal from './Overheal'
@@ -10,7 +10,7 @@ import Weaving from './Weaving'
 
 export default [
 	Aetherflow,
-	ChainStrat,
+	CooldownDowntime,
 	DoTs,
 	Interrupts,
 	Overheal,
