@@ -109,7 +109,6 @@ export class Kaiten extends Analyser {
 	}
 
 	private onComplete() {
-		const test1 = this.missedKaitens
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.HISSATSU_KAITEN.icon,
 			content: <Trans id = "sam.kaiten.suggestion.badkaiten.content">
@@ -129,9 +128,9 @@ export class Kaiten extends Analyser {
 			</Trans>,
 			tiers: SEVERITY_TIERS,
 			why: <Trans id ="sam.suggestion.missedkaiten.why">
-					You forgot to use Kaiten  <Plural value={test1} one="# time" other="# times"/> on optimal GCDs.
+					You forgot to use Kaiten  <Plural value={this.missedKaitens} one="# time" other="# times"/> on optimal GCDs.
 			</Trans>,
-			value: test1,
+			value: this.missedKaitens,
 		}))
 
 		this.suggestions.add(new TieredSuggestion({
