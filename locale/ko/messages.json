@@ -102,6 +102,8 @@
   "brd.dots.checklist.name": "항상 도트가 유지되도록 하십시오.",
   "brd.dots.checklist.requirement.caustic": "적용시간 <0/>",
   "brd.dots.checklist.requirement.storm": "적용시간 <0/>",
+  "brd.drifting-ea.timelinelink-button": "해당 타임라인으로 이동",
+  "brd.drifting-ea.timestamp-header": "타임 스탬프",
   "brd.rs.rotation-table.header.on-time": "<0/>이 제떄 사용되었습니까?",
   "brd.rs.suggestions.missedgcd.content": "<1/> 구간 마다 8 글쿨을 (<0/>까지 있을경우 9 글쿨) 목표로 하십시오.",
   "brd.rs.suggestions.trackedactions.content": "<2/> 구간마다 <0/> 1회 그리고 <1/> 1회를 사용해야 합니다.",
