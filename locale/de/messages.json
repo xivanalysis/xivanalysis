@@ -92,6 +92,8 @@
   "brd.dots.checklist.name": "Halte deine DoTs aufrecht",
   "brd.dots.checklist.requirement.caustic": "Gesamtanwendungszeit von <0/>",
   "brd.dots.checklist.requirement.storm": "Gesamtanwendungszeit von <0/>",
+  "brd.drifting-ea.timelinelink-button": "Springe zur Zeitleiste",
+  "brd.drifting-ea.timestamp-header": "Zeitstempel",
   "brd.rs.rotation-table.header.on-time": "<0/> rechtzeitig benutzt?",
   "brd.rs.suggestions.missedgcd.content": "Versuche während jedes <1/>-Zeitfensters 8 (9 mit <0/>) GCD-Angriffe unterzubringen.",
   "brd.rs.suggestions.trackedactions.content": "Jedes Mal, während <2/> aktiv ist, solltest du 1x <0/> und 1x <1/> benutzen.",
