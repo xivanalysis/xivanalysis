@@ -38,22 +38,25 @@ export class Medicated extends Analyser {
 		this.pot = {start: event.timestamp}
 	}
 
+	private stopAndSave(endTime: number) {
+		if (this.pot != null) {
+			this.pots.push({...this.pot, end: endTime})
+		}
+		this.pot = undefined
+	}
+
 	private offMedication(event: Events['statusRemove']) {
 		if (this.pot == null) {
 			throw new Error('potion instance not found')
 		}
-
-		this.pots.push({ ...this.pot, end: event.timestamp })
-
-		this.pot = undefined
+		this.stopAndSave(event.timestamp)
 	}
 
 	private onComplete() {
 
 		// Add a pot that is still up before end of pull
-		if (this.pot && !this.pot.end) {
-			this.pots.push(this.pot)
-			this.pot = undefined
+		if (this.pot != null && this.pot.end == null) {
+			this.stopAndSave(this.parser.pull.timestamp + this.parser.pull.duration)
 		}
 
 		if (this.pots.length > 0) {
