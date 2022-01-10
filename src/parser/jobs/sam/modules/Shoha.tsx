@@ -60,7 +60,7 @@ export class Shoha extends CoreGauge {
 	override initialise() {
 		super.initialise()
 
-		const MeditateActions = Array.from(this.MeditateGaugeModifiers.keys())
+		const meditateActions = Array.from(this.MeditateGaugeModifiers.keys())
 		const playerFilter = filter<Event>().source(this.parser.actor.id)
 
 		this.addEventHook(
