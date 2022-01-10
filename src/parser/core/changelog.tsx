@@ -10,6 +10,11 @@ export const changelog: ChangelogEntry[] = [
 	// 	contributors: [CONTRIBUTORS.YOU],
 	// },
 	{
+		date: new Date('2022-01-10'),
+		Changes: () => <>Finalise core support for 6.05.</>,
+		contributors: [CONTRIBUTORS.ACKWELL],
+	},
+	{
 		date: new Date('2022-01-09'),
 		Changes: () => <>Fixed a bug causing some player cooldowns that apply statuses to be missing from the timeline.</>,
 		contributors: [CONTRIBUTORS.ACKWELL],
