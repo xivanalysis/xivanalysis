@@ -1,19 +1,17 @@
 import {t} from '@lingui/macro'
 import {Trans, Plural} from '@lingui/react'
-import {ActionLink, StatusLink} from 'components/ui/DbLink'
+import Color from 'color'
+import {ActionLink, DataLink, StatusLink} from 'components/ui/DbLink'
 import {ActionKey} from 'data/ACTIONS'
 import {StatusKey} from 'data/STATUSES'
 import {Event, Events} from 'event'
-import {Analyser} from 'parser/core/Analyser'
 import {filter} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
 import {Actors} from 'parser/core/modules/Actors'
 import BrokenLog from 'parser/core/modules/BrokenLog'
-import Checklist from 'parser/core/modules/Checklist'
 import {Cooldowns} from 'parser/core/modules/Cooldowns'
-import {Data} from 'parser/core/modules/Data'
-import {Death} from 'parser/core/modules/Death'
 import Downtime from 'parser/core/modules/Downtime'
+import {CounterGauge, Gauge as CoreGauge} from 'parser/core/modules/Gauge'
 import Suggestions, {TieredSuggestion, Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import {Timeline} from 'parser/core/modules/Timeline'
 import React, {Fragment} from 'react'
@@ -24,7 +22,9 @@ const DRAGON_DURATION_MILLIS = 30000
 const LOTD_BUFF_DELAY_MIN = 30000
 const LOTD_BUFF_DELAY_MAX = 60000
 
-const MAX_EYES = 2
+const LOTD_SHOULD_RUSH_THRESHOLD = 5000		// two GCDs
+const LOTD_LATE_WINDOW_THRESHOLD = 10000	// Nastrond CD
+
 const EXPECTED_NASTRONDS_PER_WINDOW = 3
 
 type DrgTrackedBuffs = 'LANCE_CHARGE' | 'RIGHT_EYE' | 'BATTLE_LITANY'
@@ -55,19 +55,31 @@ interface LifeWindows {
 	history: LifeWindow[]
 }
 
-// EW notes:
-// - looking at BuffWindow module to see if lotd tracking can be done through that. Not planning on doing that
-//   port until basic EW support is in place
-export default class BloodOfTheDragon extends Analyser {
+// couple flags for detecting end of fight errors
+const END_OF_FIGHT_ERROR = {
+	NONE: 0,
+	SHOULD_HAVE_RUSHED: 1,
+	OPENED_TOO_LATE: 2,
+}
+
+// gauge constants
+const MAX_EYES = 2
+const EYES_PER_CAST = 1
+const LOTD_COST = 2
+
+// this is like a light blue, similar to the color of mirage dive
+// eslint-disable-next-line @typescript-eslint/no-magic-numbers
+const EYE_COLOR = Color.rgb(61, 135, 255).fade(0.25).toString()
+
+// Eye gauge is tracked with core gauge (apparently it's called "First Brood's Gaze" which I did not know until EW)
+// Life of the dragon windows are manually tracked and analyzed.
+export class BloodOfTheDragon extends CoreGauge {
 	static override handle = 'bloodOfTheDragon'
 	static override title = t('drg.blood.title')`Life of the Dragon`
 
 	@dependency private actors!: Actors
 	@dependency private brokenLog!: BrokenLog
-	@dependency private checklist!: Checklist
 	@dependency private cooldowns!: Cooldowns
-	@dependency private data!: Data
-	@dependency private death!: Death
 	@dependency private downtime!: Downtime
 	@dependency private suggestions!: Suggestions
 	@dependency private timeline!: Timeline
@@ -83,18 +95,29 @@ export default class BloodOfTheDragon extends Analyser {
 		history: [],
 	}
 	private lastEventTime = this.parser.pull.timestamp
-	private eyes = 0
-	private lostEyes = 0
+	private lastMdTime = this.parser.pull.timestamp
+	private lastGskTime = this.parser.pull.timestamp
+
+	private eyeGauge = this.add(new CounterGauge({
+		maximum: MAX_EYES,
+		graph: {
+			label: <Trans id="drg.gauge.resource.eyes">First Brood's Gaze</Trans>,
+			color: EYE_COLOR,
+		},
+		correctHistory: true,	// correct for carryover in alliance raids
+		deterministic: true,
+	}))
 
 	override initialise() {
+		super.initialise()
+
 		const playerFilter = filter<Event>().source(this.parser.actor.id)
 
 		this.addEventHook(playerFilter.type('action').action(this.data.actions.MIRAGE_DIVE.id), this.onMirageDiveCast)
 		this.addEventHook(playerFilter.type('action').action(this.data.actions.GEIRSKOGUL.id), this.onGeirskogulCast)
 		this.addEventHook(playerFilter.type('action').action(this.data.actions.NASTROND.id), this.onNastrondCast)
 		this.addEventHook(playerFilter.type('action').action(this.data.actions.STARDIVER.id), this.onStardiverCast)
-		this.addEventHook(filter<Event>().actor(this.parser.actor.id).type('death'), this.onDeath)
-		this.addEventHook(filter<Event>().actor(this.parser.actor.id).type('raise'), this.onRaise)
+		this.addEventHook(filter<Event>().actor(this.parser.actor.id).type('death'), this.onDeathLotd)
 		this.addEventHook('complete', this.onComplete)
 
 	}
@@ -135,6 +158,7 @@ export default class BloodOfTheDragon extends Analyser {
 
 	private finishLifeWindow() {
 		if (this.lifeWindows.current != null) {
+			this.lifeWindows.current.duration = this.parser.currentEpochTimestamp - this.lifeWindows.current.start
 			this.lifeWindows.history.push(this.lifeWindows.current)
 			this.lifeWindows.current = undefined
 		}
@@ -154,21 +178,19 @@ export default class BloodOfTheDragon extends Analyser {
 		this.lastEventTime = this.parser.currentEpochTimestamp
 	}
 
-	onMirageDiveCast() {
+	onMirageDiveCast(event: Events['action']) {
 		this.updateGauge()
+		this.lastMdTime = event.timestamp
 
 		// You can accrue eyes in LotD too
-		this.eyes++
-		if (this.eyes > MAX_EYES) {
-			this.lostEyes += this.eyes - MAX_EYES
-			this.eyes = MAX_EYES
-		}
+		this.eyeGauge.generate(EYES_PER_CAST)
 	}
 
-	onGeirskogulCast() {
+	onGeirskogulCast(event: Events['action']) {
 		this.updateGauge()
+		this.lastGskTime = event.timestamp
 
-		if (this.eyes === MAX_EYES) {
+		if (this.eyeGauge.value === MAX_EYES) {
 			// LotD tiiiiiime~
 			this.lifeDuration = DRAGON_DURATION_MILLIS
 			this.lifeWindows.current = {
@@ -193,7 +215,7 @@ export default class BloodOfTheDragon extends Analyser {
 				showNoDelayNote: false,
 				missedSdBuff: false,
 			}
-			this.eyes = 0
+			this.eyeGauge.spend(LOTD_COST)
 		}
 	}
 
@@ -245,19 +267,11 @@ export default class BloodOfTheDragon extends Analyser {
 		}
 	}
 
-	onDeath() {
+	onDeathLotd() {
 		// RIP
 		this.updateGauge()
 		this.lifeDuration = 0
 		this.finishLifeWindow()
-
-		// TODO: check if you lose eyes on death
-		this.eyes = 0
-	}
-
-	onRaise(event: Event) {
-		// So floor time doesn't count against BotD uptime
-		this.lastEventTime = event.timestamp
 	}
 
 	intersectsDowntime(start: number) {
@@ -282,7 +296,7 @@ export default class BloodOfTheDragon extends Analyser {
 			))
 
 			// flag for last life window
-			lifeWindow.isLast = lifeWindow.start + lifeWindow.duration > (this.parser.pull.timestamp + this.parser.pull.duration)
+			lifeWindow.isLast = lifeWindow.start + lifeWindow.duration >= (this.parser.pull.timestamp + this.parser.pull.duration)
 
 			// A window should be delayed if:
 			// - there are no buffs off cooldown at any point in this window
@@ -318,6 +332,56 @@ export default class BloodOfTheDragon extends Analyser {
 		}
 	}
 
+	/**
+	 * The Endwalker DRG opener usually has us delay the first life of the dragon to around 1 minute in order
+	 * to synchronize it with buffs. Done properly, this keeps LotD in alignment for the whole fight.
+	 * However, if we continue this pattern for the whole fight we might end up in a situation where we should've used
+	 * life of the dragon without buffs at the end of the fight in order to avoid losing it entirely.
+	 * This function does a check to see if there was room to rush a final window.
+	 */
+	private shouldRushFinalWindow() {
+		// just in case someone uses 0 lotd windows???
+		if (this.lifeWindows.history.length < 1) {
+			// this feels "technically correct"
+			return END_OF_FIGHT_ERROR.NONE
+		}
+
+		// there's actually two conditions here
+		// first condition: if we still have two eyes at the end of the fight
+		if (this.eyeGauge.value === MAX_EYES) {
+			// check to see what happened
+			// if the last gsk happened before the last mirage dive, we could've opened a window
+			if (this.lastGskTime < this.lastMdTime) {
+				// if the amount of time left in the fight would've allowed at least one nastrond, we should've rushed
+				const remaining = this.parser.pull.duration - (this.lastMdTime - this.parser.pull.timestamp)
+
+				// if we had room for like two GCDs we could've fit at least one additional nastrond (stonks)
+				if (remaining > LOTD_SHOULD_RUSH_THRESHOLD) {
+					return END_OF_FIGHT_ERROR.SHOULD_HAVE_RUSHED
+				}
+			}
+		}
+
+		// second condition:
+		// - we actually did open a window but it got severely truncated by the fight
+		// in order for this to be possible, we need to actually be in a lotd that was cut short by the end of the fight
+		// see this log for a rather extreme example of this: https://www.fflogs.com/reports/B4Q16j3WG9DFygNR#fight=13&source=124
+		const lastWindow = this.lifeWindows.history[this.lifeWindows.history.length - 1]
+		if (lastWindow.duration < DRAGON_DURATION_MILLIS) {
+			// check the duration from last mirage dive time, assuming we had max eyes because we're now in life
+			const remainingTimeForLife = this.parser.pull.duration - (this.lastMdTime - this.parser.pull.timestamp)
+
+			// if we had a significant amount of time left we could've been in life instead
+			// this should probably be at least 10 seconds, since that's the nastrond CD, potentially indicating a lost cast
+			if (remainingTimeForLife - lastWindow.duration > LOTD_LATE_WINDOW_THRESHOLD) {
+				// we had time to do this
+				return END_OF_FIGHT_ERROR.OPENED_TOO_LATE
+			}
+		}
+
+		return END_OF_FIGHT_ERROR.NONE
+	}
+
 	onComplete() {
 		this.updateGauge()
 		this.finishLifeWindow()
@@ -325,19 +389,20 @@ export default class BloodOfTheDragon extends Analyser {
 		const noBuffSd = this.lifeWindows.history.filter(window => !window.isLast && window.missedSdBuff).length
 		const noLifeSd = this.lifeWindows.history.filter(window => !window.isLast && window.stardivers.length === 0).length
 		const noFullNsLife = this.lifeWindows.history.filter(window => !window.isLast && window.nastronds.length < EXPECTED_NASTRONDS_PER_WINDOW).length
+		const shouldRush = this.shouldRushFinalWindow()
 
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.MIRAGE_DIVE.icon,
 			content: <Trans id="drg.blood.suggestions.eyes.content">
 				Avoid using <ActionLink {...this.data.actions.MIRAGE_DIVE}/> when you already have {MAX_EYES} Eyes. Wasting Eyes will delay your Life of the Dragon windows and potentially cost you a lot of DPS.
 			</Trans>,
-			value: this.lostEyes,
+			value: this.eyeGauge.overCap,
 			tiers: {
 				1: SEVERITY.MEDIUM,
 				2: SEVERITY.MAJOR,
 			},
 			why: <Trans id="drg.blood.suggestions.eyes.why">
-				You used Mirage Dive <Plural value={this.lostEyes} one="# time" other="# times"/> when you already had {MAX_EYES} Eyes.
+				You used Mirage Dive <Plural value={this.eyeGauge.overCap} one="# time" other="# times"/> when you already had {MAX_EYES} Eyes.
 			</Trans>,
 		}))
 
@@ -378,6 +443,30 @@ export default class BloodOfTheDragon extends Analyser {
 				severity: SEVERITY.MINOR,
 				why: <Trans id="drg.blood.suggestions.buffsed-stardiver.why">
 					When <ActionLink {...this.data.actions.STARDIVER} /> could have been buffed, you used it <Plural value={noBuffSd} one="# time" other="# times" /> without a buff.
+				</Trans>,
+			}))
+		}
+
+		if (shouldRush === END_OF_FIGHT_ERROR.SHOULD_HAVE_RUSHED) {
+			this.suggestions.add(new Suggestion({
+				icon: this.data.actions.NASTROND.icon,
+				content: <Trans id="drg.blood.suggestions.rush">Try to make sure you enter Life of the Dragon before the fight ends, even if it does not align with your buffs.</Trans>,
+				severity: SEVERITY.MAJOR,
+				why: <Trans id="drg.blood.suggestions.rush.why">
+					You could have entered Life of the Dragon one more time before the end of the fight.
+				</Trans>,
+			}))
+		} else if (shouldRush === END_OF_FIGHT_ERROR.OPENED_TOO_LATE) {
+			const remainingTimeForLife = (this.parser.pull.duration - (this.lastMdTime - this.parser.pull.timestamp)) / 1000
+			const lastWindowDuration = this.lifeWindows.history[this.lifeWindows.history.length - 1].duration / 1000
+
+			// medium severity, they did use it but it got cutoff
+			this.suggestions.add(new Suggestion({
+				icon: this.data.actions.NASTROND.icon,
+				content: <Trans id="drg.blood.suggestions.late-window">Avoid entering Life of the Dragon right before the end of the fight. Try to enter Life of the Dragon earlier, even if it does not align with your buffs, in order to get as many uses of <DataLink action="NASTROND" /> and <DataLink action="STARDIVER" /> as possible before the end of the fight.</Trans>,
+				severity: SEVERITY.MEDIUM,
+				why: <Trans id="drg.blood.suggestions.rush.late-window.why">
+					Your final Life of the Dragon window lasted {lastWindowDuration.toFixed(1)}s, but could have been used {remainingTimeForLife.toFixed(1)}s before the end of the fight.
 				</Trans>,
 			}))
 		}
