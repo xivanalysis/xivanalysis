@@ -8,7 +8,7 @@ export const changelog = [
 	// 	contrubutors: [CONTRIBUTORS.YOU],
 	// },
 	{
-		date: new Date('2023-1-09'),
+		date: new Date('2022-1-09'),
 		Changes: () => <>
 			<ul>
 				<li>Updated Samurai About to new infographs and removed warning about postionals not being tracked. Mark Samurai as supported</li>
