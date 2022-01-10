@@ -75,12 +75,11 @@ export class Aetherflow extends Analyser {
 	}
 
 	override output() {
-		return <Table>
+		return <><Table>
 			<Table.Header>
 				<Table.Row>
-					<Table.HeaderCell></Table.HeaderCell>
+					<Table.HeaderCell><Trans id="sch.aetherflow.cast">Cast</Trans></Table.HeaderCell>
 					<Table.HeaderCell><Trans id="sch.aetherflow.cast-time">Cast Time</Trans></Table.HeaderCell>
-					<Table.HeaderCell><Trans id="sch.aetherflow.cooldown">CD</Trans></Table.HeaderCell>
 					<Table.HeaderCell><Trans id="sch.aetherflow.drift">Drift</Trans></Table.HeaderCell>
 					<Table.HeaderCell><Trans id="sch.aetherflow.abilities-used">Abilities Used</Trans></Table.HeaderCell>
 					<Table.HeaderCell><Trans id="sch.aetherflow.stacks-wasted">Stacks Wasted</Trans></Table.HeaderCell>
@@ -98,7 +97,6 @@ export class Aetherflow extends Analyser {
 								icon="time"
 								onClick={() => this.scrollToAetherflowTimeline(aetherflowWindow.timestamp)}
 							/>{this.parser.formatEpochTimestamp(aetherflowWindow.timestamp)}</Table.Cell>
-						<Table.Cell>{aetherflowWindow.downtime > 0 && this.parser.formatDuration(aetherflowWindow.downtime)}</Table.Cell>
 						<Table.Cell>{aetherflowWindow.drift > 0 && this.parser.formatDuration(aetherflowWindow.drift)}</Table.Cell>
 						<Table.Cell>
 							<Grid>
@@ -122,30 +120,69 @@ export class Aetherflow extends Analyser {
 						<Table.Cell>{this.AETHERFLOW_CHARGES_PER_CAST - aetherflowWindow.aetherflowConsumeActions.length || '-'}</Table.Cell>
 					</Table.Row>
 				})}
+			</Table.Body>
+			<Table.Header>
 				<Table.Row>
-					<Table.Cell colSpan="5" textAlign="right"><Trans id="sch.aetherflow.total-stacks-wasted">Total Stacks Wasted</Trans></Table.Cell>
+					<Table.HeaderCell colSpan="5">Efficiency Summary</Table.HeaderCell>
+				</Table.Row>
+			</Table.Header>
+			<Table.Body>
+				<Table.Row>
+					<Table.Cell colSpan="2" textAlign="right">Total Aetherflow Drift</Table.Cell>
+					<Table.Cell>{this.parser.formatDuration(this.prevAetherflowWindow?.cummulativeDrift ?? 0)}</Table.Cell>
+					<Table.Cell textAlign="right">Total Wasted Stacks</Table.Cell>
 					<Table.Cell>{this.aetherflowWindows.length * this.AETHERFLOW_CHARGES_PER_CAST - this.totalAetherflowConsumeActions}</Table.Cell>
+				</Table.Row>
+				<Table.Row>
+					<Table.Cell colSpan="2" textAlign="right">Total Dissipation Drift</Table.Cell>
+					<Table.Cell>{this.parser.formatDuration(this.prevDissipationWindow?.cummulativeDrift ?? 0)}</Table.Cell>
+					<Table.Cell colSpan="3"></Table.Cell>
 				</Table.Row>
 			</Table.Body>
 		</Table>
+		<Table>
+			<Table.Header>
+				<Table.Row>
+					<Table.HeaderCell colSpan="6">Ability Summary</Table.HeaderCell>
+				</Table.Row>
+			</Table.Header>
+			<Table.Body>
+				<Table.Row>
+					<Table.Cell textAlign="right"><ActionLink {...this.data.actions.LUSTRATE}/></Table.Cell>
+					<Table.Cell>0</Table.Cell>
+					<Table.Cell textAlign="right"><ActionLink {...this.data.actions.EXCOGITATION}/></Table.Cell>
+					<Table.Cell>0</Table.Cell>
+					<Table.Cell textAlign="right"><ActionLink {...this.data.actions.INDOMITABILITY}/></Table.Cell>
+					<Table.Cell>0</Table.Cell>
+				</Table.Row>
+				<Table.Row>
+					<Table.Cell textAlign="right"><ActionLink {...this.data.actions.SACRED_SOIL}/></Table.Cell>
+					<Table.Cell>0</Table.Cell>
+					<Table.Cell textAlign="right"><ActionLink {...this.data.actions.SCH_ENERGY_DRAIN}/></Table.Cell>
+					<Table.Cell colSpan="3">32</Table.Cell>
+				</Table.Row>
+				<Table.Row>
+				</Table.Row>
+			</Table.Body>
+		</Table></>
 	}
 
 	private onGenerateAetherflow(event: Events['action']) {
 		// Calculate any values that depend on the previous aetherflow window
 		const prevWindow = event.action === this.data.actions.AETHERFLOW.id ? this.prevAetherflowWindow : this.prevDissipationWindow
 		const cooldown = this.data.getAction(event.action)?.cooldown ?? this.data.actions.AETHERFLOW.cooldown
-		let downtime = 0
 		let drift = 0
+		let cummulativeDrift = 0
 		if (this.aetherflowWindows.length > 1 && prevWindow) {
-			downtime = event.timestamp - prevWindow.timestamp - cooldown
-			drift = prevWindow.drift + downtime
+			drift = event.timestamp - prevWindow.timestamp - cooldown
+			cummulativeDrift = prevWindow.cummulativeDrift + drift
 		}
 
 		const newAetherflowWindow = {
 			aetherflowGenerateActionId: event.action,
 			timestamp: event.timestamp,
-			downtime: downtime,
 			drift: drift,
+			cummulativeDrift: cummulativeDrift,
 			aetherflowConsumeActions: [],
 		}
 
@@ -188,7 +225,7 @@ export class Aetherflow extends Analyser {
 interface AetherflowWindow {
 	aetherflowGenerateActionId: number
 	timestamp: number
-	downtime: number
 	drift: number
+	cummulativeDrift: number
 	aetherflowConsumeActions: Array<{actionId: number, timestamp: number}>
 }
