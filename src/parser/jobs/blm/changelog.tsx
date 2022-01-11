@@ -62,4 +62,9 @@ export const changelog = [
 		Changes: () => <>Mark missed Umbral Ice Paradoxes as a cycle error and update the Rotation Outliers table header copy.</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],
 	},
+	{
+		date: new Date('2022-01-10'),
+		Changes: () => <>Fixed a bug causing Sharpcasts to appear as if they were consumed by Umbral Ice Paradoxes in the timeline.</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
 ]
