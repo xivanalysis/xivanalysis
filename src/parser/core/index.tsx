@@ -13,7 +13,7 @@ export const CORE = new Meta({
 	changelog,
 	supportedPatches: {
 		from: '6.0',
-		to: 'Perpetuity - CORE ONLY',
+		to: '6.05',
 	},
 })
 

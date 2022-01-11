@@ -4,14 +4,13 @@ import {JobIcon} from 'components/ui/JobIcon'
 import NormalisedMessage from 'components/ui/NormalisedMessage'
 import {AnalysisLoader} from 'components/ui/SharedLoaders'
 import {JOBS, ROLES} from 'data/JOBS'
-import {AVAILABLE_MODULES} from 'parser/AVAILABLE_MODULES'
+import {Meta} from 'parser/core/Meta'
 import Parser, {Result} from 'parser/core/Parser'
 import React, {useContext, useState} from 'react'
 import {Actor, Pull, Report} from 'report'
 import {ReportStore} from 'reportSources'
 import {Header} from 'semantic-ui-react'
 import {StoreContext} from 'store'
-import {isDefined} from 'utilities'
 import styles from './Analyse.module.css'
 import {ResultSegment} from './ResultSegment'
 import {SegmentLinkItem} from './SegmentLinkItem'
@@ -19,24 +18,31 @@ import {SegmentPositionProvider} from './SegmentPositionContext'
 
 export interface AnalyseProps {
 	reportStore: ReportStore
+	meta: Meta
 	report: Report
 	pull: Pull
 	actor: Actor
 }
 
-export function Analyse({reportStore, report, pull, actor}: AnalyseProps) {
+export function Analyse({
+	reportStore,
+	meta,
+	report,
+	pull,
+	actor,
+}: AnalyseProps) {
 	const {globalErrorStore} = useContext(StoreContext)
 
 	const [results, setResults] = useState<readonly Result[]>()
 
 	React.useEffect(() => {
-		analyseReport(reportStore, report, pull, actor)
+		analyseReport(reportStore, meta, report, pull, actor)
 			.then(setResults)
 			.catch(error => {
 				Sentry.captureException(error)
 				globalErrorStore.setGlobalError(error)
 			})
-	}, [reportStore, report, pull, actor, globalErrorStore])
+	}, [reportStore, meta, report, pull, actor, globalErrorStore])
 
 	if (results == null) {
 		return <AnalysisLoader/>
@@ -80,20 +86,11 @@ export function Analyse({reportStore, report, pull, actor}: AnalyseProps) {
 
 async function analyseReport(
 	reportStore: ReportStore,
+	meta: Meta,
 	report: Report,
 	pull: Pull,
 	actor: Actor
 ) {
-	// Build the final meta representation
-	const rawMetas = [
-		AVAILABLE_MODULES.CORE,
-		AVAILABLE_MODULES.BOSSES[pull.encounter.key ?? 'TRASH'],
-		AVAILABLE_MODULES.JOBS[actor.job],
-	]
-	const meta = rawMetas
-		.filter(isDefined)
-		.reduce((acc, cur) => acc.merge(cur))
-
 	// Build the base parser instance
 	const parser = new Parser({
 		meta,
