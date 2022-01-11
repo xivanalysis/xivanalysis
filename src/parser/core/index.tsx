@@ -11,6 +11,8 @@ export const CORE = new Meta({
 		? AprilFoolsDescription
 		: undefined,
 	changelog,
+
+	// Read `docs/patch-checklist.md` before editing the following values.
 	supportedPatches: {
 		from: '6.0',
 		to: '6.05',
