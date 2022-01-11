@@ -114,10 +114,7 @@ export class HarvestMoon extends Analyser {
 			this.checklist.add(new Rule({
 				name: <Trans id="rpr.harvest-moon.checklist.name">Use <ActionLink action="SOULSOW"/> during pre-pull and
 					downtime</Trans>,
-				description: <Trans id="rpr.harvest-moon.checklist.description">The <ActionLink action="SOULSOW"/> skill
-					have a very high potency but also high cast time during battle, consider casting it before the fight
-					starts and also when the fight is in a downtime.
-					Don't forget to use <ActionLink action="HARVEST_MOON"/> before a downtime.</Trans>,
+				description: <Trans id="rpr.harvest-moon.checklist.description">Using <ActionLink action="SOULSOW" /> before the pull or during fight downtime unlocks the high potency attack <ActionLink action="HARVEST_MOON" />.  Be sure to use each buff gained from <ActionLink action="SOULSOW" />, but only cast <ActionLink action="SOULSOW" /> when you otherwise cannot attack any enemies for at least 5 seconds.</Trans>,
 				requirements,
 				displayOrder: DISPLAY_ORDER,
 			}))
