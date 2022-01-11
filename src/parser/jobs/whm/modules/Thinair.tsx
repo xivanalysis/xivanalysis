@@ -10,7 +10,7 @@ import {dependency} from 'parser/core/Injectable'
 import {Data} from 'parser/core/modules/Data'
 import React, {Fragment, ReactNode} from 'react'
 import {Accordion} from 'semantic-ui-react'
-import {DISPLAY_ORDER} from "./DISPLAY_ORDER"
+import {DISPLAY_ORDER} from './DISPLAY_ORDER'
 
 interface ThinAirRecord {
 	start: number,
