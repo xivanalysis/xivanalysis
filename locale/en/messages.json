@@ -700,7 +700,7 @@
   "rpr.deathsdesign.requirement.uptime.name": "<0/> uptime",
   "rpr.deathsdesign.rule.description": "Death's Design increases all damage you deal to the target by 10%. Aim to keep this debuff up at all times.",
   "rpr.deathsdesign.rule.name": "Keep <0/> up",
-  "rpr.harvest-moon.checklist.description": "The <0/> skill have a very high potency but also high cast time during battle, consider casting it before the fight starts and also when the fight is in a downtime. Don't forget to use <1/> before a downtime.",
+  "rpr.harvest-moon.checklist.description": "Using <0/> before the pull or during fight downtime unlocks the high potency attack <1/>.  Be sure to use each buff gained from <2/>, but only cast <3/> when you otherwise cannot attack any enemies for at least 5 seconds.",
   "rpr.harvest-moon.checklist.name": "Use <0/> during pre-pull and downtime",
   "rpr.harvest-moon.checklist.requirement.downtime.name": "Usage on downtime window {startTime} to {endTime}",
   "rpr.harvest-moon.checklist.requirement.pre-pull.name": "Usage on pre-pull",
