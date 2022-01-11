@@ -874,5 +874,6 @@
   "whm.swiftcast.missed.suggestion.content": "Wirke Zauber mit <0/> bevor es abläuft. Dadurch kannst du Angriffe mit Anwendungszeit sofort benutzen, wie beispielsweise <1/> für schnelle Wiederbelebungen oder <2/> zwischen Angriffen mit globaler Abklingzeit (zum weaven).",
   "whm.thinair.messages.explanation": "",
   "whm.thinair.messages.no-casts": "",
-  "whm.thinair.title": ""
+  "whm.thinair.title": "",
+  "whm.tincture.suggestions.trackedActions.content": ""
 }

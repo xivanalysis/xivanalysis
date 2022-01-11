@@ -874,5 +874,6 @@
   "whm.swiftcast.missed.suggestion.content": "在<0/>结束之前放一个法术。这样你就可以用<1/>秒拉人或者<2/>来插入能力技。",
   "whm.thinair.messages.explanation": "<0/>的主要用途应当是在战斗中高耗蓝阶段节省蓝量。在战斗中，不要害怕因为<0/>没有转好就用而丢失使用机会，只要<0/>覆盖到了蓝量消耗激烈的战斗过程，例如使用<1/>、<2/>和<3/>的场景就可以。",
   "whm.thinair.messages.no-casts": "没有<0/>的使用记录",
-  "whm.thinair.title": "无中生有"
+  "whm.thinair.title": "无中生有",
+  "whm.tincture.suggestions.trackedActions.content": ""
 }

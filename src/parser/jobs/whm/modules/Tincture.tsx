@@ -24,7 +24,7 @@ export class Tincture extends CoreTincture {
 				},
 			],
 			suggestionIcon: this.data.actions.INFUSION_MND.icon,
-			suggestionContent: <Trans id="sge.tincture.suggestions.trackedActions.content">
+			suggestionContent: <Trans id="whm.tincture.suggestions.trackedActions.content">
 				Try to cover as much damage as possible with your Tinctures of Mind.
 			</Trans>,
 			suggestionWindowName: <DataLink action="INFUSION_MND" showIcon={false}/>,
