@@ -14,11 +14,12 @@ export class Aetherflow extends Analyser {
 	static override handle = 'aetherflow'
 	static override title = t('sch.aetherflow.title')`Aetherflow`
 
-	private recticationActive: boolean = false;
-	private aetherflowWindows: AetherflowWindow[] = [];
-	private totalAetherflowConsumeActions: number = 0;
-	private prevAetherflowWindow?: AetherflowWindow;
-	private prevDissipationWindow?: AetherflowWindow;
+	private recticationActive: boolean = false
+	private aetherflowWindows: AetherflowWindow[] = []
+	private totalAetherflowConsumeActions: number = 0
+	private totalCastsByConsumeAction: Map<number, number> = new Map<number, number>()
+	private prevAetherflowWindow?: AetherflowWindow
+	private prevDissipationWindow?: AetherflowWindow
 
 	@dependency private data!: Data
 	@dependency private timeline!: Timeline
@@ -78,6 +79,46 @@ export class Aetherflow extends Analyser {
 		return <><Table>
 			<Table.Header>
 				<Table.Row>
+					<Table.HeaderCell colSpan="6">Summary</Table.HeaderCell>
+				</Table.Row>
+			</Table.Header>
+			<Table.Body>
+				<Table.Row>
+					<Table.Cell textAlign="right">Total Aetherflow Drift</Table.Cell>
+					<Table.Cell>{this.parser.formatDuration(this.prevAetherflowWindow?.cummulativeDrift ?? 0)}</Table.Cell>
+					<Table.Cell textAlign="right">Total Dissipation Drift</Table.Cell>
+					<Table.Cell>{this.parser.formatDuration(this.prevDissipationWindow?.cummulativeDrift ?? 0)}</Table.Cell>
+					<Table.Cell textAlign="right">Total Wasted Stacks</Table.Cell>
+					<Table.Cell>{this.aetherflowWindows.length * this.AETHERFLOW_CHARGES_PER_CAST - this.totalAetherflowConsumeActions}</Table.Cell>
+				</Table.Row>
+			</Table.Body>
+			<Table.Header>
+				<Table.Row>
+					<Table.HeaderCell colSpan="6">Abilities Used</Table.HeaderCell>
+				</Table.Row>
+			</Table.Header>
+			<Table.Body>
+				<Table.Row>
+					<Table.Cell textAlign="right"><ActionLink {...this.data.actions.LUSTRATE}/></Table.Cell>
+					<Table.Cell>{this.totalCastsByConsumeAction.get(this.data.actions.LUSTRATE.id) ?? 0}</Table.Cell>
+					<Table.Cell textAlign="right"><ActionLink {...this.data.actions.EXCOGITATION}/></Table.Cell>
+					<Table.Cell>{this.totalCastsByConsumeAction.get(this.data.actions.EXCOGITATION.id) ?? 0}</Table.Cell>
+					<Table.Cell textAlign="right"><ActionLink {...this.data.actions.INDOMITABILITY}/></Table.Cell>
+					<Table.Cell>{this.totalCastsByConsumeAction.get(this.data.actions.INDOMITABILITY.id) ?? 0}</Table.Cell>
+				</Table.Row>
+				<Table.Row>
+					<Table.Cell textAlign="right"><ActionLink {...this.data.actions.SACRED_SOIL}/></Table.Cell>
+					<Table.Cell>{this.totalCastsByConsumeAction.get(this.data.actions.SACRED_SOIL.id) ?? 0}</Table.Cell>
+					<Table.Cell textAlign="right"><ActionLink {...this.data.actions.SCH_ENERGY_DRAIN}/></Table.Cell>
+					<Table.Cell colSpan="3">{this.totalCastsByConsumeAction.get(this.data.actions.SCH_ENERGY_DRAIN.id) ?? 0}</Table.Cell>
+				</Table.Row>
+				<Table.Row>
+				</Table.Row>
+			</Table.Body>
+		</Table>
+		<Table>
+			<Table.Header>
+				<Table.Row>
 					<Table.HeaderCell><Trans id="sch.aetherflow.cast">Cast</Trans></Table.HeaderCell>
 					<Table.HeaderCell><Trans id="sch.aetherflow.cast-time">Cast Time</Trans></Table.HeaderCell>
 					<Table.HeaderCell><Trans id="sch.aetherflow.drift">Drift</Trans></Table.HeaderCell>
@@ -121,49 +162,6 @@ export class Aetherflow extends Analyser {
 					</Table.Row>
 				})}
 			</Table.Body>
-			<Table.Header>
-				<Table.Row>
-					<Table.HeaderCell colSpan="5">Efficiency Summary</Table.HeaderCell>
-				</Table.Row>
-			</Table.Header>
-			<Table.Body>
-				<Table.Row>
-					<Table.Cell colSpan="2" textAlign="right">Total Aetherflow Drift</Table.Cell>
-					<Table.Cell>{this.parser.formatDuration(this.prevAetherflowWindow?.cummulativeDrift ?? 0)}</Table.Cell>
-					<Table.Cell textAlign="right">Total Wasted Stacks</Table.Cell>
-					<Table.Cell>{this.aetherflowWindows.length * this.AETHERFLOW_CHARGES_PER_CAST - this.totalAetherflowConsumeActions}</Table.Cell>
-				</Table.Row>
-				<Table.Row>
-					<Table.Cell colSpan="2" textAlign="right">Total Dissipation Drift</Table.Cell>
-					<Table.Cell>{this.parser.formatDuration(this.prevDissipationWindow?.cummulativeDrift ?? 0)}</Table.Cell>
-					<Table.Cell colSpan="3"></Table.Cell>
-				</Table.Row>
-			</Table.Body>
-		</Table>
-		<Table>
-			<Table.Header>
-				<Table.Row>
-					<Table.HeaderCell colSpan="6">Ability Summary</Table.HeaderCell>
-				</Table.Row>
-			</Table.Header>
-			<Table.Body>
-				<Table.Row>
-					<Table.Cell textAlign="right"><ActionLink {...this.data.actions.LUSTRATE}/></Table.Cell>
-					<Table.Cell>0</Table.Cell>
-					<Table.Cell textAlign="right"><ActionLink {...this.data.actions.EXCOGITATION}/></Table.Cell>
-					<Table.Cell>0</Table.Cell>
-					<Table.Cell textAlign="right"><ActionLink {...this.data.actions.INDOMITABILITY}/></Table.Cell>
-					<Table.Cell>0</Table.Cell>
-				</Table.Row>
-				<Table.Row>
-					<Table.Cell textAlign="right"><ActionLink {...this.data.actions.SACRED_SOIL}/></Table.Cell>
-					<Table.Cell>0</Table.Cell>
-					<Table.Cell textAlign="right"><ActionLink {...this.data.actions.SCH_ENERGY_DRAIN}/></Table.Cell>
-					<Table.Cell colSpan="3">32</Table.Cell>
-				</Table.Row>
-				<Table.Row>
-				</Table.Row>
-			</Table.Body>
 		</Table></>
 	}
 
@@ -203,6 +201,8 @@ export class Aetherflow extends Analyser {
 				actionId: event.action,
 				timestamp: event.timestamp,
 			})
+			const newTotalCasts = (this.totalCastsByConsumeAction.get(event.action) ?? 0) + 1
+			this.totalCastsByConsumeAction.set(event.action, newTotalCasts)
 			this.totalAetherflowConsumeActions++
 		}
 	}
