@@ -1,6 +1,6 @@
 import {ActionTimeline} from './ActionTimeline'
 import {BattleLitany} from './BattleLitany'
-import BloodOfTheDragon from './BloodOfTheDragon'
+import {BloodOfTheDragon} from './BloodOfTheDragon'
 import Buffs from './Buffs'
 import {Combos} from './Combos'
 import Debuffs from './Debuffs'

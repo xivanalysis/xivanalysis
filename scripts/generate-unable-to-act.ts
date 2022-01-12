@@ -1,11 +1,33 @@
-import {Excel, Row} from '@kobold/excel'
-import {buildKoboldXIV} from '@kobold/xiv'
+import axios from 'axios'
+import bodybuilder from 'bodybuilder'
 import fs from 'fs'
 
 main().catch(e => {
 	console.error(e)
 	process.exit(1)
 })
+
+interface XivapiPagination {
+	Page: number
+	PageNext: number | null
+	PagePrev: number | null
+	PageTotal: number
+	Results: number
+	ResultsPerPage: number
+	ResultsTotal: number
+}
+
+interface XivapiResponse<T> {
+	Pagination: XivapiPagination
+	Results: T[]
+}
+
+interface XivapiStatus {
+	ID: number
+	Name: string | null
+	LockActions: 0 | 1
+	LockControl: 0 | 1
+}
 
 interface UTAStatus {
 	id: number
@@ -14,24 +36,30 @@ interface UTAStatus {
 }
 
 async function main() {
-	// Set up kobold
-	const kobold = await buildKoboldXIV()
-	const excel = new Excel({kobold})
-	const statuses = await excel.getSheet(Status)
+	const {data} = await axios.post<XivapiResponse<XivapiStatus>>('https://xivapi.com/search', {
+		indexes: 'status',
+		columns: 'ID,LockActions,LockControl,Name',
+		body: bodybuilder()
+			.orFilter('term', 'LockActions', 1)
+			.orFilter('term', 'LockControl', 1)
+			.size(1000)
+			.build(),
+	})
 
 	// Build the list of statuses that imply inability to act
 	const utaStatuses: UTAStatus[] = []
-	for await (const status of statuses.getRows()) {
-		if (!status.lockActions && !status.lockControl) {
+	// for await (const status of statuses.getRows()) {
+	for (const status of data.Results) {
+		if (status.LockActions === 0 && status.LockControl === 0) {
 			continue
 		}
 
 		utaStatuses.push({
-			id: status.index,
-			name: status.name,
+			id: status.ID,
+			name: status.Name,
 			reasons: [
-				...status.lockActions ? ['lockActions'] : [],
-				...status.lockControl ? ['lockControl'] : [],
+				...status.LockActions ? ['lockActions'] : [],
+				...status.LockControl ? ['lockControl'] : [],
 			],
 		})
 	}
@@ -48,12 +76,4 @@ ${statusLines.join('\n')}
 `
 
 	fs.writeFileSync('./src/generated/unableToActStatusIds.ts', fileContents)
-}
-
-class Status extends Row {
-	static sheet = 'Status'
-
-	name = this.string({column: 0})
-	lockActions = this.boolean({column: 10})
-	lockControl = this.boolean({column: 11})
 }

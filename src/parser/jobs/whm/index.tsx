@@ -19,13 +19,14 @@ export const WHITE_MAGE = new Meta({
 	Description: () => <>
 		<TransMarkdown source={description}/>
 	</>,
-	// supportedPatches: {
-	// 	from: '6.0',
-	// 	to: '6.0',
-	// },
+	supportedPatches: {
+		from: '6.0',
+		to: '6.05',
+	},
 	contributors: [
 		// {user: CONTRIBUTORS.YOU, role: ROLES.DEVELOPER},
 		{user: CONTRIBUTORS.INNI, role: ROLES.DEVELOPER},
+		{user: CONTRIBUTORS.KERRIS, role: ROLES.DEVELOPER},
 	],
 	changelog: [
 		// {
@@ -42,6 +43,16 @@ export const WHITE_MAGE = new Meta({
 			date: new Date('2022-01-02'),
 			Changes: () => <>Updated Overhealing Module to include Liturgy of the bell</>,
 			contributors: [CONTRIBUTORS.KERRIS],
+		},
+		{
+			date: new Date('2022-01-04'),
+			Changes: () => <>Updated to add defensive cooldowns and include Liturgy of the bell and Aquaveil</>,
+			contributors: [CONTRIBUTORS.KERRIS],
+		},
+		{
+			date: new Date('2022-01-09'),
+			Changes: () => <>Marked WHM as supported for 6.05</>,
+			contributors: [CONTRIBUTORS.INNI],
 		},
 	],
 })
