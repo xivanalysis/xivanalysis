@@ -4,7 +4,7 @@ import {DataLink, StatusLink} from 'components/ui/DbLink'
 import {Status} from 'data/STATUSES'
 import {Event, Events} from 'event'
 import {Analyser} from 'parser/core/Analyser'
-import {filter} from 'parser/core/filter'
+import {filter, oneOf} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
 import {Actor, Actors} from 'parser/core/modules/Actors'
 import Checklist, {Rule, Requirement} from 'parser/core/modules/Checklist'
@@ -12,8 +12,9 @@ import {Data} from 'parser/core/modules/Data'
 import {Invulnerability} from 'parser/core/modules/Invulnerability'
 import {Statuses} from 'parser/core/modules/Statuses'
 import Suggestions from 'parser/core/modules/Suggestions'
+import {Timeline} from 'parser/core/modules/Timeline'
 import React, {ReactNode} from 'react'
-import {Accordion, Table} from 'semantic-ui-react'
+import {Accordion, Table, Button} from 'semantic-ui-react'
 
 const MAX_ALLOWED_CLIPPING = 3000
 
@@ -39,14 +40,10 @@ export class Goring extends Analyser {
 	@dependency private actors!: Actors
 	@dependency private checklist!: Checklist
 	@dependency private data!: Data
+	@dependency private timeline!: Timeline
 	@dependency private invulnerability!: Invulnerability
 	@dependency private statuses!: Statuses
 	@dependency private suggestions!: Suggestions
-
-	private readonly statusDuration = {
-		[this.data.statuses.GORING_BLADE.id]: this.data.statuses.GORING_BLADE.duration,
-		[this.data.statuses.BLADE_OF_VALOR.id]: this.data.statuses.BLADE_OF_VALOR.duration,
-	}
 
 	private clip: Record<Status['id'], number> = {
 		[this.data.statuses.GORING_BLADE.id]: 0,
@@ -55,10 +52,14 @@ export class Goring extends Analyser {
 	private tracker: DotApplicationTracker = {}
 	private trackedClipping: boolean = false;
 
+	private trackedStatuses = [
+		this.data.statuses.GORING_BLADE.id,
+		this.data.statuses.BLADE_OF_VALOR.id,
+	]
+
 	override initialise() {
 		const playerFilter = filter<Event>().source(this.parser.actor.id)
-		this.addEventHook(playerFilter.type('statusApply').status(this.data.statuses.GORING_BLADE.id), this.onGoringApply)
-		this.addEventHook(playerFilter.type('statusApply').status(this.data.statuses.BLADE_OF_VALOR.id), this.onValorApply)
+		this.addEventHook(playerFilter.type('statusApply').status(oneOf(this.trackedStatuses)), this.onApply)
 		this.addEventHook('complete', this.onComplete)
 	}
 
@@ -72,8 +73,10 @@ export class Goring extends Analyser {
 		}
 	}
 
-	private pushApplication(event: Events['statusApply'], appliedDotDuration: number) {
+	private pushApplication(event: Events['statusApply']) {
 		const targetKey = event.target
+		const status = this.data.getStatus(event.status)
+		if (status?.duration == null) { return }
 		let target = this.tracker[targetKey]
 		if (target == null) {
 			target = this.createDotTargetTracker()
@@ -88,15 +91,11 @@ export class Goring extends Analyser {
 		}
 
 		target.applicationHistory[event.status].applications.push({event, clip})
-		target.lastApplicationExpires = event.timestamp + appliedDotDuration
+		target.lastApplicationExpires = event.timestamp + status.duration
 	}
 
-	private onGoringApply(event: Events['statusApply']) {
-		this.pushApplication(event, this.data.statuses.GORING_BLADE.duration)
-	}
-
-	private onValorApply(event: Events['statusApply']) {
-		this.pushApplication(event, this.data.statuses.BLADE_OF_VALOR.duration)
+	private onApply(event: Events['statusApply']) {
+		this.pushApplication(event)
 	}
 
 	private getDotUptime(statusId: Status['id']) {
@@ -147,6 +146,7 @@ export class Goring extends Analyser {
 					<Table.HeaderCell><Trans id="pld.goring.clip">Clip</Trans></Table.HeaderCell>
 					<Table.HeaderCell><Trans id="pld.goring.total-clip">Total Clip</Trans></Table.HeaderCell>
 					<Table.HeaderCell><Trans id="pld.goring.source">Source</Trans></Table.HeaderCell>
+					<Table.HeaderCell></Table.HeaderCell>
 				</Table.Row>
 			</Table.Header>
 			<Table.Body>
@@ -154,6 +154,8 @@ export class Goring extends Analyser {
 					(event) => {
 						const thisClip = event.clip || 0
 						const status = this.data.getStatus(event.event.status)
+						if (status?.duration == null) { return }
+						const thisDuration = status.duration
 						const icon = <StatusLink showName={false} {...status} />
 						const renderClipTime = event.clip != null ? this.parser.formatDuration(event.clip) : '-'
 						let clipSeverity: ReactNode = renderClipTime
@@ -166,6 +168,12 @@ export class Goring extends Analyser {
 									<Table.Cell>{clipSeverity}</Table.Cell>
 									<Table.Cell>{totalMajorDotClip ? this.parser.formatDuration(totalMajorDotClip) : '-'}</Table.Cell>
 									<Table.Cell style={{textAlign: 'center'}}>{icon}</Table.Cell>
+									<Table.Cell>
+										<Button onClick={() =>
+											this.timeline.show(event.event.timestamp - this.parser.pull.timestamp - thisDuration + thisClip, event.event.timestamp - this.parser.pull.timestamp)}>
+											<Trans id="pld.goring.timelinelink-button">Jump to Timeline</Trans>
+										</Button>
+									</Table.Cell>
 								</Table.Row>
 							</React.Fragment>
 						}
