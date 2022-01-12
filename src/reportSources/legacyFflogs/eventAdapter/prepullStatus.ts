@@ -115,9 +115,11 @@ export class PrepullStatusAdapterStep extends AdapterStep {
 	private synthesizeStatusApply(event: StatusEvent, stacks?: number) {
 		const applyEvent: Events['statusApply'] = {
 			...event,
-			data: stacks,
 			type: 'statusApply',
 			timestamp: this.pull.timestamp + PREPULL_OFFSETS.STATUS_APPLY,
+		}
+		if (stacks != null) {
+			applyEvent.data = stacks
 		}
 
 		this.precastEvents.push(applyEvent)
