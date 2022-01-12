@@ -8,7 +8,7 @@ export const changelog = [
 			Added Jump to Timeline functionality for Goring/BoV table.
 		</>
 		contributors: [CONTRIBUTORS.ARIA],
-	}
+	},
 	{
 		date: new Date('2021-12-29'),
 		Changes: () => <>
