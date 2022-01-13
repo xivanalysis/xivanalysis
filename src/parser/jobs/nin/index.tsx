@@ -13,13 +13,23 @@ export const NINJA = new Meta({
 		</Trans>
 	</>,
 	supportedPatches: {
-		from: '6.0',
-		to: '6.0',
+		from: '6.05',
+		to: '6.05',
 	},
 	contributors: [
 		{user: CONTRIBUTORS.TOASTDEIB, role: ROLES.MAINTAINER},
 	],
 	changelog: [
+		{
+			date: new Date('2022-01-10'),
+			Changes: () => <>Fixed issue with GCD uptime not considering Huton active.</>,
+			contributors: [CONTRIBUTORS.AZARIAH],
+		},
+		{
+			date: new Date('2022-01-04'),
+			Changes: () => <>Updated Raiju module for 6.05 changes.</>,
+			contributors: [CONTRIBUTORS.TOASTDEIB],
+		},
 		{
 			date: new Date('2021-12-29'),
 			Changes: () => <>Updated suggestions for Raiton use under Trick Attack and Hellfrog use on too few targets.</>,

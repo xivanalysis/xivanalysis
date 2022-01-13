@@ -1,6 +1,7 @@
 import {ActionTimeline} from './ActionTimeline'
 import {Combos} from './Combos'
 import {Huton} from './Huton'
+import {HutonCastTime} from './HutonCastTime'
 import {Kassatsu} from './Kassatsu'
 import {Ninjutsu} from './Ninjutsu'
 import {Ninki} from './Ninki'
@@ -14,6 +15,7 @@ export default [
 	ActionTimeline,
 	Combos,
 	Huton,
+	HutonCastTime,
 	Kassatsu,
 	Ninjutsu,
 	Ninki,

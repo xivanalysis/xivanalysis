@@ -21,14 +21,30 @@ export const RED_MAGE = new Meta({
 	</>,
 	supportedPatches: {
 		from: '6.0',
-		to: '6.0',
+		to: '6.05',
 	},
 	contributors: [
+		{user: CONTRIBUTORS.LAILLE, role: ROLES.DEVELOPER},
 		{user: CONTRIBUTORS.LEYLIA, role: ROLES.DEVELOPER},
 		{user: CONTRIBUTORS.MYPS, role: ROLES.DEVELOPER},
 	],
 
 	changelog: [
+		{
+			date: new Date('2022-01-08'),
+			Changes: () => <>Update proc overwrite severities to reflect 6.0 rotations.</>,
+			contributors: [CONTRIBUTORS.LAILLE],
+		},
+		{
+			date: new Date('2022-01-04'),
+			Changes: () => <>Mark as supported for 6.05.</>,
+			contributors: [CONTRIBUTORS.LEYLIA],
+		},
+		{
+			date: new Date('2021-12-29'),
+			Changes: () => <>Added Mana Stack Gauge and special handling for Melee and Finisher combo breaks</>,
+			contributors: [CONTRIBUTORS.LEYLIA],
+		},
 		{
 			date: new Date('2021-12-23'),
 			Changes: () => <>Adding column showing the number of players buffed by Embolden.</>,

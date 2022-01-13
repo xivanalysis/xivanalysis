@@ -3,6 +3,13 @@ import React from 'react'
 
 export const changelog = [
 	{
+		date: new Date('2022-01-12'),
+		Changes: () => <>
+			Added Jump to Timeline functionality for Goring/BoV table.
+		</>,
+		contributors: [CONTRIBUTORS.ARIA],
+	},
+	{
 		date: new Date('2021-12-29'),
 		Changes: () => <>
 			Added support for Endwalker.

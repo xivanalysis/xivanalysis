@@ -8,8 +8,7 @@ import React, {Fragment} from 'react'
 
 const SEVERITY_OVERWRITTEN_PROCS = {
 	1: SEVERITY.MINOR,
-	2: SEVERITY.MEDIUM,
-	5: SEVERITY.MAJOR,
+	15: SEVERITY.MEDIUM,
 }
 
 const SEVERITY_INVULN_PROCS = {
