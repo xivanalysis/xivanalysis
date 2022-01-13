@@ -150,8 +150,9 @@ export class TranslateAdapterStep extends AdapterStep {
 	}
 
 	private adaptEffectEvent(event: DamageEvent | HealEvent): Array<Events['execute' | 'damage' | 'heal' | 'actorUpdate']> {
-		// Calc events should all have a packet ID for sequence purposes. Let sentry catch outliers.
+		// Calc events should all have a packet ID for sequence purposes. Otherwise, this is a damage or heal effect packet for an over time effect.
 		const sequence = event.packetID
+
 		if (sequence == null) {
 			// Damage over time or Heal over time effects are sent as damage/heal events without a sequence ID -- there is no execute confirmation for over time effects, just the actual damage or heal event
 			// Similarly, certain failed hits will generate an "unpaired" event
@@ -164,7 +165,10 @@ export class TranslateAdapterStep extends AdapterStep {
 				if (event.type === 'damage') { return this.adaptDamageEvent(event) }
 				if (event.type === 'heal') { return this.adaptHealEvent(event) }
 			}
-			throw new Error('FFLogs Effect event encountered with no packet ID, did not match to over time status effect (DoT/HoT)')
+
+			// Damage event with no sequence ID to match to a calculated damage event, and does not resolve as an over time effect
+			// No longer throwing because we are not seeing these unmatched packets except for logs created before patch 5.08, but need an early return to make type hinting know sequence isn't null below
+			return []
 		}
 
 		const targetedFields = this.adaptTargetedFields(event)
