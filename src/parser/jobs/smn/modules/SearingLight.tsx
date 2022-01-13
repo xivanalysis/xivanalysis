@@ -15,6 +15,7 @@ import Suggestions, {SEVERITY, Suggestion} from 'parser/core/modules/Suggestions
 import {Timeline} from 'parser/core/modules/Timeline'
 import React from 'react'
 import {Icon} from 'semantic-ui-react'
+import {DISPLAY_ORDER} from './DISPLAY_ORDER'
 
 const PLAYERS_HIT_TARGET = 8
 const PLAYERS_HIT_SUGGESTION_THRESHOLD = 7
@@ -43,6 +44,7 @@ interface SearingLightUsage {
 export class SearingLight extends Analyser {
 	static override handle = 'searinglight'
 	static override title = t('smn.searinglight.title')`Searing Light`
+	static override displayOrder = DISPLAY_ORDER.SEARING_LIGHT
 
 	@dependency private actors!: Actors
 	@dependency private data!: Data

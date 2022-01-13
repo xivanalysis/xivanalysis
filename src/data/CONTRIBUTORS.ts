@@ -94,13 +94,19 @@ const CONTRIBUTORS = ensureRecord<Contributor>()({
 	},
 	RYAN: {
 		name: 'Ryan',
-		avatar: require('./avatar/Rjb99.png'),
+		avatar: require('./avatar/Ryan.png'),
 		jobs: [
 			JOBS.GUNBREAKER,
 			JOBS.SAMURAI,
 		],
 	},
-
+	LAILLE: {
+		name: 'Laille',
+		avatar: require('./avatar/Laille.png'),
+		jobs: [
+			JOBS.RED_MAGE,
+		],
+	},
 	LEYLIA: {
 		name: 'Leylia',
 		avatar: require('./avatar/Leylia.png'),
@@ -162,6 +168,13 @@ const CONTRIBUTORS = ensureRecord<Contributor>()({
 		avatar: require('./avatar/kerris.png'),
 		jobs: [
 			JOBS.WHITE_MAGE,
+		],
+	},
+	DTHOMASH: {
+		name: 'dthomash',
+		avatar: require('./avatar/dthomash.png'),
+		jobs: [
+			JOBS.SCHOLAR,
 		],
 	},
 })

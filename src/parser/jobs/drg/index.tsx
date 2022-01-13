@@ -12,12 +12,17 @@ export const DRAGOON = new Meta({
 	</>,
 	supportedPatches: {
 		from: '6.0',
-		to: '6.0',
+		to: '6.05',
 	},
 	contributors: [
 		{user: CONTRIBUTORS.FALINDRITH, role: ROLES.MAINTAINER},
 	],
 	changelog: [
+		{
+			date: new Date('2022-06-01'),
+			Changes: () => <>Added First Brood's Gaze gauge to the Timeline. Added suggestions for errors related to unused or truncated Life of the Dragon windows at the end of a fight.</>,
+			contributors: [CONTRIBUTORS.FALINDRITH],
+		},
 		{
 			date: new Date('2022-01-01'),
 			Changes: () => <>Corrected a data issue where a pre-pull use of Coerthan Torment was being synthesized and displayed on the Timeline.</>,

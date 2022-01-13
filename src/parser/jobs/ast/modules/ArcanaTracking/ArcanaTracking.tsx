@@ -338,7 +338,7 @@ export default class ArcanaTracking extends Analyser {
 				...event,
 			},
 			drawState: undefined,
-			sealState: CLEAN_SEAL_STATE,
+			sealState: lastCardState.sealState,
 			sleeveState: SleeveType.NOTHING,
 		})
 	}

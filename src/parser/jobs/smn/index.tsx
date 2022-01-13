@@ -20,13 +20,23 @@ export const SUMMONER = new Meta({
 	</>,
 	supportedPatches: {
 		from: '6.0',
-		to: '6.0',
+		to: '6.05',
 	},
 	contributors: [
 		{user: CONTRIBUTORS.KELOS, role: ROLES.MAINTAINER},
 	],
 
 	changelog: [
+		{
+			date: new Date('2022-01-09'),
+			Changes: () => <>Adjusted module display order and now start Summon windows with errors opened.</>,
+			contributors: [CONTRIBUTORS.KELOS],
+		},
+		{
+			date: new Date('2022-01-09'),
+			Changes: () => <>Corrected the cooldown of Radiant Aegis.</>,
+			contributors: [CONTRIBUTORS.KELOS],
+		},
 		{
 			date: new Date('2021-12-28'),
 			Changes: () => <>No longer consider Physick casts during downtime as bad.</>,
