@@ -3,7 +3,7 @@ import React from 'react'
 
 export const changelog = [
 	{
-		date: new Date('2022-01-04'),
+		date: new Date('2022-01-13'),
 		Changes: () => <>Migrate Riddle of Fire module to BuffWindow.</>,
 		contributors: [CONTRIBUTORS.MALP],
 	},
