@@ -169,7 +169,7 @@ const CONTRIBUTORS = ensureRecord<Contributor>()({
 		jobs: [
 			JOBS.REAPER,
 		],
-  },
+	},
 	DTHOMASH: {
 		name: 'dthomash',
 		avatar: require('./avatar/dthomash.png'),
