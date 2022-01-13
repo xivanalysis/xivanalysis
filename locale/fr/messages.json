@@ -135,6 +135,7 @@
   "blm.rotation-watchdog.suggestions.should-skip-b4.why": "Vous auriez du sauté <0/> {shouldSkipB4s, plural,one {# fois} other {# fois}}.",
   "blm.rotation-watchdog.suggestions.should-skip-t3.content": "Vous avez perdu au moins un <0/> en hardcastant <1/> avant la fin de l'instance ou d'une phase de transition.",
   "blm.rotation-watchdog.suggestions.should-skip-t3.why": "Vous auriez dû sauté <0/> {shouldSkipT3s, plural,one {# fois}other {# fois}}.",
+  "blm.rotation-watchdog.suggestions.uptime-souls.content": "Évitez l'utilisation de <0/> quand il y a un ennemi que vous pouvez frapper avec des abiletés endommageantes.<1/> n'endommage pas l'ennemi et empêche l'utilisation d'autre abiletés sur le GCD. Celui-ci devrait être réservé durant un temps d'arrêt.",
   "blm.rotation-watchdog.suggestions.wrong-t3.content": "Ne lancez jamais <0/> manuellement plus d'une fois pendant votre phase de Feu Astral, car cela coûterait du mana qui pourrait être utilisé pour lancer plus de <1/>.",
   "blm.rotation-watchdog.title": "Défauts de rotation",
   "blm.sharpcast.statistic.info": "Le nombre de dynamisation utilisés par rapport au nombre d'utilisations possibles . On s'attend généralement à moins de 100 %, mais une utilisation particulièrement faible pourrait indiquer une mauvaise utilisation du temps de recharge.",
