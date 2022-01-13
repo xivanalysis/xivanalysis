@@ -537,6 +537,7 @@
   "pld.goring.checklist.dots.name": "Vérifiez bien que vos DoTs sont bien appliqués à votre cible",
   "pld.goring.clip": "Clip",
   "pld.goring.source": "Source",
+  "pld.goring.timelinelink-button": "Voir sur la chronologie",
   "pld.goring.total-clip": "Temps total de clipping",
   "pld.requiescat.title": "Utilisation de Requiescat",
   "pld.tincture.suggestions.missedgcd.content": "Essayez d'utiliser 13 GCDs durant chaque <0/>.",
@@ -656,5 +657,6 @@
   "whm.overheal.assize.name": "Assise",
   "whm.overheal.hot.name": "Soin sur la durée",
   "whm.overheal.liturgyofthebell.name": "Tintinnabule",
-  "whm.swiftcast.missed.suggestion.content": "Lancer un sort avec <0/> avant qu'il expire. Cela vous permet d'utiliser directement un sort avec un temps de lancement, tel que <1/> pour une résurrection rapide , ou <2/> pour weave."
+  "whm.swiftcast.missed.suggestion.content": "Lancer un sort avec <0/> avant qu'il expire. Cela vous permet d'utiliser directement un sort avec un temps de lancement, tel que <1/> pour une résurrection rapide , ou <2/> pour weave.",
+  "whm.tincture.suggestions.trackedActions.content": "Essayez de faire autant de dégâts que possible avec vos potions d'esprit."
 }
