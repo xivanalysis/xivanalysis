@@ -13,6 +13,7 @@ import {GlobalCooldown} from 'parser/core/modules/GlobalCooldown'
 import Suggestions, {Suggestion, SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
 import {Accordion, Message, Table} from 'semantic-ui-react'
+import {isDefined} from 'utilities'
 import {DISPLAY_ORDER} from './DISPLAY_ORDER'
 
 const DEMI_DURATION = 15000
@@ -275,6 +276,7 @@ export class Summons extends Analyser {
 	}
 
 	override output() {
+		const rows = this.history.entries.map((entry) => this.buildPanel(entry)).filter(isDefined)
 		return <>
 			<Message>
 				<Trans id="smn.summons.disclaimer">You should aim to use all three Arcanums between each summoning
@@ -284,9 +286,10 @@ export class Summons extends Analyser {
 			</Message>
 			<Accordion
 				exclusive={false}
-				panels={this.history.entries.map(entry => this.buildPanel(entry))}
+				panels={rows.map(row => row.panel)}
 				styled
 				fluid
+				defaultActiveIndex={rows.map((row, idx) => row.hasError ? idx : -1).filter(i => i >= 0)}
 			/>
 		</>
 	}
@@ -302,18 +305,20 @@ export class Summons extends Analyser {
 	}
 
 	private buildPanel(summon: HistoryEntry<SummonWindow>) {
-		if (summon.data.demiSummon == null) { return <></> }
+		if (summon.data.demiSummon == null) { return undefined }
 
 		const data = this.buildWindowOutput(summon)
 		return {
-			key: summon.start,
-			title: {
-				content: <>
-					{this.parser.formatEpochTimestamp(summon.start)}: <ActionLink {...this.data.getAction(summon.data.demiSummon.action)} />
-				</>,
+			panel: {
+				key: summon.start,
+				title: {
+					content: <>
+						{this.parser.formatEpochTimestamp(summon.start)}: <ActionLink {...this.data.getAction(summon.data.demiSummon.action)} />
+					</>,
+				},
+				content: {content: data.display},
 			},
-			content: {content: data.display},
-			active: data.hasError,
+			hasError: data.hasError,
 		}
 	}
 

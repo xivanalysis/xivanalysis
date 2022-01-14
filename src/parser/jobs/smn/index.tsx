@@ -28,6 +28,11 @@ export const SUMMONER = new Meta({
 
 	changelog: [
 		{
+			date: new Date('2022-01-13'),
+			Changes: () => <>Fixed an issue that kept Summon rows from being expanded and collapsed.</>,
+			contributors: [CONTRIBUTORS.KELOS],
+		},
+		{
 			date: new Date('2022-01-09'),
 			Changes: () => <>Adjusted module display order and now start Summon windows with errors opened.</>,
 			contributors: [CONTRIBUTORS.KELOS],
