@@ -38,10 +38,11 @@ export class Medicated extends Analyser {
 		this.pot = {start: event.timestamp}
 	}
 
-	private stopAndSave(endTime: number) {
+	private stopAndSave(endTime: number = this.parser.currentEpochTimestamp) {
 		if (this.pot != null) {
 			this.pots.push({...this.pot, end: endTime})
 		}
+
 		this.pot = undefined
 	}
 
@@ -49,14 +50,16 @@ export class Medicated extends Analyser {
 		if (this.pot == null) {
 			throw new Error('potion instance not found')
 		}
+
 		this.stopAndSave(event.timestamp)
 	}
 
 	private onComplete() {
+		const status = this.data.statuses.MEDICATED
 
 		// Add a pot that is still up before end of pull
 		if (this.pot != null && this.pot.end == null) {
-			this.stopAndSave(this.parser.pull.timestamp + this.parser.pull.duration)
+			this.stopAndSave()
 		}
 
 		if (this.pots.length > 0) {
@@ -65,9 +68,8 @@ export class Medicated extends Analyser {
 				order: -99,
 			})
 
-			const status = this.data.statuses.MEDICATED
 			this.pots.forEach(pot => row.addItem(new StatusItem({
-				status,
+				status: status,
 				start: pot.start - this.parser.pull.timestamp,
 				end: pot.end != null ? pot.end - this.parser.pull.timestamp : this.parser.pull.duration,
 			})))
