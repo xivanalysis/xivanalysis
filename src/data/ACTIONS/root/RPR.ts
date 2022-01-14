@@ -260,6 +260,7 @@ export const RPR = ensureActions({
 		name: 'Enshroud',
 		icon: 'https://xivapi.com/i/003000/003622.png',
 		cooldown: 15000,
+		statusesApplied: ['ENSHROUDED'],
 	},
 
 	LEMURES_SLICE: {
