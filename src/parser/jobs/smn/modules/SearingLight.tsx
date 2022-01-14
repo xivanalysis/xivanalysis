@@ -259,7 +259,7 @@ export class SearingLight extends Analyser {
 					executed: this.getNotesIcon(slUse.data.ghosted),
 				}
 				const windowStart = slUse.start - this.parser.pull.timestamp
-				const windowEnd = slUse.end ?? (this.parser.pull.timestamp + this.parser.pull.duration)
+				const windowEnd = (slUse.end ?? (this.parser.pull.timestamp + this.parser.pull.duration)) - this.parser.pull.timestamp
 				const ret: RotationTableEntry = {
 					start: windowStart,
 					end: windowEnd,
