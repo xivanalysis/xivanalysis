@@ -6,6 +6,7 @@ import {HistoryEntry} from 'parser/core/modules/ActionWindow/History'
 import {SEVERITY} from 'parser/core/modules/Suggestions'
 import {Tincture as CoreTincture} from 'parser/core/modules/Tincture'
 import React from 'react'
+import {OPENER_BUFFER} from '../Constants'
 
 const COMMUNIO_SEVERITY = {
 	1: SEVERITY.MINOR,
@@ -23,9 +24,6 @@ const IGNORED_ACTIONS: ActionKey[] = [
 	'REGRESS',
 	'SECOND_WIND',
 ]
-
-// A tincture window within the first 15s is an opener
-const OPENER_BUFFER = 15000
 
 export class Tincture extends CoreTincture {
 

@@ -1,3 +1,5 @@
 export const DISPLAY_ORDER = {
+	ARCANE_CIRCLE: 10,
 	INTERRUPTS: 20,
+	ENSHROUD: 90,
 }
