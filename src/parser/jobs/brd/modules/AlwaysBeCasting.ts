@@ -42,7 +42,6 @@ export class AlwaysBeCasting extends CoreAlwaysBeCasting {
 	}
 
 	override considerCast(action: Action, castStart: number): boolean {
-
 		// Because Army's Paeon and Army's Muse reduce GCD speed by a variable amount that we can't synthesize, we exclude skills used under either buff from GCD uptime analysis
 		if (this.currentArmy != null)  {
 			this.debug(`Army's buff active at ${this.parser.formatEpochTimestamp(castStart)}`)
