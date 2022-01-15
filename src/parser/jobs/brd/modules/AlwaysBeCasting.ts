@@ -15,7 +15,8 @@ export class AlwaysBeCasting extends CoreAlwaysBeCasting {
 	override initialise() {
 		super.initialise()
 
-		const armyFilter = filter<Event>().source(this.parser.actor.id)
+		const armyFilter = filter<Event>()
+			.source(this.parser.actor.id)
 			.status(oneOf([this.data.statuses.ARMYS_MUSE.id, this.data.statuses.ARMYS_PAEON.id]))
 
 		this.addEventHook(armyFilter.type('statusApply'), this.onApplyArmy)
