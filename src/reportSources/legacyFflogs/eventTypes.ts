@@ -336,7 +336,7 @@ export interface BuffEvent extends AbilityEventFields {
 		| 'refreshdebuff'
 		| 'removebuff'
 		| 'removedebuff'
-	absorbed?: number
+	absorb?: number
 }
 
 export interface BuffStackEvent extends AbilityEventFields {

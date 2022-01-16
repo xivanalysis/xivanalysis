@@ -42,4 +42,9 @@ export const changelog = [
 		Changes: () => <>Mark as supported for 6.05.</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],
 	},
+	{
+		date: new Date('2022-01-15'),
+		Changes: () => <>Fixed an issue with Addersting stacks not counting correctly on some logs in 6.05+</>,
+		contributors: [CONTRIBUTORS.AZARIAH],
+	},
 ]

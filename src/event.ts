@@ -104,8 +104,8 @@ interface EventStatusApply extends FieldsTargeted {
 interface EventStatusRemove extends FieldsTargeted {
 	/** XIV Status ID */
 	status: number
-	/** Amount absorbed by this status (if it's a shield) */
-	absorbed?: number
+	/** If this status is a shield, the amount that was remaining unabsorbed when the shield expired */
+	remainingShield?: number
 }
 
 /** The server has confirmed the execution of an action on its target. */
