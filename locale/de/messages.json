@@ -461,6 +461,7 @@
   "rdm.procs.invuln.target": "Ziel",
   "rpr.deathsdesign.requirement.uptime.name": "Gesamtanwendungszeit von <0/>",
   "rpr.deathsdesign.rule.name": "Halte <0/> aufrecht",
+  "rpr.immortal-sacrifice.checklist.plentiful-harvest.requirement.name": "<0/> Nutzungen",
   "sam.Higanbana.checklist.requirement.name": "Gesamtanwendungszeit von <0/>",
   "sam.buffs.checklist.requirement.fugetsu.name": "Gesamtanwendungszeit von <0/>",
   "sam.buffs.checklist.requirement.fuka.name": "Gesamtanwendungszeit von <0/>",
