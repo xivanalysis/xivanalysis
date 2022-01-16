@@ -29,6 +29,11 @@ export const SUMMONER = new Meta({
 	changelog: [
 		{
 			date: new Date('2022-01-13'),
+			Changes: () => <>Fixed an issue that kept Summon rows from being expanded and collapsed.</>,
+			contributors: [CONTRIBUTORS.KELOS],
+		},
+		{
+			date: new Date('2022-01-13'),
 			Changes: () => <>Jumping to the timeline from the Searing Light table now has the expected zoom.</>,
 			contributors: [CONTRIBUTORS.KELOS],
 		},
