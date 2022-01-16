@@ -581,6 +581,7 @@
   "rdm.procs.title": "Problème de procs",
   "rpr.deathsdesign.requirement.uptime.name": "Temps total d'application de <0/>",
   "rpr.deathsdesign.rule.name": "Gardez <0/> actif",
+  "rpr.immortal-sacrifice.checklist.plentiful-harvest.requirement.name": "<0/> utilisations",
   "sam.Higanbana.checklist.requirement.name": "Temps total d'application de <0/>",
   "sam.buffs.checklist.requirement.fugetsu.name": "Temps total d'application de <0/>",
   "sam.buffs.checklist.requirement.fuka.name": "Temps total d'application de <0/>",
