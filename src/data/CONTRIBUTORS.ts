@@ -163,6 +163,13 @@ const CONTRIBUTORS = ensureRecord<Contributor>()({
 			JOBS.WHITE_MAGE,
 		],
 	},
+	MR_RAZOR: {
+		name: 'Mr Razor',
+		avatar: require('./avatar/mr_razor.png'),
+		jobs: [
+			JOBS.REAPER,
+		],
+	},
 	DTHOMASH: {
 		name: 'dthomash',
 		avatar: require('./avatar/dthomash.png'),

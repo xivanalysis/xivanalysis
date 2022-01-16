@@ -33,6 +33,11 @@ export const SUMMONER = new Meta({
 			contributors: [CONTRIBUTORS.KELOS],
 		},
 		{
+			date: new Date('2022-01-13'),
+			Changes: () => <>Jumping to the timeline from the Searing Light table now has the expected zoom.</>,
+			contributors: [CONTRIBUTORS.KELOS],
+		},
+		{
 			date: new Date('2022-01-09'),
 			Changes: () => <>Adjusted module display order and now start Summon windows with errors opened.</>,
 			contributors: [CONTRIBUTORS.KELOS],
