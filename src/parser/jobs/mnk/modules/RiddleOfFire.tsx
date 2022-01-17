@@ -159,16 +159,16 @@ class BrotherhoodEvaluator implements WindowEvaluator {
 			},
 			rows: windows.map((window, i) => {
 				return {
-					actual: this.countBrotherhood(window),
+					actual: this.countBrotherhoodNearWindow(window),
 					expected: this.numberOfBrotherhoodsExpectedInWindow(i, windows),
 				}
 			}),
 		}
 	}
 
-	private countBrotherhood(window: HistoryEntry<EvaluatedAction[]>): number {
+	private countBrotherhoodNearWindow(window: HistoryEntry<EvaluatedAction[]>): number {
 		// Check if Brotherhood was used in a 2 GCD window of RoF
-		return this.brotherhoodStartHistory.filter(value => Math.abs(window.start - value) < (BASE_GCD * 2)).length
+		return this.brotherhoodStartHistory.filter(brotherhoodStartTimestamp => Math.abs(window.start - brotherhoodStartTimestamp) < (BASE_GCD * 2)).length
 	}
 
 	private numberOfBrotherhoodsExpectedInWindow(windowIndex: number, windows: Array<HistoryEntry<EvaluatedAction[]>>): number {
@@ -186,7 +186,7 @@ class BrotherhoodEvaluator implements WindowEvaluator {
 
 	private lastBrotherhoodActionIsGreaterThanCooldown(windowIndex: number, windows: Array<HistoryEntry<EvaluatedAction[]>>): boolean {
 		for (let i = windowIndex - 1; i >= 0; --i) {
-			if (this.countBrotherhood(windows[i]) > 0) {
+			if (this.countBrotherhoodNearWindow(windows[i]) > 0) {
 				return (windows[windowIndex].start - windows[i].start) > this.brotherhood.cooldown
 			}
 		}
@@ -211,8 +211,8 @@ export class RiddleOfFire extends BuffWindow {
 
 		const playerFilter = filter<Event>()
 			.source(this.parser.actor.id)
-		const buffFilter = playerFilter.status(this.data.statuses.BROTHERHOOD.id)
-		this.addEventHook(buffFilter.type('statusApply'), this.onApplyBrotherhood)
+		const buffFilter = playerFilter.action(this.data.actions.BROTHERHOOD.id)
+		this.addEventHook(buffFilter.type('action'), this.onBrotherhoodAction)
 
 		const suggestionWindowName = <ActionLink action="RIDDLE_OF_FIRE"/>
 
@@ -256,7 +256,7 @@ export class RiddleOfFire extends BuffWindow {
 		}))
 	}
 
-	private onApplyBrotherhood(event: Events['statusApply']) {
+	private onBrotherhoodAction(event: Events['action']) {
 		this.brotherhoodStartHistory.push(event.timestamp)
 	}
 }
