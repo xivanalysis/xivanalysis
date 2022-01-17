@@ -1,7 +1,10 @@
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
 import {ActionLink} from 'components/ui/DbLink'
-import {Action} from 'data/ACTIONS'
+import {Action, ActionRoot} from 'data/ACTIONS'
+import {BASE_GCD} from 'data/CONSTANTS'
+import {Event, Events} from 'event'
+import {filter} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
 import {
 	BuffWindow,
@@ -36,7 +39,6 @@ const SEVERITIES = {
 }
 
 const DOUBLE_PERFECT_BALANCE_IN_SECONDS = 80
-const BROTHERHOOD_COOLDOWN_IN_SECONDS = 120
 
 const EXPECTED_GCDS = 11
 
@@ -122,14 +124,16 @@ class MasterfulBlitzEvaluator implements WindowEvaluator {
 }
 
 class BrotherhoodEvaluator implements WindowEvaluator {
-	private brotherhood: Action
+	private brotherhood: ActionRoot['BROTHERHOOD']
+	private brotherhoodStartHistory: number[]
 
-	constructor(brotherhood: Action) {
+	constructor(brotherhood: ActionRoot['BROTHERHOOD'], brotherhoodStartHistory: number[]) {
 		this.brotherhood = brotherhood
+		this.brotherhoodStartHistory = brotherhoodStartHistory
 	}
 
 	suggest(windows: Array<HistoryEntry<EvaluatedAction[]>>) {
-		const possibleNumberOfBrotherhoods = Math.floor(windows.length / 2)
+		const possibleNumberOfBrotherhoods = Math.ceil(windows.length / 2)
 		const brotherhoodUsagesInsideRof = windows.map(previousValue => previousValue.data.filter(value => value.action === this.brotherhood))
 			.filter(value => value.length > 0).length
 		const missedBhInsideRof = possibleNumberOfBrotherhoods - brotherhoodUsagesInsideRof
@@ -163,7 +167,8 @@ class BrotherhoodEvaluator implements WindowEvaluator {
 	}
 
 	private countBrotherhood(window: HistoryEntry<EvaluatedAction[]>): number {
-		return window.data.filter(value => this.brotherhood === value.action).length
+		// Check if Brotherhood was used in a 2 GCD window of RoF
+		return this.brotherhoodStartHistory.filter(value => Math.abs(window.start - value) < (BASE_GCD * 2)).length
 	}
 
 	private numberOfBrotherhoodsExpectedInWindow(windowIndex: number, windows: Array<HistoryEntry<EvaluatedAction[]>>): number {
@@ -182,7 +187,7 @@ class BrotherhoodEvaluator implements WindowEvaluator {
 	private lastBrotherhoodActionIsGreaterThanCooldown(windowIndex: number, windows: Array<HistoryEntry<EvaluatedAction[]>>): boolean {
 		for (let i = windowIndex - 1; i >= 0; --i) {
 			if (this.countBrotherhood(windows[i]) > 0) {
-				return (windows[windowIndex].start - windows[i].start) / 1000 > BROTHERHOOD_COOLDOWN_IN_SECONDS
+				return (windows[windowIndex].start - windows[i].start) > this.brotherhood.cooldown
 			}
 		}
 
@@ -197,17 +202,22 @@ export class RiddleOfFire extends BuffWindow {
 
 	@dependency globalCooldown!: GlobalCooldown
 
-	blitzSkills = fillActions(BLITZ_SKILLS, this.data)
-
+	private blitzSkills = fillActions(BLITZ_SKILLS, this.data)
+	private brotherhoodStartHistory: number[] = []
 	buffStatus = this.data.statuses.RIDDLE_OF_FIRE
 
 	override initialise() {
 		super.initialise()
 
+		const playerFilter = filter<Event>()
+			.source(this.parser.actor.id)
+		const buffFilter = playerFilter.status(this.data.statuses.BROTHERHOOD.id)
+		this.addEventHook(buffFilter.type('statusApply'), this.onApplyBrotherhood)
+
 		const suggestionWindowName = <ActionLink action="RIDDLE_OF_FIRE"/>
 
 		this.addEvaluator(new MasterfulBlitzEvaluator(this.blitzSkills, this.data.actions.CELESTIAL_REVOLUTION, this.data.actions.BROTHERHOOD))
-		this.addEvaluator(new BrotherhoodEvaluator(this.data.actions.BROTHERHOOD))
+		this.addEvaluator(new BrotherhoodEvaluator(this.data.actions.BROTHERHOOD, this.brotherhoodStartHistory))
 		this.addEvaluator(new ExpectedGcdCountEvaluator({
 			expectedGcds: EXPECTED_GCDS,
 			globalCooldown: this.globalCooldown,
@@ -244,5 +254,9 @@ export class RiddleOfFire extends BuffWindow {
 			suggestionWindowName,
 			severityTiers: SEVERITIES.BAD_GCD_DURING_ROF_SEVERITY,
 		}))
+	}
+
+	private onApplyBrotherhood(event: Events['statusApply']) {
+		this.brotherhoodStartHistory.push(event.timestamp)
 	}
 }
