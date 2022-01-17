@@ -19,37 +19,35 @@ import {BLITZ_SKILLS} from './constants'
 import {DISPLAY_ORDER} from './DISPLAY_ORDER'
 import {fillActions} from './utilities'
 
-const TOTAL_GCD_DURING_ROF_SEVERITY = {
-	10: SEVERITY.MINOR,
-	9: SEVERITY.MEDIUM,
-	6: SEVERITY.MAJOR,
-}
-
-const BROTHERHOOD_OUTSIDE_ROF_SEVERITY = {
-	1: SEVERITY.MEDIUM,
-	2: SEVERITY.MAJOR,
-}
-
-const BAD_GCD_DURING_ROF_SEVERITY = {
-	1: SEVERITY.MEDIUM,
-	2: SEVERITY.MAJOR,
+const SEVERITIES = {
+	TOTAL_GCD_DURING_ROF_SEVERITY: {
+		10: SEVERITY.MINOR,
+		9: SEVERITY.MEDIUM,
+		6: SEVERITY.MAJOR,
+	},
+	BROTHERHOOD_OUTSIDE_ROF_SEVERITY: {
+		1: SEVERITY.MEDIUM,
+		2: SEVERITY.MAJOR,
+	},
+	BAD_GCD_DURING_ROF_SEVERITY: {
+		1: SEVERITY.MEDIUM,
+		2: SEVERITY.MAJOR,
+	},
 }
 
 const DOUBLE_PERFECT_BALANCE_IN_SECONDS = 80
-const TIME_BETWEEN_BH_IN_SECONDS = 120
+const BROTHERHOOD_COOLDOWN_IN_SECONDS = 120
 
 const EXPECTED_GCDS = 11
 
 class MasterfulBlitzEvaluator implements WindowEvaluator {
 	private blitzSkills: Array<Action['id']>
 	private celestialRevolution: Action
-	private masterfulBlitz: Action
 	private brotherhood: Action
 
-	constructor(blitzSkills: Array<Action['id']>, celestialRevolution: Action, masterfulBlitz: Action, brotherhood: Action) {
+	constructor(blitzSkills: Array<Action['id']>, celestialRevolution: Action, brotherhood: Action) {
 		this.blitzSkills = blitzSkills
 		this.celestialRevolution = celestialRevolution
-		this.masterfulBlitz = masterfulBlitz
 		this.brotherhood = brotherhood
 	}
 
@@ -99,7 +97,8 @@ class MasterfulBlitzEvaluator implements WindowEvaluator {
 		}
 
 		// If brotherhood was used we always want 2 blitz skills
-		if (this.checkIfBrotherhoodIsInWindow(windows[windowIndex])) {
+		const isBrotherhoodInWindow = windows[windowIndex].data.filter(value => value.action.id === this.brotherhood.id).length > 0
+		if (isBrotherhoodInWindow) {
 			return 2
 		}
 
@@ -112,10 +111,6 @@ class MasterfulBlitzEvaluator implements WindowEvaluator {
 			return 1
 		}
 		return 2
-	}
-
-	private checkIfBrotherhoodIsInWindow(window: HistoryEntry<EvaluatedAction[]>): boolean {
-		return window.data.filter(value => value.action.id === this.brotherhood.id).length > 0
 	}
 
 	private timeBetweenLastWindowInSeconds(windowIndex: number, windows: Array<HistoryEntry<EvaluatedAction[]>>): number {
@@ -141,7 +136,7 @@ class BrotherhoodEvaluator implements WindowEvaluator {
 
 		return new TieredSuggestion({
 			icon: this.brotherhood.icon,
-			tiers: BROTHERHOOD_OUTSIDE_ROF_SEVERITY,
+			tiers: SEVERITIES.BROTHERHOOD_OUTSIDE_ROF_SEVERITY,
 			value: missedBhInsideRof,
 			content: <Trans id="mnk.rof.suggestions.brotherhood.content">Missed {missedBhInsideRof} <ActionLink
 				action="BROTHERHOOD"/> inside <ActionLink action="RIDDLE_OF_FIRE"/> window.
@@ -187,7 +182,7 @@ class BrotherhoodEvaluator implements WindowEvaluator {
 	private lastBrotherhoodActionIsGreaterThanCooldown(windowIndex: number, windows: Array<HistoryEntry<EvaluatedAction[]>>): boolean {
 		for (let i = windowIndex - 1; i >= 0; --i) {
 			if (this.countBrotherhood(windows[i]) > 0) {
-				return (windows[windowIndex].start - windows[i].start) / 1000 > TIME_BETWEEN_BH_IN_SECONDS
+				return (windows[windowIndex].start - windows[i].start) / 1000 > BROTHERHOOD_COOLDOWN_IN_SECONDS
 			}
 		}
 
@@ -211,19 +206,19 @@ export class RiddleOfFire extends BuffWindow {
 
 		const suggestionWindowName = <ActionLink action="RIDDLE_OF_FIRE"/>
 
-		this.addEvaluator(new MasterfulBlitzEvaluator(this.blitzSkills, this.data.actions.CELESTIAL_REVOLUTION, this.data.actions.MASTERFUL_BLITZ, this.data.actions.BROTHERHOOD))
+		this.addEvaluator(new MasterfulBlitzEvaluator(this.blitzSkills, this.data.actions.CELESTIAL_REVOLUTION, this.data.actions.BROTHERHOOD))
 		this.addEvaluator(new BrotherhoodEvaluator(this.data.actions.BROTHERHOOD))
 		this.addEvaluator(new ExpectedGcdCountEvaluator({
 			expectedGcds: EXPECTED_GCDS,
 			globalCooldown: this.globalCooldown,
 			suggestionIcon: this.data.actions.RIDDLE_OF_FIRE.icon,
-			severityTiers: TOTAL_GCD_DURING_ROF_SEVERITY,
+			severityTiers: SEVERITIES.TOTAL_GCD_DURING_ROF_SEVERITY,
 			suggestionWindowName: suggestionWindowName,
 			suggestionContent: <Trans id="mnk.rof.suggestions.gcd.content">Aim to hit {EXPECTED_GCDS} GCDs during
 				each <ActionLink action="RIDDLE_OF_FIRE"/> window.</Trans>,
 			adjustCount: window => {
 				// 6SS counts as 2 GCDs
-				return -this.numberOfSixSidedStarInWindow(window)
+				return -window.data.filter(value => value.action.id === this.data.actions.SIX_SIDED_STAR.id).length
 			},
 		}))
 		this.addEvaluator(new LimitedActionsEvaluator({
@@ -247,11 +242,7 @@ export class RiddleOfFire extends BuffWindow {
 				essentially wasting a GCD.
 			</Trans>,
 			suggestionWindowName,
-			severityTiers: BAD_GCD_DURING_ROF_SEVERITY,
+			severityTiers: SEVERITIES.BAD_GCD_DURING_ROF_SEVERITY,
 		}))
-	}
-
-	private numberOfSixSidedStarInWindow(window: HistoryEntry<EvaluatedAction[]>): number {
-		return window.data.filter(value => value.action.id === this.data.actions.SIX_SIDED_STAR.id).length
 	}
 }
