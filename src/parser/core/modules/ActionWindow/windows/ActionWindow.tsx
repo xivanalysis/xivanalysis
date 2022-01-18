@@ -26,7 +26,7 @@ export abstract class ActionWindow extends Analyser {
 	/**
 	 * The captured windows.
 	 */
-	private history = new History<Array<Events['action']>>(() => [])
+	protected history = new History<Array<Events['action']>>(() => [])
 	/**
 	 * The event filter used to capture events while a window is open.
 	 * The default filter will capture all actions.
