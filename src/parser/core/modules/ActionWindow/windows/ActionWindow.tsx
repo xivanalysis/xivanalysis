@@ -26,7 +26,7 @@ export abstract class ActionWindow extends Analyser {
 	/**
 	 * The captured windows.
 	 */
-	protected history = new History<Array<Events['action']>>(() => [])
+	private history = new History<Array<Events['action']>>(() => [])
 	/**
 	 * The event filter used to capture events while a window is open.
 	 * The default filter will capture all actions.
@@ -191,7 +191,7 @@ export abstract class ActionWindow extends Analyser {
 	}
 
 	private mapHistoryActions(): Array<HistoryEntry<EvaluatedAction[]>> {
-		return this.history.entries
+		const evalEntries: Array<HistoryEntry<EvaluatedAction[]>> = this.history.entries
 			.map(entry => ({start: entry.start,
 				end: entry.end,
 				data: entry.data
@@ -202,5 +202,17 @@ export abstract class ActionWindow extends Analyser {
 					})
 					.filter(isDefined),
 			}))
+
+		// relink
+		evalEntries.forEach((e, i) => {
+			if (i > 0) {
+				e.prev = evalEntries[i - 1]
+			}
+			if (i < evalEntries.length - 1) {
+				e.next = evalEntries[i + 1]
+			}
+		})
+
+		return evalEntries
 	}
 }
