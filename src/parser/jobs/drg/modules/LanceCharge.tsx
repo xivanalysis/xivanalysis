@@ -68,7 +68,7 @@ export default class LanceCharge extends BuffWindow {
 				},
 			],
 			suggestionIcon,
-			suggestionContent: <Trans id="drg.lc.suggestions.missedaction.content">Try to land as many of your oGCDs during every <ActionLink action="LANCE_CHARGE" />. Make sure that your oGCD cooldowns don't drift outside of your buff windows.</Trans>,
+			suggestionContent: <Trans id="drg.lc.suggestions.missedaction.content">Try to use as many of your oGCDs as possible during <ActionLink action="LANCE_CHARGE" />.</Trans>,
 			suggestionWindowName,
 			severityTiers: {
 				1: SEVERITY.MINOR,
@@ -137,16 +137,11 @@ export default class LanceCharge extends BuffWindow {
 				return 0
 			}
 
-			// get the next window
-			const currentWindowIndex = this.history.entries.findIndex(w => w.start === window.start)
-
-			// no next, no adjustment
-			if (currentWindowIndex + 1 > this.history.entries.length) {
+			if (!window.next) {
 				return 0
 			}
 
-			const nextWindow = this.history.entries[currentWindowIndex + 1]
-			const nextWindowSsd = nextWindow.data.filter(d => d.action === this.data.actions.SPINESHATTER_DIVE.id)
+			const nextWindowSsd = window.next.data.filter(d => d.action.id === this.data.actions.SPINESHATTER_DIVE.id)
 
 			// if the next window has two and this one has 0, adjust accordingly
 			if (currentWindowSsd.length === 0 && nextWindowSsd.length === 2) {
@@ -154,12 +149,11 @@ export default class LanceCharge extends BuffWindow {
 			}
 
 			// if this window has two and the _previous_ window had 0, adjust accordingly
-			if (currentWindowIndex - 1 < 0) {
+			if (!window.prev) {
 				return 0
 			}
 
-			const prevWindow = this.history.entries[currentWindowIndex - 1]
-			const prevWindowSsd = prevWindow.data.filter(d => d.action === this.data.actions.SPINESHATTER_DIVE.id)
+			const prevWindowSsd = window.prev.data.filter(d => d.action.id === this.data.actions.SPINESHATTER_DIVE.id)
 
 			if (currentWindowSsd.length === 2 && prevWindowSsd.length === 0) {
 				// expect two
