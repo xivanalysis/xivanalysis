@@ -76,6 +76,24 @@ export const BRD = ensureStatuses({
 	},
 
 	// Ally statuses
+	MAGES_BALLAD: {
+		id: 2217,
+		name: 'Mage\'s Ballad',
+		icon: 'https://xivapi.com/i/012000/012603.png',
+		duration: 45000,
+	},
+	ARMYS_PAEON: {
+		id: 2218,
+		name: 'Army\'s Paeon',
+		icon: 'https://xivapi.com/i/012000/012605.png',
+		duration: 45000,
+	},
+	THE_WANDERERS_MINUET: {
+		id: 2216,
+		name: 'The Wanderer\'s Minuet',
+		icon: 'https://xivapi.com/i/012000/012610.png',
+		duration: 45000,
+	},
 	BATTLE_VOICE: {
 		id: 141,
 		name: 'Battle Voice',

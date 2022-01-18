@@ -43,7 +43,7 @@ const ADDERSTING_CONSUMERS: ActionKey[] = [
 interface DiagnosisData {
 	applyTimestamp?: number,
 	removeTimestamp?: number,
-	absorbed?: number,
+	remainingShield?: number,
 	consumedOrOverwritten?: boolean
 }
 
@@ -165,7 +165,7 @@ export class Gauge extends CoreGauge {
 		const diagnosis = this.diagnoses[event.target]
 		if (diagnosis == null) { return }
 		diagnosis.removeTimestamp = event.timestamp
-		diagnosis.absorbed = event.absorbed
+		diagnosis.remainingShield = event.remainingShield
 		this.addTimestampHook(event.timestamp + 1, () => this.onResolveShield(event.target))
 	}
 
@@ -176,7 +176,7 @@ export class Gauge extends CoreGauge {
 		if (diagnosis.consumedOrOverwritten !== true) {
 			const diagnosisDuration = (diagnosis.removeTimestamp ?? this.parser.currentEpochTimestamp) - (diagnosis.applyTimestamp ?? this.parser.pull.timestamp)
 			// Absorbed doesn't give us an actual look at the real total absorbed, so we have to just assume that a non-overwritten removal before the duration that absorbed anything was a full break
-			if ((diagnosis.absorbed ?? 0) > 0 && diagnosisDuration < this.data.statuses.EUKRASIAN_DIAGNOSIS.duration) {
+			if ((diagnosis.remainingShield != null && diagnosis.remainingShield === 0) && diagnosisDuration < this.data.statuses.EUKRASIAN_DIAGNOSIS.duration) {
 				this.adderstingGauge.generate(1)
 			}
 		}

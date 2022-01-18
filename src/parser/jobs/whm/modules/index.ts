@@ -6,6 +6,7 @@ import {OGCDs as oGCDs} from './oGCDs'
 import {Overheal} from './Overheal'
 import {Swiftcast} from './Swiftcast'
 import {Thinair} from './Thinair'
+import {Tincture} from './Tincture'
 
 export default [
 	CastTime,
@@ -16,4 +17,5 @@ export default [
 	Overheal,
 	Swiftcast,
 	Thinair,
+	Tincture,
 ]

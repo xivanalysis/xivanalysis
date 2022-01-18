@@ -1,80 +1,53 @@
 import {Action} from 'data/ACTIONS'
 import {Event, Events} from 'event'
-import {filter} from 'parser/core/filter'
+import {filter, oneOf} from 'parser/core/filter'
 import {AlwaysBeCasting as CoreAlwaysBeCasting} from 'parser/core/modules/AlwaysBeCasting'
 
-const SONG_DURATION_MS = 45000
-
 interface ArmyWindow {
-	start: number,
+	start: number
 	end: number
 }
 
 export class AlwaysBeCasting extends CoreAlwaysBeCasting {
-	armyHistory: ArmyWindow[] = []
-	currentMuse: ArmyWindow | undefined
-	currentPaeon: ArmyWindow | undefined
+	private armyHistory: ArmyWindow[] = []
+	private currentArmy: ArmyWindow | undefined = undefined
 
 	override initialise() {
 		super.initialise()
 
-		const playerFilter = filter<Event>().source(this.parser.actor.id)
-		this.addEventHook(playerFilter.type('statusApply').status(this.data.statuses.ARMYS_MUSE.id), this.onApplyMuse)
-		this.addEventHook(playerFilter.type('statusRemove').status(this.data.statuses.ARMYS_MUSE.id), this.onRemoveMuse)
-		this.addEventHook(playerFilter.type('action').action(this.data.matchActionId(['THE_WANDERERS_MINUET', 'MAGES_BALLAD', 'ARMYS_PAEON'])), this.onSong)
+		const armyFilter = filter<Event>()
+			.source(this.parser.actor.id)
+			.status(oneOf([this.data.statuses.ARMYS_MUSE.id, this.data.statuses.ARMYS_PAEON.id]))
+
+		this.addEventHook(armyFilter.type('statusApply'), this.onApplyArmy)
+		this.addEventHook(armyFilter.type('statusRemove'), this.onRemoveArmy)
 	}
 
-	private endMuse() {
-		if (this.currentMuse) {
-			this.armyHistory.push(this.currentMuse)
-			this.currentMuse = undefined
-		}
-	}
+	private onApplyArmy(event: Events['statusApply']) {
+		if (this.currentArmy != null) { return }
 
-	private endPaeon() {
-		if (this.currentPaeon) {
-			this.armyHistory.push(this.currentPaeon)
-			this.currentPaeon = undefined
-		}
-	}
-
-	private onApplyMuse(event: Events['statusApply']) {
-		this.currentMuse = {
+		this.currentArmy = {
 			start: event.timestamp,
-			end: Math.min(this.parser.pull.timestamp + this.parser.pull.duration, event.timestamp + this.data.statuses.ARMYS_MUSE.duration),
+			end: this.parser.pull.timestamp + this.parser.pull.duration,
 		}
+
+		this.armyHistory.push(this.currentArmy)
 	}
 
-	private onRemoveMuse(event: Events['statusRemove']) {
-		if (this.currentMuse) {
-			this.currentMuse.end = event.timestamp
-			this.endMuse()
-		}
-	}
-
-	private onSong(event: Events['action']) {
-		if (event.action === this.data.actions.ARMYS_PAEON.id) {
-			this.currentPaeon = {
-				start: event.timestamp,
-				end: Math.min(this.parser.pull.timestamp + this.parser.pull.duration, event.timestamp + SONG_DURATION_MS),
-			}
-			this.addTimestampHook(event.timestamp + SONG_DURATION_MS, () => this.endPaeon)
-		} else if (this.currentPaeon) {
-			this.currentPaeon.end = event.timestamp
-			this.endPaeon()
+	private onRemoveArmy(event: Events['statusRemove']) {
+		if (this.currentArmy != null) {
+			this.currentArmy.end = event.timestamp
+			this.currentArmy = undefined
 		}
 	}
 
 	override considerCast(action: Action, castStart: number): boolean {
 		// Because Army's Paeon and Army's Muse reduce GCD speed by a variable amount that we can't synthesize, we exclude skills used under either buff from GCD uptime analysis
-		if (this.currentPaeon)  {
-			this.debug(`Army's Paeon active at ${this.parser.formatEpochTimestamp(castStart)}`)
+		if (this.currentArmy != null)  {
+			this.debug(`Army's buff active at ${this.parser.formatEpochTimestamp(castStart)}`)
 			return false
 		}
-		if (this.currentMuse) {
-			this.debug(`Army's Muse active at ${this.parser.formatEpochTimestamp(castStart)}`)
-			return false
-		}
+
 		return super.considerCast(action, castStart)
 	}
 

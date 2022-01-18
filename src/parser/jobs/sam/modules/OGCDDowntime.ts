@@ -1,4 +1,5 @@
 import {CooldownDowntime} from 'parser/core/modules/CooldownDowntime'
+import DISPLAY_ORDER from './DISPLAY_ORDER'
 
 //All Offsets based on this opener: https://cdn.discordapp.com/attachments/920171773012627516/920936501905350676/sam_ew_opener.png
 
@@ -16,6 +17,7 @@ const MEIKYO_ALLOWED_DOWNTIME = 4360
 
 export default class OGCDDowntime extends CooldownDowntime {
 	override defaultAllowedAverageDowntime = DEFAULT_ALLOWED_DOWNTIME
+	displayOrder = DISPLAY_ORDER.COOLDOWNS
 	override trackedCds = [
 		{
 			cooldowns: [this.data.actions.MEIKYO_SHISUI],
