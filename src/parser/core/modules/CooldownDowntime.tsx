@@ -74,7 +74,7 @@ const DEFAULT_DEFENSE_CHECKLIST_TIERS = {
 export abstract class CooldownDowntime extends Analyser {
 	static override handle = 'cooldownDowntime'
 	static override title = t('core.cooldownDowntime.title')`Cooldown Downtime`
-	static override debug = true
+	static override debug = false
 
 	@dependency protected data!: Data
 	@dependency private downtime!: Downtime
