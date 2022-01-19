@@ -114,7 +114,7 @@ export class ImmortalSacrifice extends Analyser {
 
 			this.checklist.add(new Rule({
 				name: <Trans id="rpr.immortal-sacrifice.checklist.title">
-					Uses Immortal Sacrifices via <DataLink action="PLENTIFUL_HARVEST"/>
+					Use Immortal Sacrifices via <DataLink action="PLENTIFUL_HARVEST"/>
 				</Trans>,
 				description: <Trans id="rpr.immortal-sacrifice.checklist.description">
 					<DataLink status="IMMORTAL_SACRIFICE"/> stacks will be generated when you
