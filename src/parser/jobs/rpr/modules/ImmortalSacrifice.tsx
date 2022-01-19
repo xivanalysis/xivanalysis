@@ -135,7 +135,7 @@ export class ImmortalSacrifice extends Analyser {
 						name: <Trans id="rpr.immortal-sacrifice.checklist.requirement.name">
 							<DataLink status="IMMORTAL_SACRIFICE"/> stacks used
 						</Trans>,
-						overrideDisplay: `${stacksConsumed} / ${totalStacks} (${stacksConsumedPercent})`,
+						overrideDisplay: `${stacksConsumed} / ${totalStacks} (${stacksConsumedPercent}%)`,
 						percent: stacksConsumedPercent,
 					}),
 				],

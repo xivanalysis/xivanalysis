@@ -734,7 +734,7 @@
   "rpr.immortal-sacrifice.checklist.description": "<0/> stacks will be generated when you use <1/>, you can then consume those stacks by using <2/>. On top of being a high potency skill, it also grants enough Shroud gauge to immediately use <3/>.",
   "rpr.immortal-sacrifice.checklist.plentiful-harvest.requirement.name": "<0/> uses",
   "rpr.immortal-sacrifice.checklist.requirement.name": "<0/> stacks used",
-  "rpr.immortal-sacrifice.checklist.title": "Uses Immortal Sacrifices via <0/>",
+  "rpr.immortal-sacrifice.checklist.title": "Use Immortal Sacrifices via <0/>",
   "rpr.immortal-sacrifice.checklist.trigger.no-immortal-sacrifice": "<0/> was executed but there were no <1/> stacks.",
   "rpr.immortal-sacrifice.suggestion.no-usage.content": "Make sure you use <0/> in the fight and it hit your party members to help generating <1/>, and make sure to use those stacks via <2/> before they expire.",
   "rpr.immortal-sacrifice.suggestion.no-usage.why": "No stacks of <0/> were generated during the fight.",
