@@ -4,8 +4,8 @@ import {AoE} from './AoE'
 import {Combos} from './Combos'
 import {CooldownDowntime} from './CooldownDowntime'
 import {DeathsDesign} from './DeathsDesign'
+import {EnhancedGibbetGallows} from './EnhancedGibbetGallows'
 import {ImmortalSacrifice} from './ImmortalSacrifice'
-import {Reaver} from './Reaver'
 import {Tincture} from './Tincture'
 
 export default [
@@ -14,8 +14,8 @@ export default [
 	Combos,
 	CooldownDowntime,
 	DeathsDesign,
+	EnhancedGibbetGallows,
 	ImmortalSacrifice,
 	Tincture,
-	Reaver,
 	Weaving,
 ]

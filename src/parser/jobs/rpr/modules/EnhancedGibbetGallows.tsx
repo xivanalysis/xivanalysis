@@ -16,8 +16,8 @@ const SEVERITY_EXPIRED_PROCS = {
 //potency loss due to not using one enhanced gibbet/enhanced gallows proc.
 const PROC_POTENCY = 60
 
-export class Reaver extends CoreProcs {
-	static override title = t('rpr.reaver.title')`Incorrect Soul Reaver Usage`
+export class EnhancedGibbetGallows extends CoreProcs {
+	static override title = t('rpr.enhanced-gibbet-gallows.title')`Incorrect Soul Reaver Usage`
 
 	/**
 	 * RPR procs gained over the course of a fight
@@ -35,61 +35,61 @@ export class Reaver extends CoreProcs {
 
 	private getExpiredProcContent(expiredGibbet: number, expiredGallows: number) {
 		if (expiredGibbet > 0 && expiredGallows > 0) {
-			return <Trans id="rpr.reaver.expired.content">
+			return <Trans id="rpr.enhanced-gibbet-gallows.expired.content">
 				Avoid letting <DataLink status="ENHANCED_GIBBET" /> and <DataLink status="ENHANCED_GALLOWS" /> expire.
 			</Trans>
 		}
 		if (expiredGibbet > 0) {
-			return <Trans id="rpr.reaver.expired-gibbet.content">
+			return <Trans id="rpr.enhanced-gibbet-gallows.expired-gibbet.content">
 				Avoid letting <DataLink status="ENHANCED_GIBBET" /> expire.
 			</Trans>
 		}
-		return <Trans id="rpr.reaver.expired-gallows.content">
+		return <Trans id="rpr.enhanced-gibbet-gallows.expired-gallows.content">
 			Avoid letting <DataLink status="ENHANCED_GALLOWS" /> expire.
 		</Trans>
 	}
 	private getExpiredProcWhy(expiredGibbet: number, expiredGallows:number) {
 		if (expiredGibbet > 0 && expiredGallows > 0) {
-			return <Trans id="rpr.reaver.expired.why">
+			return <Trans id="rpr.enhanced-gibbet-gallows.expired.why">
 				<Plural value={expiredGibbet} one="# Enhanced Gibbet proc" other="# Enhanced Gibbet procs" /> and <Plural value={expiredGallows} one="# Enhanced Gallows proc" other="# Enhanced Gallows procs" /> were dropped, causing a loss of {(expiredGibbet + expiredGallows) * PROC_POTENCY} potency.
 			</Trans>
 		}
 		if (expiredGibbet < 0) {
-			return <Trans id="rpr.reaver.expired-gibbet.why">
+			return <Trans id="rpr.enhanced-gibbet-gallows.expired-gibbet.why">
 				<Plural value={expiredGibbet} one="# Enhanced Gibbet proc was" other="# Enhanced Gibbet procs were" /> dropped causing a loss of {expiredGibbet * PROC_POTENCY} potency
 			</Trans>
 		}
-		return <Trans id="rpr.reaver.expired-gallows.why">
+		return <Trans id="rpr.enhanced-gibbet-gallows.expired-gallows.why">
 			<Plural value={expiredGallows} one="# Enhanced Gallows proc was" other="# Enhanced Gibbet procs were" /> dropped causing a loss of {expiredGallows*PROC_POTENCY} potency
 		</Trans>
 	}
 	private getOverwrittenProcContent(overwrittenGibbet: number, overwrittenGallows: number) {
 		if (overwrittenGibbet > 0 && overwrittenGallows > 0) {
-			return <Trans id="rpr.reaver.overwritten.content">
+			return <Trans id="rpr.enhanced-gibbet-gallows.overwritten.content">
 				Avoid using <DataLink action="GALLOWS" /> when you have <DataLink status="ENHANCED_GIBBET" /> or <DataLink action="GALLOWS" /> when you have <DataLink status="ENHANCED_GIBBET" />
 			</Trans>
 		}
 		if (overwrittenGibbet > 0) {
-			return <Trans id="rpr.reaver.overwritten-gibbet.content">
+			return <Trans id="rpr.enhanced-gibbet-gallows.overwritten-gibbet.content">
 				Avoid using <DataLink action="GALLOWS" /> when you have <DataLink status="ENHANCED_GIBBET" />
 			</Trans>
 		}
-		return <Trans id="rpr.reaver.overwritten-gallows.content">
+		return <Trans id="rpr.enhanced-gibbet-gallows.overwritten-gallows.content">
 			Avoid using <DataLink action="GIBBET" /> when you have <DataLink status="ENHANCED_GALLOWS" />
 		</Trans>
 	}
 	private getOverwrittenProcWhy(overwrittenGibbet: number, overwrittenGallows: number) {
 		if (overwrittenGibbet > 0 && overwrittenGallows > 0) {
-			return <Trans id="rpr.reaver.overwritten.why">
+			return <Trans id="rpr.enhanced-gibbet-gallows.overwritten.why">
 				<Plural value={overwrittenGibbet} one="# Enhanced Gibbet proc" other="# Enhanced Gibbet procs" /> and <Plural value={overwrittenGallows} one="# Enhanced Gallows proc" other="# Enhanced Gallows Procs" /> were lost due to being overwritten, causing a loss of {(overwrittenGibbet + overwrittenGallows) * PROC_POTENCY} potency.
 			</Trans>
 		}
 		if (overwrittenGibbet > 0) {
-			return <Trans id="rpr.reaver.overwritten-gibbet.why">
+			return <Trans id="rpr.enhanced-gibbet-gallows.overwritten-gibbet.why">
 				<Plural value={overwrittenGibbet} one="# Enhanced Gibbet proc was" other="# Enhanced Gibbet procs were" /> lost due to being overwritten, causing a loss of {overwrittenGibbet * PROC_POTENCY} potency
 			</Trans>
 		}
-		return <Trans id="rpr.reaver.overwritten-gallows.why">
+		return <Trans id="rpr.enhanced-gibbet-gallows.overwritten-gallows.why">
 			<Plural value={overwrittenGibbet} one="# Enhanced Gallows proc was" other="# Enhanced Gallows procs were" /> lost due to being overwritten, causing a loss of {overwrittenGallows * PROC_POTENCY} potency
 		</Trans>
 	}

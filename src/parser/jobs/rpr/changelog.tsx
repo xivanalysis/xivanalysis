@@ -4,6 +4,11 @@ import React from 'react'
 
 export const changelog = [
 	{
+		date: new Date('2021-1-19'),
+		Changes: () => <>Add tracker for dropped and overwritten <DataLink status="ENHANCED_GIBBET"/> and <DataLink status="ENHANCED_GALLOWS" /> procs</>,
+		contributors: [CONTRIBUTORS.ARKEVORKHAT],
+	},
+	{
 		date: new Date('2021-12-31'),
 		Changes: () => <>Add checklist for <DataLink status="IMMORTAL_SACRIFICE"/> consumption.</>,
 		contributors: [CONTRIBUTORS.MR_RAZOR],

@@ -20,7 +20,7 @@ export const REAPER = new Meta({
 	// }
 	contributors: [
 		{user: CONTRIBUTORS.AY, role: ROLES.MAINTAINER},
-		{user: CONTRIBUTORS.ARKEVORKHAT, role: ROLES.MAINTAINER},
+		{user: CONTRIBUTORS.ARKEVORKHAT, role: ROLES.DEVELOPER},
 	],
 
 	changelog,
