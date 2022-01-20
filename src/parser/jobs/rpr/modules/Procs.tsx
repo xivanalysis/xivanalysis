@@ -34,28 +34,25 @@ export class Procs extends CoreProcs {
 		},
 		{
 			procStatus: this.data.statuses.ENHANCED_CROSS_REAPING,
-			consumeActions: [this.data.actions.CROSS_REAPING],
+			consumeActions: [this.data.actions.CROSS_REAPING, this.data.actions.COMMUNIO],
 		},
 		{
 			procStatus: this.data.statuses.ENHANCED_VOID_REAPING,
-			consumeActions: [this.data.actions.VOID_REAPING],
+			consumeActions: [this.data.actions.VOID_REAPING, this.data.actions.COMMUNIO],
 		},
 	]
 
 	protected override addJobSpecificSuggestions() {
 		const overwrittenGibbet = this.getOverwriteCountForStatus(this.data.statuses.ENHANCED_GIBBET.id)
 		const overwrittenGallows = this.getOverwriteCountForStatus(this.data.statuses.ENHANCED_GALLOWS.id)
-		const overwrittenCrossReaping = this.getOverwriteCountForStatus(this.data.statuses.ENHANCED_CROSS_REAPING.id)
-		const overwrittenVoidReaping = this.getOverwriteCountForStatus(this.data.statuses.ENHANCED_VOID_REAPING.id)
+
 		const expiredGibbet = this.getDropCountForStatus(this.data.statuses.ENHANCED_GIBBET.id)
 		const expiredGallows = this.getDropCountForStatus(this.data.statuses.ENHANCED_GALLOWS.id)
-		const expiredCrossReaping = this.getDropCountForStatus(this.data.statuses.ENHANCED_CROSS_REAPING.id)
-		const expiredVoidRepaing = this.getDropCountForStatus(this.data.statuses.ENHANCED_VOID_REAPING.id)
 
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.GIBBET.icon,
 			content: <Trans id="rpr.procs.suggestions.overwritten.gibbet.content">
-				<Plural value={overwrittenGibbet} one="# Enhanced Gibbet proc was" other="# Enhanced Gibbet procs were" />  overwritten by using <DataLink action="GALLOWS" />.
+				<Plural value={overwrittenGibbet} one="# Enhanced Gibbet proc was" other="# Enhanced Gibbet procs were" /> overwritten by using <DataLink action="GALLOWS" />.
 			</Trans>,
 			tiers: SEVERITIES.OVERWRITTEN,
 			value: overwrittenGibbet,
@@ -73,30 +70,6 @@ export class Procs extends CoreProcs {
 			value: overwrittenGallows,
 			why: <Trans id="rpr.procs.suggestions.overwritten.gallows.why">
 				You lost {overwrittenGallows * LOST_PROC_POTENCY} potency due to overwritten procs.
-			</Trans>,
-		}))
-
-		this.suggestions.add(new TieredSuggestion({
-			icon: this.data.actions.CROSS_REAPING.icon,
-			content: <Trans id="rpr.procs.suggestions.overwritten.cross-reaping.content">
-				<Plural value={overwrittenCrossReaping} one="# Enhanced Cross Reaping proc was" other="# Enhanced Cross Reaping procs were" /> overwritten by using <DataLink action="VOID_REAPING" />.
-			</Trans>,
-			tiers: SEVERITIES.OVERWRITTEN,
-			value: overwrittenCrossReaping,
-			why: <Trans id="rpr.procs.suggestions.overwritten.cross-reaping.why">
-				You lost {overwrittenCrossReaping * LOST_PROC_POTENCY} potency due to overwritten procs.
-			</Trans>,
-		}))
-
-		this.suggestions.add(new TieredSuggestion({
-			icon: this.data.actions.VOID_REAPING.icon,
-			content: <Trans id="rpr.procs.suggestions.overwritten.void-reaping.content">
-				<Plural value={overwrittenVoidReaping} one="# Enhanced Void Reaping proc was" other="# Enhanced Cross Reaping procs were" /> overwritten by using <DataLink action="CROSS_REAPING" />.
-			</Trans>,
-			tiers: SEVERITIES.OVERWRITTEN,
-			value: overwrittenVoidReaping,
-			why: <Trans id="rpr.procs.suggestions.overwritten.void-reaping.why">
-				You lost {overwrittenVoidReaping * LOST_PROC_POTENCY} potency due to overwritten procs.
 			</Trans>,
 		}))
 
@@ -121,30 +94,6 @@ export class Procs extends CoreProcs {
 			value: expiredGallows,
 			why: <Trans id="rpr.procs.suggestions.expired.gallows.why">
 				You lost {expiredGallows * LOST_PROC_POTENCY} potency due to letting <DataLink status="ENHANCED_GALLOWS" /> procs expire.
-			</Trans>,
-		}))
-
-		this.suggestions.add(new TieredSuggestion({
-			icon: this.data.actions.CROSS_REAPING.icon,
-			content: <Trans id="rpr.procs.suggestions.expired.cross-reaping.content">
-				<Plural value={expiredCrossReaping} one="# Enhanced Cross Reaping proc was" other="# Enhanced Cross Reaping procs were" /> allowed to expire.
-			</Trans>,
-			tiers: SEVERITIES.EXPIRED,
-			value: expiredCrossReaping,
-			why: <Trans id="rpr.procs.suggestions.expired.cross-reaping.why">
-				You lost {expiredCrossReaping * LOST_PROC_POTENCY} potency due to letting <DataLink status="ENHANCED_CROSS_REAPING" /> procs expire.
-			</Trans>,
-		}))
-
-		this.suggestions.add(new TieredSuggestion({
-			icon: this.data.actions.VOID_REAPING.icon,
-			content: <Trans id="rpr.procs.suggestions.expired.void-reaping.content">
-				<Plural value={expiredVoidRepaing} one="# Enhanced Void Reaping proc was" other="# Enhanced Void Reaping procs were" /> allowed to expire.
-			</Trans>,
-			tiers: SEVERITIES.EXPIRED,
-			value: expiredVoidRepaing,
-			why: <Trans id="rpr.procs.suggestions.expired.void-reaping.why">
-				You lost {expiredVoidRepaing * LOST_PROC_POTENCY} potency due to letting <DataLink status="ENHANCED_VOID_REAPING" /> procs expire.
 			</Trans>,
 		}))
 	}
