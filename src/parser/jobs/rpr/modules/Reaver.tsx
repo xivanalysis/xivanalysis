@@ -7,8 +7,13 @@ import React from 'react'
 
 const SEVERITY_OVERWRITTEN_PROCS = {
 	1: SEVERITY.MINOR,
-	7: SEVERITY.MEDIUM,
+	5: SEVERITY.MEDIUM,
 }
+const SEVERITY_EXPIRED_PROCS = {
+	1: SEVERITY.MEDIUM,
+	2: SEVERITY.MAJOR,
+}
+//potency loss due to not using one enhanced gibbet/enhanced gallows proc.
 const PROC_POTENCY = 60
 
 export class Reaver extends CoreProcs {
@@ -28,6 +33,36 @@ export class Reaver extends CoreProcs {
 		},
 	]
 
+	private getExpiredProcContent(expiredGibbet: number, expiredGallows: number) {
+		if (expiredGibbet > 0 && expiredGallows > 0) {
+			return <Trans id="rpr.reaver.expired.content">
+				Avoid letting <DataLink status="ENHANCED_GIBBET" /> and <DataLink status="ENHANCED_GALLOWS" /> expire.
+			</Trans>
+		}
+		if (expiredGibbet > 0) {
+			return <Trans id="rpr.reaver.expired-gibbet.content">
+				Avoid letting <DataLink status="ENHANCED_GIBBET" /> expire.
+			</Trans>
+		}
+		return <Trans id="rpr.reaver.expired-gallows.content">
+			Avoid letting <DataLink status="ENHANCED_GALLOWS" /> expire.
+		</Trans>
+	}
+	private getExpiredProcWhy(expiredGibbet: number, expiredGallows:number) {
+		if (expiredGibbet > 0 && expiredGallows > 0) {
+			return <Trans id="rpr.reaver.expired.why">
+				<Plural value={expiredGibbet} one="# Enhanced Gibbet proc" other="# Enhanced Gibbet procs" /> and <Plural value={expiredGallows} one="# Enhanced Gallows proc" other="# Enhanced Gallows procs" /> were dropped, causing a loss of {(expiredGibbet + expiredGallows) * PROC_POTENCY} potency.
+			</Trans>
+		}
+		if (expiredGibbet < 0) {
+			return <Trans id="rpr.reaver.expired-gibbet.why">
+				<Plural value={expiredGibbet} one="# Enhanced Gibbet proc was" other="# Enhanced Gibbet procs were" /> dropped causing a loss of {expiredGibbet * PROC_POTENCY} potency
+			</Trans>
+		}
+		return <Trans id="rpr.reaver.expired-gallows.why">
+			<Plural value={expiredGallows} one="# Enhanced Gallows proc was" other="# Enhanced Gibbet procs were" /> dropped causing a loss of {expiredGallows*PROC_POTENCY} potency
+		</Trans>
+	}
 	private getOverwrittenProcContent(overwrittenGibbet: number, overwrittenGallows: number) {
 		if (overwrittenGibbet > 0 && overwrittenGallows > 0) {
 			return <Trans id="rpr.reaver.overwritten.content">
@@ -59,6 +94,8 @@ export class Reaver extends CoreProcs {
 		</Trans>
 	}
 	protected override addJobSpecificSuggestions() {
+		const expiredGibbet = this.getDropCountForStatus(this.data.statuses.ENHANCED_GIBBET.id)
+		const expiredGallows = this.getDropCountForStatus(this.data.statuses.ENHANCED_GALLOWS.id)
 		const overwrittenGibbet = this.getOverwriteCountForStatus(this.data.statuses.ENHANCED_GIBBET.id)
 		const overwrittenGallows = this.getOverwriteCountForStatus(this.data.statuses.ENHANCED_GALLOWS.id)
 
@@ -68,6 +105,13 @@ export class Reaver extends CoreProcs {
 			tiers: SEVERITY_OVERWRITTEN_PROCS,
 			value: overwrittenGibbet + overwrittenGallows,
 			why: this.getOverwrittenProcWhy(overwrittenGibbet, overwrittenGallows),
+		}))
+		this.suggestions.add(new TieredSuggestion({
+			icon: expiredGibbet > expiredGallows ? this.data.actions.GIBBET.icon : this.data.actions.GALLOWS.icon,
+			content: this.getExpiredProcContent(expiredGibbet, expiredGallows),
+			tiers: SEVERITY_EXPIRED_PROCS,
+			value: expiredGibbet + expiredGallows,
+			why: this.getExpiredProcWhy(expiredGibbet, expiredGallows),
 		}))
 	}
 }
