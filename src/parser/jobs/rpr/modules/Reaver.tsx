@@ -1,10 +1,9 @@
 import {t} from '@lingui/macro'
 import {Trans, Plural} from '@lingui/react'
 import {DataLink} from 'components/ui/DbLink'
-import {Events} from 'event'
 import {Procs as CoreProcs} from 'parser/core/modules/Procs'
 import {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
-import React, {Fragment} from 'react'
+import React from 'react'
 
 const SEVERITY_OVERWRITTEN_PROCS = {
 	1: SEVERITY.MINOR,
@@ -58,5 +57,17 @@ export class Reaver extends CoreProcs {
 		return <Trans id="rpr.reaver.overwritten-gallows.why">
 			<Plural value={overwrittenGibbet} one="# Enhanced Gallows proc was" other="# Enhanced Gallows procs were" /> lost due to being overwritten, causing a loss of {overwrittenGallows * PROC_POTENCY} potency
 		</Trans>
+	}
+	protected override addJobSpecificSuggestions() {
+		const overwrittenGibbet = this.getOverwriteCountForStatus(this.data.statuses.ENHANCED_GIBBET.id)
+		const overwrittenGallows = this.getOverwriteCountForStatus(this.data.statuses.ENHANCED_GALLOWS.id)
+
+		this.suggestions.add(new TieredSuggestion({
+			icon: overwrittenGibbet > overwrittenGallows ? this.data.actions.GIBBET.icon : this.data.actions.GALLOWS.icon,
+			content: this.getOverwrittenProcContent(overwrittenGibbet, overwrittenGallows),
+			tiers: SEVERITY_OVERWRITTEN_PROCS,
+			value: overwrittenGibbet + overwrittenGallows,
+			why: this.getOverwrittenProcWhy(overwrittenGibbet, overwrittenGallows),
+		}))
 	}
 }
