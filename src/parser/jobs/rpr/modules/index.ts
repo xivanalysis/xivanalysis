@@ -5,6 +5,7 @@ import {Combos} from './Combos'
 import {CooldownDowntime} from './CooldownDowntime'
 import {DeathsDesign} from './DeathsDesign'
 import {ImmortalSacrifice} from './ImmortalSacrifice'
+import {Reaver} from './Reaver'
 import {Tincture} from './Tincture'
 
 export default [
@@ -15,5 +16,6 @@ export default [
 	DeathsDesign,
 	ImmortalSacrifice,
 	Tincture,
+	Reaver,
 	Weaving,
 ]
