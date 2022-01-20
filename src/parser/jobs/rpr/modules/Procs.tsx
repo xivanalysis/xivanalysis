@@ -32,14 +32,6 @@ export class Procs extends CoreProcs {
 			procStatus: this.data.statuses.ENHANCED_GALLOWS,
 			consumeActions: [this.data.actions.GALLOWS],
 		},
-		{
-			procStatus: this.data.statuses.ENHANCED_CROSS_REAPING,
-			consumeActions: [this.data.actions.CROSS_REAPING, this.data.actions.COMMUNIO],
-		},
-		{
-			procStatus: this.data.statuses.ENHANCED_VOID_REAPING,
-			consumeActions: [this.data.actions.VOID_REAPING, this.data.actions.COMMUNIO],
-		},
 	]
 
 	protected override addJobSpecificSuggestions() {
