@@ -61,7 +61,7 @@ export class Procs extends CoreProcs {
 			tiers: SEVERITIES.OVERWRITTEN,
 			value: overwrittenGallows,
 			why: <Trans id="rpr.procs.suggestions.overwritten.gallows.why">
-				You lost {overwrittenGallows * LOST_PROC_POTENCY} potency due to overwritten procs.
+				You lost {overwrittenGallows * LOST_PROC_POTENCY} potency due to overwriting procs.
 			</Trans>,
 		}))
 
