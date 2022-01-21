@@ -21,7 +21,7 @@ const SEVERITIES = {
 const LOST_PROC_POTENCY = 60
 
 export class Procs extends CoreProcs {
-	static override title = t('rpr.enhanced-gibbet-gallows.title')`Incorrect Soul Reaver Usage`
+	static override title = t('rpr.procs.title')`Soul Reaver Usage`
 
 	trackedProcs = [
 		{
