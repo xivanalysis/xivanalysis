@@ -82,7 +82,7 @@ export class Gauge extends CoreGauge {
 		maximum: SOUL_MAX_VALUE,
 		graph: {
 			label: 'Soul Gauge',
-			color: SOUL_GAUGE_COLOR,
+			color: SOUL_GAUGE_COLOR.fade(0.25),
 		},
 		correctHistory: true,
 		deterministic: false,
@@ -93,7 +93,7 @@ export class Gauge extends CoreGauge {
 		maximum: SHROUD_MAX_VALUE,
 		graph: {
 			label: 'Shroud Gauge',
-			color: SHROUD_GAUGE_COLOR,
+			color: SHROUD_GAUGE_COLOR.fade(0.25),
 		},
 		correctHistory: true,
 		deterministic: false,
