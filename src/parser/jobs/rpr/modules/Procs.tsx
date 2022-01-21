@@ -73,7 +73,7 @@ export class Procs extends CoreProcs {
 			tiers: SEVERITIES.EXPIRED,
 			value: expiredGibbet,
 			why: <Trans id="rpr.procs.suggestions.expired.gibbet.why">
-				You lost {expiredGibbet * LOST_PROC_POTENCY} potency due to letting <DataLink status="ENHANCED_GIBBET" /> procs expire.
+				You lost {expiredGibbet * LOST_PROC_POTENCY} potency due to letting <Plural value={expiredGibbet} one="an Enhanced Gibbet proc" other="Enhanced Gibbet procs" /> expire.
 			</Trans>,
 		}))
 
@@ -85,7 +85,7 @@ export class Procs extends CoreProcs {
 			tiers: SEVERITIES.EXPIRED,
 			value: expiredGallows,
 			why: <Trans id="rpr.procs.suggestions.expired.gallows.why">
-				You lost {expiredGallows * LOST_PROC_POTENCY} potency due to letting <DataLink status="ENHANCED_GALLOWS" /> procs expire.
+				You lost {expiredGallows * LOST_PROC_POTENCY} potency due to letting <Plural value={expiredGallows} one="an Enhanced Gallows proc" other="Enhanced Gallows procs" /> expire.
 			</Trans>,
 		}))
 	}
