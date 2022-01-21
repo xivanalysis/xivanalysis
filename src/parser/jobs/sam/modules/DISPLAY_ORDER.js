@@ -1,9 +1,11 @@
 export default {
-	HIGANBANA: 1,
-	MEIKYO: 2,
-	SEN: 3,
-	//KAITEN: 4, Preallocating the slot for a future PR
-	KENKI: 5,
-	SHOHA: 6,
-	TINCTURES: 7,
+	BUFFS: 1,
+	HIGANBANA: 2,
+	COOLDOWNS: 3,
+	OGI: 4,
+	SHOHA: 5,
+	MEIKYO: 6,
+	SEN: 7,
+	KENKI: 8,
+	TINCTURES: 9,
 }

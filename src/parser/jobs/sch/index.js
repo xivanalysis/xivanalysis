@@ -22,12 +22,18 @@ export const SCHOLAR = new Meta({
 	// },
 	contributors: [
 		{user: CONTRIBUTORS.MYPS, role: ROLES.DEVELOPER},
+		{user: CONTRIBUTORS.DTHOMASH, role: ROLES.DEVELOPER},
 	],
 	changelog: [
 		{
 			date: new Date('2021-12-19'),
 			Changes: () => <>Initial Endwalker data update.</>,
 			contributors: [CONTRIBUTORS.MYPS],
+		},
+		{
+			date: new Date('2022-01-04'),
+			Changes: () => <>Update tracked cooldowns to add Aetherflow and make Chain Strategem calculations a bit stricter.</>,
+			contributors: [CONTRIBUTORS.DTHOMASH],
 		},
 	],
 })

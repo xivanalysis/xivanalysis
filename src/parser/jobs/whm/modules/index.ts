@@ -1,11 +1,12 @@
 import {CastTime} from './CastTime'
 import {DoTs} from './DoTs'
-import Interrupts from './Interrupts'
+import {Interrupts} from './Interrupts'
 import Lilies from './Lilies'
-import oGCDs from './oGCDs'
-import Overheal from './Overheal'
-import Swiftcast from './Swiftcast'
+import {OGCDs as oGCDs} from './oGCDs'
+import {Overheal} from './Overheal'
+import {Swiftcast} from './Swiftcast'
 import {Thinair} from './Thinair'
+import {Tincture} from './Tincture'
 
 export default [
 	CastTime,
@@ -16,4 +17,5 @@ export default [
 	Overheal,
 	Swiftcast,
 	Thinair,
+	Tincture,
 ]

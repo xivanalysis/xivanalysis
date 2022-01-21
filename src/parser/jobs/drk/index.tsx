@@ -18,12 +18,22 @@ export const DARK_KNIGHT = new Meta({
 	</>,
 	supportedPatches: {
 		from: '6.0',
-		to: '6.0',
+		to: '6.05',
 	},
 	contributors: [
 		{user: CONTRIBUTORS.AZARIAH, role: ROLES.MAINTAINER},
 	],
 	changelog: [
+		{
+			date: new Date('2022-01-18'),
+			Changes: () => <>Fixed Oblation timeline display</>,
+			contributors: [CONTRIBUTORS.AZARIAH],
+		},
+		{
+			date: new Date('2022-01-15'),
+			Changes: () => <>Fixed an issue with TBN not counting as broken on some logs in 6.05+</>,
+			contributors: [CONTRIBUTORS.AZARIAH],
+		},
 		{
 			date: new Date('2021-12-18'),
 			Changes: () => <>Initial Endwalker support</>,

@@ -70,7 +70,7 @@ export abstract class Swiftcast extends BuffWindow {
 	// swiftcast
 	private adjustExpectedGcdCount(window: HistoryEntry<EvaluatedAction[]>) {
 		const fightTimeRemaining = (this.parser.pull.timestamp + this.parser.pull.duration) - window.start
-		const gcdEstimate = this.globalCooldown.getEstimate()
+		const gcdEstimate = this.globalCooldown.getDuration()
 		return (fightTimeRemaining > gcdEstimate) ? 0 : 1
 	}
 

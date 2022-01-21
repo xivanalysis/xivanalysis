@@ -48,12 +48,6 @@ export class oGCDs extends CooldownDowntime {
 		{
 			cooldowns: [this.data.actions.CELESTIAL_OPPOSITION],
 		},
-		{
-			cooldowns: [this.data.actions.HOROSCOPE],
-		},
-		{
-			cooldowns: [this.data.actions.NEUTRAL_SECT],
-		},
 	]
 
 	override trackedCds = this.DPS_COOLDOWNS_TRACKED

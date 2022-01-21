@@ -1,24 +1,38 @@
 import {t} from '@lingui/macro'
-import {Trans} from '@lingui/react'
-import {ActionLink, StatusLink} from 'components/ui/DbLink'
+import {Plural, Trans} from '@lingui/react'
+import {ActionLink, DataLink} from 'components/ui/DbLink'
 import {RotationTargetOutcome} from 'components/ui/RotationTable'
-import {ActionKey} from 'data/ACTIONS'
+import {Action, ActionKey} from 'data/ACTIONS'
 import {Event, Events} from 'event'
 import _ from 'lodash'
 import {filter} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
-import {BuffWindow, EvaluatedAction, ExpectedActionsEvaluator, ExpectedGcdCountEvaluator, TrackedAction, TrackedActionsOptions} from 'parser/core/modules/ActionWindow'
+import {
+	BuffWindow,
+	EvaluatedAction,
+	EvaluationOutput,
+	ExpectedActionsEvaluator,
+	ExpectedGcdCountEvaluator,
+	TrackedAction,
+	TrackedActionsOptions,
+	WindowEvaluator,
+} from 'parser/core/modules/ActionWindow'
+import {OutcomeCalculator} from 'parser/core/modules/ActionWindow/evaluators/TrackedAction'
 import {HistoryEntry} from 'parser/core/modules/ActionWindow/History'
 import {Actors} from 'parser/core/modules/Actors'
 import {GlobalCooldown} from 'parser/core/modules/GlobalCooldown'
 import {SEVERITY} from 'parser/core/modules/Suggestions'
-import React from 'react'
+import {SeverityTiers, TieredSuggestion} from 'parser/core/modules/Suggestions/Suggestion'
+import React, {ReactNode} from 'react'
 import {Team} from 'report'
+import {Icon} from 'semantic-ui-react'
 import {isDefined} from 'utilities'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 
 // Minimum muse GCDs needed to expect an RS window to have 9 GCDs
 const MIN_MUSE_GCDS = 3
+
+const BUFF_BEST_USED_BEFORE_GCD = 3
 
 const SUPPORT_ACTIONS: ActionKey[] = [
 	'ARMS_LENGTH',
@@ -43,6 +57,7 @@ interface BarrageOptions extends TrackedActionsOptions {
 	barrageId: number
 	wasBarrageUsed: (window: HistoryEntry<EvaluatedAction[]>) => boolean
 }
+
 class BarrageEvaluator extends ExpectedActionsEvaluator {
 	// Because this class is not an Analyser, it cannot use Data directly
 	// to get the id for Barrage, so it has to take it in here.
@@ -60,6 +75,200 @@ class BarrageEvaluator extends ExpectedActionsEvaluator {
 			return this.wasBarrageUsed(window) ? 1 : 0
 		}
 		return super.countUsed(window, action)
+	}
+}
+
+interface BuffEvaluatorOptions {
+	actions: Action[]
+	gcdThreshold: number
+
+	suggestionIcon: string
+	suggestionContent: ReactNode
+	severityTiers: SeverityTiers
+}
+
+class BuffEvaluator implements WindowEvaluator, BuffEvaluatorOptions {
+	actions: Action[]
+	gcdThreshold: number
+
+	suggestionIcon: string
+	suggestionContent: ReactNode
+	suggestionWhy: ReactNode
+	severityTiers: SeverityTiers
+
+	constructor(opt: BuffEvaluatorOptions) {
+		this.actions = opt.actions
+		this.gcdThreshold = opt.gcdThreshold
+		this.suggestionContent = opt.suggestionContent
+		this.suggestionIcon = opt.suggestionIcon
+		this.severityTiers = opt.severityTiers
+	}
+
+	output(windows: Array<HistoryEntry<EvaluatedAction[]>>): EvaluationOutput[] {
+		return this.actions.map(it => {
+			const header = {
+				header: <Trans id="brd.rs.rotation-table.header.on-time"><ActionLink showName={false} {...it} /> On Time?</Trans>,
+				accessor: it.name,
+			}
+
+			return {
+				format: 'notes',
+				header: header,
+				rows: windows.map(window => this.generateNotes(it.id, window)),
+			}
+		})
+	}
+
+	generateNotes(actionId: number, window: HistoryEntry<EvaluatedAction[]>) {
+		const usedInTime = this.wasActionUsedInTime(actionId, this.gcdThreshold, window)
+		return <Icon
+			name={usedInTime ? 'checkmark' : 'remove'}
+			className={usedInTime ? 'text-success' : 'text-error'}
+		/>
+	}
+
+	suggest(windows: Array<HistoryEntry<EvaluatedAction[]>>) {
+		const wrongUsages = this.actions.map(action =>
+			// For each action, counts the amount of times skill was not used in time in every window
+			windows.map(window => Number(!this.wasActionUsedInTime(action.id, this.gcdThreshold, window)))
+				.reduce((acc, it) => acc + it, 0)
+		).reduce((acc, it) => acc + it, 0)
+
+		return new TieredSuggestion({
+			icon: this.suggestionIcon,
+			content: this.suggestionContent,
+			tiers: this.severityTiers,
+			value: wrongUsages,
+			why: <Trans id="brd.rs.suggestions.buff-evaluator.why">
+				<Plural value={wrongUsages} one="# cast of recommended actions was" other="# casts of recommended actions were"/> used later than optimal, or not at all.
+			</Trans>,
+		})
+	}
+
+	/**
+	 * Checks if given {actionId} was used before GCD #{gcdThreshold}
+	 * @param actionId
+	 * @param gcdThreshold
+	 * @param window
+	 */
+	private wasActionUsedInTime = (actionId: number, gcdThreshold: number, window: HistoryEntry<EvaluatedAction[]>): boolean => {
+		const buffAction = _.first(window.data.filter(it => it.action.id === actionId))
+
+		// Buff was not used, thus it was not in time
+		if (buffAction === undefined) { return false }
+
+		const gcdThresholdAction = _.last(
+			window.data
+				.filter(it => it.action.onGcd)
+				.slice(0, gcdThreshold)
+		)
+
+		// There's no limiting GCD in the window, so can only assume it was used in time
+		if (gcdThresholdAction === undefined) { return true }
+
+		// Used in time if it was used before specified GCD
+		return buffAction.timestamp < gcdThresholdAction.timestamp
+	}
+}
+
+interface TrackedActionGroup {
+	actions: Action[]
+	expectedPerWindow: number
+}
+
+interface TrackedActionGroupsOptions {
+	expectedActionGroups: TrackedActionGroup[]
+	suggestionIcon: string
+	suggestionContent: JSX.Element
+	suggestionWindowName: JSX.Element
+	severityTiers: SeverityTiers
+	adjustCount?: (window: HistoryEntry<EvaluatedAction[]>, action: TrackedActionGroup) => number
+	adjustOutcome?: (window: HistoryEntry<EvaluatedAction[]>, action: TrackedActionGroup) => OutcomeCalculator | undefined
+}
+
+export class ExpectedActionGroupsEvaluator implements WindowEvaluator {
+
+	private expectedActionGroups: TrackedActionGroup[]
+	private suggestionIcon: string
+	private suggestionContent: JSX.Element
+	private suggestionWindowName: JSX.Element
+	private severityTiers: SeverityTiers
+	private adjustCount : (window: HistoryEntry<EvaluatedAction[]>, action: TrackedActionGroup) => number
+	private adjustOutcome : (window: HistoryEntry<EvaluatedAction[]>, action: TrackedActionGroup) => OutcomeCalculator | undefined
+
+	constructor(opts: TrackedActionGroupsOptions) {
+		this.expectedActionGroups = opts.expectedActionGroups
+		this.suggestionIcon = opts.suggestionIcon
+		this.suggestionContent = opts.suggestionContent
+		this.suggestionWindowName = opts.suggestionWindowName
+		this.severityTiers = opts.severityTiers
+		this.adjustCount = opts.adjustCount ?? (() => 0)
+		this.adjustOutcome = opts.adjustOutcome ?? (() => undefined)
+	}
+
+	public suggest(windows: Array<HistoryEntry<EvaluatedAction[]>>) {
+		const missedActions = windows
+			.reduce((total, window) => {
+				const missingInWindow = this.expectedActionGroups.reduce((subTotal, actionGroup) => {
+					const actual = this.countUsed(window, actionGroup)
+					const expected = this.determineExpected(window, actionGroup)
+					const comparator = this.adjustOutcome(window, actionGroup)
+					// If a custom comparator is defined for this action, and it didn't return negative, don't count this window
+					const currentLoss = (comparator != null && comparator(actual, expected) !== RotationTargetOutcome.NEGATIVE) ?
+						0 : Math.max(0, expected - actual)
+					return subTotal + currentLoss
+				}, 0)
+				return total + missingInWindow
+			}, 0)
+
+		return new TieredSuggestion({
+			icon: this.suggestionIcon,
+			content: this.suggestionContent,
+			tiers: this.severityTiers,
+			value: missedActions,
+			why: <Trans id="core.buffwindow.suggestions.trackedaction.why">
+				<Plural value={missedActions} one="# use of a recommended action was" other="# uses of recommended actions were"/> missed during {this.suggestionWindowName} windows.
+			</Trans>,
+		})
+	}
+
+	public output(windows: Array<HistoryEntry<EvaluatedAction[]>>): EvaluationOutput[]  {
+		return this.expectedActionGroups.map(actionGroup => {
+			const headerActions = actionGroup.actions.map((action, i) => {
+				return <>
+					{ i > 0 && <> / </> }
+					<ActionLink key={i} showName={false} {...action}/>
+				</>
+			})
+
+			return {
+				format: 'table',
+				header: {
+					header: <>{headerActions}</>,
+					accessor: _.first(actionGroup.actions)?.name ?? '',
+				},
+				rows: windows.map(window => {
+					return {
+						actual: this.countUsed(window, actionGroup),
+						expected: this.determineExpected(window, actionGroup),
+						targetComparator: this.adjustOutcome(window, actionGroup),
+					}
+				}),
+			}
+		})
+	}
+
+	protected countUsed(window: HistoryEntry<EvaluatedAction[]>, actionGroup: TrackedActionGroup) {
+		return window.data.filter(cast => {
+			for (const action of actionGroup.actions) {
+				if (cast.action.id === action.id) { return true }
+			}
+			return false
+		}).length
+	}
+
+	private determineExpected(window: HistoryEntry<EvaluatedAction[]>, action: TrackedActionGroup) {
+		return action.expectedPerWindow + this.adjustCount(window, action)
 	}
 }
 
@@ -87,13 +296,13 @@ export class RagingStrikes extends BuffWindow {
 		this.addEventHook(buffFilter.type('statusRemove'), this.onRemoveMuse)
 		this.addEventHook(playerFilter.status(this.data.statuses.BARRAGE.id).type('statusRemove'), this.onRemoveBarrage)
 
-		const suggestionWindowName = <ActionLink action="RAGING_STRIKES" showIcon={false} />
+		const suggestionWindowName = <DataLink action="RAGING_STRIKES" showIcon={false} />
 		this.addEvaluator(new ExpectedGcdCountEvaluator({
 			expectedGcds: 8,
 			globalCooldown: this.globalCooldown,
 			suggestionIcon: this.data.actions.RAGING_STRIKES.icon,
 			suggestionContent: <Trans id="brd.rs.suggestions.missedgcd.content">
-				Try to land 8 GCDs (9 GCDs with <StatusLink {...this.data.statuses.ARMYS_MUSE}/>) during every <ActionLink {...this.data.actions.RAGING_STRIKES}/> window.
+				Try to land 8 GCDs (9 GCDs with <DataLink status="ARMYS_MUSE"/>) during every <DataLink action="RAGING_STRIKES"/> window.
 			</Trans>,
 			suggestionWindowName,
 			severityTiers: {
@@ -117,7 +326,7 @@ export class RagingStrikes extends BuffWindow {
 			],
 			suggestionIcon: this.data.actions.BARRAGE.icon,
 			suggestionContent: <Trans id="brd.rs.suggestions.trackedactions.content">
-				One use of <ActionLink {...this.data.actions.BARRAGE}/> and one use of <ActionLink {...this.data.actions.IRON_JAWS}/> should occur during every <ActionLink {...this.data.actions.RAGING_STRIKES}/> window.
+				One use of <DataLink action="BARRAGE"/> and one use of <DataLink action="IRON_JAWS"/> should occur during every <DataLink action="RAGING_STRIKES"/> window.
 			</Trans>,
 			suggestionWindowName,
 			severityTiers: {
@@ -129,6 +338,39 @@ export class RagingStrikes extends BuffWindow {
 			adjustOutcome: this.adjustExpectedActionOutcome.bind(this),
 			barrageId: this.data.actions.BARRAGE.id,
 			wasBarrageUsed: this.wasBarrageUsed.bind(this),
+		}))
+
+		this.addEvaluator(new BuffEvaluator({
+			actions: [this.data.actions.BATTLE_VOICE,
+				this.data.actions.RADIANT_FINALE,
+			],
+			gcdThreshold: BUFF_BEST_USED_BEFORE_GCD,
+			suggestionContent: <Trans id="brd.rs.suggestions.buff-evaluator.content">
+				Using <DataLink action="RADIANT_FINALE" /> and <DataLink action="BATTLE_VOICE" /> within the first two GCDs of <DataLink action="RAGING_STRIKES" /> windows allows you to better align their duration and maximize the multiplicative bonuses these statuses give you.
+			</Trans>,
+			suggestionIcon: this.data.actions.RADIANT_FINALE.icon,
+			severityTiers: {
+				1: SEVERITY.MINOR,
+				2: SEVERITY.MEDIUM,
+				3: SEVERITY.MAJOR,
+			},
+		}))
+
+		this.addEvaluator(new ExpectedActionGroupsEvaluator({
+			expectedActionGroups: [{
+				actions: [this.data.actions.BLOODLETTER, this.data.actions.RAIN_OF_DEATH],
+				expectedPerWindow: 3,
+			}],
+			suggestionIcon: this.data.actions.BLOODLETTER.icon,
+			suggestionContent: <Trans id="brd.rs.suggestions.bloodletter-evaluator.content">
+				At least three uses of <DataLink action="BLOODLETTER"/> or <DataLink action="RAIN_OF_DEATH"/> should occur during every <DataLink action="RAGING_STRIKES"/> window. Make sure you pool your <DataLink action="BLOODLETTER"/> or <DataLink action="RAIN_OF_DEATH"/> charges during <DataLink action="ARMYS_PAEON"/>.
+			</Trans>,
+			suggestionWindowName,
+			severityTiers: {
+				1: SEVERITY.MINOR,
+				3: SEVERITY.MEDIUM,
+				5: SEVERITY.MAJOR,
+			},
 		}))
 	}
 
@@ -158,7 +400,7 @@ export class RagingStrikes extends BuffWindow {
 		// Check if muse was up for at least 3 GCDs in this buffWindow
 		const museOverlap = this.museHistory.some(muse => (
 			window.data.filter(event => this.data.getAction(event.action.id)?.onGcd &&
-					event.timestamp > muse.start && (!muse.end || event.timestamp < muse.end))
+				event.timestamp > muse.start && (!muse.end || event.timestamp < muse.end))
 				.length >= MIN_MUSE_GCDS
 		))
 

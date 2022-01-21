@@ -306,7 +306,7 @@ export const PLD = ensureActions({
 		icon: 'https://xivapi.com/i/002000/002950.png',
 		onGcd: false,
 		cooldown: 5000,
-		statusesApplied: ['HOLY_SHELTRON', 'KNIGHTS_RESOLVE', 'KNIGHTS_BENEDICTION'],
+		statusesApplied: ['HOLY_SHELTRON'],
 	},
 	EXPIACION: {
 		id: 25747,

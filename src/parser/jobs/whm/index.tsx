@@ -1,5 +1,6 @@
 import {t} from '@lingui/macro'
 import TransMarkdown from 'components/ui/TransMarkdown'
+import CONTRIBUTORS, {ROLES} from 'data/CONTRIBUTORS'
 import {Meta} from 'parser/core/Meta'
 import React from 'react'
 
@@ -18,12 +19,14 @@ export const WHITE_MAGE = new Meta({
 	Description: () => <>
 		<TransMarkdown source={description}/>
 	</>,
-	// supportedPatches: {
-	// 	from: '6.0',
-	// 	to: '6.0',
-	// },
+	supportedPatches: {
+		from: '6.0',
+		to: '6.05',
+	},
 	contributors: [
 		// {user: CONTRIBUTORS.YOU, role: ROLES.DEVELOPER},
+		{user: CONTRIBUTORS.INNI, role: ROLES.DEVELOPER},
+		{user: CONTRIBUTORS.KERRIS, role: ROLES.DEVELOPER},
 	],
 	changelog: [
 		// {
@@ -31,5 +34,30 @@ export const WHITE_MAGE = new Meta({
 		// 	Changes: () => <>The changes you made</>,
 		// 	contrubutors: [CONTRIBUTORS.YOU],
 		// },
+		{
+			date: new Date('2021-12-30'),
+			Changes: () => <>Updated Thin Air Module for charge-based usage, added some weighting on MP saved per cast</>,
+			contributors: [CONTRIBUTORS.INNI],
+		},
+		{
+			date: new Date('2022-01-02'),
+			Changes: () => <>Updated Overhealing Module to include Liturgy of the bell</>,
+			contributors: [CONTRIBUTORS.KERRIS],
+		},
+		{
+			date: new Date('2022-01-04'),
+			Changes: () => <>Updated to add defensive cooldowns and include Liturgy of the bell and Aquaveil</>,
+			contributors: [CONTRIBUTORS.KERRIS],
+		},
+		{
+			date: new Date('2022-01-09'),
+			Changes: () => <>Marked WHM as supported for 6.05</>,
+			contributors: [CONTRIBUTORS.INNI],
+		},
+		{
+			date: new Date('2022-01-04'),
+			Changes: () => <>Adding Tincture section</>,
+			contributors: [CONTRIBUTORS.KERRIS],
+		},
 	],
 })

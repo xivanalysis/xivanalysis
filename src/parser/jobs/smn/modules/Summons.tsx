@@ -13,6 +13,8 @@ import {GlobalCooldown} from 'parser/core/modules/GlobalCooldown'
 import Suggestions, {Suggestion, SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
 import {Accordion, Message, Table} from 'semantic-ui-react'
+import {isDefined} from 'utilities'
+import {DISPLAY_ORDER} from './DISPLAY_ORDER'
 
 const DEMI_DURATION = 15000
 const EXPECTED_DEMI_GCDS = 6
@@ -57,6 +59,7 @@ interface SummonWindow {
 export class Summons extends Analyser {
 	static override handle = 'summons'
 	static override title = t('smn.summons.title')`Summons`
+	static override displayOrder = DISPLAY_ORDER.SUMMONS
 
 	@dependency private data!: Data
 	@dependency private downtime!: Downtime
@@ -273,6 +276,7 @@ export class Summons extends Analyser {
 	}
 
 	override output() {
+		const rows = this.history.entries.map((entry) => this.buildPanel(entry)).filter(isDefined)
 		return <>
 			<Message>
 				<Trans id="smn.summons.disclaimer">You should aim to use all three Arcanums between each summoning
@@ -282,9 +286,10 @@ export class Summons extends Analyser {
 			</Message>
 			<Accordion
 				exclusive={false}
-				panels={this.history.entries.map(entry => this.buildPanel(entry))}
+				panels={rows.map(row => row.panel)}
 				styled
 				fluid
+				defaultActiveIndex={rows.map((row, idx) => row.hasError ? idx : -1).filter(i => i >= 0)}
 			/>
 		</>
 	}
@@ -296,151 +301,165 @@ export class Summons extends Analyser {
 		if (window.end != null && window.end < demiEnd) {
 			downtimeDuringDemi += demiEnd - window.end
 		}
-		return EXPECTED_DEMI_GCDS - Math.ceil(downtimeDuringDemi / this.globalCooldown.getEstimate())
+		return EXPECTED_DEMI_GCDS - Math.ceil(downtimeDuringDemi / this.globalCooldown.getDuration())
 	}
 
 	private buildPanel(summon: HistoryEntry<SummonWindow>) {
-		if (summon.data.demiSummon == null) { return <></> }
+		if (summon.data.demiSummon == null) { return undefined }
 
+		const data = this.buildWindowOutput(summon)
 		return {
-			key: summon.start,
-			title: {
-				content: <>
-					{this.parser.formatEpochTimestamp(summon.start)}: <ActionLink {...this.data.getAction(summon.data.demiSummon.action)} />
-				</>,
+			panel: {
+				key: summon.start,
+				title: {
+					content: <>
+						{this.parser.formatEpochTimestamp(summon.start)}: <ActionLink {...this.data.getAction(summon.data.demiSummon.action)} />
+					</>,
+				},
+				content: {content: data.display},
 			},
-			content: {
-				content: <>
-					{this.buildWindowOutput(summon)}
-				</>,
-			},
+			hasError: data.hasError,
 		}
 	}
 
 	private buildWindowOutput(summon: HistoryEntry<SummonWindow>) {
-		return <Table>
-			{(summon.data.demiSummon?.action === this.data.actions.SUMMON_BAHAMUT.id) ?
-				this.buildBahamutRow(summon) :
-				this.buildPhoenixRow(summon)}
-			<Table.Row>
-				<Table.Cell positive={summon.data.ifritSummon != null}>
-					<ActionLink showName={false} action="SUMMON_IFRIT_II" />
-					&nbsp;{this.printUsageTime(summon.data.ifritSummon)}
-				</Table.Cell>
-				<Table.Cell positive={summon.data.rubyGcds === MAX_POSSIBLE_RUBY_GCDS}>
-					<ActionLink showName={false} action="RUBY_RITE" />/<ActionLink showName={false} action="RUBY_CATASTROPHE" />
-					&nbsp;{summon.data.rubyGcds}
-				</Table.Cell>
-				<Table.Cell positive={summon.data.crimsonCyclone === MAX_POSSIBLE_CRIMSON_CYCLONE}>
-					<ActionLink showName={false} action="CRIMSON_CYCLONE" />
-					&nbsp;{summon.data.crimsonCyclone}
-				</Table.Cell>
-				<Table.Cell positive={summon.data.crimsonStrike === MAX_POSSIBLE_CRIMSON_STRIKE}>
-					<ActionLink showName={false} action="CRIMSON_STRIKE" />
-					&nbsp;{summon.data.crimsonStrike}
-				</Table.Cell>
-			</Table.Row>
-			<Table.Row>
-				<Table.Cell positive={summon.data.titanSummon != null}>
-					<ActionLink showName={false} action="SUMMON_TITAN_II" />
-					&nbsp;{this.printUsageTime(summon.data.titanSummon)}
-				</Table.Cell>
-				<Table.Cell positive={summon.data.topazGcds === MAX_POSSIBLE_TOPAZ_GCDS}>
-					<ActionLink showName={false} action="TOPAZ_RITE" />/<ActionLink showName={false} action="TOPAZ_CATASTROPHE" />
-					&nbsp;{summon.data.topazGcds}
-				</Table.Cell>
-				<Table.Cell
-					positive={summon.data.mountainBusters === summon.data.topazGcds}
-					negative={summon.data.mountainBusters < summon.data.topazGcds}>
-					<ActionLink showName={false} action="SMN_MOUNTAIN_BUSTER" />
-					&nbsp;{summon.data.mountainBusters}
-				</Table.Cell>
-			</Table.Row>
-			<Table.Row>
-				<Table.Cell positive={summon.data.garudaSummon != null}>
-					<ActionLink showName={false} action="SUMMON_GARUDA_II" />
-					&nbsp;{this.printUsageTime(summon.data.garudaSummon)}
-				</Table.Cell>
-				<Table.Cell positive={summon.data.emeraldGcds === MAX_POSSIBLE_EMERALD_GCDS}>
-					<ActionLink showName={false} action="EMERALD_RITE" />/<ActionLink showName={false} action="EMERALD_CATASTROPHE" />
-					&nbsp;{summon.data.emeraldGcds}
-				</Table.Cell>
-				<Table.Cell positive={summon.data.slipstream === MAX_POSSIBLE_SLIPSTREAM}>
-					<ActionLink showName={false} action="SLIPSTREAM" />
-					&nbsp;{summon.data.slipstream}
-				</Table.Cell>
-			</Table.Row>
-			<Table.Row>
-				<Table.Cell>
-					Uptime: {this.parser.formatDuration(Math.max(0, (summon.end ?? summon.start) - summon.start - this.downtime.getDowntime(summon.start, summon.end)))}
-				</Table.Cell>
-				<Table.Cell>
-					<ActionLink showName={false} action="RUIN_III" />/<ActionLink showName={false} action="TRI_DISASTER" />
-					&nbsp;{summon.data.fillerGcds}
-				</Table.Cell>
-				<Table.Cell
-					positive={summon.data.ruinIV != null && summon.data.ruinIV.timestamp >= summon.start + DEMI_DURATION}
-					negative={(summon.data.ruinIV == null && summon.data.fillerGcds > 0) ||
-						(summon.data.ruinIV != null && summon.data.ruinIV.timestamp < summon.start + DEMI_DURATION)}>
-					<ActionLink showName={false} action="RUIN_IV" />
-					&nbsp;{(summon.data.ruinIV == null) ? 0 : 1}
-				</Table.Cell>
-			</Table.Row>
-		</Table>
+		const demiRow = (summon.data.demiSummon?.action === this.data.actions.SUMMON_BAHAMUT.id) ?
+			this.buildBahamutRow(summon) :
+			this.buildPhoenixRow(summon)
+
+		const missedMountainBusters = summon.data.mountainBusters < summon.data.topazGcds
+		const badR4 = (summon.data.ruinIV == null && summon.data.fillerGcds > 0) ||
+			(summon.data.ruinIV != null && summon.data.ruinIV.timestamp < summon.start + DEMI_DURATION)
+
+		return {
+			hasError: demiRow.hasError || missedMountainBusters || badR4,
+			display: <Table>
+				{demiRow.display}
+				<Table.Row>
+					<Table.Cell positive={summon.data.ifritSummon != null}>
+						<ActionLink showName={false} action="SUMMON_IFRIT_II" />
+						&nbsp;{this.printUsageTime(summon.data.ifritSummon)}
+					</Table.Cell>
+					<Table.Cell positive={summon.data.rubyGcds === MAX_POSSIBLE_RUBY_GCDS}>
+						<ActionLink showName={false} action="RUBY_RITE" />/<ActionLink showName={false} action="RUBY_CATASTROPHE" />
+						&nbsp;{summon.data.rubyGcds}
+					</Table.Cell>
+					<Table.Cell positive={summon.data.crimsonCyclone === MAX_POSSIBLE_CRIMSON_CYCLONE}>
+						<ActionLink showName={false} action="CRIMSON_CYCLONE" />
+						&nbsp;{summon.data.crimsonCyclone}
+					</Table.Cell>
+					<Table.Cell positive={summon.data.crimsonStrike === MAX_POSSIBLE_CRIMSON_STRIKE}>
+						<ActionLink showName={false} action="CRIMSON_STRIKE" />
+						&nbsp;{summon.data.crimsonStrike}
+					</Table.Cell>
+				</Table.Row>
+				<Table.Row>
+					<Table.Cell positive={summon.data.titanSummon != null}>
+						<ActionLink showName={false} action="SUMMON_TITAN_II" />
+						&nbsp;{this.printUsageTime(summon.data.titanSummon)}
+					</Table.Cell>
+					<Table.Cell positive={summon.data.topazGcds === MAX_POSSIBLE_TOPAZ_GCDS}>
+						<ActionLink showName={false} action="TOPAZ_RITE" />/<ActionLink showName={false} action="TOPAZ_CATASTROPHE" />
+						&nbsp;{summon.data.topazGcds}
+					</Table.Cell>
+					<Table.Cell
+						positive={summon.data.mountainBusters === summon.data.topazGcds}
+						negative={missedMountainBusters}>
+						<ActionLink showName={false} action="SMN_MOUNTAIN_BUSTER" />
+						&nbsp;{summon.data.mountainBusters}
+					</Table.Cell>
+				</Table.Row>
+				<Table.Row>
+					<Table.Cell positive={summon.data.garudaSummon != null}>
+						<ActionLink showName={false} action="SUMMON_GARUDA_II" />
+						&nbsp;{this.printUsageTime(summon.data.garudaSummon)}
+					</Table.Cell>
+					<Table.Cell positive={summon.data.emeraldGcds === MAX_POSSIBLE_EMERALD_GCDS}>
+						<ActionLink showName={false} action="EMERALD_RITE" />/<ActionLink showName={false} action="EMERALD_CATASTROPHE" />
+						&nbsp;{summon.data.emeraldGcds}
+					</Table.Cell>
+					<Table.Cell positive={summon.data.slipstream === MAX_POSSIBLE_SLIPSTREAM}>
+						<ActionLink showName={false} action="SLIPSTREAM" />
+						&nbsp;{summon.data.slipstream}
+					</Table.Cell>
+				</Table.Row>
+				<Table.Row>
+					<Table.Cell>
+						Uptime: {this.parser.formatDuration(Math.max(0, (summon.end ?? summon.start) - summon.start - this.downtime.getDowntime(summon.start, summon.end)))}
+					</Table.Cell>
+					<Table.Cell>
+						<ActionLink showName={false} action="RUIN_III" />/<ActionLink showName={false} action="TRI_DISASTER" />
+						&nbsp;{summon.data.fillerGcds}
+					</Table.Cell>
+					<Table.Cell
+						positive={summon.data.ruinIV != null && summon.data.ruinIV.timestamp >= summon.start + DEMI_DURATION}
+						negative={badR4}>
+						<ActionLink showName={false} action="RUIN_IV" />
+						&nbsp;{(summon.data.ruinIV == null) ? 0 : 1}
+					</Table.Cell>
+				</Table.Row>
+			</Table>,
+		}
 	}
 
 	private buildBahamutRow(summon: HistoryEntry<SummonWindow>) {
 		const expectedGcds = this.expectedDemiGcdsForWindow(summon)
-		return <Table.Row>
-			<Table.Cell>
-				<ActionLink showName={false} action="SUMMON_BAHAMUT" />
-				&nbsp;{this.parser.formatEpochTimestamp(summon.start)}
-			</Table.Cell>
-			<Table.Cell
-				positive={summon.data.demiGcds >= expectedGcds}
-				negative={summon.data.demiGcds < expectedGcds}>
-				<ActionLink showName={false} action="ASTRAL_IMPULSE" />/<ActionLink showName={false} action="ASTRAL_FLARE" />
-				&nbsp;{summon.data.demiGcds}
-			</Table.Cell>
-			<Table.Cell
-				positive={summon.data.deathflareOrRekindle === 1}
-				negative={summon.data.deathflareOrRekindle < 1}>
-				<ActionLink showName={false} action="DEATHFLARE" />
-				&nbsp;{summon.data.deathflareOrRekindle}
-			</Table.Cell>
-			<Table.Cell
-				positive={summon.data.enkindle === 1}
-				negative={summon.data.enkindle < 1}>
-				<ActionLink showName={false} action="ENKINDLE_BAHAMUT" />
-				&nbsp;{summon.data.enkindle}
-			</Table.Cell>
-		</Table.Row>
+
+		const missingGcds = summon.data.demiGcds < expectedGcds
+		const missingAstralFlow = summon.data.deathflareOrRekindle < 1
+		const missingEnkindle = summon.data.enkindle < 1
+
+		return {
+			hasError: missingGcds || missingAstralFlow || missingEnkindle,
+			display: <Table.Row>
+				<Table.Cell>
+					<ActionLink showName={false} action="SUMMON_BAHAMUT" />
+					&nbsp;{this.parser.formatEpochTimestamp(summon.start)}
+				</Table.Cell>
+				<Table.Cell positive={!missingGcds} negative={missingGcds}>
+					<ActionLink showName={false} action="ASTRAL_IMPULSE" />/<ActionLink showName={false} action="ASTRAL_FLARE" />
+					&nbsp;{summon.data.demiGcds}
+				</Table.Cell>
+				<Table.Cell positive={!missingAstralFlow} negative={missingAstralFlow}>
+					<ActionLink showName={false} action="DEATHFLARE" />
+					&nbsp;{summon.data.deathflareOrRekindle}
+				</Table.Cell>
+				<Table.Cell positive={!missingEnkindle} negative={missingEnkindle}>
+					<ActionLink showName={false} action="ENKINDLE_BAHAMUT" />
+					&nbsp;{summon.data.enkindle}
+				</Table.Cell>
+			</Table.Row>,
+		}
 	}
 
 	private buildPhoenixRow(summon: HistoryEntry<SummonWindow>) {
 		const expectedGcds = this.expectedDemiGcdsForWindow(summon)
-		return <Table.Row>
-			<Table.Cell>
-				<ActionLink showName={false} action="SUMMON_PHOENIX" />
-				&nbsp;{this.parser.formatEpochTimestamp(summon.start)}
-			</Table.Cell>
-			<Table.Cell
-				positive={summon.data.demiGcds >= expectedGcds}
-				negative={summon.data.demiGcds < expectedGcds}>
-				<ActionLink showName={false} action="FOUNTAIN_OF_FIRE" />/<ActionLink showName={false} action="BRAND_OF_PURGATORY" />
-				&nbsp;{summon.data.demiGcds}
-			</Table.Cell>
-			<Table.Cell>
-				<ActionLink showName={false} action="REKINDLE" />
-				&nbsp;{summon.data.deathflareOrRekindle}
-			</Table.Cell>
-			<Table.Cell
-				positive={summon.data.enkindle === 1}
-				negative={summon.data.enkindle < 1}>
-				<ActionLink showName={false} action="ENKINDLE_PHOENIX" />
-				&nbsp;{summon.data.enkindle}
-			</Table.Cell>
-		</Table.Row>
+
+		const missingGcds = summon.data.demiGcds < expectedGcds
+		const missingAstralFlow = summon.data.deathflareOrRekindle < 1
+		const missingEnkindle = summon.data.enkindle < 1
+
+		return {
+			hasError: missingGcds || missingAstralFlow || missingEnkindle,
+			display: <Table.Row>
+				<Table.Cell>
+					<ActionLink showName={false} action="SUMMON_PHOENIX" />
+					&nbsp;{this.parser.formatEpochTimestamp(summon.start)}
+				</Table.Cell>
+				<Table.Cell positive={!missingGcds} negative={missingGcds}>
+					<ActionLink showName={false} action="FOUNTAIN_OF_FIRE" />/<ActionLink showName={false} action="BRAND_OF_PURGATORY" />
+					&nbsp;{summon.data.demiGcds}
+				</Table.Cell>
+				<Table.Cell positive={!missingAstralFlow} negative={missingAstralFlow}>
+					<ActionLink showName={false} action="REKINDLE" />
+					&nbsp;{summon.data.deathflareOrRekindle}
+				</Table.Cell>
+				<Table.Cell positive={!missingEnkindle} negative={missingEnkindle}>
+					<ActionLink showName={false} action="ENKINDLE_PHOENIX" />
+					&nbsp;{summon.data.enkindle}
+				</Table.Cell>
+			</Table.Row>,
+		}
 	}
 
 	private printUsageTime(summon?: Events['action']) {

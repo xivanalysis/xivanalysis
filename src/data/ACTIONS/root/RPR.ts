@@ -125,7 +125,6 @@ export const RPR = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003623.png',
 		onGcd: true,
 		cooldown: 1500,
-		speedAttribute: Attribute.SKILL_SPEED,
 		statusesApplied: ['ENHANCED_CROSS_REAPING'],
 	},
 
@@ -135,7 +134,6 @@ export const RPR = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003624.png',
 		onGcd: true,
 		cooldown: 1500,
-		speedAttribute: Attribute.SKILL_SPEED,
 		statusesApplied: ['ENHANCED_VOID_REAPING'],
 	},
 
@@ -145,7 +143,6 @@ export const RPR = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003625.png',
 		onGcd: true,
 		cooldown: 1500,
-		speedAttribute: Attribute.SKILL_SPEED,
 	},
 
 	COMMUNIO: {
@@ -216,7 +213,7 @@ export const RPR = ensureActions({
 	HELLS_INGRESS: {
 		id: 24401,
 		name: 'Hell\'s Ingress',
-		icon: 'https://xivapi.com/i/003000/003630.png',
+		icon: 'https://xivapi.com/i/003000/003629.png',
 		cooldown: 20000,
 		cooldownGroup: 4,
 		statusesApplied: ['ENHANCED_HARPE'],
@@ -243,7 +240,7 @@ export const RPR = ensureActions({
 		name: 'Arcane Circle',
 		icon: 'https://xivapi.com/i/003000/003633.png',
 		cooldown: 120000,
-		statusesApplied: ['CIRCLE_OF_SACRIFICE', 'BLOODSOWN_CIRCLE', 'IMMORTAL_SACRIFICE'],
+		statusesApplied: ['ARCANE_CIRCLE', 'CIRCLE_OF_SACRIFICE', 'BLOODSOWN_CIRCLE', 'IMMORTAL_SACRIFICE'],
 	},
 
 	ARCANE_CREST: {

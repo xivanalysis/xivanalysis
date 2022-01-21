@@ -7,6 +7,7 @@ import {Analyser} from 'parser/core/Analyser'
 import {EventHook} from 'parser/core/Dispatcher'
 import {filter} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
+import CastTime from 'parser/core/modules/CastTime'
 import {Data} from 'parser/core/modules/Data'
 import {Timeline} from 'parser/core/modules/Timeline'
 import React, {Fragment} from 'react'
@@ -38,10 +39,12 @@ export class Lightspeed extends Analyser {
 
 	@dependency private timeline!: Timeline
 	@dependency private data!: Data
+	@dependency private castTime!: CastTime
 
 	private history: LightspeedWindow[] = []
 	private currentWindow: LightspeedWindow | undefined = undefined
 	private castHook?: EventHook<Events['action']>
+	private castTimeIndex: number | null = null
 
 	override initialise() {
 		const lightspeedFilter = filter<Event>().status(this.data.statuses.LIGHTSPEED.id)
@@ -50,8 +53,6 @@ export class Lightspeed extends Analyser {
 			.target(this.parser.actor.id), this.tryOpenWindow)
 		this.addEventHook(lightspeedFilter.type('statusRemove')
 			.target(this.parser.actor.id), this.tryCloseWindow)
-
-		//this.addEventHook(filter<Event>().source(this.parser.actor.id).type('action'), this.onCast)
 	}
 
 	private tryOpenWindow(event: Events['statusApply']) {
@@ -71,6 +72,7 @@ export class Lightspeed extends Analyser {
 					.type('action'),
 				this.onCast,
 			)
+			this.castTimeIndex = this.castTime.setTimeAdjustment('all', this.data.statuses.LIGHTSPEED.speedModifier)
 		}
 	}
 
@@ -87,8 +89,9 @@ export class Lightspeed extends Analyser {
 		if (this.castHook != null) {
 			this.removeEventHook(this.castHook)
 			this.castHook = undefined
-
 		}
+		this.castTime.reset(this.castTimeIndex)
+		this.castTimeIndex = null
 	}
 
 	private onCast(event: Events['action']) {

@@ -56,6 +56,7 @@ export const SAM = ensureStatuses({
 		name: 'Meikyo Shisui',
 		icon: 'https://xivapi.com/i/013000/013309.png',
 		duration: 15000,
+		stacksApplied: 3,
 	},
 
 	ENHANCED_ENPI: {

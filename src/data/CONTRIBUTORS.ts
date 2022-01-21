@@ -17,6 +17,15 @@ const CONTRIBUTORS = ensureRecord<Contributor>()({
 	// 		JOBS.SOME_JOB,
 	// 	],
 	// },
+	ACKWELL: {
+		name: 'ackwell',
+		avatar: 'https://secure.gravatar.com/avatar/383e78034167fdfe8303231a6dad33e5?s=100',
+		jobs: [
+			JOBS.SUMMONER,
+			JOBS.RED_MAGE,
+			JOBS.GUNBREAKER,
+		],
+	},
 	AKAIRYU: {
 		name: 'Akairyu',
 		avatar: require('./avatar/Akairyu.png'),
@@ -68,6 +77,13 @@ const CONTRIBUTORS = ensureRecord<Contributor>()({
 			JOBS.MACHINIST, JOBS.BARD,
 		],
 	},
+	INNI: {
+		name: 'Inni',
+		avatar: require('./avatar/Inni.png'),
+		jobs: [
+			JOBS.WHITE_MAGE,
+		],
+	},
 	OTOCEPHALY: {
 		name: 'Otocephaly',
 		avatar: require('./avatar/Otocephaly.png'),
@@ -78,13 +94,19 @@ const CONTRIBUTORS = ensureRecord<Contributor>()({
 	},
 	RYAN: {
 		name: 'Ryan',
-		avatar: require('./avatar/Rjb99.png'),
+		avatar: require('./avatar/Ryan.png'),
 		jobs: [
 			JOBS.GUNBREAKER,
 			JOBS.SAMURAI,
 		],
 	},
-
+	LAILLE: {
+		name: 'Laille',
+		avatar: require('./avatar/Laille.png'),
+		jobs: [
+			JOBS.RED_MAGE,
+		],
+	},
 	LEYLIA: {
 		name: 'Leylia',
 		avatar: require('./avatar/Leylia.png'),
@@ -118,6 +140,41 @@ const CONTRIBUTORS = ensureRecord<Contributor>()({
 		avatar: require('./avatar/Eden.png'),
 		jobs: [
 			JOBS.GUNBREAKER,
+		],
+	},
+	FURST: {
+		name: 'Fürst',
+		avatar: require('./avatar/Furst.png'),
+		jobs: [
+			JOBS.BLACK_MAGE,
+		],
+	},
+	YUMIYA: {
+		name: 'Yumiya',
+		avatar: require('./avatar/Yumiya.png'),
+		jobs: [
+			JOBS.BARD,
+		],
+	},
+	KERRIS: {
+		name: 'Kerris',
+		avatar: require('./avatar/kerris.png'),
+		jobs: [
+			JOBS.WHITE_MAGE,
+		],
+	},
+	MR_RAZOR: {
+		name: 'Mr Razor',
+		avatar: require('./avatar/mr_razor.png'),
+		jobs: [
+			JOBS.REAPER,
+		],
+	},
+	DTHOMASH: {
+		name: 'dthomash',
+		avatar: require('./avatar/dthomash.png'),
+		jobs: [
+			JOBS.SCHOLAR,
 		],
 	},
 })

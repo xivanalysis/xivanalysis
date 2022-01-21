@@ -44,7 +44,7 @@ export class DoTs extends CoreDoTs {
 	}
 
 	protected addClippingSuggestions() {
-		const dosisClipPerMinute = this.getClippingAmount(this.data.statuses.DIA.id)
+		const dosisClipPerMinute = this.getClippingAmount(this.data.statuses.EUKRASIAN_DOSIS_III.id)
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.EUKRASIAN_DOSIS_III.icon,
 			content: <Trans id="sge.dots.suggestion.clip.content">
