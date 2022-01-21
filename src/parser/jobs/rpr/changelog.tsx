@@ -4,6 +4,11 @@ import React from 'react'
 
 export const changelog = [
 	{
+		date: new Date('2022-01-21'),
+		Changes: () => <>Add gauges.</>,
+		contributors: [CONTRIBUTORS.MR_RAZOR],
+	},
+	{
 		date: new Date('2021-12-31'),
 		Changes: () => <>Add checklist for <DataLink status="IMMORTAL_SACRIFICE"/> consumption.</>,
 		contributors: [CONTRIBUTORS.MR_RAZOR],
