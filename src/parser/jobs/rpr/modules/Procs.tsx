@@ -49,7 +49,7 @@ export class Procs extends CoreProcs {
 			tiers: SEVERITIES.OVERWRITTEN,
 			value: overwrittenGibbet,
 			why: <Trans id="rpr.procs.suggestions.overwritten.gibbet.why">
-				You lost {overwrittenGibbet * LOST_PROC_POTENCY} potency due to overwritten procs.
+				You lost {overwrittenGibbet * LOST_PROC_POTENCY} potency due to overwriting procs.
 			</Trans>,
 		}))
 
