@@ -2,30 +2,15 @@ import {Attribute} from 'event'
 import {ensureActions} from '../type'
 
 export const AST = ensureActions({
-	DIURNAL_SECT: {
-		id: 3604,
-		name: 'Diurnal Sect',
-		icon: 'https://xivapi.com/i/003000/003133.png',
-		statusesApplied: ['DIURNAL_SECT'],
-		cooldownGroup: 5,
-	},
-
-	NOCTURNAL_SECT: {
-		id: 3605,
-		name: 'Nocturnal Sect',
-		icon: 'https://xivapi.com/i/003000/003134.png',
-		statusesApplied: ['NOCTURNAL_SECT'],
-		cooldownGroup: 5,
-	},
-
 	BENEFIC: {
 		id: 3594,
 		name: 'Benefic',
 		icon: 'https://xivapi.com/i/003000/003126.png',
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
-		castTime: 2000,
+		castTime: 1500,
 		mpCost: 400,
+		statusesApplied: ['ENHANCED_BENEFIC_II'],
 	},
 
 	BENEFIC_II: {
@@ -34,7 +19,7 @@ export const AST = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003128.png',
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
-		castTime: 2000,
+		castTime: 1500,
 		mpCost: 700,
 	},
 
@@ -76,6 +61,16 @@ export const AST = ensureActions({
 		mpCost: 400,
 	},
 
+	FALL_MALEFIC: {
+		id: 25871,
+		name: 'Fall Malefic',
+		icon: 'https://xivapi.com/i/003000/003559.png',
+		onGcd: true,
+		speedAttribute: Attribute.SPELL_SPEED,
+		castTime: 1500,
+		mpCost: 400,
+	},
+
 	COMBUST_II: {
 		id: 3608,
 		name: 'Combust II',
@@ -88,7 +83,7 @@ export const AST = ensureActions({
 
 	COMBUST_III: {
 		id: 16554,
-		name: 'Combust II',
+		name: 'Combust III',
 		icon: 'https://xivapi.com/i/003000/003554.png',
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
@@ -103,7 +98,17 @@ export const AST = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 1500,
-		mpCost: 600,
+		mpCost: 400,
+	},
+
+	GRAVITY_II: {
+		id: 25872,
+		name: 'Gravity II',
+		icon: 'https://xivapi.com/i/003000/003560.png',
+		onGcd: true,
+		speedAttribute: Attribute.SPELL_SPEED,
+		castTime: 1500,
+		mpCost: 400,
 	},
 
 	ESSENTIAL_DIGNITY: {
@@ -114,27 +119,17 @@ export const AST = ensureActions({
 		charges: 2,
 	},
 
-	ASPECTED_HELIOS: { // Diurnal Variant
+	ASPECTED_HELIOS: {
 		id: 3601,
 		name: 'Aspected Helios',
 		icon: 'https://xivapi.com/i/003000/003130.png',
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
-		castTime: 2000,
+		castTime: 1500,
 		mpCost: 800,
 	},
 
-	ASPECTED_HELIOS_NOCTURNAL: {
-		id: 17152,
-		name: 'Aspected Helios (Nocturnal)',
-		icon: 'https://xivapi.com/i/003000/003130.png',
-		onGcd: true,
-		speedAttribute: Attribute.SPELL_SPEED,
-		castTime: 2000,
-		mpCost: 1000,
-	},
-
-	ASPECTED_BENEFIC: { // Diurnal Variant
+	ASPECTED_BENEFIC: {
 		id: 3595,
 		name: 'Aspected Benefic',
 		icon: 'https://xivapi.com/i/003000/003127.png',
@@ -144,23 +139,13 @@ export const AST = ensureActions({
 		mpCost: 400,
 	},
 
-	ASPECTED_BENEFIC_NOCTURNAL: {
-		id: 17151,
-		name: 'Aspected Benefic (Nocturnal)',
-		icon: 'https://xivapi.com/i/003000/003127.png',
-		onGcd: true,
-		speedAttribute: Attribute.SPELL_SPEED,
-		castTime: 0,
-		mpCost: 700,
-	},
-
 	HELIOS: {
 		id: 3600,
 		name: 'Helios',
 		icon: 'https://xivapi.com/i/003000/003129.png',
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
-		castTime: 2000,
+		castTime: 1500,
 		mpCost: 700,
 	},
 
@@ -178,11 +163,9 @@ export const AST = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003140.png',
 		cooldown: 60000,
 		statusesApplied: [
-			'COLLECTIVE_UNCONSCIOUS_DIURNAL_MITIGATION',
+			'COLLECTIVE_UNCONSCIOUS_MITIGATION',
 			'COLLECTIVE_UNCONSCIOUS',
-			'WHEEL_OF_FORTUNE_DIURNAL',
-			'COLLECTIVE_UNCONSCIOUS_NOCTURNAL',
-			'WHEEL_OF_FORTUNE_NOCTURNAL',
+			'WHEEL_OF_FORTUNE',
 		],
 	},
 
@@ -191,7 +174,7 @@ export const AST = ensureActions({
 		name: 'Celestial Opposition',
 		icon: 'https://xivapi.com/i/003000/003142.png',
 		cooldown: 60000,
-		statusesApplied: ['DIURNAL_OPPOSITION', 'NOCTURNAL_OPPOSITION'],
+		statusesApplied: ['OPPOSITION'],
 	},
 
 	EARTHLY_STAR: {
@@ -226,7 +209,9 @@ export const AST = ensureActions({
 		name: 'Draw',
 		icon: 'https://xivapi.com/i/003000/003101.png',
 		cooldown: 30000,
+		charges: 2,
 		statusesApplied: [
+			'CLARIFYING_DRAW',
 			'BALANCE_DRAWN',
 			'BOLE_DRAWN',
 			'ARROW_DRAWN',
@@ -244,20 +229,18 @@ export const AST = ensureActions({
 		cooldownGroup: 12,
 	},
 
+	CROWN_PLAY: {
+		id: 25869,
+		name: 'Crown Play',
+		icon: 'https://xivapi.com/i/003000/003557.png',
+		cooldown: 1000,
+		cooldownGroup: 13,
+	},
+
 	REDRAW: {
 		id: 3593,
 		name: 'Redraw',
 		icon: 'https://xivapi.com/i/003000/003105.png',
-		cooldown: 30000,
-		charges: 3,
-	},
-
-	SLEEVE_DRAW: {
-		id: 7448,
-		name: 'Sleeve Draw',
-		icon: 'https://xivapi.com/i/003000/003107.png',
-		cooldown: 180000,
-		statusesApplied: ['SLEEVE_DRAW'],
 	},
 
 	UNDRAW: {
@@ -271,9 +254,8 @@ export const AST = ensureActions({
 		id: 7443,
 		name: 'Minor Arcana',
 		icon: 'https://xivapi.com/i/003000/003106.png',
-		cooldown: 1000,
+		cooldown: 60000,
 		statusesApplied: ['LORD_OF_CROWNS_DRAWN', 'LADY_OF_CROWNS_DRAWN'],
-		cooldownGroup: 12,
 	},
 
 	// ----
@@ -300,7 +282,7 @@ export const AST = ensureActions({
 		name: 'Neutral Sect',
 		icon: 'https://xivapi.com/i/003000/003552.png',
 		cooldown: 120000,
-		statusesApplied: ['NEUTRAL_SECT'],
+		statusesApplied: ['NEUTRAL_SECT', 'NEUTRAL_SECT_OTHERS'],
 	},
 
 	DIVINATION: {
@@ -316,7 +298,51 @@ export const AST = ensureActions({
 		name: 'Celestial Intersection',
 		icon: 'https://xivapi.com/i/003000/003556.png',
 		cooldown: 30000,
-		statusesApplied: ['DIURNAL_INTERSECTION', 'NOCTURNAL_INTERSECTION'],
+		statusesApplied: ['INTERSECTION'],
+		charges: 2,
+	},
+
+	// ----
+	// 81-90
+	// ----
+
+	ASTRODYNE: {
+		id: 25870,
+		name: 'Astrodyne',
+		icon: 'https://xivapi.com/i/003000/003558.png',
+		cooldown: 1000,
+		statusesApplied:
+			['HARMONY_OF_SPIRIT',
+				'HARMONY_OF_BODY',
+				'HARMONY_OF_MIND'],
+	},
+
+	EXALTATION: {
+		id: 25873,
+		name: 'Exaltation',
+		icon: 'https://xivapi.com/i/003000/003561.png',
+		cooldown: 60000,
+		statusesApplied: ['EXALTATION'],
+	},
+
+	MACROCOSMOS: {
+		id: 25874,
+		name: 'Macrocosmos',
+		icon: 'https://xivapi.com/i/003000/003562.png',
+		onGcd: true,
+		speedAttribute: Attribute.SPELL_SPEED,
+		castTime: 0,
+		cooldown: 180000,
+		gcdRecast: 2500,
+		mpCost: 600,
+		statusesApplied: ['MACROCOSMOS'],
+	},
+
+	MICROCOSMOS: {
+		id: 25875,
+		name: 'Microcosmos',
+		icon: 'https://xivapi.com/i/003000/003563.png',
+		cooldown: 1000,
 	},
 
 	// -----
@@ -382,8 +408,7 @@ export const AST = ensureActions({
 		name: 'Lady Of Crowns',
 		icon: 'https://xivapi.com/i/003000/003146.png',
 		cooldown: 1000,
-		statusesApplied: ['LADY_OF_CROWNS'],
-		cooldownGroup: 12,
+		cooldownGroup: 13,
 	},
 
 	LORD_OF_CROWNS: {
@@ -391,7 +416,6 @@ export const AST = ensureActions({
 		name: 'Lord Of Crowns',
 		icon: 'https://xivapi.com/i/003000/003147.png',
 		cooldown: 1000,
-		statusesApplied: ['LORD_OF_CROWNS'],
-		cooldownGroup: 12,
+		cooldownGroup: 13,
 	},
 })

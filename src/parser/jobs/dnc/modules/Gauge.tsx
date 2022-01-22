@@ -4,10 +4,10 @@ import {DataLink} from 'components/ui/DbLink'
 import {ActionKey} from 'data/ACTIONS'
 import {JOBS} from 'data/JOBS'
 import {StatusKey} from 'data/STATUSES'
-import {Cause, Event, Events} from 'event'
-import {EventHook, TimestampHook} from 'parser/core/Dispatcher'
+import {Event, Events} from 'event'
+import {EventHook} from 'parser/core/Dispatcher'
 import {filter} from 'parser/core/filter'
-import {dependency} from 'parser/core/Module'
+import {dependency} from 'parser/core/Injectable'
 import {CounterGauge, Gauge as CoreGauge} from 'parser/core/modules/Gauge'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
@@ -41,6 +41,7 @@ const ESPRIT_STATUSES: StatusKey[] = [
 ]
 const ESPRIT_EXCEPTIONS: ActionKey[] = [
 	...FINISHES,
+	'TILLANA', // TODO: I'm assuming this won't generate Esprit since it's classed as an Ability in the tooltip
 	'FUMA_SHURIKEN',
 	'FUMA_SHURIKEN_TCJ_TEN',
 	'FUMA_SHURIKEN_TCJ_CHI',
@@ -60,20 +61,25 @@ const ESPRIT_EXCEPTIONS: ActionKey[] = [
 	'KAESHI_SETSUGEKKA',
 ]
 
-const ESPRIT_GENERATION_AMOUNT = 10
-const ESPRIT_RATE_SELF = 0.3
-const ESPRIT_RATE_PARTY = 0.2
+const PROC_ACTIONS: ActionKey[] = [
+	'REVERSE_CASCADE',
+	'RISING_WINDMILL',
+	'FOUNTAINFALL',
+	'BLOODSHOWER',
+	'FAN_DANCE_IV',
+	'STARFALL_DANCE', // TBD if this has the guaranteed 10 Esprit effect that the others do
+]
 
-const TICK_FREQUENCY = 3000
-const MAX_IMPROV_TICKS = 5
+const ESPRIT_GENERATION_AMOUNT = 10
+const ESPRIT_RATE_SELF_NON_PROC = 0.5
+const ESPRIT_RATE_PARTY = 0.2
 
 const SABER_DANCE_COST = 50
 
 /** Graph colors */
-/* eslint-disable @typescript-eslint/no-magic-numbers */
-const ESRPIT_COLOR = Color(JOBS.DANCER.colour).fade(0.25).toString()
-const FEATHERS_COLOR = Color.rgb(140.6, 161.1, 70.8).fade(0.25).toString()
-/* eslint-enable @typescript-eslint/no-magic-numbers */
+const FADE_AMOUNT = 0.25
+const ESRPIT_COLOR = Color(JOBS.DANCER.colour).fade(FADE_AMOUNT)
+const FEATHERS_COLOR = Color('#8DA147').fade(FADE_AMOUNT)
 
 export class Gauge extends CoreGauge {
 	@dependency private suggestions!: Suggestions
@@ -97,12 +103,9 @@ export class Gauge extends CoreGauge {
 	}))
 
 	private espritBuffs: Map<string, EventHook<Events['damage']>> = new Map<string, EventHook<Events['damage']>>()
-	private improvisers: string[] = []
-	private everImproviser: string[] = []
-	private improvTickHook!: TimestampHook
-	private improvTicks: number = 0
 
 	private espritGenerationExceptions: number[] = ESPRIT_EXCEPTIONS.map(key => this.data.actions[key].id)
+	private fullEspritActions = PROC_ACTIONS.map(key => this.data.actions[key].id)
 	protected pauseGeneration = false;
 
 	override initialise() {
@@ -117,14 +120,9 @@ export class Gauge extends CoreGauge {
 		this.addEventHook(statusApplyFilter.status(espritStatusMatcher), this.addEspritGenerationHook)
 		this.addEventHook(statusRemoveFilter.status(espritStatusMatcher), this.removeEspritGenerationHook)
 
-		this.addEventHook(statusApplyFilter.status(this.data.statuses.IMPROVISATION.id), this.startImprov)
-		this.addEventHook(statusApplyFilter.status(this.data.statuses.IMPROVISATION_HEALING.id), this.onGainImprov)
-		this.addEventHook(statusRemoveFilter.status(this.data.statuses.IMPROVISATION_HEALING.id), this.onRemoveImprov)
-		this.addEventHook(statusRemoveFilter.status(this.data.statuses.IMPROVISATION.id), this.endImprov)
+		this.addEventHook(damageFilter.cause(this.data.matchCauseActionId([this.data.actions.SABER_DANCE.id])), this.onConsumeEsprit)
 
-		this.addEventHook(damageFilter.cause(filter<Cause>().action(this.data.actions.SABER_DANCE.id)), this.onConsumeEsprit)
-
-		this.addEventHook(damageFilter.cause(filter<Cause>().action(this.data.matchActionId(FEATHER_GENERATORS))), this.onCastGenerator)
+		this.addEventHook(damageFilter.cause(this.data.matchCauseAction(FEATHER_GENERATORS)), this.onCastGenerator)
 		this.addEventHook(playerFilter.type('action').action(this.data.matchActionId(FEATHER_CONSUMERS)), this.onConsumeFeather)
 
 		this.addEventHook('complete', this.onComplete)
@@ -194,66 +192,16 @@ export class Gauge extends CoreGauge {
 		}
 
 		// Transform the probabilistic esprit generation chance into an expected value
-		// As far as we know, the chance of the DNC themselves generating Esprit is slightly higher than the chance for party members to do so
-		const expectedGenerationChance = event.source === this.parser.actor.id ? ESPRIT_RATE_SELF : ESPRIT_RATE_PARTY
+		const expectedGenerationChance = event.source === this.parser.actor.id ?
+			// If the dancer is generating Esprit for themselves from a proc, they gain the full ten Esprit every time
+			(this.fullEspritActions.includes(ability) ? 1 :
+			// Otherwise, the dancer generates 5 Esprit for themselves with each action
+				ESPRIT_RATE_SELF_NON_PROC) :
+			// Party members with either the Standard Finish or Technical Finish-sourced Esprit buff generate ten Esprit at a 20% chance
+			ESPRIT_RATE_PARTY
 		const generatedAmt = ESPRIT_GENERATION_AMOUNT * expectedGenerationChance
 
 		this.espritGauge.generate(generatedAmt)
-	}
-
-	// Reset current improvisatio data when the action is executed
-	private startImprov() {
-		this.improvTicks = 0
-		this.improvisers = []
-		this.everImproviser = []
-	}
-
-	// When a party member gains the healing buff from improvisation, keep track of them
-	private onGainImprov(event: Events['statusApply']) {
-		const eventActor = event.target
-		// If the party member isn't in the current list of improvisers, add them
-		if (this.improvisers.indexOf(eventActor) <= -1) {
-			this.improvisers.push(eventActor)
-		}
-		// If the party member hasn't yet been hit by this improvisation window note that as well
-		if (this.everImproviser.indexOf(eventActor) <= -1) {
-			this.everImproviser.push(eventActor)
-
-			// If we haven't yet recorded a tic of Esprit generation from Improv, move the timestamp hook ahead a bit to make sure the first tic accounts for everyone that receives the initial buff
-			if (this.improvTicks === 0) {
-				if (this.improvTickHook) {
-					this.removeTimestampHook(this.improvTickHook)
-				}
-				// eslint-disable-next-line @typescript-eslint/no-magic-numbers
-				this.improvTickHook = this.addTimestampHook(event.timestamp + 5, this.onTickImprov) // Set this just a bit in the future in case of latency weirdness with the status applications
-			}
-		}
-	}
-
-	// When a party member loses the healing buff from improvisation, drop them from the list of current improvisers
-	private onRemoveImprov(event: Events['statusRemove']) {
-		const eventActor = event.target
-		const actorIndex = this.improvisers.indexOf(eventActor)
-		if (actorIndex > -1) {
-			this.improvisers.splice(actorIndex, 1)
-		}
-	}
-
-	// When the player loses the Improvisation buff, remove the remaining timestamp hook
-	private endImprov() {
-		this.removeTimestampHook(this.improvTickHook)
-	}
-
-	// When improvisation ticks, generate Esprit and set up the next tick if necessary
-	private onTickImprov() {
-		const improviserCount = this.improvisers.length
-		const generatedAmt = 2 + improviserCount
-		this.espritGauge.generate(generatedAmt)
-
-		// Technically we don't need this check since we'll remove the hook in endImprov but eh
-		if (++this.improvTicks < MAX_IMPROV_TICKS) {
-			this.addTimestampHook(this.parser.currentTimestamp + TICK_FREQUENCY, this.onTickImprov)
-		}
 	}
 
 	private onConsumeEsprit() {

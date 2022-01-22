@@ -149,7 +149,7 @@ export class MPUsage extends Analyser {
 	}
 
 	private onRemoveBlackestNight(event: Events['statusRemove']) {
-		if ((event.absorbed ?? 0) === 0) {
+		if (event.remainingShield != null && event.remainingShield > 0) {
 			this.droppedTBNs += 1
 		} else {
 			if (this.darkArts) {

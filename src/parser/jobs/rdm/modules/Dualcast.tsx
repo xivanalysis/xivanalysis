@@ -1,13 +1,12 @@
 import {t} from '@lingui/macro'
 import {Trans, Plural} from '@lingui/react'
-import {ActionLink, StatusLink} from 'components/ui/DbLink'
+import {DataLink} from 'components/ui/DbLink'
 import Rotation from 'components/ui/Rotation'
 import {BASE_GCD} from 'data/CONSTANTS'
 import {Event, Events} from 'event'
 import {Analyser} from 'parser/core/Analyser'
 import {filter} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
-import CastTime from 'parser/core/modules/CastTime'
 import {Data} from 'parser/core/modules/Data'
 import Downtime from 'parser/core/modules/Downtime'
 import Suggestions, {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
@@ -31,7 +30,6 @@ export class DualCast extends Analyser {
 	static override title = t('rdm.dualcast.title')`Dualcast`
 	static override displayOrder = DISPLAY_ORDER.DUALCAST
 
-	@dependency private castTime!: CastTime
 	@dependency private data!: Data
 	@dependency private downtime!: Downtime
 	@dependency private suggestions!: Suggestions
@@ -39,7 +37,6 @@ export class DualCast extends Analyser {
 	private wastedDualCasts: Array<Events['action']> = []
 	private expiredDualCasts = 0
 	private dualcastActive = false
-	private dualcastIndex: number | null = null
 
 	override initialise() {
 		const playerEvents = filter<Event>().source(this.parser.actor.id)
@@ -67,7 +64,6 @@ export class DualCast extends Analyser {
 
 	private onGain() {
 		this.dualcastActive = true
-		this.dualcastIndex = this.castTime.setInstantCastAdjustment()
 	}
 
 	private onRemove() {
@@ -77,7 +73,6 @@ export class DualCast extends Analyser {
 			}
 		}
 		this.dualcastActive = false
-		this.castTime.reset(this.dualcastIndex)
 	}
 
 	private onComplete() {
@@ -85,7 +80,7 @@ export class DualCast extends Analyser {
 			this.suggestions.add(new TieredSuggestion({
 				icon: this.data.statuses.DUALCAST.icon,
 				content: <Trans id="rdm.dualcast.suggestions.wasted.content">
-					Spells used while <StatusLink {...this.data.statuses.DUALCAST}/> is up should be limited to <ActionLink {...this.data.actions.VERAERO}/>, <ActionLink {...this.data.actions.VERTHUNDER}/>, or <ActionLink {...this.data.actions.VERRAISE}/>
+					Spells used while <DataLink status="DUALCAST"/> is up should be limited to <DataLink action="VERAERO_III"/>, <DataLink action="VERTHUNDER_III"/>, or <DataLink action="VERRAISE"/>
 				</Trans>,
 				tiers: SEVERITY_WASTED_DUALCAST,
 				value: this.wastedDualCasts.length,

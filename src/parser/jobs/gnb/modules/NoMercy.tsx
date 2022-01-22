@@ -23,7 +23,8 @@ const SEVERITIES = {
 }
 
 const EXPECTED_USES = {
-	BURST_STRIKE: 2, //This is assuming that you enter NM with 2 carts: 1st cart: Gnashing, 2nd cart: Burst, 3rd cart gained from combo mid NM: Burst
+	DOUBLE_DOWN: 1, //This is assuming that you enter NM with 3 carts: 1 cart: Gnashing, 2 carts: Double Down
+	BURST_STRIKE: 1,
 	GNASHING_FANG: 1,
 	SONIC_BREAK: 1,
 	ROUGH_DIVIDE: 1,
@@ -34,6 +35,8 @@ const EXPECTED_USES = {
 	// Don't check for correct Continuations; that will be covered by the Continuation module.
 	// Don't check for correctness on the Gnashing Fang combo; that's covered by the built-in Combo tracker.
 }
+
+const openerGracePeriod = 22500 //Perhaps I'm being overly generous, but after 9 regular gcds a proper full burst could be done.
 
 class BloodfestEvaluator extends NotesEvaluator {
 
@@ -58,7 +61,7 @@ class BloodfestEvaluator extends NotesEvaluator {
 	}
 }
 
-export default class NoMercy extends BuffWindow {
+export class NoMercy extends BuffWindow {
 	static override handle = 'nomercy'
 	static override title = t('gnb.nomercy.title')`No Mercy Windows`
 
@@ -91,10 +94,13 @@ export default class NoMercy extends BuffWindow {
 				},
 
 				{
+					action: this.data.actions.DOUBLE_DOWN,
+					expectedPerWindow: EXPECTED_USES.DOUBLE_DOWN,
+				},
+				{
 					action: this.data.actions.BURST_STRIKE,
 					expectedPerWindow: EXPECTED_USES.BURST_STRIKE,
 				},
-
 				{
 					action: this.data.actions.SONIC_BREAK,
 					expectedPerWindow: EXPECTED_USES.SONIC_BREAK,
@@ -133,10 +139,10 @@ export default class NoMercy extends BuffWindow {
 	private adjustExpectedActionCount(window: HistoryEntry<EvaluatedAction[]>, action: TrackedAction) {
 		if (action.action.id !== this.data.actions.BURST_STRIKE.id) { return 0 }
 
-		if (window.data.find(cast => cast.action.id === this.data.actions.BLOODFEST.id)) {
+		if (window.data.find(cast => cast.action.id === this.data.actions.BLOODFEST.id) && window.start > (this.parser.pull.timestamp + openerGracePeriod)) {
 			//In fights with minimal downtime, it is possible to hit 4/4 bloodfests,
 			//however I feel it is better to leave it at 3 / 3 for the adjusted rinfest window which seems to be more common
-			return 1
+			return 2
 		}
 
 		return 0

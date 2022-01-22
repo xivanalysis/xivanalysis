@@ -2,18 +2,15 @@ import {Trans} from '@lingui/react'
 import {ActionLink} from 'components/ui/DbLink'
 import {RotationTable} from 'components/ui/RotationTable'
 import ACTIONS from 'data/ACTIONS'
-import STATUSES from 'data/STATUSES'
-import {CastEvent} from 'fflogs'
+import {Event, Events} from 'event'
 import _ from 'lodash'
-import Module, {dependency} from 'parser/core/Module'
+import {Analyser} from 'parser/core/Analyser'
+import {filter, oneOf} from 'parser/core/filter'
+import {dependency} from 'parser/core/Injectable'
 import Checklist, {Requirement, Rule} from 'parser/core/modules/Checklist'
+import {Data} from 'parser/core/modules/Data'
 import {Timeline} from 'parser/core/modules/Timeline'
 import React from 'react'
-
-const RELEVANT_ACTIONS = [ACTIONS.JUGULAR_RIP.id, ACTIONS.ABDOMEN_TEAR.id, ACTIONS.EYE_GOUGE.id]
-const RELEVANT_STATUSES = [STATUSES.READY_TO_RIP.id, STATUSES.READY_TO_TEAR.id, STATUSES.READY_TO_GOUGE.id]
-const COMBO_BREAKERS = [ACTIONS.KEEN_EDGE.id, ACTIONS.BRUTAL_SHELL.id, ACTIONS.SOLID_BARREL.id] // These skills will break the Gnashing combo
-const COMBO_ACTIONS = [ACTIONS.GNASHING_FANG.id, ACTIONS.JUGULAR_RIP.id, ACTIONS.SAVAGE_CLAW.id, ACTIONS.ABDOMEN_TEAR.id, ACTIONS.WICKED_TALON.id, ACTIONS.EYE_GOUGE.id]
 
 // Expected within a standard gnashing.
 const EXPECTED_USES = {
@@ -28,46 +25,31 @@ const EXPECTED_USES = {
 class GnashingComboState {
 	startTime: number
 	endTime?: number
-	rotation: CastEvent[] = []
+	rotation: Array<Events['action']>
 	isProper: boolean = false
 
 	constructor(start: number) {
 		this.startTime = start
+		this.rotation = []
 	}
-
 	public get totalHits(): number { return this.rotation.length }
 
-	public get actualJug() : number {
-		return this.rotation.filter(cast => cast.ability.guid === ACTIONS.JUGULAR_RIP.id).length
-	}
-
-	public get actualSavage(): number {
-		return this.rotation.filter(cast => cast.ability.guid === ACTIONS.SAVAGE_CLAW.id).length
-	}
-
-	public get actualTear(): number {
-		return this.rotation.filter(cast => cast.ability.guid === ACTIONS.ABDOMEN_TEAR.id).length
-	}
-
-	public get actualTalon(): number {
-		return this.rotation.filter(cast => cast.ability.guid === ACTIONS.WICKED_TALON.id).length
-	}
-
-	public get actualEye(): number {
-		return this.rotation.filter(cast => cast.ability.guid === ACTIONS.EYE_GOUGE.id).length
-	}
 }
 
-export default class AmmoCombo extends Module {
+export class AmmoCombo extends Analyser {
 	static override handle = 'Gnashing Fang Combo issues'
 	static override debug = false
 
 	@dependency private checklist!: Checklist
 	@dependency private timeline!: Timeline
+	@dependency private data!: Data
 
 	private buffs = 0
 	private actions = 0
 	private errors = 0
+
+	private COMBO_BREAKERS = [this.data.actions.KEEN_EDGE.id, this.data.actions.BRUTAL_SHELL.id, this.data.actions.SOLID_BARREL.id] // These skills will break the Gnashing combo
+	private COMBO_ACTIONS = [this.data.actions.GNASHING_FANG.id, this.data.actions.JUGULAR_RIP.id, this.data.actions.SAVAGE_CLAW.id, this.data.actions.ABDOMEN_TEAR.id, this.data.actions.WICKED_TALON.id, ACTIONS.EYE_GOUGE.id]
 
 	private gnashingComboWindows: GnashingComboState[] = [] // Store all the gnashing fang combos to be output to the rotationTable
 
@@ -75,74 +57,70 @@ export default class AmmoCombo extends Module {
 		return _.last(this.gnashingComboWindows)
 	}
 
-	protected override init() {
-		this.addEventHook('cast',
-			{
-				by: 'player',
-				abilityId: RELEVANT_ACTIONS,
-			},
-			() => this.actions++)
+	override initialise() {
+		super.initialise()
 
-		this.addEventHook('cast', {by: 'player'}, this.onCast)
+		const RELEVANT_ACTIONS = [this.data.actions.JUGULAR_RIP.id, this.data.actions.ABDOMEN_TEAR.id, this.data.actions.EYE_GOUGE.id, this.data.actions.HYPERVELOCITY.id]
+		const RELEVANT_STATUSES = [this.data.statuses.READY_TO_TEAR.id, this.data.statuses.READY_TO_RIP.id, this.data.statuses.READY_TO_GOUGE.id, this.data.statuses.READY_TO_BLAST.id]
 
-		this.addEventHook('applybuff',
-			{
-				by: 'player',
-				abilityId: RELEVANT_STATUSES,
-			},
-			() => this.buffs++)
+		const playerFilter = filter<Event>().source(this.parser.actor.id)
+
+		this.addEventHook(playerFilter.type('statusApply').status(oneOf(RELEVANT_STATUSES)), () => this.buffs++)
+		this.addEventHook(playerFilter.type('action').action(oneOf(RELEVANT_ACTIONS)), () => this.actions++)
+
 		this.addEventHook('complete', this.onComplete)
 	}
+	onCast(event: Events['action']): void {
 
-	private onCast(event: CastEvent) {
+		const action = this.data.getAction(event.action)
 
-		const actionId = event.ability.guid
+		if (action) { //If it ain't defined I don't want it
 
-		// cases to ignore, No Mercy any other modules will handle the latter 2 and FUCK sprint.
+			// If ain't a combo or a breaker IDGAF
+			if (!this.COMBO_ACTIONS.includes(action.id)  || (!this.COMBO_BREAKERS.includes(action.id))) {
+				return
+			}
 
-		if (actionId === ACTIONS.ATTACK.id || actionId === ACTIONS.SPRINT.id || actionId === ACTIONS.BURST_STRIKE.id || actionId === ACTIONS.SONIC_BREAK.id) {
-			return
-		}
+			let lastGnashingCombo = this.lastGnashingCombo
 
-		let lastGnashingCombo = this.lastGnashingCombo
+			this.debug(`Checking if action ${action?.name} (${action}) is a Gnashing Fang action`)
 
-		this.debug(`Checking if action ${event.ability.name} (${actionId}) is a Gnashing Fang action`)
+			if (action === this.data.actions.GNASHING_FANG) {
 
-		if (actionId === ACTIONS.GNASHING_FANG.id) {
+				this.debug(`Action ${action?.name} (${action}) is a Gnashing Fang action`)
 
-			this.debug(`Action ${event.ability.name} (${actionId}) is a Gnashing Fang action`)
+				if (lastGnashingCombo != null && lastGnashingCombo.endTime == null) { // They dropped the combo via timeout
+					this.onEndGnashingCombo(event)
+				}
 
-			if (lastGnashingCombo != null && lastGnashingCombo.endTime == null) { // They dropped the combo via timeout
+				const gnashingComboState = new GnashingComboState(event.timestamp)
+				this.gnashingComboWindows.push(gnashingComboState)
+			}
+
+			if (this.COMBO_BREAKERS.includes(action.id)) {
+
 				this.onEndGnashingCombo(event)
 			}
 
-			const gnashingComboState = new GnashingComboState(event.timestamp)
-			this.gnashingComboWindows.push(gnashingComboState)
-		}
+			// If the action is a gnashingCombo one, log it
 
-		if (COMBO_BREAKERS.includes(actionId)) {
+			lastGnashingCombo = this.lastGnashingCombo
 
-			this.onEndGnashingCombo(event)
-		}
+			if (lastGnashingCombo != null && lastGnashingCombo.endTime == null) {
 
-		// If the action is a gnashingCombo one, log it
+				if (this.COMBO_ACTIONS.includes(action.id)) {
+					lastGnashingCombo.rotation.push(event)
 
-		lastGnashingCombo = this.lastGnashingCombo
-
-		if (lastGnashingCombo != null && lastGnashingCombo.endTime == null) {
-
-			if (COMBO_ACTIONS.includes(actionId)) {
-				lastGnashingCombo.rotation.push(event)
-
-				if (actionId === ACTIONS.EYE_GOUGE.id) {
-					this.onEndGnashingCombo(event)
+					if (action === this.data.actions.EYE_GOUGE) {
+						this.onEndGnashingCombo(event)
+					}
 				}
-			}
 
+			}
 		}
 	}
 
-	private onEndGnashingCombo(event: CastEvent) {
+	private onEndGnashingCombo(event: Events['action']) {
 
 		const lastGnashingCombo = this.lastGnashingCombo
 
@@ -166,13 +144,13 @@ export default class AmmoCombo extends Module {
 
 		if (lastGnashingCombo != null && lastGnashingCombo.endTime == null) {
 
-			lastGnashingCombo.endTime = this.parser.currentTimestamp
+			lastGnashingCombo.endTime = this.parser.currentEpochTimestamp
 		}
 
 		this.checklist.add(new Rule({
-			name: 'Use a Continuation once per action in the Gnashing Fang combo',
+			name: 'Use a Continuation once per single-target ammo action',
 			description: <Trans id="gnb.continuation.checklist.description">
-				One <ActionLink {...ACTIONS.CONTINUATION}/> action should be used for each <ActionLink {...ACTIONS.GNASHING_FANG}/> combo action.
+				One <ActionLink {...ACTIONS.CONTINUATION}/> action should be used for each single-target ammo skill
 			</Trans>,
 			requirements: [
 				new Requirement({
@@ -193,53 +171,22 @@ export default class AmmoCombo extends Module {
 			return <RotationTable
 				targets={[
 					{
-						header: <ActionLink showName={false} {...ACTIONS.JUGULAR_RIP}/>,
-						accessor: 'jugularRip',
-					},
-					{
-						header: <ActionLink showName={false} {...ACTIONS.SAVAGE_CLAW}/>,
-						accessor: 'savageClaw',
-					},
-					{
-						header: <ActionLink showName={false} {...ACTIONS.ABDOMEN_TEAR}/>,
-						accessor: 'abdomenTear',
-					},
-					{
-						header: <ActionLink showName={false} {...ACTIONS.WICKED_TALON}/>,
-						accessor: 'wickedTalon',
-					},
-					{
-						header: <ActionLink showName={false} {...ACTIONS.EYE_GOUGE}/>,
-						accessor: 'eyeGouge',
+						header: <ActionLink showName={false} {...ACTIONS.GNASHING_FANG}/>,
+						accessor: 'TotalActions',
 					},
 				]}
 				data={this.gnashingComboWindows
 					.filter(window => !window.isProper)
 					.map(window => {
 						return ({
-							start: window.startTime - this.parser.fight.start_time,
-							end: window.endTime != null ? window.endTime - this.parser.fight.start_time : window.startTime - this.parser.fight.start_time,
+							start: window.startTime - this.parser.pull.timestamp,
+							end: window.endTime != null ? window.endTime - this.parser.pull.timestamp : window.startTime - this.parser.pull.timestamp,
 							targetsData: {
-								jugularRip: {
-									actual: window.actualJug,
-									expected: EXPECTED_USES.JUGULAR_RIP,
+								TotalActions: {
+									actual: window.totalHits,
+									expected: EXPECTED_USES.TOTAL_SKILLS_PER_COMBO,
 								},
-								savageClaw: {
-									actual: window.actualSavage,
-									expected: EXPECTED_USES.SAVAGE_CLAW,
-								},
-								abdomenTear: {
-									actual: window.actualTear,
-									expected: EXPECTED_USES.ABDOMEN_TEAR,
-								},
-								wickedTalon: {
-									actual: window.actualTalon,
-									expected: EXPECTED_USES.WICKED_TALON,
-								},
-								eyeGouge: {
-									actual: window.actualEye,
-									expected: EXPECTED_USES.EYE_GOUGE,
-								},
+
 							},
 							rotation: window.rotation,
 						})

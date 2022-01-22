@@ -5,7 +5,7 @@ import {ActionKey} from 'data/ACTIONS'
 import {Event, Events} from 'event'
 import {Analyser} from 'parser/core/Analyser'
 import {filter, oneOf} from 'parser/core/filter'
-import {dependency} from 'parser/core/Module'
+import {dependency} from 'parser/core/Injectable'
 import {Data} from 'parser/core/modules/Data'
 import Downtime from 'parser/core/modules/Downtime'
 import {Timeline} from 'parser/core/modules/Timeline'
@@ -58,7 +58,7 @@ export default class Drift extends Analyser {
 		DRIFT_ABILITIES.forEach(id => {
 			const action = this.data.actions[id]
 			this.cooldownMs[action.id] = action.cooldown ?? 0
-			this.currentWindows[action.id] = new DriftWindow(action.id, this.parser.fight.start_time)
+			this.currentWindows[action.id] = new DriftWindow(action.id, this.parser.pull.timestamp)
 		})
 	}
 
@@ -123,7 +123,7 @@ export default class Drift extends Analyser {
 			<Table.Body>
 				{casts.map((event, index) => {
 					totalDrift += (index > 0) ? event.drift : 0
-					return <Table.Row key={event.end} warning={event.drift > DRIFT_BUFFER}>
+					return <Table.Row key={event.end} warning={index > 0 && event.drift > DRIFT_BUFFER}>
 						<Table.Cell>{this.createTimelineButton(event.end)}</Table.Cell>
 						<Table.Cell>{event.drift !== null && index > 0 ? this.parser.formatDuration(event.drift) : '-'}</Table.Cell>
 						<Table.Cell>{totalDrift ? this.parser.formatDuration(totalDrift) : '-'}</Table.Cell>

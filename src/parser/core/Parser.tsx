@@ -1,35 +1,24 @@
 import {MessageDescriptor} from '@lingui/core'
 import * as Sentry from '@sentry/browser'
-import ResultSegment from 'components/LegacyAnalyse/ResultSegment'
+import {ResultSegment} from 'components/ReportFlow/Analyse/ResultSegment'
 import ErrorMessage from 'components/ui/ErrorMessage'
-import {languageToEdition} from 'data/EDITIONS'
 import {getReportPatch, Patch} from 'data/PATCHES'
 import {DependencyCascadeError, ModulesNotFoundError} from 'errors'
 import {Event} from 'event'
-import type {Actor as FflogsActor, Fight, Pet} from 'fflogs'
-import type {Event as LegacyEvent} from 'legacyEvent'
 import React from 'react'
 import {Report, Pull, Actor} from 'report'
-import {resolveActorId} from 'reportSources/legacyFflogs/base'
-import {Report as LegacyReport} from 'store/report'
 import toposort from 'toposort'
 import {extractErrorContext, isDefined, formatDuration} from 'utilities'
-import {Analyser} from './Analyser'
+import {Analyser, DisplayMode} from './Analyser'
 import {Dispatcher} from './Dispatcher'
-import {Injectable} from './Injectable'
-import {LegacyDispatcher} from './LegacyDispatcher'
+import {Injectable, MappedDependency} from './Injectable'
 import {Meta} from './Meta'
-import Module, {DISPLAY_MODE, MappedDependency} from './Module'
-
-interface Player extends FflogsActor {
-	pets: Pet[]
-}
 
 export interface Result {
 	i18n_id?: string
 	handle: string
 	name: string | MessageDescriptor
-	mode: DISPLAY_MODE
+	mode: DisplayMode
 	order: number
 	markup: React.ReactNode
 }
@@ -49,25 +38,15 @@ export interface CompleteEvent {
 	timestamp: number
 }
 
-declare module 'legacyEvent' {
-	interface EventTypeRepository {
-		parser: InitEvent | CompleteEvent
-	}
-}
-
 class Parser {
 	// -----
 	// Properties
 	// -----
 	readonly dispatcher: Dispatcher
-	readonly legacyDispatcher: LegacyDispatcher
 
-	readonly report: LegacyReport
-	readonly fight: Fight
-	readonly player: Player
 	readonly patch: Patch
 
-	readonly newReport: Report
+	readonly report: Report
 	readonly pull: Pull
 	readonly actor: Actor
 
@@ -79,8 +58,6 @@ class Parser {
 	_triggerModules: string[] = []
 	_moduleErrors: Record<string, Error/* | {toString(): string } */> = {}
 
-	private legacyFabricationQueue: LegacyEvent[] = []
-
 	// Stored soonest-last for performance
 	private eventDispatchQueue: Event[] = []
 
@@ -88,55 +65,11 @@ class Parser {
 	get currentEpochTimestamp() {
 		const start = this.pull.timestamp
 		const end = start + this.pull.duration
-
-		// Adjust for fflog's bullshit
-		const legacyTimestamp = this.legacyDispatcher.timestamp + this.report.start
-
-		const timestamp = Math.max(this.dispatcher.timestamp, legacyTimestamp)
-		return Math.min(end, Math.max(start, timestamp))
-	}
-
-	/**
-	 * Get the current timestamp as per the legacy event system. Values are
-	 * zeroed to the start of the legacy FF Logs report.
-	 *
-	 * If writing an Analyser for the new event system, you should use
-	 * currentEpochTimestamp.
-	 */
-	get currentTimestamp() {
-		return this.currentEpochTimestamp - this.report.start
+		return Math.min(end, Math.max(start, this.dispatcher.timestamp))
 	}
 
 	get currentDuration() {
 		return this.currentEpochTimestamp - this.pull.timestamp
-	}
-
-	// TODO: REMOVE
-	get fightDuration() {
-		if (process.env.NODE_ENV === 'development') {
-			throw new Error('Please migrate your calls to `parser.fightDuration` to either `parser.pull.duration` (if you need the full pull duration) or `parser.currentDuration` if you need the zeroed current timestamp.')
-		}
-		return this.currentDuration
-	}
-
-	// Get the friendlies that took part in the current fight
-	get fightFriendlies() {
-		return this.report.friendlies.filter(
-			friend => friend.fights.some(fight => fight.id === this.fight.id),
-		)
-	}
-
-	get parseDate() {
-		// TODO: normalise time to ms across the board
-		return Math.round(this.pull.timestamp / 1000)
-	}
-
-	/** Offset for events to zero their timestamp to the start of the pull being analysed. */
-	get eventTimeOffset() {
-		// TODO: This is _wholly_ reliant on fflog's timestamp handling. Once everyone
-		// is using this instead of start_time, we can start normalising event timestamps
-		// at the source level.
-		return this.pull.timestamp - this.newReport.timestamp
 	}
 
 	// -----
@@ -145,40 +78,24 @@ class Parser {
 
 	constructor(opts: {
 		meta: Meta,
-		report: LegacyReport,
-		fight: Fight,
-		fflogsActor: FflogsActor,
 
-		newReport: Report,
+		report: Report,
 		pull: Pull,
 		actor: Actor,
 
 		dispatcher?: Dispatcher
-		legacyDispatcher?: LegacyDispatcher,
 	}) {
 		this.dispatcher = opts.dispatcher ?? new Dispatcher()
-		this.legacyDispatcher = opts.legacyDispatcher ?? new LegacyDispatcher()
 
 		this.meta = opts.meta
-		this.report = opts.report
-		this.fight = opts.fight
 
-		this.newReport = opts.newReport
+		this.report = opts.report
 		this.pull = opts.pull
 		this.actor = opts.actor
 
-		// Get a list of the current player's pets and set it on the player instance for easy reference
-		const pets = opts.report.friendlyPets
-			.filter(pet => pet.petOwner === opts.fflogsActor.id)
-
-		this.player = {
-			...opts.fflogsActor,
-			pets,
-		}
-
 		this.patch = new Patch(
-			languageToEdition(opts.report.lang),
-			this.parseDate,
+			opts.report.edition,
+			this.pull.timestamp / 1000,
 		)
 	}
 
@@ -206,9 +123,7 @@ class Parser {
 			const injectable = new constructors[handle](this)
 			this.container[handle] = injectable
 
-			if (injectable instanceof Module) {
-				injectable.doTheMagicInitDance()
-			} else if (injectable instanceof Analyser) {
+			if (injectable instanceof Analyser) {
 				injectable.initialise()
 			} else {
 				throw new Error(`Unhandled injectable type for initialisation: ${handle}`)
@@ -247,58 +162,11 @@ class Parser {
 	// Event handling
 	// -----
 
-	async normalise(events: LegacyEvent[]) {
-		// Run normalisers
-		// This intentionally does not have error handling - modules may be relying on normalisers without even realising it. If something goes wrong, it could totally throw off results.
-		for (const handle of this.executionOrder) {
-			const injectable = this.container[handle]
-
-			// TODO: Not a fan of needing to special case every way of normalising -
-			//       resolve this more generically
-			if (injectable instanceof Module) {
-				events = await injectable.normalise(events)
-			} else if (injectable instanceof Analyser) {
-				// No.
-			} else {
-				throw new Error(`Unhandled injectable type for normalisation: ${handle}`)
-			}
-		}
-
-		return events
-	}
-
-	parseEvents({
-		events,
-		legacyEvents,
-	}: {
-		events: Event[],
-		legacyEvents: LegacyEvent[],
-	}) {
-		// Required for legacy execution.
+	parseEvents({events}: {events: Event[]}) {
 		this._triggerModules = this.executionOrder.slice(0)
 
-		const xivaIterator = this.iterateXivaEvents(events)[Symbol.iterator]()
-		const legacyIterator = this.iterateLegacyEvents(legacyEvents)[Symbol.iterator]()
-
-		let xivaResult = xivaIterator.next()
-		let legacyResult = legacyIterator.next()
-
-		while (!xivaResult.done || !legacyResult.done) {
-			const xivaTimestamp = xivaResult.done ? Infinity : xivaResult.value.timestamp
-			const legacyTimestamp = legacyResult.done
-				? Infinity
-				: legacyResult.value.timestamp + this.report.start
-
-			// Preference xiva events when equal timestamps, as we're doing a trunk-first migration.
-			if (!xivaResult.done && xivaTimestamp <= legacyTimestamp) {
-				this.dispatchXivaEvent(xivaResult.value)
-				xivaResult = xivaIterator.next()
-			} else if (!legacyResult.done && legacyTimestamp < xivaTimestamp) {
-				this.dispatchLegacyEvent(legacyResult.value)
-				legacyResult = legacyIterator.next()
-			} else {
-				throw new Error('Impossible condition in event interleaving.')
-			}
+		for (const event of this.iterateXivaEvents(events)) {
+			this.dispatchXivaEvent(event)
 		}
 	}
 
@@ -348,56 +216,11 @@ class Parser {
 		}
 	}
 
-	private *iterateLegacyEvents(events: LegacyEvent[]): Iterable<LegacyEvent> {
-		const eventIterator = events[Symbol.iterator]()
-
-		// Start the parse with an 'init' fab
-		yield {
-			type: 'init',
-			timestamp: this.fight.start_time,
-		}
-
-		let obj = eventIterator.next()
-		while (!obj.done) {
-			// Iterate over the actual event first
-			yield obj.value
-			obj = eventIterator.next()
-
-			// Iterate over any fabrications arising from the event and clear the queue
-			yield* this.legacyFabricationQueue
-			this.legacyFabricationQueue = []
-		}
-
-		// Finish with 'complete' fab
-		yield {
-			type: 'complete',
-			timestamp: this.fight.end_time,
-		}
-	}
-
-	private dispatchLegacyEvent(event: LegacyEvent) {
-		const moduleErrors = this.legacyDispatcher.dispatch(event, this._triggerModules)
-
-		for (const handle in moduleErrors) {
-			if (moduleErrors[handle] == null) { continue }
-			const error = moduleErrors[handle]
-
-			this.captureError({
-				error,
-				type: 'event',
-				module: handle,
-				event,
-			})
-
-			this._setModuleError(handle, error)
-		}
-	}
-
 	queueEvent(event: Event) {
 		// If the event is in the past, noop.
 		if (event.timestamp < this.currentEpochTimestamp) {
 			if (process.env.NODE_ENV === 'development') {
-				console.warn(`Attempted to queue an event in the past. Current timestamp: ${this.currentTimestamp}. Event: ${JSON.stringify(event)}`)
+				console.warn(`Attempted to queue an event in the past. Current timestamp: ${this.currentEpochTimestamp}. Event: ${JSON.stringify(event)}`)
 			}
 			return
 		}
@@ -411,10 +234,6 @@ class Parser {
 		} else {
 			this.eventDispatchQueue.splice(index, 0, event)
 		}
-	}
-
-	fabricateLegacyEvent(event: LegacyEvent) {
-		this.legacyFabricationQueue.push(event)
 	}
 
 	private _setModuleError(mod: string, error: Error) {
@@ -445,9 +264,8 @@ class Parser {
 	 */
 	private _gatherErrorContext(
 		mod: string,
-		source: 'event' | 'output',
-		error: Error,
-		event?: LegacyEvent,
+		_source: 'event' | 'output',
+		_error: Error,
 	): [Record<string, unknown>, Array<[string, Error]>] {
 		const output: Record<string, unknown> = {}
 		const errors: Array<[string, Error]> = []
@@ -460,13 +278,6 @@ class Parser {
 			const constructor = injectable.constructor as typeof Injectable
 
 			// TODO: Should Injectable also contain rudimentary error logic?
-			if (injectable instanceof Module) {
-				try {
-					output[handle] = injectable.getErrorContext(source, error, event)
-				} catch (error) {
-					errors.push([handle, error])
-				}
-			}
 
 			if (output[handle] === undefined) {
 				output[handle] = extractErrorContext(injectable)
@@ -537,18 +348,6 @@ class Parser {
 	}
 
 	private getResultMeta(injectable: Injectable): Result {
-		if (injectable instanceof Module) {
-			const constructor = injectable.constructor as typeof Module
-			return {
-				name: constructor.title,
-				handle: constructor.handle,
-				mode: constructor.displayMode,
-				order: constructor.displayOrder,
-				i18n_id: constructor.i18n_id,
-				markup: null,
-			}
-		}
-
 		if (injectable instanceof Analyser) {
 			const constructor = injectable.constructor as typeof Analyser
 			return {
@@ -565,10 +364,6 @@ class Parser {
 	}
 
 	private getOutput(injectable: Injectable): React.ReactNode {
-		if (injectable instanceof Module) {
-			return injectable.output()
-		}
-
 		if (injectable instanceof Analyser) {
 			return injectable.output?.()
 		}
@@ -585,7 +380,7 @@ class Parser {
 		error: Error,
 		type: 'event' | 'output',
 		module: string,
-		event?: Event | LegacyEvent,
+		event?: Event,
 	}) {
 		// Bypass error handling in dev
 		if (process.env.NODE_ENV === 'development') {
@@ -593,7 +388,7 @@ class Parser {
 		}
 
 		// If the log should be analysed on a different branch, we'll probably be getting a bunch of errors - safe to ignore, as the logic will be fundamentally different.
-		if (getReportPatch(this.newReport).branch) {
+		if (getReportPatch(this.report).branch) {
 			return
 		}
 
@@ -605,7 +400,7 @@ class Parser {
 		}
 
 		const extra: Record<string, unknown> = {
-			source: this.newReport.meta.source,
+			source: this.report.meta.source,
 			pull: this.pull.id,
 			actor: this.actor.id,
 			event: opts.event,
@@ -635,72 +430,6 @@ class Parser {
 	// -----
 	// Utilities
 	// -----
-
-	byPlayer(event: {sourceID?: number}, playerId = this.player.id) {
-		return event.sourceID === playerId
-	}
-
-	toPlayer(event: {targetID?: number}, playerId = this.player.id) {
-		return event.targetID === playerId
-	}
-
-	byPlayerPet(event: {sourceID?: number}, playerId = this.player.id) {
-		const pet = this.report.friendlyPets.find(pet => pet.id === event.sourceID)
-		return pet && pet.petOwner === playerId
-	}
-
-	toPlayerPet(event: {targetID?: number}, playerId = this.player.id) {
-		const pet = this.report.friendlyPets.find(pet => pet.id === event.targetID)
-		return pet && pet.petOwner === playerId
-	}
-
-	/**
-	 * Convert an fflogs event timestamp for the current pull to an epoch timestamp
-	 * compatible with logic running in the new analysis system. Do ***not*** use this
-	 * outside the above scenario.
-	 * @deprecated
-	 */
-	fflogsToEpoch = (timestamp: number) =>
-		timestamp - this.eventTimeOffset + this.pull.timestamp
-
-	/**
-	 * Convert a unix epoch timestamp to a report-relative timestamp compatible
-	 * with logic running in the old analysis system. Do ***not*** use this
-	 * outside the above scenario.
-	 * @deprecated
-	 */
-	epochToFflogs = (timestamp: number) =>
-		timestamp - this.pull.timestamp + this.eventTimeOffset
-
-	/**
-	 * Get an actor ID compatible with the new analysis system from the target of
-	 * a legacy fflogs event. This should ***only*** be utilised in old modules that
-	 * need to interop with the new system.
-	 * @deprecated
-	 */
-	getFflogsEventSourceActorId = (event: LegacyEvent) =>
-		resolveActorId({
-			id: event.sourceID,
-			instance: event.sourceInstance,
-			actor: event.source,
-		})
-
-	/**
-	 * Get an actor ID compatible with the new analysis system from the target of
-	 * a legacy fflogs event. This should ***only*** be utilised in old modules that
-	 * need to interop with the new system.
-	 * @deprecated
-	 */
-	getFflogsEventTargetActorId = (event: LegacyEvent) =>
-		resolveActorId({
-			id: event.targetID,
-			instance: event.targetInstance,
-			actor: event.target,
-		})
-
-	formatTimestamp(timestamp: number, secondPrecision?: number) {
-		return this.formatDuration(timestamp - this.fight.start_time, secondPrecision)
-	}
 
 	formatEpochTimestamp(timestamp: number, secondPrecision?: number) {
 		return this.formatDuration(timestamp - this.pull.timestamp, secondPrecision)

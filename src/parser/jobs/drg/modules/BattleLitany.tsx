@@ -1,254 +1,216 @@
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
 import {ActionLink} from 'components/ui/DbLink'
-import {RotationTable} from 'components/ui/RotationTable'
-import ACTIONS from 'data/ACTIONS'
-import STATUSES from 'data/STATUSES'
 import {Event, Events} from 'event'
-import _ from 'lodash'
-import {Analyser} from 'parser/core/Analyser'
 import {filter} from 'parser/core/filter'
-import {dependency} from 'parser/core/Module'
+import {dependency} from 'parser/core/Injectable'
+import {BuffWindow, EvaluatedAction, EvaluationOutput, ExpectedGcdCountEvaluator, WindowEvaluator} from 'parser/core/modules/ActionWindow'
+import {HistoryEntry} from 'parser/core/modules/ActionWindow/History'
 import {Actors} from 'parser/core/modules/Actors'
-import {Data} from 'parser/core/modules/Data'
-import {Timeline} from 'parser/core/modules/Timeline'
+import {GlobalCooldown} from 'parser/core/modules/GlobalCooldown'
+import {SEVERITY} from 'parser/core/modules/Suggestions'
 import React, {Fragment} from 'react'
-import {Message, Icon} from 'semantic-ui-react'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 
-const BL_GCD_TARGET = 8
+const BL_GCD_TARGET = 6
+const EXPECTED_PLAYER_COUNT = 8
 
-// how long (or short, really) a window needs to be in order to be considered truncated
-// eslint-disable-next-line @typescript-eslint/no-magic-numbers
-const BL_TRUNCATE_DURATION = STATUSES.BATTLE_LITANY.duration - 2000
+const BL_DOUBLE_DRG_ERROR = {
+	NONE: 0,
+	THEY_OVERWROTE: 1,
+	YOU_OVERWROTE: 2,
+}
 
-class BLWindow {
-	start: number
-	end?: number
+class PlayersBuffedEvaluator implements WindowEvaluator {
+	private affectedPlayers: (window: HistoryEntry<EvaluatedAction[]>) => number
 
-	rotation: Array<Events['action']> = []
-	gcdCount: number = 0
-	trailingGcdEvent?: Events['action']
+	constructor(affectedPlayers: (window: HistoryEntry<EvaluatedAction[]>) => number) {
+		this.affectedPlayers = affectedPlayers
+	}
 
-	buffsRemoved: number[] = []
-	playersBuffed: string[] = []
-	containsOtherDRG: boolean = false
-	deathTruncated: boolean = false
+	// this is purely informational
+	public suggest() { return undefined }
 
-	constructor(start: number) {
-		this.start = start
+	public output(windows: Array<HistoryEntry<EvaluatedAction[]>>): EvaluationOutput | undefined {
+		const affected = windows.map(w => this.affectedPlayers(w))
+		return {
+			format: 'table',
+			header: {
+				header: <Trans id="drg.battlelitany.rotation-table.header.buffed">Players Buffed</Trans>,
+				accessor: 'buffed',
+			},
+			rows: affected.map(a => {
+				return {
+					actual: a,
+					expected: EXPECTED_PLAYER_COUNT,
+				}
+			}),
+		}
 	}
 }
 
-// Analyser port note:
-// - currently investigating: using new BuffWindow module to handle this logic
-// in this module we only want to track battle litany windows opened by
-// the character selected for analysis. windows that clip into or overwrite other
-// DRG litanies will be marked.
-// Used DNC technical step as basis for this module.
-export default class BattleLitany extends Analyser {
+/**
+ * so in theory, you don't have two dragoons in a party
+ * but in practice, you might. This evaluator adds notes about
+ * windows that either got truncated or stepped on another drg's dragon toes
+ */
+class DoubleDrgEvaluator implements WindowEvaluator {
+	private doubleDrgNote: (window: HistoryEntry<EvaluatedAction[]>) => number
+
+	constructor(doubleDrgNote: (window: HistoryEntry<EvaluatedAction[]>) => number) {
+		this.doubleDrgNote = doubleDrgNote
+	}
+
+	// this is purely informational
+	public suggest() { return undefined }
+
+	public output(windows: Array<HistoryEntry<EvaluatedAction[]>>): EvaluationOutput | undefined {
+		const notes = windows.map(w => this.doubleDrgNote(w))
+		if (notes.every(note => note === BL_DOUBLE_DRG_ERROR.NONE)) {
+			return undefined
+		}
+
+		return {
+			format: 'notes',
+			header: {
+				header: <Trans id="drg.battlelitany.rotation-table.header.interference">Window Interference</Trans>,
+				accessor: 'interference',
+			},
+			rows: notes.map(n => {
+				if (n === BL_DOUBLE_DRG_ERROR.THEY_OVERWROTE) {
+					return <Trans id="drg.battlelitany.notes.they-overwrote">Overwritten by Other DRG</Trans>
+				}
+
+				if (n === BL_DOUBLE_DRG_ERROR.YOU_OVERWROTE) {
+					return <Trans id="drg.battlelitany.notes.you-overwrote">You Overwrote an Existing Window</Trans>
+				}
+
+				return <></>
+			}),
+		}
+	}
+}
+
+// this implementation of Battle Litany derives from core BuffWindow with a
+// set of custom evaluators that track number of players buffed and whether or
+// not the window overwrote (or was overwritten by) windows started by other DRGs
+export class BattleLitany extends BuffWindow {
 	static override handle = 'battlelitany'
 	static override title = t('drg.battlelitany.title')`Battle Litany`
 	static override displayOrder = DISPLAY_ORDER.BATTLE_LITANY
 
 	@dependency private actors!: Actors
-	@dependency private timeline!: Timeline
-	@dependency private data!: Data
+	@dependency private globalCooldown!: GlobalCooldown
 
-	private history: BLWindow[] = []
-	private lastLitFalloffTime: number = 0
+	buffAction = this.data.actions.BATTLE_LITANY
+	buffStatus = this.data.statuses.BATTLE_LITANY
+
+	// track the buff applications to players by all drgs
+	private buffApplications: Array<{
+		timestamp: number
+		appliedByThisDrg: boolean
+		job: string
+	}> = []
 
 	override initialise() {
-		const battleLitFilter = filter<Event>().type('statusApply').status(this.data.statuses.BATTLE_LITANY.id)
-		this.addEventHook(battleLitFilter.target(this.parser.actor.id), this.tryOpenWindow)
-		this.addEventHook(battleLitFilter.source(this.parser.actor.id), this.countLitBuffs)
-		this.addEventHook(
-			filter<Event>()
-				.type('statusRemove')
-				.target(this.parser.actor.id)
-				.status(this.data.statuses.BATTLE_LITANY.id),
-			this.tryCloseWindow
-		)
-		this.addEventHook(filter<Event>().type('action').source(this.parser.actor.id), this.onCast)
-		this.addEventHook(filter<Event>().type('death').actor(this.parser.actor.id), this.onDeath)
+		super.initialise()
+
+		const blStatusFilter = filter<Event>().type('statusApply').status(this.data.statuses.BATTLE_LITANY.id)
+		this.addEventHook(blStatusFilter, this.onBlStatusApply)
+
+		const suggestionIcon = this.data.actions.BATTLE_LITANY.icon
+		const suggestionWindowName = <ActionLink action="BATTLE_LITANY" showIcon={false} />
+		this.addEvaluator(new ExpectedGcdCountEvaluator({
+			expectedGcds: BL_GCD_TARGET,
+			globalCooldown: this.globalCooldown,
+			suggestionIcon,
+			suggestionContent: <Trans id="drg.bl.suggestions.missedgcd.content">
+				Try to land at least 6 GCDs during every <ActionLink action="BATTLE_LITANY" /> window.
+			</Trans>,
+			suggestionWindowName,
+			severityTiers: {
+				1: SEVERITY.MINOR,
+				2: SEVERITY.MEDIUM,
+				3: SEVERITY.MAJOR,
+			},
+		}))
+
+		this.addEvaluator(new PlayersBuffedEvaluator(this.affectedPlayers.bind(this)))
+		this.addEvaluator(new DoubleDrgEvaluator(this.doubleDrgNote.bind(this)))
 	}
 
-	private countLitBuffs(event: Events['statusApply']) {
-		// Get this from tryOpenWindow. If a window wasn't open, we'll open one.
-		const lastWindow: BLWindow | undefined = this.tryOpenWindow(event)
-
-		// Find out how many players we hit with the buff.
-		// BL has two normalized windows? seems weird...
-		if (lastWindow && !lastWindow.playersBuffed.includes(event.target) && this.actors.get(event.target).playerControlled) {
-			lastWindow.playersBuffed.push(event.target)
-		}
-	}
-
-	private tryOpenWindow(event: Events['statusApply']): BLWindow | undefined {
-		const lastWindow: BLWindow | undefined = _.last(this.history)
-
-		if (lastWindow && !lastWindow.end) {
-			return lastWindow
-		}
-
-		if (event.source === this.parser.actor.id) {
-			const newWindow = new BLWindow(event.timestamp)
-
-			// Handle multiple drg's buffs overwriting each other, we'll have a remove then an apply with the same timestamp
-			// If that happens, mark the window and return
-			newWindow.containsOtherDRG = this.lastLitFalloffTime === event.timestamp
-
-			this.history.push(newWindow)
-			return newWindow
-		}
-
-		return undefined
-	}
-
-	private tryCloseWindow(event: Events['statusRemove']) {
-		// for determining overwrite, cache the status falloff time
-		this.lastLitFalloffTime = event.timestamp
-
-		// only track the things one player added
-		if (event.source !== this.parser.actor.id) { return }
-
-		const lastWindow: BLWindow | undefined = _.last(this.history)
-
-		if (!lastWindow) {
-			return
-		}
-
-		// Cache whether we've seen a buff removal event for this status, just in case they happen at exactly the same timestamp
-		lastWindow.buffsRemoved.push(event.status)
-
-		if (this.isWindowOkToClose(lastWindow)) {
-			lastWindow.end = event.timestamp
-		}
-	}
-
-	// Make sure all applicable statuses have fallen off before the window closes
-	private isWindowOkToClose(window: BLWindow): boolean {
-		if (!window.buffsRemoved.includes(STATUSES.BATTLE_LITANY.id)) {
-			return false
-		}
-		return true
-	}
-
-	private onCast(event: Events['action']) {
-		const lastWindow: BLWindow | undefined = _.last(this.history)
-
-		// If we don't have a window, bail
-		if (!lastWindow) {
-			return
-		}
-
-		const action = this.data.getAction(event.action)
-
-		// Can't do anything else if we didn't get a valid action object
-		if (!action) {
-			return
-		}
-
-		// If this window isn't done yet add the action to the list
-		if (!lastWindow.end) {
-			lastWindow.rotation.push(event)
-
-			if (action.onGcd) {
-				lastWindow.gcdCount++
-			}
-			return
-		}
-
-		// If we haven't recorded a trailing GCD event for this closed window, do so now
-		if (lastWindow.end && !lastWindow.trailingGcdEvent && action.onGcd) {
-			lastWindow.trailingGcdEvent = event
-		}
-	}
-
-	private onDeath(event: Events['death']) {
-		// end the window and set a flag to not count as overlapping if times are different
-		const lastWindow: BLWindow | undefined = _.last(this.history)
-
-		if (!lastWindow) {
-			return
-		}
-
-		// if there was a death within an expected window duration, we can assume the player died while
-		// lit was active.
-		if (event.timestamp < lastWindow.start + STATUSES.BATTLE_LITANY.duration) {
-			lastWindow.deathTruncated = true
-		}
-	}
-
-	// just output, no suggestions for now.
-	// open to maybe putting a suggestion not to clip into other DRG windows? hitting everyone with litany?
-	override output() {
-		const tableData = this.history.map(window => {
-			const start = window.start - this.parser.pull.timestamp
-			const end = window.end != null ?
-				window.end - this.parser.pull.timestamp :
-				start
-
-			// overlapped if: we detected an overwrite of this player onto another player, or if
-			// this player's buff had a duration that was too short and they didn't die
-			const overlap = window.containsOtherDRG || (!window.deathTruncated && (end !== start) && (end - start < BL_TRUNCATE_DURATION))
-
-			return ({
-				start,
-				end,
-				overlap,
-				notesMap: {
-					overlapped: <>{overlap ? <Icon name="x" color="red" /> : <Icon name="check" color="green" />}</>,
-				},
-				rotation: window.rotation,
-				targetsData: {
-					gcds: {
-						actual: window.gcdCount,
-						expected: BL_GCD_TARGET,
-					},
-					buffed: {
-						actual: window.playersBuffed.length,
-						expected: 8,
-					},
-				},
+	/**
+	 * Logs status applications for later analysis
+	 * Tracks if the buff was applied to player by this dragoon, and also
+	 * logs the job of the affected player
+	 * Job data was requested some time ago but am not sure how we want display to work
+	 * or if we still want it, so just holding it in data for now.
+	 */
+	private onBlStatusApply(event: Events['statusApply']) {
+		const targetActor = this.actors.get(event.target)
+		if (targetActor.playerControlled) {
+			this.buffApplications.push({
+				timestamp: event.timestamp,
+				appliedByThisDrg: event.source === this.parser.actor.id,
+				job: targetActor.job,
 			})
+		}
+	}
+
+	// returns the number of players affected by the battle lit status application
+	// in the window when the buff was active
+	// this should be 8 in content we care about
+	private affectedPlayers(buffWindow: HistoryEntry<EvaluatedAction[]>): number {
+		const actualWindowDuration = (buffWindow?.end ?? buffWindow.start) - buffWindow.start
+
+		// count the number of applications that happened in the window
+		const affected = this.buffApplications.filter(ba => {
+			return (
+				ba.appliedByThisDrg &&
+				buffWindow.start <= ba.timestamp &&
+				ba.timestamp <= buffWindow.start + actualWindowDuration
+			)
 		})
 
-		const notes = []
-		const overlap = tableData.filter(window => window.overlap).length > 0
+		return affected.length
+	}
 
-		if (overlap) {
-			notes.push({
-				header: <Trans id="drg.battlelitany.rotation-table.header.interfered">No Overlap</Trans>,
-				accessor: 'overlapped',
-			})
+	// returns a status code indicating if a buff window was overwritten or truncated
+	// by overlapping battle litany
+	private doubleDrgNote(buffWindow: HistoryEntry<EvaluatedAction[]>): number {
+		const actualWindowDuration = (buffWindow?.end ?? buffWindow.start) - buffWindow.start
+		const lookbackStart = buffWindow.start - this.buffStatus.duration
+
+		// we check whether or not you overwrote someone else first, as you
+		// can directly control that
+		const otherDrgLookbackAppl = this.buffApplications.filter(ba => {
+			return (
+				!ba.appliedByThisDrg &&
+				lookbackStart <= ba.timestamp &&
+				ba.timestamp <= buffWindow.start
+			)
+		})
+
+		// don't be rude
+		if (otherDrgLookbackAppl.length > 0) {
+			return BL_DOUBLE_DRG_ERROR.YOU_OVERWROTE
 		}
 
-		return <Fragment>
-			{overlap && (
-				<Message warning>
-					<Trans id="drg.battlelitany.rotation-table.message">
-						This log contains <ActionLink {...ACTIONS.BATTLE_LITANY}/> windows that interfered with windows
-						started by other Dragoons. Try to make sure that casts of <ActionLink showIcon={false} {...ACTIONS.BATTLE_LITANY} /> do
-						not overlap in order to maximize damage.
-					</Trans>
-				</Message>
-			)}
-			<RotationTable
-				targets={[
-					{
-						header: <Trans id="drg.battlelitany.rotation-table.header.gcd-count">GCDs</Trans>,
-						accessor: 'gcds',
-					},
-					{
-						header: <Trans id="drg.battlelitany.rotation-table.header.buffed">Players Buffed</Trans>,
-						accessor: 'buffed',
-					},
-				]}
-				notes={notes}
-				data={tableData}
-				onGoto={this.timeline.show}
-			/>
-		</Fragment>
+		// next, we check if someone else overwrote you
+		const otherDrgApplications = this.buffApplications.filter(ba => {
+			return (
+				!ba.appliedByThisDrg &&
+				buffWindow.start <= ba.timestamp &&
+				ba.timestamp <= buffWindow.start + actualWindowDuration
+			)
+		})
+
+		// whoops looks like the other drg overwrote you, bummer
+		if (otherDrgApplications.length > 0) {
+			return BL_DOUBLE_DRG_ERROR.THEY_OVERWROTE
+		}
+
+		// otherwise we're all good
+		return BL_DOUBLE_DRG_ERROR.NONE
 	}
 }

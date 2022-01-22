@@ -1,35 +1,31 @@
 import {AoeChecker} from './AoeChecker'
-import Buffs from './Buffs'
+import {Buffs} from './Buffs'
 import {Combos} from './Combos'
+import {Fuka} from './Fuka'
 import {Higanbana} from './Higanbana'
 import Interrupts from './Interrupts'
-import Kaiten from './Kaiten'
+import {Kaiten} from './Kaiten'
 import {Kenki} from './Kenki'
 import {Meikyo} from './Meikyo'
 import OGCDDowntime from './OGCDDowntime'
-import Sen from './Sen'
-import {Shifu} from './Shifu'
-import Shoha from './Shoha'
-import {StatusTimeline} from './StatusTimeline'
-import ThirdEye from './ThirdEye'
+import {Ogi} from './Ogi'
+import {Sen} from './Sen'
+import {Shoha} from './Shoha'
 import Tincture from './Tincture'
-import Tsubame from './Tsubame'
 
 export default [
 	AoeChecker,
 	Buffs,
 	Combos,
-	Higanbana,
-	Interrupts,
+	Fuka,
 	Kaiten,
 	Kenki,
-	Sen,
-	Shifu,
+	Higanbana,
+	Interrupts,
 	Meikyo,
-	ThirdEye,
-	Tsubame,
 	OGCDDowntime,
+	Ogi,
+	Sen,
 	Shoha,
-	StatusTimeline,
 	Tincture,
 ]

@@ -1,7 +1,7 @@
 import {Event} from 'event'
-import {FflogsEvent} from 'fflogs'
 import {Debuggable} from 'parser/core/Debuggable'
 import {Pull, Report} from 'report'
+import {FflogsEvent} from '../eventTypes'
 
 export const PREPULL_OFFSETS = {
 	ATTRIBUTE_UPDATE: -4,

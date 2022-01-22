@@ -1,10 +1,9 @@
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
-import {ActionKey} from 'data/ACTIONS'
 import {JOBS} from 'data/JOBS'
 import {Event, Events} from 'event'
 import {filter, oneOf} from 'parser/core/filter'
-import {dependency} from 'parser/core/Module'
+import {dependency} from 'parser/core/Injectable'
 import {Actors} from 'parser/core/modules/Actors'
 import {Cooldowns} from 'parser/core/modules/Cooldowns'
 import {CounterGauge, Gauge as CoreGauge} from 'parser/core/modules/Gauge'
@@ -17,14 +16,6 @@ const SUGGESTION_TIERS = {
 	20: SEVERITY.MINOR,
 	50: SEVERITY.MAJOR,
 }
-
-const INFURIATE_REDUCERS: ActionKey[] = [
-	'FELL_CLEAVE',
-	'DECIMATE',
-	'CHAOTIC_CYCLONE',
-	'INNER_CHAOS',
-]
-const INFURIATE_CDR = 5000
 
 export class Gauge extends CoreGauge {
 	static override title = t('war.gauge.title')`Beast Gauge`
@@ -47,8 +38,6 @@ export class Gauge extends CoreGauge {
 		// Spenders
 		[this.data.actions.FELL_CLEAVE.id, {action: -50}],
 		[this.data.actions.DECIMATE.id, {action: -50}],
-		[this.data.actions.UPHEAVAL.id, {action: -20}],
-		[this.data.actions.ONSLAUGHT.id, {action: -20}],
 		[this.data.actions.CHAOTIC_CYCLONE.id, {action: -50}],
 		[this.data.actions.INNER_CHAOS.id, {action: -50}],
 	])
@@ -57,11 +46,14 @@ export class Gauge extends CoreGauge {
 		super.initialise()
 
 		const beastActions = Array.from(this.beastGaugeModifiers.keys())
-		const infuriateReducerIds = INFURIATE_REDUCERS.map(key => this.data.actions[key].id)
 
-		const playerFilter = filter<Event>().source(this.parser.actor.id)
-		this.addEventHook(playerFilter.type(oneOf(['action', 'combo'])).action(oneOf(beastActions)), this.onGaugeModifier)
-		this.addEventHook(playerFilter.type('action').action(oneOf(infuriateReducerIds)), () => this.cooldowns.reduce('INFURIATE', INFURIATE_CDR))
+		this.addEventHook(
+			filter<Event>()
+				.source(this.parser.actor.id)
+				.type(oneOf(['action', 'combo']))
+				.action(oneOf(beastActions)),
+			this.onGaugeModifier,
+		)
 
 		this.addEventHook('complete', this.onComplete)
 	}
@@ -84,10 +76,10 @@ export class Gauge extends CoreGauge {
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.INFURIATE.icon,
 			content: <Trans id="war.gauge.suggestions.loss.content">
-					Avoid letting your Beast Gauge overcap - the wasted resources may cost you uses of your spenders over the course of the fight.
+					Avoid letting your Beast Gauge overcap - the wasted resources may cost further uses of your spenders over the course of the fight.
 			</Trans>,
 			why: <Trans id="war.gauge.suggestions.loss.why">
-				{this.beastGauge.overCap} beast gauge lost to an overcapped gauge.
+				{this.beastGauge.overCap} Wrath lost to overcapping Beast gauge.
 			</Trans>,
 			tiers: SUGGESTION_TIERS,
 			value: this.beastGauge.overCap,

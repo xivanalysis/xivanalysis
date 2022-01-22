@@ -1,9 +1,9 @@
 import * as Sentry from '@sentry/browser'
 import {STATUS_ID_OFFSET} from 'data/STATUSES'
-import {Event, Events, Cause, SourceModifier, TargetModifier} from 'event'
-import {ActorResources, BuffEvent, BuffStackEvent, CastEvent, DamageEvent, DeathEvent, FflogsEvent, HealEvent, HitType, InstaKillEvent, TargetabilityUpdateEvent} from 'fflogs'
+import {Event, Events, Cause, SourceModifier, TargetModifier, AttributeValue, Attribute} from 'event'
 import {Actor} from 'report'
 import {resolveActorId} from '../base'
+import {ActorResources, BuffEvent, BuffStackEvent, CastEvent, CombatantInfoEvent, DamageEvent, DeathEvent, FflogsEvent, HealEvent, HitType, InstaKillEvent, TargetabilityUpdateEvent} from '../eventTypes'
 import {AdapterStep} from './base'
 
 /*
@@ -43,6 +43,9 @@ const FAILED_HITS = new Set([
 	HitType.RESIST,
 ])
 /* eslint-enable @typescript-eslint/no-magic-numbers */
+
+// Equivalent to an UnreachableException, but as a noop function
+const ensureNever = (arg: never) => arg
 
 /** Translate an FFLogs APIv1 event to the xiva representation, if any exists. */
 export class TranslateAdapterStep extends AdapterStep {
@@ -92,12 +95,20 @@ export class TranslateAdapterStep extends AdapterStep {
 		case 'targetabilityupdate':
 			return [this.adaptTargetableEvent(baseEvent)]
 
+		case 'combatantinfo':
+			return this.adaptCombatantInfoEvent(baseEvent)
+
 		/* eslint-disable no-fallthrough */
 		// Dispels are already modelled by other events, and aren't something we really care about
 		case 'dispel':
+		case 'interrupt':
 		// Encounter events don't expose anything particularly useful for us
 		case 'encounterstart':
 		case 'encounterend':
+		case 'dungeonstart':
+		case 'dungeonend':
+		// Seems to be related to instance seals in i.e. 24mans?
+		case 'instancesealupdate':
 		// We don't have much need for limit break, at least for now
 		case 'limitbreakupdate':
 		// We are _technically_ limiting down to a single zone, so any zonechange should be fluff
@@ -118,7 +129,7 @@ export class TranslateAdapterStep extends AdapterStep {
 
 		default: {
 			// Anything that reaches this point is unknown. If we've already notified, just noop
-			const unknownEvent = baseEvent as {type: string}
+			const unknownEvent = ensureNever(baseEvent) as {type: string}
 			if (this.unhandledTypes.has(unknownEvent.type)) {
 				break
 			}
@@ -150,8 +161,9 @@ export class TranslateAdapterStep extends AdapterStep {
 	}
 
 	private adaptEffectEvent(event: DamageEvent | HealEvent): Array<Events['execute' | 'damage' | 'heal' | 'actorUpdate']> {
-		// Calc events should all have a packet ID for sequence purposes. Let sentry catch outliers.
+		// Calc events should all have a packet ID for sequence purposes. Otherwise, this is a damage or heal effect packet for an over time effect.
 		const sequence = event.packetID
+
 		if (sequence == null) {
 			// Damage over time or Heal over time effects are sent as damage/heal events without a sequence ID -- there is no execute confirmation for over time effects, just the actual damage or heal event
 			// Similarly, certain failed hits will generate an "unpaired" event
@@ -164,7 +176,10 @@ export class TranslateAdapterStep extends AdapterStep {
 				if (event.type === 'damage') { return this.adaptDamageEvent(event) }
 				if (event.type === 'heal') { return this.adaptHealEvent(event) }
 			}
-			throw new Error('FFLogs Effect event encountered with no packet ID, did not match to over time status effect (DoT/HoT)')
+
+			// Damage event with no sequence ID to match to a calculated damage event, and does not resolve as an over time effect
+			// No longer throwing because we are not seeing these unmatched packets except for logs created before patch 5.08, but need an early return to make type hinting know sequence isn't null below
+			return []
 		}
 
 		const targetedFields = this.adaptTargetedFields(event)
@@ -284,7 +299,7 @@ export class TranslateAdapterStep extends AdapterStep {
 			...this.adaptTargetedFields(event),
 			type: 'statusRemove',
 			status: resolveStatusId(event.ability.guid),
-			absorbed: event.absorbed,
+			remainingShield: event.absorb,
 		}
 	}
 
@@ -345,6 +360,37 @@ export class TranslateAdapterStep extends AdapterStep {
 			}),
 			targetable: !!event.targetable,
 		}
+	}
+
+	private adaptCombatantInfoEvent(event: CombatantInfoEvent): Array<Events['actorUpdate']> {
+		// TODO: Use more info in here. We're currently extracting the speed attribute values for the logging player, but there's also player level, prepull statuses, and more in there.
+
+		const attributeMapping: Array<[number | undefined, Attribute]> = [
+			[event.skillSpeed, Attribute.SKILL_SPEED],
+			[event.spellSpeed, Attribute.SPELL_SPEED],
+		]
+
+		const attributes: AttributeValue[] = []
+
+		for (const [value, attribute] of attributeMapping) {
+			if (value == null) { continue }
+			attributes.push({attribute, value, estimated: false})
+		}
+
+		if (attributes.length === 0) {
+			return []
+		}
+
+		return [{
+			...this.adaptBaseFields(event),
+			type: 'actorUpdate',
+			attributes,
+			actor: resolveActorId({
+				id: event.sourceID,
+				instance: event.sourceInstance,
+				actor: event.source,
+			}),
+		}]
 	}
 
 	private adaptTargetedFields(event: FflogsEvent) {

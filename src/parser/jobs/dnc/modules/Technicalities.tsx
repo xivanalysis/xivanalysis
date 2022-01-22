@@ -1,6 +1,6 @@
 import {t} from '@lingui/macro'
 import {Plural, Trans} from '@lingui/react'
-import {ActionLink, StatusLink} from 'components/ui/DbLink'
+import {DataLink} from 'components/ui/DbLink'
 import {RotationTable} from 'components/ui/RotationTable'
 import {StatusKey} from 'data/STATUSES'
 import {Event, Events} from 'event'
@@ -68,14 +68,28 @@ export class Technicalities extends Analyser {
 
 	private history: TechnicalWindow[] = []
 	private badDevilments: number = 0
-	private lastDevilmentTimestamp: number = -1
 
 	private technicalFinishIds = TECHNICAL_FINISHES.map(key => this.data.actions[key].id)
 
 	override initialise() {
 		const techFinishFilter = filter<Event>().type('statusApply').status(this.data.statuses.TECHNICAL_FINISH.id)
-		this.addEventHook(techFinishFilter.target(this.parser.actor.id), this.tryOpenWindow)
-		this.addEventHook(techFinishFilter.source(this.parser.actor.id), this.countTechBuffs)
+
+		// Ignore any actors besides players
+		const playerCharacters = this.parser.pull.actors
+			.filter(actor => actor.playerControlled)
+			.map(actor => actor.id)
+
+		this.addEventHook(
+			techFinishFilter
+				.target(this.parser.actor.id),
+			this.tryOpenWindow)
+
+		this.addEventHook(
+			techFinishFilter
+				.source(this.parser.actor.id)
+				.target(oneOf(playerCharacters)),
+			this.countTechBuffs)
+
 		this.addEventHook(
 			filter<Event>()
 				.type('statusRemove')
@@ -143,12 +157,6 @@ export class Technicalities extends Analyser {
 			} else {
 				lastWindow.poolingProblem = false
 			}
-
-			// If this is the first window, and we didn't catch a devilment use in the window, but we *have* used it,
-			// treat it as a timely usage due to party composition
-			if (this.history.length === 1 && !lastWindow.usedDevilment && this.lastDevilmentTimestamp > 0) {
-				lastWindow.timelyDevilment = true
-			}
 		}
 	}
 
@@ -204,17 +212,11 @@ export class Technicalities extends Analyser {
 		}
 	}
 
+	/** Check to see if Devilment was used at the proper time. In Endwalker, it should immediately follow Technical Finish */
 	private handleDevilment(lastWindow: TechnicalWindow | undefined) {
-		// Don't ding if this is the first Devilment, depending on which job the Dancer is partnered with, it may
-		// be appropriate to use Devilment early. In all other cases, Devilment should be used during Technical Finish
-		if (!this.actors.current.hasStatus(this.data.statuses.TECHNICAL_FINISH.id) && (this.lastDevilmentTimestamp < 0 ||
-			// If the first use we detect is after the cooldown, assume they popped it pre-pull and this 'first'
-			// Use is actually also bad
-			this.parser.currentEpochTimestamp >= this.data.actions.DEVILMENT.cooldown)) {
+		if (!this.actors.current.hasStatus(this.data.statuses.TECHNICAL_FINISH.id)) {
 			this.badDevilments++
 		}
-
-		this.lastDevilmentTimestamp = this.parser.currentTimestamp
 
 		// If we don't have a window for some reason, bail
 		if (lastWindow == null || lastWindow.end) {
@@ -223,8 +225,7 @@ export class Technicalities extends Analyser {
 
 		lastWindow.usedDevilment = true
 
-		// Note if the Devilment was used after the second GCD
-		if (lastWindow.gcdCount <= 1) {
+		if (lastWindow.gcdCount === 0) {
 			lastWindow.timelyDevilment = true
 		}
 	}
@@ -234,12 +235,12 @@ export class Technicalities extends Analyser {
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.DEVILMENT.icon,
 			content: <Trans id="dnc.technicalities.suggestions.bad-devilments.content">
-				Using <ActionLink {...this.data.actions.DEVILMENT} /> outside of your <StatusLink {...this.data.statuses.TECHNICAL_FINISH} /> windows leads to an avoidable loss in DPS. Aside from certain opener situations, you should be using <ActionLink {...this.data.actions.DEVILMENT} /> at the beginning of your <StatusLink {...this.data.statuses.TECHNICAL_FINISH} /> windows.
+				Using <DataLink action="DEVILMENT" /> outside of your <DataLink status="TECHNICAL_FINISH" /> windows leads to an avoidable loss in DPS. Aside from certain opener situations, you should be using <DataLink action="DEVILMENT" /> at the beginning of your <DataLink status="TECHNICAL_FINISH" /> windows.
 			</Trans>,
 			tiers: TECHNICAL_SEVERITY_TIERS,
 			value: this.badDevilments,
 			why: <Trans id="dnc.technicalities.suggestions.bad-devilments.why">
-				<Plural value={this.badDevilments} one="# Devilment" other="# Devilments"/> used outside <StatusLink {...this.data.statuses.TECHNICAL_FINISH} />.
+				<Plural value={this.badDevilments} one="# Devilment" other="# Devilments"/> used outside <DataLink status="TECHNICAL_FINISH" />.
 			</Trans>,
 		}))
 
@@ -248,7 +249,7 @@ export class Technicalities extends Analyser {
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.DEVILMENT.icon,
 			content: <Trans id="dnc.technicalities.suggestions.late-devilments.content">
-				Using <ActionLink {...this.data.actions.DEVILMENT} /> as early as possible during your <StatusLink {...this.data.statuses.TECHNICAL_FINISH} /> windows allows you to maximize the multiplicative bonuses that both statuses give you. Try to use it within the first two GCDs of your window.
+				Using <DataLink action="DEVILMENT" /> as early as possible during your <DataLink status="TECHNICAL_FINISH" /> windows allows you to maximize the multiplicative bonuses that both statuses give you. It should be used immediately after <DataLink action="TECHNICAL_FINISH" />.
 			</Trans>,
 			tiers: TECHNICAL_SEVERITY_TIERS,
 			value: lateDevilments,
@@ -262,12 +263,12 @@ export class Technicalities extends Analyser {
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.FAN_DANCE.icon,
 			content: <Trans id="dnc.technicalities.suggestions.unpooled.content">
-				Pooling your Feathers before going into a <StatusLink {...this.data.statuses.TECHNICAL_FINISH} /> window allows you to use more <ActionLink {...this.data.actions.FAN_DANCE} />s with the multiplicative bonuses active, increasing their effectiveness. Try to build and hold on to at least three feathers between windows.
+				Pooling your Feathers before going into a <DataLink status="TECHNICAL_FINISH" /> window allows you to use more <DataLink action="FAN_DANCE" />s with the multiplicative bonuses active, increasing their effectiveness. Try to build and hold on to at least three feathers between windows.
 			</Trans>,
 			tiers: TECHNICAL_SEVERITY_TIERS,
 			value: unpooledWindows,
 			why: <Trans id="dnc.technicalities.suggestions.unpooled.why">
-				<Plural value={unpooledWindows} one="# window" other="# windows"/> were missing potential <ActionLink {...this.data.actions.FAN_DANCE} />s.
+				<Plural value={unpooledWindows} one="# window" other="# windows"/> were missing potential <DataLink action="FAN_DANCE" />s.
 			</Trans>,
 		}))
 	}
@@ -278,8 +279,8 @@ export class Technicalities extends Analyser {
 			{otherDancers && (
 				<Message>
 					<Trans id="dnc.technicalities.rotation-table.message">
-						This log contains <ActionLink showIcon={false} {...this.data.actions.TECHNICAL_STEP}/> windows that were started or extended by other Dancers.<br />
-						Use your best judgement about which windows you should be dumping <ActionLink showIcon={false} {...this.data.actions.DEVILMENT}/>, Feathers, and Esprit under.<br />
+						This log contains <DataLink showIcon={false} action="TECHNICAL_STEP" /> windows that were started or extended by other Dancers.<br />
+						Use your best judgement about which windows you should be dumping <DataLink showIcon={false} action="DEVILMENT" />, Feathers, and Esprit under.<br />
 						Try to make sure they line up with other raid buffs to maximize damage.
 					</Trans>
 				</Message>
@@ -287,11 +288,11 @@ export class Technicalities extends Analyser {
 			<RotationTable
 				notes={[
 					{
-						header: <Trans id="dnc.technicalities.rotation-table.header.missed"><ActionLink showName={false} {...this.data.actions.DEVILMENT}/> On Time?</Trans>,
+						header: <Trans id="dnc.technicalities.rotation-table.header.missed"><DataLink showName={false} action="DEVILMENT" /> On Time?</Trans>,
 						accessor: 'timely',
 					},
 					{
-						header: <Trans id="dnc.technicalities.rotation-table.header.pooled"><ActionLink showName={false} {...this.data.actions.FAN_DANCE}/> Pooled?</Trans>,
+						header: <Trans id="dnc.technicalities.rotation-table.header.pooled"><DataLink showName={false} action="FAN_DANCE" /> Pooled?</Trans>,
 						accessor: 'pooled',
 					},
 					{

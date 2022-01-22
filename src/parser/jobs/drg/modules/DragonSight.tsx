@@ -103,11 +103,11 @@ export default class DragonSight extends BuffWindow {
 		this.addEvaluator(new ExpectedActionsEvaluator({
 			expectedActions: [
 				{
-					action: this.data.actions.CHAOS_THRUST,
+					action: this.data.actions.CHAOTIC_SPRING,
 					expectedPerWindow: 1,
 				},
 				{
-					action: this.data.actions.FULL_THRUST,
+					action: this.data.actions.HEAVENS_THRUST,
 					expectedPerWindow: 1,
 				},
 				{
@@ -121,7 +121,7 @@ export default class DragonSight extends BuffWindow {
 			],
 			suggestionIcon,
 			suggestionContent: <Trans id="drg.ds.suggestions.trackedactions.content">
-				Each <ActionLink action="DRAGON_SIGHT" /> window should contain at least one use each of <ActionLink action="CHAOS_THRUST" />, <ActionLink action="FULL_THRUST" />, <ActionLink action="FANG_AND_CLAW" />, and <ActionLink action="WHEELING_THRUST" />. In order to ensure that these actions fall within the buff window, try to avoid using <ActionLink action="DRAGON_SIGHT" /> after <ActionLink action="CHAOS_THRUST" /> or <ActionLink action="FULL_THRUST" />.
+				Each <ActionLink action="DRAGON_SIGHT" /> window should contain at least one use each of <ActionLink action="CHAOTIC_SPRING" />, <ActionLink action="HEAVENS_THRUST" />, <ActionLink action="FANG_AND_CLAW" />, and <ActionLink action="WHEELING_THRUST" />. In order to ensure that these actions fall within the buff window, try to avoid using <ActionLink action="DRAGON_SIGHT" /> after <ActionLink action="CHAOTIC_SPRING" /> or <ActionLink action="HEAVENS_THRUST" />.
 			</Trans>,
 			suggestionWindowName,
 			severityTiers: {
@@ -144,7 +144,7 @@ export default class DragonSight extends BuffWindow {
 		// ok so we don't want to penalize people for when their buff ends early because their partner died
 		if (this.buffTargetDied(window) === SHORT_WINDOW_FAULT.PARTNER) {
 			// you get what you get and that's ok in this case
-			return -calculateExpectedGcdsForTime(EXPECTED_GCD_COUNT, this.globalCooldown.getEstimate(), window.start, window.end)
+			return -calculateExpectedGcdsForTime(EXPECTED_GCD_COUNT, this.globalCooldown.getDuration(), window.start, window.end)
 		}
 
 		// note that if the drg died we don't reduce gcds because that's something you personally can fix

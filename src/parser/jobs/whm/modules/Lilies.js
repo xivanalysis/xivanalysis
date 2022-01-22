@@ -63,8 +63,7 @@ export default class Lilies extends Analyser {
 	}
 
 	checkLilyCapping() {
-		const fightLength = (this.parser.fight.end_time - this.parser.fight.start_time)
-		const possible = Math.floor(fightLength / LILY_INTERVAL)
+		const possible = Math.floor(this.parser.pull.duration / LILY_INTERVAL)
 		this._unused = possible - this._liliesConsumed
 
 		if (this._unused > 0) {

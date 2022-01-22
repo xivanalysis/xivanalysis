@@ -4,7 +4,7 @@ import {ANIMATION_LOCK} from 'data/CONSTANTS'
 import {Event, Events} from 'event'
 import {Analyser} from 'parser/core/Analyser'
 import {filter} from 'parser/core/filter'
-import {dependency} from 'parser/core/Module'
+import {dependency} from 'parser/core/Injectable'
 import CastTime from 'parser/core/modules/CastTime'
 import Checklist, {Requirement, Rule} from 'parser/core/modules/Checklist'
 import {Data} from 'parser/core/modules/Data'
@@ -53,7 +53,7 @@ export class AlwaysBeCasting extends Analyser {
 		}
 
 		let castTime = this.castTime.forEvent(event) ?? 0
-		const adjustedBaseGCD = this.globalCooldown.getEstimate()
+		const adjustedBaseGCD = this.globalCooldown.getDuration()
 		if (castTime >= adjustedBaseGCD) {
 			// Account for "caster tax" - animation lock on spells with cast time equal to or greater than the GCD that prevents starting the next spell until the animation finishes
 			castTime += ANIMATION_LOCK

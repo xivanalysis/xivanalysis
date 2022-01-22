@@ -4,6 +4,7 @@ import {Message, Segment} from 'akkd'
 import ContributorLabel from 'components/ui/ContributorLabel'
 import NormalisedMessage from 'components/ui/NormalisedMessage'
 import {patchSupported} from 'data/PATCHES'
+import {AVAILABLE_MODULES} from 'parser/AVAILABLE_MODULES'
 import {Analyser, DisplayMode} from 'parser/core/Analyser'
 import React from 'react'
 import {Header} from 'semantic-ui-react'
@@ -38,10 +39,16 @@ export default class About extends Analyser {
 		super(...args)
 
 		// Merge the parser's metadata in
-		const fields = ['Description', 'contributors', 'supportedPatches']
+		const fields = ['Description', 'contributors']
 		fields.forEach(field => {
 			this[field] = this.parser.meta[field]
 		})
+
+		// If the job meta doesn't have supported patches, skip using the full meta so we don't display the core support range.
+		const jobMeta = AVAILABLE_MODULES.JOBS[this.parser.actor.job]
+		this.supportedPatches = jobMeta.supportedPatches != null
+			? this.parser.meta.supportedPatches
+			: undefined
 	}
 
 	output() {
@@ -64,10 +71,10 @@ export default class About extends Analyser {
 		// Work out the supported patch range (and if we're in it)
 		const {from, to = from} = this.supportedPatches
 		const supported = patchSupported(
-			this.parser.newReport.edition,
+			this.parser.report.edition,
 			from,
 			to,
-			this.parser.parseDate,
+			this.parser.pull.timestamp / 1000,
 		)
 
 		const {Description} = this

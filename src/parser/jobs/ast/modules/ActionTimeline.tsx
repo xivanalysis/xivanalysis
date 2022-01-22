@@ -5,24 +5,27 @@ export class ActionTimeline extends CoreActionTimeline {
 		...CoreActionTimeline.rows,
 		// Arcanum
 		['DRAW', 'UNDRAW'],
-		'REDRAW',
-		'SLEEVE_DRAW',
 		'PLAY',
+		'ASTRODYNE',
+		['CROWN_PLAY', 'MINOR_ARCANA'],
+		//other AST or party buffs
 		'DIVINATION',
 		'LIGHTSPEED',
 		// oGCD ST heals
 		'ESSENTIAL_DIGNITY',
-		'CELESTIAL_INTERSECTION',
 		'SYNASTRY',
+		'CELESTIAL_INTERSECTION',
 		// oGCD AoE heals
-		['EARTHLY_STAR', 'STELLAR_DETONATION'],
 		'CELESTIAL_OPPOSITION',
-		// Horoscope
+		['EARTHLY_STAR', 'STELLAR_DETONATION'],
+		//Delayed oGCD Heals
+		['MACROCOSMOS', 'MICROCOSMOS'],
+		'EXALTATION',
 		['HOROSCOPE', 'HOROSCOPE_ACTIVATION'],
-		// Party mitigation
-		'COLLECTIVE_UNCONSCIOUS',
 		// Healing buff
 		'NEUTRAL_SECT',
+		// Party mitigation
+		'COLLECTIVE_UNCONSCIOUS',
 		// Role actions
 		'LUCID_DREAMING',
 	]

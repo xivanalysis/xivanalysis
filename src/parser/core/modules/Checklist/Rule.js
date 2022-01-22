@@ -1,4 +1,4 @@
-import {DISPLAY_ORDER} from 'parser/core/Module'
+import {DisplayOrder} from 'parser/core/Analyser'
 import {matchClosestLower} from 'utilities'
 
 export const TARGET = {
@@ -14,7 +14,7 @@ export default class Rule {
 	description = null
 	requirements = []
 	target = DEFAULT_TARGET
-	displayOrder = DISPLAY_ORDER.DEFAULT
+	displayOrder = DisplayOrder.DEFAULT
 
 	get tier() {
 		return matchClosestLower(

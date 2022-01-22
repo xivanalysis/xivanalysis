@@ -1,5 +1,5 @@
 import {Event, Events} from 'event'
-import {FflogsEvent, HealEvent} from 'fflogs'
+import {FflogsEvent, HealEvent} from '../eventTypes'
 import {AdapterStep} from './base'
 
 /**

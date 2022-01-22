@@ -13,13 +13,48 @@ export const NINJA = new Meta({
 		</Trans>
 	</>,
 	supportedPatches: {
-		from: '6.0',
-		to: '6.0',
+		from: '6.05',
+		to: '6.05',
 	},
 	contributors: [
 		{user: CONTRIBUTORS.TOASTDEIB, role: ROLES.MAINTAINER},
 	],
 	changelog: [
+		{
+			date: new Date('2022-01-10'),
+			Changes: () => <>Fixed issue with GCD uptime not considering Huton active.</>,
+			contributors: [CONTRIBUTORS.AZARIAH],
+		},
+		{
+			date: new Date('2022-01-04'),
+			Changes: () => <>Updated Raiju module for 6.05 changes.</>,
+			contributors: [CONTRIBUTORS.TOASTDEIB],
+		},
+		{
+			date: new Date('2021-12-29'),
+			Changes: () => <>Updated suggestions for Raiton use under Trick Attack and Hellfrog use on too few targets.</>,
+			contributors: [CONTRIBUTORS.TOASTDEIB],
+		},
+		{
+			date: new Date('2021-12-17'),
+			Changes: () => <>Fixed a false positive bug in the Raiju analyser.</>,
+			contributors: [CONTRIBUTORS.TOASTDEIB],
+		},
+		{
+			date: new Date('2021-12-17'),
+			Changes: () => <>Updated Huton analyser for 6.0.</>,
+			contributors: [CONTRIBUTORS.TOASTDEIB],
+		},
+		{
+			date: new Date('2021-12-11'),
+			Changes: () => <>Added an analyser for tracking dropped Forked/Fleeting Raiju Ready buffs.</>,
+			contributors: [CONTRIBUTORS.TOASTDEIB],
+		},
+		{
+			date: new Date('2021-12-02'),
+			Changes: () => <>Updated Ninki-generated actions in the gauge simulation.</>,
+			contributors: [CONTRIBUTORS.TOASTDEIB],
+		},
 		{
 			date: new Date('2021-11-21'),
 			Changes: () => <>Removed Shadow Fang and Assassinate as expected actions under Trick Attack.</>,

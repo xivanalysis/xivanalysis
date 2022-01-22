@@ -1,38 +1,40 @@
 import {Interrupts} from 'parser/core/modules/Interrupts'
 import {ActionTimeline} from './ActionTimeline'
 import {ArcanaSuggestions, ArcanaTracking} from './ArcanaTracking'
-import ArcanaUndrawUsage from './ArcanaUndrawUsage'
-import CelestialIntersection from './CelestialIntersection'
-import CelestialOpposition from './CelestialOpposition'
-import Combust from './Combust'
-import DivinationDowntime from './DivinationDowntime'
+import {ArcanaUndrawUsage} from './ArcanaUndrawUsage'
+import {CastTime} from './CastTime'
+import {Combust} from './Combust'
+import CrownPlay from './CrownPlay'
+import {Divination} from './Divination'
 import Draw from './Draw'
-import EarthlyStar from './EarthlyStar'
-import Horoscope from './Horoscope'
-import Lightspeed from './Lightspeed'
-import LucidDreaming from './LucidDreaming'
+import {EarthlyStar} from './EarthlyStar'
+import {Helios} from './Helios'
+import {Lightspeed} from './Lightspeed'
+import {LucidDreaming} from './LucidDreaming'
+import {Macrocosmos} from './Macrocosmos'
+import {oGCDs} from './oGCDs'
 import {Overheal} from './Overheal'
-import Sect from './Sect'
 import {StatusTimeline} from './StatusTimeline'
-import Synastry from './Synastry'
+import {Synastry} from './Synastry'
 
 export default [
 	ActionTimeline,
 	ArcanaSuggestions,
 	ArcanaTracking,
 	ArcanaUndrawUsage,
-	CelestialIntersection,
-	CelestialOpposition,
+	CastTime,
 	Combust,
-	DivinationDowntime,
+	Divination,
 	Draw,
+	CrownPlay,
 	EarthlyStar,
-	Horoscope,
+	oGCDs,
+	Helios,
 	Interrupts,
 	Lightspeed,
 	LucidDreaming,
+	Macrocosmos,
 	Overheal,
-	Sect,
 	StatusTimeline,
 	Synastry,
 ]

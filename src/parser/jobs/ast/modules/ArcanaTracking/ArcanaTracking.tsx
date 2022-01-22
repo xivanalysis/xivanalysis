@@ -15,22 +15,15 @@ import DISPLAY_ORDER from '../DISPLAY_ORDER'
 const LINKED_EVENT_THRESHOLD = 20
 const DEATH_EVENT_STATUS_DROP_DELAY = 2000
 
-const CARD_GRANTING_ABILITIES: Array<keyof ActionRoot> = ['DRAW', 'REDRAW', 'MINOR_ARCANA', ...PLAY, 'SLEEVE_DRAW']
+const CARD_GRANTING_ABILITIES: Array<keyof ActionRoot> = ['DRAW', 'REDRAW', ...PLAY]
 
 const CARD_ACTIONS: Array<keyof ActionRoot> = [
 	'DRAW',
 	'REDRAW',
-	'SLEEVE_DRAW',
-	'MINOR_ARCANA',
 	'UNDRAW',
-	'DIVINATION',
+	'ASTRODYNE',
 	...PLAY,
 ]
-const CROWN_PLAYS: Array<keyof ActionRoot> = [
-	'LORD_OF_CROWNS',
-	'LADY_OF_CROWNS',
-]
-
 export enum SealType {
 	NOTHING = 0,
 	SOLAR = 1,
@@ -64,7 +57,6 @@ export default class ArcanaTracking extends Analyser {
 	private arcanaStatuses: Array<Status['id']> = []
 	private cardGrantingAbilities: Array<Action['id']> = []
 	private cardActions: Array<Action['id']> = []
-	private crownPlays: Array<Action['id']> = []
 	private drawnArcana: Array<Status['id']> = []
 	private celestialSealArcana: Array<Action['id']> = []
 	private lunarSealArcana: Array<Action['id']> = []
@@ -98,7 +90,6 @@ export default class ArcanaTracking extends Analyser {
 		this.arcanaStatuses = ARCANA_STATUSES.map(statusKey => this.data.statuses[statusKey].id)
 		this.cardGrantingAbilities = CARD_GRANTING_ABILITIES.map(actionKey => this.data.actions[actionKey].id)
 		this.cardActions = CARD_ACTIONS.map(actionKey => this.data.actions[actionKey].id)
-		this.crownPlays = CROWN_PLAYS.map(actionKey => this.data.actions[actionKey].id)
 		this.drawnArcana = DRAWN_ARCANA.map(statusKey => this.data.statuses[statusKey].id)
 		this.celestialSealArcana = CELESTIAL_SEAL_ARCANA.map(actionKey => this.data.actions[actionKey].id)
 		this.lunarSealArcana = LUNAR_SEAL_ARCANA.map(actionKey => this.data.actions[actionKey].id)
@@ -263,7 +254,7 @@ export default class ArcanaTracking extends Analyser {
 			const cardStateItem: CardState = {..._.last(this.cardStateLog)} as CardState
 			// fabbing an undraw cast event
 			const lastEvent: Events['action'] = {
-				action: this.data.actions.UNDRAW.id, //action: {name: this.data.actions.UNDRAW.name, guid: this.data.actions.UNDRAW.id, type: 1, abilityIcon: _.replace(_.replace(this.data.statuses.NOCTURNAL_SECT.icon, 'https://xivapi.com/i/', ''), '/', '-')},
+				action: this.data.actions.UNDRAW.id,
 				timestamp: event.timestamp,
 				type: 'action',
 				source: event.source,
@@ -317,7 +308,7 @@ export default class ArcanaTracking extends Analyser {
 			cardStateItem.sealState = this.addSeal(sealObtained, sealState)
 		}
 
-		if (actionId === this.data.actions.DIVINATION.id) {
+		if (actionId === this.data.actions.ASTRODYNE.id) {
 			cardStateItem.sealState = CLEAN_SEAL_STATE
 		}
 
@@ -347,7 +338,7 @@ export default class ArcanaTracking extends Analyser {
 				...event,
 			},
 			drawState: undefined,
-			sealState: CLEAN_SEAL_STATE,
+			sealState: lastCardState.sealState,
 			sleeveState: SleeveType.NOTHING,
 		})
 	}
@@ -425,12 +416,7 @@ export default class ArcanaTracking extends Analyser {
 
 			// Modify log, they were holding onto this card since index
 			// Differenciate depending on searchLatest
-			let arcanaStatus: number | undefined
-			if (this.lastDrawnBuff && this.crownPlays.includes(cardActionId)) {
-				arcanaStatus = this.lastDrawnBuff.data
-			} else {
-				arcanaStatus = this.arcanaActionToStatus(cardActionId)
-			}
+			const arcanaStatus: number | undefined = this.arcanaActionToStatus(cardActionId)
 
 			_.forEachRight(this.cardStateLog,
 				(stateItem, index) => {

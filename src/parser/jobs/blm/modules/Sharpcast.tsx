@@ -5,12 +5,11 @@ import {Event, Events} from 'event'
 import {Analyser} from 'parser/core/Analyser'
 import {filter, oneOf} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
-import {CooldownDowntime} from 'parser/core/modules/CooldownDowntime'
 import {Data} from 'parser/core/modules/Data'
-import {SimpleStatistic, Statistics} from 'parser/core/modules/Statistics'
 import Suggestions, {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import {StatusItem} from 'parser/core/modules/Timeline'
 import React from 'react'
+import {Gauge} from './Gauge'
 import Procs from './Procs'
 
 const SHARPCAST_CONSUMERS: ActionKey[] = [
@@ -18,6 +17,7 @@ const SHARPCAST_CONSUMERS: ActionKey[] = [
 	'THUNDER_III',
 	'THUNDER_IV',
 	'SCATHE',
+	'PARADOX',
 ]
 
 interface SharpcastWindow {
@@ -33,19 +33,18 @@ interface SharpcastTracker {
 export class Sharpcast extends Analyser {
 	static override handle = 'sharpcast'
 
-	@dependency private cooldownDowntime!: CooldownDowntime
 	@dependency private data!: Data
 	@dependency private procs!: Procs
-	@dependency private statistics!: Statistics
 	@dependency private suggestions!: Suggestions
+	@dependency private gauge!: Gauge
 
 	private buffWindows: SharpcastTracker = {
 		history: [],
 	}
 
 	private droppedSharpcasts = 0
+	private overwrittenSharpcasts = 0
 	private sharpedScathes = 0
-	private usedSharpcasts = 0
 
 	private sharpcastConsumerIds = SHARPCAST_CONSUMERS.map(key => this.data.actions[key].id)
 
@@ -54,7 +53,7 @@ export class Sharpcast extends Analyser {
 		const sharpcastFilter = playerFilter.status(this.data.statuses.SHARPCAST.id)
 		this.addEventHook(sharpcastFilter.type('statusRemove'), this.onRemoveSharpcast)
 		this.addEventHook(sharpcastFilter.type('statusApply'), this.onGainSharpcast)
-		this.addEventHook(playerFilter.type('action').action(oneOf(this.sharpcastConsumerIds)), this.onCast)
+		this.addEventHook(playerFilter.type('action').action(oneOf(this.sharpcastConsumerIds)), this.tryConsumeSharpcast)
 		this.addEventHook({
 			type: 'death',
 			actor: this.parser.actor.id,
@@ -67,27 +66,19 @@ export class Sharpcast extends Analyser {
 	}
 
 	private onGainSharpcast(event: Events['statusApply']) {
-		this.usedSharpcasts++
+		if (this.buffWindows.current != null) {
+			this.overwrittenSharpcasts++
+		}
 		this.buffWindows.current = {
 			start: event.timestamp,
-		}
-	}
-
-	// Consolidate old onCast functions into one central function
-	private onCast(event: Events['action']) {
-		const actionId = event.action
-
-		const action = this.data.getAction(actionId)
-		if (action && action.onGcd) {
-			this.tryConsumeSharpcast(event)
 		}
 	}
 
 	private tryConsumeSharpcast(event: Events['action']) {
 		const actionId = event.action
 
-		// If this action isn't affected by a proc (or something is wrong), bail out
-		if (!this.sharpcastConsumerIds.includes(actionId)) {
+		// Paradox doesn't produce a Firestarter proc if not in Astral Fire
+		if (actionId === this.data.actions.PARADOX.id && this.gauge.getGaugeState(event.timestamp).astralFire <= 0) {
 			return
 		}
 
@@ -106,7 +97,7 @@ export class Sharpcast extends Analyser {
 		this.stopAndSave(event.timestamp)
 	}
 
-	private stopAndSave(endTime = this.parser.currentTimestamp, countDrops = true) {
+	private stopAndSave(endTime = this.parser.currentEpochTimestamp, countDrops = true) {
 		if (!this.buffWindows.current) {
 			return
 		}
@@ -137,14 +128,6 @@ export class Sharpcast extends Analyser {
 				end: (window.stop ?? window.start) - fightStart,
 			}))
 		})
-
-		// Gather the data for actual / expected
-		const expected = this.cooldownDowntime.calculateMaxUsages({cooldowns: [this.data.actions.SHARPCAST]})
-		const actual = this.usedSharpcasts
-		let percent = actual / expected * 100
-		if (process.env.NODE_ENV === 'production') {
-			percent = Math.min(percent, 100)
-		}
 
 		// Suggestions to use sharpcasts that wore off.
 		this.suggestions.add(new TieredSuggestion({
@@ -180,16 +163,21 @@ export class Sharpcast extends Analyser {
 			</Trans>,
 		}))
 
-		//add a statistic for used sharps
-		this.statistics.add(new SimpleStatistic({
-			title: <Trans id="blm.sharpcast.statistic.title">Used Sharpcasts</Trans>,
+		// Suggestion not to overwrite Sharpcast
+		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.SHARPCAST.icon,
-			value: `${actual}/${expected} (${percent.toFixed(1)}%)`,
-			info: (
-				<Trans id="blm.sharpcast.statistic.info">
-					The number of Sharpcasts used versus the number of possible Sharpcast uses. Less than 100% is generally expected, but especially low usage could indicate misuse of the cooldown.
-				</Trans>
-			),
+			content: <Trans id="blm.sharpcast.suggestions.overwrote-sharpcasts.content">
+				You lost at least one guaranteed <DataLink status="THUNDERCLOUD" /> or <DataLink status="FIRESTARTER" /> proc by using <DataLink action="SHARPCAST" /> while the status was already active.
+			</Trans>,
+			tiers: {
+				1: SEVERITY.MINOR,
+				3: SEVERITY.MEDIUM,
+				5: SEVERITY.MAJOR,
+			},
+			value: this.overwrittenSharpcasts,
+			why: <Trans id="blm.sharpcast.suggestions.overwrote-sharpcasts.why">
+				You overwrote <DataLink showIcon={false} status="SHARPCAST" /> <Plural value={this.overwrittenSharpcasts} one="# time" other="# times" />.
+			</Trans>,
 		}))
 	}
 }

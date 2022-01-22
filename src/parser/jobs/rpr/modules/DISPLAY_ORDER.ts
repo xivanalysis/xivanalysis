@@ -1,0 +1,4 @@
+export const DISPLAY_ORDER = {
+	INTERRUPTS: 20,
+	IMMORTAL_SACRIFICE: 10,
+}

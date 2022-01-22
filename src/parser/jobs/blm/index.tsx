@@ -12,10 +12,10 @@ export const BLACK_MAGE = new Meta({
 		<Trans id="blm.about.description">This analyser aims to identify how you're not actually casting <DataLink action="FIRE_IV" /> as much as you think you are.</Trans>
 	</>,
 
-	// supportedPatches: {
-	// 	from: '6.0',
-	// 	to: '6.0',
-	// },
+	supportedPatches: {
+		from: '6.0',
+		to: '6.05',
+	},
 
 	contributors: [
 		{user: CONTRIBUTORS.AKAIRYU, role: ROLES.MAINTAINER},

@@ -22,7 +22,7 @@ export const PLD = ensureActions({
 		icon: 'https://xivapi.com/i/000000/000156.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		potency: 100,
+		potency: 170,
 		combo: {
 			from: 9,
 			potency: 300,
@@ -34,8 +34,7 @@ export const PLD = ensureActions({
 		icon: 'https://xivapi.com/i/000000/000164.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		breaksCombo: true,
-		potency: 120,
+		potency: 100,
 	},
 	SHIELD_BASH: {
 		id: 16,
@@ -44,7 +43,7 @@ export const PLD = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		breaksCombo: true,
-		potency: 110,
+		potency: 100,
 	},
 	RAGE_OF_HALONE: {
 		id: 21,
@@ -55,7 +54,7 @@ export const PLD = ensureActions({
 		potency: 100,
 		combo: {
 			from: 15,
-			potency: 350,
+			potency: 330,
 			end: true,
 		},
 	},
@@ -65,7 +64,7 @@ export const PLD = ensureActions({
 		icon: 'https://xivapi.com/i/002000/002511.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		potency: 110,
+		potency: 100,
 		combo: {
 			start: true,
 		},
@@ -79,7 +78,7 @@ export const PLD = ensureActions({
 		potency: 100,
 		combo: {
 			from: 7381,
-			potency: 220,
+			potency: 170,
 			end: true,
 		},
 	},
@@ -92,7 +91,7 @@ export const PLD = ensureActions({
 		potency: 100,
 		combo: {
 			from: 15,
-			potency: 390,
+			potency: 250,
 			end: true,
 		},
 		statusesApplied: ['GORING_BLADE'],
@@ -112,10 +111,10 @@ export const PLD = ensureActions({
 		icon: 'https://xivapi.com/i/002000/002507.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		potency: 100,
+		potency: 130,
 		combo: {
 			from: 15,
-			potency: 550,
+			potency: 420,
 			end: true,
 		},
 		statusesApplied: ['SWORD_OATH'],
@@ -128,7 +127,7 @@ export const PLD = ensureActions({
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 1500,
 		breaksCombo: true,
-		potency: 350,
+		potency: 270,
 	},
 	HOLY_CIRCLE: {
 		id: 16458,
@@ -138,7 +137,7 @@ export const PLD = ensureActions({
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 1500,
 		breaksCombo: true,
-		potency: 250,
+		potency: 130,
 	},
 	ATONEMENT: {
 		id: 16460,
@@ -147,7 +146,7 @@ export const PLD = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		breaksCombo: true,
-		potency: 550,
+		potency: 420,
 	},
 	CONFITEOR: {
 		id: 16459,
@@ -155,8 +154,45 @@ export const PLD = ensureActions({
 		icon: 'https://xivapi.com/i/002000/002518.png',
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
-		breaksCombo: true,
-		potency: 800,
+		potency: 900,
+		combo: {
+			start: true,
+		},
+	},
+	BLADE_OF_FAITH: {
+		id: 25748,
+		name: 'Blade of Faith',
+		icon: 'https://xivapi.com/i/002000/002952.png',
+		onGcd: true,
+		speedAttribute: Attribute.SPELL_SPEED,
+		combo: {
+			from: 16459,
+			potency: 250,
+		},
+	},
+	BLADE_OF_TRUTH: {
+		id: 25749,
+		name: 'Blade of Truth',
+		icon: 'https://xivapi.com/i/002000/002953.png',
+		onGcd: true,
+		speedAttribute: Attribute.SPELL_SPEED,
+		combo: {
+			from: 25748,
+			potency: 350,
+		},
+	},
+	BLADE_OF_VALOR: {
+		id: 25750,
+		name: 'Blade of Valor',
+		icon: 'https://xivapi.com/i/002000/002954.png',
+		onGcd: true,
+		speedAttribute: Attribute.SPELL_SPEED,
+		combo: {
+			from: 25749,
+			potency: 420,
+			end: true,
+		},
+		statusesApplied: ['BLADE_OF_VALOR'],
 	},
 
 	// -----
@@ -190,7 +226,7 @@ export const PLD = ensureActions({
 		name: 'Circle Of Scorn',
 		icon: 'https://xivapi.com/i/000000/000161.png',
 		onGcd: false,
-		cooldown: 25000,
+		cooldown: 30000,
 		statusesApplied: ['CIRCLE_OF_SCORN'],
 	},
 	COVER: {
@@ -229,7 +265,7 @@ export const PLD = ensureActions({
 		name: 'Divine Veil',
 		icon: 'https://xivapi.com/i/002000/002508.png',
 		onGcd: false,
-		cooldown: 120000,
+		cooldown: 90000,
 		statusesApplied: ['DIVINE_VEIL', 'DIVINE_VEIL_PROC'],
 	},
 	INTERVENTION: {
@@ -263,5 +299,20 @@ export const PLD = ensureActions({
 		onGcd: false,
 		cooldown: 30000,
 		charges: 2,
+	},
+	HOLY_SHELTRON: {
+		id: 25746,
+		name: 'Holy Sheltron',
+		icon: 'https://xivapi.com/i/002000/002950.png',
+		onGcd: false,
+		cooldown: 5000,
+		statusesApplied: ['HOLY_SHELTRON'],
+	},
+	EXPIACION: {
+		id: 25747,
+		name: 'Expiacion',
+		icon: 'https://xivapi.com/i/002000/002951.png',
+		onGcd: false,
+		cooldown: 30000,
 	},
 })

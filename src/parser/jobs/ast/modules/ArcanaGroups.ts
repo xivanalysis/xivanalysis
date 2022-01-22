@@ -11,6 +11,9 @@ export const PLAY: Array<keyof ActionRoot> = [
 	'THE_SPEAR',
 	'THE_EWER',
 	'THE_SPIRE',
+]
+
+export const MINOR_ARCANA: Array<keyof ActionRoot> = [
 	'LORD_OF_CROWNS',
 	'LADY_OF_CROWNS',
 ]
@@ -39,6 +42,9 @@ export const DRAWN_ARCANA: Array<keyof StatusRoot> = [
 	'SPEAR_DRAWN',
 	'EWER_DRAWN',
 	'SPIRE_DRAWN',
+]
+
+export const DRAWN_CROWN_ARCANA: Array<keyof StatusRoot> = [
 	'LORD_OF_CROWNS_DRAWN',
 	'LADY_OF_CROWNS_DRAWN',
 ]
@@ -50,6 +56,4 @@ export const ARCANA_STATUSES: Array<keyof StatusRoot> = [
 	'THE_SPEAR',
 	'THE_EWER',
 	'THE_SPIRE',
-	'LORD_OF_CROWNS',
-	'LADY_OF_CROWNS',
 ]

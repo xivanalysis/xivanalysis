@@ -1,17 +1,6 @@
 import {ensureStatuses} from '../type'
 
 export const AST = ensureStatuses({
-	DIURNAL_SECT: {
-		id: 839,
-		name: 'Diurnal Sect',
-		icon: 'https://xivapi.com/i/013000/013218.png',
-	},
-
-	NOCTURNAL_SECT: {
-		id: 840,
-		name: 'Nocturnal Sect',
-		icon: 'https://xivapi.com/i/013000/013219.png',
-	},
 
 	COMBUST_II: {
 		id: 843,
@@ -41,13 +30,6 @@ export const AST = ensureStatuses({
 		duration: 15000,
 	},
 
-	NOCTURNAL_FIELD: {
-		id: 837,
-		name: 'Nocturnal Field',
-		icon: 'https://xivapi.com/i/013000/013217.png',
-		duration: 30000,
-	},
-
 	ENHANCED_BENEFIC_II: {
 		id: 815,
 		name: 'Enhanced Benefic II',
@@ -60,6 +42,7 @@ export const AST = ensureStatuses({
 		name: 'Lightspeed',
 		icon: 'https://xivapi.com/i/013000/013220.png',
 		duration: 15000,
+		speedModifier: -2500,
 	},
 
 	SYNASTRY_SELF: {
@@ -76,13 +59,6 @@ export const AST = ensureStatuses({
 		duration: 20000,
 	},
 
-	COLLECTIVE_UNCONSCIOUS_DIURNAL_MITIGATION: {
-		id: 849,
-		name: 'Collective Unconscious (Mitigation)',
-		icon: 'https://xivapi.com/i/013000/013226.png',
-		duration: 18000,
-	},
-
 	COLLECTIVE_UNCONSCIOUS: {
 		id: 848,
 		name: 'Collective Unconscious',
@@ -90,24 +66,17 @@ export const AST = ensureStatuses({
 		duration: 18000,
 	},
 
-	WHEEL_OF_FORTUNE_DIURNAL: {
-		id: 956,
-		name: 'Wheel Of Fortune (Diurnal)',
-		icon: 'https://xivapi.com/i/013000/013225.png',
-		duration: 15000,
-	},
-
-	COLLECTIVE_UNCONSCIOUS_NOCTURNAL: {
-		id: 847,
-		name: 'Collective Unconscious (Nocturnal)',
-		icon: 'https://xivapi.com/i/013000/013227.png',
+	COLLECTIVE_UNCONSCIOUS_MITIGATION: {
+		id: 2283,
+		name: 'Collective Unconscious (Mitigation)',
+		icon: 'https://xivapi.com/i/013000/013226.png',
 		duration: 18000,
 	},
 
-	WHEEL_OF_FORTUNE_NOCTURNAL: {
-		id: 1206,
-		name: 'Wheel Of Fortune (Nocturnal)',
-		icon: 'https://xivapi.com/i/013000/013226.png',
+	WHEEL_OF_FORTUNE: {
+		id: 956,
+		name: 'Wheel Of Fortune',
+		icon: 'https://xivapi.com/i/013000/013225.png',
 		duration: 15000,
 	},
 
@@ -123,34 +92,6 @@ export const AST = ensureStatuses({
 		name: 'Giant Dominance',
 		icon: 'https://xivapi.com/i/013000/013242.png',
 		duration: 10000,
-	},
-
-	DIURNAL_OPPOSITION: {
-		id: 1879,
-		name: 'Diurnal Opposition',
-		icon: 'https://xivapi.com/i/013000/013246.png',
-		duration: 15000,
-	},
-
-	NOCTURNAL_OPPOSITION: {
-		id: 1880,
-		name: 'Nocturnal Opposition',
-		icon: 'https://xivapi.com/i/013000/013247.png',
-		duration: 30000,
-	},
-
-	DIURNAL_INTERSECTION: {
-		id: 1888,
-		name: 'Diurnal Intersection',
-		icon: 'https://xivapi.com/i/013000/013249.png',
-		duration: 15000,
-	},
-
-	NOCTURNAL_INTERSECTION: {
-		id: 1889,
-		name: 'Nocturnal Intersection',
-		icon: 'https://xivapi.com/i/013000/013250.png',
-		duration: 30000,
 	},
 
 	HOROSCOPE: {
@@ -169,30 +110,51 @@ export const AST = ensureStatuses({
 
 	NEUTRAL_SECT: {
 		id: 1892,
-		name: 'Neutral Sect',
+		name: 'Neutral Sect (Healing Potency)',
 		icon: 'https://xivapi.com/i/013000/013253.png',
 		duration: 20000,
 	},
 
-	DIURNAL_BALANCE_ASPECTED_HELIOS: {
-		id: 1247,
-		name: 'Diurnal Balance (Helios)',
-		icon: 'https://xivapi.com/i/013000/013254.png',
-		duration: 15000,
-	},
-
-	DIURNAL_BALANCE: {
-		id: 1920,
-		name: 'Diurnal Balance (Benefic)',
-		icon: 'https://xivapi.com/i/013000/013254.png',
-		duration: 15000,
-	},
-
-	NOCTURNAL_BALANCE: {
+	NEUTRAL_SECT_OTHERS: {
 		id: 1921,
-		name: 'Nocturnal Balance',
-		icon: 'https://xivapi.com/i/013000/013255.png',
+		name: 'Neutral Sect (Barrier)',
+		icon: 'https://xivapi.com/i/013000/013253.png',
 		duration: 30000,
+	},
+
+	INTERSECTION: {
+		id: 1889,
+		name: 'Intersection',
+		icon: 'https://xivapi.com/i/013000/013250.png',
+		duration: 30000,
+	},
+
+	OPPOSITION: {
+		id: 1879,
+		name: 'Opposition',
+		icon: 'https://xivapi.com/i/013000/013246.png',
+		duration: 15000,
+	},
+
+	DIVINATION: {
+		id: 1878,
+		name: 'Divination',
+		icon: 'https://xivapi.com/i/013000/013245.png',
+		duration: 15000,
+	},
+
+	EXALTATION: {
+		id: 2717,
+		name: 'Exaltation',
+		icon: 'https://xivapi.com/i/013000/013262.png',
+		duration: 8000,
+	},
+
+	MACROCOSMOS: {
+		id: 2718,
+		name: 'Macrocosmos',
+		icon: 'https://xivapi.com/i/013000/013263.png',
+		duration: 15000,
 	},
 
 	// -----
@@ -241,33 +203,32 @@ export const AST = ensureStatuses({
 		duration: 15000,
 	},
 
-	LORD_OF_CROWNS: {
-		id: 1876,
-		name: 'Lord of Crowns',
-		icon: 'https://xivapi.com/i/013000/013243.png',
+	CLARIFYING_DRAW: {
+		id: 2713,
+		name: 'Clarifying Draw',
+		icon: 'https://xivapi.com/i/013000/013258.png',
+	},
+
+	HARMONY_OF_SPIRIT: {
+		id: 2714,
+		name: 'Harmony of Spirit',
+		icon: 'https://xivapi.com/i/013000/013259.png',
 		duration: 15000,
 	},
 
-	LADY_OF_CROWNS: {
-		id: 1877,
-		name: 'Lady of Crowns',
-		icon: 'https://xivapi.com/i/013000/013244.png',
+	HARMONY_OF_BODY: {
+		id: 2715,
+		name: 'Harmony of Body',
+		icon: 'https://xivapi.com/i/013000/013260.png',
 		duration: 15000,
+		speedModifier: 0.90,
 	},
 
-	DIVINATION: {
-		id: 1878,
-		name: 'Divination',
-		icon: 'https://xivapi.com/i/013000/013245.png',
+	HARMONY_OF_MIND: {
+		id: 2716,
+		name: 'Harmony of Mind',
+		icon: 'https://xivapi.com/i/013000/013261.png',
 		duration: 15000,
-	},
-
-	SLEEVE_DRAW: {
-		id: 1926,
-		name: 'Sleeve Draw',
-		icon: 'https://xivapi.com/i/019000/019561.png',
-		duration: 30000,
-		stacksApplied: 2,
 	},
 
 	// -----

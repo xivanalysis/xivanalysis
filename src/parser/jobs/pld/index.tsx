@@ -1,8 +1,10 @@
 import {Trans} from '@lingui/macro'
 import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
+import CONTRIBUTORS, {ROLES} from 'data/CONTRIBUTORS'
 import {Meta} from 'parser/core/Meta'
 import React from 'react'
+import {changelog} from './changelog'
 
 export const PALADIN = new Meta({
 	modules: () => import('./modules' /* webpackChunkName: "jobs-pld" */),
@@ -15,19 +17,13 @@ export const PALADIN = new Meta({
 			</p>
 		</Trans>
 	</>,
-	// supportedPatches: {
-	// 	from: '6.0',
-	// 	to: '6.0',
-	// },
+	supportedPatches: {
+		from: '6.0',
+		to: '6.05',
+	},
 	contributors: [
-		// {user: CONTRIBUTORS.YOU, role: ROLES.DEVELOPER},
+		{user: CONTRIBUTORS.ARIA, role: ROLES.MAINTAINER},
 	],
 
-	changelog: [
-		// {
-		// 	date: new Date('2021-11-19'),
-		// 	Changes: () => <>The changes you made</>,
-		// 	contrubutors: [CONTRIBUTORS.YOU],
-		// },
-	],
+	changelog,
 })

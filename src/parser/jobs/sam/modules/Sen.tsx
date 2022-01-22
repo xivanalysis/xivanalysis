@@ -1,68 +1,24 @@
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
-import {ActionLink} from 'components/ui/DbLink'
+import {ActionLink, DataLink} from 'components/ui/DbLink'
 import {RotationTable} from 'components/ui/RotationTable'
 import TransMarkdown from 'components/ui/TransMarkdown'
-import ACTIONS from 'data/ACTIONS'
-import {CastEvent} from 'fflogs'
+import {Event, Events} from 'event'
 import _ from 'lodash'
-import Module, {dependency} from 'parser/core/Module'
-import {LegacyComboEvent} from 'parser/core/modules/Combos'
-import Suggestions, {SEVERITY, TieredSuggestion, Suggestion} from 'parser/core/modules/Suggestions'
+import {Analyser} from 'parser/core/Analyser'
+import {filter, oneOf} from 'parser/core/filter'
+import {dependency} from 'parser/core/Injectable'
+import {Data} from 'parser/core/modules/Data'
+import Suggestions, {SEVERITY, Suggestion, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import {Timeline} from 'parser/core/modules/Timeline'
 import React, {Fragment} from 'react'
-import {Icon, Message} from 'semantic-ui-react'
+import {Message, Icon} from 'semantic-ui-react'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 import {Kenki} from './Kenki'
 
 // defining a const message to assign later via markdown
 
-const samWarningMessage = t('sam.sen.rotation-table.disclaimer')` This module labels a "Standard Sen Window" to be a window that with no Sen overwrites that ends on an Iaijutsu. Please consult The Balance Discord and this [Infograph](https://i.imgur.com/L0Y7d6C.png) for more details on looping Samurai gameplay.`
-
-const SEN_ACTIONS = [
-	ACTIONS.YUKIKAZE.id,
-	ACTIONS.GEKKO.id,
-	ACTIONS.MANGETSU.id,
-	ACTIONS.KASHA.id,
-	ACTIONS.OKA.id,
-]
-
-// Setsu = Yuki, Getsu = Gekko Man, Ka = Kasha Oka
-
-const SEN_REMOVERS = [
-	ACTIONS.HIGANBANA.id,
-	ACTIONS.TENKA_GOKEN.id,
-	ACTIONS.MIDARE_SETSUGEKKA.id,
-	ACTIONS.HAGAKURE.id,
-]
-
-const THINGS_WE_WANT_IN_THE_TABLE = [
-	ACTIONS.HAKAZE.id,
-	ACTIONS.JINPU.id,
-	ACTIONS.SHIFU.id,
-	ACTIONS.FUGA.id,
-
-	ACTIONS.GEKKO.id,
-	ACTIONS.KASHA.id,
-	ACTIONS.YUKIKAZE.id,
-	ACTIONS.MANGETSU.id,
-	ACTIONS.OKA.id,
-
-	// Sen Spenders
-	ACTIONS.HIGANBANA.id,
-	ACTIONS.TENKA_GOKEN.id,
-	ACTIONS.MIDARE_SETSUGEKKA.id,
-	ACTIONS.HAGAKURE.id,
-
-	// I'm leaving these in as they are a way to handle Filler. not the usual way, but a way
-	ACTIONS.ENPI.id,
-	ACTIONS.HISSATSU_YATEN.id,
-	ACTIONS.HISSATSU_GYOTEN.id,
-
-	// OGCDS IGAF about.
-	ACTIONS.HISSATSU_KAITEN.id,
-	ACTIONS.MEIKYO_SHISUI.id,
-]
+const samWarningMessage = t('sam.sen.rotation-table.disclaimer')` This module labels a "Standard Sen Window" to be a window that with no Sen overwrites that ends on an Iaijutsu. Please consult The Balance Discord and this [Infograph](https://i.imgur.com/978VOqG.jpg) for more details on looping Samurai gameplay.`
 
 const KENKI_PER_SEN = 10
 
@@ -80,7 +36,7 @@ const SEN_HANDLING = {
 class SenState {
 	start: number
 	end?: number
-	rotation: CastEvent[] = []
+	rotation: Array<Events['action']>
 	isNonStandard: boolean = false // Aka Hagakure + Overwrites, used to filter later.
 	isDone: boolean = false // I SWEAR TO GOD IF THIS JANK THING WORKS, I'M LEAVING IT
 	isDeath: boolean = false // DIE! DIE! DIE! -Reaper
@@ -125,14 +81,16 @@ class SenState {
 
 	constructor(start: number) {
 		this.start = start
+		this.rotation = []
 	}
 }
 
-export default class Sen extends Module {
+export class Sen extends Analyser {
 	static override displayOrder = DISPLAY_ORDER.SEN
 	static override handle = 'sen'
 	static override title = t('sam.sen.title')`Non-Standard Sen Windows`
 
+	@dependency private data!: Data
 	@dependency private suggestions!: Suggestions
 	@dependency private kenki!: Kenki
 	@dependency private timeline!: Timeline
@@ -147,98 +105,121 @@ export default class Sen extends Module {
 		return _.last(this.senStateWindows)
 	}
 
-	protected override init() {
+	SEN_ACTIONS = [
+		this.data.actions.YUKIKAZE.id,
+		this.data.actions.GEKKO.id,
+		this.data.actions.MANGETSU.id,
+		this.data.actions.KASHA.id,
+		this.data.actions.OKA.id,
+	]
 
-		this.addEventHook(
-			'cast',
-			{
-				by: 'player',
-				abilityId: THINGS_WE_WANT_IN_THE_TABLE,
-			},
-			this.checkCastAndPush,
-		)
+	// Setsu = Yuki, Getsu = Gekko Man, Ka = Kasha Oka
 
-		this.addEventHook(
-			'combo',
-			{
-				by: 'player',
-				abilityId: SEN_ACTIONS,
-			},
-			this.onSenGen,
+	SEN_REMOVERS = [
+		this.data.actions.HIGANBANA.id,
+		this.data.actions.TENKA_GOKEN.id,
+		this.data.actions.MIDARE_SETSUGEKKA.id,
+		this.data.actions.HAGAKURE.id,
+	]
 
-		)
+	THINGS_WE_WANT_IN_THE_TABLE = [
+		this.data.actions.HAKAZE.id,
+		this.data.actions.JINPU.id,
+		this.data.actions.SHIFU.id,
+		this.data.actions.FUKO.id,
 
-		this.addEventHook(
-			'cast',
-			{
-				by: 'player',
-				abilityId: SEN_REMOVERS,
-			},
-			this.remove,
-		)
+		this.data.actions.GEKKO.id,
+		this.data.actions.KASHA.id,
+		this.data.actions.YUKIKAZE.id,
+		this.data.actions.MANGETSU.id,
+		this.data.actions.OKA.id,
 
-		this.addEventHook('death', {to: 'player'}, this.onDeath)
+		this.data.actions.OGI_NAMIKIRI.id,
+		this.data.actions.KAESHI_NAMIKIRI.id,
+
+		// Sen Spenders
+		this.data.actions.HIGANBANA.id,
+		this.data.actions.TENKA_GOKEN.id,
+		this.data.actions.MIDARE_SETSUGEKKA.id,
+		this.data.actions.HAGAKURE.id,
+
+		// I'm leaving these in as they are a way to handle Filler. not the usual way, but a way
+		this.data.actions.ENPI.id,
+		this.data.actions.HISSATSU_YATEN.id,
+		this.data.actions.HISSATSU_GYOTEN.id,
+
+		// OGCDS IGAF about.
+		this.data.actions.HISSATSU_KAITEN.id,
+		this.data.actions.MEIKYO_SHISUI.id,
+	]
+
+	override initialise() {
+		super.initialise()
+
+		const playerFilter = filter<Event>().source(this.parser.actor.id)
+
+		this.addEventHook(playerFilter.type('action').action(oneOf(this.THINGS_WE_WANT_IN_THE_TABLE)), this.checkCastAndPush)
+		this.addEventHook(playerFilter.type('combo').action(oneOf(this.SEN_ACTIONS)), this.onSenGen)
+		this.addEventHook(playerFilter.type('action').action(oneOf(this.SEN_REMOVERS)), this.remove)
+		this.addEventHook(filter<Event>().type('death').actor(this.parser.actor.id), this.onDeath)
 
 		// Suggestion time~
 		this.addEventHook('complete', this.onComplete)
 	}
 
 	// Handles Sen Gen
-	private onSenGen(event: LegacyComboEvent) {
-		const action = event.ability.guid
+	private onSenGen(event: Events['combo']): void {
+		const action = this.data.getAction(event.action)
 
 		const lastSenState = this.lastSenState
 
 		if (lastSenState != null && lastSenState.end == null) { // The state already exists
 
-			if (event.hasSuccessfulHit === true) {
+			switch (action) {
+			case this.data.actions.YUKIKAZE:
+				lastSenState.currentSetsu++
 
-				switch (action) {
-				case ACTIONS.YUKIKAZE.id:
-					lastSenState.currentSetsu++
-
-					if (lastSenState.currentSetsu > 1) {
-						lastSenState.overwriteSetsus++
-						lastSenState.currentSetsu = 1
-						lastSenState.isOverwrite = true
-					}
-					break
-
-				case ACTIONS.GEKKO.id:
-				case ACTIONS.MANGETSU.id:
-					lastSenState.currentGetsu++
-
-					if (lastSenState.currentGetsu > 1) {
-						lastSenState.overwriteGetsus++
-						lastSenState.currentGetsu = 1
-						lastSenState.isOverwrite = true
-					}
-
-					break
-
-				case ACTIONS.KASHA.id:
-				case ACTIONS.OKA.id:
-					lastSenState.currentKa++
-
-					if (lastSenState.currentKa > 1) {
-						lastSenState.overwriteKas++
-						lastSenState.currentKa = 1
-						lastSenState.isOverwrite = true
-					}
-
-					break
+				if (lastSenState.currentSetsu > 1) {
+					lastSenState.overwriteSetsus++
+					lastSenState.currentSetsu = 1
+					lastSenState.isOverwrite = true
 				}
+				break
+
+			case this.data.actions.GEKKO:
+			case this.data.actions.MANGETSU:
+				lastSenState.currentGetsu++
+
+				if (lastSenState.currentGetsu > 1) {
+					lastSenState.overwriteGetsus++
+					lastSenState.currentGetsu = 1
+					lastSenState.isOverwrite = true
+				}
+
+				break
+
+			case this.data.actions.KASHA:
+			case this.data.actions.OKA:
+				lastSenState.currentKa++
+
+				if (lastSenState.currentKa > 1) {
+					lastSenState.overwriteKas++
+					lastSenState.currentKa = 1
+					lastSenState.isOverwrite = true
+				}
+
+				break
 			}
 		}
 	}
 
 	// Function that handles SenState check, if no senState call the maker and then push to the rotation
-	private checkCastAndPush(event: CastEvent) {
+	checkCastAndPush(event: Events['action']) : void {
 		// check the sen state, if undefined/not active, make one
 
 		let lastSenState = this.lastSenState
 
-		if ((typeof lastSenState === 'undefined') || (lastSenState.isDone === true)) {
+		if ((lastSenState == null) || (lastSenState.isDone === true)) {
 
 			this.senStateMaker(event)
 		}
@@ -254,7 +235,7 @@ export default class Sen extends Module {
 	}
 
 	// Make a new sen state!
-	private senStateMaker(event: CastEvent) {
+	private senStateMaker(event: Events['action']) : void {
 		const senState = new SenState(event.timestamp)
 		this.senStateWindows.push(senState)
 
@@ -294,16 +275,17 @@ export default class Sen extends Module {
 	}
 
 	// End the state, count wastes, add it
-	private remove(event: CastEvent) {
+	private remove(event: Events['action']) : void {
 		const lastSenState = this.lastSenState
+		const action = this.data.getAction(event.action)
 
-		if (lastSenState != null && lastSenState.end == null) {
+		if (lastSenState != null && lastSenState.end == null && action != null) {
 
-			if (event.ability.guid === ACTIONS.HAGAKURE.id) {
+			if (action.id === this.data.actions.HAGAKURE.id) {
 				lastSenState.kenkiGained = lastSenState.currentSens * KENKI_PER_SEN
 				lastSenState.isHaga = true
 
-				this.kenki.modify(lastSenState.kenkiGained)
+				this.kenki.onHagakure(lastSenState.kenkiGained)
 			}
 
 			this.wasted = this.wasted + lastSenState.wastedSens
@@ -323,16 +305,16 @@ export default class Sen extends Module {
 			lastSenState.isDone = true
 			lastSenState.isDeath = true
 			this.senCodeProcess()
-			lastSenState.end = this.parser.currentTimestamp
+			lastSenState.end = this.parser.currentEpochTimestamp
 		}
 
 	}
 
 	private onComplete() {
 		this.suggestions.add(new TieredSuggestion({
-			icon: ACTIONS.MEIKYO_SHISUI.icon,
+			icon: this.data.actions.MEIKYO_SHISUI.icon,
 			content: <Trans id ="sam.sen.suggestion.content">
-				You used <ActionLink {...ACTIONS.GEKKO} />, <ActionLink {...ACTIONS.KASHA} />, or <ActionLink {...ACTIONS.YUKIKAZE} /> at a time when you already had that sen, thus wasting a combo because it did not give you sen or you died while holding sen thus wasting it as well.
+				You used <DataLink action = "GEKKO"/>, <DataLink action = "KASHA"/>, or <DataLink action = "YUKIKAZE"/> at a time when you already had that sen, thus wasting a combo because it did not give you sen or you died while holding sen thus wasting it as well.
 			</Trans>,
 			tiers: {
 				1: SEVERITY.MINOR,
@@ -344,8 +326,8 @@ export default class Sen extends Module {
 		}))
 		if (this.hagakureCount === 0) {
 			this.suggestions.add(new Suggestion({
-				icon: ACTIONS.HAGAKURE.icon,
-				content: <Trans id = "sam.sen.no_hagakure.message"> <ActionLink {...ACTIONS.HAGAKURE}/> is a powerful tool that should be used to help keep <ActionLink {...ACTIONS.TSUBAME_GAESHI}/> on cooldown. Use it to handle your filler phase of your rotation. </Trans>,
+				icon: this.data.actions.HAGAKURE.icon,
+				content: <Trans id = "sam.sen.no_hagakure.message"> <ActionLink {...this.data.actions.HAGAKURE}/> is a powerful tool that should be used to help keep your rotation looping smoothly. Use it to handle your filler phase of your rotation. </Trans>,
 				severity: SEVERITY.MAJOR,
 				why: <Trans id = "sam.sen.suggestion.no_hagakure.why"> You never cast hagakure this fight. </Trans>,
 			}))
@@ -370,15 +352,15 @@ export default class Sen extends Module {
 				<RotationTable
 					targets={[
 						{
-							header: <ActionLink showName={false} {...ACTIONS.YUKIKAZE}/>,
+							header: <ActionLink showName={false} {...this.data.actions.YUKIKAZE}/>,
 							accessor: 'setsu',
 						},
 						{
-							header: <ActionLink showName={false} {...ACTIONS.GEKKO}/>,
+							header: <ActionLink showName={false} {...this.data.actions.GEKKO}/>,
 							accessor: 'getsu',
 						},
 						{
-							header: <ActionLink showName={false} {...ACTIONS.KASHA}/>,
+							header: <ActionLink showName={false} {...this.data.actions.KASHA}/>,
 							accessor: 'ka',
 						},
 					]}
@@ -392,11 +374,11 @@ export default class Sen extends Module {
 						.filter(window => window.isNonStandard)
 						.map(window => {
 							return ({
-								start: window.start - this.parser.fight.start_time,
+								start: window.start - this.parser.pull.timestamp,
 
 								end: window.end != null ?
-									window.end - this.parser.fight.start_time
-									: window.start - this.parser.fight.start_time,
+									window.end - this.parser.pull.timestamp
+									: window.start - this.parser.pull.timestamp,
 
 								targetsData: {
 									setsu: {

@@ -49,7 +49,7 @@ export class NotCasting extends Analyser {
 
 	private onCast(event: Events['action']) {
 		//better than using 2.5s I guess
-		const gcdLength = this.gcd.getEstimate()
+		const gcdLength = this.gcd.getDuration()
 		let timeStamp = event.timestamp
 
 		//coming from a hard cast, adjust for slidecasting
@@ -77,7 +77,7 @@ export class NotCasting extends Analyser {
 	}
 
 	private onBegin(event: Events['prepare']) {
-		const gcdLength = this.gcd.getEstimate()
+		const gcdLength = this.gcd.getDuration()
 		if (this.noCastWindows.current) {
 			if (event.timestamp - this.noCastWindows.current.start > gcdLength + GCD_ERROR_OFFSET) {
 				this.stopAndSave(event.timestamp)
@@ -105,7 +105,7 @@ export class NotCasting extends Analyser {
 	}
 
 	private onComplete(event: Events['complete']) {
-		const gcdLength = this.gcd.getEstimate()
+		const gcdLength = this.gcd.getDuration()
 		//finish up
 		this.stopAndSave(event.timestamp)
 
@@ -120,7 +120,7 @@ export class NotCasting extends Analyser {
 	}
 
 	override output() {
-		const gcdLength = this.gcd.getEstimate()
+		const gcdLength = this.gcd.getDuration()
 		if (this.noCastWindows.history.length === 0) { return }
 		return <Table collapsing unstackable compact="very">
 			<Table.Header>

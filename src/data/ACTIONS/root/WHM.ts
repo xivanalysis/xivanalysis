@@ -2,6 +2,54 @@ import {Attribute} from 'event'
 import {ensureActions} from '../type'
 
 export const WHM = ensureActions({
+	LITURGY_OF_THE_BELL_ON_EXPIRY: {
+		id: 25864,
+		name: 'Liturgy of the Bell',
+		icon: 'https://xivapi.com/i/002000/002649.png',
+	},
+
+	LITURGY_OF_THE_BELL_ON_DAMAGE: {
+		id: 25863,
+		name: 'Liturgy of the Bell',
+		icon: 'https://xivapi.com/i/002000/002649.png',
+	},
+
+	LITURGY_OF_THE_BELL: {
+		id: 25862,
+		name: 'Liturgy of the Bell',
+		icon: 'https://xivapi.com/i/002000/002649.png',
+		cooldown: 180000,
+		statusesApplied: ['LITURGY_OF_THE_BELL'],
+	},
+
+	AQUAVEIL: {
+		id: 25861,
+		name: 'Aquaveil',
+		icon: 'https://xivapi.com/i/002000/002648.png',
+		cooldown: 60000,
+		statusesApplied: ['AQUAVEIL'],
+	},
+
+	HOLY_III: {
+		id: 25860,
+		name: 'Holy III',
+		icon: 'https://xivapi.com/i/002000/002647.png',
+		onGcd: true,
+		speedAttribute: Attribute.SPELL_SPEED,
+		castTime: 2500,
+		mpCost: 400,
+	},
+
+	GLARE_III: {
+		id: 25859,
+		name: 'Glare III',
+		icon: 'https://xivapi.com/i/002000/002646.png',
+		onGcd: true,
+		speedAttribute: Attribute.SPELL_SPEED,
+		castTime: 1500,
+		mpCost: 400,
+	},
+
 	TEMPERANCE: {
 		id: 16536,
 		name: 'Temperance',
@@ -50,7 +98,7 @@ export const WHM = ensureActions({
 		icon: 'https://xivapi.com/i/002000/002642.png',
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
-		castTime: 2500,
+		castTime: 1500,
 		mpCost: 400,
 	},
 
@@ -68,7 +116,7 @@ export const WHM = ensureActions({
 		icon: 'https://xivapi.com/i/002000/002637.png',
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
-		castTime: 2500,
+		castTime: 1500,
 		mpCost: 400,
 	},
 
@@ -107,15 +155,15 @@ export const WHM = ensureActions({
 		icon: 'https://xivapi.com/i/002000/002629.png',
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
-		castTime: 3000,
-		mpCost: 600,
+		castTime: 2500,
+		mpCost: 400,
 	},
 
 	PRESENCE_OF_MIND: {
 		id: 136,
 		name: 'Presence of Mind',
 		icon: 'https://xivapi.com/i/002000/002626.png',
-		cooldown: 150000,
+		cooldown: 120000,
 		statusesApplied: ['PRESENCE_OF_MIND'],
 	},
 
@@ -125,7 +173,7 @@ export const WHM = ensureActions({
 		icon: 'https://xivapi.com/i/002000/002631.png',
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
-		castTime: 2500,
+		castTime: 1500,
 		mpCost: 400,
 	},
 
@@ -135,6 +183,7 @@ export const WHM = ensureActions({
 		icon: 'https://xivapi.com/i/002000/002638.png',
 		cooldown: 30000,
 		statusesApplied: ['DIVINE_BENISON'],
+		charges: 2,
 	},
 
 	THIN_AIR: {
@@ -143,6 +192,7 @@ export const WHM = ensureActions({
 		icon: 'https://xivapi.com/i/002000/002636.png',
 		cooldown: 120000,
 		statusesApplied: ['THIN_AIR'],
+		charges: 2,
 	},
 
 	AERO_III: {
@@ -161,9 +211,9 @@ export const WHM = ensureActions({
 		icon: 'https://xivapi.com/i/000000/000409.png',
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
-		castTime: 2500,
+		castTime: 2000,
 		statusesApplied: ['MEDICA_II'],
-		mpCost: 1300,
+		mpCost: 1000,
 	},
 
 	// the following abilities are to be moved to CNJ.js
@@ -204,14 +254,7 @@ export const WHM = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		statusesApplied: ['REGEN'],
-		mpCost: 400,
-	},
-
-	FLUID_AURA: {
-		id: 134,
-		name: 'Fluid Aura',
-		icon: 'https://xivapi.com/i/000000/000416.png',
-		cooldown: 30000,
+		mpCost: 500,
 	},
 
 	MEDICA: {
@@ -220,8 +263,8 @@ export const WHM = ensureActions({
 		icon: 'https://xivapi.com/i/000000/000408.png',
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
-		castTime: 2500,
-		mpCost: 1000,
+		castTime: 2000,
+		mpCost: 900,
 	},
 
 	STONE: {
@@ -230,7 +273,7 @@ export const WHM = ensureActions({
 		icon: 'https://xivapi.com/i/000000/000403.png',
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
-		castTime: 2500,
+		castTime: 1500,
 		mpCost: 400,
 	},
 
@@ -267,7 +310,7 @@ export const WHM = ensureActions({
 		icon: 'https://xivapi.com/i/000000/000404.png',
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
-		castTime: 2500,
+		castTime: 1500,
 		mpCost: 400,
 	},
 

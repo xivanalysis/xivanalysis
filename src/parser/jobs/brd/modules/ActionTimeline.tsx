@@ -6,6 +6,7 @@ export class ActionTimeline extends CoreActionTimeline {
 		'BARRAGE',
 		'RAGING_STRIKES',
 		'BATTLE_VOICE',
+		'RADIANT_FINALE',
 		'BLOODLETTER',
 		{
 			label: 'Songs',

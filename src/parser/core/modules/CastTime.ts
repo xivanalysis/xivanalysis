@@ -1,12 +1,11 @@
 import {Event, Events} from 'event'
-import {CastEvent} from 'fflogs'
 import {Analyser} from '../Analyser'
 import {filter} from '../filter'
 import {dependency} from '../Injectable'
 import {Data} from './Data'
 import {SpeedAdjustments} from './SpeedAdjustments'
 
-const MIN_ACTION_TIME = 1500
+const MIN_RECAST_TIME = 1500
 
 type AffectsWhichTime =
 	| 'cast'
@@ -52,13 +51,6 @@ export default class CastTime extends Analyser {
 
 	// TODO: Update signatures to use objects instead of param vomit, separate PR tho
 	/**
-	 * setTimeAdjustment Module-compatibility function
-	 * @deprecated
-	 */
-	public setTimeAdjustmentFflogs(actions: number[] | 'all', adjustment: number, start: number = this.parser.currentTimestamp, end?: number): number {
-		return this.setTimeAdjustment(actions, adjustment, this.parser.fflogsToEpoch(start), end ? this.parser.fflogsToEpoch(end) : undefined)
-	}
-	/**
 	 * Sets a cast time adjustment for a flat time amount per cast (See: Lightspeed, Dreadwyrm Trance, etc.)
 	 * @param actions The actions this adjustment applies to. Either an array of IDs, or the string 'all'
 	 * @param adjustment The amount of time that cast times are adjustmented by
@@ -71,13 +63,6 @@ export default class CastTime extends Analyser {
 	}
 
 	/**
-	 * setInstantCastAdjustment Module-compatibility function
-	 * @deprecated
-	 */
-	public setInstantCastAdjustmentFflogs(actions: number[] | 'all' = 'all', start: number = this.parser.currentTimestamp, end?: number): number {
-		return this.setInstantCastAdjustment(actions, this.parser.fflogsToEpoch(start), end ? this.parser.fflogsToEpoch(end) : undefined)
-	}
-	/**
 	 * Shorthand function for setting casts to instant (ie. Swiftcast, Triplecast)
 	 * @param actions The actions this adjustment applies to. Either an array of IDs, or the string 'all'. Defaults to 'all'
 	 * @param start The beginning of the adjustment time range. Defaults to the current epoch timestamp
@@ -87,13 +72,7 @@ export default class CastTime extends Analyser {
 	public setInstantCastAdjustment(actions: number[] | 'all' = 'all', start: number = this.parser.currentEpochTimestamp, end?: number): number {
 		return this.setPercentageAdjustment(actions, 0, 'cast', start, end)
 	}
-	/**
-	 * setPercentageAdjustment Module-compatibility function
-	 * @deprecated
-	 */
-	public setPercentageAdjustmentFflogs(actions: number[] | 'all', adjustment: number, affectsWhich: AffectsWhichTime = 'cast', start: number = this.parser.currentTimestamp, end?: number): number {
-		return this.setPercentageAdjustment(actions, adjustment, affectsWhich, this.parser.fflogsToEpoch(start), end ? this.parser.fflogsToEpoch(end) : undefined)
-	}
+
 	/**
 	 * Sets a cast time adjustment for a percentage change per cast (See: Swiftcast, RDM's Doublecast trait, Ley Lines, etc.)
 	 * @param actions The actions this adjustment applies to. Either an array of IDs, or the string 'all'
@@ -113,13 +92,6 @@ export default class CastTime extends Analyser {
 	}
 
 	/**
-	 * reset Module-compatibility function
-	 * @deprecated
-	 */
-	public resetFflogs(id: number | null, timestamp: number = this.parser.currentTimestamp): void {
-		this.reset(id, this.parser.fflogsToEpoch(timestamp))
-	}
-	/**
 	 * Sets the 'end' property of the specified cast time reduction range
 	 * @param id The index within the cast times adjustment collection (provided by the set functions)
 	 * @param timestamp The timestamp at which the reduction range ended. Defaults to the current epoch timestamp
@@ -132,13 +104,6 @@ export default class CastTime extends Analyser {
 	}
 
 	/**
-	 * forEvent Module-compatibility function
-	 * @deprecated
-	 */
-	public forFflogsEvent(event: CastEvent): number | undefined {
-		return this.forAction(event.ability.guid, this.parser.fflogsToEpoch(event.timestamp))
-	}
-	/**
 	 * Returns the effective cast time for the specified event
 	 * @param event The event in question
 	 * @returns The actual cast time, either as the default, or the modified time if any modifiers were in effect. Returns undefined if the action cannot be determined, or has no default cast time
@@ -147,13 +112,6 @@ export default class CastTime extends Analyser {
 		return this.forAction(event.action, event.timestamp)
 	}
 
-	/**
-	 * recastForEvent Module-compatibility function
-	 * @deprecated
-	 */
-	public recastForFflogsEvent(event:CastEvent): number | undefined {
-		return this.recastForAction(event.ability.guid, this.parser.fflogsToEpoch(event.timestamp))
-	}
 	/**
 	 * Returns the effective recast time for the specified event
 	 * @param event The event in question
@@ -164,13 +122,6 @@ export default class CastTime extends Analyser {
 	}
 
 	/**
-	 * forAction Module-compatibility function
-	 * @deprecated
-	 */
-	public forFflogsAction(actionId: number, timestamp: number = this.parser.currentTimestamp): number | undefined {
-		return this.forAction(actionId, this.parser.fflogsToEpoch(timestamp))
-	}
-	/**
 	 * Returns the effective cast time for the specified action at the specified point in time
 	 * @param actionId The action in question
 	 * @param timestamp The timestamp in question
@@ -180,13 +131,6 @@ export default class CastTime extends Analyser {
 		return this.getAdjustedTime(actionId, timestamp)
 	}
 
-	/**
-	 * recastForAction Module-compatibility function
-	 * @deprecated
-	 */
-	public recastForFflogsAction(actionId: number, timestamp: number = this.parser.currentTimestamp): number | undefined {
-		return this.recastForAction(actionId, this.parser.fflogsToEpoch(timestamp))
-	}
 	/**
 	 * Returns the effective recast time for the specified action at the specified point in time
 	 * @param actionId The action in question
@@ -222,7 +166,7 @@ export default class CastTime extends Analyser {
 			: action.castTime
 
 		// If the default comes back undefined, or already at or below the minimum action time (including instants), no adjustments to perform
-		if (defaultTime == null || defaultTime <= MIN_ACTION_TIME) {
+		if (defaultTime == null || forWhich === 'recast' && defaultTime <= MIN_RECAST_TIME) {
 			return defaultTime
 		}
 
@@ -255,9 +199,9 @@ export default class CastTime extends Analyser {
 
 		// Calculate the final cast time based on the flat and percentage reductions we've found
 		const flatAdjustedTime = Math.max(defaultTime + flatIncrease + flatReduction, 0) // Yes, plus flatReduction because it's already a negative value
-		if (flatAdjustedTime <= MIN_ACTION_TIME) {
+		if (forWhich === 'recast' && flatAdjustedTime <= MIN_RECAST_TIME) {
 			// Flat reductions reduced value below minimum action time, percentage adjustments will not be effective
-			return flatAdjustedTime
+			return MIN_RECAST_TIME
 		}
 
 		if (percentageAdjustment === 0) {
@@ -266,7 +210,10 @@ export default class CastTime extends Analyser {
 		}
 
 		// Apply percentage speed modifiers, subject to clamping at the minimum action time
-		const adjustedTime = Math.max(flatAdjustedTime * percentageAdjustment, MIN_ACTION_TIME)
+		let adjustedTime = flatAdjustedTime * percentageAdjustment
+		if (forWhich === 'recast') {
+			adjustedTime = Math.max(adjustedTime, MIN_RECAST_TIME)
+		}
 		// eslint-disable-next-line @typescript-eslint/no-magic-numbers
 		return Math.floor(adjustedTime / 10) * 10 // adjustments are rounded down to the nearest 10ms in game
 

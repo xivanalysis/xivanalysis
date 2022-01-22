@@ -8,7 +8,7 @@ import {Data} from 'parser/core/modules/Data'
 import Suggestions, {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import React from 'react'
 
-export default class ArcanaUndrawUsage extends Analyser {
+export class ArcanaUndrawUsage extends Analyser {
 	static override handle = 'arcanaundraws'
 	private undraws: number = 0
 
@@ -32,7 +32,7 @@ export default class ArcanaUndrawUsage extends Analyser {
 			this.suggestions.add(new Suggestion({
 				icon: this.data.actions.UNDRAW.icon,
 				content: <Trans id="ast.arcana-undraw-usage.suggestions.content" >
-						Due to Draw starting its cooldown the moment it's used, there is no longer any reason to <DataLink action="UNDRAW" /> instead of playing it or converting it with <DataLink action="MINOR_ARCANA" />.
+						Due to Draw starting its cooldown the moment it's used, there is no longer any reason to <DataLink action="UNDRAW" /> instead of playing it or directly overwriting it with <DataLink action="DRAW" />.
 				</Trans>,
 				severity: SEVERITY.MAJOR,
 				why: <Trans id="ast.arcana-undraw-usage.suggestions.why">

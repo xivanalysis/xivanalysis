@@ -4,7 +4,7 @@ import {DataLink} from 'components/ui/DbLink'
 import {JOBS} from 'data/JOBS'
 import {Event, Events} from 'event'
 import {filter, oneOf} from 'parser/core/filter'
-import {dependency} from 'parser/core/Module'
+import {dependency} from 'parser/core/Injectable'
 import {CounterGauge, Gauge as CoreGauge} from 'parser/core/modules/Gauge'
 import Suggestions, {SEVERITY, Suggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
@@ -17,6 +17,7 @@ export class Gauge extends CoreGauge {
 	@dependency private suggestions!: Suggestions
 
 	private oathGauge = this.add(new CounterGauge({
+		initialValue: 100,
 		graph: {label: 'Oath Gauge', color: JOBS.PALADIN.colour, collapse: false},
 	}))
 	private oathModifiers = new Map<number, GaugeModifier>([
@@ -24,6 +25,7 @@ export class Gauge extends CoreGauge {
 		[this.data.actions.SHELTRON.id, {action: -50}],
 		[this.data.actions.INTERVENTION.id, {action: -50}],
 		[this.data.actions.COVER.id, {action: -50}],
+		[this.data.actions.HOLY_SHELTRON.id, {action: -50}],
 	])
 
 	override initialise() {
@@ -51,9 +53,9 @@ export class Gauge extends CoreGauge {
 
 	private onComplete() {
 		this.suggestions.add(new Suggestion({
-			icon: this.data.actions.SHELTRON.icon,
+			icon: this.data.actions.HOLY_SHELTRON.icon,
 			content: <Trans id="pld.gauge.waste.suggestion.content">
-					Using <DataLink action="SHELTRON"/> on yourself or <DataLink action="INTERVENTION"/> on a tank partner in case you're off tanking could reduce incoming damage from abilities or auto-attacks.
+					Using <DataLink action="HOLY_SHELTRON"/> on yourself or <DataLink action="INTERVENTION"/> on a tank partner in case you're off tanking could reduce incoming damage from abilities or auto-attacks.
 			</Trans>,
 			why: <Trans id="pld.gauge.waste.suggestion.why">
 				A total of {this.oathGauge.overCap} gauge was lost due to exceeding the cap.

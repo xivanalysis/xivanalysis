@@ -58,5 +58,12 @@ export const DRK = ensureStatuses({
 		name: 'Delirium',
 		icon: 'https://xivapi.com/i/013000/013121.png',
 		duration: 10000,
+		stacksApplied: 3,
+	},
+	OBLATION: {
+		id: 2682,
+		name: 'Oblation',
+		icon: 'https://xivapi.com/i/013000/013123.png',
+		duration: 10000,
 	},
 })

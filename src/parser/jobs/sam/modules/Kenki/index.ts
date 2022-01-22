@@ -1,1 +1,1 @@
-export {default as Kenki} from './Kenki'
+export {Kenki} from './Kenki'

@@ -1,11 +1,11 @@
-import {getFflogsEvents} from 'api'
 import {computed, toJS} from 'mobx'
 import {Pull, Actor} from 'report'
-import {reportStore as legacyReportStore} from 'store/report'
 import {isDefined} from 'utilities'
 import {ReportStore, FetchOptions} from '../base'
 import {adaptEvents} from './eventAdapter'
 import fflogsIcon from './fflogs.png'
+import {getFflogsEvents} from './fflogsApi'
+import {reportStore as legacyReportStore} from './legacyStore'
 import {adaptReport} from './reportAdapter'
 
 /**
@@ -32,6 +32,13 @@ export class LegacyFflogsReportStore extends ReportStore {
 	override requestPulls(options?: FetchOptions) {
 		// `fetchReport` gets the full set of pulls for us, only fire fetches
 		// if bypassing the cache.
+		if (options?.bypassCache !== true) { return }
+
+		legacyReportStore.refreshReport()
+	}
+
+	override requestActors(_pullId: Pull['id'], options?: FetchOptions) {
+		// Same story as requestPulls
 		if (options?.bypassCache !== true) { return }
 
 		legacyReportStore.refreshReport()
@@ -64,9 +71,6 @@ export class LegacyFflogsReportStore extends ReportStore {
 			true,
 		)
 
-		// We're cloning the events going into the adapter, such that any mutations from it do not effect the
-		// legacy event parser run.
-		// TODO: Remove this cloning when we're migrated fully onto the report source for events.
 		return adaptEvents(report, pull, legacyEvents)
 	}
 

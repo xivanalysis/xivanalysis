@@ -7,6 +7,7 @@ import {Analyser} from 'parser/core/Analyser'
 import {EventHook} from 'parser/core/Dispatcher'
 import {filter} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
+import CastTime from 'parser/core/modules/CastTime'
 import {Data} from 'parser/core/modules/Data'
 import {Timeline} from 'parser/core/modules/Timeline'
 import React, {Fragment} from 'react'
@@ -15,7 +16,7 @@ import DISPLAY_ORDER from './DISPLAY_ORDER'
 
 const BASE_GCDS_PER_WINDOW = 6
 
-interface LIGHTSPEED_Window {
+interface LightspeedWindow {
 	start: number
 	end?: number
 
@@ -31,17 +32,19 @@ interface LIGHTSPEED_Window {
 // the character selected for analysis. windows that clip into
 // AST Lightspeed will be marked.
 // Used DNC Technicalities as basis for this module. Rewritten from previous module for consistency purposes
-export default class Lightspeed extends Analyser {
+export class Lightspeed extends Analyser {
 	static override handle = 'Lightspeed'
 	static override title = t('ast.lightspeed.title')`Lightspeed`
 	static override displayOrder = DISPLAY_ORDER.LIGHTSPEED
 
 	@dependency private timeline!: Timeline
 	@dependency private data!: Data
+	@dependency private castTime!: CastTime
 
-	private history: LIGHTSPEED_Window[] = []
-	private currentWindow: LIGHTSPEED_Window | undefined = undefined
+	private history: LightspeedWindow[] = []
+	private currentWindow: LightspeedWindow | undefined = undefined
 	private castHook?: EventHook<Events['action']>
+	private castTimeIndex: number | null = null
 
 	override initialise() {
 		const lightspeedFilter = filter<Event>().status(this.data.statuses.LIGHTSPEED.id)
@@ -50,8 +53,6 @@ export default class Lightspeed extends Analyser {
 			.target(this.parser.actor.id), this.tryOpenWindow)
 		this.addEventHook(lightspeedFilter.type('statusRemove')
 			.target(this.parser.actor.id), this.tryCloseWindow)
-
-		//this.addEventHook(filter<Event>().source(this.parser.actor.id).type('action'), this.onCast)
 	}
 
 	private tryOpenWindow(event: Events['statusApply']) {
@@ -71,6 +72,7 @@ export default class Lightspeed extends Analyser {
 					.type('action'),
 				this.onCast,
 			)
+			this.castTimeIndex = this.castTime.setTimeAdjustment('all', this.data.statuses.LIGHTSPEED.speedModifier)
 		}
 	}
 
@@ -87,8 +89,9 @@ export default class Lightspeed extends Analyser {
 		if (this.castHook != null) {
 			this.removeEventHook(this.castHook)
 			this.castHook = undefined
-
 		}
+		this.castTime.reset(this.castTimeIndex)
+		this.castTimeIndex = null
 	}
 
 	private onCast(event: Events['action']) {
@@ -169,9 +172,9 @@ export default class Lightspeed extends Analyser {
 		const castsMessage = <p><Trans id="ast.lightspeed.messages.num-casts"> There were a total of {actualCasts} out of a possible {totalPossibleCasts} <DataLink action="LIGHTSPEED" /> casts noted.</Trans></p>
 
 		const message = <p><Trans id="ast.lightspeed.messages.explanation">
-		The main use of <DataLink action="LIGHTSPEED" /> should be for weaving card actions during <DataLink action="DIVINATION" /> and <DataLink action="SLEEVE_DRAW" /> windows.<br />
+		The main use of <DataLink action="LIGHTSPEED" /> should be for weaving card actions during <DataLink action="DIVINATION" /> and <DataLink action="ASTRODYNE" /> windows.<br />
 		It can also be used for keeping casts up while on the move and other specific scenarios.<br />
-		Each fight calls for a different strategy, but try to utilize it as much as possible.<br />
+		Each fight calls for a different strategy, but consider utilizing it as much as possible.<br />
 		Unless it's being used for <DataLink action="ASCEND" />, lightspeed can fit at least 6 GCDs.<br />
 		</Trans></p>
 

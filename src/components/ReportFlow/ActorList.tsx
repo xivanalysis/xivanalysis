@@ -1,18 +1,17 @@
 import {Trans} from '@lingui/react'
 import {Message, Segment} from 'akkd'
-import classNames from 'classnames'
 import Color from 'color'
-import JobIcon from 'components/ui/JobIcon'
+import {JobIcon} from 'components/ui/JobIcon'
 import NormalisedMessage from 'components/ui/NormalisedMessage'
 import {Role, RoleKey, ROLES, JobKey, JOBS} from 'data/JOBS'
 import {patchSupported} from 'data/PATCHES'
+import {FALLBACK_KEY} from 'data/PATCHES/patches'
 import {AVAILABLE_MODULES} from 'parser/AVAILABLE_MODULES'
-import React, {ReactNode, useCallback} from 'react'
-import {useRouteMatch, Link, useParams} from 'react-router-dom'
+import {Meta} from 'parser/core/Meta'
+import React, {ReactNode} from 'react'
+import {useRouteMatch, Link} from 'react-router-dom'
 import {Report, Actor, Pull} from 'report'
 import {ReportStore} from 'reportSources'
-import {Icon} from 'semantic-ui-react'
-import {ActorListRouteParams} from './ReportFlow'
 import styles from './ReportFlow.module.css'
 
 interface RoleGroupData {
@@ -27,43 +26,21 @@ const UNSUPPORTED_ROLES = [
 
 export interface ActorListProps {
 	reportStore: ReportStore
+	meta: Meta
+	report: Report
+	pull: Pull
 }
 
-export function ActorList({reportStore}: ActorListProps) {
-	const {pullId} = useParams<ActorListRouteParams>()
-
-	const onRefreshPulls = useCallback(
-		() => reportStore.requestPulls({bypassCache: true}),
-		[reportStore],
-	)
-
-	const {report} = reportStore
-	const pull = report?.pulls.find(pull => pull.id === pullId)
-	if (report == null || pull == null) {
-		return (
-			<Message warning icon="warning sign">
-				<Trans id="core.report-flow.pull-not-found">
-					<Message.Header>Pull not found.</Message.Header>
-					No pull was found with ID "{pullId}". If this report has been updated recently, it may have been cached - try pressing Refresh to retrieve the latest data.
-				</Trans>
-
-				<button className={classNames(styles.refresh, styles.block)} onClick={onRefreshPulls}>
-					<Icon name="refresh"/>
-					<Trans id="core.report-flow.refresh">Refresh</Trans>
-				</button>
-			</Message>
-		)
-	}
-
+export function ActorList({reportStore, meta, report, pull}: ActorListProps) {
 	// Ensure actors are up to date
-	reportStore.requestActors(pullId)
+	reportStore.requestActors(pull.id)
 
 	const actors = pull.actors
 		.filter(actor => actor.playerControlled)
 
 	const groups = new Map<RoleKey, RoleGroupData>()
 	for (const actor of actors) {
-		const role = getJobRole(actor.job, pull, report)
+		const role = getJobRole(actor.job, meta, pull, report)
 
 		let group = groups.get(role)
 		if (group == null) {
@@ -89,7 +66,7 @@ export function ActorList({reportStore}: ActorListProps) {
 				return (
 					<React.Fragment key={group.role.id}>
 						{showWarning && <UnsupportedWarning/>}
-						<RoleGroup group={group}/>
+						<RoleGroup meta={meta} group={group}/>
 					</React.Fragment>
 				)
 			})}
@@ -97,13 +74,18 @@ export function ActorList({reportStore}: ActorListProps) {
 	)
 }
 
-function getJobRole(jobKey: JobKey, pull: Pull, report: Report): RoleKey {
+function getJobRole(
+	jobKey: JobKey,
+	meta: Meta,
+	pull: Pull,
+	report: Report,
+): RoleKey {
 	const jobMeta = AVAILABLE_MODULES.JOBS[jobKey]
-	if (jobMeta == null) { return 'UNSUPPORTED' }
+	if (jobMeta?.supportedPatches == null) { return 'UNSUPPORTED' }
 
-	const {supportedPatches} = jobMeta
-	if (supportedPatches == null) { return 'UNSUPPORTED' }
-
+	// Realistically this will never use the fallback, but let's be super sure.
+	const supportedPatches = meta.merge(jobMeta).supportedPatches
+		?? {from: FALLBACK_KEY, to: FALLBACK_KEY}
 	const {from, to = from} = supportedPatches
 
 	return patchSupported(report.edition, from, to, pull.timestamp / 1000)
@@ -119,10 +101,11 @@ const UnsupportedWarning = () => (
 )
 
 interface RoleGroupProps {
+	meta: Meta
 	group: RoleGroupData
 }
 
-function RoleGroup({group: {role, actors}}: RoleGroupProps) {
+function RoleGroup({meta, group: {role, actors}}: RoleGroupProps) {
 	/* eslint-disable @typescript-eslint/no-magic-numbers */
 	const background = Color(role.colour).fade(0.8).toString()
 	const color = Color(role.colour).darken(0.5).toString()
@@ -135,26 +118,28 @@ function RoleGroup({group: {role, actors}}: RoleGroupProps) {
 			</h2>
 
 			<div className={styles.links}>
-				{actors.map(actor => <ActorLink key={actor.id} actor={actor}/>)}
+				{actors.map(actor => <ActorLink key={actor.id} meta={meta} actor={actor}/>)}
 			</div>
 		</div>
 	)
 }
 
 interface ActorLinkProps {
+	meta: Meta
 	actor: Actor
 }
 
-function ActorLink({actor}: ActorLinkProps) {
+function ActorLink({meta: baseMeta, actor}: ActorLinkProps) {
 	const {url} = useRouteMatch()
 
 	const job = JOBS[actor.job]
-	let meta = AVAILABLE_MODULES.JOBS[actor.job]
+	const jobMeta = AVAILABLE_MODULES.JOBS[actor.job]
 
 	// We avoid merging core if there's no supported patch so we don't end up
 	// showing core's support range on unsupported jobs.
-	if (meta?.supportedPatches != null) {
-		meta = AVAILABLE_MODULES.CORE.merge(meta)
+	let meta = jobMeta
+	if (jobMeta?.supportedPatches != null) {
+		meta = baseMeta.merge(jobMeta)
 	}
 
 	let supportedPatches: ReactNode

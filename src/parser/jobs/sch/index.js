@@ -1,5 +1,6 @@
 import {t} from '@lingui/macro'
 import TransMarkdown from 'components/ui/TransMarkdown'
+import CONTRIBUTORS, {ROLES} from 'data/CONTRIBUTORS'
 import {Meta} from 'parser/core/Meta'
 import React from 'react'
 
@@ -20,13 +21,19 @@ export const SCHOLAR = new Meta({
 	// 	to: '6.0',
 	// },
 	contributors: [
-		// {user: CONTRIBUTORS.YOU, role: ROLES.DEVELOPER},
+		{user: CONTRIBUTORS.MYPS, role: ROLES.DEVELOPER},
+		{user: CONTRIBUTORS.DTHOMASH, role: ROLES.DEVELOPER},
 	],
 	changelog: [
-		// {
-		// 	date: new Date('2021-11-19'),
-		// 	Changes: () => <>The changes you made</>,
-		// 	contrubutors: [CONTRIBUTORS.YOU],
-		// },
+		{
+			date: new Date('2021-12-19'),
+			Changes: () => <>Initial Endwalker data update.</>,
+			contributors: [CONTRIBUTORS.MYPS],
+		},
+		{
+			date: new Date('2022-01-04'),
+			Changes: () => <>Update tracked cooldowns to add Aetherflow and make Chain Strategem calculations a bit stricter.</>,
+			contributors: [CONTRIBUTORS.DTHOMASH],
+		},
 	],
 })

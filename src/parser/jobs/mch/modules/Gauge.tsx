@@ -4,7 +4,7 @@ import Color from 'color'
 import {DataLink} from 'components/ui/DbLink'
 import {Cause, Event, Events} from 'event'
 import {filter, oneOf} from 'parser/core/filter'
-import {dependency} from 'parser/core/Module'
+import {dependency} from 'parser/core/Injectable'
 import {CounterGauge, Gauge as CoreGauge} from 'parser/core/modules/Gauge'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
@@ -51,6 +51,7 @@ export class Gauge extends CoreGauge {
 		[this.data.actions.HEATED_SLUG_SHOT.id, {event: 'combo', type: 'generate', amount: 5}],
 		[this.data.actions.HEATED_CLEAN_SHOT.id, {event: 'combo', type: 'generate', amount: 5}],
 		[this.data.actions.SPREAD_SHOT.id, {event: 'damage', type: 'generate', amount: 5}],
+		[this.data.actions.SCATTERGUN.id, {event: 'damage', type: 'generate', amount: 10}],
 		[this.data.actions.BARREL_STABILIZER.id, {event: 'action', type: 'generate', amount: 50}],
 		[this.data.actions.HYPERCHARGE.id, {event: 'action', type: 'spend', amount: 50}],
 	])
@@ -58,6 +59,7 @@ export class Gauge extends CoreGauge {
 	private batteryModifiers: GaugeMap = new Map([
 		[this.data.actions.HEATED_CLEAN_SHOT.id, {event: 'combo', type: 'generate', amount: 10}],
 		[this.data.actions.AIR_ANCHOR.id, {event: 'damage', type: 'generate', amount: 20}],
+		[this.data.actions.CHAIN_SAW.id, {event: 'damage', type: 'generate', amount: 20}],
 		[this.data.actions.AUTOMATON_QUEEN.id, {event: 'action', type: 'queen', amount: 50}],
 	])
 

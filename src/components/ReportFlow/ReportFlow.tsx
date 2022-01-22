@@ -1,13 +1,17 @@
 import {Trans} from '@lingui/react'
 import {Message} from 'akkd'
+import classNames from 'classnames'
+import {BranchBanner} from 'components/BranchBanner'
 import {DataContextProvider} from 'components/DataContext'
 import {BreadcrumbsBanner, Breadcrumb, ReportLinkContent} from 'components/GlobalSidebar'
 import {GameEdition} from 'data/EDITIONS'
 import {getDutyBanner} from 'data/ENCOUNTERS'
 import {getPatch, Patch} from 'data/PATCHES'
-import React, {ReactNode, useMemo} from 'react'
+import {AVAILABLE_MODULES} from 'parser/AVAILABLE_MODULES'
+import {Meta} from 'parser/core/Meta'
+import React, {ReactNode, useCallback, useMemo} from 'react'
 import {Switch, useRouteMatch, Route, useParams} from 'react-router-dom'
-import {Report} from 'report'
+import {Actor, Pull, Report} from 'report'
 import {ReportStore} from 'reportSources'
 import {Icon} from 'semantic-ui-react'
 import {formatDuration} from 'utilities'
@@ -27,16 +31,11 @@ export function buildReportFlowPath(pullId?: string, actorId?: string) {
 	return path
 }
 
-export interface ActorListRouteParams {
-	pullId: string
+const editionName = {
+	[GameEdition.GLOBAL]: <Icon name="globe"/>,
+	[GameEdition.KOREAN]: 'KR',
+	[GameEdition.CHINESE]: 'CN',
 }
-
-export interface AnalyseRouteParams {
-	pullId: string
-	actorId: string
-}
-
-type ReportLinkRouteParams = Partial<AnalyseRouteParams>
 
 export interface ReportFlowProps {
 	reportStore: ReportStore
@@ -45,14 +44,15 @@ export interface ReportFlowProps {
 /**
  * Generic report flow component, to be nested inside a report source providing
  * source-specific report handling. Parent report sources must provide a report
- * store over context for consumption by the flow.
+ * store for consumption by the flow.
  */
 export function ReportFlow({reportStore}: ReportFlowProps) {
 	const {path, url} = useRouteMatch()
+	const {report} = reportStore
 
 	// This is intentionally quite generic. If a specific report source can provide
 	// more information, it should do so in the report source itself.
-	if (reportStore.report == null) {
+	if (report == null) {
 		return (
 			<Message error icon="times circle outline">
 				<Trans id="core.report-flow.report-not-found">
@@ -63,35 +63,40 @@ export function ReportFlow({reportStore}: ReportFlowProps) {
 		)
 	}
 
-	return <>
-		<DataProvider report={reportStore.report}>
-			<Route path={path}>
-				<ReportCrumb report={reportStore.report}/>
-			</Route>
-			<Route path={`${path}/:pullId`}>
-				<PullCrumb report={reportStore.report}/>
-			</Route>
-			<Route path={`${path}/:pullId/:actorId`}>
-				<ActorCrumb report={reportStore.report}/>
-			</Route>
+	const meta = AVAILABLE_MODULES.CORE
+
+	return (
+		<DataProvider report={report}>
+			<BranchBanner report={report}/>
 
 			<Route path={`${path}/:pullId?/:actorId?`}>
 				<ReportLink reportStore={reportStore}/>
 			</Route>
 
+			<Breadcrumb
+				title={report.name}
+				subtitle={<>
+					(
+					{editionName[report.edition]}
+					{getPatch(report.edition, report.timestamp / 1000)}
+					)
+				</>}
+			/>
+
 			<Switch>
-				<Route path={`${path}/:pullId/:actorId`}>
-					<Analyse reportStore={reportStore}/>
-				</Route>
 				<Route path={`${path}/:pullId`}>
-					<ActorList reportStore={reportStore}/>
+					<ActorListRoute
+						reportStore={reportStore}
+						meta={meta}
+						report={report}
+					/>
 				</Route>
 				<Route path={path}>
 					<PullList reportStore={reportStore}/>
 				</Route>
 			</Switch>
 		</DataProvider>
-	</>
+	)
 }
 
 interface DataProviderProps {
@@ -112,59 +117,154 @@ function DataProvider({children, report}:DataProviderProps) {
 	)
 }
 
-interface CrumbProps {
+interface ActorListRouteProps {
+	reportStore: ReportStore
+	meta: Meta
 	report: Report
 }
 
-const editionName = {
-	[GameEdition.GLOBAL]: <Icon name="globe"/>,
-	[GameEdition.KOREAN]: 'KR',
-	[GameEdition.CHINESE]: 'CN',
+interface ActorListRouteParams {
+	pullId: Pull['id']
 }
 
-function ReportCrumb({report}: CrumbProps) {
-	const {edition, timestamp, name} = report
-	const patch = getPatch(edition, timestamp / 1000)
-	const subtitle = <>({editionName[edition]} {patch})</>
-
-	return <Breadcrumb title={name} subtitle={subtitle}/>
-}
-
-function PullCrumb({report}: CrumbProps) {
+function ActorListRoute({
+	reportStore,
+	meta: parentMeta,
+	report,
+}: ActorListRouteProps) {
+	const {path} = useRouteMatch()
 	const {pullId} = useParams<ActorListRouteParams>()
 
-	const pull = report.pulls
-		.find(pull => pull.id === pullId)
+	const onRefreshPulls = useCallback(
+		() => reportStore.requestPulls({bypassCache: true}),
+		[reportStore],
+	)
 
-	const encounter = pull?.encounter
+	const pull = report.pulls.find(pull => pull.id === pullId)
+	if (pull == null) {
+		return (
+			<Message warning icon="warning sign">
+				<Trans id="core.report-flow.pull-not-found">
+					<Message.Header>Pull not found.</Message.Header>
+					No pull was found with ID "{pullId}". If this report has been updated recently, it may have been cached - try pressing Refresh to retrieve the latest data.
+				</Trans>
 
-	const title = encounter?.name ?? 'Unknown'
-	const subtitle = pull?.duration && `(${formatDuration(pull.duration)})`
+				<button
+					className={classNames(styles.refresh, styles.block)}
+					onClick={onRefreshPulls}
+				>
+					<Icon name="refresh"/>
+					<Trans id="core.report-flow.refresh">Refresh</Trans>
+				</button>
+			</Message>
+		)
+	}
 
-	const banner = encounter?.duty.id != null
-		? getDutyBanner(encounter.duty.id)
+	const encounterMeta = pull.encounter.key != null
+		? AVAILABLE_MODULES.BOSSES[pull.encounter.key]
 		: undefined
 
+	const meta = encounterMeta != null
+		? parentMeta.merge(encounterMeta)
+		: parentMeta
+
 	return <>
-		<Breadcrumb title={title} subtitle={subtitle}/>
-		<BreadcrumbsBanner banner={banner}/>
+		<Breadcrumb
+			title={pull.encounter.name}
+			subtitle={`(${formatDuration(pull.duration)})`}
+		/>
+		<BreadcrumbsBanner banner={getDutyBanner(pull.encounter.duty.id)}/>
+
+		<Switch>
+			<Route path={`${path}/:actorId`}>
+				<AnalyseRoute
+					reportStore={reportStore}
+					meta={meta}
+					report={report}
+					pull={pull}
+				/>
+			</Route>
+			<Route path={path}>
+				<ActorList
+					reportStore={reportStore}
+					meta={meta}
+					report={report}
+					pull={pull}
+				/>
+			</Route>
+		</Switch>
 	</>
 }
 
-function ActorCrumb({report}: CrumbProps) {
-	const {pullId, actorId} = useParams<AnalyseRouteParams>()
-
-	const name = report.pulls
-		.find(pull => pull.id === pullId)
-		?.actors
-		.find(actor => actor.id === actorId)
-		?.name
-
-	return <Breadcrumb title={name ?? 'Unknown'}/>
+interface AnalyseRouteProps {
+	reportStore: ReportStore
+	meta: Meta
+	report: Report
+	pull: Pull
 }
 
+interface AnalyseRouteParams {
+	actorId: Actor['id']
+}
+
+function AnalyseRoute({
+	reportStore,
+	meta: parentMeta,
+	report,
+	pull,
+}: AnalyseRouteProps) {
+	const {actorId} = useParams<AnalyseRouteParams>()
+	const actor = pull.actors.find(actor => actor.id === actorId)
+
+	const onRefreshActors = useCallback(
+		() => reportStore.requestActors(pull.id, {bypassCache: true}),
+		[reportStore, pull],
+	)
+
+	if (actor == null) {
+		return (
+			<Message warning icon="warning sign">
+				<Trans id="core.report-flow.actor-not-found">
+					<Message.Header>Actor not found.</Message.Header>
+					No actor was found with ID "{actorId}". If this report has been updated recently, it may have been cached - try pressing Refresh to retrieve the latest data.
+				</Trans>
+
+				<button
+					className={classNames(styles.refresh, styles.block)}
+					onClick={onRefreshActors}
+				>
+					<Icon name="refresh"/>
+					<Trans id="core.report-flow.refresh">Refresh</Trans>
+				</button>
+			</Message>
+		)
+	}
+
+	const jobMeta = AVAILABLE_MODULES.JOBS[actor.job]
+
+	const meta = jobMeta != null
+		? parentMeta.merge(jobMeta)
+		: parentMeta
+
+	return <>
+		<Breadcrumb title={actor.name}/>
+
+		<Analyse
+			reportStore={reportStore}
+			meta={meta}
+			report={report}
+			pull={pull}
+			actor={actor}
+		/>
+	</>
+}
 interface ReportLinkProps {
 	reportStore: ReportStore
+}
+
+interface ReportLinkRouteParams {
+	pullId?: Pull['id']
+	actorId?: Actor['id']
 }
 
 function ReportLink({reportStore}: ReportLinkProps) {
