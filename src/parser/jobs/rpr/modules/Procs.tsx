@@ -21,14 +21,15 @@ const LOST_PROC_POTENCY = 60
 export class Procs extends CoreProcs {
 	static override title = t('rpr.procs.title')`Enhanced Procs`
 	static override debug = false
-	
+
 	private badStalks: number = 0
 
 	override initialise() {
 		super.initialise()
 
 		// Additionally count Blood Stalk uses so we can find lost potency to Unveiled
-		this.addEventHook(filter<Event>().source(this.parser.actor.id).type('action').action(this.data.actions.BLOOD_STALK.id), () => this.badStalks++ )
+		this.addEventHook(filter<Event>().source(this.parser.actor.id).type('action')
+			.action(this.data.actions.BLOOD_STALK.id), () => this.badStalks++)
 	}
 
 	trackedProcs = [
@@ -52,7 +53,7 @@ export class Procs extends CoreProcs {
 		const badGallowsStalks = this.badStalks - expiredGallows
 
 		// Sanity check, this might get weird if there's a naked Blood Stalk at the start of the fight for a borked Gluttony tho, fix later
-		if (badGibbetStalks + badGallowsStalks != this.badStalks) {
+		if (badGibbetStalks + badGallowsStalks !== this.badStalks) {
 			this.debug(`Mismatched bloodstalks to lost enhanced procs: ${this.badStalks} stalks: Gibbet ${badGibbetStalks} + Gallows ${badGallowsStalks}`)
 		}
 
