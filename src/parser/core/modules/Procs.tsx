@@ -4,7 +4,7 @@ import {Action} from 'data/ACTIONS'
 import {Status} from 'data/STATUSES'
 import {Event, Events} from 'event'
 import {Actors} from 'parser/core/modules/Actors'
-import Suggestions, {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import Suggestions, {TieredSuggestion, SEVERITY, SeverityTiers} from 'parser/core/modules/Suggestions'
 import {SimpleRow, StatusItem, Timeline} from 'parser/core/modules/Timeline'
 import React, {ReactNode} from 'react'
 import {Analyser} from '../Analyser'
@@ -67,17 +67,17 @@ export abstract class Procs extends Analyser {
 	protected showDroppedProcSuggestion: boolean = false
 	protected droppedProcIcon: string = 'https://xivapi.com/i/001000/001989.png' // Hasty Touch ...
 	protected droppedProcContent: ReactNode = <Trans id="core.procs.suggestions.dropped.content">Avoid letting your procs fall off without using them. Proc actions are generally stronger than other actions and should not be wasted.</Trans>
-	protected droppedProcSeverityTiers = DEFAULT_SEVERITY_TIERS
+	protected droppedProcSeverityTiers: SeverityTiers = DEFAULT_SEVERITY_TIERS
 
 	protected showOverwroteProcSuggestion: boolean = false
 	protected overwroteProcIcon: string = 'https://xivapi.com/i/001000/001994.png' // Muscle Memory ...
 	protected overwroteProcContent: ReactNode = <Trans id="core.procs.suggestions.overwritten.content">Avoid using an action that could generate a proc when you already have that proc active.</Trans>
-	protected overwroteProcSeverityTiers = DEFAULT_SEVERITY_TIERS
+	protected overwroteProcSeverityTiers: SeverityTiers = DEFAULT_SEVERITY_TIERS
 
 	protected showInvulnProcSuggestion: boolean = false
 	protected invulnProcIcon: string = this.data.actions.HALLOWED_GROUND.icon // lol
 	protected invulnProcContent: ReactNode = <Trans id="core.procs.suggestions.invuln.content">Try not to use your procs while the boss is invulnerable.</Trans>
-	protected invulnProcSeverityTiers = DEFAULT_SEVERITY_TIERS
+	protected invulnProcSeverityTiers: SeverityTiers = DEFAULT_SEVERITY_TIERS
 
 	/**
 	 * Subclassing analysers should not assign these directly. The corresponding override functions should be used instead to ensure that the
