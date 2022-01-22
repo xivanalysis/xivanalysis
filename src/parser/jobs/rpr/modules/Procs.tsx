@@ -29,8 +29,13 @@ export class Procs extends CoreProcs {
 		super.initialise()
 
 		// Additionally count Blood Stalk uses so we can find lost potency to Unveiled
-		this.addEventHook(filter<Event>().source(this.parser.actor.id).type('action')
-			.action(this.data.actions.BLOOD_STALK.id), () => this.badStalks++)
+		this.addEventHook(
+			filter<Event>()
+				.type('action')
+				.source(this.parser.actor.id)
+				.action(this.data.actions.BLOOD_STALK.id),
+			() => this.badStalks++
+		)
 	}
 
 	trackedProcs = [
