@@ -4,7 +4,7 @@ import React from 'react'
 
 export const changelog = [
 	{
-		date: new Date('2021-01-20'),
+		date: new Date('2022-01-20'),
 		Changes: () => <>Add proc tracking for Enhanced Gibbet and Gallows.</>,
 		contributors: [CONTRIBUTORS.ARKEVORKHAT],
 	},
