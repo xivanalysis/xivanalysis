@@ -34,6 +34,11 @@ export const changelog: ChangelogEntry[] = [
 		contributors: [CONTRIBUTORS.ACKWELL],
 	},
 	{
+		date: new Date('2022-01-22'),
+		Changes: () => <>Add proper severity types to core Procs overrides.</>,
+		contributors: [CONTRIBUTORS.AY],
+	},
+	{
 		date: new Date('2022-01-12'),
 		Changes: () => <>Improve enemy targetability detection when a target raises during a fight (e.g. striking dummies)</>,
 		contributors: [CONTRIBUTORS.AZARIAH],
