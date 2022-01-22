@@ -11,6 +11,11 @@ export const changelog: ChangelogEntry[] = [
 	// },
 	{
 		date: new Date('2022-01-12'),
+		Changes: () => <>Improve enemy targetability detection when a target raises during a fight (e.g. striking dummies)</>,
+		contributors: [CONTRIBUTORS.AZARIAH, CONTRIBUTORS.OTOCEPHALY],
+	},
+	{
+		date: new Date('2022-01-12'),
 		Changes: () => <>Fixed a bug causing some weaving issues with recast times.</>,
 		contributors: [CONTRIBUTORS.AZARIAH, CONTRIBUTORS.OTOCEPHALY],
 	},
