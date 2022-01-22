@@ -12,7 +12,7 @@ export const changelog: ChangelogEntry[] = [
 	{
 		date: new Date('2022-01-12'),
 		Changes: () => <>Improve enemy targetability detection when a target raises during a fight (e.g. striking dummies)</>,
-		contributors: [CONTRIBUTORS.AZARIAH, CONTRIBUTORS.OTOCEPHALY],
+		contributors: [CONTRIBUTORS.AZARIAH],
 	},
 	{
 		date: new Date('2022-01-12'),
