@@ -1,4 +1,4 @@
-import {getDataArrayBy} from 'data'
+import {getDataArrayBy, getDataBy} from 'data'
 import {getActions} from 'data/ACTIONS'
 import {StatusKey, getStatuses} from 'data/STATUSES'
 import {Event, Events} from 'event'
@@ -25,7 +25,23 @@ export class PrepullStatusAdapterStep extends AdapterStep {
 			}
 
 			if (event.type === 'statusApply') {
+				const observed = this.observedStatuses.get(event.target)
+				if (observed && observed.has(event.status)) {
+					// If we've already seen a matching apply event, skip
+					continue
+				}
+
 				this.synthesizeActionIfNew(event)
+
+				// If the first observed instance of a status that is applied
+				// with stacks has fewer than the applied value, synth an apply
+				// apply with max stacks.
+				const applied = getDataBy(getStatuses(this.report), 'id', event.status)
+				if (applied != null && applied.stacksApplied != null && applied.stacksApplied > 0 &&
+					event.data != null && event.data < applied.stacksApplied) {
+					this.synthesizeStatusApply(event, applied.stacksApplied)
+				}
+
 				this.observeStatus(event.status, event.target)
 
 			} else if (event.type === 'statusRemove') {
@@ -96,11 +112,14 @@ export class PrepullStatusAdapterStep extends AdapterStep {
 		this.observeAction(action.id, event.source)
 	}
 
-	private synthesizeStatusApply(event: StatusEvent) {
+	private synthesizeStatusApply(event: StatusEvent, stacks?: number) {
 		const applyEvent: Events['statusApply'] = {
 			...event,
 			type: 'statusApply',
 			timestamp: this.pull.timestamp + PREPULL_OFFSETS.STATUS_APPLY,
+		}
+		if (stacks != null) {
+			applyEvent.data = stacks
 		}
 
 		this.precastEvents.push(applyEvent)

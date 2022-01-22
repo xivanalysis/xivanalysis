@@ -114,6 +114,7 @@ export const BLM = ensureActions({
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 2500,
 		mpCost: 200,
+		statusesApplied: ['THUNDER_I'],
 	},
 	THUNDER_II: {
 		id: 7447,
@@ -123,6 +124,7 @@ export const BLM = ensureActions({
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 2500,
 		mpCost: 400,
+		statusesApplied: ['THUNDER_II'],
 	},
 	THUNDER_III: {
 		id: 153,
@@ -132,6 +134,7 @@ export const BLM = ensureActions({
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 2500,
 		mpCost: 400,
+		statusesApplied: ['THUNDER_III'],
 	},
 	THUNDER_IV: {
 		id: 7420,
@@ -141,6 +144,7 @@ export const BLM = ensureActions({
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 2500,
 		mpCost: 800,
+		statusesApplied: ['THUNDER_IV'],
 	},
 	SCATHE: {
 		id: 156,

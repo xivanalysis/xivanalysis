@@ -21,6 +21,11 @@ export const NINJA = new Meta({
 	],
 	changelog: [
 		{
+			date: new Date('2022-01-10'),
+			Changes: () => <>Fixed issue with GCD uptime not considering Huton active.</>,
+			contributors: [CONTRIBUTORS.AZARIAH],
+		},
+		{
 			date: new Date('2022-01-04'),
 			Changes: () => <>Updated Raiju module for 6.05 changes.</>,
 			contributors: [CONTRIBUTORS.TOASTDEIB],

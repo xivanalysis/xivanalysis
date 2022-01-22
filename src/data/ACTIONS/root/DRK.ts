@@ -39,7 +39,7 @@ export const DRK = ensureActions({
 		id: 25754,
 		name: 'Oblation',
 		icon: 'https://xivapi.com/i/003000/003089.png',
-		coolodwn: 60000,
+		cooldown: 60000,
 		statusesApplied: ['OBLATION'],
 		charges: 2,
 	},

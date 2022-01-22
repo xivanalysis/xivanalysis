@@ -970,7 +970,7 @@
     pirates "^4.0.0"
     source-map-support "^0.5.16"
 
-"@babel/runtime-corejs3@^7.12.5", "@babel/runtime-corejs3@^7.9.2":
+"@babel/runtime-corejs3@^7.12.5":
   version "7.14.0"
   resolved "https://registry.yarnpkg.com/@babel/runtime-corejs3/-/runtime-corejs3-7.14.0.tgz#6bf5fbc0b961f8e3202888cb2cd0fb7a0a9a3f66"
   integrity sha512-0R0HTZWHLk6G8jIk0FtoX+AatCtKnswS98VhXwGImFc759PJRp4Tru0PQYZofyijTFUr+gT8Mu7sgXVJLQ0ceg==
@@ -1300,32 +1300,6 @@
     "@types/yargs" "^15.0.0"
     chalk "^4.0.0"
 
-"@kobold/core@^0.0.1":
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/@kobold/core/-/core-0.0.1.tgz#cbdb41c52444cd96a51209d51aab8a6f63a5ecc3"
-  integrity sha512-gw7bNhJSdCZXjxloh9pdnbORapwGm+52IzmegKmGiqn7lBA4aOfNkzLgCu6DdZv7I8dFj479+ub/Rd6aDFlsQQ==
-  dependencies:
-    "@babel/runtime-corejs3" "^7.9.2"
-    "@types/binary-parser" "^1.5.0"
-    binary-parser "^1.6.2"
-    fast-glob "^3.2.2"
-
-"@kobold/excel@^0.0.2":
-  version "0.0.2"
-  resolved "https://registry.yarnpkg.com/@kobold/excel/-/excel-0.0.2.tgz#ff6084b641cb7d39f5291b269c5cc45a1b0d1644"
-  integrity sha512-OB075d9kZg8H08gv+zXD1/jK1bZj1F/HSG6eJlDCycyAGZ5bEaYZPHcb1g8mrjpTBpCapgrF/PLq30jfyiHE/g==
-  dependencies:
-    "@babel/runtime-corejs3" "^7.9.2"
-    "@types/binary-parser" "^1.5.0"
-    binary-parser "^1.6.2"
-
-"@kobold/xiv@^0.0.2":
-  version "0.0.2"
-  resolved "https://registry.yarnpkg.com/@kobold/xiv/-/xiv-0.0.2.tgz#3a91acd3e221989740e786fc7f5cd23cd46feea2"
-  integrity sha512-CSm495/GYP7aeCD5kvpAYL7qKS6sYmZFEjsumlx5TcmWVP4T4jefHP1qVAYSWMQO/MziM6QT0BfMtZNzP9T2qw==
-  dependencies:
-    "@babel/runtime-corejs3" "^7.9.2"
-
 "@lingui/babel-plugin-extract-messages@2.9.2":
   version "2.9.2"
   resolved "https://registry.yarnpkg.com/@lingui/babel-plugin-extract-messages/-/babel-plugin-extract-messages-2.9.2.tgz#6721b27b21a81d63a646fef2200c0376a88bceb3"
@@ -1587,13 +1561,6 @@
   integrity sha512-kSjgDMZONiIfSH1Nxcr5JIRMwUetDki63FSQfpTCz8ogF3Ulqm8+mr5f78dUYs6vMiB6gBusQqfQmBvHZj/lwg==
   dependencies:
     "@babel/types" "^7.3.0"
-
-"@types/binary-parser@^1.5.0":
-  version "1.5.0"
-  resolved "https://registry.yarnpkg.com/@types/binary-parser/-/binary-parser-1.5.0.tgz#d8a9676a7763b91c7537347d1d596d8b96adb164"
-  integrity sha512-eBMqKUPRjXX+E30JQOcda8Je4lw4TyQvDSOXhWx+T019lki2TURNf0kVaR27LG4B2cLu4JXfrnNp+3aEq23leA==
-  dependencies:
-    "@types/node" "*"
 
 "@types/body-parser@*":
   version "1.19.0"
@@ -2678,6 +2645,13 @@ aws4@^1.8.0:
   resolved "https://registry.yarnpkg.com/aws4/-/aws4-1.11.0.tgz#d61f46d83b2519250e2784daf5b09479a8b41c59"
   integrity sha512-xh1Rl34h6Fi1DC2WWKfxUTVqRsNnr6LsKz2+hfwDxQJWmrx8+c7ylaqBMcHfl1U1r2dsifOvKX3LQuLNZ+XSvA==
 
+axios@^0.24.0:
+  version "0.24.0"
+  resolved "https://registry.yarnpkg.com/axios/-/axios-0.24.0.tgz#804e6fa1e4b9c5288501dd9dff56a7a0940d20d6"
+  integrity sha512-Q6cWsys88HoPgAaFAVUb0WpPk0O8iTeisR9IMqy9G8AbO4NlpVknrnQS03zzF9PGAWgO3cgletO3VjV/P7VztA==
+  dependencies:
+    follow-redirects "^1.14.4"
+
 babel-core@7.0.0-bridge.0:
   version "7.0.0-bridge.0"
   resolved "https://registry.yarnpkg.com/babel-core/-/babel-core-7.0.0-bridge.0.tgz#95a492ddd90f9b4e9a4a1da14eb335b87b634ece"
@@ -2918,11 +2892,6 @@ binary-extensions@^2.0.0:
   resolved "https://registry.yarnpkg.com/binary-extensions/-/binary-extensions-2.1.0.tgz#30fa40c9e7fe07dbc895678cd287024dea241dd9"
   integrity sha512-1Yj8h9Q+QDF5FzhMs/c9+6UntbD5MkRfRwac8DoEm9ZfUBZ7tZ55YcGVAzEe4bXsdQHEk+s9S5wsOKVdZrw0tQ==
 
-binary-parser@^1.6.2:
-  version "1.6.2"
-  resolved "https://registry.yarnpkg.com/binary-parser/-/binary-parser-1.6.2.tgz#8410a82ffd9403271ec182bd91e63a09cee88cbe"
-  integrity sha512-cYAhKB51A9T/uylDvMK7uAYaPLWLwlferNOpnQ0E0fuO73yPi7kWaWiOm22BvuKxCbggmkiFN0VkuLg6gc+KQQ==
-
 body-parser@1.19.0:
   version "1.19.0"
   resolved "https://registry.yarnpkg.com/body-parser/-/body-parser-1.19.0.tgz#96b2709e57c9c4e09a6fd66a8fd979844f69f08a"
@@ -2938,6 +2907,13 @@ body-parser@1.19.0:
     qs "6.7.0"
     raw-body "2.4.0"
     type-is "~1.6.17"
+
+bodybuilder@^2.4.0:
+  version "2.4.0"
+  resolved "https://registry.yarnpkg.com/bodybuilder/-/bodybuilder-2.4.0.tgz#d82d8adea1aa4d39d5887fae7aa0b9634c5222ef"
+  integrity sha512-vN4ebuqBaqjmyRQzygEkGR2KRM5IiRoKChBkola4RBZ5pNzy5l4tRDUVQxMP/UhzhFbjCB7TqCy3hcGoNnb4zw==
+  dependencies:
+    lodash "^4.17.11"
 
 bonjour@^3.5.0:
   version "3.5.0"
@@ -4794,7 +4770,7 @@ fast-deep-equal@^3.1.1:
   resolved "https://registry.yarnpkg.com/fast-deep-equal/-/fast-deep-equal-3.1.3.tgz#3a7d56b559d6cbc3eb512325244e619a65c6c525"
   integrity sha512-f3qQ9oQy9j2AhBe/H9VC91wLmKBCCU/gDOnKNAYG5hswO7BLKj09Hc5HYNz9cGI++xlpDCIgDaitVs03ATR84Q==
 
-fast-glob@^3.1.1, fast-glob@^3.2.2, fast-glob@^3.2.5:
+fast-glob@^3.1.1, fast-glob@^3.2.5:
   version "3.2.5"
   resolved "https://registry.yarnpkg.com/fast-glob/-/fast-glob-3.2.5.tgz#7939af2a656de79a4f1901903ee8adcaa7cb9661"
   integrity sha512-2DtFcgT68wiTTiwZ2hNdJfcHNke9XOfnwmBRWXhmeKM8rF0TGwmC/Qto3S7RoZKp5cilZbxzO5iTNTQsJ+EeDg==
@@ -4963,6 +4939,11 @@ follow-redirects@^1.0.0:
   version "1.13.1"
   resolved "https://registry.yarnpkg.com/follow-redirects/-/follow-redirects-1.13.1.tgz#5f69b813376cee4fd0474a3aba835df04ab763b7"
   integrity sha512-SSG5xmZh1mkPGyKzjZP8zLjltIfpW32Y5QpdNJyjcfGxK3qo3NDDkZOZSFiGn1A6SclQxY9GzEwAHQ3dmYRWpg==
+
+follow-redirects@^1.14.4:
+  version "1.14.6"
+  resolved "https://registry.yarnpkg.com/follow-redirects/-/follow-redirects-1.14.6.tgz#8cfb281bbc035b3c067d6cd975b0f6ade6e855cd"
+  integrity sha512-fhUl5EwSJbbl8AR+uYL2KQDxLkdSjZGR36xy46AO7cOMTrCMON6Sa28FmAnC2tRTDbd/Uuzz3aJBv7EBN7JH8A==
 
 for-in@^1.0.2:
   version "1.0.2"
@@ -6860,7 +6841,7 @@ lodash.uniq@^4.5.0:
   resolved "https://registry.yarnpkg.com/lodash.uniq/-/lodash.uniq-4.5.0.tgz#d0225373aeb652adc1bc82e4945339a842754773"
   integrity sha1-0CJTc662Uq3BvILklFM5qEJ1R3M=
 
-lodash@^4.17.10, lodash@^4.17.12, lodash@^4.17.13, lodash@^4.17.14, lodash@^4.17.15, lodash@^4.17.19, lodash@^4.17.20, lodash@^4.17.21, lodash@^4.17.4:
+lodash@^4.17.10, lodash@^4.17.11, lodash@^4.17.12, lodash@^4.17.13, lodash@^4.17.14, lodash@^4.17.15, lodash@^4.17.19, lodash@^4.17.20, lodash@^4.17.21, lodash@^4.17.4:
   version "4.17.21"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.21.tgz#679591c564c3bffaae8454cf0b3df370c3d6911c"
   integrity sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==

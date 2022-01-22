@@ -22,7 +22,7 @@
 		"content": "website"
 	}, {
 		"property": "og:image",
-		"content": "/og.jpg"
+		"content": "/og.jpg?ew"
 	}, {
 		"property": "og:url",
 		"content": "https://xivanalysis.com"

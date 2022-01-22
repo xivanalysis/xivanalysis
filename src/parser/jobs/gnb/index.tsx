@@ -100,5 +100,15 @@ export const GUNBREAKER = new Meta({
 			</>,
 			contributors: [CONTRIBUTORS.RYAN],
 		},
+
+		{
+			date: new Date('2022-1-05'),
+			Changes: () => <>
+				<ul>
+					<li>Change AoE Threshold to 2 for everything</li>
+				</ul>,
+			</>,
+			contributors: [CONTRIBUTORS.RYAN],
+		},
 	],
 })

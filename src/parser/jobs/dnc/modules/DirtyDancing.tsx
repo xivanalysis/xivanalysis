@@ -22,14 +22,6 @@ import {isSuccessfulHit} from 'utilities'
 import {DANCE_MOVES, DEFAULT_SEVERITY_TIERS, FINISHES, STEPS} from '../CommonData'
 import DISPLAY_ORDER from '../DISPLAY_ORDER'
 
-// Slightly different than normal severity. Start at minor in case it's just a math error, but upgrade
-// Severity with every additional calculated drift since it's a more important issue than others
-const DRIFT_SEVERITY_TIERS = {
-	1: SEVERITY.MINOR,
-	2: SEVERITY.MEDIUM,
-	3: SEVERITY.MAJOR,
-}
-
 const DANCE_COMPLETION_LENIENCY_MILLIS = 1000
 
 class Dance {
@@ -295,30 +287,6 @@ export class DirtyDancing extends Analyser {
 					percent: closedPositionUptimePct,
 				}),
 			],
-		}))
-
-		const driftedStandards = Math.floor(this.totalDrift[this.data.actions.STANDARD_STEP.id] / this.data.actions.STANDARD_STEP.cooldown)
-		this.suggestions.add(new TieredSuggestion({
-			icon: this.data.actions.STANDARD_STEP.icon,
-			content: <Trans id="dnc.dirty-dancing.suggestions.standard-drift.content">You may have lost a use of <ActionLink {...this.data.actions.STANDARD_STEP} /> by letting the cooldown drift. Try to keep it on cooldown, even if it means letting your GCD sit for a second.
-			</Trans>,
-			tiers: DRIFT_SEVERITY_TIERS,
-			value: driftedStandards,
-			why: <Trans id="dnc.dirty-dancing.suggestions.standard-drift.why">
-				<Plural value={driftedStandards} one="# Standard Step was" other="# Standard Steps were"/> lost due to drift.
-			</Trans>,
-		}))
-
-		const driftedTechnicals = Math.floor(this.totalDrift[this.data.actions.TECHNICAL_STEP.id] / this.data.actions.TECHNICAL_STEP.cooldown)
-		this.suggestions.add(new TieredSuggestion({
-			icon: this.data.actions.TECHNICAL_STEP.icon,
-			content: <Trans id="dnc.dirty-dancing.suggestions.technical-drift.content">You may have lost a use of <ActionLink {...this.data.actions.TECHNICAL_STEP} /> by letting the cooldown drift. Try to keep it on cooldown, even if it means letting your GCD sit for a second.
-			</Trans>,
-			tiers: DRIFT_SEVERITY_TIERS,
-			value: driftedTechnicals,
-			why: <Trans id="dnc.dirty-dancing.suggestions.technical-drift.why">
-				<Plural value={driftedTechnicals} one="# Technical Step was" other="# Technical Steps were"/> lost due to drift.
-			</Trans>,
 		}))
 
 		this.suggestions.add(new TieredSuggestion({

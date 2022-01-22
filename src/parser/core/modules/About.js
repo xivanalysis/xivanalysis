@@ -44,7 +44,11 @@ export default class About extends Analyser {
 			this[field] = this.parser.meta[field]
 		})
 
-		this.supportedPatches = AVAILABLE_MODULES.JOBS[this.parser.actor.job].supportedPatches
+		// If the job meta doesn't have supported patches, skip using the full meta so we don't display the core support range.
+		const jobMeta = AVAILABLE_MODULES.JOBS[this.parser.actor.job]
+		this.supportedPatches = jobMeta.supportedPatches != null
+			? this.parser.meta.supportedPatches
+			: undefined
 	}
 
 	output() {

@@ -7,6 +7,8 @@ import {BreadcrumbsBanner, Breadcrumb, ReportLinkContent} from 'components/Globa
 import {GameEdition} from 'data/EDITIONS'
 import {getDutyBanner} from 'data/ENCOUNTERS'
 import {getPatch, Patch} from 'data/PATCHES'
+import {AVAILABLE_MODULES} from 'parser/AVAILABLE_MODULES'
+import {Meta} from 'parser/core/Meta'
 import React, {ReactNode, useCallback, useMemo} from 'react'
 import {Switch, useRouteMatch, Route, useParams} from 'react-router-dom'
 import {Actor, Pull, Report} from 'report'
@@ -61,6 +63,8 @@ export function ReportFlow({reportStore}: ReportFlowProps) {
 		)
 	}
 
+	const meta = AVAILABLE_MODULES.CORE
+
 	return (
 		<DataProvider report={report}>
 			<BranchBanner report={report}/>
@@ -83,6 +87,7 @@ export function ReportFlow({reportStore}: ReportFlowProps) {
 				<Route path={`${path}/:pullId`}>
 					<ActorListRoute
 						reportStore={reportStore}
+						meta={meta}
 						report={report}
 					/>
 				</Route>
@@ -114,6 +119,7 @@ function DataProvider({children, report}:DataProviderProps) {
 
 interface ActorListRouteProps {
 	reportStore: ReportStore
+	meta: Meta
 	report: Report
 }
 
@@ -121,7 +127,11 @@ interface ActorListRouteParams {
 	pullId: Pull['id']
 }
 
-function ActorListRoute({reportStore, report}: ActorListRouteProps) {
+function ActorListRoute({
+	reportStore,
+	meta: parentMeta,
+	report,
+}: ActorListRouteProps) {
 	const {path} = useRouteMatch()
 	const {pullId} = useParams<ActorListRouteParams>()
 
@@ -150,6 +160,14 @@ function ActorListRoute({reportStore, report}: ActorListRouteProps) {
 		)
 	}
 
+	const encounterMeta = pull.encounter.key != null
+		? AVAILABLE_MODULES.BOSSES[pull.encounter.key]
+		: undefined
+
+	const meta = encounterMeta != null
+		? parentMeta.merge(encounterMeta)
+		: parentMeta
+
 	return <>
 		<Breadcrumb
 			title={pull.encounter.name}
@@ -159,10 +177,20 @@ function ActorListRoute({reportStore, report}: ActorListRouteProps) {
 
 		<Switch>
 			<Route path={`${path}/:actorId`}>
-				<AnalyseRoute reportStore={reportStore} report={report} pull={pull}/>
+				<AnalyseRoute
+					reportStore={reportStore}
+					meta={meta}
+					report={report}
+					pull={pull}
+				/>
 			</Route>
 			<Route path={path}>
-				<ActorList reportStore={reportStore} report={report} pull={pull}/>
+				<ActorList
+					reportStore={reportStore}
+					meta={meta}
+					report={report}
+					pull={pull}
+				/>
 			</Route>
 		</Switch>
 	</>
@@ -170,6 +198,7 @@ function ActorListRoute({reportStore, report}: ActorListRouteProps) {
 
 interface AnalyseRouteProps {
 	reportStore: ReportStore
+	meta: Meta
 	report: Report
 	pull: Pull
 }
@@ -178,7 +207,12 @@ interface AnalyseRouteParams {
 	actorId: Actor['id']
 }
 
-function AnalyseRoute({reportStore, report, pull}: AnalyseRouteProps) {
+function AnalyseRoute({
+	reportStore,
+	meta: parentMeta,
+	report,
+	pull,
+}: AnalyseRouteProps) {
 	const {actorId} = useParams<AnalyseRouteParams>()
 	const actor = pull.actors.find(actor => actor.id === actorId)
 
@@ -206,11 +240,18 @@ function AnalyseRoute({reportStore, report, pull}: AnalyseRouteProps) {
 		)
 	}
 
+	const jobMeta = AVAILABLE_MODULES.JOBS[actor.job]
+
+	const meta = jobMeta != null
+		? parentMeta.merge(jobMeta)
+		: parentMeta
+
 	return <>
 		<Breadcrumb title={actor.name}/>
 
 		<Analyse
 			reportStore={reportStore}
+			meta={meta}
 			report={report}
 			pull={pull}
 			actor={actor}

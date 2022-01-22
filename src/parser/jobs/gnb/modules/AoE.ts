@@ -27,7 +27,7 @@ export class AoE extends AoEUsages {
 		{
 			aoeAction: this.data.actions.DEMON_SLICE,
 			stActions: [this.data.actions.KEEN_EDGE],
-			minTargets: 3,
+			minTargets: 2, //May cause erroneous good feedback if they forget to fated circle/choose not to after
 		},
 		{
 			aoeAction: this.data.actions.FATED_CIRCLE,
