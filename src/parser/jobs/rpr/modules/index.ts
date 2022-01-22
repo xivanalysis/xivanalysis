@@ -4,6 +4,7 @@ import {AoE} from './AoE'
 import {Combos} from './Combos'
 import {CooldownDowntime} from './CooldownDowntime'
 import {DeathsDesign} from './DeathsDesign'
+import {HarvestMoon} from './HarvestMoon'
 import {ImmortalSacrifice} from './ImmortalSacrifice'
 import {Procs} from './Procs'
 import {Tincture} from './Tincture'
@@ -16,6 +17,7 @@ export default [
 	DeathsDesign,
 	Procs,
 	ImmortalSacrifice,
+	HarvestMoon,
 	Tincture,
 	Weaving,
 ]
