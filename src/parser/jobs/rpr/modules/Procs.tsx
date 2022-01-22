@@ -1,6 +1,7 @@
 import {t} from '@lingui/macro'
 import {Trans, Plural} from '@lingui/react'
 import {DataLink} from 'components/ui/DbLink'
+import {Event} from 'event'
 import {filter} from 'parser/core/filter'
 import {Procs as CoreProcs} from 'parser/core/modules/Procs'
 import {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
@@ -31,8 +32,8 @@ export class Procs extends CoreProcs {
 		// Additionally count Blood Stalk uses so we can find lost potency to Unveiled
 		this.addEventHook(
 			filter<Event>()
-				.type('action')
 				.source(this.parser.actor.id)
+				.type('action')
 				.action(this.data.actions.BLOOD_STALK.id),
 			() => this.badStalks++
 		)
