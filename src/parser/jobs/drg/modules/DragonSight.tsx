@@ -107,7 +107,7 @@ export default class DragonSight extends BuffWindow {
 					expectedPerWindow: 1,
 				},
 				{
-					action: this.data.actions.SPINESHATTER_DIVE,
+					action: this.data.actions.GEIRSKOGUL,
 					expectedPerWindow: 1,
 				},
 				{
@@ -115,7 +115,7 @@ export default class DragonSight extends BuffWindow {
 					expectedPerWindow: 1,
 				},
 				{
-					action: this.data.actions.GEIRSKOGUL,
+					action: this.data.actions.MIRAGE_DIVE,
 					expectedPerWindow: 1,
 				},
 				{
@@ -123,15 +123,17 @@ export default class DragonSight extends BuffWindow {
 					expectedPerWindow: 1,
 				},
 				{
-					action: this.data.actions.WYRMWIND_THRUST,
-					expectedPerWindow: 0,
+					action: this.data.actions.SPINESHATTER_DIVE,
+					expectedPerWindow: 1,
 				},
 			],
 			suggestionIcon,
-			suggestionContent: <></>,
+			suggestionContent: <Trans id="drg.lc.suggestions.missedaction.content">Try to use as many of your oGCDs as possible during <ActionLink action="DRAGON_SIGHT" />. Remember to keep your abilities on cooldown, when possible, to prevent them from drifting outside of your buff windows.</Trans>,
 			suggestionWindowName,
 			severityTiers: {
-				100: SEVERITY.MINOR,
+				1: SEVERITY.MINOR,
+				3: SEVERITY.MEDIUM,
+				6: SEVERITY.MAJOR,
 			},
 			adjustCount: this.adjustExpectedActionCount.bind(this),
 			adjustOutcome: this.adjustExpectedActionOutcome.bind(this),
@@ -164,6 +166,7 @@ export default class DragonSight extends BuffWindow {
 			return -1
 		}
 
+		// unlike lance charge, there are no adjustments expected here due to DS being a two minute CD
 		return 0
 	}
 

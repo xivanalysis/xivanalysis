@@ -68,12 +68,12 @@ export default class LanceCharge extends BuffWindow {
 				},
 			],
 			suggestionIcon,
-			suggestionContent: <Trans id="drg.lc.suggestions.missedaction.content">Try to use as many of your oGCDs as possible during <ActionLink action="LANCE_CHARGE" />.</Trans>,
+			suggestionContent: <Trans id="drg.lc.suggestions.missedaction.content">Try to use as many of your oGCDs as possible during <ActionLink action="LANCE_CHARGE" />. Remember to keep your abilities on cooldown, when possible, to prevent them from drifting outside of your buff windows.</Trans>,
 			suggestionWindowName,
 			severityTiers: {
 				1: SEVERITY.MINOR,
-				3: SEVERITY.MEDIUM,
-				6: SEVERITY.MAJOR,
+				6: SEVERITY.MEDIUM,
+				12: SEVERITY.MAJOR,
 			},
 			adjustCount: this.adjustExpectedActionCount.bind(this),
 		}))
