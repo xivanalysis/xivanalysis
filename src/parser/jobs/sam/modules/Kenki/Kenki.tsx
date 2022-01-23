@@ -5,7 +5,6 @@ import {Event, Events} from 'event'
 import {EventHook} from 'parser/core/Dispatcher'
 import {filter, oneOf} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
-import {Actors} from 'parser/core/modules/Actors'
 import {CounterGauge, Gauge as CoreGauge} from 'parser/core/modules/Gauge'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
@@ -29,10 +28,16 @@ export class Kenki extends CoreGauge {
 	static override title = t('sam.gauge.title')`Kenki Gauge`
 	static override displayOrder = DISPLAY_ORDER.KENKI
 	@dependency private suggestions!: Suggestions
-	@dependency private actors!: Actors
 
 	private kenkiGauge = this.add(new CounterGauge({
 		chart: {label: 'Kenki Gauge', color: JOBS.SAMURAI.colour},
+		/*
+		graph: {
+			handle: 'Kenki',
+			label: <Trans id="sam.gauge.resource.kenkiLabel">Kenki</Trans>,
+			color: JOBS.SAMURAI.colour,
+		},
+		*/
 	}))
 
 	private kenkiGaugeModifiers = new Map<number, GaugeModifier>([

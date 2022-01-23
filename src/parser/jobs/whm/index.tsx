@@ -54,5 +54,10 @@ export const WHITE_MAGE = new Meta({
 			Changes: () => <>Marked WHM as supported for 6.05</>,
 			contributors: [CONTRIBUTORS.INNI],
 		},
+		{
+			date: new Date('2022-01-04'),
+			Changes: () => <>Adding Tincture section</>,
+			contributors: [CONTRIBUTORS.KERRIS],
+		},
 	],
 })

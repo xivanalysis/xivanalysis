@@ -78,7 +78,7 @@ export class Sharpcast extends Analyser {
 		const actionId = event.action
 
 		// Paradox doesn't produce a Firestarter proc if not in Astral Fire
-		if (actionId === this.data.actions.PARADOX && this.gauge.getGaugeState(event.timestamp).astralFire <= 0) {
+		if (actionId === this.data.actions.PARADOX.id && this.gauge.getGaugeState(event.timestamp).astralFire <= 0) {
 			return
 		}
 

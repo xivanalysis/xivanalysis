@@ -24,6 +24,11 @@ export const BARD = new Meta({
 	],
 	changelog: [
 		{
+			date: new Date('2022-01-14'),
+			Changes: () => <>Fixed an issue with "Always be casting" calculations.</>,
+			contributors: [CONTRIBUTORS.HINT],
+		},
+		{
 			date: new Date('2022-01-09'),
 			Changes: () => <>Added Empyreal Arrow drift module and tracker for Bloodletter/Rain of Death in Raging Strikes windows.</>,
 			contributors: [CONTRIBUTORS.YUMIYA],
