@@ -114,7 +114,7 @@ export class ImmortalSacrifice extends Analyser {
 
 			this.checklist.add(new Rule({
 				name: <Trans id="rpr.immortal-sacrifice.checklist.title">
-					Uses Immortal Sacrifices via <DataLink action="PLENTIFUL_HARVEST"/>
+					Use Immortal Sacrifices via <DataLink action="PLENTIFUL_HARVEST"/>
 				</Trans>,
 				description: <Trans id="rpr.immortal-sacrifice.checklist.description">
 					<DataLink status="IMMORTAL_SACRIFICE"/> stacks will be generated when you
@@ -135,7 +135,7 @@ export class ImmortalSacrifice extends Analyser {
 						name: <Trans id="rpr.immortal-sacrifice.checklist.requirement.name">
 							<DataLink status="IMMORTAL_SACRIFICE"/> stacks used
 						</Trans>,
-						overrideDisplay: `${stacksConsumed} / ${totalStacks} (${stacksConsumedPercent})`,
+						overrideDisplay: `${stacksConsumed} / ${totalStacks} (${stacksConsumedPercent}%)`,
 						percent: stacksConsumedPercent,
 					}),
 				],

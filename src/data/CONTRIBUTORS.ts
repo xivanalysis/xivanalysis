@@ -35,6 +35,13 @@ const CONTRIBUTORS = ensureRecord<Contributor>()({
 			JOBS.SAGE,
 		],
 	},
+	ARKEVORKHAT: {
+		name: 'Arkevorkhat',
+		avatar: require('./avatar/Arkevorkhat.png'),
+		jobs: [
+			JOBS.REAPER, JOBS.RED_MAGE, JOBS.SUMMONER,
+		],
+	},
 	AY: {
 		name: 'acchan',
 		avatar: require('./avatar/ay.png'),
