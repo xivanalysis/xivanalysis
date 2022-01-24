@@ -52,7 +52,7 @@ export default class LanceCharge extends BuffWindow {
 				},
 				{
 					action: this.data.actions.DRAGONFIRE_DIVE,
-					expectedPerWindow: 1,
+					expectedPerWindow: 0,
 				},
 				{
 					action: this.data.actions.MIRAGE_DIVE,
@@ -85,47 +85,6 @@ export default class LanceCharge extends BuffWindow {
 			return -1
 		}
 
-		// couple of special cases
-		// DFD: if it's on CD during the window, expect 0, otherwise, expect 1
-		if (action.action.id === this.data.actions.DRAGONFIRE_DIVE.id) {
-			// cd history
-			const dfdCds = this.cooldowns.cooldownHistory('DRAGONFIRE_DIVE')
-
-			// if the end of one of these cd history items is within the window expect 1
-			// else 0. this is somewhat more forgiving than we might want...
-			const end = window.end ?? this.parser.pull.timestamp + this.parser.pull.duration
-
-			for (let i = 0; i < dfdCds.length; i++) {
-				const current = dfdCds[i]
-				const next = i + 1 < dfdCds.length ? dfdCds[i + 1] : undefined
-
-				// special case for first
-				if (i === 0) {
-					if (window.start <= current.start && current.start < end) {
-						return 0
-					}
-				}
-
-				// check if it comes off cd in this window
-				// if it did, return no adjustment
-				if (window.start <= current.end && current.end < end) {
-					return 0
-				}
-
-				if (next) {
-					// did if come off cd before this window
-					// and did the next come off cd after the end of this window
-					// if yes we expect one here and you missed it rip
-					if (current.end < window.start && next.start > end) {
-						return 0
-					}
-				}
-			}
-
-			// on cd
-			return -1
-		}
-
 		// SSD: if a buff window didn't have a SSD but the next one actually contained two SSDs, we correct
 		// this window to expect 0 (this is due to SSD having charges and it's optimal to use both during the 2 minute windows)
 		// note that this _only_ happens if two SSDs were actually used in the next window.
@@ -137,7 +96,7 @@ export default class LanceCharge extends BuffWindow {
 				return 0
 			}
 
-			if (!window.next) {
+			if (window.next == null) {
 				return 0
 			}
 
@@ -149,7 +108,7 @@ export default class LanceCharge extends BuffWindow {
 			}
 
 			// if this window has two and the _previous_ window had 0, adjust accordingly
-			if (!window.prev) {
+			if (window.prev == null) {
 				return 0
 			}
 
