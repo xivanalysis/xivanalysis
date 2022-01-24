@@ -10,6 +10,16 @@ export const changelog: ChangelogEntry[] = [
 	// 	contributors: [CONTRIBUTORS.YOU],
 	// },
 	{
+		date: new Date('2022-01-12'),
+		Changes: () => <>Improve enemy targetability detection when a target raises during a fight (e.g. striking dummies)</>,
+		contributors: [CONTRIBUTORS.AZARIAH],
+	},
+	{
+		date: new Date('2022-01-12'),
+		Changes: () => <>Fixed a bug causing some weaving issues with recast times.</>,
+		contributors: [CONTRIBUTORS.AZARIAH, CONTRIBUTORS.OTOCEPHALY],
+	},
+	{
 		date: new Date('2022-01-10'),
 		Changes: () => <>Finalise core support for 6.05.</>,
 		contributors: [CONTRIBUTORS.ACKWELL],

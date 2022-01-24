@@ -24,7 +24,6 @@ export const RDM = ensureStatuses({
 		name: 'Acceleration',
 		icon: 'https://xivapi.com/i/013000/013405.png',
 		duration: 20000,
-		stacksApplied: 3,
 	},
 	EMBOLDEN_PARTY: {
 		// Note that this is the Embolden that other people receive from RDM
