@@ -79,22 +79,22 @@ export class Aetherflow extends Analyser {
 		return <><Table>
 			<Table.Header>
 				<Table.Row>
-					<Table.HeaderCell colSpan="6">Summary</Table.HeaderCell>
+					<Table.HeaderCell colSpan="6"><Trans id="sch.aetherflow.summary">Summary</Trans></Table.HeaderCell>
 				</Table.Row>
 			</Table.Header>
 			<Table.Body>
 				<Table.Row>
-					<Table.Cell textAlign="right">Total Aetherflow Drift</Table.Cell>
+					<Table.Cell textAlign="right"><Trans id="sch.aetherflow.total-aetherflow-drift">Total Aetherflow Drift</Trans></Table.Cell>
 					<Table.Cell>{this.parser.formatDuration(this.prevAetherflowWindow?.cummulativeDrift ?? 0)}</Table.Cell>
-					<Table.Cell textAlign="right">Total Dissipation Drift</Table.Cell>
+					<Table.Cell textAlign="right"><Trans id="sch.aetherflow.total-dissipation-drift">Total Dissipation Drift</Trans></Table.Cell>
 					<Table.Cell>{this.parser.formatDuration(this.prevDissipationWindow?.cummulativeDrift ?? 0)}</Table.Cell>
-					<Table.Cell textAlign="right">Total Wasted Stacks</Table.Cell>
+					<Table.Cell textAlign="right"><Trans id="sch.aetherflow.total-wasted-stacks">Total Wasted Stacks</Trans></Table.Cell>
 					<Table.Cell>{this.aetherflowWindows.length * this.AETHERFLOW_CHARGES_PER_CAST - this.totalAetherflowConsumeActions}</Table.Cell>
 				</Table.Row>
 			</Table.Body>
 			<Table.Header>
 				<Table.Row>
-					<Table.HeaderCell colSpan="6">Abilities Used</Table.HeaderCell>
+					<Table.HeaderCell colSpan="6"><Trans id="sch.aetherflow.abilities-used">Abilities Used</Trans></Table.HeaderCell>
 				</Table.Row>
 			</Table.Header>
 			<Table.Body>
@@ -123,7 +123,7 @@ export class Aetherflow extends Analyser {
 					<Table.HeaderCell><Trans id="sch.aetherflow.cast-time">Cast Time</Trans></Table.HeaderCell>
 					<Table.HeaderCell><Trans id="sch.aetherflow.drift">Drift</Trans></Table.HeaderCell>
 					<Table.HeaderCell><Trans id="sch.aetherflow.abilities-used">Abilities Used</Trans></Table.HeaderCell>
-					<Table.HeaderCell><Trans id="sch.aetherflow.stacks-wasted">Stacks Wasted</Trans></Table.HeaderCell>
+					<Table.HeaderCell><Trans id="sch.aetherflow.wasted-stacks">Wasted Stacks</Trans></Table.HeaderCell>
 				</Table.Row>
 			</Table.Header>
 			<Table.Body>
