@@ -182,6 +182,7 @@
   "brd.procs.suggestions.missed.content": "<1/>がある場合、<0/>を使ってください。",
   "brd.procs.suggestions.overwritten.content": "<1/> 使える時、できれば <0/> を使わないでください。",
   "brd.rs.rotation-table.header.on-time": "<0/> 使用可能?",
+  "brd.rs.suggestions.aaba-evaluator.content": "",
   "brd.rs.suggestions.bloodletter-evaluator.content": "",
   "brd.rs.suggestions.buff-evaluator.content": "",
   "brd.rs.suggestions.buff-evaluator.why": "",
