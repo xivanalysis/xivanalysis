@@ -24,6 +24,11 @@ export const BARD = new Meta({
 	],
 	changelog: [
 		{
+			date: new Date('2022-01-24'),
+			Changes: () => <>Added Apex Arrow and Blast Arrow tracker in Raging Strikes windows. Also fixed the incorrect expected usage amount of Empyreal Arrows in the cooldowns checklist.</>,
+			contributors: [CONTRIBUTORS.YUMIYA],
+		},
+		{
 			date: new Date('2022-01-14'),
 			Changes: () => <>Fixed an issue with "Always be casting" calculations.</>,
 			contributors: [CONTRIBUTORS.HINT],

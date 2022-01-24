@@ -182,6 +182,7 @@
   "brd.procs.suggestions.missed.content": "Try to use <0/> whenever you have <1/>.",
   "brd.procs.suggestions.overwritten.content": "Avoid using actions that grant <0/> when you could use <1/> instead.",
   "brd.rs.rotation-table.header.on-time": "<0/> On Time?",
+  "brd.rs.suggestions.aaba-evaluator.content": "One use of <0/> and <1/> should occur during every <2/> window after the opener. Make sure you have at least 80 Soul Voice Gauge for your buffs.",
   "brd.rs.suggestions.bloodletter-evaluator.content": "At least three uses of <0/> or <1/> should occur during every <2/> window. Make sure you pool your <3/> or <4/> charges during <5/>.",
   "brd.rs.suggestions.buff-evaluator.content": "Using <0/> and <1/> within the first two GCDs of <2/> windows allows you to better align their duration and maximize the multiplicative bonuses these statuses give you.",
   "brd.rs.suggestions.buff-evaluator.why": "{wrongUsages, plural, one {# cast of recommended actions was} other {# casts of recommended actions were}} used later than optimal, or not at all.",
