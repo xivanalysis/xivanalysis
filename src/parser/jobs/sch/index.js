@@ -35,5 +35,10 @@ export const SCHOLAR = new Meta({
 			Changes: () => <>Update tracked cooldowns to add Aetherflow and make Chain Strategem calculations a bit stricter.</>,
 			contributors: [CONTRIBUTORS.DTHOMASH],
 		},
+		{
+			date: new Date('2022-01-23'),
+			Changes: () => <>Add Aetherflow section.</>,
+			contributors: [CONTRIBUTORS.DTHOMASH],
+		},
 	],
 })
