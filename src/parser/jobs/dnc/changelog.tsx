@@ -42,4 +42,9 @@ export const changelog = [
 		Changes: () => <>Mark as supported for 6.05.</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],
 	},
+	{
+		date: new Date('2022-01-17'),
+		Changes: () => <>Removed Step drift suggestions that duplicated cooldown checklist feedback.</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
 ]
