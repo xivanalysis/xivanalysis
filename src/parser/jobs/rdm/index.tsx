@@ -21,7 +21,7 @@ export const RED_MAGE = new Meta({
 	</>,
 	supportedPatches: {
 		from: '6.0',
-		to: '6.05',
+		to: '6.08',
 	},
 	contributors: [
 		{user: CONTRIBUTORS.LAILLE, role: ROLES.DEVELOPER},
@@ -30,6 +30,11 @@ export const RED_MAGE = new Meta({
 	],
 
 	changelog: [
+		{
+			date: new Date('2022-01-25'),
+			Changes: () => <>Mark as supported for 6.08.  Fixed wording in Mana Stack Gauge.</>,
+			contributors: [CONTRIBUTORS.LEYLIA],
+		},
 		{
 			date: new Date('2022-01-08'),
 			Changes: () => <>Update proc overwrite severities to reflect 6.0 rotations.</>,
