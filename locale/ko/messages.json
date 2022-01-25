@@ -503,6 +503,7 @@
   "gnb.ammo.leftover-ammo.content": "전투 종료전에 소일이 남게되는 상황을 최대한 기피하십시오. 기존의 <1/> 콤보보다 <0/>의 위력이 더 높으므로 종료전에 최대한 남은 소일을 마저 사용하십시오.",
   "gnb.ammo.leftover-ammo.why": "{0, plural, other {# 개의 소일을}} 남긴 상태에서 전투를 종료하였습니다.",
   "gnb.ammo.title": "소일 사용표",
+  "gnb.ammo.waste.content": "소일을 사용하지 않은 채로 죽거나 전투를 끝낼 경우 남은 소일은 딜 손해를 의미합니다. <0/> (일대다수일 경우 <1/>) 를 사용하여 방지하십시오.",
   "gnb.continuation.checklist.description": "<1/> 콤보마다 1회의 <0/>를 사용해야 합니다.",
   "gnb.continuation.checklist.requirement.continuation.name": "<1/> 콤보 마다 사용된 <0/>",
   "gnb.nomercy.chart.notes.no": "비적용",
