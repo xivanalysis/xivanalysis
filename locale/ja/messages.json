@@ -80,6 +80,7 @@
   "ast.overheal.suggestion.content": "",
   "ast.synastry.suggestion.content": "単体の詠唱ヒールが必要な場合は、<0/>を使うようにしましょう。\nそもそも回復をするにあたって詠唱している事自体が既に非効率的です。\nシナストリーが必要に駆られる場合を除いて、可能な限り軽減をしたほうが良いでしょう。",
   "ast.synastry.suggestion.why": "{0, plural, one {# single-target GCD heal was cast} other {# single-target GCD heals were cast}} シナストリーが利用可能であったにも関わらず単体回復を詠唱し、シナストリーを無駄にしました。",
+  "ast.tincture.suggestions.trackedActions.content": "",
   "blm.about.description": "このアナライザーは、あなたが考えているより実際に詠唱できていない<0/>を特定することを目指しています。",
   "blm.gage.suggestions.overwritten-paradox.why": "<0/> が上書きされました。 {0, plural, one {# time} other {# times}}",
   "blm.gauge.resource.astral-fire": "アストラルファイア",
