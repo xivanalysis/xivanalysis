@@ -16,6 +16,14 @@ export class Tincture extends CoreTincture {
 					action: this.data.actions.COMBUST_III,
 					expectedPerWindow: 1,
 				},
+				{
+					action: this.data.actions.LORD_OF_CROWNS,
+					expectedPerWindow: 0,
+				},
+				{
+					action: this.data.actions.ASTRODYNE,
+					expectedPerWindow: 1,
+				},
 			],
 			suggestionIcon: this.data.actions.INFUSION_MND.icon,
 			suggestionContent: <Trans id="ast.tincture.suggestions.trackedActions.content">
