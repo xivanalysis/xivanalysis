@@ -14,12 +14,17 @@ export const NINJA = new Meta({
 	</>,
 	supportedPatches: {
 		from: '6.05',
-		to: '6.05',
+		to: '6.08',
 	},
 	contributors: [
 		{user: CONTRIBUTORS.TOASTDEIB, role: ROLES.MAINTAINER},
 	],
 	changelog: [
+		{
+			date: new Date('2022-01-10'),
+			Changes: () => <>Fixed issue with GCD uptime not considering Huton active.</>,
+			contributors: [CONTRIBUTORS.AZARIAH],
+		},
 		{
 			date: new Date('2022-01-04'),
 			Changes: () => <>Updated Raiju module for 6.05 changes.</>,

@@ -5,7 +5,7 @@ import {dependency} from '../Injectable'
 import {Data} from './Data'
 import {SpeedAdjustments} from './SpeedAdjustments'
 
-const MIN_ACTION_TIME = 1500
+const MIN_RECAST_TIME = 1500
 
 type AffectsWhichTime =
 	| 'cast'
@@ -166,7 +166,7 @@ export default class CastTime extends Analyser {
 			: action.castTime
 
 		// If the default comes back undefined, or already at or below the minimum action time (including instants), no adjustments to perform
-		if (defaultTime == null || defaultTime <= MIN_ACTION_TIME) {
+		if (defaultTime == null || forWhich === 'recast' && defaultTime <= MIN_RECAST_TIME) {
 			return defaultTime
 		}
 
@@ -199,9 +199,9 @@ export default class CastTime extends Analyser {
 
 		// Calculate the final cast time based on the flat and percentage reductions we've found
 		const flatAdjustedTime = Math.max(defaultTime + flatIncrease + flatReduction, 0) // Yes, plus flatReduction because it's already a negative value
-		if (flatAdjustedTime <= MIN_ACTION_TIME) {
+		if (forWhich === 'recast' && flatAdjustedTime <= MIN_RECAST_TIME) {
 			// Flat reductions reduced value below minimum action time, percentage adjustments will not be effective
-			return flatAdjustedTime
+			return MIN_RECAST_TIME
 		}
 
 		if (percentageAdjustment === 0) {
@@ -210,7 +210,10 @@ export default class CastTime extends Analyser {
 		}
 
 		// Apply percentage speed modifiers, subject to clamping at the minimum action time
-		const adjustedTime = Math.max(flatAdjustedTime * percentageAdjustment, MIN_ACTION_TIME)
+		let adjustedTime = flatAdjustedTime * percentageAdjustment
+		if (forWhich === 'recast') {
+			adjustedTime = Math.max(adjustedTime, MIN_RECAST_TIME)
+		}
 		// eslint-disable-next-line @typescript-eslint/no-magic-numbers
 		return Math.floor(adjustedTime / 10) * 10 // adjustments are rounded down to the nearest 10ms in game
 

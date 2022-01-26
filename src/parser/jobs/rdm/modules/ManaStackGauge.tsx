@@ -161,12 +161,12 @@ export class ManaStackGauge extends CoreGauge {
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.RESOLUTION.icon,
 			content: <Fragment>
-				<Trans id="rdm.manaStackGauge.suggestions.manaStack-wasted-content">Ensure you don't overcap your ManaStacks before using your finisher combo; overcapping ManaStacks means you used more than 3 enchanted skills in a row.</Trans>
+				<Trans id="rdm.manaStackGauge.suggestions.manaStack-wasted-content">Ensure you don't overcap your Mana Stacks before using your finisher combo; overcapping Mana Stacks means you used more than 3 enchanted skills in a row.</Trans>
 			</Fragment>,
 			tiers:  this.severity,
 			value:  this.manaStackGauge.overCap,
 			why: <Fragment>
-				<Trans id="rdm.manaStackGauge.suggestions.manaStack-wasted-why">You lost { this.manaStackGauge.overCap} ManaStacks due to capped Gauge resources</Trans>
+				<Trans id="rdm.manaStackGauge.suggestions.manaStack-wasted-why">You lost { this.manaStackGauge.overCap} Mana Stacks due to capped Gauge resources</Trans>
 			</Fragment>,
 		}))
 
@@ -175,12 +175,12 @@ export class ManaStackGauge extends CoreGauge {
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.RESOLUTION.icon,
 			content: <Fragment>
-				<Trans id="rdm.manaStackGauge.suggestions.manaStack-loss-content">Ensure that you don't use a non Enchanted GCD when you have ManaStacks, otherwise you lose them all</Trans>
+				<Trans id="rdm.manaStackGauge.suggestions.manaStack-loss-content">Ensure that you don't use a non Enchanted GCD when you have Mana Stacks, otherwise you lose them all</Trans>
 			</Fragment>,
 			tiers:  this.severity,
 			value:  manaStacksLost,
 			why: <Fragment>
-				<Trans id="rdm.manaStackGauge.suggestions.manaStack-loss-why">You lost { manaStacksLost} ManaStacks due to using a non Enchanted GCD</Trans>
+				<Trans id="rdm.manaStackGauge.suggestions.manaStack-loss-why">You lost { manaStacksLost} Mana Stacks due to using a non Enchanted GCD</Trans>
 			</Fragment>,
 		}))
 

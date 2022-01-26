@@ -56,12 +56,9 @@ export const PATCHES = ensureRecord<PatchInfo>()({
 			[GameEdition.GLOBAL]: 1641286800, // 04/01/22 09:00:00 GMT
 		},
 	},
-	// Do not add new patches beneath this point.
-	'Perpetuity - CORE ONLY': {
+	'6.08': {
 		date: {
-			[GameEdition.GLOBAL]: Infinity,
-			[GameEdition.KOREAN]: Infinity,
-			[GameEdition.CHINESE]: Infinity,
+			[GameEdition.GLOBAL]: 1643101200, // 25/01/22 09:00:00 GMT
 		},
 	},
 })

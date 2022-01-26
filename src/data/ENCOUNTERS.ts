@@ -6,6 +6,8 @@ export interface Encounter {
 	ids?: Partial<Record<ReportMetaKey, string>>
 }
 
+// NOTE: Keep documentation at `docs/patch-checklist.md` up to date with
+// instructions on how to find encounter IDs for each report source.
 export const ENCOUNTERS = ensureRecord<Encounter>()({
 	TRASH: {ids: {legacyFflogs: '0'}},
 })

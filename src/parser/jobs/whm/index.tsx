@@ -21,7 +21,7 @@ export const WHITE_MAGE = new Meta({
 	</>,
 	supportedPatches: {
 		from: '6.0',
-		to: '6.05',
+		to: '6.08',
 	},
 	contributors: [
 		// {user: CONTRIBUTORS.YOU, role: ROLES.DEVELOPER},
@@ -52,6 +52,16 @@ export const WHITE_MAGE = new Meta({
 		{
 			date: new Date('2022-01-09'),
 			Changes: () => <>Marked WHM as supported for 6.05</>,
+			contributors: [CONTRIBUTORS.INNI],
+		},
+		{
+			date: new Date('2022-01-04'),
+			Changes: () => <>Adding Tincture section</>,
+			contributors: [CONTRIBUTORS.KERRIS],
+		},
+		{
+			date: new Date('2022-01-25'),
+			Changes: () => <>Marked WHM as supported for 6.08</>,
 			contributors: [CONTRIBUTORS.INNI],
 		},
 	],
