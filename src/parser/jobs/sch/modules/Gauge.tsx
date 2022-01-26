@@ -3,6 +3,8 @@ import {Trans} from '@lingui/react'
 import Color from 'color'
 import {JOBS} from 'data/JOBS'
 import {Event} from 'event'
+import {isUndefined} from 'lodash'
+import {EventHook} from 'parser/core/Dispatcher'
 import {filter, oneOf} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
 import {CounterGauge} from 'parser/core/modules/Gauge'
@@ -31,13 +33,14 @@ export default class FaerieGauge extends CoreGauge {
 	private fairyOut: boolean = false
 	private dissipationActive: boolean = false
 	private actorPets = this.parser.pull.actors.filter(actor => actor.owner != null && actor.owner.id === this.parser.actor.id).map(pet => pet.id)
+	private petHook?: EventHook<{ type: 'action'; action: number; source: string; target: string; timestamp: number; }>
 
 	override initialise() {
 		super.initialise()
 		const playerFilter = filter<Event>().source(this.parser.actor.id)
 
 		//Faerie Summon
-		this.addEventHook(playerFilter.type('action').action(oneOf([this.data.actions.SUMMON_EOS.id, this.data.actions.SUMMON_SELENE.id])), this.onSummon)
+		this.petHook = this.addEventHook(playerFilter.type('action').action(oneOf([this.data.actions.SUMMON_EOS.id, this.data.actions.SUMMON_SELENE.id])), this.onSummon)
 		//sanity check, your pets can't take actions if they're not out.
 		this.addEventHook(filter<Event>().source(oneOf(this.actorPets)), this.onSummon)
 		//Consumers
@@ -64,6 +67,9 @@ export default class FaerieGauge extends CoreGauge {
 	private onSummon() {
 		if (!(this.fairyOut || this.dissipationActive)) {
 			this.fairyOut = true
+			if (! isUndefined(this.petHook)) {
+				this.removeEventHook(this.petHook)
+			}
 		}
 	}
 
