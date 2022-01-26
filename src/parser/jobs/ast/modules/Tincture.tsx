@@ -1,5 +1,6 @@
 import {Trans} from '@lingui/react'
 import {DataLink} from 'components/ui/DbLink'
+import {filter} from 'parser/core/filter'
 import {ExpectedActionsEvaluator} from 'parser/core/modules/ActionWindow'
 import {SEVERITY} from 'parser/core/modules/Suggestions'
 import {Tincture as CoreTincture} from 'parser/core/modules/Tincture'
@@ -9,7 +10,16 @@ export class Tincture extends CoreTincture {
 
 	override initialise() {
 		super.initialise()
-
+		this.trackOnlyActions([
+			this.data.actions.FALL_MALEFIC.id,
+			this.data.actions.COMBUST_III.id,
+			this.data.actions.GRAVITY_II.id,
+			this.data.actions.ASTRODYNE.id,
+			this.data.actions.MACROCOSMOS.id,
+			this.data.actions.LORD_OF_CROWNS.id,
+			this.data.actions.EARTHLY_STAR.id,
+			this.data.actions.DIVINATION.id,
+		])
 		this.addEvaluator(new ExpectedActionsEvaluator({
 			expectedActions: [
 				{
@@ -22,6 +32,10 @@ export class Tincture extends CoreTincture {
 				},
 				{
 					action: this.data.actions.ASTRODYNE,
+					expectedPerWindow: 1,
+				},
+				{
+					action: this.data.actions.DIVINATION,
 					expectedPerWindow: 1,
 				},
 			],
