@@ -27,7 +27,7 @@ export const SCHOLAR = new Meta({
 	changelog: [
 		{
 			date: new Date('2022-01-25'),
-			Changes: () => <>Update Weaving module text to account for R4 update</>,
+			Changes: () => <>Update Weaving module text to account for Broil IV update</>,
 			contributors: [CONTRIBUTORS.ARKEVORKHAT],
 		},
 		{
