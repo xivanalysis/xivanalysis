@@ -81,6 +81,7 @@
   "ast.swiftcast.suggestion.content": "",
   "ast.synastry.suggestion.content": "Versuche <0/> zu nutzen, wenn du einen Heilzauber mit globaler Abklingzeit auf ein einzelnes Ziel wirken musst. Durch den Heilzauber mit globaler Abklingzeit verlierst du bereits Effizienz, daher solltest du ihn so stark wie möglich machen, wenn du Synastrie in naher Zukunft nicht brauchst.",
   "ast.synastry.suggestion.why": "{0, plural, one {# Heilzauber mit globaler Abklingzeit wurde auf ein einzelnes Ziel gewirkt} other {# Heilzauber mit globaler Abklingzeit wurden auf ein einzelnes Ziel gewirkt}}, ohne dass Synastrie aktiv war, obwohl es verfügbar war.",
+  "ast.tincture.suggestions.trackedActions.content": "",
   "blm.about.description": "Dieser Analysator zeigt dir, warum du weniger <0/> castest, als du denkst.",
   "blm.gage.suggestions.overwritten-paradox.why": "",
   "blm.gauge.resource.astral-fire": "",
