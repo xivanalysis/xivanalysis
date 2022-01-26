@@ -548,7 +548,7 @@
   "rpr.deathsdesign.requirement.uptime.name": "アクティブ率: <0/>",
   "rpr.deathsdesign.rule.description": "「デスデザイン」はターゲットに与える全てのダメージを10%上昇させます。このバフを常に維持するように心がけましょう。",
   "rpr.deathsdesign.rule.name": "<0/> を維持しましょう",
-  "rpr.immortal-sacrifice.checklist.description": "<1/> を使用すると <0/> のスタックが発生し、<2/> を使用することでそのスタックを消費することが出来ます。これは威力が高いスキルである上に、 <3/> を即座に使用できるほどのシュラウドが付与される。",
+  "rpr.immortal-sacrifice.checklist.description": "<1/> を使用すると <0/> のスタックが発生し、<2/> を使用することでそのスタックを消費することが出来ます。このスキルは威力が高い事に加え、 <3/> を即座に使用出来るほどのシュラウドが付与されます。",
   "rpr.immortal-sacrifice.checklist.plentiful-harvest.requirement.name": "<0/> の使用回数",
   "rpr.immortal-sacrifice.checklist.requirement.name": "<0/> の使用回数",
   "rpr.immortal-sacrifice.checklist.title": "<0/> による死の供物の使用",
