@@ -1,13 +1,11 @@
 import {Trans} from '@lingui/react'
 import {DataLink} from 'components/ui/DbLink'
-import {filter} from 'parser/core/filter'
 import {ExpectedActionsEvaluator} from 'parser/core/modules/ActionWindow'
 import {SEVERITY} from 'parser/core/modules/Suggestions'
 import {Tincture as CoreTincture} from 'parser/core/modules/Tincture'
 import React from 'react'
 
 export class Tincture extends CoreTincture {
-
 	override initialise() {
 		super.initialise()
 		this.trackOnlyActions([
@@ -25,10 +23,6 @@ export class Tincture extends CoreTincture {
 				{
 					action: this.data.actions.COMBUST_III,
 					expectedPerWindow: 1,
-				},
-				{
-					action: this.data.actions.LORD_OF_CROWNS,
-					expectedPerWindow: 0,
 				},
 				{
 					action: this.data.actions.ASTRODYNE,
