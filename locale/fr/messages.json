@@ -725,6 +725,8 @@
   "rdm.procs.suggestions.overwritten.why": "",
   "rdm.procs.title": "Problème de procs",
   "rpr.about.description": "",
+  "rpr.arcanecircle.suggestions.content": "",
+  "rpr.arcanecircle.title": "",
   "rpr.deathsdesign.requirement.uptime.name": "Temps total d'application de <0/>",
   "rpr.deathsdesign.rule.description": "",
   "rpr.deathsdesign.rule.name": "Gardez <0/> actif",
