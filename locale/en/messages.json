@@ -78,6 +78,7 @@
   "ast.overheal.earthlystar.name": "Earthly Star",
   "ast.overheal.hot.name": "Healing over Time",
   "ast.overheal.suggestion.content": "Avoid healing your party for more than is needed. Cut back on unnecessary heals and coordinate with your co-healer to plan resources efficiently. <0/>* Delayed heals include heals such as <1/>, <2/>, and <3/> when not manually activated.",
+  "ast.swiftcast.suggestion.content": "Cast a spell with <0/> before it expires. This allows you to instantly cast spells with a cast times, such as <1/> for a quick revive, or <2/> for weaving.",
   "ast.synastry.suggestion.content": "Try to use <0/> if you need to cast a single-target GCD heal. The GCD heal itself is already an efficiency loss, so it's better to make it as strong as possible if Synastry is not needed soon.",
   "ast.synastry.suggestion.why": "{0, plural, one {# single-target GCD heal was cast} other {# single-target GCD heals were cast}} without synastry even though it was available.",
   "blm.about.description": "This analyser aims to identify how you're not actually casting <0/> as much as you think you are.",
