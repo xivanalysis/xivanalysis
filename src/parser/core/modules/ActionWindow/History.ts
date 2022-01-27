@@ -13,14 +13,6 @@ export interface HistoryEntry<T> {
 	 * The data for this entry.
 	 */
 	data: T
-	/**
-	 * The next window in the pull
-	 */
-	next?: HistoryEntry<T>
-	/**
-	 * The previous window in the pull
-	 */
-	prev?: HistoryEntry<T>
 }
 
 export class History<T> {
@@ -98,13 +90,6 @@ export class History<T> {
 	 */
 	private open(timestamp: number) {
 		const current: HistoryEntry<T> = {start: timestamp, data: this.dataInitializer()}
-
-		// linked list for lookahead/lookback
-		if (this.entries.length > 0) {
-			const prev = this.entries[this.entries.length - 1]
-			current.prev = prev
-			prev.next = current
-		}
 
 		this.entries.push(current)
 		return current

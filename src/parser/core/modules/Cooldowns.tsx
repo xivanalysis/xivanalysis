@@ -1,6 +1,5 @@
 import {Action, ActionKey} from 'data/ACTIONS'
 import {Events} from 'event'
-import _ from 'lodash'
 import {Analyser} from '../Analyser'
 import {TimestampHook} from '../Dispatcher'
 import {dependency} from '../Injectable'
@@ -153,63 +152,6 @@ export class Cooldowns extends Analyser {
 		return chargeValues.length > 0
 			? Math.min(...chargeValues)
 			: 0
-	}
-
-	/**
-	 * Get the remaining charges of the specific action at the given timestamp. If multiple groups are
-	 * selected, the minimum remaining charges will be returned.
-	 *
-	 * @param specifier Selection specifier for groups whose charges should be retrieved.
-	 * @param timestamp Time at which to check for charges
-	 * @param options Options to select the groups to read.
-	 */
-	chargesAt(specifier: SelectionSpecifier, timestamp: number, options?: Partial<SelectionOptions>) {
-		// fetch the history
-		const history = this.chargeHistory(specifier, options)
-
-		// oops no history
-		if (history.length === 0) {
-			return 0
-		}
-
-		// iterate through history to find how many charges we had
-		// history is sorted so we want the charges immediately before the first
-		// element with history.timestamp >= timestamp
-		const firstAfterTime = history.find(h => h.timestamp > timestamp)
-
-		// reconstruct prior state with delta or accept final history entry if there's nothing after the
-		// given timestamp
-		if (firstAfterTime == null) {
-			return history[history.length - 1].current
-		}
-		return firstAfterTime.current - firstAfterTime.delta
-	}
-
-	/**
-	 * Get the maximum number of charges held during the given window
-	 *
-	 * @param specifier Selection specifier for groups whose charges should be retrieved.
-	 * @param start Window start time
-	 * @param end Window end time
-	 * @param options Options to select the groups to read.
-	 */
-	maxChargesWithin(specifier: SelectionSpecifier, start: number, end: number, options?: Partial<SelectionOptions>) {
-		// get the history
-		const history = this.chargeHistory(specifier, options)
-
-		if (history.length === 0) {
-			return 0
-		}
-
-		// initialize to charges at start
-		const initCharges = this.chargesAt(specifier, start, options)
-		const inWindowCharges = history
-			.filter(h => start <= h.timestamp && h.timestamp <= end)
-			.map(h => h.current)
-		inWindowCharges.push(initCharges)
-
-		// filter then select max
-		return _.max(inWindowCharges)
 	}
 
 	/**

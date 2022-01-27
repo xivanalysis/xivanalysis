@@ -191,7 +191,7 @@ export abstract class ActionWindow extends Analyser {
 	}
 
 	private mapHistoryActions(): Array<HistoryEntry<EvaluatedAction[]>> {
-		const evalEntries: Array<HistoryEntry<EvaluatedAction[]>> = this.history.entries
+		return this.history.entries
 			.map(entry => ({start: entry.start,
 				end: entry.end,
 				data: entry.data
@@ -202,17 +202,5 @@ export abstract class ActionWindow extends Analyser {
 					})
 					.filter(isDefined),
 			}))
-
-		// relink
-		evalEntries.forEach((e, i) => {
-			if (i > 0) {
-				e.prev = evalEntries[i - 1]
-			}
-			if (i < evalEntries.length - 1) {
-				e.next = evalEntries[i + 1]
-			}
-		})
-
-		return evalEntries
 	}
 }

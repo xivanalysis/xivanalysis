@@ -1,6 +1,8 @@
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
 import {ActionLink} from 'components/ui/DbLink'
+import {Event, Events} from 'event'
+import {filter} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
 import {BuffWindow, EvaluatedAction, ExpectedActionsEvaluator, ExpectedGcdCountEvaluator, TrackedAction} from 'parser/core/modules/ActionWindow'
 import {HistoryEntry} from 'parser/core/modules/ActionWindow/History'
@@ -9,6 +11,14 @@ import {GlobalCooldown} from 'parser/core/modules/GlobalCooldown'
 import {SEVERITY} from 'parser/core/modules/Suggestions'
 import React from 'react'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
+
+interface SsdDelayTracker {
+	nextWindowHoldSuccess: boolean
+	ssdHeld: boolean
+	expectsTwo: boolean
+	ssdUseCount: number
+	start: number
+}
 
 export default class LanceCharge extends BuffWindow {
 	static override handle: string = 'lancecharge'
@@ -20,8 +30,23 @@ export default class LanceCharge extends BuffWindow {
 
 	override buffStatus = this.data.statuses.LANCE_CHARGE
 
+	private ssdDelays: SsdDelayTracker[] = []
+	private currentSsdWindow?: SsdDelayTracker
+	private previousSsdWindow?: SsdDelayTracker
+
 	override initialise() {
 		super.initialise()
+
+		const lcStatusFilter = filter<Event>()
+			.source(this.parser.actor.id)
+			.status(this.data.statuses.LANCE_CHARGE.id)
+
+		const ssdActionFilter = filter<Event>().source(this.parser.actor.id).type('action')
+			.action(this.data.actions.SPINESHATTER_DIVE.id)
+
+		this.addEventHook(lcStatusFilter.type('statusApply'), this.onLcStatusApply)
+		this.addEventHook(ssdActionFilter, this.onSsd)
+		this.addEventHook(lcStatusFilter.type('statusRemove'), this.onLcStatusRemove)
 
 		const suggestionIcon = this.data.actions.LANCE_CHARGE.icon
 		const suggestionWindowName = <ActionLink action="LANCE_CHARGE" showIcon={false}/>
@@ -79,15 +104,53 @@ export default class LanceCharge extends BuffWindow {
 		}))
 	}
 
+	private onLcStatusApply(event: Events['statusApply']) {
+		// construct current
+		this.currentSsdWindow = {
+			nextWindowHoldSuccess: false,
+			ssdHeld: false,
+			ssdUseCount: 0,
+			start: event.timestamp,
+			expectsTwo: this.previousSsdWindow?.ssdHeld ?? false,
+		}
+
+		this.ssdDelays.push(this.currentSsdWindow)
+	}
+
+	private onSsd() {
+		if (this.currentSsdWindow != null) {
+			this.currentSsdWindow.ssdUseCount += 1
+		}
+	}
+
+	private onLcStatusRemove() {
+		// little bit of analysis
+		if (this.currentSsdWindow != null) {
+			const ssdCharges = this.cooldowns.charges('SPINESHATTER_DIVE')
+
+			if (ssdCharges >= 1) {
+				this.currentSsdWindow.ssdHeld = true
+			}
+
+			if (this.previousSsdWindow) {
+				if (this.currentSsdWindow.ssdUseCount === 2 && this.previousSsdWindow.ssdHeld) {
+					this.previousSsdWindow.nextWindowHoldSuccess = true
+				}
+			}
+
+			this.previousSsdWindow = this.currentSsdWindow
+			this.currentSsdWindow = undefined
+		}
+	}
+
 	private adjustExpectedActionCount(window: HistoryEntry<EvaluatedAction[]>, action: TrackedAction) {
 		// so if a drg is rushing we don't really have expectations of specific actions that get fit in the window, we just want the buff used.
-		if (this.isRushedEndOfPullWindow(window)) {
+		if (this.isRushedEndOfPullWindow(window) && action.action.id !== this.data.actions.DRAGONFIRE_DIVE.id) {
 			return -1
 		}
 
 		// SSD: if a buff window didn't have a SSD but the next one actually contained two SSDs, we correct
 		// this window to expect 0 (this is due to SSD having charges and it's optimal to use both during the 2 minute windows)
-		// note that this _only_ happens if two SSDs were actually used in the next window.
 		if (action.action.id === this.data.actions.SPINESHATTER_DIVE.id) {
 			// ok quick eject if there's only actually one SSD here because in that case this check isn't relevant
 			// this is just to avoid flagging an error if someone does hold charges correctly
@@ -96,29 +159,21 @@ export default class LanceCharge extends BuffWindow {
 				return 0
 			}
 
-			// if we've got a full window check if we've got two charges or didn't use a ssd
-			if (window.end != null) {
-				const maxCharges = this.cooldowns.maxChargesWithin('SPINESHATTER_DIVE', window.start, window.end)
+			// find the window extra data
+			const ssdDelay = this.ssdDelays.find(d => d.start === window.start)
 
-				// we just straight up expect you to use 2
-				if (maxCharges === 2) {
+			if (ssdDelay) {
+				if (ssdDelay.ssdHeld && ssdDelay.nextWindowHoldSuccess) {
+					return -1
+				}
+				if (ssdDelay.expectsTwo) {
 					return 1
 				}
 
-				// otherwise maybe you didn't use a ssd because u holdin
-				// charge check if no ssds were used and this isn't a partial window
-				if (currentWindowSsd.length === 0) {
-					const nextWindowExpectedEnd = window.start + this.data.actions.LANCE_CHARGE.cooldown + this.data.statuses.LANCE_CHARGE.duration
-
-					// hold conditions
-					// we've got a full window still available
-					const nextWindowAvailable = nextWindowExpectedEnd < this.parser.pull.timestamp + this.parser.pull.duration
-
-					// and we actually have more than one charge within the window
-					// note that if we had two, we've already expected the player to use it here
-					if (nextWindowAvailable && maxCharges >= 1) {
-						return -1
-					}
+				// if we weren't expecting two but got two anyway, sure give it to them
+				// this should only happen on the first window
+				if (!ssdDelay.expectsTwo && currentWindowSsd.length === 2) {
+					return 1
 				}
 			}
 		}
