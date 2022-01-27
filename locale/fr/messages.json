@@ -803,6 +803,7 @@
   "sch.overheal.pet.name": "Fée",
   "sch.overheal.pethot.name": "Soins sur la durée de la fée",
   "sch.swiftcast.missed.suggestion.content": "Utiliser des sorts avec <0/> avant qu'ils expirent. Cela vous permet d'utiliser directement des sorts avec des temps de lancement, tel que <1/> pour une résurrection rapide , ou <2/> pour weave.",
+  "sch.tincture.prepend.content": "",
   "sch.weaving.content": "",
   "sge.about.description": "\nCet analyseur a pour but d'identifier certains sorts qui pourraient être utilisés pour améliorer votre gameplay de Sage, ainsi que de donner un aperçu plus profond de ce qui s'est passé pendant une rencontre.\n\nSi vous voulez en savoir plus sur Erudit, consultez les guides à[The Balance] (https://thebalanceffxiv.com/), et discutez dans le canal #sge_questions.\n",
   "sge.actiontimeline.addersgall": "Bile de vipère",
