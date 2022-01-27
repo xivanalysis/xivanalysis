@@ -1,9 +1,9 @@
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
 import Color from 'color'
+import {DataLink} from 'components/ui/DbLink'
 import {JOBS} from 'data/JOBS'
 import {Event} from 'event'
-import {isUndefined} from 'lodash'
 import {EventHook} from 'parser/core/Dispatcher'
 import {filter, oneOf} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
@@ -21,7 +21,7 @@ const OVERCAP_SEVERITY = {
 	50: SEVERITY.MEDIUM,
 	70: SEVERITY.MAJOR,
 }
-export default class FaerieGauge extends CoreGauge {
+export class FaerieGauge extends CoreGauge {
 	static override handle = 'fairieGauge'
 	static override title = t('sch.gauge.title')`Faerie Gauge Usage`
 
@@ -39,9 +39,9 @@ export default class FaerieGauge extends CoreGauge {
 		const playerFilter = filter<Event>().source(this.parser.actor.id)
 
 		//Faerie Summon
-		this.petHook = this.addEventHook(playerFilter.type('action').action(oneOf([this.data.actions.SUMMON_EOS.id, this.data.actions.SUMMON_SELENE.id])), this.onSummon)
+		this.addEventHook(playerFilter.type('action').action(oneOf([this.data.actions.SUMMON_EOS.id, this.data.actions.SUMMON_SELENE.id])), this.onSummon)
 		//sanity check, your pets can't take actions if they're not out.
-		this.addEventHook(filter<Event>().source(oneOf(this.actorPets)), this.onSummon)
+		this.petHook = this.addEventHook(filter<Event>().source(oneOf(this.actorPets)), this.onSummon)
 		//Consumers
 		this.addEventHook(filter<Event>()
 			.type('heal')
@@ -66,11 +66,9 @@ export default class FaerieGauge extends CoreGauge {
 	}
 
 	private onSummon() {
-		if (!(this.fairyOut)) {
-			this.fairyOut = true
-			if (! isUndefined(this.petHook)) {
-				this.removeEventHook(this.petHook)
-			}
+		this.fairyOut = true
+		if (this.petHook != null) {
+			this.removeEventHook(this.petHook)
 		}
 	}
 
@@ -92,7 +90,7 @@ export default class FaerieGauge extends CoreGauge {
 			this.suggestions.add(new TieredSuggestion({
 				icon: this.data.actions.SUMMON_SERAPH.icon,
 				content: <Trans id="sch.gauge.overcap.content">
-					Avoid using Aetherflow abilities when your Faerie Gauge is already at 100.
+					Use <DataLink action="FEY_UNION" /> when your Faerie Gauge is high to spend gauge and avoid using Aetherflow abilities when your Faerie Gauge is full.
 				</Trans>,
 				tiers: OVERCAP_SEVERITY,
 				value: this.gauge.overCap,

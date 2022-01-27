@@ -1,6 +1,6 @@
 import {CooldownDowntime} from './CooldownDowntime'
 import DoTs from './DoTs'
-import FaerieGauge from './Gauge'
+import {FaerieGauge} from './Gauge'
 import Interrupts from './Interrupts'
 import Overheal from './Overheal'
 import Pets from './Pets'
