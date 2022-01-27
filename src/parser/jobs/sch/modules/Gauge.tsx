@@ -1,6 +1,7 @@
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
 import {DataLink} from 'components/ui/DbLink'
+import {ActionKey} from 'data/ACTIONS'
 import {JOBS} from 'data/JOBS'
 import {Event, Events} from 'event'
 import {EventHook} from 'parser/core/Dispatcher'
@@ -19,6 +20,20 @@ const OVERCAP_SEVERITY = {
 	50: SEVERITY.MEDIUM,
 	70: SEVERITY.MAJOR,
 }
+
+const GAUGE_GENERATORS: ActionKey[] = [
+	'SCH_ENERGY_DRAIN',
+	'LUSTRATE',
+	'INDOMITABILITY',
+	'SACRED_SOIL',
+	'EXCOGITATION',
+]
+
+const FAERIE_SUMMONERS: ActionKey[] = [
+	'SUMMON_EOS',
+	'SUMMON_SELENE',
+]
+
 export class FaerieGauge extends CoreGauge {
 	static override handle = 'faeriegauge'
 	static override title = t('sch.gauge.title')`Faerie Gauge Usage`
@@ -38,7 +53,7 @@ export class FaerieGauge extends CoreGauge {
 		const playerFilter = filter<Event>().source(this.parser.actor.id)
 
 		//Faerie Summon same as the generation actions, this list is only used once.
-		this.addEventHook(playerFilter.type('action').action(oneOf([this.data.actions.SUMMON_EOS.id, this.data.actions.SUMMON_SELENE.id])), this.onSummon)
+		this.addEventHook(playerFilter.type('action').action(this.data.matchActionId(FAERIE_SUMMONERS)), this.onSummon)
 
 		//sanity check, your pets can't take actions if they're not out.
 		this.petHook = this.addEventHook(filter<Event>().source(oneOf(this.actorPets)), this.onSummon)
@@ -51,21 +66,14 @@ export class FaerieGauge extends CoreGauge {
 		this.onGaugeSpend)
 
 		//generators
-		//I only use this list of actions once, so as ugly as it is, I think it's still better to inline it
 		this.addEventHook(playerFilter
 			.type('action')
-			.action(oneOf([
-				this.data.actions.SCH_ENERGY_DRAIN.id,
-				this.data.actions.LUSTRATE.id,
-				this.data.actions.INDOMITABILITY.id,
-				this.data.actions.SACRED_SOIL.id,
-				this.data.actions.EXCOGITATION.id,
-			])),
+			.action(this.data.matchActionId(GAUGE_GENERATORS)),
 		this.onGaugeGenerate)
 
 		//Death
 		this.addEventHook('death', () => this.fairyOut = false)
-		//Dissipation
+		//Dissipation (Faerie is automatically re-summoned at status expiration)
 		this.addEventHook(playerFilter.type('statusApply').status(this.data.statuses.DISSIPATION.id), () => this.fairyOut = false)
 		this.addEventHook(playerFilter.type('statusRemove').status(this.data.statuses.DISSIPATION.id), () => this.fairyOut = true)
 
