@@ -15,6 +15,7 @@ export default class Rule {
 	requirements = []
 	target = DEFAULT_TARGET
 	displayOrder = DisplayOrder.DEFAULT
+	showProgress = true
 
 	get tier() {
 		return matchClosestLower(

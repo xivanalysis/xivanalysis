@@ -48,20 +48,24 @@ class Checklist extends Component {
 				title: {
 					className: styles.title,
 					content: <>
-						<Icon
-							name={ruleStyles.icon}
-							className={ruleStyles.text}
-						/>
-						{rule.name}
-						<div className={styles.percent + ' ' + ruleStyles.text}>
-							{percent.toFixed(1)}%
-							<Progress
-								percent={percent}
-								className={styles.progress}
-								size="small"
-								color={ruleStyles.color}
+						{rule.showProgress &&
+							<Icon
+								name={ruleStyles.icon}
+								className={ruleStyles.text}
 							/>
-						</div>
+						}
+						{rule.name}
+						{rule.showProgress &&
+							<div className={styles.percent + ' ' + ruleStyles.text}>
+								{percent.toFixed(1)}%
+								<Progress
+									percent={percent}
+									className={styles.progress}
+									size="small"
+									color={ruleStyles.color}
+								/>
+							</div>
+						}
 					</>,
 				},
 				content: {
