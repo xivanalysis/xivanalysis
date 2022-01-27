@@ -182,6 +182,7 @@
   "brd.procs.suggestions.missed.content": "Essayez d'utilisez <0/> dès que <1/> est prêt.",
   "brd.procs.suggestions.overwritten.content": "",
   "brd.rs.rotation-table.header.on-time": "<0/> dans les temps ?",
+  "brd.rs.suggestions.aaba-evaluator.content": "",
   "brd.rs.suggestions.bloodletter-evaluator.content": "",
   "brd.rs.suggestions.buff-evaluator.content": "",
   "brd.rs.suggestions.buff-evaluator.why": "",

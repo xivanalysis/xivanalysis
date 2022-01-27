@@ -47,4 +47,9 @@ export const changelog = [
 		Changes: () => <>Removed Step drift suggestions that duplicated cooldown checklist feedback.</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],
 	},
+	{
+		date: new Date('2022-01-25'),
+		Changes: () => <>Update AoE checks for Windmill and mark supported for 6.08.</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
 ]
