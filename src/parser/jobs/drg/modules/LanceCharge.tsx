@@ -96,27 +96,30 @@ export default class LanceCharge extends BuffWindow {
 				return 0
 			}
 
-			if (window.next == null) {
-				return 0
-			}
+			// if we've got a full window check if we've got two charges or didn't use a ssd
+			if (window.end != null) {
+				const maxCharges = this.cooldowns.maxChargesWithin('SPINESHATTER_DIVE', window.start, window.end)
 
-			const nextWindowSsd = window.next.data.filter(d => d.action.id === this.data.actions.SPINESHATTER_DIVE.id)
+				// we just straight up expect you to use 2
+				if (maxCharges === 2) {
+					return 1
+				}
 
-			// if the next window has two and this one has 0, adjust accordingly
-			if (currentWindowSsd.length === 0 && nextWindowSsd.length === 2) {
-				return -1
-			}
+				// otherwise maybe you didn't use a ssd because u holdin
+				// charge check if no ssds were used and this isn't a partial window
+				if (currentWindowSsd.length === 0) {
+					const nextWindowExpectedEnd = window.start + this.data.actions.LANCE_CHARGE.cooldown + this.data.statuses.LANCE_CHARGE.duration
 
-			// if this window has two and the _previous_ window had 0, adjust accordingly
-			if (window.prev == null) {
-				return 0
-			}
+					// hold conditions
+					// we've got a full window still available
+					const nextWindowAvailable = nextWindowExpectedEnd < this.parser.pull.timestamp + this.parser.pull.duration
 
-			const prevWindowSsd = window.prev.data.filter(d => d.action.id === this.data.actions.SPINESHATTER_DIVE.id)
-
-			if (currentWindowSsd.length === 2 && prevWindowSsd.length === 0) {
-				// expect two
-				return 1
+					// and we actually have more than one charge within the window
+					// note that if we had two, we've already expected the player to use it here
+					if (nextWindowAvailable && maxCharges >= 1) {
+						return -1
+					}
+				}
 			}
 		}
 
