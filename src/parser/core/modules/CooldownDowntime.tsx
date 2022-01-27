@@ -105,7 +105,7 @@ export abstract class CooldownDowntime extends Analyser {
 		when they are available, but do not clip your GCD to use them.</Trans>
 	protected checklistTarget = DEFAULT_CHECKLIST_TARGET
 
-	protected defenseChecklistName = <Trans id="core.cooldownDowntime.use-defense-cds">Use your defensive cooldowns</Trans>
+	protected defenseChecklistName = <Trans id="core.cooldownDowntime.use-defense-cds">Defensive cooldown usage</Trans>
 	protected defenseChecklistDescription = <Trans id="core.cooldownDowntime.defense-cd-metric">
 		Using your mitigation and healing cooldowns can help you survive mistakes, or relieve some stress on the healers and let them deal more damage.
 		While you shouldn't use them at the expense of your rotation or buff alignment, you should try to find helpful times to use them.
@@ -210,6 +210,7 @@ export abstract class CooldownDowntime extends Analyser {
 				name: this.defenseChecklistName,
 				description: this.defenseChecklistDescription,
 				requirements: defensiveRequirements,
+				showProgress: false,
 				tiers: this.defenseChecklistTiers,
 			}))
 		}

@@ -236,7 +236,7 @@
   "core.cooldownDowntime.defense-cd-metric": "Using your mitigation and healing cooldowns can help you survive mistakes, or relieve some stress on the healers and let them deal more damage. While you shouldn't use them at the expense of your rotation or buff alignment, you should try to find helpful times to use them.",
   "core.cooldownDowntime.ogcd-cd-metric": "Always make sure to use your actions when they are available, but do not clip your GCD to use them.",
   "core.cooldownDowntime.title": "Cooldown Downtime",
-  "core.cooldownDowntime.use-defense-cds": "Use your defensive cooldowns",
+  "core.cooldownDowntime.use-defense-cds": "Defensive cooldown usage",
   "core.cooldownDowntime.use-ogcd-cds": "Use your cooldowns",
   "core.dblink.loading": "Loading...",
   "core.deaths.content": "Don't die. Between downtime, lost gauge resources, and resurrection debuffs, dying is absolutely <0>crippling</0> to damage output.",
