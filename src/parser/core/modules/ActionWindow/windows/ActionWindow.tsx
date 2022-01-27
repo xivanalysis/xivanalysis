@@ -48,8 +48,8 @@ export abstract class ActionWindow extends Analyser {
 	protected rotationTableHeader?: JSX.Element
 
 	/**
-	 * Implementing modules MAY provide a value to override the "Rotation" title in the header of the rotation section
-	 * If implementing, you MUST provide a JSX.Element <Trans> or <Fragment> tag (Trans tag preferred)
+	 * Implementing modules MAY provide a Message element to appear above the RotationTable
+	 * If prepending multiple nodes, you MUST provide a JSX.Element <Fragment> tag
 	 */
 	protected prependMessages?: JSX.Element
 
