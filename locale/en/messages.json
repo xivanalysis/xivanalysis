@@ -799,7 +799,7 @@
   "sch.dots.checklist.requirement.bio-ii.name": "<0/> uptime",
   "sch.dots.suggestions.clipping.content": "Avoid refreshing Biolysis significantly before its expiration, except when at the end of the fight. Unnecessary refreshes use up your mana more than necessary, and may cause you to go out of mana.",
   "sch.dots.suggestions.clipping.why": "An average of {0} seconds of <0/> per minute lost to early refreshes.",
-  "sch.gauge.overcap.content": "Avoid using Aetherflow abilities when your Faerie Gauge is already at 100.",
+  "sch.gauge.overcap.content": "Use <0/> when your Faerie Gauge is high to spend gauge and avoid using Aetherflow abilities when your Faerie Gauge is full.",
   "sch.gauge.overcap.why": "You lost a total of {0} Faerie Gauge over the course of the fight due to overcapping.",
   "sch.gauge.title": "Faerie Gauge Usage",
   "sch.interrupts.suggestion.content": "If you can, try to preposition yourself so you don't have to move during mechanics as much as possible. Utilizing slidecasting will lower the need to use <0/> to instantly relocate or interrupt your current Broil III cast",
