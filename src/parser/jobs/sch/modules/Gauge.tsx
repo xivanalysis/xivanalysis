@@ -31,7 +31,6 @@ export default class FaerieGauge extends CoreGauge {
 		chart: {label: 'Faerie Gauge', color: GRAPH_COLOR},
 	}))
 	private fairyOut: boolean = false
-	private dissipationActive: boolean = false
 	private actorPets = this.parser.pull.actors.filter(actor => actor.owner != null && actor.owner.id === this.parser.actor.id).map(pet => pet.id)
 	private petHook?: EventHook<{ type: 'action'; action: number; source: string; target: string; timestamp: number; }>
 
@@ -44,8 +43,11 @@ export default class FaerieGauge extends CoreGauge {
 		//sanity check, your pets can't take actions if they're not out.
 		this.addEventHook(filter<Event>().source(oneOf(this.actorPets)), this.onSummon)
 		//Consumers
-		this.addEventHook(filter<Event>().type('heal').source(oneOf(this.actorPets))
-			.cause(this.data.matchCauseStatusId([this.data.statuses.FEY_UNION.id])), this.onGaugeSpend)
+		this.addEventHook(filter<Event>()
+			.type('heal')
+			.source(oneOf(this.actorPets))
+			.cause(this.data.matchCauseStatus(['FEY_UNION'])),
+		this.onGaugeSpend)
 		//generators
 		//I only use this list of actions once, so as ugly as it is, I think it's still better to inline it
 		this.addEventHook(playerFilter.type('action').action(oneOf([
@@ -58,13 +60,13 @@ export default class FaerieGauge extends CoreGauge {
 		//Death
 		this.addEventHook('death', () => this.fairyOut = false)
 		//Dissipation
-		this.addEventHook(playerFilter.type('statusApply').status(this.data.statuses.DISSIPATION.id), () => this.dissipationActive = true)
-		this.addEventHook(playerFilter.type('statusRemove').status(this.data.statuses.DISSIPATION.id), () => this.dissipationActive = false)
+		this.addEventHook(playerFilter.type('statusApply').status(this.data.statuses.DISSIPATION.id), () => this.fairyOut = false)
+		this.addEventHook(playerFilter.type('statusRemove').status(this.data.statuses.DISSIPATION.id), () => this.fairyOut = true)
 		this.addEventHook('complete', this.onComplete)
 	}
 
 	private onSummon() {
-		if (!(this.fairyOut || this.dissipationActive)) {
+		if (!(this.fairyOut)) {
 			this.fairyOut = true
 			if (! isUndefined(this.petHook)) {
 				this.removeEventHook(this.petHook)
@@ -78,7 +80,7 @@ export default class FaerieGauge extends CoreGauge {
 	}
 
 	private onGaugeGenerate() {
-		if (this.dissipationActive || !this.fairyOut) {
+		if (!this.fairyOut) {
 			// can't generate a guage without the fairy, so bail out
 			return
 		}
