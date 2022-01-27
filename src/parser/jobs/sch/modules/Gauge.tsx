@@ -22,7 +22,7 @@ const OVERCAP_SEVERITY = {
 	70: SEVERITY.MAJOR,
 }
 export class FaerieGauge extends CoreGauge {
-	static override handle = 'fairieGauge'
+	static override handle = 'faeriegauge'
 	static override title = t('sch.gauge.title')`Faerie Gauge Usage`
 
 	@dependency private suggestions!: Suggestions
@@ -78,23 +78,20 @@ export class FaerieGauge extends CoreGauge {
 	}
 
 	private onGaugeGenerate() {
-		if (!this.fairyOut) {
-			// can't generate a guage without the fairy, so bail out
-			return
+		if (this.fairyOut) {
+				this.gauge.generate(GAUGE_GAIN_AMOUNT)
 		}
-
-		this.gauge.generate(GAUGE_GAIN_AMOUNT)
 	}
 	private onComplete() {
 		if (this.gauge.overCap > 0) {
 			this.suggestions.add(new TieredSuggestion({
 				icon: this.data.actions.SUMMON_SERAPH.icon,
-				content: <Trans id="sch.gauge.overcap.content">
+				content: <Trans id="sch.faeriegauge.overcap.content">
 					Use <DataLink action="FEY_UNION" /> when your Faerie Gauge is high to spend gauge and avoid using Aetherflow abilities when your Faerie Gauge is full.
 				</Trans>,
 				tiers: OVERCAP_SEVERITY,
 				value: this.gauge.overCap,
-				why: <Trans id="sch.gauge.overcap.why">
+				why: <Trans id="sch.faeriegauge.overcap.why">
 					You lost a total of {this.gauge.overCap} Faerie Gauge over the course of the fight due to overcapping.
 				</Trans>,
 			}))
