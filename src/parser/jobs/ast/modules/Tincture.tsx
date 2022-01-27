@@ -4,8 +4,16 @@ import {ExpectedActionsEvaluator} from 'parser/core/modules/ActionWindow'
 import {SEVERITY} from 'parser/core/modules/Suggestions'
 import {Tincture as CoreTincture} from 'parser/core/modules/Tincture'
 import React from 'react'
+import {Message} from 'semantic-ui-react'
 
 export class Tincture extends CoreTincture {
+
+	override prependMessages = <Message>
+		<Trans id="sch.tincture.prepend.content">
+			Tracking for <DataLink action="LORD_OF_CROWNS" /> will be added in a future update, but make sure you get as many uses as possible in each Tincture window.
+		</Trans>
+	</Message>
+
 	override initialise() {
 		super.initialise()
 		this.trackOnlyActions([
@@ -35,7 +43,7 @@ export class Tincture extends CoreTincture {
 			],
 			suggestionIcon: this.data.actions.INFUSION_MND.icon,
 			suggestionContent: <Trans id="ast.tincture.suggestions.trackedActions.content">
-				Try to cover as much damage as possible with your Tinctures of Mind. Tracking for <DataLink action="LORD_OF_CROWNS" /> will be added in a future update, but make sure you get as many uses as possible in each Tincture window.
+				Try to cover as much damage as possible with your Tinctures of Mind.
 			</Trans>,
 			suggestionWindowName: <DataLink action="INFUSION_MND" showIcon={false} />,
 			severityTiers: {
