@@ -15,6 +15,7 @@ import {Icon, Message} from 'semantic-ui-react'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 
 const BASE_GCDS_PER_WINDOW = 6
+const LIGHTSPEED_REDUCTION = -2500
 
 interface LightspeedWindow {
 	start: number
@@ -72,7 +73,7 @@ export class Lightspeed extends Analyser {
 					.type('action'),
 				this.onCast,
 			)
-			this.castTimeIndex = this.castTime.setTimeAdjustment('all', this.data.statuses.LIGHTSPEED.speedModifier)
+			this.castTimeIndex = this.castTime.setTimeAdjustment('all', LIGHTSPEED_REDUCTION)
 		}
 	}
 

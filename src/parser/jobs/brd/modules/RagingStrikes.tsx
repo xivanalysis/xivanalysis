@@ -34,6 +34,8 @@ const MIN_MUSE_GCDS = 3
 
 const BUFF_BEST_USED_BEFORE_GCD = 3
 
+const APEX_OPENER_BUFFER = 60000 // time it takes on average to fill the first Apex Arrow
+
 const SUPPORT_ACTIONS: ActionKey[] = [
 	'ARMS_LENGTH',
 	'FOOT_GRAZE',
@@ -255,6 +257,29 @@ export class RagingStrikes extends BuffWindow {
 			},
 		}))
 
+		this.addEvaluator(new ExpectedActionsEvaluator({
+			expectedActions: [
+				{
+					action: this.data.actions.APEX_ARROW,
+					expectedPerWindow: 1,
+				},
+				{
+					action: this.data.actions.BLAST_ARROW,
+					expectedPerWindow: 1,
+				},
+			],
+			suggestionIcon: this.data.actions.BLAST_ARROW.icon,
+			suggestionContent: <Trans id="brd.rs.suggestions.aaba-evaluator.content">
+				One use of <DataLink action="APEX_ARROW"/> and <DataLink action="BLAST_ARROW"/> should occur during every <DataLink action="RAGING_STRIKES"/> window after the opener. Make sure you have at least 80 Soul Voice Gauge for your buffs.
+			</Trans>,
+			suggestionWindowName,
+			severityTiers: {
+				1: SEVERITY.MEDIUM,
+				3: SEVERITY.MAJOR,
+			},
+			adjustCount: this.adjustExpectedApexCount.bind(this),
+		}))
+
 		this.addEvaluator(new ExpectedActionGroupsEvaluator({
 			expectedActionGroups: [{
 				actions: [this.data.actions.BLOODLETTER, this.data.actions.RAIN_OF_DEATH],
@@ -347,6 +372,16 @@ export class RagingStrikes extends BuffWindow {
 				return RotationTargetOutcome.NEGATIVE
 			}
 		}
+	}
+
+	private adjustExpectedApexCount(window: HistoryEntry<EvaluatedAction[]>) {
+		// If the action is Apex Arrow or Blast Arrow, shouldn't count at the first window of the fight,
+		// since there's no gauge to be spent
+		if (window.start - APEX_OPENER_BUFFER <= this.parser.pull.timestamp) {
+			return -1
+		}
+
+		return 0
 	}
 
 	private wasBarrageUsed(window: HistoryEntry<EvaluatedAction[]>) {

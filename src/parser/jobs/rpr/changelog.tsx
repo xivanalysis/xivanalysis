@@ -9,6 +9,11 @@ export const changelog = [
 		contributors: [CONTRIBUTORS.KELOS],
 	},
 	{
+		date: new Date('2022-01-20'),
+		Changes: () => <>Add proc tracking for Enhanced Gibbet and Gallows.</>,
+		contributors: [CONTRIBUTORS.ARKEVORKHAT],
+	},
+	{
 		date: new Date('2021-12-31'),
 		Changes: () => <>Add checklist for <DataLink status="IMMORTAL_SACRIFICE"/> consumption.</>,
 		contributors: [CONTRIBUTORS.MR_RAZOR],
