@@ -35,7 +35,7 @@ export class Tincture extends CoreTincture {
 			],
 			suggestionIcon: this.data.actions.INFUSION_MND.icon,
 			suggestionContent: <Trans id="ast.tincture.suggestions.trackedActions.content">
-				Try to cover as much damage as possible with your Tinctures of Mind.
+				Try to cover as much damage as possible with your Tinctures of Mind. Tracking for <DataLink action="LORD_OF_CROWNS" /> will be added in a future update, but make sure you get as many uses as possible in each Tincture window.
 			</Trans>,
 			suggestionWindowName: <DataLink action="INFUSION_MND" showIcon={false} />,
 			severityTiers: {
