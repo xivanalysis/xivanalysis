@@ -46,7 +46,6 @@ export default class FaerieGauge extends CoreGauge {
 		//Consumers
 		this.addEventHook(filter<Event>().type('heal').source(oneOf(this.actorPets))
 			.cause(this.data.matchCauseStatusId([this.data.statuses.FEY_UNION.id])), this.onGaugeSpend)
-		this.addEventHook(playerFilter.type('action').action(this.data.actions.SCH_FEY_BLESSING.id), this.onGaugeSpend)
 		//generators
 		//I only use this list of actions once, so as ugly as it is, I think it's still better to inline it
 		this.addEventHook(playerFilter.type('action').action(oneOf([
