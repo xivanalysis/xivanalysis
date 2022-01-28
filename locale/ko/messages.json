@@ -81,6 +81,8 @@
   "ast.swiftcast.suggestion.content": "",
   "ast.synastry.suggestion.content": "단일 대상에게 글쿨힐을 사용하기 전에 <0/>을 먼저 적용시킨 후 사용하십시오. 글쿨힐을 사용하는것 자체가 손해를 보는것 이기 때문에 궁합을 사용하여 치유량을 최대로 하십시오.",
   "ast.synastry.suggestion.why": "궁합이 사용가능함에도 글쿨힐을 궁합없이 {0, plural, one {# 회 } other {# 회 }}사용하였습니다.",
+  "ast.tincture.prepend.content": "",
+  "ast.tincture.suggestions.trackedActions.content": "",
   "blm.about.description": "이 분석기는 당신이 생각하는 것보다 얼마나 <0/> 을(를) 시전하지 못하는지 알려줍니다.",
   "blm.gage.suggestions.overwritten-paradox.why": "<0/>을 {0, plural, one {#회} other {#회}} 미처 사용하지 못하고 갱신하였습니다.",
   "blm.gauge.resource.astral-fire": "천상의 화염",
