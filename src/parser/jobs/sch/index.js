@@ -27,7 +27,12 @@ export const SCHOLAR = new Meta({
 	changelog: [
 		{
 			date: new Date('2022-01-25'),
-			changes: () => <>Update Faerie Gauge to 6.0</>,
+			Changes: () => <>Update Faerie Gauge to 6.0</>,
+			contributors: [CONTRIBUTORS.ARKEVORKHAT],
+		},
+		{
+			date: new Date('2022-01-25'),
+			Changes: () => <>Update Weaving module text to account for Broil IV update</>,
 			contributors: [CONTRIBUTORS.ARKEVORKHAT],
 		},
 		{

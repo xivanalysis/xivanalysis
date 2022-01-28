@@ -10,6 +10,9 @@ import {Data} from 'parser/core/modules/Data'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
 
+// Rarely, reassembled fade timestamps don't match the GCD cast timestamps - deal with it
+const DELAY_THRESHOLD_MS = 100
+
 // These are the only GCDs that should be reassembled under normal circumstances
 const REASSEMBLE_GCDS: ActionKey[] = [
 	'CHAIN_SAW',
@@ -93,7 +96,7 @@ export class Reassemble extends Analyser {
 	}
 
 	private onRemove(event: Events['statusRemove']) {
-		if (event.timestamp !== this.state.lastGcdTime) {
+		if (event.timestamp > this.state.lastGcdTime + DELAY_THRESHOLD_MS) {
 			this.history.droppedUses += 1
 		}
 		if (this.state.gcdHook != null) {
