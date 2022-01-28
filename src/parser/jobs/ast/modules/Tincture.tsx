@@ -9,7 +9,7 @@ import {Message} from 'semantic-ui-react'
 export class Tincture extends CoreTincture {
 
 	override prependMessages = <Message>
-		<Trans id="sch.tincture.prepend.content">
+		<Trans id="ast.tincture.prepend.content">
 			Tracking for <DataLink action="LORD_OF_CROWNS" /> will be added in a future update, but make sure you get as many uses as possible in each Tincture window.
 		</Trans>
 	</Message>
