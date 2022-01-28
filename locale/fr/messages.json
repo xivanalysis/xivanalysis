@@ -81,6 +81,7 @@
   "ast.swiftcast.suggestion.content": "Lancer un sort avec <0/> avant qu'il expire. Cela vous permet d'utiliser directement un sort avec un temps de lancement, tel que <1/> pour une résurrection rapide , ou <2/> pour weave.",
   "ast.synastry.suggestion.content": "Essayez d'utiliser <0/> si vous avez besoin de lancer un GCD à cible unique pour soigner. Le soin du GCD en lui même est déjà une perte d'efficacité, il est donc préférable de la rendre aussi fort que possible si Synastrie n'est pas nécessaire bientôt.",
   "ast.synastry.suggestion.why": "{0, plural,one {#mono-cible GCD de heal a été utilisé}other {#mono-cible gcd de heal ont été utilisé}} sans synastrie, même si elle était disponible.",
+  "ast.tincture.suggestions.trackedActions.content": "Essayez de faire autant de dégâts que possible avec vos potions d'esprit.",
   "blm.about.description": "Cet analyseur a pour but d'identifier à quel point vous n'utilisez pas <0/> autant que vous le pensez.",
   "blm.gage.suggestions.overwritten-paradox.why": "<0/> a été écrasé {0} fois.",
   "blm.gauge.resource.astral-fire": "Feu astral",
