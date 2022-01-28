@@ -418,6 +418,7 @@
   "drg.gauge.suggestions.overcapped-fmf.content": "",
   "drg.gauge.suggestions.overcapped-fmf.why": "",
   "drg.lancecharge.title": "Lanzenschärfung",
+  "drg.lc.prepend-message": "",
   "drg.lc.suggestions.missedaction.content": "",
   "drg.lc.suggestions.missedgcd.content": "Versuche während jedes <0/>-Zeitfensters mindestens 8 Angriffe mit globaler Abklingzeit unterzubringen.",
   "drg.procs.suggestions.extenders.content": "Vermeide es, deine Kombos während <0/> oder <1/> zu unterbrechen, da du dadurch deine Procs verlierst, die es dir erlauben sie zu benutzen. Das kostet dich sowohl den Cast als auch die <2/>-Dauer, die daran gebunden ist.",

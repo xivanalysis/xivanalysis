@@ -418,6 +418,7 @@
   "drg.gauge.suggestions.overcapped-fmf.content": "",
   "drg.gauge.suggestions.overcapped-fmf.why": "",
   "drg.lancecharge.title": "돌격하는 창",
+  "drg.lc.prepend-message": "",
   "drg.lc.suggestions.missedaction.content": "",
   "drg.lc.suggestions.missedgcd.content": "<0/> 구간 마다 반드시 8회의 글쿨기를 포함하십시오.",
   "drg.procs.suggestions.extenders.content": "<0/>와 <1/> 단계에서 콤보를 끊는 것은 프록을 잃게되며, 그에 따르는 <2/> 연장 또한 잃게 되므로 피합니다.",

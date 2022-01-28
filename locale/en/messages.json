@@ -418,6 +418,7 @@
   "drg.gauge.suggestions.overcapped-fmf.content": "Make sure to use <0/> before <1/> or <2/> when you already have two stacks of Firstminds' Focus to prevent losing uses of <3/> by overcapping.",
   "drg.gauge.suggestions.overcapped-fmf.why": "{fmfOvercap, plural, one {# Firstminds' Focus stack} other {# Firstminds' Focus stacks}} were lost.",
   "drg.lancecharge.title": "Lance Charge",
+  "drg.lc.prepend-message": "<0/> may be held (not used) during a buff window if you are instead able to use both charges during the next window. We do our best in this module to avoid marking windows where <1/> was correctly held as errors. <2/> should be used in every other window.",
   "drg.lc.suggestions.missedaction.content": "Try to use as many of your oGCDs as possible during <0/>. Remember to keep your abilities on cooldown, when possible, to prevent them from drifting outside of your buff windows.",
   "drg.lc.suggestions.missedgcd.content": "Try to land at least 8 GCDs during every <0/> window.",
   "drg.procs.suggestions.extenders.content": "Avoid interrupting your combos at the <0/> and <1/> stages, as it causes you to lose the procs that allow you to cast them.",

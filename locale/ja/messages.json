@@ -418,6 +418,7 @@
   "drg.gauge.suggestions.overcapped-fmf.content": "2スタックの天竜眼があるとき、<1/>や<2/>の前に<0/>を使用して<3/>の使用回数を減らさないようにしましょう。",
   "drg.gauge.suggestions.overcapped-fmf.why": "{fmfOvercap, plural, other {#スタックの天竜眼}}が失われました",
   "drg.lancecharge.title": "ランスチャージ",
+  "drg.lc.prepend-message": "",
   "drg.lc.suggestions.missedaction.content": "",
   "drg.lc.suggestions.missedgcd.content": "<0/>の効果時間中に8回以上のウェポンスキルを使いましょう。",
   "drg.procs.suggestions.extenders.content": "コンボが<0/>や<1/>の状態にあるときに中断すると、それらを実行できるプロックが失われてしまうので中断しないようにしましょう。",

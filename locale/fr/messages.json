@@ -418,6 +418,7 @@
   "drg.gauge.suggestions.overcapped-fmf.content": "",
   "drg.gauge.suggestions.overcapped-fmf.why": "",
   "drg.lancecharge.title": "Lance acérée",
+  "drg.lc.prepend-message": "",
   "drg.lc.suggestions.missedaction.content": "",
   "drg.lc.suggestions.missedgcd.content": "",
   "drg.procs.suggestions.extenders.content": "Évitez d'interrompre vos combos aux étapes <0/> et <1/>, car cela vous fait perdre les procs qui vous permettent de les lancer, ce qui vous coûte à la fois le casting et la durée <2/> qui l'accompagne.",
