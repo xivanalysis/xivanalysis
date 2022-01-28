@@ -13,8 +13,7 @@ import React from 'react'
 const SOULSOW_CAST_TIME = 5000 //milliseconds
 const SOULSOW_CAST_GRACE = 1000
 const USAGE_PERCENTAGE_SEVERITY = {
-	5: TARGET.FAIL,
-	10: TARGET.WARN,
+	0: TARGET.FAIL,
 	100: TARGET.SUCCESS,
 }
 
