@@ -12,12 +12,12 @@ import {
 	EvaluatedAction,
 	EvaluationOutput,
 	ExpectedActionsEvaluator,
+	ExpectedActionGroupsEvaluator,
 	ExpectedGcdCountEvaluator,
 	TrackedAction,
 	TrackedActionsOptions,
 	WindowEvaluator,
 } from 'parser/core/modules/ActionWindow'
-import {OutcomeCalculator} from 'parser/core/modules/ActionWindow/evaluators/TrackedAction'
 import {HistoryEntry} from 'parser/core/modules/ActionWindow/History'
 import {Actors} from 'parser/core/modules/Actors'
 import {GlobalCooldown} from 'parser/core/modules/GlobalCooldown'
@@ -33,6 +33,8 @@ import DISPLAY_ORDER from './DISPLAY_ORDER'
 const MIN_MUSE_GCDS = 3
 
 const BUFF_BEST_USED_BEFORE_GCD = 3
+
+const APEX_OPENER_BUFFER = 60000 // time it takes on average to fill the first Apex Arrow
 
 const SUPPORT_ACTIONS: ActionKey[] = [
 	'ARMS_LENGTH',
@@ -171,107 +173,6 @@ class BuffEvaluator implements WindowEvaluator, BuffEvaluatorOptions {
 	}
 }
 
-interface TrackedActionGroup {
-	actions: Action[]
-	expectedPerWindow: number
-}
-
-interface TrackedActionGroupsOptions {
-	expectedActionGroups: TrackedActionGroup[]
-	suggestionIcon: string
-	suggestionContent: JSX.Element
-	suggestionWindowName: JSX.Element
-	severityTiers: SeverityTiers
-	adjustCount?: (window: HistoryEntry<EvaluatedAction[]>, action: TrackedActionGroup) => number
-	adjustOutcome?: (window: HistoryEntry<EvaluatedAction[]>, action: TrackedActionGroup) => OutcomeCalculator | undefined
-}
-
-export class ExpectedActionGroupsEvaluator implements WindowEvaluator {
-
-	private expectedActionGroups: TrackedActionGroup[]
-	private suggestionIcon: string
-	private suggestionContent: JSX.Element
-	private suggestionWindowName: JSX.Element
-	private severityTiers: SeverityTiers
-	private adjustCount : (window: HistoryEntry<EvaluatedAction[]>, action: TrackedActionGroup) => number
-	private adjustOutcome : (window: HistoryEntry<EvaluatedAction[]>, action: TrackedActionGroup) => OutcomeCalculator | undefined
-
-	constructor(opts: TrackedActionGroupsOptions) {
-		this.expectedActionGroups = opts.expectedActionGroups
-		this.suggestionIcon = opts.suggestionIcon
-		this.suggestionContent = opts.suggestionContent
-		this.suggestionWindowName = opts.suggestionWindowName
-		this.severityTiers = opts.severityTiers
-		this.adjustCount = opts.adjustCount ?? (() => 0)
-		this.adjustOutcome = opts.adjustOutcome ?? (() => undefined)
-	}
-
-	public suggest(windows: Array<HistoryEntry<EvaluatedAction[]>>) {
-		const missedActions = windows
-			.reduce((total, window) => {
-				const missingInWindow = this.expectedActionGroups.reduce((subTotal, actionGroup) => {
-					const actual = this.countUsed(window, actionGroup)
-					const expected = this.determineExpected(window, actionGroup)
-					const comparator = this.adjustOutcome(window, actionGroup)
-					// If a custom comparator is defined for this action, and it didn't return negative, don't count this window
-					const currentLoss = (comparator != null && comparator(actual, expected) !== RotationTargetOutcome.NEGATIVE) ?
-						0 : Math.max(0, expected - actual)
-					return subTotal + currentLoss
-				}, 0)
-				return total + missingInWindow
-			}, 0)
-
-		return new TieredSuggestion({
-			icon: this.suggestionIcon,
-			content: this.suggestionContent,
-			tiers: this.severityTiers,
-			value: missedActions,
-			why: <Trans id="core.buffwindow.suggestions.trackedaction.why">
-				<Plural value={missedActions} one="# use of a recommended action was" other="# uses of recommended actions were"/> missed during {this.suggestionWindowName} windows.
-			</Trans>,
-		})
-	}
-
-	public output(windows: Array<HistoryEntry<EvaluatedAction[]>>): EvaluationOutput[]  {
-		return this.expectedActionGroups.map(actionGroup => {
-			const headerActions = actionGroup.actions.map((action, i) => {
-				return <>
-					{ i > 0 && <> / </> }
-					<ActionLink key={i} showName={false} {...action}/>
-				</>
-			})
-
-			return {
-				format: 'table',
-				header: {
-					header: <>{headerActions}</>,
-					accessor: _.first(actionGroup.actions)?.name ?? '',
-				},
-				rows: windows.map(window => {
-					return {
-						actual: this.countUsed(window, actionGroup),
-						expected: this.determineExpected(window, actionGroup),
-						targetComparator: this.adjustOutcome(window, actionGroup),
-					}
-				}),
-			}
-		})
-	}
-
-	protected countUsed(window: HistoryEntry<EvaluatedAction[]>, actionGroup: TrackedActionGroup) {
-		return window.data.filter(cast => {
-			for (const action of actionGroup.actions) {
-				if (cast.action.id === action.id) { return true }
-			}
-			return false
-		}).length
-	}
-
-	private determineExpected(window: HistoryEntry<EvaluatedAction[]>, action: TrackedActionGroup) {
-		return action.expectedPerWindow + this.adjustCount(window, action)
-	}
-}
-
 export class RagingStrikes extends BuffWindow {
 	static override handle = 'rs'
 	static override title = t('brd.rs.title')`Raging Strikes`
@@ -354,6 +255,29 @@ export class RagingStrikes extends BuffWindow {
 				2: SEVERITY.MEDIUM,
 				3: SEVERITY.MAJOR,
 			},
+		}))
+
+		this.addEvaluator(new ExpectedActionsEvaluator({
+			expectedActions: [
+				{
+					action: this.data.actions.APEX_ARROW,
+					expectedPerWindow: 1,
+				},
+				{
+					action: this.data.actions.BLAST_ARROW,
+					expectedPerWindow: 1,
+				},
+			],
+			suggestionIcon: this.data.actions.BLAST_ARROW.icon,
+			suggestionContent: <Trans id="brd.rs.suggestions.aaba-evaluator.content">
+				One use of <DataLink action="APEX_ARROW"/> and <DataLink action="BLAST_ARROW"/> should occur during every <DataLink action="RAGING_STRIKES"/> window after the opener. Make sure you have at least 80 Soul Voice Gauge for your buffs.
+			</Trans>,
+			suggestionWindowName,
+			severityTiers: {
+				1: SEVERITY.MEDIUM,
+				3: SEVERITY.MAJOR,
+			},
+			adjustCount: this.adjustExpectedApexCount.bind(this),
 		}))
 
 		this.addEvaluator(new ExpectedActionGroupsEvaluator({
@@ -448,6 +372,16 @@ export class RagingStrikes extends BuffWindow {
 				return RotationTargetOutcome.NEGATIVE
 			}
 		}
+	}
+
+	private adjustExpectedApexCount(window: HistoryEntry<EvaluatedAction[]>) {
+		// If the action is Apex Arrow or Blast Arrow, shouldn't count at the first window of the fight,
+		// since there's no gauge to be spent
+		if (window.start - APEX_OPENER_BUFFER <= this.parser.pull.timestamp) {
+			return -1
+		}
+
+		return 0
 	}
 
 	private wasBarrageUsed(window: HistoryEntry<EvaluatedAction[]>) {

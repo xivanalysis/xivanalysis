@@ -7,7 +7,7 @@ export class AoEUsages extends CoreAoE {
 		{
 			aoeAction: this.data.actions.WINDMILL,
 			stActions: [this.data.actions.CASCADE],
-			minTargets: 2,
+			minTargets: 3,
 		},
 		{
 			aoeAction: this.data.actions.RISING_WINDMILL,
