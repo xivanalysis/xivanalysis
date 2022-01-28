@@ -5,11 +5,13 @@ import {Event, Events} from 'event'
 import {filter} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
 import {BuffWindow, EvaluatedAction, ExpectedActionsEvaluator, ExpectedGcdCountEvaluator, TrackedAction} from 'parser/core/modules/ActionWindow'
+import {DisplayedActionEvaluator} from 'parser/core/modules/ActionWindow/evaluators/DisplayedActionEvaluator'
 import {HistoryEntry} from 'parser/core/modules/ActionWindow/History'
 import {Cooldowns} from 'parser/core/modules/Cooldowns'
 import {GlobalCooldown} from 'parser/core/modules/GlobalCooldown'
 import {SEVERITY} from 'parser/core/modules/Suggestions'
 import React from 'react'
+import {Message} from 'semantic-ui-react'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 
 interface SsdDelayTracker {
@@ -29,6 +31,10 @@ export default class LanceCharge extends BuffWindow {
 	@dependency cooldowns!: Cooldowns
 
 	override buffStatus = this.data.statuses.LANCE_CHARGE
+
+	override prependMessages = <Message info>
+		<Trans id="drg.lc.prepend-message"><ActionLink action="SPINESHATTER_DIVE" /> may be held (not used) during a buff window if you are instead able to use both charges during the next window. We do our best in this module to avoid marking windows where <ActionLink action="SPINESHATTER_DIVE" showIcon={false} /> was correctly held as errors. <ActionLink action="DRAGONFIRE_DIVE" /> should be used in every other window.</Trans>
+	</Message>
 
 	private ssdDelays: SsdDelayTracker[] = []
 	private currentSsdWindow?: SsdDelayTracker
@@ -76,10 +82,6 @@ export default class LanceCharge extends BuffWindow {
 					expectedPerWindow: 1,
 				},
 				{
-					action: this.data.actions.DRAGONFIRE_DIVE,
-					expectedPerWindow: 0,
-				},
-				{
 					action: this.data.actions.MIRAGE_DIVE,
 					expectedPerWindow: 1,
 				},
@@ -102,6 +104,8 @@ export default class LanceCharge extends BuffWindow {
 			},
 			adjustCount: this.adjustExpectedActionCount.bind(this),
 		}))
+
+		this.addEvaluator(new DisplayedActionEvaluator([this.data.actions.DRAGONFIRE_DIVE]))
 	}
 
 	private onLcStatusApply(event: Events['statusApply']) {
@@ -171,7 +175,7 @@ export default class LanceCharge extends BuffWindow {
 				}
 
 				// if we weren't expecting two but got two anyway, sure give it to them
-				// this should only happen on the first window
+				// this should only happen on the first window or after a downtime reset
 				if (!ssdDelay.expectsTwo && currentWindowSsd.length === 2) {
 					return 1
 				}

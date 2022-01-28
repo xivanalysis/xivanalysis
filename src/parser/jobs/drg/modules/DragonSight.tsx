@@ -111,10 +111,6 @@ export default class DragonSight extends BuffWindow {
 					expectedPerWindow: 1,
 				},
 				{
-					action: this.data.actions.DRAGONFIRE_DIVE,
-					expectedPerWindow: 1,
-				},
-				{
 					action: this.data.actions.MIRAGE_DIVE,
 					expectedPerWindow: 1,
 				},
@@ -124,6 +120,10 @@ export default class DragonSight extends BuffWindow {
 				},
 				{
 					action: this.data.actions.SPINESHATTER_DIVE,
+					expectedPerWindow: 1,
+				},
+				{
+					action: this.data.actions.DRAGONFIRE_DIVE,
 					expectedPerWindow: 1,
 				},
 			],
