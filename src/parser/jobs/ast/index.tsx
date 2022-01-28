@@ -29,12 +29,25 @@ export const ASTROLOGIAN = new Meta({
 	</>,
 	supportedPatches: {
 		from: '6.0',
-		to: '6.05',
+		to: '6.08',
 	},
 	contributors: [
 		{user: CONTRIBUTORS.OTOCEPHALY, role: ROLES.DEVELOPER},
 	],
 	changelog: [
+		{
+			date: new Date('2022-01-26'),
+			Changes: () => <>
+				<strong>6.08 Support</strong>
+				<ul>
+					<li> Bumped to 6.08 support. No job changes noted for AST and no bugs related to the patch noted. </li>
+					<li> Added tinctures module to show rotations during opener and burst windows. </li>
+					<li> Added <DataLink action="SWIFTCAST" /> modules for healer suggestion consistency purposes. </li>
+					<li> Fixed bug with <DataLink action="HELIOS" /> suggestion where the counter would increase when <DataLink action="HELIOS" showIcon={false} /> (not aspected) is cast and <DataLink action="NEUTRAL_SECT" /> is up since <DataLink action="HELIOS" showIcon={false} /> does not activate <DataLink action="NEUTRAL_SECT" showIcon={false} />. </li>
+				</ul>
+			</>,
+			contributors: [CONTRIBUTORS.ARKEVORKHAT, CONTRIBUTORS.OTOCEPHALY],
+		},
 		{
 			date: new Date('2022-01-06'),
 			Changes: () => <>
