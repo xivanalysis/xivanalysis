@@ -42,7 +42,6 @@ export const AST = ensureStatuses({
 		name: 'Lightspeed',
 		icon: 'https://xivapi.com/i/013000/013220.png',
 		duration: 15000,
-		speedModifier: -2500,
 	},
 
 	SYNASTRY_SELF: {

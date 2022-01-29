@@ -21,7 +21,7 @@ export const SAMURAI = new Meta({
 
 	supportedPatches: {
 		from: '6.0',
-		to: '6.05',
+		to: '6.08',
 	},
 
 	contributors: [

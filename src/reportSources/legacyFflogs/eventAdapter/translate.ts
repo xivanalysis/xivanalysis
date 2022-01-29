@@ -324,12 +324,20 @@ export class TranslateAdapterStep extends AdapterStep {
 		resources: ActorResources,
 		event: FflogsEvent,
 	): Events['actorUpdate'] {
-		// TODO: Do we want to bother tracking actor resources to prevent duplicate updates?
 		return {
 			...this.adaptBaseFields(event),
 			type: 'actorUpdate',
 			actor,
-			hp: {current: resources.hitPoints, maximum: resources.maxHitPoints},
+			hp: {
+				// FF Logs is doing some incorrect adjustments to HP resources that cause
+				// a 0 HP report without an accompanying death. These are typically caused
+				// by 1-hit mechanics being survived due to either fight mechanics or tank
+				// invulnerabilities - we can safely cap resource updates at 1 HP, and wait
+				// for the death event for a 0 HP update. This does mean deaths can be a
+				// little delayed in the event stream, but is probably an overall safer methodology.
+				current: Math.max(1, resources.hitPoints),
+				maximum: resources.maxHitPoints,
+			},
 			mp: {current: resources.mp, maximum: resources.maxMP},
 			position: {x: resources.x, y: resources.y, bearing: resources.facing},
 		}
