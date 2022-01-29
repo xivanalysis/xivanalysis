@@ -510,6 +510,8 @@
   "gnb.nomercy.notes.header": "ブラッドソイルが使われました",
   "gnb.nomercy.suggestions.gcds.content": "9回のウェポンスキルを<0/>効果時間中に使うようにしましょう。使用直前のGCDタイマーの残り1/3まで待てば、20秒の効果時間は9回のウェポンスキルを収めるのに十分です。",
   "gnb.nomercy.title": "ノー・マーシー効果時間",
+  "mch.drift.drift-header": "遅延の問題",
+  "mch.drift.drift-issue": "<0/> {0} の遅延",
   "mch.drift.timelinelink-button": "タイムラインに移動",
   "mch.drift.timestamp-header": "タイムスタンプ",
   "mch.drift.title": "GCDの挟み込み",
