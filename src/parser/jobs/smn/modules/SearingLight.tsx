@@ -79,14 +79,14 @@ export class SearingLight extends Analyser {
 		)
 		// this hook is for just the player to start the window
 		this.addEventHook(
-			filter<Event>()
+			petsFilter
 				.target(this.parser.actor.id)
 				.status(this.data.statuses.SEARING_LIGHT.id)
 				.type('statusApply'),
 			this.onBuffApplied
 		)
 		this.addEventHook(
-			filter<Event>()
+			petsFilter
 				.target(this.parser.actor.id)
 				.status(this.data.statuses.SEARING_LIGHT.id)
 				.type('statusRemove'),
