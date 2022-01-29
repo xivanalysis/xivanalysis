@@ -587,6 +587,7 @@
   "sch.dots.checklist.name": "常にDoTを切らさないようにしてください。",
   "sch.dots.checklist.requirement.bio-ii.name": "アクティブ率: <0/>",
   "sch.dots.suggestions.clipping.content": "戦闘終了の直前を除き、蠱毒法の早すぎる更新は避けましょう。不要な更新は必要以上のMPを消費し、MP切れの原因にもなり得ます。",
+  "sch.gauge.title": "フェイエーテル",
   "sch.interrupts.suggestion.content": "可能な限り事前に位置取りをすることでギミック中に動く必要がないようにしてみましょう。すべり撃ちも活用することで死炎法を中断したり<0/>に置き換えたりする必要が少なくなります。",
   "sch.overheal.hot.name": "野戦治療の陣",
   "sch.overheal.pet.name": "フェアリー",
