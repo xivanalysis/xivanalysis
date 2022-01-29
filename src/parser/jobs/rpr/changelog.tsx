@@ -4,6 +4,11 @@ import React from 'react'
 
 export const changelog = [
 	{
+		date: new Date('2022-01-29'),
+		Changes: () => <>Add usage statistic for defensive cooldowns.</>,
+		contributors: [CONTRIBUTORS.HINT],
+	},
+	{
 		date: new Date('2022-01-20'),
 		Changes: () => <>Add proc tracking for Enhanced Gibbet and Gallows.</>,
 		contributors: [CONTRIBUTORS.ARKEVORKHAT],

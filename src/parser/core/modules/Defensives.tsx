@@ -32,7 +32,7 @@ export abstract class Defensives extends Analyser {
 	 */
 	protected statisticOpts: AbstractStatisticOptions = {}
 
-	private uses: Map<number, number> = new Map()
+	private uses: Map<Action['id'], number> = new Map()
 
 	override initialise() {
 		const actionFilter = filter<Event>()
