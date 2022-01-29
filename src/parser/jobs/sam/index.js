@@ -26,7 +26,6 @@ export const SAMURAI = new Meta({
 
 	contributors: [
 		{user: CONTRIBUTORS.RYAN, role: ROLES.DEVELOPER},
-		{user: CONTRIBUTORS.ACKWELL},
 		{user: CONTRIBUTORS.KALITTLES, role: ROLES.DEVELOPER},
 	],
 
