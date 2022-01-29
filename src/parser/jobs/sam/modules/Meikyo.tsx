@@ -94,6 +94,9 @@ export class Meikyo extends BuffWindow {
 			const fightTimeRemaining = (this.parser.pull.timestamp + this.parser.pull.duration) - window.start
 			const possibleGCDs = Math.floor(fightTimeRemaining / SAM_BASE_GCD_SPEED_BUFFED)
 
+			if (possibleGCDs > SEN_GCDS) { //No Samurai, you can not slash so fast you bend space-time and get 2 GCDs for the price of 1
+				return 0
+			}
 			return possibleGCDs - defaultEoFValue
 		}
 
