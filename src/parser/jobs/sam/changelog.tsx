@@ -8,6 +8,10 @@ export const changelog = [
 	// 	contrubutors: [CONTRIBUTORS.YOU],
 	// },
 	{
+		date: new Date('2022-1-28'),
+		Changes: () => <>Fixed flawed logic that assumes SAM's can surpass their limits and get more than 3 gcds under the meikyo shisui buff.</>,
+		contributors: [CONTRIBUTORS.RYAN],
+	}, {
 		date: new Date('2022-1-09'),
 		Changes: () => <>
 			<ul>
