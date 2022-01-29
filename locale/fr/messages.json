@@ -603,7 +603,6 @@
   "sam.ms.suggestions.badgcd.content": "GCDs utilisés durant <0/> devraient être limités à l'utilisation des sorts de sen setsu.",
   "sam.ms.suggestions.missedgcd.content": "Essayez d'utiliser 3 GCDs chaque <0/> fenêtre.",
   "sam.ms.title": "Fenêtre de Meikyo Shisui",
-  "sam.ogi.checklist.requirement.waste.name": "Utilisez autant de niveau de Tension de la lame que possible.",
   "sam.sen.rotation-table.message": "Ce tableau permet de mieux voir les événements qui se prêtent à une fenêtre Sen qui a été jugée \"non standard\" comme expliqué ci-dessous. La mort, l'écrasement d'un Sen ou l'utilisation de l'hagakure font qu'une fenêtre sera signalée comme non standard.",
   "sam.sen.sen_handling.d_hagakure": "Contient une utilisation non standard de Hagakure.",
   "sam.sen.sen_handling.death": "Contient vos morts.",
