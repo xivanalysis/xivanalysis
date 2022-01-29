@@ -10,6 +10,14 @@ export const changelog: ChangelogEntry[] = [
 	// 	contributors: [CONTRIBUTORS.YOU],
 	// },
 	{
+		date: new Date('2022-01-29'),
+		Changes: () => <>
+			Prevent erroneous 0 HP updates from FF Logs report sources marking the player as dead.
+			This should resolve incorrect death flags due to tank invulnerabilities and mechanics such as Death's Toll.
+		</>,
+		contributors: [CONTRIBUTORS.ACKWELL],
+	},
+	{
 		date: new Date('2022-01-12'),
 		Changes: () => <>Improve enemy targetability detection when a target raises during a fight (e.g. striking dummies)</>,
 		contributors: [CONTRIBUTORS.AZARIAH],
