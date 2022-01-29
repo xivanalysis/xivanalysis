@@ -772,6 +772,7 @@
   "sch.dots.checklist.requirement.bio-ii.name": "<0/> 的覆盖率",
   "sch.dots.suggestions.clipping.content": "避免在蛊毒法结束之前过早地刷新它，除非战斗已经接近尾声。不必要的刷新会消耗你更多的MP，可能会导致你的MP用尽。",
   "sch.dots.suggestions.clipping.why": "因为过早刷新，你平均丢失了{0}秒的<0/>。",
+  "sch.gauge.title": "异想以太",
   "sch.interrupts.suggestion.content": "如果可以的话，提前移动到你应该在的位置，这样就不用在处理机制时进行过多移动了。合理利用滑步可以减少为了移动而使用的 <0/> ，避免打断死炎法的咏唱。",
   "sch.overheal.hot.name": "野战治疗阵",
   "sch.overheal.pet.name": "小仙女",
