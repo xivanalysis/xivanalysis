@@ -770,7 +770,7 @@
   "sam.ms.suggestions.badgcd.content": "GCDs used during <0/> should be limited to sen building skills.",
   "sam.ms.suggestions.missedgcd.content": "Try to land 3 GCDs during every <0/> window.",
   "sam.ms.title": "Meikyo Shisui Windows",
-  "sam.ogi.checklist.requirement.waste.name": "Use as many of your meditation stacks as possible.",
+  "sam.ogi.checklist.requirement.waste.name": "Use as many of your Ogis as possible.",
   "sam.ogi.waste.content": "Using <0/> grants <1/> which is consumed to use <2/> and <3/>. Using these skills are important for both your damage output and rotational alignment as <4/> and <5/> replace your filler GCDs.",
   "sam.sen.no_hagakure.message": "<0/> is a powerful tool that should be used to help keep your rotation looping smoothly. Use it to handle your filler phase of your rotation.",
   "sam.sen.rotation-table.disclaimer": " This module labels a \"Standard Sen Window\" to be a window that with no Sen overwrites that ends on an Iaijutsu. Please consult The Balance Discord and this [Infograph](https://i.imgur.com/978VOqG.jpg) for more details on looping Samurai gameplay.",
