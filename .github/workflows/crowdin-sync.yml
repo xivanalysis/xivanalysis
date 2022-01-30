@@ -22,11 +22,13 @@ jobs:
 
     - name: Sync translations
       run: |
-        crowdin download -b $GITHUB_REF_NAME -T ${{ secrets.CROWDIN_API_TOKEN }}
+        crowdin download -b $GITHUB_REF_NAME -T ${{ secrets.CROWDIN_API_TOKEN }} --no-progress
         yarn extract
 
     - name: Commit
       run: |
         git config user.name github-actions
         git config user.email github-actions@github.com
-        git diff --color=never locale
+        git add locale
+        git commit -m "i18n sync $(date +%s)"
+        git push
