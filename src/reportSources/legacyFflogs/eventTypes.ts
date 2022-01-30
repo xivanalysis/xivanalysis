@@ -194,6 +194,7 @@ interface EffectEventFields extends AbilityEventFields {
 	expectedCritRate?: number
 	directHitPercentage?: number
 	multiplier?: number
+	bonusPercent?: number
 }
 
 // -----
