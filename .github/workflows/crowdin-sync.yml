@@ -7,6 +7,9 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+      with:
+        token: ${{ secrets.I18N_WORKER_API_TOKEN }}
+
     - uses: actions/setup-node@v2
       with:
         node-version: '14'
