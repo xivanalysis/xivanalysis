@@ -57,15 +57,16 @@ export class SearingLight extends Analyser {
 	private players: Actor[] = []
 	private playerCastHook? : EventHook<Events['action']>
 	private slPending: number = 0 // timestamp
+	private petIds: string[] = []
 
 	override initialise() {
 		super.initialise()
 
-		const pets = this.parser.pull.actors
+		this.petIds = this.parser.pull.actors
 			.filter(actor => actor.owner === this.parser.actor)
 			.map(actor => actor.id)
 		const petsFilter = filter<Event>()
-			.source(oneOf(pets))
+			.source(oneOf(this.petIds))
 
 		this.addEventHook(
 			petsFilter.action(this.data.actions.PET_SEARING_LIGHT.id).type('action'),
@@ -79,14 +80,14 @@ export class SearingLight extends Analyser {
 		)
 		// this hook is for just the player to start the window
 		this.addEventHook(
-			petsFilter
+			filter<Event>()
 				.target(this.parser.actor.id)
 				.status(this.data.statuses.SEARING_LIGHT.id)
 				.type('statusApply'),
 			this.onBuffApplied
 		)
 		this.addEventHook(
-			petsFilter
+			filter<Event>()
 				.target(this.parser.actor.id)
 				.status(this.data.statuses.SEARING_LIGHT.id)
 				.type('statusRemove'),
@@ -124,6 +125,12 @@ export class SearingLight extends Analyser {
 		const action = this.data.getAction(event.action)
 		if (action?.autoAttack) { return }
 
+		const current = this.history.getCurrent()
+		if (current != null && event.timestamp > current.start + MAX_BUFF_DURATION) {
+			this.closeSearingLightWindow(current.start + MAX_BUFF_DURATION)
+			return
+		}
+
 		this.history.doIfOpen(current => {
 			if (this.actors.current.hasStatus(this.data.statuses.SEARING_LIGHT.id)) {
 				current.events.push(event)
@@ -132,12 +139,12 @@ export class SearingLight extends Analyser {
 	}
 
 	private onPetCast(event: Events['action']) {
-		this.tryStartNewWindow(event.timestamp)
+		this.tryStartNewWindow(event.timestamp, event.source)
 		this.slPending = 0
 	}
 
 	private onBuffApplied(event: Events['statusApply']) {
-		this.tryStartNewWindow(event.timestamp)
+		this.tryStartNewWindow(event.timestamp, event.source)
 		// do not clear slPending here, since this could be from another summoner
 
 		// Do add the player to the list of targets hit in this window.  In the
@@ -147,7 +154,7 @@ export class SearingLight extends Analyser {
 		})
 	}
 
-	private tryStartNewWindow(timestamp: number) {
+	private tryStartNewWindow(timestamp: number, source: string) {
 		this.hookPlayerCasts()
 		// Check for an active window
 		// This method can get called multiple times for what should
@@ -167,7 +174,10 @@ export class SearingLight extends Analyser {
 			}
 
 			// If there is no last window or it is not the same one, start a new one
-			this.history.openNew(timestamp)
+			if (this.petIds.includes(source)) {
+				this.history.openNew(timestamp)
+			}
+
 		} else if (current.start + MAX_BUFF_DURATION < timestamp) {
 			// If the active window is old enough that it should have closed
 			// but didn't for some reason, close it and open a new one.
@@ -185,7 +195,11 @@ export class SearingLight extends Analyser {
 	}
 
 	private onBuffRemoved(event: Events['statusRemove']) {
-		this.history.closeCurrent(event.timestamp)
+		this.closeSearingLightWindow(event.timestamp)
+	}
+
+	private closeSearingLightWindow(timestamp: number) {
+		this.history.closeCurrent(timestamp)
 		this.unhookPlayerCasts()
 	}
 
