@@ -16,10 +16,10 @@ export class Aetherflow extends Analyser {
 
 	private recticationActive: boolean = false
 	private aetherflowWindows: AetherflowWindow[] = []
+	private aetherflowCumulativeDrift: number = 0
+	private dissipationCumulativeDrift: number = 0
 	private totalAetherflowConsumeActions: number = 0
 	private totalCastsByConsumeAction: Map<number, number> = new Map<number, number>()
-	private prevAetherflowWindow?: AetherflowWindow
-	private prevDissipationWindow?: AetherflowWindow
 
 	@dependency private data!: Data
 	@dependency private timeline!: Timeline
@@ -73,6 +73,7 @@ export class Aetherflow extends Analyser {
 			type: 'death',
 			actor: this.parser.actor.id,
 		}, this.recitationRemoved)
+		this.addEventHook('complete', this.onComplete)
 	}
 
 	override output() {
@@ -85,9 +86,9 @@ export class Aetherflow extends Analyser {
 			<Table.Body>
 				<Table.Row>
 					<Table.Cell textAlign="right"><Trans id="sch.aetherflow.total-aetherflow-drift">Total Aetherflow Drift</Trans></Table.Cell>
-					<Table.Cell>{this.parser.formatDuration(this.prevAetherflowWindow?.cummulativeDrift ?? 0)}</Table.Cell>
+					<Table.Cell>{this.parser.formatDuration(this.aetherflowCumulativeDrift ?? 0)}</Table.Cell>
 					<Table.Cell textAlign="right"><Trans id="sch.aetherflow.total-dissipation-drift">Total Dissipation Drift</Trans></Table.Cell>
-					<Table.Cell>{this.parser.formatDuration(this.prevDissipationWindow?.cummulativeDrift ?? 0)}</Table.Cell>
+					<Table.Cell>{this.parser.formatDuration(this.dissipationCumulativeDrift ?? 0)}</Table.Cell>
 					<Table.Cell textAlign="right"><Trans id="sch.aetherflow.total-wasted-stacks">Total Wasted Stacks</Trans></Table.Cell>
 					<Table.Cell>{this.aetherflowWindows.length * this.AETHERFLOW_CHARGES_PER_CAST - this.totalAetherflowConsumeActions}</Table.Cell>
 				</Table.Row>
@@ -166,32 +167,13 @@ export class Aetherflow extends Analyser {
 	}
 
 	private onGenerateAetherflow(event: Events['action']) {
-		// Calculate any values that depend on the previous aetherflow window
-		const prevWindow = event.action === this.data.actions.AETHERFLOW.id ? this.prevAetherflowWindow : this.prevDissipationWindow
-		const cooldown = this.data.getAction(event.action)?.cooldown ?? this.data.actions.AETHERFLOW.cooldown
-		let drift = 0
-		let cummulativeDrift = 0
-		if (this.aetherflowWindows.length > 1 && prevWindow) {
-			drift = event.timestamp - prevWindow.timestamp - cooldown
-			cummulativeDrift = prevWindow.cummulativeDrift + drift
-		}
-
-		const newAetherflowWindow = {
+		this.aetherflowWindows.push({
 			aetherflowGenerateActionId: event.action,
 			timestamp: event.timestamp,
-			drift: drift,
-			cummulativeDrift: cummulativeDrift,
 			aetherflowConsumeActions: [],
-		}
-
-		// Overwrite appropriate previous window with the new window
-		if (event.action === this.data.actions.AETHERFLOW.id) {
-			this.prevAetherflowWindow = newAetherflowWindow
-		} else {
-			this.prevDissipationWindow = newAetherflowWindow
-		}
-
-		this.aetherflowWindows.push(newAetherflowWindow)
+			// Initialize to 0 since drift will be calculated in onComplete
+			drift: 0,
+		})
 	}
 
 	private onConsumeAetherflow(event: Events['action']) {
@@ -215,6 +197,36 @@ export class Aetherflow extends Analyser {
 		this.recticationActive = false
 	}
 
+	private onComplete() {
+		// Calculate Aetherflow drift
+		const aetherflowWindows = this.aetherflowWindows
+			.filter(window => window.aetherflowGenerateActionId === this.data.actions.AETHERFLOW.id)
+		aetherflowWindows.forEach((currentWindow, index) => {
+			const previousWindow = aetherflowWindows[index-1]
+			if (!previousWindow) {
+				currentWindow.drift = 0
+			} else {
+				currentWindow.drift = currentWindow.timestamp - previousWindow.timestamp - this.data.actions.AETHERFLOW.cooldown
+				this.aetherflowCumulativeDrift += currentWindow.drift
+			}
+		})
+
+		// Calculate Dissipation drift
+		const dissipationWindows = this.aetherflowWindows
+			.filter(window => window.aetherflowGenerateActionId === this.data.actions.DISSIPATION.id)
+		dissipationWindows.forEach((currentWindow, index) => {
+			const previousWindow = dissipationWindows[index-1]
+			if (!previousWindow) {
+				currentWindow.drift = 0
+			} else {
+				currentWindow.drift = currentWindow.timestamp - previousWindow.timestamp - this.data.actions.DISSIPATION.cooldown
+				this.dissipationCumulativeDrift += currentWindow.drift
+			}
+
+			return currentWindow
+		})
+	}
+
 	private scrollToAetherflowTimeline(timestamp: number) {
 		const start = timestamp - this.parser.pull.timestamp - this.AETHERFLOW_TIMELINE_START_PADDING
 		const end = timestamp - this.parser.pull.timestamp + this.AETHERFLOW_TIMELINE_END_PADDING
@@ -226,6 +238,5 @@ interface AetherflowWindow {
 	aetherflowGenerateActionId: number
 	timestamp: number
 	drift: number
-	cummulativeDrift: number
 	aetherflowConsumeActions: Array<{actionId: number, timestamp: number}>
 }
