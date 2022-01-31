@@ -14,15 +14,18 @@ static override displayOrder = DISPLAY_ORDER.SWIFTCAST
 @dependency private downtime!: Downtime
 
 override considerSwiftAction(_action: Action): boolean {
+	//We want to inspect the cast time to determine if the player was allowed to use SwiftCast or not
 	const castTime = _action?.castTime ?? 0
 	if (castTime > 0) {
-		if (!this.downtime.isDowntime() && (castTime <= BASE_GCD || _action === this.data.actions.SPRINT)) {
+		//As long as we aren't in downtime, the cast time must exceed the base GCD to qualify.
+		if (!this.downtime.isDowntime() && castTime <= BASE_GCD) {
 			return false
 		}
+		//Then it had to be VerRaise, VerAero III, or VerThunder III or we were in downtime so it's valid
 		return true
 	}
 	//Use the default behavoir if we've gotten back no cast time
-	return true
+	return super.considerSwiftAction(_action)
 }
 	override suggestionContent = <Trans id="rdm.swiftcast.suggestion.content">Spells used while <DataLink status="SWIFTCAST"/> is up should be limited to <DataLink action="VERAERO_III"/>, <DataLink action="VERTHUNDER_III"/>, or <DataLink action="VERRAISE"/></Trans>
 }
