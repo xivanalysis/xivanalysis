@@ -210,7 +210,7 @@ export class Aetherflow extends Analyser {
 			if (!previousWindow) {
 				currentWindow.drift = 0
 			} else {
-				currentWindow.drift = this.calculateDrift(previousWindow.timestamp, currentWindow.timestamp)
+				currentWindow.drift = this.calculateDrift(previousWindow.timestamp, currentWindow.timestamp, this.data.actions.AETHERFLOW.cooldown)
 				this.aetherflowCumulativeDrift += currentWindow.drift
 			}
 		})
@@ -223,7 +223,7 @@ export class Aetherflow extends Analyser {
 			if (!previousWindow) {
 				currentWindow.drift = 0
 			} else {
-				currentWindow.drift = this.calculateDrift(previousWindow.timestamp, currentWindow.timestamp)
+				currentWindow.drift = this.calculateDrift(previousWindow.timestamp, currentWindow.timestamp, this.data.actions.DISSIPATION.cooldown)
 				this.dissipationCumulativeDrift += currentWindow.drift
 			}
 
@@ -231,8 +231,8 @@ export class Aetherflow extends Analyser {
 		})
 	}
 
-	private calculateDrift(previousCastTimestamp: number, currentCastTimestamp: number): number {
-		let desiredCastTimestamp = previousCastTimestamp + this.data.actions.AETHERFLOW.cooldown
+	private calculateDrift(previousCastTimestamp: number, currentCastTimestamp: number, skillCooldown: number): number {
+		let desiredCastTimestamp = previousCastTimestamp + skillCooldown
 
 		const desiredCastInUnableToAct = this.unableToAct.isUnableToAct({timestamp: desiredCastTimestamp})
 		if (desiredCastInUnableToAct) {
