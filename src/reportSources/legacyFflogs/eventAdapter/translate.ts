@@ -1,7 +1,7 @@
 import * as Sentry from '@sentry/browser'
 import {STATUS_ID_OFFSET} from 'data/STATUSES'
 import {Event, Events, Cause, SourceModifier, TargetModifier, AttributeValue, Attribute} from 'event'
-import {Actor} from 'report'
+import {Actor, Team} from 'report'
 import {resolveActorId} from '../base'
 import {ActorResources, BuffEvent, BuffStackEvent, CastEvent, CombatantInfoEvent, DamageEvent, DeathEvent, FflogsEvent, HealEvent, HitType, InstaKillEvent, TargetabilityUpdateEvent} from '../eventTypes'
 import {AdapterStep} from './base'
@@ -320,24 +320,28 @@ export class TranslateAdapterStep extends AdapterStep {
 	}
 
 	private buildActorUpdateResourceEvent(
-		actor: Actor['id'],
+		actorId: Actor['id'],
 		resources: ActorResources,
 		event: FflogsEvent,
 	): Events['actorUpdate'] {
+		const actor = this.pull.actors.find(actor => actor.id === actorId)
+
+		// FF Logs is doing some incorrect adjustments to HP resources that cause a
+		// 0 HP report without an accompanying death. These are typically caused by
+		// 1-hit mechanics being survived due to either fight mechanics or tank
+		// invulnerabilities - we can safely cap resource updates at 1 HP, and wait
+		// for the death event for a 0 HP update. This does mean deaths can be a
+		// little delayed in the event stream, but is probably an overall safer methodology.
+		let currentHp = resources.hitPoints
+		if (actor?.team === Team.FRIEND) {
+			currentHp = Math.max(1, currentHp)
+		}
+
 		return {
 			...this.adaptBaseFields(event),
 			type: 'actorUpdate',
-			actor,
-			hp: {
-				// FF Logs is doing some incorrect adjustments to HP resources that cause
-				// a 0 HP report without an accompanying death. These are typically caused
-				// by 1-hit mechanics being survived due to either fight mechanics or tank
-				// invulnerabilities - we can safely cap resource updates at 1 HP, and wait
-				// for the death event for a 0 HP update. This does mean deaths can be a
-				// little delayed in the event stream, but is probably an overall safer methodology.
-				current: Math.max(1, resources.hitPoints),
-				maximum: resources.maxHitPoints,
-			},
+			actor: actorId,
+			hp: {current: currentHp, maximum: resources.maxHitPoints},
 			mp: {current: resources.mp, maximum: resources.maxMP},
 			position: {x: resources.x, y: resources.y, bearing: resources.facing},
 		}
