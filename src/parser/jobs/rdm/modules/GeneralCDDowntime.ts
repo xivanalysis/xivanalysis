@@ -37,4 +37,8 @@ export class GeneralCDDowntime extends CooldownDowntime {
 			],
 		},
 	]
+	override defensiveCooldowns = [
+		{cooldowns: [this.data.actions.ADDLE]},
+		{cooldowns: [this.data.actions.MAGICK_BARRIER]},
+	]
 }
