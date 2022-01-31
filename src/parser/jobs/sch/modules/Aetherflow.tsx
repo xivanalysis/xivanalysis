@@ -7,6 +7,7 @@ import {filter, oneOf} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
 import {Data} from 'parser/core/modules/Data'
 import {Timeline} from 'parser/core/modules/Timeline'
+import {UnableToAct} from 'parser/core/modules/UnableToAct'
 import React from 'react'
 import {Button, Grid, Table} from 'semantic-ui-react'
 
@@ -23,6 +24,7 @@ export class Aetherflow extends Analyser {
 
 	@dependency private data!: Data
 	@dependency private timeline!: Timeline
+	@dependency private unableToAct!: UnableToAct
 
 	private readonly AETHERFLOW_GENERATE_ACTIONS: number[] = [
 		this.data.actions.AETHERFLOW.id,
@@ -44,9 +46,11 @@ export class Aetherflow extends Analyser {
 		this.data.actions.SUCCOR.id,
 	];
 
-	private readonly AETHERFLOW_CHARGES_PER_CAST = 3;
-	private readonly AETHERFLOW_TIMELINE_START_PADDING = 5000;
-	private readonly AETHERFLOW_TIMELINE_END_PADDING = 65000;
+	private readonly AETHERFLOW_CHARGES_PER_CAST = 3
+	private readonly AETHERFLOW_TIMELINE_START_PADDING = 5000
+	private readonly AETHERFLOW_TIMELINE_END_PADDING = 65000
+
+	private readonly UNABLE_TO_ACT_BUFFER = 7500 // Give the player 7.5s (3 GCDs) to expend aetherflow after a UTA downtime
 
 	override initialise() {
 		const generateAetherflowFilter = filter<Event>()
@@ -206,7 +210,7 @@ export class Aetherflow extends Analyser {
 			if (!previousWindow) {
 				currentWindow.drift = 0
 			} else {
-				currentWindow.drift = currentWindow.timestamp - previousWindow.timestamp - this.data.actions.AETHERFLOW.cooldown
+				currentWindow.drift = this.calculateDrift(previousWindow.timestamp, currentWindow.timestamp)
 				this.aetherflowCumulativeDrift += currentWindow.drift
 			}
 		})
@@ -219,12 +223,24 @@ export class Aetherflow extends Analyser {
 			if (!previousWindow) {
 				currentWindow.drift = 0
 			} else {
-				currentWindow.drift = currentWindow.timestamp - previousWindow.timestamp - this.data.actions.DISSIPATION.cooldown
+				currentWindow.drift = this.calculateDrift(previousWindow.timestamp, currentWindow.timestamp)
 				this.dissipationCumulativeDrift += currentWindow.drift
 			}
 
 			return currentWindow
 		})
+	}
+
+	private calculateDrift(previousCastTimestamp: number, currentCastTimestamp: number): number {
+		let desiredCastTimestamp = previousCastTimestamp + this.data.actions.AETHERFLOW.cooldown
+
+		const desiredCastInUnableToAct = this.unableToAct.isUnableToAct({timestamp: desiredCastTimestamp})
+		if (desiredCastInUnableToAct) {
+			const unableToActWindow = this.unableToAct.getWindows({start: desiredCastTimestamp, end: currentCastTimestamp})[0]
+			desiredCastTimestamp = unableToActWindow.end + this.UNABLE_TO_ACT_BUFFER
+		}
+
+		return Math.max(currentCastTimestamp - desiredCastTimestamp, 0)
 	}
 
 	private scrollToAetherflowTimeline(timestamp: number) {
