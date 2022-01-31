@@ -15,7 +15,7 @@ export class Aetherflow extends Analyser {
 	static override handle = 'aetherflow'
 	static override title = t('sch.aetherflow.title')`Aetherflow`
 
-	private recticationActive: boolean = false
+	private recitationActive: boolean = false
 	private aetherflowWindows: AetherflowWindow[] = []
 	private aetherflowCumulativeDrift: number = 0
 	private dissipationCumulativeDrift: number = 0
@@ -182,7 +182,7 @@ export class Aetherflow extends Analyser {
 
 	private onConsumeAetherflow(event: Events['action']) {
 		// If recitation is inactive, or if the aetherflow action is not a recitation action add the action to the aetherflow window
-		if (!this.recticationActive || !this.RECITATION_ACTIONS.some(recitationActionId => recitationActionId === event.action)) {
+		if (!this.recitationActive || !this.RECITATION_ACTIONS.some(recitationActionId => recitationActionId === event.action)) {
 			this.aetherflowWindows[this.aetherflowWindows.length - 1].aetherflowConsumeActions.push({
 				actionId: event.action,
 				timestamp: event.timestamp,
@@ -194,11 +194,11 @@ export class Aetherflow extends Analyser {
 	}
 
 	private recitationApplied() {
-		this.recticationActive = true
+		this.recitationActive = true
 	}
 
 	private recitationRemoved() {
-		this.recticationActive = false
+		this.recitationActive = false
 	}
 
 	private onComplete() {
