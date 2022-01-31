@@ -1,0 +1,37 @@
+name: Sync translations from Crowdin
+on: workflow_dispatch
+jobs:
+  sync_translations:
+    name: Sync translations from Crowdin
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        token: ${{ secrets.I18N_WORKER_API_TOKEN }}
+
+    - uses: actions/setup-node@v2
+      with:
+        node-version: '14'
+        cache: 'yarn'
+    - run: yarn install
+
+    - name: Set up Crowdin CLI
+      run: |
+        sudo apt install -y default-jre
+        wget https://artifacts.crowdin.com/repo/deb/crowdin3.deb -O crowdin.deb
+        sudo dpkg -i crowdin.deb
+        rm crowdin.deb
+
+    - name: Sync translations
+      run: |
+        crowdin download -b $GITHUB_REF_NAME -T ${{ secrets.CROWDIN_API_TOKEN }} --no-progress
+        yarn extract
+
+    - name: Commit
+      run: |
+        git config user.name github-actions
+        git config user.email github-actions@github.com
+        git add locale
+        git commit -m "i18n sync $(date +%s)"
+        git push

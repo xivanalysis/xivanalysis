@@ -169,5 +169,6 @@ export const UNABLE_TO_ACT_STATUS_IDS = [
 	2953, // Stun (lockActions)
 	2955, // Will to Live (lockActions)
 	2961, // Down for the Count (lockActions)
+	2983, // Sleep (lockActions)
 	2999, // In Event (lockActions, lockControl)
 ]

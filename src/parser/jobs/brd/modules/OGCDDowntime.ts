@@ -8,6 +8,7 @@ export class OGCDDowntime extends CooldownDowntime {
 		{
 			cooldowns: [this.data.actions.EMPYREAL_ARROW],
 			firstUseOffset: 4000,
+			allowedAverageDowntime: 1,
 		},
 		{
 			cooldowns: [this.data.actions.BATTLE_VOICE],

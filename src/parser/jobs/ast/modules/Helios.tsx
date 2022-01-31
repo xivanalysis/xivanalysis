@@ -3,7 +3,7 @@ import {Plural, Trans} from '@lingui/react'
 import {DataLink} from 'components/ui/DbLink'
 import {Event} from 'event'
 import {Analyser} from 'parser/core/Analyser'
-import {filter, oneOf} from 'parser/core/filter'
+import {filter} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
 import {Cooldowns} from 'parser/core/modules/Cooldowns'
 import {Data} from 'parser/core/modules/Data'
@@ -11,7 +11,7 @@ import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Sugge
 import React from 'react'
 
 // Things to track:
-// Did they cast a Helios/Aspected Helios without Horoscope despite having it up?
+// Did they cast a Helios/Aspected Helios without Horoscope or Neutral Sect despite having either up?
 // Maybe track how they used it?
 
 const SEVERITIES = {
@@ -33,20 +33,19 @@ export class Helios extends Analyser {
 
 	override initialise() {
 
-		const HELIOS_CASTS = [
-			this.data.actions.HELIOS.id,
-			this.data.actions.ASPECTED_HELIOS.id,
-		]
-
 		const playerFilter = filter<Event>().source(this.parser.actor.id)
 
 		this.addEventHook(playerFilter
 			.type('action')
-			.action(oneOf(HELIOS_CASTS)), this.onHeliosCast)
+			.action(this.data.actions.HELIOS.id), this.onHeliosCast)
+		//aspected vs regular helios differentiated since Neutral Sect cannot be activated with regular Helios
+		this.addEventHook(playerFilter
+			.type('action')
+			.action(this.data.actions.ASPECTED_HELIOS.id), this.onAspectedHeliosCast)
 		this.addEventHook('complete', this.onComplete)
 	}
 
-	private onHeliosCast() {
+	private onAspectedHeliosCast() {
 		if (this.data.actions.HOROSCOPE.cooldown -  this.cooldowns.remaining('HOROSCOPE') < this.data.statuses.HOROSCOPE.duration //checks whether horoscope was just used
 		|| this.data.actions.NEUTRAL_SECT.cooldown -  this.cooldowns.remaining('NEUTRAL_SECT') < this.data.statuses.NEUTRAL_SECT.duration //checks whether neutral sect was just used
 		|| (this.cooldowns.remaining('NEUTRAL_SECT') > 0 && this.cooldowns.remaining('HOROSCOPE') > 0)) { //if neither were just used, check if they're on CD
@@ -55,9 +54,17 @@ export class Helios extends Analyser {
 		this.nonHoroscopeHeals++
 	}
 
+	private onHeliosCast() {
+		if (this.data.actions.HOROSCOPE.cooldown -  this.cooldowns.remaining('HOROSCOPE') < this.data.statuses.HOROSCOPE.duration //checks whether horoscope was just used
+		|| (this.cooldowns.remaining('HOROSCOPE') > 0)) { //if horoscope was just used, check if it's on CD
+			return
+		}
+		this.nonHoroscopeHeals++
+	}
+
 	private onComplete() {
 		/*
-			SUGGESTION: AOE heal without horoscope
+			SUGGESTION: AOE heal without horoscope or neutral sect
 		*/
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.HELIOS.icon,
