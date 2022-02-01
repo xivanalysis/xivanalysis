@@ -172,6 +172,7 @@
   "brd.dots.checklist.name": "Vérifiez bien que vos DoTs sont bien appliqués à votre cible",
   "brd.dots.checklist.requirement.caustic": "Temps total d'application de <0/>",
   "brd.dots.checklist.requirement.storm": "Temps total d'application de <0/>",
+  "brd.dots.suggestion.clip.content": "Évitez de rafraîchir <0/> et <1/> trop longtemps avant son expiration.",
   "brd.drifting-ea.drift-header": "Problème de dérive",
   "brd.drifting-ea.drift-issue": "<0/> a dérivé de {0}",
   "brd.drifting-ea.timelinelink-button": "Voir sur la chronologie",
