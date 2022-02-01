@@ -86,6 +86,18 @@ export abstract class Positionals extends Analyser {
 			return
 		}
 
+		const positionalResult = this.getOrCreatePositionalResult(positional)
+
+		// All positionals are single target skills, so getting the 0 index
+		// should be all we need to do here.
+		if (this.positionalHit(positional, event.targets[0].bonusPercent)) {
+			positionalResult.hits.push(event)
+		} else {
+			positionalResult.misses.push(event)
+		}
+	}
+
+	private getOrCreatePositionalResult(positional: Positional) {
 		let positionalResult = this.positionalResults.find(result => result.positional === positional)
 		if (positionalResult == null) {
 			positionalResult = {
@@ -95,14 +107,7 @@ export abstract class Positionals extends Analyser {
 			}
 			this.positionalResults.push(positionalResult)
 		}
-
-		// All positionals are single target skills, so getting the 0 index
-		// should be all we need to do here.
-		if (this.positionalHit(positional, event.targets[0].bonusPercent)) {
-			positionalResult.hits.push(event)
-		} else {
-			positionalResult.misses.push(event)
-		}
+		return positionalResult
 	}
 
 	// The "hit" version of this function needs to check for more
@@ -129,6 +134,7 @@ export abstract class Positionals extends Analyser {
 		)?.value || NO_BONUS_PERCENT
 	}
 
+	// The bonusPercent is based on the final potency number.
 	private calculateBonusPercent(base: number, bonus: number) {
 		return Math.trunc(100 * (1 - base / bonus))
 	}
@@ -154,25 +160,28 @@ export abstract class Positionals extends Analyser {
 			return
 		}
 		this.checklist.add(new Rule({
-			name: 'Hit Your Positionals',
+			name: <Trans id="core.positionals.checklist.title">Hit Your Positionals</Trans>,
 			displayOrder: DISPLAY_ORDER.POSITIONALS,
-			description: <Trans id="core.positionals.checklist">
+			description: <Trans id="core.positionals.checklist.description">
 				Melee DPS jobs have some skills that will do more damage when used from the rear or flank.
 				Make sure you use those skills in the right position to do the most damage, or
 				use <DataLink action="TRUE_NORTH"/> when you are out of position.
 			</Trans>,
-			requirements:
-				this.positionalResults.map(this.positionalRequirement),
+			requirements: this.positionalResults.map(this.positionalRequirement),
 		}))
 	}
 	private positionalRequirement(result: PositionalResult) {
-		const numHits = result.hits.length
+		const actual = result.hits.length
 		const numMisses = result.misses.length
-		const total = numHits + numMisses
+		const expected = actual + numMisses
+		let percent = actual / expected * 100
+		if (process.env.NODE_ENV === 'production') {
+			percent = Math.min(percent, 100)
+		}
 		return new Requirement({
 			name: <ActionLink {...result.positional.action}/>,
-			value: numHits,
-			target: total,
+			percent: percent,
+			overrideDisplay: `${actual} / ${expected} (${percent.toFixed(2)}%)`,
 		})
 	}
 
