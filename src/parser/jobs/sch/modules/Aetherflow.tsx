@@ -182,8 +182,9 @@ export class Aetherflow extends Analyser {
 
 	private onConsumeAetherflow(event: Events['action']) {
 		// If recitation is inactive, or if the aetherflow action is not a recitation action add the action to the aetherflow window
-		if (!this.recitationActive || !this.RECITATION_ACTIONS.some(recitationActionId => recitationActionId === event.action)) {
-			this.aetherflowWindows[this.aetherflowWindows.length - 1].aetherflowConsumeActions.push({
+		const currentWindow = this.aetherflowWindows[this.aetherflowWindows.length - 1]
+		if (currentWindow && (!this.recitationActive || !this.RECITATION_ACTIONS.some(recitationActionId => recitationActionId === event.action))) {
+			currentWindow.aetherflowConsumeActions.push({
 				actionId: event.action,
 				timestamp: event.timestamp,
 			})
