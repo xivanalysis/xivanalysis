@@ -28,7 +28,7 @@ export const SUMMONER = new Meta({
 
 	changelog: [
 		{
-			date: new Date('2002-01-29'),
+			date: new Date('2022-01-29'),
 			Changes: () => <>Fix duplicate searing light rows when there are multiple summoners in the party.</>,
 			contributors: [CONTRIBUTORS.DEAN],
 		},
