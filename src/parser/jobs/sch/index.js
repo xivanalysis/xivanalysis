@@ -26,6 +26,16 @@ export const SCHOLAR = new Meta({
 	],
 	changelog: [
 		{
+			date: new Date('2021-12-19'),
+			Changes: () => <>Initial Endwalker data update.</>,
+			contributors: [CONTRIBUTORS.MYPS],
+		},
+		{
+			date: new Date('2022-01-04'),
+			Changes: () => <>Update tracked cooldowns to add Aetherflow and make Chain Strategem calculations a bit stricter.</>,
+			contributors: [CONTRIBUTORS.DTHOMASH],
+		},
+		{
 			date: new Date('2022-01-25'),
 			Changes: () => <>Update Faerie Gauge to 6.0</>,
 			contributors: [CONTRIBUTORS.ARKEVORKHAT],
@@ -36,13 +46,8 @@ export const SCHOLAR = new Meta({
 			contributors: [CONTRIBUTORS.ARKEVORKHAT],
 		},
 		{
-			date: new Date('2021-12-19'),
-			Changes: () => <>Initial Endwalker data update.</>,
-			contributors: [CONTRIBUTORS.MYPS],
-		},
-		{
-			date: new Date('2022-01-04'),
-			Changes: () => <>Update tracked cooldowns to add Aetherflow and make Chain Strategem calculations a bit stricter.</>,
+			date: new Date('2022-01-30'),
+			Changes: () => <>Add Aetherflow section.</>,
 			contributors: [CONTRIBUTORS.DTHOMASH],
 		},
 	],
