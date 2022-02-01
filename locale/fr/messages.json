@@ -182,6 +182,7 @@
   "brd.dots.checklist.name": "Vérifiez bien que vos DoTs sont bien appliqués à votre cible",
   "brd.dots.checklist.requirement.caustic": "Temps total d'application de <0/>",
   "brd.dots.checklist.requirement.storm": "Temps total d'application de <0/>",
+  "brd.dots.suggestion.clip.content": "Évitez de rafraîchir <0/> et <1/> trop longtemps avant son expiration.",
   "brd.pitch-perfect.cast-without-max-stacks": "<0/> devrait être utilisé avant d'atteindre 3 stacks quand vous savez qu'il n'y a plus de tick de DoT avant le fin de <1/>.",
   "brd.pitch-perfect.cast-without-max-stacks.potency-lost": "<0>{0}</0> puissance perdue contre les lancement à stacks maximales",
   "brd.pitch-perfect.cast-without-max-stacks.reason": "La puissance de <0/> est {0} au premier stack, {1} au deuxième, et {2} au troisième et dernier stack, donc vous ne voulez pas l'utiliser avant d'être au dernier stack.",
