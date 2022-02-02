@@ -8,13 +8,11 @@ import {SEVERITY} from 'parser/core/modules/Suggestions'
 import {Tincture as CoreTincture} from 'parser/core/modules/Tincture'
 import React from 'react'
 
-// Arbitrary 1 GCD buffer for the tincture buff application
-const TINCTURE_BUFFER = 2500
-
 interface reassembleOptions extends TrackedActionsOptions {
 	reassembleId: number
 	wasReassembleUsed: (window: HistoryEntry<EvaluatedAction[]>) => boolean
 }
+
 class ReassembleEvaluator extends ExpectedActionsEvaluator {
 	// Because this class is not an Analyser, it cannot use Data directly
 	// to get the id for Reassemble, so it has to take it in here.
