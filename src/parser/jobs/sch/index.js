@@ -50,5 +50,10 @@ export const SCHOLAR = new Meta({
 			Changes: () => <>Add Aetherflow section.</>,
 			contributors: [CONTRIBUTORS.DTHOMASH],
 		},
+		{
+			date: new Date('2022-01-31'),
+			Changes: () => <>Add Scholar defensive cooldowns to tracked cooldowns</>,
+			contributors: [CONTRIBUTORS.DTHOMASH],
+		},
 	],
 })
