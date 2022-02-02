@@ -37,13 +37,16 @@ export class HarvestMoon extends Analyser {
 
 	private getExpectedUses(): number {
 		const ADJUSTED_CAST = this.data.actions.SOULSOW.castTime + BUFFER
-		const invulnWindows = this.invulnerability.getWindows().filter((w) => { return w.end - w.start >=  ADJUSTED_CAST })
+		const invulnWindows = this.invulnerability.getWindows().filter((w) => w.end - w.start >=  ADJUSTED_CAST)
 
 		if (this.unableToAct.getDuration() > 0) {
-			return invulnWindows.filter((w) => {
-				const firstWindow = this.unableToAct.getWindows({start: w.start, end: w.end})[0]
+			return invulnWindows.filter((invulnWindow) => {
+				const unableToActWindow = this.unableToAct.getWindows({start: invulnWindow.start, end: invulnWindow.end})[0]
 
-				return firstWindow == null ? false : w.start - firstWindow.start >= ADJUSTED_CAST || firstWindow.end - w.end >= ADJUSTED_CAST
+				return unableToActWindow == null
+					?false
+					:unableToActWindow.start - invulnWindow.start >= ADJUSTED_CAST
+						||unableToActWindow.end - invulnWindow.end >= ADJUSTED_CAST
 			}).length + 1
 		}
 
