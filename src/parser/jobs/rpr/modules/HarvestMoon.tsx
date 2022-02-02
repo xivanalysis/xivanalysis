@@ -10,7 +10,7 @@ import {Invulnerability} from 'parser/core/modules/Invulnerability'
 import {UnableToAct} from 'parser/core/modules/UnableToAct'
 import React from 'react'
 
-const BUFFER = 1000
+const SOULSOW_BUFFER = 1000
 
 export class HarvestMoon extends Analyser {
 	static override handle = 'harvestMoon'
@@ -69,7 +69,6 @@ export class HarvestMoon extends Analyser {
 				Harvest Moon is one of your highest potency abilities.
 				Aim to get at least one use each time the boss is targetable.
 			</Trans>,
-
 			requirements: [
 				new Requirement({
 					name: <Trans id="rpr.harvestmoon.checklist.requirement.name">
@@ -79,9 +78,7 @@ export class HarvestMoon extends Analyser {
 					percent: hmUsesPercent,
 				}),
 			],
-
 			target: 100,
-
 		}))
 	}
 }
