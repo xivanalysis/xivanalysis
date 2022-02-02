@@ -85,7 +85,6 @@ export class Tincture extends CoreTincture {
 				4: SEVERITY.MEDIUM,
 				6: SEVERITY.MAJOR,
 			},
-			adjustCount: this.adjustExpectedActionCount.bind(this),
 			reassembleId: this.data.actions.REASSEMBLE.id,
 			wasReassembleUsed: this.wasReassembleUsed.bind(this),
 		}))
