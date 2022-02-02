@@ -10,6 +10,23 @@ export const changelog: ChangelogEntry[] = [
 	// 	contributors: [CONTRIBUTORS.YOU],
 	// },
 	{
+		date: new Date('2022-01-31'),
+		Changes: () => <>
+			Fix overcorrection caused by prior death-related changes that were leading to player deaths being ignored.
+			Due to inaccuracies in data provided by FF Logs, this will cause deaths to be reported a few seconds after the actual time of death in-game.
+			This will impact analysis, but should be relatively minimal overall.
+		</>,
+		contributors: [CONTRIBUTORS.ACKWELL],
+	},
+	{
+		date: new Date('2022-01-29'),
+		Changes: () => <>
+			Prevent erroneous 0 HP updates from FF Logs report sources marking the player as dead.
+			This should resolve incorrect death flags due to tank invulnerabilities and mechanics such as Death's Toll.
+		</>,
+		contributors: [CONTRIBUTORS.ACKWELL],
+	},
+	{
 		date: new Date('2022-01-12'),
 		Changes: () => <>Improve enemy targetability detection when a target raises during a fight (e.g. striking dummies)</>,
 		contributors: [CONTRIBUTORS.AZARIAH],

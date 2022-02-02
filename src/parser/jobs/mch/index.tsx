@@ -20,6 +20,11 @@ export const MACHINIST = new Meta({
 	],
 	changelog: [
 		{
+			date: new Date('2022-01-28'),
+			Changes: () => <>Fixed a rare bug that erroneously marked Reassembles as dropped.</>,
+			contributors: [CONTRIBUTORS.HINT],
+		},
+		{
 			date: new Date('2022-01-06'),
 			Changes: () => <>Marked as supported for 6.05.</>,
 			contributors: [CONTRIBUTORS.HINT],
