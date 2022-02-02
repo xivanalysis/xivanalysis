@@ -3,14 +3,17 @@ import {Trans, Plural} from '@lingui/react'
 import {ActionLink} from 'components/ui/DbLink'
 import {ActionKey} from 'data/ACTIONS'
 import {dependency} from 'parser/core/Injectable'
-import {BuffWindow, EvaluatedAction, ExpectedActionsEvaluator, ExpectedGcdCountEvaluator, LimitedActionsEvaluator, NotesEvaluator} from 'parser/core/modules/ActionWindow'
+import {BuffWindow, EvaluatedAction, ExpectedActionsEvaluator, ExpectedGcdCountEvaluator, LimitedActionsEvaluator, NotesEvaluator, TrackedAction} from 'parser/core/modules/ActionWindow'
 import {HistoryEntry} from 'parser/core/modules/ActionWindow/History'
 import {GlobalCooldown} from 'parser/core/modules/GlobalCooldown'
 import {SEVERITY} from 'parser/core/modules/Suggestions'
 import React from 'react'
 
-// Opener has 5 Ninjutsu + 3 weaponskills, non-TCJ windows will likely have 2-3 Ninjutsu + 4-5 weaponskills
+// TCJ windows should have 5-6 Ninjutsu + 2-3 (or 3-4, with good ping) weaponskills, non-TCJ windows should have 3 Ninjutsu + 4 weaponskills
 const BASE_GCDS_PER_WINDOW = 7
+
+// For opener detection - first Trick should be 8-9s into the fight, with a bit of wiggle room for late starts
+const FIRST_TRICK_BUFFER = 12000
 
 const MUDRAS: ActionKey[] = [
 	'TEN',
@@ -99,6 +102,7 @@ export class TrickAttackWindow extends BuffWindow {
 				1: SEVERITY.MEDIUM,
 				3: SEVERITY.MAJOR,
 			},
+			adjustCount: this.adjustExpectedRaitonCount.bind(this),
 		}))
 
 		this.addEvaluator(new LimitedActionsEvaluator({
@@ -123,5 +127,18 @@ export class TrickAttackWindow extends BuffWindow {
 
 	private adjustExpectedGcdCount(window: HistoryEntry<EvaluatedAction[]>) {
 		return window.data.find(cast => cast.action.id === this.data.actions.TEN_CHI_JIN.id) ? 1 : 0
+	}
+
+	private adjustExpectedRaitonCount(window: HistoryEntry<EvaluatedAction[]>, action: TrackedAction) {
+		const bufferedWindowStart = window.start - FIRST_TRICK_BUFFER
+
+		if (action.action.id === this.data.actions.RAITON.id) {
+			// We push one Raiton outside the Trick window in the opener to fit an extra Bhava
+			if (bufferedWindowStart <= this.parser.pull.timestamp) {
+				return -1
+			}
+		}
+
+		return 0
 	}
 }
