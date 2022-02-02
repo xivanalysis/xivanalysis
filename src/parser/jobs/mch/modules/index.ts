@@ -1,4 +1,5 @@
 import {ActionTimeline} from './ActionTimeline'
+import {AlwaysBeCasting} from './AlwaysBeCasting'
 import {Combos} from './Combos'
 import {Drift} from './Drift'
 import {Gauge} from './Gauge'
@@ -13,6 +14,7 @@ import {YassQueen} from './YassQueen'
 
 export default [
 	ActionTimeline,
+	AlwaysBeCasting,
 	Combos,
 	Drift,
 	Gauge,
