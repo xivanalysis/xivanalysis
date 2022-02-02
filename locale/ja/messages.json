@@ -378,6 +378,7 @@
   "dnc.technicalities.rotation-table.header.buffed": "バフを与えられた人数",
   "dnc.technicalities.rotation-table.header.missed": "<0/> 使用可能?",
   "dnc.technicalities.rotation-table.header.pooled": "<0/> 貯蓄済?",
+  "dnc.technicalities.rotation-table.message": "このログには他の踊り子によって始動したり延長された期間が含まれています。期間中に適用されている幻扇やエスプリをどう投棄するかは、ご自身の判断でお願いします。他のレイドバフと発動期間を合わせることで最大の効果を発揮できるようにしましょう。",
   "dnc.technicalities.title": "テクニカルステップ",
   "drg.about.description": "<0>このアナライザーは、あなたを先入観から解き放ち、ジューシーな色を出す手助けをになることを目指しています。竜騎士のスキル回しはきっちり決まっているため、提案は主にスキル回しをスムーズに保つこと、紅の竜血の効果時間とバフ合わせに関する問題を解決することに焦点を当てます。</0>",
   "drg.battlelitany.rotation-table.header.buffed": "バフを与えられた人数",
