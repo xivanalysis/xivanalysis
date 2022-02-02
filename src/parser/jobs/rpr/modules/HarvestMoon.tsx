@@ -10,10 +10,10 @@ import {Invulnerability} from 'parser/core/modules/Invulnerability'
 import {UnableToAct} from 'parser/core/modules/UnableToAct'
 import React from 'react'
 
-const SOULSOW_CAST_GRACE = 1000
+const BUFFER = 1000
 
 export class HarvestMoon extends Analyser {
-	static override handle = 'HarvestMoon'
+	static override handle = 'harvestMoon'
 
 	@dependency private checklist!: Checklist
 	@dependency private data!: Data
@@ -25,14 +25,18 @@ export class HarvestMoon extends Analyser {
 	override initialise() {
 		super.initialise()
 
-		this.addEventHook(filter<Event>().source(this.parser.actor.id).type('action')
-			.action(this.data.actions.HARVEST_MOON.id), () => { this.harvestMoonCasts++ })
+		this.addEventHook(
+			filter<Event>()
+				.source(this.parser.actor.id)
+				.type('action')
+				.action(this.data.actions.HARVEST_MOON.id),
+			() => { this.harvestMoonCasts++ })
 
 		this.addEventHook('complete', this.onComplete)
 	}
 
 	private getExpectedUses(): number {
-		const ADJUSTED_CAST = this.data.actions.SOULSOW.castTime + SOULSOW_CAST_GRACE
+		const ADJUSTED_CAST = this.data.actions.SOULSOW.castTime + BUFFER
 		const invulnWindows = this.invulnerability.getWindows().filter((w) => { return w.end - w.start >=  ADJUSTED_CAST })
 
 		if (this.unableToAct.getDuration() > 0) {
