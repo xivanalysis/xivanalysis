@@ -93,19 +93,6 @@ export class Tincture extends CoreTincture {
 		}))
 	}
 
-	private adjustExpectedActionCount(window: HistoryEntry<EvaluatedAction[]>, action: TrackedAction) {
-		const bufferedWindowStart = window.start - TINCTURE_BUFFER
-
-		if (action.action === this.data.actions.PILE_BUNKER) {
-			// We don't have queen in the opener
-			if (bufferedWindowStart <= this.parser.pull.timestamp) {
-				return -1
-			}
-		}
-
-		return 0
-	}
-
 	private onRemoveReassembled(event: Events['statusRemove']) {
 		this.reassembledRemoves.push(event.timestamp)
 	}
