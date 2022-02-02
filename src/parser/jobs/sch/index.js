@@ -16,10 +16,10 @@ export const SCHOLAR = new Meta({
 	Description: () => <>
 		<TransMarkdown source={description} key="sch.about.description"/>
 	</>,
-	// supportedPatches: {
-	// 	from: '6.0',
-	// 	to: '6.0',
-	// },
+	supportedPatches: {
+		from: '6.0',
+		to: '6.08',
+	},
 	contributors: [
 		{user: CONTRIBUTORS.MYPS, role: ROLES.DEVELOPER},
 		{user: CONTRIBUTORS.DTHOMASH, role: ROLES.DEVELOPER},
@@ -33,6 +33,21 @@ export const SCHOLAR = new Meta({
 		{
 			date: new Date('2022-01-04'),
 			Changes: () => <>Update tracked cooldowns to add Aetherflow and make Chain Strategem calculations a bit stricter.</>,
+			contributors: [CONTRIBUTORS.DTHOMASH],
+		},
+		{
+			date: new Date('2022-01-25'),
+			Changes: () => <>Update Faerie Gauge to 6.0</>,
+			contributors: [CONTRIBUTORS.ARKEVORKHAT],
+		},
+		{
+			date: new Date('2022-01-25'),
+			Changes: () => <>Update Weaving module text to account for Broil IV update</>,
+			contributors: [CONTRIBUTORS.ARKEVORKHAT],
+		},
+		{
+			date: new Date('2022-01-30'),
+			Changes: () => <>Add Aetherflow section.</>,
 			contributors: [CONTRIBUTORS.DTHOMASH],
 		},
 	],
