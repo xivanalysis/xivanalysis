@@ -804,6 +804,7 @@
   "sch.aetherflow.total-dissipation-drift": "",
   "sch.aetherflow.total-wasted-stacks": "",
   "sch.aetherflow.wasted-stacks": "",
+  "sch.cooldownDowntime.defense-cd-metric": "",
   "sch.dots.checklist.description": "학자의 고독법는 딜 기여도에 상당한 지분을 차지합니다. 최대한 지속 시간 유지를 목표로 하며 사용할때마다 최소 15초 이상 적용하도록 타이밍을 맞추십시오.",
   "sch.dots.checklist.name": "항상 도트 데미지가 유지되도록 하십시오.",
   "sch.dots.checklist.requirement.bio-ii.name": "<0/> 적용 시간",

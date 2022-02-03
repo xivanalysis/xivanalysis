@@ -804,6 +804,7 @@
   "sch.aetherflow.total-dissipation-drift": "",
   "sch.aetherflow.total-wasted-stacks": "",
   "sch.aetherflow.wasted-stacks": "",
+  "sch.cooldownDowntime.defense-cd-metric": "",
   "sch.dots.checklist.description": "学者にとって蠱毒法は主要なダメージ源です。可能な限り維持するように心がけ、1回の使用ごとに最低でも15秒の効果時間を得られるようにしましょう。",
   "sch.dots.checklist.name": "常にDoTを切らさないようにしてください。",
   "sch.dots.checklist.requirement.bio-ii.name": "アクティブ率: <0/>",
