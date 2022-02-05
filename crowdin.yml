@@ -1,4 +1,5 @@
 project_id: "310054"
+api_token_env: CROWDIN_API_TOKEN
 commit_message: "[skip ci]"
 files:
   - source: /locale/en/*.json

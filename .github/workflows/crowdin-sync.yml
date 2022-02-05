@@ -1,5 +1,8 @@
 name: Sync translations from Crowdin
-on: workflow_dispatch
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 0 * * *'
 jobs:
   sync_translations:
     name: Sync translations from Crowdin
@@ -18,20 +21,23 @@ jobs:
 
     - name: Set up Crowdin CLI
       run: |
-        sudo apt install -y default-jre
+        sudo apt-get install -y default-jre
         wget https://artifacts.crowdin.com/repo/deb/crowdin3.deb -O crowdin.deb
         sudo dpkg -i crowdin.deb
         rm crowdin.deb
 
     - name: Sync translations
-      run: |
-        crowdin download -b $GITHUB_REF_NAME -T ${{ secrets.CROWDIN_API_TOKEN }} --no-progress
-        yarn extract
+      run: crowdin download -b $GITHUB_REF_NAME --no-progress
+      env:
+        CROWDIN_API_TOKEN: ${{ secrets.CROWDIN_API_TOKEN }}
+
+    - name: Extract
+      run: yarn extract
 
     - name: Commit
       run: |
         git config user.name github-actions
         git config user.email github-actions@github.com
         git add locale
-        git commit -m "i18n sync $(date +%s)"
+        git commit -m "i18n sync $(date -u "+%Y/%m/%d %H:%M:%S")"
         git push
