@@ -5,7 +5,7 @@ runs:
   steps:
   - shell: bash
     run: |
-      sudo apt-get install -y default-jre
-      wget https://artifacts.crowdin.com/repo/deb/crowdin3.deb -O crowdin.deb
+      sudo apt-get -q install -y default-jre
+      wget https://artifacts.crowdin.com/repo/deb/crowdin3.deb -O crowdin.deb -nv
       sudo dpkg -i crowdin.deb
       rm crowdin.deb
