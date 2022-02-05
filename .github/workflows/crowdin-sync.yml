@@ -19,12 +19,7 @@ jobs:
         cache: 'yarn'
     - run: yarn install
 
-    - name: Set up Crowdin CLI
-      run: |
-        sudo apt-get install -y default-jre
-        wget https://artifacts.crowdin.com/repo/deb/crowdin3.deb -O crowdin.deb
-        sudo dpkg -i crowdin.deb
-        rm crowdin.deb
+    - uses: ./.github/actions/install-crowdin-cli
 
     - name: Sync translations
       run: crowdin download -b $GITHUB_REF_NAME --no-progress
