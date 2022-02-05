@@ -7,6 +7,7 @@ import {InnerRelease} from './InnerRelease'
 import {OGCDDowntime} from './OGCDDowntime'
 import {PrimalChaos} from './PrimalChaos'
 import {SurgingTempest} from './SurgingTempest'
+import {Tincture} from './Tincture'
 
 export default [
 	ActionTimeline,
@@ -18,4 +19,5 @@ export default [
 	OGCDDowntime,
 	PrimalChaos,
 	SurgingTempest,
+	Tincture,
 ]
