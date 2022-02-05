@@ -374,6 +374,7 @@ export interface InstaKillEvent extends EffectEventFields {
 }
 
 const healEventTypes = [
+	'absorbed',
 	'calculatedheal',
 	'heal',
 ] as const
