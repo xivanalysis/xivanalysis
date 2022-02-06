@@ -1,6 +1,7 @@
 project_id: "310054"
 api_token_env: CROWDIN_API_TOKEN
 commit_message: "[skip ci]"
+preserve_hierarchy: true
 files:
   - source: /locale/en/*.json
     translation: /locale/%two_letters_code%/%original_file_name%
