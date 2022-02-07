@@ -44,37 +44,53 @@ const SHROUD_CONSUMERS: ActionKey[] = [
 	'ENSHROUD',
 ]
 
+/**
+ * Base amount for the combo actions
+ */
+const BASE_GAUGE_GENERATION_AMOUNT = 10
+
+/**
+ * Base amount for the soul gauge consumption
+ */
+const BASE_GAUGE_CONSUMPTION_AMOUNT = 50
+const PLENTIFUL_HARVEST_SHROUD_GENERATION_AMOUNT = 50
+const ENSHROUD_GAUGE_CONSUMPTION = 50
+
+/**
+ * Amount generated for the "Soul" skills, which are cooldowns
+ */
+const SOUL_GAUGE_GENERATION_AMOUNT = 50
+
 export class Gauge extends CoreGauge {
 	@dependency private suggestions!: Suggestions
 
-	/* eslint-disable @typescript-eslint/no-magic-numbers */
 	private soulGeneratorModifiers = new Map<number, number>([
-		[this.data.actions.SLICE.id, 10],
-		[this.data.actions.WAXING_SLICE.id, 10],
-		[this.data.actions.INFERNAL_SLICE.id, 10],
-		[this.data.actions.SPINNING_SCYTHE.id, 10],
-		[this.data.actions.NIGHTMARE_SCYTHE.id, 10],
-		[this.data.actions.SOUL_SLICE.id, 50],
-		[this.data.actions.SOUL_SCYTHE.id, 50],
+		[this.data.actions.SLICE.id, BASE_GAUGE_GENERATION_AMOUNT],
+		[this.data.actions.WAXING_SLICE.id, BASE_GAUGE_GENERATION_AMOUNT],
+		[this.data.actions.INFERNAL_SLICE.id, BASE_GAUGE_GENERATION_AMOUNT],
+		[this.data.actions.SPINNING_SCYTHE.id, BASE_GAUGE_GENERATION_AMOUNT],
+		[this.data.actions.NIGHTMARE_SCYTHE.id, BASE_GAUGE_GENERATION_AMOUNT],
+		[this.data.actions.SOUL_SLICE.id, SOUL_GAUGE_GENERATION_AMOUNT],
+		[this.data.actions.SOUL_SCYTHE.id, SOUL_GAUGE_GENERATION_AMOUNT],
 	])
 
 	private soulConsumptionModifiers = new Map<number, number>([
-		[this.data.actions.BLOOD_STALK.id, 50],
-		[this.data.actions.GRIM_SWATHE.id, 50],
-		[this.data.actions.GLUTTONY.id, 50],
-		[this.data.actions.UNVEILED_GIBBET.id, 50],
-		[this.data.actions.UNVEILED_GALLOWS.id, 50],
+		[this.data.actions.BLOOD_STALK.id, BASE_GAUGE_CONSUMPTION_AMOUNT],
+		[this.data.actions.GRIM_SWATHE.id, BASE_GAUGE_CONSUMPTION_AMOUNT],
+		[this.data.actions.GLUTTONY.id, BASE_GAUGE_CONSUMPTION_AMOUNT],
+		[this.data.actions.UNVEILED_GIBBET.id, BASE_GAUGE_CONSUMPTION_AMOUNT],
+		[this.data.actions.UNVEILED_GALLOWS.id, BASE_GAUGE_CONSUMPTION_AMOUNT],
 	])
 
 	private shroudGeneratorModifiers = new Map<number, number>([
-		[this.data.actions.GIBBET.id, 10],
-		[this.data.actions.GALLOWS.id, 10],
-		[this.data.actions.GUILLOTINE.id, 10],
-		[this.data.actions.PLENTIFUL_HARVEST.id, 50],
+		[this.data.actions.GIBBET.id, BASE_GAUGE_GENERATION_AMOUNT],
+		[this.data.actions.GALLOWS.id, BASE_GAUGE_GENERATION_AMOUNT],
+		[this.data.actions.GUILLOTINE.id, BASE_GAUGE_GENERATION_AMOUNT],
+		[this.data.actions.PLENTIFUL_HARVEST.id, PLENTIFUL_HARVEST_SHROUD_GENERATION_AMOUNT],
 	])
 
 	private shroudConsumerModifiers = new Map<number, number>([
-		[this.data.actions.ENSHROUD.id, 50],
+		[this.data.actions.ENSHROUD.id, ENSHROUD_GAUGE_CONSUMPTION],
 	])
 
 	private soulGauge = this.add(new CounterGauge({
@@ -85,7 +101,6 @@ export class Gauge extends CoreGauge {
 			color: SOUL_GAUGE_COLOR.fade(0.25),
 		},
 		correctHistory: true,
-		deterministic: false,
 	}))
 
 	private shroudGauge = this.add(new CounterGauge({
@@ -96,7 +111,6 @@ export class Gauge extends CoreGauge {
 			color: SHROUD_GAUGE_COLOR.fade(0.25),
 		},
 		correctHistory: true,
-		deterministic: false,
 	}))
 
 	override initialise() {
@@ -166,7 +180,7 @@ export class Gauge extends CoreGauge {
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.ENSHROUD.icon,
 			content: <Trans id="rpr.gauge.suggestions.shroud-gauge-overcap.content">
-				Try to not overcap Shroud gauge because it can lead to less usages of <DataLink action="ENSHROUD"/> over
+				Try to not overcap Shroud gauge because it can lead to fewer uses of <DataLink action="ENSHROUD"/> over
 				the course of the fight.
 			</Trans>,
 			tiers: {
