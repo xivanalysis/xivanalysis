@@ -21,6 +21,11 @@ export const NINJA = new Meta({
 	],
 	changelog: [
 		{
+			date: new Date('2022-02-02'),
+			Changes: () => <>Updated Trick Attack modules for correct handling of the opener.</>,
+			contributors: [CONTRIBUTORS.TOASTDEIB],
+		},
+		{
 			date: new Date('2022-01-10'),
 			Changes: () => <>Fixed issue with GCD uptime not considering Huton active.</>,
 			contributors: [CONTRIBUTORS.AZARIAH],
