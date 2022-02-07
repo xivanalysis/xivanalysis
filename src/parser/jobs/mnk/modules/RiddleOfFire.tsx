@@ -1,12 +1,12 @@
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
 import {ActionLink} from 'components/ui/DbLink'
-import {Action, ActionRoot} from 'data/ACTIONS'
+import {Action, ActionKey} from 'data/ACTIONS'
 import {dependency} from 'parser/core/Injectable'
 import {BuffWindow, EvaluatedAction, EvaluationOutput, ExpectedGcdCountEvaluator, LimitedActionsEvaluator, WindowEvaluator} from 'parser/core/modules/ActionWindow'
 import {HistoryEntry} from 'parser/core/modules/ActionWindow/History'
 import {GlobalCooldown} from 'parser/core/modules/GlobalCooldown'
-import {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
+import {SEVERITY} from 'parser/core/modules/Suggestions'
 import React from 'react'
 import {BLITZ_SKILLS} from './constants'
 import {DISPLAY_ORDER} from './DISPLAY_ORDER'
@@ -22,47 +22,36 @@ const SEVERITIES = {
 		1: SEVERITY.MEDIUM,
 		2: SEVERITY.MAJOR,
 	},
-	CR_USAGE: {
-		1: SEVERITY.MAJOR,
-	},
 }
 
 const EXPECTED_GCDS = 11
 
+const SUPPORT_ACTIONS: ActionKey[] = [
+	'FEINT',
+	'MANTRA',
+	'THUNDERCLAP',
+	'RIDDLE_OF_EARTH',
+	'SECOND_WIND',
+	'LEG_SWEEP',
+	'BLOODBATH',
+	'ARMS_LENGTH',
+	'TRUE_NORTH',
+	'SPRINT',
+]
+
 interface MasterfulBlitzEvaluatorOpts {
 	blitzSkills: Array<Action['id']>,
-	celestialRevolution: Action,
-	perfectBalance: ActionRoot['PERFECT_BALANCE'],
 }
 
 class MasterfulBlitzEvaluator implements WindowEvaluator {
 	private blitzSkills: Array<Action['id']>
-	private celestialRevolution: Action
-	private perfectBalance: ActionRoot['PERFECT_BALANCE']
 
 	constructor(opts: MasterfulBlitzEvaluatorOpts) {
 		this.blitzSkills = opts.blitzSkills
-		this.celestialRevolution = opts.celestialRevolution
-		this.perfectBalance = opts.perfectBalance
 	}
 
-	suggest(windows: Array<HistoryEntry<EvaluatedAction[]>>) {
-		const celestialRevolutionUsages = windows.map(previousValue => previousValue.data)
-			.reduce((previousValue, currentValue) => previousValue.concat(currentValue))
-			.filter(value => value.action === this.celestialRevolution)
-			.length
-
-		return new TieredSuggestion({
-			icon: this.celestialRevolution.icon,
-			content: <Trans id="mnk.rof.suggestions.celestialrevolution.content">
-				Avoid using <ActionLink action="CELESTIAL_REVOLUTION"/>.
-			</Trans>,
-			tiers: SEVERITIES.CR_USAGE,
-			value: celestialRevolutionUsages,
-			why: <Trans id="mnk.rof.suggestions.celestialrevolution.why">
-				<ActionLink action="RISING_PHOENIX"/> and <ActionLink action="ELIXIR_FIELD"/> do more potency along with AoE.
-			</Trans>,
-		})
+	suggest() {
+		return undefined
 	}
 
 	output(windows: Array<HistoryEntry<EvaluatedAction[]>>): EvaluationOutput {
@@ -72,10 +61,10 @@ class MasterfulBlitzEvaluator implements WindowEvaluator {
 				header: <ActionLink showName={false} action="MASTERFUL_BLITZ"/>,
 				accessor: 'masterfulblitz',
 			},
-			rows: windows.map((window, i) => {
+			rows: windows.map(window => {
 				return {
 					actual: this.countBlitzSkills(window),
-					expected: this.numberOfBlitzExpectedInWindow(i, windows),
+					expected: undefined,
 				}
 			}),
 		}
@@ -83,32 +72,6 @@ class MasterfulBlitzEvaluator implements WindowEvaluator {
 
 	private countBlitzSkills(window: HistoryEntry<EvaluatedAction[]>): number {
 		return window.data.filter(value => this.blitzSkills.includes(value.action.id)).length
-	}
-
-	private numberOfBlitzExpectedInWindow(windowIndex: number, windows: Array<HistoryEntry<EvaluatedAction[]>>): number {
-		// First window should always contain 2 blitz
-		if (windowIndex === 0) {
-			return 2
-		}
-
-		// If the time between the last RoF window is greater than double the CD of PB, then expect all PBs to be used
-		if (this.timeBetweenLastWindowInSeconds(windowIndex, windows) > (this.perfectBalance.cooldown * 2)) {
-			return 2
-		}
-
-		// Determined by the last window
-		const blitzSkillsInLastWindow = this.numberOfBlitzExpectedInWindow(windowIndex - 1, windows)
-		if (blitzSkillsInLastWindow === 2) {
-			return 1
-		}
-		return 2
-	}
-
-	private timeBetweenLastWindowInSeconds(windowIndex: number, windows: Array<HistoryEntry<EvaluatedAction[]>>): number {
-		if (windowIndex === 0) {
-			return 0
-		}
-		return (windows[windowIndex].start - windows[windowIndex - 1].start) / 1000
 	}
 }
 
@@ -127,10 +90,10 @@ export class RiddleOfFire extends BuffWindow {
 
 		const suggestionWindowName = <ActionLink action="RIDDLE_OF_FIRE"/>
 
+		this.ignoreActions(fillActions(SUPPORT_ACTIONS, this.data))
+
 		this.addEvaluator(new MasterfulBlitzEvaluator({
 			blitzSkills: this.blitzSkills,
-			celestialRevolution: this.data.actions.CELESTIAL_REVOLUTION,
-			perfectBalance: this.data.actions.PERFECT_BALANCE,
 		}))
 		this.addEvaluator(new ExpectedGcdCountEvaluator({
 			expectedGcds: EXPECTED_GCDS,
@@ -161,9 +124,9 @@ export class RiddleOfFire extends BuffWindow {
 					expectedPerWindow: 0,
 				},
 			],
-			suggestionIcon: this.data.actions.MEDITATION.icon,
+			suggestionIcon: this.data.actions.RIDDLE_OF_FIRE.icon,
 			suggestionContent: <Trans id="mnk.rof.suggestions.meditation.content">
-				Avoid using <ActionLink action="MEDITATION"/>, <ActionLink action="MEDITATION"/> or <ActionLink action="FORM_SHIFT"/> under <ActionLink action="RIDDLE_OF_FIRE"/> as this is essentially wasting a GCD.
+				Avoid using <ActionLink action="MEDITATION"/>, <ActionLink action="ANATMAN"/> or <ActionLink action="FORM_SHIFT"/> under <ActionLink action="RIDDLE_OF_FIRE"/> as this is essentially wasting a GCD.
 			</Trans>,
 			suggestionWindowName,
 			severityTiers: SEVERITIES.BAD_GCDS,
