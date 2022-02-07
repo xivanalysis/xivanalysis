@@ -1,0 +1,11 @@
+name: Install Crowdin CLI
+description: Installs the Crowdin CLI and required dependencies
+runs:
+  using: composite
+  steps:
+  - shell: bash
+    run: |
+      sudo apt-get -q install -y default-jre
+      wget https://artifacts.crowdin.com/repo/deb/crowdin3.deb -O crowdin.deb -nv
+      sudo dpkg -i crowdin.deb
+      rm crowdin.deb

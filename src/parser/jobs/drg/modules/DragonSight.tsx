@@ -103,31 +103,37 @@ export default class DragonSight extends BuffWindow {
 		this.addEvaluator(new ExpectedActionsEvaluator({
 			expectedActions: [
 				{
-					action: this.data.actions.CHAOTIC_SPRING,
+					action: this.data.actions.HIGH_JUMP,
 					expectedPerWindow: 1,
 				},
 				{
-					action: this.data.actions.HEAVENS_THRUST,
+					action: this.data.actions.GEIRSKOGUL,
 					expectedPerWindow: 1,
 				},
 				{
-					action: this.data.actions.FANG_AND_CLAW,
+					action: this.data.actions.MIRAGE_DIVE,
 					expectedPerWindow: 1,
 				},
 				{
-					action: this.data.actions.WHEELING_THRUST,
+					action: this.data.actions.LIFE_SURGE,
+					expectedPerWindow: 1,
+				},
+				{
+					action: this.data.actions.SPINESHATTER_DIVE,
+					expectedPerWindow: 1,
+				},
+				{
+					action: this.data.actions.DRAGONFIRE_DIVE,
 					expectedPerWindow: 1,
 				},
 			],
 			suggestionIcon,
-			suggestionContent: <Trans id="drg.ds.suggestions.trackedactions.content">
-				Each <ActionLink action="DRAGON_SIGHT" /> window should contain at least one use each of <ActionLink action="CHAOTIC_SPRING" />, <ActionLink action="HEAVENS_THRUST" />, <ActionLink action="FANG_AND_CLAW" />, and <ActionLink action="WHEELING_THRUST" />. In order to ensure that these actions fall within the buff window, try to avoid using <ActionLink action="DRAGON_SIGHT" /> after <ActionLink action="CHAOTIC_SPRING" /> or <ActionLink action="HEAVENS_THRUST" />.
-			</Trans>,
+			suggestionContent: <Trans id="drg.lc.suggestions.missedaction.content">Try to use as many of your oGCDs as possible during <ActionLink action="DRAGON_SIGHT" />. Remember to keep your abilities on cooldown, when possible, to prevent them from drifting outside of your buff windows.</Trans>,
 			suggestionWindowName,
 			severityTiers: {
 				1: SEVERITY.MINOR,
 				3: SEVERITY.MEDIUM,
-				5: SEVERITY.MAJOR,
+				6: SEVERITY.MAJOR,
 			},
 			adjustCount: this.adjustExpectedActionCount.bind(this),
 			adjustOutcome: this.adjustExpectedActionOutcome.bind(this),
@@ -160,6 +166,7 @@ export default class DragonSight extends BuffWindow {
 			return -1
 		}
 
+		// unlike lance charge, there are no adjustments expected here due to DS being a two minute CD
 		return 0
 	}
 

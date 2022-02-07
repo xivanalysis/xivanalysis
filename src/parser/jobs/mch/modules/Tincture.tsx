@@ -8,13 +8,11 @@ import {SEVERITY} from 'parser/core/modules/Suggestions'
 import {Tincture as CoreTincture} from 'parser/core/modules/Tincture'
 import React from 'react'
 
-// Arbitrary 1 GCD buffer for the tincture buff application
-const TINCTURE_BUFFER = 2500
-
 interface reassembleOptions extends TrackedActionsOptions {
 	reassembleId: number
 	wasReassembleUsed: (window: HistoryEntry<EvaluatedAction[]>) => boolean
 }
+
 class ReassembleEvaluator extends ExpectedActionsEvaluator {
 	// Because this class is not an Analyser, it cannot use Data directly
 	// to get the id for Reassemble, so it has to take it in here.
@@ -87,23 +85,9 @@ export class Tincture extends CoreTincture {
 				4: SEVERITY.MEDIUM,
 				6: SEVERITY.MAJOR,
 			},
-			adjustCount: this.adjustExpectedActionCount.bind(this),
 			reassembleId: this.data.actions.REASSEMBLE.id,
 			wasReassembleUsed: this.wasReassembleUsed.bind(this),
 		}))
-	}
-
-	private adjustExpectedActionCount(window: HistoryEntry<EvaluatedAction[]>, action: TrackedAction) {
-		const bufferedWindowStart = window.start - TINCTURE_BUFFER
-
-		if (action.action === this.data.actions.PILE_BUNKER) {
-			// We don't have queen in the opener
-			if (bufferedWindowStart <= this.parser.pull.timestamp) {
-				return -1
-			}
-		}
-
-		return 0
 	}
 
 	private onRemoveReassembled(event: Events['statusRemove']) {

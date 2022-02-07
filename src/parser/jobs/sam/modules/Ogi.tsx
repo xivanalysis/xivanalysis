@@ -61,7 +61,7 @@ export class Ogi extends Analyser {
 			requirements: [
 				new Requirement({
 					name: <Trans id="sam.ogi.checklist.requirement.waste.name">
-						Use as many of your meditation stacks as possible.
+						Use as many of your Ogis as possible.
 					</Trans>,
 					value: this.ogisDone,
 					target: (this.ogiReadys * 2),

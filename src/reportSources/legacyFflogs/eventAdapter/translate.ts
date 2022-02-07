@@ -1,7 +1,7 @@
 import * as Sentry from '@sentry/browser'
 import {STATUS_ID_OFFSET} from 'data/STATUSES'
 import {Event, Events, Cause, SourceModifier, TargetModifier, AttributeValue, Attribute} from 'event'
-import {Actor} from 'report'
+import {Actor, Team} from 'report'
 import {resolveActorId} from '../base'
 import {ActorResources, BuffEvent, BuffStackEvent, CastEvent, CombatantInfoEvent, DamageEvent, DeathEvent, FflogsEvent, HealEvent, HitType, InstaKillEvent, TargetabilityUpdateEvent} from '../eventTypes'
 import {AdapterStep} from './base'
@@ -52,6 +52,9 @@ export class TranslateAdapterStep extends AdapterStep {
 	private unhandledTypes = new Set<string>()
 	// Using negatives so we don't tread on fflog's positive sequence IDs
 	private nextFakeSequence = -1
+
+	// Set of sequence IDs that have been explicitly seen in a calculated event
+	private calculatedSequences = new Set<number>()
 
 	override adapt(baseEvent: FflogsEvent, _adaptedEvents: Event[]): Event[] {
 		switch (baseEvent.type) {
@@ -164,7 +167,8 @@ export class TranslateAdapterStep extends AdapterStep {
 		// Calc events should all have a packet ID for sequence purposes. Otherwise, this is a damage or heal effect packet for an over time effect.
 		const sequence = event.packetID
 
-		if (sequence == null) {
+		// As of ~6.08, FF Logs reports a packetID that links all `damage` events from a single DOT application, however these still do not have calculated events.
+		if (sequence == null || !this.calculatedSequences.has(sequence)) {
 			// Damage over time or Heal over time effects are sent as damage/heal events without a sequence ID -- there is no execute confirmation for over time effects, just the actual damage or heal event
 			// Similarly, certain failed hits will generate an "unpaired" event
 			const cause = resolveCause(event.ability.guid)
@@ -232,6 +236,8 @@ export class TranslateAdapterStep extends AdapterStep {
 	}
 
 	private adaptDamageEvent(event: DamageEvent): Array<Events['damage' | 'actorUpdate']> {
+		const sequence = event.packetID
+
 		// Calculate source modifier
 		let sourceModifier = sourceHitType[event.hitType] ?? SourceModifier.NORMAL
 		if (event.multistrike) {
@@ -246,7 +252,7 @@ export class TranslateAdapterStep extends AdapterStep {
 			...this.adaptSourceFields(event),
 			type: 'damage',
 			cause: resolveCause(event.ability.guid),
-			sequence: event.packetID,
+			sequence,
 			targets: [{
 				...resolveTargetId(event),
 				// fflogs subtracts overkill from amount, amend
@@ -257,16 +263,22 @@ export class TranslateAdapterStep extends AdapterStep {
 			}],
 		}
 
+		if (sequence != null) {
+			this.calculatedSequences.add(sequence)
+		}
+
 		return [newEvent, ...this.buildActorUpdateResourceEvents(event)]
 	}
 
 	private adaptHealEvent(event: HealEvent): Array<Events['heal' | 'actorUpdate']> {
+		const sequence = event.packetID
 		const overheal = event.overheal ?? 0
+
 		const newEvent: Events['heal'] = {
 			...this.adaptSourceFields(event),
 			type: 'heal',
 			cause: resolveCause(event.ability.guid),
-			sequence: event.packetID,
+			sequence,
 			targets: [{
 				...resolveTargetId(event),
 				// fflogs substracts overheal from amount, amend
@@ -274,6 +286,10 @@ export class TranslateAdapterStep extends AdapterStep {
 				overheal,
 				sourceModifier: sourceHitType[event.hitType] ?? SourceModifier.NORMAL,
 			}],
+		}
+
+		if (sequence != null) {
+			this.calculatedSequences.add(sequence)
 		}
 
 		return [newEvent, ...this.buildActorUpdateResourceEvents(event)]
@@ -320,16 +336,28 @@ export class TranslateAdapterStep extends AdapterStep {
 	}
 
 	private buildActorUpdateResourceEvent(
-		actor: Actor['id'],
+		actorId: Actor['id'],
 		resources: ActorResources,
 		event: FflogsEvent,
 	): Events['actorUpdate'] {
-		// TODO: Do we want to bother tracking actor resources to prevent duplicate updates?
+		const actor = this.pull.actors.find(actor => actor.id === actorId)
+
+		// FF Logs is doing some incorrect adjustments to HP resources that cause a
+		// 0 HP report without an accompanying death. These are typically caused by
+		// 1-hit mechanics being survived due to either fight mechanics or tank
+		// invulnerabilities - we can safely cap resource updates at 1 HP, and wait
+		// for the death event for a 0 HP update. This does mean deaths can be a
+		// little delayed in the event stream, but is probably an overall safer methodology.
+		let currentHp = resources.hitPoints
+		if (actor?.team === Team.FRIEND) {
+			currentHp = Math.max(1, currentHp)
+		}
+
 		return {
 			...this.adaptBaseFields(event),
 			type: 'actorUpdate',
-			actor,
-			hp: {current: resources.hitPoints, maximum: resources.maxHitPoints},
+			actor: actorId,
+			hp: {current: currentHp, maximum: resources.maxHitPoints},
 			mp: {current: resources.mp, maximum: resources.maxMP},
 			position: {x: resources.x, y: resources.y, bearing: resources.facing},
 		}

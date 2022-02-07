@@ -48,6 +48,12 @@ export abstract class ActionWindow extends Analyser {
 	protected rotationTableHeader?: JSX.Element
 
 	/**
+	 * Implementing modules MAY provide a JSX element to appear above the RotationTable
+	 * If prepending multiple nodes, you MUST provide a JSX.Element <Fragment> tag
+	 */
+	protected prependMessages?: JSX.Element
+
+	/**
 	 * Adds an evaluator to be run on the windows.
 	 * @param evaluator An evaluator to be run on the windows
 	 */
@@ -148,7 +154,7 @@ export abstract class ActionWindow extends Analyser {
 		if (this.history.entries.length === 0) { return undefined }
 
 		const actionHistory = this.mapHistoryActions()
-		const evalColumns: EvaluationOutput[]  = []
+		const evalColumns: EvaluationOutput[] = []
 		for (const ev of this.evaluators) {
 			const maybeColumns = ev.output(actionHistory)
 			if (maybeColumns == null) { continue }
@@ -181,18 +187,21 @@ export abstract class ActionWindow extends Analyser {
 				}
 			})
 
-		return <RotationTable
-			targets={rotationTargets}
-			data={rotationData}
-			notes={notesData}
-			onGoto={this.timeline.show}
-			headerTitle={this.rotationTableHeader}
-		/>
+		return <>
+			{this.prependMessages}
+			<RotationTable
+				targets={rotationTargets}
+				data={rotationData}
+				notes={notesData}
+				onGoto={this.timeline.show}
+				headerTitle={this.rotationTableHeader}
+			/></>
 	}
 
 	private mapHistoryActions(): Array<HistoryEntry<EvaluatedAction[]>> {
 		return this.history.entries
-			.map(entry => ({start: entry.start,
+			.map(entry => ({
+				start: entry.start,
 				end: entry.end,
 				data: entry.data
 					.map(ev => {

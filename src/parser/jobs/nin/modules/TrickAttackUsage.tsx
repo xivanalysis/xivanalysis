@@ -12,7 +12,7 @@ import Suggestions, {TieredSuggestion, SEVERITY} from 'parser/core/modules/Sugge
 import React from 'react'
 import {matchClosestHigher} from 'utilities'
 
-const OPTIMAL_GCD_COUNT = 5 // Opener should be Suiton > AE combo > SE before Trick
+const OPTIMAL_GCD_COUNT = 4 // Opener should be Suiton > AE combo before Trick
 
 const MUDRAS: ActionKey[] = [
 	'TEN',
