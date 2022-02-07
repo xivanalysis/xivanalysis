@@ -1,0 +1,43 @@
+name: Sync translations from Crowdin
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 0 * * *'
+jobs:
+  sync_translations:
+    name: Sync translations from Crowdin
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        token: ${{ secrets.I18N_WORKER_API_TOKEN }}
+
+    - uses: actions/setup-node@v2
+      with:
+        node-version: '14'
+        cache: 'yarn'
+    - run: yarn install
+
+    - uses: ./.github/actions/install-crowdin-cli
+
+    - name: Sync translations
+      run: crowdin download -b $GITHUB_REF_NAME --no-progress
+      env:
+        CROWDIN_API_TOKEN: ${{ secrets.CROWDIN_API_TOKEN }}
+
+    - name: Extract
+      run: yarn extract
+
+    - name: Check for changes
+      id: check-changes
+      run: echo "::set-output name=changes::$(git status --porcelain | wc -l)"
+
+    - name: Commit
+      if: steps.check-changes.outputs.changes != 0
+      run: |
+        git config user.name github-actions
+        git config user.email github-actions@github.com
+        git add locale
+        git commit -m "i18n sync $(date -u "+%Y/%m/%d %H:%M:%S")"
+        git push

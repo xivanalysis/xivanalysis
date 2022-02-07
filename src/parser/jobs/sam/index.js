@@ -21,11 +21,12 @@ export const SAMURAI = new Meta({
 
 	supportedPatches: {
 		from: '6.0',
-		to: '6.05',
+		to: '6.08',
 	},
 
 	contributors: [
 		{user: CONTRIBUTORS.RYAN, role: ROLES.DEVELOPER},
+		{user: CONTRIBUTORS.KALITTLES, role: ROLES.DEVELOPER},
 	],
 
 	changelog,

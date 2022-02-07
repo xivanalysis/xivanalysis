@@ -98,4 +98,11 @@ export const RPR = ensureStatuses({
 		icon: 'https://xivapi.com/i/012000/12935.png',
 		duration: 15000,
 	},
+
+	ENSHROUDED: {
+		id: 2593,
+		name: 'Enshrouded',
+		icon: 'https://xivapi.com/i/012000/012931.png',
+		duration: 30000,
+	},
 })

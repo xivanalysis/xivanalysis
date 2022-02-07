@@ -16,6 +16,7 @@ import {oGCDs} from './oGCDs'
 import {Overheal} from './Overheal'
 import {StatusTimeline} from './StatusTimeline'
 import {Synastry} from './Synastry'
+import {Tincture} from './Tincture'
 
 export default [
 	ActionTimeline,
@@ -37,4 +38,5 @@ export default [
 	Overheal,
 	StatusTimeline,
 	Synastry,
+	Tincture,
 ]

@@ -1,0 +1,43 @@
+name: Build
+on:
+  workflow_dispatch:
+  push:
+    branches:
+    - endwalker
+jobs:
+  check_changes:
+    name: Check for changes
+    runs-on: ubuntu-latest
+    outputs:
+      i18n_changes: ${{ steps.check_changes.outputs.i18n_changes }}
+    steps:
+    - uses: actions/checkout@v2
+    - name: Check for changes
+      id: check_changes
+      run: |
+        if [ ${{ github.event_name }} == "workflow_dispatch" ]; then
+          export SHA="$GITHUB_SHA"
+        elif [ ${{ github.event_name }} == "push" ]; then
+          git fetch origin ${{ github.event.before }} --depth=1
+          export SHA="${{ github.event.before }} ${{ github.event.after }}"
+        else
+          echo "Unhandled event type: ${{ github.event_name }}"
+          exit 1
+        fi
+        git diff --quiet $SHA locale/en && true || echo '::set-output name=i18n_changes::true'
+
+  upload_i18n:
+    name: Upload i18n sources to Crowdin
+    runs-on: ubuntu-latest
+    needs: check_changes
+    if: needs.check_changes.outputs.changes == 'true'
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Install Crowdin CLI
+      uses: ./.github/actions/install-crowdin-cli
+
+    - name: Upload i18n sources
+      run: crowdin upload sources -b $GITHUB_REF_NAME --no-progress
+      env:
+        CROWDIN_API_TOKEN: ${{ secrets.CROWDIN_API_TOKEN }}

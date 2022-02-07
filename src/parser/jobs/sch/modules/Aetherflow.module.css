@@ -1,9 +1,0 @@
-.abilities {
-    display: flex;
-    justify-content: flex-start;
-}
-
-.ability {
-    flex: 1;
-    min-width: 110px; /* hardcoded to longest width of sch actions, indomitability */
-}

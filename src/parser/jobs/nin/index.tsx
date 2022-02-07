@@ -14,12 +14,17 @@ export const NINJA = new Meta({
 	</>,
 	supportedPatches: {
 		from: '6.05',
-		to: '6.05',
+		to: '6.08',
 	},
 	contributors: [
 		{user: CONTRIBUTORS.TOASTDEIB, role: ROLES.MAINTAINER},
 	],
 	changelog: [
+		{
+			date: new Date('2022-02-02'),
+			Changes: () => <>Updated Trick Attack modules for correct handling of the opener.</>,
+			contributors: [CONTRIBUTORS.TOASTDEIB],
+		},
 		{
 			date: new Date('2022-01-10'),
 			Changes: () => <>Fixed issue with GCD uptime not considering Huton active.</>,
