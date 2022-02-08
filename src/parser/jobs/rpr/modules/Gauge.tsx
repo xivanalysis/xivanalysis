@@ -2,7 +2,7 @@ import {Trans} from '@lingui/react'
 import Color from 'color'
 import {DataLink} from 'components/ui/DbLink'
 import {ActionKey} from 'data/ACTIONS'
-import {Event, Events} from 'event'
+import {Event} from 'event'
 import {filter} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
 import {CounterGauge, Gauge as CoreGauge} from 'parser/core/modules/Gauge'
@@ -21,6 +21,13 @@ const SOUL_GENERATORS: ActionKey[] = [
 	'INFERNAL_SLICE',
 	'SPINNING_SCYTHE',
 	'NIGHTMARE_SCYTHE',
+]
+
+/**
+ * Actions on cooldown that generate souls, those generate
+ * more souls than regular combo actions
+ */
+const SOUL_GENERATORS_CDS: ActionKey[] = [
 	'SOUL_SLICE',
 	'SOUL_SCYTHE',
 ]
@@ -37,7 +44,6 @@ const SHROUD_GENERATORS: ActionKey[] = [
 	'GIBBET',
 	'GALLOWS',
 	'GUILLOTINE',
-	'PLENTIFUL_HARVEST',
 ]
 
 const SHROUD_CONSUMERS: ActionKey[] = [
@@ -64,35 +70,6 @@ const SOUL_GAUGE_GENERATION_AMOUNT = 50
 export class Gauge extends CoreGauge {
 	@dependency private suggestions!: Suggestions
 
-	private soulGeneratorModifiers = new Map<number, number>([
-		[this.data.actions.SLICE.id, BASE_GAUGE_GENERATION_AMOUNT],
-		[this.data.actions.WAXING_SLICE.id, BASE_GAUGE_GENERATION_AMOUNT],
-		[this.data.actions.INFERNAL_SLICE.id, BASE_GAUGE_GENERATION_AMOUNT],
-		[this.data.actions.SPINNING_SCYTHE.id, BASE_GAUGE_GENERATION_AMOUNT],
-		[this.data.actions.NIGHTMARE_SCYTHE.id, BASE_GAUGE_GENERATION_AMOUNT],
-		[this.data.actions.SOUL_SLICE.id, SOUL_GAUGE_GENERATION_AMOUNT],
-		[this.data.actions.SOUL_SCYTHE.id, SOUL_GAUGE_GENERATION_AMOUNT],
-	])
-
-	private soulConsumptionModifiers = new Map<number, number>([
-		[this.data.actions.BLOOD_STALK.id, BASE_GAUGE_CONSUMPTION_AMOUNT],
-		[this.data.actions.GRIM_SWATHE.id, BASE_GAUGE_CONSUMPTION_AMOUNT],
-		[this.data.actions.GLUTTONY.id, BASE_GAUGE_CONSUMPTION_AMOUNT],
-		[this.data.actions.UNVEILED_GIBBET.id, BASE_GAUGE_CONSUMPTION_AMOUNT],
-		[this.data.actions.UNVEILED_GALLOWS.id, BASE_GAUGE_CONSUMPTION_AMOUNT],
-	])
-
-	private shroudGeneratorModifiers = new Map<number, number>([
-		[this.data.actions.GIBBET.id, BASE_GAUGE_GENERATION_AMOUNT],
-		[this.data.actions.GALLOWS.id, BASE_GAUGE_GENERATION_AMOUNT],
-		[this.data.actions.GUILLOTINE.id, BASE_GAUGE_GENERATION_AMOUNT],
-		[this.data.actions.PLENTIFUL_HARVEST.id, PLENTIFUL_HARVEST_SHROUD_GENERATION_AMOUNT],
-	])
-
-	private shroudConsumerModifiers = new Map<number, number>([
-		[this.data.actions.ENSHROUD.id, ENSHROUD_GAUGE_CONSUMPTION],
-	])
-
 	private soulGauge = this.add(new CounterGauge({
 		minimum: 0,
 		maximum: SOUL_MAX_VALUE,
@@ -100,7 +77,6 @@ export class Gauge extends CoreGauge {
 			label: 'Soul Gauge',
 			color: SOUL_GAUGE_COLOR.fade(0.25),
 		},
-		correctHistory: true,
 	}))
 
 	private shroudGauge = this.add(new CounterGauge({
@@ -110,7 +86,6 @@ export class Gauge extends CoreGauge {
 			label: 'Shroud Gauge',
 			color: SHROUD_GAUGE_COLOR.fade(0.25),
 		},
-		correctHistory: true,
 	}))
 
 	override initialise() {
@@ -120,35 +95,44 @@ export class Gauge extends CoreGauge {
 
 		// soul gauge
 		this.addEventHook(playerFilter.type('action').action(this.data.matchActionId(SOUL_GENERATORS)), this.onSoulGeneration)
+		this.addEventHook(playerFilter.type('action').action(this.data.matchActionId(SOUL_GENERATORS_CDS)), this.onSoulGenerationCds)
 		this.addEventHook(playerFilter.type('action').action(this.data.matchActionId(SOUL_CONSUMERS)), this.onSoulConsumption)
+		this.addEventHook(playerFilter.type('action').action(this.data.actions.PLENTIFUL_HARVEST.id), this.onPlentifulHarvest)
 
 		// shroud gauge
 		this.addEventHook(playerFilter.type('action').action(this.data.matchActionId(SHROUD_GENERATORS)), this.onShroudGeneration)
 		this.addEventHook(playerFilter.type('action').action(this.data.matchActionId(SHROUD_CONSUMERS)), this.onShroudConsumption)
+		this.addEventHook(playerFilter.type('action').action(this.data.actions.ENSHROUD.id), this.onEnshroud)
 
 		this.addEventHook('complete', this.onComplete)
 	}
 
 	private onSoulGeneration() {
-            this.soulGauge.generate(BASE_GAUGE_GENERATION_AMOUNT)
+		this.soulGauge.generate(BASE_GAUGE_GENERATION_AMOUNT)
 	}
 
-	private onSoulConsumption(event: Events['action']) {
-            this.SoulGauge.spend(BASE_GAUGE_CONSUMPTION_AMOUNT)
+	private onSoulGenerationCds() {
+		this.soulGauge.generate(SOUL_GAUGE_GENERATION_AMOUNT)
 	}
 
-	private onShroudGeneration(event: Events['action']) {
-		const generated = this.shroudGeneratorModifiers.get(event.action)
-		if (generated) {
-			this.shroudGauge.generate(generated)
-		}
+	private onSoulConsumption() {
+		this.soulGauge.spend(BASE_GAUGE_CONSUMPTION_AMOUNT)
 	}
 
-	private onShroudConsumption(event: Events['action']) {
-		const spent = this.shroudConsumerModifiers.get(event.action)
-		if (spent) {
-			this.shroudGauge.spend(spent)
-		}
+	private onShroudGeneration() {
+		this.shroudGauge.generate(BASE_GAUGE_GENERATION_AMOUNT)
+	}
+
+	private onPlentifulHarvest() {
+		this.shroudGauge.generate(PLENTIFUL_HARVEST_SHROUD_GENERATION_AMOUNT)
+	}
+
+	private onEnshroud() {
+		this.shroudGauge.spend(ENSHROUD_GAUGE_CONSUMPTION)
+	}
+
+	private onShroudConsumption() {
+		this.shroudGauge.spend(BASE_GAUGE_CONSUMPTION_AMOUNT)
 	}
 
 	private onComplete() {

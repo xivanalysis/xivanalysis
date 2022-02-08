@@ -737,7 +737,7 @@
   "rpr.enshroud.suggestions.content": "Each <0/> window should contain 2 uses each of <1/>, <2/>, and <3/> (or their AoE equivalents) and 1 use of <4/>.",
   "rpr.enshroud.title": "Enshroud",
   "rpr.gauge.suggestions.shroud-gauge-overcap.content": "Try to not overcap Shroud gauge because it can lead to fewer uses of <0/> over the course of the fight.",
-  "rpr.gauge.suggestions.shroud-gauge-overcap.why": "You lost {0} Shroud due to overcapped gauge.",
+  "rpr.gauge.suggestions.shroud-gauge-overcap.why": "You lost {0} Shroud due to overcapped gauge, which cost you {1} uses of Enshroud.",
   "rpr.gauge.suggestions.soul-gauge-overcap.content": "Try to not overcap Soul gauge since it's required for shroud generation for your highest damaging skills via <0/>. Pay special attention when using <1/> or <2/> as they increase the gauge by <3>50</3>, make sure you have <4>50</4> or less in your gauge before using.",
   "rpr.gauge.suggestions.soul-gauge-overcap.why": "You lost {0} Soul due to overcapped gauge.",
   "rpr.immortal-sacrifice.checklist.description": "<0/> stacks will be generated when you use <1/>, you can then consume those stacks by using <2/>. On top of being a high potency skill, it also grants enough Shroud gauge to immediately use <3/>.",
