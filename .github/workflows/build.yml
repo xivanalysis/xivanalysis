@@ -19,7 +19,7 @@ jobs:
           export SHA="$GITHUB_SHA"
         elif [ ${{ github.event_name }} == "push" ]; then
           git fetch origin ${{ github.event.before }} --depth=1
-          export SHA="${{ github.event.before }}...${{ github.event.after }}"
+          export SHA="${{ github.event.before }}..${{ github.event.after }}"
         else
           echo "Unhandled event type: ${{ github.event_name }}"
           exit 1
