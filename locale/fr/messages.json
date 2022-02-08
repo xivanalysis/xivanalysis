@@ -423,7 +423,7 @@
   "drg.lc.prepend-message": "",
   "drg.lc.suggestions.missedaction.content": "",
   "drg.lc.suggestions.missedgcd.content": "",
-  "drg.procs.suggestions.extenders.content": "Évitez d'interrompre vos combos aux étapes <0/> et <1/>, car cela vous fait perdre les procs qui vous permettent de les lancer, ce qui vous coûte à la fois le casting et la durée <2/> qui l'accompagne.",
+  "drg.procs.suggestions.extenders.content": "",
   "drg.procs.suggestions.extenders.why": "Vous avez laisser {droppedFang, plural,one {# Croc-et-griffe proc}other {# Croc-et-griffe procs}} et {droppedWheeling, plural,one {#Percée tournante proc}other {#Percée tournante procs}}.",
   "drg.procs.suggestions.mirage-dropped.content": "Évitez de laisser vos <0/> procs tomber, car cela peut retarder votre fenêtre vie du dragon et potentiellement vous coûter beaucoup de DPS.",
   "drg.procs.suggestions.mirage-dropped.why": "Vous avez laisser tombé{droppedMirage, plural,one {#  Piqué mirage proc}other {#  Piqué mirage procs}}.",
