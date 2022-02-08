@@ -202,7 +202,7 @@ export class TranslateAdapterStep extends AdapterStep {
 
 		// Instant kills don't seem to include a sequence, so we're faking it
 		const sequence = this.nextFakeSequence--
-		const bonusPercent = event.bonusPercent || 0
+		const bonusPercent = event.bonusPercent ?? 0
 
 		// Build the primary damage event for the instakill.
 		const damageEvent: Events['damage'] = {
@@ -250,7 +250,7 @@ export class TranslateAdapterStep extends AdapterStep {
 
 		// Build the new event
 		const overkill = event.overkill ?? 0
-		const bonusPercent = event.bonusPercent || 0
+		const bonusPercent = event.bonusPercent ?? 0
 		const newEvent: Events['damage'] = {
 			...this.adaptSourceFields(event),
 			type: 'damage',

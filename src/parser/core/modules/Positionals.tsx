@@ -69,7 +69,7 @@ export abstract class Positionals extends Analyser {
 	override initialise() {
 		this.addEventHook(
 			filter<Event>().source(this.parser.actor.id).type('damage')
-				.cause(filter<Cause>().action(oneOf(this.positionals.map(positional => positional.action.id)))), this.onCast)
+				.cause(this.data.matchCauseActionId(this.positionals.map(positional => positional.action.id))), this.onCast)
 		this.addEventHook('complete', this.onComplete)
 	}
 
@@ -78,11 +78,11 @@ export abstract class Positionals extends Analyser {
 			return
 		}
 		const action = this.data.getAction(event.cause.action)
-		if (!action) {
+		if (action == null) {
 			return
 		}
 		const positional = this.positionals.find(positional => positional.action === action)
-		if (!positional) {
+		if (positional == null) {
 			return
 		}
 
