@@ -92,7 +92,7 @@ export class RiddleOfFire extends BuffWindow {
 
 		this.ignoreActions(fillActions(IGNORED_ACTIONS, this.data))
 
-		this.addEvaluator(new MasterfulBlitzEvaluator({
+		this.addEvaluator(new BlitzEvaluator({
 			blitzSkills: this.blitzSkills,
 		}))
 
