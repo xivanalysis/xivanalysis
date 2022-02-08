@@ -726,6 +726,7 @@
   "rdm.procs.suggestions.overwritten.content": "当你有<1/>的时候，不要咏唱<0/>；当你有<3/>的时候，不要咏唱<2/>.",
   "rdm.procs.suggestions.overwritten.why": "你因为触发覆盖而浪费了 {overWrittenFire, plural, one {# 次赤火炎} other {# 次赤火炎}}，和 {overWrittenStone, plural, one {# 次赤飞石} other {# 次赤飞石}}。",
   "rdm.procs.title": "触发问题",
+  "rdm.swiftcast.suggestion.content": "",
   "rpr.about.description": "<0>这个分析器旨在帮你找到一些触手可及的提升钐镰客手法的方法，也会提供一些战斗中的细节分析。 </0><1>如果你发现了问题，请访问我们的Discord服务器并在#fb-reaper频道内反馈。 </1>",
   "rpr.arcanecircle.suggestions.content": "",
   "rpr.arcanecircle.title": "",

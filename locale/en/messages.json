@@ -726,6 +726,7 @@
   "rdm.procs.suggestions.overwritten.content": "Don't cast <0/> when you have <1/> or <2/> when you have <3/>.",
   "rdm.procs.suggestions.overwritten.why": "{overWrittenFire, plural, one {# Verfire proc} other {# Verfire procs}} and {overWrittenStone, plural, one {# Verstone proc} other {# Verstone procs}} were lost due to being overwritten.",
   "rdm.procs.title": "Proc Issues",
+  "rdm.swiftcast.suggestion.content": "Spells used while <0/> is up should be limited to <1/>, <2/>, or <3/>",
   "rpr.about.description": "<0>This analyser aims to identify some of the low-hanging fruit that could be used to improve your RPR gameplay, as well as give a deeper insight into what happened during an encounter.</0><1>If you notice anything that looks particularly wrong, please visit our Discord server and report it in the #fb-reaper channel.</1>",
   "rpr.arcanecircle.suggestions.content": "Each <0/> window should contain at least 2 uses of <1/> and a use of <2/>.",
   "rpr.arcanecircle.title": "Arcane Circle",
