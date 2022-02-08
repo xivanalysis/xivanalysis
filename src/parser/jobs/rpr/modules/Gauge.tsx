@@ -137,10 +137,7 @@ export class Gauge extends CoreGauge {
 	}
 
 	private onSoulConsumption(event: Events['action']) {
-		const spentAmount = this.soulConsumptionModifiers.get(event.action)
-		if (spentAmount) {
-			this.soulGauge.spend(spentAmount)
-		}
+            this.SoulGauge.spend(BASE_GAUGE_CONSUMPTION_AMOUNT)
 	}
 
 	private onShroudGeneration(event: Events['action']) {
