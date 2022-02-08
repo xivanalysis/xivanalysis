@@ -190,7 +190,7 @@ export class Gauge extends CoreGauge {
 			},
 			value: this.shroudGauge.overCap,
 			why: <Trans id="rpr.gauge.suggestions.shroud-gauge-overcap.why">
-				You lost {this.shroudGauge.overCap} Shroud due to overcapped gauge.
+				You lost {this.shroudGauge.overCap} Shroud due to overcapped gauge, which cost you {this.shroudGauge.overCap / ENSHROUD_GAUGE_CONSUMPTION} uses of Enshroud.
 			</Trans>,
 		}))
 	}
