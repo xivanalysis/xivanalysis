@@ -559,7 +559,7 @@
   "mnk.pb.suggestions.stacks.why": "{droppedGcds, plural, one {# possible GCD was} other {# possible GCDs were}} missed during <0/>.",
   "mnk.pb.title": "Perfect Balance",
   "mnk.rof.suggestions.gcd.content": "Aim to hit {EXPECTED_GCDS} GCDs during each <0/> window.",
-  "mnk.rof.suggestions.meditation.content": "Avoid using <0/>, <1/> or <2/> under <3/> as this is essentially wasting a GCD.",
+  "mnk.rof.suggestions.wasted.content": "Avoid using <0/>, <1/>, or <2/> under <3/> as this is essentially wasting a GCD.",
   "mnk.rof.title": "Riddle of Fire",
   "mnk.steppies.checklist.description": "<0/> is your strongest form GCD when you buff it by using <1/> beforehand.",
   "mnk.steppies.checklist.name": "Buff Bootshine",

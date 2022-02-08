@@ -559,7 +559,7 @@
   "mnk.pb.suggestions.stacks.why": "在<0/>期间丢失了{droppedGcds, plural,one {#个}other {#个}}可能的GCD。",
   "mnk.pb.title": "震脚",
   "mnk.rof.suggestions.gcd.content": "尝试在<0/>的持续时间内插入{0} 个GCD技能。",
-  "mnk.rof.suggestions.meditation.content": "",
+  "mnk.rof.suggestions.wasted.content": "",
   "mnk.rof.title": "红莲极意",
   "mnk.steppies.checklist.description": "当您提前使用<1/>以增益<0/>时，该技能就是您威力最高的GCD技能。",
   "mnk.steppies.checklist.name": "连击效果提高",
