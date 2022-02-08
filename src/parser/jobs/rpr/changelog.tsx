@@ -5,7 +5,7 @@ import React from 'react'
 export const changelog = [
 	{
 		date: new Date('2022-02-07'),
-		Changes: () => <>Add gauges.</>,
+		Changes: () => <>Add Soul Gauge and Shroud gauge.</>,
 		contributors: [CONTRIBUTORS.MR_RAZOR],
 	},
 	{
