@@ -142,7 +142,9 @@ export class Gauge extends CoreGauge {
 				Try to not overcap Soul gauge since it's required for shroud generation for your highest damaging skills
 				via <DataLink action="ENSHROUD"/>.
 				Pay special attention when using <DataLink action="SOUL_SLICE"/> or <DataLink action="SOUL_SCYTHE"/> as
-				they increase the gauge by <b>50</b>, make sure you have <b>50</b> or less in your gauge before using.
+				they increase the gauge by <b>{SOUL_GAUGE_GENERATION_AMOUNT}</b>,
+				make sure you have <b>{SOUL_MAX_VALUE - SOUL_GAUGE_GENERATION_AMOUNT}</b> or
+				less in your gauge before using.
 			</Trans>,
 			tiers: {
 				10: SEVERITY.MINOR,
@@ -168,7 +170,8 @@ export class Gauge extends CoreGauge {
 			},
 			value: this.shroudGauge.overCap,
 			why: <Trans id="rpr.gauge.suggestions.shroud-gauge-overcap.why">
-				You lost {this.shroudGauge.overCap} Shroud due to overcapped gauge, which cost you {this.shroudGauge.overCap / ENSHROUD_GAUGE_CONSUMPTION} uses of Enshroud.
+				You lost {this.shroudGauge.overCap} Shroud due to overcapped gauge,
+				which cost you {Math.floor(this.shroudGauge.overCap / ENSHROUD_GAUGE_CONSUMPTION)} uses of Enshroud.
 			</Trans>,
 		}))
 	}
