@@ -1,6 +1,6 @@
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
-import {ActionLink} from 'components/ui/DbLink'
+import {DataLink} from 'components/ui/DbLink'
 import {Action, ActionKey} from 'data/ACTIONS'
 import {dependency} from 'parser/core/Injectable'
 import {BuffWindow, EvaluatedAction, EvaluationOutput, ExpectedGcdCountEvaluator, LimitedActionsEvaluator, WindowEvaluator} from 'parser/core/modules/ActionWindow'
@@ -12,8 +12,10 @@ import {BLITZ_SKILLS} from './constants'
 import {DISPLAY_ORDER} from './DISPLAY_ORDER'
 import {fillActions} from './utilities'
 
+const EXPECTED_GCDS = 11
+
 const SEVERITIES = {
-	TOTAL_GCD: {
+	TOTAL_GCDS: {
 		10: SEVERITY.MINOR,
 		9: SEVERITY.MEDIUM,
 		6: SEVERITY.MAJOR,
@@ -24,9 +26,7 @@ const SEVERITIES = {
 	},
 }
 
-const EXPECTED_GCDS = 11
-
-const SUPPORT_ACTIONS: ActionKey[] = [
+const IGNORED_ACTIONS: ActionKey[] = [
 	'FEINT',
 	'MANTRA',
 	'THUNDERCLAP',
@@ -39,15 +39,15 @@ const SUPPORT_ACTIONS: ActionKey[] = [
 	'SPRINT',
 ]
 
-interface MasterfulBlitzEvaluatorOpts {
-	blitzSkills: Array<Action['id']>,
+interface BlitzEvaluatorOpts {
+	blitzActions: Array<Action['id']>,
 }
 
-class MasterfulBlitzEvaluator implements WindowEvaluator {
-	private blitzSkills: Array<Action['id']>
+class BlitzEvaluator implements WindowEvaluator {
+	private blitzActions: Array<Action['id']>
 
-	constructor(opts: MasterfulBlitzEvaluatorOpts) {
-		this.blitzSkills = opts.blitzSkills
+	constructor(opts: BlitzEvaluatorOpts) {
+		this.blitzActions = opts.blitzActions
 	}
 
 	suggest() {
@@ -58,20 +58,20 @@ class MasterfulBlitzEvaluator implements WindowEvaluator {
 		return {
 			format: 'table',
 			header: {
-				header: <ActionLink showName={false} action="MASTERFUL_BLITZ"/>,
+				header: <DataLink showName={false} action="MASTERFUL_BLITZ"/>,
 				accessor: 'masterfulblitz',
 			},
 			rows: windows.map(window => {
 				return {
-					actual: this.countBlitzSkills(window),
+					actual: this.countBlitzes(window),
 					expected: undefined,
 				}
 			}),
 		}
 	}
 
-	private countBlitzSkills(window: HistoryEntry<EvaluatedAction[]>): number {
-		return window.data.filter(value => this.blitzSkills.includes(value.action.id)).length
+	private countBlitzes(window: HistoryEntry<EvaluatedAction[]>): number {
+		return window.data.filter(value => this.blitzActions.includes(value.action.id)).length
 	}
 }
 
@@ -82,33 +82,35 @@ export class RiddleOfFire extends BuffWindow {
 
 	@dependency globalCooldown!: GlobalCooldown
 
-	private blitzSkills = fillActions(BLITZ_SKILLS, this.data)
+	private blitzActions = fillActions(BLITZ_SKILLS, this.data)
 	buffStatus = this.data.statuses.RIDDLE_OF_FIRE
 
 	override initialise() {
 		super.initialise()
 
-		const suggestionWindowName = <ActionLink action="RIDDLE_OF_FIRE"/>
+		const suggestionWindowName = <DataLink action="RIDDLE_OF_FIRE"/>
 
-		this.ignoreActions(fillActions(SUPPORT_ACTIONS, this.data))
+		this.ignoreActions(fillActions(IGNORED_ACTIONS, this.data))
 
 		this.addEvaluator(new MasterfulBlitzEvaluator({
 			blitzSkills: this.blitzSkills,
 		}))
+
 		this.addEvaluator(new ExpectedGcdCountEvaluator({
 			expectedGcds: EXPECTED_GCDS,
 			globalCooldown: this.globalCooldown,
 			suggestionIcon: this.data.actions.RIDDLE_OF_FIRE.icon,
-			severityTiers: SEVERITIES.TOTAL_GCD,
+			severityTiers: SEVERITIES.TOTAL_GCDS,
 			suggestionWindowName: suggestionWindowName,
 			suggestionContent: <Trans id="mnk.rof.suggestions.gcd.content">
-				Aim to hit {EXPECTED_GCDS} GCDs during each <ActionLink action="RIDDLE_OF_FIRE"/> window.
+				Aim to hit {EXPECTED_GCDS} GCDs during each <DataLink action="RIDDLE_OF_FIRE"/> window.
 			</Trans>,
 			adjustCount: window => {
 				// 6SS counts as 2 GCDs
 				return -window.data.filter(value => value.action.id === this.data.actions.SIX_SIDED_STAR.id).length
 			},
 		}))
+
 		this.addEvaluator(new LimitedActionsEvaluator({
 			expectedActions: [
 				{
@@ -124,11 +126,11 @@ export class RiddleOfFire extends BuffWindow {
 					expectedPerWindow: 0,
 				},
 			],
-			suggestionIcon: this.data.actions.RIDDLE_OF_FIRE.icon,
-			suggestionContent: <Trans id="mnk.rof.suggestions.meditation.content">
-				Avoid using <ActionLink action="MEDITATION"/>, <ActionLink action="ANATMAN"/> or <ActionLink action="FORM_SHIFT"/> under <ActionLink action="RIDDLE_OF_FIRE"/> as this is essentially wasting a GCD.
+			suggestionIcon: this.data.actions.MEDITATION.icon,
+			suggestionContent: <Trans id="mnk.rof.suggestions.wasted.content">
+				Avoid using <DataLink action="MEDITATION"/>, <DataLink action="ANATMAN"/>, or <DataLink action="FORM_SHIFT"/> under <DataLink status="RIDDLE_OF_FIRE"/> as this is essentially wasting a GCD.
 			</Trans>,
-			suggestionWindowName,
+			suggestionWindowName: suggestionWindowName,
 			severityTiers: SEVERITIES.BAD_GCDS,
 		}))
 	}
