@@ -379,6 +379,7 @@ export interface AbsorbedEvent extends EffectEventFields {
 	attackerID: number,
 	attackerIsFriendly: boolean,
 	extraAbility: Ability
+	fight: number,
 	// Does not include "hitType" field.
 }
 

@@ -779,6 +779,7 @@ const fakeEvents: Record<FflogsEvent['type'], FflogsEvent[]> = {
 			type: 8,
 			abilityIcon: '012000-012954.png',
 		},
+		fight: 3,
 		// hitType is not in this event
 		hitType: 0,
 		attackerID: 10,
