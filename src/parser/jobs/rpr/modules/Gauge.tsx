@@ -129,11 +129,8 @@ export class Gauge extends CoreGauge {
 		this.addEventHook('complete', this.onComplete)
 	}
 
-	private onSoulGeneration(event: Events['action']) {
-		const generatedAmount = this.soulGeneratorModifiers.get(event.action)
-		if (generatedAmount) {
-			this.soulGauge.generate(generatedAmount)
-		}
+	private onSoulGeneration() {
+            this.soulGauge.generate(BASE_GAUGE_GENERATION_AMOUNT)
 	}
 
 	private onSoulConsumption(event: Events['action']) {
