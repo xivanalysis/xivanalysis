@@ -4,7 +4,7 @@ import React from 'react'
 
 export const changelog = [
 	{
-		date: new Date('2022-01-21'),
+		date: new Date('2022-02-07'),
 		Changes: () => <>Add gauges.</>,
 		contributors: [CONTRIBUTORS.MR_RAZOR],
 	},
