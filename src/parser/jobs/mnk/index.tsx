@@ -24,6 +24,7 @@ export const MONK = new Meta({
 
 	contributors: [
 		{user: CONTRIBUTORS.AY, role: ROLES.MAINTAINER},
+		{user: CONTRIBUTORS.MALP, role: ROLES.DEVELOPER},
 	],
 
 	changelog,
