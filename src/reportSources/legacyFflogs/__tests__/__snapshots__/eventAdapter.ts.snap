@@ -98,7 +98,7 @@ Array [
     "targets": Array [
       Object {
         "amount": 0,
-        "bonusPercent": 0,
+        "bonusPercent": 13,
         "overkill": 0,
         "sourceModifier": 2,
         "target": "3",
