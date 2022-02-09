@@ -4,10 +4,12 @@ on:
   push:
     branches:
     - endwalker
+# TODO: Consider utilising multiple workflows, and narrowing this down to a single purpose i18n job - can use push path filter to remove the complexity below, potentially.
 jobs:
   check_changes:
     name: Check for changes
     runs-on: ubuntu-latest
+    if: github.repository_owner == 'xivanalysis'
     outputs:
       i18n_changes: ${{ steps.check_changes.outputs.i18n_changes }}
     steps:
