@@ -30,7 +30,7 @@ jobs:
     name: Upload i18n sources to Crowdin
     runs-on: ubuntu-latest
     needs: check_changes
-    if: needs.check_changes.outputs.changes == 'true'
+    if: needs.check_changes.outputs.i18n_changes == 'true'
     steps:
     - uses: actions/checkout@v2
 
