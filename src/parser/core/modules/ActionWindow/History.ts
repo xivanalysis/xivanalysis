@@ -90,6 +90,7 @@ export class History<T> {
 	 */
 	private open(timestamp: number) {
 		const current: HistoryEntry<T> = {start: timestamp, data: this.dataInitializer()}
+
 		this.entries.push(current)
 		return current
 	}

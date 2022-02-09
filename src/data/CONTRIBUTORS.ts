@@ -156,6 +156,13 @@ const CONTRIBUTORS = ensureRecord<Contributor>()({
 			JOBS.BLACK_MAGE,
 		],
 	},
+	MALP: {
+		name: 'Malp',
+		avatar: require('./avatar/Malp.png'),
+		jobs: [
+			JOBS.MONK,
+		],
+	},
 	YUMIYA: {
 		name: 'Yumiya',
 		avatar: require('./avatar/Yumiya.png'),
@@ -182,6 +189,27 @@ const CONTRIBUTORS = ensureRecord<Contributor>()({
 		avatar: require('./avatar/dthomash.png'),
 		jobs: [
 			JOBS.SCHOLAR,
+		],
+	},
+	KALITTLES: {
+		name: 'Kalittles',
+		avatar: require('./avatar/Kalittles.png'),
+		jobs: [
+			JOBS.SAMURAI,
+		],
+	},
+	SUSHIROU: {
+		name: 'suShirou',
+		avatar: require('./avatar/sushirou.png'),
+		jobs: [
+			JOBS.ASTROLOGIAN,
+		],
+	},
+	DEAN: {
+		name: 'dean',
+		avatar: require('./avatar/dean.png'),
+		jobs: [
+			JOBS.REAPER,
 		],
 	},
 })
