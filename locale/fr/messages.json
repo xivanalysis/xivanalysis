@@ -512,6 +512,8 @@
   "mch.drift.timelinelink-button": "Voir sur la chronologie",
   "mch.drift.timestamp-header": "Horodatage",
   "mch.drift.title": "GCD perdu",
+  "mch.gauge.resource.battery": "",
+  "mch.gauge.resource.heat": "",
   "mch.gauge.suggestions.battery-waste.content": "Essayez de ne pas laisser votre jauge de batterie surcharger, car cela peut vous coûter <0/> utilisations au cours du combat.",
   "mch.gauge.suggestions.battery-waste.why": "Vous avez perdus {0} batterie pour avoir dépasser le maximum stockable.",
   "mch.gauge.suggestions.heat-waste.content": "Essayez de ne pas laisser votre jauge de chaleur surcharger, car cela peut vous coûter des utilisations d'Hypercharge au cours du combat.",

@@ -39,11 +39,17 @@ export class Gauge extends CoreGauge {
 	@dependency private suggestions!: Suggestions
 
 	private heat = this.add(new CounterGauge({
-		chart: {label: 'Heat Gauge', color: HEAT_COLOR},
+		graph: {
+			label: <Trans id="mch.gauge.resource.heat">Heat</Trans>,
+			color: HEAT_COLOR,
+		},
 	}))
 
 	private battery = this.add(new CounterGauge({
-		chart: {label: 'Battery Gauge', color: BATTERY_COLOR},
+		graph: {
+			label: <Trans id="mch.gauge.resource.battery">Battery</Trans>,
+			color: BATTERY_COLOR,
+		},
 	}))
 
 	private heatModifiers: GaugeMap = new Map([

@@ -512,6 +512,8 @@
   "mch.drift.timelinelink-button": "Springe zur Zeitleiste",
   "mch.drift.timestamp-header": "Zeitstempel",
   "mch.drift.title": "GCD Drift",
+  "mch.gauge.resource.battery": "",
+  "mch.gauge.resource.heat": "",
   "mch.gauge.suggestions.battery-waste.content": "Versuch, deinen Batteriebalken nicht überlaufen zu lassen, da es dich im Laufe des Kampfes eventuell <0/> kosten kann.",
   "mch.gauge.suggestions.battery-waste.why": "Du hast {0} Batterie durch einen überlaufenden Balken verloren.",
   "mch.gauge.suggestions.heat-waste.content": "Versuch, deinen Hitzebalken nicht überlaufen zu lassen, da es dich im Laufe des Kampfes eventuell Hyperladung-Fenster kosten kann.",
