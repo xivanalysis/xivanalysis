@@ -374,6 +374,16 @@ export interface InstaKillEvent extends EffectEventFields {
 	// Does not include "amount" and "hitType" fields.
 }
 
+// Could consider rolling into HealEvent if this ever gets used.
+export interface AbsorbedEvent extends EffectEventFields {
+	type: 'absorbed',
+	attackerID: number,
+	attackerIsFriendly: boolean,
+	extraAbility: Ability
+	fight: number,
+	// Does not include "hitType" field.
+}
+
 const healEventTypes = [
 	'calculatedheal',
 	'heal',
@@ -393,6 +403,7 @@ type EffectEvent =
 	| DamageEvent
 	| HealEvent
 	| InstaKillEvent
+	| AbsorbedEvent
 
 export type AbilityEvent =
 	| EffectEvent

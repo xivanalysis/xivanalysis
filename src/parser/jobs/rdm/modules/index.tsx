@@ -10,6 +10,7 @@ import {ManaGauge} from './ManaGauge'
 import {ManaStackGauge} from './ManaStackGauge'
 import {MeleeCombos} from './MeleeCombos'
 import {Procs} from './Procs'
+import {Swiftcast} from './Swiftcast'
 import {Weaving} from './Weaving'
 
 export {DualStatistic} from 'parser/jobs/rdm/statistics/DualStatistic'
@@ -27,5 +28,6 @@ export default [
 	Combos,
 	MeleeCombos,
 	Tincture,
+	Swiftcast,
 	Weaving,
 ]

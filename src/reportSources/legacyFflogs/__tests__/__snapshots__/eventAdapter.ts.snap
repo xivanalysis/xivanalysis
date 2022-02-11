@@ -1,5 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Event adapter individual events adapts absorbed 1`] = `Array []`;
+
 exports[`Event adapter individual events adapts applybuff 1`] = `
 Array [
   Object {

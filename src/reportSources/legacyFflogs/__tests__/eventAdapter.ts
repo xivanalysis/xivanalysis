@@ -767,6 +767,44 @@ const fakeEvents: Record<FflogsEvent['type'], FflogsEvent[]> = {
 		timestamp: 1058060,
 		type: 'instancesealupdate',
 	}],
+	absorbed: [{
+		timestamp: 452966,
+		type: 'absorbed',
+		sourceID: 2,
+		sourceIsFriendly: true,
+		targetID: 6,
+		targetIsFriendly: true,
+		ability: {
+			name: 'Eukrasian Diagnosis',
+			guid: 1002607,
+			type: 8,
+			abilityIcon: '012000-012954.png',
+		},
+		fight: 3,
+		// hitType is not in this event
+		hitType: 0,
+		attackerID: 10,
+		attackerIsFriendly: false,
+		amount: 11372,
+		extraAbility: {
+			name: 'attack',
+			guid: 872,
+			type: 128,
+			abilityIcon: '000000-000101.png',
+		},
+		targetResources: {
+			hitPoints: 86098,
+			maxHitPoints: 86098,
+			mp: 10000,
+			maxMP: 10000,
+			tp: 0,
+			maxTP: 0,
+			x: 10004,
+			y: 9532,
+			facing: -158,
+			absorb: 52,
+		},
+	}],
 }
 
 // #endregion
