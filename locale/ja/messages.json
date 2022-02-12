@@ -613,6 +613,7 @@
   "nin.ninjutsu.suggestions.st-doton.why": "敵１匹しか当たってない土遁の術を {badStds, plural, other {# 回}} やっちゃいましたよ！",
   "nin.ninjutsu.suggestions.tcj-doton.content": "",
   "nin.ninjutsu.suggestions.tcj-doton.why": "",
+  "nin.ninki.resource.label": "",
   "nin.ninki.suggestions.frog.content": "",
   "nin.ninki.suggestions.frog.why": "",
   "nin.ninki.suggestions.waste.content": "忍気が60以上そして上限近い忍気のときに <0/>を使うのは避けてください(いくつかの例外はのぞきます)。あなたが戦いの過程で使うことができる消費を最大にするためにです。",

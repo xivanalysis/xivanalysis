@@ -613,6 +613,7 @@
   "nin.ninjutsu.suggestions.st-doton.why": "Vous avez utilisé Doton sur une cible unique {badStds, plural,one {# fois}other {# fois}}.",
   "nin.ninjutsu.suggestions.tcj-doton.content": "Évitez d'utiliser <0/> sous l'effet de <1/> à moins que vous ayez plusieurs cibles. Sur une cible unique utiliser le combo de <2/> qui fera les même dégâts ou plus et permet de rester aligné avec <3/>.",
   "nin.ninjutsu.suggestions.tcj-doton.why": "Vous avez utiliser un doton mon-cible sous ten-chi-jin {badTcjs, plural,one {#fois}other {#fois}}.",
+  "nin.ninki.resource.label": "",
   "nin.ninki.suggestions.frog.content": "",
   "nin.ninki.suggestions.frog.why": "Vous avez utilisé Kuchiyose Ogama{0, plural,one {fois}other {#fois}} quand d'autre sort était possible.",
   "nin.ninki.suggestions.waste.content": "Évitez d'utiliser <0/> et <1/> quand vous avez moins de 40 de Ninki et prioriser l'utilisation de vos sorts utilisant du Ninki lorsque votre jauge est pleine ou presque (avec quelques petites exceptions) afin de maximiser le nombre d'utilisation que vous pouvez faire au cours d'un combat.",

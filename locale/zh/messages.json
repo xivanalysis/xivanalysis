@@ -613,6 +613,7 @@
   "nin.ninjutsu.suggestions.st-doton.why": "你施放了单目标土遁 {badStds, plural, one {# 次} other {# 次}}。",
   "nin.ninjutsu.suggestions.tcj-doton.content": "避免在<1/>中使用<0/>，除非{TCJ_DOTON_TICK_TARGET} 能打到敌人或者你正面对多目标。在单目标会跳走或者移动时，即使<3/>能用，选择<2/>连击会能提供更多的伤害。",
   "nin.ninjutsu.suggestions.tcj-doton.why": "你在天地人中使用了非正规的土遁 {badTcjs, plural, one {# 次} other {# 次}}。",
+  "nin.ninki.resource.label": "",
   "nin.ninki.suggestions.frog.content": "避免在少于三个目标时使用<0/>，此时<1/>威力更高。",
   "nin.ninki.suggestions.frog.why": "在其他忍气技能可使用时，你使用了 {0, plural, one {# 次} other {# 次}}通灵之术·大虾蟆.",
   "nin.ninki.suggestions.waste.content": "避免在60+忍气时使用<0/>或者任由忍气溢出(少数情况允许) 以最大化整场战斗的忍气技能次数。",
