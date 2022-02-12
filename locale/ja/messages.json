@@ -512,6 +512,8 @@
   "mch.drift.timelinelink-button": "タイムラインに移動",
   "mch.drift.timestamp-header": "タイムスタンプ",
   "mch.drift.title": "GCDの挟み込み",
+  "mch.gauge.resource.battery": "",
+  "mch.gauge.resource.heat": "",
   "mch.gauge.suggestions.battery-waste.content": "バッテリーゲージを溢れさせないようにしましょう。戦闘中に<0/>の使用回数が減少する可能性があります。",
   "mch.gauge.suggestions.battery-waste.why": "{0} バッテリーをゲージ超えで失っています。",
   "mch.gauge.suggestions.heat-waste.content": "",

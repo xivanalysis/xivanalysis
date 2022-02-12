@@ -512,6 +512,8 @@
   "mch.drift.timelinelink-button": "Jump to Timeline",
   "mch.drift.timestamp-header": "Timestamp",
   "mch.drift.title": "GCD Drift",
+  "mch.gauge.resource.battery": "Battery",
+  "mch.gauge.resource.heat": "Heat",
   "mch.gauge.suggestions.battery-waste.content": "Try not to let your Battery gauge overcap, as it may cost you <0/> uses over the course of the fight.",
   "mch.gauge.suggestions.battery-waste.why": "You lost {0} Battery to an overcapped gauge.",
   "mch.gauge.suggestions.heat-waste.content": "Try not to let your Heat gauge overcap, as it may cost you Overheat windows over the course of the fight.",
