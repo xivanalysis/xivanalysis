@@ -298,7 +298,7 @@ export const RDM = ensureActions({
 	},
 	VERAERO: {
 		id: 7507,
-		name: 'Verareo',
+		name: 'Veraero',
 		icon: 'https://xivapi.com/i/003000/003205.png',
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
@@ -320,7 +320,7 @@ export const RDM = ensureActions({
 	},
 	VERAERO_III: {
 		id: 25856,
-		name: 'Verareo III',
+		name: 'Veraero III',
 		icon: 'https://xivapi.com/i/003000/003236.png',
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,

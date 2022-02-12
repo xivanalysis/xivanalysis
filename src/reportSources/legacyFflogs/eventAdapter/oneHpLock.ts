@@ -1,5 +1,5 @@
 import {Event, Events} from 'event'
-import {Actor} from 'report'
+import {Actor, Team} from 'report'
 import {AdapterStep} from './base'
 
 /**
@@ -19,10 +19,11 @@ export class OneHpLockAdapterStep extends AdapterStep {
 		const zeroHp = new Map<Actor['id'], Events['actorUpdate']>()
 
 		for (const event of adaptedEvents) {
-			// Only care about actor updates with current hp value
+			// Only care about foe actor updates with current hp value
 			if (
 				event.type !== 'actorUpdate'
 				|| event.hp?.current == null
+				|| this.pull.actors.find(actor => actor.id === event.actor)?.team !== Team.FOE
 			) { continue }
 
 			const currentHp = event.hp.current

@@ -4,7 +4,7 @@ import {Actor, Pull, Report, Team} from 'report'
 import {adaptEvents} from '../eventAdapter'
 import {AdapterStep} from '../eventAdapter/base'
 import {ReassignUnknownActorStep} from '../eventAdapter/reassignUnknownActor'
-import {CastEvent, CombatantInfoAura, FflogsEvent, HitType, ReportLanguage} from '../eventTypes'
+import {CastEvent, CombatantInfoAura, DamageEvent, FflogsEvent, HitType, ReportLanguage} from '../eventTypes'
 
 // "Mock" the reassign unknown actor step with its real implementation. We use this mock handling later
 // to disable the step on a test-by-test basis.
@@ -773,7 +773,7 @@ const fakeEvents: Record<FflogsEvent['type'], FflogsEvent[]> = {
 describe('Event adapter', () => {
 	describe('individual events', () => {
 		// Noop the reassign unknown actor step - the test data for individual events is intentionally
-		// pulled directly out of real logcs, and as such will always be misaligned from the test report.
+		// pulled directly out of real logs, and as such will always be misaligned from the test report.
 		class NoopStep extends AdapterStep {}
 		beforeEach(() => {
 			MockReassignUnknownActorStep.mockImplementation((...args: ReassignUnknownActorStepParams) => {
@@ -1100,5 +1100,34 @@ describe('Event adapter', () => {
 		const heal = result.filter((event): event is Events['heal'] => event.type === 'heal')
 		// eslint-disable-next-line @typescript-eslint/no-magic-numbers
 		expect(heal[0].targets[0].overheal).toEqual(36194)
+	})
+
+	it('translates to execute if a snapshot is seen', () => {
+		const ability = {
+			abilityIcon: '',
+			name: 'Test',
+			guid: 1,
+			type: 128,
+		}
+
+		const events: DamageEvent[] = [
+			{
+				...fakeEvents.calculateddamage[0] as DamageEvent,
+				timestamp: 0,
+				ability,
+				packetID: 1,
+			},
+			{
+				...fakeEvents.damage[0] as DamageEvent,
+				timestamp: 1,
+				ability,
+				packetID: 1,
+			},
+		]
+
+		const result = adaptEvents(report, pull, events)
+
+		expect(result.map(event => event.type))
+			.toEqual(expect.arrayContaining(['damage', 'execute']))
 	})
 })

@@ -9,6 +9,11 @@ export const changelog = [
 		contributors: [CONTRIBUTORS.HINT],
 	},
 	{
+		date: new Date('2022-01-14'),
+		Changes: () => <>Add checks for Enshroud and Arcane Circle windows.</>,
+		contributors: [CONTRIBUTORS.KELOS],
+	},
+	{
 		date: new Date('2022-01-20'),
 		Changes: () => <>Add proc tracking for Enhanced Gibbet and Gallows.</>,
 		contributors: [CONTRIBUTORS.ARKEVORKHAT],
@@ -23,7 +28,6 @@ export const changelog = [
 		Changes: () => <>Fix Always Be Casting accounting for Soul Slice and Soul Scythe.</>,
 		contributors: [CONTRIBUTORS.KELOS],
 	},
-
 	{
 		date: new Date('2021-12-28'),
 		Changes: () => <>Replace Enshroud with Soul Slice and Soul Scythe in Cooldowns checklist.</>,
