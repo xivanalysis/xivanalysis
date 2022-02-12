@@ -19,7 +19,7 @@ export class DeathGauge extends CoreGauge {
 	// Lemure's Shroud, the blue pips
 	private lemureShroud = this.add(new CounterGauge({
 		maximum: 0,
-		graph: {label: 'Lemure Shroud', color: JOBS.MACHINIST.colour, collapse: false},
+		graph: {label: 'Lemure Shroud', color: JOBS.PALADIN.colour, collapse: true},
 	}))
 
 	private lemureStackModifiers = new Map<Action['id'], number>([
@@ -32,7 +32,7 @@ export class DeathGauge extends CoreGauge {
 	// Void Shroud, the purple pips
 	private voidShroud = this.add(new CounterGauge({
 		maximum: 0,
-		graph: {label: 'Void Shroud', color: JOBS.REAPER.colour, collapse: false},
+		graph: {label: 'Void Shroud', color: JOBS.REAPER.colour, collapse: true},
 	}))
 
 	private voidStackModifiers = new Map<Action['id'], number>([
