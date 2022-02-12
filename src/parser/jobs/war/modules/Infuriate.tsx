@@ -1,4 +1,3 @@
-import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
 import {DataLink} from 'components/ui/DbLink'
 import {ActionKey} from 'data/ACTIONS'
@@ -26,7 +25,6 @@ const INFURIATE_SEVERITY = {
 // Yes I know this is Infuriate but the proc is Nascent Chaos so here we are
 export class Infuriate extends CoreProcs {
 	static override handle = 'infuriate'
-	static override title = t('war.infuriate.title')`Nascent Chaos Procs`
 
 	@dependency private cooldowns!: Cooldowns
 
@@ -52,9 +50,13 @@ export class Infuriate extends CoreProcs {
 
 	override droppedProcIcon = this.data.actions.INFURIATE.icon
 	override droppedProcSeverityTiers = INFURIATE_SEVERITY
-	override droppedProcContent = <Trans id="war.infuriate.suggestions.dropped.content">Avoid letting <DataLink status="NASCENT_CHAOS"/> fall off without using it.</Trans>
+	override droppedProcContent = <Trans id="war.infuriate.suggestions.dropped.content">
+		Try to consume <DataLink status="NASCENT_CHAOS"/> before it expires, as <DataLink action="INNER_CHAOS"/> and <DataLink action="CHAOTIC_CYCLONE"/> are two of your strongest skills.
+	</Trans>
 
 	override overwroteProcIcon = this.data.actions.INFURIATE.icon
 	override overwroteProcSeverityTiers = INFURIATE_SEVERITY
-	override overwroteProcContent = <Trans id="war.infuriate.suggestions.overwritten.content">Avoid using <DataLink action="INFURIATE"/> when you already have <DataLink status="NASCENT_CHAOS"/> applied.</Trans>
+	override overwroteProcContent = <Trans id="war.infuriate.suggestions.overwritten.content">
+		Avoid using <DataLink action="INFURIATE"/> when you already have <DataLink status="NASCENT_CHAOS"/> applied.
+	</Trans>
 }
