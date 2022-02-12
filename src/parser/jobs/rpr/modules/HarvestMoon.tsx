@@ -66,8 +66,7 @@ export class HarvestMoon extends Analyser {
 				Use <DataLink action="SOULSOW" /> during downtime.
 			</Trans>,
 			description: <Trans id="rpr.harvestmoon.checklist.description">
-				Harvest Moon is one of your highest potency abilities.
-				Aim to get at least one use each time the boss is targetable.
+				Harvest Moon is one of your highest potency abilities. Aim to get at least one use each time the boss is targetable.
 			</Trans>,
 			requirements: [
 				new Requirement({
