@@ -1,5 +1,6 @@
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
+import Color from 'color'
 import {JOBS} from 'data/JOBS'
 import {Event, Events} from 'event'
 import {EventHook} from 'parser/core/Dispatcher'
@@ -30,14 +31,10 @@ export class Kenki extends CoreGauge {
 	@dependency private suggestions!: Suggestions
 
 	private kenkiGauge = this.add(new CounterGauge({
-		chart: {label: 'Kenki Gauge', color: JOBS.SAMURAI.colour},
-		/*
 		graph: {
-			handle: 'Kenki',
 			label: <Trans id="sam.gauge.resource.kenkiLabel">Kenki</Trans>,
-			color: JOBS.SAMURAI.colour,
+			color: Color(JOBS.SAMURAI.colour).fade(.25),
 		},
-		*/
 	}))
 
 	private kenkiGaugeModifiers = new Map<number, GaugeModifier>([

@@ -1,5 +1,6 @@
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
+import Color from 'color'
 import {DataLink} from 'components/ui/DbLink'
 import {JOBS} from 'data/JOBS'
 import {Event, Events} from 'event'
@@ -32,14 +33,10 @@ export class Shoha extends CoreGauge {
 	@dependency private checklist!: Checklist
 
 	private MeditateGauge = this.add(new CounterGauge({
-		chart: {label: 'Meditate Stacks', color: JOBS.SAMURAI.colour},
-		/*
 		graph: {
-			handle: 'Meditation',
 			label: <Trans id="sam.gauge.resource.meditationLabel">Meditation</Trans>,
-			color: JOBS.SAMURAI.colour,
+			color: Color(JOBS.WARRIOR.colour).fade(.75),
 		},
-		*/
 		maximum: MAX_MEDITATE_STACKS,
 	}))
 

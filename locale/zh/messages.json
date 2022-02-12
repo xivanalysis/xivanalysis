@@ -770,6 +770,8 @@
   "sam.buffs.checklist.requirement.fugetsu.name": "<0/> 覆盖率",
   "sam.buffs.checklist.requirement.fuka.name": "<0/> 覆盖率",
   "sam.buffs.description": "{0}和{1}可以提高你的伤害和技能速度各13%，它们是武士伤害的重要组成部分。",
+  "sam.gauge.resource.kenkiLabel": "",
+  "sam.gauge.resource.meditationLabel": "",
   "sam.gauge.suggestions.loss.content": "避免剑气溢出。溢出的剑气能让你多释放别的消耗剑气的技能。",
   "sam.gauge.suggestions.loss.why": "由于溢出而损失{0}剑气。",
   "sam.gauge.title": "剑气量谱",
