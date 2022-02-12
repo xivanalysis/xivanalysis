@@ -47,6 +47,9 @@ export class Infuriate extends CoreProcs {
 		consumeActions: [this.data.actions.INNER_CHAOS, this.data.actions.CHAOTIC_CYCLONE],
 	}]
 
+	override showDroppedProcSuggestion = true
+	override showOverwroteProcSuggestion = true
+
 	override droppedProcIcon = this.data.actions.INFURIATE.icon
 	override droppedProcSeverityTiers = INFURIATE_SEVERITY
 	override droppedProcContent = <Trans id="war.infuriate.suggestions.dropped.content">Avoid letting <DataLink status="NASCENT_CHAOS"/> fall off without using it.</Trans>
