@@ -12,7 +12,7 @@ import {Rows, TableStatistic, Statistics, SimpleStatistic} from 'parser/core/mod
 import React from 'react'
 import {AbstractStatisticOptions} from './Statistics/AbstractStatistic'
 
-const TABLE_COLUMNS = 3
+const TABLE_COLUMNS = 2
 
 export abstract class Defensives extends Analyser {
 	static override handle = 'defensives'
@@ -48,19 +48,26 @@ export abstract class Defensives extends Analyser {
 		this.addEventHook('complete', this.onComplete)
 	}
 
+	private formatUsages(defensive: Action): React.ReactNode {
+		const uses = this.uses.get(defensive.id) ?? 0
+		const maxUses = this.cooldownDowntime.calculateMaxUsages({cooldowns: [defensive]})
+
+		const flooredPercent = Math.floor(100 * uses / maxUses)
+
+		return <>{uses} / {maxUses} ({flooredPercent}%)</>
+	}
+
 	private onComplete() {
 		if (this.trackedDefensives.length === 1) {
 			// Only one defensive, use a simple statistic rather than a table
-			const action = this.trackedDefensives[0]
-			const uses = this.uses.get(action.id) ?? 0
-			const maxUses = this.cooldownDowntime.calculateMaxUsages({cooldowns: [action]})
+			const defensive = this.trackedDefensives[0]
 
 			this.statistics.add(new SimpleStatistic({
-				icon: action.icon,
+				icon: defensive.icon,
 				title: <Trans id="core.defensives.statistic-title">
-					<ActionLink showIcon={false} {...action} /> Uses
+					<ActionLink showIcon={false} {...defensive} /> Uses
 				</Trans>,
-				value: <>{uses} / {maxUses} ({Math.floor(100 * uses / maxUses)}%)</>,
+				value: this.formatUsages(defensive),
 				...this.statisticOpts,
 			}))
 
@@ -69,15 +76,13 @@ export abstract class Defensives extends Analyser {
 
 		const rows: Rows<React.ReactNode, typeof TABLE_COLUMNS> = this.trackedDefensives.map((defensive, index) => [
 			<ActionLink key={index} {...defensive} />,
-			this.uses.get(defensive.id) ?? 0,
-			this.cooldownDowntime.calculateMaxUsages({cooldowns: [defensive]}),
+			this.formatUsages(defensive),
 		])
 
 		this.statistics.add(new TableStatistic({
 			headings: [
 				'Defensive',
 				'Uses',
-				'Max',
 			],
 			rows: rows,
 			...this.statisticOpts,
