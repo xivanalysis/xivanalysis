@@ -70,7 +70,12 @@ export class DeathGauge extends CoreGauge {
 	}
 
 	private onDeshroud() {
+		// Flush Lemure
+		this.lemureShroud.reset()
 		this.lemureShroud.setMaximum(0)
+
+		// Flush Void
+		this.voidShroud.reset()
 		this.voidShroud.setMaximum(0)
 	}
 
@@ -78,7 +83,11 @@ export class DeathGauge extends CoreGauge {
 		const action = this.data.getAction(event.action)
 		if (action == null) { return }
 
-		if (action.id === this.data.actions.COMMUNIO.id) {
+		// Sanity check
+		if (!this.actors.current.hasStatus(this.data.statuses.ENSHROUDED.id)) { return }
+
+		// Communio gets special handling since it eats everything you have
+		if (action.id === this.data.actions.COMMUNIO.id && this.lemureShroud.value > 0) {
 			// Use set so we can lodge this reset as a spend rather than a reset
 			this.lemureShroud.set(0, 'spend')
 			return
