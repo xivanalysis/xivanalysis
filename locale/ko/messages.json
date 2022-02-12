@@ -518,6 +518,8 @@
   "mch.drift.timelinelink-button": "해당 타임라인으로 이동",
   "mch.drift.timestamp-header": "타임 스탬프",
   "mch.drift.title": "글쿨 밀림 현상",
+  "mch.gauge.resource.battery": "",
+  "mch.gauge.resource.heat": "",
   "mch.gauge.suggestions.battery-waste.content": "충전지를 초과하지 마십시오. 초과할시 전투내 총 <0/> 사용 횟수를 손해 볼 수 있습니다.",
   "mch.gauge.suggestions.battery-waste.why": "충전지를 {0} 만큼 초과하였습니다.",
   "mch.gauge.suggestions.heat-waste.content": "열기를 초과하지 마십시오. 초과할시 과열 상태 진입 횟수를 놓칠 수 있습니다.",
