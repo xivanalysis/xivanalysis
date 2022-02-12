@@ -52,9 +52,9 @@ export abstract class Procs extends Analyser {
 	@dependency protected data!: Data
 	@dependency protected invulnerability!: Invulnerability
 
-	private droppedProcs: number = 0
-	private overwrittenProcs: number = 0
-	private invulnUsages: number = 0
+	protected droppedProcs: number = 0
+	protected overwrittenProcs: number = 0
+	protected invulnUsages: number = 0
 
 	/**
 	 * Subclassing analysers must provide a list of tracked procs
