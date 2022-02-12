@@ -1,18 +1,23 @@
-import {t} from '@lingui/macro'
+import {t, Trans} from '@lingui/macro'
+import {DataLink} from 'components/ui/DbLink'
+import {ActionRoot} from 'data/ACTIONS'
+import {StatusRoot} from 'data/STATUSES'
+import {Event, Events} from 'event'
+import {filter, oneOf} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
-import {BuffWindow} from 'parser/core/modules/ActionWindow'
+import {BuffWindow, EvaluatedAction} from 'parser/core/modules/ActionWindow'
+import {PlayersBuffedEvaluator} from 'parser/core/modules/ActionWindow/evaluators/PlayersBuffedEvaluator'
+import {HistoryEntry} from 'parser/core/modules/ActionWindow/History'
 import {GlobalCooldown} from 'parser/core/modules/GlobalCooldown'
-import {Event, Events} from '../../../../event'
-import {filter, oneOf} from '../../../core/filter'
+import React from 'react'
 import {BLITZ_ACTIONS} from './constants'
 import {DISPLAY_ORDER} from './DISPLAY_ORDER'
 import {BlitzEvaluator} from './evaluators/BlitzEvaluator'
-import {BrotherhoodTargetsEvaluator} from './evaluators/BrotherhoodTargetsEvaluator'
 import {fillActions} from './utilities'
 
-export interface BrotherhoodWindow {
+export interface BrotherhoodBuff {
 	start: number
-	targetsAffected: number
+	target: string
 }
 
 export class Brotherhood extends BuffWindow {
@@ -26,7 +31,8 @@ export class Brotherhood extends BuffWindow {
 	buffStatus = this.data.statuses.BROTHERHOOD
 
 	private blitzActions = fillActions(BLITZ_ACTIONS, this.data)
-	private brotherhoodWindows: BrotherhoodWindow[] = [];
+	private brotherhoodWindows: BrotherhoodBuff[] = []
+	private brotherhood : StatusRoot['BROTHERHOOD'] = this.data.statuses.BROTHERHOOD
 
 	override initialise() {
 		super.initialise()
@@ -46,18 +52,22 @@ export class Brotherhood extends BuffWindow {
 			blitzActions: this.blitzActions,
 			excepted: 1,
 		}))
-		this.addEvaluator(new BrotherhoodTargetsEvaluator({
-			brotherhoodWindows: this.brotherhoodWindows,
+		this.addEvaluator(new PlayersBuffedEvaluator({
+			affectedPlayers: this.affectedPlayers.bind(this),
+			suggestionContent: <Trans id="mnk.bh.playersbuffed.suggestion.content">
+				To maximise raid dps, make sure <DataLink action="BROTHERHOOD"/> hits all party members.
+			</Trans>,
+			suggestionIcon: this.data.actions.BROTHERHOOD.icon,
+			status: this.brotherhood.id,
 		}))
 	}
 
+	private affectedPlayers(window: HistoryEntry<EvaluatedAction[]>): number {
+		return this.brotherhoodWindows.filter(value => Math.abs(window.start - value.start) < this.brotherhood.duration).length
+	}
+
 	private buffApplied(event: Events['statusApply']) {
-		const brotherhoodWindow = this.brotherhoodWindows.find(value => Math.abs(value.start - event.timestamp) < this.data.statuses.BROTHERHOOD?.duration)
-		if (brotherhoodWindow) {
-			brotherhoodWindow.targetsAffected += 1
-		} else {
-			this.brotherhoodWindows.push({start: event.timestamp, targetsAffected: 1})
-		}
+		this.brotherhoodWindows.push({start: event.timestamp, target: event.target})
 		this.debug(this.brotherhoodWindows)
 	}
 
