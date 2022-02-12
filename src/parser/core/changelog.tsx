@@ -5,10 +5,17 @@ import {ChangelogEntry} from './Meta'
 
 export const changelog: ChangelogEntry[] = [
 	// {
-	// 	date: new Date('2021-11-19'),
+	// 	date: new Date('2022-11-19'),
 	// 	Changes: () => <>The changes you made</>,
 	// 	contributors: [CONTRIBUTORS.YOU],
 	// },
+	{
+		date: new Date('2022-02-12'),
+		Changes: () => <>
+			Added players buffed evaluator to core.
+		</>,
+		contributors: [CONTRIBUTORS.MALP],
+	},
 	{
 		date: new Date('2022-02-11'),
 		Changes: () => <>
