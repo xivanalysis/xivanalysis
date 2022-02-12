@@ -12,8 +12,13 @@ export const changelog: ChangelogEntry[] = [
 	{
 		date: new Date('2022-02-11'),
 		Changes: () => <>
-			Fix Swiftcast end of fight forgiveness. It was increasing the number of expected GCDs to 2 instead of reducing it to 0.
+		Fix Swiftcast end of fight forgiveness. It was increasing the number of expected GCDs to 2 instead of reducing it to 0.
 		</>,
+		contributors: [CONTRIBUTORS.DEAN],
+	},
+	{
+		date: new Date('2022-02-01'),
+		Changes: () => <>Added positionals.</>,
 		contributors: [CONTRIBUTORS.DEAN],
 	},
 	{
