@@ -1,6 +1,6 @@
 import {Trans} from '@lingui/react'
 import {StatusLink} from 'components/ui/DbLink'
-import {StatusKey} from 'data/STATUSES'
+import {Status} from 'data/STATUSES'
 import {EvaluatedAction} from 'parser/core/modules/ActionWindow/EvaluatedAction'
 import {HistoryEntry} from 'parser/core/modules/ActionWindow/History'
 import {SEVERITY, SeverityTiers, TieredSuggestion} from 'parser/core/modules/Suggestions'
@@ -30,7 +30,7 @@ export interface PlayersBuffedEvaluatorOptions {
 	/**
 	 * The status of the buff players are receiving.
 	 */
-	status: StatusKey,
+	status: Status['id'],
 	suggestionContent: JSX.Element,
 	suggestionIcon: string
 }
@@ -39,7 +39,7 @@ export class PlayersBuffedEvaluator implements WindowEvaluator {
 	private readonly affectedPlayers: (window: HistoryEntry<EvaluatedAction[]>) => number
 	private readonly expectedPlayerCount: number;
 	private readonly severityTiers: SeverityTiers;
-	private readonly status: StatusKey;
+	private readonly status: Status['id'];
 	private readonly suggestionContent: JSX.Element;
 	private readonly suggestionIcon: string;
 
@@ -58,7 +58,7 @@ export class PlayersBuffedEvaluator implements WindowEvaluator {
 			icon: this.suggestionIcon,
 			content: this.suggestionContent,
 			why: <Trans id="core.buffwindow.suggestions.playersbuffed.why">
-				{missed} of your <StatusLink status={this.status}/> uses did not buff the full party.
+				{missed} of your <StatusLink id={this.status}/> uses did not buff the full party.
 			</Trans>,
 			tiers: this.severityTiers,
 			value: missed,
