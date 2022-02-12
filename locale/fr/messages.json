@@ -569,12 +569,7 @@
   "mnk.pb.suggestions.stacks.why": "{droppedGcds, plural,one {# GCD potentiel a été manqué}other {# GCDs potentiels ont été manqués}} pendant <0/>.",
   "mnk.pb.title": "Équilibre parfait",
   "mnk.rof.suggestions.gcd.content": "",
-<<<<<<< HEAD
-  "mnk.rof.suggestions.gcd.why": "",
-  "mnk.rof.table.header.gcds": "",
-=======
   "mnk.rof.suggestions.wasted.content": "",
->>>>>>> upstream/endwalker
   "mnk.rof.title": "Énigme du feu",
   "mnk.steppies.checklist.description": "<0/> est votre plus puissant GCD quand vous le buffer en utilisant <1/> avant lancement.",
   "mnk.steppies.checklist.name": "Bonus de Volée de coups",

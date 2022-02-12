@@ -12,8 +12,6 @@ import {Rows, TableStatistic, Statistics, SimpleStatistic} from 'parser/core/mod
 import React from 'react'
 import {AbstractStatisticOptions} from './Statistics/AbstractStatistic'
 
-const TABLE_COLUMNS = 2
-
 export abstract class Defensives extends Analyser {
 	static override handle = 'defensives'
 	static override title = t('core.defensives.title')`Defensives`
@@ -74,7 +72,7 @@ export abstract class Defensives extends Analyser {
 			return
 		}
 
-		const rows: Rows<React.ReactNode, typeof TABLE_COLUMNS> = this.trackedDefensives.map((defensive, index) => [
+		const rows: Rows<React.ReactNode, 2> = this.trackedDefensives.map((defensive, index) => [
 			<ActionLink key={index} {...defensive} />,
 			this.formatUsages(defensive),
 		])
