@@ -5,11 +5,8 @@ import {ArcaneCircle} from './ArcaneCircle'
 import {Combos} from './Combos'
 import {CooldownDowntime} from './CooldownDowntime'
 import {DeathsDesign} from './DeathsDesign'
-<<<<<<< HEAD
 import {Defensives} from './Defensives'
-=======
 import {Enshroud} from './Enshroud'
->>>>>>> endwalker
 import {ImmortalSacrifice} from './ImmortalSacrifice'
 import {Procs} from './Procs'
 import {Tincture} from './Tincture'
@@ -21,11 +18,8 @@ export default [
 	Combos,
 	CooldownDowntime,
 	DeathsDesign,
-<<<<<<< HEAD
 	Defensives,
-=======
 	Enshroud,
->>>>>>> endwalker
 	Procs,
 	ImmortalSacrifice,
 	Tincture,
