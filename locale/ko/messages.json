@@ -607,6 +607,7 @@
   "nin.ninjutsu.suggestions.st-doton.why": "잘못된 토둔술을 {badStds,  plural, one {#회} other {#회}} 사용했습니다.",
   "nin.ninjutsu.suggestions.tcj-doton.content": "다수 대상을 상대하지 않는다면 <1/> 구간내에서 <0/> 사용을 기피 하십시오. 단일 대상에겐 <2/> 콤보를 사용하는것이 더 높은 기대치를 가질 뿐만 아니라 <3/>구간과 함께 맞춰 사용할 수 있습니다.",
   "nin.ninjutsu.suggestions.tcj-doton.why": "천지인 사용 중 잘못된 토둔술을 {badTcjs, plural,one {#회} other {#회}}사용했습니다.",
+  "nin.ninki.resource.label": "",
   "nin.ninki.suggestions.frog.content": "",
   "nin.ninki.suggestions.frog.why": "다른 기술을 사용할 수 있을 때 두꺼비 소환술을 {0, plural, one {#회} other {#회}} 사용했습니다.",
   "nin.ninki.suggestions.waste.content": "인법이 60 이상일 때 <0/>을 쓰거나, 인법이 거의 찼을 때 소모 기술을 사용하지 않는 것은 특수한 경우가 아니면 피해야 합니다.",
