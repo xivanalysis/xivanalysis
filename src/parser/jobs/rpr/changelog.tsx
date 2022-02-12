@@ -4,7 +4,12 @@ import React from 'react'
 
 export const changelog = [
 	{
-		date: new Date('2021-01-14'),
+		date: new Date('2022-02-11'),
+		Changes: () => <>Add Harvest Moon tracking.</>,
+		contributors: [CONTRIBUTORS.ARKEVORKHAT],
+	},
+	{
+		date: new Date('2022-01-14'),
 		Changes: () => <>Add checks for Enshroud and Arcane Circle windows.</>,
 		contributors: [CONTRIBUTORS.KELOS],
 	},
