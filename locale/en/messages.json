@@ -817,6 +817,7 @@
   "sch.aetherflow.total-dissipation-drift": "Total Dissipation Drift",
   "sch.aetherflow.total-wasted-stacks": "Total Wasted Stacks",
   "sch.aetherflow.wasted-stacks": "Wasted Stacks",
+  "sch.cooldownDowntime.defense-cd-metric": "Using your mitigation and healing cooldowns allows you to help keep the party healthy while continuing to deal damage. While you shouldn't waste these actions, you should try to plan out when to use them to maximize their utility.",
   "sch.dots.checklist.description": "As a Scholar, Biolysis is a notable portion of your damage. Aim to keep it up as much as possible, so long as you can get at least 15 seconds of uptime per application.",
   "sch.dots.checklist.name": "Keep your DoT up",
   "sch.dots.checklist.requirement.bio-ii.name": "<0/> uptime",

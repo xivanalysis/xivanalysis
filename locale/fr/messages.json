@@ -817,6 +817,7 @@
   "sch.aetherflow.total-dissipation-drift": "",
   "sch.aetherflow.total-wasted-stacks": "",
   "sch.aetherflow.wasted-stacks": "",
+  "sch.cooldownDowntime.defense-cd-metric": "",
   "sch.dots.checklist.description": "En tant que'érudit, la Loi de l'infection est un aspect important de vos dommages. Essayez de le maintenir le plus possible, tant que vous pouvez obtenir au moins 15 secondes de temps d'utilisation par application.",
   "sch.dots.checklist.name": "Vérifiez que vos DoTs soient bien appliqués à votre cible en permanence",
   "sch.dots.checklist.requirement.bio-ii.name": "Temps d'activité total de <0/>",

@@ -817,6 +817,7 @@
   "sch.aetherflow.total-dissipation-drift": "",
   "sch.aetherflow.total-wasted-stacks": "",
   "sch.aetherflow.wasted-stacks": "",
+  "sch.cooldownDowntime.defense-cd-metric": "",
   "sch.dots.checklist.description": "作为学者，蛊毒法占输出很大一部分。尽量保持蛊毒法不断，每次用能持续至少15秒。",
   "sch.dots.checklist.name": "保持DoT不断",
   "sch.dots.checklist.requirement.bio-ii.name": "<0/> 的覆盖率",
