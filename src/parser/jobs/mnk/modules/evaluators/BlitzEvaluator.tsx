@@ -6,13 +6,16 @@ import React from 'react'
 
 interface BlitzEvaluatorOpts {
 	blitzActions: Array<Action['id']>,
+	excepted?: number
 }
 
 export class BlitzEvaluator implements WindowEvaluator {
+	private readonly excepted: number | undefined;
 	private blitzActions: Array<Action['id']>
 
 	constructor(opts: BlitzEvaluatorOpts) {
 		this.blitzActions = opts.blitzActions
+		this.excepted = opts.excepted
 	}
 
 	suggest() {
@@ -29,7 +32,7 @@ export class BlitzEvaluator implements WindowEvaluator {
 			rows: windows.map(window => {
 				return {
 					actual: this.countBlitzes(window),
-					expected: undefined,
+					expected: this.excepted,
 				}
 			}),
 		}
