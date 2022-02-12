@@ -36,8 +36,8 @@ jobs:
     - name: Commit
       if: steps.check-changes.outputs.changes != 0
       run: |
-        git config user.name github-actions
-        git config user.email github-actions@github.com
+        git config user.name xivanalysis-i18n-worker
+        git config user.email xiva-worker@ackwell.com.au
         git add locale
         git commit -m "i18n sync $(date -u "+%Y/%m/%d %H:%M:%S")"
         git push

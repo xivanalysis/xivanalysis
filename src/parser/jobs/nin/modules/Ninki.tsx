@@ -26,12 +26,15 @@ const FROG_SEVERITY = {
 }
 
 export class Ninki extends CoreGauge {
-	static override title = t('nin.ninki.title')`Ninki Timeline`
+	static override title = t('nin.ninki.title')`Ninki Gauge`
 
 	@dependency private suggestions!: Suggestions
 
 	private ninkiGauge = this.add(new CounterGauge({
-		chart: {label: 'Ninki', color: JOBS.NINJA.colour},
+		graph: {
+			label: <Trans id="nin.ninki.resource.label">Ninki</Trans>,
+			color: JOBS.NINJA.colour,
+		},
 	}))
 
 	private ninkiFilters = {

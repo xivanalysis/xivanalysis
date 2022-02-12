@@ -3,6 +3,11 @@ import React from 'react'
 
 export const changelog = [
 	{
+		date: new Date('2022-02-10'),
+		Changes: () => <>Cleanup Riddle of Fire module.</>,
+		contributors: [CONTRIBUTORS.MALP],
+	},
+	{
 		date: new Date('2022-01-13'),
 		Changes: () => <>Migrate Riddle of Fire module to BuffWindow.</>,
 		contributors: [CONTRIBUTORS.MALP],

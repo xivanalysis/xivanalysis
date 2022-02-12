@@ -6,6 +6,7 @@ import {Kassatsu} from './Kassatsu'
 import {Ninjutsu} from './Ninjutsu'
 import {Ninki} from './Ninki'
 import {OGCDDowntime} from './OGCDDowntime'
+import {Positionals} from './Positionals'
 import {Raiju} from './Raiju'
 import {TrickAttackUsage} from './TrickAttackUsage'
 import {TrickAttackWindow} from './TrickAttackWindow'
@@ -19,6 +20,7 @@ export default [
 	Kassatsu,
 	Ninjutsu,
 	Ninki,
+	Positionals,
 	OGCDDowntime,
 	Raiju,
 	TrickAttackUsage,
