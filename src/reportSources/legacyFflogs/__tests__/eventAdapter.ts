@@ -151,6 +151,7 @@ const fakeEvents: Record<FflogsEvent['type'], FflogsEvent[]> = {
 		},
 		hitType: 2,
 		amount: 0,
+		bonusPercent: 13,
 		multiplier: 1.1,
 		packetID: 16647,
 		sourceResources: {

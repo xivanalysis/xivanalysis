@@ -80,6 +80,13 @@ export const LIMIT_BREAK = ensureActions({
 		icon,
 	},
 
+	// SGE LB3
+	TECHNE_MAKRE: {
+		id: 24859,
+		name: 'Techne Makre',
+		icon,
+	},
+
 	// Melee LB1
 	BRAVER: {
 		id: 200,
@@ -119,6 +126,13 @@ export const LIMIT_BREAK = ensureActions({
 	DOOM_OF_THE_LIVING: {
 		id: 7861,
 		name: 'Doom of the Living',
+		icon,
+	},
+
+	// RPR LB3
+	THE_END: {
+		id: 24858,
+		name: 'the End',
 		icon,
 	},
 
