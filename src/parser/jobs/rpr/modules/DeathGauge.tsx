@@ -1,9 +1,9 @@
 import {Trans} from '@lingui/react'
 import {ActionLink} from 'components/ui/DbLink'
-import {Action} from 'data/ACTIONS'
+import {ActionKey} from 'data/ACTIONS'
 import {JOBS} from 'data/JOBS'
 import {Event, Events} from 'event'
-import {filter, oneOf} from 'parser/core/filter'
+import {filter} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
 import {Actors} from 'parser/core/modules/Actors'
 import BrokenLog from 'parser/core/modules/BrokenLog'
@@ -12,46 +12,52 @@ import React from 'react'
 
 const MAX_STACKS = 5
 
+// Lemure Shroud, the blue pips
+const LEMURE_MOD = 1
+
+const LEMURE_ACTIONS: ActionKey[] = [
+	'VOID_REAPING',
+	'CROSS_REAPING',
+	'GRIM_REAPING',
+	'COMMUNIO',
+]
+
+// Void Shroud, the purple pips
+const VOID_COST = 2
+
+const VOID_ACTIONS: ActionKey[] = [
+	'LEMURES_SLICE',
+	'LEMURES_SCYTHE',
+]
+
 export class DeathGauge extends CoreGauge {
 	@dependency private actors!: Actors
 	@dependency private brokenLog!: BrokenLog
 
 	// Lemure's Shroud, the blue pips
+	// We initialise to zero because without Enshroud you can't get more
 	private lemureShroud = this.add(new CounterGauge({
 		maximum: 0,
 		graph: {label: 'Lemure Shroud', color: JOBS.PALADIN.colour, collapse: true},
 	}))
 
-	private lemureStackModifiers = new Map<Action['id'], number>([
-		[this.data.actions.VOID_REAPING.id, 1],
-		[this.data.actions.CROSS_REAPING.id, 1],
-		[this.data.actions.GRIM_REAPING.id, 1],
-		[this.data.actions.COMMUNIO.id, 0],
-	])
-
 	// Void Shroud, the purple pips
+	// We initialise to zero because without Lemure you can't get more
 	private voidShroud = this.add(new CounterGauge({
 		maximum: 0,
 		graph: {label: 'Void Shroud', color: JOBS.REAPER.colour, collapse: true},
 	}))
 
-	private voidStackModifiers = new Map<Action['id'], number>([
-		// Communio kinda weird, needs at least 1, eats all and cancels shroud
-		[this.data.actions.LEMURES_SLICE.id, 2],
-		[this.data.actions.LEMURES_SCYTHE.id, 2],
-	])
-
 	override initialise() {
 		super.initialise()
 
 		const playerFilter = filter<Event>().source(this.parser.actor.id)
-		const lemureActions = Array.from(this.lemureStackModifiers.keys())
-		const voidActions = Array.from(this.voidStackModifiers.keys())
 
 		this.addEventHook(playerFilter.type('statusApply').status(this.data.statuses.ENSHROUDED.id), this.onEnshroud)
 		this.addEventHook(playerFilter.type('statusRemove').status(this.data.statuses.ENSHROUDED.id), this.onDeshroud)
-		this.addEventHook(playerFilter.type('action').action(oneOf(lemureActions)),	this.onLemure)
-		this.addEventHook(playerFilter.type('action').action(oneOf(voidActions)),	this.onVoid)
+		this.addEventHook(playerFilter.type('action').action(this.data.matchActionId(LEMURE_ACTIONS)), this.onLemure)
+		this.addEventHook(playerFilter.type('action').action(this.data.matchActionId(VOID_ACTIONS)), this.onVoid)
+		this.addEventHook('complete', this.onDeshroud)
 	}
 
 	private onEnshroud() {
@@ -78,14 +84,8 @@ export class DeathGauge extends CoreGauge {
 			return
 		}
 
-		const amount = this.lemureStackModifiers.get(action.id)
-
-		// Sanity check
-		if (amount == null || !this.actors.current.hasStatus(this.data.statuses.ENSHROUDED.id)) { return }
-
 		// Sanity check more - this gauge counts down so inverts overcap
-		if (amount > this.lemureShroud.value) {
-			// how did this even happen, broken log yolo
+		if (LEMURE_MOD > this.lemureShroud.value) {
 			this.brokenLog.trigger(this, 'rpr.deathgauge.lemure.undercap',
 				<Trans id="rpr.deathgauge.lemure.undercap.reason">
 					<ActionLink {...action}/> can't be executed with only {this.lemureShroud.value} stacks of Lemure's Shroud.
@@ -94,8 +94,8 @@ export class DeathGauge extends CoreGauge {
 		}
 
 		// Sanity check morer - core gauge doesn't know that these are really a single shared gauge
+		// We don't need to check this in Void actions because they only consume gauge, not generate
 		if (this.lemureShroud.value + this.voidShroud.value > MAX_STACKS) {
-			// why is it like this
 			this.brokenLog.trigger(this, 'rpr.deathgauge.lemure.outofbounds',
 				<Trans id="rpr.deathgauge.lemure.outofbounds.reason">
 					<ActionLink {...action}/> can't be executed with {this.lemureShroud.value} stacks of Lemure's Shroud and {this.voidShroud.value} stacks of Void Shroud as this would go over the shared gauge max.
@@ -103,20 +103,18 @@ export class DeathGauge extends CoreGauge {
 			)
 		}
 
-		this.lemureShroud.spend(amount)
-		this.voidShroud.generate(amount)
+		// Adjust the gauges - Lemure spend actions generate Void
+		this.lemureShroud.spend(LEMURE_MOD)
+		this.voidShroud.generate(LEMURE_MOD)
 	}
 
 	private onVoid(event: Events['action']) {
 		const action = this.data.getAction(event.action)
 		if (action == null) { return }
 
-		const amount = this.voidStackModifiers.get(action.id)
+		if (!this.actors.current.hasStatus(this.data.statuses.ENSHROUDED.id)) { return }
 
-		if (amount == null || !this.actors.current.hasStatus(this.data.statuses.ENSHROUDED.id)) { return }
-
-		if (this.voidShroud.value < amount) {
-			// big wat
+		if (VOID_COST > this.voidShroud.value) {
 			this.brokenLog.trigger(this, 'rpr.deathgauge.void.undercap',
 				<Trans id="rpr.deathgauge.void.undercap.reason">
 					<ActionLink {...action}/> can't be executed with only {this.voidShroud.value} stacks of Void Shroud.
@@ -124,6 +122,6 @@ export class DeathGauge extends CoreGauge {
 			)
 		}
 
-		this.voidShroud.spend(amount)
+		this.voidShroud.spend(VOID_COST)
 	}
 }
