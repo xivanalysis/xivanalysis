@@ -104,6 +104,8 @@ export class TranslateAdapterStep extends AdapterStep {
 		/* eslint-disable no-fallthrough */
 		// Dispels are already modelled by other events, and aren't something we really care about
 		case 'dispel':
+		// FFLogs computed value, could be useful in the future for shield healing analysis.
+		case 'absorbed':
 		case 'interrupt':
 		// Encounter events don't expose anything particularly useful for us
 		case 'encounterstart':
@@ -202,6 +204,7 @@ export class TranslateAdapterStep extends AdapterStep {
 
 		// Instant kills don't seem to include a sequence, so we're faking it
 		const sequence = this.nextFakeSequence--
+		const bonusPercent = event.bonusPercent ?? 0
 
 		// Build the primary damage event for the instakill.
 		const damageEvent: Events['damage'] = {
@@ -213,6 +216,7 @@ export class TranslateAdapterStep extends AdapterStep {
 				...resolveTargetId(event),
 				// We don't get any amount for an instakill, fake it with the target's HP.
 				amount: target.maxHitPoints,
+				bonusPercent,
 				overkill: target.maxHitPoints - target.hitPoints,
 				// No hit type either, just assume normal.
 				sourceModifier: SourceModifier.NORMAL,
@@ -248,6 +252,7 @@ export class TranslateAdapterStep extends AdapterStep {
 
 		// Build the new event
 		const overkill = event.overkill ?? 0
+		const bonusPercent = event.bonusPercent ?? 0
 		const newEvent: Events['damage'] = {
 			...this.adaptSourceFields(event),
 			type: 'damage',
@@ -257,6 +262,7 @@ export class TranslateAdapterStep extends AdapterStep {
 				...resolveTargetId(event),
 				// fflogs subtracts overkill from amount, amend
 				amount: event.amount + overkill,
+				bonusPercent,
 				overkill,
 				sourceModifier,
 				targetModifier: targetHitType[event.hitType] ?? TargetModifier.NORMAL,

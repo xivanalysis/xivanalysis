@@ -8,6 +8,7 @@ import {DeathsDesign} from './DeathsDesign'
 import {Defensives} from './Defensives'
 import {Enshroud} from './Enshroud'
 import {ImmortalSacrifice} from './ImmortalSacrifice'
+import {Positionals} from './Positionals'
 import {Procs} from './Procs'
 import {Tincture} from './Tincture'
 
@@ -20,8 +21,9 @@ export default [
 	DeathsDesign,
 	Defensives,
 	Enshroud,
-	Procs,
 	ImmortalSacrifice,
+	Positionals,
+	Procs,
 	Tincture,
 	Weaving,
 ]

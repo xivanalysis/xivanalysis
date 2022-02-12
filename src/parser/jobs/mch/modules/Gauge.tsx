@@ -21,9 +21,9 @@ const OVERCAP_SEVERITY = {
 		30: SEVERITY.MAJOR,
 	},
 }
-
-const HEAT_COLOR = Color('#D35A10')
-const BATTERY_COLOR = Color('#2C9FCB')
+const FADE_AMOUNT = 0.25
+const HEAT_COLOR = Color('#D35A10').fade(FADE_AMOUNT)
+const BATTERY_COLOR = Color('#2C9FCB').fade(FADE_AMOUNT)
 
 interface GaugeModifier {
 	event: 'action' | 'damage' | 'combo'
@@ -39,11 +39,17 @@ export class Gauge extends CoreGauge {
 	@dependency private suggestions!: Suggestions
 
 	private heat = this.add(new CounterGauge({
-		chart: {label: 'Heat Gauge', color: HEAT_COLOR},
+		graph: {
+			label: <Trans id="mch.gauge.resource.heat">Heat</Trans>,
+			color: HEAT_COLOR,
+		},
 	}))
 
 	private battery = this.add(new CounterGauge({
-		chart: {label: 'Battery Gauge', color: BATTERY_COLOR},
+		graph: {
+			label: <Trans id="mch.gauge.resource.battery">Battery</Trans>,
+			color: BATTERY_COLOR,
+		},
 	}))
 
 	private heatModifiers: GaugeMap = new Map([

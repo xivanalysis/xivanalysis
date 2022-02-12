@@ -25,7 +25,7 @@ export class ArcaneCircle extends BuffWindow {
 			],
 			suggestionIcon: this.data.actions.ARCANE_CIRCLE.icon,
 			suggestionContent: <Trans id="rpr.arcanecircle.suggestions.content">
-				Each <ActionLink action="ARCANE_CIRCLE"/> window should contain at least 2 uses of <ActionLink action="COMMUNIO"/> and a use
+				Each <ActionLink action="ARCANE_CIRCLE"/> window should contain 2 uses of <ActionLink action="COMMUNIO"/> and a use
 				of <ActionLink action="PLENTIFUL_HARVEST"/>.
 			</Trans>,
 			suggestionWindowName: <ActionLink action="ARCANE_CIRCLE" showIcon={false} />,

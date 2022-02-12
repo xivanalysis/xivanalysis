@@ -37,12 +37,12 @@ export const SCHOLAR = new Meta({
 		},
 		{
 			date: new Date('2022-01-25'),
-			Changes: () => <>Update Faerie Gauge to 6.0</>,
+			Changes: () => <>Update Faerie Gauge to 6.0.</>,
 			contributors: [CONTRIBUTORS.ARKEVORKHAT],
 		},
 		{
 			date: new Date('2022-01-25'),
-			Changes: () => <>Update Weaving module text to account for Broil IV update</>,
+			Changes: () => <>Update Weaving module text to account for Broil IV update.</>,
 			contributors: [CONTRIBUTORS.ARKEVORKHAT],
 		},
 		{
@@ -52,7 +52,12 @@ export const SCHOLAR = new Meta({
 		},
 		{
 			date: new Date('2022-01-31'),
-			Changes: () => <>Add Scholar defensive cooldowns to tracked cooldowns</>,
+			Changes: () => <>Add Scholar defensive cooldowns to tracked cooldowns.</>,
+			contributors: [CONTRIBUTORS.DTHOMASH],
+		},
+		{
+			date: new Date('2022-02-02'),
+			Changes: () => <>Update Scholar defensive cooldowns to better reflect usage.</>,
 			contributors: [CONTRIBUTORS.DTHOMASH],
 		},
 	],
