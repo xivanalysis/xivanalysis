@@ -11,4 +11,14 @@ export class CooldownDowntime extends CooldownDowntimeCore {
 			firstUseOffset: 7500,
 		},
 	]
+	override defensiveCooldowns = [
+		{cooldowns: [this.data.actions.SCH_WHISPERING_DAWN]},
+		{cooldowns: [this.data.actions.SCH_FEY_ILLUMINATION]},
+		{cooldowns: [this.data.actions.DEPLOYMENT_TACTICS]},
+		{cooldowns: [this.data.actions.DISSIPATION]},
+		{cooldowns: [this.data.actions.RECITATION]},
+		{cooldowns: [this.data.actions.SUMMON_SERAPH]},
+		{cooldowns: [this.data.actions.PROTRACTION]},
+		{cooldowns: [this.data.actions.EXPEDIENT]},
+	]
 }

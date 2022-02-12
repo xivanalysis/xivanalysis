@@ -14,7 +14,6 @@ export class Tincture extends CoreTincture {
 		</Trans>
 	</Message>
 
-
 	override initialise() {
 		super.initialise()
 		this.trackOnlyActions([

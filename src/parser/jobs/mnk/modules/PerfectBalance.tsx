@@ -10,7 +10,7 @@ import {dependency} from 'parser/core/Injectable'
 import {Data} from 'parser/core/modules/Data'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
-import {FORM_SKILLS} from './constants'
+import {FORM_ACTIONS} from './constants'
 import {DISPLAY_ORDER} from './DISPLAY_ORDER'
 import {fillActions} from './utilities'
 
@@ -50,7 +50,7 @@ export class PerfectBalance extends Analyser {
 
 	override initialise() {
 		this.badActions = fillActions(PB_BAD_ACTIONS, this.data)
-		this.formActions = fillActions(FORM_SKILLS, this.data)
+		this.formActions = fillActions(FORM_ACTIONS, this.data)
 
 		const playerFilter = filter<Event>().source(this.parser.actor.id)
 		this.addEventHook(playerFilter.type('statusApply').status(this.data.statuses.PERFECT_BALANCE.id), this.onStacc)

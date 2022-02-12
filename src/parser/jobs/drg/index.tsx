@@ -19,7 +19,12 @@ export const DRAGOON = new Meta({
 	],
 	changelog: [
 		{
-			date: new Date('2022-06-01'),
+			date: new Date('2022-01-22'),
+			Changes: () => <>Lance Charge and Dragon Sight windows now expect uses of oGCDs instead of uses of GCDs.</>,
+			contributors: [CONTRIBUTORS.FALINDRITH],
+		},
+		{
+			date: new Date('2022-01-06'),
 			Changes: () => <>Added First Brood's Gaze gauge to the Timeline. Added suggestions for errors related to unused or truncated Life of the Dragon windows at the end of a fight.</>,
 			contributors: [CONTRIBUTORS.FALINDRITH],
 		},
