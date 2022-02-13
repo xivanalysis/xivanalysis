@@ -8,6 +8,7 @@ import {DeathsDesign} from './DeathsDesign'
 import {Enshroud} from './Enshroud'
 import {HarvestMoon} from './HarvestMoon'
 import {ImmortalSacrifice} from './ImmortalSacrifice'
+import {Positionals} from './Positionals'
 import {Procs} from './Procs'
 import {Tincture} from './Tincture'
 
@@ -19,9 +20,10 @@ export default [
 	CooldownDowntime,
 	DeathsDesign,
 	Enshroud,
-	Procs,
 	ImmortalSacrifice,
 	HarvestMoon,
+	Positionals,
+	Procs,
 	Tincture,
 	Weaving,
 ]
