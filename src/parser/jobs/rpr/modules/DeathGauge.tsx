@@ -63,6 +63,8 @@ export class DeathGauge extends CoreGauge {
 		this.addEventHook(playerFilter.type('statusRemove').status(this.data.statuses.ENSHROUDED.id), this.onDeshroud)
 		this.addEventHook(playerFilter.type('action').action(this.data.matchActionId(LEMURE_ACTIONS)), this.onLemure)
 		this.addEventHook(playerFilter.type('action').action(this.data.matchActionId(VOID_ACTIONS)), this.onVoid)
+
+		// This is effectively emptying the gauge at end of fight for history
 		this.addEventHook('complete', this.onDeshroud)
 	}
 
@@ -87,10 +89,9 @@ export class DeathGauge extends CoreGauge {
 
 	private onLemure(event: Events['action']) {
 		const action = this.data.getAction(event.action)
-		if (action == null) { return }
 
 		// Sanity check
-		if (!this.actors.current.hasStatus(this.data.statuses.ENSHROUDED.id)) { return }
+		if (action == null || !this.actors.current.hasStatus(this.data.statuses.ENSHROUDED.id)) { return }
 
 		// Communio gets special handling since it eats everything you have
 		if (action.id === this.data.actions.COMMUNIO.id && this.lemureShroud.value > 0) {
@@ -103,7 +104,7 @@ export class DeathGauge extends CoreGauge {
 		this.lemureShroud.spend(LEMURE_MOD)
 		this.voidShroud.generate(LEMURE_MOD)
 
-		// Sanity check morer - core gauge doesn't know that these are really a single shared gauge
+		// Sanity check more - core gauge doesn't know that these are really a single shared gauge
 		// We don't need to check this in Void actions because they only consume gauge, not generate
 		if (this.lemureShroud.value + this.voidShroud.value > MAX_STACKS) {
 			this.brokenLog.trigger(this, 'rpr.deathgauge.lemure.outofbounds',
