@@ -7,6 +7,7 @@ import {CooldownDowntime} from './CooldownDowntime'
 import {DeathsDesign} from './DeathsDesign'
 import {Enshroud} from './Enshroud'
 import {ImmortalSacrifice} from './ImmortalSacrifice'
+import {OtherGauges} from './OtherGauges'
 import {Positionals} from './Positionals'
 import {Procs} from './Procs'
 import {Tincture} from './Tincture'
@@ -20,6 +21,7 @@ export default [
 	DeathsDesign,
 	Enshroud,
 	ImmortalSacrifice,
+	OtherGauges,
 	Positionals,
 	Procs,
 	Tincture,
