@@ -38,11 +38,11 @@ export class OtherGauges extends CoreGauge {
 
 	// Initialise our gauges - default max is 100 so yolo it is
 	private soulGauge = this.add(new CounterGauge({
-		graph: {label: 'Soul Gauge', color: JOBS.REAPER.colour, collapse: false},
+		graph: {label: 'Soul Gauge', color: JOBS.REAPER.colour, collapse: true},
 	}))
 
 	private shroudGauge = this.add(new CounterGauge({
-		graph: {label: 'Shroud Gauge', color: JOBS.BLUE_MAGE.colour, collapse: false},
+		graph: {label: 'Shroud Gauge', color: JOBS.BLUE_MAGE.colour, collapse: true},
 	}))
 
 	private soulGaugeModifiers = new Map<Action['id'], GaugeModifier>([
@@ -81,11 +81,9 @@ export class OtherGauges extends CoreGauge {
 
 	private onFoeDeath(event: Events['death']) {
 		// We effectively check if they had the status 100ms before death, since it drops with death
-		// if (this.actors.get(event.actor).at(event.timestamp - 100).hasStatus(this.data.statuses.DEATHS_DESIGN.id)) {
-		// this.soulGauge.generate(DESIGN_GAIN)
-		// } else {
-		// this.debug('NO STATUS, FUCK')
-		// }
+		if (this.actors.get(event.actor).at(event.timestamp - 100).hasStatus(this.data.statuses.DEATHS_DESIGN.id)) {
+			this.soulGauge.generate(DESIGN_GAIN)
+		}
 	}
 
 	private onSoulModifier(event: Events['action' | 'combo']) {
