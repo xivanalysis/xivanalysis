@@ -99,14 +99,9 @@ export class DeathGauge extends CoreGauge {
 			return
 		}
 
-		// Sanity check more - this gauge counts down so inverts overcap
-		if (LEMURE_MOD > this.lemureShroud.value) {
-			this.brokenLog.trigger(this, 'rpr.deathgauge.lemure.undercap',
-				<Trans id="rpr.deathgauge.lemure.undercap.reason">
-					<ActionLink {...action}/> can't be executed with only {this.lemureShroud.value} stacks of Lemure's Shroud.
-				</Trans>
-			)
-		}
+		// Adjust the gauges - Lemure spend actions generate Void
+		this.lemureShroud.spend(LEMURE_MOD)
+		this.voidShroud.generate(LEMURE_MOD)
 
 		// Sanity check morer - core gauge doesn't know that these are really a single shared gauge
 		// We don't need to check this in Void actions because they only consume gauge, not generate
@@ -117,10 +112,6 @@ export class DeathGauge extends CoreGauge {
 				</Trans>
 			)
 		}
-
-		// Adjust the gauges - Lemure spend actions generate Void
-		this.lemureShroud.spend(LEMURE_MOD)
-		this.voidShroud.generate(LEMURE_MOD)
 	}
 
 	private onVoid() {

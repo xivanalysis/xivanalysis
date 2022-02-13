@@ -733,7 +733,6 @@
   "rpr.arcanecircle.suggestions.content": "Each <0/> window should contain 2 uses of <1/> and a use of <2/>.",
   "rpr.arcanecircle.title": "Arcane Circle",
   "rpr.deathgauge.lemure.outofbounds.reason": "<0/> can't be executed with {0} stacks of Lemure's Shroud and {1} stacks of Void Shroud as this would go over the shared gauge max.",
-  "rpr.deathgauge.lemure.undercap.reason": "<0/> can't be executed with only {0} stacks of Lemure's Shroud.",
   "rpr.deathsdesign.requirement.uptime.name": "<0/> uptime",
   "rpr.deathsdesign.rule.description": "Death's Design increases all damage you deal to the target by 10%. Aim to keep this debuff up at all times.",
   "rpr.deathsdesign.rule.name": "Keep <0/> up",
