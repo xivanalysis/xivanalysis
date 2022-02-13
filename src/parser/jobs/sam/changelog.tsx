@@ -8,6 +8,10 @@ export const changelog = [
 	// 	contrubutors: [CONTRIBUTORS.YOU],
 	// },
 	{
+		date: new Date('2022-02-09'),
+		Changes: () => <>Fixed a bug that erroneously flagged AoE combos as broken.</>,
+		contributors: [CONTRIBUTORS.HINT],
+	}, {
 		date: new Date('2022-01-28'),
 		Changes: () => <>Fixed flawed logic that assumes SAM's can surpass their limits and get more than 3 gcds under the meikyo shisui buff.</>,
 		contributors: [CONTRIBUTORS.RYAN],
