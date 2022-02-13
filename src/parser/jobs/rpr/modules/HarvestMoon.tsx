@@ -44,7 +44,7 @@ export class HarvestMoon extends Analyser {
 				const unableToActWindow = this.unableToAct.getWindows({start: invulnWindow.start, end: invulnWindow.end})[0]
 
 				return unableToActWindow == null
-					? false
+					? true
 					: unableToActWindow.start - invulnWindow.start >= ADJUSTED_CAST
 						|| unableToActWindow.end - invulnWindow.end >= ADJUSTED_CAST
 			}).length + 1
