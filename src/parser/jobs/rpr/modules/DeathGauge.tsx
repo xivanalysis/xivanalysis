@@ -67,9 +67,9 @@ export class DeathGauge extends CoreGauge {
 	}
 
 	private onEnshroud() {
-		// Pre-fill Lemure stacks to max
+		// Pre-fill Lemure stacks to max, using generate as that's what the tooltip says it does internally
 		this.lemureShroud.setMaximum(MAX_STACKS)
-		this.lemureShroud.set(MAX_STACKS, 'changeBounds')
+		this.lemureShroud.generate(MAX_STACKS)
 
 		// Technically this can be 5 but your window would end if it did
 		this.voidShroud.setMaximum(MAX_STACKS - 1)
