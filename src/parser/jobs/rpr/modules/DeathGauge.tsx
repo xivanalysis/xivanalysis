@@ -123,20 +123,9 @@ export class DeathGauge extends CoreGauge {
 		this.voidShroud.generate(LEMURE_MOD)
 	}
 
-	private onVoid(event: Events['action']) {
-		const action = this.data.getAction(event.action)
-		if (action == null) { return }
-
-		if (!this.actors.current.hasStatus(this.data.statuses.ENSHROUDED.id)) { return }
-
-		if (VOID_COST > this.voidShroud.value) {
-			this.brokenLog.trigger(this, 'rpr.deathgauge.void.undercap',
-				<Trans id="rpr.deathgauge.void.undercap.reason">
-					<ActionLink {...action}/> can't be executed with only {this.voidShroud.value} stacks of Void Shroud.
-				</Trans>
-			)
+	private onVoid() {
+		if (this.actors.current.hasStatus(this.data.statuses.ENSHROUDED.id)) {
+			this.voidShroud.spend(VOID_COST)
 		}
-
-		this.voidShroud.spend(VOID_COST)
 	}
 }

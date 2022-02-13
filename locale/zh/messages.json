@@ -734,7 +734,6 @@
   "rpr.arcanecircle.title": "",
   "rpr.deathgauge.lemure.outofbounds.reason": "",
   "rpr.deathgauge.lemure.undercap.reason": "",
-  "rpr.deathgauge.void.undercap.reason": "",
   "rpr.deathsdesign.requirement.uptime.name": "<0/> 覆盖率",
   "rpr.deathsdesign.rule.description": "",
   "rpr.deathsdesign.rule.name": "保持 <0/> 不断",

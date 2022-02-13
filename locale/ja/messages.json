@@ -734,7 +734,6 @@
   "rpr.arcanecircle.title": "",
   "rpr.deathgauge.lemure.outofbounds.reason": "",
   "rpr.deathgauge.lemure.undercap.reason": "",
-  "rpr.deathgauge.void.undercap.reason": "",
   "rpr.deathsdesign.requirement.uptime.name": "アクティブ率: <0/>",
   "rpr.deathsdesign.rule.description": "「デスデザイン」はターゲットに与える全てのダメージを10%上昇させます。このバフを常に維持するように心がけましょう。",
   "rpr.deathsdesign.rule.name": "<0/> を維持しましょう",
