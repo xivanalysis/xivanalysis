@@ -34,8 +34,6 @@ export class OtherGauges extends CoreGauge {
 	@dependency private actors!: Actors
 	@dependency private suggestions!: Suggestions
 
-	static override debug = true
-
 	// Initialise our gauges - default max is 100 so yolo it is
 	private soulGauge = this.add(new CounterGauge({
 		graph: {label: 'Soul Gauge', color: JOBS.REAPER.colour, collapse: true},
