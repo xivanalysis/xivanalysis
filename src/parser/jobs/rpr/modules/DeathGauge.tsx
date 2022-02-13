@@ -1,4 +1,5 @@
 import {Trans} from '@lingui/react'
+import Color from 'color'
 import {ActionLink} from 'components/ui/DbLink'
 import {ActionKey} from 'data/ACTIONS'
 import {JOBS} from 'data/JOBS'
@@ -9,6 +10,8 @@ import {Actors} from 'parser/core/modules/Actors'
 import BrokenLog from 'parser/core/modules/BrokenLog'
 import {CounterGauge, Gauge as CoreGauge} from 'parser/core/modules/Gauge'
 import React from 'react'
+
+const GAUGE_FADE = 0.25
 
 const MAX_STACKS = 5
 
@@ -41,7 +44,7 @@ export class DeathGauge extends CoreGauge {
 	private lemureShroud = this.add(new CounterGauge({
 		maximum: 0,
 		correctHistory: true,
-		graph: {label: 'Lemure Shroud', color: JOBS.PALADIN.colour, collapse: true},
+		graph: {label: 'Lemure Shroud', color: Color(JOBS.PALADIN.colour).fade(GAUGE_FADE), collapse: true},
 	}))
 
 	// Void Shroud
@@ -51,7 +54,7 @@ export class DeathGauge extends CoreGauge {
 	private voidShroud = this.add(new CounterGauge({
 		maximum: 0,
 		correctHistory: true,
-		graph: {label: 'Void Shroud', color: JOBS.REAPER.colour, collapse: true},
+		graph: {label: 'Void Shroud', color: Color(JOBS.REAPER.colour).fade(GAUGE_FADE), collapse: true},
 	}))
 
 	override initialise() {
