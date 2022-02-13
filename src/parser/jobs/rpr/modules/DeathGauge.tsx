@@ -34,17 +34,23 @@ export class DeathGauge extends CoreGauge {
 	@dependency private actors!: Actors
 	@dependency private brokenLog!: BrokenLog
 
-	// Lemure's Shroud, the blue pips
+	// Lemure's Shroud
 	// We initialise to zero because without Enshroud you can't get more
+	// History correction is enabled:
+	//   you cannot rely on point-in-time gauge values and need the history in onComplete for any consuming modules
 	private lemureShroud = this.add(new CounterGauge({
 		maximum: 0,
+		correctHistory: true,
 		graph: {label: 'Lemure Shroud', color: JOBS.PALADIN.colour, collapse: true},
 	}))
 
-	// Void Shroud, the purple pips
+	// Void Shroud
 	// We initialise to zero because without Lemure you can't get more
+	// History correction is enabled:
+	//   you cannot rely on point-in-time gauge values and need the history in onComplete for any consuming modules
 	private voidShroud = this.add(new CounterGauge({
 		maximum: 0,
+		correctHistory: true,
 		graph: {label: 'Void Shroud', color: JOBS.REAPER.colour, collapse: true},
 	}))
 
