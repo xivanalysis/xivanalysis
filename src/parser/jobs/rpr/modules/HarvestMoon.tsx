@@ -30,7 +30,7 @@ export class HarvestMoon extends Analyser {
 				.source(this.parser.actor.id)
 				.type('action')
 				.action(this.data.actions.HARVEST_MOON.id),
-			() => { this.harvestMoonCasts++ })
+			() => this.harvestMoonCasts++)
 
 		this.addEventHook('complete', this.onComplete)
 	}
@@ -44,9 +44,9 @@ export class HarvestMoon extends Analyser {
 				const unableToActWindow = this.unableToAct.getWindows({start: invulnWindow.start, end: invulnWindow.end})[0]
 
 				return unableToActWindow == null
-					?false
-					:unableToActWindow.start - invulnWindow.start >= ADJUSTED_CAST
-						||unableToActWindow.end - invulnWindow.end >= ADJUSTED_CAST
+					? false
+					: unableToActWindow.start - invulnWindow.start >= ADJUSTED_CAST
+						|| unableToActWindow.end - invulnWindow.end >= ADJUSTED_CAST
 			}).length + 1
 		}
 
