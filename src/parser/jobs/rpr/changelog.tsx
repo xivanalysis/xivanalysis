@@ -4,6 +4,11 @@ import React from 'react'
 
 export const changelog = [
 	{
+		date: new Date('2022-02-13'),
+		Changes: () => <>Add Soul and Shroud gauge tracking.</>,
+		contributors: [CONTRIBUTORS.AY],
+	},
+	{
 		date: new Date('2021-01-14'),
 		Changes: () => <>Add checks for Enshroud and Arcane Circle windows.</>,
 		contributors: [CONTRIBUTORS.KELOS],
