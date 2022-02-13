@@ -1,4 +1,5 @@
 import {Trans} from '@lingui/react'
+import Color from 'color'
 import {DataLink} from 'components/ui/DbLink'
 import {Action, ActionKey} from 'data/ACTIONS'
 import {JOBS} from 'data/JOBS'
@@ -26,6 +27,8 @@ const SHROUD_ACTIONS: ActionKey[] = [
 	'ENSHROUD',
 ]
 
+const GAUGE_FADE = 0.25
+
 const DESIGN_GAIN = 10
 const BASE_SHROUD_MOD = 10
 const HIGH_SHROUD_MOD = 50
@@ -36,11 +39,11 @@ export class OtherGauges extends CoreGauge {
 
 	// Initialise our gauges - default max is 100 so yolo it is
 	private soulGauge = this.add(new CounterGauge({
-		graph: {label: 'Soul Gauge', color: JOBS.REAPER.colour, collapse: true},
+		graph: {label: 'Soul Gauge', color: Color(JOBS.WARRIOR.colour).fade(GAUGE_FADE), collapse: true},
 	}))
 
 	private shroudGauge = this.add(new CounterGauge({
-		graph: {label: 'Shroud Gauge', color: JOBS.BLUE_MAGE.colour, collapse: true},
+		graph: {label: 'Shroud Gauge', color: Color(JOBS.BLUE_MAGE.colour).fade(GAUGE_FADE), collapse: true},
 	}))
 
 	private soulGaugeModifiers = new Map<Action['id'], GaugeModifier>([
