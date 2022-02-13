@@ -25,6 +25,9 @@ const KENKI_PER_MEDITATE_TICK = 10
 const MEDITATE_TICK_FREQUENCY = 3000
 const MAX_MEDITATE_TICKS = 5
 
+const FADE = 0.25
+const KENKI_COLOR = Color(JOBS.SAMURAI.colour).fade(FADE)
+
 export class Kenki extends CoreGauge {
 	static override title = t('sam.gauge.title')`Kenki Gauge`
 	static override displayOrder = DISPLAY_ORDER.KENKI
@@ -33,7 +36,7 @@ export class Kenki extends CoreGauge {
 	private kenkiGauge = this.add(new CounterGauge({
 		graph: {
 			label: <Trans id="sam.gauge.resource.kenkiLabel">Kenki</Trans>,
-			color: Color(JOBS.SAMURAI.colour).fade(.25),
+			color: KENKI_COLOR,
 		},
 	}))
 
