@@ -107,8 +107,8 @@ export class DeathGauge extends CoreGauge {
 		// Sanity check more - core gauge doesn't know that these are really a single shared gauge
 		// We don't need to check this in Void actions because they only consume gauge, not generate
 		if (this.lemureShroud.value + this.voidShroud.value > MAX_STACKS) {
-			this.brokenLog.trigger(this, 'rpr.deathgauge.lemure.outofbounds',
-				<Trans id="rpr.deathgauge.lemure.outofbounds.reason">
+			this.brokenLog.trigger(this, 'rpr.gauge.lemure.outofbounds',
+				<Trans id="rpr.gauge.lemure.outofbounds.reason">
 					<ActionLink {...action}/> can't be executed with {this.lemureShroud.value} stacks of Lemure's Shroud and {this.voidShroud.value} stacks of Void Shroud as this would go over the shared gauge max.
 				</Trans>
 			)
