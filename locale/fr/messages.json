@@ -561,6 +561,8 @@
   "mnk.forms.suggestions.reset.why": "{0, plural,one {#combo fut}other {#combos furent}} réinitialiser par une position de l'opo-opo.",
   "mnk.forms.suggestions.skipped.content": "",
   "mnk.forms.suggestions.skipped.why": "{0, plural,one {#forme était}other {#forme étaient}} sauter par Glissement de posture non nécessaire.",
+  "mnk.mbstats.headings.count": "",
+  "mnk.mbstats.title": "",
   "mnk.pb.suggestions.badActions.content": "",
   "mnk.pb.suggestions.badActions.why": "",
   "mnk.pb.suggestions.stacks.content": "Essayez d'utiliser vos 6 stacks durant chaque phase de <0/>.",

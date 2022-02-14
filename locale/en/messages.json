@@ -561,6 +561,8 @@
   "mnk.forms.suggestions.reset.why": "{0, plural, one {# combo was} other {# combos were}} reset by an Opo-Opo Form skill.",
   "mnk.forms.suggestions.skipped.content": "Avoid skipping Forms outside of downtime. A skipped GCD could otherwise be used for damage.",
   "mnk.forms.suggestions.skipped.why": "{0, plural, one {# form was} other {# forms were}} skipped by Form Shift unnecessarily.",
+  "mnk.mbstats.headings.count": "Count",
+  "mnk.mbstats.title": "Masterful Blitz",
   "mnk.pb.suggestions.badActions.content": "Using <0/> or <1/> inside of <2/> does no damage and does not change your Form.",
   "mnk.pb.suggestions.badActions.why": "{badActions, plural, one {# use of} other {# uses of}} uses of <0/> or <1/> were used during <2/>.",
   "mnk.pb.suggestions.stacks.content": "Try to consume all 6 stacks during every <0/> window.",

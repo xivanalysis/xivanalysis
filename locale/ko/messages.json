@@ -561,6 +561,8 @@
   "mnk.forms.suggestions.reset.why": "{0, plural, one {#개} other {#개}}의 콤보가 원숭이 품새 기술로 초기화되었습니다.",
   "mnk.forms.suggestions.skipped.content": "",
   "mnk.forms.suggestions.skipped.why": "{0, plural, one {#개} other {#개}}의 품새가 필요 이외의 연무로 생략되었습니다.",
+  "mnk.mbstats.headings.count": "",
+  "mnk.mbstats.title": "",
   "mnk.pb.suggestions.badActions.content": "",
   "mnk.pb.suggestions.badActions.why": "",
   "mnk.pb.suggestions.stacks.content": "",
