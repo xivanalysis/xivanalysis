@@ -12,6 +12,7 @@ import {Data} from './Data'
 import {Death} from './Death'
 import Downtime from './Downtime'
 import {Dummy} from './Dummy'
+import {EnemyTimeline} from './EnemyTimeline'
 import {EventsView} from './EventsView'
 import {GlobalCooldown} from './GlobalCooldown'
 import {Invulnerability} from './Invulnerability'
@@ -42,6 +43,7 @@ export default [
 	Death,
 	Downtime,
 	Dummy,
+	EnemyTimeline,
 	EventsView,
 	GlobalCooldown,
 	Invulnerability,
