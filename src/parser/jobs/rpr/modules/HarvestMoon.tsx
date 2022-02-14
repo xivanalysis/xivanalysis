@@ -35,18 +35,14 @@ export class HarvestMoon extends Analyser {
 		this.addEventHook('complete', this.onComplete)
 	}
 
-	private windowFilterCallback(inputWindow: {start: number, end: number}): boolean {
+	private canChargeMoon(inputWindow: {start: number, end: number}): boolean {
 		const unableToActWindow = this.unableToAct.getWindows(inputWindow)[0]
+		const soulsowCastTime = this.data.actions.SOULSOW.castTime + SOULSOW_BUFFER
 
-		if (unableToActWindow == null) {
+		if (unableToActWindow == null || unableToActWindow.start - inputWindow.start < soulsowCastTime) {
 			return false
 		}
-
-		if (unableToActWindow.start - inputWindow.start >= this.data.actions.SOULSOW.castTime + SOULSOW_BUFFER) {
-			return true
-		}
-
-		return this.windowFilterCallback({start: unableToActWindow.end, end: inputWindow.end})
+		return this.canChargeMoon({start: unableToActWindow.end, end: inputWindow.end})
 	}
 
 	private getExpectedUses(): number {
@@ -54,7 +50,7 @@ export class HarvestMoon extends Analyser {
 		const invulnWindows = this.invulnerability.getWindows().filter((w) => w.end - w.start >=  ADJUSTED_CAST)
 
 		if (this.unableToAct.getDuration() > 0) {
-			return invulnWindows.filter(this.windowFilterCallback).length + 1
+			return invulnWindows.filter(this.canChargeMoon).length + 1
 		}
 
 		return invulnWindows.length + 1
