@@ -37,13 +37,22 @@ export class HarvestMoon extends Analyser {
 
 	private canChargeMoon(inputWindow: {start: number, end: number}): boolean {
 		const ADJUSTED_CAST_TIME = this.data.actions.SOULSOW.castTime + SOULSOW_BUFFER
+
+		// get the earliest unable to act window that falls within the provided inputWindow
 		const unableToActWindow = this.unableToAct.getWindows(inputWindow)[0]
+
+		// the window will be undefined if there are no unable to act windows left before the end of the inputWindow
 		if (unableToActWindow == null) {
+			// True if there are ADJUSTED_CAST_TIME milliseconds or more remaining in the inputWindow
 			return inputWindow.end - inputWindow.start >= ADJUSTED_CAST_TIME
 		}
+
+		// return true if there are ADJUSTED_CAST_TIME milliseconds between the beginning of the window being checked and the beginning of an unableToAct window
 		if (unableToActWindow.start - inputWindow.start >= ADJUSTED_CAST_TIME) {
 			return true
 		}
+
+		// recurse the method, shrinking the window to the space between the end of the unable to act window and the end of the input window.
 		return this.canChargeMoon({start: unableToActWindow.end, end: inputWindow.end})
 	}
 
@@ -51,6 +60,7 @@ export class HarvestMoon extends Analyser {
 		const ADJUSTED_CAST = this.data.actions.SOULSOW.castTime + SOULSOW_BUFFER
 		const invulnWindows = this.invulnerability.getWindows().filter((window) => window.end - window.start >=  ADJUSTED_CAST)
 
+		// will only run the window filter if there is a non-zero amount of unableToAct time during the fight.
 		if (this.unableToAct.getDuration({start: this.parser.pull.timestamp, end: this.parser.pull.timestamp + this.parser.pull.duration}) > 0) {
 			return invulnWindows.filter(window => this.canChargeMoon(window)).length + 1
 		}
