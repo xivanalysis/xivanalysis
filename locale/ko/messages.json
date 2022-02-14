@@ -770,6 +770,8 @@
   "sam.buffs.checklist.requirement.fugetsu.name": "적용시간 <0/>",
   "sam.buffs.checklist.requirement.fuka.name": "적용시간 <0/>",
   "sam.buffs.description": "",
+  "sam.gauge.resource.kenkiLabel": "",
+  "sam.gauge.resource.meditationLabel": "",
   "sam.gauge.suggestions.loss.content": "",
   "sam.gauge.suggestions.loss.why": "",
   "sam.gauge.title": "",

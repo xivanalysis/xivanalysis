@@ -770,6 +770,8 @@
   "sam.buffs.checklist.requirement.fugetsu.name": "<0/> uptime",
   "sam.buffs.checklist.requirement.fuka.name": "<0/> uptime",
   "sam.buffs.description": "{0} and {1} increases your damage and speed by 13%. Both buffs are key part of Samurai's damage.",
+  "sam.gauge.resource.kenkiLabel": "Kenki",
+  "sam.gauge.resource.meditationLabel": "Meditation",
   "sam.gauge.suggestions.loss.content": "Avoid letting your Kenki Gauge overcap - the wasted resources may cost further uses of your spenders over the course of the fight.",
   "sam.gauge.suggestions.loss.why": "{0} Kenki lost to overcapping.",
   "sam.gauge.title": "Kenki Gauge",

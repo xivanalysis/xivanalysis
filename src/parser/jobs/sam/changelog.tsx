@@ -8,6 +8,10 @@ export const changelog = [
 	// 	contrubutors: [CONTRIBUTORS.YOU],
 	// },
 	{
+		date: new Date('2022-02-12'),
+		Changes: () => <> Moved Kenki and Meditation Gauge to the Timeline.</>,
+		contributors: [CONTRIBUTORS.RYAN],
+	}, {
 		date: new Date('2022-02-09'),
 		Changes: () => <>Fixed a bug that erroneously flagged AoE combos as broken.</>,
 		contributors: [CONTRIBUTORS.HINT],
