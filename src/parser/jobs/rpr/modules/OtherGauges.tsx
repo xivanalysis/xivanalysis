@@ -133,7 +133,7 @@ export class OtherGauges extends CoreGauge {
 					Avoid letting your Shroud gauge overcap as it can cost you uses of <DataLink action="ENSHROUD"/> over the fight.
 			</Trans>,
 			why: <Trans id="rpr.gauge.shroud.suggestions.overcap.why">
-				{this.soulGauge.overCap} Shrouds lost to overcapping Shroud gauge.
+				{this.shroudGauge.overCap} Shrouds lost to overcapping Shroud gauge.
 			</Trans>,
 			tiers: SUGGESTION_TIERS,
 			value: this.shroudGauge.overCap,
