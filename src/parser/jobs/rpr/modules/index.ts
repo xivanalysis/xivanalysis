@@ -6,6 +6,7 @@ import {Combos} from './Combos'
 import {CooldownDowntime} from './CooldownDowntime'
 import {DeathsDesign} from './DeathsDesign'
 import {Enshroud} from './Enshroud'
+import {HarvestMoon} from './HarvestMoon'
 import {ImmortalSacrifice} from './ImmortalSacrifice'
 import {OtherGauges} from './OtherGauges'
 import {Positionals} from './Positionals'
@@ -21,6 +22,7 @@ export default [
 	DeathsDesign,
 	Enshroud,
 	ImmortalSacrifice,
+	HarvestMoon,
 	OtherGauges,
 	Positionals,
 	Procs,
