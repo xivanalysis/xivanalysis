@@ -54,7 +54,7 @@ export class HarvestMoon extends Analyser {
 		const invulnWindows = this.invulnerability.getWindows().filter((w) => w.end - w.start >=  ADJUSTED_CAST)
 
 		if (this.unableToAct.getDuration() > 0) {
-			return invulnWindows.filter(this.canChargeMoon).length + 1
+			return invulnWindows.filter(window => this.canChargeMoon(window)).length + 1
 		}
 
 		return invulnWindows.length + 1
