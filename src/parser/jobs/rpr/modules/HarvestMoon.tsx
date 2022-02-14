@@ -37,11 +37,15 @@ export class HarvestMoon extends Analyser {
 
 	private canChargeMoon(inputWindow: {start: number, end: number}): boolean {
 		const unableToActWindow = this.unableToAct.getWindows(inputWindow)[0]
-		const soulsowCastTime = this.data.actions.SOULSOW.castTime + SOULSOW_BUFFER
 
-		if (unableToActWindow == null || unableToActWindow.start - inputWindow.start < soulsowCastTime) {
+		if (unableToActWindow == null) {
 			return false
 		}
+
+		if (unableToActWindow.start - inputWindow.start >= this.data.actions.SOULSOW.castTime + SOULSOW_BUFFER) {
+			return true
+		}
+
 		return this.canChargeMoon({start: unableToActWindow.end, end: inputWindow.end})
 	}
 
