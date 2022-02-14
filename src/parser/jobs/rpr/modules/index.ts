@@ -9,6 +9,7 @@ import {Enshroud} from './Enshroud'
 import {ImmortalSacrifice} from './ImmortalSacrifice'
 import {Positionals} from './Positionals'
 import {Procs} from './Procs'
+import {Reaver} from './Reaver'
 import {Tincture} from './Tincture'
 
 export default [
@@ -22,6 +23,7 @@ export default [
 	ImmortalSacrifice,
 	Positionals,
 	Procs,
+	Reaver,
 	Tincture,
 	Weaving,
 ]
