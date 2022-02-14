@@ -55,7 +55,7 @@ export class MasterfulBlitzStatistics extends Analyser {
 				value: trackedAction.count,
 				color: trackedAction.color,
 				columns: [
-					<ActionLink id={actionId}/>,
+					<ActionLink key={actionId} id={actionId}/>,
 					trackedAction.count,
 				],
 			}
@@ -63,8 +63,8 @@ export class MasterfulBlitzStatistics extends Analyser {
 
 		this.statistics.add(new PieChartStatistic({
 			headings: [
-				<ActionLink action="MASTERFUL_BLITZ"/>,
-				<Trans id="mnk.mbstats.headings.count">Count</Trans>,
+				<ActionLink key="mnk.mbstats.headings.action" action="MASTERFUL_BLITZ"/>,
+				<Trans key="mnk.mbstats.headings.count" id="mnk.mbstats.headings.count">Count</Trans>,
 			],
 			data: data,
 		}))
