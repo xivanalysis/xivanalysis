@@ -18,7 +18,7 @@ export const changelog = [
 		Changes: () => <>Add proc tracking for Enhanced Gibbet and Gallows.</>,
 		contributors: [CONTRIBUTORS.ARKEVORKHAT],
 	},
-  {
+	{
 		date: new Date('2022-01-14'),
 		Changes: () => <>Add checks for Enshroud and Arcane Circle windows.</>,
 		contributors: [CONTRIBUTORS.KELOS],
