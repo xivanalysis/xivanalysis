@@ -160,7 +160,7 @@ export abstract class Positionals extends Analyser {
 			return
 		}
 		this.checklist.add(new Rule({
-			name: <Trans id="core.positionals.checklist.title">Hit Your Positionals</Trans>,
+			name: <Trans id="core.positionals.checklist.title">Hit your positionals</Trans>,
 			displayOrder: DISPLAY_ORDER.POSITIONALS,
 			description: <Trans id="core.positionals.checklist.description">
 				Melee DPS jobs have some skills that will do more damage when used from the rear or flank.
@@ -186,9 +186,10 @@ export abstract class Positionals extends Analyser {
 	}
 
 	override output(): React.ReactNode {
-		if (this.positionalResults.length === 0) {
-			return
-		}
+		const totalMisses = this.positionalResults.reduce((total, current) => total + current.misses.length, 0)
+
+		if (totalMisses === 0) { return }
+
 		return <Table compact unstackable celled textAlign="center">
 			<Table.Header>
 				<Table.Row>
@@ -232,5 +233,4 @@ export abstract class Positionals extends Analyser {
 			</Table.Body>
 		</Table>
 	}
-
 }
