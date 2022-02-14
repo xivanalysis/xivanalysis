@@ -1,10 +1,10 @@
 import {Trans} from '@lingui/react'
+import {StatusLink} from 'components/ui/DbLink'
+import {Status} from 'data/STATUSES'
+import {EvaluatedAction, EvaluationOutput, WindowEvaluator} from 'parser/core/modules/ActionWindow'
+import {HistoryEntry} from 'parser/core/modules/ActionWindow/History'
+import {SEVERITY, SeverityTiers, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
-import {StatusLink} from '../../../../../components/ui/DbLink'
-import {Status} from '../../../../../data/STATUSES'
-import {EvaluatedAction, EvaluationOutput, WindowEvaluator} from '../../../../core/modules/ActionWindow'
-import {HistoryEntry} from '../../../../core/modules/ActionWindow/History'
-import {SEVERITY, SeverityTiers, TieredSuggestion} from '../../../../core/modules/Suggestions'
 
 const DEFAULT_EXPECTED_PLAYER_COUNT = 8
 const DEFAULT_PLAYERS_MISSED_SEVERITY = {
