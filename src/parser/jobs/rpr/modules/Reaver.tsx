@@ -13,6 +13,9 @@ const SEVERITY_TIERS = {
 	2: SEVERITY.MAJOR,
 }
 
+const SOUL_GAIN = 1 //Soul moves grant 1 reaver
+const GLUTTONY_GAIN = 2 //Gluttony grants 2 reavers, also therotically max
+
 export class Reaver extends Analyser {
 	static override handle = 'reaver'
 
@@ -93,11 +96,12 @@ export class Reaver extends Analyser {
 			this.haveReaver = false
 		}
 		if (event.action === this.data.actions.GLUTTONY.id)	{
-			this.currentReaverStacks++
+			this.currentReaverStacks = GLUTTONY_GAIN
+			this.haveReaver = true
+		} else {
+			this.currentReaverStacks = SOUL_GAIN
 			this.haveReaver = true
 		}
-		this.currentReaverStacks++
-		this.haveReaver = true
 	}
 
 	private onBadCast() {
@@ -109,9 +113,9 @@ export class Reaver extends Analyser {
 	}
 
 	private onGoodCast() {
-		this.currentReaverStacks--
+		this.currentReaverStacks-- //Everything currently consumes 1 stack
 
-		if (this.currentReaverStacks <= 0) { //bug check + flag change
+		if (this.currentReaverStacks <= 0) { //bug check + flag change, just in case they somehow start with stacks.
 			this.currentReaverStacks = 0
 			this.haveReaver = false
 		}
