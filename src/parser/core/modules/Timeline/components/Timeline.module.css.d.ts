@@ -17,7 +17,12 @@ declare namespace TimelineModuleCssNamespace {
     major: string;
     majorGridLineColour: string;
     minimised: string;
+    themeBackground: string;
     timeline: string;
+    tooltip: string;
+    tooltipContainer: string;
+    tooltipDetails: string;
+    tooltipMarker: string;
     track: string;
   }
 }

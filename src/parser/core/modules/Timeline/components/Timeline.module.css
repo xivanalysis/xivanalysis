@@ -1,3 +1,5 @@
+@value themeBackground from 'theme.module.css';
+
 /* Colours picked to mimic vis for now */
 @value borderColour: #bfbfbf;
 @value borderWidth: 1px;
@@ -37,6 +39,8 @@ Basic diagram:
 	grid-gap: borderWidth;
 	padding: borderWidth;
 	user-select: none;
+
+	position: relative;
 }
 
 .label,
@@ -147,4 +151,36 @@ Basic diagram:
 	display: inline-flex;
 	justify-content: flex-end;
 	max-width: 100%;
+}
+
+.tooltipContainer {
+	position: relative;
+}
+
+.tooltip {
+	position: absolute;
+	z-index: 100;
+	pointer-events: none;
+}
+
+.tooltipMarker {
+	composes: tooltip;
+
+	top: 0;
+	left: 0;
+
+	width: 1px;
+	height: 100%;
+	background: black;
+}
+
+.tooltipDetails {
+	composes: tooltip;
+
+	left: 20px;
+	top: -20px;
+
+	border: 1px solid black;
+	padding: 5px;
+	background: themeBackground;
 }

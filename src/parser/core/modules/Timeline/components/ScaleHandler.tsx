@@ -1,7 +1,7 @@
 import {ScaleTime, scaleUtc} from 'd3-scale'
 import _ from 'lodash'
-import React, {createContext, useCallback, useContext, useEffect, useMemo, useRef, useState} from 'react'
-import Measure, {BoundingRect, ContentRect, MeasureProps} from 'react-measure'
+import React, {createContext, ReactElement, ReactNode, useCallback, useContext, useEffect, useMemo, useRef, useState} from 'react'
+import Measure, {BoundingRect, ContentRect, MeasuredComponentProps, MeasureProps} from 'react-measure'
 import {useGesture} from 'react-use-gesture'
 import {UseGestureEvent} from 'react-use-gesture/dist/types'
 
@@ -69,6 +69,12 @@ function preventMouseEventDefault(event?: UseGestureEvent) {
 	event.preventDefault()
 }
 
+export interface HoverState {
+	top: number
+	left: number
+	timestamp: number
+}
+
 export interface ScaleHandlerProps {
 	/** Minimum bound of time region to display. */
 	min: number
@@ -90,10 +96,9 @@ export interface ScaleHandlerProps {
 	 * the displayed view of the domain.
 	 */
 	exposeSetView?: ExposeSetViewFn
-}
 
-export interface InternalScaleHandlerProps extends ScaleHandlerProps {
-	children: MeasureChildren
+	// children: MeasureChildren
+	children?: (opts: MeasuredComponentProps & {hover?: HoverState}) => ReactElement
 }
 
 export function ScaleHandler({
@@ -106,12 +111,14 @@ export function ScaleHandler({
 	panFactor = DEFAULT_PAN_FACTOR,
 	zoomFactor = DEFAULT_ZOOM_FACTOR,
 	exposeSetView,
-}: InternalScaleHandlerProps) {
+}: ScaleHandlerProps) {
 	// States representing the scale's range & domain
 	// TODO: Should I just put the entire scale in the state and be done with it?
 	const [domain, setDomain] = useState<Vector2>([start ?? min, end ?? max])
 	const [range, setRange] = useState<Vector2>([0, 100])
 	const domainDistance = domain[1] - domain[0]
+
+	const [hoverState, setHoverState] = useState<HoverState>()
 
 	// If able, expose our user domain setter so external code can adjust it
 	const setView = useCallback(
@@ -142,13 +149,28 @@ export function ScaleHandler({
 		[range, domainDistance],
 	)
 
+	// TODO: Keep an eye on the perf here. I don't like regenning the scale every time, but it's
+	//       the easiest way to cascade updates over the context. It... should be fine?
+	const scales = useMemo(
+		() => {
+			const extendBy = domainDistance * EXPAND_DOMAIN_BY
+			const primary = scaleUtc().range(range).domain(domain)
+			const extended = primary.copy().domain([domain[0] - extendBy, domain[1]])
+			return {primary, extended}
+		},
+		[domainDistance, range, domain],
+	)
+
 	// Ref that will be populated with the scroll parent element. We need access to this for some
 	// event binds, and location calculations
 	const scrollParentRef = useRef<HTMLDivElement>(null)
 
 	// Track the current scroll parent bounds, we use this to calculate the mouse position and the range of the scale
 	const contentBounds = useRef<BoundingRect>()
-	const onContentResize = useCallback(({bounds}: ContentRect) => {
+	const onContentResize = useCallback(({
+		bounds,
+		// client: bounds,
+	}: ContentRect) => {
 		contentBounds.current = bounds
 		if (bounds?.width != null) { setRange([0, bounds.width]) }
 	}, [])
@@ -233,25 +255,42 @@ export function ScaleHandler({
 			preventMouseEventDefault(event)
 			pan({delta: -deltaScale.invert(dX).getTime()})
 		},
+
+		onMove: (state) => {
+			// last tends to trip after leave, and doesn't represent anything useful
+			if (state.last) { return }
+
+			const [x, y] = state.xy
+			// const [x, y]=state.offset
+			// console.log(x, y)
+			const {left = 0, top = 0} = contentBounds.current ?? {} as Partial<BoundingRect>
+			// console.log(scales.primary.invert(x - left))
+
+			const hoverLeft = x - left + window.scrollX
+			if (hoverLeft < 0) {
+				setHoverState(undefined)
+				return
+			}
+
+			setHoverState({
+				top: y - top + window.scrollY,
+				left: hoverLeft,
+				timestamp: scales.primary.invert(hoverLeft).getTime(),
+			})
+		},
+
+		onMouseLeave: () => {
+			setHoverState(undefined)
+		},
 	}, gestureConfig)
 	useEffect(bindGestures, [bindGestures])
-
-	// TODO: Keep an eye on the perf here. I don't like regenning the scale every time, but it's
-	//       the easiest way to cascade updates over the context. It... should be fine?
-	const scales = useMemo(
-		() => {
-			const extendBy = domainDistance * EXPAND_DOMAIN_BY
-			const primary = scaleUtc().range(range).domain(domain)
-			const extended = primary.copy().domain([domain[0] - extendBy, domain[1]])
-			return {primary, extended}
-		},
-		[domainDistance, range, domain],
-	)
 
 	return (
 		<div ref={scrollParentRef}>
 			<ScaleContext.Provider value={scales}>
-				<Measure bounds onResize={onContentResize}>{children}</Measure>
+				<Measure bounds onResize={onContentResize}>
+					{measureProps => children?.({...measureProps, hover: hoverState}) ?? null}
+				</Measure>
 			</ScaleContext.Provider>
 		</div>
 	)

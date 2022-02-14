@@ -30,12 +30,14 @@ export const Rows = memo(function Rows({
 	parentCollapsed,
 	...rowProps
 }: RowsProps) {
-	const orderedRows = useMemo(
-		() => rows
-			.filter(row => getItemCount(row) > 0)
-			.sort((a, b) => (a.order ?? 0) - (b.order ?? 0)),
-		[rows],
-	)
+	// TODO: does this still need the filter?
+	const orderedRows = rows
+	// const orderedRows = useMemo(
+	// 	() => rows
+	// 		.filter(row => getItemCount(row) > 0)
+	// 		.sort((a, b) => (a.order ?? 0) - (b.order ?? 0)),
+	// 	[rows],
+	// )
 
 	// Calculate sizes
 	let currentTop = top
@@ -70,11 +72,11 @@ export const Rows = memo(function Rows({
 	</>
 })
 
-type RowProps = SharedRowProps & {
+export type RowProps = SharedRowProps & {
 	row: RowConfig,
 }
 
-const Row = memo(function Row({
+export const Row = memo(function Row({
 	row,
 	depth,
 	maxDepth,
