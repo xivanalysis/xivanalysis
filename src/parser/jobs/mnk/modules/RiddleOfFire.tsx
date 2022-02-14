@@ -1,15 +1,15 @@
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
 import {DataLink} from 'components/ui/DbLink'
-import {Action, ActionKey} from 'data/ACTIONS'
+import {ActionKey} from 'data/ACTIONS'
 import {dependency} from 'parser/core/Injectable'
-import {BuffWindow, EvaluatedAction, EvaluationOutput, ExpectedGcdCountEvaluator, LimitedActionsEvaluator, WindowEvaluator} from 'parser/core/modules/ActionWindow'
-import {HistoryEntry} from 'parser/core/modules/ActionWindow/History'
+import {BuffWindow, ExpectedGcdCountEvaluator, LimitedActionsEvaluator} from 'parser/core/modules/ActionWindow'
 import {GlobalCooldown} from 'parser/core/modules/GlobalCooldown'
 import {SEVERITY} from 'parser/core/modules/Suggestions'
 import React from 'react'
-import {BLITZ_SKILLS} from './constants'
+import {BLITZ_ACTIONS} from './constants'
 import {DISPLAY_ORDER} from './DISPLAY_ORDER'
+import {BlitzEvaluator} from './evaluators/BlitzEvaluator'
 import {fillActions} from './utilities'
 
 const EXPECTED_GCDS = 11
@@ -39,42 +39,6 @@ const IGNORED_ACTIONS: ActionKey[] = [
 	'SPRINT',
 ]
 
-interface BlitzEvaluatorOpts {
-	blitzActions: Array<Action['id']>,
-}
-
-class BlitzEvaluator implements WindowEvaluator {
-	private blitzActions: Array<Action['id']>
-
-	constructor(opts: BlitzEvaluatorOpts) {
-		this.blitzActions = opts.blitzActions
-	}
-
-	suggest() {
-		return undefined
-	}
-
-	output(windows: Array<HistoryEntry<EvaluatedAction[]>>): EvaluationOutput {
-		return {
-			format: 'table',
-			header: {
-				header: <DataLink showName={false} action="MASTERFUL_BLITZ"/>,
-				accessor: 'masterfulblitz',
-			},
-			rows: windows.map(window => {
-				return {
-					actual: this.countBlitzes(window),
-					expected: undefined,
-				}
-			}),
-		}
-	}
-
-	private countBlitzes(window: HistoryEntry<EvaluatedAction[]>): number {
-		return window.data.filter(value => this.blitzActions.includes(value.action.id)).length
-	}
-}
-
 export class RiddleOfFire extends BuffWindow {
 	static override handle = 'riddleoffire'
 	static override title = t('mnk.rof.title')`Riddle of Fire`
@@ -82,7 +46,7 @@ export class RiddleOfFire extends BuffWindow {
 
 	@dependency globalCooldown!: GlobalCooldown
 
-	private blitzActions = fillActions(BLITZ_SKILLS, this.data)
+	private blitzActions = fillActions(BLITZ_ACTIONS, this.data)
 	buffStatus = this.data.statuses.RIDDLE_OF_FIRE
 
 	override initialise() {
