@@ -4,6 +4,7 @@ import {CooldownDowntime} from './CooldownDowntime'
 import {Demolish} from './Demolish'
 import {Forms} from './Forms'
 import {GreasedLightning} from './GreasedLightning'
+import {Positionals} from './Positionals'
 import {RiddleOfFire} from './RiddleOfFire'
 import {Steppies} from './Steppies'
 import {TwinSnakes} from './TwinSnakes'
@@ -16,6 +17,7 @@ export default [
 	Demolish,
 	Forms,
 	GreasedLightning,
+	Positionals,
 	RiddleOfFire,
 	Steppies,
 	TwinSnakes,

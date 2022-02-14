@@ -1,5 +1,6 @@
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
+import Color from 'color'
 import {JOBS} from 'data/JOBS'
 import {Event, Events} from 'event'
 import {EventHook} from 'parser/core/Dispatcher'
@@ -24,20 +25,19 @@ const KENKI_PER_MEDITATE_TICK = 10
 const MEDITATE_TICK_FREQUENCY = 3000
 const MAX_MEDITATE_TICKS = 5
 
+const FADE = 0.25
+const KENKI_COLOR = Color(JOBS.SAMURAI.colour).fade(FADE)
+
 export class Kenki extends CoreGauge {
 	static override title = t('sam.gauge.title')`Kenki Gauge`
 	static override displayOrder = DISPLAY_ORDER.KENKI
 	@dependency private suggestions!: Suggestions
 
 	private kenkiGauge = this.add(new CounterGauge({
-		chart: {label: 'Kenki Gauge', color: JOBS.SAMURAI.colour},
-		/*
 		graph: {
-			handle: 'Kenki',
 			label: <Trans id="sam.gauge.resource.kenkiLabel">Kenki</Trans>,
-			color: JOBS.SAMURAI.colour,
+			color: KENKI_COLOR,
 		},
-		*/
 	}))
 
 	private kenkiGaugeModifiers = new Map<number, GaugeModifier>([
