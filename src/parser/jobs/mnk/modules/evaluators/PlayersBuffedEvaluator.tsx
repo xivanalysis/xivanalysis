@@ -57,7 +57,7 @@ export class PlayersBuffedEvaluator implements WindowEvaluator {
 			icon: this.suggestionIcon,
 			content: this.suggestionContent,
 			why: <Trans id="core.buffwindow.suggestions.playersbuffed.why">
-				{missed} of your <StatusLink id={this.status}/> uses did not buff the full party.
+				{missed} of your <StatusLink id={this.status}/> uses did not fully buff the party.
 			</Trans>,
 			tiers: this.severityTiers,
 			value: missed,
