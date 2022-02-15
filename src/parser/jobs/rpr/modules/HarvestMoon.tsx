@@ -67,6 +67,14 @@ export class HarvestMoon extends Analyser {
 	// to calculate the actable Windows. Guarantees at least 2 windows.
 	private unableToActWindows(invulWindow: Window): Window[] {
 		const unactableWindows = this.unableToAct.getWindows(invulWindow) as Window[]
+
+		// Edge case where the unableToAct window is larger than the invulWindow.
+		if (this.unableToActWindows.length === 1
+			&& unactableWindows[0].start < invulWindow.start
+			&& unactableWindows[0].end > invulWindow.end) {
+			return unactableWindows.concat(this.dummyWindow(unactableWindows[0].end))
+		}
+
 		if (unactableWindows.length === 0 || unactableWindows[0].start > invulWindow.start) {
 			unactableWindows.unshift(this.dummyWindow(invulWindow.start))
 		}
