@@ -111,6 +111,9 @@ export class Forms extends Analyser {
 	private onGain(event: Events['statusApply']): void {
 		this.lastFormChanged = event.timestamp
 
+		// Reset forms - we need this to avoid DK spam rotations leaving trailing hooks
+		this.resetFormHook()
+
 		this.formHook = this.addEventHook(
 			filter<Event>()
 				.source(this.parser.actor.id)
@@ -122,6 +125,10 @@ export class Forms extends Analyser {
 	private onRemove(event: Events['statusRemove']): void {
 		this.lastFormDropped = event.timestamp
 
+		this.resetFormHook()
+	}
+
+	private resetFormHook() {
 		if (this.formHook != null) {
 			this.removeEventHook(this.formHook)
 			this.formHook = undefined
