@@ -6,7 +6,7 @@ import {filter} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
 import Checklist, {Requirement, Rule} from 'parser/core/modules/Checklist'
 import {Data} from 'parser/core/modules/Data'
-import {Invulnerability} from 'parser/core/modules/Invulnerability'
+import {Window, Invulnerability} from 'parser/core/modules/Invulnerability'
 import {UnableToAct} from 'parser/core/modules/UnableToAct'
 import React from 'react'
 
@@ -21,6 +21,7 @@ export class HarvestMoon extends Analyser {
 	@dependency private unableToAct!: UnableToAct
 
 	private harvestMoonCasts = 0
+	private ADJUSTED_CAST = this.data.actions.SOULSOW.castTime + SOULSOW_BUFFER
 
 	override initialise() {
 		super.initialise()
@@ -35,37 +36,52 @@ export class HarvestMoon extends Analyser {
 		this.addEventHook('complete', this.onComplete)
 	}
 
-	private canChargeMoon(inputWindow: {start: number, end: number}): boolean {
-		const ADJUSTED_CAST_TIME = this.data.actions.SOULSOW.castTime + SOULSOW_BUFFER
-
-		// get the earliest unable to act window that falls within the provided inputWindow
-		const unableToActWindow = this.unableToAct.getWindows(inputWindow)[0]
-
-		// the window will be undefined if there are no unable to act windows left before the end of the inputWindow
-		if (unableToActWindow == null) {
-			// True if there are ADJUSTED_CAST_TIME milliseconds or more remaining in the inputWindow
-			return inputWindow.end - inputWindow.start >= ADJUSTED_CAST_TIME
-		}
-
-		// return true if there are ADJUSTED_CAST_TIME milliseconds between the beginning of the window being checked and the beginning of an unableToAct window
-		if (unableToActWindow.start - inputWindow.start >= ADJUSTED_CAST_TIME) {
-			return true
-		}
-
-		// recurse the method, shrinking the window to the space between the end of the unable to act window and the end of the input window.
-		return this.canChargeMoon({start: unableToActWindow.end, end: inputWindow.end})
+	private getExpectedUses(): number {
+		return this.invulWindows()
+			.filter(this.canChargeMoon.bind(this))
+			.length + 1
 	}
 
-	private getExpectedUses(): number {
-		const ADJUSTED_CAST = this.data.actions.SOULSOW.castTime + SOULSOW_BUFFER
-		const invulnWindows = this.invulnerability.getWindows().filter((window) => window.end - window.start >=  ADJUSTED_CAST)
+	private invulWindows(): Window[] {
+		return this.invulnerability.getWindows().filter(this.longerThanChargeTime.bind(this))
+	}
 
-		// will only run the window filter if there is a non-zero amount of unableToAct time during the fight.
-		if (this.unableToAct.getDuration({start: this.parser.pull.timestamp, end: this.parser.pull.timestamp + this.parser.pull.duration}) > 0) {
-			return invulnWindows.filter(window => this.canChargeMoon(window)).length + 1
+	private canChargeMoon(invulWindow: Window): boolean {
+		return this.unableToActWindows(invulWindow)
+			.reduce(this.toActableWindows, [] as Window[])
+			.some(this.longerThanChargeTime.bind(this))
+	}
+
+	// Reduce function for calculating interstitial windows that assumes that there are at least 2 windows.
+	private toActableWindows(acc: Window[], window: Window, idx: number, arr: Window[]): Window[] {
+		if (idx === arr.length - 1) {
+			return acc
 		}
+		return acc.concat({
+			start: window.end,
+			end: arr[idx + 1].start,
+		})
+	}
 
-		return invulnWindows.length + 1
+	// Creates dummy windows at the beginning and end of the invulWindow if needed
+	// to calculate the actable Windows. Guarantees at least 2 windows.
+	private unableToActWindows(invulWindow: Window): Window[] {
+		const unactableWindows = this.unableToAct.getWindows(invulWindow) as Window[]
+		if (unactableWindows.length === 0 || unactableWindows[0].start > invulWindow.start) {
+			unactableWindows.unshift(this.dummyWindow(invulWindow.start))
+		}
+		if (unactableWindows[unactableWindows.length - 1].end < invulWindow.end) {
+			unactableWindows.push(this.dummyWindow(invulWindow.end))
+		}
+		return unactableWindows
+	}
+
+	private dummyWindow(time: number): Window {
+		return {start: time, end: time}
+	}
+
+	private longerThanChargeTime(window: Window): boolean {
+		return window.end - window.start >= this.ADJUSTED_CAST
 	}
 
 	private getUsedPercentage(expectedUses: number): string {
