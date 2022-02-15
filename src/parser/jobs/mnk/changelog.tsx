@@ -3,6 +3,11 @@ import React from 'react'
 
 export const changelog = [
 	{
+		date: new Date('2022-02-14'),
+		Changes: () => <>Fix opo opo form combo resets.</>,
+		contributors: [CONTRIBUTORS.MALP],
+	},
+	{
 		date: new Date('2022-02-10'),
 		Changes: () => <>Cleanup Riddle of Fire module.</>,
 		contributors: [CONTRIBUTORS.MALP],
