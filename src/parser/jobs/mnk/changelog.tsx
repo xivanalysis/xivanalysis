@@ -8,6 +8,11 @@ export const changelog = [
 		contributors: [CONTRIBUTORS.MALP],
 	},
 	{
+		date: new Date('2022-02-14'),
+		Changes: () => <>Fix incorrect combo resets bug when Dragon Kick is spammed.</>,
+		contributors: [CONTRIBUTORS.MALP],
+	},
+	{
 		date: new Date('2022-02-10'),
 		Changes: () => <>Cleanup Riddle of Fire module.</>,
 		contributors: [CONTRIBUTORS.MALP],
