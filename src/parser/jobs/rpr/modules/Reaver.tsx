@@ -1,9 +1,11 @@
 import {Plural, Trans} from '@lingui/react'
 import {DataLink} from 'components/ui/DbLink'
+import {ActionKey} from 'data/ACTIONS'
 import {Event, Events} from 'event'
 import {Analyser} from 'parser/core/Analyser'
-import {filter, oneOf} from 'parser/core/filter'
+import {filter} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
+import {Actors} from 'parser/core/modules/Actors'
 import {Data} from 'parser/core/modules/Data'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
@@ -13,7 +15,40 @@ const SEVERITY_TIERS = {
 	2: SEVERITY.MAJOR,
 }
 
-const SOUL_GAIN = 1 //Soul moves grant 1 reaver
+//The following generate Stacks
+const STACK_MAKERS: ActionKey [] = [
+	'GLUTTONY',
+	'BLOOD_STALK',
+	'GRIM_SWATHE',
+	'UNVEILED_GALLOWS',
+	'UNVEILED_GIBBET',
+]
+
+// The following all drop EVERY stack of soul reaver when successfully cast
+const STACK_DROPPERS: ActionKey [] = [
+	'SLICE',
+	'WAXING_SLICE',
+	'INFERNAL_SLICE',
+	'SHADOW_OF_DEATH',
+	'WHORL_OF_DEATH',
+	'SOUL_SLICE',
+	'SOUL_SCYTHE',
+	'SOULSOW',
+	'HARVEST_MOON',
+	'HARPE',
+	'NIGHTMARE_SCYTHE',
+	'SPINNING_SCYTHE',
+	'PLENTIFUL_HARVEST',
+]
+
+//The following are what you are suppose to use the stacks on.
+const STACK_SKILLS_TO_USE: ActionKey [] = [
+	'GALLOWS',
+	'GIBBET',
+	'GUILLOTINE',
+]
+
+const SOUL_GAIN = 1 //Soul consuming moves grant 1 reaver except for...
 const GLUTTONY_GAIN = 2 //Gluttony grants 2 reavers, also therotically max
 
 export class Reaver extends Analyser {
@@ -21,43 +56,11 @@ export class Reaver extends Analyser {
 
 	@dependency private data!: Data
 	@dependency private suggestions!: Suggestions
+	@dependency private actors!: Actors
 
 	//Trackers
-	private haveReaver = false
-
-	private droppedReaver = 0
+	private droppedReavers = 0
 	private currentReaverStacks = 0
-
-	//groups
-	private TheMakers = [
-		this.data.actions.BLOOD_STALK.id,
-		this.data.actions.GRIM_SWATHE.id,
-		this.data.actions.UNVEILED_GALLOWS.id,
-		this.data.actions.UNVEILED_GIBBET.id,
-		this.data.actions.GLUTTONY.id,
-	]
-
-	private TheGoodOnes = [
-		this.data.actions.GUILLOTINE.id,
-		this.data.actions.GIBBET.id,
-		this.data.actions.GALLOWS.id,
-	]
-
-	private TheBadsOnes = [ //Generators handle elsewhere
-		this.data.actions.SLICE.id,
-		this.data.actions.WAXING_SLICE.id,
-		this.data.actions.INFERNAL_SLICE.id,
-		this.data.actions.HARVEST_MOON.id,
-		this.data.actions.SOULSOW.id, //Yes, even this takes it.
-		this.data.actions.HARPE.id,
-		this.data.actions.SHADOW_OF_DEATH.id,
-		this.data.actions.WHORL_OF_DEATH.id,
-		this.data.actions.SOUL_SCYTHE.id,
-		this.data.actions.SOUL_SLICE.id,
-		this.data.actions.SPINNING_SCYTHE.id,
-		this.data.actions.NIGHTMARE_SCYTHE.id,
-		this.data.actions.PLENTIFUL_HARVEST.id,
-	]
 
 	override initialise() {
 		super.initialise()
@@ -67,71 +70,61 @@ export class Reaver extends Analyser {
 		this.addEventHook(
 			playerFilter
 				.type('action')
-				.action(oneOf(this.TheBadsOnes)),
-			this.onBadCast
+				.action(this.data.matchActionId(STACK_MAKERS)),
+			this.onStackGain
 		)
 
 		this.addEventHook(
 			playerFilter
 				.type('action')
-				.action(oneOf(this.TheGoodOnes)),
-			this.onGoodCast
+				.action(this.data.matchActionId(STACK_DROPPERS)),
+			this.dropStacks
 		)
 
 		this.addEventHook(
 			playerFilter
 				.type('action')
-				.action(oneOf(this.TheMakers)),
-			this.onGenCast
+				.action(this.data.matchActionId(STACK_SKILLS_TO_USE)),
+			this.onStackUse
 		)
 
+		//Death means you drop them stacks too, ya know?
+		this.addEventHook(filter<Event>().type('death').actor(this.parser.actor.id), this.dropStacks)
 		this.addEventHook('complete', this.onComplete)
 
 	}
 
-	private onGenCast(event: Events['action']) : void {
-		if (this.haveReaver === true) {
-			this.droppedReaver += this.currentReaverStacks
-			this.currentReaverStacks = 0
-			this.haveReaver = false
+	private onStackGain(event: Events['action']) : void {
+		//If Player has reaver, slap them
+		if (this.actors.current.hasStatus(this.data.statuses.SOUL_REAVER.id)) {
+			this.dropStacks()
 		}
-		if (event.action === this.data.actions.GLUTTONY.id)	{
-			this.currentReaverStacks = GLUTTONY_GAIN
-			this.haveReaver = true
-		} else {
-			this.currentReaverStacks = SOUL_GAIN
-			this.haveReaver = true
+		//Slap stacks on them
+		this.currentReaverStacks = (event.action === this.data.actions.GLUTTONY.id) ? GLUTTONY_GAIN : SOUL_GAIN
+	}
+
+	private onStackUse() {
+		if (this.actors.current.hasStatus(this.data.statuses.SOUL_REAVER.id)) {
+			this.currentReaverStacks--
 		}
 	}
 
-	private onBadCast() {
-		if (this.haveReaver === true) {
-			this.droppedReaver += this.currentReaverStacks
-			this.currentReaverStacks = 0
-			this.haveReaver = false
-		}
-	}
-
-	private onGoodCast() {
-		this.currentReaverStacks-- //Everything currently consumes 1 stack
-
-		if (this.currentReaverStacks <= 0) { //bug check + flag change, just in case they somehow start with stacks.
-			this.currentReaverStacks = 0
-			this.haveReaver = false
-		}
+	private dropStacks() {
+		this.droppedReavers += this.currentReaverStacks
+		this.currentReaverStacks = 0
 	}
 
 	private onComplete() {
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.GLUTTONY.icon,
-			content: <Trans id = "rpr.reaver.suggestion.droppedreaver.content">
-				Avoid dropping <DataLink status="SOUL_REAVER"/> by using <DataLink action="GUILLOTINE"/> , <DataLink action="GALLOWS"/> , and <DataLink action="GIBBET"/>. These actions grant you more damage and 10 shroud gauge, which is important to maximize the amount of <DataLink action="ENSHROUD"/> over the course of a fight.
+			content: <Trans id = "rpr.reaver.suggestion.dropped.content">
+				Avoid dropping <DataLink status="SOUL_REAVER"/> by using <DataLink action="GALLOWS"/>, <DataLink action="GIBBET"/>, or <DataLink action="GUILLOTINE"/>. These actions have high damage and grant you 10 Shroud gauge, giving you more chances to use <DataLink action="ENSHROUD"/> over the course of a fight.
 			</Trans>,
 			tiers: SEVERITY_TIERS,
-			why: <Trans id ="rpr.suggestion.droppedreaver.why">
-					You used lost <Plural value={this.droppedReaver} one="# stack" other="# stacks"/> over the course of the fight.
+			why: <Trans id ="rpr.reaver.suggestion.dropped.why">
+					You used lost <Plural value={this.droppedReavers} one="# stack" other="# stacks"/> over the course of the fight.
 			</Trans>,
-			value: this.droppedReaver,
+			value: this.droppedReavers,
 		}))
 	}
 }
