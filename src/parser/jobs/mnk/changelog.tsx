@@ -4,7 +4,7 @@ import React from 'react'
 export const changelog = [
 	{
 		date: new Date('2022-02-14'),
-		Changes: () => <>Fix opo opo form combo resets.</>,
+		Changes: () => <>Fix incorrect combo resets bug when Dragon Kick is spammed.</>,
 		contributors: [CONTRIBUTORS.MALP],
 	},
 	{
