@@ -96,6 +96,7 @@ export const RPR = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003615.png',
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
+		castTime: 5000,
 		statusesApplied: ['SOULSOW'],
 	},
 

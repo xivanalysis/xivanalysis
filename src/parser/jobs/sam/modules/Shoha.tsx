@@ -1,5 +1,6 @@
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
+import Color from 'color'
 import {DataLink} from 'components/ui/DbLink'
 import {JOBS} from 'data/JOBS'
 import {Event, Events} from 'event'
@@ -23,6 +24,9 @@ const STACKS_PER_MEDITATE_TICK = 1
 const MEDITATE_TICK_FREQUENCY = 3000
 const MAX_MEDITATE_STACKS = 3
 
+const FADE = 0.75
+const SHOHA_COLOR = Color(JOBS.WARRIOR.colour).fade(FADE)
+
 export class Shoha extends CoreGauge {
 	static override title = t('sam.shoha.title')`Meditatation Stacks`
 	static override handle = 'shoha'
@@ -32,14 +36,10 @@ export class Shoha extends CoreGauge {
 	@dependency private checklist!: Checklist
 
 	private MeditateGauge = this.add(new CounterGauge({
-		chart: {label: 'Meditate Stacks', color: JOBS.SAMURAI.colour},
-		/*
 		graph: {
-			handle: 'Meditation',
 			label: <Trans id="sam.gauge.resource.meditationLabel">Meditation</Trans>,
-			color: JOBS.SAMURAI.colour,
+			color: SHOHA_COLOR,
 		},
-		*/
 		maximum: MAX_MEDITATE_STACKS,
 	}))
 
