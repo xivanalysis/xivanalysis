@@ -3,8 +3,8 @@ import React from 'react'
 
 export const changelog = [
 	{
-		date: new Date('2022-02-13'),
-		Changes: () => <>Add Brotherhood module.</>,
+		date: new Date('2022-02-14'),
+		Changes: () => <>Add Brotherhood checklist.</>,
 		contributors: [CONTRIBUTORS.MALP],
 	},
 	{

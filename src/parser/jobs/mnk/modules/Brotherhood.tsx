@@ -1,32 +1,28 @@
 import {t, Trans} from '@lingui/macro'
-import {DataLink} from 'components/ui/DbLink'
+import {ActionLink} from 'components/ui/DbLink'
 import {StatusRoot} from 'data/STATUSES'
 import {Event, Events} from 'event'
+import {Analyser} from 'parser/core/Analyser'
 import {filter, oneOf} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
-import {BuffWindow, EvaluatedAction} from 'parser/core/modules/ActionWindow'
-import {HistoryEntry} from 'parser/core/modules/ActionWindow/History'
-import {GlobalCooldown} from 'parser/core/modules/GlobalCooldown'
+import Checklist, {Requirement, Rule} from 'parser/core/modules/Checklist'
+import {Data} from 'parser/core/modules/Data'
 import React from 'react'
 import {DISPLAY_ORDER} from './DISPLAY_ORDER'
-import {PlayersBuffedEvaluator} from './evaluators/PlayersBuffedEvaluator'
 
-export interface BrotherhoodBuff {
-	start: number
-	target: string
-}
+const FULL_PARTY_SIZE = 8
 
-export class Brotherhood extends BuffWindow {
-	static override debug = true
+export class Brotherhood extends Analyser {
+	static override debug = false
 	static override handle = 'brotherhood'
 	static override title = t('mnk.bh.title')`Brotherhood`
 	static override displayOrder = DISPLAY_ORDER.BROTHERHOOD
 
-	@dependency globalCooldown!: GlobalCooldown
+	@dependency private checklist!: Checklist
+	@dependency private data!: Data
 
-	buffStatus = this.data.statuses.BROTHERHOOD
-
-	private brotherhoodBuffs: BrotherhoodBuff[] = []
+	private brotherhoodBuffTimestamps: number[] = []
+	private brotherhoodCastTimestamps: number[] = []
 	private brotherhood: StatusRoot['BROTHERHOOD'] = this.data.statuses.BROTHERHOOD
 
 	override initialise() {
@@ -41,24 +37,53 @@ export class Brotherhood extends BuffWindow {
 			.status(this.data.statuses.BROTHERHOOD.id)
 			.source(this.parser.actor.id)
 			.target(oneOf(playerCharacters)),
-		this.buffApplied)
+		this.onBrotherhoodBuff)
 
-		this.addEvaluator(new PlayersBuffedEvaluator({
-			affectedPlayers: this.affectedPlayers.bind(this),
-			suggestionContent: <Trans id="mnk.bh.playersbuffed.content">
-				To maximise raid dps, make sure <DataLink action="BROTHERHOOD"/> hits all party members.
+		this.addEventHook(filter<Event>()
+			.type('action')
+			.action(this.data.actions.BROTHERHOOD.id)
+			.source(this.parser.actor.id),
+		this.onBrotherhoodAction)
+
+		this.addEventHook(filter<Event>().type('complete'), this.onComplete)
+	}
+
+	private onComplete() {
+		this.checklist.add(new Rule({
+			name: <Trans id="mnk.bh.checklist.name">Buff your party</Trans>,
+			description: <Trans id="mnk.bh.checklist.desc">
+				To maximise raid damage, try to hit all party members with <ActionLink action="BROTHERHOOD"/>.
 			</Trans>,
-			suggestionIcon: this.data.actions.BROTHERHOOD.icon,
-			status: this.brotherhood.id,
+			displayOrder: DISPLAY_ORDER.BROTHERHOOD,
+			requirements: [
+				new Requirement({
+					name: <Trans id="mnk.bh.checklist.req.name"><ActionLink action="BROTHERHOOD"/> buffs</Trans>,
+					value: this.totalAffectedPlayers(),
+					target: this.maxPossibleTargets(),
+				}),
+			],
+			target: 95,
 		}))
 	}
 
-	private affectedPlayers(window: HistoryEntry<EvaluatedAction[]>): number {
-		return this.brotherhoodBuffs.filter(value => Math.abs(window.start - value.start) < this.brotherhood.duration).length
+	private maxPossibleTargets(): number {
+		return this.brotherhoodCastTimestamps.length * FULL_PARTY_SIZE
 	}
 
-	private buffApplied(event: Events['statusApply']) {
-		this.brotherhoodBuffs.push({start: event.timestamp, target: event.target})
+	private totalAffectedPlayers(): number {
+		return this.brotherhoodCastTimestamps.map(bhTimestamp => this.affectedPlayers(bhTimestamp))
+			.reduce((previousValue, currentValue) => previousValue + currentValue, 0)
 	}
 
+	private affectedPlayers(castTimestamp: number): number {
+		return this.brotherhoodBuffTimestamps.filter(buffTimestamp => Math.abs(castTimestamp - buffTimestamp) < this.brotherhood.duration).length
+	}
+
+	private onBrotherhoodBuff(event: Events['statusApply']) {
+		this.brotherhoodBuffTimestamps.push(event.timestamp)
+	}
+
+	private onBrotherhoodAction(event: Events['action']) {
+		this.brotherhoodCastTimestamps.push(event.timestamp)
+	}
 }
