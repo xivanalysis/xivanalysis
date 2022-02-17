@@ -71,16 +71,20 @@ export class HarvestMoon extends Analyser {
 	private unableToActWindows(invulWindow: Window): Window[] {
 		const unactableWindows = this.unableToAct.getWindows(invulWindow) as Window[]
 
-		// Edge case where the unableToAct window is larger than the invulWindow.
-		if (this.unableToActWindows.length === 1
-			&& unactableWindows[0].start < invulWindow.start
-			&& unactableWindows[0].end > invulWindow.end) {
-			return unactableWindows.concat(this.dummyWindow(unactableWindows[0].end))
+		// Edge case where the unableToAct window is larger on both ends than the invulWindow.
+		const superLongWindow = unactableWindows.find(unactableWindow =>
+			unactableWindow.start < invulWindow.start
+			&& unactableWindow.end > invulWindow.end)
+		if (superLongWindow != null) {
+			unactableWindows.push(this.dummyWindow(superLongWindow.end))
 		}
 
+		// Maybe add a dummy unactable window at the beginning of our invulWindow.
 		if (unactableWindows.length === 0 || unactableWindows[0].start > invulWindow.start) {
 			unactableWindows.unshift(this.dummyWindow(invulWindow.start))
 		}
+
+		// Maybe add a dummy unactable window at the end of our invulWindow.
 		if (unactableWindows[unactableWindows.length - 1].end < invulWindow.end) {
 			unactableWindows.push(this.dummyWindow(invulWindow.end))
 		}
