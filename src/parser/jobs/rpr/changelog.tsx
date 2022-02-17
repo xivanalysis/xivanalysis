@@ -4,6 +4,11 @@ import React from 'react'
 
 export const changelog = [
 	{
+		date: new Date('2022-02-16'),
+		Changes: () => <>Allow overriden Arcane Circles to simulate their full duration</>,
+		contributors: [CONTRIBUTORS.DEAN],
+	},
+	{
 		date: new Date('2022-02-11'),
 		Changes: () => <>Add Harvest Moon tracking.</>,
 		contributors: [CONTRIBUTORS.ARKEVORKHAT],

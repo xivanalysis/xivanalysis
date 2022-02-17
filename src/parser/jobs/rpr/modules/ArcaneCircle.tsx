@@ -1,6 +1,8 @@
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
 import {ActionLink} from 'components/ui/DbLink'
+import {Event, Events} from 'event'
+import {filter, noneOf} from 'parser/core/filter'
 import {BuffWindow, EvaluatedAction, ExpectedActionsEvaluator, TrackedAction} from 'parser/core/modules/ActionWindow'
 import {HistoryEntry} from 'parser/core/modules/ActionWindow/History'
 import {SEVERITY} from 'parser/core/modules/Suggestions'
@@ -17,6 +19,13 @@ export class ArcaneCircle extends BuffWindow {
 
 	override initialise() {
 		super.initialise()
+
+		// Multiple reapers can override each other's buffs
+		const dupeFilter = filter<Event>().source(noneOf([this.parser.actor.id]))
+			.target(this.parser.actor.id)
+			.status(this.buffStatus.id)
+
+		this.addEventHook(dupeFilter.type('statusApply'), this.maybeReOpenPreviousWindow)
 
 		this.addEvaluator(new ExpectedActionsEvaluator({
 			expectedActions: [
@@ -36,6 +45,13 @@ export class ArcaneCircle extends BuffWindow {
 			},
 			adjustCount: this.adjustCount.bind(this),
 		}))
+	}
+
+	private maybeReOpenPreviousWindow(event: Events['statusApply']) {
+		// See if another reaper overrode your Arcane Circle
+		if ((this.history.endOfLastEntry() ?? 0) === event.timestamp) {
+			super.reOpenPreviousWindow(this.buffStatus.duration)
+		}
 	}
 
 	private adjustCount(window: HistoryEntry<EvaluatedAction[]>, action: TrackedAction): number {

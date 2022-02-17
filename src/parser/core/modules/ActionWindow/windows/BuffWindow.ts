@@ -60,14 +60,29 @@ export abstract class BuffWindow extends ActionWindow {
 		this.addEventHook(buffFilter.type('statusRemove'), this.endWindowByStatus)
 	}
 
+	/**
+	 * Reopens and extends previous window in the event of buff overriding.
+	 * @param duration The duration of the buff, so that the timestamp hook
+	 * will accurately end the window.
+	 */
+	protected reOpenPreviousWindow(duration: number) {
+		const last = this.history.reopenLastEntry()
+		if (last != null) {
+			this.startWindow(last.start, duration)
+		}
+	}
+
 	private startWindowAndTimeout(event: Events['statusApply']) {
-		this.onWindowStart(event.timestamp)
-		const duration = this.data.getStatus(event.status)?.duration
+		this.startWindow(event.timestamp, this.data.getStatus(event.status)?.duration)
+	}
+
+	private startWindow(timestamp: number, duration?: number) {
+		this.onWindowStart(timestamp)
 		if (duration == null) { return }
 		if (this.durationHook != null) {
 			this.removeTimestampHook(this.durationHook)
 		}
-		this.durationHook = this.addTimestampHook(event.timestamp + duration + STATUS_DURATION_FUDGE,
+		this.durationHook = this.addTimestampHook(timestamp + duration + STATUS_DURATION_FUDGE,
 			this.endWindowByTime)
 	}
 
