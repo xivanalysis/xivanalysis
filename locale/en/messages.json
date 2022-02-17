@@ -286,7 +286,7 @@
   "core.procs.suggestions.overwritten.content": "Avoid using an action that could generate a proc when you already have that proc active.",
   "core.procs.suggestions.overwrote.why": "You overwrote {0, plural, one {# proc} other {# procs}}.",
   "core.procs.title": "Procs",
-	"core.raidbuffwindow.table.header.players": "Players Buffed",
+  "core.raidbuffwindow.table.header.players": "Players Buffed",
   "core.report-flow.actor-not-found": "<0>Actor not found.</0>No actor was found with ID \"{actorId}\". If this report has been updated recently, it may have been cached - try pressing Refresh to retrieve the latest data.",
   "core.report-flow.job-unsupported.description": "We're always looking to expand our support and accuracy. Come drop by our Discord channel and see how you could help out!",
   "core.report-flow.job-unsupported.title": "Favourite job unsupported?",
