@@ -49,7 +49,7 @@ export class ArcaneCircle extends BuffWindow {
 
 	private maybeReOpenPreviousWindow(event: Events['statusApply']) {
 		// See if another reaper overrode your Arcane Circle
-		if ((this.history.endOfLastEntry() ?? 0) === event.timestamp) {
+		if (this.history.endOfLastEntry() === event.timestamp) {
 			super.reOpenPreviousWindow(this.buffStatus.duration)
 		}
 	}
