@@ -147,11 +147,8 @@ export class CounterGauge extends AbstractGauge {
 	/** Set the current value of the gauge. Value will automatically be bounded to valid values. Value over the maximum will be tracked as overcap. */
 	set(value: number, reason?: GaugeEventReason) {
 		const delta = value - this.value
-		if (delta === 0 && reason != null) { return }
 
-		if (reason == null) {
-			reason = delta > 0 ? 'generate' : 'spend'
-		}
+		const _reason = reason ?? delta > 0 ? 'generate' : 'spend'
 
 		const newValue = Math.min(Math.max(value, this.minimum), this.maximum)
 
@@ -163,7 +160,7 @@ export class CounterGauge extends AbstractGauge {
 		}
 
 		this._value = newValue
-		this.pushHistory(reason, delta)
+		this.pushHistory(_reason, delta)
 	}
 
 	private correctGaugeHistory(spenderCost: number, currentGauge: number) {

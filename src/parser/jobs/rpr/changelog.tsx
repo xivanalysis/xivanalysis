@@ -6,12 +6,21 @@ export const changelog = [
 	{
 		date: new Date('2022-02-13'),
 		Changes: () => <>Add Soul and Shroud gauge tracking.</>,
+	},
+	{
+		date: new Date('2022-02-12'),
+		Changes: () => <>Add Death gauge tracking.</>,
 		contributors: [CONTRIBUTORS.AY],
 	},
 	{
 		date: new Date('2022-02-11'),
 		Changes: () => <>Add Harvest Moon tracking.</>,
 		contributors: [CONTRIBUTORS.ARKEVORKHAT],
+	},
+	{
+		date: new Date('2022-01-29'),
+		Changes: () => <>Add usage statistic for defensive cooldowns.</>,
+		contributors: [CONTRIBUTORS.HINT],
 	},
 	{
 		date: new Date('2022-01-20'),
