@@ -63,8 +63,11 @@ export class HarvestMoon extends Analyser {
 		})
 	}
 
-	// Gets unableToAct windows and adds dummy windows at start and end if needed
-	// to calculate the actable Windows. Guarantees at least 2 windows.
+	// Returns a sorted list of at least 2 unactable windows for calculating the actable time
+	// inbetween them.
+	// When there are no unactable windows at the start or end of the invulWindow, or when
+	// a single large unactable window extends past both the start and end of the invulWindow,
+	// this adds dummy windows as needed as bookends.
 	private unableToActWindows(invulWindow: Window): Window[] {
 		const unactableWindows = this.unableToAct.getWindows(invulWindow) as Window[]
 
