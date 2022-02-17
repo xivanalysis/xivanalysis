@@ -10,6 +10,7 @@ import {Defensives} from './Defensives'
 import {Enshroud} from './Enshroud'
 import {HarvestMoon} from './HarvestMoon'
 import {ImmortalSacrifice} from './ImmortalSacrifice'
+import {OtherGauges} from './OtherGauges'
 import {Positionals} from './Positionals'
 import {Procs} from './Procs'
 import {Tincture} from './Tincture'
@@ -26,6 +27,7 @@ export default [
 	Enshroud,
 	ImmortalSacrifice,
 	HarvestMoon,
+	OtherGauges,
 	Positionals,
 	Procs,
 	Tincture,
