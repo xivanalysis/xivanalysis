@@ -1,14 +1,14 @@
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
 import {ActionLink} from 'components/ui/DbLink'
-import {BuffWindow, EvaluatedAction, ExpectedActionsEvaluator, TrackedAction} from 'parser/core/modules/ActionWindow'
+import {RaidBuffWindow, EvaluatedAction, ExpectedActionsEvaluator, TrackedAction} from 'parser/core/modules/ActionWindow'
 import {HistoryEntry} from 'parser/core/modules/ActionWindow/History'
 import {SEVERITY} from 'parser/core/modules/Suggestions'
 import React from 'react'
 import {OPENER_BUFFER} from '../Constants'
 import {DISPLAY_ORDER} from './DISPLAY_ORDER'
 
-export class ArcaneCircle extends BuffWindow {
+export class ArcaneCircle extends RaidBuffWindow {
 	static override handle = 'arcaneCircle'
 	static override title = t('rpr.arcanecircle.title')`Arcane Circle`
 	static override displayOrder = DISPLAY_ORDER.ARCANE_CIRCLE
