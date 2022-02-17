@@ -1,4 +1,3 @@
-import {Weaving} from 'parser/core/modules/Weaving'
 import {ActionTimeline} from './ActionTimeline'
 import {AoE} from './AoE'
 import {ArcaneCircle} from './ArcaneCircle'
@@ -14,6 +13,7 @@ import {OtherGauges} from './OtherGauges'
 import {Positionals} from './Positionals'
 import {Procs} from './Procs'
 import {Tincture} from './Tincture'
+import {Weaving} from './Weaving'
 
 export default [
 	ActionTimeline,
