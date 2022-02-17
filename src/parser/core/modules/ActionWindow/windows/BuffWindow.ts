@@ -41,7 +41,7 @@ export abstract class BuffWindow extends ActionWindow {
 	 * Whether or not the player should receive credit for their original buff duration
 	 * if they were overridden by another player.
 	 */
-	protected simulateDurationWhenOverriden = false
+	protected simulateDurationWhenOverridden = false
 
 	private buffDuration?: number
 	private durationHook?: TimestampHook
@@ -66,7 +66,7 @@ export abstract class BuffWindow extends ActionWindow {
 			.target(oneOf(targets))
 			.status(oneOf(ensureArray(this.buffStatus).map(s => s.id)))
 
-		if (this.simulateDurationWhenOverriden) {
+		if (this.simulateDurationWhenOverridden) {
 			// Duplicate jobs can override buffs
 			const dupeFilter = filter<Event>()
 				.source(noneOf(playerOwnedIds))
