@@ -6,6 +6,7 @@ export const changelog = [
 	{
 		date: new Date('2022-02-13'),
 		Changes: () => <>Add Soul and Shroud gauge tracking.</>,
+		contributors: [CONTRIBUTORS.AY],
 	},
 	{
 		date: new Date('2022-02-12'),
