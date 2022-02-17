@@ -66,15 +66,17 @@ export abstract class BuffWindow extends ActionWindow {
 			.target(oneOf(targets))
 			.status(oneOf(ensureArray(this.buffStatus).map(s => s.id)))
 
-		// Duplicate jobs can override buffs
-		const dupeFilter = filter<Event>()
-			.source(noneOf(playerOwnedIds))
-			.target(oneOf(targets))
-			.status(oneOf(ensureArray(this.buffStatus).map(s => s.id)))
+		if (this.simulateDurationWhenOverriden) {
+			// Duplicate jobs can override buffs
+			const dupeFilter = filter<Event>()
+				.source(noneOf(playerOwnedIds))
+				.target(oneOf(targets))
+				.status(oneOf(ensureArray(this.buffStatus).map(s => s.id)))
+			this.addEventHook(dupeFilter.type('statusApply'), this.maybeReOpenPreviousWindow)
+		}
 
 		this.addEventHook(buffFilter.type('statusApply'), this.onStatusApply)
 		this.addEventHook(buffFilter.type('statusRemove'), this.onStatusRemove)
-		this.addEventHook(dupeFilter.type('statusApply'), this.maybeReOpenPreviousWindow)
 		this.buffDuration = _.max(ensureArray(this.buffStatus).map(s => s.duration))
 	}
 
@@ -116,10 +118,9 @@ export abstract class BuffWindow extends ActionWindow {
 	}
 
 	private maybeReOpenPreviousWindow(event: Events['statusApply']) {
-		// IF your buff was overridden, the end timestamp should match the overriding event.
-		if (this.simulateDurationWhenOverriden && this.history.endOfLastEntry() === event.timestamp) {
+		// If your buff was overridden, the end timestamp should match the overriding event.
+		if (this.history.endOfLastEntry() === event.timestamp) {
 			this.reOpenPreviousWindow()
 		}
 	}
-
 }

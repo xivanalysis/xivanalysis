@@ -14,10 +14,10 @@ export class ArcaneCircle extends BuffWindow {
 	static override displayOrder = DISPLAY_ORDER.ARCANE_CIRCLE
 
 	override buffStatus = this.data.statuses.ARCANE_CIRCLE
+	override simulateDurationWhenOverriden = true
 
 	override initialise() {
 		super.initialise()
-		this.simulateDurationWhenOverriden = true
 
 		this.addEvaluator(new ExpectedActionsEvaluator({
 			expectedActions: [
