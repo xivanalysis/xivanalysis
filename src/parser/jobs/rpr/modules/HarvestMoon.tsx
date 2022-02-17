@@ -71,7 +71,7 @@ export class HarvestMoon extends Analyser {
 	private unableToActWindows(invulWindow: Window): Window[] {
 		const unactableWindows = this.unableToAct.getWindows(invulWindow) as Window[]
 
-		// Edge case where the unableToAct window is larger on both ends than the invulWindow.
+		// Edge case where the unableToAct window is extends past both ends than the invulWindow.
 		const superLongWindow = unactableWindows.find(unactableWindow =>
 			unactableWindow.start < invulWindow.start
 			&& unactableWindow.end > invulWindow.end)
