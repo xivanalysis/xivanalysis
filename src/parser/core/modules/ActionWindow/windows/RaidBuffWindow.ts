@@ -33,21 +33,18 @@ export abstract class RaidBuffWindow extends BuffWindow {
 		const playerOwnedIds = this.parser.pull.actors
 			.filter(actor => (actor.owner === this.parser.actor) || actor === this.parser.actor)
 			.map(actor => actor.id)
-
-		const buffFilter = filter<Event>()
+		const statusFilter = filter<Event>()
 			.type('statusApply')
-			.source(oneOf(playerOwnedIds))
-			.target(oneOf(partyMembers))
 			.status(oneOf(ensureArray(this.buffStatus).map(s => s.id)))
 
-		this.addEventHook(buffFilter, this.onRaidBuffApply)
+		this.addEventHook(statusFilter
+			.source(oneOf(playerOwnedIds))
+			.target(oneOf(partyMembers)), this.onRaidBuffApply)
 
 		// Duplicate jobs can override buffs
-		const dupeFilter = filter<Event>()
+		this.addEventHook(statusFilter
 			.source(noneOf(playerOwnedIds))
-			.target(this.parser.actor.id)
-			.status(oneOf(ensureArray(this.buffStatus).map(s => s.id)))
-		this.addEventHook(dupeFilter.type('statusApply'), this.maybeReOpenPreviousWindow)
+			.target(this.parser.actor.id), this.maybeReOpenPreviousWindow)
 
 		this.addEvaluator(new PlayersBuffedEvaluator({
 			expectedCount: this.expectedCount,
