@@ -2,7 +2,7 @@ import {Event, Events} from 'event'
 import {BuffWindow, EvaluatedAction, PlayersBuffedEvaluator} from 'parser/core/modules/ActionWindow'
 import {HistoryEntry} from 'parser/core/modules/ActionWindow/History'
 import {ensureArray} from 'utilities'
-import {filter, oneOf} from '../../../filter'
+import {filter, oneOf, noneOf} from '../../../filter'
 
 const FULL_PARTY = 8
 
@@ -42,6 +42,13 @@ export abstract class RaidBuffWindow extends BuffWindow {
 
 		this.addEventHook(buffFilter, this.onRaidBuffApply)
 
+		// Duplicate jobs can override buffs
+		const dupeFilter = filter<Event>()
+			.source(noneOf(playerOwnedIds))
+			.target(this.parser.actor.id)
+			.status(oneOf(ensureArray(this.buffStatus).map(s => s.id)))
+		this.addEventHook(dupeFilter.type('statusApply'), this.maybeReOpenPreviousWindow)
+
 		this.addEvaluator(new PlayersBuffedEvaluator({
 			expectedCount: this.expectedCount,
 			affectedPlayers: this.affectedPlayers.bind(this),
@@ -51,7 +58,8 @@ export abstract class RaidBuffWindow extends BuffWindow {
 	private onRaidBuffApply(event: Events['statusApply']) {
 		this.raidBuffApplications.push(event)
 	}
-	protected affectedPlayers(buffWindow: HistoryEntry<EvaluatedAction[]>): number {
+
+	private affectedPlayers(buffWindow: HistoryEntry<EvaluatedAction[]>): number {
 		const actualWindowDuration = (buffWindow?.end ?? buffWindow.start) - buffWindow.start
 		// count the number of applications that happened in the window
 		const affected = this.raidBuffApplications.filter(event => {
@@ -60,5 +68,15 @@ export abstract class RaidBuffWindow extends BuffWindow {
 		})
 
 		return affected.length
+	}
+
+	private maybeReOpenPreviousWindow(event: Events['statusApply']) {
+		// If your buff was overridden, the end timestamp should match the overriding event.
+		if (this.history.endOfLastEntry() === event.timestamp) {
+			const last = this.history.reopenLastEntry()
+			if (last != null) {
+				this.startWindowAndTimeout(last.start)
+			}
+		}
 	}
 }

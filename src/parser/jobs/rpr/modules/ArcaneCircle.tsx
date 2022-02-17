@@ -14,7 +14,6 @@ export class ArcaneCircle extends RaidBuffWindow {
 	static override displayOrder = DISPLAY_ORDER.ARCANE_CIRCLE
 
 	override buffStatus = this.data.statuses.ARCANE_CIRCLE
-	override simulateDurationWhenOverridden = true
 
 	override initialise() {
 		super.initialise()

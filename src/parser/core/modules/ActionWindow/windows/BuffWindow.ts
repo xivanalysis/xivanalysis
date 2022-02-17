@@ -3,7 +3,7 @@ import {Event, Events} from 'event'
 import _ from 'lodash'
 import {TimestampHook, TimestampHookArguments} from 'parser/core/Dispatcher'
 import {ensureArray} from 'utilities'
-import {filter, oneOf, noneOf} from '../../../filter'
+import {filter, oneOf} from '../../../filter'
 import {EvaluatedAction} from '../EvaluatedAction'
 import {HistoryEntry} from '../History'
 import {ActionWindow} from './ActionWindow'
@@ -37,12 +37,6 @@ export abstract class BuffWindow extends ActionWindow {
 		return expectedDuration >= fightTimeRemaining
 	}
 
-	/**
-	 * Whether or not the player should receive credit for their original buff duration
-	 * if they were overridden by another player.
-	 */
-	protected simulateDurationWhenOverridden = false
-
 	private buffDuration?: number
 	private durationHook?: TimestampHook
 
@@ -66,35 +60,23 @@ export abstract class BuffWindow extends ActionWindow {
 			.target(oneOf(targets))
 			.status(oneOf(ensureArray(this.buffStatus).map(s => s.id)))
 
-		if (this.simulateDurationWhenOverridden) {
-			// Duplicate jobs can override buffs
-			const dupeFilter = filter<Event>()
-				.source(noneOf(playerOwnedIds))
-				.target(oneOf(targets))
-				.status(oneOf(ensureArray(this.buffStatus).map(s => s.id)))
-			this.addEventHook(dupeFilter.type('statusApply'), this.maybeReOpenPreviousWindow)
-		}
-
 		this.addEventHook(buffFilter.type('statusApply'), this.onStatusApply)
 		this.addEventHook(buffFilter.type('statusRemove'), this.onStatusRemove)
 		this.buffDuration = _.max(ensureArray(this.buffStatus).map(s => s.duration))
-	}
-
-	/**
-	 * Reopens and extends previous window in the event of buff overriding.
-	 */
-	private reOpenPreviousWindow() {
-		const last = this.history.reopenLastEntry()
-		if (last != null) {
-			this.startWindowAndTimeout(last.start)
-		}
 	}
 
 	private onStatusApply(event: Events['statusApply']) {
 		this.startWindowAndTimeout(event.timestamp)
 	}
 
-	private startWindowAndTimeout(timestamp: number) {
+	/**
+	 * Start window at the timestamp provided and attach hook for closing the window
+	 * after the duration of the buff.
+	 *
+	 * Visible for RaidBuffWindow to reopen windows.
+	 * @param timestamp Time of buff application.
+	 */
+	protected startWindowAndTimeout(timestamp: number) {
 		this.onWindowStart(timestamp)
 		if (this.buffDuration == null) { return }
 		if (this.durationHook != null) {
@@ -115,12 +97,5 @@ export abstract class BuffWindow extends ActionWindow {
 	private endWindowByTime(event: TimestampHookArguments) {
 		this.onWindowEnd(event.timestamp)
 		this.durationHook = undefined
-	}
-
-	private maybeReOpenPreviousWindow(event: Events['statusApply']) {
-		// If your buff was overridden, the end timestamp should match the overriding event.
-		if (this.history.endOfLastEntry() === event.timestamp) {
-			this.reOpenPreviousWindow()
-		}
 	}
 }
