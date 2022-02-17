@@ -3,6 +3,13 @@ import React from 'react'
 
 export const changelog = [
 	{
+		date: new Date('2022-02-16'),
+		Changes: () => <>
+			Spells under Requiescat now properly instant for weaving purposes.
+		</>,
+		contributors: [CONTRIBUTORS.ARIA],
+	},
+	{
 		date: new Date('2022-01-12'),
 		Changes: () => <>
 			Added Jump to Timeline functionality for Goring/BoV table.
