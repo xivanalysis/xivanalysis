@@ -745,6 +745,7 @@
   "rpr.enshroud.enhanced.header": "Alternated Reapings",
   "rpr.enshroud.suggestions.content": "Each <0/> window should contain 2 uses each of <1/>, <2/>, and <3/> (or their AoE equivalents) and 1 use of <4/>.",
   "rpr.enshroud.title": "Enshroud",
+  "rpr.gauge.lemure.outofbounds.reason": "<0/> can't be executed with {0} stacks of Lemure's Shroud and {1} stacks of Void Shroud as this would go over the shared gauge max.",
   "rpr.harvestmoon.checklist.description": "Harvest Moon is one of your highest potency abilities. Aim to get at least one use each time the boss is targetable.",
   "rpr.harvestmoon.checklist.requirement.name": "<0/> uses",
   "rpr.harvestmoon.checklist.title": "Use <0/> during downtime.",

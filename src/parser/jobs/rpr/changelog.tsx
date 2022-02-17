@@ -4,19 +4,24 @@ import React from 'react'
 
 export const changelog = [
 	{
+		date: new Date('2022-02-12'),
+		Changes: () => <>Add Death gauge tracking.</>,
+		contributors: [CONTRIBUTORS.AY],
+	},
+	{
 		date: new Date('2022-02-11'),
 		Changes: () => <>Add Harvest Moon tracking.</>,
+		contributors: [CONTRIBUTORS.ARKEVORKHAT],
+	},
+	{
+		date: new Date('2022-01-20'),
+		Changes: () => <>Add proc tracking for Enhanced Gibbet and Gallows.</>,
 		contributors: [CONTRIBUTORS.ARKEVORKHAT],
 	},
 	{
 		date: new Date('2022-01-14'),
 		Changes: () => <>Add checks for Enshroud and Arcane Circle windows.</>,
 		contributors: [CONTRIBUTORS.KELOS],
-	},
-	{
-		date: new Date('2022-01-20'),
-		Changes: () => <>Add proc tracking for Enhanced Gibbet and Gallows.</>,
-		contributors: [CONTRIBUTORS.ARKEVORKHAT],
 	},
 	{
 		date: new Date('2021-12-31'),

@@ -745,6 +745,7 @@
   "rpr.enshroud.enhanced.header": "",
   "rpr.enshroud.suggestions.content": "<0/> の効果中には <1/>と<2/>に加え<3/> (またはこれに相当する範囲攻撃) がそれぞれ2回、そして<4/>が1回含まれている必要があります。",
   "rpr.enshroud.title": "レムールシュラウド",
+  "rpr.gauge.lemure.outofbounds.reason": "",
   "rpr.harvestmoon.checklist.description": "ハーベストムーンは最も威力の高いスキルのうちの1つです。ボスがターゲット可能になる度に最低でも1回は使用しましょう。",
   "rpr.harvestmoon.checklist.requirement.name": "使用回数：<0/>",
   "rpr.harvestmoon.checklist.title": "ボスがいない間に <0/> を使いましょう。",
