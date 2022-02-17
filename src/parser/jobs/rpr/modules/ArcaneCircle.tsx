@@ -5,8 +5,14 @@ import {BuffWindow, EvaluatedAction, ExpectedActionsEvaluator, TrackedAction} fr
 import {HistoryEntry} from 'parser/core/modules/ActionWindow/History'
 import {SEVERITY} from 'parser/core/modules/Suggestions'
 import React from 'react'
-import {OPENER_BUFFER} from '../Constants'
+import {OPENER_BUFFER} from '../constants'
 import {DISPLAY_ORDER} from './DISPLAY_ORDER'
+
+const SEVERITIES = {
+	1: SEVERITY.MINOR,
+	3: SEVERITY.MEDIUM,
+	5: SEVERITY.MAJOR,
+}
 
 export class ArcaneCircle extends BuffWindow {
 	static override handle = 'arcaneCircle'
@@ -29,11 +35,7 @@ export class ArcaneCircle extends BuffWindow {
 				of <ActionLink action="PLENTIFUL_HARVEST"/>.
 			</Trans>,
 			suggestionWindowName: <ActionLink action="ARCANE_CIRCLE" showIcon={false} />,
-			severityTiers: {
-				1: SEVERITY.MINOR,
-				3: SEVERITY.MEDIUM,
-				5: SEVERITY.MAJOR,
-			},
+			severityTiers: SEVERITIES,
 			adjustCount: this.adjustCount.bind(this),
 		}))
 	}
