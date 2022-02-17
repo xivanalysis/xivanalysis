@@ -53,13 +53,13 @@ export class HarvestMoon extends Analyser {
 	}
 
 	// Reduce function for calculating interstitial windows that assumes that there are at least 2 windows.
-	private toActableWindows(acc: Window[], window: Window, idx: number, arr: Window[]): Window[] {
-		if (idx === arr.length - 1) {
-			return acc
+	private toActableWindows(actableWindows: Window[], window: Window, idx: number, unactableWindows: Window[]): Window[] {
+		if (idx === unactableWindows.length - 1) {
+			return actableWindows
 		}
-		return acc.concat({
+		return actableWindows.concat({
 			start: window.end,
-			end: arr[idx + 1].start,
+			end: unactableWindows[idx + 1].start,
 		})
 	}
 
