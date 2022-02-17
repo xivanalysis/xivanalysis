@@ -1,6 +1,7 @@
 import {Interrupts} from 'parser/core/modules/Interrupts'
 import {ActionTimeline} from './ActionTimeline'
 import {Atonement} from './Atonement'
+import {CastTime} from './CastTime'
 import {Combos} from './Combos'
 import {FightOrFlight} from './FightOrFlight'
 import {Gauge} from './Gauge'
@@ -13,6 +14,7 @@ import {Tincture} from './Tincture'
 export default [
 	ActionTimeline,
 	Atonement,
+	CastTime,
 	Combos,
 	FightOrFlight,
 	Goring,

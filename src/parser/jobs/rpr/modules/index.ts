@@ -4,9 +4,11 @@ import {AoE} from './AoE'
 import {ArcaneCircle} from './ArcaneCircle'
 import {Combos} from './Combos'
 import {CooldownDowntime} from './CooldownDowntime'
+import {DeathGauge} from './DeathGauge'
 import {DeathsDesign} from './DeathsDesign'
 import {Defensives} from './Defensives'
 import {Enshroud} from './Enshroud'
+import {HarvestMoon} from './HarvestMoon'
 import {ImmortalSacrifice} from './ImmortalSacrifice'
 import {Positionals} from './Positionals'
 import {Procs} from './Procs'
@@ -19,9 +21,11 @@ export default [
 	Combos,
 	CooldownDowntime,
 	DeathsDesign,
+	DeathGauge,
 	Defensives,
 	Enshroud,
 	ImmortalSacrifice,
+	HarvestMoon,
 	Positionals,
 	Procs,
 	Tincture,
