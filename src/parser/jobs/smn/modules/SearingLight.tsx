@@ -165,7 +165,7 @@ export class SearingLight extends Analyser {
 			// If there is no active window, see if the last window just ended
 			// at the exact same timestamp.  If it did, this is likely due to
 			// having multiple summoners, so reopen the last window
-			if ((this.history.endOfLastEntry() ?? 0) === timestamp) {
+			if (this.history.endOfLastEntry === timestamp) {
 				this.history.reopenLastEntry()
 				return
 			}
