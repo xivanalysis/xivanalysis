@@ -20,7 +20,7 @@ export class HarvestMoon extends Analyser {
 	@dependency private invulnerability!: Invulnerability
 	@dependency private unableToAct!: UnableToAct
 
-	private harvestMoonCasts = 0
+	private moons = 0
 
 	override initialise() {
 		super.initialise()
@@ -30,37 +30,16 @@ export class HarvestMoon extends Analyser {
 				.source(this.parser.actor.id)
 				.type('action')
 				.action(this.data.actions.HARVEST_MOON.id),
-			() => this.harvestMoonCasts++)
+			() => this.moons++
+		)
 
 		this.addEventHook('complete', this.onComplete)
-	}
-
-	private canChargeMoon(inputWindow: {start: number, end: number}): boolean {
-		const ADJUSTED_CAST_TIME = this.data.actions.SOULSOW.castTime + SOULSOW_BUFFER
-
-		// get the earliest unable to act window that falls within the provided inputWindow
-		const unableToActWindow = this.unableToAct.getWindows(inputWindow)[0]
-
-		// the window will be undefined if there are no unable to act windows left before the end of the inputWindow
-		if (unableToActWindow == null) {
-			// True if there are ADJUSTED_CAST_TIME milliseconds or more remaining in the inputWindow
-			return inputWindow.end - inputWindow.start >= ADJUSTED_CAST_TIME
-		}
-
-		// return true if there are ADJUSTED_CAST_TIME milliseconds between the beginning of the window being checked and the beginning of an unableToAct window
-		if (unableToActWindow.start - inputWindow.start >= ADJUSTED_CAST_TIME) {
-			return true
-		}
-
-		// recurse the method, shrinking the window to the space between the end of the unable to act window and the end of the input window.
-		return this.canChargeMoon({start: unableToActWindow.end, end: inputWindow.end})
 	}
 
 	private getExpectedUses(): number {
 		const ADJUSTED_CAST = this.data.actions.SOULSOW.castTime + SOULSOW_BUFFER
 		const invulnWindows = this.invulnerability.getWindows().filter((window) => window.end - window.start >=  ADJUSTED_CAST)
 
-		// will only run the window filter if there is a non-zero amount of unableToAct time during the fight.
 		if (this.unableToAct.getDuration({start: this.parser.pull.timestamp, end: this.parser.pull.timestamp + this.parser.pull.duration}) > 0) {
 			return invulnWindows.filter(window => this.canChargeMoon(window)).length + 1
 		}
@@ -68,31 +47,52 @@ export class HarvestMoon extends Analyser {
 		return invulnWindows.length + 1
 	}
 
-	private getUsedPercentage(expectedUses: number): string {
-		return (this.harvestMoonCasts / expectedUses * 100).toFixed(2)
+	private canChargeMoon(inputWindow: {start: number, end: number}): boolean {
+		const ADJUSTED_CAST_TIME = this.data.actions.SOULSOW.castTime + SOULSOW_BUFFER
+
+		// Find the earliest unable to act window that falls within the input window
+		const unableToActWindow = this.unableToAct.getWindows(inputWindow)[0]
+
+		// If there are no unable to act windows left before the end of the input window, this UTA will be undefined
+		// Check if our input window is long enough
+		if (unableToActWindow == null) {
+			return inputWindow.end - inputWindow.start >= ADJUSTED_CAST_TIME
+		}
+
+		// Even if the input window was too short, check if there's a large enough time between the input window and UTA
+		if (unableToActWindow.start - inputWindow.start >= ADJUSTED_CAST_TIME) {
+			return true
+		}
+
+		// Recurse the method, shrinking the window to the space between the end of the unable to act window and the end of the input window
+		return this.canChargeMoon({start: unableToActWindow.end, end: inputWindow.end})
 	}
 
 	private onComplete() {
 		const expectedUses = this.getExpectedUses()
-		const hmUsesPercent = this.getUsedPercentage(expectedUses)
+		const harvestsUsedPercent = this.getUsedPercentage(expectedUses)
 
 		this.checklist.add(new Rule({
 			name: <Trans id="rpr.harvestmoon.checklist.title">
-				Use <DataLink action="SOULSOW" /> during downtime.
+				Use <DataLink action="SOULSOW" /> during downtime
 			</Trans>,
 			description: <Trans id="rpr.harvestmoon.checklist.description">
-				Harvest Moon is one of your highest potency abilities. Aim to get at least one use each time the boss is targetable.
+				<DataLink action="HARVEST_MOON"/> is one of your highest damage abilities. Aim to get at least one use each time the boss is targetable.
 			</Trans>,
 			requirements: [
 				new Requirement({
 					name: <Trans id="rpr.harvestmoon.checklist.requirement.name">
 						<DataLink action="HARVEST_MOON" /> uses
 					</Trans>,
-					overrideDisplay: `${this.harvestMoonCasts} / ${expectedUses} (${hmUsesPercent}%)`,
-					percent: hmUsesPercent,
+					overrideDisplay: `${this.moons} / ${expectedUses} (${harvestsUsedPercent}%)`,
+					percent: harvestsUsedPercent,
 				}),
 			],
 			target: 100,
 		}))
+	}
+
+	private getUsedPercentage(expected: number): string {
+		return (this.moons / expected * 100).toFixed(2)
 	}
 }
