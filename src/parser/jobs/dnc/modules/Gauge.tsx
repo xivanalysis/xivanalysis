@@ -54,7 +54,6 @@ const ESPRIT_EXCEPTIONS_PARTY: ActionKey[] = [
 	'HYOSHO_RANRYU',
 	'SUITON',
 	'SUITON_TCJ',
-	// TODO: What's up with Phantom Kamaitachi/Phantom Kamaitachi Bunshin?
 	'KAESHI_GOKEN',
 	'KAESHI_HIGANBANA',
 	'KAESHI_SETSUGEKKA',
@@ -65,7 +64,7 @@ const ESPRIT_GENERATION_AMOUNT_PARTY = 10
 const ESPRIT_RATE_PARTY_DEFAULT = 0.2
 
 /* eslint-disable @typescript-eslint/no-magic-numbers */
-const ESPRIT_RATE_PARTY_KNOWN = new Map<JobKey, number>([
+const ESPRIT_RATE_PARTY_TESTED = new Map<JobKey, number>([
 	['MONK', 0.17],
 	['DRAGOON', 0.18],
 	['NINJA', 0.16],
@@ -212,7 +211,7 @@ export class Gauge extends CoreGauge {
 			this.espritGeneratorsSelf.get(action.id) ?? 0 :
 			// The party has a ~20% chance to generate 10 Esprit for the player
 			// For the jobs that theorycrafters have determined a more precise rate, use that instead
-			ESPRIT_GENERATION_AMOUNT_PARTY * (ESPRIT_RATE_PARTY_KNOWN.get(eventActor.job) ?? ESPRIT_RATE_PARTY_DEFAULT)
+			ESPRIT_GENERATION_AMOUNT_PARTY * (ESPRIT_RATE_PARTY_TESTED.get(eventActor.job) ?? ESPRIT_RATE_PARTY_DEFAULT)
 
 		// If we actually generate something, add it to the gauge
 		if (generatedAmt > 0) {
