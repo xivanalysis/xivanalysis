@@ -4,6 +4,26 @@ import React from 'react'
 
 export const changelog = [
 	{
+		date: new Date('2022-02-17'),
+		Changes: () => <>Add Enhanced Cross Reaping and Void Reaping to procs.</>,
+		contributors: [CONTRIBUTORS.AY],
+	},
+	{
+		date: new Date('2022-02-17'),
+		Changes: () => <>Reorder timeline and module navigation.</>,
+		contributors: [CONTRIBUTORS.AY],
+	},
+	{
+		date: new Date('2022-02-17'),
+		Changes: () => <>Cleanup code to be easier for other developers to work with.</>,
+		contributors: [CONTRIBUTORS.AY],
+	},
+	{
+		date: new Date('2022-02-17'),
+		Changes: () => <>Fix Death gauge not showing in timeline.</>,
+		contributors: [CONTRIBUTORS.AY],
+	},
+	{
 		date: new Date('2022-02-13'),
 		Changes: () => <>Add Soul and Shroud gauge tracking.</>,
 		contributors: [CONTRIBUTORS.AY],
