@@ -27,7 +27,7 @@ export abstract class RaidBuffWindow extends BuffWindow {
 	override initialise() {
 		super.initialise()
 
-		const playerCharacters = this.parser.pull.actors
+		const partyMembers = this.parser.pull.actors
 			.filter(actor => actor.playerControlled)
 			.map(actor => actor.id)
 		const playerOwnedIds = this.parser.pull.actors
@@ -37,7 +37,7 @@ export abstract class RaidBuffWindow extends BuffWindow {
 		const buffFilter = filter<Event>()
 			.type('statusApply')
 			.source(oneOf(playerOwnedIds))
-			.target(oneOf(playerCharacters))
+			.target(oneOf(partyMembers))
 			.status(oneOf(ensureArray(this.buffStatus).map(s => s.id)))
 
 		this.addEventHook(buffFilter, this.onRaidBuffApply)
