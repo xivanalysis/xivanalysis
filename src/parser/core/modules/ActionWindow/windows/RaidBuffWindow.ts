@@ -4,8 +4,6 @@ import {HistoryEntry} from 'parser/core/modules/ActionWindow/History'
 import {ensureArray} from 'utilities'
 import {filter, oneOf, noneOf} from '../../../filter'
 
-const FULL_PARTY = 8
-
 /**
  * Tracks buffs applied to the party.
  */
@@ -22,7 +20,7 @@ export abstract class RaidBuffWindow extends BuffWindow {
 	/**
 	 * Expected number of people who should get the raid buff every time.
 	 */
-	protected expectedCount = FULL_PARTY
+	protected expectedCount = 0
 
 	override initialise() {
 		super.initialise()
@@ -30,6 +28,7 @@ export abstract class RaidBuffWindow extends BuffWindow {
 		const partyMembers = this.parser.pull.actors
 			.filter(actor => actor.playerControlled)
 			.map(actor => actor.id)
+		this.expectedCount = partyMembers.length
 		const playerOwnedIds = this.parser.pull.actors
 			.filter(actor => (actor.owner === this.parser.actor) || actor === this.parser.actor)
 			.map(actor => actor.id)
