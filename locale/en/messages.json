@@ -679,7 +679,6 @@
   "rdm.dualcast.suggestions.wasted.content": "Spells used while <0/> is up should be limited to <1/>, <2/>, or <3/>",
   "rdm.dualcast.suggestions.wasted.why": "{0} {1, plural, one {Dualcast was} other {Dualcasts were}} wasted on low cast-time spells.",
   "rdm.dualcast.title": "Dualcast",
-  "rdm.embolden.rotation-table.header.buffed": "Players Buffed",
   "rdm.embolden.title": "Embolden",
   "rdm.gauge.black-mana-lost-to-manafication": "Black",
   "rdm.gauge.resource.blackmana": "Black Mana",
