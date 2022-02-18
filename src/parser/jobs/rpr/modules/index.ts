@@ -8,7 +8,6 @@ import {DeathsDesign} from './DeathsDesign'
 import {DefensiveCooldowns} from './DefensiveCooldowns'
 import {Enshroud} from './Enshroud'
 import {HarvestMoon} from './HarvestMoon'
-import {ImmortalSacrifice} from './ImmortalSacrifice'
 import {OtherGauges} from './OtherGauges'
 import {Positionals} from './Positionals'
 import {Procs} from './Procs'
@@ -25,7 +24,6 @@ export default [
 	DeathGauge,
 	DefensiveCooldowns,
 	Enshroud,
-	ImmortalSacrifice,
 	HarvestMoon,
 	OtherGauges,
 	Positionals,
