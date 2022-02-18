@@ -286,6 +286,7 @@
   "core.procs.suggestions.overwritten.content": "procがあるときにprocを得られるアクションを使用するのは避けましょう。",
   "core.procs.suggestions.overwrote.why": "あなたは {0, plural, one {# proc} other {# procs}} を上書きによって失いました。",
   "core.procs.title": "Proc",
+  "core.raidbuffwindow.table.header.players": "",
   "core.report-flow.actor-not-found": "<0>アクターが見つかりません。</0> ID \"{actorId}\"を持つアクターは見つかりませんでした。このレポートが最近更新された場合、キャッシュされている可能性があります。最新のデータを取得するために、更新を押してみてください。",
   "core.report-flow.job-unsupported.description": "私達は常にお手伝いさんや正確さを求めてます。Discordサーバーにて情報・お手伝いを募集中なので、興味がある方は是非立寄ってみてください（日本語が話せるプレイヤーも数人います)！",
   "core.report-flow.job-unsupported.title": "お気に入りのジョブはまだ対応していないのですか？",

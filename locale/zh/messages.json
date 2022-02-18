@@ -286,6 +286,7 @@
   "core.procs.suggestions.overwritten.content": "当你已经有对应的触发时，不要使用会产生该触发的技能。",
   "core.procs.suggestions.overwrote.why": "你浪费了 {0} 次触发 Buff。",
   "core.procs.title": "触发",
+  "core.raidbuffwindow.table.header.players": "",
   "core.report-flow.actor-not-found": "<0>未找到角色。</0>未找到ID为\"{actorId}\"的角色。如果这场战斗数据刚刚上传，它可能还在缓存中。尝试刷新页面以获取最新数据。",
   "core.report-flow.job-unsupported.description": "我们一直追求更广泛的支持和更精准的分析。欢迎加入我们的Discord频道，找到参与帮助我们的方式！",
   "core.report-flow.job-unsupported.title": "尚未支持你最喜欢的职业？",
