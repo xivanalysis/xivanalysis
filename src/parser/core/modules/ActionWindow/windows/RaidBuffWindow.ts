@@ -62,11 +62,11 @@ export abstract class RaidBuffWindow extends BuffWindow {
 	}
 
 	private affectedPlayers(buffWindow: HistoryEntry<EvaluatedAction[]>): number {
-		const actualWindowDuration = (buffWindow?.end ?? buffWindow.start) - buffWindow.start
+		const windowEnd = buffWindow?.end ?? buffWindow.start
 		// count the number of applications that happened in the window
 		const affected = this.raidBuffApplications.filter(event => {
 			return (buffWindow.start <= event.timestamp &&
-				event.timestamp <= buffWindow.start + actualWindowDuration)
+				event.timestamp <= windowEnd)
 		})
 
 		return affected.length
