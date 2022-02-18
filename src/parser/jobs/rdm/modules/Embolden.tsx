@@ -1,5 +1,4 @@
 import {t} from '@lingui/macro'
-import _ from 'lodash'
 import {RaidBuffWindow} from 'parser/core/modules/ActionWindow'
 import {DISPLAY_ORDER} from './DISPLAY_ORDER'
 
