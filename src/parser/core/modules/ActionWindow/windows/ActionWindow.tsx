@@ -20,7 +20,7 @@ import {History, HistoryEntry} from '../History'
 export abstract class ActionWindow extends Analyser {
 
 	@dependency protected data!: Data
-	@dependency private suggestions!: Suggestions
+	@dependency protected suggestions!: Suggestions
 	@dependency private timeline!: Timeline
 
 	/**
@@ -137,7 +137,7 @@ export abstract class ActionWindow extends Analyser {
 		this.addEventHook('complete', this.onComplete)
 	}
 
-	private onComplete() {
+	protected onComplete() {
 		this.onWindowEnd(this.parser.pull.timestamp + this.parser.pull.duration)
 
 		const actionHistory = this.mapHistoryActions()
