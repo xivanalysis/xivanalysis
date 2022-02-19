@@ -313,13 +313,110 @@ export class Summons extends Analyser {
 				key: summon.start,
 				title: {
 					content: <>
-						{this.parser.formatEpochTimestamp(summon.start)}: <ActionLink {...this.data.getAction(summon.data.demiSummon.action)} />
+						{<span style={{ width: '200px', display: 'inline-block' }}>{this.parser.formatEpochTimestamp(summon.start)}: <ActionLink {...this.data.getAction(summon.data.demiSummon.action)} /></span>}
+						{this.getEgiIcons(summon)}
 					</>,
 				},
-				content: {content: data.display},
+				content: { content: data.display },
 			},
 			hasError: data.hasError,
 		}
+	}
+
+	private getEgiIcons(summon: HistoryEntry<SummonWindow>) {
+		const egis = [summon.data.titanSummon, summon.data.ifritSummon, summon.data.garudaSummon]
+		egis.sort((a, b) => {
+			if (a === undefined) { return -1 }
+			if (b === undefined) { return 1 }
+			return (a.timestamp > b.timestamp) ? 1 : -1
+		})
+
+		const retval: JSX.Element[] = []
+		egis.forEach(egi => {
+			if (egi !== undefined) {
+				if (egi === summon.data.ifritSummon) {
+					retval.push(< > <ActionLink showName={false} action="SUMMON_IFRIT_II" />&nbsp;{this.printUsageTime(summon.data.ifritSummon)} </>)
+				} else if (egi === summon.data.garudaSummon) {
+					retval.push(<> <ActionLink showName={false} action="SUMMON_GARUDA_II" />&nbsp;{this.printUsageTime(summon.data.garudaSummon)} </>)
+				} else if (egi === summon.data.titanSummon) {
+					retval.push(<> <ActionLink showName={false} action="SUMMON_TITAN_II" />&nbsp;{this.printUsageTime(summon.data.titanSummon)} </>)
+				}
+			}
+		})
+		return retval
+	}
+
+	private getEgiRows(summon: HistoryEntry<SummonWindow>) {
+		const egis = [summon.data.titanSummon, summon.data.ifritSummon, summon.data.garudaSummon]
+		egis.sort((a, b) => {
+			if (a === undefined) { return -1 }
+			if (b === undefined) { return 1 }
+			return (a.timestamp > b.timestamp) ? 1 : -1
+		})
+
+		const missedMountainBusters = summon.data.mountainBusters < summon.data.topazGcds
+
+		const retval: JSX.Element[] = []
+		egis.forEach(egi => {
+			if (egi !== undefined) {
+				if (egi === summon.data.ifritSummon) {
+					retval.push(
+						<Table.Row>
+							<Table.Cell positive={summon.data.ifritSummon != null}>
+								<ActionLink showName={false} action="SUMMON_IFRIT_II" />
+						&nbsp;{this.printUsageTime(summon.data.ifritSummon)}
+					</Table.Cell>
+					<Table.Cell positive={summon.data.rubyGcds === MAX_POSSIBLE_RUBY_GCDS}>
+						<ActionLink showName={false} action="RUBY_RITE" />/<ActionLink showName={false} action="RUBY_CATASTROPHE" />
+						&nbsp;{summon.data.rubyGcds}
+					</Table.Cell>
+					<Table.Cell positive={summon.data.crimsonCyclone === MAX_POSSIBLE_CRIMSON_CYCLONE}>
+						<ActionLink showName={false} action="CRIMSON_CYCLONE" />
+						&nbsp;{summon.data.crimsonCyclone}
+					</Table.Cell>
+					<Table.Cell positive={summon.data.crimsonStrike === MAX_POSSIBLE_CRIMSON_STRIKE}>
+								<ActionLink showName={false} action="CRIMSON_STRIKE" />
+								&nbsp;{summon.data.crimsonStrike}
+							</Table.Cell>
+						</Table.Row>)
+				} else if (egi === summon.data.garudaSummon) {
+					retval.push(
+						<Table.Row>
+							<Table.Cell positive={summon.data.garudaSummon != null}>
+								<ActionLink showName={false} action="SUMMON_GARUDA_II" />
+								&nbsp;{this.printUsageTime(summon.data.garudaSummon)}
+							</Table.Cell>
+							<Table.Cell positive={summon.data.emeraldGcds === MAX_POSSIBLE_EMERALD_GCDS}>
+								<ActionLink showName={false} action="EMERALD_RITE" />/<ActionLink showName={false} action="EMERALD_CATASTROPHE" />
+								&nbsp;{summon.data.emeraldGcds}
+							</Table.Cell>
+							<Table.Cell positive={summon.data.slipstream === MAX_POSSIBLE_SLIPSTREAM}>
+								<ActionLink showName={false} action="SLIPSTREAM" />
+								&nbsp;{summon.data.slipstream}
+							</Table.Cell>
+						</Table.Row>)
+				} else if (egi === summon.data.titanSummon) {
+					retval.push(
+						<Table.Row>
+							<Table.Cell positive={summon.data.titanSummon != null}>
+								<ActionLink showName={false} action="SUMMON_TITAN_II" />
+						&nbsp;{this.printUsageTime(summon.data.titanSummon)}
+					</Table.Cell>
+					<Table.Cell positive={summon.data.topazGcds === MAX_POSSIBLE_TOPAZ_GCDS}>
+						<ActionLink showName={false} action="TOPAZ_RITE" />/<ActionLink showName={false} action="TOPAZ_CATASTROPHE" />
+						&nbsp;{summon.data.topazGcds}
+					</Table.Cell>
+					<Table.Cell
+						positive={summon.data.mountainBusters === summon.data.topazGcds}
+						negative={missedMountainBusters}>
+								<ActionLink showName={false} action="SMN_MOUNTAIN_BUSTER" />
+								&nbsp;{summon.data.mountainBusters}
+							</Table.Cell>
+						</Table.Row>)
+				}
+			}
+		})
+		return retval
 	}
 
 	private buildWindowOutput(summon: HistoryEntry<SummonWindow>) {
@@ -335,54 +432,7 @@ export class Summons extends Analyser {
 			hasError: demiRow.hasError || missedMountainBusters || badR4,
 			display: <Table>
 				{demiRow.display}
-				<Table.Row>
-					<Table.Cell positive={summon.data.ifritSummon != null}>
-						<ActionLink showName={false} action="SUMMON_IFRIT_II" />
-						&nbsp;{this.printUsageTime(summon.data.ifritSummon)}
-					</Table.Cell>
-					<Table.Cell positive={summon.data.rubyGcds === MAX_POSSIBLE_RUBY_GCDS}>
-						<ActionLink showName={false} action="RUBY_RITE" />/<ActionLink showName={false} action="RUBY_CATASTROPHE" />
-						&nbsp;{summon.data.rubyGcds}
-					</Table.Cell>
-					<Table.Cell positive={summon.data.crimsonCyclone === MAX_POSSIBLE_CRIMSON_CYCLONE}>
-						<ActionLink showName={false} action="CRIMSON_CYCLONE" />
-						&nbsp;{summon.data.crimsonCyclone}
-					</Table.Cell>
-					<Table.Cell positive={summon.data.crimsonStrike === MAX_POSSIBLE_CRIMSON_STRIKE}>
-						<ActionLink showName={false} action="CRIMSON_STRIKE" />
-						&nbsp;{summon.data.crimsonStrike}
-					</Table.Cell>
-				</Table.Row>
-				<Table.Row>
-					<Table.Cell positive={summon.data.titanSummon != null}>
-						<ActionLink showName={false} action="SUMMON_TITAN_II" />
-						&nbsp;{this.printUsageTime(summon.data.titanSummon)}
-					</Table.Cell>
-					<Table.Cell positive={summon.data.topazGcds === MAX_POSSIBLE_TOPAZ_GCDS}>
-						<ActionLink showName={false} action="TOPAZ_RITE" />/<ActionLink showName={false} action="TOPAZ_CATASTROPHE" />
-						&nbsp;{summon.data.topazGcds}
-					</Table.Cell>
-					<Table.Cell
-						positive={summon.data.mountainBusters === summon.data.topazGcds}
-						negative={missedMountainBusters}>
-						<ActionLink showName={false} action="SMN_MOUNTAIN_BUSTER" />
-						&nbsp;{summon.data.mountainBusters}
-					</Table.Cell>
-				</Table.Row>
-				<Table.Row>
-					<Table.Cell positive={summon.data.garudaSummon != null}>
-						<ActionLink showName={false} action="SUMMON_GARUDA_II" />
-						&nbsp;{this.printUsageTime(summon.data.garudaSummon)}
-					</Table.Cell>
-					<Table.Cell positive={summon.data.emeraldGcds === MAX_POSSIBLE_EMERALD_GCDS}>
-						<ActionLink showName={false} action="EMERALD_RITE" />/<ActionLink showName={false} action="EMERALD_CATASTROPHE" />
-						&nbsp;{summon.data.emeraldGcds}
-					</Table.Cell>
-					<Table.Cell positive={summon.data.slipstream === MAX_POSSIBLE_SLIPSTREAM}>
-						<ActionLink showName={false} action="SLIPSTREAM" />
-						&nbsp;{summon.data.slipstream}
-					</Table.Cell>
-				</Table.Row>
+				{this.getEgiRows(summon)}
 				<Table.Row>
 					<Table.Cell>
 						Uptime: {this.parser.formatDuration(Math.max(0, (summon.end ?? summon.start) - summon.start - this.downtime.getDowntime(summon.start, summon.end)))}
