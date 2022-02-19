@@ -313,11 +313,11 @@ export class Summons extends Analyser {
 				key: summon.start,
 				title: {
 					content: <>
-						{<span style={{ width: '200px', display: 'inline-block' }}>{this.parser.formatEpochTimestamp(summon.start)}: <ActionLink {...this.data.getAction(summon.data.demiSummon.action)} /></span>}
+						{<span style={{width: '200px', display: 'inline-block'}}>{this.parser.formatEpochTimestamp(summon.start)}: <ActionLink {...this.data.getAction(summon.data.demiSummon.action)} /></span>}
 						{this.getEgiIcons(summon)}
 					</>,
 				},
-				content: { content: data.display },
+				content: {content: data.display},
 			},
 			hasError: data.hasError,
 		}
@@ -381,12 +381,12 @@ export class Summons extends Analyser {
 					<Table.Cell positive={summon.data.garudaSummon != null}>
 						<ActionLink showName={false} action="SUMMON_GARUDA_II" />
 								&nbsp;{this.printUsageTime(summon.data.garudaSummon)}
-							</Table.Cell>
-							<Table.Cell positive={summon.data.emeraldGcds === MAX_POSSIBLE_EMERALD_GCDS}>
-								<ActionLink showName={false} action="EMERALD_RITE" />/<ActionLink showName={false} action="EMERALD_CATASTROPHE" />
+					</Table.Cell>
+					<Table.Cell positive={summon.data.emeraldGcds === MAX_POSSIBLE_EMERALD_GCDS}>
+						<ActionLink showName={false} action="EMERALD_RITE" />/<ActionLink showName={false} action="EMERALD_CATASTROPHE" />
 								&nbsp;{summon.data.emeraldGcds}
-							</Table.Cell>
-							<Table.Cell positive={summon.data.slipstream === MAX_POSSIBLE_SLIPSTREAM}>
+					</Table.Cell>
+					<Table.Cell positive={summon.data.slipstream === MAX_POSSIBLE_SLIPSTREAM}>
 						<ActionLink showName={false} action="SLIPSTREAM" />
 						&nbsp;{summon.data.slipstream}
 					</Table.Cell>
