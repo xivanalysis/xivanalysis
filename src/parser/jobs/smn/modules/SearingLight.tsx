@@ -128,6 +128,7 @@ export class SearingLight extends RaidBuffWindow {
 				severity: SEVERITY.MAJOR,
 			}))
 		}
+		super.onComplete()
 	}
 
 	override playersBuffedSuggestion(windows: Array<HistoryEntry<EvaluatedAction[]>>): Suggestion | undefined {
