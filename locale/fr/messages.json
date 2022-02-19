@@ -286,7 +286,7 @@
   "core.procs.suggestions.overwritten.content": "Évitez d'utiliser une action pouvant vous donner un proc lorsque vous en avez déja un d'actif.",
   "core.procs.suggestions.overwrote.why": "Vous avez écrasé {0, plural,one {# proc}other {# procs}}.",
   "core.procs.title": "Procs",
-  "core.raidbuffwindow.table.header.players": "",
+  "core.raidbuffwindow.table.header.players": "Buff du joueurs",
   "core.report-flow.actor-not-found": "<0> Personnage non trouvé.</0> aucun personnage trouvé avec l'identifiant \"{actorId}\". Si le rapport a été publier récemment, il peux ne pas encore apparaître. Essayer de rafraîchir la page pour obtenir les dernières données du combat.",
   "core.report-flow.job-unsupported.description": "Nous sommes toujours à la recherche de compagnons afin d'améliorer la qualité et la précision de nos analyses. N'hésitez pas à passer sur notre chaîne Discord et voyez comment vous pourriez aider !",
   "core.report-flow.job-unsupported.title": "Votre job préféré n'est pas pris en charge?",
