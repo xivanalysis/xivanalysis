@@ -1,7 +1,6 @@
 import {Event, Events} from 'event'
 import {BuffWindow, EvaluatedAction, PlayersBuffedEvaluator} from 'parser/core/modules/ActionWindow'
 import {HistoryEntry} from 'parser/core/modules/ActionWindow/History'
-import {Suggestion} from 'parser/core/modules/Suggestions'
 import {ensureArray} from 'utilities'
 import {filter, oneOf, noneOf} from '../../../filter'
 
@@ -55,7 +54,6 @@ export abstract class RaidBuffWindow extends BuffWindow {
 		this.addEvaluator(new PlayersBuffedEvaluator({
 			expectedCount: this.expectedCount,
 			affectedPlayers: this.affectedPlayers.bind(this),
-			suggestion: this.playersBuffedSuggestion.bind(this),
 		}))
 	}
 
@@ -63,10 +61,7 @@ export abstract class RaidBuffWindow extends BuffWindow {
 		this.raidBuffApplications.push(event)
 	}
 
-	/**
-	 * Default implementation of counting how many people received the raidbuff.
-	 */
-	protected affectedPlayers(buffWindow: HistoryEntry<EvaluatedAction[]>): number {
+	private affectedPlayers(buffWindow: HistoryEntry<EvaluatedAction[]>): number {
 		const windowEnd = buffWindow?.end ?? buffWindow.start
 		// count the number of applications that happened in the window
 		const affected = this.raidBuffApplications.filter(event => {
@@ -75,15 +70,6 @@ export abstract class RaidBuffWindow extends BuffWindow {
 		})
 
 		return affected.length
-	}
-
-	/**
-	 * Custom suggestion for the PlayersBuffedEvaluator.
-	 *
-	 * This could be a generic suggestion in the future.
-	 */
-	protected playersBuffedSuggestion(_: Array<HistoryEntry<EvaluatedAction[]>>): Suggestion | undefined {
-		return undefined
 	}
 
 	private maybeReOpenPreviousWindow(event: Events['statusApply']) {
