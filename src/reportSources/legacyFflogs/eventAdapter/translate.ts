@@ -99,7 +99,7 @@ export class TranslateAdapterStep extends AdapterStep {
 			return [this.adaptTargetableEvent(baseEvent)]
 
 		case 'combatantinfo':
-			return this.adaptCombatantInfoEvent(baseEvent).concat(this.adaptCombatantInfoEventAuras(baseEvent))
+			return this.adaptCombatantInfoEvent(baseEvent)
 
 		/* eslint-disable no-fallthrough */
 		// Dispels are already modelled by other events, and aren't something we really care about
@@ -396,9 +396,14 @@ export class TranslateAdapterStep extends AdapterStep {
 		}
 	}
 
-	private adaptCombatantInfoEvent(event: CombatantInfoEvent): Array<Events['actorUpdate']> {
-		// TODO: Use more info in here. We're currently extracting the speed attribute values for the logging player, but there's also player level, prepull statuses, and more in there.
+	private adaptCombatantInfoEvent(event: CombatantInfoEvent): Array<Events['actorUpdate' | 'statusApply']> {
+		const attributesEvent = this.adaptAttributesFromCombatantInfoEvent(event)
+		const statusEvent = this.adaptStatusFromCombatantInfoEvent(event)
 
+		return [...attributesEvent, ...statusEvent]
+	}
+
+	private adaptAttributesFromCombatantInfoEvent(event: CombatantInfoEvent): Array<Events['actorUpdate']> {
 		const attributeMapping: Array<[number | undefined, Attribute]> = [
 			[event.skillSpeed, Attribute.SKILL_SPEED],
 			[event.spellSpeed, Attribute.SPELL_SPEED],
@@ -427,17 +432,23 @@ export class TranslateAdapterStep extends AdapterStep {
 		}]
 	}
 
-	private adaptCombatantInfoEventAuras(event: CombatantInfoEvent): Array<Events['actorUpdate']> {
-		return [{
-			...this.adaptBaseFields(event),
-			type: 'actorUpdate',
-			actor: resolveActorId({
-				id: event.sourceID,
-				instance: event.sourceInstance,
-				actor: event.source,
-			}),
-			auras: this.resolveAuras(event.auras),
-		}]
+	private adaptStatusFromCombatantInfoEvent(event: CombatantInfoEvent): Array<Events['statusApply']> {
+		return event.auras.map(status => {
+			return {
+				...this.adaptBaseFields(event),
+				type: 'statusApply',
+				status: resolveStatusId(status.ability),
+				target: resolveActorId({
+					id: event.sourceID,
+					instance: event.sourceInstance,
+					actor: event.source,
+				}),
+				source: resolveActorId({
+					id: status.source,
+					instance: event.sourceInstance,
+				}),
+			}
+		})
 	}
 
 	private resolveAuras(auras: CombatantInfoAura[]) {

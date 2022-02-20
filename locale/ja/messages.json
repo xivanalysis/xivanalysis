@@ -335,6 +335,7 @@
   "core.weaving.why": "{0, plural, other {不適切な挟み込み回数：#回}}",
   "core.wellprepared.checklist.description": "",
   "core.wellprepared.checklist.name": "",
+  "core.wellprepared.checklist.requirements.wellfed.name": "",
   "dnc.about.description": "踊り子になったけど、金冠のピルエッテと緑葉のジュテの区別がつかない…！なんて事はありませんか？このページではみんなが思わず立ち上がって拍手を送りたくなるような踊り方についての方法を学べます！\n\n踊り子にとって重要なのは適切に踊りを行うこと、ゲージの超過を防ぐこと、そしてプロックを使い方こなすことです。ここでは、これらを最大限に活用する方法を提案をします。",
   "dnc.about.description.warning": "踊り子の幻扇シンボルとエスプリゲージはどちらも正確なデータを取得できないので、ここでは予測しています。できるだけ正確なデータを取得するために最善を尽くしていますが、もし、著しく間違っているようならばDiscordチャンネルに立ち寄るか、GitHubのリポジトリにバグを報告してください。",
   "dnc.dirty-dancing.checklist.closed-position-buff.description": "PTメンバーに<0/>を付与すると、対象に<1/>と<2/>の効果も与えることができます。非常に限られたケースでは対象を付け替える場合もありますが、必ず誰かに付与し続けるようにしましょう。",
