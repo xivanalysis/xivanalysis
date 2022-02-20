@@ -11,7 +11,7 @@ import React from 'react'
 import {Icon} from 'semantic-ui-react'
 import {DISPLAY_ORDER} from './DISPLAY_ORDER'
 
-class GhostSearingEvaluator implements WindowEvaluator {
+export class GhostSearingEvaluator implements WindowEvaluator {
 	private ghostTimestamps: number[] = []
 	constructor(ghostTimestamps: number[]) {
 		this.ghostTimestamps = ghostTimestamps
