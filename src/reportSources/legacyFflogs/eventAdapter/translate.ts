@@ -3,21 +3,7 @@ import {STATUS_ID_OFFSET} from 'data/STATUSES'
 import {Attribute, AttributeValue, Cause, Event, Events, SourceModifier, TargetModifier} from 'event'
 import {Actor, Team} from 'report'
 import {resolveActorId} from '../base'
-import {
-	ActorResources,
-	BuffEvent,
-	BuffStackEvent,
-	CastEvent,
-	CombatantInfoAura,
-	CombatantInfoEvent,
-	DamageEvent,
-	DeathEvent,
-	FflogsEvent,
-	HealEvent,
-	HitType,
-	InstaKillEvent,
-	TargetabilityUpdateEvent
-} from '../eventTypes'
+import {ActorResources, BuffEvent, BuffStackEvent, CastEvent, CombatantInfoAura, CombatantInfoEvent, DamageEvent, DeathEvent, FflogsEvent, HealEvent, HitType, InstaKillEvent, TargetabilityUpdateEvent} from '../eventTypes'
 import {AdapterStep} from './base'
 
 /*
