@@ -137,7 +137,7 @@ export abstract class ActionWindow extends Analyser {
 		this.addEventHook('complete', this.onComplete)
 	}
 
-	protected onComplete() {
+	private onComplete() {
 		this.onWindowEnd(this.parser.pull.timestamp + this.parser.pull.duration)
 
 		const actionHistory = this.mapHistoryActions()
