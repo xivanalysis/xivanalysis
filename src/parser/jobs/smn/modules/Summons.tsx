@@ -328,7 +328,7 @@ export class Summons extends Analyser {
 		egis.sort((a, b) => {
 			if (a === undefined) { return -1 }
 			if (b === undefined) { return 1 }
-			return (a.timestamp > b.timestamp) ? 1 : -1
+			return (a.timestamp > b.timestamp) ? -1 : 1
 		})
 
 		const retval: JSX.Element[] = []
