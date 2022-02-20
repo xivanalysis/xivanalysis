@@ -20,7 +20,7 @@ import {History, HistoryEntry} from '../History'
 export abstract class ActionWindow extends Analyser {
 
 	@dependency protected data!: Data
-	@dependency protected suggestions!: Suggestions
+	@dependency private suggestions!: Suggestions
 	@dependency private timeline!: Timeline
 
 	/**
