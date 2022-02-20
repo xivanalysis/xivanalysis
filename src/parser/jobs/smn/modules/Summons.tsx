@@ -313,7 +313,7 @@ export class Summons extends Analyser {
 				key: summon.start,
 				title: {
 					content: <>
-						{<span style={{width: '200px', display: 'inline-block'}}>{this.parser.formatEpochTimestamp(summon.start)}: <ActionLink {...this.data.getAction(summon.data.demiSummon.action)} /></span>}
+						{<>{this.parser.formatEpochTimestamp(summon.start)}: <ActionLink {...this.data.getAction(summon.data.demiSummon.action)} /></>}
 						{this.getEgiIcons(summon)}
 					</>,
 				},
@@ -335,11 +335,11 @@ export class Summons extends Analyser {
 		egis.forEach(egi => {
 			if (egi !== undefined) {
 				if (egi === summon.data.ifritSummon) {
-					retval.push(< > <ActionLink showName={false} action="SUMMON_IFRIT_II" />&nbsp; </>)
+					retval.push(<span style={{float: 'right'}}> <ActionLink showName={false} action="SUMMON_IFRIT_II" />&nbsp; </span>)
 				} else if (egi === summon.data.garudaSummon) {
-					retval.push(<> <ActionLink showName={false} action="SUMMON_GARUDA_II" />&nbsp; </>)
+					retval.push(<span style={{float: 'right'}}> <ActionLink showName={false} action="SUMMON_GARUDA_II" />&nbsp; </span>)
 				} else if (egi === summon.data.titanSummon) {
-					retval.push(<> <ActionLink showName={false} action="SUMMON_TITAN_II" />&nbsp; </>)
+					retval.push(<span style={{float: 'right'}}> <ActionLink showName={false} action="SUMMON_TITAN_II" />&nbsp; </span>)
 				}
 			}
 		})
@@ -378,20 +378,6 @@ export class Summons extends Analyser {
 					</Table.Cell>
 				</Table.Row>
 				<Table.Row>
-					<Table.Cell positive={summon.data.garudaSummon != null}>
-						<ActionLink showName={false} action="SUMMON_GARUDA_II" />
-								&nbsp;{this.printUsageTime(summon.data.garudaSummon)}
-					</Table.Cell>
-					<Table.Cell positive={summon.data.emeraldGcds === MAX_POSSIBLE_EMERALD_GCDS}>
-						<ActionLink showName={false} action="EMERALD_RITE" />/<ActionLink showName={false} action="EMERALD_CATASTROPHE" />
-								&nbsp;{summon.data.emeraldGcds}
-					</Table.Cell>
-					<Table.Cell positive={summon.data.slipstream === MAX_POSSIBLE_SLIPSTREAM}>
-						<ActionLink showName={false} action="SLIPSTREAM" />
-						&nbsp;{summon.data.slipstream}
-					</Table.Cell>
-				</Table.Row>
-				<Table.Row>
 					<Table.Cell positive={summon.data.titanSummon != null}>
 						<ActionLink showName={false} action="SUMMON_TITAN_II" />
 						&nbsp;{this.printUsageTime(summon.data.titanSummon)}
@@ -405,6 +391,20 @@ export class Summons extends Analyser {
 						negative={missedMountainBusters}>
 						<ActionLink showName={false} action="SMN_MOUNTAIN_BUSTER" />
 						&nbsp;{summon.data.mountainBusters}
+					</Table.Cell>
+				</Table.Row>
+				<Table.Row>
+					<Table.Cell positive={summon.data.garudaSummon != null}>
+						<ActionLink showName={false} action="SUMMON_GARUDA_II" />
+								&nbsp;{this.printUsageTime(summon.data.garudaSummon)}
+					</Table.Cell>
+					<Table.Cell positive={summon.data.emeraldGcds === MAX_POSSIBLE_EMERALD_GCDS}>
+						<ActionLink showName={false} action="EMERALD_RITE" />/<ActionLink showName={false} action="EMERALD_CATASTROPHE" />
+								&nbsp;{summon.data.emeraldGcds}
+					</Table.Cell>
+					<Table.Cell positive={summon.data.slipstream === MAX_POSSIBLE_SLIPSTREAM}>
+						<ActionLink showName={false} action="SLIPSTREAM" />
+						&nbsp;{summon.data.slipstream}
 					</Table.Cell>
 				</Table.Row>
 				<Table.Row>
