@@ -313,7 +313,7 @@ export class Summons extends Analyser {
 				key: summon.start,
 				title: {
 					content: <>
-						{<>{this.parser.formatEpochTimestamp(summon.start)}: <ActionLink {...this.data.getAction(summon.data.demiSummon.action)} /></>}
+						{this.parser.formatEpochTimestamp(summon.start)}: <ActionLink {...this.data.getAction(summon.data.demiSummon.action)} />
 						{this.getEgiIcons(summon)}
 					</>,
 				},
@@ -396,11 +396,11 @@ export class Summons extends Analyser {
 				<Table.Row>
 					<Table.Cell positive={summon.data.garudaSummon != null}>
 						<ActionLink showName={false} action="SUMMON_GARUDA_II" />
-								&nbsp;{this.printUsageTime(summon.data.garudaSummon)}
+						&nbsp;{this.printUsageTime(summon.data.garudaSummon)}
 					</Table.Cell>
 					<Table.Cell positive={summon.data.emeraldGcds === MAX_POSSIBLE_EMERALD_GCDS}>
 						<ActionLink showName={false} action="EMERALD_RITE" />/<ActionLink showName={false} action="EMERALD_CATASTROPHE" />
-								&nbsp;{summon.data.emeraldGcds}
+						&nbsp;{summon.data.emeraldGcds}
 					</Table.Cell>
 					<Table.Cell positive={summon.data.slipstream === MAX_POSSIBLE_SLIPSTREAM}>
 						<ActionLink showName={false} action="SLIPSTREAM" />
