@@ -1,7 +1,8 @@
-import {t, Trans} from '@lingui/macro'
+import {t} from '@lingui/macro'
+import {Trans} from '@lingui/react'
 import {ActionLink} from 'components/ui/DbLink'
-import {StatusRoot} from 'data/STATUSES'
 import {Event, Events} from 'event'
+import _ from 'lodash'
 import {Analyser} from 'parser/core/Analyser'
 import {filter, oneOf} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
@@ -10,7 +11,11 @@ import {Data} from 'parser/core/modules/Data'
 import React from 'react'
 import {DISPLAY_ORDER} from './DISPLAY_ORDER'
 
-const FULL_PARTY_SIZE = 8
+interface BrotherhoodWindow {
+	start: number
+	end?: number
+	targetsHit: number
+}
 
 export class Brotherhood extends Analyser {
 	static override debug = false
@@ -21,14 +26,13 @@ export class Brotherhood extends Analyser {
 	@dependency private checklist!: Checklist
 	@dependency private data!: Data
 
-	private brotherhoodBuffTimestamps: number[] = []
-	private brotherhoodCastTimestamps: number[] = []
-	private brotherhood: StatusRoot['BROTHERHOOD'] = this.data.statuses.BROTHERHOOD
+	private windows: BrotherhoodWindow[] = []
+	private playerCharacters: string[] = []
 
 	override initialise() {
 		super.initialise()
 
-		const playerCharacters = this.parser.pull.actors
+		this.playerCharacters = this.parser.pull.actors
 			.filter(actor => actor.playerControlled)
 			.map(actor => actor.id)
 
@@ -36,28 +40,30 @@ export class Brotherhood extends Analyser {
 			.type('statusApply')
 			.status(this.data.statuses.BROTHERHOOD.id)
 			.source(this.parser.actor.id)
-			.target(oneOf(playerCharacters)),
-		this.onBrotherhoodBuff)
+			.target(oneOf(this.playerCharacters)),
+		this.onApply)
 
 		this.addEventHook(filter<Event>()
-			.type('action')
-			.action(this.data.actions.BROTHERHOOD.id)
-			.source(this.parser.actor.id),
-		this.onBrotherhoodAction)
-
-		this.addEventHook(filter<Event>().type('complete'), this.onComplete)
+			.type('statusRemove')
+			.status(this.data.statuses.MEDITATIVE_BROTHERHOOD.id)
+			.source(this.parser.actor.id)
+			.target(this.parser.actor.id),
+		this.onRemove)
+		this.addEventHook('complete', this.onComplete)
 	}
 
 	private onComplete() {
+		this.debug(this.windows)
+
 		this.checklist.add(new Rule({
 			name: <Trans id="mnk.bh.checklist.name">Buff your party</Trans>,
-			description: <Trans id="mnk.bh.checklist.desc">
+			description: <Trans id="mnk.bh.checklist.description">
 				To maximise raid damage, try to hit all party members with <ActionLink action="BROTHERHOOD"/>.
 			</Trans>,
 			displayOrder: DISPLAY_ORDER.BROTHERHOOD,
 			requirements: [
 				new Requirement({
-					name: <Trans id="mnk.bh.checklist.req.name"><ActionLink action="BROTHERHOOD"/> buffs</Trans>,
+					name: <Trans id="mnk.bh.checklist.requirement.name"><ActionLink action="BROTHERHOOD"/> buffs</Trans>,
 					value: this.totalAffectedPlayers(),
 					target: this.maxPossibleTargets(),
 				}),
@@ -67,23 +73,33 @@ export class Brotherhood extends Analyser {
 	}
 
 	private maxPossibleTargets(): number {
-		return this.brotherhoodCastTimestamps.length * FULL_PARTY_SIZE
+		return this.windows.length * this.playerCharacters.length
 	}
 
 	private totalAffectedPlayers(): number {
-		return this.brotherhoodCastTimestamps.map(bhTimestamp => this.affectedPlayers(bhTimestamp))
+		return this.windows.map(window => window.targetsHit)
 			.reduce((previousValue, currentValue) => previousValue + currentValue, 0)
 	}
 
-	private affectedPlayers(castTimestamp: number): number {
-		return this.brotherhoodBuffTimestamps.filter(buffTimestamp => Math.abs(castTimestamp - buffTimestamp) < this.brotherhood.duration).length
+	private onApply(event: Events['statusApply']) {
+		const lastWindow = _.last(this.windows)
+		if (lastWindow == null || lastWindow.end != null) {
+			this.windows.push({
+				targetsHit: 1,
+				start: event.timestamp,
+			})
+			return
+		}
+
+		lastWindow.targetsHit += 1
 	}
 
-	private onBrotherhoodBuff(event: Events['statusApply']) {
-		this.brotherhoodBuffTimestamps.push(event.timestamp)
-	}
+	private onRemove(event: Events['statusRemove']) {
+		const lastWindow = _.last(this.windows)
+		if (lastWindow == null) {
+			return
+		}
 
-	private onBrotherhoodAction(event: Events['action']) {
-		this.brotherhoodCastTimestamps.push(event.timestamp)
+		lastWindow.end = event.timestamp
 	}
 }
