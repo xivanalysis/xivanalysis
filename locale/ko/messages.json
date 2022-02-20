@@ -333,6 +333,8 @@
   "core.weaving.panel-count": "{0, plural, other {끼워넣은 스킬횟수：#}}",
   "core.weaving.title": "논글쿨기 초과 문제",
   "core.weaving.why": "{0, plural, other {부적절하게 끼워넣은 스킬횟수：#회}}",
+  "core.wellprepared.checklist.description": "",
+  "core.wellprepared.checklist.name": "",
   "dnc.about.description": "",
   "dnc.about.description.warning": "정확한 계산 및 정보가 제공되지않아 무도가의 두 게이지 모두 시뮬레이션 되어 표시되어있습니다. 최대한 실전에 가깝게 시뮬되어 있으며 모든 제안은 어느정도 반론이 되게끔 남겨두었습니다. 만약 무언가가 이상하거나 심각하게 잘못된 정보가 제안되있다면 저희 디스코드로 오시거나 깃허브로 해당 버그를 제보해주십시오.",
   "dnc.dirty-dancing.checklist.closed-position-buff.description": "",

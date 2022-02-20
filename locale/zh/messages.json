@@ -333,6 +333,8 @@
   "core.weaving.panel-count": "插入 {0, plural, other {#}}",
   "core.weaving.title": "能力技穿插问题",
   "core.weaving.why": "{0, plural, other {# 次错误插入}}",
+  "core.wellprepared.checklist.description": "",
+  "core.wellprepared.checklist.name": "",
   "dnc.about.description": "所以你选择当一个舞娘，但是却分不清舞步？这个模块能帮助你练习舞者的技巧，最终让你站在舞台上接受观众的喝彩！舞娘的核心部分是恰当地跳舞，避免能量溢出，及时使用触发。我们会提供建议，让你好好利用这些技能。",
   "dnc.about.description.warning": "两种舞者的职业量谱都在此被模拟，因为我们还没有确切的可用数据来进行分析。我们已经尽量保证数据的准确性来让你从我们的建议中获得帮助。如果你发现有任何看上去明显出错的地方，请通过我们的反馈通道进行反馈或是在我们的github资料库报告错误。",
   "dnc.dirty-dancing.checklist.closed-position-buff.description": "选择<0/>的同时也会给他们<1/>和<2/>两个buff。请确保buff一直不断，除非在特殊情况下需要切换。",

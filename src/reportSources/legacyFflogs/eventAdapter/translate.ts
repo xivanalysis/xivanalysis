@@ -1,9 +1,23 @@
 import * as Sentry from '@sentry/browser'
 import {STATUS_ID_OFFSET} from 'data/STATUSES'
-import {Event, Events, Cause, SourceModifier, TargetModifier, AttributeValue, Attribute} from 'event'
+import {Attribute, AttributeValue, Cause, Event, Events, SourceModifier, TargetModifier} from 'event'
 import {Actor, Team} from 'report'
 import {resolveActorId} from '../base'
-import {ActorResources, BuffEvent, BuffStackEvent, CastEvent, CombatantInfoEvent, DamageEvent, DeathEvent, FflogsEvent, HealEvent, HitType, InstaKillEvent, TargetabilityUpdateEvent} from '../eventTypes'
+import {
+	ActorResources,
+	BuffEvent,
+	BuffStackEvent,
+	CastEvent,
+	CombatantInfoAura,
+	CombatantInfoEvent,
+	DamageEvent,
+	DeathEvent,
+	FflogsEvent,
+	HealEvent,
+	HitType,
+	InstaKillEvent,
+	TargetabilityUpdateEvent
+} from '../eventTypes'
 import {AdapterStep} from './base'
 
 /*
@@ -99,7 +113,7 @@ export class TranslateAdapterStep extends AdapterStep {
 			return [this.adaptTargetableEvent(baseEvent)]
 
 		case 'combatantinfo':
-			return this.adaptCombatantInfoEvent(baseEvent)
+			return this.adaptCombatantInfoEvent(baseEvent).concat(this.adaptCombatantInfoEventAuras(baseEvent))
 
 		/* eslint-disable no-fallthrough */
 		// Dispels are already modelled by other events, and aren't something we really care about
@@ -425,6 +439,27 @@ export class TranslateAdapterStep extends AdapterStep {
 				actor: event.source,
 			}),
 		}]
+	}
+
+	private adaptCombatantInfoEventAuras(event: CombatantInfoEvent): Array<Events['actorUpdate']> {
+		return [{
+			...this.adaptBaseFields(event),
+			type: 'actorUpdate',
+			actor: resolveActorId({
+				id: event.sourceID,
+				instance: event.sourceInstance,
+				actor: event.source,
+			}),
+			auras: this.resolveAuras(event.auras),
+		}]
+	}
+
+	private resolveAuras(auras: CombatantInfoAura[]) {
+		return auras.map(value => {
+			return {
+				id: value.ability,
+			}
+		})
 	}
 
 	private adaptTargetedFields(event: FflogsEvent) {

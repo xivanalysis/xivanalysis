@@ -205,6 +205,10 @@ export interface AttributeValue {
 	estimated: boolean
 }
 
+export interface Aura {
+	id: number,
+}
+
 /** An actors parameters have been updated. */
 interface EventActorUpdate extends FieldsBase {
 	/** ID of the updated actor. */
@@ -219,6 +223,8 @@ interface EventActorUpdate extends FieldsBase {
 	targetable?: boolean
 	/** Current attributes (stats) */
 	attributes?: AttributeValue[]
+	/** Auras on start of pull */
+	auras?: Aura[]
 }
 
 // Merge core events into the repository.

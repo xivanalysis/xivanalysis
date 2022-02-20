@@ -333,6 +333,8 @@
   "core.weaving.panel-count": "{0, plural, =1 {# weave} other {# weaves}}",
   "core.weaving.title": "Probleme beim Weaven (Anwenden von Fähigkeiten außerhalb der globalen Abklingzeit)",
   "core.weaving.why": "{0, plural, =1 {# Beispiel für falsches Weaving} other {# Beispiele für falsches Weaving}}",
+  "core.wellprepared.checklist.description": "",
+  "core.wellprepared.checklist.name": "",
   "dnc.about.description": "",
   "dnc.about.description.warning": "Beide Balken von Dancer sind hier simuliert, da es keine exakten Daten gibt. Wir haben unser Bestes gegeben, es so akkurat wie möglich zu bekommen, und im Zweifelsfall wird bei den Tipps hier zu deinen Gunsten entschieden. Falls du etwas bemerkst, das sehr falsch aussieht, schau bitte auf unserem Discord vorbei oder melde den Bug bei GitHub!",
   "dnc.dirty-dancing.checklist.closed-position-buff.description": "",
