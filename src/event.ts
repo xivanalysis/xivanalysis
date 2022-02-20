@@ -204,6 +204,7 @@ export interface AttributeValue {
 	value: number
 	estimated: boolean
 }
+
 /** An actors parameters have been updated. */
 interface EventActorUpdate extends FieldsBase {
 	/** ID of the updated actor. */
