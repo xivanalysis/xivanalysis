@@ -70,12 +70,7 @@ export class RiddleOfWind extends BuffWindow {
 			value: `${actualAttacks}/${maxAttacks}`,
 			info: <Trans id="mnk.row.statistic.info">
 				Missing auto attacks during <ActionLink id={this.riddleOfWind.id}/> means you were not
-				able get full uptime on the boss. This is a DPS loss due to missing auto attacks. <br/>
-				<br/>
-				❗❗❗Cursed monk stuff ahead❗❗❗<br/>
-				It is also possible to get 16 auto attacks in the <ActionLink id={this.riddleOfWind.id}/> duration,
-				but this requires very precise timing. More information can be found in The Balance discord under the
-				#mnk_resources channel.
+				able get full uptime on the boss. This is a DPS loss due to missing auto attacks.
 			</Trans>,
 		}))
 	}
