@@ -13,6 +13,7 @@ import {OneHpLockAdapterStep} from './oneHpLock'
 import {PrepullActionAdapterStep} from './prepullAction'
 import {PrepullStatusAdapterStep} from './prepullStatus'
 import {ReassignUnknownActorStep} from './reassignUnknownActor'
+import {SortStatusAdapterStep} from './sortStatus'
 import {SpeedStatsAdapterStep} from './speedStat'
 import {TranslateAdapterStep} from './translate'
 
@@ -41,6 +42,7 @@ class EventAdapter {
 			new DeduplicateAoEStep(opts),
 			new DeduplicateStatusApplicationStep(opts),
 			new DeduplicateActorUpdateStep(opts),
+			new SortStatusAdapterStep(opts),
 			new PrepullActionAdapterStep(opts),
 			new PrepullStatusAdapterStep(opts),
 			new OneHpLockAdapterStep(opts),
