@@ -36,9 +36,6 @@ export class SortStatusAdapterStep extends AdapterStep {
 
 		const applyingActions = getDataArrayBy(getActions(this.report), 'statusesApplied', statusKey)
 
-		// No actions are known to apply this status, so no need to sequence this event
-		if (applyingActions.length === 0) { return false }
-
 		return applyingActions.some(other => action === other.id)
 	})
 
