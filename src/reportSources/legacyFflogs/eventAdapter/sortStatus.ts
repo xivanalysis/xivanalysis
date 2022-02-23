@@ -8,7 +8,6 @@ import {AdapterStep} from './base'
 interface EventNode {
 	event: Event
 	isRoot: boolean
-	before: Event[]
 	after: Event[]
 }
 
@@ -29,7 +28,7 @@ export class SortStatusAdapterStep extends AdapterStep {
 		return sortedEvents
 	}
 
-	private didActionApplyStatus = _.memoize((action: number, status: number) => {
+	private canActionApplyStatus = _.memoize((action: number, status: number) => {
 		const statusKey = _.findKey(getStatuses(this.report), other => status === other.id) as StatusKey | undefined
 
 		// This shouldn't be possible, but bail if we don't find a matching status
@@ -47,7 +46,6 @@ export class SortStatusAdapterStep extends AdapterStep {
 		const nodes: EventNode[] = events.map(event => ({
 			event: event,
 			isRoot: true,
-			before: [],
 			after: [],
 		}))
 
@@ -55,27 +53,19 @@ export class SortStatusAdapterStep extends AdapterStep {
 			const event = node.event
 
 			if (event.type === 'statusApply') {
-				// Sorts the event *after* its corresponding action event
+				// Sorts the event after its corresponding action event
 				for (const other of nodes.slice(index + 1)) {
-					if (other.event.type === 'action' && this.didActionApplyStatus(other.event.action, event.status)) {
+					if (other.event.type === 'action' && this.canActionApplyStatus(other.event.action, event.status)) {
 						other.after.push(event)
-						node.isRoot = false
-					}
-				}
-			} else if (event.type === 'statusRemove') {
-				// Sorts the event *before* the target's first prepare event
-				for (const other of nodes.slice(0, index)) {
-					if (other.event.type === 'damage' && other.event.source === event.target) {
-						other.before.push(event)
 						node.isRoot = false
 					}
 				}
 			}
 		}
 
-		return nodes.reduce((events: Event[], node) => node.isRoot ?
-			events.concat(...node.before, node.event, ...node.after) :
-			events
+		return nodes.reduce((events: Event[], node) => node.isRoot
+			? events.concat(node.event, ...node.after)
+			: events
 		, [])
 	}
 }
