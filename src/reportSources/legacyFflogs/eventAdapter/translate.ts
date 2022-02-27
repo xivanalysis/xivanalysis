@@ -53,9 +53,6 @@ export class TranslateAdapterStep extends AdapterStep {
 	// Using negatives so we don't tread on fflog's positive sequence IDs
 	private nextFakeSequence = -1
 
-	// Set of sequence IDs that have been explicitly seen in a calculated event
-	private calculatedSequences = new Set<number>()
-
 	override adapt(baseEvent: FflogsEvent, _adaptedEvents: Event[]): Event[] {
 		switch (baseEvent.type) {
 		case 'begincast':
@@ -169,11 +166,12 @@ export class TranslateAdapterStep extends AdapterStep {
 		// Calc events should all have a packet ID for sequence purposes. Otherwise, this is a damage or heal effect packet for an over time effect.
 		const sequence = event.packetID
 
+		const cause = resolveCause(event.ability.guid)
+
 		// As of ~6.08, FF Logs reports a packetID that links all `damage` events from a single DOT application, however these still do not have calculated events.
-		if (sequence == null || !this.calculatedSequences.has(sequence)) {
+		if (sequence == null || cause.type === 'status') {
 			// Damage over time or Heal over time effects are sent as damage/heal events without a sequence ID -- there is no execute confirmation for over time effects, just the actual damage or heal event
 			// Similarly, certain failed hits will generate an "unpaired" event
-			const cause = resolveCause(event.ability.guid)
 			if (
 				cause.type === 'status'
 				|| EFFECT_ONLY_ACTIONS.has(event.ability.guid)
@@ -269,10 +267,6 @@ export class TranslateAdapterStep extends AdapterStep {
 			}],
 		}
 
-		if (sequence != null) {
-			this.calculatedSequences.add(sequence)
-		}
-
 		return [newEvent, ...this.buildActorUpdateResourceEvents(event)]
 	}
 
@@ -292,10 +286,6 @@ export class TranslateAdapterStep extends AdapterStep {
 				overheal,
 				sourceModifier: sourceHitType[event.hitType] ?? SourceModifier.NORMAL,
 			}],
-		}
-
-		if (sequence != null) {
-			this.calculatedSequences.add(sequence)
 		}
 
 		return [newEvent, ...this.buildActorUpdateResourceEvents(event)]
