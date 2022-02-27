@@ -179,8 +179,8 @@ export class TranslateAdapterStep extends AdapterStep {
 				|| EFFECT_ONLY_ACTIONS.has(event.ability.guid)
 				|| FAILED_HITS.has(event.hitType)
 			) {
-				if (event.type === 'damage') { return this.adaptDamageEvent(event) }
-				if (event.type === 'heal') { return this.adaptHealEvent(event) }
+				if (event.type === 'damage') { return this.adaptDamageEvent(event, true) }
+				if (event.type === 'heal') { return this.adaptHealEvent(event, true) }
 			}
 
 			// Damage event with no sequence ID to match to a calculated damage event, and does not resolve as an over time effect
@@ -239,8 +239,8 @@ export class TranslateAdapterStep extends AdapterStep {
 		]
 	}
 
-	private adaptDamageEvent(event: DamageEvent): Array<Events['damage' | 'actorUpdate']> {
-		const sequence = event.packetID
+	private adaptDamageEvent(event: DamageEvent, omitSequence: boolean = false): Array<Events['damage' | 'actorUpdate']> {
+		const sequence = omitSequence ? undefined : event.packetID
 
 		// Calculate source modifier
 		let sourceModifier = sourceHitType[event.hitType] ?? SourceModifier.NORMAL
@@ -276,8 +276,8 @@ export class TranslateAdapterStep extends AdapterStep {
 		return [newEvent, ...this.buildActorUpdateResourceEvents(event)]
 	}
 
-	private adaptHealEvent(event: HealEvent): Array<Events['heal' | 'actorUpdate']> {
-		const sequence = event.packetID
+	private adaptHealEvent(event: HealEvent, omitSequence: boolean = false): Array<Events['heal' | 'actorUpdate']> {
+		const sequence = omitSequence ? undefined : event.packetID
 		const overheal = event.overheal ?? 0
 
 		const newEvent: Events['heal'] = {
