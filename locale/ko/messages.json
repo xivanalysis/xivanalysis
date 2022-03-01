@@ -286,7 +286,7 @@
   "core.procs.suggestions.overwritten.content": "",
   "core.procs.suggestions.overwrote.why": "프록을 {0, plural, one {#회} other {#회}} 덧썼습니다.",
   "core.procs.title": "",
-  "core.raidbuffwindow.table.header.players": "",
+  "core.raidbuffwindow.table.header.players": "버프받은 파티원들",
   "core.report-flow.actor-not-found": "<0>존재하지 않는 캐릭터입니다.</0> 해당 \"{actorId}\" ID를 가진 캐릭터가 존재하지 않습니다. 이 리포트가 최근에 업로드 되었다면 가장 최근 데이터를 불러오기 위해 Refresh 버튼을 누르십시오.",
   "core.report-flow.job-unsupported.description": "높은 정확도와 폭넓은 지원을 위해 항상 지원자들을 모집하고 있습니다. 도움을 주시려면 저희 디스코드 채널로 오십시오!",
   "core.report-flow.job-unsupported.title": "선호하는 직업을 지원하지 않나요?",
