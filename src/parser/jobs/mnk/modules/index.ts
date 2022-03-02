@@ -14,6 +14,7 @@ import {Weaving} from './Weaving'
 export default [
 	ActionTimeline,
 	AoE,
+	Brotherhood,
 	CooldownDowntime,
 	Demolish,
 	Forms,
@@ -23,5 +24,4 @@ export default [
 	Steppies,
 	TwinSnakes,
 	Weaving,
-	Brotherhood,
 ]
