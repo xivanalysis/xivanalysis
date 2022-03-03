@@ -551,6 +551,8 @@
   "mch.wildfire.title": "Flambée",
   "mnk.about.description": "<0>Bonjour ami moine! Votre volée de coups de fait pas assez mal ? Est-ce que votre étoile à six branches reste une vaste blague?</0><1>Cet outil d'analyse vous aidera à révéler votre plein potentiel en tant que moine en pointant du doigt des erreurs qui peuvent être difficile à trouver par soi-même. L'accent est mis sur l'utilisation de vos buffs, le temps où ils sont pertinents ainsi que la synergie avec les compétences utilisées pendant l'activité de ceux-ci.</1><2>Si vous remarquez n'importe quoi de faux ou sujet à controverse, veuillez s'il vous plaît aller sur notre serveur Discord et le dire dans le canal #fb-monk.</2>",
   "mnk.action-timeline.chakras": "Chakras",
+  "mnk.cr.suggestions.content": "",
+  "mnk.cr.suggestions.why": "",
   "mnk.demolish.checklist.description": "",
   "mnk.demolish.checklist.name": "Garder Démolition actif",
   "mnk.demolish.checklist.requirement.name": "Temps d'activité total de <0/>",
