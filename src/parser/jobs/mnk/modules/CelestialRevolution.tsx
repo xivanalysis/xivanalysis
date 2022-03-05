@@ -34,7 +34,7 @@ export class CelestialRevolution extends Analyser {
 				</Trans>,
 				severity: SEVERITY.MAJOR,
 				why: <Trans id="mnk.cr.suggestions.why">
-					You cast <ActionLink action="CELESTIAL_REVOLUTION"/> <Plural value={this.count} one="# time" other="# times"/>.
+					<ActionLink action="CELESTIAL_REVOLUTION"/> was used <Plural value={this.count} one="# time" other="# times"/>.
 				</Trans>,
 			}))
 		}
