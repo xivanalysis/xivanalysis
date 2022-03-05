@@ -219,6 +219,13 @@ const CONTRIBUTORS = ensureRecord<Contributor>()({
 			JOBS.REAPER,
 		],
 	},
+	SQUARE: {
+		name: 'square',
+		avatar: require('./avatar/square.png'),
+		jobs: [
+			JOBS.MONK,
+		],
+	},
 })
 
 export default CONTRIBUTORS
