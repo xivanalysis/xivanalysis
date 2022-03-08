@@ -40,7 +40,7 @@ export class Revolution extends Analyser {
 				</Trans>,
 				severity: SEVERITY.MAJOR,
 				why: <Trans id="mnk.cr.suggestions.why">
-					{lowerBound} - {upperBound} potency lost due to <Plural value={this.revolutions} one="# use" other="# uses"/> of <ActionLink action="CELESTIAL_REVOLUTION"/>
+					{lowerBound} - {upperBound} potency lost due to <Plural value={this.revolutions} one="# use" other="# uses"/> of <ActionLink action="CELESTIAL_REVOLUTION"/>.
 				</Trans>,
 			}))
 		}
