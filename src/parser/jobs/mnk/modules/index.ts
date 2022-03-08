@@ -1,11 +1,11 @@
 import {ActionTimeline} from './ActionTimeline'
 import {AoE} from './AoE'
-import {CelestialRevolution} from './CelestialRevolution'
 import {CooldownDowntime} from './CooldownDowntime'
 import {Demolish} from './Demolish'
 import {Forms} from './Forms'
 import {GreasedLightning} from './GreasedLightning'
 import {Positionals} from './Positionals'
+import {Revolution} from './Revolution'
 import {RiddleOfFire} from './RiddleOfFire'
 import {Steppies} from './Steppies'
 import {TwinSnakes} from './TwinSnakes'
@@ -15,7 +15,7 @@ export default [
 	ActionTimeline,
 	AoE,
 	CooldownDowntime,
-	CelestialRevolution,
+	Revolution,
 	Demolish,
 	Forms,
 	GreasedLightning,
