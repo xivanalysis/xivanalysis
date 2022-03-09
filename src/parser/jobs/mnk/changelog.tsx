@@ -4,7 +4,7 @@ import React from 'react'
 export const changelog = [
 	{
 		date: new Date('2022-03-03'),
-		Changes: () => <>Add Celstial Revolution support.</>,
+		Changes: () => <>Add Celestial Revolution support.</>,
 		contributors: [CONTRIBUTORS.SQUARE],
 	},
 	{

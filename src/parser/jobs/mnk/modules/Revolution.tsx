@@ -8,9 +8,6 @@ import {Data} from 'parser/core/modules/Data'
 import Suggestions, {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import React from 'react'
 
-const MIN_POTENCY_LOSS = 150
-const MAX_POTENCY_LOSS = 250
-
 export class Revolution extends Analyser {
 	static override handle = 'cr'
 
@@ -31,8 +28,8 @@ export class Revolution extends Analyser {
 
 	private onComplete(): void {
 		if (this.revolutions > 0) {
-			const lowerBound = this.revolutions * MIN_POTENCY_LOSS
-			const upperBound = this.revolutions * MAX_POTENCY_LOSS
+			const lowerBound = this.revolutions * (this.data.actions.ELIXIR_FIELD.potency - this.data.actions.CELESTIAL_REVOLUTION.potency)
+			const upperBound = this.revolutions * (this.data.actions.RISING_PHOENIX.potency - this.data.actions.CELESTIAL_REVOLUTION.potency)
 			this.suggestions.add(new Suggestion({
 				icon: this.data.actions.CELESTIAL_REVOLUTION.icon,
 				content: <Trans id="mnk.cr.suggestions.content">
