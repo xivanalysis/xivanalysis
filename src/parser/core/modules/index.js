@@ -26,6 +26,7 @@ import Suggestions from './Suggestions'
 import {Timeline} from './Timeline'
 import {UnableToAct} from './UnableToAct'
 import {Weaving} from './Weaving'
+import {WellPrepared} from './WellPrepared'
 
 export default [
 	About,
@@ -56,4 +57,5 @@ export default [
 	Timeline,
 	UnableToAct,
 	Weaving,
+	WellPrepared,
 ]
