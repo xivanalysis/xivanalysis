@@ -777,6 +777,8 @@
   "rpr.procs.suggestions.overwritten.gibbet.content": "",
   "rpr.procs.suggestions.overwritten.gibbet.why": "プロックの上書きにより 威力 {0} を失いました。",
   "rpr.procs.title": "効果アップ",
+  "rpr.reaver.suggestion.dropped.content": "",
+  "rpr.reaver.suggestion.dropped.why": "",
   "rpr.tincture.suggestions.trackedActions.content": "幻薬の効果中に <0/> を2回使用することを意識してください。",
   "sam.Higanbana.checklist.requirement.name": "アクティブ率: <0/>",
   "sam.about.description": "",
