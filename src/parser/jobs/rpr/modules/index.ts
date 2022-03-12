@@ -11,6 +11,7 @@ import {HarvestMoon} from './HarvestMoon'
 import {OtherGauges} from './OtherGauges'
 import {Positionals} from './Positionals'
 import {Procs} from './Procs'
+import {Reaver} from './Reaver'
 import {Tincture} from './Tincture'
 import {Weaving} from './Weaving'
 
@@ -28,6 +29,7 @@ export default [
 	OtherGauges,
 	Positionals,
 	Procs,
+	Reaver,
 	Tincture,
 	Weaving,
 ]

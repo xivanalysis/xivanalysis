@@ -4,6 +4,11 @@ import React from 'react'
 
 export const changelog = [
 	{
+		date: new Date('2022-03-11'),
+		Changes: () => <>Add Soul Reaver checks.</>,
+		contributors: [CONTRIBUTORS.RYAN],
+	},
+	{
 		date: new Date('2022-02-17'),
 		Changes: () => <>Add Enhanced Cross Reaping and Void Reaping to procs.</>,
 		contributors: [CONTRIBUTORS.AY],
@@ -22,6 +27,11 @@ export const changelog = [
 		date: new Date('2022-02-17'),
 		Changes: () => <>Fix Death gauge not showing in timeline.</>,
 		contributors: [CONTRIBUTORS.AY],
+	},
+	{
+		date: new Date('2022-02-16'),
+		Changes: () => <>Allow overriden Arcane Circles to simulate their full duration, and track number of players hit.</>,
+		contributors: [CONTRIBUTORS.DEAN],
 	},
 	{
 		date: new Date('2022-02-13'),
