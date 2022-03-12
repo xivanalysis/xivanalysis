@@ -195,7 +195,7 @@ export const MCH = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003018.png',
 		onGcd: false,
 		cooldown: 120000,
-		statusesApplied: ['WILDFIRE_SELF'],
+		statusesApplied: ['WILDFIRE_SELF', 'WILDFIRE'],
 	},
 
 	DETONATOR: {
