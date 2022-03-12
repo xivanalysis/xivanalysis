@@ -551,6 +551,8 @@
   "mch.wildfire.title": "ワイルドファイア",
   "mnk.about.description": "<0>ようこそモンクさん！　連撃がクリティカルにならない？　六合星導脚で虚無タイムが発生する？　</0><1>こちらのアナライザーを使えば、 Logs だけでは発見が難しい問題点を洗い出し、真の実力を引き出すヒントが見付かるはずです。主にフォーカスを当てているのは、バフ中のスキル回し、バフのアクティブ率で、アビリティを適切に使用するための補助スキルの使い方をアドバイスします。</1><2>どこかが間違っていたり、新しい機能の提案がある場合は、 Discord の #fb-monk チャンネルに参加して報告をお願いします。</2>",
   "mnk.action-timeline.chakras": "闘気",
+  "mnk.cr.suggestions.content": "",
+  "mnk.cr.suggestions.why": "",
   "mnk.demolish.checklist.description": "<0/>は最強の参の型です(3秒tickのDoTダメージが入ります)。",
   "mnk.demolish.checklist.name": "破砕拳の維持率",
   "mnk.demolish.checklist.requirement.name": "アクティブ率: <0/>",

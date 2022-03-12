@@ -127,6 +127,7 @@ export const MNK = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		statusesApplied: ['FORMLESS_FIST'],
+		potency: 600,
 	},
 
 	CELESTIAL_REVOLUTION: {
@@ -136,6 +137,7 @@ export const MNK = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		statusesApplied: ['FORMLESS_FIST'],
+		potency: 450,
 	},
 
 	RISING_PHOENIX: {
@@ -145,6 +147,7 @@ export const MNK = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		statusesApplied: ['FORMLESS_FIST'],
+		potency: 700,
 	},
 
 	PHANTOM_RUSH: {
