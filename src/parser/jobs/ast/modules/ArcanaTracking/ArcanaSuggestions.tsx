@@ -25,7 +25,7 @@ import sealSolar from './seal_solar.png'
 const TIMELINE_UPPER_MOD = 30000 // in ms
 const OPTIMAL_CARD_PERCENTAGE = 0.06
 const NOT_OPTIMAL_CARD_PERCENTAGE = 0.03
-const PARTY_DAMAGE_ROWS_SHOW = 8 //maximum of 3 party members are shown for this purpose
+const PARTY_DAMAGE_ROWS_SHOW = 3 //maximum of 3 party members are shown for this purpose
 const MAX_PARTY_MEMBERS = 8
 
 const SEAL_ICON = {
