@@ -4,6 +4,11 @@ import React from 'react'
 
 export const changelog = [
 	{
+		date: new Date('2022-03-11'),
+		Changes: () => <>Add Soul Reaver checks.</>,
+		contributors: [CONTRIBUTORS.RYAN],
+	},
+	{
 		date: new Date('2022-02-16'),
 		Changes: () => <>Allow overriden Arcane Circles to simulate their full duration, and track number of players hit.</>,
 		contributors: [CONTRIBUTORS.DEAN],
@@ -12,11 +17,6 @@ export const changelog = [
 		date: new Date('2022-02-16'),
 		Changes: () => <>Add Soul and Shroud gauge tracking.</>,
 		contributors: [CONTRIBUTORS.AY],
-	},
-	{
-		date: new Date('2022-02-13'),
-		Changes: () => <>Add Soul Reaver checks.</>,
-		contributors: [CONTRIBUTORS.RYAN],
 	},
 	{
 		date: new Date('2022-02-12'),
