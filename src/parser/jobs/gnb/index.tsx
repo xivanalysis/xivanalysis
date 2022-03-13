@@ -112,7 +112,7 @@ export const GUNBREAKER = new Meta({
 		},
 
 		{
-			date: new Date('2022-3-12-2022'),
+			date: new Date('2022-03-12'),
 			Changes: () => <>
 				<ul>
 					<li>Added Double Down to expected actions under tincture</li>
