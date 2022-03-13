@@ -110,5 +110,15 @@ export const GUNBREAKER = new Meta({
 			</>,
 			contributors: [CONTRIBUTORS.RYAN],
 		},
+
+		{
+			date: new Date('2022-03-12'),
+			Changes: () => <>
+				<ul>
+					<li>Added Double Down to expected actions under tincture</li>
+				</ul>,
+			</>,
+			contributors: [CONTRIBUTORS.RYAN],
+		},
 	],
 })
