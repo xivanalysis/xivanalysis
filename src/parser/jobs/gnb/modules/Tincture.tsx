@@ -20,6 +20,10 @@ export class Tincture extends CoreTincture {
 					action: this.data.actions.BLASTING_ZONE,
 					expectedPerWindow: 1,
 				},
+				{
+					action: this.data.actions.DOUBLE_DOWN,
+					expectedPerWindow: 1,
+				},
 			],
 			suggestionIcon: this.data.actions.INFUSION_STR.icon,
 			suggestionContent: <Trans id="gnb.tincture.suggestions.trackedActions.content">
