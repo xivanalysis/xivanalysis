@@ -4,8 +4,10 @@ export const DISPLAY_ORDER = {
 	ENSHROUD: 3,
 
 	// Super low priority, some of these override default ordering
-	WEAVING: 50,
-	POSITIONALS: 51,
-	INTERRUPTS: 52,
-	TINCTURES: 53,
+	AOE: 50,
+	COMBOS: 51,
+	POSITIONALS: 52,
+	WEAVING: 53,
+	INTERRUPTS: 54,
+	TINCTURES: 55,
 }
