@@ -745,7 +745,7 @@
   "rpr.actiontimeline.bloodstalk": "Blood Stalk",
   "rpr.actiontimeline.lemure": "Lemure",
   "rpr.actiontimeline.movement": "Movement",
-  "rpr.arcanecircle.suggestions.content": "Each <0/> window should contain 2 uses of <1/> and a use of <2/>.",
+  "rpr.arcanecircle.suggestions.content": "Each <0/> window should contain 2 uses of <1/>and 1 use of <2/>. In your opener, only 1 <3/> is expected.",
   "rpr.arcanecircle.title": "Arcane Circle",
   "rpr.deathsdesign.requirement.uptime.name": "<0/> uptime",
   "rpr.deathsdesign.rule.description": "Death's Design increases all damage you deal to the target by 10%. Aim to keep this debuff up at all times.",
