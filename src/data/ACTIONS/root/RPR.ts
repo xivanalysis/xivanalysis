@@ -303,12 +303,14 @@ export const RPR = ensureActions({
 		id: 24391,
 		name: 'Unveiled Gallows',
 		icon: 'https://xivapi.com/i/003000/003619.png',
+		cooldown: 1000,
 	},
 
 	UNVEILED_GIBBET: {
 		id: 24390,
 		name: 'Unveiled Gibbet',
 		icon: 'https://xivapi.com/i/003000/003618.png',
+		cooldown: 1000,
 	},
 
 	GRIM_SWATHE: {
