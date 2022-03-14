@@ -67,12 +67,6 @@ export class Enshroud extends BuffWindow {
 	static override title = t('rpr.enshroud.title')`Enshroud`
 	static override displayOrder = DISPLAY_ORDER.ENSHROUD
 
-	private reapings: Action[] = [
-		this.data.actions.CROSS_REAPING,
-		this.data.actions.VOID_REAPING,
-		this.data.actions.GRIM_REAPING,
-	]
-
 	override buffStatus = this.data.statuses.ENSHROUDED
 
 	override initialise() {
@@ -83,15 +77,26 @@ export class Enshroud extends BuffWindow {
 		this.addEvaluator(new ExpectedActionGroupsEvaluator({
 			expectedActionGroups: [
 				{
-					actions: this.reapings,
+					actions: [
+						this.data.actions.CROSS_REAPING,
+						this.data.actions.VOID_REAPING,
+						this.data.actions.GRIM_REAPING,
+					],
 					expectedPerWindow: REAPINGS_PER_SHROUD,
 				},
 				{
-					actions: [this.data.actions.LEMURES_SLICE,
-						this.data.actions.LEMURES_SCYTHE],
+					actions: [
+						this.data.actions.LEMURES_SLICE,
+						this.data.actions.LEMURES_SCYTHE,
+					],
 					expectedPerWindow: 2,
 				},
-				{actions: [this.data.actions.COMMUNIO], expectedPerWindow: 1},
+				{
+					actions: [
+						this.data.actions.COMMUNIO,
+					],
+					expectedPerWindow: 1,
+				},
 			],
 			suggestionIcon: this.data.actions.ENSHROUD.icon,
 			suggestionContent: <Trans id="rpr.enshroud.suggestions.content">
