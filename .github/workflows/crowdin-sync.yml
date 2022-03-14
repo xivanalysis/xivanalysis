@@ -7,6 +7,7 @@ jobs:
   sync_translations:
     name: Sync translations from Crowdin
     runs-on: ubuntu-latest
+    if: github.repository_owner == 'xivanalysis'
 
     steps:
     - uses: actions/checkout@v2
