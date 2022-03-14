@@ -750,7 +750,6 @@
   "rpr.deathsdesign.requirement.uptime.name": "アクティブ率: <0/>",
   "rpr.deathsdesign.rule.description": "「デスデザイン」はターゲットに与える全てのダメージを10%上昇させます。このバフを常に維持するように心がけましょう。",
   "rpr.deathsdesign.rule.name": "<0/> を維持しましょう",
-  "rpr.defensives.info": "アルケインクレストは戦闘中に無視できない量の自己シールドとパーティーの全体回復を供給する。牽制はターゲット可能な敵から発生する全体ダメージを軽減することが可能である。これらのアクションはギミックの失敗や軽減不足、ヒーリング不足によるワイプからあなたを救う可能性がある。",
   "rpr.enshroud.enhanced.header": "交互に使用しているかどうか",
   "rpr.enshroud.suggestions.content": "<0/> の効果中には <1/>と<2/>に加え<3/> (またはこれに相当する範囲攻撃) がそれぞれ2回、そして<4/>が1回含まれている必要があります。",
   "rpr.enshroud.title": "レムールシュラウド",
