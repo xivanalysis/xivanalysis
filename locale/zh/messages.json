@@ -681,7 +681,6 @@
   "rdm.dualcast.suggestions.wasted.content": "<0/>存在时只应该使用<1/>、<2/>、或者<3/>。",
   "rdm.dualcast.suggestions.wasted.why": "在连续咏唱触发时，使用了 {0} {1, plural, one {次} other {次}}咏唱时间较短的魔法。",
   "rdm.dualcast.title": "连续咏唱",
-  "rdm.embolden.rotation-table.header.buffed": "收到增益的队员",
   "rdm.embolden.title": "鼓励",
   "rdm.gauge.black-mana-lost-to-manafication": "黑魔元",
   "rdm.gauge.resource.blackmana": "黑魔元",
