@@ -80,6 +80,11 @@ export abstract class Procs extends Analyser {
 	protected invulnProcSeverityTiers = DEFAULT_SEVERITY_TIERS
 
 	/**
+	 * Subclassing analysers may override this to toggle off timeline display
+	 */
+	protected showProcTimelineRow: boolean = true
+
+	/**
 	 * Subclassing analysers should not assign these directly. The corresponding override functions should be used instead to ensure that the
 	 * variables needed for the Plurals typically used in suggestion Whys are ready for setting into the object
 	 */
@@ -239,10 +244,12 @@ export abstract class Procs extends Analyser {
 
 		this.addEventHook('complete', this.onComplete)
 
-		this.row = this.timeline.addRow(new SimpleRow({
-			label: 'Procs',
-			order: 0,
-		}))
+		if (this.showProcTimelineRow) {
+			this.row = this.timeline.addRow(new SimpleRow({
+				label: 'Procs',
+				order: 0,
+			}))
+		}
 
 		this.trackedProcs.forEach(group => {
 			this.usages.set(group, {timestamps: [], events: []})
@@ -382,20 +389,22 @@ export abstract class Procs extends Analyser {
 			const status = procGroup.procStatus
 			if (status == null) { return }
 
-			const row = this.getRowForStatus(status)
 			const fightStart = this.parser.pull.timestamp
 			// Finalise the buff if it was still active, shouldn't be counted as dropped or overwritten
 			this.stopAndSave(procGroup)
 
 			// Add buff windows to the timeline
-			this.history.get(procGroup)?.forEach(window => {
-				if (window.stop == null) { return }
-				row.addItem(new StatusItem({
-					status,
-					start: window.start - fightStart,
-					end: window.stop - fightStart,
-				}))
-			})
+			if (this.showProcTimelineRow) {
+				const row = this.getRowForStatus(status)
+				this.history.get(procGroup)?.forEach(window => {
+					if (window.stop == null) { return }
+					row.addItem(new StatusItem({
+						status,
+						start: window.start - fightStart,
+						end: window.stop - fightStart,
+					}))
+				})
+			}
 		})
 
 		// Dropped Procs

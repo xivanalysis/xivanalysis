@@ -13,6 +13,7 @@ import {ImmortalSacrifice} from './ImmortalSacrifice'
 import {OtherGauges} from './OtherGauges'
 import {Positionals} from './Positionals'
 import {Procs} from './Procs'
+import {Reaver} from './Reaver'
 import {Tincture} from './Tincture'
 
 export default [
@@ -30,6 +31,7 @@ export default [
 	OtherGauges,
 	Positionals,
 	Procs,
+	Reaver,
 	Tincture,
 	Weaving,
 ]

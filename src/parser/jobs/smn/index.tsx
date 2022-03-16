@@ -28,6 +28,11 @@ export const SUMMONER = new Meta({
 
 	changelog: [
 		{
+			date: new Date('2022-02-19'),
+			Changes: () => <>Add sorted egis to header.</>,
+			contributors: [CONTRIBUTORS.IAOTLE],
+		},
+		{
 			date: new Date('2022-01-29'),
 			Changes: () => <>Fix duplicate searing light rows when there are multiple summoners in the party.</>,
 			contributors: [CONTRIBUTORS.DEAN],

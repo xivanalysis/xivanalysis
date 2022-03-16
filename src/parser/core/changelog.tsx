@@ -10,6 +10,14 @@ export const changelog: ChangelogEntry[] = [
 	// 	contributors: [CONTRIBUTORS.YOU],
 	// },
 	{
+		date: new Date('2022-02-17'),
+		Changes: () => <>
+			Allow core procs to hide the timeline row. This was previously enforced, jobs can now hide it.
+			This is useful for jobs that have GCDs with lots of procs getting duplicated information.
+		</>,
+		contributors: [CONTRIBUTORS.AY],
+	},
+	{
 		date: new Date('2022-02-11'),
 		Changes: () => <>
 		Fix Swiftcast end of fight forgiveness. It was increasing the number of expected GCDs to 2 instead of reducing it to 0.
