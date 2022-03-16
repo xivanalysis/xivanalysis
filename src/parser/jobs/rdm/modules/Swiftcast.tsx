@@ -1,6 +1,6 @@
 import {Trans} from '@lingui/react'
 import {DataLink} from 'components/ui/DbLink'
-import {Action, ActionKey} from 'data/ACTIONS'
+import {Action} from 'data/ACTIONS'
 import {BASE_GCD} from 'data/CONSTANTS'
 import {dependency} from 'parser/core/Injectable'
 import {Actors} from 'parser/core/modules/Actors'
@@ -16,10 +16,10 @@ export class Swiftcast extends CoreSwiftcast {
 	@dependency private actors!: Actors
 
 	// If Swiftcast and Acceleration are both up, these actions consume Acceleration first.
-	private ACCELERATION_ACTIONS: ActionKey[] = [
-		'VERTHUNDER_III',
-		'VERAERO_III',
-		'IMPACT',
+	private accelerationActions: Action[] = [
+		this.data.actions.VERTHUNDER_III,
+		this.data.actions.VERAERO_III,
+		this.data.actions.IMPACT,
 	]
 
 	override considerSwiftAction(action: Action): boolean {
@@ -31,8 +31,7 @@ export class Swiftcast extends CoreSwiftcast {
 				return false
 			}
 			// Ignore acceleration actions since they won't consume Swiftcast when you have Acceleration.
-			if (this.actors.current.hasStatus(this.data.statuses.ACCELERATION.id)
-				&& this.ACCELERATION_ACTIONS.map(actionKey => this.data.actions[actionKey]).includes(action)) {
+			if (this.actors.current.hasStatus(this.data.statuses.ACCELERATION.id) && this.accelerationActions.includes(action)) {
 				return false
 			}
 			//Then it had to be VerRaise, VerAero III, or VerThunder III or we were in downtime so it's valid
