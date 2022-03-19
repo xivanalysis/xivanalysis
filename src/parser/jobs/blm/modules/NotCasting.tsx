@@ -115,7 +115,7 @@ export class NotCasting extends Analyser {
 				windows.start,
 				windows.stop ?? windows.start,
 			)
-			return duration === 0 || (windows.stop ?? windows.start) - windows.start > gcdLength + GCD_ERROR_OFFSET
+			return duration === 0 && (windows.stop ?? windows.start) - windows.start > gcdLength + GCD_ERROR_OFFSET
 		})
 	}
 
@@ -134,7 +134,7 @@ export class NotCasting extends Analyser {
 				{this.noCastWindows.history.map(notCasting => {
 					return <Table.Row key={notCasting.start}>
 						<Table.Cell>{this.parser.formatEpochTimestamp(notCasting.start)}</Table.Cell>
-						<Table.Cell>&ge;{this.parser.formatDuration((notCasting.stop ?? notCasting.start) -notCasting.start-gcdLength-GCD_ERROR_OFFSET)}</Table.Cell>
+						<Table.Cell>&ge;{this.parser.formatDuration((notCasting.stop ?? notCasting.start) -notCasting.start - gcdLength - GCD_ERROR_OFFSET)}</Table.Cell>
 						<Table.Cell>
 							<Button onClick={() =>
 								this.timeline.show(notCasting.start - this.parser.pull.timestamp, (notCasting.stop ?? notCasting.start) - this.parser.pull.timestamp)}>
