@@ -158,6 +158,8 @@ interface EventDamage extends FieldsMultiTargeted {
 		sourceModifier: SourceModifier
 		/** Target damage modifier. */
 		targetModifier: TargetModifier
+		/** Bonus multiplier on the damage from which positionals can be inferred */
+		bonusPercent: number
 	}>>
 }
 

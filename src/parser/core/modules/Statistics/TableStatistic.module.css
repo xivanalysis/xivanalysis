@@ -1,0 +1,16 @@
+.container {
+	display: inline-block;
+	margin: -10px 0 -10px -10px;
+}
+
+.table {
+	display: inherit;
+	vertical-align: top;
+	text-align: left;
+	border-collapse: collapse;
+}
+
+.table td,
+.table th {
+	padding: 0 5px;
+}

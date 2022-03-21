@@ -100,6 +100,7 @@ Array [
     "targets": Array [
       Object {
         "amount": 0,
+        "bonusPercent": 13,
         "overkill": 0,
         "sourceModifier": 2,
         "target": "3",
@@ -237,6 +238,7 @@ Array [
     "targets": Array [
       Object {
         "amount": 4176,
+        "bonusPercent": 0,
         "overkill": 0,
         "sourceModifier": 0,
         "target": "3",
@@ -359,6 +361,7 @@ Array [
     "targets": Array [
       Object {
         "amount": 43259,
+        "bonusPercent": 0,
         "overkill": 0,
         "sourceModifier": 0,
         "target": "1951",

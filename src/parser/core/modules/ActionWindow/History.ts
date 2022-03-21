@@ -83,6 +83,32 @@ export class History<T> {
 	}
 
 	/**
+	 * Reopens the last entry and returns it.
+	 * If the previous entry was still open, returns the entry as is.
+	 * If there is no previous entry, does nothing and returns undefined.
+	 */
+	public reopenLastEntry() {
+		const last = _.last(this.entries)
+		if (last != null) {
+			last.end = undefined
+		}
+		return last
+	}
+
+	/**
+	 * Returns the end of the last entry.
+	 * If there is no previous entry or if the current entry is still open,
+	 * returns undefined
+	 */
+	public endOfLastEntry() {
+		const last = _.last(this.entries)
+		if (last != null) {
+			return last.end
+		}
+		return undefined
+	}
+
+	/**
 	 * Opens a new entry and adds it to the history.
 	 * Assumes any existing entry has been closed.
 	 * @param timestamp The timestamp at which the entry is opened.

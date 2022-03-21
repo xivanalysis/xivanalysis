@@ -129,7 +129,7 @@ export const SAM = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		combo: {
-			from: [7483, 25780],
+			from: [25780],
 			end: true,
 		},
 		statusesApplied: ['FUKA'],
@@ -162,6 +162,9 @@ export const SAM = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003189.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
+		combo: {
+			start: true,
+		},
 	},
 
 	OGI_NAMIKIRI: {
