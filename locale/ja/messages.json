@@ -118,7 +118,7 @@
   "blm.procs.suggestions.dropped-t3ps.content": "<1/>を使用せずに時間切れで失ったために、1つ以上の<0/>procを失いました。",
   "blm.procs.suggestions.dropped-t3ps.why": "{droppedThunderClouds, plural, other {# 個のサンダガproc}}が失われた。",
   "blm.rotation-watchdog.error-messages.died": "<0/>死んだ",
-  "blm.rotation-watchdog.error-messages.dropped-astral-umbral": "",
+  "blm.rotation-watchdog.error-messages.dropped-astral-umbral": "アストラルファイヤかアンブラルブリザードが切れた",
   "blm.rotation-watchdog.error-messages.extra-f1": "エクストラ<0/>",
   "blm.rotation-watchdog.error-messages.extra-t3": "エクストラ<0/>",
   "blm.rotation-watchdog.error-messages.manafont-before-despair": "<0/>は<1/>の前で使いました。",
