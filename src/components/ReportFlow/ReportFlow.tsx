@@ -14,7 +14,6 @@ import {Switch, useRouteMatch, Route, useParams} from 'react-router-dom'
 import {Actor, Pull, Report} from 'report'
 import {ReportStore} from 'reportSources'
 import {Icon} from 'semantic-ui-react'
-import {ThemeStore} from 'store/theme'
 import {formatDuration} from 'utilities'
 import {ActorList} from './ActorList'
 import {Analyse} from './Analyse'
@@ -39,8 +38,7 @@ const editionName = {
 }
 
 export interface ReportFlowProps {
-	reportStore: ReportStore,
-	themeStore: ThemeStore,
+	reportStore: ReportStore
 }
 
 /**
@@ -48,7 +46,7 @@ export interface ReportFlowProps {
  * source-specific report handling. Parent report sources must provide a report
  * store for consumption by the flow.
  */
-export function ReportFlow({reportStore, themeStore}: ReportFlowProps) {
+export function ReportFlow({reportStore}: ReportFlowProps) {
 	const {path, url} = useRouteMatch()
 	const {report} = reportStore
 
@@ -89,7 +87,6 @@ export function ReportFlow({reportStore, themeStore}: ReportFlowProps) {
 				<Route path={`${path}/:pullId`}>
 					<ActorListRoute
 						reportStore={reportStore}
-						themeStore={themeStore}
 						meta={meta}
 						report={report}
 					/>
@@ -121,8 +118,7 @@ function DataProvider({children, report}:DataProviderProps) {
 }
 
 interface ActorListRouteProps {
-	reportStore: ReportStore,
-	themeStore: ThemeStore,
+	reportStore: ReportStore
 	meta: Meta
 	report: Report
 }
@@ -133,7 +129,6 @@ interface ActorListRouteParams {
 
 function ActorListRoute({
 	reportStore,
-	themeStore,
 	meta: parentMeta,
 	report,
 }: ActorListRouteProps) {
@@ -192,7 +187,6 @@ function ActorListRoute({
 			<Route path={path}>
 				<ActorList
 					reportStore={reportStore}
-					themeStore={themeStore}
 					meta={meta}
 					report={report}
 					pull={pull}
