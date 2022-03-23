@@ -5,8 +5,6 @@ import {Icon} from 'semantic-ui-react'
 import {StoreContext} from 'store'
 import styles from './ThemeMenu.module.css'
 
-const DEBUG = process.env.NODE_ENV === 'development'
-
 @observer
 class ThemeMenu extends Component {
 	static contextType = StoreContext

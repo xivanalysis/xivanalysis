@@ -1,6 +1,5 @@
 import {Trans} from '@lingui/react'
 import {Message, Segment} from 'akkd'
-import Color from 'color'
 import {JobIcon} from 'components/ui/JobIcon'
 import NormalisedMessage from 'components/ui/NormalisedMessage'
 import {Role, RoleKey, ROLES, JobKey, JOBS} from 'data/JOBS'
