@@ -681,7 +681,6 @@
   "rdm.dualcast.suggestions.wasted.content": "<0/> 상태에서는 <1/>, <2/>, <3/> 마법만 사용하여야 합니다.",
   "rdm.dualcast.suggestions.wasted.why": "{0}개의 연속 마법이 시전 시간이 짧은 스킬 사용에 낭비되었습니다.",
   "rdm.dualcast.title": "연속 마법",
-  "rdm.embolden.rotation-table.header.buffed": "버프받은 파티원들",
   "rdm.embolden.title": "",
   "rdm.gauge.black-mana-lost-to-manafication": "흑마나",
   "rdm.gauge.resource.blackmana": "",

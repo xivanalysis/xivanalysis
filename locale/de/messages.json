@@ -681,7 +681,6 @@
   "rdm.dualcast.suggestions.wasted.content": "Mit <0/> solltest du nur <1/>,<2/> oder <3/> benutzen",
   "rdm.dualcast.suggestions.wasted.why": "{0} {1, plural, one {Doppelzauber wurde} other {Doppelzauber wurden}} für ohnehin kurze Zauber verschwendet.",
   "rdm.dualcast.title": "Doppelzauber",
-  "rdm.embolden.rotation-table.header.buffed": "Spieler gebufft",
   "rdm.embolden.title": "",
   "rdm.gauge.black-mana-lost-to-manafication": "Schwarz",
   "rdm.gauge.resource.blackmana": "",
