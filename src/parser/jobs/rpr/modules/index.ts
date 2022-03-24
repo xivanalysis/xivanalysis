@@ -5,7 +5,6 @@ import {Combos} from './Combos'
 import {CooldownDowntime} from './CooldownDowntime'
 import {DeathGauge} from './DeathGauge'
 import {DeathsDesign} from './DeathsDesign'
-import {DefensiveCooldowns} from './DefensiveCooldowns'
 import {Enshroud} from './Enshroud'
 import {HarvestMoon} from './HarvestMoon'
 import {OtherGauges} from './OtherGauges'
@@ -23,7 +22,6 @@ export default [
 	CooldownDowntime,
 	DeathsDesign,
 	DeathGauge,
-	DefensiveCooldowns,
 	Enshroud,
 	HarvestMoon,
 	OtherGauges,
