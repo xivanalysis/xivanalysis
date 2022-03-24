@@ -65,6 +65,7 @@
 
 	/* Basic Light Mode values */
 	--text: rgba(0, 0, 0, 0.87);
+	--inactive-text: rgba(0, 0, 0, 0.4);
 	--background: themeWhite;
 	--backdrop: themeLight;
 	--text-muted: #666;
@@ -95,6 +96,7 @@
 .darkMode {
 	/* Basic Dark Mode values */
 	--text: rgba(255, 255, 255, 0.87);
+	--inactive-text: rgba(255, 255, 255, 0.4);
 	--background: #313131;
 	--backdrop: #3d3d3d;
 	--text-muted: #aaa;

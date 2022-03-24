@@ -1,4 +1,4 @@
-@value lg from "theme.module.css";
+@value lg, textTheme from "theme.module.css";
 
 .title {
 	position: relative;
@@ -22,6 +22,7 @@
 .description {
 	display: flex;
 	align-items: center;
+	color: textTheme;
 }
 
 .description p {
