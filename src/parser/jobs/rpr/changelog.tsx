@@ -4,6 +4,16 @@ import React from 'react'
 
 export const changelog = [
 	{
+		date: new Date('2022-03-24'),
+		Changes: () => <>Add missing Unveiled actions to timeline.</>,
+		contributors: [CONTRIBUTORS.AY],
+	},
+	{
+		date: new Date('2022-03-24'),
+		Changes: () => <>Remove usage statistic for defensive cooldowns until display issues can be resolved.</>,
+		contributors: [CONTRIBUTORS.AY],
+	},
+	{
 		date: new Date('2022-03-11'),
 		Changes: () => <>Add Soul Reaver checks.</>,
 		contributors: [CONTRIBUTORS.RYAN],
@@ -11,16 +21,6 @@ export const changelog = [
 	{
 		date: new Date('2022-02-17'),
 		Changes: () => <>Add Enhanced Cross Reaping and Void Reaping to procs.</>,
-		contributors: [CONTRIBUTORS.AY],
-	},
-	{
-		date: new Date('2022-02-17'),
-		Changes: () => <>Reorder timeline and module navigation.</>,
-		contributors: [CONTRIBUTORS.AY],
-	},
-	{
-		date: new Date('2022-02-17'),
-		Changes: () => <>Cleanup code to be easier for other developers to work with.</>,
 		contributors: [CONTRIBUTORS.AY],
 	},
 	{
