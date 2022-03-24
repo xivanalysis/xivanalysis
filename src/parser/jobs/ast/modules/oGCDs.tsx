@@ -13,7 +13,7 @@ const DEFAULT_HEAL_CHECKLIST_TIERS = {
 export class oGCDs extends CooldownDowntime {
 
 	override defenseChecklistTiers = DEFAULT_HEAL_CHECKLIST_TIERS
-	override defenseChecklistName = <Trans id="ast.cooldownDowntime.use-heal-ogcds">Use your healing OGDs</Trans>
+	override defenseChecklistName = <Trans id="ast.cooldownDowntime.use-heal-ogcds">Use your healing oGCDs</Trans>
 	override defenseChecklistDescription = <Trans id="ast.cooldownDowntime.heals-ogcd.description">
 		Try to use your healing oGCDs to reduce the amount of GCD healing necessary. The below list provides an oGCD healing snapshot for you to consider as you progress with your parties and is not meant to be an extensive healing checklist to complete.
 	</Trans>

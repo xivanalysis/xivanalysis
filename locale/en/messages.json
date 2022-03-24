@@ -17,7 +17,7 @@
   "ast.arcana-undraw-usage.suggestions.content": "Due to Draw starting its cooldown the moment it's used, there is no longer any reason to <0/> instead of playing it or directly overwriting it with <1/>.",
   "ast.arcana-undraw-usage.suggestions.why": "{0, plural, one {# instance} other {# instances}} of using undraw.",
   "ast.cooldownDowntime.heals-ogcd.description": "Try to use your healing oGCDs to reduce the amount of GCD healing necessary. The below list provides an oGCD healing snapshot for you to consider as you progress with your parties and is not meant to be an extensive healing checklist to complete.",
-  "ast.cooldownDowntime.use-heal-ogcds": "Use your healing OGDs",
+  "ast.cooldownDowntime.use-heal-ogcds": "Use your healing oGCDs",
   "ast.crown-play.checklist.description": "Playing <0/> will allow for extra oGCD damage through <1/> or extra oGCD healing through <2/>. Try to play <3/> as much as possible to allow for possible extra damage or extra healing without wasting additional resources.",
   "ast.crown-play.checklist.lady": "<0/> uses",
   "ast.crown-play.checklist.lord": "<0/> uses",
