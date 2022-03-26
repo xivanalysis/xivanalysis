@@ -17,7 +17,7 @@
   "ast.arcana-undraw-usage.suggestions.content": "Étant donné que Tirage commence son temps de recharge au moment où il est utilisé, il n’y a plus de raison de <0/> au lieu de le jouer ou de le surcharger avec <1/>.",
   "ast.arcana-undraw-usage.suggestions.why": "{0, plural,one {# cas}other {# cas}} d'utilisation de défausse.",
   "ast.cooldownDowntime.heals-ogcd.description": "N'utiliser que les soins oGCD permet de réduire la quantité de soin GCD nécessaire. La liste ci-dessous montre une partie des oGCDs de soin à prendre en compte au fur et à mesure que vous progressez au sein de vos équipes et n'est pas une liste exhaustive des soins à faire.",
-  "ast.cooldownDowntime.use-heal-ogcds": "Utilisez vos oGCDs de soin",
+  "ast.cooldownDowntime.use-heal-ogcds": "",
   "ast.crown-play.checklist.description": "Jouer <0/> permettra de faire plus de dégâts 0GCD via <1/> ou plus de soin oGCD avec<2/>. Essayez de jouer <3/> autant que possible pour maximiser la quantité de dégât ou de soin sans gaspiller plus de ressources.",
   "ast.crown-play.checklist.lady": "<0/> utilisations",
   "ast.crown-play.checklist.lord": "<0/> utilisations",

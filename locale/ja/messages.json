@@ -17,7 +17,7 @@
   "ast.arcana-undraw-usage.suggestions.content": "ドローは使用した瞬間にクールダウンを開始するため、<1/> で使用したり変換したりする代わりに、<0/> を使用する必要がなくなります。",
   "ast.arcana-undraw-usage.suggestions.why": "アルカナ破棄の使用回数：{0, plural, other {# 回}}",
   "ast.cooldownDowntime.heals-ogcd.description": "必要な詠唱ヒールの回数を減らすために回復アビリティを活用してください。以下のリストは、あなたのパーティの進行に応じた回復アビリティの使用状況です。クリアするためのチェックリストではありません。",
-  "ast.cooldownDowntime.use-heal-ogcds": "回復アビリティを使いましょう",
+  "ast.cooldownDowntime.use-heal-ogcds": "",
   "ast.crown-play.checklist.description": "<0/>を使うことで、<1/>によってダメージを与えたり、<2/>によってアビリティヒールが使えたりします。できる限り<3/>を使うようにして、リソース消費無しで追加のダメージもしくはヒールを得られるようにしましょう。",
   "ast.crown-play.checklist.lady": "使用回数：<0/>",
   "ast.crown-play.checklist.lord": "使用回数：<0/>",
