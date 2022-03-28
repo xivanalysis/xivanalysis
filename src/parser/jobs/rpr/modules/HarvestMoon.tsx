@@ -38,7 +38,7 @@ export class HarvestMoon extends Analyser {
 
 	private getExpectedUses(): number {
 		const ADJUSTED_CAST = this.data.actions.SOULSOW.castTime + SOULSOW_BUFFER
-		const invulnWindows = this.invulnerability.getWindows().filter((window) => window.end - window.start >=  ADJUSTED_CAST)
+		const invulnWindows = this.invulnerability.getWindows().filter((window) => window.end - window.start >= ADJUSTED_CAST)
 
 		if (this.unableToAct.getDuration({start: this.parser.pull.timestamp, end: this.parser.pull.timestamp + this.parser.pull.duration}) > 0) {
 			return invulnWindows.filter(window => this.canChargeMoon(window)).length + 1

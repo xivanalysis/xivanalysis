@@ -31,7 +31,7 @@ const SHROUD_ACTIONS: ActionKey[] = [
 class EnhancedReapingEvaluator extends NotesEvaluator {
 
 	header = {
-		header: <Trans id ="rpr.enshroud.enhanced.header">Alternated Reapings</Trans>,
+		header: <Trans id="rpr.enshroud.enhanced.header">Alternated Reapings</Trans>,
 		accessor: 'enhanced',
 	}
 
@@ -101,7 +101,7 @@ export class Enshroud extends BuffWindow {
 			suggestionIcon: this.data.actions.ENSHROUD.icon,
 			suggestionContent: <Trans id="rpr.enshroud.suggestions.content">
 				Each <ActionLink action="ENSHROUD"/> window should contain 2 uses each of <ActionLink action="CROSS_REAPING"/>, <ActionLink action="VOID_REAPING"/>,
-				and <ActionLink action="LEMURES_SLICE"/> (or their AoE equivalents) and 1 use of <ActionLink action="COMMUNIO"/>.
+				and <ActionLink action="LEMURES_SLICE"/> (or their AoE equivalents), and 1 use of <ActionLink action="COMMUNIO"/>.
 			</Trans>,
 			suggestionWindowName: <ActionLink action="ENSHROUD" showIcon={false} />,
 			severityTiers: SEVERITIES,

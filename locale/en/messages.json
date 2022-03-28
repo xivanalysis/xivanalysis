@@ -750,7 +750,7 @@
   "rpr.deathsdesign.rule.description": "Death's Design increases all damage you deal to the target by 10%. Aim to keep this debuff up at all times.",
   "rpr.deathsdesign.rule.name": "Keep <0/> up",
   "rpr.enshroud.enhanced.header": "Alternated Reapings",
-  "rpr.enshroud.suggestions.content": "Each <0/> window should contain 2 uses each of <1/>, <2/>, and <3/> (or their AoE equivalents) and 1 use of <4/>.",
+  "rpr.enshroud.suggestions.content": "Each <0/> window should contain 2 uses each of <1/>, <2/>, and <3/> (or their AoE equivalents), and 1 use of <4/>.",
   "rpr.enshroud.title": "Enshroud",
   "rpr.gauge.lemure.outofbounds.reason": "<0/> can't be executed with {0} stacks of Lemure's Shroud and {1} stacks of Void Shroud as this would go over the shared gauge max.",
   "rpr.gauge.shroud.suggestions.overcap.content": "Avoid letting your Shroud gauge overcap as it can cost you uses of <0/> over the fight.",
