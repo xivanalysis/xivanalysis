@@ -10,6 +10,12 @@ export const changelog: ChangelogEntry[] = [
 	// 	contributors: [CONTRIBUTORS.YOU],
 	// },
 	{
+		date: new Date('2022-03-29'),
+		Changes: () => <>
+			Update Always Be Casting to target 98% and show at top of checklist.
+		</>,
+		contributors: [CONTRIBUTORS.AY],
+	},	{
 		date: new Date('2022-02-17'),
 		Changes: () => <>
 			Allow core procs to hide the timeline row. This was previously enforced, jobs can now hide it.
