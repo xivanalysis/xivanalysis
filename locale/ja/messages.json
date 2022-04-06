@@ -376,7 +376,6 @@
   "drg.about.description": "<0>このアナライザーは、あなたを先入観から解き放ち、ジューシーな色を出す手助けをになることを目指しています。竜騎士のスキル回しはきっちり決まっているため、提案は主にスキル回しをスムーズに保つこと、紅の竜血の効果時間とバフ合わせに関する問題を解決することに焦点を当てます。</0>",
   "drg.battlelitany.notes.they-overwrote": "他の竜騎士に上書きされました",
   "drg.battlelitany.notes.you-overwrote": "既存の効果を上書きしました",
-  "drg.battlelitany.rotation-table.header.buffed": "バフを与えられた人数",
   "drg.battlelitany.rotation-table.header.interference": "",
   "drg.battlelitany.title": "バトルリタニー",
   "drg.bl.suggestions.missedgcd.content": "<0/>の効果時間中に6回以上のウェポンスキルを使いましょう。",

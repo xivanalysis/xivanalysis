@@ -376,7 +376,6 @@
   "drg.about.description": "<0>这个分析工具旨在帮助你告别人们对龙骑的刻板印象，防止躺尸，并打出赏心悦目的数据。因为龙骑士的循环非常严格，这里的建议主要着眼于如何维持流畅的循环，同时指出你在红莲龙血和buff对齐等方面的问题。</0>",
   "drg.battlelitany.notes.they-overwrote": "被其他龙骑士覆盖",
   "drg.battlelitany.notes.you-overwrote": "你覆盖了现有的持续时间",
-  "drg.battlelitany.rotation-table.header.buffed": "收到增益的队员",
   "drg.battlelitany.rotation-table.header.interference": "持续时间重叠",
   "drg.battlelitany.title": "战斗连祷",
   "drg.bl.suggestions.missedgcd.content": "尝试在每个<0/>的持续时间内插入6个GCD技能。",
