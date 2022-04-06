@@ -86,10 +86,6 @@ export default class LanceCharge extends BuffWindow {
 					expectedPerWindow: 1,
 				},
 				{
-					action: this.data.actions.LIFE_SURGE,
-					expectedPerWindow: 1,
-				},
-				{
 					action: this.data.actions.SPINESHATTER_DIVE,
 					expectedPerWindow: 1,
 				},
@@ -105,7 +101,7 @@ export default class LanceCharge extends BuffWindow {
 			adjustCount: this.adjustExpectedActionCount.bind(this),
 		}))
 
-		this.addEvaluator(new DisplayedActionEvaluator([this.data.actions.DRAGONFIRE_DIVE]))
+		this.addEvaluator(new DisplayedActionEvaluator([this.data.actions.LIFE_SURGE, this.data.actions.DRAGONFIRE_DIVE]))
 	}
 
 	private onLcStatusApply(event: Events['statusApply']) {
