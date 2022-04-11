@@ -13,12 +13,17 @@ export const MACHINIST = new Meta({
 	</>,
 	supportedPatches: {
 		from: '6.0',
-		to: '6.08',
+		to: '6.1',
 	},
 	contributors: [
 		{user: CONTRIBUTORS.HINT, role: ROLES.MAINTAINER},
 	],
 	changelog: [
+		{
+			date: new Date('2022-04-11'),
+			Changes: () => <>Marked as supported for 6.1.</>,
+			contributors: [CONTRIBUTORS.HINT],
+		},
 		{
 			date: new Date('2022-02-09'),
 			Changes: () => <>Moved gauge to a resource graph in the timeline.</>,

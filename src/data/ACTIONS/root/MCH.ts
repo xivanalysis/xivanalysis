@@ -16,7 +16,7 @@ export const MCH = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003001.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		potency: 180,
+		potency: 140,
 		combo: {
 			start: true,
 		},
@@ -31,7 +31,7 @@ export const MCH = ensureActions({
 		potency: 100,
 		combo: {
 			from: [2866, 7411],
-			potency: 260,
+			potency: 210,
 		},
 	},
 
@@ -63,7 +63,7 @@ export const MCH = ensureActions({
 		potency: 100,
 		combo: {
 			from: [2868, 7412],
-			potency: 340,
+			potency: 270,
 			end: true,
 		},
 	},
@@ -74,7 +74,7 @@ export const MCH = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003031.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		potency: 220,
+		potency: 200,
 		combo: {
 			start: true,
 		},
@@ -86,10 +86,10 @@ export const MCH = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003032.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		potency: 100,
+		potency: 120,
 		combo: {
 			from: 7411,
-			potency: 330,
+			potency: 280,
 		},
 	},
 
@@ -99,10 +99,10 @@ export const MCH = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003033.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		potency: 100,
+		potency: 110,
 		combo: {
 			from: 7412,
-			potency: 440,
+			potency: 360,
 			end: true,
 		},
 	},
@@ -113,7 +113,7 @@ export const MCH = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003030.png',
 		onGcd: true,
 		cooldown: 1500,
-		potency: 220,
+		potency: 180,
 	},
 
 	AUTO_CROSSBOW: {
