@@ -1,5 +1,5 @@
-import { Layer } from 'data/layer'
-import { StatusRoot } from '../root'
+import {Layer} from 'data/layer'
+import {StatusRoot} from '../root'
 
 export const patch610: Layer<StatusRoot> = {
 	patch: '6.1',

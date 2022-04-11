@@ -1,6 +1,6 @@
 import {Layer} from 'data/layer'
 import {ActionRoot} from '../root'
-import { patch610 } from './patch6.1'
+import {patch610} from './patch6.1'
 
 export const layers: Array<Layer<ActionRoot>> = [
 	// Layers should be in their own files, and imported for use here.
