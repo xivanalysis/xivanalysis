@@ -24,7 +24,7 @@ export abstract class ActionWindow extends Analyser {
 	@dependency private timeline!: Timeline
 
 	/**
-	* The captured windows.
+	 * The captured windows.
 	 */
 	protected history = new History<Array<Events['action']>>(() => [])
 	/**
