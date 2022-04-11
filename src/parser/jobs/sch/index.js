@@ -18,13 +18,18 @@ export const SCHOLAR = new Meta({
 	</>,
 	supportedPatches: {
 		from: '6.0',
-		to: '6.08',
+		to: '6.1',
 	},
 	contributors: [
 		{user: CONTRIBUTORS.MYPS, role: ROLES.DEVELOPER},
 		{user: CONTRIBUTORS.DTHOMASH, role: ROLES.DEVELOPER},
 	],
 	changelog: [
+		{
+			date: new Date('2022-04-11'),
+			Changes: () => <>Patch 6.1 Support. Duration of Expedience tracked to be 10s instead of 20s. No other functional changes on this update.</>,
+			contributors: [CONTRIBUTORS.SUSHIROU],
+		},
 		{
 			date: new Date('2021-12-19'),
 			Changes: () => <>Initial Endwalker data update.</>,
