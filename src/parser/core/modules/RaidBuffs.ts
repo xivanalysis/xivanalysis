@@ -63,10 +63,7 @@ export class RaidBuffs extends Analyser {
 				{key: 'TRICK_ATTACK_VULNERABILITY_UP', name: 'Trick Attack'}
 			)
 		} else {
-			this.settings.set(
-				this.data.statuses.MUG_VULNERABILITY_UP.id,
-				{key: 'MUG_VULNERABILITY_UP', name: 'Mug'}
-			)
+			this.settings.set(this.data.statuses.MUG.id, {key: 'MUG'})
 		}
 
 		// Event hooks
