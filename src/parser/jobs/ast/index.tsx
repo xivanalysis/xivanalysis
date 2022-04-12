@@ -29,10 +29,11 @@ export const ASTROLOGIAN = new Meta({
 	</>,
 	supportedPatches: {
 		from: '6.0',
-		to: '6.08',
+		to: '6.1',
 	},
 	contributors: [
-		{user: CONTRIBUTORS.OTOCEPHALY, role: ROLES.DEVELOPER},
+		{ user: CONTRIBUTORS.SUSHIROU, role: ROLES.MAINTAINER },
+		{ user: CONTRIBUTORS.OTOCEPHALY, role: ROLES.DEVELOPER },
 	],
 	changelog: [
 		{
