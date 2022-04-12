@@ -20,11 +20,6 @@ export const MACHINIST = new Meta({
 	],
 	changelog: [
 		{
-			date: new Date('2022-04-11'),
-			Changes: () => <>Marked as supported for 6.1.</>,
-			contributors: [CONTRIBUTORS.HINT],
-		},
-		{
 			date: new Date('2022-02-09'),
 			Changes: () => <>Moved gauge to a resource graph in the timeline.</>,
 			contributors: [CONTRIBUTORS.HINT],
