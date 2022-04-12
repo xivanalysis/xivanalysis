@@ -37,16 +37,6 @@ export const ASTROLOGIAN = new Meta({
 	],
 	changelog: [
 		{
-			date: new Date('2022-04-11'),
-			Changes: () => <>
-				<strong>6.1 Support</strong>
-				<ul>
-					<li>Bumped to 6.1 support. No functional changes at Lv90 from 6.08.</li>
-				</ul>
-			</>,
-			contributors: [CONTRIBUTORS.SUSHIROU],
-		},
-		{
 			date: new Date('2022-01-26'),
 			Changes: () => <>
 				<strong>6.08 Support</strong>
