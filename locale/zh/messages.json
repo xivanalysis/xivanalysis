@@ -853,8 +853,6 @@
   "sge.actiontimeline.addersgall": "蛇胆量谱",
   "sge.cooldownDowntime.defense-cd-metric": "使用减伤和治疗能力技可以帮助你维持团队血线，这样你就能继续造成伤害并治疗<0/>目标。你不应该浪费这些技能，你应该试着寻找有效的使用时机。",
   "sge.cooldownDowntime.ogcd-cd-metric": "<0/> 比 <1/> 强，避免因为觉得它们充能太慢就不用。",
-  "sge.cooldowns.pepsis.why": "你没有使用<0/>",
-  "sge.cooldowns.suggestions.pepsis.content": "<0/> 可以将未消耗的 <1/> 和 <2/> 提供的护盾转化为治疗，如果队里有护盾即将超时且接下来没有Boss伤害，则可以使用 <3/> 将他们回满从而避免护盾浪费。",
   "sge.dots.requirement.uptime.name": "<0/> 覆盖率",
   "sge.dots.rule.description": "<0/>的总威力很大，请尽量保持此DoT的常驻。另外，它产生的GCD空档的时间也可以用来插入能力技或其他技能。",
   "sge.dots.rule.name": "保持你的 DoT 常驻",
