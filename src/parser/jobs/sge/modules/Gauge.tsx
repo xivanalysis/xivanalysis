@@ -201,18 +201,21 @@ export class Gauge extends CoreGauge {
 		const addersgallExpirationTime = this.addersgallTimer.getExpirationTime(addersgallLeniency, this.parser.currentEpochTimestamp, forceGainUtaWindows, addersgallLeniency)
 		const lostAddersgall = Math.floor(addersgallExpirationTime / ADDERSGALL_TIME_REQUIRED)
 
-		if (lostAddersgall > 0) {
-			this.suggestions.add(new Suggestion({
-				icon: this.data.actions.KERACHOLE.icon,
-				content: <Trans id="sge.gauge.suggestions.lost-addersgall.content">
-					You lost Addersgall due to capping the gauge and letting the timer stop. Your Addersgall actions are your primary healing and mitigation tools, as well as contributing to your MP recovery, so you should try to use another one before regaining your third stack.
-				</Trans>,
-				severity: SEVERITY.MEDIUM,
-				why: <Trans id="sge.gauge.suggestions.lost-addersgall.why">
-					<Plural value={lostAddersgall} one="# Addersgall stack was" other="# Addersgall stacks were"/> lost to timer inactivity.
-				</Trans>,
-			}))
-		}
+		this.suggestions.add(new TieredSuggestion({
+			icon: this.data.actions.KERACHOLE.icon,
+			content: <Trans id="sge.gauge.suggestions.lost-addersgall.content">
+				You lost Addersgall due to capping the gauge and letting the timer stop. Your Addersgall actions are your primary healing and mitigation tools, as well as contributing to your MP recovery, so you should try to use another one before regaining your third stack.
+			</Trans>,
+			tiers: {
+				1: SEVERITY.MINOR,
+				3: SEVERITY.MEDIUM,
+				5: SEVERITY.MAJOR,
+			},
+			value: lostAddersgall,
+			why: <Trans id="sge.gauge.suggestions.lost-addersgall.why">
+				<Plural value={lostAddersgall} one="# Addersgall stack was" other="# Addersgall stacks were"/> lost to timer inactivity.
+			</Trans>,
+		}))
 
 		const rhizomataLostStacks = Math.floor(this.rhizomataLoss / ADDERSGALL_TIME_REQUIRED)
 		if (rhizomataLostStacks > 0) {
