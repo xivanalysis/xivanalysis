@@ -67,6 +67,7 @@ export class Gauge extends CoreGauge {
 
 	private adderstingGauge = this.add(new CounterGauge({
 		maximum: ADDERSTING_MAX_STACKS,
+		initialValue: this.parser.patch.before('6.1') ? 0 : ADDERSTING_MAX_STACKS,
 		graph: {
 			label: <Trans id="sge.gauge.resource.addersting">Addersting</Trans>,
 			color: ADDERSTING_COLOR.fade(GAUGE_FADE),
