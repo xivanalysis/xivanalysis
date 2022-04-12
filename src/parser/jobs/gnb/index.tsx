@@ -20,7 +20,7 @@ export const GUNBREAKER = new Meta({
 
 	supportedPatches: {
 		from: '6.0',
-		to: '6.08',
+		to: '6.1',
 	},
 
 	contributors: [
@@ -116,6 +116,15 @@ export const GUNBREAKER = new Meta({
 			Changes: () => <>
 				<ul>
 					<li>Added Double Down to expected actions under tincture</li>
+				</ul>,
+			</>,
+			contributors: [CONTRIBUTORS.RYAN],
+		},
+		{
+			date: new Date('2022-04-11'),
+			Changes: () => <>
+				<ul>
+					<li>Bump Gunbreaker to 6.1 Support</li>
 				</ul>,
 			</>,
 			contributors: [CONTRIBUTORS.RYAN],
