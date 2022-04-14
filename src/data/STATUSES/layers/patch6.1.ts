@@ -14,5 +14,13 @@ export const patch610: Layer<StatusRoot> = {
 
 		// SCH 6.1 duration changes
 		EXPEDIENCE: {duration: 10000},
+
+		// DNC 6.1 changes
+		SILKEN_SYMMETRY: {
+			name: 'Silken Symmetry',
+		},
+		SILKEN_FLOW: {
+			name: 'Silken Flow',
+		},
 	},
 }
