@@ -15,6 +15,9 @@ export const patch610: Layer<StatusRoot> = {
 		// SCH 6.1 duration changes
 		EXPEDIENCE: {duration: 10000},
 
+		// SGE 6.1 changes
+		SOTERIA: {stacksApplied: 4},
+
 		// DNC 6.1 changes
 		SILKEN_SYMMETRY: {
 			name: 'Silken Symmetry',
