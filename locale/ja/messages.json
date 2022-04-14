@@ -853,8 +853,6 @@
   "sge.actiontimeline.addersgall": "アダーガル",
   "sge.cooldownDowntime.defense-cd-metric": "軽減と回復のクールダウンを使えば <0/> の対象にダメージと回復を与え続けながら、パーティのHP維持に貢献することが出来ます。これらのアクションは無駄にはなりませんが、その有用性を最大化するために使用するタイミングを計画的に行うようにしましょう。",
   "sge.cooldownDowntime.ogcd-cd-metric": "<0/> は <1/> よりも強いです。 両方のチャージを長くして使い損なわないようにしましょう。",
-  "sge.cooldowns.pepsis.why": "あなたは <0/> を使用しませんでした。",
-  "sge.cooldowns.suggestions.pepsis.content": "<0/> を使うと、 使用していない <1/> や <2/> のバリアを回復に変換することが出来ます。パーティのバリアがダメージを受ける前に切れてしまう場合、 <3/> を使うことでバリアを無駄にならないようにすることが出来ます。",
   "sge.dots.requirement.uptime.name": "アクティブ率: <0/>",
   "sge.dots.rule.description": "<0/>は、ダメージの大部分を占めます。このDoTを常に維持することを目指してください。また、アダーガルのアビリティや他のクールダウンを挟むことで、GCDの稼働時間を落とさずに操作することができます。",
   "sge.dots.rule.name": "DoTを切らさないようにしましょう",
