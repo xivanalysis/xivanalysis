@@ -360,7 +360,7 @@
   "dnc.feather-gauge.suggestions.overcapped-feathers.why": "{featherOvercap, plural, one {# feather} other {# feathers}} may have been lost.",
   "dnc.gauge.resource.esprit": "Esprit",
   "dnc.gauge.resource.feathers": "Feathers",
-  "dnc.procs.suggestions.drops.content": "Avoid dropping your procs unless absolutely necessary. If you have to drop one to keep your Esprit from overcapping, <0/> will lose the least DPS overall.",
+  "dnc.procs.suggestions.drops.content": "Avoid dropping your procs unless absolutely necessary. If you have to drop one to keep your Esprit from overcapping, <0/> or <1/> will lose the least DPS overall.",
   "dnc.procs.suggestions.overwrite.content": "Avoid overwriting your procs. Your proc actions are stronger than your normal combo, so overwriting them is a significant DPS loss.",
   "dnc.technicalities.rotation-table.header.buffed": "Players Buffed",
   "dnc.technicalities.rotation-table.header.missed": "<0/> On Time?",
