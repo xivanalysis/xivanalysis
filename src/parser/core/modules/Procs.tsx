@@ -58,6 +58,8 @@ export abstract class Procs extends Analyser {
 
 	/**
 	 * Subclassing analysers must provide a list of tracked procs
+	 * Note that if a given action can consume multiple proc statuses, the statuses should be listed in the order that the game will consume them
+	 * See DNC's Procs subclass for an example
 	 */
 	protected abstract trackedProcs: ProcGroup[]
 
@@ -128,9 +130,13 @@ export abstract class Procs extends Analyser {
 	 * @returns True if there was a tracked proc usage for the action at the given timestamp, false otherwise
 	 */
 	private checkActionWasProc(actionId: number, timestamp: number): boolean {
-		const procGroup = this.getTrackedGroupByAction(actionId)
-		if (procGroup == null) { return false }
-		return this.getUsagesForStatus(procGroup).some(event => event.timestamp === timestamp)
+		const procGroups = this.getTrackedGroupsByAction(actionId)
+		if (procGroups.length === 0) { return false }
+		let wasProc = false
+		for (const procGroup of procGroups) {
+			wasProc = wasProc || this.getUsagesForStatus(procGroup).some(event => event.timestamp === timestamp)
+		}
+		return wasProc
 	}
 
 	private overwrites = new Map<ProcGroup, ProcGroupEvents>()
@@ -302,13 +308,16 @@ export abstract class Procs extends Analyser {
 	protected jobSpecificOnConsumeProc(_procGroup: ProcGroup, _event: Events['action']): void { /* */ }
 
 	private onCast(event: Events['action']): void {
-		const procGroup = this.getTrackedGroupByAction(event.action)
+		const procGroups = this.getTrackedGroupsByAction(event.action)
 
-		// If this action consumed a proc, log it
-		if (procGroup != null && this.checkConsumeProc(procGroup, event)) {
-			this.stopAndSave(procGroup, event, 'usage')
+		for (const procGroup of procGroups) {
+			// If this action consumed a proc, log it
+			if (this.checkConsumeProc(procGroup, event)) {
+				this.stopAndSave(procGroup, event, 'usage')
 
-			this.jobSpecificOnConsumeProc(procGroup, event)
+				this.jobSpecificOnConsumeProc(procGroup, event)
+				break // Get out of the loop, we only consume one proc status at a time
+			}
 		}
 
 		// Reset the variable tracking hardcasts since we just finished casting something
@@ -539,5 +548,9 @@ export abstract class Procs extends Analyser {
 
 	protected getTrackedGroupByAction(actionId: number): ProcGroup | undefined {
 		return this.trackedProcs.find(group => group.consumeActions.find(action => action.id === actionId) != null)
+	}
+
+	protected getTrackedGroupsByAction(actionId: number): ProcGroup[] {
+		return this.trackedProcs.filter(group => group.consumeActions.find(action => action.id === actionId) != null)
 	}
 }
