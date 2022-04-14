@@ -546,10 +546,6 @@ export abstract class Procs extends Analyser {
 		return typeof status === 'number' ? this.trackedProcs.find(group => group.procStatus.id === status) : status
 	}
 
-	protected getTrackedGroupByAction(actionId: number): ProcGroup | undefined {
-		return this.trackedProcs.find(group => group.consumeActions.find(action => action.id === actionId) != null)
-	}
-
 	protected getTrackedGroupsByAction(actionId: number): ProcGroup[] {
 		return this.trackedProcs.filter(group => group.consumeActions.find(action => action.id === actionId) != null)
 	}
