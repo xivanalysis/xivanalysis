@@ -67,4 +67,9 @@ export const changelog = [
 		Changes: () => <>Fixed a bug causing Sharpcasts to appear as if they were consumed by Umbral Ice Paradoxes in the timeline.</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],
 	},
+	{
+		date: new Date('2022-03-19'),
+		Changes: () => <>Fixed a bug with the Not Casting check that was giving incorrect results for fight downtime and end-of-fight casts.</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
 ]
