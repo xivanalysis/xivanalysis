@@ -853,8 +853,6 @@
   "sge.actiontimeline.addersgall": "Addersgall",
   "sge.cooldownDowntime.defense-cd-metric": "Using your mitigation and healing cooldowns allows you to help keep the party healthy while continuing to deal damage and healing to your <0/> target. While you shouldn't waste these actions, you should try to plan out when to use them to maximize their utility.",
   "sge.cooldownDowntime.ogcd-cd-metric": "<0/> is stronger than <1/>. Try not to lose out on using it by sitting on both charges for too long.",
-  "sge.cooldowns.pepsis.why": "You didn't use <0/>",
-  "sge.cooldowns.suggestions.pepsis.content": "<0/> allows you to convert unused <1/> or <2/> shields into healing. If your party has a shield that will wear off before more damage hits, you can use <3/> to help top them up and keep the shield from going to waste.",
   "sge.dots.requirement.uptime.name": "<0/> uptime",
   "sge.dots.rule.description": "<0/> makes up a good portion of your damage. Aim to keep this DoT up at all times. It can also be used to weave your Addersgall abilities or other cooldowns, or maneuver around without dropping GCD uptime.",
   "sge.dots.rule.name": "Keep your DoT up",
