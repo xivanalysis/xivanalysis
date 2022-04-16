@@ -120,15 +120,5 @@ export const GUNBREAKER = new Meta({
 			</>,
 			contributors: [CONTRIBUTORS.RYAN],
 		},
-		{
-			date: new Date('2022-04-11'),
-			Changes: () => <>
-				<ul>
-					<li>Bump Gunbreaker to 6.1 Support</li>
-					<li> Adjust Royal Guard cooldown to reflect 6.1 changes</li>
-				</ul>,
-			</>,
-			contributors: [CONTRIBUTORS.RYAN],
-		},
 	],
 })
