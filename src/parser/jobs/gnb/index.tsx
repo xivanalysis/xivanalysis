@@ -125,6 +125,7 @@ export const GUNBREAKER = new Meta({
 			Changes: () => <>
 				<ul>
 					<li>Bump Gunbreaker to 6.1 Support</li>
+					<li> Adjust Royal Guard cooldown to reflect 6.1 changes</li>
 				</ul>,
 			</>,
 			contributors: [CONTRIBUTORS.RYAN],
