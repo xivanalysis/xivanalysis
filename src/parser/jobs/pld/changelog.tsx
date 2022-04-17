@@ -3,6 +3,13 @@ import React from 'react'
 
 export const changelog = [
 	{
+		datee: new Date('2022-04-17'),
+		Changes: () => <>
+			Various spells no longer break combo. Blade of Faith no longer combos from Confiteor.
+		</>,
+		contributors: [CONTRIBUTORS.ARIA],
+	},
+	{
 		date: new Date('2022-02-16'),
 		Changes: () => <>
 			Spells under Requiescat now properly instant for weaving purposes.
