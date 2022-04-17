@@ -665,6 +665,8 @@
   "pld.requiescat.suggestions.wrong-gcd.why": "在 {0} 的持续时间内打了{missedCasts, plural, one {#个错误的技能} other {#个错误的技能}}。",
   "pld.requiescat.table.note": "每次<0/>持续时间内应包含5次魔法，包括4次<1/>或<2/>，并以<3/>收尾。",
   "pld.requiescat.title": "安魂祈祷的使用",
+  "pld.timeouts.faith.content": "",
+  "pld.timeouts.faith.why": "",
   "pld.tincture.suggestions.missedgcd.content": "尝试在每个<0/>的持续时间内插入13个GCD技能。",
   "pld.tincture.suggestions.trackedactions.content": "每次<2/>里都应该用一次<0/>和至少一次<1/>。",
   "rdm.about.description": "<0>本分析会把将你的<1>样本</1>再次<2>解析</2>，提供给你所需的信息。</0><3>如果你想了解更多有关赤魔的内容，可以在 <4>The Balance</4> Discord 群组中查看指南，在其中的 <5>#rdm_questions</5> 频道里与其他玩家相互沟通。</3>",

@@ -665,6 +665,8 @@
   "pld.requiescat.suggestions.wrong-gcd.why": "{missedCasts, plural, one {# missing cast} other {# missing casts}} during the {0} buff window.",
   "pld.requiescat.table.note": "Each of your <0/> windows should contain 5 spells, consisting of 4 casts of <1/> or <2/> and ending with a cast of <3/>.",
   "pld.requiescat.title": "Requiescat Usage",
+  "pld.timeouts.faith.content": "Try to consume <0/> before it expires as the <1/> combo is your strongest combo.",
+  "pld.timeouts.faith.why": "<0/> timed out {0, plural, one {# time} other {# times}}.",
   "pld.tincture.suggestions.missedgcd.content": "Try to land 13 GCDs during every <0/> window.",
   "pld.tincture.suggestions.trackedactions.content": "One use of <0/> and at least one use of <1/> should occur during every <2/> window.",
   "rdm.about.description": "<0>This analyzer aims to give you the information you need to turn your <1>parses</1> into <2>parses</2></0><3>If you would like to learn more about RDM, check the guides over at <4>The Balance</4>, and have a chat in the <5>#rdm_questions</5> channel.</3>",

@@ -103,7 +103,6 @@ export const PLD = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 1500,
-		breaksCombo: true,
 	},
 	ROYAL_AUTHORITY: {
 		id: 3539,
@@ -126,7 +125,6 @@ export const PLD = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 1500,
-		breaksCombo: true,
 		potency: 270,
 	},
 	HOLY_CIRCLE: {
@@ -136,7 +134,6 @@ export const PLD = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 1500,
-		breaksCombo: true,
 		potency: 130,
 	},
 	ATONEMENT: {
@@ -154,10 +151,7 @@ export const PLD = ensureActions({
 		icon: 'https://xivapi.com/i/002000/002518.png',
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
-		potency: 900,
-		combo: {
-			start: true,
-		},
+		breaksCombo: true,
 	},
 	BLADE_OF_FAITH: {
 		id: 25748,
@@ -166,8 +160,7 @@ export const PLD = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		combo: {
-			from: 16459,
-			potency: 250,
+			start: true,
 		},
 	},
 	BLADE_OF_TRUTH: {

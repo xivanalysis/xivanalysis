@@ -665,6 +665,8 @@
   "pld.requiescat.suggestions.wrong-gcd.why": "",
   "pld.requiescat.table.note": "",
   "pld.requiescat.title": "안식기도 사용기록",
+  "pld.timeouts.faith.content": "",
+  "pld.timeouts.faith.why": "",
   "pld.tincture.suggestions.missedgcd.content": "<0/> 구간 마다 반드시 13회의 글쿨기를 포함하십시오.",
   "pld.tincture.suggestions.trackedactions.content": "",
   "rdm.about.description": "<0>이 분석기는 여러분의 FFlogs 결과를 <1>이것</1>에서 <2>이것</2>으로 바꾸는데 필요한 정보를 제공합니다.</0><3>적마도사에 대해서 더 많은 정보가 필요하다면 <4>The Balance</4> 디스코드의 잡 가이드와 <5>#rdm_questions</5> 채널을 활용합시다.</3>",
