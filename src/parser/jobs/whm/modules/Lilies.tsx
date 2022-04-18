@@ -1,6 +1,7 @@
 import {Plural, Trans} from '@lingui/react'
 import Color from 'color'
 import {DataLink} from 'components/ui/DbLink'
+import {JOBS} from 'data/JOBS'
 import {Event} from 'event'
 import {filter, oneOf} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
@@ -14,6 +15,12 @@ const LILY_MAX_STACKS = 3
 const LILY_TIME_REQUIRED = 20000
 
 const BLOOD_LILY_BLOOM = 3
+
+const GAUGE_FADE = 0.25
+const TIMER_FADE = 0.75
+const BLOODLILY_FADE = 0.5
+const LILY_COLOR = Color('#4f73b5')
+const BLOODLILY_COLOR = Color('#b52d6c')
 
 export class Lilies extends CoreGauge {
 
@@ -33,8 +40,8 @@ export class Lilies extends CoreGauge {
 		maximum: LILY_MAX_STACKS,
 		initialValue: LILY_INITIAL_STACKS,
 		graph: {
-			label: 'LILY',
-			color: Color('#9F9F9F'),
+			label: <Trans id="whm.gauge.resource.lily">Lily</Trans>,
+			color: LILY_COLOR.fade(GAUGE_FADE),
 		},
 	}))
 
@@ -43,7 +50,7 @@ export class Lilies extends CoreGauge {
 		onExpiration: this.onLilyGeneration.bind(this),
 		graph: {
 			label: <Trans id="whm.gauge.resource.lily-timer">Lily Timer</Trans>,
-			color: Color('blue').fade(0.25),
+			color: LILY_COLOR.fade(TIMER_FADE),
 		},
 
 	}))
@@ -52,8 +59,8 @@ export class Lilies extends CoreGauge {
 		maximum: BLOOD_LILY_BLOOM,
 		initialValue: 0,
 		graph: {
-			label: <Trans>Blood Lily</Trans>,
-			color: Color('#333333'),
+			label: <Trans id="whm.gauge.resource.bloodlily">Blood Lily</Trans>,
+			color: BLOODLILY_COLOR.fade(BLOODLILY_FADE),
 		},
 	}))
 
@@ -96,7 +103,7 @@ export class Lilies extends CoreGauge {
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.AFFLATUS_MISERY.icon,
 			content: <Trans id="whm.lily-blood.suggestion.content">
-						Use <DataLink action="AFFLATUS_MISERY" /> to avoid wasting blood lily growth.
+						Use <DataLink action="AFFLATUS_MISERY" /> to avoid wasting Blood lily growth.
 			</Trans>,
 			tiers: {
 				1: SEVERITY.MINOR,
@@ -105,7 +112,7 @@ export class Lilies extends CoreGauge {
 			},
 			value: this.bloodLilyGauge.overCap,
 			why: <Trans id="whm.lily-blood.suggestion.why">
-				<Plural value={this.bloodLilyGauge.overCap} one="# blood lily" other="# blood lilies" /> did not bloom due to early lily use.
+				<Plural value={this.bloodLilyGauge.overCap} one="# Blood lily" other="# Blood lilies" /> did not bloom due to early lily use.
 			</Trans>,
 		})
 		)
