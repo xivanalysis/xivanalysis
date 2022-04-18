@@ -7,6 +7,7 @@ import {dependency} from 'parser/core/Injectable'
 import Checklist from 'parser/core/modules/Checklist'
 import {CounterGauge, Gauge as CoreGauge, TimerGauge} from 'parser/core/modules/Gauge'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
+import Parser from 'parser/core/Parser'
 import React from 'react'
 
 const LILY_INITIAL_STACKS = 0
@@ -45,7 +46,7 @@ export class Lilies extends CoreGauge {
 	}))
 
 	private lilyTimer = this.add(new TimerGauge({
-		maximum: LILY_TIME_REQUIRED,
+		maximum: this.parser.patch.before('6.1') ? 30000 : LILY_TIME_REQUIRED,
 		onExpiration: this.onLilyGeneration.bind(this),
 		graph: {
 			label: <Trans id="whm.gauge.resource.lily-timer">Lily Timer</Trans>,

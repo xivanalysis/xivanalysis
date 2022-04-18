@@ -942,6 +942,9 @@
   "whm.dots.rule.name": "Vérifiez bien que vos DoTs soient bien appliqués à votre cible",
   "whm.dots.suggestion.clip-dia.content": "Évitez de rafraichir Lumen trop tôt, cela vous permettra de lancer plus de Chatoiements.",
   "whm.dots.suggestion.clip-dia.why": "Une moyenne de {0} de <0/> par minute perdue dû à une réactivation précoce.",
+  "whm.gauge.resource.bloodlily": "",
+  "whm.gauge.resource.lily": "",
+  "whm.gauge.resource.lily-timer": "",
   "whm.interrupts.suggestion.content": "Évitez d'interrompre les lancement de sorts en vous prépositionnant ou en slidecastant lorsque c'est possible. Utilisez les fenêtres créées par les rafraîchissements normaux de <0/> pour vous déplacer avant la mécanique. Lorsque ce n'est pas possible, essayez de planifier et d'utiliser les actions d'Offrande pour soigner simultanément là où c'est nécessaire et couvrir le mouvement. L'écrasement de Lumen en avance devrait être votre dernier recours pour le mouvement.",
   "whm.lily-blood.suggestion.content": "Utilisez <0/> pour éviter de perdre des Lys de sang.",
   "whm.lily-blood.suggestion.why": "{0, plural, one {# Lys de sang a été perdu} other {# Lys de sang ont été perdu}} dû à une utilisation précoce de Lys.",
@@ -961,5 +964,7 @@
   "whm.thinair.messages.explanation": "L'utilisation principale de <0/> devrait être d'économiser des PM sur des sorts ayant un coût élevé. N'ayez pas peur de garder une charge et d'en perdre une sur la durée du combat, du moment qu'elle sont utilisées pour des sorts chers en PM comme <1/>, <2/> et <3/>.\nLes utilisations qui n'ont pas économisé un grand nombre de PM sont marquées en rouge.",
   "whm.thinair.messages.no-casts": "Aucune utilisation de <0/> enregistrée",
   "whm.thinair.title": "Sponte",
-  "whm.tincture.suggestions.trackedActions.content": "Essayez de faire autant de dégâts que possible avec vos Potions d'esprit."
+  "whm.tincture.suggestions.trackedActions.content": "Essayez de faire autant de dégâts que possible avec vos Potions d'esprit.",
+  "whm.unspent-blood-lily.suggestion.content": "",
+  "whm.unspent-blood-lily.suggestion.why": ""
 }

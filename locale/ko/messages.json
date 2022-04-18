@@ -942,6 +942,9 @@
   "whm.dots.rule.name": "도트가 항상 유지되도록 하십시오",
   "whm.dots.suggestion.clip-dia.content": "디아 지속시간이 한참 끝나가기 전에 갱신하는것을 피하십시오. 제 때 갱신할시 그만큼 광명 사용에 더 전념할 수 있습니다.",
   "whm.dots.suggestion.clip-dia.why": "",
+  "whm.gauge.resource.bloodlily": "",
+  "whm.gauge.resource.lily": "",
+  "whm.gauge.resource.lily-timer": "",
   "whm.interrupts.suggestion.content": "슬라이드 캐스팅 혹은 적절한 위치 선점을 통해 최대한 마법 시전이 끊기지 않도록 하십시오. 기믹 처리에 필요한 이동을 아낄 수 있도록 미리 <0/>을 하는 타이밍에 맞추어 위치 선점을 할 수 있습니다. 다른 방법으로 각종 마음 기술들을 통해 힐이 필요한 때 또한 가능합니다. 디아를 강제 갱신하여 이동하는것은 최대한 기피하십시오.",
   "whm.lily-blood.suggestion.content": "<0/>을 사용하여 백합 스택을 초과하지않게 하십시오.",
   "whm.lily-blood.suggestion.why": "{0, plural, other {#개의}} 백합을 피우지 못하였습니다.",
@@ -961,5 +964,7 @@
   "whm.thinair.messages.explanation": "",
   "whm.thinair.messages.no-casts": "",
   "whm.thinair.title": "",
-  "whm.tincture.suggestions.trackedActions.content": ""
+  "whm.tincture.suggestions.trackedActions.content": "",
+  "whm.unspent-blood-lily.suggestion.content": "",
+  "whm.unspent-blood-lily.suggestion.why": ""
 }

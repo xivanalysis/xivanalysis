@@ -942,6 +942,9 @@
   "whm.dots.rule.name": "Halte deine DoTs aufrecht",
   "whm.dots.suggestion.clip-dia.content": "",
   "whm.dots.suggestion.clip-dia.why": "",
+  "whm.gauge.resource.bloodlily": "",
+  "whm.gauge.resource.lily": "",
+  "whm.gauge.resource.lily-timer": "",
   "whm.interrupts.suggestion.content": "",
   "whm.lily-blood.suggestion.content": "",
   "whm.lily-blood.suggestion.why": "",
@@ -961,5 +964,7 @@
   "whm.thinair.messages.explanation": "",
   "whm.thinair.messages.no-casts": "",
   "whm.thinair.title": "",
-  "whm.tincture.suggestions.trackedActions.content": ""
+  "whm.tincture.suggestions.trackedActions.content": "",
+  "whm.unspent-blood-lily.suggestion.content": "",
+  "whm.unspent-blood-lily.suggestion.why": ""
 }
