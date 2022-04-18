@@ -25,6 +25,8 @@ export class SortStatusAdapterStep extends AdapterStep {
 			}
 		}
 
+		sortedEvents.push(...this.sortTimestampBucket(currentEvents))
+
 		return sortedEvents
 	}
 
