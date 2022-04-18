@@ -1,9 +1,10 @@
-import {Trans} from '@lingui/react'
+import {Plural, Trans} from '@lingui/react'
 import Color from 'color'
 import {DataLink} from 'components/ui/DbLink'
 import {Event} from 'event'
 import {filter, oneOf} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
+import Checklist from 'parser/core/modules/Checklist'
 import {CounterGauge, Gauge as CoreGauge, TimerGauge} from 'parser/core/modules/Gauge'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
@@ -16,6 +17,7 @@ const BLOOD_LILY_BLOOM = 3
 
 export class Lilies extends CoreGauge {
 
+	@dependency private checklist!: Checklist
 	@dependency private suggestions!: Suggestions
 
 	private lilyConsumers = [
@@ -90,23 +92,11 @@ export class Lilies extends CoreGauge {
 	}
 
 	private onComplete() {
-		if (!this.bloodLilyGauge.empty) {
-			this.suggestions.add(new TieredSuggestion({
-				icon: this.data.actions.AFFLATUS_MISERY.icon,
-				content: <Trans>Try and make sure you end a fight with 0 blood lilies</Trans>,
-				tiers: {
-					2: SEVERITY.MINOR,
-					3: SEVERITY.MAJOR,
-				},
-				value: this.lilyGauge.value,
-				why: 'WHY NOT',
 
-			}))
-		}
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.AFFLATUS_MISERY.icon,
-			content: <Trans id="whm.gauge.suggestsions.bloodlily-overcap.content">
-				<DataLink action="AFFLATUS_MISERY" /> Is only DPS neutral if you dont over cap on your blood lilies
+			content: <Trans id="whm.lily-blood.suggestion.content">
+						Use <DataLink action="AFFLATUS_MISERY" /> to avoid wasting blood lily growth.
 			</Trans>,
 			tiers: {
 				1: SEVERITY.MINOR,
@@ -114,7 +104,9 @@ export class Lilies extends CoreGauge {
 				3: SEVERITY.MAJOR,
 			},
 			value: this.bloodLilyGauge.overCap,
-			why: 'WHY LOSE DAMAGE' + this.bloodLilyGauge.overCap,
+			why: <Trans id="whm.lily-blood.suggestion.why">
+				<Plural value={this.bloodLilyGauge.overCap} one="# blood lily" other="# blood lilies" /> did not bloom due to early lily use.
+			</Trans>,
 		})
 		)
 
@@ -123,14 +115,18 @@ export class Lilies extends CoreGauge {
 		if (lostLilies >0) {
 			this.suggestions.add(new TieredSuggestion({
 				icon: this.data.actions.AFFLATUS_SOLACE.icon,
-				content: <Trans>Dont Cap Lillies</Trans>,
+				content: <Trans id="whm.lily-cap.suggestion.content">
+						Use <DataLink action="AFFLATUS_RAPTURE" /> or <DataLink action="AFFLATUS_SOLACE" /> before using other GCD heals. It's okay to cap your lilies if you don't need to heal, move, or weave with them.
+				</Trans>,
 				tiers: {
 					1: SEVERITY.MINOR,
 					2: SEVERITY.MEDIUM,
 					3: SEVERITY.MAJOR,
 				},
 				value: lostLilies,
-				why: 'WHY NO ' + lostLilies,
+				why: <Trans id="whm.lily-cap.suggestion.why">
+					{<Plural value={lostLilies} one="# lily" other="# lilies" />} went unused.
+				</Trans>,
 			}))
 		}
 
