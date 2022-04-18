@@ -1,12 +1,12 @@
-import { Plural, Trans } from '@lingui/react'
+import {Plural, Trans} from '@lingui/react'
 import Color from 'color'
-import { DataLink } from 'components/ui/DbLink'
-import { Event } from 'event'
-import { filter, oneOf } from 'parser/core/filter'
-import { dependency } from 'parser/core/Injectable'
+import {DataLink} from 'components/ui/DbLink'
+import {Event} from 'event'
+import {filter, oneOf} from 'parser/core/filter'
+import {dependency} from 'parser/core/Injectable'
 import Checklist from 'parser/core/modules/Checklist'
-import { CounterGauge, Gauge as CoreGauge, TimerGauge } from 'parser/core/modules/Gauge'
-import Suggestions, { SEVERITY, TieredSuggestion } from 'parser/core/modules/Suggestions'
+import {CounterGauge, Gauge as CoreGauge, TimerGauge} from 'parser/core/modules/Gauge'
+import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
 
 const LILY_INITIAL_STACKS = 0
@@ -149,22 +149,20 @@ export class Lilies extends CoreGauge {
 			}))
 		}
 
-	}
-
-	if(this.bloodLilyGauge.value > 0) {
-	this.suggestions.add(new TieredSuggestion({
-		icon: this.data.actions.AFFLATUS_MISERY.icon,
-		content: <Trans id="whm.unspent-blood-lily.suggestion.content">Aim to finish the fight with no blood lilies </Trans>,
-		tiers: {
-			1: SEVERITY.MINOR,
-			3: SEVERITY.MAJOR,
-		},
-		value: this.bloodLilyGauge.value,
-		why: <Trans id="whm.unspent-blood-lily.suggestion.why">
-			{<Plural value={this.bloodLilyGauge.value} one="# blood lily" other="# blood lilies" />} went unused.
-		</Trans>,
-	}))
-}
+		if (this.bloodLilyGauge.value > 0) {
+			this.suggestions.add(new TieredSuggestion({
+				icon: this.data.actions.AFFLATUS_MISERY.icon,
+				content: <Trans id="whm.unspent-blood-lily.suggestion.content">Aim to finish the fight with no blood lilies </Trans>,
+				tiers: {
+					1: SEVERITY.MINOR,
+					3: SEVERITY.MAJOR,
+				},
+				value: this.bloodLilyGauge.value,
+				why: <Trans id="whm.unspent-blood-lily.suggestion.why">
+					{<Plural value={this.bloodLilyGauge.value} one="# blood lily" other="# blood lilies" />} went unused.
+				</Trans>,
+			}))
+		}
 
 	}
 }
