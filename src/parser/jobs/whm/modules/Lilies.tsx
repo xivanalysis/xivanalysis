@@ -133,13 +133,15 @@ export class Lilies extends CoreGauge {
 		if (!this.bloodLilyGauge.empty) {
 			this.suggestions.add(new TieredSuggestion({
 				icon: this.data.actions.GLARE_III.icon,
-				content: <Trans>Dont spend unrefunded lilies</Trans>,
+				content: <Trans>Aim to finish the fight with no blood lilies </Trans>,
 				tiers: {
 					1: SEVERITY.MINOR,
 					3: SEVERITY.MAJOR,
 				},
 				value: this.bloodLilyGauge.value,
-				why: 'Pref OGCD to unrefunded lilies, GCD spent ' + this.bloodLilyGauge.value,
+				why: <Trans id="whm.unspent-blood-lily.suggestion.why">
+					{<Plural value={this.bloodLilyGauge.overCap} one="# blood lily" other="# blood lilies"/>} went unused.
+				</Trans>,
 			}))
 		}
 
