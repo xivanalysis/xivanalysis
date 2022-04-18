@@ -1,7 +1,6 @@
 import {Plural, Trans} from '@lingui/react'
 import Color from 'color'
 import {DataLink} from 'components/ui/DbLink'
-import {JOBS} from 'data/JOBS'
 import {Event} from 'event'
 import {filter, oneOf} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
@@ -90,12 +89,9 @@ export class Lilies extends CoreGauge {
 
 	}
 
-	private onBloodLilySpend() {
-		this.bloodLilyGauge.reset()
-	}
-
 	private calculateLostLilies(): number {
-		return Math.floor(this.lilyTimer.getExpirationTime() / LILY_TIME_REQUIRED)
+		const lostLilies = Math.floor(this.lilyTimer.getExpirationTime() / LILY_TIME_REQUIRED)
+		return lostLilies
 	}
 
 	private onComplete() {
@@ -117,37 +113,34 @@ export class Lilies extends CoreGauge {
 		})
 		)
 
-		const lostLilies = this.calculateLostLilies()
-
-		if (lostLilies >0) {
+		if (this.calculateLostLilies() >0) {
 			this.suggestions.add(new TieredSuggestion({
 				icon: this.data.actions.AFFLATUS_SOLACE.icon,
 				content: <Trans id="whm.lily-cap.suggestion.content">
 						Use <DataLink action="AFFLATUS_RAPTURE" /> or <DataLink action="AFFLATUS_SOLACE" /> before using other GCD heals. It's okay to overheal with your lilies as they are to be used for mana management and movement.
 				</Trans>,
 				tiers: {
-					1: SEVERITY.MINOR,
-					2: SEVERITY.MEDIUM,
+					1: SEVERITY.MEDIUM,
 					3: SEVERITY.MAJOR,
 				},
-				value: lostLilies,
+				value: this.calculateLostLilies(),
 				why: <Trans id="whm.lily-cap.suggestion.why">
-					{<Plural value={lostLilies} one="# lily" other="# lilies" />} went unused.
+					{<Plural value={this.calculateLostLilies()} one="# lily" other="# lilies" />} went unused.
 				</Trans>,
 			}))
 		}
 
-		if (!this.bloodLilyGauge.empty) {
+		if (this.bloodLilyGauge.value > 0) {
 			this.suggestions.add(new TieredSuggestion({
-				icon: this.data.actions.GLARE_III.icon,
+				icon: this.data.actions.AFFLATUS_MISERY.icon,
 				content: <Trans id="whm.unspent-blood-lily.suggestion.content">Aim to finish the fight with no blood lilies </Trans>,
 				tiers: {
-					1: SEVERITY.MEDIUM,
+					1: SEVERITY.MINOR,
 					3: SEVERITY.MAJOR,
 				},
 				value: this.bloodLilyGauge.value,
 				why: <Trans id="whm.unspent-blood-lily.suggestion.why">
-					{<Plural value={this.bloodLilyGauge.overCap} one="# blood lily" other="# blood lilies"/>} went unused.
+					{<Plural value={this.bloodLilyGauge.value} one="# blood lily" other="# blood lilies"/>} went unused.
 				</Trans>,
 			}))
 		}
