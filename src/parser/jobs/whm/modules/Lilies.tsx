@@ -1,12 +1,12 @@
-import {Plural, Trans} from '@lingui/react'
+import { Plural, Trans } from '@lingui/react'
 import Color from 'color'
-import {DataLink} from 'components/ui/DbLink'
-import {Event} from 'event'
-import {filter, oneOf} from 'parser/core/filter'
-import {dependency} from 'parser/core/Injectable'
+import { DataLink } from 'components/ui/DbLink'
+import { Event } from 'event'
+import { filter, oneOf } from 'parser/core/filter'
+import { dependency } from 'parser/core/Injectable'
 import Checklist from 'parser/core/modules/Checklist'
-import {CounterGauge, Gauge as CoreGauge, TimerGauge} from 'parser/core/modules/Gauge'
-import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
+import { CounterGauge, Gauge as CoreGauge, TimerGauge } from 'parser/core/modules/Gauge'
+import Suggestions, { SEVERITY, TieredSuggestion } from 'parser/core/modules/Suggestions'
 import React from 'react'
 
 const LILY_INITIAL_STACKS = 0
@@ -83,7 +83,7 @@ export class Lilies extends CoreGauge {
 	}
 
 	private onLilySpend() {
-		this.bloodLilyGauge.capped ? this.bloodLilyGauge.overCap +=1 : this.bloodLilyGauge.modify(1)
+		this.bloodLilyGauge.capped ? this.bloodLilyGauge.overCap += 1 : this.bloodLilyGauge.modify(1)
 		if (this.lilyTimer.expired) {
 			this.lilyTimer.start()
 		}
@@ -101,7 +101,7 @@ export class Lilies extends CoreGauge {
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.AFFLATUS_MISERY.icon,
 			content: <Trans id="whm.lily-blood.suggestion.content">
-						Use <DataLink action="AFFLATUS_MISERY" /> to avoid wasting Blood lily growth.
+				Use <DataLink action="AFFLATUS_MISERY" /> to avoid wasting Blood lily growth.
 			</Trans>,
 			tiers: {
 				1: SEVERITY.MINOR,
@@ -115,16 +115,33 @@ export class Lilies extends CoreGauge {
 		})
 		)
 
-		if (this.calculateLostLilies() >0) {
-			this.suggestions.add(new TieredSuggestion({
-				icon: this.data.actions.AFFLATUS_SOLACE.icon,
-				content: <Trans id="whm.lily-cap.suggestion.content">
-						Use <DataLink action="AFFLATUS_RAPTURE" /> or <DataLink action="AFFLATUS_SOLACE" /> before using other GCD heals. It's okay to overheal with your lilies as they are to be used for mana management and movement aswell as healing.
-				</Trans>,
-				tiers: {
+		if (this.calculateLostLilies() > 0) {
+			let content
+			let tiers
+
+			if (this.parser.patch.before('6.1')) {
+				content = <Trans id="whm.lily-cap.suggestion.6_0_content">
+					Use <DataLink action="AFFLATUS_RAPTURE" /> or <DataLink action="AFFLATUS_SOLACE" /> before using other GCD heals. It's okay to cap your lilies if you don't need to heal, move, or weave with them.
+				</Trans>
+
+				tiers = {
+					1: SEVERITY.MINOR,
+				}
+			} else {
+				content = <Trans id="whm.lily-cap.suggestion.6_1_content">
+					Use <DataLink action="AFFLATUS_RAPTURE" /> or <DataLink action="AFFLATUS_SOLACE" /> before using other GCD heals. It's okay to overheal with your lilies as they are to be used for mana management and movement aswell as healing.
+				</Trans>
+
+				tiers = {
 					1: SEVERITY.MEDIUM,
 					3: SEVERITY.MAJOR,
-				},
+				}
+			}
+
+			this.suggestions.add(new TieredSuggestion({
+				icon: this.data.actions.AFFLATUS_SOLACE.icon,
+				content: content,
+				tiers: tiers,
 				value: this.calculateLostLilies(),
 				why: <Trans id="whm.lily-cap.suggestion.why">
 					{<Plural value={this.calculateLostLilies()} one="# lily" other="# lilies" />} went unused.
@@ -132,20 +149,22 @@ export class Lilies extends CoreGauge {
 			}))
 		}
 
-		if (this.bloodLilyGauge.value > 0) {
-			this.suggestions.add(new TieredSuggestion({
-				icon: this.data.actions.AFFLATUS_MISERY.icon,
-				content: <Trans id="whm.unspent-blood-lily.suggestion.content">Aim to finish the fight with no blood lilies </Trans>,
-				tiers: {
-					1: SEVERITY.MINOR,
-					3: SEVERITY.MAJOR,
-				},
-				value: this.bloodLilyGauge.value,
-				why: <Trans id="whm.unspent-blood-lily.suggestion.why">
-					{<Plural value={this.bloodLilyGauge.value} one="# blood lily" other="# blood lilies"/>} went unused.
-				</Trans>,
-			}))
-		}
+	}
+
+	if(this.bloodLilyGauge.value > 0) {
+	this.suggestions.add(new TieredSuggestion({
+		icon: this.data.actions.AFFLATUS_MISERY.icon,
+		content: <Trans id="whm.unspent-blood-lily.suggestion.content">Aim to finish the fight with no blood lilies </Trans>,
+		tiers: {
+			1: SEVERITY.MINOR,
+			3: SEVERITY.MAJOR,
+		},
+		value: this.bloodLilyGauge.value,
+		why: <Trans id="whm.unspent-blood-lily.suggestion.why">
+			{<Plural value={this.bloodLilyGauge.value} one="# blood lily" other="# blood lilies" />} went unused.
+		</Trans>,
+	}))
+}
 
 	}
 }
