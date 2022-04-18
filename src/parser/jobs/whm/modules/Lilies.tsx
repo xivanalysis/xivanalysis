@@ -7,14 +7,15 @@ import {dependency} from 'parser/core/Injectable'
 import Checklist from 'parser/core/modules/Checklist'
 import {CounterGauge, Gauge as CoreGauge, TimerGauge} from 'parser/core/modules/Gauge'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
-import Parser from 'parser/core/Parser'
 import React from 'react'
 
 const LILY_INITIAL_STACKS = 0
 const LILY_MAX_STACKS = 3
+const LILY_60_TIME_REQUIRED = 30000
 const LILY_TIME_REQUIRED = 20000
 
 const BLOOD_LILY_BLOOM = 3
+const MISERY_COST = 3
 
 const GAUGE_FADE = 0.25
 const TIMER_FADE = 0.75
@@ -46,7 +47,7 @@ export class Lilies extends CoreGauge {
 	}))
 
 	private lilyTimer = this.add(new TimerGauge({
-		maximum: this.parser.patch.before('6.1') ? 30000 : LILY_TIME_REQUIRED,
+		maximum: this.parser.patch.before('6.1') ? LILY_60_TIME_REQUIRED : LILY_TIME_REQUIRED,
 		onExpiration: this.onLilyGeneration.bind(this),
 		graph: {
 			label: <Trans id="whm.gauge.resource.lily-timer">Lily Timer</Trans>,
@@ -69,7 +70,7 @@ export class Lilies extends CoreGauge {
 
 		const playerFilter = filter<Event>().source(this.parser.actor.id)
 		this.addEventHook(playerFilter.type('action').action(oneOf(this.lilyConsumers)), this.onLilySpend)
-		this.addEventHook(playerFilter.type('action').action(oneOf(this.bloodLilyConsumers)), () => this.bloodLilyGauge.spend(3))
+		this.addEventHook(playerFilter.type('action').action(oneOf(this.bloodLilyConsumers)), () => this.bloodLilyGauge.spend(MISERY_COST))
 		this.addEventHook('complete', this.onComplete)
 		this.lilyTimer.start()
 	}
@@ -118,7 +119,7 @@ export class Lilies extends CoreGauge {
 			this.suggestions.add(new TieredSuggestion({
 				icon: this.data.actions.AFFLATUS_SOLACE.icon,
 				content: <Trans id="whm.lily-cap.suggestion.content">
-						Use <DataLink action="AFFLATUS_RAPTURE" /> or <DataLink action="AFFLATUS_SOLACE" /> before using other GCD heals. It's okay to overheal with your lilies as they are to be used for mana management and movement.
+						Use <DataLink action="AFFLATUS_RAPTURE" /> or <DataLink action="AFFLATUS_SOLACE" /> before using other GCD heals. It's okay to overheal with your lilies as they are to be used for mana management and movement aswell as healing.
 				</Trans>,
 				tiers: {
 					1: SEVERITY.MEDIUM,
