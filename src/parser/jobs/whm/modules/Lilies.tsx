@@ -4,7 +4,6 @@ import {DataLink} from 'components/ui/DbLink'
 import {Event} from 'event'
 import {filter, oneOf} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
-import Checklist from 'parser/core/modules/Checklist'
 import {CounterGauge, Gauge as CoreGauge, TimerGauge} from 'parser/core/modules/Gauge'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
@@ -25,7 +24,6 @@ const BLOODLILY_COLOR = Color('#b52d6c')
 
 export class Lilies extends CoreGauge {
 
-	@dependency private checklist!: Checklist
 	@dependency private suggestions!: Suggestions
 
 	private lilyConsumers = [
