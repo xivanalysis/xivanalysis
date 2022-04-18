@@ -853,8 +853,6 @@
   "sge.actiontimeline.addersgall": "Bile de vipère",
   "sge.cooldownDowntime.defense-cd-metric": "",
   "sge.cooldownDowntime.ogcd-cd-metric": "",
-  "sge.cooldowns.pepsis.why": "Vous n'avez pas utilisé <0/>",
-  "sge.cooldowns.suggestions.pepsis.content": "",
   "sge.dots.requirement.uptime.name": "Temps total d'application de <0/>",
   "sge.dots.rule.description": "",
   "sge.dots.rule.name": "Vérifiez que vos DoTs soient bien appliqués à votre cible en permanence",
