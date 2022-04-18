@@ -116,7 +116,7 @@ export class Lilies extends CoreGauge {
 			this.suggestions.add(new TieredSuggestion({
 				icon: this.data.actions.AFFLATUS_SOLACE.icon,
 				content: <Trans id="whm.lily-cap.suggestion.content">
-						Use <DataLink action="AFFLATUS_RAPTURE" /> or <DataLink action="AFFLATUS_SOLACE" /> before using other GCD heals. It's okay to cap your lilies if you don't need to heal, move, or weave with them.
+						Use <DataLink action="AFFLATUS_RAPTURE" /> or <DataLink action="AFFLATUS_SOLACE" /> before using other GCD heals. It's okay to overheal with your lilies as they are to be used for mana management and movement.
 				</Trans>,
 				tiers: {
 					1: SEVERITY.MINOR,
@@ -133,9 +133,9 @@ export class Lilies extends CoreGauge {
 		if (!this.bloodLilyGauge.empty) {
 			this.suggestions.add(new TieredSuggestion({
 				icon: this.data.actions.GLARE_III.icon,
-				content: <Trans>Aim to finish the fight with no blood lilies </Trans>,
+				content: <Trans id="whm.unspent-blood-lily.suggestion.content">Aim to finish the fight with no blood lilies </Trans>,
 				tiers: {
-					1: SEVERITY.MINOR,
+					1: SEVERITY.MEDIUM,
 					3: SEVERITY.MAJOR,
 				},
 				value: this.bloodLilyGauge.value,
