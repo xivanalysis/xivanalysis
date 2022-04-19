@@ -15,7 +15,7 @@ const LILY_INTERVAL_610 = 20000
 
 const MISERY_COST = 3
 
-const GRAPH_DISPLAY_SETTINGS= {
+const GRAPH_DISPLAY_SETTINGS = {
 	LILY_GAUGE_FADE: 0.25,
 	LILY_TIMER_FADE: 0.75,
 	BLOODLILY_GAUGE_FADE: 0.5,
@@ -36,6 +36,8 @@ export class Lilies extends CoreGauge {
 		'AFFLATUS_MISERY',
 	]
 
+	private lilyInterval = this.parser.patch.before('6.1') ? LILY_INTERVAL_600 : LILY_INTERVAL_610
+
 	private lilyGauge = this.add(new CounterGauge({
 		maximum: LILY_MAX_STACKS,
 		initialValue: 0,
@@ -46,11 +48,11 @@ export class Lilies extends CoreGauge {
 	}))
 
 	private lilyTimer = this.add(new TimerGauge({
-		maximum: this.parser.patch.before('6.1') ? LILY_INTERVAL_600 : LILY_INTERVAL_610,
+		maximum: this.lilyInterval,
 		onExpiration: this.onLilyGeneration.bind(this),
 		graph: {
 			label: <Trans id="whm.gauge.lily.timer.label">Lily Timer</Trans>,
-			color: GRAPH_DISPLAY_SETTINGS.LILY_GAUGE_COLOR.fade(GRAPH_DISPLAY_SETTINGS.LILY_GAUGE_FADE),
+			color: GRAPH_DISPLAY_SETTINGS.LILY_GAUGE_COLOR.fade(GRAPH_DISPLAY_SETTINGS.LILY_TIMER_FADE),
 		},
 
 	}))
@@ -90,8 +92,7 @@ export class Lilies extends CoreGauge {
 	}
 
 	private calculateLostLilies(): number {
-		const LILY_INTERVAL = this.parser.patch.before('6.1') ? LILY_INTERVAL_600 : LILY_INTERVAL_610
-		return Math.floor(this.lilyTimer.getExpirationTime() / LILY_INTERVAL)
+		return Math.floor(this.lilyTimer.getExpirationTime() / this.lilyInterval)
 	}
 
 	private onComplete() {
@@ -130,7 +131,7 @@ export class Lilies extends CoreGauge {
 
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.AFFLATUS_SOLACE.icon,
-			content:  this.parser.patch.before('6.1') ? lilyOvercapSuggestion_600 : lilyOvercapSuggestion_610,
+			content: this.parser.patch.before('6.1') ? lilyOvercapSuggestion_600 : lilyOvercapSuggestion_610,
 			tiers: this.parser.patch.before('6.1') ? lilyOvercapTiers_600 : lilyOvercapTiers_610,
 			value: this.calculateLostLilies(),
 			why: <Trans id="whm.gauge.suggestions.lily.overcap.why">
@@ -138,7 +139,7 @@ export class Lilies extends CoreGauge {
 			</Trans>,
 		}))
 
-		const bloodlilyLeftoverTier={
+		const bloodlilyLeftoverTier = {
 			1: SEVERITY.MINOR,
 			3: SEVERITY.MAJOR,
 		}
