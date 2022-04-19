@@ -1,5 +1,6 @@
 import {Layer} from 'data/layer'
 import {StatusRoot} from '../root'
+import {SHARED} from '../root/SHARED'
 
 export const patch610: Layer<StatusRoot> = {
 	patch: '6.1',
@@ -11,6 +12,10 @@ export const patch610: Layer<StatusRoot> = {
 			icon: 'https://xivapi.com/i/014000/014942.png',
 			duration: 20000,
 		},
+
+		//SAM 6.1 buff Change
+		THIRD_EYE: {duration: 4000},
+		KAITEN: {id: SHARED.UNKNOWN.id},
 
 		// SCH 6.1 duration changes
 		EXPEDIENCE: {duration: 10000},

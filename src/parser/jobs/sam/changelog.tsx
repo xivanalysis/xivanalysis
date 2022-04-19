@@ -8,6 +8,11 @@ export const changelog = [
 	// 	contrubutors: [CONTRIBUTORS.YOU],
 	// },
 	{
+		date: new Date('2022-4-18'),
+		Changes: () => <> Removed Kaiten module for parses from patch 6.1+ as it was removed in patch 6.1</>,
+		contributors: [CONTRIBUTORS.RYAN],
+	},
+	{
 		date: new Date('2022-02-12'),
 		Changes: () => <> Moved Kenki and Meditation Gauge to the Timeline.</>,
 		contributors: [CONTRIBUTORS.RYAN],

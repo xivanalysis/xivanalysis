@@ -9,5 +9,8 @@ export const patch610: Layer<ActionRoot> = {
 		GRIT: {cooldown: 3000},
 		IRON_WILL: {cooldown: 3000},
 		ROYAL_GUARD: {cooldown: 3000},
+
+		//SAM 6.1 action changes:
+		HISSATSU_KAITEN: {id: 0}, //Kaiten was removed. But is job critical for pre-6.1 analysis.
 	},
 }
