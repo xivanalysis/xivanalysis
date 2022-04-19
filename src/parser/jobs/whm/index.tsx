@@ -66,7 +66,7 @@ export const WHITE_MAGE = new Meta({
 		},
 		{
 			date: new Date('2022-04-18'),
-			Changes: () => <>Changed Lily timer and content for 6.1 with misery update</>,
+			Changes: () => <>Migrate Lily gauge to core gauge, and upade for 6.1 misery analysis</>,
 			contributors: [CONTRIBUTORS.KERRIS],
 		},
 	],
