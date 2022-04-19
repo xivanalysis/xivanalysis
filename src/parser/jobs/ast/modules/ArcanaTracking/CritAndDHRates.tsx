@@ -64,8 +64,10 @@ export class CritAndDHPredictor extends Analyser {
 		this.data.statuses.BATTLE_LITANY.id,
 		this.data.statuses.DEVILMENT.id,
 		this.data.statuses.THE_WANDERERS_MINUET.id,
-		this.data.statuses.REASSEMBLED.id,
 		this.data.statuses.INNER_RELEASE.id,
+		this.data.statuses.REASSEMBLED.id,
+		this.data.statuses.OPO_OPO_FORM.id,
+		this.data.statuses.LIFE_SURGE.id,
 	]
 	private critEnemyStatuses: Array<Status['id']> = [
 		this.data.statuses.CHAIN_STRATAGEM.id,
@@ -74,6 +76,8 @@ export class CritAndDHPredictor extends Analyser {
 		this.data.statuses.DEVILMENT.id,
 		this.data.statuses.REASSEMBLED.id,
 		this.data.statuses.INNER_RELEASE.id,
+		this.data.statuses.BATTLE_VOICE.id,
+		this.data.statuses.ARMYS_PAEON.id,
 	]
 
 	//these are abilities that will automatically crit or direct hit which will skew results and should automatically be removed from the respective DH or Crit calculations
