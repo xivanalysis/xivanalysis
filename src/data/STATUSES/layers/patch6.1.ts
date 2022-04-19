@@ -25,5 +25,17 @@ export const patch610: Layer<StatusRoot> = {
 		SILKEN_FLOW: {
 			name: 'Silken Flow',
 		},
+		FLOURISHING_SYMMETRY: {
+			id: 3017,
+			name: 'Flourishing Symmetry',
+			icon: 'https://xivapi.com/i/013000/013725.png',
+			duration: 30000,
+		},
+		FLOURISHING_FLOW: {
+			id: 3018,
+			name: 'Flourishing Flow',
+			icon: 'https://xivapi.com/i/013000/013726.png',
+			duration: 30000,
+		},
 	},
 }
