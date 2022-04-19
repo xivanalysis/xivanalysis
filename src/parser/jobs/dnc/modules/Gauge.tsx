@@ -2,16 +2,16 @@ import {Plural, Trans} from '@lingui/react'
 import Color from 'color'
 import {DataLink} from 'components/ui/DbLink'
 import {ActionKey} from 'data/ACTIONS'
-import {JOBS} from 'data/JOBS'
+import {JOBS, JobKey} from 'data/JOBS'
 import {StatusKey} from 'data/STATUSES'
 import {Event, Events} from 'event'
 import {EventHook} from 'parser/core/Dispatcher'
 import {filter} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
+import {Actors} from 'parser/core/modules/Actors'
 import {CounterGauge, Gauge as CoreGauge} from 'parser/core/modules/Gauge'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
-import {FINISHES} from '../CommonData'
 
 // More lenient than usual due to the probable unreliability of the data.
 const GAUGE_SEVERITY_TIERS = {
@@ -39,9 +39,9 @@ const ESPRIT_STATUSES: StatusKey[] = [
 	'ESPRIT',
 	'ESPRIT_TECHNICAL',
 ]
-const ESPRIT_EXCEPTIONS: ActionKey[] = [
-	...FINISHES,
-	'TILLANA', // TODO: I'm assuming this won't generate Esprit since it's classed as an Ability in the tooltip
+
+// These are generally the on-GCD 'Abilities' such as NIN's Ninjutsu and SAM's Tsubame Iaijutsu
+const ESPRIT_EXCEPTIONS_PARTY: ActionKey[] = [
 	'FUMA_SHURIKEN',
 	'FUMA_SHURIKEN_TCJ_TEN',
 	'FUMA_SHURIKEN_TCJ_CHI',
@@ -49,8 +49,6 @@ const ESPRIT_EXCEPTIONS: ActionKey[] = [
 	'KATON',
 	'KATON_TCJ',
 	'RAITON_TCJ',
-	'RAITON_TCJ',
-	'HYOTON_TCJ',
 	'HYOTON_TCJ',
 	'GOKA_MEKKYAKU',
 	'HYOSHO_RANRYU',
@@ -59,20 +57,25 @@ const ESPRIT_EXCEPTIONS: ActionKey[] = [
 	'KAESHI_GOKEN',
 	'KAESHI_HIGANBANA',
 	'KAESHI_SETSUGEKKA',
+	'KAESHI_NAMIKIRI',
 ]
 
-const PROC_ACTIONS: ActionKey[] = [
-	'REVERSE_CASCADE',
-	'RISING_WINDMILL',
-	'FOUNTAINFALL',
-	'BLOODSHOWER',
-	'FAN_DANCE_IV',
-	'STARFALL_DANCE', // TBD if this has the guaranteed 10 Esprit effect that the others do
-]
+const ESPRIT_GENERATION_AMOUNT_PARTY = 10
+const ESPRIT_RATE_PARTY_DEFAULT = 0.2
 
-const ESPRIT_GENERATION_AMOUNT = 10
-const ESPRIT_RATE_SELF_NON_PROC = 0.5
-const ESPRIT_RATE_PARTY = 0.2
+/* eslint-disable @typescript-eslint/no-magic-numbers */
+const ESPRIT_RATE_PARTY_TESTED = new Map<JobKey, number>([
+	['MONK', 0.17],
+	['DRAGOON', 0.18],
+	['NINJA', 0.16],
+	['SAMURAI', 0.19],
+	['BLACK_MAGE', 0.25],
+	['RED_MAGE', 0.21],
+])
+/* eslint-enable @typescript-eslint/no-magic-numbers */
+
+const ESPRIT_GENERATION_AMOUNT_COMBO = 5
+const ESPRIT_GENERATION_AMOUNT_PROC = 10
 
 const SABER_DANCE_COST = 50
 
@@ -82,6 +85,7 @@ const ESRPIT_COLOR = Color(JOBS.DANCER.colour).fade(FADE_AMOUNT)
 const FEATHERS_COLOR = Color('#8DA147').fade(FADE_AMOUNT)
 
 export class Gauge extends CoreGauge {
+	@dependency private actors!: Actors
 	@dependency private suggestions!: Suggestions
 
 	private featherGauge = this.add(new CounterGauge({
@@ -104,8 +108,19 @@ export class Gauge extends CoreGauge {
 
 	private espritBuffs: Map<string, EventHook<Events['damage']>> = new Map<string, EventHook<Events['damage']>>()
 
-	private espritGenerationExceptions: number[] = ESPRIT_EXCEPTIONS.map(key => this.data.actions[key].id)
-	private fullEspritActions = PROC_ACTIONS.map(key => this.data.actions[key].id)
+	private espritGenerationExceptionIds: number[] = ESPRIT_EXCEPTIONS_PARTY.map(key => this.data.actions[key].id)
+
+	private espritGeneratorsSelf = new Map<number, number>([
+		[this.data.actions.CASCADE.id, ESPRIT_GENERATION_AMOUNT_COMBO],
+		[this.data.actions.FOUNTAIN.id, ESPRIT_GENERATION_AMOUNT_COMBO],
+		[this.data.actions.WINDMILL.id, ESPRIT_GENERATION_AMOUNT_COMBO],
+		[this.data.actions.BLADESHOWER.id, ESPRIT_GENERATION_AMOUNT_COMBO],
+		[this.data.actions.REVERSE_CASCADE.id, ESPRIT_GENERATION_AMOUNT_PROC],
+		[this.data.actions.FOUNTAINFALL.id, ESPRIT_GENERATION_AMOUNT_PROC],
+		[this.data.actions.RISING_WINDMILL.id, ESPRIT_GENERATION_AMOUNT_PROC],
+		[this.data.actions.BLOODSHOWER.id, ESPRIT_GENERATION_AMOUNT_PROC],
+	])
+
 	protected pauseGeneration = false;
 
 	override initialise() {
@@ -177,31 +192,31 @@ export class Gauge extends CoreGauge {
 		if (event.cause.type !== 'action') {
 			return
 		}
-		const ability = event.cause.action
-		const action = this.data.getAction(ability)
+
+		const action = this.data.getAction(event.cause.action)
 		if (action == null) { return }
 
-		// Off GCDs generally don't count as weaponskills, so ignore them
 		if (!action.onGcd) {
 			return
 		}
 
-		// Some on-GCD damaging actions are classified as 'Abilities' rather than Weaponskills or Spells. Ignore them
-		if (this.espritGenerationExceptions.includes(action.id)) {
+		if (this.espritGenerationExceptionIds.includes(action.id)) {
 			return
 		}
 
-		// Transform the probabilistic esprit generation chance into an expected value
-		const expectedGenerationChance = event.source === this.parser.actor.id ?
-			// If the dancer is generating Esprit for themselves from a proc, they gain the full ten Esprit every time
-			(this.fullEspritActions.includes(ability) ? 1 :
-			// Otherwise, the dancer generates 5 Esprit for themselves with each action
-				ESPRIT_RATE_SELF_NON_PROC) :
-			// Party members with either the Standard Finish or Technical Finish-sourced Esprit buff generate ten Esprit at a 20% chance
-			ESPRIT_RATE_PARTY
-		const generatedAmt = ESPRIT_GENERATION_AMOUNT * expectedGenerationChance
+		const eventActor = this.actors.get(event.source)
+		// Determine how much Esprit is being generated. Differs if it's the player generating for themselves, or if it's another member of the party generating for the player
+		const generatedAmt = event.source === this.parser.actor.id ?
+			// The dancer's own generation is limited to the 4 combo GCDs and the 4 proc GCDs, so get the amount from the map
+			this.espritGeneratorsSelf.get(action.id) ?? 0 :
+			// The party has a ~20% chance to generate 10 Esprit for the player
+			// For the jobs that theorycrafters have determined a more precise rate, use that instead
+			ESPRIT_GENERATION_AMOUNT_PARTY * (ESPRIT_RATE_PARTY_TESTED.get(eventActor.job) ?? ESPRIT_RATE_PARTY_DEFAULT)
 
-		this.espritGauge.generate(generatedAmt)
+		// If we actually generate something, add it to the gauge
+		if (generatedAmt > 0) {
+			this.espritGauge.generate(generatedAmt)
+		}
 	}
 
 	private onConsumeEsprit() {
