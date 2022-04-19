@@ -13,6 +13,8 @@ import {GlobalCooldown} from 'parser/core/modules/GlobalCooldown'
 import {SpeedAdjustments} from 'parser/core/modules/SpeedAdjustments'
 import React from 'react'
 
+const UPTIME_TARGET = 98
+
 export class AlwaysBeCasting extends Analyser {
 	static override handle = 'abc'
 	static override debug = false
@@ -108,12 +110,14 @@ export class AlwaysBeCasting extends Analyser {
 				mistakes while keeping the GCD rolling than it is to perform the correct
 				rotation slowly.
 			</Trans>,
+			displayOrder: -1,
 			requirements: [
 				new Requirement({
 					name: <Trans id="core.always-cast.gcd-uptime">GCD Uptime</Trans>,
 					percent: this.getUptimePercent(),
 				}),
 			],
+			target: UPTIME_TARGET,
 		}))
 	}
 }

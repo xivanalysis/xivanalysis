@@ -47,4 +47,9 @@ export const changelog = [
 		Changes: () => <>Fixed an issue with Addersting stacks not counting correctly on some logs in 6.05+</>,
 		contributors: [CONTRIBUTORS.AZARIAH],
 	},
+	{
+		date: new Date('2022-04-12'),
+		Changes: () => <>Updated Addersting gauge initialization for 6.1 and later logs, and cleaned up a few suggestions.</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
 ]
