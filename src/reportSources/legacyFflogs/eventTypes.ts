@@ -117,6 +117,8 @@ export enum HitType {
 	MISS = 0,
 	NORMAL = 1,
 	CRITICAL = 2,
+	DIRECT = 3,
+	CRITICAL_DIRECT = 4,
 	BLOCK = 4,
 	DODGE = 7,
 	// PARRY = 8, // Seems to be used for other games where parry is a missType?
@@ -364,8 +366,10 @@ export interface DamageEvent extends EffectEventFields {
 	type: typeof damageEventTypes[number]
 	overkill?: number
 	absorbed?: number
-	multistrike?: boolean
+	directHit?: boolean
 	blocked?: number
+	directHitPercentage?: number
+	expectedCritRate?: number
 }
 
 // Bruh.

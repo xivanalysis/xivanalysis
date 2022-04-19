@@ -16,6 +16,8 @@ NOTES:
 const sourceHitType: Partial<Record<HitType, SourceModifier>> = {
 	[HitType.MISS]: SourceModifier.MISS,
 	[HitType.CRITICAL]: SourceModifier.CRITICAL,
+	[HitType.DIRECT]: SourceModifier.DIRECT,
+	[HitType.CRITICAL_DIRECT]: SourceModifier.CRITICAL_DIRECT,
 	// Marking dodge as miss 'cus it seems to be mis-used as such on fflogs
 	[HitType.DODGE]: SourceModifier.MISS,
 }
@@ -240,7 +242,7 @@ export class TranslateAdapterStep extends AdapterStep {
 
 		// Calculate source modifier
 		let sourceModifier = sourceHitType[event.hitType] ?? SourceModifier.NORMAL
-		if (event.multistrike) {
+		if (event.directHit) {
 			sourceModifier = sourceModifier === SourceModifier.CRITICAL
 				? SourceModifier.CRITICAL_DIRECT
 				: SourceModifier.DIRECT
@@ -263,6 +265,8 @@ export class TranslateAdapterStep extends AdapterStep {
 				sourceModifier,
 				targetModifier: targetHitType[event.hitType] ?? TargetModifier.NORMAL,
 			}],
+			directHitRate: event.directHitPercentage,
+			expectedCritRate: event.expectedCritRate,
 		}
 
 		return [newEvent, ...this.buildActorUpdateResourceEvents(event)]
