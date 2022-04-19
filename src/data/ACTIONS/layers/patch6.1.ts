@@ -1,5 +1,6 @@
 import {Layer} from 'data/layer'
 import {ActionRoot} from '../root'
+import {SHARED} from '../root/SHARED'
 
 export const patch610: Layer<ActionRoot> = {
 	patch: '6.1',
@@ -11,6 +12,6 @@ export const patch610: Layer<ActionRoot> = {
 		ROYAL_GUARD: {cooldown: 3000},
 
 		//SAM 6.1 action changes:
-		HISSATSU_KAITEN: {id: 0}, //Kaiten was removed. But is job critical for pre-6.1 analysis.
+		HISSATSU_KAITEN: {id: SHARED.UNKNOWN.id}, //Kaiten was removed. But is job critical for pre-6.1 analysis.
 	},
 }
