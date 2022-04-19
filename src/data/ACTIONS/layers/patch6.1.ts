@@ -13,5 +13,8 @@ export const patch610: Layer<ActionRoot> = {
 
 		//SAM 6.1 action changes:
 		HISSATSU_KAITEN: {id: SHARED.UNKNOWN.id}, //Kaiten was removed. But is job critical for pre-6.1 analysis.
+		// Potency buffs, very important, breaks postionals without them.
+		GEKKO: {potency: 330},
+		KASHA: {potency: 330},
 	},
 }

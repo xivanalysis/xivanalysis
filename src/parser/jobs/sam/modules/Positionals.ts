@@ -9,7 +9,7 @@ export class Positionals extends CorePositionals {
 				modifiers: [],
 			},
 			{
-				value: 320,
+				value: this.data.actions.GEKKO.potency,
 				modifiers: [PotencyModifier.COMBO],
 			},
 		],
@@ -22,7 +22,7 @@ export class Positionals extends CorePositionals {
 				modifiers: [],
 			},
 			{
-				value: 320,
+				value: this.data.actions.KASHA.potency,
 				modifiers: [PotencyModifier.COMBO],
 			},
 		],
