@@ -60,7 +60,6 @@ export class Kenki extends CoreGauge {
 		[this.data.actions.HISSATSU_KYUTEN.id, {action: -25}],
 		[this.data.actions.HISSATSU_SHINTEN.id, {action: -25}],
 		[this.data.actions.HISSATSU_SENEI.id, {action: -25}],
-		[this.data.actions.HISSATSU_KAITEN.id, {action: -20}], //Removed. In theory an unknown action will break this if cast by player.
 		[this.data.actions.HISSATSU_GYOTEN.id, {action: -10}],
 		[this.data.actions.HISSATSU_YATEN.id, {action: -10}],
 	])
@@ -71,6 +70,10 @@ export class Kenki extends CoreGauge {
 
 	override initialise() {
 		super.initialise()
+
+		if (this.parser.patch.before('6.1')) {
+			this.kenkiGaugeModifiers.set(this.data.actions.HISSATSU_KAITEN.id, {action: -20})
+		}
 
 		const kenkiActions = Array.from(this.kenkiGaugeModifiers.keys())
 		const playerFilter = filter<Event>().source(this.parser.actor.id)

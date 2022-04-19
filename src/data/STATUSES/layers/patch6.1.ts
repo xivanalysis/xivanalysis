@@ -15,7 +15,7 @@ export const patch610: Layer<StatusRoot> = {
 
 		//SAM 6.1 buff Change
 		THIRD_EYE: {duration: 4000},
-		KAITEN: {id: SHARED.UNKNOWN.id},
+		KAITEN: SHARED.UNKNOWN,
 
 		// SCH 6.1 duration changes
 		EXPEDIENCE: {duration: 10000},

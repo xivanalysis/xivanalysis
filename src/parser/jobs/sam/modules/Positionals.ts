@@ -5,7 +5,7 @@ export class Positionals extends CorePositionals {
 		action: this.data.actions.GEKKO,
 		potencies: [
 			{
-				value: 100,
+				value: this.data.actions.GEKKO.noComboPotency,
 				modifiers: [],
 			},
 			{
@@ -18,7 +18,7 @@ export class Positionals extends CorePositionals {
 		action: this.data.actions.KASHA,
 		potencies: [
 			{
-				value: 100,
+				value: this.data.actions.KASHA.noComboPotency,
 				modifiers: [],
 			},
 			{

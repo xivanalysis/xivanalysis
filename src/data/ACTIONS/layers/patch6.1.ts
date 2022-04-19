@@ -12,9 +12,15 @@ export const patch610: Layer<ActionRoot> = {
 		ROYAL_GUARD: {cooldown: 3000},
 
 		//SAM 6.1 action changes:
-		HISSATSU_KAITEN: {id: SHARED.UNKNOWN.id}, //Kaiten was removed. But is job critical for pre-6.1 analysis.
+		HISSATSU_KAITEN: SHARED.UNKNOWN, //Kaiten was removed. But is job critical for pre-6.1 analysis.
 		// Potency buffs, very important, breaks postionals without them.
-		GEKKO: {potency: 330},
-		KASHA: {potency: 330},
+		GEKKO: {
+			potency: 330,
+			noComboPotency: 120,
+		},
+		KASHA: {
+			potency: 330,
+			noComboPotency: 120,
+		},
 	},
 }
