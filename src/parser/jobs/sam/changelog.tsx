@@ -8,8 +8,8 @@ export const changelog = [
 	// 	contrubutors: [CONTRIBUTORS.YOU],
 	// },
 	{
-		date: new Date('2022-4-18'),
-		Changes: () => <> Removed Kaiten module for parses from patch 6.1+ as it was removed in patch 6.1</>,
+		date: new Date('2022-04-18'),
+		Changes: () => <>Removed Kaiten analysis for the patch 6.1 job update</>,
 		contributors: [CONTRIBUTORS.RYAN],
 	},
 	{
