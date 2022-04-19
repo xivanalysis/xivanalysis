@@ -2,6 +2,7 @@ import {Interrupts} from 'parser/core/modules/Interrupts'
 import {ActionTimeline} from './ActionTimeline'
 import {ArcanaSuggestions, ArcanaTracking} from './ArcanaTracking'
 import ArcanaTrackingOptimized from './ArcanaTracking/ArcanaTrackingOptimized'
+import {CritAndDHPredictor} from './ArcanaTracking/CritAndDHRates'
 import {ArcanaUndrawUsage} from './ArcanaUndrawUsage'
 import {CastTime} from './CastTime'
 import {Combust} from './Combust'
@@ -26,6 +27,7 @@ export default [
 	ArcanaTrackingOptimized,
 	ArcanaUndrawUsage,
 	CastTime,
+	CritAndDHPredictor,
 	Combust,
 	Divination,
 	Draw,

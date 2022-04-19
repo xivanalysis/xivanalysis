@@ -202,6 +202,16 @@ export default class ArcanaSuggestions extends Analyser {
 					This section keeps track of cards that were placed on party members, who the optimal target would have been, and party-level damage during this window excluding already played cards for the top three damage dealers.
 				</Trans>
 			</p>
+			<p>
+				<Trans id="ast.arcana-suggestions.messages.target-card-icon">
+					* Statuses next to player names indicate player had a card already applied at the time the current card was played.
+				</Trans>
+			</p>
+			<p>
+				<Trans id="ast.arcana-suggestions.messages.adjustments-to-damage-figures">
+					** These figures have been normalized based on calculated direct hit and critical hit probabilities and the related multipliers using the following formula. Expected damage = Base damage * (1 + critical probability * critical multiplier) * (1 + direct hit probability * direct hit multiplier). Base damage is the calculated damage prior to applying the related critical hit and direct hit multipliers, if applicable.
+				</Trans>
+			</p>
 			<Message warning icon>
 				<Icon name="frown" /> <Trans id="ast.arcana-suggestions.messages.optimal-disclaimer">
 					Please note the following disclaimers regarding this analysis.
@@ -219,7 +229,6 @@ export default class ArcanaSuggestions extends Analyser {
 				Key assumptions in this analysis:
 					<ul>
 						<li>Cards played would have been played at the same time regardless of player positions and other circumstances; </li>
-						<li>Critical hits, direct hits, and other RNG factors would have happened anyway; and </li>
 						<li>Players included in this log are party members that can receive cards (up to 8 members). </li>
 					</ul>
 				</Trans>
@@ -228,19 +237,16 @@ export default class ArcanaSuggestions extends Analyser {
 				<Table.Header>
 					<Table.Row>
 						<Table.HeaderCell width={1}>
-							{timeHeader}
-						</Table.HeaderCell>
-						<Table.HeaderCell width={1}>
 							<Trans id="ast.arcana-suggestions.header.optimal.card">Card Played</Trans>
 						</Table.HeaderCell>
 						<Table.HeaderCell width={2}>
 							<Trans id="ast.arcana-suggestions.header.optimal.target">Target info</Trans>
 						</Table.HeaderCell>
 						<Table.HeaderCell width={2}>
-							<Trans id="ast.arcana-suggestions.header.optimal.party-damage">Top three damage dealers during window <br/>(excluding applied cards)</Trans>
+							<Trans id="ast.arcana-suggestions.header.optimal.party-damage">Top three damage dealers during window <br/>(excluding applied cards)</Trans>* **
 						</Table.HeaderCell>
 						<Table.HeaderCell width={2}>
-							<Trans id="ast.arcana-suggestions.header.optimal.card-damage">Additional damage if card was applied</Trans>
+							<Trans id="ast.arcana-suggestions.header.optimal.card-damage">Additional expected damage if card was applied</Trans>* **
 						</Table.HeaderCell>
 					</Table.Row>
 				</Table.Header>
@@ -268,8 +274,7 @@ export default class ArcanaSuggestions extends Analyser {
 									onClick={() => this.timeline.show(start, end)}
 								/>}
 								<span style={{marginRight: 10}}>{formattedTime}</span>
-							</Table.Cell>
-							<Table.Cell>
+								<br/>
 								<StatusLink {...this.data.getStatus(artifact.card)}/>
 							</Table.Cell>
 							<Table.Cell>

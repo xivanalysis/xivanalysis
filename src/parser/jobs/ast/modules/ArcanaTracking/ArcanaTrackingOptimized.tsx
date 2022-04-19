@@ -2,7 +2,7 @@ import {t} from '@lingui/macro'
 import {Action} from 'data/ACTIONS'
 import {JOBS} from 'data/JOBS'
 import {Status} from 'data/STATUSES'
-import {Event, Events} from 'event'
+import {Event, Events, SourceModifier} from 'event'
 import {Analyser} from 'parser/core/Analyser'
 import {EventHook} from 'parser/core/Dispatcher'
 import {filter, oneOf} from 'parser/core/filter'
@@ -12,6 +12,7 @@ import {Data} from 'parser/core/modules/Data'
 import {InitEvent} from 'parser/core/Parser'
 import {ARCANA_STATUSES} from '../ArcanaGroups'
 import {DOTS_AND_GROUND_ACTIONS, SPECIAL_STATUS, DOTS_ALIAS} from './ArcanaDoTsGroup'
+import {CritAndDHPredictor} from './CritAndDHRates'
 import {optimalRoleVerify} from './OptimalRoleVerify'
 
 /*
@@ -19,18 +20,21 @@ Preliminary notes:
 
 A few assumptions went into the preparation of this section including:
 	- cards played at that time could have been played on another target including the optimal target. This assumption was necessary since we don't have location data to tell whether the target was targetable at that time. Additionally, this removes speculation of optimizing card plays which would make this tool a predictive one instead of an informative one.
-	- critical hits, direct hits, and other RNG items are not card dependent. i.e. the crit/DH or RNG would have happened if the card was played or not on that target. Therefore, not adjustments to crits/DH, or other RNG were made in this preparation
+	- critical hits and direct hit relative percentages have been utilized to normalize damage figures based on the CritAndDH module and the normalizer helper below
 	- All combatants in the log are combatants who can receive cards (i.e. not alliance raid members, are targetable, etc.). Note: this assumption allows for chocobos to be included as long as there are less than 8 players included. However, no move sets by chocobos have been included and no testing has been done over chocobos, but I am not relaying this information to the user since chocobos are not included in logs typically anyway.
 
-Other noteworthy item:
+Other noteworthy items:
+
 	- if you want to compare damage to FFLogs, you need to compare non-tick damage AND damage prepared within window. no other damage included.
 		filter expression in FFLogs is IN RANGE FROM timestamp=9000 to timestamp=23980 END where the timestamps MUST relate to an actual event. if the event doesn't exist, the filter won't work
 		please note that if a preparation event happens on the cusp of this, it'll be included in damage
+	- damage will be normalized based on relative critical hit and direct hit rates based on the initial calculations done in CritAndDHRates
 */
 
 const OPTIMAL_CARD_PERCENTAGE = 0.06
 const NOT_OPTIMAL_CARD_PERCENTAGE = 0.03
-const MAX_PLAYERS = 8
+const MAX_PLAYERS = 8 //won't be processed for alliance raids, hunt groups, etc.
+const DHIT_MOD = 0.25
 
 export interface PartyState {
 	//target info
@@ -51,6 +55,9 @@ export interface DoTs{
 	status: Status['id']
 	damage: number //tracks actor who used dot or ground action during window (indexed by timestamp of arcana card window)
 	percentage: number //tracks percentage buff from card if one is applied
+	crit: number //crit at time of application
+	DH: number //DH at time of application
+	critMultiplier: number //crit multiplier at time of application
 }
 
 // hooks are used here to allow for quick adding and removal as necessary. A dictionary was used to ensure uniqueness and reduce duplication of hooks
@@ -68,6 +75,7 @@ export default class ArcanaTrackingOptimized extends Analyser {
 
 	@dependency private data!: Data
 	@dependency private actors!: Actors
+	@dependency private critDH!: CritAndDHPredictor
 
 	private partyStateLog: PartyState[] = []
 	private partyWindow: PartyState[] = []
@@ -238,16 +246,27 @@ export default class ArcanaTrackingOptimized extends Analyser {
 	private onCast(event: Events['damage']) {
 		//dots will be handled in another function as only dots applied IN the window should be considered. additionally statuses that act like actions will be handled like actions
 		if (event.cause.type === 'status' && !this.specialStatus.includes(event.cause.status)) { return }
+		const owner: Actor['id'] | undefined = this.actors.get(event.source)?.owner?.id
 
 		let damage = 0
 		event.targets.forEach(target => {
-			damage += target.amount
+			const crit = owner != null ? this.critDH.getCritDH(event.timestamp, owner).crit : this.critDH.getCritDH(event.timestamp, event.source).crit
+			const DH = owner != null ? this.critDH.getCritDH(event.timestamp, owner).DH : this.critDH.getCritDH(event.timestamp, event.source).DH
+			const critMultiplier = owner != null ? this.critDH.getCritMulti(event.timestamp, owner) : this.critDH.getCritMulti(event.timestamp, event.source)
+			let adjAmount = target.amount
+			adjAmount = adjAmount * (1 + crit * critMultiplier) * (1 + DH * DHIT_MOD)
+			if (target.sourceModifier === SourceModifier.CRITICAL || target.sourceModifier === SourceModifier.CRITICAL_DIRECT) {
+				adjAmount = adjAmount / (1 + critMultiplier)
+			}
+			if (target.sourceModifier === SourceModifier.DIRECT || target.sourceModifier === SourceModifier.CRITICAL_DIRECT) {
+				adjAmount = adjAmount / (1 + DHIT_MOD)
+			}
+			damage += adjAmount
 		})
 
 		//find percentage buff on current target to take out of damage later on. should be unique so the sum should return the right value
 		let cardPercentageBuff: number = 0
 		this.partyWindow.filter(cardWindow => cardWindow.actualTarget === event.source).forEach(cardwindow => { cardPercentageBuff += cardwindow.targetPercentage })
-		const owner: Actor['id'] | undefined = this.actors.get(event.source)?.owner?.id
 		//owner set up for pet damage
 		if (owner != null) {
 			this.partyWindow.forEach(window => {
@@ -324,6 +343,9 @@ export default class ArcanaTrackingOptimized extends Analyser {
 				status: event.status,
 				damage: 0,
 				percentage: cardPercentageBuff,
+				crit: this.critDH.getCritDH(event.timestamp, event.source).crit,
+				DH: this.critDH.getCritDH(event.timestamp, event.source).DH,
+				critMultiplier: this.critDH.getCritMulti(event.timestamp, event.source),
 			}
 			this.dotsInWindow.push(dot)
 		})
@@ -350,6 +372,9 @@ export default class ArcanaTrackingOptimized extends Analyser {
 				status: aliasStatusID,
 				damage: 0,
 				percentage: cardPercentageBuff,
+				crit: this.critDH.getCritDH(event.timestamp, event.source).crit,
+				DH: this.critDH.getCritDH(event.timestamp, event.source).DH,
+				critMultiplier: this.critDH.getCritMulti(event.timestamp, event.source),
 			}
 			this.dotsInWindow.push(dot)
 		})
@@ -388,11 +413,22 @@ export default class ArcanaTrackingOptimized extends Analyser {
 		const status = event.cause.status
 
 		let damage = 0
-		event.targets.forEach(target => {
-			damage += target.amount
-		})
+		let adjAmount = 0
 
 		this.dotsInWindow.filter(dotWindow => dotWindow.actor === event.source && dotWindow.status === status).forEach(window => {
+			//damage is brought into this loop because I need the specific dot crit/DH and the source modifier for each target to normalize
+			damage = 0
+			event.targets.forEach(target => {
+				adjAmount = target.amount
+				adjAmount = adjAmount * (1 + window.crit * window.critMultiplier) * (1 + window.DH * DHIT_MOD)
+				if (target.sourceModifier === SourceModifier.CRITICAL || target.sourceModifier === SourceModifier.CRITICAL_DIRECT) {
+					adjAmount = adjAmount / (1 + window.critMultiplier)
+				}
+				if (target.sourceModifier === SourceModifier.DIRECT || target.sourceModifier === SourceModifier.CRITICAL_DIRECT) {
+					adjAmount = adjAmount / (1 + DHIT_MOD)
+				}
+				damage += adjAmount
+			})
 			window.damage += damage / (1 + window.percentage)
 		})
 	}
