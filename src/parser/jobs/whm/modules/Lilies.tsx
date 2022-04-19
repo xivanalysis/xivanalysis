@@ -15,7 +15,7 @@ const LILY_INTERVAL_610 = 20000
 
 const MISERY_COST = 3
 
-const gaugeDisplay = {
+const GRAPH_DISPLAY_SETTINGS= {
 	LILY_GAUGE_FADE: 0.25,
 	LILY_TIMER_FADE: 0.75,
 	BLOODLILY_GAUGE_FADE: 0.5,
@@ -40,8 +40,8 @@ export class Lilies extends CoreGauge {
 		maximum: LILY_MAX_STACKS,
 		initialValue: 0,
 		graph: {
-			label: <Trans id="whm.gauge.resource.lily">Lily</Trans>,
-			color: gaugeDisplay.LILY_GAUGE_COLOR.fade(gaugeDisplay.LILY_GAUGE_FADE),
+			label: <Trans id="whm.gauge.lily.stacks.label">Lily</Trans>,
+			color: GRAPH_DISPLAY_SETTINGS.LILY_GAUGE_COLOR.fade(GRAPH_DISPLAY_SETTINGS.LILY_GAUGE_FADE),
 		},
 	}))
 
@@ -49,8 +49,8 @@ export class Lilies extends CoreGauge {
 		maximum: this.parser.patch.before('6.1') ? LILY_INTERVAL_600 : LILY_INTERVAL_610,
 		onExpiration: this.onLilyGeneration.bind(this),
 		graph: {
-			label: <Trans id="whm.gauge.resource.lily-timer">Lily Timer</Trans>,
-			color: gaugeDisplay.LILY_GAUGE_COLOR.fade(gaugeDisplay.LILY_GAUGE_FADE),
+			label: <Trans id="whm.gauge.lily.timer.label">Lily Timer</Trans>,
+			color: GRAPH_DISPLAY_SETTINGS.LILY_GAUGE_COLOR.fade(GRAPH_DISPLAY_SETTINGS.LILY_GAUGE_FADE),
 		},
 
 	}))
@@ -59,8 +59,8 @@ export class Lilies extends CoreGauge {
 		maximum: LILY_MAX_STACKS,
 		initialValue: 0,
 		graph: {
-			label: <Trans id="whm.gauge.resource.bloodlily">Blood Lily</Trans>,
-			color: gaugeDisplay.BLOODLILY_GAUGE_COLOR.fade(gaugeDisplay.BLOODLILY_GAUGE_FADE),
+			label: <Trans id="whm.gauge.bloodlily.stacks.label">Blood Lily</Trans>,
+			color: GRAPH_DISPLAY_SETTINGS.BLOODLILY_GAUGE_COLOR.fade(GRAPH_DISPLAY_SETTINGS.BLOODLILY_GAUGE_FADE),
 		},
 	}))
 
@@ -95,57 +95,60 @@ export class Lilies extends CoreGauge {
 	}
 
 	private onComplete() {
+		const bloodLilyOvercapTiers = {
+			1: SEVERITY.MINOR,
+			2: SEVERITY.MEDIUM,
+			3: SEVERITY.MAJOR,
+		}
 
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.AFFLATUS_MISERY.icon,
-			content: <Trans id="whm.lily-blood.suggestion.content">
+			content: <Trans id="whm.gauge.suggestions.bloodlily.overcap.content">
 				Try to use <DataLink action="AFFLATUS_MISERY" /> to avoid wasting Blood Lily growth from overcapping the gauge.
 			</Trans>,
-			tiers: {
-				1: SEVERITY.MINOR,
-				2: SEVERITY.MEDIUM,
-				3: SEVERITY.MAJOR,
-			},
+			tiers: bloodLilyOvercapTiers,
 			value: this.bloodLilyGauge.overCap,
-			why: <Trans id="whm.lily-blood.suggestion.why">
+			why: <Trans id="whm.gauge.suggestions.bloodlily.overcap.why">
 				<Plural value={this.bloodLilyGauge.overCap} one="# Blood lily" other="# Blood lilies" /> did not bloom due to early lily use.
 			</Trans>,
 		})
 		)
 
-		const LILYCAP_SUGGESTION_600 = <Trans id="whm.lily-cap.suggestion.6_0_content">
+		const lilyOvercapSuggestion_600 = <Trans id="whm.gauge.suggestions.lily.overcap.content.600">
 			Try to use <DataLink action="AFFLATUS_RAPTURE" /> or <DataLink action="AFFLATUS_SOLACE" /> before using other GCD heals. It's okay to cap your lilies if you don't need to heal, move, or weave with them.
 		</Trans>
 
-		const LILYCAP_SUGGESTION_610 = <Trans id="whm.lily-cap.suggestion.6_1_content">
+		const lilyOvercapSuggestion_610 = <Trans id="whm.gauge.suggestions.lily.overcap.content.610">
 			Try to use <DataLink action="AFFLATUS_RAPTURE" /> or <DataLink action="AFFLATUS_SOLACE" /> before using other GCD heals. It's okay to overheal with your lilies as they are to be used for mana management and movement aswell as healing.
 		</Trans>
 
-		const LILYCAP_TIERS_600 = {1: SEVERITY.MINOR}
-		const LILYCAP_TIERS_610 = {
+		const lilyOvercapTiers_600 = {1: SEVERITY.MINOR}
+		const lilyOvercapTiers_610 = {
 			1: SEVERITY.MEDIUM,
 			3: SEVERITY.MAJOR,
 		}
 
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.AFFLATUS_SOLACE.icon,
-			content:  this.parser.patch.before('6.1') ? LILYCAP_SUGGESTION_600 : LILYCAP_SUGGESTION_610,
-			tiers: this.parser.patch.before('6.1') ? LILYCAP_TIERS_600 : LILYCAP_TIERS_610,
+			content:  this.parser.patch.before('6.1') ? lilyOvercapSuggestion_600 : lilyOvercapSuggestion_610,
+			tiers: this.parser.patch.before('6.1') ? lilyOvercapTiers_600 : lilyOvercapTiers_610,
 			value: this.calculateLostLilies(),
-			why: <Trans id="whm.lily-cap.suggestion.why">
+			why: <Trans id="whm.gauge.suggestions.lily.overcap.why">
 				{<Plural value={this.calculateLostLilies()} one="# lily" other="# lilies" />} went unused.
 			</Trans>,
 		}))
 
+		const bloodlilyLeftoverTier={
+			1: SEVERITY.MINOR,
+			3: SEVERITY.MAJOR,
+		}
+
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.AFFLATUS_MISERY.icon,
-			content: <Trans id="whm.unspent-blood-lily.suggestion.content">Aim to finish the fight with no blood lilies </Trans>,
-			tiers: {
-				1: SEVERITY.MINOR,
-				3: SEVERITY.MAJOR,
-			},
+			content: <Trans id="whm.gauge.suggestions.bloodlily.leftover.content">Aim to finish the fight with no blood lilies </Trans>,
+			tiers: bloodlilyLeftoverTier,
 			value: this.bloodLilyGauge.value,
-			why: <Trans id="whm.unspent-blood-lily.suggestion.why">
+			why: <Trans id="whm.gauge.suggestions.bloodlily.leftover.why">
 				{<Plural value={this.bloodLilyGauge.value} one="# blood lily" other="# blood lilies" />} went unused.
 			</Trans>,
 		}))
