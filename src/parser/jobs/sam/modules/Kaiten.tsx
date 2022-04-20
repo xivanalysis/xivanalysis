@@ -117,7 +117,7 @@ export class Kaiten extends Analyser {
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.HISSATSU_KAITEN.icon,
 			content: <Trans id = "sam.kaiten.suggestion.badkaiten.content">
-			Avoid using <DataLink action="HISSATSU_KAITEN"/> on any GCDs besides <DataLink action ="IAIJUTSU"/> moves and <DataLink action = "OGI_NAMIKIRI"/>. These actions are worth it because of the potency gained per kenki spent.
+				Avoid using <DataLink action="HISSATSU_KAITEN"/> on any GCDs besides <DataLink action ="IAIJUTSU"/> moves and <DataLink action = "OGI_NAMIKIRI"/>. These actions are worth it because of the potency gained per kenki spent.
 			</Trans>,
 			tiers: SEVERITY_TIERS,
 			why: <Trans id ="sam.suggestion.badkaiten.why">
@@ -129,7 +129,7 @@ export class Kaiten extends Analyser {
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.HISSATSU_KAITEN.icon,
 			content: <Trans id = "sam.kaiten.suggestion.missedkaiten.content">
-			Always use <DataLink action = "HISSATSU_KAITEN"/> on <DataLink action = "MIDARE_SETSUGEKKA"/>,<DataLink action = "HIGANBANA"/> and <DataLink action="OGI_NAMIKIRI"/>. The gain on these actions from kaiten is too great to miss.
+				Always use <DataLink action = "HISSATSU_KAITEN"/> on <DataLink action = "MIDARE_SETSUGEKKA"/>,<DataLink action = "HIGANBANA"/> and <DataLink action="OGI_NAMIKIRI"/>. The gain on these actions from kaiten is too great to miss.
 			</Trans>,
 			tiers: SEVERITY_TIERS,
 			why: <Trans id ="sam.suggestion.missedkaiten.why">
