@@ -117,11 +117,11 @@ export class Kaiten extends Analyser {
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.HISSATSU_KAITEN.icon,
 			content: <Trans id = "sam.kaiten.suggestion.badkaiten.content">
-					Avoid using <DataLink action="HISSATSU_KAITEN"/> on any GCDs besides <DataLink action ="IAIJUTSU"/> moves and <DataLink action = "OGI_NAMIKIRI"/>. These actions are worth it because of the potency gained per kenki spent.
+			Avoid using <DataLink action="HISSATSU_KAITEN"/> on any GCDs besides <DataLink action ="IAIJUTSU"/> moves and <DataLink action = "OGI_NAMIKIRI"/>. These actions are worth it because of the potency gained per kenki spent.
 			</Trans>,
 			tiers: SEVERITY_TIERS,
 			why: <Trans id ="sam.suggestion.badkaiten.why">
-						You used Kaiten  <Plural value={this.badKaitens} one="# time" other="# times"/> on non-optimal GCDs.
+				You used Kaiten  <Plural value={this.badKaitens} one="# time" other="# times"/> on non-optimal GCDs.
 			</Trans>,
 			value: this.badKaitens,
 		}))
@@ -129,11 +129,11 @@ export class Kaiten extends Analyser {
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.HISSATSU_KAITEN.icon,
 			content: <Trans id = "sam.kaiten.suggestion.missedkaiten.content">
-					Always use <DataLink action = "HISSATSU_KAITEN"/> on <DataLink action = "MIDARE_SETSUGEKKA"/>,<DataLink action = "HIGANBANA"/> and <DataLink action="OGI_NAMIKIRI"/>. The gain on these actions from kaiten is too great to miss.
+			Always use <DataLink action = "HISSATSU_KAITEN"/> on <DataLink action = "MIDARE_SETSUGEKKA"/>,<DataLink action = "HIGANBANA"/> and <DataLink action="OGI_NAMIKIRI"/>. The gain on these actions from kaiten is too great to miss.
 			</Trans>,
 			tiers: SEVERITY_TIERS,
 			why: <Trans id ="sam.suggestion.missedkaiten.why">
-						You forgot to use Kaiten  <Plural value={this.missedKaitens} one="# time" other="# times"/> on optimal GCDs.
+				You forgot to use Kaiten  <Plural value={this.missedKaitens} one="# time" other="# times"/> on optimal GCDs.
 			</Trans>,
 			value: this.missedKaitens,
 		}))
@@ -141,11 +141,11 @@ export class Kaiten extends Analyser {
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.HISSATSU_KAITEN.icon,
 			content: <Trans id = "sam.kaiten.suggestion.doublekaiten.content">
-					Avoid using <DataLink action = "HISSATSU_KAITEN"/> when already under the effect of it.
+				Avoid using <DataLink action = "HISSATSU_KAITEN"/> when already under the effect of it.
 			</Trans>,
 			tiers: SEVERITY_TIERS,
 			why: <Trans id ="sam.suggestion.doublekaiten.why">
-						You used Kaiten  <Plural value={this.doubleKaitens} one="# time" other="# times"/> when you already had it up.
+				You used Kaiten  <Plural value={this.doubleKaitens} one="# time" other="# times"/> when you already had it up.
 			</Trans>,
 			value: this.doubleKaitens,
 		}))

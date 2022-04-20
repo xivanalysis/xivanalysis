@@ -142,7 +142,7 @@ export class Kenki extends CoreGauge {
 		this.suggestions.add(new TieredSuggestion({
 			icon: kenkiIcon,
 			content: <Trans id="sam.gauge.suggestions.loss.content">
-					Avoid letting your Kenki Gauge overcap - the wasted resources may cost further uses of your spenders over the course of the fight.
+				Avoid letting your Kenki Gauge overcap - the wasted resources may cost further uses of your spenders over the course of the fight.
 			</Trans>,
 			why: <Trans id="sam.gauge.suggestions.loss.why">
 				{this.kenkiGauge.overCap} Kenki lost to overcapping.
