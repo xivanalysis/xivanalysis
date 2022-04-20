@@ -92,6 +92,7 @@ export class Lilies extends CoreGauge {
 		this.addEventHook(playerFilter.type('action').action(this.data.matchActionId(LILY_CONSUMERS)), this.onLilySpend)
 		this.addEventHook(playerFilter.type('action').action(this.data.matchActionId(BLOODLILY_CONSUMERS)), () => this.bloodLilyGauge.spend(MISERY_COST))
 		this.addEventHook('complete', this.onComplete)
+		this.lilyTimer.start()
 	}
 
 	private onLilyGeneration() {
@@ -146,7 +147,7 @@ export class Lilies extends CoreGauge {
 
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.AFFLATUS_MISERY.icon,
-			content: <Trans id="whm.gauge.bloodlily.suggestions.leftover.content">Aim to finish the fight with no Blood Lilies </Trans>,
+			content: <Trans id="whm.gauge.bloodlily.suggestions.leftover.content">Try to finish the fight with no Blood Lilies </Trans>,
 			tiers: SEVERITIES.BLOODLILY_LEFTOVER,
 			value: this.bloodLilyGauge.value,
 			why: <Trans id="whm.gauge.bloodlily.suggestions.leftover.why">

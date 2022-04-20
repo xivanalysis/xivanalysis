@@ -943,7 +943,7 @@
   "whm.dots.suggestion.clip-dia.content": "Avoid refreshing Dia significantly before its expiration, this will allow you to cast more Glares.",
   "whm.dots.suggestion.clip-dia.why": "An average of {0} of <0/> per minute lost to early refreshes.",
   "whm.gauge.bloodlily.stacks.label": "Blood Lily",
-  "whm.gauge.bloodlily.suggestions.leftover.content": "Aim to finish the fight with no Blood Lilies",
+  "whm.gauge.bloodlily.suggestions.leftover.content": "Try to finish the fight with no Blood Lilies",
   "whm.gauge.bloodlily.suggestions.leftover.why": "{0, plural, one {# Blood Lily} other {# Blood Lilies}} went unused.",
   "whm.gauge.bloodlily.suggestions.overcap.content": "Try to use <0/> to avoid wasting Blood Lily growth from overcapping the gauge.",
   "whm.gauge.bloodlily.suggestions.overcap.why": "{0, plural, one {# Blood Lily} other {# Blood Lilies}} did not bloom due to early Lily use.",
