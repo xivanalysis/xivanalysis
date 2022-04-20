@@ -12,6 +12,9 @@ export const patch610: Layer<StatusRoot> = {
 			duration: 20000,
 		},
 
+		// RPR 6.1 duration changes
+		ENHANCED_HARPE: {duration: 20000},
+
 		// SCH 6.1 duration changes
 		EXPEDIENCE: {duration: 10000},
 
