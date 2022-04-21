@@ -50,6 +50,7 @@ const SEVERITIES = {
 }
 
 export class Lilies extends CoreGauge {
+
 	static override handle = 'gauge'
 
 	@dependency private suggestions!: Suggestions
@@ -109,7 +110,7 @@ export class Lilies extends CoreGauge {
 		// Each spend also generates a Blood Lily
 		this.bloodLilyGauge.generate(1)
 		this.lilyGauge.spend(1)
-		
+
 		// When we spend a Lily, if the timer isn't running we restart it
 		if (this.lilyTimer.expired) {
 			this.lilyTimer.start()
@@ -148,7 +149,7 @@ export class Lilies extends CoreGauge {
 			tiers: this.parser.patch.before('6.1') ? SEVERITIES.LILY_OVERCAP_600 : SEVERITIES.LILY_OVERCAP_610,
 			value: lostLilies,
 			why: <Trans id="whm.gauge.lily.suggestions.overcap.why">
-				{<Plural value={lostLillies} one="# Lily" other="# Lilies" />} were wasted due to overcapping the gauge.
+				{<Plural value={lostLilies} one="# Lily" other="# Lilies" />} were wasted due to overcapping the gauge.
 			</Trans>,
 		}))
 
