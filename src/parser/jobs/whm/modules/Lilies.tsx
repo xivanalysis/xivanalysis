@@ -92,6 +92,7 @@ export class Lilies extends CoreGauge {
 		this.addEventHook(playerFilter.type('action').action(this.data.matchActionId(LILY_CONSUMERS)), this.onLilySpend)
 		this.addEventHook(playerFilter.type('action').action(this.data.matchActionId(BLOODLILY_CONSUMERS)), () => this.bloodLilyGauge.spend(MISERY_COST))
 		this.addEventHook('complete', this.onComplete)
+
 		this.lilyTimer.start()
 	}
 
