@@ -7,6 +7,7 @@ import {GreasedLightning} from './GreasedLightning'
 import {Positionals} from './Positionals'
 import {Revolution} from './Revolution'
 import {RiddleOfFire} from './RiddleOfFire'
+import {Star} from './Star'
 import {Steppies} from './Steppies'
 import {TwinSnakes} from './TwinSnakes'
 import {Weaving} from './Weaving'
@@ -21,6 +22,7 @@ export default [
 	GreasedLightning,
 	Positionals,
 	RiddleOfFire,
+	Star,
 	Steppies,
 	TwinSnakes,
 	Weaving,
