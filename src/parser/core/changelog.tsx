@@ -10,12 +10,18 @@ export const changelog: ChangelogEntry[] = [
 	// 	contributors: [CONTRIBUTORS.YOU],
 	// },
 	{
+		date: new Date('2022-04-20'),
+		Changes: () => <>Update core raid buffs to use the correct NIN buff name in timeline.</>,
+		contributors: [CONTRIBUTORS.AY],
+	},
+	{
 		date: new Date('2022-03-29'),
 		Changes: () => <>
 			Update Always Be Casting to target 98% and show at top of checklist.
 		</>,
 		contributors: [CONTRIBUTORS.AY],
-	},	{
+	},
+	{
 		date: new Date('2022-02-17'),
 		Changes: () => <>
 			Allow core Procs to hide the timeline row. This was previously enforced, jobs can now hide it.
@@ -31,7 +37,7 @@ export const changelog: ChangelogEntry[] = [
 	{
 		date: new Date('2022-02-11'),
 		Changes: () => <>
-		Fix Swiftcast end of fight forgiveness. It was increasing the number of expected GCDs to 2 instead of reducing it to 0.
+			Fix Swiftcast end of fight forgiveness. It was increasing the number of expected GCDs to 2 instead of reducing it to 0.
 		</>,
 		contributors: [CONTRIBUTORS.DEAN],
 	},
