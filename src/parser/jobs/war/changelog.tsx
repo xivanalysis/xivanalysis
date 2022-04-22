@@ -3,6 +3,13 @@ import React from 'react'
 
 export const changelog = [
 	{
+		date: new Date('2022-01-22'),
+		Changes: () => <>
+			Add Nascent Chaos status timeout/overwrite tracking.
+		</>,
+		contributors: [CONTRIBUTORS.AY],
+	},
+	{
 		date: new Date('2022-01-01'),
 		Changes: () => <>
 			Fix bugged Inner Release rushed window handling in suggestions.
