@@ -280,6 +280,8 @@ export const RPR = ensureActions({
 
 	// -----
 	// Soul Gauge oGCDs
+	// Note:
+	//  all of these grant Reaver, but we only keep it on Gluttony since that's the only real use at level cap
 	// -----
 
 	GLUTTONY: {
@@ -295,21 +297,20 @@ export const RPR = ensureActions({
 		name: 'Blood Stalk',
 		icon: 'https://xivapi.com/i/003000/003617.png',
 		cooldown: 1000,
-		statusesApplied: ['SOUL_REAVER'],
 	},
 
 	UNVEILED_GALLOWS: {
 		id: 24391,
 		name: 'Unveiled Gallows',
 		icon: 'https://xivapi.com/i/003000/003619.png',
-		statusesApplied: ['SOUL_REAVER'],
+		cooldown: 1000,
 	},
 
 	UNVEILED_GIBBET: {
 		id: 24390,
 		name: 'Unveiled Gibbet',
 		icon: 'https://xivapi.com/i/003000/003618.png',
-		statusesApplied: ['SOUL_REAVER'],
+		cooldown: 1000,
 	},
 
 	GRIM_SWATHE: {
@@ -317,6 +318,5 @@ export const RPR = ensureActions({
 		name: 'Grim Swathe',
 		icon: 'https://xivapi.com/i/003000/003620.png',
 		cooldown: 1000,
-		statusesApplied: ['SOUL_REAVER'],
 	},
 })
