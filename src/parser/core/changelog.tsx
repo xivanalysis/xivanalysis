@@ -18,9 +18,14 @@ export const changelog: ChangelogEntry[] = [
 	},	{
 		date: new Date('2022-02-17'),
 		Changes: () => <>
-			Allow core procs to hide the timeline row. This was previously enforced, jobs can now hide it.
+			Allow core Procs to hide the timeline row. This was previously enforced, jobs can now hide it.
 			This is useful for jobs that have GCDs with lots of procs getting duplicated information.
 		</>,
+		contributors: [CONTRIBUTORS.AY],
+	},
+	{
+		date: new Date('2022-02-12'),
+		Changes: () => <>Make core Procs counter values accessible to job-specific overrides.</>,
 		contributors: [CONTRIBUTORS.AY],
 	},
 	{
@@ -51,6 +56,11 @@ export const changelog: ChangelogEntry[] = [
 			This should resolve incorrect death flags due to tank invulnerabilities and mechanics such as Death's Toll.
 		</>,
 		contributors: [CONTRIBUTORS.ACKWELL],
+	},
+	{
+		date: new Date('2022-01-22'),
+		Changes: () => <>Add proper severity types to core Procs overrides.</>,
+		contributors: [CONTRIBUTORS.AY],
 	},
 	{
 		date: new Date('2022-01-12'),

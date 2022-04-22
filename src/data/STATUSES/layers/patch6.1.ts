@@ -17,5 +17,25 @@ export const patch610: Layer<StatusRoot> = {
 
 		// SGE 6.1 changes
 		SOTERIA: {stacksApplied: 4},
+
+		// DNC 6.1 changes
+		SILKEN_SYMMETRY: {
+			name: 'Silken Symmetry',
+		},
+		SILKEN_FLOW: {
+			name: 'Silken Flow',
+		},
+		FLOURISHING_SYMMETRY: {
+			id: 3017,
+			name: 'Flourishing Symmetry',
+			icon: 'https://xivapi.com/i/013000/013725.png',
+			duration: 30000,
+		},
+		FLOURISHING_FLOW: {
+			id: 3018,
+			name: 'Flourishing Flow',
+			icon: 'https://xivapi.com/i/013000/013726.png',
+			duration: 30000,
+		},
 	},
 }

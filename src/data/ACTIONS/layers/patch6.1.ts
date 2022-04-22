@@ -9,5 +9,15 @@ export const patch610: Layer<ActionRoot> = {
 		GRIT: {cooldown: 3000},
 		IRON_WILL: {cooldown: 3000},
 		ROYAL_GUARD: {cooldown: 3000},
+
+		// DNC 6.1 changes
+		FLOURISH: {
+			statusesApplied: [
+				'FLOURISHING_SYMMETRY',
+				'FLOURISHING_FLOW',
+				'THREEFOLD_FAN_DANCE',
+				'FOURFOLD_FAN_DANCE',
+			],
+		},
 	},
 }
