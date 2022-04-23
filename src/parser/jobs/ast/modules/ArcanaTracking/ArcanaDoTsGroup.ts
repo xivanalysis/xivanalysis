@@ -10,7 +10,7 @@ export const DOTS_ALIAS: [[keyof StatusRoot, keyof StatusRoot]] = [
 	['WILDFIRE', 'WILDFIRE_SELF'],
 ]
 
-export const DOTS_AND_GROUND_ACTIONS: Array<keyof ActionRoot> = [
+export const DOT_ACTIONS: Array<keyof ActionRoot> = [
 
 	//**MELEE**
 	//DRG
@@ -18,8 +18,7 @@ export const DOTS_AND_GROUND_ACTIONS: Array<keyof ActionRoot> = [
 	'CHAOTIC_SPRING',
 
 	//NIN
-	'DOTON',
-	'DOTON_TCJ',
+	//only ground dots, see below. Comment left here as reminder to review in future patches
 
 	//RPR
 	//none for RPR. Comment left here as reminder to review in future patches
@@ -40,7 +39,6 @@ export const DOTS_AND_GROUND_ACTIONS: Array<keyof ActionRoot> = [
 	'STORMBITE',
 
 	//MCH
-	'FLAMETHROWER',
 	'BIOBLASTER',
 	'WILDFIRE',
 
@@ -58,7 +56,7 @@ export const DOTS_AND_GROUND_ACTIONS: Array<keyof ActionRoot> = [
 	//none for RDM. Comment left here as reminder to review in future patches
 
 	//SMN
-	'SLIPSTREAM',
+	//only ground dots, see below. Comment left here as reminder to review in future patches
 
 	//**TANK**
 	//PLD
@@ -71,7 +69,7 @@ export const DOTS_AND_GROUND_ACTIONS: Array<keyof ActionRoot> = [
 	'BOW_SHOCK',
 
 	//DRK
-	'SALTED_EARTH',
+	//only ground dots, see below. Comment left here as reminder to review in future patches
 
 	//WAR
 	//none for WAR. Comment left here as reminder to review in future patches
@@ -100,4 +98,19 @@ export const DOTS_AND_GROUND_ACTIONS: Array<keyof ActionRoot> = [
 export const SPECIAL_STATUS: Array<keyof StatusRoot> = [
 	//war vengeance uses damage buffs at the time of preparation, not the time vengeance is cast
 	'VENGEANCE',
+]
+
+export const GROUND_DOTS: Array<keyof ActionRoot> = [
+	//NIN
+	'DOTON',
+	'DOTON_TCJ',
+
+	//MCH
+	'FLAMETHROWER',
+
+	//SMN
+	'SLIPSTREAM',
+
+	//DRK
+	'SALTED_EARTH',
 ]

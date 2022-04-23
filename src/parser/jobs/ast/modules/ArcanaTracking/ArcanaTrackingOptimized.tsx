@@ -11,8 +11,8 @@ import {Actor, Actors} from 'parser/core/modules/Actors'
 import {Data} from 'parser/core/modules/Data'
 import {InitEvent} from 'parser/core/Parser'
 import {ARCANA_STATUSES} from '../ArcanaGroups'
-import {DOTS_AND_GROUND_ACTIONS, SPECIAL_STATUS, DOTS_ALIAS} from './ArcanaDoTsGroup'
-import {CritAndDHPredictor} from './CritAndDHRates'
+import {DOT_ACTIONS, GROUND_DOTS, SPECIAL_STATUS, DOTS_ALIAS} from './ArcanaDoTsGroup'
+import {CritAndDHPredictor, CRIT_DH_TYPES} from './CritAndDHRates'
 import {optimalRoleVerify} from './OptimalRoleVerify'
 
 /*
@@ -28,7 +28,11 @@ Other noteworthy items:
 	- if you want to compare damage to FFLogs, you need to compare non-tick damage AND damage prepared within window. no other damage included.
 		filter expression in FFLogs is IN RANGE FROM timestamp=9000 to timestamp=23980 END where the timestamps MUST relate to an actual event. if the event doesn't exist, the filter won't work
 		please note that if a preparation event happens on the cusp of this, it'll be included in damage
-	- damage will be normalized based on relative critical hit and direct hit rates based on the initial calculations done in CritAndDHRates
+	- damage will be normalized based on relative critical hit and direct hit rates based on the initial calculations done in CritAndDHRates. All of the special cases in CritAndDHRatesConsts need to be considered and applied below since they have varying impacts on the expected value calculations.
+		- considerations: regular modifiers are built into the function .getCritDH and .getCritMulti, so these considerations are
+							inert modifier is taken as base damage with no expected damage formula application
+							auto crits/dh are taken base damage and multiplier without any percentage application. this consideration is also applied for moves that only crit for specific moves or weaponskills
+							Note: there is an assumption for autocrits that the crit multiplier is the same multiplier as a regular crit including all aforeapplied non-autocrit modifiers as part of .getCritMulti
 */
 
 const OPTIMAL_CARD_PERCENTAGE = 0.06
@@ -91,6 +95,7 @@ export default class ArcanaTrackingOptimized extends Analyser {
 
 	//dots
 	private dotsStatus: Array<Status['id']> = []
+	private groundDotsStatus: Array<Status['id']> = []
 	private dotsInWindow: DoTs[] = [] //this one is used temporarily for damage tracking
 	private dotsComplete: DoTs[] = [] //this one is used on complete to add damage
 	private dotWindowOpen: boolean = false
@@ -111,7 +116,15 @@ export default class ArcanaTrackingOptimized extends Analyser {
 		this.specialStatus = SPECIAL_STATUS.map(statusKey => this.data.statuses[statusKey].id)
 		DOTS_ALIAS.forEach(dot => this.statusAlias[this.data.statuses[dot[0]].id] = {alias: this.data.statuses[dot[1]].id})
 		DOTS_ALIAS.forEach(dot => this.aliasStatus[this.data.statuses[dot[1]].id] = {status: this.data.statuses[dot[0]].id})
-		this.dotsStatus = DOTS_AND_GROUND_ACTIONS
+		this.dotsStatus = DOT_ACTIONS
+			.filter(actionKey => this.data.actions[actionKey] !== undefined && this.data.actions[actionKey].statusesApplied !== undefined)
+			.flatMap(actionKey =>
+				//ts is complaining about the potential for undefined, but the filter already filters these out, so ¯\_(ツ)_/¯
+				this.data.actions[actionKey].statusesApplied.map(statusKey => {
+					return this.data.statuses[statusKey].id
+				})
+			)
+		this.groundDotsStatus = GROUND_DOTS
 			.filter(actionKey => this.data.actions[actionKey] !== undefined && this.data.actions[actionKey].statusesApplied !== undefined)
 			.flatMap(actionKey =>
 				//ts is complaining about the potential for undefined, but the filter already filters these out, so ¯\_(ツ)_/¯
@@ -140,6 +153,7 @@ export default class ArcanaTrackingOptimized extends Analyser {
 				.target(oneOf(this.playerControlled)),
 			this.onCardRemove
 		)
+		//note: special statuses and ground dots are not included in this intentionally since these types of statuses do not snapshot for the entire duration, only when damage is applied.
 		this.addEventHook(
 			filter<Event>()
 				.type('statusApply')
@@ -241,27 +255,18 @@ export default class ArcanaTrackingOptimized extends Analyser {
 	}
 
 	/**
-	 * Updates damage amount
+	 * Updates damage amount for non-dots
 	 */
 	private onCast(event: Events['damage']) {
-		//dots will be handled in another function as only dots applied IN the window should be considered. additionally statuses that act like actions will be handled like actions
-		if (event.cause.type === 'status' && !this.specialStatus.includes(event.cause.status)) { return }
+		//dots will be handled in another function as only dots applied IN the window should be considered. additionally statuses that act like actions will be handled like actions EXCEPT ground dots which will be handled in the same manner as actions largely because these "dots" do not snapshot
+		if (event.cause.type === 'status' && !this.specialStatus.includes(event.cause.status) && !this.groundDotsStatus.includes(event.cause.status)) { return }
 		const owner: Actor['id'] | undefined = this.actors.get(event.source)?.owner?.id
 
-		let damage = 0
+		let damage: number = 0
 		event.targets.forEach(target => {
-			const crit = owner != null ? this.critDH.getCritDH(event.timestamp, owner).crit : this.critDH.getCritDH(event.timestamp, event.source).crit
-			const DH = owner != null ? this.critDH.getCritDH(event.timestamp, owner).DH : this.critDH.getCritDH(event.timestamp, event.source).DH
+			const critDHEvent = owner != null ? this.critDH.getCritDH(event.timestamp, owner) : this.critDH.getCritDH(event.timestamp, event.source)
 			const critMultiplier = owner != null ? this.critDH.getCritMulti(event.timestamp, owner) : this.critDH.getCritMulti(event.timestamp, event.source)
-			let adjAmount = target.amount
-			adjAmount = adjAmount * (1 + crit * critMultiplier) * (1 + DH * DHIT_MOD)
-			if (target.sourceModifier === SourceModifier.CRITICAL || target.sourceModifier === SourceModifier.CRITICAL_DIRECT) {
-				adjAmount = adjAmount / (1 + critMultiplier)
-			}
-			if (target.sourceModifier === SourceModifier.DIRECT || target.sourceModifier === SourceModifier.CRITICAL_DIRECT) {
-				adjAmount = adjAmount / (1 + DHIT_MOD)
-			}
-			damage += adjAmount
+			damage += this.expectedDamageAdjustment(critDHEvent.critType, critDHEvent.DHType, critDHEvent.crit, critDHEvent.DH, target.amount, critMultiplier, target.sourceModifier)
 		})
 
 		//find percentage buff on current target to take out of damage later on. should be unique so the sum should return the right value
@@ -285,6 +290,9 @@ export default class ArcanaTrackingOptimized extends Analyser {
 		}
 	}
 
+	/**
+	 * Opens up window for dots that snapshot during card window
+	 */
 	private onDotApply(event: Events['statusApply']) {
 		//ignore applications of statuses we are aliasing
 		if (this.statusAlias[event.status] !== undefined) { return }
@@ -350,7 +358,7 @@ export default class ArcanaTrackingOptimized extends Analyser {
 			this.dotsInWindow.push(dot)
 		})
 
-		//statusAlias consideration
+		//statusAlias consideration (i.e. statuses that are not associated with the original status. A good example is MCH wildfire on the target which refreshes a bunch so it's easier to track the wildfire status on the MCH)
 		if (this.aliasStatus[event.status] === undefined) { return }
 		const aliasStatusID = this.aliasStatus[event.status].status
 		if (this.dotDamageHook[event.source] === undefined) { this.dotDamageHook[event.source] = {} }
@@ -365,6 +373,7 @@ export default class ArcanaTrackingOptimized extends Analyser {
 			}
 		}
 
+		//push dot window for each open window for the aliased status
 		this.partyWindow.forEach(window => {
 			const dot: DoTs = {
 				timestamp: window.lastEvent.timestamp,
@@ -380,6 +389,9 @@ export default class ArcanaTrackingOptimized extends Analyser {
 		})
 	}
 
+	/**
+	 * Closes dot window on expiry only if the dot was applied during an open card window
+	 */
 	private onDotRemove(event: Events['statusRemove']) {
 		//remove statusRemove hooks
 		this.removeEventHook(this.dotStatusRemoveHook[event.source][event.status].hook)
@@ -407,30 +419,50 @@ export default class ArcanaTrackingOptimized extends Analyser {
 		dotsToPushAliasStatus.forEach(dot => this.dotsComplete.push(dot))
 	}
 
+	/**
+	 * Dot damage consideration only for dots that open during a card window
+	 */
 	private onDotDamage(event: Events['damage']) {
 		//ts complains without this statement even though our hooks are only with cause type status
 		if (event.cause.type === 'action') { return }
 		const status = event.cause.status
 
 		let damage = 0
-		let adjAmount = 0
 
 		this.dotsInWindow.filter(dotWindow => dotWindow.actor === event.source && dotWindow.status === status).forEach(window => {
 			//damage is brought into this loop because I need the specific dot crit/DH and the source modifier for each target to normalize
 			damage = 0
 			event.targets.forEach(target => {
-				adjAmount = target.amount
-				adjAmount = adjAmount * (1 + window.crit * window.critMultiplier) * (1 + window.DH * DHIT_MOD)
-				if (target.sourceModifier === SourceModifier.CRITICAL || target.sourceModifier === SourceModifier.CRITICAL_DIRECT) {
-					adjAmount = adjAmount / (1 + window.critMultiplier)
-				}
-				if (target.sourceModifier === SourceModifier.DIRECT || target.sourceModifier === SourceModifier.CRITICAL_DIRECT) {
-					adjAmount = adjAmount / (1 + DHIT_MOD)
-				}
-				damage += adjAmount
+				//assumption: no autocrit or inert DoTs
+				damage += this.expectedDamageAdjustment(CRIT_DH_TYPES.normal, CRIT_DH_TYPES.normal, window.crit, window.DH, target.amount, window.critMultiplier, target.sourceModifier)
 			})
 			window.damage += damage / (1 + window.percentage)
 		})
+	}
+
+	/*
+	* to output the expected damage based on known types within the specified damage event. it has many inputs, but this method is used to consolidate a bit of case management for ease of review.
+	*/
+	private expectedDamageAdjustment(critType: string, DHType: string, crit: number, DH: number, baseDamage: number, critMultiplier: number, sourceModifier: number): number {
+		//since multiplication is associative, we won't care about the order of multiplication. for simplicity, we will react first with crit, dh, then deal with source modifiers
+		//inert
+		if (critType === CRIT_DH_TYPES.inert && DHType === CRIT_DH_TYPES.inert) { return baseDamage }
+
+		let adjustedDamage = baseDamage
+
+		//crit management
+		if (critType === CRIT_DH_TYPES.auto) { adjustedDamage = adjustedDamage * (1 + critMultiplier) }
+		if (critType === CRIT_DH_TYPES.normal) { adjustedDamage = adjustedDamage * (1 + crit * critMultiplier) }
+
+		//DH management
+		if (DHType === CRIT_DH_TYPES.auto) { adjustedDamage = adjustedDamage * (1 + DHIT_MOD) }
+		if (DHType === CRIT_DH_TYPES.normal) { adjustedDamage = adjustedDamage * (1 + DH * DHIT_MOD) }
+
+		//source modifier management
+		if (sourceModifier === SourceModifier.CRITICAL || sourceModifier === SourceModifier.CRITICAL_DIRECT) { adjustedDamage = adjustedDamage / (1 + critMultiplier) }
+		if (sourceModifier === SourceModifier.DIRECT || sourceModifier === SourceModifier.CRITICAL_DIRECT) { adjustedDamage = adjustedDamage / (1 + DHIT_MOD) }
+
+		return adjustedDamage
 	}
 
 	private onComplete() {
