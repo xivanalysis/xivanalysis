@@ -42,5 +42,10 @@ export const patch610: Layer<StatusRoot> = {
 			icon: 'https://xivapi.com/i/013000/013726.png',
 			duration: 30000,
 		},
+
+		// SMN 6.1 changes
+		SEARING_LIGHT: {
+			icon: 'https://xivapi.com/i/012000/012699.png',
+		},
 	},
 }

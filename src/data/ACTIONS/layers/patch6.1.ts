@@ -23,5 +23,14 @@ export const patch610: Layer<ActionRoot> = {
 				'FOURFOLD_FAN_DANCE',
 			],
 		},
+
+		// SMN 6.1 changes
+		SEARING_LIGHT: {
+			icon: 'https://xivapi.com/i/002000/002780.png',
+			statusesApplied: ['SEARING_LIGHT'],
+		},
+		RUBY_RITE: {
+			gcdRecast: 3000,
+		},
 	},
 }
