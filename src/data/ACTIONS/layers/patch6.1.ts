@@ -32,5 +32,8 @@ export const patch610: Layer<ActionRoot> = {
 		RUBY_RITE: {
 			gcdRecast: 3000,
 		},
+		RUBY_CATASTROPHE: {
+			gcdRecast: 3000,
+		},
 	},
 }
