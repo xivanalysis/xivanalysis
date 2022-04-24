@@ -14,7 +14,7 @@ export const patch610: Layer<StatusRoot> = {
 		// Duration varies by the remaining duration on Walking Dead when it was cleansed
 		UNDEAD_REBIRTH: {
 			id: 3255,
-			name: 'Undeath Rebirth',
+			name: 'Undead Rebirth',
 			icon: 'https://xivapi.com/i/013000/013124.png',
 		},
 
