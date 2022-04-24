@@ -1,54 +1,71 @@
 import {Trans} from '@lingui/react'
 import {ActionLink} from 'components/ui/DbLink'
+import {Event, Events} from 'event'
+import {Analyser} from 'parser/core/Analyser'
+import {EventHook} from 'parser/core/Dispatcher'
+import {filter} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
-import {BuffWindow, EvaluatedAction, WindowEvaluator} from 'parser/core/modules/ActionWindow'
-import {HistoryEntry} from 'parser/core/modules/ActionWindow/History'
+import {Data} from 'parser/core/modules/Data'
 import {SimpleStatistic, Statistics} from 'parser/core/modules/Statistics'
 import React from 'react'
 
 /**
- * While it is possible to get 16 attacks in a Riddle of Wind
- * window, it is such a niche and time based thing that I'm
- * not sure if it's worth it. I've looked into a lot of top
- * parsing monk logs, and it almost feels like it's RNG if
- * someone has a 16 RoW attack window.
+ * While it is possible to get 16 attacks in a Riddle of Wind window,
+ * it's such a niche and time based thing that it's not worth handling.
+ * Even in a lot of top parsing monk logs, it's effectively RNG if they get 16.
  */
 const EXPECTED_ATTACKS_PER_ROW_WINDOW = 15
 
-class CallbackEvaluator implements WindowEvaluator {
-	private readonly callback: (windows: Array<HistoryEntry<EvaluatedAction[]>>) => void;
-
-	constructor(callback: (windows: Array<HistoryEntry<EvaluatedAction[]>>) => void) {
-		this.callback = callback
-	}
-
-	output(): undefined {
-		return undefined
-	}
-
-	suggest(windows: Array<HistoryEntry<EvaluatedAction[]>>): undefined {
-		this.callback(windows)
-		return undefined
-	}
-}
-
-export class RiddleOfWind extends BuffWindow {
+export class RiddleOfWind extends Analyser {
 	static override handle = 'riddleofwind'
 
+	@dependency data!: Data
 	@dependency statistics!: Statistics
 
-	buffStatus = this.data.statuses.RIDDLE_OF_WIND
+	private history: number[] = []
+	private autos: number = 0
+
+	private windHook?: EventHook<Events['action']>
 
 	override initialise() {
 		super.initialise()
 
-		this.trackOnlyActions([this.data.actions.ATTACK.id])
-		this.addEvaluator(new CallbackEvaluator(this.addStatistic.bind(this)))
+		const playerFilter = filter<Event>().source(this.parser.actor.id)
+
+		this.addEventHook(playerFilter.type('statusApply').status(this.data.statuses.RIDDLE_OF_WIND.id), this.onGain)
+		this.addEventHook(playerFilter.type('statusRemove').status(this.data.statuses.RIDDLE_OF_WIND.id), this.onPass)
+
+		this.addEventHook('complete', this.onComplete)
 	}
 
-	private addStatistic(windows: Array<HistoryEntry<EvaluatedAction[]>>) {
-		const expectedAttacks = windows.length * EXPECTED_ATTACKS_PER_ROW_WINDOW
-		const actualAttacks = windows.map(history => history.data.length).reduce((previousValue, currentValue) => previousValue + currentValue, 0)
+	private onGain(): void {
+		if (this.windHook == null) {
+			this.windHook = this.addEventHook(
+				filter<Event>()
+					.source(this.parser.actor.id)
+					.type('action')
+					.action(this.data.actions.ATTACK.id),
+				() => this.autos++
+			)
+		}
+	}
+
+	// Passing Wind, get it
+	private onPass(): void {
+		if (this.windHook != null) {
+			// Cleanup data
+			this.history.push(this.autos)
+			this.autos = 0
+
+			// Cleanup hooks
+			this.removeEventHook(this.windHook)
+			this.windHook = undefined
+		}
+	}
+
+	private onComplete() {
+		const expectedAttacks = this.history.length * EXPECTED_ATTACKS_PER_ROW_WINDOW
+		const actualAttacks = this.history.reduce((total, autos) => total + autos, 0)
 
 		this.statistics.add(new SimpleStatistic({
 			title: <Trans id="mnk.row.statistic.title">
@@ -61,12 +78,5 @@ export class RiddleOfWind extends BuffWindow {
 				able get full uptime on the boss. This is a DPS loss due to missing auto attacks.
 			</Trans>,
 		}))
-	}
-
-	override output(): undefined {
-		// Called to get our history
-		super.output()
-		// Don't want to show anything from the buff window, just use the history it provides
-		return undefined
 	}
 }
