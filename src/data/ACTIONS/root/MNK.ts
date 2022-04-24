@@ -1,5 +1,5 @@
 import {Attribute} from 'event'
-import {ensureActions} from '../type'
+import {ensureActions, BonusModifier} from '../type'
 
 export const MNK = ensureActions({
 	// -----
@@ -29,6 +29,13 @@ export const MNK = ensureActions({
 		icon: 'https://xivapi.com/i/000000/000210.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
+		potencies: [{
+			value: 250,
+			bonusModifiers: [],
+		}, {
+			value: 310,
+			bonusModifiers: [BonusModifier.POSITIONAL],
+		}],
 	},
 
 	TWIN_SNAKES: {
@@ -37,7 +44,6 @@ export const MNK = ensureActions({
 		icon: 'https://xivapi.com/i/000000/000213.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		potency: 280,
 		statusesApplied: ['DISCIPLINED_FIST'],
 	},
 
@@ -56,6 +62,13 @@ export const MNK = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		statusesApplied: ['DEMOLISH'],
+		potencies: [{
+			value: 70,
+			bonusModifiers: [],
+		}, {
+			value: 130,
+			bonusModifiers: [BonusModifier.POSITIONAL],
+		}],
 	},
 
 	ROCKBREAKER: {

@@ -1,5 +1,5 @@
 import {Attribute} from 'event'
-import {ensureActions} from '../type'
+import {ensureActions, BonusModifier} from '../type'
 
 // Samurai Actions
 
@@ -82,7 +82,20 @@ export const SAM = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003158.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		potency: 320,
+		// These are 6.0 values updated in the 6.1 layer.
+		potencies: [{
+			value: 100,
+			bonusModifiers: [],
+		}, {
+			value: 150,
+			bonusModifiers: [BonusModifier.POSITIONAL],
+		}, {
+			value: 320,
+			bonusModifiers: [BonusModifier.COMBO],
+		}, {
+			value: 370,
+			bonusModifiers: [BonusModifier.POSITIONAL, BonusModifier.COMBO],
+		}],
 		combo: {
 			from: 7478,
 			end: true,
@@ -117,7 +130,20 @@ export const SAM = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003164.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		potency: 320,
+		// These are 6.0 values updated in the 6.1 layer.
+		potencies: [{
+			value: 100,
+			bonusModifiers: [],
+		}, {
+			value: 150,
+			bonusModifiers: [BonusModifier.POSITIONAL],
+		}, {
+			value: 320,
+			bonusModifiers: [BonusModifier.COMBO],
+		}, {
+			value: 370,
+			bonusModifiers: [BonusModifier.POSITIONAL, BonusModifier.COMBO],
+		}],
 		combo: {
 			from: 7479,
 			end: true,

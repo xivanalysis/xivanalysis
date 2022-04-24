@@ -1,5 +1,5 @@
 import {Attribute} from 'event'
-import {ensureActions} from '../type'
+import {ensureActions, BonusModifier} from '../type'
 
 export const RPR = ensureActions({
 	// -----
@@ -166,6 +166,24 @@ export const RPR = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		statusesApplied: ['ENHANCED_GIBBET'],
+		potencies: [{
+			value: 400,
+			bonusModifiers: [],
+			baseModifiers: [],
+		}, {
+			value: 460,
+			bonusModifiers: [BonusModifier.POSITIONAL],
+			baseModifiers: [],
+		}, {
+			// Lance Mastery increases the potency of the 5th hit by 100
+			value: 460,
+			bonusModifiers: [],
+			baseModifiers: ['ENHANCED_GALLOWS'],
+		}, {
+			value: 520,
+			bonusModifiers: [BonusModifier.POSITIONAL],
+			baseModifiers: ['ENHANCED_GALLOWS'],
+		}],
 	},
 
 	GIBBET: {
@@ -175,6 +193,24 @@ export const RPR = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		statusesApplied: ['ENHANCED_GALLOWS'],
+		potencies: [{
+			value: 400,
+			bonusModifiers: [],
+			baseModifiers: [],
+		}, {
+			value: 460,
+			bonusModifiers: [BonusModifier.POSITIONAL],
+			baseModifiers: [],
+		}, {
+			// Lance Mastery increases the potency of the 5th hit by 100
+			value: 460,
+			bonusModifiers: [],
+			baseModifiers: ['ENHANCED_GIBBET'],
+		}, {
+			value: 520,
+			bonusModifiers: [BonusModifier.POSITIONAL],
+			baseModifiers: ['ENHANCED_GIBBET'],
+		}],
 	},
 
 	GUILLOTINE: {
