@@ -5,6 +5,19 @@ import {SHARED} from '../root/SHARED'
 export const patch610: Layer<StatusRoot> = {
 	patch: '6.1',
 	data: {
+		// DRK 6.1 buff changes
+		BLOOD_WEAPON: {
+			duration: 15000,
+			stacksApplied: 5,
+		},
+
+		// Duration varies by the remaining duration on Walking Dead when it was cleansed
+		UNDEAD_REBIRTH: {
+			id: 3255,
+			name: 'Undead Rebirth',
+			icon: 'https://xivapi.com/i/013000/013124.png',
+		},
+
 		// NIN 6.1 buff changes
 		MUG_VULNERABILITY_UP: {
 			id: 638,
