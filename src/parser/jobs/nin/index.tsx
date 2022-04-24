@@ -21,7 +21,7 @@ export const NINJA = new Meta({
 	],
 	changelog: [
 		{
-			date: new Date('2022-02-24'),
+			date: new Date('2022-04-24'),
 			Changes: () => <>Support 6.1 NIN positionals.</>,
 			contributors: [CONTRIBUTORS.DEAN],
 		},
