@@ -6,7 +6,8 @@ import {HistoryEntry} from 'parser/core/modules/ActionWindow/History'
 import {SEVERITY} from 'parser/core/modules/Suggestions'
 import {Tincture as CoreTincture} from 'parser/core/modules/Tincture'
 import React from 'react'
-import {OPENER_BUFFER} from '../Constants'
+import {OPENER_BUFFER} from '../constants'
+import {DISPLAY_ORDER} from './DISPLAY_ORDER'
 
 const COMMUNIO_SEVERITY = {
 	1: SEVERITY.MINOR,
@@ -26,6 +27,7 @@ const IGNORED_ACTIONS: ActionKey[] = [
 ]
 
 export class Tincture extends CoreTincture {
+	static override displayOrder = DISPLAY_ORDER.TINCTURES
 
 	private adjustExpectedActionCount = (window: HistoryEntry<EvaluatedAction[]>) => {
 		if (window.start - OPENER_BUFFER <= this.parser.pull.timestamp) {

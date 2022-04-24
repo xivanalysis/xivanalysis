@@ -1,18 +1,23 @@
 import {ensureStatuses} from '../type'
+import {SHARED} from './SHARED'
 
 export const DNC = ensureStatuses({
-	FLOURISHING_SYMMETRY: {
+	// Silken Symmetry/Flow are the pre-6.1 combined proc statuses, so they get the Flourishing name in the base layer
+	SILKEN_SYMMETRY: {
 		id: 2693,
 		name: 'Flourishing Symmetry',
 		icon: 'https://xivapi.com/i/013000/013718.png',
 		duration: 30000,
 	},
-	FLOURISHING_FLOW: {
+	SILKEN_FLOW: {
 		id: 2694,
 		name: 'Flourishing Flow',
 		icon: 'https://xivapi.com/i/013000/013719.png',
 		duration: 30000,
 	},
+	// Flourishing Symmetry/Flow are the Flourish-specific statuses introduced in 6.1, their data will get added in the 6.1 layer
+	FLOURISHING_SYMMETRY: SHARED.UNKNOWN,
+	FLOURISHING_FLOW: SHARED.UNKNOWN,
 	THREEFOLD_FAN_DANCE: {
 		id: 1820,
 		name: 'Threefold Fan Dance',

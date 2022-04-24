@@ -5,6 +5,7 @@ import {Demolish} from './Demolish'
 import {Forms} from './Forms'
 import {GreasedLightning} from './GreasedLightning'
 import {Positionals} from './Positionals'
+import {Revolution} from './Revolution'
 import {RiddleOfFire} from './RiddleOfFire'
 import {RiddleOfWind} from './RiddleOfWind'
 import {Steppies} from './Steppies'
@@ -15,6 +16,7 @@ export default [
 	ActionTimeline,
 	AoE,
 	CooldownDowntime,
+	Revolution,
 	Demolish,
 	Forms,
 	GreasedLightning,

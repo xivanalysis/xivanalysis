@@ -20,7 +20,7 @@ export const GUNBREAKER = new Meta({
 
 	supportedPatches: {
 		from: '6.0',
-		to: '6.08',
+		to: '6.1',
 	},
 
 	contributors: [
@@ -106,6 +106,16 @@ export const GUNBREAKER = new Meta({
 			Changes: () => <>
 				<ul>
 					<li>Change AoE Threshold to 2 for everything</li>
+				</ul>,
+			</>,
+			contributors: [CONTRIBUTORS.RYAN],
+		},
+
+		{
+			date: new Date('2022-03-12'),
+			Changes: () => <>
+				<ul>
+					<li>Added Double Down to expected actions under tincture</li>
 				</ul>,
 			</>,
 			contributors: [CONTRIBUTORS.RYAN],

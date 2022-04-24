@@ -12,12 +12,17 @@ export const DRAGOON = new Meta({
 	</>,
 	supportedPatches: {
 		from: '6.0',
-		to: '6.08',
+		to: '6.1',
 	},
 	contributors: [
 		{user: CONTRIBUTORS.FALINDRITH, role: ROLES.MAINTAINER},
 	],
 	changelog: [
+		{
+			date: new Date('2022-04-03'),
+			Changes: () => <>Due to changes in 6.08, Life Surge is no longer expected to be in every Lance Charge window.</>,
+			contributors: [CONTRIBUTORS.FALINDRITH],
+		},
 		{
 			date: new Date('2022-01-22'),
 			Changes: () => <>Lance Charge and Dragon Sight windows now expect uses of oGCDs instead of uses of GCDs.</>,

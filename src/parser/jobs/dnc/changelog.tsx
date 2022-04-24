@@ -52,4 +52,14 @@ export const changelog = [
 		Changes: () => <>Update AoE checks for Windmill and mark supported for 6.08.</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],
 	},
+	{
+		date: new Date('2022-02-16'),
+		Changes: () => <>Improved accuracy of Esprit gauge generation simulation</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
+	{
+		date: new Date('2022-04-13'),
+		Changes: () => <>Update proc analysis to handle the separate Flourish and combo-sourced procs.</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
 ]

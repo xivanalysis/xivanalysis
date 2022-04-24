@@ -2,7 +2,6 @@ import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
 import Color from 'color'
 import {DataLink} from 'components/ui/DbLink'
-import {JOBS} from 'data/JOBS'
 import {Event, Events} from 'event'
 import {filter, oneOf} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
@@ -25,7 +24,7 @@ const MEDITATE_TICK_FREQUENCY = 3000
 const MAX_MEDITATE_STACKS = 3
 
 const FADE = 0.75
-const SHOHA_COLOR = Color(JOBS.WARRIOR.colour).fade(FADE)
+const SHOHA_COLOR = Color('#cf2621').fade(FADE)
 
 export class Shoha extends CoreGauge {
 	static override title = t('sam.shoha.title')`Meditatation Stacks`

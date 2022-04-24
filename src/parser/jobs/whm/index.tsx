@@ -64,5 +64,10 @@ export const WHITE_MAGE = new Meta({
 			Changes: () => <>Marked WHM as supported for 6.08</>,
 			contributors: [CONTRIBUTORS.INNI],
 		},
+		{
+			date: new Date('2022-04-18'),
+			Changes: () => <>Migrate Lily gauge to core gauge, and upade for 6.1 misery analysis</>,
+			contributors: [CONTRIBUTORS.KERRIS],
+		},
 	],
 })
