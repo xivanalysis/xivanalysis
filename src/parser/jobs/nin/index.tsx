@@ -22,6 +22,11 @@ export const NINJA = new Meta({
 	changelog: [
 		{
 			date: new Date('2022-02-12'),
+			Changes: () => <>Support 6.1 NIN positionals.</>,
+			contributors: [CONTRIBUTORS.DEAN],
+		},
+		{
+			date: new Date('2022-02-12'),
 			Changes: () => <>Moved the Ninki gauge display from a separate chart to the timeline.</>,
 			contributors: [CONTRIBUTORS.TOASTDEIB],
 		},
