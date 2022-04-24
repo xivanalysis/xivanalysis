@@ -51,38 +51,41 @@ export class Kaiten extends Analyser {
 	override initialise() {
 		super.initialise()
 
-		const playerFilter = filter<Event>().source(this.parser.actor.id)
+		// If before 6.1, we need them hooks for kaiten.
+		if (this.parser.patch.before('6.1')) {
+			const playerFilter = filter<Event>().source(this.parser.actor.id)
 
-		this.addEventHook(
-			playerFilter
-				.type('statusApply')
-				.status(this.data.statuses.KAITEN.id),
-			this.onKaiten
-		)
+			this.addEventHook(
+				playerFilter
+					.type('statusApply')
+					.status(this.data.statuses.KAITEN.id),
+				this.onKaiten
+			)
 
-		this.addEventHook(
-			playerFilter
-				.type('statusRemove')
-				.status(this.data.statuses.KAITEN.id),
-			this.onKaitenRemove
-		)
+			this.addEventHook(
+				playerFilter
+					.type('statusRemove')
+					.status(this.data.statuses.KAITEN.id),
+				this.onKaitenRemove
+			)
 
-		this.addEventHook(
-			playerFilter
-				.type('action')
-				.action(oneOf(this.TheBadsOnes)),
-			this.onBadCast
-		)
+			this.addEventHook(
+				playerFilter
+					.type('action')
+					.action(oneOf(this.TheBadsOnes)),
+				this.onBadCast
+			)
 
-		this.addEventHook(
-			playerFilter
-				.type('action')
-				.action(oneOf(this.TheGoodOnes)),
-			this.onGoodCast
-		)
+			this.addEventHook(
+				playerFilter
+					.type('action')
+					.action(oneOf(this.TheGoodOnes)),
+				this.onGoodCast
+			)
 
-		this.addEventHook('complete', this.onComplete)
+			this.addEventHook('complete', this.onComplete)
 
+		}
 	}
 
 	private onKaiten() {
@@ -109,6 +112,8 @@ export class Kaiten extends Analyser {
 	}
 
 	private onComplete() {
+		// No suggestions if after patch 6.1
+
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.HISSATSU_KAITEN.icon,
 			content: <Trans id = "sam.kaiten.suggestion.badkaiten.content">
@@ -116,7 +121,7 @@ export class Kaiten extends Analyser {
 			</Trans>,
 			tiers: SEVERITY_TIERS,
 			why: <Trans id ="sam.suggestion.badkaiten.why">
-					You used Kaiten  <Plural value={this.badKaitens} one="# time" other="# times"/> on non-optimal GCDs.
+				You used Kaiten  <Plural value={this.badKaitens} one="# time" other="# times"/> on non-optimal GCDs.
 			</Trans>,
 			value: this.badKaitens,
 		}))
@@ -128,7 +133,7 @@ export class Kaiten extends Analyser {
 			</Trans>,
 			tiers: SEVERITY_TIERS,
 			why: <Trans id ="sam.suggestion.missedkaiten.why">
-					You forgot to use Kaiten  <Plural value={this.missedKaitens} one="# time" other="# times"/> on optimal GCDs.
+				You forgot to use Kaiten  <Plural value={this.missedKaitens} one="# time" other="# times"/> on optimal GCDs.
 			</Trans>,
 			value: this.missedKaitens,
 		}))
@@ -140,7 +145,7 @@ export class Kaiten extends Analyser {
 			</Trans>,
 			tiers: SEVERITY_TIERS,
 			why: <Trans id ="sam.suggestion.doublekaiten.why">
-					You used Kaiten  <Plural value={this.doubleKaitens} one="# time" other="# times"/> when you already had it up.
+				You used Kaiten  <Plural value={this.doubleKaitens} one="# time" other="# times"/> when you already had it up.
 			</Trans>,
 			value: this.doubleKaitens,
 		}))

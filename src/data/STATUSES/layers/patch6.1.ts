@@ -17,6 +17,10 @@ export const patch610: Layer<StatusRoot> = {
 		// RPR 6.1 duration changes
 		ENHANCED_HARPE: {duration: 20000},
 
+		//SAM 6.1 buff Change
+		THIRD_EYE: {duration: 4000},
+		KAITEN: SHARED.UNKNOWN,
+
 		// SCH 6.1 duration changes
 		EXPEDIENCE: {duration: 10000},
 
