@@ -573,6 +573,8 @@
   "mnk.rof.suggestions.gcd.content": "尝试在<0/>的持续时间内插入 {EXPECTED_GCDS} 个GCD技能。",
   "mnk.rof.suggestions.wasted.content": "避免使用<0/>，<1/>或<2/>在<3/>后，这根本上是对 GCD 的浪费。",
   "mnk.rof.title": "红莲极意",
+  "mnk.row.statistic.info": "",
+  "mnk.row.statistic.title": "",
   "mnk.steppies.checklist.description": "当您提前使用<1/>以增益<0/>时，该技能就是您威力最高的GCD技能。",
   "mnk.steppies.checklist.name": "连击效果提高",
   "mnk.steppies.checklist.requirement.name": "<0/>Buff率",

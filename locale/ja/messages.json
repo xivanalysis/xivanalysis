@@ -573,6 +573,8 @@
   "mnk.rof.suggestions.gcd.content": "<0/> 中に {EXPECTED_GCDS} 回のGCDスキルを使いましょう。",
   "mnk.rof.suggestions.wasted.content": "<0/>や<1/>、<2/>を<3/>中に使用するのはGCDを無駄にしてしまうため避けましょう。",
   "mnk.rof.title": "紅蓮の極意",
+  "mnk.row.statistic.info": "",
+  "mnk.row.statistic.title": "",
   "mnk.steppies.checklist.description": "先に<1/>でバフしたら、<0/>はあなたの一番強い型のGCDなのです。",
   "mnk.steppies.checklist.name": "連撃をバフ",
   "mnk.steppies.checklist.requirement.name": "<0/> バフ率",
