@@ -16,11 +16,9 @@ export const patch610: Layer<ActionRoot> = {
 		// Potency buffs, very important, breaks postionals without them.
 		GEKKO: {
 			potency: 330,
-			noComboPotency: 120,
 		},
 		KASHA: {
 			potency: 330,
-			noComboPotency: 120,
 		},
 	},
 }

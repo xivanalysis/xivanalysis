@@ -82,7 +82,6 @@ export const SAM = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003158.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		noComboPotency: 100,
 		potency: 320,
 		combo: {
 			from: 7478,
@@ -118,7 +117,6 @@ export const SAM = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003164.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		noComboPotency: 100,
 		potency: 320,
 		combo: {
 			from: 7479,
