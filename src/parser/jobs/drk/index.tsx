@@ -22,8 +22,14 @@ export const DARK_KNIGHT = new Meta({
 	},
 	contributors: [
 		{user: CONTRIBUTORS.AZARIAH, role: ROLES.MAINTAINER},
+		{user: CONTRIBUTORS.AY, role: ROLES.DEVELOPER},
 	],
 	changelog: [
+		{
+			date: new Date('2022-04-24'),
+			Changes: () => <>Update timeline for 6.1 changes to <DataLink action="LIVING_DEAD"/>, and combine <DataLink action="SALTED_EARTH"/> with <DataLink action="SALT_AND_DARKNESS"/>.</>,
+			contributors: [CONTRIBUTORS.AY],
+		},
 		{
 			date: new Date('2022-01-18'),
 			Changes: () => <>Fixed Oblation timeline display</>,

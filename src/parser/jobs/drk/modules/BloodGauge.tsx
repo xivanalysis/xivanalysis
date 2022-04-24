@@ -1,5 +1,6 @@
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
+import {Action} from 'data/ACTIONS'
 import {JOBS} from 'data/JOBS'
 import {Event, Events} from 'event'
 import {EventHook} from 'parser/core/Dispatcher'
@@ -11,6 +12,7 @@ import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Sugge
 import React from 'react'
 
 const BLOOD_WEAPON_GAIN = 10
+
 const BLOOD_OVERCAP_SEVERITY = {
 	50: SEVERITY.MINOR,
 	100: SEVERITY.MEDIUM,
@@ -26,24 +28,28 @@ export class BloodGauge extends CoreGauge {
 	private bloodGauge = this.add(new CounterGauge({
 		chart: {label: 'Blood Gauge', color: JOBS.DARK_KNIGHT.colour},
 	}))
+
 	/* eslint-disable @typescript-eslint/no-magic-numbers */
-	private onComboModifiers = new Map<number, number>([
+	private onComboModifiers = new Map<Action['id'], number>([
 		[this.data.actions.SOULEATER.id, 20],
 		[this.data.actions.STALWART_SOUL.id, 20],
 		[this.data.actions.STORMS_PATH.id, 20],
 		[this.data.actions.MYTHRIL_TEMPEST.id, 20],
 	])
-	private onActionModifiers = new Map<number, number>([
+
+	private onActionModifiers = new Map<Action['id'], number>([
 		[this.data.actions.INFURIATE.id, 50],
 		[this.data.actions.LIVING_SHADOW.id, -50],
 		[this.data.actions.QUIETUS.id, -50],
 		[this.data.actions.BLOODSPILLER.id, -50],
 	])
+
 	/* eslint-enable @typescript-eslint/no-magic-numbers */
 	private deliriumFreeCasts = [
 		this.data.actions.QUIETUS.id,
 		this.data.actions.BLOODSPILLER.id,
 	]
+
 	private activeGcdHook?: EventHook<Events['damage']>
 
 	override initialise() {
@@ -53,13 +59,14 @@ export class BloodGauge extends CoreGauge {
 		this.addEventHook(playerFilter.type('action').action(oneOf([...this.onActionModifiers.keys()])), this.onModifier(this.onActionModifiers))
 		this.addEventHook(playerFilter.type('combo').action(oneOf([...this.onComboModifiers.keys()])), this.onModifier(this.onComboModifiers))
 
-		this.addEventHook(playerFilter.type('statusApply').status(this.data.statuses.BLOOD_WEAPON.id), this.onApplyBloodWeapon)
+		// We hook the action for BW so we can just ignore stacks entirely
+		this.addEventHook(playerFilter.type('action').action(this.data.actions.BLOOD_WEAPON.id), this.onApplyBloodWeapon)
 		this.addEventHook(playerFilter.type('statusRemove').status(this.data.statuses.BLOOD_WEAPON.id), this.onRemoveBloodWeapon)
 
 		this.addEventHook('complete', this.onComplete)
 	}
 
-	private onModifier(modifiers: Map<number, number>) {
+	private onModifier(modifiers: Map<Action['id'], number>) {
 		return (event: Events['action' | 'combo']) => {
 			const modifier = modifiers.get(event.action) ?? 0
 			const freeBloodAction = this.actors.current.hasStatus(this.data.statuses.DELIRIUM.id) && this.deliriumFreeCasts.includes(event.action)
@@ -68,7 +75,12 @@ export class BloodGauge extends CoreGauge {
 	}
 
 	private onApplyBloodWeapon() {
-		this.activeGcdHook = this.addEventHook(filter<Event>().source(this.parser.actor.id).type('damage'), this.onHitUnderBloodWeapon)
+		this.activeGcdHook = this.addEventHook(
+			filter<Event>()
+				.source(this.parser.actor.id)
+				.type('damage'),
+			this.onHitUnderBloodWeapon
+		)
 	}
 
 	private onRemoveBloodWeapon() {
