@@ -67,8 +67,7 @@ export class SearingLight extends Analyser {
 			.map(actor => actor.id)
 
 		const playerFilter = filter<Event>().source(this.parser.actor.id)
-		const petsFilter = filter<Event>()
-			.source(oneOf(this.petIds))
+		const petsFilter = filter<Event>().source(oneOf(this.petIds))
 
 		const buffSourceFilter = (this.parser.patch.before('6.1')) ? petsFilter : playerFilter
 
