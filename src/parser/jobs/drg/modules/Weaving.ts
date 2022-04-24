@@ -2,11 +2,8 @@ import {ActionKey} from 'data/ACTIONS'
 import {Weaving as CoreWeaving, Weave} from 'parser/core/modules/Weaving'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 
+// With the reduced animation lock, it's just stardiver that's the bad weave
 const JUMPS: ActionKey[] = [
-	'JUMP',
-	'HIGH_JUMP',
-	'SPINESHATTER_DIVE',
-	'DRAGONFIRE_DIVE',
 	'STARDIVER',
 ]
 

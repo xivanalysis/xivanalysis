@@ -6,6 +6,7 @@ import {Events} from 'event'
 import _ from 'lodash'
 import {dependency} from 'parser/core/Injectable'
 import {BuffWindow, calculateExpectedGcdsForTime, EvaluatedAction, EvaluationOutput, ExpectedActionsEvaluator, ExpectedGcdCountEvaluator, WindowEvaluator} from 'parser/core/modules/ActionWindow'
+import {DisplayedActionEvaluator} from 'parser/core/modules/ActionWindow/evaluators/DisplayedActionEvaluator'
 import {HistoryEntry} from 'parser/core/modules/ActionWindow/History'
 import {GlobalCooldown} from 'parser/core/modules/GlobalCooldown'
 import {SEVERITY} from 'parser/core/modules/Suggestions'
@@ -115,12 +116,8 @@ export default class DragonSight extends BuffWindow {
 					expectedPerWindow: 1,
 				},
 				{
-					action: this.data.actions.LIFE_SURGE,
-					expectedPerWindow: 1,
-				},
-				{
 					action: this.data.actions.SPINESHATTER_DIVE,
-					expectedPerWindow: 1,
+					expectedPerWindow: 2,
 				},
 				{
 					action: this.data.actions.DRAGONFIRE_DIVE,
@@ -140,6 +137,7 @@ export default class DragonSight extends BuffWindow {
 		}))
 
 		this.addEvaluator(new ShortWindowEvaluator(this.buffTargetDied.bind(this)))
+		this.addEvaluator(new DisplayedActionEvaluator([this.data.actions.LIFE_SURGE]))
 	}
 
 	private onDeath(event: Events['death']) {
