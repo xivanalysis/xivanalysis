@@ -34,6 +34,8 @@ const BASE_SHROUD_MOD = 10
 const HIGH_SHROUD_MOD = 50
 
 export class OtherGauges extends CoreGauge {
+	static override handle = 'otherGauges'
+
 	@dependency private actors!: Actors
 	@dependency private suggestions!: Suggestions
 

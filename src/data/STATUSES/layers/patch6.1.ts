@@ -6,12 +6,16 @@ export const patch610: Layer<StatusRoot> = {
 	patch: '6.1',
 	data: {
 		// NIN 6.1 buff changes
-		MUG: {
-			id: 3183,
-			name: 'Mug',
-			icon: 'https://xivapi.com/i/014000/014942.png',
+		MUG_VULNERABILITY_UP: {
+			id: 638,
+			name: 'Vulnerability Up',
+			icon: 'https://xivapi.com/i/015000/015020.png',
 			duration: 20000,
 		},
+		TRICK_ATTACK_VULNERABILITY_UP: SHARED.UNKNOWN,
+
+		// RPR 6.1 duration changes
+		ENHANCED_HARPE: {duration: 20000},
 
 		//SAM 6.1 buff Change
 		THIRD_EYE: {duration: 4000},
@@ -22,5 +26,30 @@ export const patch610: Layer<StatusRoot> = {
 
 		// SGE 6.1 changes
 		SOTERIA: {stacksApplied: 4},
+
+		// DNC 6.1 changes
+		SILKEN_SYMMETRY: {
+			name: 'Silken Symmetry',
+		},
+		SILKEN_FLOW: {
+			name: 'Silken Flow',
+		},
+		FLOURISHING_SYMMETRY: {
+			id: 3017,
+			name: 'Flourishing Symmetry',
+			icon: 'https://xivapi.com/i/013000/013725.png',
+			duration: 30000,
+		},
+		FLOURISHING_FLOW: {
+			id: 3018,
+			name: 'Flourishing Flow',
+			icon: 'https://xivapi.com/i/013000/013726.png',
+			duration: 30000,
+		},
+
+		// SMN 6.1 changes
+		SEARING_LIGHT: {
+			icon: 'https://xivapi.com/i/012000/012699.png',
+		},
 	},
 }

@@ -84,7 +84,7 @@ export const DNC = ensureActions({
 		combo: {
 			start: true,
 		},
-		statusesApplied: ['FLOURISHING_SYMMETRY'],
+		statusesApplied: ['SILKEN_SYMMETRY'],
 	},
 	FOUNTAIN: {
 		id: 15990,
@@ -96,7 +96,7 @@ export const DNC = ensureActions({
 			from: 15989,
 			end: true,
 		},
-		statusesApplied: ['FLOURISHING_FLOW'],
+		statusesApplied: ['SILKEN_FLOW'],
 	},
 	REVERSE_CASCADE: {
 		id: 15991,
@@ -121,7 +121,7 @@ export const DNC = ensureActions({
 		combo: {
 			start: true,
 		},
-		statusesApplied: ['FLOURISHING_SYMMETRY'],
+		statusesApplied: ['SILKEN_SYMMETRY'],
 	},
 	BLADESHOWER: {
 		id: 15994,
@@ -133,7 +133,7 @@ export const DNC = ensureActions({
 			from: 15993,
 			end: true,
 		},
-		statusesApplied: ['FLOURISHING_FLOW'],
+		statusesApplied: ['SILKEN_FLOW'],
 	},
 	RISING_WINDMILL: {
 		id: 15995,
@@ -277,8 +277,8 @@ export const DNC = ensureActions({
 		onGcd: false,
 		cooldown: 60000,
 		statusesApplied: [
-			'FLOURISHING_SYMMETRY',
-			'FLOURISHING_FLOW',
+			'SILKEN_SYMMETRY', // Pre-6.1 proc statuses for base layer (with the post 6.1 key they will have for the future)
+			'SILKEN_FLOW',
 			'THREEFOLD_FAN_DANCE',
 			'FOURFOLD_FAN_DANCE',
 		],
