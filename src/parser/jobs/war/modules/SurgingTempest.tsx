@@ -1,12 +1,29 @@
 import {Trans} from '@lingui/react'
 import {DataLink} from 'components/ui/DbLink'
+import {ActionKey} from 'data/ACTIONS'
+import {Event} from 'event'
 import {Analyser} from 'parser/core/Analyser'
+import {filter} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
 import {Actors} from 'parser/core/modules/Actors'
 import Checklist, {Rule, Requirement} from 'parser/core/modules/Checklist'
+import {Gauge as CoreGauge, TimerGauge} from 'parser/core/modules/Gauge'
 import {Invulnerability} from 'parser/core/modules/Invulnerability'
 import {Statuses} from 'parser/core/modules/Statuses'
+import Suggestions, {SEVERITY, Suggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
+
+//Surging Tempest Generation
+const SURGING_TEMPEST_GENERATORS: ActionKey[] = [
+	'MYTHRIL_TEMPEST',
+	'STORMS_EYE',
+]
+const SURGING_TEMPEST_GENERATION_AMOUNT = 30
+// Surging Tempest Extension
+const SURGING_TEMPEST_EXTENDERS: ActionKey[] = ['INNER_RELEASE']
+const SURGING_TEMPEST_EXTENSION_AMOUNT = 10
+
+const SURGING_TEMPEST_EARLY_REFRESH_GRACE = 7.5
 
 export class SurgingTempest extends Analyser {
 	static override handle = 'surgingtempest'
@@ -39,5 +56,53 @@ export class SurgingTempest extends Analyser {
 		const fightUptime = this.parser.currentDuration - this.invulnerability.getDuration({types: ['invulnerable']})
 
 		return (statusUptime / fightUptime) * 100
+	}
+}
+
+export class StormsEye extends CoreGauge {
+	static override handle = 'stormseye'
+
+	@dependency private suggestions!: Suggestions
+
+	private surgingTempest = this.add(new TimerGauge({
+		maximum: 60,
+	}))
+	private earlyRefreshCount = 0
+	override initialise() {
+		this.addEventHook(
+			filter<Event>()
+				.source(this.parser.actor.id)
+				.action(this.data.matchActionId(SURGING_TEMPEST_GENERATORS)),
+			(_) => this.extendSurgingTempest(SURGING_TEMPEST_GENERATION_AMOUNT)
+		)
+		this.addEventHook(
+			filter<Event>()
+				.source(this.parser.actor.id)
+				.action(this.data.matchActionId(SURGING_TEMPEST_EXTENDERS)),
+			(_) => this.extendSurgingTempest(SURGING_TEMPEST_EXTENSION_AMOUNT, true)
+		)
+		this.addEventHook('complete', this.onComplete)
+	}
+
+	private extendSurgingTempest(amount: number, onlyIfRunning ?: boolean) {
+		if (this.surgingTempest.remaining > SURGING_TEMPEST_EARLY_REFRESH_GRACE) {
+			this.earlyRefreshCount++
+		}
+
+		this.surgingTempest.extend(amount, onlyIfRunning === undefined ? false : onlyIfRunning)
+	}
+
+	private onComplete() {
+		this.suggestions.add(new Suggestion({
+			icon: this.data.actions.STORMS_EYE.icon,
+			content: <Trans id="war.stormseye.suggestions.overwrite.content">
+				lorem ipsum dolor sit amet
+			</Trans>,
+			why: <Trans id="war.stormseye.suggestions.overwrite.why">
+					consequitor sit amet
+			</Trans>,
+			severity: SEVERITY.MINOR,
+
+		}))
 	}
 }
