@@ -101,29 +101,40 @@ export default class DragonSight extends BuffWindow {
 			adjustCount: this.adjustExpectedGcdCount.bind(this),
 		}))
 
+		const expectedActions = [
+			{
+				action: this.data.actions.HIGH_JUMP,
+				expectedPerWindow: 1,
+			},
+			{
+				action: this.data.actions.GEIRSKOGUL,
+				expectedPerWindow: 1,
+			},
+			{
+				action: this.data.actions.MIRAGE_DIVE,
+				expectedPerWindow: 1,
+			},
+			{
+				action: this.data.actions.SPINESHATTER_DIVE,
+				expectedPerWindow: this.parser.patch.before('6.1') ? 1 : 2,
+			},
+			{
+				action: this.data.actions.DRAGONFIRE_DIVE,
+				expectedPerWindow: 1,
+			},
+		]
+
+		// 6.08 changed the potencies such that it's generally better to always use LS on
+		// Heavens' Thrust. Before that, we generally expected one in each two minute window.
+		if (this.parser.patch.before('6.08')) {
+			expectedActions.push({
+				action: this.data.actions.LIFE_SURGE,
+				expectedPerWindow: 1,
+			})
+		}
+
 		this.addEvaluator(new ExpectedActionsEvaluator({
-			expectedActions: [
-				{
-					action: this.data.actions.HIGH_JUMP,
-					expectedPerWindow: 1,
-				},
-				{
-					action: this.data.actions.GEIRSKOGUL,
-					expectedPerWindow: 1,
-				},
-				{
-					action: this.data.actions.MIRAGE_DIVE,
-					expectedPerWindow: 1,
-				},
-				{
-					action: this.data.actions.SPINESHATTER_DIVE,
-					expectedPerWindow: 2,
-				},
-				{
-					action: this.data.actions.DRAGONFIRE_DIVE,
-					expectedPerWindow: 1,
-				},
-			],
+			expectedActions,
 			suggestionIcon,
 			suggestionContent: <Trans id="drg.lc.suggestions.missedaction.content">Try to use as many of your oGCDs as possible during <ActionLink action="DRAGON_SIGHT" />. Remember to keep your abilities on cooldown, when possible, to prevent them from drifting outside of your buff windows.</Trans>,
 			suggestionWindowName,
@@ -137,7 +148,11 @@ export default class DragonSight extends BuffWindow {
 		}))
 
 		this.addEvaluator(new ShortWindowEvaluator(this.buffTargetDied.bind(this)))
-		this.addEvaluator(new DisplayedActionEvaluator([this.data.actions.LIFE_SURGE]))
+
+		// display ordering
+		if (this.parser.patch.after('6.05')) {
+			this.addEvaluator(new DisplayedActionEvaluator([this.data.actions.LIFE_SURGE]))
+		}
 	}
 
 	private onDeath(event: Events['death']) {
