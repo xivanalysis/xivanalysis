@@ -3,7 +3,7 @@ import {Weaving as CoreWeaving, Weave} from 'parser/core/modules/Weaving'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 
 // With the reduced animation lock, it's just stardiver that's the bad weave
-const JUMPS_ALL: ActionKey[] = [
+const JUMPS: ActionKey[] = [
 	'STARDIVER',
 ]
 
@@ -17,15 +17,14 @@ const JUMPS_600: ActionKey[] = [
 export default class Weaving extends CoreWeaving {
 	static override displayOrder = DISPLAY_ORDER.WEAVING
 
-	private jumpIds = JUMPS_ALL.map(key => this.data.actions[key].id)
-
-	// pre-6.1, all jumps are bad weaves
-	private jump600Ids = [...this.jumpIds, ...JUMPS_600.map(key => this.data.actions[key].id)]
+	private jumps = JUMPS.map(key => this.data.actions[key].id)
 
 	override getMaxWeaves(weave: Weave) {
-		const jumps = this.parser.patch.before('6.1')	? this.jump600Ids : this.jumpIds
+		if (this.parser.patch.before('6.1')) {
+			this.jumps.push(...JUMPS_600.map(key => this.data.actions[key].id))
+		}
 
-		if (weave.weaves.some(weave => jumps.includes(weave.action))) {
+		if (weave.weaves.some(weave => this.jumps.includes(weave.action))) {
 			return 1
 		}
 
