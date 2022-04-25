@@ -930,6 +930,8 @@
   "war.ir.title": "Relâchement bestial",
   "war.primalrend.suggestions.dropped.content": "",
   "war.primalrend.suggestions.dropped.why": "",
+  "war.stormseye.suggestions.overwrite.content": "",
+  "war.stormseye.suggestions.overwrite.why": "",
   "war.surgingtempest.checklist.description": "Vent de tempête augmente vos dégâts de 10 %, une partie non négligeable de vos dégâts.",
   "war.surgingtempest.checklist.name": "Gardez Vent de tempête actif",
   "war.surgingtempest.checklist.uptime": "Temps total d'application de <0/>",
