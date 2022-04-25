@@ -23,11 +23,9 @@ export default class Weaving extends CoreWeaving {
 	private jump600Ids = [...this.jumpIds, ...JUMPS_600.map(key => this.data.actions[key].id)]
 
 	override getMaxWeaves(weave: Weave) {
-		if (this.parser.patch.before('6.1')) {
-			if (weave.weaves.some(weave => this.jump600Ids.includes(weave.action))) {
-				return 1
-			}
-		} else if (weave.weaves.some(weave => this.jumpIds.includes(weave.action))) {
+		const jumps = this.parser.patch.before('6.1')	? this.jump600Ids : this.jumpIds
+
+		if (weave.weaves.some(weave => jumps.includes(weave.action))) {
 			return 1
 		}
 
