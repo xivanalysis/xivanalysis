@@ -10,7 +10,7 @@ import Checklist, {Rule, Requirement} from 'parser/core/modules/Checklist'
 import {Gauge as CoreGauge, TimerGauge} from 'parser/core/modules/Gauge'
 import {Invulnerability} from 'parser/core/modules/Invulnerability'
 import {Statuses} from 'parser/core/modules/Statuses'
-import Suggestions, {SEVERITY, Suggestion} from 'parser/core/modules/Suggestions'
+import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
 
 //Surging Tempest Generation
@@ -24,6 +24,13 @@ const SURGING_TEMPEST_EXTENDERS: ActionKey[] = ['INNER_RELEASE']
 const SURGING_TEMPEST_EXTENSION_AMOUNT = 10
 
 const SURGING_TEMPEST_EARLY_REFRESH_GRACE = 7.5
+const STORMS_EYE_LOST_GAUGE = 10
+//TODO: Discuss with acc to select correct tier breakpoints
+const SUGGESTION_TIERS = {
+	1: SEVERITY.MINOR,
+	5: SEVERITY.MEDIUM,
+	10: SEVERITY.MAJOR,
+}
 
 export class SurgingTempest extends Analyser {
 	static override handle = 'surgingtempest'
@@ -67,7 +74,9 @@ export class StormsEye extends CoreGauge {
 	private surgingTempest = this.add(new TimerGauge({
 		maximum: 60,
 	}))
+
 	private earlyRefreshCount = 0
+
 	override initialise() {
 		this.addEventHook(
 			filter<Event>()
@@ -75,6 +84,7 @@ export class StormsEye extends CoreGauge {
 				.action(this.data.matchActionId(SURGING_TEMPEST_GENERATORS)),
 			(_) => this.extendSurgingTempest(SURGING_TEMPEST_GENERATION_AMOUNT)
 		)
+
 		this.addEventHook(
 			filter<Event>()
 				.source(this.parser.actor.id)
@@ -93,16 +103,18 @@ export class StormsEye extends CoreGauge {
 	}
 
 	private onComplete() {
-		this.suggestions.add(new Suggestion({
-			icon: this.data.actions.STORMS_EYE.icon,
-			content: <Trans id="war.stormseye.suggestions.overwrite.content">
-				lorem ipsum dolor sit amet
-			</Trans>,
-			why: <Trans id="war.stormseye.suggestions.overwrite.why">
-					consequitor sit amet
-			</Trans>,
-			severity: SEVERITY.MINOR,
-
-		}))
+		if (this.earlyRefreshCount > 0) {
+			this.suggestions.add(new TieredSuggestion({
+				content: <Trans id="war.stormseye.suggestions.overwrite.content">
+				Avoid refreshing <DataLink status="SURGING_TEMPEST" /> too early
+				</Trans>,
+				why: <Trans id="war.stormseye.suggestions.overwrite.why">
+					<DataLink action="STORMS_EYE" /> Does less damage and generates less Beast Gauge than <DataLink action="STORMS_PATH" />. You lost {this.earlyRefreshCount * STORMS_EYE_LOST_GAUGE} Beast Gauge over the course of the fight.
+				</Trans>,
+				icon: this.data.actions.STORMS_EYE.icon,
+				value: this.earlyRefreshCount,
+				tiers: SUGGESTION_TIERS,
+			}))
+		}
 	}
 }
