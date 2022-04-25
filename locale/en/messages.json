@@ -770,7 +770,7 @@
   "rpr.procs.suggestions.overwritten.gibbet.why": "{0} potency lost due to overwriting procs.",
   "rpr.procs.title": "Enhanced Procs",
   "rpr.reaver.suggestion.dropped.content": "Avoid dropping <0/> by using <1/>, <2/>, or <3/>. These actions have high damage and grant you 10 Shroud gauge, giving you more chances to use <4/> over the course of a fight.",
-  "rpr.reaver.suggestion.dropped.why": "You used {0, plural, one {# stack} other {# stacks}} over the course of the fight.",
+  "rpr.reaver.suggestion.dropped.why": "You lost {0, plural, one {# stack} other {# stacks}} over the course of the fight.",
   "rpr.tincture.suggestions.trackedActions.content": "Try to fit two uses of <0/> while under the effects of a Tincture.",
   "sam.Higanbana.checklist.requirement.name": "<0/> uptime",
   "sam.about.description": "So you study the blade do you? Well consider this analysis the exam to see exactly how much you have learned about the basics of Samurai. This tool will track your Sen and Kenki gains/uses to see if you are missing possible resources to gain or you have failed to make the most out of what you gained over the course of the fight. Study guides for the exam:\n\n- [Bushido, a PVE Samurai Guide](http://bit.ly/SAM-Guide)\n\n- [Visual Guide to Samurai rotation](https://i.imgur.com/978VOqG.jpg)\n",
