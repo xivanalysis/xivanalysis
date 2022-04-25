@@ -5,7 +5,7 @@ import React from 'react'
 export const changelog = [
 	{
 		date: new Date('2022-04-24'),
-		Changes: () => <>Reword Harvest Moon text to make Soulsow's use clearer.</>,
+		Changes: () => <>Reword Harvest Moon text to make the usage of Soulsow clearer.</>,
 		contributors: [CONTRIBUTORS.AY],
 	},
 	{
