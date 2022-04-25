@@ -11,7 +11,7 @@ export const DRAGOON = new Meta({
 		</Trans>
 	</>,
 	supportedPatches: {
-		from: '6.1',
+		from: '6.0',
 		to: '6.1',
 	},
 	contributors: [
