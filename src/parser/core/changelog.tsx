@@ -10,6 +10,11 @@ export const changelog: ChangelogEntry[] = [
 	// 	contributors: [CONTRIBUTORS.YOU],
 	// },
 	{
+		date: new Date('2022-04-26'),
+		Changes: () => <>Add overcap tracking to core timer gauge.</>,
+		contributors: [CONTRIBUTORS.AY],
+	},
+	{
 		date: new Date('2022-04-20'),
 		Changes: () => <>Update core raid buffs to use the correct NIN buff name in timeline.</>,
 		contributors: [CONTRIBUTORS.AY],

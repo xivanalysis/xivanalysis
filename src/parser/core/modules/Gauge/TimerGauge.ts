@@ -37,6 +37,7 @@ export class TimerGauge extends AbstractGauge {
 	// Just in case I ever have to change it lmao
 	private readonly minimum = 0
 	private readonly maximum: number
+	overCap: number = 0
 	private readonly expirationCallback?: TimestampHookCallback
 	private readonly graphOptions?: GaugeGraphOptions
 
@@ -157,6 +158,10 @@ export class TimerGauge extends AbstractGauge {
 			remaining: this.remaining,
 			paused: this.paused,
 		})
+
+		if (duration > this.maximum) {
+			this.overCap += duration - this.maximum
+		}
 
 		const remaining = Math.max(this.minimum, Math.min(duration, this.maximum))
 
