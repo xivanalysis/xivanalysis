@@ -4,8 +4,8 @@ import React from 'react'
 export const changelog = [
 	{
 		date: new Date('2022-04-25'),
-		changes: () => <>
-			reintroduce early Surging Tempest refresh tracking
+		Changes: () => <>
+			Reintroduce early Surging Tempest refresh tracking
 		</>,
 		contributors: [CONTRIBUTORS.ARKEVORKHAT],
 	},

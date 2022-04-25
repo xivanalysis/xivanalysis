@@ -78,6 +78,7 @@ export class StormsEye extends CoreGauge {
 	private earlyRefreshCount = 0
 
 	override initialise() {
+		super.initialise()
 		this.addEventHook(
 			filter<Event>()
 				.source(this.parser.actor.id)
@@ -95,11 +96,16 @@ export class StormsEye extends CoreGauge {
 	}
 
 	private extendSurgingTempest(amount: number, onlyIfRunning ?: boolean) {
+		onlyIfRunning === undefined ? false : onlyIfRunning
+
 		if (this.surgingTempest.remaining > SURGING_TEMPEST_EARLY_REFRESH_GRACE) {
 			this.earlyRefreshCount++
 		}
 
-		this.surgingTempest.extend(amount, onlyIfRunning === undefined ? false : onlyIfRunning)
+		if ((this.surgingTempest.expired || this.surgingTempest.paused) && !onlyIfRunning) {
+			this.surgingTempest.start()
+		}
+		this.surgingTempest.extend(amount, onlyIfRunning)
 	}
 
 	private onComplete() {
@@ -109,7 +115,7 @@ export class StormsEye extends CoreGauge {
 				Avoid refreshing <DataLink status="SURGING_TEMPEST" /> too early
 				</Trans>,
 				why: <Trans id="war.stormseye.suggestions.overwrite.why">
-					<DataLink action="STORMS_EYE" /> Does less damage and generates less Beast Gauge than <DataLink action="STORMS_PATH" />. You lost {this.earlyRefreshCount * STORMS_EYE_LOST_GAUGE} Beast Gauge over the course of the fight.
+					<DataLink action="STORMS_EYE" /> Does less damage and generates less Beast Gauge than <DataLink action="STORMS_PATH" />. You lost {this.earlyRefreshCount * STORMS_EYE_LOST_GAUGE} Beast Gauge over the course of the fight due to early refreshes.
 				</Trans>,
 				icon: this.data.actions.STORMS_EYE.icon,
 				value: this.earlyRefreshCount,
