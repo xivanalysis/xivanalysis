@@ -21,9 +21,9 @@ const SURGING_TEMPEST_GENERATION_AMOUNT = 30
 // Surging Tempest Extension
 const SURGING_TEMPEST_EXTENSION_AMOUNT = 10
 
-const ONE_MINUTE = 60
+const ONE_MINUTE = 60000
 
-const SURGING_TEMPEST_EARLY_REFRESH_GRACE = 7.5
+const SURGING_TEMPEST_EARLY_REFRESH_GRACE = 7500
 const STORMS_EYE_LOST_GAUGE = 10
 //TODO: Discuss with acc to select correct tier breakpoints
 const SUGGESTION_TIERS = {
