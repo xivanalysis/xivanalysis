@@ -115,7 +115,7 @@ export class StormsEye extends CoreGauge {
 				Avoid refreshing <DataLink status="SURGING_TEMPEST" /> too early
 				</Trans>,
 				why: <Trans id="war.stormseye.suggestions.overwrite.why">
-					<DataLink action="STORMS_EYE" /> Does less damage and generates less Beast Gauge than <DataLink action="STORMS_PATH" />. You lost {this.earlyRefreshCount * STORMS_EYE_LOST_GAUGE} Beast Gauge over the course of the fight due to early refreshes.
+					You lost {this.earlyRefreshCount * STORMS_EYE_LOST_GAUGE} Beast Gauge over the course of the fight due to early refreshes.
 				</Trans>,
 				icon: this.data.actions.STORMS_EYE.icon,
 				value: this.earlyRefreshCount,
