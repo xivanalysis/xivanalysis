@@ -17,14 +17,15 @@ const JUMPS_600: ActionKey[] = [
 export default class Weaving extends CoreWeaving {
 	static override displayOrder = DISPLAY_ORDER.WEAVING
 
-	private jumps = JUMPS.map(key => this.data.actions[key].id)
+	private jumpIds = JUMPS.map(key => this.data.actions[key].id)
 
 	override getMaxWeaves(weave: Weave) {
 		if (this.parser.patch.before('6.1')) {
-			this.jumps.push(...JUMPS_600.map(key => this.data.actions[key].id))
+			const jump600Ids = JUMPS_600.map(key => this.data.actions[key].id)
+			this.jumpIds.push(...jump600Ids)
 		}
 
-		if (weave.weaves.some(weave => this.jumps.includes(weave.action))) {
+		if (weave.weaves.some(weave => this.jumpIds.includes(weave.action))) {
 			return 1
 		}
 
