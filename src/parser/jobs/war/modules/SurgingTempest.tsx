@@ -2,7 +2,6 @@ import {Trans} from '@lingui/react'
 import {DataLink} from 'components/ui/DbLink'
 import {ActionKey} from 'data/ACTIONS'
 import {Event} from 'event'
-import {Analyser} from 'parser/core/Analyser'
 import {filter} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
 import {Actors} from 'parser/core/modules/Actors'
@@ -13,14 +12,13 @@ import {Statuses} from 'parser/core/modules/Statuses'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
 
-//Surging Tempest Generation
 const SURGING_TEMPEST_GENERATORS: ActionKey[] = [
 	'MYTHRIL_TEMPEST',
 	'STORMS_EYE',
+	'INNER_RELEASE',
 ]
 const SURGING_TEMPEST_GENERATION_AMOUNT = 30
 // Surging Tempest Extension
-const SURGING_TEMPEST_EXTENDERS: ActionKey[] = ['INNER_RELEASE']
 const SURGING_TEMPEST_EXTENSION_AMOUNT = 10
 
 const SURGING_TEMPEST_EARLY_REFRESH_GRACE = 7.5
@@ -32,16 +30,43 @@ const SUGGESTION_TIERS = {
 	10: SEVERITY.MAJOR,
 }
 
-export class SurgingTempest extends Analyser {
+export class SurgingTempest extends CoreGauge {
 	static override handle = 'surgingtempest'
 
 	@dependency private actors!: Actors
 	@dependency private checklist!: Checklist
 	@dependency private invulnerability!: Invulnerability
 	@dependency private statuses!: Statuses
+	@dependency private suggestions!: Suggestions
 
 	override initialise(): void {
+		this.addEventHook(
+			filter<Event>()
+				.source(this.parser.actor.id)
+				.action(this.data.matchActionId(SURGING_TEMPEST_GENERATORS)),
+			this.extendSurgingTempest
+		)
 		this.addEventHook('complete', this.onComplete)
+	}
+
+	private surgingTempest = this.add(new TimerGauge({
+		maximum: 60,
+	}))
+
+	private earlyRefreshCount = 0
+
+	private extendSurgingTempest(event: Event) {
+		//if I remove this my editor starts screaming at me and disables code completion, we can remove it in review if it's that malodorous.
+		if (!(event.type === 'action')) { return }
+
+		if (this.surgingTempest.remaining > SURGING_TEMPEST_EARLY_REFRESH_GRACE) {
+			this.earlyRefreshCount++
+		}
+		if (event.action === this.data.actions.INNER_RELEASE.id) {
+			this.surgingTempest.extend(SURGING_TEMPEST_EXTENSION_AMOUNT, true)
+		} else {
+			this.surgingTempest.extend(SURGING_TEMPEST_GENERATION_AMOUNT)
+		}
 	}
 
 	onComplete(): void {
@@ -56,6 +81,17 @@ export class SurgingTempest extends Analyser {
 				}),
 			],
 		}))
+		this.suggestions.add(new TieredSuggestion({
+			content: <Trans id="war.stormseye.suggestions.overwrite.content">
+			Avoid using <DataLink action="STORMS_EYE" /> too early, as it does less damage and generates less beast gauge than <DataLink action="STORMS_PATH" />
+			</Trans>,
+			why: <Trans id="war.stormseye.suggestions.overwrite.why">
+				You lost {this.earlyRefreshCount * STORMS_EYE_LOST_GAUGE} Beast Gauge over the course of the fight due to early refreshes.
+			</Trans>,
+			icon: this.data.actions.STORMS_EYE.icon,
+			value: this.earlyRefreshCount,
+			tiers: SUGGESTION_TIERS,
+		}))
 	}
 
 	getUptimePercent(): number {
@@ -63,64 +99,5 @@ export class SurgingTempest extends Analyser {
 		const fightUptime = this.parser.currentDuration - this.invulnerability.getDuration({types: ['invulnerable']})
 
 		return (statusUptime / fightUptime) * 100
-	}
-}
-
-export class StormsEye extends CoreGauge {
-	static override handle = 'stormseye'
-
-	@dependency private suggestions!: Suggestions
-
-	private surgingTempest = this.add(new TimerGauge({
-		maximum: 60,
-	}))
-
-	private earlyRefreshCount = 0
-
-	override initialise() {
-		super.initialise()
-		this.addEventHook(
-			filter<Event>()
-				.source(this.parser.actor.id)
-				.action(this.data.matchActionId(SURGING_TEMPEST_GENERATORS)),
-			(_) => this.extendSurgingTempest(SURGING_TEMPEST_GENERATION_AMOUNT)
-		)
-
-		this.addEventHook(
-			filter<Event>()
-				.source(this.parser.actor.id)
-				.action(this.data.matchActionId(SURGING_TEMPEST_EXTENDERS)),
-			(_) => this.extendSurgingTempest(SURGING_TEMPEST_EXTENSION_AMOUNT, true)
-		)
-		this.addEventHook('complete', this.onComplete)
-	}
-
-	private extendSurgingTempest(amount: number, onlyIfRunning ?: boolean) {
-		onlyIfRunning === undefined ? false : onlyIfRunning
-
-		if (this.surgingTempest.remaining > SURGING_TEMPEST_EARLY_REFRESH_GRACE) {
-			this.earlyRefreshCount++
-		}
-
-		if ((this.surgingTempest.expired || this.surgingTempest.paused) && !onlyIfRunning) {
-			this.surgingTempest.start()
-		}
-		this.surgingTempest.extend(amount, onlyIfRunning)
-	}
-
-	private onComplete() {
-		if (this.earlyRefreshCount > 0) {
-			this.suggestions.add(new TieredSuggestion({
-				content: <Trans id="war.stormseye.suggestions.overwrite.content">
-				Avoid refreshing <DataLink status="SURGING_TEMPEST" /> too early
-				</Trans>,
-				why: <Trans id="war.stormseye.suggestions.overwrite.why">
-					You lost {this.earlyRefreshCount * STORMS_EYE_LOST_GAUGE} Beast Gauge over the course of the fight due to early refreshes.
-				</Trans>,
-				icon: this.data.actions.STORMS_EYE.icon,
-				value: this.earlyRefreshCount,
-				tiers: SUGGESTION_TIERS,
-			}))
-		}
 	}
 }
