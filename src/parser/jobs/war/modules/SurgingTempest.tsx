@@ -21,7 +21,7 @@ const SURGING_TEMPEST_GENERATION_AMOUNT = 30
 // Surging Tempest Extension
 const SURGING_TEMPEST_EXTENSION_AMOUNT = 10
 
-const ONE_MINUTE = 60000
+const TEMPEST_MAX = 60000
 
 const SURGING_TEMPEST_EARLY_REFRESH_GRACE = 7500
 const STORMS_EYE_LOST_GAUGE = 10
@@ -52,7 +52,7 @@ export class SurgingTempest extends CoreGauge {
 	}
 
 	private surgingTempest = this.add(new TimerGauge({
-		maximum: ONE_MINUTE,
+		maximum: TEMPEST_MAX,
 	}))
 
 	private earlyRefreshCount = 0
