@@ -15,10 +15,14 @@ const LILY_INTERVAL_610 = 20000
 
 const MISERY_COST = 3
 
+const LILY_GAUGE_FADE = 0.25
+const LILY_TIMER_FADE = 0.75
+const BLOOD_LILY_FADE = 0.5
+
 const GAUGE_COLOURS = {
-	LILY_GAUGE: Color('#4f73b5').fade(0.25),
-	LILY_TIMER: Color('#4f73b5').fade(0.75),
-	BLOODLILY: Color('#b52d6c').fade(0.5),
+	LILY_GAUGE: Color('#4f73b5').fade(LILY_GAUGE_FADE),
+	LILY_TIMER: Color('#4f73b5').fade(LILY_TIMER_FADE),
+	BLOODLILY: Color('#b52d6c').fade(BLOOD_LILY_FADE),
 }
 
 const LILY_CONSUMERS: ActionKey[] = [
