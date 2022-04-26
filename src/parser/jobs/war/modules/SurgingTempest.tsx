@@ -28,8 +28,8 @@ const STORMS_EYE_LOST_GAUGE = 10
 //TODO: Discuss with acc to select correct tier breakpoints
 const SUGGESTION_TIERS = {
 	1: SEVERITY.MINOR,
-	5: SEVERITY.MEDIUM,
-	10: SEVERITY.MAJOR,
+	2: SEVERITY.MEDIUM,
+	5: SEVERITY.MAJOR,
 }
 
 export class SurgingTempest extends CoreGauge {
