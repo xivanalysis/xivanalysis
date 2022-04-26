@@ -6,7 +6,7 @@ import {Infuriate} from './Infuriate'
 import {InnerRelease} from './InnerRelease'
 import {OGCDDowntime} from './OGCDDowntime'
 import {PrimalRend} from './PrimalRend'
-import {SurgingTempest, StormsEye} from './SurgingTempest'
+import {SurgingTempest} from './SurgingTempest'
 
 export default [
 	ActionTimeline,
@@ -18,5 +18,4 @@ export default [
 	OGCDDowntime,
 	PrimalRend,
 	SurgingTempest,
-	StormsEye,
 ]
