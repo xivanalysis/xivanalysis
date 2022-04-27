@@ -14,6 +14,7 @@ const LILY_INTERVAL_600 = 30000
 const LILY_INTERVAL_610 = 20000
 
 const MISERY_COST = 3
+
 /* eslint-disable @typescript-eslint/no-magic-numbers */
 const GAUGE_COLOURS = {
 	LILY_GAUGE: Color('#4f73b5').fade(0.25),
