@@ -428,7 +428,7 @@
   "drg.gauge.suggestions.overcapped-fmf.content": "Assurez-vous d'utiliser <0/> avant <1/> ou <2/> quand vous avez déjà 2 charges de Fouge des dragons anciens pour éviter de perdre une utilisation de <3/>.",
   "drg.gauge.suggestions.overcapped-fmf.why": "{fmfOvercap, plural, one {# charge de Fougue des dragons anciens a été perdue} other {# charges de Fougue des dragons anciens ont été perdues}}.",
   "drg.lancecharge.title": "Lance acérée",
-  "drg.lc.prepend-message": "<0/> peut être gardé (non utilisé) durant une fenêtre de buff si vous êtes capable à la place d'utiliser les 2 charges durant la prochaine fenêtre. Nous faisons de notre mieux dans ce module pour éviter de marquer des fenêtres où <1/> a été conservé comme une erreur. <2/> devrait être utilisé durant chaque autre fenêtre.",
+  "drg.lc.prepend-message": "",
   "drg.lc.suggestions.missedaction.content": "Essayez d'utiliser autant d'oGCD que possible durant <0/>. Pensez à garder vos aptitudes en cooldown, si possible, pour les empêcher de drift en dehors des buffs.",
   "drg.lc.suggestions.missedgcd.content": "Essayer de lancer 8 GCDs durant chaque <0/>.",
   "drg.procs.suggestions.extenders.content": "",
