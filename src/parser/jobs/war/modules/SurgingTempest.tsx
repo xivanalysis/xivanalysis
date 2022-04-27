@@ -1,8 +1,7 @@
 import {Trans} from '@lingui/react'
 import {DataLink} from 'components/ui/DbLink'
-import {ActionKey} from 'data/ACTIONS'
-import {Event} from 'event'
-import {filter} from 'parser/core/filter'
+import {Event, Events} from 'event'
+import {filter, oneOf} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
 import {Actors} from 'parser/core/modules/Actors'
 import Checklist, {Rule, Requirement} from 'parser/core/modules/Checklist'
@@ -12,16 +11,9 @@ import {Statuses} from 'parser/core/modules/Statuses'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
 
-const SURGING_TEMPEST_GENERATORS: ActionKey[] = [
-	'MYTHRIL_TEMPEST',
-	'STORMS_EYE',
-	'INNER_RELEASE',
-]
-const SURGING_TEMPEST_GENERATION_AMOUNT = 30
-// Surging Tempest Extension
-const SURGING_TEMPEST_EXTENSION_AMOUNT = 10
+type GaugeModifier = Partial<Record<Event['type'], number>>
 
-const TEMPEST_MAX = 60000
+const SURGE_MAX = 60000
 
 const EYE_BUFFER = 7500
 const PATH_LOST_GAUGE = 10
@@ -41,31 +33,50 @@ export class SurgingTempest extends CoreGauge {
 	@dependency private statuses!: Statuses
 	@dependency private suggestions!: Suggestions
 
+	private surgingTempest = this.add(new TimerGauge({
+		maximum: SURGE_MAX,
+	}))
+
+	private surgeModifiers = new Map<number, GaugeModifier>([
+		[this.data.actions.STORMS_EYE.id, {combo: 30}],
+		[this.data.actions.INNER_RELEASE.id, {action: 15}],
+	])
+
+	private earlyEyes = 0
+
 	override initialise(): void {
+
+		const surgeActions = Array.from(this.surgeModifiers.keys())
+
 		this.addEventHook(
 			filter<Event>()
 				.source(this.parser.actor.id)
-				.action(this.data.matchActionId(SURGING_TEMPEST_GENERATORS)),
-			this.extendSurgingTempest
+				.type(oneOf(['action', 'combo']))
+				.action(oneOf(surgeActions)),
+			this.onSurge
 		)
 		this.addEventHook('complete', this.onComplete)
 	}
 
-	private surgingTempest = this.add(new TimerGauge({
-		maximum: TEMPEST_MAX,
-	}))
-
-	private earlyEyes = 0
-
 	private onSurge(event: Events['action' | 'combo']) {
+		const modifier = this.surgeModifiers.get(event.action)
+		let isGenerator = true
+		switch (event.action) {
+		case this.data.actions.INNER_RELEASE.id:
+			isGenerator = false
+		// eslint-disable-next-line no-fallthrough
+		case this.data.actions.STORMS_EYE.id:
+			if (isGenerator && this.surgingTempest.remaining > EYE_BUFFER) {
+				this.earlyEyes++
+			}
 
-		if (this.surgingTempest.remaining > SURGING_TEMPEST_EARLY_REFRESH_GRACE) {
-			this.earlyRefreshCount++
-		}
-		if (event.action === this.data.actions.INNER_RELEASE.id) {
-			this.surgingTempest.extend(SURGING_TEMPEST_EXTENSION_AMOUNT, true)
-		} else {
-			this.surgingTempest.extend(SURGING_TEMPEST_GENERATION_AMOUNT)
+			if (modifier != null) {
+				const amount = modifier[event.type] ?? 0
+				this.surgingTempest.extend(amount, isGenerator)
+			}
+			break
+		default:
+			return
 		}
 	}
 
@@ -86,10 +97,10 @@ export class SurgingTempest extends CoreGauge {
 			Avoid using <DataLink action="STORMS_EYE"/> more than {EYE_BUFFER / 1000} seconds before it expires, as it generates less Beast Gauge than <DataLink action="STORMS_PATH"/> which can cost you uses of your gauge consumers.
 			</Trans>,
 			why: <Trans id="war.surgingtempest.suggestions.early.why">
-				You lost {this.earlyRefreshCount * STORMS_EYE_LOST_GAUGE} Beast Gauge over the course of the fight due to early refreshes.
+				You lost {this.earlyEyes * PATH_LOST_GAUGE} Beast Gauge over the course of the fight due to early refreshes.
 			</Trans>,
 			icon: this.data.actions.STORMS_EYE.icon,
-			value: this.earlyRefreshCount,
+			value: this.earlyEyes,
 			tiers: SUGGESTION_TIERS,
 		}))
 	}
