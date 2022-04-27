@@ -40,7 +40,7 @@ export class SurgingTempest extends CoreGauge {
 	private surgeModifiers = new Map<number, GaugeModifier>([
 		[this.data.actions.STORMS_EYE.id, {combo: 30}],
 		[this.data.actions.MYTHRIL_TEMPEST.id, {combo: 30}],
-		[this.data.actions.INNER_RELEASE.id, {action: 15}],
+		[this.data.actions.INNER_RELEASE.id, {action: 10}],
 	])
 
 	private earlyEyes = 0
