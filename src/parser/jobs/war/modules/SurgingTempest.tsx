@@ -45,6 +45,7 @@ export class SurgingTempest extends CoreGauge {
 	private earlyEyes = 0
 
 	override initialise(): void {
+		super.initialise()
 
 		const surgeActions = Array.from(this.surgeModifiers.keys())
 
@@ -55,15 +56,18 @@ export class SurgingTempest extends CoreGauge {
 				.action(oneOf(surgeActions)),
 			this.onSurge
 		)
+
 		this.addEventHook('complete', this.onComplete)
 	}
 
 	private onSurge(event: Events['action' | 'combo']) {
 		const modifier = this.surgeModifiers.get(event.action)
 		let isGenerator = true
+
 		switch (event.action) {
 		case this.data.actions.INNER_RELEASE.id:
 			isGenerator = false
+
 		// eslint-disable-next-line no-fallthrough
 		case this.data.actions.STORMS_EYE.id:
 			if (isGenerator && this.surgingTempest.remaining > EYE_BUFFER) {
@@ -75,8 +79,6 @@ export class SurgingTempest extends CoreGauge {
 				this.surgingTempest.extend(amount, isGenerator)
 			}
 			break
-		default:
-			return
 		}
 	}
 
@@ -92,6 +94,7 @@ export class SurgingTempest extends CoreGauge {
 				}),
 			],
 		}))
+
 		this.suggestions.add(new TieredSuggestion({
 			content: <Trans id="war.surgingtempest.suggestions.early.content">
 			Avoid using <DataLink action="STORMS_EYE"/> more than {EYE_BUFFER / 1000} seconds before it expires, as it generates less Beast Gauge than <DataLink action="STORMS_PATH"/> which can cost you uses of your gauge consumers.
