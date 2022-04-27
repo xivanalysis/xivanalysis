@@ -4,6 +4,11 @@ import React from 'react'
 
 export const changelog = [
 	{
+		date: new Date('2022-04-24'),
+		Changes: () => <>Reword Harvest Moon text to make the usage of Soulsow clearer.</>,
+		contributors: [CONTRIBUTORS.AY],
+	},
+	{
 		date: new Date('2022-03-24'),
 		Changes: () => <>Add missing Unveiled actions to timeline.</>,
 		contributors: [CONTRIBUTORS.AY],

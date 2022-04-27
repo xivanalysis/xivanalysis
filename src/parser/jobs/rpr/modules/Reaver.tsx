@@ -103,7 +103,7 @@ export class Reaver extends Analyser {
 			</Trans>,
 			tiers: SEVERITIES,
 			why: <Trans id ="rpr.reaver.suggestion.dropped.why">
-					You used lost <Plural value={this.droppedReavers} one="# stack" other="# stacks"/> over the course of the fight.
+					You lost <Plural value={this.droppedReavers} one="# stack" other="# stacks"/> over the course of the fight.
 			</Trans>,
 			value: this.droppedReavers,
 		}))
