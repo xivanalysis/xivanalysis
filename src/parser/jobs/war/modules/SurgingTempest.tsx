@@ -23,9 +23,9 @@ const SURGING_TEMPEST_EXTENSION_AMOUNT = 10
 
 const TEMPEST_MAX = 60000
 
-const SURGING_TEMPEST_EARLY_REFRESH_GRACE = 7500
-const STORMS_EYE_LOST_GAUGE = 10
-//TODO: Discuss with acc to select correct tier breakpoints
+const EYE_BUFFER = 7500
+const PATH_LOST_GAUGE = 10
+
 const SUGGESTION_TIERS = {
 	1: SEVERITY.MINOR,
 	2: SEVERITY.MEDIUM,
@@ -55,11 +55,9 @@ export class SurgingTempest extends CoreGauge {
 		maximum: TEMPEST_MAX,
 	}))
 
-	private earlyRefreshCount = 0
+	private earlyEyes = 0
 
-	private extendSurgingTempest(event: Event) {
-		//if I remove this my editor starts screaming at me and disables code completion, we can remove it in review if it's that malodorous.
-		if (!(event.type === 'action')) { return }
+	private onSurge(event: Events['action' | 'combo']) {
 
 		if (this.surgingTempest.remaining > SURGING_TEMPEST_EARLY_REFRESH_GRACE) {
 			this.earlyRefreshCount++
@@ -84,10 +82,10 @@ export class SurgingTempest extends CoreGauge {
 			],
 		}))
 		this.suggestions.add(new TieredSuggestion({
-			content: <Trans id="war.stormseye.suggestions.overwrite.content">
-			Avoid using <DataLink action="STORMS_EYE" /> too early, as it does less damage and generates less beast gauge than <DataLink action="STORMS_PATH" />
+			content: <Trans id="war.surgingtempest.suggestions.early.content">
+			Avoid using <DataLink action="STORMS_EYE"/> more than {EYE_BUFFER / 1000} seconds before it expires, as it generates less Beast Gauge than <DataLink action="STORMS_PATH"/> which can cost you uses of your gauge consumers.
 			</Trans>,
-			why: <Trans id="war.stormseye.suggestions.overwrite.why">
+			why: <Trans id="war.surgingtempest.suggestions.early.why">
 				You lost {this.earlyRefreshCount * STORMS_EYE_LOST_GAUGE} Beast Gauge over the course of the fight due to early refreshes.
 			</Trans>,
 			icon: this.data.actions.STORMS_EYE.icon,
