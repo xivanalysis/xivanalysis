@@ -15,11 +15,13 @@ const LILY_INTERVAL_610 = 20000
 
 const MISERY_COST = 3
 
+/* eslint-disable @typescript-eslint/no-magic-numbers */
 const GAUGE_COLOURS = {
 	LILY_GAUGE: Color('#4f73b5').fade(0.25),
 	LILY_TIMER: Color('#4f73b5').fade(0.75),
 	BLOODLILY: Color('#b52d6c').fade(0.5),
 }
+/* eslint-enable @typescript-eslint/no-magic-numbers */
 
 const LILY_CONSUMERS: ActionKey[] = [
 	'AFFLATUS_RAPTURE',
