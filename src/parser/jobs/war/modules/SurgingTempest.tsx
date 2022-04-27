@@ -39,6 +39,7 @@ export class SurgingTempest extends CoreGauge {
 
 	private surgeModifiers = new Map<number, GaugeModifier>([
 		[this.data.actions.STORMS_EYE.id, {combo: 30}],
+		[this.data.actions.MYTHRIL_TEMPEST.id, {combo: 30}],
 		[this.data.actions.INNER_RELEASE.id, {action: 15}],
 	])
 
@@ -63,14 +64,19 @@ export class SurgingTempest extends CoreGauge {
 	private onSurge(event: Events['action' | 'combo']) {
 		const modifier = this.surgeModifiers.get(event.action)
 		let isGenerator = true
+		let penalizeEarlyRefresh = true
 
 		switch (event.action) {
 		case this.data.actions.INNER_RELEASE.id:
 			isGenerator = false
 
 		// eslint-disable-next-line no-fallthrough
+		case this.data.actions.MYTHRIL_TEMPEST.id:
+			penalizeEarlyRefresh = false
+
+		// eslint-disable-next-line no-fallthrough
 		case this.data.actions.STORMS_EYE.id:
-			if (isGenerator && this.surgingTempest.remaining > EYE_BUFFER) {
+			if (penalizeEarlyRefresh && this.surgingTempest.remaining > EYE_BUFFER) {
 				this.earlyEyes++
 			}
 
