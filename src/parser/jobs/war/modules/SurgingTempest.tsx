@@ -16,7 +16,7 @@ type GaugeModifier = Partial<Record<Event['type'], number>>
 const SURGE_MAX = 60000
 
 const EYE_BUFFER = 15000
-const SURGE_END_BELOW = 35000
+const WASTE_BUFFER = 35000
 const PATH_LOST_GAUGE = 10
 
 const SUGGESTION_TIERS = {
@@ -85,7 +85,7 @@ export class SurgingTempest extends CoreGauge {
 	onComplete(): void {
 		this.checklist.add(new Rule({
 			name: <Trans id="war.surgingtempest.checklist.name">Keep Surging Tempest Up</Trans>,
-			description: <Trans id="war.surgingtempest.checklist.description">Surging Tempest increases your damage by 10%, a substantial part of your damage.</Trans>,
+			description: <Trans id="war.surgingtempest.checklist.description"><DataLink status='SURGING_TEMPEST'/> increases your damage by 10%, a substantial buff.</Trans>,
 			target: 90,
 			requirements: [
 				new Requirement({
@@ -95,14 +95,14 @@ export class SurgingTempest extends CoreGauge {
 			],
 		}))
 
-		if (this.surgingTempest.remaining > SURGE_END_BELOW) {
+		if (this.surgingTempest.remaining > WASTE_BUFFER) {
 			this.suggestions.add(new Suggestion({
 				icon: this.data.actions.STORMS_PATH.icon,
 				content: <Trans id="war.surgingtempest.suggestions.leftover.content">
-					Avoid having more than 35 seconds of <DataLink status="SURGING_TEMPEST" /> at the end of the fight, as doing so will lose you a use of Storm's Path.
+					Avoid having more than {WASTE_BUFFER / 1000} seconds of <DataLink status="SURGING_TEMPEST" /> at the end of the fight, as doing so will cost you a use of <DataLink action='STORMS_PATH'/>.
 				</Trans>,
 				why: <Trans id="war.surgingtempest.suggestions.leftover.why">
-					You may have lost a use of Fell Cleave due to refreshing your Surging Tempest too early.
+					You may have lost a use of <DataLink action='FELL_CLEAVE'/> due to refreshing your <DataLink status='SURGING_TEMPEST'/> too early.
 				</Trans>,
 				severity: SEVERITY.MINOR,
 			}))
