@@ -5,7 +5,7 @@ import {ActionKey} from 'data/ACTIONS'
 import {Event, Events} from 'event'
 import {Analyser} from 'parser/core/Analyser'
 import {EventHook} from 'parser/core/Dispatcher'
-import {filter} from 'parser/core/filter'
+import {filter, oneOf} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
 import {Actors} from 'parser/core/modules/Actors'
 import {Data} from 'parser/core/modules/Data'
@@ -81,6 +81,7 @@ export class MPUsage extends Analyser {
 
 		const playerFilter = filter<Event>().source(this.parser.actor.id)
 		this.addEventHook(playerFilter.type('damage').cause(this.data.matchCauseActionId([...this.damageGenerators.keys()])), this.onGenerator(this.damageGenerators))
+		this.addEventHook(playerFilter.type('combo').action(oneOf([...this.comboGenerators.keys()])), this.onGenerator(this.comboGenerators))
 		this.addEventHook(filter<Event>().type('actorUpdate').actor(this.parser.actor.id), this.onActorUpdate)
 
 		this.addEventHook(playerFilter.type('statusApply').status(this.data.statuses.BLOOD_WEAPON.id), this.onApplyBloodWeapon)
@@ -97,7 +98,11 @@ export class MPUsage extends Analyser {
 
 	private activeBloodWeaponHook?: EventHook<Events['damage']>
 	private onApplyBloodWeapon() {
-		this.activeBloodWeaponHook = this.addEventHook(filter<Event>().source(this.parser.actor.id).type('damage'), this.onGenerator(this.bloodWeaponGenerators))
+		if (this.activeBloodWeaponHook == null) {
+			// Buffs with stacks generate separate apply events for each stack with a single remove at the end.
+			// Make sure we only start hooking for actions effected by Blood Weapon on the first apply event -- no duplicate hooks on the "reapply" events as the stacks go down
+			this.activeBloodWeaponHook = this.addEventHook(filter<Event>().source(this.parser.actor.id).type('damage'), this.onGenerator(this.bloodWeaponGenerators))
+		}
 	}
 	private onRemoveBloodWeapon() {
 		if (this.activeBloodWeaponHook != null) {
@@ -108,7 +113,11 @@ export class MPUsage extends Analyser {
 
 	private activeDeliriumHook?: EventHook<Events['damage']>
 	private onApplyDelirium() {
-		this.activeDeliriumHook = this.addEventHook(filter<Event>().source(this.parser.actor.id).type('damage'), this.onGenerator(this.deliriumGenerators))
+		if (this.activeDeliriumHook == null) {
+			// Buffs with stacks generate separate apply events for each stack with a single remove at the end.
+			// Make sure we only start hooking for actions effected by Blood Weapon on the first apply event -- no duplicate hooks on the "reapply" events as the stacks go down
+			this.activeDeliriumHook = this.addEventHook(filter<Event>().source(this.parser.actor.id).type('damage'), this.onGenerator(this.deliriumGenerators))
+		}
 	}
 	private onRemoveDelirium() {
 		if (this.activeDeliriumHook != null) {
