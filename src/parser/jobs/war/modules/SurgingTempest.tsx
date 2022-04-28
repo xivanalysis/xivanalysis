@@ -65,23 +65,23 @@ export class SurgingTempest extends CoreGauge {
 		const modifier = this.surgeModifiers.get(event.action)
 		let isExtender = false
 
-		// The "Default" case here is Mythril Tempest. It can generate gauge from 0 and doesn't get penalized for early refresh
+		/* eslint-disable no-fallthrough */
 		switch (event.action) {
 		case this.data.actions.STORMS_EYE.id:
 			if (this.surgingTempest.remaining > EYE_BUFFER) {
 				this.earlyEyes++
 			}
-			break
 
 		case this.data.actions.INNER_RELEASE.id:
 			isExtender = true
-			break
-		}
 
-		if (modifier != null) {
-			const amount = modifier[event.type] ?? 0
-			this.surgingTempest.extend(amount, isExtender)
+		default:
+			if (modifier != null) {
+				const amount = modifier[event.type] ?? 0
+				this.surgingTempest.extend(amount, isExtender)
+			}
 		}
+		/* eslint-enable no-fallthrough */
 	}
 
 	onComplete(): void {
