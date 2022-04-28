@@ -85,7 +85,7 @@ export class SurgingTempest extends CoreGauge {
 	onComplete(): void {
 		this.checklist.add(new Rule({
 			name: <Trans id="war.surgingtempest.checklist.name">Keep Surging Tempest Up</Trans>,
-			description: <Trans id="war.surgingtempest.checklist.description"><DataLink status='SURGING_TEMPEST'/> increases your damage by 10%, a substantial buff.</Trans>,
+			description: <Trans id="war.surgingtempest.checklist.description"><DataLink status="SURGING_TEMPEST"/> increases your damage by 10%, a substantial buff.</Trans>,
 			target: 90,
 			requirements: [
 				new Requirement({
@@ -95,18 +95,19 @@ export class SurgingTempest extends CoreGauge {
 			],
 		}))
 
-		if (this.surgingTempest.remaining > WASTE_BUFFER) {
-			this.suggestions.add(new Suggestion({
-				icon: this.data.actions.STORMS_PATH.icon,
-				content: <Trans id="war.surgingtempest.suggestions.leftover.content">
-					Avoid having more than {WASTE_BUFFER / 1000} seconds of <DataLink status="SURGING_TEMPEST" /> at the end of the fight, as doing so will cost you a use of <DataLink action='STORMS_PATH'/>.
-				</Trans>,
-				why: <Trans id="war.surgingtempest.suggestions.leftover.why">
-					You may have lost a use of <DataLink action='FELL_CLEAVE'/> due to refreshing your <DataLink status='SURGING_TEMPEST'/> too early.
-				</Trans>,
-				severity: SEVERITY.MINOR,
-			}))
-		}
+		this.suggestions.add(new TieredSuggestion({
+			icon: this.data.actions.STORMS_PATH.icon,
+			content: <Trans id="war.surgingtempest.suggestions.leftover.content">
+					Avoid having more than {WASTE_BUFFER / 1000} seconds of <DataLink status="SURGING_TEMPEST" /> at the end of the fight, as doing so will cost you a use of <DataLink action="STORMS_PATH"/>.
+			</Trans>,
+			why: <Trans id="war.surgingtempest.suggestions.leftover.why">
+					You may have lost a use of <DataLink action="FELL_CLEAVE"/> due to refreshing your <DataLink status="SURGING_TEMPEST"/> too early.
+			</Trans>,
+			value: this.surgingTempest.remaining,
+			tiers: {
+				[WASTE_BUFFER]: SEVERITY.MINOR,
+			},
+		}))
 
 		this.suggestions.add(new TieredSuggestion({
 			content: <Trans id="war.surgingtempest.suggestions.early.content">
