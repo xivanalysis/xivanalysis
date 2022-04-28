@@ -100,13 +100,14 @@ export class SurgingTempest extends CoreGauge {
 			content: <Trans id="war.surgingtempest.suggestions.leftover.content">
 					Avoid having more than {WASTE_BUFFER / 1000} seconds of <DataLink status="SURGING_TEMPEST" /> at the end of the fight, as doing so will cost you a use of <DataLink action="STORMS_PATH"/>.
 			</Trans>,
-			why: <Trans id="war.surgingtempest.suggestions.leftover.why">
-					You may have lost a use of <DataLink action="FELL_CLEAVE"/> due to refreshing your <DataLink status="SURGING_TEMPEST"/> too early.
-			</Trans>,
-			value: this.surgingTempest.remaining,
 			tiers: {
 				[WASTE_BUFFER]: SEVERITY.MINOR,
 			},
+			value: this.surgingTempest.remaining,
+			why: <Trans id="war.surgingtempest.suggestions.leftover.why">
+					You may have lost a use of <DataLink action="FELL_CLEAVE"/> due to refreshing your <DataLink status="SURGING_TEMPEST"/> too early.
+			</Trans>,
+
 		}))
 
 		this.suggestions.add(new TieredSuggestion({
