@@ -69,5 +69,10 @@ export const WHITE_MAGE = new Meta({
 			Changes: () => <>Migrate Lily gauge to core gauge, and upade for 6.1 misery analysis</>,
 			contributors: [CONTRIBUTORS.KERRIS],
 		},
+		{
+			date: new Date('2022-04-28'),
+			Changes: () => <>Added Action Timeline structure</>,
+			contributors: [CONTRIBUTORS.INNI],
+		},
 	],
 })

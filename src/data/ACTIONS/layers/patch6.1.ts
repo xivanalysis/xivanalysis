@@ -45,5 +45,16 @@ export const patch610: Layer<ActionRoot> = {
 		RUBY_CATASTROPHE: {
 			gcdRecast: 3000,
 		},
+
+		// WHM 6.1 changes
+		REGEN: {
+			mpCost: 400,
+		},
+		LITURGY_OF_THE_BELL_ACTIVATION: {
+			id: 28509,
+			name: 'Liturgy of the Bell (Detonate)',
+			icon: 'https://xivapi.com/i/002000/002649.png',
+			cooldown: 1000,
+		},
 	},
 }
