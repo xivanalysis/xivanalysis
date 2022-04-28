@@ -86,19 +86,19 @@ export class SurgingTempest extends CoreGauge {
 		this.checklist.add(new Rule({
 			name: <Trans id="war.surgingtempest.checklist.name">Keep Surging Tempest Up</Trans>,
 			description: <Trans id="war.surgingtempest.checklist.description"><DataLink status="SURGING_TEMPEST"/> increases your damage by 10%, a substantial buff.</Trans>,
-			target: 90,
 			requirements: [
 				new Requirement({
 					name: <Trans id="war.surgingtempest.checklist.uptime"><DataLink status="SURGING_TEMPEST"/> uptime</Trans>,
 					percent: () => this.getUptimePercent(),
 				}),
 			],
+			target: 90,
 		}))
 
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.STORMS_PATH.icon,
 			content: <Trans id="war.surgingtempest.suggestions.leftover.content">
-					Avoid having more than {WASTE_BUFFER / 1000} seconds of <DataLink status="SURGING_TEMPEST" /> at the end of the fight, as doing so will cost you a use of <DataLink action="STORMS_PATH"/>.
+				Avoid having more than {WASTE_BUFFER / 1000} seconds of <DataLink status="SURGING_TEMPEST" /> at the end of the fight, as doing so will cost you a use of <DataLink action="STORMS_PATH"/>.
 			</Trans>,
 			tiers: {
 				[WASTE_BUFFER]: SEVERITY.MINOR,
@@ -107,19 +107,18 @@ export class SurgingTempest extends CoreGauge {
 			why: <Trans id="war.surgingtempest.suggestions.leftover.why">
 					You may have lost a use of <DataLink action="FELL_CLEAVE"/> due to refreshing your <DataLink status="SURGING_TEMPEST"/> too early.
 			</Trans>,
-
 		}))
 
 		this.suggestions.add(new TieredSuggestion({
+			icon: this.data.actions.STORMS_EYE.icon,
 			content: <Trans id="war.surgingtempest.suggestions.early.content">
-			Avoid using <DataLink action="STORMS_EYE"/> more than {EYE_BUFFER / 1000} seconds before it expires, as it generates less Beast Gauge than <DataLink action="STORMS_PATH"/> which can cost you uses of your gauge consumers.
+				Avoid using <DataLink action="STORMS_EYE"/> more than {EYE_BUFFER / 1000} seconds before it expires, as it generates less Beast Gauge than <DataLink action="STORMS_PATH"/> which can cost you uses of your gauge consumers.
 			</Trans>,
+			tiers: SUGGESTION_TIERS,
+			value: this.earlyEyes,
 			why: <Trans id="war.surgingtempest.suggestions.early.why">
 				You lost {this.earlyEyes * PATH_LOST_GAUGE} Beast Gauge over the course of the fight due to early refreshes.
 			</Trans>,
-			icon: this.data.actions.STORMS_EYE.icon,
-			value: this.earlyEyes,
-			tiers: SUGGESTION_TIERS,
 		}))
 	}
 
