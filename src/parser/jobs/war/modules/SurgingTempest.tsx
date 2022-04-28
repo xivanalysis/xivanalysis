@@ -98,10 +98,10 @@ export class SurgingTempest extends CoreGauge {
 		if (this.surgingTempest.remaining > SURGE_END_BELOW) {
 			this.suggestions.add(new Suggestion({
 				icon: this.data.actions.STORMS_PATH.icon,
-				content: <Trans id="war.surgingtempest.suggestions.fightend.content">
-					Avoid having more than 35 seconds of Surging Tempest at the end of the fight, as doing so will lose you a use of Storm's Path.
+				content: <Trans id="war.surgingtempest.suggestions.leftover.content">
+					Avoid having more than 35 seconds of <DataLink status="SURGING_TEMPEST" /> at the end of the fight, as doing so will lose you a use of Storm's Path.
 				</Trans>,
-				why: <Trans id="war.surgingtempest.suggestions.fightend.why">
+				why: <Trans id="war.surgingtempest.suggestions.leftover.why">
 					You may have lost a use of Fell Cleave due to refreshing your Surging Tempest too early.
 				</Trans>,
 				severity: SEVERITY.MINOR,
