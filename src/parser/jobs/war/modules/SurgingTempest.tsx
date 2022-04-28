@@ -5,6 +5,7 @@ import {filter, oneOf} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
 import {Actors} from 'parser/core/modules/Actors'
 import Checklist, {Rule, Requirement} from 'parser/core/modules/Checklist'
+import Downtime from 'parser/core/modules/Downtime'
 import {Gauge as CoreGauge, TimerGauge} from 'parser/core/modules/Gauge'
 import {Invulnerability} from 'parser/core/modules/Invulnerability'
 import {Statuses} from 'parser/core/modules/Statuses'
@@ -15,8 +16,9 @@ type GaugeModifier = Partial<Record<Event['type'], number>>
 
 const SURGE_MAX = 60000
 
-const EYE_BUFFER = 15000
-const WASTE_BUFFER = 35000
+const EYE_BUFFER = 30000
+const DOWNTIME_ALLOWANCE = 30000
+const RELEASE_BUFFER = 50000
 const PATH_LOST_GAUGE = 10
 
 const SUGGESTION_TIERS = {
@@ -33,6 +35,7 @@ export class SurgingTempest extends CoreGauge {
 	@dependency private invulnerability!: Invulnerability
 	@dependency private statuses!: Statuses
 	@dependency private suggestions!: Suggestions
+	@dependency private downtime!: Downtime
 
 	private surgingTempest = this.add(new TimerGauge({
 		maximum: SURGE_MAX,
@@ -73,12 +76,24 @@ export class SurgingTempest extends CoreGauge {
 		}
 
 		if (event.action === this.data.actions.INNER_RELEASE.id) {
+			if (this.surgingTempest.remaining > RELEASE_BUFFER) {
+				this.earlyEyes++
+			}
 			isExtender = true
 		}
 
 		if (modifier != null) {
 			const amount = modifier[event.type] ?? 0
 			this.surgingTempest.extend(amount, isExtender)
+		}
+
+		const lastWindow = this.downtime.getDowntimeWindows(event.timestamp, event.timestamp + this.surgingTempest.remaining).pop()
+		if (lastWindow != null) {
+			const downtimeRemainder = this.surgingTempest.remaining - (lastWindow.start - event.timestamp)
+
+			if (downtimeRemainder >= DOWNTIME_ALLOWANCE && event.timestamp + this.surgingTempest.remaining < lastWindow.end) {
+				this.earlyEyes++
+			}
 		}
 	}
 
@@ -98,10 +113,10 @@ export class SurgingTempest extends CoreGauge {
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.STORMS_PATH.icon,
 			content: <Trans id="war.surgingtempest.suggestions.leftover.content">
-					Avoid having more than {WASTE_BUFFER / 1000} seconds of <DataLink status="SURGING_TEMPEST" /> at the end of the fight, as doing so will cost you a use of <DataLink action="STORMS_PATH"/>.
+					Avoid having more than {RELEASE_BUFFER / 1000} seconds of <DataLink status="SURGING_TEMPEST" /> at the end of the fight, as doing so will cost you a use of <DataLink action="STORMS_PATH"/>.
 			</Trans>,
 			tiers: {
-				[WASTE_BUFFER]: SEVERITY.MINOR,
+				[RELEASE_BUFFER]: SEVERITY.MINOR,
 			},
 			value: this.surgingTempest.remaining,
 			why: <Trans id="war.surgingtempest.suggestions.leftover.why">
