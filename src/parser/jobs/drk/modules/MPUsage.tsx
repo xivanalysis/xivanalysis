@@ -100,7 +100,8 @@ export class MPUsage extends Analyser {
 	private onApplyBloodWeapon() {
 		if (this.activeBloodWeaponHook == null) {
 			// Buffs with stacks generate separate apply events for each stack with a single remove at the end.
-			// Make sure we only start hooking for actions effected by Blood Weapon on the first apply event -- no duplicate hooks on the "reapply" events as the stacks go down
+			// Make sure we only start hooking for actions effected by Blood Weapon on the first apply event
+			// ie no duplicate hooks on the "reapply" events as the stacks go down
 			this.activeBloodWeaponHook = this.addEventHook(filter<Event>().source(this.parser.actor.id).type('damage'), this.onGenerator(this.bloodWeaponGenerators))
 		}
 	}
@@ -115,7 +116,8 @@ export class MPUsage extends Analyser {
 	private onApplyDelirium() {
 		if (this.activeDeliriumHook == null) {
 			// Buffs with stacks generate separate apply events for each stack with a single remove at the end.
-			// Make sure we only start hooking for actions effected by Blood Weapon on the first apply event -- no duplicate hooks on the "reapply" events as the stacks go down
+			// Make sure we only start hooking for actions effected by Delirium on the first apply event
+			// ie no duplicate hooks on the "reapply" events as the stacks go down
 			this.activeDeliriumHook = this.addEventHook(filter<Event>().source(this.parser.actor.id).type('damage'), this.onGenerator(this.deliriumGenerators))
 		}
 	}
