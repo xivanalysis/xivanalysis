@@ -60,7 +60,7 @@ export class BloodGauge extends CoreGauge {
 		this.addEventHook(playerFilter.type('combo').action(oneOf([...this.onComboModifiers.keys()])), this.onModifier(this.onComboModifiers))
 
 		// We hook the action for BW so we can just ignore stacks entirely
-		this.addEventHook(playerFilter.type('action').action(this.data.actions.BLOOD_WEAPON.id), this.onApplyBloodWeapon)
+		this.addEventHook(playerFilter.type('statusApply').status(this.data.statuses.BLOOD_WEAPON.id), this.onApplyBloodWeapon)
 		this.addEventHook(playerFilter.type('statusRemove').status(this.data.statuses.BLOOD_WEAPON.id), this.onRemoveBloodWeapon)
 
 		this.addEventHook('complete', this.onComplete)
