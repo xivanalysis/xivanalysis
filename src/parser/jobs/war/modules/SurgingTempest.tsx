@@ -8,7 +8,7 @@ import Checklist, {Rule, Requirement} from 'parser/core/modules/Checklist'
 import {Gauge as CoreGauge, TimerGauge} from 'parser/core/modules/Gauge'
 import {Invulnerability} from 'parser/core/modules/Invulnerability'
 import {Statuses} from 'parser/core/modules/Statuses'
-import Suggestions, {SEVERITY, Suggestion,  TieredSuggestion} from 'parser/core/modules/Suggestions'
+import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
 
 type GaugeModifier = Partial<Record<Event['type'], number>>
