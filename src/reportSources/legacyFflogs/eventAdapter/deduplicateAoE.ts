@@ -43,6 +43,7 @@ export class DeduplicateAoEStep extends AdapterStep {
 		}
 
 		const key = `${event.type}:${event.sequence}`
+		
 		if (this.memo.has(key)) {
 			return this.memo.get(key)
 		}
