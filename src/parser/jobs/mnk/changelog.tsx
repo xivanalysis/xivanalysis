@@ -3,7 +3,7 @@ import React from 'react'
 
 export const changelog = [
 	{
-		date: new Date('2022-04-19'),
+		date: new Date('2022-04-29'),
 		Changes: () => <>Adjust Riddle of Wind expected count for windows that get the max possible.</>,
 		contributors: [CONTRIBUTORS.AY],
 	},
