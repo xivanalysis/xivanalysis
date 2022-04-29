@@ -8,6 +8,7 @@ import {AdapterStep} from './base'
  */
 export class DeduplicateAoEStep extends AdapterStep {
 	private deduplicatedEvents: Event[] = []
+	private memo: Map<string, Event> = new Map<string, Event>()
 
 	override postprocess(adaptedEvents: Event[]) {
 
@@ -37,7 +38,16 @@ export class DeduplicateAoEStep extends AdapterStep {
 		}
 
 		// Events with no sequence ID are from over time effects or the passive regeneration, do not deduplicate
-		return this.deduplicatedEvents.find(e => e.type === event.type && e.sequence != null && e.sequence === event.sequence)
-	}
+		if (event.sequence == null) {
+			return undefined
+		}
 
+		const key = `${event.type}:${event.sequence}`
+		if (this.memo.has(key)) {
+			return this.memo.get(key)
+		}
+
+		this.memo.set(key, event)
+		return undefined
+	}
 }
