@@ -7,9 +7,11 @@ import {BuffWindow, ExpectedGcdCountEvaluator, LimitedActionsEvaluator} from 'pa
 import {GlobalCooldown} from 'parser/core/modules/GlobalCooldown'
 import {SEVERITY} from 'parser/core/modules/Suggestions'
 import React from 'react'
+import {Brotherhood} from './Brotherhood'
 import {BLITZ_ACTIONS} from './constants'
 import {DISPLAY_ORDER} from './DISPLAY_ORDER'
 import {BlitzEvaluator} from './evaluators/BlitzEvaluator'
+import {BrotherhoodDriftEvaluator, BrotherhoodRaidBuffEvaluator} from './evaluators/BrotherhoodEvaluator'
 import {fillActions} from './utilities'
 
 const EXPECTED_GCDS = 11
@@ -45,6 +47,7 @@ export class RiddleOfFire extends BuffWindow {
 	static override displayOrder = DISPLAY_ORDER.RIDDLE_OF_FIRE
 
 	@dependency globalCooldown!: GlobalCooldown
+	@dependency brotherhood!: Brotherhood
 
 	private blitzActions = fillActions(BLITZ_ACTIONS, this.data)
 	buffStatus = this.data.statuses.RIDDLE_OF_FIRE
@@ -97,5 +100,8 @@ export class RiddleOfFire extends BuffWindow {
 			suggestionWindowName: suggestionWindowName,
 			severityTiers: SEVERITIES.BAD_GCDS,
 		}))
+
+		this.addEvaluator(new BrotherhoodDriftEvaluator(this.brotherhood, this.data.actions.BROTHERHOOD.icon))
+		this.addEvaluator(new BrotherhoodRaidBuffEvaluator(this.brotherhood))
 	}
 }

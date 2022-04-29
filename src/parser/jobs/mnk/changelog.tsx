@@ -3,6 +3,11 @@ import React from 'react'
 
 export const changelog = [
 	{
+		date: new Date('2022-04-28'),
+		Changes: () => <>Add Brotherhood support.</>,
+		contributors: [CONTRIBUTORS.SQUARE],
+	},
+	{
 		date: new Date('2022-03-03'),
 		Changes: () => <>Add Celestial Revolution support.</>,
 		contributors: [CONTRIBUTORS.SQUARE],
