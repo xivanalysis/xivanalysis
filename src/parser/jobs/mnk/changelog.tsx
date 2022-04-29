@@ -3,6 +3,11 @@ import React from 'react'
 
 export const changelog = [
 	{
+		date: new Date('2022-04-19'),
+		Changes: () => <>Adjust Riddle of Wind expected count for windows that get the max possible.</>,
+		contributors: [CONTRIBUTORS.Ay],
+	},
+	{
 		date: new Date('2022-03-03'),
 		Changes: () => <>Add Celestial Revolution support.</>,
 		contributors: [CONTRIBUTORS.SQUARE],
