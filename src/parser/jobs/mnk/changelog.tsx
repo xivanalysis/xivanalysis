@@ -5,7 +5,7 @@ export const changelog = [
 	{
 		date: new Date('2022-04-19'),
 		Changes: () => <>Adjust Riddle of Wind expected count for windows that get the max possible.</>,
-		contributors: [CONTRIBUTORS.Ay],
+		contributors: [CONTRIBUTORS.AY],
 	},
 	{
 		date: new Date('2022-03-03'),
