@@ -94,7 +94,7 @@
   "blm.gauge.resource.umbral-hearts": "アンブラルハート",
   "blm.gauge.resource.umbral-ice": "アンブラルブリザード",
   "blm.gauge.resource.umbral-timer": "アンブラルアイス タイマー",
-  "blm.gauge.suggestions.dropped-enochian.content": "<0/> をドロップすると、 <1/>や<2/>が失われたり、 <3/>のキャストが追加されたり、 <3/> および <4/> が利用できなくなったり、 <6/> が提供する与ダメージの15%アップを見逃したりする可能性があります。",
+  "blm.gauge.suggestions.dropped-enochian.content": "アストラルファイアまたはアンブラルブリザードのドロップにより、 <0/>や<1/>の詠唱回数が減らしてしまう可能性があります。",
   "blm.gauge.suggestions.dropped-enochian.why": "<0/>が切れました。{droppedEno, plural, one {# time} other {# times}}",
   "blm.gauge.suggestions.lost-polyglot.content": "<0/>が切れたため、ポリグロットをすべて失いました。 <1/>や<2/> は最も強力なGCDなので、キャストを常に最大化しましょう。",
   "blm.gauge.suggestions.lost-polyglot.why": "{lostPolyglot, plural, one {# スタックのポリグロットを} other {# スタックのポリグロットを}}失いました。",
