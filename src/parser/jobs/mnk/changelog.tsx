@@ -3,6 +3,11 @@ import React from 'react'
 
 export const changelog = [
 	{
+		date: new Date('2022-05-03'),
+		Changes: () => <>Add expected Masterful Blitz support in Riddle of Fire window.</>,
+		contributors: [CONTRIBUTORS.SQUARE],
+	},
+	{
 		date: new Date('2022-03-03'),
 		Changes: () => <>Add Celestial Revolution support.</>,
 		contributors: [CONTRIBUTORS.SQUARE],
