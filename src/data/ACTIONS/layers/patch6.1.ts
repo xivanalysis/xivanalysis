@@ -56,5 +56,9 @@ export const patch610: Layer<ActionRoot> = {
 			icon: 'https://xivapi.com/i/002000/002649.png',
 			cooldown: 1000,
 		},
+
+		PET_SEARING_LIGHT: {
+			statusesApplied: [],
+		},
 	},
 }
