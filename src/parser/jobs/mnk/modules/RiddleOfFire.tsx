@@ -69,7 +69,8 @@ export class RiddleOfFire extends BuffWindow {
 		this.addEvaluator(new BlitzEvaluator({
 			blitzActions: this.blitzActions,
 			pbCasts: this.pbCasts,
-			pbCooldown: this.data.actions.PERFECT_BALANCE.cooldown,
+			blitzIcon: this.data.actions.MASTERFUL_BLITZ.icon,
+			pb: this.data.actions.PERFECT_BALANCE,
 		}))
 
 		this.addEvaluator(new ExpectedGcdCountEvaluator({
