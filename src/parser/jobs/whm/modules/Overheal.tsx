@@ -16,6 +16,7 @@ export class Overheal extends CoreOverheal {
 				this.data.statuses.REGEN.id,
 				this.data.actions.MEDICA_II.id,
 				this.data.actions.ASYLUM.id,
+				this.data.statuses.ASYLUM.id,
 			],
 		},
 		{
@@ -29,6 +30,15 @@ export class Overheal extends CoreOverheal {
 			trackedHealIds: [
 				this.data.actions.LITURGY_OF_THE_BELL_ON_DAMAGE.id,
 				this.data.actions.LITURGY_OF_THE_BELL_ON_EXPIRY.id,
+				this.data.actions.LITURGY_OF_THE_BELL_ACTIVATION.id,
+			],
+		},
+		{
+			name: <Trans id="whm.overheal.afflatus.name">Afflatus Healing</Trans>,
+			color: SuggestedColors[4],
+			trackedHealIds: [
+				this.data.actions.AFFLATUS_RAPTURE.id,
+				this.data.actions.AFFLATUS_SOLACE.id,
 			],
 		},
 	]
