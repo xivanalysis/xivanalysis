@@ -31,7 +31,8 @@ You've now got the primary codebase locally, next you'll need to download all th
 $ yarn
 ```
 
-**NOTE:** If you are configuring the [server](https://github.com/xivanalysis/server) locally, you can create an `.env.local` file and set `REACT_APP_FFLOGS_V1_BASE_URL` to point to your local instance at `[server url]/proxy/fflogs/`.
+**NOTE:** If you would like to cache FFLogs response data locally to speed up development time and avoid rate limits, you can create an `.env.local` file and set `REACT_APP_FFLOGS_V1_BASE_URL` to point to `http://localhost:5544` and run `yarn talkback` to run the [talkback](https://github.com/ijpiantanida/talkback) server, which will store
+responses locally at `./tapes`
 {: .admonition .info}
 
 Once that's done, you're ready to go! To start the development server, just run
