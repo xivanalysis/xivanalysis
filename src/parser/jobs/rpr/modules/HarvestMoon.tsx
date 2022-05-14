@@ -74,11 +74,12 @@ export class HarvestMoon extends Analyser {
 
 		this.checklist.add(new Rule({
 			name: <Trans id="rpr.harvestmoon.checklist.title">
-				Use <DataLink action="HARVEST_MOON" />
+				Use <DataLink action="SOULSOW"/> and <DataLink action="HARVEST_MOON"/>
 			</Trans>,
 			description: <Trans id="rpr.harvestmoon.checklist.description">
 				<DataLink action="HARVEST_MOON"/> is one of your highest damage abilities.
-				Aim to use it before the end of the fight, and before any downtime long enough to recharge it.
+				Aim to use <DataLink action="SOULSOW"/> pre-pull to guarantee at least one <DataLink showIcon={false} action="HARVEST_MOON"/> in the fight.
+				If any downtime is long enough to cast <DataLink action="SOULSOW"/> again, you can get additional uses of <DataLink showIcon={false} action="HARVEST_MOON"/>.
 			</Trans>,
 			requirements: [
 				new Requirement({

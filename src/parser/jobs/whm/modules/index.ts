@@ -1,3 +1,4 @@
+import {ActionTimeline} from './ActionTimeline'
 import {CastTime} from './CastTime'
 import {DoTs} from './DoTs'
 import {Interrupts} from './Interrupts'
@@ -9,6 +10,7 @@ import {Thinair} from './Thinair'
 import {Tincture} from './Tincture'
 
 export default [
+	ActionTimeline,
 	CastTime,
 	DoTs,
 	Interrupts,
