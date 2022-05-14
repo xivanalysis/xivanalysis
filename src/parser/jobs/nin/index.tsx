@@ -21,6 +21,11 @@ export const NINJA = new Meta({
 	],
 	changelog: [
 		{
+			date: new Date('2022-05-14'),
+			Changes: () => <>Updated positional module for 6.1 changes.</>,
+			contributors: [CONTRIBUTORS.HINT],
+		},
+		{
 			date: new Date('2022-02-12'),
 			Changes: () => <>Moved the Ninki gauge display from a separate chart to the timeline.</>,
 			contributors: [CONTRIBUTORS.TOASTDEIB],
