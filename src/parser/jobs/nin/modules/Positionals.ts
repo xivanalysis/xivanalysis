@@ -9,7 +9,7 @@ export class Positionals extends CorePositionals {
 				modifiers: [],
 			},
 			{
-				value: 340,
+				value: 360,
 				modifiers: [PotencyModifier.COMBO],
 			},
 		],
@@ -25,7 +25,7 @@ export class Positionals extends CorePositionals {
 				modifiers: [],
 			},
 			{
-				value: 360,
+				value: 380,
 				modifiers: [PotencyModifier.COMBO],
 			},
 		],
