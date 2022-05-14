@@ -175,7 +175,6 @@ export const RPR = ensureActions({
 			bonusModifiers: [BonusModifier.POSITIONAL],
 			baseModifiers: [],
 		}, {
-			// Lance Mastery increases the potency of the 5th hit by 100
 			value: 460,
 			bonusModifiers: [],
 			baseModifiers: ['ENHANCED_GALLOWS'],
@@ -202,7 +201,6 @@ export const RPR = ensureActions({
 			bonusModifiers: [BonusModifier.POSITIONAL],
 			baseModifiers: [],
 		}, {
-			// Lance Mastery increases the potency of the 5th hit by 100
 			value: 460,
 			bonusModifiers: [],
 			baseModifiers: ['ENHANCED_GIBBET'],

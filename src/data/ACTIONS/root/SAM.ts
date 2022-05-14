@@ -82,7 +82,6 @@ export const SAM = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003158.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		// These are 6.0 values updated in the 6.1 layer.
 		potencies: [{
 			value: 100,
 			bonusModifiers: [],
@@ -130,7 +129,6 @@ export const SAM = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003164.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		// These are 6.0 values updated in the 6.1 layer.
 		potencies: [{
 			value: 100,
 			bonusModifiers: [],
