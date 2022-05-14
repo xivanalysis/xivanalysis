@@ -1,7 +1,7 @@
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
 import {ActionLink, DataLink} from 'components/ui/DbLink'
-import {Action} from 'data/ACTIONS'
+import {Action, getPotencyWithMods, getBasePotency} from 'data/ACTIONS'
 import {BonusModifier} from 'data/ACTIONS/type'
 import {Event, Events} from 'event'
 import {filter} from 'parser/core/filter'
@@ -91,8 +91,8 @@ export abstract class Positionals extends Analyser {
 	// of detecting positional hits.
 	private missedPositionalBonusPercents(action: Action) {
 		const missed_positional_combo_bonus_percent = this.calculateBonusPercent(
-			this.getPotencyWithMods(action, []),
-			this.getPotencyWithMods(action, [BonusModifier.COMBO]))
+			getBasePotency(action),
+			getPotencyWithMods(action, [BonusModifier.COMBO], []))
 		return [...new Set([NO_BONUS_PERCENT, missed_positional_combo_bonus_percent])]
 	}
 
@@ -100,13 +100,6 @@ export abstract class Positionals extends Analyser {
 	// otherwise be more complex.
 	private positionalHit(action: Action, bonusPercent: number) {
 		return !this.missedPositionalBonusPercents(action).includes(bonusPercent)
-	}
-
-	private getPotencyWithMods(action: Action, modifiers: BonusModifier[]) {
-		return action.potencies?.find(
-			potency =>
-				JSON.stringify(potency.bonusModifiers.sort()) === JSON.stringify(modifiers.sort())
-		)?.value || NO_BONUS_PERCENT
 	}
 
 	// The bonusPercent is based on the final potency number.

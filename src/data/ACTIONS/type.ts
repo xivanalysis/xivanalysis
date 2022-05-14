@@ -1,3 +1,4 @@
+import {StatusKey} from 'data/STATUSES'
 import {StatusRoot} from 'data/STATUSES/root'
 import {Attribute} from 'event'
 import {ensureRecord} from 'utilities/typescript'
@@ -25,7 +26,7 @@ export enum PotencySpecialCase {
 // combo and positional success, BonusModifiers are the modifiers that
 // will increase the percent. Statuses from jobs like RPR and DRG
 // modify the base.
-export type BaseModifier = PotencySpecialCase | keyof StatusRoot
+export type BaseModifier = PotencySpecialCase | StatusKey
 
 // Potency is modeled this way because any single potency number
 // can have a combination of states that apply to it, see all
