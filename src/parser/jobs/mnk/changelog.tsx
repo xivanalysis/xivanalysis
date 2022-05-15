@@ -8,6 +8,11 @@ export const changelog = [
 		contributors: [CONTRIBUTORS.SQUARE],
 	},
 	{
+		date: new Date('2022-02-20'),
+		Changes: () => <>Add Riddle of Wind statistic.</>,
+		contributors: [CONTRIBUTORS.MALP],
+	},
+	{
 		date: new Date('2022-02-14'),
 		Changes: () => <>Fix incorrect combo resets bug when Dragon Kick is spammed.</>,
 		contributors: [CONTRIBUTORS.MALP],

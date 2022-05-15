@@ -9,7 +9,7 @@ export class Positionals extends CorePositionals {
 				modifiers: [],
 			},
 			{
-				value: 340,
+				value: this.parser.patch.before('6.1') ? 340 : 360,
 				modifiers: [PotencyModifier.COMBO],
 			},
 		],
@@ -25,7 +25,7 @@ export class Positionals extends CorePositionals {
 				modifiers: [],
 			},
 			{
-				value: 360,
+				value: this.parser.patch.before('6.1') ? 360 : 380,
 				modifiers: [PotencyModifier.COMBO],
 			},
 		],

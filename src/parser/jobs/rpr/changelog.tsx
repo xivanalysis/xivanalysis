@@ -4,9 +4,34 @@ import React from 'react'
 
 export const changelog = [
 	{
+		date: new Date('2022-04-24'),
+		Changes: () => <>Reword Harvest Moon text to make the usage of Soulsow clearer.</>,
+		contributors: [CONTRIBUTORS.AY],
+	},
+	{
+		date: new Date('2022-03-24'),
+		Changes: () => <>Add missing Unveiled actions to timeline.</>,
+		contributors: [CONTRIBUTORS.AY],
+	},
+	{
+		date: new Date('2022-03-24'),
+		Changes: () => <>Remove usage statistic for defensive cooldowns until display issues can be resolved.</>,
+		contributors: [CONTRIBUTORS.AY],
+	},
+	{
 		date: new Date('2022-03-11'),
 		Changes: () => <>Add Soul Reaver checks.</>,
 		contributors: [CONTRIBUTORS.RYAN],
+	},
+	{
+		date: new Date('2022-02-17'),
+		Changes: () => <>Add Enhanced Cross Reaping and Void Reaping to procs.</>,
+		contributors: [CONTRIBUTORS.AY],
+	},
+	{
+		date: new Date('2022-02-17'),
+		Changes: () => <>Fix Death gauge not showing in timeline.</>,
+		contributors: [CONTRIBUTORS.AY],
 	},
 	{
 		date: new Date('2022-02-16'),
@@ -14,7 +39,7 @@ export const changelog = [
 		contributors: [CONTRIBUTORS.DEAN],
 	},
 	{
-		date: new Date('2022-02-16'),
+		date: new Date('2022-02-13'),
 		Changes: () => <>Add Soul and Shroud gauge tracking.</>,
 		contributors: [CONTRIBUTORS.AY],
 	},

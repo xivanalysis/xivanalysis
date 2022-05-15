@@ -1,11 +1,11 @@
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
+import {Action} from 'data/ACTIONS'
 import {JOBS} from 'data/JOBS'
 import {Event, Events} from 'event'
 import {filter, oneOf} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
 import {Actors} from 'parser/core/modules/Actors'
-import {Cooldowns} from 'parser/core/modules/Cooldowns'
 import {CounterGauge, Gauge as CoreGauge} from 'parser/core/modules/Gauge'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
@@ -21,7 +21,6 @@ export class Gauge extends CoreGauge {
 	static override title = t('war.gauge.title')`Beast Gauge`
 
 	@dependency private actors!: Actors
-	@dependency private cooldowns!: Cooldowns
 	@dependency private suggestions!: Suggestions
 
 	private beastGauge = this.add(new CounterGauge({
@@ -60,11 +59,18 @@ export class Gauge extends CoreGauge {
 
 	private onGaugeModifier(event: Events['action' | 'combo']) {
 		const modifier = this.beastGaugeModifiers.get(event.action)
+		const freeActions = new Set<Action['id']>([
+			this.data.actions.FELL_CLEAVE.id,
+			this.data.actions.DECIMATE.id,
+		])
 
 		if (modifier != null) {
-			// Spenders are free during IR
+			// Spenders are free during IR, post-6.1 only FC+Decimate are
 			let amount = modifier[event.type] ?? 0
-			if (this.actors.current.hasStatus(this.data.statuses.INNER_RELEASE.id)) {
+			if (
+				this.actors.current.hasStatus(this.data.statuses.INNER_RELEASE.id)
+				&& (this.parser.patch.before('6.1') || freeActions.has(event.action))
+			) {
 				amount = Math.max(amount, 0)
 			}
 

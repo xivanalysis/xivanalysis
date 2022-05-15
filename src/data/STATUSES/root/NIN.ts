@@ -9,7 +9,7 @@ export const NIN = ensureStatuses({
 		duration: 15000,
 	},
 
-	MUG: SHARED.UNKNOWN,
+	MUG_VULNERABILITY_UP: SHARED.UNKNOWN,
 
 	KASSATSU: {
 		id: 497,

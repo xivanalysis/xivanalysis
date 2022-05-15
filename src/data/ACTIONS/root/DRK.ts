@@ -83,7 +83,7 @@ export const DRK = ensureActions({
 	},
 	CARVE_AND_SPIT: {
 		id: 3643,
-		name: 'Carve And Spit',
+		name: 'Carve and Spit',
 		icon: 'https://xivapi.com/i/003000/003058.png',
 		cooldown: 60000,
 		cooldownGroup: 14,
