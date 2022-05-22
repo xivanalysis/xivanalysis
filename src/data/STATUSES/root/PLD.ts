@@ -1,4 +1,5 @@
 import {ensureStatuses} from '../type'
+import {SHARED} from './SHARED'
 
 export const PLD = ensureStatuses({
 	GORING_BLADE: {
@@ -116,10 +117,5 @@ export const PLD = ensureStatuses({
 		icon: 'https://xivapi.com/i/012000/012518.png',
 		duration: 21000,
 	},
-	BLADE_OF_FAITH_READY: {
-		id: 3019,
-		name: 'Blade of Faith Ready',
-		icon: 'https://xivapi.com/i/012000/012519.png',
-		duration: 30000,
-	},
+	BLADE_OF_FAITH_READY: SHARED.UNKNOWN,
 })
