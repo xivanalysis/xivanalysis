@@ -165,9 +165,7 @@ export const PLD = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		combo: {
-			start: undefined,
 			from: 16459,
-			end: undefined,
 		},
 	},
 	BLADE_OF_TRUTH: {

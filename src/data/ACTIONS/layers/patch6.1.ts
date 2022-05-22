@@ -1,5 +1,4 @@
 import {Layer} from 'data/layer'
-import {ActionCombo} from 'data/ACTIONS/type'
 import {ActionRoot} from '../root'
 import {SHARED} from '../root/SHARED'
 
@@ -77,9 +76,7 @@ export const patch610: Layer<ActionRoot> = {
 		BLADE_OF_FAITH: {
 			combo: {
 				start: true,
-				from: undefined,
-				end: undefined,
-			} as ActionCombo,
+			},
 		},
 	},
 }
