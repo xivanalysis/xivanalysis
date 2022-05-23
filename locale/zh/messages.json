@@ -185,7 +185,7 @@
   "brd.procs.suggestions.missed.content": "尽可能在有<1/>的时候使用<0/>。",
   "brd.procs.suggestions.overwritten.content": "当你可以使用<1/>时，尽量不要用会触发<0/>的技能。",
   "brd.rs.rotation-table.header.on-time": "<0/>是否准时？",
-  "brd.rs.suggestions.aaba-evaluator.content": "",
+  "brd.rs.suggestions.aaba-evaluator.content": "每一次<2/>持续时间内都应该使用<0/>或<1/>，确保灵魂之声积攒到80以上。",
   "brd.rs.suggestions.bloodletter-evaluator.content": "在每次<2/>的效果内至少要打出三次<0/>或<1/>，记得在咏唱<5/>的期间保留<3/>或<4/>的充能。",
   "brd.rs.suggestions.buff-evaluator.content": "在<2/>持续期间内的前两个 GCD 内使用<0/>和<1/>能让你对齐这些技能的持续时间，并叠加他们给予的增益状态。",
   "brd.rs.suggestions.buff-evaluator.why": "有 {wrongUsages} 次推荐技能较晚使用，或根本没有使用。",
