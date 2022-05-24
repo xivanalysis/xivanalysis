@@ -781,7 +781,7 @@
   "sam.buffs.checklist.requirement.fuka.name": "적용시간 <0/>",
   "sam.buffs.description": "",
   "sam.gauge.resource.kenkiLabel": "검기",
-  "sam.gauge.resource.meditationLabel": "",
+  "sam.gauge.resource.meditationLabel": "묵상",
   "sam.gauge.suggestions.loss.content": "",
   "sam.gauge.suggestions.loss.why": "",
   "sam.gauge.title": "",
