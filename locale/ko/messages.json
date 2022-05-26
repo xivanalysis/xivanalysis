@@ -738,10 +738,10 @@
   "rdm.procs.suggestions.overwritten-stone.content": "",
   "rdm.procs.suggestions.overwritten-stone.why": "",
   "rdm.procs.suggestions.overwritten.content": "",
-  "rdm.procs.suggestions.overwritten.why": "",
+  "rdm.procs.suggestions.overwritten.why": "덮어씌워져 버려진 버파이어 프록 {overWrittenFire, plural, other {#회}}와 버스톤 프록 {overWrittenStone, plural, other {#회}}",
   "rdm.procs.title": "프록 문제점",
   "rdm.swiftcast.suggestion.content": "<0/> 상태에서는 <1/>, <2/>, <3/> 마법만 사용하여야 합니다.",
-  "rpr.about.description": "",
+  "rpr.about.description": "<0>이 분석기는 리퍼 실력을 늘릴 수 있도록 정보를 제공할 뿐만 아니라 전투에서 일어난 각 상황들을 자세하게 분석해드립니다.</0><1>만약 이상한 지적이 있거나 틀린정보가 있다면 저희 디스코드의 #fb-reaper 채널을 통하여 리포트 해주십시오.</1>",
   "rpr.actiontimeline.bloodstalk": "",
   "rpr.actiontimeline.lemure": "",
   "rpr.actiontimeline.movement": "",
@@ -853,7 +853,7 @@
   "sge.dots.rule.description": "",
   "sge.dots.rule.name": "항상 도트 데미지가 유지되도록 하십시오.",
   "sge.dots.suggestion.clip.content": "이전에 부여한 <0/>의 지속 시간이 충분할 경우 갱신을 피하십시오.",
-  "sge.dots.suggestion.clip.why": "",
+  "sge.dots.suggestion.clip.why": "이른 갱신으로 인해 1분당 평균 {0} 초의 <0/>을 잃었습니다.",
   "sge.gauge.resource.addersgall-timer": "",
   "sge.gauge.resource.addersting": "",
   "sge.gauge.resource.addsergall": "",
@@ -962,7 +962,7 @@
   "whm.overheal.liturgyofthebell.name": "",
   "whm.swiftcast.missed.suggestion.content": "<0/> 지속시간이 만료되기전에 사용하십시오. <1/>과 병행하여 빠른 부활 혹은 <2/>와 병행하여 논글쿨기를 끼워넣는 응용을 할 수 있습니다.",
   "whm.thinair.messages.explanation": "",
-  "whm.thinair.messages.no-casts": "",
-  "whm.thinair.title": "",
-  "whm.tincture.suggestions.trackedActions.content": ""
+  "whm.thinair.messages.no-casts": "<0/>이 한 번도 사용되지 않았습니다",
+  "whm.thinair.title": "실바람",
+  "whm.tincture.suggestions.trackedActions.content": "환혹약을 사용하여 최대한 많이 딜을 누적하십시오."
 }
