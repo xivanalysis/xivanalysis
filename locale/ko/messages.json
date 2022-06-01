@@ -570,6 +570,8 @@
   "mnk.pb.suggestions.stacks.content": "<0/> 구간마다 6스택을 모두 사용하십시오.",
   "mnk.pb.suggestions.stacks.why": "<0/> 구간내에서 {droppedGcds, plural, one {# 회의} other {# 회의}} 글쿨기를 놓쳤습니다.",
   "mnk.pb.title": "진각 구간",
+  "mnk.rof.suggestions.blitz.content": "",
+  "mnk.rof.suggestions.blitz.why": "",
   "mnk.rof.suggestions.gcd.content": "<0/> 구간동안 {EXPECTED_GCDS} 개의 글쿨을 사용하십시오.",
   "mnk.rof.suggestions.wasted.content": "<0/>나 <1/>, <2/>를 <3/>중에 사용하는 것은 글쿨을 낭비해 버리기 때문에 피하십시오.",
   "mnk.rof.title": "홍련의 극의",
