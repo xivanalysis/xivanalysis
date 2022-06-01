@@ -32,11 +32,11 @@ class MissedBrotherhoodEvaluator implements WindowEvaluator {
 			content: <Trans id="mnk.brotherhood.missed-window.content">
 				Try and make sure your <DataLink action="BROTHERHOOD"/> casts line up with your <DataLink action="RIDDLE_OF_FIRE"/> windows to maximize buff stacking.
 			</Trans>,
+			tiers: MISSED_BROTHERHOOD_TIERS,
+			value: windows.length,
 			why: <Trans id="mnk.brotherhood.missed-window.why">
 				<Plural value={windows.length} one="# cast" other="# casts"/> of <DataLink action="BROTHERHOOD"/> did not occur during a <DataLink status="RIDDLE_OF_FIRE"/> window.
 			</Trans>,
-			tiers: MISSED_BROTHERHOOD_TIERS,
-			value: windows.length,
 		})
 	}
 	public output() { return undefined }

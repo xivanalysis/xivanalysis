@@ -86,53 +86,56 @@ export class Brotherhood extends Analyser {
 	 *
 	 * Entries that are not matched are purposefully not stored within the map
 	 */
-	public findMatchingWindow(window: HistoryEntry<EvaluatedAction[]>): MatchedBrotherhoodWindow | undefined {
-		if (this.matchedWindows.has(window.start)) {
-			return this.matchedWindows.get(window.start)
+	public findMatchingWindow(rofWindow: HistoryEntry<EvaluatedAction[]>): MatchedBrotherhoodWindow | undefined {
+		if (this.matchedWindows.has(rofWindow.start)) {
+			return this.matchedWindows.get(rofWindow.start)
 		}
 
-		const possibleWindow = this.searchForMatchingWindow(window)
+		const possibleWindow = this.searchForMatchingWindow(rofWindow)
 		if (possibleWindow == null) {
 			return undefined
 		}
 
-		this.matchedWindows.set(window.start, possibleWindow)
+		this.matchedWindows.set(rofWindow.start, possibleWindow)
 		return possibleWindow
 	}
 
-	private searchForMatchingWindow(window: HistoryEntry<EvaluatedAction[]>): MatchedBrotherhoodWindow | undefined {
-		let startInWindow = false
-		let endInWindow = false
-		let found
+	private searchForMatchingWindow(rofWindow: HistoryEntry<EvaluatedAction[]>): MatchedBrotherhoodWindow | undefined {
+		let validStart = false
+		let validEnd = false
+		let matchedWindow
 		for (const bhWindow of this.windows) {
 			// If within tolerance and first GCD of both windows is equivalent, then we consider both
 			// as "starting" at the same time
-			startInWindow = (window.start <= (bhWindow.start + BROTHERHOOD_DRIFT_TOLERANCE) && (window.end == null || bhWindow.start <= window.end))
+			const beforeBrotherhood = rofWindow.start <= (bhWindow.start + BROTHERHOOD_DRIFT_TOLERANCE)
+			const startInWindow = (rofWindow.end == null || bhWindow.start <= rofWindow.end)
 
-			// Oh my god this is awful.
-			endInWindow = (window.end == null && (bhWindow.end == null || window.start <= bhWindow.end)) ||
-								(window.end != null && bhWindow.end != null && window.start <= bhWindow.end && bhWindow.end <= window.end)
+			validStart = beforeBrotherhood && startInWindow
 
-			if (startInWindow || endInWindow) {
-				found = bhWindow
+			const unendedWindow = rofWindow.end == null && (bhWindow.end == null || rofWindow.start <= bhWindow.end)
+			const endInWindow = rofWindow.end != null && bhWindow.end != null && rofWindow.start <= bhWindow.end && bhWindow.end <= rofWindow.end
+			validEnd =  unendedWindow || endInWindow
+
+			if (validStart || validEnd) {
+				matchedWindow = bhWindow
 				break
 			}
 		}
 
-		if (!found) {
+		if (!matchedWindow) {
 			return undefined
 		}
 
 		let status = OverlapStatus.OUT_OF_WINDOW
-		if (startInWindow && !endInWindow) {
+		if (validStart && !validEnd) {
 			status = OverlapStatus.USED_LATE
-		} else if (startInWindow && endInWindow) {
+		} else if (validStart && validEnd) {
 			status = OverlapStatus.IN_WINDOW
-		} else if (!startInWindow && endInWindow) {
+		} else if (!validStart && validEnd) {
 			status = OverlapStatus.USED_EARLY
 		}
 
-		return {...found, status}
+		return {...matchedWindow, status}
 	}
 
 	get expectedTargetCount(): number {
@@ -181,12 +184,12 @@ export class Brotherhood extends Analyser {
 			content: <Trans id="mnk.brotherhood.suggestions.missed-players.content">
 				Try to make sure your <DataLink action="BROTHERHOOD"/> casts buff your full party with each use. Failing to do so is a raid damage loss.
 			</Trans>,
+			matcher: matchClosestHigher,
+			tiers: BROTHERHOOD_SEVERITY_TIERS,
+			value: (expectedBuffs - actualBuffs) / expectedBuffs,
 			why: <Trans id="mnk.brotherhood.suggestions.missed-players.why">
 				<Plural value={windowsWithMissedBuffs} one="# cast" other="# casts"/> of <DataLink action="BROTHERHOOD"/> missed hitting the entire party for a total of <Plural value={expectedBuffs - actualBuffs} one="# players" other="# players"/>.
 			</Trans>,
-			tiers: BROTHERHOOD_SEVERITY_TIERS,
-			value: (expectedBuffs - actualBuffs) / expectedBuffs,
-			matcher: matchClosestHigher,
 		}))
 	}
 }

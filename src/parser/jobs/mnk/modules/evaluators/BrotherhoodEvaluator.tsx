@@ -58,10 +58,10 @@ export class BrotherhoodDriftEvaluator extends NotesEvaluator {
 			content: <Trans id="mnk.brotherhood.drifted-window.content.">
 				Try and make sure your <DataLink action="BROTHERHOOD"/> casts are fully included within a <DataLink action="RIDDLE_OF_FIRE"/> window.
 			</Trans>,
+			severity: SEVERITY.MINOR,
 			why: <Trans id="mnk.brotherhood.drifted-window.why">
 				<Plural value={driftedWindows.length} one= "# cast" other="% casts"/> of <DataLink action="BROTHERHOOD"/> was either early or late for a <DataLink action="RIDDLE_OF_FIRE"/> window.
 			</Trans>,
-			severity: SEVERITY.MINOR,
 		})
 	}
 }
