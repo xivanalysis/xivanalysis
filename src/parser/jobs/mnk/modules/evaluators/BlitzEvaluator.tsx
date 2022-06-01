@@ -65,11 +65,11 @@ export class BlitzEvaluator implements WindowEvaluator {
 			content: <Trans id="mnk.rof.suggestions.blitz.content">
 				Try to hit two uses of <DataLink action="MASTERFUL_BLITZ"/> in both the opener and every 'even' <DataLink action="RIDDLE_OF_FIRE"/> window and one usage of <DataLink action="MASTERFUL_BLITZ"/> in every 'odd' window, as the blitz actions are your strongest skills.
 			</Trans>,
+			tiers: BLITZ_SEVERITY_TIERS,
+			value: missedBlitzes,
 			why: <Trans id="mnk.rof.suggestions.blitz.why">
 				<Plural value={missedBlitzes} one="# use of" other="# uses of"/> <DataLink action="MASTERFUL_BLITZ"/> <Plural value={missedBlitzes} one="was" other="were"/> missed during {badWindows.length} <DataLink action="RIDDLE_OF_FIRE"/> <Plural value={badWindows.length} one ="window" other="windows"/>
 			</Trans>,
-			tiers: BLITZ_SEVERITY_TIERS,
-			value: missedBlitzes,
 		})
 	}
 
