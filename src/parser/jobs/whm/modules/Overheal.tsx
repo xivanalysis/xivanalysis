@@ -15,6 +15,7 @@ export class Overheal extends CoreOverheal {
 			trackedHealIds: [
 				this.data.statuses.REGEN.id,
 				this.data.actions.MEDICA_II.id,
+				this.data.statuses.MEDICA_II.id,
 				this.data.actions.ASYLUM.id,
 				this.data.statuses.ASYLUM.id,
 			],
