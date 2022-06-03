@@ -35,7 +35,7 @@ export interface Action {
 	generic by default - we use some TS magic to forcefully widen them again.
 	Expect to add this when dealing with top-level arrays.
 */
-type TroublesomeProperties = 'statusesApplied'
+type TroublesomeProperties = 'statusesApplied' | 'combo'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 // export const ensureActions = <T extends Record<string, Action>>(actions: T): EnsuredActions<T> => actions as any // trust me

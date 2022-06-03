@@ -667,6 +667,8 @@
   "pld.requiescat.suggestions.wrong-gcd.why": "{0} 사용 중 시전 횟수를 총 {missedCasts, plural, other {#회}} 놓쳤습니다.",
   "pld.requiescat.table.note": "<0/>는 시전 시간 없이 마법을 5번 사용할 수 있는 버프를 부여하며 <1/> 또는 <2/> 스킬을 4번 사용하고, <3/> 스킬로 마무리 하는게 이상적입니다.",
   "pld.requiescat.title": "안식기도 사용기록",
+  "pld.timeouts.faith.content": "",
+  "pld.timeouts.faith.why": "",
   "pld.tincture.suggestions.missedgcd.content": "<0/> 구간 마다 반드시 13회의 글쿨기를 포함하십시오.",
   "pld.tincture.suggestions.trackedactions.content": "<2/> 구간마다 <0/> 1회 사용, 그리고 최소 <1/> 스킬을 1회를 사용해야 합니다.",
   "rdm.about.description": "<0>이 분석기는 여러분의 FFlogs 결과를 <1>이것</1>에서 <2>이것</2>으로 바꾸는데 필요한 정보를 제공합니다.</0><3>적마도사에 대해서 더 많은 정보가 필요하다면 <4>The Balance</4> 디스코드의 잡 가이드와 <5>#rdm_questions</5> 채널을 활용합시다.</3>",

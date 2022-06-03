@@ -667,6 +667,8 @@
   "pld.requiescat.suggestions.wrong-gcd.why": "{missedCasts, plural, one {# action manquante} other {# actions manquantes}} durant la fenêtre {0}.",
   "pld.requiescat.table.note": "Chacune de vos fenêtres de <0/> devrait contenir 5 sorts, composée de 4 lancements de <1/> or <2/> et finir avec un lancement de <3/>.",
   "pld.requiescat.title": "Utilisation de Requiescat",
+  "pld.timeouts.faith.content": "",
+  "pld.timeouts.faith.why": "",
   "pld.tincture.suggestions.missedgcd.content": "Essayez d'utiliser 13 GCDs durant chaque <0/>.",
   "pld.tincture.suggestions.trackedactions.content": "Une utilisation de <0/> et au moins une utilisation de <1/> doit se produire à chaque phase de <2/>.",
   "rdm.about.description": "<0>Cet analyseur a pour but de vous donner les informations nécessaires pour changer vos <1>parses</1> en<2>parses</2></0> <3>Si vous souhaitez en savoir plus sur Mage rouge, consultez les guides <4>The Balance</4>, et consultez le canal <5>#rdm_questions</5>.</3>",

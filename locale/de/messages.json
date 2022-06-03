@@ -667,6 +667,8 @@
   "pld.requiescat.suggestions.wrong-gcd.why": "",
   "pld.requiescat.table.note": "",
   "pld.requiescat.title": "Requiescat-Benutzung",
+  "pld.timeouts.faith.content": "",
+  "pld.timeouts.faith.why": "",
   "pld.tincture.suggestions.missedgcd.content": "Versuche während jedes <0/>-Zeitfensters 13 Angriffe mit globaler Abklingzeit unterzubringen.",
   "pld.tincture.suggestions.trackedactions.content": "Jedes Mal, während <2/> aktiv ist, solltest du 1x <0/> und mindestens 1x <1/> benutzen.",
   "rdm.about.description": "<0>Dieser Analysator versucht dir Information zu geben, um deine <1>Parses</1> in <2>Parses</2> zu verwandeln.</0><3>Wenn du mehr über RDM lernen möchtest, dann schau dir die Guides in <4>der Balance</4> an, und schreib in den <5>#rdm-questions</5> Channel.</3>",

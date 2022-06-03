@@ -56,5 +56,27 @@ export const patch610: Layer<ActionRoot> = {
 			icon: 'https://xivapi.com/i/002000/002649.png',
 			cooldown: 1000,
 		},
+
+		//PLD 6.1 changes
+		CLEMENCY: {
+			breaksCombo: undefined,
+		},
+		HOLY_SPIRIT: {
+			breaksCombo: undefined,
+		},
+		HOLY_CIRCLE: {
+			breaksCombo: undefined,
+		},
+		REQUIESCAT: {
+			statusesApplied: ['REQUIESCAT', 'BLADE_OF_FAITH_READY'],
+		},
+		CONFITEOR: {
+			combo: undefined,
+		},
+		BLADE_OF_FAITH: {
+			combo: {
+				start: true,
+			},
+		},
 	},
 }
