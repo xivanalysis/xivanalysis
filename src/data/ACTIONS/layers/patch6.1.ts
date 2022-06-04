@@ -46,6 +46,10 @@ export const patch610: Layer<ActionRoot> = {
 			gcdRecast: 3000,
 		},
 
+		PET_SEARING_LIGHT: {
+			statusesApplied: [],
+		},
+
 		// WHM 6.1 changes
 		REGEN: {
 			mpCost: 400,
@@ -55,10 +59,6 @@ export const patch610: Layer<ActionRoot> = {
 			name: 'Liturgy of the Bell (Detonate)',
 			icon: 'https://xivapi.com/i/002000/002649.png',
 			cooldown: 1000,
-		},
-
-		PET_SEARING_LIGHT: {
-			statusesApplied: [],
 		},
 	},
 }
