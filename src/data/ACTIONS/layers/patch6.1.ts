@@ -46,6 +46,10 @@ export const patch610: Layer<ActionRoot> = {
 			gcdRecast: 3000,
 		},
 
+		PET_SEARING_LIGHT: {
+			statusesApplied: [],
+		},
+
 		// WHM 6.1 changes
 		REGEN: {
 			mpCost: 400,
