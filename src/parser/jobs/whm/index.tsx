@@ -50,19 +50,9 @@ export const WHITE_MAGE = new Meta({
 			contributors: [CONTRIBUTORS.KERRIS],
 		},
 		{
-			date: new Date('2022-01-09'),
-			Changes: () => <>Marked WHM as supported for 6.05</>,
-			contributors: [CONTRIBUTORS.INNI],
-		},
-		{
 			date: new Date('2022-01-04'),
 			Changes: () => <>Added Tincture section.</>,
 			contributors: [CONTRIBUTORS.KERRIS],
-		},
-		{
-			date: new Date('2022-01-25'),
-			Changes: () => <>Marked WHM as supported for 6.08</>,
-			contributors: [CONTRIBUTORS.INNI],
 		},
 		{
 			date: new Date('2022-04-18'),
@@ -76,7 +66,7 @@ export const WHITE_MAGE = new Meta({
 		},
 		{
 			date: new Date('2022-05-07'),
-			Changes: () => <>Added Afflatus Heals to the Overheal pie chart, updated Defensive Cooldowns. 6.1 now supported.</>,
+			Changes: () => <>Added Afflatus Heals to the Overheal pie chart, updated Defensive Cooldowns.</>,
 			contributors: [CONTRIBUTORS.INNI],
 		},
 	],
