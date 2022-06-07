@@ -66,7 +66,7 @@ export const WHITE_MAGE = new Meta({
 		},
 		{
 			date: new Date('2022-05-07'),
-			Changes: () => <>Added Afflatus Heals to the Overheal pie chart, updated Defensive Cooldowns.</>,
+			Changes: () => <>Added Afflatus Heals to the Overheal pie chart and updated for 6.1 Defensive Cooldowns.</>,
 			contributors: [CONTRIBUTORS.INNI],
 		},
 	],
