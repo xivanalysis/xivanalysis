@@ -64,5 +64,13 @@ export const patch610: Layer<StatusRoot> = {
 		SEARING_LIGHT: {
 			icon: 'https://xivapi.com/i/012000/012699.png',
 		},
+
+		//PLD 6.1 changes
+		BLADE_OF_FAITH_READY: {
+			id: 3019,
+			name: 'Blade of Faith Ready',
+			icon: 'https://xivapi.com/i/012000/012519.png',
+			duration: 30000,
+		},
 	},
 }

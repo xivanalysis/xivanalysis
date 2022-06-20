@@ -28,6 +28,11 @@ export const SUMMONER = new Meta({
 
 	changelog: [
 		{
+			date: new Date('2022-05-04'),
+			Changes: () => <>Fixed an issue that prevented synthing a pre-cast Searing Light.</>,
+			contributors: [CONTRIBUTORS.KELOS],
+		},
+		{
 			date: new Date('2022-04-23'),
 			Changes: () => <>Updated Searing Light to be sourced from the player in patch 6.1.</>,
 			contributors: [CONTRIBUTORS.KELOS],
