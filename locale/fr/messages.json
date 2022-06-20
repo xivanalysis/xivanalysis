@@ -743,7 +743,7 @@
   "rdm.procs.suggestions.overwritten.why": "",
   "rdm.procs.title": "Problème de procs",
   "rdm.swiftcast.suggestion.content": "Sorts utilisés alors que <0/> est actif devrait être limité à <1/>, <2/>, or <3/>",
-  "rpr.about.description": "<0>Cet outil d'analyse a pour but de vous aider à _semer_ la terreur chez vos ennemis, d'identifier vos possibles _faux_-pas afin d'améliorer vos capacités en RPR et de _faucher_ la première place au DPS, ainsi que de vous livrer une inspection approfondie de ce qu'il s'est passé durant ce combat.</0><1>Si vous remarquez n'importe quoi de _faux_ ou sujet à controverse, veuillez s'il-vous-plaît aller sur notre serveur Discord et nous en faire part dans le canal #fb-reaper.</1>",
+  "rpr.about.description": "<0>Cet outil d'analyse a pour but de vous aider à semer la terreur chez vos ennemis, d'identifier vos possibles faux-pas afin d'améliorer vos capacités en RPR et de faucher la première place au DPS, ainsi que de vous livrer une inspection approfondie de ce qu'il s'est passé durant ce combat.</0><1>Si vous remarquez n'importe quoi de faux ou sujet à controverse, veuillez s'il-vous-plaît aller sur notre serveur Discord et nous en faire part dans le canal #fb-reaper.</1>",
   "rpr.actiontimeline.bloodstalk": "Fétu ensanglanté",
   "rpr.actiontimeline.lemure": "Lemure",
   "rpr.actiontimeline.movement": "Mouvement",
