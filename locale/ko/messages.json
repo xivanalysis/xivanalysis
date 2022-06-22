@@ -841,7 +841,7 @@
   "sch.faeriegauge.overcap.content": "요정 에테르 게이지가 높을 때는 <0/>을 사용하여 게이지를 소비하고 요정 에테르 게이지가 가득 찼을 때는 요정 에테르가 쌓이는 스킬을 사용하지 않도록 하십시오.",
   "sch.faeriegauge.overcap.why": "게이지 초과로 인해 전투 중 총 {0} 의 요정 에테르 게이지를 잃었습니다.",
   "sch.gauge.title": "요정 에테르 사용",
-  "sch.interrupts.suggestion.content": "가능하면 이동을 최소화 할 수 있는 위치를 선점하십시오. 슬라이드 캐스팅을 적극적으로 활용하면 이동시 강제되는 <0/> 사용 혹은 마염법 시전이 취소되는 상황을 피할 수 있습니다.",
+  "sch.interrupts.suggestion.content": "가능하면 이동을 최소화 할 수 있는 위치를 선점하십시오. 슬라이드 캐스팅을 적극적으로 활용하면 이동시 강제되는 <0/> 사용 혹은 <1/> 시전이 취소되는 상황을 피할 수 있습니다.",
   "sch.overheal.hot.name": "야전치유진",
   "sch.overheal.pet.name": "요정",
   "sch.overheal.pethot.name": "요정의 도트힐",

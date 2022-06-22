@@ -841,7 +841,7 @@
   "sch.faeriegauge.overcap.content": "",
   "sch.faeriegauge.overcap.why": "",
   "sch.gauge.title": "Usage de la jauge d'éther féerique",
-  "sch.interrupts.suggestion.content": "Si vous le pouvez, essayez de vous prépositionner de façon à ne pas avoir à vous déplacer autant pendant la mécanique. L'utilisation de slidecasting(L'acte d'attendre que le sort lancé soit presque terminé et de commencer le mouvement, sans que le serveur n'interrompe le lancer. Ceci est possible, si le temps restant sur le cast est inférieur à la latence entre le serveur et le client.) réduit le besoin d'utiliser <0/> pour déplacer ou interrompre instantanément votre Loi de l'ébullition III",
+  "sch.interrupts.suggestion.content": "Si vous le pouvez, essayez de vous prépositionner de façon à ne pas avoir à vous déplacer autant pendant la mécanique. L'utilisation de slidecasting(L'acte d'attendre que le sort lancé soit presque terminé et de commencer le mouvement, sans que le serveur n'interrompe le lancer. Ceci est possible, si le temps restant sur le cast est inférieur à la latence entre le serveur et le client.) réduit le besoin d'utiliser <0/> pour déplacer ou interrompre instantanément votre <1/>.",
   "sch.overheal.hot.name": "Dogme de survie",
   "sch.overheal.pet.name": "Fée",
   "sch.overheal.pethot.name": "Soins sur la durée de la fée",

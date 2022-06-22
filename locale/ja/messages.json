@@ -841,7 +841,7 @@
   "sch.faeriegauge.overcap.content": "",
   "sch.faeriegauge.overcap.why": "",
   "sch.gauge.title": "フェイエーテル",
-  "sch.interrupts.suggestion.content": "可能な限り事前に位置取りをすることでギミック中に動く必要がないようにしてみましょう。すべり撃ちも活用することで死炎法を中断したり<0/>に置き換えたりする必要が少なくなります。",
+  "sch.interrupts.suggestion.content": "可能な限り事前に位置取りをすることでギミック中に動く必要がないようにしてみましょう。すべり撃ちも活用することで<1/>を中断したり<0/>に置き換えたりする必要が少なくなります。",
   "sch.overheal.hot.name": "野戦治療の陣",
   "sch.overheal.pet.name": "フェアリー",
   "sch.overheal.pethot.name": "フェアリー(HoT)",
