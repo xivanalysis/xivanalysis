@@ -84,6 +84,13 @@ const CONTRIBUTORS = ensureRecord<Contributor>()({
 			JOBS.SUMMONER,
 		],
 	},
+	KHAYLE: {
+		name: 'Khayle',
+		avatar: require('https://en.gravatar.com/userimage/144107452/e5633a13833d1ddbf7a53fa5edbad2c3.jpg?size=200'),
+		jobs: [
+			JOBS.BLUE_MAGE,
+		],
+	},
 	HINT: {
 		name: 'Hint',
 		avatar: require('./avatar/Hint.png'),

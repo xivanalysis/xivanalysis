@@ -21,6 +21,11 @@ export const NINJA = new Meta({
 	],
 	changelog: [
 		{
+			date: new Date('2022-06-22'),
+			Changes: () => <>Positional module clean-up.</>,
+			contributors: [CONTRIBUTORS.KHAYLE],
+		},
+		{
 			date: new Date('2022-05-14'),
 			Changes: () => <>Updated positional module for 6.1 changes.</>,
 			contributors: [CONTRIBUTORS.HINT],
