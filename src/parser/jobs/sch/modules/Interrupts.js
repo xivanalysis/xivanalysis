@@ -1,6 +1,5 @@
 import {Trans} from '@lingui/react'
 import {DataLink} from 'components/ui/DbLink'
-import ACTIONS from 'data/ACTIONS'
 import {Interrupts as CoreInterrupts} from 'parser/core/modules/Interrupts'
 import React from 'react'
 
