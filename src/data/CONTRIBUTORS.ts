@@ -86,7 +86,7 @@ const CONTRIBUTORS = ensureRecord<Contributor>()({
 	},
 	KHAYLE: {
 		name: 'Khayle',
-		avatar: 'https://en.gravatar.com/userimage/144107452/e5633a13833d1ddbf7a53fa5edbad2c3.jpg?size=200',
+		avatar: require('./avatar/Khayle.png'),
 		jobs: [
 			JOBS.BLUE_MAGE,
 		],
