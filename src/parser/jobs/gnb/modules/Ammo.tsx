@@ -97,16 +97,16 @@ export class Ammo extends CoreGauge {
 		}))
 
 		this.checklist.add(new Rule({
-			name: 'Cartridge Usage',
+			name: <Trans id="gnb.ammo.usage.title">Cartridge Usage</Trans>,
 			description: <Trans id="gnb.ammo.waste.content">
 				Wasted cartridge generation, ending the fight with cartridges loaded, or dying with cartridges loaded is a
-				direct potency loss. Use <ActionLink action="BURST_STRIKE"/>(or <ActionLink action="FATED_CIRCLE"/> if
+				direct potency loss. Use <ActionLink action="BURST_STRIKE"/> (or <ActionLink action="FATED_CIRCLE"/> if
 				there is more than one target) to avoid wasting cartridges.
 			</Trans>,
 			requirements: [
 				new Requirement({
 					name: <Trans id="gnb.ammo.checklist.requirement.waste.name">
-						Use as many of your loaded cartridges as possible.
+						Use as many of your loaded cartridges as possible
 					</Trans>,
 					value: this.totalGeneratedAmmo - this.ammoGauge.overCap,
 					target: this.totalGeneratedAmmo,

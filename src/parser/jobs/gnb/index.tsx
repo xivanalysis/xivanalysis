@@ -35,16 +35,16 @@ export const GUNBREAKER = new Meta({
 		// 	Changes: () => <>The changes you made</>,
 		// 	contributors: [CONTRIBUTORS.YOU],
 		// },
-		{
-			date: new Date('2021-12-11'),
-			Changes: () => <>
-				<ul>
-					<li>i18n improvements</li>
-					<li>String formatting corrections</li>
-				</ul>,
-			</>,
-			contributors: [CONTRIBUTORS.KHAYLE],
-		},
+		// {
+		// 	date: new Date('2021-12-11'),
+		// 	Changes: () => <>
+		// 		<ul>
+		// 			<li>i18n improvements</li>
+		// 			<li>String formatting corrections</li>
+		// 		</ul>,
+		// 	</>,
+		// 	contributors: [CONTRIBUTORS.KHAYLE],
+		// },
 		{
 			date: new Date('2021-12-11'),
 			Changes: () => <>
