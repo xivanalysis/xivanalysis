@@ -841,7 +841,7 @@
   "sch.faeriegauge.overcap.content": "当你的异想以太量值过高的时候避使用<0/>来消耗，如果异想以太量值已满避免使用以太让他溢出",
   "sch.faeriegauge.overcap.why": "在战斗过程中由于技能的过度使用，你总共损失了 {0} 异想以太",
   "sch.gauge.title": "异想以太",
-  "sch.interrupts.suggestion.content": "如果可以的话，提前移动到你应该在的位置，这样就不用在处理机制时进行过多移动了。合理利用滑步可以减少为了移动而使用的 <0/> ，避免打断 <1/> 的咏唱。",
+  "sch.interrupts.suggestion.content": "",
   "sch.overheal.hot.name": "野战治疗阵",
   "sch.overheal.pet.name": "小仙女",
   "sch.overheal.pethot.name": "小仙女的HoT",
