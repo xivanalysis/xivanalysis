@@ -296,12 +296,13 @@ export class Overheal extends Analyser {
 
 			this.statistics.add(new PieChartStatistic({
 				headings: [
-					'Type of heal',
-					'% of total overheal',
-					'Overheal % per type',
+					<Trans id="core.overheal.header.type" key="core.overheal.header.type">Type of heal</Trans>,
+					<Trans id="core.overheal.header.percenttotal" key="core.overheal.header.percenttotal">% of total overheal</Trans>,
+					<Trans id="core.overheal.header.percenttype" key="core.overheal.header.percenttype">Overheal % per type</Trans>,
 				],
 				data: data,
 				width: 3, // chart's wide, yo
+				order: 10, // Place it after GCD stat panel and other statistics
 			}))
 		}
 
