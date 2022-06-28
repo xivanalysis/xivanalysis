@@ -1,5 +1,4 @@
 import {ensureStatuses} from '../type'
-import {SHARED} from './SHARED'
 
 export const NIN = ensureStatuses({
 	TRICK_ATTACK_VULNERABILITY_UP: {
@@ -8,7 +7,7 @@ export const NIN = ensureStatuses({
 		icon: 'https://xivapi.com/i/015000/015020.png',
 		duration: 15000,
 	},
-	
+
 	TRICK_ATTACK: {
 		id: 3254,
 		name: 'Trick Attack',
