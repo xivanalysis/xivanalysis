@@ -6,7 +6,7 @@ export const patch610: Layer<ActionRoot> = {
 	patch: '6.1',
 	data: {
 		// NIN 6.1 raid buff changes
-		TRICK_ATTACK: {statusesApplied: []},
+		TRICK_ATTACK: {statusesApplied: ['TRICK_ATTACK']},
 		MUG: {statusesApplied: ['MUG_VULNERABILITY_UP']},
 
 		// Tank 6.1 cooldown changes
