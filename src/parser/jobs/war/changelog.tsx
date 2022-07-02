@@ -3,6 +3,11 @@ import React from 'react'
 
 export const changelog = [
 	{
+		date: new Date('2022-04-25'),
+		Changes: () => <>Add Surging Tempest early refresh analyser.</>,
+		contributors: [CONTRIBUTORS.ARKEVORKHAT],
+	},
+	{
 		date: new Date('2022-04-12'),
 		Changes: () => <>
 			Add pre-6.1 Inner Release and Beast gauge handling for the reduced set of stack consumers.
