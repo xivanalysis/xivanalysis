@@ -1,6 +1,9 @@
 import {AoEUsages} from 'parser/core/modules/AoEUsages'
+import {DISPLAY_ORDER} from './DISPLAY_ORDER'
 
 export class AoE extends AoEUsages {
+	static override displayOrder = DISPLAY_ORDER.AOE
+
 	suggestionIcon = this.data.actions.SPINNING_SCYTHE.icon
 
 	trackedActions = [

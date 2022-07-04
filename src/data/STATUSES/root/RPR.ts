@@ -18,7 +18,7 @@ export const RPR = ensureStatuses({
 	SOUL_REAVER: {
 		id: 2587,
 		name: 'Soul Reaver',
-		icon: 'https://xivapi.com/i/017000/17097.png',
+		icon: 'https://xivapi.com/i/017000/017097.png',
 		duration: 30000,
 	},
 

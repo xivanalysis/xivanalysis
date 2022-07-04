@@ -20,13 +20,23 @@ export const SUMMONER = new Meta({
 	</>,
 	supportedPatches: {
 		from: '6.0',
-		to: '6.08',
+		to: '6.1',
 	},
 	contributors: [
 		{user: CONTRIBUTORS.KELOS, role: ROLES.MAINTAINER},
 	],
 
 	changelog: [
+		{
+			date: new Date('2022-05-04'),
+			Changes: () => <>Fixed an issue that prevented synthing a pre-cast Searing Light.</>,
+			contributors: [CONTRIBUTORS.KELOS],
+		},
+		{
+			date: new Date('2022-04-23'),
+			Changes: () => <>Updated Searing Light to be sourced from the player in patch 6.1.</>,
+			contributors: [CONTRIBUTORS.KELOS],
+		},
 		{
 			date: new Date('2022-02-19'),
 			Changes: () => <>Add sorted egis to header.</>,

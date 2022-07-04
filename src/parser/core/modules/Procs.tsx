@@ -4,7 +4,7 @@ import {Action} from 'data/ACTIONS'
 import {Status} from 'data/STATUSES'
 import {Event, Events} from 'event'
 import {Actors} from 'parser/core/modules/Actors'
-import Suggestions, {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import Suggestions, {TieredSuggestion, SEVERITY, SeverityTiers} from 'parser/core/modules/Suggestions'
 import {SimpleRow, StatusItem, Timeline} from 'parser/core/modules/Timeline'
 import React, {ReactNode} from 'react'
 import {Analyser} from '../Analyser'
@@ -52,12 +52,14 @@ export abstract class Procs extends Analyser {
 	@dependency protected data!: Data
 	@dependency protected invulnerability!: Invulnerability
 
-	private droppedProcs: number = 0
-	private overwrittenProcs: number = 0
-	private invulnUsages: number = 0
+	protected droppedProcs: number = 0
+	protected overwrittenProcs: number = 0
+	protected invulnUsages: number = 0
 
 	/**
 	 * Subclassing analysers must provide a list of tracked procs
+	 * Note that if a given action can consume multiple proc statuses, the statuses should be listed in the order that the game will consume them
+	 * See DNC's Procs subclass for an example
 	 */
 	protected abstract trackedProcs: ProcGroup[]
 
@@ -67,17 +69,17 @@ export abstract class Procs extends Analyser {
 	protected showDroppedProcSuggestion: boolean = false
 	protected droppedProcIcon: string = 'https://xivapi.com/i/001000/001989.png' // Hasty Touch ...
 	protected droppedProcContent: ReactNode = <Trans id="core.procs.suggestions.dropped.content">Avoid letting your procs fall off without using them. Proc actions are generally stronger than other actions and should not be wasted.</Trans>
-	protected droppedProcSeverityTiers = DEFAULT_SEVERITY_TIERS
+	protected droppedProcSeverityTiers: SeverityTiers = DEFAULT_SEVERITY_TIERS
 
 	protected showOverwroteProcSuggestion: boolean = false
 	protected overwroteProcIcon: string = 'https://xivapi.com/i/001000/001994.png' // Muscle Memory ...
 	protected overwroteProcContent: ReactNode = <Trans id="core.procs.suggestions.overwritten.content">Avoid using an action that could generate a proc when you already have that proc active.</Trans>
-	protected overwroteProcSeverityTiers = DEFAULT_SEVERITY_TIERS
+	protected overwroteProcSeverityTiers: SeverityTiers = DEFAULT_SEVERITY_TIERS
 
 	protected showInvulnProcSuggestion: boolean = false
 	protected invulnProcIcon: string = this.data.actions.HALLOWED_GROUND.icon // lol
 	protected invulnProcContent: ReactNode = <Trans id="core.procs.suggestions.invuln.content">Try not to use your procs while the boss is invulnerable.</Trans>
-	protected invulnProcSeverityTiers = DEFAULT_SEVERITY_TIERS
+	protected invulnProcSeverityTiers: SeverityTiers = DEFAULT_SEVERITY_TIERS
 
 	/**
 	 * Subclassing analysers may override this to toggle off timeline display
@@ -128,9 +130,13 @@ export abstract class Procs extends Analyser {
 	 * @returns True if there was a tracked proc usage for the action at the given timestamp, false otherwise
 	 */
 	private checkActionWasProc(actionId: number, timestamp: number): boolean {
-		const procGroup = this.getTrackedGroupByAction(actionId)
-		if (procGroup == null) { return false }
-		return this.getUsagesForStatus(procGroup).some(event => event.timestamp === timestamp)
+		const procGroups = this.getTrackedGroupsByAction(actionId)
+		if (procGroups.length === 0) { return false }
+		let wasProc = false
+		for (const procGroup of procGroups) {
+			wasProc = wasProc || this.getUsagesForStatus(procGroup).some(event => event.timestamp === timestamp)
+		}
+		return wasProc
 	}
 
 	private overwrites = new Map<ProcGroup, ProcGroupEvents>()
@@ -302,13 +308,16 @@ export abstract class Procs extends Analyser {
 	protected jobSpecificOnConsumeProc(_procGroup: ProcGroup, _event: Events['action']): void { /* */ }
 
 	private onCast(event: Events['action']): void {
-		const procGroup = this.getTrackedGroupByAction(event.action)
+		const procGroups = this.getTrackedGroupsByAction(event.action)
 
-		// If this action consumed a proc, log it
-		if (procGroup != null && this.checkConsumeProc(procGroup, event)) {
-			this.stopAndSave(procGroup, event, 'usage')
+		for (const procGroup of procGroups) {
+			// If this action consumed a proc, log it
+			if (this.checkConsumeProc(procGroup, event)) {
+				this.stopAndSave(procGroup, event, 'usage')
 
-			this.jobSpecificOnConsumeProc(procGroup, event)
+				this.jobSpecificOnConsumeProc(procGroup, event)
+				break // Get out of the loop, we only consume one proc status at a time
+			}
 		}
 
 		// Reset the variable tracking hardcasts since we just finished casting something
@@ -537,7 +546,7 @@ export abstract class Procs extends Analyser {
 		return typeof status === 'number' ? this.trackedProcs.find(group => group.procStatus.id === status) : status
 	}
 
-	protected getTrackedGroupByAction(actionId: number): ProcGroup | undefined {
-		return this.trackedProcs.find(group => group.consumeActions.find(action => action.id === actionId) != null)
+	protected getTrackedGroupsByAction(actionId: number): ProcGroup[] {
+		return this.trackedProcs.filter(group => group.consumeActions.find(action => action.id === actionId) != null)
 	}
 }
