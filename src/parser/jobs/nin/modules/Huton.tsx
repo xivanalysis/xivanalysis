@@ -189,9 +189,8 @@ export class Huton extends Analyser {
 				Avoid using <ActionLink action="ARMOR_CRUSH"/> when <ActionLink action="HUTON"/> has more than 30 seconds left on its duration. The excess time is wasted, so using <ActionLink action="AEOLIAN_EDGE"/> is typically the better option.
 			</Trans>,
 			tiers: {
-				5000: SEVERITY.MINOR,
-				10000: SEVERITY.MEDIUM,
-				20000: SEVERITY.MAJOR,
+				15000: SEVERITY.MINOR,
+				60000: SEVERITY.MEDIUM,
 			},
 			value: clipped,
 			why: <Trans id="nin.huton.suggestions.clipping.why">
