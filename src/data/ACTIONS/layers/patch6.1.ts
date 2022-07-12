@@ -8,6 +8,9 @@ export const patch610: Layer<ActionRoot> = {
 		// NIN 6.1 raid buff changes
 		TRICK_ATTACK: {statusesApplied: []},
 		MUG: {statusesApplied: ['MUG_VULNERABILITY_UP']},
+		// Potency buffs, very important, breaks positionals without them.
+		ARMOR_CRUSH: {potency: 360},
+		AEOLIAN_EDGE: {potency: 380},
 
 		// Tank 6.1 cooldown changes
 		DEFIANCE: {cooldown: 3000},

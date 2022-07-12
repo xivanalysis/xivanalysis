@@ -34,6 +34,7 @@ export const NIN = ensureActions({
 		icon: 'https://xivapi.com/i/000000/000605.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
+		potency: 360,
 		combo: {
 			from: 2242,
 			end: true,
@@ -65,6 +66,7 @@ export const NIN = ensureActions({
 		icon: 'https://xivapi.com/i/002000/002915.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
+		potency: 340,
 		combo: {
 			from: 2242,
 			end: true,
