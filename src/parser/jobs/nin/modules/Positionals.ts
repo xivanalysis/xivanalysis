@@ -1,14 +1,14 @@
 import {PotencyModifier, Positionals as CorePositionals} from 'parser/core/modules/Positionals'
 
-const AEOLIAN_EDGE_BASE_POTENCY_600 = 140
-const ARMOR_CRUSH_BASE_POTENCY_600 = 140
+const AEOLIAN_EDGE_BASE_POTENCY = 140
+const ARMOR_CRUSH_BASE_POTENCY = 140
 
 export class Positionals extends CorePositionals {
 	positionals = [{
 		action: this.data.actions.ARMOR_CRUSH,
 		potencies: [
 			{
-				value: AEOLIAN_EDGE_BASE_POTENCY_600,
+				value: AEOLIAN_EDGE_BASE_POTENCY,
 				modifiers: [],
 			},
 			{
@@ -24,7 +24,7 @@ export class Positionals extends CorePositionals {
 		action: this.data.actions.AEOLIAN_EDGE,
 		potencies: [
 			{
-				value: ARMOR_CRUSH_BASE_POTENCY_600,
+				value: ARMOR_CRUSH_BASE_POTENCY,
 				modifiers: [],
 			},
 			{
