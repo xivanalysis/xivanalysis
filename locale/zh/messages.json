@@ -209,7 +209,7 @@
   "core.analyse.view-on-fflogs": "在FFlogs上查看报告",
   "core.aoeusages.aoe-ability": "AoE技能使用",
   "core.aoeusages.min-targets": "最少目标",
-  "core.aoeusages.number-bad-usages": "错误使用",
+  "core.aoeusages.number-bad-usages": "错误使用次数",
   "core.aoeusages.st-alternative": "单体目标替代项",
   "core.aoeusages.suggestion.content": "当AoE技能造成的伤害不如与他共享冷却或资源消耗的替代性单体技能时，不要使用AoE技能。如果这个AoE技能不能击中足够的目标数，那么单体技能将能造成更多的总伤害，并且应当使用单体技能而非AoE技能。",
   "core.aoeusages.suggestion.why": "{totalBadUsages, plural,other {#次}}对过少的目标使用AoE技能",
