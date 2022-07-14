@@ -3,6 +3,7 @@ import {ActionTimeline} from './ActionTimeline'
 import {Atonement} from './Atonement'
 import {CastTime} from './CastTime'
 import {Combos} from './Combos'
+import {Faith} from './Faith'
 import {FightOrFlight} from './FightOrFlight'
 import {Gauge} from './Gauge'
 import {Goring} from './Goring'
@@ -24,4 +25,5 @@ export default [
 	Requiescat,
 	StatusTimeline,
 	Tincture,
+	Faith,
 ]

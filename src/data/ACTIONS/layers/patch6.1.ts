@@ -46,6 +46,10 @@ export const patch610: Layer<ActionRoot> = {
 			gcdRecast: 3000,
 		},
 
+		PET_SEARING_LIGHT: {
+			statusesApplied: [],
+		},
+
 		// WHM 6.1 changes
 		REGEN: {
 			mpCost: 400,
@@ -55,6 +59,28 @@ export const patch610: Layer<ActionRoot> = {
 			name: 'Liturgy of the Bell (Detonate)',
 			icon: 'https://xivapi.com/i/002000/002649.png',
 			cooldown: 1000,
+		},
+
+		//PLD 6.1 changes
+		CLEMENCY: {
+			breaksCombo: undefined,
+		},
+		HOLY_SPIRIT: {
+			breaksCombo: undefined,
+		},
+		HOLY_CIRCLE: {
+			breaksCombo: undefined,
+		},
+		REQUIESCAT: {
+			statusesApplied: ['REQUIESCAT', 'BLADE_OF_FAITH_READY'],
+		},
+		CONFITEOR: {
+			combo: undefined,
+		},
+		BLADE_OF_FAITH: {
+			combo: {
+				start: true,
+			},
 		},
 	},
 }
