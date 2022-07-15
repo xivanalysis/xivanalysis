@@ -268,7 +268,7 @@ export class DirtyDancing extends Analyser {
 			target: 95,
 			requirements: [
 				new Requirement({
-					name: <Fragment><StatusLink {...this.data.statuses.STANDARD_FINISH} /> <Trans id="dnc.dirty-dancing.checklist.standard-finish-buff.uptime"> uptime</Trans></Fragment>,
+					name: <Trans id="dnc.dirty-dancing.checklist.standard-finish-buff.uptime"><StatusLink {...this.data.statuses.STANDARD_FINISH} /> uptime</Trans>,
 					percent: standardFinishUptimePct,
 				}),
 			],
@@ -283,7 +283,7 @@ export class DirtyDancing extends Analyser {
 			target: 95,
 			requirements: [
 				new Requirement({
-					name: <Fragment><StatusLink {...this.data.statuses.CLOSED_POSITION} /> <Trans id="dnc.dirty-dancing.checklist.closed-position-buff.uptime">uptime (excluding downtime)</Trans></Fragment>,
+					name: <Trans id="dnc.dirty-dancing.checklist.closed-position-buff.uptime"><StatusLink {...this.data.statuses.CLOSED_POSITION} />uptime (excluding downtime)</Trans>,
 					percent: closedPositionUptimePct,
 				}),
 			],
