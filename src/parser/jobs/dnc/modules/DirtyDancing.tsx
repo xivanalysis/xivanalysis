@@ -283,7 +283,7 @@ export class DirtyDancing extends Analyser {
 			target: 95,
 			requirements: [
 				new Requirement({
-					name: <Trans id="dnc.dirty-dancing.checklist.closed-position-buff.uptime"><StatusLink {...this.data.statuses.CLOSED_POSITION} />uptime (excluding downtime)</Trans>,
+					name: <Trans id="dnc.dirty-dancing.checklist.closed-position-buff.uptime"><StatusLink {...this.data.statuses.CLOSED_POSITION} /> uptime (excluding downtime)</Trans>,
 					percent: closedPositionUptimePct,
 				}),
 			],
