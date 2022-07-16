@@ -337,7 +337,7 @@
   "dnc.about.description.warning": "Both of dancer's gauges are simulated here, since we don't have exact data available to work from. We've done our best to get it as accurate as we can, and to give you the benefit of the doubt in our suggestions. If you notice anything that looks significantly wrong, please drop by our Discord channel or report a bug on our github repository!",
   "dnc.dirty-dancing.checklist.closed-position-buff.description": "Choosing a <0/> will also give them the <1/> and <2/> buffs. Make sure to keep it up at all times except for rare circumstances where a switch is warranted.",
   "dnc.dirty-dancing.checklist.closed-position-buff.name": "Choose a <0/>",
-  "dnc.dirty-dancing.checklist.closed-position-buff.uptime": "<0/>uptime (excluding downtime)",
+  "dnc.dirty-dancing.checklist.closed-position-buff.uptime": "<0/> uptime (excluding downtime)",
   "dnc.dirty-dancing.checklist.standard-finish-buff.description": "Your <0/> buff contributes significantly to your overall damage, and the damage of your <1/> as well. Make sure to keep it up at all times.",
   "dnc.dirty-dancing.checklist.standard-finish-buff.name": "Keep your <0/> buff up",
   "dnc.dirty-dancing.checklist.standard-finish-buff.uptime": "<0/> uptime",
