@@ -340,7 +340,7 @@
   "dnc.dirty-dancing.checklist.closed-position-buff.uptime": "",
   "dnc.dirty-dancing.checklist.standard-finish-buff.description": "あなたの<0/>バフは自身のダメージに大きく貢献するだけでなく、<1/>のダメージにも貢献します。常に保つようにしましょう。",
   "dnc.dirty-dancing.checklist.standard-finish-buff.name": "<0/> のバフを維持してください",
-  "dnc.dirty-dancing.checklist.standard-finish-buff.uptime": "",
+  "dnc.dirty-dancing.checklist.standard-finish-buff.uptime": "アクティブ率: <0/>",
   "dnc.dirty-dancing.rotation-table.header.dirty": "正しいフィニッシュ",
   "dnc.dirty-dancing.rotation-table.header.footloose": "正しいステップ回数",
   "dnc.dirty-dancing.rotation-table.header.missed": "敵に命中",

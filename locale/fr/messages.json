@@ -340,7 +340,7 @@
   "dnc.dirty-dancing.checklist.closed-position-buff.uptime": "",
   "dnc.dirty-dancing.checklist.standard-finish-buff.description": "Votre buff <0/> contribue de manière importante la globalité de vos dégâts, et les dégâts de votre <1/> aussi. Veillez à l'avoir toujours actif.",
   "dnc.dirty-dancing.checklist.standard-finish-buff.name": "Gardez votre <0/> actif",
-  "dnc.dirty-dancing.checklist.standard-finish-buff.uptime": "",
+  "dnc.dirty-dancing.checklist.standard-finish-buff.uptime": "Temps total d'application de <0/>",
   "dnc.dirty-dancing.rotation-table.header.dirty": "Finition correcte",
   "dnc.dirty-dancing.rotation-table.header.footloose": "Pas de mouvements superflus",
   "dnc.dirty-dancing.rotation-table.header.missed": "Cible touchée",

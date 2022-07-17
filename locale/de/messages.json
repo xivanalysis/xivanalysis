@@ -340,7 +340,7 @@
   "dnc.dirty-dancing.checklist.closed-position-buff.uptime": "",
   "dnc.dirty-dancing.checklist.standard-finish-buff.description": "Dein <0/>-Buff macht einen Großteil deines allgemeinen und <1/>-Schadens aus. Versuche diesen DoT wann immer möglich aufrecht zu halten.",
   "dnc.dirty-dancing.checklist.standard-finish-buff.name": "Halte <0/> aufrecht",
-  "dnc.dirty-dancing.checklist.standard-finish-buff.uptime": "",
+  "dnc.dirty-dancing.checklist.standard-finish-buff.uptime": "Gesamtanwendungszeit von <0/>",
   "dnc.dirty-dancing.rotation-table.header.dirty": "Richtig ausgeführte Finale",
   "dnc.dirty-dancing.rotation-table.header.footloose": "Keine überflüssigen Schritte",
   "dnc.dirty-dancing.rotation-table.header.missed": "Ziele",
