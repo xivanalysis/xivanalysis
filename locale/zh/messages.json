@@ -337,7 +337,7 @@
   "dnc.about.description.warning": "我们无法读取幻扇和伶俐量谱的准确数据，相关数据仅为模拟计算。我们已尽量保证数据准确来提供准确的建议。若发现明显错误，请在我们的Discord频道或GitHub仓库反馈。",
   "dnc.dirty-dancing.checklist.closed-position-buff.description": "<0/>可以共享<1/>和<2/>两个buff。请全程绑好舞伴，除非特殊情况下需要换舞伴。",
   "dnc.dirty-dancing.checklist.closed-position-buff.name": "绑好<0/>",
-  "dnc.dirty-dancing.checklist.closed-position-buff.uptime": "",
+  "dnc.dirty-dancing.checklist.closed-position-buff.uptime": "<0/>覆盖率（CD时间不计）",
   "dnc.dirty-dancing.checklist.standard-finish-buff.description": "<0/>buff对你和<1/>的输出贡献巨大，请保持常驻。",
   "dnc.dirty-dancing.checklist.standard-finish-buff.name": "保持<0/>buff常驻",
   "dnc.dirty-dancing.checklist.standard-finish-buff.uptime": "<0/> 覆盖率",
