@@ -14,12 +14,17 @@ export const NINJA = new Meta({
 	</>,
 	supportedPatches: {
 		from: '6.05',
-		to: '6.08',
+		to: '6.1',
 	},
 	contributors: [
 		{user: CONTRIBUTORS.TOASTDEIB, role: ROLES.MAINTAINER},
 	],
 	changelog: [
+		{
+			date: new Date('2022-07-19'),
+			Changes: () => <>Updated Mug and Trick Attack for 6.1 changes, adjusted severity on Raiju and Armor Crush suggestions.</>,
+			contributors: [CONTRIBUTORS.TOASTDEIB],
+		},
 		{
 			date: new Date('2022-06-22'),
 			Changes: () => <>Positional module clean-up.</>,
