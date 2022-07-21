@@ -125,6 +125,10 @@ export class Overheal extends Analyser {
 	 * Implementing modules MAY override this to provide a list of heal 'categories' to track
 	 */
 	protected trackedHealCategories: TrackedOverhealOpts[] = []
+	/**
+	 * Implementing modules MAY override this to provide a list of heal 'categories' to track
+	 */
+	protected excludedOverhealIds: number[] = []
 
 	// Display options
 
@@ -179,6 +183,8 @@ export class Overheal extends Analyser {
 
 	// direct healing
 	private direct!: TrackedOverheal
+	// excluded healing
+	private excludedOverheal: number[] = []
 	// Everything else
 	private trackedOverheals: TrackedOverheal[] = []
 
@@ -197,6 +203,9 @@ export class Overheal extends Analyser {
 		})
 		for (const healCategoryOpts of this.trackedHealCategories) {
 			this.trackedOverheals.push(new TrackedOverheal(healCategoryOpts))
+		}
+		for (const healId of this.excludedOverhealIds) {
+			this.excludedOverheal.push(healId)
 		}
 
 		this.addEventHook(filter<Event>().type('heal').source(this.parser.actor.id), this.onHeal)
@@ -231,10 +240,13 @@ export class Overheal extends Analyser {
 	}
 
 	private onHeal(event: Events['heal'], petHeal: boolean = false) {
+
 		if (this.isRegeneration(event) || ! this.considerHeal(event, petHeal)) { return }
 
 		const guid = event.cause.type === 'action' ? event.cause.action : event.cause.status
 		const name = event.cause.type === 'action' ? this.data.getAction(guid)?.name : this.data.getStatus(guid)?.name
+
+		if (this.excludedOverheal.includes(guid)) { return }
 		for (const trackedHeal of this.trackedOverheals) {
 			if (trackedHeal.idIsTracked(guid)) {
 				this.debug(`Heal from ${name} (${guid}) at ${event.timestamp} matched into category ${trackedHeal.name.props.defaults}`)
