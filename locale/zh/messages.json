@@ -961,7 +961,6 @@
   "whm.ogcds.suggestions.temperance.content": "多使用<0/>进行减伤以及提高GCD治疗的效率。使用时避免卡GCD。",
   "whm.ogcds.suggestions.why": "最多可用 {maxUses} 次，但你少用了大概 {missed} 次。",
   "whm.overheal.afflatus.name": "安慰之心治疗",
-  "whm.overheal.assize.name": "法令",
   "whm.overheal.hot.name": "HoT",
   "whm.overheal.liturgyofthebell.name": "礼仪之铃",
   "whm.swiftcast.missed.suggestion.content": "在<0/>结束之前放一个法术。这样你就可以用<1/>秒拉人或者<2/>来插入能力技。",
