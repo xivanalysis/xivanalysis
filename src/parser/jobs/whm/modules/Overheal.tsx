@@ -7,7 +7,7 @@ export class Overheal extends CoreOverheal {
 	override checklistRuleBreakout = true
 	override displayPieChart = true
 	override displaySuggestion = true
-
+	override excludedOverhealIds = [this.data.actions.ASSIZE.id]
 	override trackedHealCategories = [
 		{
 			name: <Trans id="whm.overheal.hot.name">Healing Over Time</Trans>,
@@ -19,11 +19,6 @@ export class Overheal extends CoreOverheal {
 				this.data.actions.ASYLUM.id,
 				this.data.statuses.ASYLUM.id,
 			],
-		},
-		{
-			name: <Trans id="whm.overheal.assize.name">Assize</Trans>,
-			color: '#12ba45',
-			trackedHealIds: [this.data.actions.ASSIZE.id],
 		},
 		{
 			name: <Trans id="whm.overheal.liturgyofthebell.name">Liturgy of the Bell</Trans>,

@@ -126,7 +126,7 @@ export class Overheal extends Analyser {
 	 */
 	protected trackedHealCategories: TrackedOverhealOpts[] = []
 	/**
-	 * Implementing modules MAY override this to provide a list of heal 'categories' to track
+	 * Implementing modules MAY override this to provide a list of healing ids to exclude from overhealing
 	 */
 	protected excludedOverhealIds: number[] = []
 
@@ -240,12 +240,10 @@ export class Overheal extends Analyser {
 	}
 
 	private onHeal(event: Events['heal'], petHeal: boolean = false) {
-
 		if (this.isRegeneration(event) || ! this.considerHeal(event, petHeal)) { return }
 
 		const guid = event.cause.type === 'action' ? event.cause.action : event.cause.status
 		const name = event.cause.type === 'action' ? this.data.getAction(guid)?.name : this.data.getStatus(guid)?.name
-
 		if (this.excludedOverheal.includes(guid)) { return }
 		for (const trackedHeal of this.trackedOverheals) {
 			if (trackedHeal.idIsTracked(guid)) {
