@@ -504,7 +504,7 @@
   "gnb.ammo.leftover-ammo.content": "Avoid having leftover ammo at the end of a fight, consider using the ammo earlier if possible. <0/> is more potency than any of your <1/> combo.",
   "gnb.ammo.leftover-ammo.why": "You had {0, plural, one {# cartridge} other {# cartridges}} remaining at the end of the fight.",
   "gnb.ammo.title": "Cartridge Timeline",
-  "gnb.ammo.usage.title": "Cartridge Usage",
+  "gnb.ammo.usage.title": "Cartridge usage",
   "gnb.ammo.waste.content": "Wasted cartridge generation, ending the fight with cartridges loaded, or dying with cartridges loaded is a direct potency loss. Use <0/> (or <1/> if there is more than one target) to avoid wasting cartridges.",
   "gnb.continuation.checklist.description": "One <0/> action should be used for each single-target ammo skill",
   "gnb.continuation.checklist.requirement.continuation.name": "<0/> uses per <1/> combo action",
