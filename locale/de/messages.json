@@ -500,7 +500,7 @@
   "glossary.proc.description": "Proc als Begriff bezeichnet einen Effekt, der unter bestimmten Zuständen ausgelöst/aktiviert wird, vom englischen \"procedure\".\n\nAls Beispiel: [~action/VERTHUNDER] hat bei Benutzung eine 50%ige Chance, den Status [~status/VERFIRE_READY] zu geben.",
   "glossary.proc.title": "プロック",
   "gnb.about.description": "",
-  "gnb.ammo.checklist.requirement.waste.name": "Nutze so viele deiner Patronen wie möglich.",
+  "gnb.ammo.checklist.requirement.waste.name": "",
   "gnb.ammo.leftover-ammo.content": "Vermeide es, am Ende eines Kampfes noch Patronen übrig zu haben. Nutze sie während des Kampfes. <0/> macht mehr Schaden als jeder Part deiner <1/> Kombo.",
   "gnb.ammo.leftover-ammo.why": "Du hattest {0, plural, one {# Patrone} other {# Patronen}} am Ende des Kampfes übrig.",
   "gnb.ammo.title": "Patronen-Zeitleiste",
