@@ -29,7 +29,7 @@ export class RiddleOfWindEvaluator implements WindowEvaluator {
 			rows: windows.map(window => {
 				return {
 					actual: this.usedRow(window) ? 1 : 0,
-					expected: 1,
+					expected: undefined,
 				}
 			}),
 		}
