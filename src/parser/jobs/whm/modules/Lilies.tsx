@@ -32,6 +32,13 @@ const BLOODLILY_CONSUMERS: ActionKey[] = [
 	'AFFLATUS_MISERY',
 ]
 
+// Leaving out CURE3 due to having it only warn instead of error
+const GCD_HEALS: ActionKey[] = [
+	'MEDICA',
+	'CURE',
+	'CURE_II',
+]
+
 const SEVERITIES = {
 	BLOODLILY_LEFTOVER: {
 		1: SEVERITY.MINOR,
@@ -49,6 +56,9 @@ const SEVERITIES = {
 		1: SEVERITY.MEDIUM,
 		3: SEVERITY.MAJOR,
 	},
+	UNNECESSARY_GCD_HEALS: {
+		3: SEVERITY.MAJOR,
+	},
 }
 
 export class Lilies extends CoreGauge {
@@ -56,6 +66,8 @@ export class Lilies extends CoreGauge {
 	static override handle = 'gauge'
 
 	@dependency private suggestions!: Suggestions
+
+  private numUnnecessaryGcdHeals = 0;
 
 	private lilyInterval = this.parser.patch.before('6.1') ? LILY_INTERVAL_600 : LILY_INTERVAL_610
 
@@ -93,6 +105,7 @@ export class Lilies extends CoreGauge {
 		const playerFilter = filter<Event>().source(this.parser.actor.id)
 		this.addEventHook(playerFilter.type('action').action(this.data.matchActionId(LILY_CONSUMERS)), this.onSpend)
 		this.addEventHook(playerFilter.type('action').action(this.data.matchActionId(BLOODLILY_CONSUMERS)), () => this.bloodLilyGauge.spend(MISERY_COST))
+		this.addEventHook(playerFilter.type('action').action(this.data.matchActionId(GCD_HEALS)), this.checkAfflatusAvailability)
 
 		this.addEventHook('complete', this.onComplete)
 
@@ -118,6 +131,12 @@ export class Lilies extends CoreGauge {
 			this.lilyTimer.start()
 		}
 
+	}
+
+	private checkAfflatusAvailability() {
+		if (this.lilyGauge.value !== 0) {
+			this.numUnnecessaryGcdHeals++
+		}
 	}
 
 	private onComplete() {
@@ -167,6 +186,17 @@ export class Lilies extends CoreGauge {
 			</Trans>,
 		}))
 
+		this.suggestions.add(new TieredSuggestion({
+			icon: this.data.actions.AFFLATUS_RAPTURE.icon,
+			content: <Trans id="whm.gauge.gcdheals.suggestions.leftover.content">
+        Try to use lillies instead of GCD heals when they're available.
+			</Trans>,
+			tiers: SEVERITIES.UNNECESSARY_GCD_HEALS,
+			value: this.numUnnecessaryGcdHeals,
+			why: <Trans id="whm.gauge.gcdheals.suggestions.leftover.why">
+				{<Plural value={this.numUnnecessaryGcdHeals} one="# GCD Heal was" other="# GCD Heals were" />} used instead of using a Lily.
+			</Trans>,
+		}))
 	}
 }
 
