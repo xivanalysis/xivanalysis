@@ -38,7 +38,7 @@ export const WHITE_MAGE = new Meta({
 		{
 			date: new Date('2022-07-25'),
 			Changes: () => <>Added check for using lilies instead of GCD heals when available</>,
-			contrubutors: [CONTRIBUTORS.FAIR2DARE],
+			contributors: [CONTRIBUTORS.FAIR2DARE],
 		},
 		{
 			date: new Date('2021-12-30'),
