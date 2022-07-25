@@ -948,6 +948,8 @@
   "whm.gauge.bloodlily.suggestions.leftover.why": "{0, plural, one {# Blutlilie blieb} other {# Blutlilien blieben}} ungenutzt.",
   "whm.gauge.bloodlily.suggestions.overcap.content": "",
   "whm.gauge.bloodlily.suggestions.overcap.why": "{0, plural, one {# Blutlilie ist} other {# Blutlilien sind}} nicht geblüht da eine Lilie zu früh verwendet wurde.",
+  "whm.gauge.gcdheals.suggestions.leftover.content": "",
+  "whm.gauge.gcdheals.suggestions.leftover.why": "",
   "whm.gauge.lily.stacks.label": "Lilie",
   "whm.gauge.lily.suggestions.overcap.content.600": "",
   "whm.gauge.lily.suggestions.overcap.content.610": "",
