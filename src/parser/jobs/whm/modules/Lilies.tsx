@@ -189,7 +189,7 @@ export class Lilies extends CoreGauge {
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.AFFLATUS_RAPTURE.icon,
 			content: <Trans id="whm.gauge.gcdheals.suggestions.leftover.content">
-        Try to use lillies instead of GCD heals when they're available.
+        Try to use lilies instead of GCD heals when they're available.
 			</Trans>,
 			tiers: SEVERITIES.UNNECESSARY_GCD_HEALS,
 			value: this.numUnnecessaryGcdHeals,
