@@ -134,7 +134,7 @@ export class Lilies extends CoreGauge {
 	}
 
 	private checkAfflatusAvailability() {
-		if (this.lilyGauge.value !== 0) {
+		if (this.lilyGauge.value !== 0 && this.bloodLilyGauge.value === 0) {
 			this.numUnnecessaryGcdHeals++
 		}
 	}
