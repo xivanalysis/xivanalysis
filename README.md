@@ -41,9 +41,9 @@ The parser is the meat of xivanalysis. Its primary job is to orchestrate modules
 
 The modules are split into a number of groups:
 
-- `core`: Unsurprisingly, the core system modules. These provide commonly-used functionality (see the section on dependency below), as well as job-agnostic modules such as "Don't die".
-- `jobs/[job]`: Each supported job has its own group of modules, that provide specialised analysis/information for that job.
-- `bosses/[boss]`: Like jobs, some bosses have groups of modules, usually used to analyse unique fight mechanics, or provide concrete implementations that fflogs does not currently provide itself.
+- `core`:These provide commonly-used functionality (see the section on dependency below), as well as job-agnostic modules such as "Don't die".
+- `jobs/[job]`: Each supported job has its own group of modules. These provide specialised analysis/information for that job.
+- `bosses/[boss]`: Some bosses have groups of modules. They usually used to analyse unique fight mechanics, or provide concrete implementations that fflogs does not provide.
 
 Modules from `core` are loaded first, followed by bosses, then jobs.
 
