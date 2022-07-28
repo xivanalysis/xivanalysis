@@ -33,7 +33,7 @@ Make sure to sanity check the function results, as the underlying algorithm may 
 
 ## Adding encounter overrides
 
-While we generally avoid adding per-boss handling, as it generates increased maintenance burden for the site as a whole, some modules such as `invulnerability` can't account for all possible variations, and occasionally need to be configured.
+Boss handing generates increased maintenance burnen for the site. Some modules such as `invulnerability` can't account for all possible variations, and occasionally need to be configured.
 
 To start, you'll need to add an entry to `src/data/ENCOUNTERS` for the boss - don't feel the need to populate it with _every_ new boss, only the ones we're explicitly adding overrides for. Use community shorthand for the keys, i.e. `P1S` for Erichthonios.
 
