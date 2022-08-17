@@ -15,12 +15,13 @@ interface SeverityTiers {
 }
 
 interface TrackedOverhealOpts {
-	name: JSX.Element,
-	color?: string
-	trackedHealIds?: number[],
+	name: JSX.Element;
+	color?: string;
+	trackedHealIds?: number[];
 }
 
 const REGENERATION_ID: number = 1302
+const DEFAULT_DISPLAY_ORDER: number = 10
 
 const SUGGESTION_SEVERITY_TIERS: SeverityTiers = {
 	0: SEVERITY.MINOR,
@@ -156,6 +157,12 @@ export class Overheal extends Analyser {
 	 * checklist item
 	 */
 	protected displayChecklist: boolean = true
+
+	/**
+	 * Implementing modules MAY modify this value to change the order displayed within the stats panel
+	 */
+	protected displayOrder: number = DEFAULT_DISPLAY_ORDER
+
 	/**
 	 * Implementing modules MAY wish to override this to set custom severity tiers.
 	 * Do remember that the numbers for checklist are inverted for overheal (e.g., warning at
@@ -302,7 +309,7 @@ export class Overheal extends Analyser {
 				],
 				data: data,
 				width: 3, // chart's wide, yo
-				order: 10, // Place it after GCD stat panel and other statistics
+				statsDisplayOrder: this.displayOrder,
 			}))
 		}
 
