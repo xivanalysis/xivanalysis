@@ -953,7 +953,7 @@
   "whm.gauge.lily.stacks.label": "治疗百合",
   "whm.gauge.lily.suggestions.overcap.content.600": "在使用其他GCD魔法治疗之前，尝试使用<0/>或<1/>。如果你不需要治疗，移动或积攒血百合，溢出治疗百合也没有问题",
   "whm.gauge.lily.suggestions.overcap.content.610": "在使用其他GCD魔法治疗之前，尝试使用<0/>或<1/>。可以在一些时候使用治疗百合进行过度治疗，因为他们可以帮助你进行走位并且节省你的魔力消耗，当然还有治疗你的队友。",
-  "whm.gauge.lily.suggestions.overcap.why": "{lostLilies, plural,one {#治疗百合}other {#朵}}由于过度使用而被浪费的治疗百合花",
+  "whm.gauge.lily.suggestions.overcap.why": "{lostLilies, plural,one {#治疗百合}other {#朵}}由于百合量谱溢出而被浪费的治疗百合。",
   "whm.gauge.lily.timer.label": "通晓",
   "whm.interrupts.suggestion.content": "通过预先跑位或充分利用滑步来避免咏唱中断。使用正常的 <0/> 刷新创造的瞬发窗口来躲避机制。当刷新时机对不上的时候，尝试规划并利用百合技来兼顾跑位和治疗。提前覆盖天辉应是最后的跑位手段。",
   "whm.ogcds.suggestions.AQUAVEIL.content": "尽可能使用<0/>来减少使用单体治疗的次数。",
