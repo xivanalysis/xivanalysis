@@ -14,7 +14,7 @@ export const NINJA = new Meta({
 	</>,
 	supportedPatches: {
 		from: '6.05',
-		to: '6.1',
+		to: '6.2',
 	},
 	contributors: [
 		{user: CONTRIBUTORS.TOASTDEIB, role: ROLES.MAINTAINER},
