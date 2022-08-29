@@ -32,17 +32,10 @@ export enum SealType {
 }
 const CLEAN_SEAL_STATE = [SealType.NOTHING, SealType.NOTHING, SealType.NOTHING]
 
-export enum SleeveType {
-	NOTHING = 0,
-	ONE_STACK = 1,
-	TWO_STACK = 2,
-}
-
 export interface CardState {
 	lastEvent: InitEvent | Events['action'] | Events['death']
 	drawState?: number // typeof DRAWN_ARCANA status ID. Only loaded at runtime. TODO: Types
 	sealState: SealType[]
-	sleeveState: SleeveType
 }
 
 // TODO: Try to track for when a seal was not given on pull due to latency?
@@ -74,7 +67,6 @@ export default class ArcanaTracking extends Analyser {
 		},
 		drawState: undefined,
 		sealState: CLEAN_SEAL_STATE,
-		sleeveState: SleeveType.NOTHING,
 	}]
 
 	private lastDrawnBuff?: Events['statusApply']
@@ -296,14 +288,7 @@ export default class ArcanaTracking extends Analyser {
 			cardStateItem.drawState = undefined
 
 			// Work out what seal they got
-			let sealObtained: SealType = SealType.NOTHING
-			if (this.solarSealArcana.includes(actionId)) {
-				sealObtained = SealType.SOLAR
-			} else if (this.lunarSealArcana.includes(actionId)) {
-				sealObtained = SealType.LUNAR
-			} else if (this.celestialSealArcana.includes(actionId)) {
-				sealObtained = SealType.CELESTIAL
-			}
+			const sealObtained: SealType = this.sealState(actionId)
 			const sealState = [...cardStateItem.sealState]
 			cardStateItem.sealState = this.addSeal(sealObtained, sealState)
 		}
@@ -339,7 +324,6 @@ export default class ArcanaTracking extends Analyser {
 			},
 			drawState: undefined,
 			sealState: lastCardState.sealState,
-			sleeveState: SleeveType.NOTHING,
 		})
 	}
 
@@ -493,5 +477,26 @@ export default class ArcanaTracking extends Analyser {
 		}
 
 		return arcanaId
+	}
+
+	/**
+	 * returns sealState based on the card selected
+	 *
+	 * @param arcana {Action['id'] | Status['id']} action or status of applicable card
+	 * @reutnrs {SealType} seal of applicable card
+	 */
+	public sealState(arcana: Action['id'] | Status['id']): SealType {
+		const actionId: Action['id'] = this.drawnToPlayLookup[arcana]
+										?? this.statusToPlayLookup[arcana]
+											?? arcana //to ensure status becomes action if a drawn status or an applied status for flexibility purposes
+		let sealObtained: SealType = SealType.NOTHING
+		if (this.solarSealArcana.includes(actionId)) {
+			sealObtained = SealType.SOLAR
+		} else if (this.lunarSealArcana.includes(actionId)) {
+			sealObtained = SealType.LUNAR
+		} else if (this.celestialSealArcana.includes(actionId)) {
+			sealObtained = SealType.CELESTIAL
+		}
+		return sealObtained
 	}
 }
