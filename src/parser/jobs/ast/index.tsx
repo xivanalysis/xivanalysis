@@ -29,13 +29,24 @@ export const ASTROLOGIAN = new Meta({
 	</>,
 	supportedPatches: {
 		from: '6.0',
-		to: '6.1',
+		to: '6.2',
 	},
 	contributors: [
 		{user: CONTRIBUTORS.SUSHIROU, role: ROLES.MAINTAINER},
 		{user: CONTRIBUTORS.OTOCEPHALY, role: ROLES.DEVELOPER},
 	],
 	changelog: [
+		{
+			date: new Date('2022-08-29'),
+			Changes: () => <>
+				<strong><DataLink action="REDRAW" showIcon={false} /> and Arcana Tracking updates</strong>
+				<ul>
+					<li> Added <DataLink action="REDRAW" /> module to output suggestions when redraws are used ineffectively. </li>
+					<li> Added technically optimal targets and effective redraw for Arcana Tracking. </li>
+				</ul>
+			</>,
+			contributors: [CONTRIBUTORS.OTOCEPHALY],
+		},
 		{
 			date: new Date('2022-01-26'),
 			Changes: () => <>
