@@ -11,5 +11,10 @@ export const patch620: Layer<StatusRoot> = {
 			icon: 'https://xivapi.com/i/012000-012972.png',
 			duration: 30000,
 		},
+
+		// WHM - New Lilybell duration
+		LITURGY_OF_THE_BELL: {
+			duration: 20000,
+		},
 	},
 }
