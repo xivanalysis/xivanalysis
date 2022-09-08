@@ -61,10 +61,5 @@ export const SCHOLAR = new Meta({
 			Changes: () => <>Update Scholar defensive cooldowns to better reflect usage.</>,
 			contributors: [CONTRIBUTORS.DTHOMASH],
 		},
-		{
-			date: new Date('2022-09-07'),
-			Changes: () => <>Update Scholar for 6.2 support since nothing functional has changed</>,
-			contributors: [CONTRIBUTORS.NONO],
-		}
 	],
 })
