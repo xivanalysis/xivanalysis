@@ -1,6 +1,5 @@
 import {MessageDescriptor} from '@lingui/core'
 import {t} from '@lingui/macro'
-import { Requirement } from 'parser/core/modules/Checklist'
 import {ensureRecord} from 'utilities'
 import {JOBS, Job} from './JOBS'
 
@@ -239,8 +238,8 @@ const CONTRIBUTORS = ensureRecord<Contributor>()({
 		avatar: require('./avatar/nono.png'),
 		jobs: [
 			JOBS.SCHOLAR,
-		]
-	}
+		],
+	},
 })
 
 export default CONTRIBUTORS
