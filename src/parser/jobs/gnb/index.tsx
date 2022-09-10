@@ -8,7 +8,6 @@ const description = t('gnb.about.description')`This analyzer looks for the low-h
 If you're looking to learn about how exactly the job plays and functions from the ground up, take a look at a few basic guides:
 
 * [General tanking guide by Aletin](https://goo.gl/nYzAnq)
-* [No Mercy Windows by Rin Karigani](https://media.discordapp.net/attachments/879555876648812554/919201930583109632/123NMGF.jpg?width=1193&height=671)
 
 If you have any suggestions about the module, feel free to join the XIVA discord and use the feedback channels.
 `
@@ -20,7 +19,7 @@ export const GUNBREAKER = new Meta({
 
 	supportedPatches: {
 		from: '6.0',
-		to: '6.1',
+		to: '6.2',
 	},
 
 	contributors: [

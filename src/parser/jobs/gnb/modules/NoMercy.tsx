@@ -140,8 +140,7 @@ export class NoMercy extends BuffWindow {
 		if (action.action.id !== this.data.actions.BURST_STRIKE.id) { return 0 }
 
 		if (window.data.find(cast => cast.action.id === this.data.actions.BLOODFEST.id) && window.start > (this.parser.pull.timestamp + openerGracePeriod)) {
-			//In fights with minimal downtime, it is possible to hit 4/4 bloodfests,
-			//however I feel it is better to leave it at 3 / 3 for the adjusted rinfest window which seems to be more common
+			//Outside of opener, all Bloodfest NM bursts should have 6 ammo uses, 1 for GF combo 2 for DD and 3 for BS
 			return 2
 		}
 
