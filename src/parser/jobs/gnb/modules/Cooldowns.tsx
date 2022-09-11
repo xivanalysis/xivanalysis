@@ -13,7 +13,7 @@ That being said, 1NM23 is the "general all rounder" opener for blind prog,
 *All values are seperate in case the current ones fall out of favor in the future
 */
 
-const FIRST_USE_OFFSET_NO_MERCY = 5000 // Current opener has NM used as before 2nd gcd
+const FIRST_USE_OFFSET_NO_MERCY = 2500 // Current opener has NM used as before 2nd gcd, but in second weave slot
 
 const FIRST_USE_OFFSET_BLOODFEST = 10000 // Current Opener have bloodfest by after the 4th gcd
 
