@@ -62,4 +62,9 @@ export const changelog = [
 		Changes: () => <>Update proc analysis to handle the separate Flourish and combo-sourced procs.</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],
 	},
+	{
+		date: new Date('2022-09-08'),
+		Changes: () => <>Fix a bug preventing missed steps from registering as an error.</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
 ]
