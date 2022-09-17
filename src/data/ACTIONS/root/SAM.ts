@@ -290,7 +290,6 @@ export const SAM = ensureActions({
 		name: 'Tsubame Gaeshi',
 		icon: 'https://xivapi.com/i/003000/003180.png',
 		onGcd: true,
-		speedAttribute: Attribute.SKILL_SPEED,
 		cooldown: 60000,
 		charges: 2,
 	},
