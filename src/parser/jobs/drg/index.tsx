@@ -19,6 +19,11 @@ export const DRAGOON = new Meta({
 	],
 	changelog: [
 		{
+			date: new Date('2022-09-20'),
+			Changes: () => <>Corrected an issue that was causing the suggestion for using Dragon Sight on a partner to appear even when it was used on a partner.</>,
+			contributors: [CONTRIBUTORS.FALINDRITH],
+		},
+		{
 			date: new Date('2022-04-24'),
 			Changes: () => <>As of 6.1, weaving any jump (except for Stardiver) is no longer a weaving error. Because of this, we now expect both Spineshatter Dive charges to be used with Dragon Sight windows.</>,
 			contributors: [CONTRIBUTORS.FALINDRITH],

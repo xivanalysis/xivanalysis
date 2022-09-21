@@ -58,7 +58,7 @@ export default class Buffs extends Analyser {
 
 	private badLifeSurges: number = 0
 	private fifthGcd: boolean = false
-	private soloDragonSight: boolean = false
+	private soloDragonSightCount: number = 0
 	private lifeSurgeCasts: number[] = []
 
 	@dependency private actors!: Actors
@@ -77,7 +77,9 @@ export default class Buffs extends Analyser {
 	override initialise() {
 		const playerFilter = filter<Event>().source(this.parser.actor.id)
 		this.addEventHook(playerFilter.type('action'), this.onCast)
-		this.addEventHook(playerFilter.type('statusApply').status(this.data.statuses.RIGHT_EYE_SOLO.id), () => this.soloDragonSight = true)
+
+		this.addEventHook(filter<Event>().source(this.parser.actor.id).action(this.data.actions.DRAGON_SIGHT.id), this.onDs)
+
 		this.addEventHook(playerFilter.type('damage').cause(filter<Cause>().action(this.data.actions.COERTHAN_TORMENT.id)), this.onCot)
 		this.addEventHook('complete', this.onComplete)
 
@@ -109,6 +111,13 @@ export default class Buffs extends Analyser {
 					}
 				}
 			}
+		}
+	}
+
+	private onDs(event: Events['action']) {
+		// self cast
+		if (event.source === event.target) {
+			this.soloDragonSightCount += 1
 		}
 	}
 
@@ -162,7 +171,7 @@ export default class Buffs extends Analyser {
 			</Trans>,
 		}))
 
-		if (this.soloDragonSight) {
+		if (this.soloDragonSightCount > 0) {
 			this.suggestions.add(new Suggestion({
 				icon: this.data.actions.DRAGON_SIGHT.icon,
 				content: <Trans id="drg.buffs.suggestions.solo-ds.content">
@@ -170,7 +179,7 @@ export default class Buffs extends Analyser {
 				</Trans>,
 				severity: SEVERITY.MINOR,
 				why: <Trans id="drg.buffs.suggestions.solo-ds.why">
-					At least 1 of your Dragon Sight casts didn't have a tether partner.
+					{this.soloDragonSightCount} of your Dragon Sight casts didn't have a tether partner.
 				</Trans>,
 			}))
 		}
