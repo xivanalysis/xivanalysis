@@ -78,7 +78,7 @@ export default class Buffs extends Analyser {
 		const playerFilter = filter<Event>().source(this.parser.actor.id)
 		this.addEventHook(playerFilter.type('action'), this.onCast)
 
-		this.addEventHook(filter<Event>().source(this.parser.actor.id).action(this.data.actions.DRAGON_SIGHT.id), this.onDs)
+		this.addEventHook(filter<Event>().source(this.parser.actor.id).action(this.data.actions.DRAGON_SIGHT.id), this.onDragonSight)
 
 		this.addEventHook(playerFilter.type('damage').cause(filter<Cause>().action(this.data.actions.COERTHAN_TORMENT.id)), this.onCot)
 		this.addEventHook('complete', this.onComplete)
@@ -114,7 +114,7 @@ export default class Buffs extends Analyser {
 		}
 	}
 
-	private onDs(event: Events['action']) {
+	private onDragonSight(event: Events['action']) {
 		// self cast
 		if (event.source === event.target) {
 			this.soloDragonSightCount += 1
