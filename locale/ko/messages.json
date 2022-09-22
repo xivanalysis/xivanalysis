@@ -1,4 +1,5 @@
 {
+
   "ast.about.description-1": "점성술사의 가장 큰 무기는 카드를 통한 파티의 피해량 버프입니다. 이 분석기는 작두를 타거나 어둠의 게임을 할 필요 없이 파티에 기여할 수 있도록 도와드립니다.",
   "ast.about.description-2": "\n힐러에게는 파티원을 살리기 위한 MP 관리와 기술 배분이 매우 중요합니다. 기술 배분을 계획하고 파트너 힐러와 조율하세요. 일부 글쿨을 피해량 기술에 투자할 수 있게 됩니다.\n",
   "ast.about.description.warning.development": "모두가 쉽게 이해할 수 있는 분석기의 완성을 위해서는 도움이 필요합니다! 저희 Discord 채널에서 추적 요소를 제안해주세요!",
@@ -8,7 +9,9 @@
   "ast.arcana-suggestions.messages.pull": "초기 상태",
   "ast.arcana-suggestions.messages.spread-state": "천궁의 징조 상태",
   "ast.arcana-suggestions.messages.target": "대상",
+  "ast.arcana-suggestions.messages.target-card-icon": "",
   "ast.arcana-suggestions.messages.time": "시간",
+  "ast.arcana-suggestions.optimal-target-table.title": "",
   "ast.arcana-suggestions.scroll-to-top-button": "아르카나 로그 처음으로 돌아가기",
   "ast.arcana-suggestions.title": "아르카나 로그",
   "ast.arcana-tracking.divination.playertarget": "버프 받은 파티원",

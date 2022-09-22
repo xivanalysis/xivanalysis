@@ -161,6 +161,9 @@ interface EventDamage extends FieldsMultiTargeted {
 		/** Bonus multiplier on the damage from which positionals can be inferred */
 		bonusPercent: number
 	}>>
+	/** direct hit and crit rates provided by fflogs. Note: crit is provided as a stat and not the actual rate */
+	directHitRate?: number
+	expectedCritRate?: number
 }
 
 /** An actor has been healed. */
