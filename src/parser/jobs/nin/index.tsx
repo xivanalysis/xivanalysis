@@ -21,6 +21,11 @@ export const NINJA = new Meta({
 	],
 	changelog: [
 		{
+			date: new Date('2022-09-24'),
+			Changes: () => <>Fixed a bug in the extender-without-Huton suggestion, adjusted severity on the dropped Kassatsu suggestion, corrected text for the Rabbit Medium suggestion.</>,
+			contributors: [CONTRIBUTORS.TOASTDEIB],
+		},
+		{
 			date: new Date('2022-07-19'),
 			Changes: () => <>Updated Mug and Trick Attack for 6.1 changes, adjusted severity on Raiju and Armor Crush suggestions.</>,
 			contributors: [CONTRIBUTORS.TOASTDEIB],
