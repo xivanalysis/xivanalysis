@@ -127,8 +127,8 @@ export class Huton extends Analyser {
 
 	private onKamaitachi(event: Events['damage']) {
 		const elapsedTime = (event.timestamp - this.lastEventTime)
-		this.handleHutonExtension(this.highEstimate, this.data.actions.HURAIJIN.id, HUTON_EXTENSION_SHORT, elapsedTime)
-		this.handleHutonExtension(this.lowEstimate, this.data.actions.HURAIJIN.id, HUTON_EXTENSION_SHORT, elapsedTime)
+		this.handleHutonExtension(this.highEstimate, this.data.actions.PHANTOM_KAMAITACHI_BUNSHIN.id, HUTON_EXTENSION_SHORT, elapsedTime)
+		this.handleHutonExtension(this.lowEstimate, this.data.actions.PHANTOM_KAMAITACHI_BUNSHIN.id, HUTON_EXTENSION_SHORT, elapsedTime)
 		this.lastEventTime = event.timestamp
 	}
 
