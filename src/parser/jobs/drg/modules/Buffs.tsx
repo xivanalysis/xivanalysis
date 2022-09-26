@@ -135,7 +135,7 @@ export default class Buffs extends Analyser {
 		this.checklist.add(new Rule({
 			name: <Trans id="drg.buffs.checklist.name">Keep {this.data.statuses.POWER_SURGE.name} up</Trans>,
 			description: <Trans id="drg.buffs.checklist.description">
-				<ActionLink {...this.data.actions.DISEMBOWEL}/> and <ActionLink action="SONIC_THRUST" /> grant <StatusLink status="POWER_SURGE" /> which provides a 10% boost to your personal damage and should always be kept up.
+				<ActionLink action="DISEMBOWEL" /> and <ActionLink action="SONIC_THRUST" /> grant <StatusLink status="POWER_SURGE" /> which provides a 10% boost to your personal damage and should always be kept up.
 			</Trans>,
 			displayOrder: DISPLAY_ORDER.DISEMBOWEL,
 			requirements: [
