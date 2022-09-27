@@ -7,7 +7,7 @@
 		"dbaeumer.vscode-eslint",
 		"editorconfig.editorconfig",
 		"mikestead.dotenv",
-		"msjsdiag.debugger-for-chrome"
+		"ms-vscode.js-debug"
 	],
 	// List of extensions recommended by VS Code that should not be recommended for users of this workspace.
 	"unwantedRecommendations": [
