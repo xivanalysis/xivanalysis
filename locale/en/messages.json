@@ -617,7 +617,7 @@
   "nin.ninjutsu.suggestions.aoe-doton.why": "You cast an unoptimized Doton cast {badAoes, plural, one {# time} other {# times}}.",
   "nin.ninjutsu.suggestions.hyoton.content": "Avoid using <0/>, as it's the weakest of the mudra combinations and should typically never be used in raid content.",
   "nin.ninjutsu.suggestions.hyoton.why": "You cast Hyoton {0, plural, one {# time} other {# times}}.",
-  "nin.ninjutsu.suggestions.rabbit.content": "Be careful not to flub your mudras, as using <0/> can cost you personal DPS at best and raid DPS at worst by reducing the number of <1/>s you can do during the fight.",
+  "nin.ninjutsu.suggestions.rabbit.content": "Be careful not to flub your mudras, as using <0/> can cost you considerable DPS by reducing the number of <1/>s you can do during the fight.",
   "nin.ninjutsu.suggestions.rabbit.why": "You cast Rabbit Medium {0, plural, one {# time} other {# times}}.",
   "nin.ninjutsu.suggestions.st-doton.content": "Avoid using <0/> on single targets, as it does less damage than <1/> if any ticks miss and uses more mudras, resulting in more GCD delay for no gain.",
   "nin.ninjutsu.suggestions.st-doton.why": "You cast a single-target Doton {badStds, plural, one {# time} other {# times}}.",
