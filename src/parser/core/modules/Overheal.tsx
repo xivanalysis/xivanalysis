@@ -256,7 +256,7 @@ export class Overheal extends Analyser {
 		if (bucketId >= 0) {
 			for (const trackedHeal of this.trackedOverheals) {
 				if (trackedHeal.bucketId === bucketId) {
-					this.debug(`Heal ${name} (${guid}) at ${event.timestamp} MANUALLY shoved into bucket ${trackedHeal.name.props.default}`)
+					this.debug(`Heal ${name} (${guid}) at ${event.timestamp} MANUALLY shoved into bucket ${trackedHeal.name.props.defaults}`)
 					trackedHeal.pushHeal(event)
 				}
 			}
