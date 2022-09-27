@@ -3,13 +3,6 @@ import React from 'react'
 
 export const changelog = [
 	{
-		date: new Date('2022-10-01'),
-		Changes: () => <>
-			Updated supported patches to include 6.2.
-		</>,
-		contributors: [CONTRIBUTORS.STYRFIRE],
-	},
-	{
 		date: new Date('2022-05-22'),
 		Changes: () => <>
 			Various spells no longer break combo. Blade of Faith no longer combos from Confiteor.
