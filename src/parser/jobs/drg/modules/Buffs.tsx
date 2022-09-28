@@ -1,6 +1,6 @@
 import {t} from '@lingui/macro'
 import {Trans, Plural} from '@lingui/react'
-import {ActionLink, StatusLink} from 'components/ui/DbLink'
+import {DataLink} from 'components/ui/DbLink'
 import {ActionKey} from 'data/ACTIONS'
 import {Cause, Event, Events} from 'event'
 import {Analyser} from 'parser/core/Analyser'
@@ -12,7 +12,7 @@ import {Data} from 'parser/core/modules/Data'
 import {Invulnerability} from 'parser/core/modules/Invulnerability'
 import {PieChartStatistic, Statistics} from 'parser/core/modules/Statistics'
 import {Statuses} from 'parser/core/modules/Statuses'
-import Suggestions, {Suggestion, TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import Suggestions, {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import React from 'react'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 
@@ -144,12 +144,12 @@ export default class Buffs extends Analyser {
 		this.checklist.add(new Rule({
 			name: <Trans id="drg.buffs.checklist.name">Keep {this.data.statuses.POWER_SURGE.name} up</Trans>,
 			description: <Trans id="drg.buffs.checklist.description">
-				<ActionLink {...this.data.actions.DISEMBOWEL}/> and <ActionLink action="COERTHAN_TORMENT" /> grant <StatusLink status="POWER_SURGE" /> which provides a 10% boost to your personal damage and should always be kept up.
+				<DataLink action="DISEMBOWEL"/> and <DataLink action="COERTHAN_TORMENT" /> grant <DataLink status="POWER_SURGE" /> which provides a 10% boost to your personal damage and should always be kept up.
 			</Trans>,
 			displayOrder: DISPLAY_ORDER.DISEMBOWEL,
 			requirements: [
 				new Requirement({
-					name: <Trans id="drg.buffs.checklist.requirement.name"><StatusLink {...this.data.statuses.POWER_SURGE}/> uptime</Trans>,
+					name: <Trans id="drg.buffs.checklist.requirement.name"><DataLink status="POWER_SURGE" /> uptime</Trans>,
 					percent: () => this.getPowerSurgeUptimePercent(),
 				}),
 			],
@@ -158,7 +158,7 @@ export default class Buffs extends Analyser {
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.LIFE_SURGE.icon,
 			content: <Trans id="drg.buffs.suggestions.life-surge.content">
-				<ActionLink {...this.data.actions.LIFE_SURGE}/> should be used on <ActionLink {...this.data.actions.HEAVENS_THRUST}/>, your highest potency ability, as much as possible. In order to keep <ActionLink {...this.data.actions.LIFE_SURGE} /> on cooldown, it may sometimes be necessary to use it on a 5th combo hit. In multi-target scenarios, <ActionLink {...this.data.actions.LIFE_SURGE} /> can be used on <ActionLink {...this.data.actions.COERTHAN_TORMENT} /> if you hit at least three targets.
+				<DataLink action="LIFE_SURGE"/> should be used on <DataLink action="HEAVENS_THRUST"/>, your highest potency ability, as much as possible. In order to keep <DataLink action="LIFE_SURGE" /> on cooldown, it may sometimes be necessary to use it on a 5th combo hit. In multi-target scenarios, <DataLink action="LIFE_SURGE" /> can be used on <DataLink action="COERTHAN_TORMENT" /> if you hit at least three targets.
 			</Trans>,
 			tiers: {
 				1: SEVERITY.MINOR,
@@ -171,18 +171,19 @@ export default class Buffs extends Analyser {
 			</Trans>,
 		}))
 
-		if (this.soloDragonSightCount > 0) {
-			this.suggestions.add(new Suggestion({
-				icon: this.data.actions.DRAGON_SIGHT.icon,
-				content: <Trans id="drg.buffs.suggestions.solo-ds.content">
-					Although it doesn't impact your personal DPS, try to always use <ActionLink {...this.data.actions.DRAGON_SIGHT} /> on a partner in group content so that someone else can benefit from the damage bonus too.
-				</Trans>,
-				severity: SEVERITY.MINOR,
-				why: <Trans id="drg.buffs.suggestions.solo-ds.why">
-					{this.soloDragonSightCount} of your Dragon Sight casts didn't have a tether partner.
-				</Trans>,
-			}))
-		}
+		this.suggestions.add(new TieredSuggestion({
+			icon: this.data.actions.DRAGON_SIGHT.icon,
+			content: <Trans id="drg.buffs.suggestions.solo-ds.content">
+				Although it doesn't impact your personal DPS, try to always use <DataLink action="DRAGON_SIGHT" /> on a partner in group content so that someone else can benefit from the damage bonus too.
+			</Trans>,
+			tiers: {
+				1: SEVERITY.MINOR,
+			},
+			value: this.soloDragonSightCount,
+			why: <Trans id="drg.buffs.suggestions.solo-ds.why">
+				{this.soloDragonSightCount} of your Dragon Sight casts didn't have a tether partner.
+			</Trans>,
+		}))
 
 		// make a lil graph of life surge uses
 		// get total LS casts
