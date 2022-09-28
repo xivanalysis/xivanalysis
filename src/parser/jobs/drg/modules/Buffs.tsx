@@ -79,7 +79,6 @@ export default class Buffs extends Analyser {
 		this.addEventHook(playerFilter.type('action'), this.onCast)
 
 		this.addEventHook(playerFilter.action(this.data.actions.DRAGON_SIGHT.id), this.onDragonSight)
-
 		this.addEventHook(playerFilter.type('damage').cause(filter<Cause>().action(this.data.actions.COERTHAN_TORMENT.id)), this.onCot)
 		this.addEventHook('complete', this.onComplete)
 
@@ -144,7 +143,7 @@ export default class Buffs extends Analyser {
 		this.checklist.add(new Rule({
 			name: <Trans id="drg.buffs.checklist.name">Keep {this.data.statuses.POWER_SURGE.name} up</Trans>,
 			description: <Trans id="drg.buffs.checklist.description">
-				<DataLink action="DISEMBOWEL"/> and <DataLink action="COERTHAN_TORMENT" /> grant <DataLink status="POWER_SURGE" /> which provides a 10% boost to your personal damage and should always be kept up.
+				<DataLink action="DISEMBOWEL"/> and <DataLink action="SONIC_THRUST" /> grant <DataLink status="POWER_SURGE" /> which provides a 10% boost to your personal damage and should always be kept up.
 			</Trans>,
 			displayOrder: DISPLAY_ORDER.DISEMBOWEL,
 			requirements: [
