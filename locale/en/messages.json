@@ -409,7 +409,7 @@
   "drg.buffs.suggestions.life-surge.content": "<0/> should be used on <1/>, your highest potency ability, as much as possible. In order to keep <2/> on cooldown, it may sometimes be necessary to use it on a 5th combo hit. In multi-target scenarios, <3/> can be used on <4/> if you hit at least three targets.",
   "drg.buffs.suggestions.life-surge.why": "You used {0} on a non-optimal GCD {1, plural, one {# time} other {# times}}.",
   "drg.buffs.suggestions.solo-ds.content": "Although it doesn't impact your personal DPS, try to always use <0/> on a partner in group content so that someone else can benefit from the damage bonus too.",
-  "drg.buffs.suggestions.solo-ds.why": "At least 1 of your Dragon Sight casts didn't have a tether partner.",
+  "drg.buffs.suggestions.solo-ds.why": "{0} of your Dragon Sight casts didn't have a tether partner.",
   "drg.buffs.title": "Buffs",
   "drg.debuffs.checklist.description": "<0/> provides a potent DoT which should be maintained at all times.",
   "drg.debuffs.checklist.name": "Keep your debuffs up",
