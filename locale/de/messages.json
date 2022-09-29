@@ -409,7 +409,7 @@
   "drg.buffs.suggestions.life-surge.content": "",
   "drg.buffs.suggestions.life-surge.why": "Du hast {0} {1, plural, one {# Mal} other {# Mal}} für einen nicht-optimalen GCD benutzt.",
   "drg.buffs.suggestions.solo-ds.content": "",
-  "drg.buffs.suggestions.solo-ds.why": "Mindestens 1 Drachenblick hatte keinen Partner.",
+  "drg.buffs.suggestions.solo-ds.why": "",
   "drg.buffs.title": "バフ",
   "drg.debuffs.checklist.description": "<0/> beinhaltet einen starken DoT, der immer aktiv sein sollte.",
   "drg.debuffs.checklist.name": "Halte deine DoTs aufrecht",

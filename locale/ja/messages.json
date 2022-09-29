@@ -409,7 +409,7 @@
   "drg.buffs.suggestions.life-surge.content": "<0/>は、可能な限りあなたの最高威力を持つスキルである<1/>に使用してください。<2/>をクールダウンさせておくために、場合により5回目のコンボ命中時に使用することも必要かもしれません。マルチターゲットの場合には、少なくとも3つのターゲットに命中した場合、<3/>を<4/>に使用することができます。",
   "drg.buffs.suggestions.life-surge.why": "{1, plural, other {# 回}} の{0} が適さないウェポンスキルに対して使用されました。",
   "drg.buffs.suggestions.solo-ds.content": "あなた個人のDPSには影響しませんが、<0/>は常にパーティーメンバーのだれかに使い、ダメージボーナスを得られるようにしてください。",
-  "drg.buffs.suggestions.solo-ds.why": "最低でも1回のドラゴンサイトに対象のメンバーが指定されませんでした。",
+  "drg.buffs.suggestions.solo-ds.why": "",
   "drg.buffs.title": "バフ",
   "drg.debuffs.checklist.description": "<0/> は強力なDoTで、常に維持されるべきです。",
   "drg.debuffs.checklist.name": "デバフを常に切らさないようにしてください。",

@@ -409,7 +409,7 @@
   "drg.buffs.suggestions.life-surge.content": "<0/> devrait être utilisé avec <1/>, votre action la plus puissante, autant que possible. Dans le but de garder <2/> en cooldown, il peut être parfois nécessaire de l'utiliser sur le 5e coup d'un combo. Sur de multiples cibles, <3/> peut être utilisé sur <4/> s'il y a au moins 3 cibles.",
   "drg.buffs.suggestions.life-surge.why": "Vous avez utilisé {0} sur un GCD non optimal {1, plural, one {# fois} other {# fois}}.",
   "drg.buffs.suggestions.solo-ds.content": "Même si votre DPS personnel n'est pas impacté, essayez de toujours utiliser <0/> sur un autre joueur pour qu'il puisse profiter du bonus de dégâts.",
-  "drg.buffs.suggestions.solo-ds.why": "Au moins un de vos vue du dragon n'avait pas de partenaire.",
+  "drg.buffs.suggestions.solo-ds.why": "",
   "drg.buffs.title": "Boost",
   "drg.debuffs.checklist.description": "<0/> fournit un DoT puissant qui doit être maintenu en tout temps.",
   "drg.debuffs.checklist.name": "Maintenez vos débuffs actifs",

@@ -409,7 +409,7 @@
   "drg.buffs.suggestions.life-surge.content": "<0/> 기술은 될 수 있는 한 가장 강력한 위력을 가진 <1/> 기술에 사용해야 합니다. <2/> 기술과 함께 재사용 시간을 맞추려면 일부러 다섯번째 콤보에 사용해야 할 수도 있습니다. 셋 이상의 다수 대상이라면 <3/> 기술을 <4/> 기술에 쓸 수도 있습니다.",
   "drg.buffs.suggestions.life-surge.why": "{0} 기술을 비효율적인 글쿨 기술에 {1, plural, other {#회}} 사용했습니다.",
   "drg.buffs.suggestions.solo-ds.content": "개인 피해량에 영향이 가지는 않지만 반드시 <0/> 기술을 파티원에게 사용하십시오. 파티원 또한 피해량 보너스를 받게 됩니다.",
-  "drg.buffs.suggestions.solo-ds.why": "용의 시선을 대상을 지정하지 않고 최소 1회 사용했습니다.",
+  "drg.buffs.suggestions.solo-ds.why": "",
   "drg.buffs.title": "버프",
   "drg.debuffs.checklist.description": "<0/> 기술은 상당한 지속 피해를 입히며 항상 유지해야 합니다.",
   "drg.debuffs.checklist.name": "항상 디버프 유지하기",
