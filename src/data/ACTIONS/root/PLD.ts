@@ -11,7 +11,6 @@ export const PLD = ensureActions({
 		icon: 'https://xivapi.com/i/000000/000158.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		potency: 200,
 		combo: {
 			start: true,
 		},
@@ -22,10 +21,8 @@ export const PLD = ensureActions({
 		icon: 'https://xivapi.com/i/000000/000156.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		potency: 170,
 		combo: {
 			from: 9,
-			potency: 300,
 		},
 	},
 	SHIELD_LOB: {
@@ -34,7 +31,6 @@ export const PLD = ensureActions({
 		icon: 'https://xivapi.com/i/000000/000164.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		potency: 100,
 	},
 	SHIELD_BASH: {
 		id: 16,
@@ -43,7 +39,6 @@ export const PLD = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		breaksCombo: true,
-		potency: 100,
 	},
 	RAGE_OF_HALONE: {
 		id: 21,
@@ -51,10 +46,8 @@ export const PLD = ensureActions({
 		icon: 'https://xivapi.com/i/000000/000155.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		potency: 100,
 		combo: {
 			from: 15,
-			potency: 330,
 			end: true,
 		},
 	},
@@ -64,7 +57,6 @@ export const PLD = ensureActions({
 		icon: 'https://xivapi.com/i/002000/002511.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		potency: 100,
 		combo: {
 			start: true,
 		},
@@ -75,10 +67,8 @@ export const PLD = ensureActions({
 		icon: 'https://xivapi.com/i/002000/002516.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		potency: 100,
 		combo: {
 			from: 7381,
-			potency: 170,
 			end: true,
 		},
 	},
@@ -88,10 +78,8 @@ export const PLD = ensureActions({
 		icon: 'https://xivapi.com/i/002000/002506.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		potency: 100,
 		combo: {
 			from: 15,
-			potency: 250,
 			end: true,
 		},
 		statusesApplied: ['GORING_BLADE'],
@@ -111,10 +99,8 @@ export const PLD = ensureActions({
 		icon: 'https://xivapi.com/i/002000/002507.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		potency: 130,
 		combo: {
 			from: 15,
-			potency: 420,
 			end: true,
 		},
 		statusesApplied: ['SWORD_OATH'],
@@ -126,7 +112,6 @@ export const PLD = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 1500,
-		potency: 270,
 		breaksCombo: true,
 	},
 	HOLY_CIRCLE: {
@@ -136,7 +121,6 @@ export const PLD = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 1500,
-		potency: 130,
 		breaksCombo: true,
 	},
 	ATONEMENT: {
@@ -146,7 +130,6 @@ export const PLD = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		breaksCombo: true,
-		potency: 420,
 	},
 	CONFITEOR: {
 		id: 16459,
@@ -176,7 +159,6 @@ export const PLD = ensureActions({
 		speedAttribute: Attribute.SPELL_SPEED,
 		combo: {
 			from: 25748,
-			potency: 350,
 		},
 	},
 	BLADE_OF_VALOR: {
@@ -187,7 +169,6 @@ export const PLD = ensureActions({
 		speedAttribute: Attribute.SPELL_SPEED,
 		combo: {
 			from: 25749,
-			potency: 420,
 			end: true,
 		},
 		statusesApplied: ['BLADE_OF_VALOR'],
