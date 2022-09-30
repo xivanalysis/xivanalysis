@@ -873,7 +873,7 @@
   "sge.gauge.suggestions.lost-to-rhizomata.why": "{rhizomataLostStacks, plural, one {# charge de Bile de vipère perdue} other {# charges Bile de vipère perdues}} en surchargeant la jauge avec <0/>.",
   "sge.interrupts.suggestion.content": "",
   "sge.overheal.addersgall.name": "Bile de vipère",
-  "sge.overheal.cooldowns.name": "Temps de rechargement",
+  "sge.overheal.direct.name": "",
   "sge.overheal.haima.name": "Expiration de Haima & Panhaima",
   "sge.swiftcast.missed.suggestion.content": "Lancez un sort avec <0/> avant qu'il n'expire. Cela vous permet d'utiliser un sort instantanément, comme <1/> pour une résurrection rapide ou <2/> pour weave.",
   "sge.tincture.suggestions.trackedActions.content": "Essayez de faire autant de dégâts que possible avec vos potions d'esprit.",
