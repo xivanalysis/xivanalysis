@@ -14,7 +14,7 @@ export class Overheal extends CoreOverheal {
 
 	override trackedHealCategories = [
 		{
-			name: <Trans id="sge.overheal.addersgall.name">Addersgall</Trans>,
+			name: 'Addersgall',
 			trackedHealIds: [
 				this.data.statuses.KERAKEIA.id,
 				this.data.actions.DRUOCHOLE.id,
@@ -31,7 +31,7 @@ export class Overheal extends CoreOverheal {
 			],
 		},
 		{
-			name: <DataLink action="PHYSIS_II" showIcon={false} showTooltip={false} />,
+			name: <DataLink status="PHYSIS_II" showIcon={false} showTooltip={false} />,
 			color: SuggestedColors[2],
 			trackedHealIds: [
 				this.data.statuses.PHYSIS.id,
