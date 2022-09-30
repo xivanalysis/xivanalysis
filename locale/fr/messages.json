@@ -872,7 +872,6 @@
   "sge.gauge.suggestions.lost-to-rhizomata.content": "Vous avez perdu des Biles de vipère en surchargeant la jauge avec <0/>, ce qui a gâché le temps déjà dépensé pour charger la 3e charge. Essayer d'utiliser <1/> quand vous n'avez qu'une charge ou moins pour éviter de perdre du temps au compteur.",
   "sge.gauge.suggestions.lost-to-rhizomata.why": "{rhizomataLostStacks, plural, one {# charge de Bile de vipère perdue} other {# charges Bile de vipère perdues}} en surchargeant la jauge avec <0/>.",
   "sge.interrupts.suggestion.content": "",
-  "sge.overheal.addersgall.name": "Bile de vipère",
   "sge.overheal.direct.name": "",
   "sge.overheal.haima.name": "Expiration de Haima & Panhaima",
   "sge.swiftcast.missed.suggestion.content": "Lancez un sort avec <0/> avant qu'il n'expire. Cela vous permet d'utiliser un sort instantanément, comme <1/> pour une résurrection rapide ou <2/> pour weave.",
