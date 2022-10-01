@@ -88,8 +88,8 @@ export class TrackedOverheal {
 	}
 
 	/**
-     * Gets a printable name for the category
-     */
+	 * Gets a printable name for the category
+	 */
 	get debugName(): string {
 		if (typeof this.name === 'string') {
 			return this.name
