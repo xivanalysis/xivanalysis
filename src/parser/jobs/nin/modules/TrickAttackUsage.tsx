@@ -81,7 +81,7 @@ export class TrickAttackUsage extends Analyser {
 			this.suggestions.add(new TieredSuggestion({
 				icon: this.data.actions.TRICK_ATTACK.icon,
 				content: <Trans id="nin.ta-usage.suggestions.missed.content">
-					Avoid holding <ActionLink action="TRICK_ATTACK"/> for extended periods of time. It's typically ideal to use it as close to on cooldown as possible in order to keep it aligned with all the other raid buffs and personal burst windows, as well as maximizing the number of uses per fight.
+					Avoid holding <ActionLink action="TRICK_ATTACK"/> for extended periods of time. It's typically ideal to use it as close to on cooldown as possible in order to keep it aligned with raid buffs, as well as maximizing the number of uses per fight.
 				</Trans>,
 				value: lostCasts,
 				tiers: {
@@ -93,28 +93,31 @@ export class TrickAttackUsage extends Analyser {
 				</Trans>,
 			}))
 
-			const distanceFromOptimal = Math.abs(OPTIMAL_GCD_COUNT - this.gcdCount)
-			this.suggestions.add(new TieredSuggestion({
-				icon: this.data.actions.TRICK_ATTACK.icon,
-				content: <Trans id="nin.ta-usage.suggestions.opener.content">
-					Avoid unconventional timings for your first <ActionLink action="TRICK_ATTACK"/> of the fight in order to line it up with all the other raid and personal buffs. In most openers, Trick Attack should be weaved in approximately 8-9 seconds into the fight.
-				</Trans>,
-				value: distanceFromOptimal,
-				tiers: {
-					1: SEVERITY.MEDIUM,
-					2: SEVERITY.MAJOR,
-				},
-				why: <Trans id="nin.ta-usage.suggestions.opener.why">
-					Your first Trick Attack was <Plural value={this.gcdCount} one="# GCD" other="# GCDs"/> into your opener.
-				</Trans>,
-			}))
+			// Suppressing this suggestion for any 6.1+ parses, since Trick isn't a raid buff anymore and it's not really worth updating/keeping around for Mug
+			if (this.parser.patch.before('6.1')) {
+				const distanceFromOptimal = Math.abs(OPTIMAL_GCD_COUNT - this.gcdCount)
+				this.suggestions.add(new TieredSuggestion({
+					icon: this.data.actions.TRICK_ATTACK.icon,
+					content: <Trans id="nin.ta-usage.suggestions.opener.content">
+						Avoid unconventional timings for your first <ActionLink action="TRICK_ATTACK"/> of the fight in order to line it up raid buffs. In most openers, Trick Attack should be weaved in approximately 8-9 seconds into the fight.
+					</Trans>,
+					value: distanceFromOptimal,
+					tiers: {
+						1: SEVERITY.MEDIUM,
+						2: SEVERITY.MAJOR,
+					},
+					why: <Trans id="nin.ta-usage.suggestions.opener.why">
+						Your first Trick Attack was <Plural value={this.gcdCount} one="# GCD" other="# GCDs"/> into your opener.
+					</Trans>,
+				}))
+			}
 		}
 
 		// WHY ARE YOU EVEN PLAYING THIS JOB
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.TRICK_ATTACK.icon,
 			content: <Trans id="nin.ta-usage.suggestions.none.content">
-				<ActionLink action="TRICK_ATTACK"/> is the single most powerful raid buff in your kit and should be used on cooldown, or as close to it as possible depending on the flow of the fight.
+				<ActionLink action="TRICK_ATTACK"/> is a very powerful personal buff and should be used on cooldown, or as close to it as possible depending on the flow of the fight.
 			</Trans>,
 			value: this.taCasts.length,
 			tiers: {

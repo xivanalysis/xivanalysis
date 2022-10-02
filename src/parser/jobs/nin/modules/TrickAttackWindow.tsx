@@ -54,7 +54,8 @@ export class TrickAttackWindow extends BuffWindow {
 
 	@dependency globalCooldown!: GlobalCooldown
 
-	override buffStatus = this.data.statuses.TRICK_ATTACK_VULNERABILITY_UP
+	// The Trick Attack debuff changed in 6.1, so we need to track a different one depending on the patch
+	override buffStatus = this.parser.patch.before('6.1') ? this.data.statuses.TRICK_ATTACK_VULNERABILITY_UP : this.data.statuses.TRICK_ATTACK
 
 	override initialise() {
 		super.initialise()
