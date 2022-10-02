@@ -97,12 +97,15 @@ export class Huton extends Analyser {
 		this.lastEventTime = event.timestamp
 	}
 
-	private handleHutonExtension(estimate: HutonEstimate, amount: number, elapsedTime: number) {
+	private handleHutonExtension(estimate: HutonEstimate, actionId: number, amount: number, elapsedTime: number) {
 		let newDuration = estimate.current - elapsedTime
 		if (newDuration <= 0) {
 			estimate.current = 0
 			estimate.downtime -= newDuration // Since it's negative, this is basically addition
-			estimate.badAcs++
+			if (actionId === this.data.actions.ARMOR_CRUSH.id) {
+				// Only flag actual Armor Crushes for the badAcs property
+				estimate.badAcs++
+			}
 		} else {
 			newDuration += amount
 			estimate.clipped += Math.max(newDuration - HUTON_MAX_DURATION_MILLIS, 0)
@@ -117,15 +120,15 @@ export class Huton extends Analyser {
 
 		// The .get() should never be undefined but we must appease the ts lint gods
 		const extension = this.hutonExtensionMillis.get(action.id) ?? 0
-		this.handleHutonExtension(this.highEstimate, extension, elapsedTime)
-		this.handleHutonExtension(this.lowEstimate, extension, elapsedTime)
+		this.handleHutonExtension(this.highEstimate, action.id, extension, elapsedTime)
+		this.handleHutonExtension(this.lowEstimate, action.id, extension, elapsedTime)
 		this.lastEventTime = event.timestamp
 	}
 
 	private onKamaitachi(event: Events['damage']) {
 		const elapsedTime = (event.timestamp - this.lastEventTime)
-		this.handleHutonExtension(this.highEstimate, HUTON_EXTENSION_SHORT, elapsedTime)
-		this.handleHutonExtension(this.lowEstimate, HUTON_EXTENSION_SHORT, elapsedTime)
+		this.handleHutonExtension(this.highEstimate, this.data.actions.PHANTOM_KAMAITACHI_BUNSHIN.id, HUTON_EXTENSION_SHORT, elapsedTime)
+		this.handleHutonExtension(this.lowEstimate, this.data.actions.PHANTOM_KAMAITACHI_BUNSHIN.id, HUTON_EXTENSION_SHORT, elapsedTime)
 		this.lastEventTime = event.timestamp
 	}
 

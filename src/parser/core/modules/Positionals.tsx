@@ -181,6 +181,7 @@ export abstract class Positionals extends Analyser {
 		return new Requirement({
 			name: <ActionLink {...result.positional.action}/>,
 			percent: percent,
+			weight: expected,
 			overrideDisplay: `${actual} / ${expected} (${percent.toFixed(2)}%)`,
 		})
 	}

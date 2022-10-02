@@ -12,7 +12,6 @@ export const WAR = ensureActions({
 		icon: 'https://xivapi.com/i/000000/000261.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		potency: 100,
 		breaksCombo: false,
 	},
 
@@ -20,7 +19,6 @@ export const WAR = ensureActions({
 		id: 31,
 		name: 'Heavy Swing',
 		icon: 'https://xivapi.com/i/000000/000260.png',
-		potency: 200,
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		combo: {
@@ -34,10 +32,8 @@ export const WAR = ensureActions({
 		icon: 'https://xivapi.com/i/000000/000255.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		potency: 130,
 		combo: {
 			from: 31,
-			potency: 280,
 		},
 	},
 
@@ -47,10 +43,8 @@ export const WAR = ensureActions({
 		icon: 'https://xivapi.com/i/000000/000258.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		potency: 120,
 		combo: {
 			from: 37,
-			potency: 400,
 			end: true,
 		},
 	},
@@ -62,10 +56,8 @@ export const WAR = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		statusesApplied: ['SURGING_TEMPEST'],
-		potency: 120,
 		combo: {
 			from: 37,
-			potency: 400,
 			end: true,
 		},
 	},
@@ -76,7 +68,6 @@ export const WAR = ensureActions({
 		icon: 'https://xivapi.com/i/002000/002557.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		potency: 460,
 		breaksCombo: false,
 	},
 
@@ -86,7 +77,6 @@ export const WAR = ensureActions({
 		icon: 'https://xivapi.com/i/002000/002568.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		potency: 650,
 		breaksCombo: false,
 	},
 
@@ -96,7 +86,6 @@ export const WAR = ensureActions({
 		icon: 'https://xivapi.com/i/000000/000254.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		potency: 110,
 		combo: {
 			start: true,
 		},
@@ -109,10 +98,8 @@ export const WAR = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		statusesApplied: ['SURGING_TEMPEST'],
-		potency: 150,
 		combo: {
 			from: 41,
-			potency: 150,
 			end: true,
 		},
 	},
@@ -123,7 +110,6 @@ export const WAR = ensureActions({
 		icon: 'https://xivapi.com/i/002000/002558.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		potency: 200,
 		breaksCombo: false,
 	},
 
@@ -133,7 +119,6 @@ export const WAR = ensureActions({
 		icon: 'https://xivapi.com/i/002000/002566.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		potency: 320,
 		breaksCombo: false,
 	},
 
@@ -143,7 +128,6 @@ export const WAR = ensureActions({
 		icon: 'https://xivapi.com/i/002000/002571.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		potency: 700,
 		breaksCombo: false,
 	},
 
@@ -214,7 +198,6 @@ export const WAR = ensureActions({
 		icon: 'https://xivapi.com/i/002000/002561.png',
 		cooldown: 30000,
 		charges: 3,
-		potency: 150,
 	},
 
 	UPHEAVAL: {
@@ -223,7 +206,6 @@ export const WAR = ensureActions({
 		icon: 'https://xivapi.com/i/002000/002562.png',
 		cooldown: 30000,
 		cooldownGroup: 6,
-		potency: 350,
 	},
 
 	OROGENY: {
@@ -232,7 +214,6 @@ export const WAR = ensureActions({
 		icon: 'https://xivapi.com/i/002000/002570.png',
 		cooldown: 30000,
 		cooldownGroup: 6,
-		potency: 150,
 	},
 
 	INNER_RELEASE: {

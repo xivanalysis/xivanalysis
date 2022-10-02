@@ -106,7 +106,7 @@ export class Ninjutsu extends Analyser {
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.RABBIT_MEDIUM.icon,
 			content: <Trans id="nin.ninjutsu.suggestions.rabbit.content">
-				Be careful not to flub your mudras, as using <ActionLink action="RABBIT_MEDIUM"/> can cost you personal DPS at best and raid DPS at worst by reducing the number of <ActionLink action="TRICK_ATTACK"/>s you can do during the fight.
+				Be careful not to flub your mudras, as using <ActionLink action="RABBIT_MEDIUM"/> can cost you considerable DPS by reducing the number of <ActionLink action="TRICK_ATTACK"/>s you can do during the fight.
 			</Trans>,
 			tiers: {
 				1: SEVERITY.MEDIUM, // You were having a bad day, mudra lag, etc.
