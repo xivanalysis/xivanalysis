@@ -60,7 +60,7 @@ export class Kassatsu extends Analyser {
 				content: <Trans id="nin.kassatsu.suggestions.waste.content">
 					Be careful not to let <ActionLink action="KASSATSU"/> fall off, as it wastes a 30% potency buff and means that you're delaying your Ninjutsu casts significantly.
 				</Trans>,
-				severity: SEVERITY.MEDIUM,
+				severity: SEVERITY.MAJOR,
 				why: <Trans id="nin.kassatsu.suggestions.waste.why">
 					You allowed Kassatsu to fall off <Plural value={this.kassatsuWastes} one="# time" other="# times"/>.
 				</Trans>,

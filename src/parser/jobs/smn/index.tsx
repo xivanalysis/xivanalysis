@@ -20,7 +20,7 @@ export const SUMMONER = new Meta({
 	</>,
 	supportedPatches: {
 		from: '6.0',
-		to: '6.1',
+		to: '6.2',
 	},
 	contributors: [
 		{user: CONTRIBUTORS.KELOS, role: ROLES.MAINTAINER},

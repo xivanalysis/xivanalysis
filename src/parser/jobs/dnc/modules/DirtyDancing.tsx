@@ -175,7 +175,7 @@ export class DirtyDancing extends Analyser {
 		// Count dance as dirty if we didn't get the expected finisher, and the fight wouldn't have ended or been in an invuln window before we could have
 		if (finisher.action !== dance.expectedFinishId && dance.expectedEndTime <= this.parser.pull.timestamp + this.parser.pull.duration) {
 			this.addTimestampHook(dance.expectedEndTime, ({timestamp}) => {
-				dance.dirty = this.invulnerability.isActive({
+				dance.dirty = !this.invulnerability.isActive({
 					timestamp,
 					types: ['invulnerable'],
 				})
