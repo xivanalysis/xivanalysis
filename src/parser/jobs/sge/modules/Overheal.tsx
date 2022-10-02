@@ -29,6 +29,7 @@ export class Overheal extends CoreOverheal {
 			trackedHealIds: [
 				this.data.actions.HOLOS.id,
 			],
+			debugName: 'Holos',
 		},
 		{
 			name: <DataLink status="PHYSIS_II" showIcon={false} showTooltip={false} />,
@@ -37,6 +38,7 @@ export class Overheal extends CoreOverheal {
 				this.data.statuses.PHYSIS.id,
 				this.data.statuses.PHYSIS_II.id,
 			],
+			debugName: 'Physis',
 		},
 		{
 			name: <Trans id="sge.overheal.haima.name">Haima &amp; Panhaima Expiration</Trans>,

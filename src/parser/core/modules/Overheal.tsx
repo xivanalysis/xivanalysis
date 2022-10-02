@@ -20,6 +20,7 @@ interface TrackedOverhealOpts {
 	color?: string
 	trackedHealIds?: number[],
 	ignore?: boolean
+	debugName?: string
 }
 
 const REGENERATION_ID: number = 1302
@@ -53,6 +54,7 @@ export class TrackedOverheal {
 	protected trackedHealIds: number[]
 	heal: number = 0
 	overheal: number = 0
+	internalDebugName: string | undefined
 
 	constructor(opts: TrackedOverhealOpts) {
 		this.name = opts.name
@@ -60,6 +62,7 @@ export class TrackedOverheal {
 		this.trackedHealIds = opts.trackedHealIds || []
 		this.bucketId = opts.bucketId || -1
 		this.ignore = opts.ignore || false
+		this.internalDebugName = opts.debugName
 	}
 
 	/**
@@ -91,6 +94,10 @@ export class TrackedOverheal {
 	 * Gets a printable name for the category
 	 */
 	get debugName(): string {
+		if (this.internalDebugName != null) {
+			return this.internalDebugName
+		}
+
 		if (typeof this.name === 'string') {
 			return this.name
 		}
@@ -98,21 +105,6 @@ export class TrackedOverheal {
 		// Trans tags
 		if (this.name.props.defaults != null) {
 			return this.name.props.defaults
-		}
-
-		// <></> JSX tags
-		if (this.name.props.children != null) {
-			return this.name.props.children
-		}
-
-		// DataLink action
-		if (this.name.props.action != null) {
-			return this.name.props.action
-		}
-
-		// DataLink status
-		if (this.name.props.status != null) {
-			return this.name.props.status
 		}
 
 		return 'Unknown'
