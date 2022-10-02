@@ -246,13 +246,13 @@ const CONTRIBUTORS = ensureRecord<Contributor>()({
 		jobs: [
 			JOBS.PALADIN,
 		],
-  }
-  FAIR2DARE: {
-    name: 'fair2dare',
-    avatar: require('./avatar/fair2dare.png'),
-    jobs: [
-      JOBS.PALADIN, JOBS.DARK_KNIGHT
-    ],
+	},
+	FAIR2DARE: {
+		name: 'fair2dare',
+		avatar: require('./avatar/fair2dare.png'),
+		jobs: [
+			JOBS.PALADIN, JOBS.DARK_KNIGHT,
+		],
 	},
 })
 
