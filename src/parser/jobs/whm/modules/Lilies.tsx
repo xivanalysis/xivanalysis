@@ -56,7 +56,7 @@ const SEVERITIES = {
 		1: SEVERITY.MEDIUM,
 		3: SEVERITY.MAJOR,
 	},
-	UNNECESSARY_GCD_HEALS: {
+	WASTED_GCD_HEALS: {
 		3: SEVERITY.MAJOR,
 	},
 }
@@ -67,7 +67,7 @@ export class Lilies extends CoreGauge {
 
 	@dependency private suggestions!: Suggestions
 
-  private numUnnecessaryGcdHeals = 0;
+  private wastedGcds = 0;
 
 	private lilyInterval = this.parser.patch.before('6.1') ? LILY_INTERVAL_600 : LILY_INTERVAL_610
 
@@ -134,8 +134,8 @@ export class Lilies extends CoreGauge {
 	}
 
 	private checkAfflatusAvailability() {
-		if (this.lilyGauge.value !== 0 && !this.bloodLilyGauge.capped) {
-			this.numUnnecessaryGcdHeals++
+		if (!this.lilyGauge.empty && !this.bloodLilyGauge.capped) {
+			this.wastedGcds++
 		}
 	}
 
@@ -188,13 +188,13 @@ export class Lilies extends CoreGauge {
 
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.AFFLATUS_RAPTURE.icon,
-			content: <Trans id="whm.gauge.gcdheals.suggestions.leftover.content">
-        Try to use lilies instead of GCD heals when they're available.
+			content: <Trans id="whm.gauge.lily.suggestions.leftover.content">
+        Try to use Lilies instead of GCD heals when they're available.
 			</Trans>,
-			tiers: SEVERITIES.UNNECESSARY_GCD_HEALS,
-			value: this.numUnnecessaryGcdHeals,
-			why: <Trans id="whm.gauge.gcdheals.suggestions.leftover.why">
-				{<Plural value={this.numUnnecessaryGcdHeals} one="# GCD Heal was" other="# GCD Heals were" />} used instead of using a Lily.
+			tiers: SEVERITIES.WASTED_GCD_HEALS,
+			value: this.wastedGcds,
+			why: <Trans id="whm.gauge.lily.suggestions.leftover.why">
+				{<Plural value={this.wastedGcds} one="# GCD Heal was" other="# GCD Heals were" />} used instead of using a Lily.
 			</Trans>,
 		}))
 	}
