@@ -44,6 +44,7 @@ export class Kenki extends CoreGauge {
 		// Builders
 		[this.data.actions.HAKAZE.id, {action: 5}],
 		[this.data.actions.JINPU.id, {combo: 5}],
+		[this.data.actions.ENPI.id, {action: 10}],
 		[this.data.actions.SHIFU.id, {combo: 5}],
 		[this.data.actions.KASHA.id, {combo: 10}],
 		[this.data.actions.GEKKO.id, {combo: 10}],
