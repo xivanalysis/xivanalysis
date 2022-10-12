@@ -8,6 +8,11 @@ export const changelog = [
 	// 	contrubutors: [CONTRIBUTORS.YOU],
 	// },
 	{
+		date: new Date('2022-10-11'),
+		Changes: () => <>Fixed Enpi incorrectly eating Meiyo Stacks when used</>,
+		contributors: [CONTRIBUTORS.RYAN],
+	},
+	{
 		date: new Date('2022-04-18'),
 		Changes: () => <>Removed Kaiten analysis for the patch 6.1 job update</>,
 		contributors: [CONTRIBUTORS.RYAN],
