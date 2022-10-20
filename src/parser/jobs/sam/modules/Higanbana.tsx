@@ -53,7 +53,7 @@ export class Higanbana extends DoTs {
 			tiers: SUGGESTION_TIERS.CLIPPING,
 			value: HiganbanaClipPerMinute,
 			why: <Trans id="sam.higanbana.suggestion.why">
-				An average of {this.parser.formatDuration(HiganbanaClipPerMinute, 1)} seconds of <DataLink status="HIGANBANA" /> per minute lost to early refreshes.
+				An average of {this.parser.formatDuration(HiganbanaClipPerMinute, 1)} seconds of <DataLink status="HIGANBANA" /> clipped per minute due to early refreshes.
 			</Trans>,
 		}))
 	}
