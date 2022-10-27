@@ -55,7 +55,7 @@ export class Demolish extends DoTs {
 			tiers: SUGGESTION_TIERS.CLIPPING,
 			value: demolishClipPerMinute,
 			why: <Trans id="mnk.demolish.suggestion.why">
-				An average of {this.parser.formatDuration(demolishClipPerMinute, 1)} seconds of <DataLink status="DEMOLISH" /> per minute lost to early refreshes.
+				An average of {this.parser.formatDuration(demolishClipPerMinute, 1)} seconds of <DataLink status="DEMOLISH" /> clipped per minute due to early refreshes.
 			</Trans>,
 		}))
 	}

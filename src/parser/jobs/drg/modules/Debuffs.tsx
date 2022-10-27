@@ -46,7 +46,7 @@ export default class Debuffs extends CoreDoTs {
 			},
 			value: chaosThrustClipPerMinute,
 			why: <Trans id="drg.debuffs.suggestions.clipping.why">
-				An average of {this.parser.formatDuration(chaosThrustClipPerMinute, 1)} seconds of <DataLink status="CHAOTIC_SPRING" /> per minute lost to early refreshes.
+				An average of {this.parser.formatDuration(chaosThrustClipPerMinute, 1)} seconds of <DataLink status="CHAOTIC_SPRING" /> clipped per minute due to early refreshes.
 			</Trans>,
 		}))
 	}
