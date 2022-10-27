@@ -57,4 +57,9 @@ export const changelog = [
 		Changes: () => <>Added data for new shield status from Holos.</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],
 	},
+	{
+		date: new Date('2022-09-30'),
+		Changes: () => <>Ignore Addersgall actions in Overheal and updated Overheal buckets.</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
 ]

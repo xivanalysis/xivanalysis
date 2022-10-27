@@ -16,10 +16,11 @@ interface SeverityTiers {
 
 interface TrackedOverhealOpts {
 	bucketId?: number
-	name: JSX.Element,
+	name: JSX.Element | string,
 	color?: string
 	trackedHealIds?: number[],
 	ignore?: boolean
+	debugName?: string
 }
 
 const REGENERATION_ID: number = 1302
@@ -48,11 +49,12 @@ export const SuggestedColors: string[] = [
 export class TrackedOverheal {
 	bucketId: number = -1
 	ignore: boolean
-	name: JSX.Element
+	name: JSX.Element | string
 	color: string = '#fff'
 	protected trackedHealIds: number[]
 	heal: number = 0
 	overheal: number = 0
+	internalDebugName: string | undefined
 
 	constructor(opts: TrackedOverhealOpts) {
 		this.name = opts.name
@@ -60,6 +62,7 @@ export class TrackedOverheal {
 		this.trackedHealIds = opts.trackedHealIds || []
 		this.bucketId = opts.bucketId || -1
 		this.ignore = opts.ignore || false
+		this.internalDebugName = opts.debugName
 	}
 
 	/**
@@ -85,6 +88,26 @@ export class TrackedOverheal {
 			return true
 		}
 		return false
+	}
+
+	/**
+	 * Gets a printable name for the category
+	 */
+	get debugName(): string {
+		if (this.internalDebugName != null) {
+			return this.internalDebugName
+		}
+
+		if (typeof this.name === 'string') {
+			return this.name
+		}
+
+		// Trans tags
+		if (this.name.props.defaults != null) {
+			return this.name.props.defaults
+		}
+
+		return 'Unknown'
 	}
 
 	/**
@@ -256,7 +279,7 @@ export class Overheal extends Analyser {
 		if (bucketId >= 0) {
 			for (const trackedHeal of this.trackedOverheals) {
 				if (trackedHeal.bucketId === bucketId) {
-					this.debug(`Heal ${name} (${guid}) at ${event.timestamp} MANUALLY shoved into bucket ${trackedHeal.name.props.defaults}`)
+					this.debug(`Heal ${name} (${guid}) at ${event.timestamp} MANUALLY shoved into bucket ${trackedHeal.debugName}`)
 					trackedHeal.pushHeal(event)
 				}
 			}
@@ -264,7 +287,7 @@ export class Overheal extends Analyser {
 		}
 		for (const trackedHeal of this.trackedOverheals) {
 			if (trackedHeal.idIsTracked(guid)) {
-				this.debug(`Heal from ${name} (${guid}) at ${event.timestamp} matched into category ${trackedHeal.name.props.defaults}`)
+				this.debug(`Heal from ${name} (${guid}) at ${event.timestamp} matched into category ${trackedHeal.debugName}`)
 				trackedHeal.pushHeal(event)
 				return
 			}
