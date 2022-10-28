@@ -54,7 +54,7 @@ export const changelog = [
 	},
 	{
 		date: new Date('2022-02-16'),
-		Changes: () => <>Improved accuracy of Esprit gauge generation simulation</>,
+		Changes: () => <>Improved accuracy of Esprit gauge generation simulation.</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],
 	},
 	{
@@ -65,6 +65,11 @@ export const changelog = [
 	{
 		date: new Date('2022-09-08'),
 		Changes: () => <>Fix a bug preventing missed steps from registering as an error.</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
+	{
+		date: new Date('2022-09-30'),
+		Changes: () => <>Fix a bug that could improperly mark Quadruple Technical Finish as wrong if Technical Step was started before the pull.</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],
 	},
 ]
