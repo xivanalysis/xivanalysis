@@ -205,7 +205,7 @@ export default class CrownPlay extends Analyser {
 		this.checklist.add(new TieredRule({
 			displayOrder: DISPLAY_ORDER.CROWN_PLAY_CHECKLIST,
 			name: <Trans id="ast.crown=play.checklist.name">
-				Use <DataLink action="MINOR_ARCANA" showIcon={false} /> to your advantage.
+				Use <DataLink action="MINOR_ARCANA" showIcon={false} /> to your advantage
 			</Trans>,
 			description: <><Trans id="ast.crown-play.checklist.description">
 				Playing <DataLink action="MINOR_ARCANA" /> will allow for extra oGCD damage through <DataLink action="LORD_OF_CROWNS" /> or extra oGCD healing through <DataLink action="LADY_OF_CROWNS" />.
