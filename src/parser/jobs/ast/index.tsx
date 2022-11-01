@@ -37,6 +37,19 @@ export const ASTROLOGIAN = new Meta({
 	],
 	changelog: [
 		{
+			date: new Date('2022-10-31'),
+			Changes: () => <>
+				<strong>AST Cleanup and <DataLink action="DIVINATION" showIcon={false} /></strong>
+				<ul>
+					<li> Removed <DataLink action="LIGHTSPEED" /> module and integrated it with <DataLink action="DIVINATION" /> </li>
+					<li> Added suggestion for <DataLink action="LIGHTSPEED" /> if not used with <DataLink action="DIVINATION" /> </li>
+					<li> Updated <DataLink action="DIVINATION" /> module to align with AST burst window recommendations. </li>
+					<li> Reorganized checklist items and added <DataLink action="COLLECTIVE_UNCONSCIOUS" /> to the healing oGCDs checklist. </li>
+				</ul>
+			</>,
+			contributors: [CONTRIBUTORS.OTOCEPHALY],
+		},
+		{
 			date: new Date('2022-01-26'),
 			Changes: () => <>
 				<strong>6.08 Support</strong>
