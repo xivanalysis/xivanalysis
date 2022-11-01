@@ -3,6 +3,7 @@ import {DataLink} from 'components/ui/DbLink'
 import {TARGET} from 'parser/core/modules/Checklist'
 import {CooldownDowntime} from 'parser/core/modules/CooldownDowntime'
 import React from 'react'
+import DISPLAY_ORDER from './DISPLAY_ORDER'
 
 const DEFAULT_HEAL_CHECKLIST_TIERS = {
 	20: TARGET.WARN,
@@ -26,6 +27,9 @@ export class oGCDs extends CooldownDowntime {
 	// eslint-disable-next-line @typescript-eslint/no-magic-numbers
 	override checklistTarget = 100
 
+	override trackedDisplayOrder = DISPLAY_ORDER.DIVINATION_CHECKLIST
+	override defensiveDisplayOrder = DISPLAY_ORDER.HEALING_OGCDS_CHECKLIST
+
 	private DPS_COOLDOWNS_TRACKED = [
 		//dps actions
 		{
@@ -47,6 +51,9 @@ export class oGCDs extends CooldownDowntime {
 		},
 		{
 			cooldowns: [this.data.actions.CELESTIAL_OPPOSITION],
+		},
+		{
+			cooldowns: [this.data.actions.COLLECTIVE_UNCONSCIOUS],
 		},
 	]
 
