@@ -1,7 +1,7 @@
 import {Trans} from '@lingui/react'
 import ACTIONS from 'data/ACTIONS'
 import {Event, Events} from 'event'
-import {Analyser} from 'parser/core/Analyser'
+import {Analyser, DisplayOrder} from 'parser/core/Analyser'
 import {filter, oneOf} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
 import Checklist, {Requirement, TARGET, TieredRule} from 'parser/core/modules/Checklist'
@@ -185,6 +185,10 @@ export class Overheal extends Analyser {
 	 * checklist item
 	 */
 	protected displayChecklist: boolean = true
+	/**
+	 * Allows for more flexibility in ordering of the checklist if necessary.
+	 */
+	protected displayOrder = DisplayOrder.DEFAULT
 	/**
 	 * Implementing modules MAY wish to override this to set custom severity tiers.
 	 * Do remember that the numbers for checklist are inverted for overheal (e.g., warning at
@@ -384,6 +388,7 @@ export class Overheal extends Analyser {
 				description: this.checklistDescription([this.direct, ...this.trackedOverheals]),
 				tiers: this.checklistSeverity,
 				requirements,
+				displayOrder: this.displayOrder,
 			}))
 		}
 
