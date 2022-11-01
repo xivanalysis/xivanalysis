@@ -5,6 +5,7 @@ import Checklist, {Requirement, TARGET, TieredRule} from 'parser/core/modules/Ch
 import {DoTs} from 'parser/core/modules/DoTs'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
+import DISPLAY_ORDER from './DISPLAY_ORDER'
 
 const SEVERITIES = {
 	CLIPPING: {
@@ -41,6 +42,7 @@ export class Combust extends DoTs {
 					percent: () => this.getUptimePercent(this.data.statuses.COMBUST_III.id),
 				}),
 			],
+			displayOrder: DISPLAY_ORDER.DOT_CHECKLIST,
 		}))
 	}
 
