@@ -561,6 +561,8 @@
   "mnk.demolish.checklist.requirement.name": "Gesamtanwendungszeit von <0/>",
   "mnk.demolish.suggestion.content": "",
   "mnk.demolish.suggestion.why": "",
+  "mnk.dragonkick.suggestions.overkick.content": "",
+  "mnk.dragonkick.suggestions.overkick.why": "",
   "mnk.forms.suggestions.dropped.content": "Vermeide es, Formen zu verlieren. Du musst eventuell z.B. Rakshasas Umarmung benutzen oder einfach näher am Gegner bleiben, damit deine Kombo nicht ausläuft. Dies deutet normalerweise auf größere Probleme hin.",
   "mnk.forms.suggestions.dropped.why": "Form wurde {0, plural, one {# -mal} other {#-mal}} verloren.",
   "mnk.forms.suggestions.formless.content": "Vermeide es, Kombo-Starter außerhalb von <0/> zu benutzen, da der Form-Bonus nur in der korrekten Form aktiviert wird.",

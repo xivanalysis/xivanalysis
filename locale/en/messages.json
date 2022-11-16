@@ -561,6 +561,8 @@
   "mnk.demolish.checklist.requirement.name": "<0/> uptime",
   "mnk.demolish.suggestion.content": "Avoid refreshing <0/> significantly before its expiration. Unnecessary refreshes risk overwriting buff snapshots.",
   "mnk.demolish.suggestion.why": "An average of {0} seconds of <0/> clipped per minute due to early refreshes.",
+  "mnk.dragonkick.suggestions.overkick.content": "Avoid using <0/> while under the effect of <1/>. Use <2/> instead.",
+  "mnk.dragonkick.suggestions.overkick.why": "You used <0/>  {0, plural, one {# time} other {# times}} while already having the <1/> buff.",
   "mnk.forms.suggestions.dropped.content": "Avoid dropping Forms. You may need to use a gap closer or stay closer to the enemy to avoid your combo timing out. This usually indicates a bigger problem.",
   "mnk.forms.suggestions.dropped.why": "Form was dropped {0, plural, one {# time.} other {# times.}}",
   "mnk.forms.suggestions.formless.content": "Avoid using combo starters outside of <0/> as the Form bonus is only activated in the correct form.",
