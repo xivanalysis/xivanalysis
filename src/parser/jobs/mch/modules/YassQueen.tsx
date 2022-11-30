@@ -146,11 +146,11 @@ export class YassQueen extends Analyser {
 			return {
 				title: {
 					key: 'title-' + queen.start,
-					content: <Fragment>
+					content: <Trans id="mch.queen.panel.content">
 						{this.parser.formatEpochTimestamp(queen.start)}
 						<span> - </span>
 						{queen.battery} Battery spent, {totalDamage} total damage
-					</Fragment>,
+					</Trans>,
 				},
 				content: {
 					key: 'content-' + queen.start,
