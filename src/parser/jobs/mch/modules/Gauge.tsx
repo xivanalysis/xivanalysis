@@ -21,6 +21,7 @@ const OVERCAP_SEVERITY = {
 		30: SEVERITY.MAJOR,
 	},
 }
+
 const FADE_AMOUNT = 0.25
 const HEAT_COLOR = Color('#D35A10').fade(FADE_AMOUNT)
 const BATTERY_COLOR = Color('#2C9FCB').fade(FADE_AMOUNT)

@@ -23,9 +23,6 @@ const QUEEN_WEAPONSKILLS: ActionKey[] = [
 	'CROWNED_COLLIDER',
 ]
 
-// Duration = Battery/5 seconds <=> Battery*200 milliseconds
-const BATTERY_TO_MILLIS_FACTOR = 200
-
 interface QueenAttack {
 	event: Events['damage']
 	action: number
@@ -152,7 +149,7 @@ export class YassQueen extends Analyser {
 					content: <Fragment>
 						{this.parser.formatEpochTimestamp(queen.start)}
 						<span> - </span>
-						{queen.battery} Battery spent ({this.parser.formatDuration(queen.battery * BATTERY_TO_MILLIS_FACTOR)}), {totalDamage} total damage
+						{queen.battery} Battery spent, {totalDamage} total damage
 					</Fragment>,
 				},
 				content: {
