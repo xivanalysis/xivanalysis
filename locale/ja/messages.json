@@ -535,6 +535,7 @@
   "mch.hypercharge.panel-count": "{0, plural, one {GCD使用数: #} other {GCD使用数: #}}",
   "mch.hypercharge.title": "",
   "mch.queen.accordion.message": "",
+  "mch.queen.panel.content": "",
   "mch.queen.suggestions.missing-collider.content": "",
   "mch.queen.suggestions.missing-collider.why": "",
   "mch.queen.title": "オートマトン・クイーン使用状況",
