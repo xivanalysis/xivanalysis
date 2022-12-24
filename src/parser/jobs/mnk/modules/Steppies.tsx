@@ -28,6 +28,13 @@ const SUGGESTION_TIERS = {
 		1: SEVERITY.MEDIUM,
 		4: SEVERITY.MAJOR,
 	},
+
+	KICKS: { // DK is 320, Bootshine is 210 without the buff, so you effective lost 110 * critcial hit modifers,  so it adds up fast.
+		1: SEVERITY.MINOR, // minor loss
+		2: SEVERITY.MEDIUM, // You've lost a full Bootshine and then some
+		3: SEVERITY.MAJOR, // You've got a problem.
+		// 4: SEVERITY.JUSTWHY Dear God man, use your hands!
+	},
 }
 
 const CRIT_MODIFIERS = new Set([SourceModifier.CRITICAL, SourceModifier.CRITICAL_DIRECT])
@@ -41,7 +48,6 @@ interface Boot {
 	weak: boolean
 	timestamp: number
 }
-
 export class Steppies extends Analyser {
 	static override handle = 'steppies'
 
@@ -51,6 +57,7 @@ export class Steppies extends Analyser {
 	@dependency private suggestions!: Suggestions
 
 	private steppies: Boot[] = []
+	private overKicks = 0 // Amount of times they kicked over a buff
 
 	override initialise(): void {
 		this.addEventHook(
@@ -61,7 +68,21 @@ export class Steppies extends Analyser {
 			this.onStep,
 		)
 
+		this.addEventHook(
+			filter<Event>()
+				.source(this.parser.actor.id)
+				.type('damage')
+				.cause(filter<Cause>().action(this.data.actions.DRAGON_KICK.id)),
+			this.onKick,
+		)
+
 		this.addEventHook('complete', this.onComplete)
+	}
+
+	private onKick() {
+		if (this.actors.current.hasStatus(this.data.statuses.LEADEN_FIST.id)) {
+			this.overKicks++
+		}
 	}
 
 	private onStep(event: Events['damage']): void {
@@ -113,6 +134,18 @@ export class Steppies extends Analyser {
 			</Trans>,
 			tiers: SUGGESTION_TIERS.CRIT,
 			value: this.getUncritCount(this.steppies),
+		}))
+
+		this.suggestions.add(new TieredSuggestion({
+			icon: this.data.actions.DRAGON_KICK.icon,
+			content: <Trans id="mnk.steppies.suggestions.overkick.content">
+				Avoid using <DataLink action="DRAGON_KICK" /> while under the effect of <DataLink status="LEADEN_FIST"/>. Use <DataLink action="BOOTSHINE" /> instead.
+			</Trans>,
+			why: <Trans id="mnk.steppies.suggestions.overkick.why">
+				You used <DataLink action="DRAGON_KICK" />  <Plural value={this.overKicks} one="# time" other="# times"/> while already having the <DataLink status="LEADEN_FIST"/> buff.
+			</Trans>,
+			tiers: SUGGESTION_TIERS.KICKS,
+			value: this.overKicks,
 		}))
 	}
 
