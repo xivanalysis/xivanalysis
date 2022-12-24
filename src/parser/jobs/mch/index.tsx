@@ -20,6 +20,11 @@ export const MACHINIST = new Meta({
 	],
 	changelog: [
 		{
+			date: new Date('2022-11-30'),
+			Changes: () => <>Relaxed the suggestion thresholds for Heat overcap.</>,
+			contributors: [CONTRIBUTORS.HINT],
+		},
+		{
 			date: new Date('2022-02-09'),
 			Changes: () => <>Moved gauge to a resource graph in the timeline.</>,
 			contributors: [CONTRIBUTORS.HINT],

@@ -535,6 +535,7 @@
   "mch.hypercharge.panel-count": "글쿨 기술 횟수",
   "mch.hypercharge.title": "과충전 구간",
   "mch.queen.accordion.message": "아래는 전투 중 사용된 모든 <0/> 구간입니다. 진입 시간, 충전지 소모량 및 유지 시간, 자동인형 퀸이 대상에게 준 총 피해량이 표시됩니다. 구간을 확대하면 자동인형 퀸이 사용한 기술 목록을 표시합니다.",
+  "mch.queen.panel.content": "",
   "mch.queen.suggestions.missing-collider.content": "<0/> 구간이 종료될 때 보스가 공격 가능 상태가 되도록 조절하십시오. 퀸 충돌기는 피해량에서 상당한 지분을 차지합니다. 보스가 죽기 직전이거나 곧 공격 불가능 상태가 될 때에는 미리 <1/> 기술을 써서 구간을 일찍 종료시키십시오.",
   "mch.queen.suggestions.missing-collider.why": "자동인형 퀸 구간 중 총 {missedColliders}회 퀸 충돌기로 마무리하지 않았습니다.",
   "mch.queen.title": "자동인형 퀸 사용",

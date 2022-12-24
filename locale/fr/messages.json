@@ -535,6 +535,7 @@
   "mch.hypercharge.panel-count": "{0, plural, one {GCD} other {GCDs}}",
   "mch.hypercharge.title": "Fenêtre d'Hypercharge",
   "mch.queen.accordion.message": "La liste ci-dessous contient toutes les fenêtres <0/> du combat, indiquant quand il a commencé, le coût et la durée de sa Batterie, et combien de dégâts totaux l'Automate Reine a fait à sa cible. L'agrandissement d'une fenêtre individuelle ci-dessous affichera tous les utilisations réalisées par l'Automate Reine au cours de cette période.",
+  "mch.queen.panel.content": "",
   "mch.queen.suggestions.missing-collider.content": "Essayer de prévoir vos fenêtres d'<0/> pour faire en sorte qu'elles se terminent tant que le boss est ciblable, car Collisionneur royal est une partie importante de ses dégâts. Si le boss est sur le point de sauter ou de mourir, utilisez <1/> pour terminer la fenêtre plus tôt et obtenir le coup.",
   "mch.queen.suggestions.missing-collider.why": "{missedColliders} de vos fenêtres d'Automate Reine se sont finies sans Collisionneur royal.",
   "mch.queen.title": "Utilisation de l'Automate Reine",

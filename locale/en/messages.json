@@ -535,6 +535,7 @@
   "mch.hypercharge.panel-count": "{0, plural, one {GCD} other {GCDs}}",
   "mch.hypercharge.title": "Hypercharge Windows",
   "mch.queen.accordion.message": "The list below contains every <0/> window from the fight, indicating when it started, its Battery cost and duration, and how much total damage the Queen did to its target. Expanding an individual window below will display every cast by the Automaton Queen made during it.",
+  "mch.queen.panel.content": "{0}<0> - </0>{1} Battery spent, {totalDamage} total damage",
   "mch.queen.suggestions.missing-collider.content": "Try to time your <0/> windows so that they end while the boss is targetable, as Crowned Collider is a significant chunk of its damage. If the boss is about to jump or die, use <1/> to end the window early and get the hit in.",
   "mch.queen.suggestions.missing-collider.why": "{missedColliders} of your Automaton Queen windows ended without a Crowned Collider.",
   "mch.queen.title": "Automaton Queen Usage",
