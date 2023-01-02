@@ -499,7 +499,7 @@
   "game.roles.unsupported": "미지원",
   "glossary.proc.description": "프록은 특정 상황에서 발동하는 조건부 이벤트입니다. (예시: 기술을 썼을 때 발동, 대상에게 적용했던 디버프에서 확률적으로 발동 등)\n\n예를 들어, [~action/VERTHUNDER] 기술을 시전하면 50% 확률로 [~status/VERFIRE_READY] 효과를 발동합니다.",
   "glossary.proc.title": "프록",
-  "gnb.about.description": "",
+  "gnb.about.description": "이 분석기는 건브레이커로 싸울 때 전투 중 어떤 일이 일어났는지 자세하게 분석하여 어떻게 해야 피해량을 더 많이 줄 수 있을지를 분석합니다.\n건브레이커를 어떻게 플레이 해야 할지 기초부터 알고 싶다면 다음 가이드를 읽어보세요. \n\n * [Aletin의 탱커의 기본](https://goo.gl/nYzAnq) (영어)\n\n모듈에 대한 제안이 있으면 언제든지 저희 XIVA Discord 피드백 채널에서 알려주세요.\n",
   "gnb.ammo.checklist.requirement.waste.name": "충전된 소일을 최대한 많이 사용하십시오.",
   "gnb.ammo.leftover-ammo.content": "전투 종료 전 소일이 남지 않도록 주의하십시오. <0/> 기술의 위력은 <1/> 콤보보다 위력이 강합니다. 가능하다면 미리 소일을 사용하십시오.",
   "gnb.ammo.leftover-ammo.why": "소일을 {0, plural, other {#개}} 남긴 상태에서 전투를 종료했습니다.",
