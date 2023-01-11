@@ -21,7 +21,7 @@ export const WHITE_MAGE = new Meta({
 	</>,
 	supportedPatches: {
 		from: '6.0',
-		to: '6.2',
+		to: '6.3',
 	},
 	contributors: [
 		// {user: CONTRIBUTORS.YOU, role: ROLES.DEVELOPER},
