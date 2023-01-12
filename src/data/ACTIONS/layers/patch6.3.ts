@@ -6,5 +6,7 @@ export const patch630: Layer<ActionRoot> = {
 	data: {
 		//WHM - Assize CD change
 		ASSIZE: {cooldown: 40000},
+		//DRG - Life Surge CD change
+		LIFE_SURGE: {cooldown: 40000},
 	},
 }
