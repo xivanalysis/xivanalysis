@@ -169,7 +169,7 @@
   "blm.triplecast.suggestions.overwrote-triplecasts.why": "你覆盖了<0/>。",
   "blu.about.description": "这只是一个对于有限职业的有限分析。它还未准备就绪，敬请期待。\n\n该项分析将会着眼于持续伤害，技能覆盖率以及 [~action/BRISTLE] 的正确使用[~action/MOON_FLUTE]，和[~action/SURPANAKHA]。",
   "blu.about.description.warning": "这个模块正在开发，尚未发布。",
-  "brd.about.description": "<0>欢迎来到吟游诗人模块！尽管是个非常直白的职业，但吟游诗人的复杂性却异常地高。 </0><1>吟游诗人被许多人视为 <2>“易学难精”</2> 的职业，严重依赖于做出正确的决策。 </1><3>对吟游诗人的改进可以从正确使用歌曲（<4/>、<5/> 和 <6/>）的基础到复杂的<7/>和 buff/debuff 快照的概念。 </3><8>此分析器将引导您了解本职业的核心机制，并针对特定情况进行优化。 </8>",
+  "brd.about.description": "",
   "brd.dots.checklist.description": "吟游诗人的DPS有很大一部分来自<0/> 和 <1/>。确保你的目标身上永远有这两种技能效果。使用 <2/> 刷新持续伤害（DoT）的剩余时间。",
   "brd.dots.checklist.name": "保持DoT不断",
   "brd.dots.checklist.requirement.caustic": "<0/> 覆盖率",

@@ -169,7 +169,7 @@
   "blm.triplecast.suggestions.overwrote-triplecasts.why": "<0/> 기술을 덮어썼습니다.",
   "blu.about.description": "리미트 잡을 위한 리미티드 분석기는 아직 완전하지 않습니다. 추후 업데이트를 기대해주세요.\n\n이 분석기는 지속 피해와 전투 업타임, 그리고 [~action/BRISTLE], [~action/MOON_FLUTE] 그리고 [~action/SURPANKHA] 기술의 올바른 사용을 점검해줍니다.\n",
   "blu.about.description.warning": "이 모듈은 개발 중이며, 아직 공개될 준비가 되지 않았습니다.",
-  "brd.about.description": "<0>음유시인 모듈에 오신 것을 환영합니다! 음유시인은 굉장히 단순해 보이는 직업이지만, 그 깊이는 정말 깊습니다.</0><1>매 순간 판단해야 하는 음유시인을 두고 많은 이들은 <2>\"배우기는 쉽고, 마스터하는 것은 어렵다\"</2>고 말하죠.</1><3>음유시인을 잘 다루려면 노래(<4/>, <5/>, <6/>)를 어떻게 사용하는지와 같은 기초적인 것부터 <7/>, 버프와 디버프의 스냅샷 같은 복잡한 개념까지 두루 보아야 합니다.</3><8>이 분석기에서는 음유시인의 핵심 메커니즘부터 전투마다 최적화하는 방식까지를 안내합니다.</8>",
+  "brd.about.description": "",
   "brd.dots.checklist.description": "음유시인의 피해량 대부분은 <0/>, <1/> 기술에서 발생합니다. 항상 대상에게 지속 피해 디버프가 붙어 있도록 하십시오. 지속 피해 디버프를 갱신해야 때에는 <2/> 기술을 사용하십시오.",
   "brd.dots.checklist.name": "항상 지속 피해 유지하기",
   "brd.dots.checklist.requirement.caustic": "<0/> 적용",
