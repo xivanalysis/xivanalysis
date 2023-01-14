@@ -28,6 +28,11 @@ export const SUMMONER = new Meta({
 
 	changelog: [
 		{
+			date: new Date('2023-01-14'),
+			Changes: () => <>Removed outdated Swiftcast message.</>,
+			contributors: [CONTRIBUTORS.KELOS],
+		},
+		{
 			date: new Date('2022-05-04'),
 			Changes: () => <>Fixed an issue that prevented synthing a pre-cast Searing Light.</>,
 			contributors: [CONTRIBUTORS.KELOS],
