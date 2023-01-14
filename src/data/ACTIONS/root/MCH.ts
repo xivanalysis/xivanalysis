@@ -263,6 +263,14 @@ export const MCH = ensureActions({
 		statusesApplied: ['TACTICIAN'],
 	},
 
+	DISMANTLE: {
+		id: 2887,
+		name: 'Dismantle',
+		icon: 'https://xivapi.com/i/003000/003011.png',
+		onGcd: false,
+		cooldown: 120000,
+	},
+
 	AUTOMATON_QUEEN: {
 		id: 16501,
 		name: 'Automaton Queen',
