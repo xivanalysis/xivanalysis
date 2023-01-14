@@ -182,6 +182,7 @@
   "brd.drifting-ea.timelinelink-button": "Jump to Timeline",
   "brd.drifting-ea.timestamp-header": "Timestamp",
   "brd.drifting-ea.title": "Empyreal Arrow Drift",
+  "brd.mitigation.title": "Mitigation",
   "brd.procs.suggestions.missed.content": "Try to use <0/> whenever you have <1/>.",
   "brd.procs.suggestions.overwritten.content": "Avoid using actions that grant <0/> when you could use <1/> instead.",
   "brd.rs.rotation-table.header.on-time": "<0/> On Time?",

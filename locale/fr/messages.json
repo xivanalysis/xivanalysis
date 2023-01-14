@@ -182,6 +182,7 @@
   "brd.drifting-ea.timelinelink-button": "Voir sur la chronologie",
   "brd.drifting-ea.timestamp-header": "Horodatage",
   "brd.drifting-ea.title": "Drift de Flèche empyréenne",
+  "brd.mitigation.title": "",
   "brd.procs.suggestions.missed.content": "Essayez d'utilisez <0/> dès que <1/> est prêt.",
   "brd.procs.suggestions.overwritten.content": "N'utilisez pas d'action donnant <0/> lorsque vous pouvez utiliser <1/> à la place.",
   "brd.rs.rotation-table.header.on-time": "<0/> dans les temps ?",
