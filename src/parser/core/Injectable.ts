@@ -44,7 +44,7 @@ export function dependency(target: Injectable, prop: string) {
  * If you have to think whether you need this or not, you don't need it.
  */
 export const executeBeforeDoNotUseOrYouWillBeFired = (target: typeof Injectable) =>
-	(source: typeof Injectable) => {
+	<T extends typeof Injectable>(source: T): T => {
 		target.dependencies.push(source.handle)
 		return source
 	}
