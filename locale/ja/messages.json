@@ -534,6 +534,7 @@
   "mch.hypercharge.accordion.message": "",
   "mch.hypercharge.panel-count": "{0, plural, one {GCD使用数: #} other {GCD使用数: #}}",
   "mch.hypercharge.title": "",
+  "mch.mitigation.title": "",
   "mch.queen.accordion.message": "",
   "mch.queen.panel.content": "",
   "mch.queen.suggestions.missing-collider.content": "",
