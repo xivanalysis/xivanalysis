@@ -182,6 +182,7 @@
   "brd.drifting-ea.timelinelink-button": "跳转到时间轴",
   "brd.drifting-ea.timestamp-header": "时间截",
   "brd.drifting-ea.title": "九天连箭偏移",
+  "brd.mitigation.title": "",
   "brd.procs.suggestions.missed.content": "尽可能在有<1/>的时候使用<0/>。",
   "brd.procs.suggestions.overwritten.content": "当你可以使用<1/>时，尽量不要用会触发<0/>的技能。",
   "brd.rs.rotation-table.header.on-time": "<0/>是否准时？",

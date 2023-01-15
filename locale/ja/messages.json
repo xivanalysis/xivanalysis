@@ -182,6 +182,7 @@
   "brd.drifting-ea.timelinelink-button": "タイムラインに移動",
   "brd.drifting-ea.timestamp-header": "タイムスタンプ",
   "brd.drifting-ea.title": "エンピリアルアローのずれ",
+  "brd.mitigation.title": "",
   "brd.procs.suggestions.missed.content": "<1/>がある場合、<0/>を使ってください。",
   "brd.procs.suggestions.overwritten.content": "<1/> を使える時、<0/> を付与するアクションを使わないでください。",
   "brd.rs.rotation-table.header.on-time": "<0/> 使用可能?",

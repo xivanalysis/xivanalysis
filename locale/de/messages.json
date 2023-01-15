@@ -182,6 +182,7 @@
   "brd.drifting-ea.timelinelink-button": "Springe zur Zeitleiste",
   "brd.drifting-ea.timestamp-header": "Zeitstempel",
   "brd.drifting-ea.title": "Empyreischer Pfeil Verzögerung",
+  "brd.mitigation.title": "",
   "brd.procs.suggestions.missed.content": "Versuche, <0/> zu verwenden, wenn du <1/> hast.",
   "brd.procs.suggestions.overwritten.content": "Vermeide das Verwenden von Aktionen, welche <0/> geben, wenn du stattdessen <1/> verwenden könntest.",
   "brd.rs.rotation-table.header.on-time": "<0/> rechtzeitig benutzt?",

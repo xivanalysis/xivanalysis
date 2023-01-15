@@ -182,6 +182,7 @@
   "brd.drifting-ea.timelinelink-button": "해당 타임라인으로 이동",
   "brd.drifting-ea.timestamp-header": "타임스탬프",
   "brd.drifting-ea.title": "천상의 화살 지연",
+  "brd.mitigation.title": "",
   "brd.procs.suggestions.missed.content": "<1/> 효과가 있을 때마다 <0/> 기술을 사용하십시오.",
   "brd.procs.suggestions.overwritten.content": "<1/> 기술을 사용할 수 있을 때 <0/> 스택을 부여하는 기술을 사용하지 마십시오.",
   "brd.rs.rotation-table.header.on-time": "<0/> 기술을 제때 쓰기",
