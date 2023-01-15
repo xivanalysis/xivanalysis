@@ -868,7 +868,7 @@
   "sge.gauge.resource.addsergall": "Addersgall",
   "sge.gauge.statistics.addersgall-used": "Addersgall Stacks Used",
   "sge.gauge.statistics.addersgall-used.info": "The denominator is calculated as if you kept the Addersgall timer running essentially the entire fight, and maximized your uses of <0/>.",
-  "sge.gauge.suggestions.addersting-overcap.content": "<0/> is a useful movement and weaving tool, and does the same single-target DPS as <1/>. Try not to waste them by breaking a fourth <2/> shield before using an Addersting stack.",
+  "sge.gauge.suggestions.addersting-overcap.content": "<0/> is a useful movement and weaving tool, and does the same single-target DPS as <1/>. Try not to waste them by breaking a fourth <2/> or self-targeted <3/> shield before using an Addersting stack.",
   "sge.gauge.suggestions.addersting-overcap.why": "{0, plural, one {# Addersting stack} other {# Addersting stacks}} lost due to overcap.",
   "sge.gauge.suggestions.lost-addersgall.content": "You lost Addersgall due to capping the gauge and letting the timer stop. Your Addersgall actions are your primary healing and mitigation tools, as well as contributing to your MP recovery, so you should try to use another one before regaining your third stack.",
   "sge.gauge.suggestions.lost-addersgall.why": "{lostAddersgall, plural, one {# Addersgall stack was} other {# Addersgall stacks were}} lost to timer inactivity.",
