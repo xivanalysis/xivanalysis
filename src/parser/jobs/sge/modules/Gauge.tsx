@@ -26,7 +26,8 @@ const ADDERSGALL_CONSUMERS: ActionKey[] = [
 	'TAUROCHOLE',
 ]
 
-const OVERWRITES_DIAGNOSIS: StatusKey[] = [
+const OVERWRITES_SHIELDS: StatusKey[] = [
+	'EUKRASIAN_DIAGNOSIS',
 	'EUKRASIAN_PROGNOSIS',
 	'GALVANIZE',
 ]
@@ -39,8 +40,8 @@ const ADDERSTING_CONSUMERS: ActionKey[] = [
 	'TOXIKON_II',
 ]
 
-/** Diagnosis-tracking object interface */
-interface DiagnosisData {
+/** Shield-tracking object interface */
+interface ShieldData {
 	applyTimestamp?: number,
 	removeTimestamp?: number,
 	remainingShield?: number,
@@ -60,7 +61,7 @@ export class Gauge extends CoreGauge {
 	@dependency private suggestions!: Suggestions
 	@dependency private unableToAct!: UnableToAct
 
-	private diagnoses: Partial<Record<Actor['id'], DiagnosisData>> = {}
+	private trackedShields: Partial<Record<Actor['id'], ShieldData>> = {}
 
 	private rhizomataLoss: number = 0
 	private rhizomatasUsed: number = 0
@@ -95,22 +96,28 @@ export class Gauge extends CoreGauge {
 	override initialise() {
 		super.initialise()
 
+		// Initial filter setup
 		const playerFilter = filter<Event>().source(this.parser.actor.id)
 		const partyIds = this.actors.friends.filter(friend => friend.playerControlled).map(friend => friend.id)
 		const partyFilter = filter<Event>().target(oneOf(partyIds))
 		const playerDiagnosisPartyFilter = partyFilter.source(this.parser.actor.id).status(this.data.statuses.EUKRASIAN_DIAGNOSIS.id)
+		const playerPrognosisSelfFilter = playerFilter.target(this.parser.actor.id).status(this.data.statuses.EUKRASIAN_PROGNOSIS.id)
+
+		// Hook Addersgall consumer and generator actions
 		this.addEventHook(playerFilter.type('action').action(this.data.matchActionId(ADDERSGALL_CONSUMERS)), this.onConsumeAddersgall)
 		this.addEventHook(playerFilter.action(this.data.actions.RHIZOMATA.id), this.onRhizomata)
 
 		// Hook shield applications/removals that could generate Addersting
 		this.addEventHook(playerDiagnosisPartyFilter.type('statusApply'), this.onShieldApply)
 		this.addEventHook(playerDiagnosisPartyFilter.type('statusRemove'), this.onShieldRemove)
+		this.addEventHook(playerPrognosisSelfFilter.type('statusApply'), this.onShieldApply)
+		this.addEventHook(playerPrognosisSelfFilter.type('statusRemove'), this.onShieldRemove)
 
 		// Hook shield applications/actions that could prevent Addersting generation
-		this.addEventHook(filter<Event>().type('statusApply').source(noneOf([this.parser.actor.id]))
-			.status(this.data.statuses.EUKRASIAN_DIAGNOSIS.id), this.onShieldOverwrite)
-		this.addEventHook(partyFilter.type('statusApply').status(this.data.matchStatusId(OVERWRITES_DIAGNOSIS)), this.onShieldOverwrite)
+		this.addEventHook(partyFilter.type('statusApply').source(noneOf([this.parser.actor.id])).status(this.data.matchStatusId(OVERWRITES_SHIELDS)), this.onShieldOverwrite)
 		this.addEventHook(playerFilter.action(this.data.actions.PEPSIS.id), this.onPepsis)
+
+		// Hook Addersting consumption
 		this.addEventHook(playerFilter.type('action').action(this.data.matchActionId(ADDERSTING_CONSUMERS)), () => this.adderstingGauge.spend(1))
 
 		this.addEventHook('complete', this.onComplete)
@@ -149,47 +156,48 @@ export class Gauge extends CoreGauge {
 	//#endregion
 
 	//#region Addersting gauge
-	// Keep track of Eukrasian Diagnosis applications
+	// Keep track of relevant Eukrasian shield applications
 	private onShieldApply(event: Events['statusApply']) {
-		this.diagnoses[event.target] = {applyTimestamp: event.timestamp}
+		this.trackedShields[event.target] = {applyTimestamp: event.timestamp}
 	}
 
-	// Keep track of instances where a Eukrasian Diagnosis was definitely overwritten by another status
+	// Keep track of instances where a relevant Eukrasian shield was definitely overwritten by another status
 	private onShieldOverwrite(event: Events['statusApply']) {
-		const diagnosis = this.diagnoses[event.target]
-		if (diagnosis == null) { return }
-		diagnosis.consumedOrOverwritten = true
+		const shield = this.trackedShields[event.target]
+		if (shield == null) { return }
+		shield.consumedOrOverwritten = true
 	}
 
 	// Keep track of shield removals, and set a timestamp hook to resolve the shield (overwrites happen 'after' the removal event but at the same timestamp, so we can't know for sure if the shield was overwritten yet)
 	private onShieldRemove(event: Events['statusRemove']) {
-		const diagnosis = this.diagnoses[event.target]
-		if (diagnosis == null) { return }
-		diagnosis.removeTimestamp = event.timestamp
-		diagnosis.remainingShield = event.remainingShield
+		const shield = this.trackedShields[event.target]
+		if (shield == null) { return }
+		shield.removeTimestamp = event.timestamp
+		shield.remainingShield = event.remainingShield
 		this.addTimestampHook(event.timestamp + 1, () => this.onResolveShield(event.target))
 	}
 
 	// Resolve the shield and grant an Addersting if we're reasonably sure the shield wasn't overwritten or wore off due to time
 	private onResolveShield(target: string) {
-		const diagnosis = this.diagnoses[target]
-		if (diagnosis == null) { return }
-		if (diagnosis.consumedOrOverwritten !== true) {
-			const diagnosisDuration = (diagnosis.removeTimestamp ?? this.parser.currentEpochTimestamp) - (diagnosis.applyTimestamp ?? this.parser.pull.timestamp)
+		const shield = this.trackedShields[target]
+		if (shield == null) { return }
+		if (shield.consumedOrOverwritten !== true) {
+			const shieldDuration = (shield.removeTimestamp ?? this.parser.currentEpochTimestamp) - (shield.applyTimestamp ?? this.parser.pull.timestamp)
 			// Absorbed doesn't give us an actual look at the real total absorbed, so we have to just assume that a non-overwritten removal before the duration that absorbed anything was a full break
-			if ((diagnosis.remainingShield != null && diagnosis.remainingShield === 0) && diagnosisDuration < this.data.statuses.EUKRASIAN_DIAGNOSIS.duration) {
+			// Diagnosis and Prognosis also have the same shield duration, so we'll just pick one since we're not tracking exactly which shield this is at the moment...
+			if ((shield.remainingShield != null && shield.remainingShield === 0) && shieldDuration < this.data.statuses.EUKRASIAN_DIAGNOSIS.duration) {
 				this.adderstingGauge.generate(1)
 			}
 		}
-		this.diagnoses[target] = undefined
+		this.trackedShields[target] = undefined
 	}
 
 	// Pepsis consumes all active shields, which doesn't grant Addersting
 	private onPepsis() {
-		for (const key in this.diagnoses) {
-			const diagnosis = this.diagnoses[key]
-			if (diagnosis != null) {
-				diagnosis.consumedOrOverwritten = true
+		for (const key in this.trackedShields) {
+			const shield = this.trackedShields[key]
+			if (shield != null) {
+				shield.consumedOrOverwritten = true
 			}
 		}
 	}
@@ -234,7 +242,7 @@ export class Gauge extends CoreGauge {
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.TOXIKON_II.icon,
 			content: <Trans id="sge.gauge.suggestions.addersting-overcap.content">
-				<DataLink action="TOXIKON_II" /> is a useful movement and weaving tool, and does the same single-target DPS as <DataLink action="DOSIS_III" />. Try not to waste them by breaking a fourth <DataLink status="EUKRASIAN_DIAGNOSIS" /> shield before using an Addersting stack.
+				<DataLink action="TOXIKON_II" /> is a useful movement and weaving tool, and does the same single-target DPS as <DataLink action="DOSIS_III" />. Try not to waste them by breaking a fourth <DataLink status="EUKRASIAN_DIAGNOSIS" /> or self-targeted <DataLink showIcon={false} status="EUKRASIAN_PROGNOSIS" /> shield before using an Addersting stack.
 			</Trans>,
 			tiers: {
 				1: SEVERITY.MINOR,
