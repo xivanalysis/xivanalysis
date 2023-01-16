@@ -28,7 +28,7 @@ invulnerability configuration.
 
 const MERGE_KINDS: Set<Actor['kind']> = new Set([
 	// Ex5: Rubicante primary boss instance. Logs intermittently include a brief
-	// secondary instance of this actor's kind which can throw off ananalysis
+	// secondary instance of this actor's kind which can throw off analysis
 	// around targeting.
 	// https://www.fflogs.com/reports/a:DMfrPk7X2qBzHL9y#fight=last&hostility=1&source=243.2&view=events
 	'15756',
