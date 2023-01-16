@@ -533,7 +533,7 @@
   "mch.gauge.suggestions.heat-waste.why": "ヒートゲージを{0} 超過したため損失しました。",
   "mch.gauge.title": "エンジニアゲージ",
   "mch.hypercharge.accordion.message": "",
-  "mch.hypercharge.panel-count": "{0, plural, one {GCD使用数: #} other {GCD使用数: #}}",
+  "mch.hypercharge.panel-count": "",
   "mch.hypercharge.title": "",
   "mch.mitigation.title": "",
   "mch.queen.accordion.message": "",
