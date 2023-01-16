@@ -919,7 +919,6 @@
   "smn.summons.ruiniv-demi.why": "데미 소환 중 루인쟈를 {missed, plural, other {#회}} 사용했습니다.",
   "smn.summons.title": "소환",
   "smn.swiftcast.missed.suggestion.content": "<0/> 효과 시간이 끝나기 전 기술을 사용하십시오.",
-  "smn.swiftcast.note": "신속한 마법은 <0/>, <1/> (광역 <2/>), 또는 버프 적용 중일 때 <3/> 기술을 사용할 때 써야 합니다. 신속한 마법을 다른 기술에 사용하지 않도록 신비 에테르 소환 순서를 재조정하지 마십시오.",
   "ui.loading.analysis": "분석 불러오는 중",
   "ui.loading.report": "기록 불러오는 중",
   "war.about.description": "<0>이 분석기는 전투 중 어떤 일이 일어났는지 자세하게 분석하여 전사 게임플레이에 개선점이 있을지를 분석합니다.</0><1>잘못된 부분이 있다면 저희 Discord 서버의 #fb-warrior 채널에 제보해주세요.</1>",

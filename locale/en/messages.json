@@ -919,7 +919,6 @@
   "smn.summons.ruiniv-demi.why": "You used Ruin IV during a demi summon {missed, plural, one {# time} other {# times}}.",
   "smn.summons.title": "Summons",
   "smn.swiftcast.missed.suggestion.content": "Use a spell with <0/> before it expires.",
-  "smn.swiftcast.note": "Swiftcast should only be used on <0/>, <1/>(<2/> in AoE), or when snapshotting buffs, <3/>.  Avoid using Swiftcast on other skills by rearranging your Arcanum summoning order.",
   "ui.loading.analysis": "Loading analysis",
   "ui.loading.report": "Loading report",
   "war.about.description": "<0>This analyser aims to identify some of the low-hanging fruit that could be used to improve your WAR gameplay, as well as give a deeper insight into what happened during an encounter.</0><1>If you notice anything that looks particularly wrong, please visit our Discord server and report it in the #fb-warrior channel.</1>",

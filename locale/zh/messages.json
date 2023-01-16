@@ -919,7 +919,6 @@
   "smn.summons.ruiniv-demi.why": "你在亚灵神召唤期间使用了 {missed} 次毁绝。",
   "smn.summons.title": "召唤",
   "smn.swiftcast.missed.suggestion.content": "在<0/>效果结束前施放一个法术。",
-  "smn.swiftcast.note": "即刻咏唱只应该被用于<0/>、<1/>（<2/>用于范围攻击）或快照团辅时的<3/>。透过调整奥秘召唤顺序来避免将即刻咏唱用于其他技能。",
   "ui.loading.analysis": "分析加载中",
   "ui.loading.report": "报告加载中",
   "war.about.description": "<0>这个分析器旨在帮你找到一些触手可及的提升战士手法的方法，也会提供一些战斗中的细节分析。</0><1>如果你发现了问题，请访问我们的Discord服务器并在#fb-warrior频道内反馈。</1>",
