@@ -14,13 +14,13 @@ import {Message} from 'semantic-ui-react'
 const SEVERITIES = {
 	MISSED_CASTS: {
 		1: SEVERITY.MEDIUM,
-		5: SEVERITY.MAJOR,
+		3: SEVERITY.MAJOR,
 	},
-	MISSED_CONFITEORS: {
+	MISSED_CONFITEOR_GCDS: {
 		1: SEVERITY.MAJOR,
 	},
 }
-const EXPECTED_REQUIESCAT_CASTS = 5
+const EXPECTED_REQUIESCAT_CASTS = 4
 // When calculating rushing, adjust the start of the window by 1.5 seconds to allow for using Requiescat in the first weave slot
 const WINDOW_START_FORGIVENESS_FOR_RUSHING = 1500
 const REQUIESCAT_DURATION = 30000
@@ -29,6 +29,9 @@ const REQUIESCAT_ACTIONS: ActionKey[] = [
 	'HOLY_SPIRIT',
 	'HOLY_CIRCLE',
 	'CONFITEOR',
+	'BLADE_OF_FAITH',
+	'BLADE_OF_TRUTH',
+	'BLADE_OF_VALOR',
 ]
 
 interface RequiescatGcdsOptions extends AllowedGcdsOnlyOptions {
@@ -69,8 +72,7 @@ class RequiescatGcdsEvaluator extends AllowedGcdsOnlyEvaluator {
 		const adjustedWindowEnd = originalWindowEnd - downtimeInWindow
 		const adjustedWindowStart = window.start + WINDOW_START_FORGIVENESS_FOR_RUSHING
 
-		// Reduce calculated amount by 1 to not report the Confietor cast as an expected Holy Spirit/Circle cast
-		return calculateExpectedGcdsForTime(EXPECTED_REQUIESCAT_CASTS, this.globalCooldown.getDuration(), adjustedWindowStart, adjustedWindowEnd) - 1
+		return calculateExpectedGcdsForTime(EXPECTED_REQUIESCAT_CASTS, this.globalCooldown.getDuration(), adjustedWindowStart, adjustedWindowEnd)
 	}
 }
 export class Requiescat extends BuffWindow {
@@ -92,13 +94,17 @@ export class Requiescat extends BuffWindow {
 			allowedGcds: [
 				this.data.actions.HOLY_SPIRIT.id,
 				this.data.actions.HOLY_CIRCLE.id,
+				this.data.actions.CONFITEOR.id,
+				this.data.actions.BLADE_OF_FAITH.id,
+				this.data.actions.BLADE_OF_TRUTH.id,
+				this.data.actions.BLADE_OF_VALOR.id,
 			],
 			downtime: this.downtime,
 			globalCooldown: this.globalCooldown,
-			suggestionIcon: this.data.actions.HOLY_SPIRIT.icon,
+			suggestionIcon: this.data.actions.REQUIESCAT.icon,
 			suggestionContent: <Trans id="pld.requiescat.suggestions.wrong-gcd.content">
-				GCDs used during <DataLink action="REQUIESCAT" /> should consist of 4 uses of <DataLink action="HOLY_SPIRIT" /> (or
-				multi-hit <DataLink action="HOLY_CIRCLE" />) and 1 use of <DataLink action="CONFITEOR" /> for optimal damage.
+				GCDs used during <DataLink action="REQUIESCAT" /> should consist of <DataLink action="CONFITEOR" />
+				, <DataLink action="BLADE_OF_FAITH" />, <DataLink action="BLADE_OF_TRUTH" />, and <DataLink action="BLADE_OF_VALOR" /> for optimal damage.
 			</Trans>,
 			suggestionWindowName: <DataLink action="REQUIESCAT" showIcon={false} />,
 			severityTiers: SEVERITIES.MISSED_CASTS,
@@ -106,20 +112,24 @@ export class Requiescat extends BuffWindow {
 		this.addEvaluator(new ExpectedActionsEvaluator({
 			expectedActions: [
 				{action: this.data.actions.CONFITEOR, expectedPerWindow: 1},
+				{action: this.data.actions.BLADE_OF_FAITH, expectedPerWindow: 1},
+				{action: this.data.actions.BLADE_OF_TRUTH, expectedPerWindow: 1},
+				{action: this.data.actions.BLADE_OF_VALOR, expectedPerWindow: 1},
 			],
 			suggestionIcon: this.data.actions.CONFITEOR.icon,
 			suggestionContent: <Trans id="pld.requiescat.suggestions.missed-confiteor.content">
-				Be sure to end each <DataLink status="REQUIESCAT" /> window with <DataLink action="CONFITEOR" /> for optimal damage.
+				Be sure to use <DataLink action="CONFITEOR" />, <DataLink action="BLADE_OF_FAITH" />, <DataLink action="BLADE_OF_TRUTH" />
+				, and <DataLink action="BLADE_OF_VALOR" /> for each each <DataLink status="REQUIESCAT" /> window for optimal damage.
 			</Trans>,
 			suggestionWindowName: <DataLink action="REQUIESCAT" showIcon={false} />,
-			severityTiers: SEVERITIES.MISSED_CONFITEORS,
-			adjustCount: this.adjustExpectedConfiteorCount.bind(this),
+			severityTiers: SEVERITIES.MISSED_CONFITEOR_GCDS,
+			adjustCount: this.adjustExpectedConfiteorGCDCount.bind(this),
 		}))
 
 		this.addEventHook({type: 'action', source: this.parser.actor.id, action: this.data.actions.REQUIESCAT.id}, () => this.requiescatUsages++)
 	}
 
-	private adjustExpectedConfiteorCount(window: HistoryEntry<EvaluatedAction[]>) {
+	private adjustExpectedConfiteorGCDCount(window: HistoryEntry<EvaluatedAction[]>) {
 		if (window.end == null) {
 			return 0
 		}
@@ -138,7 +148,9 @@ export class Requiescat extends BuffWindow {
 	override output() {
 		return <Fragment>
 			<Message>
-				<Trans id="pld.requiescat.table.note">Each of your <DataLink status="REQUIESCAT" /> windows should contain 5 spells, consisting of 4 casts of <DataLink action="HOLY_SPIRIT" /> or <DataLink action="HOLY_CIRCLE" /> and ending with a cast of <DataLink action="CONFITEOR" />.</Trans>
+				<Trans id="pld.requiescat.table.note">Each of your <DataLink status="REQUIESCAT" /> windows should contain 4 spells
+				, consisting of <DataLink action="CONFITEOR" />, <DataLink action="BLADE_OF_FAITH" />, <DataLink action="BLADE_OF_TRUTH" />
+				, and <DataLink action="BLADE_OF_VALOR" /> for each each stack <DataLink status="REQUIESCAT" />.</Trans>
 			</Message>
 			<>{super.output()}</>
 		</Fragment>
