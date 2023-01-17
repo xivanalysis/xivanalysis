@@ -51,5 +51,10 @@ export const patch630: Layer<ActionRoot> = {
 			statusesApplied: ['BULWARK'],
 		},
 		DIVINE_VEIL: {statusesApplied: ['DIVINE_VEIL']},
+
+		/// SGE - Phlegma's cooldown (all tiers) was reduced to 40s
+		PHLEGMA: {cooldown: 40000},
+		PHLEGMA_II: {cooldown: 40000},
+		PHLEGMA_III: {cooldown: 40000},
 	},
 }

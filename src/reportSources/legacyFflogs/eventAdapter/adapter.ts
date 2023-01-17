@@ -8,6 +8,7 @@ import {DeduplicateAoEStep} from './deduplicateAoE'
 import {DeduplicateStatusApplicationStep} from './deduplicateStatus'
 import {ErroneousFriendDeathAdapterStep} from './erroneousFriendDeath'
 import {InterruptsAdapterStep} from './interrupts'
+import {MergeActorInstancesStep} from './mergeActorInstance'
 import {OneHpLockAdapterStep} from './oneHpLock'
 import {PrepullActionAdapterStep} from './prepullAction'
 import {PrepullStatusAdapterStep} from './prepullStatus'
@@ -36,6 +37,7 @@ class EventAdapter {
 	constructor(opts: AdapterOptions) {
 		this.adaptionSteps = [
 			new ReassignUnknownActorStep(opts),
+			new MergeActorInstancesStep(opts),
 			new TranslateAdapterStep(opts),
 			new ErroneousFriendDeathAdapterStep(opts),
 			new AssignOverhealStep(opts),

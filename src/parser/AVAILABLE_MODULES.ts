@@ -1,6 +1,5 @@
 import {EncounterKey} from 'data/ENCOUNTERS'
 import {JobKey} from 'data/JOBS'
-import {EX5} from './bosses/ex5'
 import {CORE} from './core'
 import {Meta} from './core/Meta'
 import {ASTROLOGIAN} from './jobs/ast'
@@ -62,6 +61,5 @@ export const AVAILABLE_MODULES: AvailableModules = {
 
 	BOSSES: {
 		// BOSSKEY: importedBossMeta
-		EX5,
 	},
 }

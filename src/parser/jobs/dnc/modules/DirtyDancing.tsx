@@ -214,8 +214,8 @@ export class DirtyDancing extends Analyser {
 
 	private getStatusUptimePercent(statusKey: StatusKey): number {
 		// Exclude downtime from both the status time and expected uptime
-		const statusTime = this.statuses.getUptime(statusKey, this.actors.friends) - this.downtime.getDowntime()
-		const uptime = this.parser.currentDuration - this.downtime.getDowntime()
+		const statusTime = Math.max(this.statuses.getUptime(statusKey, this.actors.friends) - this.downtime.getDowntime(), 0)
+		const uptime = Math.max(this.parser.currentDuration - this.downtime.getDowntime(), 0)
 
 		return (statusTime / uptime) * 100
 	}
