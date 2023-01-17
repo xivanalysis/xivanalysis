@@ -32,6 +32,16 @@ export const patch630: Layer<ActionRoot> = {
 		BLADE_OF_VALOR: {
 			combo: undefined,
 		},
+		IRON_WILL: {
+			cooldown: 2000,
+		},
+		RELEASE_IRON_WILL: {
+			id: 32065,
+			name: 'Release Iron Will',
+			icon: 'https://xivapi.com/i/002000/002521.png',
+			onGcd: false,
+			cooldown: 1000,
+		},
 		BULWARK: {
 			id: 22,
 			name: 'Bulwark',

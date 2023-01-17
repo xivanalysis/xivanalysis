@@ -193,6 +193,7 @@ export const PLD = ensureActions({
 		onGcd: false,
 		cooldown: 10000,
 	},
+	RELEASE_IRON_WILL: SHARED.UNKNOWN,
 	SENTINEL: {
 		id: 17,
 		name: 'Sentinel',
