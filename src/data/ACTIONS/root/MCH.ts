@@ -259,7 +259,7 @@ export const MCH = ensureActions({
 		name: 'Tactician',
 		icon: 'https://xivapi.com/i/003000/003040.png',
 		onGcd: false,
-		cooldown: 120000,
+		cooldown: 90000,
 		statusesApplied: ['TACTICIAN'],
 	},
 
