@@ -868,7 +868,7 @@
   "sge.gauge.resource.addsergall": "의술석",
   "sge.gauge.statistics.addersgall-used": "의술석 스택 사용 횟수",
   "sge.gauge.statistics.addersgall-used.info": "분모는 의술석 타이머를 계속 작동시킨 채 <0/> 기술을 최대한 많이 사용한 것을 가정하여 계산합니다.",
-  "sge.gauge.suggestions.addersting-overcap.content": "<0/> 기술은 이동 및 끼워넣기(위빙)에 유용한 기술이며 <1/> 기술과 동일한 단일 대상 피해를 줍니다. 의술침 사용 전 네 번째 <2/> 보호막을 소모하여 낭비되지 않도록 하십시오.",
+  "sge.gauge.suggestions.addersting-overcap.content": "",
   "sge.gauge.suggestions.addersting-overcap.why": "게이지가 초과되어 의술침 스택을 {0, plural, other {#}}개 잃었습니다.",
   "sge.gauge.suggestions.lost-addersgall.content": "의술석이 상한에 도달하여 획득 예정이었던 의술석을 잃었습니다. 의술석은 회복과 경감 기술에 사용되며, 해당 기술 사용 시 MP 또한 회복됩니다. 스택 3개가 채워지기 전에 사용하십시오.",
   "sge.gauge.suggestions.lost-addersgall.why": "시간 내에 사용하지 못하여 의술석을 {lostAddersgall, plural, other {#개}} 잃었습니다.",

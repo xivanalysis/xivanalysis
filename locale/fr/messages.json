@@ -868,7 +868,7 @@
   "sge.gauge.resource.addsergall": "Bile de vipère",
   "sge.gauge.statistics.addersgall-used": "Stacks de Bile de vipère utilisés",
   "sge.gauge.statistics.addersgall-used.info": "",
-  "sge.gauge.suggestions.addersting-overcap.content": "<0/> est un bon outil pour se déplacer ou faire du weaving, et inflige les mêmes dégâts mono-cible que <1/>. Essayez de ne pas les gâcher en utilisant une charge de Croc de vipère avant de consommer un 4e bouclier.",
+  "sge.gauge.suggestions.addersting-overcap.content": "",
   "sge.gauge.suggestions.addersting-overcap.why": "{0, plural, one {# charge de Croc de vipère perdue} other {# charges de Croc de vipère perdues}} à cause de surcharge.",
   "sge.gauge.suggestions.lost-addersgall.content": "Vous avez perdu des Biles de vipère en surchargeant la jauge et en laissant le compteur s'arrêter. Vos actions Bile de vipère sont vos outils principaux de soin et de mitigation et contribuent aussi à la recharge des PM. Vous devriez essayer d'utiliser une de ces actions avant de regagner votre 3e charge.",
   "sge.gauge.suggestions.lost-addersgall.why": "{lostAddersgall, plural, one {# charge de Bile de vipère perdue} other {# charges de Bile de vipère perdues}} à cause de l'arrêt du compteur.",

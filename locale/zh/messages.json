@@ -868,7 +868,7 @@
   "sge.gauge.resource.addsergall": "蛇胆",
   "sge.gauge.statistics.addersgall-used": "使用的蛇胆",
   "sge.gauge.statistics.addersgall-used.info": "此处的分母值是假定你保持蛇胆量谱未满并最大化了 <0/> 的使用。",
-  "sge.gauge.suggestions.addersting-overcap.content": "<0/> 是很实用的走位与滑步手段，并且在攻击单目标时伤害与 <1/> 一样。尽可能避免在蛇刺量谱充满三层时再被击破一个 <2/> 的护盾。",
+  "sge.gauge.suggestions.addersting-overcap.content": "",
   "sge.gauge.suggestions.addersting-overcap.why": "因溢出而浪费了 {0, plural, one {# 个蛇刺} other {# 个蛇刺}}。",
   "sge.gauge.suggestions.lost-addersgall.content": "由于蛇胆量谱已满，你损失了蛇胆。蛇胆技能是你的主要治疗与减伤手段，同时也帮助你恢复魔力值，因此尽可能在蛇胆量谱充满三层前用掉一个。",
   "sge.gauge.suggestions.lost-addersgall.why": "因量谱已满损失了 {lostAddersgall, plural, one {# 个蛇胆} other {# 个蛇胆}}",
