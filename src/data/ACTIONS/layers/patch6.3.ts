@@ -14,6 +14,7 @@ export const patch630: Layer<ActionRoot> = {
 		// PLD 6.3 rework changes
 		GORING_BLADE: {
 			cooldown: 60000,
+			gcdRecast: 2500,
 			combo: undefined,
 			statusesApplied: undefined,
 		},
