@@ -33,6 +33,7 @@ export default (env: Environment, {
 		filename: mode === 'development'
 			? 'assets/[name].js'
 			: 'assets/[name].[contenthash:8].js',
+		hashFunction: 'xxhash64',
 	},
 	target: 'browserslist',
 
