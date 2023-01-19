@@ -162,10 +162,15 @@ export default (env: Environment, {
 			// Lingui message files
 			{
 				test: /locale.+\.json$/,
+				resourceQuery: { not: [/raw/] },
 				type: 'javascript/auto',
 				use: [
 					{loader: '@lingui/loader'},
 				],
+			},
+			{
+				resourceQuery: /raw/,
+				type: 'asset/source',
 			},
 			// Fonts
 			{
