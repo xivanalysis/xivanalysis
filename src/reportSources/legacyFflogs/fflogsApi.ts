@@ -1,7 +1,6 @@
 import {ReportProcessingError} from 'errors'
 import ky, {Options} from 'ky'
-import _ from 'lodash'
-import {FflogsEvent, Fight, Pet, ReportEventsQuery, ReportEventsResponse} from './eventTypes'
+import {Fight,  ReportEventsQuery, ReportEventsResponse} from './eventTypes'
 import {Report} from './legacyStore'
 
 const options: Options = {
@@ -57,37 +56,18 @@ async function requestEvents(
 	return response
 }
 
-// this is cursed shit
-let eventCache: {
-	key: string,
-	events: FflogsEvent[],
-} | undefined
-
 // Helper for pagination and suchforth
 export async function getFflogsEvents(
 	report: Report,
 	fight: Fight,
-	extra: ReportEventsQuery,
-	authoritative = false,
 ) {
 	const {code} = report
-	const cacheKey = `${code}|${fight}`
 
 	// Base parameters
 	const searchParams: ReportEventsQuery = {
 		start: fight.start_time,
 		end: fight.end_time,
 		translate: true,
-		..._.omitBy(extra, _.isNil),
-	}
-
-	// If this is a non-authoritative request, and we have an
-	// authoritative copy in cache, try to filter that into shape.
-	if (!authoritative && eventCache?.key === cacheKey) {
-		const filter = buildEventFilter(searchParams, report)
-		if (filter != null) {
-			return eventCache.events.filter(filter)
-		}
 	}
 
 	// Initial data request
@@ -101,53 +81,6 @@ export async function getFflogsEvents(
 		events.push(...data.events)
 	}
 
-	// If this is an authoritative request, cache the data
-	if (authoritative) {
-		eventCache = {
-			key: cacheKey,
-			events,
-		}
-	}
-
 	// And done
 	return events
-}
-
-function buildEventFilter(
-	query: ReportEventsQuery,
-	report: Report,
-) {
-	const {start, end, actorid, filter} = query
-
-	// TODO: Do we want to try and parse the mess of filters?
-	if (filter != null) {
-		return
-	}
-
-	const predicates: Array<(event: FflogsEvent) => boolean> = []
-
-	if (start != null) {
-		predicates.push((event: FflogsEvent) => event.timestamp >= start)
-	}
-
-	if (end != null) {
-		predicates.push((event: FflogsEvent) => event.timestamp <= end)
-	}
-
-	if (actorid != null) {
-		const petFilter = (pets: Pet[]) => pets
-			.filter(pet => pet.petOwner === actorid)
-			.map(pet => pet.id)
-
-		const involvedActors = [actorid]
-			.concat(petFilter(report.friendlyPets))
-			.concat(petFilter(report.enemyPets))
-
-		predicates.push((event: FflogsEvent) => false
-			|| involvedActors.includes(event.sourceID ?? NaN)
-			|| involvedActors.includes(event.targetID ?? NaN),
-		)
-	}
-
-	return (event: FflogsEvent) => predicates.every(predicate => predicate(event))
 }
