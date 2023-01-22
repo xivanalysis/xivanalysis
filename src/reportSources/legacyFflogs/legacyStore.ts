@@ -5,7 +5,7 @@ import {action, observable, runInAction} from 'mobx'
 import {globalErrorStore} from 'store/globalError'
 import {settingsStore} from 'store/settings'
 import {ProcessedReportFightsResponse, ReportFightsQuery, ReportFightsResponse} from './eventTypes'
-import {fflogsApi} from './fflogsApi'
+import {createCacheHooks, fflogsApi, getCache} from './fflogsApi'
 
 interface UnloadedReport {
 	loading: true
@@ -39,12 +39,14 @@ export class ReportStore {
 
 		let response: ReportFightsResponse
 		try {
+			const cache = await getCache(code)
 			response = await fflogsApi.get(`report/fights/${code}`, {
 				searchParams: {
 					translate: 'true',
 					..._.omitBy(params, _.isNil),
 					...(bypassCache? {bypassCache: 'true'} : {}),
 				},
+				hooks: createCacheHooks(cache, bypassCache ? 'bypass' : 'read'),
 			}).json<ReportFightsResponse>()
 		} catch (e) {
 			// Something's gone wrong, clear report status then dispatch an error

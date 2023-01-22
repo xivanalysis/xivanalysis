@@ -22,7 +22,7 @@ if (process.env.REACT_APP_FFLOGS_V1_API_KEY) {
 // Core API via ky
 export const fflogsApi = ky.create(options)
 
-function createCacheHooks(cache: Cache, behavior: CacheBehavior): Hooks {
+export function createCacheHooks(cache: Cache, behavior: CacheBehavior): Hooks {
 	return {
 		// If bypassing the cache, disable beforeRequest to prevent reading from it
 		// - we still want to cache responses.
@@ -114,7 +114,7 @@ export async function getFflogsEvents(
 	const {code} = report
 
 	// Grab the cache storage we'll be using for requests
-	const cache = await getCache(report)
+	const cache = await getCache(report.code)
 
 	// Base parameters
 	const searchParams: ReportEventsQuery = {
@@ -138,10 +138,12 @@ export async function getFflogsEvents(
 	return events
 }
 
-async function getCache(report: Report) {
+export async function getCache(code: Report['code']) {
 	// This is currently bucketing an entire report at a time. Keep an eye on behavior,
 	// it's relatively easy to tweak this key to increase/decrease bucket size.
-	const key = report.code
+	// NOTE: Decreasing size of bucket will require splitting reports into their
+	// own bucket, which will in turn require more nuanced bucket deletion logic.
+	const key = code
 
 	// Grab all the current cache names, as well as the cache we actually want
 	const [keys, cache] = await Promise.all([
