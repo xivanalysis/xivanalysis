@@ -9,12 +9,10 @@ import {Data} from 'parser/core/modules/Data'
 import React from 'react'
 
 const SWORD_OATH_SEVERITY = {
-	89: TARGET.WARN,
 	94: TARGET.SUCCESS,
 }
 
 const DIVINE_MIGHT_SEVERITY = {
-	89: TARGET.WARN,
 	94: TARGET.SUCCESS,
 }
 
