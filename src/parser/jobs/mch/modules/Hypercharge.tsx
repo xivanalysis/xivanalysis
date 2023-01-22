@@ -63,6 +63,8 @@ export class Hypercharge extends Analyser {
 	}
 
 	private onHypercharge(event: Events['action']) {
+		this.endCurrentWindow(event)
+
 		this.rotationHook = this.addEventHook(
 			filter<Event>()
 				.source(this.parser.actor.id)
