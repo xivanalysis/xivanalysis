@@ -658,7 +658,7 @@
   "pld.gauge.title": "Oath Gauge Usage",
   "pld.gauge.waste.suggestion.content": "Using <0/> on yourself or <1/> on a tank partner in case you're off tanking could reduce incoming damage from abilities or auto-attacks.",
   "pld.gauge.waste.suggestion.why": "A total of {0} gauge was lost due to exceeding the cap.",
-  "pld.requiescat.suggestions.missed-confiteor.content": "Be sure to use <0/>, <1/>, <2/>, and <3/> for each each <4/> window for optimal damage.",
+  "pld.requiescat.suggestions.missed-confiteor.content": "Be sure to use <0/>, <1/>, <2/>, and <3/> in each <4/> window for optimal damage.",
   "pld.requiescat.suggestions.wrong-gcd.content": "GCDs used during <0/> should consist of <1/>, <2/>, <3/>, and <4/> for optimal damage.",
   "pld.requiescat.suggestions.wrong-gcd.why": "{missedCasts, plural, one {# missing cast} other {# missing casts}} during the {0} buff window.",
   "pld.requiescat.table.note": "Each of your <0/> windows should contain 4 spells , consisting of <1/>, <2/>, <3/>, and <4/> for each each stack <5/>.",
