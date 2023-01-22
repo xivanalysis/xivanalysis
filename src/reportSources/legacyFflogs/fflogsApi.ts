@@ -38,7 +38,7 @@ export function createCacheHooks(cache: Cache, behavior: CacheBehavior): Hooks {
 
 		afterResponse: [
 			(request, _options, response) => {
-				// If the respone was fetched from cache, don't need to do anything.
+				// If the response was fetched from cache, don't need to do anything.
 				if (response.headers.has(FROM_CACHE_HEADER)) {
 					return
 				}
