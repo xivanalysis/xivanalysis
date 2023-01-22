@@ -25,9 +25,9 @@ export class Tincture extends CoreTincture {
 			</Trans>,
 			suggestionWindowName,
 			severityTiers: {
-				2: SEVERITY.MINOR,
-				4: SEVERITY.MEDIUM,
-				6: SEVERITY.MAJOR,
+				1: SEVERITY.MINOR,
+				2: SEVERITY.MEDIUM,
+				3: SEVERITY.MAJOR,
 			},
 		}))
 

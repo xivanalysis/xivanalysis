@@ -11,13 +11,14 @@ import React from 'react'
 const SEVERITIES = {
 	MISSED_OGCDS: {
 		1: SEVERITY.MINOR,
+		5: SEVERITY.MEDIUM,
 	},
 	MISSED_ACTIONS: {
 		1: SEVERITY.MINOR,
 		2: SEVERITY.MEDIUM,
 		4: SEVERITY.MAJOR,
 	},
-	MISSED_GCD: {
+	MISSED_GCDS: {
 		1: SEVERITY.MINOR,
 		2: SEVERITY.MEDIUM,
 		4: SEVERITY.MAJOR,
@@ -53,7 +54,7 @@ export class FightOrFlight extends BuffWindow {
 				Try to land 8 GCDs during every <DataLink action="FIGHT_OR_FLIGHT" /> window.
 			</Trans>,
 			suggestionWindowName,
-			severityTiers: SEVERITIES.MISSED_GCD,
+			severityTiers: SEVERITIES.MISSED_GCDS,
 		}))
 
 		this.addEvaluator(new ExpectedActionsEvaluator({
@@ -65,7 +66,7 @@ export class FightOrFlight extends BuffWindow {
 				{action: this.data.actions.BLADE_OF_VALOR, expectedPerWindow: 1},
 				{action: this.data.actions.HOLY_SPIRIT, expectedPerWindow: 1},
 			],
-			suggestionIcon: this.data.actions.EXPIACION.icon,
+			suggestionIcon: this.data.actions.FIGHT_OR_FLIGHT.icon,
 			suggestionContent: <Trans id="pld.fightorflight.suggestions.gcd_actions.content">
 				Try to land at least one cast of <DataLink action="GORING_BLADE" />
 				, <DataLink action="CONFITEOR" />, <DataLink action="BLADE_OF_FAITH" />, <DataLink action="BLADE_OF_TRUTH" />
@@ -73,7 +74,7 @@ export class FightOrFlight extends BuffWindow {
 				during every <DataLink action="FIGHT_OR_FLIGHT" /> window.
 			</Trans>,
 			suggestionWindowName,
-			severityTiers: SEVERITIES.MISSED_OGCDS,
+			severityTiers: SEVERITIES.MISSED_ACTIONS,
 		}))
 
 		this.addEvaluator(new ExpectedActionsEvaluator({
@@ -82,7 +83,7 @@ export class FightOrFlight extends BuffWindow {
 				{action: this.data.actions.CIRCLE_OF_SCORN, expectedPerWindow: 1},
 				{action: this.data.actions.INTERVENE, expectedPerWindow: 1},
 			],
-			suggestionIcon: this.data.actions.EXPIACION.icon,
+			suggestionIcon: this.data.actions.FIGHT_OR_FLIGHT.icon,
 			suggestionContent: <Trans id="pld.fightorflight.suggestions.ogcds.content">
 				Try to land at least one cast of each of your off-GCD skills (<DataLink action="EXPIACION" />,
 				<DataLink action="CIRCLE_OF_SCORN" />, and <DataLink action="INTERVENE" />)
