@@ -3,6 +3,8 @@ import ky, {Options, Hooks} from 'ky'
 import {Fight,  ReportEventsQuery, ReportEventsResponse} from './eventTypes'
 import {Report} from './legacyStore'
 
+type CacheBehavior = 'read' | 'bypass'
+
 const FROM_CACHE_HEADER = '__from-cache'
 
 const options: Options = {
@@ -20,11 +22,13 @@ if (process.env.REACT_APP_FFLOGS_V1_API_KEY) {
 // Core API via ky
 export const fflogsApi = ky.create(options)
 
-function createCacheHooks(cache: Cache): Hooks {
+function createCacheHooks(cache: Cache, behavior: CacheBehavior): Hooks {
 	return {
-		// Before sending a request, try to fetch it from the cache.
-		beforeRequest: [
+		// If bypassing the cache, disable beforeRequest to prevent reading from it
+		// - we still want to cache responses.
+		beforeRequest: behavior === 'bypass' ? [] : [
 			async request => {
+				// Before sending a request, try to fetch it from the cache.
 				const cachedResponse = await cache.match(request)
 				// If we got a cached response, mark it so we don't try to re-cache it later.
 				cachedResponse?.headers.append(FROM_CACHE_HEADER, 'true')
@@ -51,11 +55,18 @@ function createCacheHooks(cache: Cache): Hooks {
 function fetchEvents(
 	code: string,
 	searchParams: Record<string, string | number | boolean>,
-	cache: Cache
+	cache: Cache,
+	behavior: CacheBehavior,
 ) {
 	return fflogsApi.get(
 		`report/events/${code}`,
-		{searchParams, hooks: createCacheHooks(cache)},
+		{
+			searchParams: {
+				...searchParams,
+				...(behavior === 'bypass' ? {bypassCache: 'true'} : {}),
+			},
+			hooks: createCacheHooks(cache, behavior),
+		},
 	).json<ReportEventsResponse>()
 }
 
@@ -68,15 +79,17 @@ async function requestEvents(
 	let response = await fetchEvents(
 		code,
 		searchParams,
-		cache
+		cache,
+		'read'
 	)
 
 	// If it's blank, try again, bypassing the cache
 	if (response === '') {
 		response = await fetchEvents(
 			code,
-			{...searchParams, bypassCache: 'true'},
-			cache
+			searchParams,
+			cache,
+			'bypass'
 		)
 	}
 
