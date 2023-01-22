@@ -659,8 +659,6 @@
   "pld.gauge.waste.suggestion.content": "메인 탱킹 중 <0/> 기술을 본인에게 사용하거나, 서브 탱킹 중 <1/> 기술을 다른 탱커에게 사용하여 받는 피해량을 줄일 수 있습니다.",
   "pld.gauge.waste.suggestion.why": "게이지 초과로 충의를 총 {0} 잃었습니다.",
   "pld.requiescat.suggestions.missed-confiteor.content": "",
-  "pld.requiescat.suggestions.wrong-gcd.content": "",
-  "pld.requiescat.suggestions.wrong-gcd.why": "{0} 버프 구간 중 기술 시전을 {missedCasts, plural, other {#}}회 놓쳤습니다.",
   "pld.requiescat.table.note": "",
   "pld.requiescat.title": "안식 기도 사용",
   "pld.royal-authority.title": "",

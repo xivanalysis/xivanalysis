@@ -659,8 +659,6 @@
   "pld.gauge.waste.suggestion.content": "使用<0/>或者对另一个T使用<1/>以减少受到的伤害。",
   "pld.gauge.waste.suggestion.why": "由于溢出而浪费{0} 。",
   "pld.requiescat.suggestions.missed-confiteor.content": "",
-  "pld.requiescat.suggestions.wrong-gcd.content": "",
-  "pld.requiescat.suggestions.wrong-gcd.why": "在 {0} 的持续时间内打了{missedCasts, plural, one {#个错误的技能} other {#个错误的技能}}。",
   "pld.requiescat.table.note": "",
   "pld.requiescat.title": "安魂祈祷的使用",
   "pld.royal-authority.title": "",
