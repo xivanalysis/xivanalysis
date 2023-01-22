@@ -119,7 +119,7 @@ export class Requiescat extends BuffWindow {
 			suggestionIcon: this.data.actions.CONFITEOR.icon,
 			suggestionContent: <Trans id="pld.requiescat.suggestions.missed-confiteor.content">
 				Be sure to use <DataLink action="CONFITEOR" />, <DataLink action="BLADE_OF_FAITH" />, <DataLink action="BLADE_OF_TRUTH" />
-				, and <DataLink action="BLADE_OF_VALOR" /> for each each <DataLink status="REQUIESCAT" /> window for optimal damage.
+				, and <DataLink action="BLADE_OF_VALOR" /> in each <DataLink status="REQUIESCAT" /> window for optimal damage.
 			</Trans>,
 			suggestionWindowName: <DataLink action="REQUIESCAT" showIcon={false} />,
 			severityTiers: SEVERITIES.MISSED_CONFITEOR_GCDS,
