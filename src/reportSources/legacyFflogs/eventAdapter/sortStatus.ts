@@ -46,43 +46,28 @@ export class SortStatusAdapterStep extends AdapterStep {
 		return sameSource && this.canActionApplyStatus(actionEvent.action, statusEvent.status)
 	}
 
-	private getNode(cache: Record<number, EventNode>, index: number, event: Event) {
-		if (index in cache) {
-			return cache[index]
-		}
-
-		const newNode = {
+	private sortTimestampBucket(events: Event[]): Event[] {
+		const nodes: EventNode[] = events.map(event => ({
 			event: event,
 			isRoot: true,
 			after: [],
-		}
+		}))
 
-		cache[index] = newNode
-		return newNode
-	}
-
-	private sortTimestampBucket(events: Event[]): Event[] {
-		const nodes: EventNode[] = []
-		const nodeCache: Record<number, EventNode> = {}
-
-		for (const [index, event] of events.entries()) {
-			const node = this.getNode(nodeCache, index, event)
+		for (const [index, node] of nodes.entries()) {
+			const event = node.event
 
 			if (event.type === 'statusApply') {
 				// Sorts the event after its corresponding action event
-				for (let actionIndex = index + 1; actionIndex < events.length; ++actionIndex) {
-					const other = events[actionIndex]
+				for (let actionIndex = index + 1; actionIndex < nodes.length; ++actionIndex) {
+					const other = nodes[actionIndex]
 
-					if (other.type === 'action' && this.actionAppliedStatus(other, event)) {
-						const actionNode = this.getNode(nodeCache, actionIndex, other)
-						actionNode.after.push(event)
+					if (other.event.type === 'action' && this.actionAppliedStatus(other.event, event)) {
+						other.after.push(event)
 						node.isRoot = false
 						break
 					}
 				}
 			}
-
-			nodes.push(node)
 		}
 
 		return nodes.reduce((events: Event[], node) => node.isRoot
