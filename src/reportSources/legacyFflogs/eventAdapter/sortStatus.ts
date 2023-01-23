@@ -48,25 +48,41 @@ export class SortStatusAdapterStep extends AdapterStep {
 
 	private sortTimestampBucket(events: Event[]): Event[] {
 		const nodes: EventNode[] = []
+		const nodeCache: Record<number, EventNode> = {}
 
 		for (const [index, event] of events.entries()) {
-			const node = {
-				event: event,
-				isRoot: true,
-				after: [],
-			}
+			const node = index in nodeCache
+				? nodeCache[index]
+				: {
+					event: event,
+					isRoot: true,
+					after: [],
+				}
 
 			if (event.type === 'statusApply') {
 				// Sorts the event after its corresponding action event
-				for (const other of nodes.slice(index + 1)) {
-					if (other.event.type === 'action' && this.actionAppliedStatus(other.event, event)) {
-						other.after.push(event)
+				for (let actionIndex = index + 1; actionIndex < events.length; ++actionIndex) {
+					const other = events[actionIndex]
+
+					if (other.type === 'action' && this.actionAppliedStatus(other, event)) {
 						node.isRoot = false
+
+						const actionNode = actionIndex in nodeCache
+							? nodeCache[actionIndex]
+							: {
+								event: other,
+								isRoot: true,
+								after: [],
+							}
+
+						actionNode.after.push(event)
+						nodeCache[actionIndex] = actionNode
 						break
 					}
 				}
 			}
 
+			nodeCache[index] = node
 			nodes.push(node)
 		}
 
