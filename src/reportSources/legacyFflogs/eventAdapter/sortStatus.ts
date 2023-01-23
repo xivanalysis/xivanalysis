@@ -1,7 +1,7 @@
 import {getDataArrayBy} from 'data'
 import {getActions} from 'data/ACTIONS'
 import {StatusKey, getStatuses} from 'data/STATUSES'
-import {Event} from 'event'
+import {Event, Events} from 'event'
 import _ from 'lodash'
 import {AdapterStep} from './base'
 
@@ -41,25 +41,33 @@ export class SortStatusAdapterStep extends AdapterStep {
 		return applyingActions.some(other => action === other.id)
 	})
 
-	private sortTimestampBucket(events: Event[]): Event[] {
-		const nodes: EventNode[] = events.map(event => ({
-			event: event,
-			isRoot: true,
-			after: [],
-		}))
+	private actionAppliedStatus(actionEvent: Events['action'], statusEvent: Events['statusApply']) {
+		const sameSource = actionEvent.source === statusEvent.source
+		return sameSource && this.canActionApplyStatus(actionEvent.action, statusEvent.status)
+	}
 
-		for (const [index, node] of nodes.entries()) {
-			const event = node.event
+	private sortTimestampBucket(events: Event[]): Event[] {
+		const nodes: EventNode[] = []
+
+		for (const [index, event] of events.entries()) {
+			const node = {
+				event: event,
+				isRoot: true,
+				after: [],
+			}
 
 			if (event.type === 'statusApply') {
 				// Sorts the event after its corresponding action event
 				for (const other of nodes.slice(index + 1)) {
-					if (other.event.type === 'action' && this.canActionApplyStatus(other.event.action, event.status)) {
+					if (other.event.type === 'action' && this.actionAppliedStatus(other.event, event)) {
 						other.after.push(event)
 						node.isRoot = false
+						break
 					}
 				}
 			}
+
+			nodes.push(node)
 		}
 
 		return nodes.reduce((events: Event[], node) => node.isRoot
