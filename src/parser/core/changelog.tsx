@@ -10,6 +10,13 @@ export const changelog: ChangelogEntry[] = [
 	// 	contributors: [CONTRIBUTORS.YOU],
 	// },
 	{
+		date: new Date('2023-01-22'),
+		Changes: () => <>
+			Fix event ordering inaccuracies when a buff application and a damage event occur on the same timestamp.
+		</>,
+		contributors: [CONTRIBUTORS.HINT],
+	},
+	{
 		date: new Date('2022-04-20'),
 		Changes: () => <>Update core raid buffs to use the correct NIN buff name in timeline.</>,
 		contributors: [CONTRIBUTORS.AY],

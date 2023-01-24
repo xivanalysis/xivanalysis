@@ -13,7 +13,7 @@ import {OneHpLockAdapterStep} from './oneHpLock'
 import {PrepullActionAdapterStep} from './prepullAction'
 import {PrepullStatusAdapterStep} from './prepullStatus'
 import {ReassignUnknownActorStep} from './reassignUnknownActor'
-import {sortEvents} from './sortEvents'
+import {SortStatusAdapterStep} from './sortStatus'
 import {SpeedStatsAdapterStep} from './speedStat'
 import {TranslateAdapterStep} from './translate'
 
@@ -24,9 +24,6 @@ export function adaptEvents(report: Report, pull: Pull, baseEvents: FflogsEvent[
 	// Shallow clone to ensure top-level updates will not effect the base array.
 	// Child adapters are responsible for ensuring updates are copy-on-write.
 	const events = [...baseEvents]
-
-	// TODO: Move sort logic into adapter scope once legacy is removed
-	sortEvents(events)
 
 	return adapter.adaptEvents(events)
 }
@@ -45,6 +42,7 @@ class EventAdapter {
 			new DeduplicateAoEStep(opts),
 			new DeduplicateStatusApplicationStep(opts),
 			new DeduplicateActorUpdateStep(opts),
+			new SortStatusAdapterStep(opts),
 			new PrepullActionAdapterStep(opts),
 			new PrepullStatusAdapterStep(opts),
 			new OneHpLockAdapterStep(opts),

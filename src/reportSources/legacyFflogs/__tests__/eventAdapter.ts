@@ -4,7 +4,7 @@ import {Actor, Pull, Report, Team} from 'report'
 import {adaptEvents} from '../eventAdapter'
 import {AdapterStep} from '../eventAdapter/base'
 import {ReassignUnknownActorStep} from '../eventAdapter/reassignUnknownActor'
-import {ActorType, CastEvent, CombatantInfoAura, DamageEvent, FflogsEvent, HitType, ReportLanguage} from '../eventTypes'
+import {ActorType, BuffEvent, CastEvent, CombatantInfoAura, DamageEvent, FflogsEvent, HitType, ReportLanguage} from '../eventTypes'
 
 // "Mock" the reassign unknown actor step with its real implementation. We use this mock handling later
 // to disable the step on a test-by-test basis.
@@ -896,18 +896,29 @@ describe('Event adapter', () => {
 	})
 
 	it('sorts events with identical timestamps', () => {
+		// Reassemble applies Reassembled; these events should be sorted
+		const reassembleAbility = {...(fakeEvents.begincast[0] as CastEvent).ability, guid: 2876}
+		const reassembledAbility = {...(fakeEvents.applybuff[0] as BuffEvent).ability, guid: 1000851}
+
 		const result = adaptEvents(report, pull, [
-			{...fakeEvents.applybuff[0], timestamp: 1},
-			{...fakeEvents.cast[0], timestamp: 1},
-			{...fakeEvents.begincast[0], timestamp: 1},
-			{...fakeEvents.death[0], timestamp: 1},
+			{
+				...fakeEvents.applybuff[0],
+				timestamp: 1,
+				sourceID: 1,
+				sourceInstance: undefined,
+				ability: reassembledAbility,
+			} as BuffEvent,
+			{
+				...fakeEvents.cast[0],
+				timestamp: 1,
+				sourceID: 1,
+				ability: reassembleAbility,
+			} as CastEvent,
 		])
 
 		expect(result.map(event => event.type)).toEqual([
-			'actorUpdate',
-			'prepare',
-			'action',
-			'statusApply',
+			'action', // action first
+			'statusApply', // buff second
 		])
 	})
 
