@@ -1,3 +1,4 @@
+import * as Sentry from '@sentry/browser'
 import {ReportProcessingError} from 'errors'
 import ky, {Options, Hooks} from 'ky'
 import {Fight,  ReportEventsQuery, ReportEventsResponse} from './eventTypes'
@@ -43,9 +44,20 @@ export function createCacheHooks(cache: Cache, behavior: CacheBehavior): Hooks {
 					return
 				}
 
-				// Save successful responses to the cache
+				// Try to save successful responses to the cache. Failure can be ignored
+				// as far as the user is concerned.
 				if (response.ok) {
-					cache.put(request, response)
+					try {
+						cache.put(request, response)
+					} catch (error) {
+						Sentry.withScope(scope => {
+							scope.setExtras({
+								error,
+								request,
+							})
+							Sentry.captureMessage('Failed to save response to cache.', Sentry.Severity.Warning)
+						})
+					}
 				}
 			},
 		],
