@@ -60,5 +60,34 @@ export const patch630: Layer<ActionRoot> = {
 
 		// WAR 6.3 new statuses from actions
 		SHAKE_IT_OFF: {statusesApplied: ['SHAKE_IT_OFF', 'SHAKE_IT_OFF_OVER_TIME']},
+
+		// Tank stance changes
+		DEFIANCE: {cooldown: 2000},
+		GRIT: {cooldown: 2000},
+		ROYAL_GUARD: {cooldown: 2000},
+
+		RELEASE_DEFIANCE: {
+			id: 32066,
+			name: 'Release Defiance',
+			icon: 'https://xivapi.com/i/002000/002572.png',
+			onGcd: false,
+			cooldown: 1000,
+		},
+
+		RELEASE_GRIT: {
+			id: 32067,
+			name: 'Release Grit',
+			icon: 'https://xivapi.com/i/003000/003092.png',
+			onGcd: false,
+			cooldown: 1000,
+		},
+
+		RELEASE_ROYAL_GUARD: {
+			id: 32068,
+			name: 'Release Royal Guard',
+			icon: 'https://xivapi.com/i/003000/003433.png',
+			onGcd: false,
+			cooldown: 1000,
+		},
 	},
 }
