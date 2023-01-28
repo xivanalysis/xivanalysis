@@ -57,5 +57,8 @@ export const patch630: Layer<ActionRoot> = {
 		PHLEGMA: {cooldown: 40000},
 		PHLEGMA_II: {cooldown: 40000},
 		PHLEGMA_III: {cooldown: 40000},
+
+		// WAR 6.3 new statuses from actions
+		SHAKE_IT_OFF: {statusesApplied: ['SHAKE_IT_OFF', 'SHAKE_IT_OFF_OVER_TIME']},
 	},
 }
