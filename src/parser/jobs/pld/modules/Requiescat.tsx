@@ -2,9 +2,12 @@ import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
 import {DataLink} from 'components/ui/DbLink'
 import {ActionKey} from 'data/ACTIONS'
+import {Event, Events} from 'event'
+import {filter} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
 import {BuffWindow, EvaluatedAction, ExpectedActionsEvaluator} from 'parser/core/modules/ActionWindow'
 import {HistoryEntry} from 'parser/core/modules/ActionWindow/History'
+import {Actors} from 'parser/core/modules/Actors'
 import Downtime from 'parser/core/modules/Downtime'
 import {GlobalCooldown} from 'parser/core/modules/GlobalCooldown'
 import {SEVERITY} from 'parser/core/modules/Suggestions'
@@ -22,6 +25,11 @@ const SEVERITIES = {
 }
 const REQUIESCAT_DURATION = 30000
 
+const DIVINE_MIGHT_ACTIONS: ActionKey[] = [
+	'HOLY_SPIRIT',
+	'HOLY_CIRCLE',
+]
+
 const REQUIESCAT_ACTIONS: ActionKey[] = [
 	'HOLY_SPIRIT',
 	'HOLY_CIRCLE',
@@ -35,6 +43,7 @@ export class Requiescat extends BuffWindow {
 	static override handle = 'requiescat'
 	static override title = t('pld.requiescat.title')`Requiescat Usage`
 
+	@dependency actors!: Actors
 	@dependency downtime!: Downtime
 	@dependency globalCooldown!: GlobalCooldown
 
@@ -44,7 +53,27 @@ export class Requiescat extends BuffWindow {
 
 	override initialise() {
 		super.initialise()
-		this.trackOnlyActions(REQUIESCAT_ACTIONS.map(g => this.data.actions[g].id))
+
+		const actionFilter = filter<Event>()
+			.source(this.parser.actor.id)
+			.type('action')
+		const isDivineMightAction = this.data.matchActionId(DIVINE_MIGHT_ACTIONS)
+		const isRequiescatAction = this.data.matchActionId(REQUIESCAT_ACTIONS)
+		this.setEventFilter((event): event is Events['action'] => {
+			if (!actionFilter(event)) { return false }
+
+			// If the player has divine might active, the holy spells can be ignored, they do not consume requi stacks.
+			if (
+				this.actors.current.hasStatus(this.data.statuses.DIVINE_MIGHT.id)
+				&& isDivineMightAction(event.action)
+			) {
+				return false
+			}
+
+			// Otherwise, report any action effected by requi.
+			return isRequiescatAction(event.action)
+		})
+
 		this.addEvaluator(new ExpectedActionsEvaluator({
 			expectedActions: [
 				{action: this.data.actions.CONFITEOR, expectedPerWindow: 1},
