@@ -12,7 +12,13 @@ import {Rows, TableStatistic, Statistics, SimpleStatistic} from 'parser/core/mod
 import React from 'react'
 import {AbstractStatisticOptions} from './Statistics/AbstractStatistic'
 
-export abstract class Defensives extends Analyser {
+const DEFENSIVE_ROLE_ACTIONS: Map<RoleKey, ActionKey[]> = new Map<RoleKey, ActionKey[]>([
+	['TANK', ['RAMPART', 'REPRISAL']],
+	['MELEE', ['FEINT', 'BLOODBATH', 'SECOND_WIND']],
+	['PHYSICAL_RANGED', ['SECOND_WIND']],
+	['MAGICAL_RANGED', ['ADDLE']],
+	['HEALER', []],
+])
 	static override handle = 'defensives'
 	static override title = t('core.defensives.title')`Defensives`
 
@@ -33,15 +39,13 @@ export abstract class Defensives extends Analyser {
 	private uses: Map<Action['id'], number> = new Map()
 
 	override initialise() {
-		const actionFilter = filter<Event>()
-			.source(this.parser.actor.id)
-			.type('action')
-
-		this.trackedDefensives.forEach(defensive => {
-			this.addEventHook(actionFilter.action(defensive.id),
-				() => this.uses.set(defensive.id, (this.uses.get(defensive.id) ?? 0) + 1)
-			)
+		const roleDefensives = DEFENSIVE_ROLE_ACTIONS.get(JOBS[this.parser.actor.job].role)?.map(key => this.data.actions[key]) ?? []
+		roleDefensives.forEach(roleAction => {
+			if (!this.trackedDefensives.find(action => roleAction.id === action.id)) {
+				this.trackedDefensives.push(roleAction)
+			}
 		})
+	}
 
 		this.addEventHook('complete', this.onComplete)
 	}
