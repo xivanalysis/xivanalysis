@@ -1,16 +1,17 @@
 import {t} from '@lingui/macro'
-import {Trans} from '@lingui/react'
+import {Plural, Trans} from '@lingui/react'
 import {ActionLink} from 'components/ui/DbLink'
-import {Action} from 'data/ACTIONS'
-import {Event} from 'event'
+import {Action, ActionKey} from 'data/ACTIONS'
+import {JOBS, RoleKey} from 'data/JOBS'
 import {Analyser} from 'parser/core/Analyser'
-import {filter} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
 import {CooldownDowntime} from 'parser/core/modules/CooldownDowntime'
 import {Data} from 'parser/core/modules/Data'
-import {Rows, TableStatistic, Statistics, SimpleStatistic} from 'parser/core/modules/Statistics'
-import React from 'react'
-import {AbstractStatisticOptions} from './Statistics/AbstractStatistic'
+import React, {Fragment, ReactNode} from 'react'
+import {Accordion, Button, Icon, Message, Table} from 'semantic-ui-react'
+import {CooldownHistoryEntry, Cooldowns} from './Cooldowns'
+import DISPLAY_ORDER from './DISPLAY_ORDER'
+import {Timeline} from './Timeline'
 
 const DEFENSIVE_ROLE_ACTIONS: Map<RoleKey, ActionKey[]> = new Map<RoleKey, ActionKey[]>([
 	['TANK', ['RAMPART', 'REPRISAL']],
@@ -19,24 +20,28 @@ const DEFENSIVE_ROLE_ACTIONS: Map<RoleKey, ActionKey[]> = new Map<RoleKey, Actio
 	['MAGICAL_RANGED', ['ADDLE']],
 	['HEALER', []],
 ])
+
+export class Defensives extends Analyser {
 	static override handle = 'defensives'
 	static override title = t('core.defensives.title')`Defensives`
+	static override displayOrder = DISPLAY_ORDER.DEFENSIVES
 
+	@dependency protected cooldowns!:Cooldowns
 	@dependency protected cooldownDowntime!: CooldownDowntime
 	@dependency protected data!: Data
-	@dependency private statistics!: Statistics
+	@dependency private timeline!: Timeline
 
 	/**
-	 * Implementing modules MUST provide a list of defensive actions to track
+	 * Implementing modules should provide a list of job-specific defensive actions to track
 	 */
-	protected abstract trackedDefensives: Action[]
-
+	protected trackedDefensives: Action[] = []
 	/**
-	 * Implementing modules may provide opts for the statistic display
+	 * Implementing modules may override the header message text
 	 */
-	protected statisticOpts: AbstractStatisticOptions = {}
-
-	private uses: Map<Action['id'], number> = new Map()
+	protected headerContent: ReactNode = <Trans id="core.defensives.header.content">
+		Using your mitigation and healing cooldowns can help you survive mistakes, or relieve some stress on the healers and let them deal more damage.
+		While you shouldn't use them at the expense of your rotation or buff alignment, you should try to find helpful times to use them.
+	</Trans>
 
 	override initialise() {
 		const roleDefensives = DEFENSIVE_ROLE_ACTIONS.get(JOBS[this.parser.actor.job].role)?.map(key => this.data.actions[key]) ?? []
@@ -47,12 +52,13 @@ const DEFENSIVE_ROLE_ACTIONS: Map<RoleKey, ActionKey[]> = new Map<RoleKey, Actio
 		})
 	}
 
-		this.addEventHook('complete', this.onComplete)
+	private getUses(defensive: Action): number {
+		return this.cooldowns.cooldownHistory(defensive).length
 	}
 
-	private formatUsages(defensive: Action): React.ReactNode {
-		const uses = this.uses.get(defensive.id) ?? 0
-		const maxUses = this.cooldownDowntime.calculateMaxUsages({cooldowns: [defensive]})
+	private getMaxUses(defensive: Action): number {
+		return this.cooldownDowntime.calculateMaxUsages({cooldowns: [defensive]})
+	}
 
 	override output() {
 		if (this.trackedDefensives.length === 0) {
