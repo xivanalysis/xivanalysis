@@ -1,5 +1,6 @@
 import {Attribute} from 'event'
 import {ensureActions} from '../type'
+import {SHARED} from './SHARED'
 
 export const DRK = ensureActions({
 	// -----
@@ -10,6 +11,9 @@ export const DRK = ensureActions({
 		name: 'Grit',
 		icon: 'https://xivapi.com/i/003000/003070.png',
 	},
+
+	RELEASE_GRIT: SHARED.UNKNOWN, // Added in patch 6.3 layer
+
 	// -----
 	// Cooldowns
 	// -----

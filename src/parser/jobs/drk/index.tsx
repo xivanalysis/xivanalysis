@@ -18,7 +18,7 @@ export const DARK_KNIGHT = new Meta({
 	</>,
 	supportedPatches: {
 		from: '6.0',
-		to: '6.2',
+		to: '6.3',
 	},
 	contributors: [
 		{user: CONTRIBUTORS.AZARIAH, role: ROLES.MAINTAINER},
