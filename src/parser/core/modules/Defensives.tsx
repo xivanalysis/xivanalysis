@@ -36,10 +36,10 @@ export class Defensives extends Analyser {
 	 */
 	protected trackedDefensives: Action[] = []
 	/**
-	 * Implementing modules may override the header message text
+	 * Implementing modules may override the main header message text
 	 */
 	protected headerContent: ReactNode = <Trans id="core.defensives.header.content">
-		Using your mitigation and healing cooldowns can help you survive mistakes, or relieve some stress on the healers and let them deal more damage.
+		Using your mitigation and healing cooldowns can help you survive mistakes, or relieve some stress on the healers and let them deal more damage.<br/>
 		While you shouldn't use them at the expense of your rotation or buff alignment, you should try to find helpful times to use them.
 	</Trans>
 
@@ -70,6 +70,10 @@ export class Defensives extends Analyser {
 				<Icon name="info" />
 				<Message.Content>
 					{this.headerContent}
+					<br/><br/>
+					<Trans id="core.defensives.header.sub-content">
+						The below tables will show you where you can gain additional uses of these cooldowns, without interfering with your existing ones.
+					</Trans>
 				</Message.Content>
 			</Message>
 			<Accordion

@@ -12,7 +12,7 @@ export const changelog: ChangelogEntry[] = [
 	{
 		date: new Date('2023-02-04'),
 		Changes: () => <>
-			Overhaul defensive cooldown analysis, include role actions, and apply to all jobs.
+			Overhaul defensive cooldown analysis for all jobs, including role actions by default.
 		</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],
 	},
