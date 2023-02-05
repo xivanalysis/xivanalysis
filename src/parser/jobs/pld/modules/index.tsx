@@ -4,6 +4,7 @@ import {CastTime} from './CastTime'
 import {Combos} from './Combos'
 import {Confiteor} from './Confiteor'
 import {CooldownDowntime} from './CooldownDowntime'
+import {Defensives} from './Defensives'
 import {FightOrFlight} from './FightOrFlight'
 import {Gauge} from './Gauge'
 import {Requiescat} from './Requiescat'
@@ -16,6 +17,7 @@ export default [
 	Combos,
 	Confiteor,
 	CooldownDowntime,
+	Defensives,
 	FightOrFlight,
 	Interrupts,
 	Gauge,
