@@ -50,40 +50,100 @@ export abstract class Defensives extends Analyser {
 		const uses = this.uses.get(defensive.id) ?? 0
 		const maxUses = this.cooldownDowntime.calculateMaxUsages({cooldowns: [defensive]})
 
-		const flooredPercent = Math.floor(100 * uses / maxUses)
-
-		return <>{uses} / {maxUses} ({flooredPercent}%)</>
-	}
-
-	private onComplete() {
-		if (this.trackedDefensives.length === 1) {
-			// Only one defensive, use a simple statistic rather than a table
-			const defensive = this.trackedDefensives[0]
-
-			this.statistics.add(new SimpleStatistic({
-				icon: defensive.icon,
-				title: <Trans id="core.defensives.statistic-title">
-					<ActionLink showIcon={false} {...defensive} /> Uses
-				</Trans>,
-				value: this.formatUsages(defensive),
-				...this.statisticOpts,
-			}))
-
+	override output() {
+		if (this.trackedDefensives.length === 0) {
 			return
 		}
 
-		const rows: Rows<React.ReactNode, 2> = this.trackedDefensives.map((defensive, index) => [
-			<ActionLink key={index} {...defensive} />,
-			this.formatUsages(defensive),
-		])
+		return <Fragment>
+			<Message icon>
+				<Icon name="info" />
+				<Message.Content>
+					{this.headerContent}
+				</Message.Content>
+			</Message>
+			<Accordion
+				exclusive={false}
+				styled
+				fluid
+				panels={
+					this.trackedDefensives.map((defensive, index) => {
+						return {
+							key: defensive.id,
+							title: {
+								content: <><ActionLink key={index} {...defensive} /> - {this.getUses(defensive)} / {this.getMaxUses(defensive)}</>,
+							},
+							content: {
+								content: <Table compact unstackable celled>
+									<Table.Body>
+										{
+											this.tryGetAdditionalUseRow(defensive)
+										}
+										{
+											this.cooldowns.cooldownHistory(defensive).map((entry) => {
+												return this.getUsageRow(entry, defensive)
+											})
+										}
+									</Table.Body>
+								</Table>,
+							},
+						}
+					})
+				}
+			/>
+		</Fragment>
+	}
 
-		this.statistics.add(new TableStatistic({
-			headings: [
-				'Defensive',
-				'Uses',
-			],
-			rows: rows,
-			...this.statisticOpts,
-		}))
+	private getUsageRow(entry: CooldownHistoryEntry, defensive: Action): ReactNode {
+		return <>
+			<Table.Row key={entry.start}>
+				<Table.Cell>
+					<Trans id="core.defensives.table.usage-row.text">Used at <Button
+						circular
+						compact
+						size="mini"
+						icon="time"onClick={() => this.timeline.show(entry.start - this.parser.pull.timestamp, entry.end - this.parser.pull.timestamp)}>
+					</Button> {this.parser.formatEpochTimestamp(entry.start)}
+					</Trans>
+				</Table.Cell>
+			</Table.Row>
+			{
+				this.tryGetAdditionalUseRow(defensive, entry.start)
+			}
+		</>
+	}
+
+	private tryGetAdditionalUseRow(defensive: Action, timestamp: number = this.parser.pull.timestamp): ReactNode {
+		let availableTimestamp: number, currentCharges
+
+		if (timestamp === this.parser.pull.timestamp) {
+			availableTimestamp = this.parser.pull.timestamp
+			currentCharges = defensive.charges || 1
+		} else {
+			const chargesAvailableEvent = this.cooldowns.chargeHistory(defensive).find(charges => charges.timestamp >= timestamp && charges.current > 0)
+			availableTimestamp = chargesAvailableEvent?.timestamp || (this.parser.pull.duration + this.parser.pull.timestamp)
+			currentCharges = chargesAvailableEvent?.current || 0
+		}
+
+		const cooldown = defensive.cooldown || this.parser.pull.duration
+		const nextEntry = this.cooldowns.cooldownHistory(defensive).find(historyEntry => historyEntry.start > timestamp)
+		const useByTimestamp = nextEntry != null ? (nextEntry.start - cooldown) : (this.parser.pull.timestamp + this.parser.pull.duration)
+
+		if (useByTimestamp <= availableTimestamp) {
+			return <></>
+		}
+
+		const chargesBeforeNextUse = currentCharges + Math.floor((useByTimestamp - availableTimestamp) / cooldown)
+		return <Table.Row>
+			<Table.Cell>
+				<Trans id="core.defensives.table.extra-usage-row.text"><Plural value={chargesBeforeNextUse} one="1 extra use" other="# extra uses"/> available between <Button
+					circular
+					compact
+					size="mini"
+					icon="time"onClick={() => this.timeline.show(availableTimestamp - this.parser.pull.timestamp, useByTimestamp - this.parser.pull.timestamp)}>
+				</Button> {this.parser.formatEpochTimestamp(availableTimestamp)} and {this.parser.formatEpochTimestamp(useByTimestamp)}
+				</Trans>
+			</Table.Cell>
+		</Table.Row>
 	}
 }
