@@ -2,6 +2,7 @@ import {ActionTimeline} from './ActionTimeline'
 import {BloodGauge} from './BloodGauge'
 import {BloodWeapon} from './BloodWeapon'
 import {Darkside} from './Darkside'
+import {Defensives} from './Defensives'
 import {Delirium} from './Delirium'
 import {EsteemTimeline} from './EsteemTimeline'
 import {MPUsage} from './MPUsage'
@@ -15,6 +16,7 @@ export default [
 	BloodGauge,
 	BloodWeapon,
 	Darkside,
+	Defensives,
 	Delirium,
 	EsteemTimeline,
 	MPUsage,
