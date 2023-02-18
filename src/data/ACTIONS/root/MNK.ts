@@ -41,6 +41,14 @@ export const MNK = ensureActions({
 		statusesApplied: ['DISCIPLINED_FIST'],
 	},
 
+	ARM_OF_THE_DESTROYER: {
+		id: 62,
+		name: 'Arm of the Destroyer',
+		icon: 'https://xivapi.com/i/000000/000215.png',
+		onGcd: true,
+		speedAttribute: Attribute.SKILL_SPEED,
+	},
+
 	SHADOW_OF_THE_DESTROYER: {
 		id: 25767,
 		name: 'Shadow of the Destroyer',
@@ -231,6 +239,22 @@ export const MNK = ensureActions({
 		icon: 'https://xivapi.com/i/002000/002978.png',
 		cooldown: 90000,
 		statusesApplied: ['RIDDLE_OF_WIND'],
+	},
+
+	STEEL_PEAK: {
+		id: 25761,
+		name: 'Steel Peak',
+		icon: 'https://xivapi.com/i/002000/002530.png',
+		cooldown: 1000,
+		cooldownGroup: 1,
+	},
+
+	HOWLING_FIST: {
+		id: 25763,
+		name: 'Howling Fist',
+		icon: 'https://xivapi.com/i/000000/000207.png',
+		cooldown: 1000,
+		cooldownGroup: 1,
 	},
 
 	THE_FORBIDDEN_CHAKRA: {
