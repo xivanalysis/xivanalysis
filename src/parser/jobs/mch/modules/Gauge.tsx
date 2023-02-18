@@ -2,7 +2,7 @@ import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
 import Color from 'color'
 import {DataLink} from 'components/ui/DbLink'
-import {Cause, Event, Events} from 'event'
+import {Event, Events} from 'event'
 import {filter, oneOf} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
 import {CounterGauge, Gauge as CoreGauge} from 'parser/core/modules/Gauge'
@@ -27,7 +27,7 @@ const HEAT_COLOR = Color('#D35A10').fade(FADE_AMOUNT)
 const BATTERY_COLOR = Color('#2C9FCB').fade(FADE_AMOUNT)
 
 interface GaugeModifier {
-	event: 'action' | 'damage' | 'combo'
+	event: 'action' | 'combo'
 	type: 'generate' | 'spend' | 'queen'
 	amount: number
 }
@@ -54,56 +54,39 @@ export class Gauge extends CoreGauge {
 	}))
 
 	private heatModifiers: GaugeMap = new Map([
-		[this.data.actions.HEATED_SPLIT_SHOT.id, {event: 'damage', type: 'generate', amount: 5}],
+		[this.data.actions.HEATED_SPLIT_SHOT.id, {event: 'action', type: 'generate', amount: 5}],
 		[this.data.actions.HEATED_SLUG_SHOT.id, {event: 'combo', type: 'generate', amount: 5}],
 		[this.data.actions.HEATED_CLEAN_SHOT.id, {event: 'combo', type: 'generate', amount: 5}],
-		[this.data.actions.SPREAD_SHOT.id, {event: 'damage', type: 'generate', amount: 5}],
-		[this.data.actions.SCATTERGUN.id, {event: 'damage', type: 'generate', amount: 10}],
+		[this.data.actions.SPREAD_SHOT.id, {event: 'action', type: 'generate', amount: 5}],
+		[this.data.actions.SCATTERGUN.id, {event: 'action', type: 'generate', amount: 10}],
 		[this.data.actions.BARREL_STABILIZER.id, {event: 'action', type: 'generate', amount: 50}],
 		[this.data.actions.HYPERCHARGE.id, {event: 'action', type: 'spend', amount: 50}],
 	])
 
 	private batteryModifiers: GaugeMap = new Map([
 		[this.data.actions.HEATED_CLEAN_SHOT.id, {event: 'combo', type: 'generate', amount: 10}],
-		[this.data.actions.AIR_ANCHOR.id, {event: 'damage', type: 'generate', amount: 20}],
-		[this.data.actions.CHAIN_SAW.id, {event: 'damage', type: 'generate', amount: 20}],
+		[this.data.actions.AIR_ANCHOR.id, {event: 'action', type: 'generate', amount: 20}],
+		[this.data.actions.CHAIN_SAW.id, {event: 'action', type: 'generate', amount: 20}],
 		[this.data.actions.AUTOMATON_QUEEN.id, {event: 'action', type: 'queen', amount: 50}],
 	])
 
 	private _lastQueenCost = 0
 
-	private addGaugeHooks(gauge: CounterGauge, modifiers: GaugeMap) {
-		const damageActions = []
-		const castActions = []
-
-		for (const [action, modifier] of modifiers.entries()) {
-			modifier.event === 'damage' ?
-				damageActions.push(action) :
-				castActions.push(action)
-		}
-
-		const baseFilter = filter<Event>().source(this.parser.actor.id)
-
-		const actionFilter = baseFilter
+	private addGaugeHook(gauge: CounterGauge, modifiers: GaugeMap) {
+		const castActions = [...modifiers.keys()]
+		const actionFilter = filter<Event>()
+			.source(this.parser.actor.id)
 			.type(oneOf(['action', 'combo']))
 			.action(oneOf(castActions))
 
-		const damageFilter = baseFilter
-			.type('damage')
-			.cause(filter<Cause>()
-				.type('action')
-				.action(oneOf(damageActions))
-			)
-
 		this.addEventHook(actionFilter, this.onAction(gauge, modifiers))
-		this.addEventHook(damageFilter, this.onDamage(gauge, modifiers))
 	}
 
 	override initialise() {
 		super.initialise()
 
-		this.addGaugeHooks(this.heat, this.heatModifiers)
-		this.addGaugeHooks(this.battery, this.batteryModifiers)
+		this.addGaugeHook(this.heat, this.heatModifiers)
+		this.addGaugeHook(this.battery, this.batteryModifiers)
 		this.addEventHook('complete', this.onComplete)
 	}
 
@@ -116,18 +99,6 @@ export class Gauge extends CoreGauge {
 			const modifier = modifiers.get(event.action)
 
 			if (modifier && modifier.event === event.type) {
-				this.modifyGauge(gauge, modifier)
-			}
-		}
-	}
-
-	private onDamage(gauge: CounterGauge, modifiers: GaugeMap) {
-		return (event: Events['damage']) => {
-			if (event.cause.type === 'status') { return }
-
-			const modifier = modifiers.get(event.cause.action)
-
-			if (modifier) {
 				this.modifyGauge(gauge, modifier)
 			}
 		}

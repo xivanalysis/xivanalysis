@@ -29,6 +29,11 @@ export const MACHINIST = new Meta({
 	],
 	changelog: [
 		{
+			date: new Date('2023-02-28'),
+			Changes: () => <>Fixed inaccurate gauge numbers on fights that contain multiple enemies.</>,
+			contributors: [CONTRIBUTORS.HINT],
+		},
+		{
 			date: new Date('2023-01-14'),
 			Changes: () => <>Added Dismantle and a statistic for defensive cooldown usage, updated the Hypercharge module, and rewrote the "About" section for patch 6.3.</>,
 			contributors: [CONTRIBUTORS.HINT],
