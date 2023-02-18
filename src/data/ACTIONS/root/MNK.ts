@@ -130,6 +130,16 @@ export const MNK = ensureActions({
 		potency: 600,
 	},
 
+	FLINT_STRIKE: {
+		id: 25882,
+		name: 'Flint Strike',
+		icon: 'https://xivapi.com/i/002000/002548.png',
+		onGcd: true,
+		speedAttribute: Attribute.SKILL_SPEED,
+		statusesApplied: ['FORMLESS_FIST'],
+		potency: 600,
+	},
+
 	CELESTIAL_REVOLUTION: {
 		id: 25765,
 		name: 'Celestial Revolution',
@@ -138,6 +148,16 @@ export const MNK = ensureActions({
 		speedAttribute: Attribute.SKILL_SPEED,
 		statusesApplied: ['FORMLESS_FIST'],
 		potency: 450,
+	},
+
+	TORNADO_KICK: {
+		id: 3543,
+		name: 'Tornado Kick',
+		icon: 'https://xivapi.com/i/002000/002531.png',
+		onGcd: true,
+		speedAttribute: Attribute.SKILL_SPEED,
+		statusesApplied: ['FORMLESS_FIST'],
+		potency: 850,
 	},
 
 	RISING_PHOENIX: {
