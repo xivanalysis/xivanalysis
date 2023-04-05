@@ -1,97 +1,35 @@
 import {t} from '@lingui/macro'
-import {Plural, Trans} from '@lingui/react'
+import {Trans} from '@lingui/react'
 import {DataLink} from 'components/ui/DbLink'
-import {Action, ActionKey} from 'data/ACTIONS'
-import _ from 'lodash'
+import {ActionKey} from 'data/ACTIONS'
 import {dependency} from 'parser/core/Injectable'
-import {BuffWindow, EvaluatedAction, ExpectedActionsEvaluator, ExpectedGcdCountEvaluator, WindowEvaluator} from 'parser/core/modules/ActionWindow'
-import {HistoryEntry} from 'parser/core/modules/ActionWindow/History'
+import {BuffWindow, ExpectedActionsEvaluator, ExpectedGcdCountEvaluator} from 'parser/core/modules/ActionWindow'
 import {GlobalCooldown} from 'parser/core/modules/GlobalCooldown'
-import {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
+import {SEVERITY} from 'parser/core/modules/Suggestions'
 import React from 'react'
 
 const SEVERITIES = {
 	MISSED_OGCDS: {
 		1: SEVERITY.MINOR,
 		5: SEVERITY.MEDIUM,
-		10: SEVERITY.MAJOR,
 	},
-	MISSED_GORING: {
+	MISSED_ACTIONS: {
 		1: SEVERITY.MINOR,
 		2: SEVERITY.MEDIUM,
 		4: SEVERITY.MAJOR,
 	},
-	MISSED_GCD: {
-		1: SEVERITY.MINOR,
-		2: SEVERITY.MEDIUM,
-		4: SEVERITY.MAJOR,
-	},
-	GORING_CLIP: {
+	MISSED_GCDS: {
 		1: SEVERITY.MINOR,
 		2: SEVERITY.MEDIUM,
 		4: SEVERITY.MAJOR,
 	},
 }
-
-const MINIMUM_GORING_DISTANCE = 9
 
 // These GCDs should not count towards the FoF GCD counter, as they are not
 // physical damage (weaponskill) GCDs.
 const EXCLUDED_ACTIONS: ActionKey[] = [
 	'CLEMENCY',
-	'HOLY_SPIRIT',
-	'HOLY_CIRCLE',
-	'CONFITEOR',
-	'BLADE_OF_FAITH',
-	'BLADE_OF_TRUTH',
-	'BLADE_OF_VALOR',
-	'REQUIESCAT',
 ]
-
-class GoringBladeSpacingEvaluator implements WindowEvaluator {
-	// Because this class is not an Analyser, it cannot use Data directly to get the id or icon for Goring Blade, so require the action object in the constructor
-	private goringBlade: Action
-
-	constructor (goringBlade: Action) {
-		this.goringBlade = goringBlade
-	}
-
-	suggest(windows: Array<HistoryEntry<EvaluatedAction[]>>) {
-		const goringTooClose = windows
-			.reduce((total, window) => {
-				const gcdsInWindow = window.data.filter(cast => (cast.action.onGcd ?? false))
-				const firstGoring = _.findIndex(gcdsInWindow, gcd => gcd.action.id === this.goringBlade.id)
-				if (firstGoring === -1) {
-					return total
-				}
-
-				const secondGoring = _.findIndex(gcdsInWindow, gcd => gcd.action.id === this.goringBlade.id, firstGoring + 1)
-				if (secondGoring === -1) {
-					return total
-				}
-
-				return total + ((secondGoring - firstGoring) < MINIMUM_GORING_DISTANCE ? 1 : 0)
-			}, 0)
-
-		return new TieredSuggestion({
-			icon: this.goringBlade.icon,
-			content: <Trans id="pld.fightorflight.suggestions.goring-blade-clip.content">
-				Try to refresh <DataLink action="GORING_BLADE" /> 9 GCDs after the
-				first <DataLink action="GORING_BLADE" /> in
-				a <DataLink action="FIGHT_OR_FLIGHT" /> window.
-			</Trans>,
-			why: <Trans id="pld.fightorflight.suggestions.goring-blade-clip.why">
-				<Plural value={goringTooClose} one="# application was" other="# applications were"/> refreshed too early during <DataLink status="FIGHT_OR_FLIGHT" /> windows.
-			</Trans>,
-			tiers: SEVERITIES.GORING_CLIP,
-			value: goringTooClose,
-		})
-	}
-
-	output() {
-		return undefined
-	}
-}
 
 export class FightOrFlight extends BuffWindow {
 	static override handle = 'fightorflight'
@@ -109,14 +47,34 @@ export class FightOrFlight extends BuffWindow {
 		this.ignoreActions(EXCLUDED_ACTIONS.map(g => this.data.actions[g].id))
 
 		this.addEvaluator(new ExpectedGcdCountEvaluator({
-			expectedGcds: 11,
+			expectedGcds: 8,
 			globalCooldown: this.globalCooldown,
 			suggestionIcon: this.data.actions.FIGHT_OR_FLIGHT.icon,
 			suggestionContent: <Trans id="pld.fightorflight.suggestions.gcds.content">
-				Try to land 11 physical GCDs during every <DataLink action="FIGHT_OR_FLIGHT" /> window.
+				Try to land 8 GCDs during every <DataLink action="FIGHT_OR_FLIGHT" /> window.
 			</Trans>,
 			suggestionWindowName,
-			severityTiers: SEVERITIES.MISSED_GCD,
+			severityTiers: SEVERITIES.MISSED_GCDS,
+		}))
+
+		this.addEvaluator(new ExpectedActionsEvaluator({
+			expectedActions: [
+				{action: this.data.actions.GORING_BLADE, expectedPerWindow: 1},
+				{action: this.data.actions.CONFITEOR, expectedPerWindow: 1},
+				{action: this.data.actions.BLADE_OF_FAITH, expectedPerWindow: 1},
+				{action: this.data.actions.BLADE_OF_TRUTH, expectedPerWindow: 1},
+				{action: this.data.actions.BLADE_OF_VALOR, expectedPerWindow: 1},
+				{action: this.data.actions.HOLY_SPIRIT, expectedPerWindow: 1},
+			],
+			suggestionIcon: this.data.actions.FIGHT_OR_FLIGHT.icon,
+			suggestionContent: <Trans id="pld.fightorflight.suggestions.gcd_actions.content">
+				Try to land at least one cast of <DataLink action="GORING_BLADE" />
+				, <DataLink action="CONFITEOR" />, <DataLink action="BLADE_OF_FAITH" />, <DataLink action="BLADE_OF_TRUTH" />
+				, <DataLink action="BLADE_OF_VALOR" />, and a <DataLink status="DIVINE_MIGHT" /> empowered <DataLink action="HOLY_SPIRIT" />
+				during every <DataLink action="FIGHT_OR_FLIGHT" /> window.
+			</Trans>,
+			suggestionWindowName,
+			severityTiers: SEVERITIES.MISSED_ACTIONS,
 		}))
 
 		this.addEvaluator(new ExpectedActionsEvaluator({
@@ -124,19 +82,15 @@ export class FightOrFlight extends BuffWindow {
 				{action: this.data.actions.EXPIACION, expectedPerWindow: 1},
 				{action: this.data.actions.CIRCLE_OF_SCORN, expectedPerWindow: 1},
 				{action: this.data.actions.INTERVENE, expectedPerWindow: 1},
-				{action: this.data.actions.GORING_BLADE, expectedPerWindow: 2},
-				{action: this.data.actions.ATONEMENT, expectedPerWindow: 3},
 			],
-			suggestionIcon: this.data.actions.EXPIACION.icon,
+			suggestionIcon: this.data.actions.FIGHT_OR_FLIGHT.icon,
 			suggestionContent: <Trans id="pld.fightorflight.suggestions.ogcds.content">
-				Try to land at least one cast of each of your physical off-GCD skills (<DataLink action="EXPIACION" />,
-				<DataLink action="CIRCLE_OF_SCORN" />, and <DataLink action="INTERVENE" />), two <DataLink action="GORING_BLADE" /> applications, and three casts of <DataLink action ="ATONEMENT" />
+				Try to land at least one cast of each of your off-GCD skills (<DataLink action="EXPIACION" />,
+				<DataLink action="CIRCLE_OF_SCORN" />, and <DataLink action="INTERVENE" />)
 				during every <DataLink action="FIGHT_OR_FLIGHT" /> window.
 			</Trans>,
 			suggestionWindowName,
 			severityTiers: SEVERITIES.MISSED_OGCDS,
 		}))
-
-		this.addEvaluator(new GoringBladeSpacingEvaluator(this.data.actions.GORING_BLADE))
 	}
 }

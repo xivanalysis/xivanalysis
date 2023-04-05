@@ -33,6 +33,7 @@ export default (env: Environment, {
 		filename: mode === 'development'
 			? 'assets/[name].js'
 			: 'assets/[name].[contenthash:8].js',
+		hashFunction: 'xxhash64',
 	},
 	target: 'browserslist',
 
@@ -161,36 +162,36 @@ export default (env: Environment, {
 			// Lingui message files
 			{
 				test: /locale.+\.json$/,
+				resourceQuery: { not: [/raw/] },
 				type: 'javascript/auto',
 				use: [
 					{loader: '@lingui/loader'},
 				],
 			},
+			{
+				resourceQuery: /raw/,
+				type: 'asset/source',
+			},
 			// Fonts
 			{
 				test: /\.(eot|ttf|woff|woff2)(\?v=\d+\.\d+\.\d+)?$/,
-				use: [
-					{
-						loader: 'file-loader',
-						options: {
-							name: 'assets/[name].[hash:8].[ext]',
-						},
-					},
-				],
+				type: 'asset/resource',
+				generator: {
+					filename: 'assets/[name].[hash:8].[ext]',
+				},
 			},
 			// Images
 			{
 				test: /\.(ico|png|jpg|jpeg|gif|svg|webp)(\?v=\d+\.\d+\.\d+)?$/,
-				use: [
-					{
-						loader: 'url-loader',
-						options: {
-							limit: 8192,
-							name: 'assets/[name].[hash:8].[ext]',
-							esModule: false,
-						},
+				type: 'asset',
+				parser: {
+					dataUrlCondition: {
+						maxSize: 8192,
 					},
-				],
+				},
+				generator: {
+					filename: 'assets/[name].[hash:8].[ext]',
+				},
 			},
 		],
 	},

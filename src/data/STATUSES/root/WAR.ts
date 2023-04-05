@@ -1,4 +1,5 @@
 import {ensureStatuses} from '../type'
+import {SHARED} from './SHARED'
 
 export const WAR = ensureStatuses({
 	DEFIANCE: {
@@ -83,6 +84,8 @@ export const WAR = ensureStatuses({
 		icon: 'https://xivapi.com/i/012000/012557.png',
 		duration: 15000,
 	},
+
+	SHAKE_IT_OFF_OVER_TIME: SHARED.UNKNOWN, // Added in patch 6.3 layer
 
 	NASCENT_CHAOS: {
 		id: 1897,

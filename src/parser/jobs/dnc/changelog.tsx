@@ -72,4 +72,9 @@ export const changelog = [
 		Changes: () => <>Fix a bug that could improperly mark Quadruple Technical Finish as wrong if Technical Step was started before the pull.</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],
 	},
+	{
+		date: new Date('2023-01-15'),
+		Changes: () => <>Fix a bug where fights with unavoidable downtime could report Standard Step uptime as a negative percentage.</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
 ]

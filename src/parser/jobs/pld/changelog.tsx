@@ -3,6 +3,13 @@ import React from 'react'
 
 export const changelog = [
 	{
+		date: new Date('2023-01-15'),
+		Changes: () => <>
+			Updated Paladin for 6.3 rework.
+		</>,
+		contributors: [CONTRIBUTORS.STYRFIRE],
+	},
+	{
 		date: new Date('2022-05-22'),
 		Changes: () => <>
 			Various spells no longer break combo. Blade of Faith no longer combos from Confiteor.

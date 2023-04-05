@@ -4,7 +4,7 @@ import {Actor, Pull, Report, Team} from 'report'
 import {adaptEvents} from '../eventAdapter'
 import {AdapterStep} from '../eventAdapter/base'
 import {ReassignUnknownActorStep} from '../eventAdapter/reassignUnknownActor'
-import {CastEvent, CombatantInfoAura, DamageEvent, FflogsEvent, HitType, ReportLanguage} from '../eventTypes'
+import {ActorType, BuffEvent, CastEvent, CombatantInfoAura, DamageEvent, FflogsEvent, HitType, ReportLanguage} from '../eventTypes'
 
 // "Mock" the reassign unknown actor step with its real implementation. We use this mock handling later
 // to disable the step on a test-by-test basis.
@@ -805,6 +805,74 @@ const fakeEvents: Record<FflogsEvent['type'], FflogsEvent[]> = {
 			absorb: 52,
 		},
 	}],
+	headmarker: [{
+		timestamp: 1794311,
+		type: 'headmarker',
+		sourceID: 106,
+		sourceIsFriendly: true,
+		target: {
+			name: 'Environment',
+			id: -1,
+			guid: 0,
+			type: ActorType.NPC,
+			icon: 'NPC',
+		},
+		targetIsFriendly: false,
+		ability: {
+			name: 'Unknown Ability',
+			guid: 0,
+			type: 0,
+			abilityIcon: '000000-000405.png',
+		},
+		markerID: 328,
+	}, {
+		timestamp: 1456535,
+		type: 'headmarker',
+		sourceID: 107,
+		sourceIsFriendly: true,
+		target: {
+			name: 'Environment',
+			id: -1,
+			guid: 0,
+			type: ActorType.NPC,
+			icon: 'NPC',
+		},
+		targetIsFriendly: false,
+		ability: {
+			name: 'Unknown Ability',
+			guid: 0,
+			type: 0,
+			abilityIcon: '000000-000405.png',
+		},
+		markerID: 86,
+		markerType: 'dice8',
+		markerDuration: 9000,
+	}],
+	tether: [{
+		timestamp: 1822478,
+		type: 'tether',
+		sourceID: 109,
+		sourceIsFriendly: true,
+		targetID: 104,
+		targetIsFriendly: true,
+		ability: {
+			name: 'Unknown Ability',
+			guid: 0,
+			type: 0,
+			abilityIcon: '000000-000405.png',
+		},
+		tetherID: 202,
+	}],
+	gaugeupdate: [{
+		...fakeBaseFields,
+		timestamp: 1800638,
+		type: 'gaugeupdate',
+		gaugeID: '10331D9A',
+		data1: '1C',
+		data2: '50',
+		data3: 'E0000000',
+		data4: '00',
+	}],
 }
 
 // #endregion
@@ -828,18 +896,29 @@ describe('Event adapter', () => {
 	})
 
 	it('sorts events with identical timestamps', () => {
+		// Reassemble applies Reassembled; these events should be sorted
+		const reassembleAbility = {...(fakeEvents.begincast[0] as CastEvent).ability, guid: 2876}
+		const reassembledAbility = {...(fakeEvents.applybuff[0] as BuffEvent).ability, guid: 1000851}
+
 		const result = adaptEvents(report, pull, [
-			{...fakeEvents.applybuff[0], timestamp: 1},
-			{...fakeEvents.cast[0], timestamp: 1},
-			{...fakeEvents.begincast[0], timestamp: 1},
-			{...fakeEvents.death[0], timestamp: 1},
+			{
+				...fakeEvents.applybuff[0],
+				timestamp: 1,
+				sourceID: 1,
+				sourceInstance: undefined,
+				ability: reassembledAbility,
+			} as BuffEvent,
+			{
+				...fakeEvents.cast[0],
+				timestamp: 1,
+				sourceID: 1,
+				ability: reassembleAbility,
+			} as CastEvent,
 		])
 
 		expect(result.map(event => event.type)).toEqual([
-			'actorUpdate',
-			'prepare',
-			'action',
-			'statusApply',
+			'action', // action first
+			'statusApply', // buff second
 		])
 	})
 

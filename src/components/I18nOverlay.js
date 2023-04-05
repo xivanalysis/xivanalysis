@@ -54,7 +54,7 @@ export default class I18nOverlay extends React.Component {
 		try {
 			const rawCatalog = await import(
 				/* webpackMode: 'lazy', webpackChunkName: 'i18n-[index]-raw' */
-				'!raw-loader!../../locale/' + language + '/messages.json' // eslint-disable-line comma-dangle
+				'../../locale/' + language + '/messages.json?raw' // eslint-disable-line comma-dangle
 			)
 			catalog = JSON.parse(rawCatalog.default)
 		} catch (err) {

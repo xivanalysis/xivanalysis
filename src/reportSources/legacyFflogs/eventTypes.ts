@@ -270,6 +270,15 @@ export interface WorldMarkerRemovedEvent extends BaseEventFields {
 	icon: number
 }
 
+export interface GaugeUpdateEvent extends BaseEventFields {
+	type: 'gaugeupdate',
+	gaugeID: string,
+	data1: string,
+	data2: string,
+	data3: string,
+	data4: string,
+}
+
 /* End no source/target */
 
 export interface CombatantInfoAura {
@@ -317,6 +326,18 @@ export interface DispelEvent extends AbilityEventFields {
 export interface InterruptEvent extends AbilityEventFields {
 	type: 'interrupt'
 	extraAbility: Ability
+}
+
+export interface HeadMarkerEvent extends AbilityEventFields {
+	type: 'headmarker',
+	markerID: number,
+	markerDuration?: number,
+	markerType?: 'stack' | 'circle' | 'donut' | `dice${1 | 2 | 3 | 4 | 5 | 6 | 7 | 8}`,
+}
+
+export interface TetherEvent extends AbilityEventFields {
+	type: 'tether',
+	tetherID: number
 }
 
 const castEventTypes = [
@@ -413,6 +434,8 @@ export type AbilityEvent =
 	| TargetabilityUpdateEvent
 	| DispelEvent
 	| InterruptEvent
+	| HeadMarkerEvent
+	| TetherEvent
 
 export type FflogsEvent =
 	| EncounterEvent
@@ -425,6 +448,7 @@ export type FflogsEvent =
 	| WipeCalledEvent
 	| WorldMarkerPlacedEvent
 	| WorldMarkerRemovedEvent
+	| GaugeUpdateEvent
 	| MapChangeEvent
 	| CombatantInfoEvent
 	| InstanceSealUpdateEvent
