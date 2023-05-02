@@ -1,3 +1,4 @@
+import {Swiftcast} from 'parser/core/modules/Swiftcast'
 import {Tincture} from 'parser/core/modules/Tincture'
 import {AlwaysBeCasting} from './AlwaysBeCasting'
 import {ColdFog} from './ColdFog'
@@ -6,7 +7,6 @@ import {GeneralCDDowntime} from './GeneralCDDowntime'
 import {Interrupts} from './Interrupts'
 import {MoonFlute} from './MoonFlute'
 import {RevengeBlast} from './RevengeBlast'
-import {Swiftcast} from 'parser/core/modules/Swiftcast'
 import Weaving from './Weaving'
 
 export default [
