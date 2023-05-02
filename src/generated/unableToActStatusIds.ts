@@ -203,4 +203,5 @@ export const UNABLE_TO_ACT_STATUS_IDS = [
 	3501, // Down for the Count (lockActions, lockControl)
 	3513, // Concussion (lockActions, lockControl)
 	3519, // Deep Freeze (lockActions)
+	1727, // Waning Nocturne (lockActions)
 ]

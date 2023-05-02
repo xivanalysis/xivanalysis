@@ -64,6 +64,18 @@ async function main() {
 		})
 	}
 
+    // The secondary effect from Moon Flute, Waning Nocturne, makes you
+    // unable to do any actions (save, for some reason, Sprint) for 15 seconds.
+    // Sadly the game doesn't mark it as LockActions.
+    // Just tagging it manually here saves a lot of hassle later:
+    utaStatuses.push({
+        id: 1727,
+        name: "Waning Nocturne",
+        reasons: [
+            ['lockActions'],
+        ],
+    })
+
 	// Codegen
 	const statusLines = utaStatuses
 		.map(meta => `\t${meta.id}, // ${meta.name} (${meta.reasons.join(', ')})`)
