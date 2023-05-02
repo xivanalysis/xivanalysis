@@ -7,7 +7,7 @@ export const BLU = ensureStatuses({
 		icon: 'https://xivapi.com/i/013000/013514.png',
 		duration: 12000,
 	},
-	SONG_OF_TORMENT: {
+	BLEEDING: {
 		id: 1714,
 		name: 'Bleeding',
 		icon: 'https://xivapi.com/i/013000/013501.png',
@@ -177,5 +177,29 @@ export const BLU = ensureStatuses({
 		icon: 'https://xivapi.com/i/019000/019581.png',
 		duration: 3000,
 		stacksApplied: 1,
+	},
+	PHANTOM_FLURRY: {
+		id: 2502,
+		name: 'Phantom Flurry',
+		icon: 'https://xivapi.com/i/013000/013541.png',
+		duration: 5000,
+	},
+	COLD_FOG: {
+		id: 2493,
+		name: 'Cold Fog',
+		icon: 'https://xivapi.com/i/013000/013532.png',
+		duration: 5000,
+	},
+	TOUCH_OF_FROST: {
+		id: 2494,
+		name: 'Touch of Frost',
+		icon: 'https://xivapi.com/i/013000/013533.png',
+		duration: 15000,
+	},
+	TINGLING: {
+		id: 2492,
+		name: 'Tingling',
+		icon: 'https://xivapi.com/i/013000/013531.png',
+		duration: 15000,
 	},
 })
