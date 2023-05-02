@@ -1,5 +1,6 @@
 import {Tincture} from 'parser/core/modules/Tincture'
 import {AlwaysBeCasting} from './AlwaysBeCasting'
+import {ColdFog} from './ColdFog'
 import {DoTs} from './DoTs'
 import {GeneralCDDowntime} from './GeneralCDDowntime'
 import {Interrupts} from './Interrupts'
@@ -14,4 +15,5 @@ export default [
 	Interrupts,
 	Swiftcast,
 	GeneralCDDowntime,
+	ColdFog,
 ]
