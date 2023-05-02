@@ -7,7 +7,7 @@ import {GeneralCDDowntime} from './GeneralCDDowntime'
 import {Interrupts} from './Interrupts'
 import {MoonFlute} from './MoonFlute'
 import {RevengeBlast} from './RevengeBlast'
-import Weaving from './Weaving'
+import {Weaving} from './Weaving'
 
 export default [
 	Weaving,
