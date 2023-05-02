@@ -1,0 +1,3 @@
+export const DISPLAY_ORDER = {
+	INTERRUPTED_CASTS: 1,
+}
