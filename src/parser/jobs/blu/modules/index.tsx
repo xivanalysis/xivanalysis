@@ -5,6 +5,7 @@ import {DoTs} from './DoTs'
 import {GeneralCDDowntime} from './GeneralCDDowntime'
 import {Interrupts} from './Interrupts'
 import {MoonFlute} from './MoonFlute'
+import {RevengeBlast} from './RevengeBlast'
 import {Swiftcast} from 'parser/core/modules/Swiftcast'
 import Weaving from './Weaving'
 
@@ -18,4 +19,5 @@ export default [
 	GeneralCDDowntime,
 	MoonFlute,
 	ColdFog,
+	RevengeBlast,
 ]
