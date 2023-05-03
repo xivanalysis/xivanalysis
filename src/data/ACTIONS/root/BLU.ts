@@ -806,6 +806,13 @@ export const BLU = ensureActions({
 		onGcd: true, // not actually true but makes the timeline nicer
 		statusesApplied: ['PHANTOM_FLURRY'],
 	},
+	PHANTOM_FLURRY_KICK: { // This is what Phantom Flurry turns into while the effect is channeling
+		id: 23289,
+		name: 'Phantom Flurry',
+		icon: 'https://xivapi.com//i/003000/003356.png',
+		gcdRecast: 2500,
+		onGcd: true,
+	},
 	NIGHTBLOOM: {
 		id: 23290,
 		name: 'Nightbloom',
