@@ -14,7 +14,7 @@ export class GeneralCDDowntime extends CooldownDowntime {
 			firstUseOffset: 19000,
 		},
 		{
-			cooldowns: [this.data.actions.FEATHER_RAIN],
+			cooldowns: [this.data.actions.FEATHER_RAIN, this.data.actions.ERUPTION],
 			firstUseOffset: 15000,
 		},
 		{
@@ -27,7 +27,7 @@ export class GeneralCDDowntime extends CooldownDowntime {
 			allowedAverageDowntime: 30000, // DPS gain to hold this until the Moon Flute window
 		},
 		{
-			cooldowns: [this.data.actions.J_KICK],
+			cooldowns: [this.data.actions.J_KICK, this.data.actions.QUASAR],
 			firstUseOffset: 2500,
 		},
 		{
