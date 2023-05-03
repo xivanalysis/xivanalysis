@@ -105,7 +105,6 @@ export class RevengeBlast extends Analyser {
 	}
 
 	private onRevengeBlastWindow(event: Events['action']) {
-		this.actors.current.hasStatus(this.data.statuses.WHISTLE.id)
 		this.revengeBlastWindows.doIfOpen(current => {
 			if (!current.hadRevengeBlast && this.data.getAction(event.action).id === this.data.actions.REVENGE_BLAST.id) {
 				if (this.actors.current.hasStatus(this.data.statuses.WHISTLE.id)) {
@@ -142,12 +141,12 @@ export class RevengeBlast extends Analyser {
 
 		// If you know a Revenge Blast window is coming, using Whistle first is a DPS gain.
 		const unwhistledWindows = this.revengeBlastWindows.entries
-			.filter(revengeWindow => revengeWindow.hadRevengeBlast && !revengeWindow.hadWhistle)
+			.filter(revengeWindow => revengeWindow.data.hadRevengeBlast && !revengeWindow.data.hadWhistle)
 			.length
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.REVENGE_BLAST.icon,
 			content: <Trans id="blu.revenge_blast.unwhistled.content">
-                If it won't drop a <DataLink action="REVENGE_BLAST" /> cast, you can optionally buff the very first cast in a window with <DataLink action="WHISTLE" /> for a DPS gain over using your filler.
+                If it won't drop a <DataLink action="REVENGE_BLAST" /> cast, you should cast <DataLink action="WHISTLE" /> before entering a <DataLink action="REVENGE_BLAST" showIcon={false} /> window for a DPS gain over using your filler.
 			</Trans>,
 			tiers: REVENGE_SEVERITY.UNWHISTLED_OPENING_REVENGE_BLAST,
 			value: unwhistledWindows,
