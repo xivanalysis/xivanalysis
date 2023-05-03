@@ -1,6 +1,6 @@
 import {StatusKey} from 'data/STATUSES'
 import {StatusRoot} from 'data/STATUSES/root'
-import {Attribute} from 'event'
+import {Attribute, DamageType} from 'event'
 import {ensureRecord} from 'utilities/typescript'
 
 export type ActionCombo =
@@ -53,6 +53,7 @@ export interface Action {
 	statusesApplied?: Array<keyof StatusRoot>
 	charges?: number
 	mpCost?: number
+	damageType?: DamageType.MAGICAL | DamageType.PHYSICAL | DamageType.DARK
 	/** Indicate whether this action's recast is adjusted by skill speed or spell speed.  Should be set for any onGCD skill or gcd-like skill that has a reduced recast based on speed stats */
 	speedAttribute?: Attribute.SKILL_SPEED | Attribute.SPELL_SPEED
 	potencies?: Potency[]
