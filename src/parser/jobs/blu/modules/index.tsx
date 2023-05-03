@@ -1,6 +1,7 @@
 import {Swiftcast} from 'parser/core/modules/Swiftcast'
 import {Tincture} from 'parser/core/modules/Tincture'
 import {AlwaysBeCasting} from './AlwaysBeCasting'
+import {BLURaidBuffs} from './BLURaidBuffs'
 import {ColdFog} from './ColdFog'
 import {DoTs} from './DoTs'
 import {GeneralCDDowntime} from './GeneralCDDowntime'
@@ -20,4 +21,5 @@ export default [
 	MoonFlute,
 	ColdFog,
 	RevengeBlast,
+	BLURaidBuffs,
 ]
