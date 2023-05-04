@@ -735,6 +735,7 @@ export const BLU = ensureActions({
 		gcdRecast: 2500,
 		castTime: 2000,
 		cooldownGroup: BLU_COOLDOWN_GROUP.MATRA_MAGIC,
+		statusesApplied: ['ANGELS_SNACK'],
 	},
 	CHELONIAN_GATE: {
 		id: 23273,

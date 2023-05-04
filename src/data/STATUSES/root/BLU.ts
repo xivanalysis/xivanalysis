@@ -168,7 +168,7 @@ export const BLU = ensureStatuses({
 	},
 	MIMICRY_HEALER: {
 		id: 2126,
-		name: 'Aetherial Mimicry: Tank',
+		name: 'Aetherial Mimicry: Healer',
 		icon: 'https://xivapi.com/i/013000/013529.png',
 	},
 	SURPANAKHA: {
@@ -200,6 +200,12 @@ export const BLU = ensureStatuses({
 		id: 2492,
 		name: 'Tingling',
 		icon: 'https://xivapi.com/i/013000/013531.png',
+		duration: 15000,
+	},
+	ANGELS_SNACK: {
+		id: 2495,
+		name: 'Angel\'s Snack',
+		icon: 'https://xivapi.com/i/013000/013534.png',
 		duration: 15000,
 	},
 })

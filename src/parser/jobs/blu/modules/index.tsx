@@ -7,6 +7,7 @@ import {DoTs} from './DoTs'
 import {GeneralCDDowntime} from './GeneralCDDowntime'
 import {Interrupts} from './Interrupts'
 import {MoonFlute} from './MoonFlute'
+import {Overheal} from './Overheal'
 import {RevengeBlast} from './RevengeBlast'
 import {Weaving} from './Weaving'
 
@@ -22,4 +23,5 @@ export default [
 	ColdFog,
 	RevengeBlast,
 	BLURaidBuffs,
+	Overheal,
 ]
