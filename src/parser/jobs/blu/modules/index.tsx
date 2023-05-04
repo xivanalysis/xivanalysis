@@ -9,6 +9,7 @@ import {Interrupts} from './Interrupts'
 import {MoonFlute} from './MoonFlute'
 import {Overheal} from './Overheal'
 import {RevengeBlast} from './RevengeBlast'
+import {TripleTrident} from './TripleTrident'
 import {Weaving} from './Weaving'
 
 export default [
@@ -24,4 +25,5 @@ export default [
 	RevengeBlast,
 	BLURaidBuffs,
 	Overheal,
+	TripleTrident,
 ]
