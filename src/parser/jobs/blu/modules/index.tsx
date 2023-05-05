@@ -4,6 +4,7 @@ import {AlwaysBeCasting} from './AlwaysBeCasting'
 import {BLURaidBuffs} from './BLURaidBuffs'
 import {ColdFog} from './ColdFog'
 import {DoTs} from './DoTs'
+import {DroppedBuffs} from './DroppedBuffs'
 import {GeneralCDDowntime} from './GeneralCDDowntime'
 import {Interrupts} from './Interrupts'
 import {MoonFlute} from './MoonFlute'
@@ -26,4 +27,5 @@ export default [
 	BLURaidBuffs,
 	Overheal,
 	TripleTrident,
+	DroppedBuffs,
 ]
