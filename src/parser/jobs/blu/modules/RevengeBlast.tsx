@@ -106,7 +106,7 @@ export class RevengeBlast extends Analyser {
 
 	private onRevengeBlastWindow(event: Events['action']) {
 		this.revengeBlastWindows.doIfOpen(current => {
-			if (!current.hadRevengeBlast && this.data.getAction(event.action).id === this.data.actions.REVENGE_BLAST.id) {
+			if (!current.hadRevengeBlast && event.action === this.data.actions.REVENGE_BLAST.id) {
 				if (this.actors.current.hasStatus(this.data.statuses.WHISTLE.id)) {
 					current.hadWhistle = true
 				}
@@ -189,7 +189,7 @@ export class RevengeBlast extends Analyser {
 					end: revengeEnd,
 					targetsData: {
 						gcds: {
-							actual: revengeWindow.data.events.filter(e => dat.getAction(e.action).id === revengeBlastID).length,
+							actual: revengeWindow.data.events.filter(e => dat.getAction(e.action)?.id === revengeBlastID).length,
 							expected: expectedGCDs,
 						},
 					},
