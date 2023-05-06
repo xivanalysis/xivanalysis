@@ -14,6 +14,8 @@ import React from 'react'
 const PHANTOM_FLURRY_CHANNEL_DURATION_MAX_MS = 5000
 const PHANTOM_FLURRY_CHANNEL_WITH_KICK_DURATION_MS = 4000
 
+const SURPANAKHA_ANIMATION_LOCK_MS = 1000
+
 // Essentially a carbon copy of the MCH extension to ABC -- we want to treat
 // Phantom Flurry as a Flamethrower-like.
 
@@ -31,6 +33,7 @@ export class AlwaysBeCasting extends CoreAlwaysBeCasting {
 	private phantomFlurryHistory: PhantomFlurryWindow[] = []
 	private currentPhantomFlurry: PhantomFlurryWindow | undefined = undefined
 	private phantomFlurryInterruptingActionHook?: EventHook<Events['action']>
+	private surpanakhas: number = 0
 
 	@dependency protected data!: Data
 	@dependency private suggestions!: Suggestions
@@ -50,9 +53,18 @@ export class AlwaysBeCasting extends CoreAlwaysBeCasting {
 			.action(this.data.actions.PHANTOM_FLURRY_KICK.id)
 			.type('action')
 
+		const surpanakhaCastFilter = playerFilter
+			.action(this.data.actions.SURPANAKHA.id)
+			.type('action')
+
 		this.addEventHook(phantomFlurryCastFilter, this.onApplyPhantomFlurry)
 		this.addEventHook(phantomFlurryStatusFilter, this.onRemovePhantomFlurry)
 		this.addEventHook(phantomFlurryKick, this.onPhantomFlurryFinalKick)
+		this.addEventHook(surpanakhaCastFilter, this.onCastSurpanakha)
+	}
+
+	private onCastSurpanakha() {
+		this.surpanakhas++
 	}
 
 	private onPhantomFlurryFinalKick() {
@@ -124,7 +136,8 @@ export class AlwaysBeCasting extends CoreAlwaysBeCasting {
 			const phantomFlurryDurationOrGCD = Math.max(flurry.end - flurry.start, this.globalCooldown.getDuration())
 			return acc + phantomFlurryDurationOrGCD - downtime
 		}, 0)
-		const uptime = (this.gcdUptime + flurryDuration) / (fightDuration) * 100
+		const surpanakhaDuration = this.surpanakhas * SURPANAKHA_ANIMATION_LOCK_MS
+		const uptime = (this.gcdUptime + flurryDuration + surpanakhaDuration) / (fightDuration) * 100
 
 		return uptime
 	}
