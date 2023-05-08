@@ -7,7 +7,6 @@ import {filter, noneOf} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
 import {Actors} from 'parser/core/modules/Actors'
 import {AlwaysBeCasting as CoreAlwaysBeCasting} from 'parser/core/modules/AlwaysBeCasting'
-import {Data} from 'parser/core/modules/Data'
 import Suggestions, {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import React from 'react'
 
@@ -35,7 +34,6 @@ export class AlwaysBeCasting extends CoreAlwaysBeCasting {
 	private phantomFlurryInterruptingActionHook?: EventHook<Events['action']>
 	private surpanakhas: number = 0
 
-	@dependency protected data!: Data
 	@dependency private suggestions!: Suggestions
 	@dependency private actors!: Actors
 
@@ -78,7 +76,7 @@ export class AlwaysBeCasting extends CoreAlwaysBeCasting {
 		// the full 5000ms channel, BUT, if they used the kick, then they should
 		// have waited at least 4000ms for most of the channel to have happened.
 
-		const currentFlurry = this.currentPhantomFlurry ?? this.phantomFlurryHistory.at(-1)
+		const currentFlurry = this.currentPhantomFlurry ?? this.phantomFlurryHistory[this.phantomFlurryHistory.length - 1]
 		if (currentFlurry === null) { return }
 		currentFlurry.manualKick = true
 	}
