@@ -1,5 +1,5 @@
-import React from 'react'
 import CONTRIBUTORS from 'data/CONTRIBUTORS'
+import React from 'react'
 
 export const changelog = [
 	{
