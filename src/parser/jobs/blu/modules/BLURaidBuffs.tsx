@@ -409,7 +409,7 @@ export class BLURaidBuffs extends Analyser {
 				</Table.Header>
 				<Table.Body>
 					{rotationData.map(a => {
-						return <Table.Row key={a.timestamp}>
+						return <Table.Row key={a.start}>
 							<Table.Cell textAlign="center">
 								<span style={{marginRight: 5}}>{this.parser.formatEpochTimestamp(a.start + this.parser.pull.timestamp)}</span>
 								<Button
