@@ -13,6 +13,7 @@ import React from 'react'
 interface buffMisuse {
 	dropped: number
 	overwrote: number
+	duration: number
 }
 
 export class DroppedBuffs extends Analyser {
@@ -23,7 +24,7 @@ export class DroppedBuffs extends Analyser {
 	@dependency private downtime!: Downtime
 
 	private currentBuffs = new Map<Status['id'], number>()
-	private misusedBuffs : {[key: Status['id']]: buffMisuse} = {
+	private misusedBuffs : {[key: number]: buffMisuse} = {
 		[STATUSES.BRISTLE.id]: {dropped: 0, overwrote: 0, duration: STATUSES.BRISTLE.duration},
 		[STATUSES.WHISTLE.id]: {dropped: 0, overwrote: 0, duration: STATUSES.WHISTLE.duration},
 		[STATUSES.TINGLING.id]: {dropped: 0, overwrote: 0, duration: STATUSES.TINGLING.duration},
@@ -43,7 +44,7 @@ export class DroppedBuffs extends Analyser {
 
 	private onRemoveBuff(event: Events['statusRemove']) {
 		if (this.currentBuffs.has(event.status)) {
-			const buffStart = this.currentBuffs.get(event.status)
+			const buffStart = this.currentBuffs.get(event.status) ?? event.timestamp
 			const buffEnd   = event.timestamp
 			const buffDelta = buffEnd - buffStart
 			if (buffDelta >= this.misusedBuffs[event.status].duration) {
@@ -51,7 +52,7 @@ export class DroppedBuffs extends Analyser {
 				this.misusedBuffs[event.status].dropped++
 			}
 		}
-		this.currentBuffs.delete(event.action)
+		this.currentBuffs.delete(event.status)
 	}
 
 	private onGainBuff(event: Events['statusApply']) {
@@ -69,15 +70,16 @@ export class DroppedBuffs extends Analyser {
 		}
 
 		// Not during downtime, so just an overwrite.
-		this.misusedBuffs[event.action].overwrote++
+		this.misusedBuffs[event.status].overwrote++
 	}
 
 	private onDeath() {
 		this.currentBuffs.clear()
 	}
 
-	private suggestOnDroppedStatus(statusID, droppedStatusCount) {
+	private suggestOnDroppedStatus(statusID: Status['id'], droppedStatusCount: number) {
 		const droppedStatus = this.data.getStatus(statusID)
+		if (droppedStatus === undefined) { return }
 		this.suggestions.add(new TieredSuggestion({
 			icon: droppedStatus.icon,
 			content: <Trans id="blu.droppedbuffs.suggestions.dropped.content" >
@@ -91,8 +93,9 @@ export class DroppedBuffs extends Analyser {
 		}))
 	}
 
-	private suggestOnOverwrittenStatus(statusID, overwrittenStatusCount) {
+	private suggestOnOverwrittenStatus(statusID: Status['id'], overwrittenStatusCount: number) {
 		const overwrittenStatus = this.data.getStatus(statusID)
+		if (overwrittenStatus === undefined) { return }
 		this.suggestions.add(new TieredSuggestion({
 			icon: overwrittenStatus.icon,
 			content: <Trans id="blu.droppedbuffs.suggestions.overwritten.content" >
