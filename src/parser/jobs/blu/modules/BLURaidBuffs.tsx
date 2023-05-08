@@ -37,15 +37,16 @@ import {DISPLAY_ORDER} from './DISPLAY_ORDER'
 // Addle / Feint / Reprisal -- you can only have one instance of
 // the buff on the boss, and re-applying it overwrites the current one.
 //
-// The Condensed Libra spells don't currently see a ton of use in raiding
-// due to spell slot limitations, and aren't currently covered here.
-//
 // So for Off-guard and Peculiar Light, we want to look into two things:
 //
 //      1. Check that people aren't overwriting eachother's buffs
 //      2. Check that the buffs are actually a DPS gain; for example
 //         using Peculiar Light during a Revenge Blast window is
 //         just lost damage, since Revenge Blast is physical.
+//
+// For the Libra effects, we should never check for overwrites,
+// since fishing for Physical Libra is common and a DPS gain
+// in some situations (long revenge blast windows, or before stinging)
 
 interface BuffedEvent {
 	action: number, // action ID
@@ -57,11 +58,15 @@ interface BuffedEvent {
 interface BuffWindow {
 	buffAction: Action,
 	buffId: Status['id'],
-	damageType?: DamageType.MAGICAL | DamageType.PHYSICAL,
+	isBuffedAction(Action, number): boolean,
 	events: BuffedEvent[],
 	overwritten: boolean,
 	ours: boolean,
 }
+
+// TODO: export these
+const UMBRAL = 1
+const ASTRAL = 2
 
 const allowedBuffOverwriteMs = 2000 // Probably too high?
 const dupedEventThresholdMs = 100
@@ -85,30 +90,66 @@ export class BLURaidBuffs extends Analyser {
 
 	private PECULIAR_LIGHT_ID = this.data.statuses.PECULIAR_LIGHT.id
 	private OFF_GUARD_ID      = this.data.statuses.OFF_GUARD.id
+	private CONDENSED_LIBRA_ASTRAL_ID = this.data.statuses.CONDENSED_LIBRA_ASTRAL.id
+	private CONDENSED_LIBRA_UMBRAL_ID = this.data.statuses.CONDENSED_LIBRA_UMBRAL.id
+	private CONDENSED_LIBRA_PHYSICAL_ID = this.data.statuses.CONDENSED_LIBRA_PHYSICAL.id
+
+
+	private newBuffHistory(st, fn) {
+		return new History<BuffWindow>(
+			() => ({
+				buffAction: st,
+				isBuffedAction: fn,
+				events: [],
+				overwritten: false,
+				ours: false,
+			})
+		)
+	}
 
 	override initialise() {
 		super.initialise()
 
-		this.buffHistory[this.data.statuses.OFF_GUARD.id] = new History<BuffWindow>(
-			() => ({
-				buffAction: this.data.actions.OFF_GUARD,
-				events: [],
-				overwritten: false,
-				ours: false,
-			})
+		this.buffHistory[this.data.statuses.OFF_GUARD.id] = this.newBuffHistory(
+			this.data.actions.OFF_GUARD,
+			function() { return true }, // buffs everything
 		)
-		this.buffHistory[this.data.statuses.PECULIAR_LIGHT.id] = new History<BuffWindow>(
-			() => ({
-				buffAction: this.data.actions.PECULIAR_LIGHT,
-				damageType: DamageType.MAGICAL,
-				events: [],
-				overwritten: false,
-				ours: false,
-			})
+		this.buffHistory[this.data.statuses.PECULIAR_LIGHT.id] = this.newBuffHistory(
+			this.data.actions.PECULIAR_LIGHT,
+			function (action) {
+				return action.damageType === DamageType.MAGICAL
+			},
 		)
 
+		const CONDENSED_LIBRA_ASTRAL_ID = this.CONDENSED_LIBRA_ASTRAL_ID
+		const CONDENSED_LIBRA_UMBRAL_ID = this.CONDENSED_LIBRA_UMBRAL_ID
+		const CONDENSED_LIBRA_PHYSICAL_ID = this.CONDENSED_LIBRA_PHYSICAL_ID
+		const libraIsBuffed = function(action, buffId) {
+			if ( buffId === CONDENSED_LIBRA_PHYSICAL_ID ) {
+				const damageType = action.damageType ?? DamageType.MAGICAL
+				return damageType === DamageType.PHYSICAL
+			}
+
+			const attackElement = action.elementType
+			if ( attackElement === undefined ) {
+				return false
+			}
+			switch ( buffId ) {
+				case CONDENSED_LIBRA_ASTRAL_ID:
+					return attackElement === ASTRAL
+					break
+				case CONDENSED_LIBRA_UMBRAL_ID:
+					return attackElement === UMBRAL
+					break
+			}
+		}
+		const libraAction = this.data.actions.CONDENSED_LIBRA
+		this.buffHistory[CONDENSED_LIBRA_ASTRAL_ID] = this.newBuffHistory( libraAction, libraIsBuffed )
+		this.buffHistory[CONDENSED_LIBRA_UMBRAL_ID] = this.newBuffHistory( libraAction, libraIsBuffed )
+		this.buffHistory[CONDENSED_LIBRA_PHYSICAL_ID] = this.newBuffHistory( libraAction, libraIsBuffed )
+
 		const statusFilter = filter<Event>()
-			.status(oneOf([this.PECULIAR_LIGHT_ID, this.OFF_GUARD_ID]))
+			.status(oneOf(Object.keys(this.buffHistory).map(Number)))
 			.target((target: Actor['id']): target is Actor['id'] => {
 				// Match all foes, but only the parsed actor of the friends.
 				const actor = this.actors.get(target)
@@ -171,10 +212,15 @@ export class BLURaidBuffs extends Analyser {
 		case (this.PECULIAR_LIGHT_ID):
 			this.inPeculiarLight = true
 			break
+		case (this.CONDENSED_LIBRA_ASTRAL_ID):
+		case (this.CONDENSED_LIBRA_UMBRAL_ID):
+		case (this.CONDENSED_LIBRA_PHYSICAL_ID):
+			this.inLibra = true
+			break
 		}
 
 		const newBuff = appliedBuffHistory.openNew(event.timestamp)
-		newBuff.buffId = event.status
+		newBuff.data.buffId = event.status
 		if (event.source === this.actors.current.id) {
 			newBuff.data.ours = true
 		}
@@ -221,6 +267,11 @@ export class BLURaidBuffs extends Analyser {
 					break
 				case this.PECULIAR_LIGHT_ID:
 					this.inPeculiarLight = false
+					break
+				case (this.CONDENSED_LIBRA_ASTRAL_ID):
+				case (this.CONDENSED_LIBRA_UMBRAL_ID):
+				case (this.CONDENSED_LIBRA_PHYSICAL_ID):
+					this.inLibra = false
 					break
 				}
 			}
@@ -281,19 +332,20 @@ export class BLURaidBuffs extends Analyser {
 	}
 
 	override output() {
-		const plHistory = this.buffHistory[this.data.statuses.PECULIAR_LIGHT.id]
-		const ogHistory = this.buffHistory[this.data.statuses.OFF_GUARD.id]
-		if (ogHistory.entries.length === 0 && plHistory.entries.length === 0) { return undefined }
+		const allBuffs = Object.values(this.buffHistory).map(e => e.entries).flat().sort((a, b) => {
+			return a.start - b.start
+		})
+		if (allBuffs.length === 0) { return undefined }
 
-		const ourPLs = [...plHistory.entries, ...ogHistory.entries]
-			.filter(pl => pl.data.ours)
-		if (ourPLs.length === 0) { return undefined }
+		const ourBuffs = allBuffs.filter(pl => pl.data.ours)
+		if (ourBuffs.length === 0) { return undefined }
 
-		const rotationData = ourPLs.map(buffWindow => {
+		const rotationData = ourBuffs.map(buffWindow => {
 			const buffStart = buffWindow.start - this.parser.pull.timestamp
 			const buffEnd   = (buffWindow.end ?? buffWindow.start) - this.parser.pull.timestamp
 
-			const buffedDamageType = buffWindow.data.damageType
+			const buffId         = buffWindow.data.buffId
+			const isBuffedAction = buffWindow.data.isBuffedAction
 			const relevantActionsBuffed = buffWindow.data.events.filter(e => {
 				const action     = this.data.getAction(e.action)
 				if (action === undefined) { return }
@@ -302,11 +354,8 @@ export class BLURaidBuffs extends Analyser {
 					// This filters out all the non-damaging actions, ala Bristle or Whistle
 					return
 				}
-				if (buffedDamageType === undefined) {
-					// This buff has no conditions, so huzzah, we are done, count it!
-					return true
-				} if (buffedDamageType === damageType) {
-					// This buff specifically buffs this type of damage!
+				if (isBuffedAction(action, buffId)) {
+					// This buff covers this action
 					return true
 				}
 				return
@@ -331,6 +380,7 @@ export class BLURaidBuffs extends Analyser {
 				start: buffStart,
 				end: buffEnd,
 				buffAction: buffWindow.data.buffAction,
+				buffStatus: this.data.getStatus(buffId),
 				ogBuffed: ogBuffed,
 				plBuffed: plBuffed,
 				libraBuffed: libraBuffed,
@@ -342,7 +392,9 @@ export class BLURaidBuffs extends Analyser {
 		return <Fragment>
 			<Message>
 				<Trans id="blu.buffs.table.message">
-				Blue Mages can keep both <ActionLink action="OFF_GUARD"/> and <ActionLink action="PECULIAR_LIGHT"/> up for the entire duration of the fight, so the table below shows when you used your buff, how many damaging party actions the buff covered ("Actions buffed"), and how many of those were also covered by someone else using the other buff ("Double buffed"); ideally both numbers should be equal!
+				Blue Mages can keep both <ActionLink action="OFF_GUARD"/> and <ActionLink action="PECULIAR_LIGHT"/> up for the entire duration of the fight, and may opt to have the <ActionLink action="CONDENSED_LIBRA"/> buffs running as well.
+				<br />
+				The table below shows when you used your buffs, as well as how many damaging party actions the buff covered; it also shows how many of those actions were also covered by the other two buffs.  Ideally your team should coordinate to have <ActionLink action="OFF_GUARD" showIcon={false} /> and <ActionLink action="PECULIAR_LIGHT" showIcon={false} /> running all the time, making both numbers below equal.
 				</Trans>
 			</Message>
 			<Table compact unstackable celled collapsing>
@@ -352,6 +404,7 @@ export class BLURaidBuffs extends Analyser {
 						<Table.HeaderCell><Trans id="blu.buffs.buff_name">Your Buff</Trans></Table.HeaderCell>
 						<Table.HeaderCell><DataLink action="OFF_GUARD" /></Table.HeaderCell>
 						<Table.HeaderCell><DataLink action="PECULIAR_LIGHT" /></Table.HeaderCell>
+						<Table.HeaderCell><DataLink action="CONDENSED_LIBRA" /></Table.HeaderCell>
 					</Table.Row>
 				</Table.Header>
 				<Table.Body>
@@ -367,10 +420,11 @@ export class BLURaidBuffs extends Analyser {
 									onClick={() => this.timeline.show(a.start, a.end)}
 								/>
 							</Table.Cell>
-							<Table.Cell> <ActionLink {...a.buffAction} showName={false} />
+							<Table.Cell> <StatusLink {...a.buffStatus} />
 							</Table.Cell>
 							<Table.Cell>{a.ogBuffed}</Table.Cell>
 							<Table.Cell>{a.plBuffed}</Table.Cell>
+							<Table.Cell>{a.libraBuffed}</Table.Cell>
 						</Table.Row>
 					})}
 				</Table.Body>

@@ -3,7 +3,7 @@ import {ensureActions} from '../type'
 
 const MAGICAL  = DamageType.MAGICAL
 const PHYSICAL = DamageType.PHYSICAL
-const DARK     = DamageType.DARK
+const DARK	 = DamageType.DARK
 
 export const BLU_COOLDOWN_GROUP = {
 	OFF_GUARD: 11411,
@@ -16,6 +16,9 @@ export const BLU_COOLDOWN_GROUP = {
 	MATRA_MAGIC: 23285,
 }
 
+const UMBRAL   = 1 // Water, Earth, Ice
+const ASTRAL   = 2 // Fire, Wind, Lightning
+
 export const BLU = ensureActions({
 	// TODO: may need to go deeper on statuses applied in the future?
 	WATER_CANNON: {
@@ -25,6 +28,7 @@ export const BLU = ensureActions({
 		onGcd: true,
 		castTime: 2500,
 		damageType: MAGICAL,
+		elementType: UMBRAL,
 	},
 	FLAME_THROWER: {
 		id: 11402,
@@ -33,6 +37,7 @@ export const BLU = ensureActions({
 		onGcd: true,
 		castTime: 2000,
 		damageType: MAGICAL,
+		elementType: ASTRAL,
 	},
 	AQUA_BREATH: {
 		id: 11390,
@@ -42,6 +47,7 @@ export const BLU = ensureActions({
 		castTime: 2000,
 		statusesApplied: ['AQUA_BREATH'],
 		damageType: MAGICAL,
+		elementType: UMBRAL,
 	},
 	FLYING_FRENZY: {
 		id: 11389,
@@ -66,6 +72,7 @@ export const BLU = ensureActions({
 		onGcd: true,
 		castTime: 2000,
 		damageType: MAGICAL,
+		elementType: ASTRAL,
 	},
 	LOOM: {
 		id: 11401,
@@ -98,6 +105,7 @@ export const BLU = ensureActions({
 		onGcd: true,
 		castTime: 2000,
 		damageType: MAGICAL,
+		elementType: ASTRAL,
 	},
 	PLAINCRACKER: {
 		id: 11391,
@@ -106,6 +114,7 @@ export const BLU = ensureActions({
 		onGcd: true,
 		castTime: 2000,
 		damageType: MAGICAL,
+		elementType: UMBRAL,
 	},
 	BRISTLE: {
 		id: 11393,
@@ -167,6 +176,7 @@ export const BLU = ensureActions({
 		onGcd: true,
 		castTime: 2000,
 		damageType: MAGICAL,
+		elementType: ASTRAL,
 	},
 	OFF_GUARD: {
 		id: 11411,
@@ -275,6 +285,7 @@ export const BLU = ensureActions({
 		onGcd: true,
 		castTime: 2000,
 		damageType: MAGICAL,
+		elementType: UMBRAL,
 	},
 	THE_DRAGONS_VOICE: {
 		id: 11420,
@@ -283,6 +294,7 @@ export const BLU = ensureActions({
 		onGcd: true,
 		castTime: 2000,
 		damageType: MAGICAL,
+		elementType: ASTRAL,
 	},
 	MISSILE: {
 		id: 11405,
@@ -315,6 +327,7 @@ export const BLU = ensureActions({
 		onGcd: true,
 		castTime: 1000,
 		damageType: PHYSICAL,
+		elementType: ASTRAL,
 	},
 	MOON_FLUTE: {
 		id: 11415,
@@ -364,6 +377,7 @@ export const BLU = ensureActions({
 		cooldownGroup: BLU_COOLDOWN_GROUP.FEATHER_RAIN,
 		statusesApplied: ['FEATHER_RAIN'],
 		damageType: MAGICAL,
+		elementType: ASTRAL,
 	},
 	ERUPTION: {
 		id: 11427,
@@ -372,6 +386,7 @@ export const BLU = ensureActions({
 		cooldown: 30000,
 		cooldownGroup: BLU_COOLDOWN_GROUP.FEATHER_RAIN,
 		damageType: MAGICAL,
+		elementType: ASTRAL,
 	},
 	BLU_MOUNTAIN_BUSTER: {
 		id: 11428,
@@ -380,6 +395,7 @@ export const BLU = ensureActions({
 		cooldown: 60000,
 		cooldownGroup: BLU_COOLDOWN_GROUP.BLU_MOUNTAIN_BUSTER,
 		damageType: PHYSICAL,
+		elementType: UMBRAL,
 	},
 	SHOCK_STRIKE: {
 		id: 11429,
@@ -388,6 +404,7 @@ export const BLU = ensureActions({
 		cooldown: 60000,
 		cooldownGroup: BLU_COOLDOWN_GROUP.BLU_MOUNTAIN_BUSTER,
 		damageType: MAGICAL,
+		elementType: ASTRAL,
 	},
 	GLASS_DANCE: {
 		id: 11430,
@@ -396,6 +413,7 @@ export const BLU = ensureActions({
 		cooldown: 90000,
 		cooldownGroup: BLU_COOLDOWN_GROUP.GLASS_DANCE,
 		damageType: MAGICAL,
+		elementType: UMBRAL,
 	},
 	VEIL_OF_THE_WHORL: {
 		id: 11431,
@@ -412,6 +430,7 @@ export const BLU = ensureActions({
 		onGcd: true,
 		castTime: 2000,
 		damageType: MAGICAL,
+		elementType: ASTRAL,
 	},
 	PROTEAN_WAVE: {
 		id: 18296,
@@ -420,6 +439,7 @@ export const BLU = ensureActions({
 		onGcd: true,
 		castTime: 2000,
 		damageType: MAGICAL,
+		elementType: UMBRAL,
 	},
 	NORTHERLIES: {
 		id: 18297,
@@ -428,6 +448,7 @@ export const BLU = ensureActions({
 		onGcd: true,
 		castTime: 2000,
 		damageType: MAGICAL,
+		elementType: UMBRAL,
 	},
 	ELECTROGENESIS: {
 		id: 18298,
@@ -436,6 +457,7 @@ export const BLU = ensureActions({
 		onGcd: true,
 		castTime: 2000,
 		damageType: MAGICAL,
+		elementType: ASTRAL,
 	},
 	KALTSTRAHL: {
 		id: 18299,
@@ -517,6 +539,7 @@ export const BLU = ensureActions({
 		onGcd: true,
 		castTime: 1000,
 		damageType: MAGICAL,
+		elementType: ASTRAL,
 	},
 	WHISTLE: {
 		id: 18309,
@@ -606,6 +629,7 @@ export const BLU = ensureActions({
 		onGcd: true,
 		castTime: 2000,
 		damageType: MAGICAL,
+		elementType: ASTRAL,
 	},
 	DEVOUR: {
 		id: 18320,
@@ -642,6 +666,7 @@ export const BLU = ensureActions({
 		charges: 4,
 		statusesApplied: ['SURPANAKHA'],
 		damageType: MAGICAL,
+		elementType: UMBRAL,
 	},
 	QUASAR: {
 		id: 18324,
@@ -677,6 +702,7 @@ export const BLU = ensureActions({
 		castTime: 2000,
 		statusesApplied: ['TINGLING'],
 		damageType: MAGICAL,
+		elementType: ASTRAL,
 	},
 	TATAMI_GAESHI: {
 		id: 23266,
@@ -702,6 +728,7 @@ export const BLU = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003335.png',
 		onGcd: true,
 		damageType: MAGICAL,
+		elementType: UMBRAL,
 	},
 	STOTRAM: {
 		id: 23416,
@@ -725,6 +752,7 @@ export const BLU = ensureActions({
 		onGcd: true,
 		castTime: 2000,
 		damageType: MAGICAL,
+		elementType: UMBRAL,
 	},
 	ANGELS_SNACK: {
 		id: 23272,
@@ -753,6 +781,7 @@ export const BLU = ensureActions({
 		icon: 'https://xivapi.com//i/003000/003341.png',
 		onGcd: true,
 		damageType: MAGICAL,
+		elementType: UMBRAL,
 	},
 	THE_ROSE_OF_DESTRUCTION: {
 		id: 23275,
@@ -788,6 +817,7 @@ export const BLU = ensureActions({
 		onGcd: true,
 		castTime: 2000,
 		damageType: MAGICAL,
+		elementType: UMBRAL,
 	},
 	MUSTARD_BOMB: {
 		id: 23279,
@@ -796,6 +826,7 @@ export const BLU = ensureActions({
 		onGcd: true,
 		castTime: 2000,
 		damageType: MAGICAL,
+		elementType: ASTRAL,
 	},
 	DRAGON_FORCE: {
 		id: 23280,
@@ -823,6 +854,7 @@ export const BLU = ensureActions({
 		onGcd: true,
 		castTime: 2000,
 		damageType: MAGICAL,
+		elementType: UMBRAL,
 	},
 	MALEDICTION_OF_WATER: {
 		id: 23283,
@@ -831,6 +863,7 @@ export const BLU = ensureActions({
 		onGcd: true,
 		castTime: 2000,
 		damageType: MAGICAL,
+		elementType: UMBRAL,
 	},
 	CHOCO_METEOR: {
 		id: 23284,
