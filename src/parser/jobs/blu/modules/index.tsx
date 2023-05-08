@@ -11,10 +11,10 @@ import {MoonFlute} from './MoonFlute'
 import {Overheal} from './Overheal'
 import {RevengeBlast} from './RevengeBlast'
 import {TripleTrident} from './TripleTrident'
-import {Weaving} from './Weaving'
+import {BLUWeaving} from './Weaving'
 
 export default [
-	Weaving,
+	BLUWeaving,
 	AlwaysBeCasting,
 	DoTs,
 	Tincture,

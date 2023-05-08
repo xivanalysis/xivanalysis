@@ -1,10 +1,11 @@
 import {Trans, Plural} from '@lingui/react'
 import {DataLink} from 'components/ui/DbLink'
+import {Event, Events} from 'event'
+import {filter} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
 import {Actors} from 'parser/core/modules/Actors'
-import {Data} from 'parser/core/modules/Data'
-import Suggestions, {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
-import {Weaving as CoreWeaving, Weave} from 'parser/core/modules/Weaving'
+import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import {Weaving, Weave} from 'parser/core/modules/Weaving'
 import React from 'react'
 
 const TO_MILLISECONDS = 1000
@@ -26,17 +27,20 @@ const MAX_ALLOWED_MULTIWEAVE_DURING_MOON_FLUTE = 6
 // we need to except that specific situation too.
 //
 
-export class Weaving extends CoreWeaving {
+export class BLUWeaving extends Weaving {
 	private badSurpanakhaSequence = 0
 
-	@dependency protected data!: Data
-	@dependency private suggestions!: Suggestions
 	@dependency private actors!: Actors
+
+	override initialise() {
+		super.initialise()
+		this.addEventHook(filter<Event>().type('complete'), this.onCompleteExtra)
+	}
 
 	override getMaxWeaves(weave: Weave) {
 		let surpanakhas = 0
 		let foundBadSurpanakhaSequence = false
-		const weaves = weave.weaves
+		const weaves: Array<Events['action']> = weave.weaves
 		weaves.forEach(weave => {
 			if (weave.action === this.data.actions.SURPANAKHA.id) {
 				surpanakhas++
@@ -55,7 +59,7 @@ export class Weaving extends CoreWeaving {
 			// If the weave happened after the final Surpanakha then they're unnecessarily
 			// clipping their next GCD, so we'll fall through and give them a suggestion
 			// based on that
-			if (weaves.at(-1).action === this.data.actions.SURPANAKHA.id) {
+			if (weaves[weaves.length - 1].action === this.data.actions.SURPANAKHA.id) {
 				// ...but here's the other alternative.  They did the four Surpanakhas at
 				// the end of the weave slot.  IF they are following the standard opener,
 				// then they did something like this:
@@ -82,9 +86,7 @@ export class Weaving extends CoreWeaving {
 		return super.getMaxWeaves(weave)
 	}
 
-	override onComplete() {
-		super.onComplete()
-
+	private onCompleteExtra() {
 		// Give a suggestion for people who didn't use Surpanakha x4, losing the buff and
 		// a bunch of damage.
 		//
