@@ -84,7 +84,6 @@ export class DoTs extends CoreDoTs {
 	}
 
 	protected addClippingSuggestions() {
-		this.debug(this.data.statuses)
 		const clippingPerMinute = this.getClippingAmount(this.data.statuses.BLEEDING.id)
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.SONG_OF_TORMENT.icon,
