@@ -100,7 +100,7 @@ export class Weaving extends CoreWeaving {
 				Use all four <DataLink action="SURPANAKHA" /> charges at the same time, with no other actions in-between.  Even <DataLink action="SPRINT" showIcon={false} /> or using an item will cancel the buff.
 			</Trans>,
 			why: <Trans id="blu.weaving.bad_surpanakha.why">
-				<Plural value={this.badSurpanakhaSequence} one="# Surpanakha chain" other="# Surpanakha chains" /> dropped the buff early.
+				<Plural value={this.badSurpanakhaSequence ?? 0} one="# Surpanakha chain" other="# Surpanakha chains" /> dropped the buff early.
 			</Trans>,
 			tiers: {1: SEVERITY.MAJOR},
 			value: this.badSurpanakhaSequence,

@@ -54,13 +54,13 @@ export class DoTs extends CoreDoTs {
 		super.onComplete()
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.SONG_OF_TORMENT.icon,
-			content: <Trans id = "blu.song_of_torment.suggestion.dropped.content">
+			content: <Trans id = "blu.song_of_torment.suggestion.unbuffed.content">
 				Ideally every <DataLink action="SONG_OF_TORMENT"/> should be buffed by first using <DataLink action="BRISTLE"/>.
                 This is a minor potency gain.
 			</Trans>,
 			tiers: SEVERITIES.UNBUFFED_SOT,
-			why: <Trans id ="blu.song_of_torment.suggestion.dropped.why">
-				<Plural value={this.unbuffedSongsOfTorment} one="# Song of Torment was" other="# Songs of Torment were"/> not buffed.
+			why: <Trans id ="blu.song_of_torment.suggestion.unbuffed.why">
+				<Plural value={this.unbuffedSongsOfTorment ?? 0} one="# Song of Torment was" other="# Songs of Torment were"/> not buffed.
 			</Trans>,
 			value: this.unbuffedSongsOfTorment,
 		}))

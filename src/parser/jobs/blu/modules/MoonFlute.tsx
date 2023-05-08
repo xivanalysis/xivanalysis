@@ -126,7 +126,7 @@ export class MoonFlute extends BuffWindow {
 				},
 			],
 			suggestionIcon,
-			suggestionContent: <Trans id="blu.moonflutes.suggestions.expected-uses.content">
+			suggestionContent: <Trans id="blu.moonflutes.suggestions.expected-actions.content">
 				<ActionLink action="MOON_FLUTE" /> is only worth using if the buffed actions during the window
 				will give you an extra 1260 potency (equivalent to casting <ActionLink action="SONIC_BOOM" /> six times).
 				The more of your larger cooldowns you can fit into the window, the better the result.  High-priority targets

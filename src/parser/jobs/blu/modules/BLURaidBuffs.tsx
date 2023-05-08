@@ -73,7 +73,7 @@ const dupedEventThresholdMs = 100
 
 export class BLURaidBuffs extends Analyser {
 	static override handle = 'buffwindows'
-	static override title = t('blu.buffs.off_guard.title')`Buff Windows`
+	static override title = t('blu.buffs.title')`Buff Windows`
 	static override displayOrder = DISPLAY_ORDER.RAID_BUFFS
 
 	@dependency private actors!: Actors
@@ -319,13 +319,13 @@ export class BLURaidBuffs extends Analyser {
 			// TODO best to show seconds overwritten rather than just the count tbh
 			this.suggestions.add(new TieredSuggestion({
 				icon: buff.icon,
-				content: <Trans id={ 'blu.buffs.overwritten.content-' + buff.id } >
+				content: <Trans id='blu.buffs.overwritten.content' >
 					Your <StatusLink {...buff} /> was overwritten by someone else before it ran out.  This might be reasonable depending on the fight, but worth examining and figuring out if your team needs to coordinate buffs.
 				</Trans>,
 				tiers: {1: SEVERITY.MEDIUM},
 				value: ourOverwritten,
-				why: <Trans id={ 'blu.buffs.overwritten.why-' + buff.id } >
-					<Plural value={ourOverwritten} one="# application was " other="# applications were" /> overwritten by someone else
+				why: <Trans id='blu.buffs.overwritten.why' >
+					<Plural value={ourOverwritten ?? 0} one="# application was " other="# applications were" /> overwritten by someone else
 				</Trans>,
 			}))
 		})
@@ -401,7 +401,7 @@ export class BLURaidBuffs extends Analyser {
 				<Table.Header>
 					<Table.Row>
 						<Table.HeaderCell><Trans id="blu.buffs.buff_time">Time</Trans></Table.HeaderCell>
-						<Table.HeaderCell><Trans id="blu.buffs.buff_name">Your Buff</Trans></Table.HeaderCell>
+						<Table.HeaderCell><Trans id="blu.buffs.buff_yours">Your Buff</Trans></Table.HeaderCell>
 						<Table.HeaderCell><DataLink action="OFF_GUARD" /></Table.HeaderCell>
 						<Table.HeaderCell><DataLink action="PECULIAR_LIGHT" /></Table.HeaderCell>
 						<Table.HeaderCell><DataLink action="CONDENSED_LIBRA" /></Table.HeaderCell>

@@ -80,13 +80,13 @@ export class DroppedBuffs extends Analyser {
 		const droppedStatus = this.data.getStatus(statusID)
 		this.suggestions.add(new TieredSuggestion({
 			icon: droppedStatus.icon,
-			content: <Trans id={ 'blu.droppedbuffs.suggestions.dropped.content-' + statusID } >
+			content: <Trans id='blu.droppedbuffs.suggestions.dropped.content' >
 				<StatusLink {...droppedStatus} /> fell off without being used.
 			</Trans>,
 			tiers: {1: SEVERITY.MEDIUM},
 			value: droppedStatusCount,
-			why: <Trans id={ 'blu.droppedbuffs.suggestions.dropped.why-'+ statusID } >
-				<Plural value={droppedStatusCount} one="# Use of " other="# Uses of "/> <StatusLink {...droppedStatus} showIcon={false} /> expired.
+			why: <Trans id='blu.droppedbuffs.suggestions.dropped.why' >
+				<Plural value={droppedStatusCount ?? 0} one="# Use of " other="# Uses of "/> <StatusLink {...droppedStatus} showIcon={false} /> expired.
 			</Trans>,
 		}))
 	}
@@ -95,13 +95,13 @@ export class DroppedBuffs extends Analyser {
 		const overwrittenStatus = this.data.getStatus(statusID)
 		this.suggestions.add(new TieredSuggestion({
 			icon: overwrittenStatus.icon,
-			content: <Trans id={ 'blu.droppedbuffs.suggestions.overwritten.content-' + statusID } >
+			content: <Trans id='blu.droppedbuffs.suggestions.overwritten.content' >
 				<StatusLink {...overwrittenStatus} /> was overwritten.
 			</Trans>,
 			tiers: {1: SEVERITY.MEDIUM},
 			value: overwrittenStatusCount,
-			why: <Trans id={ 'blu.droppedbuffs.suggestions.overwritten.why-'+ statusID } >
-				<Plural value={overwrittenStatusCount} one="# Use of " other="# Uses of "/> <StatusLink {...overwrittenStatus} showIcon={false} /> were overwritten.
+			why: <Trans id='blu.droppedbuffs.suggestions.overwritten.why' >
+				<Plural value={overwrittenStatusCount ?? 0} one="# Use of " other="# Uses of "/> <StatusLink {...overwrittenStatus} showIcon={false} /> were overwritten.
 			</Trans>,
 		}))
 	}

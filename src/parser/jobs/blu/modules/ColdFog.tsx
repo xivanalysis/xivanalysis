@@ -98,7 +98,7 @@ export class ColdFog extends Analyser {
 			tiers: COLD_SEVERITY.DROPPED_COLD_FOG,
 			value: droppedColdFogs,
 			why: <Trans id="blu.coldfog.dropped.why">
-				<Plural value={droppedColdFogs} one="# Cold Fog use" other="# Cold Fog uses" /> did not proc <DataLink action="WHITE_DEATH"  showIcon={false} showTooltip={false} />
+				<Plural value={droppedColdFogs ?? 0} one="# Cold Fog use" other="# Cold Fog uses" /> did not proc <DataLink action="WHITE_DEATH"  showIcon={false} showTooltip={false} />
 			</Trans>,
 		}))
 
@@ -116,7 +116,7 @@ export class ColdFog extends Analyser {
 			tiers: COLD_SEVERITY.INEFFECTIVE_COLD_FOG,
 			value: ineffectiveColdFog,
 			why: <Trans id="blu.coldfog.ineffective.why">
-				<Plural value={ineffectiveColdFog} one="# Cold Fog use" other="# Cold Fog uses" /> were a DPS loss due to not using<DataLink action="WHITE_DEATH"  showIcon={false} showTooltip={false} /> enough times
+				<Plural value={ineffectiveColdFog ?? 0} one="# Cold Fog use" other="# Cold Fog uses" /> were a DPS loss due to not using<DataLink action="WHITE_DEATH"  showIcon={false} showTooltip={false} /> enough times
 			</Trans>,
 		}))
 
@@ -134,7 +134,7 @@ export class ColdFog extends Analyser {
 			tiers: COLD_SEVERITY.DROPPED_WHITE_DEATH_CASTS,
 			value: droppedWhiteDeathCasts,
 			why: <Trans id="blu.coldfog.dropped_casts.why">
-				<Plural value={droppedWhiteDeathCasts} one="# Cold Fog use" other="# Cold Fog uses" /> cast <DataLink action="WHITE_DEATH"  showIcon={false} showTooltip={false} /> less than 6 times.
+				<Plural value={droppedWhiteDeathCasts ?? 0} one="# Cold Fog use" other="# Cold Fog uses" /> cast <DataLink action="WHITE_DEATH"  showIcon={false} showTooltip={false} /> less than 6 times.
 			</Trans>,
 		}))
 	}

@@ -135,12 +135,12 @@ export class RevengeBlast extends Analyser {
 			tiers: REVENGE_SEVERITY.CAST_OUT_OF_WINDOW,
 			value: this.badRevengeBlasts,
 			why: <Trans id="blu.revenge_blast.bad.why">
-				<Plural value={this.badRevengeBlasts} one="# Revenge Blast cast" other="# Revenge Blast casts" /> happened when above 20% HP
+				<Plural value={this.badRevengeBlasts ?? 0} one="# Revenge Blast cast" other="# Revenge Blast casts" /> happened when above 20% HP
 			</Trans>,
 		}))
 
 		// If you know a Revenge Blast window is coming, using Whistle first is a DPS gain.
-		const unwhistledWindows = this.revengeBlastWindows.entries
+		const unwhistledWindows: number = this.revengeBlastWindows.entries
 			.filter(revengeWindow => revengeWindow.data.hadRevengeBlast && !revengeWindow.data.hadWhistle)
 			.length
 		this.suggestions.add(new TieredSuggestion({
@@ -151,7 +151,7 @@ export class RevengeBlast extends Analyser {
 			tiers: REVENGE_SEVERITY.UNWHISTLED_OPENING_REVENGE_BLAST,
 			value: unwhistledWindows,
 			why: <Trans id="blu.revenge_blast.unwhistled.why">
-				<Plural value={unwhistledWindows} one="# Revenge Blast window" other="# Revenge Blast windows" /> did not have the <DataLink action="WHISTLE" /> buff.
+				<Plural value={unwhistledWindows ?? 0} one="# Revenge Blast window" other="# Revenge Blast windows" /> did not have the <DataLink action="WHISTLE" /> buff.
 			</Trans>,
 		}))
 	}
