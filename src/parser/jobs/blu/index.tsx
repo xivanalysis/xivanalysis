@@ -23,8 +23,8 @@ export const BLUE_MAGE = new Meta({
 		</Message>
 	</>,
 	supportedPatches: {
-		from: '5.45',
-		to: '6.45',
+		from: '6.0',
+		to: '6.3',
 	},
 	contributors: [
 		{user: CONTRIBUTORS.HUGMEIR, role: ROLES.DEVELOPER},
