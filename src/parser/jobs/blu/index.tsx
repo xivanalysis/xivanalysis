@@ -1,5 +1,6 @@
 import {t, Trans} from '@lingui/macro'
 import TransMarkdown from 'components/ui/TransMarkdown'
+import CONTRIBUTORS, {ROLES} from 'data/CONTRIBUTORS'
 import {Meta} from 'parser/core/Meta'
 import React from 'react'
 import {Icon, Message} from 'semantic-ui-react'
@@ -22,11 +23,11 @@ export const BLUE_MAGE = new Meta({
 		</Message>
 	</>,
 	supportedPatches: {
-		from: '✖', // TODO: Update when we have even the most basic gcd uptime working
-		to: '✖',
+		from: '5.45',
+		to: '6.45',
 	},
 	contributors: [
-		// {user: CONTRIBUTORS.YOU, role: ROLES.DEVELOPER},
+		{user: CONTRIBUTORS.HUGMEIR, role: ROLES.DEVELOPER},
 	],
 	changelog,
 })
