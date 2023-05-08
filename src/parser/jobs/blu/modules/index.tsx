@@ -8,7 +8,7 @@ import {DroppedBuffs} from './DroppedBuffs'
 import {GeneralCDDowntime} from './GeneralCDDowntime'
 import {Interrupts} from './Interrupts'
 import {MoonFlute} from './MoonFlute'
-import {Overheal} from './Overheal'
+import {BLUOverheal} from './Overheal'
 import {RevengeBlast} from './RevengeBlast'
 import {TripleTrident} from './TripleTrident'
 import {BLUWeaving} from './Weaving'
@@ -25,7 +25,7 @@ export default [
 	ColdFog,
 	RevengeBlast,
 	BLURaidBuffs,
-	Overheal,
+	BLUOverheal,
 	TripleTrident,
 	DroppedBuffs,
 ]

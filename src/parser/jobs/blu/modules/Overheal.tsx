@@ -1,18 +1,20 @@
 import {Trans} from '@lingui/react'
 import ACTIONS from 'data/ACTIONS'
+import {Event} from 'event'
+import {filter} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
 import {Actors} from 'parser/core/modules/Actors'
-import {Overheal as CoreOverheal, SuggestedColors} from 'parser/core/modules/Overheal'
+import {Overheal, SuggestedColors} from 'parser/core/modules/Overheal'
 import React from 'react'
 
-export class Overheal extends CoreOverheal {
+export class BLUOverheal extends Overheal {
 
-    @dependency private actors!: Actors
+	@dependency private actors!: Actors
 
 	override checklistRuleBreakout = true
 	override displayPieChart = true
 	override displaySuggestion = true
-    override suggestionIcon = ACTIONS.POM_CURE.icon
+	override suggestionIcon = ACTIONS.POM_CURE.icon
 
 	override trackedHealCategories = [
 		{
@@ -40,23 +42,36 @@ export class Overheal extends CoreOverheal {
 		},
 	]
 
-	override onComplete() {
+	override initialise() {
+		// the eventhooks look like a FIFO but might as well just add
+		// this hook twice in case it also behaves like a LIFO in some
+		// scenario.
+		this.addEventHook(filter<Event>().type('complete'), this.onCompleteExtra)
+		super.initialise()
+		this.addEventHook(filter<Event>().type('complete'), this.onCompleteExtra)
+	}
+
+	private onCompleteExtra() {
 		// Ideally we only run the Overheal report if the person has Healer mimickry,
 		// but detection of the status is finicky since it's a stance that people
 		// normally get before even going into the instance.
 
 		// So let's instead just check if they did any sort of non-White Wind healing
 		const nonWWhealing = this.direct.heal + this.trackedOverheals.reduce((acc, entry) => {
-			if (entry.trackedHealIds[0] === this.data.actions.WHITE_WIND.id) {
+			if (entry.idIsTracked(this.data.actions.WHITE_WIND.id)) {
 				return acc
 			}
 			return acc + entry.heal
 		}, 0)
 
-		if (nonWWhealing === 0) {
-			// No direct healing... But did they use Angel's Snack or the AoE heals?
+		if (nonWWhealing !== 0) {
 			return
 		}
-		super.onComplete()
+
+		this.checklistRuleBreakout = false
+		this.displayPieChart = false
+		this.displaySuggestion = false
+		this.displayChecklist = false
+		this.checklistRuleBreakout = false
 	}
 }
