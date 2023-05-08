@@ -1,7 +1,7 @@
 import {t} from '@lingui/macro'
 import {Plural, Trans} from '@lingui/react'
 import {ActionLink, DataLink} from 'components/ui/DbLink'
-import {RotationTable} from 'components/ui/RotationTable'
+import {RotationTable, RotationTableEntry} from 'components/ui/RotationTable'
 import {Event, Events} from 'event'
 import {Analyser} from 'parser/core/Analyser'
 import {EventHook} from 'parser/core/Dispatcher'
@@ -43,9 +43,9 @@ const REVENGE_SEVERITY = {
 }
 
 interface RevengeBlastWindow {
-    events: Event[],
-    hadWhistle: boolean,
-    hadRevengeBlast: boolean,
+	events: Array<Events['action']>,
+	hadWhistle: boolean,
+	hadRevengeBlast: boolean,
 }
 
 export class RevengeBlast extends Analyser {
@@ -60,8 +60,8 @@ export class RevengeBlast extends Analyser {
 	@dependency private downtime!: Downtime
 	@dependency private gcd!: GlobalCooldown
 
-    private badRevengeBlasts = 0
-    private inRevengeBlastWindow = false
+	private badRevengeBlasts = 0
+	private inRevengeBlastWindow = false
 	private revengeBlastWindows = new History<RevengeBlastWindow>(
 		() => ({
 			events: [],
@@ -76,7 +76,12 @@ export class RevengeBlast extends Analyser {
 
 		const playerFilter = filter<Event>().source(this.parser.actor.id)
 		this.addEventHook(playerFilter.type('action').action(this.data.actions.REVENGE_BLAST.id), this.onRevengeBlast)
-		this.addEventHook(playerFilter.type(oneOf(['actorUpdate', 'heal', 'damage', 'death'])), this.onActorUpdate)
+		this.addEventHook(playerFilter.type(oneOf(['heal', 'damage'])), this.onActorUpdate)
+		this.addEventHook(filter<Event>().type('actorUpdate').actor(this.parser.actor.id), this.onActorUpdate)
+		this.addEventHook({
+			type: 'death',
+			actor: this.parser.actor.id,
+		}, this.onActorUpdate)
 
 		this.addEventHook('complete', this.onComplete)
 	}
@@ -130,7 +135,7 @@ export class RevengeBlast extends Analyser {
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.REVENGE_BLAST.icon,
 			content: <Trans id="blu.revenge_blast.bad.content">
-                Only use <DataLink action="REVENGE_BLAST" /> if your HP will be below 20% by the time the slidecast window starts.
+				Only use <DataLink action="REVENGE_BLAST" /> if your HP will be below 20% by the time the slidecast window starts.
 			</Trans>,
 			tiers: REVENGE_SEVERITY.CAST_OUT_OF_WINDOW,
 			value: this.badRevengeBlasts,
@@ -146,7 +151,7 @@ export class RevengeBlast extends Analyser {
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.REVENGE_BLAST.icon,
 			content: <Trans id="blu.revenge_blast.unwhistled.content">
-                If it won't drop a <DataLink action="REVENGE_BLAST" /> cast, you should cast <DataLink action="WHISTLE" /> before entering a <DataLink action="REVENGE_BLAST" showIcon={false} /> window for a DPS gain over using your filler.
+				If it won't drop a <DataLink action="REVENGE_BLAST" /> cast, you should cast <DataLink action="WHISTLE" /> before entering a <DataLink action="REVENGE_BLAST" showIcon={false} /> window for a DPS gain over using your filler.
 			</Trans>,
 			tiers: REVENGE_SEVERITY.UNWHISTLED_OPENING_REVENGE_BLAST,
 			value: unwhistledWindows,
@@ -168,9 +173,10 @@ export class RevengeBlast extends Analyser {
 		const revengeBlastID = this.data.actions.REVENGE_BLAST.id
 		const dat = this.data
 		const downtime = this.downtime
-		const rotationData = this.revengeBlastWindows.entries
+		const rotationData: RotationTableEntry[] = []
+		this.revengeBlastWindows.entries
 			.filter(revengeWindow => ((revengeWindow.end ?? revengeWindow.start) - revengeWindow.start) > REVENGE_BLAST_MINIMUM_WINDOW_MS)
-			.map(revengeWindow => {
+			.forEach(revengeWindow => {
 				const revengeStart = revengeWindow.start - this.parser.pull.timestamp - REVENGE_BLAST_CAST_TIME + SLIDECAST_OFFSET
 				const revengeEnd   = (revengeWindow.end ?? revengeWindow.start) - this.parser.pull.timestamp - REVENGE_BLAST_CAST_TIME + SLIDECAST_OFFSET
 				const forcedDowntime = downtime.getDowntime(
@@ -184,7 +190,7 @@ export class RevengeBlast extends Analyser {
 				if (deltaMs < REVENGE_BLAST_MINIMUM_WINDOW_MS) { return }
 
 				const expectedGCDs = Math.floor(deltaMs / 1000 / gcd)
-				return {
+				const tableEntry: RotationTableEntry = {
 					start: revengeStart,
 					end: revengeEnd,
 					targetsData: {
@@ -195,7 +201,8 @@ export class RevengeBlast extends Analyser {
 					},
 					rotation: revengeWindow.data.events.map(event => ({action: event.action})),
 				}
-			}).filter(e => e !== undefined)
+				rotationData.push(tableEntry)
+			})
 
 		if (rotationData.length === 0) { return }
 
