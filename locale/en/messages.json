@@ -191,7 +191,7 @@
   "blu.coldfog.dropped_casts.content": "<0/> should be cast 6 or 7 times (depending on spell speed) for each <1/> cast.",
   "blu.coldfog.dropped_casts.why": "{0, plural, one {# Cold Fog use} other {# Cold Fog uses}} cast <0/> less than 6 times.",
   "blu.song_of_torment.suggestion.unbuffed.content": "Ideally every <0/> should be buffed by first using <1/>. This is a minor potency gain.",
-  "blu.song_of_torment.suggestion.unbuffed.why": "{0, plural, one {# Song of Torment was} other {# Songs of Tormwnt were}} not buffed.",
+  "blu.song_of_torment.suggestion.unbuffed.why": "{0, plural, one {# Song of Torment was} other {# Songs of Torment were}} not buffed.",
   "blu.dots.rule.name": "Keep your DoTs up ",
   "blu.dots.rule.description": "The <0/> effect from Nightbloom and SoT is a solid 15% of your total damage.",
   "blu.dots.requirement.uptime-bleed.name": "<0/> uptime",
