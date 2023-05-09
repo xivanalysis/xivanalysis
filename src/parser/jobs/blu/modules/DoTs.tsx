@@ -1,7 +1,10 @@
 import {Plural, Trans} from '@lingui/react'
 import {DataLink} from 'components/ui/DbLink'
+import {Status} from 'data/STATUSES'
+import {Event} from 'event'
 import {filter} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
+import {Actors} from 'parser/core/modules/Actors'
 import Checklist, {Requirement, TARGET, TieredRule} from 'parser/core/modules/Checklist'
 import {DoTs as CoreDoTs} from 'parser/core/modules/DoTs'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
@@ -24,10 +27,12 @@ const SEVERITIES = {
 }
 
 export class DoTs extends CoreDoTs {
+	@dependency private myactors!: Actors
 	@dependency private checklist!: Checklist
 	@dependency private suggestions!: Suggestions
 
-    private unbuffedSongsOfTorment = 0;
+	private bristleId?: Status['id']
+	private unbuffedSongsOfTorment = 0;
 
 	protected override trackedStatuses = [
 		this.data.statuses.BLEEDING.id,
@@ -36,13 +41,17 @@ export class DoTs extends CoreDoTs {
 	override initialise() {
 		super.initialise()
 
+		this.bristleId = this.data.statuses.BRISTLE.id
+
 		const playerFilter = filter<Event>().source(this.parser.actor.id)
 
 		this.addEventHook(playerFilter.type('action').action(this.data.actions.SONG_OF_TORMENT.id), this.onApplyingSoT)
+		this.addEventHook(filter<Event>().type('complete'), this.onCompleteExtra)
 
 	}
 	private onApplyingSoT() {
-		if (this.actors.current.hasStatus(this.data.statuses.BRISTLE.id)) { // Boost effect from Bristle is present
+		if (this.bristleId === undefined) { return }
+		if (this.myactors.current.hasStatus(this.bristleId)) { // Boost effect from Bristle is present
 			return
 		}
 
@@ -50,13 +59,12 @@ export class DoTs extends CoreDoTs {
 		this.unbuffedSongsOfTorment++
 	}
 
-	override onComplete() {
-		super.onComplete()
+	private onCompleteExtra() {
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.SONG_OF_TORMENT.icon,
 			content: <Trans id = "blu.song_of_torment.suggestion.unbuffed.content">
 				Ideally every <DataLink action="SONG_OF_TORMENT"/> should be buffed by first using <DataLink action="BRISTLE"/>.
-                This is a minor potency gain.
+				This is a minor potency gain.
 			</Trans>,
 			tiers: SEVERITIES.UNBUFFED_SOT,
 			why: <Trans id ="blu.song_of_torment.suggestion.unbuffed.why">
