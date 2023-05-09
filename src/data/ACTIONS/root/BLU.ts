@@ -1,5 +1,5 @@
 import {DamageType} from 'event'
-import {ensureActions} from '../type'
+import {Action, ensureActions} from '../type'
 
 const MAGICAL  = DamageType.MAGICAL
 const PHYSICAL = DamageType.PHYSICAL
@@ -18,6 +18,10 @@ export const BLU_COOLDOWN_GROUP = {
 
 const UMBRAL   = 1 // Water, Earth, Ice
 const ASTRAL   = 2 // Fire, Wind, Lightning
+
+export interface BlueAction extends Action {
+    elementType?: number,
+}
 
 export const BLU = ensureActions({
 	// TODO: may need to go deeper on statuses applied in the future?

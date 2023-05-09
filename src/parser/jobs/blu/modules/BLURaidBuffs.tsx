@@ -1,13 +1,15 @@
 import {t} from '@lingui/macro'
 import {Plural, Trans} from '@lingui/react'
 import {ActionLink, DataLink, StatusLink} from 'components/ui/DbLink'
+import {BlueAction} from 'data/ACTIONS/root/BLU'
+import {Status} from 'data/STATUSES'
 import {Event, Events, DamageType} from 'event'
 import {Analyser} from 'parser/core/Analyser'
 import {EventHook} from 'parser/core/Dispatcher'
 import {filter, oneOf} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
 import {History} from 'parser/core/modules/ActionWindow/History'
-import {Actors} from 'parser/core/modules/Actors'
+import {Actor, Actors} from 'parser/core/modules/Actors'
 import {Data} from 'parser/core/modules/Data'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import {Timeline} from 'parser/core/modules/Timeline'
@@ -56,9 +58,9 @@ interface BuffedEvent {
 }
 
 interface BuffWindow {
-	buffAction: Action,
+	buffAction: BlueAction,
 	buffId: Status['id'],
-	isBuffedAction(Action, number): boolean,
+	isBuffedAction(arg0: BlueAction, arg1: number): boolean,
 	events: BuffedEvent[],
 	overwritten: boolean,
 	ours: boolean,
@@ -70,6 +72,7 @@ const ASTRAL = 2
 
 const allowedBuffOverwriteMs = 2000 // Probably too high?
 const dupedEventThresholdMs = 100
+const fallbackBuffDuration  = 15000
 
 export class BLURaidBuffs extends Analyser {
 	static override handle = 'buffwindows'
@@ -85,7 +88,7 @@ export class BLURaidBuffs extends Analyser {
 	private inPeculiarLight = false
 	private inLibra = false
 
-	private buffHistory: {[key: Status['id']]: History<BuffWindow>} = {}
+	private buffHistory: {[key: number]: History<BuffWindow>} = {}
 	private buffActionHook?: EventHook<Events['action']>
 
 	private PECULIAR_LIGHT_ID = this.data.statuses.PECULIAR_LIGHT.id
@@ -94,11 +97,12 @@ export class BLURaidBuffs extends Analyser {
 	private CONDENSED_LIBRA_UMBRAL_ID = this.data.statuses.CONDENSED_LIBRA_UMBRAL.id
 	private CONDENSED_LIBRA_PHYSICAL_ID = this.data.statuses.CONDENSED_LIBRA_PHYSICAL.id
 
-	private newBuffHistory(st, fn) {
+	private newBuffHistory(st: BlueAction, fn: (arg0: BlueAction, arg1: number) => boolean) {
 		return new History<BuffWindow>(
 			() => ({
 				buffAction: st,
 				isBuffedAction: fn,
+				buffId: 0,
 				events: [],
 				overwritten: false,
 				ours: false,
@@ -123,7 +127,7 @@ export class BLURaidBuffs extends Analyser {
 		const CONDENSED_LIBRA_ASTRAL_ID = this.CONDENSED_LIBRA_ASTRAL_ID
 		const CONDENSED_LIBRA_UMBRAL_ID = this.CONDENSED_LIBRA_UMBRAL_ID
 		const CONDENSED_LIBRA_PHYSICAL_ID = this.CONDENSED_LIBRA_PHYSICAL_ID
-		const libraIsBuffed = function(action, buffId) {
+		const libraIsBuffed = function(action: BlueAction, buffId: Status['id']): boolean {
 			if (buffId === CONDENSED_LIBRA_PHYSICAL_ID) {
 				const damageType = action.damageType ?? DamageType.MAGICAL
 				return damageType === DamageType.PHYSICAL
@@ -141,6 +145,7 @@ export class BLURaidBuffs extends Analyser {
 				return attackElement === UMBRAL
 				break
 			}
+			return false
 		}
 		const libraAction = this.data.actions.CONDENSED_LIBRA
 		this.buffHistory[CONDENSED_LIBRA_ASTRAL_ID] = this.newBuffHistory(libraAction, libraIsBuffed)
@@ -163,7 +168,7 @@ export class BLURaidBuffs extends Analyser {
 		this.addEventHook('complete', this.onComplete)
 	}
 
-	private isDupedEvent(cur, prev): boolean {
+	private isDupedEvent(cur: Events['statusApply'] | Events['statusRemove'], prev?: Events['statusApply'] | Events['statusRemove']): boolean {
 		if (prev === undefined) {
 			return false
 		}
@@ -184,7 +189,7 @@ export class BLURaidBuffs extends Analyser {
 		return false
 	}
 
-	private previousApply: Events['statusApply'] = undefined
+	private previousApply?: Events['statusApply']
 	private onApplyRaidBuff(event: Events['statusApply']) {
 		if (this.isDupedEvent(event, this.previousApply)) {
 			// Duped event, skip it
@@ -239,7 +244,7 @@ export class BLURaidBuffs extends Analyser {
 		this.buffActionHook = this.addEventHook(playerActionFilter, this.onActionDuringBuff)
 	}
 
-	private previousRemove: Events['statusRemove'] = undefined
+	private previousRemove?: Events['statusRemove']
 	private onRemoveRaidBuff(event: Events['statusRemove']) {
 		if (this.isDupedEvent(event, this.previousRemove)) {
 			// Duped event, skip it
@@ -248,12 +253,14 @@ export class BLURaidBuffs extends Analyser {
 		this.previousRemove = event
 
 		const removedBuff = this.data.getStatus(event.status)
+		if (removedBuff === undefined) { return }
+
 		const removedBuffHistory = this.buffHistory[event.status]
 
 		// Was this an overwrite, or did it run its full course?
 		const currentBuff = removedBuffHistory.getCurrent()
-		if (currentBuff !== undefined) {
-			const buffExpectedDuration = removedBuff.duration - allowedBuffOverwriteMs
+		if (currentBuff !== undefined && removedBuff !== undefined) {
+			const buffExpectedDuration = (removedBuff.duration ?? fallbackBuffDuration) - allowedBuffOverwriteMs
 			const buffActualDuration = event.timestamp - currentBuff.start
 			if (buffExpectedDuration > buffActualDuration) {
 				currentBuff.data.overwritten = true
