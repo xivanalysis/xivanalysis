@@ -219,6 +219,7 @@
   "blu.triple_trident.unbuffed.why": "{0, plural, one {# Triple Trident use} other {# Triple Trident uses}} were not buffed.",
   "blu.weaving.bad_surpanakha.content": "Use all four <0/> charges at the same time, with no other actions in-between.  Even <1/> or using an item will cancel the buff.",
   "blu.weaving.bad_surpanakha.why": "{0, plural, one {# Surpanakha chain} other {# Surpanakha chains}} dropped the buff early",
+  "blu.swiftcast.suggestion.content": "Cast a spell with <0/> before it expires.",
   "brd.about.description": "\nWelcome to the Bard module! Although Bard might seem to be a straightforward job on the surface, its complexity can be deceiving.\nConsidered by many as an \"*easy to learn, hard to master*\" job, Bards have to make minute-to-minute decisions about their repertoire procs, Damage-over-Time actions, and Soul Voice gauge.\n\nTo understand the fundamentals behind the suggestions given below, check out one of the following guides:\n\n- [Icy Veins Bard Guide](https://www.icy-veins.com/ffxiv/bard-guide)\n- [The Balance Bard Guide](https://www.thebalanceffxiv.com/jobs/ranged/bard)\n",
   "brd.dots.checklist.description": "A significant amount of Bard's DPS comes from <0/> and <1/>. Make sure you have these skills applied on the target at all times. Use <2/> to refresh the timer on the Damage over Time (DoT) debuff.",
   "brd.dots.checklist.name": "Keep your DoTs up",
