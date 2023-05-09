@@ -3,6 +3,7 @@ import {Plural, Trans} from '@lingui/react'
 import {DataLink} from 'components/ui/DbLink'
 import {Event, Events} from 'event'
 import {Analyser} from 'parser/core/Analyser'
+import {EventHook} from 'parser/core/Dispatcher'
 import {filter} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
 import {History} from 'parser/core/modules/ActionWindow/History'
@@ -28,7 +29,7 @@ const COLD_FOG_MINIMUM_VIABLE_CASTS = 2
 const COLD_COLD_IDEAL_CASTS = 6
 
 interface ColdFogWindow {
-    whiteDeathCasts: number
+	whiteDeathCasts: number
 }
 
 export class ColdFog extends Analyser {
@@ -40,7 +41,8 @@ export class ColdFog extends Analyser {
 	@dependency private suggestions!: Suggestions
 
 	private touchOfFrostProcs = 0
-    private coldFogCasts = 0
+	private coldFogCasts = 0
+	private currentHook?: EventHook<Events['action']>
 	private touchOfFrostHistory = new History<ColdFogWindow>(
 		() => ({
 			whiteDeathCasts: 0,
@@ -61,14 +63,17 @@ export class ColdFog extends Analyser {
 
 	private onApplyTouchOfFrost(event: Events['statusApply']) {
 		this.touchOfFrostHistory.openNew(event.timestamp)
+		if (this.currentHook !== undefined) { return }
 
 		// Start tracking to see if they got the six White Death GCDs during the window
 		const playerFilter = filter<Event>().source(this.parser.actor.id)
-		this.addEventHook(playerFilter.action(this.data.actions.WHITE_DEATH.id).type('action'), this.onWhiteDeath)
+		this.currentHook = this.addEventHook(playerFilter.action(this.data.actions.WHITE_DEATH.id).type('action'), this.onWhiteDeath)
 	}
 	private onRemoveTouchOfFrost() {
 		this.touchOfFrostHistory.closeCurrent(this.parser.pull.timestamp + this.parser.pull.duration)
-		this.removeEventHook(this.onWhiteDeath)
+		if (this.currentHook !== undefined) {
+			this.removeEventHook(this.currentHook)
+		}
 	}
 
 	private onWhiteDeath(event: Events['action']) {
@@ -92,8 +97,8 @@ export class ColdFog extends Analyser {
 			icon: this.data.actions.COLD_FOG.icon,
 			content: <Trans id="blu.coldfog.dropped.content">
 				Any damage taken while the <DataLink status="COLD_FOG"/> effect is active grants the <DataLink status="TOUCH_OF_FROST"/>
-                buff, allowing the use of <DataLink action="WHITE_DEATH" /> for 15 seconds.
-                You should ensure you can proc every cast of <DataLink action="COLD_FOG"/>.
+				buff, allowing the use of <DataLink action="WHITE_DEATH" /> for 15 seconds.
+				You should ensure you can proc every cast of <DataLink action="COLD_FOG"/>.
 			</Trans>,
 			tiers: COLD_SEVERITY.DROPPED_COLD_FOG,
 			value: droppedColdFogs,
@@ -111,7 +116,7 @@ export class ColdFog extends Analyser {
 			icon: this.data.actions.COLD_FOG.icon,
 			content: <Trans id="blu.coldfog.ineffective.content">
 				For <DataLink action="COLD_FOG"/> to be effective, you need to cast <DataLink action="WHITE_DEATH" />
-                at least two times while under <DataLink status="TOUCH_OF_FROST" />.
+				at least two times while under <DataLink status="TOUCH_OF_FROST" />.
 			</Trans>,
 			tiers: COLD_SEVERITY.INEFFECTIVE_COLD_FOG,
 			value: ineffectiveColdFog,
@@ -129,7 +134,7 @@ export class ColdFog extends Analyser {
 			icon: this.data.actions.COLD_FOG.icon,
 			content: <Trans id="blu.coldfog.dropped_casts.content">
 				<DataLink action="WHITE_DEATH" /> should be cast 6 or 7 times (depending on spell speed)
-                for each <DataLink action="COLD_FOG" /> cast.
+				for each <DataLink action="COLD_FOG" /> cast.
 			</Trans>,
 			tiers: COLD_SEVERITY.DROPPED_WHITE_DEATH_CASTS,
 			value: droppedWhiteDeathCasts,
