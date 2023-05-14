@@ -5,6 +5,7 @@ export const changelog = [
 	{
 		date: new Date('2023-05-14'),
 		Changes: () => <>BLU's Overheal report no longer counts Devour as a heal</>,
+		Changes: () => <>Dying to Final Sting and Self-Destruct won't be counted as a death</>,
 		contributors: [CONTRIBUTORS.HUGMEIR],
 	},
 	{

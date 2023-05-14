@@ -2,6 +2,7 @@ import {Tincture} from 'parser/core/modules/Tincture'
 import {AlwaysBeCasting} from './AlwaysBeCasting'
 import {BLURaidBuffs} from './BLURaidBuffs'
 import {ColdFog} from './ColdFog'
+import {BLUDeath} from './Death'
 import {Defensives} from './Defensives'
 import {DoTs} from './DoTs'
 import {DroppedBuffs} from './DroppedBuffs'
@@ -16,6 +17,7 @@ import {BLUWeaving} from './Weaving'
 
 export default [
 	Defensives,
+	BLUDeath,
 	BLUWeaving,
 	AlwaysBeCasting,
 	DoTs,
