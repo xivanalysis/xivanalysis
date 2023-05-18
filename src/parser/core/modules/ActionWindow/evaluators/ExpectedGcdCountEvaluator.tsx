@@ -6,9 +6,12 @@ import {EvaluatedAction} from '../EvaluatedAction'
 import {HistoryEntry} from '../History'
 import {EvaluationOutput, WindowEvaluator} from './WindowEvaluator'
 
+// 700ms weave delay with "ok" ping
+const weaveDelay = 700
+
 // exported for use in AllowedGcdsOnlyEvaluator
 export function calculateExpectedGcdsForTime(defaultExpected: number, gcdEstimate: number, start: number, end?: number) {
-	return Math.min(defaultExpected, Math.ceil(((end ?? start) - start) / gcdEstimate))
+	return Math.min(defaultExpected, Math.ceil(Math.max((end ?? start) - start - weaveDelay, 0) / gcdEstimate))
 }
 
 interface ExpectedGcdCountOptions {
