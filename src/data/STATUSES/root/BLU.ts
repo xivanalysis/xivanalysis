@@ -208,4 +208,15 @@ export const BLU = ensureStatuses({
 		icon: 'https://xivapi.com/i/013000/013534.png',
 		duration: 15000,
 	},
+	CHELONIAN_GATE: {
+		id: 2496,
+		name: 'Chelonian Gate',
+		icon: 'https://xivapi.com/i/013000/013535.png',
+		duration: 10000,
+	},
+	AUSPICIOUS_TRANCE: {
+		id: 2497,
+		name: 'Auspicious Trance',
+		icon: 'https://xivapi.com/i/013000/013536.png',
+	},
 })
