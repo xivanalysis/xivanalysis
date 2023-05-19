@@ -12,6 +12,7 @@ import {Interrupts} from './Interrupts'
 import {MoonFlute} from './MoonFlute'
 import {BLUOverheal} from './Overheal'
 import {RevengeBlast} from './RevengeBlast'
+import {StatusTimeline} from './StatusTimeline'
 import {Swiftcast} from './Swiftcast'
 import {TripleTrident} from './TripleTrident'
 import {BLUWeaving} from './Weaving'
@@ -32,6 +33,7 @@ export default [
 	RevengeBlast,
 	BLURaidBuffs,
 	BLUOverheal,
+	StatusTimeline,
 	TripleTrident,
 	DroppedBuffs,
 ]
