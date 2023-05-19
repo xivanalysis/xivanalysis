@@ -1,5 +1,6 @@
 import {LucidDreaming} from 'parser/core/modules/LucidDreaming'
 import {Tincture} from 'parser/core/modules/Tincture'
+import {ActionTimeline} from './ActionTimeline'
 import {AlwaysBeCasting} from './AlwaysBeCasting'
 import {BLURaidBuffs} from './BLURaidBuffs'
 import {ColdFog} from './ColdFog'
@@ -19,6 +20,7 @@ import {BLUWeaving} from './Weaving'
 
 export default [
 	Defensives,
+	ActionTimeline,
 	BLUDeath,
 	BLUWeaving,
 	AlwaysBeCasting,
