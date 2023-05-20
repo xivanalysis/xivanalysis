@@ -15,6 +15,7 @@ export interface AllowedGcdsOnlyOptions {
 	 * It is used by this class to perform end of fight gcd count adjustment.
 	 */
 	globalCooldown: GlobalCooldown
+	hasStacks: boolean
 	suggestionIcon: string
 	suggestionContent: JSX.Element
 	/**
@@ -44,6 +45,7 @@ export class AllowedGcdsOnlyEvaluator implements WindowEvaluator {
 	private expectedGcdCount: number
 	protected allowedGcds: number[]
 	protected globalCooldown: GlobalCooldown
+	protected hasStacks: boolean
 	protected suggestionIcon: string
 	protected suggestionContent: JSX.Element
 	protected suggestionWindowName: JSX.Element
@@ -54,6 +56,7 @@ export class AllowedGcdsOnlyEvaluator implements WindowEvaluator {
 		this.expectedGcdCount = opts.expectedGcdCount
 		this.allowedGcds = opts.allowedGcds
 		this.globalCooldown = opts.globalCooldown
+		this.hasStacks = opts.hasStacks
 		this.suggestionIcon = opts.suggestionIcon
 		this.suggestionContent = opts.suggestionContent
 		this.suggestionWindowName = opts.suggestionWindowName
@@ -99,7 +102,7 @@ export class AllowedGcdsOnlyEvaluator implements WindowEvaluator {
 	}
 
 	protected calculateExpectedGcdsForWindow(window: HistoryEntry<EvaluatedAction[]>) {
-		return calculateExpectedGcdsForTime(this.expectedGcdCount, this.globalCooldown.getDuration(), window.start, window.end) + this.adjustCount(window)
+		return calculateExpectedGcdsForTime(this.expectedGcdCount, this.globalCooldown.getDuration(), this.hasStacks, window.start, window.end) + this.adjustCount(window)
 	}
 
 	private countAllowedGcdsInWindow(window: HistoryEntry<EvaluatedAction[]>) {

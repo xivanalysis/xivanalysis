@@ -6,12 +6,22 @@ import {EvaluatedAction} from '../EvaluatedAction'
 import {HistoryEntry} from '../History'
 import {EvaluationOutput, WindowEvaluator} from './WindowEvaluator'
 
-// 700ms weave delay with "ok" ping
-const weaveDelay = 700
+// Extremely conservative weave delay to prevent
+// any possibility of undercounting expected GCDs
+const weaveDelay = 250
 
 // exported for use in AllowedGcdsOnlyEvaluator
-export function calculateExpectedGcdsForTime(defaultExpected: number, gcdEstimate: number, start: number, end?: number) {
-	return Math.min(defaultExpected, Math.ceil(Math.max((end ?? start) - start - weaveDelay, 0) / gcdEstimate))
+export function calculateExpectedGcdsForTime(defaultExpected: number, gcdEstimate: number, hasStacks: boolean, start: number, end?: number) {
+	let usableWindow = (end ?? start) - start
+
+	// Buffs with stacks have durations tightly coupled to the GCD
+	// and do not benefit from accounting for weave delay
+	if (!hasStacks)
+		usableWindow -= weaveDelay
+
+	usableWindow = Math.max(usableWindow, 1)
+
+	return Math.min(defaultExpected, Math.ceil(usableWindow / gcdEstimate))
 }
 
 interface ExpectedGcdCountOptions {
@@ -21,6 +31,7 @@ interface ExpectedGcdCountOptions {
 	 * It is used by this class to perform end of fight gcd count adjustment.
 	 */
 	globalCooldown: GlobalCooldown
+	hasStacks: boolean
 	suggestionIcon: string
 	suggestionContent: JSX.Element
 	/**
@@ -47,6 +58,7 @@ export class ExpectedGcdCountEvaluator implements WindowEvaluator {
 
 	private expectedGcds: number
 	private globalCooldown: GlobalCooldown
+	private hasStacks: boolean
 	private suggestionIcon: string
 	private suggestionContent: JSX.Element
 	private suggestionWindowName: JSX.Element
@@ -56,6 +68,7 @@ export class ExpectedGcdCountEvaluator implements WindowEvaluator {
 	constructor(opts: ExpectedGcdCountOptions) {
 		this.expectedGcds = opts.expectedGcds
 		this.globalCooldown = opts.globalCooldown
+		this.hasStacks = opts.hasStacks
 		this.suggestionIcon = opts.suggestionIcon
 		this.suggestionContent = opts.suggestionContent
 		this.suggestionWindowName = opts.suggestionWindowName
@@ -100,7 +113,7 @@ export class ExpectedGcdCountEvaluator implements WindowEvaluator {
 	}
 
 	private calculateExpectedGcdsForWindow(window: HistoryEntry<EvaluatedAction[]>) {
-		return calculateExpectedGcdsForTime(this.expectedGcds, this.globalCooldown.getDuration(), window.start, window.end) + this.adjustCount(window)
+		return calculateExpectedGcdsForTime(this.expectedGcds, this.globalCooldown.getDuration(), this.hasStacks, window.start, window.end) + this.adjustCount(window)
 	}
 
 	private countGcdsInWindow(window: HistoryEntry<EvaluatedAction[]>) {

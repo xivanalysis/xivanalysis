@@ -19,6 +19,7 @@ export class Tincture extends CoreTincture {
 		this.addEvaluator(new ExpectedGcdCountEvaluator({
 			expectedGcds: 12,
 			globalCooldown: this.globalCooldown,
+			hasStacks: false,
 			suggestionIcon,
 			suggestionContent: <Trans id="pld.tincture.suggestions.missedgcd.content">
 				Try to land 12 GCDs during every <DataLink action="INFUSION_STR" /> window.

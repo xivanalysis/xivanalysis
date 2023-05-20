@@ -49,6 +49,7 @@ export class Meikyo extends BuffWindow {
 			new ExpectedGcdCountEvaluator({
 				expectedGcds: SEN_GCDS,
 				globalCooldown: this.globalCooldown,
+				hasStacks: true,
 				suggestionIcon,
 				suggestionContent: <Trans id="sam.ms.suggestions.missedgcd.content">
 					Try to land 3 GCDs during every <ActionLink action="MEIKYO_SHISUI" /> window.
@@ -74,6 +75,7 @@ export class Meikyo extends BuffWindow {
 					this.data.actions.MANGETSU.id,
 				],
 				globalCooldown: this.globalCooldown,
+				hasStacks: true,
 				suggestionIcon,
 				suggestionContent: <Trans id="sam.ms.suggestions.badgcd.content">
 					GCDs used during <ActionLink action="MEIKYO_SHISUI"/> should be limited to sen building skills.

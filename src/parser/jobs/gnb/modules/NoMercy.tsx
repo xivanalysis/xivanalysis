@@ -77,6 +77,7 @@ export class NoMercy extends BuffWindow {
 		this.addEvaluator(new ExpectedGcdCountEvaluator({
 			expectedGcds: EXPECTED_USES.GCD,
 			globalCooldown: this.globalCooldown,
+			hasStacks: false,
 			suggestionIcon,
 			suggestionContent: <Trans id="gnb.nomercy.suggestions.gcds.content">
 				Try to land 9 GCDs during every <ActionLink action="NO_MERCY" /> window. A 20 second duration is sufficient
