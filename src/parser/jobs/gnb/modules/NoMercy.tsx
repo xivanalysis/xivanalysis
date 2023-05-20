@@ -31,6 +31,7 @@ const EXPECTED_USES = {
 	BLASTING_ZONE: 1,
 	BOW_SHOCK: 1,
 	GCD: 9,
+	GCD_SLOW: 8,
 
 	// Don't check for correct Continuations; that will be covered by the Continuation module.
 	// Don't check for correctness on the Gnashing Fang combo; that's covered by the built-in Combo tracker.
@@ -80,8 +81,8 @@ export class NoMercy extends BuffWindow {
 			hasStacks: false,
 			suggestionIcon,
 			suggestionContent: <Trans id="gnb.nomercy.suggestions.gcds.content">
-				Try to land 9 GCDs during every <ActionLink action="NO_MERCY" /> window. A 20 second duration is sufficient
-					to comfortably fit 9 GCDs with full uptime if you wait until the last one-third of your GCD timer to activate it.
+				Try to land {EXPECTED_USES.GCD} GCDs ({EXPECTED_USES.GCD_SLOW} without gearing skill speed) during every <ActionLink action="NO_MERCY" /> window.
+					A 20 second duration fits all GCDs with full uptime if you wait until the last third of your GCD timer to activate <ActionLink action="NO_MERCY" />.
 			</Trans>,
 			suggestionWindowName,
 			severityTiers: SEVERITIES.TOO_FEW_GCDS,

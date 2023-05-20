@@ -16,8 +16,9 @@ export function calculateExpectedGcdsForTime(defaultExpected: number, gcdEstimat
 
 	// Buffs with stacks have durations tightly coupled to the GCD
 	// and do not benefit from accounting for weave delay
-	if (!hasStacks)
+	if (!hasStacks) {
 		usableWindow -= weaveDelay
+	}
 
 	usableWindow = Math.max(usableWindow, 1)
 
