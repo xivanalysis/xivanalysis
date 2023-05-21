@@ -15,9 +15,12 @@ interface SeverityTiers {
 }
 
 interface TrackedOverhealOpts {
-	name: JSX.Element,
+	bucketId?: number
+	name: JSX.Element | string,
 	color?: string
 	trackedHealIds?: number[],
+	ignore?: boolean
+	debugName?: string
 }
 
 const REGENERATION_ID: number = 1302
@@ -44,16 +47,22 @@ export const SuggestedColors: string[] = [
 ]
 
 export class TrackedOverheal {
-	name: JSX.Element
+	bucketId: number = -1
+	ignore: boolean
+	name: JSX.Element | string
 	color: string = '#fff'
 	protected trackedHealIds: number[]
 	heal: number = 0
 	overheal: number = 0
+	internalDebugName: string | undefined
 
 	constructor(opts: TrackedOverhealOpts) {
 		this.name = opts.name
 		this.color = opts.color || this.color
 		this.trackedHealIds = opts.trackedHealIds || []
+		this.bucketId = opts.bucketId || -1
+		this.ignore = opts.ignore || false
+		this.internalDebugName = opts.debugName
 	}
 
 	/**
@@ -79,6 +88,26 @@ export class TrackedOverheal {
 			return true
 		}
 		return false
+	}
+
+	/**
+	 * Gets a printable name for the category
+	 */
+	get debugName(): string {
+		if (this.internalDebugName != null) {
+			return this.internalDebugName
+		}
+
+		if (typeof this.name === 'string') {
+			return this.name
+		}
+
+		// Trans tags
+		if (this.name.props.defaults != null) {
+			return this.name.props.defaults
+		}
+
+		return 'Unknown'
 	}
 
 	/**
@@ -226,6 +255,16 @@ export class Overheal extends Analyser {
 		return <Trans id="core.overheal.rule.description">Avoid healing your party for more than is needed. Cut back on unnecessary heals and coordinate with your co-healer to plan resources efficiently.</Trans>
 	}
 
+	/**
+	 * This method MAY be overriden to force a heal into a specific bucket for whatever reason
+	 * @param _event - the healing event to consider
+	 * @param _petHeal - whether the heal comes from a pet or not; defaults to false
+	 * @returns a number for the bucket to for a heal into. Return -1 to bucket the heal normally
+	 */
+	protected overrideHealBucket(_event: Events['heal'], _petHeal: boolean = false): number {
+		return -1
+	}
+
 	private isRegeneration(event: Events['heal']): boolean {
 		return event.cause.type === 'action' && event.cause.action === REGENERATION_ID
 	}
@@ -235,9 +274,20 @@ export class Overheal extends Analyser {
 
 		const guid = event.cause.type === 'action' ? event.cause.action : event.cause.status
 		const name = event.cause.type === 'action' ? this.data.getAction(guid)?.name : this.data.getStatus(guid)?.name
+
+		const bucketId = this.overrideHealBucket(event, petHeal)
+		if (bucketId >= 0) {
+			for (const trackedHeal of this.trackedOverheals) {
+				if (trackedHeal.bucketId === bucketId) {
+					this.debug(`Heal ${name} (${guid}) at ${event.timestamp} MANUALLY shoved into bucket ${trackedHeal.debugName}`)
+					trackedHeal.pushHeal(event)
+				}
+			}
+			return // return here because you might want to set multiple things with an id to match into multiple categories based on some criteria
+		}
 		for (const trackedHeal of this.trackedOverheals) {
 			if (trackedHeal.idIsTracked(guid)) {
-				this.debug(`Heal from ${name} (${guid}) at ${event.timestamp} matched into category ${trackedHeal.name.props.defaults}`)
+				this.debug(`Heal from ${name} (${guid}) at ${event.timestamp} matched into category ${trackedHeal.debugName}`)
 				trackedHeal.pushHeal(event)
 				return
 			}
@@ -259,7 +309,7 @@ export class Overheal extends Analyser {
 		let overhealtotal = this.direct.overheal
 
 		this.trackedOverheals.forEach(x => {
-			if (x.hasData) {
+			if (!x.ignore && x.hasData) {
 				healtotal += x.heal
 				overhealtotal += x.overheal
 			}
@@ -280,7 +330,7 @@ export class Overheal extends Analyser {
 			}]
 
 			for (const trackedHeal of this.trackedOverheals) {
-				if (trackedHeal.hasData) {
+				if (!trackedHeal.ignore && trackedHeal.hasData) {
 					const percentage = this.percentageOf(trackedHeal.overheal, overhealtotal)
 					data.push({
 						value: percentage,
@@ -315,6 +365,8 @@ export class Overheal extends Analyser {
 				}))
 
 				for (const trackedHeal of this.trackedOverheals) {
+					if (trackedHeal.ignore) { continue }
+
 					requirements.push(new InvertedRequirement({
 						name: trackedHeal.name,
 						percent: trackedHeal.percentInverted,

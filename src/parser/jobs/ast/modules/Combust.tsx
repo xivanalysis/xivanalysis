@@ -53,11 +53,10 @@ export class Combust extends DoTs {
 					Avoid refreshing <DataLink action="COMBUST_III" /> significantly before it expires.
 			</Trans>,
 			why: <Trans id="ast.dots.suggestion.clip.why">
-				An average of {this.parser.formatDuration(combustClipPerMinute, 1)} seconds of <DataLink status="COMBUST_III" /> per minute lost to early refreshes.
+				An average of {this.parser.formatDuration(combustClipPerMinute, 1)} seconds of <DataLink status="COMBUST_III" /> clipped per minute due to early refreshes.
 			</Trans>,
 			tiers: SEVERITIES.CLIPPING,
 			value: combustClipPerMinute,
 		}))
 	}
-
 }

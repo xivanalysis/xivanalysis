@@ -51,7 +51,7 @@ export class DoTs extends CoreDoTs {
 				Avoid refreshing <DataLink status="EUKRASIAN_DOSIS_III" /> significantly before it expires.
 			</Trans>,
 			why: <Trans id="sge.dots.suggestion.clip.why">
-				An average of {this.parser.formatDuration(dosisClipPerMinute, 1)} seconds of <DataLink status="EUKRASIAN_DOSIS_III" /> per minute lost to early refreshes.
+				An average of {this.parser.formatDuration(dosisClipPerMinute, 1)} seconds of <DataLink status="EUKRASIAN_DOSIS_III" /> clipped per minute due to early refreshes.
 			</Trans>,
 			tiers: SEVERITIES.CLIPPING,
 			value: dosisClipPerMinute,

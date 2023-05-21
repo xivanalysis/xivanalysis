@@ -1,8 +1,12 @@
+import * as Sentry from '@sentry/browser'
 import {ReportProcessingError} from 'errors'
-import ky, {Options} from 'ky'
-import _ from 'lodash'
-import {FflogsEvent, Fight, Pet, ReportEventsQuery, ReportEventsResponse} from './eventTypes'
+import ky, {Options, Hooks} from 'ky'
+import {Fight,  ReportEventsQuery, ReportEventsResponse} from './eventTypes'
 import {Report} from './legacyStore'
+
+type CacheBehavior = 'read' | 'bypass'
+
+const FROM_CACHE_HEADER = '__from-cache'
 
 const options: Options = {
 	prefixUrl: process.env.REACT_APP_FFLOGS_V1_BASE_URL,
@@ -19,28 +23,85 @@ if (process.env.REACT_APP_FFLOGS_V1_API_KEY) {
 // Core API via ky
 export const fflogsApi = ky.create(options)
 
-function fetchEvents(code: string, searchParams: Record<string, string | number | boolean>) {
+export function createCacheHooks(cache: Cache, behavior: CacheBehavior): Hooks {
+	return {
+		// If bypassing the cache, disable beforeRequest to prevent reading from it
+		// - we still want to cache responses.
+		beforeRequest: behavior === 'bypass' ? [] : [
+			async request => {
+				// Before sending a request, try to fetch it from the cache.
+				const cachedResponse = await cache.match(request)
+				// If we got a cached response, mark it so we don't try to re-cache it later.
+				cachedResponse?.headers.append(FROM_CACHE_HEADER, 'true')
+				return cachedResponse
+			},
+		],
+
+		afterResponse: [
+			(request, _options, response) => {
+				// If the response was fetched from cache, don't need to do anything.
+				if (response.headers.has(FROM_CACHE_HEADER)) {
+					return
+				}
+
+				// Try to save successful responses to the cache. Failure can be ignored
+				// as far as the user is concerned.
+				if (response.ok) {
+					try {
+						cache.put(request, response)
+					} catch (error) {
+						Sentry.withScope(scope => {
+							scope.setExtras({
+								error,
+								request,
+							})
+							Sentry.captureMessage('Failed to save response to cache.', Sentry.Severity.Warning)
+						})
+					}
+				}
+			},
+		],
+	}
+}
+
+function fetchEvents(
+	code: string,
+	searchParams: Record<string, string | number | boolean>,
+	cache: Cache,
+	behavior: CacheBehavior,
+) {
 	return fflogsApi.get(
 		`report/events/${code}`,
-		{searchParams},
+		{
+			searchParams: {
+				...searchParams,
+				...(behavior === 'bypass' ? {bypassCache: 'true'} : {}),
+			},
+			hooks: createCacheHooks(cache, behavior),
+		},
 	).json<ReportEventsResponse>()
 }
 
 async function requestEvents(
 	code: string,
 	query: ReportEventsQuery,
+	cache: Cache
 ) {
 	const searchParams = query as Record<string, string | number | boolean>
 	let response = await fetchEvents(
 		code,
 		searchParams,
+		cache,
+		'read'
 	)
 
 	// If it's blank, try again, bypassing the cache
 	if (response === '') {
 		response = await fetchEvents(
 			code,
-			{...searchParams, bypassCache: 'true'},
+			searchParams,
+			cache,
+			'bypass'
 		)
 	}
 
@@ -57,97 +118,59 @@ async function requestEvents(
 	return response
 }
 
-// this is cursed shit
-let eventCache: {
-	key: string,
-	events: FflogsEvent[],
-} | undefined
-
 // Helper for pagination and suchforth
 export async function getFflogsEvents(
 	report: Report,
 	fight: Fight,
-	extra: ReportEventsQuery,
-	authoritative = false,
 ) {
 	const {code} = report
-	const cacheKey = `${code}|${fight}`
+
+	// Grab the cache storage we'll be using for requests
+	const cache = await getCache(report.code)
 
 	// Base parameters
 	const searchParams: ReportEventsQuery = {
 		start: fight.start_time,
 		end: fight.end_time,
 		translate: true,
-		..._.omitBy(extra, _.isNil),
-	}
-
-	// If this is a non-authoritative request, and we have an
-	// authoritative copy in cache, try to filter that into shape.
-	if (!authoritative && eventCache?.key === cacheKey) {
-		const filter = buildEventFilter(searchParams, report)
-		if (filter != null) {
-			return eventCache.events.filter(filter)
-		}
 	}
 
 	// Initial data request
-	let data = await requestEvents(code, searchParams)
+	let data = await requestEvents(code, searchParams, cache)
 	const events = data.events
 
 	// Handle pagination
 	while (data.nextPageTimestamp && data.events.length > 0) {
 		searchParams.start = data.nextPageTimestamp
-		data = await requestEvents(code, searchParams)
+		data = await requestEvents(code, searchParams, cache)
 		events.push(...data.events)
-	}
-
-	// If this is an authoritative request, cache the data
-	if (authoritative) {
-		eventCache = {
-			key: cacheKey,
-			events,
-		}
 	}
 
 	// And done
 	return events
 }
 
-function buildEventFilter(
-	query: ReportEventsQuery,
-	report: Report,
-) {
-	const {start, end, actorid, filter} = query
+export async function getCache(code: Report['code']) {
+	// This is currently bucketing an entire report at a time. Keep an eye on behavior,
+	// it's relatively easy to tweak this key to increase/decrease bucket size.
+	// NOTE: Decreasing size of bucket will require splitting reports into their
+	// own bucket, which will in turn require more nuanced bucket deletion logic.
+	const key = code
 
-	// TODO: Do we want to try and parse the mess of filters?
-	if (filter != null) {
-		return
+	// Grab all the current cache names, as well as the cache we actually want
+	const [keys, cache] = await Promise.all([
+		caches.keys(),
+		caches.open(key),
+	])
+
+	// Delete any caches that aren't the one we requested.
+	for (const cacheKey of keys) {
+		if (cacheKey === key) {
+			continue
+		}
+
+		caches.delete(cacheKey)
 	}
 
-	const predicates: Array<(event: FflogsEvent) => boolean> = []
-
-	if (start != null) {
-		predicates.push((event: FflogsEvent) => event.timestamp >= start)
-	}
-
-	if (end != null) {
-		predicates.push((event: FflogsEvent) => event.timestamp <= end)
-	}
-
-	if (actorid != null) {
-		const petFilter = (pets: Pet[]) => pets
-			.filter(pet => pet.petOwner === actorid)
-			.map(pet => pet.id)
-
-		const involvedActors = [actorid]
-			.concat(petFilter(report.friendlyPets))
-			.concat(petFilter(report.enemyPets))
-
-		predicates.push((event: FflogsEvent) => false
-			|| involvedActors.includes(event.sourceID ?? NaN)
-			|| involvedActors.includes(event.targetID ?? NaN),
-		)
-	}
-
-	return (event: FflogsEvent) => predicates.every(predicate => predicate(event))
+	return cache
 }

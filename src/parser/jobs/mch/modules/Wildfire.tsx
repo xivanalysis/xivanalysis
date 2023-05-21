@@ -4,7 +4,7 @@ import {ActionLink} from 'components/ui/DbLink'
 import {RotationTable} from 'components/ui/RotationTable'
 import {Event, Events} from 'event'
 import {Analyser} from 'parser/core/Analyser'
-import {EventHook} from 'parser/core/Dispatcher'
+import {EventHook, TimestampHook} from 'parser/core/Dispatcher'
 import {filter} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
 import {History} from 'parser/core/modules/ActionWindow/History'
@@ -51,6 +51,7 @@ export class Wildfire extends Analyser {
 	)
 
 	private actionHook?: EventHook<Events['action']>
+	private durationHook?: TimestampHook
 
 	private actionFilter = filter<Event>()
 		.source(this.parser.actor.id)
@@ -65,16 +66,25 @@ export class Wildfire extends Analyser {
 		, this.onApply)
 
 		this.addEventHook(playerFilter
-			.type('statusRemove')
-			.status(this.data.statuses.WILDFIRE.id)
-		, this.onRemove)
-
-		this.addEventHook(playerFilter
 			.type('damage')
 			.cause(this.data.matchCauseStatusId([this.data.statuses.WILDFIRE.id]))
 		, this.onDamage)
 
 		this.addEventHook('complete', this.onComplete)
+	}
+
+	private closeWindow(timestamp: number) {
+		this.history.closeCurrent(timestamp)
+
+		if (this.actionHook != null) {
+			this.removeEventHook(this.actionHook)
+			this.actionHook = undefined
+		}
+
+		if (this.durationHook != null) {
+			this.removeTimestampHook(this.durationHook)
+			this.durationHook = undefined
+		}
 	}
 
 	private onApply(event: Events['statusApply']) {
@@ -89,19 +99,14 @@ export class Wildfire extends Analyser {
 		if (this.actionHook == null) {
 			this.actionHook = this.addEventHook(this.actionFilter, this.onAction)
 		}
+
+		const expectedEnd = event.timestamp + this.data.statuses.WILDFIRE.duration
+		this.durationHook = this.addTimestampHook(expectedEnd, () => this.closeWindow(expectedEnd))
 	}
 
 	private onDamage(event: Events['damage']) {
 		this.history.doIfOpen(current => current.damage = event.targets[0].amount)
-	}
-
-	private onRemove(event: Events['statusRemove']) {
-		this.history.closeCurrent(event.timestamp)
-
-		if (this.actionHook != null) {
-			this.removeEventHook(this.actionHook)
-			this.actionHook = undefined
-		}
+		this.closeWindow(event.timestamp)
 	}
 
 	private onAction(event: Events['action']) {

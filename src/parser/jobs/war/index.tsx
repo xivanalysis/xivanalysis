@@ -16,7 +16,7 @@ export const WARRIOR = new Meta({
 	</>,
 	supportedPatches: {
 		from: '6.0',
-		to: '6.1',
+		to: '6.3',
 	},
 	contributors: [
 		{user: CONTRIBUTORS.AY, role: ROLES.MAINTAINER},

@@ -331,6 +331,7 @@ export const RPR = ensureActions({
 		name: 'Blood Stalk',
 		icon: 'https://xivapi.com/i/003000/003617.png',
 		cooldown: 1000,
+		statusesApplied: ['SOUL_REAVER'],
 	},
 
 	UNVEILED_GALLOWS: {
@@ -352,5 +353,6 @@ export const RPR = ensureActions({
 		name: 'Grim Swathe',
 		icon: 'https://xivapi.com/i/003000/003620.png',
 		cooldown: 1000,
+		statusesApplied: ['SOUL_REAVER'],
 	},
 })

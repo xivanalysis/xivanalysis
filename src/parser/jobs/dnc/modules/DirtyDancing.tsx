@@ -43,15 +43,24 @@ class Dance {
 
 	public get expectedFinishId(): number {
 		const actualFinish = _.last(this.rotation)
-		let expectedFinish = -1
-		if (actualFinish) {
-			if (this.initiatingStep.action === this.data.actions.TECHNICAL_STEP.id) {
-				expectedFinish =  this.data.actions.QUADRUPLE_TECHNICAL_FINISH.id
-			} else if (this.initiatingStep.action === this.data.actions.STANDARD_STEP.id) {
-				expectedFinish = this.data.actions.DOUBLE_STANDARD_FINISH.id
-			}
+
+		// Bail if something's wrong
+		if (actualFinish == null) { return -1 }
+
+		// If the player actually finished with one of the two expected finishes, just return that
+		if (actualFinish.action === this.data.actions.QUADRUPLE_TECHNICAL_FINISH.id ||
+			actualFinish.action === this.data.actions.DOUBLE_STANDARD_FINISH.id) {
+			return actualFinish.action
 		}
-		return expectedFinish
+
+		// If the player messed up Standard Step, return Double Standard Finish
+		if (actualFinish.action === this.data.actions.STANDARD_FINISH.id ||
+			actualFinish.action === this.data.actions.SINGLE_STANDARD_FINISH.id) {
+			return this.data.actions.DOUBLE_STANDARD_FINISH.id
+		}
+
+		// Process of elimination, they messed up Technical so return Quadruple Technical Finish
+		return this.data.actions.QUADRUPLE_TECHNICAL_FINISH.id
 	}
 
 	public get expectedEndTime(): number {
@@ -175,7 +184,7 @@ export class DirtyDancing extends Analyser {
 		// Count dance as dirty if we didn't get the expected finisher, and the fight wouldn't have ended or been in an invuln window before we could have
 		if (finisher.action !== dance.expectedFinishId && dance.expectedEndTime <= this.parser.pull.timestamp + this.parser.pull.duration) {
 			this.addTimestampHook(dance.expectedEndTime, ({timestamp}) => {
-				dance.dirty = this.invulnerability.isActive({
+				dance.dirty = !this.invulnerability.isActive({
 					timestamp,
 					types: ['invulnerable'],
 				})
@@ -205,8 +214,8 @@ export class DirtyDancing extends Analyser {
 
 	private getStatusUptimePercent(statusKey: StatusKey): number {
 		// Exclude downtime from both the status time and expected uptime
-		const statusTime = this.statuses.getUptime(statusKey, this.actors.friends) - this.downtime.getDowntime()
-		const uptime = this.parser.currentDuration - this.downtime.getDowntime()
+		const statusTime = Math.max(this.statuses.getUptime(statusKey, this.actors.friends) - this.downtime.getDowntime(), 0)
+		const uptime = Math.max(this.parser.currentDuration - this.downtime.getDowntime(), 0)
 
 		return (statusTime / uptime) * 100
 	}
@@ -268,7 +277,7 @@ export class DirtyDancing extends Analyser {
 			target: 95,
 			requirements: [
 				new Requirement({
-					name: <Fragment><StatusLink {...this.data.statuses.STANDARD_FINISH} /> uptime</Fragment>,
+					name: <Trans id="dnc.dirty-dancing.checklist.standard-finish-buff.uptime"><StatusLink {...this.data.statuses.STANDARD_FINISH} /> uptime</Trans>,
 					percent: standardFinishUptimePct,
 				}),
 			],
@@ -283,7 +292,7 @@ export class DirtyDancing extends Analyser {
 			target: 95,
 			requirements: [
 				new Requirement({
-					name: <Fragment><StatusLink {...this.data.statuses.CLOSED_POSITION} /> uptime (excluding downtime)</Fragment>,
+					name: <Trans id="dnc.dirty-dancing.checklist.closed-position-buff.uptime"><StatusLink {...this.data.statuses.CLOSED_POSITION} /> uptime (excluding downtime)</Trans>,
 					percent: closedPositionUptimePct,
 				}),
 			],

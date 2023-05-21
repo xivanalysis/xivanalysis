@@ -14,7 +14,6 @@ import DISPLAY_ORDER from './DISPLAY_ORDER'
 const ONLY_SHOW: ActionKey[] = [
 	'HAKAZE',
 	'JINPU',
-	'ENPI',
 	'SHIFU',
 	'FUKO',
 	'GEKKO',

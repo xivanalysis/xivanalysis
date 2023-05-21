@@ -58,7 +58,7 @@ export class DoTs extends CoreDoTs {
 					Avoid refreshing <ActionLink {...this.data.actions.CAUSTIC_BITE} /> and <ActionLink {...this.data.actions.STORMBITE} /> significantly before they expire.
 			</Trans>,
 			why: <Trans id="brd.dots.suggestion.clip.why">
-						An average of {this.parser.formatDuration(meanClip)} of DoTs clipped every minute.
+						An average of {this.parser.formatDuration(meanClip)} of DoTs clipped per minute due to early refreshes.
 			</Trans>,
 			tiers: SEVERITIES.CLIPPING,
 			value: meanClip,

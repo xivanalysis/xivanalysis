@@ -1,4 +1,5 @@
 import {ensureStatuses} from '../type'
+import {SHARED} from './SHARED'
 
 export const PLD = ensureStatuses({
 	GORING_BLADE: {
@@ -44,6 +45,7 @@ export const PLD = ensureStatuses({
 		duration: 30000,
 		stacksApplied: 3,
 	},
+	DIVINE_MIGHT: SHARED.UNKNOWN,
 	SHELTRON: {
 		id: 1856,
 		name: 'Sheltron',
@@ -92,6 +94,7 @@ export const PLD = ensureStatuses({
 		icon: 'https://xivapi.com/i/012000/012504.png',
 		duration: 10000,
 	},
+	BULWARK: SHARED.UNKNOWN,
 	HOLY_SHELTRON: {
 		id: 2674,
 		name: 'Holy Sheltron',
@@ -116,4 +119,6 @@ export const PLD = ensureStatuses({
 		icon: 'https://xivapi.com/i/012000/012518.png',
 		duration: 21000,
 	},
+	CONFITEOR_READY: SHARED.UNKNOWN,
+	BLADE_OF_FAITH_READY: SHARED.UNKNOWN,
 })
