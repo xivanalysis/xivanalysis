@@ -1,5 +1,5 @@
 import {Attribute} from 'event'
-import {ensureActions} from '../type'
+import {ensureActions, BonusModifier} from '../type'
 
 export const MNK = ensureActions({
 	// -----
@@ -12,6 +12,14 @@ export const MNK = ensureActions({
 		icon: 'https://xivapi.com/i/000000/000208.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
+		potencies: [{
+			value: 210,
+			bonusModifiers: [],
+		}, {
+			value: 310,
+			bonusModifiers: [],
+			baseModifiers: ['LEADEN_FIST'],
+		}],
 	},
 
 	TRUE_STRIKE: {
@@ -20,7 +28,10 @@ export const MNK = ensureActions({
 		icon: 'https://xivapi.com/i/000000/000209.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		potency: 300,
+		potencies: [{
+			value: 300,
+			bonusModifiers: [],
+		}],
 	},
 
 	SNAP_PUNCH: {
@@ -29,6 +40,13 @@ export const MNK = ensureActions({
 		icon: 'https://xivapi.com/i/000000/000210.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
+		potencies: [{
+			value: 250,
+			bonusModifiers: [],
+		}, {
+			value: 310,
+			bonusModifiers: [BonusModifier.POSITIONAL],
+		}],
 	},
 
 	TWIN_SNAKES: {
@@ -37,8 +55,11 @@ export const MNK = ensureActions({
 		icon: 'https://xivapi.com/i/000000/000213.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		potency: 280,
 		statusesApplied: ['DISCIPLINED_FIST'],
+		potencies: [{
+			value: 280,
+			bonusModifiers: [],
+		}],
 	},
 
 	SHADOW_OF_THE_DESTROYER: {
@@ -56,6 +77,13 @@ export const MNK = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		statusesApplied: ['DEMOLISH'],
+		potencies: [{
+			value: 70,
+			bonusModifiers: [],
+		}, {
+			value: 130,
+			bonusModifiers: [BonusModifier.POSITIONAL],
+		}],
 	},
 
 	ROCKBREAKER: {
@@ -127,7 +155,10 @@ export const MNK = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		statusesApplied: ['FORMLESS_FIST'],
-		potency: 600,
+		potencies: [{
+			value: 600,
+			bonusModifiers: [],
+		}],
 	},
 
 	CELESTIAL_REVOLUTION: {
@@ -137,7 +168,10 @@ export const MNK = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		statusesApplied: ['FORMLESS_FIST'],
-		potency: 450,
+		potencies: [{
+			value: 450,
+			bonusModifiers: [],
+		}],
 	},
 
 	RISING_PHOENIX: {
@@ -147,7 +181,10 @@ export const MNK = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		statusesApplied: ['FORMLESS_FIST'],
-		potency: 700,
+		potencies: [{
+			value: 700,
+			bonusModifiers: [],
+		}],
 	},
 
 	PHANTOM_RUSH: {
