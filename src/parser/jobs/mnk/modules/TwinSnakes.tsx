@@ -88,7 +88,7 @@ export class TwinSnakes extends Analyser {
 		}
 
 		// Verify the window isn't closed, and count the GCDs:
-		if (this.twinSnake.end != null) {
+		if (this.twinSnake.end == null) {
 			// We still count TS in the GCD list of the window, just flag if it's early
 			if (action.id === this.data.actions.TWIN_SNAKES.id) {
 				const expected = this.data.statuses.DISCIPLINED_FIST.duration - TWIN_SNAKES_BUFFER
