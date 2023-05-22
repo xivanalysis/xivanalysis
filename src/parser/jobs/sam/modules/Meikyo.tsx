@@ -75,7 +75,6 @@ export class Meikyo extends BuffWindow {
 					this.data.actions.MANGETSU.id,
 				],
 				globalCooldown: this.globalCooldown,
-				hasStacks: true,
 				suggestionIcon,
 				suggestionContent: <Trans id="sam.ms.suggestions.badgcd.content">
 					GCDs used during <ActionLink action="MEIKYO_SHISUI"/> should be limited to sen building skills.

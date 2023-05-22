@@ -22,6 +22,8 @@ const SEVERITIES = {
 	},
 }
 
+const GCD_SLOW = 2.47
+
 const EXPECTED_USES = {
 	DOUBLE_DOWN: 1, //This is assuming that you enter NM with 3 carts: 1 cart: Gnashing, 2 carts: Double Down
 	BURST_STRIKE: 1,
@@ -81,8 +83,8 @@ export class NoMercy extends BuffWindow {
 			hasStacks: false,
 			suggestionIcon,
 			suggestionContent: <Trans id="gnb.nomercy.suggestions.gcds.content">
-				Try to land {EXPECTED_USES.GCD} GCDs ({EXPECTED_USES.GCD_SLOW} without gearing skill speed) during every <ActionLink action="NO_MERCY" /> window.
-					A 20 second duration fits all GCDs with full uptime if you wait until the last third of your GCD timer to activate <ActionLink action="NO_MERCY" />.
+				Try to land {EXPECTED_USES.GCD} weaponskills ({EXPECTED_USES.GCD_SLOW} weaponskills at {GCD_SLOW} GCD or slower) during every <ActionLink action="NO_MERCY" /> window.
+					A 20 second duration fits all weaponskills with full uptime if you wait until the last third of your GCD timer to activate <ActionLink action="NO_MERCY" />.
 			</Trans>,
 			suggestionWindowName,
 			severityTiers: SEVERITIES.TOO_FEW_GCDS,

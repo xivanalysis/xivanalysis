@@ -11,18 +11,9 @@ import {EvaluationOutput, WindowEvaluator} from './WindowEvaluator'
 const weaveDelay = 250
 
 // exported for use in AllowedGcdsOnlyEvaluator
-export function calculateExpectedGcdsForTime(defaultExpected: number, gcdEstimate: number, hasStacks: boolean, start: number, end?: number) {
-	let usableWindow = (end ?? start) - start
-
-	// Buffs with stacks have durations tightly coupled to the GCD
-	// and do not benefit from accounting for weave delay
-	if (!hasStacks) {
-		usableWindow -= weaveDelay
-	}
-
-	usableWindow = Math.max(usableWindow, 1)
-
-	return Math.min(defaultExpected, Math.ceil(usableWindow / gcdEstimate))
+export function calculateExpectedGcdsForTime(defaultExpected: number, gcdEstimate: number, start: number, end?: number) {
+	const duration = Math.max((end ?? start) - start, 1)
+	return Math.min(defaultExpected, Math.ceil(duration / gcdEstimate))
 }
 
 interface ExpectedGcdCountOptions {
@@ -113,8 +104,16 @@ export class ExpectedGcdCountEvaluator implements WindowEvaluator {
 		return Math.max(0, expected - actual)
 	}
 
+	// Buffs with stacks have durations tightly coupled to the GCD
+	// and do not benefit from accounting for weave delay
 	private calculateExpectedGcdsForWindow(window: HistoryEntry<EvaluatedAction[]>) {
-		return calculateExpectedGcdsForTime(this.expectedGcds, this.globalCooldown.getDuration(), this.hasStacks, window.start, window.end) + this.adjustCount(window)
+		let adjustedStart = window.start
+
+		if (!this.hasStacks) {
+			adjustedStart += weaveDelay
+		}
+		
+		return calculateExpectedGcdsForTime(this.expectedGcds, this.globalCooldown.getDuration(), adjustedStart, window.end) + this.adjustCount(window)
 	}
 
 	private countGcdsInWindow(window: HistoryEntry<EvaluatedAction[]>) {
