@@ -164,7 +164,7 @@ export default class DragonSight extends BuffWindow {
 		// ok so we don't want to penalize people for when their buff ends early because their partner died
 		if (this.buffTargetDied(window) === SHORT_WINDOW_FAULT.PARTNER) {
 			// you get what you get and that's ok in this case
-			return -calculateExpectedGcdsForTime(EXPECTED_GCD_COUNT, this.globalCooldown.getDuration(), false, window.start, window.end)
+			return -calculateExpectedGcdsForTime(EXPECTED_GCD_COUNT, this.globalCooldown.getDuration(), window.start, window.end)
 		}
 
 		// note that if the drg died we don't reduce gcds because that's something you personally can fix
