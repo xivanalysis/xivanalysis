@@ -112,7 +112,7 @@ export class ExpectedGcdCountEvaluator implements WindowEvaluator {
 		if (!this.hasStacks) {
 			adjustedStart += weaveDelay
 		}
-		
+
 		return calculateExpectedGcdsForTime(this.expectedGcds, this.globalCooldown.getDuration(), adjustedStart, window.end) + this.adjustCount(window)
 	}
 
