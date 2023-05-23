@@ -49,6 +49,7 @@ export class FightOrFlight extends BuffWindow {
 		this.addEvaluator(new ExpectedGcdCountEvaluator({
 			expectedGcds: 8,
 			globalCooldown: this.globalCooldown,
+			hasStacks: false,
 			suggestionIcon: this.data.actions.FIGHT_OR_FLIGHT.icon,
 			suggestionContent: <Trans id="pld.fightorflight.suggestions.gcds.content">
 				Try to land 8 GCDs during every <DataLink action="FIGHT_OR_FLIGHT" /> window.

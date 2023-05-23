@@ -515,7 +515,7 @@
   "gnb.nomercy.chart.notes.yes": "Yes",
   "gnb.nomercy.notes.header": "Bloodfest Used",
   "gnb.nomercy.suggestions.expected-uses.content": "Watch your uses of certain abilities during <0/>. Under ideal conditions, you should be using <1/>, a full <2/> combo, and all of your off-GCD skills <3/>, <4/>, and at least one charge of <5/> under the buff duration.",
-  "gnb.nomercy.suggestions.gcds.content": "Try to land 9 GCDs during every <0/> window. A 20 second duration is sufficient to comfortably fit 9 GCDs with full uptime if you wait until the last one-third of your GCD timer to activate it.",
+  "gnb.nomercy.suggestions.gcds.content": "Try to land {0} weaponskills ({1} weaponskills at {GCD_SLOW} GCD or slower) during every <0/> window. A 20 second duration fits all weaponskills with full uptime if you wait until the last third of your GCD timer to activate <1/>.",
   "gnb.nomercy.title": "No Mercy Windows",
   "gnb.tincture.suggestions.trackedActions.content": "Try to cover as much damage as possible with your Tinctures of Strength.",
   "mch.about.description": "\nWelcome to the Machinist module! This job is all about managing cooldowns to dish out as much damage as possible,\nespecially during your party's raid buff windows. This page will walk you through how well you utilized each of your major\ncooldowns and resources.\n\nTo understand the fundamentals behind the suggestions given below, check out one of the following guides:\n\n- [Icy Veins Machinist Guide](https://www.icy-veins.com/ffxiv/machinist-guide)\n- [The Balance Machinist Guide](https://www.thebalanceffxiv.com/jobs/ranged/machinist/)\n",

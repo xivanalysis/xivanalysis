@@ -22,6 +22,8 @@ const SEVERITIES = {
 	},
 }
 
+const GCD_SLOW = 2.47
+
 const EXPECTED_USES = {
 	DOUBLE_DOWN: 1, //This is assuming that you enter NM with 3 carts: 1 cart: Gnashing, 2 carts: Double Down
 	BURST_STRIKE: 1,
@@ -31,6 +33,7 @@ const EXPECTED_USES = {
 	BLASTING_ZONE: 1,
 	BOW_SHOCK: 1,
 	GCD: 9,
+	GCD_SLOW: 8,
 
 	// Don't check for correct Continuations; that will be covered by the Continuation module.
 	// Don't check for correctness on the Gnashing Fang combo; that's covered by the built-in Combo tracker.
@@ -77,10 +80,11 @@ export class NoMercy extends BuffWindow {
 		this.addEvaluator(new ExpectedGcdCountEvaluator({
 			expectedGcds: EXPECTED_USES.GCD,
 			globalCooldown: this.globalCooldown,
+			hasStacks: false,
 			suggestionIcon,
 			suggestionContent: <Trans id="gnb.nomercy.suggestions.gcds.content">
-				Try to land 9 GCDs during every <ActionLink action="NO_MERCY" /> window. A 20 second duration is sufficient
-					to comfortably fit 9 GCDs with full uptime if you wait until the last one-third of your GCD timer to activate it.
+				Try to land {EXPECTED_USES.GCD} weaponskills ({EXPECTED_USES.GCD_SLOW} weaponskills at {GCD_SLOW} GCD or slower) during every <ActionLink action="NO_MERCY" /> window.
+					A 20 second duration fits all weaponskills with full uptime if you wait until the last third of your GCD timer to activate <ActionLink action="NO_MERCY" />.
 			</Trans>,
 			suggestionWindowName,
 			severityTiers: SEVERITIES.TOO_FEW_GCDS,
