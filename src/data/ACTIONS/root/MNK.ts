@@ -62,6 +62,14 @@ export const MNK = ensureActions({
 		}],
 	},
 
+	ARM_OF_THE_DESTROYER: {
+		id: 62,
+		name: 'Arm of the Destroyer',
+		icon: 'https://xivapi.com/i/000000/000215.png',
+		onGcd: true,
+		speedAttribute: Attribute.SKILL_SPEED,
+	},
+
 	SHADOW_OF_THE_DESTROYER: {
 		id: 25767,
 		name: 'Shadow of the Destroyer',
@@ -161,6 +169,16 @@ export const MNK = ensureActions({
 		}],
 	},
 
+	FLINT_STRIKE: {
+		id: 25882,
+		name: 'Flint Strike',
+		icon: 'https://xivapi.com/i/002000/002548.png',
+		onGcd: true,
+		speedAttribute: Attribute.SKILL_SPEED,
+		statusesApplied: ['FORMLESS_FIST'],
+		potency: 600,
+	},
+
 	CELESTIAL_REVOLUTION: {
 		id: 25765,
 		name: 'Celestial Revolution',
@@ -172,6 +190,16 @@ export const MNK = ensureActions({
 			value: 450,
 			bonusModifiers: [],
 		}],
+	},
+
+	TORNADO_KICK: {
+		id: 3543,
+		name: 'Tornado Kick',
+		icon: 'https://xivapi.com/i/002000/002531.png',
+		onGcd: true,
+		speedAttribute: Attribute.SKILL_SPEED,
+		statusesApplied: ['FORMLESS_FIST'],
+		potency: 850,
 	},
 
 	RISING_PHOENIX: {
@@ -248,6 +276,22 @@ export const MNK = ensureActions({
 		icon: 'https://xivapi.com/i/002000/002978.png',
 		cooldown: 90000,
 		statusesApplied: ['RIDDLE_OF_WIND'],
+	},
+
+	STEEL_PEAK: {
+		id: 25761,
+		name: 'Steel Peak',
+		icon: 'https://xivapi.com/i/002000/002530.png',
+		cooldown: 1000,
+		cooldownGroup: 1,
+	},
+
+	HOWLING_FIST: {
+		id: 25763,
+		name: 'Howling Fist',
+		icon: 'https://xivapi.com/i/000000/000207.png',
+		cooldown: 1000,
+		cooldownGroup: 1,
 	},
 
 	THE_FORBIDDEN_CHAKRA: {
