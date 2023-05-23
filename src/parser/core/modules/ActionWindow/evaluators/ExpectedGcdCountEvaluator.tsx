@@ -12,8 +12,7 @@ const weaveDelay = 250
 
 // exported for use in AllowedGcdsOnlyEvaluator
 export function calculateExpectedGcdsForTime(defaultExpected: number, gcdEstimate: number, start: number, end?: number) {
-	const duration = Math.max((end ?? start) - start, 1)
-	return Math.min(defaultExpected, Math.ceil(duration / gcdEstimate))
+	return Math.min(defaultExpected, Math.ceil(((end ?? start) - start) / gcdEstimate))
 }
 
 interface ExpectedGcdCountOptions {
