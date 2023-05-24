@@ -14,7 +14,7 @@ export class OGCDs extends CooldownDowntime {
 		{cooldowns: [this.data.actions.ASSIZE], weight: 1},
 		{cooldowns: [this.data.actions.PRESENCE_OF_MIND], weight: 1},
 	]
-	override defensiveCooldowns = [
+	override suggestionOnlyCooldowns = [
 		{
 			cooldowns: [this.data.actions.LITURGY_OF_THE_BELL],
 			tiers: {2: SEVERITY.MINOR, 3: SEVERITY.MEDIUM},
@@ -55,7 +55,7 @@ export class OGCDs extends CooldownDowntime {
 	override checklistTarget = DPS_TARGET_PERCENT
 
 	override addJobSuggestions() {
-		this.defensiveCooldowns.forEach(cooldownGroup => {
+		this.suggestionOnlyCooldowns.forEach(cooldownGroup => {
 
 			// set up for suggestion(s)
 			const maxUses = this.calculateMaxUsages(cooldownGroup)
