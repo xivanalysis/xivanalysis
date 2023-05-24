@@ -10,7 +10,7 @@ export const changelog: ChangelogEntry[] = [
 	// 	contributors: [CONTRIBUTORS.YOU],
 	// },
 	{
-		date: new Date('2023-02-04'),
+		date: new Date('2023-05-24'),
 		Changes: () => <>
 			Overhaul defensive cooldown analysis for all jobs, including role actions by default.
 		</>,
