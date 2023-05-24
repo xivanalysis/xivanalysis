@@ -10,7 +10,6 @@ export class Defensives extends CoreDefensives {
 		this.data.actions.PANHAIMA,
 		this.data.actions.HAIMA,
 		this.data.actions.PHYSIS_II,
-		this.data.actions.ZOE,
 		this.data.actions.SOTERIA,
 		this.data.actions.RHIZOMATA,
 		this.data.actions.KRASIS,
@@ -18,7 +17,7 @@ export class Defensives extends CoreDefensives {
 
 	// Retaining old Trans ID to maintain i18n
 	protected override headerContent = <Trans id="sge.cooldownDowntime.defense-cd-metric">
-		Using your mitigation and healing cooldowns allows you to help keep the party healthy while continuing to deal damage and healing to your <DataLink showIcon={false} action="KARDIA" /> target.
+		Using your mitigation and healing cooldowns allows you to help keep the party healthy while continuing to deal damage to enemies and healing to your <DataLink showIcon={false} action="KARDIA" /> target.
 		While you shouldn't waste these actions, you should try to plan out when to use them to maximize their utility.
 	</Trans>
 }
