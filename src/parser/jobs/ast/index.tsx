@@ -37,7 +37,7 @@ export const ASTROLOGIAN = new Meta({
 	],
 	changelog: [
 		{
-			date: new Date('2022-10-31'),
+			date: new Date('2023-05-24'),
 			Changes: () => <>
 				<strong>AST Cleanup and <DataLink action="DIVINATION" showIcon={false} /></strong>
 				<ul>
