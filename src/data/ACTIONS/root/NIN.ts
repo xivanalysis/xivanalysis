@@ -1,5 +1,5 @@
 import {Attribute} from 'event'
-import {ensureActions, BonusModifier} from '../type'
+import {ensureActions} from '../type'
 
 export const NIN = ensureActions({
 	// -----
@@ -39,19 +39,6 @@ export const NIN = ensureActions({
 			from: 2242,
 			end: true,
 		},
-		potencies: [{
-			value: 140,
-			bonusModifiers: [],
-		}, {
-			value: 200,
-			bonusModifiers: [BonusModifier.POSITIONAL],
-		}, {
-			value: 360,
-			bonusModifiers: [BonusModifier.COMBO],
-		}, {
-			value: 420,
-			bonusModifiers: [BonusModifier.POSITIONAL, BonusModifier.COMBO],
-		}],
 	},
 
 	DEATH_BLOSSOM: {
@@ -84,19 +71,6 @@ export const NIN = ensureActions({
 			from: 2242,
 			end: true,
 		},
-		potencies: [{
-			value: 140,
-			bonusModifiers: [],
-		}, {
-			value: 200,
-			bonusModifiers: [BonusModifier.POSITIONAL],
-		}, {
-			value: 340,
-			bonusModifiers: [BonusModifier.COMBO],
-		}, {
-			value: 400,
-			bonusModifiers: [BonusModifier.POSITIONAL, BonusModifier.COMBO],
-		}],
 	},
 
 	HAKKE_MUJINSATSU: {
@@ -401,13 +375,6 @@ export const NIN = ensureActions({
 		onGcd: false,
 		cooldown: 60000,
 		statusesApplied: ['TRICK_ATTACK_VULNERABILITY_UP'],
-		potencies: [{
-			value: 300,
-			bonusModifiers: [],
-		}, {
-			value: 400,
-			bonusModifiers: [BonusModifier.POSITIONAL],
-		}],
 	},
 
 	SHADE_SHIFT: {

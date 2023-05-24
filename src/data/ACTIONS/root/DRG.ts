@@ -1,5 +1,5 @@
 import {Attribute} from 'event'
-import {ensureActions, BonusModifier, PotencySpecialCase} from '../type'
+import {ensureActions} from '../type'
 
 export const DRG = ensureActions({
 	// -----
@@ -95,19 +95,6 @@ export const DRG = ensureActions({
 			from: 87,
 			end: true,
 		},
-		potencies: [{
-			value: 100,
-			bonusModifiers: [],
-		}, {
-			value: 140,
-			bonusModifiers: [BonusModifier.POSITIONAL],
-		}, {
-			value: 260,
-			bonusModifiers: [BonusModifier.COMBO],
-		}, {
-			value: 300,
-			bonusModifiers: [BonusModifier.COMBO, BonusModifier.POSITIONAL],
-		}],
 		statusesApplied: ['CHAOTIC_SPRING'],
 	},
 
@@ -139,24 +126,6 @@ export const DRG = ensureActions({
 		icon: 'https://xivapi.com/i/002000/002582.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		potencies: [{
-			value: 260,
-			bonusModifiers: [],
-			baseModifiers: [],
-		}, {
-			value: 300,
-			bonusModifiers: [BonusModifier.POSITIONAL],
-			baseModifiers: [],
-		}, {
-			// Lance Mastery increases the potency of the 5th hit by 100
-			value: 360,
-			bonusModifiers: [],
-			baseModifiers: [PotencySpecialCase.DRG_LANCE_MASTERY],
-		}, {
-			value: 400,
-			bonusModifiers: [BonusModifier.POSITIONAL],
-			baseModifiers: [PotencySpecialCase.DRG_LANCE_MASTERY],
-		}],
 	},
 
 	WHEELING_THRUST: {
@@ -165,24 +134,6 @@ export const DRG = ensureActions({
 		icon: 'https://xivapi.com/i/002000/002584.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		potencies: [{
-			value: 260,
-			bonusModifiers: [],
-			baseModifiers: [],
-		}, {
-			value: 300,
-			bonusModifiers: [BonusModifier.POSITIONAL],
-			baseModifiers: [],
-		}, {
-			// Lance Mastery increases the potency of the 5th hit by 100
-			value: 360,
-			bonusModifiers: [],
-			baseModifiers: [PotencySpecialCase.DRG_LANCE_MASTERY],
-		}, {
-			value: 400,
-			bonusModifiers: [BonusModifier.POSITIONAL],
-			baseModifiers: [PotencySpecialCase.DRG_LANCE_MASTERY],
-		}],
 	},
 
 	RAIDEN_THRUST: {
