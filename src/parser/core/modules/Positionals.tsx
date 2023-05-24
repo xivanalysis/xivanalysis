@@ -1,7 +1,8 @@
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
 import {ActionLink, DataLink} from 'components/ui/DbLink'
-import {Action} from 'data/ACTIONS'
+import {Action, getPotencyWithMods, getBasePotency} from 'data/ACTIONS'
+import {BonusModifier} from 'data/ACTIONS/type'
 import {Event, Events} from 'event'
 import {filter} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
@@ -14,38 +15,9 @@ import {Analyser} from '../Analyser'
 import {Data} from './Data'
 
 export interface PositionalResult {
-	positional: Positional,
+	positional: Action,
 	hits: Array<Events['damage']>,
 	misses: Array<Events['damage']>
-}
-
-// The commented out enums are unused because only plain combo actions
-// are required for the positional checking to work for now.
-// "NONE" or "BASE" was considered as a modifier, but it could result in
-// invalid states like [NONE, COMBO] that need to be checked.
-export enum PotencyModifier {
-	COMBO,
-	// POSITIONAL,
-	// DRG_LANCE_MASTERY,
-	// RPR_ENHANCED_REAVE,
-}
-
-// Potency is modeled this way because any single potency number
-// can have a combination of states that apply to it, see all
-// of the commented out PotencyModifiers. An empty modifier
-// list means it's the base potency.
-interface Potency {
-	value: number,
-	modifiers: PotencyModifier[]
-}
-
-// The absence of potencies current means that it does NOT have combo actions,
-// because in order to detect positionals, checking combo non-positional
-// potencies is sufficient. For full potency modeling, potencies
-// should not be optional.
-interface Positional {
-	action: Action,
-	potencies?: Potency[]
 }
 
 const NO_BONUS_PERCENT = 0
@@ -63,13 +35,16 @@ export abstract class Positionals extends Analyser {
 
 	/**
 	 * Jobs MUST provide a list of their positional actions
+	 *
+	 * TODO: This should just be a filter on all actions for the job for
+	 * any actions they have with positional potencies.
 	 */
-	protected abstract positionals: Positional[]
+	protected abstract positionals: Action[]
 
 	override initialise() {
 		this.addEventHook(
 			filter<Event>().source(this.parser.actor.id).type('damage')
-				.cause(this.data.matchCauseActionId(this.positionals.map(positional => positional.action.id))), this.onCast)
+				.cause(this.data.matchCauseActionId(this.positionals.map(positional => positional.id))), this.onCast)
 		this.addEventHook('complete', this.onComplete)
 	}
 
@@ -81,7 +56,7 @@ export abstract class Positionals extends Analyser {
 		if (action == null) {
 			return
 		}
-		const positional = this.positionals.find(positional => positional.action === action)
+		const positional = this.positionals.find(positional => positional === action)
 		if (positional == null) {
 			return
 		}
@@ -97,7 +72,7 @@ export abstract class Positionals extends Analyser {
 		}
 	}
 
-	private getOrCreatePositionalResult(positional: Positional) {
+	private getOrCreatePositionalResult(positional: Action) {
 		let positionalResult = this.positionalResults.find(result => result.positional === positional)
 		if (positionalResult == null) {
 			positionalResult = {
@@ -114,24 +89,17 @@ export abstract class Positionals extends Analyser {
 	// things such as DRG's 5th hit combo buff and RPR's reaver buff.
 	// Luckily, assessing misses is easy and sufficient for the purposes
 	// of detecting positional hits.
-	private missedPositionalBonusPercents(action: Positional) {
+	private missedPositionalBonusPercents(action: Action) {
 		const missed_positional_combo_bonus_percent = this.calculateBonusPercent(
-			this.getPotencyWithMods(action, []),
-			this.getPotencyWithMods(action, [PotencyModifier.COMBO]))
+			getBasePotency(action),
+			getPotencyWithMods(action, [BonusModifier.COMBO], []))
 		return [...new Set([NO_BONUS_PERCENT, missed_positional_combo_bonus_percent])]
 	}
 
 	// Currently just checks that you didn't miss. Checking for hits would
 	// otherwise be more complex.
-	private positionalHit(action: Positional, bonusPercent: number) {
+	private positionalHit(action: Action, bonusPercent: number) {
 		return !this.missedPositionalBonusPercents(action).includes(bonusPercent)
-	}
-
-	private getPotencyWithMods(action: Positional, modifiers: PotencyModifier[]) {
-		return action.potencies?.find(
-			potency =>
-				JSON.stringify(potency.modifiers.sort()) === JSON.stringify(modifiers.sort())
-		)?.value || NO_BONUS_PERCENT
 	}
 
 	// The bonusPercent is based on the final potency number.
@@ -179,7 +147,7 @@ export abstract class Positionals extends Analyser {
 			percent = Math.min(percent, 100)
 		}
 		return new Requirement({
-			name: <ActionLink {...result.positional.action}/>,
+			name: <ActionLink {...result.positional}/>,
 			percent: percent,
 			weight: expected,
 			overrideDisplay: `${actual} / ${expected} (${percent.toFixed(2)}%)`,
@@ -211,9 +179,9 @@ export abstract class Positionals extends Analyser {
 						const numHits = result.hits.length
 						const numMisses = result.misses.length
 						const success = numMisses === 0
-						return <Table.Row key={result.positional.action.id}>
+						return <Table.Row key={result.positional.id}>
 							<Table.Cell style={{whiteSpace: 'nowrap'}}>
-								<ActionLink {...result.positional.action} showName={false} />
+								<ActionLink {...result.positional} showName={false} />
 							</Table.Cell>
 							<Table.Cell
 								textAlign="center"

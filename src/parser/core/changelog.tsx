@@ -10,6 +10,13 @@ export const changelog: ChangelogEntry[] = [
 	// 	contributors: [CONTRIBUTORS.YOU],
 	// },
 	{
+		date: new Date('2023-05-24'),
+		Changes: () => <>
+			Overhaul defensive cooldown analysis for all jobs, including role actions by default.
+		</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
+	{
 		date: new Date('2023-01-22'),
 		Changes: () => <>
 			Fix event ordering inaccuracies when a buff application and a damage event occur on the same timestamp.

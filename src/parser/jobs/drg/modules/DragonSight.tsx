@@ -88,6 +88,7 @@ export default class DragonSight extends BuffWindow {
 		this.addEvaluator(new ExpectedGcdCountEvaluator({
 			expectedGcds: EXPECTED_GCD_COUNT,
 			globalCooldown: this.globalCooldown,
+			hasStacks: false,
 			suggestionIcon,
 			suggestionContent: <Trans id="drg.ds.suggestions.missedgcd.content">
 				Try to land at least 8 GCDs during every <ActionLink action="DRAGON_SIGHT" /> window.

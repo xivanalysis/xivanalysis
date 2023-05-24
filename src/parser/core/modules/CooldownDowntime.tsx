@@ -4,7 +4,7 @@ import {ActionLink} from 'components/ui/DbLink'
 import {Action} from 'data/ACTIONS'
 import {Event, Events} from 'event'
 import {dependency} from 'parser/core/Injectable'
-import {Requirement, Rule, TARGET, TieredRule} from 'parser/core/modules/Checklist'
+import {Requirement, Rule} from 'parser/core/modules/Checklist'
 import React from 'react'
 import {Analyser, DisplayOrder} from '../Analyser'
 import {filter, oneOf} from '../filter'
@@ -66,10 +66,6 @@ interface CooldownGroup {
 
 const DEFAULT_CHECKLIST_TARGET = 95
 const DEFAULT_ALLOWED_AVERAGE_DOWNTIME = 1250
-const DEFAULT_DEFENSE_CHECKLIST_TIERS = {
-	20: TARGET.WARN,
-	80: TARGET.SUCCESS,
-}
 
 export abstract class CooldownDowntime extends Analyser {
 	static override handle = 'cooldownDowntime'
@@ -84,17 +80,14 @@ export abstract class CooldownDowntime extends Analyser {
 	 * Jobs MUST provide a list of tracked DPS cooldowns
 	 */
 	protected abstract trackedCds: CooldownGroup[]
-	/**
-	 * Jobs may provide a list of tracked healing and mitigation cooldowns
-	 */
-	protected defensiveCooldowns: CooldownGroup[] = []
+
 	/**
 	 * Jobs may provide a list of cooldowns that won't appear in the checklist, but may still warrant suggestions regarding their use
 	 */
 	protected suggestionOnlyCooldowns: CooldownGroup[] = []
 
 	private get allCooldowns(): CooldownGroup[] {
-		return this.trackedCds.concat(this.defensiveCooldowns).concat(this.suggestionOnlyCooldowns)
+		return this.trackedCds.concat(this.suggestionOnlyCooldowns)
 	}
 
 	private usages = new Map<CooldownGroup, Array<Events['action']>>()
@@ -104,13 +97,6 @@ export abstract class CooldownDowntime extends Analyser {
 	protected checklistDescription = <Trans id="core.cooldownDowntime.ogcd-cd-metric">Always make sure to use your actions
 		when they are available, but do not clip your GCD to use them.</Trans>
 	protected checklistTarget = DEFAULT_CHECKLIST_TARGET
-
-	protected defenseChecklistName = <Trans id="core.cooldownDowntime.use-defense-cds">Use your defensive cooldowns</Trans>
-	protected defenseChecklistDescription = <Trans id="core.cooldownDowntime.defense-cd-metric">
-		Using your mitigation and healing cooldowns can help you survive mistakes, or relieve some stress on the healers and let them deal more damage.
-		While you shouldn't use them at the expense of your rotation or buff alignment, you should try to find helpful times to use them.
-	</Trans>
-	protected defenseChecklistTiers = DEFAULT_DEFENSE_CHECKLIST_TIERS
 
 	protected defaultAllowedAverageDowntime = DEFAULT_ALLOWED_AVERAGE_DOWNTIME
 	protected defaultFirstUseOffset = 0
@@ -218,7 +204,6 @@ export abstract class CooldownDowntime extends Analyser {
 				displayOrder: this.defensiveDisplayOrder,
 			}))
 		}
-
 		this.addJobSuggestions()
 	}
 

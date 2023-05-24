@@ -332,7 +332,7 @@ export interface HeadMarkerEvent extends AbilityEventFields {
 	type: 'headmarker',
 	markerID: number,
 	markerDuration?: number,
-	markerType?: 'stack' | 'circle' | 'donut' | `dice${1 | 2 | 3 | 4 | 5 | 6 | 7 | 8}`,
+	markerType?: 'stack' | 'circle' | 'donut' | `dice${1 | 2 | 3 | 4 | 5 | 6 | 7 | 8}`, // eslint-disable-line @typescript-eslint/no-magic-numbers
 }
 
 export interface TetherEvent extends AbilityEventFields {

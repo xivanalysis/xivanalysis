@@ -1,5 +1,6 @@
 import {Aetherflow} from './Aetherflow'
 import {CooldownDowntime} from './CooldownDowntime'
+import {Defensives} from './Defensives'
 import DoTs from './DoTs'
 import {FaerieGauge} from './FaerieGauge'
 import Interrupts from './Interrupts'
@@ -12,6 +13,7 @@ import Weaving from './Weaving'
 export default [
 	Aetherflow,
 	CooldownDowntime,
+	Defensives,
 	DoTs,
 	Interrupts,
 	FaerieGauge,

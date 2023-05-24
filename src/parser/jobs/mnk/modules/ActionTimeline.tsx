@@ -8,7 +8,7 @@ export class ActionTimeline extends CoreActionTimeline {
 
 		{
 			label: <Trans id="mnk.action-timeline.chakras">Chakras</Trans>,
-			content: ['THE_FORBIDDEN_CHAKRA', 'ENLIGHTENMENT'],
+			content: ['STEEL_PEAK', 'HOWLING_FIST', 'THE_FORBIDDEN_CHAKRA', 'ENLIGHTENMENT'],
 		},
 		'RIDDLE_OF_FIRE',
 		'BROTHERHOOD',

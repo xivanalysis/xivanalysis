@@ -1,5 +1,6 @@
 import {Plural, Trans} from '@lingui/react'
 import {DataLink} from 'components/ui/DbLink'
+import {getBasePotency, getPotencyWithMods} from 'data/ACTIONS'
 import {Cause, Event, Events, SourceModifier} from 'event'
 import {Analyser} from 'parser/core/Analyser'
 import {filter} from 'parser/core/filter'
@@ -10,9 +11,6 @@ import {Data} from 'parser/core/modules/Data'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
 import {DISPLAY_ORDER} from './DISPLAY_ORDER'
-
-const LITE_BOOT_POTENCY = 210
-const LEAD_BOOT_POTENCY = 310
 
 const SUGGESTION_TIERS = {
 	// Typically a player with lag can derp positional in opener, this usually happens 2 times per fight.
@@ -49,6 +47,9 @@ export class Steppies extends Analyser {
 	@dependency private checklist!: Checklist
 	@dependency private data!: Data
 	@dependency private suggestions!: Suggestions
+
+	private liteBootPotency = getBasePotency(this.data.actions.BOOTSHINE)
+	private leadBootPotency = getPotencyWithMods(this.data.actions.BOOTSHINE, [], ['LEADEN_FIST'])
 
 	private steppies: Boot[] = []
 
@@ -97,7 +98,7 @@ export class Steppies extends Analyser {
 				Avoid unbuffed <DataLink action="BOOTSHINE"/> by using <DataLink action="DRAGON_KICK" /> before it.
 			</Trans>,
 			why: <Trans id="mnk.steppies.suggestions.dragon_kick.why">
-				{this.getUnbuffedCount(this.steppies) * (LEAD_BOOT_POTENCY - LITE_BOOT_POTENCY)} potency lost to missing <DataLink status="LEADEN_FIST"/> buff {this.getUnbuffedCount(this.steppies)} times.
+				{this.getUnbuffedCount(this.steppies) * (this.leadBootPotency - this.liteBootPotency)} potency lost to missing <DataLink status="LEADEN_FIST"/> buff {this.getUnbuffedCount(this.steppies)} times.
 			</Trans>,
 			tiers: SUGGESTION_TIERS.WEAK,
 			value: this.getUnbuffedCount(this.steppies),
