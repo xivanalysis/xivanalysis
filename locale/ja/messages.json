@@ -515,7 +515,7 @@
   "gnb.nomercy.chart.notes.yes": "はい",
   "gnb.nomercy.notes.header": "ブラッドソイルが使われました",
   "gnb.nomercy.suggestions.expected-uses.content": "<0/>の効果中に使用したアビリティを確認してください。理想的な状況下においては、<1/>、<2/>コンボ全体、そしてアビリティ全て、つまり<3/>、<4/>、1回以上の<5/>を効果時間中に使いましょう。",
-  "gnb.nomercy.suggestions.gcds.content": "9回のウェポンスキルを<0/>効果時間中に使うようにしましょう。使用直前のGCDタイマーの残り1/3まで待てば、20秒の効果時間は9回のウェポンスキルを収めるのに十分です。",
+  "gnb.nomercy.suggestions.gcds.content": "",
   "gnb.nomercy.title": "ノー・マーシー効果時間",
   "gnb.tincture.suggestions.trackedActions.content": "できるだけ剛力の幻薬でダメージを稼ぎましょう。",
   "mch.about.description": "",

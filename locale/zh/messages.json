@@ -515,7 +515,7 @@
   "gnb.nomercy.chart.notes.yes": "是",
   "gnb.nomercy.notes.header": "血壤使用",
   "gnb.nomercy.suggestions.expected-uses.content": "关注你特定能力的使用情况。理想情况下，每个<0/>的持续期间都应该使用： 一个<1/>，一套完整的<2/>连击，所有的能力技——<3/>和<4/>，以及至少一次<5/>。",
-  "gnb.nomercy.suggestions.gcds.content": "在每次<0/>持续时间内尽量使用9次GCD，只要你在GCD的后半段开启它，20秒的持续时间是足以插入9个GCD的。",
+  "gnb.nomercy.suggestions.gcds.content": "",
   "gnb.nomercy.title": "无情的使用记录",
   "gnb.tincture.suggestions.trackedActions.content": "在爆发药期间打出尽可能多的伤害。",
   "mch.about.description": "\n欢迎使用机工士分析模块！机工士的重点在于“有啥打啥”——不要让GCD空转以提高输出，特别是在团辅窗口期里。本页面将会为您讲解您是如何管理能力技和职业资源的。\n\n为了更好地理解提出的建议，请阅读以下职业教程（英文）：\n\n- [Icy Veins Machinist Guide](https://www.icy-veins.com/ffxiv/machinist-guide)\n- [The Balance Machinist Guide](https://www.thebalanceffxiv.com/jobs/ranged/machinist/)\n",
