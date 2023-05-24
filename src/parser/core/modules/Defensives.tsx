@@ -9,7 +9,7 @@ import {CooldownDowntime} from 'parser/core/modules/CooldownDowntime'
 import {Data} from 'parser/core/modules/Data'
 import React, {Fragment, ReactNode} from 'react'
 import {Accordion, Button, Icon, Message, Table} from 'semantic-ui-react'
-import {CooldownHistoryEntry, Cooldowns} from './Cooldowns'
+import {CooldownEndReason, CooldownHistoryEntry, Cooldowns} from './Cooldowns'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 import {Timeline} from './Timeline'
 
@@ -52,8 +52,12 @@ export class Defensives extends Analyser {
 		})
 	}
 
-	private getUses(defensive: Action): number {
-		return this.cooldowns.cooldownHistory(defensive).length
+	private getUsageCount(defensive: Action): number {
+		return this.getUses(defensive).length
+	}
+
+	private getUses(defensive: Action): CooldownHistoryEntry[] {
+		return this.cooldowns.cooldownHistory(defensive).filter((entry) => entry.endReason !== CooldownEndReason.INTERRUPTED)
 	}
 
 	private getMaxUses(defensive: Action): number {
@@ -85,7 +89,7 @@ export class Defensives extends Analyser {
 						return {
 							key: defensive.id,
 							title: {
-								content: <><ActionLink key={index} {...defensive} /> - {this.getUses(defensive)} / {this.getMaxUses(defensive)}</>,
+								content: <><ActionLink key={index} {...defensive} /> - {this.getUsageCount(defensive)} / {this.getMaxUses(defensive)}</>,
 							},
 							content: {
 								content: <Table compact unstackable celled>
@@ -94,7 +98,7 @@ export class Defensives extends Analyser {
 											this.tryGetAdditionalUseRow(defensive)
 										}
 										{
-											this.cooldowns.cooldownHistory(defensive).map((entry) => {
+											this.getUses(defensive).map((entry) => {
 												return this.getUsageRow(entry, defensive)
 											})
 										}
@@ -140,7 +144,7 @@ export class Defensives extends Analyser {
 		}
 
 		const cooldown = defensive.cooldown || this.parser.pull.duration
-		const nextEntry = this.cooldowns.cooldownHistory(defensive).find(historyEntry => historyEntry.start > timestamp)
+		const nextEntry = this.getUses(defensive).find(historyEntry => historyEntry.start > timestamp)
 		const useByTimestamp = nextEntry != null ? (nextEntry.start - cooldown) : (this.parser.pull.timestamp + this.parser.pull.duration)
 
 		if (useByTimestamp <= availableTimestamp) {
