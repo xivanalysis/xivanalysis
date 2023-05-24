@@ -61,7 +61,8 @@ export class Defensives extends Analyser {
 	}
 
 	private getMaxUses(defensive: Action): number {
-		return this.cooldownDowntime.calculateMaxUsages({cooldowns: [defensive]})
+		const totalAdditionalUses = this.getUses(defensive).reduce((acc, usage) => acc + this.getAdditionalUsageData(defensive, usage.start).chargesBeforeNextUse, this.getAdditionalUsageData(defensive).chargesBeforeNextUse)
+		return this.getUsageCount(defensive) + totalAdditionalUses
 	}
 
 	override output() {
@@ -131,7 +132,7 @@ export class Defensives extends Analyser {
 		</>
 	}
 
-	private tryGetAdditionalUseRow(defensive: Action, timestamp: number = this.parser.pull.timestamp): ReactNode {
+	private getAdditionalUsageData(defensive: Action, timestamp: number = this.parser.pull.timestamp): {chargesBeforeNextUse: number, availableTimestamp: number, useByTimestamp: number} {
 		let availableTimestamp: number, currentCharges
 
 		if (timestamp === this.parser.pull.timestamp) {
@@ -148,10 +149,19 @@ export class Defensives extends Analyser {
 		const useByTimestamp = nextEntry != null ? (nextEntry.start - cooldown) : (this.parser.pull.timestamp + this.parser.pull.duration)
 
 		if (useByTimestamp <= availableTimestamp) {
+			return {chargesBeforeNextUse: 0, availableTimestamp, useByTimestamp}
+		}
+
+		return {chargesBeforeNextUse: currentCharges + Math.floor((useByTimestamp - availableTimestamp) / cooldown), availableTimestamp, useByTimestamp}
+	}
+
+	private tryGetAdditionalUseRow(defensive: Action, timestamp: number = this.parser.pull.timestamp): ReactNode {
+		const {chargesBeforeNextUse, availableTimestamp, useByTimestamp} = this.getAdditionalUsageData(defensive, timestamp)
+
+		if (chargesBeforeNextUse === 0) {
 			return <></>
 		}
 
-		const chargesBeforeNextUse = currentCharges + Math.floor((useByTimestamp - availableTimestamp) / cooldown)
 		return <Table.Row>
 			<Table.Cell>
 				<Trans id="core.defensives.table.extra-usage-row.text"><Plural value={chargesBeforeNextUse} one="1 extra use" other="# extra uses"/> available between <Button
