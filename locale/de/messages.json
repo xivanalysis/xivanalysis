@@ -513,7 +513,7 @@
   "gnb.nomercy.chart.notes.yes": "Ja",
   "gnb.nomercy.notes.header": "Blutpatronen verwendet",
   "gnb.nomercy.suggestions.expected-uses.content": "",
-  "gnb.nomercy.suggestions.gcds.content": "Versuch, 9 GCDs in jedem <0/>-Fenster zu landen. Eine Dauer von 20 Sekunden ist genug, um 9 GCDs mit voller Uptime unterzubringen, wenn du bis zum letzten Drittel von jedem GCD-Timer wartest.",
+  "gnb.nomercy.suggestions.gcds.content": "",
   "gnb.nomercy.title": "Ohne Gnade-Fenster",
   "gnb.tincture.suggestions.trackedActions.content": "Versuch, so viel Schaden wie möglich mit deinem Visionsremedium der Stärke abzudecken.",
   "mch.about.description": "",

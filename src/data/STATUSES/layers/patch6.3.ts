@@ -37,5 +37,14 @@ export const patch630: Layer<StatusRoot> = {
 			icon: 'https://xivapi.com/i/012000/012520.png',
 			duration: 30000,
 		},
+
+		// WAR 6.3 changes
+		SHAKE_IT_OFF: {duration: 30000},
+		SHAKE_IT_OFF_OVER_TIME: {
+			id: 2108,
+			name: 'Shake It Off (Over Time)',
+			icon: 'https://xivapi.com/i/012000/012567.png',
+			duration: 15000,
+		},
 	},
 }
