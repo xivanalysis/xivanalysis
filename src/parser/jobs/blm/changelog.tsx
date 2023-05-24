@@ -72,4 +72,9 @@ export const changelog = [
 		Changes: () => <>Fixed a bug with the Not Casting check that was giving incorrect results for fight downtime and end-of-fight casts.</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],
 	},
+	{
+		date: new Date('2023-05-24'),
+		Changes: () => <>Foul now requires 3 targets to outperform Xenoglossy due to 6.4 potency increase.</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
 ]
