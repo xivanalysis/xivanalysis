@@ -102,9 +102,14 @@ export class Kenki extends CoreGauge {
 	}
 
 	private eyeExam(event: Events['damage']) {
+		if (this.damageHook == null) { return }
 		const targetedSelf = event.targets.some(({target}) => target === this.parser.actor.id)
 		if (targetedSelf) {
 			this.kenkiGauge.modify(THIRD_EYE_GAIN)
+			// This handles an edge case with multi-hit attacks; the damage hooks will all get invoked
+			// before the Third Eye status gets removed, incorrectly giving Kenki for each hit rather
+			// than just the first one.  See https://github.com/xivanalysis/xivanalysis/issues/1750
+			this.removeEventHook(this.damageHook)
 		}
 	}
 
