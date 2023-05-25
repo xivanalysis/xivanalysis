@@ -65,7 +65,7 @@ export class MoonFlute extends BuffWindow {
 			expectedGcds: EXPECTED_GCD_COUNT, // 4 GCDs + Phantom Flurry _or_ 5 GCDs
 			globalCooldown: this.globalCooldown,
 			suggestionIcon,
-			suggestionContent: <Trans id="blue.moonflutes.suggestions.gcds.content">
+			suggestionContent: <Trans id="blu.moonflutes.suggestions.gcds.content">
 				Regardless of spell speed, ideally a <ActionLink action="MOON_FLUTE" /> window should contain at least
 					4 GCDs and end in <ActionLink action="PHANTOM_FLURRY" />.  If you have higher latency this can
 					be problematic; changing your speed speed might help, and in a pinch you can try moving certain
