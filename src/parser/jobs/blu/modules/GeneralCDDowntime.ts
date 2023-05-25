@@ -51,8 +51,4 @@ export class GeneralCDDowntime extends CooldownDowntime {
 			firstUseOffset: 50000, // up to 50 seconds into the pull, if people are staggering their buffs
 		},
 	]
-	override defensiveCooldowns = [
-		{cooldowns: [this.data.actions.ADDLE]},
-		{cooldowns: [this.data.actions.MAGIC_HAMMER]},
-	]
 }
