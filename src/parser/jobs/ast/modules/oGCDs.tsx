@@ -15,7 +15,6 @@ export class oGCDs extends CooldownDowntime {
 	override checklistTarget = 100
 
 	override trackedDisplayOrder = DISPLAY_ORDER.DIVINATION_CHECKLIST
-	override defensiveDisplayOrder = DISPLAY_ORDER.HEALING_OGCDS_CHECKLIST
 
 	private DPS_COOLDOWNS_TRACKED = [
 		//dps actions
@@ -25,22 +24,6 @@ export class oGCDs extends CooldownDowntime {
 				Consider using <DataLink action="DIVINATION" /> more frequently. <DataLink action="DIVINATION" /> provides an Astrologian with a strong amount of raid DPS.
 			</Trans>,
 			allowedAverageDowntime: 2500,
-		},
-	]
-
-	private HEALING_OGCDS = [
-		//healing ogcds
-		{
-			cooldowns: [this.data.actions.EXALTATION],
-		},
-		{
-			cooldowns: [this.data.actions.CELESTIAL_INTERSECTION],
-		},
-		{
-			cooldowns: [this.data.actions.CELESTIAL_OPPOSITION],
-		},
-		{
-			cooldowns: [this.data.actions.COLLECTIVE_UNCONSCIOUS],
 		},
 	]
 
