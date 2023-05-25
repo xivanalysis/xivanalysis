@@ -75,6 +75,7 @@ export class MoonFlute extends BuffWindow {
 			</Trans>,
 			suggestionWindowName,
 			severityTiers: SEVERITIES.TOO_FEW_GCDS,
+			hasStacks: false,
 		}))
 
 		const mfActionEvaluator = new MoonFluteExpectedActionsEvaluator({
