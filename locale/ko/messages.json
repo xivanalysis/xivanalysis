@@ -844,7 +844,7 @@
   "sch.weaving.content": "<0/>, <1/> 또는 <2/> 기술을 글쿨 사이에 끼워넣되, 재사용 시간을 초과하며 과도하게 끼워 넣지 마십시오. 다음 글쿨 기술의 사용이 지연됩니다. 하단 {0} 모듈에서 상세 분석을 확인하세요.",
   "sge.about.description": "\n이 분석기는 전투 중 어떤 일이 일어났는지 자세하게 분석하여 현자 게임플레이에 개선점이 있을지를 분석합니다.\n\n현자에 대해 더욱 자세하게 알고 싶다면 [The Balance](https://thebalanceffxiv.com/)의 가이드를 읽어보세요. #sge_questions 채널에서 질문하실 수도 있습니다.\n",
   "sge.actiontimeline.addersgall": "의술석",
-  "sge.cooldownDowntime.defense-cd-metric": "경감 및 치유 기술을 사용하면 파티 유지력에 도움이 되며, <0/> 대상을 회복할 수 있습니다. 효율을 극대화하기 위해 언제 사용하면 좋을지 낭비가 없게끔 계획을 세우십시오.",
+  "sge.cooldownDowntime.defense-cd-metric": "",
   "sge.cooldownDowntime.ogcd-cd-metric": "<0/> 기술은 <1/> 기술보다 강합니다. 사용 기회를 놓치지 마십시오.",
   "sge.dots.requirement.uptime.name": "<0/> 업타임",
   "sge.dots.rule.description": "<0/> 기술은 피해량 기여도에서 상당한 지분을 차지합니다. 상시 유지하도록 하십시오. 의술석 능력 또는 타 기술의 글쿨을 관리할 시간을 벌거나, 글쿨 손해 없이 이동할 때 사용할 수도 있습니다.",
