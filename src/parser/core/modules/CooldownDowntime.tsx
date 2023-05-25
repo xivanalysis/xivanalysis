@@ -102,7 +102,6 @@ export abstract class CooldownDowntime extends Analyser {
 	protected defaultFirstUseOffset = 0
 
 	protected trackedDisplayOrder = DisplayOrder.DEFAULT //to allow for more flexible ordering in the checklist
-	protected defensiveDisplayOrder = DisplayOrder.DEFAULT //to allow for more flexible ordering in the checklist (specific to other cooldowns)
 
 	/**
 	 * Jobs MAY filter out some usages as 'fake' usages of a cooldown.
@@ -188,22 +187,6 @@ export abstract class CooldownDowntime extends Analyser {
 			target: this.checklistTarget,
 			displayOrder: this.trackedDisplayOrder,
 		}))
-
-		// If the job has provided a list of defensive cooldowns, build that checklist display
-		if (this.defensiveCooldowns.length > 0) {
-			const defensiveRequirements = []
-			for (const cdGroup of this.defensiveCooldowns) {
-				defensiveRequirements.push(this.createRequirement(cdGroup))
-			}
-
-			this.checklist.add(new TieredRule({
-				name: this.defenseChecklistName,
-				description: this.defenseChecklistDescription,
-				requirements: defensiveRequirements,
-				tiers: this.defenseChecklistTiers,
-				displayOrder: this.defensiveDisplayOrder,
-			}))
-		}
 		this.addJobSuggestions()
 	}
 

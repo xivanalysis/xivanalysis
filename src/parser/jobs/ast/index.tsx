@@ -44,7 +44,8 @@ export const ASTROLOGIAN = new Meta({
 					<li> Removed <DataLink action="LIGHTSPEED" /> module and integrated it with <DataLink action="DIVINATION" /> </li>
 					<li> Added suggestion for <DataLink action="LIGHTSPEED" /> if not used with <DataLink action="DIVINATION" /> </li>
 					<li> Updated <DataLink action="DIVINATION" /> module to align with AST burst window recommendations. </li>
-					<li> Reorganized checklist items and added <DataLink action="COLLECTIVE_UNCONSCIOUS" /> to the healing oGCDs checklist. </li>
+					<li> Reorganized checklist items. </li>
+					<li> Added <DataLink action="COLLECTIVE_UNCONSCIOUS" /> to the healing oGCDs checklist. </li>
 				</ul>
 			</>,
 			contributors: [CONTRIBUTORS.OTOCEPHALY],
