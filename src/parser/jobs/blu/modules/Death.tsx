@@ -1,8 +1,12 @@
+import {Plural, Trans} from '@lingui/react'
+import {DataLink} from 'components/ui/DbLink'
 import {Event, Events} from 'event'
 import {filter, oneOf} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
+import {Actor} from 'parser/core/modules/Actors'
 import {Data} from 'parser/core/modules/Data'
-import {Death} from 'parser/core/modules/Death'
+import {ActorDeathInfo, Death} from 'parser/core/modules/Death'
+import React from 'react'
 
 // Deaths from Final Sting and Self-Destruct should not count for
 // the report.
@@ -24,7 +28,10 @@ export class BLUDeath extends Death {
 			])), this.onFinalSting)
 	}
 
-	private onFinalSting() {
+	private actorStings: Map<Actor['id'], number> = new Map<Actor['id'], number>()
+	private onFinalSting(event: Events['action']) {
+		const stingerId = event.source
+		this.actorStings.set(stingerId, (this.actorStings.get(stingerId) ?? 0) + 1)
 		this.isFinalSting = true
 	}
 
@@ -37,6 +44,25 @@ export class BLUDeath extends Death {
 			return false
 		}
 		return true
+	}
+
+	override deathSuggestionWhy(actorId: Actor['id'], playerInfo: ActorDeathInfo): JSX.Element {
+		const actorStings = this.actorStings.get(actorId) ?? 0
+		if (actorStings === 0) {
+			super.deathSuggestionWhy(actorId, playerInfo)
+		}
+
+		return <Trans id="blu.deaths.why">
+			<Plural id="blu.deaths.why.death_count"
+				value={playerInfo.count}
+				_1="# death"
+				other="# deaths"
+			/>.  That number does not include the <Plural id="blu.deaths.why.final_stings"
+				value={actorStings}
+				_1="# death"
+				other="# deaths"
+			/> from using <DataLink action="FINAL_STING"/>
+		</Trans>
 	}
 }
 
