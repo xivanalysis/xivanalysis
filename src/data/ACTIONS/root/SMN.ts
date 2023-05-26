@@ -181,7 +181,6 @@ export const SMN = ensureActions({
 		icon: 'https://xivapi.com/i/002000/002682.png',
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
-		castTime: 2800,
 	},
 
 	TOPAZ_RITE: {
@@ -198,7 +197,7 @@ export const SMN = ensureActions({
 		icon: 'https://xivapi.com/i/002000/002682.png',
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
-		castTime: 2800,
+		cooldown: 1500,
 	},
 
 	EMERALD_RITE: {
@@ -261,6 +260,15 @@ export const SMN = ensureActions({
 		statusesApplied: ['REKINDLE', 'UNDYING_FLAME'],
 	},
 
+	RUBY_OUTBURST: {
+		id: 25814,
+		name: 'Ruby Outburst',
+		icon: 'https://xivapi.com/i/002000/002698.png',
+		onGcd: true,
+		speedAttribute: Attribute.SPELL_SPEED,
+		castTime: 2800,
+	},
+
 	RUBY_CATASTROPHE: {
 		id: 25832,
 		name: 'Ruby Catastrophe',
@@ -270,12 +278,28 @@ export const SMN = ensureActions({
 		castTime: 2800,
 	},
 
+	TOPAZ_OUTBURST: {
+		id: 25815,
+		name: 'Topaz Outburst',
+		icon: 'https://xivapi.com/i/002000/002698.png',
+		onGcd: true,
+		speedAttribute: Attribute.SPELL_SPEED,
+	},
+
 	TOPAZ_CATASTROPHE: {
 		id: 25833,
 		name: 'Topaz Catastrophe',
 		icon: 'https://xivapi.com/i/002000/002767.png',
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
+	},
+
+	EMERALD_OUTBURST: {
+		id: 25816,
+		name: 'Emerald Outburst',
+		icon: 'https://xivapi.com/i/002000/002698.png',
+		onGcd: true,
+		cooldown: 1500,
 	},
 
 	EMERALD_CATASTROPHE: {
