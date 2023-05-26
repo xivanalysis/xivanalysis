@@ -8,7 +8,7 @@ import {dependency} from 'parser/core/Injectable'
 import {CounterGauge, Gauge as CoreGauge} from 'parser/core/modules/Gauge'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
-import { isSuccessfulHit } from 'utilities'
+import {isSuccessfulHit} from 'utilities'
 
 const OVERCAP_SEVERITY = {
 	HEAT: {
