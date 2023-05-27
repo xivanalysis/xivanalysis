@@ -11,6 +11,7 @@ import {Cooldowns} from 'parser/core/modules/Cooldowns'
 import {GlobalCooldown} from 'parser/core/modules/GlobalCooldown'
 import {SEVERITY} from 'parser/core/modules/Suggestions'
 import React from 'react'
+import {DISPLAY_ORDER} from './DISPLAY_ORDER'
 
 const SEVERITIES = {
 	MISSING_EXPECTED_USES: {
@@ -63,6 +64,7 @@ const neutralOrPositiveOutcome = (actual: number, expected?: number) => {
 export class MoonFlute extends BuffWindow {
 	static override handle = 'moonflutes'
 	static override title = t('blu.moonflutes.title')`Moon Flute Windows`
+	static override displayOrder = DISPLAY_ORDER.MOON_FLUTE
 
 	@dependency globalCooldown!: GlobalCooldown
 	@dependency private cooldowns!: Cooldowns
