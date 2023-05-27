@@ -77,4 +77,9 @@ export const changelog = [
 		Changes: () => <>Fix a bug where fights with unavoidable downtime could report Standard Step uptime as a negative percentage.</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],
 	},
+	{
+		date: new Date('2023-05-27'),
+		Changes: () => <>Adjust Devilment timing check to account for changed Technical Finish status application timing after 6.4.</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
 ]

@@ -79,9 +79,15 @@ export class Technicalities extends Analyser {
 			.filter(actor => actor.playerControlled)
 			.map(actor => actor.id)
 
+		// 6.4 changed the status application time from the players own finish to not always happen at the same time as the executing action
+		// Hook both the player's finish actions and status applications targeting the player
 		this.addEventHook(
 			techFinishFilter
 				.target(this.parser.actor.id),
+			this.tryOpenWindow)
+		this.addEventHook(
+			filter<Event>().type('action').action(oneOf(this.technicalFinishIds))
+				.source(this.parser.actor.id),
 			this.tryOpenWindow)
 
 		this.addEventHook(
@@ -112,7 +118,7 @@ export class Technicalities extends Analyser {
 		}
 	}
 
-	private tryOpenWindow(event: Events['statusApply']): TechnicalWindow {
+	private tryOpenWindow(event: Events['statusApply'] | Events['action']): TechnicalWindow {
 		const lastWindow: TechnicalWindow | undefined = _.last(this.history)
 
 		// Handle multiple dancer's buffs overwriting each other, we'll have a remove then an apply with the same timestamp
@@ -225,7 +231,9 @@ export class Technicalities extends Analyser {
 
 		lastWindow.usedDevilment = true
 
-		if (lastWindow.gcdCount === 0) {
+		// If the player hits devilment within a GCD of another DNC's Finish going up, or immediately following their own Technical Finish, it is considered to be on time
+		if (lastWindow.gcdCount <= 1 ||
+			this.technicalFinishIds.includes(lastWindow.rotation[lastWindow.rotation.length-1].action)) {
 			lastWindow.timelyDevilment = true
 		}
 	}
