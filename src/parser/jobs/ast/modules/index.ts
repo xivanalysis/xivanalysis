@@ -10,6 +10,7 @@ import {Divination} from './Divination'
 import Draw from './Draw'
 import {EarthlyStar} from './EarthlyStar'
 import {Helios} from './Helios'
+import {Lightspeed} from './Lightspeed'
 import {LucidDreaming} from './LucidDreaming'
 import {Macrocosmos} from './Macrocosmos'
 import {oGCDs} from './oGCDs'
@@ -33,6 +34,7 @@ export default [
 	oGCDs,
 	Helios,
 	Interrupts,
+	Lightspeed,
 	LucidDreaming,
 	Macrocosmos,
 	Overheal,
