@@ -1,4 +1,3 @@
-import {t} from '@lingui/macro'
 import {Event, Events} from 'event'
 import {Analyser} from 'parser/core/Analyser'
 import {filter} from 'parser/core/filter'
@@ -10,6 +9,8 @@ const LIGHTSPEED_REDUCTION = -2500
 
 // in this module we only want to track Lightspeed windows for castTime/weaving purposes
 export class Lightspeed extends Analyser {
+	static override handle = 'Lightspeed'
+
 	@dependency private data!: Data
 	@dependency private castTime!: CastTime
 
