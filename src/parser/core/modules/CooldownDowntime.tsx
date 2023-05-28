@@ -6,7 +6,7 @@ import {Event, Events} from 'event'
 import {dependency} from 'parser/core/Injectable'
 import {Requirement, Rule} from 'parser/core/modules/Checklist'
 import React from 'react'
-import {Analyser} from '../Analyser'
+import {Analyser, DisplayOrder} from '../Analyser'
 import {filter, oneOf} from '../filter'
 import Checklist from './Checklist'
 import {Data} from './Data'
@@ -101,6 +101,8 @@ export abstract class CooldownDowntime extends Analyser {
 	protected defaultAllowedAverageDowntime = DEFAULT_ALLOWED_AVERAGE_DOWNTIME
 	protected defaultFirstUseOffset = 0
 
+	protected trackedDisplayOrder = DisplayOrder.DEFAULT //to allow for more flexible ordering in the checklist
+
 	/**
 	 * Jobs MAY filter out some usages as 'fake' usages of a cooldown.
 	 *
@@ -183,8 +185,8 @@ export abstract class CooldownDowntime extends Analyser {
 			description: this.checklistDescription,
 			requirements: cdRequirements,
 			target: this.checklistTarget,
+			displayOrder: this.trackedDisplayOrder,
 		}))
-
 		this.addJobSuggestions()
 	}
 

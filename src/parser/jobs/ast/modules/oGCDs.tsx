@@ -2,6 +2,7 @@ import {Trans} from '@lingui/react'
 import {DataLink} from 'components/ui/DbLink'
 import {CooldownDowntime} from 'parser/core/modules/CooldownDowntime'
 import React from 'react'
+import DISPLAY_ORDER from './DISPLAY_ORDER'
 
 export class oGCDs extends CooldownDowntime {
 
@@ -12,6 +13,8 @@ export class oGCDs extends CooldownDowntime {
 	</Trans>
 	// eslint-disable-next-line @typescript-eslint/no-magic-numbers
 	override checklistTarget = 100
+
+	override trackedDisplayOrder = DISPLAY_ORDER.DIVINATION_CHECKLIST
 
 	private DPS_COOLDOWNS_TRACKED = [
 		//dps actions
