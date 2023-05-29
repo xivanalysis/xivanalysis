@@ -17,7 +17,7 @@ export const REAPER = new Meta({
 
 	supportedPatches: {
 		from: '6.0',
-		to: '6.3',
+		to: '6.4',
 	},
 
 	contributors: [
