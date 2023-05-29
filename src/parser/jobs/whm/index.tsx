@@ -21,7 +21,7 @@ export const WHITE_MAGE = new Meta({
 	</>,
 	supportedPatches: {
 		from: '6.0',
-		to: '6.3',
+		to: '6.4',
 	},
 	contributors: [
 		// {user: CONTRIBUTORS.YOU, role: ROLES.DEVELOPER},
@@ -32,7 +32,7 @@ export const WHITE_MAGE = new Meta({
 		// {
 		// 	date: new Date('2021-11-19'),
 		// 	Changes: () => <>The changes you made</>,
-		// 	contrubutors: [CONTRIBUTORS.YOU],
+		// 	contributors: [CONTRIBUTORS.YOU],
 		// },
 		{
 			date: new Date('2021-12-30'),
