@@ -1,5 +1,4 @@
 import CONTRIBUTORS from 'data/CONTRIBUTORS'
-import {contributors} from 'parser/core/modules/ChangeLog/ChangeLog.module.css'
 import React from 'react'
 
 export const changelog = [
