@@ -1,4 +1,5 @@
 import CONTRIBUTORS from 'data/CONTRIBUTORS'
+import {contributors} from 'parser/core/modules/ChangeLog/ChangeLog.module.css'
 import React from 'react'
 
 export const changelog = [
@@ -7,6 +8,11 @@ export const changelog = [
 	// 	Changes: () => <>The changes you made</>,
 	// 	contrubutors: [CONTRIBUTORS.YOU],
 	// },
+	{
+		date: new Date('2023-05-29'),
+		Changes: () => <> Adds Shoha to Aoe Checker module </>,
+		contributors: [CONTRIBUTORS.RYAN],
+	},
 	{
 		date: new Date('2022-10-11'),
 		Changes: () => <>Fixed Enpi incorrectly eating Meiyo Stacks when used</>,
