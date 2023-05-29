@@ -220,12 +220,9 @@ export class Technicalities extends Analyser {
 
 	/** Check to see if Devilment was used at the proper time. In Endwalker, it should immediately follow Technical Finish */
 	private handleDevilment(lastWindow: TechnicalWindow | undefined) {
-		if (!this.actors.current.hasStatus(this.data.statuses.TECHNICAL_FINISH.id)) {
-			this.badDevilments++
-		}
-
-		// If we don't have a window for some reason, bail
+		// If we're not currently in an active Technical Window, mark the Devilment use as bad
 		if (lastWindow == null || lastWindow.end) {
+			this.badDevilments++
 			return
 		}
 
