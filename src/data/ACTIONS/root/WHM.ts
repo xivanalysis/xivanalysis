@@ -133,7 +133,7 @@ export const WHM = ensureActions({
 		id: 3571,
 		name: 'Assize',
 		icon: 'https://xivapi.com/i/002000/002634.png',
-		cooldown: 45000,
+		cooldown: 40000,
 	},
 
 	ASYLUM: {
