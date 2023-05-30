@@ -29,7 +29,7 @@ export const ASTROLOGIAN = new Meta({
 	</>,
 	supportedPatches: {
 		from: '6.0',
-		to: '6.2',
+		to: '6.4',
 	},
 	contributors: [
 		{user: CONTRIBUTORS.SUSHIROU, role: ROLES.MAINTAINER},
@@ -45,7 +45,7 @@ export const ASTROLOGIAN = new Meta({
 					<li> Added suggestion for <DataLink action="LIGHTSPEED" /> if not used with <DataLink action="DIVINATION" /> </li>
 					<li> Updated <DataLink action="DIVINATION" /> module to align with AST burst window recommendations. </li>
 					<li> Reorganized checklist items. </li>
-					<li> Added <DataLink action="COLLECTIVE_UNCONSCIOUS" /> to the healing oGCDs checklist. </li>
+					<li> Added <DataLink action="COLLECTIVE_UNCONSCIOUS" />, <DataLink action="MACROCOSMOS" />, and <DataLink action="EARTHLY_STAR" /> to the defensives checklist. </li>
 				</ul>
 			</>,
 			contributors: [CONTRIBUTORS.OTOCEPHALY],
