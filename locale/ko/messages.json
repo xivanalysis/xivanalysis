@@ -245,7 +245,7 @@
   "core.defensives.title": "경감",
   "core.dummy.broken-log": "전투 기록에 나무인형이 하나 이상 포함되어 있습니다. 나무인형의 체력 동작은 xivanalysis에서 가정한 수치와 다르기에 결과가 일부 잘못되었을 수 있습니다.",
   "core.dummy.title": "나무인형",
-  "core.error.generic": "무언가 잘못되었습니다. 코드 깎는 노인들에게 알림이 갔습니다.",
+  "core.error.unknown": "",
   "core.gauge.title": "게이지",
   "core.gcd.estimate-help.fflogs": "정확한 속성 값은 ACT로 리포트를 기록하여 FF Logs에 업로드한 플레이어만 알 수 있습니다.",
   "core.gcd.estimated-gcd": "예상 글로벌 쿨타임 시간",

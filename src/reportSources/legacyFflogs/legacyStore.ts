@@ -5,7 +5,7 @@ import {action, observable, runInAction} from 'mobx'
 import {globalErrorStore} from 'store/globalError'
 import {settingsStore} from 'store/settings'
 import {ProcessedReportFightsResponse, ReportFightsQuery, ReportFightsResponse} from './eventTypes'
-import {createCacheHooks, fflogsApi, getCache} from './fflogsApi'
+import {fetchFflogs, getCache} from './fflogsApi'
 
 interface UnloadedReport {
 	loading: true
@@ -40,14 +40,15 @@ export class ReportStore {
 		let response: ReportFightsResponse
 		try {
 			const cache = await getCache(code)
-			response = await fflogsApi.get(`report/fights/${code}`, {
-				searchParams: {
+			response = await fetchFflogs<ReportFightsResponse>(
+				`report/fights/${code}`,
+				{
 					translate: 'true',
 					..._.omitBy(params, _.isNil),
-					...(bypassCache? {bypassCache: 'true'} : {}),
 				},
-				hooks: createCacheHooks(cache, bypassCache ? 'bypass' : 'read'),
-			}).json<ReportFightsResponse>()
+				cache,
+				bypassCache ? 'bypass' : 'read',
+			)
 		} catch (e) {
 			// Something's gone wrong, clear report status then dispatch an error
 			runInAction(() => {
@@ -55,15 +56,20 @@ export class ReportStore {
 			})
 
 			// TODO: Add more error handling to this if they start cropping up more
-			if (e instanceof ky.HTTPError) {
-				const json: ErrorResponse | undefined = await e.response.json()
+			if (e instanceof Errors.UnknownApiError && e.inner instanceof ky.HTTPError) {
+				const json: ErrorResponse | undefined = await e.inner.response.json().catch(_err => undefined)
 				if (json && json.error === 'This report does not exist or is private.') {
 					globalErrorStore.setGlobalError(new Errors.ReportNotFoundError())
 					return
 				}
 			}
 
-			globalErrorStore.setGlobalError(new Errors.UnknownApiError())
+			if (e instanceof Errors.GlobalError) {
+				globalErrorStore.setGlobalError(e)
+				return
+			}
+
+			globalErrorStore.setGlobalError(new Errors.UnknownApiError({inner: e}))
 			return
 		}
 

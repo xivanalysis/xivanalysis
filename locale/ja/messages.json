@@ -245,7 +245,7 @@
   "core.defensives.title": "",
   "core.dummy.broken-log": "レポートに一つかそれ以上のターゲットは木人らしいです。木人のHPはxivanalysisの仮定ルールと一致していませんので、計算は間違う可能性があります。",
   "core.dummy.title": "木人",
-  "core.error.generic": "おや、何か大変なことになりましたね。すでに開発者にアラートを送りましたのでご安心ください。",
+  "core.error.unknown": "",
   "core.gauge.title": "ゲージ",
   "core.gcd.estimate-help.fflogs": "",
   "core.gcd.estimated-gcd": "推定GCD",
