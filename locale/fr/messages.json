@@ -245,7 +245,7 @@
   "core.defensives.title": "Défensives",
   "core.dummy.broken-log": "Un ou plusieurs acteurs dans ce pull semblent être des mannequins d'entraînement. Le comportement de la jauge de vie des mannequins va à l'encontre d'un certain nombre d'hypothèses sur lesquelles repose xivanalysis, ce qui peut engendrer des résultats subtilement incorrects.",
   "core.dummy.title": "Mannequin d'entraînement",
-  "core.error.generic": "On dirait que quelque ne tourne pas rond. Notre équipe de développeurs hautement qualifiée en a été notifiée.",
+  "core.error.unknown": "",
   "core.gauge.title": "Jauge",
   "core.gcd.estimate-help.fflogs": "Les valeurs précises des attributs ne sont disponibles depuis FFLog que pour le joueur qui a enregistré le rapport de combat dans ACT.",
   "core.gcd.estimated-gcd": "Estimation du GCD",

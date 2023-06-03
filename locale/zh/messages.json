@@ -245,7 +245,7 @@
   "core.defensives.title": "防御性技能",
   "core.dummy.broken-log": "这场战斗中的一个或多个目标似乎是木人。木人血量槽的表现与xivanalysis做出的一些假设不符，这可能会导致错误的分析结果。",
   "core.dummy.title": "木人",
-  "core.error.generic": "好像出了点问题。程序猿已经接到报警。",
+  "core.error.unknown": "",
   "core.gauge.title": "职业量谱",
   "core.gcd.estimate-help.fflogs": "只有在 ACT 中记录报告的玩家才能从 FFlogs 中获得精确的属性值。",
   "core.gcd.estimated-gcd": "预估GCD复唱时间",

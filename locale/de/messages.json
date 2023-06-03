@@ -245,7 +245,7 @@
   "core.defensives.title": "",
   "core.dummy.broken-log": "",
   "core.dummy.title": "Trainingspuppe",
-  "core.error.generic": "Sieht aus, als ob etwas falsch gelaufen ist. Unser hoch motiviertes Team von Programmierern wurde benachrichtigt.",
+  "core.error.unknown": "",
   "core.gauge.title": "Balken",
   "core.gcd.estimate-help.fflogs": "",
   "core.gcd.estimated-gcd": "Geschätzte globale Abklingzeit",

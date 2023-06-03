@@ -20,7 +20,9 @@ const ErrorMessage = ({error}) => <Message
 	{...(ERROR_PROPS[error.severity || SEVERITY.ERROR])}
 	header={error.message || error.toString()}
 	content={<p>
-		{error.detail || <Trans id="core.error.generic">Looks like something has gone wrong. The code monkies have been notified.</Trans>}
+		{error.detail || (
+			<Trans id="core.error.unknown">xivanalysis encountered an unknown error. If this issue persists, let us know on Discord.</Trans>
+		)}
 	</p>}
 />
 
