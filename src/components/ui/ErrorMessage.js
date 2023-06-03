@@ -23,6 +23,7 @@ const ErrorMessage = ({error}) => <Message
 		{error.detail || (
 			<Trans id="core.error.unknown">xivanalysis encountered an unknown error. If this issue persists, let us know on Discord.</Trans>
 		)}
+		{error.inner && <pre>{error.inner.toString()}</pre>}
 	</p>}
 />
 
@@ -31,6 +32,7 @@ ErrorMessage.propTypes = {
 		severity: PropTypes.oneOf(Object.values(SEVERITY)),
 		message: PropTypes.string,
 		detail: PropTypes.string,
+		inner: PropTypes.instanceOf(Error),
 	}).isRequired,
 }
 

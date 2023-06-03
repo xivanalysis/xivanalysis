@@ -71,6 +71,12 @@ export class DidNotParticipateError extends GlobalError {
 export class UnknownApiError extends GlobalError {
 	message = 'API Error.'
 	detail = 'An error occured while requesting data from FFLogs. If this issue persists, let us know on Discord.'
+	constructor(options) {
+		super(options)
+
+		/** @type {Error | undefined} */
+		this.inner = options.inner
+	}
 }
 
 export class ModulesNotFoundError extends GlobalError {

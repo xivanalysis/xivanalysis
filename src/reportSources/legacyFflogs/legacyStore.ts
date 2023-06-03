@@ -63,7 +63,7 @@ export class ReportStore {
 				}
 			}
 
-			globalErrorStore.setGlobalError(new Errors.UnknownApiError())
+			globalErrorStore.setGlobalError(new Errors.UnknownApiError({inner: e}))
 			return
 		}
 
