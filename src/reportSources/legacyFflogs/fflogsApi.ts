@@ -7,6 +7,7 @@ import {Report} from './legacyStore'
 type CacheBehavior = 'read' | 'bypass'
 
 const FROM_CACHE_HEADER = '__from-cache'
+const HTTP_TOO_MANY_REQUESTS = 429
 
 const options: Options = {
 	prefixUrl: process.env.REACT_APP_FFLOGS_V1_BASE_URL,
@@ -90,6 +91,10 @@ export async function fetchFflogs<T>(
 			hooks: createCacheHooks(cache, behavior),
 		}).json<T>()
 	} catch (error) {
+		if (error instanceof ky.HTTPError && error.response.status === HTTP_TOO_MANY_REQUESTS) {
+			throw new Errors.TooManyRequestsError()
+		}
+
 		throw new Errors.UnknownApiError({inner: error})
 	}
 }
