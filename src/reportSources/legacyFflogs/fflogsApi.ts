@@ -23,17 +23,28 @@ if (process.env.REACT_APP_FFLOGS_V1_API_KEY) {
 // Core API via ky
 export const fflogsApi = ky.create(options)
 
-export function createCacheHooks(cache: Cache, behavior: CacheBehavior): Hooks {
+export function createCacheHooks(cache: Cache | undefined, behavior: CacheBehavior): Hooks {
+	if (cache == null) { return {} }
+
 	return {
 		// If bypassing the cache, disable beforeRequest to prevent reading from it
 		// - we still want to cache responses.
 		beforeRequest: behavior === 'bypass' ? [] : [
 			async request => {
-				// Before sending a request, try to fetch it from the cache.
-				const cachedResponse = await cache.match(request)
-				// If we got a cached response, mark it so we don't try to re-cache it later.
-				cachedResponse?.headers.append(FROM_CACHE_HEADER, 'true')
-				return cachedResponse
+				try {
+					// Before sending a request, try to fetch it from the cache.
+					const cachedResponse = await cache.match(request)
+					// If we got a cached response, mark it so we don't try to re-cache it later.
+					cachedResponse?.headers.append(FROM_CACHE_HEADER, 'true')
+					return cachedResponse
+				} catch (error) {
+					// Catch errors when dealing with the cache, and report them -
+					// a failure here should not halt the program, it's just a cache.
+					Sentry.withScope(scope => {
+						scope.setExtras({request})
+						Sentry.captureException(error)
+					})
+				}
 			},
 		],
 
@@ -67,7 +78,7 @@ export function createCacheHooks(cache: Cache, behavior: CacheBehavior): Hooks {
 function fetchEvents(
 	code: string,
 	searchParams: Record<string, string | number | boolean>,
-	cache: Cache,
+	cache: Cache | undefined,
 	behavior: CacheBehavior,
 ) {
 	return fflogsApi.get(
@@ -85,7 +96,7 @@ function fetchEvents(
 async function requestEvents(
 	code: string,
 	query: ReportEventsQuery,
-	cache: Cache
+	cache: Cache | undefined
 ) {
 	const searchParams = query as Record<string, string | number | boolean>
 	let response = await fetchEvents(
@@ -125,8 +136,14 @@ export async function getFflogsEvents(
 ) {
 	const {code} = report
 
-	// Grab the cache storage we'll be using for requests
-	const cache = await getCache(report.code)
+	// Grab the cache storage we'll be using for requests.
+	let cache: Cache | undefined
+	try {
+		cache = await getCache(report.code)
+	} catch (error) {
+		Sentry.captureException(error)
+		cache = undefined
+	}
 
 	// Base parameters
 	const searchParams: ReportEventsQuery = {
@@ -150,7 +167,7 @@ export async function getFflogsEvents(
 	return events
 }
 
-export async function getCache(code: Report['code']) {
+export async function getCache(code: Report['code']): Promise<Cache | undefined> {
 	// This is currently bucketing an entire report at a time. Keep an eye on behavior,
 	// it's relatively easy to tweak this key to increase/decrease bucket size.
 	// NOTE: Decreasing size of bucket will require splitting reports into their
@@ -159,8 +176,8 @@ export async function getCache(code: Report['code']) {
 
 	// Grab all the current cache names, as well as the cache we actually want
 	const [keys, cache] = await Promise.all([
-		caches.keys(),
-		caches.open(key),
+		window.caches.keys(),
+		window.caches.open(key),
 	])
 
 	// Delete any caches that aren't the one we requested.
@@ -169,7 +186,7 @@ export async function getCache(code: Report['code']) {
 			continue
 		}
 
-		caches.delete(cacheKey)
+		window.caches.delete(cacheKey)
 	}
 
 	return cache
