@@ -1,5 +1,5 @@
 import * as Sentry from '@sentry/browser'
-import {ReportProcessingError} from 'errors'
+import * as Errors from 'errors'
 import ky, {Options, Hooks} from 'ky'
 import {Fight,  ReportEventsQuery, ReportEventsResponse} from './eventTypes'
 import {Report} from './legacyStore'
@@ -23,7 +23,7 @@ if (process.env.REACT_APP_FFLOGS_V1_API_KEY) {
 // Core API via ky
 export const fflogsApi = ky.create(options)
 
-export function createCacheHooks(cache: Cache | undefined, behavior: CacheBehavior): Hooks {
+function createCacheHooks(cache: Cache | undefined, behavior: CacheBehavior): Hooks {
 	if (cache == null) { return {} }
 
 	return {
@@ -75,22 +75,32 @@ export function createCacheHooks(cache: Cache | undefined, behavior: CacheBehavi
 	}
 }
 
+export async function fetchFflogs<T>(
+	url: string,
+	searchParameters: Record<string, string | number | boolean>,
+	cache: Cache | undefined,
+	behavior: CacheBehavior
+) {
+	try {
+		return await fflogsApi.get(url, {
+			searchParams: {
+				...(behavior === 'bypass' ? {bypassCache: 'true'} : {}),
+				...searchParameters,
+			},
+			hooks: createCacheHooks(cache, behavior),
+		}).json<T>()
+	} catch (error) {
+		throw new Errors.UnknownApiError({inner: error})
+	}
+}
+
 function fetchEvents(
 	code: string,
 	searchParams: Record<string, string | number | boolean>,
 	cache: Cache | undefined,
 	behavior: CacheBehavior,
 ) {
-	return fflogsApi.get(
-		`report/events/${code}`,
-		{
-			searchParams: {
-				...searchParams,
-				...(behavior === 'bypass' ? {bypassCache: 'true'} : {}),
-			},
-			hooks: createCacheHooks(cache, behavior),
-		},
-	).json<ReportEventsResponse>()
+	return fetchFflogs<ReportEventsResponse>(`report/events/${code}`, searchParams, cache, behavior)
 }
 
 async function requestEvents(
@@ -118,7 +128,7 @@ async function requestEvents(
 
 	// If it's _still_ blank, bail and get them to retry
 	if (response === '') {
-		throw new ReportProcessingError()
+		throw new Errors.ReportProcessingError()
 	}
 
 	// If it's a string at this point, there's an upstream failure.
