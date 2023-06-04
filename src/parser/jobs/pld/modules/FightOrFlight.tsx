@@ -60,7 +60,7 @@ export class FightOrFlight extends BuffWindow {
 			severityTiers: SEVERITIES.MISSED_GCDS,
 		}))
 
-		const expectedActionsEvaluatorCreator = this.addExpectedActionsEvaluatorByPatch(this.parser.patch)
+		const expectedActionsEvaluatorCreator = this.selectExpectedActionsEvaluatorCreator(this.parser.patch)
 		this.addEvaluator(expectedActionsEvaluatorCreator(this.data, suggestionWindowName))
 
 		this.addEvaluator(new ExpectedActionsEvaluator({
@@ -80,14 +80,35 @@ export class FightOrFlight extends BuffWindow {
 		}))
 	}
 
-	private addExpectedActionsEvaluatorByPatch(patch: Patch) : (data: Data, suggestionWindowName: JSX.Element) => WindowEvaluator {
+	/**
+	 * Selects the Expected Actions Evaluator Creator depending on the patch.
+	 *
+	 * Patch 6.4 made it so that Atonement no longer breaks combos. Thus we can
+	 * improve the FoF window by always using higher potency actions.
+	 *
+	 * @param patch of the report to be analyzed
+	 * @returns Method to create the expected actions evaluator
+	 */
+	private selectExpectedActionsEvaluatorCreator(patch: Patch) : (data: Data, suggestionWindowName: JSX.Element) => WindowEvaluator {
 		if (patch.before('6.4')) {
-			return this.addExpectedActionsBefore6_4
+			return this.createExpectedActionsEvaluatorBefore6_4
 		}
-		return this.addExpectedActionsAfter6_4
+		return this.createExpectedActionsEvaluatorAfter6_4
 	}
 
-	private addExpectedActionsBefore6_4(data: Data, suggestionWindowName: JSX.Element) {
+	/**
+	 * Creates the expected actions evaluator for 6.3 and before.
+	 *
+	 * Due to atonement breaking combo we only try to get at least one holy spirit
+	 * in our combo. But the two other actions may, depending on the part of the rotation
+	 * we're currently in, be a Fast Blade and Riot Blade and thus consist of low potency
+	 * skills.
+	 *
+	 * @param data of all actions
+	 * @param suggestionWindowName to use
+	 * @returns ExpectedActionEvaluator for 6.3 and before
+	 */
+	private createExpectedActionsEvaluatorBefore6_4(data: Data, suggestionWindowName: JSX.Element): WindowEvaluator {
 		return new ExpectedActionsEvaluator({
 			expectedActions: [
 				{action: data.actions.GORING_BLADE, expectedPerWindow: 1},
@@ -109,7 +130,17 @@ export class FightOrFlight extends BuffWindow {
 		})
 	}
 
-	private addExpectedActionsAfter6_4(data: Data, suggestionWindowName: JSX.Element) {
+	/**
+	 * Creates the expected actions evaluator for 6.4 onwards.
+	 *
+	 * Due to atonement no longer breaking combo we can have 3 higher potency actions
+	 * in our fight or flight window.
+	 *
+	 * @param data of all actions
+	 * @param suggestionWindowName to use
+	 * @returns ExpectedActionEvaluator for 6.4 onwards
+	 */
+	private createExpectedActionsEvaluatorAfter6_4(data: Data, suggestionWindowName: JSX.Element): WindowEvaluator {
 		return new ExpectedActionGroupsEvaluator({
 			expectedActionGroups: [
 				{actions: [data.actions.GORING_BLADE], expectedPerWindow: 1},
