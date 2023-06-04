@@ -4,7 +4,8 @@ import {DataLink} from 'components/ui/DbLink'
 import {ActionKey} from 'data/ACTIONS'
 import {Patch} from 'data/PATCHES'
 import {dependency} from 'parser/core/Injectable'
-import {BuffWindow, ExpectedActionsEvaluator, ExpectedActionGroupsEvaluator, ExpectedGcdCountEvaluator} from 'parser/core/modules/ActionWindow'
+import {BuffWindow, ExpectedActionsEvaluator, ExpectedActionGroupsEvaluator, ExpectedGcdCountEvaluator, WindowEvaluator} from 'parser/core/modules/ActionWindow'
+import {Data} from 'parser/core/modules/Data'
 import {GlobalCooldown} from 'parser/core/modules/GlobalCooldown'
 import {SEVERITY} from 'parser/core/modules/Suggestions'
 import React from 'react'
@@ -59,7 +60,8 @@ export class FightOrFlight extends BuffWindow {
 			severityTiers: SEVERITIES.MISSED_GCDS,
 		}))
 
-		this.addExpectedActionsEvaluatorByPatch(this.parser.patch, suggestionWindowName)
+		const expectedActionsEvaluatorCreator = this.addExpectedActionsEvaluatorByPatch(this.parser.patch)
+		this.addEvaluator(expectedActionsEvaluatorCreator(this.data, suggestionWindowName))
 
 		this.addEvaluator(new ExpectedActionsEvaluator({
 			expectedActions: [
@@ -78,25 +80,24 @@ export class FightOrFlight extends BuffWindow {
 		}))
 	}
 
-	private addExpectedActionsEvaluatorByPatch(patch: Patch, suggestionWindowName: JSX.Element) {
+	private addExpectedActionsEvaluatorByPatch(patch: Patch) : (data: Data, suggestionWindowName: JSX.Element) => WindowEvaluator {
 		if (patch.before('6.4')) {
-			this.addExpectedActionsBefore6_4(suggestionWindowName)
-		} else {
-			this.addExpectedActionsAfter6_4(suggestionWindowName)
+			return this.addExpectedActionsBefore6_4
 		}
+		return this.addExpectedActionsAfter6_4
 	}
 
-	private addExpectedActionsBefore6_4(suggestionWindowName: JSX.Element) {
-		this.addEvaluator(new ExpectedActionsEvaluator({
+	private addExpectedActionsBefore6_4(data: Data, suggestionWindowName: JSX.Element) {
+		return new ExpectedActionsEvaluator({
 			expectedActions: [
-				{action: this.data.actions.GORING_BLADE, expectedPerWindow: 1},
-				{action: this.data.actions.CONFITEOR, expectedPerWindow: 1},
-				{action: this.data.actions.BLADE_OF_FAITH, expectedPerWindow: 1},
-				{action: this.data.actions.BLADE_OF_TRUTH, expectedPerWindow: 1},
-				{action: this.data.actions.BLADE_OF_VALOR, expectedPerWindow: 1},
-				{action: this.data.actions.HOLY_SPIRIT, expectedPerWindow: 1},
+				{action: data.actions.GORING_BLADE, expectedPerWindow: 1},
+				{action: data.actions.CONFITEOR, expectedPerWindow: 1},
+				{action: data.actions.BLADE_OF_FAITH, expectedPerWindow: 1},
+				{action: data.actions.BLADE_OF_TRUTH, expectedPerWindow: 1},
+				{action: data.actions.BLADE_OF_VALOR, expectedPerWindow: 1},
+				{action: data.actions.HOLY_SPIRIT, expectedPerWindow: 1},
 			],
-			suggestionIcon: this.data.actions.FIGHT_OR_FLIGHT.icon,
+			suggestionIcon: data.actions.FIGHT_OR_FLIGHT.icon,
 			suggestionContent: <Trans id="pld.fightorflight.suggestions.gcd_actions.6.3.content">
 				Try to land at least one cast of <DataLink action="GORING_BLADE" />
 				, <DataLink action="CONFITEOR" />, <DataLink action="BLADE_OF_FAITH" />, <DataLink action="BLADE_OF_TRUTH" />
@@ -105,20 +106,20 @@ export class FightOrFlight extends BuffWindow {
 			</Trans>,
 			suggestionWindowName,
 			severityTiers: SEVERITIES.MISSED_ACTIONS,
-		}))
+		})
 	}
 
-	private addExpectedActionsAfter6_4(suggestionWindowName: JSX.Element) {
-		this.addEvaluator(new ExpectedActionGroupsEvaluator({
+	private addExpectedActionsAfter6_4(data: Data, suggestionWindowName: JSX.Element) {
+		return new ExpectedActionGroupsEvaluator({
 			expectedActionGroups: [
-				{actions: [this.data.actions.GORING_BLADE], expectedPerWindow: 1},
-				{actions: [this.data.actions.CONFITEOR], expectedPerWindow: 1},
-				{actions: [this.data.actions.BLADE_OF_FAITH], expectedPerWindow: 1},
-				{actions: [this.data.actions.BLADE_OF_TRUTH], expectedPerWindow: 1},
-				{actions: [this.data.actions.BLADE_OF_VALOR], expectedPerWindow: 1},
-				{actions: [this.data.actions.HOLY_SPIRIT, this.data.actions.ATONEMENT, this.data.actions.ROYAL_AUTHORITY], expectedPerWindow: 3},
+				{actions: [data.actions.GORING_BLADE], expectedPerWindow: 1},
+				{actions: [data.actions.CONFITEOR], expectedPerWindow: 1},
+				{actions: [data.actions.BLADE_OF_FAITH], expectedPerWindow: 1},
+				{actions: [data.actions.BLADE_OF_TRUTH], expectedPerWindow: 1},
+				{actions: [data.actions.BLADE_OF_VALOR], expectedPerWindow: 1},
+				{actions: [data.actions.HOLY_SPIRIT, data.actions.ATONEMENT, data.actions.ROYAL_AUTHORITY], expectedPerWindow: 3},
 			],
-			suggestionIcon: this.data.actions.FIGHT_OR_FLIGHT.icon,
+			suggestionIcon: data.actions.FIGHT_OR_FLIGHT.icon,
 			suggestionContent: <Trans id="pld.fightorflight.suggestions.gcd_actions.content">
 				Try to land at least one cast of <DataLink action="GORING_BLADE" />
 				, <DataLink action="CONFITEOR" />, <DataLink action="BLADE_OF_FAITH" />, <DataLink action="BLADE_OF_TRUTH" />
@@ -127,6 +128,6 @@ export class FightOrFlight extends BuffWindow {
 			</Trans>,
 			suggestionWindowName,
 			severityTiers: SEVERITIES.MISSED_ACTIONS,
-		}))
+		})
 	}
 }
