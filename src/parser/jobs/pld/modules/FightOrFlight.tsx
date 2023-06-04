@@ -2,6 +2,7 @@ import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
 import {DataLink} from 'components/ui/DbLink'
 import {ActionKey} from 'data/ACTIONS'
+import {Patch} from 'data/PATCHES'
 import {dependency} from 'parser/core/Injectable'
 import {BuffWindow, ExpectedActionsEvaluator, ExpectedActionGroupsEvaluator, ExpectedGcdCountEvaluator} from 'parser/core/modules/ActionWindow'
 import {GlobalCooldown} from 'parser/core/modules/GlobalCooldown'
@@ -58,6 +59,56 @@ export class FightOrFlight extends BuffWindow {
 			severityTiers: SEVERITIES.MISSED_GCDS,
 		}))
 
+		this.addExpectedActionsEvaluatorByPatch(this.parser.patch, suggestionWindowName)
+
+		this.addEvaluator(new ExpectedActionsEvaluator({
+			expectedActions: [
+				{action: this.data.actions.EXPIACION, expectedPerWindow: 1},
+				{action: this.data.actions.CIRCLE_OF_SCORN, expectedPerWindow: 1},
+				{action: this.data.actions.INTERVENE, expectedPerWindow: 1},
+			],
+			suggestionIcon: this.data.actions.FIGHT_OR_FLIGHT.icon,
+			suggestionContent: <Trans id="pld.fightorflight.suggestions.ogcds.content">
+				Try to land at least one cast of each of your off-GCD skills (<DataLink action="EXPIACION" />,
+				<DataLink action="CIRCLE_OF_SCORN" />, and <DataLink action="INTERVENE" />)
+				during every <DataLink action="FIGHT_OR_FLIGHT" /> window.
+			</Trans>,
+			suggestionWindowName,
+			severityTiers: SEVERITIES.MISSED_OGCDS,
+		}))
+	}
+
+	private addExpectedActionsEvaluatorByPatch(patch: Patch, suggestionWindowName: JSX.Element) {
+		if (patch.before('6.4')) {
+			this.addExpectedActionsBefore6_4(suggestionWindowName)
+		} else {
+			this.addExpectedActionsAfter6_4(suggestionWindowName)
+		}
+	}
+
+	private addExpectedActionsBefore6_4(suggestionWindowName: JSX.Element) {
+		this.addEvaluator(new ExpectedActionsEvaluator({
+			expectedActions: [
+				{action: this.data.actions.GORING_BLADE, expectedPerWindow: 1},
+				{action: this.data.actions.CONFITEOR, expectedPerWindow: 1},
+				{action: this.data.actions.BLADE_OF_FAITH, expectedPerWindow: 1},
+				{action: this.data.actions.BLADE_OF_TRUTH, expectedPerWindow: 1},
+				{action: this.data.actions.BLADE_OF_VALOR, expectedPerWindow: 1},
+				{action: this.data.actions.HOLY_SPIRIT, expectedPerWindow: 1},
+			],
+			suggestionIcon: this.data.actions.FIGHT_OR_FLIGHT.icon,
+			suggestionContent: <Trans id="pld.fightorflight.suggestions.gcd_actions.6.3.content">
+				Try to land at least one cast of <DataLink action="GORING_BLADE" />
+				, <DataLink action="CONFITEOR" />, <DataLink action="BLADE_OF_FAITH" />, <DataLink action="BLADE_OF_TRUTH" />
+				, <DataLink action="BLADE_OF_VALOR" />, and a <DataLink status="DIVINE_MIGHT" /> empowered <DataLink action="HOLY_SPIRIT" />
+				during every <DataLink action="FIGHT_OR_FLIGHT" /> window.
+			</Trans>,
+			suggestionWindowName,
+			severityTiers: SEVERITIES.MISSED_ACTIONS,
+		}))
+	}
+
+	private addExpectedActionsAfter6_4(suggestionWindowName: JSX.Element) {
 		this.addEvaluator(new ExpectedActionGroupsEvaluator({
 			expectedActionGroups: [
 				{actions: [this.data.actions.GORING_BLADE], expectedPerWindow: 1},
@@ -76,22 +127,6 @@ export class FightOrFlight extends BuffWindow {
 			</Trans>,
 			suggestionWindowName,
 			severityTiers: SEVERITIES.MISSED_ACTIONS,
-		}))
-
-		this.addEvaluator(new ExpectedActionsEvaluator({
-			expectedActions: [
-				{action: this.data.actions.EXPIACION, expectedPerWindow: 1},
-				{action: this.data.actions.CIRCLE_OF_SCORN, expectedPerWindow: 1},
-				{action: this.data.actions.INTERVENE, expectedPerWindow: 1},
-			],
-			suggestionIcon: this.data.actions.FIGHT_OR_FLIGHT.icon,
-			suggestionContent: <Trans id="pld.fightorflight.suggestions.ogcds.content">
-				Try to land at least one cast of each of your off-GCD skills (<DataLink action="EXPIACION" />,
-				<DataLink action="CIRCLE_OF_SCORN" />, and <DataLink action="INTERVENE" />)
-				during every <DataLink action="FIGHT_OR_FLIGHT" /> window.
-			</Trans>,
-			suggestionWindowName,
-			severityTiers: SEVERITIES.MISSED_OGCDS,
 		}))
 	}
 }

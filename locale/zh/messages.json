@@ -646,6 +646,7 @@
   "pld.divine-might.checklist.description": "使用<0/>和<1/>会产生一层强化<3/>或者<4/>的<2/>。<2/>会强化威力并使得<5/>和<6/>可以无读条释放。",
   "pld.divine-might.checklist.name": "消耗王权剑带来的Divine Might层数",
   "pld.divine-might.checklist.requirement.name": "使用了全部可用次数中的<0/>次",
+  "pld.fightorflight.suggestions.gcd_actions.6.3.content": "尝试在每个<7/>期间打出至少一个<0/>、<1/>、<2/>、<3/>、<4/>和带<5/>强化的<6/>。",
   "pld.fightorflight.suggestions.gcd_actions.content": "",
   "pld.fightorflight.suggestions.gcds.content": "尝试在每个<0/>的持续时间内插入8个GCD技能。",
   "pld.fightorflight.suggestions.ogcds.content": "尝试在每个<3/>持续期间打出至少一个攻击能力技（<0/>、<1/>和<2/>）。",

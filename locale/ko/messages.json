@@ -646,6 +646,7 @@
   "pld.divine-might.checklist.description": "<0/> 및 <1/> 기술을 사용하면 <2/> to <3/> 또는 <4/> 기술을 강화할 수 있는 <2/> 스택이 한 개 생성됩니다. 이 스택이 있으면 피해량이 증가하며 <5/> 및 <6/> 기술의 시전 시간이 없어집니다.",
   "pld.divine-might.checklist.name": "제왕의 권위로 생성되는 충의의 검 스택을 사용",
   "pld.divine-might.checklist.requirement.name": "총 사용 횟수 중 <0/> 사용",
+  "pld.fightorflight.suggestions.gcd_actions.6.3.content": "매 <7/> 구간마다 <0/>, <1/>, <2/>, <3/>, <4/> 및 <5/> 버프로 강화된 <6/> 기술을 1회씩 사용하십시오.",
   "pld.fightorflight.suggestions.gcd_actions.content": "",
   "pld.fightorflight.suggestions.gcds.content": "매 <0/> 구간마다 글쿨 기술을 8회 사용하십시오.",
   "pld.fightorflight.suggestions.ogcds.content": "매 <3/> 구간마다 논글쿨 기술(<0/>, <1/> 및 <2/>)을 최소 1회 사용하십시오.",
