@@ -646,7 +646,7 @@
   "pld.divine-might.checklist.description": "<0/> et <1/> génèrent 1 pile de <2/> pour renforcer <3/> ou <4/>. Cela augmente les dégâts et supprime le temps d'incantation de <5/> et <6/>.",
   "pld.divine-might.checklist.name": "Utiliser la grâce divine générée par l'Autorité royale",
   "pld.divine-might.checklist.requirement.name": "Utilisations de <0/> parmi les utilisations possibles",
-  "pld.fightorflight.suggestions.gcd_actions.content": "Essayez d'obtenir au moins un lancer de <0/>, <1/>, <2/>, <3/>, <4/>, et un lancer de <5/> avec pouvoir <6/> pendant chaque fenêtre de <7/>.",
+  "pld.fightorflight.suggestions.gcd_actions.content": "",
   "pld.fightorflight.suggestions.gcds.content": "Essayez d'utiliser 8 GCDs chaque fenêtre de <0/>.",
   "pld.fightorflight.suggestions.ogcds.content": "Essayez de lancer au moins une fois chacune de vos compétences off-GCD (<0/>, <1/> et <2/>) pendant chaque fenêtre <3/>.",
   "pld.fightorflight.title": "Utilisation de combat acharné",

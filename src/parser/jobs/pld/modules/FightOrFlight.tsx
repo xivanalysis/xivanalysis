@@ -3,7 +3,7 @@ import {Trans} from '@lingui/react'
 import {DataLink} from 'components/ui/DbLink'
 import {ActionKey} from 'data/ACTIONS'
 import {dependency} from 'parser/core/Injectable'
-import {BuffWindow, ExpectedActionsEvaluator, ExpectedGcdCountEvaluator} from 'parser/core/modules/ActionWindow'
+import {BuffWindow, ExpectedActionsEvaluator, ExpectedActionGroupsEvaluator, ExpectedGcdCountEvaluator} from 'parser/core/modules/ActionWindow'
 import {GlobalCooldown} from 'parser/core/modules/GlobalCooldown'
 import {SEVERITY} from 'parser/core/modules/Suggestions'
 import React from 'react'
@@ -58,21 +58,21 @@ export class FightOrFlight extends BuffWindow {
 			severityTiers: SEVERITIES.MISSED_GCDS,
 		}))
 
-		this.addEvaluator(new ExpectedActionsEvaluator({
-			expectedActions: [
-				{action: this.data.actions.GORING_BLADE, expectedPerWindow: 1},
-				{action: this.data.actions.CONFITEOR, expectedPerWindow: 1},
-				{action: this.data.actions.BLADE_OF_FAITH, expectedPerWindow: 1},
-				{action: this.data.actions.BLADE_OF_TRUTH, expectedPerWindow: 1},
-				{action: this.data.actions.BLADE_OF_VALOR, expectedPerWindow: 1},
-				{action: this.data.actions.HOLY_SPIRIT, expectedPerWindow: 1},
+		this.addEvaluator(new ExpectedActionGroupsEvaluator({
+			expectedActionGroups: [
+				{actions: [this.data.actions.GORING_BLADE], expectedPerWindow: 1},
+				{actions: [this.data.actions.CONFITEOR], expectedPerWindow: 1},
+				{actions: [this.data.actions.BLADE_OF_FAITH], expectedPerWindow: 1},
+				{actions: [this.data.actions.BLADE_OF_TRUTH], expectedPerWindow: 1},
+				{actions: [this.data.actions.BLADE_OF_VALOR], expectedPerWindow: 1},
+				{actions: [this.data.actions.HOLY_SPIRIT, this.data.actions.ATONEMENT, this.data.actions.ROYAL_AUTHORITY], expectedPerWindow: 3},
 			],
 			suggestionIcon: this.data.actions.FIGHT_OR_FLIGHT.icon,
 			suggestionContent: <Trans id="pld.fightorflight.suggestions.gcd_actions.content">
 				Try to land at least one cast of <DataLink action="GORING_BLADE" />
 				, <DataLink action="CONFITEOR" />, <DataLink action="BLADE_OF_FAITH" />, <DataLink action="BLADE_OF_TRUTH" />
-				, <DataLink action="BLADE_OF_VALOR" />, and a <DataLink status="DIVINE_MIGHT" /> empowered <DataLink action="HOLY_SPIRIT" />
-				during every <DataLink action="FIGHT_OR_FLIGHT" /> window.
+				, <DataLink action="BLADE_OF_VALOR" />, and three casts of either <DataLink status="DIVINE_MIGHT" /> empowered <DataLink action="HOLY_SPIRIT" />
+				, <DataLink action="ATONEMENT" />, or <DataLink action="ROYAL_AUTHORITY" /> during every <DataLink action="FIGHT_OR_FLIGHT" /> window.
 			</Trans>,
 			suggestionWindowName,
 			severityTiers: SEVERITIES.MISSED_ACTIONS,
