@@ -18,8 +18,8 @@ export const PALADIN = new Meta({
 		</Trans>
 	</>,
 	supportedPatches: {
-		from: '6.3',
-		to: '6.3',
+		from: '6.4',
+		to: '6.4',
 	},
 	contributors: [
 		{user: CONTRIBUTORS.STYRFIRE, role: ROLES.MAINTAINER},
