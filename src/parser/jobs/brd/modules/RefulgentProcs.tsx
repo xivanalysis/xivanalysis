@@ -8,7 +8,7 @@ import React, {Fragment} from 'react'
 import {Table, Button} from 'semantic-ui-react'
 
 export class RefulgentProcs extends Procs {
-	@dependency private timeline!: Timeline
+	@dependency private timelinemodule!: Timeline
 
 	static override title = t('brd.procs.title')`Straight Shot Ready Overwrites`
 
@@ -54,7 +54,7 @@ export class RefulgentProcs extends Procs {
 							<Table.Cell>{this.parser.formatEpochTimestamp(item.timestamp)}</Table.Cell>
 							<Table.Cell>
 								<Button onClick={() =>
-									this.timeline.show(item.timestamp - this.parser.pull.timestamp, item.timestamp - this.parser.pull.timestamp)}>
+									this.timelinemodule.show(item.timestamp - this.parser.pull.timestamp, item.timestamp - this.parser.pull.timestamp)}>
 									<Trans id="brd.procs.refulgentproc.timelinelink-button">Jump to Timeline</Trans>
 								</Button>
 							</Table.Cell>
