@@ -24,7 +24,7 @@ const MEDITATE_TICK_FREQUENCY = 3000
 const MAX_MEDITATE_STACKS = 3
 
 const FADE = 0.75
-const SHOHA_COLOR = Color('#F2787B').fade(FADE)
+const SHOHA_COLOR = Color('#cf2621').fade(FADE)
 
 export class Shoha extends CoreGauge {
 	static override title = t('sam.shoha.title')`Meditatation Stacks`

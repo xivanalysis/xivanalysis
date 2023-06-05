@@ -3,7 +3,7 @@ import {Patch} from 'data/PATCHES'
 import {Report} from 'report'
 import {layers} from './layers'
 import {ActionRoot, ITEM_ID_OFFSET, root} from './root'
-import {Action} from './type'
+import {Action, BonusModifier, BaseModifier} from './type'
 
 const DEFAULT_GCD_CASTTIME = 0
 const DEFAULT_GCD_COOLDOWN = 2500
@@ -43,6 +43,18 @@ export type {Action}
 export function getActions(report: Report) {
 	const patch = new Patch(report.edition, report.timestamp / 1000)
 	return getAppliedData({root, layers, state: {patch: patch}})
+}
+
+export function getBasePotency(action: Action): number {
+	return getPotencyWithMods(action, [], [])
+}
+
+export function getPotencyWithMods(action: Action, bonusModifiers: BonusModifier[], baseModifiers: BaseModifier[]) {
+	return action.potencies?.find(
+		potency =>
+			JSON.stringify(potency.bonusModifiers.sort()) === JSON.stringify(bonusModifiers.sort()) &&
+			JSON.stringify(potency.baseModifiers ? potency.baseModifiers.sort() : []) === JSON.stringify(baseModifiers.sort())
+	)?.value || 0
 }
 
 // Everything below here is temp back compat

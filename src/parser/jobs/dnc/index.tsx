@@ -25,7 +25,7 @@ export const DANCER = new Meta({
 
 	supportedPatches: {
 		from: '6.0',
-		to: '6.08',
+		to: '6.4',
 	},
 
 	contributors: [

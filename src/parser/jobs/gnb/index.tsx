@@ -8,7 +8,6 @@ const description = t('gnb.about.description')`This analyzer looks for the low-h
 If you're looking to learn about how exactly the job plays and functions from the ground up, take a look at a few basic guides:
 
 * [General tanking guide by Aletin](https://goo.gl/nYzAnq)
-* [No Mercy Windows by Rin Karigani](https://media.discordapp.net/attachments/879555876648812554/919201930583109632/123NMGF.jpg?width=1193&height=671)
 
 If you have any suggestions about the module, feel free to join the XIVA discord and use the feedback channels.
 `
@@ -20,7 +19,7 @@ export const GUNBREAKER = new Meta({
 
 	supportedPatches: {
 		from: '6.0',
-		to: '6.08',
+		to: '6.4',
 	},
 
 	contributors: [
@@ -33,8 +32,18 @@ export const GUNBREAKER = new Meta({
 		// {
 		// 	date: new Date('2020-04-20'),
 		// 	Changes: () => <>The changes you made</>,
-		// 	contrubutors: [CONTRIBUTORS.YOU],
+		// 	contributors: [CONTRIBUTORS.YOU],
 		// },
+		{
+			date: new Date('2021-07-19'),
+			Changes: () => <>
+				<ul>
+					<li>i18n improvements</li>
+					<li>String formatting corrections</li>
+				</ul>,
+			</>,
+			contributors: [CONTRIBUTORS.KHAYLE],
+		},
 		{
 			date: new Date('2021-12-11'),
 			Changes: () => <>
@@ -106,6 +115,16 @@ export const GUNBREAKER = new Meta({
 			Changes: () => <>
 				<ul>
 					<li>Change AoE Threshold to 2 for everything</li>
+				</ul>,
+			</>,
+			contributors: [CONTRIBUTORS.RYAN],
+		},
+
+		{
+			date: new Date('2022-03-12'),
+			Changes: () => <>
+				<ul>
+					<li>Added Double Down to expected actions under tincture</li>
 				</ul>,
 			</>,
 			contributors: [CONTRIBUTORS.RYAN],

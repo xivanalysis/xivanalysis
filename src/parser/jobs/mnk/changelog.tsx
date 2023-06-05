@@ -3,6 +3,21 @@ import React from 'react'
 
 export const changelog = [
 	{
+		date: new Date('2023-02-18'),
+		Changes: () => <>Add Timeline support for low level actions.</>,
+		contributors: [CONTRIBUTORS.HINT],
+	},
+	{
+		date: new Date('2022-03-03'),
+		Changes: () => <>Add Celestial Revolution support.</>,
+		contributors: [CONTRIBUTORS.SQUARE],
+	},
+	{
+		date: new Date('2022-02-20'),
+		Changes: () => <>Add Riddle of Wind statistic.</>,
+		contributors: [CONTRIBUTORS.MALP],
+	},
+	{
 		date: new Date('2022-02-14'),
 		Changes: () => <>Fix incorrect combo resets bug when Dragon Kick is spammed.</>,
 		contributors: [CONTRIBUTORS.MALP],

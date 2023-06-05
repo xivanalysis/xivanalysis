@@ -1,5 +1,5 @@
 import {Attribute} from 'event'
-import {ensureActions} from '../type'
+import {ensureActions, BonusModifier} from '../type'
 
 export const RPR = ensureActions({
 	// -----
@@ -166,6 +166,23 @@ export const RPR = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		statusesApplied: ['ENHANCED_GIBBET'],
+		potencies: [{
+			value: 400,
+			bonusModifiers: [],
+			baseModifiers: [],
+		}, {
+			value: 460,
+			bonusModifiers: [BonusModifier.POSITIONAL],
+			baseModifiers: [],
+		}, {
+			value: 460,
+			bonusModifiers: [],
+			baseModifiers: ['ENHANCED_GALLOWS'],
+		}, {
+			value: 520,
+			bonusModifiers: [BonusModifier.POSITIONAL],
+			baseModifiers: ['ENHANCED_GALLOWS'],
+		}],
 	},
 
 	GIBBET: {
@@ -175,6 +192,23 @@ export const RPR = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		statusesApplied: ['ENHANCED_GALLOWS'],
+		potencies: [{
+			value: 400,
+			bonusModifiers: [],
+			baseModifiers: [],
+		}, {
+			value: 460,
+			bonusModifiers: [BonusModifier.POSITIONAL],
+			baseModifiers: [],
+		}, {
+			value: 460,
+			bonusModifiers: [],
+			baseModifiers: ['ENHANCED_GIBBET'],
+		}, {
+			value: 520,
+			bonusModifiers: [BonusModifier.POSITIONAL],
+			baseModifiers: ['ENHANCED_GIBBET'],
+		}],
 	},
 
 	GUILLOTINE: {
@@ -280,6 +314,8 @@ export const RPR = ensureActions({
 
 	// -----
 	// Soul Gauge oGCDs
+	// Note:
+	//  all of these grant Reaver, but we only keep it on Gluttony since that's the only real use at level cap
 	// -----
 
 	GLUTTONY: {
@@ -302,14 +338,14 @@ export const RPR = ensureActions({
 		id: 24391,
 		name: 'Unveiled Gallows',
 		icon: 'https://xivapi.com/i/003000/003619.png',
-		statusesApplied: ['SOUL_REAVER'],
+		cooldown: 1000,
 	},
 
 	UNVEILED_GIBBET: {
 		id: 24390,
 		name: 'Unveiled Gibbet',
 		icon: 'https://xivapi.com/i/003000/003618.png',
-		statusesApplied: ['SOUL_REAVER'],
+		cooldown: 1000,
 	},
 
 	GRIM_SWATHE: {

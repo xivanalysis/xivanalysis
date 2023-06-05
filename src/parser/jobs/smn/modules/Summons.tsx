@@ -314,12 +314,36 @@ export class Summons extends Analyser {
 				title: {
 					content: <>
 						{this.parser.formatEpochTimestamp(summon.start)}: <ActionLink {...this.data.getAction(summon.data.demiSummon.action)} />
+						{this.getEgiIcons(summon)}
 					</>,
 				},
 				content: {content: data.display},
 			},
 			hasError: data.hasError,
 		}
+	}
+
+	private getEgiIcons(summon: HistoryEntry<SummonWindow>) {
+		const egis = [summon.data.titanSummon, summon.data.ifritSummon, summon.data.garudaSummon]
+		egis.sort((a, b) => {
+			if (a === undefined) { return -1 }
+			if (b === undefined) { return 1 }
+			return (a.timestamp > b.timestamp) ? -1 : 1
+		})
+
+		const retval: JSX.Element[] = []
+		egis.forEach(egi => {
+			if (egi !== undefined) {
+				if (egi === summon.data.ifritSummon) {
+					retval.push(<span style={{float: 'right'}}> <ActionLink showName={false} action="SUMMON_IFRIT_II" />&nbsp; </span>)
+				} else if (egi === summon.data.garudaSummon) {
+					retval.push(<span style={{float: 'right'}}> <ActionLink showName={false} action="SUMMON_GARUDA_II" />&nbsp; </span>)
+				} else if (egi === summon.data.titanSummon) {
+					retval.push(<span style={{float: 'right'}}> <ActionLink showName={false} action="SUMMON_TITAN_II" />&nbsp; </span>)
+				}
+			}
+		})
+		return retval
 	}
 
 	private buildWindowOutput(summon: HistoryEntry<SummonWindow>) {

@@ -16,7 +16,6 @@ export const MCH = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003001.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		potency: 180,
 		combo: {
 			start: true,
 		},
@@ -28,10 +27,8 @@ export const MCH = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003002.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		potency: 100,
 		combo: {
 			from: [2866, 7411],
-			potency: 260,
 		},
 	},
 
@@ -60,10 +57,8 @@ export const MCH = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003004.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		potency: 100,
 		combo: {
 			from: [2868, 7412],
-			potency: 340,
 			end: true,
 		},
 	},
@@ -74,7 +69,6 @@ export const MCH = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003031.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		potency: 220,
 		combo: {
 			start: true,
 		},
@@ -86,10 +80,8 @@ export const MCH = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003032.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		potency: 100,
 		combo: {
 			from: 7411,
-			potency: 330,
 		},
 	},
 
@@ -99,10 +91,8 @@ export const MCH = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003033.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		potency: 100,
 		combo: {
 			from: 7412,
-			potency: 440,
 			end: true,
 		},
 	},
@@ -113,7 +103,6 @@ export const MCH = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003030.png',
 		onGcd: true,
 		cooldown: 1500,
-		potency: 220,
 	},
 
 	AUTO_CROSSBOW: {
@@ -270,8 +259,16 @@ export const MCH = ensureActions({
 		name: 'Tactician',
 		icon: 'https://xivapi.com/i/003000/003040.png',
 		onGcd: false,
-		cooldown: 120000,
+		cooldown: 90000,
 		statusesApplied: ['TACTICIAN'],
+	},
+
+	DISMANTLE: {
+		id: 2887,
+		name: 'Dismantle',
+		icon: 'https://xivapi.com/i/003000/003011.png',
+		onGcd: false,
+		cooldown: 120000,
 	},
 
 	AUTOMATON_QUEEN: {

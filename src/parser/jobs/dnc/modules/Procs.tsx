@@ -14,6 +14,15 @@ export class Procs extends CoreProcs {
 			consumeActions: [this.data.actions.FAN_DANCE_IV],
 		},
 		{
+			procStatus: this.data.statuses.SILKEN_SYMMETRY,
+			consumeActions: [this.data.actions.REVERSE_CASCADE, this.data.actions.RISING_WINDMILL],
+		},
+		{
+			procStatus: this.data.statuses.SILKEN_FLOW,
+			consumeActions: [this.data.actions.FOUNTAINFALL, this.data.actions.BLOODSHOWER],
+		},
+		// We don't need to patch-specify this status construction since these just won't be present in pre-6.1 logs
+		{
 			procStatus: this.data.statuses.FLOURISHING_SYMMETRY,
 			consumeActions: [this.data.actions.REVERSE_CASCADE, this.data.actions.RISING_WINDMILL],
 		},
@@ -35,7 +44,7 @@ export class Procs extends CoreProcs {
 	override droppedProcIcon = this.data.actions.FOUNTAINFALL.icon
 	override droppedProcContent =
 		<Trans id="dnc.procs.suggestions.drops.content">
-			Avoid dropping your procs unless absolutely necessary. If you have to drop one to keep your Esprit from overcapping, <DataLink status="FLOURISHING_SYMMETRY"/> will lose the least DPS overall.
+			Avoid dropping your procs unless absolutely necessary. If you have to drop one to keep your Esprit from overcapping, <DataLink status="SILKEN_SYMMETRY"/> or <DataLink status="FLOURISHING_SYMMETRY"/> will lose the least DPS overall.
 		</Trans>
 
 	override showOverwroteProcSuggestion = true

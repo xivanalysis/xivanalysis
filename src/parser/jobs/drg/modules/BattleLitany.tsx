@@ -4,7 +4,7 @@ import {ActionLink} from 'components/ui/DbLink'
 import {Event, Events} from 'event'
 import {filter} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
-import {BuffWindow, EvaluatedAction, EvaluationOutput, ExpectedGcdCountEvaluator, WindowEvaluator} from 'parser/core/modules/ActionWindow'
+import {EvaluatedAction, EvaluationOutput, ExpectedGcdCountEvaluator, RaidBuffWindow, WindowEvaluator} from 'parser/core/modules/ActionWindow'
 import {HistoryEntry} from 'parser/core/modules/ActionWindow/History'
 import {Actors} from 'parser/core/modules/Actors'
 import {GlobalCooldown} from 'parser/core/modules/GlobalCooldown'
@@ -13,40 +13,11 @@ import React, {Fragment} from 'react'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 
 const BL_GCD_TARGET = 6
-const EXPECTED_PLAYER_COUNT = 8
 
 const BL_DOUBLE_DRG_ERROR = {
 	NONE: 0,
 	THEY_OVERWROTE: 1,
 	YOU_OVERWROTE: 2,
-}
-
-class PlayersBuffedEvaluator implements WindowEvaluator {
-	private affectedPlayers: (window: HistoryEntry<EvaluatedAction[]>) => number
-
-	constructor(affectedPlayers: (window: HistoryEntry<EvaluatedAction[]>) => number) {
-		this.affectedPlayers = affectedPlayers
-	}
-
-	// this is purely informational
-	public suggest() { return undefined }
-
-	public output(windows: Array<HistoryEntry<EvaluatedAction[]>>): EvaluationOutput | undefined {
-		const affected = windows.map(w => this.affectedPlayers(w))
-		return {
-			format: 'table',
-			header: {
-				header: <Trans id="drg.battlelitany.rotation-table.header.buffed">Players Buffed</Trans>,
-				accessor: 'buffed',
-			},
-			rows: affected.map(a => {
-				return {
-					actual: a,
-					expected: EXPECTED_PLAYER_COUNT,
-				}
-			}),
-		}
-	}
 }
 
 /**
@@ -94,7 +65,7 @@ class DoubleDrgEvaluator implements WindowEvaluator {
 // this implementation of Battle Litany derives from core BuffWindow with a
 // set of custom evaluators that track number of players buffed and whether or
 // not the window overwrote (or was overwritten by) windows started by other DRGs
-export class BattleLitany extends BuffWindow {
+export class BattleLitany extends RaidBuffWindow {
 	static override handle = 'battlelitany'
 	static override title = t('drg.battlelitany.title')`Battle Litany`
 	static override displayOrder = DISPLAY_ORDER.BATTLE_LITANY
@@ -123,6 +94,7 @@ export class BattleLitany extends BuffWindow {
 		this.addEvaluator(new ExpectedGcdCountEvaluator({
 			expectedGcds: BL_GCD_TARGET,
 			globalCooldown: this.globalCooldown,
+			hasStacks: false,
 			suggestionIcon,
 			suggestionContent: <Trans id="drg.bl.suggestions.missedgcd.content">
 				Try to land at least 6 GCDs during every <ActionLink action="BATTLE_LITANY" /> window.
@@ -135,7 +107,6 @@ export class BattleLitany extends BuffWindow {
 			},
 		}))
 
-		this.addEvaluator(new PlayersBuffedEvaluator(this.affectedPlayers.bind(this)))
 		this.addEvaluator(new DoubleDrgEvaluator(this.doubleDrgNote.bind(this)))
 	}
 
@@ -155,24 +126,6 @@ export class BattleLitany extends BuffWindow {
 				job: targetActor.job,
 			})
 		}
-	}
-
-	// returns the number of players affected by the battle lit status application
-	// in the window when the buff was active
-	// this should be 8 in content we care about
-	private affectedPlayers(buffWindow: HistoryEntry<EvaluatedAction[]>): number {
-		const actualWindowDuration = (buffWindow?.end ?? buffWindow.start) - buffWindow.start
-
-		// count the number of applications that happened in the window
-		const affected = this.buffApplications.filter(ba => {
-			return (
-				ba.appliedByThisDrg &&
-				buffWindow.start <= ba.timestamp &&
-				ba.timestamp <= buffWindow.start + actualWindowDuration
-			)
-		})
-
-		return affected.length
 	}
 
 	// returns a status code indicating if a buff window was overwritten or truncated

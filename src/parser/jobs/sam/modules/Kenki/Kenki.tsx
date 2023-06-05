@@ -44,6 +44,7 @@ export class Kenki extends CoreGauge {
 		// Builders
 		[this.data.actions.HAKAZE.id, {action: 5}],
 		[this.data.actions.JINPU.id, {combo: 5}],
+		[this.data.actions.ENPI.id, {action: 10}],
 		[this.data.actions.SHIFU.id, {combo: 5}],
 		[this.data.actions.KASHA.id, {combo: 10}],
 		[this.data.actions.GEKKO.id, {combo: 10}],
@@ -60,7 +61,6 @@ export class Kenki extends CoreGauge {
 		[this.data.actions.HISSATSU_KYUTEN.id, {action: -25}],
 		[this.data.actions.HISSATSU_SHINTEN.id, {action: -25}],
 		[this.data.actions.HISSATSU_SENEI.id, {action: -25}],
-		[this.data.actions.HISSATSU_KAITEN.id, {action: -20}],
 		[this.data.actions.HISSATSU_GYOTEN.id, {action: -10}],
 		[this.data.actions.HISSATSU_YATEN.id, {action: -10}],
 	])
@@ -71,6 +71,10 @@ export class Kenki extends CoreGauge {
 
 	override initialise() {
 		super.initialise()
+
+		if (this.parser.patch.before('6.1')) {
+			this.kenkiGaugeModifiers.set(this.data.actions.HISSATSU_KAITEN.id, {action: -20})
+		}
 
 		const kenkiActions = Array.from(this.kenkiGaugeModifiers.keys())
 		const playerFilter = filter<Event>().source(this.parser.actor.id)
@@ -98,9 +102,14 @@ export class Kenki extends CoreGauge {
 	}
 
 	private eyeExam(event: Events['damage']) {
+		if (this.damageHook == null) { return }
 		const targetedSelf = event.targets.some(({target}) => target === this.parser.actor.id)
 		if (targetedSelf) {
 			this.kenkiGauge.modify(THIRD_EYE_GAIN)
+			// This handles an edge case with multi-hit attacks; the damage hooks will all get invoked
+			// before the Third Eye status gets removed, incorrectly giving Kenki for each hit rather
+			// than just the first one.  See https://github.com/xivanalysis/xivanalysis/issues/1750
+			this.removeEventHook(this.damageHook)
 		}
 	}
 
@@ -139,7 +148,7 @@ export class Kenki extends CoreGauge {
 		this.suggestions.add(new TieredSuggestion({
 			icon: kenkiIcon,
 			content: <Trans id="sam.gauge.suggestions.loss.content">
-					Avoid letting your Kenki Gauge overcap - the wasted resources may cost further uses of your spenders over the course of the fight.
+				Avoid letting your Kenki Gauge overcap - the wasted resources may cost further uses of your spenders over the course of the fight.
 			</Trans>,
 			why: <Trans id="sam.gauge.suggestions.loss.why">
 				{this.kenkiGauge.overCap} Kenki lost to overcapping.

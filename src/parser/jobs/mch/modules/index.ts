@@ -5,6 +5,7 @@ import {Drift} from './Drift'
 import {Gauge} from './Gauge'
 import GeneralCDDowntime from './GeneralCDDowntime'
 import {Hypercharge} from './Hypercharge'
+import {Mitigation} from './Mitigation'
 import MultiHitSkills from './MultiHitSkills'
 import QueenTimeline from './QueenTimeline'
 import {Reassemble} from './Reassemble'
@@ -20,6 +21,7 @@ export default [
 	Gauge,
 	GeneralCDDowntime,
 	Hypercharge,
+	Mitigation,
 	MultiHitSkills,
 	QueenTimeline,
 	Reassemble,

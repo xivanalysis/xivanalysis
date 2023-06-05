@@ -1,5 +1,6 @@
 import {ActionTimeline} from './ActionTimeline'
 import {Combos} from './Combos'
+import {Defensives} from './Defensives'
 import {Huton} from './Huton'
 import {HutonCastTime} from './HutonCastTime'
 import {Kassatsu} from './Kassatsu'
@@ -15,6 +16,7 @@ import {Weaving} from './Weaving'
 export default [
 	ActionTimeline,
 	Combos,
+	Defensives,
 	Huton,
 	HutonCastTime,
 	Kassatsu,

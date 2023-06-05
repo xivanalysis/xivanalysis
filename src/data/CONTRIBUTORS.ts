@@ -17,6 +17,13 @@ const CONTRIBUTORS = ensureRecord<Contributor>()({
 	// 		JOBS.SOME_JOB,
 	// 	],
 	// },
+	IAOTLE: {
+		name: 'Iaotle',
+		avatar: 'https://en.gravatar.com/userimage/201482348/ea453cafbd1a6b6944a05b7320f7d4fd.jpg?size=200',
+		jobs: [
+			JOBS.SUMMONER,
+		],
+	},
 	ACKWELL: {
 		name: 'ackwell',
 		avatar: 'https://secure.gravatar.com/avatar/383e78034167fdfe8303231a6dad33e5?s=100',
@@ -75,6 +82,13 @@ const CONTRIBUTORS = ensureRecord<Contributor>()({
 		avatar: require('./avatar/kelos.png'),
 		jobs: [
 			JOBS.SUMMONER,
+		],
+	},
+	KHAYLE: {
+		name: 'Khayle',
+		avatar: require('./avatar/Khayle.png'),
+		jobs: [
+			JOBS.BLUE_MAGE,
 		],
 	},
 	HINT: {
@@ -210,6 +224,27 @@ const CONTRIBUTORS = ensureRecord<Contributor>()({
 		avatar: require('./avatar/dean.png'),
 		jobs: [
 			JOBS.REAPER,
+		],
+	},
+	SQUARE: {
+		name: 'square',
+		avatar: require('./avatar/square.png'),
+		jobs: [
+			JOBS.MONK,
+		],
+	},
+	NONO: {
+		name: 'Nono',
+		avatar: require('./avatar/nono.png'),
+		jobs: [
+			JOBS.SCHOLAR,
+		],
+	},
+	STYRFIRE: {
+		name: 'Styrfire',
+		avatar: require('./avatar/styrfire.png'),
+		jobs: [
+			JOBS.PALADIN,
 		],
 	},
 })

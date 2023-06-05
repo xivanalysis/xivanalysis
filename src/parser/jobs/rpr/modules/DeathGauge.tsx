@@ -34,6 +34,8 @@ const VOID_ACTIONS: ActionKey[] = [
 ]
 
 export class DeathGauge extends CoreGauge {
+	static override handle = 'deathGauge'
+
 	@dependency private actors!: Actors
 	@dependency private brokenLog!: BrokenLog
 

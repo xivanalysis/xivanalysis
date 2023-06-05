@@ -1,11 +1,19 @@
 import {CooldownDowntime} from 'parser/core/modules/CooldownDowntime'
 
 /*
-*Current offsets are based off: 6.0 Opener (https://media.discordapp.net/attachments/879555876648812554/919201930583109632/123NMGF.jpg?width=1193&height=671)
+GNB: There is no spefific opener, it's fight dependent
+Also GNB: makes no easy track record of each fight by fight opener
+
+That being said, 1NM23 is the "general all rounder" opener for blind prog,
+1NM23 captures all big buttons with raid buffs unlike the 6.0 123NM opener that *may* miss
+
+*Current offsets are based off: 6.1 Opener / 1NM23 (https://media.discordapp.net/attachments/441424599310270464/1010362485578145842/unknown.png?width=1664&height=936)
+*Note: This infograph is out of date due to it using 6.1 BF, but the opener offsets are the safe.
+
 *All values are seperate in case the current ones fall out of favor in the future
 */
 
-const FIRST_USE_OFFSET_NO_MERCY = 7500 // Current opener has No mercy as 3after 3rd ogcd slot
+const FIRST_USE_OFFSET_NO_MERCY = 2500 // Current opener has NM used as before 2nd gcd, but in second weave slot
 
 const FIRST_USE_OFFSET_BLOODFEST = 10000 // Current Opener have bloodfest by after the 4th gcd
 

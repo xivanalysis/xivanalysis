@@ -3,6 +3,7 @@ import {DataLink} from 'components/ui/DbLink'
 import {Action} from 'data/ACTIONS'
 import {BASE_GCD} from 'data/CONSTANTS'
 import {dependency} from 'parser/core/Injectable'
+import {Actors} from 'parser/core/modules/Actors'
 import Downtime from 'parser/core/modules/Downtime'
 import {Swiftcast as CoreSwiftcast} from 'parser/core/modules/Swiftcast'
 import React from 'react'
@@ -12,6 +13,14 @@ export class Swiftcast extends CoreSwiftcast {
 	static override displayOrder = DISPLAY_ORDER.SWIFTCAST
 
 	@dependency private downtime!: Downtime
+	@dependency private actors!: Actors
+
+	// If Swiftcast and Acceleration are both up, these actions consume Acceleration first.
+	private accelerationActions: Action[] = [
+		this.data.actions.VERTHUNDER_III,
+		this.data.actions.VERAERO_III,
+		this.data.actions.IMPACT,
+	]
 
 	override considerSwiftAction(action: Action): boolean {
 		//We want to inspect the cast time to determine if the player was allowed to use SwiftCast or not
@@ -19,6 +28,10 @@ export class Swiftcast extends CoreSwiftcast {
 		if (castTime > 0) {
 		//As long as we aren't in downtime, the cast time must exceed the base GCD to qualify.
 			if (!this.downtime.isDowntime() && castTime <= BASE_GCD) {
+				return false
+			}
+			// Ignore acceleration actions since they won't consume Swiftcast when you have Acceleration.
+			if (this.actors.current.hasStatus(this.data.statuses.ACCELERATION.id) && this.accelerationActions.includes(action)) {
 				return false
 			}
 			//Then it had to be VerRaise, VerAero III, or VerThunder III or we were in downtime so it's valid

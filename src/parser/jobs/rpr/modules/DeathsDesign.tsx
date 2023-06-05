@@ -9,8 +9,7 @@ import {Invulnerability} from 'parser/core/modules/Invulnerability'
 import {Statuses} from 'parser/core/modules/Statuses'
 import React from 'react'
 
-const UPTIME_SEVERITY = {
-	90: TARGET.WARN,
+const SEVERITIES = {
 	95: TARGET.SUCCESS,
 }
 
@@ -35,11 +34,13 @@ export class DeathsDesign extends Analyser {
 
 	private onComplete() {
 		this.checklist.add(new TieredRule({
-			name: <Trans id="rpr.deathsdesign.rule.name">Keep <DataLink status="DEATHS_DESIGN"/> up</Trans>,
+			name: <Trans id="rpr.deathsdesign.rule.name">
+				Keep <DataLink status="DEATHS_DESIGN"/> up
+			</Trans>,
 			description: <Trans id="rpr.deathsdesign.rule.description">
 				Death's Design increases all damage you deal to the target by 10%. Aim to keep this debuff up at all times.
 			</Trans>,
-			tiers: UPTIME_SEVERITY,
+			tiers: SEVERITIES,
 			requirements: [
 				new Requirement({
 					name: <Trans id="rpr.deathsdesign.requirement.uptime.name"><DataLink status="DEATHS_DESIGN"/> uptime</Trans>,
