@@ -4,9 +4,14 @@ import {ActionLink, StatusLink} from 'components/ui/DbLink'
 import {Procs} from 'parser/core/modules/Procs'
 import React, {Fragment} from 'react'
 import {Table, Button} from 'semantic-ui-react'
+import {dependency} from 'parser/core/Injectable'
+import {Timeline} from 'parser/core/modules/Timeline'
 
 export class RefulgentProcs extends Procs {
+	@dependency private timeline!: Timeline
+
 	static override title = t('brd.procs.title')`Straight Shot Ready Overwrites`
+
 	override trackedProcs = [
 		{
 			procStatus: this.data.statuses.STRAIGHT_SHOT_READY,
