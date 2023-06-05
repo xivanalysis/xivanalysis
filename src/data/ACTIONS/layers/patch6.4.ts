@@ -5,7 +5,7 @@ export const patch640: Layer<ActionRoot> = {
 	patch: '6.4',
 	data: {
 		ATONEMENT: {
-			breaksCombo: undefined,
+			breaksCombo: false,
 		},
 	},
 }
