@@ -130,7 +130,7 @@ export const PLD = ensureActions({
 		icon: 'https://xivapi.com/i/002000/002519.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		breaksCombo: true,
+		breaksCombo: true as boolean,
 	},
 	CONFITEOR: {
 		id: 16459,
