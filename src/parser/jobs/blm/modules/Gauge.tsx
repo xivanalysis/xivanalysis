@@ -12,8 +12,10 @@ import {dependency} from 'parser/core/Injectable'
 import CastTime from 'parser/core/modules/CastTime'
 import {CounterGauge, TimerGauge, Gauge as CoreGauge} from 'parser/core/modules/Gauge'
 import Suggestions, {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import {Timeline} from 'parser/core/modules/Timeline'
 import {UnableToAct} from 'parser/core/modules/UnableToAct'
 import React from 'react'
+import {Table, Button} from 'semantic-ui-react'
 import {isSuccessfulHit} from 'utilities'
 import {FIRE_SPELLS, ICE_SPELLS_TARGETED, ICE_SPELLS_UNTARGETED} from './Elements'
 
@@ -73,14 +75,17 @@ const POLYGLOT_COLOR = Color(JOBS.BLACK_MAGE.colour)
 
 export class Gauge extends CoreGauge {
 	static override handle = 'gauge'
-	static override title = t('blm.gauge.title')`Gauge`
+	static override title = t('blm.gauge.title')`Proc Overwrites`
 
 	@dependency private suggestions!: Suggestions
 	@dependency private unableToAct!: UnableToAct
 	@dependency private castTime!: CastTime
+	@dependency private timeline!: Timeline
 
 	private droppedEnoTimestamps: number[] = []
 	private overwrittenPolyglot: number = 0
+	private overwriteParadoxTimestamps: number[] = []
+	private overwritePolyglotTimestamps: number[] = []
 
 	private fireSpellIds = FIRE_SPELLS.map(key => this.data.actions[key].id)
 	private iceSpellIds = [
@@ -353,6 +358,11 @@ export class Gauge extends CoreGauge {
 	private tryGainParadox(lastGaugeState: BLMGaugeState) {
 		if ((lastGaugeState.umbralIce === ASTRAL_UMBRAL_MAX_STACKS && !this.astralFireGauge.empty && this.umbralHeartsGauge.capped) ||
 			(lastGaugeState.astralFire === ASTRAL_UMBRAL_MAX_STACKS && !this.umbralIceGauge.empty)) {
+
+			if (!this.paradoxGauge.empty) {
+				this.overwriteParadoxTimestamps.push(this.parser.currentEpochTimestamp)
+			}
+
 			this.paradoxGauge.generate(1)
 		}
 	}
@@ -457,6 +467,7 @@ export class Gauge extends CoreGauge {
 		// Can't just rely on CounterGauge.overCap since there's some weird timing things we have to account for
 		if (this.polyglotGauge.capped) {
 			this.overwrittenPolyglot++
+			this.overwritePolyglotTimestamps.push(this.parser.currentEpochTimestamp)
 		}
 
 		this.polyglotGauge.generate(1)
@@ -468,6 +479,7 @@ export class Gauge extends CoreGauge {
 		// Safety to catch ordering issues where Foul/Xenoglossy is used late enough to trigger our overwrite check but happens before Poly actually overwrites
 		if (this.polyglotGauge.empty && this.overwrittenPolyglot > 0) {
 			this.overwrittenPolyglot--
+			this.overwritePolyglotTimestamps.pop()
 		}
 
 		this.polyglotGauge.spend(1)
@@ -574,6 +586,49 @@ export class Gauge extends CoreGauge {
 				</Trans>,
 			}))
 		}
+	}
+
+	private overwriteMessage(timestamp: number) {
+		if (this.overwritePolyglotTimestamps.indexOf(timestamp) > -1) {
+			return <Trans id="blm.gauge.overwrites.polyglot">You overwrote Polyglot</Trans>
+		}
+
+		if (this.overwriteParadoxTimestamps.indexOf(timestamp) > -1) {
+			return <Trans id="blm.gauge.overwrites.paradox">You overwrote <DataLink action="PARADOX"/></Trans>
+		}
+
+		return <Trans id="blm.gauge.overwrites.unknown">Unknown proc overwritten</Trans>
+	}
+
+	override output() {
+		const allOverwrites = this.overwritePolyglotTimestamps.concat(this.overwriteParadoxTimestamps).sort()
+		if (allOverwrites.length === 0) { return false }
+
+		return (
+			<Table collapsing unstackable compact="very">
+				<Table.Header>
+					<Table.Row>
+						<Table.HeaderCell><Trans id="blm.gauge.header.time">Time</Trans></Table.HeaderCell>
+						<Table.HeaderCell><Trans id="blm.gauge.header.event">Event</Trans></Table.HeaderCell>
+						<Table.HeaderCell></Table.HeaderCell>
+					</Table.Row>
+				</Table.Header>
+				<Table.Body>
+					{allOverwrites.map(timestamp => {
+						return <Table.Row key={timestamp}>
+							<Table.Cell>{this.parser.formatEpochTimestamp(timestamp)}</Table.Cell>
+							<Table.Cell>{this.overwriteMessage(timestamp)}</Table.Cell>
+							<Table.Cell>
+								<Button onClick={() =>
+									this.timeline.show(timestamp - this.parser.pull.timestamp, timestamp - this.parser.pull.timestamp)}>
+									<Trans id="blm.gauge.timelinelink-button">Jump to Timeline</Trans>
+								</Button>
+							</Table.Cell>
+						</Table.Row>
+					})}
+				</Table.Body>
+			</Table>
+		)
 	}
 }
 
