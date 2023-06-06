@@ -29,6 +29,11 @@ export const BARD = new Meta({
 	],
 	changelog: [
 		{
+			date: new Date('2023-06-05'),
+			Changes: () => <>Display timestamps for Straight Shot Ready overwrites.</>,
+			contributors: [CONTRIBUTORS.MALI],
+		},
+		{
 			date: new Date('2023-01-14'),
 			Changes: () => <>Updated for patch 6.3.</>,
 			contributors: [CONTRIBUTORS.HINT],
