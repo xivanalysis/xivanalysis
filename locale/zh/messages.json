@@ -240,7 +240,7 @@
   "core.deaths.why": "{0, plural, =1 {# 次死亡} other {# 次死亡}}",
   "core.defensives.header.content": "使用你的减伤和治疗能力技能能帮助你在机制失误时保住性命，或者减轻治疗的压力，帮助他们打出更多伤害。 <0/> 不过不要为此打乱循环或buff对齐，尽可能找到适当的时机来使用。",
   "core.defensives.header.sub-content": "下表列出了在不影响当前技能安排的前提下何处可以多使用一次这些能力。",
-  "core.defensives.table.extra-usage-row.text": "<0></0> {0} 和 {1} 时可以额外使用{chargesBeforeNextUse, plural, one {1次} other {#次}}",
+  "core.defensives.table.extra-usage-row.text": "<0></0> {0} 至 {1} 之间可以额外使用{chargesBeforeNextUse, plural, one {1次} other {#次}}",
   "core.defensives.table.usage-row.text": "<0></0> {0} 时已使用",
   "core.defensives.title": "防御性技能",
   "core.dummy.broken-log": "这场战斗中的一个或多个目标似乎是木人。木人血量槽的表现与xivanalysis做出的一些假设不符，这可能会导致错误的分析结果。",
