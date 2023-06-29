@@ -654,7 +654,7 @@
   "pld.gauge.waste.suggestion.content": "使用<0/>或者对另一个T使用<1/>以减少受到的伤害。",
   "pld.gauge.waste.suggestion.why": "由于溢出而浪费{0} 。",
   "pld.requiescat.suggestions.missed-confiteor.content": "在每个<4/>窗口期中一定使用<0/>、<1/>、<2/>和<3/>来保证伤害最大化。",
-  "pld.requiescat.table.note": "每次<0/>持续时间内应包含4次魔法，包括<1/>、<2/>和<3/>，以及每一层<5/>对应的一个<4/>。",
+  "pld.requiescat.table.note": "每次<0/>持续时间内应包含4次魔法，每一层<5/>对应着一个<1/>、<2/>、<3/>和<4/>。",
   "pld.requiescat.title": "安魂祈祷的使用",
   "pld.royal-authority.title": "王权剑",
   "pld.sword-oath.checklist.description": "<0/>会带来{swordOathStacks} 层的<1/>来发动<2/>。实质上跟用{swordOathStacks} 次<3/>是一样的。",
