@@ -135,7 +135,7 @@ export class Technicalities extends RaidBuffWindow {
 				timestamp: event.timestamp,
 				appliedByThisDnc: event.source === this.parser.actor.id,
 			})
-			if (targetActor.id === this.parser.actor.id) {
+			if (event.target === this.parser.actor.id) {
 				this.buffActive = true
 			}
 		}
