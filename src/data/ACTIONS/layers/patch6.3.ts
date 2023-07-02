@@ -89,5 +89,11 @@ export const patch630: Layer<ActionRoot> = {
 			onGcd: false,
 			cooldown: 1000,
 		},
+
+		// MNK - Riddle of Earth changes
+		RIDDLE_OF_EARTH: {
+			charges: undefined,
+			cooldown: 90000,
+		},
 	},
 }
