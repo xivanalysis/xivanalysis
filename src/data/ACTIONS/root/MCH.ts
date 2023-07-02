@@ -218,7 +218,6 @@ export const MCH = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003041.png',
 		onGcd: false,
 		cooldown: 10000,
-		statusesApplied: ['OVERHEATED'],
 	},
 
 	RICOCHET: {
