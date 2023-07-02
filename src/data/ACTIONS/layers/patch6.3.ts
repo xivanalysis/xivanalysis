@@ -89,5 +89,8 @@ export const patch630: Layer<ActionRoot> = {
 			onGcd: false,
 			cooldown: 1000,
 		},
+
+		// MCH 6.3 changes
+		HYPERCHARGE: {statusesApplied: ['OVERHEATED']},
 	},
 }

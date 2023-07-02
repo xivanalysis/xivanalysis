@@ -46,5 +46,13 @@ export const patch630: Layer<StatusRoot> = {
 			icon: 'https://xivapi.com/i/012000/012567.png',
 			duration: 15000,
 		},
+
+		// MCH 6.3 changes
+		OVERHEATED: {
+			id: 2688,
+			name: 'Overheated',
+			icon: 'https://xivapi.com/i/018000/018385.png',
+			duration: 10000,
+		},
 	},
 }

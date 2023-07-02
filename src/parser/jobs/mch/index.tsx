@@ -22,12 +22,17 @@ export const MACHINIST = new Meta({
 	</>,
 	supportedPatches: {
 		from: '6.0',
-		to: '6.3',
+		to: '6.4',
 	},
 	contributors: [
 		{user: CONTRIBUTORS.HINT, role: ROLES.MAINTAINER},
 	],
 	changelog: [
+		{
+			date: new Date('2023-07-02'),
+			Changes: () => <>Updated Hypercharge module to properly end after all 5 stacks are expended.</>,
+			contributors: [CONTRIBUTORS.HINT],
+		},
 		{
 			date: new Date('2023-01-14'),
 			Changes: () => <>Added Dismantle and a statistic for defensive cooldown usage, updated the Hypercharge module, and rewrote the "About" section for patch 6.3.</>,
