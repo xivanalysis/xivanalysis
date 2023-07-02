@@ -8,6 +8,13 @@ export const MCH = ensureStatuses({
 		duration: 5000,
 	},
 
+	OVERHEATED: {
+		id: 2688,
+		name: 'Overheated',
+		icon: 'https://xivapi.com/i/018000/018385.png',
+		duration: 10000,
+	},
+
 	WILDFIRE: {
 		id: 861,
 		name: 'Wildfire',
