@@ -45,12 +45,18 @@ export class Hypercharge extends Analyser {
 			.type('action')
 			.action(this.data.actions.HYPERCHARGE.id)
 
+		const overheatedFilter = filter<Event>()
+			.source(this.parser.actor.id)
+			.type('statusRemove')
+			.status(this.data.statuses.OVERHEATED.id)
+
 		this.addEventHook(hyperchargeFilter, this.onHypercharge)
+		this.addEventHook(overheatedFilter, this.endCurrentWindow)
+		this.addEventHook('complete', this.endCurrentWindow)
 		this.addEventHook({
 			type: 'death',
 			actor: this.parser.actor.id,
 		}, this.endCurrentWindow)
-		this.addEventHook('complete', this.endCurrentWindow)
 	}
 
 	private endCurrentWindow(event: Event) {
