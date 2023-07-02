@@ -93,7 +93,7 @@ export const patch630: Layer<ActionRoot> = {
 		// MNK - Riddle of Earth changes
 		RIDDLE_OF_EARTH: {
 			charges: undefined,
-			cooldown: 90000,
+			cooldown: 120000,
 		},
 	},
 }
