@@ -3,6 +3,11 @@ import React from 'react'
 
 export const changelog = [
 	{
+		date: new Date('2023-07-02'),
+		Changes: () => <>Add 6.3 Riddle of Earth changes.</>,
+		contributors: [CONTRIBUTORS.HINT],
+	},
+	{
 		date: new Date('2023-02-18'),
 		Changes: () => <>Add Timeline support for low level actions.</>,
 		contributors: [CONTRIBUTORS.HINT],

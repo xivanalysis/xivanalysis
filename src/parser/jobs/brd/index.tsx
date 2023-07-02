@@ -21,7 +21,7 @@ export const BARD = new Meta({
 	</>,
 	supportedPatches: {
 		from: '6.0',
-		to: '6.3',
+		to: '6.4',
 	},
 	contributors: [
 		{user: CONTRIBUTORS.HINT, role: ROLES.MAINTAINER},
@@ -29,6 +29,11 @@ export const BARD = new Meta({
 	],
 	changelog: [
 		{
+			date: new Date('2023-07-02'),
+			Changes: () => <>Marked as supported for 6.4.</>,
+			contributors: [CONTRIBUTORS.HINT],
+    },
+    {
 			date: new Date('2023-06-05'),
 			Changes: () => <>Display timestamps for Straight Shot Ready overwrites.</>,
 			contributors: [CONTRIBUTORS.MALI],

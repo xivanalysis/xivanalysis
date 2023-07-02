@@ -89,5 +89,14 @@ export const patch630: Layer<ActionRoot> = {
 			onGcd: false,
 			cooldown: 1000,
 		},
+
+		// MNK - Riddle of Earth changes
+		RIDDLE_OF_EARTH: {
+			charges: undefined,
+			cooldown: 120000,
+		},
+
+		// MCH 6.3 changes
+		HYPERCHARGE: {statusesApplied: ['OVERHEATED']},
 	},
 }
