@@ -54,6 +54,7 @@ export const patch630: Layer<StatusRoot> = {
 			name: "Earth's Reply",
 			icon: 'https://xivapi.com/i/012000/012531.png',
 			duration: 15000,
+		},
 
 		// MCH 6.3 changes
 		OVERHEATED: {
