@@ -1,4 +1,5 @@
 import {ensureStatuses} from '../type'
+import {SHARED} from './SHARED'
 
 export const MCH = ensureStatuses({
 	REASSEMBLED: {
@@ -8,12 +9,7 @@ export const MCH = ensureStatuses({
 		duration: 5000,
 	},
 
-	OVERHEATED: {
-		id: 2688,
-		name: 'Overheated',
-		icon: 'https://xivapi.com/i/018000/018385.png',
-		duration: 10000,
-	},
+	OVERHEATED: SHARED.UNKNOWN, // Added in patch 6.3 layer
 
 	WILDFIRE: {
 		id: 861,
