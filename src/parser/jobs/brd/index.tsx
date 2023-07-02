@@ -32,8 +32,8 @@ export const BARD = new Meta({
 			date: new Date('2023-07-02'),
 			Changes: () => <>Marked as supported for 6.4.</>,
 			contributors: [CONTRIBUTORS.HINT],
-    },
-    {
+		},
+		{
 			date: new Date('2023-06-05'),
 			Changes: () => <>Display timestamps for Straight Shot Ready overwrites.</>,
 			contributors: [CONTRIBUTORS.MALI],
