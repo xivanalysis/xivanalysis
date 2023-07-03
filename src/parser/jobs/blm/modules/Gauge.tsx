@@ -83,7 +83,6 @@ export class Gauge extends CoreGauge {
 	@dependency private timeline!: Timeline
 
 	private droppedEnoTimestamps: number[] = []
-	private overwrittenPolyglot: number = 0
 	private overwriteParadoxTimestamps: number[] = []
 	private overwritePolyglotTimestamps: number[] = []
 
@@ -466,7 +465,6 @@ export class Gauge extends CoreGauge {
 	private onGeneratePolyglot() {
 		// Can't just rely on CounterGauge.overCap since there's some weird timing things we have to account for
 		if (this.polyglotGauge.capped) {
-			this.overwrittenPolyglot++
 			this.overwritePolyglotTimestamps.push(this.parser.currentEpochTimestamp)
 		}
 
@@ -477,8 +475,7 @@ export class Gauge extends CoreGauge {
 
 	private onConsumePolyglot() {
 		// Safety to catch ordering issues where Foul/Xenoglossy is used late enough to trigger our overwrite check but happens before Poly actually overwrites
-		if (this.polyglotGauge.empty && this.overwrittenPolyglot > 0) {
-			this.overwrittenPolyglot--
+		if (this.polyglotGauge.empty && this.overwritePolyglotTimestamps.length > 0) {
 			this.overwritePolyglotTimestamps.pop()
 		}
 
@@ -561,7 +558,7 @@ export class Gauge extends CoreGauge {
 			}))
 		}
 
-		if (this.overwrittenPolyglot > 0) {
+		if (this.overwritePolyglotTimestamps.length > 0) {
 			this.suggestions.add(new Suggestion({
 				icon: this.data.actions.XENOGLOSSY.icon,
 				content: <Trans id="blm.gauge.suggestions.overwritten-polyglot.content">
@@ -569,7 +566,7 @@ export class Gauge extends CoreGauge {
 				</Trans>,
 				severity: SEVERITY.MAJOR,
 				why: <Trans id="blm.gauge.suggestions.overwritten-polyglot.why">
-					<DataLink showIcon={false} action="XENOGLOSSY"/> got overwritten <Plural value={this.overwrittenPolyglot} one="# time" other="# times"/>.
+					<DataLink showIcon={false} action="XENOGLOSSY"/> got overwritten <Plural value={this.overwritePolyglotTimestamps.length} one="# time" other="# times"/>.
 				</Trans>,
 			}))
 		}
