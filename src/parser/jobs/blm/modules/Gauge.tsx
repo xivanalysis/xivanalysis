@@ -6,6 +6,7 @@ import {DataLink} from 'components/ui/DbLink'
 import {ActionKey} from 'data/ACTIONS'
 import {JOBS} from 'data/JOBS'
 import {Event, Events, FieldsBase} from 'event'
+import _ from 'lodash'
 import {TimestampHookArguments} from 'parser/core/Dispatcher'
 import {filter} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
@@ -14,8 +15,8 @@ import {CounterGauge, TimerGauge, Gauge as CoreGauge} from 'parser/core/modules/
 import Suggestions, {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import {Timeline} from 'parser/core/modules/Timeline'
 import {UnableToAct} from 'parser/core/modules/UnableToAct'
-import React from 'react'
-import {Table, Button} from 'semantic-ui-react'
+import React, {Fragment} from 'react'
+import {Message, Table, Button} from 'semantic-ui-react'
 import {isSuccessfulHit} from 'utilities'
 import {FIRE_SPELLS, ICE_SPELLS_TARGETED, ICE_SPELLS_UNTARGETED} from './Elements'
 
@@ -45,6 +46,12 @@ const AFFECTS_GAUGE_ON_CAST: ActionKey[] = [
 	'PARADOX',
 ]
 
+const GAUGE_ERROR_TYPE = {
+	NONE: 0,
+	OVERWROTE_PARADOX: 1,
+	OVERWROTE_POLYGLOT: 2,
+}
+
 /** Gauge state interface for consumers */
 export interface BLMGaugeState {
 	astralFire: number,
@@ -53,6 +60,11 @@ export interface BLMGaugeState {
 	polyglot: number,
 	enochian: boolean, // Keeping this as a calculated value to simplify RotationWatchdog's "did Enochian drop?" check
 	paradox: number
+}
+
+interface BLMGaugeError {
+	timestamp: number,
+	error: number
 }
 
 /** BLM Gauge Event interface & include in Event repository */
@@ -75,16 +87,15 @@ const POLYGLOT_COLOR = Color(JOBS.BLACK_MAGE.colour)
 
 export class Gauge extends CoreGauge {
 	static override handle = 'gauge'
-	static override title = t('blm.gauge.title')`Proc Overwrites`
+	static override title = t('blm.gauge.title')`Gauge`
 
 	@dependency private suggestions!: Suggestions
 	@dependency private unableToAct!: UnableToAct
 	@dependency private castTime!: CastTime
 	@dependency private timeline!: Timeline
 
+	private gaugeErrors: BLMGaugeError[] = []
 	private droppedEnoTimestamps: number[] = []
-	private overwriteParadoxTimestamps: number[] = []
-	private overwritePolyglotTimestamps: number[] = []
 
 	private fireSpellIds = FIRE_SPELLS.map(key => this.data.actions[key].id)
 	private iceSpellIds = [
@@ -359,7 +370,7 @@ export class Gauge extends CoreGauge {
 			(lastGaugeState.astralFire === ASTRAL_UMBRAL_MAX_STACKS && !this.umbralIceGauge.empty)) {
 
 			if (!this.paradoxGauge.empty) {
-				this.overwriteParadoxTimestamps.push(this.parser.currentEpochTimestamp)
+				this.gaugeErrors.push({timestamp: this.parser.currentEpochTimestamp, error: GAUGE_ERROR_TYPE.OVERWROTE_PARADOX})
 			}
 
 			this.paradoxGauge.generate(1)
@@ -465,7 +476,7 @@ export class Gauge extends CoreGauge {
 	private onGeneratePolyglot() {
 		// Can't just rely on CounterGauge.overCap since there's some weird timing things we have to account for
 		if (this.polyglotGauge.capped) {
-			this.overwritePolyglotTimestamps.push(this.parser.currentEpochTimestamp)
+			this.gaugeErrors.push({timestamp: this.parser.currentEpochTimestamp, error: GAUGE_ERROR_TYPE.OVERWROTE_POLYGLOT})
 		}
 
 		this.polyglotGauge.generate(1)
@@ -475,8 +486,11 @@ export class Gauge extends CoreGauge {
 
 	private onConsumePolyglot() {
 		// Safety to catch ordering issues where Foul/Xenoglossy is used late enough to trigger our overwrite check but happens before Poly actually overwrites
-		if (this.polyglotGauge.empty && this.overwritePolyglotTimestamps.length > 0) {
-			this.overwritePolyglotTimestamps.pop()
+		if (this.polyglotGauge.empty && this.gaugeErrors.length > 0) {
+			const lastPolyglotOverwriteIndex = _.findLastIndex(this.gaugeErrors, errorEvent => errorEvent.error === GAUGE_ERROR_TYPE.OVERWROTE_POLYGLOT)
+			if (lastPolyglotOverwriteIndex !== -1) {
+				this.gaugeErrors.splice(lastPolyglotOverwriteIndex, 1)
+			}
 		}
 
 		this.polyglotGauge.spend(1)
@@ -558,7 +572,8 @@ export class Gauge extends CoreGauge {
 			}))
 		}
 
-		if (this.overwritePolyglotTimestamps.length > 0) {
+		const polyglotOverwriteCount = this.gaugeErrors.filter(errorEvent => errorEvent.error === GAUGE_ERROR_TYPE.OVERWROTE_POLYGLOT).length
+		if (polyglotOverwriteCount > 0) {
 			this.suggestions.add(new Suggestion({
 				icon: this.data.actions.XENOGLOSSY.icon,
 				content: <Trans id="blm.gauge.suggestions.overwritten-polyglot.content">
@@ -566,7 +581,7 @@ export class Gauge extends CoreGauge {
 				</Trans>,
 				severity: SEVERITY.MAJOR,
 				why: <Trans id="blm.gauge.suggestions.overwritten-polyglot.why">
-					<DataLink showIcon={false} action="XENOGLOSSY"/> got overwritten <Plural value={this.overwritePolyglotTimestamps.length} one="# time" other="# times"/>.
+					<DataLink showIcon={false} action="XENOGLOSSY"/> got overwritten <Plural value={polyglotOverwriteCount} one="# time" other="# times"/>.
 				</Trans>,
 			}))
 		}
@@ -585,46 +600,56 @@ export class Gauge extends CoreGauge {
 		}
 	}
 
-	private overwriteMessage(timestamp: number) {
-		if (this.overwritePolyglotTimestamps.indexOf(timestamp) > -1) {
-			return <Trans id="blm.gauge.overwrites.polyglot">You overwrote Polyglot</Trans>
+	private errorMessage(errorEvent: BLMGaugeError) {
+		if (errorEvent.error === GAUGE_ERROR_TYPE.OVERWROTE_POLYGLOT) {
+			return <Trans id="blm.gauge.error.polyglot"><DataLink action="XENOGLOSSY"/> / <DataLink action="FOUL"/></Trans>
 		}
 
-		if (this.overwriteParadoxTimestamps.indexOf(timestamp) > -1) {
-			return <Trans id="blm.gauge.overwrites.paradox">You overwrote <DataLink action="PARADOX"/></Trans>
+		if (errorEvent.error === GAUGE_ERROR_TYPE.OVERWROTE_PARADOX) {
+			return <Trans id="blm.gauge.error.paradox"><DataLink action="PARADOX"/></Trans>
 		}
 
-		return <Trans id="blm.gauge.overwrites.unknown">Unknown proc overwritten</Trans>
+		return <Trans id="blm.gauge.error.unknown">Unknown error</Trans>
 	}
 
 	override output() {
-		const allOverwrites = this.overwritePolyglotTimestamps.concat(this.overwriteParadoxTimestamps).sort()
-		if (allOverwrites.length === 0) { return false }
+		if (this.gaugeErrors.length === 0) { return false }
 
 		return (
-			<Table collapsing unstackable compact="very">
-				<Table.Header>
-					<Table.Row>
-						<Table.HeaderCell><Trans id="blm.gauge.header.time">Time</Trans></Table.HeaderCell>
-						<Table.HeaderCell><Trans id="blm.gauge.header.event">Event</Trans></Table.HeaderCell>
-						<Table.HeaderCell></Table.HeaderCell>
-					</Table.Row>
-				</Table.Header>
-				<Table.Body>
-					{allOverwrites.map(timestamp => {
-						return <Table.Row key={timestamp}>
-							<Table.Cell>{this.parser.formatEpochTimestamp(timestamp)}</Table.Cell>
-							<Table.Cell>{this.overwriteMessage(timestamp)}</Table.Cell>
-							<Table.Cell>
-								<Button onClick={() =>
-									this.timeline.show(timestamp - this.parser.pull.timestamp, timestamp - this.parser.pull.timestamp)}>
-									<Trans id="blm.gauge.timelinelink-button">Jump to Timeline</Trans>
-								</Button>
-							</Table.Cell>
+			<Fragment>
+				<Message>
+					<Trans id="blm.gauge.error.content">
+						Reaching Astral Fire III then swapping to the opposite element generates a <DataLink action="PARADOX"/> marker.<br/>
+						Reaching Umbral Ice III and gaining 3 Umbral Hearts then swapping to the opposite element also generates a <DataLink action="PARADOX"/> marker.<br/>
+						Maintaining Enochian for 30 seconds or using <DataLink action="AMPLIFIER"/> generates a Polyglot charge, allowing
+						the casting of <DataLink action="XENOGLOSSY"/> or <DataLink action="FOUL"/>. You can have up to 2 Polyglot charges.<br/>
+						This module displays when these gauge effects were overwritten.
+					</Trans>
+				</Message>
+				<Table collapsing unstackable compact="very">
+					<Table.Header>
+						<Table.Row>
+							<Table.HeaderCell><Trans id="blm.gauge.header.time">Time</Trans></Table.HeaderCell>
+							<Table.HeaderCell><Trans id="blm.gauge.header.event">Overwrote</Trans></Table.HeaderCell>
+							<Table.HeaderCell></Table.HeaderCell>
 						</Table.Row>
-					})}
-				</Table.Body>
-			</Table>
+					</Table.Header>
+					<Table.Body>
+						{this.gaugeErrors.map(errorEvent => {
+							return <Table.Row key={errorEvent.timestamp}>
+								<Table.Cell>{this.parser.formatEpochTimestamp(errorEvent.timestamp)}</Table.Cell>
+								<Table.Cell>{this.errorMessage(errorEvent)}</Table.Cell>
+								<Table.Cell>
+									<Button onClick={() =>
+										this.timeline.show(errorEvent.timestamp - this.parser.pull.timestamp, errorEvent.timestamp - this.parser.pull.timestamp)}>
+										<Trans id="blm.gauge.timelinelink-button">Jump to Timeline</Trans>
+									</Button>
+								</Table.Cell>
+							</Table.Row>
+						})}
+					</Table.Body>
+				</Table>
+			</Fragment>
 		)
 	}
 }
