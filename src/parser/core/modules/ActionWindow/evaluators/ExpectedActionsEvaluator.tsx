@@ -13,7 +13,7 @@ import {EvaluationOutput, WindowEvaluator} from './WindowEvaluator'
  */
 export class ExpectedActionsEvaluator implements WindowEvaluator {
 
-	private expectedActions: TrackedAction[]
+	protected expectedActions: TrackedAction[]
 	private suggestionIcon: string
 	private suggestionContent: JSX.Element
 	private suggestionWindowName: JSX.Element
@@ -80,7 +80,7 @@ export class ExpectedActionsEvaluator implements WindowEvaluator {
 		return window.data.filter(cast => cast.action.id === action.action.id).length
 	}
 
-	private determineExpected(window: HistoryEntry<EvaluatedAction[]>, action: TrackedAction) {
+	protected determineExpected(window: HistoryEntry<EvaluatedAction[]>, action: TrackedAction) {
 		return action.expectedPerWindow + this.adjustCount(window, action)
 	}
 }
