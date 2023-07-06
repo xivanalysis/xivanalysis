@@ -94,6 +94,12 @@ export const patch610: Layer<ActionRoot> = {
 			icon: 'https://xivapi.com/i/002000/002780.png',
 			statusesApplied: ['SEARING_LIGHT'],
 		},
+		RUBY_RUIN_III: {
+			gcdRecast: 3000,
+		},
+		RUBY_OUTBURST: {
+			gcdRecast: 3000,
+		},
 		RUBY_RITE: {
 			gcdRecast: 3000,
 		},
