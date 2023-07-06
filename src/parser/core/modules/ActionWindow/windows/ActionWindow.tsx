@@ -140,7 +140,7 @@ export abstract class ActionWindow extends Analyser {
 	protected onComplete() {
 		this.onWindowEnd(this.parser.pull.timestamp + this.parser.pull.duration)
 
-		const actionHistory = this.mapHistoryActions()
+		const actionHistory = this.mapHistoryActions().filter(window => this.filterForSuggestions(window))
 		this.evaluators
 			.forEach(ev => {
 				const suggestion = ev.suggest(actionHistory)
@@ -153,7 +153,7 @@ export abstract class ActionWindow extends Analyser {
 	override output() {
 		if (this.history.entries.length === 0) { return undefined }
 
-		const actionHistory = this.mapHistoryActions()
+		const actionHistory = this.mapHistoryActions().filter(window => this.filterForOutput(window))
 		const evalColumns: EvaluationOutput[] = []
 		for (const ev of this.evaluators) {
 			const maybeColumns = ev.output(actionHistory)
@@ -165,7 +165,7 @@ export abstract class ActionWindow extends Analyser {
 
 		const rotationTargets = evalColumns.filter(column => column.format === 'table').map(column => column.header)
 		const notesData = evalColumns.filter(column => column.format === 'notes').map(column => column.header)
-		const rotationData = this.history.entries
+		const rotationData = this.history.entries.filter(window => this.filterForOutput(window))
 			.map((window, idx) => {
 				const targetsData: RotationTableTargetData = {}
 				const notesMap: RotationTableNotesMap = {}
@@ -182,7 +182,7 @@ export abstract class ActionWindow extends Analyser {
 					start: window.start - this.parser.pull.timestamp,
 					end: (window.end ?? window.start) - this.parser.pull.timestamp,
 					targetsData,
-					rotation: window.data.map(event => { return {action: event.action} }),
+					rotation: window.data.map(event => { return this.getRotationOutputForEvent(event) }),
 					notesMap,
 				}
 			})
@@ -211,5 +211,18 @@ export abstract class ActionWindow extends Analyser {
 					})
 					.filter(isDefined),
 			}))
+	}
+
+	// Extending classes may choose to override these functions to filter windows out of the suggestions and output respectively
+	protected filterForSuggestions(_window: HistoryEntry<EvaluatedAction[]>): boolean {
+		return true
+	}
+
+	protected filterForOutput(_window: HistoryEntry<EvaluatedAction[]> | HistoryEntry<Array<Events['action']>>): boolean {
+		return true
+	}
+
+	protected getRotationOutputForEvent(event: Events['action']) {
+		return {action: event.action}
 	}
 }
