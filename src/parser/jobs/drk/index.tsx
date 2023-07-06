@@ -27,6 +27,11 @@ export const DARK_KNIGHT = new Meta({
 	],
 	changelog: [
 		{
+			date: new Date('2022-07-06'),
+			Changes: () => <>Removed <DataLink action="THE_BLACKEST_NIGHT" showIcon={false} /> from the Defensives analysis since it's additionally constrained by MP.</>,
+			contributors: [CONTRIBUTORS.AKAIRYU],
+		},
+		{
 			date: new Date('2022-04-24'),
 			Changes: () => <>Update timeline for 6.1 changes to <DataLink action="LIVING_DEAD"/>, and combine <DataLink action="SALTED_EARTH"/> with <DataLink action="SALT_AND_DARKNESS"/>.</>,
 			contributors: [CONTRIBUTORS.AY],
