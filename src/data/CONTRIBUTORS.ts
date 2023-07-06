@@ -175,6 +175,7 @@ const CONTRIBUTORS = ensureRecord<Contributor>()({
 		avatar: require('./avatar/Mali.png'),
 		jobs: [
 			JOBS.BARD,
+			JOBS.BLACK_MAGE,
 		],
 	},
 	MALP: {
