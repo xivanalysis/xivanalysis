@@ -82,4 +82,9 @@ export const changelog = [
 		Changes: () => <>Display timestamps for Paradox and Polyglot overwrites.</>,
 		contributors: [CONTRIBUTORS.MALI],
 	},
+	{
+		date: new Date('2023-07-06'),
+		Changes: () => <>Fix a bug where Transposing to generate a Paradox during downtime could complain about missing Despairs during that downtime.</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
 ]

@@ -223,6 +223,7 @@ export class RotationWatchdog extends RestartWindow {
 		}))
 
 		// This was previously only for normal mid-fight windows but it probably should've been for everything...
+		// Also needs to be sequenced before the SkipT3Evaluator
 		this.addEvaluator(new ExtraHardT3Evaluator({
 			data: this.data,
 			metadataHistory: this.metadataHistory,
