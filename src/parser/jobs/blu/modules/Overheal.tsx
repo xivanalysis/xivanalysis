@@ -52,7 +52,7 @@ export class BLUOverheal extends Overheal {
 	}
 
 	private onCompleteExtra() {
-		// Ideally we only run the Overheal report if the person has Healer mimickry,
+		// Ideally we only run the Overheal report if the person has Healer mimicry,
 		// but detection of the status is finicky since it's a stance that people
 		// normally get before even going into the instance.
 

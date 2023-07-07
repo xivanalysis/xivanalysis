@@ -6,9 +6,9 @@ import React from 'react'
 import {Icon, Message} from 'semantic-ui-react'
 import {changelog} from './changelog'
 
-const description = t('blu.about.description')`BLU has wildly different play styles depending on your mimickry. This page will primarily focus on the DPS aspect of the job, so do take the advice with a grain of salt if you are healing or tanking.
+const description = t('blu.about.description')`BLU has wildly different play styles depending on your mimicry. This page will primarily focus on the DPS aspect of the job, so do take the advice with a grain of salt if you are healing or tanking.
 
-Worth also keeping in mind the usual adage that BLU content is won and lost on mechanics, not DPS. Following the suggestions here to optimize your performance will always be welcome, but it should not detract from mechanics; greeding Phantom Flurry ticks at the expense of your teammate's sanity is not recommended.
+Worth also keeping in mind the usual adage that BLU content is won and lost on mechanics, not DPS. Following the suggestions here to optimize your performance will always be welcome, but it should not detract from mechanics; greeding Phantom Flurry ticks at the expense of your teammates' sanity is not recommended.
 
 If you want further context for the suggestions given here, the [Blue Academy Discord](https://discord.gg/blueacademy) is the primary source for Blue Mage information.`
 
