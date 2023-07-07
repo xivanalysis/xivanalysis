@@ -38,7 +38,6 @@ export class ColdFog extends Analyser {
 	@dependency private data!: Data
 	@dependency private suggestions!: Suggestions
 
-	private touchOfFrostProcs = 0
 	private coldFogCasts = 0
 	private currentHook?: EventHook<Events['action']>
 	private touchOfFrostHistory = new History<ColdFogWindow>(
