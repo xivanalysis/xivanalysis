@@ -178,7 +178,7 @@ export class RevengeBlast extends Analyser {
 			.filter(revengeWindow => ((revengeWindow.end ?? revengeWindow.start) - revengeWindow.start) > REVENGE_BLAST_MINIMUM_WINDOW_MS)
 			.forEach(revengeWindow => {
 				const revengeStart = revengeWindow.start - this.parser.pull.timestamp - REVENGE_BLAST_CAST_TIME + SLIDECAST_OFFSET
-				const revengeEnd   = (revengeWindow.end ?? revengeWindow.start) - this.parser.pull.timestamp - REVENGE_BLAST_CAST_TIME + SLIDECAST_OFFSET
+				const revengeEnd = (revengeWindow.end ?? revengeWindow.start) - this.parser.pull.timestamp - REVENGE_BLAST_CAST_TIME + SLIDECAST_OFFSET
 				const forcedDowntime = downtime.getDowntime(
 					revengeWindow.start,
 					revengeWindow.end ?? revengeWindow.start,
@@ -186,7 +186,7 @@ export class RevengeBlast extends Analyser {
 				// TODO: this is a cop-out. Dealing with downtime is hard.
 				if (forcedDowntime > REVENGE_BLAST_MINIMUM_WINDOW_MS) { return }
 
-				const deltaMs      = revengeEnd - revengeStart - forcedDowntime
+				const deltaMs = revengeEnd - revengeStart - forcedDowntime
 				if (deltaMs < REVENGE_BLAST_MINIMUM_WINDOW_MS) { return }
 
 				const expectedGCDs = Math.floor(deltaMs / 1000 / gcd)

@@ -45,7 +45,7 @@ export class DroppedBuffs extends Analyser {
 	private onRemoveBuff(event: Events['statusRemove']) {
 		if (this.currentBuffs.has(event.status)) {
 			const buffStart = this.currentBuffs.get(event.status) ?? event.timestamp
-			const buffEnd   = event.timestamp
+			const buffEnd = event.timestamp
 			const buffDelta = buffEnd - buffStart
 			if (buffDelta >= this.misusedBuffs[event.status].duration) {
 				// Buff expired!

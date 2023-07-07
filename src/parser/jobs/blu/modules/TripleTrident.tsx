@@ -36,7 +36,7 @@ export class TripleTrident extends Analyser {
 
 	private onTripleTrident() {
 		const hasWhistle = this.actors.current.hasStatus(this.data.statuses.WHISTLE.id)
-		const hasTingle  = this.actors.current.hasStatus(this.data.statuses.TINGLING.id)
+		const hasTingle = this.actors.current.hasStatus(this.data.statuses.TINGLING.id)
 		if (hasWhistle && hasTingle) {
 			return
 		}

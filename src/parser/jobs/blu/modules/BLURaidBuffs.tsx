@@ -72,7 +72,7 @@ const ASTRAL = 2
 
 const allowedBuffOverwriteMs = 2000 // Probably too high?
 const dupedEventThresholdMs = 100
-const fallbackBuffDuration  = 15000
+const fallbackBuffDuration = 15000
 
 export class BLURaidBuffs extends Analyser {
 	static override handle = 'buffwindows'
@@ -92,7 +92,7 @@ export class BLURaidBuffs extends Analyser {
 	private buffActionHook?: EventHook<Events['action']>
 
 	private PECULIAR_LIGHT_ID = this.data.statuses.PECULIAR_LIGHT.id
-	private OFF_GUARD_ID      = this.data.statuses.OFF_GUARD.id
+	private OFF_GUARD_ID = this.data.statuses.OFF_GUARD.id
 	private CONDENSED_LIBRA_ASTRAL_ID = this.data.statuses.CONDENSED_LIBRA_ASTRAL.id
 	private CONDENSED_LIBRA_UMBRAL_ID = this.data.statuses.CONDENSED_LIBRA_UMBRAL.id
 	private CONDENSED_LIBRA_PHYSICAL_ID = this.data.statuses.CONDENSED_LIBRA_PHYSICAL.id
@@ -349,12 +349,12 @@ export class BLURaidBuffs extends Analyser {
 
 		const rotationData = ourBuffs.map(buffWindow => {
 			const buffStart = buffWindow.start - this.parser.pull.timestamp
-			const buffEnd   = (buffWindow.end ?? buffWindow.start) - this.parser.pull.timestamp
+			const buffEnd = (buffWindow.end ?? buffWindow.start) - this.parser.pull.timestamp
 
-			const buffId         = buffWindow.data.buffId
+			const buffId = buffWindow.data.buffId
 			const isBuffedAction = buffWindow.data.isBuffedAction
 			const relevantActionsBuffed = buffWindow.data.events.filter(e => {
-				const action     = this.data.getAction(e.action)
+				const action = this.data.getAction(e.action)
 				if (action === undefined) { return }
 				const damageType = action?.damageType
 				if (damageType === undefined) {
