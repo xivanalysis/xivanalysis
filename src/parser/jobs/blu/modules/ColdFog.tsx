@@ -95,7 +95,7 @@ export class ColdFog extends Analyser {
 			icon: this.data.actions.COLD_FOG.icon,
 			content: <Trans id="blu.coldfog.dropped.content">
 				Any damage taken while the <DataLink status="COLD_FOG"/> effect is active grants the <DataLink status="TOUCH_OF_FROST"/>
-				buff, allowing the use of <DataLink action="WHITE_DEATH" /> for 15 seconds.
+				buff, allowing the use of <DataLink action="WHITE_DEATH" /> for 15 seconds.<br />
 				You should ensure you can proc every cast of <DataLink action="COLD_FOG"/>.
 			</Trans>,
 			tiers: COLD_SEVERITY.DROPPED_COLD_FOG,
