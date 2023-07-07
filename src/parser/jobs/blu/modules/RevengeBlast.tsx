@@ -140,7 +140,7 @@ export class RevengeBlast extends Analyser {
 			tiers: REVENGE_SEVERITY.CAST_OUT_OF_WINDOW,
 			value: this.badRevengeBlasts,
 			why: <Trans id="blu.revenge_blast.bad.why">
-				<Plural value={this.badRevengeBlasts ?? 0} one="# Revenge Blast cast" other="# Revenge Blast casts" /> happened when above 20% HP
+				<Plural value={this.badRevengeBlasts} one="# Revenge Blast cast" other="# Revenge Blast casts" /> happened when above 20% HP
 			</Trans>,
 		}))
 

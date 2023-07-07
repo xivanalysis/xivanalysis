@@ -52,7 +52,7 @@ export class TripleTrident extends Analyser {
 			tiers: {1: SEVERITY.MEDIUM},
 			value: this.unbuffedTT,
 			why: <Trans id="blu.triple_trident.unbuffed.why">
-				<Plural value={this.unbuffedTT ?? 0} one="# Triple Trident use" other="# Triple Trident uses" /> were not buffed
+				<Plural value={this.unbuffedTT} one="# Triple Trident use" other="# Triple Trident uses" /> were not buffed
 			</Trans>,
 		}))
 	}

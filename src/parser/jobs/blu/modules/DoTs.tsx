@@ -68,7 +68,7 @@ export class DoTs extends CoreDoTs {
 			</Trans>,
 			tiers: SEVERITIES.UNBUFFED_SOT,
 			why: <Trans id ="blu.song_of_torment.suggestion.unbuffed.why">
-				<Plural value={this.unbuffedSongsOfTorment ?? 0} one="# Song of Torment was" other="# Songs of Torment were"/> not buffed.
+				<Plural value={this.unbuffedSongsOfTorment} one="# Song of Torment was" other="# Songs of Torment were"/> not buffed.
 			</Trans>,
 			value: this.unbuffedSongsOfTorment,
 		}))

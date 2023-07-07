@@ -331,7 +331,7 @@ export class BLURaidBuffs extends Analyser {
 				tiers: {1: SEVERITY.MEDIUM},
 				value: ourOverwritten,
 				why: <Trans id="blu.buffs.overwritten.why" >
-					<Plural value={ourOverwritten ?? 0} one="# application was " other="# applications were" /> overwritten by someone else
+					<Plural value={ourOverwritten} one="# application was " other="# applications were" /> overwritten by someone else
 				</Trans>,
 			}))
 		})

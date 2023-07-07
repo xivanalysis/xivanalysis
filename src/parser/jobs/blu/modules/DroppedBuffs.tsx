@@ -88,7 +88,7 @@ export class DroppedBuffs extends Analyser {
 			tiers: {1: SEVERITY.MEDIUM},
 			value: droppedStatusCount,
 			why: <Trans id="blu.droppedbuffs.suggestions.dropped.why" >
-				<Plural value={droppedStatusCount ?? 0} one="# Use of " other="# Uses of "/> <StatusLink {...droppedStatus} showIcon={false} /> expired.
+				<Plural value={droppedStatusCount} one="# Use of " other="# Uses of "/> <StatusLink {...droppedStatus} showIcon={false} /> expired.
 			</Trans>,
 		}))
 	}
@@ -104,7 +104,7 @@ export class DroppedBuffs extends Analyser {
 			tiers: {1: SEVERITY.MEDIUM},
 			value: overwrittenStatusCount,
 			why: <Trans id="blu.droppedbuffs.suggestions.overwritten.why" >
-				<Plural value={overwrittenStatusCount ?? 0} one="# Use of " other="# Uses of "/> <StatusLink {...overwrittenStatus} showIcon={false} /> were overwritten.
+				<Plural value={overwrittenStatusCount} one="# Use of " other="# Uses of "/> <StatusLink {...overwrittenStatus} showIcon={false} /> were overwritten.
 			</Trans>,
 		}))
 	}
