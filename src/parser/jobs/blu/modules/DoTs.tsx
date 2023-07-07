@@ -32,7 +32,7 @@ export class DoTs extends CoreDoTs {
 	@dependency private suggestions!: Suggestions
 
 	private bristleId?: Status['id']
-	private unbuffedSongsOfTorment = 0;
+	private unbuffedSongsOfTorment = 0
 
 	protected override trackedStatuses = [
 		this.data.statuses.BLEEDING.id,

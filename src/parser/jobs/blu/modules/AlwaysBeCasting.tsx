@@ -158,7 +158,7 @@ export class AlwaysBeCasting extends CoreAlwaysBeCasting {
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.PHANTOM_FLURRY.icon,
 			content: <Trans id="blu.phantom_flurry.dropped_ticks.content">
-				Dropping out of <DataLink action="PHANTOM_FLURRY" /> too early will lose damage ticks. If you are in a <DataLink action="MOON_FLUTE" /> window you want to wait out the entire channel; if you are using it outside of a window and activating the final kick, wait until the last second the <DataLink status="PHANTOM_FLURRY" /> effect is active.
+				Dropping out of <DataLink action="PHANTOM_FLURRY" /> too early will lose damage ticks. If you are in a <DataLink action="MOON_FLUTE" /> window you want to wait out the entire channel. If you are using it outside of a window and activating the final kick, wait until the last second the <DataLink status="PHANTOM_FLURRY" /> effect is active.
 			</Trans>,
 			why: <Trans id="blu.phantom_flurry.dropped_ticks.why">
 				<Plural value={missingFlurryTicks ?? 0} one="# Phantom Flurry tick was" other="# Phantom Flurry ticks were" /> dropped due to cancelling the channel too early.

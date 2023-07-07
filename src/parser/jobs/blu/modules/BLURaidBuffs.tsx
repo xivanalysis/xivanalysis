@@ -401,7 +401,7 @@ export class BLURaidBuffs extends Analyser {
 				<Trans id="blu.buffs.table.message">
 				Blue Mages can keep both <ActionLink action="OFF_GUARD"/> and <ActionLink action="PECULIAR_LIGHT"/> up for the entire duration of the fight, and may opt to have the <ActionLink action="CONDENSED_LIBRA"/> buffs running as well.
 					<br />
-				The table below shows when you used your buffs, as well as how many damaging party actions the buff covered; it also shows how many of those actions were also covered by the other two buffs. Ideally your team should coordinate to have <ActionLink action="OFF_GUARD" showIcon={false} /> and <ActionLink action="PECULIAR_LIGHT" showIcon={false} /> running all the time, making both numbers below equal.
+				The table below shows when you used your buffs, as well as how many damaging party actions the buff covered. It also shows how many of those actions were also covered by the other two buffs. Ideally your team should coordinate to have <ActionLink action="OFF_GUARD" showIcon={false} /> and <ActionLink action="PECULIAR_LIGHT" showIcon={false} /> running all the time, making both numbers below equal.
 				</Trans>
 			</Message>
 			<Table compact unstackable celled collapsing>
