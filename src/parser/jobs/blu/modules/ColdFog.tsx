@@ -7,7 +7,6 @@ import {EventHook} from 'parser/core/Dispatcher'
 import {filter} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
 import {History} from 'parser/core/modules/ActionWindow/History'
-import {Actors} from 'parser/core/modules/Actors'
 import {Data} from 'parser/core/modules/Data'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
@@ -36,7 +35,6 @@ export class ColdFog extends Analyser {
 	static override handle = 'coldfog'
 	static override title = t('blu.cold_fog.title')`Cold Fog`
 
-	@dependency private actors!: Actors
 	@dependency private data!: Data
 	@dependency private suggestions!: Suggestions
 
