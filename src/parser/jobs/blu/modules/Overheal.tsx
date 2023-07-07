@@ -2,15 +2,10 @@ import {Trans} from '@lingui/react'
 import ACTIONS from 'data/ACTIONS'
 import {Event} from 'event'
 import {filter} from 'parser/core/filter'
-import {dependency} from 'parser/core/Injectable'
-import {Actors} from 'parser/core/modules/Actors'
 import {Overheal, SuggestedColors} from 'parser/core/modules/Overheal'
 import React from 'react'
 
 export class BLUOverheal extends Overheal {
-
-	@dependency private actors!: Actors
-
 	override checklistRuleBreakout = true
 	override displayPieChart = true
 	override displaySuggestion = true
