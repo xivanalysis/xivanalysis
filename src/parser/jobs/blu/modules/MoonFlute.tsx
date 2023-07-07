@@ -67,7 +67,7 @@ export class MoonFlute extends BuffWindow {
 			suggestionIcon,
 			suggestionContent: <Trans id="blu.moonflutes.suggestions.gcds.content">
 				Regardless of spell speed, ideally a <ActionLink action="MOON_FLUTE" /> window should contain at least
-					4 GCDs and end in <ActionLink action="PHANTOM_FLURRY" />.  If you have higher latency this can
+					4 GCDs and end in <ActionLink action="PHANTOM_FLURRY" />. If you have higher latency this can
 					be problematic; changing your speed speed might help, and in a pinch you can try moving certain
 					oGCDs out of the window (<ActionLink action="J_KICK" />, <ActionLink action="GLASS_DANCE" />,
 				<ActionLink action="FEATHER_RAIN" />), or replacing <ActionLink action="THE_ROSE_OF_DESTRUCTION" />
@@ -129,7 +129,7 @@ export class MoonFlute extends BuffWindow {
 			suggestionContent: <Trans id="blu.moonflutes.suggestions.expected-actions.content">
 				<ActionLink action="MOON_FLUTE" /> is only worth using if the buffed actions during the window
 				will give you an extra 1260 potency (equivalent to casting <ActionLink action="SONIC_BOOM" /> six times).
-				The more of your larger cooldowns you can fit into the window, the better the result.  High-priority targets
+				The more of your larger cooldowns you can fit into the window, the better the result. High-priority targets
 				are <ActionLink action="NIGHTBLOOM" />, and finishing the combo with a <ActionLink action="PHANTOM_FLURRY" />.
 			</Trans>,
 			suggestionWindowName,

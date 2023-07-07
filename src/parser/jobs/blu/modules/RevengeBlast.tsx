@@ -183,7 +183,7 @@ export class RevengeBlast extends Analyser {
 					revengeWindow.start,
 					revengeWindow.end ?? revengeWindow.start,
 				)
-				// TODO: this is a cop-out.  Dealing with downtime is hard.
+				// TODO: this is a cop-out. Dealing with downtime is hard.
 				if (forcedDowntime > REVENGE_BLAST_MINIMUM_WINDOW_MS) { return }
 
 				const deltaMs      = revengeEnd - revengeStart - forcedDowntime
@@ -208,7 +208,7 @@ export class RevengeBlast extends Analyser {
 
 		return <Fragment>
 			<Message>
-				<Trans id="blu.revenge_blast.table.message">Finding windows to safely use <ActionLink action="REVENGE_BLAST"/> is always a good idea.  Even small windows of two GCDs can be attractive -- If you fumble the timing and the second cast only does 50 potency, it is still a DPS gain over casting a filler GCD twice.</Trans>
+				<Trans id="blu.revenge_blast.table.message">Finding windows to safely use <ActionLink action="REVENGE_BLAST"/> is always a good idea. Even small windows of two GCDs can be attractive -- If you fumble the timing and the second cast only does 50 potency, it is still a DPS gain over casting a filler GCD twice.</Trans>
 			</Message>
 			<RotationTable
 				targets={[gcdHeader]}

@@ -18,7 +18,7 @@ import {Team} from 'report'
 import {Message, Button, Table} from 'semantic-ui-react'
 import {DISPLAY_ORDER} from './DISPLAY_ORDER'
 
-// BLU has *five* raid buffs.  All of them behave essentially
+// BLU has *five* raid buffs. All of them behave essentially
 // like a NIN's Mug, applying a debuff on the boss that
 // increases damage, however, four of them actually have a
 // catch to them:
@@ -326,7 +326,7 @@ export class BLURaidBuffs extends Analyser {
 			this.suggestions.add(new TieredSuggestion({
 				icon: buff.icon,
 				content: <Trans id="blu.buffs.overwritten.content" >
-					Your <StatusLink {...buff} /> was overwritten by someone else before it ran out.  This might be reasonable depending on the fight, but worth examining and figuring out if your team needs to coordinate buffs.
+					Your <StatusLink {...buff} /> was overwritten by someone else before it ran out. This might be reasonable depending on the fight, but worth examining and figuring out if your team needs to coordinate buffs.
 				</Trans>,
 				tiers: {1: SEVERITY.MEDIUM},
 				value: ourOverwritten,
@@ -401,7 +401,7 @@ export class BLURaidBuffs extends Analyser {
 				<Trans id="blu.buffs.table.message">
 				Blue Mages can keep both <ActionLink action="OFF_GUARD"/> and <ActionLink action="PECULIAR_LIGHT"/> up for the entire duration of the fight, and may opt to have the <ActionLink action="CONDENSED_LIBRA"/> buffs running as well.
 					<br />
-				The table below shows when you used your buffs, as well as how many damaging party actions the buff covered; it also shows how many of those actions were also covered by the other two buffs.  Ideally your team should coordinate to have <ActionLink action="OFF_GUARD" showIcon={false} /> and <ActionLink action="PECULIAR_LIGHT" showIcon={false} /> running all the time, making both numbers below equal.
+				The table below shows when you used your buffs, as well as how many damaging party actions the buff covered; it also shows how many of those actions were also covered by the other two buffs. Ideally your team should coordinate to have <ActionLink action="OFF_GUARD" showIcon={false} /> and <ActionLink action="PECULIAR_LIGHT" showIcon={false} /> running all the time, making both numbers below equal.
 				</Trans>
 			</Message>
 			<Table compact unstackable celled collapsing>

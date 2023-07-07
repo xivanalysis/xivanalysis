@@ -16,7 +16,7 @@ const MAX_ALLOWED_MULTIWEAVE_DURING_MOON_FLUTE = 6
 // Surpanakha has four charges, and each it is pressed, it gives
 // a buff that increases the damage of the next Surpanakha, but
 // ONLY if no other action is used.
-// That "no other action" is EXTREMELY strict.  No GCD, no oGCDs,
+// That "no other action" is EXTREMELY strict. No GCD, no oGCDs,
 // no items, no sprint.
 //
 // Each Surpanakha cast is *roughly* ~850ms, assuming little latency;
@@ -60,11 +60,11 @@ export class BLUWeaving extends Weaving {
 			// clipping their next GCD, so we'll fall through and give them a suggestion
 			// based on that
 			if (weaves[weaves.length - 1].action === this.data.actions.SURPANAKHA.id) {
-				// ...but here's the other alternative.  They did the four Surpanakhas at
-				// the end of the weave slot.  IF they are following the standard opener,
+				// ...but here's the other alternative. They did the four Surpanakhas at
+				// the end of the weave slot. IF they are following the standard opener,
 				// then they did something like this:
 				//      Bristle (Swiftcast, Glass Dance, Surpanakha x4)
-				// So let's be understanding.  During a Moon Flute window, single or
+				// So let's be understanding. During a Moon Flute window, single or
 				// double weaving *before* the Surpanakhas is potentially fine.
 				if (this.actors.current.hasStatus(this.data.statuses.WAXING_NOCTURNE.id)) {
 					// Continue the handwavey assumption that any weave takes 1000ms
@@ -99,7 +99,7 @@ export class BLUWeaving extends Weaving {
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.SURPANAKHA.icon,
 			content: <Trans id="blu.weaving.bad_surpanakha.content">
-				Use all four <DataLink action="SURPANAKHA" /> charges at the same time, with no other actions in-between.  Even <DataLink action="SPRINT" showIcon={false} /> or using an item will cancel the buff.
+				Use all four <DataLink action="SURPANAKHA" /> charges at the same time, with no other actions in-between. Even <DataLink action="SPRINT" showIcon={false} /> or using an item will cancel the buff.
 			</Trans>,
 			why: <Trans id="blu.weaving.bad_surpanakha.why">
 				<Plural value={this.badSurpanakhaSequence ?? 0} one="# Surpanakha chain" other="# Surpanakha chains" /> dropped the buff early.

@@ -19,7 +19,7 @@ const SURPANAKHA_ANIMATION_LOCK_MS = 1000
 // Phantom Flurry as a Flamethrower-like.
 
 // This also removes the time under Waning Nocturne (the second half of Moon Flute)
-// from the ABC report.  Can't cast, am waning.
+// from the ABC report. Can't cast, am waning.
 
 interface PhantomFlurryWindow {
 	start: number
@@ -69,10 +69,10 @@ export class AlwaysBeCasting extends CoreAlwaysBeCasting {
 		// We go in here when someone uses Phantom Flurry and, instead of channeling
 		// the entire effect, instead presses the button a second time.
 		// For DPSes this is always bad, since you want Phantom Flurry to finish
-		// off your Moon Flute.  For tank/healer, pressing this button at the last
+		// off your Moon Flute. For tank/healer, pressing this button at the last
 		// possible moment is a DPS gain.
 		//
-		// So let's just use a very simple heuristic.  We'll say that we expect
+		// So let's just use a very simple heuristic. We'll say that we expect
 		// the full 5000ms channel, BUT, if they used the kick, then they should
 		// have waited at least 4000ms for most of the channel to have happened.
 
@@ -158,7 +158,7 @@ export class AlwaysBeCasting extends CoreAlwaysBeCasting {
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.PHANTOM_FLURRY.icon,
 			content: <Trans id="blu.phantom_flurry.dropped_ticks.content">
-				Dropping out of <DataLink action="PHANTOM_FLURRY" /> too early will lose damage ticks.  If you are in a <DataLink action="MOON_FLUTE" /> window you want to wait out the entire channel; if you are using it outside of a window and activating the final kick, wait until the last second the <DataLink status="PHANTOM_FLURRY" /> effect is active.
+				Dropping out of <DataLink action="PHANTOM_FLURRY" /> too early will lose damage ticks. If you are in a <DataLink action="MOON_FLUTE" /> window you want to wait out the entire channel; if you are using it outside of a window and activating the final kick, wait until the last second the <DataLink status="PHANTOM_FLURRY" /> effect is active.
 			</Trans>,
 			why: <Trans id="blu.phantom_flurry.dropped_ticks.why">
 				<Plural value={missingFlurryTicks ?? 0} one="# Phantom Flurry tick was" other="# Phantom Flurry ticks were" /> dropped due to cancelling the channel too early.
@@ -179,7 +179,7 @@ export class AlwaysBeCasting extends CoreAlwaysBeCasting {
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.PHANTOM_FLURRY_KICK.icon,
 			content: <Trans id="blu.phantom_flurry.dropped_kicks.content">
-				While the channel from <DataLink action="PHANTOM_FLURRY" /> is active, it becomes <DataLink action="PHANTOM_FLURRY_KICK" />, a 600 potency button.  If you are using <DataLink action="PHANTOM_FLURRY" /> outside of a <DataLink action="MOON_FLUTE" showIcon={false} /> window, then you should use the 600 potency button before the channel runs out.  Use this even if it means dropping the last tick of the channel.
+				While the channel from <DataLink action="PHANTOM_FLURRY" /> is active, it becomes <DataLink action="PHANTOM_FLURRY_KICK" />, a 600 potency button. If you are using <DataLink action="PHANTOM_FLURRY" /> outside of a <DataLink action="MOON_FLUTE" showIcon={false} /> window, then you should use the 600 potency button before the channel runs out. Use this even if it means dropping the last tick of the channel.
 			</Trans>,
 			why: <Trans id="blu.phantom_flurry.dropped_kicks.why">
 				<Plural value={missingFlurryKicks ?? 0} one="# Phantom Flurry big kick was" other="# Phantom Flurry big kicks were" /> dropped by not pressing the button again before the effect ran out.

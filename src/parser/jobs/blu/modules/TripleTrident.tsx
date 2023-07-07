@@ -47,7 +47,7 @@ export class TripleTrident extends Analyser {
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.TRIPLE_TRIDENT.icon,
 			content: <Trans id="blu.triple_trident.unbuffed.content">
-				<DataLink action="TRIPLE_TRIDENT" /> should always be buffed with <DataLink action="WHISTLE" /> and <DataLink action="TINGLE" />.  For <DataLink action="MOON_FLUTE" /> windows, you want to cast <DataLink action="WHISTLE" showIcon={false} /> and <DataLink action="TINGLE" showIcon={false} /> before casting <DataLink action="MOON_FLUTE" showIcon={false} />.
+				<DataLink action="TRIPLE_TRIDENT" /> should always be buffed with <DataLink action="WHISTLE" /> and <DataLink action="TINGLE" />. For <DataLink action="MOON_FLUTE" /> windows, you want to cast <DataLink action="WHISTLE" showIcon={false} /> and <DataLink action="TINGLE" showIcon={false} /> before casting <DataLink action="MOON_FLUTE" showIcon={false} />.
 			</Trans>,
 			tiers: {1: SEVERITY.MEDIUM},
 			value: this.unbuffedTT,
