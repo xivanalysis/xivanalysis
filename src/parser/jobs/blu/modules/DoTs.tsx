@@ -84,7 +84,7 @@ export class DoTs extends CoreDoTs {
 			tiers: SEVERITIES.UPTIME,
 			requirements: [
 				new Requirement({
-					name: <Trans id="blu.dots.requirement.uptime-bleed.name"><DataLink status="BLEEDING" /> uptime</Trans>,
+					name: <Trans id="blu.dots.requirement.uptime-bleed.name"><DataLink status="BLEEDING" showIcon={false} /> uptime</Trans>,
 					percent: uptimePercent,
 				}),
 			],
@@ -101,7 +101,7 @@ export class DoTs extends CoreDoTs {
 			tiers: SEVERITIES.CLIPPING,
 			value: clippingPerMinute,
 			why: <Trans id="blu.dots.suggestion.clip-bleed.why">
-				An average of {this.parser.formatDuration(clippingPerMinute)} of <DataLink status="BLEEDING" /> clipped per minute due to early refreshes.
+				An average of {this.parser.formatDuration(clippingPerMinute)} of <DataLink status="BLEEDING" showIcon={false} /> clipped per minute due to early refreshes.
 			</Trans>,
 		}))
 	}

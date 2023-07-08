@@ -158,7 +158,7 @@ export class AlwaysBeCasting extends CoreAlwaysBeCasting {
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.PHANTOM_FLURRY.icon,
 			content: <Trans id="blu.phantom_flurry.dropped_ticks.content">
-				Dropping out of <DataLink action="PHANTOM_FLURRY" /> too early will lose damage ticks. If you are in a <DataLink action="MOON_FLUTE" /> window you want to wait out the entire channel. If you are using it outside of a window and activating the final kick, wait until the last second the <DataLink status="PHANTOM_FLURRY" /> effect is active.
+				Dropping out of <DataLink action="PHANTOM_FLURRY" /> too early will lose damage ticks. If you are in a <DataLink action="MOON_FLUTE" /> window you want to wait out the entire channel. If you are using it outside of a window and activating the final kick, wait until the last second the <DataLink status="PHANTOM_FLURRY" showIcon={false} /> effect is active.
 			</Trans>,
 			why: <Trans id="blu.phantom_flurry.dropped_ticks.why">
 				<Plural value={missingFlurryTicks} one="# Phantom Flurry tick was" other="# Phantom Flurry ticks were" /> dropped due to cancelling the channel too early.
@@ -179,7 +179,7 @@ export class AlwaysBeCasting extends CoreAlwaysBeCasting {
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.PHANTOM_FLURRY_KICK.icon,
 			content: <Trans id="blu.phantom_flurry.dropped_kicks.content">
-				While the channel from <DataLink action="PHANTOM_FLURRY" /> is active, it becomes <DataLink action="PHANTOM_FLURRY_KICK" />, a 600 potency button. If you are using <DataLink action="PHANTOM_FLURRY" /> outside of a <DataLink action="MOON_FLUTE" showIcon={false} /> window, then you should use the 600 potency button before the channel runs out. Use this even if it means dropping the last tick of the channel.
+				While the channel from <DataLink action="PHANTOM_FLURRY" /> is active, it becomes <DataLink action="PHANTOM_FLURRY_KICK" />, a 600 potency button. If you are using <DataLink action="PHANTOM_FLURRY" showIcon={false} /> outside of a <DataLink action="MOON_FLUTE" showIcon={false} /> window, then you should use the 600 potency button before the channel runs out. Use this even if it means dropping the last tick of the channel.
 			</Trans>,
 			why: <Trans id="blu.phantom_flurry.dropped_kicks.why">
 				<Plural value={missingFlurryKicks} one="# Phantom Flurry big kick was" other="# Phantom Flurry big kicks were" /> dropped by not pressing the button again before the effect ran out.

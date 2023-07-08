@@ -156,7 +156,7 @@ export class RevengeBlast extends Analyser {
 			tiers: REVENGE_SEVERITY.UNWHISTLED_OPENING_REVENGE_BLAST,
 			value: unwhistledWindows,
 			why: <Trans id="blu.revenge_blast.unwhistled.why">
-				<Plural value={unwhistledWindows ?? 0} one="# Revenge Blast window" other="# Revenge Blast windows" /> did not have the <DataLink action="WHISTLE" /> buff.
+				<Plural value={unwhistledWindows ?? 0} one="# Revenge Blast window" other="# Revenge Blast windows" /> did not have the <DataLink action="WHISTLE" showIcon={false} /> buff.
 			</Trans>,
 		}))
 	}
