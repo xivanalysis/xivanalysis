@@ -185,6 +185,7 @@
   "blu.coldfog.dropped_casts.why": "{droppedWhiteDeathCasts, plural, one {# Cold Fog use} other {# Cold Fog uses}} cast <0/> less than 6 times.",
   "blu.coldfog.ineffective.content": "For <0/> to be effective, you need to cast <1/>at least two times while under <2/>.",
   "blu.coldfog.ineffective.why": "{ineffectiveColdFog, plural, one {# Cold Fog use} other {# Cold Fog uses}} were a DPS loss due to not using <0/> enough times",
+  "blu.deaths.why": "{0, plural, =1 {# death} other {# deaths}}.  That number does not include the {actorStings, plural, =1 {# death} other {# deaths}} from using <0/>",
   "blu.dots.requirement.uptime-bleed.name": "<0/> uptime",
   "blu.dots.rule.description": "The <0/> effect from Nightbloom and SoT is a solid 15% of your total damage.",
   "blu.dots.rule.name": "Keep your DoTs up",
