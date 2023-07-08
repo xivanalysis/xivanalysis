@@ -211,9 +211,9 @@ export class Overheal extends Analyser {
 	protected checklistRuleBreakout: boolean = false
 
 	// direct healing
-	private direct!: TrackedOverheal
+	protected direct!: TrackedOverheal
 	// Everything else
-	private trackedOverheals: TrackedOverheal[] = []
+	protected trackedOverheals: TrackedOverheal[] = []
 
 	/**
 	 * Implementing modules MAY override this to provide the 'why' for suggestion content
