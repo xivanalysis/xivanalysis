@@ -29,6 +29,11 @@ export const MACHINIST = new Meta({
 	],
 	changelog: [
 		{
+			date: new Date('2023-07-08'),
+			Changes: () => <>Fixed a rare bug that erroneously marked Wildfire as dealing 0 damage.</>,
+			contributors: [CONTRIBUTORS.HINT],
+		},
+		{
 			date: new Date('2023-07-02'),
 			Changes: () => <>Updated Hypercharge module to properly end after all 5 stacks are expended.</>,
 			contributors: [CONTRIBUTORS.HINT],
