@@ -3,7 +3,8 @@ import {Trans} from '@lingui/react'
 import {ActionLink} from 'components/ui/DbLink'
 import {RotationTargetOutcome} from 'components/ui/RotationTable'
 import {dependency} from 'parser/core/Injectable'
-import {BuffWindow, ExpectedActionGroupsEvaluator, ExpectedGcdCountEvaluator} from 'parser/core/modules/ActionWindow'
+import {BuffWindow, EvaluatedAction, TrackedActionGroup, ExpectedActionGroupsEvaluator, ExpectedGcdCountEvaluator} from 'parser/core/modules/ActionWindow'
+import {HistoryEntry} from 'parser/core/modules/ActionWindow/History'
 import {GlobalCooldown} from 'parser/core/modules/GlobalCooldown'
 import {SEVERITY} from 'parser/core/modules/Suggestions'
 import React from 'react'
@@ -146,7 +147,7 @@ export class MoonFlute extends BuffWindow {
 		return finalStingUsed >= 1 ? (-window.data.length+1) : 0
 	}
 
-	private adjustExpectedActionOutcome(window: HistoryEntry<EvaluatedAction[]>, _action: TrackedAction) {
+	private adjustExpectedActionOutcome(window: HistoryEntry<EvaluatedAction[]>, _action: TrackedActionGroup) {
 		const finalStingUsed = window.data.filter(event => (event.action.id === this.data.actions.FINAL_STING.id || event.action.id === this.data.actions.SELF_DESTRUCT.id)).length
 		if (finalStingUsed === 0) {
 			return
