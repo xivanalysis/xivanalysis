@@ -1,5 +1,4 @@
 import {Tincture} from 'parser/core/modules/Tincture'
-import {Swiftcast} from 'parser/core/modules/Swiftcast'
 import {AlwaysBeCasting} from './AlwaysBeCasting'
 import {BLURaidBuffs} from './BLURaidBuffs'
 import {ColdFog} from './ColdFog'

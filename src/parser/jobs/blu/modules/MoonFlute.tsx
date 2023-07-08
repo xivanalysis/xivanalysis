@@ -1,10 +1,8 @@
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
 import {ActionLink} from 'components/ui/DbLink'
-import {Action} from 'data/ACTIONS'
 import {dependency} from 'parser/core/Injectable'
-import {BuffWindow, ExpectedActionGroupsEvaluator, EvaluatedAction, TrackedAction, ExpectedActionsEvaluator, ExpectedGcdCountEvaluator} from 'parser/core/modules/ActionWindow'
-import {HistoryEntry} from 'parser/core/modules/ActionWindow/History'
+import {BuffWindow, ExpectedActionGroupsEvaluator, ExpectedGcdCountEvaluator} from 'parser/core/modules/ActionWindow'
 import {GlobalCooldown} from 'parser/core/modules/GlobalCooldown'
 import {SEVERITY} from 'parser/core/modules/Suggestions'
 import React from 'react'
@@ -81,47 +79,47 @@ export class MoonFlute extends BuffWindow {
 		this.addEvaluator(new ExpectedActionGroupsEvaluator({
 			expectedActionGroups: [
 				{
-					actions: [ this.data.actions.J_KICK, this.data.actions.QUASAR ],
+					actions: [this.data.actions.J_KICK, this.data.actions.QUASAR],
 					expectedPerWindow: 1,
 				},
 				{
-					actions: [ this.data.actions.TRIPLE_TRIDENT ],
+					actions: [this.data.actions.TRIPLE_TRIDENT],
 					expectedPerWindow: 1,
 				},
 				{
-					actions: [ this.data.actions.NIGHTBLOOM ],
+					actions: [this.data.actions.NIGHTBLOOM],
 					expectedPerWindow: 1,
 				},
 				{
-					actions: [ this.data.actions.THE_ROSE_OF_DESTRUCTION ],
+					actions: [this.data.actions.THE_ROSE_OF_DESTRUCTION],
 					expectedPerWindow: 1,
 				},
 				{
-					actions: [ this.data.actions.SHOCK_STRIKE, this.data.actions.BLU_MOUNTAIN_BUSTER ],
+					actions: [this.data.actions.SHOCK_STRIKE, this.data.actions.BLU_MOUNTAIN_BUSTER],
 					expectedPerWindow: 1,
 				},
 				{
-					actions: [ this.data.actions.BRISTLE ],
+					actions: [this.data.actions.BRISTLE],
 					expectedPerWindow: 1,
 				},
 				{
-					actions: [ this.data.actions.GLASS_DANCE ],
+					actions: [this.data.actions.GLASS_DANCE],
 					expectedPerWindow: 1,
 				},
 				{
-					actions: [ this.data.actions.SURPANAKHA ],
+					actions: [this.data.actions.SURPANAKHA],
 					expectedPerWindow: 4,
 				},
 				{
-					actions: [ this.data.actions.FEATHER_RAIN, this.data.actions.ERUPTION ],
+					actions: [this.data.actions.FEATHER_RAIN, this.data.actions.ERUPTION],
 					expectedPerWindow: 1,
 				},
 				{
-					actions: [ this.data.actions.MATRA_MAGIC ],
+					actions: [this.data.actions.MATRA_MAGIC],
 					expectedPerWindow: 1,
 				},
 				{
-					actions: [ this.data.actions.PHANTOM_FLURRY ],
+					actions: [this.data.actions.PHANTOM_FLURRY],
 					expectedPerWindow: 1,
 				},
 			],
