@@ -70,7 +70,7 @@ async function main() {
 	// Just tagging it manually here saves a lot of hassle later:
 	utaStatuses.push({
 		id: 1727,
-		name: "Waning Nocturne",
+		name: 'Waning Nocturne',
 		reasons: [
 			['lockActions'],
 		],
