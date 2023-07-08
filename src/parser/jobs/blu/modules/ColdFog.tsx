@@ -118,7 +118,7 @@ export class ColdFog extends Analyser {
 			tiers: COLD_SEVERITY.INEFFECTIVE_COLD_FOG,
 			value: ineffectiveColdFog,
 			why: <Trans id="blu.coldfog.ineffective.why">
-				<Plural value={ineffectiveColdFog} one="# Cold Fog use" other="# Cold Fog uses" /> were a DPS loss due to not using<DataLink action="WHITE_DEATH"  showIcon={false} showTooltip={false} /> enough times
+				<Plural value={ineffectiveColdFog} one="# Cold Fog use" other="# Cold Fog uses" /> were a DPS loss due to not using <DataLink action="WHITE_DEATH"  showIcon={false} showTooltip={false} /> enough times
 			</Trans>,
 		}))
 
