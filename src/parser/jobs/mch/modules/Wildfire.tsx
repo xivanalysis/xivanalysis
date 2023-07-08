@@ -67,14 +67,16 @@ export class Wildfire extends Analyser {
 		this.addEventHook(
 			playerFilter
 				.type('statusApply')
-				.status(this.data.statuses.WILDFIRE.id)
-		, this.onApply)
+				.status(this.data.statuses.WILDFIRE.id),
+			this.onApply
+		)
 
 		this.addEventHook(
 			playerFilter
 				.type('damage')
-				.cause(this.data.matchCauseStatusId([this.data.statuses.WILDFIRE.id]))
-		, this.onWildfireDamage)
+				.cause(this.data.matchCauseStatusId([this.data.statuses.WILDFIRE.id])),
+			this.onWildfireDamage
+		)
 
 		this.addEventHook('complete', this.onComplete)
 	}
