@@ -4,16 +4,103 @@ import {ActionLink} from 'components/ui/DbLink'
 import {Action} from 'data/ACTIONS'
 import {Status} from 'data/STATUSES'
 import {Events} from 'event'
-import {SEVERITY, SeverityTiers} from 'parser/core/modules/Suggestions'
+import {SEVERITY, SeverityTiers, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
 import {dependency} from '../Injectable'
-import {BuffWindow, EvaluatedAction, ExpectedGcdCountEvaluator} from './ActionWindow'
+import {BuffWindow, EvaluatedAction, EvaluationOutput, ExpectedGcdCountEvaluator, NotesEvaluator, WindowEvaluator} from './ActionWindow'
 import {HistoryEntry} from './ActionWindow/History'
 import {GlobalCooldown} from './GlobalCooldown'
+import {Icon} from 'semantic-ui-react'
 
 // Global default
 const MISSED_SWIFTCAST_SEVERITIES: SeverityTiers = {
 	1: SEVERITY.MAJOR,
+}
+
+type SwiftcastValidator = (window: HistoryEntry<EvaluatedAction[]>) => {
+	isValid: boolean,
+	noteContent: JSX.Element,
+}
+
+export interface SwiftcastEvaluatorOptions {
+	validators: SwiftcastValidator[]
+	suggestionIcon: string
+	suggestionContent: JSX.Element
+	suggestionWindowName: JSX.Element
+	severityTiers: SeverityTiers
+}
+
+class SwiftcastEvaluator implements WindowEvaluator, SwiftcastEvaluatorOptions {
+	validators: SwiftcastValidator[]
+	suggestionIcon: string
+	suggestionContent: JSX.Element
+	suggestionWindowName: JSX.Element
+	severityTiers: SeverityTiers
+
+	constructor(opt: SwiftcastEvaluatorOptions) {
+		this.validators = opt.validators
+		this.suggestionIcon = opt.suggestionIcon
+		this.suggestionContent = opt.suggestionContent
+		this.suggestionWindowName = opt.suggestionWindowName
+		this.severityTiers = opt.severityTiers
+	}
+
+	private isValidSwiftcastUse = (window: HistoryEntry<EvaluatedAction[]>) => {
+		return this.validators.every(validator => validator(window).isValid)
+	}
+
+	private generateValidColumn = (window: HistoryEntry<EvaluatedAction[]>) => {
+		const isValid = this.isValidSwiftcastUse(window)
+
+		return <Icon
+			name={isValid ? 'checkmark' : 'remove'}
+			className={isValid ? 'text-success' : 'text-error'}
+		/>
+	}
+	
+	private generateNotesColumn = (window: HistoryEntry<EvaluatedAction[]>) => {
+		if (this.isValidSwiftcastUse(window)) {
+			return <></>
+		}
+
+		return <>
+			{this.validators.map(validator => validator(window).noteContent)}
+		</>
+	}
+
+	public suggest = (windows: Array<HistoryEntry<EvaluatedAction[]>>) => {
+		return new TieredSuggestion({
+			icon: this.suggestionIcon,
+			content: this.suggestionContent,
+			tiers: this.severityTiers,
+			value: 0,
+			why: this.suggestionWindowName,
+		})
+	}
+
+	public output = (windows: Array<HistoryEntry<EvaluatedAction[]>>) => {
+		const columns: EvaluationOutput[] = [{
+			format: 'notes',
+			header: {
+				header: <Trans id="core.swiftcast.chart.valid.header">Valid?</Trans>,
+				accessor: 'valid',
+			},
+			rows: windows.map(this.generateValidColumn),
+		}]
+
+		if (!windows.every(this.isValidSwiftcastUse)) {
+			columns.push({
+				format: 'notes',
+				header: {
+					header: <Trans id="core.swiftcast.chart.why.header">Why?</Trans>,
+					accessor: 'why',
+				},
+				rows: windows.map(this.generateNotesColumn),
+			})
+		}
+
+		return columns
+	}
 }
 
 export abstract class Swiftcast extends BuffWindow {
@@ -27,15 +114,12 @@ export abstract class Swiftcast extends BuffWindow {
 	override initialise() {
 		super.initialise()
 
-		this.addEvaluator(new ExpectedGcdCountEvaluator({
-			expectedGcds: 1,
-			globalCooldown: this.globalCooldown,
-			hasStacks: true,
+		this.addEvaluator(new SwiftcastEvaluator({
+			validators: [],
 			suggestionIcon: this.data.actions.SWIFTCAST.icon,
 			suggestionContent: this.suggestionContent,
 			suggestionWindowName: <ActionLink action="SWIFTCAST" showIcon={false} />,
 			severityTiers: this.severityTiers,
-			adjustCount: this.adjustExpectedGcdCount.bind(this),
 		}))
 	}
 
@@ -63,6 +147,11 @@ export abstract class Swiftcast extends BuffWindow {
 	 */
 	protected considerSwiftAction(_action: Action): boolean {
 		return true
+	}
+
+	// Checks if Swiftcast fell off without being used
+	private droppedSwiftcastValidator = (window: HistoryEntry<EvaluatedAction[]>) => {
+		
 	}
 
 	// Provide our own logic for the end of the fight – even though the window is
