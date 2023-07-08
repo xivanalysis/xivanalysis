@@ -3,7 +3,7 @@ import {Trans} from '@lingui/react'
 import {ActionLink} from 'components/ui/DbLink'
 import {Action} from 'data/ACTIONS'
 import {dependency} from 'parser/core/Injectable'
-import {BuffWindow, EvaluatedAction, TrackedAction, ExpectedActionsEvaluator, ExpectedGcdCountEvaluator} from 'parser/core/modules/ActionWindow'
+import {BuffWindow, ExpectedActionGroupsEvaluator, EvaluatedAction, TrackedAction, ExpectedActionsEvaluator, ExpectedGcdCountEvaluator} from 'parser/core/modules/ActionWindow'
 import {HistoryEntry} from 'parser/core/modules/ActionWindow/History'
 import {GlobalCooldown} from 'parser/core/modules/GlobalCooldown'
 import {SEVERITY} from 'parser/core/modules/Suggestions'
@@ -78,102 +78,63 @@ export class MoonFlute extends BuffWindow {
 			hasStacks: false,
 		}))
 
-		const mfActionEvaluator = new MoonFluteExpectedActionsEvaluator({
-			expectedActions: [
+		this.addEvaluator(new ExpectedActionGroupsEvaluator({
+			expectedActionGroups: [
 				{
-					action: this.data.actions.J_KICK,
+					actions: [ this.data.actions.J_KICK, this.data.actions.QUASAR ],
 					expectedPerWindow: 1,
 				},
 				{
-					action: this.data.actions.TRIPLE_TRIDENT,
+					actions: [ this.data.actions.TRIPLE_TRIDENT ],
 					expectedPerWindow: 1,
 				},
 				{
-					action: this.data.actions.NIGHTBLOOM,
+					actions: [ this.data.actions.NIGHTBLOOM ],
 					expectedPerWindow: 1,
 				},
 				{
-					action: this.data.actions.THE_ROSE_OF_DESTRUCTION,
+					actions: [ this.data.actions.THE_ROSE_OF_DESTRUCTION ],
 					expectedPerWindow: 1,
 				},
 				{
-					action: this.data.actions.SHOCK_STRIKE,
+					actions: [ this.data.actions.SHOCK_STRIKE, this.data.actions.BLU_MOUNTAIN_BUSTER ],
 					expectedPerWindow: 1,
 				},
 				{
-					action: this.data.actions.BRISTLE,
+					actions: [ this.data.actions.BRISTLE ],
 					expectedPerWindow: 1,
 				},
 				{
-					action: this.data.actions.GLASS_DANCE,
+					actions: [ this.data.actions.GLASS_DANCE ],
 					expectedPerWindow: 1,
 				},
 				{
-					action: this.data.actions.SURPANAKHA,
+					actions: [ this.data.actions.SURPANAKHA ],
 					expectedPerWindow: 4,
 				},
 				{
-					action: this.data.actions.FEATHER_RAIN,
+					actions: [ this.data.actions.FEATHER_RAIN, this.data.actions.ERUPTION ],
 					expectedPerWindow: 1,
 				},
 				{
-					action: this.data.actions.MATRA_MAGIC,
+					actions: [ this.data.actions.MATRA_MAGIC ],
 					expectedPerWindow: 1,
 				},
 				{
-					action: this.data.actions.PHANTOM_FLURRY,
+					actions: [ this.data.actions.PHANTOM_FLURRY ],
 					expectedPerWindow: 1,
 				},
 			],
-			suggestionIcon,
+			suggestionIcon: suggestionIcon,
+			suggestionWindowName: suggestionWindowName,
 			suggestionContent: <Trans id="blu.moonflutes.suggestions.expected-actions.content">
 				<ActionLink action="MOON_FLUTE" /> is only worth using if the buffed actions during the window
 				will give you an extra 1260 potency (equivalent to casting <ActionLink action="SONIC_BOOM" showIcon={false} /> six times).
 				The more of your larger cooldowns you can fit into the window, the better the result. High-priority targets
 				are <ActionLink action="NIGHTBLOOM" showIcon={false} />, and finishing the combo with a <ActionLink action="PHANTOM_FLURRY" showIcon={false} />.
 			</Trans>,
-			suggestionWindowName,
 			severityTiers: SEVERITIES.MISSING_EXPECTED_USES,
-		})
-		mfActionEvaluator.setAltAction(this.data.actions.FEATHER_RAIN, this.data.actions.ERUPTION)
-		mfActionEvaluator.setAltAction(this.data.actions.SHOCK_STRIKE, this.data.actions.BLU_MOUNTAIN_BUSTER)
-		mfActionEvaluator.setAltAction(this.data.actions.J_KICK, this.data.actions.QUASAR)
-		this.addEvaluator(mfActionEvaluator)
-	}
-
-}
-
-class MoonFluteExpectedActionsEvaluator extends ExpectedActionsEvaluator {
-	private altActions = new Map<Action['id'], Action>()
-	private foundAltActions = new Map<Action['id'], Action>()
-
-	public setAltAction(action: Action, altAction: Action) {
-		this.altActions.set(action.id, altAction)
-	}
-
-	// Just a small subclass that handles our alternative actions.
-	override countUsed(window: HistoryEntry<EvaluatedAction[]>, action: TrackedAction) {
-		const altAction = this.altActions.get(action.action.id)
-		if (altAction !== undefined) {
-			const altActionID = altAction.id
-			const foundAlt = window.data.filter(cast => cast.action.id === altActionID).length
-			if (foundAlt > 0) {
-				this.foundAltActions.set(action.action.id, altAction)
-				return foundAlt
-			}
-		}
-
-		return super.countUsed(window, action)
-	}
-
-	override actionHeader(action: TrackedAction) {
-		const foundAlt = this.foundAltActions.get(action.action.id)
-		if (foundAlt === undefined) {
-			return super.actionHeader(action)
-		}
-
-		// We have alternative actions used
-		return <ActionLink showName={false} {...foundAlt}/>
+		}))
 	}
 }
 
