@@ -2,7 +2,6 @@ import {Trans} from '@lingui/react'
 import Color from 'color'
 import {ActionLink} from 'components/ui/DbLink'
 import {ActionKey} from 'data/ACTIONS'
-import {JOBS} from 'data/JOBS'
 import {Event, Events} from 'event'
 import {filter} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
@@ -33,6 +32,9 @@ const VOID_ACTIONS: ActionKey[] = [
 	'LEMURES_SCYTHE',
 ]
 
+const LEMURE_SHROUD_COLOR = Color('#4ec8dc')
+const VOID_SHROUD_COLOR = Color('#b614c4')
+
 export class DeathGauge extends CoreGauge {
 	static override handle = 'deathGauge'
 
@@ -40,23 +42,21 @@ export class DeathGauge extends CoreGauge {
 	@dependency private brokenLog!: BrokenLog
 
 	// Lemure's Shroud
-	// We initialise to zero because without Enshroud you can't get more
 	// History correction is enabled:
 	//   you cannot rely on point-in-time gauge values and need the history in onComplete for any consuming modules
 	private lemureShroud = this.add(new CounterGauge({
-		maximum: 0,
+		maximum: MAX_STACKS,
 		correctHistory: true,
-		graph: {label: 'Lemure Shroud', color: Color(JOBS.PALADIN.colour).fade(GAUGE_FADE), collapse: true},
+		graph: {handle: 'deathgauge', label: 'Lemure Shroud', color: LEMURE_SHROUD_COLOR.fade(GAUGE_FADE), collapse: true},
 	}))
 
 	// Void Shroud
-	// We initialise to zero because without Lemure you can't get more
 	// History correction is enabled:
 	//   you cannot rely on point-in-time gauge values and need the history in onComplete for any consuming modules
 	private voidShroud = this.add(new CounterGauge({
-		maximum: 0,
+		maximum: MAX_STACKS,
 		correctHistory: true,
-		graph: {label: 'Void Shroud', color: Color(JOBS.REAPER.colour).fade(GAUGE_FADE), collapse: true},
+		graph: {handle: 'deathgauge', label: 'Void Shroud', color: VOID_SHROUD_COLOR.fade(GAUGE_FADE), collapse: true},
 	}))
 
 	override initialise() {
@@ -71,25 +71,27 @@ export class DeathGauge extends CoreGauge {
 
 		// This is effectively emptying the gauge at end of fight for history
 		this.addEventHook('complete', this.onDeshroud)
+
+		this.resourceGraphs.addDataGroup({
+			handle: 'deathgauge',
+			label: <Trans id="rpr.gauge.resource.death">Death Gauge</Trans>,
+			collapse: true,
+			forceCollapsed: true,
+			stacking: true,
+		})
 	}
 
 	private onEnshroud() {
 		// Pre-fill Lemure stacks to max, using generate as that's what the tooltip says it does internally
-		this.lemureShroud.setMaximum(MAX_STACKS)
 		this.lemureShroud.generate(MAX_STACKS)
-
-		// Technically this can be 5 but your window would end if it did
-		this.voidShroud.setMaximum(MAX_STACKS - 1)
 	}
 
 	private onDeshroud() {
 		// Flush Lemure
 		this.lemureShroud.reset()
-		this.lemureShroud.setMaximum(0)
 
 		// Flush Void
 		this.voidShroud.reset()
-		this.voidShroud.setMaximum(0)
 	}
 
 	private onLemure(event: Events['action']) {
@@ -100,8 +102,7 @@ export class DeathGauge extends CoreGauge {
 
 		// Communio gets special handling since it eats everything you have
 		if (action.id === this.data.actions.COMMUNIO.id && this.lemureShroud.value > 0) {
-			// Use set so we can lodge this reset as a spend rather than a reset
-			this.lemureShroud.set(0, 'spend')
+			this.lemureShroud.spend(this.lemureShroud.value)
 			return
 		}
 
