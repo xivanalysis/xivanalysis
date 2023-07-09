@@ -10,6 +10,13 @@ export const changelog: ChangelogEntry[] = [
 	// 	contributors: [CONTRIBUTORS.YOU],
 	// },
 	{
+		date: new Date('2023-07-09'),
+		Changes: () => <>
+			Fixed prepull actions for defensive cooldowns module.
+		</>,
+		contributors: [CONTRIBUTORS.OTOCEPHALY],
+	},
+	{
 		date: new Date('2023-05-24'),
 		Changes: () => <>
 			Overhaul defensive cooldown analysis for all jobs, including role actions by default.
