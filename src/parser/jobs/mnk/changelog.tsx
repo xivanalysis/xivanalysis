@@ -3,6 +3,11 @@ import React from 'react'
 
 export const changelog = [
 	{
+		date: new Date('2023-07-09'),
+		Changes: () => <>Add gauge visualisation for Perfect Balance.</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
+	{
 		date: new Date('2023-07-02'),
 		Changes: () => <>Add 6.3 Riddle of Earth changes.</>,
 		contributors: [CONTRIBUTORS.HINT],

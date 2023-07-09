@@ -5,6 +5,7 @@ import {Defensives} from './Defensives'
 import {Demolish} from './Demolish'
 import {Forms} from './Forms'
 import {GreasedLightning} from './GreasedLightning'
+import {PerfectBalance} from './PerfectBalance'
 import {Positionals} from './Positionals'
 import {Revolution} from './Revolution'
 import {RiddleOfFire} from './RiddleOfFire'
@@ -25,6 +26,7 @@ export default [
 	Positionals,
 	RiddleOfFire,
 	RiddleOfWind,
+	PerfectBalance,
 	Steppies,
 	TwinSnakes,
 	Weaving,
