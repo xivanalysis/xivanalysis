@@ -44,8 +44,8 @@ export function Graph({resource, scaleX}: GraphProps) {
 				data={data}
 				curve={(resource.linear ?? false) ? curveLinear : curveStepAfter}
 				x={datum => scaleX(datum.time)}
-				y0={scaleY(0)}
-				y1={datum => scaleY(datum.current)}
+				y0={datum => scaleY(datum.base || 0)}
+				y1={datum => scaleY((datum.base || 0) + datum.current)}
 			/>
 		</ClipPath>
 
