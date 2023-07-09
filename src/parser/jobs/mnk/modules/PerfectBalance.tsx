@@ -79,7 +79,7 @@ export class PerfectBalance extends Gauge {
 		initialValue: 0,
 		graph: {
 			handle: BEAST_GAUGE_HANDLE,
-			label: <Trans id="mnk.gauge.resource.beast.opo">Raptor</Trans>,
+			label: <Trans id="mnk.gauge.resource.beast.raptor">Raptor</Trans>,
 			color: RAPTOR_GAUGE_COLOR.fade(GAUGE_FADE),
 		},
 	}))
@@ -88,7 +88,7 @@ export class PerfectBalance extends Gauge {
 		initialValue: 0,
 		graph: {
 			handle: BEAST_GAUGE_HANDLE,
-			label: <Trans id="mnk.gauge.resource.beast.opo">Coeurl</Trans>,
+			label: <Trans id="mnk.gauge.resource.beast.coeurl">Coeurl</Trans>,
 			color: COEURL_GAUGE_COLOR.fade(GAUGE_FADE),
 		},
 	}))
