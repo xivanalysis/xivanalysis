@@ -18,10 +18,15 @@ const MISSED_SWIFTCAST_SEVERITIES: SeverityTiers = {
 	1: SEVERITY.MAJOR,
 }
 
-export type SwiftcastValidator = (window: HistoryEntry<EvaluatedAction[]>) => {
+export interface SwiftcastValidResult {
+	// True if the Swiftcast use was good, false otherwise
 	isValid: boolean
+	// Optionally, you may provide an explanation of why the use was good/bad
 	note?: JSX.Element
 }
+
+export type SwiftcastValidator = 
+	(window: HistoryEntry<EvaluatedAction[]>) => SwiftcastValidResult
 
 export interface SwiftcastEvaluatorOptions {
 	validators: SwiftcastValidator[]
