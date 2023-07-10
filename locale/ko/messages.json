@@ -605,7 +605,7 @@
   "mch.wildfire.suggestions.fizzle.why": "소이탄이 {fizzledWildfires}회 무시되거나 0의 피해량을 입혔습니다.",
   "mch.wildfire.suggestions.gcds.content": "피해량을 최대화하기 위해 <0/> 기술을 사용하기 전 과충전이 준비되도록 하십시오. 소이탄 구간 중 글쿨 기술 1회당 150 위력을 가집니다. <1/> 기술을 사용하여 최대한 많은 글쿨 기술을 사용하십시오.",
   "mch.wildfire.suggestions.gcds.why": "글쿨 기술을 {EXPECTED_GCDS}회 미만으로 사용한 소이탄 구간이 총 {badWildfires}회입니다.",
-  "mch.wildfire.table.message": "디버프 위력을 최대화하려면 <0/> 구간 중 글쿨 기술을 {EXPECTED_GCDS}회 사용해야 합니다. 소이탄 구간 중에는 피해량을 준 글쿨 기술만 계산된다는 점에 유의하십시오.",
+  "mch.wildfire.table.message": "",
   "mch.wildfire.title": "소이탄",
   "mnk.about.description": "<0>안녕하세요, 몽림사 여러분! 아직도 연격삑사리가 나고 육합성도각은 먼지만 날리나요?</0><1>몽크 분석기를 통해 진정한 몽크로 거듭나세요! 로그로는 쉽게 볼 수 없는 버프 구간 및 유지, 그리고 기술이 제때 제대로 들어가는지 등을 분석해드립니다.</1><2>잘못된 정보 또는 제안할 기능이 있다면 저희 Discord 서버의 #fb-monk 채널에서 알려주세요.</2>",
   "mnk.action-timeline.chakras": "투기",

@@ -605,7 +605,7 @@
   "mch.wildfire.suggestions.fizzle.why": "{fizzledWildfires} de vos fenêtres de Flambée ont fait 0 dégât.",
   "mch.wildfire.suggestions.gcds.content": "Assurez-vous d'avoir une fenêtre d'Hypercharge préparée pour chaque utilisation de <0/> afin de maximiser les dommages. Chaque GCD lors d'une Flambée vaut 150 de puissance, il est donc important de maximiser le nombre de GCD avec <1/>.",
   "mch.wildfire.suggestions.gcds.why": "{badWildfires} de vos fenêtres de Flambée contiennent moins de {EXPECTED_GCDS} GCDS.",
-  "mch.wildfire.table.message": "Chaque fenêtre de <0/> devrait idéalement inclure {EXPECTED_GCDS} GCDs pour maximiser la puissance du debuff. Notez que chaque GCD ne compte pour la Flambée que si les dégâts atteignent la cible avant que la Flambée n'expire.",
+  "mch.wildfire.table.message": "",
   "mch.wildfire.title": "Flambée",
   "mnk.about.description": "<0>Bonjour ami moine! Votre volée de coups de fait pas assez mal ? Est-ce que votre étoile à six branches reste une vaste blague?</0><1>Cet outil d'analyse vous aidera à révéler votre plein potentiel en tant que moine en pointant du doigt des erreurs qui peuvent être difficile à trouver par soi-même. L'accent est mis sur l'utilisation de vos buffs, le temps où ils sont pertinents ainsi que la synergie avec les compétences utilisées pendant l'activité de ceux-ci.</1><2>Si vous remarquez n'importe quoi de faux ou sujet à controverse, veuillez s'il vous plaît aller sur notre serveur Discord et le dire dans le canal #fb-monk.</2>",
   "mnk.action-timeline.chakras": "Chakras",
