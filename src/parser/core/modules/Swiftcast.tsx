@@ -66,7 +66,7 @@ class SwiftcastEvaluator implements WindowEvaluator, SwiftcastEvaluatorOptions {
 	}
 
 	private generateNotesColumn = (window: HistoryEntry<EvaluatedAction[]>) => {
-		return <div style={{minWidth: '30%'}}>
+		return <div>
 			{this.validators.map(validator => validator(window).note)}
 		</div>
 	}
