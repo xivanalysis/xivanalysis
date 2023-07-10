@@ -28,7 +28,7 @@ export interface SwiftcastValidResult {
 export type SwiftcastValidator = 
 	(window: HistoryEntry<EvaluatedAction[]>) => SwiftcastValidResult
 
-export interface SwiftcastEvaluatorOptions {
+interface SwiftcastEvaluatorOptions {
 	validators: SwiftcastValidator[]
 	suggestionIcon: string
 	suggestionContent: JSX.Element
