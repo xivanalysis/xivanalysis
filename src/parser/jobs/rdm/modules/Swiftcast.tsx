@@ -2,12 +2,12 @@ import {Trans} from '@lingui/react'
 import {DataLink} from 'components/ui/DbLink'
 import {Action} from 'data/ACTIONS'
 import {dependency} from 'parser/core/Injectable'
+import {EvaluatedAction} from 'parser/core/modules/ActionWindow'
+import {HistoryEntry} from 'parser/core/modules/ActionWindow/History'
 import {Actors} from 'parser/core/modules/Actors'
 import {Swiftcast as CoreSwiftcast} from 'parser/core/modules/Swiftcast'
 import React from 'react'
 import {DISPLAY_ORDER} from './DISPLAY_ORDER'
-import {HistoryEntry} from 'parser/core/modules/ActionWindow/History'
-import {EvaluatedAction} from 'parser/core/modules/ActionWindow'
 
 export class Swiftcast extends CoreSwiftcast {
 	static override displayOrder = DISPLAY_ORDER.SWIFTCAST
@@ -37,7 +37,7 @@ export class Swiftcast extends CoreSwiftcast {
 			}
 		}
 
-		return { isValid: true }
+		return {isValid: true}
 	}
 
 	override swiftcastValidators = [this.badSwiftValidator]
@@ -51,7 +51,7 @@ export class Swiftcast extends CoreSwiftcast {
 			const hasDualcast = this.actors.current.hasStatus(this.data.statuses.DUALCAST.id)
 			return !(hasAcceleration || hasDualcast)
 		}
-	
+
 		// Use the default behaviour if no cast time
 		return super.considerSwiftAction(action)
 	}

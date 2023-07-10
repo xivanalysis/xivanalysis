@@ -1,17 +1,17 @@
 import {t} from '@lingui/macro'
+import {Plural, Trans} from '@lingui/react'
 import {ActionLink} from 'components/ui/DbLink'
 import {Action} from 'data/ACTIONS'
 import {Status} from 'data/STATUSES'
 import {Events} from 'event'
+import _ from 'lodash'
 import {SEVERITY, SeverityTiers, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
+import {Icon} from 'semantic-ui-react'
 import {dependency} from '../Injectable'
 import {BuffWindow, EvaluatedAction, EvaluationOutput, WindowEvaluator} from './ActionWindow'
 import {HistoryEntry} from './ActionWindow/History'
 import {GlobalCooldown} from './GlobalCooldown'
-import {Icon} from 'semantic-ui-react'
-import {Plural, Trans} from '@lingui/react'
-import _ from 'lodash'
 
 // Global default
 const MISSED_SWIFTCAST_SEVERITIES: SeverityTiers = {
@@ -61,7 +61,7 @@ class SwiftcastEvaluator implements WindowEvaluator, SwiftcastEvaluatorOptions {
 	}
 
 	private generateNotesColumn = (window: HistoryEntry<EvaluatedAction[]>) => {
-		return <div style={{ minWidth: '30%' }}>
+		return <div style={{minWidth: '30%'}}>
 			{this.validators.map(validator => validator(window).note)}
 		</div>
 	}
@@ -164,7 +164,7 @@ export abstract class Swiftcast extends BuffWindow {
 		const swiftConsumed = window.data.length > 0
 
 		if (swiftConsumed) {
-			return { isValid: true }
+			return {isValid: true}
 		}
 
 		// If it's the end of the fight, only ding if it was possible to consume the Swiftcast
@@ -174,14 +174,14 @@ export abstract class Swiftcast extends BuffWindow {
 		if (fightTimeRemaining <= gcdEstimate) {
 			return {
 				isValid: true,
-				note: <Trans id="core.swiftcast.table.note.unused-eof">Unused (end of fight)</Trans>
-			}
-		} else {
-			return {
-				isValid: false,
-				note: <Trans id="core.swiftcast.table.note.unused">Unused</Trans>
+				note: <Trans id="core.swiftcast.table.note.unused-eof">Unused (end of fight)</Trans>,
 			}
 		}
+		return {
+			isValid: false,
+			note: <Trans id="core.swiftcast.table.note.unused">Unused</Trans>,
+		}
+
 	}
 
 	override onWindowAction(event: Events['action']) {
