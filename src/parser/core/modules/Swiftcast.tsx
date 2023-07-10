@@ -65,11 +65,11 @@ class SwiftcastEvaluator implements WindowEvaluator, SwiftcastEvaluatorOptions {
 		/>
 	}
 
-	private generateNotesColumn = (window: HistoryEntry<EvaluatedAction[]>) => {
-		return <div>
+	private generateNotesColumn = (window: HistoryEntry<EvaluatedAction[]>) => (
+		<div>
 			{this.validators.map(validator => validator(window).note)}
 		</div>
-	}
+	)
 
 	public suggest = (windows: Array<HistoryEntry<EvaluatedAction[]>>) => {
 		const badUses = windows
