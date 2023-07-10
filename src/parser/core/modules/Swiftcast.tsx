@@ -52,9 +52,9 @@ class SwiftcastEvaluator implements WindowEvaluator, SwiftcastEvaluatorOptions {
 		return this.validators.every(validator => validator(window).isValid)
 	})
 
-	private hasNote = (window: HistoryEntry<EvaluatedAction[]>) => {
+	private hasNote = _.memoize((window: HistoryEntry<EvaluatedAction[]>) => {
 		return this.validators.some(validator => validator(window).note != null)
-	}
+	})
 
 	private generateValidColumn = (window: HistoryEntry<EvaluatedAction[]>) => {
 		const isValid = this.isValidSwiftcastUse(window)
