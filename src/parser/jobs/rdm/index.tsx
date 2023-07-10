@@ -31,6 +31,11 @@ export const RED_MAGE = new Meta({
 
 	changelog: [
 		{
+			date: new Date('2023-07-10'),
+			Changes: () => <>Fixed Swiftcast bugs that would erroneously report 2/1 or 0/1 Swiftcasted spells.</>,
+			contributors: [CONTRIBUTORS.HINT],
+		},
+		{
 			date: new Date('2023-05-27'),
 			Changes: () => <>Mark as supported for 6.4.</>,
 			contributors: [CONTRIBUTORS.LEYLIA],

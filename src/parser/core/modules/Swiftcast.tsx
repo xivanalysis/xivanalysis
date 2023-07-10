@@ -11,18 +11,17 @@ import {HistoryEntry} from './ActionWindow/History'
 import {GlobalCooldown} from './GlobalCooldown'
 import {Icon} from 'semantic-ui-react'
 import {Plural, Trans} from '@lingui/react'
+import _ from 'lodash'
 
 // Global default
 const MISSED_SWIFTCAST_SEVERITIES: SeverityTiers = {
 	1: SEVERITY.MAJOR,
 }
 
-interface SwiftcastValidResult {
+export type SwiftcastValidator = (window: HistoryEntry<EvaluatedAction[]>) => {
 	isValid: boolean
 	note?: JSX.Element
 }
-  
-export type SwiftcastValidator = (window: HistoryEntry<EvaluatedAction[]>) => SwiftcastValidResult
 
 export interface SwiftcastEvaluatorOptions {
 	validators: SwiftcastValidator[]
@@ -44,9 +43,9 @@ class SwiftcastEvaluator implements WindowEvaluator, SwiftcastEvaluatorOptions {
 		this.severityTiers = opt.severityTiers
 	}
 
-	private isValidSwiftcastUse = (window: HistoryEntry<EvaluatedAction[]>) => {
+	private isValidSwiftcastUse = _.memoize((window: HistoryEntry<EvaluatedAction[]>) => {
 		return this.validators.every(validator => validator(window).isValid)
-	}
+	})
 
 	private hasNote = (window: HistoryEntry<EvaluatedAction[]>) => {
 		return this.validators.some(validator => validator(window).note != null)
@@ -68,7 +67,9 @@ class SwiftcastEvaluator implements WindowEvaluator, SwiftcastEvaluatorOptions {
 	}
 
 	public suggest = (windows: Array<HistoryEntry<EvaluatedAction[]>>) => {
-		const badUses = windows.map(this.isValidSwiftcastUse).length
+		const badUses = windows
+			.filter(window => !this.isValidSwiftcastUse(window))
+			.length
 
 		return new TieredSuggestion({
 			icon: this.suggestionIcon,
@@ -85,8 +86,8 @@ class SwiftcastEvaluator implements WindowEvaluator, SwiftcastEvaluatorOptions {
 		const columns: EvaluationOutput[] = [{
 			format: 'notes',
 			header: {
-				header: <Trans id="core.swiftcast.chart.valid.header">Valid?</Trans>,
-				accessor: 'valid',
+				header: <Trans id="core.swiftcast.chart.good.header">Good Use?</Trans>,
+				accessor: 'good',
 			},
 			rows: windows.map(this.generateValidColumn),
 		}]
