@@ -23,6 +23,11 @@ export const changelog = [
 		contributors: [CONTRIBUTORS.SQUARE],
 	},
 	{
+		date: new Date('2022-04-29'),
+		Changes: () => <>Adjust Riddle of Wind expected count for windows that get the max possible.</>,
+		contributors: [CONTRIBUTORS.AY],
+	},
+	{
 		date: new Date('2022-03-03'),
 		Changes: () => <>Add Celestial Revolution support.</>,
 		contributors: [CONTRIBUTORS.SQUARE],
