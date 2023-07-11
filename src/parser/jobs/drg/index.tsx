@@ -12,12 +12,27 @@ export const DRAGOON = new Meta({
 	</>,
 	supportedPatches: {
 		from: '6.0',
-		to: '6.08',
+		to: '6.4',
 	},
 	contributors: [
 		{user: CONTRIBUTORS.FALINDRITH, role: ROLES.MAINTAINER},
 	],
 	changelog: [
+		{
+			date: new Date('2022-09-20'),
+			Changes: () => <>Corrected an issue that was causing the suggestion for using Dragon Sight on a partner to appear even when it was used on a partner.</>,
+			contributors: [CONTRIBUTORS.FALINDRITH],
+		},
+		{
+			date: new Date('2022-04-24'),
+			Changes: () => <>As of 6.1, weaving any jump (except for Stardiver) is no longer a weaving error. Because of this, we now expect both Spineshatter Dive charges to be used with Dragon Sight windows.</>,
+			contributors: [CONTRIBUTORS.FALINDRITH],
+		},
+		{
+			date: new Date('2022-04-03'),
+			Changes: () => <>Due to changes in 6.08, Life Surge is no longer expected to be in every Lance Charge window.</>,
+			contributors: [CONTRIBUTORS.FALINDRITH],
+		},
 		{
 			date: new Date('2022-01-22'),
 			Changes: () => <>Lance Charge and Dragon Sight windows now expect uses of oGCDs instead of uses of GCDs.</>,

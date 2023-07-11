@@ -1,7 +1,9 @@
 import {Attribute} from 'event'
 import {ensureActions} from '../type'
+import {SHARED} from './SHARED'
 
 export const WHM = ensureActions({
+	LITURGY_OF_THE_BELL_ACTIVATION: SHARED.UNKNOWN,
 	LITURGY_OF_THE_BELL_ON_EXPIRY: {
 		id: 25864,
 		name: 'Liturgy of the Bell',

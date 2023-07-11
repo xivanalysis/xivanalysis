@@ -4,7 +4,7 @@ import {ActionLink} from 'components/ui/DbLink'
 import {RotationTable} from 'components/ui/RotationTable'
 import {Event, Events} from 'event'
 import {Analyser} from 'parser/core/Analyser'
-import {EventHook} from 'parser/core/Dispatcher'
+import {EventHook, TimestampHook} from 'parser/core/Dispatcher'
 import {filter} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
 import {History} from 'parser/core/modules/ActionWindow/History'
@@ -16,6 +16,9 @@ import {Message} from 'semantic-ui-react'
 
 // We always want 6 GCDs in WF
 const EXPECTED_GCDS = 6
+
+// XIV timestamps suck, WF might last longer than we expect
+const WF_LENIENCE_MS = 200
 
 const SEVERITIES = {
 	BAD_WILDFIRE: {
@@ -51,30 +54,45 @@ export class Wildfire extends Analyser {
 	)
 
 	private actionHook?: EventHook<Events['action']>
+	private durationHook?: TimestampHook
 
 	private actionFilter = filter<Event>()
 		.source(this.parser.actor.id)
 		.type('action')
 
 	override initialise() {
-		const playerFilter = filter<Event>().source(this.parser.actor.id)
+		const playerFilter = filter<Event>()
+			.source(this.parser.actor.id)
 
-		this.addEventHook(playerFilter
-			.type('statusApply')
-			.status(this.data.statuses.WILDFIRE.id)
-		, this.onApply)
+		this.addEventHook(
+			playerFilter
+				.type('statusApply')
+				.status(this.data.statuses.WILDFIRE.id),
+			this.onApply
+		)
 
-		this.addEventHook(playerFilter
-			.type('statusRemove')
-			.status(this.data.statuses.WILDFIRE.id)
-		, this.onRemove)
-
-		this.addEventHook(playerFilter
-			.type('damage')
-			.cause(this.data.matchCauseStatusId([this.data.statuses.WILDFIRE.id]))
-		, this.onDamage)
+		this.addEventHook(
+			playerFilter
+				.type('damage')
+				.cause(this.data.matchCauseStatusId([this.data.statuses.WILDFIRE.id])),
+			this.onWildfireDamage
+		)
 
 		this.addEventHook('complete', this.onComplete)
+	}
+
+	private closeWindow(timestamp: number) {
+		this.history.closeCurrent(timestamp)
+
+		if (this.actionHook != null) {
+			this.removeEventHook(this.actionHook)
+			this.actionHook = undefined
+		}
+
+		if (this.durationHook != null) {
+			this.removeTimestampHook(this.durationHook)
+			this.durationHook = undefined
+		}
 	}
 
 	private onApply(event: Events['statusApply']) {
@@ -89,19 +107,14 @@ export class Wildfire extends Analyser {
 		if (this.actionHook == null) {
 			this.actionHook = this.addEventHook(this.actionFilter, this.onAction)
 		}
+
+		const expectedEnd = event.timestamp + this.data.statuses.WILDFIRE.duration + WF_LENIENCE_MS
+		this.durationHook = this.addTimestampHook(expectedEnd, () => this.closeWindow(expectedEnd))
 	}
 
-	private onDamage(event: Events['damage']) {
+	private onWildfireDamage(event: Events['damage']) {
 		this.history.doIfOpen(current => current.damage = event.targets[0].amount)
-	}
-
-	private onRemove(event: Events['statusRemove']) {
-		this.history.closeCurrent(event.timestamp)
-
-		if (this.actionHook != null) {
-			this.removeEventHook(this.actionHook)
-			this.actionHook = undefined
-		}
+		this.closeWindow(event.timestamp)
 	}
 
 	private onAction(event: Events['action']) {
@@ -174,7 +187,7 @@ export class Wildfire extends Analyser {
 
 		return <Fragment>
 			<Message>
-				<Trans id="mch.wildfire.table.message">Every <ActionLink action="WILDFIRE"/> window should ideally include {EXPECTED_GCDS} GCDs to maximize the debuff's potency. Note that a GCD only counts toward Wildfire if the damage lands on the target before Wildfire expires.</Trans>
+				<Trans id="mch.wildfire.table.message">Every <ActionLink action="WILDFIRE"/> window should ideally include {EXPECTED_GCDS} GCDs to maximize the debuff's potency. Note that a GCD only counts toward Wildfire if the damage lands on the target before Wildfire expires; <b>GCDs that show up in the "Rotation" column did not necessarily resolve their damage under Wildfire!</b></Trans>
 			</Message>
 			<RotationTable
 				targets={[gcdHeader]}

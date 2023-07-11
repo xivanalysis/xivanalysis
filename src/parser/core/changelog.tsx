@@ -10,9 +10,55 @@ export const changelog: ChangelogEntry[] = [
 	// 	contributors: [CONTRIBUTORS.YOU],
 	// },
 	{
+		date: new Date('2023-07-09'),
+		Changes: () => <>
+			Fixed prepull actions for defensive cooldowns module.
+		</>,
+		contributors: [CONTRIBUTORS.OTOCEPHALY],
+	},
+	{
+		date: new Date('2023-05-24'),
+		Changes: () => <>
+			Overhaul defensive cooldown analysis for all jobs, including role actions by default.
+		</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
+	{
+		date: new Date('2023-01-22'),
+		Changes: () => <>
+			Fix event ordering inaccuracies when a buff application and a damage event occur on the same timestamp.
+		</>,
+		contributors: [CONTRIBUTORS.HINT],
+	},
+	{
+		date: new Date('2022-04-20'),
+		Changes: () => <>Update core raid buffs to use the correct NIN buff name in timeline.</>,
+		contributors: [CONTRIBUTORS.AY],
+	},
+	{
+		date: new Date('2022-03-29'),
+		Changes: () => <>
+			Update Always Be Casting to target 98% and show at top of checklist.
+		</>,
+		contributors: [CONTRIBUTORS.AY],
+	},
+	{
+		date: new Date('2022-02-17'),
+		Changes: () => <>
+			Allow core Procs to hide the timeline row. This was previously enforced, jobs can now hide it.
+			This is useful for jobs that have GCDs with lots of procs getting duplicated information.
+		</>,
+		contributors: [CONTRIBUTORS.AY],
+	},
+	{
+		date: new Date('2022-02-12'),
+		Changes: () => <>Make core Procs counter values accessible to job-specific overrides.</>,
+		contributors: [CONTRIBUTORS.AY],
+	},
+	{
 		date: new Date('2022-02-11'),
 		Changes: () => <>
-		Fix Swiftcast end of fight forgiveness. It was increasing the number of expected GCDs to 2 instead of reducing it to 0.
+			Fix Swiftcast end of fight forgiveness. It was increasing the number of expected GCDs to 2 instead of reducing it to 0.
 		</>,
 		contributors: [CONTRIBUTORS.DEAN],
 	},
@@ -37,6 +83,11 @@ export const changelog: ChangelogEntry[] = [
 			This should resolve incorrect death flags due to tank invulnerabilities and mechanics such as Death's Toll.
 		</>,
 		contributors: [CONTRIBUTORS.ACKWELL],
+	},
+	{
+		date: new Date('2022-01-22'),
+		Changes: () => <>Add proper severity types to core Procs overrides.</>,
+		contributors: [CONTRIBUTORS.AY],
 	},
 	{
 		date: new Date('2022-01-12'),

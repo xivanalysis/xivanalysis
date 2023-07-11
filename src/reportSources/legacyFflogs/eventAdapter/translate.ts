@@ -1,7 +1,7 @@
 import * as Sentry from '@sentry/browser'
 import {STATUS_ID_OFFSET} from 'data/STATUSES'
 import {Event, Events, Cause, SourceModifier, TargetModifier, AttributeValue, Attribute} from 'event'
-import {Actor, Team} from 'report'
+import {Actor} from 'report'
 import {resolveActorId} from '../base'
 import {ActorResources, BuffEvent, BuffStackEvent, CastEvent, CombatantInfoEvent, DamageEvent, DeathEvent, FflogsEvent, HealEvent, HitType, InstaKillEvent, TargetabilityUpdateEvent} from '../eventTypes'
 import {AdapterStep} from './base'
@@ -53,9 +53,6 @@ export class TranslateAdapterStep extends AdapterStep {
 	// Using negatives so we don't tread on fflog's positive sequence IDs
 	private nextFakeSequence = -1
 
-	// Set of sequence IDs that have been explicitly seen in a calculated event
-	private calculatedSequences = new Set<number>()
-
 	override adapt(baseEvent: FflogsEvent, _adaptedEvents: Event[]): Event[] {
 		switch (baseEvent.type) {
 		case 'begincast':
@@ -80,8 +77,6 @@ export class TranslateAdapterStep extends AdapterStep {
 		case 'refreshdebuff':
 			return [this.adaptStatusApplyEvent(baseEvent)]
 
-		// TODO: Due to FFLogs™️ Quality™️, this effectively results in a double application
-		// of every stacked status. Probably should resolve that out.
 		case 'applybuffstack':
 		case 'applydebuffstack':
 		case 'removebuffstack':
@@ -102,6 +97,8 @@ export class TranslateAdapterStep extends AdapterStep {
 			return this.adaptCombatantInfoEvent(baseEvent)
 
 		/* eslint-disable no-fallthrough */
+		// TODO: This could be _really_ useful. Like, combatantinfo tier useful but even more so. But it will require non-trivial consideration around how we want to approach the data itself.
+		case 'gaugeupdate':
 		// Dispels are already modelled by other events, and aren't something we really care about
 		case 'dispel':
 		// FFLogs computed value, could be useful in the future for shield healing analysis.
@@ -123,6 +120,9 @@ export class TranslateAdapterStep extends AdapterStep {
 		// Could be interesting to do something with, but not important for analysis
 		case 'worldmarkerplaced':
 		case 'worldmarkerremoved':
+		// Seem to be representation of mechanics - interesting data, but likely not useful for analysis without in-depth per-fight logic.
+		case 'headmarker':
+		case 'tether':
 		// Not My Problem™️
 		case 'checksummismatch':
 		// New event type from unreleased (as of 2021/04/26) fflogs client. Doesn't contain anything useful.
@@ -169,18 +169,19 @@ export class TranslateAdapterStep extends AdapterStep {
 		// Calc events should all have a packet ID for sequence purposes. Otherwise, this is a damage or heal effect packet for an over time effect.
 		const sequence = event.packetID
 
+		const cause = resolveCause(event.ability.guid)
+
 		// As of ~6.08, FF Logs reports a packetID that links all `damage` events from a single DOT application, however these still do not have calculated events.
-		if (sequence == null || !this.calculatedSequences.has(sequence)) {
+		if (sequence == null || cause.type === 'status') {
 			// Damage over time or Heal over time effects are sent as damage/heal events without a sequence ID -- there is no execute confirmation for over time effects, just the actual damage or heal event
 			// Similarly, certain failed hits will generate an "unpaired" event
-			const cause = resolveCause(event.ability.guid)
 			if (
 				cause.type === 'status'
 				|| EFFECT_ONLY_ACTIONS.has(event.ability.guid)
 				|| FAILED_HITS.has(event.hitType)
 			) {
-				if (event.type === 'damage') { return this.adaptDamageEvent(event) }
-				if (event.type === 'heal') { return this.adaptHealEvent(event) }
+				if (event.type === 'damage') { return this.adaptDamageEvent(event, true) }
+				if (event.type === 'heal') { return this.adaptHealEvent(event, true) }
 			}
 
 			// Damage event with no sequence ID to match to a calculated damage event, and does not resolve as an over time effect
@@ -239,8 +240,8 @@ export class TranslateAdapterStep extends AdapterStep {
 		]
 	}
 
-	private adaptDamageEvent(event: DamageEvent): Array<Events['damage' | 'actorUpdate']> {
-		const sequence = event.packetID
+	private adaptDamageEvent(event: DamageEvent, omitSequence: boolean = false): Array<Events['damage' | 'actorUpdate']> {
+		const sequence = omitSequence ? undefined : event.packetID
 
 		// Calculate source modifier
 		let sourceModifier = sourceHitType[event.hitType] ?? SourceModifier.NORMAL
@@ -269,15 +270,11 @@ export class TranslateAdapterStep extends AdapterStep {
 			}],
 		}
 
-		if (sequence != null) {
-			this.calculatedSequences.add(sequence)
-		}
-
 		return [newEvent, ...this.buildActorUpdateResourceEvents(event)]
 	}
 
-	private adaptHealEvent(event: HealEvent): Array<Events['heal' | 'actorUpdate']> {
-		const sequence = event.packetID
+	private adaptHealEvent(event: HealEvent, omitSequence: boolean = false): Array<Events['heal' | 'actorUpdate']> {
+		const sequence = omitSequence ? undefined : event.packetID
 		const overheal = event.overheal ?? 0
 
 		const newEvent: Events['heal'] = {
@@ -292,10 +289,6 @@ export class TranslateAdapterStep extends AdapterStep {
 				overheal,
 				sourceModifier: sourceHitType[event.hitType] ?? SourceModifier.NORMAL,
 			}],
-		}
-
-		if (sequence != null) {
-			this.calculatedSequences.add(sequence)
 		}
 
 		return [newEvent, ...this.buildActorUpdateResourceEvents(event)]
@@ -346,24 +339,11 @@ export class TranslateAdapterStep extends AdapterStep {
 		resources: ActorResources,
 		event: FflogsEvent,
 	): Events['actorUpdate'] {
-		const actor = this.pull.actors.find(actor => actor.id === actorId)
-
-		// FF Logs is doing some incorrect adjustments to HP resources that cause a
-		// 0 HP report without an accompanying death. These are typically caused by
-		// 1-hit mechanics being survived due to either fight mechanics or tank
-		// invulnerabilities - we can safely cap resource updates at 1 HP, and wait
-		// for the death event for a 0 HP update. This does mean deaths can be a
-		// little delayed in the event stream, but is probably an overall safer methodology.
-		let currentHp = resources.hitPoints
-		if (actor?.team === Team.FRIEND) {
-			currentHp = Math.max(1, currentHp)
-		}
-
 		return {
 			...this.adaptBaseFields(event),
 			type: 'actorUpdate',
 			actor: actorId,
-			hp: {current: currentHp, maximum: resources.maxHitPoints},
+			hp: {current: resources.hitPoints, maximum: resources.maxHitPoints},
 			mp: {current: resources.mp, maximum: resources.maxMP},
 			position: {x: resources.x, y: resources.y, bearing: resources.facing},
 		}

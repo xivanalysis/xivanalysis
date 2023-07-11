@@ -21,11 +21,4 @@ export default class OGCDDowntime extends CooldownDowntime {
 		{cooldowns: [this.data.actions.DEVILMENT]},
 		{cooldowns: [this.data.actions.FLOURISH]},
 	]
-
-	override defensiveCooldowns = [
-		{cooldowns: [this.data.actions.SHIELD_SAMBA]},
-		{cooldowns: [this.data.actions.IMPROVISATION]},
-		{cooldowns: [this.data.actions.CURING_WALTZ]},
-		{cooldowns: [this.data.actions.SECOND_WIND]},
-	]
 }

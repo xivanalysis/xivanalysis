@@ -1,13 +1,12 @@
 import {AttributeValue, Event, Events, Position, Resource} from 'event'
 import _ from 'lodash'
 import {Actor} from 'report'
-import {FflogsEvent} from '../eventTypes'
 import {AdapterStep} from './base'
 
 export class DeduplicateActorUpdateStep extends AdapterStep {
 	private actorState = new Map<Actor['id'], Events['actorUpdate']>()
 
-	override adapt(baseEvent: FflogsEvent, adaptedEvents: Event[]): Event[] {
+	override postprocess(adaptedEvents: Event[]): Event[] {
 		const out: Event[] = []
 		for (const event of adaptedEvents) {
 			const adapted = event.type === 'actorUpdate'

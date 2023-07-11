@@ -36,6 +36,7 @@ export class Zoe extends BuffWindow {
 		this.addEvaluator(new ExpectedGcdCountEvaluator({
 			expectedGcds: 1,
 			globalCooldown: this.globalCooldown,
+			hasStacks: true,
 			suggestionIcon: this.data.actions.ZOE.icon,
 			suggestionContent: <Trans id="sge.zoe.missed.suggestion.content"><DataLink action="ZOE"/> increases the power of your next healing spell. Make sure to use one before it expires.</Trans>,
 			suggestionWindowName: <DataLink action="ZOE" showIcon={false} />,

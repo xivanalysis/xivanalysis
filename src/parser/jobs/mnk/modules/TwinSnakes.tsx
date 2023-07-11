@@ -1,6 +1,6 @@
 import {Plural, Trans} from '@lingui/react'
 import {DataLink} from 'components/ui/DbLink'
-import {Action, ActionKey} from 'data/ACTIONS'
+import {Action, ActionKey, getBasePotency} from 'data/ACTIONS'
 import {Status} from 'data/STATUSES'
 import {Event, Events} from 'event'
 import {Analyser} from 'parser/core/Analyser'
@@ -144,7 +144,7 @@ export class TwinSnakes extends Analyser {
 		this.stopAndSave(this.parser.pull.timestamp + this.parser.pull.duration)
 
 		// Calculate derped potency to early refreshes
-		const lostTruePotency = this.earlySnakes * (this.data.actions.TRUE_STRIKE.potency - this.data.actions.TWIN_SNAKES.potency)
+		const lostTruePotency = this.earlySnakes * (getBasePotency(this.data.actions.TRUE_STRIKE) - getBasePotency(this.data.actions.TWIN_SNAKES))
 
 		this.checklist.add(new Rule({
 			name: <Trans id="mnk.twinsnakes.checklist.name">Keep <DataLink status="DISCIPLINED_FIST" showIcon={false}/> up</Trans>,

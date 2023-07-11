@@ -1,28 +1,53 @@
-import {Trans} from '@lingui/macro'
-import {ActionLink} from 'components/ui/DbLink'
+import {t} from '@lingui/macro'
+import TransMarkdown from 'components/ui/TransMarkdown'
 import CONTRIBUTORS, {ROLES} from 'data/CONTRIBUTORS'
 import {Meta} from 'parser/core/Meta'
 import React from 'react'
 
+const about = t('brd.about.description')`
+Welcome to the Bard module! Although Bard might seem to be a straightforward job on the surface, its complexity can be deceiving.
+Considered by many as an "*easy to learn, hard to master*" job, Bards have to make minute-to-minute decisions about their repertoire procs, Damage-over-Time actions, and Soul Voice gauge.
+
+To understand the fundamentals behind the suggestions given below, check out one of the following guides:
+
+- [Icy Veins Bard Guide](https://www.icy-veins.com/ffxiv/bard-guide)
+- [The Balance Bard Guide](https://www.thebalanceffxiv.com/jobs/ranged/bard)
+`
+
 export const BARD = new Meta({
 	modules: () => import('./modules' /* webpackChunkName: "jobs-brd" */),
 	Description: () => <>
-		<Trans id="brd.about.description">
-			<p>Welcome to the Bard module! Despite being a very straightforward job, Bard's complexity is deceiving.</p>
-			<p>Considered by many as an <i>"easy to learn, hard to master"</i> job, Bard is a job that relies heavily on decision-making.</p>
-			<p>Improvements on Bard can range from the fundamentals of properly utilizing songs (<ActionLink action="THE_WANDERERS_MINUET"/>, <ActionLink action="MAGES_BALLAD"/> and <ActionLink action="ARMYS_PAEON"/>) up to the intricacies of <ActionLink action="IRON_JAWS"/> and the concept of buff/debuff snapshotting.</p>
-			<p>This analyzer will guide you through the job's core mechanics, all the way to encounter-specific optimization.</p>
-		</Trans>
+		<TransMarkdown source={about}/>
 	</>,
 	supportedPatches: {
 		from: '6.0',
-		to: '6.08',
+		to: '6.4',
 	},
 	contributors: [
 		{user: CONTRIBUTORS.HINT, role: ROLES.MAINTAINER},
 		{user: CONTRIBUTORS.YUMIYA, role: ROLES.DEVELOPER},
 	],
 	changelog: [
+		{
+			date: new Date('2023-07-02'),
+			Changes: () => <>Marked as supported for 6.4.</>,
+			contributors: [CONTRIBUTORS.HINT],
+		},
+		{
+			date: new Date('2023-06-05'),
+			Changes: () => <>Display timestamps for Straight Shot Ready overwrites.</>,
+			contributors: [CONTRIBUTORS.MALI],
+		},
+		{
+			date: new Date('2023-01-14'),
+			Changes: () => <>Updated for patch 6.3.</>,
+			contributors: [CONTRIBUTORS.HINT],
+		},
+		{
+			date: new Date('2023-01-08'),
+			Changes: () => <>Updated the "About" section.</>,
+			contributors: [CONTRIBUTORS.HINT],
+		},
 		{
 			date: new Date('2022-01-24'),
 			Changes: () => <>Added Apex Arrow and Blast Arrow tracker in Raging Strikes windows. Also fixed the incorrect expected usage amount of Empyreal Arrows in the cooldowns checklist.</>,

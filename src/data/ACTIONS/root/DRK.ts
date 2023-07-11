@@ -1,5 +1,6 @@
 import {Attribute} from 'event'
 import {ensureActions} from '../type'
+import {SHARED} from './SHARED'
 
 export const DRK = ensureActions({
 	// -----
@@ -10,6 +11,9 @@ export const DRK = ensureActions({
 		name: 'Grit',
 		icon: 'https://xivapi.com/i/003000/003070.png',
 	},
+
+	RELEASE_GRIT: SHARED.UNKNOWN, // Added in patch 6.3 layer
+
 	// -----
 	// Cooldowns
 	// -----
@@ -83,7 +87,7 @@ export const DRK = ensureActions({
 	},
 	CARVE_AND_SPIT: {
 		id: 3643,
-		name: 'Carve And Spit',
+		name: 'Carve and Spit',
 		icon: 'https://xivapi.com/i/003000/003058.png',
 		cooldown: 60000,
 		cooldownGroup: 14,

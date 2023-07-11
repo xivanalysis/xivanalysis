@@ -32,11 +32,12 @@ export abstract class BuffWindow extends ActionWindow {
 	 * of the pull; false otherwise.
 	 */
 	protected isRushedEndOfPullWindow(window: HistoryEntry<EvaluatedAction[]>) {
-		const expectedDuration = _.max(ensureArray(this.buffStatus).map(s => s.duration)) ?? 0
+		const expectedDuration = this.buffDuration ?? 0
 		const fightTimeRemaining = (this.parser.pull.timestamp + this.parser.pull.duration) - window.start
 		return expectedDuration >= fightTimeRemaining
 	}
 
+	private buffDuration?: number
 	private durationHook?: TimestampHook
 
 	override initialise() {
@@ -50,28 +51,42 @@ export abstract class BuffWindow extends ActionWindow {
 			.map(actor => actor.id)
 
 		const targets = [this.parser.actor.id, ...enemyTargets]
+		const playerOwnedIds = this.parser.pull.actors
+			.filter(actor => (actor.owner === this.parser.actor) || actor === this.parser.actor)
+			.map(actor => actor.id)
 
 		const buffFilter = filter<Event>()
-			.source(this.parser.actor.id)
+			.source(oneOf(playerOwnedIds))
 			.target(oneOf(targets))
 			.status(oneOf(ensureArray(this.buffStatus).map(s => s.id)))
 
-		this.addEventHook(buffFilter.type('statusApply'), this.startWindowAndTimeout)
-		this.addEventHook(buffFilter.type('statusRemove'), this.endWindowByStatus)
+		this.addEventHook(buffFilter.type('statusApply'), this.onStatusApply)
+		this.addEventHook(buffFilter.type('statusRemove'), this.onStatusRemove)
+		this.buffDuration = _.max(ensureArray(this.buffStatus).map(s => s.duration))
 	}
 
-	private startWindowAndTimeout(event: Events['statusApply']) {
-		this.onWindowStart(event.timestamp)
-		const duration = this.data.getStatus(event.status)?.duration
-		if (duration == null) { return }
+	private onStatusApply(event: Events['statusApply']) {
+		this.startWindowAndTimeout(event.timestamp)
+	}
+
+	/**
+	 * Start window at the timestamp provided and attach hook for closing the window
+	 * after the duration of the buff.
+	 *
+	 * Visible for RaidBuffWindow to reopen windows.
+	 * @param timestamp Time of buff application.
+	 */
+	protected startWindowAndTimeout(timestamp: number) {
+		this.onWindowStart(timestamp)
+		if (this.buffDuration == null) { return }
 		if (this.durationHook != null) {
 			this.removeTimestampHook(this.durationHook)
 		}
-		this.durationHook = this.addTimestampHook(event.timestamp + duration + STATUS_DURATION_FUDGE,
+		this.durationHook = this.addTimestampHook(timestamp + this.buffDuration + STATUS_DURATION_FUDGE,
 			this.endWindowByTime)
 	}
 
-	private endWindowByStatus(event: Events['statusRemove']) {
+	private onStatusRemove(event: Events['statusRemove']) {
 		this.onWindowEnd(event.timestamp)
 		if (this.durationHook != null) {
 			this.removeTimestampHook(this.durationHook)
@@ -83,5 +98,4 @@ export abstract class BuffWindow extends ActionWindow {
 		this.onWindowEnd(event.timestamp)
 		this.durationHook = undefined
 	}
-
 }

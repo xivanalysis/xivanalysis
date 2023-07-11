@@ -269,7 +269,36 @@ Array [
 ]
 `;
 
-exports[`Event adapter individual events adapts damage 2`] = `Array []`;
+exports[`Event adapter individual events adapts damage 2`] = `
+Array [
+  Object {
+    "action": 16555,
+    "sequence": 18762,
+    "source": "2",
+    "target": "3",
+    "timestamp": 1600107453814,
+    "type": "execute",
+  },
+  Object {
+    "actor": "3",
+    "hp": Object {
+      "current": 73328677,
+      "maximum": 73350280,
+    },
+    "mp": Object {
+      "current": 10000,
+      "maximum": 10000,
+    },
+    "position": Object {
+      "bearing": -472,
+      "x": 10000,
+      "y": 9100,
+    },
+    "timestamp": 1600107453814,
+    "type": "actorUpdate",
+  },
+]
+`;
 
 exports[`Event adapter individual events adapts death 1`] = `
 Array [
@@ -296,6 +325,12 @@ exports[`Event adapter individual events adapts dungeonstart 1`] = `Array []`;
 exports[`Event adapter individual events adapts encounterend 1`] = `Array []`;
 
 exports[`Event adapter individual events adapts encounterstart 1`] = `Array []`;
+
+exports[`Event adapter individual events adapts gaugeupdate 1`] = `Array []`;
+
+exports[`Event adapter individual events adapts headmarker 1`] = `Array []`;
+
+exports[`Event adapter individual events adapts headmarker 2`] = `Array []`;
 
 exports[`Event adapter individual events adapts heal 1`] = `
 Array [
@@ -338,9 +373,67 @@ Array [
 ]
 `;
 
-exports[`Event adapter individual events adapts heal 2`] = `Array []`;
+exports[`Event adapter individual events adapts heal 2`] = `
+Array [
+  Object {
+    "action": 16139,
+    "sequence": 18799,
+    "source": "1",
+    "target": "1",
+    "timestamp": 1600107457863,
+    "type": "execute",
+  },
+  Object {
+    "actor": "1",
+    "hp": Object {
+      "current": 213022,
+      "maximum": 213022,
+    },
+    "mp": Object {
+      "current": 10000,
+      "maximum": 10000,
+    },
+    "position": Object {
+      "bearing": -783,
+      "x": 9996,
+      "y": 9999,
+    },
+    "timestamp": 1600107457863,
+    "type": "actorUpdate",
+  },
+]
+`;
 
-exports[`Event adapter individual events adapts heal 3`] = `Array []`;
+exports[`Event adapter individual events adapts heal 3`] = `
+Array [
+  Object {
+    "action": 3571,
+    "sequence": 4570,
+    "source": "3",
+    "target": "3",
+    "timestamp": 1600007412071,
+    "type": "execute",
+  },
+  Object {
+    "actor": "3",
+    "hp": Object {
+      "current": 122214,
+      "maximum": 122214,
+    },
+    "mp": Object {
+      "current": 9800,
+      "maximum": 10000,
+    },
+    "position": Object {
+      "bearing": -208,
+      "x": 9887,
+      "y": 10642,
+    },
+    "timestamp": 1600007412071,
+    "type": "actorUpdate",
+  },
+]
+`;
 
 exports[`Event adapter individual events adapts instakill 1`] = `
 Array [
@@ -555,6 +648,8 @@ Array [
   },
 ]
 `;
+
+exports[`Event adapter individual events adapts tether 1`] = `Array []`;
 
 exports[`Event adapter individual events adapts unknown 1`] = `Array []`;
 

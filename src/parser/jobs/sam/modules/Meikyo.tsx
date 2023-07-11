@@ -14,7 +14,6 @@ import DISPLAY_ORDER from './DISPLAY_ORDER'
 const ONLY_SHOW: ActionKey[] = [
 	'HAKAZE',
 	'JINPU',
-	'ENPI',
 	'SHIFU',
 	'FUKO',
 	'GEKKO',
@@ -50,6 +49,7 @@ export class Meikyo extends BuffWindow {
 			new ExpectedGcdCountEvaluator({
 				expectedGcds: SEN_GCDS,
 				globalCooldown: this.globalCooldown,
+				hasStacks: true,
 				suggestionIcon,
 				suggestionContent: <Trans id="sam.ms.suggestions.missedgcd.content">
 					Try to land 3 GCDs during every <ActionLink action="MEIKYO_SHISUI" /> window.

@@ -14,10 +14,12 @@ export const REAPER = new Meta({
 			<p>If you notice anything that looks particularly wrong, please visit our Discord server and report it in the #fb-reaper channel.</p>
 		</Trans>
 	</>,
-	// supportedPatches: {
-	// 	from: '✖',
-	// 	to: '✖',
-	// }
+
+	supportedPatches: {
+		from: '6.0',
+		to: '6.4',
+	},
+
 	contributors: [
 		{user: CONTRIBUTORS.AY, role: ROLES.MAINTAINER},
 		{user: CONTRIBUTORS.ARKEVORKHAT, role: ROLES.DEVELOPER},

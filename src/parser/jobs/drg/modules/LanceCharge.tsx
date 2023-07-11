@@ -33,7 +33,7 @@ export default class LanceCharge extends BuffWindow {
 	override buffStatus = this.data.statuses.LANCE_CHARGE
 
 	override prependMessages = <Message info>
-		<Trans id="drg.lc.prepend-message"><ActionLink action="SPINESHATTER_DIVE" /> may be held (not used) during a buff window if you are instead able to use both charges during the next window. We do our best in this module to avoid marking windows where <ActionLink action="SPINESHATTER_DIVE" showIcon={false} /> was correctly held as errors. <ActionLink action="DRAGONFIRE_DIVE" /> should be used in every other window.</Trans>
+		<Trans id="drg.lc.prepend-message">Both charges of <ActionLink action="SPINESHATTER_DIVE" /> should be used while both <ActionLink action="LANCE_CHARGE" /> and <ActionLink action="DRAGON_SIGHT" /> are active. Since this is not always possible, we do our best in this module to avoid marking windows where <ActionLink action="SPINESHATTER_DIVE" showIcon={false} /> was correctly held as errors. <ActionLink action="DRAGONFIRE_DIVE" /> should be used in every other window.</Trans>
 	</Message>
 
 	private ssdDelays: SsdDelayTracker[] = []
@@ -59,6 +59,7 @@ export default class LanceCharge extends BuffWindow {
 		this.addEvaluator(new ExpectedGcdCountEvaluator({
 			expectedGcds: 8,
 			globalCooldown: this.globalCooldown,
+			hasStacks: false,
 			suggestionIcon,
 			suggestionContent: <Trans id="drg.lc.suggestions.missedgcd.content">
 				Try to land at least 8 GCDs during every <ActionLink action="LANCE_CHARGE" /> window.
@@ -86,10 +87,6 @@ export default class LanceCharge extends BuffWindow {
 					expectedPerWindow: 1,
 				},
 				{
-					action: this.data.actions.LIFE_SURGE,
-					expectedPerWindow: 1,
-				},
-				{
 					action: this.data.actions.SPINESHATTER_DIVE,
 					expectedPerWindow: 1,
 				},
@@ -105,7 +102,7 @@ export default class LanceCharge extends BuffWindow {
 			adjustCount: this.adjustExpectedActionCount.bind(this),
 		}))
 
-		this.addEvaluator(new DisplayedActionEvaluator([this.data.actions.DRAGONFIRE_DIVE]))
+		this.addEvaluator(new DisplayedActionEvaluator([this.data.actions.LIFE_SURGE, this.data.actions.DRAGONFIRE_DIVE]))
 	}
 
 	private onLcStatusApply(event: Events['statusApply']) {

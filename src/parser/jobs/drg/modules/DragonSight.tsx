@@ -6,6 +6,7 @@ import {Events} from 'event'
 import _ from 'lodash'
 import {dependency} from 'parser/core/Injectable'
 import {BuffWindow, calculateExpectedGcdsForTime, EvaluatedAction, EvaluationOutput, ExpectedActionsEvaluator, ExpectedGcdCountEvaluator, WindowEvaluator} from 'parser/core/modules/ActionWindow'
+import {DisplayedActionEvaluator} from 'parser/core/modules/ActionWindow/evaluators/DisplayedActionEvaluator'
 import {HistoryEntry} from 'parser/core/modules/ActionWindow/History'
 import {GlobalCooldown} from 'parser/core/modules/GlobalCooldown'
 import {SEVERITY} from 'parser/core/modules/Suggestions'
@@ -87,6 +88,7 @@ export default class DragonSight extends BuffWindow {
 		this.addEvaluator(new ExpectedGcdCountEvaluator({
 			expectedGcds: EXPECTED_GCD_COUNT,
 			globalCooldown: this.globalCooldown,
+			hasStacks: false,
 			suggestionIcon,
 			suggestionContent: <Trans id="drg.ds.suggestions.missedgcd.content">
 				Try to land at least 8 GCDs during every <ActionLink action="DRAGON_SIGHT" /> window.
@@ -100,33 +102,40 @@ export default class DragonSight extends BuffWindow {
 			adjustCount: this.adjustExpectedGcdCount.bind(this),
 		}))
 
+		const expectedActions = [
+			{
+				action: this.data.actions.HIGH_JUMP,
+				expectedPerWindow: 1,
+			},
+			{
+				action: this.data.actions.GEIRSKOGUL,
+				expectedPerWindow: 1,
+			},
+			{
+				action: this.data.actions.MIRAGE_DIVE,
+				expectedPerWindow: 1,
+			},
+			{
+				action: this.data.actions.SPINESHATTER_DIVE,
+				expectedPerWindow: this.parser.patch.before('6.1') ? 1 : 2,
+			},
+			{
+				action: this.data.actions.DRAGONFIRE_DIVE,
+				expectedPerWindow: 1,
+			},
+		]
+
+		// 6.08 changed the potencies such that it's generally better to always use LS on
+		// Heavens' Thrust. Before that, we generally expected one in each two minute window.
+		if (this.parser.patch.before('6.08')) {
+			expectedActions.push({
+				action: this.data.actions.LIFE_SURGE,
+				expectedPerWindow: 1,
+			})
+		}
+
 		this.addEvaluator(new ExpectedActionsEvaluator({
-			expectedActions: [
-				{
-					action: this.data.actions.HIGH_JUMP,
-					expectedPerWindow: 1,
-				},
-				{
-					action: this.data.actions.GEIRSKOGUL,
-					expectedPerWindow: 1,
-				},
-				{
-					action: this.data.actions.MIRAGE_DIVE,
-					expectedPerWindow: 1,
-				},
-				{
-					action: this.data.actions.LIFE_SURGE,
-					expectedPerWindow: 1,
-				},
-				{
-					action: this.data.actions.SPINESHATTER_DIVE,
-					expectedPerWindow: 1,
-				},
-				{
-					action: this.data.actions.DRAGONFIRE_DIVE,
-					expectedPerWindow: 1,
-				},
-			],
+			expectedActions,
 			suggestionIcon,
 			suggestionContent: <Trans id="drg.lc.suggestions.missedaction.content">Try to use as many of your oGCDs as possible during <ActionLink action="DRAGON_SIGHT" />. Remember to keep your abilities on cooldown, when possible, to prevent them from drifting outside of your buff windows.</Trans>,
 			suggestionWindowName,
@@ -140,6 +149,11 @@ export default class DragonSight extends BuffWindow {
 		}))
 
 		this.addEvaluator(new ShortWindowEvaluator(this.buffTargetDied.bind(this)))
+
+		// display ordering
+		if (this.parser.patch.after('6.05')) {
+			this.addEvaluator(new DisplayedActionEvaluator([this.data.actions.LIFE_SURGE]))
+		}
 	}
 
 	private onDeath(event: Events['death']) {

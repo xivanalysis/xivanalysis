@@ -8,12 +8,13 @@ import {dependency} from 'parser/core/Injectable'
 import {CounterGauge, Gauge as CoreGauge} from 'parser/core/modules/Gauge'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
+import {isSuccessfulHit} from 'utilities'
 
 const OVERCAP_SEVERITY = {
 	HEAT: {
-		5: SEVERITY.MINOR,
-		20: SEVERITY.MEDIUM,
-		30: SEVERITY.MAJOR,
+		10: SEVERITY.MINOR,
+		30: SEVERITY.MEDIUM,
+		50: SEVERITY.MAJOR,
 	},
 	BATTERY: {
 		10: SEVERITY.MINOR,
@@ -21,6 +22,7 @@ const OVERCAP_SEVERITY = {
 		30: SEVERITY.MAJOR,
 	},
 }
+
 const FADE_AMOUNT = 0.25
 const HEAT_COLOR = Color('#D35A10').fade(FADE_AMOUNT)
 const BATTERY_COLOR = Color('#2C9FCB').fade(FADE_AMOUNT)
@@ -122,7 +124,7 @@ export class Gauge extends CoreGauge {
 
 	private onDamage(gauge: CounterGauge, modifiers: GaugeMap) {
 		return (event: Events['damage']) => {
-			if (event.cause.type === 'status') { return }
+			if (event.cause.type === 'status' || !isSuccessfulHit(event)) { return }
 
 			const modifier = modifiers.get(event.cause.action)
 

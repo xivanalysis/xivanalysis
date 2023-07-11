@@ -1,5 +1,6 @@
 import {Attribute} from 'event'
 import {ensureActions} from '../type'
+import {SHARED} from './SHARED'
 
 export const GNB = ensureActions({
 	// -----
@@ -216,6 +217,9 @@ export const GNB = ensureActions({
 		onGcd: false,
 		cooldown: 10000,
 	},
+
+	RELEASE_ROYAL_GUARD: SHARED.UNKNOWN, // Added in patch 6.3 layer
+
 	AURORA: {
 		id: 16151,
 		name: 'Aurora',

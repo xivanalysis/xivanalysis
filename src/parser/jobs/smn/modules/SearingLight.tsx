@@ -65,17 +65,39 @@ export class SearingLight extends Analyser {
 		this.petIds = this.parser.pull.actors
 			.filter(actor => actor.owner === this.parser.actor)
 			.map(actor => actor.id)
-		const petsFilter = filter<Event>()
-			.source(oneOf(this.petIds))
 
-		this.addEventHook(
-			petsFilter.action(this.data.actions.PET_SEARING_LIGHT.id).type('action'),
-			this.onPetCast
-		)
+		const playerFilter = filter<Event>().source(this.parser.actor.id)
+		const petsFilter = filter<Event>().source(oneOf(this.petIds))
+
+		const buffSourceFilter = (this.parser.patch.before('6.1')) ? petsFilter : playerFilter
+
+		if (this.parser.patch.before('6.1')) {
+			this.addEventHook(
+				filter<Event>()
+					.source(this.parser.actor.id)
+					.action(this.data.actions.SEARING_LIGHT.id)
+					.type('action'),
+				this.queueSearingLight)
+
+			this.addEventHook(
+				petsFilter.action(this.data.actions.PET_SEARING_LIGHT.id).type('action'),
+				this.onBuffGeneratorCast
+			)
+
+			this.addEventHook(
+				petsFilter.action(this.data.matchActionId(OTHER_PET_ACTIONS)).type('action'),
+				this.nonCarbuncleAction,
+			)
+		} else {
+			this.addEventHook(
+				playerFilter.action(this.data.actions.SEARING_LIGHT.id).type('action'),
+				this.onBuffGeneratorCast
+			)
+		}
 
 		// this hook is for counting targets
 		this.addEventHook(
-			petsFilter.status(this.data.statuses.SEARING_LIGHT.id).type('statusApply'),
+			buffSourceFilter.status(this.data.statuses.SEARING_LIGHT.id).type('statusApply'),
 			this.countTargets
 		)
 		// this hook is for just the player to start the window
@@ -92,17 +114,6 @@ export class SearingLight extends Analyser {
 				.status(this.data.statuses.SEARING_LIGHT.id)
 				.type('statusRemove'),
 			this.onBuffRemoved
-		)
-
-		this.addEventHook(
-			filter<Event>()
-				.source(this.parser.actor.id)
-				.action(this.data.actions.SEARING_LIGHT.id)
-				.type('action'),
-			this.queueSearingLight)
-		this.addEventHook(
-			petsFilter.action(this.data.matchActionId(OTHER_PET_ACTIONS)).type('action'),
-			this.nonCarbuncleAction,
 		)
 
 		this.players = this.actors.friends.filter(actor => actor.playerControlled)
@@ -138,7 +149,7 @@ export class SearingLight extends Analyser {
 		})
 	}
 
-	private onPetCast(event: Events['action']) {
+	private onBuffGeneratorCast(event: Events['action']) {
 		this.tryStartNewWindow(event.timestamp, event.source)
 		this.slPending = 0
 	}
@@ -165,16 +176,13 @@ export class SearingLight extends Analyser {
 			// If there is no active window, see if the last window just ended
 			// at the exact same timestamp.  If it did, this is likely due to
 			// having multiple summoners, so reopen the last window
-			if (this.history.entries.length > 0) {
-				const last = this.history.entries[this.history.entries.length - 1]
-				if ((last.end ?? 0) === timestamp) {
-					last.end = undefined
-					return
-				}
+			if (this.history.endOfLastEntry() === timestamp) {
+				this.history.reopenLastEntry()
+				return
 			}
 
 			// If there is no last window or it is not the same one, start a new one
-			if (this.petIds.includes(source)) {
+			if (this.petIds.includes(source) || this.parser.actor.id === source) {
 				this.history.openNew(timestamp)
 			}
 

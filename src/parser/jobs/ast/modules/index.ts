@@ -5,6 +5,7 @@ import {ArcanaUndrawUsage} from './ArcanaUndrawUsage'
 import {CastTime} from './CastTime'
 import {Combust} from './Combust'
 import CrownPlay from './CrownPlay'
+import {Defensives} from './Defensives'
 import {Divination} from './Divination'
 import Draw from './Draw'
 import {EarthlyStar} from './EarthlyStar'
@@ -25,6 +26,7 @@ export default [
 	ArcanaUndrawUsage,
 	CastTime,
 	Combust,
+	Defensives,
 	Divination,
 	Draw,
 	CrownPlay,

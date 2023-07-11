@@ -32,12 +32,14 @@ const TRACKED_STATUSES: StatusConfig[] = [
 	{key: 'EMBOLDEN_SELF'}, // tracking the self buff so it appears on the RDM's perspective
 	{key: 'EMBOLDEN_PARTY'},
 	{key: 'LEFT_EYE', exclude: ['DRAGOON']}, // notDRG
-	{key: 'TRICK_ATTACK_VULNERABILITY_UP', name: 'Trick Attack'},
 	{key: 'TECHNICAL_FINISH'},
 	{key: 'STANDARD_FINISH_PARTNER'},
 	{key: 'DEVILMENT'},
 	{key: 'OFF_GUARD'},
 	{key: 'PECULIAR_LIGHT'},
+	{key: 'CONDENSED_LIBRA_ASTRAL', group: 'libra', name: 'Condensed Libra'},
+	{key: 'CONDENSED_LIBRA_UMBRAL', group: 'libra', name: 'Condensed Libra'},
+	{key: 'CONDENSED_LIBRA_PHYSICAL', group: 'libra', name: 'Condensed Libra'},
 	{key: 'ARCANE_CIRCLE'},
 	{key: 'SEARING_LIGHT'},
 	{key: 'RADIANT_FINALE'},
@@ -57,6 +59,19 @@ export class RaidBuffs extends Analyser {
 	)
 
 	override initialise() {
+		// Patch-specific raid buff additions
+		if (this.parser.patch.before('6.1')) {
+			this.settings.set(
+				this.data.statuses.TRICK_ATTACK_VULNERABILITY_UP.id,
+				{key: 'TRICK_ATTACK_VULNERABILITY_UP', name: 'Trick Attack'}
+			)
+		} else {
+			this.settings.set(
+				this.data.statuses.MUG_VULNERABILITY_UP.id,
+				{key: 'MUG_VULNERABILITY_UP', name: 'Mug'}
+			)
+		}
+
 		// Event hooks
 		const statusFilter = filter<Event>()
 			.status(oneOf([...this.settings.keys()]))
