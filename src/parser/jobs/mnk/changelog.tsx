@@ -18,6 +18,11 @@ export const changelog = [
 		contributors: [CONTRIBUTORS.FAIR2DARE],
 	},
 	{
+		date: new Date('2022-05-03'),
+		Changes: () => <>Add expected Masterful Blitz support in Riddle of Fire window.</>,
+		contributors: [CONTRIBUTORS.SQUARE],
+	},
+	{
 		date: new Date('2022-03-03'),
 		Changes: () => <>Add Celestial Revolution support.</>,
 		contributors: [CONTRIBUTORS.SQUARE],

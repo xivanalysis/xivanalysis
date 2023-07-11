@@ -629,6 +629,8 @@
   "mnk.pb.suggestions.stacks.content": "<0/> 구간 중 스택 6개를 모두 사용하십시오.",
   "mnk.pb.suggestions.stacks.why": "<0/> 중 사용 가능한 글쿨 기술을 {droppedGcds, plural, other {#회}} 잃었습니다.",
   "mnk.pb.title": "진각",
+  "mnk.rof.suggestions.blitz.content": "",
+  "mnk.rof.suggestions.blitz.why": "",
   "mnk.rof.suggestions.gcd.content": "<0/> 구간 중 글쿨 기술을 {EXPECTED_GCDS}회 사용하십시오.",
   "mnk.rof.suggestions.wasted.content": "<3/> 중 <0/>, <1/>, <2/> 기술을 사용하지 마십시오. 글로벌 쿨다운이 낭비됩니다.",
   "mnk.rof.title": "홍련의 극의",

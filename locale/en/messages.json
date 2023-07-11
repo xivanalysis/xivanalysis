@@ -629,6 +629,8 @@
   "mnk.pb.suggestions.stacks.content": "Try to consume all 6 stacks during every <0/> window.",
   "mnk.pb.suggestions.stacks.why": "{droppedGcds, plural, one {# possible GCD was} other {# possible GCDs were}} missed during <0/>.",
   "mnk.pb.title": "Perfect Balance",
+  "mnk.rof.suggestions.blitz.content": "Try to hit two uses of <0/> in both the opener and every 'even' <1/> window and one usage of <2/> in every 'odd' window, as the blitz actions are your strongest skills.",
+  "mnk.rof.suggestions.blitz.why": "{missedBlitzes, plural, one {# use of} other {# uses of}} <0/> {missedBlitzes, plural, one {was} other {were}} missed during {0} <1/> {1, plural, one {window} other {windows}}",
   "mnk.rof.suggestions.gcd.content": "Aim to hit {EXPECTED_GCDS} GCDs during each <0/> window.",
   "mnk.rof.suggestions.wasted.content": "Avoid using <0/>, <1/>, or <2/> under <3/> as this is essentially wasting a GCD.",
   "mnk.rof.title": "Riddle of Fire",

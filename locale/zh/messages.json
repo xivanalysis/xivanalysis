@@ -629,6 +629,8 @@
   "mnk.pb.suggestions.stacks.content": "尝试在<0/>的持续时间内用尽6层buff。",
   "mnk.pb.suggestions.stacks.why": "在<0/>期间丢失了{droppedGcds, plural,one {#个}other {#个}}可能的GCD。",
   "mnk.pb.title": "震脚",
+  "mnk.rof.suggestions.blitz.content": "",
+  "mnk.rof.suggestions.blitz.why": "",
   "mnk.rof.suggestions.gcd.content": "尝试在 <0/> 的持续时间内插入 {EXPECTED_GCDS} 个GCD技能。",
   "mnk.rof.suggestions.wasted.content": "避免使用<0/>，<1/>或<2/>在<3/>后，这根本上是对 GCD 的浪费。",
   "mnk.rof.title": "红莲极意",
