@@ -7,9 +7,11 @@ export class ActionTimeline extends CoreActionTimeline {
 		// Buffs
 		'INFURIATE',
 		'INNER_RELEASE',
+
 		// oGCD Damage
-		'UPHEAVAL',
+		['UPHEAVAL', 'OROGENY'],
 		'ONSLAUGHT',
+
 		// Personal Mitigation
 		'VENGEANCE',
 		'RAMPART',
@@ -18,14 +20,17 @@ export class ActionTimeline extends CoreActionTimeline {
 		'THRILL_OF_BATTLE',
 		'EQUILIBRIUM',
 		'HOLMGANG',
+
 		// Party Mitigation
 		'SHAKE_IT_OFF',
 		'REPRISAL',
+
 		// Tank Utility
 		'PROVOKE',
 		'SHIRK',
 		// Stance
 		'DEFIANCE',
+
 		// Disrupt Utility
 		'INTERJECT',
 		'LOW_BLOW',

@@ -137,9 +137,12 @@ export class Summons extends Analyser {
 			current.data.enkindle += 1
 			break
 
+		case this.data.actions.SUMMON_IFRIT.id:
 		case this.data.actions.SUMMON_IFRIT_II.id:
 			current.data.ifritSummon = event
 			break
+		case this.data.actions.RUBY_RUIN_III.id:
+		case this.data.actions.RUBY_OUTBURST.id:
 		case this.data.actions.RUBY_RITE.id:
 		case this.data.actions.RUBY_CATASTROPHE.id:
 			current.data.rubyGcds += 1
@@ -151,9 +154,12 @@ export class Summons extends Analyser {
 			current.data.crimsonStrike += 1
 			break
 
+		case this.data.actions.SUMMON_TITAN.id:
 		case this.data.actions.SUMMON_TITAN_II.id:
 			current.data.titanSummon = event
 			break
+		case this.data.actions.TOPAZ_RUIN_III.id:
+		case this.data.actions.TOPAZ_OUTBURST.id:
 		case this.data.actions.TOPAZ_RITE.id:
 		case this.data.actions.TOPAZ_CATASTROPHE.id:
 			current.data.topazGcds += 1
@@ -162,9 +168,12 @@ export class Summons extends Analyser {
 			current.data.mountainBusters += 1
 			break
 
+		case this.data.actions.SUMMON_GARUDA.id:
 		case this.data.actions.SUMMON_GARUDA_II.id:
 			current.data.garudaSummon = event
 			break
+		case this.data.actions.EMERALD_RUIN_III.id:
+		case this.data.actions.EMERALD_OUTBURST.id:
 		case this.data.actions.EMERALD_RITE.id:
 		case this.data.actions.EMERALD_CATASTROPHE.id:
 			current.data.emeraldGcds += 1

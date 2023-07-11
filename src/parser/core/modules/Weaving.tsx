@@ -42,7 +42,7 @@ export class Weaving extends Analyser {
 	@dependency protected castTime!: CastTime
 	@dependency protected data!: Data
 	@dependency private invulnerability!: Invulnerability
-	@dependency private suggestions!: Suggestions
+	@dependency protected suggestions!: Suggestions
 
 	static override title = t('core.weaving.title')`Weaving Issues`
 
@@ -71,6 +71,7 @@ export class Weaving extends Analyser {
 		this.addEventHook(playerFilter.type('prepare'), this.onBeginCast)
 		this.addEventHook(playerFilter.type('action'), this.onCast)
 		this.addEventHook(filter<Event>().type('complete'), this.onComplete)
+		this.addEventHook(filter<Event>().type('death'), this.clearWeave)
 	}
 
 	private onBeginCast(event: Events['prepare']) {
@@ -177,6 +178,17 @@ export class Weaving extends Analyser {
 		const recast = ((weave.leadingGcdEvent != null) ? this.castTime.recastForEvent(weave.leadingGcdEvent) : undefined) ?? BASE_GCD
 		// Check the downtime-adjusted GCD time difference for this weave - do not treat multiple weaves during downtime as bad weaves
 		return weave.gcdTimeDiff > recast && weaveCount > this.getMaxWeaves(weave)
+	}
+
+	private clearWeave() {
+		// prompts saving any existing weaves if they're bad, and reset
+		if (this.weaves.length > 0) {
+			this.saveIfBad()
+		}
+
+		// remove existing weaves and pretend the next leadingGcdEvent is like a fresh start (which I guess it is)
+		this.weaves = []
+		this.leadingGcdEvent = undefined
 	}
 
 	/**

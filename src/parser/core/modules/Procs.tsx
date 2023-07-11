@@ -47,7 +47,7 @@ export abstract class Procs extends Analyser {
 
 	@dependency private downtime!: Downtime
 	@dependency protected suggestions!: Suggestions
-	@dependency private timeline!: Timeline
+	@dependency protected timeline!: Timeline
 	@dependency protected actors!: Actors
 	@dependency protected data!: Data
 	@dependency protected invulnerability!: Invulnerability

@@ -30,6 +30,7 @@ export abstract class Swiftcast extends BuffWindow {
 		this.addEvaluator(new ExpectedGcdCountEvaluator({
 			expectedGcds: 1,
 			globalCooldown: this.globalCooldown,
+			hasStacks: true,
 			suggestionIcon: this.data.actions.SWIFTCAST.icon,
 			suggestionContent: this.suggestionContent,
 			suggestionWindowName: <ActionLink action="SWIFTCAST" showIcon={false} />,

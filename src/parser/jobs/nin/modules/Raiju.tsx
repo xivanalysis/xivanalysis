@@ -53,8 +53,7 @@ export class Raiju extends Analyser {
 				Avoid using any of your non-Raiju melee GCDs while you have stacks of <StatusLink status="RAIJU_READY"/>, as it will cause the stacks to fall off.
 			</Trans>,
 			tiers: {
-				1: SEVERITY.MEDIUM, // TODO - Run these numbers past a theorycrafter
-				3: SEVERITY.MAJOR,
+				1: SEVERITY.MAJOR,
 			},
 			value: this.droppedStacks,
 			why: <Trans id="nin.raiju.suggestions.dropped.why">

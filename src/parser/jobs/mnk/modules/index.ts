@@ -1,6 +1,7 @@
 import {ActionTimeline} from './ActionTimeline'
 import {AoE} from './AoE'
 import {CooldownDowntime} from './CooldownDowntime'
+import {Defensives} from './Defensives'
 import {Demolish} from './Demolish'
 import {Forms} from './Forms'
 import {GreasedLightning} from './GreasedLightning'
@@ -17,6 +18,7 @@ export default [
 	AoE,
 	CooldownDowntime,
 	Revolution,
+	Defensives,
 	Demolish,
 	Forms,
 	GreasedLightning,

@@ -15,6 +15,7 @@ export class ActionTimeline extends CoreActionTimeline {
 		'HOLY_SHELTRON',
 		'INTERVENTION',
 		// Personal Mitigation
+		'BULWARK',
 		'HALLOWED_GROUND',
 		'SENTINEL',
 		'RAMPART',

@@ -14,7 +14,7 @@ export class OGCDs extends CooldownDowntime {
 		{cooldowns: [this.data.actions.ASSIZE], weight: 1},
 		{cooldowns: [this.data.actions.PRESENCE_OF_MIND], weight: 1},
 	]
-	override defensiveCooldowns = [
+	override suggestionOnlyCooldowns = [
 		{
 			cooldowns: [this.data.actions.LITURGY_OF_THE_BELL],
 			tiers: {2: SEVERITY.MINOR, 3: SEVERITY.MEDIUM},
@@ -44,13 +44,6 @@ export class OGCDs extends CooldownDowntime {
 			</Fragment>,
 		},
 		{
-			cooldowns: [this.data.actions.PLENARY_INDULGENCE],
-			tiers: {1: SEVERITY.MINOR},
-			content: <Fragment>
-				<Trans id="whm.ogcds.suggestions.plenary_indulgence.content">Use <DataLink action="PLENARY_INDULGENCE"/> when casting GCD AOE heals when the extra potency will reduce the amount of additional heals needed. Avoiding clipping to apply this, and only consider clipping if the additional healing will save subsequent a GCD heal cast.</Trans>
-			</Fragment>,
-		},
-		{
 			cooldowns: [this.data.actions.TEMPERANCE],
 			tiers: {2: SEVERITY.MINOR, 3: SEVERITY.MEDIUM},
 			content: <Fragment>
@@ -62,7 +55,7 @@ export class OGCDs extends CooldownDowntime {
 	override checklistTarget = DPS_TARGET_PERCENT
 
 	override addJobSuggestions() {
-		this.defensiveCooldowns.forEach(cooldownGroup => {
+		this.suggestionOnlyCooldowns.forEach(cooldownGroup => {
 
 			// set up for suggestion(s)
 			const maxUses = this.calculateMaxUsages(cooldownGroup)

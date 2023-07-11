@@ -1,5 +1,6 @@
 import {Plural, Trans} from '@lingui/react'
 import {ActionLink} from 'components/ui/DbLink'
+import {getBasePotency} from 'data/ACTIONS'
 import {Event} from 'event'
 import {Analyser} from 'parser/core/Analyser'
 import {filter} from 'parser/core/filter'
@@ -28,8 +29,8 @@ export class Revolution extends Analyser {
 
 	private onComplete(): void {
 		if (this.revolutions > 0) {
-			const lowerBound = this.revolutions * (this.data.actions.ELIXIR_FIELD.potency - this.data.actions.CELESTIAL_REVOLUTION.potency)
-			const upperBound = this.revolutions * (this.data.actions.RISING_PHOENIX.potency - this.data.actions.CELESTIAL_REVOLUTION.potency)
+			const lowerBound = this.revolutions * (getBasePotency(this.data.actions.ELIXIR_FIELD) - getBasePotency(this.data.actions.CELESTIAL_REVOLUTION))
+			const upperBound = this.revolutions * (getBasePotency(this.data.actions.RISING_PHOENIX) - getBasePotency(this.data.actions.CELESTIAL_REVOLUTION))
 			this.suggestions.add(new Suggestion({
 				icon: this.data.actions.CELESTIAL_REVOLUTION.icon,
 				content: <Trans id="mnk.cr.suggestions.content">

@@ -84,6 +84,13 @@ const CONTRIBUTORS = ensureRecord<Contributor>()({
 			JOBS.SUMMONER,
 		],
 	},
+	KHAYLE: {
+		name: 'Khayle',
+		avatar: require('./avatar/Khayle.png'),
+		jobs: [
+			JOBS.BLUE_MAGE,
+		],
+	},
 	HINT: {
 		name: 'Hint',
 		avatar: require('./avatar/Hint.png'),
@@ -163,6 +170,14 @@ const CONTRIBUTORS = ensureRecord<Contributor>()({
 			JOBS.BLACK_MAGE,
 		],
 	},
+	MALI: {
+		name: 'Mali',
+		avatar: require('./avatar/Mali.png'),
+		jobs: [
+			JOBS.BARD,
+			JOBS.BLACK_MAGE,
+		],
+	},
 	MALP: {
 		name: 'Malp',
 		avatar: require('./avatar/Malp.png'),
@@ -224,6 +239,34 @@ const CONTRIBUTORS = ensureRecord<Contributor>()({
 		avatar: require('./avatar/square.png'),
 		jobs: [
 			JOBS.MONK,
+		],
+	},
+	NONO: {
+		name: 'Nono',
+		avatar: require('./avatar/nono.png'),
+		jobs: [
+			JOBS.SCHOLAR,
+		],
+	},
+	STYRFIRE: {
+		name: 'Styrfire',
+		avatar: require('./avatar/styrfire.png'),
+		jobs: [
+			JOBS.PALADIN,
+		],
+	},
+	FAIR2DARE: {
+		name: 'fair2dare',
+		avatar: require('./avatar/fair2dare.png'),
+		jobs: [
+			JOBS.PALADIN, JOBS.DARK_KNIGHT,
+		],
+	},
+	HUGMEIR: {
+		name: 'Hugmeir',
+		avatar: require('./avatar/hugmeir.png'),
+		jobs: [
+			JOBS.BLUE_MAGE,
 		],
 	},
 })

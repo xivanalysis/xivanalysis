@@ -74,6 +74,10 @@ export class Tincture extends CoreTincture {
 					action: this.data.actions.CHAIN_SAW,
 					expectedPerWindow: 1,
 				},
+				{
+					action: this.data.actions.AIR_ANCHOR,
+					expectedPerWindow: 1,
+				},
 			],
 			suggestionIcon: this.data.actions.INFUSION_DEX.icon,
 			suggestionContent: <Trans id="mch.tincture.suggestions.trackedActions.content">

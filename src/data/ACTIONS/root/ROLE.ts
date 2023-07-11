@@ -88,7 +88,7 @@ export const ROLE = ensureActions({
 		id: 7571,
 		name: 'Rescue',
 		icon: 'https://xivapi.com/i/000000/000890.png',
-		cooldown: 150000,
+		cooldown: 120000,
 	},
 
 	// Physical Ranged DPS
@@ -150,7 +150,7 @@ export const ROLE = ensureActions({
 		id: 7548,
 		name: 'Arm\'s Length',
 		icon: 'https://xivapi.com/i/000000/000822.png',
-		cooldown: 90000,
+		cooldown: 120000,
 		statusesApplied: ['ARMS_LENGTH'],
 	},
 
@@ -173,7 +173,7 @@ export const ROLE = ensureActions({
 		id: 7549,
 		name: 'Feint',
 		icon: 'https://xivapi.com/i/000000/000828.png',
-		cooldown: 120000,
+		cooldown: 90000,
 		statusesApplied: ['FEINT'],
 	},
 
