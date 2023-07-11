@@ -4,7 +4,7 @@ import React from 'react'
 export const changelog = [
 	{
 		date: new Date('2023-07-09'),
-		Changes: () => <>Add gauge visualisation for Perfect Balance.</>,
+		Changes: () => <>Add gauge visualisation for Perfect Balance, and mark as supported for Endwalker.</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],
 	},
 	{

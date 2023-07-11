@@ -17,10 +17,10 @@ export const MONK = new Meta({
 			<p>If you notice anything that looks wrong or have a feature idea, please visit our Discord server and report it in the #fb-monk channel.</p>
 		</Trans>
 	</>,
-	// supportedPatches: {
-	// 	from: '6.0',
-	// 	to: '6.0',
-	// },
+	supportedPatches: {
+		from: '6.0',
+		to: '6.4',
+	},
 
 	contributors: [
 		{user: CONTRIBUTORS.AY, role: ROLES.MAINTAINER},
