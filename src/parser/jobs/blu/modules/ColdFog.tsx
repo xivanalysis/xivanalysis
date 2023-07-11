@@ -3,7 +3,6 @@ import {Plural, Trans} from '@lingui/react'
 import {DataLink} from 'components/ui/DbLink'
 import {Event, Events} from 'event'
 import {Analyser} from 'parser/core/Analyser'
-import {EventHook} from 'parser/core/Dispatcher'
 import {filter} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
 import {History} from 'parser/core/modules/ActionWindow/History'
@@ -39,7 +38,6 @@ export class ColdFog extends Analyser {
 	@dependency private suggestions!: Suggestions
 
 	private coldFogCasts = 0
-	private currentHook?: EventHook<Events['action']>
 	private touchOfFrostHistory = new History<ColdFogWindow>(
 		() => ({
 			whiteDeathCasts: 0,
@@ -55,22 +53,17 @@ export class ColdFog extends Analyser {
 
 		this.addEventHook(playerFilter.type('statusApply').status(this.data.statuses.COLD_FOG.id), this.onApplyColdFog)
 
+		// Start tracking to see if they got the six White Death GCDs during the window
+		this.addEventHook(playerFilter.action(this.data.actions.WHITE_DEATH.id).type('action'), this.onWhiteDeath)
+
 		this.addEventHook('complete', this.onComplete)
 	}
 
 	private onApplyTouchOfFrost(event: Events['statusApply']) {
 		this.touchOfFrostHistory.openNew(event.timestamp)
-		if (this.currentHook !== undefined) { return }
-
-		// Start tracking to see if they got the six White Death GCDs during the window
-		const playerFilter = filter<Event>().source(this.parser.actor.id)
-		this.currentHook = this.addEventHook(playerFilter.action(this.data.actions.WHITE_DEATH.id).type('action'), this.onWhiteDeath)
 	}
 	private onRemoveTouchOfFrost() {
 		this.touchOfFrostHistory.closeCurrent(this.parser.pull.timestamp + this.parser.pull.duration)
-		if (this.currentHook !== undefined) {
-			this.removeEventHook(this.currentHook)
-		}
 	}
 
 	private onWhiteDeath(event: Events['action']) {

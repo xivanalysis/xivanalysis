@@ -144,9 +144,14 @@ export class Defensives extends Analyser {
 			currentCharges = chargesAvailableEvent?.current || 0
 		}
 
+		const prepullBoolean: boolean = this.getUses(defensive).find(historyEntry => historyEntry.start === this.parser.pull.timestamp)?.start != null
 		const cooldown = defensive.cooldown || this.parser.pull.duration
 		const nextEntry = this.getUses(defensive).find(historyEntry => historyEntry.start > timestamp)
 		const useByTimestamp = nextEntry != null ? (nextEntry.start - cooldown) : (this.parser.pull.timestamp + this.parser.pull.duration)
+
+		//need to consider whether there is a prepull action as it will shift every subsequent event for this analysis. assumption is that it was actioned right at pull since no timestamp available for prepull so cooldown is used
+		availableTimestamp = availableTimestamp
+			+ (prepullBoolean && availableTimestamp !== (this.parser.pull.duration + this.parser.pull.timestamp) ? cooldown : 0)
 
 		if (useByTimestamp <= availableTimestamp) {
 			return {chargesBeforeNextUse: 0, availableTimestamp, useByTimestamp}
