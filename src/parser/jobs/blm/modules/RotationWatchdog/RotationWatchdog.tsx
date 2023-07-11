@@ -1,11 +1,13 @@
 import {t, Trans} from '@lingui/macro'
 import {DataLink} from 'components/ui/DbLink'
+import {RotationEvent} from 'components/ui/Rotation'
 import {RotationTargetOutcome} from 'components/ui/RotationTable'
 import {ActionKey} from 'data/ACTIONS'
 import {Events} from 'event'
 import {dependency} from 'parser/core/Injectable'
 import {EvaluatedAction, RestartWindow, TrackedAction} from 'parser/core/modules/ActionWindow'
 import {History, HistoryEntry} from 'parser/core/modules/ActionWindow/History'
+import {HistoryEntryPredicate} from 'parser/core/modules/ActionWindow/windows/ActionWindow'
 import {Actors} from 'parser/core/modules/Actors'
 import {Invulnerability} from 'parser/core/modules/Invulnerability'
 import {SEVERITY} from 'parser/core/modules/Suggestions'
@@ -172,6 +174,9 @@ export class RotationWatchdog extends RestartWindow {
 
 	override initialise() {
 		super.initialise()
+
+		this.setHistorySuggestionFilter(this.filterForSuggestions)
+		this.setHistoryOutputFilter(this.filterForOutput)
 
 		this.ignoreActions([this.data.actions.ATTACK.id])
 
@@ -443,7 +448,7 @@ export class RotationWatchdog extends RestartWindow {
 	}
 
 	// Filter out the too-short windows from inclusion in suggestions
-	override filterForSuggestions(window: HistoryEntry<EvaluatedAction[]>): boolean {
+	private filterForSuggestions: HistoryEntryPredicate = (window: HistoryEntry<EvaluatedAction[]>) => {
 		const windowMetadata = getMetadataForWindow(window, this.metadataHistory)
 		if (windowMetadata == null) { return false }
 
@@ -451,7 +456,7 @@ export class RotationWatchdog extends RestartWindow {
 	}
 
 	// Filter out the windows we don't want to show in the output, unless we're showing everything
-	override filterForOutput(window: HistoryEntry<EvaluatedAction[]>): boolean {
+	private filterForOutput: HistoryEntryPredicate = (window: HistoryEntry<EvaluatedAction[]>) => {
 		const windowMetadata = getMetadataForWindow(window, this.metadataHistory)
 		if (windowMetadata == null) { return false }
 
@@ -459,7 +464,7 @@ export class RotationWatchdog extends RestartWindow {
 	}
 
 	// Include whether the event was a proc so we get the proc outline in the output Rotation column
-	override getRotationOutputForEvent(event: Events['action']) {
-		return {action: event.action, isProc: this.procs.checkEventWasProc(event)}
+	override getRotationOutputForAction(action: EvaluatedAction): RotationEvent {
+		return {action: action.action.id, isProc: this.procs.checkActionWasProc(action.action.id, action.timestamp)}
 	}
 }
