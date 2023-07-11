@@ -1,4 +1,9 @@
-import {ensureActions} from '../type'
+import {DamageType} from 'event'
+import {Action, ensureActions} from '../type'
+
+const MAGICAL  = DamageType.MAGICAL
+const PHYSICAL = DamageType.PHYSICAL
+const DARK	 = DamageType.DARK
 
 export const BLU_COOLDOWN_GROUP = {
 	OFF_GUARD: 11411,
@@ -6,6 +11,16 @@ export const BLU_COOLDOWN_GROUP = {
 	BLU_MOUNTAIN_BUSTER: 11428,
 	GLASS_DANCE: 11430,
 	QUASAR: 18324,
+	NIGHTBLOOM: 23290,
+	THE_ROSE_OF_DESTRUCTION: 23275,
+	MATRA_MAGIC: 23285,
+}
+
+const UMBRAL   = 1 // Water, Earth, Ice
+const ASTRAL   = 2 // Fire, Wind, Lightning
+
+export interface BlueAction extends Action {
+    elementType?: number,
 }
 
 export const BLU = ensureActions({
@@ -16,6 +31,8 @@ export const BLU = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003253.png',
 		onGcd: true,
 		castTime: 2500,
+		damageType: MAGICAL,
+		elementType: UMBRAL,
 	},
 	FLAME_THROWER: {
 		id: 11402,
@@ -23,6 +40,8 @@ export const BLU = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003270.png',
 		onGcd: true,
 		castTime: 2000,
+		damageType: MAGICAL,
+		elementType: ASTRAL,
 	},
 	AQUA_BREATH: {
 		id: 11390,
@@ -31,6 +50,8 @@ export const BLU = ensureActions({
 		onGcd: true,
 		castTime: 2000,
 		statusesApplied: ['AQUA_BREATH'],
+		damageType: MAGICAL,
+		elementType: UMBRAL,
 	},
 	FLYING_FRENZY: {
 		id: 11389,
@@ -38,6 +59,7 @@ export const BLU = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003257.png',
 		onGcd: true,
 		castTime: 1000,
+		damageType: PHYSICAL,
 	},
 	DRILL_CANNONS: {
 		id: 11398,
@@ -45,6 +67,7 @@ export const BLU = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003266.png',
 		onGcd: true,
 		castTime: 2000,
+		damageType: PHYSICAL,
 	},
 	HIGH_VOLTAGE: {
 		id: 11387,
@@ -52,6 +75,8 @@ export const BLU = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003255.png',
 		onGcd: true,
 		castTime: 2000,
+		damageType: MAGICAL,
+		elementType: ASTRAL,
 	},
 	LOOM: {
 		id: 11401,
@@ -66,6 +91,7 @@ export const BLU = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003275.png',
 		onGcd: true,
 		castTime: 2000, // TODO: Brush With Death
+		damageType: PHYSICAL,
 	},
 	SONG_OF_TORMENT: {
 		id: 11386,
@@ -73,7 +99,8 @@ export const BLU = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003254.png',
 		onGcd: true,
 		castTime: 2000,
-		statusesApplied: ['SONG_OF_TORMENT'],
+		statusesApplied: ['BLEEDING'],
+		damageType: MAGICAL,
 	},
 	GLOWER: {
 		id: 11404,
@@ -81,6 +108,8 @@ export const BLU = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003272.png',
 		onGcd: true,
 		castTime: 2000,
+		damageType: MAGICAL,
+		elementType: ASTRAL,
 	},
 	PLAINCRACKER: {
 		id: 11391,
@@ -88,6 +117,8 @@ export const BLU = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003259.png',
 		onGcd: true,
 		castTime: 2000,
+		damageType: MAGICAL,
+		elementType: UMBRAL,
 	},
 	BRISTLE: {
 		id: 11393,
@@ -117,6 +148,7 @@ export const BLU = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003268.png',
 		onGcd: true,
 		castTime: 1000,
+		damageType: PHYSICAL,
 	},
 	ICE_SPIKES: {
 		id: 11418,
@@ -132,6 +164,7 @@ export const BLU = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003263.png',
 		onGcd: true,
 		castTime: 2000,
+		damageType: MAGICAL,
 	},
 	ACORN_BOMB: {
 		id: 11392,
@@ -146,6 +179,8 @@ export const BLU = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003264.png',
 		onGcd: true,
 		castTime: 2000,
+		damageType: MAGICAL,
+		elementType: ASTRAL,
 	},
 	OFF_GUARD: {
 		id: 11411,
@@ -162,6 +197,7 @@ export const BLU = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003276.png',
 		onGcd: true,
 		castTime: 2000,
+		damageType: MAGICAL,
 	},
 	TRANSFUSION: {
 		id: 11409,
@@ -182,6 +218,7 @@ export const BLU = ensureActions({
 		name: 'Flying Sardine',
 		icon: 'https://xivapi.com/i/003000/003291.png',
 		onGcd: true,
+		damageType: PHYSICAL,
 	},
 	SNORT: {
 		id: 11383,
@@ -196,6 +233,7 @@ export const BLU = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003252.png',
 		onGcd: true,
 		castTime: 2000,
+		damageType: PHYSICAL,
 	},
 	THE_LOOK: {
 		id: 11399,
@@ -203,6 +241,7 @@ export const BLU = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003267.png',
 		onGcd: true,
 		castTime: 2000,
+		damageType: MAGICAL,
 	},
 	BAD_BREATH: {
 		id: 11388,
@@ -249,6 +288,8 @@ export const BLU = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003287.png',
 		onGcd: true,
 		castTime: 2000,
+		damageType: MAGICAL,
+		elementType: UMBRAL,
 	},
 	THE_DRAGONS_VOICE: {
 		id: 11420,
@@ -256,6 +297,8 @@ export const BLU = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003288.png',
 		onGcd: true,
 		castTime: 2000,
+		damageType: MAGICAL,
+		elementType: ASTRAL,
 	},
 	MISSILE: {
 		id: 11405,
@@ -263,6 +306,7 @@ export const BLU = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003273.png',
 		onGcd: true,
 		castTime: 2500,
+		damageType: DARK,
 	},
 	THOUSAND_NEEDLES: {
 		id: 11397,
@@ -270,6 +314,7 @@ export const BLU = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003265.png',
 		onGcd: true,
 		castTime: 6000,
+		damageType: PHYSICAL,
 	},
 	INK_JET: {
 		id: 11422,
@@ -277,6 +322,7 @@ export const BLU = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003290.png',
 		onGcd: true,
 		castTime: 2000,
+		damageType: MAGICAL,
 	},
 	FIRE_ANGON: {
 		id: 11425,
@@ -284,6 +330,8 @@ export const BLU = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003293.png',
 		onGcd: true,
 		castTime: 1000,
+		damageType: PHYSICAL,
+		elementType: ASTRAL,
 	},
 	MOON_FLUTE: {
 		id: 11415,
@@ -306,6 +354,7 @@ export const BLU = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003262.png',
 		onGcd: true,
 		castTime: 1000,
+		damageType: MAGICAL,
 	},
 	DOOM: {
 		id: 11416,
@@ -331,6 +380,8 @@ export const BLU = ensureActions({
 		cooldown: 30000,
 		cooldownGroup: BLU_COOLDOWN_GROUP.FEATHER_RAIN,
 		statusesApplied: ['FEATHER_RAIN'],
+		damageType: MAGICAL,
+		elementType: ASTRAL,
 	},
 	ERUPTION: {
 		id: 11427,
@@ -338,6 +389,8 @@ export const BLU = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003295.png',
 		cooldown: 30000,
 		cooldownGroup: BLU_COOLDOWN_GROUP.FEATHER_RAIN,
+		damageType: MAGICAL,
+		elementType: ASTRAL,
 	},
 	BLU_MOUNTAIN_BUSTER: {
 		id: 11428,
@@ -345,6 +398,8 @@ export const BLU = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003296.png',
 		cooldown: 60000,
 		cooldownGroup: BLU_COOLDOWN_GROUP.BLU_MOUNTAIN_BUSTER,
+		damageType: PHYSICAL,
+		elementType: UMBRAL,
 	},
 	SHOCK_STRIKE: {
 		id: 11429,
@@ -352,6 +407,8 @@ export const BLU = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003297.png',
 		cooldown: 60000,
 		cooldownGroup: BLU_COOLDOWN_GROUP.BLU_MOUNTAIN_BUSTER,
+		damageType: MAGICAL,
+		elementType: ASTRAL,
 	},
 	GLASS_DANCE: {
 		id: 11430,
@@ -359,6 +416,8 @@ export const BLU = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003298.png',
 		cooldown: 90000,
 		cooldownGroup: BLU_COOLDOWN_GROUP.GLASS_DANCE,
+		damageType: MAGICAL,
+		elementType: UMBRAL,
 	},
 	VEIL_OF_THE_WHORL: {
 		id: 11431,
@@ -374,6 +433,8 @@ export const BLU = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003300.png',
 		onGcd: true,
 		castTime: 2000,
+		damageType: MAGICAL,
+		elementType: ASTRAL,
 	},
 	PROTEAN_WAVE: {
 		id: 18296,
@@ -381,6 +442,8 @@ export const BLU = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003301.png',
 		onGcd: true,
 		castTime: 2000,
+		damageType: MAGICAL,
+		elementType: UMBRAL,
 	},
 	NORTHERLIES: {
 		id: 18297,
@@ -388,6 +451,8 @@ export const BLU = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003302.png',
 		onGcd: true,
 		castTime: 2000,
+		damageType: MAGICAL,
+		elementType: UMBRAL,
 	},
 	ELECTROGENESIS: {
 		id: 18298,
@@ -395,6 +460,8 @@ export const BLU = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003303.png',
 		onGcd: true,
 		castTime: 2000,
+		damageType: MAGICAL,
+		elementType: ASTRAL,
 	},
 	KALTSTRAHL: {
 		id: 18299,
@@ -402,6 +469,7 @@ export const BLU = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003304.png',
 		onGcd: true,
 		castTime: 2000,
+		damageType: PHYSICAL,
 	},
 	ABYSSAL_TRANSFIXION: {
 		id: 18300,
@@ -409,6 +477,7 @@ export const BLU = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003305.png',
 		onGcd: true,
 		castTime: 2000,
+		damageType: PHYSICAL,
 	},
 	CHIRP: {
 		id: 18301,
@@ -448,6 +517,7 @@ export const BLU = ensureActions({
 		cooldown: 90000,
 		gcdRecast: 2500,
 		statusesApplied: ['MAGIC_HAMMER'],
+		damageType: MAGICAL,
 	},
 	AVAIL: {
 		id: 18306,
@@ -472,6 +542,8 @@ export const BLU = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003313.png',
 		onGcd: true,
 		castTime: 1000,
+		damageType: MAGICAL,
+		elementType: ASTRAL,
 	},
 	WHISTLE: {
 		id: 18309,
@@ -487,6 +559,7 @@ export const BLU = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003315.png',
 		onGcd: true,
 		castTime: 2000,
+		damageType: MAGICAL,
 	},
 	BLACK_KNIGHTS_TOUR: {
 		id: 18311,
@@ -494,6 +567,7 @@ export const BLU = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003316.png',
 		onGcd: true,
 		castTime: 2000,
+		damageType: MAGICAL,
 	},
 	LEVEL_5_DEATH: {
 		id: 18312,
@@ -510,6 +584,7 @@ export const BLU = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003318.png',
 		onGcd: true,
 		castTime: 2000,
+		damageType: DARK,
 	},
 	PERPETUAL_RAY: {
 		id: 18314,
@@ -517,6 +592,7 @@ export const BLU = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003319.png',
 		onGcd: true,
 		castTime: 3000,
+		damageType: MAGICAL,
 	},
 	CACTGUARD: {
 		id: 18315,
@@ -532,6 +608,7 @@ export const BLU = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003321.png',
 		onGcd: true,
 		castTime: 2000,
+		damageType: PHYSICAL,
 	},
 	ANGEL_WHISPER: {
 		id: 18317,
@@ -555,6 +632,8 @@ export const BLU = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003324.png',
 		onGcd: true,
 		castTime: 2000,
+		damageType: MAGICAL,
+		elementType: ASTRAL,
 	},
 	DEVOUR: {
 		id: 18320,
@@ -565,6 +644,7 @@ export const BLU = ensureActions({
 		cooldown: 60000,
 		gcdRecast: 2500,
 		statusesApplied: ['DEVOUR'],
+		damageType: MAGICAL,
 	},
 	CONDENSED_LIBRA: {
 		id: 18321,
@@ -589,6 +669,8 @@ export const BLU = ensureActions({
 		cooldown: 30000,
 		charges: 4,
 		statusesApplied: ['SURPANAKHA'],
+		damageType: MAGICAL,
+		elementType: UMBRAL,
 	},
 	QUASAR: {
 		id: 18324,
@@ -596,6 +678,7 @@ export const BLU = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003329.png',
 		cooldown: 60000,
 		cooldownGroup: BLU_COOLDOWN_GROUP.QUASAR,
+		damageType: MAGICAL,
 	},
 	J_KICK: {
 		id: 18325,
@@ -603,5 +686,249 @@ export const BLU = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003330.png',
 		cooldown: 60000,
 		cooldownGroup: BLU_COOLDOWN_GROUP.QUASAR,
+		damageType: PHYSICAL,
+	},
+	TRIPLE_TRIDENT: {
+		id: 23264,
+		name: 'Triple Trident',
+		icon: 'https://xivapi.com/i/003000/003331.png',
+		onGcd: true,
+		castTime: 2000,
+		gcdRecast: 2500,
+		cooldown: 90000,
+		damageType: PHYSICAL,
+	},
+	TINGLE: {
+		id: 23265,
+		name: 'Tingle',
+		icon: 'https://xivapi.com/i/003000/003332.png',
+		onGcd: true,
+		castTime: 2000,
+		statusesApplied: ['TINGLING'],
+		damageType: MAGICAL,
+		elementType: ASTRAL,
+	},
+	TATAMI_GAESHI: {
+		id: 23266,
+		name: 'Tatami-gaeshi',
+		icon: 'https://xivapi.com/i/003000/003333.png',
+		onGcd: true,
+		castTime: 2000,
+		damageType: MAGICAL,
+	},
+	COLD_FOG: {
+		id: 23267,
+		name: 'Cold Fog',
+		icon: 'https://xivapi.com/i/003000/003334.png',
+		onGcd: true,
+		castTime: 2000,
+		gcdRecast: 2500,
+		cooldown: 90000,
+		statusesApplied: ['COLD_FOG'],
+	},
+	WHITE_DEATH: {
+		id: 23268,
+		name: 'White Death',
+		icon: 'https://xivapi.com/i/003000/003335.png',
+		onGcd: true,
+		damageType: MAGICAL,
+		elementType: UMBRAL,
+	},
+	STOTRAM: {
+		id: 23416,
+		name: 'Stotram',
+		icon: 'https://xivapi.com/i/003000/003336.png',
+		onGcd: true,
+		castTime: 2000,
+	},
+	SAINTLY_BEAM: {
+		id: 23270,
+		name: 'Saintly Beam',
+		icon: 'https://xivapi.com/i/003000/003337.png',
+		onGcd: true,
+		castTime: 2000,
+		damageType: MAGICAL,
+	},
+	FECULENT_FLOOD: {
+		id: 23271,
+		name: 'Feculent Flood',
+		icon: 'https://xivapi.com/i/003000/003338.png',
+		onGcd: true,
+		castTime: 2000,
+		damageType: MAGICAL,
+		elementType: UMBRAL,
+	},
+	ANGELS_SNACK: {
+		id: 23272,
+		name: 'Angel\'s Snack',
+		icon: 'https://xivapi.com/i/003000/003339.png',
+		onGcd: true,
+		cooldown: 120000,
+		gcdRecast: 2500,
+		castTime: 2000,
+		cooldownGroup: BLU_COOLDOWN_GROUP.MATRA_MAGIC,
+		statusesApplied: ['ANGELS_SNACK'],
+	},
+	CHELONIAN_GATE: {
+		id: 23273,
+		name: 'Chelonian Gate',
+		icon: 'https://xivapi.com//i/003000/003340.png',
+		onGcd: true,
+		castTime: 2000,
+		gcdRecast: 2500,
+		cooldown: 30000,
+		cooldownGroup: BLU_COOLDOWN_GROUP.THE_ROSE_OF_DESTRUCTION,
+	},
+	DIVINE_CATARACT: {
+		id: 23274,
+		name: 'Divine Cataract',
+		icon: 'https://xivapi.com//i/003000/003341.png',
+		onGcd: true,
+		damageType: MAGICAL,
+		elementType: UMBRAL,
+	},
+	THE_ROSE_OF_DESTRUCTION: {
+		id: 23275,
+		name: 'The Rose of Destruction',
+		icon: 'https://xivapi.com//i/003000/003342.png',
+		onGcd: true,
+		castTime: 2000,
+		gcdRecast: 2500,
+		cooldown: 30000,
+		cooldownGroup: BLU_COOLDOWN_GROUP.THE_ROSE_OF_DESTRUCTION,
+		damageType: MAGICAL,
+	},
+	BASIC_INSTINCT: {
+		id: 23276,
+		name: 'Basic Instinct',
+		icon: 'https://xivapi.com//i/003000/003343.png',
+		onGcd: true,
+		castTime: 2000,
+	},
+	ULTRAVIBRATION: {
+		id: 23277,
+		name: 'Ultravibration',
+		icon: 'https://xivapi.com//i/003000/003344.png',
+		onGcd: true,
+		castTime: 2000,
+		gcdRecast: 2500,
+		cooldown: 120000,
+	},
+	BLAZE: {
+		id: 23278,
+		name: 'Blaze',
+		icon: 'https://xivapi.com//i/003000/003345.png',
+		onGcd: true,
+		castTime: 2000,
+		damageType: MAGICAL,
+		elementType: UMBRAL,
+	},
+	MUSTARD_BOMB: {
+		id: 23279,
+		name: 'Mustard Bomb',
+		icon: 'https://xivapi.com//i/003000/003346.png',
+		onGcd: true,
+		castTime: 2000,
+		damageType: MAGICAL,
+		elementType: ASTRAL,
+	},
+	DRAGON_FORCE: {
+		id: 23280,
+		name: 'Dragon Force',
+		icon: 'https://xivapi.com//i/003000/003347.png',
+		onGcd: true,
+		castTime: 2000,
+		gcdRecast: 2500,
+		cooldown: 120000,
+		cooldownGroup: BLU_COOLDOWN_GROUP.MATRA_MAGIC,
+	},
+	AETHERIAL_SPARK: {
+		id: 23281,
+		name: 'Aetherial Spark',
+		icon: 'https://xivapi.com//i/003000/003348.png',
+		onGcd: true,
+		castTime: 2000,
+		statusesApplied: ['BLEEDING'],
+		damageType: MAGICAL,
+	},
+	HYDRO_PULL: {
+		id: 23282,
+		name: 'Hydro Pull',
+		icon: 'https://xivapi.com//i/003000/003349.png',
+		onGcd: true,
+		castTime: 2000,
+		damageType: MAGICAL,
+		elementType: UMBRAL,
+	},
+	MALEDICTION_OF_WATER: {
+		id: 23283,
+		name: 'Malediction of Water',
+		icon: 'https://xivapi.com//i/003000/003350.png',
+		onGcd: true,
+		castTime: 2000,
+		damageType: MAGICAL,
+		elementType: UMBRAL,
+	},
+	CHOCO_METEOR: {
+		id: 23284,
+		name: 'Choco Meteor',
+		icon: 'https://xivapi.com//i/003000/003351.png',
+		onGcd: true,
+		castTime: 2000,
+		damageType: MAGICAL,
+	},
+	MATRA_MAGIC: {
+		id: 23285,
+		name: 'Matra Magic',
+		icon: 'https://xivapi.com//i/003000/003352.png',
+		onGcd: true,
+		castTime: 2000,
+		gcdRecast: 2500,
+		cooldown: 120000,
+		cooldownGroup: BLU_COOLDOWN_GROUP.MATRA_MAGIC,
+		damageType: MAGICAL,
+	},
+	PERIPHERAL_SYNTHESIS: {
+		id: 23286,
+		name: 'Peripheral Synthesis',
+		icon: 'https://xivapi.com//i/003000/003353.png',
+		onGcd: true,
+		castTime: 2000,
+		damageType: PHYSICAL,
+	},
+	BOTH_ENDS: {
+		id: 23287,
+		name: 'Both Ends',
+		icon: 'https://xivapi.com//i/003000/003354.png',
+		cooldown: 120000,
+		cooldownGroup: BLU_COOLDOWN_GROUP.NIGHTBLOOM,
+		damageType: MAGICAL,
+	},
+	PHANTOM_FLURRY: {
+		id: 23288,
+		name: 'Phantom Flurry',
+		icon: 'https://xivapi.com//i/003000/003355.png',
+		gcdRecast: 2500,
+		cooldown: 120000,
+		onGcd: true, // not actually true but makes the timeline nicer
+		statusesApplied: ['PHANTOM_FLURRY'],
+		damageType: MAGICAL,
+	},
+	PHANTOM_FLURRY_KICK: { // This is what Phantom Flurry turns into while the effect is channeling
+		id: 23289,
+		name: 'Phantom Flurry',
+		icon: 'https://xivapi.com//i/003000/003356.png',
+		gcdRecast: 2500,
+		onGcd: true,
+		damageType: MAGICAL,
+	},
+	NIGHTBLOOM: {
+		id: 23290,
+		name: 'Nightbloom',
+		icon: 'https://xivapi.com//i/003000/003357.png',
+		cooldown: 120000,
+		cooldownGroup: BLU_COOLDOWN_GROUP.NIGHTBLOOM,
+		statusesApplied: ['BLEEDING'],
+		damageType: MAGICAL,
 	},
 })

@@ -18,11 +18,12 @@ export const DARK_KNIGHT = new Meta({
 	</>,
 	supportedPatches: {
 		from: '6.0',
-		to: '6.1',
+		to: '6.4',
 	},
 	contributors: [
 		{user: CONTRIBUTORS.AZARIAH, role: ROLES.MAINTAINER},
 		{user: CONTRIBUTORS.AY, role: ROLES.DEVELOPER},
+		{user: CONTRIBUTORS.STYRFIRE, role: ROLES.DEVELOPER},
 	],
 	changelog: [
 		{

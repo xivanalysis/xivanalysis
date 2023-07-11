@@ -1,14 +1,16 @@
 import {t, Trans} from '@lingui/macro'
 import TransMarkdown from 'components/ui/TransMarkdown'
+import CONTRIBUTORS, {ROLES} from 'data/CONTRIBUTORS'
 import {Meta} from 'parser/core/Meta'
 import React from 'react'
 import {Icon, Message} from 'semantic-ui-react'
 import {changelog} from './changelog'
 
-const description = t('blu.about.description')`This is a limited analyzer for a limited job. It's not ready yet, but please look forward to it.
+const description = t('blu.about.description')`BLU has wildly different play styles depending on your mimicry. This page will primarily focus on the DPS aspect of the job, so do take the advice with a grain of salt if you are healing or tanking.
 
-This analyzer will focus on DoTs, uptime, and proper usage of [~action/BRISTLE],[~action/MOON_FLUTE], and [~action/SURPANAKHA].
-`
+Worth also keeping in mind the usual adage that BLU content is won and lost on mechanics, not DPS. Following the suggestions here to optimize your performance will always be welcome, but it should not detract from mechanics. Greeding Phantom Flurry ticks at the expense of your teammates' sanity is not recommended.
+
+If you want further context for the suggestions given here, the [Blue Academy Discord](https://discord.gg/blueacademy) is the primary source for Blue Mage information.`
 
 export const BLUE_MAGE = new Meta({
 	modules: () => import('./modules' /* webpackChunkName: "jobs-blu" */),
@@ -17,16 +19,16 @@ export const BLUE_MAGE = new Meta({
 		<Message warning icon>
 			<Icon name="warning sign"/>
 			<Message.Content>
-				<Trans id="blu.about.description.warning">This module is under development and not yet ready for the public.</Trans>
+				<Trans id="blu.about.description.warning">This module was recently extended and we would appreciate feedback!</Trans>
 			</Message.Content>
 		</Message>
 	</>,
 	supportedPatches: {
-		from: '✖', // TODO: Update when we have even the most basic gcd uptime working
-		to: '✖',
+		from: '6.0',
+		to: '6.4',
 	},
 	contributors: [
-		// {user: CONTRIBUTORS.YOU, role: ROLES.DEVELOPER},
+		{user: CONTRIBUTORS.HUGMEIR, role: ROLES.DEVELOPER},
 	],
 	changelog,
 })

@@ -12,6 +12,7 @@ import React from 'react'
 import {BLITZ_ACTIONS} from './constants'
 import {DISPLAY_ORDER} from './DISPLAY_ORDER'
 import {BlitzEvaluator} from './evaluators/BlitzEvaluator'
+import {RiddleOfWindEvaluator} from './evaluators/RiddleOfWindEvaluator'
 import {fillActions} from './utilities'
 
 const EXPECTED_GCDS = 11
@@ -50,6 +51,7 @@ export class RiddleOfFire extends BuffWindow {
 
 	private pbCasts: number[] = []
 	private blitzActions = fillActions(BLITZ_ACTIONS, this.data)
+	private riddleActions = fillActions(['RIDDLE_OF_WIND'], this.data)
 	buffStatus = this.data.statuses.RIDDLE_OF_FIRE
 
 	override initialise() {
@@ -73,9 +75,14 @@ export class RiddleOfFire extends BuffWindow {
 			pb: this.data.actions.PERFECT_BALANCE,
 		}))
 
+		this.addEvaluator(new RiddleOfWindEvaluator({
+			riddleActions: this.riddleActions,
+		}))
+
 		this.addEvaluator(new ExpectedGcdCountEvaluator({
 			expectedGcds: EXPECTED_GCDS,
 			globalCooldown: this.globalCooldown,
+			hasStacks: false,
 			suggestionIcon: this.data.actions.RIDDLE_OF_FIRE.icon,
 			severityTiers: SEVERITIES.TOTAL_GCDS,
 			suggestionWindowName: suggestionWindowName,

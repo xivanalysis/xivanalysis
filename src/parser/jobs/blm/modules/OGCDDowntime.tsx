@@ -21,10 +21,6 @@ export class OGCDDowntime extends CooldownDowntime {
 		{cooldowns: [this.data.actions.AMPLIFIER]},
 		{cooldowns: [this.data.actions.SHARPCAST]},
 	]
-	override defensiveCooldowns = [
-		{cooldowns: [this.data.actions.MANAWARD]},
-		{cooldowns: [this.data.actions.ADDLE]},
-	]
 
 	override checklistTarget = TARGETPERCENT
 	override checklistDescription = <Trans id="blm.ogcd-downtime.ogcd-cd-metric">Always make sure to use your OGCDs when they are up but don't clip them. Utilize your procs or fast Blizzard IIIs or Fire IIIs to weave them. <Trans id="blm.ogcd-downtime.ogcd-cd-buffer">To account for random factors you are given a buffer of {ALLOWEDDOWNTIMEALL/1000} seconds per instance to hold your cooldowns.</Trans></Trans>

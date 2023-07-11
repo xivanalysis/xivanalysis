@@ -54,7 +54,8 @@ export class TrickAttackWindow extends BuffWindow {
 
 	@dependency globalCooldown!: GlobalCooldown
 
-	override buffStatus = this.data.statuses.TRICK_ATTACK_VULNERABILITY_UP
+	// The Trick Attack debuff changed in 6.1, so we need to track a different one depending on the patch
+	override buffStatus = this.parser.patch.before('6.1') ? this.data.statuses.TRICK_ATTACK_VULNERABILITY_UP : this.data.statuses.TRICK_ATTACK
 
 	override initialise() {
 		super.initialise()
@@ -66,6 +67,7 @@ export class TrickAttackWindow extends BuffWindow {
 		this.addEvaluator(new ExpectedGcdCountEvaluator({
 			expectedGcds: BASE_GCDS_PER_WINDOW,
 			globalCooldown: this.globalCooldown,
+			hasStacks: false,
 			suggestionIcon,
 			suggestionContent: <Trans id="nin.taWindow.suggestions.gcds.content">
 				While the exact number of GCDs per window will vary depending on whether <ActionLink action="TEN_CHI_JIN"/> is up, every <ActionLink action="TRICK_ATTACK"/> window should contain at least <Plural value={BASE_GCDS_PER_WINDOW} one="# GCD" other="# GCDs" />.

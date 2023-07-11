@@ -29,13 +29,27 @@ export const ASTROLOGIAN = new Meta({
 	</>,
 	supportedPatches: {
 		from: '6.0',
-		to: '6.1',
+		to: '6.4',
 	},
 	contributors: [
 		{user: CONTRIBUTORS.SUSHIROU, role: ROLES.MAINTAINER},
 		{user: CONTRIBUTORS.OTOCEPHALY, role: ROLES.DEVELOPER},
 	],
 	changelog: [
+		{
+			date: new Date('2023-05-24'),
+			Changes: () => <>
+				<strong>AST Cleanup and <DataLink action="DIVINATION" showIcon={false} /></strong>
+				<ul>
+					<li> Removed <DataLink action="LIGHTSPEED" /> module and integrated it with <DataLink action="DIVINATION" /> </li>
+					<li> Added suggestion for <DataLink action="LIGHTSPEED" /> if not used with <DataLink action="DIVINATION" /> </li>
+					<li> Updated <DataLink action="DIVINATION" /> module to align with AST burst window recommendations. </li>
+					<li> Reorganized checklist items. </li>
+					<li> Added <DataLink action="COLLECTIVE_UNCONSCIOUS" />, <DataLink action="MACROCOSMOS" />, and <DataLink action="EARTHLY_STAR" /> to the defensives checklist. </li>
+				</ul>
+			</>,
+			contributors: [CONTRIBUTORS.OTOCEPHALY],
+		},
 		{
 			date: new Date('2022-01-26'),
 			Changes: () => <>

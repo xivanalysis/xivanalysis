@@ -1,3 +1,4 @@
+import * as Sentry from '@sentry/browser'
 import * as Errors from 'errors'
 import ky from 'ky'
 import _ from 'lodash'
@@ -5,7 +6,7 @@ import {action, observable, runInAction} from 'mobx'
 import {globalErrorStore} from 'store/globalError'
 import {settingsStore} from 'store/settings'
 import {ProcessedReportFightsResponse, ReportFightsQuery, ReportFightsResponse} from './eventTypes'
-import {fflogsApi} from './fflogsApi'
+import {fetchFflogs, getCache} from './fflogsApi'
 
 interface UnloadedReport {
 	loading: true
@@ -39,13 +40,22 @@ export class ReportStore {
 
 		let response: ReportFightsResponse
 		try {
-			response = await fflogsApi.get(`report/fights/${code}`, {
-				searchParams: {
+			let cache : Cache | undefined
+			try {
+				cache = await getCache(code)
+			} catch (error) {
+				Sentry.captureException(error)
+				cache = undefined
+			}
+			response = await fetchFflogs<ReportFightsResponse>(
+				`report/fights/${code}`,
+				{
 					translate: 'true',
 					..._.omitBy(params, _.isNil),
-					...(bypassCache? {bypassCache: 'true'} : {}),
 				},
-			}).json<ReportFightsResponse>()
+				cache,
+				bypassCache ? 'bypass' : 'read',
+			)
 		} catch (e) {
 			// Something's gone wrong, clear report status then dispatch an error
 			runInAction(() => {
@@ -53,15 +63,20 @@ export class ReportStore {
 			})
 
 			// TODO: Add more error handling to this if they start cropping up more
-			if (e instanceof ky.HTTPError) {
-				const json: ErrorResponse | undefined = await e.response.json()
+			if (e instanceof Errors.UnknownApiError && e.inner instanceof ky.HTTPError) {
+				const json: ErrorResponse | undefined = await e.inner.response.json().catch(_err => undefined)
 				if (json && json.error === 'This report does not exist or is private.') {
 					globalErrorStore.setGlobalError(new Errors.ReportNotFoundError())
 					return
 				}
 			}
 
-			globalErrorStore.setGlobalError(new Errors.UnknownApiError())
+			if (e instanceof Errors.GlobalError) {
+				globalErrorStore.setGlobalError(e)
+				return
+			}
+
+			globalErrorStore.setGlobalError(new Errors.UnknownApiError({inner: e}))
 			return
 		}
 

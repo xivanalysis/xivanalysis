@@ -52,4 +52,19 @@ export const changelog = [
 		Changes: () => <>Updated Addersting gauge initialization for 6.1 and later logs, and cleaned up a few suggestions.</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],
 	},
+	{
+		date: new Date('2022-08-27'),
+		Changes: () => <>Added data for new shield status from Holos.</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
+	{
+		date: new Date('2022-09-30'),
+		Changes: () => <>Ignore Addersgall actions in Overheal and updated Overheal buckets.</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
+	{
+		date: new Date('2023-01-15'),
+		Changes: () => <>Updates for 6.3: 40 second Phlegma cooldown and Addersting generation for Eukrasian Prognosis on self.</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
 ]

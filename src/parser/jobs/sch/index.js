@@ -18,11 +18,12 @@ export const SCHOLAR = new Meta({
 	</>,
 	supportedPatches: {
 		from: '6.0',
-		to: '6.1',
+		to: '6.4',
 	},
 	contributors: [
 		{user: CONTRIBUTORS.MYPS, role: ROLES.DEVELOPER},
 		{user: CONTRIBUTORS.DTHOMASH, role: ROLES.DEVELOPER},
+		{user: CONTRIBUTORS.NONO, role: ROLES.DEVELOPER},
 	],
 	changelog: [
 		{

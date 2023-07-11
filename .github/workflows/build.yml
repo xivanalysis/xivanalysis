@@ -1,6 +1,11 @@
 name: Build
 on:
   workflow_dispatch:
+    inputs:
+      force:
+        description: Force i18n to be uploaded
+        required: false
+        type: boolean
   push:
     branches:
     - endwalker
@@ -32,7 +37,7 @@ jobs:
     name: Upload i18n sources to Crowdin
     runs-on: ubuntu-latest
     needs: check_changes
-    if: needs.check_changes.outputs.i18n_changes == 'true'
+    if: needs.check_changes.outputs.i18n_changes == 'true' || inputs.force
     steps:
     - uses: actions/checkout@v2
 

@@ -60,6 +60,12 @@ export class AoeChecker extends AoEUsages {
 			stActions: [ACTIONS.GEKKO],
 			minTargets: 3,
 		},
+
+		{
+			aoeAction: ACTIONS.SHOHA_II,
+			stActions: [ACTIONS.SHOHA],
+			minTargets: 3,
+		},
 	]
 
 	protected override adjustMinTargets(event: Events['damage'], minTargets: number): number {
