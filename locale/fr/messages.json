@@ -630,6 +630,8 @@
   "mnk.forms.suggestions.reset.why": "{0, plural,one {#combo fut}other {#combos furent}} réinitialiser par une position de l'opo-opo.",
   "mnk.forms.suggestions.skipped.content": "Évitez de sauter des formes en dehors des temps d'arrêt. Un GCD ignoré pourrait autrement être utilisé pour causer des dommages.",
   "mnk.forms.suggestions.skipped.why": "{0, plural,one {#forme était}other {#forme étaient}} sauter par Glissement de posture non nécessaire.",
+  "mnk.mbstats.headings.count": "",
+  "mnk.mbstats.title": "",
   "mnk.missedbrotherhood.disclaimer": "",
   "mnk.missedbrotherhood.title": "",
   "mnk.pb.suggestions.badActions.content": "Utilisez <0/> ou <1/> durant <2/> ne fait aucune dégât et ne change pas votre Posture.",

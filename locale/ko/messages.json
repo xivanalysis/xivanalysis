@@ -630,6 +630,8 @@
   "mnk.forms.suggestions.reset.why": "원숭이 품새 기술을 사용하여 콤보가 {0, plural, other {#회}} 초기화되었습니다.",
   "mnk.forms.suggestions.skipped.content": "공격할 수 없을 때를 제외하면 품새를 건너뛰지 마십시오. 대신 피해량을 주는 글쿨 기술을 사용하십시오.",
   "mnk.forms.suggestions.skipped.why": "필요 이상으로 연무를 사용하여 품새를 {0, plural, other {#회}} 건너뛰었습니다.",
+  "mnk.mbstats.headings.count": "",
+  "mnk.mbstats.title": "",
   "mnk.missedbrotherhood.disclaimer": "",
   "mnk.missedbrotherhood.title": "",
   "mnk.pb.suggestions.badActions.content": "<2/> 중 <0/> 또는 <1/> 기술을 사용하면 피해량을 주지도 않을 뿐더러 품새가 바뀌지도 않습니다.",

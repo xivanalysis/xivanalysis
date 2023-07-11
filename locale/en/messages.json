@@ -630,6 +630,8 @@
   "mnk.forms.suggestions.reset.why": "{0, plural, one {# combo was} other {# combos were}} reset by an Opo-Opo Form skill.",
   "mnk.forms.suggestions.skipped.content": "Avoid skipping Forms outside of downtime. A skipped GCD could otherwise be used for damage.",
   "mnk.forms.suggestions.skipped.why": "{0, plural, one {# form was} other {# forms were}} skipped by Form Shift unnecessarily.",
+  "mnk.mbstats.headings.count": "Count",
+  "mnk.mbstats.title": "Masterful Blitz",
   "mnk.missedbrotherhood.disclaimer": "Ideally, Brotherhood should always be used within a Riddle of Fire window, however, in cases where this does not happen and its usage drifts, this module will show you relevant buff information for said usage.",
   "mnk.missedbrotherhood.title": "Brotherhood",
   "mnk.pb.suggestions.badActions.content": "Using <0/> or <1/> inside of <2/> does no damage and does not change your Form.",

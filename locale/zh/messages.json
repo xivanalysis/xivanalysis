@@ -630,6 +630,8 @@
   "mnk.forms.suggestions.reset.why": "存在 {0} 次因错误使用魔猿身形技能导致的连击重置。",
   "mnk.forms.suggestions.skipped.content": "避免在能攻击敌人时切换身形。由于切换身形而损失的GCD可以用来输出。",
   "mnk.forms.suggestions.skipped.why": "存在 {0} 次因不必要的演武导致的跳过身形。",
+  "mnk.mbstats.headings.count": "",
+  "mnk.mbstats.title": "",
   "mnk.missedbrotherhood.disclaimer": "",
   "mnk.missedbrotherhood.title": "",
   "mnk.pb.suggestions.badActions.content": "在<2/>期间用<0/>或<1/>不会造成伤害而且不会改变你的身形。",

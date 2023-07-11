@@ -6,6 +6,7 @@ import {Defensives} from './Defensives'
 import {Demolish} from './Demolish'
 import {Forms} from './Forms'
 import {GreasedLightning} from './GreasedLightning'
+import {MasterfulBlitzStatistics} from './MasterfulBlitzStatistics'
 import {MissedBrotherhood} from './MissedBrotherhood'
 import {Positionals} from './Positionals'
 import {Revolution} from './Revolution'
@@ -26,6 +27,7 @@ export default [
 	MissedBrotherhood,
 	Forms,
 	GreasedLightning,
+	MasterfulBlitzStatistics,
 	Positionals,
 	RiddleOfFire,
 	RiddleOfWind,

@@ -630,6 +630,8 @@
   "mnk.forms.suggestions.reset.why": "壱の型のスキルを使ってしまったため、コンボは {0, plural, other {#}} 回キャンセルされました。",
   "mnk.forms.suggestions.skipped.content": "",
   "mnk.forms.suggestions.skipped.why": "演武で、型は無駄に{0, plural, one {#回 } other {#回}}飛ばしてしまいました。",
+  "mnk.mbstats.headings.count": "",
+  "mnk.mbstats.title": "",
   "mnk.missedbrotherhood.disclaimer": "",
   "mnk.missedbrotherhood.title": "",
   "mnk.pb.suggestions.badActions.content": "",

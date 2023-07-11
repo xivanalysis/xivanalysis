@@ -630,6 +630,8 @@
   "mnk.forms.suggestions.reset.why": "{0, plural, one {# Kombo wurde} other {# Kombos wurden}} von einem Opo-Opo-Form-Skill zurückgesetzt.",
   "mnk.forms.suggestions.skipped.content": "",
   "mnk.forms.suggestions.skipped.why": "{0, plural, one {# Form wurde} other {# Formen wurden}} mit Formwechsel unnötig übersprungen.",
+  "mnk.mbstats.headings.count": "",
+  "mnk.mbstats.title": "",
   "mnk.missedbrotherhood.disclaimer": "",
   "mnk.missedbrotherhood.title": "",
   "mnk.pb.suggestions.badActions.content": "Das Nutzen von <0/> oder <1/> während <2/> aktiv ist macht keinen Schaden und ändert nicht deine Form.",
