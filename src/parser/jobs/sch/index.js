@@ -18,7 +18,7 @@ export const SCHOLAR = new Meta({
 	</>,
 	supportedPatches: {
 		from: '6.0',
-		to: '6.2',
+		to: '6.4',
 	},
 	contributors: [
 		{user: CONTRIBUTORS.MYPS, role: ROLES.DEVELOPER},

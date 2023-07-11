@@ -2,6 +2,7 @@ import {AlwaysBeCasting} from 'parser/core/modules/AlwaysBeCasting'
 import {Tincture} from 'parser/core/modules/Tincture'
 import {CastTime} from './CastTime'
 import {Combos} from './Combos'
+import {Defensives} from './Defensives'
 import {DualCast} from './Dualcast'
 import {Embolden} from './Embolden'
 import {GeneralCDDowntime} from './GeneralCDDowntime'
@@ -21,6 +22,7 @@ export default [
 	ManaGauge,
 	ManaStackGauge,
 	CastTime,
+	Defensives,
 	DualCast,
 	GeneralCDDowntime,
 	Interrupts,

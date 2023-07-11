@@ -1,5 +1,6 @@
 import {ActionTimeline} from './ActionTimeline'
 import {CastTime} from './CastTime'
+import {Defensives} from './Defensives'
 import {DoTs} from './DoTs'
 import {Interrupts} from './Interrupts'
 import {Lilies} from './Lilies'
@@ -12,6 +13,7 @@ import {Tincture} from './Tincture'
 export default [
 	ActionTimeline,
 	CastTime,
+	Defensives,
 	DoTs,
 	Interrupts,
 	Lilies,

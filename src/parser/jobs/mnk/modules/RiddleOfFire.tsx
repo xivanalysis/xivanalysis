@@ -69,6 +69,7 @@ export class RiddleOfFire extends BuffWindow {
 		this.addEvaluator(new ExpectedGcdCountEvaluator({
 			expectedGcds: EXPECTED_GCDS,
 			globalCooldown: this.globalCooldown,
+			hasStacks: false,
 			suggestionIcon: this.data.actions.RIDDLE_OF_FIRE.icon,
 			severityTiers: SEVERITIES.TOTAL_GCDS,
 			suggestionWindowName: suggestionWindowName,

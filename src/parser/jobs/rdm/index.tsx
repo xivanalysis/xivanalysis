@@ -21,7 +21,7 @@ export const RED_MAGE = new Meta({
 	</>,
 	supportedPatches: {
 		from: '6.0',
-		to: '6.2',
+		to: '6.4',
 	},
 	contributors: [
 		{user: CONTRIBUTORS.LAILLE, role: ROLES.DEVELOPER},
@@ -30,6 +30,16 @@ export const RED_MAGE = new Meta({
 	],
 
 	changelog: [
+		{
+			date: new Date('2023-05-27'),
+			Changes: () => <>Mark as supported for 6.4.</>,
+			contributors: [CONTRIBUTORS.LEYLIA],
+		},
+		{
+			date: new Date('2023-01-17'),
+			Changes: () => <>Mark as supported for 6.3.</>,
+			contributors: [CONTRIBUTORS.LEYLIA],
+		},
 		{
 			date: new Date('2022-01-31'),
 			Changes: () => <>Added defensive cooldowns.  Added Swiftcast usage Validation, rules are the same as Dualcast.</>,

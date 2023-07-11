@@ -3,6 +3,20 @@ import React from 'react'
 
 export const changelog = [
 	{
+		date: new Date('2023-05-27'),
+		Changes: () => <>
+			Removed Intervention, Holy Sheltron, and Cover from defensive analysis since they use a shared gauge resource.
+		</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
+	{
+		date: new Date('2023-01-15'),
+		Changes: () => <>
+			Updated Paladin for 6.3 rework.
+		</>,
+		contributors: [CONTRIBUTORS.STYRFIRE],
+	},
+	{
 		date: new Date('2022-05-22'),
 		Changes: () => <>
 			Various spells no longer break combo. Blade of Faith no longer combos from Confiteor.

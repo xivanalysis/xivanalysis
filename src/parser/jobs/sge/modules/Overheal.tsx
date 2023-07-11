@@ -1,4 +1,5 @@
 import {Trans} from '@lingui/macro'
+import {DataLink} from 'components/ui/DbLink'
 import {Events} from 'event'
 import {Overheal as CoreOverheal, SuggestedColors} from 'parser/core/modules/Overheal'
 import React from 'react'
@@ -9,26 +10,35 @@ export class Overheal extends CoreOverheal {
 	override displaySuggestion = true
 
 	override suggestionIcon = this.data.actions.DIAGNOSIS.icon
+	override overhealName = <Trans id="sge.overheal.direct.name">GCD Heals</Trans>
 
 	override trackedHealCategories = [
 		{
-			name: <Trans id="sge.overheal.addersgall.name">Addersgall</Trans>,
-			color: SuggestedColors[1],
+			name: 'Addersgall',
 			trackedHealIds: [
 				this.data.statuses.KERAKEIA.id,
 				this.data.actions.DRUOCHOLE.id,
 				this.data.actions.IXOCHOLE.id,
 				this.data.actions.TAUROCHOLE.id,
 			],
+			ignore: true,
 		},
 		{
-			name: <Trans id="sge.overheal.cooldowns.name">Cooldowns</Trans>,
-			color: SuggestedColors[2],
+			name: <DataLink action="HOLOS" showIcon={false} showTooltip={false} />,
+			color: SuggestedColors[1],
 			trackedHealIds: [
 				this.data.actions.HOLOS.id,
+			],
+			debugName: 'Holos',
+		},
+		{
+			name: <DataLink status="PHYSIS_II" showIcon={false} showTooltip={false} />,
+			color: SuggestedColors[2],
+			trackedHealIds: [
 				this.data.statuses.PHYSIS.id,
 				this.data.statuses.PHYSIS_II.id,
 			],
+			debugName: 'Physis',
 		},
 		{
 			name: <Trans id="sge.overheal.haima.name">Haima &amp; Panhaima Expiration</Trans>,

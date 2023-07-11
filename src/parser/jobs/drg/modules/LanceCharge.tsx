@@ -59,6 +59,7 @@ export default class LanceCharge extends BuffWindow {
 		this.addEvaluator(new ExpectedGcdCountEvaluator({
 			expectedGcds: 8,
 			globalCooldown: this.globalCooldown,
+			hasStacks: false,
 			suggestionIcon,
 			suggestionContent: <Trans id="drg.lc.suggestions.missedgcd.content">
 				Try to land at least 8 GCDs during every <ActionLink action="LANCE_CHARGE" /> window.

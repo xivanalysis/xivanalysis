@@ -8,11 +8,12 @@ import {DeduplicateAoEStep} from './deduplicateAoE'
 import {DeduplicateStatusApplicationStep} from './deduplicateStatus'
 import {ErroneousFriendDeathAdapterStep} from './erroneousFriendDeath'
 import {InterruptsAdapterStep} from './interrupts'
+import {MergeActorInstancesStep} from './mergeActorInstance'
 import {OneHpLockAdapterStep} from './oneHpLock'
 import {PrepullActionAdapterStep} from './prepullAction'
 import {PrepullStatusAdapterStep} from './prepullStatus'
 import {ReassignUnknownActorStep} from './reassignUnknownActor'
-import {sortEvents} from './sortEvents'
+import {SortStatusAdapterStep} from './sortStatus'
 import {SpeedStatsAdapterStep} from './speedStat'
 import {TranslateAdapterStep} from './translate'
 
@@ -24,9 +25,6 @@ export function adaptEvents(report: Report, pull: Pull, baseEvents: FflogsEvent[
 	// Child adapters are responsible for ensuring updates are copy-on-write.
 	const events = [...baseEvents]
 
-	// TODO: Move sort logic into adapter scope once legacy is removed
-	sortEvents(events)
-
 	return adapter.adaptEvents(events)
 }
 
@@ -36,6 +34,7 @@ class EventAdapter {
 	constructor(opts: AdapterOptions) {
 		this.adaptionSteps = [
 			new ReassignUnknownActorStep(opts),
+			new MergeActorInstancesStep(opts),
 			new TranslateAdapterStep(opts),
 			new ErroneousFriendDeathAdapterStep(opts),
 			new AssignOverhealStep(opts),
@@ -43,6 +42,7 @@ class EventAdapter {
 			new DeduplicateAoEStep(opts),
 			new DeduplicateStatusApplicationStep(opts),
 			new DeduplicateActorUpdateStep(opts),
+			new SortStatusAdapterStep(opts),
 			new PrepullActionAdapterStep(opts),
 			new PrepullStatusAdapterStep(opts),
 			new OneHpLockAdapterStep(opts),

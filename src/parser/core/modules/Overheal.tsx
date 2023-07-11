@@ -1,7 +1,7 @@
 import {Trans} from '@lingui/react'
 import ACTIONS from 'data/ACTIONS'
 import {Event, Events} from 'event'
-import {Analyser} from 'parser/core/Analyser'
+import {Analyser, DisplayOrder} from 'parser/core/Analyser'
 import {filter, oneOf} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
 import Checklist, {Requirement, TARGET, TieredRule} from 'parser/core/modules/Checklist'
@@ -16,10 +16,11 @@ interface SeverityTiers {
 
 interface TrackedOverhealOpts {
 	bucketId?: number
-	name: JSX.Element,
+	name: JSX.Element | string,
 	color?: string
 	trackedHealIds?: number[],
 	ignore?: boolean
+	debugName?: string
 }
 
 const REGENERATION_ID: number = 1302
@@ -48,11 +49,12 @@ export const SuggestedColors: string[] = [
 export class TrackedOverheal {
 	bucketId: number = -1
 	ignore: boolean
-	name: JSX.Element
+	name: JSX.Element | string
 	color: string = '#fff'
 	protected trackedHealIds: number[]
 	heal: number = 0
 	overheal: number = 0
+	internalDebugName: string | undefined
 
 	constructor(opts: TrackedOverhealOpts) {
 		this.name = opts.name
@@ -60,6 +62,7 @@ export class TrackedOverheal {
 		this.trackedHealIds = opts.trackedHealIds || []
 		this.bucketId = opts.bucketId || -1
 		this.ignore = opts.ignore || false
+		this.internalDebugName = opts.debugName
 	}
 
 	/**
@@ -85,6 +88,26 @@ export class TrackedOverheal {
 			return true
 		}
 		return false
+	}
+
+	/**
+	 * Gets a printable name for the category
+	 */
+	get debugName(): string {
+		if (this.internalDebugName != null) {
+			return this.internalDebugName
+		}
+
+		if (typeof this.name === 'string') {
+			return this.name
+		}
+
+		// Trans tags
+		if (this.name.props.defaults != null) {
+			return this.name.props.defaults
+		}
+
+		return 'Unknown'
 	}
 
 	/**
@@ -163,6 +186,10 @@ export class Overheal extends Analyser {
 	 */
 	protected displayChecklist: boolean = true
 	/**
+	 * Allows for more flexibility in ordering of the checklist if necessary.
+	 */
+	protected displayOrder = DisplayOrder.DEFAULT
+	/**
 	 * Implementing modules MAY wish to override this to set custom severity tiers.
 	 * Do remember that the numbers for checklist are inverted for overheal (e.g., warning at
 	 * 35% overheal means you need to set your threshold at 65)
@@ -184,9 +211,9 @@ export class Overheal extends Analyser {
 	protected checklistRuleBreakout: boolean = false
 
 	// direct healing
-	private direct!: TrackedOverheal
+	protected direct!: TrackedOverheal
 	// Everything else
-	private trackedOverheals: TrackedOverheal[] = []
+	protected trackedOverheals: TrackedOverheal[] = []
 
 	/**
 	 * Implementing modules MAY override this to provide the 'why' for suggestion content
@@ -256,7 +283,7 @@ export class Overheal extends Analyser {
 		if (bucketId >= 0) {
 			for (const trackedHeal of this.trackedOverheals) {
 				if (trackedHeal.bucketId === bucketId) {
-					this.debug(`Heal ${name} (${guid}) at ${event.timestamp} MANUALLY shoved into bucket ${trackedHeal.name.props.defaults}`)
+					this.debug(`Heal ${name} (${guid}) at ${event.timestamp} MANUALLY shoved into bucket ${trackedHeal.debugName}`)
 					trackedHeal.pushHeal(event)
 				}
 			}
@@ -264,7 +291,7 @@ export class Overheal extends Analyser {
 		}
 		for (const trackedHeal of this.trackedOverheals) {
 			if (trackedHeal.idIsTracked(guid)) {
-				this.debug(`Heal from ${name} (${guid}) at ${event.timestamp} matched into category ${trackedHeal.name.props.defaults}`)
+				this.debug(`Heal from ${name} (${guid}) at ${event.timestamp} matched into category ${trackedHeal.debugName}`)
 				trackedHeal.pushHeal(event)
 				return
 			}
@@ -361,6 +388,7 @@ export class Overheal extends Analyser {
 				description: this.checklistDescription([this.direct, ...this.trackedOverheals]),
 				tiers: this.checklistSeverity,
 				requirements,
+				displayOrder: this.displayOrder,
 			}))
 		}
 

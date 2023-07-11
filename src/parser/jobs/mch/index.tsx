@@ -1,24 +1,53 @@
-import {Trans} from '@lingui/macro'
+import {t} from '@lingui/macro'
+import TransMarkdown from 'components/ui/TransMarkdown'
 import CONTRIBUTORS, {ROLES} from 'data/CONTRIBUTORS'
 import {Meta} from 'parser/core/Meta'
 import React from 'react'
 
+const about = t('mch.about.description')`
+Welcome to the Machinist module! This job is all about managing cooldowns to dish out as much damage as possible,
+especially during your party's raid buff windows. This page will walk you through how well you utilized each of your major
+cooldowns and resources.
+
+To understand the fundamentals behind the suggestions given below, check out one of the following guides:
+
+- [Icy Veins Machinist Guide](https://www.icy-veins.com/ffxiv/machinist-guide)
+- [The Balance Machinist Guide](https://www.thebalanceffxiv.com/jobs/ranged/machinist/)
+`
+
 export const MACHINIST = new Meta({
 	modules: () => import('./modules' /* webpackChunkName: "jobs-mch" */),
 	Description: () => <>
-		<Trans id="mch.about.description">
-			<p>BOB! <strong>DO SOMETHING!</strong></p>
-			<p>This module aims to help you improve your MCH gameplay by analyzing things that are difficult to spot in raw logs and pointing out ways to keep your rotation tight, keep your tools on cooldown, make your Wildfire windows as strong as possible, and get the most out of the best pet any job has right now.</p>
-		</Trans>
+		<TransMarkdown source={about}/>
 	</>,
 	supportedPatches: {
 		from: '6.0',
-		to: '6.2',
+		to: '6.4',
 	},
 	contributors: [
 		{user: CONTRIBUTORS.HINT, role: ROLES.MAINTAINER},
 	],
 	changelog: [
+		{
+			date: new Date('2023-07-08'),
+			Changes: () => <>Fixed a rare bug that erroneously marked Wildfire as dealing 0 damage.</>,
+			contributors: [CONTRIBUTORS.HINT],
+		},
+		{
+			date: new Date('2023-07-02'),
+			Changes: () => <>Updated Hypercharge module to properly end after all 5 stacks are expended.</>,
+			contributors: [CONTRIBUTORS.HINT],
+		},
+		{
+			date: new Date('2023-01-14'),
+			Changes: () => <>Added Dismantle and a statistic for defensive cooldown usage, updated the Hypercharge module, and rewrote the "About" section for patch 6.3.</>,
+			contributors: [CONTRIBUTORS.HINT],
+		},
+		{
+			date: new Date('2022-11-30'),
+			Changes: () => <>Relaxed the suggestion thresholds for Heat overcap.</>,
+			contributors: [CONTRIBUTORS.HINT],
+		},
 		{
 			date: new Date('2022-02-09'),
 			Changes: () => <>Moved gauge to a resource graph in the timeline.</>,

@@ -16,6 +16,7 @@ export class ActionTimeline extends CoreActionTimeline {
 		'AIR_ANCHOR',
 		'DRILL',
 		'FLAMETHROWER',
+		'DISMANTLE',
 		'TACTICIAN',
 	]
 }

@@ -1,6 +1,7 @@
 import {Interrupts} from 'parser/core/modules/Interrupts'
 import {AoEUsages} from './AoEUsages'
 import {CastTime} from './CastTime'
+import {Defensives} from './Defensives'
 import {Gauge} from './Gauge'
 import Leylines from './Leylines'
 import {NotCasting} from './NotCasting'
@@ -16,6 +17,7 @@ export default [
 	AoEUsages,
 	Weaving,
 	CastTime,
+	Defensives,
 	Gauge,
 	Interrupts,
 	Leylines,
