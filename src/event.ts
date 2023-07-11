@@ -198,6 +198,12 @@ export enum Attribute {
 	SPELL_SPEED,
 }
 
+export enum DamageType {
+	MAGICAL,
+	PHYSICAL,
+	DARK,
+}
+
 /** Actor attribute (stat value) */
 export interface AttributeValue {
 	attribute: Attribute

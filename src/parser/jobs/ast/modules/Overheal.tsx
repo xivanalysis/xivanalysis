@@ -2,6 +2,7 @@ import {Trans} from '@lingui/react'
 import {DataLink} from 'components/ui/DbLink'
 import {Overheal as CoreOverheal, SuggestedColors, TrackedOverheal} from 'parser/core/modules/Overheal'
 import React from 'react'
+import DISPLAY_ORDER from './DISPLAY_ORDER'
 
 export class Overheal extends CoreOverheal {
 	static override handle = 'overheal'
@@ -9,6 +10,7 @@ export class Overheal extends CoreOverheal {
 	protected override checklistRuleBreakout = true
 	protected override displayPieChart = true
 	protected override displaySuggestion = true
+	protected override displayOrder = DISPLAY_ORDER.OVERHEAL_CHECKLIST
 
 	protected content = <Trans id="ast.overheal.suggestion.content">
 		Avoid healing your party for more than is needed. Cut back on unnecessary heals and coordinate with your co-healer to plan resources efficiently. <br/>

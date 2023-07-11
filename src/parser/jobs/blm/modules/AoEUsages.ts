@@ -7,7 +7,8 @@ export class AoEUsages extends CoreAoE {
 		{
 			aoeAction: this.data.actions.FOUL,
 			stActions: [this.data.actions.XENOGLOSSY],
-			minTargets: 2,
+			// eslint-disable-next-line @typescript-eslint/no-magic-numbers
+			minTargets: this.parser.patch.before('6.4') ? 2 : 3,
 		},
 		{
 			aoeAction: this.data.actions.FLARE,

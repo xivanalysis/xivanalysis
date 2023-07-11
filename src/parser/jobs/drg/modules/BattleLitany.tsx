@@ -94,6 +94,7 @@ export class BattleLitany extends RaidBuffWindow {
 		this.addEvaluator(new ExpectedGcdCountEvaluator({
 			expectedGcds: BL_GCD_TARGET,
 			globalCooldown: this.globalCooldown,
+			hasStacks: false,
 			suggestionIcon,
 			suggestionContent: <Trans id="drg.bl.suggestions.missedgcd.content">
 				Try to land at least 6 GCDs during every <ActionLink action="BATTLE_LITANY" /> window.

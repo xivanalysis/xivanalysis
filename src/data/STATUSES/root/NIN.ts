@@ -1,5 +1,4 @@
 import {ensureStatuses} from '../type'
-import {SHARED} from './SHARED'
 
 export const NIN = ensureStatuses({
 	TRICK_ATTACK_VULNERABILITY_UP: {
@@ -9,7 +8,19 @@ export const NIN = ensureStatuses({
 		duration: 15000,
 	},
 
-	MUG_VULNERABILITY_UP: SHARED.UNKNOWN,
+	TRICK_ATTACK: {
+		id: 3254,
+		name: 'Trick Attack',
+		icon: 'https://xivapi.com/i/012000/012918.png',
+		duration: 15000,
+	},
+
+	MUG_VULNERABILITY_UP: {
+		id: 638, // Same ID as the old Trick vuln debuff, but this one is 5 seconds longer
+		name: 'Vulnerability Up',
+		icon: 'https://xivapi.com/i/015000/015020.png',
+		duration: 20000,
+	},
 
 	KASSATSU: {
 		id: 497,

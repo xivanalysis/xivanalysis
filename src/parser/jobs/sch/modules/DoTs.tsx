@@ -57,7 +57,7 @@ export default class DoTs extends CoreDoTs {
 			tiers: SEVERITIES.CLIPPING,
 			value: clipPerMinute,
 			why: <Trans id="sch.dots.suggestions.clipping.why">
-				An average of {this.parser.formatDuration(clipPerMinute, 1)} seconds of <DataLink status="BIOLYSIS" /> per minute lost to early refreshes.
+				An average of {this.parser.formatDuration(clipPerMinute, 1)} seconds of <DataLink status="BIOLYSIS" /> clipped per minute due to early refreshes.
 			</Trans>,
 		}))
 	}

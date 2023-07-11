@@ -64,7 +64,11 @@ export class RiddleOfWind extends Analyser {
 	}
 
 	private onComplete() {
-		const expectedAttacks = this.history.length * EXPECTED_ATTACKS_PER_ROW_WINDOW
+		// We default to 15 per window, but for any windows that got 16 we add an extra 1
+		const expectedAttacks = this.history.length
+			* EXPECTED_ATTACKS_PER_ROW_WINDOW
+			+ this.history.filter(autos => autos >= EXPECTED_ATTACKS_PER_ROW_WINDOW + 1).length
+
 		const actualAttacks = this.history.reduce((total, autos) => total + autos, 0)
 
 		this.statistics.add(new SimpleStatistic({
