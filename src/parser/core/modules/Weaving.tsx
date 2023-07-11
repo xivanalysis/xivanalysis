@@ -42,7 +42,7 @@ export class Weaving extends Analyser {
 	@dependency protected castTime!: CastTime
 	@dependency protected data!: Data
 	@dependency private invulnerability!: Invulnerability
-	@dependency private suggestions!: Suggestions
+	@dependency protected suggestions!: Suggestions
 
 	static override title = t('core.weaving.title')`Weaving Issues`
 

@@ -17,6 +17,9 @@ import {Message} from 'semantic-ui-react'
 // We always want 6 GCDs in WF
 const EXPECTED_GCDS = 6
 
+// XIV timestamps suck, WF might last longer than we expect
+const WF_LENIENCE_MS = 200
+
 const SEVERITIES = {
 	BAD_WILDFIRE: {
 		1: SEVERITY.MINOR,
@@ -58,17 +61,22 @@ export class Wildfire extends Analyser {
 		.type('action')
 
 	override initialise() {
-		const playerFilter = filter<Event>().source(this.parser.actor.id)
+		const playerFilter = filter<Event>()
+			.source(this.parser.actor.id)
 
-		this.addEventHook(playerFilter
-			.type('statusApply')
-			.status(this.data.statuses.WILDFIRE.id)
-		, this.onApply)
+		this.addEventHook(
+			playerFilter
+				.type('statusApply')
+				.status(this.data.statuses.WILDFIRE.id),
+			this.onApply
+		)
 
-		this.addEventHook(playerFilter
-			.type('damage')
-			.cause(this.data.matchCauseStatusId([this.data.statuses.WILDFIRE.id]))
-		, this.onDamage)
+		this.addEventHook(
+			playerFilter
+				.type('damage')
+				.cause(this.data.matchCauseStatusId([this.data.statuses.WILDFIRE.id])),
+			this.onWildfireDamage
+		)
 
 		this.addEventHook('complete', this.onComplete)
 	}
@@ -100,11 +108,11 @@ export class Wildfire extends Analyser {
 			this.actionHook = this.addEventHook(this.actionFilter, this.onAction)
 		}
 
-		const expectedEnd = event.timestamp + this.data.statuses.WILDFIRE.duration
+		const expectedEnd = event.timestamp + this.data.statuses.WILDFIRE.duration + WF_LENIENCE_MS
 		this.durationHook = this.addTimestampHook(expectedEnd, () => this.closeWindow(expectedEnd))
 	}
 
-	private onDamage(event: Events['damage']) {
+	private onWildfireDamage(event: Events['damage']) {
 		this.history.doIfOpen(current => current.damage = event.targets[0].amount)
 		this.closeWindow(event.timestamp)
 	}
@@ -179,7 +187,7 @@ export class Wildfire extends Analyser {
 
 		return <Fragment>
 			<Message>
-				<Trans id="mch.wildfire.table.message">Every <ActionLink action="WILDFIRE"/> window should ideally include {EXPECTED_GCDS} GCDs to maximize the debuff's potency. Note that a GCD only counts toward Wildfire if the damage lands on the target before Wildfire expires.</Trans>
+				<Trans id="mch.wildfire.table.message">Every <ActionLink action="WILDFIRE"/> window should ideally include {EXPECTED_GCDS} GCDs to maximize the debuff's potency. Note that a GCD only counts toward Wildfire if the damage lands on the target before Wildfire expires; <b>GCDs that show up in the "Rotation" column did not necessarily resolve their damage under Wildfire!</b></Trans>
 			</Message>
 			<RotationTable
 				targets={[gcdHeader]}

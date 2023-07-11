@@ -57,12 +57,16 @@ export class ExpectedActionsEvaluator implements WindowEvaluator {
 		})
 	}
 
+	protected actionHeader(action: TrackedAction) {
+		return <ActionLink showName={false} {...action.action}/>
+	}
+
 	public output(windows: Array<HistoryEntry<EvaluatedAction[]>>): EvaluationOutput[]  {
 		return this.expectedActions.map(action => {
 			return {
 				format: 'table',
 				header: {
-					header: <ActionLink showName={false} {...action.action}/>,
+					header: this.actionHeader(action),
 					accessor: action.action.name,
 				},
 				rows: windows.map(window => {
