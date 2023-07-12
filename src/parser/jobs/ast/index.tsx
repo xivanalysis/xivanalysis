@@ -51,6 +51,13 @@ export const ASTROLOGIAN = new Meta({
 			contributors: [CONTRIBUTORS.OTOCEPHALY],
 		},
 		{
+			date: new Date('2022-06-23'),
+			Changes: () => <>
+				Swapped GCD and Overheal panels in statistics to be consistent with other healers. Fixed translation support for headers in overheal stats.
+			</>,
+			contributors: [CONTRIBUTORS.SUSHIROU],
+		},
+		{
 			date: new Date('2022-01-26'),
 			Changes: () => <>
 				<strong>6.08 Support</strong>

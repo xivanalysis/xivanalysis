@@ -1,10 +1,10 @@
 import {Trans} from '@lingui/react'
 import {DataLink} from 'components/ui/DbLink'
 import {Action} from 'data/ACTIONS'
-import {BASE_GCD} from 'data/CONSTANTS'
 import {dependency} from 'parser/core/Injectable'
+import {EvaluatedAction} from 'parser/core/modules/ActionWindow'
+import {HistoryEntry} from 'parser/core/modules/ActionWindow/History'
 import {Actors} from 'parser/core/modules/Actors'
-import Downtime from 'parser/core/modules/Downtime'
 import {Swiftcast as CoreSwiftcast} from 'parser/core/modules/Swiftcast'
 import React from 'react'
 import {DISPLAY_ORDER} from './DISPLAY_ORDER'
@@ -12,33 +12,49 @@ import {DISPLAY_ORDER} from './DISPLAY_ORDER'
 export class Swiftcast extends CoreSwiftcast {
 	static override displayOrder = DISPLAY_ORDER.SWIFTCAST
 
-	@dependency private downtime!: Downtime
 	@dependency private actors!: Actors
 
-	// If Swiftcast and Acceleration are both up, these actions consume Acceleration first.
 	private accelerationActions: Action[] = [
 		this.data.actions.VERTHUNDER_III,
 		this.data.actions.VERAERO_III,
 		this.data.actions.IMPACT,
 	]
 
-	override considerSwiftAction(action: Action): boolean {
-		//We want to inspect the cast time to determine if the player was allowed to use SwiftCast or not
-		const castTime = action?.castTime ?? 0
-		if (castTime > 0) {
-		//As long as we aren't in downtime, the cast time must exceed the base GCD to qualify.
-			if (!this.downtime.isDowntime() && castTime <= BASE_GCD) {
-				return false
+	private badSwiftcastSpells: Action[] = [
+		this.data.actions.JOLT,
+		this.data.actions.JOLT_II,
+		this.data.actions.VERTHUNDER_II,
+		this.data.actions.VERAERO_II,
+		this.data.actions.VERFIRE,
+		this.data.actions.VERSTONE,
+	]
+
+	private badSwiftValidator = (window: HistoryEntry<EvaluatedAction[]>) => {
+		if (window.data.length > 0 && this.badSwiftcastSpells.includes(window.data[0].action)) {
+			return {
+				isValid: false,
+				note: <Trans id="rdm.swiftcast.table.note.bad">Swiftcast used on a suboptimal spell</Trans>,
 			}
-			// Ignore acceleration actions since they won't consume Swiftcast when you have Acceleration.
-			if (this.actors.current.hasStatus(this.data.statuses.ACCELERATION.id) && this.accelerationActions.includes(action)) {
-				return false
-			}
-			//Then it had to be VerRaise, VerAero III, or VerThunder III or we were in downtime so it's valid
-			return true
 		}
-		//Use the default behavoir if we've gotten back no cast time
+
+		return {isValid: true}
+	}
+
+	override swiftcastValidators = [this.badSwiftValidator]
+
+	override considerSwiftAction(action: Action): boolean {
+		const castTime = action.castTime ?? 0
+
+		if (castTime > 0) {
+			// Ignore spells that get consumed by Acceleration / Dualcast before Swiftcast
+			const hasAcceleration = this.actors.current.hasStatus(this.data.statuses.ACCELERATION.id) && this.accelerationActions.includes(action)
+			const hasDualcast = this.actors.current.hasStatus(this.data.statuses.DUALCAST.id)
+			return !(hasAcceleration || hasDualcast)
+		}
+
+		// Use the default behaviour if no cast time
 		return super.considerSwiftAction(action)
 	}
-	override suggestionContent = <Trans id="rdm.swiftcast.suggestion.content">Spells used while <DataLink status="SWIFTCAST"/> is up should be limited to <DataLink action="VERAERO_III"/>, <DataLink action="VERTHUNDER_III"/>, or <DataLink action="VERRAISE"/></Trans>
+
+	override suggestionContent = <Trans id="rdm.swiftcast.suggestion.content">Spells used while <DataLink status="SWIFTCAST"/> is up should be limited to <DataLink action="VERAERO_III"/>, <DataLink action="VERTHUNDER_III"/>, <DataLink action="IMPACT"/>, and <DataLink action="VERRAISE"/>.</Trans>
 }
