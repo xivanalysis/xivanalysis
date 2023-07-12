@@ -69,6 +69,13 @@ export class Defensives extends Analyser {
 		return this.cooldownHistories[defensive.id]
 	}
 
+	private getChargeHistory(action: Action) {
+		if (this.chargeHistories[action.id] == null) {
+			this.chargeHistories[action.id] = this.cooldowns.chargeHistory(action)
+		}
+		return this.chargeHistories[action.id]
+	}
+
 	private getMaxUses(defensive: Action): number {
 		const totalAdditionalUses = this.getUses(defensive).reduce((acc, usage) => acc + this.getAdditionalUsageData(defensive, usage.start).chargesBeforeNextUse, this.getAdditionalUsageData(defensive).chargesBeforeNextUse)
 		return this.getUsageCount(defensive) + totalAdditionalUses
@@ -172,13 +179,6 @@ export class Defensives extends Analyser {
 		}
 
 		return {chargesBeforeNextUse: currentCharges + Math.floor((useByTimestamp - availableTimestamp) / cooldown), availableTimestamp, useByTimestamp}
-	}
-
-	private getChargeHistory(action: Action) {
-		if (this.chargeHistories[action.id] == null) {
-			this.chargeHistories[action.id] = this.cooldowns.chargeHistory(action)
-		}
-		return this.chargeHistories[action.id]
 	}
 
 	private tryGetAdditionalUseRow(defensive: Action, timestamp: number = this.parser.pull.timestamp): ReactNode {
