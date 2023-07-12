@@ -190,7 +190,7 @@ export class Overheal extends Analyser {
 	/**
 	 * Implementing modules MAY modify this value to change the order displayed within the stats panel
 	 */
-	protected displayOrder: number = DEFAULT_DISPLAY_ORDER
+	protected statsDisplayOrder: number = DEFAULT_DISPLAY_ORDER
 
 	/**
 	 * Allows for more flexibility in ordering of the checklist if necessary.
@@ -363,7 +363,7 @@ export class Overheal extends Analyser {
 				],
 				data: data,
 				width: 3, // chart's wide, yo
-				statsDisplayOrder: this.displayOrder,
+				statsDisplayOrder: this.statsDisplayOrder,
 			}))
 		}
 
