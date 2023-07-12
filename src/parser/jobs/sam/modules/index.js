@@ -1,6 +1,7 @@
 import {AoeChecker} from './AoeChecker'
 import {Buffs} from './Buffs'
 import {Combos} from './Combos'
+import {Defensives} from './Defensives'
 import {Fuka} from './Fuka'
 import {Higanbana} from './Higanbana'
 import Interrupts from './Interrupts'
@@ -18,6 +19,7 @@ export default [
 	AoeChecker,
 	Buffs,
 	Combos,
+	Defensives,
 	Fuka,
 	Kaiten,
 	Kenki,

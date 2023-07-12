@@ -1,29 +1,27 @@
 import {Interrupts} from 'parser/core/modules/Interrupts'
 import {ActionTimeline} from './ActionTimeline'
-import {Atonement} from './Atonement'
 import {CastTime} from './CastTime'
 import {Combos} from './Combos'
-import {Faith} from './Faith'
+import {Confiteor} from './Confiteor'
+import {CooldownDowntime} from './CooldownDowntime'
+import {Defensives} from './Defensives'
 import {FightOrFlight} from './FightOrFlight'
 import {Gauge} from './Gauge'
-import {Goring} from './Goring'
-import {OGCDDowntime} from './OGCDDowntime'
 import {Requiescat} from './Requiescat'
-import {StatusTimeline} from './StatusTimeline'
+import {RoyalAuthority} from './RoyalAuthority'
 import {Tincture} from './Tincture'
 
 export default [
 	ActionTimeline,
-	Atonement,
 	CastTime,
 	Combos,
+	Confiteor,
+	CooldownDowntime,
+	Defensives,
 	FightOrFlight,
-	Goring,
 	Interrupts,
 	Gauge,
-	OGCDDowntime,
+	RoyalAuthority,
 	Requiescat,
-	StatusTimeline,
 	Tincture,
-	Faith,
 ]

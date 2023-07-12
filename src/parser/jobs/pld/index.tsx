@@ -18,11 +18,12 @@ export const PALADIN = new Meta({
 		</Trans>
 	</>,
 	supportedPatches: {
-		from: '6.0',
-		to: '6.1',
+		from: '6.3',
+		to: '6.4',
 	},
 	contributors: [
-		{user: CONTRIBUTORS.ARIA, role: ROLES.MAINTAINER},
+		{user: CONTRIBUTORS.STYRFIRE, role: ROLES.MAINTAINER},
+		{user: CONTRIBUTORS.ARIA, role: ROLES.DEVELOPER},
 	],
 
 	changelog,

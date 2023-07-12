@@ -13,6 +13,8 @@ import {EvaluatedAction} from '../EvaluatedAction'
 import {EvaluationOutput, WindowEvaluator} from '../evaluators/WindowEvaluator'
 import {History, HistoryEntry} from '../History'
 
+export type HistoryEntryPredicate = (e: HistoryEntry<EvaluatedAction[]>) => boolean;
+
 /**
  * Tracks actions that occur within a window.
  * By default, all actions cast during a window will be included.
@@ -32,6 +34,11 @@ export abstract class ActionWindow extends Analyser {
 	 * The default filter will capture all actions.
 	 */
 	private eventFilter: EventFilterPredicate<Events['action']> = filter<Event>().source(this.parser.actor.id).type('action')
+	/**
+	 * The history filter used to determine whether a history entry should be used.
+	 * The default filter will allow all history entries.
+	 */
+	private historyFilter: HistoryEntryPredicate = (_) => true
 	/**
 	 * The event hook for actions being captured.
 	 */
@@ -133,6 +140,14 @@ export abstract class ActionWindow extends Analyser {
 		this.eventFilter = filter
 	}
 
+	/**
+	 * Sets a custom history filter for displaying results and suggestions.
+	 * @param filter The filter for history entries to consider
+	 */
+	protected setHistoryFilter(filter: HistoryEntryPredicate) {
+		this.historyFilter = filter
+	}
+
 	override initialise() {
 		this.addEventHook('complete', this.onComplete)
 	}
@@ -141,9 +156,10 @@ export abstract class ActionWindow extends Analyser {
 		this.onWindowEnd(this.parser.pull.timestamp + this.parser.pull.duration)
 
 		const actionHistory = this.mapHistoryActions()
+		const filteredHistory = actionHistory.filter(this.historyFilter)
 		this.evaluators
 			.forEach(ev => {
-				const suggestion = ev.suggest(actionHistory)
+				const suggestion = ev.suggest(filteredHistory)
 				if (suggestion != null) {
 					this.suggestions.add(suggestion)
 				}
@@ -151,12 +167,13 @@ export abstract class ActionWindow extends Analyser {
 	}
 
 	override output() {
-		if (this.history.entries.length === 0) { return undefined }
-
 		const actionHistory = this.mapHistoryActions()
+		const filteredHistory = actionHistory.filter(this.historyFilter)
+		if (filteredHistory.length === 0) { return undefined }
+
 		const evalColumns: EvaluationOutput[] = []
 		for (const ev of this.evaluators) {
-			const maybeColumns = ev.output(actionHistory)
+			const maybeColumns = ev.output(filteredHistory)
 			if (maybeColumns == null) { continue }
 			for (const column of ensureArray(maybeColumns)) {
 				evalColumns.push(column)
@@ -165,7 +182,7 @@ export abstract class ActionWindow extends Analyser {
 
 		const rotationTargets = evalColumns.filter(column => column.format === 'table').map(column => column.header)
 		const notesData = evalColumns.filter(column => column.format === 'notes').map(column => column.header)
-		const rotationData = this.history.entries
+		const rotationData = filteredHistory
 			.map((window, idx) => {
 				const targetsData: RotationTableTargetData = {}
 				const notesMap: RotationTableNotesMap = {}
@@ -182,7 +199,7 @@ export abstract class ActionWindow extends Analyser {
 					start: window.start - this.parser.pull.timestamp,
 					end: (window.end ?? window.start) - this.parser.pull.timestamp,
 					targetsData,
-					rotation: window.data.map(event => { return {action: event.action} }),
+					rotation: window.data.map(event => { return {action: event.action.id} }),
 					notesMap,
 				}
 			})

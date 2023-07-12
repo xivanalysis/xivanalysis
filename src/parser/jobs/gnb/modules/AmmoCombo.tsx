@@ -148,7 +148,7 @@ export class AmmoCombo extends Analyser {
 		}
 
 		this.checklist.add(new Rule({
-			name: 'Use a Continuation once per single-target ammo action',
+			name: <Trans id="gnb.continuation.checklist.title">Use a Continuation once per single-target ammo action</Trans>,
 			description: <Trans id="gnb.continuation.checklist.description">
 				One <ActionLink {...ACTIONS.CONTINUATION}/> action should be used for each single-target ammo skill
 			</Trans>,

@@ -54,7 +54,7 @@ export class DoTs extends CoreDoTs {
 			tiers: SEVERITIES.CLIPPING,
 			value: clippingPerMinute,
 			why: <Trans id="whm.dots.suggestion.clip-dia.why">
-				An average of {this.parser.formatDuration(clippingPerMinute)} of <DataLink status="DIA" /> per minute lost to early refreshes.
+				An average of {this.parser.formatDuration(clippingPerMinute)} of <DataLink status="DIA" /> clipped per minute due to early refreshes.
 			</Trans>,
 		}))
 	}
