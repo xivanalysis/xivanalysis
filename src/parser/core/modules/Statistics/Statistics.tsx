@@ -13,6 +13,7 @@ export interface Statistic {
 	Info?: React.ComponentType
 	width?: ColumnSpan
 	height?: number
+	statsDisplayOrder?: number
 }
 
 export class Statistics extends Analyser {
@@ -31,6 +32,7 @@ export class Statistics extends Analyser {
 		if (!this.statistics.length) {
 			return false
 		}
+		this.statistics.sort((a, b) => (a.statsDisplayOrder ?? 0) - (b.statsDisplayOrder ?? 0))
 
 		return (
 			<div className={styles.statistics}>
