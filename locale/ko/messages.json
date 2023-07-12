@@ -1013,6 +1013,8 @@
   "whm.gauge.bloodlily.suggestions.overcap.content": "<0/> 기술을 사용하여 피의 백합 스택이 초과되지 않도록 하십시오.",
   "whm.gauge.bloodlily.suggestions.overcap.why": "백합을 너무 일찍 사용하여 피의 백합을 {0, plural, other {#}}개 잃었습니다.",
   "whm.gauge.lily.stacks.label": "백합",
+  "whm.gauge.lily.suggestions.leftover.content": "",
+  "whm.gauge.lily.suggestions.leftover.why": "",
   "whm.gauge.lily.suggestions.overcap.content.600": "타 글쿨 치유 기술을 사용하기 전에 <0/> 또는 <1/> 기술을 사용하십시오. 치유나 이동, 끼워넣기(위빙)가 필요 없다면 백합 스택이 초과되어도 괜찮습니다.",
   "whm.gauge.lily.suggestions.overcap.content.610": "타 글쿨 치유 기술을 사용하기 전에 <0/> 또는 <1/> 기술을 사용하십시오. MP 관리, 이동 및 치유에 이점이 있기에 백합을 이용한 회복은 오버힐로 집계되어도 괜찮습니다.",
   "whm.gauge.lily.suggestions.overcap.why": "게이지가 초과되어 백합을 {lostLilies, plural, other {#개}} 잃었습니다.",

@@ -1013,6 +1013,8 @@
   "whm.gauge.bloodlily.suggestions.overcap.content": "尽量规划好 <0/> 来避免血百合和治疗百合相互生长时间不被浪费",
   "whm.gauge.bloodlily.suggestions.overcap.why": "{0, plural,one {#血百合}other {#个苦难之心}}由于过早使用治疗百合而没有准备好",
   "whm.gauge.lily.stacks.label": "治疗百合",
+  "whm.gauge.lily.suggestions.leftover.content": "",
+  "whm.gauge.lily.suggestions.leftover.why": "",
   "whm.gauge.lily.suggestions.overcap.content.600": "在使用其他GCD魔法治疗之前，尝试使用<0/>或<1/>。如果你不需要治疗，移动或积攒血百合，溢出治疗百合也没有问题",
   "whm.gauge.lily.suggestions.overcap.content.610": "在使用其他GCD魔法治疗之前，尝试使用<0/>或<1/>。可以在一些时候使用治疗百合进行过度治疗，因为他们可以帮助你进行走位并且节省你的魔力消耗，当然还有治疗你的队友。",
   "whm.gauge.lily.suggestions.overcap.why": "{lostLilies, plural,one {#治疗百合}other {#朵}}由于百合量谱溢出而被浪费的治疗百合。",

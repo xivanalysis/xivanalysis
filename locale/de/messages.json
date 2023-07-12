@@ -1013,6 +1013,8 @@
   "whm.gauge.bloodlily.suggestions.overcap.content": "",
   "whm.gauge.bloodlily.suggestions.overcap.why": "{0, plural, one {# Blutlilie ist} other {# Blutlilien sind}} nicht geblüht da eine Lilie zu früh verwendet wurde.",
   "whm.gauge.lily.stacks.label": "Lilie",
+  "whm.gauge.lily.suggestions.leftover.content": "",
+  "whm.gauge.lily.suggestions.leftover.why": "",
   "whm.gauge.lily.suggestions.overcap.content.600": "",
   "whm.gauge.lily.suggestions.overcap.content.610": "",
   "whm.gauge.lily.suggestions.overcap.why": "",
