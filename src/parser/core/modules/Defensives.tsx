@@ -9,7 +9,7 @@ import {CooldownDowntime} from 'parser/core/modules/CooldownDowntime'
 import {Data} from 'parser/core/modules/Data'
 import React, {Fragment, ReactNode} from 'react'
 import {Accordion, Button, Icon, Message, Table} from 'semantic-ui-react'
-import {CooldownEndReason, CooldownHistoryEntry, Cooldowns} from './Cooldowns'
+import {ChargeHistoryEntry, CooldownEndReason, CooldownHistoryEntry, Cooldowns} from './Cooldowns'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 import {Timeline} from './Timeline'
 
@@ -35,6 +35,11 @@ export class Defensives extends Analyser {
 	 * Implementing modules should provide a list of job-specific defensive actions to track
 	 */
 	protected trackedDefensives: Action[] = []
+
+	// Private lists of the cooldown usage and charge histories so we don't keep recalculating it via calls to the cooldowns module
+	private cooldownHistories: {[key: number]: CooldownHistoryEntry[]} = {}
+	private chargeHistories: {[key: number]: ChargeHistoryEntry[]} = {}
+
 	/**
 	 * Implementing modules may override the main header message text
 	 */
@@ -53,11 +58,15 @@ export class Defensives extends Analyser {
 	}
 
 	private getUsageCount(defensive: Action): number {
-		return this.getUses(defensive).length
+		// The cooldowns module actually returns events based on cooldown *group* so make sure we're actually getting the uses for the cooldown we asked for
+		return this.getUses(defensive).filter(event => event.action.id === defensive.id).length
 	}
 
 	private getUses(defensive: Action): CooldownHistoryEntry[] {
-		return this.cooldowns.cooldownHistory(defensive).filter((entry) => entry.endReason !== CooldownEndReason.INTERRUPTED)
+		if (this.cooldownHistories[defensive.id] == null) {
+			this.cooldownHistories[defensive.id] = this.cooldowns.cooldownHistory(defensive).filter((entry) => entry.endReason !== CooldownEndReason.INTERRUPTED)
+		}
+		return this.cooldownHistories[defensive.id]
 	}
 
 	private getMaxUses(defensive: Action): number {
@@ -115,17 +124,22 @@ export class Defensives extends Analyser {
 
 	private getUsageRow(entry: CooldownHistoryEntry, defensive: Action): ReactNode {
 		return <>
-			<Table.Row key={entry.start}>
-				<Table.Cell>
-					<Trans id="core.defensives.table.usage-row.text">Used at <Button
-						circular
-						compact
-						size="mini"
-						icon="time"onClick={() => this.timeline.show(entry.start - this.parser.pull.timestamp, entry.end - this.parser.pull.timestamp)}>
-					</Button> {this.parser.formatEpochTimestamp(entry.start)}
-					</Trans>
-				</Table.Cell>
-			</Table.Row>
+			{
+				// Only create the usage rown if this history entry was for this cooldown, not another in the same cooldown group
+				entry.action.id === defensive.id ?
+					<Table.Row key={entry.start}>
+						<Table.Cell>
+							<Trans id="core.defensives.table.usage-row.text">Used at <Button
+								circular
+								compact
+								size="mini"
+								icon="time"onClick={() => this.timeline.show(entry.start - this.parser.pull.timestamp, entry.end - this.parser.pull.timestamp)}>
+							</Button> {this.parser.formatEpochTimestamp(entry.start)}
+							</Trans>
+						</Table.Cell>
+					</Table.Row>
+					: undefined
+			}
 			{
 				this.tryGetAdditionalUseRow(defensive, entry.start)
 			}
@@ -139,7 +153,7 @@ export class Defensives extends Analyser {
 			availableTimestamp = this.parser.pull.timestamp
 			currentCharges = defensive.charges || 1
 		} else {
-			const chargesAvailableEvent = this.cooldowns.chargeHistory(defensive).find(charges => charges.timestamp >= timestamp && charges.current > 0)
+			const chargesAvailableEvent = this.getChargeHistory(defensive).find(charges => charges.timestamp > timestamp && charges.current > 0)
 			availableTimestamp = chargesAvailableEvent?.timestamp || (this.parser.pull.duration + this.parser.pull.timestamp)
 			currentCharges = chargesAvailableEvent?.current || 0
 		}
@@ -158,6 +172,13 @@ export class Defensives extends Analyser {
 		}
 
 		return {chargesBeforeNextUse: currentCharges + Math.floor((useByTimestamp - availableTimestamp) / cooldown), availableTimestamp, useByTimestamp}
+	}
+
+	private getChargeHistory(action: Action) {
+		if (this.chargeHistories[action.id] == null) {
+			this.chargeHistories[action.id] = this.cooldowns.chargeHistory(action)
+		}
+		return this.chargeHistories[action.id]
 	}
 
 	private tryGetAdditionalUseRow(defensive: Action, timestamp: number = this.parser.pull.timestamp): ReactNode {
