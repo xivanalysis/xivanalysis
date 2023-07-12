@@ -142,13 +142,18 @@ export class MoonFlute extends BuffWindow {
 		}))
 	}
 
-	private adjustExpectedGcdCount(window: HistoryEntry<EvaluatedAction[]>) {
+	private finalStingsUsedInWindow(window: HistoryEntry<EvaluatedAction[]>): number {
 		const finalStingUsed = window.data.filter(event => (event.action.id === this.data.actions.FINAL_STING.id || event.action.id === this.data.actions.SELF_DESTRUCT.id)).length
+		return finalStingUsed
+	}
+
+	private adjustExpectedGcdCount(window: HistoryEntry<EvaluatedAction[]>) {
+		const finalStingUsed = this.finalStingsUsedInWindow(window)
 		return finalStingUsed >= 1 ? (-window.data.length+1) : 0
 	}
 
 	private adjustExpectedActionOutcome(window: HistoryEntry<EvaluatedAction[]>, _action: TrackedActionGroup) {
-		const finalStingUsed = window.data.filter(event => (event.action.id === this.data.actions.FINAL_STING.id || event.action.id === this.data.actions.SELF_DESTRUCT.id)).length
+		const finalStingUsed = this.finalStingsUsedInWindow(window)
 		if (finalStingUsed === 0) {
 			return
 		}
