@@ -1,5 +1,5 @@
 import {Attribute} from 'event'
-import {ensureActions} from '../type'
+import {ensureActions, BonusModifier} from '../type'
 
 export const MNK = ensureActions({
 	// -----
@@ -12,6 +12,14 @@ export const MNK = ensureActions({
 		icon: 'https://xivapi.com/i/000000/000208.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
+		potencies: [{
+			value: 210,
+			bonusModifiers: [],
+		}, {
+			value: 310,
+			bonusModifiers: [],
+			baseModifiers: ['LEADEN_FIST'],
+		}],
 	},
 
 	TRUE_STRIKE: {
@@ -20,7 +28,10 @@ export const MNK = ensureActions({
 		icon: 'https://xivapi.com/i/000000/000209.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		potency: 300,
+		potencies: [{
+			value: 300,
+			bonusModifiers: [],
+		}],
 	},
 
 	SNAP_PUNCH: {
@@ -29,6 +40,13 @@ export const MNK = ensureActions({
 		icon: 'https://xivapi.com/i/000000/000210.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
+		potencies: [{
+			value: 250,
+			bonusModifiers: [],
+		}, {
+			value: 310,
+			bonusModifiers: [BonusModifier.POSITIONAL],
+		}],
 	},
 
 	TWIN_SNAKES: {
@@ -37,8 +55,19 @@ export const MNK = ensureActions({
 		icon: 'https://xivapi.com/i/000000/000213.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		potency: 280,
 		statusesApplied: ['DISCIPLINED_FIST'],
+		potencies: [{
+			value: 280,
+			bonusModifiers: [],
+		}],
+	},
+
+	ARM_OF_THE_DESTROYER: {
+		id: 62,
+		name: 'Arm of the Destroyer',
+		icon: 'https://xivapi.com/i/000000/000215.png',
+		onGcd: true,
+		speedAttribute: Attribute.SKILL_SPEED,
 	},
 
 	SHADOW_OF_THE_DESTROYER: {
@@ -56,6 +85,13 @@ export const MNK = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		statusesApplied: ['DEMOLISH'],
+		potencies: [{
+			value: 70,
+			bonusModifiers: [],
+		}, {
+			value: 130,
+			bonusModifiers: [BonusModifier.POSITIONAL],
+		}],
 	},
 
 	ROCKBREAKER: {
@@ -127,6 +163,19 @@ export const MNK = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		statusesApplied: ['FORMLESS_FIST'],
+		potencies: [{
+			value: 600,
+			bonusModifiers: [],
+		}],
+	},
+
+	FLINT_STRIKE: {
+		id: 25882,
+		name: 'Flint Strike',
+		icon: 'https://xivapi.com/i/002000/002548.png',
+		onGcd: true,
+		speedAttribute: Attribute.SKILL_SPEED,
+		statusesApplied: ['FORMLESS_FIST'],
 		potency: 600,
 	},
 
@@ -137,7 +186,20 @@ export const MNK = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		statusesApplied: ['FORMLESS_FIST'],
-		potency: 450,
+		potencies: [{
+			value: 450,
+			bonusModifiers: [],
+		}],
+	},
+
+	TORNADO_KICK: {
+		id: 3543,
+		name: 'Tornado Kick',
+		icon: 'https://xivapi.com/i/002000/002531.png',
+		onGcd: true,
+		speedAttribute: Attribute.SKILL_SPEED,
+		statusesApplied: ['FORMLESS_FIST'],
+		potency: 850,
 	},
 
 	RISING_PHOENIX: {
@@ -147,7 +209,10 @@ export const MNK = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		statusesApplied: ['FORMLESS_FIST'],
-		potency: 700,
+		potencies: [{
+			value: 700,
+			bonusModifiers: [],
+		}],
 	},
 
 	PHANTOM_RUSH: {
@@ -211,6 +276,22 @@ export const MNK = ensureActions({
 		icon: 'https://xivapi.com/i/002000/002978.png',
 		cooldown: 90000,
 		statusesApplied: ['RIDDLE_OF_WIND'],
+	},
+
+	STEEL_PEAK: {
+		id: 25761,
+		name: 'Steel Peak',
+		icon: 'https://xivapi.com/i/002000/002530.png',
+		cooldown: 1000,
+		cooldownGroup: 1,
+	},
+
+	HOWLING_FIST: {
+		id: 25763,
+		name: 'Howling Fist',
+		icon: 'https://xivapi.com/i/000000/000207.png',
+		cooldown: 1000,
+		cooldownGroup: 1,
 	},
 
 	THE_FORBIDDEN_CHAKRA: {

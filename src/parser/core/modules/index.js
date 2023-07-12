@@ -10,6 +10,7 @@ import {Combos} from './Combos'
 import {Cooldowns} from './Cooldowns'
 import {Data} from './Data'
 import {Death} from './Death'
+import {Defensives} from './Defensives'
 import Downtime from './Downtime'
 import {Dummy} from './Dummy'
 import {EventsView} from './EventsView'
@@ -40,6 +41,7 @@ export default [
 	Cooldowns,
 	Data,
 	Death,
+	Defensives,
 	Downtime,
 	Dummy,
 	EventsView,

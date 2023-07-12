@@ -1,5 +1,6 @@
 import {Attribute} from 'event'
 import {ensureActions} from '../type'
+import {SHARED} from './SHARED'
 
 export const PLD = ensureActions({
 	// -----
@@ -25,6 +26,29 @@ export const PLD = ensureActions({
 			from: 9,
 		},
 	},
+	RAGE_OF_HALONE: {
+		id: 21,
+		name: 'Rage Of Halone',
+		icon: 'https://xivapi.com/i/000000/000155.png',
+		onGcd: true,
+		speedAttribute: Attribute.SKILL_SPEED,
+		combo: {
+			from: 15,
+			end: true,
+		},
+	},
+	ROYAL_AUTHORITY: {
+		id: 3539,
+		name: 'Royal Authority',
+		icon: 'https://xivapi.com/i/002000/002507.png',
+		onGcd: true,
+		speedAttribute: Attribute.SKILL_SPEED,
+		combo: {
+			from: 15,
+			end: true,
+		},
+		statusesApplied: ['SWORD_OATH'],
+	},
 	SHIELD_LOB: {
 		id: 24,
 		name: 'Shield Lob',
@@ -39,17 +63,6 @@ export const PLD = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		breaksCombo: true,
-	},
-	RAGE_OF_HALONE: {
-		id: 21,
-		name: 'Rage Of Halone',
-		icon: 'https://xivapi.com/i/000000/000155.png',
-		onGcd: true,
-		speedAttribute: Attribute.SKILL_SPEED,
-		combo: {
-			from: 15,
-			end: true,
-		},
 	},
 	TOTAL_ECLIPSE: {
 		id: 7381,
@@ -93,18 +106,6 @@ export const PLD = ensureActions({
 		castTime: 1500,
 		breaksCombo: true,
 	},
-	ROYAL_AUTHORITY: {
-		id: 3539,
-		name: 'Royal Authority',
-		icon: 'https://xivapi.com/i/002000/002507.png',
-		onGcd: true,
-		speedAttribute: Attribute.SKILL_SPEED,
-		combo: {
-			from: 15,
-			end: true,
-		},
-		statusesApplied: ['SWORD_OATH'],
-	},
 	HOLY_SPIRIT: {
 		id: 7384,
 		name: 'Holy Spirit',
@@ -129,7 +130,7 @@ export const PLD = ensureActions({
 		icon: 'https://xivapi.com/i/002000/002519.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		breaksCombo: true,
+		breaksCombo: true as boolean,
 	},
 	CONFITEOR: {
 		id: 16459,
@@ -192,6 +193,7 @@ export const PLD = ensureActions({
 		onGcd: false,
 		cooldown: 10000,
 	},
+	RELEASE_IRON_WILL: SHARED.UNKNOWN,
 	SENTINEL: {
 		id: 17,
 		name: 'Sentinel',
@@ -231,6 +233,7 @@ export const PLD = ensureActions({
 		cooldown: 420000,
 		statusesApplied: ['HALLOWED_GROUND'],
 	},
+	BULWARK: SHARED.UNKNOWN,
 	SHELTRON: {
 		id: 3542,
 		name: 'Sheltron',

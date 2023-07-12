@@ -1,4 +1,5 @@
 import {ensureStatuses} from '../type'
+import {SHARED} from './SHARED'
 
 export const MNK = ensureStatuses({
 	OPO_OPO_FORM: {
@@ -72,6 +73,8 @@ export const MNK = ensureStatuses({
 		duration: 10000,
 		stacksApplied: 3,
 	},
+
+	EARTHS_REPLY: SHARED.UNKNOWN, // Added in patch 6.3 layer
 
 	RIDDLE_OF_FIRE: {
 		id: 1181,

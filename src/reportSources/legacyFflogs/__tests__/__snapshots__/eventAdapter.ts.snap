@@ -326,6 +326,12 @@ exports[`Event adapter individual events adapts encounterend 1`] = `Array []`;
 
 exports[`Event adapter individual events adapts encounterstart 1`] = `Array []`;
 
+exports[`Event adapter individual events adapts gaugeupdate 1`] = `Array []`;
+
+exports[`Event adapter individual events adapts headmarker 1`] = `Array []`;
+
+exports[`Event adapter individual events adapts headmarker 2`] = `Array []`;
+
 exports[`Event adapter individual events adapts heal 1`] = `
 Array [
   Object {
@@ -642,6 +648,8 @@ Array [
   },
 ]
 `;
+
+exports[`Event adapter individual events adapts tether 1`] = `Array []`;
 
 exports[`Event adapter individual events adapts unknown 1`] = `Array []`;
 

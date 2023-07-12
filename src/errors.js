@@ -68,9 +68,20 @@ export class DidNotParticipateError extends GlobalError {
 	}
 }
 
+export class TooManyRequestsError extends GlobalError {
+	message = 'Slow down.'
+	detail = 'Too many requests. Please wait a little while before trying again.'
+}
+
 export class UnknownApiError extends GlobalError {
 	message = 'API Error.'
 	detail = 'An error occured while requesting data from FFLogs. If this issue persists, let us know on Discord.'
+	constructor(options) {
+		super(options)
+
+		/** @type {Error | undefined} */
+		this.inner = options.inner
+	}
 }
 
 export class ModulesNotFoundError extends GlobalError {

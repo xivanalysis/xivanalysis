@@ -97,6 +97,8 @@ export class TranslateAdapterStep extends AdapterStep {
 			return this.adaptCombatantInfoEvent(baseEvent)
 
 		/* eslint-disable no-fallthrough */
+		// TODO: This could be _really_ useful. Like, combatantinfo tier useful but even more so. But it will require non-trivial consideration around how we want to approach the data itself.
+		case 'gaugeupdate':
 		// Dispels are already modelled by other events, and aren't something we really care about
 		case 'dispel':
 		// FFLogs computed value, could be useful in the future for shield healing analysis.
@@ -118,6 +120,9 @@ export class TranslateAdapterStep extends AdapterStep {
 		// Could be interesting to do something with, but not important for analysis
 		case 'worldmarkerplaced':
 		case 'worldmarkerremoved':
+		// Seem to be representation of mechanics - interesting data, but likely not useful for analysis without in-depth per-fight logic.
+		case 'headmarker':
+		case 'tether':
 		// Not My Problem™️
 		case 'checksummismatch':
 		// New event type from unreleased (as of 2021/04/26) fflogs client. Doesn't contain anything useful.

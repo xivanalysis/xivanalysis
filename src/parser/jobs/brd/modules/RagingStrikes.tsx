@@ -201,6 +201,7 @@ export class RagingStrikes extends BuffWindow {
 		this.addEvaluator(new ExpectedGcdCountEvaluator({
 			expectedGcds: 8,
 			globalCooldown: this.globalCooldown,
+			hasStacks: false,
 			suggestionIcon: this.data.actions.RAGING_STRIKES.icon,
 			suggestionContent: <Trans id="brd.rs.suggestions.missedgcd.content">
 				Try to land 8 GCDs (9 GCDs with <DataLink status="ARMYS_MUSE"/>) during every <DataLink action="RAGING_STRIKES"/> window.

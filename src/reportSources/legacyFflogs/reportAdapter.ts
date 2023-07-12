@@ -13,6 +13,11 @@ const NPC_FRIENDLY_TYPES: ActorType[] = [
 	ActorType.LIMIT_BREAK,
 ]
 
+// Some actors are ephemeral / not used in combat, and as such do not have a
+// stable GUID. FFLogs seperates these by numberspacing them above a multiple
+// of this value.
+const UNSTABLE_GUID_MINIMUM = 1000000
+
 // We're storing the entire legacy report interface in the meta field so that
 // we can pull it back out again for the legacy analysis page, while it gets upgraded
 // to work with the new system.
@@ -102,7 +107,7 @@ function buildActorsByFight(report: LegacyReport) {
 const convertActor = (actor: FflogsActor, overrides?: Partial<Actor>): Actor => ({
 	...UNKNOWN_ACTOR,
 	id: resolveActorId({id: actor.id}),
-	kind: actor.guid.toString(),
+	kind: resolveActorKind(actor.id, actor.guid),
 	name: actor.name,
 	...overrides,
 })
@@ -114,6 +119,18 @@ const UNKNOWN_ACTOR: Actor = {
 	team: Team.UNKNOWN,
 	playerControlled: false,
 	job: 'UNKNOWN',
+}
+
+function resolveActorKind(id: number, guid: number) {
+	// Unstable GUIDs will reliably match their ID with a numberspace.
+	// Because these GUIDs are unstable between logs, and used (seemingly)
+	// exclusively for mechanic-actors that can't be targeted, we're eagerly
+	// falling them back to `unknown`.
+	if (guid >= UNSTABLE_GUID_MINIMUM && id === guid % UNSTABLE_GUID_MINIMUM) {
+		return 'unknown'
+	}
+
+	return guid.toString()
 }
 
 const convertFight = (

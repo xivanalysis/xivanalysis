@@ -43,15 +43,24 @@ class Dance {
 
 	public get expectedFinishId(): number {
 		const actualFinish = _.last(this.rotation)
-		let expectedFinish = -1
-		if (actualFinish) {
-			if (this.initiatingStep.action === this.data.actions.TECHNICAL_STEP.id) {
-				expectedFinish =  this.data.actions.QUADRUPLE_TECHNICAL_FINISH.id
-			} else if (this.initiatingStep.action === this.data.actions.STANDARD_STEP.id) {
-				expectedFinish = this.data.actions.DOUBLE_STANDARD_FINISH.id
-			}
+
+		// Bail if something's wrong
+		if (actualFinish == null) { return -1 }
+
+		// If the player actually finished with one of the two expected finishes, just return that
+		if (actualFinish.action === this.data.actions.QUADRUPLE_TECHNICAL_FINISH.id ||
+			actualFinish.action === this.data.actions.DOUBLE_STANDARD_FINISH.id) {
+			return actualFinish.action
 		}
-		return expectedFinish
+
+		// If the player messed up Standard Step, return Double Standard Finish
+		if (actualFinish.action === this.data.actions.STANDARD_FINISH.id ||
+			actualFinish.action === this.data.actions.SINGLE_STANDARD_FINISH.id) {
+			return this.data.actions.DOUBLE_STANDARD_FINISH.id
+		}
+
+		// Process of elimination, they messed up Technical so return Quadruple Technical Finish
+		return this.data.actions.QUADRUPLE_TECHNICAL_FINISH.id
 	}
 
 	public get expectedEndTime(): number {
@@ -205,8 +214,8 @@ export class DirtyDancing extends Analyser {
 
 	private getStatusUptimePercent(statusKey: StatusKey): number {
 		// Exclude downtime from both the status time and expected uptime
-		const statusTime = this.statuses.getUptime(statusKey, this.actors.friends) - this.downtime.getDowntime()
-		const uptime = this.parser.currentDuration - this.downtime.getDowntime()
+		const statusTime = Math.max(this.statuses.getUptime(statusKey, this.actors.friends) - this.downtime.getDowntime(), 0)
+		const uptime = Math.max(this.parser.currentDuration - this.downtime.getDowntime(), 0)
 
 		return (statusTime / uptime) * 100
 	}
