@@ -148,22 +148,24 @@ export class PerfectBalance extends Gauge {
 		if (action == null || !(action.onGcd ?? false)) { return }
 
 		if (this.current) {
-
-			if (this.opoActions.includes(action.id)) {
-				this.opoBeastGauge.generate(1)
-			}
-			if (this.raptorActions.includes(action.id)) {
-				this.raptorBeastGauge.generate(1)
-			}
-			if (this.coeurlActions.includes(action.id)) {
-				this.coeurlBeastGauge.generate(1)
-			}
-
-			// Additionally flag any bad GCDs
+			// Flag any bad GCDs
 			if (this.badActions.includes(action.id)) {
 				this.current.bads++
 			} else {
 				this.current.used++
+			}
+
+			// Make sure we don't record additional gauge generation if the player doesn't immediately blitz after using their PB stacks
+			if (this.current.used <= this.current.start) {
+				if (this.opoActions.includes(action.id)) {
+					this.opoBeastGauge.generate(1)
+				}
+				if (this.raptorActions.includes(action.id)) {
+					this.raptorBeastGauge.generate(1)
+				}
+				if (this.coeurlActions.includes(action.id)) {
+					this.coeurlBeastGauge.generate(1)
+				}
 			}
 		}
 	}
@@ -176,22 +178,23 @@ export class PerfectBalance extends Gauge {
 		// The blitz action closes the window if it wasn't already
 		this.stopAndSave()
 
-		if (action.id === this.data.actions.ELIXIR_FIELD.id) {
+		switch (action.id) {
+		case this.data.actions.ELIXIR_FIELD.id:
 			this.lunarNadiGauge.generate(1)
-		}
-		if (action.id === this.data.actions.CELESTIAL_REVOLUTION.id) {
+			break
+		case this.data.actions.RISING_PHOENIX.id:
+			this.solarNadiGauge.generate(1)
+			break
+		case this.data.actions.PHANTOM_RUSH.id:
+			this.lunarNadiGauge.reset()
+			this.solarNadiGauge.reset()
+			break
+		case this.data.actions.CELESTIAL_REVOLUTION.id:
 			if (this.lunarNadiGauge.empty) {
 				this.lunarNadiGauge.generate(1)
 			} else {
 				this.solarNadiGauge.generate(1)
 			}
-		}
-		if (action.id === this.data.actions.RISING_PHOENIX.id) {
-			this.solarNadiGauge.generate(1)
-		}
-		if (action.id === this.data.actions.PHANTOM_RUSH.id) {
-			this.lunarNadiGauge.reset()
-			this.solarNadiGauge.reset()
 		}
 	}
 
