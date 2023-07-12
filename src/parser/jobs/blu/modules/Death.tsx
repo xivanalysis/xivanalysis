@@ -49,7 +49,7 @@ export class BLUDeath extends Death {
 	override deathSuggestionWhy(actorId: Actor['id'], playerInfo: ActorDeathInfo): JSX.Element {
 		const actorStings = this.actorStings.get(actorId) ?? 0
 		if (actorStings === 0) {
-			super.deathSuggestionWhy(actorId, playerInfo)
+			return super.deathSuggestionWhy(actorId, playerInfo)
 		}
 
 		return <Trans id="blu.deaths.why">
@@ -57,11 +57,11 @@ export class BLUDeath extends Death {
 				value={playerInfo.count}
 				_1="# death"
 				other="# deaths"
-			/>.  That number does not include the <Plural id="blu.deaths.why.final_stings"
+			/>, not counting <Plural id="blu.deaths.why.final_stings"
 				value={actorStings}
 				_1="# death"
 				other="# deaths"
-			/> from using <DataLink action="FINAL_STING"/>
+			/> from using <DataLink action="FINAL_STING" showIcon={false} />.
 		</Trans>
 	}
 }
