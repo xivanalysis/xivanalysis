@@ -5,6 +5,7 @@ import {ActionKey} from 'data/ACTIONS'
 import {Event} from 'event'
 import {filter} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
+import {Actors} from 'parser/core/modules/Actors'
 import {CounterGauge, Gauge as CoreGauge, TimerGauge} from 'parser/core/modules/Gauge'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
@@ -62,12 +63,12 @@ const SEVERITIES = {
 }
 
 export class Lilies extends CoreGauge {
-
 	static override handle = 'gauge'
 
 	@dependency private suggestions!: Suggestions
+	@dependency private actors!: Actors
 
-  private wastedGcds = 0;
+	private wastedGcds = 0;
 
 	private lilyInterval = this.parser.patch.before('6.1') ? LILY_INTERVAL_600 : LILY_INTERVAL_610
 
@@ -134,7 +135,7 @@ export class Lilies extends CoreGauge {
 	}
 
 	private checkAfflatusAvailability() {
-		if (!this.lilyGauge.empty && !this.bloodLilyGauge.capped) {
+		if (!this.lilyGauge.empty && !this.bloodLilyGauge.capped && !this.actors.current.hasStatus(this.data.statuses.THIN_AIR.id)) {
 			this.wastedGcds++
 		}
 	}
