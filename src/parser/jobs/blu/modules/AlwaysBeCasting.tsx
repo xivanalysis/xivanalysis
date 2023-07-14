@@ -34,6 +34,20 @@ export class AlwaysBeCasting extends CoreAlwaysBeCasting {
 	private phantomFlurryInterruptingActionHook?: EventHook<Events['action']>
 	private surpanakhas: number = 0
 
+	override gcdUptimeSuggestionContent: JSX.Element = <Trans id="blu.always-cast.description">
+		Make sure you're always doing something. It's often better to make small
+		mistakes while keeping the GCD rolling than it is to perform the correct
+		rotation slowly.
+		<br />
+		For BLU, we count the following as GCD uptime:
+		<ul>
+			<li>Time spent under <DataLink action="DIAMONDBACK" /></li>
+			<li><DataLink status="WANING_NOCTURNE" />, the forced downtime following a <DataLink action="MOON_FLUTE" /></li>
+			<li>The <DataLink action="PHANTOM_FLURRY" /> channel</li>
+			<li>The <DataLink action="SURPANAKHA" /> oGCD spam</li>
+		</ul>
+	</Trans>
+
 	@dependency private suggestions!: Suggestions
 	@dependency private actors!: Actors
 
