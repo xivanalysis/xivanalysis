@@ -778,6 +778,7 @@ export const BLU = ensureActions({
 		gcdRecast: 2500,
 		cooldown: 30000,
 		cooldownGroup: BLU_COOLDOWN_GROUP.THE_ROSE_OF_DESTRUCTION,
+		statusesApplied: ['CHELONIAN_GATE', 'AUSPICIOUS_TRANCE'],
 	},
 	DIVINE_CATARACT: {
 		id: 23274,
