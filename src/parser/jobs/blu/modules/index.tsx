@@ -1,3 +1,4 @@
+import {LucidDreaming} from 'parser/core/modules/LucidDreaming'
 import {Tincture} from 'parser/core/modules/Tincture'
 import {AlwaysBeCasting} from './AlwaysBeCasting'
 import {BLURaidBuffs} from './BLURaidBuffs'
@@ -23,6 +24,7 @@ export default [
 	DoTs,
 	Tincture,
 	Interrupts,
+	LucidDreaming,
 	Swiftcast,
 	GeneralCDDowntime,
 	MoonFlute,
