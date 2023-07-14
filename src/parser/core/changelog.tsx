@@ -17,6 +17,15 @@ export const changelog: ChangelogEntry[] = [
 		contributors: [CONTRIBUTORS.AKAIRYU],
 	},
 	{
+		date: new Date('2023-07-09'),
+		Changes: () => <>
+			Fixed prepull actions for defensive cooldowns module.
+			Fixed some bugs relating to weaving issues and party member deaths.
+			Updated weaving issues into a more-consistent format with other modules.
+		</>,
+		contributors: [CONTRIBUTORS.OTOCEPHALY],
+	},
+	{
 		date: new Date('2023-05-24'),
 		Changes: () => <>
 			Overhaul defensive cooldown analysis for all jobs, including role actions by default.

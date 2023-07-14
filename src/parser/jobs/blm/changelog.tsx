@@ -77,4 +77,9 @@ export const changelog = [
 		Changes: () => <>Foul now requires 3 targets to outperform Xenoglossy due to 6.4 potency increase.</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],
 	},
+	{
+		date: new Date('2023-06-05'),
+		Changes: () => <>Display timestamps for Paradox and Polyglot overwrites.</>,
+		contributors: [CONTRIBUTORS.MALI],
+	},
 ]

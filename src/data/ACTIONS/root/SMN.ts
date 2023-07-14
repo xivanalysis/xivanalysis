@@ -157,6 +157,15 @@ export const SMN = ensureActions({
 		cooldown: 20000,
 	},
 
+	RUBY_RUIN_III: {
+		id: 25817,
+		name: 'Ruby Ruin III',
+		icon: 'https://xivapi.com/i/002000/002682.png',
+		onGcd: true,
+		speedAttribute: Attribute.SPELL_SPEED,
+		castTime: 2800,
+	},
+
 	RUBY_RITE: {
 		id: 25823,
 		name: 'Ruby Rite',
@@ -166,12 +175,29 @@ export const SMN = ensureActions({
 		castTime: 2800,
 	},
 
+	TOPAZ_RUIN_III: {
+		id: 25818,
+		name: 'Topaz Ruin III',
+		icon: 'https://xivapi.com/i/002000/002682.png',
+		onGcd: true,
+		speedAttribute: Attribute.SPELL_SPEED,
+	},
+
 	TOPAZ_RITE: {
 		id: 25824,
 		name: 'Topaz Rite',
 		icon: 'https://xivapi.com/i/002000/002761.png',
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
+	},
+
+	EMERALD_RUIN_III: {
+		id: 25819,
+		name: 'Emerald Ruin III',
+		icon: 'https://xivapi.com/i/002000/002682.png',
+		onGcd: true,
+		speedAttribute: Attribute.SPELL_SPEED,
+		cooldown: 1500,
 	},
 
 	EMERALD_RITE: {
@@ -234,6 +260,15 @@ export const SMN = ensureActions({
 		statusesApplied: ['REKINDLE', 'UNDYING_FLAME'],
 	},
 
+	RUBY_OUTBURST: {
+		id: 25814,
+		name: 'Ruby Outburst',
+		icon: 'https://xivapi.com/i/002000/002698.png',
+		onGcd: true,
+		speedAttribute: Attribute.SPELL_SPEED,
+		castTime: 2800,
+	},
+
 	RUBY_CATASTROPHE: {
 		id: 25832,
 		name: 'Ruby Catastrophe',
@@ -243,12 +278,28 @@ export const SMN = ensureActions({
 		castTime: 2800,
 	},
 
+	TOPAZ_OUTBURST: {
+		id: 25815,
+		name: 'Topaz Outburst',
+		icon: 'https://xivapi.com/i/002000/002698.png',
+		onGcd: true,
+		speedAttribute: Attribute.SPELL_SPEED,
+	},
+
 	TOPAZ_CATASTROPHE: {
 		id: 25833,
 		name: 'Topaz Catastrophe',
 		icon: 'https://xivapi.com/i/002000/002767.png',
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
+	},
+
+	EMERALD_OUTBURST: {
+		id: 25816,
+		name: 'Emerald Outburst',
+		icon: 'https://xivapi.com/i/002000/002698.png',
+		onGcd: true,
+		cooldown: 1500,
 	},
 
 	EMERALD_CATASTROPHE: {
@@ -293,6 +344,14 @@ export const SMN = ensureActions({
 		statusesApplied: ['SLIPSTREAM'],
 	},
 
+	SUMMON_IFRIT: {
+		id: 25805,
+		name: 'Summon Ifrit',
+		icon: 'https://xivapi.com/i/002000/002680.png',
+		onGcd: true,
+		speedAttribute: Attribute.SPELL_SPEED,
+	},
+
 	SUMMON_IFRIT_II: {
 		id: 25838,
 		name: 'Summon Ifrit II',
@@ -301,10 +360,26 @@ export const SMN = ensureActions({
 		speedAttribute: Attribute.SPELL_SPEED,
 	},
 
+	SUMMON_TITAN: {
+		id: 25806,
+		name: 'Summon Titan',
+		icon: 'https://xivapi.com/i/002000/002755.png',
+		onGcd: true,
+		speedAttribute: Attribute.SPELL_SPEED,
+	},
+
 	SUMMON_TITAN_II: {
 		id: 25839,
 		name: 'Summon Titan II',
 		icon: 'https://xivapi.com/i/002000/002773.png',
+		onGcd: true,
+		speedAttribute: Attribute.SPELL_SPEED,
+	},
+
+	SUMMON_GARUDA: {
+		id: 25807,
+		name: 'Summon Garuda',
+		icon: 'https://xivapi.com/i/002000/002756.png',
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 	},

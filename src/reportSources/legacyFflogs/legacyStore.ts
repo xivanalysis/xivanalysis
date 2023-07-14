@@ -1,3 +1,4 @@
+import * as Sentry from '@sentry/browser'
 import * as Errors from 'errors'
 import ky from 'ky'
 import _ from 'lodash'
@@ -39,7 +40,13 @@ export class ReportStore {
 
 		let response: ReportFightsResponse
 		try {
-			const cache = await getCache(code)
+			let cache : Cache | undefined
+			try {
+				cache = await getCache(code)
+			} catch (error) {
+				Sentry.captureException(error)
+				cache = undefined
+			}
 			response = await fetchFflogs<ReportFightsResponse>(
 				`report/fights/${code}`,
 				{
