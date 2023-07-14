@@ -1,5 +1,6 @@
 import {Plural, Trans} from '@lingui/react'
 import {DataLink} from 'components/ui/DbLink'
+import _ from 'lodash'
 import {EvaluatedAction} from 'parser/core/modules/ActionWindow'
 import {RulePassedEvaluator} from 'parser/core/modules/ActionWindow/evaluators/RulePassedEvaluator'
 import {HistoryEntry} from 'parser/core/modules/ActionWindow/History'
@@ -57,15 +58,14 @@ export class PooledFeathersEvaluator extends RulePassedEvaluator {
 
 	override passesRule(window: HistoryEntry<EvaluatedAction[]>): boolean | undefined {
 		// Check to see if this window could've had more feathers due to possible pooling problems
-		if (this.gauge.feathersSpentInRange(window.start, window.end ?? (this.pullTime + this.pullDuration)) >= FEATHER_THRESHHOLD) {
+		if (this.gauge.feathersSpentInRange(window.start, (window.end || (this.pullTime + this.pullDuration))) >= FEATHER_THRESHHOLD) {
 			return true
 		}
-		const previousWindow = this.windows[this.windows.indexOf(window)-1]
-		if (previousWindow == null) {
+		const previousWindowEnd = _.max(this.windows.filter(w => (w.end || (this.pullTime + this.pullDuration)) < window.start).map(w => w.end))
+		if (previousWindowEnd == null) {
 			return undefined
 		}
-		const feathersBeforeWindow = this.gauge.feathersSpentInRange((previousWindow && previousWindow.end || this.pullTime)
-			+ POST_WINDOW_GRACE_PERIOD_MILLIS, window.start)
+		const feathersBeforeWindow = this.gauge.feathersSpentInRange(previousWindowEnd + POST_WINDOW_GRACE_PERIOD_MILLIS, window.start)
 
 		return feathersBeforeWindow === 0
 	}

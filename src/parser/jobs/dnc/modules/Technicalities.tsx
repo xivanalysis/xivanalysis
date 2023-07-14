@@ -86,15 +86,6 @@ export class Technicalities extends RaidBuffWindow {
 		// Evaluate whether Devilment was used at the appropriate time within each window
 		this.addEvaluator(new TimelyDevilmentEvaluator(this.data.actions.DEVILMENT))
 
-		// Evaluate whether feathers were properly pooled for each window
-		this.addEvaluator(new PooledFeathersEvaluator({
-			pullTime: this.parser.pull.timestamp,
-			pullDuration: this.parser.pull.duration,
-			gauge: this.gauge,
-			suggestionIcon: this.data.actions.FAN_DANCE.icon,
-			windows: this.mapHistoryActions(),
-		}))
-
 		// Evaluate whether the player missed finishing Standard Steps initiated within a window
 		this.addEvaluator(new LateStandardEvaluator(this.data.actions.STANDARD_STEP))
 	}
@@ -123,6 +114,15 @@ export class Technicalities extends RaidBuffWindow {
 	//#endregion
 
 	override onComplete() {
+		// Evaluate whether feathers were properly pooled for each window. This must be added in oncomplete so we can actually get at the mapped history data
+		this.addEvaluator(new PooledFeathersEvaluator({
+			pullTime: this.parser.pull.timestamp,
+			pullDuration: this.parser.pull.duration,
+			gauge: this.gauge,
+			suggestionIcon: this.data.actions.FAN_DANCE.icon,
+			windows: this.mapHistoryActions(),
+		}))
+
 		super.onComplete()
 
 		// Suggestion to use Devilment under Technical
