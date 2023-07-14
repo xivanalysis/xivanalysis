@@ -96,12 +96,7 @@ export class Technicalities extends RaidBuffWindow {
 		}))
 
 		// Evaluate whether the player missed finishing Standard Steps initiated within a window
-		this.addEvaluator(new LateStandardEvaluator({
-			data: this.data,
-		}))
-
-		// Evaluate whether there was interference between multiple dancers (if multiple are present)
-		this.addEvaluator(new MultiDancerEvaluator(this.multiDncNote.bind(this)))
+		this.addEvaluator(new LateStandardEvaluator(this.data.actions.STANDARD_STEP))
 	}
 
 	// Open new windows to deal with 6.4+ buff timing weirdness
