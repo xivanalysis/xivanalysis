@@ -1,8 +1,10 @@
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
 import {ActionLink} from 'components/ui/DbLink'
+import {RotationTargetOutcome} from 'components/ui/RotationTable'
 import {dependency} from 'parser/core/Injectable'
-import {BuffWindow, ExpectedActionGroupsEvaluator, ExpectedGcdCountEvaluator} from 'parser/core/modules/ActionWindow'
+import {BuffWindow, EvaluatedAction, TrackedActionGroup, ExpectedActionGroupsEvaluator, ExpectedGcdCountEvaluator} from 'parser/core/modules/ActionWindow'
+import {HistoryEntry} from 'parser/core/modules/ActionWindow/History'
 import {GlobalCooldown} from 'parser/core/modules/GlobalCooldown'
 import {SEVERITY} from 'parser/core/modules/Suggestions'
 import React from 'react'
@@ -45,6 +47,9 @@ const EXPECTED_GCD_COUNT = 5
 // ...but for implementation details, Phantom Flurry is marked as a GCD,
 // so even though we technically only do 4 GCDs in the window, we are
 // looking for a pseudo-5th, Phantom Flurry.
+//
+// Also, if they used Final Sting, then we window can be as short as a single
+// GCD!
 
 export class MoonFlute extends BuffWindow {
 	static override handle = 'moonflutes'
@@ -74,6 +79,7 @@ export class MoonFlute extends BuffWindow {
 			suggestionWindowName,
 			severityTiers: SEVERITIES.TOO_FEW_GCDS,
 			hasStacks: false,
+			adjustCount: this.adjustExpectedGcdCount.bind(this),
 		}))
 
 		this.addEvaluator(new ExpectedActionGroupsEvaluator({
@@ -132,7 +138,32 @@ export class MoonFlute extends BuffWindow {
 				are <ActionLink action="NIGHTBLOOM" showIcon={false} />, and finishing the combo with a <ActionLink action="PHANTOM_FLURRY" showIcon={false} />.
 			</Trans>,
 			severityTiers: SEVERITIES.MISSING_EXPECTED_USES,
+			adjustOutcome: this.adjustExpectedActionOutcome.bind(this),
 		}))
+	}
+
+	private finalStingsUsedInWindow(window: HistoryEntry<EvaluatedAction[]>): number {
+		const finalStingUsed = window.data.filter(event => (event.action.id === this.data.actions.FINAL_STING.id || event.action.id === this.data.actions.SELF_DESTRUCT.id)).length
+		return finalStingUsed
+	}
+
+	private adjustExpectedGcdCount(window: HistoryEntry<EvaluatedAction[]>) {
+		const finalStingUsed = this.finalStingsUsedInWindow(window)
+		return finalStingUsed >= 1 ? (-window.data.length+1) : 0
+	}
+
+	private adjustExpectedActionOutcome(window: HistoryEntry<EvaluatedAction[]>, _action: TrackedActionGroup) {
+		const finalStingUsed = this.finalStingsUsedInWindow(window)
+		if (finalStingUsed === 0) {
+			return
+		}
+
+		return (actual: number, expected?: number) => {
+			if (expected !== undefined && actual === expected) {
+				return RotationTargetOutcome.POSITIVE
+			}
+			return RotationTargetOutcome.NEUTRAL
+		}
 	}
 }
 

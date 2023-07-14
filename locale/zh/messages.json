@@ -185,6 +185,7 @@
   "blu.coldfog.dropped_casts.why": "{droppedWhiteDeathCasts, plural, other {# 次彻骨雾寒}} 中打出 <0/> 少于6次。",
   "blu.coldfog.ineffective.content": "要让 <0/> 有正收益，你至少要使用2次 <1/> 于 <2/> 期间。",
   "blu.coldfog.ineffective.why": "{ineffectiveColdFog, plural, other {# 次彻骨雾寒}} 由于没有使用足够次数的 <0/> 而亏损了DPS。",
+  "blu.deaths.why": "",
   "blu.dots.requirement.uptime-bleed.name": "<0/> 覆盖率",
   "blu.dots.rule.description": "月下彼岸花和苦闷之歌附加的 <0/> 效果占了总伤害的15%左右。",
   "blu.dots.rule.name": "保持DoT不断",
