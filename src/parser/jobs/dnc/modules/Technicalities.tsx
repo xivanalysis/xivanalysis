@@ -84,17 +84,15 @@ export class Technicalities extends RaidBuffWindow {
 		}))
 
 		// Evaluate whether Devilment was used at the appropriate time within each window
-		this.addEvaluator(new TimelyDevilmentEvaluator({
-			parser: this.parser,
-			gauge: this.gauge,
-			data: this.data,
-		}))
+		this.addEvaluator(new TimelyDevilmentEvaluator(this.data.actions.DEVILMENT))
 
 		// Evaluate whether feathers were properly pooled for each window
 		this.addEvaluator(new PooledFeathersEvaluator({
-			parser: this.parser,
+			pullTime: this.parser.pull.timestamp,
+			pullDuration: this.parser.pull.duration,
 			gauge: this.gauge,
-			data: this.data,
+			suggestionIcon: this.data.actions.FAN_DANCE.icon,
+			windows: this.mapHistoryActions(),
 		}))
 
 		// Evaluate whether the player missed finishing Standard Steps initiated within a window

@@ -198,7 +198,7 @@ export abstract class ActionWindow extends Analyser {
 			/></>
 	}
 
-	private mapHistoryActions(): Array<HistoryEntry<EvaluatedAction[]>> {
+	protected mapHistoryActions(): Array<HistoryEntry<EvaluatedAction[]>> {
 		return this.history.entries
 			.map(entry => ({
 				start: entry.start,
