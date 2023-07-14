@@ -11,7 +11,8 @@ export abstract class NotesEvaluator implements WindowEvaluator {
 
 	suggest(_windows: Array<HistoryEntry<EvaluatedAction[]>>): Suggestion | undefined { return undefined }
 
-	public output(windows: Array<HistoryEntry<EvaluatedAction[]>>): EvaluationOutput  {
+	public output(windows: Array<HistoryEntry<EvaluatedAction[]>>): EvaluationOutput | undefined {
+		if (this.header == null) { return undefined }
 		return {
 			format: 'notes',
 			header: this.header,
