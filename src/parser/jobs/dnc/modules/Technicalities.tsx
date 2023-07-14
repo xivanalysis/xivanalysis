@@ -4,9 +4,7 @@ import {DataLink} from 'components/ui/DbLink'
 import {Event, Events} from 'event'
 import {filter, oneOf} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
-import {EvaluatedAction, ExpectedGcdCountEvaluator, RaidBuffWindow} from 'parser/core/modules/ActionWindow'
-import {HistoryEntry} from 'parser/core/modules/ActionWindow/History'
-import {Actors} from 'parser/core/modules/Actors'
+import {ExpectedGcdCountEvaluator, RaidBuffWindow} from 'parser/core/modules/ActionWindow'
 import {GlobalCooldown} from 'parser/core/modules/GlobalCooldown'
 import {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
@@ -14,7 +12,6 @@ import {Message} from 'semantic-ui-react'
 import {DANCE_MOVES, TECHNICAL_FINISHES} from '../CommonData'
 import DISPLAY_ORDER from '../DISPLAY_ORDER'
 import {LateStandardEvaluator} from './evaluators/LateStandardEvaluator'
-import {MultiDancerEvaluator} from './evaluators/MultiDancerEvaluator'
 import {PooledFeathersEvaluator} from './evaluators/PooledFeathersEvaluator'
 import {TimelyDevilmentEvaluator} from './evaluators/TimelyDevilmentEvaluator'
 import {Gauge} from './Gauge'
@@ -26,18 +23,11 @@ export const TECHNICAL_SEVERITY_TIERS = {
 	3: SEVERITY.MAJOR,
 }
 
-const MULTI_DNC_ERROR = {
-	NONE: 0,
-	THEY_OVERWROTE: 1,
-	YOU_OVERWROTE: 2,
-}
-
 export class Technicalities extends RaidBuffWindow {
 	static override handle = 'technicalities'
 	static override title = t('dnc.technicalities.title')`Technical Windows`
 	static override displayOrder = DISPLAY_ORDER.TECHNICALITIES
 
-	@dependency private actors!: Actors
 	@dependency private gauge!: Gauge
 	@dependency private globalCooldown!: GlobalCooldown
 
@@ -48,12 +38,6 @@ export class Technicalities extends RaidBuffWindow {
 
 	private buffActive = false
 	private badDevilments: number = 0
-
-	// track the buff applications to players by all DNCs
-	private buffApplications: Array<{
-		timestamp: number
-		appliedByThisDnc: boolean
-	}> = []
 
 	// If the log has multiple dancers in it, add the prepend warning message
 	override prependMessages = this.parser.pull.actors.filter(actor => actor.job === 'DANCER').length > 1 ? <Message>
@@ -127,17 +111,10 @@ export class Technicalities extends RaidBuffWindow {
 		this.startWindowAndTimeout(event.timestamp)
 	}
 
-	//#region Hook functions to deal with outside-of-window Devilment suggestions (and multi-dancer window interference warnings)
+	//#region Hook functions to deal with outside-of-window Devilment suggestions
 	private onApplyTechnicalFinish(event: Events['statusApply']) {
-		const targetActor = this.actors.get(event.target)
-		if (targetActor.playerControlled) {
-			this.buffApplications.push({
-				timestamp: event.timestamp,
-				appliedByThisDnc: event.source === this.parser.actor.id,
-			})
-			if (event.target === this.parser.actor.id) {
-				this.buffActive = true
-			}
+		if (event.target === this.parser.actor.id) {
+			this.buffActive = true
 		}
 	}
 
@@ -151,43 +128,6 @@ export class Technicalities extends RaidBuffWindow {
 		}
 	}
 	//#endregion
-
-	private multiDncNote(buffWindow: HistoryEntry<EvaluatedAction[]>): number {
-		const actualWindowDuration = (buffWindow?.end ?? buffWindow.start) - buffWindow.start
-		const lookbackStart = buffWindow.start - this.buffStatus.duration
-
-		// we check whether or not you overwrote someone else first, as you
-		// can directly control that
-		const otherDncLookbackAppl = this.buffApplications.filter(ba => {
-			return (
-				!ba.appliedByThisDnc &&
-				lookbackStart <= ba.timestamp &&
-				ba.timestamp <= buffWindow.start
-			)
-		})
-
-		// don't be rude
-		if (otherDncLookbackAppl.length > 0) {
-			return MULTI_DNC_ERROR.YOU_OVERWROTE
-		}
-
-		// next, we check if someone else overwrote you
-		const otherDncApplications = this.buffApplications.filter(ba => {
-			return (
-				!ba.appliedByThisDnc &&
-				buffWindow.start <= ba.timestamp &&
-				ba.timestamp <= buffWindow.start + actualWindowDuration
-			)
-		})
-
-		// whoops looks like the other drg overwrote you, bummer
-		if (otherDncApplications.length > 0) {
-			return MULTI_DNC_ERROR.THEY_OVERWROTE
-		}
-
-		// otherwise we're all good
-		return MULTI_DNC_ERROR.NONE
-	}
 
 	override onComplete() {
 		super.onComplete()
