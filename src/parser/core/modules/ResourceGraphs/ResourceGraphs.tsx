@@ -241,29 +241,6 @@ export class ResourceGraphs extends Analyser {
 				})
 			}),
 		}))
-
-		/*const row = new SimpleRow({
-			label,
-			height: (dataGroup.row.height ?? DEFAULT_ROW_HEIGHT),
-			items: (dataGroup.stacking
-				? [new SimpleItem({
-					content: <StackedGraph resources={dataGroup.data} scaleX={this.scaleX}/>,
-					start: 0,
-					end: this.parser.pull.duration})]
-				: data.map(data => {
-					return new SimpleItem({
-						content: <Graph resource={data} scaleX={this.scaleX}/>,
-						start: 0,
-						end: this.parser.pull.duration,
-					})
-				})),
-		})
-
-		if (dataGroup.stacking) {
-			dataGroup.row.rows = [row]
-			return
-		}
-		dataGroup.row.addRow(row)*/
 	}
 
 	/**
