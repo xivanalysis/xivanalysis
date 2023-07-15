@@ -1,5 +1,6 @@
 import {Trans, Plural} from '@lingui/react'
 import {DataLink} from 'components/ui/DbLink'
+import {BASE_GCD} from 'data/CONSTANTS'
 import {Event, Events} from 'event'
 import {filter} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
@@ -8,6 +9,7 @@ import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import {Weaving, Weave} from 'parser/core/modules/Weaving'
 import React from 'react'
 
+const MAX_CAST_TIME_FOR_SINGLE_WEAVE = 1500
 const TO_MILLISECONDS = 1000
 const MAX_SURPANAKHA_CHARGES = 4
 
@@ -81,6 +83,12 @@ export class BLUWeaving extends Weaving {
 			weaves.length === surpanakhas &&
 			weave.gcdTimeDiff < (surpanakhas + 1) * TO_MILLISECONDS) {
 			return surpanakhas
+		}
+
+		const castTime = this.castTime.forEvent(weave.leadingGcdEvent) ?? BASE_GCD
+		if (castTime > MAX_CAST_TIME_FOR_SINGLE_WEAVE) {
+			// 2s cast time spell, possibly a bit lower due to SpS; no weaves allowed
+			return 0
 		}
 
 		return super.getMaxWeaves(weave)
