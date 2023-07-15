@@ -326,7 +326,7 @@
   "core.interrupts.table.cast": "Anwendungen",
   "core.interrupts.table.time": "Zeit",
   "core.interrupts.title": "Unterbrochene Anwendungen",
-  "core.lucid-dreaming.suggestion.content": "Versuche, <0/> auf Cooldown zu halten, um dein Mana-Management zu verbessern.",
+  "core.lucid-dreaming.suggestion.content": "",
   "core.lucid-dreaming.suggestion.why": "",
   "core.overheal.direct.name": "Direkt",
   "core.overheal.header.percenttotal": "",
