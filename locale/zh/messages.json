@@ -196,6 +196,8 @@
   "blu.droppedbuffs.suggestions.overwritten.content": "<0/> 被覆盖了。",
   "blu.droppedbuffs.suggestions.overwritten.why": "{overwrittenStatusCount, plural, other {# 次 }} <0/> 被覆盖了。",
   "blu.interrupts.suggestion.content": "青魔法师没什么移动用的技能。<0/> 一般在 <1/> 期间打掉了，或者留着复活用。少数情况可以用 <2/> 获得15秒自由移动时间。总体来说，尽量提前站位，利用好滑步。",
+  "blu.mimicry_missing.content": "",
+  "blu.mimicry_missing.why": "",
   "blu.moonflutes.suggestions.expected-actions.content": "只有能覆盖额外1260威力的技能时，<0/>才有收益(相当于打6个<1/>)。把更多能力打进月之笛窗口以进一步提升收益，比如 <2/>，并以 <3/> 结尾。",
   "blu.moonflutes.suggestions.gcds.content": "不管咏速如何，理想的 <0/> 应该包含至少4个GCD并以 <1/> 结尾。如果你的延迟偏高，这可能会有点问题。可以考虑调节咏速，紧急情况下可以放弃一个能力(<2/>、<3/>、<4/>)，或者把 <5/> 换成 <6/>。",
   "blu.moonflutes.title": "月之笛",
