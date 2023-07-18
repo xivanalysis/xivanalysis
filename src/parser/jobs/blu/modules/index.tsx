@@ -10,6 +10,7 @@ import {DoTs} from './DoTs'
 import {DroppedBuffs} from './DroppedBuffs'
 import {GeneralCDDowntime} from './GeneralCDDowntime'
 import {Interrupts} from './Interrupts'
+import {MightyGuardGCDing} from './MightyGuardGCDing'
 import {MoonFlute} from './MoonFlute'
 import {BLUOverheal} from './Overheal'
 import {RevengeBlast} from './RevengeBlast'
@@ -19,6 +20,7 @@ import {TripleTrident} from './TripleTrident'
 import {BLUWeaving} from './Weaving'
 
 export default [
+	MightyGuardGCDing,
 	Defensives,
 	ActionTimeline,
 	BLUDeath,
