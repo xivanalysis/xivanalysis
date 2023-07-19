@@ -62,7 +62,7 @@ export class Defensives extends Analyser {
 		return this.getUses(defensive).filter(event => event.action.id === defensive.id).length
 	}
 
-	private getUses(defensive: Action): CooldownHistoryEntry[] {
+	protected getUses(defensive: Action): CooldownHistoryEntry[] {
 		if (this.cooldownHistories[defensive.id] == null) {
 			this.cooldownHistories[defensive.id] = this.cooldowns.cooldownHistory(defensive).filter((entry) => entry.endReason !== CooldownEndReason.INTERRUPTED)
 		}
