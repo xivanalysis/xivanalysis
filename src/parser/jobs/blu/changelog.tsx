@@ -3,6 +3,11 @@ import React from 'react'
 
 export const changelog = [
 	{
+		date: new Date('2023-07-20'),
+		Changes: () => <>Added BLU's new 6.45 spells & effects.</>,
+		contributors: [CONTRIBUTORS.HUGMEIR],
+	},
+	{
 		date: new Date('2023-07-12'),
 		Changes: () => <>
 			<ul>
