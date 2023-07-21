@@ -30,6 +30,11 @@ export interface ActionRowConfig {
 	label?: ReactNode
 	/** Order of the row within the timeline. */
 	order?: number
+	/** For multi-action rows, should we resolve the name of the action late?
+	*  This allows setting the name of the row to whatever actions was first used
+	*  of the set of possibilities.
+	* */
+	lateResolveLabel?: boolean
 }
 
 /** Configuration for a single row. */
@@ -82,6 +87,24 @@ export class ActionTimeline extends Analyser {
 		this.addEventHook('complete', this.onComplete)
 	}
 
+	protected resolveRowLabel(config: InternalRowConfig) {
+		for (const maybeAction of config.content) {
+			let fullAction = undefined
+			if (typeof maybeAction === 'object') {
+				fullAction = maybeAction
+			} else if (typeof maybeAction === 'number') {
+				fullAction = this.data.getAction(maybeAction)
+			} else if (typeof maybeAction === 'string') {
+				fullAction = this.data.actions[maybeAction as ActionKey]
+			}
+			if (fullAction == null) { continue }
+
+			const uses = this.cooldowns.cooldownHistory(fullAction.id) ?? []
+			if (uses.length === 0) { continue }
+
+			return uses[0].action.name
+		}
+	}
 	private onComplete() {
 		// Track the groups with configured rows so backfill doesn't duplicate
 		const populatedGroups = new Set<number>()
@@ -89,6 +112,11 @@ export class ActionTimeline extends Analyser {
 		// Add rows for all the configured entries
 		for (const config of this.resolvedRows) {
 			const row = this.addRow(config)
+			if (config.lateResolveLabel) {
+				// Resolve the label for multi-action rows late, by finding which one
+				// of the actions was first used
+				row.label = this.resolveRowLabel(config) ?? row.label
+			}
 			this.populateRow(row, config)
 			config.content.forEach(specifier =>
 				this.cooldowns.groups(specifier).forEach(group => populatedGroups.add(group))

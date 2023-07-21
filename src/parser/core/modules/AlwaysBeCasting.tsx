@@ -26,6 +26,12 @@ export class AlwaysBeCasting extends Analyser {
 	@dependency protected globalCooldown!: GlobalCooldown
 	@dependency protected speedAdjustments!: SpeedAdjustments
 
+	protected gcdUptimeSuggestionContent: JSX.Element = <Trans id="core.always-cast.description">
+		Make sure you're always doing something. It's often better to make small
+		mistakes while keeping the GCD rolling than it is to perform the correct
+		rotation slowly.
+	</Trans>
+
 	protected gcdUptime: number = 0
 	protected gcdsCounted: number = 0
 
@@ -105,11 +111,7 @@ export class AlwaysBeCasting extends Analyser {
 
 		this.checklist.add(new Rule({
 			name: <Trans id="core.always-cast.title">Always be casting</Trans>,
-			description: <Trans id="core.always-cast.description">
-				Make sure you're always doing something. It's often better to make small
-				mistakes while keeping the GCD rolling than it is to perform the correct
-				rotation slowly.
-			</Trans>,
+			description: this.gcdUptimeSuggestionContent,
 			displayOrder: -1,
 			requirements: [
 				new Requirement({
