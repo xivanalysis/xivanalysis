@@ -5,7 +5,7 @@ const MAGICAL  = DamageType.MAGICAL
 const PHYSICAL = DamageType.PHYSICAL
 const DARK	 = DamageType.DARK
 
-export const BLU_COOLDOWN_GROUP = {
+export const BLU_COOLDOWN_GROUPS = {
 	OFF_GUARD: 11411,
 	FEATHER_RAIN: 11426,
 	BLU_MOUNTAIN_BUSTER: 11428,
@@ -209,7 +209,7 @@ export const BLU = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003279.png',
 		castTime: 1000,
 		cooldown: 60000,
-		cooldownGroup: BLU_COOLDOWN_GROUP.OFF_GUARD,
+		cooldownGroup: BLU_COOLDOWN_GROUPS.OFF_GUARD,
 		statusesApplied: ['OFF_GUARD'],
 	},
 	SELF_DESTRUCT: {
@@ -412,7 +412,7 @@ export const BLU = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003289.png',
 		castTime: 1000,
 		cooldown: 60000,
-		cooldownGroup: BLU_COOLDOWN_GROUP.OFF_GUARD,
+		cooldownGroup: BLU_COOLDOWN_GROUPS.OFF_GUARD,
 		statusesApplied: ['PECULIAR_LIGHT'],
 	},
 	FEATHER_RAIN: {
@@ -420,7 +420,7 @@ export const BLU = ensureActions({
 		name: 'Feather Rain',
 		icon: 'https://xivapi.com/i/003000/003294.png',
 		cooldown: 30000,
-		cooldownGroup: BLU_COOLDOWN_GROUP.FEATHER_RAIN,
+		cooldownGroup: BLU_COOLDOWN_GROUPS.FEATHER_RAIN,
 		statusesApplied: ['FEATHER_RAIN'],
 		damageType: MAGICAL,
 		elementType: ASTRAL,
@@ -430,7 +430,7 @@ export const BLU = ensureActions({
 		name: 'Eruption',
 		icon: 'https://xivapi.com/i/003000/003295.png',
 		cooldown: 30000,
-		cooldownGroup: BLU_COOLDOWN_GROUP.FEATHER_RAIN,
+		cooldownGroup: BLU_COOLDOWN_GROUPS.FEATHER_RAIN,
 		damageType: MAGICAL,
 		elementType: ASTRAL,
 	},
@@ -439,7 +439,7 @@ export const BLU = ensureActions({
 		name: 'Mountain Buster',
 		icon: 'https://xivapi.com/i/003000/003296.png',
 		cooldown: 60000,
-		cooldownGroup: BLU_COOLDOWN_GROUP.BLU_MOUNTAIN_BUSTER,
+		cooldownGroup: BLU_COOLDOWN_GROUPS.BLU_MOUNTAIN_BUSTER,
 		damageType: PHYSICAL,
 		elementType: UMBRAL,
 	},
@@ -448,7 +448,7 @@ export const BLU = ensureActions({
 		name: 'Shock Strike',
 		icon: 'https://xivapi.com/i/003000/003297.png',
 		cooldown: 60000,
-		cooldownGroup: BLU_COOLDOWN_GROUP.BLU_MOUNTAIN_BUSTER,
+		cooldownGroup: BLU_COOLDOWN_GROUPS.BLU_MOUNTAIN_BUSTER,
 		damageType: MAGICAL,
 		elementType: ASTRAL,
 	},
@@ -457,7 +457,7 @@ export const BLU = ensureActions({
 		name: 'Glass Dance',
 		icon: 'https://xivapi.com/i/003000/003298.png',
 		cooldown: 90000,
-		cooldownGroup: BLU_COOLDOWN_GROUP.GLASS_DANCE,
+		cooldownGroup: BLU_COOLDOWN_GROUPS.GLASS_DANCE,
 		damageType: MAGICAL,
 		elementType: UMBRAL,
 	},
@@ -466,7 +466,7 @@ export const BLU = ensureActions({
 		name: 'Veil of the Whorl',
 		icon: 'https://xivapi.com/i/003000/003299.png',
 		cooldown: 90000,
-		cooldownGroup: BLU_COOLDOWN_GROUP.GLASS_DANCE,
+		cooldownGroup: BLU_COOLDOWN_GROUPS.GLASS_DANCE,
 		statusesApplied: ['VEIL_OF_THE_WHORL'],
 	},
 	ALPINE_DRAFT: {
@@ -569,7 +569,7 @@ export const BLU = ensureActions({
 		cooldown: 90000,
 		gcdRecast: 2500,
 		statusesApplied: ['MAGIC_HAMMER'],
-		cooldownGroup: BLU_COOLDOWN_GROUP.MAGIC_HAMMER,
+		cooldownGroup: BLU_COOLDOWN_GROUPS.MAGIC_HAMMER,
 		damageType: MAGICAL,
 	},
 	AVAIL: {
@@ -743,7 +743,7 @@ export const BLU = ensureActions({
 		name: 'Quasar',
 		icon: 'https://xivapi.com/i/003000/003329.png',
 		cooldown: 60000,
-		cooldownGroup: BLU_COOLDOWN_GROUP.QUASAR,
+		cooldownGroup: BLU_COOLDOWN_GROUPS.QUASAR,
 		damageType: MAGICAL,
 	},
 	J_KICK: {
@@ -751,7 +751,7 @@ export const BLU = ensureActions({
 		name: 'J Kick',
 		icon: 'https://xivapi.com/i/003000/003330.png',
 		cooldown: 60000,
-		cooldownGroup: BLU_COOLDOWN_GROUP.QUASAR,
+		cooldownGroup: BLU_COOLDOWN_GROUPS.QUASAR,
 		damageType: PHYSICAL,
 	},
 	TRIPLE_TRIDENT: {
@@ -837,7 +837,7 @@ export const BLU = ensureActions({
 		cooldown: 120000,
 		castTime: 2000,
 		gcdRecast: 2500,
-		cooldownGroup: BLU_COOLDOWN_GROUP.MATRA_MAGIC,
+		cooldownGroup: BLU_COOLDOWN_GROUPS.MATRA_MAGIC,
 		statusesApplied: ['ANGELS_SNACK'],
 	},
 	CHELONIAN_GATE: {
@@ -848,7 +848,7 @@ export const BLU = ensureActions({
 		castTime: 2000,
 		gcdRecast: 2500,
 		cooldown: 30000,
-		cooldownGroup: BLU_COOLDOWN_GROUP.THE_ROSE_OF_DESTRUCTION,
+		cooldownGroup: BLU_COOLDOWN_GROUPS.THE_ROSE_OF_DESTRUCTION,
 		statusesApplied: ['CHELONIAN_GATE', 'AUSPICIOUS_TRANCE'],
 	},
 	DIVINE_CATARACT: {
@@ -867,7 +867,7 @@ export const BLU = ensureActions({
 		castTime: 2000,
 		gcdRecast: 2500,
 		cooldown: 30000,
-		cooldownGroup: BLU_COOLDOWN_GROUP.THE_ROSE_OF_DESTRUCTION,
+		cooldownGroup: BLU_COOLDOWN_GROUPS.THE_ROSE_OF_DESTRUCTION,
 		damageType: MAGICAL,
 	},
 	BASIC_INSTINCT: {
@@ -915,7 +915,7 @@ export const BLU = ensureActions({
 		castTime: 2000,
 		gcdRecast: 2500,
 		cooldown: 120000,
-		cooldownGroup: BLU_COOLDOWN_GROUP.MATRA_MAGIC,
+		cooldownGroup: BLU_COOLDOWN_GROUPS.MATRA_MAGIC,
 	},
 	AETHERIAL_SPARK: {
 		id: 23281,
@@ -964,7 +964,7 @@ export const BLU = ensureActions({
 		castTime: 2000,
 		gcdRecast: 2500,
 		cooldown: 120000,
-		cooldownGroup: BLU_COOLDOWN_GROUP.MATRA_MAGIC,
+		cooldownGroup: BLU_COOLDOWN_GROUPS.MATRA_MAGIC,
 		damageType: MAGICAL,
 	},
 	PERIPHERAL_SYNTHESIS: {
@@ -981,7 +981,7 @@ export const BLU = ensureActions({
 		name: 'Both Ends',
 		icon: 'https://xivapi.com//i/003000/003354.png',
 		cooldown: 120000,
-		cooldownGroup: BLU_COOLDOWN_GROUP.NIGHTBLOOM,
+		cooldownGroup: BLU_COOLDOWN_GROUPS.NIGHTBLOOM,
 		damageType: MAGICAL,
 	},
 	PHANTOM_FLURRY: {
@@ -1007,7 +1007,7 @@ export const BLU = ensureActions({
 		name: 'Nightbloom',
 		icon: 'https://xivapi.com//i/003000/003357.png',
 		cooldown: 120000,
-		cooldownGroup: BLU_COOLDOWN_GROUP.NIGHTBLOOM,
+		cooldownGroup: BLU_COOLDOWN_GROUPS.NIGHTBLOOM,
 		statusesApplied: ['BLEEDING'],
 		damageType: MAGICAL,
 	},
@@ -1093,7 +1093,7 @@ export const BLU = ensureActions({
 		castTime: 2000,
 		gcdRecast: 2500,
 		cooldown: 30000,
-		cooldownGroup: BLU_COOLDOWN_GROUP.THE_ROSE_OF_DESTRUCTION,
+		cooldownGroup: BLU_COOLDOWN_GROUPS.THE_ROSE_OF_DESTRUCTION,
 		damageType: PHYSICAL,
 	},
 	DIVINATION_RUNE: {
@@ -1163,7 +1163,7 @@ export const BLU = ensureActions({
 		cooldown: 90000,
 		gcdRecast: 2500,
 		statusesApplied: ['CANDY_CANE'],
-		cooldownGroup: BLU_COOLDOWN_GROUP.MAGIC_HAMMER,
+		cooldownGroup: BLU_COOLDOWN_GROUPS.MAGIC_HAMMER,
 		damageType: MAGICAL,
 	},
 	MORTAL_FLAME: {
@@ -1193,7 +1193,7 @@ export const BLU = ensureActions({
 		damageType: MAGICAL,
 		onGcd: true, // same justification as with Phantom Flurry
 		statusesApplied: ['APOKALYPSIS'],
-		cooldownGroup: BLU_COOLDOWN_GROUP.BEING_MORTAL,
+		cooldownGroup: BLU_COOLDOWN_GROUPS.BEING_MORTAL,
 	},
 	BEING_MORTAL: {
 		id: 34581,
@@ -1201,6 +1201,6 @@ export const BLU = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003377.png',
 		cooldown: 120000,
 		damageType: MAGICAL,
-		cooldownGroup: BLU_COOLDOWN_GROUP.BEING_MORTAL,
+		cooldownGroup: BLU_COOLDOWN_GROUPS.BEING_MORTAL,
 	},
 })
