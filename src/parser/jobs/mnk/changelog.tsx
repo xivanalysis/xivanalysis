@@ -3,6 +3,11 @@ import React from 'react'
 
 export const changelog = [
 	{
+		date: new Date('2023-07-21'),
+		Changes: () => <>Fix a bug with the calculation for the expected number of Masterful Blitz uses in Riddle of Fire.</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
+	{
 		date: new Date('2023-07-09'),
 		Changes: () => <>Add gauge visualisation for Perfect Balance, and mark as supported for Endwalker.</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],

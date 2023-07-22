@@ -6,6 +6,7 @@ import {Event, Events} from 'event'
 import {filter} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
 import {BuffWindow, ExpectedGcdCountEvaluator, LimitedActionsEvaluator} from 'parser/core/modules/ActionWindow'
+import {Cooldowns} from 'parser/core/modules/Cooldowns'
 import {GlobalCooldown} from 'parser/core/modules/GlobalCooldown'
 import {SEVERITY} from 'parser/core/modules/Suggestions'
 import React from 'react'
@@ -15,6 +16,7 @@ import {DISPLAY_ORDER} from './DISPLAY_ORDER'
 import {BlitzEvaluator} from './evaluators/BlitzEvaluator'
 import {BrotherhoodDriftEvaluator, BrotherhoodRaidBuffEvaluator} from './evaluators/BrotherhoodEvaluator'
 import {RiddleOfWindEvaluator} from './evaluators/RiddleOfWindEvaluator'
+import {PerfectBalance} from './PerfectBalance'
 import {fillActions} from './utilities'
 
 const EXPECTED_GCDS = 11
@@ -49,8 +51,10 @@ export class RiddleOfFire extends BuffWindow {
 	static override title = t('mnk.rof.title')`Riddle of Fire`
 	static override displayOrder = DISPLAY_ORDER.RIDDLE_OF_FIRE
 
-	@dependency globalCooldown!: GlobalCooldown
-	@dependency brotherhood!: Brotherhood
+	@dependency private globalCooldown!: GlobalCooldown
+	@dependency private brotherhood!: Brotherhood
+	@dependency private cooldowns!: Cooldowns
+	@dependency private perfectBalance!: PerfectBalance
 
 	private pbCasts: number[] = []
 	private blitzActions = fillActions(BLITZ_ACTIONS, this.data)
@@ -73,9 +77,10 @@ export class RiddleOfFire extends BuffWindow {
 
 		this.addEvaluator(new BlitzEvaluator({
 			blitzActions: this.blitzActions,
-			pbCasts: this.pbCasts,
 			blitzIcon: this.data.actions.MASTERFUL_BLITZ.icon,
-			pb: this.data.actions.PERFECT_BALANCE,
+			maxCharges: this.data.actions.PERFECT_BALANCE.charges,
+			perfectBalance: this.perfectBalance,
+			cooldowns: this.cooldowns,
 		}))
 
 		this.addEvaluator(new RiddleOfWindEvaluator({
