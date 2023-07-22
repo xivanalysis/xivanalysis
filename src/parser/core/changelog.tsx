@@ -10,6 +10,13 @@ export const changelog: ChangelogEntry[] = [
 	// 	contributors: [CONTRIBUTORS.YOU],
 	// },
 	{
+		date: new Date('2023-07-21'),
+		Changes: () => <>
+			Fixed a bug that was breaking raid buff window detection for players in a party with a Summoner that did not use <DataLink action="RADIANT_AEGIS" showIcon={false} />.
+		</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
+	{
 		date: new Date('2023-07-09'),
 		Changes: () => <>
 			Fixed prepull actions for defensive cooldowns module.

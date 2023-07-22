@@ -47,7 +47,7 @@ export abstract class BuffWindow extends ActionWindow {
 		// or on an enemy actor (trick attack)
 		// enemies are not on the same team as the parser actor
 		const enemyTargets = this.parser.pull.actors
-			.filter(actor => actor.team !== this.parser.actor.team)
+			.filter(actor => actor.team > this.parser.actor.team) // Ignore actors with an 'unknown' team (team 0, where player's are team 1: Friend)
 			.map(actor => actor.id)
 
 		const targets = [this.parser.actor.id, ...enemyTargets]
