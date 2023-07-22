@@ -56,7 +56,7 @@ export function MarkerHandler(props: MarkerHandlerProps) {
 			{(markerState != null && markerState.resources.length > 0) && (
 				<Marker {...markerState}>
 					<ul className={styles.resourceList}>
-						{markerState.resources.map(({label, current = 0, maximum = 0, colour}, index) => (
+						{markerState.resources.sort((a, b) => (b.base ?? 0) - (a.base ?? 0)).map(({label, current = 0, maximum = 0, colour, tooltipHideMaximum}, index) => (
 							<li key={index} className={styles.resourceItem}>
 								<span
 									className={styles.resourceSwatch}
