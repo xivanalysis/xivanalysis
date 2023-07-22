@@ -74,4 +74,9 @@ export class GeneralCDDowntime extends CooldownDowntime {
 		{cooldowns: [this.data.actions.DRAGON_FORCE]},
 		{cooldowns: [this.data.actions.ANGELS_SNACK]},
 	]
+
+	override onComplete() {
+		this.trackedCds = this.trackedCds.filter(cdGroup => this.calculateUsageCount(cdGroup) !== 0)
+		return super.onComplete()
+	}
 }
