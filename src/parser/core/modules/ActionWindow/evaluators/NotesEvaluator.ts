@@ -6,7 +6,7 @@ import {EvaluationOutput, WindowEvaluator} from './WindowEvaluator'
 
 export abstract class NotesEvaluator implements WindowEvaluator {
 
-	protected abstract header : RotationTarget
+	protected abstract header : RotationTarget | undefined
 	protected abstract generateNotes(window: HistoryEntry<EvaluatedAction[]>): JSX.Element
 
 	suggest(_windows: Array<HistoryEntry<EvaluatedAction[]>>): Suggestion | undefined { return undefined }
