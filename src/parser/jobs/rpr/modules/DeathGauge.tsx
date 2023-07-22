@@ -1,16 +1,14 @@
 import {Trans} from '@lingui/react'
 import Color from 'color'
-import {ActionLink} from 'components/ui/DbLink'
 import {ActionKey} from 'data/ACTIONS'
 import {Event, Events} from 'event'
 import {filter} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
 import {Actors} from 'parser/core/modules/Actors'
-import BrokenLog from 'parser/core/modules/BrokenLog'
-import {CounterGauge, Gauge as CoreGauge} from 'parser/core/modules/Gauge'
+import {Gauge as CoreGauge} from 'parser/core/modules/Gauge'
+import {EnumGauge} from 'parser/core/modules/Gauge/EnumGauge'
+import {GAUGE_FADE} from 'parser/core/modules/ResourceGraphs/ResourceGraphs'
 import React from 'react'
-
-const GAUGE_FADE = 0.25
 
 const MAX_STACKS = 5
 
@@ -32,31 +30,36 @@ const VOID_ACTIONS: ActionKey[] = [
 	'LEMURES_SCYTHE',
 ]
 
-const LEMURE_SHROUD_COLOR = Color('#4ec8dc')
-const VOID_SHROUD_COLOR = Color('#b614c4')
+const LEMURE_SHROUD = 'lemure'
+const VOID_SHROUD = 'void'
+
+const LEMURE_SHROUD_COLOR = Color('#4ec8dc').fade(GAUGE_FADE)
+const VOID_SHROUD_COLOR = Color('#b614c4').fade(GAUGE_FADE)
 
 export class DeathGauge extends CoreGauge {
 	static override handle = 'deathGauge'
 
 	@dependency private actors!: Actors
-	@dependency private brokenLog!: BrokenLog
 
-	// Lemure's Shroud
-	// History correction is enabled:
-	//   you cannot rely on point-in-time gauge values and need the history in onComplete for any consuming modules
-	private lemureShroud = this.add(new CounterGauge({
+	private deathGauge = this.add(new EnumGauge({
 		maximum: MAX_STACKS,
-		correctHistory: true,
-		graph: {handle: 'deathgauge', label: 'Lemure Shroud', color: LEMURE_SHROUD_COLOR.fade(GAUGE_FADE), collapse: true},
-	}))
-
-	// Void Shroud
-	// History correction is enabled:
-	//   you cannot rely on point-in-time gauge values and need the history in onComplete for any consuming modules
-	private voidShroud = this.add(new CounterGauge({
-		maximum: MAX_STACKS,
-		correctHistory: true,
-		graph: {handle: 'deathgauge', label: 'Void Shroud', color: VOID_SHROUD_COLOR.fade(GAUGE_FADE), collapse: true},
+		options: [
+			{
+				value: VOID_SHROUD,
+				label: <Trans id="rpr.deathgauge.void-shroud.label">Void Shroud</Trans>,
+				color: VOID_SHROUD_COLOR,
+			},
+			{
+				value: LEMURE_SHROUD,
+				label: <Trans id="rpr.deathgauge.lemure-shroud.label">Lemure Shroud</Trans>,
+				color: LEMURE_SHROUD_COLOR,
+			},
+		],
+		graph: {
+			handle: 'deathgaugee',
+			label: <Trans id="rpr.gauge.resource.death">Death Gauge</Trans>,
+			tooltipHideWhenEmpty: true, // Death gauge is only interesting while in Enshroud, so hide the tooltip if we're not Enshrouded
+		},
 	}))
 
 	override initialise() {
@@ -71,27 +74,15 @@ export class DeathGauge extends CoreGauge {
 
 		// This is effectively emptying the gauge at end of fight for history
 		this.addEventHook('complete', this.onDeshroud)
-
-		this.resourceGraphs.addDataGroup({
-			handle: 'deathgauge',
-			label: <Trans id="rpr.gauge.resource.death">Death Gauge</Trans>,
-			collapse: true,
-			forceCollapsed: true,
-			stacking: true,
-		})
 	}
 
 	private onEnshroud() {
 		// Pre-fill Lemure stacks to max, using generate as that's what the tooltip says it does internally
-		this.lemureShroud.generate(MAX_STACKS)
+		this.deathGauge.generate(LEMURE_SHROUD, MAX_STACKS)
 	}
 
 	private onDeshroud() {
-		// Flush Lemure
-		this.lemureShroud.reset()
-
-		// Flush Void
-		this.voidShroud.reset()
+		this.deathGauge.reset()
 	}
 
 	private onLemure(event: Events['action']) {
@@ -101,29 +92,20 @@ export class DeathGauge extends CoreGauge {
 		if (action == null || !this.actors.current.hasStatus(this.data.statuses.ENSHROUDED.id)) { return }
 
 		// Communio gets special handling since it eats everything you have
-		if (action.id === this.data.actions.COMMUNIO.id && this.lemureShroud.value > 0) {
-			this.lemureShroud.spend(this.lemureShroud.value)
+		const lemureShroudValue = this.deathGauge.getCountAt(LEMURE_SHROUD)
+		if (action.id === this.data.actions.COMMUNIO.id && lemureShroudValue > 0) {
+			this.deathGauge.spend(LEMURE_SHROUD, lemureShroudValue)
 			return
 		}
 
 		// Adjust the gauges - Lemure spend actions generate Void
-		this.lemureShroud.spend(LEMURE_MOD)
-		this.voidShroud.generate(LEMURE_MOD)
-
-		// Sanity check more - core gauge doesn't know that these are really a single shared gauge
-		// We don't need to check this in Void actions because they only consume gauge, not generate
-		if (this.lemureShroud.value + this.voidShroud.value > MAX_STACKS) {
-			this.brokenLog.trigger(this, 'rpr.gauge.lemure.outofbounds',
-				<Trans id="rpr.gauge.lemure.outofbounds.reason">
-					<ActionLink {...action}/> can't be executed with {this.lemureShroud.value} stacks of Lemure's Shroud and {this.voidShroud.value} stacks of Void Shroud as this would go over the shared gauge max.
-				</Trans>
-			)
-		}
+		this.deathGauge.spend(LEMURE_SHROUD, LEMURE_MOD)
+		this.deathGauge.generate(VOID_SHROUD, LEMURE_MOD)
 	}
 
 	private onVoid() {
 		if (this.actors.current.hasStatus(this.data.statuses.ENSHROUDED.id)) {
-			this.voidShroud.spend(VOID_COST)
+			this.deathGauge.spend(VOID_SHROUD, VOID_COST)
 		}
 	}
 }
