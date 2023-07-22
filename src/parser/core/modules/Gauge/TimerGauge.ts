@@ -210,7 +210,7 @@ export class TimerGauge extends AbstractGauge {
 		const {handle, label, color} = this.graphOptions
 		const graphData = {
 			label,
-			colour: color,
+			colour: color ?? 'black',
 			data: this.history.map(entry => {
 				return {time: entry.timestamp, current: entry.remaining / 1000, maximum: this.maximum / 1000}
 			}),

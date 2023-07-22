@@ -13,8 +13,8 @@ export interface AbstractGaugeOptions {
 export interface GaugeGraphOptions extends ResourceGraphOptions {
 	/** The handle of the timeline group to display this gauge data in. If not passed, will use the default "Gauges" group */
 	handle?: string
-	/** The color to draw the data set in */
-	color: string | Color
+	/** The color to draw the data set in. Will default to black if not specified */
+	color?: string | Color
 }
 
 export abstract class AbstractGauge {

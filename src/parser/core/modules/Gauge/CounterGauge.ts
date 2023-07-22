@@ -239,7 +239,7 @@ export class CounterGauge extends AbstractGauge {
 		const {handle, color, label} = this.graphOptions
 		const graphData = {
 			label,
-			colour: color,
+			colour: color ?? 'black',
 			data: this.history.map(entry => {
 				return {time: entry.timestamp, current: entry.value, maximum: entry.maximum}
 			}),
