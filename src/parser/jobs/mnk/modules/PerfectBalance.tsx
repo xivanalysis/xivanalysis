@@ -132,7 +132,7 @@ export class PerfectBalance extends Gauge {
 
 		this.resourceGraphs.addDataGroup({
 			handle: BEAST_GAUGE_HANDLE,
-			label: <Trans id="mnk.gauge.resource.beast">Beast Gauge</Trans>,
+			label: <Trans id="mnk.gauge.resource.beast.chakra">Beast Chakra</Trans>,
 			collapse: true,
 			forceCollapsed: true,
 			stacking: true,
