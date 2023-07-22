@@ -4,8 +4,10 @@ import {Action} from 'data/ACTIONS'
 import _ from 'lodash'
 import {EvaluatedAction, EvaluationOutput, WindowEvaluator} from 'parser/core/modules/ActionWindow'
 import {HistoryEntry} from 'parser/core/modules/ActionWindow/History'
+import {ChargeHistoryEntry, Cooldowns} from 'parser/core/modules/Cooldowns'
 import {SEVERITY, Suggestion, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
+import {PerfectBalance} from '../PerfectBalance'
 
 /**
  * We leave space for roughly 4 GCDs at the end of the window when
@@ -23,11 +25,14 @@ const BLITZ_SEVERITY_TIERS = {
 	6: SEVERITY.MAJOR,
 }
 
+const MAX_EXPECTED_BLITZES = 2
+
 interface BlitzEvaluatorOpts {
 	blitzActions: Array<Action['id']>,
-	pbCasts: number[]
 	blitzIcon: string
-	pb: {cooldown: number, charges: number}
+	maxCharges: number
+	perfectBalance: PerfectBalance
+	cooldowns: Cooldowns
 }
 
 interface BlitzWindowResults {
@@ -36,22 +41,21 @@ interface BlitzWindowResults {
 }
 export class BlitzEvaluator implements WindowEvaluator {
 	private blitzActions: Array<Action['id']>
-	private pbCasts: number[]
-	private pbCooldown: number
-	private pbCharges: number
 	private blitzIcon: string
+	private maxCharges: number
+	private perfectBalance: PerfectBalance
+	private cooldowns: Cooldowns
 
-	private rechargeTimes: number[]
+	private pbChargeHistory: ChargeHistoryEntry[] = []
 	private windowResults: BlitzWindowResults[]
 
 	constructor(opts: BlitzEvaluatorOpts) {
 		this.blitzActions = opts.blitzActions
-		this.pbCasts = opts.pbCasts
 		this.blitzIcon = opts.blitzIcon
-		this.pbCooldown = opts.pb.cooldown
-		this.pbCharges = opts.pb.charges
+		this.maxCharges = opts.maxCharges
+		this.perfectBalance = opts.perfectBalance
+		this.cooldowns = opts.cooldowns
 
-		this.rechargeTimes = []
 		this.windowResults = []
 	}
 
@@ -100,17 +104,8 @@ export class BlitzEvaluator implements WindowEvaluator {
 	}
 
 	private calculateRechargeTimes(): void {
-		let isOnCooldown = false
-		for (let i = 0; i < this.pbCasts.length; i++) {
-			if (i !== 0) {
-				isOnCooldown = this.pbCasts[i] < this.rechargeTimes[i-1]
-			}
-
-			if (!isOnCooldown) {
-				this.rechargeTimes[i] = this.pbCasts[i] + this.pbCooldown
-			} else {
-				this.rechargeTimes[i] = this.rechargeTimes[i-1] + this.pbCooldown
-			}
+		if (this.pbChargeHistory.length === 0) {
+			this.pbChargeHistory = this.cooldowns.chargeHistory('PERFECT_BALANCE')
 		}
 	}
 
@@ -119,16 +114,16 @@ export class BlitzEvaluator implements WindowEvaluator {
 	}
 
 	private expectedBlitzes(window: HistoryEntry<EvaluatedAction[]>): number {
-		const priorCasts = this.pbCasts.filter(time => time <= window.start)
-		const priorRegens = this.rechargeTimes.filter(time =>
-			time <= (window.end ?? window.start) - END_OF_WINDOW_TOLERANCE
-		)
+		// We expect the player to burn off PB charges that were available when the window began, and any that became available with enough time before the window ended
+		const chargesAvailable = (_.last(this.pbChargeHistory.filter(entry => entry.timestamp < window.start))?.current ?? this.maxCharges) +
+			(this.pbChargeHistory.some(entry => entry.timestamp > window.start && entry.timestamp <= (window.end ?? window.start) - END_OF_WINDOW_TOLERANCE) ? 1 : 0)
 
-		const castsAvailable = this.pbCharges - Math.min(this.pbCharges, priorCasts.length - priorRegens.length)
+		// If we entered the window with a PB already active, expect that to get used too
+		const castsAvailable = chargesAvailable + (this.perfectBalance.inBalance(window.start) ? 1 : 0)
 
 		// Even though it is possible to have a triple blitz window
 		// we do not recommend it as a target since it is an advanced
 		// optimization that requires specific types of downtime
-		return Math.min(this.pbCharges, castsAvailable)
+		return Math.min(castsAvailable, MAX_EXPECTED_BLITZES)
 	}
 }
