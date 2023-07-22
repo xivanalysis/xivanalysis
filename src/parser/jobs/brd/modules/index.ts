@@ -1,5 +1,6 @@
 import {ActionTimeline} from './ActionTimeline'
 import {AlwaysBeCasting} from './AlwaysBeCasting'
+import {Coda} from './Coda'
 import {DoTs} from './DoTs'
 import {DriftingEa} from './DriftingEa'
 import {Mitigation} from './Mitigation'
@@ -11,6 +12,7 @@ import {RefulgentProcs} from './RefulgentProcs'
 export default [
 	ActionTimeline,
 	AlwaysBeCasting,
+	Coda,
 	DoTs,
 	DriftingEa,
 	MultiHitSkills,
