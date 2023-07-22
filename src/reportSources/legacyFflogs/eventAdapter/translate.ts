@@ -398,8 +398,11 @@ export class TranslateAdapterStep extends AdapterStep {
 		// start of each pull.
 		event.auras.forEach(aura => {
 			const statusApplyEvent: Events['statusApply'] = {
-				...this.adaptTargetedFields(event),
+				...this.adaptBaseFields(event),
 				type: 'statusApply',
+				// The source of each of the buffs is marked on the aura object itself, whereas the target is the source actor of the combatant info.
+				source: resolveActorId({id: aura.source}),
+				target: resolveActorId({id: event.sourceID, instance: event.sourceInstance, actor: event.source}),
 				status: resolveStatusId(aura.ability),
 			}
 			ourEvents.push(statusApplyEvent)
