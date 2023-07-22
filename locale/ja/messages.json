@@ -363,6 +363,7 @@
   "core.report-flow.supported-patches": "パッチ {from}{0}",
   "core.report-flow.view-report": "{0} でログを見る",
   "core.resource-graphs.gauge-label": "ゲージ",
+  "core.resource-graphs.resource-current": "",
   "core.resource-graphs.resource-value": "{label}: {current,number} / {maximum,number}",
   "core.resource-graphs.row-label": "リソース",
   "core.role.developer": "開発者",

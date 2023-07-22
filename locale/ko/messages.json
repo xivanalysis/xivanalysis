@@ -363,6 +363,7 @@
   "core.report-flow.supported-patches": "{from}{0} 패치",
   "core.report-flow.view-report": "{0}에서 리포트 보기",
   "core.resource-graphs.gauge-label": "게이지",
+  "core.resource-graphs.resource-current": "",
   "core.resource-graphs.resource-value": "{label}: {current,number} / {maximum,number}",
   "core.resource-graphs.row-label": "자원",
   "core.role.developer": "개발자",

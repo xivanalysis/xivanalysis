@@ -363,6 +363,7 @@
   "core.report-flow.supported-patches": "版本 {from}{0}",
   "core.report-flow.view-report": "在{0}查看报告。",
   "core.resource-graphs.gauge-label": "职业量谱",
+  "core.resource-graphs.resource-current": "",
   "core.resource-graphs.resource-value": "{label}: {current,number} / {maximum,number}",
   "core.resource-graphs.row-label": "资源",
   "core.role.developer": "开发者",

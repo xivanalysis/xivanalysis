@@ -363,6 +363,7 @@
   "core.report-flow.supported-patches": "Patch {from}{0}",
   "core.report-flow.view-report": "View report on {0}",
   "core.resource-graphs.gauge-label": "Gauges",
+  "core.resource-graphs.resource-current": "{label}: {current,number}",
   "core.resource-graphs.resource-value": "{label}: {current,number} / {maximum,number}",
   "core.resource-graphs.row-label": "Resources",
   "core.role.developer": "Developer",
