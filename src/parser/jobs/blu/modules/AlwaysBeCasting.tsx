@@ -3,7 +3,7 @@ import {DataLink} from 'components/ui/DbLink'
 import {Action} from 'data/ACTIONS'
 import {Event, Events} from 'event'
 import {EventHook} from 'parser/core/Dispatcher'
-import {filter, noneOf} from 'parser/core/filter'
+import {filter} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
 import {History} from 'parser/core/modules/ActionWindow/History'
 import {Actors} from 'parser/core/modules/Actors'
@@ -24,16 +24,16 @@ const SURPANAKHA_ANIMATION_LOCK_MS = 1000
 // from the ABC report. Can't cast, am waning.
 
 interface PhantomFlurryWindow {
-	start: number
-	end: number
 	manualKick: boolean
 	inMoonFlute: boolean
 }
 
 export class AlwaysBeCasting extends CoreAlwaysBeCasting {
 	private diamondBackHistory: History<boolean> = new History<boolean>(() => (true))
-	private phantomFlurryHistory: PhantomFlurryWindow[] = []
-	private currentPhantomFlurry: PhantomFlurryWindow | undefined = undefined
+	private phantomFlurryHistory: History<PhantomFlurryWindow> = new History<PhantomFlurryWindow>(() => ({
+		manualKick: false,
+		inMoonFlute: false,
+	}))
 	private phantomFlurryInterruptingActionHook?: EventHook<Events['action']>
 	private surpanakhas: number = 0
 
@@ -105,43 +105,36 @@ export class AlwaysBeCasting extends CoreAlwaysBeCasting {
 		// the full 5000ms channel, BUT, if they used the kick, then they should
 		// have waited at least 4000ms for most of the channel to have happened.
 
-		const currentFlurry = this.currentPhantomFlurry ?? this.phantomFlurryHistory[this.phantomFlurryHistory.length - 1]
+		const allPhantomFlurries = this.phantomFlurryHistory.entries
+		if (allPhantomFlurries.length === 0) { return }
+		const currentFlurry = allPhantomFlurries[allPhantomFlurries.length - 1]
 		if (currentFlurry === null) { return }
-		currentFlurry.manualKick = true
+		currentFlurry.data.manualKick = true
 	}
 
 	private onApplyPhantomFlurry(event: Events['action']) {
-		if (this.currentPhantomFlurry != null) { return }
+		const newFlurry = this.phantomFlurryHistory.openNew(event.timestamp)
+		newFlurry.data.inMoonFlute = this.actors.current.hasStatus(this.data.statuses.WAXING_NOCTURNE.id)
 
-		this.currentPhantomFlurry = {
-			start: event.timestamp,
-			end: event.timestamp + this.data.statuses.PHANTOM_FLURRY.duration,
-			manualKick: false,
-			inMoonFlute: this.actors.current.hasStatus(this.data.statuses.WAXING_NOCTURNE.id),
-		}
 		const anyActionFilter = filter<Event>()
 			.source(this.parser.actor.id)
-			.action(noneOf([this.data.actions.PHANTOM_FLURRY.id]))
 			.type('action')
 		this.phantomFlurryInterruptingActionHook = this.addEventHook(anyActionFilter, this.onRemovePhantomFlurry)
 
-		this.phantomFlurryHistory.push(this.currentPhantomFlurry)
 	}
 
 	private onRemovePhantomFlurry(event: Events['statusRemove'] | Events['action']) {
-		if (this.currentPhantomFlurry == null) {
+		if (event.type === 'action' && (event.action ?? 0) === this.data.actions.PHANTOM_FLURRY.id) {
+			// This hook is installed by the Phantom Flurry action event, but is somehow also
+			// being called for the same event that installed it.  Since you can't press Phantom Flurry
+			// (the channel, not the kick) after already having pressed it, we can just skip this event.
 			return
 		}
-		if (this.phantomFlurryInterruptingActionHook == null) {
-			return
+		this.phantomFlurryHistory.closeCurrent(event.timestamp)
+		if (this.phantomFlurryInterruptingActionHook != null) {
+			this.removeEventHook(this.phantomFlurryInterruptingActionHook)
 		}
-
-		this.currentPhantomFlurry.end = event.timestamp
-		this.removeEventHook(this.phantomFlurryInterruptingActionHook)
-
-		this.currentPhantomFlurry = undefined
 		this.phantomFlurryInterruptingActionHook = undefined
-
 	}
 
 	override considerCast(action: Action, castStart: number): boolean {
@@ -155,12 +148,13 @@ export class AlwaysBeCasting extends CoreAlwaysBeCasting {
 
 	override getUptimePercent(): number {
 		const fightDuration = this.parser.currentDuration - this.downtime.getDowntime()
-		const flurryDuration = this.phantomFlurryHistory.reduce((acc, flurry) => {
+		const maxFlurryUptime = this.parser.pull.timestamp + this.parser.pull.duration
+		const flurryDuration = this.phantomFlurryHistory.entries.reduce((acc, flurry) => {
 			const downtime = this.downtime.getDowntime(
 				flurry.start,
-				flurry.end,
+				flurry.end ?? maxFlurryUptime,
 			)
-			const phantomFlurryDurationOrGCD = Math.max(flurry.end - flurry.start, this.globalCooldown.getDuration())
+			const phantomFlurryDurationOrGCD = Math.max((flurry.end ?? maxFlurryUptime) - flurry.start, this.globalCooldown.getDuration())
 			return acc + phantomFlurryDurationOrGCD - downtime
 		}, 0)
 		const surpanakhaDuration = this.surpanakhas * SURPANAKHA_ANIMATION_LOCK_MS
@@ -172,7 +166,10 @@ export class AlwaysBeCasting extends CoreAlwaysBeCasting {
 	override onComplete() {
 		super.onComplete()
 
-		this.diamondBackHistory.closeCurrent(this.parser.pull.timestamp + this.parser.pull.duration)
+		const endOfPullTimestamp = this.parser.pull.timestamp + this.parser.pull.duration
+		this.phantomFlurryHistory.closeCurrent(endOfPullTimestamp)
+		this.diamondBackHistory.closeCurrent(endOfPullTimestamp)
+
 		const diamondBackTimeMs = this.diamondBackHistory.entries.reduce((acc, e) => {
 			return acc + ((e.end ?? e.start) - e.start)
 		}, 0)
@@ -187,10 +184,10 @@ export class AlwaysBeCasting extends CoreAlwaysBeCasting {
 
 		// Since we were already tracking Phantom Flurry, go ahead and take
 		// the chance to track if they dropped any damage ticks.
-		const missingFlurryTicks = this.phantomFlurryHistory
+		const missingFlurryTicks = this.phantomFlurryHistory.entries
 			.reduce((acc, flurry) => {
-				const flurryChannelMs = flurry.end - flurry.start
-				const expectedFlurryChannel = (flurry.manualKick ? PHANTOM_FLURRY_CHANNEL_WITH_KICK_DURATION_MS : PHANTOM_FLURRY_CHANNEL_DURATION_MAX_MS)
+				const flurryChannelMs = (flurry.end ?? endOfPullTimestamp) - flurry.start
+				const expectedFlurryChannel = (flurry.data.manualKick ? PHANTOM_FLURRY_CHANNEL_WITH_KICK_DURATION_MS : PHANTOM_FLURRY_CHANNEL_DURATION_MAX_MS)
 				const missingFlurryChannelMs = expectedFlurryChannel - flurryChannelMs
 				if (missingFlurryChannelMs <= 0) { return acc }
 
@@ -214,8 +211,8 @@ export class AlwaysBeCasting extends CoreAlwaysBeCasting {
 		}))
 
 		// If they weren't in a Moon Flute, then they should have kicked!
-		const missingFlurryKicks = this.phantomFlurryHistory
-			.filter(flurry => !flurry.inMoonFlute && !flurry.manualKick)
+		const missingFlurryKicks = this.phantomFlurryHistory.entries
+			.filter(flurry => !flurry.data.inMoonFlute && !flurry.data.manualKick)
 			.length
 
 		this.suggestions.add(new TieredSuggestion({
