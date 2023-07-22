@@ -81,6 +81,7 @@ export class RiddleOfFire extends BuffWindow {
 			maxCharges: this.data.actions.PERFECT_BALANCE.charges,
 			perfectBalance: this.perfectBalance,
 			cooldowns: this.cooldowns,
+			pullEnd: this.parser.pull.timestamp + this.parser.pull.duration,
 		}))
 
 		this.addEvaluator(new RiddleOfWindEvaluator({

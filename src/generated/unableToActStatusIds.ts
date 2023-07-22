@@ -208,6 +208,7 @@ export const UNABLE_TO_ACT_STATUS_IDS = [
 	3552, // Fetters (lockActions, lockControl)
 	3570, // Wrathful Revelation (lockActions, lockControl)
 	3571, // Delightful Revelation (lockActions, lockControl)
+	3624, // Seduced (lockActions, lockControl)
 	3697, // Seized (lockActions)
 	1727, // Waning Nocturne (lockActions)
 ]
