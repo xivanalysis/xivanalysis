@@ -655,7 +655,6 @@
   "mnk.forms.suggestions.reset.why": "{0, plural,one {#combo fut}other {#combos furent}} réinitialiser par une position de l'opo-opo.",
   "mnk.forms.suggestions.skipped.content": "Évitez de sauter des formes en dehors des temps d'arrêt. Un GCD ignoré pourrait autrement être utilisé pour causer des dommages.",
   "mnk.forms.suggestions.skipped.why": "{0, plural,one {#forme était}other {#forme étaient}} sauter par Glissement de posture non nécessaire.",
-  "mnk.gauge.resource.beast": "",
   "mnk.gauge.resource.beast.chakra": "",
   "mnk.gauge.resource.beast.coeurl": "",
   "mnk.gauge.resource.beast.opo": "",

@@ -137,13 +137,6 @@ export class PerfectBalance extends Gauge {
 		this.addEventHook('complete', this.onComplete)
 
 		this.resourceGraphs.addDataGroup({
-			handle: BEAST_GAUGE_HANDLE,
-			label: <Trans id="mnk.gauge.resource.beast">Beast Gauge</Trans>,
-			collapse: true,
-			forceCollapsed: true,
-			stacking: true,
-		})
-		this.resourceGraphs.addDataGroup({
 			handle: NADI_GAUGE_HANDLE,
 			label: <Trans id="mnk.gauge.resource.nadi">Nadi Gauge</Trans>,
 			collapse: false,

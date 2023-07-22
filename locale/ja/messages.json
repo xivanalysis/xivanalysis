@@ -655,7 +655,6 @@
   "mnk.forms.suggestions.reset.why": "壱の型のスキルを使ってしまったため、コンボは {0, plural, other {#}} 回キャンセルされました。",
   "mnk.forms.suggestions.skipped.content": "",
   "mnk.forms.suggestions.skipped.why": "演武で、型は無駄に{0, plural, one {#回 } other {#回}}飛ばしてしまいました。",
-  "mnk.gauge.resource.beast": "",
   "mnk.gauge.resource.beast.chakra": "",
   "mnk.gauge.resource.beast.coeurl": "",
   "mnk.gauge.resource.beast.opo": "",
