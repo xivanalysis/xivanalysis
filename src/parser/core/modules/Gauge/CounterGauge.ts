@@ -236,13 +236,15 @@ export class CounterGauge extends AbstractGauge {
 	override generateResourceGraph() {
 		if (this.graphOptions == null) { return }
 
-		const {handle, color, label} = this.graphOptions
+		const {handle, color, label, tooltipHideWhenEmpty, tooltipHideMaximum} = this.graphOptions
 		const graphData = {
 			label,
 			colour: color ?? 'black',
 			data: this.history.map(entry => {
 				return {time: entry.timestamp, current: entry.value, maximum: entry.maximum}
 			}),
+			tooltipHideWhenEmpty,
+			tooltipHideMaximum,
 		}
 		if (handle != null) {
 			this.resourceGraphs.addDataGroup({...this.graphOptions, handle})
