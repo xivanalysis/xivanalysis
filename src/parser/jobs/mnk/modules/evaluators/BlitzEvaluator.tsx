@@ -33,6 +33,7 @@ interface BlitzEvaluatorOpts {
 	maxCharges: number
 	perfectBalance: PerfectBalance
 	cooldowns: Cooldowns
+	pullEnd: number
 }
 
 interface BlitzWindowResults {
@@ -45,6 +46,7 @@ export class BlitzEvaluator implements WindowEvaluator {
 	private maxCharges: number
 	private perfectBalance: PerfectBalance
 	private cooldowns: Cooldowns
+	private pullEnd: number
 
 	private pbChargeHistory: ChargeHistoryEntry[] = []
 	private windowResults: BlitzWindowResults[]
@@ -55,6 +57,7 @@ export class BlitzEvaluator implements WindowEvaluator {
 		this.maxCharges = opts.maxCharges
 		this.perfectBalance = opts.perfectBalance
 		this.cooldowns = opts.cooldowns
+		this.pullEnd = opts.pullEnd
 
 		this.windowResults = []
 	}
@@ -115,15 +118,13 @@ export class BlitzEvaluator implements WindowEvaluator {
 
 	private expectedBlitzes(window: HistoryEntry<EvaluatedAction[]>): number {
 		// We expect the player to burn off PB charges that were available when the window began, and any that became available with enough time before the window ended
-		const chargesAvailable = (_.last(this.pbChargeHistory.filter(entry => entry.timestamp < window.start))?.current ?? this.maxCharges) +
-			(this.pbChargeHistory.some(entry => entry.timestamp > window.start && entry.timestamp <= (window.end ?? window.start) - END_OF_WINDOW_TOLERANCE) ? 1 : 0)
+		const chargesBeforeWindow = (_.last(this.pbChargeHistory.filter(entry => entry.timestamp < window.start))?.current ?? this.maxCharges)
+		const chargesInWindow = this.pbChargeHistory.some(entry => entry.timestamp > window.start && entry.timestamp <= (window.end ?? this.pullEnd) - END_OF_WINDOW_TOLERANCE) ? 1 : 0
 
-		// If we entered the window with a PB already active, expect that to get used too
-		const castsAvailable = chargesAvailable + (this.perfectBalance.inBalance(window.start) ? 1 : 0)
+		// If we entered the window with a PB already active and have enough time to use it before the window ends, expect that to get used too
+		const castsAvailable = chargesBeforeWindow + chargesInWindow + (this.perfectBalance.inBalance(window.start) && window.start + END_OF_WINDOW_TOLERANCE < (window.end ?? this.pullEnd) ? 1 : 0)
 
-		// Even though it is possible to have a triple blitz window
-		// we do not recommend it as a target since it is an advanced
-		// optimization that requires specific types of downtime
-		return Math.min(castsAvailable, MAX_EXPECTED_BLITZES)
+		// If we're going into RoF with a blitz prepped, we can fit 3 blitzes in 11 GCDs (or at least one, if we're a short window at the end of the fight)
+		return this.perfectBalance.blitzReady(window.start) ? Math.min(castsAvailable, 1) : Math.min(castsAvailable, MAX_EXPECTED_BLITZES)
 	}
 }

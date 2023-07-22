@@ -33,6 +33,7 @@ export class Defensives extends Analyser {
 
 	/**
 	 * Implementing modules should provide a list of job-specific defensive actions to track
+	 * These should not be actions which are constrained by either MP or a gauge resource, such as The Blackest Night, Holy Sheltron, or SGE's Addersgall actions
 	 */
 	protected trackedDefensives: Action[] = []
 	/**
@@ -56,7 +57,7 @@ export class Defensives extends Analyser {
 		return this.getUses(defensive).length
 	}
 
-	private getUses(defensive: Action): CooldownHistoryEntry[] {
+	protected getUses(defensive: Action): CooldownHistoryEntry[] {
 		return this.cooldowns.cooldownHistory(defensive).filter((entry) => entry.endReason !== CooldownEndReason.INTERRUPTED)
 	}
 
