@@ -650,7 +650,7 @@
   "mnk.forms.suggestions.reset.why": "存在 {0} 次因错误使用魔猿身形技能导致的连击重置。",
   "mnk.forms.suggestions.skipped.content": "避免在能攻击敌人时切换身形。由于切换身形而损失的GCD可以用来输出。",
   "mnk.forms.suggestions.skipped.why": "存在 {0} 次因不必要的演武导致的跳过身形。",
-  "mnk.gauge.resource.beast": "",
+  "mnk.gauge.resource.beast.chakra": "",
   "mnk.gauge.resource.beast.coeurl": "",
   "mnk.gauge.resource.beast.opo": "",
   "mnk.gauge.resource.beast.raptor": "",

@@ -650,7 +650,7 @@
   "mnk.forms.suggestions.reset.why": "{0, plural, one {# combo was} other {# combos were}} reset by an Opo-Opo Form skill.",
   "mnk.forms.suggestions.skipped.content": "Avoid skipping Forms outside of downtime. A skipped GCD could otherwise be used for damage.",
   "mnk.forms.suggestions.skipped.why": "{0, plural, one {# form was} other {# forms were}} skipped by Form Shift unnecessarily.",
-  "mnk.gauge.resource.beast": "Beast Gauge",
+  "mnk.gauge.resource.beast.chakra": "Beast Chakra",
   "mnk.gauge.resource.beast.coeurl": "Coeurl",
   "mnk.gauge.resource.beast.opo": "Opo-opo",
   "mnk.gauge.resource.beast.raptor": "Raptor",

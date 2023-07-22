@@ -650,7 +650,7 @@
   "mnk.forms.suggestions.reset.why": "{0, plural, one {# Kombo wurde} other {# Kombos wurden}} von einem Opo-Opo-Form-Skill zurückgesetzt.",
   "mnk.forms.suggestions.skipped.content": "",
   "mnk.forms.suggestions.skipped.why": "{0, plural, one {# Form wurde} other {# Formen wurden}} mit Formwechsel unnötig übersprungen.",
-  "mnk.gauge.resource.beast": "",
+  "mnk.gauge.resource.beast.chakra": "",
   "mnk.gauge.resource.beast.coeurl": "",
   "mnk.gauge.resource.beast.opo": "",
   "mnk.gauge.resource.beast.raptor": "",
