@@ -29,7 +29,7 @@ export const ASTROLOGIAN = new Meta({
 	</>,
 	supportedPatches: {
 		from: '6.0',
-		to: '6.4',
+		to: '6.45',
 	},
 	contributors: [
 		{user: CONTRIBUTORS.SUSHIROU, role: ROLES.MAINTAINER},

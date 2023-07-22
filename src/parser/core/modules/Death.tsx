@@ -32,7 +32,7 @@ declare module 'event' {
 	}
 }
 
-interface ActorInfo {
+export interface ActorDeathInfo {
 	timestampDeath?: Event['timestamp']
 	timestampTranscendent?: Event['timestamp']
 	count: number
@@ -53,7 +53,7 @@ export class Death extends Analyser {
 		return this.getDuration(this.parser.actor.id)
 	}
 
-	private info = new Map<Actor['id'], ActorInfo>()
+	private info = new Map<Actor['id'], ActorDeathInfo>()
 
 	getCount(actorId: Actor['id']) {
 		return this.getActorInfo(actorId).count
@@ -88,7 +88,7 @@ export class Death extends Analyser {
 		this.addEventHook('complete', this.onComplete)
 	}
 
-	private getActorInfo(actorId: Actor['id']): ActorInfo {
+	private getActorInfo(actorId: Actor['id']): ActorDeathInfo {
 		let actorInfo = this.info.get(actorId)
 		if (actorInfo == null) {
 			actorInfo = {count: 0, duration: 0}
@@ -184,6 +184,15 @@ export class Death extends Analyser {
 		})
 	}
 
+	protected deathSuggestionWhy(_actorId: Actor['id'], playerInfo: ActorDeathInfo): JSX.Element {
+		return <Plural
+			id="core.deaths.why"
+			value={playerInfo.count}
+			_1="# death"
+			other="# deaths"
+		/>
+	}
+
 	private onComplete(event: Events['complete']) {
 		for (const [actorId, actorInfo] of this.info) {
 			// If the actor was dead on completion, and the pull was a wipe, refund the
@@ -209,12 +218,7 @@ export class Death extends Analyser {
 				Don't die. Between downtime, lost gauge resources, and resurrection debuffs, dying is absolutely <em>crippling</em> to damage output.
 			</Trans>,
 			severity: SEVERITY.MORBID,
-			why: <Plural
-				id="core.deaths.why"
-				value={playerInfo.count}
-				_1="# death"
-				other="# deaths"
-			/>,
+			why: this.deathSuggestionWhy(this.parser.actor.id, playerInfo),
 		}))
 	}
 

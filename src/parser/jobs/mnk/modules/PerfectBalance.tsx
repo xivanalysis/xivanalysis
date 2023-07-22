@@ -48,6 +48,8 @@ const COEURL_GAUGE_COLOR = Color('#d7548e')
 const LUNAR_NADI_COLOR = Color('#8a57c4')
 const SOLAR_NADI_COLOR = Color('#e7dbd3')
 
+const CHAKRA_TO_BLITZ = 3
+
 export class PerfectBalance extends Gauge {
 	static override debug = false
 	static override handle = 'perfectBalance'
@@ -70,7 +72,7 @@ export class PerfectBalance extends Gauge {
 	private beastTimeoutHook?: TimestampHook
 
 	private beastChakraGauge = this.add(new EnumGauge({
-		maximum: 3,
+		maximum: CHAKRA_TO_BLITZ,
 		options: [
 			{
 				value: OPO_HANDLE,
@@ -151,9 +153,13 @@ export class PerfectBalance extends Gauge {
 	// Determine if perfect balance is active at the specified timestamp. It's active if:
 	// Any of the chakra gauges have values in them, or
 	// There is a history window that contains the specified timestamp
-	public inBalance(timestamp: number) {
+	public inBalance(timestamp: number): boolean {
 		const latestHistory = this.history.find(entry => entry.start <= timestamp && entry.start + this.data.statuses.PERFECT_BALANCE.duration < timestamp)
 		return this.beastChakraGauge.getValuesAt(timestamp).length > 0 || latestHistory != null
+	}
+
+	public blitzReady(timestamp: number): boolean {
+		return this.beastChakraGauge.getValuesAt(timestamp).length >= CHAKRA_TO_BLITZ
 	}
 
 	private onCast(event: Events['action']): void {
