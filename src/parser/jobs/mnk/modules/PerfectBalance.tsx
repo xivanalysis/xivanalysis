@@ -134,6 +134,14 @@ export class PerfectBalance extends Gauge {
 		this.addEventHook(playerFilter.type('action').action(oneOf(this.blitzActions)), this.onBlitz)
 
 		this.addEventHook('complete', this.onComplete)
+
+		this.resourceGraphs.addDataGroup({
+			handle: BEAST_GAUGE_HANDLE,
+			label: <Trans id="mnk.gauge.resource.beast.chakra">Beast Chakra</Trans>,
+			collapse: true,
+			forceCollapsed: true,
+			stacking: true,
+		})
 	}
 
 	// Determine if perfect balance is active at the specified timestamp. It's active if:
