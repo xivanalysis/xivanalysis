@@ -34,7 +34,6 @@ export class AlwaysBeCasting extends CoreAlwaysBeCasting {
 		manualKick: false,
 		inMoonFlute: false,
 	}))
-	private phantomFlurryInterruptingActionHook?: EventHook<Events['action']>
 	private surpanakhas: number = 0
 
 	override gcdUptimeSuggestionContent: JSX.Element = <Trans id="blu.always-cast.description">
@@ -115,26 +114,10 @@ export class AlwaysBeCasting extends CoreAlwaysBeCasting {
 	private onApplyPhantomFlurry(event: Events['action']) {
 		const newFlurry = this.phantomFlurryHistory.openNew(event.timestamp)
 		newFlurry.data.inMoonFlute = this.actors.current.hasStatus(this.data.statuses.WAXING_NOCTURNE.id)
-
-		const anyActionFilter = filter<Event>()
-			.source(this.parser.actor.id)
-			.type('action')
-		this.phantomFlurryInterruptingActionHook = this.addEventHook(anyActionFilter, this.onRemovePhantomFlurry)
-
 	}
 
-	private onRemovePhantomFlurry(event: Events['statusRemove'] | Events['action']) {
-		if (event.type === 'action' && (event.action ?? 0) === this.data.actions.PHANTOM_FLURRY.id) {
-			// This hook is installed by the Phantom Flurry action event, but is somehow also
-			// being called for the same event that installed it.  Since you can't press Phantom Flurry
-			// (the channel, not the kick) after already having pressed it, we can just skip this event.
-			return
-		}
+	private onRemovePhantomFlurry(event: Events['statusRemove']) {
 		this.phantomFlurryHistory.closeCurrent(event.timestamp)
-		if (this.phantomFlurryInterruptingActionHook != null) {
-			this.removeEventHook(this.phantomFlurryInterruptingActionHook)
-		}
-		this.phantomFlurryInterruptingActionHook = undefined
 	}
 
 	override considerCast(action: Action, castStart: number): boolean {
