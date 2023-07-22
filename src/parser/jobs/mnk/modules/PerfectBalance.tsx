@@ -303,6 +303,7 @@ export class PerfectBalance extends Gauge {
 			</Trans>,
 		}))
 
+		// Future TODO: Calculate whether the overcap mattered
 		const nadiOvercap = this.nadiGauge.overcap
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.PHANTOM_RUSH.icon,
@@ -310,9 +311,9 @@ export class PerfectBalance extends Gauge {
 				Generating a Lunar or Solar Nadi while already in possession of that Nadi means fewer uses of <DataLink action="PHANTOM_RUSH" /> over the course of the fight. Try not to overcap either of your Nadis.
 			</Trans>,
 			tiers: {
-				1: SEVERITY.MINOR,
-				2: SEVERITY.MEDIUM,
-				3: SEVERITY.MAJOR,
+				2: SEVERITY.MINOR, // Start at 2 since 1 might be expected depending on opener
+				3: SEVERITY.MEDIUM,
+				4: SEVERITY.MAJOR,
 			},
 			value: nadiOvercap,
 			why: <Trans id="mnk.pb.suggestions.nadi-overcap.why">
