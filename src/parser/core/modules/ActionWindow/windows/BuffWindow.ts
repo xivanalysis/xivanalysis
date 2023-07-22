@@ -2,6 +2,7 @@ import {Status} from 'data/STATUSES'
 import {Event, Events} from 'event'
 import _ from 'lodash'
 import {TimestampHook, TimestampHookArguments} from 'parser/core/Dispatcher'
+import {Team} from 'report'
 import {ensureArray} from 'utilities'
 import {filter, oneOf} from '../../../filter'
 import {EvaluatedAction} from '../EvaluatedAction'
@@ -47,7 +48,8 @@ export abstract class BuffWindow extends ActionWindow {
 		// or on an enemy actor (trick attack)
 		// enemies are not on the same team as the parser actor
 		const enemyTargets = this.parser.pull.actors
-			.filter(actor => actor.team > this.parser.actor.team) // Ignore actors with an 'unknown' team (team 0, where player's are team 1: Friend)
+			.filter(actor => actor.team !== this.parser.actor.team &&
+				actor.team !== Team.UNKNOWN) // Ignore actors with an 'unknown' team
 			.map(actor => actor.id)
 
 		const targets = [this.parser.actor.id, ...enemyTargets]
