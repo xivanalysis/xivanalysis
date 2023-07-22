@@ -5,6 +5,8 @@ Parser - AST:
   - src/parser/jobs/ast/**/*
 Parser - BLM:
   - src/parser/jobs/blm/**/*
+Parser - BLU:
+  - src/parser/jobs/blu/**/*
 Parser - BRD:
   - src/parser/jobs/brd/**/*
 Parser - DNC:

@@ -1,11 +1,17 @@
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
 import {ActionLink} from 'components/ui/DbLink'
+import {RotationTargetOutcome} from 'components/ui/RotationTable'
+import {Event} from 'event'
+import {filter} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
-import {BuffWindow, ExpectedActionGroupsEvaluator, ExpectedGcdCountEvaluator} from 'parser/core/modules/ActionWindow'
+import {BuffWindow, EvaluatedAction, TrackedActionGroup, ExpectedActionGroupsEvaluator, ExpectedGcdCountEvaluator} from 'parser/core/modules/ActionWindow'
+import {HistoryEntry} from 'parser/core/modules/ActionWindow/History'
+import {Cooldowns} from 'parser/core/modules/Cooldowns'
 import {GlobalCooldown} from 'parser/core/modules/GlobalCooldown'
 import {SEVERITY} from 'parser/core/modules/Suggestions'
 import React from 'react'
+import {DISPLAY_ORDER} from './DISPLAY_ORDER'
 
 const SEVERITIES = {
 	MISSING_EXPECTED_USES: {
@@ -45,17 +51,35 @@ const EXPECTED_GCD_COUNT = 5
 // ...but for implementation details, Phantom Flurry is marked as a GCD,
 // so even though we technically only do 4 GCDs in the window, we are
 // looking for a pseudo-5th, Phantom Flurry.
+//
+// Also, if they used Final Sting, then we window can be as short as a single
+// GCD!
+const neutralOrPositiveOutcome = (actual: number, expected?: number) => {
+	if (expected !== undefined && actual === expected) {
+		return RotationTargetOutcome.POSITIVE
+	}
+	return RotationTargetOutcome.NEUTRAL
+}
 
 export class MoonFlute extends BuffWindow {
 	static override handle = 'moonflutes'
 	static override title = t('blu.moonflutes.title')`Moon Flute Windows`
+	static override displayOrder = DISPLAY_ORDER.MOON_FLUTE
 
 	@dependency globalCooldown!: GlobalCooldown
+	@dependency private cooldowns!: Cooldowns
 
 	override buffStatus = this.data.statuses.WAXING_NOCTURNE
 
+	private windowMissedTT = new Set<number>()
+
 	override initialise() {
 		super.initialise()
+
+		// Add a Waning Moon hook, essentially telling us exactly when a MF window ended.
+		const extraFilter = filter<Event>().source(this.parser.actor.id).type('statusApply')
+			.status(this.data.statuses.WANING_NOCTURNE.id)
+		this.addEventHook(extraFilter, this.onWaningNocturneApply)
 
 		const suggestionIcon = this.data.actions.MOON_FLUTE.icon
 		const suggestionWindowName = <ActionLink action="MOON_FLUTE" showIcon={false}/>
@@ -74,6 +98,7 @@ export class MoonFlute extends BuffWindow {
 			suggestionWindowName,
 			severityTiers: SEVERITIES.TOO_FEW_GCDS,
 			hasStacks: false,
+			adjustCount: this.adjustExpectedGcdCount.bind(this),
 		}))
 
 		this.addEvaluator(new ExpectedActionGroupsEvaluator({
@@ -132,7 +157,60 @@ export class MoonFlute extends BuffWindow {
 				are <ActionLink action="NIGHTBLOOM" showIcon={false} />, and finishing the combo with a <ActionLink action="PHANTOM_FLURRY" showIcon={false} />.
 			</Trans>,
 			severityTiers: SEVERITIES.MISSING_EXPECTED_USES,
+			adjustOutcome: this.adjustExpectedActionOutcome.bind(this),
 		}))
+	}
+
+	private finalStingsUsedInWindow(window: HistoryEntry<EvaluatedAction[]>): number {
+		const finalStingUsed = window.data.filter(event => (event.action.id === this.data.actions.FINAL_STING.id || event.action.id === this.data.actions.SELF_DESTRUCT.id)).length
+		return finalStingUsed
+	}
+
+	private onWaningNocturneApply() {
+		// This will be 0 if TT is available, and some number of milliseconds otherwise
+		const ttCd = this.cooldowns.remaining('TRIPLE_TRIDENT')
+		if (ttCd > 0) { return }
+
+		// They just finished a MF window and TT was available.  This is a Big Loss(tm);
+		// for Spell Speed builds this means they missed aligning their TT with the 6m
+		// MF window, and for Crit builds they just lost a ton of damage.
+		const current = this.history.getCurrent()
+		if (current == null) { return }
+		this.windowMissedTT.add(current.start)
+	}
+
+	private adjustExpectedGcdCount(window: HistoryEntry<EvaluatedAction[]>) {
+		const finalStingUsed = this.finalStingsUsedInWindow(window)
+		return finalStingUsed >= 1 ? (-window.data.length+1) : 0
+	}
+
+	private adjustExpectedActionOutcome(window: HistoryEntry<EvaluatedAction[]>, trackedActions: TrackedActionGroup) {
+		const finalStingUsed = this.finalStingsUsedInWindow(window)
+		if (finalStingUsed === 0) {
+			// Final Sting not used here
+			if (trackedActions.actions.length !== 1) {
+				// Default handling:
+				return
+			}
+			const trackedActionId = trackedActions.actions[0].id
+			if (trackedActionId === this.data.actions.TRIPLE_TRIDENT.id) {
+				// Using TT on cooldown, on a long enough timeline, can be a DPS gain over
+				// holding it for a MF window, particularly for SpS builds.
+				// So let's be understanding -- We only dock points if they were in a
+				// Moon Flute window, had TT available, and didn't use it.
+				if (!this.windowMissedTT.has(window.start)) {
+					// TT was either used, or wasn't available during the window.
+					// Either way, this check will either be a Positive or a Neutral,
+					// never a negative.
+					return neutralOrPositiveOutcome
+				}
+			}
+			// Default handling:
+			return
+		}
+
+		// Final Sting used, so don't dock any points for missed actions:
+		return neutralOrPositiveOutcome
 	}
 }
 

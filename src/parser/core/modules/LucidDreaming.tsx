@@ -61,6 +61,20 @@ export class LucidDreaming extends Analyser {
 		this.lastUse = event.timestamp
 	}
 
+	protected suggestionContent: JSX.Element = <Fragment>
+		<Trans id="core.lucid-dreaming.suggestion.content">
+			Try to keep <DataLink action="LUCID_DREAMING" /> on cooldown for better MP management.
+		</Trans>
+	</Fragment>
+
+	protected suggestionWhy(usesMissed: number, holdDuration: number): JSX.Element {
+		return <Fragment>
+			<Trans id="core.lucid-dreaming.suggestion.why">
+				<Plural value={usesMissed} one="# use" other="# uses" /> of Lucid Dreaming <Plural value={usesMissed} one="was" other="were" /> missed by holding it for at least a total of {this.parser.formatDuration(holdDuration)}.
+			</Trans>
+		</Fragment>
+	}
+
 	private onComplete() {
 		//uses missed reported in 1 decimal
 		const holdDuration = this.uses === 0 ? this.parser.pull.duration : this.totalHeld
@@ -69,20 +83,10 @@ export class LucidDreaming extends Analyser {
 
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.LUCID_DREAMING.icon,
-			content: <Fragment>
-				<Trans id="ast.lucid-dreaming.suggestion.content">
-				Try to keep <DataLink action="LUCID_DREAMING" /> on cooldown for better MP management.
-				</Trans>
-			</Fragment>,
+			content: this.suggestionContent,
 			tiers: SEVERITIES.USE_PERCENT_THRESHOLD,
-			why: <Fragment>
-				<Trans id="ast.lucid-dreaming.suggestion.why">
-					<Plural value={usesMissed} one="# use" other="# uses" /> of Lucid Dreaming <Plural value={usesMissed} one="was" other="were" /> missed by holding it for at least a total of {this.parser.formatDuration(holdDuration)}.
-				</Trans>
-			</Fragment>,
+			why: this.suggestionWhy(usesMissed, holdDuration),
 			value: notUsesPercent,
 		}))
-
 	}
-
 }

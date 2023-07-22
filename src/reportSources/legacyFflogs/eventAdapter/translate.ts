@@ -376,7 +376,7 @@ export class TranslateAdapterStep extends AdapterStep {
 		}
 	}
 
-	private adaptCombatantInfoEvent(event: CombatantInfoEvent): Array<Events['actorUpdate']> {
+	private adaptCombatantInfoEvent(event: CombatantInfoEvent): Array<Events['actorUpdate'] | Events['statusApply']> {
 		// TODO: Use more info in here. We're currently extracting the speed attribute values for the logging player, but there's also player level, prepull statuses, and more in there.
 
 		const attributeMapping: Array<[number | undefined, Attribute]> = [
@@ -391,20 +391,37 @@ export class TranslateAdapterStep extends AdapterStep {
 			attributes.push({attribute, value, estimated: false})
 		}
 
-		if (attributes.length === 0) {
-			return []
-		}
+		const ourEvents = new Array<Events['actorUpdate'] | Events['statusApply']>()
+		// "Auras" seems to be a holdover from WoW, but over here they mainly cover Stances;
+		// Tank Stance (Grit, etc), as well as the BLU mimickries.
+		// The minimum thing we can do here is just report these as a statusApply at the
+		// start of each pull.
+		event.auras.forEach(aura => {
+			const statusApplyEvent: Events['statusApply'] = {
+				...this.adaptBaseFields(event),
+				type: 'statusApply',
+				// The source of each of the buffs is marked on the aura object itself, whereas the target is the source actor of the combatant info.
+				source: resolveActorId({id: aura.source}),
+				target: resolveActorId({id: event.sourceID, instance: event.sourceInstance, actor: event.source}),
+				status: resolveStatusId(aura.ability),
+			}
+			ourEvents.push(statusApplyEvent)
+		})
 
-		return [{
-			...this.adaptBaseFields(event),
-			type: 'actorUpdate',
-			attributes,
-			actor: resolveActorId({
-				id: event.sourceID,
-				instance: event.sourceInstance,
-				actor: event.source,
-			}),
-		}]
+		if (attributes.length !== 0) {
+			const actorUpdateEvent: Events['actorUpdate'] = {
+				...this.adaptBaseFields(event),
+				type: 'actorUpdate',
+				attributes,
+				actor: resolveActorId({
+					id: event.sourceID,
+					instance: event.sourceInstance,
+					actor: event.source,
+				}),
+			}
+			ourEvents.push(actorUpdateEvent)
+		}
+		return ourEvents
 	}
 
 	private adaptTargetedFields(event: FflogsEvent) {
