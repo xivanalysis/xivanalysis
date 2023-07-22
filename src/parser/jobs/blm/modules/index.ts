@@ -1,4 +1,5 @@
 import {Interrupts} from 'parser/core/modules/Interrupts'
+import {ActionTimeline} from './ActionTimeline'
 import {AoEUsages} from './AoEUsages'
 import {CastTime} from './CastTime'
 import {Defensives} from './Defensives'
@@ -14,6 +15,7 @@ import {Triplecast} from './Triplecast'
 import {Weaving} from './Weaving'
 
 export default [
+	ActionTimeline,
 	AoEUsages,
 	Weaving,
 	CastTime,
