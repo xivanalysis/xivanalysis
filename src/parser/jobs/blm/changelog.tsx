@@ -82,4 +82,9 @@ export const changelog = [
 		Changes: () => <>Display timestamps for Paradox and Polyglot overwrites.</>,
 		contributors: [CONTRIBUTORS.MALI],
 	},
+	{
+		date: new Date('2023-07-21'),
+		Changes: () => <>Update timeline display for gauge state and enforce a more useful timeline display order for cooldowns.</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
 ]
