@@ -25,7 +25,8 @@ const SEVERITIES = {
 	},
 }
 
-const EXPECTED_GCD_COUNT = 5
+const EXPECTED_GCD_COUNT_LEVEL_70 = 5
+const EXPECTED_GCD_COUNT_LEVEL_80 = 6
 // Some notes on the expected GCD count.
 // Waxing Nocturne is 15 seconds, so that seems like
 // it should be 6 GCDs, but the first .5 seconds you are still
@@ -87,10 +88,100 @@ export class MoonFlute extends BuffWindow {
 			.action(this.data.actions.BREATH_OF_MAGIC.id)
 		this.addEventHook(bomFilter, this.onCastBreathOfMagic)
 
+		const level80BLU = this.parser.patch.after('6.4')
+		const bluLevel70MoonFlute = [
+			{
+				actions: [this.data.actions.J_KICK, this.data.actions.QUASAR],
+				expectedPerWindow: 1,
+			},
+			{
+				actions: [this.data.actions.TRIPLE_TRIDENT],
+				expectedPerWindow: 1,
+			},
+			{
+				actions: [this.data.actions.NIGHTBLOOM],
+				expectedPerWindow: 1,
+			},
+			{
+				actions: [this.data.actions.THE_ROSE_OF_DESTRUCTION],
+				expectedPerWindow: 1,
+			},
+			{
+				actions: [this.data.actions.SHOCK_STRIKE, this.data.actions.BLU_MOUNTAIN_BUSTER],
+				expectedPerWindow: 1,
+			},
+			{
+				actions: [this.data.actions.BRISTLE],
+				expectedPerWindow: 1,
+			},
+			{
+				actions: [this.data.actions.GLASS_DANCE],
+				expectedPerWindow: 1,
+			},
+			{
+				actions: [this.data.actions.SURPANAKHA],
+				expectedPerWindow: 4,
+			},
+			{
+				actions: [this.data.actions.FEATHER_RAIN, this.data.actions.ERUPTION],
+				expectedPerWindow: 1,
+			},
+			{
+				actions: [this.data.actions.MATRA_MAGIC],
+				expectedPerWindow: 1,
+			},
+			{
+				actions: [this.data.actions.PHANTOM_FLURRY],
+				expectedPerWindow: 1,
+			},
+		]
+
+		const bluLevel80MoonFlute = [
+			{
+				actions: [this.data.actions.J_KICK, this.data.actions.QUASAR],
+				expectedPerWindow: 1,
+			},
+			{
+				actions: [this.data.actions.TRIPLE_TRIDENT],
+				expectedPerWindow: 1,
+			},
+			{
+				actions: [this.data.actions.NIGHTBLOOM],
+				expectedPerWindow: 1,
+			},
+			{
+				actions: [this.data.actions.SHOCK_STRIKE, this.data.actions.BLU_MOUNTAIN_BUSTER],
+				expectedPerWindow: 1,
+			},
+			{
+				actions: [this.data.actions.SEA_SHANTY],
+				expectedPerWindow: 1,
+			},
+			{
+				actions: [this.data.actions.BEING_MORTAL],
+				expectedPerWindow: 1,
+			},
+			{
+				actions: [this.data.actions.SURPANAKHA],
+				expectedPerWindow: 4,
+			},
+			{
+				actions: [this.data.actions.FEATHER_RAIN, this.data.actions.ERUPTION],
+				expectedPerWindow: 1,
+			},
+			{
+				actions: [this.data.actions.MATRA_MAGIC],
+				expectedPerWindow: 1,
+			},
+			{
+				actions: [this.data.actions.PHANTOM_FLURRY],
+				expectedPerWindow: 1,
+			},
+		]
 		const suggestionIcon = this.data.actions.MOON_FLUTE.icon
 		const suggestionWindowName = <ActionLink action="MOON_FLUTE" showIcon={false}/>
 		this.addEvaluator(new ExpectedGcdCountEvaluator({
-			expectedGcds: EXPECTED_GCD_COUNT, // 4 GCDs + Phantom Flurry _or_ 5 GCDs
+			expectedGcds: level80BLU ? EXPECTED_GCD_COUNT_LEVEL_80 : EXPECTED_GCD_COUNT_LEVEL_70, // 4 GCDs + Phantom Flurry _or_ 5 GCDs
 			globalCooldown: this.globalCooldown,
 			suggestionIcon,
 			suggestionContent: <Trans id="blu.moonflutes.suggestions.gcds.content">
@@ -108,48 +199,7 @@ export class MoonFlute extends BuffWindow {
 		}))
 
 		this.addEvaluator(new ExpectedActionGroupsEvaluator({
-			expectedActionGroups: [
-				{
-					actions: [this.data.actions.J_KICK, this.data.actions.QUASAR],
-					expectedPerWindow: 1,
-				},
-				{
-					actions: [this.data.actions.TRIPLE_TRIDENT],
-					expectedPerWindow: 1,
-				},
-				{
-					actions: [this.data.actions.NIGHTBLOOM],
-					expectedPerWindow: 1,
-				},
-				{
-					actions: [this.data.actions.SHOCK_STRIKE, this.data.actions.BLU_MOUNTAIN_BUSTER],
-					expectedPerWindow: 1,
-				},
-				{
-					actions: [this.data.actions.SEA_SHANTY],
-					expectedPerWindow: 1,
-				},
-				{
-					actions: [this.data.actions.BEING_MORTAL],
-					expectedPerWindow: 1,
-				},
-				{
-					actions: [this.data.actions.SURPANAKHA],
-					expectedPerWindow: 4,
-				},
-				{
-					actions: [this.data.actions.FEATHER_RAIN, this.data.actions.ERUPTION],
-					expectedPerWindow: 1,
-				},
-				{
-					actions: [this.data.actions.MATRA_MAGIC],
-					expectedPerWindow: 1,
-				},
-				{
-					actions: [this.data.actions.PHANTOM_FLURRY],
-					expectedPerWindow: 1,
-				},
-			],
+			expectedActionGroups: level80BLU ? bluLevel80MoonFlute : bluLevel70MoonFlute,
 			suggestionIcon: suggestionIcon,
 			suggestionWindowName: suggestionWindowName,
 			suggestionContent: <Trans id="blu.moonflutes.suggestions.expected-actions.content">
