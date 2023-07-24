@@ -171,6 +171,8 @@
   "blu.about.description": "根据所选技能的不同，青魔法师的玩法可能千变万化。本页主要讨论如何打出更高的DPS，所以如果你在玩T青或者奶青，有些建议可能并不适用。\n\n此外，青魔法师的挑战主要在于对机制的处理，而不是DPS压力。此处的建议可以优化你的输出，但机制需要仍然是绝对优先。别贪输出把你的队友给贪进去了。\n\n若你想要进一步理解此处的建议，建议造访青魔法学会 (https://discord.gg/blueacademy) 以获得第一手资料。",
   "blu.about.description.warning": "本模块是最近才拓展的，我们很欢迎反馈！",
   "blu.always-cast.description": "始终保持GCD不空转。大部分情况下就算出了一些小错误，也比缓慢地打出正确循环要好。<0/>对于青魔法师，我们额外排除了以下会导致GCD空转的正常情况：<1><2>处于 <3/> 时</2><4>处于 <5/> 时（<6/>之后无法使用技能的时期）</4><7>持续引导<8/>时</7><9>连发<10/>时</9></1>",
+  "blu.apokalypsis.dropped_ticks.content": "",
+  "blu.apokalypsis.dropped_ticks.why": "",
   "blu.buffs.buff_time": "时间",
   "blu.buffs.buff_yours": "常驻伤害buff",
   "blu.buffs.overwritten.content": "你的 <0/> 在结束之前被其他人覆盖了。虽然有时候会这样，不过如果有必要，和队友商量下能不能避免。",
