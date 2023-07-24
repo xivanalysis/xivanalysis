@@ -1,11 +1,11 @@
-import {DamageType} from 'event'
+import {Attribute, DamageType} from 'event'
 import {Action, ensureActions} from '../type'
 
-const MAGICAL  = DamageType.MAGICAL
+const MAGICAL = DamageType.MAGICAL
 const PHYSICAL = DamageType.PHYSICAL
-const DARK	 = DamageType.DARK
+const DARK = DamageType.DARK
 
-export const BLU_COOLDOWN_GROUP = {
+export const BLU_COOLDOWN_GROUPS = {
 	OFF_GUARD: 11411,
 	FEATHER_RAIN: 11426,
 	BLU_MOUNTAIN_BUSTER: 11428,
@@ -14,6 +14,8 @@ export const BLU_COOLDOWN_GROUP = {
 	NIGHTBLOOM: 23290,
 	THE_ROSE_OF_DESTRUCTION: 23275,
 	MATRA_MAGIC: 23285,
+	MAGIC_HAMMER: 18305,
+	BEING_MORTAL: 34581,
 }
 
 const UMBRAL   = 1 // Water, Earth, Ice
@@ -34,6 +36,7 @@ export const BLU = ensureActions({
 		gcdRecast: 2500,
 		damageType: MAGICAL,
 		elementType: UMBRAL,
+		speedAttribute: Attribute.SPELL_SPEED,
 	},
 	FLAME_THROWER: {
 		id: 11402,
@@ -44,6 +47,7 @@ export const BLU = ensureActions({
 		gcdRecast: 2500,
 		damageType: MAGICAL,
 		elementType: ASTRAL,
+		speedAttribute: Attribute.SPELL_SPEED,
 	},
 	AQUA_BREATH: {
 		id: 11390,
@@ -55,6 +59,7 @@ export const BLU = ensureActions({
 		statusesApplied: ['AQUA_BREATH'],
 		damageType: MAGICAL,
 		elementType: UMBRAL,
+		speedAttribute: Attribute.SPELL_SPEED,
 	},
 	FLYING_FRENZY: {
 		id: 11389,
@@ -64,6 +69,7 @@ export const BLU = ensureActions({
 		castTime: 1000,
 		gcdRecast: 2500,
 		damageType: PHYSICAL,
+		speedAttribute: Attribute.SPELL_SPEED,
 	},
 	DRILL_CANNONS: {
 		id: 11398,
@@ -73,6 +79,7 @@ export const BLU = ensureActions({
 		castTime: 2000,
 		gcdRecast: 2500,
 		damageType: PHYSICAL,
+		speedAttribute: Attribute.SPELL_SPEED,
 	},
 	HIGH_VOLTAGE: {
 		id: 11387,
@@ -83,6 +90,7 @@ export const BLU = ensureActions({
 		gcdRecast: 2500,
 		damageType: MAGICAL,
 		elementType: ASTRAL,
+		speedAttribute: Attribute.SPELL_SPEED,
 	},
 	LOOM: {
 		id: 11401,
@@ -91,6 +99,7 @@ export const BLU = ensureActions({
 		onGcd: true,
 		castTime: 1000,
 		gcdRecast: 2500,
+		speedAttribute: Attribute.SPELL_SPEED,
 	},
 	FINAL_STING: {
 		id: 11407,
@@ -100,6 +109,7 @@ export const BLU = ensureActions({
 		castTime: 2000, // TODO: Brush With Death
 		gcdRecast: 2500,
 		damageType: PHYSICAL,
+		speedAttribute: Attribute.SPELL_SPEED,
 	},
 	SONG_OF_TORMENT: {
 		id: 11386,
@@ -110,6 +120,7 @@ export const BLU = ensureActions({
 		gcdRecast: 2500,
 		statusesApplied: ['BLEEDING'],
 		damageType: MAGICAL,
+		speedAttribute: Attribute.SPELL_SPEED,
 	},
 	GLOWER: {
 		id: 11404,
@@ -120,6 +131,7 @@ export const BLU = ensureActions({
 		gcdRecast: 2500,
 		damageType: MAGICAL,
 		elementType: ASTRAL,
+		speedAttribute: Attribute.SPELL_SPEED,
 	},
 	PLAINCRACKER: {
 		id: 11391,
@@ -130,6 +142,7 @@ export const BLU = ensureActions({
 		gcdRecast: 2500,
 		damageType: MAGICAL,
 		elementType: UMBRAL,
+		speedAttribute: Attribute.SPELL_SPEED,
 	},
 	BRISTLE: {
 		id: 11393,
@@ -139,6 +152,7 @@ export const BLU = ensureActions({
 		castTime: 1000,
 		gcdRecast: 2500,
 		statusesApplied: ['BRISTLE'],
+		speedAttribute: Attribute.SPELL_SPEED,
 	},
 	WHITE_WIND: {
 		id: 11406,
@@ -147,6 +161,7 @@ export const BLU = ensureActions({
 		onGcd: true,
 		castTime: 2000,
 		gcdRecast: 2500,
+		speedAttribute: Attribute.SPELL_SPEED,
 	},
 	LEVEL_5_PETRIFY: {
 		id: 11414,
@@ -155,6 +170,7 @@ export const BLU = ensureActions({
 		onGcd: true,
 		castTime: 2000,
 		gcdRecast: 2500,
+		speedAttribute: Attribute.SPELL_SPEED,
 	},
 	SHARPENED_KNIFE: {
 		id: 11400,
@@ -164,6 +180,7 @@ export const BLU = ensureActions({
 		castTime: 1000,
 		gcdRecast: 2500,
 		damageType: PHYSICAL,
+		speedAttribute: Attribute.SPELL_SPEED,
 	},
 	ICE_SPIKES: {
 		id: 11418,
@@ -173,6 +190,7 @@ export const BLU = ensureActions({
 		castTime: 2000,
 		gcdRecast: 2500,
 		statusesApplied: ['ICE_SPIKES'],
+		speedAttribute: Attribute.SPELL_SPEED,
 	},
 	BLOOD_DRAIN: {
 		id: 11395,
@@ -182,6 +200,7 @@ export const BLU = ensureActions({
 		castTime: 2000,
 		gcdRecast: 2500,
 		damageType: MAGICAL,
+		speedAttribute: Attribute.SPELL_SPEED,
 	},
 	ACORN_BOMB: {
 		id: 11392,
@@ -190,6 +209,7 @@ export const BLU = ensureActions({
 		onGcd: true,
 		castTime: 2000,
 		gcdRecast: 2500,
+		speedAttribute: Attribute.SPELL_SPEED,
 	},
 	BOMB_TOSS: {
 		id: 11396,
@@ -200,6 +220,7 @@ export const BLU = ensureActions({
 		gcdRecast: 2500,
 		damageType: MAGICAL,
 		elementType: ASTRAL,
+		speedAttribute: Attribute.SPELL_SPEED,
 	},
 	OFF_GUARD: {
 		id: 11411,
@@ -207,8 +228,9 @@ export const BLU = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003279.png',
 		castTime: 1000,
 		cooldown: 60000,
-		cooldownGroup: BLU_COOLDOWN_GROUP.OFF_GUARD,
+		cooldownGroup: BLU_COOLDOWN_GROUPS.OFF_GUARD,
 		statusesApplied: ['OFF_GUARD'],
+		speedAttribute: Attribute.SPELL_SPEED,
 	},
 	SELF_DESTRUCT: {
 		id: 11408,
@@ -218,6 +240,7 @@ export const BLU = ensureActions({
 		castTime: 2000,
 		gcdRecast: 2500,
 		damageType: MAGICAL,
+		speedAttribute: Attribute.SPELL_SPEED,
 	},
 	TRANSFUSION: {
 		id: 11409,
@@ -226,6 +249,7 @@ export const BLU = ensureActions({
 		onGcd: true,
 		castTime: 2000,
 		gcdRecast: 2500,
+		speedAttribute: Attribute.SPELL_SPEED,
 	},
 	FAZE: {
 		id: 11403,
@@ -234,6 +258,7 @@ export const BLU = ensureActions({
 		onGcd: true,
 		castTime: 2000,
 		gcdRecast: 2500,
+		speedAttribute: Attribute.SPELL_SPEED,
 	},
 	FLYING_SARDINE: {
 		id: 11423,
@@ -241,6 +266,7 @@ export const BLU = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003291.png',
 		onGcd: true,
 		damageType: PHYSICAL,
+		speedAttribute: Attribute.SPELL_SPEED,
 	},
 	SNORT: {
 		id: 11383,
@@ -249,6 +275,7 @@ export const BLU = ensureActions({
 		onGcd: true,
 		castTime: 2000,
 		gcdRecast: 2500,
+		speedAttribute: Attribute.SPELL_SPEED,
 	},
 	FOUR_TONZE_WEIGHT: {
 		id: 11384,
@@ -258,6 +285,7 @@ export const BLU = ensureActions({
 		castTime: 2000,
 		gcdRecast: 2500,
 		damageType: PHYSICAL,
+		speedAttribute: Attribute.SPELL_SPEED,
 	},
 	THE_LOOK: {
 		id: 11399,
@@ -267,6 +295,7 @@ export const BLU = ensureActions({
 		castTime: 2000,
 		gcdRecast: 2500,
 		damageType: MAGICAL,
+		speedAttribute: Attribute.SPELL_SPEED,
 	},
 	BAD_BREATH: {
 		id: 11388,
@@ -276,6 +305,7 @@ export const BLU = ensureActions({
 		castTime: 2000,
 		gcdRecast: 2500,
 		statusesApplied: ['MALODOROUS', 'BAD_BREATH_POISON'],
+		speedAttribute: Attribute.SPELL_SPEED,
 	},
 	DIAMONDBACK: {
 		id: 11424,
@@ -285,6 +315,7 @@ export const BLU = ensureActions({
 		castTime: 2000,
 		gcdRecast: 2500,
 		statusesApplied: ['DIAMONDBACK'],
+		speedAttribute: Attribute.SPELL_SPEED,
 	},
 	MIGHTY_GUARD: {
 		id: 11417,
@@ -294,6 +325,7 @@ export const BLU = ensureActions({
 		castTime: 2000,
 		gcdRecast: 2500,
 		statusesApplied: ['MIGHTY_GUARD'],
+		speedAttribute: Attribute.SPELL_SPEED,
 	},
 	STICKY_TONGUE: {
 		id: 11412,
@@ -302,6 +334,7 @@ export const BLU = ensureActions({
 		onGcd: true,
 		castTime: 2000,
 		gcdRecast: 2500,
+		speedAttribute: Attribute.SPELL_SPEED,
 	},
 	TOAD_OIL: {
 		id: 11410,
@@ -311,6 +344,7 @@ export const BLU = ensureActions({
 		castTime: 2000,
 		gcdRecast: 2500,
 		statusesApplied: ['TOAD_OIL'],
+		speedAttribute: Attribute.SPELL_SPEED,
 	},
 	THE_RAMS_VOICE: {
 		id: 11419,
@@ -321,6 +355,7 @@ export const BLU = ensureActions({
 		gcdRecast: 2500,
 		damageType: MAGICAL,
 		elementType: UMBRAL,
+		speedAttribute: Attribute.SPELL_SPEED,
 	},
 	THE_DRAGONS_VOICE: {
 		id: 11420,
@@ -331,6 +366,7 @@ export const BLU = ensureActions({
 		gcdRecast: 2500,
 		damageType: MAGICAL,
 		elementType: ASTRAL,
+		speedAttribute: Attribute.SPELL_SPEED,
 	},
 	MISSILE: {
 		id: 11405,
@@ -340,6 +376,7 @@ export const BLU = ensureActions({
 		castTime: 2000,
 		gcdRecast: 2500,
 		damageType: DARK,
+		speedAttribute: Attribute.SPELL_SPEED,
 	},
 	THOUSAND_NEEDLES: {
 		id: 11397,
@@ -349,6 +386,7 @@ export const BLU = ensureActions({
 		castTime: 6000,
 		gcdRecast: 2500,
 		damageType: PHYSICAL,
+		speedAttribute: Attribute.SPELL_SPEED,
 	},
 	INK_JET: {
 		id: 11422,
@@ -358,6 +396,7 @@ export const BLU = ensureActions({
 		castTime: 2000,
 		gcdRecast: 2500,
 		damageType: MAGICAL,
+		speedAttribute: Attribute.SPELL_SPEED,
 	},
 	FIRE_ANGON: {
 		id: 11425,
@@ -368,6 +407,7 @@ export const BLU = ensureActions({
 		gcdRecast: 2500,
 		damageType: PHYSICAL,
 		elementType: ASTRAL,
+		speedAttribute: Attribute.SPELL_SPEED,
 	},
 	MOON_FLUTE: {
 		id: 11415,
@@ -377,6 +417,7 @@ export const BLU = ensureActions({
 		castTime: 2000,
 		gcdRecast: 2500,
 		statusesApplied: ['WAXING_NOCTURNE', 'WANING_NOCTURNE'],
+		speedAttribute: Attribute.SPELL_SPEED,
 	},
 	TAIL_SCREW: {
 		id: 11413,
@@ -385,6 +426,7 @@ export const BLU = ensureActions({
 		onGcd: true,
 		castTime: 2000,
 		gcdRecast: 2500,
+		speedAttribute: Attribute.SPELL_SPEED,
 	},
 	MIND_BLAST: {
 		id: 11394,
@@ -394,6 +436,7 @@ export const BLU = ensureActions({
 		castTime: 1000,
 		gcdRecast: 2500,
 		damageType: MAGICAL,
+		speedAttribute: Attribute.SPELL_SPEED,
 	},
 	DOOM: {
 		id: 11416,
@@ -403,6 +446,7 @@ export const BLU = ensureActions({
 		castTime: 2000,
 		gcdRecast: 2500,
 		statusesApplied: ['DOOM'],
+		speedAttribute: Attribute.SPELL_SPEED,
 	},
 	PECULIAR_LIGHT: {
 		id: 11421,
@@ -410,15 +454,16 @@ export const BLU = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003289.png',
 		castTime: 1000,
 		cooldown: 60000,
-		cooldownGroup: BLU_COOLDOWN_GROUP.OFF_GUARD,
+		cooldownGroup: BLU_COOLDOWN_GROUPS.OFF_GUARD,
 		statusesApplied: ['PECULIAR_LIGHT'],
+		speedAttribute: Attribute.SPELL_SPEED,
 	},
 	FEATHER_RAIN: {
 		id: 11426,
 		name: 'Feather Rain',
 		icon: 'https://xivapi.com/i/003000/003294.png',
 		cooldown: 30000,
-		cooldownGroup: BLU_COOLDOWN_GROUP.FEATHER_RAIN,
+		cooldownGroup: BLU_COOLDOWN_GROUPS.FEATHER_RAIN,
 		statusesApplied: ['FEATHER_RAIN'],
 		damageType: MAGICAL,
 		elementType: ASTRAL,
@@ -428,7 +473,7 @@ export const BLU = ensureActions({
 		name: 'Eruption',
 		icon: 'https://xivapi.com/i/003000/003295.png',
 		cooldown: 30000,
-		cooldownGroup: BLU_COOLDOWN_GROUP.FEATHER_RAIN,
+		cooldownGroup: BLU_COOLDOWN_GROUPS.FEATHER_RAIN,
 		damageType: MAGICAL,
 		elementType: ASTRAL,
 	},
@@ -437,7 +482,7 @@ export const BLU = ensureActions({
 		name: 'Mountain Buster',
 		icon: 'https://xivapi.com/i/003000/003296.png',
 		cooldown: 60000,
-		cooldownGroup: BLU_COOLDOWN_GROUP.BLU_MOUNTAIN_BUSTER,
+		cooldownGroup: BLU_COOLDOWN_GROUPS.BLU_MOUNTAIN_BUSTER,
 		damageType: PHYSICAL,
 		elementType: UMBRAL,
 	},
@@ -446,7 +491,7 @@ export const BLU = ensureActions({
 		name: 'Shock Strike',
 		icon: 'https://xivapi.com/i/003000/003297.png',
 		cooldown: 60000,
-		cooldownGroup: BLU_COOLDOWN_GROUP.BLU_MOUNTAIN_BUSTER,
+		cooldownGroup: BLU_COOLDOWN_GROUPS.BLU_MOUNTAIN_BUSTER,
 		damageType: MAGICAL,
 		elementType: ASTRAL,
 	},
@@ -455,7 +500,7 @@ export const BLU = ensureActions({
 		name: 'Glass Dance',
 		icon: 'https://xivapi.com/i/003000/003298.png',
 		cooldown: 90000,
-		cooldownGroup: BLU_COOLDOWN_GROUP.GLASS_DANCE,
+		cooldownGroup: BLU_COOLDOWN_GROUPS.GLASS_DANCE,
 		damageType: MAGICAL,
 		elementType: UMBRAL,
 	},
@@ -464,7 +509,7 @@ export const BLU = ensureActions({
 		name: 'Veil of the Whorl',
 		icon: 'https://xivapi.com/i/003000/003299.png',
 		cooldown: 90000,
-		cooldownGroup: BLU_COOLDOWN_GROUP.GLASS_DANCE,
+		cooldownGroup: BLU_COOLDOWN_GROUPS.GLASS_DANCE,
 		statusesApplied: ['VEIL_OF_THE_WHORL'],
 	},
 	ALPINE_DRAFT: {
@@ -476,6 +521,7 @@ export const BLU = ensureActions({
 		gcdRecast: 2500,
 		damageType: MAGICAL,
 		elementType: ASTRAL,
+		speedAttribute: Attribute.SPELL_SPEED,
 	},
 	PROTEAN_WAVE: {
 		id: 18296,
@@ -486,6 +532,7 @@ export const BLU = ensureActions({
 		gcdRecast: 2500,
 		damageType: MAGICAL,
 		elementType: UMBRAL,
+		speedAttribute: Attribute.SPELL_SPEED,
 	},
 	NORTHERLIES: {
 		id: 18297,
@@ -496,6 +543,7 @@ export const BLU = ensureActions({
 		gcdRecast: 2500,
 		damageType: MAGICAL,
 		elementType: UMBRAL,
+		speedAttribute: Attribute.SPELL_SPEED,
 	},
 	ELECTROGENESIS: {
 		id: 18298,
@@ -506,6 +554,7 @@ export const BLU = ensureActions({
 		gcdRecast: 2500,
 		damageType: MAGICAL,
 		elementType: ASTRAL,
+		speedAttribute: Attribute.SPELL_SPEED,
 	},
 	KALTSTRAHL: {
 		id: 18299,
@@ -515,6 +564,7 @@ export const BLU = ensureActions({
 		castTime: 2000,
 		gcdRecast: 2500,
 		damageType: PHYSICAL,
+		speedAttribute: Attribute.SPELL_SPEED,
 	},
 	ABYSSAL_TRANSFIXION: {
 		id: 18300,
@@ -524,6 +574,7 @@ export const BLU = ensureActions({
 		castTime: 2000,
 		gcdRecast: 2500,
 		damageType: PHYSICAL,
+		speedAttribute: Attribute.SPELL_SPEED,
 	},
 	CHIRP: {
 		id: 18301,
@@ -532,6 +583,7 @@ export const BLU = ensureActions({
 		onGcd: true,
 		castTime: 2000,
 		gcdRecast: 2500,
+		speedAttribute: Attribute.SPELL_SPEED,
 	},
 	EERIE_SOUNDWAVE: {
 		id: 18302,
@@ -540,6 +592,7 @@ export const BLU = ensureActions({
 		onGcd: true,
 		castTime: 2000,
 		gcdRecast: 2500,
+		speedAttribute: Attribute.SPELL_SPEED,
 	},
 	POM_CURE: {
 		id: 18303,
@@ -548,6 +601,7 @@ export const BLU = ensureActions({
 		onGcd: true,
 		castTime: 1500,
 		gcdRecast: 2500,
+		speedAttribute: Attribute.SPELL_SPEED,
 	},
 	GOBSKIN: {
 		id: 18304,
@@ -557,6 +611,7 @@ export const BLU = ensureActions({
 		castTime: 2000,
 		gcdRecast: 2500,
 		statusesApplied: ['GOBSKIN'],
+		speedAttribute: Attribute.SPELL_SPEED,
 	},
 	MAGIC_HAMMER: {
 		id: 18305,
@@ -567,7 +622,9 @@ export const BLU = ensureActions({
 		cooldown: 90000,
 		gcdRecast: 2500,
 		statusesApplied: ['MAGIC_HAMMER'],
+		cooldownGroup: BLU_COOLDOWN_GROUPS.MAGIC_HAMMER,
 		damageType: MAGICAL,
+		speedAttribute: Attribute.SPELL_SPEED,
 	},
 	AVAIL: {
 		id: 18306,
@@ -578,6 +635,7 @@ export const BLU = ensureActions({
 		cooldown: 120000,
 		gcdRecast: 2500,
 		statusesApplied: ['AVAIL_MEATILY_SHIELDED', 'AVAIL_MEAT_SHIELD'],
+		speedAttribute: Attribute.SPELL_SPEED,
 	},
 	FROG_LEGS: {
 		id: 18307,
@@ -586,6 +644,7 @@ export const BLU = ensureActions({
 		onGcd: true,
 		castTime: 1000,
 		gcdRecast: 2500,
+		speedAttribute: Attribute.SPELL_SPEED,
 	},
 	SONIC_BOOM: {
 		id: 18308,
@@ -596,6 +655,7 @@ export const BLU = ensureActions({
 		gcdRecast: 2500,
 		damageType: MAGICAL,
 		elementType: ASTRAL,
+		speedAttribute: Attribute.SPELL_SPEED,
 	},
 	WHISTLE: {
 		id: 18309,
@@ -605,6 +665,7 @@ export const BLU = ensureActions({
 		castTime: 1000,
 		gcdRecast: 2500,
 		statusesApplied: ['WHISTLE'],
+		speedAttribute: Attribute.SPELL_SPEED,
 	},
 	WHITE_KNIGHTS_TOUR: {
 		id: 18310,
@@ -614,6 +675,7 @@ export const BLU = ensureActions({
 		castTime: 2000,
 		gcdRecast: 2500,
 		damageType: MAGICAL,
+		speedAttribute: Attribute.SPELL_SPEED,
 	},
 	BLACK_KNIGHTS_TOUR: {
 		id: 18311,
@@ -623,6 +685,7 @@ export const BLU = ensureActions({
 		castTime: 2000,
 		gcdRecast: 2500,
 		damageType: MAGICAL,
+		speedAttribute: Attribute.SPELL_SPEED,
 	},
 	LEVEL_5_DEATH: {
 		id: 18312,
@@ -632,6 +695,7 @@ export const BLU = ensureActions({
 		castTime: 2000,
 		gcdRecast: 2500,
 		cooldown: 180000,
+		speedAttribute: Attribute.SPELL_SPEED,
 	},
 	LAUNCHER: {
 		id: 18313,
@@ -641,6 +705,7 @@ export const BLU = ensureActions({
 		castTime: 2000,
 		gcdRecast: 2500,
 		damageType: DARK,
+		speedAttribute: Attribute.SPELL_SPEED,
 	},
 	PERPETUAL_RAY: {
 		id: 18314,
@@ -650,6 +715,7 @@ export const BLU = ensureActions({
 		castTime: 3000,
 		gcdRecast: 2500,
 		damageType: MAGICAL,
+		speedAttribute: Attribute.SPELL_SPEED,
 	},
 	CACTGUARD: {
 		id: 18315,
@@ -659,6 +725,7 @@ export const BLU = ensureActions({
 		castTime: 1000,
 		gcdRecast: 2500,
 		statusesApplied: ['CACTGUARD'],
+		speedAttribute: Attribute.SPELL_SPEED,
 	},
 	REVENGE_BLAST: {
 		id: 18316,
@@ -668,6 +735,7 @@ export const BLU = ensureActions({
 		castTime: 2000,
 		gcdRecast: 2500,
 		damageType: PHYSICAL,
+		speedAttribute: Attribute.SPELL_SPEED,
 	},
 	ANGEL_WHISPER: {
 		id: 18317,
@@ -677,6 +745,7 @@ export const BLU = ensureActions({
 		castTime: 10000,
 		cooldown: 300000,
 		gcdRecast: 2500,
+		speedAttribute: Attribute.SPELL_SPEED,
 	},
 	EXUVIATION: {
 		id: 18318,
@@ -685,6 +754,7 @@ export const BLU = ensureActions({
 		onGcd: true,
 		castTime: 2000,
 		gcdRecast: 2500,
+		speedAttribute: Attribute.SPELL_SPEED,
 	},
 	REFLUX: {
 		id: 18319,
@@ -695,6 +765,7 @@ export const BLU = ensureActions({
 		gcdRecast: 2500,
 		damageType: MAGICAL,
 		elementType: ASTRAL,
+		speedAttribute: Attribute.SPELL_SPEED,
 	},
 	DEVOUR: {
 		id: 18320,
@@ -706,6 +777,7 @@ export const BLU = ensureActions({
 		gcdRecast: 2500,
 		statusesApplied: ['DEVOUR'],
 		damageType: MAGICAL,
+		speedAttribute: Attribute.SPELL_SPEED,
 	},
 	CONDENSED_LIBRA: {
 		id: 18321,
@@ -715,6 +787,7 @@ export const BLU = ensureActions({
 		castTime: 2000,
 		gcdRecast: 2500,
 		statusesApplied: ['CONDENSED_LIBRA_ASTRAL', 'CONDENSED_LIBRA_UMBRAL', 'CONDENSED_LIBRA_PHYSICAL'],
+		speedAttribute: Attribute.SPELL_SPEED,
 	},
 	AETHERIAL_MIMICRY: {
 		id: 18322,
@@ -724,6 +797,7 @@ export const BLU = ensureActions({
 		castTime: 1000,
 		gcdRecast: 2500,
 		statusesApplied: ['MIMICRY_TANK', 'MIMICRY_DPS', 'MIMICRY_HEALER'],
+		speedAttribute: Attribute.SPELL_SPEED,
 	},
 	SURPANAKHA: {
 		id: 18323,
@@ -740,7 +814,7 @@ export const BLU = ensureActions({
 		name: 'Quasar',
 		icon: 'https://xivapi.com/i/003000/003329.png',
 		cooldown: 60000,
-		cooldownGroup: BLU_COOLDOWN_GROUP.QUASAR,
+		cooldownGroup: BLU_COOLDOWN_GROUPS.QUASAR,
 		damageType: MAGICAL,
 	},
 	J_KICK: {
@@ -748,7 +822,7 @@ export const BLU = ensureActions({
 		name: 'J Kick',
 		icon: 'https://xivapi.com/i/003000/003330.png',
 		cooldown: 60000,
-		cooldownGroup: BLU_COOLDOWN_GROUP.QUASAR,
+		cooldownGroup: BLU_COOLDOWN_GROUPS.QUASAR,
 		damageType: PHYSICAL,
 	},
 	TRIPLE_TRIDENT: {
@@ -760,6 +834,7 @@ export const BLU = ensureActions({
 		gcdRecast: 2500,
 		cooldown: 90000,
 		damageType: PHYSICAL,
+		speedAttribute: Attribute.SPELL_SPEED,
 	},
 	TINGLE: {
 		id: 23265,
@@ -771,6 +846,7 @@ export const BLU = ensureActions({
 		statusesApplied: ['TINGLING'],
 		damageType: MAGICAL,
 		elementType: ASTRAL,
+		speedAttribute: Attribute.SPELL_SPEED,
 	},
 	TATAMI_GAESHI: {
 		id: 23266,
@@ -780,6 +856,7 @@ export const BLU = ensureActions({
 		castTime: 2000,
 		gcdRecast: 2500,
 		damageType: MAGICAL,
+		speedAttribute: Attribute.SPELL_SPEED,
 	},
 	COLD_FOG: {
 		id: 23267,
@@ -790,14 +867,17 @@ export const BLU = ensureActions({
 		gcdRecast: 2500,
 		cooldown: 90000,
 		statusesApplied: ['COLD_FOG'],
+		speedAttribute: Attribute.SPELL_SPEED,
 	},
 	WHITE_DEATH: {
 		id: 23268,
 		name: 'White Death',
 		icon: 'https://xivapi.com/i/003000/003335.png',
 		onGcd: true,
+		gcdRecast: 2500,
 		damageType: MAGICAL,
 		elementType: UMBRAL,
+		speedAttribute: Attribute.SPELL_SPEED,
 	},
 	STOTRAM: {
 		id: 23416,
@@ -806,6 +886,7 @@ export const BLU = ensureActions({
 		onGcd: true,
 		castTime: 2000,
 		gcdRecast: 2500,
+		speedAttribute: Attribute.SPELL_SPEED,
 	},
 	SAINTLY_BEAM: {
 		id: 23270,
@@ -815,6 +896,7 @@ export const BLU = ensureActions({
 		castTime: 2000,
 		gcdRecast: 2500,
 		damageType: MAGICAL,
+		speedAttribute: Attribute.SPELL_SPEED,
 	},
 	FECULENT_FLOOD: {
 		id: 23271,
@@ -825,6 +907,7 @@ export const BLU = ensureActions({
 		gcdRecast: 2500,
 		damageType: MAGICAL,
 		elementType: UMBRAL,
+		speedAttribute: Attribute.SPELL_SPEED,
 	},
 	ANGELS_SNACK: {
 		id: 23272,
@@ -834,8 +917,9 @@ export const BLU = ensureActions({
 		cooldown: 120000,
 		castTime: 2000,
 		gcdRecast: 2500,
-		cooldownGroup: BLU_COOLDOWN_GROUP.MATRA_MAGIC,
+		cooldownGroup: BLU_COOLDOWN_GROUPS.MATRA_MAGIC,
 		statusesApplied: ['ANGELS_SNACK'],
+		speedAttribute: Attribute.SPELL_SPEED,
 	},
 	CHELONIAN_GATE: {
 		id: 23273,
@@ -845,16 +929,19 @@ export const BLU = ensureActions({
 		castTime: 2000,
 		gcdRecast: 2500,
 		cooldown: 30000,
-		cooldownGroup: BLU_COOLDOWN_GROUP.THE_ROSE_OF_DESTRUCTION,
+		cooldownGroup: BLU_COOLDOWN_GROUPS.THE_ROSE_OF_DESTRUCTION,
 		statusesApplied: ['CHELONIAN_GATE', 'AUSPICIOUS_TRANCE'],
+		speedAttribute: Attribute.SPELL_SPEED,
 	},
 	DIVINE_CATARACT: {
 		id: 23274,
 		name: 'Divine Cataract',
 		icon: 'https://xivapi.com//i/003000/003341.png',
 		onGcd: true,
+		gcdRecast: 2500,
 		damageType: MAGICAL,
 		elementType: UMBRAL,
+		speedAttribute: Attribute.SPELL_SPEED,
 	},
 	THE_ROSE_OF_DESTRUCTION: {
 		id: 23275,
@@ -864,8 +951,9 @@ export const BLU = ensureActions({
 		castTime: 2000,
 		gcdRecast: 2500,
 		cooldown: 30000,
-		cooldownGroup: BLU_COOLDOWN_GROUP.THE_ROSE_OF_DESTRUCTION,
+		cooldownGroup: BLU_COOLDOWN_GROUPS.THE_ROSE_OF_DESTRUCTION,
 		damageType: MAGICAL,
+		speedAttribute: Attribute.SPELL_SPEED,
 	},
 	BASIC_INSTINCT: {
 		id: 23276,
@@ -874,6 +962,7 @@ export const BLU = ensureActions({
 		onGcd: true,
 		castTime: 2000,
 		gcdRecast: 2500,
+		speedAttribute: Attribute.SPELL_SPEED,
 	},
 	ULTRAVIBRATION: {
 		id: 23277,
@@ -883,6 +972,7 @@ export const BLU = ensureActions({
 		castTime: 2000,
 		gcdRecast: 2500,
 		cooldown: 120000,
+		speedAttribute: Attribute.SPELL_SPEED,
 	},
 	BLAZE: {
 		id: 23278,
@@ -893,6 +983,7 @@ export const BLU = ensureActions({
 		gcdRecast: 2500,
 		damageType: MAGICAL,
 		elementType: UMBRAL,
+		speedAttribute: Attribute.SPELL_SPEED,
 	},
 	MUSTARD_BOMB: {
 		id: 23279,
@@ -903,6 +994,7 @@ export const BLU = ensureActions({
 		gcdRecast: 2500,
 		damageType: MAGICAL,
 		elementType: ASTRAL,
+		speedAttribute: Attribute.SPELL_SPEED,
 	},
 	DRAGON_FORCE: {
 		id: 23280,
@@ -912,7 +1004,8 @@ export const BLU = ensureActions({
 		castTime: 2000,
 		gcdRecast: 2500,
 		cooldown: 120000,
-		cooldownGroup: BLU_COOLDOWN_GROUP.MATRA_MAGIC,
+		cooldownGroup: BLU_COOLDOWN_GROUPS.MATRA_MAGIC,
+		speedAttribute: Attribute.SPELL_SPEED,
 	},
 	AETHERIAL_SPARK: {
 		id: 23281,
@@ -923,6 +1016,7 @@ export const BLU = ensureActions({
 		statusesApplied: ['BLEEDING'],
 		gcdRecast: 2500,
 		damageType: MAGICAL,
+		speedAttribute: Attribute.SPELL_SPEED,
 	},
 	HYDRO_PULL: {
 		id: 23282,
@@ -933,6 +1027,7 @@ export const BLU = ensureActions({
 		gcdRecast: 2500,
 		damageType: MAGICAL,
 		elementType: UMBRAL,
+		speedAttribute: Attribute.SPELL_SPEED,
 	},
 	MALEDICTION_OF_WATER: {
 		id: 23283,
@@ -943,6 +1038,7 @@ export const BLU = ensureActions({
 		gcdRecast: 2500,
 		damageType: MAGICAL,
 		elementType: UMBRAL,
+		speedAttribute: Attribute.SPELL_SPEED,
 	},
 	CHOCO_METEOR: {
 		id: 23284,
@@ -952,6 +1048,7 @@ export const BLU = ensureActions({
 		castTime: 2000,
 		gcdRecast: 2500,
 		damageType: MAGICAL,
+		speedAttribute: Attribute.SPELL_SPEED,
 	},
 	MATRA_MAGIC: {
 		id: 23285,
@@ -961,8 +1058,9 @@ export const BLU = ensureActions({
 		castTime: 2000,
 		gcdRecast: 2500,
 		cooldown: 120000,
-		cooldownGroup: BLU_COOLDOWN_GROUP.MATRA_MAGIC,
+		cooldownGroup: BLU_COOLDOWN_GROUPS.MATRA_MAGIC,
 		damageType: MAGICAL,
+		speedAttribute: Attribute.SPELL_SPEED,
 	},
 	PERIPHERAL_SYNTHESIS: {
 		id: 23286,
@@ -972,13 +1070,14 @@ export const BLU = ensureActions({
 		castTime: 2000,
 		gcdRecast: 2500,
 		damageType: PHYSICAL,
+		speedAttribute: Attribute.SPELL_SPEED,
 	},
 	BOTH_ENDS: {
 		id: 23287,
 		name: 'Both Ends',
 		icon: 'https://xivapi.com//i/003000/003354.png',
 		cooldown: 120000,
-		cooldownGroup: BLU_COOLDOWN_GROUP.NIGHTBLOOM,
+		cooldownGroup: BLU_COOLDOWN_GROUPS.NIGHTBLOOM,
 		damageType: MAGICAL,
 	},
 	PHANTOM_FLURRY: {
@@ -992,6 +1091,7 @@ export const BLU = ensureActions({
 		damageType: MAGICAL,
 	},
 	PHANTOM_FLURRY_KICK: { // This is what Phantom Flurry turns into while the effect is channeling
+		// Even though this is a GCD, it is NOT affected by Spell Speed; it always rolls for 2.5s
 		id: 23289,
 		name: 'Phantom Flurry',
 		icon: 'https://xivapi.com//i/003000/003356.png',
@@ -1004,8 +1104,217 @@ export const BLU = ensureActions({
 		name: 'Nightbloom',
 		icon: 'https://xivapi.com//i/003000/003357.png',
 		cooldown: 120000,
-		cooldownGroup: BLU_COOLDOWN_GROUP.NIGHTBLOOM,
+		cooldownGroup: BLU_COOLDOWN_GROUPS.NIGHTBLOOM,
 		statusesApplied: ['BLEEDING'],
 		damageType: MAGICAL,
+	},
+	GOBLIN_PUNCH: {
+		id: 34563,
+		name: 'Goblin Punch',
+		icon: 'https://xivapi.com/i/003000/003358.png',
+		onGcd: true,
+		gcdRecast: 2500,
+		damageType: PHYSICAL,
+		speedAttribute: Attribute.SPELL_SPEED,
+	},
+	RIGHT_ROUND: {
+		id: 34564,
+		name: 'Right Round',
+		icon: 'https://xivapi.com/i/003000/003359.png',
+		onGcd: true,
+		castTime: 2000,
+		gcdRecast: 2500,
+		damageType: PHYSICAL,
+		speedAttribute: Attribute.SPELL_SPEED,
+	},
+	SCHILTRON: {
+		id: 34565,
+		name: 'Schiltron',
+		icon: 'https://xivapi.com/i/003000/003360.png',
+		onGcd: true,
+		castTime: 2000,
+		gcdRecast: 2500,
+		statusesApplied: ['SCHILTRON'],
+		speedAttribute: Attribute.SPELL_SPEED,
+	},
+	REHYDRATION: {
+		id: 34566,
+		name: 'Rehydration',
+		icon: 'https://xivapi.com/i/003000/003361.png',
+		onGcd: true,
+		castTime: 5000,
+		gcdRecast: 2500,
+		speedAttribute: Attribute.SPELL_SPEED,
+	},
+	BREATH_OF_MAGIC: {
+		id: 34567,
+		name: 'Breath of Magic',
+		icon: 'https://xivapi.com/i/003000/003362.png',
+		onGcd: true,
+		castTime: 2000,
+		gcdRecast: 2500,
+		damageType: MAGICAL,
+		statusesApplied: ['BREATH_OF_MAGIC'],
+		speedAttribute: Attribute.SPELL_SPEED,
+	},
+	WILD_RAGE: {
+		id: 34568,
+		name: 'Wild Rage',
+		icon: 'https://xivapi.com/i/003000/003363.png',
+		onGcd: true,
+		castTime: 5000,
+		gcdRecast: 2500,
+		damageType: PHYSICAL,
+		speedAttribute: Attribute.SPELL_SPEED,
+	},
+	PEAT_PELT: {
+		id: 34569,
+		name: 'Peat Pelt',
+		icon: 'https://xivapi.com/i/003000/003364.png',
+		onGcd: true,
+		castTime: 2000,
+		gcdRecast: 2500,
+		damageType: MAGICAL,
+		elementType: UMBRAL,
+		statusesApplied: ['BEGRIMED'],
+		speedAttribute: Attribute.SPELL_SPEED,
+	},
+	DEEP_CLEAN: {
+		id: 34570,
+		name: 'Deep Clean',
+		icon: 'https://xivapi.com/i/003000/003365.png',
+		onGcd: true,
+		castTime: 2000,
+		gcdRecast: 2500,
+		damageType: PHYSICAL,
+		statusesApplied: ['SPICK_AND_SPAN'],
+		speedAttribute: Attribute.SPELL_SPEED,
+	},
+	RUBY_DYNAMICS: {
+		id: 34571,
+		name: 'Ruby Dynamics',
+		icon: 'https://xivapi.com/i/003000/003366.png',
+		onGcd: true,
+		castTime: 2000,
+		gcdRecast: 2500,
+		cooldown: 30000,
+		cooldownGroup: BLU_COOLDOWN_GROUPS.THE_ROSE_OF_DESTRUCTION,
+		damageType: PHYSICAL,
+		speedAttribute: Attribute.SPELL_SPEED,
+	},
+	DIVINATION_RUNE: {
+		id: 34572,
+		name: 'Divination Rune',
+		icon: 'https://xivapi.com/i/003000/003367.png',
+		onGcd: true,
+		castTime: 2000,
+		gcdRecast: 2500,
+		damageType: MAGICAL,
+		speedAttribute: Attribute.SPELL_SPEED,
+	},
+	DIMENSIONAL_SHIFT: {
+		id: 34573,
+		name: 'Dimensional Shift',
+		icon: 'https://xivapi.com/i/003000/003368.png',
+		onGcd: true,
+		castTime: 5000,
+		gcdRecast: 2500,
+		damageType: DARK,
+		speedAttribute: Attribute.SPELL_SPEED,
+	},
+	CONVICTION_MARCATO: {
+		id: 34574,
+		name: 'Conviction Marcato',
+		icon: 'https://xivapi.com/i/003000/003369.png',
+		onGcd: true,
+		castTime: 2000,
+		gcdRecast: 2500,
+		damageType: MAGICAL,
+		speedAttribute: Attribute.SPELL_SPEED,
+	},
+	FORCE_FIELD: {
+		id: 34575,
+		name: 'Force Field',
+		icon: 'https://xivapi.com/i/003000/003370.png',
+		onGcd: true,
+		castTime: 2000,
+		gcdRecast: 2500,
+		cooldown: 120000,
+		statusesApplied: ['BLU_PHYSICAL_VULN_DOWN', 'BLU_MAGIC_VULN_DOWN'],
+		speedAttribute: Attribute.SPELL_SPEED,
+	},
+	WINGED_REPROBATION: {
+		// TODO: This spell is weird and does weird things with the cooldown.
+		id: 34576,
+		name: 'Winged Reprobation',
+		icon: 'https://xivapi.com/i/003000/003371.png',
+		onGcd: true,
+		castTime: 2000,
+		gcdRecast: 2500,
+		cooldown: 120000,
+		damageType: PHYSICAL,
+		statusesApplied: ['WINGED_REPROBATION', 'WINGED_REDEMPTION'],
+		speedAttribute: Attribute.SPELL_SPEED,
+	},
+	LASER_EYE: {
+		id: 34577,
+		name: 'Laser Eye',
+		icon: 'https://xivapi.com/i/003000/003372.png',
+		onGcd: true,
+		castTime: 2000,
+		gcdRecast: 2500,
+		damageType: MAGICAL,
+		speedAttribute: Attribute.SPELL_SPEED,
+	},
+	CANDY_CANE: {
+		id: 34578,
+		name: 'Candy Cane',
+		icon: 'https://xivapi.com/i/003000/003373.png',
+		onGcd: true,
+		castTime: 1000,
+		cooldown: 90000,
+		gcdRecast: 2500,
+		statusesApplied: ['CANDY_CANE'],
+		cooldownGroup: BLU_COOLDOWN_GROUPS.MAGIC_HAMMER,
+		damageType: MAGICAL,
+		speedAttribute: Attribute.SPELL_SPEED,
+	},
+	MORTAL_FLAME: {
+		id: 34579,
+		name: 'Mortal Flame',
+		icon: 'https://xivapi.com/i/003000/003374.png',
+		onGcd: true,
+		castTime: 2000,
+		gcdRecast: 2500,
+		damageType: MAGICAL,
+		elementType: ASTRAL,
+		statusesApplied: ['MORTAL_FLAME'],
+		speedAttribute: Attribute.SPELL_SPEED,
+	},
+	SEA_SHANTY: {
+		id: 34580,
+		name: 'Sea Shanty',
+		icon: 'https://xivapi.com/i/003000/003375.png',
+		cooldown: 120000,
+		damageType: MAGICAL,
+		elementType: UMBRAL,
+	},
+	APOKALYPSIS: {
+		id: 34581,
+		name: 'Apokalypsis',
+		icon: 'https://xivapi.com/i/003000/003376.png',
+		cooldown: 120000,
+		damageType: MAGICAL,
+		onGcd: true, // same justification as with Phantom Flurry
+		statusesApplied: ['APOKALYPSIS'],
+		cooldownGroup: BLU_COOLDOWN_GROUPS.BEING_MORTAL,
+	},
+	BEING_MORTAL: {
+		id: 34581,
+		name: 'Being Mortal',
+		icon: 'https://xivapi.com/i/003000/003377.png',
+		cooldown: 120000,
+		damageType: MAGICAL,
+		cooldownGroup: BLU_COOLDOWN_GROUPS.BEING_MORTAL,
 	},
 })
