@@ -6,6 +6,16 @@ export const changelog = [
 		date: new Date('2023-07-24'),
 		Changes: () => <>
 			<ul>
+				<li>BLU's Moon Flute report has been updated for the 6.45 spells. </li>
+				<li>BLU's Moon Flute report now handles the Breath of Magic odd-minute reapply burst. </li>
+			</ul>
+		</>,
+		contributors: [CONTRIBUTORS.HUGMEIR],
+	},
+	{
+		date: new Date('2023-07-24'),
+		Changes: () => <>
+			<ul>
 				<li>BLU's cooldowns will filter out spells that were not used at all.</li>
 				<li>BLU's cooldowns now track Being Mortal, Sea Shanty, and Winged Reprobation.</li>
 			</ul>
