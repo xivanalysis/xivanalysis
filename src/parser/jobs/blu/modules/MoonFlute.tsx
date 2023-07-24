@@ -72,14 +72,20 @@ export class MoonFlute extends BuffWindow {
 	override buffStatus = this.data.statuses.WAXING_NOCTURNE
 
 	private windowMissedTT = new Set<number>()
+	private breathOfMagicApplier: boolean = false
 
 	override initialise() {
 		super.initialise()
 
+		const playerFilter = filter<Event>().source(this.parser.actor.id)
 		// Add a Waning Moon hook, essentially telling us exactly when a MF window ended.
-		const extraFilter = filter<Event>().source(this.parser.actor.id).type('statusApply')
+		const extraFilter = playerFilter.type('statusApply')
 			.status(this.data.statuses.WANING_NOCTURNE.id)
 		this.addEventHook(extraFilter, this.onWaningNocturneApply)
+
+		const bomFilter = playerFilter.type('action')
+			.action(this.data.actions.BREATH_OF_MAGIC.id)
+		this.addEventHook(bomFilter, this.onCastBreathOfMagic)
 
 		const suggestionIcon = this.data.actions.MOON_FLUTE.icon
 		const suggestionWindowName = <ActionLink action="MOON_FLUTE" showIcon={false}/>
@@ -162,6 +168,10 @@ export class MoonFlute extends BuffWindow {
 		return finalStingUsed
 	}
 
+	private onCastBreathOfMagic() {
+		this.breathOfMagicApplier = true
+	}
+
 	private onWaningNocturneApply() {
 		// This will be 0 if TT is available, and some number of milliseconds otherwise
 		const ttCd = this.cooldowns.remaining('TRIPLE_TRIDENT')
@@ -182,31 +192,50 @@ export class MoonFlute extends BuffWindow {
 
 	private adjustExpectedActionOutcome(window: HistoryEntry<EvaluatedAction[]>, trackedActions: TrackedActionGroup) {
 		const finalStingUsed = this.finalStingsUsedInWindow(window)
-		if (finalStingUsed === 0) {
-			// Final Sting not used here
-			if (trackedActions.actions.length !== 1) {
-				// Default handling:
-				return
-			}
-			const trackedActionId = trackedActions.actions[0].id
-			if (trackedActionId === this.data.actions.TRIPLE_TRIDENT.id) {
-				// Using TT on cooldown, on a long enough timeline, can be a DPS gain over
-				// holding it for a MF window, particularly for SpS builds.
-				// So let's be understanding -- We only dock points if they were in a
-				// Moon Flute window, had TT available, and didn't use it.
-				if (!this.windowMissedTT.has(window.start)) {
-					// TT was either used, or wasn't available during the window.
-					// Either way, this check will either be a Positive or a Neutral,
-					// never a negative.
+		if (finalStingUsed !== 0) {
+			// Final Sting used, so don't dock any points for missed actions:
+			return neutralOrPositiveOutcome
+		}
+
+		// Final Sting not used here
+		if (this.breathOfMagicApplier) {
+			// It's the Breath of Magic applier!  They may be doing an off-minute window to
+			// reapply BoM, and we should not dock them any points for that.
+			// ...but how can we tell if it's an off-minute window?
+			// Yeah, that's a good question.  Hopefully someone will have a better
+			// answer than mine, which is SILLY HEURISTIC:
+			// If this MF includes both Breath of Magic and Song of Torment, it's
+			// an odd-minute apply.
+			let castBoM = false
+			let castSoT = false
+			for (const event of window.data) {
+				castBoM ||= event.action.id === this.data.actions.BREATH_OF_MAGIC.id
+				castSoT ||= event.action.id === this.data.actions.SONG_OF_TORMENT.id
+				if (castBoM && castSoT) {
+					// Heuristic says this is an off-minute MF, so accept them doing whatever
+					// they want for oGCD spam.
 					return neutralOrPositiveOutcome
 				}
 			}
-			// Default handling:
-			return
 		}
 
-		// Final Sting used, so don't dock any points for missed actions:
-		return neutralOrPositiveOutcome
+		// For SpS builds, using Triple Trident on cooldown is a DPS gain, so
+		// jump through hoops to accommodate for that:
+		const trackedActionId = trackedActions.actions[0].id
+		if (trackedActionId === this.data.actions.TRIPLE_TRIDENT.id) {
+			// Using TT on cooldown, on a long enough timeline, can be a DPS gain over
+			// holding it for a MF window, particularly for SpS builds.
+			// So let's be understanding -- We only dock points if they were in a
+			// Moon Flute window, had TT available, and didn't use it.
+			if (!this.windowMissedTT.has(window.start)) {
+				// TT was either used, or wasn't available during the window.
+				// Either way, this check will either be a Positive or a Neutral,
+				// never a negative.
+				return neutralOrPositiveOutcome
+			}
+		}
+		// Default handling:
+		return
 	}
 }
 
