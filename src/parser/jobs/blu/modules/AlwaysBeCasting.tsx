@@ -24,7 +24,7 @@ const SURPANAKHA_ANIMATION_LOCK_MS = 1000
 // This also removes the time under Waning Nocturne (the second half of Moon Flute)
 // from the ABC report. Can't cast, am waning.
 
-interface channelWindow {
+interface ChannelWindow {
 	manualKick: boolean
 	inMoonFlute: boolean
 	actionId: number
@@ -32,7 +32,7 @@ interface channelWindow {
 
 export class AlwaysBeCasting extends CoreAlwaysBeCasting {
 	private diamondBackHistory: History<boolean> = new History<boolean>(() => (true))
-	private channelHistory: History<channelWindow> = new History<channelWindow>(() => ({
+	private channelHistory: History<ChannelWindow> = new History<ChannelWindow>(() => ({
 		manualKick: false,
 		inMoonFlute: false,
 		actionId: 0,
@@ -125,12 +125,8 @@ export class AlwaysBeCasting extends CoreAlwaysBeCasting {
 	}
 
 	override considerCast(action: Action, castStart: number): boolean {
-		if (action === this.data.actions.PHANTOM_FLURRY) {
-			this.debug(`Phantom Flurry began channeling at ${this.parser.formatEpochTimestamp(castStart)}`)
-			return false
-		}
-		if (action === this.data.actions.APOKALYPSIS) {
-			this.debug(`Apokalypsis began channeling at ${this.parser.formatEpochTimestamp(castStart)}`)
+		if (action === this.data.actions.PHANTOM_FLURRY || action === this.data.actions.APOKALYPSIS) {
+			this.debug(`${action.name} began channeling at ${this.parser.formatEpochTimestamp(castStart)}`)
 			return false
 		}
 
