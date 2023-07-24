@@ -116,19 +116,15 @@ export class MoonFlute extends BuffWindow {
 					expectedPerWindow: 1,
 				},
 				{
-					actions: [this.data.actions.THE_ROSE_OF_DESTRUCTION],
-					expectedPerWindow: 1,
-				},
-				{
 					actions: [this.data.actions.SHOCK_STRIKE, this.data.actions.BLU_MOUNTAIN_BUSTER],
 					expectedPerWindow: 1,
 				},
 				{
-					actions: [this.data.actions.BRISTLE],
+					actions: [this.data.actions.SEA_SHANTY],
 					expectedPerWindow: 1,
 				},
 				{
-					actions: [this.data.actions.GLASS_DANCE],
+					actions: [this.data.actions.BEING_MORTAL],
 					expectedPerWindow: 1,
 				},
 				{
