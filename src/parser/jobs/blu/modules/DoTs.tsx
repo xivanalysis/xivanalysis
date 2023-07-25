@@ -5,7 +5,7 @@ import {Event} from 'event'
 import {filter} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
 import {Actors} from 'parser/core/modules/Actors'
-import Checklist, {Requirement, TARGET, TieredRule} from 'parser/core/modules/Checklist'
+import Checklist, {Requirement, TARGET, Rule} from 'parser/core/modules/Checklist'
 import {DoTs as CoreDoTs} from 'parser/core/modules/DoTs'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
@@ -151,13 +151,13 @@ export class DoTs extends CoreDoTs {
 			}))
 		}
 
-		this.checklist.add(new TieredRule({
-			name: <Trans id="blu.dots.rule.name">Keep your DoTs up </Trans>,
+		this.checklist.add(new Rule({
+			name: <Trans id="blu.dots.rule.name">Keep your DoTs up</Trans>,
 			description: <Trans id="blu.dots.rule.description">
 				The <DataLink status="BLEEDING" showIcon={false} showTooltip={false} /> effect from <DataLink action="NIGHTBLOOM" showIcon={false} showTooltip={false} /> and <DataLink action="SONG_OF_TORMENT" showIcon={false} showTooltip={false} /> is a solid 15% of your total damage. <br />
 			If you are one of the DPSes applying <DataLink action="BREATH_OF_MAGIC" showIcon={false} showTooltip={false} /> or <DataLink action="MORTAL_FLAME" showIcon={false} showTooltip={false} />, it should be a top priority to keep these DoTs rolling.
 			</Trans>,
-			tiers: SEVERITIES.UPTIME,
+			target: 95,
 			requirements: requirements,
 		}))
 	}
