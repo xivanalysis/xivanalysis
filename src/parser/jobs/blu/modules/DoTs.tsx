@@ -101,28 +101,26 @@ export class DoTs extends CoreDoTs {
 			value: this.unbuffedSongsOfTorment,
 		}))
 
+		const unbuffedWhyBoM = <Trans id ="blu.breath_of_magic.suggestion.unbuffed.why">
+			<Plural value={this.unbuffedBoM} one="# Breath of Magic was" other="# Breaths of Magic were"/> cast without both buffs.
+		</Trans>
+		const unbuffedWhyFlame = <Trans id ="blu.mortal_flame.suggestion.unbuffed.why">
+			<Plural value={this.unbuffedMortal} one="# Mortal Flame was" other="# Mortal Flames were"/> cast without both buffs.
+		</Trans>
+		const unbuffedWhyBoth = <Trans id ="blu.big-dots.suggestion.unbuffed.why">
+			<Plural value={this.unbuffedBoM} one="# Breath of Magic" other="# Breaths of Magic"/>,
+			<Plural value={this.unbuffedMortal} one="# Mortal Flame" other="# Mortal Flames"/> were cast without both buffs.
+		</Trans>
+		const unbuffedWhy = (this.unbuffedBoM && this.unbuffedMortal) ? unbuffedWhyBoth
+			: this.unbuffedMortal ? unbuffedWhyFlame : unbuffedWhyBoM
 		this.suggestions.add(new TieredSuggestion({
-			icon: this.data.actions.BREATH_OF_MAGIC.icon,
-			content: <Trans id = "blu.breath_of_magic.suggestion.unbristled.content">
-				<DataLink action="BREATH_OF_MAGIC"/> must always be buffed with <DataLink action="BRISTLE"/> and <DataLink action="MOON_FLUTE"/> for a colossal damage gain.
+			icon: this.unbuffedMortal ? this.data.actions.MORTAL_FLAME.icon : this.data.actions.BREATH_OF_MAGIC.icon,
+			content: <Trans id = "blu.big-dot.suggestion.unbuffed.content">
+				<DataLink action="BREATH_OF_MAGIC"/> and <DataLink action="MORTAL_FLAME"/> must always be buffed with <DataLink action="BRISTLE"/> and <DataLink action="MOON_FLUTE"/> for a colossal damage gain.
 			</Trans>,
 			tiers: {1: SEVERITY.MAJOR},
-			why: <Trans id ="blu.breath_of_magic.suggestion.unbristled.why">
-				<Plural value={this.unbuffedBoM} one="# Breath of Magic was" other="# Breaths of Magic were"/> cast without both buffs.
-			</Trans>,
-			value: this.unbuffedBoM,
-		}))
-
-		this.suggestions.add(new TieredSuggestion({
-			icon: this.data.actions.MORTAL_FLAME.icon,
-			content: <Trans id = "blu.mortal_flame.suggestion.unbristled.content">
-				<DataLink action="MORTAL_FLAME"/> must always be buffed with <DataLink action="BRISTLE"/> and <DataLink action="MOON_FLUTE"/> for a colossal damage gain.
-			</Trans>,
-			tiers: {1: SEVERITY.MAJOR},
-			why: <Trans id ="blu.mortal_flame.suggestion.unbristled.why">
-				<Plural value={this.unbuffedMortal} one="# Mortal Flame was" other="# Mortal Flames were"/> cast without both buffs.
-			</Trans>,
-			value: this.unbuffedMortal,
+			why: unbuffedWhy,
+			value: this.unbuffedBoM + this.unbuffedMortal,
 		}))
 	}
 
