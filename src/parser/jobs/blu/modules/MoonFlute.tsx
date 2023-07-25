@@ -188,8 +188,8 @@ export class MoonFlute extends BuffWindow {
 				A <ActionLink action="MOON_FLUTE" showIcon={false} showTooltip={false} /> window should contain at least
 				4 GCDs and end in <ActionLink action="PHANTOM_FLURRY" />. If you have higher latency this can
 				be problematic. Changing your speed speed might help, and in a pinch you can try moving certain
-				oGCDs out of the window (<ActionLink action="J_KICK" showIcon={false} />,
-				 <ActionLink action="FEATHER_RAIN" showIcon={false} />), or replacing 2-second cast time GCDs
+				oGCDs out of the window (<ActionLink action="J_KICK" showIcon={false} />
+				, <ActionLink action="FEATHER_RAIN" showIcon={false} />), or replacing 2-second cast time GCDs
 				with 1-second GCDs like <ActionLink action="SONIC_BOOM" showIcon={false} />.
 			</Trans>,
 			suggestionWindowName,
