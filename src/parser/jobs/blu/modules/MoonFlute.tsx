@@ -185,16 +185,12 @@ export class MoonFlute extends BuffWindow {
 			globalCooldown: this.globalCooldown,
 			suggestionIcon,
 			suggestionContent: <Trans id="blu.moonflutes.suggestions.gcds.content">
-				Regardless of spell speed, ideally a <ActionLink action="MOON_FLUTE" /> window should contain at least
+				A <ActionLink action="MOON_FLUTE" showIcon={false} showTooltip={false} /> window should contain at least
 				4 GCDs and end in <ActionLink action="PHANTOM_FLURRY" />. If you have higher latency this can
 				be problematic. Changing your speed speed might help, and in a pinch you can try moving certain
 				oGCDs out of the window (<ActionLink action="J_KICK" showIcon={false} />,
-				<ActionLink action="FEATHER_RAIN" showIcon={false} />), or replacing 2-second cast time GCDs
-				with <ActionLink action="SONIC_BOOM" showIcon={false} />.
-				<br />
-				The <ActionLink action="BREATH_OF_MAGIC" showIcon={false} /> applier may choose to reapply the DoT
-				by doing a Moon Flute every minute. The extra odd-minute Moon Flute is exempt from most requirements,
-				but it should ideally should also include a <ActionLink action="SONG_OF_TORMENT" showIcon={false} />.
+				 <ActionLink action="FEATHER_RAIN" showIcon={false} />), or replacing 2-second cast time GCDs
+				with 1-second GCDs like <ActionLink action="SONIC_BOOM" showIcon={false} />.
 			</Trans>,
 			suggestionWindowName,
 			severityTiers: SEVERITIES.TOO_FEW_GCDS,
@@ -207,10 +203,13 @@ export class MoonFlute extends BuffWindow {
 			suggestionIcon: suggestionIcon,
 			suggestionWindowName: suggestionWindowName,
 			suggestionContent: <Trans id="blu.moonflutes.suggestions.expected-actions.content">
-				<ActionLink action="MOON_FLUTE" /> is only worth using if the buffed actions during the window
+				<ActionLink action="MOON_FLUTE" showIcon={false} /> is only worth using if the buffed actions during the window
 				will give you an extra 1260 potency (equivalent to casting <ActionLink action="SONIC_BOOM" showIcon={false} /> six times).
 				The more of your larger cooldowns you can fit into the window, the better the result. High-priority targets
 				are <ActionLink action="NIGHTBLOOM" showIcon={false} />, and finishing the combo with a <ActionLink action="PHANTOM_FLURRY" showIcon={false} />.
+				<br />
+				The odd-minute <ActionLink action="MOON_FLUTE" showIcon={false} showTooltip={false} /> from
+				the <ActionLink action="BREATH_OF_MAGIC" showIcon={false} /> applier is exempt from this check.
 			</Trans>,
 			severityTiers: SEVERITIES.MISSING_EXPECTED_USES,
 			adjustOutcome: this.adjustExpectedActionOutcome.bind(this),
