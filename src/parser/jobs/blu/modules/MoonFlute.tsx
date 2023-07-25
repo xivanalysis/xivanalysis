@@ -186,11 +186,15 @@ export class MoonFlute extends BuffWindow {
 			suggestionIcon,
 			suggestionContent: <Trans id="blu.moonflutes.suggestions.gcds.content">
 				Regardless of spell speed, ideally a <ActionLink action="MOON_FLUTE" /> window should contain at least
-					4 GCDs and end in <ActionLink action="PHANTOM_FLURRY" />. If you have higher latency this can
-					be problematic. Changing your speed speed might help, and in a pinch you can try moving certain
-					oGCDs out of the window (<ActionLink action="J_KICK" showIcon={false} />, <ActionLink action="GLASS_DANCE" showIcon={false} />,
-				<ActionLink action="FEATHER_RAIN" showIcon={false} />), or replacing <ActionLink action="THE_ROSE_OF_DESTRUCTION" showIcon={false} />
-					with a <ActionLink action="SONIC_BOOM" showIcon={false} />.
+				4 GCDs and end in <ActionLink action="PHANTOM_FLURRY" />. If you have higher latency this can
+				be problematic. Changing your speed speed might help, and in a pinch you can try moving certain
+				oGCDs out of the window (<ActionLink action="J_KICK" showIcon={false} />,
+				<ActionLink action="FEATHER_RAIN" showIcon={false} />), or replacing 2-second cast time GCDs
+				with <ActionLink action="SONIC_BOOM" showIcon={false} />.
+				<br />
+				The <ActionLink action="BREATH_OF_MAGIC" showIcon={false} /> applier may choose to reapply the DoT
+				by doing a Moon Flute every minute. The extra odd-minute Moon Flute is exempt from most requirements,
+				but it should ideally should also include a <ActionLink action="SONG_OF_TORMENT" showIcon={false} />.
 			</Trans>,
 			suggestionWindowName,
 			severityTiers: SEVERITIES.TOO_FEW_GCDS,
@@ -251,21 +255,9 @@ export class MoonFlute extends BuffWindow {
 		if (this.breathOfMagicApplier) {
 			// It's the Breath of Magic applier!  They may be doing an off-minute window to
 			// reapply BoM, and we should not dock them any points for that.
-			// ...but how can we tell if it's an off-minute window?
-			// Yeah, that's a good question.  Hopefully someone will have a better
-			// answer than mine, which is SILLY HEURISTIC:
-			// If this MF includes both Breath of Magic and Song of Torment, it's
-			// an odd-minute apply.
-			let castBoM = false
-			let castSoT = false
-			for (const event of window.data) {
-				castBoM ||= event.action.id === this.data.actions.BREATH_OF_MAGIC.id
-				castSoT ||= event.action.id === this.data.actions.SONG_OF_TORMENT.id
-				if (castBoM && castSoT) {
-					// Heuristic says this is an off-minute MF, so accept them doing whatever
-					// they want for oGCD spam.
-					return neutralOrPositiveOutcome
-				}
+			if (this.offMinuteBoMMoonFlute(window)) {
+				// TODO: We should actually still enforce that Surpanakha should either be 4 casts or 0, nothing else.
+				return neutralOrPositiveOutcome
 			}
 		}
 
@@ -286,6 +278,36 @@ export class MoonFlute extends BuffWindow {
 		}
 		// Default handling:
 		return
+	}
+
+	private offMinuteBoMMoonFlute(window: HistoryEntry<EvaluatedAction[]>): boolean {
+		// We only relax the requirements for off-minute Moon Flutes that reapply BoM:
+		const bomCasts = window.data.filter(event => event.action.id === this.data.actions.BREATH_OF_MAGIC.id).length
+		if (bomCasts < 1) { return false }
+
+		// So how can we tell if it's an off-minute window?
+		// Everyone's favorite: Heuristics!  If Nightbloom is still in cooldown,
+		// and will be in cooldown by the end of the Moon Flute, assume it's an odd-minute flute.
+		// NOTE: Initially we were checking for a Moon Flute that used both BoM and
+		// Song of Torment, but it's possible -- though not recommended -- that they didn't
+		// take Song of Torment.
+		const nightbloomHistory = this.cooldowns.cooldownHistory(this.data.actions.NIGHTBLOOM) ?? []
+		for (const nightbloomCast of nightbloomHistory) {
+			const mfEnd = window.end ?? (window.start + this.data.statuses.WAXING_NOCTURNE.duration)
+			if (nightbloomCast.start > window.start && nightbloomCast.start < mfEnd) {
+				// This nightbloom happened during this MF, assume it's an even-minute
+				continue
+			}
+			const bloomOffCd = nightbloomCast.start + this.data.actions.NIGHTBLOOM.cooldown
+			if (nightbloomCast.start < window.start && bloomOffCd > (mfEnd + this.data.statuses.WANING_NOCTURNE.duration)) {
+				// We had a nightbloom that happened before this window, but comes off cooldown
+				// after this MF is over.  Assume that this is an odd-minute MF, so accept them
+				// doing whatever they want for the oGCD spam.
+				return true
+			}
+		}
+
+		return false
 	}
 }
 
