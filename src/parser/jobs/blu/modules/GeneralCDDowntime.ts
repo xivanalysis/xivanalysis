@@ -45,6 +45,15 @@ export class GeneralCDDowntime extends CooldownDowntime {
 			allowedAverageDowntime: 30000, // DPS gain to hold this until the Moon Flute window
 		},
 		{
+			cooldowns: [this.data.actions.SEA_SHANTY],
+			firstUseOffset: 12500,
+		},
+		{
+			cooldowns: [this.data.actions.BEING_MORTAL, this.data.actions.APOKALYPSIS],
+			// If they are taking Apokalypsis, they may be holding it until the odd-minute burst
+			firstUseOffset: 75000,
+		},
+		{
 			cooldowns: [this.data.actions.J_KICK, this.data.actions.QUASAR],
 			firstUseOffset: 2500,
 		},
@@ -56,6 +65,10 @@ export class GeneralCDDowntime extends CooldownDowntime {
 		{
 			cooldowns: [this.data.actions.THE_ROSE_OF_DESTRUCTION],
 			firstUseOffset: 5000,
+		},
+		{
+			cooldowns: [this.data.actions.WINGED_REPROBATION],
+			firstUseOffset: 35000, // First use will at best be during MF, but the cooldown won't trigger until after
 		},
 		{
 			cooldowns: [this.data.actions.COLD_FOG],
@@ -74,4 +87,9 @@ export class GeneralCDDowntime extends CooldownDowntime {
 		{cooldowns: [this.data.actions.DRAGON_FORCE]},
 		{cooldowns: [this.data.actions.ANGELS_SNACK]},
 	]
+
+	override onComplete() {
+		this.trackedCds = this.trackedCds.filter(cdGroup => this.calculateUsageCount(cdGroup) !== 0)
+		return super.onComplete()
+	}
 }
