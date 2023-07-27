@@ -42,7 +42,7 @@ export class SpeedStatsAdapterStep extends AdapterStep {
 	private actorActions = new Map<Actor['id'], GCD[]>()
 	private actorSpeedmodWindows = new Map<Actor['id'], Map<number, SpeedmodWindow[]>>()
 
-	static override debug = true
+	static override debug = false
 	private endTimestamp = this.pull.timestamp + this.pull.duration
 
 	override adapt(baseEvent: FflogsEvent, adaptedEvents: Event[]) {
@@ -202,7 +202,7 @@ export class SpeedStatsAdapterStep extends AdapterStep {
 
 			const castTimeScale = recast / BASE_GCD
 			const speedModifier = this.getSpeedModifierAtTimestamp(previous.start, actorId)
-			const adjustedInterval = rawInterval - (hasAnimationLock ? ANIMATION_LOCK : 0) / castTimeScale / speedModifier
+			const adjustedInterval = (rawInterval - (hasAnimationLock ? ANIMATION_LOCK : 0)) / castTimeScale / speedModifier
 
 			// The below debug is useful if you need to trace individual interval calculations, but will make your console really laggy if you enable it without any filter
 			//this.debug(`Actor ID: ${actorId} - Event at ${previous.start} - Raw Interval: ${rawInterval}ms - Caster Tax: ${hasAnimationLock} - Cast Time Scale: ${castTimeScale} - Speed Modifier: ${speedModifier} - Calculated Interval: ${adjustedInterval}ms`)
@@ -303,8 +303,6 @@ export class SpeedStatsAdapterStep extends AdapterStep {
 			const smallestInterval = batch * BATCH_SIZE_MS
 			const largestInterval = ((batch + 1) * BATCH_SIZE_MS) - 1
 			const averageInterval = (smallestInterval + largestInterval) / 2
-
-			console.log('average interval for batch: ', averageInterval)
 
 			intervalSum += averageInterval * count
 			countSum += batches.get(batch) ?? 0
