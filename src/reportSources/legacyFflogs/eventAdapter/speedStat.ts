@@ -269,10 +269,9 @@ export class SpeedStatsAdapterStep extends AdapterStep {
 		const batches = this.batchIntervals(observedIntervals)
 		const rawEstimate = this.estimateGcdFromBatches(batches)
 
-		// We can expect up to 0.1s of GCD drift resulting from imperfect fps alignment,
-		// so our estimate of the true tooltip GCD should probably be floored.
+		// Round to the nearest 0.01s to reflect how tooltip GCDs are tiered in-game
 		// eslint-disable-next-line @typescript-eslint/no-magic-numbers
-		return Math.floor(rawEstimate / 10) * 10
+		return Math.round(rawEstimate / 10) * 10
 	}
 
 	private batchIntervals(intervals: number[]): Map<number, number> {
