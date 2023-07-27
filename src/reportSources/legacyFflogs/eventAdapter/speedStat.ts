@@ -296,9 +296,9 @@ export class SpeedStatsAdapterStep extends AdapterStep {
 			batchesNearMode.push(batch)
 		}
 
+		// Calculate a weighted average of the batches surrounding the mode
 		let intervalSum = 0
 		let countSum = 0
-
 		for (const batch of batchesNearMode) {
 			const count = batches.get(batch) ?? 0
 			const smallestInterval = batch * BATCH_SIZE_MS
