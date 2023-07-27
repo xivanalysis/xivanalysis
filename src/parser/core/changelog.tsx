@@ -14,7 +14,7 @@ export const changelog: ChangelogEntry[] = [
 		Changes: () => <>
 			Improve GCD estimation from FFLogs reports.
 		</>,
-		contributors: [CONTRIBUTORS.HINT],
+		contributors: [CONTRIBUTORS.HINT, CONTRIBUTORS.AYA],
 	},
 	{
 		date: new Date('2023-07-11'),
