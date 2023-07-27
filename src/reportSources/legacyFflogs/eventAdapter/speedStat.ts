@@ -207,7 +207,7 @@ export class SpeedStatsAdapterStep extends AdapterStep {
 			// The below debug is useful if you need to trace individual interval calculations, but will make your console really laggy if you enable it without any filter
 			//this.debug(`Actor ID: ${actorId} - Event at ${previous.start} - Raw Interval: ${rawInterval}ms - Caster Tax: ${hasAnimationLock} - Cast Time Scale: ${castTimeScale} - Speed Modifier: ${speedModifier} - Calculated Interval: ${adjustedInterval}ms`)
 
-			intervals[previousAction.speedAttribute].push(adjustedInterval) 
+			intervals[previousAction.speedAttribute].push(adjustedInterval)
 		})
 
 		const attributes: AttributeValue[] = []
@@ -262,7 +262,7 @@ export class SpeedStatsAdapterStep extends AdapterStep {
 	}
 
 	private estimateGcdLength(observedIntervals: number[]): number {
-		// Since timestamps in logs are batched in intervals of roughly 45ms, 
+		// Since timestamps in logs are batched in intervals of roughly 45ms,
 		// a tooltip GCD of 2.50 (e.g.) will see many intervals in the range [2.41, 2.59].
 		// Rather than considering the most frequent interval, we can instead batch the intervals
 		// and then make an estimate based on the distribution of the batches.
@@ -271,6 +271,7 @@ export class SpeedStatsAdapterStep extends AdapterStep {
 
 		// We can expect up to 0.1s of GCD drift resulting from imperfect fps alignment,
 		// so our estimate of the true tooltip GCD should probably be floored.
+		// eslint-disable-next-line @typescript-eslint/no-magic-numbers
 		return Math.floor(rawEstimate / 10) * 10
 	}
 
@@ -309,7 +310,7 @@ export class SpeedStatsAdapterStep extends AdapterStep {
 		}
 
 		if (countSum === 0) {
-			throw new Error("No GCD intervals observed (division by zero)")
+			throw new Error('No GCD intervals observed (division by zero)')
 		}
 
 		return intervalSum / countSum
