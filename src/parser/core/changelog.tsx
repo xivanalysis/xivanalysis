@@ -10,6 +10,13 @@ export const changelog: ChangelogEntry[] = [
 	// 	contributors: [CONTRIBUTORS.YOU],
 	// },
 	{
+		date: new Date('2023-07-27'),
+		Changes: () => <>
+			Improve GCD estimation from FFLogs reports.
+		</>,
+		contributors: [CONTRIBUTORS.HINT, CONTRIBUTORS.AYA],
+	},
+	{
 		date: new Date('2023-07-11'),
 		Changes: () => <>
 			Better handling for defensives with a shared cooldown, and fix a bug with the extra use available calculations.
