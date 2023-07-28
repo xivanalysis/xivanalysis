@@ -10,6 +10,13 @@ export const changelog: ChangelogEntry[] = [
 	// 	contributors: [CONTRIBUTORS.YOU],
 	// },
 	{
+		date: new Date('2023-07-27'),
+		Changes: () => <>
+			Improve GCD estimation from FFLogs reports.
+		</>,
+		contributors: [CONTRIBUTORS.HINT, CONTRIBUTORS.AYA],
+	},
+	{
 		date: new Date('2023-07-21'),
 		Changes: () => <>
 			Fixed a bug that was breaking raid buff window detection for players in a party with a Summoner that did not use <DataLink action="RADIANT_AEGIS" showIcon={false} />.
