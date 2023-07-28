@@ -1244,7 +1244,8 @@ export const BLU = ensureActions({
 		speedAttribute: Attribute.SPELL_SPEED,
 	},
 	WINGED_REPROBATION: {
-		// TODO: This spell is weird and does weird things with the cooldown.
+		// NOTE: This spell handles cooldowns in a very unusual way;
+		// see the WingedReprobation module for details.
 		id: 34576,
 		name: 'Winged Reprobation',
 		icon: 'https://xivapi.com/i/003000/003371.png',

@@ -3,6 +3,26 @@ import React from 'react'
 
 export const changelog = [
 	{
+		date: new Date('2023-07-24'),
+		Changes: () => <>
+			<ul>
+				<li>BLU's cooldowns will filter out spells that were not used at all.</li>
+				<li>BLU's cooldowns now track Being Mortal, Sea Shanty, and Winged Reprobation.</li>
+			</ul>
+		</>,
+		contributors: [CONTRIBUTORS.HUGMEIR],
+	},
+	{
+		date: new Date('2023-07-22'),
+		Changes: () => <>BLU now counts the Apokalypsis channel as uptime, and gives a suggestion if channel ticks were dropped.</>,
+		contributors: [CONTRIBUTORS.HUGMEIR],
+	},
+	{
+		date: new Date('2023-07-22'),
+		Changes: () => <>Winged Reprobation's cooldown will be displayed correctly in the timeline.</>,
+		contributors: [CONTRIBUTORS.HUGMEIR],
+	},
+	{
 		date: new Date('2023-07-20'),
 		Changes: () => <>Added BLU's new 6.45 spells & effects.</>,
 		contributors: [CONTRIBUTORS.HUGMEIR],
