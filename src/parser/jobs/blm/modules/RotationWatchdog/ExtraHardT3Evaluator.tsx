@@ -6,8 +6,8 @@ import {Data} from 'parser/core/modules/Data'
 import {TieredSuggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
 import Procs from '../Procs'
+import {ROTATION_ERRORS, DEFAULT_SEVERITY_TIERS, RotationMetadata} from '../RotationWatchdog'
 import {assignErrorCode, getMetadataForWindow} from './EvaluatorUtilities'
-import {ROTATION_ERRORS, DEFAULT_SEVERITY_TIERS, RotationMetadata} from './RotationWatchdog'
 
 export interface ExtraHardT3EvaluatorOpts {
 	data: Data,

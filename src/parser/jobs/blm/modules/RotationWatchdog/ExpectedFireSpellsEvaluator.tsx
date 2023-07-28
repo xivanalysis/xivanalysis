@@ -8,8 +8,8 @@ import {Invulnerability} from 'parser/core/modules/Invulnerability'
 import {TieredSuggestion} from 'parser/core/modules/Suggestions'
 import Parser from 'parser/core/Parser'
 import React from 'react'
+import {ROTATION_ERRORS, DEFAULT_SEVERITY_TIERS, RotationMetadata} from '../RotationWatchdog'
 import {assignErrorCode, getMetadataForWindow, includeInSuggestions} from './EvaluatorUtilities'
-import {ROTATION_ERRORS, DEFAULT_SEVERITY_TIERS, RotationMetadata} from './RotationWatchdog'
 
 export interface ExpectedFireSpellsEvaluatorOpts extends TrackedActionsOptions {
 	parser: Parser

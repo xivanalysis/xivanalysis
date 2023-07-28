@@ -6,7 +6,7 @@ import {Data} from 'parser/core/modules/Data'
 import {Invulnerability} from 'parser/core/modules/Invulnerability'
 import {TieredSuggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
-import {DEFAULT_SEVERITY_TIERS} from './RotationWatchdog'
+import {DEFAULT_SEVERITY_TIERS} from '../RotationWatchdog'
 
 export interface UptimeSoulsEvaluatorOpts {
 	data: Data,

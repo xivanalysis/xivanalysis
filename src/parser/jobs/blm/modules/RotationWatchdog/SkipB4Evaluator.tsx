@@ -5,8 +5,8 @@ import {History, HistoryEntry} from 'parser/core/modules/ActionWindow/History'
 import {Data} from 'parser/core/modules/Data'
 import {TieredSuggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
+import {ROTATION_ERRORS, ENHANCED_SEVERITY_TIERS, RotationMetadata, NO_UH_EXPECTED_FIRE4} from '../RotationWatchdog'
 import {assignErrorCode} from './EvaluatorUtilities'
-import {ROTATION_ERRORS, ENHANCED_SEVERITY_TIERS, RotationMetadata, NO_UH_EXPECTED_FIRE4} from './RotationWatchdog'
 
 export interface SkipB4EvaluatorOpts {
 	data: Data,

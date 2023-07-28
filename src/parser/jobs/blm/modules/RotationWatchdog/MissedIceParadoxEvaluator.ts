@@ -1,8 +1,8 @@
 import {EvaluatedAction, WindowEvaluator} from 'parser/core/modules/ActionWindow'
 import {History, HistoryEntry} from 'parser/core/modules/ActionWindow/History'
 import {ASTRAL_UMBRAL_MAX_STACKS, UMBRAL_HEARTS_MAX_STACKS} from '../Gauge'
+import {ROTATION_ERRORS, RotationMetadata} from '../RotationWatchdog'
 import {assignErrorCode, getMetadataForWindow} from './EvaluatorUtilities'
-import {ROTATION_ERRORS, RotationMetadata} from './RotationWatchdog'
 
 export class MissedIceParadoxEvaluator implements WindowEvaluator {
 	private metadataHistory: History<RotationMetadata>
