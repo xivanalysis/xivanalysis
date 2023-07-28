@@ -12,7 +12,7 @@ export const changelog: ChangelogEntry[] = [
 	{
 		date: new Date('2023-07-28'),
 		Changes: () => <>
-			Fix a bug with status application event ordering that sometimes caused extra action uses to by synthesized.
+			Fix a bug with status application event ordering that sometimes caused extra action uses to be synthesized.
 		</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],
 	},
