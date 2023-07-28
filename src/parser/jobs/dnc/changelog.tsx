@@ -82,4 +82,9 @@ export const changelog = [
 		Changes: () => <>Adjust Devilment timing check to account for changed Technical Finish status application timing after 6.4.</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],
 	},
+	{
+		date: new Date('2023-06-29'),
+		Changes: () => <>Revamp Technical Finish analysis to include GCD count information, and better clarify when multiple dancers interfere with each others' buffs.</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
 ]

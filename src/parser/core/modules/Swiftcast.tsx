@@ -1,13 +1,15 @@
-import {MessageDescriptor} from '@lingui/core'
-import {t, Trans} from '@lingui/macro'
+import {t} from '@lingui/macro'
+import {Plural, Trans} from '@lingui/react'
 import {ActionLink} from 'components/ui/DbLink'
 import {Action} from 'data/ACTIONS'
 import {Status} from 'data/STATUSES'
 import {Events} from 'event'
-import {SEVERITY, SeverityTiers} from 'parser/core/modules/Suggestions'
+import _ from 'lodash'
+import {SEVERITY, SeverityTiers, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
+import {Icon} from 'semantic-ui-react'
 import {dependency} from '../Injectable'
-import {BuffWindow, EvaluatedAction, ExpectedGcdCountEvaluator} from './ActionWindow'
+import {BuffWindow, EvaluatedAction, EvaluationOutput, WindowEvaluator} from './ActionWindow'
 import {HistoryEntry} from './ActionWindow/History'
 import {GlobalCooldown} from './GlobalCooldown'
 
@@ -16,9 +18,103 @@ const MISSED_SWIFTCAST_SEVERITIES: SeverityTiers = {
 	1: SEVERITY.MAJOR,
 }
 
+export interface SwiftcastValidResult {
+	// True if the Swiftcast use was good, false otherwise
+	isValid: boolean
+	// Optionally, you may provide an explanation of why the use was good/bad
+	note?: JSX.Element
+}
+
+export type SwiftcastValidator =
+	(window: HistoryEntry<EvaluatedAction[]>) => SwiftcastValidResult
+
+interface SwiftcastEvaluatorOptions {
+	validators: SwiftcastValidator[]
+	suggestionIcon: string
+	suggestionContent: JSX.Element
+	severityTiers: SeverityTiers
+}
+
+class SwiftcastEvaluator implements WindowEvaluator, SwiftcastEvaluatorOptions {
+	validators: SwiftcastValidator[]
+	suggestionIcon: string
+	suggestionContent: JSX.Element
+	severityTiers: SeverityTiers
+
+	constructor(opt: SwiftcastEvaluatorOptions) {
+		this.validators = opt.validators
+		this.suggestionIcon = opt.suggestionIcon
+		this.suggestionContent = opt.suggestionContent
+		this.severityTiers = opt.severityTiers
+	}
+
+	private isValidSwiftcastUse = _.memoize((window: HistoryEntry<EvaluatedAction[]>) => {
+		return this.validators.every(validator => validator(window).isValid)
+	})
+
+	private hasNote = _.memoize((window: HistoryEntry<EvaluatedAction[]>) => {
+		return this.validators.some(validator => validator(window).note != null)
+	})
+
+	private generateValidColumn = (window: HistoryEntry<EvaluatedAction[]>) => {
+		const isValid = this.isValidSwiftcastUse(window)
+
+		return <Icon
+			name={isValid ? 'checkmark' : 'remove'}
+			className={isValid ? 'text-success' : 'text-error'}
+		/>
+	}
+
+	private generateNotesColumn = (window: HistoryEntry<EvaluatedAction[]>) => (
+		<div>
+			{this.validators.map(validator => validator(window).note)}
+		</div>
+	)
+
+	public suggest = (windows: Array<HistoryEntry<EvaluatedAction[]>>) => {
+		const badUses = windows
+			.filter(window => !this.isValidSwiftcastUse(window))
+			.length
+
+		return new TieredSuggestion({
+			icon: this.suggestionIcon,
+			content: this.suggestionContent,
+			tiers: this.severityTiers,
+			value: badUses,
+			why: <Trans id="core.swiftcast.suggestion.why">
+				<Plural value={badUses} one="# incorrect use of" other="# incorrect uses of" /> <ActionLink action="SWIFTCAST" showIcon={false} />.
+			</Trans>,
+		})
+	}
+
+	public output = (windows: Array<HistoryEntry<EvaluatedAction[]>>) => {
+		const columns: EvaluationOutput[] = [{
+			format: 'notes',
+			header: {
+				header: <Trans id="core.swiftcast.chart.good.header">Good Use?</Trans>,
+				accessor: 'good',
+			},
+			rows: windows.map(this.generateValidColumn),
+		}]
+
+		if (windows.some(this.hasNote)) {
+			columns.push({
+				format: 'notes',
+				header: {
+					header: <Trans id="core.swiftcast.chart.note.header">Note</Trans>,
+					accessor: 'why',
+				},
+				rows: windows.map(this.generateNotesColumn),
+			})
+		}
+
+		return columns
+	}
+}
+
 export abstract class Swiftcast extends BuffWindow {
 	static override handle: string = 'swiftcast'
-	static override title: MessageDescriptor = t('core.swiftcast.title')`Swiftcast Actions`
+	static override title = t('core.swiftcast.title')`Swiftcast Actions`
 
 	@dependency private globalCooldown!: GlobalCooldown
 
@@ -27,15 +123,11 @@ export abstract class Swiftcast extends BuffWindow {
 	override initialise() {
 		super.initialise()
 
-		this.addEvaluator(new ExpectedGcdCountEvaluator({
-			expectedGcds: 1,
-			globalCooldown: this.globalCooldown,
-			hasStacks: true,
+		this.addEvaluator(new SwiftcastEvaluator({
+			validators: [this.unusedSwiftcastValidator, ...this.swiftcastValidators],
 			suggestionIcon: this.data.actions.SWIFTCAST.icon,
 			suggestionContent: this.suggestionContent,
-			suggestionWindowName: <ActionLink action="SWIFTCAST" showIcon={false} />,
 			severityTiers: this.severityTiers,
-			adjustCount: this.adjustExpectedGcdCount.bind(this),
 		}))
 	}
 
@@ -65,14 +157,36 @@ export abstract class Swiftcast extends BuffWindow {
 		return true
 	}
 
-	// Provide our own logic for the end of the fight – even though the window is
-	// ~4 GCDs 'wide', we can only use one action with it anyway; this change should
-	// ding them only if they had enough time during the window to use a spell with
-	// swiftcast
-	private adjustExpectedGcdCount(window: HistoryEntry<EvaluatedAction[]>) {
+	/**
+	 * Implementing modules MAY want to provide additional SwiftcastValidators if there are job-specific
+	 * cases where a Swiftcast use may be "wrong" - e.g., RDM does not want to use Swiftcast on damaging
+	 * spells with short cast times.
+	 */
+	protected swiftcastValidators: SwiftcastValidator[] = []
+
+	// Provide our own validator for checking if Swiftcast fell off
+	private unusedSwiftcastValidator: SwiftcastValidator = (window: HistoryEntry<EvaluatedAction[]>) => {
+		const swiftConsumed = window.data.length > 0
+
+		if (swiftConsumed) {
+			return {isValid: true}
+		}
+
+		// If it's the end of the fight, only ding if it was possible to consume the Swiftcast
 		const fightTimeRemaining = (this.parser.pull.timestamp + this.parser.pull.duration) - window.start
 		const gcdEstimate = this.globalCooldown.getDuration()
-		return (fightTimeRemaining > gcdEstimate) ? 0 : -1
+
+		if (fightTimeRemaining <= gcdEstimate) {
+			return {
+				isValid: true,
+				note: <Trans id="core.swiftcast.table.note.unused-eof">Unused (end of fight)</Trans>,
+			}
+		}
+		return {
+			isValid: false,
+			note: <Trans id="core.swiftcast.table.note.unused">Unused</Trans>,
+		}
+
 	}
 
 	override onWindowAction(event: Events['action']) {

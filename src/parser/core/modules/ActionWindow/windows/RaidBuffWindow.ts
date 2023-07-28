@@ -3,6 +3,9 @@ import {BuffWindow, EvaluatedAction, PlayersBuffedEvaluator} from 'parser/core/m
 import {HistoryEntry} from 'parser/core/modules/ActionWindow/History'
 import {ensureArray} from 'utilities'
 import {filter, oneOf, noneOf} from '../../../filter'
+import {RaidBuffOverwriteEvaluator} from '../evaluators/RaidBuffOverwriteEvaluator'
+
+const FULL_PARTY_SIZE = 8
 
 /**
  * Tracks buffs applied to the party.
@@ -17,6 +20,10 @@ export abstract class RaidBuffWindow extends BuffWindow {
 	 */
 	protected raidBuffApplications = new Array<Events['statusApply']>()
 
+	// Implementing jobs may choose to disable the multiple-players-of-same-job overwrite evaluation
+	// if there is good reason to do so, such as for RPR's Arcane Circle
+	protected evaluateOverwrites = true
+
 	/**
 	 * Expected number of people who should get the raid buff every time.
 	 */
@@ -28,7 +35,7 @@ export abstract class RaidBuffWindow extends BuffWindow {
 		const partyMembers = this.parser.pull.actors
 			.filter(actor => actor.playerControlled)
 			.map(actor => actor.id)
-		this.expectedCount = partyMembers.length
+		this.expectedCount = Math.min(partyMembers.length, FULL_PARTY_SIZE) // 24-mans count the other alliance members as 'party members' but you can't buff them...
 		const playerOwnedIds = this.parser.pull.actors
 			.filter(actor => (actor.owner === this.parser.actor) || actor === this.parser.actor)
 			.map(actor => actor.id)
@@ -38,7 +45,6 @@ export abstract class RaidBuffWindow extends BuffWindow {
 
 		this.addEventHook(
 			statusFilter
-				.source(oneOf(playerOwnedIds))
 				.target(oneOf(partyMembers)),
 			this.onRaidBuffApply
 		)
@@ -55,6 +61,14 @@ export abstract class RaidBuffWindow extends BuffWindow {
 			expectedCount: this.expectedCount,
 			affectedPlayers: this.affectedPlayers.bind(this),
 		}))
+
+		if (this.evaluateOverwrites) {
+			this.addEvaluator(new RaidBuffOverwriteEvaluator({
+				raidBuffApplications: this.raidBuffApplications,
+				buffStatus: this.buffStatus,
+				playerId: this.parser.actor.id,
+			}))
+		}
 	}
 
 	private onRaidBuffApply(event: Events['statusApply']) {
@@ -63,10 +77,11 @@ export abstract class RaidBuffWindow extends BuffWindow {
 
 	private affectedPlayers(buffWindow: HistoryEntry<EvaluatedAction[]>): number {
 		const windowEnd = buffWindow?.end ?? buffWindow.start
-		// count the number of applications that happened in the window
+		// count the number of player-sourced applications that happened in the window
 		const affected = this.raidBuffApplications.filter(event => {
 			return (buffWindow.start <= event.timestamp &&
-				event.timestamp <= windowEnd)
+				event.timestamp <= windowEnd &&
+				event.source === this.parser.actor.id)
 		})
 
 		return affected.length

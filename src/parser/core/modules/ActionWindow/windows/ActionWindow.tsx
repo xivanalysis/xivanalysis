@@ -23,7 +23,7 @@ export type HistoryEntryPredicate = (e: HistoryEntry<EvaluatedAction[]>) => bool
 export abstract class ActionWindow extends Analyser {
 
 	@dependency protected data!: Data
-	@dependency private suggestions!: Suggestions
+	@dependency protected suggestions!: Suggestions
 	@dependency private timeline!: Timeline
 
 	/**

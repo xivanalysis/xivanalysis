@@ -11,6 +11,9 @@ import {resolveActorId} from '../base'
 import {FflogsEvent} from '../eventTypes'
 import {AdapterStep, PREPULL_OFFSETS} from './base'
 
+// Log timestamps are batched in intervals of roughly 45ms
+const BATCH_SIZE_MS = 45
+
 const JOB_SPEED_MODIFIERS: Partial<Record<JobKey, number>> = {
 	MONK: 0.8,
 	NINJA: 0.85,
@@ -172,9 +175,9 @@ export class SpeedStatsAdapterStep extends AdapterStep {
 
 	private estimateActorSpeedStat(gcds: GCD[], actorId: string): Events['actorUpdate'] | undefined {
 		const speedAttributeKeys = [Attribute.SKILL_SPEED, Attribute.SPELL_SPEED] as const
-		const intervalGroups = {
-			[Attribute.SKILL_SPEED]: new Map<number, number>(),
-			[Attribute.SPELL_SPEED]: new Map<number, number>(),
+		const intervals: Record<Attribute, number[]> = {
+			[Attribute.SKILL_SPEED]: [],
+			[Attribute.SPELL_SPEED]: [],
 		}
 
 		gcds.forEach((gcd, index) => {
@@ -199,25 +202,25 @@ export class SpeedStatsAdapterStep extends AdapterStep {
 
 			const castTimeScale = recast / BASE_GCD
 			const speedModifier = this.getSpeedModifierAtTimestamp(previous.start, actorId)
-			// round to nearest 10ms, since game works with calculating durations to 0.01s
-			// eslint-disable-next-line @typescript-eslint/no-magic-numbers
-			const interval = Math.round((rawInterval - (hasAnimationLock ? ANIMATION_LOCK : 0)) / castTimeScale / speedModifier / 10) * 10
+			const adjustedInterval = (rawInterval - (hasAnimationLock ? ANIMATION_LOCK : 0)) / castTimeScale / speedModifier
 
 			// The below debug is useful if you need to trace individual interval calculations, but will make your console really laggy if you enable it without any filter
-			//this.debug(`Actor ID: ${actorId} - Event at ${previous.start} - Raw Interval: ${rawInterval}ms - Caster Tax: ${hasAnimationLock} - Cast Time Scale: ${castTimeScale} - Speed Modifier: ${speedModifier} - Calculated Interval: ${interval}ms`)
+			//this.debug(`Actor ID: ${actorId} - Event at ${previous.start} - Raw Interval: ${rawInterval}ms - Caster Tax: ${hasAnimationLock} - Cast Time Scale: ${castTimeScale} - Speed Modifier: ${speedModifier} - Calculated Interval: ${adjustedInterval}ms`)
 
-			const count = intervalGroups[previousAction.speedAttribute].get(interval) ?? 0
-			intervalGroups[previousAction.speedAttribute].set(interval, count + 1)
+			intervals[previousAction.speedAttribute].push(adjustedInterval)
 		})
 
 		const attributes: AttributeValue[] = []
 		for (const attribute of speedAttributeKeys) {
-			const group = intervalGroups[attribute]
-			if (group.size > 0) {
+			const group = intervals[attribute]
+			if (group.length > 0) {
+				const gcdEstimate = this.estimateGcdLength(intervals[attribute])
 				this.debug(`Actor ID: ${actorId} - ${attribute.toString} Event Intervals ${JSON.stringify(Array.from(group.entries()).sort((a, b) => b[1] - a[1]))}`)
+				this.debug(`Estimate: ${gcdEstimate}`)
+
 				attributes.push({
 					attribute: attribute,
-					value: getSpeedStat(this.getMostFrequentInterval(group)),
+					value: getSpeedStat(gcdEstimate),
 					estimated: true,
 				})
 			}
@@ -258,7 +261,57 @@ export class SpeedStatsAdapterStep extends AdapterStep {
 		return speedModifier
 	}
 
-	private getMostFrequentInterval(intervalGroups: Map<number,  number>) : number {
-		return Array.from(intervalGroups.entries()).reduce((a, b) => b[1] > a[1] ? b : a)[0]
+	private estimateGcdLength(observedIntervals: number[]): number {
+		// Since timestamps in logs are batched in intervals of roughly 45ms,
+		// a tooltip GCD of 2.50 (e.g.) will see many intervals in the range [2.41, 2.59].
+		// Rather than considering the most frequent interval, we can instead batch the intervals
+		// and then make an estimate based on the distribution of the batches.
+		const batches = this.batchIntervals(observedIntervals)
+		const rawEstimate = this.estimateGcdFromBatches(batches)
+
+		// Round to the nearest 0.01s to reflect how tooltip GCDs are tiered in-game
+		// eslint-disable-next-line @typescript-eslint/no-magic-numbers
+		return Math.round(rawEstimate / 10) * 10
+	}
+
+	private batchIntervals(intervals: number[]): Map<number, number> {
+		const batchCounts = new Map<number, number>()
+
+		for (const interval of intervals) {
+			const batch = Math.floor(interval / BATCH_SIZE_MS)
+			batchCounts.set(batch, (batchCounts.get(batch) ?? 0) + 1)
+		}
+
+		return batchCounts
+	}
+
+	private estimateGcdFromBatches(batches: Map<number, number>, radius = 2): number {
+		const modeBatch = Array.from(batches.entries())
+			.reduce((a, b) => a[1] < b[1] ? b : a)[0]
+
+		// Collect all batches observed within radius of the mode batch
+		const batchesNearMode = []
+		for (let batch = modeBatch - radius; batch <= modeBatch + radius; ++batch) {
+			batchesNearMode.push(batch)
+		}
+
+		// Calculate a weighted average of the batches surrounding the mode
+		let intervalSum = 0
+		let countSum = 0
+		for (const batch of batchesNearMode) {
+			const count = batches.get(batch) ?? 0
+			const smallestInterval = batch * BATCH_SIZE_MS
+			const largestInterval = ((batch + 1) * BATCH_SIZE_MS) - 1
+			const averageInterval = (smallestInterval + largestInterval) / 2
+
+			intervalSum += averageInterval * count
+			countSum += batches.get(batch) ?? 0
+		}
+
+		if (countSum === 0) {
+			throw new Error('No GCD intervals observed (division by zero)')
+		}
+
+		return intervalSum / countSum
 	}
 }
