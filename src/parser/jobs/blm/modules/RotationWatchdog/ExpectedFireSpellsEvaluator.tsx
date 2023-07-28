@@ -1,7 +1,7 @@
 import {Trans, Plural} from '@lingui/macro'
 import {DataLink} from 'components/ui/DbLink'
 import {EvaluatedAction, ExpectedActionsEvaluator} from 'parser/core/modules/ActionWindow'
-import {TrackedActionsOptions} from 'parser/core/modules/ActionWindow/evaluators/TrackedAction'
+import {TrackedAction, TrackedActionsOptions} from 'parser/core/modules/ActionWindow/evaluators/TrackedAction'
 import {History, HistoryEntry} from 'parser/core/modules/ActionWindow/History'
 import {Data} from 'parser/core/modules/Data'
 import {Invulnerability} from 'parser/core/modules/Invulnerability'
@@ -38,29 +38,7 @@ export class ExpectedFireSpellsEvaluator extends ExpectedActionsEvaluator {
 			const windowMetadata = getMetadataForWindow(window, this.metadataHistory)
 			if (windowMetadata == null) { return total }
 
-			this.expectedActions.forEach(action => {
-				// If they got the expected number of actions in, no need to grump
-				if (this.countUsed(window, action) >= this.determineExpected(window, action)) { return }
-
-				// Assign error code and metadata based on which action wasn't used enough
-				if (action.action.id === this.data.actions.FIRE_IV.id) {
-					windowMetadata.missingFire4s = true
-					assignErrorCode(windowMetadata, ROTATION_ERRORS.MISSING_FIRE4S)
-				} else if (action.action.id === this.data.actions.DESPAIR.id) {
-					windowMetadata.missingDespairs = true
-					assignErrorCode(windowMetadata, ROTATION_ERRORS.MISSING_DESPAIRS)
-				}
-
-				// Re-check to see if the window was actually right before a downtime but the boss became invulnerable before another Fire 4 could've been cast.
-				// If so, mark it as a finalOrDowntime cycle, and clear the error code so we can check it for other errors
-				if (windowMetadata.errorCode.priority === ROTATION_ERRORS.MISSING_FIRE4S.priority && this.invulnerability.isActive({
-					timestamp: window.end ?? (this.parser.pull.timestamp + this.parser.pull.duration) + this.data.actions.FIRE_IV.castTime,
-					types: ['invulnerable'],
-				})) {
-					windowMetadata.finalOrDowntime = true
-					windowMetadata.errorCode = ROTATION_ERRORS.NO_ERROR
-				}
-			})
+			this.expectedActions.forEach(action => this.assessWindowAction(window, windowMetadata, action))
 
 			return total + ((windowMetadata.missingDespairs && includeInSuggestions(windowMetadata)) ? 1 : 0)
 		}, 0)
@@ -76,5 +54,30 @@ export class ExpectedFireSpellsEvaluator extends ExpectedActionsEvaluator {
 				<Plural value={astralFiresMissingDespairs} one="# Astral Fire phase was" other="# Astral Fire phases were"/> missing at least one <DataLink showIcon={false} action="DESPAIR"/>.
 			</Trans>,
 		})
+	}
+
+	private assessWindowAction(window: HistoryEntry<EvaluatedAction[]>, windowMetadata: RotationMetadata, action: TrackedAction) {
+		// If they got the expected number of actions in, no need to grump
+		if (this.countUsed(window, action) >= this.determineExpected(window, action)) { return }
+
+		// Assign error code and metadata based on which action wasn't used enough
+		if (action.action.id === this.data.actions.FIRE_IV.id) {
+			windowMetadata.missingFire4s = true
+			assignErrorCode(windowMetadata, ROTATION_ERRORS.MISSING_FIRE4S)
+		} else if (action.action.id === this.data.actions.DESPAIR.id) {
+			windowMetadata.missingDespairs = true
+			assignErrorCode(windowMetadata, ROTATION_ERRORS.MISSING_DESPAIRS)
+		}
+
+		// Re-check to see if the window was actually right before a downtime but the boss became invulnerable before another Fire 4 could've been cast.
+		// If so, mark it as a finalOrDowntime cycle, and clear the error code so we can check it for other errors
+		if (windowMetadata.errorCode.priority === ROTATION_ERRORS.MISSING_FIRE4S.priority && this.invulnerability.isActive({
+			timestamp: window.end ?? (this.parser.pull.timestamp + this.parser.pull.duration) + this.data.actions.FIRE_IV.castTime,
+			types: ['invulnerable'],
+		})) {
+			windowMetadata.finalOrDowntime = true
+			windowMetadata.errorCode = ROTATION_ERRORS.NO_ERROR
+		}
+
 	}
 }
