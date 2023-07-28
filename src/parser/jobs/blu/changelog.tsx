@@ -14,6 +14,11 @@ export const changelog = [
 	},
 	{
 		date: new Date('2023-07-22'),
+		Changes: () => <>BLU DoT tracking now handles Breath of Magic & Mortal Flame, and gives suggestions if they are cast unbuffed</>,
+		contributors: [CONTRIBUTORS.HUGMEIR],
+	},
+	{
+		date: new Date('2023-07-22'),
 		Changes: () => <>BLU now counts the Apokalypsis channel as uptime, and gives a suggestion if channel ticks were dropped.</>,
 		contributors: [CONTRIBUTORS.HUGMEIR],
 	},
