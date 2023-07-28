@@ -15,7 +15,7 @@ export const BLU_COOLDOWN_GROUPS = {
 	THE_ROSE_OF_DESTRUCTION: 23275,
 	MATRA_MAGIC: 23285,
 	MAGIC_HAMMER: 18305,
-	BEING_MORTAL: 34581,
+	BEING_MORTAL: 34582,
 }
 
 const UMBRAL   = 1 // Water, Earth, Ice
@@ -1311,7 +1311,7 @@ export const BLU = ensureActions({
 		cooldownGroup: BLU_COOLDOWN_GROUPS.BEING_MORTAL,
 	},
 	BEING_MORTAL: {
-		id: 34581,
+		id: 34582,
 		name: 'Being Mortal',
 		icon: 'https://xivapi.com/i/003000/003377.png',
 		cooldown: 120000,

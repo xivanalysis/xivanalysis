@@ -25,7 +25,8 @@ const SEVERITIES = {
 	},
 }
 
-const EXPECTED_GCD_COUNT = 5
+const EXPECTED_GCD_COUNT_LEVEL_70 = 5
+const EXPECTED_GCD_COUNT_LEVEL_80 = 6
 // Some notes on the expected GCD count.
 // Waxing Nocturne is 15 seconds, so that seems like
 // it should be 6 GCDs, but the first .5 seconds you are still
@@ -72,28 +73,124 @@ export class MoonFlute extends BuffWindow {
 	override buffStatus = this.data.statuses.WAXING_NOCTURNE
 
 	private windowMissedTT = new Set<number>()
+	private breathOfMagicApplier: boolean = false
 
 	override initialise() {
 		super.initialise()
 
+		const playerFilter = filter<Event>().source(this.parser.actor.id)
 		// Add a Waning Moon hook, essentially telling us exactly when a MF window ended.
-		const extraFilter = filter<Event>().source(this.parser.actor.id).type('statusApply')
+		const extraFilter = playerFilter.type('statusApply')
 			.status(this.data.statuses.WANING_NOCTURNE.id)
 		this.addEventHook(extraFilter, this.onWaningNocturneApply)
 
+		const bomFilter = playerFilter.type('action')
+			.action(this.data.actions.BREATH_OF_MAGIC.id)
+		this.addEventHook(bomFilter, this.onCastBreathOfMagic)
+
+		const level80BLU = this.parser.patch.after('6.4')
+		const bluLevel70MoonFlute = [
+			{
+				actions: [this.data.actions.J_KICK, this.data.actions.QUASAR],
+				expectedPerWindow: 1,
+			},
+			{
+				actions: [this.data.actions.TRIPLE_TRIDENT],
+				expectedPerWindow: 1,
+			},
+			{
+				actions: [this.data.actions.NIGHTBLOOM],
+				expectedPerWindow: 1,
+			},
+			{
+				actions: [this.data.actions.THE_ROSE_OF_DESTRUCTION],
+				expectedPerWindow: 1,
+			},
+			{
+				actions: [this.data.actions.SHOCK_STRIKE, this.data.actions.BLU_MOUNTAIN_BUSTER],
+				expectedPerWindow: 1,
+			},
+			{
+				actions: [this.data.actions.BRISTLE],
+				expectedPerWindow: 1,
+			},
+			{
+				actions: [this.data.actions.GLASS_DANCE],
+				expectedPerWindow: 1,
+			},
+			{
+				actions: [this.data.actions.SURPANAKHA],
+				expectedPerWindow: 4,
+			},
+			{
+				actions: [this.data.actions.FEATHER_RAIN, this.data.actions.ERUPTION],
+				expectedPerWindow: 1,
+			},
+			{
+				actions: [this.data.actions.MATRA_MAGIC],
+				expectedPerWindow: 1,
+			},
+			{
+				actions: [this.data.actions.PHANTOM_FLURRY],
+				expectedPerWindow: 1,
+			},
+		]
+
+		const bluLevel80MoonFlute = [
+			{
+				actions: [this.data.actions.J_KICK, this.data.actions.QUASAR],
+				expectedPerWindow: 1,
+			},
+			{
+				actions: [this.data.actions.TRIPLE_TRIDENT],
+				expectedPerWindow: 1,
+			},
+			{
+				actions: [this.data.actions.NIGHTBLOOM],
+				expectedPerWindow: 1,
+			},
+			{
+				actions: [this.data.actions.SHOCK_STRIKE, this.data.actions.BLU_MOUNTAIN_BUSTER],
+				expectedPerWindow: 1,
+			},
+			{
+				actions: [this.data.actions.SEA_SHANTY],
+				expectedPerWindow: 1,
+			},
+			{
+				actions: [this.data.actions.BEING_MORTAL],
+				expectedPerWindow: 1,
+			},
+			{
+				actions: [this.data.actions.SURPANAKHA],
+				expectedPerWindow: 4,
+			},
+			{
+				actions: [this.data.actions.FEATHER_RAIN, this.data.actions.ERUPTION],
+				expectedPerWindow: 1,
+			},
+			{
+				actions: [this.data.actions.MATRA_MAGIC],
+				expectedPerWindow: 1,
+			},
+			{
+				actions: [this.data.actions.PHANTOM_FLURRY],
+				expectedPerWindow: 1,
+			},
+		]
 		const suggestionIcon = this.data.actions.MOON_FLUTE.icon
 		const suggestionWindowName = <ActionLink action="MOON_FLUTE" showIcon={false}/>
 		this.addEvaluator(new ExpectedGcdCountEvaluator({
-			expectedGcds: EXPECTED_GCD_COUNT, // 4 GCDs + Phantom Flurry _or_ 5 GCDs
+			expectedGcds: level80BLU ? EXPECTED_GCD_COUNT_LEVEL_80 : EXPECTED_GCD_COUNT_LEVEL_70, // 4 GCDs + Phantom Flurry _or_ 5 GCDs
 			globalCooldown: this.globalCooldown,
 			suggestionIcon,
 			suggestionContent: <Trans id="blu.moonflutes.suggestions.gcds.content">
-				Regardless of spell speed, ideally a <ActionLink action="MOON_FLUTE" /> window should contain at least
-					4 GCDs and end in <ActionLink action="PHANTOM_FLURRY" />. If you have higher latency this can
-					be problematic. Changing your speed speed might help, and in a pinch you can try moving certain
-					oGCDs out of the window (<ActionLink action="J_KICK" showIcon={false} />, <ActionLink action="GLASS_DANCE" showIcon={false} />,
-				<ActionLink action="FEATHER_RAIN" showIcon={false} />), or replacing <ActionLink action="THE_ROSE_OF_DESTRUCTION" showIcon={false} />
-					with a <ActionLink action="SONIC_BOOM" showIcon={false} />.
+				A <ActionLink action="MOON_FLUTE" showIcon={false} showTooltip={false} /> window should contain at least
+				4 GCDs and end in <ActionLink action="PHANTOM_FLURRY" />. If you have higher latency this can
+				be problematic. Changing your speed speed might help, and in a pinch you can try moving certain
+				oGCDs out of the window (<ActionLink action="J_KICK" showIcon={false} />
+				, <ActionLink action="FEATHER_RAIN" showIcon={false} />), or replacing 2-second cast time GCDs
+				with 1-second GCDs like <ActionLink action="SONIC_BOOM" showIcon={false} />.
 			</Trans>,
 			suggestionWindowName,
 			severityTiers: SEVERITIES.TOO_FEW_GCDS,
@@ -102,59 +199,17 @@ export class MoonFlute extends BuffWindow {
 		}))
 
 		this.addEvaluator(new ExpectedActionGroupsEvaluator({
-			expectedActionGroups: [
-				{
-					actions: [this.data.actions.J_KICK, this.data.actions.QUASAR],
-					expectedPerWindow: 1,
-				},
-				{
-					actions: [this.data.actions.TRIPLE_TRIDENT],
-					expectedPerWindow: 1,
-				},
-				{
-					actions: [this.data.actions.NIGHTBLOOM],
-					expectedPerWindow: 1,
-				},
-				{
-					actions: [this.data.actions.THE_ROSE_OF_DESTRUCTION],
-					expectedPerWindow: 1,
-				},
-				{
-					actions: [this.data.actions.SHOCK_STRIKE, this.data.actions.BLU_MOUNTAIN_BUSTER],
-					expectedPerWindow: 1,
-				},
-				{
-					actions: [this.data.actions.BRISTLE],
-					expectedPerWindow: 1,
-				},
-				{
-					actions: [this.data.actions.GLASS_DANCE],
-					expectedPerWindow: 1,
-				},
-				{
-					actions: [this.data.actions.SURPANAKHA],
-					expectedPerWindow: 4,
-				},
-				{
-					actions: [this.data.actions.FEATHER_RAIN, this.data.actions.ERUPTION],
-					expectedPerWindow: 1,
-				},
-				{
-					actions: [this.data.actions.MATRA_MAGIC],
-					expectedPerWindow: 1,
-				},
-				{
-					actions: [this.data.actions.PHANTOM_FLURRY],
-					expectedPerWindow: 1,
-				},
-			],
+			expectedActionGroups: level80BLU ? bluLevel80MoonFlute : bluLevel70MoonFlute,
 			suggestionIcon: suggestionIcon,
 			suggestionWindowName: suggestionWindowName,
 			suggestionContent: <Trans id="blu.moonflutes.suggestions.expected-actions.content">
-				<ActionLink action="MOON_FLUTE" /> is only worth using if the buffed actions during the window
+				<ActionLink action="MOON_FLUTE" showIcon={false} /> is only worth using if the buffed actions during the window
 				will give you an extra 1260 potency (equivalent to casting <ActionLink action="SONIC_BOOM" showIcon={false} /> six times).
 				The more of your larger cooldowns you can fit into the window, the better the result. High-priority targets
 				are <ActionLink action="NIGHTBLOOM" showIcon={false} />, and finishing the combo with a <ActionLink action="PHANTOM_FLURRY" showIcon={false} />.
+				<br />
+				The odd-minute <ActionLink action="MOON_FLUTE" showIcon={false} showTooltip={false} /> from
+				the <ActionLink action="BREATH_OF_MAGIC" showIcon={false} /> applier is exempt from this check.
 			</Trans>,
 			severityTiers: SEVERITIES.MISSING_EXPECTED_USES,
 			adjustOutcome: this.adjustExpectedActionOutcome.bind(this),
@@ -164,6 +219,10 @@ export class MoonFlute extends BuffWindow {
 	private finalStingsUsedInWindow(window: HistoryEntry<EvaluatedAction[]>): number {
 		const finalStingUsed = window.data.filter(event => (event.action.id === this.data.actions.FINAL_STING.id || event.action.id === this.data.actions.SELF_DESTRUCT.id)).length
 		return finalStingUsed
+	}
+
+	private onCastBreathOfMagic() {
+		this.breathOfMagicApplier = true
 	}
 
 	private onWaningNocturneApply() {
@@ -186,31 +245,68 @@ export class MoonFlute extends BuffWindow {
 
 	private adjustExpectedActionOutcome(window: HistoryEntry<EvaluatedAction[]>, trackedActions: TrackedActionGroup) {
 		const finalStingUsed = this.finalStingsUsedInWindow(window)
-		if (finalStingUsed === 0) {
-			// Final Sting not used here
-			if (trackedActions.actions.length !== 1) {
-				// Default handling:
-				return
-			}
-			const trackedActionId = trackedActions.actions[0].id
-			if (trackedActionId === this.data.actions.TRIPLE_TRIDENT.id) {
-				// Using TT on cooldown, on a long enough timeline, can be a DPS gain over
-				// holding it for a MF window, particularly for SpS builds.
-				// So let's be understanding -- We only dock points if they were in a
-				// Moon Flute window, had TT available, and didn't use it.
-				if (!this.windowMissedTT.has(window.start)) {
-					// TT was either used, or wasn't available during the window.
-					// Either way, this check will either be a Positive or a Neutral,
-					// never a negative.
-					return neutralOrPositiveOutcome
-				}
-			}
-			// Default handling:
-			return
+		if (finalStingUsed !== 0) {
+			// Final Sting used, so don't dock any points for missed actions:
+			return neutralOrPositiveOutcome
 		}
 
-		// Final Sting used, so don't dock any points for missed actions:
-		return neutralOrPositiveOutcome
+		// Final Sting not used here
+		if (this.breathOfMagicApplier) {
+			// It's the Breath of Magic applier!  They may be doing an off-minute window to
+			// reapply BoM, and we should not dock them any points for that.
+			if (this.offMinuteBoMMoonFlute(window)) {
+				// TODO: We should actually still enforce that Surpanakha should either be 4 casts or 0, nothing else.
+				return neutralOrPositiveOutcome
+			}
+		}
+
+		// For SpS builds, using Triple Trident on cooldown is a DPS gain, so
+		// jump through hoops to accommodate for that:
+		const trackedActionId = trackedActions.actions[0].id
+		if (trackedActionId === this.data.actions.TRIPLE_TRIDENT.id) {
+			// Using TT on cooldown, on a long enough timeline, can be a DPS gain over
+			// holding it for a MF window, particularly for SpS builds.
+			// So let's be understanding -- We only dock points if they were in a
+			// Moon Flute window, had TT available, and didn't use it.
+			if (!this.windowMissedTT.has(window.start)) {
+				// TT was either used, or wasn't available during the window.
+				// Either way, this check will either be a Positive or a Neutral,
+				// never a negative.
+				return neutralOrPositiveOutcome
+			}
+		}
+		// Default handling:
+		return
+	}
+
+	private offMinuteBoMMoonFlute(window: HistoryEntry<EvaluatedAction[]>): boolean {
+		// We only relax the requirements for off-minute Moon Flutes that reapply BoM:
+		const bomCasts = window.data.filter(event => event.action.id === this.data.actions.BREATH_OF_MAGIC.id).length
+		if (bomCasts < 1) { return false }
+
+		// So how can we tell if it's an off-minute window?
+		// Everyone's favorite: Heuristics!  If Nightbloom is still in cooldown,
+		// and will be in cooldown by the end of the Moon Flute, assume it's an odd-minute flute.
+		// NOTE: Initially we were checking for a Moon Flute that used both BoM and
+		// Song of Torment, but it's possible -- though not recommended -- that they didn't
+		// take Song of Torment.
+		const nightbloomHistory = this.cooldowns.cooldownHistory(this.data.actions.NIGHTBLOOM) ?? []
+		for (const nightbloomCast of nightbloomHistory) {
+			const mfEnd = window.end ?? (window.start + this.data.statuses.WAXING_NOCTURNE.duration)
+			if (nightbloomCast.start > window.start && nightbloomCast.start < mfEnd) {
+				// This nightbloom happened during this MF, assume it's an even-minute
+				continue
+			}
+			const bloomOffCd = nightbloomCast.start + this.data.actions.NIGHTBLOOM.cooldown
+			if (nightbloomCast.start < window.start && bloomOffCd > (mfEnd + this.data.statuses.WANING_NOCTURNE.duration)) {
+				// We had a nightbloom that happened before this window, but comes off cooldown
+				// after this MF is over.  Assume that this is an odd-minute MF, so accept them
+				// doing whatever they want for the oGCD spam.
+				return true
+			}
+		}
+
+		return false
 	}
 }
 
