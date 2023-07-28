@@ -84,6 +84,27 @@ export class DoTs extends CoreDoTs {
 			this.unbuffedMortal++
 		}
 	}
+	private unbuffedBigDoTWhy(unbuffedBoM: number, unbuffedMortal: number): JSX.Element {
+		if (unbuffedBoM && unbuffedMortal) {
+			// Both BoM and Mortal Flame were unbuffed
+			return <Trans id ="blu.big-dots.suggestion.unbuffed.why">
+				<Plural value={this.unbuffedBoM} one="# Breath of Magic" other="# Breaths of Magic"/> and
+				<Plural value={this.unbuffedMortal} one=" # Mortal Flame" other=" # Mortal Flames"/> were cast without both buffs.
+			</Trans>
+		}
+
+		if (unbuffedBoM) {
+			// unbuffed Breath of Magic
+			return <Trans id ="blu.breath_of_magic.suggestion.unbuffed.why">
+				<Plural value={this.unbuffedBoM} one="# Breath of Magic was" other="# Breaths of Magic were"/> cast without both buffs.
+			</Trans>
+		}
+
+		// unbuffed Mortal Flame
+		return <Trans id ="blu.mortal_flame.suggestion.unbuffed.why">
+			<Plural value={this.unbuffedMortal} one="# Mortal Flame was" other="# Mortal Flames were"/> cast without both buffs.
+		</Trans>
+	}
 
 	private onCompleteExtra() {
 		// TODO: For the Breath of Magic applier, one of their Songs of Torment will be reapplied
@@ -101,25 +122,13 @@ export class DoTs extends CoreDoTs {
 			value: this.unbuffedSongsOfTorment,
 		}))
 
-		const unbuffedWhyBoM = <Trans id ="blu.breath_of_magic.suggestion.unbuffed.why">
-			<Plural value={this.unbuffedBoM} one="# Breath of Magic was" other="# Breaths of Magic were"/> cast without both buffs.
-		</Trans>
-		const unbuffedWhyFlame = <Trans id ="blu.mortal_flame.suggestion.unbuffed.why">
-			<Plural value={this.unbuffedMortal} one="# Mortal Flame was" other="# Mortal Flames were"/> cast without both buffs.
-		</Trans>
-		const unbuffedWhyBoth = <Trans id ="blu.big-dots.suggestion.unbuffed.why">
-			<Plural value={this.unbuffedBoM} one="# Breath of Magic" other="# Breaths of Magic"/>,
-			<Plural value={this.unbuffedMortal} one="# Mortal Flame" other="# Mortal Flames"/> were cast without both buffs.
-		</Trans>
-		const unbuffedWhy = (this.unbuffedBoM && this.unbuffedMortal) ? unbuffedWhyBoth
-			: this.unbuffedMortal ? unbuffedWhyFlame : unbuffedWhyBoM
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.unbuffedMortal ? this.data.actions.MORTAL_FLAME.icon : this.data.actions.BREATH_OF_MAGIC.icon,
 			content: <Trans id = "blu.big-dot.suggestion.unbuffed.content">
 				<DataLink action="BREATH_OF_MAGIC"/> and <DataLink action="MORTAL_FLAME"/> must always be buffed with <DataLink action="BRISTLE"/> and <DataLink action="MOON_FLUTE"/> for a colossal damage gain.
 			</Trans>,
 			tiers: {1: SEVERITY.MAJOR},
-			why: unbuffedWhy,
+			why: this.unbuffedBigDoTWhy(this.unbuffedBoM, this.unbuffedMortal),
 			value: this.unbuffedBoM + this.unbuffedMortal,
 		}))
 	}
