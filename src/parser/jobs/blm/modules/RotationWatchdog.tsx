@@ -220,10 +220,6 @@ export class RotationWatchdog extends RestartWindow {
 					expectedPerWindow: 0,
 				},
 			],
-			suggestionIcon: '', // This evaluator skips the normal ExpectedActionsEvaluator suggestion, so just pass empty stuff here...
-			suggestionContent: <></>,
-			suggestionWindowName: <></>,
-			severityTiers: {},
 			adjustCount: this.adjustExpectedActionsCount.bind(this),
 			adjustOutcome: this.adjustExpectedActionsOutcome.bind(this),
 		}))

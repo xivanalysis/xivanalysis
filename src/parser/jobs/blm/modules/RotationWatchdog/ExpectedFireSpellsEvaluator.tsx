@@ -11,7 +11,9 @@ import React from 'react'
 import {ROTATION_ERRORS, DEFAULT_SEVERITY_TIERS, RotationMetadata} from '../RotationWatchdog'
 import {assignErrorCode, getMetadataForWindow, includeInSuggestions} from './EvaluatorUtilities'
 
-export interface ExpectedFireSpellsEvaluatorOpts extends TrackedActionsOptions {
+export type ExpectedFireSpellsEvaluatorOpts =
+	& Omit<TrackedActionsOptions, 'suggestionIcon' | 'suggestionContent' | 'suggestionWindowName' | 'severityTiers'>
+	& {
 	parser: Parser
 	data: Data
 	invulnerability: Invulnerability
@@ -25,7 +27,12 @@ export class ExpectedFireSpellsEvaluator extends ExpectedActionsEvaluator {
 	private metadataHistory: History<RotationMetadata>
 
 	constructor(opts: ExpectedFireSpellsEvaluatorOpts) {
-		super(opts)
+		super({...opts,
+			suggestionIcon: '',
+			suggestionContent: <></>,
+			suggestionWindowName: <></>,
+			severityTiers: {},
+		})
 		this.parser = opts.parser
 		this.data = opts.data
 		this.invulnerability = opts.invulnerability
