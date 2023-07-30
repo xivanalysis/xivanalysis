@@ -2,7 +2,7 @@ import React from 'react'
 import {changelog} from './changelog'
 import {Meta} from './Meta'
 
-const DEBUG_IS_APRIL_FIRST: boolean = true && process.env.NODE_ENV !== 'production'
+const DEBUG_IS_APRIL_FIRST: boolean = false && process.env.NODE_ENV !== 'production'
 const JS_APRIL_MONTH: number = 3 // JS months start at 0 because reasons
 
 export const CORE = new Meta({
