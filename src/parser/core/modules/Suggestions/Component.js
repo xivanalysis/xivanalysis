@@ -14,7 +14,7 @@ const SEVERITY_LABEL_PROPS = {
 	[SEVERITY.MAJOR]: {content: <Trans id="core.suggestions.severity.major">Major</Trans>, color: 'red', icon: 'arrow up'},
 	[SEVERITY.MEDIUM]: {content: <Trans id="core.suggestions.severity.medium">Medium</Trans>, color: 'orange'},
 	[SEVERITY.MINOR]: {content: <Trans id="core.suggestions.severity.minor">Minor</Trans>, color: 'blue', icon: 'arrow down'},
-	[SEVERITY.MEMES]: {content: <Trans id="code.suggestions.severity.memes">Memes</Trans>, color: 'silver', icon: 'exclamation'},
+	[SEVERITY.MEMES]: {content: <Trans id="code.suggestions.severity.memes">Memes</Trans>, color: 'yellow', icon: 'exclamation'},
 }
 
 @observer
