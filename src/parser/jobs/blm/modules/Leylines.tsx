@@ -17,6 +17,47 @@ import DISPLAY_ORDER from './DISPLAY_ORDER'
 //pretty random. Should be revised, maybe based on fights? 10% is ~ 1 GCD. So we allow that.
 const TARGET_UPTIME_PCT = 90
 
+interface CircleOfPowerUptimeEvaluatorOpts {
+	pullEnd: number,
+	circleOfPowerId: number
+	getStatusDurationInRange : (status: number, start: number, end: number) => number
+	dontMovePercent : (numerator: number, denominator: number) => number
+}
+
+class CircleOfPowerUptimeEvaluator extends RulePassedEvaluator {
+	private pullEnd: number
+	private circleOfPowerId: number
+	private getStatusDurationInRange : (status: number, start: number, end: number) => number
+	private dontMovePercent : (numerator: number, denominator: number) => number
+
+	override header = {
+		header: <Trans id="blm.leylines.uptime-header">Uptime</Trans>,
+		accessor: 'powertime',
+	}
+
+	constructor(opts: CircleOfPowerUptimeEvaluatorOpts) {
+		super()
+		this.pullEnd = opts.pullEnd
+		this.circleOfPowerId = opts.circleOfPowerId
+		this.getStatusDurationInRange = opts.getStatusDurationInRange
+		this.dontMovePercent = opts.dontMovePercent
+	}
+
+	override passesRule(window: HistoryEntry<EvaluatedAction[]>) {
+		return this.getUptimeForWindow(window) >= TARGET_UPTIME_PCT
+	}
+
+	override ruleContext(window: HistoryEntry<EvaluatedAction[]>) {
+		return this.getUptimeForWindow(window).toFixed(2) + '%'
+	}
+
+	private getUptimeForWindow(window: HistoryEntry<EvaluatedAction[]>) {
+		const linesDuration = (window.end ?? this.pullEnd) - window.start
+		const copDuration = this.getStatusDurationInRange(this.circleOfPowerId, window.start, window.end ?? this.pullEnd)
+		return this.dontMovePercent(copDuration, linesDuration)
+	}
+}
+
 export default class Leylines extends BuffWindow {
 	static override handle = 'leylines'
 	static override title = t('blm.leylines.title')`Ley Lines`
@@ -43,13 +84,11 @@ export default class Leylines extends BuffWindow {
 			actor: this.parser.actor.id,
 		}, this.onDeath)
 
-		this.addEvaluator(new RulePassedEvaluator({
-			header: {
-				header: <Trans id="blm.leylines.uptime-header">Uptime</Trans>,
-				accessor: 'powertime',
-			},
-			passesRule: this.encircled.bind(this),
-			ruleContext: this.uptimeContext.bind(this),
+		this.addEvaluator(new CircleOfPowerUptimeEvaluator({
+			pullEnd: this.parser.pull.timestamp + this.parser.pull.duration,
+			circleOfPowerId: this.data.statuses.CIRCLE_OF_POWER.id,
+			getStatusDurationInRange: this.getStatusDurationInRange.bind(this),
+			dontMovePercent: this.dontMovePercent.bind(this),
 		}))
 	}
 
@@ -99,20 +138,6 @@ export default class Leylines extends BuffWindow {
 	// A reminder of man's ability to generate electricity
 	private dontMovePercent(power: number, lines: number) {
 		return (power / lines) * 100
-	}
-
-	private encircled(window: HistoryEntry<EvaluatedAction[]>): boolean {
-		return this.getUptimeForWindow(window) >= TARGET_UPTIME_PCT
-	}
-
-	private uptimeContext(window: HistoryEntry<EvaluatedAction[]>): string {
-		return this.getUptimeForWindow(window).toFixed(2) + '%'
-	}
-
-	private getUptimeForWindow(window: HistoryEntry<EvaluatedAction[]>) {
-		const linesDuration = (window.end ?? this.parser.pull.timestamp + this.parser.pull.duration) - window.start
-		const copDuration = this.getStatusDurationInRange(this.data.statuses.CIRCLE_OF_POWER.id, window.start, window.end)
-		return this.dontMovePercent(copDuration, linesDuration)
 	}
 
 	override onComplete() {
