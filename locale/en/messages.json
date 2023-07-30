@@ -456,6 +456,7 @@
   "dnc.technicalities.suggestions.unpooled.content": "Pooling your Feathers before going into a <0/> window allows you to use more <1/>s with the multiplicative bonuses active, increasing their effectiveness. Try to build and hold on to at least three feathers between windows.",
   "dnc.technicalities.suggestions.unpooled.why": "{unpooledWindows, plural, one {# window was} other {# windows were}} missing potential <0/>s.",
   "dnc.technicalities.title": "Technical Windows",
+  "dnc.technicalities.unpooled.context.opener": "Opener",
   "drg.about.description": "<0>This analyzer aims to help you beat the stereotypes, stay off the floor, and dish out some big juicy numbers. As the DRG rotation is pretty strict, the suggestions you see will focus mostly on keeping that rotation flowing smoothly, as well as picking out issues related to your Life of the Dragon windows and buff alignment.</0>",
   "drg.battlelitany.title": "Battle Litany",
   "drg.bl.suggestions.missedgcd.content": "Try to land at least 6 GCDs during every <0/> window.",
