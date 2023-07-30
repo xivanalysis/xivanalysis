@@ -105,8 +105,6 @@
   "blm.gauge.title": "职业量谱",
   "blm.leylines.checklist": "在放下<0/>后尽量不要离开它。充分利用<1/>的面积优势呆在里面，躲开AoE，接受治疗。如果大部分时间无法站在<2/>里。请考虑更换放置的时机和位置。",
   "blm.leylines.checklist-caption": "站在你的<0/>中",
-  "blm.leylines.timelinelink-button": "跳转到时间轴",
-  "blm.leylines.timestamp-header": "时间截",
   "blm.leylines.title": "黑魔纹",
   "blm.leylines.uptime-header": "覆盖率",
   "blm.notcasting.duration-header": "持续时间",

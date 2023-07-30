@@ -105,8 +105,6 @@
   "blm.gauge.title": "Jauge",
   "blm.leylines.checklist": "Évitez de quitter vos <0/> après les avoir placés. Profitez de la taille du cercle de vos <1/> pour rester dedans tout en esquivant les AoEs et en vous tenant à portée des soigneurs. Si vous n'arrivez pas à rester dedans durant la majorité de la durée de <2/>, veuillez considérer l'idée de changer l'emplacement où vous les déposez durant ce combat.",
   "blm.leylines.checklist-caption": "Restez à l'intérieur de vos <0/>",
-  "blm.leylines.timelinelink-button": "Voir sur la Chronologie",
-  "blm.leylines.timestamp-header": "Horodatage",
   "blm.leylines.title": "Manalignements",
   "blm.leylines.uptime-header": "Durée active",
   "blm.notcasting.duration-header": "Durée",

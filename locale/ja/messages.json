@@ -105,8 +105,6 @@
   "blm.gauge.title": "ゲージ",
   "blm.leylines.checklist": "設置後に<0/>から離れないでください。<1/>'を利用して、AOEを避けヒーラーの回復範囲内にいる間は留まってください。もし<2/>'の持続時間の大半で留まれないならば、戦闘中にそれを設置する場所の変更を検討してください。",
   "blm.leylines.checklist-caption": "<0/>から出ないでください。",
-  "blm.leylines.timelinelink-button": "タイムラインに移動",
-  "blm.leylines.timestamp-header": "タイムスタンプ",
   "blm.leylines.title": "黒魔紋",
   "blm.leylines.uptime-header": "アクティブ率",
   "blm.notcasting.duration-header": "効果時間",

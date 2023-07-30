@@ -105,8 +105,6 @@
   "blm.gauge.title": "극성과 언어",
   "blm.leylines.checklist": "<0/> 배치 후 최대한 벗어나지 마십시오. <1/> 크기를 최대한 살려 범위 공격을 피하고 힐러의 치유 범위에 닿도록 하십시오. <2/> 지속 시간 중 상당 시간을 범위 내에 머무르지 못했다면 다른 곳에 설치하는 것을 고려하십시오.",
   "blm.leylines.checklist-caption": "<0/> 내에 머무르기",
-  "blm.leylines.timelinelink-button": "타임라인으로 이동",
-  "blm.leylines.timestamp-header": "타임스탬프",
   "blm.leylines.title": "흑마법 문양",
   "blm.leylines.uptime-header": "적용 시간",
   "blm.notcasting.duration-header": "지속 시간",

@@ -105,8 +105,6 @@
   "blm.gauge.title": "Gauge",
   "blm.leylines.checklist": "Try to avoid leaving your <0/> after placing them. Take advantage of <1/>' size to stay in them while dodging AOEs and being in range of healers. If you can't stay in them for the majority of a <2/>' duration, consider changing where they're placed in the fight.",
   "blm.leylines.checklist-caption": "Stay in your <0/>",
-  "blm.leylines.timelinelink-button": "Jump to Timeline",
-  "blm.leylines.timestamp-header": "Timestamp",
   "blm.leylines.title": "Ley Lines",
   "blm.leylines.uptime-header": "Uptime",
   "blm.notcasting.duration-header": "Duration",
