@@ -22,8 +22,8 @@ export type HistoryEntryPredicate = (e: HistoryEntry<EvaluatedAction[]>) => bool
 export abstract class ActionWindow extends Analyser {
 
 	@dependency protected data!: Data
-	@dependency private suggestions!: Suggestions
-	@dependency private timeline!: Timeline
+	@dependency protected suggestions!: Suggestions
+	@dependency protected timeline!: Timeline
 
 	/**
 	 * The captured windows.
@@ -152,7 +152,7 @@ export abstract class ActionWindow extends Analyser {
 		this.addEventHook('complete', this.onComplete)
 	}
 
-	private onComplete() {
+	protected onComplete() {
 		this.onWindowEnd(this.parser.pull.timestamp + this.parser.pull.duration)
 
 		const actionHistory = this.mapHistoryActions()
