@@ -17,7 +17,7 @@ export default class Hijinks extends Analyser {
 					icon: require('../../../data/avatar/Godbert.png'),
 					severity: SEVERITY.MEMES,
 					content: <Trans id="core.hijinks.crit-more.content">Godbert says you should crit more to do more damage!</Trans>,
-					why: <Trans id="core.hijink.crit-more.why">You wouldn't want to disappoint Godbert, would you?</Trans>,
+					why: <Trans id="core.hijinks.crit-more.why">You wouldn't want to disappoint Godbert, would you?</Trans>,
 				}
 				))
 			})
