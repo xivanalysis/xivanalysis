@@ -1,12 +1,11 @@
 import {Trans, Plural} from '@lingui/macro'
 import {DataLink} from 'components/ui/DbLink'
+import {Action} from 'data/ACTIONS'
 import {EvaluatedAction, ExpectedActionsEvaluator} from 'parser/core/modules/ActionWindow'
 import {TrackedAction, TrackedActionsOptions} from 'parser/core/modules/ActionWindow/evaluators/TrackedAction'
 import {History, HistoryEntry} from 'parser/core/modules/ActionWindow/History'
-import {Data} from 'parser/core/modules/Data'
 import {Invulnerability} from 'parser/core/modules/Invulnerability'
 import {TieredSuggestion} from 'parser/core/modules/Suggestions'
-import Parser from 'parser/core/Parser'
 import React from 'react'
 import {ROTATION_ERRORS, DEFAULT_SEVERITY_TIERS, RotationMetadata} from '../RotationWatchdog'
 import {assignErrorCode, getMetadataForWindow, includeInSuggestions} from './EvaluatorUtilities'
@@ -14,15 +13,17 @@ import {assignErrorCode, getMetadataForWindow, includeInSuggestions} from './Eva
 export type ExpectedFireSpellsEvaluatorOpts =
 	& Omit<TrackedActionsOptions, 'suggestionIcon' | 'suggestionContent' | 'suggestionWindowName' | 'severityTiers'>
 	& {
-	parser: Parser
-	data: Data
+	pullEnd: number
+	despairAction: Action
+	fire4Action: Action
 	invulnerability: Invulnerability
 	metadataHistory: History<RotationMetadata>
 }
 
 export class ExpectedFireSpellsEvaluator extends ExpectedActionsEvaluator {
-	private parser: Parser
-	private data: Data
+	private pullEnd: number
+	private despairAction: Action
+	private fire4Action: Action
 	private invulnerability: Invulnerability
 	private metadataHistory: History<RotationMetadata>
 
@@ -33,8 +34,9 @@ export class ExpectedFireSpellsEvaluator extends ExpectedActionsEvaluator {
 			suggestionWindowName: <></>,
 			severityTiers: {},
 		})
-		this.parser = opts.parser
-		this.data = opts.data
+		this.pullEnd = opts.pullEnd
+		this.despairAction = opts.despairAction
+		this.fire4Action = opts.fire4Action
 		this.invulnerability = opts.invulnerability
 		this.metadataHistory = opts.metadataHistory
 	}
@@ -51,7 +53,7 @@ export class ExpectedFireSpellsEvaluator extends ExpectedActionsEvaluator {
 		}, 0)
 
 		return new TieredSuggestion({
-			icon: this.data.actions.DESPAIR.icon,
+			icon: this.despairAction.icon,
 			content: <Trans id="blm.rotation-watchdog.suggestions.end-with-despair.content">
 				Once you can no longer cast another spell in Astral Fire and remain above 800 MP, you should use your remaining MP by casting <DataLink action="DESPAIR"/>.
 			</Trans>,
@@ -63,15 +65,22 @@ export class ExpectedFireSpellsEvaluator extends ExpectedActionsEvaluator {
 		})
 	}
 
+	override determineExpected(window: HistoryEntry<EvaluatedAction[]>, action: TrackedAction) {
+		const windowMetadata = getMetadataForWindow(window, this.metadataHistory)
+		if (action.action.id === this.fire4Action.id && windowMetadata != null && windowMetadata.finalOrDowntime) { return undefined }
+
+		return super.determineExpected(window, action)
+	}
+
 	private assessWindowAction(window: HistoryEntry<EvaluatedAction[]>, windowMetadata: RotationMetadata, action: TrackedAction) {
 		// If they got the expected number of actions in, no need to grump
-		if (this.countUsed(window, action) >= this.determineExpected(window, action)) { return }
+		if (this.countUsed(window, action) >= (this.determineExpected(window, action) ?? 0)) { return }
 
 		// Assign error code and metadata based on which action wasn't used enough
-		if (action.action.id === this.data.actions.FIRE_IV.id) {
+		if (action.action.id === this.fire4Action.id) {
 			windowMetadata.missingFire4s = true
 			assignErrorCode(windowMetadata, ROTATION_ERRORS.MISSING_FIRE4S)
-		} else if (action.action.id === this.data.actions.DESPAIR.id) {
+		} else if (action.action.id === this.despairAction.id) {
 			windowMetadata.missingDespairs = true
 			assignErrorCode(windowMetadata, ROTATION_ERRORS.MISSING_DESPAIRS)
 		}
@@ -79,12 +88,11 @@ export class ExpectedFireSpellsEvaluator extends ExpectedActionsEvaluator {
 		// Re-check to see if the window was actually right before a downtime but the boss became invulnerable before another Fire 4 could've been cast.
 		// If so, mark it as a finalOrDowntime cycle, and clear the error code so we can check it for other errors
 		if (windowMetadata.errorCode.priority === ROTATION_ERRORS.MISSING_FIRE4S.priority && this.invulnerability.isActive({
-			timestamp: window.end ?? (this.parser.pull.timestamp + this.parser.pull.duration) + this.data.actions.FIRE_IV.castTime,
+			timestamp: (window.end ?? this.pullEnd) + (this.fire4Action.castTime ?? 0),
 			types: ['invulnerable'],
 		})) {
 			windowMetadata.finalOrDowntime = true
 			windowMetadata.errorCode = ROTATION_ERRORS.NO_ERROR
 		}
-
 	}
 }

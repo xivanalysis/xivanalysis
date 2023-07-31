@@ -1,5 +1,5 @@
 import {t} from '@lingui/macro'
-import {Plural, Trans} from '@lingui/react'
+import {Trans} from '@lingui/react'
 import {DataLink} from 'components/ui/DbLink'
 import {RotationEvent} from 'components/ui/Rotation'
 import {RotationTargetOutcome} from 'components/ui/RotationTable'
@@ -7,25 +7,29 @@ import {ActionKey} from 'data/ACTIONS'
 import {Events} from 'event'
 import {dependency} from 'parser/core/Injectable'
 import {EvaluatedAction, RestartWindow, TrackedAction} from 'parser/core/modules/ActionWindow'
-import {RulePassedEvaluator} from 'parser/core/modules/ActionWindow/evaluators/RulePassedEvaluator'
 import {History, HistoryEntry} from 'parser/core/modules/ActionWindow/History'
 import {HistoryEntryPredicate} from 'parser/core/modules/ActionWindow/windows/ActionWindow'
 import {Actors} from 'parser/core/modules/Actors'
 import {Invulnerability} from 'parser/core/modules/Invulnerability'
-import {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
+import {SEVERITY} from 'parser/core/modules/Suggestions'
 import {UnableToAct} from 'parser/core/modules/UnableToAct'
 import React, {Fragment, ReactNode} from 'react'
 import {Icon, Message} from 'semantic-ui-react'
 import {ensureRecord} from 'utilities'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 import {FIRE_SPELLS} from './Elements'
-import {ASTRAL_UMBRAL_DURATION, ASTRAL_UMBRAL_MAX_STACKS, BLMGaugeState, Gauge, UMBRAL_HEARTS_MAX_STACKS} from './Gauge'
+import {ASTRAL_UMBRAL_DURATION, BLMGaugeState, Gauge, UMBRAL_HEARTS_MAX_STACKS} from './Gauge'
 import Leylines from './Leylines'
 import Procs from './Procs'
 import {assignErrorCode, getMetadataForWindow} from './RotationWatchdog/EvaluatorUtilities'
 import {ExpectedFireSpellsEvaluator} from './RotationWatchdog/ExpectedFireSpellsEvaluator'
+import {ExtraF1Evaluator} from './RotationWatchdog/ExtraF1Evaluator'
 import {ExtraHardT3Evaluator} from './RotationWatchdog/ExtraHardT3Evaluator'
+import {IceMageEvaluator} from './RotationWatchdog/IceMageEvaluator'
+import {ManafontTimingEvaluator} from './RotationWatchdog/ManafontTimingEvaluator'
+import {MissedIceParadoxEvaluator} from './RotationWatchdog/MissedIceParadoxEvaluator'
 import {RotationErrorNotesEvaluator} from './RotationWatchdog/RotationErrorNotesEvaluator'
+import {SkipB4Evaluator} from './RotationWatchdog/SkipB4Evaluator'
 import {SkipT3Evaluator} from './RotationWatchdog/SkipT3Evaluator'
 import {UptimeSoulsEvaluator} from './RotationWatchdog/UptimeSoulsEvaluator'
 
@@ -169,23 +173,6 @@ export class RotationWatchdog extends RestartWindow {
 			initialGaugeState: this.currentGaugeState,
 		}}))
 
-	private manafontTimingEvaluator: RulePassedEvaluator = new RulePassedEvaluator({
-		passesRule: this.determineManafontTiming.bind(this),
-		suggestion: this.suggestManafontTiming.bind(this),
-	})
-	private extraF1Evaluator: RulePassedEvaluator = new RulePassedEvaluator({
-		passesRule: this.determineNoExtraF1.bind(this),
-		suggestion: this.suggestNoExtraF1.bind(this),
-	})
-	private iceMageEvaluator: RulePassedEvaluator = new RulePassedEvaluator({
-		passesRule: this.determineFirePhase.bind(this),
-		suggestion: this.suggestNoIceMage.bind(this),
-	})
-	private skipB4Evaluator: RulePassedEvaluator = new RulePassedEvaluator({
-		passesRule: this.determineUsedB4.bind(this),
-		suggestion: this.suggestSkipB4.bind(this),
-	})
-
 	override initialise() {
 		super.initialise()
 
@@ -205,8 +192,9 @@ export class RotationWatchdog extends RestartWindow {
 		// The ExpectedFireSpellsEvaluator must go before any others, since it will assign metadata about the
 		// expected fire spell counts that other evaluators may depend on
 		this.addEvaluator(new ExpectedFireSpellsEvaluator({
-			parser: this.parser,
-			data: this.data,
+			pullEnd: this.parser.pull.timestamp + this.parser.pull.duration,
+			despairAction: this.data.actions.DESPAIR,
+			fire4Action: this.data.actions.FIRE_IV,
 			invulnerability: this.invulnerability,
 			metadataHistory: this.metadataHistory,
 			// Expected counts per window will be calculated in the adjustExpectedActionsCount function
@@ -224,14 +212,20 @@ export class RotationWatchdog extends RestartWindow {
 			adjustOutcome: this.adjustExpectedActionsOutcome.bind(this),
 		}))
 
-		this.addEvaluator(new RulePassedEvaluator({
-			passesRule: this.determineUsedIceParadox.bind(this),
-			suggestion: this.evaluateUsedIceParadox.bind(this),
+		this.addEvaluator(new MissedIceParadoxEvaluator(this.metadataHistory))
+
+		this.addEvaluator(new ManafontTimingEvaluator({
+			manafontAction: this.data.actions.MANAFONT,
+			despairId: this.data.actions.DESPAIR.id,
+			metadataHistory: this.metadataHistory,
 		}))
 
-		this.addEvaluator(this.manafontTimingEvaluator)
-
-		this.addEvaluator(this.extraF1Evaluator)
+		this.addEvaluator(new ExtraF1Evaluator({
+			suggestionIcon: this.data.actions.FIRE_I.icon,
+			metadataHistory: this.metadataHistory,
+			allFireSpellIds: this.fireSpellIds,
+			limitedFireSpellIds: [this.data.actions.FIRE_I.id, this.data.actions.PARADOX.id],
+		}))
 
 		// This was previously only for normal mid-fight windows but it probably should've been for everything...
 		// Also needs to be sequenced before the SkipT3Evaluator
@@ -239,28 +233,35 @@ export class RotationWatchdog extends RestartWindow {
 			data: this.data,
 			metadataHistory: this.metadataHistory,
 			procs: this.procs,
-			fireSpellIds: this.fireSpellIds,
 		}))
 
 		this.addEvaluator(new UptimeSoulsEvaluator({
-			data: this.data,
+			umbralSoulAction: this.data.actions.UMBRAL_SOUL,
 			invulnerability: this.invulnerability,
 		}))
 		//#endregion
 
 		//#region Evaluators that only apply to normal mid-fight windows
 
-		this.addEvaluator(this.iceMageEvaluator)
+		this.addEvaluator(new IceMageEvaluator({
+			suggestionIcon: this.data.actions.HIGH_BLIZZARD_II.icon,
+			metadataHistory: this.metadataHistory,
+			fireSpellIds: this.fireSpellIds,
+		}))
 		//#endregion
 
 		//#region Evaluators that only apply to windows that ended in downtime
 
 		this.addEvaluator(new SkipT3Evaluator({
-			data: this.data,
+			suggestionIcon: this.data.actions.FIRE_IV.icon,
 			metadataHistory: this.metadataHistory,
 		}))
 
-		this.addEvaluator(this.skipB4Evaluator)
+		this.addEvaluator(new SkipB4Evaluator({
+			blizzard4Id: this.data.actions.BLIZZARD_IV.id,
+			fire4action: this.data.actions.FIRE_IV,
+			metadataHistory: this.metadataHistory,
+		}))
 		//#endregion
 
 		// This should be the last evaluator added, since it is the one that will actually output the contents of the "Why Outlier" column
@@ -268,163 +269,6 @@ export class RotationWatchdog extends RestartWindow {
 
 		this.onWindowStart(this.parser.pull.timestamp)
 	}
-
-	//#region Missed Ice Paradox
-	private determineUsedIceParadox(window: HistoryEntry<EvaluatedAction[]>) {
-		const windowMetadata = getMetadataForWindow(window, this.metadataHistory)
-		if (windowMetadata == null) { return }
-
-		// Check if the rotation overwrote a Paradox from the ice phase
-		if (windowMetadata.firePhaseMetadata.initialGaugeState.paradox > 0 &&
-			windowMetadata.firePhaseMetadata.initialGaugeState.umbralIce === ASTRAL_UMBRAL_MAX_STACKS &&
-			windowMetadata.firePhaseMetadata.initialGaugeState.umbralHearts === UMBRAL_HEARTS_MAX_STACKS) {
-			assignErrorCode(windowMetadata, ROTATION_ERRORS.MISSED_ICE_PARADOX)
-			return false
-		}
-		return true
-	}
-
-	// Not actually suggesting anything, just assigning the error code as needed
-	private evaluateUsedIceParadox(windows: Array<HistoryEntry<EvaluatedAction[]>>) {
-		windows.forEach(window => this.determineUsedIceParadox(window))
-		return undefined
-	}
-	//#endregion
-
-	//#region Manafont Timing
-	private determineManafontTiming(window: HistoryEntry<EvaluatedAction[]>) {
-		const windowMetadata = this.metadataHistory.entries.find(entry => entry.start === window.start)?.data
-		if (windowMetadata == null) { return }
-
-		const currentRotation = window.data
-		const manafontIndex = currentRotation.findIndex(event => event.action.id === this.data.actions.MANAFONT.id)
-		if (manafontIndex === -1) { return }
-
-		const despairIndex = currentRotation.findIndex(event => event.action.id === this.data.actions.DESPAIR.id)
-		if (manafontIndex < despairIndex || despairIndex === -1) {
-			assignErrorCode(windowMetadata, ROTATION_ERRORS.MANAFONT_BEFORE_DESPAIR)
-			return false
-		}
-		return true
-	}
-
-	private suggestManafontTiming(windows: Array<HistoryEntry<EvaluatedAction[]>>) {
-		const manafontsBeforeDespair = this.manafontTimingEvaluator.failedRuleCount(windows)
-		return new TieredSuggestion({
-			icon: this.data.actions.MANAFONT.icon,
-			content: <Trans id="blm.rotation-watchdog.suggestions.mf-before-despair.content">
-				Using <DataLink action="MANAFONT"/> before <DataLink action="DESPAIR"/> leads to fewer <DataLink showIcon={false} action="DESPAIR"/>s than possible being cast. Try to avoid that since <DataLink showIcon={false} action="DESPAIR"/> is stronger than <DataLink action="FIRE_IV"/>.
-			</Trans>,
-			tiers: ENHANCED_SEVERITY_TIERS,
-			value: manafontsBeforeDespair,
-			why: <Trans id="blm.rotation-watchdog.suggestions.mf-before-despair.why">
-				<DataLink showIcon={false} action="MANAFONT"/> was used before <DataLink action="DESPAIR"/> <Plural value={manafontsBeforeDespair} one="# time" other="# times"/>.
-			</Trans>,
-		})
-	}
-	//#endregion
-
-	//#region Extra Fire 1
-	private determineNoExtraF1(window: HistoryEntry<EvaluatedAction[]>) {
-		const windowMetadata = getMetadataForWindow(window, this.metadataHistory)
-		if (windowMetadata == null) { return }
-
-		// Check if the rotation included more than one Fire 1
-		const currentRotation = window.data
-		const firePhaseStartIndex = currentRotation.findIndex(event => this.fireSpellIds.includes(event.action.id))
-		const extraFire1Count = Math.max(currentRotation.filter(event => [this.data.actions.FIRE_I.id, this.data.actions.PARADOX.id].includes(event.action.id) && currentRotation.indexOf(event) >= firePhaseStartIndex).length - 1, 0)
-
-		if (extraFire1Count > 0) {
-			assignErrorCode(windowMetadata, ROTATION_ERRORS.EXTRA_F1)
-			return false
-		}
-		return true
-	}
-
-	private suggestNoExtraF1(windows: Array<HistoryEntry<EvaluatedAction[]>>) {
-		const extraF1s = this.extraF1Evaluator.failedRuleCount(windows)
-		return new TieredSuggestion({
-			icon: this.data.actions.FIRE_I.icon,
-			content: <Trans id="blm.rotation-watchdog.suggestions.extra-f1s.content">
-				Casting more than one <DataLink action="FIRE_I"/> per Astral Fire cycle is a crutch that should be avoided by better pre-planning of the encounter.
-			</Trans>,
-			tiers: DEFAULT_SEVERITY_TIERS,
-			value: extraF1s,
-			why: <Trans id="blm.rotation-watchdog.suggestions.extra-f1s.why">
-				You cast an extra <DataLink showIcon={false} action="FIRE_I"/> <Plural value={extraF1s} one="# time" other="# times"/>.
-			</Trans>,
-		})
-	}
-	//#endregion
-
-	//#region Icemage
-	private determineFirePhase(window: HistoryEntry<EvaluatedAction[]>) {
-		const windowMetadata = this.metadataHistory.entries.find(entry => entry.start === window.start)?.data
-		if (windowMetadata == null) { return }
-		if (windowMetadata.finalOrDowntime) { return } // This suggestion only applies to normal mid-fight windows
-
-		// If the window had no fire spells, try to assign the error code
-		if (!window.data.some(event => this.fireSpellIds.includes(event.action.id))) {
-			assignErrorCode(windowMetadata, ROTATION_ERRORS.NO_FIRE_SPELLS)
-
-			// If they died on this window, don't count it for the suggestion so we don't double-ding them
-			if (windowMetadata.errorCode.priority === DEATH_PRIORITY) {
-				return
-			}
-			return false
-		}
-		return true
-	}
-
-	private suggestNoIceMage(windows: Array<HistoryEntry<EvaluatedAction[]>>) {
-		const rotationsWithoutFire = this.iceMageEvaluator.failedRuleCount(windows)
-		return new TieredSuggestion({
-			icon: this.data.actions.BLIZZARD_II.icon,
-			content: <Trans id="blm.rotation-watchdog.suggestions.icemage.content">
-				Avoid spending significant amounts of time in Umbral Ice. The majority of your damage comes from your Astral Fire phase, so you should maximize the number of <DataLink action="FIRE_IV"/>s cast during the fight.
-			</Trans>,
-			tiers: DEFAULT_SEVERITY_TIERS,
-			value: rotationsWithoutFire,
-			why: <Trans id="blm.rotation-watchdog.suggestions.icemage.why">
-				<Plural value={rotationsWithoutFire} one="# rotation was" other="# rotations were"/> performed with no fire spells.
-			</Trans>,
-		})
-	}
-	//#endregion
-
-	//#region Skip B4
-	private determineUsedB4(window: HistoryEntry<EvaluatedAction[]>) {
-		const windowMetadata = this.metadataHistory.entries.find(entry => entry.start === window.start)?.data
-		if (windowMetadata == null) { return }
-		if (!windowMetadata.finalOrDowntime) { return } // This suggestion only applies to windows that end with downtime
-
-		const currentRotation = window.data
-		// B4 should be skipped for rotations that ended in downtime or the end of the fight,
-		if (currentRotation.some(event => event.action.id === this.data.actions.BLIZZARD_IV.id) // AND the rotations had a B4 cast
-			&& currentRotation.filter(event => event.action.id === this.data.actions.FIRE_IV.id).length <= NO_UH_EXPECTED_FIRE4 // AND the Umbral Hearts gained from Blizzard 4 weren't needed
-		) {
-			assignErrorCode(windowMetadata, ROTATION_ERRORS.SHOULD_SKIP_B4)
-			return false
-		}
-
-		return true
-	}
-
-	private suggestSkipB4(windows: Array<HistoryEntry<EvaluatedAction[]>>) {
-		const shouldSkipB4s = this.skipB4Evaluator.failedRuleCount(windows)
-		return new TieredSuggestion({
-			icon: this.data.actions.FIRE_IV.icon,
-			content: <Trans id="blm.rotation-watchdog.suggestions.should-skip-b4.content">
-				You lost at least one <DataLink action="FIRE_IV"/> by not skipping <DataLink action="BLIZZARD_IV"/> in an Umbral Ice phase before the fight finished or a phase transition occurred.
-			</Trans>,
-			tiers: ENHANCED_SEVERITY_TIERS,
-			value: shouldSkipB4s,
-			why: <Trans id="blm.rotation-watchdog.suggestions.should-skip-b4.why">
-				You should have skipped <DataLink showIcon={false} action="BLIZZARD_IV"/> <Plural value={shouldSkipB4s} one="# time" other="# times"/>.
-			</Trans>,
-		})
-	}
-	//#endregion
 
 	private onDeath() {
 		const metadata = this.metadataHistory.getCurrent()?.data

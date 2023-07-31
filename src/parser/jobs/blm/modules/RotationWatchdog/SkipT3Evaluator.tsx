@@ -2,23 +2,22 @@ import {Plural, Trans} from '@lingui/react'
 import {DataLink} from 'components/ui/DbLink'
 import {EvaluatedAction, WindowEvaluator} from 'parser/core/modules/ActionWindow'
 import {History, HistoryEntry} from 'parser/core/modules/ActionWindow/History'
-import {Data} from 'parser/core/modules/Data'
 import {TieredSuggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
 import {ROTATION_ERRORS, ENHANCED_SEVERITY_TIERS, RotationMetadata} from '../RotationWatchdog'
 import {assignErrorCode} from './EvaluatorUtilities'
 
 export interface SkipT3EvaluatorOpts {
-	data: Data,
+	suggestionIcon: string
 	metadataHistory: History<RotationMetadata>
 }
 
 export class SkipT3Evaluator implements WindowEvaluator {
-	private data: Data
+	private suggestionIcon: string
 	private metadataHistory: History<RotationMetadata>
 
 	constructor(opts: SkipT3EvaluatorOpts) {
-		this.data = opts.data
+		this.suggestionIcon = opts.suggestionIcon
 		this.metadataHistory = opts.metadataHistory
 	}
 
@@ -38,7 +37,7 @@ export class SkipT3Evaluator implements WindowEvaluator {
 		}, 0)
 
 		return new TieredSuggestion({
-			icon: this.data.actions.FIRE_IV.icon,
+			icon: this.suggestionIcon,
 			content: <Trans id="blm.rotation-watchdog.suggestions.should-skip-t3.content">
 				You lost at least one <DataLink action="FIRE_IV"/> by hard casting <DataLink action="THUNDER_III"/> before the fight finished or a phase transition occurred.
 			</Trans>,

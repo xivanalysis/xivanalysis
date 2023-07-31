@@ -36,7 +36,7 @@ export class ExpectedActionsEvaluator implements WindowEvaluator {
 			.reduce((total, window) => {
 				const missingInWindow = this.expectedActions.reduce((subTotal, action) => {
 					const actual = this.countUsed(window, action)
-					const expected = this.determineExpected(window, action)
+					const expected = this.determineExpected(window, action) ?? 0
 					const comparator = this.adjustOutcome(window, action)
 					// If a custom comparator is defined for this action, and it didn't return negative, don't count this window
 					const currentLoss = (comparator != null && comparator(actual, expected) !== RotationTargetOutcome.NEGATIVE) ?
@@ -84,7 +84,7 @@ export class ExpectedActionsEvaluator implements WindowEvaluator {
 		return window.data.filter(cast => cast.action.id === action.action.id).length
 	}
 
-	protected determineExpected(window: HistoryEntry<EvaluatedAction[]>, action: TrackedAction) {
+	protected determineExpected(window: HistoryEntry<EvaluatedAction[]>, action: TrackedAction): number | undefined {
 		return action.expectedPerWindow + this.adjustCount(window, action)
 	}
 }
