@@ -148,7 +148,7 @@ export class CounterGauge extends AbstractGauge {
 	set(value: number, reason?: GaugeEventReason) {
 		const delta = value - this.value
 
-		const _reason = reason ?? delta > 0 ? 'generate' : 'spend'
+		const _reason = reason ?? (delta > 0 ? 'generate' : 'spend')
 
 		const newValue = Math.min(Math.max(value, this.minimum), this.maximum)
 
