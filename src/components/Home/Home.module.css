@@ -24,10 +24,8 @@
 }
 
 .logo {
-	position: absolute;
-	top: 20%;
-	left: 50%;
-	transform: translate(-50%, -50%);
+	margin-top: 20px;
+	margin-bottom: 20px;
 	font-size: 24px;
 	font-weight: bold;
 	text-align: center;
@@ -40,9 +38,6 @@
 }
 
 .search {
-	position: absolute;
-	top: 50%;
-	transform: translateY(-50%);
 	padding: 0 gutter;
 	width: 100%;
 	color: themeText;
@@ -77,6 +72,9 @@
 
 	.search {
 		padding: 0;
+		position: absolute;
+		top: 50%;
+		transform: translateY(-50%);
 	}
 
 	.options {
