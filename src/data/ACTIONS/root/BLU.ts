@@ -240,6 +240,7 @@ export const BLU = ensureActions({
 		castTime: 2000,
 		gcdRecast: 2500,
 		damageType: MAGICAL,
+		elementType: ASTRAL,
 		speedAttribute: Attribute.SPELL_SPEED,
 	},
 	TRANSFUSION: {
