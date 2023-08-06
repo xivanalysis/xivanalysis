@@ -879,6 +879,7 @@ export const BLU = ensureActions({
 		elementType: UMBRAL,
 		speedAttribute: Attribute.SPELL_SPEED,
 	},
+	// the attack and heal variations of Stotram share a name and icon but have different IDs.
 	STOTRAM_ATTACK: {
 		id: 23269,
 		name: 'Stotram',
@@ -972,6 +973,7 @@ export const BLU = ensureActions({
 		onGcd: true,
 		castTime: 2000,
 		gcdRecast: 2500,
+		statusesApplied: ['BASIC_INSTINCT'],
 		speedAttribute: Attribute.SPELL_SPEED,
 	},
 	ULTRAVIBRATION: {
@@ -1004,6 +1006,7 @@ export const BLU = ensureActions({
 		gcdRecast: 2500,
 		damageType: MAGICAL,
 		elementType: ASTRAL,
+		statusesApplied: ['INCENDIARY_BURNS'],
 		speedAttribute: Attribute.SPELL_SPEED,
 	},
 	DRAGON_FORCE: {
@@ -1015,6 +1018,7 @@ export const BLU = ensureActions({
 		gcdRecast: 2500,
 		cooldown: 120000,
 		cooldownGroup: BLU_COOLDOWN_GROUPS.MATRA_MAGIC,
+		statusesApplied: ['DRAGON_FORCE'],
 		speedAttribute: Attribute.SPELL_SPEED,
 	},
 	AETHERIAL_SPARK: {
@@ -1080,6 +1084,7 @@ export const BLU = ensureActions({
 		castTime: 2000,
 		gcdRecast: 2500,
 		damageType: PHYSICAL,
+		statusesApplied: ['LIGHTHEADED'],
 		speedAttribute: Attribute.SPELL_SPEED,
 	},
 	BOTH_ENDS: {
