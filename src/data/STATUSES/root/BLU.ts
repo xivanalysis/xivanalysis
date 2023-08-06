@@ -88,13 +88,13 @@ export const BLU = ensureStatuses({
 		id: 1723,
 		name: 'Windburn',
 		icon: 'https://xivapi.com/i/013000/013510.png',
-		duration: 15000,
+		duration: 6000,
 	},
 	VEIL_OF_THE_WHORL: {
 		id: 1724,
 		name: 'Veil of the Whorl',
 		icon: 'https://xivapi.com/i/013000/013511.png',
-		duration: 15000,
+		duration: 30000,
 	},
 	GOBSKIN: {
 		id: 2114,
@@ -219,6 +219,29 @@ export const BLU = ensureStatuses({
 		name: 'Auspicious Trance',
 		icon: 'https://xivapi.com/i/013000/013536.png',
 	},
+	BASIC_INSTINCT: {
+		id: 2498,
+		name: 'Basic Instinct',
+		icon: 'https://xivapi.com/i/013000/013537.png',
+	},
+	INCENDIARY_BURNS: {
+		id: 2499,
+		name: 'Incendiary Burns',
+		icon: 'https://xivapi.com/i/013000/013538.png',
+		duration: 15000,
+	},
+	DRAGON_FORCE: {
+		id: 2500,
+		name: 'Dragon Force',
+		icon: 'https://xivapi.com/i/013000/013539.png',
+		duration: 15000,
+	},
+	LIGHTHEADED: {
+		id: 2501,
+		name: 'Lightheaded',
+		icon: 'https://xivapi.com/i/013000/013540.png',
+		duration: 5000,
+	},
 	SCHILTRON: {
 		id: 3631,
 		name: 'Schiltron',
@@ -235,7 +258,7 @@ export const BLU = ensureStatuses({
 		id: 3636,
 		name: 'Begrimed',
 		icon: 'https://xivapi.com/i/013000/013546.png',
-		duration: 8000,
+		duration: 9000,
 	},
 	SPICK_AND_SPAN: {
 		id: 3637,
