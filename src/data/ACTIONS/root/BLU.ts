@@ -406,8 +406,7 @@ export const BLU = ensureActions({
 		onGcd: true,
 		castTime: 1000,
 		gcdRecast: 2500,
-		damageType: PHYSICAL,
-		elementType: ASTRAL,
+		damageType: PHYSICAL, // Fire Angon is considered Piercing/Fire, but it only gets a boost from Physical buffs
 		speedAttribute: Attribute.SPELL_SPEED,
 	},
 	MOON_FLUTE: {
@@ -880,7 +879,17 @@ export const BLU = ensureActions({
 		elementType: UMBRAL,
 		speedAttribute: Attribute.SPELL_SPEED,
 	},
-	STOTRAM: {
+	STOTRAM_ATTACK: {
+		id: 23269,
+		name: 'Stotram',
+		icon: 'https://xivapi.com/i/003000/003336.png',
+		onGcd: true,
+		castTime: 2000,
+		gcdRecast: 2500,
+		damageType: MAGICAL,
+		speedAttribute: Attribute.SPELL_SPEED,
+	},
+	STOTRAM_HEAL: {
 		id: 23416,
 		name: 'Stotram',
 		icon: 'https://xivapi.com/i/003000/003336.png',
