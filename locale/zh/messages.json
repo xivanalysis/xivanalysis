@@ -766,7 +766,6 @@
   "pld.tincture.suggestions.missedgcd.content": "尝试在<0/>的持续时间内插入12个GCD技能。",
   "pld.tincture.suggestions.trackedactions.content": "尝试在每个<10/>期间打出至少一个<0/>、<1/>、<2/>、<3/>、<4/>、<5/>、<6/>、<7/>和带<8/>强化的<9/>。",
   "rdm.about.description": "<0>本分析会把将你的<1>样本</1>再次<2>解析</2>，提供给你所需的信息。</0><3>如果你想了解更多有关赤魔的内容，可以在 <4>The Balance</4> Discord 群组中查看指南，在其中的 <5>#rdm_questions</5> 频道里与其他玩家相互沟通。</3>",
-  "rdm.about.description.warning": "现在还不支持起手分析。",
   "rdm.combos.suggestions.derpcombos.content": "不要打错魔连击。",
   "rdm.combos.suggestions.derpcombos.why": "连击打错 {derpComboCount, plural, one {# 次} other {# 次}}",
   "rdm.combos.suggestions.notenoughmanacombos.content": "不要在魔元低于 50 / 50 时进入连击。",

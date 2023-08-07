@@ -766,7 +766,6 @@
   "pld.tincture.suggestions.missedgcd.content": "Try to land 12 GCDs during every <0/> window.",
   "pld.tincture.suggestions.trackedactions.content": "Try to land at least one cast of <0/>, <1/>, <2/>, <3/>, <4/>, <5/>, <6/>, <7/>, and a <8/> empowered <9/> during every <10/> window.",
   "rdm.about.description": "<0>This analyzer aims to give you the information you need to turn your <1>parses</1> into <2>parses</2></0><3>If you would like to learn more about RDM, check the guides over at <4>The Balance</4>, and have a chat in the <5>#rdm_questions</5> channel.</3>",
-  "rdm.about.description.warning": "Openers are currently not supported at this time.",
   "rdm.combos.suggestions.derpcombos.content": "Be sure not to use combo actions out of order.",
   "rdm.combos.suggestions.derpcombos.why": "{derpComboCount, plural, one {# enchanted combo was lost due to using the combo skills out of order} other {# enchanted combos were lost due to using the combo skills out of order}}",
   "rdm.combos.suggestions.notenoughmanacombos.content": "Be sure not to enter your combo before having 50|50 mana",

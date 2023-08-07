@@ -766,7 +766,6 @@
   "pld.tincture.suggestions.missedgcd.content": "",
   "pld.tincture.suggestions.trackedactions.content": "",
   "rdm.about.description": "<0>Dieser Analysator versucht dir Information zu geben, um deine <1>Parses</1> in <2>Parses</2> zu verwandeln.</0><3>Wenn du mehr über RDM lernen möchtest, dann schau dir die Guides in <4>der Balance</4> an, und schreib in den <5>#rdm-questions</5> Channel.</3>",
-  "rdm.about.description.warning": "Kampferöffnungen werden noch nicht unterstützt.",
   "rdm.combos.suggestions.derpcombos.content": "Benutze deine Kombos nicht in falscher Reihenfolge.",
   "rdm.combos.suggestions.derpcombos.why": "{derpComboCount, plural, one {# magische Kombo verloren durch falsche Reihenfolge.} other {# magische Kombos verloren durch falsche Reihenfolge.}}",
   "rdm.combos.suggestions.notenoughmanacombos.content": "",

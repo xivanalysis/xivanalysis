@@ -766,7 +766,6 @@
   "pld.tincture.suggestions.missedgcd.content": "Essayez d'utiliser 12 GCDs chaque fenêtre de <0/>.",
   "pld.tincture.suggestions.trackedactions.content": "Essayez d'obtenir au moins un lancer de <0/>, <1/>, <2/>, <3/>, <4/>, <5/>, <6/>, <7/>, et un <8/> avec pouvoir <9/> pendant chaque fenêtre de <10/>.",
   "rdm.about.description": "<0>Cet analyseur a pour but de vous donner les informations nécessaires pour changer vos <1>parses</1> en<2>parses</2></0> <3>Si vous souhaitez en savoir plus sur Mage rouge, consultez les guides <4>The Balance</4>, et consultez le canal <5>#rdm_questions</5>.</3>",
-  "rdm.about.description.warning": "L'opener est actuellement pas pris en compte.",
   "rdm.combos.suggestions.derpcombos.content": "Faites attention à ne pas utiliser vos combos dans le mauvais ordre.",
   "rdm.combos.suggestions.derpcombos.why": "{derpComboCount, plural, one {# combo enchanté perdu du à l'utilisation de combos dans le mauvais ordre} other {# combos enchantés perdus du à l'utilisation de combos dans le mauvais ordre}}",
   "rdm.combos.suggestions.notenoughmanacombos.content": "Faites attention à ne pas lancer votre combo avant d'avoir 50/50 mana",
