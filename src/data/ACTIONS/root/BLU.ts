@@ -1136,7 +1136,7 @@ export const BLU = ensureActions({
 		icon: 'https://xivapi.com//i/003000/003356.png',
 		gcdRecast: 2500,
 		onGcd: true,
-		damageType: MAGICAL,
+		damageType: PHYSICAL, // kick is Physical/Blunt
 	},
 	NIGHTBLOOM: {
 		id: 23290,
