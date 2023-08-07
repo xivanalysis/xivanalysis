@@ -1,6 +1,54 @@
 import {ensureStatuses} from '../type'
 
 export const BLU = ensureStatuses({
+	PETRIFICATION: {
+		id: 1,
+		name: 'Petrification',
+		icon: 'https://xivapi.com/i/015000/015001.png',
+		duration: 20000,
+	},
+	STUN: {
+		id: 2,
+		name: 'Stun',
+		icon: 'https://xivapi.com/i/015000/015004.png',
+		duration: 3000, // duration: 6000 if applied by Faze, duration: 4000 if applied by Sticky Tongue, duration: 1000 if applied by Perpetual Ray
+	},
+	SLEEP: {
+		id: 3,
+		name: 'Sleep',
+		icon: 'https://xivapi.com/i/015000/015013.png',
+		duration: 30000, // duration: 40000 if applied by Chirp
+	},
+	SLOW: {
+		id: 9,
+		name: 'Slow',
+		icon: 'https://xivapi.com/i/015000/015009.png',
+		duration: 15000, // duration: 20000 if applied by White Knight's Tour
+	},
+	BIND: {
+		id: 13,
+		name: 'Bind',
+		icon: 'https://xivapi.com/i/015000/015003.png',
+		duration: 20000,
+	},
+	HEAVY: {
+		id: 14,
+		name: 'Heavy',
+		icon: 'https://xivapi.com/i/015000/015002.png',
+		duration: 15000, // duration: 30000 if applied by 4-tonze Weight, duration: 10000 if applied by Reflux
+	},
+	BLIND: {
+		id: 15,
+		name: 'Blind',
+		icon: 'https://xivapi.com/i/015000/015012.png',
+		duration: 15000, // duration: 30000 if applied by Ink Jet
+	},
+	PARALYSIS: {
+		id: 17,
+		name: 'Paralysis',
+		icon: 'https://xivapi.com/i/015000/015006.png',
+		duration: 15000, // duration: 6000 if applied by Glower, duration: 9000 if applied by The Dragon's Voice, duration 30000 if applied by Mind Blast or Abyssal Transfixion
+	},
 	AQUA_BREATH: {
 		id: 1736,
 		name: 'Dropsy',
@@ -11,7 +59,7 @@ export const BLU = ensureStatuses({
 		id: 1714,
 		name: 'Bleeding',
 		icon: 'https://xivapi.com/i/013000/013501.png',
-		duration: 30000,
+		duration: 30000, // duration: 15000 if applied by Aetherial Spark, duration: 60000 if applied by Nightbloom
 	},
 	BRISTLE: {
 		id: 1716,
@@ -71,6 +119,12 @@ export const BLU = ensureStatuses({
 		name: 'Waning Nocturne',
 		icon: 'https://xivapi.com/i/013000/013512.png',
 		duration: 15000,
+	},
+	DEEP_FREEZE: {
+		id: 1731,
+		name: 'Deep Freeze',
+		icon: 'https://xivapi.com/i/013000/013513.png',
+		duration: 12000, // duration: 20000 if applied by Northerlies, duration: 10000 if applied by White Death
 	},
 	DOOM: {
 		id: 1738,
@@ -170,6 +224,12 @@ export const BLU = ensureStatuses({
 		id: 2126,
 		name: 'Aetherial Mimicry: Healer',
 		icon: 'https://xivapi.com/i/013000/013529.png',
+	},
+	BRUSH_WITH_DEATH: {
+		id: 2127,
+		name: 'Brush with Death',
+		icon: 'https://xivapi.com/i/013000/013530.png',
+		duration: 600000,
 	},
 	SURPANAKHA: {
 		id: 2130,
