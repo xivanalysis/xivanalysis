@@ -766,7 +766,6 @@
   "pld.tincture.suggestions.missedgcd.content": "매 <0/> 구간마다 글쿨 기술을 12회 사용하십시오.",
   "pld.tincture.suggestions.trackedactions.content": "매 <10/> 구간마다 <0/>, <1/>, <2/>, <3/>, <4/>, <5/>, <6/>, <7/> 및 <8/> 버프로 강화된 <9/> 기술을 1회씩 사용하십시오.",
   "rdm.about.description": "<0>이 분석기는 여러분의 숫자를 <1>이 색깔</1>에서 <2>이 색깔</2>으로 바꿀 수 있도록 도와드립니다.</2></0><3>적마도사를 더욱 자세히 알아보려면 <4>The Balance</4> 가이드를 참고하거나 <5>#rdm_questions</5> 채널에서 대화를 나눠보세요.",
-  "rdm.about.description.warning": "현재 오프너는 지원되지 않습니다.",
   "rdm.combos.suggestions.derpcombos.content": "콤보를 순서대로 사용하십시오.",
   "rdm.combos.suggestions.derpcombos.why": "콤보 스킬을 순서대로 사용하지 않아 강화 콤보를 {derpComboCount}회 잃었습니다.",
   "rdm.combos.suggestions.notenoughmanacombos.content": "50|50 마나가 채워지기 전에는 근접 콤보를 사용하지 마십시오.",

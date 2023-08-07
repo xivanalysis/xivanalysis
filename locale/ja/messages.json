@@ -766,7 +766,6 @@
   "pld.tincture.suggestions.missedgcd.content": "<0/>の効果時間中に12回のウェポンスキルを使いましょう。",
   "pld.tincture.suggestions.trackedactions.content": "",
   "rdm.about.description": "<0>この分析ツールはあなたの数字を<1>この色</1>から<2>この色</2>に変えるサポートを目的としています。</0><3>赤魔道士について更に知りたい場合、<4>The Balance</4>のガイドを読み、<5>#rdm_questions</5>にてお聞きください。</3>",
-  "rdm.about.description.warning": "開幕回しは現在未対応です。",
   "rdm.combos.suggestions.derpcombos.content": "コンボアクションは必ず順番通りに打つようにしましょう。",
   "rdm.combos.suggestions.derpcombos.why": "コンボアクションが順番通りではなかったため、メレーコンボ{derpComboCount}回分が損失されました。",
   "rdm.combos.suggestions.notenoughmanacombos.content": "マナが50|50になる前にメレーコンボを打たないようにしましょう。",
