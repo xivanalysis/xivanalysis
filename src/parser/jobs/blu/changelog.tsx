@@ -3,6 +3,11 @@ import React from 'react'
 
 export const changelog = [
 	{
+		date: new Date('2023-08-07'),
+		Changes: () => <>BLU's odd-minute bursts now enforce the usual Surpanakha rules: either all 4 stacks, or zero stacks.</>,
+		contributors: [CONTRIBUTORS.HUGMEIR],
+	},
+	{
 		date: new Date('2023-07-24'),
 		Changes: () => <>
 			<ul>

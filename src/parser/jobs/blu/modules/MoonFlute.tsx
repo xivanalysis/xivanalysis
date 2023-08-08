@@ -61,6 +61,19 @@ const neutralOrPositiveOutcome = (actual: number, expected?: number) => {
 	}
 	return RotationTargetOutcome.NEUTRAL
 }
+// We use this for Surpanakha on the off-minute flutes -- they either
+// used all four stacks, or they didn't use Surpanakha.  Partially using
+// it is a big DPS loss, and will become an even harsher DPS loss since
+// it likely breaks their upcoming even-minute MF
+const unusedOrPositiveOutcome = (actual: number, expected?: number) => {
+	if (actual === expected) {
+		return RotationTargetOutcome.POSITIVE
+	}
+	if (expected === undefined || actual === 0) {
+		return RotationTargetOutcome.NEUTRAL
+	}
+	return RotationTargetOutcome.NEGATIVE
+}
 
 export class MoonFlute extends BuffWindow {
 	static override handle = 'moonflutes'
@@ -251,18 +264,22 @@ export class MoonFlute extends BuffWindow {
 		}
 
 		// Final Sting not used here
+		const trackedActionId = trackedActions.actions[0].id
 		if (this.breathOfMagicApplier) {
 			// It's the Breath of Magic applier!  They may be doing an off-minute window to
 			// reapply BoM, and we should not dock them any points for that.
 			if (this.offMinuteBoMMoonFlute(window)) {
-				// TODO: We should actually still enforce that Surpanakha should either be 4 casts or 0, nothing else.
+				if (trackedActionId === this.data.actions.SURPANAKHA.id) {
+					// During off-minute bursts, they either should not
+					// use Surpanakha at all, OR they should use all 4 stacks.
+					return unusedOrPositiveOutcome
+				}
 				return neutralOrPositiveOutcome
 			}
 		}
 
 		// For SpS builds, using Triple Trident on cooldown is a DPS gain, so
 		// jump through hoops to accommodate for that:
-		const trackedActionId = trackedActions.actions[0].id
 		if (trackedActionId === this.data.actions.TRIPLE_TRIDENT.id) {
 			// Using TT on cooldown, on a long enough timeline, can be a DPS gain over
 			// holding it for a MF window, particularly for SpS builds.
