@@ -24,7 +24,7 @@ export class BLUOverheal extends Overheal {
 			name: <Trans id="blu.overheal.aoe.name">AoE</Trans>,
 			color: SuggestedColors[2],
 			trackedHealIds: [
-				this.data.actions.STOTRAM.id,
+				this.data.actions.STOTRAM_HEAL.id,
 				this.data.actions.EXUVIATION.id,
 			],
 		},
