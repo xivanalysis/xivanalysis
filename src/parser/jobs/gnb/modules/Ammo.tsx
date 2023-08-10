@@ -28,9 +28,6 @@ export class Ammo extends CoreGauge {
 
 	private ammoGauge = this.add(new CounterGauge({
 		maximum: MAX_AMMO,
-		/* We'll see how people like it being in the timeline over a seperate chart.
-		I've grown to prefer it on the timeline myself
-		chart: {label: 'Ammo', color: JOBS.GUNBREAKER.colour}, */
 		graph: {
 			handle: 'ammo',
 			label: <Trans id="gnb.gauge.resource.ammoLabel">Ammo</Trans>,

@@ -190,6 +190,10 @@ export class Gauge extends CoreGauge {
 			handle: POLYGLOT_HANDLE,
 			label: POLYGLOT_LABEL,
 			color: POLYGLOT_COLOR.fade(GAUGE_FADE),
+			order: 2,
+			collapse: true,
+			forceCollapsed: true,
+			height: DEFAULT_ROW_HEIGHT / 2,
 		},
 		correctHistory: true,
 	}))
@@ -219,15 +223,6 @@ export class Gauge extends CoreGauge {
 		this.addEventHook(playerFilter.type('damage').cause(this.data.matchCauseActionId(this.affectsGaugeOnDamage)), this.onCast)
 
 		this.addEventHook('complete', this.onComplete)
-
-		this.resourceGraphs.addDataGroup({
-			handle: POLYGLOT_HANDLE,
-			label: POLYGLOT_LABEL,
-			order: 2,
-			collapse: true,
-			forceCollapsed: true,
-			height: DEFAULT_ROW_HEIGHT / 2,
-		})
 	}
 
 	/**

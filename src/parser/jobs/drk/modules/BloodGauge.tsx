@@ -26,19 +26,19 @@ export class BloodGauge extends CoreGauge {
 	@dependency private suggestions!: Suggestions
 
 	private bloodGauge = this.add(new CounterGauge({
-		chart: {label: 'Blood Gauge', color: JOBS.DARK_KNIGHT.colour},
+		graph: {
+			label: <Trans id="drk.gauge.bloodgauge.label">Blood Gauge</Trans>,
+			color: JOBS.DARK_KNIGHT.colour,
+		},
 	}))
 
 	/* eslint-disable @typescript-eslint/no-magic-numbers */
 	private onComboModifiers = new Map<Action['id'], number>([
 		[this.data.actions.SOULEATER.id, 20],
 		[this.data.actions.STALWART_SOUL.id, 20],
-		[this.data.actions.STORMS_PATH.id, 20],
-		[this.data.actions.MYTHRIL_TEMPEST.id, 20],
 	])
 
 	private onActionModifiers = new Map<Action['id'], number>([
-		[this.data.actions.INFURIATE.id, 50],
 		[this.data.actions.LIVING_SHADOW.id, -50],
 		[this.data.actions.QUIETUS.id, -50],
 		[this.data.actions.BLOODSPILLER.id, -50],
