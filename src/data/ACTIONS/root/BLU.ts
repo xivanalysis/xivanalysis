@@ -1,5 +1,5 @@
 import {Attribute, DamageType} from 'event'
-import {Action, ensureActions} from '../type'
+import {Action, ensureActions, BonusModifier, PotencySpecialCase} from '../type'
 
 const MAGICAL = DamageType.MAGICAL
 const PHYSICAL = DamageType.PHYSICAL
@@ -1155,6 +1155,24 @@ export const BLU = ensureActions({
 		gcdRecast: 2500,
 		damageType: PHYSICAL,
 		speedAttribute: Attribute.SPELL_SPEED,
+		potencies: [{
+			value: 120,
+			bonusModifiers: [],
+			baseModifiers: [],
+		}, {
+			value: 220,
+			bonusModifiers: [BonusModifier.POSITIONAL],
+			baseModifiers: [],
+		}, {
+			// Mighty Guard increases the potency of Goblin Punch by 100
+			value: 220,
+			bonusModifiers: [],
+			baseModifiers: [PotencySpecialCase.BLU_MIGHTY_GOBLIN_PUNCH],
+		}, {
+			value: 320,
+			bonusModifiers: [BonusModifier.POSITIONAL],
+			baseModifiers: [PotencySpecialCase.BLU_MIGHTY_GOBLIN_PUNCH],
+		}],
 	},
 	RIGHT_ROUND: {
 		id: 34564,
