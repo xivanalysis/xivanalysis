@@ -123,6 +123,13 @@ export abstract class Positionals extends Analyser {
 		/>
 	}
 
+	protected missedPositionalsChecklistDescription(): JSX.Element {
+		return <Trans id="core.positionals.checklist.description">
+			Melee DPS jobs have some skills that will do more damage when used from the rear or flank.
+			Make sure you use those skills in the right position to do the most damage, or
+			use <DataLink action="TRUE_NORTH"/> when you are out of position.
+		</Trans>
+	}
 	private onComplete() {
 		if (this.positionalResults.length === 0) {
 			return
@@ -130,11 +137,7 @@ export abstract class Positionals extends Analyser {
 		this.checklist.add(new Rule({
 			name: <Trans id="core.positionals.checklist.title">Hit your positionals</Trans>,
 			displayOrder: DISPLAY_ORDER.POSITIONALS,
-			description: <Trans id="core.positionals.checklist.description">
-				Melee DPS jobs have some skills that will do more damage when used from the rear or flank.
-				Make sure you use those skills in the right position to do the most damage, or
-				use <DataLink action="TRUE_NORTH"/> when you are out of position.
-			</Trans>,
+			description: this.missedPositionalsChecklistDescription(),
 			requirements: this.positionalResults.map(this.positionalRequirement),
 		}))
 	}
