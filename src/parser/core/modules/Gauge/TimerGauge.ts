@@ -1,7 +1,7 @@
 import {Analyser} from 'parser/core/Analyser'
 import {TimestampHookArguments, TimestampHookCallback} from 'parser/core/Dispatcher'
-import {GAUGE_HANDLE} from '../ResourceGraphs/ResourceGraphs'
-import {AbstractGauge, AbstractGaugeOptions, GaugeGraphOptions} from './AbstractGauge'
+import {GAUGE_HANDLE, ResourceData, ResourceGraphOptions} from '../ResourceGraphs/ResourceGraphs'
+import {AbstractGauge, AbstractGaugeOptions} from './AbstractGauge'
 
 function expectExist<T>(value?: T) {
 	if (!value) {
@@ -30,7 +30,14 @@ export interface TimerGaugeOptions extends AbstractGaugeOptions {
 	onExpiration?: TimestampHookCallback
 
 	/** Graph options. Omit to disable graphing for this gauge. */
-	graph?: GaugeGraphOptions,
+	graph?: TimerGraphOptions,
+}
+
+type TimerGraphOptions =
+	& Omit<ResourceGraphOptions, 'required'>
+
+export interface TimerResourceData extends ResourceData {
+	type: 'area'
 }
 
 export class TimerGauge extends AbstractGauge {
@@ -38,7 +45,7 @@ export class TimerGauge extends AbstractGauge {
 	private readonly minimum = 0
 	private readonly maximum: number
 	private readonly expirationCallback?: TimestampHookCallback
-	private readonly graphOptions?: GaugeGraphOptions
+	private readonly graphOptions?: ResourceGraphOptions
 
 	private hook?: ReturnType<Analyser['addTimestampHook']>
 	private history: State[] = []
@@ -208,7 +215,7 @@ export class TimerGauge extends AbstractGauge {
 		this.pause()
 
 		const {handle, label, color, tooltipHideWhenEmpty, tooltipHideMaximum} = this.graphOptions
-		const graphData = {
+		const graphData: TimerResourceData = {
 			label,
 			colour: color ?? 'black',
 			data: this.history.map(entry => {
@@ -217,12 +224,13 @@ export class TimerGauge extends AbstractGauge {
 			linear: true,
 			tooltipHideWhenEmpty,
 			tooltipHideMaximum,
+			type: 'area',
 		}
 		if (handle != null) {
-			this.resourceGraphs.addDataGroup({...this.graphOptions, handle})
+			this.resourceGraphs.addDataGroup({...this.graphOptions, handle, type: 'area'})
 			this.resourceGraphs.addData(handle, graphData)
 		} else {
-			this.resourceGraphs.addGauge(graphData, {...this.graphOptions, handle: GAUGE_HANDLE})
+			this.resourceGraphs.addGauge(graphData, {...this.graphOptions, handle: GAUGE_HANDLE, type: 'area'})
 		}
 	}
 

@@ -1,8 +1,6 @@
-import {ChartDataSets} from 'chart.js'
-import Color from 'color'
 import _ from 'lodash'
-import {GAUGE_HANDLE} from '../ResourceGraphs/ResourceGraphs'
-import {AbstractGauge, AbstractGaugeOptions, GaugeGraphOptions} from './AbstractGauge'
+import {GAUGE_HANDLE, ResourceData, ResourceGraphOptions} from '../ResourceGraphs/ResourceGraphs'
+import {AbstractGauge, AbstractGaugeOptions} from './AbstractGauge'
 
 type GaugeEventReason =
 	| 'init'
@@ -27,10 +25,8 @@ export interface CounterGaugeOptions extends AbstractGaugeOptions {
 	minimum?: number,
 	/** Maximum value of the gauge. Defaults to 100. Value over the maximum will be considered over cap, and tracked if enabled. */
 	maximum?: number,
-	/** Chart options. Omit to disable charting for this gauge. Superseded by graph if both are provided */
-	chart?: CounterChartOptions,
 	/** Graph options. Omit to disable graphing in the timeline for this gauge. */
-	graph?: GaugeGraphOptions
+	graph?: ResourceGraphOptions
 	/**
 	 * Should this gauge correct its history in the event of underflow? Must pass true to enable
 	 * Important note:
@@ -48,13 +44,11 @@ export interface CounterGaugeOptions extends AbstractGaugeOptions {
 	deterministic?: boolean
 }
 
-export interface CounterChartOptions {
-	/** Label to display on the data set. */
-	label: string
-	/** Color to draw the data set in. Defaults to grey. */
-	color?: string | Color
+export interface CounterResourceData extends ResourceData {
+	type: 'area',
+	required?: number
+	warning?: number
 }
-
 export class CounterGauge extends AbstractGauge {
 	private initialValue: number
 	private currentValue: number
@@ -64,8 +58,7 @@ export class CounterGauge extends AbstractGauge {
 	private correctHistory: boolean
 	private deterministic: boolean
 
-	private chartOptions?: CounterChartOptions
-	private graphOptions?: GaugeGraphOptions
+	private graphOptions?: ResourceGraphOptions
 
 	public history: CounterHistory[] = []
 
@@ -99,7 +92,6 @@ export class CounterGauge extends AbstractGauge {
 		this.correctHistory = opts.correctHistory ?? false
 		this.deterministic = opts.deterministic ?? true
 
-		this.chartOptions = opts.chart
 		this.graphOptions = opts.graph
 	}
 
@@ -236,8 +228,8 @@ export class CounterGauge extends AbstractGauge {
 	override generateResourceGraph() {
 		if (this.graphOptions == null) { return }
 
-		const {handle, color, label, tooltipHideWhenEmpty, tooltipHideMaximum} = this.graphOptions
-		const graphData = {
+		const {handle, color, label, tooltipHideWhenEmpty, tooltipHideMaximum, required, warning} = this.graphOptions
+		const graphData: CounterResourceData = {
 			label,
 			colour: color ?? 'black',
 			data: this.history.map(entry => {
@@ -245,44 +237,15 @@ export class CounterGauge extends AbstractGauge {
 			}),
 			tooltipHideWhenEmpty,
 			tooltipHideMaximum,
+			required,
+			warning,
+			type: 'area',
 		}
 		if (handle != null) {
-			this.resourceGraphs.addDataGroup({...this.graphOptions, handle})
+			this.resourceGraphs.addDataGroup({...this.graphOptions, handle, type: 'area'})
 			this.resourceGraphs.addData(handle, graphData)
 		} else {
-			this.resourceGraphs.addGauge(graphData, {...this.graphOptions, handle: GAUGE_HANDLE})
+			this.resourceGraphs.addGauge(graphData, {...this.graphOptions, handle: GAUGE_HANDLE, type: 'area'})
 		}
-	}
-
-	/** @inheritdoc */
-	override generateDataset() {
-		// If there's no chart options, or if there are graph options, provide nothing (prefer graph)
-		if (this.chartOptions == null || this.graphOptions != null) {
-			return
-		}
-
-		// Map the data into something the chart will understand
-		const data = this.history.map(entry => ({
-			t: entry.timestamp - this.parser.pull.timestamp,
-			y: entry.value,
-		}))
-
-		// Build the final data set
-		const {label, color} = this.chartOptions
-		const dataSet: ChartDataSets = {
-			label,
-			data,
-			steppedLine: true,
-		}
-
-		if (color) {
-			/* eslint-disable @typescript-eslint/no-magic-numbers */
-			const chartColor = Color(color)
-			dataSet.backgroundColor = chartColor.fade(0.8).toString()
-			dataSet.borderColor = chartColor.fade(0.5).toString()
-			/* eslint-enable @typescript-eslint/no-magic-numbers */
-		}
-
-		return dataSet
 	}
 }
