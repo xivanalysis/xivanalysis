@@ -69,6 +69,7 @@ export interface Job {
 	icon: string
 	colour: string
 	role: RoleKey
+	usesMP?: boolean // Used by Actors to determine if an MP graph should be shown for jobs outside the healer and caster roles
 }
 
 // Yeah I know there's lots of repetition but they're all different apis and endpoints and shit and I don't wanna pull it apart later to fix a desync
@@ -88,6 +89,7 @@ export const JOBS = ensureRecord<Job>()({
 		icon: 'pld',
 		colour: '#a8d2e6',
 		role: 'TANK',
+		usesMP: true,
 	},
 	WARRIOR: {
 		name: t('game.job.warrior')`Warrior`,
@@ -102,6 +104,7 @@ export const JOBS = ensureRecord<Job>()({
 		icon: 'drk',
 		colour: '#d126cc',
 		role: 'TANK',
+		usesMP: true,
 	},
 	GUNBREAKER: {
 		name: t('game.job.gunbreaker')`Gunbreaker`,
