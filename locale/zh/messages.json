@@ -219,6 +219,7 @@
   "blu.phantom_flurry.dropped_kicks.why": "{missingFlurryKicks, plural, other {# 次鬼宿脚终结踢}}没有被打出。",
   "blu.phantom_flurry.dropped_ticks.content": "太早结束 <0/> 会丢失伤害次数。在 <1/> 末尾使用时，可以等到打满。其他场合使用时，等到 <2/> 的最后一秒再踢出最后一脚。",
   "blu.phantom_flurry.dropped_ticks.why": "{missingFlurryTicks, plural, other {# 次鬼宿脚伤害}} 由于过早中断而丢失。",
+  "blu.positionals.checklist.description": "",
   "blu.revenge_blast.bad.content": "只在生命低于20%时使用 <0/>。生命在滑步窗口同时判定。",
   "blu.revenge_blast.bad.why": "{0, plural, other {# 次复仇冲击}} 在生命值高于20%时打出。",
   "blu.revenge_blast.rotation-table.header.blast-count": "复仇冲击",
