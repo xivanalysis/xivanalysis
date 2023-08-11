@@ -229,6 +229,7 @@
   "blu.revenge_blast.unwhistled.why": "",
   "blu.song_of_torment.suggestion.unbuffed.content": "理想的には、最初に <1/> を使用してすべての <0/> をバフする必要があります。 これはわずかな能力の向上です。",
   "blu.song_of_torment.suggestion.unbuffed.why": "{0, plural, other {# 回の苦悶の歌}}はバフされませんでした。",
+  "blu.swiftcast.table.note.bad-mf": "",
   "blu.triple_trident.unbuffed.content": "<0/> は常に <1/> と <2/> でバフするべきです。 <3/> 効果時間中の場合、<6/> を詠唱する前に <4/> と <5/> を詠唱する必要があります。",
   "blu.triple_trident.unbuffed.why": "{0, plural, other {# 回の銛三段}} はバフされませんでした。",
   "blu.weaving.bad_surpanakha.content": "",

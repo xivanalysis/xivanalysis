@@ -229,6 +229,7 @@
   "blu.revenge_blast.unwhistled.why": "{0, plural, other {# 个复仇冲击机会期}} 没有使用 <0/> buff。",
   "blu.song_of_torment.suggestion.unbuffed.content": "理想情况下，每次 <0/> 之前都应该用 <1/> 强化，不过这个收益比较小。",
   "blu.song_of_torment.suggestion.unbuffed.why": "{0, plural, other {# 次苦闷之歌}}未被强化。",
+  "blu.swiftcast.table.note.bad-mf": "",
   "blu.triple_trident.unbuffed.content": "<0/> 应总在 <1/> 和 <2/> 的效果加成下使用。要在 <3/> 期间使用的场合，最好提前使用 <4/> 和 <5/> 后再使用 <6/>。",
   "blu.triple_trident.unbuffed.why": "{0, plural, other {# 次渔叉三段}}未被强化。",
   "blu.weaving.bad_surpanakha.content": "一口气打完4层 <0/> 充能，中间不要插入别的技能。即使使用 <1/> 或者道具都会取消穿甲散弹强化效果。",
