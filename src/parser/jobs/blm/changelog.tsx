@@ -87,4 +87,9 @@ export const changelog = [
 		Changes: () => <>Fix a bug where Transposing to generate a Paradox during downtime could complain about missing Despairs during that downtime.</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],
 	},
+	{
+		date: new Date('2023-08-11'),
+		Changes: () => <>Rotation Outliers better accounts for initial MP upon attaining full Astral Fire when calculating the expected number of Fire IVs.</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
 ]

@@ -18,7 +18,7 @@ import {Icon, Message} from 'semantic-ui-react'
 import {ensureRecord} from 'utilities'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 import {FIRE_SPELLS} from './Elements'
-import {ASTRAL_UMBRAL_DURATION, BLMGaugeState, Gauge, UMBRAL_HEARTS_MAX_STACKS} from './Gauge'
+import {ASTRAL_UMBRAL_DURATION, ASTRAL_UMBRAL_MAX_STACKS, BLMGaugeState, Gauge, UMBRAL_HEARTS_MAX_STACKS} from './Gauge'
 import Leylines from './Leylines'
 import Procs from './Procs'
 import {assignErrorCode, getMetadataForWindow} from './RotationWatchdog/EvaluatorUtilities'
@@ -103,6 +103,7 @@ export interface RotationMetadata {
 
 export interface PhaseMetadata {
 	startIndex: number
+	fullElementIndex: number
 	startTime: number
 	initialMP: number
 	circleOfPowerPct: number
@@ -160,6 +161,7 @@ export class RotationWatchdog extends RestartWindow {
 		hardT3sInFireCount: 0,
 		icePhaseMetadata: {
 			startIndex: -1,
+			fullElementIndex: -1,
 			startTime: 0,
 			initialMP: 0,
 			circleOfPowerPct: 0,
@@ -167,6 +169,7 @@ export class RotationWatchdog extends RestartWindow {
 		},
 		firePhaseMetadata: {
 			startIndex: -1,
+			fullElementIndex: -1,
 			startTime: 0,
 			initialMP: 0,
 			circleOfPowerPct: 0,
@@ -292,12 +295,26 @@ export class RotationWatchdog extends RestartWindow {
 				phaseMetadata = metadata.icePhaseMetadata
 			}
 			if (phaseMetadata != null) {
-				phaseMetadata.startIndex = window.length -1
+				phaseMetadata.startIndex = window.length - 1
 				phaseMetadata.startTime = event.timestamp
-				phaseMetadata.initialMP = this.actors.current.mp.current
+
+				// We can log initial MP for the ice phase immediately on entry
+				if (nextGaugeState.umbralIce > 0) {
+					phaseMetadata.initialMP = this.actors.current.mp.current
+				}
 
 				// Spread the current gauge state into the phase metadata for future reference
 				phaseMetadata.initialGaugeState = {...this.currentGaugeState}
+			}
+
+			// Tranpose -> Paradox -> F1 is a thing in non-standard scenarios, so only store the initial MP once we actually reach full AF
+			if (this.currentGaugeState.astralFire < ASTRAL_UMBRAL_MAX_STACKS && nextGaugeState.astralFire === ASTRAL_UMBRAL_MAX_STACKS) {
+				metadata.firePhaseMetadata.fullElementIndex = window.length - 1
+				metadata.firePhaseMetadata.initialMP = this.actors.current.mp.current
+			}
+
+			if (this.currentGaugeState.umbralIce < ASTRAL_UMBRAL_MAX_STACKS && nextGaugeState.umbralIce === ASTRAL_UMBRAL_MAX_STACKS) {
+				metadata.icePhaseMetadata.fullElementIndex = window.length - 1
 			}
 
 			// If we no longer have enochian, flag it for display
@@ -395,7 +412,8 @@ export class RotationWatchdog extends RestartWindow {
 		if (action.action.id === this.data.actions.FIRE_IV.id) {
 			if (windowMetadata.finalOrDowntime) { return window.data.filter(event => event.action.id === this.data.actions.FIRE_IV.id).length }
 
-			adjustment = NO_UH_EXPECTED_FIRE4
+			// If the player comes in to the fire phase with less than 10k MP, cap the F4 count to the number of F4s they can actually do and not miss the Despair
+			adjustment = Math.min(NO_UH_EXPECTED_FIRE4, Math.floor((windowMetadata.firePhaseMetadata.initialMP - this.data.actions.FIRE_IV.mpCost) / (this.data.actions.FIRE_IV.mpCost * 2)))
 
 			// Rotations with at least one heart get an extra F4 (5x F4 + F1 with 1 heart is the same MP cost as the standard 6F4 + F1 with 3)
 			// Note that two hearts does not give any extra F4s, though it'll hardly ever come up in practice
