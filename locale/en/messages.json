@@ -179,7 +179,7 @@
   "blu.buffs.buff_time": "Time",
   "blu.buffs.buff_yours": "Your Buff",
   "blu.buffs.overwritten.content": "Your <0/> was overwritten by someone else before it ran out. This might be reasonable depending on the fight, but worth examining and figuring out if your team needs to coordinate buffs.",
-  "blu.buffs.overwritten.why": "{ourOverwritten, plural, one {# application was } other {# applications were}} overwritten by someone else",
+  "blu.buffs.overwritten.why": "{ourOverwrittenSecs} seconds were overwritten by someone else",
   "blu.buffs.table.message": "Blue Mages can keep both <0/> and <1/> up for the entire duration of the fight, and may opt to have the <2/> buffs running as well.<3/>The table below shows when you used your buffs, as well as how many damaging party actions the buff covered. It also shows how many of those actions were also covered by the other two buffs. Ideally your team should coordinate to have <4/> and <5/> running all the time, making both numbers below equal.",
   "blu.buffs.title": "Buff Windows",
   "blu.cold_fog.title": "Cold Fog",
