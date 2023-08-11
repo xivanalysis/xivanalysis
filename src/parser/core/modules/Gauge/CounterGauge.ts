@@ -242,10 +242,10 @@ export class CounterGauge extends AbstractGauge {
 			type: 'area',
 		}
 		if (handle != null) {
-			this.resourceGraphs.addDataGroup({...this.graphOptions, handle, type: 'area'})
+			this.resourceGraphs.addDataGroup({...this.graphOptions, handle})
 			this.resourceGraphs.addData(handle, graphData)
 		} else {
-			this.resourceGraphs.addGauge(graphData, {...this.graphOptions, handle: GAUGE_HANDLE, type: 'area'})
+			this.resourceGraphs.addGauge(graphData, {...this.graphOptions, handle: GAUGE_HANDLE})
 		}
 	}
 }

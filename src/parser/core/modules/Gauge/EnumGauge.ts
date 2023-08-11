@@ -183,12 +183,12 @@ export class EnumGauge extends AbstractGauge {
 
 		// Send all the data over to ResourceGraphs
 		if (handle != null) {
-			this.resourceGraphs.addDataGroup({...this.graphOptions, handle, type: 'shared', collapse: FORCE_COLLAPSE, forceCollapsed: FORCE_COLLAPSE})
+			this.resourceGraphs.addDataGroup({...this.graphOptions, handle, collapse: FORCE_COLLAPSE, forceCollapsed: FORCE_COLLAPSE})
 			graphDatas.forEach(graphData => {
 				this.resourceGraphs.addData(handle, graphData)
 			})
 		} else {
-			const groupOptions: ResourceGroupOptions = {...this.graphOptions, handle: GAUGE_HANDLE, type: 'shared'} // TODO: , collapse: FORCE_COLLAPSE, forceCollapsed: FORCE_COLLAPSE}
+			const groupOptions: ResourceGroupOptions = {...this.graphOptions, handle: GAUGE_HANDLE} // TODO: , collapse: FORCE_COLLAPSE, forceCollapsed: FORCE_COLLAPSE}
 			graphDatas.forEach(graphData => {
 				this.resourceGraphs.addGauge(graphData, groupOptions)
 			})

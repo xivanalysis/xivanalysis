@@ -39,16 +39,15 @@ export type TypedResourceData =
 	| EnumResourceData
 
 export interface ResourceData extends ResourceDataCommon {
-	type: ResourceGroupTypes
+	type: ResourceDataTypes
 }
 export interface ResourceDataGroup {
-	type: ResourceGroupTypes
 	data: TypedResourceData[]
 	row: SimpleRow
 	tooltipHideWhenEmpty?: boolean
 }
 
-export type ResourceGroupTypes =
+export type ResourceDataTypes =
 	| 'area'
 	| 'variablearea'
 	| 'shared'
@@ -86,7 +85,6 @@ export const DEFAULT_ROW_HEIGHT: number = 64
 export interface ResourceGroupOptions extends ResourceGraphOptions {
 	/** The handle for this group of data */
 	handle: string,
-	type: ResourceGroupTypes
 }
 
 export const RESOURCE_HANDLE: string = 'resources'
@@ -110,7 +108,6 @@ export class ResourceGraphs extends Analyser {
 		this.addDataGroup({
 			handle: RESOURCE_HANDLE,
 			label: <Trans id="core.resource-graphs.row-label">Resources</Trans>,
-			type: 'variablearea',
 		})
 		const {timestamp, duration} = this.parser.pull
 
@@ -154,9 +151,8 @@ export class ResourceGraphs extends Analyser {
 	 * @returns A reference to the ResourceDataGroup that was added or updated
 	 */
 	public addDataGroup(opts: ResourceGroupOptions): ResourceDataGroup {
-		const {handle, label, collapse, forceCollapsed, height, order, tooltipHideWhenEmpty, type} = opts
+		const {handle, label, collapse, forceCollapsed, height, order, tooltipHideWhenEmpty} = opts
 		const resourceGroup: ResourceDataGroup = this.dataGroups.get(handle) ?? {
-			type,
 			data: [],
 			row: new SimpleRow({
 				label,
