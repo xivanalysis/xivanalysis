@@ -89,8 +89,6 @@ export class RevengeBlast extends Analyser {
 	private onActorUpdate(event: Event) {
 		const revengeBlastThreshold = this.actors.current.hp.maximum * REVENGE_BLAST_WINDOW_PERCENT
 
-		// TODO: check if we are in a downtime window
-
 		if ((this.actors.current.hp.current > 0) && (this.actors.current.hp.current < revengeBlastThreshold)) {
 			if (this.inRevengeBlastWindow) { return }
 			this.inRevengeBlastWindow = true
