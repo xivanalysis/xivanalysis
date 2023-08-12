@@ -229,6 +229,7 @@
   "blu.revenge_blast.unwhistled.why": "{0, plural, one {# Revenge Blast window} other {# Revenge Blast windows}} did not have the <0/> buff.",
   "blu.song_of_torment.suggestion.unbuffed.content": "Ideally every <0/> should be buffed by first using <1/>. This is a minor potency gain.",
   "blu.song_of_torment.suggestion.unbuffed.why": "{0, plural, one {# Song of Torment was} other {# Songs of Torment were}} not buffed.",
+  "blu.swiftcast.table.note.bad-mf": "Swiftcasting Moon Flute will lose you a damaging GCD",
   "blu.triple_trident.unbuffed.content": "<0/> should always be buffed with <1/> and <2/>. For <3/> windows, you want to cast <4/> and <5/> before casting <6/>.",
   "blu.triple_trident.unbuffed.why": "{0, plural, one {# Triple Trident use} other {# Triple Trident uses}} were not buffed",
   "blu.weaving.bad_surpanakha.content": "Use all four <0/> charges at the same time, with no other actions in-between. Even <1/> or using an item will cancel the buff.",

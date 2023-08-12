@@ -3,6 +3,11 @@ import React from 'react'
 
 export const changelog = [
 	{
+		date: new Date('2023-08-11'),
+		Changes: () => <>Swiftcasting Moon Flute will lose you a damaging GCD under burst</>,
+		contributors: [CONTRIBUTORS.HUGMEIR],
+	},
+	{
 		date: new Date('2023-08-10'),
 		Changes: () => <>Report missed Goblin Punch positionals</>,
 		contributors: [CONTRIBUTORS.HUGMEIR],
