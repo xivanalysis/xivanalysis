@@ -179,7 +179,7 @@
   "blu.buffs.buff_time": "时间",
   "blu.buffs.buff_yours": "常驻伤害buff",
   "blu.buffs.overwritten.content": "你的 <0/> 在结束之前被其他人覆盖了。虽然有时候会这样，不过如果有必要，和队友商量下能不能避免。",
-  "blu.buffs.overwritten.why": "常驻伤害buff被别人覆盖了 {ourOverwritten, plural, other {# 次}}。",
+  "blu.buffs.overwritten.why": "",
   "blu.buffs.table.message": "青魔法师可以全程保持 <0/> 和 <1/>，有些人还会选择保持 <2/>。<3/>下表显示了你使用这些技能的时点，它覆盖了多少团队攻击技能，以及其他两个技能的情况。理想情况下团队应该一半人带破防一半人带惊奇光，并协调技能顺序，全程保持 <4/> 和 <5/>。",
   "blu.buffs.title": "常驻伤害buff",
   "blu.cold_fog.title": "彻骨雾寒",
