@@ -16,7 +16,10 @@ import React, {ReactNode} from 'react'
 import {Button, Table} from 'semantic-ui-react'
 import {Timeline} from './Timeline'
 
-const ANIMATION_LOCK_MS = 800 // on lower pings this apparently goes down to as little as 600ms
+const LATENCY_FUDGE_FACTOR_MS = 200 // 200ms of fudge factor to accoutn for higher latency folk
+const INSTANT_GCD_ANIMATION_LOCK_MS = 100 + LATENCY_FUDGE_FACTOR_MS
+const CAST_GCD_ANIMATION_LOCK_MS = 600 + LATENCY_FUDGE_FACTOR_MS
+const OGCD_ANIMATION_LOCK_MS = 600 + LATENCY_FUDGE_FACTOR_MS
 const CLIPPING_GRACE_PERIOD_MS = 50 // you're allowed to clip a GCD by this much
 // The grace period is just here to reflect reality -- Gold parses on fflogs are
 // clipping their GCDs by about 20-30ms during bursts, so showing these kind
@@ -232,8 +235,9 @@ export class Weaving extends Analyser {
 
 		const castTime = this.castTime.forEvent(weave.leadingGcdEvent) ?? 0
 		const recastTime = this.castTime.recastForEvent(weave.leadingGcdEvent) ?? BASE_GCD
-		const weavingTime = Math.max(0, recastTime - castTime - ANIMATION_LOCK_MS) // max(0, ...) for e.g. RDM hardcasting one of the 5s spells
-		const maxWeaves = Math.max(0, Math.floor(weavingTime / ANIMATION_LOCK_MS))
+		const gcdLock = castTime === 0 ? INSTANT_GCD_ANIMATION_LOCK_MS : CAST_GCD_ANIMATION_LOCK_MS
+		const weavingTime = Math.max(0, recastTime - castTime - gcdLock) // max(0, ...) for e.g. RDM hardcasting one of the 5s spells
+		const maxWeaves = Math.max(0, Math.floor(weavingTime / OGCD_ANIMATION_LOCK_MS))
 		return maxWeaves
 	}
 
