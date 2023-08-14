@@ -17,6 +17,10 @@ import {Button, Table} from 'semantic-ui-react'
 import {Timeline} from './Timeline'
 
 const ANIMATION_LOCK_MS = 800 // on lower pings this apparently goes down to as little as 600ms
+const CLIPPING_GRACE_PERIOD_MS = 50 // you're allowed to clip a GCD by this much
+// The grace period is just here to reflect reality -- Gold parses on fflogs are
+// clipping their GCDs by about 20-30ms during bursts, so showing these kind
+// of clips is just unactionable spam.
 
 const DEFAULT_MAX_WEAVES = 2
 
@@ -196,7 +200,7 @@ export class Weaving extends Analyser {
 
 		const recast = ((weave.leadingGcdEvent != null) ? this.castTime.recastForEvent(weave.leadingGcdEvent) : undefined) ?? BASE_GCD
 		// Check the downtime-adjusted GCD time difference for this weave - do not treat multiple weaves during downtime as bad weaves
-		return weave.gcdTimeDiff > recast && weaveCount > this.getMaxWeaves(weave)
+		return weave.gcdTimeDiff > (recast + CLIPPING_GRACE_PERIOD_MS) && weaveCount > this.getMaxWeaves(weave)
 	}
 
 	private clearWeave(event: Events['death']) {
