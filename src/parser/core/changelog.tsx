@@ -10,6 +10,13 @@ export const changelog: ChangelogEntry[] = [
 	// 	contributors: [CONTRIBUTORS.YOU],
 	// },
 	{
+		date: new Date('2023-08-14'),
+		Changes: () => <>
+			Tightened the detection of Weaving issues.
+		</>,
+		contributors: [CONTRIBUTORS.HUGMEIR],
+	},
+	{
 		date: new Date('2023-07-28'),
 		Changes: () => <>
 			Fix a bug with status application event ordering that sometimes caused extra action uses to by synthesized.

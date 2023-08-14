@@ -14,15 +14,10 @@ import {Invulnerability} from 'parser/core/modules/Invulnerability'
 import Suggestions, {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import React, {ReactNode} from 'react'
 import {Button, Table} from 'semantic-ui-react'
-import {matchClosestLower} from 'utilities'
 import {Timeline} from './Timeline'
 
-const CAST_TIME_MAX_WEAVES = {
-	0: 2,
-	1000: 1,
-	2500: 0,
-}
-const REDUCE_MAX_WEAVES_RECAST_BELOW = 1800
+const ANIMATION_LOCK_MS = 800 // on lower pings this apparently goes down to as little as 600ms
+
 const DEFAULT_MAX_WEAVES = 2
 
 const WEAVING_SEVERITY = {
@@ -231,15 +226,11 @@ export class Weaving extends Analyser {
 			return DEFAULT_MAX_WEAVES
 		}
 
-		const castTime = this.castTime.forEvent(weave.leadingGcdEvent)
-		if (castTime == null)  {
-			return DEFAULT_MAX_WEAVES
-		}
-
-		const maxWeaves = matchClosestLower(CAST_TIME_MAX_WEAVES, castTime) ?? DEFAULT_MAX_WEAVES
+		const castTime = this.castTime.forEvent(weave.leadingGcdEvent) ?? 0
 		const recastTime = this.castTime.recastForEvent(weave.leadingGcdEvent) ?? BASE_GCD
-
-		return maxWeaves - (recastTime < REDUCE_MAX_WEAVES_RECAST_BELOW ? 1 : 0)
+		const weavingTime = Math.max(0, recastTime - castTime - ANIMATION_LOCK_MS) // max(0, ...) for e.g. RDM hardcasting one of the 5s spells
+		const maxWeaves = Math.max(0, Math.floor(weavingTime / ANIMATION_LOCK_MS))
+		return maxWeaves
 	}
 
 	override output() {
