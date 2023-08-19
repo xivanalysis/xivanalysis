@@ -1,9 +1,9 @@
 import * as Sentry from '@sentry/browser'
 import {STATUS_ID_OFFSET} from 'data/STATUSES'
-import {Event, Events, Cause, SourceModifier, TargetModifier, AttributeValue, Attribute} from 'event'
+import {Event, Events, Cause, SourceModifier, TargetModifier, AttributeValue, Attribute, EventGaugeUpdate} from 'event'
 import {Actor} from 'report'
 import {resolveActorId} from '../base'
-import {ActorResources, BuffEvent, BuffStackEvent, CastEvent, CombatantInfoEvent, DamageEvent, DeathEvent, FflogsEvent, HealEvent, HitType, InstaKillEvent, TargetabilityUpdateEvent} from '../eventTypes'
+import {ActorResources, BuffEvent, BuffStackEvent, CastEvent, CombatantInfoEvent, DamageEvent, DeathEvent, FflogsEvent, GaugeUpdateEvent, HealEvent, HitType, InstaKillEvent, TargetabilityUpdateEvent} from '../eventTypes'
 import {AdapterStep} from './base'
 
 /*
@@ -47,11 +47,27 @@ const FAILED_HITS = new Set([
 // Equivalent to an UnreachableException, but as a noop function
 const ensureNever = (arg: never) => arg
 
+const BYTE_FIELD_OFFSETS = {
+	FIRST: 0,
+	SECOND: 1,
+	THIRD: 2,
+	FOURTH: 3,
+}
+
+const GAUGE_JOB_IDS = {
+	DANCER: 38,
+}
+
+const CHARS_PER_HEX_WORD = 8
+const CHARS_PER_HEX_BYTE = 2
+
 /** Translate an FFLogs APIv1 event to the xiva representation, if any exists. */
 export class TranslateAdapterStep extends AdapterStep {
 	private unhandledTypes = new Set<string>()
 	// Using negatives so we don't tread on fflog's positive sequence IDs
 	private nextFakeSequence = -1
+	private loggingActorId: Actor['id'] = ''
+	private lastGaugeUpdate: EventGaugeUpdate | undefined = undefined
 
 	override adapt(baseEvent: FflogsEvent, _adaptedEvents: Event[]): Event[] {
 		switch (baseEvent.type) {
@@ -96,9 +112,10 @@ export class TranslateAdapterStep extends AdapterStep {
 		case 'combatantinfo':
 			return this.adaptCombatantInfoEvent(baseEvent)
 
-		/* eslint-disable no-fallthrough */
-		// TODO: This could be _really_ useful. Like, combatantinfo tier useful but even more so. But it will require non-trivial consideration around how we want to approach the data itself.
 		case 'gaugeupdate':
+			return this.adaptGaugeUpdateEvent(baseEvent)
+
+		/* eslint-disable no-fallthrough */
 		// Dispels are already modelled by other events, and aren't something we really care about
 		case 'dispel':
 		// FFLogs computed value, could be useful in the future for shield healing analysis.
@@ -389,6 +406,13 @@ export class TranslateAdapterStep extends AdapterStep {
 		for (const [value, attribute] of attributeMapping) {
 			if (value == null) { continue }
 			attributes.push({attribute, value, estimated: false})
+			this.loggingActorId = resolveActorId({
+				id: event.sourceID,
+				instance: event.sourceInstance,
+				actor: event.source,
+			})
+			const loggingActor = this.pull.actors.find(actor => actor.id === this.loggingActorId)
+			if (loggingActor != null) { loggingActor.loggedGauge = true }
 		}
 
 		const ourEvents = new Array<Events['actorUpdate'] | Events['statusApply']>()
@@ -424,6 +448,37 @@ export class TranslateAdapterStep extends AdapterStep {
 		return ourEvents
 	}
 
+	private adaptGaugeUpdateEvent(event: GaugeUpdateEvent): Event[] {
+		// It seems like the last hex byte from data1 corresponds to the job ID code for all of the gauges
+		const jobId = numberFromHexBytes(event.data1, BYTE_FIELD_OFFSETS.FOURTH)
+
+		switch (jobId) {
+		case GAUGE_JOB_IDS.DANCER:
+			return this.adaptDancerGaugeEvent(event)
+		default:
+			return []
+		}
+	}
+
+	private adaptDancerGaugeEvent(event: GaugeUpdateEvent): Event[] {
+		const adaptedEvent: Events['gaugeUpdate'] = {
+			...this.adaptBaseFields(event),
+			actor: this.loggingActorId, // Relies on there being a combatant info event first...
+			type: 'gaugeUpdate',
+			esprit: numberFromHexBytes(event.data1, BYTE_FIELD_OFFSETS.SECOND),
+			feathers: numberFromHexBytes(event.data1, BYTE_FIELD_OFFSETS.THIRD),
+		}
+		// Only return an adapted event if something we care about actually changed
+		if (this.lastGaugeUpdate == null ||
+			('esprit' in this.lastGaugeUpdate && this.lastGaugeUpdate.esprit !== adaptedEvent.esprit) ||
+			('feathers' in this.lastGaugeUpdate && this.lastGaugeUpdate.feathers !== adaptedEvent.feathers)
+		) {
+			this.lastGaugeUpdate = adaptedEvent
+			return [adaptedEvent]
+		}
+		return []
+	}
+
 	private adaptTargetedFields(event: FflogsEvent) {
 		return {
 			...this.adaptBaseFields(event),
@@ -441,6 +496,17 @@ export class TranslateAdapterStep extends AdapterStep {
 	private adaptBaseFields(event: FflogsEvent) {
 		return {timestamp: this.report.timestamp + event.timestamp}
 	}
+}
+
+const numberFromHexBytes = (hexWord: string, offset: number = 0, bytes: number = 1): number => {
+	if (offset < BYTE_FIELD_OFFSETS.FIRST || offset > BYTE_FIELD_OFFSETS.FOURTH) { return 0 }
+
+	const paddedWord = hexWord.padStart(CHARS_PER_HEX_WORD, '0')
+	const startIndex = Math.min(offset * CHARS_PER_HEX_BYTE, CHARS_PER_HEX_WORD - CHARS_PER_HEX_BYTE)
+	const endIndex = startIndex + CHARS_PER_HEX_BYTE * bytes >= CHARS_PER_HEX_WORD ? undefined : startIndex + CHARS_PER_HEX_BYTE * bytes
+	const byteString = paddedWord.substring(startIndex, endIndex)
+
+	return Number('0x' + byteString)
 }
 
 const resolveActorIds = (event: FflogsEvent) => ({
