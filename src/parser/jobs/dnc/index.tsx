@@ -18,7 +18,7 @@ export const DANCER = new Meta({
 		<Message warning icon>
 			<Icon name="warning sign"/>
 			<Message.Content>
-				<Trans id="dnc.about.description.warning">Both of dancer's gauges are simulated here, since we don't have exact data available to work from. We've done our best to get it as accurate as we can, and to give you the benefit of the doubt in our suggestions. If you notice anything that looks significantly wrong, please drop by our Discord channel or report a bug on our github repository!</Trans>
+				<Trans id="dnc.about.description.warning">Both of dancer's gauges are simulated here, unless you uploaded your own log. We've done our best to get it as accurate as we can, and to give you the benefit of the doubt in our suggestions. If you notice anything that looks significantly wrong, please drop by our Discord channel or report a bug on our github repository!</Trans>
 			</Message.Content>
 		</Message>
 	</>,

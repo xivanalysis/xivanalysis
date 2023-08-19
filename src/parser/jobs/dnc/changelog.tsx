@@ -82,4 +82,9 @@ export const changelog = [
 		Changes: () => <>Adjust Devilment timing check to account for changed Technical Finish status application timing after 6.4.</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],
 	},
+	{
+		date: new Date('2023-08-19'),
+		Changes: () => <>Esprit and Feather Gauges now show the actual values for logs the Dancer uploaded themselves! Overcap is still partly simulated though.</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
 ]
