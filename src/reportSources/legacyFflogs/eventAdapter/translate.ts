@@ -411,8 +411,6 @@ export class TranslateAdapterStep extends AdapterStep {
 				instance: event.sourceInstance,
 				actor: event.source,
 			})
-			const loggingActor = this.pull.actors.find(actor => actor.id === this.loggingActorId)
-			if (loggingActor != null) { loggingActor.loggedGauge = true }
 		}
 
 		const ourEvents = new Array<Events['actorUpdate'] | Events['statusApply']>()
