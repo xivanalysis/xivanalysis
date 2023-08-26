@@ -33,16 +33,14 @@ export class ExtraHardT3Evaluator implements WindowEvaluator {
 		if (!(windowMetadata.missingFire4s || windowMetadata.missingDespairs)) { return 0 }
 
 		const currentRotation = window.data
-		const firePhaseStartIndex = windowMetadata.firePhaseMetadata.startIndex
-		const fullFirePhaseEvents = currentRotation.slice(firePhaseStartIndex)
-		const manafontIndex = currentRotation.findIndex(event => event.action.id === this.data.actions.MANAFONT.id)
-		const firePhaseEvents = currentRotation.slice(firePhaseStartIndex, manafontIndex === -1 ? undefined : manafontIndex)
-		const manafontPhaseEvents = manafontIndex === -1 ? [] : currentRotation.slice(manafontIndex)
+		const manafontTimestamp = currentRotation.find(event => event.action.id === this.data.actions.MANAFONT.id)?.timestamp
+		const firePhaseEvents = currentRotation.filter(event => event.timestamp >= windowMetadata.firePhaseMetadata.startTime && (!manafontTimestamp || event.timestamp < manafontTimestamp))
+		const manafontPhaseEvents = currentRotation.filter(event => manafontTimestamp && event.timestamp >= manafontTimestamp)
 
-		const minimumMPForExpectedFires = this.mpCostForExpectedFires(windowMetadata, fullFirePhaseEvents.some(event => [this.data.actions.FIRE_I.id, this.data.actions.PARADOX.id].includes(event.action.id)))
+		const minimumMPForExpectedFires = this.mpCostForExpectedFires(windowMetadata, firePhaseEvents.some(event => [this.data.actions.FIRE_I.id, this.data.actions.PARADOX.id].includes(event.action.id)))
 
 		// Figure out how many T3s we could hardcast with the MP not needed for Fires (if any)
-		const maxHardcastT3s = Math.floor(Math.max(windowMetadata.firePhaseMetadata.initialMP - minimumMPForExpectedFires, 0) / this.data.actions.THUNDER_III.mpCost)
+		const maxHardcastT3s = Math.floor(Math.max(windowMetadata.firePhaseMetadata.fullElementMP - minimumMPForExpectedFires, 0) / this.data.actions.THUNDER_III.mpCost)
 		const hardT3sBeforeManafont = this.hardT3sInPhase(firePhaseEvents)
 		const hardT3sAfterManafont = this.hardT3sInPhase(manafontPhaseEvents)
 		windowMetadata.hardT3sInFireCount = hardT3sBeforeManafont + hardT3sAfterManafont

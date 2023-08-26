@@ -10,20 +10,17 @@ import {assignErrorCode, getMetadataForWindow} from './EvaluatorUtilities'
 export interface ExtraF1EvaluatorOpts {
 	suggestionIcon: string
 	metadataHistory: History<RotationMetadata>
-	allFireSpellIds: number[]
 	limitedFireSpellIds: number[]
 }
 
 export class ExtraF1Evaluator implements WindowEvaluator {
 	private suggestionIcon: string
 	private metadataHistory: History<RotationMetadata>
-	private allFireSpellIds: number[]
 	private limitedFireSpellIds: number[]
 
 	constructor(opts: ExtraF1EvaluatorOpts) {
 		this.suggestionIcon = opts.suggestionIcon
 		this.metadataHistory = opts.metadataHistory
-		this.allFireSpellIds = opts.allFireSpellIds
 		this.limitedFireSpellIds = opts.limitedFireSpellIds
 	}
 
@@ -31,10 +28,11 @@ export class ExtraF1Evaluator implements WindowEvaluator {
 		const windowMetadata = getMetadataForWindow(window, this.metadataHistory)
 		if (windowMetadata == null) { return 0 }
 
-		// Check if the rotation included more than one Fire 1
-		const currentRotation = window.data
-		const firePhaseStartIndex = currentRotation.findIndex(event => this.allFireSpellIds.includes(event.action.id))
-		const extraFire1Count = Math.max(currentRotation.filter(event => this.limitedFireSpellIds.includes(event.action.id) && currentRotation.indexOf(event) >= firePhaseStartIndex).length - 1, 0)
+		// If the fire phase began with Transpose -> Paradox -> F1, allow those two casts (but no more). Otherwise, allow one cast for AF refresh
+		const allowedF1s = windowMetadata.wasTPF1 ? 2 : 1
+
+		// Get the number of F1s used beyond the allowed amount
+		const extraFire1Count = Math.max(window.data.filter(event => this.limitedFireSpellIds.includes(event.action.id) && event.timestamp > windowMetadata.firePhaseMetadata.startTime).length - allowedF1s, 0)
 
 		if (extraFire1Count > 0) {
 			assignErrorCode(windowMetadata, ROTATION_ERRORS.EXTRA_F1)
