@@ -34,11 +34,10 @@ export class ManafontTimingEvaluator extends RulePassedEvaluator {
 		const windowMetadata = this.metadataHistory.entries.find(entry => entry.start === window.start)?.data
 		if (windowMetadata == null) { return }
 
-		const currentRotation = window.data
-		const manafontIndex = currentRotation.findIndex(event => event.action.id === this.manafontAction.id)
+		const manafontIndex = window.data.findIndex(event => event.action.id === this.manafontAction.id)
 		if (manafontIndex === -1) { return }
 
-		const despairIndex = currentRotation.findIndex(event => event.action.id === this.despairId)
+		const despairIndex = window.data.findIndex(event => event.action.id === this.despairId)
 		if (manafontIndex < despairIndex || despairIndex === -1) {
 			assignErrorCode(windowMetadata, ROTATION_ERRORS.MANAFONT_BEFORE_DESPAIR)
 			return false

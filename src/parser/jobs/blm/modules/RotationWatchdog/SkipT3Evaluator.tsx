@@ -5,7 +5,7 @@ import {History, HistoryEntry} from 'parser/core/modules/ActionWindow/History'
 import {TieredSuggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
 import {ROTATION_ERRORS, ENHANCED_SEVERITY_TIERS, RotationMetadata} from '../RotationWatchdog'
-import {assignErrorCode} from './EvaluatorUtilities'
+import {assignErrorCode, getMetadataForWindow} from './EvaluatorUtilities'
 
 export interface SkipT3EvaluatorOpts {
 	suggestionIcon: string
@@ -24,8 +24,8 @@ export class SkipT3Evaluator implements WindowEvaluator {
 	// Suggestion for skipping T3 on rotations that are cut short by the end of the parse or downtime
 	suggest(windows: Array<HistoryEntry<EvaluatedAction[]>>) {
 		const shouldSkipT3s = windows.reduce((total, window) => {
-			const windowMetadata = this.metadataHistory.entries.find(entry => entry.start === window.start)?.data
-			if (windowMetadata == null) { return total }
+			const windowMetadata = getMetadataForWindow(window, this.metadataHistory)
+
 			if (!windowMetadata.finalOrDowntime) { return total } // This suggestion only applies to windows that end with downtime
 
 			// Hardcasted T3's initial potency isn't worth it if the DoT is going to go to waste before the boss jumps or dies

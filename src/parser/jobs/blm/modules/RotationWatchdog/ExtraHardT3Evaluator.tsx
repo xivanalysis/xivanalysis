@@ -28,14 +28,13 @@ export class ExtraHardT3Evaluator implements WindowEvaluator {
 
 	private extraT3sInWindow(window: HistoryEntry<EvaluatedAction[]>): number {
 		const windowMetadata = getMetadataForWindow(window, this.metadataHistory)
-		if (windowMetadata == null) { return 0 }
+
 		// By definition, if you didn't miss any expected casts, you couldn't have hardcast an extra T3
 		if (!(windowMetadata.missingFire4s || windowMetadata.missingDespairs)) { return 0 }
 
-		const currentRotation = window.data
-		const manafontTimestamp = currentRotation.find(event => event.action.id === this.data.actions.MANAFONT.id)?.timestamp
-		const firePhaseEvents = currentRotation.filter(event => event.timestamp >= windowMetadata.firePhaseMetadata.startTime && (!manafontTimestamp || event.timestamp < manafontTimestamp))
-		const manafontPhaseEvents = currentRotation.filter(event => manafontTimestamp && event.timestamp >= manafontTimestamp)
+		const manafontTimestamp = window.data.find(event => event.action.id === this.data.actions.MANAFONT.id)?.timestamp
+		const firePhaseEvents = window.data.filter(event => event.timestamp >= windowMetadata.firePhaseMetadata.startTime && (!manafontTimestamp || event.timestamp < manafontTimestamp))
+		const manafontPhaseEvents = window.data.filter(event => manafontTimestamp && event.timestamp >= manafontTimestamp)
 
 		const minimumMPForExpectedFires = this.mpCostForExpectedFires(windowMetadata, firePhaseEvents.some(event => [this.data.actions.FIRE_I.id, this.data.actions.PARADOX.id].includes(event.action.id)))
 

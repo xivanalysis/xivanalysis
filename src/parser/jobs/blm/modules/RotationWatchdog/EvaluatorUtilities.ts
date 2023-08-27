@@ -12,6 +12,10 @@ export function includeInSuggestions(metadata: RotationMetadata): boolean {
 	return metadata.errorCode.priority < DEATH_PRIORITY && metadata.errorCode.priority > HIDDEN_PRIORITY_THRESHOLD
 }
 
-export function getMetadataForWindow(window: HistoryEntry<EvaluatedAction[]>, metadataHistory: History<RotationMetadata>): RotationMetadata | undefined {
-	return metadataHistory.entries.find(entry => entry.start === window.start)?.data
+export function getMetadataForWindow(window: HistoryEntry<EvaluatedAction[]>, metadataHistory: History<RotationMetadata>): RotationMetadata {
+	let windowMetadataEntry = metadataHistory.entries.find(entry => entry.start === window.start)
+	if (windowMetadataEntry == null) {
+		windowMetadataEntry = metadataHistory.openNew(window.start)
+	}
+	return windowMetadataEntry.data
 }

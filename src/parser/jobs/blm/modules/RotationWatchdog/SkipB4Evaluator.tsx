@@ -7,7 +7,7 @@ import {History, HistoryEntry} from 'parser/core/modules/ActionWindow/History'
 import {TieredSuggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
 import {ROTATION_ERRORS, ENHANCED_SEVERITY_TIERS, RotationMetadata, NO_UH_EXPECTED_FIRE4} from '../RotationWatchdog'
-import {assignErrorCode} from './EvaluatorUtilities'
+import {assignErrorCode, getMetadataForWindow} from './EvaluatorUtilities'
 
 export interface SkipB4EvaluatorOpts {
 	blizzard4Id: number
@@ -31,8 +31,8 @@ export class SkipB4Evaluator extends RulePassedEvaluator {
 	}
 
 	override passesRule(window: HistoryEntry<EvaluatedAction[]>) {
-		const windowMetadata = this.metadataHistory.entries.find(entry => entry.start === window.start)?.data
-		if (windowMetadata == null) { return }
+		const windowMetadata = getMetadataForWindow(window, this.metadataHistory)
+
 		if (!windowMetadata.finalOrDowntime) { return } // This suggestion only applies to windows that end with downtime
 
 		const currentRotation = window.data

@@ -20,9 +20,6 @@ export class RotationErrorNotesEvaluator extends NotesEvaluator {
 
 	override generateNotes(window: HistoryEntry<EvaluatedAction[]>): JSX.Element {
 		const windowMetadata = getMetadataForWindow(window, this.metadataHistory)
-		if (windowMetadata == null) {
-			return <></>
-		}
 
 		return <>{windowMetadata.errorCode.message}</>
 	}

@@ -97,6 +97,8 @@ export interface RotationMetadata {
 	missingFire4s: boolean
 	wasTPF1: boolean
 	expectedFire4sBeforeDespair: number
+	expectedFire4s: number,
+	expectedDespairs: number,
 	hardT3sInFireCount: number
 	firePhaseMetadata: PhaseMetadata
 }
@@ -110,6 +112,35 @@ export interface PhaseMetadata {
 	fullElementGaugeState: BLMGaugeState
 	circleOfPowerPct: number
 }
+
+export const EMPTY_GAUGE_STATE: BLMGaugeState = {
+	astralFire: 0,
+	umbralIce: 0,
+	umbralHearts: 0,
+	polyglot: 0,
+	enochian: false,
+	paradox: 0,
+}
+
+export const EMPTY_METADATA: RotationMetadata = {
+	errorCode: ROTATION_ERRORS.NO_ERROR,
+	finalOrDowntime: false,
+	missingDespairs: false,
+	missingFire4s: false,
+	wasTPF1: false,
+	expectedFire4sBeforeDespair: 0,
+	expectedFire4s: -1,
+	expectedDespairs: -1,
+	hardT3sInFireCount: 0,
+	firePhaseMetadata: {
+		startTime: 0,
+		initialMP: 0,
+		initialGaugeState: {...EMPTY_GAUGE_STATE},
+		fullElementTime: 0,
+		fullElementMP: 0,
+		fullElementGaugeState: {...EMPTY_GAUGE_STATE},
+		circleOfPowerPct: 0,
+	}}
 
 export class RotationWatchdog extends RestartWindow {
 	static override handle = 'RotationWatchdog'
@@ -145,33 +176,9 @@ export class RotationWatchdog extends RestartWindow {
 	private fireSpellIds = FIRE_SPELLS.map(key => this.data.actions[key].id)
 	private iceSpellIds = ICE_SPELLS.map(key => this.data.actions[key].id)
 
-	private emptyGaugeState: BLMGaugeState = {
-		astralFire: 0,
-		umbralIce: 0,
-		umbralHearts: 0,
-		polyglot: 0,
-		enochian: false,
-		paradox: 0,
-	}
-	private currentGaugeState = {...this.emptyGaugeState}
+	private currentGaugeState = {...EMPTY_GAUGE_STATE}
 
-	private metadataHistory = new History<RotationMetadata>(() => ({
-		errorCode: ROTATION_ERRORS.NO_ERROR,
-		finalOrDowntime: false,
-		missingDespairs: false,
-		missingFire4s: false,
-		wasTPF1: false,
-		expectedFire4sBeforeDespair: 0,
-		hardT3sInFireCount: 0,
-		firePhaseMetadata: {
-			startTime: 0,
-			initialMP: 0,
-			initialGaugeState: this.emptyGaugeState,
-			fullElementTime: 0,
-			fullElementMP: 0,
-			fullElementGaugeState: this.emptyGaugeState,
-			circleOfPowerPct: 0,
-		}}))
+	private metadataHistory = new History<RotationMetadata>(() => ({...EMPTY_METADATA}))
 
 	override initialise() {
 		super.initialise()
@@ -359,7 +366,7 @@ export class RotationWatchdog extends RestartWindow {
 		// Couldn't do this at the time of DROPPED_AF_UI code assignment, since the downtime data wasn't fully available yet
 		this.mapHistoryActions().forEach(window => {
 			const windowMetadata = getMetadataForWindow(window, this.metadataHistory)
-			if (windowMetadata == null) { return }
+
 			if (windowMetadata.errorCode !== ROTATION_ERRORS.DROPPED_AF_UI) { return }
 
 			const utaWindows = this.unableToAct
@@ -379,9 +386,8 @@ export class RotationWatchdog extends RestartWindow {
 
 	private adjustExpectedActionsCount(window: HistoryEntry<EvaluatedAction[]>, action: TrackedAction): number {
 		const windowMetadata = getMetadataForWindow(window, this.metadataHistory)
-		if (windowMetadata == null) { return 0 }
 
-		const windowEnd = window.end ?? this.parser.pull.timestamp + this.parser.pull.duration
+		const windowEnd = window.end ?? (this.parser.pull.timestamp + this.parser.pull.duration)
 		const firePhaseDuration = windowEnd - windowMetadata.firePhaseMetadata.startTime
 		const fireInvulnDuration = this.invulnerability.getDuration({
 			start: windowMetadata.firePhaseMetadata.startTime,
@@ -420,7 +426,7 @@ export class RotationWatchdog extends RestartWindow {
 			}
 
 			// No Umbral hearts -> Tranpose -> Raw F3 loses an F4 due to MP, or F3P due to time (unless very speedy, in which case you're probably not going non-standard...)
-			if (windowMetadata.firePhaseMetadata.initialGaugeState.umbralHearts === 0 && (buildAstralFireEvents[0].action.id === this.data.actions.TRANSPOSE.id &&
+			if (windowMetadata.firePhaseMetadata.initialGaugeState.umbralHearts === 0 && (buildAstralFireEvents.length >= 1 && buildAstralFireEvents[0].action.id === this.data.actions.TRANSPOSE.id &&
 					buildAstralFireEvents[buildAstralFireEvents.length - 1].action.id === this.data.actions.FIRE_III.id)) {
 				adjustment--
 			}
@@ -436,7 +442,7 @@ export class RotationWatchdog extends RestartWindow {
 				windowMetadata.firePhaseMetadata.initialGaugeState.umbralHearts === 0 &&
 				window.data.some(event => this.iceSpellIds.includes(event.action.id)) &&
 				(buildAstralFireEvents.length === 1 || // Did the window either start via UI F3 or a Transpose F3P?
-					(buildAstralFireEvents[0].action.id === this.data.actions.TRANSPOSE.id && buildAstralFireEvents[buildAstralFireEvents.length - 1].action.id === this.data.actions.FIRE_III.id &&
+					(buildAstralFireEvents.length > 1 && buildAstralFireEvents[0].action.id === this.data.actions.TRANSPOSE.id && buildAstralFireEvents[buildAstralFireEvents.length - 1].action.id === this.data.actions.FIRE_III.id &&
 						this.procs.checkActionWasProc(this.data.actions.FIRE_III.id, buildAstralFireEvents[buildAstralFireEvents.length - 1].timestamp))) &&
 				windowMetadata.firePhaseMetadata.circleOfPowerPct >= EXTRA_F4_COP_THRESHOLD &&
 				((adjustment + 1) * 2 + 1) * this.data.actions.FIRE_IV.mpCost < windowMetadata.firePhaseMetadata.fullElementMP
@@ -461,6 +467,14 @@ export class RotationWatchdog extends RestartWindow {
 			adjustment += EXTRA_CASTS_FROM_MANAFONT
 		}
 
+		switch (action.action.id) {
+		case this.data.actions.FIRE_IV.id:
+			windowMetadata.expectedFire4s = adjustment
+			break
+		case this.data.actions.DESPAIR.id:
+			windowMetadata.expectedDespairs = adjustment
+		}
+
 		return adjustment
 	}
 
@@ -476,7 +490,6 @@ export class RotationWatchdog extends RestartWindow {
 	// Filter out the too-short windows from inclusion in suggestions
 	private filterForSuggestions: HistoryEntryPredicate = (window: HistoryEntry<EvaluatedAction[]>) => {
 		const windowMetadata = getMetadataForWindow(window, this.metadataHistory)
-		if (windowMetadata == null) { return false }
 
 		return windowMetadata.errorCode.priority !== ROTATION_ERRORS.SHORT.priority
 	}
@@ -484,7 +497,6 @@ export class RotationWatchdog extends RestartWindow {
 	// Filter out the windows we don't want to show in the output, unless we're showing everything
 	private filterForOutput: HistoryEntryPredicate = (window: HistoryEntry<EvaluatedAction[]>) => {
 		const windowMetadata = getMetadataForWindow(window, this.metadataHistory)
-		if (windowMetadata == null) { return false }
 
 		return windowMetadata.errorCode.priority > HIDDEN_PRIORITY_THRESHOLD || DEBUG_SHOW_ALL
 	}

@@ -18,7 +18,6 @@ export class MissedIceParadoxEvaluator extends RulePassedEvaluator {
 
 	override passesRule(window: HistoryEntry<EvaluatedAction[]>): undefined {
 		const windowMetadata = getMetadataForWindow(window, this.metadataHistory)
-		if (windowMetadata == null) { return }
 
 		// Check if the rotation overwrote a Paradox from the ice phase
 		if (windowMetadata.firePhaseMetadata.initialGaugeState.paradox > 0 &&

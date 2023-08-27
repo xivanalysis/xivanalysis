@@ -26,7 +26,6 @@ export class ExtraF1Evaluator implements WindowEvaluator {
 
 	private extraF1sInWindow(window: HistoryEntry<EvaluatedAction[]>) {
 		const windowMetadata = getMetadataForWindow(window, this.metadataHistory)
-		if (windowMetadata == null) { return 0 }
 
 		// If the fire phase began with Transpose -> Paradox -> F1, allow those two casts (but no more). Otherwise, allow one cast for AF refresh
 		const allowedF1s = windowMetadata.wasTPF1 ? 2 : 1

@@ -45,7 +45,6 @@ export class ExpectedFireSpellsEvaluator extends ExpectedActionsEvaluator {
 	public override suggest(windows: Array<HistoryEntry<EvaluatedAction[]>>) {
 		const astralFiresMissingDespairs = windows.reduce((total, window) => {
 			const windowMetadata = getMetadataForWindow(window, this.metadataHistory)
-			if (windowMetadata == null) { return total }
 
 			this.expectedActions.forEach(action => this.assessWindowAction(window, windowMetadata, action))
 
@@ -67,7 +66,14 @@ export class ExpectedFireSpellsEvaluator extends ExpectedActionsEvaluator {
 
 	override determineExpected(window: HistoryEntry<EvaluatedAction[]>, action: TrackedAction) {
 		const windowMetadata = getMetadataForWindow(window, this.metadataHistory)
-		if (action.action.id === this.fire4Action.id && windowMetadata != null && windowMetadata.finalOrDowntime) { return undefined }
+
+		if (action.action.id === this.fire4Action.id) {
+			if (windowMetadata.finalOrDowntime) { return undefined }
+			if (windowMetadata.expectedFire4s >= 0) { return windowMetadata.expectedFire4s }
+		}
+		if (action.action.id === this.despairAction.id && windowMetadata.expectedDespairs >= 0) {
+			return windowMetadata.expectedDespairs
+		}
 
 		return super.determineExpected(window, action)
 	}
