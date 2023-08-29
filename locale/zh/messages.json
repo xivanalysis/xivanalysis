@@ -456,6 +456,7 @@
   "dnc.technicalities.suggestions.unpooled.content": "在进入<0/>窗口前积累幻扇，能够让你使用更多伤害增益的<1/>以提高利用效率。尽量积累并在窗口期间维持至少3档幻扇。",
   "dnc.technicalities.suggestions.unpooled.why": "在{unpooledWindows}个窗口中损失了<0/>威力",
   "dnc.technicalities.title": "技巧舞步窗口内的循环",
+  "dnc.technicalities.unpooled.context.opener": "",
   "drg.about.description": "<0>这个分析工具旨在帮助你告别人们对龙骑的刻板印象，防止躺尸，并打出赏心悦目的数据。因为龙骑士的循环非常严格，这里的建议主要着眼于如何维持流畅的循环，同时指出你在红莲龙血和buff对齐等方面的问题。</0>",
   "drg.battlelitany.title": "战斗连祷",
   "drg.bl.suggestions.missedgcd.content": "尝试在每个<0/>的持续时间内插入6个GCD技能。",

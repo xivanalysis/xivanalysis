@@ -456,6 +456,7 @@
   "dnc.technicalities.suggestions.unpooled.content": "Deine Plume Burlesque-Stacks anzusammeln bevor du in eine <0/>-Phase gehst, erlaubt es dir mehr <1/> mit aktiven Vervielfachungsboni auszuführen, was die Effektivität des Spells erhöht. Versuche zwischen den Phasen mindestens 3 Stacks anzusammeln und bereitzuhalten.",
   "dnc.technicalities.suggestions.unpooled.why": "{unpooledWindows, plural, one {Ein Einsatz} other {# Einsätze}} mit fehlendem potentiellen Einsatz von <0/>.",
   "dnc.technicalities.title": "\"Komplexe\"-Aktionen",
+  "dnc.technicalities.unpooled.context.opener": "",
   "drg.about.description": "<0>Diese Analyse soll dir dabei helfen Vorurteile zu beseitigen, nicht den Boden zu wischen und große, saftige Zahlen zu erreichen. Da die DRG Rotation relativ strikt ist, fokussieren sich die Empfehlungen hier vor allem auf eine reibungslose Rotation, Fehler in Bezug zu Drachengeist und Buff Ausrichtung.</0>",
   "drg.battlelitany.title": "Litanei der Schlacht",
   "drg.bl.suggestions.missedgcd.content": "",
