@@ -122,26 +122,6 @@ export const EMPTY_GAUGE_STATE: BLMGaugeState = {
 	paradox: 0,
 }
 
-export const EMPTY_METADATA: RotationMetadata = {
-	errorCode: ROTATION_ERRORS.NO_ERROR,
-	finalOrDowntime: false,
-	missingDespairs: false,
-	missingFire4s: false,
-	wasTPF1: false,
-	expectedFire4sBeforeDespair: 0,
-	expectedFire4s: -1,
-	expectedDespairs: -1,
-	hardT3sInFireCount: 0,
-	firePhaseMetadata: {
-		startTime: 0,
-		initialMP: 0,
-		initialGaugeState: {...EMPTY_GAUGE_STATE},
-		fullElementTime: 0,
-		fullElementMP: 0,
-		fullElementGaugeState: {...EMPTY_GAUGE_STATE},
-		circleOfPowerPct: 0,
-	}}
-
 export class RotationWatchdog extends RestartWindow {
 	static override handle = 'RotationWatchdog'
 	static override title = t('blm.rotation-watchdog.title')`Rotation Outliers`
@@ -178,7 +158,26 @@ export class RotationWatchdog extends RestartWindow {
 
 	private currentGaugeState = {...EMPTY_GAUGE_STATE}
 
-	private metadataHistory = new History<RotationMetadata>(() => ({...EMPTY_METADATA}))
+	private metadataHistory = new History<RotationMetadata>(() => ({
+		errorCode: ROTATION_ERRORS.NO_ERROR,
+		finalOrDowntime: false,
+		missingDespairs: false,
+		missingFire4s: false,
+		wasTPF1: false,
+		expectedFire4sBeforeDespair: 0,
+		expectedFire4s: -1,
+		expectedDespairs: -1,
+		hardT3sInFireCount: 0,
+		firePhaseMetadata: {
+			startTime: 0,
+			initialMP: 0,
+			initialGaugeState: {...EMPTY_GAUGE_STATE},
+			fullElementTime: 0,
+			fullElementMP: 0,
+			fullElementGaugeState: {...EMPTY_GAUGE_STATE},
+			circleOfPowerPct: 0,
+		}}
+	))
 
 	override initialise() {
 		super.initialise()
