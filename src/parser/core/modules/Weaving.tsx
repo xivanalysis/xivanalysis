@@ -13,8 +13,9 @@ import {Data} from 'parser/core/modules/Data'
 import {Invulnerability} from 'parser/core/modules/Invulnerability'
 import Suggestions, {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import React, {ReactNode} from 'react'
-import {Accordion} from 'semantic-ui-react'
+import {Button, Table} from 'semantic-ui-react'
 import {matchClosestLower} from 'utilities'
+import {Timeline} from './Timeline'
 
 const CAST_TIME_MAX_WEAVES = {
 	0: 2,
@@ -29,8 +30,11 @@ const WEAVING_SEVERITY = {
 	5: SEVERITY.MAJOR,
 }
 
+// used for timeline viewing by giving you a nice 30s window
+const TIMELINE_UPPER_MOD: number = 30000
+
 export interface Weave {
-	leadingGcdEvent?: Events['action'],
+	leadingGcdEvent: Events['action'],
 	trailingGcdEvent: Events['action'],
 	gcdTimeDiff: number,
 	weaves: Array<Events['action']>,
@@ -42,7 +46,8 @@ export class Weaving extends Analyser {
 	@dependency protected castTime!: CastTime
 	@dependency protected data!: Data
 	@dependency private invulnerability!: Invulnerability
-	@dependency private suggestions!: Suggestions
+	@dependency protected suggestions!: Suggestions
+	@dependency private timeline!: Timeline
 
 	static override title = t('core.weaving.title')`Weaving Issues`
 
@@ -59,10 +64,26 @@ export class Weaving extends Analyser {
 
 	protected severity = WEAVING_SEVERITY
 
+	//used to synth a start and end in case there were no actions before the pull or close to when the pull ended. it's also used to ensure that leading and trailing gcd events are not nullable
+	private pullStart: Events['action'] = {
+		action: 0,
+		type: 'action',
+		timestamp: this.parser.pull.timestamp,
+		source: this.parser.actor.id,
+		target: this.parser.actor.id,
+	}
+	private pullEnd: Events['action'] = {
+		action: 0,
+		type: 'action',
+		timestamp: this.parser.pull.timestamp + this.parser.pull.duration,
+		source: this.parser.actor.id,
+		target: this.parser.actor.id,
+	}
+
 	private weaves: Array<Events['action']> = []
 	private ongoingCastEvent?: Events['prepare']
-	private leadingGcdEvent?: Events['action']
-	private trailingGcdEvent?: Events['action']
+	private leadingGcdEvent: Events['action'] = this.pullStart
+	private trailingGcdEvent: Events['action'] = this.pullStart
 	private badWeaves: Weave[] = []
 
 	override initialise() {
@@ -71,7 +92,7 @@ export class Weaving extends Analyser {
 		this.addEventHook(playerFilter.type('prepare'), this.onBeginCast)
 		this.addEventHook(playerFilter.type('action'), this.onCast)
 		this.addEventHook(filter<Event>().type('complete'), this.onComplete)
-		this.addEventHook(filter<Event>().type('death'), this.clearWeave)
+		this.addEventHook(filter<Event>().type('death').actor(this.parser.actor.id), this.clearWeave)
 	}
 
 	private onBeginCast(event: Events['prepare']) {
@@ -92,7 +113,7 @@ export class Weaving extends Analyser {
 			return
 		}
 
-		if (this.ongoingCastEvent && this.ongoingCastEvent.action === action.id) {
+		if (this.ongoingCastEvent && this.ongoingCastEvent.action === action.id && this.ongoingCastEvent.timestamp !== 0) {
 			// This event is the end of a GCD cast
 			this.trailingGcdEvent = {
 				...event,
@@ -116,6 +137,9 @@ export class Weaving extends Analyser {
 	}
 
 	private onComplete() {
+		// Used to ensure weaves are captured on boss death. Synthed null action used to show
+		this.trailingGcdEvent = this.pullEnd
+
 		// If there's been at least one gcd, run a cleanup on any remnant data
 		if (this.leadingGcdEvent) {
 			this.saveIfBad()
@@ -180,7 +204,7 @@ export class Weaving extends Analyser {
 		return weave.gcdTimeDiff > recast && weaveCount > this.getMaxWeaves(weave)
 	}
 
-	private clearWeave() {
+	private clearWeave(event: Events['death']) {
 		// prompts saving any existing weaves if they're bad, and reset
 		if (this.weaves.length > 0) {
 			this.saveIfBad()
@@ -188,7 +212,13 @@ export class Weaving extends Analyser {
 
 		// remove existing weaves and pretend the next leadingGcdEvent is like a fresh start (which I guess it is)
 		this.weaves = []
-		this.leadingGcdEvent = undefined
+		this.leadingGcdEvent = {
+			action: 0,
+			type: 'action',
+			timestamp: event.timestamp,
+			source: this.parser.actor.id,
+			target: this.parser.actor.id,
+		}
 	}
 
 	/**
@@ -217,38 +247,57 @@ export class Weaving extends Analyser {
 			return false
 		}
 
-		const panels = this.badWeaves.map(item => ({
-			key: item.leadingGcdEvent?.timestamp ?? this.parser.pull.timestamp,
-			title: {
-				content: <>
-					<strong>{this.parser.formatEpochTimestamp(item.leadingGcdEvent?.timestamp ?? this.parser.pull.timestamp)}</strong>
-					&nbsp;-&nbsp;
-					<Plural
-						id="core.weaving.panel-count"
-						value={item.weaves.length}
-						_1="# weave"
-						other="# weaves"
-					/>
-					&nbsp;(
-					{this.parser.formatDuration(item.gcdTimeDiff)}
-					&nbsp;
-					<Trans id="core.weaving.between-gcds">between GCDs</Trans>
-					)
-				</>,
-			},
-			content: {
-				content: <Rotation events={[
-					...(item.leadingGcdEvent != null ? [item.leadingGcdEvent] : []),
-					...item.weaves,
-				]}/>,
-			},
-		}))
-
-		return <Accordion
-			exclusive={false}
-			panels={panels}
-			styled
-			fluid
-		/>
+		return <Table unstackable collapsing>
+			<Table.Header>
+				<Table.Row>
+					<Table.HeaderCell collapsing>
+						<strong><Trans id="core.weaving.table.time">Time</Trans></strong>
+					</Table.HeaderCell>
+					<Table.HeaderCell collapsing>
+						<strong><Trans id="core.weaving.table.weave-info">Weave info</Trans></strong>
+					</Table.HeaderCell>
+					<Table.HeaderCell>
+						<strong><Trans id="core.weaving.table.weave-actions">Actions</Trans></strong>
+					</Table.HeaderCell>
+				</Table.Row>
+			</Table.Header>
+			<Table.Body>
+				{
+					this.badWeaves.map((item) => {
+						return <Table.Row key={item.leadingGcdEvent.timestamp}>
+							<Table.Cell textAlign="center">
+								<span style={{marginRight: 5}}>{this.parser.formatEpochTimestamp(item.leadingGcdEvent.timestamp)}</span>
+								<Button
+									circular
+									compact
+									size="mini"
+									icon="time"
+									onClick={() => this.timeline.show(item.leadingGcdEvent.timestamp - this.parser.pull.timestamp, item.leadingGcdEvent.timestamp - this.parser.pull.timestamp + TIMELINE_UPPER_MOD)}
+								/>
+							</Table.Cell>
+							<Table.Cell>
+								<Plural
+									id="core.weaving.panel-count"
+									value={item.weaves.length}
+									_1="# weave"
+									other="# weaves"
+								/>
+								&nbsp; - &nbsp;
+								{this.parser.formatDuration(item.gcdTimeDiff)}
+								&nbsp;
+								<Trans id="core.weaving.between-gcds">between GCDs</Trans>
+							</Table.Cell>
+							<Table.Cell>
+								<Rotation events={[
+									...(item.leadingGcdEvent.action !== 0 ? [item.leadingGcdEvent] : []), // don't want to show null action if individual weaves a lot in the beginning without any beginning actions
+									...item.weaves,
+									...(item.trailingGcdEvent.action !== 0 ? [item.trailingGcdEvent] : []), // don't want to show null action if individual weaves a lot close to the end without any ending actions
+								]}/>
+							</Table.Cell>
+						</Table.Row>
+					})
+				}
+			</Table.Body>
+		</Table>
 	}
 }

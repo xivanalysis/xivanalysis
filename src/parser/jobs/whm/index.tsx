@@ -21,12 +21,13 @@ export const WHITE_MAGE = new Meta({
 	</>,
 	supportedPatches: {
 		from: '6.0',
-		to: '6.4',
+		to: '6.45',
 	},
 	contributors: [
 		// {user: CONTRIBUTORS.YOU, role: ROLES.DEVELOPER},
 		{user: CONTRIBUTORS.INNI, role: ROLES.DEVELOPER},
 		{user: CONTRIBUTORS.KERRIS, role: ROLES.DEVELOPER},
+		{user: CONTRIBUTORS.FAIR2DARE, role: ROLES.DEVELOPER},
 	],
 	changelog: [
 		// {
@@ -34,6 +35,11 @@ export const WHITE_MAGE = new Meta({
 		// 	Changes: () => <>The changes you made</>,
 		// 	contributors: [CONTRIBUTORS.YOU],
 		// },
+		{
+			date: new Date('2022-07-25'),
+			Changes: () => <>Added check for using lilies instead of GCD heals when available</>,
+			contributors: [CONTRIBUTORS.FAIR2DARE],
+		},
 		{
 			date: new Date('2021-12-30'),
 			Changes: () => <>Updated Thin Air Module for charge-based usage, added some weighting on MP saved per cast.</>,

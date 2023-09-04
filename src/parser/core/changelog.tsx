@@ -10,6 +10,36 @@ export const changelog: ChangelogEntry[] = [
 	// 	contributors: [CONTRIBUTORS.YOU],
 	// },
 	{
+		date: new Date('2023-07-28'),
+		Changes: () => <>
+			Fix a bug with status application event ordering that sometimes caused extra action uses to by synthesized.
+		</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
+	{
+		date: new Date('2023-07-27'),
+		Changes: () => <>
+			Improve GCD estimation from FFLogs reports.
+		</>,
+		contributors: [CONTRIBUTORS.HINT, CONTRIBUTORS.AYA],
+	},
+	{
+		date: new Date('2023-07-11'),
+		Changes: () => <>
+			Better handling for defensives with a shared cooldown, and fix a bug with the extra use available calculations.
+		</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
+	{
+		date: new Date('2023-07-09'),
+		Changes: () => <>
+			Fixed prepull actions for defensive cooldowns module.
+			Fixed some bugs relating to weaving issues and party member deaths.
+			Updated weaving issues into a more-consistent format with other modules.
+		</>,
+		contributors: [CONTRIBUTORS.OTOCEPHALY],
+	},
+	{
 		date: new Date('2023-05-24'),
 		Changes: () => <>
 			Overhaul defensive cooldown analysis for all jobs, including role actions by default.

@@ -1,6 +1,6 @@
 import {StatusKey} from 'data/STATUSES'
 import {StatusRoot} from 'data/STATUSES/root'
-import {Attribute} from 'event'
+import {Attribute, DamageType} from 'event'
 import {ensureRecord} from 'utilities/typescript'
 
 export type ActionCombo =
@@ -18,8 +18,11 @@ export enum BonusModifier {
 
 // DRG lance mastery is a special case hidden field that
 // augments the potency of the 5th hit.
+// Similarly, BLU's Goblin Punch deals extra potency when
+// cast under Mighty Guard (one of the tank stances)
 export enum PotencySpecialCase {
 	DRG_LANCE_MASTERY,
+	BLU_MIGHTY_GOBLIN_PUNCH,
 }
 
 // When calculating the bonusPercent that the game uses to display
@@ -53,6 +56,7 @@ export interface Action {
 	statusesApplied?: Array<keyof StatusRoot>
 	charges?: number
 	mpCost?: number
+	damageType?: DamageType.MAGICAL | DamageType.PHYSICAL | DamageType.DARK
 	/** Indicate whether this action's recast is adjusted by skill speed or spell speed.  Should be set for any onGCD skill or gcd-like skill that has a reduced recast based on speed stats */
 	speedAttribute?: Attribute.SKILL_SPEED | Attribute.SPELL_SPEED
 	potencies?: Potency[]

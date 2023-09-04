@@ -19,7 +19,7 @@ export const PALADIN = new Meta({
 	</>,
 	supportedPatches: {
 		from: '6.3',
-		to: '6.3',
+		to: '6.45',
 	},
 	contributors: [
 		{user: CONTRIBUTORS.STYRFIRE, role: ROLES.MAINTAINER},

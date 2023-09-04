@@ -207,6 +207,65 @@ exports[`Event adapter individual events adapts checksummismatch 1`] = `Array []
 exports[`Event adapter individual events adapts combatantinfo 1`] = `
 Array [
   Object {
+    "action": 3540,
+    "source": "16",
+    "status": 1000727,
+    "target": "15",
+    "timestamp": 1599999999997,
+    "type": "action",
+  },
+  Object {
+    "action": 7432,
+    "source": "20",
+    "status": 1001218,
+    "target": "15",
+    "timestamp": 1599999999997,
+    "type": "action",
+  },
+  Object {
+    "action": 137,
+    "source": "20",
+    "status": 1000158,
+    "target": "15",
+    "timestamp": 1599999999997,
+    "type": "action",
+  },
+  Object {
+    "source": "15",
+    "status": 1000743,
+    "target": "15",
+    "timestamp": 1600002865189,
+    "type": "statusApply",
+  },
+  Object {
+    "source": "17",
+    "status": 1000297,
+    "target": "15",
+    "timestamp": 1600002865189,
+    "type": "statusApply",
+  },
+  Object {
+    "source": "16",
+    "status": 1000727,
+    "target": "15",
+    "timestamp": 1600002865189,
+    "type": "statusApply",
+  },
+  Object {
+    "source": "20",
+    "status": 1001218,
+    "target": "15",
+    "timestamp": 1600002865189,
+    "type": "statusApply",
+  },
+  Object {
+    "source": "20",
+    "status": 1000158,
+    "target": "15",
+    "timestamp": 1600002865189,
+    "type": "statusApply",
+  },
+  Object {
     "actor": "15",
     "attributes": Array [
       Object {
