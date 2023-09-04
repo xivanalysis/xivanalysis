@@ -594,6 +594,8 @@
   "gnb.continuation.checklist.requirement.continuation.name": "<0/>が<1/>コンボごとに使われた",
   "gnb.continuation.checklist.title": "",
   "gnb.gauge.resource.ammoLabel": "",
+  "gnb.lightningshot.statistic.info": "",
+  "gnb.lightningshot.statistic.title": "",
   "gnb.nomercy.chart.notes.no": "いいえ",
   "gnb.nomercy.chart.notes.yes": "はい",
   "gnb.nomercy.notes.header": "ブラッドソイルの使用",

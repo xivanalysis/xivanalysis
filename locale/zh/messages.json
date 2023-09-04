@@ -594,6 +594,8 @@
   "gnb.continuation.checklist.requirement.continuation.name": "每使用一次<1/>连击中的技能就要使用一次<0/>。",
   "gnb.continuation.checklist.title": "每下子弹连都要使用一次续剑",
   "gnb.gauge.resource.ammoLabel": "特殊弹",
+  "gnb.lightningshot.statistic.info": "",
+  "gnb.lightningshot.statistic.title": "",
   "gnb.nomercy.chart.notes.no": "否",
   "gnb.nomercy.chart.notes.yes": "是",
   "gnb.nomercy.notes.header": "血壤使用",

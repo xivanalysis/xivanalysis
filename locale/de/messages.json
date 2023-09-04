@@ -594,6 +594,8 @@
   "gnb.continuation.checklist.requirement.continuation.name": "<0/>-Nutzen pro <1/>-Kombo-Aktion",
   "gnb.continuation.checklist.title": "",
   "gnb.gauge.resource.ammoLabel": "Patronen",
+  "gnb.lightningshot.statistic.info": "",
+  "gnb.lightningshot.statistic.title": "",
   "gnb.nomercy.chart.notes.no": "Nein",
   "gnb.nomercy.chart.notes.yes": "Ja",
   "gnb.nomercy.notes.header": "Blutpatronen verwendet",
