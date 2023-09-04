@@ -8,6 +8,7 @@ import {filter} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
 import {Data} from 'parser/core/modules/Data'
 import {SimpleStatistic, Statistics} from 'parser/core/modules/Statistics'
+import React from 'react'
 
 export class LightningShot extends Analyser {
 	static override handle = 'lightningshot'
