@@ -33,10 +33,11 @@ import {SkipB4Evaluator} from './RotationWatchdog/SkipB4Evaluator'
 import {SkipT3Evaluator} from './RotationWatchdog/SkipT3Evaluator'
 import {UptimeSoulsEvaluator} from './RotationWatchdog/UptimeSoulsEvaluator'
 
-const DEBUG_SHOW_ALL = false && process.env.NODE_ENV !== 'production'
+const DEBUG_SHOW_ALL = true && process.env.NODE_ENV !== 'production'
 
 const MAX_POSSIBLE_FIRE4 = 6
 export const NO_UH_EXPECTED_FIRE4 = 4
+const MAX_MP = 10000
 const EXTRA_CASTS_FROM_MANAFONT = 1
 
 const EXTRA_F4_COP_THRESHOLD = 0.5 // Feelycraft
@@ -284,35 +285,32 @@ export class RotationWatchdog extends RestartWindow {
 
 	// Handle events coming from BLM's Gauge module
 	private onGaugeEvent(event: Events['blmgauge']) {
-		const nextGaugeState = this.gauge.getGaugeState(event.timestamp)
-
 		const metadata = this.metadataHistory.getCurrent()?.data
 		const window = this.history.getCurrent()?.data
 		if (!(metadata == null || window == null)) {
 			// If we're entering the fire phase of this rotation, note it and save some data
-			if (this.currentGaugeState.astralFire === 0 && nextGaugeState.astralFire > 0) {
+			if (this.currentGaugeState.astralFire === 0 && event.gaugeState.astralFire > 0) {
 				metadata.firePhaseMetadata.startTime = event.timestamp
-				metadata.firePhaseMetadata.initialMP = this.actors.current.mp.current
 
 				// Spread the current gauge state into the phase metadata for future reference (technically the final state of the gauge before it changes to Fire)
 				metadata.firePhaseMetadata.initialGaugeState = {...this.currentGaugeState}
 			}
 
 			// Tranpose -> Paradox -> F1 is a thing in non-standard scenarios, so only store the initial MP once we actually reach full AF
-			if (this.currentGaugeState.astralFire < ASTRAL_UMBRAL_MAX_STACKS && nextGaugeState.astralFire === ASTRAL_UMBRAL_MAX_STACKS) {
+			if (this.currentGaugeState.astralFire < ASTRAL_UMBRAL_MAX_STACKS && event.gaugeState.astralFire === ASTRAL_UMBRAL_MAX_STACKS) {
 				metadata.firePhaseMetadata.fullElementTime = event.timestamp
-				metadata.firePhaseMetadata.fullElementGaugeState = {...nextGaugeState}
+				metadata.firePhaseMetadata.fullElementGaugeState = {...event.gaugeState}
 				metadata.firePhaseMetadata.fullElementMP = this.actors.current.mp.current
 			}
 
 			// If we no longer have enochian, flag it for display
-			if (this.currentGaugeState.enochian && !nextGaugeState.enochian) {
+			if (this.currentGaugeState.enochian && !event.gaugeState.enochian) {
 				assignErrorCode(metadata, ROTATION_ERRORS.DROPPED_AF_UI)
 			}
 		}
 
 		// Retrieve the GaugeState from the event
-		this.currentGaugeState = {...nextGaugeState}
+		this.currentGaugeState = {...event.gaugeState}
 	}
 
 	override onWindowStart(timestamp: number) {
@@ -401,8 +399,8 @@ export class RotationWatchdog extends RestartWindow {
 			// Let the player rush the Despair if they need to before a downtime/end of fight
 			if (windowMetadata.finalOrDowntime) { return window.data.filter(event => event.action.id === this.data.actions.FIRE_IV.id).length }
 
-			// If the player comes in to the fire phase with less than 10k MP, cap the F4 count to the number of F4s they can actually do and not miss the Despair
-			adjustment = Math.min(NO_UH_EXPECTED_FIRE4, Math.floor((windowMetadata.firePhaseMetadata.fullElementMP - this.data.actions.FIRE_IV.mpCost) / (this.data.actions.FIRE_IV.mpCost * 2)))
+			// Start off with the baseline assumption they've reached full MP in Umbral Ice, since MP events from the log source aren't reliably timed
+			adjustment = NO_UH_EXPECTED_FIRE4
 
 			// Rotations with at least one heart get an extra F4 (5x F4 + F1 with 1 heart is the same MP cost as the standard 6F4 + F1 with 3)
 			// Note that two hearts does not give any extra F4s, though it'll hardly ever come up in practice
@@ -444,7 +442,7 @@ export class RotationWatchdog extends RestartWindow {
 					(buildAstralFireEvents.length > 1 && buildAstralFireEvents[0].action.id === this.data.actions.TRANSPOSE.id && buildAstralFireEvents[buildAstralFireEvents.length - 1].action.id === this.data.actions.FIRE_III.id &&
 						this.procs.checkActionWasProc(this.data.actions.FIRE_III.id, buildAstralFireEvents[buildAstralFireEvents.length - 1].timestamp))) &&
 				windowMetadata.firePhaseMetadata.circleOfPowerPct >= EXTRA_F4_COP_THRESHOLD &&
-				((adjustment + 1) * 2 + 1) * this.data.actions.FIRE_IV.mpCost < windowMetadata.firePhaseMetadata.fullElementMP
+				((adjustment + 1) * 2 + 1) * this.data.actions.FIRE_IV.mpCost < MAX_MP
 			) {
 				adjustment++
 			}
