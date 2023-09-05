@@ -16,10 +16,6 @@ export class LightningShot extends Analyser {
 	@dependency data!: Data
 	@dependency statistics!: Statistics
 
-	private shotsFired: number = 0
-
-	private windHook?: EventHook<Events['action']>
-
 	override initialise() {
 		super.initialise()
 
@@ -41,7 +37,7 @@ export class LightningShot extends Analyser {
 			value: `${this.shotsFired}`,
 			info: <Trans id="gnb.lightningshot.statistic.info">
 				While it is important to keep your GCD rolling as much as possible,
-				try to minimize your <ActionLink {...ACTIONS.LIGHTNING_SHOT}/> usage. It does less damaage and delays resource generation.
+				try to minimize your <ActionLink {...ACTIONS.LIGHTNING_SHOT}/> usage. It does less damage and delays resource generation.
 			</Trans>,
 		}))
 
