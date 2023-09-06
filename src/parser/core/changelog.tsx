@@ -10,6 +10,13 @@ export const changelog: ChangelogEntry[] = [
 	// 	contributors: [CONTRIBUTORS.YOU],
 	// },
 	{
+		date: new Date('2023-07-28'),
+		Changes: () => <>
+			Fix a bug with status application event ordering that sometimes caused extra action uses to by synthesized.
+		</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
+	{
 		date: new Date('2023-07-27'),
 		Changes: () => <>
 			Improve GCD estimation from FFLogs reports.

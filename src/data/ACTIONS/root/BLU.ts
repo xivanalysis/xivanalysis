@@ -1,5 +1,5 @@
 import {Attribute, DamageType} from 'event'
-import {Action, ensureActions} from '../type'
+import {Action, ensureActions, BonusModifier, PotencySpecialCase} from '../type'
 
 const MAGICAL = DamageType.MAGICAL
 const PHYSICAL = DamageType.PHYSICAL
@@ -15,7 +15,7 @@ export const BLU_COOLDOWN_GROUPS = {
 	THE_ROSE_OF_DESTRUCTION: 23275,
 	MATRA_MAGIC: 23285,
 	MAGIC_HAMMER: 18305,
-	BEING_MORTAL: 34581,
+	BEING_MORTAL: 34582,
 }
 
 const UMBRAL   = 1 // Water, Earth, Ice
@@ -88,6 +88,7 @@ export const BLU = ensureActions({
 		onGcd: true,
 		castTime: 2000,
 		gcdRecast: 2500,
+		statusesApplied: ['PARALYSIS'],
 		damageType: MAGICAL,
 		elementType: ASTRAL,
 		speedAttribute: Attribute.SPELL_SPEED,
@@ -106,8 +107,9 @@ export const BLU = ensureActions({
 		name: 'Final Sting',
 		icon: 'https://xivapi.com/i/003000/003275.png',
 		onGcd: true,
-		castTime: 2000, // TODO: Brush With Death
+		castTime: 2000,
 		gcdRecast: 2500,
+		statusesApplied: ['BRUSH_WITH_DEATH'],
 		damageType: PHYSICAL,
 		speedAttribute: Attribute.SPELL_SPEED,
 	},
@@ -129,6 +131,7 @@ export const BLU = ensureActions({
 		onGcd: true,
 		castTime: 2000,
 		gcdRecast: 2500,
+		statusesApplied: ['PARALYSIS'],
 		damageType: MAGICAL,
 		elementType: ASTRAL,
 		speedAttribute: Attribute.SPELL_SPEED,
@@ -170,6 +173,7 @@ export const BLU = ensureActions({
 		onGcd: true,
 		castTime: 2000,
 		gcdRecast: 2500,
+		statusesApplied: ['PETRIFICATION'],
 		speedAttribute: Attribute.SPELL_SPEED,
 	},
 	SHARPENED_KNIFE: {
@@ -189,7 +193,7 @@ export const BLU = ensureActions({
 		onGcd: true,
 		castTime: 2000,
 		gcdRecast: 2500,
-		statusesApplied: ['ICE_SPIKES'],
+		statusesApplied: ['ICE_SPIKES', 'SLOW'],
 		speedAttribute: Attribute.SPELL_SPEED,
 	},
 	BLOOD_DRAIN: {
@@ -209,6 +213,7 @@ export const BLU = ensureActions({
 		onGcd: true,
 		castTime: 2000,
 		gcdRecast: 2500,
+		statusesApplied: ['SLEEP'],
 		speedAttribute: Attribute.SPELL_SPEED,
 	},
 	BOMB_TOSS: {
@@ -218,6 +223,7 @@ export const BLU = ensureActions({
 		onGcd: true,
 		castTime: 2000,
 		gcdRecast: 2500,
+		statusesApplied: ['STUN'],
 		damageType: MAGICAL,
 		elementType: ASTRAL,
 		speedAttribute: Attribute.SPELL_SPEED,
@@ -239,7 +245,9 @@ export const BLU = ensureActions({
 		onGcd: true,
 		castTime: 2000,
 		gcdRecast: 2500,
+		statusesApplied: ['BRUSH_WITH_DEATH'],
 		damageType: MAGICAL,
+		elementType: ASTRAL,
 		speedAttribute: Attribute.SPELL_SPEED,
 	},
 	TRANSFUSION: {
@@ -249,6 +257,7 @@ export const BLU = ensureActions({
 		onGcd: true,
 		castTime: 2000,
 		gcdRecast: 2500,
+		statusesApplied: ['BRUSH_WITH_DEATH'],
 		speedAttribute: Attribute.SPELL_SPEED,
 	},
 	FAZE: {
@@ -258,6 +267,7 @@ export const BLU = ensureActions({
 		onGcd: true,
 		castTime: 2000,
 		gcdRecast: 2500,
+		statusesApplied: ['STUN'],
 		speedAttribute: Attribute.SPELL_SPEED,
 	},
 	FLYING_SARDINE: {
@@ -284,6 +294,7 @@ export const BLU = ensureActions({
 		onGcd: true,
 		castTime: 2000,
 		gcdRecast: 2500,
+		statusesApplied: ['HEAVY'],
 		damageType: PHYSICAL,
 		speedAttribute: Attribute.SPELL_SPEED,
 	},
@@ -304,7 +315,7 @@ export const BLU = ensureActions({
 		onGcd: true,
 		castTime: 2000,
 		gcdRecast: 2500,
-		statusesApplied: ['MALODOROUS', 'BAD_BREATH_POISON'],
+		statusesApplied: ['MALODOROUS', 'BAD_BREATH_POISON', 'SLOW', 'HEAVY', 'BLIND', 'PARALYSIS'],
 		speedAttribute: Attribute.SPELL_SPEED,
 	},
 	DIAMONDBACK: {
@@ -334,6 +345,7 @@ export const BLU = ensureActions({
 		onGcd: true,
 		castTime: 2000,
 		gcdRecast: 2500,
+		statusesApplied: ['STUN'],
 		speedAttribute: Attribute.SPELL_SPEED,
 	},
 	TOAD_OIL: {
@@ -353,6 +365,7 @@ export const BLU = ensureActions({
 		onGcd: true,
 		castTime: 2000,
 		gcdRecast: 2500,
+		statusesApplied: ['DEEP_FREEZE'],
 		damageType: MAGICAL,
 		elementType: UMBRAL,
 		speedAttribute: Attribute.SPELL_SPEED,
@@ -364,6 +377,7 @@ export const BLU = ensureActions({
 		onGcd: true,
 		castTime: 2000,
 		gcdRecast: 2500,
+		statusesApplied: ['PARALYSIS'],
 		damageType: MAGICAL,
 		elementType: ASTRAL,
 		speedAttribute: Attribute.SPELL_SPEED,
@@ -395,6 +409,7 @@ export const BLU = ensureActions({
 		onGcd: true,
 		castTime: 2000,
 		gcdRecast: 2500,
+		statusesApplied: ['BLIND'],
 		damageType: MAGICAL,
 		speedAttribute: Attribute.SPELL_SPEED,
 	},
@@ -405,8 +420,7 @@ export const BLU = ensureActions({
 		onGcd: true,
 		castTime: 1000,
 		gcdRecast: 2500,
-		damageType: PHYSICAL,
-		elementType: ASTRAL,
+		damageType: PHYSICAL, // Fire Angon is considered Piercing/Fire, but it only gets a boost from Physical buffs
 		speedAttribute: Attribute.SPELL_SPEED,
 	},
 	MOON_FLUTE: {
@@ -435,6 +449,7 @@ export const BLU = ensureActions({
 		onGcd: true,
 		castTime: 1000,
 		gcdRecast: 2500,
+		statusesApplied: ['PARALYSIS'],
 		damageType: MAGICAL,
 		speedAttribute: Attribute.SPELL_SPEED,
 	},
@@ -541,6 +556,7 @@ export const BLU = ensureActions({
 		onGcd: true,
 		castTime: 2000,
 		gcdRecast: 2500,
+		statusesApplied: ['DEEP_FREEZE'],
 		damageType: MAGICAL,
 		elementType: UMBRAL,
 		speedAttribute: Attribute.SPELL_SPEED,
@@ -573,6 +589,7 @@ export const BLU = ensureActions({
 		onGcd: true,
 		castTime: 2000,
 		gcdRecast: 2500,
+		statusesApplied: ['PARALYSIS'],
 		damageType: PHYSICAL,
 		speedAttribute: Attribute.SPELL_SPEED,
 	},
@@ -583,6 +600,7 @@ export const BLU = ensureActions({
 		onGcd: true,
 		castTime: 2000,
 		gcdRecast: 2500,
+		statusesApplied: ['SLEEP'],
 		speedAttribute: Attribute.SPELL_SPEED,
 	},
 	EERIE_SOUNDWAVE: {
@@ -674,6 +692,7 @@ export const BLU = ensureActions({
 		onGcd: true,
 		castTime: 2000,
 		gcdRecast: 2500,
+		statusesApplied: ['SLOW'],
 		damageType: MAGICAL,
 		speedAttribute: Attribute.SPELL_SPEED,
 	},
@@ -684,6 +703,7 @@ export const BLU = ensureActions({
 		onGcd: true,
 		castTime: 2000,
 		gcdRecast: 2500,
+		statusesApplied: ['BIND'],
 		damageType: MAGICAL,
 		speedAttribute: Attribute.SPELL_SPEED,
 	},
@@ -714,6 +734,7 @@ export const BLU = ensureActions({
 		onGcd: true,
 		castTime: 3000,
 		gcdRecast: 2500,
+		statusesApplied: ['STUN'],
 		damageType: MAGICAL,
 		speedAttribute: Attribute.SPELL_SPEED,
 	},
@@ -763,6 +784,7 @@ export const BLU = ensureActions({
 		onGcd: true,
 		castTime: 2000,
 		gcdRecast: 2500,
+		statusesApplied: ['HEAVY'],
 		damageType: MAGICAL,
 		elementType: ASTRAL,
 		speedAttribute: Attribute.SPELL_SPEED,
@@ -855,6 +877,7 @@ export const BLU = ensureActions({
 		onGcd: true,
 		castTime: 2000,
 		gcdRecast: 2500,
+		statusesApplied: ['STUN'],
 		damageType: MAGICAL,
 		speedAttribute: Attribute.SPELL_SPEED,
 	},
@@ -875,11 +898,23 @@ export const BLU = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003335.png',
 		onGcd: true,
 		gcdRecast: 2500,
+		statusesApplied: ['DEEP_FREEZE'],
 		damageType: MAGICAL,
 		elementType: UMBRAL,
 		speedAttribute: Attribute.SPELL_SPEED,
 	},
-	STOTRAM: {
+	// the attack and heal variations of Stotram share a name and icon but have different IDs.
+	STOTRAM_ATTACK: {
+		id: 23269,
+		name: 'Stotram',
+		icon: 'https://xivapi.com/i/003000/003336.png',
+		onGcd: true,
+		castTime: 2000,
+		gcdRecast: 2500,
+		damageType: MAGICAL,
+		speedAttribute: Attribute.SPELL_SPEED,
+	},
+	STOTRAM_HEAL: {
 		id: 23416,
 		name: 'Stotram',
 		icon: 'https://xivapi.com/i/003000/003336.png',
@@ -962,6 +997,7 @@ export const BLU = ensureActions({
 		onGcd: true,
 		castTime: 2000,
 		gcdRecast: 2500,
+		statusesApplied: ['BASIC_INSTINCT'],
 		speedAttribute: Attribute.SPELL_SPEED,
 	},
 	ULTRAVIBRATION: {
@@ -994,6 +1030,7 @@ export const BLU = ensureActions({
 		gcdRecast: 2500,
 		damageType: MAGICAL,
 		elementType: ASTRAL,
+		statusesApplied: ['INCENDIARY_BURNS'],
 		speedAttribute: Attribute.SPELL_SPEED,
 	},
 	DRAGON_FORCE: {
@@ -1005,6 +1042,7 @@ export const BLU = ensureActions({
 		gcdRecast: 2500,
 		cooldown: 120000,
 		cooldownGroup: BLU_COOLDOWN_GROUPS.MATRA_MAGIC,
+		statusesApplied: ['DRAGON_FORCE'],
 		speedAttribute: Attribute.SPELL_SPEED,
 	},
 	AETHERIAL_SPARK: {
@@ -1070,6 +1108,7 @@ export const BLU = ensureActions({
 		castTime: 2000,
 		gcdRecast: 2500,
 		damageType: PHYSICAL,
+		statusesApplied: ['LIGHTHEADED'],
 		speedAttribute: Attribute.SPELL_SPEED,
 	},
 	BOTH_ENDS: {
@@ -1097,7 +1136,7 @@ export const BLU = ensureActions({
 		icon: 'https://xivapi.com//i/003000/003356.png',
 		gcdRecast: 2500,
 		onGcd: true,
-		damageType: MAGICAL,
+		damageType: PHYSICAL, // kick is Physical/Blunt
 	},
 	NIGHTBLOOM: {
 		id: 23290,
@@ -1116,6 +1155,24 @@ export const BLU = ensureActions({
 		gcdRecast: 2500,
 		damageType: PHYSICAL,
 		speedAttribute: Attribute.SPELL_SPEED,
+		potencies: [{
+			value: 120,
+			bonusModifiers: [],
+			baseModifiers: [],
+		}, {
+			value: 220,
+			bonusModifiers: [BonusModifier.POSITIONAL],
+			baseModifiers: [],
+		}, {
+			// Mighty Guard increases the potency of Goblin Punch by 100
+			value: 220,
+			bonusModifiers: [],
+			baseModifiers: [PotencySpecialCase.BLU_MIGHTY_GOBLIN_PUNCH],
+		}, {
+			value: 320,
+			bonusModifiers: [BonusModifier.POSITIONAL],
+			baseModifiers: [PotencySpecialCase.BLU_MIGHTY_GOBLIN_PUNCH],
+		}],
 	},
 	RIGHT_ROUND: {
 		id: 34564,
@@ -1311,7 +1368,7 @@ export const BLU = ensureActions({
 		cooldownGroup: BLU_COOLDOWN_GROUPS.BEING_MORTAL,
 	},
 	BEING_MORTAL: {
-		id: 34581,
+		id: 34582,
 		name: 'Being Mortal',
 		icon: 'https://xivapi.com/i/003000/003377.png',
 		cooldown: 120000,
