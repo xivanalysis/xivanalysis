@@ -87,4 +87,9 @@ export const changelog = [
 		Changes: () => <>Esprit and Feather Gauges now show the actual values for logs the Dancer uploaded themselves! Overcap is still partly simulated though.</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],
 	},
+	{
+		date: new Date('2023-09-04'),
+		Changes: () => <>Fix a bug related to the Technical Finish status application changes from 6.4 that occasionally caused incorrect 'missed' Finish reports.</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
 ]
