@@ -597,6 +597,8 @@
   "gnb.continuation.checklist.requirement.continuation.name": "<0/> uses per <1/> combo action",
   "gnb.continuation.checklist.title": "Use a Continuation once per single-target ammo action",
   "gnb.gauge.resource.ammoLabel": "Ammo",
+  "gnb.lightningshot.statistic.info": "While it is important to keep your GCD rolling as much as possible, try to minimize your <0/> usage. It does less damage and delays resource generation.",
+  "gnb.lightningshot.statistic.title": "Lightning Shots",
   "gnb.nomercy.chart.notes.no": "No",
   "gnb.nomercy.chart.notes.yes": "Yes",
   "gnb.nomercy.notes.header": "Bloodfest Used",

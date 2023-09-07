@@ -597,6 +597,8 @@
   "gnb.continuation.checklist.requirement.continuation.name": "<1/> 콤보 기술마다 <0/> 사용",
   "gnb.continuation.checklist.title": "단일 대상 소일 기술을 사용할 때마다 연속기 사용하기",
   "gnb.gauge.resource.ammoLabel": "특수탄",
+  "gnb.lightningshot.statistic.info": "",
+  "gnb.lightningshot.statistic.title": "",
   "gnb.nomercy.chart.notes.no": "비적용",
   "gnb.nomercy.chart.notes.yes": "적용",
   "gnb.nomercy.notes.header": "피의 소일 사용",
