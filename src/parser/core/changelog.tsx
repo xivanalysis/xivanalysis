@@ -10,6 +10,13 @@ export const changelog: ChangelogEntry[] = [
 	// 	contributors: [CONTRIBUTORS.YOU],
 	// },
 	{
+		date: new Date('2023-08-01'),
+		Changes: () => <>
+			Fix a bug that could cause deaths and raises to throw off some gauge's total generation calculations.
+		</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
+	{
 		date: new Date('2023-07-28'),
 		Changes: () => <>
 			Fix a bug with status application event ordering that sometimes caused extra action uses to be synthesized.
