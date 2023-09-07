@@ -57,7 +57,7 @@ export interface CounterChartOptions {
 
 export class CounterGauge extends AbstractGauge {
 	private initialValue: number
-	private _value: number
+	private currentValue: number
 	private minimum: number
 	private maximum: number
 	overCap: number = 0
@@ -70,15 +70,15 @@ export class CounterGauge extends AbstractGauge {
 	public history: CounterHistory[] = []
 
 	get value(): number {
-		return this._value
+		return this.currentValue
 	}
 
 	get capped(): boolean {
-		return this._value >= this.maximum
+		return this.currentValue >= this.maximum
 	}
 
 	get empty(): boolean {
-		return this._value <= this.minimum
+		return this.currentValue <= this.minimum
 	}
 
 	get totalSpent(): number {
@@ -94,7 +94,7 @@ export class CounterGauge extends AbstractGauge {
 
 		this.minimum = opts.minimum ?? 0
 		this.initialValue = opts.initialValue ?? this.minimum
-		this._value = this.initialValue
+		this.currentValue = this.initialValue
 		this.maximum = opts.maximum ?? 100
 		this.correctHistory = opts.correctHistory ?? false
 		this.deterministic = opts.deterministic ?? true
@@ -135,7 +135,7 @@ export class CounterGauge extends AbstractGauge {
 
 	/** Modify the current value by the provided amount. Equivalent to `set(currentValue + amount)` */
 	modify(amount: number) {
-		this.set(this._value + amount)
+		this.set(this.currentValue + amount)
 	}
 
 	/** Increase the current value by the provided amount. */
@@ -148,7 +148,7 @@ export class CounterGauge extends AbstractGauge {
 	set(value: number, reason?: GaugeEventReason) {
 		const delta = value - this.value
 
-		const _reason = reason ?? delta > 0 ? 'generate' : 'spend'
+		const defaultReason = delta > 0 ? 'generate' : 'spend'
 
 		const newValue = Math.min(Math.max(value, this.minimum), this.maximum)
 
@@ -156,11 +156,11 @@ export class CounterGauge extends AbstractGauge {
 		if (diff > 0) {
 			this.overCap += diff
 		} else if (diff < 0 && this.correctHistory) {
-			this.correctGaugeHistory(delta, this._value)
+			this.correctGaugeHistory(delta, this.currentValue)
 		}
 
-		this._value = newValue
-		this.pushHistory(_reason, delta)
+		this.currentValue = newValue
+		this.pushHistory(reason ?? defaultReason, delta)
 	}
 
 	private correctGaugeHistory(spenderCost: number, currentGauge: number) {
@@ -204,7 +204,7 @@ export class CounterGauge extends AbstractGauge {
 		this.maximum = maximum
 
 		// Ensure the value remains within bounds by re-setting it
-		this.set(this._value, 'changeBounds')
+		this.set(this.currentValue, 'changeBounds')
 	}
 
 	private pushHistory(reason: GaugeEventReason, delta: number) {
@@ -224,7 +224,7 @@ export class CounterGauge extends AbstractGauge {
 
 		this.history.push({
 			timestamp,
-			value: this._value,
+			value: this.currentValue,
 			minimum: this.minimum,
 			maximum: this.maximum,
 			delta,
