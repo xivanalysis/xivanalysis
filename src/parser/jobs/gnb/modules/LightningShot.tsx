@@ -1,9 +1,8 @@
 import {Trans} from '@lingui/react'
 import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
-import {Event, Events} from 'event'
+import {Event} from 'event'
 import {Analyser} from 'parser/core/Analyser'
-import {EventHook} from 'parser/core/Dispatcher'
 import {filter} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
 import {Data} from 'parser/core/modules/Data'
@@ -15,6 +14,8 @@ export class LightningShot extends Analyser {
 
 	@dependency data!: Data
 	@dependency statistics!: Statistics
+
+	private shotsFired: number = 0
 
 	override initialise() {
 		super.initialise()
