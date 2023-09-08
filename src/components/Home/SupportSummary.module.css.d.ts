@@ -7,9 +7,9 @@ declare namespace SupportSummaryModuleCssNamespace {
     header: string;
     job: string;
     jobs: string;
+    lg: string;
     md: string;
     outdated: string;
-    sm: string;
     summary: string;
     supportGrid: string;
     supported: string;

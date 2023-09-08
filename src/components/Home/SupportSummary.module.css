@@ -1,4 +1,4 @@
-@value sm, md, warningBackground, warningText, errorBackground, errorText, themeBackground, themeText from "theme.module.css";
+@value md, lg, warningBackground, warningText, errorBackground, errorText, themeBackground, themeText from "theme.module.css";
 
 .unknown {
 	background-color: themeText;
@@ -60,13 +60,22 @@
 	overflow: hidden;
 }
 
-@media sm {
+.job > *:first-child  {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+@media md {
 	.summary {
 		font-size: unset;
 	}
 }
 
-@media md {
+@media lg {
 	.summary {
 		display: block;
 	}

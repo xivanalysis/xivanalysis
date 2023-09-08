@@ -18,7 +18,9 @@ interface RoleData {
 class SupportSummary extends Component {
 	private roleJobs: RoleData[] = []
 	override render() {
-		const maxPatch = [...Object.entries(PATCHES)].map(patch => patch[0]).pop() ?? FALLBACK_KEY
+		const maxPatch = Object.entries(PATCHES)
+			.map(patch => ({name: patch[0], date: patch[1].date[GameEdition.GLOBAL]}))
+			.sort((a, b) => b.date - a.date)[0].name
 		const coreMeta = AVAILABLE_MODULES.CORE
 		const coreTo = coreMeta.supportedPatches?.to ?? FALLBACK_KEY
 
