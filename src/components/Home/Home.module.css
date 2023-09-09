@@ -43,9 +43,14 @@
 	color: themeText;
 }
 
+.support {
+	margin-top: 20px;
+}
+
 .about {
 	cursor: pointer;
 	border-bottom: 1px dashed themeText;
+	margin-bottom: 50px;
 }
 
 .options {
@@ -75,6 +80,10 @@
 		position: absolute;
 		top: 50%;
 		transform: translateY(-50%);
+	}
+
+	.support {
+		margin-top: 50px;
 	}
 
 	.options {

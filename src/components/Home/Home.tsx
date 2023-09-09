@@ -51,7 +51,9 @@ class Home extends Component {
 					</Modal.Content>
 				</Modal>
 
-				<SupportSummary />
+				<div className={styles.support} >
+					<SupportSummary />
+				</div>
 			</div>
 
 			<div className={styles.options}>
