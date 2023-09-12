@@ -24,9 +24,6 @@ export class ArcaneCircle extends RaidBuffWindow {
 
 	override buffStatus = this.data.statuses.ARCANE_CIRCLE
 
-	// RPR should not evaluate Arcance Circle overwrites since it's also a gauge generator
-	override evaluateOverwrites = false
-
 	override initialise() {
 		super.initialise()
 

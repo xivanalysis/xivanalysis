@@ -40,7 +40,7 @@ export const changelog: ChangelogEntry[] = [
 	{
 		date: new Date('2023-07-13'),
 		Changes: () => <>
-			Raid buffs tracking includes multi-job overwrite information by default. Reaper's Arcane Circle analysis disables this since it enables gauge generation via access to Plentiful Harvest.
+			Raid buff tracking now includes multi-job overwrite information by default.
 		</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],
 	},
