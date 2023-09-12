@@ -83,6 +83,11 @@ export const changelog = [
 		contributors: [CONTRIBUTORS.AKAIRYU],
 	},
 	{
+		date: new Date('2023-06-29'),
+		Changes: () => <>Revamp Technical Finish analysis to include GCD count information, and better clarify when multiple dancers interfere with each others' buffs.</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
+	{
 		date: new Date('2023-09-04'),
 		Changes: () => <>Fix a bug related to the Technical Finish status application changes from 6.4 that occasionally caused incorrect 'missed' Finish reports.</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],

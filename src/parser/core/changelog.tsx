@@ -38,6 +38,13 @@ export const changelog: ChangelogEntry[] = [
 		contributors: [CONTRIBUTORS.AKAIRYU],
 	},
 	{
+		date: new Date('2023-07-13'),
+		Changes: () => <>
+			Raid buff tracking now includes multi-job overwrite information by default.
+		</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
+	{
 		date: new Date('2023-07-11'),
 		Changes: () => <>
 			Better handling for defensives with a shared cooldown, and fix a bug with the extra use available calculations.

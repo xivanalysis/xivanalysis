@@ -22,7 +22,7 @@ export type HistoryEntryPredicate = (e: HistoryEntry<EvaluatedAction[]>) => bool
 export abstract class ActionWindow extends Analyser {
 
 	@dependency protected data!: Data
-	@dependency private suggestions!: Suggestions
+	@dependency protected suggestions!: Suggestions
 	@dependency private timeline!: Timeline
 
 	/**
@@ -152,7 +152,7 @@ export abstract class ActionWindow extends Analyser {
 		this.addEventHook('complete', this.onComplete)
 	}
 
-	private onComplete() {
+	protected onComplete() {
 		this.onWindowEnd(this.parser.pull.timestamp + this.parser.pull.duration)
 
 		const actionHistory = this.mapHistoryActions()
@@ -215,7 +215,7 @@ export abstract class ActionWindow extends Analyser {
 			/></>
 	}
 
-	private mapHistoryActions(): Array<HistoryEntry<EvaluatedAction[]>> {
+	protected mapHistoryActions(): Array<HistoryEntry<EvaluatedAction[]>> {
 		return this.history.entries
 			.map(entry => ({
 				start: entry.start,
