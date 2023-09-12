@@ -5,6 +5,7 @@ import {AoE} from './AoE'
 import {Combos} from './Combos'
 import {AbilityDowntime} from './Cooldowns'
 import {Defensives} from './Defensives'
+import {LightningShot} from './LightningShot'
 import {NoMercy} from './NoMercy'
 import {Tincture} from './Tincture'
 
@@ -16,6 +17,7 @@ export default [
 	AoE,
 	Combos,
 	Defensives,
+	LightningShot,
 	NoMercy,
 	Tincture,
 ]

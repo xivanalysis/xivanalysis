@@ -216,7 +216,7 @@ export abstract class Procs extends Analyser {
 		return this.getRemovalCountForStatus(status) - this.getUsageCountForStatus(status)
 	}
 
-	private currentWindows = new Map<ProcGroup, ProcBuffWindow>()
+	protected currentWindows = new Map<ProcGroup, ProcBuffWindow>()
 	private history = new Map<ProcGroup, ProcBuffWindow[]>()
 	/**
 	 * Gets the array of buff windows for a specified status

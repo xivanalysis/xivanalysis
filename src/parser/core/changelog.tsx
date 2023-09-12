@@ -10,6 +10,20 @@ export const changelog: ChangelogEntry[] = [
 	// 	contributors: [CONTRIBUTORS.YOU],
 	// },
 	{
+		date: new Date('2023-08-01'),
+		Changes: () => <>
+			Fix a bug that could cause deaths and raises to throw off some gauge's total generation calculations.
+		</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
+	{
+		date: new Date('2023-07-28'),
+		Changes: () => <>
+			Fix a bug with status application event ordering that sometimes caused extra action uses to be synthesized.
+		</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
+	{
 		date: new Date('2023-07-27'),
 		Changes: () => <>
 			Improve GCD estimation from FFLogs reports.
@@ -17,9 +31,16 @@ export const changelog: ChangelogEntry[] = [
 		contributors: [CONTRIBUTORS.HINT, CONTRIBUTORS.AYA],
 	},
 	{
+		date: new Date('2023-07-21'),
+		Changes: () => <>
+			Fixed a bug that was breaking raid buff window detection for players in a party with a Summoner that did not use <DataLink action="RADIANT_AEGIS" showIcon={false} />.
+		</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
+	{
 		date: new Date('2023-07-13'),
 		Changes: () => <>
-			Raid buffs tracking includes multi-job overwrite information by default. Reaper's Arcane Circle analysis disables this since it enables gauge generation via access to Plentiful Harvest.
+			Raid buff tracking now includes multi-job overwrite information by default.
 		</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],
 	},

@@ -3,6 +3,31 @@ import React from 'react'
 
 export const changelog = [
 	{
+		date: new Date('2023-08-11'),
+		Changes: () => <>Swiftcasting Moon Flute will lose you a damaging GCD under burst</>,
+		contributors: [CONTRIBUTORS.HUGMEIR],
+	},
+	{
+		date: new Date('2023-08-10'),
+		Changes: () => <>Report missed Goblin Punch positionals</>,
+		contributors: [CONTRIBUTORS.HUGMEIR],
+	},
+	{
+		date: new Date('2023-08-07'),
+		Changes: () => <>BLU's odd-minute bursts now enforce the usual Surpanakha rules: either all 4 stacks, or zero stacks.</>,
+		contributors: [CONTRIBUTORS.HUGMEIR],
+	},
+	{
+		date: new Date('2023-07-24'),
+		Changes: () => <>
+			<ul>
+				<li>BLU's Moon Flute report has been updated for the 6.45 spells. </li>
+				<li>BLU's Moon Flute report now handles the Breath of Magic odd-minute reapply burst. </li>
+			</ul>
+		</>,
+		contributors: [CONTRIBUTORS.HUGMEIR],
+	},
+	{
 		date: new Date('2023-07-24'),
 		Changes: () => <>
 			<ul>
@@ -10,6 +35,11 @@ export const changelog = [
 				<li>BLU's cooldowns now track Being Mortal, Sea Shanty, and Winged Reprobation.</li>
 			</ul>
 		</>,
+		contributors: [CONTRIBUTORS.HUGMEIR],
+	},
+	{
+		date: new Date('2023-07-22'),
+		Changes: () => <>BLU DoT tracking now handles Breath of Magic & Mortal Flame, and gives suggestions if they are cast unbuffed</>,
 		contributors: [CONTRIBUTORS.HUGMEIR],
 	},
 	{

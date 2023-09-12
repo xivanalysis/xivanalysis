@@ -1,5 +1,5 @@
 import {t} from '@lingui/macro'
-import {Plural, Trans} from '@lingui/react'
+import {Trans} from '@lingui/react'
 import {ActionLink, DataLink, StatusLink} from 'components/ui/DbLink'
 import {BlueAction} from 'data/ACTIONS/root/BLU'
 import {Status} from 'data/STATUSES'
@@ -11,7 +11,7 @@ import {dependency} from 'parser/core/Injectable'
 import {History} from 'parser/core/modules/ActionWindow/History'
 import {Actor, Actors} from 'parser/core/modules/Actors'
 import {Data} from 'parser/core/modules/Data'
-import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
+import Suggestions, {SEVERITY, Suggestion} from 'parser/core/modules/Suggestions'
 import {Timeline} from 'parser/core/modules/Timeline'
 import React, {Fragment} from 'react'
 import {Team} from 'report'
@@ -73,6 +73,8 @@ const ASTRAL = 2
 const allowedBuffOverwriteMs = 2000 // Probably too high?
 const dupedEventThresholdMs = 100
 const fallbackBuffDuration = 15000
+
+const BUFF_OVERWRITE_THRESHOLD_MS = 3000 // 3 seconds
 
 export class BLURaidBuffs extends Analyser {
 	static override handle = 'buffwindows'
@@ -318,22 +320,28 @@ export class BLURaidBuffs extends Analyser {
 		]
 		reportOverwrite.forEach(buff => {
 			const history = this.buffHistory[buff.id]
-			const ourOverwritten = history.entries
+			const ourOverwrittenMs = history.entries
 				.filter(b => b.data.overwritten && b.data.ours)
-				.length
+				.reduce((acc, overwritten) => {
+					const buffStart = overwritten.start
+					const buffEnd   = overwritten.end ?? overwritten.start
+					const overwrittenMs = buffEnd - buffStart
+					return acc + overwrittenMs
+				}, 0)
 
-			// TODO best to show seconds overwritten rather than just the count tbh
-			this.suggestions.add(new TieredSuggestion({
-				icon: buff.icon,
-				content: <Trans id="blu.buffs.overwritten.content" >
-					Your <StatusLink {...buff} /> was overwritten by someone else before it ran out. This might be reasonable depending on the fight, but worth examining and figuring out if your team needs to coordinate buffs.
-				</Trans>,
-				tiers: {1: SEVERITY.MEDIUM},
-				value: ourOverwritten,
-				why: <Trans id="blu.buffs.overwritten.why" >
-					<Plural value={ourOverwritten} one="# application was " other="# applications were" /> overwritten by someone else
-				</Trans>,
-			}))
+			if (ourOverwrittenMs > BUFF_OVERWRITE_THRESHOLD_MS) {
+				const ourOverwrittenSecs = this.parser.formatDuration(ourOverwrittenMs)
+				this.suggestions.add(new Suggestion({
+					icon: buff.icon,
+					content: <Trans id="blu.buffs.overwritten.content" >
+						Your <StatusLink {...buff} /> was overwritten by someone else before it ran out. This might be reasonable depending on the fight, but worth examining and figuring out if your team needs to coordinate buffs.
+					</Trans>,
+					severity: SEVERITY.MEDIUM,
+					why: <Trans id="blu.buffs.overwritten.why" >
+						{ourOverwrittenSecs} seconds were overwritten by someone else
+					</Trans>,
+				}))
+			}
 		})
 	}
 

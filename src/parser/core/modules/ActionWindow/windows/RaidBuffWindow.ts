@@ -21,7 +21,7 @@ export abstract class RaidBuffWindow extends BuffWindow {
 	protected raidBuffApplications = new Array<Events['statusApply']>()
 
 	// Implementing jobs may choose to disable the multiple-players-of-same-job overwrite evaluation
-	// if there is good reason to do so, such as for RPR's Arcane Circle
+	// if there is good reason to do so
 	protected evaluateOverwrites = true
 
 	/**
