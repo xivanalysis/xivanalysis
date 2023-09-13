@@ -28,6 +28,11 @@ export const SUMMONER = new Meta({
 
 	changelog: [
 		{
+			date: new Date('2023-09-13'),
+			Changes: () => <>Update Searing Light tracking for better consistency with other jobs.</>,
+			contributors: [CONTRIBUTORS.AKAIRYU],
+		},
+		{
 			date: new Date('2023-01-14'),
 			Changes: () => <>Removed outdated Swiftcast message.</>,
 			contributors: [CONTRIBUTORS.KELOS],
