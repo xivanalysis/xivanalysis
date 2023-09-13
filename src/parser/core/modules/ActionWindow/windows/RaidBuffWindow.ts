@@ -29,6 +29,8 @@ export abstract class RaidBuffWindow extends BuffWindow {
 	 */
 	protected expectedCount = 0
 
+	private playerOwnedIds!: string[]
+
 	override initialise() {
 		super.initialise()
 
@@ -36,7 +38,7 @@ export abstract class RaidBuffWindow extends BuffWindow {
 			.filter(actor => actor.playerControlled)
 			.map(actor => actor.id)
 		this.expectedCount = Math.min(partyMembers.length, FULL_PARTY_SIZE) // 24-mans count the other alliance members as 'party members' but you can't buff them...
-		const playerOwnedIds = this.parser.pull.actors
+		this.playerOwnedIds = this.parser.pull.actors
 			.filter(actor => (actor.owner === this.parser.actor) || actor === this.parser.actor)
 			.map(actor => actor.id)
 		const statusFilter = filter<Event>()
@@ -52,7 +54,7 @@ export abstract class RaidBuffWindow extends BuffWindow {
 		// Duplicate jobs can override buffs
 		this.addEventHook(
 			statusFilter
-				.source(noneOf(playerOwnedIds))
+				.source(noneOf(this.playerOwnedIds))
 				.target(this.parser.actor.id),
 			this.maybeReOpenPreviousWindow
 		)
@@ -66,7 +68,7 @@ export abstract class RaidBuffWindow extends BuffWindow {
 			this.addEvaluator(new RaidBuffOverwriteEvaluator({
 				raidBuffApplications: this.raidBuffApplications,
 				buffStatus: this.buffStatus,
-				playerId: this.parser.actor.id,
+				playerOwnedIds: this.playerOwnedIds,
 			}))
 		}
 	}
@@ -81,7 +83,7 @@ export abstract class RaidBuffWindow extends BuffWindow {
 		const affected = this.raidBuffApplications.filter(event => {
 			return (buffWindow.start <= event.timestamp &&
 				event.timestamp <= windowEnd &&
-				event.source === this.parser.actor.id)
+				this.playerOwnedIds.includes(event.source))
 		})
 
 		return affected.length

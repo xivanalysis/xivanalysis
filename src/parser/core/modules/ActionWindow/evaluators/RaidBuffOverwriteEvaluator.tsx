@@ -10,7 +10,7 @@ import {ensureArray} from 'utilities'
 export interface RaidBuffOverwriteEvaluatorOpts {
 	raidBuffApplications: Array<Events['statusApply']>
 	buffStatus: Status | Status[]
-	playerId: string
+	playerOwnedIds: string[]
 }
 
 const MULTI_JOB_ERROR = {
@@ -22,7 +22,7 @@ const MULTI_JOB_ERROR = {
 export class RaidBuffOverwriteEvaluator extends NotesEvaluator {
 	private raidBuffApplications: Array<Events['statusApply']>
 	private buffStatus: Status | Status[]
-	private playerId: string
+	private playerOwnedIds: string[]
 
 	header = {
 		header: <Trans id="core.raidbuffwindow.table.header.interference">Window Interference</Trans>,
@@ -33,7 +33,7 @@ export class RaidBuffOverwriteEvaluator extends NotesEvaluator {
 		super()
 		this.raidBuffApplications = opts.raidBuffApplications
 		this.buffStatus = opts.buffStatus
-		this.playerId = opts.playerId
+		this.playerOwnedIds = opts.playerOwnedIds
 	}
 
 	override output(windows: Array<HistoryEntry<EvaluatedAction[]>>): EvaluationOutput | undefined {
@@ -67,7 +67,7 @@ export class RaidBuffOverwriteEvaluator extends NotesEvaluator {
 		// can directly control that
 		const otherPlayerLookbackApplications = this.raidBuffApplications.filter(ba => {
 			return (
-				ba.source !== this.playerId &&
+				!this.playerOwnedIds.includes(ba.source) &&
 				lookbackStart <= ba.timestamp &&
 				ba.timestamp <= buffWindow.start
 			)
@@ -81,7 +81,7 @@ export class RaidBuffOverwriteEvaluator extends NotesEvaluator {
 		// next, we check if someone else overwrote you
 		const otherPlayerApplications = this.raidBuffApplications.filter(ba => {
 			return (
-				ba.source !== this.playerId &&
+				!this.playerOwnedIds.includes(ba.source) &&
 				buffWindow.start <= ba.timestamp &&
 				ba.timestamp <= buffWindow.start + actualWindowDuration
 			)
