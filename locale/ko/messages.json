@@ -469,7 +469,7 @@
   "dnc.technicalities.suggestions.late-standards.why": "",
   "dnc.technicalities.suggestions.missedgcd.content": "",
   "dnc.technicalities.suggestions.unpooled.content": "<0/> 구간에 진입하기 전 환상부채를 미리 모으면 버프 중첩 중 <1/> 사용 횟수를 늘릴 수 있습니다. 구간 진입 전 환생부채 스택 3개가 준비되어야 합니다.",
-  "dnc.technicalities.suggestions.unpooled.why": "구간 {unpooledWindows, plural, other {#개}}에서 <0/> 기술을 사용할 기회를 잃었습니다.",
+  "dnc.technicalities.suggestions.unpooled.why": "",
   "dnc.technicalities.title": "기교 무도 구간",
   "dnc.technicalities.unpooled.context.opener": "",
   "drg.about.description": "<0>이 분석기는 용기사에 대한 편견을 이겨내고, 바닥에 눕지 않게끔 하며, 피해량 영수증에 최대한 큰 숫자가 찍혀 나오는 것을 목표로 합니다. 용기사의 딜 사이클은 상당히 엄격하기에, 본 제안은 주로 붉은 용혈 구간과 버프 정렬 관련 문제를 골라냄과 함께 딜 사이클을 어떻게 유지할 수 있을지에 초점이 맞추어져 있습니다.</0>",

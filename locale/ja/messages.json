@@ -469,7 +469,7 @@
   "dnc.technicalities.suggestions.late-standards.why": "",
   "dnc.technicalities.suggestions.missedgcd.content": "",
   "dnc.technicalities.suggestions.unpooled.content": "<0/>の効果時間に入る前に幻扇を溜めておくことで、<1/>を高いダメージボーナスが乗った状態で使用することができ、より高い効果が期待できます。効果時間外に最低3つの幻扇を溜められるようにしましょう。",
-  "dnc.technicalities.suggestions.unpooled.why": "{unpooledWindows, plural, one {# 回} other {# 回}}の効果時間で<0/>を十分に溜められていませんでした。",
+  "dnc.technicalities.suggestions.unpooled.why": "",
   "dnc.technicalities.title": "テクニカルステップ",
   "dnc.technicalities.unpooled.context.opener": "",
   "drg.about.description": "<0>このアナライザーは、あなたを先入観から解き放ち、ジューシーな色を出す手助けをになることを目指しています。竜騎士のスキル回しはきっちり決まっているため、提案は主にスキル回しをスムーズに保つこと、紅の竜血の効果時間とバフ合わせに関する問題を解決することに焦点を当てます。</0>",

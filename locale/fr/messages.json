@@ -469,7 +469,7 @@
   "dnc.technicalities.suggestions.late-standards.why": "",
   "dnc.technicalities.suggestions.missedgcd.content": "",
   "dnc.technicalities.suggestions.unpooled.content": "Regrouper vos Plumes oniriques avant d'entrer dans une fenêtre <0/> vous permet d'utiliser plus de <1/> avec les bonus multiplicatifs actifs, augmentant leur efficacité. Essayez de regrouper et de garder au moins trois Plumes oniriques entre les fenêtres.",
-  "dnc.technicalities.suggestions.unpooled.why": "{unpooledWindows, plural,one {#fenêtre}other {#fenêtres}} ou il manquait des potentiels <0/>s.",
+  "dnc.technicalities.suggestions.unpooled.why": "",
   "dnc.technicalities.title": "Fenêtres techniques",
   "dnc.technicalities.unpooled.context.opener": "",
   "drg.about.description": "<0> Cet analyseur a pour but de vous aider à vaincre les stéréotypes, à ne pas vous retrouver à tanker le sol et à produire des chiffres conséquent. Comme la rotation du chavalier dragon est assez stricte, les suggestions que vous verrez se concentreront principalement sur la fluidité de cette rotation, ainsi que sur les problèmes liés aux fenêtres de la Vie du Dragon et à l'alignement des buffs. </0>",
