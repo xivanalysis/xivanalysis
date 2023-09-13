@@ -4,18 +4,18 @@ import {EvaluatedAction, WindowEvaluator} from 'parser/core/modules/ActionWindow
 import {History, HistoryEntry} from 'parser/core/modules/ActionWindow/History'
 import {TieredSuggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
-import {ROTATION_ERRORS, DEFAULT_SEVERITY_TIERS, RotationMetadata} from '../RotationWatchdog'
+import {ROTATION_ERRORS, DEFAULT_SEVERITY_TIERS, CycleMetadata} from '../RotationWatchdog'
 import {assignErrorCode, getMetadataForWindow} from './EvaluatorUtilities'
 
 export interface ExtraF1EvaluatorOpts {
 	suggestionIcon: string
-	metadataHistory: History<RotationMetadata>
+	metadataHistory: History<CycleMetadata>
 	limitedFireSpellIds: number[]
 }
 
 export class ExtraF1Evaluator implements WindowEvaluator {
 	private suggestionIcon: string
-	private metadataHistory: History<RotationMetadata>
+	private metadataHistory: History<CycleMetadata>
 	private limitedFireSpellIds: number[]
 
 	constructor(opts: ExtraF1EvaluatorOpts) {

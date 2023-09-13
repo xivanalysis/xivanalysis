@@ -2,15 +2,15 @@ import {EvaluatedAction} from 'parser/core/modules/ActionWindow'
 import {RulePassedEvaluator} from 'parser/core/modules/ActionWindow/evaluators/RulePassedEvaluator'
 import {History, HistoryEntry} from 'parser/core/modules/ActionWindow/History'
 import {ASTRAL_UMBRAL_MAX_STACKS, UMBRAL_HEARTS_MAX_STACKS} from '../Gauge'
-import {ROTATION_ERRORS, RotationMetadata} from '../RotationWatchdog'
+import {ROTATION_ERRORS, CycleMetadata} from '../RotationWatchdog'
 import {assignErrorCode, getMetadataForWindow} from './EvaluatorUtilities'
 
 export class MissedIceParadoxEvaluator extends RulePassedEvaluator {
-	private metadataHistory: History<RotationMetadata>
+	private metadataHistory: History<CycleMetadata>
 
 	override header = undefined
 
-	constructor(metadataHistory: History<RotationMetadata>) {
+	constructor(metadataHistory: History<CycleMetadata>) {
 		super()
 
 		this.metadataHistory = metadataHistory

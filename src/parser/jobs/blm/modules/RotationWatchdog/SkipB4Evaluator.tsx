@@ -6,19 +6,19 @@ import {RulePassedEvaluator} from 'parser/core/modules/ActionWindow/evaluators/R
 import {History, HistoryEntry} from 'parser/core/modules/ActionWindow/History'
 import {TieredSuggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
-import {ROTATION_ERRORS, ENHANCED_SEVERITY_TIERS, RotationMetadata, NO_UH_EXPECTED_FIRE4} from '../RotationWatchdog'
+import {ROTATION_ERRORS, ENHANCED_SEVERITY_TIERS, CycleMetadata, NO_UH_EXPECTED_FIRE4} from '../RotationWatchdog'
 import {assignErrorCode, getMetadataForWindow} from './EvaluatorUtilities'
 
 export interface SkipB4EvaluatorOpts {
 	blizzard4Id: number
 	fire4action: Action
-	metadataHistory: History<RotationMetadata>
+	metadataHistory: History<CycleMetadata>
 }
 
 export class SkipB4Evaluator extends RulePassedEvaluator {
 	private blizzard4Id: number
 	private fire4action: Action
-	private metadataHistory: History<RotationMetadata>
+	private metadataHistory: History<CycleMetadata>
 
 	override header = undefined
 

@@ -2,13 +2,13 @@ import {Trans} from '@lingui/macro'
 import {EvaluatedAction, NotesEvaluator} from 'parser/core/modules/ActionWindow'
 import {History, HistoryEntry} from 'parser/core/modules/ActionWindow/History'
 import React from 'react'
-import {RotationMetadata} from '../RotationWatchdog'
+import {CycleMetadata} from '../RotationWatchdog'
 import {getMetadataForWindow} from './EvaluatorUtilities'
 
 export class RotationErrorNotesEvaluator extends NotesEvaluator {
-	private metadataHistory: History<RotationMetadata>
+	private metadataHistory: History<CycleMetadata>
 
-	constructor (metadataHistory: History<RotationMetadata>) {
+	constructor (metadataHistory: History<CycleMetadata>) {
 		super()
 		this.metadataHistory = metadataHistory
 	}

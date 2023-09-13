@@ -129,7 +129,7 @@
   "blm.rotation-watchdog.error-messages.no-fire-spells": "Rotation included no Fire spells",
   "blm.rotation-watchdog.error-messages.should-skip-b4": "Should skip <0/>",
   "blm.rotation-watchdog.error-messages.should-skip-t3": "Should skip hardcast <0/>",
-  "blm.rotation-watchdog.rotation-table.disclaimer": "This module assumes you are following the standard BLM playstyle.<0/>If you are following a non-standard playstyle, this report and many of the suggestions may not be applicable.",
+  "blm.rotation-watchdog.rotation-table.disclaimer": "This module assumes you are following the standard BLM playstyle.<0/>Suggestions will focus on improving standard play, but non-standard lines shouldn't be treated as an error by this report.",
   "blm.rotation-watchdog.rotation-table.header.reason": "Why Outlier",
   "blm.rotation-watchdog.rotation-table.message": "The core of BLM consists of six casts of <0/>, two casts of <1/> and one cast <2/> per rotation.<3/>With <4/>, an extra cast each of <5/> and <6/> are expected.<7/>Avoid missing <8/> casts where possible.",
   "blm.rotation-watchdog.suggestions.end-with-despair.content": "Once you can no longer cast another spell in Astral Fire and remain above 800 MP, you should use your remaining MP by casting <0/>.",

@@ -6,19 +6,19 @@ import {RulePassedEvaluator} from 'parser/core/modules/ActionWindow/evaluators/R
 import {History, HistoryEntry} from 'parser/core/modules/ActionWindow/History'
 import {TieredSuggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
-import {ROTATION_ERRORS, ENHANCED_SEVERITY_TIERS, RotationMetadata} from '../RotationWatchdog'
+import {ROTATION_ERRORS, ENHANCED_SEVERITY_TIERS, CycleMetadata} from '../RotationWatchdog'
 import {assignErrorCode} from './EvaluatorUtilities'
 
 export interface ManafontTimingEvaluatorOpts {
 	manafontAction: Action
 	despairId: number
-	metadataHistory: History<RotationMetadata>
+	metadataHistory: History<CycleMetadata>
 }
 
 export class ManafontTimingEvaluator extends RulePassedEvaluator {
 	private manafontAction: Action
 	private despairId: number
-	private metadataHistory: History<RotationMetadata>
+	private metadataHistory: History<CycleMetadata>
 
 	override header = undefined
 

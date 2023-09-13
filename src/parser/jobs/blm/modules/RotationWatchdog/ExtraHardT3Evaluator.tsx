@@ -6,18 +6,18 @@ import {Data} from 'parser/core/modules/Data'
 import {TieredSuggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
 import Procs from '../Procs'
-import {ROTATION_ERRORS, DEFAULT_SEVERITY_TIERS, RotationMetadata} from '../RotationWatchdog'
+import {ROTATION_ERRORS, DEFAULT_SEVERITY_TIERS, CycleMetadata} from '../RotationWatchdog'
 import {assignErrorCode, getMetadataForWindow} from './EvaluatorUtilities'
 
 export interface ExtraHardT3EvaluatorOpts {
 	data: Data,
-	metadataHistory: History<RotationMetadata>
+	metadataHistory: History<CycleMetadata>
 	procs: Procs
 }
 
 export class ExtraHardT3Evaluator implements WindowEvaluator {
 	private data: Data
-	private metadataHistory: History<RotationMetadata>
+	private metadataHistory: History<CycleMetadata>
 	private procs: Procs
 
 	constructor(opts: ExtraHardT3EvaluatorOpts) {
@@ -53,7 +53,7 @@ export class ExtraHardT3Evaluator implements WindowEvaluator {
 		return windowExtraT3s
 	}
 
-	private mpCostForExpectedFires(windowMetadata: RotationMetadata, includedRefresh: boolean) {
+	private mpCostForExpectedFires(windowMetadata: CycleMetadata, includedRefresh: boolean) {
 		const astralFireEffectiveF4Count = windowMetadata.expectedFire4sBeforeDespair * 2 - windowMetadata.firePhaseMetadata.initialGaugeState.umbralHearts // AF makes F4 cost twice as much, but each Umbral Heart negates that for one cast
 		const allowedRefreshMP = includedRefresh ? this.data.actions.PARADOX.mpCost : 0 // If they included a F1/Paradox we'll allow it. If they skipped it, that's fine too. If they have more than one, it's bad so only allow one for the MP requirement calculation.
 		return (astralFireEffectiveF4Count + 1) * this.data.actions.FIRE_IV.mpCost + allowedRefreshMP // Add in the required MP cost for Despair, which happens to be the same as an F4

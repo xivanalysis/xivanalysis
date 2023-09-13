@@ -7,7 +7,7 @@ import {History, HistoryEntry} from 'parser/core/modules/ActionWindow/History'
 import {Invulnerability} from 'parser/core/modules/Invulnerability'
 import {TieredSuggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
-import {ROTATION_ERRORS, DEFAULT_SEVERITY_TIERS, RotationMetadata} from '../RotationWatchdog'
+import {ROTATION_ERRORS, DEFAULT_SEVERITY_TIERS, CycleMetadata} from '../RotationWatchdog'
 import {assignErrorCode, getMetadataForWindow, includeInSuggestions} from './EvaluatorUtilities'
 
 export type ExpectedFireSpellsEvaluatorOpts =
@@ -17,7 +17,7 @@ export type ExpectedFireSpellsEvaluatorOpts =
 	despairAction: Action
 	fire4Action: Action
 	invulnerability: Invulnerability
-	metadataHistory: History<RotationMetadata>
+	metadataHistory: History<CycleMetadata>
 }
 
 export class ExpectedFireSpellsEvaluator extends ExpectedActionsEvaluator {
@@ -25,7 +25,7 @@ export class ExpectedFireSpellsEvaluator extends ExpectedActionsEvaluator {
 	private despairAction: Action
 	private fire4Action: Action
 	private invulnerability: Invulnerability
-	private metadataHistory: History<RotationMetadata>
+	private metadataHistory: History<CycleMetadata>
 
 	constructor(opts: ExpectedFireSpellsEvaluatorOpts) {
 		super({...opts,
@@ -78,7 +78,7 @@ export class ExpectedFireSpellsEvaluator extends ExpectedActionsEvaluator {
 		return super.determineExpected(window, action)
 	}
 
-	private assessWindowAction(window: HistoryEntry<EvaluatedAction[]>, windowMetadata: RotationMetadata, action: TrackedAction) {
+	private assessWindowAction(window: HistoryEntry<EvaluatedAction[]>, windowMetadata: CycleMetadata, action: TrackedAction) {
 		// If they got the expected number of actions in, no need to grump
 		if (this.countUsed(window, action) >= (this.determineExpected(window, action) ?? 0)) { return }
 

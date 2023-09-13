@@ -33,7 +33,7 @@ import {SkipB4Evaluator} from './RotationWatchdog/SkipB4Evaluator'
 import {SkipT3Evaluator} from './RotationWatchdog/SkipT3Evaluator'
 import {UptimeSoulsEvaluator} from './RotationWatchdog/UptimeSoulsEvaluator'
 
-const DEBUG_SHOW_ALL = true && process.env.NODE_ENV !== 'production'
+const DEBUG_SHOW_ALL = false && process.env.NODE_ENV !== 'production'
 
 const MAX_POSSIBLE_FIRE4 = 6
 export const NO_UH_EXPECTED_FIRE4 = 4
@@ -64,18 +64,18 @@ const ROTATION_ENDPOINTS: ActionKey[] = [
 // This is feelycraft at the moment. Rotations shorter than this won't be processed for errors.
 export const MIN_ROTATION_LENGTH = 3
 
-export interface RotationErrorCode {priority: number, message: ReactNode}
+export interface CycleErrorCode {priority: number, message: ReactNode}
 export const DEATH_PRIORITY = 101 // Define this const here so we can reference it in both classes
 export const HIDDEN_PRIORITY_THRESHOLD = 2 // Same as ^
 /**
  * Error type codes, higher values indicate higher priority errors. If you add more, adjust the IDs to ensure correct priorities.
  * Only the highest priority error will be displayed in the 'Reason' column.
- * NOTE: Rotations with values at or below HIDDEN_PRIORITY_THRESHOLD will be filtered out of the RotationTable display
- * unless the DEBUG_SHOW_ALL_ROTATIONS variable is set to true
+ * NOTE: Cycles with values at or below HIDDEN_PRIORITY_THRESHOLD will be filtered out of the RotationTable display
+ * unless the DEBUG_SHOW_ALL variable is set to true
  */
-export const ROTATION_ERRORS = ensureRecord<RotationErrorCode>()({
+export const ROTATION_ERRORS = ensureRecord<CycleErrorCode>()({
 	NO_ERROR: {priority: 0, message: 'No errors'},
-	FINAL_OR_DOWNTIME: {priority: 1, message: 'Ended with downtime, or last rotation'},
+	FINAL_OR_DOWNTIME: {priority: 1, message: 'Ended with downtime, or last cycle'},
 	SHORT: {priority: HIDDEN_PRIORITY_THRESHOLD, message: 'Too short, won\'t process'},
 	// Messages below should be Trans objects since they'll be displayed to end users
 	SHOULD_SKIP_T3: {priority: 8, message: <Trans id="blm.rotation-watchdog.error-messages.should-skip-t3">Should skip hardcast <DataLink action="THUNDER_III"/></Trans>},
@@ -91,8 +91,8 @@ export const ROTATION_ERRORS = ensureRecord<RotationErrorCode>()({
 	DIED: {priority: DEATH_PRIORITY, message: <Trans id="blm.rotation-watchdog.error-messages.died"><DataLink showName={false} action="RAISE"/> Died</Trans>},
 })
 
-export interface RotationMetadata {
-	errorCode: RotationErrorCode
+export interface CycleMetadata {
+	errorCode: CycleErrorCode
 	finalOrDowntime: boolean
 	missingDespairs: boolean
 	missingFire4s: boolean
@@ -129,7 +129,6 @@ export class RotationWatchdog extends RestartWindow {
 	static override displayOrder = DISPLAY_ORDER.ROTATION
 
 	@dependency private actors!: Actors
-	@dependency private gauge!: Gauge
 	@dependency private invulnerability!: Invulnerability
 	@dependency private leylines!: Leylines
 	@dependency private procs!: Procs
@@ -148,7 +147,7 @@ export class RotationWatchdog extends RestartWindow {
 			<Icon name="warning sign"/>
 			<Message.Content>
 				<Trans id="blm.rotation-watchdog.rotation-table.disclaimer">This module assumes you are following the standard BLM playstyle.<br/>
-					If you are following a non-standard playstyle, this report and many of the suggestions may not be applicable.
+					Suggestions will focus on improving standard play, but non-standard lines shouldn't be treated as an error by this report.
 				</Trans>
 			</Message.Content>
 		</Message>
@@ -159,7 +158,7 @@ export class RotationWatchdog extends RestartWindow {
 
 	private currentGaugeState = {...EMPTY_GAUGE_STATE}
 
-	private metadataHistory = new History<RotationMetadata>(() => ({
+	private metadataHistory = new History<CycleMetadata>(() => ({
 		errorCode: ROTATION_ERRORS.NO_ERROR,
 		finalOrDowntime: false,
 		missingDespairs: false,

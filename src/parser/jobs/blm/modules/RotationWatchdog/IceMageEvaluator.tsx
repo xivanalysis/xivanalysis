@@ -5,18 +5,18 @@ import {RulePassedEvaluator} from 'parser/core/modules/ActionWindow/evaluators/R
 import {History, HistoryEntry} from 'parser/core/modules/ActionWindow/History'
 import {TieredSuggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
-import {ROTATION_ERRORS, DEATH_PRIORITY, DEFAULT_SEVERITY_TIERS, RotationMetadata} from '../RotationWatchdog'
+import {ROTATION_ERRORS, DEATH_PRIORITY, DEFAULT_SEVERITY_TIERS, CycleMetadata} from '../RotationWatchdog'
 import {assignErrorCode, getMetadataForWindow} from './EvaluatorUtilities'
 
 export interface IceMageEvaluatorOpts {
 	suggestionIcon: string
-	metadataHistory: History<RotationMetadata>
+	metadataHistory: History<CycleMetadata>
 	fireSpellIds: number[]
 }
 
 export class IceMageEvaluator extends RulePassedEvaluator {
 	private suggestionIcon: string
-	private metadataHistory: History<RotationMetadata>
+	private metadataHistory: History<CycleMetadata>
 	private fireSpellIds: number[]
 
 	override header = undefined

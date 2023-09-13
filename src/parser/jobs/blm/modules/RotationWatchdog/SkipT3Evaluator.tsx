@@ -4,17 +4,17 @@ import {EvaluatedAction, WindowEvaluator} from 'parser/core/modules/ActionWindow
 import {History, HistoryEntry} from 'parser/core/modules/ActionWindow/History'
 import {TieredSuggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
-import {ROTATION_ERRORS, ENHANCED_SEVERITY_TIERS, RotationMetadata} from '../RotationWatchdog'
+import {ROTATION_ERRORS, ENHANCED_SEVERITY_TIERS, CycleMetadata} from '../RotationWatchdog'
 import {assignErrorCode, getMetadataForWindow} from './EvaluatorUtilities'
 
 export interface SkipT3EvaluatorOpts {
 	suggestionIcon: string
-	metadataHistory: History<RotationMetadata>
+	metadataHistory: History<CycleMetadata>
 }
 
 export class SkipT3Evaluator implements WindowEvaluator {
 	private suggestionIcon: string
-	private metadataHistory: History<RotationMetadata>
+	private metadataHistory: History<CycleMetadata>
 
 	constructor(opts: SkipT3EvaluatorOpts) {
 		this.suggestionIcon = opts.suggestionIcon
