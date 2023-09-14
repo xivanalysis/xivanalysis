@@ -74,6 +74,9 @@ export abstract class RaidBuffWindow extends BuffWindow {
 	}
 
 	private onRaidBuffApply(event: Events['statusApply']) {
+		if (!this.history.getCurrent()) {
+			this.startWindowAndTimeout(event.timestamp)
+		}
 		this.raidBuffApplications.push(event)
 	}
 
