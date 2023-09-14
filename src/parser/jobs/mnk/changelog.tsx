@@ -3,6 +3,11 @@ import React from 'react'
 
 export const changelog = [
 	{
+		date: new Date('2023-09-13'),
+		Changes: () => <>Update Brotherhood report to be consistent with other jobs.</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
+	{
 		date: new Date('2023-07-02'),
 		Changes: () => <>Add 6.3 Riddle of Earth changes.</>,
 		contributors: [CONTRIBUTORS.HINT],
