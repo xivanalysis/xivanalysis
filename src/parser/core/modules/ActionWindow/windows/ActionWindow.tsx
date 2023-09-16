@@ -59,6 +59,11 @@ export abstract class ActionWindow extends Analyser {
 	 * If prepending multiple nodes, you MUST provide a JSX.Element <Fragment> tag
 	 */
 	protected prependMessages?: JSX.Element
+	/**
+	 * Implementing modules MAY provide a JSX element to appear below the RotationTable
+	 * If prepending multiple nodes, you MUST provide a JSX.Element <Fragment> tag
+	 */
+	protected appendMessages?: JSX.Element
 
 	/**
 	 * Adds an evaluator to be run on the windows.
@@ -212,7 +217,9 @@ export abstract class ActionWindow extends Analyser {
 				notes={notesData}
 				onGoto={this.timeline.show}
 				headerTitle={this.rotationTableHeader}
-			/></>
+			/>
+			{this.appendMessages}
+		</>
 	}
 
 	protected mapHistoryActions(): Array<HistoryEntry<EvaluatedAction[]>> {
