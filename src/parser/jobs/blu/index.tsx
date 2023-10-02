@@ -25,7 +25,7 @@ export const BLUE_MAGE = new Meta({
 	</>,
 	supportedPatches: {
 		from: '6.0',
-		to: '6.45',
+		to: '6.5',
 	},
 	contributors: [
 		{user: CONTRIBUTORS.HUGMEIR, role: ROLES.DEVELOPER},
