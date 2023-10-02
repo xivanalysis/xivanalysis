@@ -129,5 +129,15 @@ export const GUNBREAKER = new Meta({
 			</>,
 			contributors: [CONTRIBUTORS.RYAN],
 		},
+
+		{
+			date: new Date('2023-09-03'),
+			Changes: () => <>
+				<ul>
+					<li>Added a statistic to show usage of Lightning Shot.</li>
+				</ul>,
+			</>,
+			contributors: [CONTRIBUTORS.RYAN],
+		},
 	],
 })

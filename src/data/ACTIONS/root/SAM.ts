@@ -15,7 +15,7 @@ export const SAM = ensureActions({
 	// -----
 	HAKAZE: {
 		id: 7477,
-		name: 'Hakazae',
+		name: 'Hakaze',
 		icon: 'https://xivapi.com/i/003000/003151.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,

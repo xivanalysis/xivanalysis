@@ -62,8 +62,8 @@ export class ColdFog extends Analyser {
 	private onApplyTouchOfFrost(event: Events['statusApply']) {
 		this.touchOfFrostHistory.openNew(event.timestamp)
 	}
-	private onRemoveTouchOfFrost() {
-		this.touchOfFrostHistory.closeCurrent(this.parser.pull.timestamp + this.parser.pull.duration)
+	private onRemoveTouchOfFrost(event: Events['statusRemove']) {
+		this.touchOfFrostHistory.closeCurrent(event.timestamp)
 	}
 
 	private onWhiteDeath(event: Events['action']) {
@@ -80,6 +80,8 @@ export class ColdFog extends Analyser {
 	}
 
 	private onComplete() {
+
+		this.touchOfFrostHistory.closeCurrent(this.parser.pull.timestamp + this.parser.pull.duration)
 
 		// Wiffled Cold Fog
 		const droppedColdFogs = this.coldFogCasts - this.touchOfFrostHistory.entries.length

@@ -174,7 +174,7 @@ export abstract class CooldownDowntime extends Analyser {
 		})
 	}
 
-	private onComplete() {
+	protected onComplete() {
 		const cdRequirements = []
 		for (const cdGroup of this.trackedCds) {
 			cdRequirements.push(this.createRequirement(cdGroup))
