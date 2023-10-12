@@ -1,55 +1,85 @@
 import React from 'react'
-import {Item as ItemConfig, Row as RowConfig} from '../config'
+import {formatDuration} from 'utilities'
+import {Row as RowConfig} from '../config'
 import {Axis} from './Axis'
-import {Items} from './Item'
-import {Rows} from './Row'
-import {ScaleHandler, ScaleHandlerProps} from './ScaleHandler'
+import {Row} from './Row'
+import {HoverState, ScaleHandler, ScaleHandlerProps} from './ScaleHandler'
 import styles from './Timeline.module.css'
 import {getMaxChildren, getMaxDepth} from './utilities'
 
 export type TimelineProps =
-	& ScaleHandlerProps
-	& {rows?: RowConfig[], items?: ItemConfig[]}
+	& Omit<ScaleHandlerProps, 'children'>
+	& {row: RowConfig}
 
 export function Timeline({
-	rows = [],
-	items = [],
+	row,
 	...scaleHandlerProps
 }: TimelineProps) {
-	const maxDepth = getMaxDepth(rows)
-	const maxChildren = getMaxChildren({rows, items})
+	const maxDepth = getMaxDepth(row.rows)
+	const maxChildren = getMaxChildren(row)
 
 	return (
 		<ScaleHandler {...scaleHandlerProps}>
-			{({measureRef}) => (
+			{({measureRef, hover}) => (
 				<div className={styles.timeline}>
-					<div ref={measureRef} style={{gridColumnStart: 2, gridColumnEnd: 'span 1'}}/>
+					<div
+						ref={measureRef}
+						className={styles.tooltipContainer}
+						style={{
+							gridColumnStart: 2,
+							gridColumnEnd: 'span 1',
+							gridRowStart: 1,
+							gridRowEnd: `span ${maxChildren + 1}`,
+						}}
+					>
+						{hover != null && (
+							<Tooltip hover={hover} row={row}/>
+						)}
+					</div>
 
 					<Axis height={maxChildren}/>
 
-					<Rows
-						rows={rows}
-						depth={0}
+					<Row
+						row={row}
+						depth={-1}
 						maxDepth={maxDepth}
 						top={1}
 						height={maxChildren}
 						parentCollapsed={false}
 					/>
-
-					{/* Root-level item track */}
-					{items.length > 0 && (
-						<div
-							className={styles.track}
-							style={{
-								gridRowStart: 1,
-								gridRowEnd: `span ${maxChildren}`,
-							}}
-						>
-							<Items items={items}/>
-						</div>
-					)}
 				</div>
 			)}
 		</ScaleHandler>
 	)
+}
+
+interface TooltipProps {
+	hover: HoverState
+	row: RowConfig
+}
+
+function Tooltip({
+	hover,
+	row,
+}: TooltipProps) {
+	return <>
+		<div
+			className={styles.tooltipMarker}
+			style={{transform: `translateX(${hover.left}px)`}}
+		/>
+
+		<div
+			className={styles.tooltipDetails}
+			style={{transform: `translate(${hover.left}px, ${hover.top}px)`}}
+		>
+			<strong>
+				{formatDuration(hover.timestamp, {
+					secondPrecision: 3,
+					hideMinutesIfZero: false,
+				})}
+			</strong>
+
+			{row.TooltipContent && <row.TooltipContent timestamp={hover.timestamp}/>}
+		</div>
+	</>
 }

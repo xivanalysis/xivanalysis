@@ -1,5 +1,8 @@
-import {ReactNode} from 'react'
+import React, {ComponentType, ReactNode} from 'react'
 import {Item} from './Item'
+
+export interface TooltipContentProps { timestamp: number }
+export type TooltipContent = ComponentType<TooltipContentProps>
 
 export interface Row {
 	/** Label to display for the row */
@@ -18,18 +21,23 @@ export interface Row {
 	readonly rows: Row[]
 	/** Items within this row */
 	readonly items: Item[]
+
+	// fsdafasdfa
+	readonly TooltipContent?: TooltipContent
 }
 
 /** Simple row that can be added to the timeline */
 export class SimpleRow implements Row {
 	label?: ReactNode
 	height?: number
-	order?: number
+	readonly order?: number
 	collapse?: boolean
 	forceCollapsed?: boolean
 	hideCollapsed?: boolean
 	rows: Row[]
 	items: Item[]
+
+	private _TooltipContent?: TooltipContent
 
 	constructor(opts: {
 		label?: ReactNode,
@@ -40,6 +48,7 @@ export class SimpleRow implements Row {
 		hideCollapsed?: boolean
 		rows?: readonly Row[],
 		items?: readonly Item[],
+		TooltipContent?: TooltipContent
 	} = {}) {
 		this.label = opts.label
 		this.height = opts.height
@@ -47,13 +56,35 @@ export class SimpleRow implements Row {
 		this.collapse = opts.collapse
 		this.forceCollapsed = opts.forceCollapsed
 		this.hideCollapsed = opts.hideCollapsed
-		this.rows = opts.rows?.slice() ?? []
+		this.rows = opts.rows?.slice().sort((a, b) => (a.order ?? 0) - (b.order ?? 0)) ?? []
 		this.items = opts.items?.slice() ?? []
+		this._TooltipContent = opts.TooltipContent
 	}
+
+	// TODO all of this shit
+	readonly TooltipContent = (props: TooltipContentProps) => <>
+		{this._TooltipContent && <this._TooltipContent timestamp={props.timestamp}/>}
+
+		{this.rows.map((row, index) => <>
+			{row.TooltipContent && (
+				<row.TooltipContent key={index} timestamp={props.timestamp}/>
+			)}
+		</>
+		)}
+	</>
 
 	/** Add a row as a child to this row */
 	addRow<T extends Row>(row: T): T {
-		this.rows.push(row)
+		const newOrder = row.order ?? 0
+		const index = this.rows
+			.findIndex(existingRow => newOrder < (existingRow.order ?? 0))
+
+		if (index === -1) {
+			this.rows.push(row)
+		} else {
+			this.rows.splice(index, 0, row)
+		}
+
 		return row
 	}
 

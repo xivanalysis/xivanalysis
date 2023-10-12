@@ -10,6 +10,7 @@ import {
 import {
 	Item as ItemConfig,
 	Row as RowConfig,
+	SimpleRow,
 } from './config'
 import styles from './Timeline.module.css'
 
@@ -27,8 +28,10 @@ export class Timeline extends Analyser {
 
 	private setView?: SetViewFn
 
-	private rows: RowConfig[] = []
-	private items: ItemConfig[] = []
+	// private rows: RowConfig[] = []
+	// private items: ItemConfig[] = []
+
+	private rootRow: SimpleRow = new SimpleRow()
 
 	/**
 	 * Add a row to the timeline.
@@ -36,7 +39,8 @@ export class Timeline extends Analyser {
 	 * @returns The added row
 	 */
 	addRow<T extends RowConfig>(row: T): T {
-		this.rows.push(row)
+		// this.rows.push(row)
+		this.rootRow.addRow(row)
 		return row
 	}
 
@@ -47,7 +51,8 @@ export class Timeline extends Analyser {
 	 * @returns The added item
 	 */
 	addItem<T extends ItemConfig>(item: T): T {
-		this.items.push(item)
+		// this.items.push(item)
+		this.rootRow.addItem(item)
 		return item
 	}
 
@@ -64,7 +69,6 @@ export class Timeline extends Analyser {
 			this.parser.scrollTo(Timeline.handle)
 		}
 	}
-
 	private exposeSetView = (handler: SetViewFn) => {
 		this.setView = handler
 	}
@@ -75,8 +79,9 @@ export class Timeline extends Analyser {
 				Scroll or click+drag to pan, ctrl+scroll or pinch to zoom.
 			</Trans>
 			<TimelineComponent
-				rows={this.rows}
-				items={this.items}
+				// rows={this.rows}
+				// items={this.items}
+				row={this.rootRow}
 
 				min={0}
 				max={this.parser.currentDuration}

@@ -201,7 +201,7 @@ export class Gauge extends CoreGauge {
 			handle: ASTRAL_UMBRAL_HANDLE,
 			label: <Trans id="blm.gauge.resource.astral-umbral">Astral Fire and<br></br>Umbral Ice</Trans>,
 			collapse: true,
-			forceCollapsed: true,
+			// forceCollapsed: true,
 		})
 	}
 
