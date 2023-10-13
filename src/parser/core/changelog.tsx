@@ -10,6 +10,13 @@ export const changelog: ChangelogEntry[] = [
 	// 	contributors: [CONTRIBUTORS.YOU],
 	// },
 	{
+		date: new Date('2023-19-13'),
+		Changes: () => <>
+			Fix event ordering inaccuracies when a buff status removal and a damage event occur on the same timestamp.
+		</>,
+		contributors: [CONTRIBUTORS.HINT],
+	},
+	{
 		date: new Date('2023-08-01'),
 		Changes: () => <>
 			Fix a bug that could cause deaths and raises to throw off some gauge's total generation calculations.
