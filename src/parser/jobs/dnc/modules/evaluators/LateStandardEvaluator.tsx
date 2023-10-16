@@ -34,7 +34,9 @@ export class LateStandardEvaluator extends RulePassedEvaluator {
 	}
 
 	override passesRule(window: HistoryEntry<EvaluatedAction[]>): boolean | undefined {
-		if (window.data[window.data.length-1].action.id === this.standardStep.id) {
+		const lastAction = window.data[window.data.length-1]
+		if (lastAction == null) { return undefined }
+		if (lastAction.action.id === this.standardStep.id) {
 			return false
 		}
 		return true
