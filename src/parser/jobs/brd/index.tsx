@@ -21,13 +21,18 @@ export const BARD = new Meta({
 	</>,
 	supportedPatches: {
 		from: '6.0',
-		to: '6.45',
+		to: '6.5',
 	},
 	contributors: [
 		{user: CONTRIBUTORS.HINT, role: ROLES.MAINTAINER},
 		{user: CONTRIBUTORS.YUMIYA, role: ROLES.DEVELOPER},
 	],
 	changelog: [
+		{
+			date: new Date('2023-10-02'),
+			Changes: () => <>Updated for patch 6.5.</>,
+			contributors: [CONTRIBUTORS.HINT],
+		},
 		{
 			date: new Date('2023-07-02'),
 			Changes: () => <>Marked as supported for 6.4.</>,

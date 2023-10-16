@@ -13,11 +13,13 @@ import {Interrupts} from './Interrupts'
 import {MightyGuardGCDing} from './MightyGuardGCDing'
 import {MoonFlute} from './MoonFlute'
 import {BLUOverheal} from './Overheal'
+import {Positionals} from './Positionals'
 import {RevengeBlast} from './RevengeBlast'
 import {StatusTimeline} from './StatusTimeline'
 import {Swiftcast} from './Swiftcast'
 import {TripleTrident} from './TripleTrident'
 import {BLUWeaving} from './Weaving'
+import {WingedReprobation} from './WingedReprobation'
 
 export default [
 	MightyGuardGCDing,
@@ -40,4 +42,6 @@ export default [
 	StatusTimeline,
 	TripleTrident,
 	DroppedBuffs,
+	WingedReprobation,
+	Positionals,
 ]

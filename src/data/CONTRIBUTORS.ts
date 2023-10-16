@@ -269,6 +269,13 @@ const CONTRIBUTORS = ensureRecord<Contributor>()({
 			JOBS.BLUE_MAGE,
 		],
 	},
+	AYA: {
+		name: 'Aya',
+		avatar: require('./avatar/aya.png'),
+		jobs: [
+			JOBS.MONK,
+		],
+	},
 })
 
 export default CONTRIBUTORS
