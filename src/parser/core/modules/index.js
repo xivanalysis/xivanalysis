@@ -15,6 +15,7 @@ import Downtime from './Downtime'
 import {Dummy} from './Dummy'
 import {EventsView} from './EventsView'
 import {GlobalCooldown} from './GlobalCooldown'
+import Hijinks from './Hijinks'
 import {Invulnerability} from './Invulnerability'
 import {Medicated} from './Medicated'
 import {RaidBuffs} from './RaidBuffs'
@@ -46,6 +47,7 @@ export default [
 	Dummy,
 	EventsView,
 	GlobalCooldown,
+	Hijinks,
 	Invulnerability,
 	Medicated,
 	RaidBuffs,

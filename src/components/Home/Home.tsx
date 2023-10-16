@@ -9,6 +9,7 @@ import React, {Component} from 'react'
 import {Modal} from 'semantic-ui-react'
 import styles from './Home.module.css'
 import ReportSearch from './ReportSearch'
+import SupportSummary from './SupportSummary'
 
 const about = t('core.home.about.content')`
 xivanalysis is a tool aimed at helping _you_ improve your performance, through both automatic suggestions and metrics. While some metrics are shared across all jobs - seriously, don't die - most are tailored specifically to each job to ensure they are as accurate and useful as possible.
@@ -31,7 +32,7 @@ class Home extends Component {
 					src={process.env.PUBLIC_URL + '/logo.png'}
 					alt="logo"
 				/>
-				xivanalysis
+					xivanalysis
 			</div>
 
 			<div className={styles.search}>
@@ -43,12 +44,16 @@ class Home extends Component {
 					</span>
 				)}>
 					<Modal.Header><Trans id="core.home.about.title">
-						About xivanalysis
+							About xivanalysis
 					</Trans></Modal.Header>
 					<Modal.Content>
 						<TransMarkdown source={about}/>
 					</Modal.Content>
 				</Modal>
+
+				<div className={styles.support} >
+					<SupportSummary />
+				</div>
 			</div>
 
 			<div className={styles.options}>

@@ -11,6 +11,7 @@ declare namespace HomeModuleCssNamespace {
     md: string;
     options: string;
     search: string;
+    support: string;
     themeBackground: string;
     themeText: string;
   }
