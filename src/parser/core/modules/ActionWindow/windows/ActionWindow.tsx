@@ -22,7 +22,7 @@ export type HistoryEntryPredicate = (e: HistoryEntry<EvaluatedAction[]>) => bool
 export abstract class ActionWindow extends Analyser {
 
 	@dependency protected data!: Data
-	@dependency private suggestions!: Suggestions
+	@dependency protected suggestions!: Suggestions
 	@dependency private timeline!: Timeline
 
 	/**
@@ -59,6 +59,11 @@ export abstract class ActionWindow extends Analyser {
 	 * If prepending multiple nodes, you MUST provide a JSX.Element <Fragment> tag
 	 */
 	protected prependMessages?: JSX.Element
+	/**
+	 * Implementing modules MAY provide a JSX element to appear below the RotationTable
+	 * If prepending multiple nodes, you MUST provide a JSX.Element <Fragment> tag
+	 */
+	protected appendMessages?: JSX.Element
 
 	/**
 	 * Adds an evaluator to be run on the windows.
@@ -152,7 +157,7 @@ export abstract class ActionWindow extends Analyser {
 		this.addEventHook('complete', this.onComplete)
 	}
 
-	private onComplete() {
+	protected onComplete() {
 		this.onWindowEnd(this.parser.pull.timestamp + this.parser.pull.duration)
 
 		const actionHistory = this.mapHistoryActions()
@@ -212,10 +217,12 @@ export abstract class ActionWindow extends Analyser {
 				notes={notesData}
 				onGoto={this.timeline.show}
 				headerTitle={this.rotationTableHeader}
-			/></>
+			/>
+			{this.appendMessages}
+		</>
 	}
 
-	private mapHistoryActions(): Array<HistoryEntry<EvaluatedAction[]>> {
+	protected mapHistoryActions(): Array<HistoryEntry<EvaluatedAction[]>> {
 		return this.history.entries
 			.map(entry => ({
 				start: entry.start,

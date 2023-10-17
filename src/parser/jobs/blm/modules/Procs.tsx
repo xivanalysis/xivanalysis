@@ -1,7 +1,6 @@
 import {Plural, Trans} from '@lingui/react'
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
-import {Event, Events} from 'event'
-import {filter} from 'parser/core/filter'
+import {Events} from 'event'
 import {dependency} from 'parser/core/Injectable'
 import CastTime from 'parser/core/modules/CastTime'
 import {ProcGroup, Procs as CoreProcs} from 'parser/core/modules/Procs'
@@ -25,19 +24,6 @@ export default class Procs extends CoreProcs {
 		},
 	]
 
-	private hasSharpcast: boolean = false
-
-	override initialise() {
-		super.initialise()
-
-		// Hacky workaround because Statuses aren't in Analyser format yet, can (and probably should) remove this when that's done
-		const trackedStatusFilter = filter<Event>()
-			.target(this.parser.actor.id)
-			.status(this.data.statuses.SHARPCAST.id)
-		this.addEventHook(trackedStatusFilter.type('statusApply'), () => { this.hasSharpcast = true })
-		this.addEventHook(trackedStatusFilter.type('statusRemove'), () => { this.hasSharpcast = false })
-	}
-
 	protected override jobSpecificCheckConsumeProc(_procGroup: ProcGroup, event: Events['action']): boolean {
 		// If we were already hardcasting this spell, it does not consume the proc
 		return !(this.castingSpellId != null && this.castingSpellId === event.action)
@@ -48,10 +34,14 @@ export default class Procs extends CoreProcs {
 		this.castTime.setInstantCastAdjustment([event.action], event.timestamp, event.timestamp)
 
 		// Thunder procs used while sharpcast is up re-grant the proc status without technically removing it, so we need to forcibly add the 'removal' here to keep the 'dropped' counting correct
-		if ((event.action === this.data.actions.THUNDER_III.id || event.action === this.data.actions.THUNDER_IV.id) && this.hasSharpcast) {
+		if ((event.action === this.data.actions.THUNDER_III.id || event.action === this.data.actions.THUNDER_IV.id) && this.actors.current.hasStatus(this.data.statuses.SHARPCAST.id)) {
 			this.tryAddEventToRemovals(procGroup, event)
+
+			// Make sure a Sharpcasted thunder always results in an open window, in case the log had weird status timing
+			if (!this.currentWindows.has(procGroup)) {
+				this.currentWindows.set(procGroup, {start: event.timestamp})
+			}
 		}
-		return
 	}
 
 	protected override addJobSpecificSuggestions(): void {

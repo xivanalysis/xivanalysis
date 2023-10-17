@@ -37,6 +37,13 @@ export const ASTROLOGIAN = new Meta({
 	],
 	changelog: [
 		{
+			date: new Date('2023-09-12'),
+			Changes: () => <>
+				Updated <DataLink action="DIVINATION" showIcon={false} /> analysis to improve consistency with other jobs and make use of new core raidbuff overwrite tracking.
+			</>,
+			contributors: [CONTRIBUTORS.AKAIRYU],
+		},
+		{
 			date: new Date('2023-05-24'),
 			Changes: () => <>
 				<strong>AST Cleanup and <DataLink action="DIVINATION" showIcon={false} /></strong>

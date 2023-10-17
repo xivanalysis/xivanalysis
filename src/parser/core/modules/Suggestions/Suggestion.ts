@@ -7,6 +7,8 @@ export const SEVERITY = {
 	MAJOR: 1,
 	MEDIUM: 2,
 	MINOR: 3,
+	// Also don't use this for real suggestions, tis but a meme
+	MEMES: 100,
 	// The matchClosest fall back to undefined, so let's use that for ignore too
 	IGNORE: undefined,
 }
