@@ -2,7 +2,7 @@ import React from 'react'
 import {changelog} from './changelog'
 import {Meta} from './Meta'
 
-const DEBUG_IS_APRIL_FIRST: boolean = false
+const DEBUG_IS_APRIL_FIRST: boolean = false && process.env.NODE_ENV !== 'production'
 const JS_APRIL_MONTH: number = 3 // JS months start at 0 because reasons
 
 export const CORE = new Meta({
@@ -19,9 +19,10 @@ export const CORE = new Meta({
 	},
 })
 
-function getIsAprilFirst(): boolean {
+export function getIsAprilFirst(): boolean {
+	if (DEBUG_IS_APRIL_FIRST) { return true }
 	const currentDate: Date = new Date()
-	return DEBUG_IS_APRIL_FIRST || (currentDate.getDate() === 1 && currentDate.getMonth() === JS_APRIL_MONTH)
+	return currentDate.getDate() === 1 && currentDate.getMonth() === JS_APRIL_MONTH
 }
 
 function AprilFoolsDescription() {

@@ -174,6 +174,10 @@ export class DirtyDancing extends Analyser {
 	private resolveDance(event: Events['damage']) {
 		const dance = this.lastDance
 
+		// Tech Finish's buff range extension from 6.4 sometimes produces unsequenced 'damage' events 'targeting' the source player that 'miss'.
+		// If they come before the actual damage event, it'll mess things up so just ignore them
+		if (!event.sequence) { return }
+
 		if (!dance || dance.resolved) {
 			return
 		}

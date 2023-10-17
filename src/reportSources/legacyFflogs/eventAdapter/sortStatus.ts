@@ -2,7 +2,7 @@ import {getDataArrayBy} from 'data'
 import {getActions} from 'data/ACTIONS'
 import {StatusKey, getStatuses} from 'data/STATUSES'
 import {Event, Events} from 'event'
-import _ from 'lodash'
+import _, {values} from 'lodash'
 import {AdapterStep} from './base'
 
 interface EventNode {
@@ -39,7 +39,9 @@ export class SortStatusAdapterStep extends AdapterStep {
 		const applyingActions = getDataArrayBy(getActions(this.report), 'statusesApplied', statusKey)
 
 		return applyingActions.some(other => action === other.id)
-	})
+		// Lodash normally treats the first param of the memoized function as the key for the memo lookup
+		// We want it to lookup by action+status combo instead
+	}, (...args) => values(args).join('_'))
 
 	private actionAppliedStatus(actionEvent: Events['action'], statusEvent: Events['statusApply']) {
 		const sameSource = actionEvent.source === statusEvent.source

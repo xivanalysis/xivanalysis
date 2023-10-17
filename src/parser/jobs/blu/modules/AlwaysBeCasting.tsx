@@ -2,8 +2,7 @@ import {Plural, Trans} from '@lingui/react'
 import {DataLink} from 'components/ui/DbLink'
 import {Action} from 'data/ACTIONS'
 import {Event, Events} from 'event'
-import {EventHook} from 'parser/core/Dispatcher'
-import {filter, noneOf} from 'parser/core/filter'
+import {filter, oneOf} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
 import {History} from 'parser/core/modules/ActionWindow/History'
 import {Actors} from 'parser/core/modules/Actors'
@@ -15,6 +14,8 @@ import React from 'react'
 const PHANTOM_FLURRY_CHANNEL_DURATION_MAX_MS = 5000
 const PHANTOM_FLURRY_CHANNEL_WITH_KICK_DURATION_MS = 4000
 
+const APOKALYPSIS_CHANNEL_DURATION_MAX_MS = 10000
+
 const SURPANAKHA_ANIMATION_LOCK_MS = 1000
 
 // Essentially a carbon copy of the MCH extension to ABC -- we want to treat
@@ -23,18 +24,19 @@ const SURPANAKHA_ANIMATION_LOCK_MS = 1000
 // This also removes the time under Waning Nocturne (the second half of Moon Flute)
 // from the ABC report. Can't cast, am waning.
 
-interface PhantomFlurryWindow {
-	start: number
-	end: number
+interface ChannelWindow {
 	manualKick: boolean
 	inMoonFlute: boolean
+	actionId: number
 }
 
 export class AlwaysBeCasting extends CoreAlwaysBeCasting {
 	private diamondBackHistory: History<boolean> = new History<boolean>(() => (true))
-	private phantomFlurryHistory: PhantomFlurryWindow[] = []
-	private currentPhantomFlurry: PhantomFlurryWindow | undefined = undefined
-	private phantomFlurryInterruptingActionHook?: EventHook<Events['action']>
+	private channelHistory: History<ChannelWindow> = new History<ChannelWindow>(() => ({
+		manualKick: false,
+		inMoonFlute: false,
+		actionId: 0,
+	}))
 	private surpanakhas: number = 0
 
 	override gcdUptimeSuggestionContent: JSX.Element = <Trans id="blu.always-cast.description">
@@ -46,7 +48,7 @@ export class AlwaysBeCasting extends CoreAlwaysBeCasting {
 		<ul>
 			<li>Time spent under <DataLink action="DIAMONDBACK" /></li>
 			<li><DataLink status="WANING_NOCTURNE" />, the forced downtime following a <DataLink action="MOON_FLUTE" /></li>
-			<li>The <DataLink action="PHANTOM_FLURRY" /> channel</li>
+			<li>The <DataLink action="PHANTOM_FLURRY" /> and <DataLink action="APOKALYPSIS" /> channels</li>
 			<li>The <DataLink action="SURPANAKHA" /> oGCD spam</li>
 		</ul>
 	</Trans>
@@ -59,26 +61,26 @@ export class AlwaysBeCasting extends CoreAlwaysBeCasting {
 		super.initialise()
 
 		const playerFilter = filter<Event>().source(this.parser.actor.id)
-		const phantomFlurryCastFilter = playerFilter
-			.action(this.data.actions.PHANTOM_FLURRY.id)
+
+		const channelCastFilter = playerFilter
+			.action(oneOf([this.data.actions.PHANTOM_FLURRY.id, this.data.actions.APOKALYPSIS.id]))
 			.type('action')
-		const phantomFlurryStatusFilter = playerFilter
-			.status(this.data.statuses.PHANTOM_FLURRY.id)
+		const channelStatusFilter = playerFilter
+			.status(oneOf([this.data.statuses.PHANTOM_FLURRY.id, this.data.statuses.APOKALYPSIS.id]))
 			.type('statusRemove')
 		const phantomFlurryKick = playerFilter
 			.action(this.data.actions.PHANTOM_FLURRY_KICK.id)
 			.type('action')
-
-		const diamondBackFilter = playerFilter.status(this.data.statuses.DIAMONDBACK.id)
+		this.addEventHook(channelCastFilter, this.onApplyChannel)
+		this.addEventHook(channelStatusFilter, this.onRemoveChannel)
+		this.addEventHook(phantomFlurryKick, this.onPhantomFlurryFinalKick)
 
 		const surpanakhaCastFilter = playerFilter
 			.action(this.data.actions.SURPANAKHA.id)
 			.type('action')
-
-		this.addEventHook(phantomFlurryCastFilter, this.onApplyPhantomFlurry)
-		this.addEventHook(phantomFlurryStatusFilter, this.onRemovePhantomFlurry)
-		this.addEventHook(phantomFlurryKick, this.onPhantomFlurryFinalKick)
 		this.addEventHook(surpanakhaCastFilter, this.onCastSurpanakha)
+
+		const diamondBackFilter = playerFilter.status(this.data.statuses.DIAMONDBACK.id)
 		this.addEventHook(diamondBackFilter.type('statusApply'), this.onDiamondBackApply)
 		this.addEventHook(diamondBackFilter.type('statusRemove'), this.onDiamondBackRemove)
 	}
@@ -105,48 +107,26 @@ export class AlwaysBeCasting extends CoreAlwaysBeCasting {
 		// the full 5000ms channel, BUT, if they used the kick, then they should
 		// have waited at least 4000ms for most of the channel to have happened.
 
-		const currentFlurry = this.currentPhantomFlurry ?? this.phantomFlurryHistory[this.phantomFlurryHistory.length - 1]
-		if (currentFlurry === null) { return }
-		currentFlurry.manualKick = true
+		const allChannels = this.channelHistory.entries
+		if (allChannels.length === 0) { return }
+		const currentChannel = allChannels[allChannels.length - 1]
+		if (currentChannel === null) { return }
+		currentChannel.data.manualKick = true
 	}
 
-	private onApplyPhantomFlurry(event: Events['action']) {
-		if (this.currentPhantomFlurry != null) { return }
-
-		this.currentPhantomFlurry = {
-			start: event.timestamp,
-			end: event.timestamp + this.data.statuses.PHANTOM_FLURRY.duration,
-			manualKick: false,
-			inMoonFlute: this.actors.current.hasStatus(this.data.statuses.WAXING_NOCTURNE.id),
-		}
-		const anyActionFilter = filter<Event>()
-			.source(this.parser.actor.id)
-			.action(noneOf([this.data.actions.PHANTOM_FLURRY.id]))
-			.type('action')
-		this.phantomFlurryInterruptingActionHook = this.addEventHook(anyActionFilter, this.onRemovePhantomFlurry)
-
-		this.phantomFlurryHistory.push(this.currentPhantomFlurry)
+	private onApplyChannel(event: Events['action']) {
+		const newChannel = this.channelHistory.openNew(event.timestamp)
+		newChannel.data.inMoonFlute = this.actors.current.hasStatus(this.data.statuses.WAXING_NOCTURNE.id)
+		newChannel.data.actionId = event.action
 	}
 
-	private onRemovePhantomFlurry(event: Events['statusRemove'] | Events['action']) {
-		if (this.currentPhantomFlurry == null) {
-			return
-		}
-		if (this.phantomFlurryInterruptingActionHook == null) {
-			return
-		}
-
-		this.currentPhantomFlurry.end = event.timestamp
-		this.removeEventHook(this.phantomFlurryInterruptingActionHook)
-
-		this.currentPhantomFlurry = undefined
-		this.phantomFlurryInterruptingActionHook = undefined
-
+	private onRemoveChannel(event: Events['statusRemove']) {
+		this.channelHistory.closeCurrent(event.timestamp)
 	}
 
 	override considerCast(action: Action, castStart: number): boolean {
-		if (action === this.data.actions.PHANTOM_FLURRY) {
-			this.debug(`Phantom Flurry began channeling at ${this.parser.formatEpochTimestamp(castStart)}`)
+		if (action === this.data.actions.PHANTOM_FLURRY || action === this.data.actions.APOKALYPSIS) {
+			this.debug(`${action.name} began channeling at ${this.parser.formatEpochTimestamp(castStart)}`)
 			return false
 		}
 
@@ -155,16 +135,17 @@ export class AlwaysBeCasting extends CoreAlwaysBeCasting {
 
 	override getUptimePercent(): number {
 		const fightDuration = this.parser.currentDuration - this.downtime.getDowntime()
-		const flurryDuration = this.phantomFlurryHistory.reduce((acc, flurry) => {
+		const maxChannelUptime = this.parser.pull.timestamp + this.parser.pull.duration
+		const channelDuration = this.channelHistory.entries.reduce((acc, channel) => {
 			const downtime = this.downtime.getDowntime(
-				flurry.start,
-				flurry.end,
+				channel.start,
+				channel.end ?? maxChannelUptime,
 			)
-			const phantomFlurryDurationOrGCD = Math.max(flurry.end - flurry.start, this.globalCooldown.getDuration())
-			return acc + phantomFlurryDurationOrGCD - downtime
+			const channelDurationOrGCD = Math.max((channel.end ?? maxChannelUptime) - channel.start, this.globalCooldown.getDuration())
+			return acc + channelDurationOrGCD - downtime
 		}, 0)
 		const surpanakhaDuration = this.surpanakhas * SURPANAKHA_ANIMATION_LOCK_MS
-		const uptime = (this.gcdUptime + flurryDuration + surpanakhaDuration) / (fightDuration) * 100
+		const uptime = (this.gcdUptime + channelDuration + surpanakhaDuration) / (fightDuration) * 100
 
 		return uptime
 	}
@@ -172,7 +153,10 @@ export class AlwaysBeCasting extends CoreAlwaysBeCasting {
 	override onComplete() {
 		super.onComplete()
 
-		this.diamondBackHistory.closeCurrent(this.parser.pull.timestamp + this.parser.pull.duration)
+		const endOfPullTimestamp = this.parser.pull.timestamp + this.parser.pull.duration
+		this.channelHistory.closeCurrent(endOfPullTimestamp)
+		this.diamondBackHistory.closeCurrent(endOfPullTimestamp)
+
 		const diamondBackTimeMs = this.diamondBackHistory.entries.reduce((acc, e) => {
 			return acc + ((e.end ?? e.start) - e.start)
 		}, 0)
@@ -187,10 +171,11 @@ export class AlwaysBeCasting extends CoreAlwaysBeCasting {
 
 		// Since we were already tracking Phantom Flurry, go ahead and take
 		// the chance to track if they dropped any damage ticks.
-		const missingFlurryTicks = this.phantomFlurryHistory
+		const missingFlurryTicks = this.channelHistory.entries
+			.filter(channel => channel.data.actionId === this.data.actions.PHANTOM_FLURRY.id)
 			.reduce((acc, flurry) => {
-				const flurryChannelMs = flurry.end - flurry.start
-				const expectedFlurryChannel = (flurry.manualKick ? PHANTOM_FLURRY_CHANNEL_WITH_KICK_DURATION_MS : PHANTOM_FLURRY_CHANNEL_DURATION_MAX_MS)
+				const flurryChannelMs = (flurry.end ?? endOfPullTimestamp) - flurry.start
+				const expectedFlurryChannel = (flurry.data.manualKick ? PHANTOM_FLURRY_CHANNEL_WITH_KICK_DURATION_MS : PHANTOM_FLURRY_CHANNEL_DURATION_MAX_MS)
 				const missingFlurryChannelMs = expectedFlurryChannel - flurryChannelMs
 				if (missingFlurryChannelMs <= 0) { return acc }
 
@@ -213,9 +198,37 @@ export class AlwaysBeCasting extends CoreAlwaysBeCasting {
 			value: missingFlurryTicks,
 		}))
 
+		// And also report missing ticks for Apokalypsis
+		const missingApokalypsisTicks = this.channelHistory.entries
+			.filter(channel => channel.data.actionId === this.data.actions.APOKALYPSIS.id)
+			.reduce((acc, apoka) => {
+				const apokaChannelMs = (apoka.end ?? endOfPullTimestamp) - apoka.start
+				const missingChannelMs = APOKALYPSIS_CHANNEL_DURATION_MAX_MS - apokaChannelMs
+				if (missingChannelMs <= 0) { return acc }
+
+				const missingTicks = Math.ceil(missingChannelMs / 1000)
+				return acc + missingTicks
+			}, 0)
+		this.suggestions.add(new TieredSuggestion({
+			icon: this.data.actions.APOKALYPSIS.icon,
+			content: <Trans id="blu.apokalypsis.dropped_ticks.content">
+				Dropping out of <DataLink action="APOKALYPSIS" /> too early will lose damage ticks.
+			</Trans>,
+			why: <Trans id="blu.apokalypsis.dropped_ticks.why">
+				<Plural value={missingApokalypsisTicks} one="# Apokalypsis tick was" other="# Apokalypsis ticks were" /> dropped due to cancelling the channel too early.
+			</Trans>,
+			tiers: {
+				1: SEVERITY.MINOR,  // 140 pot
+				2: SEVERITY.MEDIUM, // 380 pot
+				3: SEVERITY.MAJOR,  // 520 pot
+			},
+			value: missingApokalypsisTicks,
+		}))
+
 		// If they weren't in a Moon Flute, then they should have kicked!
-		const missingFlurryKicks = this.phantomFlurryHistory
-			.filter(flurry => !flurry.inMoonFlute && !flurry.manualKick)
+		const missingFlurryKicks = this.channelHistory.entries
+			.filter(channel => channel.data.actionId === this.data.actions.PHANTOM_FLURRY.id)
+			.filter(flurry => !flurry.data.inMoonFlute && !flurry.data.manualKick)
 			.length
 
 		this.suggestions.add(new TieredSuggestion({
