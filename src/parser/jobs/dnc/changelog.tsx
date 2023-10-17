@@ -83,6 +83,11 @@ export const changelog = [
 		contributors: [CONTRIBUTORS.AKAIRYU],
 	},
 	{
+		date: new Date('2023-06-29'),
+		Changes: () => <>Revamp Technical Finish analysis to include GCD count information, and better clarify when multiple dancers interfere with each others' buffs.</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
+	{
 		date: new Date('2023-08-19'),
 		Changes: () => <>Esprit and Feather Gauges now show the actual values for logs the Dancer uploaded themselves! Overcap is still partly simulated though.</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],

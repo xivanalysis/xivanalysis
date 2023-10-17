@@ -14,7 +14,7 @@ export const RED_MAGE = new Meta({
 	</>,
 	supportedPatches: {
 		from: '6.0',
-		to: '6.45',
+		to: '6.5',
 	},
 	contributors: [
 		{user: CONTRIBUTORS.LAILLE, role: ROLES.DEVELOPER},
@@ -23,6 +23,11 @@ export const RED_MAGE = new Meta({
 	],
 
 	changelog: [
+		{
+			date: new Date('2023-10-02'),
+			Changes: () => <>Mark as supported for 6.5</>,
+			contributors: [CONTRIBUTORS.LEYLIA],
+		},
 		{
 			date: new Date('2023-07-10'),
 			Changes: () => <>Fixed Swiftcast bugs that would erroneously report 2/1 or 0/1 Swiftcasted spells.</>,

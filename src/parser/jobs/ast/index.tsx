@@ -29,13 +29,20 @@ export const ASTROLOGIAN = new Meta({
 	</>,
 	supportedPatches: {
 		from: '6.0',
-		to: '6.45',
+		to: '6.5',
 	},
 	contributors: [
 		{user: CONTRIBUTORS.SUSHIROU, role: ROLES.MAINTAINER},
 		{user: CONTRIBUTORS.OTOCEPHALY, role: ROLES.DEVELOPER},
 	],
 	changelog: [
+		{
+			date: new Date('2023-09-12'),
+			Changes: () => <>
+				Updated <DataLink action="DIVINATION" showIcon={false} /> analysis to improve consistency with other jobs and make use of new core raidbuff overwrite tracking.
+			</>,
+			contributors: [CONTRIBUTORS.AKAIRYU],
+		},
 		{
 			date: new Date('2023-05-24'),
 			Changes: () => <>

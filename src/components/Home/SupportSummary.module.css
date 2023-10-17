@@ -1,0 +1,103 @@
+@value md, lg, warningBackground, warningText, errorBackground, errorText, themeBackground, themeText from "theme.module.css";
+
+.unknown {
+	background-color: themeText;
+	color: themeBackground;
+}
+
+.unsupported {
+	background-color: errorBackground;
+	color: errorText;
+}
+
+.outdated {
+	background-color: warningBackground;
+	color: warningText;
+}
+
+.supported {
+	background-color: themeBackground;
+	color: themeText;
+}
+
+.summary {
+	margin-top: 20px;
+	align-content: initial;
+	width: 100%;
+
+	font-size: x-small;
+	display: flex;
+}
+
+.supportGrid {
+	display: grid;
+	gap: 10px;
+
+	grid-auto-rows: auto;
+	grid-template-columns: 1fr auto;
+}
+
+.supportGrid .header {
+	border-style: solid;
+	margin: 0px;
+
+	border-width: 0 4px 0 0;
+}
+
+.supportGrid .jobs {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 5px;
+	min-width: 0;
+	align-items: flex-start;
+	width: 100%;
+}
+
+.supportGrid .job {
+	padding: 5px;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	overflow: hidden;
+}
+
+.job > *:first-child  {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+@media md {
+	.summary {
+		font-size: unset;
+	}
+}
+
+@media lg {
+	.summary {
+		display: block;
+	}
+
+	.supportGrid {
+		grid-auto-rows: unset;
+		grid-template-columns: unset;
+
+		grid-auto-flow: column;
+		grid-auto-columns: 1fr;
+		grid-template-rows: 1fr auto;
+	}
+
+	.supportGrid .header {
+		border-width: 0 0 4px;
+	}
+
+	.supportGrid .jobs {
+		flex-direction: column;
+	}
+
+	.supportGrid .job {
+		width: 100%;
+	}
+}
