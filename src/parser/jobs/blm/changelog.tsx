@@ -5,8 +5,13 @@ export const changelog = [
 	// {
 	// 	date: new Date('2021-11-19'),
 	// 	Changes: () => <>The changes you made</>,
-	// 	contrubutors: [CONTRIBUTORS.YOU],
+	// 	contributors: [CONTRIBUTORS.YOU],
 	// },
+	{
+		date: new Date('2023-10-14'),
+		Changes: () => <>Added BLM tincture module.</>,
+		contributors: [CONTRIBUTORS.NOLO],
+	},
 	{
 		date: new Date('2023-08-22'),
 		Changes: () => <>Ensure Sharpcasted Thunder spells result in an active Thundercloud buff being tracked, in case of strange status application event timings.</>,
