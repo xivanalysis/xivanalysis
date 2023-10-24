@@ -51,10 +51,11 @@ const DEFAULT_ROW_HEIGHT: number = 64
 export interface ResourceGroupOptions extends ResourceGraphOptions {
 	/** The handle for this group of data */
 	handle: string,
-	/** Should the group display it's gauges stacked on top of each other, instead of all starting from the 0 baseline (ie. RPR's Death Gauge to help it look like it does in-game)
-	 * 		NOTE: If using this option, all gauges within the resource group should have a constant and identical maximum or it's gonna look hella weird.
-	 * 			Also recommended to use the forceCollapsed option along with this (unless debugging) since that'll also look weird.
-	  */
+	/**
+	 * Should the group display it's gauges stacked on top of each other, instead of all starting from the 0 baseline (ie. RPR's Death Gauge to help it look like it does in-game)
+	 * NOTE: If using this option, all gauges within the resource group should have a constant and identical maximum or it's gonna look hella weird.
+	 * Also recommended to use the forceCollapsed option along with this (unless debugging) since that'll also look weird.
+	**/
 	stacking?: boolean
 }
 
