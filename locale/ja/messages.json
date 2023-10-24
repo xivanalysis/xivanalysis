@@ -550,7 +550,7 @@
   "drk.gauge.suggestions.loss.why": "{0} のインナービーストゲージを上限を超えたため失いました。",
   "drk.gauge.title": "ブラッドゲージ",
   "drk.resourceanalyzer.blackestnight.content": "<0/>の使用によって付与されたバリアを効果時間内に消費することで、次に使用する<1/>または<2/>の消費MPを無視できるダークアーツと呼ばれるProcを得ることができます。<3/>は使用することで付与されるバリアを確実に消費しきれる時にのみ使うようにしましょう。加えてダークアーツは1つしか保持できないため、ダークアーツを保持した状態での<0/>の使用は特別な理由が無い限り避けましょう。",
-  "drk.resourceanalyzer.blackestnight.why": "",
+  "drk.resourceanalyzer.blackestnight.why": "{wastedDarkArts, plural, one {# 回} other {# 回}} 、<0/> を使用したのに完全に吸収して消滅しなかったためダークアーツが付与されませんでした。",
   "drk.resourceanalyzer.title": "リソースアナライザー",
   "drk.resourceanalyzer.wastedmp.content": "MPを消費することによって強力な与ダメージと与ダメージUPのバフを得られる<0/>と、強力な被ダメージ軽減効果を持つ<1/>を使うことが出来ます。\n自然回復やメインコンボスキルによるMP回復の恩恵を必ず得られるようにするために、常にMPを消費してください。",
   "drk.resourceanalyzer.wastedmp.why": "合計で{wastedMPActions, plural, other {# 回分のMP消費アクション}}をMPが溢れたか死亡したことで失いました。",

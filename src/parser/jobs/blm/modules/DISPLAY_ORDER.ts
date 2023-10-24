@@ -4,4 +4,5 @@ export default {
 	LEY_LINES: 3,
 	THUNDER: 4,
 	WEAVING: 5,
+	TINCTURES: 6,
 }
