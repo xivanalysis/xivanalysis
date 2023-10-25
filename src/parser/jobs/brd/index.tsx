@@ -29,14 +29,14 @@ export const BARD = new Meta({
 	],
 	changelog: [
 		{
+			date: new Date('2023-10-24'),
+			Changes: () => <>Added Coda visualisation to timeline.</>,
+			contributors: [CONTRIBUTORS.AKAIRYU],
+		},
+		{
 			date: new Date('2023-10-02'),
 			Changes: () => <>Updated for patch 6.5.</>,
 			contributors: [CONTRIBUTORS.HINT],
-		},
-		{
-			date: new Date('2023-07-21'),
-			Changes: () => <>Added Coda visualisation to timeline.</>,
-			contributors: [CONTRIBUTORS.AKAIRYU],
 		},
 		{
 			date: new Date('2023-07-02'),

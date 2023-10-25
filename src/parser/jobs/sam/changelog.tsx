@@ -8,7 +8,7 @@ export const changelog = [
 	// 	contrubutors: [CONTRIBUTORS.YOU],
 	// },
 	{
-		date: new Date('2023-07-21'),
+		date: new Date('2023-10-24'),
 		Changes: () => <>Add Sen gauge visualisation to timeline.</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],
 	},

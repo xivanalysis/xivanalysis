@@ -3,7 +3,7 @@ import React from 'react'
 
 export const changelog = [
 	{
-		date: new Date('2023-07-21'),
+		date: new Date('2023-10-24'),
 		Changes: () => <>Add a suggestion to avoid overcapping Nadis.</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],
 	},
