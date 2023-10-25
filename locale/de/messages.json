@@ -680,7 +680,7 @@
   "mnk.missedbrotherhood.title": "",
   "mnk.pb.suggestions.badActions.content": "Das Nutzen von <0/> oder <1/> während <2/> aktiv ist macht keinen Schaden und ändert nicht deine Form.",
   "mnk.pb.suggestions.badActions.why": "",
-  "mnk.pb.suggestions.stacks.content": "Versuche während jedes <0/>-Zeitfensters alle 6 Stapel aufzubrauchen.",
+  "mnk.pb.suggestions.stacks.content": "",
   "mnk.pb.suggestions.stacks.why": "",
   "mnk.pb.title": "\tImprovisation",
   "mnk.rof.chart.notes.early": "",
