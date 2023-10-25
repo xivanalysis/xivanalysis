@@ -37,16 +37,16 @@ export const ASTROLOGIAN = new Meta({
 	],
 	changelog: [
 		{
-			date: new Date('2023-09-12'),
+			date: new Date('2023-10-24'),
 			Changes: () => <>
-				Updated <DataLink action="DIVINATION" showIcon={false} /> analysis to improve consistency with other jobs and make use of new core raidbuff overwrite tracking.
+				Added Astrosign gauge state display to the timeline.
 			</>,
 			contributors: [CONTRIBUTORS.AKAIRYU],
 		},
 		{
-			date: new Date('2023-07-21'),
+			date: new Date('2023-09-12'),
 			Changes: () => <>
-				Added Astrosign gauge state display to the timeline.
+				Updated <DataLink action="DIVINATION" showIcon={false} /> analysis to improve consistency with other jobs and make use of new core raidbuff overwrite tracking.
 			</>,
 			contributors: [CONTRIBUTORS.AKAIRYU],
 		},

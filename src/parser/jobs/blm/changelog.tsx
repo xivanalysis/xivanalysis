@@ -8,6 +8,11 @@ export const changelog = [
 	// 	contributors: [CONTRIBUTORS.YOU],
 	// },
 	{
+		date: new Date('2023-10-24'),
+		Changes: () => <>Update timeline display for gauge state and enforce a more useful timeline display order for cooldowns.</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
+	{
 		date: new Date('2023-10-14'),
 		Changes: () => <>Added BLM tincture module.</>,
 		contributors: [CONTRIBUTORS.NOLO],
@@ -90,11 +95,6 @@ export const changelog = [
 	{
 		date: new Date('2021-11-04'),
 		Changes: () => <>Initial data scaffolding and basic updates to handle removal of Enochian ability.</>,
-		contributors: [CONTRIBUTORS.AKAIRYU],
-	},
-	{
-		date: new Date('2023-07-21'),
-		Changes: () => <>Update timeline display for gauge state and enforce a more useful timeline display order for cooldowns.</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],
 	},
 ]
