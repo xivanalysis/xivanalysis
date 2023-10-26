@@ -125,10 +125,13 @@ export class BlitzEvaluator implements WindowEvaluator {
 	private expectedBlitzes(window: HistoryEntry<EvaluatedAction[]>): number {
 		// We expect the player to burn off PB charges that were available when the window began, and any that became available with enough time before the window ended
 		const chargesBeforeWindow = (_.last(this.pbChargeHistory.filter(entry => entry.timestamp < window.start))?.current ?? this.maxCharges)
-		const chargesInWindow = this.pbChargeHistory.some(entry => entry.timestamp > window.start && entry.timestamp <= (window.end ?? this.pullEnd) - END_OF_WINDOW_TOLERANCE) ? 1 : 0
+		const chargesInWindow = this.pbChargeHistory.some(entry => entry.delta > 0 && entry.timestamp > window.start && entry.timestamp <= (window.end ?? this.pullEnd) - END_OF_WINDOW_TOLERANCE) ? 1 : 0
 
 		// If we entered the window with a PB already active and have enough time to use it before the window ends, expect that to get used too
-		const castsAvailable = chargesBeforeWindow + chargesInWindow + (this.perfectBalance.inBalance(window.start) && window.start + END_OF_WINDOW_TOLERANCE < (window.end ?? this.pullEnd) ? 1 : 0)
+		const pbActive = this.perfectBalance.inBalance(window.start) && window.start + END_OF_WINDOW_TOLERANCE < (window.end ?? this.pullEnd)
+
+		// Total up the potential uses
+		const castsAvailable = chargesBeforeWindow + chargesInWindow + (pbActive ? 1 : 0)
 
 		// If we're going into RoF with a blitz prepped, we can fit 3 blitzes in 11 GCDs (or at least one, if we're a short window at the end of the fight)
 		if (this.perfectBalance.blitzReady(window.start)) {
