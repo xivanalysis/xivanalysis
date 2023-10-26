@@ -148,7 +148,7 @@ export class PerfectBalance extends Gauge {
 	// Any of the chakra gauges have values in them, or
 	// There is a history window that contains the specified timestamp
 	public inBalance(timestamp: number): boolean {
-		const latestHistory = this.history.find(entry => entry.start <= timestamp && entry.start + this.data.statuses.PERFECT_BALANCE.duration < timestamp)
+		const latestHistory = this.history.find(entry => entry.start <= timestamp && entry.start + this.data.statuses.PERFECT_BALANCE.duration > timestamp)
 		return this.opoBeastGauge.getValueAt(timestamp) > 0 || this.raptorBeastGauge.getValueAt(timestamp) > 0 || this.coeurlBeastGauge.getValueAt(timestamp) > 0 || latestHistory != null
 	}
 

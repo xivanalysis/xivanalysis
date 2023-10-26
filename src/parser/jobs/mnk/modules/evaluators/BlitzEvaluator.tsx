@@ -25,7 +25,10 @@ const BLITZ_SEVERITY_TIERS = {
 	6: SEVERITY.MAJOR,
 }
 
+// Normally we only expect the player to fit at most two blitzes into a RoF
 const MAX_EXPECTED_BLITZES = 2
+// If a blitz is already ready to go, and both PB charges are available, it's barely possible to fit three into a single RoF
+const MAX_POSSIBLE_BLITZES = 3
 
 interface BlitzEvaluatorOpts {
 	blitzActions: Array<Action['id']>,
@@ -34,6 +37,7 @@ interface BlitzEvaluatorOpts {
 	perfectBalance: PerfectBalance
 	cooldowns: Cooldowns
 	pullEnd: number
+	pbAction: Action
 }
 
 interface BlitzWindowResults {
@@ -47,6 +51,7 @@ export class BlitzEvaluator implements WindowEvaluator {
 	private perfectBalance: PerfectBalance
 	private cooldowns: Cooldowns
 	private pullEnd: number
+	private pbAction: Action
 
 	private pbChargeHistory: ChargeHistoryEntry[] = []
 	private windowResults: BlitzWindowResults[]
@@ -58,6 +63,7 @@ export class BlitzEvaluator implements WindowEvaluator {
 		this.perfectBalance = opts.perfectBalance
 		this.cooldowns = opts.cooldowns
 		this.pullEnd = opts.pullEnd
+		this.pbAction = opts.pbAction
 
 		this.windowResults = []
 	}
@@ -108,7 +114,7 @@ export class BlitzEvaluator implements WindowEvaluator {
 
 	private calculateRechargeTimes(): void {
 		if (this.pbChargeHistory.length === 0) {
-			this.pbChargeHistory = this.cooldowns.chargeHistory('PERFECT_BALANCE')
+			this.pbChargeHistory = this.cooldowns.chargeHistory(this.pbAction)
 		}
 	}
 
@@ -125,6 +131,11 @@ export class BlitzEvaluator implements WindowEvaluator {
 		const castsAvailable = chargesBeforeWindow + chargesInWindow + (this.perfectBalance.inBalance(window.start) && window.start + END_OF_WINDOW_TOLERANCE < (window.end ?? this.pullEnd) ? 1 : 0)
 
 		// If we're going into RoF with a blitz prepped, we can fit 3 blitzes in 11 GCDs (or at least one, if we're a short window at the end of the fight)
-		return this.perfectBalance.blitzReady(window.start) ? Math.min(castsAvailable, 1) : Math.min(castsAvailable, MAX_EXPECTED_BLITZES)
+		if (this.perfectBalance.blitzReady(window.start)) {
+			return Math.max(Math.min(castsAvailable, MAX_POSSIBLE_BLITZES), 1)
+		}
+
+		// Otherwise we only expect up to two blitzes
+		return Math.min(castsAvailable, MAX_EXPECTED_BLITZES)
 	}
 }
