@@ -140,6 +140,7 @@ export class PerfectBalance extends Gauge {
 			handle: NADI_GAUGE_HANDLE,
 			label: <Trans id="mnk.gauge.resource.nadi">Nadi Gauge</Trans>,
 			collapse: false,
+			order: 2,
 		})
 	}
 
