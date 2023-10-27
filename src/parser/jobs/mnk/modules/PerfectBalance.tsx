@@ -44,6 +44,8 @@ const COEURL_GAUGE_COLOR = Color('#d7548e')
 const LUNAR_NADI_COLOR = Color('#8a57c4')
 const SOLAR_NADI_COLOR = Color('#e7dbd3')
 
+const CHAKRA_TO_BLITZ = 3
+
 export class PerfectBalance extends Gauge {
 	static override debug = false
 	static override handle = 'perfectBalance'
@@ -66,7 +68,7 @@ export class PerfectBalance extends Gauge {
 	private beastTimeoutHook?: TimestampHook
 
 	private opoBeastGauge = this.add(new CounterGauge({
-		maximum: 3,
+		maximum: CHAKRA_TO_BLITZ,
 		initialValue: 0,
 		graph: {
 			handle: BEAST_GAUGE_HANDLE,
@@ -75,7 +77,7 @@ export class PerfectBalance extends Gauge {
 		},
 	}))
 	private raptorBeastGauge = this.add(new CounterGauge({
-		maximum: 3,
+		maximum: CHAKRA_TO_BLITZ,
 		initialValue: 0,
 		graph: {
 			handle: BEAST_GAUGE_HANDLE,
@@ -84,7 +86,7 @@ export class PerfectBalance extends Gauge {
 		},
 	}))
 	private coeurlBeastGauge = this.add(new CounterGauge({
-		maximum: 3,
+		maximum: CHAKRA_TO_BLITZ,
 		initialValue: 0,
 		graph: {
 			handle: BEAST_GAUGE_HANDLE,
@@ -140,6 +142,18 @@ export class PerfectBalance extends Gauge {
 			label: <Trans id="mnk.gauge.resource.nadi">Nadi Gauge</Trans>,
 			collapse: false,
 		})
+	}
+
+	// Determine if perfect balance is active at the specified timestamp. It's active if:
+	// Any of the chakra gauges have values in them, or
+	// There is a history window that contains the specified timestamp
+	public inBalance(timestamp: number): boolean {
+		const latestHistory = this.history.find(entry => entry.start <= timestamp && entry.start + this.data.statuses.PERFECT_BALANCE.duration > timestamp)
+		return this.opoBeastGauge.getValueAt(timestamp) > 0 || this.raptorBeastGauge.getValueAt(timestamp) > 0 || this.coeurlBeastGauge.getValueAt(timestamp) > 0 || latestHistory != null
+	}
+
+	public blitzReady(timestamp: number): boolean {
+		return (this.opoBeastGauge.getValueAt(timestamp) + this.raptorBeastGauge.getValueAt(timestamp) + this.coeurlBeastGauge.getValueAt(timestamp)) >= CHAKRA_TO_BLITZ
 	}
 
 	private onCast(event: Events['action']): void {
