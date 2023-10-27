@@ -148,18 +148,6 @@ export class PerfectBalance extends Gauge {
 	// Any of the chakra gauges have values in them, or
 	// There is a history window that contains the specified timestamp
 	public inBalance(timestamp: number): boolean {
-		const latestHistory = this.history.find(entry => entry.start <= timestamp && entry.start + this.data.statuses.PERFECT_BALANCE.duration < timestamp)
-		return this.opoBeastGauge.getValueAt(timestamp) > 0 || this.raptorBeastGauge.getValueAt(timestamp) > 0 || this.coeurlBeastGauge.getValueAt(timestamp) > 0 || latestHistory != null
-	}
-
-	public blitzReady(timestamp: number): boolean {
-		return (this.opoBeastGauge.getValueAt(timestamp) + this.raptorBeastGauge.getValueAt(timestamp) + this.coeurlBeastGauge.getValueAt(timestamp)) >= CHAKRA_TO_BLITZ
-	}
-
-	// Determine if perfect balance is active at the specified timestamp. It's active if:
-	// Any of the chakra gauges have values in them, or
-	// There is a history window that contains the specified timestamp
-	public inBalance(timestamp: number): boolean {
 		const latestHistory = this.history.find(entry => entry.start <= timestamp && entry.start + this.data.statuses.PERFECT_BALANCE.duration > timestamp)
 		return this.opoBeastGauge.getValueAt(timestamp) > 0 || this.raptorBeastGauge.getValueAt(timestamp) > 0 || this.coeurlBeastGauge.getValueAt(timestamp) > 0 || latestHistory != null
 	}
