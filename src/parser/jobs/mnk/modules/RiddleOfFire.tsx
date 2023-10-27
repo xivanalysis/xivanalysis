@@ -82,6 +82,7 @@ export class RiddleOfFire extends BuffWindow {
 			perfectBalance: this.perfectBalance,
 			cooldowns: this.cooldowns,
 			pullEnd: this.parser.pull.timestamp + this.parser.pull.duration,
+			pbAction: this.data.actions.PERFECT_BALANCE,
 		}))
 
 		this.addEvaluator(new RiddleOfWindEvaluator({

@@ -3,17 +3,17 @@ import React from 'react'
 
 export const changelog = [
 	{
-		date: new Date('2023-10-24'),
-		Changes: () => <>Add a suggestion to avoid overcapping Nadis.</>,
+		date: new Date('2023-10-27'),
+		Changes: () => <>Add a suggestion to avoid overcapping Nadis and polish Nadi gauge visualisation.</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],
 	},
 	{
-		date: new Date('2023-07-21'),
+		date: new Date('2023-10-24'),
 		Changes: () => <>Fix a bug with the calculation for the expected number of Masterful Blitz uses in Riddle of Fire.</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],
 	},
 	{
-		date: new Date('2023-07-09'),
+		date: new Date('2023-10-23'),
 		Changes: () => <>Add gauge visualisation for Perfect Balance, and mark as supported for Endwalker.</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],
 	},
