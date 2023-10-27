@@ -3,7 +3,7 @@ import React from 'react'
 
 export const changelog = [
 	{
-		date: new Date('2023-07-21'),
+		date: new Date('2023-10-24'),
 		Changes: () => <>Fix a bug with the calculation for the expected number of Masterful Blitz uses in Riddle of Fire.</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],
 	},

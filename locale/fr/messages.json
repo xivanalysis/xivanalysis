@@ -685,7 +685,7 @@
   "mnk.missedbrotherhood.title": "",
   "mnk.pb.suggestions.badActions.content": "Utilisez <0/> ou <1/> durant <2/> ne fait aucune dégât et ne change pas votre Posture.",
   "mnk.pb.suggestions.badActions.why": "{badActions, plural, one {# utilisation} other {# utilisations}} de <0/> ou <1/> {badActions, plural, one {a été effectuée} other {ont été effectuées}} durant <2/>.",
-  "mnk.pb.suggestions.stacks.content": "Essayez d'utiliser vos 6 stacks durant chaque phase de <0/>.",
+  "mnk.pb.suggestions.stacks.content": "",
   "mnk.pb.suggestions.stacks.why": "{droppedGcds, plural,one {# GCD potentiel a été manqué}other {# GCDs potentiels ont été manqués}} pendant <0/>.",
   "mnk.pb.title": "Équilibre parfait",
   "mnk.rof.chart.notes.early": "",

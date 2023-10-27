@@ -685,7 +685,7 @@
   "mnk.missedbrotherhood.title": "",
   "mnk.pb.suggestions.badActions.content": "<2/> 중 <0/> 또는 <1/> 기술을 사용하면 피해량을 주지도 않을 뿐더러 품새가 바뀌지도 않습니다.",
   "mnk.pb.suggestions.badActions.why": "<2/> 중 <0/> 또는 <1/> 기술을 {badActions, plural, one {#회} other {#회}} 사용했습니다.",
-  "mnk.pb.suggestions.stacks.content": "<0/> 구간 중 스택 6개를 모두 사용하십시오.",
+  "mnk.pb.suggestions.stacks.content": "",
   "mnk.pb.suggestions.stacks.why": "<0/> 중 사용 가능한 글쿨 기술을 {droppedGcds, plural, other {#회}} 잃었습니다.",
   "mnk.pb.title": "진각",
   "mnk.rof.chart.notes.early": "",
