@@ -1,6 +1,12 @@
 import {ensureStatuses} from '../type'
 
 export const SCH = ensureStatuses({
+	BIO_II: {
+		id: 189,
+		name: 'Bio II',
+		icon: 'https://xivapi.com/i/010000/010505.png',
+		duration: 30000,
+	},
 	BIOLYSIS: {
 		id: 1895,
 		name: 'Biolysis',
