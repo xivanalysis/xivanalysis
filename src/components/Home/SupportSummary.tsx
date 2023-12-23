@@ -5,7 +5,6 @@ import {GameEdition} from 'data/EDITIONS'
 import {JobKey, JOBS, RoleKey, ROLES} from 'data/JOBS'
 import {patchSupported} from 'data/PATCHES'
 import {FALLBACK_KEY, PATCHES} from 'data/PATCHES/patches'
-import {observer} from 'mobx-react'
 import {AVAILABLE_MODULES} from 'parser/AVAILABLE_MODULES'
 import React, {Component, Fragment} from 'react'
 import {Message} from 'semantic-ui-react'
@@ -16,9 +15,7 @@ interface RoleData {
 	jobKeys: JobKey[]
 }
 
-@observer
 class SupportSummary extends Component {
-	private roleJobs: RoleData[] = []
 	override render() {
 		const maxPatch = Object.entries(PATCHES)
 			.map(patch => ({name: patch[0], date: patch[1].date[GameEdition.GLOBAL]}))
@@ -50,20 +47,21 @@ class SupportSummary extends Component {
 
 		// Build the list of roles and their associated jobs
 		let jobKey: JobKey
+		const roleJobs: RoleData[] = []
 		for (jobKey in JOBS) {
 			const roleKey = JOBS[jobKey].role
 			if (roleKey === 'UNSUPPORTED') { continue }
-			const roleData = this.roleJobs.find(rd => rd.roleKey === roleKey) ?? {roleKey, jobKeys: []}
+			const roleData = roleJobs.find(rd => rd.roleKey === roleKey) ?? {roleKey, jobKeys: []}
 			roleData.jobKeys.push(jobKey)
-			if (!this.roleJobs.some(rd => rd.roleKey === roleKey)) {
-				this.roleJobs.push(roleData)
+			if (!roleJobs.some(rd => rd.roleKey === roleKey)) {
+				roleJobs.push(roleData)
 			}
 		}
 
 		return <>
 			{supportMessage}
 			<div className={styles.summary}>
-				<SupportSummaryGrid roles={this.roleJobs} />
+				<SupportSummaryGrid roles={roleJobs} />
 			</div>
 		</>
 	}
