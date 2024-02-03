@@ -19,7 +19,7 @@ export const GUNBREAKER = new Meta({
 
 	supportedPatches: {
 		from: '6.0',
-		to: '6.45',
+		to: '6.5',
 	},
 
 	contributors: [
@@ -135,6 +135,17 @@ export const GUNBREAKER = new Meta({
 			Changes: () => <>
 				<ul>
 					<li>Added a statistic to show usage of Lightning Shot.</li>
+				</ul>,
+			</>,
+			contributors: [CONTRIBUTORS.RYAN],
+		},
+		{
+			date: new Date('2023-11-28'),
+			Changes: () => <>
+				<ul>
+					<li>Added Gnashing Fang to the cooldown usage section. </li>
+					<li>Adjusted Cooldown Offsets to 2.47 Standard Opener from 1NM23 Opener Offsets. </li>
+					<li>Rerranged Cooldowns to be in order via cooldown length. </li>
 				</ul>,
 			</>,
 			contributors: [CONTRIBUTORS.RYAN],

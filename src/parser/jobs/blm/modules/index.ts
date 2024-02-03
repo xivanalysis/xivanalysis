@@ -1,4 +1,5 @@
 import {Interrupts} from 'parser/core/modules/Interrupts'
+import {Tincture} from 'parser/core/modules/Tincture'
 import {AoEUsages} from './AoEUsages'
 import {CastTime} from './CastTime'
 import {Defensives} from './Defensives'
@@ -20,6 +21,7 @@ export default [
 	Defensives,
 	Gauge,
 	Interrupts,
+	Tincture,
 	Leylines,
 	NotCasting,
 	OGCDDowntime,
