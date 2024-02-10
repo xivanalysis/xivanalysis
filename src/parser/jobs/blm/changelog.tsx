@@ -8,8 +8,8 @@ export const changelog = [
 	// 	contributors: [CONTRIBUTORS.YOU],
 	// },
 	{
-		date: new Date('2023-09-12'),
-		Changes: () => <>Fix a bug where Transposing to generate a Paradox during downtime could complain about missing Despairs during that downtime, and improve support for non-standard Astral Fire phases.</>,
+		date: new Date('2024-02-09'),
+		Changes: () => <>Significantly improve support for non-standard Astral Fire phases, and fix a bug where Transposing to generate a Paradox during downtime could complain about missing Despairs during that downtime.</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],
 	},
 	{
