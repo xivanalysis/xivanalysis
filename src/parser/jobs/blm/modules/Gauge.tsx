@@ -70,6 +70,7 @@ interface BLMGaugeError {
 /** BLM Gauge Event interface & include in Event repository */
 interface EventBLMGauge extends FieldsBase {
 	type: 'blmgauge',
+	gaugeState: BLMGaugeState
 }
 declare module 'event' {
 	interface EventTypeRepository {
@@ -318,6 +319,7 @@ export class Gauge extends CoreGauge {
 			this.parser.queueEvent({
 				type: 'blmgauge',
 				timestamp: this.parser.currentEpochTimestamp,
+				gaugeState: {...this.previousGaugeState},
 			})
 		}
 	}
