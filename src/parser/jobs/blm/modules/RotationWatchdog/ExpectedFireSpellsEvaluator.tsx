@@ -6,9 +6,10 @@ import {TrackedAction, TrackedActionsOptions} from 'parser/core/modules/ActionWi
 import {History, HistoryEntry} from 'parser/core/modules/ActionWindow/History'
 import {Invulnerability} from 'parser/core/modules/Invulnerability'
 import {TieredSuggestion} from 'parser/core/modules/Suggestions'
+import {DEFAULT_SEVERITY_TIERS} from 'parser/jobs/dnc/CommonData'
 import React from 'react'
-import {ROTATION_ERRORS, DEFAULT_SEVERITY_TIERS, CycleMetadata} from '../RotationWatchdog'
 import {assignErrorCode, getMetadataForWindow, includeInSuggestions} from './EvaluatorUtilities'
+import {CycleMetadata, ROTATION_ERRORS} from './WatchdogConstants'
 
 export type ExpectedFireSpellsEvaluatorOpts =
 	& Omit<TrackedActionsOptions, 'suggestionIcon' | 'suggestionContent' | 'suggestionWindowName' | 'severityTiers'>

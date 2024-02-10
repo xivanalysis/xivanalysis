@@ -6,18 +6,20 @@ import {RulePassedEvaluator} from 'parser/core/modules/ActionWindow/evaluators/R
 import {History, HistoryEntry} from 'parser/core/modules/ActionWindow/History'
 import {TieredSuggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
-import {ROTATION_ERRORS, ENHANCED_SEVERITY_TIERS, CycleMetadata, NO_UH_EXPECTED_FIRE4} from '../RotationWatchdog'
 import {assignErrorCode, getMetadataForWindow} from './EvaluatorUtilities'
+import {CycleMetadata, ENHANCED_SEVERITY_TIERS, ROTATION_ERRORS} from './WatchdogConstants'
 
 export interface SkipB4EvaluatorOpts {
 	blizzard4Id: number
 	fire4action: Action
+	minExpectedF4s: number
 	metadataHistory: History<CycleMetadata>
 }
 
 export class SkipB4Evaluator extends RulePassedEvaluator {
 	private blizzard4Id: number
 	private fire4action: Action
+	private minExpectedF4s: number
 	private metadataHistory: History<CycleMetadata>
 
 	override header = undefined
@@ -27,6 +29,7 @@ export class SkipB4Evaluator extends RulePassedEvaluator {
 
 		this.blizzard4Id = opts.blizzard4Id
 		this.fire4action = opts.fire4action
+		this.minExpectedF4s = opts.minExpectedF4s
 		this.metadataHistory = opts.metadataHistory
 	}
 
@@ -38,7 +41,7 @@ export class SkipB4Evaluator extends RulePassedEvaluator {
 		const currentRotation = window.data
 		// B4 should be skipped for rotations that ended in downtime or the end of the fight,
 		if (currentRotation.some(event => event.action.id === this.blizzard4Id) // AND the rotations had a B4 cast
-			&& currentRotation.filter(event => event.action.id === this.fire4action.id).length <= NO_UH_EXPECTED_FIRE4 // AND the Umbral Hearts gained from Blizzard 4 weren't needed
+			&& currentRotation.filter(event => event.action.id === this.fire4action.id).length <= this.minExpectedF4s // AND the Umbral Hearts gained from Blizzard 4 weren't needed
 		) {
 			assignErrorCode(windowMetadata, ROTATION_ERRORS.SHOULD_SKIP_B4)
 			return false

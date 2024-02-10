@@ -4,9 +4,10 @@ import {EvaluatedAction} from 'parser/core/modules/ActionWindow'
 import {RulePassedEvaluator} from 'parser/core/modules/ActionWindow/evaluators/RulePassedEvaluator'
 import {History, HistoryEntry} from 'parser/core/modules/ActionWindow/History'
 import {TieredSuggestion} from 'parser/core/modules/Suggestions'
+import {DEFAULT_SEVERITY_TIERS} from 'parser/jobs/dnc/CommonData'
 import React from 'react'
-import {ROTATION_ERRORS, DEATH_PRIORITY, DEFAULT_SEVERITY_TIERS, CycleMetadata} from '../RotationWatchdog'
 import {assignErrorCode, getMetadataForWindow} from './EvaluatorUtilities'
+import {CycleMetadata, ROTATION_ERRORS, DEATH_PRIORITY} from './WatchdogConstants'
 
 export interface IceMageEvaluatorOpts {
 	suggestionIcon: string

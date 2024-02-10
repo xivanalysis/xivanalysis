@@ -1,6 +1,6 @@
 import {EvaluatedAction} from 'parser/core/modules/ActionWindow'
 import {History, HistoryEntry} from 'parser/core/modules/ActionWindow/History'
-import {CycleErrorCode, DEATH_PRIORITY, HIDDEN_PRIORITY_THRESHOLD, CycleMetadata} from '../RotationWatchdog'
+import {CycleErrorCode, CycleMetadata, DEATH_PRIORITY, HIDDEN_PRIORITY_THRESHOLD} from './WatchdogConstants'
 
 export function assignErrorCode(metadata: CycleMetadata, errorCode: CycleErrorCode) {
 	if (metadata.errorCode.priority < errorCode.priority) {
