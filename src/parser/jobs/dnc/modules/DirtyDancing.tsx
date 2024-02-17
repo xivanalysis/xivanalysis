@@ -162,6 +162,21 @@ export class DirtyDancing extends ActionWindow {
 	override onComplete() {
 		super.onComplete()
 
+		const standardFinishUptimePct = this.getStatusUptimePercent('STANDARD_FINISH')
+		this.checklist.add(new Rule({
+			name: <Trans id="dnc.dirty-dancing.checklist.standard-finish-buff.name">Keep your <StatusLink {...this.data.statuses.STANDARD_FINISH} /> buff up</Trans>,
+			description: <Trans id="dnc.dirty-dancing.checklist.standard-finish-buff.description">
+				Your <StatusLink {...this.data.statuses.STANDARD_FINISH} /> buff contributes significantly to your overall damage, and the damage of your <StatusLink {...this.data.statuses.DANCE_PARTNER} /> as well. Make sure to keep it up at all times.
+			</Trans>,
+			target: 95,
+			requirements: [
+				new Requirement({
+					name: <Trans id="dnc.dirty-dancing.checklist.standard-finish-buff.uptime"><StatusLink {...this.data.statuses.STANDARD_FINISH} /> uptime</Trans>,
+					percent: standardFinishUptimePct,
+				}),
+			],
+		}))
+
 		const closedPositionUptimePct = this.getStatusUptimePercent('CLOSED_POSITION')
 		this.checklist.add(new Rule({
 			name: <Trans id="dnc.dirty-dancing.checklist.closed-position-buff.name">Choose a <StatusLink {...this.data.statuses.DANCE_PARTNER} /></Trans>,
