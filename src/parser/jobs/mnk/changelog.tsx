@@ -3,7 +3,7 @@ import React from 'react'
 
 export const changelog = [
 	{
-		date: new Date('2023-10-27'),
+		date: new Date('2024-02-19'),
 		Changes: () => <>Improve Beast Chakra gauge visualisation.</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],
 	},

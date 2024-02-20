@@ -8,7 +8,7 @@ export const changelog = [
 	// 	contributors: [CONTRIBUTORS.YOU],
 	// },
 	{
-		date: new Date('2023-10-24'),
+		date: new Date('2024-02-19'),
 		Changes: () => <>Update timeline display for gauge state and enforce a more useful timeline display order for cooldowns.</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],
 	},

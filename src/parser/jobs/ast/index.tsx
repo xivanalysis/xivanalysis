@@ -37,7 +37,7 @@ export const ASTROLOGIAN = new Meta({
 	],
 	changelog: [
 		{
-			date: new Date('2023-10-24'),
+			date: new Date('2024-02-19'),
 			Changes: () => <>
 				Added Astrosign gauge state display to the timeline.
 			</>,
