@@ -72,6 +72,22 @@ export abstract class BuffWindow extends ActionWindow {
 	}
 
 	/**
+	 * End window at the timestamp provided, removing history entries
+	 * which do not belong in the window.
+	 *
+	 * @param timestamp Time of statusRemove event.
+	 */
+	protected override onWindowEnd(timestamp: number): void {
+		const currentWindow = this.history.getCurrent()
+
+		if (currentWindow != null) {
+			currentWindow.data = currentWindow.data.filter(event => event.timestamp < timestamp)
+		}
+
+		super.onWindowEnd(timestamp)
+	}
+
+	/**
 	 * Start window at the timestamp provided and attach hook for closing the window
 	 * after the duration of the buff.
 	 *

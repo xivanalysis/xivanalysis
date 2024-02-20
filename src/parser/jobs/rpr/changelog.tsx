@@ -4,6 +4,11 @@ import React from 'react'
 
 export const changelog = [
 	{
+		date: new Date('2023-07-09'),
+		Changes: () => <>Update Death Gauge visualisation to more closely match the in-game display.</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
+	{
 		date: new Date('2022-04-24'),
 		Changes: () => <>Reword Harvest Moon text to make the usage of Soulsow clearer.</>,
 		contributors: [CONTRIBUTORS.AY],

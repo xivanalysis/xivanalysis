@@ -8,6 +8,7 @@ import {Forms} from './Forms'
 import {GreasedLightning} from './GreasedLightning'
 import {MasterfulBlitzStatistics} from './MasterfulBlitzStatistics'
 import {MissedBrotherhood} from './MissedBrotherhood'
+import {PerfectBalance} from './PerfectBalance'
 import {Positionals} from './Positionals'
 import {Revolution} from './Revolution'
 import {RiddleOfFire} from './RiddleOfFire'
@@ -31,6 +32,7 @@ export default [
 	Positionals,
 	RiddleOfFire,
 	RiddleOfWind,
+	PerfectBalance,
 	Steppies,
 	TwinSnakes,
 	Weaving,

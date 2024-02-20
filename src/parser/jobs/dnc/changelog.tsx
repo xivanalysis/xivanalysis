@@ -8,13 +8,18 @@ export const changelog = [
 	// 	contrubutors: [CONTRIBUTORS.YOU],
 	// },
 	{
-		date: new Date('2023-09-04'),
-		Changes: () => <>Fix a bug related to the Technical Finish status application changes from 6.4 that occasionally caused incorrect 'missed' Finish reports.</>,
+		date: new Date('2024-02-19'),
+		Changes: () => <>Esprit and Feather Gauges now show the actual values for logs the Dancer uploaded themselves! Overcap is still partly simulated though.</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],
 	},
 	{
-		date: new Date('2023-08-19'),
-		Changes: () => <>Esprit and Feather Gauges now show the actual values for logs the Dancer uploaded themselves! Overcap is still partly simulated though.</>,
+		date: new Date('2023-10-16'),
+		Changes: () => <>Fix a bug causing broken log errors when a Technical Finish killed the boss.</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
+	{
+		date: new Date('2023-09-04'),
+		Changes: () => <>Fix a bug related to the Technical Finish status application changes from 6.4 that occasionally caused incorrect 'missed' Finish reports.</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],
 	},
 	{
