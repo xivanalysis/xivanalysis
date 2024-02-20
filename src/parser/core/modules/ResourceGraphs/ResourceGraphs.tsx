@@ -18,6 +18,7 @@ export interface ResourceMeta {
 
 export interface ResourceDatum extends Resource {
 	time: number
+	base?: number
 }
 
 export interface ResourceData extends ResourceMeta {
@@ -27,6 +28,7 @@ export interface ResourceData extends ResourceMeta {
 export interface ResourceDataGroup {
 	data: ResourceData[],
 	row: SimpleRow
+	stacking?: boolean
 }
 
 /**
@@ -49,6 +51,12 @@ const DEFAULT_ROW_HEIGHT: number = 64
 export interface ResourceGroupOptions extends ResourceGraphOptions {
 	/** The handle for this group of data */
 	handle: string,
+	/**
+	 * Should the group display it's gauges stacked on top of each other, instead of all starting from the 0 baseline (ie. RPR's Death Gauge to help it look like it does in-game)
+	 * NOTE: If using this option, all gauges within the resource group should have a constant and identical maximum or it's gonna look hella weird.
+	 * Also recommended to use the forceCollapsed option along with this (unless debugging) since that'll also look weird.
+	**/
+	stacking?: boolean
 }
 
 export const RESOURCE_HANDLE: string = 'resources'
@@ -128,7 +136,7 @@ export class ResourceGraphs extends Analyser {
 	 * @returns A reference to the ResourceDataGroup that was added or updated
 	 */
 	public addDataGroup(opts: ResourceGroupOptions): ResourceDataGroup {
-		const {handle, label, collapse, forceCollapsed, height} = opts
+		const {handle, label, collapse, forceCollapsed, height, stacking} = opts
 		let resourceData = this.dataGroups.get(handle)
 		if (resourceData == null) {
 			const resourceRow = new SimpleRow({
@@ -147,8 +155,10 @@ export class ResourceGraphs extends Analyser {
 				})],
 			})
 			this.timeline.addRow(resourceRow)
-			resourceData = {data: [],
+			resourceData = {
+				data: [],
 				row: resourceRow,
+				stacking,
 			}
 			this.dataGroups.set(handle, resourceData)
 		} else {
@@ -179,7 +189,44 @@ export class ResourceGraphs extends Analyser {
 			return
 		}
 
-		data.forEach(data => dataGroup?.data.push(data))
+		data.forEach(resource => {
+			// Extra processing to make the stacking work right
+			if (dataGroup.stacking) {
+				const lastResource = _.last(dataGroup.data)
+				if (lastResource != null) {
+					const insertData: ResourceDatum[] = []
+
+					// Loop through the most recent previously added resource's events and add any missing timestamps to this resource,
+					// retaining the current resources's current value and setting the baseline value for this resource to the sum of the previous resource's baseline and current value
+					lastResource.data.forEach(datum => {
+						const previousDatum = _.findLast(resource.data, d => d.time <= datum.time)
+						if (previousDatum != null && insertData.find(d => d.time === datum.time) == null) {
+							insertData.push({
+								time: datum.time,
+								current: previousDatum != null ? previousDatum.current : 0,
+								maximum: previousDatum != null ? previousDatum.maximum : datum.maximum,
+								base: (datum.base || 0) + datum.current,
+							})
+						}
+					})
+
+					// Additionally loop through the current resource to assign baseline values for the resource's own events
+					resource.data.forEach(datum => {
+						if (datum.base == null) {
+							const lastDatum = _.findLast(lastResource.data, d => d.time <= datum.time)
+							if (lastDatum != null) {
+								datum.base = (lastDatum.base || 0) + lastDatum.current
+							}
+						}
+					})
+
+					// Add all the new data to the current resource, and sort it by timestamp
+					// This will ensure the next resource to be added has access to the full picture of the previous baselines
+					resource.data = resource.data.concat(insertData).sort((a, b) => a.time - b.time)
+				}
+			}
+			dataGroup.data.push(resource)
+		})
 
 		// Add a row for the graph - we only need a single item per resource, as the graph is the full duration.
 		// TODO: Keep an eye on performance of this. If this chews resources too much, it should be

@@ -1,47 +1,47 @@
 import {t} from '@lingui/macro'
-import {Plural, Trans} from '@lingui/react'
+import {Trans} from '@lingui/react'
 import {DataLink} from 'components/ui/DbLink'
-import {RotationTable} from 'components/ui/RotationTable'
+import {RotationEvent} from 'components/ui/Rotation'
+import {RotationTargetOutcome} from 'components/ui/RotationTable'
 import {ActionKey} from 'data/ACTIONS'
-import {Events, FieldsTargeted} from 'event'
-import {Analyser} from 'parser/core/Analyser'
+import {Events} from 'event'
 import {dependency} from 'parser/core/Injectable'
+import {EvaluatedAction, RestartWindow, TrackedAction} from 'parser/core/modules/ActionWindow'
+import {History, HistoryEntry} from 'parser/core/modules/ActionWindow/History'
+import {HistoryEntryPredicate} from 'parser/core/modules/ActionWindow/windows/ActionWindow'
 import {Actors} from 'parser/core/modules/Actors'
-import {Data} from 'parser/core/modules/Data'
 import {Invulnerability} from 'parser/core/modules/Invulnerability'
-import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
-import {Timeline} from 'parser/core/modules/Timeline'
 import {UnableToAct} from 'parser/core/modules/UnableToAct'
-import React, {Fragment, ReactNode} from 'react'
+import React, {Fragment} from 'react'
 import {Icon, Message} from 'semantic-ui-react'
-import {ensureRecord} from 'utilities'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
-import {FIRE_SPELLS} from './Elements'
-import {Gauge, ASTRAL_UMBRAL_DURATION, BLMGaugeState, UMBRAL_HEARTS_MAX_STACKS, ASTRAL_UMBRAL_MAX_STACKS} from './Gauge'
+import {FIRE_SPELLS, ICE_SPELLS} from './Elements'
+import {ASTRAL_UMBRAL_DURATION, ASTRAL_UMBRAL_MAX_STACKS, BLMGaugeState, UMBRAL_HEARTS_MAX_STACKS} from './Gauge'
 import Leylines from './Leylines'
 import Procs from './Procs'
+import {assignErrorCode, getMetadataForWindow} from './RotationWatchdog/EvaluatorUtilities'
+import {ExpectedFireSpellsEvaluator} from './RotationWatchdog/ExpectedFireSpellsEvaluator'
+import {ExtraF1Evaluator} from './RotationWatchdog/ExtraF1Evaluator'
+import {ExtraHardT3Evaluator} from './RotationWatchdog/ExtraHardT3Evaluator'
+import {IceMageEvaluator} from './RotationWatchdog/IceMageEvaluator'
+import {ManafontTimingEvaluator} from './RotationWatchdog/ManafontTimingEvaluator'
+import {MissedIceParadoxEvaluator} from './RotationWatchdog/MissedIceParadoxEvaluator'
+import {RotationErrorNotesEvaluator} from './RotationWatchdog/RotationErrorNotesEvaluator'
+import {SkipB4Evaluator} from './RotationWatchdog/SkipB4Evaluator'
+import {SkipT3Evaluator} from './RotationWatchdog/SkipT3Evaluator'
+import {UptimeSoulsEvaluator} from './RotationWatchdog/UptimeSoulsEvaluator'
+import {CycleMetadata, ROTATION_ERRORS, HIDDEN_PRIORITY_THRESHOLD} from './RotationWatchdog/WatchdogConstants'
 
-const DEBUG_SHOW_ALL_CYCLES = false && process.env.NODE_ENV !== 'production'
+const DEBUG_SHOW_ALL = false && process.env.NODE_ENV !== 'production'
 
 const MAX_POSSIBLE_FIRE4 = 6
 const NO_UH_EXPECTED_FIRE4 = 4
-const FIRE4_FROM_MANAFONT = 1
+const MAX_MP = 10000
+const EXTRA_CASTS_FROM_MANAFONT = 1
 
 const EXTRA_F4_COP_THRESHOLD = 0.5 // Feelycraft
 
-const DEFAULT_SEVERITY_TIERS = {
-	1: SEVERITY.MINOR,
-	3: SEVERITY.MEDIUM,
-	5: SEVERITY.MAJOR,
-}
-
-const ENHANCED_SEVERITY_TIERS = {
-	1: SEVERITY.MINOR,
-	2: SEVERITY.MEDIUM,
-	3: SEVERITY.MAJOR,
-}
-
-const CYCLE_ENDPOINTS: ActionKey[] = [
+const ROTATION_ENDPOINTS: ActionKey[] = [
 	'BLIZZARD_III',
 	'TRANSPOSE',
 	'BLIZZARD_II',
@@ -51,693 +51,392 @@ const CYCLE_ENDPOINTS: ActionKey[] = [
 // This is feelycraft at the moment. Rotations shorter than this won't be processed for errors.
 const MIN_ROTATION_LENGTH = 3
 
-interface CycleErrorCode {priority: number, message: ReactNode}
-const DEATH_PRIORITY = 101 // Define this const here so we can reference it in both classes
-const HIDDEN_PRIORITY_THRESHOLD = 2 // Same as ^
-/**
- * Error type codes, higher values indicate higher priority errors. If you add more, adjust the IDs to ensure correct priorities.
- * Only the highest priority error will be displayed in the 'Reason' column.
- * NOTE: Cycles with values at or below HIDDEN_PRIORITY_THRESHOLD will be filtered out of the RotationTable display
- * unless the DEBUG_SHOW_ALL_CYCLES variable is set to true
- */
-const CYCLE_ERRORS = ensureRecord<CycleErrorCode>()({
-	NO_ERROR: {priority: 0, message: 'No errors'},
-	FINAL_OR_DOWNTIME: {priority: 1, message: 'Ended with downtime, or last cycle'},
-	SHORT: {priority: HIDDEN_PRIORITY_THRESHOLD, message: 'Too short, won\'t process'},
-	// Messages below should be Trans objects since they'll be displayed to end users
-	SHOULD_SKIP_T3: {priority: 8, message: <Trans id="blm.rotation-watchdog.error-messages.should-skip-t3">Should skip hardcast <DataLink action="THUNDER_III"/></Trans>},
-	SHOULD_SKIP_B4: {priority: 9, message: <Trans id="blm.rotation-watchdog.error-messages.should-skip-b4">Should skip <DataLink action="BLIZZARD_IV"/></Trans>},
-	MISSING_FIRE4S: {priority: 10, message: <Trans id="blm.rotation-watchdog.error-messages.missing-fire4s">Missing one or more <DataLink action="FIRE_IV"/>s</Trans>}, // These two errors are lower priority since they can be determined by looking at the
-	MISSED_ICE_PARADOX: {priority: 15, message: <Trans id="blm.rotation-watchdog.error-messages.missed-ice-paradox">Missed <DataLink action="PARADOX"/> in Umbral Ice</Trans>},
-	MISSING_DESPAIRS: {priority: 20, message: <Trans id="blm.rotation-watchdog.error-messages.missing-despair">Missing one or more <DataLink action="DESPAIR"/>s</Trans>}, // target columns in the table, so we want to tell players about other errors first
-	MANAFONT_BEFORE_DESPAIR: {priority: 40, message: <Trans id="blm.rotation-watchdog.error-messages.manafont-before-despair"><DataLink action="MANAFONT"/> used before <DataLink action="DESPAIR"/></Trans>},
-	EXTRA_T3: {priority: 59, message: <Trans id="blm.rotation-watchdog.error-messages.extra-t3">Extra <DataLink action="THUNDER_III"/>s</Trans>}, // Extra T3 and Extra F1 are *very* similar in terms of per-GCD potency loss
-	EXTRA_F1: {priority: 60, message: <Trans id="blm.rotation-watchdog.error-messages.extra-f1">Extra <DataLink action="FIRE_I"/></Trans>}, // These two codes should stay close to each other
-	NO_FIRE_SPELLS: {priority: 80, message: <Trans id="blm.rotation-watchdog.error-messages.no-fire-spells">Rotation included no Fire spells</Trans>},
-	DROPPED_AF_UI: {priority: 100, message: <Trans id="blm.rotation-watchdog.error-messages.dropped-astral-umbral">Dropped Astral Fire or Umbral Ice</Trans>},
-	DIED: {priority: DEATH_PRIORITY, message: <Trans id="blm.rotation-watchdog.error-messages.died"><DataLink showName={false} action="RAISE"/> Died</Trans>},
-})
-
-interface CycleEvent extends FieldsTargeted {
-	action: number,
-	isProc: boolean,
-	gaugeContext: BLMGaugeState
+const EMPTY_GAUGE_STATE: BLMGaugeState = {
+	astralFire: 0,
+	umbralIce: 0,
+	umbralHearts: 0,
+	polyglot: 0,
+	enochian: false,
+	paradox: 0,
 }
 
-interface FirePhaseMetadata {
-	startTime: number,
-	initialMP: number,
-	circleOfPowerPct: number
-	initialGaugeState: BLMGaugeState
-}
-
-class Cycle {
-	private data: Data
-	private fireSpellIds: number[] = []
-
-	//#region Cycle events
-	// Keep track of spells cast in this cycle by which phase of the cycle they're in
-	private unaspectedEvents: CycleEvent[] = [] // This will only include events during opener or reopener cycles
-	private icePhaseEvents: CycleEvent[] = []
-	private firePhaseEvents: CycleEvent[] = []
-	private manafontPhaseEvents: CycleEvent[] = [] // Keeping track of post-manafont events separately so we can fine-tune some of the analysis logic
-
-	// Concatenate the fire and manafont events together to get the event array for the full astral fire phase
-	public get fullFirePhaseEvents(): CycleEvent[] {
-		return this.firePhaseEvents.concat(this.manafontPhaseEvents)
-	}
-
-	// Concatenate the phased events together to produce the full event array for the cycle
-	public get events(): CycleEvent[] {
-		return this.unaspectedEvents.concat(this.icePhaseEvents).concat(this.fullFirePhaseEvents)
-	}
-	//#endregion
-
-	//#region Cycle metadata
-	public startTime: number
-	public endTime?: number
-	public firePhaseMetadata: FirePhaseMetadata
-	public finalOrDowntime: boolean = false
-
-	private _errorCode: CycleErrorCode = CYCLE_ERRORS.NO_ERROR
-
-	public set errorCode(code: CycleErrorCode) {
-		if (code.priority > this._errorCode.priority) {
-			this._errorCode = code
-		}
-	}
-
-	public get errorCode(): CycleErrorCode {
-		return this._errorCode
-	}
-	//#endregion
-
-	//#region Fire 4s
-	/**
-	 * Determines how many Fire 4s the player should have been able to cast during this cycle.
-	 * NOTE:
-	 *   This function does NOT account for all the complexities of any alternative playstyles.
-	 */
-	public get expectedFire4s(): number | undefined {
-		if (this.finalOrDowntime) {
-			return
-		}
-
-		// Get the expected count prior to the initial despair
-		let expectedCount = this.expectedFire4sBeforeDespair
-
-		// Adjust expected count if the cycle included manafont
-		expectedCount += this.hasManafont ? FIRE4_FROM_MANAFONT : 0
-
-		return expectedCount
-	}
-
-	public get expectedFire4sBeforeDespair(): number {
-		// Cycles start with a baseline of 4 Fire 4s
-		let expectedCount = NO_UH_EXPECTED_FIRE4
-
-		// Cycles with at least one heart get an extra F4 (5x F4 + F1 with 1 heart is the same MP cost as the standard 6F4 + F1 with 3)
-		// Note that two hearts does not give any extra F4s, though it'll hardly ever come up in practice
-		if (this.firePhaseMetadata.initialGaugeState.umbralHearts > 0) {
-			expectedCount++
-		}
-
-		// Cycles with full hearts get two extra F4s
-		if (this.firePhaseMetadata.initialGaugeState.umbralHearts === UMBRAL_HEARTS_MAX_STACKS) {
-			expectedCount++
-		}
-
-		/**
-		 * IF this cycle's Astral Fire phase began with no Umbral Hearts (either no-B4-opener, or a midfight alternate playstyle cycle),
-		 * AND it is not an opener that begins with Fire 3 (ie, the cycle includes an ice phase)
-		 * AND we have leylines for long enough to squeeze in an extra F4
-		 * THEN we increase the expected count by one
-		 */
-		if (
-			expectedCount === NO_UH_EXPECTED_FIRE4 &&
-			this.icePhaseEvents.length > 0 &&
-			this.firePhaseMetadata.circleOfPowerPct >= EXTRA_F4_COP_THRESHOLD
-		) {
-			expectedCount++
-		}
-
-		// Make sure we don't go wild and return a larger expected count than is actually possible, in case the above logic misbehaves...
-		return Math.min(expectedCount, MAX_POSSIBLE_FIRE4)
-	}
-
-	public get actualFire4s(): number {
-		return this.events.filter(event => event.action === this.data.actions.FIRE_IV.id).length
-	}
-
-	public get missingFire4s(): number | undefined {
-		if (!this.expectedFire4s) { return }
-		return Math.max(this.expectedFire4s - this.actualFire4s, 0)
-	}
-	//#endregion
-
-	//#region Despairs
-	public get expectedDespairs(): number {
-		return this.hasManafont ? 2 : 1
-	}
-
-	public get actualDespairs(): number {
-		return this.events.filter(event => event.action === this.data.actions.DESPAIR.id).length
-	}
-
-	public get missingDespairs(): number {
-		return Math.max(this.expectedDespairs - this.actualDespairs, 0)
-	}
-	//#endregion
-
-	//#region Thunder 3s
-	private hardT3sInPhase(events: CycleEvent[]): number {
-		return events.filter(event => event.action === this.data.actions.THUNDER_III.id && !event.isProc).length
-	}
-
-	public get hardT3sBeforeManafont(): number {
-		return this.hardT3sInPhase(this.firePhaseEvents)
-	}
-
-	public get hardT3sAfterManafont(): number {
-		return this.hardT3sInPhase(this.manafontPhaseEvents)
-	}
-
-	public get hardT3sInFireCount(): number {
-		return this.hardT3sBeforeManafont + this.hardT3sAfterManafont
-	}
-
-	public get extraT3s(): number {
-		// By definition, if you didn't miss any expected casts, you couldn't have hardcast an extra T3
-		if (!(this.missingFire4s || this.missingDespairs)) {
-			return 0
-		}
-
-		// Determine how much MP we need to cast all of our expected Fire spells
-		const minimumMPForExpectedFires =
-			(this.expectedFire4sBeforeDespair * this.data.actions.FIRE_IV.mpCost + // MP for the expected Fire 4s
-			(this.fullFirePhaseEvents.some(event => event.action === this.data.actions.FIRE_I.id || event.action === this.data.actions.PARADOX.id) ? 1 : 0) * this.data.actions.FIRE_I.mpCost) // Feelycraft: If they included a single F1/Paradox we'll allow it. If they skipped it, that's fine too. If they have more than one, it's bad so only allow one for the MP requirement calculation.
-			* 2 // Astral Fire makes F1 and F4 cost twice as much
-			- this.firePhaseMetadata.initialGaugeState.umbralHearts * this.data.actions.FIRE_IV.mpCost // Refund the additional cost for each Umbral Heart carried into the Astral Fire phase
-			+ this.data.actions.FIRE_IV.mpCost // Add in the required MP cost for Despair, which happens to be the same as an F4
-
-		// Figure out how many T3s we could hardcast with the MP not needed for Fires (if any)
-		const maxHardcastT3s = Math.floor(Math.max(this.firePhaseMetadata.initialMP - minimumMPForExpectedFires, 0) / this.data.actions.THUNDER_III.mpCost)
-
-		// Refund the T3s that dont lose us a Fire 4 from the pre-manafont hardcast count, as well as one from the post-manafont count
-		return Math.max(this.hardT3sBeforeManafont - maxHardcastT3s, 0) + Math.max(this.hardT3sAfterManafont - 1, 0)
-	}
-	//#endregion
-
-	//#region Manafont
-	public get hasManafont(): boolean {
-		return this.events.some(event => event.action === this.data.actions.MANAFONT.id)
-	}
-
-	public get manafontBeforeDespair(): boolean {
-		return this.hasManafont && !this.firePhaseEvents.some(event => event.action === this.data.actions.DESPAIR.id)
-	}
-	//#endregion
-
-	//#region Other Fire checks
-	public get extraF1s(): number {
-		// Paradox counts against the allowed F1 count if used in Fire phase
-		return Math.max(this.fullFirePhaseEvents.filter(event => event.action === this.data.actions.FIRE_I.id || event.action === this.data.actions.PARADOX.id).length - 1, 0)
-	}
-
-	public get isMissingFire(): boolean {
-		return !this.events.some(event => this.fireSpellIds.includes(event.action))
-	}
-	//#endregion
-
-	//#region Final cycle or downtime cycle checks
-	public get shouldSkipB4(): boolean {
-		return this.finalOrDowntime // B4 should be skipped if this cycle ended in downtime or the end of the fight,
-			&& this.icePhaseEvents.some(event => event.action === this.data.actions.BLIZZARD_IV.id) // AND this cycle had a B4 cast
-			&& this.actualFire4s <= NO_UH_EXPECTED_FIRE4 // AND the Umbral Hearts gained from Blizzard 4 weren't needed
-	}
-
-	// Hardcasted T3's initial potency isn't worth it if the DoT is going to go to waste before the boss jumps or dies
-	public get shouldSkipT3(): boolean {
-		return this.finalOrDowntime && this.hardT3sInFireCount > 0
-	}
-	//#endregion
-
-	public get includeInSuggestions(): boolean {
-		return this.errorCode.priority < DEATH_PRIORITY && this.errorCode.priority > HIDDEN_PRIORITY_THRESHOLD
-	}
-
-	constructor(start: number, gaugeState: BLMGaugeState, dataRef: Data, fireSpellIds: number[]) {
-		this.startTime = start
-		this.firePhaseMetadata = {
-			startTime: 0,
-			initialMP: 0,
-			circleOfPowerPct: 0,
-			initialGaugeState: {...gaugeState},
-		}
-		this.data = dataRef
-		this.fireSpellIds = fireSpellIds
-	}
-
-	public overrideErrorCode(code: CycleErrorCode): void {
-		this._errorCode = code
-	}
-
-	public addEvent(event: CycleEvent): void {
-		// Stash the event in the appropriate phase-specific array
-		if (!event.gaugeContext.enochian) {
-			this.unaspectedEvents.push(event)
-		} else if (this.firePhaseMetadata.startTime === 0) {
-			this.icePhaseEvents.push(event)
-		} else if (!this.firePhaseEvents.some(event => event.action === this.data.actions.MANAFONT.id)) {
-			this.firePhaseEvents.push(event)
-		} else {
-			this.manafontPhaseEvents.push(event)
-		}
-	}
-}
-
-export class RotationWatchdog extends Analyser {
+export class RotationWatchdog extends RestartWindow {
 	static override handle = 'RotationWatchdog'
 	static override title = t('blm.rotation-watchdog.title')`Rotation Outliers`
 	static override displayOrder = DISPLAY_ORDER.ROTATION
 
-	@dependency private suggestions!: Suggestions
-	@dependency private invulnerability!: Invulnerability
-	@dependency private timeline!: Timeline
-	@dependency private unableToAct!: UnableToAct
 	@dependency private actors!: Actors
-	@dependency private gauge!: Gauge
-	@dependency private data!: Data
-	@dependency private procs!: Procs
+	@dependency private invulnerability!: Invulnerability
 	@dependency private leylines!: Leylines
+	@dependency private procs!: Procs
+	@dependency private unableToAct!: UnableToAct
 
-	private currentGaugeState: BLMGaugeState = {
-		astralFire: 0,
-		umbralIce: 0,
-		umbralHearts: 0,
-		polyglot: 0,
-		enochian: false,
-		paradox: 0,
-	}
-
-	private cycleEndpointIds = CYCLE_ENDPOINTS.map(key => this.data.actions[key].id)
+	override startAction = ROTATION_ENDPOINTS
+	override prependMessages = <Fragment>
+		<Message>
+			<Trans id="blm.rotation-watchdog.rotation-table.message">
+				The core of BLM consists of six casts of <DataLink action="FIRE_IV"/>, two casts of <DataLink action="PARADOX"/> and one cast <DataLink action="DESPAIR"/> per rotation.<br/>
+				With <DataLink action="MANAFONT"/>, an extra cast each of <DataLink action="FIRE_IV"/> and <DataLink action="DESPAIR"/> are expected.<br/>
+				Avoid missing <DataLink action="FIRE_IV" showIcon={false} /> casts where possible.
+			</Trans>
+		</Message>
+		<Message warning icon>
+			<Icon name="warning sign"/>
+			<Message.Content>
+				<Trans id="blm.rotation-watchdog.rotation-table.disclaimer">This module assumes you are following the standard BLM playstyle.<br/>
+					Suggestions will focus on improving standard play, but non-standard lines shouldn't be treated as an error by this report.
+				</Trans>
+			</Message.Content>
+		</Message>
+	</Fragment>
 
 	private fireSpellIds = FIRE_SPELLS.map(key => this.data.actions[key].id)
-	private currentRotation: Cycle = new Cycle(this.parser.pull.timestamp, this.currentGaugeState, this.data, this.fireSpellIds)
-	private history: Cycle[] = []
+	private iceSpellIds = ICE_SPELLS.map(key => this.data.actions[key].id)
 
-	private firstEvent: boolean = true
-	// counters for suggestions
-	private uptimeSouls: number = 0
+	private currentGaugeState = {...EMPTY_GAUGE_STATE}
+
+	private metadataHistory = new History<CycleMetadata>(() => ({
+		errorCode: ROTATION_ERRORS.NO_ERROR,
+		finalOrDowntime: false,
+		missingDespairs: false,
+		missingFire4s: false,
+		wasTPF1: false,
+		expectedFire4sBeforeDespair: 0,
+		expectedFire4s: -1,
+		expectedDespairs: -1,
+		hardT3sInFireCount: 0,
+		firePhaseMetadata: {
+			startTime: 0,
+			initialMP: 0,
+			initialGaugeState: {...EMPTY_GAUGE_STATE},
+			fullElementTime: 0,
+			fullElementMP: 0,
+			fullElementGaugeState: {...EMPTY_GAUGE_STATE},
+			circleOfPowerPct: 0,
+		}}
+	))
 
 	override initialise() {
-		this.addEventHook({type: 'action', source: this.parser.actor.id}, this.onCast)
-		this.addEventHook('complete', this.onComplete)
+		super.initialise()
+
+		this.setHistorySuggestionFilter(this.filterForSuggestions)
+		this.setHistoryOutputFilter(this.filterForOutput)
+
+		this.ignoreActions([this.data.actions.ATTACK.id])
+
 		this.addEventHook('blmgauge', this.onGaugeEvent)
 		this.addEventHook({
 			type: 'death',
 			actor: this.parser.actor.id,
 		}, this.onDeath)
+
+		//#region Evaluators that apply to all windows
+
+		// The ExpectedFireSpellsEvaluator must go before any others, since it will assign metadata about the
+		// expected fire spell counts that other evaluators may depend on
+		this.addEvaluator(new ExpectedFireSpellsEvaluator({
+			pullEnd: this.parser.pull.timestamp + this.parser.pull.duration,
+			despairAction: this.data.actions.DESPAIR,
+			fire4Action: this.data.actions.FIRE_IV,
+			invulnerability: this.invulnerability,
+			metadataHistory: this.metadataHistory,
+			// Expected counts per window will be calculated in the adjustExpectedActionsCount function
+			expectedActions: [
+				{
+					action: this.data.actions.FIRE_IV,
+					expectedPerWindow: 0,
+				},
+				{
+					action: this.data.actions.DESPAIR,
+					expectedPerWindow: 0,
+				},
+			],
+			adjustCount: this.adjustExpectedActionsCount.bind(this),
+			adjustOutcome: this.adjustExpectedActionsOutcome.bind(this),
+		}))
+
+		this.addEvaluator(new MissedIceParadoxEvaluator(this.metadataHistory))
+
+		this.addEvaluator(new ManafontTimingEvaluator({
+			manafontAction: this.data.actions.MANAFONT,
+			despairId: this.data.actions.DESPAIR.id,
+			metadataHistory: this.metadataHistory,
+		}))
+
+		this.addEvaluator(new ExtraF1Evaluator({
+			suggestionIcon: this.data.actions.FIRE_I.icon,
+			metadataHistory: this.metadataHistory,
+			limitedFireSpellIds: [this.data.actions.FIRE_I.id, this.data.actions.PARADOX.id],
+		}))
+
+		// This was previously only for normal mid-fight windows but it probably should've been for everything...
+		// Also needs to be sequenced before the SkipT3Evaluator
+		this.addEvaluator(new ExtraHardT3Evaluator({
+			data: this.data,
+			metadataHistory: this.metadataHistory,
+			procs: this.procs,
+		}))
+
+		this.addEvaluator(new UptimeSoulsEvaluator({
+			umbralSoulAction: this.data.actions.UMBRAL_SOUL,
+			invulnerability: this.invulnerability,
+		}))
+		//#endregion
+
+		//#region Evaluators that only apply to normal mid-fight windows
+
+		this.addEvaluator(new IceMageEvaluator({
+			suggestionIcon: this.data.actions.HIGH_BLIZZARD_II.icon,
+			metadataHistory: this.metadataHistory,
+			fireSpellIds: this.fireSpellIds,
+		}))
+		//#endregion
+
+		//#region Evaluators that only apply to windows that ended in downtime
+
+		this.addEvaluator(new SkipT3Evaluator({
+			suggestionIcon: this.data.actions.FIRE_IV.icon,
+			metadataHistory: this.metadataHistory,
+		}))
+
+		this.addEvaluator(new SkipB4Evaluator({
+			blizzard4Id: this.data.actions.BLIZZARD_IV.id,
+			fire4action: this.data.actions.FIRE_IV,
+			minExpectedF4s: NO_UH_EXPECTED_FIRE4,
+			metadataHistory: this.metadataHistory,
+		}))
+		//#endregion
+
+		// This should be the last evaluator added, since it is the one that will actually output the contents of the "Why Outlier" column
+		this.addEvaluator(new RotationErrorNotesEvaluator(this.metadataHistory))
+
+		this.onWindowStart(this.parser.pull.timestamp)
+	}
+
+	private onDeath() {
+		const metadata = this.metadataHistory.getCurrent()?.data
+		if (metadata != null) {
+			metadata.errorCode = ROTATION_ERRORS.DIED
+		}
 	}
 
 	// Handle events coming from BLM's Gauge module
 	private onGaugeEvent(event: Events['blmgauge']) {
-		const nextGaugeState = this.gauge.getGaugeState(event.timestamp)
+		const metadata = this.metadataHistory.getCurrent()?.data
+		const window = this.history.getCurrent()?.data
+		if (!(metadata == null || window == null)) {
+			// If we're entering the fire phase of this rotation, note it and save some data
+			if (this.currentGaugeState.astralFire === 0 && event.gaugeState.astralFire > 0) {
+				metadata.firePhaseMetadata.startTime = event.timestamp
 
-		// If we're beginning the fire phase of this cycle, note it and save some data
-		if (this.currentGaugeState.astralFire === 0 && nextGaugeState.astralFire > 0) {
-			this.currentRotation.firePhaseMetadata.startTime = event.timestamp
-			this.currentRotation.firePhaseMetadata.initialMP = this.actors.current.mp.current
+				// Spread the current gauge state into the phase metadata for future reference (technically the final state of the gauge before it changes to Fire)
+				metadata.firePhaseMetadata.initialGaugeState = {...this.currentGaugeState}
+			}
 
-			// Spread the current gauge state into the fire phase metadata for future reference
-			this.currentRotation.firePhaseMetadata.initialGaugeState = {...this.currentGaugeState}
-		}
+			// Tranpose -> Paradox -> F1 is a thing in non-standard scenarios, so only store the initial MP once we actually reach full AF
+			if (this.currentGaugeState.astralFire < ASTRAL_UMBRAL_MAX_STACKS && event.gaugeState.astralFire === ASTRAL_UMBRAL_MAX_STACKS) {
+				metadata.firePhaseMetadata.fullElementTime = event.timestamp
+				metadata.firePhaseMetadata.fullElementGaugeState = {...event.gaugeState}
+				metadata.firePhaseMetadata.fullElementMP = this.actors.current.mp.current
+			}
 
-		// If we no longer have enochian, flag it for display
-		if (this.currentGaugeState.enochian && !nextGaugeState.enochian) {
-			this.currentRotation.errorCode = CYCLE_ERRORS.DROPPED_AF_UI
+			// If we no longer have enochian, flag it for display
+			if (this.currentGaugeState.enochian && !event.gaugeState.enochian) {
+				assignErrorCode(metadata, ROTATION_ERRORS.DROPPED_AF_UI)
+			}
 		}
 
 		// Retrieve the GaugeState from the event
-		this.currentGaugeState = {...nextGaugeState}
+		this.currentGaugeState = {...event.gaugeState}
 	}
 
-	// Handle cast events and updated recording data accordingly
-	private onCast(event: Events['action']) {
-		const actionId = event.action
-
-		// If this action is signifies the beginning of a new cycle, unless this is the first
-		// cast of the log, stop the current cycle, and begin a new one. If Transposing from ice
-		// to fire, keep this cycle going
-		if (this.cycleEndpointIds.includes(actionId) && !this.firstEvent &&
-			!(actionId === this.data.actions.TRANSPOSE.id && this.currentGaugeState.umbralIce > 0)) {
-			this.startRecording(event)
-		}
-
-		// Add actions other than auto-attacks to the rotation cast list
-		const action = this.data.getAction(actionId)
-
-		if (!action  || action.autoAttack) {
-			return
-		}
-
-		// Note that we've recorded our first GCD event once we have one
-		if (this.firstEvent && action.onGcd) { this.firstEvent = false }
-
-		this.currentRotation.addEvent({...event, isProc: this.procs.checkEventWasProc(event), gaugeContext: {...this.currentGaugeState}})
-
-		if (actionId === this.data.actions.UMBRAL_SOUL.id && !this.invulnerability.isActive({types: ['invulnerable']})) {
-			this.uptimeSouls++
-		}
+	override onWindowStart(timestamp: number) {
+		super.onWindowStart(timestamp)
+		this.metadataHistory.getCurrentOrOpenNew(timestamp)
 	}
 
-	private onDeath() {
-		this.currentRotation.errorCode = CYCLE_ERRORS.DIED
-	}
+	override onWindowEnd(timestamp: number) {
+		const metadata = this.metadataHistory.getCurrent()
+		if (metadata != null) {
+			metadata.data.firePhaseMetadata.circleOfPowerPct =
+				this.leylines.getStatusDurationInRange(this.data.statuses.CIRCLE_OF_POWER.id, metadata.data.firePhaseMetadata.startTime, timestamp) /
+				(timestamp - metadata.data.firePhaseMetadata.startTime)
 
-	// Finish this parse and add the suggestions and checklist items
-	private onComplete() {
-		this.stopRecording(undefined)
+			// If the window ended while the boss was untargetable, mark it as a downtime window
+			if (this.invulnerability.isActive({
+				timestamp: timestamp,
+				types: ['untargetable'],
+			})) {
+				metadata.data.finalOrDowntime = true
+				assignErrorCode(metadata.data, ROTATION_ERRORS.FINAL_OR_DOWNTIME)
+			}
 
-		// Override the error code for cycles that dropped enochian, when the cycle contained an unabletoact time long enough to kill it.
-		// Couldn't do this at the time of code assignment, since the downtime data wasn't fully available yet
-		for (const cycle of this.history) {
-			if (cycle.errorCode !== CYCLE_ERRORS.DROPPED_AF_UI) { continue }
-
-			const windows = this.unableToAct
-				.getWindows({
-					start: cycle.startTime,
-					end: cycle.endTime,
-				})
-				.filter(window => Math.max(0, window.end - window.start) >= ASTRAL_UMBRAL_DURATION)
-
-			if (windows.length > 0) {
-				cycle.overrideErrorCode(CYCLE_ERRORS.FINAL_OR_DOWNTIME)
+			// If the rotation was shorter than we'll bother processing, mark it as such
+			if ((this.history.getCurrent()?.data.length ?? 0) <= MIN_ROTATION_LENGTH) {
+				assignErrorCode(metadata.data, ROTATION_ERRORS.SHORT)
 			}
 		}
 
-		// Re-check to see if any of the cycles that were tagged as missing Fire 4s were actually right before a downtime but the boss
-		// became invunlnerable before another Fire 4 could've been cast. If so, mark it as a finalOrDowntime cycle, clear the error code
-		// and reprocess it to see if there were any other errors
-		this.history.forEach(cycle => {
-			if (cycle.errorCode !== CYCLE_ERRORS.MISSING_FIRE4S) { return }
-			const cycleEnd = cycle.endTime ?? (this.parser.pull.timestamp + this.parser.pull.duration)
-			if (this.invulnerability.isActive({
-				timestamp: cycleEnd + this.data.actions.FIRE_IV.castTime,
-				types: ['invulnerable'],
-			})) {
-				cycle.finalOrDowntime = true
-				cycle.overrideErrorCode(CYCLE_ERRORS.NO_ERROR)
-				this.processCycle(cycle)
+		// Close the windows
+		super.onWindowEnd(timestamp)
+		this.metadataHistory.closeCurrent(timestamp)
+	}
+
+	override onWindowRestart(event: Events['action']) {
+		// Do not start a new window if transposing from Ice to Fire
+		if (event.action === this.data.actions.TRANSPOSE.id && this.currentGaugeState.umbralIce > 0) {
+			return
+		}
+		super.onWindowRestart(event)
+	}
+
+	override onComplete() {
+		const currentMetadata = this.metadataHistory.getCurrent()
+		if (currentMetadata != null) {
+			currentMetadata.data.finalOrDowntime = true
+		}
+
+		// Override the error code for rotations that dropped enochian, when the rotation contained an unabletoact time long enough to kill it.
+		// Couldn't do this at the time of DROPPED_AF_UI code assignment, since the downtime data wasn't fully available yet
+		this.mapHistoryActions().forEach(window => {
+			const windowMetadata = getMetadataForWindow(window, this.metadataHistory)
+
+			if (windowMetadata.errorCode !== ROTATION_ERRORS.DROPPED_AF_UI) { return }
+
+			const utaWindows = this.unableToAct
+				.getWindows({
+					start: window.start,
+					end: window.end ?? (this.parser.pull.timestamp + this.parser.pull.duration),
+				})
+				.filter(utaWindow => Math.max(0, utaWindow.end - utaWindow.start) >= ASTRAL_UMBRAL_DURATION)
+
+			if (utaWindows.length > 0) {
+				windowMetadata.errorCode = ROTATION_ERRORS.FINAL_OR_DOWNTIME
 			}
 		})
 
-		// Suggestion for skipping B4 on rotations that are cut short by the end of the parse or downtime
-		const shouldSkipB4s = this.history.filter(cycle => cycle.shouldSkipB4).length
-		this.suggestions.add(new TieredSuggestion({
-			icon: this.data.actions.FIRE_IV.icon,
-			content: <Trans id="blm.rotation-watchdog.suggestions.should-skip-b4.content">
-				You lost at least one <DataLink action="FIRE_IV"/> by not skipping <DataLink action="BLIZZARD_IV"/> in an Umbral Ice phase before the fight finished or a phase transition occurred.
-			</Trans>,
-			tiers: ENHANCED_SEVERITY_TIERS,
-			value: shouldSkipB4s,
-			why: <Trans id="blm.rotation-watchdog.suggestions.should-skip-b4.why">
-				You should have skipped <DataLink showIcon={false} action="BLIZZARD_IV"/> <Plural value={shouldSkipB4s} one="# time" other="# times"/>.
-			</Trans>,
-		}))
-
-		// Suggestion for skipping T3 on rotations that are cut short by the end of the parse or downtime
-		const shouldSkipT3s = this.history.filter(cycle => cycle.shouldSkipT3).reduce<number>((sum, cycle) => sum + cycle.hardT3sInFireCount, 0)
-		this.suggestions.add(new TieredSuggestion({
-			icon: this.data.actions.FIRE_IV.icon,
-			content: <Trans id="blm.rotation-watchdog.suggestions.should-skip-t3.content">
-				You lost at least one <DataLink action="FIRE_IV"/> by hard casting <DataLink action="THUNDER_III"/> before the fight finished or a phase transition occurred.
-			</Trans>,
-			tiers: ENHANCED_SEVERITY_TIERS,
-			value: shouldSkipT3s,
-			why: <Trans id="blm.rotation-watchdog.suggestions.should-skip-t3.why">
-				You should have skipped <DataLink showIcon={false} action="THUNDER_III"/> <Plural value={shouldSkipT3s} one="# time" other="# times"/>.
-			</Trans>,
-		}))
-
-		// Suggestion for unneccessary extra F1s
-		const extraF1s = this.history.reduce<number>((sum, cycle) => sum + cycle.extraF1s, 0)
-		this.suggestions.add(new TieredSuggestion({
-			icon: this.data.actions.FIRE_I.icon,
-			content: <Trans id="blm.rotation-watchdog.suggestions.extra-f1s.content">
-				Casting more than one <DataLink action="FIRE_I"/> per Astral Fire cycle is a crutch that should be avoided by better pre-planning of the encounter.
-			</Trans>,
-			tiers: DEFAULT_SEVERITY_TIERS,
-			value: extraF1s,
-			why: <Trans id="blm.rotation-watchdog.suggestions.extra-f1s.why">
-				You cast an extra <DataLink showIcon={false} action="FIRE_I"/> <Plural value={extraF1s} one="# time" other="# times"/>.
-			</Trans>,
-		}))
-
-		// Suggestion to end Astral Fires with Despair
-		const astralFiresMissingDespairs = this.history.filter(cycle => cycle.missingDespairs && cycle.includeInSuggestions).length
-		this.suggestions.add(new TieredSuggestion({
-			icon: this.data.actions.DESPAIR.icon,
-			content: <Trans id="blm.rotation-watchdog.suggestions.end-with-despair.content">
-				Once you can no longer cast another spell in Astral Fire and remain above 800 MP, you should use your remaining MP by casting <DataLink action="DESPAIR"/>.
-			</Trans>,
-			tiers: DEFAULT_SEVERITY_TIERS,
-			value: astralFiresMissingDespairs,
-			why: <Trans id="blm.rotation-watchdog.suggestions.end-with-despair.why">
-				<Plural value={astralFiresMissingDespairs} one="# Astral Fire phase was" other="# Astral Fire phases were"/> missing at least one <DataLink showIcon={false} action="DESPAIR"/>.
-			</Trans>,
-		}))
-
-		// Suggestion to not use Manafont before Despair
-		const manafontsBeforeDespair = this.history.filter(cycle => cycle.manafontBeforeDespair).length
-		this.suggestions.add(new TieredSuggestion({
-			icon: this.data.actions.MANAFONT.icon,
-			content: <Trans id="blm.rotation-watchdog.suggestions.mf-before-despair.content">
-				Using <DataLink action="MANAFONT"/> before <DataLink action="DESPAIR"/> leads to fewer <DataLink showIcon={false} action="DESPAIR"/>s than possible being cast. Try to avoid that since <DataLink showIcon={false} action="DESPAIR"/> is stronger than <DataLink action="FIRE_IV"/>.
-			</Trans>,
-			tiers: ENHANCED_SEVERITY_TIERS,
-			value: manafontsBeforeDespair,
-			why: <Trans id="blm.rotation-watchdog.suggestions.mf-before-despair.why">
-				<DataLink showIcon={false} action="MANAFONT"/> was used before <DataLink action="DESPAIR"/> <Plural value={manafontsBeforeDespair} one="# time" other="# times"/>.
-			</Trans>,
-		}))
-
-		// Suggestion for hard T3s under AF. Should only have one per cycle
-		const extraT3s = this.history.reduce<number>((sum, cycle) => sum + cycle.extraT3s, 0)
-		this.suggestions.add(new TieredSuggestion({
-			icon: this.data.actions.THUNDER_III.icon,
-			content: <Trans id="blm.rotation-watchdog.suggestions.wrong-t3.content">
-				Don't hard cast more than one <DataLink action="THUNDER_III"/> in your Astral Fire phase, since that costs MP which could be used for more <DataLink action="FIRE_IV"/>s.
-			</Trans>,
-			tiers: DEFAULT_SEVERITY_TIERS,
-			value: extraT3s,
-			why: <Trans id="blm.rotation-watchdog.suggestions.wrong-t3.why">
-				<DataLink showIcon={false} action="THUNDER_III"/> was hard casted under Astral Fire <Plural value={extraT3s} one="# extra time" other="# extra times"/>.
-			</Trans>,
-		}))
-
-		// Suggestion not to icemage, but don't double-count it if they got cut short or we otherwise weren't showing it in the errors table
-		const rotationsWithoutFire = this.history.filter(cycle => cycle.isMissingFire && cycle.includeInSuggestions && !cycle.finalOrDowntime).length
-		this.suggestions.add(new TieredSuggestion({
-			icon: this.data.actions.BLIZZARD_II.icon,
-			content: <Trans id="blm.rotation-watchdog.suggestions.icemage.content">
-				Avoid spending significant amounts of time in Umbral Ice. The majority of your damage comes from your Astral Fire phase, so you should maximize the number of <DataLink action="FIRE_IV"/>s cast during the fight.
-			</Trans>,
-			tiers: DEFAULT_SEVERITY_TIERS,
-			value: rotationsWithoutFire,
-			why: <Trans id="blm.rotation-watchdog.suggestions.icemage.why">
-				<Plural value={rotationsWithoutFire} one="# rotation was" other="# rotations were"/> performed with no fire spells.
-			</Trans>,
-		}))
-
-		this.suggestions.add(new TieredSuggestion({
-			icon: this.data.actions.UMBRAL_SOUL.icon,
-			content: <Trans id="blm.rotation-watchdog.suggestions.uptime-souls.content">
-				Avoid using <DataLink action="UMBRAL_SOUL"/> when there is a target available to hit with a damaging ability. <DataLink showIcon={false} action="UMBRAL_SOUL"/> does no damage and prevents you from using other GCD skills. It should be reserved for downtime.
-			</Trans>,
-			tiers: DEFAULT_SEVERITY_TIERS,
-			value: this.uptimeSouls,
-			why: <Trans id="blm.rotation-watchdog.suggestions.uptime-souls.why">
-				<DataLink showIcon={false} action="UMBRAL_SOUL"/> was performed during uptime <Plural value={this.uptimeSouls} one="# time" other="# times"/>.
-			</Trans>,
-		}))
+		super.onComplete()
 	}
 
-	// Complete the previous cycle and start a new one
-	private startRecording(event: Events['action']) {
-		this.stopRecording(event)
-		// Pass in whether we've seen the first cycle endpoint to account for pre-pull buff executions (mainly Sharpcast)
-		this.currentRotation = new Cycle(event.timestamp, this.currentGaugeState, this.data, this.fireSpellIds)
+	private adjustExpectedActionsCount(window: HistoryEntry<EvaluatedAction[]>, action: TrackedAction): number {
+		const windowMetadata = getMetadataForWindow(window, this.metadataHistory)
+
+		const windowEnd = window.end ?? (this.parser.pull.timestamp + this.parser.pull.duration)
+		const firePhaseDuration = windowEnd - windowMetadata.firePhaseMetadata.startTime
+		const fireInvulnDuration = this.invulnerability.getDuration({
+			start: windowMetadata.firePhaseMetadata.startTime,
+			end: windowEnd,
+		})
+
+		// If the whole fire phase happened during downtime (ie. Transpose spamming to get a paradox marker), don't expect fire spells
+		if (fireInvulnDuration === firePhaseDuration) { return 0 }
+
+		let adjustment = 0
+		if (action.action.id === this.data.actions.FIRE_IV.id) {
+			// Let the player rush the Despair if they need to before a downtime/end of fight
+			if (windowMetadata.finalOrDowntime) { return window.data.filter(event => event.action.id === this.data.actions.FIRE_IV.id).length }
+
+			// Start off with the baseline assumption they've reached full MP in Umbral Ice, since MP events from the log source aren't reliably timed
+			adjustment = NO_UH_EXPECTED_FIRE4
+
+			// Rotations with at least one heart get an extra F4 (5x F4 + F1 with 1 heart is the same MP cost as the standard 6F4 + F1 with 3)
+			// Note that two hearts does not give any extra F4s, though it'll hardly ever come up in practice
+			if (windowMetadata.firePhaseMetadata.fullElementGaugeState.umbralHearts > 0) {
+				adjustment++
+			}
+
+			// Rotations with full hearts get two extra F4s
+			if (windowMetadata.firePhaseMetadata.fullElementGaugeState.umbralHearts === UMBRAL_HEARTS_MAX_STACKS) {
+				adjustment++
+			}
+
+			const buildAstralFireEvents = window.data.filter(event => event.timestamp >= windowMetadata.firePhaseMetadata.startTime && event.timestamp <= windowMetadata.firePhaseMetadata.fullElementTime)
+			// Transpose -> Paradox -> F1 to build Astral Fire costs enough MP to remove the use of F4 they would have gained from 2 umbral hearts
+			const transposeParaF1 = [this.data.actions.TRANSPOSE.id, this.data.actions.PARADOX.id, this.data.actions.FIRE_I.id]
+			const filteredBuildEvents = buildAstralFireEvents.filter(event => transposeParaF1.includes(event.action.id)).map(event => event.action.id)
+			if (filteredBuildEvents.length === transposeParaF1.length && filteredBuildEvents.every((actionId, index) => actionId === transposeParaF1[index])) {
+				adjustment--
+				windowMetadata.wasTPF1 = true
+			}
+
+			// No Umbral hearts -> Tranpose -> Raw F3 loses an F4 due to MP, or F3P due to time (unless very speedy, in which case you're probably not going non-standard...)
+			if (windowMetadata.firePhaseMetadata.initialGaugeState.umbralHearts === 0 && (buildAstralFireEvents.length >= 1 && buildAstralFireEvents[0].action.id === this.data.actions.TRANSPOSE.id &&
+					buildAstralFireEvents[buildAstralFireEvents.length - 1].action.id === this.data.actions.FIRE_III.id)) {
+				adjustment--
+			}
+
+			/**
+			 * IF this rotation's Astral Fire phase began with no Umbral Hearts (either no-B4-opener, or a midfight alternate playstyle rotation),
+			 * AND it begins with a cost-less Fire 3 (ie, the rotation includes an ice phase and they didn't Transpose -> hardcast F3)
+			 * AND we have leylines for long enough to squeeze in an extra F4
+			 * AND we actually have enough MP for it
+			 * THEN we increase the expected count by one
+			 */
+			if (
+				windowMetadata.firePhaseMetadata.initialGaugeState.umbralHearts === 0 &&
+				window.data.some(event => this.iceSpellIds.includes(event.action.id)) &&
+				(buildAstralFireEvents.length === 1 || // Did the window either start via UI F3 or a Transpose F3P?
+					(buildAstralFireEvents.length > 1 && buildAstralFireEvents[0].action.id === this.data.actions.TRANSPOSE.id && buildAstralFireEvents[buildAstralFireEvents.length - 1].action.id === this.data.actions.FIRE_III.id &&
+						this.procs.checkActionWasProc(this.data.actions.FIRE_III.id, buildAstralFireEvents[buildAstralFireEvents.length - 1].timestamp))) &&
+				windowMetadata.firePhaseMetadata.circleOfPowerPct >= EXTRA_F4_COP_THRESHOLD &&
+				((adjustment + 1) * 2 + 1) * this.data.actions.FIRE_IV.mpCost < MAX_MP
+			) {
+				adjustment++
+			}
+
+			// Make sure we don't go wild and return a larger expected count than is actually possible, in case the above logic misbehaves...
+			adjustment = Math.min(adjustment, MAX_POSSIBLE_FIRE4)
+			const despairTime = window.data.find(event => event.action.id === this.data.actions.DESPAIR.id)?.timestamp
+
+			// Give them credit if we were overly pessimistic
+			adjustment = Math.max(adjustment, window.data.filter(event => event.action.id === action.action.id && (!despairTime || event.timestamp < despairTime)).length)
+			windowMetadata.expectedFire4sBeforeDespair = adjustment
+		}
+
+		if (action.action.id === this.data.actions.DESPAIR.id) {
+			adjustment++
+		}
+
+		if (window.data.find(event => event.action.id === this.data.actions.MANAFONT.id) != null) {
+			adjustment += EXTRA_CASTS_FROM_MANAFONT
+		}
+
+		switch (action.action.id) {
+		case this.data.actions.FIRE_IV.id:
+			windowMetadata.expectedFire4s = adjustment
+			break
+		case this.data.actions.DESPAIR.id:
+			windowMetadata.expectedDespairs = adjustment
+		}
+
+		return adjustment
 	}
 
-	// End the current cycle, send it off to error processing, and add it to the history list
-	private stopRecording(event: Events['action'] | undefined) {
-		this.currentRotation.endTime = this.parser.currentEpochTimestamp
-		// TODO: Replace this BS with core statuses once that's ported
-		this.currentRotation.firePhaseMetadata.circleOfPowerPct =
-			this.leylines.getStatusDurationInRange(this.data.statuses.CIRCLE_OF_POWER.id, this.currentRotation.firePhaseMetadata.startTime, this.currentRotation.endTime) /
-			(this.currentRotation.endTime - this.currentRotation.firePhaseMetadata.startTime)
-
-		// If an event object wasn't passed, or the event was a transpose that occurred during downtime,
-		// treat this as a rotation that ended with some kind of downtime
-		if (
-			!event
-			|| (
-				event
-				&& event.action === this.data.actions.TRANSPOSE.id
-				&& this.invulnerability.isActive({
-					timestamp: event.timestamp,
-					types: ['untargetable'],
-				})
-			)
-		) {
-			this.currentRotation.finalOrDowntime = true
-		}
-
-		this.processCycle(this.currentRotation)
-		this.history.push(this.currentRotation)
-	}
-
-	// Process errors for this cycle
-	// TODO: Handle aoe things?
-	// TODO: Handle Flare?
-	private processCycle(currentRotation: Cycle) {
-		// Only process errors for rotations with more than the minimum number of casts,
-		// since fewer than that usually indicates something weird happening
-		if (currentRotation.events.length <= MIN_ROTATION_LENGTH) {
-			currentRotation.errorCode = CYCLE_ERRORS.SHORT
-			return
-		}
-
-		// Check for errors that apply for all cycles
-
-		// Check if the rotation overwrote a Paradox from the ice phase
-		if (currentRotation.firePhaseMetadata.initialGaugeState.paradox > 0 &&
-			currentRotation.firePhaseMetadata.initialGaugeState.umbralIce === ASTRAL_UMBRAL_MAX_STACKS &&
-			currentRotation.firePhaseMetadata.initialGaugeState.umbralHearts === UMBRAL_HEARTS_MAX_STACKS) {
-			currentRotation.errorCode = CYCLE_ERRORS.MISSED_ICE_PARADOX
-		}
-
-		// Check if the rotation included the expected number of Despair casts
-		if (currentRotation.missingDespairs) {
-			currentRotation.errorCode = CYCLE_ERRORS.MISSING_DESPAIRS
-		}
-
-		// Check whether manafont was used before despair
-		if (currentRotation.manafontBeforeDespair) {
-			currentRotation.errorCode = CYCLE_ERRORS.MANAFONT_BEFORE_DESPAIR
-		}
-
-		// Check if the rotation included more than one Fire 1
-		if (currentRotation.extraF1s > 0) {
-			currentRotation.errorCode = CYCLE_ERRORS.EXTRA_F1
-		}
-
-		// If this cycle ends with downtime or is the last cycle, many of the errors we normally check for
-		// don't apply, so split the processing pathway here
-		if (currentRotation.finalOrDowntime) {
-			this.processDowntimeCycle(currentRotation)
-			return
-		}
-
-		this.processNormalCycle(currentRotation)
-	}
-
-	// Process errors for a normal mid-fight cycle
-	private processNormalCycle(currentRotation: Cycle) {
-		// Check to make sure we didn't lose Fire 4 casts due to spending MP on T3 hardcasts
-		if (currentRotation.extraT3s > 0) {
-			currentRotation.errorCode = CYCLE_ERRORS.EXTRA_T3
-		}
-
-		// Why so icemage?
-		if (currentRotation.isMissingFire) {
-			currentRotation.errorCode = CYCLE_ERRORS.NO_FIRE_SPELLS
-		}
-
-		// If they're just missing Fire 4 because derp, note it
-		if (currentRotation.missingFire4s) {
-			currentRotation.errorCode = CYCLE_ERRORS.MISSING_FIRE4S
+	private adjustExpectedActionsOutcome(window: HistoryEntry<EvaluatedAction[]>, action: TrackedAction) {
+		const windowMetadata = this.metadataHistory.entries.find(entry => entry.start === window.start)
+		if (action.action.id === this.data.actions.FIRE_IV.id && (windowMetadata?.data.finalOrDowntime || false)) {
+			return (_actual: number, _expected?: number) => {
+				return RotationTargetOutcome.NEUTRAL
+			}
 		}
 	}
 
-	// Process errors for a cycle that was cut short by downtime or by the fight ending
-	private processDowntimeCycle(currentRotation: Cycle) {
-		currentRotation.errorCode = CYCLE_ERRORS.FINAL_OR_DOWNTIME
+	// Filter out the too-short windows from inclusion in suggestions
+	private filterForSuggestions: HistoryEntryPredicate = (window: HistoryEntry<EvaluatedAction[]>) => {
+		const windowMetadata = getMetadataForWindow(window, this.metadataHistory)
 
-		// Check if more Fire 4s could've been cast by skipping Blizzard 4 before this downtime
-		if (currentRotation.shouldSkipB4) {
-			currentRotation.errorCode = CYCLE_ERRORS.SHOULD_SKIP_B4
-		}
-
-		// Check if more Fire 4s could've been cast by skipping a hardcast Thunder 3
-		if (currentRotation.hardT3sInFireCount > 0) {
-			currentRotation.errorCode = CYCLE_ERRORS.SHOULD_SKIP_T3
-		}
+		return windowMetadata.errorCode.priority !== ROTATION_ERRORS.SHORT.priority
 	}
 
-	override output() {
-		const outliers: Cycle[] = this.history.filter(cycle => cycle.errorCode.priority >
-			HIDDEN_PRIORITY_THRESHOLD || DEBUG_SHOW_ALL_CYCLES)
-		if (outliers.length > 0) {
-			return <Fragment>
-				<Message>
-					<Trans id="blm.rotation-watchdog.rotation-table.message">
-						The core of BLM consists of six casts of <DataLink action="FIRE_IV"/>, two casts of <DataLink action="PARADOX"/> and one cast <DataLink action="DESPAIR"/> per rotation.<br/>
-						With <DataLink action="MANAFONT"/>, an extra cast each of <DataLink action="FIRE_IV"/> and <DataLink action="DESPAIR"/> are expected.<br/>
-						Avoid missing Fire IV casts where possible.
-					</Trans>
-				</Message>
-				<Message warning icon>
-					<Icon name="warning sign"/>
-					<Message.Content>
-						<Trans id="blm.rotation-watchdog.rotation-table.disclaimer">This module assumes you are following the standard BLM playstyle.<br/>
-							If you are following a non-standard playstyle, this report and many of the suggestions may not be applicable.
-						</Trans>
-					</Message.Content>
-				</Message>
-				<RotationTable
-					targets={[
-						{
-							header: <DataLink showName={false} action="FIRE_IV"/>,
-							accessor: 'fire4s',
-						},
-						{
-							header: <DataLink showName={false} action="DESPAIR"/>,
-							accessor: 'despairs',
-						},
-					]}
-					notes={[
-						{
-							header: <Trans id="blm.rotation-watchdog.rotation-table.header.reason">Why Outlier</Trans>,
-							accessor: 'reason',
-						},
-					]}
-					data={outliers.map(cycle => {
-						return ({
-							start: cycle.startTime - this.parser.pull.timestamp,
-							end: cycle.endTime != null ?
-								cycle.endTime - this.parser.pull.timestamp :
-								cycle.startTime - this.parser.pull.timestamp,
-							targetsData: {
-								fire4s: {
-									actual: cycle.actualFire4s,
-									expected: cycle.expectedFire4s,
-								},
-								despairs: {
-									actual: cycle.actualDespairs,
-									expected: cycle.expectedDespairs,
-								},
-							},
-							notesMap: {
-								reason: <>{cycle.errorCode.message}</>,
-							},
-							rotation: cycle.events,
-						})
-					})}
-					onGoto={this.timeline.show}
-				/>
-			</Fragment>
-		}
+	// Filter out the windows we don't want to show in the output, unless we're showing everything
+	private filterForOutput: HistoryEntryPredicate = (window: HistoryEntry<EvaluatedAction[]>) => {
+		const windowMetadata = getMetadataForWindow(window, this.metadataHistory)
+
+		return windowMetadata.errorCode.priority > HIDDEN_PRIORITY_THRESHOLD || DEBUG_SHOW_ALL
+	}
+
+	// Include whether the event was a proc so we get the proc outline in the output Rotation column
+	override getRotationOutputForAction(action: EvaluatedAction): RotationEvent {
+		return {action: action.action.id, isProc: this.procs.checkActionWasProc(action.action.id, action.timestamp)}
 	}
 }

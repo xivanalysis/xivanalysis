@@ -1,6 +1,4 @@
 import {Events} from 'event'
-import {dependency} from 'parser/core/Injectable'
-import {Actors} from 'parser/core/modules/Actors'
 import {CooldownDowntime} from 'parser/core/modules/CooldownDowntime'
 
 const DEFAULT_ALLOWED_DOWNTIME = 1000
@@ -8,17 +6,25 @@ const MAX_WINGED_STACKS_BEFORE_CD = 3
 export class GeneralCDDowntime extends CooldownDowntime {
 	override defaultAllowedAverageDowntime = DEFAULT_ALLOWED_DOWNTIME
 
-	@dependency private actors!: Actors
+	private wingedReprobationCounter = 0
 
 	override countUsage(e: Events['action']): boolean {
 		const actionId = e.action
 		if (actionId !== this.data.actions.WINGED_REPROBATION.id) {
 			return true
 		}
-		const wingedReprobationStacks = this.actors.current.getStatusData(this.data.statuses.WINGED_REPROBATION.id) ?? 0
-		if (wingedReprobationStacks < MAX_WINGED_STACKS_BEFORE_CD) {
+
+		// Winged Reprobation only starts its cooldown after every 4th use, so
+		// for simplicity just start counting from there.
+		// TODO: This means that for this case:
+		//    Winged => Winged => Winged => 30s doing other stuff => Winged
+		// we won't catch those 30 seconds of "downtime".  Probably best to
+		// let the WingedReprobation module implement that.
+		this.wingedReprobationCounter++
+		if (this.wingedReprobationCounter < MAX_WINGED_STACKS_BEFORE_CD) {
 			return false
 		}
+		this.wingedReprobationCounter = 0
 		return true
 	}
 

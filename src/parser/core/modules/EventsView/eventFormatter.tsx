@@ -143,6 +143,10 @@ registerEventFormatter('actorUpdate', ({event, pull}) => <>
 	{event.targetable != null && <>&nbsp;{event.targetable ? 'Targetable' : 'Untargetable'}.</>}
 </>)
 
+registerEventFormatter('gaugeUpdate', ({event, pull}) => <>
+	{getActorName(event.actor, pull.actors)}'s gauge is updated.&nbsp;
+</>)
+
 // -----
 // #endregion
 // -----
