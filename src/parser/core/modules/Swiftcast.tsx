@@ -11,6 +11,7 @@ import {Icon} from 'semantic-ui-react'
 import {dependency} from '../Injectable'
 import {BuffWindow, EvaluatedAction, EvaluationOutput, WindowEvaluator} from './ActionWindow'
 import {HistoryEntry} from './ActionWindow/History'
+import {EndOfWindowHandlingMode} from './ActionWindow/windows/BuffWindow'
 import {GlobalCooldown} from './GlobalCooldown'
 
 // Global default
@@ -119,6 +120,7 @@ export abstract class Swiftcast extends BuffWindow {
 	@dependency private globalCooldown!: GlobalCooldown
 
 	override buffStatus: Status = this.data.statuses.SWIFTCAST
+	override endOfWindowHandlingMode: EndOfWindowHandlingMode = 'SAME-TIMESTAMP'
 
 	override initialise() {
 		super.initialise()
