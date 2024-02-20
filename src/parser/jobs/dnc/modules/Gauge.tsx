@@ -12,6 +12,7 @@ import {Actors} from 'parser/core/modules/Actors'
 import {CounterGauge, Gauge as CoreGauge} from 'parser/core/modules/Gauge'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
+import {DEFAULT_SEVERITY_TIERS} from '../CommonData'
 
 // More lenient than usual due to the probable unreliability of the data.
 const GAUGE_SEVERITY_TIERS = {
@@ -88,6 +89,8 @@ export class Gauge extends CoreGauge {
 	@dependency private actors!: Actors
 	@dependency private suggestions!: Suggestions
 
+	private potentialOvercap = 0
+
 	private featherGauge = this.add(new CounterGauge({
 		maximum: MAX_FEATHERS,
 		graph: {
@@ -107,6 +110,8 @@ export class Gauge extends CoreGauge {
 	}))
 
 	private espritBuffs: Map<string, EventHook<Events['damage']>> = new Map<string, EventHook<Events['damage']>>()
+	private espritConsumptionHook: EventHook<Events['action']> | undefined = undefined
+	private featherConsumptionHook: EventHook<Events['action']> | undefined = undefined
 
 	private espritGenerationExceptionIds: number[] = ESPRIT_EXCEPTIONS_PARTY.map(key => this.data.actions[key].id)
 
@@ -135,12 +140,38 @@ export class Gauge extends CoreGauge {
 		this.addEventHook(statusApplyFilter.status(espritStatusMatcher), this.addEspritGenerationHook)
 		this.addEventHook(statusRemoveFilter.status(espritStatusMatcher), this.removeEspritGenerationHook)
 
-		this.addEventHook(damageFilter.cause(this.data.matchCauseActionId([this.data.actions.SABER_DANCE.id])), this.onConsumeEsprit)
+		this.espritConsumptionHook = this.addEventHook(playerFilter.type('action').action(this.data.actions.SABER_DANCE.id), this.onConsumeEsprit)
 
 		this.addEventHook(damageFilter.cause(this.data.matchCauseAction(FEATHER_GENERATORS)), this.onCastGenerator)
-		this.addEventHook(playerFilter.type('action').action(this.data.matchActionId(FEATHER_CONSUMERS)), this.onConsumeFeather)
+		this.featherConsumptionHook = this.addEventHook(playerFilter.type('action').action(this.data.matchActionId(FEATHER_CONSUMERS)), this.onConsumeFeather)
 
 		this.addEventHook('complete', this.onComplete)
+
+		// right now only the logging player has gauge update events, but in case that changes, narrow this to only the parsing actor
+		this.addEventHook(filter<Event>().actor(this.parser.actor.id).type('gaugeUpdate'), this.handleLoggedGauge)
+	}
+
+	private handleLoggedGauge(event: Events['gaugeUpdate']) {
+		// If we haven't yet noted that this player has gauge update events, set that now
+		if (!this.parser.actor.loggedGauge) { this.parser.actor.loggedGauge = true }
+
+		// Clean up the consumption hooks if they haven't been already
+		if (this.espritConsumptionHook != null) {
+			this.removeEventHook(this.espritConsumptionHook)
+			this.espritConsumptionHook = undefined
+		}
+		if (this.featherConsumptionHook != null) {
+			this.removeEventHook(this.featherConsumptionHook)
+			this.featherConsumptionHook = undefined
+		}
+
+		// Set the gauge values as needed
+		if ('esprit' in event && event.esprit !== this.espritGauge.value) {
+			this.espritGauge.set(event.esprit)
+		}
+		if ('feathers' in event && event.feathers !== this.featherGauge.value) {
+			this.featherGauge.set(event.feathers)
+		}
 	}
 
 	override onDeath(event: Events['death']) {
@@ -213,37 +244,86 @@ export class Gauge extends CoreGauge {
 			// For the jobs that theorycrafters have determined a more precise rate, use that instead
 			ESPRIT_GENERATION_AMOUNT_PARTY * (ESPRIT_RATE_PARTY_TESTED.get(eventActor.job) ?? ESPRIT_RATE_PARTY_DEFAULT)
 
-		// If we actually generate something, add it to the gauge
-		if (generatedAmt > 0) {
+		// If we didn't generate anything (shouldn't hit this but hey), just get out
+		if (generatedAmt <= 0) { return }
+
+		// If the player doesn't have logged gauge events, add it to the gauge
+		if (!this.parser.actor.loggedGauge) {
 			this.espritGauge.generate(generatedAmt)
+			return
+		}
+
+		// If the player has logged gauge events, and their gauge is known to be capped...
+		if (this.espritGauge.capped) {
+			if (event.source === this.parser.actor.id) {
+				// 'add' their own self-generated Esprit to the gauge so we can get a definitive overcap amount
+				this.espritGauge.generate(generatedAmt)
+			} else {
+				// Keep track of assumed party-generated Esprit so we can estimate a total overcap amount
+				this.potentialOvercap += generatedAmt
+			}
 		}
 	}
 
 	private onConsumeEsprit() {
+		// If we haven't removed the consumption hook for some reason yet, just bail
+		if (this.parser.actor.loggedGauge) { return }
 		this.espritGauge.spend(SABER_DANCE_COST)
 	}
 
 	private onCastGenerator() {
-		this.featherGauge.generate(FEATHER_GENERATION_CHANCE)
+		// Make sure we keep track of overcap even with gauge update events
+		if (!this.parser.actor.loggedGauge || this.espritGauge.capped) {
+			this.featherGauge.generate(FEATHER_GENERATION_CHANCE)
+		}
 	}
 
 	private onConsumeFeather() {
+		// If we haven't removed the consumption hook for some reason yet, just bail
+		if (this.parser.actor.loggedGauge) { return }
 		this.featherGauge.spend(1)
 	}
 
 	/* Parse Completion and output */
 	private onComplete() {
-		const missedSaberDances = Math.floor(this.espritGauge.overCap / SABER_DANCE_COST)
+		const definiteMissedSabers = this.parser.actor.loggedGauge ? Math.floor(this.espritGauge.overCap / SABER_DANCE_COST) : 0
+		const missedSaberDances = Math.floor((this.espritGauge.overCap + this.potentialOvercap) / SABER_DANCE_COST)
+
+		let suggestionContent, suggestionTiers, suggestionValue, suggestionWhy
+
+		// Default the normal severity tiers and the definite missed value in case we had gauge update events
+		suggestionTiers = DEFAULT_SEVERITY_TIERS
+		suggestionValue = definiteMissedSabers
+		// Default suggestion text if they had gauge update events and we know for sure they missed a saber dance
+		suggestionContent = <Trans id="dnc.esprit.suggestions.definite-overcapped-esprit.content">You lost uses of <DataLink action="SABER_DANCE" /> due to overcapping your Esprit gauge. Make sure you use it, especially if your gauge is above 80.</Trans>
+
+		// Customize the Esprit overcap suggestion based on the results
+		if (definiteMissedSabers === 0) {
+			// Since we didn't have gauge update events for this parse, give more leniency to the suggestion and use the uncertain overcap content text
+			suggestionTiers = GAUGE_SEVERITY_TIERS
+			suggestionValue = missedSaberDances
+			suggestionContent = <Trans id="dnc.esprit.suggestions.overcapped-esprit.content">
+				You may have lost uses of <DataLink action="SABER_DANCE" /> due to overcapping your Esprit gauge. Make sure you use it, especially if your gauge is above 80.
+			</Trans>
+			suggestionWhy = <Trans id="dnc.esprit.suggestions.overcapped-esprit.why">
+				<Plural value={missedSaberDances} one="# Saber Dance" other="# Saber Dances"/> may have been missed.
+			</Trans>
+		} else if (missedSaberDances > definiteMissedSabers) {
+			suggestionWhy =	<Trans id="dnc.esprit.suggestions.possible-overcapped-esprit.why">
+				At least <Plural value={definiteMissedSabers} one="one" other="#"/> and up to {missedSaberDances} uses of <DataLink action="SABER_DANCE" showIcon={false} /> were missed.
+			</Trans>
+		} else {
+			suggestionWhy =	<Trans id="dnc.esprit.suggestions.definite-overcapped-esprit.why">
+				<Plural value={definiteMissedSabers} one="# Saber Dance was" other="# Saber Dances were"/> missed.
+			</Trans>
+		}
+
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.SABER_DANCE.icon,
-			content: <Trans id="dnc.esprit.suggestions.overcapped-esprit.content">
-				You may have lost uses of <DataLink action="SABER_DANCE" /> due to overcapping your Esprit gauge. Make sure you use it, especially if your gauge is above 80.
-			</Trans>,
-			tiers: GAUGE_SEVERITY_TIERS,
-			value: missedSaberDances,
-			why: <Trans id="dnc.esprit.suggestions.overcapped-esprit.why">
-				<Plural value={missedSaberDances} one="# Saber Dance" other="# Saber Dances"/> may have been missed.
-			</Trans>,
+			content: suggestionContent,
+			tiers: suggestionTiers,
+			value: suggestionValue,
+			why: suggestionWhy,
 		}))
 
 		const featherOvercap = Math.floor(this.featherGauge.overCap)
