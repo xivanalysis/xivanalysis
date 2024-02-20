@@ -1,3 +1,4 @@
+import {RotationEvent} from 'components/ui/Rotation'
 import {RotationTable, RotationTableNotesMap, RotationTableTargetData} from 'components/ui/RotationTable'
 import {Event, Events} from 'event'
 import {dependency} from 'parser/core/Injectable'
@@ -35,10 +36,16 @@ export abstract class ActionWindow extends Analyser {
 	 */
 	private eventFilter: EventFilterPredicate<Events['action']> = filter<Event>().source(this.parser.actor.id).type('action')
 	/**
-	 * The history filter used to determine whether a history entry should be used.
+	 * The history filter used to determine whether a history entry should be used in the output display.
 	 * The default filter will allow all history entries.
 	 */
-	private historyFilter: HistoryEntryPredicate = (_) => true
+	private historyOutputFilter: HistoryEntryPredicate = (_) => true
+	/**
+	 * The history filter used to determine whether a history entry should be used in the suggestions.
+	 * The default filter will allow all history entries.
+	 */
+	private historySuggestionFilter: HistoryEntryPredicate = (_) => true
+
 	/**
 	 * The event hook for actions being captured.
 	 */
@@ -150,7 +157,22 @@ export abstract class ActionWindow extends Analyser {
 	 * @param filter The filter for history entries to consider
 	 */
 	protected setHistoryFilter(filter: HistoryEntryPredicate) {
-		this.historyFilter = filter
+		this.historyOutputFilter = filter
+		this.historySuggestionFilter = filter
+	}
+	/**
+	 * Sets a custom history filter for displaying results.
+	 * @param filter The filter for history entries to consider
+	 */
+	protected setHistoryOutputFilter(filter: HistoryEntryPredicate) {
+		this.historyOutputFilter = filter
+	}
+	/**
+	 * Sets a custom history filter for displaying suggestions.
+	 * @param filter The filter for history entries to consider
+	 */
+	protected setHistorySuggestionFilter(filter: HistoryEntryPredicate) {
+		this.historySuggestionFilter = filter
 	}
 
 	override initialise() {
@@ -161,7 +183,7 @@ export abstract class ActionWindow extends Analyser {
 		this.onWindowEnd(this.parser.pull.timestamp + this.parser.pull.duration)
 
 		const actionHistory = this.mapHistoryActions()
-		const filteredHistory = actionHistory.filter(this.historyFilter)
+		const filteredHistory = actionHistory.filter(this.historySuggestionFilter)
 		this.evaluators
 			.forEach(ev => {
 				const suggestion = ev.suggest(filteredHistory)
@@ -173,7 +195,7 @@ export abstract class ActionWindow extends Analyser {
 
 	override output() {
 		const actionHistory = this.mapHistoryActions()
-		const filteredHistory = actionHistory.filter(this.historyFilter)
+		const filteredHistory = actionHistory.filter(this.historyOutputFilter)
 		if (filteredHistory.length === 0) { return undefined }
 
 		const evalColumns: EvaluationOutput[] = []
@@ -204,7 +226,7 @@ export abstract class ActionWindow extends Analyser {
 					start: window.start - this.parser.pull.timestamp,
 					end: (window.end ?? window.start) - this.parser.pull.timestamp,
 					targetsData,
-					rotation: window.data.map(event => { return {action: event.action.id} }),
+					rotation: window.data.map(action => { return this.getRotationOutputForAction(action) }),
 					notesMap,
 				}
 			})
@@ -235,5 +257,9 @@ export abstract class ActionWindow extends Analyser {
 					})
 					.filter(isDefined),
 			}))
+	}
+
+	protected getRotationOutputForAction(action: EvaluatedAction): RotationEvent {
+		return {action: action.action.id}
 	}
 }

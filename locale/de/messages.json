@@ -144,7 +144,7 @@
   "blm.rotation-watchdog.suggestions.should-skip-t3.content": "",
   "blm.rotation-watchdog.suggestions.should-skip-t3.why": "",
   "blm.rotation-watchdog.suggestions.uptime-souls.content": "Vermeide <0/>, wenn ein Ziel für eine Schadenfertigkeit vorhanden ist. <1/> macht keinen Schaden und verhindert die Nutzung von anderen GCD Fähigkeiten. Nutze es nur bei Downtime.",
-  "blm.rotation-watchdog.suggestions.uptime-souls.why": "<0/> würde während der Uptime {0, plural,one {# mal} other {# mal}} verwendet.",
+  "blm.rotation-watchdog.suggestions.uptime-souls.why": "",
   "blm.rotation-watchdog.suggestions.wrong-t3.content": "Vermeide mehr als ein <0/> in deiner Lichtfeuer-Phase zu zaubern, da dies MP kostet, welche eher für weitere <1/> eingesetzt werden sollten.",
   "blm.rotation-watchdog.suggestions.wrong-t3.why": "",
   "blm.rotation-watchdog.title": "Rotationsübersicht",

@@ -172,7 +172,7 @@ export const BLM = ensureActions({
 		id: 149,
 		name: 'Transpose',
 		icon: 'https://xivapi.com/i/000000/000466.png',
-		cooldown: 8000,
+		cooldown: 5000,
 	},
 	MANAFONT: {
 		id: 158,
