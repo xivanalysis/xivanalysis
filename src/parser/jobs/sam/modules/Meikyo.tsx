@@ -4,6 +4,7 @@ import {ActionKey} from 'data/ACTIONS'
 import {dependency} from 'parser/core/Injectable'
 import {AllowedGcdsOnlyEvaluator, BuffWindow, EvaluatedAction, ExpectedGcdCountEvaluator} from 'parser/core/modules/ActionWindow'
 import {HistoryEntry} from 'parser/core/modules/ActionWindow/History'
+import {EndOfWindowHandlingMode} from 'parser/core/modules/ActionWindow/windows/BuffWindow'
 import {GlobalCooldown} from 'parser/core/modules/GlobalCooldown'
 import {SEVERITY} from 'parser/core/modules/Suggestions'
 import React from 'react'
@@ -37,6 +38,7 @@ export class Meikyo extends BuffWindow {
 	@dependency globalCooldown!: GlobalCooldown
 
 	override buffStatus = this.data.statuses.MEIKYO_SHISUI
+	override endOfWindowHandlingMode: EndOfWindowHandlingMode = 'SAME-TIMESTAMP'
 
 	override initialise() {
 		super.initialise()
