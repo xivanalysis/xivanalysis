@@ -423,7 +423,7 @@
   "core.weaving.title": "能力技穿插问题",
   "core.weaving.why": "{0, plural, other {# 次错误插入}}",
   "dnc.about.description": "想玩舞者，但是分不清什么“金冠趾尖转”“绿叶小踢腿”？下面的分析能帮你练好舞者，接受喝彩！\n\n舞者的核心部分是跳好舞，防止量谱溢出，及时使用触发。以下是用好这些技能的建议。",
-  "dnc.about.description.warning": "我们无法读取幻扇和伶俐量谱的准确数据，相关数据仅为模拟计算。我们已尽量保证数据准确来提供准确的建议。若发现明显错误，请在我们的Discord频道或GitHub仓库反馈。",
+  "dnc.about.description.warning": "",
   "dnc.dirty-dancing.checklist.closed-position-buff.description": "<0/>可以共享<1/>和<2/>两个buff。请全程绑好舞伴，除非特殊情况下需要换舞伴。",
   "dnc.dirty-dancing.checklist.closed-position-buff.name": "绑好<0/>",
   "dnc.dirty-dancing.checklist.closed-position-buff.uptime": "<0/>覆盖率（CD时间不计）",

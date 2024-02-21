@@ -423,7 +423,7 @@
   "core.weaving.title": "Problèmes de weaving",
   "core.weaving.why": "{0, plural, =1 {# exemple de weaving incorrect} other {# exemples de weaving incorrect}}.",
   "dnc.about.description": "Alors comme ça vous êtes devenu Danseur, mais vous ne savez pas différencier vos Jetés de vos Pirouettes ? Ce module va vous aider à améliorer vos chance d'être acclamé !\n\nLes principales parties du danseur sont de réaliser correctement vos danses, d'éviter que vos jauges ne se surchargent, et d'utiliser vos procs. Nous allons vous fournir quelques suggestions pour vous aider à mieux utiliser tout cela.",
-  "dnc.about.description.warning": "Les deux jauges du danseur sont simulées ici, car nous ne disposons pas de données exactes pour travailler. Nous avons fait de notre mieux pour obtenir la plus grande précision possible et pour vous donner le bénéfice du doute dans nos suggestions. Si vous remarquez quoi que ce soit qui semble significativement erroné, veuillez passer par notre canal Discord ou rapporter un bug sur notre répertoire github !",
+  "dnc.about.description.warning": "",
   "dnc.dirty-dancing.checklist.closed-position-buff.description": "Choisir un <0/> leur confèrera aussi les buffs <1/> et <2/>. Soyez sur de le garder en permanence (à l'exeption de rares situations ou un changement s'impose).",
   "dnc.dirty-dancing.checklist.closed-position-buff.name": "Choisissez une <0/>",
   "dnc.dirty-dancing.checklist.closed-position-buff.uptime": "<0/> uptime (hors temps mort)",
