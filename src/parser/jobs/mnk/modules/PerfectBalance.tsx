@@ -11,7 +11,7 @@ import {Gauge} from 'parser/core/modules/Gauge'
 import {EnumGauge} from 'parser/core/modules/Gauge/EnumGauge'
 import {SetGauge} from 'parser/core/modules/Gauge/SetGauge'
 import {GAUGE_FADE} from 'parser/core/modules/ResourceGraphs/ResourceGraphs'
-import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
+import Suggestions, {SEVERITY, Suggestion, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
 import {BLITZ_ACTIONS, COEURL_ACTIONS, FORM_ACTIONS, OPO_OPO_ACTIONS, RAPTOR_ACTIONS} from './constants'
 import {DISPLAY_ORDER} from './DISPLAY_ORDER'
@@ -301,19 +301,17 @@ export class PerfectBalance extends Gauge {
 
 		// Future TODO: Calculate whether the overcap mattered
 		const nadiOvercap = this.nadiGauge.overcap
-		this.suggestions.add(new TieredSuggestion({
-			icon: this.data.actions.PHANTOM_RUSH.icon,
-			content: <Trans id="mnk.pb.suggestions.nadi-overcap.content">
-				Generating a Lunar or Solar Nadi while already in possession of that Nadi means fewer uses of <DataLink action="PHANTOM_RUSH" /> over the course of the fight. Try not to overcap either of your Nadis.
-			</Trans>,
-			tiers: {
-				2: SEVERITY.MEDIUM, // Start at 2 since 1 might be expected depending on opener
-				3: SEVERITY.MAJOR,
-			},
-			value: nadiOvercap,
-			why: <Trans id="mnk.pb.suggestions.nadi-overcap.why">
-				You generated a Nadi while already in possession of that Nadi <Plural value={nadiOvercap} one="# time" other="# times" />.
-			</Trans>,
-		}))
+		if (nadiOvercap > 1) { // Start at 2 since 1 might be expected depending on opener
+			this.suggestions.add(new Suggestion({
+				icon: this.data.actions.PHANTOM_RUSH.icon,
+				content: <Trans id="mnk.pb.suggestions.nadi-overcap.content">
+					Generating a Lunar or Solar Nadi while already in possession of that Nadi means fewer uses of <DataLink action="PHANTOM_RUSH" /> over the course of the fight. Try not to overcap either of your Nadis.
+				</Trans>,
+				severity: SEVERITY.MAJOR,
+				why: <Trans id="mnk.pb.suggestions.nadi-overcap.why">
+					You generated a Nadi while already in possession of that Nadi <Plural value={nadiOvercap} one="# time" other="# times" />.
+				</Trans>,
+			}))
+		}
 	}
 }
