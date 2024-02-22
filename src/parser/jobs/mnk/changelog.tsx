@@ -13,7 +13,7 @@ export const changelog = [
 		contributors: [CONTRIBUTORS.AKAIRYU],
 	},
 	{
-		date: new Date('2023-07-09'),
+		date: new Date('2023-10-23'),
 		Changes: () => <>Add gauge visualisation for Perfect Balance, and mark as supported for Endwalker.</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],
 	},
