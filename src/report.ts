@@ -135,4 +135,6 @@ export interface Actor {
 	owner?: Actor
 	/** Combat job of the actor. */
 	job: JobKey
+	/** Does this player have logged gauge events? */
+	loggedGauge?: boolean
 }

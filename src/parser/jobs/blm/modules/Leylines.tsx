@@ -41,6 +41,8 @@ export default class Leylines extends Analyser {
 	private buffWindows: {[key: number]: LeyLinesWindows} = {}
 	private castTimeIndex: number | null = null
 
+	private leyLinesRow!: SimpleRow
+
 	override initialise() {
 		const leyLinesFilter = filter<Event>()
 			.source(this.parser.actor.id)
@@ -56,6 +58,12 @@ export default class Leylines extends Analyser {
 		this.leyLinesStatuses.forEach(status => {
 			this.buffWindows[status] = {history: []}
 		})
+
+		// Build the grouping row
+		this.leyLinesRow = this.timeline.addRow(new SimpleRow({
+			label: 'Ley Lines Buffs',
+			order: 0,
+		}))
 	}
 
 	public getStatusDurationInRange(
@@ -142,12 +150,6 @@ export default class Leylines extends Analyser {
 		// Current time will be end of fight so no need to pass it here
 		this.stopAndSave(this.data.statuses.LEY_LINES.id)
 
-		// Build the grouping row
-		const parentRow = this.timeline.addRow(new SimpleRow({
-			label: 'Ley Lines Buffs',
-			order: 0,
-		}))
-
 		const fightStart = this.parser.pull.timestamp
 
 		// For each buff, add it to timeline
@@ -155,7 +157,7 @@ export default class Leylines extends Analyser {
 			const status = this.data.getStatus(buff)
 			if (!status) { return }
 
-			const row = parentRow.addRow(new SimpleRow({label: status.name}))
+			const row = this.leyLinesRow.addRow(new SimpleRow({label: status.name}))
 
 			this.buffWindows[buff].history.forEach(window => {
 				if (!window.stop) { return }

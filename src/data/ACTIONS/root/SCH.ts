@@ -218,6 +218,16 @@ export const SCH = ensureActions({
 		castTime: 1500,
 	},
 
+	BIO_II: {
+		id: 17865,
+		name: 'Bio II',
+		icon: 'https://xivapi.com/i/000000/000504.png',
+		onGcd: true,
+		speedAttribute: Attribute.SPELL_SPEED,
+		statusesApplied: ['BIO_II'],
+	},
+
+
 	CHAIN_STRATAGEM: {
 		id: 7436,
 		name: 'Chain Stratagem',

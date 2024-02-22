@@ -5,6 +5,7 @@ import {RotationTargetOutcome} from 'components/ui/RotationTable'
 import {Action, ActionKey} from 'data/ACTIONS'
 import {BuffWindow, ExpectedActionGroupsEvaluator, EvaluatedAction, NotesEvaluator, TrackedActionGroup} from 'parser/core/modules/ActionWindow'
 import {HistoryEntry} from 'parser/core/modules/ActionWindow/History'
+import {EndOfWindowHandlingMode} from 'parser/core/modules/ActionWindow/windows/BuffWindow'
 import {Data} from 'parser/core/modules/Data'
 import {SEVERITY} from 'parser/core/modules/Suggestions'
 import React from 'react'
@@ -68,6 +69,7 @@ export class Enshroud extends BuffWindow {
 	static override displayOrder = DISPLAY_ORDER.ENSHROUD
 
 	override buffStatus = this.data.statuses.ENSHROUDED
+	override endOfWindowHandlingMode: EndOfWindowHandlingMode = 'SAME-TIMESTAMP'
 
 	override initialise() {
 		super.initialise()
