@@ -1,4 +1,4 @@
-import {Event} from 'event'
+import {Event, Events} from 'event'
 import {ensureArray} from 'utilities'
 import {filter, oneOf} from '../../../filter'
 import {ActionSpecifier} from '../../Cooldowns'
@@ -24,9 +24,11 @@ export abstract class RestartWindow extends ActionWindow {
 		this.addEventHook(
 			filter<Event>().source(this.parser.actor.id)
 				.action(oneOf(startIds))
-				.type('action'),
-			event => this.onWindowStart(event.timestamp),
-		)
-		// No explicit end hook. Windows continue until the next cast or end of pull.
+				.type('action'), this.onWindowRestart)
+	}
+
+	protected onWindowRestart(event: Events['action']) {
+		this.onWindowEnd(event.timestamp)
+		this.onWindowStart(event.timestamp)
 	}
 }

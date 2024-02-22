@@ -7,8 +7,11 @@ import {Event, Events} from 'event'
 import {EventHook, TimestampHook} from 'parser/core/Dispatcher'
 import {filter, oneOf} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
-import {CounterGauge, Gauge} from 'parser/core/modules/Gauge'
-import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
+import {Gauge} from 'parser/core/modules/Gauge'
+import {EnumGauge} from 'parser/core/modules/Gauge/EnumGauge'
+import {SetGauge} from 'parser/core/modules/Gauge/SetGauge'
+import {GAUGE_FADE} from 'parser/core/modules/ResourceGraphs/ResourceGraphs'
+import Suggestions, {SEVERITY, Suggestion, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
 import {BLITZ_ACTIONS, COEURL_ACTIONS, FORM_ACTIONS, OPO_OPO_ACTIONS, RAPTOR_ACTIONS} from './constants'
 import {DISPLAY_ORDER} from './DISPLAY_ORDER'
@@ -16,6 +19,11 @@ import {fillActions} from './utilities'
 
 const BEAST_GAUGE_HANDLE = 'beastgauge'
 const NADI_GAUGE_HANDLE = 'nadigauge'
+const OPO_HANDLE = 'opo-opo'
+const RAPTOR_HANDLE = 'raptor'
+const COEURL_HANDLE = 'coeurl'
+const LUNAR_VALUE = 'lunar'
+const SOLAR_VALUE = 'solar'
 
 const BEAST_GAUGE_TIMEOUT_MILLIS = 20000
 
@@ -37,7 +45,6 @@ interface Balance {
 	start: number
 }
 
-const GAUGE_FADE = 0.25
 const OPO_GAUGE_COLOR = Color('#a256dc')
 const RAPTOR_GAUGE_COLOR = Color('#57b39a')
 const COEURL_GAUGE_COLOR = Color('#d7548e')
@@ -67,49 +74,53 @@ export class PerfectBalance extends Gauge {
 	private perfectHook?: EventHook<Events['action']>
 	private beastTimeoutHook?: TimestampHook
 
-	private opoBeastGauge = this.add(new CounterGauge({
+	private beastChakraGauge = this.add(new EnumGauge({
 		maximum: CHAKRA_TO_BLITZ,
-		initialValue: 0,
+		options: [
+			{
+				value: OPO_HANDLE,
+				label: <Trans id="mnk.gauge.resource.beast.opo">Opo-opo</Trans>,
+				color: OPO_GAUGE_COLOR.fade(GAUGE_FADE),
+				tooltipHideWhenEmpty: true,
+			},
+			{
+				value: RAPTOR_HANDLE,
+				label: <Trans id="mnk.gauge.resource.beast.raptor">Raptor</Trans>,
+				color: RAPTOR_GAUGE_COLOR.fade(GAUGE_FADE),
+				tooltipHideWhenEmpty: true,
+			},
+			{
+				value: COEURL_HANDLE,
+				label: <Trans id="mnk.gauge.resource.beast.coeurl">Coeurl</Trans>,
+				color: COEURL_GAUGE_COLOR.fade(GAUGE_FADE),
+				tooltipHideWhenEmpty: true,
+			},
+		],
 		graph: {
 			handle: BEAST_GAUGE_HANDLE,
-			label: <Trans id="mnk.gauge.resource.beast.opo">Opo-opo</Trans>,
-			color: OPO_GAUGE_COLOR.fade(GAUGE_FADE),
+			label: <Trans id="mnk.gauge.resource.beast.chakra">Beast Chakra</Trans>,
+			order: 1,
+			tooltipHideMaximum: true, // It looks weird to imply one could have 9 total chakra. Hide the denominator from the tooltip
 		},
 	}))
-	private raptorBeastGauge = this.add(new CounterGauge({
-		maximum: CHAKRA_TO_BLITZ,
-		initialValue: 0,
-		graph: {
-			handle: BEAST_GAUGE_HANDLE,
-			label: <Trans id="mnk.gauge.resource.beast.raptor">Raptor</Trans>,
-			color: RAPTOR_GAUGE_COLOR.fade(GAUGE_FADE),
-		},
-	}))
-	private coeurlBeastGauge = this.add(new CounterGauge({
-		maximum: CHAKRA_TO_BLITZ,
-		initialValue: 0,
-		graph: {
-			handle: BEAST_GAUGE_HANDLE,
-			label: <Trans id="mnk.gauge.resource.beast.coeurl">Coeurl</Trans>,
-			color: COEURL_GAUGE_COLOR.fade(GAUGE_FADE),
-		},
-	}))
-	private lunarNadiGauge = this.add(new CounterGauge({
-		maximum: 1,
-		initialValue: 0,
+
+	private nadiGauge = this.add(new SetGauge({
+		options: [
+			{
+				value: LUNAR_VALUE,
+				label: <Trans id="mnk.gauge.resource.nadi.lunar">Lunar Nadi</Trans>,
+				color: LUNAR_NADI_COLOR.fade(GAUGE_FADE),
+			},
+			{
+				value: SOLAR_VALUE,
+				label: <Trans id="mnk.gauge.resource.nadi.solar">Solar Nadi</Trans>,
+				color: SOLAR_NADI_COLOR.fade(GAUGE_FADE),
+			},
+		],
 		graph: {
 			handle: NADI_GAUGE_HANDLE,
-			label: <Trans id="mnk.gauge.resource.nadi.lunar">Lunar Nadi</Trans>,
-			color: LUNAR_NADI_COLOR.fade(GAUGE_FADE),
-		},
-	}))
-	private solarNadiGauge = this.add(new CounterGauge({
-		maximum: 1,
-		initialValue: 0,
-		graph: {
-			handle: NADI_GAUGE_HANDLE,
-			label: <Trans id="mnk.gauge.resource.nadi.solar">Solar Nadi</Trans>,
-			color: SOLAR_NADI_COLOR.fade(GAUGE_FADE),
+			label: <Trans id="mnk.gauge.resource.nadi">Nadi Gauge</Trans>,
+			order: 2,
 		},
 	}))
 
@@ -129,19 +140,6 @@ export class PerfectBalance extends Gauge {
 		this.addEventHook(playerFilter.type('action').action(oneOf(this.blitzActions)), this.onBlitz)
 
 		this.addEventHook('complete', this.onComplete)
-
-		this.resourceGraphs.addDataGroup({
-			handle: BEAST_GAUGE_HANDLE,
-			label: <Trans id="mnk.gauge.resource.beast.chakra">Beast Chakra</Trans>,
-			collapse: true,
-			forceCollapsed: true,
-			stacking: true,
-		})
-		this.resourceGraphs.addDataGroup({
-			handle: NADI_GAUGE_HANDLE,
-			label: <Trans id="mnk.gauge.resource.nadi">Nadi Gauge</Trans>,
-			collapse: false,
-		})
 	}
 
 	// Determine if perfect balance is active at the specified timestamp. It's active if:
@@ -149,11 +147,11 @@ export class PerfectBalance extends Gauge {
 	// There is a history window that contains the specified timestamp
 	public inBalance(timestamp: number): boolean {
 		const latestHistory = this.history.find(entry => entry.start <= timestamp && entry.start + this.data.statuses.PERFECT_BALANCE.duration > timestamp)
-		return this.opoBeastGauge.getValueAt(timestamp) > 0 || this.raptorBeastGauge.getValueAt(timestamp) > 0 || this.coeurlBeastGauge.getValueAt(timestamp) > 0 || latestHistory != null
+		return this.beastChakraGauge.getValuesAt(timestamp).length > 0 || latestHistory != null
 	}
 
 	public blitzReady(timestamp: number): boolean {
-		return (this.opoBeastGauge.getValueAt(timestamp) + this.raptorBeastGauge.getValueAt(timestamp) + this.coeurlBeastGauge.getValueAt(timestamp)) >= CHAKRA_TO_BLITZ
+		return this.beastChakraGauge.getValuesAt(timestamp).length >= CHAKRA_TO_BLITZ
 	}
 
 	private onCast(event: Events['action']): void {
@@ -172,13 +170,13 @@ export class PerfectBalance extends Gauge {
 			// Make sure we don't record additional gauge generation if the player doesn't immediately blitz after using their PB stacks
 			if (this.current.used <= this.current.start) {
 				if (this.opoActions.includes(action.id)) {
-					this.opoBeastGauge.generate(1)
+					this.beastChakraGauge.generate(OPO_HANDLE)
 				}
 				if (this.raptorActions.includes(action.id)) {
-					this.raptorBeastGauge.generate(1)
+					this.beastChakraGauge.generate(RAPTOR_HANDLE)
 				}
 				if (this.coeurlActions.includes(action.id)) {
-					this.coeurlBeastGauge.generate(1)
+					this.beastChakraGauge.generate(COEURL_HANDLE)
 				}
 			}
 		}
@@ -194,20 +192,19 @@ export class PerfectBalance extends Gauge {
 
 		switch (action.id) {
 		case this.data.actions.ELIXIR_FIELD.id:
-			this.lunarNadiGauge.generate(1)
+			this.nadiGauge.generate(LUNAR_VALUE)
 			break
 		case this.data.actions.RISING_PHOENIX.id:
-			this.solarNadiGauge.generate(1)
+			this.nadiGauge.generate(SOLAR_VALUE)
 			break
 		case this.data.actions.PHANTOM_RUSH.id:
-			this.lunarNadiGauge.reset()
-			this.solarNadiGauge.reset()
+			this.nadiGauge.reset()
 			break
 		case this.data.actions.CELESTIAL_REVOLUTION.id:
-			if (this.lunarNadiGauge.empty) {
-				this.lunarNadiGauge.generate(1)
+			if (!this.nadiGauge.getStateAt(LUNAR_VALUE)) {
+				this.nadiGauge.generate(LUNAR_VALUE)
 			} else {
-				this.solarNadiGauge.generate(1)
+				this.nadiGauge.generate(SOLAR_VALUE)
 			}
 		}
 	}
@@ -264,9 +261,7 @@ export class PerfectBalance extends Gauge {
 			}
 		}
 
-		this.opoBeastGauge.reset()
-		this.raptorBeastGauge.reset()
-		this.coeurlBeastGauge.reset()
+		this.beastChakraGauge.reset()
 		this.current = undefined
 	}
 
@@ -303,5 +298,20 @@ export class PerfectBalance extends Gauge {
 				<Plural value={badActions} one="# use of" other="# uses of"/> uses of <DataLink action="FORM_SHIFT"/> or <DataLink action="ANATMAN"/> were used during <DataLink status="PERFECT_BALANCE"/>.
 			</Trans>,
 		}))
+
+		// Future TODO: Calculate whether the overcap mattered
+		const nadiOvercap = this.nadiGauge.overcap
+		if (nadiOvercap > 1) { // Start at 2 since 1 might be expected depending on opener
+			this.suggestions.add(new Suggestion({
+				icon: this.data.actions.PHANTOM_RUSH.icon,
+				content: <Trans id="mnk.pb.suggestions.nadi-overcap.content">
+					Generating a Lunar or Solar Nadi while already in possession of that Nadi means fewer uses of <DataLink action="PHANTOM_RUSH" /> over the course of the fight. Try not to overcap either of your Nadis.
+				</Trans>,
+				severity: SEVERITY.MAJOR,
+				why: <Trans id="mnk.pb.suggestions.nadi-overcap.why">
+					You generated a Nadi while already in possession of that Nadi <Plural value={nadiOvercap} one="# time" other="# times" />.
+				</Trans>,
+			}))
+		}
 	}
 }

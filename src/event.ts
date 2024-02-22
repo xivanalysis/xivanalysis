@@ -210,11 +210,13 @@ export interface AttributeValue {
 	value: number
 	estimated: boolean
 }
-
-/** An actors parameters have been updated. */
-interface EventActorUpdate extends FieldsBase {
+interface FieldsForActor extends FieldsBase {
 	/** ID of the updated actor. */
 	actor: Actor['id']
+}
+
+/** An actors parameters have been updated. */
+interface EventActorUpdate extends FieldsForActor {
 	/** Updated HP status. */
 	hp?: Partial<Resource>
 	/** Updated MP status. */
@@ -226,6 +228,14 @@ interface EventActorUpdate extends FieldsBase {
 	/** Current attributes (stats) */
 	attributes?: AttributeValue[]
 }
+
+export interface EventDancerGaugeUpdate extends FieldsForActor {
+	esprit: number
+	feathers: number
+}
+
+export type EventGaugeUpdate =
+	| EventDancerGaugeUpdate
 
 // Merge core events into the repository.
 // No declare module, as we're in the same file as the root repository.
@@ -240,6 +250,7 @@ export interface EventTypeRepository {
 	damage: EventDamage
 	heal: EventHeal
 	actorUpdate: EventActorUpdate
+	gaugeUpdate: EventGaugeUpdate
 }
 
 // -----

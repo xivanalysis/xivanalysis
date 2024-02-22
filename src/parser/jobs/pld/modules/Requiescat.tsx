@@ -7,6 +7,7 @@ import {filter} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
 import {BuffWindow, EvaluatedAction, ExpectedActionsEvaluator} from 'parser/core/modules/ActionWindow'
 import {HistoryEntry} from 'parser/core/modules/ActionWindow/History'
+import {EndOfWindowHandlingMode} from 'parser/core/modules/ActionWindow/windows/BuffWindow'
 import {Actors} from 'parser/core/modules/Actors'
 import Downtime from 'parser/core/modules/Downtime'
 import {GlobalCooldown} from 'parser/core/modules/GlobalCooldown'
@@ -48,6 +49,7 @@ export class Requiescat extends BuffWindow {
 	@dependency globalCooldown!: GlobalCooldown
 
 	override buffStatus = this.data.statuses.REQUIESCAT
+	override endOfWindowHandlingMode: EndOfWindowHandlingMode = 'SAME-TIMESTAMP'
 
 	private requiescatUsages = 0
 

@@ -129,7 +129,7 @@ export abstract class Procs extends Analyser {
 	 * @param timestamp The timestamp to check
 	 * @returns True if there was a tracked proc usage for the action at the given timestamp, false otherwise
 	 */
-	private checkActionWasProc(actionId: number, timestamp: number): boolean {
+	public checkActionWasProc(actionId: number, timestamp: number): boolean {
 		const procGroups = this.getTrackedGroupsByAction(actionId)
 		if (procGroups.length === 0) { return false }
 		let wasProc = false

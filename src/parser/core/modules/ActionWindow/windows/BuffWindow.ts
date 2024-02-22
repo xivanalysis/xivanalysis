@@ -17,6 +17,19 @@ const SECONDS_TO_MS: number = 1000
 const STATUS_DURATION_FUDGE = SECONDS_TO_MS
 
 /**
+ * STRICT:
+ *   The default. Events that occur on the same timestamp
+ *   as the end of the window are removed from the window.
+ *   This is how most "buff windows" in the game function.
+ *
+ * SAME-TIMESTAMP:
+ *   Events that occur on the same timestamp as the end of
+ *   the window are included in the window. Useful for
+ *   "consumable" buffs like Swiftcast.
+ */
+export type EndOfWindowHandlingMode = 'STRICT' | 'SAME-TIMESTAMP'
+
+/**
  * Tracks actions that occur while a buff status is active on the player.
  */
 export abstract class BuffWindow extends ActionWindow {
@@ -37,6 +50,11 @@ export abstract class BuffWindow extends ActionWindow {
 		const fightTimeRemaining = (this.parser.pull.timestamp + this.parser.pull.duration) - window.start
 		return expectedDuration >= fightTimeRemaining
 	}
+
+	/**
+	 * Controls how events near the end of the window are handled.
+	 */
+	protected endOfWindowHandlingMode: EndOfWindowHandlingMode = 'STRICT'
 
 	private buffDuration?: number
 	private durationHook?: TimestampHook
@@ -69,6 +87,22 @@ export abstract class BuffWindow extends ActionWindow {
 
 	private onStatusApply(event: Events['statusApply']) {
 		this.startWindowAndTimeout(event.timestamp)
+	}
+
+	/**
+	 * End window at the timestamp provided, removing history entries
+	 * which do not belong in the window.
+	 *
+	 * @param timestamp Time of statusRemove event.
+	 */
+	protected override onWindowEnd(timestamp: number): void {
+		const currentWindow = this.history.getCurrent()
+
+		if (this.endOfWindowHandlingMode === 'STRICT' && currentWindow != null) {
+			currentWindow.data = currentWindow.data.filter(event => event.timestamp < timestamp)
+		}
+
+		super.onWindowEnd(timestamp)
 	}
 
 	/**

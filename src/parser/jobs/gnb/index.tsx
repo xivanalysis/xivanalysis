@@ -139,5 +139,16 @@ export const GUNBREAKER = new Meta({
 			</>,
 			contributors: [CONTRIBUTORS.RYAN],
 		},
+		{
+			date: new Date('2023-11-28'),
+			Changes: () => <>
+				<ul>
+					<li>Added Gnashing Fang to the cooldown usage section. </li>
+					<li>Adjusted Cooldown Offsets to 2.47 Standard Opener from 1NM23 Opener Offsets. </li>
+					<li>Rerranged Cooldowns to be in order via cooldown length. </li>
+				</ul>,
+			</>,
+			contributors: [CONTRIBUTORS.RYAN],
+		},
 	],
 })

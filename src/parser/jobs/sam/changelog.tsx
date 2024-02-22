@@ -8,6 +8,11 @@ export const changelog = [
 	// 	contrubutors: [CONTRIBUTORS.YOU],
 	// },
 	{
+		date: new Date('2023-10-24'),
+		Changes: () => <>Add Sen gauge visualisation to timeline.</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
+	{
 		date: new Date('2023-05-29'),
 		Changes: () => <> Adds Shoha to Aoe Checker module </>,
 		contributors: [CONTRIBUTORS.RYAN],

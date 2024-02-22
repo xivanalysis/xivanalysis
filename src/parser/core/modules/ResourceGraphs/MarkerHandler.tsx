@@ -53,20 +53,27 @@ export function MarkerHandler(props: MarkerHandlerProps) {
 			onMouseMove={onMouseMove}
 			onMouseLeave={onMouseLeave}
 		>
-			{markerState != null && (
+			{(markerState != null && markerState.resources.length > 0) && (
 				<Marker {...markerState}>
 					<ul className={styles.resourceList}>
-						{markerState.resources.map(({label, current = 0, maximum = 0, colour}, index) => (
+						{markerState.resources.sort((a, b) => (b.base ?? 0) - (a.base ?? 0)).map(({label, current = 0, maximum = 0, colour, tooltipHideMaximum}, index) => (
 							<li key={index} className={styles.resourceItem}>
 								<span
 									className={styles.resourceSwatch}
 									style={{background: colour.toString()}}
 								/>
-								<Trans id="core.resource-graphs.resource-value">
-									{label}:
-									<NumberFormat value={current}/> /
-									<NumberFormat value={maximum}/>
-								</Trans>
+								{
+									tooltipHideMaximum
+										? <Trans id="core.resource-graphs.resource-current">
+											{label}:
+											<NumberFormat value={current}/>
+										</Trans>
+										: <Trans id="core.resource-graphs.resource-value">
+											{label}:
+											<NumberFormat value={current}/> /
+											<NumberFormat value={maximum}/>
+										</Trans>
+								}
 							</li>
 						))}
 					</ul>

@@ -3,6 +3,16 @@ import React from 'react'
 
 export const changelog = [
 	{
+		date: new Date('2024-02-21'),
+		Changes: () => <>Add a suggestion to avoid overcapping Nadis and polish Nadi gauge visualisation.</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
+	{
+		date: new Date('2024-02-19'),
+		Changes: () => <>Improve Beast Chakra gauge visualisation.</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
+	{
 		date: new Date('2023-10-24'),
 		Changes: () => <>Fix a bug with the calculation for the expected number of Masterful Blitz uses in Riddle of Fire.</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],
