@@ -5,6 +5,7 @@ import {ActionKey} from 'data/ACTIONS'
 import {Status} from 'data/STATUSES'
 import {dependency} from 'parser/core/Injectable'
 import {BuffWindow, ExpectedGcdCountEvaluator} from 'parser/core/modules/ActionWindow'
+import {EndOfWindowHandlingMode} from 'parser/core/modules/ActionWindow/windows/BuffWindow'
 import {GlobalCooldown} from 'parser/core/modules/GlobalCooldown'
 import {SEVERITY} from 'parser/core/modules/Suggestions'
 import React from 'react'
@@ -27,6 +28,7 @@ export class Zoe extends BuffWindow {
 	@dependency private globalCooldown!: GlobalCooldown
 
 	override buffStatus: Status = this.data.statuses.ZOE
+	override endOfWindowHandlingMode: EndOfWindowHandlingMode = 'SAME-TIMESTAMP'
 
 	override initialise() {
 		super.initialise()
