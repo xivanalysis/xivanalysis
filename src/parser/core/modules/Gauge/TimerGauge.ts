@@ -207,14 +207,16 @@ export class TimerGauge extends AbstractGauge {
 		// Insert a data point at the end of the timeline
 		this.pause()
 
-		const {handle, label, color} = this.graphOptions
+		const {handle, label, color, tooltipHideWhenEmpty, tooltipHideMaximum} = this.graphOptions
 		const graphData = {
 			label,
-			colour: color,
+			colour: color ?? 'black',
 			data: this.history.map(entry => {
 				return {time: entry.timestamp, current: entry.remaining / 1000, maximum: this.maximum / 1000}
 			}),
 			linear: true,
+			tooltipHideWhenEmpty,
+			tooltipHideMaximum,
 		}
 		if (handle != null) {
 			this.resourceGraphs.addDataGroup({...this.graphOptions, handle})

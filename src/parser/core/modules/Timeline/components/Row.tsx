@@ -108,7 +108,7 @@ const Row = memo(function Row({
 		{!parentCollapsed && row.label != null && (
 			<Label
 				minimised={hasChildren && !selfCollapsed}
-				collapsed={collapsed}
+				collapsed={collapsed && !row.forceCollapsed}
 				onClick={hasChildren && !(collapsed && row.forceCollapsed) ? toggleCollapsed : undefined}
 				gridStyle={{ // TODO: Memo?
 					gridColumnStart: (LABEL_GRID_OFFSET-maxDepth) + depth,

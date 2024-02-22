@@ -12,6 +12,8 @@ import {filter} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
 import CastTime from 'parser/core/modules/CastTime'
 import {CounterGauge, TimerGauge, Gauge as CoreGauge} from 'parser/core/modules/Gauge'
+import {EnumGauge} from 'parser/core/modules/Gauge/EnumGauge'
+import {DEFAULT_ROW_HEIGHT, GAUGE_FADE} from 'parser/core/modules/ResourceGraphs/ResourceGraphs'
 import Suggestions, {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import {Timeline} from 'parser/core/modules/Timeline'
 import {UnableToAct} from 'parser/core/modules/UnableToAct'
@@ -30,6 +32,10 @@ const FLARE_MAX_HEART_CONSUMPTION = 3
 const POLYGLOT_MAX_STACKS = 2
 const PARADOX_MAX_STACKS = 1
 const ASTRAL_UMBRAL_HANDLE = 'astralumbral'
+const UMBRAL_ICE_HANDLE = 'umbralice'
+const ASTRAL_FIRE_HANDLE = 'astralfire'
+const POLYGLOT_HANDLE = 'polyglot'
+const POLYGLOT_LABEL = <Trans id="blm.gauge.resource.polyglot">Polyglot</Trans>
 
 const AFFECTS_GAUGE_ON_DAMAGE: ActionKey[] = [
 	...FIRE_SPELLS,
@@ -80,7 +86,6 @@ declare module 'event' {
 
 /** Graph colors/fade settings */
 const STANCE_FADE = 0.5
-const GAUGE_FADE = 0.25
 const TIMER_FADE = 0.75
 const ICE_COLOR = Color('#2F70B1')
 const FIRE_COLOR = Color('#D23D26')
@@ -108,15 +113,32 @@ export class Gauge extends CoreGauge {
 	private castTimeIndex: number | null = null
 	private paradoxInstantIndex: number | null = null
 
-	/** Astral Fire */
-	private astralFireGauge = this.add(new CounterGauge({
-		maximum: ASTRAL_UMBRAL_MAX_STACKS,
+	/** Astral Fire and Umbral Ice */
+	private astralUmbralGauge = this.add(new EnumGauge({
+		maximum: 3,
+		options: [
+			{
+				value: ASTRAL_FIRE_HANDLE,
+				label: <Trans id="blm.gauge.resource.astral-fire">Astral Fire</Trans>,
+				color: FIRE_COLOR.fade(STANCE_FADE),
+				tooltipHideWhenEmpty: true,
+			},
+			{
+				value: UMBRAL_ICE_HANDLE,
+				label: <Trans id="blm.gauge.resource.umbral-ice">Umbral Ice</Trans>,
+				color: ICE_COLOR.fade(STANCE_FADE),
+				tooltipHideWhenEmpty: true,
+			},
+		],
 		graph: {
 			handle: ASTRAL_UMBRAL_HANDLE,
-			label: <Trans id="blm.gauge.resource.astral-fire">Astral Fire</Trans>,
-			color: FIRE_COLOR.fade(STANCE_FADE),
+			label: <Trans id="blm.gauge.resource.astral-umbral">Astral Fire and<br></br>Umbral Ice</Trans>,
+			order: 1,
+			// eslint-disable-next-line @typescript-eslint/no-magic-numbers
+			height: DEFAULT_ROW_HEIGHT * 4 / 5,
 		},
 	}))
+
 	private astralFireTimer = this.add(new TimerGauge({
 		maximum: ASTRAL_UMBRAL_DURATION,
 		onExpiration: this.onAstralUmbralTimeout.bind(this),
@@ -124,15 +146,7 @@ export class Gauge extends CoreGauge {
 			handle: ASTRAL_UMBRAL_HANDLE,
 			label: <Trans id="blm.gauge.resource.astral-timer">Astral Fire Timer</Trans>,
 			color: FIRE_COLOR.fade(TIMER_FADE),
-		},
-	}))
-	/** Umbral Ice */
-	private umbralIceGauge = this.add(new CounterGauge({
-		maximum: ASTRAL_UMBRAL_MAX_STACKS,
-		graph: {
-			handle: ASTRAL_UMBRAL_HANDLE,
-			label: <Trans id="blm.gauge.resource.umbral-ice">Umbral Ice</Trans>,
-			color: ICE_COLOR.fade(STANCE_FADE),
+			tooltipHideWhenEmpty: true,
 		},
 	}))
 	private umbralIceTimer = this.add(new TimerGauge({
@@ -142,6 +156,7 @@ export class Gauge extends CoreGauge {
 			handle: ASTRAL_UMBRAL_HANDLE,
 			label: <Trans id="blm.gauge.resource.umbral-timer">Umbral Ice Timer</Trans>,
 			color: ICE_COLOR.fade(TIMER_FADE),
+			tooltipHideWhenEmpty: true,
 		},
 	}))
 
@@ -151,6 +166,8 @@ export class Gauge extends CoreGauge {
 		graph: {
 			label: <Trans id="blm.gauge.resource.paradox">Paradox</Trans>,
 			color: FIRE_COLOR.fade(GAUGE_FADE),
+			collapse: false,
+			height: DEFAULT_ROW_HEIGHT / 2,
 		},
 		correctHistory: true,
 	}))
@@ -161,6 +178,8 @@ export class Gauge extends CoreGauge {
 		graph: {
 			label: <Trans id="blm.gauge.resource.umbral-hearts">Umbral Hearts</Trans>,
 			color: ICE_COLOR.fade(GAUGE_FADE),
+			collapse: false,
+			height: DEFAULT_ROW_HEIGHT / 2,
 		},
 	}))
 
@@ -168,7 +187,8 @@ export class Gauge extends CoreGauge {
 	private polyglotGauge = this.add(new CounterGauge({
 		maximum: POLYGLOT_MAX_STACKS,
 		graph: {
-			label: <Trans id="blm.gauge.resource.polyglot">Polyglot</Trans>,
+			handle: POLYGLOT_HANDLE,
+			label: POLYGLOT_LABEL,
 			color: POLYGLOT_COLOR.fade(GAUGE_FADE),
 		},
 		correctHistory: true,
@@ -177,8 +197,10 @@ export class Gauge extends CoreGauge {
 		maximum: POLYGLOT_DURATION_REQUIRED,
 		onExpiration: this.onPolyglotTimerComplete.bind(this),
 		graph: {
+			handle: POLYGLOT_HANDLE,
 			label: <Trans id="blm.gauge.resource.polyglot-timer">Polyglot Timer</Trans>,
 			color: POLYGLOT_COLOR.fade(TIMER_FADE),
+			tooltipHideWhenEmpty: true,
 		},
 	}))
 
@@ -199,10 +221,12 @@ export class Gauge extends CoreGauge {
 		this.addEventHook('complete', this.onComplete)
 
 		this.resourceGraphs.addDataGroup({
-			handle: ASTRAL_UMBRAL_HANDLE,
-			label: <Trans id="blm.gauge.resource.astral-umbral">Astral Fire and<br></br>Umbral Ice</Trans>,
+			handle: POLYGLOT_HANDLE,
+			label: POLYGLOT_LABEL,
+			order: 2,
 			collapse: true,
 			forceCollapsed: true,
+			height: DEFAULT_ROW_HEIGHT / 2,
 		})
 	}
 
@@ -212,8 +236,8 @@ export class Gauge extends CoreGauge {
 	 * @returns The BLMGaugeState object for this timestamp
 	*/
 	public getGaugeState(timestamp: number = this.parser.currentEpochTimestamp): BLMGaugeState {
-		const astralFire = this.astralFireGauge.getValueAt(timestamp)
-		const umbralIce = this.umbralIceGauge.getValueAt(timestamp)
+		const astralFire = this.astralUmbralGauge.getCountAt(ASTRAL_FIRE_HANDLE, timestamp)
+		const umbralIce = this.astralUmbralGauge.getCountAt(UMBRAL_ICE_HANDLE, timestamp)
 		return {
 			astralFire,
 			umbralIce,
@@ -250,7 +274,7 @@ export class Gauge extends CoreGauge {
 			break
 		case this.data.actions.FREEZE.id:
 		case this.data.actions.BLIZZARD_IV.id:
-			if (this.umbralIceGauge.empty) {
+			if (this.astralUmbralGauge.getCountAt(UMBRAL_ICE_HANDLE) === 0) {
 				this.onGainUmbralIceStacks(1, false)
 			}
 			this.umbralHeartsGauge.set(UMBRAL_HEARTS_MAX_STACKS)
@@ -271,7 +295,7 @@ export class Gauge extends CoreGauge {
 			this.onGainAstralFireStacks(ASTRAL_UMBRAL_MAX_STACKS, false)
 			break
 		case this.data.actions.FIRE_IV.id:
-			if (this.astralFireGauge.empty) {
+			if (this.astralUmbralGauge.getCountAt(ASTRAL_FIRE_HANDLE) === 0) {
 				this.onGainAstralFireStacks(1, false)
 			}
 			this.tryConsumeUmbralHearts(1)
@@ -300,10 +324,10 @@ export class Gauge extends CoreGauge {
 	}
 
 	private addEvent() {
-		if (!this.astralFireGauge.empty && this.astralFireTimer.expired) {
+		if (this.astralUmbralGauge.getCountAt(ASTRAL_FIRE_HANDLE) !== 0 && this.astralFireTimer.expired) {
 			this.astralFireTimer.start()
 		}
-		if (!this.umbralIceGauge.empty && this.umbralIceTimer.expired) {
+		if (this.astralUmbralGauge.getCountAt(UMBRAL_ICE_HANDLE) !== 0 && this.umbralIceTimer.expired) {
 			this.umbralIceTimer.start()
 		}
 		if ((!this.astralFireTimer.expired || !this.umbralIceTimer.expired) && this.polyglotTimer.expired) {
@@ -325,8 +349,8 @@ export class Gauge extends CoreGauge {
 	}
 
 	private gaugeValuesChanged(lastGaugeState: BLMGaugeState) {
-		if (lastGaugeState.astralFire !== this.astralFireGauge.value ||
-			lastGaugeState.umbralIce !== this.umbralIceGauge.value ||
+		if (lastGaugeState.astralFire !== this.astralUmbralGauge.getCountAt(ASTRAL_FIRE_HANDLE) ||
+			lastGaugeState.umbralIce !== this.astralUmbralGauge.getCountAt(UMBRAL_ICE_HANDLE) ||
 			lastGaugeState.umbralHearts !== this.umbralHeartsGauge.value ||
 			lastGaugeState.polyglot !== this.polyglotGauge.value ||
 			lastGaugeState.paradox !== this.paradoxGauge.value
@@ -341,35 +365,35 @@ export class Gauge extends CoreGauge {
 		const lastUmbralIce = lastGaugeState.umbralIce
 
 		// If we have gained max AF, set Blizzard spells to be fast
-		if (lastAstralFire !== ASTRAL_UMBRAL_MAX_STACKS && this.astralFireGauge.value === ASTRAL_UMBRAL_MAX_STACKS) {
+		if (lastAstralFire !== ASTRAL_UMBRAL_MAX_STACKS && this.astralUmbralGauge.getCountAt(ASTRAL_FIRE_HANDLE) === ASTRAL_UMBRAL_MAX_STACKS) {
 			this.castTime.reset(this.castTimeIndex)
 			this.castTimeIndex = this.castTime.setPercentageAdjustment(this.iceSpellIds, CAPPED_ASTRAL_UMBRAL_CAST_SCALAR)
 		}
 		// If we have gained max UI, set Fire spells to be fast
-		if (lastUmbralIce !== ASTRAL_UMBRAL_MAX_STACKS && this.umbralIceGauge.value === ASTRAL_UMBRAL_MAX_STACKS) {
+		if (lastUmbralIce !== ASTRAL_UMBRAL_MAX_STACKS && this.astralUmbralGauge.getCountAt(UMBRAL_ICE_HANDLE) === ASTRAL_UMBRAL_MAX_STACKS) {
 			this.castTime.reset(this.castTimeIndex)
 			this.castTimeIndex = this.castTime.setPercentageAdjustment(this.fireSpellIds, CAPPED_ASTRAL_UMBRAL_CAST_SCALAR)
 		}
 		// If our current gauge state doesn't have either max AF or max UI, drop the cast time adjustment entirely
-		if (this.astralFireGauge.value !== ASTRAL_UMBRAL_MAX_STACKS && this.umbralIceGauge.value !== ASTRAL_UMBRAL_MAX_STACKS) {
+		if (this.astralUmbralGauge.getCountAt(ASTRAL_FIRE_HANDLE) !== ASTRAL_UMBRAL_MAX_STACKS && this.astralUmbralGauge.getCountAt(UMBRAL_ICE_HANDLE) !== ASTRAL_UMBRAL_MAX_STACKS) {
 			this.castTime.reset(this.castTimeIndex)
 			this.castTimeIndex = null
 		}
 
 		// If we're in Umbral Ice, Paradox is always instant
-		if (!this.umbralIceGauge.empty && this.paradoxInstantIndex == null) {
+		if (this.astralUmbralGauge.getCountAt(UMBRAL_ICE_HANDLE) > 0 && this.paradoxInstantIndex == null) {
 			this.paradoxInstantIndex = this.castTime.setInstantCastAdjustment([this.data.actions.PARADOX.id])
 		}
 		// If we're not in Umbral Ice, Paradox has a cast time
-		if (this.umbralIceGauge.empty && this.paradoxInstantIndex != null) {
+		if (this.astralUmbralGauge.getCountAt(UMBRAL_ICE_HANDLE) === 0 && this.paradoxInstantIndex != null) {
 			this.castTime.reset(this.paradoxInstantIndex)
 			this.paradoxInstantIndex = null
 		}
 	}
 
 	private tryGainParadox(lastGaugeState: BLMGaugeState) {
-		if ((lastGaugeState.umbralIce === ASTRAL_UMBRAL_MAX_STACKS && !this.astralFireGauge.empty && this.umbralHeartsGauge.capped) ||
-			(lastGaugeState.astralFire === ASTRAL_UMBRAL_MAX_STACKS && !this.umbralIceGauge.empty)) {
+		if ((lastGaugeState.umbralIce === ASTRAL_UMBRAL_MAX_STACKS && this.astralUmbralGauge.getCountAt(ASTRAL_FIRE_HANDLE) > 0 && this.umbralHeartsGauge.capped) ||
+			(lastGaugeState.astralFire === ASTRAL_UMBRAL_MAX_STACKS && this.astralUmbralGauge.getCountAt(UMBRAL_ICE_HANDLE) > 0)) {
 
 			if (!this.paradoxGauge.empty) {
 				this.gaugeErrors.push({timestamp: this.parser.currentEpochTimestamp, error: GAUGE_ERROR_TYPE.OVERWROTE_PARADOX})
@@ -387,37 +411,36 @@ export class Gauge extends CoreGauge {
 
 	private onAstralUmbralEnd(flagIssues: boolean) {
 		this.astralFireTimer.reset()
-		this.astralFireGauge.reset()
-
 		this.umbralIceTimer.reset()
-		this.umbralIceGauge.reset()
+
+		this.astralUmbralGauge.reset()
 
 		this.onEnochianTimeout(flagIssues)
 	}
 
 	private onGainAstralFireStacks(stackCount: number, dropsElementOnSwap: boolean = true) {
-		if (!this.umbralIceGauge.empty && dropsElementOnSwap) {
+		if (this.astralUmbralGauge.getCountAt(UMBRAL_ICE_HANDLE) > 0 && dropsElementOnSwap) {
 			this.onAstralUmbralEnd(true)
 		} else {
 			this.umbralIceTimer.reset()
-			this.umbralIceGauge.reset()
+			this.astralUmbralGauge.clear(UMBRAL_ICE_HANDLE)
 
 			this.astralFireTimer.start()
-			this.astralFireGauge.generate(stackCount)
+			this.astralUmbralGauge.generate(ASTRAL_FIRE_HANDLE, stackCount)
 
 			this.addEvent()
 		}
 	}
 
 	private onGainUmbralIceStacks(stackCount: number, dropsElementOnSwap: boolean = true) {
-		if (!this.astralFireGauge.empty && dropsElementOnSwap) {
+		if (this.astralUmbralGauge.getCountAt(ASTRAL_FIRE_HANDLE) > 0 && dropsElementOnSwap) {
 			this.onAstralUmbralEnd(true)
 		} else {
 			this.astralFireTimer.reset()
-			this.astralFireGauge.reset()
+			this.astralUmbralGauge.clear(ASTRAL_FIRE_HANDLE)
 
 			this.umbralIceTimer.start()
-			this.umbralIceGauge.generate(stackCount)
+			this.astralUmbralGauge.generate(UMBRAL_ICE_HANDLE, stackCount)
 
 			this.addEvent()
 		}
@@ -425,10 +448,10 @@ export class Gauge extends CoreGauge {
 
 	private onTransposeStacks() {
 		// If we're in neither stance, Transpose is a no-op
-		if (this.astralFireGauge.empty && this.umbralIceGauge.empty) { return }
+		if (this.astralUmbralGauge.empty) { return }
 
 		// If we're currently in Fire, we're swapping to Ice
-		if (!this.astralFireGauge.empty) {
+		if (this.astralUmbralGauge.getCountAt(ASTRAL_FIRE_HANDLE) > 0) {
 			this.onGainUmbralIceStacks(1, false)
 		} else { // Otherwise, we're swapping to fire
 			this.onGainAstralFireStacks(1, false)
@@ -440,7 +463,7 @@ export class Gauge extends CoreGauge {
 
 	//#region Umbral Hearts
 	private tryGainUmbralHearts(count: number) {
-		if (this.umbralIceGauge.empty) { return }
+		if (this.astralUmbralGauge.getCountAt(UMBRAL_ICE_HANDLE) === 0) { return }
 
 		this.umbralHeartsGauge.generate(count)
 
@@ -448,7 +471,7 @@ export class Gauge extends CoreGauge {
 	}
 
 	private tryConsumeUmbralHearts(count:  number, force: boolean = false) {
-		if (this.umbralHeartsGauge.empty || (this.astralFireGauge.empty && !force)) { return }
+		if (this.umbralHeartsGauge.empty || (this.astralUmbralGauge.getCountAt(ASTRAL_FIRE_HANDLE) === 0 && !force)) { return }
 
 		this.umbralHeartsGauge.spend(count)
 

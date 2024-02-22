@@ -14,6 +14,8 @@ export interface ResourceMeta {
 	label: ReactNode
 	colour: string | Color
 	linear?: boolean
+	tooltipHideWhenEmpty?: boolean
+	tooltipHideMaximum?: boolean
 }
 
 export interface ResourceDatum extends Resource {
@@ -29,6 +31,7 @@ export interface ResourceDataGroup {
 	data: ResourceData[],
 	row: SimpleRow
 	stacking?: boolean
+	tooltipHideWhenEmpty?: boolean
 }
 
 /**
@@ -44,9 +47,15 @@ export interface ResourceGraphOptions {
 	forceCollapsed?: boolean
 	/** The height of the row for the group. If not included, defaults to 64 px */
 	height?: number
+	/* Set to affect the relative order of the resource in the graph. */
+	order?: number
+	/* Set to hide the resource from the timeline tooltip when the resource's value is 0 */
+	tooltipHideWhenEmpty?: boolean
+	/* Set to hide the maximum value of this resource from the tooltip's denominator */
+	tooltipHideMaximum?: boolean
 }
 
-const DEFAULT_ROW_HEIGHT: number = 64
+export const DEFAULT_ROW_HEIGHT: number = 64
 
 export interface ResourceGroupOptions extends ResourceGraphOptions {
 	/** The handle for this group of data */
@@ -61,6 +70,9 @@ export interface ResourceGroupOptions extends ResourceGraphOptions {
 
 export const RESOURCE_HANDLE: string = 'resources'
 export const GAUGE_HANDLE: string = 'gauges'
+
+// Recommended to apply a fade of at least 25% to colors used for the gauge, so the vertical dividers for time slices can still be seen through them
+export const GAUGE_FADE: number = 0.25
 
 export class ResourceGraphs extends Analyser {
 	static override handle = 'resourceGraphs'
@@ -124,6 +136,7 @@ export class ResourceGraphs extends Analyser {
 				...opts,
 				handle: GAUGE_HANDLE,
 				label: <Trans id="core.resource-graphs.gauge-label">Gauges</Trans>,
+				order: 99, // This will put it right on top of the raid buffs row
 			})
 		}
 
@@ -136,12 +149,13 @@ export class ResourceGraphs extends Analyser {
 	 * @returns A reference to the ResourceDataGroup that was added or updated
 	 */
 	public addDataGroup(opts: ResourceGroupOptions): ResourceDataGroup {
-		const {handle, label, collapse, forceCollapsed, height, stacking} = opts
+		const {handle, label, collapse, forceCollapsed, height, stacking, order, tooltipHideWhenEmpty} = opts
 		let resourceData = this.dataGroups.get(handle)
 		if (resourceData == null) {
 			const resourceRow = new SimpleRow({
 				label,
-				order: -200,
+				// eslint-disable-next-line @typescript-eslint/no-magic-numbers
+				order: -200 + (order ?? 0),
 				height: (height ?? DEFAULT_ROW_HEIGHT),
 				collapse: (collapse ?? true),
 				forceCollapsed: (forceCollapsed ?? false),
@@ -159,6 +173,7 @@ export class ResourceGraphs extends Analyser {
 				data: [],
 				row: resourceRow,
 				stacking,
+				tooltipHideWhenEmpty,
 			}
 			this.dataGroups.set(handle, resourceData)
 		} else {
@@ -270,9 +285,11 @@ export class ResourceGraphs extends Analyser {
 				label: datum.label,
 				colour: datum.colour,
 				...lastData,
+				tooltipHideWhenEmpty: datum.tooltipHideWhenEmpty,
+				tooltipHideMaximum: datum.tooltipHideMaximum,
 			})
-		})
-
+		}).filter(ri => !((ri.current == null || ri.current === 0) && ri.tooltipHideWhenEmpty === true)) // Remove resources that are empty if they're flagged for hiding from the tooltip
+		if (dataGroup.tooltipHideWhenEmpty && !info.some(ri => (ri.current ?? 0) > 0)) { return [] } // If the group should be hidden from the tooltip when all resources are 0, return an empty array
 		return info
 	}
 }

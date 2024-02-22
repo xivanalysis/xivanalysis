@@ -8,6 +8,7 @@ import {EventHook, TimestampHook} from 'parser/core/Dispatcher'
 import {filter, oneOf} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
 import {CounterGauge, Gauge} from 'parser/core/modules/Gauge'
+import {EnumGauge} from 'parser/core/modules/Gauge/EnumGauge'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
 import {BLITZ_ACTIONS, COEURL_ACTIONS, FORM_ACTIONS, OPO_OPO_ACTIONS, RAPTOR_ACTIONS} from './constants'
@@ -16,6 +17,9 @@ import {fillActions} from './utilities'
 
 const BEAST_GAUGE_HANDLE = 'beastgauge'
 const NADI_GAUGE_HANDLE = 'nadigauge'
+const OPO_HANDLE = 'opo-opo'
+const RAPTOR_HANDLE = 'raptor'
+const COEURL_HANDLE = 'coeurl'
 
 const BEAST_GAUGE_TIMEOUT_MILLIS = 20000
 
@@ -67,31 +71,33 @@ export class PerfectBalance extends Gauge {
 	private perfectHook?: EventHook<Events['action']>
 	private beastTimeoutHook?: TimestampHook
 
-	private opoBeastGauge = this.add(new CounterGauge({
+	private beastChakraGauge = this.add(new EnumGauge({
 		maximum: CHAKRA_TO_BLITZ,
-		initialValue: 0,
+		options: [
+			{
+				value: OPO_HANDLE,
+				label: <Trans id="mnk.gauge.resource.beast.opo">Opo-opo</Trans>,
+				color: OPO_GAUGE_COLOR.fade(GAUGE_FADE),
+				tooltipHideWhenEmpty: true,
+			},
+			{
+				value: RAPTOR_HANDLE,
+				label: <Trans id="mnk.gauge.resource.beast.raptor">Raptor</Trans>,
+				color: RAPTOR_GAUGE_COLOR.fade(GAUGE_FADE),
+				tooltipHideWhenEmpty: true,
+			},
+			{
+				value: COEURL_HANDLE,
+				label: <Trans id="mnk.gauge.resource.beast.coeurl">Coeurl</Trans>,
+				color: COEURL_GAUGE_COLOR.fade(GAUGE_FADE),
+				tooltipHideWhenEmpty: true,
+			},
+		],
 		graph: {
 			handle: BEAST_GAUGE_HANDLE,
-			label: <Trans id="mnk.gauge.resource.beast.opo">Opo-opo</Trans>,
-			color: OPO_GAUGE_COLOR.fade(GAUGE_FADE),
-		},
-	}))
-	private raptorBeastGauge = this.add(new CounterGauge({
-		maximum: CHAKRA_TO_BLITZ,
-		initialValue: 0,
-		graph: {
-			handle: BEAST_GAUGE_HANDLE,
-			label: <Trans id="mnk.gauge.resource.beast.raptor">Raptor</Trans>,
-			color: RAPTOR_GAUGE_COLOR.fade(GAUGE_FADE),
-		},
-	}))
-	private coeurlBeastGauge = this.add(new CounterGauge({
-		maximum: CHAKRA_TO_BLITZ,
-		initialValue: 0,
-		graph: {
-			handle: BEAST_GAUGE_HANDLE,
-			label: <Trans id="mnk.gauge.resource.beast.coeurl">Coeurl</Trans>,
-			color: COEURL_GAUGE_COLOR.fade(GAUGE_FADE),
+			label: <Trans id="mnk.gauge.resource.beast.chakra">Beast Chakra</Trans>,
+			order: 1,
+			tooltipHideMaximum: true, // It looks weird to imply one could have 9 total chakra. Hide the denominator from the tooltip
 		},
 	}))
 	private lunarNadiGauge = this.add(new CounterGauge({
@@ -131,16 +137,10 @@ export class PerfectBalance extends Gauge {
 		this.addEventHook('complete', this.onComplete)
 
 		this.resourceGraphs.addDataGroup({
-			handle: BEAST_GAUGE_HANDLE,
-			label: <Trans id="mnk.gauge.resource.beast.chakra">Beast Chakra</Trans>,
-			collapse: true,
-			forceCollapsed: true,
-			stacking: true,
-		})
-		this.resourceGraphs.addDataGroup({
 			handle: NADI_GAUGE_HANDLE,
 			label: <Trans id="mnk.gauge.resource.nadi">Nadi Gauge</Trans>,
 			collapse: false,
+			order: 2,
 		})
 	}
 
@@ -149,11 +149,11 @@ export class PerfectBalance extends Gauge {
 	// There is a history window that contains the specified timestamp
 	public inBalance(timestamp: number): boolean {
 		const latestHistory = this.history.find(entry => entry.start <= timestamp && entry.start + this.data.statuses.PERFECT_BALANCE.duration > timestamp)
-		return this.opoBeastGauge.getValueAt(timestamp) > 0 || this.raptorBeastGauge.getValueAt(timestamp) > 0 || this.coeurlBeastGauge.getValueAt(timestamp) > 0 || latestHistory != null
+		return this.beastChakraGauge.getValuesAt(timestamp).length > 0 || latestHistory != null
 	}
 
 	public blitzReady(timestamp: number): boolean {
-		return (this.opoBeastGauge.getValueAt(timestamp) + this.raptorBeastGauge.getValueAt(timestamp) + this.coeurlBeastGauge.getValueAt(timestamp)) >= CHAKRA_TO_BLITZ
+		return this.beastChakraGauge.getValuesAt(timestamp).length >= CHAKRA_TO_BLITZ
 	}
 
 	private onCast(event: Events['action']): void {
@@ -172,13 +172,13 @@ export class PerfectBalance extends Gauge {
 			// Make sure we don't record additional gauge generation if the player doesn't immediately blitz after using their PB stacks
 			if (this.current.used <= this.current.start) {
 				if (this.opoActions.includes(action.id)) {
-					this.opoBeastGauge.generate(1)
+					this.beastChakraGauge.generate(OPO_HANDLE)
 				}
 				if (this.raptorActions.includes(action.id)) {
-					this.raptorBeastGauge.generate(1)
+					this.beastChakraGauge.generate(RAPTOR_HANDLE)
 				}
 				if (this.coeurlActions.includes(action.id)) {
-					this.coeurlBeastGauge.generate(1)
+					this.beastChakraGauge.generate(COEURL_HANDLE)
 				}
 			}
 		}
@@ -264,9 +264,7 @@ export class PerfectBalance extends Gauge {
 			}
 		}
 
-		this.opoBeastGauge.reset()
-		this.raptorBeastGauge.reset()
-		this.coeurlBeastGauge.reset()
+		this.beastChakraGauge.reset()
 		this.current = undefined
 	}
 
