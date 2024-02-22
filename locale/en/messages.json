@@ -660,7 +660,7 @@
   "mnk.action-timeline.chakras": "Chakras",
   "mnk.brotherhood.drift.header": "Used inside<0/><1/>?",
   "mnk.brotherhood.drifted-window.content.": "Try and make sure your <0/> casts are fully included within a <1/> window.",
-  "mnk.brotherhood.drifted-window.why": "{0, plural, one {# cast} other {% casts}} of <0/> was either early or late for a <1/> window.",
+  "mnk.brotherhood.drifted-window.why": "{0, plural, one {# cast} other {# casts}} of <0/> {1, plural, one {was} other {were}} either early or late for a <1/> window.",
   "mnk.brotherhood.missed-window.content": "Try and make sure your <0/> casts line up with your <1/> windows to maximize buff stacking.",
   "mnk.brotherhood.missed-window.why": "{missedWindows, plural, one {# cast} other {# casts}} of <0/> did not occur during a <1/> window.",
   "mnk.cr.suggestions.content": "Avoid using <0/> over <1/> or <2/> as they have higher potency even for a single target.",
