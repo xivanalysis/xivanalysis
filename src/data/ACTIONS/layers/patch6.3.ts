@@ -21,6 +21,9 @@ export const patch630: Layer<ActionRoot> = {
 		ROYAL_AUTHORITY: {
 			statusesApplied: ['SWORD_OATH', 'DIVINE_MIGHT'],
 		},
+		PROMINENCE: {
+			statusesApplied: ['DIVINE_MIGHT'],
+		},
 		CONFITEOR: {
 			combo: undefined,
 		},

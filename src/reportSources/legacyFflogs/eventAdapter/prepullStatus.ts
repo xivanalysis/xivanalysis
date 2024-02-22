@@ -15,6 +15,8 @@ export class PrepullStatusAdapterStep extends AdapterStep {
 	private observedStatuses = new Map<Actor['id'], Set<number>>()
 	private precastEvents: Event[] = []
 
+	static override debug = false
+
 	override postprocess(adaptedEvents: Event[]): Event[] {
 		for (const event of adaptedEvents) {
 			if (event.type !== 'statusApply' && event.type !== 'statusRemove') {
@@ -31,6 +33,7 @@ export class PrepullStatusAdapterStep extends AdapterStep {
 					continue
 				}
 
+				this.debug(`Timestamp ${event.timestamp}: Saw first statusApply for status ${event.status} on target ${event.target}`)
 				this.synthesizeActionIfNew(event)
 
 				// If the first observed instance of a status that is applied
@@ -100,6 +103,8 @@ export class PrepullStatusAdapterStep extends AdapterStep {
 			// We've already seen an action that applies this status, skip
 			return
 		}
+
+		this.debug(`Timestamp ${event.timestamp}: Found unmatched application of ${statusKey} on ${event.target} - synthesizing action ${action.name}`)
 
 		const actionEvent: Events['action'] = {
 			...event,
