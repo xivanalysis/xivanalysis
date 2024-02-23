@@ -694,7 +694,7 @@
   "mnk.pb.suggestions.badActions.why": "在<2/>期间错误使用了{badActions, plural, one {# 次} other {# 次}} <0/>或者<1/>。",
   "mnk.pb.suggestions.nadi-overcap.content": "",
   "mnk.pb.suggestions.nadi-overcap.why": "",
-  "mnk.pb.suggestions.stacks.content": "尝试在<0/>的持续时间内用尽6层buff。",
+  "mnk.pb.suggestions.stacks.content": "尽可能把每个 <0/> 的全部 {0} 档效果打完。",
   "mnk.pb.suggestions.stacks.why": "在<0/>期间丢失了{droppedGcds, plural,one {#个}other {#个}}可能的GCD。",
   "mnk.pb.title": "震脚",
   "mnk.rof.chart.notes.early": "延后",
