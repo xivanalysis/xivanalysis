@@ -17,8 +17,7 @@ import React from 'react'
 import {Icon} from 'semantic-ui-react'
 import {DISPLAY_ORDER} from './DISPLAY_ORDER'
 
-const PLAYERS_HIT_TARGET = 8
-const PLAYERS_HIT_SUGGESTION_THRESHOLD = 7
+const FULL_PARTY_SIZE = 8
 const MAX_BUFF_DURATION = 30000
 
 const OTHER_PET_ACTIONS: ActionKey[] = [
@@ -59,8 +58,15 @@ export class SearingLight extends Analyser {
 	private slPending: number = 0 // timestamp
 	private petIds: string[] = []
 
+	private expectedCount: number = 0
+
 	override initialise() {
 		super.initialise()
+
+		const partyMembers = this.parser.pull.actors
+			.filter(actor => actor.playerControlled)
+			.map(actor => actor.id)
+		this.expectedCount = Math.min(partyMembers.length, FULL_PARTY_SIZE) // 24-mans count the other alliance members as 'party members' but you can't buff them...
 
 		this.petIds = this.parser.pull.actors
 			.filter(actor => actor.owner === this.parser.actor)
@@ -274,7 +280,7 @@ export class SearingLight extends Analyser {
 				const targetsData = {
 					players: {
 						actual: slUse.data.playersHit.size,
-						expected: PLAYERS_HIT_TARGET,
+						expected: this.expectedCount,
 					},
 				}
 				const notesMap = {
