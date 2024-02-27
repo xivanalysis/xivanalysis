@@ -1,6 +1,6 @@
 import {t} from '@lingui/macro'
 import {Trans, Plural} from '@lingui/react'
-import {ActionLink, StatusLink} from 'components/ui/DbLink'
+import {ActionLink} from 'components/ui/DbLink'
 import {RotationTable, RotationTableEntry} from 'components/ui/RotationTable'
 import {ActionKey} from 'data/ACTIONS'
 import {Event, Events} from 'event'
@@ -235,27 +235,6 @@ export class SearingLight extends Analyser {
 		this.history.closeCurrent(this.parser.pull.timestamp + this.parser.pull.duration)
 
 		if (this.history.entries.length === 0) { return }
-
-		const missedPlayersWindows = this.history.entries
-			.filter(slUse => slUse.data.playersHit.size <= PLAYERS_HIT_SUGGESTION_THRESHOLD)
-			.length
-		const totalMissedPlayers = this.history.entries
-			.reduce((totalMissed, slUse) => {
-				return totalMissed + ((slUse.data.ghosted) ? 0 :  PLAYERS_HIT_TARGET - slUse.data.playersHit.size)
-			}, 0)
-
-		if (totalMissedPlayers > 0) {
-			this.suggestions.add(new Suggestion({
-				icon: this.data.actions.SEARING_LIGHT.icon,
-				content: <Trans id="smn.searinglight.suggestions.missed-players.content">
-					Try to make sure your <StatusLink status="SEARING_LIGHT"/> casts buff your full party with each use. Failing to do so is a raid damage loss.
-				</Trans>,
-				severity: SEVERITY.MINOR,
-				why: <Trans id="smn.searinglight.suggestions.missed-players.why">
-					{missedPlayersWindows} of your Searing Light uses did not buff the full party.
-				</Trans>,
-			}))
-		}
 
 		const ghostedWindows = this.history.entries.filter(slUse => slUse.data.ghosted).length
 		if (ghostedWindows) {
