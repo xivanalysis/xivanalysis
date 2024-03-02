@@ -13,6 +13,7 @@ import {Death} from './Death'
 import {Defensives} from './Defensives'
 import Downtime from './Downtime'
 import {Dummy} from './Dummy'
+import {EnemyTimeline} from './EnemyTimeline'
 import {EventsView} from './EventsView'
 import {GlobalCooldown} from './GlobalCooldown'
 import Hijinks from './Hijinks'
@@ -45,6 +46,7 @@ export default [
 	Defensives,
 	Downtime,
 	Dummy,
+	EnemyTimeline,
 	EventsView,
 	GlobalCooldown,
 	Hijinks,
