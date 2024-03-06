@@ -28,6 +28,11 @@ export const SUMMONER = new Meta({
 
 	changelog: [
 		{
+			date: new Date('2024-02-26'),
+			Changes: () => <>Fix Searing Light's tracking of players buffed to be consistent with other raid buffs.</>,
+			contributors: [CONTRIBUTORS.AKAIRYU],
+		},
+		{
 			date: new Date('2023-01-14'),
 			Changes: () => <>Removed outdated Swiftcast message.</>,
 			contributors: [CONTRIBUTORS.KELOS],

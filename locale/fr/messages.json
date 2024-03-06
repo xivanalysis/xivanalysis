@@ -1021,8 +1021,6 @@
   "smn.searinglight.players-count": "Buff du joueurs",
   "smn.searinglight.suggestiongs.ghosted.why": "{ghostedWindows, plural, one {# Éclat Ardent a été perdu} other {# Éclats Ardents ont été perdus}}.",
   "smn.searinglight.suggestions.ghosted.content": "Assurez-vous que Carbuncle a suffisemment de temps pour lancer <0/> avant d'invoquer une Arcane ou une Demi-invocation, sinon votre sort sera gâché.",
-  "smn.searinglight.suggestions.missed-players.content": "Essayez de faire en sorte que vos <0/> touchent tous le monde à chaque utilisation. Ne pas le faire résulte en une perte de dégât de groupe.",
-  "smn.searinglight.suggestions.missed-players.why": "{missedPlayersWindows} de vos Éclats Ardents n'ont pas touchés tout le groupe.",
   "smn.searinglight.table-header": "Actions durant Éclat Ardent",
   "smn.searinglight.title": "Éclat Ardent",
   "smn.slipstream.title": "Sillage",

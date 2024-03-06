@@ -1021,8 +1021,6 @@
   "smn.searinglight.players-count": "バフを与えられた人数",
   "smn.searinglight.suggestiongs.ghosted.why": "",
   "smn.searinglight.suggestions.ghosted.content": "",
-  "smn.searinglight.suggestions.missed-players.content": "<0/>は使用時にパーティー全体にかかっているか意識してみてください。失敗しているとダメージロスになります。",
-  "smn.searinglight.suggestions.missed-players.why": "{missedPlayersWindows} 回のシアリングライトでパーティー全体にかかっていませんでした。",
   "smn.searinglight.table-header": "シアリングライトアクション",
   "smn.searinglight.title": "シアリングライト",
   "smn.slipstream.title": "スリップストリーム",
