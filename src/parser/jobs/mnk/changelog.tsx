@@ -4,6 +4,11 @@ import React from 'react'
 export const changelog = [
 	{
 		date: new Date('2024-02-21'),
+		Changes: () => <>Update Brotherhood report to be consistent with other jobs.</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
+	{
+		date: new Date('2024-02-21'),
 		Changes: () => <>Add a suggestion to avoid overcapping Nadis and polish Nadi gauge visualisation.</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],
 	},

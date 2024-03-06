@@ -10,11 +10,9 @@ import {Cooldowns} from 'parser/core/modules/Cooldowns'
 import {GlobalCooldown} from 'parser/core/modules/GlobalCooldown'
 import {SEVERITY} from 'parser/core/modules/Suggestions'
 import React from 'react'
-import {Brotherhood} from './Brotherhood'
 import {BLITZ_ACTIONS} from './constants'
 import {DISPLAY_ORDER} from './DISPLAY_ORDER'
 import {BlitzEvaluator} from './evaluators/BlitzEvaluator'
-import {BrotherhoodDriftEvaluator, BrotherhoodRaidBuffEvaluator} from './evaluators/BrotherhoodEvaluator'
 import {RiddleOfWindEvaluator} from './evaluators/RiddleOfWindEvaluator'
 import {PerfectBalance} from './PerfectBalance'
 import {fillActions} from './utilities'
@@ -52,7 +50,6 @@ export class RiddleOfFire extends BuffWindow {
 	static override displayOrder = DISPLAY_ORDER.RIDDLE_OF_FIRE
 
 	@dependency private globalCooldown!: GlobalCooldown
-	@dependency private brotherhood!: Brotherhood
 	@dependency private cooldowns!: Cooldowns
 	@dependency private perfectBalance!: PerfectBalance
 
@@ -127,8 +124,9 @@ export class RiddleOfFire extends BuffWindow {
 			suggestionWindowName: suggestionWindowName,
 			severityTiers: SEVERITIES.BAD_GCDS,
 		}))
+	}
 
-		this.addEvaluator(new BrotherhoodDriftEvaluator(this.brotherhood, this.data.actions.BROTHERHOOD.icon))
-		this.addEvaluator(new BrotherhoodRaidBuffEvaluator(this.brotherhood))
+	public get windows() {
+		return this.mapHistoryActions()
 	}
 }

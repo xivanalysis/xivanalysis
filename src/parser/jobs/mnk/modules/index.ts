@@ -7,7 +7,6 @@ import {Demolish} from './Demolish'
 import {Forms} from './Forms'
 import {GreasedLightning} from './GreasedLightning'
 import {MasterfulBlitzStatistics} from './MasterfulBlitzStatistics'
-import {MissedBrotherhood} from './MissedBrotherhood'
 import {PerfectBalance} from './PerfectBalance'
 import {Positionals} from './Positionals'
 import {Revolution} from './Revolution'
@@ -25,7 +24,6 @@ export default [
 	Revolution,
 	Defensives,
 	Demolish,
-	MissedBrotherhood,
 	Forms,
 	GreasedLightning,
 	MasterfulBlitzStatistics,
