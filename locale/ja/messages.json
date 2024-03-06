@@ -660,7 +660,7 @@
   "mnk.action-timeline.chakras": "闘気",
   "mnk.brotherhood.drift.header": "",
   "mnk.brotherhood.drifted-window.content.": "<0/>は<1/>の効果時間内に完全に乗るように使いましょう。",
-  "mnk.brotherhood.drifted-window.why": "{0, plural, one {# 回} other {# 回}}の<0/>の使用が早すぎるか遅すぎるため、<1/>の効果時間の外に出てしまいました。",
+  "mnk.brotherhood.drifted-window.why": "",
   "mnk.brotherhood.missed-window.content": "",
   "mnk.brotherhood.missed-window.why": "",
   "mnk.cr.suggestions.content": "単体に対して最大のダメージを与えるために<0/>より<1/>か<2/>を使ってください。",
