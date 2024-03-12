@@ -1,4 +1,4 @@
-@value gutter from "theme.module.css";
+@value gutter, themeText, themeTextMuted from "theme.module.css";
 
 .checkbox {
 	position: absolute !important;
@@ -14,6 +14,7 @@
 	display: flex;
 	margin: 1em 0;
 	width: 100%;
+	color: themeText;
 }
 
 .item:first-child {
@@ -33,5 +34,5 @@
 
 .extra {
 	margin-top: .5em;
-	color: rgba(0, 0, 0, .4);
+	color: themeTextMuted;
 }

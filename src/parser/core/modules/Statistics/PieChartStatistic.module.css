@@ -1,3 +1,5 @@
+@value themeText from "theme.module.css";
+
 .chartWrapper {
 	/* Break the pie out of the statistic's padding a little, it's too small otherwise. */
 	margin: -10px 0 -10px -10px;
@@ -10,6 +12,7 @@
 	text-align: left;
 	border-collapse: collapse;
 	margin-top: -20px;
+	color: themeText;
 }
 
 .legend td,

@@ -7,6 +7,8 @@ declare namespace SuggestionsModuleCssNamespace {
     gutter: string;
     item: string;
     items: string;
+    themeText: string;
+    themeTextMuted: string;
   }
 }
 

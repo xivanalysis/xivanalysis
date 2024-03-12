@@ -65,6 +65,7 @@
 
 	/* Basic Light Mode values */
 	--text: rgba(0, 0, 0, 0.87);
+	--inactive-text: rgba(0, 0, 0, 0.4);
 	--background: themeWhite;
 	--backdrop: themeLight;
 	--text-muted: #666;
@@ -82,15 +83,24 @@
 	--warning-text: warningDark;
 	--error-background: errorLight;
 	--error-text: errorDark;
+	--tank-background: rgba(33, 133, 208, 0.2);
+	--tank-text: rgb(16, 66, 104);
+	--healer-background: rgba(33, 186, 69, 0.2);
+	--healer-text: rgb(17, 93, 35);
+	--dps-background: rgba(219, 40, 40, 0.2);
+	--dps-text: rgb(111, 19, 19);
+	--misc-background: rgba(118, 118, 118, 0.2);
+	--misc-text: #767676;
 }
 
 .darkMode {
 	/* Basic Dark Mode values */
 	--text: rgba(255, 255, 255, 0.87);
-	--background: #2d2d2d;
+	--inactive-text: rgba(255, 255, 255, 0.4);
+	--background: #313131;
 	--backdrop: #3d3d3d;
 	--text-muted: #aaa;
-	--segment-active: #202020;
+	--segment-active: #8a8a8a;
 	--border-color: #7e7e7e;
 
 	/* Dark Mode Message Box values */
@@ -104,6 +114,19 @@
 	--warning-text: warningLight;
 	--error-background: errorDark;
 	--error-text: errorLight;
+	/* colors */
+	--blue: #7575fa;
+	--green: #75fa75;
+	--red: #fa7575;
+	/* roles */
+	--tank-text: rgba(0, 143, 253, 0.822);
+	--tank-background: rgb(16, 66, 104);
+	--healer-background: rgba(33, 186, 69, 0.2);
+	--healer-text: rgb(11, 179, 50);
+	--dps-background: rgba(219, 40, 40, 0.2);
+	--dps-text: rgb(192, 17, 17);
+	--misc-text: rgba(0, 0, 0, 0.8);
+	--misc-background: #767676;
 }
 
 

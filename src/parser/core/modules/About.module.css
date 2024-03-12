@@ -1,12 +1,13 @@
 @value gutter from "theme.module.css";
 @value md from "theme.module.css";
-@value themeBackground from "theme.module.css";
+@value themeBackground, themeText from "theme.module.css";
 
 .description,
 .meta {
 	padding: gutter;
 	background: themeBackground;
 	flex-basis: 0;
+	color: themeText;
 }
 
 .meta {

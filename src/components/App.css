@@ -37,3 +37,29 @@ Resulting stack:
 .text-error { color: var(--error); }
 .text-orange { color: var(--orange); }
 .text-grey { color: var(--grey); }
+
+/* Easier to override these globally than in every component */
+/* Unfortunately semantic UI uses !important inconsistently so */
+/* we will have to make do. */
+/* suggested TODO: move project to use semantic UI theme with LESS instead of CSS variables */
+.accordion {
+	background-color: var(--backdrop) !important;
+	color: var(--text) !important;
+}
+
+.table {
+	background-color: var(--backdrop) !important;
+	color: var(--text) !important;
+}
+
+.title:not(.active) {
+	color: var(--inactive-text) !important;
+}
+
+.title.active {
+	color: var(--text) !important;
+}
+
+.header {
+	color: var(--text) !important;
+}

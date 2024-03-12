@@ -9,6 +9,7 @@ declare namespace AboutModuleCssNamespace {
     md: string;
     meta: string;
     themeBackground: string;
+    themeText: string;
   }
 }
 

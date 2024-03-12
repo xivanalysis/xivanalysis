@@ -1,4 +1,8 @@
-@value gutter from "theme.module.css";
+@value gutter, themeText from "theme.module.css";
+
+div {
+	color: themeText;
+}
 
 .helpText {
 	font-style: italic;

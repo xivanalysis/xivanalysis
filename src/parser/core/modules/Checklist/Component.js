@@ -88,6 +88,7 @@ class Checklist extends Component {
 			panels={panels}
 			defaultActiveIndex={expanded}
 			styled fluid
+			className={styles.checklistBox}
 		/>
 	}
 }

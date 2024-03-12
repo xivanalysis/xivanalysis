@@ -1,5 +1,6 @@
 import classNames from 'classnames'
 import I18nMenu from 'components/ui/I18nMenu'
+import ThemeMenu from 'components/ui/ThemeMenu'
 import {observer} from 'mobx-react'
 import React, {useRef, useEffect, useContext} from 'react'
 import ReactDOM from 'react-dom'
@@ -30,6 +31,10 @@ export default function Options() {
 
 		<div className={styles.row}>
 			<I18nMenu/>
+		</div>
+
+		<div className={styles.row}>
+			<ThemeMenu/>
 		</div>
 
 		<div className={classNames(styles.row, styles.meta)}>

@@ -4,6 +4,7 @@ declare namespace TimelineModuleCssNamespace {
   export interface ITimelineModuleCss {
     gutter: string;
     helpText: string;
+    themeText: string;
   }
 }
 

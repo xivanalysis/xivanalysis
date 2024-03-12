@@ -4,9 +4,16 @@ declare namespace ChecklistModuleCssNamespace {
   export interface IChecklistModuleCss {
     description: string;
     lg: string;
+    mappings: string;
+    names: string;
     percent: string;
     progress: string;
+    sourceRoot: string;
+    sources: string;
+    sourcesContent: string;
+    textTheme: string;
     title: string;
+    version: string;
   }
 }
 

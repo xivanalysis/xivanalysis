@@ -1,4 +1,4 @@
-@value gutter from "theme.module.css";
+@value gutter, themeText from "theme.module.css";
 
 .simpleStatistic {
 	position: relative;
@@ -6,6 +6,7 @@
 	flex-direction: column;
 	justify-content: space-between;
 	height: 100%;
+	color: themeText;
 }
 
 .simpleStatistic > :only-child {
