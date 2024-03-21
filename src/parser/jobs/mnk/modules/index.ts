@@ -2,6 +2,7 @@ import {ActionTimeline} from './ActionTimeline'
 import {AoE} from './AoE'
 import {Brotherhood} from './Brotherhood'
 import {CooldownDowntime} from './CooldownDowntime'
+import { DKOptimalGoof } from './DKOptimalGoof'
 import {Defensives} from './Defensives'
 import {Demolish} from './Demolish'
 import {Forms} from './Forms'
@@ -34,4 +35,5 @@ export default [
 	Steppies,
 	TwinSnakes,
 	Weaving,
+	DKOptimalGoof
 ]
