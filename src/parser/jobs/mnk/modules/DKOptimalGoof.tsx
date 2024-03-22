@@ -21,15 +21,11 @@ interface GCD {
 	dfTimer?: number
     reason?: string
 }
-interface Disciplined {
-	start: number
-    }
 export class DKOptimalGoof extends Analyser {
-	static override handle = 'DKOptimal'
+	static override handle = 'DragonKickRotation'
 
 
 	@dependency private checklist!: Checklist
-	@dependency private suggestions!: Suggestions
 
 	@dependency private data!: Data
 	@dependency private timeline!: Timeline
@@ -44,8 +40,6 @@ export class DKOptimalGoof extends Analyser {
 
     private dragonKicks: GCD[] = []
     private missedKicks: GCD[] = []
-    private allNonPBGCDs: number = 0
-    private disciplineFist?: Disciplined
     private twinRefreshExpected?: number
  
     override initialise(): void {
@@ -92,12 +86,10 @@ export class DKOptimalGoof extends Analyser {
         if(!needTwinRefresh){
             if(isDragonKick){
                 this.dragonKicks.push(gcd)
-            }else if (!isBlitz) {
+            } else if (!isBlitz) {
                 gcd.reason = `Not a dragon kick :(`
                 this.missedKicks.push(gcd)
             }
-			
-			this.allNonPBGCDs++
     
         }
     }
@@ -112,7 +104,8 @@ export class DKOptimalGoof extends Analyser {
 			requirements: [
 				new Requirement({
 					name: <Trans id="mnk.dragonkickrotation.checklist.requirement.name">Optimal <DataLink action="DRAGON_KICK"/>  </Trans>,
-					percent: () => this.dragonKicks.length/this.allNonPBGCDs * 100,
+					value: this.dragonKicks.length,
+					target: this.dragonKicks.length + this.missedKicks.length
 				}),
 			],
 			target: 95,
@@ -120,16 +113,16 @@ export class DKOptimalGoof extends Analyser {
     }
 
 	private onGain(event: Events['statusApply']): void {
-		// Check if existing window or not
-		if (!this.disciplineFist) {
-			this.disciplineFist = {start: event.timestamp}
+		// Set the end of the disciplinefist buff
+		const status = this.data.getStatus(event.status)
+		//sanity check
+		if(status && status.id === this.data.statuses.DISCIPLINED_FIST.id && status.duration){
+			this.twinRefreshExpected = event.timestamp + status.duration 
 		}
-		this.twinRefreshExpected = event.timestamp + 15000
         
 	}
 
 	private onDrop(event: Events['statusRemove']): void {
-		this.disciplineFist = undefined
         this.twinRefreshExpected = undefined
 	}
 
