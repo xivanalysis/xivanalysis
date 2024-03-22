@@ -7,12 +7,12 @@ import { Data } from "parser/core/modules/Data"
 import { Timeline } from "parser/core/modules/Timeline"
 import { Events } from "event"
 import Checklist, { Requirement, Rule } from "parser/core/modules/Checklist"
-import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import {DISPLAY_ORDER} from './DISPLAY_ORDER'
 import { ActionLink, DataLink } from "components/ui/DbLink"
 import { Button, Table } from "semantic-ui-react"
 import { Action } from "data/ACTIONS"
 import styles from 'components/ui/Rotation.module.css'
+import {getIsAprilFirst} from 'parser/core'
 
 
 interface GCD {
@@ -43,20 +43,22 @@ export class DKOptimalGoof extends Analyser {
     private twinRefreshExpected?: number
  
     override initialise(): void {
-        const playerFilter = filter<Event>().source(this.parser.actor.id)
+		if(getIsAprilFirst()){
+			const playerFilter = filter<Event>().source(this.parser.actor.id)
 
-        this.addEventHook(playerFilter.type('action'),this.onCast)
-        this.addEventHook(playerFilter.type('statusApply').status(this.data.statuses.DISCIPLINED_FIST.id), this.onGain)
-		this.addEventHook(playerFilter.type('statusRemove').status(this.data.statuses.DISCIPLINED_FIST.id), this.onDrop)
-    
-		this.addEventHook('complete', this.onComplete)
+			this.addEventHook(playerFilter.type('action'),this.onCast)
+			this.addEventHook(playerFilter.type('statusApply').status(this.data.statuses.DISCIPLINED_FIST.id), this.onGain)
+			this.addEventHook(playerFilter.type('statusRemove').status(this.data.statuses.DISCIPLINED_FIST.id), this.onDrop)
+		
+			this.addEventHook('complete', this.onComplete)
+		}
     }
 
     private onCast(event: Events['action']) {
 		const action = this.data.getAction(event.action)
 
         const inPB = this.actors.current.hasStatus(this.data.statuses.PERFECT_BALANCE.id)
-		if (action == null || !(action.onGcd ?? false) || inPB ) { return }
+		if (action == null || !(action.onGcd ?? false) || inPB  || this.blitz.includes(action.id) ) { return }
         
 
 		const gcd: GCD = {
@@ -65,9 +67,8 @@ export class DKOptimalGoof extends Analyser {
 		}
 
         const isDragonKick = action.id === this.data.actions.DRAGON_KICK.id 
-        const isBlitz = this.blitz.includes(action.id) 
         const inDisciplinedFist = this.actors.current.hasStatus(this.data.statuses.DISCIPLINED_FIST.id)
-        let needTwinRefresh
+        let needTwinRefresh = true
         if(this.twinRefreshExpected){
             needTwinRefresh = this.twinRefreshExpected - event.timestamp < 2500
 			gcd.dfTimer = this.twinRefreshExpected  - event.timestamp 
@@ -86,11 +87,10 @@ export class DKOptimalGoof extends Analyser {
         if(!needTwinRefresh){
             if(isDragonKick){
                 this.dragonKicks.push(gcd)
-            } else if (!isBlitz) {
+            } else {
                 gcd.reason = `Not a dragon kick :(`
                 this.missedKicks.push(gcd)
-            }
-    
+            }    
         }
     }
 
@@ -98,12 +98,12 @@ export class DKOptimalGoof extends Analyser {
         this.checklist.add(new Rule({
 			name: <Trans id="mnk.dragonkickrotation.checklist.name">Dragon Kick to win</Trans>,
 			description: <Trans id="mnk.dragonkickrotation.checklist.description">
-				<DataLink action="DRAGON_KICK"/> is your strongest GCD if you want to win, press it.
+				<DataLink action="DRAGON_KICK"/> is your strongest GCD, if you want to win, press it.
 			</Trans>,
 			displayOrder: DISPLAY_ORDER.DK_OPTIMAL_GOOF,
 			requirements: [
 				new Requirement({
-					name: <Trans id="mnk.dragonkickrotation.checklist.requirement.name">Optimal <DataLink action="DRAGON_KICK"/>  </Trans>,
+					name: <Trans id="mnk.dragonkickrotation.checklist.requirement.name">Optimal <DataLink action="DRAGON_KICK"/>s  </Trans>,
 					value: this.dragonKicks.length,
 					target: this.dragonKicks.length + this.missedKicks.length
 				}),
@@ -113,7 +113,6 @@ export class DKOptimalGoof extends Analyser {
     }
 
 	private onGain(event: Events['statusApply']): void {
-		// Set the end of the disciplinefist buff
 		const status = this.data.getStatus(event.status)
 		//sanity check
 		if(status && status.id === this.data.statuses.DISCIPLINED_FIST.id && status.duration){
@@ -137,13 +136,13 @@ export class DKOptimalGoof extends Analyser {
 			<Table.Header>
 				<Table.Row>
 					<Table.HeaderCell collapsing>
-						<strong><Trans id="core.ui.dkmiss-table.header.starttime">Time</Trans></strong>
+						<strong><Trans id="core.ui.dkmiss-table.header.time">Time</Trans></strong>
 					</Table.HeaderCell>
 					<Table.HeaderCell collapsing>
-						<strong><Trans id="core.ui.dkmiss-table.header.dftimer">Discipline Fist Status</Trans></strong>
+						<strong><Trans id="core.ui.dkmiss-table.header.dftimer"><DataLink action="TWIN_SNAKES" showName={false} /></Trans></strong>
 					</Table.HeaderCell>
 					<Table.HeaderCell>
-						<strong><Trans id="core.ui.dkmiss-table.header.comboactions">Action</Trans></strong>
+						<strong><Trans id="core.ui.dkmiss-table.header.action">Action</Trans></strong>
 					</Table.HeaderCell>
 					<Table.HeaderCell collapsing>
 						<strong><Trans id="core.ui.dkmiss-table.header.reason">Reason</Trans></strong>
