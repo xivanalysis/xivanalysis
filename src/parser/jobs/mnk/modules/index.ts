@@ -2,9 +2,9 @@ import {ActionTimeline} from './ActionTimeline'
 import {AoE} from './AoE'
 import {Brotherhood} from './Brotherhood'
 import {CooldownDowntime} from './CooldownDowntime'
-import {DKOptimalGoof} from './DKOptimalGoof'
 import {Defensives} from './Defensives'
 import {Demolish} from './Demolish'
+import {DKOptimalGoof} from './DKOptimalGoof'
 import {Forms} from './Forms'
 import {GreasedLightning} from './GreasedLightning'
 import {MasterfulBlitzStatistics} from './MasterfulBlitzStatistics'
@@ -35,5 +35,5 @@ export default [
 	Steppies,
 	TwinSnakes,
 	Weaving,
-	DKOptimalGoof
+	DKOptimalGoof,
 ]

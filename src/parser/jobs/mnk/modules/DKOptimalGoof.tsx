@@ -1,29 +1,31 @@
-import { Analyser } from "parser/core/Analyser"
 import {Trans} from '@lingui/react'
-import { dependency } from "parser/core/Injectable"
-import {filter} from 'parser/core/filter'
-import { Actors } from "parser/core/modules/Actors"
-import { Data } from "parser/core/modules/Data"
-import { Timeline } from "parser/core/modules/Timeline"
-import { Events } from "event"
-import Checklist, { Requirement, Rule } from "parser/core/modules/Checklist"
-import {DISPLAY_ORDER} from './DISPLAY_ORDER'
-import { ActionLink, DataLink } from "components/ui/DbLink"
-import { Button, Table } from "semantic-ui-react"
-import { Action } from "data/ACTIONS"
+import {ActionLink, DataLink} from 'components/ui/DbLink'
 import styles from 'components/ui/Rotation.module.css'
+import {Action} from 'data/ACTIONS'
+import {Events} from 'event'
 import {getIsAprilFirst} from 'parser/core'
-
+import {Analyser} from 'parser/core/Analyser'
+import {filter} from 'parser/core/filter'
+import {dependency} from 'parser/core/Injectable'
+import {Actors} from 'parser/core/modules/Actors'
+import Checklist, {Requirement, Rule} from 'parser/core/modules/Checklist'
+import {Data} from 'parser/core/modules/Data'
+import {Timeline} from 'parser/core/modules/Timeline'
+import React from 'react'
+import {Button, Table} from 'semantic-ui-react'
+import {DISPLAY_ORDER} from './DISPLAY_ORDER'
 
 interface GCD {
 	timestamp: number
-    action: Action
+	action: Action
 	dfTimer?: number
-    reason?: string
+	reason?: string
 }
+
+const REFRESH_TWIN_WINDOW: number = 3000
+
 export class DKOptimalGoof extends Analyser {
 	static override handle = 'DragonKickRotation'
-
 
 	@dependency private checklist!: Checklist
 
@@ -36,66 +38,63 @@ export class DKOptimalGoof extends Analyser {
 		this.data.actions.ELIXIR_FIELD.id,
 		this.data.actions.RISING_PHOENIX.id,
 		this.data.actions.PHANTOM_RUSH.id,
-    ]
+	]
 
-    private dragonKicks: GCD[] = []
-    private missedKicks: GCD[] = []
-    private twinRefreshExpected?: number
- 
-    override initialise(): void {
-		if(getIsAprilFirst()){
+	private dragonKicks: GCD[] = []
+	private missedKicks: GCD[] = []
+	private twinRefreshExpected?: number
+
+	override initialise(): void {
+		if (getIsAprilFirst()) {
 			const playerFilter = filter<Event>().source(this.parser.actor.id)
 
-			this.addEventHook(playerFilter.type('action'),this.onCast)
+			this.addEventHook(playerFilter.type('action'), this.onCast)
 			this.addEventHook(playerFilter.type('statusApply').status(this.data.statuses.DISCIPLINED_FIST.id), this.onGain)
 			this.addEventHook(playerFilter.type('statusRemove').status(this.data.statuses.DISCIPLINED_FIST.id), this.onDrop)
-		
+
 			this.addEventHook('complete', this.onComplete)
 		}
-    }
+	}
 
-    private onCast(event: Events['action']) {
+	private onCast(event: Events['action']) {
 		const action = this.data.getAction(event.action)
 
-        const inPB = this.actors.current.hasStatus(this.data.statuses.PERFECT_BALANCE.id)
-		if (action == null || !(action.onGcd ?? false) || inPB  || this.blitz.includes(action.id) ) { return }
-        
+		const inPB = this.actors.current.hasStatus(this.data.statuses.PERFECT_BALANCE.id)
+		if (action == null || !(action.onGcd ?? false) || inPB  || this.blitz.includes(action.id)) { return }
 
 		const gcd: GCD = {
 			timestamp: event.timestamp,
-            action: action
+			action: action,
 		}
 
-        const isDragonKick = action.id === this.data.actions.DRAGON_KICK.id 
-        const inDisciplinedFist = this.actors.current.hasStatus(this.data.statuses.DISCIPLINED_FIST.id)
-        let needTwinRefresh = true
-        if(this.twinRefreshExpected){
-            needTwinRefresh = this.twinRefreshExpected - event.timestamp < 2500
-			gcd.dfTimer = this.twinRefreshExpected  - event.timestamp 
+		const isDragonKick = action.id === this.data.actions.DRAGON_KICK.id
+		const inDisciplinedFist = this.actors.current.hasStatus(this.data.statuses.DISCIPLINED_FIST.id)
+		let needTwinRefresh = true
+		if (this.twinRefreshExpected) {
+			needTwinRefresh = this.twinRefreshExpected - event.timestamp < REFRESH_TWIN_WINDOW
+			gcd.dfTimer = this.twinRefreshExpected  - event.timestamp
 		}
-            
 
-        if(this.actors.current.hasStatus(this.data.statuses.LEADEN_FIST.id) && (
-            this.actors.current.hasStatus(this.data.statuses.OPO_OPO_FORM.id) 
-                || this.actors.current.hasStatus(this.data.statuses.FORMLESS_FIST.id))){
-            return
-        }
+		if (this.actors.current.hasStatus(this.data.statuses.LEADEN_FIST.id) && (
+			this.actors.current.hasStatus(this.data.statuses.OPO_OPO_FORM.id)
+				|| this.actors.current.hasStatus(this.data.statuses.FORMLESS_FIST.id))) {
+			return
+		}
 
-        if(!inDisciplinedFist || this.actors.current.hasStatus(this.data.statuses.COEURL_FORM.id)) return
+		if (!inDisciplinedFist || this.actors.current.hasStatus(this.data.statuses.COEURL_FORM.id)) { return }
 
+		if (!needTwinRefresh) {
+			if (isDragonKick) {
+				this.dragonKicks.push(gcd)
+			} else {
+				gcd.reason = 'Not a dragon kick :('
+				this.missedKicks.push(gcd)
+			}
+		}
+	}
 
-        if(!needTwinRefresh){
-            if(isDragonKick){
-                this.dragonKicks.push(gcd)
-            } else {
-                gcd.reason = `Not a dragon kick :(`
-                this.missedKicks.push(gcd)
-            }    
-        }
-    }
-
-    onComplete() {
-        this.checklist.add(new Rule({
+	onComplete() {
+		this.checklist.add(new Rule({
 			name: <Trans id="mnk.dragonkickrotation.checklist.name">Dragon Kick to win</Trans>,
 			description: <Trans id="mnk.dragonkickrotation.checklist.description">
 				<DataLink action="DRAGON_KICK"/> is your strongest GCD, if you want to win, press it.
@@ -105,27 +104,27 @@ export class DKOptimalGoof extends Analyser {
 				new Requirement({
 					name: <Trans id="mnk.dragonkickrotation.checklist.requirement.name">Optimal <DataLink action="DRAGON_KICK"/>s  </Trans>,
 					value: this.dragonKicks.length,
-					target: this.dragonKicks.length + this.missedKicks.length
+					target: this.dragonKicks.length + this.missedKicks.length,
 				}),
 			],
 			target: 95,
 		}))
-    }
+	}
 
 	private onGain(event: Events['statusApply']): void {
 		const status = this.data.getStatus(event.status)
 		//sanity check
-		if(status && status.id === this.data.statuses.DISCIPLINED_FIST.id && status.duration){
-			this.twinRefreshExpected = event.timestamp + status.duration 
+		if (status && status.id === this.data.statuses.DISCIPLINED_FIST.id && status.duration) {
+			this.twinRefreshExpected = event.timestamp + status.duration
 		}
-        
+
 	}
 
-	private onDrop(event: Events['statusRemove']): void {
-        this.twinRefreshExpected = undefined
+	private onDrop(): void {
+		this.twinRefreshExpected = undefined
 	}
 
-    override output(): React.ReactNode {
+	override output(): React.ReactNode {
 		if (this.missedKicks.length <= 0) {
 			return false
 		}
@@ -153,8 +152,8 @@ export class DKOptimalGoof extends Analyser {
 				{
 					data.map((issue, index) => {
 
-                        const action = issue.action
-        
+						const action = issue.action
+
 						return <Table.Row key={issue.timestamp}>
 							<Table.Cell style={{whiteSpace: 'nowrap'}}>
 								{issue.timestamp > 0 &&
@@ -165,27 +164,27 @@ export class DKOptimalGoof extends Analyser {
 											compact
 											size="mini"
 											icon="time"
-											onClick={() => this.timeline.show(this.relativeTimestamp(issue.timestamp), this.relativeTimestamp( issue.timestamp))}
+											onClick={() => this.timeline.show(this.relativeTimestamp(issue.timestamp), this.relativeTimestamp(issue.timestamp))}
 										/>
 									</>}
 							</Table.Cell>
 							<Table.Cell>
-								{ issue.dfTimer && 
+								{ issue.dfTimer &&
 									<>
 										<span>{this.parser.formatDuration(issue.dfTimer, 2)}</span>
 									</>
 								}
 							</Table.Cell>
 							<Table.Cell>
-                                <div
-                                    key={index}
-                                >
-                                    <ActionLink
-                                        showName={false}
-                                        iconSize={styles.gcdSize}
-                                        {...action}
-                                    />
-                                </div>
+								<div
+									key={index}
+								>
+									<ActionLink
+										showName={false}
+										iconSize={styles.gcdSize}
+										{...action}
+									/>
+								</div>
 							</Table.Cell>
 							<Table.Cell>
 								<span style={{whiteSpace: 'nowrap'}}>{issue.reason}</span>
@@ -196,7 +195,8 @@ export class DKOptimalGoof extends Analyser {
 			</Table.Body>
 		</Table>
 	}
-    private relativeTimestamp(timestamp: number) {
+	private relativeTimestamp(timestamp: number) {
 		return timestamp - this.parser.pull.timestamp
 	}
 }
+

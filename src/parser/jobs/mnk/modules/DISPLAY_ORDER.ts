@@ -1,5 +1,3 @@
-import { DKOptimalGoof } from "./DKOptimalGoof";
-
 export const DISPLAY_ORDER = {
 	RIDDLE_OF_FIRE: 2,
 	PERFECT_BALANCE: 3,
