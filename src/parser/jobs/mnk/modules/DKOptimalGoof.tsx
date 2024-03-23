@@ -135,16 +135,16 @@ export class DKOptimalGoof extends Analyser {
 			<Table.Header>
 				<Table.Row>
 					<Table.HeaderCell collapsing>
-						<strong><Trans id="core.ui.dkmiss-table.header.time">Time</Trans></strong>
+						<strong><Trans id="mnk.dragonkickrotation.dkmiss-table.header.time">Time</Trans></strong>
 					</Table.HeaderCell>
 					<Table.HeaderCell collapsing>
-						<strong><Trans id="core.ui.dkmiss-table.header.dftimer"><DataLink action="TWIN_SNAKES" showName={false} /></Trans></strong>
+						<strong><Trans id="mnk.dragonkickrotation.dkmiss-table.header.dftimer"><DataLink action="TWIN_SNAKES" showName={false} /></Trans></strong>
 					</Table.HeaderCell>
 					<Table.HeaderCell>
-						<strong><Trans id="core.ui.dkmiss-table.header.action">Action</Trans></strong>
+						<strong><Trans id="mnk.dragonkickrotation.dkmiss-table.header.action">Action</Trans></strong>
 					</Table.HeaderCell>
 					<Table.HeaderCell collapsing>
-						<strong><Trans id="core.ui.dkmiss-table.header.reason">Reason</Trans></strong>
+						<strong><Trans id="mnk.dragonkickrotation.dkmiss-table.header.reason">Reason</Trans></strong>
 					</Table.HeaderCell>
 				</Table.Row>
 			</Table.Header>
@@ -187,7 +187,7 @@ export class DKOptimalGoof extends Analyser {
 								</div>
 							</Table.Cell>
 							<Table.Cell>
-								<span style={{whiteSpace: 'nowrap'}}>{issue.reason}</span>
+								<span style={{whiteSpace: 'nowrap'}}><Trans id="mnk.dragonkickrotation.dkmiss-table.reason">{issue.reason}</Trans></span>
 							</Table.Cell>
 						</Table.Row>
 					})
