@@ -27,6 +27,7 @@ export class BloodGauge extends CoreGauge {
 
 	private bloodGauge = this.add(new CounterGauge({
 		graph: {
+			handle: 'bloodgauge',
 			label: <Trans id="drk.gauge.bloodgauge.label">Blood Gauge</Trans>,
 			color: JOBS.DARK_KNIGHT.colour,
 		},

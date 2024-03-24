@@ -19,9 +19,10 @@ export class Gauge extends CoreGauge {
 	private oathGauge = this.add(new CounterGauge({
 		initialValue: 100,
 		graph: {
+			handle: 'oathgauge',
 			label: <Trans id="pld.gauge.label">Oath Gauge</Trans>,
 			color: JOBS.PALADIN.colour,
-			collapse: false,
+			forceCollapsed: true,
 		},
 	}))
 	private oathModifiers = new Map<number, GaugeModifier>([

@@ -42,8 +42,10 @@ export class FaerieGauge extends CoreGauge {
 	// Defaults
 	private gauge = this.add(new CounterGauge({
 		graph: {
+			handle: 'faeriegauge',
 			label: <Trans id="sch.gauge.faerie.label">Faerie Gauge</Trans>,
 			color: JOBS.SCHOLAR.colour,
+			forceCollapsed: true,
 		},
 	}))
 

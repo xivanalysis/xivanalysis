@@ -25,8 +25,10 @@ export class Gauge extends CoreGauge {
 
 	private beastGauge = this.add(new CounterGauge({
 		graph: {
+			handle: 'beastgauge',
 			label: <Trans id="war.gauge.beast.label">Beast Gauge</Trans>,
 			color: JOBS.WARRIOR.colour,
+			forceCollapsed: true,
 		},
 	}))
 

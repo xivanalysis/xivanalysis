@@ -32,6 +32,7 @@ export class Ammo extends CoreGauge {
 			handle: 'ammo',
 			label: <Trans id="gnb.gauge.resource.ammoLabel">Ammo</Trans>,
 			color: JOBS.GUNBREAKER.colour,
+			forceCollapsed: true,
 		},
 	}))
 
