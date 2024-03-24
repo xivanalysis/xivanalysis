@@ -10,6 +10,14 @@ export const changelog: ChangelogEntry[] = [
 	// 	contributors: [CONTRIBUTORS.YOU],
 	// },
 	{
+		date: new Date('2024-03-24'),
+		Changes: () => <>
+			Stop MP graphs from appearing due to deaths for jobs that do not use MP.
+		</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
+	// },
+	{
 		date: new Date('2024-02-19'),
 		Changes: () => <>
 			Fix event ordering inaccuracies when a buff status removal and a damage event occur on the same timestamp.
