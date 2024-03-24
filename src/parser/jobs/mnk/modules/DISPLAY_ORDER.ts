@@ -4,5 +4,4 @@ export const DISPLAY_ORDER = {
 	DRAGON_KICK: 5,
 	TWIN_SNAKES: 6,
 	DEMOLISH: 7,
-	DK_OPTIMAL_GOOF: 8,
 }

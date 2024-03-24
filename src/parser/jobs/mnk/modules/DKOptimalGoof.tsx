@@ -1,4 +1,4 @@
-import {Trans} from '@lingui/react'
+import {Plural, Trans} from '@lingui/react'
 import {ActionLink, DataLink} from 'components/ui/DbLink'
 import styles from 'components/ui/Rotation.module.css'
 import {Action} from 'data/ACTIONS'
@@ -8,12 +8,11 @@ import {Analyser} from 'parser/core/Analyser'
 import {filter} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
 import {Actors} from 'parser/core/modules/Actors'
-import Checklist, {Requirement, Rule} from 'parser/core/modules/Checklist'
 import {Data} from 'parser/core/modules/Data'
+import Suggestions, {SEVERITY, Suggestion} from 'parser/core/modules/Suggestions'
 import {Timeline} from 'parser/core/modules/Timeline'
 import React from 'react'
 import {Button, Table} from 'semantic-ui-react'
-import {DISPLAY_ORDER} from './DISPLAY_ORDER'
 
 interface GCD {
 	timestamp: number
@@ -27,7 +26,7 @@ const REFRESH_TWIN_WINDOW: number = 3000
 export class DKOptimalGoof extends Analyser {
 	static override handle = 'DragonKickRotation'
 
-	@dependency private checklist!: Checklist
+	@dependency private suggestions!: Suggestions
 
 	@dependency private data!: Data
 	@dependency private timeline!: Timeline
@@ -94,20 +93,19 @@ export class DKOptimalGoof extends Analyser {
 	}
 
 	onComplete() {
-		this.checklist.add(new Rule({
-			name: <Trans id="mnk.dragonkickrotation.checklist.name">Dragon Kick to win</Trans>,
-			description: <Trans id="mnk.dragonkickrotation.checklist.description">
+
+		const missedKicks = this.missedKicks.length
+		const possibleKicks = this.dragonKicks.length + this.missedKicks.length
+
+		this.suggestions.add(new Suggestion({
+			icon: this.data.actions.DRAGON_KICK.icon,
+			severity: SEVERITY.MEMES,
+			content: <Trans id="mnk.dragonkickrotation.suggestions.content">
 				<DataLink action="DRAGON_KICK"/> is your strongest GCD, if you want to win, press it.
 			</Trans>,
-			displayOrder: DISPLAY_ORDER.DK_OPTIMAL_GOOF,
-			requirements: [
-				new Requirement({
-					name: <Trans id="mnk.dragonkickrotation.checklist.requirement.name">Optimal <DataLink action="DRAGON_KICK"/>s  </Trans>,
-					value: this.dragonKicks.length,
-					target: this.dragonKicks.length + this.missedKicks.length,
-				}),
-			],
-			target: 95,
+			why: <Trans id="mnk.dragonkickrotation.suggestions.missed.why">
+				Missed <Plural value={missedKicks} one="# kick" other="# kicks" /> out of {possibleKicks} <DataLink action="DRAGON_KICK"/>s.
+			</Trans>,
 		}))
 	}
 
