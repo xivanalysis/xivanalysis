@@ -75,5 +75,10 @@ export const WHITE_MAGE = new Meta({
 			Changes: () => <>Added Afflatus Heals to the Overheal pie chart and updated for 6.1 Defensive Cooldowns.</>,
 			contributors: [CONTRIBUTORS.INNI],
 		},
+		{
+			date: new Date('2024-03-20'),
+			Changes: () => <>Updated Lilies Module to give more accurate suggestions for Blood Lily overwrites and missed usages.</>,
+			contributors: [CONTRIBUTORS.SAMEH],
+		},
 	],
 })
