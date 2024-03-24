@@ -24,7 +24,7 @@ export interface SetGaugeOptions extends AbstractGaugeOptions {
 }
 
 type SetGraphOptions =
-	&Omit<ResourceGraphOptions, 'tooltipHideMaximum' | 'required'>
+	&Omit<ResourceGraphOptions, 'tooltipHideMaximum'>
 
 export interface SetResourceData extends ResourceData {
 	type: 'discrete'

@@ -76,8 +76,6 @@ export interface ResourceGraphOptions {
 	tooltipHideWhenEmpty?: boolean
 	/* Set to hide the maximum value of this resource from the tooltip's denominator */
 	tooltipHideMaximum?: boolean
-	required?: number
-	warning?: number
 }
 
 export const DEFAULT_ROW_HEIGHT: number = 64
@@ -232,16 +230,13 @@ export class ResourceGraphs extends Analyser {
 				const timePct = (timestamp - lastTimestamp) / (nextTimestamp - lastTimestamp)
 				lastData.current = (lastData.current ?? 0) + delta * timePct
 			}
-			const warning = (datum.type === 'area' && 'warning' in datum) ? (datum.warning) : undefined
-			const required = (datum.type === 'area' && 'required' in datum) ? (datum.required) : undefined
+
 			return ({
 				label: datum.label,
 				colour: datum.colour,
 				...lastData,
 				tooltipHideWhenEmpty: datum.tooltipHideWhenEmpty,
 				tooltipHideMaximum: datum.tooltipHideMaximum,
-				warning,
-				required,
 			})
 		}).filter(ri => !((ri.current == null || ri.current === 0) && ri.tooltipHideWhenEmpty === true)) // Remove resources that are empty if they're flagged for hiding from the tooltip
 		if (dataGroup.tooltipHideWhenEmpty && !info.some(ri => (ri.current ?? 0) > 0)) { return [] } // If the group should be hidden from the tooltip when all resources are 0, return an empty array

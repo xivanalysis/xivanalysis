@@ -26,7 +26,7 @@ export interface CounterGaugeOptions extends AbstractGaugeOptions {
 	/** Maximum value of the gauge. Defaults to 100. Value over the maximum will be considered over cap, and tracked if enabled. */
 	maximum?: number,
 	/** Graph options. Omit to disable graphing in the timeline for this gauge. */
-	graph?: ResourceGraphOptions
+	graph?: CounterGraphOptions
 	/**
 	 * Should this gauge correct its history in the event of underflow? Must pass true to enable
 	 * Important note:
@@ -44,11 +44,13 @@ export interface CounterGaugeOptions extends AbstractGaugeOptions {
 	deterministic?: boolean
 }
 
+type CounterGraphOptions =
+	&Omit<ResourceGraphOptions, ''> // Not currently omitting any options, but making easier to do so in the future
+
 export interface CounterResourceData extends ResourceData {
 	type: 'area',
-	required?: number
-	warning?: number
 }
+
 export class CounterGauge extends AbstractGauge {
 	private initialValue: number
 	private currentValue: number
@@ -228,7 +230,7 @@ export class CounterGauge extends AbstractGauge {
 	override generateResourceGraph() {
 		if (this.graphOptions == null) { return }
 
-		const {handle, color, label, tooltipHideWhenEmpty, tooltipHideMaximum, required, warning} = this.graphOptions
+		const {handle, color, label, tooltipHideWhenEmpty, tooltipHideMaximum} = this.graphOptions
 		const graphData: CounterResourceData = {
 			label,
 			colour: color ?? 'black',
@@ -237,8 +239,6 @@ export class CounterGauge extends AbstractGauge {
 			}),
 			tooltipHideWhenEmpty,
 			tooltipHideMaximum,
-			required,
-			warning,
 			type: 'area',
 		}
 		if (handle != null) {

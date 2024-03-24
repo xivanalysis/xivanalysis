@@ -34,7 +34,7 @@ export interface TimerGaugeOptions extends AbstractGaugeOptions {
 }
 
 type TimerGraphOptions =
-	& Omit<ResourceGraphOptions, 'required'>
+	& Omit<ResourceGraphOptions, ''> // Not currently omitting any options, but making easier to do so in the future
 
 export interface TimerResourceData extends ResourceData {
 	type: 'area'
