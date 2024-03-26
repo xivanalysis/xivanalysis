@@ -41,11 +41,18 @@ export class OtherGauges extends CoreGauge {
 
 	// Initialise our gauges - default max is 100 so yolo it is
 	private soulGauge = this.add(new CounterGauge({
-		graph: {label: 'Soul Gauge', color: Color(JOBS.WARRIOR.colour).fade(GAUGE_FADE), collapse: true},
+		graph: {
+			label: <Trans id="rpr.gauge.soulgauge.label">Soul Gauge</Trans>,
+			color: Color(JOBS.WARRIOR.colour).fade(GAUGE_FADE),
+			collapse: false,
+		},
 	}))
 
 	private shroudGauge = this.add(new CounterGauge({
-		graph: {label: 'Shroud Gauge', color: Color(JOBS.BLUE_MAGE.colour).fade(GAUGE_FADE), collapse: true},
+		graph: {
+			label: <Trans id="rpr.gauge.shroudgauge.label">Shroud Gauge</Trans>,
+			color: Color(JOBS.BLUE_MAGE.colour).fade(GAUGE_FADE),
+		},
 	}))
 
 	private soulGaugeModifiers = new Map<Action['id'], GaugeModifier>([

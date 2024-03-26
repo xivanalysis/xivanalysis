@@ -1,4 +1,5 @@
 import {Trans} from '@lingui/react'
+import {JOBS, RoleKey} from 'data/JOBS'
 import {Event, Events} from 'event'
 import {Analyser} from 'parser/core/Analyser'
 import {filter, oneOf} from 'parser/core/filter'
@@ -7,6 +8,11 @@ import React from 'react'
 import {Actor as ReportActor, Team} from 'report'
 import {ResourceDatum, ResourceGraphs} from '../ResourceGraphs'
 import {Actor, StatusEvent} from './Actor'
+
+const USES_MP_ROLES: RoleKey[] = [
+	'HEALER',
+	'MAGICAL_RANGED',
+]
 
 export class Actors extends Analyser {
 	static override handle = 'actors'
@@ -118,9 +124,10 @@ export class Actors extends Analyser {
 		})
 
 		// Some jobs do not use MP at all - hide if we get no info beyond the initial data dump
-		// TODO: This check fails if there was a death - the natural MP regen will create mp update
-		// events. Look into a more robust way of deriving MP-less jobs - will require updates in data/
-		if (mp.length > 1) {
+		if (mp.length > 1 && (
+			USES_MP_ROLES.includes(JOBS[this.current.job].role)
+			|| JOBS[this.current.job].usesMP
+		)) {
 			this.resourceGraphs.addResource({
 				label: <Trans id="core.actors.resource.mp">MP</Trans>,
 				colour: 'rgba(188, 55, 147, 0.5)',

@@ -79,7 +79,7 @@ export class Gauge extends CoreGauge {
 		maximum: ADDERSGALL_MAX_STACKS,
 		initialValue: ADDERSGALL_MAX_STACKS,
 		graph: {
-			label: <Trans id="sge.gauge.resource.addsergall">Addersgall</Trans>,
+			label: <Trans id="sge.gauge.resource.addersgall">Addersgall</Trans>,
 			color: ADDERSGALL_COLOR.fade(GAUGE_FADE),
 		},
 		correctHistory: true,
