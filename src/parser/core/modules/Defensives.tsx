@@ -21,6 +21,8 @@ const DEFENSIVE_ROLE_ACTIONS: Map<RoleKey, ActionKey[]> = new Map<RoleKey, Actio
 	['HEALER', []],
 ])
 
+const DEFAULT_FORGIVENESS_MS: number = 800
+
 export class Defensives extends Analyser {
 	static override handle = 'defensives'
 	static override title = t('core.defensives.title')`Defensives`
@@ -36,6 +38,12 @@ export class Defensives extends Analyser {
 	 * These should not be actions which are constrained by either MP or a gauge resource, such as The Blackest Night, Holy Sheltron, or SGE's Addersgall actions
 	 */
 	protected trackedDefensives: Action[] = []
+
+	/**
+	 * Implementing modules may wish to override this to provide more/less forgiveness on strict allowances; the default is 800ms - anything less in available
+	 * to next usage will be forgiven.
+	 */
+	protected forgiveness_ms: number = DEFAULT_FORGIVENESS_MS
 
 	// Private lists of the cooldown usage and charge histories so we don't keep recalculating it via calls to the cooldowns module
 	private cooldownHistories: {[key: number]: CooldownHistoryEntry[]} = {}
@@ -166,7 +174,8 @@ export class Defensives extends Analyser {
 		availableTimestamp = availableTimestamp
 			+ (prepullBoolean && availableTimestamp !== (this.parser.pull.duration + this.parser.pull.timestamp) ? cooldown : 0)
 
-		if (useByTimestamp <= availableTimestamp) {
+		// if use by is before available or the usage window is less than an appropriate weave window, return 0 charges
+		if (useByTimestamp <= availableTimestamp || (useByTimestamp - availableTimestamp) < this.forgiveness_ms) {
 			return {chargesBeforeNextUse: 0, availableTimestamp, useByTimestamp}
 		}
 
