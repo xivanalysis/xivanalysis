@@ -174,7 +174,8 @@ export class Defensives extends Analyser {
 		availableTimestamp = availableTimestamp
 			+ (prepullBoolean && availableTimestamp !== (this.parser.pull.duration + this.parser.pull.timestamp) ? cooldown : 0)
 
-		if (useByTimestamp <= availableTimestamp) {
+		// if use by is before available or the usage window is less than an appropriate weave window, return 0 charges
+		if (useByTimestamp <= availableTimestamp || (useByTimestamp - availableTimestamp) < this.forgiveness_ms) {
 			return {chargesBeforeNextUse: 0, availableTimestamp, useByTimestamp}
 		}
 
@@ -204,12 +205,6 @@ export class Defensives extends Analyser {
 		const {chargesBeforeNextUse, availableTimestamp, useByTimestamp} = this.getAdditionalUsageData(defensive, timestamp)
 
 		if (chargesBeforeNextUse === 0) {
-			return <></>
-		}
-
-		// forgive things that couldn't be weaved reasonably
-		if ((useByTimestamp - availableTimestamp) < this.forgiveness_ms) {
-			this.debug(`Ignoring forgiven use (time diff is ${useByTimestamp - availableTimestamp})`)
 			return <></>
 		}
 
