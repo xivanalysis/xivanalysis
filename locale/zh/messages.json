@@ -697,7 +697,7 @@
   "mnk.rof.chart.notes.early": "延后",
   "mnk.rof.chart.notes.inwindow": "对齐",
   "mnk.rof.chart.notes.late": "过早",
-  "mnk.rof.chart.notes.missed": "",
+  "mnk.rof.chart.notes.missed": "错过的窗口期",
   "mnk.rof.suggestions.blitz.content": "必杀技是你最强的技能，尽可能打两个 <0/> 进2分钟爆发 <1/>，打一个 <2/> 进1分钟爆发。",
   "mnk.rof.suggestions.blitz.why": "{missedBlitzes, plural, other {# 次}} <0/> {missedBlitzes, plural, other {没有}} 在 {0} 个 <1/> {1, plural, other {期间打出}}。",
   "mnk.rof.suggestions.gcd.content": "尝试在 <0/> 的持续时间内插入 {EXPECTED_GCDS} 个GCD技能。",
