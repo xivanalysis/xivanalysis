@@ -1065,7 +1065,7 @@
   "whm.dots.suggestion.clip-dia.why": "",
   "whm.gauge.bloodlily.stacks.label": "Blutlilie",
   "whm.gauge.bloodlily.suggestions.leftover.content": "Versuche, den Kampf ohne Blutlilie zu beenden.",
-  "whm.gauge.bloodlily.suggestions.leftover.why": "{0, plural, one {# Blutlilie blieb} other {# Blutlilien blieben}} ungenutzt.",
+  "whm.gauge.bloodlily.suggestions.leftover.why": "{unusedLilies, plural, one {# Blutlilie blieb} other {# Blutlilien blieben}} ungenutzt.",
   "whm.gauge.bloodlily.suggestions.overcap.content": "",
   "whm.gauge.bloodlily.suggestions.overcap.why": "{lostBloodLilies, plural, one {# Blutlilie ist} other {# Blutlilien sind}} nicht geblüht da eine Lilie zu früh verwendet wurde.",
   "whm.gauge.lily.stacks.label": "Lilie",
