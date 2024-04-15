@@ -1,9 +1,8 @@
 import Color from 'color'
 import _ from 'lodash'
 import {ReactNode} from 'react'
-import {ResourceData} from '../ResourceGraphs'
-import {GAUGE_HANDLE} from '../ResourceGraphs/ResourceGraphs'
-import {AbstractGauge, AbstractGaugeOptions, GaugeGraphOptions} from './AbstractGauge'
+import {GAUGE_HANDLE, ResourceData, ResourceGraphOptions, ResourceGroupOptions} from '../ResourceGraphs/ResourceGraphs'
+import {AbstractGauge, AbstractGaugeOptions} from './AbstractGauge'
 
 const FORCE_COLLAPSE = true || process.env.NODE_ENV === 'production'
 
@@ -21,10 +20,13 @@ export interface SetEntryOption {
 export interface SetGaugeOptions extends AbstractGaugeOptions {
 	options: SetEntryOption[],
 	/** Graph options. Omit to disable graphing in the timeline for this gauge. */
-	graph?: GaugeGraphOptions
+	graph?: SetGraphOptions
 }
 
-interface SetResourceData extends ResourceData {
+type SetGraphOptions = Omit<ResourceGraphOptions, 'tooltipHideMaximum'>
+
+export interface SetResourceData extends ResourceData {
+	type: 'discrete'
 	base: number,
 	value: string,
 }
@@ -32,7 +34,7 @@ interface SetResourceData extends ResourceData {
 export class SetGauge extends AbstractGauge {
 	private options: SetEntryOption[]
 
-	private graphOptions?: GaugeGraphOptions
+	private graphOptions?: ResourceGraphOptions
 
 	public history: SetHistory[] = []
 	public overcap = 0
@@ -151,6 +153,7 @@ export class SetGauge extends AbstractGauge {
 				tooltipHideMaximum: true, // A side effect of the way this works is the tooltip would imply a 'maximum' of however many options are in the set. Don't do that.
 				base: this.options.indexOf(option),
 				value: option.value,
+				type: 'discrete',
 			}
 		})
 		// Convert the list of history entries into a stacked set of counter-gauge style history entries
@@ -167,7 +170,7 @@ export class SetGauge extends AbstractGauge {
 				this.resourceGraphs.addData(handle, graphData)
 			})
 		} else {
-			const groupOptions = {...this.graphOptions, handle: GAUGE_HANDLE}
+			const groupOptions: ResourceGroupOptions = {...this.graphOptions, handle: GAUGE_HANDLE, collapse: FORCE_COLLAPSE, forceCollapsed: FORCE_COLLAPSE}
 			graphDatas.forEach(graphData => {
 				this.resourceGraphs.addGauge(graphData, groupOptions)
 			})

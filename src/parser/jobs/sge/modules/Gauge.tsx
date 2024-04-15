@@ -70,8 +70,10 @@ export class Gauge extends CoreGauge {
 		maximum: ADDERSTING_MAX_STACKS,
 		initialValue: this.parser.patch.before('6.1') ? 0 : ADDERSTING_MAX_STACKS,
 		graph: {
+			handle: 'addersting',
 			label: <Trans id="sge.gauge.resource.addersting">Addersting</Trans>,
 			color: ADDERSTING_COLOR.fade(GAUGE_FADE),
+			forceCollapsed: true,
 		},
 		correctHistory: true,
 	}))
@@ -79,8 +81,10 @@ export class Gauge extends CoreGauge {
 		maximum: ADDERSGALL_MAX_STACKS,
 		initialValue: ADDERSGALL_MAX_STACKS,
 		graph: {
-			label: <Trans id="sge.gauge.resource.addsergall">Addersgall</Trans>,
+			handle: 'addersgall',
+			label: <Trans id="sge.gauge.resource.addersgall">Addersgall</Trans>,
 			color: ADDERSGALL_COLOR.fade(GAUGE_FADE),
+			forceCollapsed: true,
 		},
 		correctHistory: true,
 	}))
@@ -88,6 +92,7 @@ export class Gauge extends CoreGauge {
 		maximum: ADDERSGALL_TIME_REQUIRED,
 		onExpiration: this.onCompleteAddersgallTimer.bind(this),
 		graph: {
+			handle: 'addersgall',
 			label: <Trans id="sge.gauge.resource.addersgall-timer">Addersgall Timer</Trans>,
 			color: ADDERSGALL_COLOR.fade(TIMER_FADE),
 		},

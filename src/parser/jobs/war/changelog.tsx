@@ -5,6 +5,13 @@ export const changelog = [
 	{
 		date: new Date('2023-01-28'),
 		Changes: () => <>
+			Moved Beast Gauge graph into the timeline to be consistent with other jobs.
+		</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
+	{
+		date: new Date('2023-01-28'),
+		Changes: () => <>
 			Add new status Shake it Off (Over Time) for patch 6.3, and add Orogeny to timeline.
 		</>,
 		contributors: [CONTRIBUTORS.AY],

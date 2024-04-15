@@ -27,6 +27,11 @@ export const DARK_KNIGHT = new Meta({
 	],
 	changelog: [
 		{
+			date: new Date('2024-03-24'),
+			Changes: () => <>Moved Blood Gauge graph into the timeline to be consistent with other jobs.</>,
+			contributors: [CONTRIBUTORS.AKAIRYU],
+		},
+		{
 			date: new Date('2022-07-06'),
 			Changes: () => <>Removed <DataLink action="THE_BLACKEST_NIGHT" showIcon={false} /> from the Defensives analysis since it's additionally constrained by MP.</>,
 			contributors: [CONTRIBUTORS.AKAIRYU],

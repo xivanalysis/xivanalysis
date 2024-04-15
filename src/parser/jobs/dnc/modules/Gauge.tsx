@@ -96,6 +96,7 @@ export class Gauge extends CoreGauge {
 		graph: {
 			label: <Trans id="dnc.gauge.resource.feathers">Feathers</Trans>,
 			color: FEATHERS_COLOR,
+			collapse: false,
 		},
 		correctHistory: true,
 		deterministic: false,
