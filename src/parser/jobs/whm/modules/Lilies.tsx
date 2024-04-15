@@ -143,7 +143,7 @@ export class Lilies extends CoreGauge {
 		const lostBloodLilies = this.bloodLilyGauge.value < MISERY_COST ? Math.floor((this.bloodLilyGauge.overCap + this.bloodLilyGauge.value) / MISERY_COST) : Math.floor(this.bloodLilyGauge.overCap / MISERY_COST)
 
 		// Calculate how many Blood Lilies were unused at the end of the fight
-		const unusedLilies = this.bloodLilyGauge.value / MISERY_COST
+		const unusedLilies = Math.floor(this.bloodLilyGauge.value / MISERY_COST)
 
 		const lilyOvercapSuggestion_600 = <Trans id="whm.gauge.lily.suggestions.overcap.content.600">
 			Try to use <DataLink action="AFFLATUS_RAPTURE" /> or <DataLink action="AFFLATUS_SOLACE" /> before using other GCD heals. It's okay to cap your lilies if you don't need to heal, move, or weave with them.
