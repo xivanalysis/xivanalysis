@@ -56,7 +56,7 @@ export class DeathGauge extends CoreGauge {
 			},
 		],
 		graph: {
-			handle: 'deathgaugee',
+			handle: 'deathgauge',
 			label: <Trans id="rpr.gauge.resource.death">Death Gauge</Trans>,
 			tooltipHideWhenEmpty: true, // Death gauge is only interesting while in Enshroud, so hide the tooltip if we're not Enshrouded
 		},

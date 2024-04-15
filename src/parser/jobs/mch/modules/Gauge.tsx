@@ -44,6 +44,7 @@ export class Gauge extends CoreGauge {
 		graph: {
 			label: <Trans id="mch.gauge.resource.heat">Heat</Trans>,
 			color: HEAT_COLOR,
+			collapse: false,
 		},
 	}))
 

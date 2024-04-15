@@ -25,8 +25,7 @@ export interface EnumGaugeOptions extends AbstractGaugeOptions {
 	graph?: EnumGraphOptions
 }
 
-type EnumGraphOptions =
-	& Omit<ResourceGraphOptions, ''> // Not currently omitting any options, but making easier to do so in the future
+type EnumGraphOptions = Omit<ResourceGraphOptions, ''> // Not currently omitting any options, but making easier to do so in the future
 
 export interface EnumResourceData extends ResourceData {
 	type: 'shared'

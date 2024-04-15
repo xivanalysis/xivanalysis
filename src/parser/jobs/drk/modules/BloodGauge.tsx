@@ -30,6 +30,7 @@ export class BloodGauge extends CoreGauge {
 			handle: 'bloodgauge',
 			label: <Trans id="drk.gauge.bloodgauge.label">Blood Gauge</Trans>,
 			color: JOBS.DARK_KNIGHT.colour,
+			forceCollapsed: true,
 		},
 	}))
 

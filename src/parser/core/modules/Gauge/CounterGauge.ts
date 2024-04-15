@@ -44,8 +44,7 @@ export interface CounterGaugeOptions extends AbstractGaugeOptions {
 	deterministic?: boolean
 }
 
-type CounterGraphOptions =
-	&Omit<ResourceGraphOptions, ''> // Not currently omitting any options, but making easier to do so in the future
+type CounterGraphOptions = Omit<ResourceGraphOptions, ''> // Not currently omitting any options, but making easier to do so in the future
 
 export interface CounterResourceData extends ResourceData {
 	type: 'area',
