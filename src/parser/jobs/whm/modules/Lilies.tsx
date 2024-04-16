@@ -7,7 +7,7 @@ import {filter} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
 import {Actors} from 'parser/core/modules/Actors'
 import {CounterGauge, Gauge as CoreGauge, TimerGauge} from 'parser/core/modules/Gauge'
-import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
+import Suggestions, {SEVERITY, TieredSuggestion, Suggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
 
 const LILY_MAX_STACKS = 3
@@ -41,14 +41,9 @@ const GCD_HEALS: ActionKey[] = [
 ]
 
 const SEVERITIES = {
-	BLOODLILY_LEFTOVER: {
-		1: SEVERITY.MINOR,
-		3: SEVERITY.MAJOR,
-	},
 	BLOODLILY_OVERCAP: {
-		1: SEVERITY.MINOR,
-		2: SEVERITY.MEDIUM,
-		3: SEVERITY.MAJOR,
+		1: SEVERITY.MEDIUM,
+		2: SEVERITY.MAJOR,
 	},
 	LILY_OVERCAP_600: {
 		1: SEVERITY.MINOR,
@@ -144,6 +139,12 @@ export class Lilies extends CoreGauge {
 		// Calculate lost Lilies for the fight, does not correct for UTA or other downtime
 		const lostLilies = Math.floor(this.lilyTimer.getExpirationTime() / this.lilyInterval)
 
+		// Calculate how many Blood Lillies were lost due to overcapping
+		const lostBloodLilies = this.bloodLilyGauge.value < MISERY_COST ? Math.floor((this.bloodLilyGauge.overCap + this.bloodLilyGauge.value) / MISERY_COST) : Math.floor(this.bloodLilyGauge.overCap / MISERY_COST)
+
+		// Calculate how many Blood Lilies were unused at the end of the fight
+		const unusedLilies = Math.floor(this.bloodLilyGauge.value / MISERY_COST)
+
 		const lilyOvercapSuggestion_600 = <Trans id="whm.gauge.lily.suggestions.overcap.content.600">
 			Try to use <DataLink action="AFFLATUS_RAPTURE" /> or <DataLink action="AFFLATUS_SOLACE" /> before using other GCD heals. It's okay to cap your lilies if you don't need to heal, move, or weave with them.
 		</Trans>
@@ -158,9 +159,9 @@ export class Lilies extends CoreGauge {
 				Try to use <DataLink action="AFFLATUS_MISERY" /> to avoid wasting Blood Lily growth from overcapping the gauge.
 			</Trans>,
 			tiers: SEVERITIES.BLOODLILY_OVERCAP,
-			value: this.bloodLilyGauge.overCap,
+			value: lostBloodLilies,
 			why: <Trans id="whm.gauge.bloodlily.suggestions.overcap.why">
-				<Plural value={this.bloodLilyGauge.overCap} one="# Blood Lily" other="# Blood Lilies" /> did not bloom due to using a Lily too early.
+				<Plural value={lostBloodLilies} one="# Blood Lily" other="# Blood Lilies" /> did not bloom due to using a Lily too early.
 			</Trans>,
 		})
 		)
@@ -175,17 +176,18 @@ export class Lilies extends CoreGauge {
 			</Trans>,
 		}))
 
-		this.suggestions.add(new TieredSuggestion({
-			icon: this.data.actions.AFFLATUS_MISERY.icon,
-			content: <Trans id="whm.gauge.bloodlily.suggestions.leftover.content">
-				Try to finish the fight with no leftover Blood Lilies.
-			</Trans>,
-			tiers: SEVERITIES.BLOODLILY_LEFTOVER,
-			value: this.bloodLilyGauge.value,
-			why: <Trans id="whm.gauge.bloodlily.suggestions.leftover.why">
-				{<Plural value={this.bloodLilyGauge.value} one="# Blood Lily" other="# Blood Lilies" />} went unused.
-			</Trans>,
-		}))
+		if (unusedLilies > 0) {
+			this.suggestions.add(new Suggestion({
+				icon: this.data.actions.AFFLATUS_MISERY.icon,
+				content: <Trans id="whm.gauge.bloodlily.suggestions.leftover.content">
+					Try to finish the fight with no leftover Blood Lilies.
+				</Trans>,
+				severity: SEVERITY.MAJOR,
+				why: <Trans id="whm.gauge.bloodlily.suggestions.leftover.why">
+					{<Plural value={unusedLilies} one="# Blood Lily" other="# Blood Lilies" />} went unused.
+				</Trans>,
+			}))
+		}
 
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.AFFLATUS_RAPTURE.icon,

@@ -1071,7 +1071,7 @@
   "whm.dots.suggestion.clip-dia.why": "",
   "whm.gauge.bloodlily.stacks.label": "ブラッドリリー",
   "whm.gauge.bloodlily.suggestions.leftover.content": "ブラッドリリーを残さずに戦いを終わらせるようにしてください。",
-  "whm.gauge.bloodlily.suggestions.leftover.why": "{0, plural, other {# 個のブラッドリリー}} が使われませんでした。",
+  "whm.gauge.bloodlily.suggestions.leftover.why": "{unusedLilies, plural, other {# 個のブラッドリリー}} が使われませんでした。",
   "whm.gauge.bloodlily.suggestions.overcap.content": "ブラッドリリーがゲージ上限を超えて無駄にならないように、<0/> を使用するようにしてください。",
   "whm.gauge.bloodlily.suggestions.overcap.why": "リリーの使用が早すぎたため、{0, plural, other {# 回のブラッドリリー}} が咲きませんでした。",
   "whm.gauge.lily.stacks.label": "",
