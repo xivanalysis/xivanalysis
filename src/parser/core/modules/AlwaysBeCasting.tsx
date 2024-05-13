@@ -22,7 +22,7 @@ interface GcdUptimeEvent {
 
 export class AlwaysBeCasting extends Analyser {
 	static override handle = 'abc'
-	static override debug = true
+	static override debug = false
 
 	@dependency protected castTime!: CastTime
 	@dependency protected checklist!: Checklist
