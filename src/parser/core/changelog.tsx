@@ -10,6 +10,13 @@ export const changelog: ChangelogEntry[] = [
 	// 	contributors: [CONTRIBUTORS.YOU],
 	// },
 	{
+		date: new Date('2024-05-13'),
+		Changes: () => <>
+			Fix a bug that caused slightly higher than expected GCD uptime results.
+		</>,
+		contributors: [CONTRIBUTORS.HINT],
+	},
+	{
 		date: new Date('2024-03-24'),
 		Changes: () => <>
 			Stop MP graphs from appearing due to deaths for jobs that do not use MP.

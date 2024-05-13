@@ -107,6 +107,7 @@ export class AlwaysBeCasting extends Analyser {
 		return !this.downtime.isDowntime(castStart)
 	}
 
+	/* Must be accessed after all events have been processed */
 	protected get gcdUptime(): number {
 		return this.gcdUptimeEvents.reduce((totalUptime: number, event: GcdUptimeEvent) => {
 			if (this.downtime.isDowntime(event.time + event.gcdUptime)) {
