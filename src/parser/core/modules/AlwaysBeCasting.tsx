@@ -15,6 +15,11 @@ import React from 'react'
 
 const UPTIME_TARGET = 98
 
+interface GcdUptimeEvent {
+	time: number
+	gcdUptime: number
+}
+
 export class AlwaysBeCasting extends Analyser {
 	static override handle = 'abc'
 	static override debug = false
@@ -32,7 +37,7 @@ export class AlwaysBeCasting extends Analyser {
 		rotation slowly.
 	</Trans>
 
-	protected gcdUptime: number = 0
+	protected gcdUptimeEvents: GcdUptimeEvent[] = []
 	protected gcdsCounted: number = 0
 
 	private lastBeginCast?: Events['prepare']
@@ -73,10 +78,16 @@ export class AlwaysBeCasting extends Analyser {
 			const relativeTimestamp = event.timestamp - this.parser.pull.timestamp
 			if (castTime > relativeTimestamp) {
 				this.debug(`GCD Uptime for precast ${action.name} at ${this.parser.formatEpochTimestamp(event.timestamp, 1)} - Cast time: ${castTime} | Recast time: ${recastTime} | Time of completion: ${relativeTimestamp}`)
-				this.gcdUptime += Math.max(0, relativeTimestamp)
+				this.gcdUptimeEvents.push({
+					time: event.timestamp,
+					gcdUptime: Math.max(0, relativeTimestamp),
+				})
 			} else {
 				this.debug(`GCD Uptime for ${action.name} at ${this.parser.formatEpochTimestamp(event.timestamp, 1)} - Cast time: ${castTime} | Recast time: ${recastTime}`)
-				this.gcdUptime += Math.max(castTime, recastTime)
+				this.gcdUptimeEvents.push({
+					time: event.timestamp,
+					gcdUptime: Math.max(castTime, recastTime),
+				})
 			}
 			this.gcdsCounted += 1
 		} else {
@@ -96,6 +107,19 @@ export class AlwaysBeCasting extends Analyser {
 		return !this.downtime.isDowntime(castStart)
 	}
 
+	/* Must be accessed after all events have been processed */
+	protected get gcdUptime(): number {
+		return this.gcdUptimeEvents.reduce((totalUptime: number, event: GcdUptimeEvent) => {
+			if (this.downtime.isDowntime(event.time + event.gcdUptime)) {
+				// If the GCD ends in a downtime window, we only count the part that occurred in uptime
+				this.debug(`GCD ends in downtime at ${this.parser.formatEpochTimestamp(event.time + event.gcdUptime)}`)
+				const downtimeWindow = this.downtime.getDowntimeWindows(event.time, event.time + event.gcdUptime)[0]
+				return totalUptime + (downtimeWindow?.start ?? event.time + event.gcdUptime) - event.time
+			}
+			return totalUptime + event.gcdUptime
+		}, 0)
+	}
+
 	protected getUptimePercent(): number {
 		this.debug(`Observed ${this.gcdsCounted} GCDs for a total of ${this.gcdUptime} ms of uptime`)
 		const fightDuration = this.parser.currentDuration - this.downtime.getDowntime()
@@ -105,7 +129,7 @@ export class AlwaysBeCasting extends Analyser {
 	}
 
 	protected onComplete() {
-		if (this.gcdUptime === 0) {
+		if (this.gcdUptimeEvents.length === 0) {
 			return
 		}
 
