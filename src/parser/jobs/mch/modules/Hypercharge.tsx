@@ -14,8 +14,7 @@ import {Timeline} from 'parser/core/modules/Timeline'
 import React, {Fragment} from 'react'
 import {Message, Accordion, Button} from 'semantic-ui-react'
 
-const HYPERCHARGE_DURATION_PATCH_600 = 8000
-const HYPERCHARGE_DURATION_PATCH_630 = 10000
+const HYPERCHARGE_DURATION = 10000
 const HYPERCHARGE_GCD_TARGET = 5
 const HYPERCHARGE_GCD_WARNING = 4
 const HYPERCHARGE_GCD_ERROR = 0
@@ -35,9 +34,6 @@ export class Hypercharge extends Analyser {
 	private history: History<Array<Events['action']>> = new History(() => [])
 	private rotationHook: EventHook<Events['action']> | undefined
 	private hyperchargeGcds = HYPERCHARGE_GCDS.map(key => this.data.actions[key].id)
-	private hyperchargeDuration = this.parser.patch.before('6.3')
-		? HYPERCHARGE_DURATION_PATCH_600
-		: HYPERCHARGE_DURATION_PATCH_630
 
 	override initialise() {
 		const hyperchargeFilter = filter<Event>()
@@ -86,7 +82,7 @@ export class Hypercharge extends Analyser {
 
 		if (currentWindow == null) { return }
 
-		if (event.timestamp > currentWindow.start + this.hyperchargeDuration) {
+		if (event.timestamp > currentWindow.start + HYPERCHARGE_DURATION) {
 			this.endCurrentWindow(event)
 			return
 		}
