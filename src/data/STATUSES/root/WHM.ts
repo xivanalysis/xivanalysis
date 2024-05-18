@@ -5,7 +5,7 @@ export const WHM = ensureStatuses({
 		id: 2709,
 		name: 'Liturgy of the Bell',
 		icon: 'https://xivapi.com/i/018000/018373.png',
-		duration: 15000,
+		duration: 20000,
 		stacksApplied: 5,
 	},
 

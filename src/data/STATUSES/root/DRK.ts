@@ -1,5 +1,4 @@
 import {ensureStatuses} from '../type'
-import {SHARED} from './SHARED'
 
 export const DRK = ensureStatuses({
 	GRIT: {
@@ -11,7 +10,8 @@ export const DRK = ensureStatuses({
 		id: 742,
 		name: 'Blood Weapon',
 		icon: 'https://xivapi.com/i/013000/013109.png',
-		duration: 10000,
+		duration: 15000,
+		stacksApplied: 5,
 	},
 	BLACKEST_NIGHT: {
 		id: 1178,
@@ -43,7 +43,11 @@ export const DRK = ensureStatuses({
 		duration: 10000,
 	},
 
-	UNDEAD_REBIRTH: SHARED.UNKNOWN,
+	UNDEAD_REBIRTH: {
+		id: 3255,
+		name: 'Undead Rebirth',
+		icon: 'https://xivapi.com/i/013000/013124.png',
+	},
 
 	DARK_MIND: {
 		id: 746,

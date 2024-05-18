@@ -88,7 +88,7 @@ export const SCH = ensureStatuses({
 		id: 2712,
 		name: 'Expedience',
 		icon: 'https://xivapi.com/i/012000/012817.png',
-		duration: 20000,
+		duration: 10000,
 	},
 
 	// -----

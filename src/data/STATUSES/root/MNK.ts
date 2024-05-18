@@ -1,5 +1,4 @@
 import {ensureStatuses} from '../type'
-import {SHARED} from './SHARED'
 
 export const MNK = ensureStatuses({
 	OPO_OPO_FORM: {
@@ -71,10 +70,14 @@ export const MNK = ensureStatuses({
 		name: 'Riddle of Earth',
 		icon: 'https://xivapi.com/i/012000/012527.png',
 		duration: 10000,
-		stacksApplied: 3,
 	},
 
-	EARTHS_REPLY: SHARED.UNKNOWN, // Added in patch 6.3 layer
+	EARTHS_REPLY: {
+		id: 1180,
+		name: "Earth's Reply",
+		icon: 'https://xivapi.com/i/012000/012531.png',
+		duration: 15000,
+	},
 
 	RIDDLE_OF_FIRE: {
 		id: 1181,
