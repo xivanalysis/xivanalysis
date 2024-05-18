@@ -72,10 +72,6 @@ export class Kenki extends CoreGauge {
 	override initialise() {
 		super.initialise()
 
-		if (this.parser.patch.before('6.1')) {
-			this.kenkiGaugeModifiers.set(this.data.actions.HISSATSU_KAITEN.id, {action: -20})
-		}
-
 		const kenkiActions = Array.from(this.kenkiGaugeModifiers.keys())
 		const playerFilter = filter<Event>().source(this.parser.actor.id)
 
