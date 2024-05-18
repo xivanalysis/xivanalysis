@@ -2,11 +2,10 @@ import {t} from '@lingui/macro'
 import {Trans, Plural} from '@lingui/react'
 import {ActionLink} from 'components/ui/DbLink'
 import {RotationTable, RotationTableEntry} from 'components/ui/RotationTable'
-import {ActionKey} from 'data/ACTIONS'
 import {Event, Events} from 'event'
 import {Analyser} from 'parser/core/Analyser'
 import {EventHook} from 'parser/core/Dispatcher'
-import {filter, oneOf} from 'parser/core/filter'
+import {filter} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
 import {History} from 'parser/core/modules/ActionWindow/History'
 import {Actor, Actors} from 'parser/core/modules/Actors'
@@ -19,17 +18,6 @@ import {DISPLAY_ORDER} from './DISPLAY_ORDER'
 
 const FULL_PARTY_SIZE = 8
 const MAX_BUFF_DURATION = 30000
-
-const OTHER_PET_ACTIONS: ActionKey[] = [
-	'INFERNO',
-	'EARTHEN_FURY',
-	'AERIAL_BLAST',
-	'WYRMWAVE',
-	'AKH_MORN',
-	'EVERLASTING_FLIGHT',
-	'SCARLET_FLAME',
-	'REVELATION',
-]
 
 interface SearingLightUsage {
 	playersHit: Set<string>
@@ -73,37 +61,15 @@ export class SearingLight extends Analyser {
 			.map(actor => actor.id)
 
 		const playerFilter = filter<Event>().source(this.parser.actor.id)
-		const petsFilter = filter<Event>().source(oneOf(this.petIds))
 
-		const buffSourceFilter = (this.parser.patch.before('6.1')) ? petsFilter : playerFilter
-
-		if (this.parser.patch.before('6.1')) {
-			this.addEventHook(
-				filter<Event>()
-					.source(this.parser.actor.id)
-					.action(this.data.actions.SEARING_LIGHT.id)
-					.type('action'),
-				this.queueSearingLight)
-
-			this.addEventHook(
-				petsFilter.action(this.data.actions.PET_SEARING_LIGHT.id).type('action'),
-				this.onBuffGeneratorCast
-			)
-
-			this.addEventHook(
-				petsFilter.action(this.data.matchActionId(OTHER_PET_ACTIONS)).type('action'),
-				this.nonCarbuncleAction,
-			)
-		} else {
-			this.addEventHook(
-				playerFilter.action(this.data.actions.SEARING_LIGHT.id).type('action'),
-				this.onBuffGeneratorCast
-			)
-		}
+		this.addEventHook(
+			playerFilter.action(this.data.actions.SEARING_LIGHT.id).type('action'),
+			this.onBuffGeneratorCast
+		)
 
 		// this hook is for counting targets
 		this.addEventHook(
-			buffSourceFilter.status(this.data.statuses.SEARING_LIGHT.id).type('statusApply'),
+			playerFilter.status(this.data.statuses.SEARING_LIGHT.id).type('statusApply'),
 			this.countTargets
 		)
 		// this hook is for just the player to start the window
