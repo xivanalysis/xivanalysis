@@ -12,8 +12,6 @@ import Suggestions, {TieredSuggestion, SEVERITY} from 'parser/core/modules/Sugge
 import React from 'react'
 import {matchClosestHigher} from 'utilities'
 
-const OPTIMAL_GCD_COUNT = 4 // Opener should be Suiton > AE combo before Trick
-
 const MUDRAS: ActionKey[] = [
 	'TEN',
 	'TEN_KASSATSU',
@@ -92,25 +90,6 @@ export class TrickAttackUsage extends Analyser {
 					You delayed Trick Attack for a cumulative {this.parser.formatDuration(this.lostTime)}, costing you <Plural value={lostCasts} one="# potential use" other="# potential uses"/>.
 				</Trans>,
 			}))
-
-			// Suppressing this suggestion for any 6.1+ parses, since Trick isn't a raid buff anymore and it's not really worth updating/keeping around for Mug
-			if (this.parser.patch.before('6.1')) {
-				const distanceFromOptimal = Math.abs(OPTIMAL_GCD_COUNT - this.gcdCount)
-				this.suggestions.add(new TieredSuggestion({
-					icon: this.data.actions.TRICK_ATTACK.icon,
-					content: <Trans id="nin.ta-usage.suggestions.opener.content">
-						Avoid unconventional timings for your first <ActionLink action="TRICK_ATTACK"/> of the fight in order to line it up raid buffs. In most openers, Trick Attack should be weaved in approximately 8-9 seconds into the fight.
-					</Trans>,
-					value: distanceFromOptimal,
-					tiers: {
-						1: SEVERITY.MEDIUM,
-						2: SEVERITY.MAJOR,
-					},
-					why: <Trans id="nin.ta-usage.suggestions.opener.why">
-						Your first Trick Attack was <Plural value={this.gcdCount} one="# GCD" other="# GCDs"/> into your opener.
-					</Trans>,
-				}))
-			}
 		}
 
 		// WHY ARE YOU EVEN PLAYING THIS JOB
