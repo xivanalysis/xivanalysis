@@ -68,7 +68,7 @@ export class Gauge extends CoreGauge {
 
 	private adderstingGauge = this.add(new CounterGauge({
 		maximum: ADDERSTING_MAX_STACKS,
-		initialValue: this.parser.patch.before('6.1') ? 0 : ADDERSTING_MAX_STACKS,
+		initialValue: ADDERSTING_MAX_STACKS,
 		graph: {
 			handle: 'addersting',
 			label: <Trans id="sge.gauge.resource.addersting">Addersting</Trans>,
@@ -115,18 +115,12 @@ export class Gauge extends CoreGauge {
 		// Hook shield applications/removals that could generate Addersting
 		this.addEventHook(playerDiagnosisPartyFilter.type('statusApply'), this.onShieldApply)
 		this.addEventHook(playerDiagnosisPartyFilter.type('statusRemove'), this.onShieldRemove)
-		// For 6.3 and later patches, self-targeted Prognosis can generate Addersting
-		if (!this.parser.patch.before('6.3')) {
-			this.addEventHook(playerPrognosisSelfFilter.type('statusApply'), this.onShieldApply)
-			this.addEventHook(playerPrognosisSelfFilter.type('statusRemove'), this.onShieldRemove)
-		}
+		// Self-targeted Prognosis can generate Addersting
+		this.addEventHook(playerPrognosisSelfFilter.type('statusApply'), this.onShieldApply)
+		this.addEventHook(playerPrognosisSelfFilter.type('statusRemove'), this.onShieldRemove)
 
 		// Hook shield applications/actions that could prevent Addersting generation
 		this.addEventHook(partyFilter.type('statusApply').source(noneOf([this.parser.actor.id])).status(this.data.matchStatusId(OVERWRITES_SHIELDS)), this.onShieldOverwrite)
-		// Prior to patch 6.3, player's own Eukrasian Prognosis shields, if overwriting a partially-consumed Diagnosis shield, will not generate Addersting
-		if (this.parser.patch.before('6.3')) {
-			this.addEventHook(partyFilter.type('statusApply').source(this.parser.actor.id).status(this.data.statuses.EUKRASIAN_PROGNOSIS.id), this.onShieldOverwrite)
-		}
 		this.addEventHook(playerFilter.action(this.data.actions.PEPSIS.id), this.onPepsis)
 
 		// Hook Addersting consumption
