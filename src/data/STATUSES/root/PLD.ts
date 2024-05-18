@@ -1,13 +1,6 @@
 import {ensureStatuses} from '../type'
-import {SHARED} from './SHARED'
 
 export const PLD = ensureStatuses({
-	GORING_BLADE: {
-		id: 725,
-		name: 'Goring Blade',
-		icon: 'https://xivapi.com/i/012000/012507.png',
-		duration: 21000,
-	},
 	CIRCLE_OF_SCORN: {
 		id: 248,
 		name: 'Circle Of Scorn',
@@ -19,13 +12,13 @@ export const PLD = ensureStatuses({
 		name: 'Requiescat',
 		icon: 'https://xivapi.com/i/012000/012514.png',
 		duration: 30000,
-		stacksApplied: 5,
+		stacksApplied: 4,
 	},
 	FIGHT_OR_FLIGHT: {
 		id: 76,
 		name: 'Fight Or Flight',
 		icon: 'https://xivapi.com/i/010000/010155.png',
-		duration: 25000,
+		duration: 20000,
 	},
 	IRON_WILL: {
 		id: 79,
@@ -45,7 +38,13 @@ export const PLD = ensureStatuses({
 		duration: 30000,
 		stacksApplied: 3,
 	},
-	DIVINE_MIGHT: SHARED.UNKNOWN,
+	DIVINE_MIGHT: {
+		id: 2673,
+		name: 'Divine Might',
+		icon: 'https://xivapi.com/i/012000/012521.png',
+		duration: 30000,
+		stacksApplied: 1,
+	},
 	SHELTRON: {
 		id: 1856,
 		name: 'Sheltron',
@@ -65,12 +64,6 @@ export const PLD = ensureStatuses({
 		duration: 18000,
 	},
 	DIVINE_VEIL: {
-		id: 726,
-		name: 'Divine Veil',
-		icon: 'https://xivapi.com/i/012000/012508.png',
-		duration: 30000,
-	},
-	DIVINE_VEIL_PROC: {
 		id: 727,
 		name: 'Divine Veil',
 		icon: 'https://xivapi.com/i/012000/012509.png',
@@ -94,7 +87,12 @@ export const PLD = ensureStatuses({
 		icon: 'https://xivapi.com/i/012000/012504.png',
 		duration: 10000,
 	},
-	BULWARK: SHARED.UNKNOWN,
+	BULWARK: {
+		id: 77,
+		name: 'Bulwark',
+		icon: 'https://xivapi.com/i/010000/010156.png',
+		duration: 10000,
+	},
 	HOLY_SHELTRON: {
 		id: 2674,
 		name: 'Holy Sheltron',
@@ -113,12 +111,10 @@ export const PLD = ensureStatuses({
 		icon: 'https://xivapi.com/i/012000/012517.png',
 		duration: 12000,
 	},
-	BLADE_OF_VALOR: {
-		id: 2721,
-		name: 'Blade of Valor',
-		icon: 'https://xivapi.com/i/012000/012518.png',
-		duration: 21000,
+	CONFITEOR_READY: {
+		id: 3019,
+		name: 'Confiteor Ready',
+		icon: 'https://xivapi.com/i/012000/012520.png',
+		duration: 30000,
 	},
-	CONFITEOR_READY: SHARED.UNKNOWN,
-	BLADE_OF_FAITH_READY: SHARED.UNKNOWN,
 })

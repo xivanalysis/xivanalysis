@@ -1,5 +1,4 @@
 import {ensureStatuses} from '../type'
-import {SHARED} from './SHARED'
 
 export const SGE = ensureStatuses({
 	EUKRASIA: {
@@ -82,6 +81,7 @@ export const SGE = ensureStatuses({
 		name: 'Soteria',
 		icon: 'https://xivapi.com/i/012000/012956.png',
 		duration: 15000,
+		stacksApplied: 4,
 	},
 	ZOE: {
 		id: 2611,
@@ -143,5 +143,10 @@ export const SGE = ensureStatuses({
 		icon: 'https://xivapi.com/i/012000/012971.png',
 		duration: 20000,
 	},
-	HOLOSAKOS: SHARED.UNKNOWN, // Added in 6.2, see the 6.2 layer for definition
+	HOLOSAKOS: {
+		id: 3365,
+		name: 'Holosakos',
+		icon: 'https://xivapi.com/i/012000-012972.png',
+		duration: 30000,
+	},
 })

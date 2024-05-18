@@ -26,7 +26,7 @@ export const RPR = ensureStatuses({
 		id: 2845,
 		name: 'Enhanced Harpe',
 		icon: 'https://xivapi.com/i/012000/012939.png',
-		duration: 15000,
+		duration: 20000,
 	},
 
 	ENHANCED_CROSS_REAPING: {
