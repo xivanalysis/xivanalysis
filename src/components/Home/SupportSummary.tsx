@@ -98,7 +98,7 @@ export class SupportSummaryGrid extends React.Component<SupportSummaryGridProp> 
 		let supportMessage = <NormalisedMessage message={ROLES.UNSUPPORTED.name} />
 		let supported: boolean | undefined = undefined
 		let style = styles.unsupported
-		if (meta.supportedPatches != null) {
+		if (meta.supportedPatches != null && meta.supportedPatches.from !== '✖') {
 			// Figure out what patches are supported right now. Jobs can't go further than core though
 			const supportedPatches = AVAILABLE_MODULES.CORE.merge(meta).supportedPatches
 				?? {from: FALLBACK_KEY, to: FALLBACK_KEY}
