@@ -1,6 +1,6 @@
 import {t, Trans} from '@lingui/macro'
 import TransMarkdown from 'components/ui/TransMarkdown'
-import CONTRIBUTORS, {ROLES} from 'data/CONTRIBUTORS'
+// import CONTRIBUTORS, {ROLES} from 'data/CONTRIBUTORS'
 import {Meta} from 'parser/core/Meta'
 import React from 'react'
 import {Icon, Message} from 'semantic-ui-react'
@@ -14,6 +14,7 @@ If you want further context for the suggestions given here, the [Blue Academy Di
 
 export const BLUE_MAGE = new Meta({
 	modules: () => import('./modules' /* webpackChunkName: "jobs-blu" */),
+
 	Description: () => <>
 		<TransMarkdown source={description}/>
 		<Message warning icon>
@@ -23,12 +24,15 @@ export const BLUE_MAGE = new Meta({
 			</Message.Content>
 		</Message>
 	</>,
+
 	supportedPatches: {
-		from: '6.0',
-		to: '6.5',
+		from: '✖',
+		to: '✖',
 	},
+
 	contributors: [
-		{user: CONTRIBUTORS.HUGMEIR, role: ROLES.DEVELOPER},
+		// {user: CONTRIBUTORS.YOU, role: ROLES.YOUR_ROLE},
 	],
+
 	changelog,
 })

@@ -1,5 +1,5 @@
 import {Trans} from '@lingui/react'
-import CONTRIBUTORS, {ROLES} from 'data/CONTRIBUTORS'
+// import CONTRIBUTORS, {ROLES} from 'data/CONTRIBUTORS'
 import {Meta} from 'parser/core/Meta'
 import React from 'react'
 import {changelog} from './changelog'
@@ -14,12 +14,14 @@ export const WARRIOR = new Meta({
 			<p>If you notice anything that looks particularly wrong, please visit our Discord server and report it in the #fb-warrior channel.</p>
 		</Trans>
 	</>,
+
 	supportedPatches: {
-		from: '6.0',
-		to: '6.5',
+		from: '✖',
+		to: '✖',
 	},
+
 	contributors: [
-		{user: CONTRIBUTORS.AY, role: ROLES.MAINTAINER},
+	// {user: CONTRIBUTORS.YOU, role: ROLES.YOUR_ROLE},
 	],
 
 	changelog,
