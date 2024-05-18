@@ -7,7 +7,7 @@
 	"tslint.configFile": "tslint.json",
 	"typescript.tsdk": "node_modules\\typescript\\lib",
 	"editor.codeActionsOnSave": {
-		"source.fixAll.eslint": true,
-		"source.fixAll.tslint": true
+		"source.fixAll.eslint": "explicit",
+		"source.fixAll.tslint": "explicit"
 	}
 }
