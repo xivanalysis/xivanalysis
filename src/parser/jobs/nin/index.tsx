@@ -1,10 +1,12 @@
-import {Trans} from '@lingui/react'
-import CONTRIBUTORS, {ROLES} from 'data/CONTRIBUTORS'
+import {Trans} from '@lingui/macro'
+// import CONTRIBUTORS, {ROLES} from 'data/CONTRIBUTORS'
 import {Meta} from 'parser/core/Meta'
 import React from 'react'
+import {changelog} from './changelog'
 
 export const NINJA = new Meta({
 	modules: () => import('./modules' /* webpackChunkName: "jobs-nin" */),
+
 	Description: () => <>
 		<Trans id="nin.about.description">
 			<p>Hey there, NIN friend! Are you tired of being looked down on by your MNK and BLM peers? Wish your raid team would stop using you for your Trick Attacks and appreciate you for who you really are? Well look no further! We'll help you bring yourself all the way up from <strong className="text-grey">this</strong> to <strong className="text-orange">this</strong>*!</p>
@@ -12,83 +14,15 @@ export const NINJA = new Meta({
 			<p>*Results not guaranteed. Offer void where prohibited. Please don't sue us.</p>
 		</Trans>
 	</>,
+
 	supportedPatches: {
-		from: '6.05',
-		to: '6.5',
+		from: '✖',
+		to: '✖',
 	},
+
 	contributors: [
-		{user: CONTRIBUTORS.TOASTDEIB, role: ROLES.MAINTAINER},
+		// {user: CONTRIBUTORS.YOU, role: ROLES.YOUR_ROLE},
 	],
-	changelog: [
-		{
-			date: new Date('2022-09-24'),
-			Changes: () => <>Fixed a bug in the extender-without-Huton suggestion, adjusted severity on the dropped Kassatsu suggestion, corrected text for the Rabbit Medium suggestion.</>,
-			contributors: [CONTRIBUTORS.TOASTDEIB],
-		},
-		{
-			date: new Date('2022-07-19'),
-			Changes: () => <>Updated Mug and Trick Attack for 6.1 changes, adjusted severity on Raiju and Armor Crush suggestions.</>,
-			contributors: [CONTRIBUTORS.TOASTDEIB],
-		},
-		{
-			date: new Date('2022-06-22'),
-			Changes: () => <>Positional module clean-up.</>,
-			contributors: [CONTRIBUTORS.KHAYLE],
-		},
-		{
-			date: new Date('2022-05-14'),
-			Changes: () => <>Updated positional module for 6.1 changes.</>,
-			contributors: [CONTRIBUTORS.HINT],
-		},
-		{
-			date: new Date('2022-02-12'),
-			Changes: () => <>Moved the Ninki gauge display from a separate chart to the timeline.</>,
-			contributors: [CONTRIBUTORS.TOASTDEIB],
-		},
-		{
-			date: new Date('2022-02-02'),
-			Changes: () => <>Updated Trick Attack modules for correct handling of the opener.</>,
-			contributors: [CONTRIBUTORS.TOASTDEIB],
-		},
-		{
-			date: new Date('2022-01-10'),
-			Changes: () => <>Fixed issue with GCD uptime not considering Huton active.</>,
-			contributors: [CONTRIBUTORS.AZARIAH],
-		},
-		{
-			date: new Date('2022-01-04'),
-			Changes: () => <>Updated Raiju module for 6.05 changes.</>,
-			contributors: [CONTRIBUTORS.TOASTDEIB],
-		},
-		{
-			date: new Date('2021-12-29'),
-			Changes: () => <>Updated suggestions for Raiton use under Trick Attack and Hellfrog use on too few targets.</>,
-			contributors: [CONTRIBUTORS.TOASTDEIB],
-		},
-		{
-			date: new Date('2021-12-17'),
-			Changes: () => <>Fixed a false positive bug in the Raiju analyser.</>,
-			contributors: [CONTRIBUTORS.TOASTDEIB],
-		},
-		{
-			date: new Date('2021-12-17'),
-			Changes: () => <>Updated Huton analyser for 6.0.</>,
-			contributors: [CONTRIBUTORS.TOASTDEIB],
-		},
-		{
-			date: new Date('2021-12-11'),
-			Changes: () => <>Added an analyser for tracking dropped Forked/Fleeting Raiju Ready buffs.</>,
-			contributors: [CONTRIBUTORS.TOASTDEIB],
-		},
-		{
-			date: new Date('2021-12-02'),
-			Changes: () => <>Updated Ninki-generated actions in the gauge simulation.</>,
-			contributors: [CONTRIBUTORS.TOASTDEIB],
-		},
-		{
-			date: new Date('2021-11-21'),
-			Changes: () => <>Removed Shadow Fang and Assassinate as expected actions under Trick Attack.</>,
-			contributors: [CONTRIBUTORS.TOASTDEIB],
-		},
-	],
+
+	changelog,
 })

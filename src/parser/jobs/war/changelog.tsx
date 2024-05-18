@@ -1,40 +1,10 @@
-import CONTRIBUTORS from 'data/CONTRIBUTORS'
-import React from 'react'
+// import CONTRIBUTORS from 'data/CONTRIBUTORS'
+// import React from 'react'
 
 export const changelog = [
-	{
-		date: new Date('2023-01-28'),
-		Changes: () => <>
-			Add new status Shake it Off (Over Time) for patch 6.3, and add Orogeny to timeline.
-		</>,
-		contributors: [CONTRIBUTORS.AY],
-	},
-	{
-		date: new Date('2022-04-12'),
-		Changes: () => <>
-			Add pre-6.1 Inner Release and Beast gauge handling for the reduced set of stack consumers.
-		</>,
-		contributors: [CONTRIBUTORS.AY],
-	},
-	{
-		date: new Date('2022-01-22'),
-		Changes: () => <>
-			Add Nascent Chaos status timeout/overwrite tracking.
-		</>,
-		contributors: [CONTRIBUTORS.AY],
-	},
-	{
-		date: new Date('2022-01-01'),
-		Changes: () => <>
-			Fix bugged Inner Release rushed window handling in suggestions.
-		</>,
-		contributors: [CONTRIBUTORS.AY],
-	},
-	{
-		date: new Date('2021-12-03'),
-		Changes: () => <>
-			Add support for Endwalker.
-		</>,
-		contributors: [CONTRIBUTORS.AY],
-	},
+	// {
+	// 	date: new Date('2021-11-19'),
+	// 	Changes: () => <>The changes you made</>,
+	// 	contributors: [CONTRIBUTORS.YOU],
+	// },
 ]
