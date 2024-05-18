@@ -135,6 +135,7 @@ workflows:
                 - stormblood
                 - shadowbringers
                 - endwalker
+                - dawntrail
                 - ui
       - deploy:
           requires:

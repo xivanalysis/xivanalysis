@@ -23,6 +23,8 @@ Parser - MNK:
   - src/parser/jobs/mnk/**/*
 Parser - NIN:
   - src/parser/jobs/nin/**/*
+Parser - PCT:
+  - src/parser/jobs/pct/**/*
 Parser - PLD:
   - src/parser/jobs/pld/**/*
 Parser - RDM:
@@ -37,6 +39,8 @@ Parser - SGE:
   - src/parser/jobs/sge/**/*
 Parser - SMN:
   - src/parser/jobs/smn/**/*
+Parser - VPR:
+  - src/parser/jobs/vpr/**/*
 Parser - WAR:
   - src/parser/jobs/war/**/*
 Parser - WHM:
