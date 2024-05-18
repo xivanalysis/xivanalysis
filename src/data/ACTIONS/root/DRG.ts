@@ -226,7 +226,7 @@ export const DRG = ensureActions({
 		id: 83,
 		name: 'Life Surge',
 		icon: 'https://xivapi.com/i/000000/000304.png',
-		cooldown: 45000,
+		cooldown: 40000,
 		statusesApplied: ['LIFE_SURGE'],
 		charges: 2,
 	},
