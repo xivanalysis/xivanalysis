@@ -13,6 +13,7 @@ import {GUNBREAKER} from './jobs/gnb'
 import {MACHINIST} from './jobs/mch'
 import {MONK} from './jobs/mnk'
 import {NINJA} from './jobs/nin'
+import {PICTOMANCER} from './jobs/pct'
 import {PALADIN} from './jobs/pld'
 import {RED_MAGE} from './jobs/rdm'
 import {REAPER} from './jobs/rpr'
@@ -20,6 +21,7 @@ import {SAMURAI} from './jobs/sam'
 import {SCHOLAR} from './jobs/sch'
 import {SAGE} from './jobs/sge'
 import {SUMMONER} from './jobs/smn'
+import {VIPER} from './jobs/vpr'
 import {WARRIOR} from './jobs/war'
 import {WHITE_MAGE} from './jobs/whm'
 
@@ -48,6 +50,7 @@ export const AVAILABLE_MODULES: AvailableModules = {
 		NINJA,
 		SAMURAI,
 		REAPER,
+		VIPER,
 
 		BARD,
 		MACHINIST,
@@ -56,6 +59,7 @@ export const AVAILABLE_MODULES: AvailableModules = {
 		BLACK_MAGE,
 		SUMMONER,
 		RED_MAGE,
+		PICTOMANCER,
 		BLUE_MAGE,
 	},
 
