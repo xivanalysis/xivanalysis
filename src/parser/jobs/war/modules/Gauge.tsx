@@ -65,11 +65,11 @@ export class Gauge extends CoreGauge {
 		])
 
 		if (modifier != null) {
-			// Spenders are free during IR, post-6.1 only FC+Decimate are
+			// FC+Decimate are free during IR
 			let amount = modifier[event.type] ?? 0
 			if (
 				this.actors.current.hasStatus(this.data.statuses.INNER_RELEASE.id)
-				&& (this.parser.patch.before('6.1') || freeActions.has(event.action))
+				&& freeActions.has(event.action)
 			) {
 				amount = Math.max(amount, 0)
 			}
