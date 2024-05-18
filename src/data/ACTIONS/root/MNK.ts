@@ -257,8 +257,7 @@ export const MNK = ensureActions({
 		id: 7394,
 		name: 'Riddle of Earth',
 		icon: 'https://xivapi.com/i/002000/002537.png',
-		charges: 3,
-		cooldown: 30000,
+		cooldown: 120000,
 		statusesApplied: ['RIDDLE_OF_EARTH'],
 	},
 

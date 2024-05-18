@@ -277,8 +277,8 @@ export const DNC = ensureActions({
 		onGcd: false,
 		cooldown: 60000,
 		statusesApplied: [
-			'SILKEN_SYMMETRY', // Pre-6.1 proc statuses for base layer (with the post 6.1 key they will have for the future)
-			'SILKEN_FLOW',
+			'FLOURISHING_SYMMETRY',
+			'FLOURISHING_FLOW',
 			'THREEFOLD_FAN_DANCE',
 			'FOURFOLD_FAN_DANCE',
 		],

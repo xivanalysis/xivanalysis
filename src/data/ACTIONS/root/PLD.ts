@@ -1,6 +1,5 @@
 import {Attribute} from 'event'
 import {ensureActions} from '../type'
-import {SHARED} from './SHARED'
 
 export const PLD = ensureActions({
 	// -----
@@ -47,7 +46,7 @@ export const PLD = ensureActions({
 			from: 15,
 			end: true,
 		},
-		statusesApplied: ['SWORD_OATH'],
+		statusesApplied: ['SWORD_OATH', 'DIVINE_MIGHT'],
 	},
 	SHIELD_LOB: {
 		id: 24,
@@ -84,6 +83,7 @@ export const PLD = ensureActions({
 			from: 7381,
 			end: true,
 		},
+		statusesApplied: ['DIVINE_MIGHT'],
 	},
 	GORING_BLADE: {
 		id: 3538,
@@ -91,11 +91,8 @@ export const PLD = ensureActions({
 		icon: 'https://xivapi.com/i/002000/002506.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		combo: {
-			from: 15,
-			end: true,
-		},
-		statusesApplied: ['GORING_BLADE'],
+		cooldown: 60000,
+		gcdRecast: 2500,
 	},
 	CLEMENCY: {
 		id: 3541,
@@ -104,7 +101,6 @@ export const PLD = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 1500,
-		breaksCombo: true,
 	},
 	HOLY_SPIRIT: {
 		id: 7384,
@@ -113,7 +109,6 @@ export const PLD = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 1500,
-		breaksCombo: true,
 	},
 	HOLY_CIRCLE: {
 		id: 16458,
@@ -122,7 +117,6 @@ export const PLD = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 1500,
-		breaksCombo: true,
 	},
 	ATONEMENT: {
 		id: 16460,
@@ -130,7 +124,7 @@ export const PLD = ensureActions({
 		icon: 'https://xivapi.com/i/002000/002519.png',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		breaksCombo: true as boolean,
+		breaksCombo: false,
 	},
 	CONFITEOR: {
 		id: 16459,
@@ -172,7 +166,6 @@ export const PLD = ensureActions({
 			from: 25749,
 			end: true,
 		},
-		statusesApplied: ['BLADE_OF_VALOR'],
 	},
 
 	// -----
@@ -191,9 +184,15 @@ export const PLD = ensureActions({
 		name: 'Iron Will',
 		icon: 'https://xivapi.com/i/002000/002505.png',
 		onGcd: false,
-		cooldown: 10000,
+		cooldown: 2000,
 	},
-	RELEASE_IRON_WILL: SHARED.UNKNOWN,
+	RELEASE_IRON_WILL: {
+		id: 32065,
+		name: 'Release Iron Will',
+		icon: 'https://xivapi.com/i/002000/002521.png',
+		onGcd: false,
+		cooldown: 1000,
+	},
 	SENTINEL: {
 		id: 17,
 		name: 'Sentinel',
@@ -233,7 +232,14 @@ export const PLD = ensureActions({
 		cooldown: 420000,
 		statusesApplied: ['HALLOWED_GROUND'],
 	},
-	BULWARK: SHARED.UNKNOWN,
+	BULWARK: {
+		id: 22,
+		name: 'Bulwark',
+		icon: 'https://xivapi.com/i/000000/000167.png',
+		onGcd: false,
+		cooldown: 90000,
+		statusesApplied: ['BULWARK'],
+	},
 	SHELTRON: {
 		id: 3542,
 		name: 'Sheltron',
@@ -248,7 +254,7 @@ export const PLD = ensureActions({
 		icon: 'https://xivapi.com/i/002000/002508.png',
 		onGcd: false,
 		cooldown: 90000,
-		statusesApplied: ['DIVINE_VEIL', 'DIVINE_VEIL_PROC'],
+		statusesApplied: ['DIVINE_VEIL'],
 	},
 	INTERVENTION: {
 		id: 7382,
@@ -264,7 +270,7 @@ export const PLD = ensureActions({
 		icon: 'https://xivapi.com/i/002000/002513.png',
 		onGcd: false,
 		cooldown: 60000,
-		statusesApplied: ['REQUIESCAT'],
+		statusesApplied: ['REQUIESCAT', 'CONFITEOR_READY'],
 	},
 	PASSAGE_OF_ARMS: {
 		id: 7385,

@@ -1,6 +1,5 @@
 import {Attribute} from 'event'
 import {ensureActions} from '../type'
-import {SHARED} from './SHARED'
 
 export const GNB = ensureActions({
 	// -----
@@ -146,7 +145,7 @@ export const GNB = ensureActions({
 		name: 'Bloodfest',
 		icon: 'https://xivapi.com/i/003000/003428.png',
 		onGcd: false,
-		cooldown: 90000,
+		cooldown: 120000,
 	},
 	JUGULAR_RIP: {
 		id: 16156,
@@ -215,10 +214,16 @@ export const GNB = ensureActions({
 		name: 'Royal Guard',
 		icon: 'https://xivapi.com/i/003000/003406.png',
 		onGcd: false,
-		cooldown: 10000,
+		cooldown: 2000,
 	},
 
-	RELEASE_ROYAL_GUARD: SHARED.UNKNOWN, // Added in patch 6.3 layer
+	RELEASE_ROYAL_GUARD: {
+		id: 32068,
+		name: 'Release Royal Guard',
+		icon: 'https://xivapi.com/i/003000/003433.png',
+		onGcd: false,
+		cooldown: 1000,
+	},
 
 	AURORA: {
 		id: 16151,

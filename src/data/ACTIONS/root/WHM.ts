@@ -1,9 +1,13 @@
 import {Attribute} from 'event'
 import {ensureActions} from '../type'
-import {SHARED} from './SHARED'
 
 export const WHM = ensureActions({
-	LITURGY_OF_THE_BELL_ACTIVATION: SHARED.UNKNOWN,
+	LITURGY_OF_THE_BELL_ACTIVATION: {
+		id: 28509,
+		name: 'Liturgy of the Bell (Detonate)',
+		icon: 'https://xivapi.com/i/002000/002649.png',
+		cooldown: 1000,
+	},
 	LITURGY_OF_THE_BELL_ON_EXPIRY: {
 		id: 25864,
 		name: 'Liturgy of the Bell',
@@ -133,7 +137,7 @@ export const WHM = ensureActions({
 		id: 3571,
 		name: 'Assize',
 		icon: 'https://xivapi.com/i/002000/002634.png',
-		cooldown: 45000,
+		cooldown: 40000,
 	},
 
 	ASYLUM: {
@@ -256,7 +260,7 @@ export const WHM = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		statusesApplied: ['REGEN'],
-		mpCost: 500,
+		mpCost: 400,
 	},
 
 	MEDICA: {
