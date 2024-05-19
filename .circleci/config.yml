@@ -112,13 +112,7 @@ workflows:
   version: 2
   flow:
     jobs:
-      - setup:
-          filters:
-            branches:
-              ignore:
-                - i18n-stormblood
-                - i18n-shadowbringers
-                - i18n-endwalker
+      - setup
       - lint:
           requires:
             - setup
@@ -135,6 +129,7 @@ workflows:
                 - stormblood
                 - shadowbringers
                 - endwalker
+                - dawntrail
                 - ui
       - deploy:
           requires:

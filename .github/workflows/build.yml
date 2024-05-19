@@ -8,7 +8,7 @@ on:
         type: boolean
   push:
     branches:
-    - endwalker
+    - dawntrail
 # TODO: Consider utilising multiple workflows, and narrowing this down to a single purpose i18n job - can use push path filter to remove the complexity below, potentially.
 jobs:
   check_changes:
