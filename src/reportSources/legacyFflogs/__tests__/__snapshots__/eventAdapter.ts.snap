@@ -39,7 +39,7 @@ Array [
 exports[`Event adapter individual events adapts applydebuff 1`] = `
 Array [
   Object {
-    "action": 2258,
+    "action": 2248,
     "source": "6",
     "status": 1000638,
     "target": "11",
