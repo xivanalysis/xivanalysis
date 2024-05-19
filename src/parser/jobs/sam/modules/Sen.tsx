@@ -162,7 +162,6 @@ export class Sen extends Analyser {
 		this.data.actions.HISSATSU_GYOTEN.id,
 
 		// OGCDS IGAF about.
-		this.data.actions.HISSATSU_KAITEN.id,
 		this.data.actions.MEIKYO_SHISUI.id,
 	]
 
