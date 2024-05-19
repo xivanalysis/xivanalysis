@@ -135,6 +135,12 @@ export class Lilies extends CoreGauge {
 		// Calculate lost Lilies for the fight, does not correct for UTA or other downtime
 		const lostLilies = Math.floor(this.lilyTimer.getExpirationTime() / this.lilyInterval)
 
+		// Calculate how many Blood Lillies were lost due to overcapping
+		const lostBloodLilies = this.bloodLilyGauge.value < MISERY_COST ? Math.floor((this.bloodLilyGauge.overCap + this.bloodLilyGauge.value) / MISERY_COST) : Math.floor(this.bloodLilyGauge.overCap / MISERY_COST)
+
+		// Calculate how many Blood Lilies were unused at the end of the fight
+		const unusedLilies = Math.floor(this.bloodLilyGauge.value / MISERY_COST)
+
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.AFFLATUS_MISERY.icon,
 			content: <Trans id="whm.gauge.bloodlily.suggestions.overcap.content">
