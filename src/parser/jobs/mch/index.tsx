@@ -29,6 +29,11 @@ export const MACHINIST = new Meta({
 	],
 	changelog: [
 		{
+			date: new Date('2024-05-21'),
+			Changes: () => <>Fixed Reassemble count under Tincture showing as 1/1 when two Reassembles were used.</>,
+			contributors: [CONTRIBUTORS.HINT],
+		},
+		{
 			date: new Date('2023-07-08'),
 			Changes: () => <>Fixed a rare bug that erroneously marked Wildfire as dealing 0 damage.</>,
 			contributors: [CONTRIBUTORS.HINT],
