@@ -1,29 +1,30 @@
 import {iconUrl} from 'data/icon'
 import {ensureStatuses} from '../type'
 
-// TODO: Fill in the rest of this
 export const BLM = ensureStatuses({
-	THUNDER_I: {
-		id: 161,
-		name: 'Thunder',
-		icon: iconUrl(10457),
-	},
-	THUNDER_II: {
-		id: 162,
-		name: 'Thunder II',
-		icon: iconUrl(10458),
-	},
 	THUNDER_III: {
 		id: 163,
 		name: 'Thunder III',
 		icon: iconUrl(10459),
-		duration: 30000,
+		duration: 27000,
 	},
 	THUNDER_IV: {
 		id: 1210,
 		name: 'Thunder IV',
 		icon: iconUrl(12657),
-		duration: 18000,
+		duration: 21000,
+	},
+	HIGH_THUNDER: {
+		id: 7000163, // TODO
+		name: 'High Thunder', // TODO
+		icon: 'https://xivapi.com/i/010000/010459.png', // TODO
+		duration: 30000,
+	},
+	HIGH_THUNDER_II: {
+		id: 7001210, // TODO
+		name: 'High Thunder II', // TODO
+		icon: 'https://xivapi.com/i/012000/012657.png', // TODO
+		duration: 24000,
 	},
 	TRIPLECAST: {
 		id: 1211,
@@ -36,11 +37,11 @@ export const BLM = ensureStatuses({
 		icon: iconUrl(10460),
 		duration: 30000,
 	},
-	THUNDERCLOUD: {
-		id: 164,
-		name: 'Thundercloud',
-		icon: iconUrl(10461),
-		duration: 40000,
+	THUNDERHEAD: {
+		id: 7000164, // TODO
+		name: 'Thunderhead',
+		icon: 'https://xivapi.com/i/010000/010461.png', // TODO
+		duration: 30000,
 	},
 	LEY_LINES: {
 		id: 737,
@@ -53,12 +54,6 @@ export const BLM = ensureStatuses({
 		name: 'Circle Of Power',
 		icon: iconUrl(12654),
 		speedModifier: 0.85,
-	},
-	SHARPCAST: {
-		id: 867,
-		name: 'Sharpcast',
-		icon: iconUrl(12655),
-		duration: 30000,
 	},
 	MANAWARD: {
 		id: 168,
