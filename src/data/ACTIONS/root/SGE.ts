@@ -281,6 +281,7 @@ export const SGE = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		mpCost: 400,
+		statusesApplied: ['EUKRASIAN_DYSKRASIA'],
 	},
 	PHLEGMA: {
 		id: 24289,
