@@ -1,6 +1,5 @@
 import {Trans} from '@lingui/macro'
 import {DataLink} from 'components/ui/DbLink'
-import {Events} from 'event'
 import {Overheal as CoreOverheal, SuggestedColors} from 'parser/core/modules/Overheal'
 import React from 'react'
 
@@ -20,6 +19,14 @@ export class Overheal extends CoreOverheal {
 				this.data.actions.DRUOCHOLE.id,
 				this.data.actions.IXOCHOLE.id,
 				this.data.actions.TAUROCHOLE.id,
+			],
+			ignore: true,
+		},
+		{
+			name: 'Kardia/Philosophia',
+			trackedHealIds: [
+				this.data.statuses.KARDIA.id,
+				this.data.statuses.PHILOSOPHIA.id,
 			],
 			ignore: true,
 		},
@@ -49,12 +56,4 @@ export class Overheal extends CoreOverheal {
 			],
 		},
 	]
-
-	override considerHeal(event: Events['heal'], _pet: boolean = false): boolean {
-		// Filter out Kardia heals, the SGE isn't exactly going to stop DPSing if the tank is full HP...
-		if (event.cause.type === 'status') {
-			return event.cause.status !== this.data.statuses.KARDIA.id
-		}
-		return true
-	}
 }
