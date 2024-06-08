@@ -27,9 +27,11 @@ const POLYGLOT_DURATION_REQUIRED = 30000
 export const ASTRAL_UMBRAL_DURATION = 15000
 export const ASTRAL_UMBRAL_MAX_STACKS = 3
 export const UMBRAL_HEARTS_MAX_STACKS = 3
+export const ASTRAL_SOUL_MAX_STACKS = 6
 const CAPPED_ASTRAL_UMBRAL_CAST_SCALAR = 0.5
 const FLARE_MAX_HEART_CONSUMPTION = 3
-const POLYGLOT_MAX_STACKS = 2
+const FLARE_SOUL_GENERATION = 3
+const POLYGLOT_MAX_STACKS = 3
 const PARADOX_MAX_STACKS = 1
 const ASTRAL_UMBRAL_HANDLE = 'astralumbral'
 const UMBRAL_ICE_HANDLE = 'umbralice'
@@ -50,6 +52,8 @@ const AFFECTS_GAUGE_ON_CAST: ActionKey[] = [
 	'XENOGLOSSY',
 	'AMPLIFIER',
 	'PARADOX',
+	'MANAFONT',
+	'FLARE_STAR',
 ]
 
 const GAUGE_ERROR_TYPE = {
@@ -65,7 +69,8 @@ export interface BLMGaugeState {
 	umbralHearts: number,
 	polyglot: number,
 	enochian: boolean, // Keeping this as a calculated value to simplify RotationWatchdog's "did Enochian drop?" check
-	paradox: number
+	paradox: number,
+	astralSoul: number,
 }
 
 interface BLMGaugeError {
@@ -111,7 +116,6 @@ export class Gauge extends CoreGauge {
 	private affectsGaugeOnDamage = AFFECTS_GAUGE_ON_DAMAGE.map(key => this.data.actions[key].id)
 
 	private castTimeIndex: number | null = null
-	private paradoxInstantIndex: number | null = null
 
 	/** Astral Fire and Umbral Ice */
 	private astralUmbralGauge = this.add(new EnumGauge({
@@ -157,6 +161,17 @@ export class Gauge extends CoreGauge {
 			label: <Trans id="blm.gauge.resource.umbral-timer">Umbral Ice Timer</Trans>,
 			color: ICE_COLOR.fade(TIMER_FADE),
 			tooltipHideWhenEmpty: true,
+		},
+	}))
+
+	/** Astral Soul */
+	private astralSoulGauge = this.add(new CounterGauge({
+		maximum: ASTRAL_SOUL_MAX_STACKS,
+		graph: {
+			label: <Trans id="blm.gauge.resource.astral-soul">Astral Soul</Trans>,
+			color: FIRE_COLOR.fade(GAUGE_FADE),
+			collapse: false,
+			height: DEFAULT_ROW_HEIGHT,
 		},
 	}))
 
@@ -240,6 +255,7 @@ export class Gauge extends CoreGauge {
 			polyglot: this.polyglotGauge.getValueAt(timestamp),
 			enochian: astralFire > 0 || umbralIce > 0,
 			paradox: this.paradoxGauge.getValueAt(timestamp),
+			astralSoul: this.astralSoulGauge.getValueAt(timestamp),
 		}
 	}
 
@@ -294,6 +310,7 @@ export class Gauge extends CoreGauge {
 				this.onGainAstralFireStacks(1, false)
 			}
 			this.tryConsumeUmbralHearts(1)
+			this.onGainAstralSoul(1)
 			break
 		case this.data.actions.DESPAIR.id:
 			this.onGainAstralFireStacks(ASTRAL_UMBRAL_MAX_STACKS, false)
@@ -301,6 +318,7 @@ export class Gauge extends CoreGauge {
 		case this.data.actions.FLARE.id:
 			this.tryConsumeUmbralHearts(FLARE_MAX_HEART_CONSUMPTION, true)
 			this.onGainAstralFireStacks(ASTRAL_UMBRAL_MAX_STACKS, false)
+			this.onGainAstralSoul(FLARE_SOUL_GENERATION)
 			break
 		case this.data.actions.XENOGLOSSY.id:
 		case this.data.actions.FOUL.id:
@@ -314,6 +332,14 @@ export class Gauge extends CoreGauge {
 			break
 		case this.data.actions.AMPLIFIER.id:
 			this.onGeneratePolyglot()
+			break
+		case this.data.actions.FLARE_STAR.id:
+			this.astralSoulGauge.reset()
+			break
+		case this.data.actions.MANAFONT.id:
+			this.onGainAstralFireStacks(ASTRAL_UMBRAL_MAX_STACKS, false)
+			this.gainUmbralHearts(UMBRAL_HEARTS_MAX_STACKS)
+			this.onGainParadox()
 			break
 		}
 	}
@@ -374,28 +400,24 @@ export class Gauge extends CoreGauge {
 			this.castTime.reset(this.castTimeIndex)
 			this.castTimeIndex = null
 		}
-
-		// If we're in Umbral Ice, Paradox is always instant
-		if (this.astralUmbralGauge.getCountAt(UMBRAL_ICE_HANDLE) > 0 && this.paradoxInstantIndex == null) {
-			this.paradoxInstantIndex = this.castTime.setInstantCastAdjustment([this.data.actions.PARADOX.id])
-		}
-		// If we're not in Umbral Ice, Paradox has a cast time
-		if (this.astralUmbralGauge.getCountAt(UMBRAL_ICE_HANDLE) === 0 && this.paradoxInstantIndex != null) {
-			this.castTime.reset(this.paradoxInstantIndex)
-			this.paradoxInstantIndex = null
-		}
 	}
 
 	private tryGainParadox(lastGaugeState: BLMGaugeState) {
-		if ((lastGaugeState.umbralIce === ASTRAL_UMBRAL_MAX_STACKS && this.astralUmbralGauge.getCountAt(ASTRAL_FIRE_HANDLE) > 0 && this.umbralHeartsGauge.capped) ||
-			(lastGaugeState.astralFire === ASTRAL_UMBRAL_MAX_STACKS && this.astralUmbralGauge.getCountAt(UMBRAL_ICE_HANDLE) > 0)) {
+		// Swapping element states only generates a paradox if we started with full UI/UH and are switching to Astral Fire
+		if (lastGaugeState.umbralIce === ASTRAL_UMBRAL_MAX_STACKS &&
+			this.astralUmbralGauge.getCountAt(ASTRAL_FIRE_HANDLE) > 0 &&
+			this.umbralHeartsGauge.capped) {
 
-			if (!this.paradoxGauge.empty) {
-				this.gaugeErrors.push({timestamp: this.parser.currentEpochTimestamp, error: GAUGE_ERROR_TYPE.OVERWROTE_PARADOX})
-			}
-
-			this.paradoxGauge.generate(1)
+			this.onGainParadox()
 		}
+	}
+
+	private onGainParadox() {
+		if (!this.paradoxGauge.empty) {
+			this.gaugeErrors.push({timestamp: this.parser.currentEpochTimestamp, error: GAUGE_ERROR_TYPE.OVERWROTE_PARADOX})
+		}
+
+		this.paradoxGauge.generate(1)
 	}
 	//#endregion
 
@@ -437,6 +459,9 @@ export class Gauge extends CoreGauge {
 			this.umbralIceTimer.start()
 			this.astralUmbralGauge.generate(UMBRAL_ICE_HANDLE, stackCount)
 
+			this.paradoxGauge.reset()
+			this.astralSoulGauge.reset()
+
 			this.addEvent()
 		}
 	}
@@ -460,6 +485,10 @@ export class Gauge extends CoreGauge {
 	private tryGainUmbralHearts(count: number) {
 		if (this.astralUmbralGauge.getCountAt(UMBRAL_ICE_HANDLE) === 0) { return }
 
+		this.gainUmbralHearts(count)
+	}
+
+	private gainUmbralHearts(count: number) {
 		this.umbralHeartsGauge.generate(count)
 
 		this.addEvent()
@@ -474,6 +503,12 @@ export class Gauge extends CoreGauge {
 	}
 	//#endregion
 
+	//#region Astral Soul
+	private onGainAstralSoul(count: number) {
+		this.astralSoulGauge.generate(count)
+	}
+	//#endregion
+
 	//#region Polyglot
 	private onEnochianTimeout(flagIssues: boolean = true) {
 		if (this.polyglotTimer.active && flagIssues) {
@@ -483,6 +518,9 @@ export class Gauge extends CoreGauge {
 		this.polyglotTimer.reset()
 
 		this.umbralHeartsGauge.reset()
+
+		this.polyglotGauge.reset()
+		this.astralSoulGauge.reset()
 
 		this.addEvent()
 	}
@@ -534,10 +572,7 @@ export class Gauge extends CoreGauge {
 			this.paradoxGauge.spend(1)
 		} else if (event.type === 'damage') {
 			// We checked isSuccessfulHit back in onCast, so we don't need to check it again here
-			// Add a stack for whichever timer isn't expired
-			if (!this.umbralIceTimer.expired) {
-				this.onGainUmbralIceStacks(1)
-			}
+			// In Dawntrail it shouldn't be possible to cast Paradox with an expired Astral Fire timer but we'll leave the check in to be safe
 			if (!this.astralFireTimer.expired) {
 				this.onGainAstralFireStacks(1)
 			}
@@ -610,7 +645,7 @@ export class Gauge extends CoreGauge {
 			this.suggestions.add(new Suggestion({
 				icon: this.data.actions.PARADOX.icon,
 				content: <Trans id="blm.gauge.suggestions.overwritten-paradox.content">
-					You overwrote <DataLink action="PARADOX"/> by generating a new marker without using the previous one. <DataLink showIcon={false} action="PARADOX"/> is a strong filler spell, so be sure to use it before generating a new one.
+					You overwrote <DataLink action="PARADOX"/> by not casting it before using <DataLink showIcon={false} action="MANAFONT" />. <DataLink showIcon={false} action="PARADOX"/> is a strong spell, and guarantees you a free <DataLink showIcon={false} status="FIRESTARTER" />, so be sure to use it.
 				</Trans>,
 				severity: SEVERITY.MAJOR,
 				why: <Trans id="blm.gage.suggestions.overwritten-paradox.why">
@@ -639,8 +674,8 @@ export class Gauge extends CoreGauge {
 			<Fragment>
 				<Message>
 					<Trans id="blm.gauge.error.content">
-						Reaching Astral Fire III then swapping to the opposite element generates a <DataLink action="PARADOX"/> marker.<br/>
-						Reaching Umbral Ice III and gaining 3 Umbral Hearts then swapping to the opposite element also generates a <DataLink action="PARADOX"/> marker.<br/>
+						Reaching Umbral Ice III and gaining 3 Umbral Hearts then swapping to the opposite element generates a <DataLink action="PARADOX"/> marker.<br/>
+						Using <DataLink action="MANAFONT" /> also generates a <DataLink action="PARADOX" /> marker.<br/>
 						Maintaining Enochian for 30 seconds or using <DataLink action="AMPLIFIER"/> generates a Polyglot charge, allowing
 						the casting of <DataLink action="XENOGLOSSY"/> or <DataLink action="FOUL"/>. You can have up to 2 Polyglot charges.<br/>
 						This module displays when these gauge effects were overwritten.
