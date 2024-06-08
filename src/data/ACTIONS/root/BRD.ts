@@ -121,7 +121,7 @@ export const BRD = ensureActions({
 		icon: 'https://xivapi.com/i/002000/002606.png',
 		onGcd: false,
 		cooldown: 15000,
-		potency: 200,
+		potency: 240,
 	},
 	THE_WANDERERS_MINUET: {
 		id: 3559,
@@ -153,7 +153,7 @@ export const BRD = ensureActions({
 		icon: 'https://xivapi.com/i/002000/002610.png',
 		onGcd: false,
 		cooldown: 60000,
-		potency: 300,
+		potency: 320,
 	},
 	PITCH_PERFECT: {
 		id: 7404,
@@ -194,7 +194,7 @@ export const BRD = ensureActions({
 		name: 'Nature\'s Minne',
 		icon: 'https://xivapi.com/i/002000/002615.png',
 		onGcd: false,
-		cooldown: 90000,
+		cooldown: 120000,
 		statusesApplied: ['NATURES_MINNE'],
 	},
 	REFULGENT_ARROW: {

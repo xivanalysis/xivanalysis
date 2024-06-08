@@ -1,13 +1,6 @@
 import {ensureStatuses} from '../type'
 
 export const NIN = ensureStatuses({
-	TRICK_ATTACK_VULNERABILITY_UP: {
-		id: 638,
-		name: 'Vulnerability Up',
-		icon: 'https://xivapi.com/i/015000/015020.png',
-		duration: 15000,
-	},
-
 	TRICK_ATTACK: {
 		id: 3254,
 		name: 'Trick Attack',
@@ -16,7 +9,7 @@ export const NIN = ensureStatuses({
 	},
 
 	MUG_VULNERABILITY_UP: {
-		id: 638, // Same ID as the old Trick vuln debuff, but this one is 5 seconds longer
+		id: 638,
 		name: 'Vulnerability Up',
 		icon: 'https://xivapi.com/i/015000/015020.png',
 		duration: 20000,

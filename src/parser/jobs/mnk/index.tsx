@@ -1,5 +1,5 @@
 import {Trans} from '@lingui/macro'
-import CONTRIBUTORS, {ROLES} from 'data/CONTRIBUTORS'
+// import CONTRIBUTORS, {ROLES} from 'data/CONTRIBUTORS'
 import {Meta} from 'parser/core/Meta'
 import React from 'react'
 import {changelog} from './changelog'
@@ -17,15 +17,14 @@ export const MONK = new Meta({
 			<p>If you notice anything that looks wrong or have a feature idea, please visit our Discord server and report it in the #fb-monk channel.</p>
 		</Trans>
 	</>,
+
 	supportedPatches: {
-		from: '6.0',
-		to: '6.5',
+		from: '✖',
+		to: '✖',
 	},
 
 	contributors: [
-		{user: CONTRIBUTORS.AY, role: ROLES.MAINTAINER},
-		{user: CONTRIBUTORS.MALP, role: ROLES.DEVELOPER},
-		{user: CONTRIBUTORS.FAIR2DARE, role: ROLES.DEVELOPER},
+		// {user: CONTRIBUTORS.YOU, role: ROLES.YOUR_ROLE},
 	],
 
 	changelog,

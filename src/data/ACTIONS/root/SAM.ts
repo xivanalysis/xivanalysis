@@ -83,13 +83,13 @@ export const SAM = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		potencies: [{
-			value: 100,
+			value: 120,
 			bonusModifiers: [],
 		}, {
-			value: 150,
+			value: 170,
 			bonusModifiers: [BonusModifier.POSITIONAL],
 		}, {
-			value: 320,
+			value: 330,
 			bonusModifiers: [BonusModifier.COMBO],
 		}, {
 			value: 370,
@@ -130,16 +130,16 @@ export const SAM = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		potencies: [{
-			value: 100,
+			value: 120,
 			bonusModifiers: [],
 		}, {
-			value: 150,
+			value: 170,
 			bonusModifiers: [BonusModifier.POSITIONAL],
 		}, {
-			value: 320,
+			value: 330,
 			bonusModifiers: [BonusModifier.COMBO],
 		}, {
-			value: 370,
+			value: 380,
 			bonusModifiers: [BonusModifier.POSITIONAL, BonusModifier.COMBO],
 		}],
 		combo: {
@@ -229,14 +229,6 @@ export const SAM = ensureActions({
 		cooldown: 55000,
 		statusesApplied: ['MEIKYO_SHISUI'],
 		charges: 2,
-	},
-
-	HISSATSU_KAITEN: {
-		id: 7494,
-		name: 'Hissatsu: Kaiten',
-		icon: 'https://xivapi.com/i/003000/003168.png',
-		cooldown: 1000,
-		statusesApplied: ['KAITEN'],
 	},
 
 	HISSATSU_GYOTEN: {

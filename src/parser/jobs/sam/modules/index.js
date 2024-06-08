@@ -5,7 +5,6 @@ import {Defensives} from './Defensives'
 import {Fuka} from './Fuka'
 import {Higanbana} from './Higanbana'
 import Interrupts from './Interrupts'
-import {Kaiten} from './Kaiten'
 import {Kenki} from './Kenki'
 import {Meikyo} from './Meikyo'
 import OGCDDowntime from './OGCDDowntime'
@@ -21,7 +20,6 @@ export default [
 	Combos,
 	Defensives,
 	Fuka,
-	Kaiten,
 	Kenki,
 	Higanbana,
 	Interrupts,

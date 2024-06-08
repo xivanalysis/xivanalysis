@@ -117,22 +117,13 @@ export default class DragonSight extends BuffWindow {
 			},
 			{
 				action: this.data.actions.SPINESHATTER_DIVE,
-				expectedPerWindow: this.parser.patch.before('6.1') ? 1 : 2,
+				expectedPerWindow: 2,
 			},
 			{
 				action: this.data.actions.DRAGONFIRE_DIVE,
 				expectedPerWindow: 1,
 			},
 		]
-
-		// 6.08 changed the potencies such that it's generally better to always use LS on
-		// Heavens' Thrust. Before that, we generally expected one in each two minute window.
-		if (this.parser.patch.before('6.08')) {
-			expectedActions.push({
-				action: this.data.actions.LIFE_SURGE,
-				expectedPerWindow: 1,
-			})
-		}
 
 		this.addEvaluator(new ExpectedActionsEvaluator({
 			expectedActions,
@@ -151,9 +142,7 @@ export default class DragonSight extends BuffWindow {
 		this.addEvaluator(new ShortWindowEvaluator(this.buffTargetDied.bind(this)))
 
 		// display ordering
-		if (this.parser.patch.after('6.05')) {
-			this.addEvaluator(new DisplayedActionEvaluator([this.data.actions.LIFE_SURGE]))
-		}
+		this.addEvaluator(new DisplayedActionEvaluator([this.data.actions.LIFE_SURGE]))
 	}
 
 	private onDeath(event: Events['death']) {

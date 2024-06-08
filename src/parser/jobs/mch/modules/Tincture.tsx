@@ -10,24 +10,24 @@ import React from 'react'
 
 interface reassembleOptions extends TrackedActionsOptions {
 	reassembleId: number
-	wasReassembleUsed: (window: HistoryEntry<EvaluatedAction[]>) => boolean
+	countReassemblesUsed: (window: HistoryEntry<EvaluatedAction[]>) => number
 }
 
 class ReassembleEvaluator extends ExpectedActionsEvaluator {
 	// Because this class is not an Analyser, it cannot use Data directly
 	// to get the id for Reassemble, so it has to take it in here.
 	private reassembleId: number
-	private wasReassembleUsed: (window: HistoryEntry<EvaluatedAction[]>) => boolean
+	private countReassemblesUsed: (window: HistoryEntry<EvaluatedAction[]>) => number
 
 	constructor(opts: reassembleOptions) {
 		super(opts)
 		this.reassembleId = opts.reassembleId
-		this.wasReassembleUsed = opts.wasReassembleUsed
+		this.countReassemblesUsed = opts.countReassemblesUsed
 	}
 
 	override countUsed(window: HistoryEntry<EvaluatedAction[]>, action: TrackedAction) {
 		if (action.action.id === this.reassembleId) {
-			return this.wasReassembleUsed(window) ? 1 : 0
+			return this.countReassemblesUsed(window)
 		}
 		return super.countUsed(window, action)
 	}
@@ -90,7 +90,7 @@ export class Tincture extends CoreTincture {
 				6: SEVERITY.MAJOR,
 			},
 			reassembleId: this.data.actions.REASSEMBLE.id,
-			wasReassembleUsed: this.wasReassembleUsed.bind(this),
+			countReassemblesUsed: this.countReassemblesUsed.bind(this),
 		}))
 	}
 
@@ -98,15 +98,13 @@ export class Tincture extends CoreTincture {
 		this.reassembledRemoves.push(event.timestamp)
 	}
 
-	private wasReassembleUsed(window: HistoryEntry<EvaluatedAction[]>) {
+	private countReassemblesUsed(window: HistoryEntry<EvaluatedAction[]>) {
 		const gcdTimestamps = window.data
 			.filter(e => e.action.onGcd)
 			.map(e => e.timestamp)
-		if (gcdTimestamps.length === 0) { return false }
+		if (gcdTimestamps.length === 0) { return 0 }
 
-		// Check to make sure at least one GCD happened before the status expired
 		const firstGcd = gcdTimestamps[0]
-		return this.reassembledRemoves.some(timestamp => firstGcd <= timestamp && timestamp <= (window.end ?? window.start))
+		return this.reassembledRemoves.filter(timestamp => firstGcd <= timestamp && timestamp <= (window.end ?? window.start)).length
 	}
-
 }

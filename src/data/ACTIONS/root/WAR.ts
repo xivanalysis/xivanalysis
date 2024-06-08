@@ -1,6 +1,5 @@
 import {Attribute} from 'event'
 import {ensureActions} from '../type'
-import {SHARED} from './SHARED'
 
 export const WAR = ensureActions({
 	// -----
@@ -190,7 +189,7 @@ export const WAR = ensureActions({
 		name: 'Shake It Off',
 		icon: 'https://xivapi.com/i/002000/002563.png',
 		cooldown: 90000,
-		statusesApplied: ['SHAKE_IT_OFF'],
+		statusesApplied: ['SHAKE_IT_OFF', 'SHAKE_IT_OFF_OVER_TIME'],
 	},
 
 	ONSLAUGHT: {
@@ -238,10 +237,16 @@ export const WAR = ensureActions({
 		id: 48,
 		name: 'Defiance',
 		icon: 'https://xivapi.com/i/002000/002551.png',
-		cooldown: 10000,
+		cooldown: 2000,
 		cooldownGroup: 3,
 		statusesApplied: ['DEFIANCE'],
 	},
 
-	RELEASE_DEFIANCE: SHARED.UNKNOWN, // Added in patch 6.3 layer
+	RELEASE_DEFIANCE: {
+		id: 32066,
+		name: 'Release Defiance',
+		icon: 'https://xivapi.com/i/002000/002572.png',
+		onGcd: false,
+		cooldown: 1000,
+	},
 })

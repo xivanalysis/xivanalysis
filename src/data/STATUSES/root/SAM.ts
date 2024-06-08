@@ -5,7 +5,7 @@ export const SAM = ensureStatuses({
 		id: 1232,
 		name: 'Third Eye',
 		icon: 'https://xivapi.com/i/013000/013307.png',
-		duration: 3000,
+		duration: 4000,
 	},
 
 	FUGETSU: {
@@ -42,13 +42,6 @@ export const SAM = ensureStatuses({
 		name: 'Higanbana',
 		icon: 'https://xivapi.com/i/013000/013304.png',
 		duration: 60000,
-	},
-
-	KAITEN: {
-		id: 1229,
-		name: 'Kaiten',
-		icon: 'https://xivapi.com/i/013000/013305.png',
-		duration: 10000,
 	},
 
 	MEIKYO_SHISUI: {

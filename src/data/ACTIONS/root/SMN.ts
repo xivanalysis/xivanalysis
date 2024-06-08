@@ -135,8 +135,9 @@ export const SMN = ensureActions({
 	SEARING_LIGHT: {
 		id: 25801,
 		name: 'Searing Light',
-		icon: 'https://xivapi.com/i/002000/002752.png',
+		icon: 'https://xivapi.com/i/002000/002780.png',
 		cooldown: 120000,
+		statusesApplied: ['SEARING_LIGHT'],
 	},
 
 	SUMMON_BAHAMUT: {
@@ -164,6 +165,7 @@ export const SMN = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 2800,
+		gcdRecast: 3000,
 	},
 
 	RUBY_RITE: {
@@ -173,6 +175,7 @@ export const SMN = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 2800,
+		gcdRecast: 3000,
 	},
 
 	TOPAZ_RUIN_III: {
@@ -267,6 +270,7 @@ export const SMN = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 2800,
+		gcdRecast: 3000,
 	},
 
 	RUBY_CATASTROPHE: {
@@ -276,6 +280,7 @@ export const SMN = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 2800,
+		gcdRecast: 3000,
 	},
 
 	TOPAZ_OUTBURST: {
@@ -461,6 +466,5 @@ export const SMN = ensureActions({
 		id: 25842,
 		name: 'Searing Light',
 		icon: 'https://xivapi.com/i/002000/002776.png',
-		statusesApplied: ['SEARING_LIGHT'],
 	},
 })

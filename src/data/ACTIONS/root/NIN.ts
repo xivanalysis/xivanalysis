@@ -46,10 +46,10 @@ export const NIN = ensureActions({
 			value: 200,
 			bonusModifiers: [BonusModifier.POSITIONAL],
 		}, {
-			value: 360,
+			value: 380,
 			bonusModifiers: [BonusModifier.COMBO],
 		}, {
-			value: 420,
+			value: 440,
 			bonusModifiers: [BonusModifier.POSITIONAL, BonusModifier.COMBO],
 		}],
 	},
@@ -91,10 +91,10 @@ export const NIN = ensureActions({
 			value: 200,
 			bonusModifiers: [BonusModifier.POSITIONAL],
 		}, {
-			value: 340,
+			value: 360,
 			bonusModifiers: [BonusModifier.COMBO],
 		}, {
-			value: 400,
+			value: 420,
 			bonusModifiers: [BonusModifier.POSITIONAL, BonusModifier.COMBO],
 		}],
 	},
@@ -384,6 +384,7 @@ export const NIN = ensureActions({
 		icon: 'https://xivapi.com/i/000000/000613.png',
 		onGcd: false,
 		cooldown: 120000,
+		statusesApplied: ['MUG_VULNERABILITY_UP'],
 	},
 
 	ASSASSINATE: {
@@ -400,7 +401,7 @@ export const NIN = ensureActions({
 		icon: 'https://xivapi.com/i/000000/000618.png',
 		onGcd: false,
 		cooldown: 60000,
-		statusesApplied: ['TRICK_ATTACK_VULNERABILITY_UP'],
+		statusesApplied: ['TRICK_ATTACK'],
 		potencies: [{
 			value: 300,
 			bonusModifiers: [],

@@ -1,8 +1,9 @@
 import {t} from '@lingui/macro'
 import TransMarkdown from 'components/ui/TransMarkdown'
-import CONTRIBUTORS, {ROLES} from 'data/CONTRIBUTORS'
+// import CONTRIBUTORS, {ROLES} from 'data/CONTRIBUTORS'
 import {Meta} from 'parser/core/Meta'
 import React from 'react'
+import {changelog} from './changelog'
 
 const description = t('smn.about.description')`
 While the SMN toolkit is very flexible and full optimization will require you to consider each fight and your stats individually, there are still some common guidelines to follow in any fight.
@@ -18,79 +19,15 @@ export const SUMMONER = new Meta({
 	Description: () => <>
 		<TransMarkdown source={description} key="smn.about.description"/>
 	</>,
+
 	supportedPatches: {
-		from: '6.0',
-		to: '6.5',
+		from: '✖',
+		to: '✖',
 	},
+
 	contributors: [
-		{user: CONTRIBUTORS.KELOS, role: ROLES.MAINTAINER},
+	// {user: CONTRIBUTORS.YOU, role: ROLES.YOUR_ROLE},
 	],
 
-	changelog: [
-		{
-			date: new Date('2024-02-26'),
-			Changes: () => <>Fix Searing Light's tracking of players buffed to be consistent with other raid buffs.</>,
-			contributors: [CONTRIBUTORS.AKAIRYU],
-		},
-		{
-			date: new Date('2023-01-14'),
-			Changes: () => <>Removed outdated Swiftcast message.</>,
-			contributors: [CONTRIBUTORS.KELOS],
-		},
-		{
-			date: new Date('2022-05-04'),
-			Changes: () => <>Fixed an issue that prevented synthing a pre-cast Searing Light.</>,
-			contributors: [CONTRIBUTORS.KELOS],
-		},
-		{
-			date: new Date('2022-04-23'),
-			Changes: () => <>Updated Searing Light to be sourced from the player in patch 6.1.</>,
-			contributors: [CONTRIBUTORS.KELOS],
-		},
-		{
-			date: new Date('2022-02-19'),
-			Changes: () => <>Add sorted egis to header.</>,
-			contributors: [CONTRIBUTORS.IAOTLE],
-		},
-		{
-			date: new Date('2022-01-29'),
-			Changes: () => <>Fix duplicate searing light rows when there are multiple summoners in the party.</>,
-			contributors: [CONTRIBUTORS.DEAN],
-		},
-		{
-			date: new Date('2022-01-13'),
-			Changes: () => <>Fixed an issue that kept Summon rows from being expanded and collapsed.</>,
-			contributors: [CONTRIBUTORS.KELOS],
-		},
-		{
-			date: new Date('2022-01-13'),
-			Changes: () => <>Jumping to the timeline from the Searing Light table now has the expected zoom.</>,
-			contributors: [CONTRIBUTORS.KELOS],
-		},
-		{
-			date: new Date('2022-01-09'),
-			Changes: () => <>Adjusted module display order and now start Summon windows with errors opened.</>,
-			contributors: [CONTRIBUTORS.KELOS],
-		},
-		{
-			date: new Date('2022-01-09'),
-			Changes: () => <>Corrected the cooldown of Radiant Aegis.</>,
-			contributors: [CONTRIBUTORS.KELOS],
-		},
-		{
-			date: new Date('2021-12-28'),
-			Changes: () => <>No longer consider Physick casts during downtime as bad.</>,
-			contributors: [CONTRIBUTORS.KELOS],
-		},
-		{
-			date: new Date('2021-12-24'),
-			Changes: () => <>Improved Searing Light checks when the party contains multiple Summoners.</>,
-			contributors: [CONTRIBUTORS.KELOS],
-		},
-		{
-			date: new Date('2021-12-16'),
-			Changes: () => <>Implemented Endwalker support</>,
-			contributors: [CONTRIBUTORS.KELOS],
-		},
-	],
+	changelog,
 })
