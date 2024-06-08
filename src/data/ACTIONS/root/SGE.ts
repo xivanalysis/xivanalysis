@@ -58,6 +58,15 @@ export const SGE = ensureActions({
 		mpCost: 900,
 		statusesApplied: ['EUKRASIAN_PROGNOSIS'],
 	},
+	EUKRASIAN_PROGNOSIS_II: {
+		id: 7024292, // TODO
+		name: 'Eukrasian Prognosis II',
+		icon: 'https://xivapi.com/i/003000/003660.png', // TODO
+		onGcd: true,
+		gcdRecast: 1500,
+		mpCost: 900,
+		statusesApplied: ['EUKRASIAN_PROGNOSIS'],
+	},
 	PANHAIMA: {
 		id: 24311,
 		name: 'Panhaima',
@@ -113,7 +122,7 @@ export const SGE = ensureActions({
 		id: 24294,
 		name: 'Soteria',
 		icon: iconUrl(3662),
-		cooldown: 90000,
+		cooldown: 60000,
 		statusesApplied: ['SOTERIA'],
 	},
 	ICARUS: {
@@ -135,6 +144,13 @@ export const SGE = ensureActions({
 		icon: iconUrl(3685),
 		cooldown: 60000,
 		statusesApplied: ['KRASIS'],
+	},
+	PHILOSOPHIA: {
+		id: 7024285, // TODO
+		name: 'Philosophia',
+		icon: 'https://xivapi.com/i/003000/003653.png', // TODO
+		cooldown: 180000,
+		statusesApplied: ['KARDIA', 'KARDION'],
 	},
 
 	/** Addersgall abilities */
@@ -258,6 +274,14 @@ export const SGE = ensureActions({
 		speedAttribute: Attribute.SPELL_SPEED,
 		mpCost: 400,
 	},
+	EUKRASIAN_DYSKRASIA: {
+		id: 7024315,
+		name: 'Eukrasian Dyskrasia',
+		icon: 'https://xivapi.com/i/003000/003683.png', // TODO
+		onGcd: true,
+		speedAttribute: Attribute.SPELL_SPEED,
+		mpCost: 400,
+	},
 	PHLEGMA: {
 		id: 24289,
 		name: 'Phlegma',
@@ -290,6 +314,13 @@ export const SGE = ensureActions({
 		cooldown: 40000,
 		charges: 2,
 		mpCost: 400,
+	},
+	PSYCHE: {
+		id: 7024313, // TODO
+		name: 'Psyche',
+		icon: 'https://xivapi.com/i/003000/003681.png', // TODO
+		onGcd: false,
+		cooldown: 60000,
 	},
 	PNEUMA: {
 		id: 24318,

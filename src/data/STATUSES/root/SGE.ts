@@ -65,7 +65,7 @@ export const SGE = ensureStatuses({
 		id: 2621,
 		name: 'Autophysis',
 		icon: iconUrl(12967),
-		duration: 10000,
+		duration: 15000,
 	},
 	KARDIA: {
 		id: 2604,
@@ -76,6 +76,18 @@ export const SGE = ensureStatuses({
 		id: 2605,
 		name: 'Kardion',
 		icon: iconUrl(12952),
+	},
+	PHILOSOPHIA: {
+		id: 7002604, // TODO
+		name: 'Philosophia',
+		icon: 'https://xivapi.com/i/012000/012951.png', // TODO
+		duration: 20000,
+	},
+	EUDAIMONIA: {
+		id: 7002605, // TODO
+		name: 'Eudaimonia',
+		icon: 'https://xivapi.com/i/012000/012952.png', // TODO
+		duration: 20000,
 	},
 	SOTERIA: {
 		id: 2610,
