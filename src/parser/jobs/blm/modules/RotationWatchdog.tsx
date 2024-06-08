@@ -45,6 +45,7 @@ const ROTATION_ENDPOINTS: ActionKey[] = [
 	'TRANSPOSE',
 	'BLIZZARD_II',
 	'HIGH_BLIZZARD_II',
+	'MANAFONT',
 ]
 
 // This is feelycraft at the moment. Rotations shorter than this won't be processed for errors.
