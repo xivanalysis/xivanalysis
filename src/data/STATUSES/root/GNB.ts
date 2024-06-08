@@ -49,6 +49,18 @@ export const GNB = ensureStatuses({
 		icon: 'https://xivapi.com/i/013000/013618_hr1.png',
 		duration: 10000,
 	},
+	READY_TO_RAZE: {
+		id: 0, //TODO: Add ID
+		name: 'Ready to Raze',
+		icon: 'icon', //TODO: Add icon
+		duration: 10000,
+	},
+	READY_TO_REIGN: {
+		id: 0, //TODO: Add ID
+		name: 'Ready to Reign',
+		icon: 'icon', //TODO: Add icon
+		duration: 10000,
+	},
 	AURORA: {
 		id: 1835,
 		name: 'Aurora',
@@ -89,6 +101,12 @@ export const GNB = ensureStatuses({
 		id: 1834,
 		name: 'Nebula',
 		icon: 'https://xivapi.com/i/013000/013604.png',
+		duration: 15000,
+	},
+	GREAT_NEBULA: {//+ NOT Thrill of Battle
+		id: 0, //TODO: Add ID
+		name: 'Great Nebula',
+		icon: 'icon', //TODO: Add icon
 		duration: 15000,
 	},
 	SUPERBOLIDE: {

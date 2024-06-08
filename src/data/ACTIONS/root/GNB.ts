@@ -128,6 +128,42 @@ export const GNB = ensureActions({
 		cooldown: 60000,
 		speedAttribute: Attribute.SKILL_SPEED,
 	},
+	REIGN_OF_BEASTS: {
+		id: 0, //todo: add ID
+		name: 'Reign of Beasts',
+		icon: 'icon', //todo: add icon
+		onGcd: true,
+		gcdRecast: 2500,
+		speedAttribute: Attribute.SKILL_SPEED,
+		combo: {
+			start: true,
+		},
+	},
+
+	NOBLE_BLOOD: {
+		id: 0, //todo: add ID
+		name: 'Noble Blood',
+		icon: 'icon', //todo: add icon
+		onGcd: true,
+		gcdRecast: 2500,
+		speedAttribute: Attribute.SKILL_SPEED,
+		combo: {
+			from: 0, //REIGN_OF_BEASTS
+		},
+	},
+
+	LION_HEART: {
+		id: 0, //todo: add ID
+		name: 'Lion Heart',
+		icon: 'icon', //todo: add icon
+		onGcd: true,
+		gcdRecast: 2500,
+		speedAttribute: Attribute.SKILL_SPEED,
+		combo: {
+			from: 0, //Noble Blood
+			end: true,
+		},
+	},
 
 	// -----
 	// Player oGCDs
@@ -179,6 +215,14 @@ export const GNB = ensureActions({
 		cooldown: 1000,
 		cooldownGroup: 1,
 	},
+	FATED_BRAND: {
+		id: 0, //TODO: Add ID
+		name: 'Fated Brand',
+		icon: 'icon', //TODO: Add icon
+		onGcd: false,
+		cooldown: 1000,
+		cooldownGroup: 1,
+	},
 	DANGER_ZONE: {	// Note: upgrades to Blasting Zone at lvl 80
 		id: 16144,
 		name: 'Danger Zone',
@@ -201,10 +245,10 @@ export const GNB = ensureActions({
 		cooldown: 60000,
 		statusesApplied: ['BOW_SHOCK'],
 	},
-	ROUGH_DIVIDE: {
-		id: 16154,
-		name: 'Rough Divide',
-		icon: 'https://xivapi.com/i/003000/003418.png',
+	TRAJECTORY: { //Formerly known as Rough Divide
+		id: 0, //TODO: Add ID
+		name: 'Trajectory',
+		icon: 'icon', //TODO: Add icon
 		onGcd: false,
 		cooldown: 30000,
 		charges: 2,
@@ -256,6 +300,16 @@ export const GNB = ensureActions({
 		onGcd: false,
 		cooldown: 120000,
 		statusesApplied: ['NEBULA'],
+	},
+	GREAT_NEBULA: {
+		id: 0, //TODO: Add ID
+		name: 'Great Nebula',
+		icon: 'icon', //TODO: Add icon
+		onGcd: false,
+		cooldown: 120000,
+		statusesApplied: [
+			'GREAT_NEBULA',
+		],
 	},
 	HEART_OF_STONE: {
 		id: 16161,
