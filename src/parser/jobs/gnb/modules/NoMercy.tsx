@@ -24,22 +24,19 @@ const SEVERITIES = {
 
 const GCD_SLOW = 2.47
 
+//At a minimum 3 carts will be used under No Mercy, if GNB is going fast, a 4th cart may be used TODO: Confirm Burst Strike's expectations
 const EXPECTED_USES = {
-	DOUBLE_DOWN: 1, //This is assuming that you enter NM with 3 carts: 1 cart: Gnashing, 2 carts: Double Down
-	BURST_STRIKE: 1,
+	DOUBLE_DOWN: 1,
 	GNASHING_FANG: 1,
 	SONIC_BREAK: 1,
 	BLASTING_ZONE: 1,
 	BOW_SHOCK: 1,
+	LION_HEART: 0,
 	GCD: 9,
 	GCD_SLOW: 8,
 
 	// Don't check for correct Continuations; that will be covered by the Continuation module.
-	// Don't check for correctness on the Gnashing Fang combo; that's covered by the built-in Combo tracker.
 }
-
-const openerGracePeriod = 22500 //Perhaps I'm being overly generous, but after 9 regular gcds a proper full burst could be done.
-
 class BloodfestEvaluator extends NotesEvaluator {
 
 	// Because this class is not an Analyser, it cannot use Data directly
@@ -101,10 +98,6 @@ export class NoMercy extends BuffWindow {
 					expectedPerWindow: EXPECTED_USES.DOUBLE_DOWN,
 				},
 				{
-					action: this.data.actions.BURST_STRIKE,
-					expectedPerWindow: EXPECTED_USES.BURST_STRIKE,
-				},
-				{
 					action: this.data.actions.SONIC_BREAK,
 					expectedPerWindow: EXPECTED_USES.SONIC_BREAK,
 				},
@@ -117,6 +110,11 @@ export class NoMercy extends BuffWindow {
 				{
 					action: this.data.actions.BOW_SHOCK,
 					expectedPerWindow: EXPECTED_USES.BOW_SHOCK,
+				},
+
+				{
+					action: this.data.actions.LION_HEART,
+					expectedPerWindow: EXPECTED_USES.LION_HEART,
 				},
 			],
 			suggestionIcon,
@@ -134,11 +132,10 @@ export class NoMercy extends BuffWindow {
 	}
 
 	private adjustExpectedActionCount(window: HistoryEntry<EvaluatedAction[]>, action: TrackedAction) {
-		if (action.action.id !== this.data.actions.BURST_STRIKE.id) { return 0 }
+		if (action.action.id !== this.data.actions.LION_HEART.id) { return 0 }
 
-		if (window.data.find(cast => cast.action.id === this.data.actions.BLOODFEST.id) && window.start > (this.parser.pull.timestamp + openerGracePeriod)) {
-			//Outside of opener, all Bloodfest NM bursts should have 6 ammo uses, 1 for GF combo 2 for DD and 3 for BS
-			return 2
+		if (window.data.find(cast => cast.action.id === this.data.actions.BLOODFEST.id) && action.action.id === this.data.actions.LION_HEART.id) { //If Bloodfest was used, LionHeart is expected.
+			return 1
 		}
 
 		return 0
