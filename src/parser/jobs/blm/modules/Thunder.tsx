@@ -54,7 +54,7 @@ export class Thunder extends Analyser {
 	// Can never be too careful :blobsweat:
 	private readonly STATUS_DURATION = {
 		[this.data.statuses.THUNDER_III.id]: this.data.statuses.THUNDER_III.duration,
-		[this.data.statuses.THUNDERCLOUD.id]: this.data.statuses.THUNDERCLOUD.duration,
+		[this.data.statuses.THUNDERHEAD.id]: this.data.statuses.THUNDERHEAD.duration,
 	}
 
     private thunder3Casts = 0
@@ -211,8 +211,8 @@ export class Thunder extends Analyser {
 
 		const disclaimer = <Message>
 			<Trans id="blm.thunder.clip-disclaimer">
-				Due to the nature of <DataLink action="THUNDER_III" /> procs, you will run into situations where you will use your <DataLink status="THUNDERCLOUD" /> proc before it runs out, while your <DataLink status="THUNDER_III" /> is still running on your enemy.
-				At most, this could theoretically lead to refreshing <DataLink showIcon={false} status="THUNDER_III" /> a maximum of ~3 seconds early every single refresh.
+				Due to the nature of <DataLink action="HIGH_THUNDER" /> procs, you will run into situations where you will use your <DataLink status="THUNDERHEAD" /> proc before it runs out, while your <DataLink status="HIGH_THUNDER" /> is still running on your enemy.
+				At most, this could theoretically lead to refreshing <DataLink showIcon={false} status="HIGH_THUNDER" /> a maximum of ~3 seconds early every single refresh.
 				Since this amount of clipping is still considered optimal, we quantify and call this the maximum clip time.
 			</Trans>
 		</Message>
