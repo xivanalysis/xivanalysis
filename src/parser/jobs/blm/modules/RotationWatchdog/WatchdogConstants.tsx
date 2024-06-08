@@ -51,6 +51,7 @@ export interface CycleMetadata {
 	expectedFire4sBeforeDespair: number
 	expectedFire4s: number,
 	expectedDespairs: number,
+	expectedFlareStars: number,
 	hardT3sInFireCount: number
 	firePhaseMetadata: PhaseMetadata
 }

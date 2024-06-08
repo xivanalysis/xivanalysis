@@ -36,7 +36,6 @@ const DEBUG_SHOW_ALL = false && process.env.NODE_ENV !== 'production'
 const MAX_POSSIBLE_FIRE4 = 6
 const NO_UH_EXPECTED_FIRE4 = 4
 const MAX_MP = 10000
-const EXTRA_CASTS_FROM_MANAFONT = 1
 
 const EXTRA_F4_COP_THRESHOLD = 0.5 // Feelycraft
 
@@ -95,6 +94,7 @@ export class RotationWatchdog extends RestartWindow {
 		expectedFire4sBeforeDespair: 0,
 		expectedFire4s: -1,
 		expectedDespairs: -1,
+		expectedFlareStars: -1,
 		hardT3sInFireCount: 0,
 		firePhaseMetadata: {
 			startTime: 0,
@@ -132,6 +132,7 @@ export class RotationWatchdog extends RestartWindow {
 			pullEnd: this.parser.pull.timestamp + this.parser.pull.duration,
 			despairAction: this.data.actions.DESPAIR,
 			fire4Action: this.data.actions.FIRE_IV,
+			flareStarAction: this.data.actions.FLARE_STAR,
 			invulnerability: this.invulnerability,
 			metadataHistory: this.metadataHistory,
 			// Expected counts per window will be calculated in the adjustExpectedActionsCount function
@@ -142,6 +143,10 @@ export class RotationWatchdog extends RestartWindow {
 				},
 				{
 					action: this.data.actions.DESPAIR,
+					expectedPerWindow: 0,
+				},
+				{
+					action: this.data.actions.FLARE_STAR,
 					expectedPerWindow: 0,
 				},
 			],
@@ -325,7 +330,7 @@ export class RotationWatchdog extends RestartWindow {
 			end: windowEnd,
 		})
 
-		// If the whole fire phase happened during downtime (ie. Transpose spamming to get a paradox marker), don't expect fire spells
+		// If the whole fire phase happened during downtime (ie. Transpose spamming to get/keep Thunderhead), don't expect fire spells
 		if (fireInvulnDuration === firePhaseDuration) { return 0 }
 
 		let adjustment = 0
@@ -348,19 +353,6 @@ export class RotationWatchdog extends RestartWindow {
 			}
 
 			const buildAstralFireEvents = window.data.filter(event => event.timestamp >= windowMetadata.firePhaseMetadata.startTime && event.timestamp <= windowMetadata.firePhaseMetadata.fullElementTime)
-			// Transpose -> Paradox -> F1 to build Astral Fire costs enough MP to remove the use of F4 they would have gained from 2 umbral hearts
-			const transposeParaF1 = [this.data.actions.TRANSPOSE.id, this.data.actions.PARADOX.id, this.data.actions.FIRE_I.id]
-			const filteredBuildEvents = buildAstralFireEvents.filter(event => transposeParaF1.includes(event.action.id)).map(event => event.action.id)
-			if (filteredBuildEvents.length === transposeParaF1.length && filteredBuildEvents.every((actionId, index) => actionId === transposeParaF1[index])) {
-				adjustment--
-				windowMetadata.wasTPF1 = true
-			}
-
-			// No Umbral hearts -> Tranpose -> Raw F3 loses an F4 due to MP, or F3P due to time (unless very speedy, in which case you're probably not going non-standard...)
-			if (windowMetadata.firePhaseMetadata.initialGaugeState.umbralHearts === 0 && (buildAstralFireEvents.length >= 1 && buildAstralFireEvents[0].action.id === this.data.actions.TRANSPOSE.id &&
-					buildAstralFireEvents[buildAstralFireEvents.length - 1].action.id === this.data.actions.FIRE_III.id)) {
-				adjustment--
-			}
 
 			/**
 			 * IF this rotation's Astral Fire phase began with no Umbral Hearts (either no-B4-opener, or a midfight alternate playstyle rotation),
@@ -394,8 +386,9 @@ export class RotationWatchdog extends RestartWindow {
 			adjustment++
 		}
 
-		if (window.data.find(event => event.action.id === this.data.actions.MANAFONT.id) != null) {
-			adjustment += EXTRA_CASTS_FROM_MANAFONT
+		// We should only expect a Flare Star if we're also expected to get all 6 F4s in during a full uptime window
+		if (action.action.id === this.data.actions.FLARE_STAR.id && !windowMetadata.finalOrDowntime && windowMetadata.expectedFire4s >= MAX_POSSIBLE_FIRE4) {
+			adjustment++
 		}
 
 		switch (action.action.id) {
@@ -404,6 +397,10 @@ export class RotationWatchdog extends RestartWindow {
 			break
 		case this.data.actions.DESPAIR.id:
 			windowMetadata.expectedDespairs = adjustment
+			break
+		case this.data.actions.FLARE_STAR.id:
+			windowMetadata.expectedFlareStars = adjustment
+			break
 		}
 
 		return adjustment

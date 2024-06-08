@@ -6,10 +6,9 @@ import {TrackedAction, TrackedActionsOptions} from 'parser/core/modules/ActionWi
 import {History, HistoryEntry} from 'parser/core/modules/ActionWindow/History'
 import {Invulnerability} from 'parser/core/modules/Invulnerability'
 import {TieredSuggestion} from 'parser/core/modules/Suggestions'
-import {DEFAULT_SEVERITY_TIERS} from 'parser/jobs/dnc/CommonData'
 import React from 'react'
 import {assignErrorCode, getMetadataForWindow, includeInSuggestions} from './EvaluatorUtilities'
-import {CycleMetadata, ROTATION_ERRORS} from './WatchdogConstants'
+import {CycleMetadata, ROTATION_ERRORS, DEFAULT_SEVERITY_TIERS} from './WatchdogConstants'
 
 export type ExpectedFireSpellsEvaluatorOpts =
 	& Omit<TrackedActionsOptions, 'suggestionIcon' | 'suggestionContent' | 'suggestionWindowName' | 'severityTiers'>
@@ -17,6 +16,7 @@ export type ExpectedFireSpellsEvaluatorOpts =
 	pullEnd: number
 	despairAction: Action
 	fire4Action: Action
+	flareStarAction: Action
 	invulnerability: Invulnerability
 	metadataHistory: History<CycleMetadata>
 }
@@ -25,6 +25,7 @@ export class ExpectedFireSpellsEvaluator extends ExpectedActionsEvaluator {
 	private pullEnd: number
 	private despairAction: Action
 	private fire4Action: Action
+	private flareStarAction: Action
 	private invulnerability: Invulnerability
 	private metadataHistory: History<CycleMetadata>
 
@@ -38,6 +39,7 @@ export class ExpectedFireSpellsEvaluator extends ExpectedActionsEvaluator {
 		this.pullEnd = opts.pullEnd
 		this.despairAction = opts.despairAction
 		this.fire4Action = opts.fire4Action
+		this.flareStarAction = opts.flareStarAction
 		this.invulnerability = opts.invulnerability
 		this.metadataHistory = opts.metadataHistory
 	}
