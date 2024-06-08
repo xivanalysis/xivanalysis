@@ -27,7 +27,7 @@ import {ManafontTimingEvaluator} from './RotationWatchdog/ManafontTimingEvaluato
 import {MissedIceParadoxEvaluator} from './RotationWatchdog/MissedIceParadoxEvaluator'
 import {RotationErrorNotesEvaluator} from './RotationWatchdog/RotationErrorNotesEvaluator'
 import {SkipB4Evaluator} from './RotationWatchdog/SkipB4Evaluator'
-import {SkipT3Evaluator} from './RotationWatchdog/SkipT3Evaluator'
+import {SkipThunderEvaluator} from './RotationWatchdog/SkipThunderEvaluator'
 import {UptimeSoulsEvaluator} from './RotationWatchdog/UptimeSoulsEvaluator'
 import {CycleMetadata, ROTATION_ERRORS, HIDDEN_PRIORITY_THRESHOLD} from './RotationWatchdog/WatchdogConstants'
 
@@ -178,7 +178,7 @@ export class RotationWatchdog extends RestartWindow {
 
 		//#region Evaluators that only apply to windows that ended in downtime
 
-		this.addEvaluator(new SkipT3Evaluator({
+		this.addEvaluator(new SkipThunderEvaluator({
 			suggestionIcon: this.data.actions.FIRE_IV.icon,
 			metadataHistory: this.metadataHistory,
 		}))
