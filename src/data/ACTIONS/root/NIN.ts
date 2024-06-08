@@ -29,7 +29,7 @@ export const NIN = ensureActions({
 	},
 
 	AEOLIAN_EDGE: {
-		id: 2255,
+		id: 2255, // TODO - Verify ID and icon, they may have changed since the action did
 		name: 'Aeolian Edge',
 		icon: 'https://xivapi.com/i/000000/000605.png',
 		onGcd: true,
@@ -74,7 +74,7 @@ export const NIN = ensureActions({
 	},
 
 	ARMOR_CRUSH: {
-		id: 3563,
+		id: 3563, // TODO - Verify ID and icon, they may have changed since the action did
 		name: 'Armor Crush',
 		icon: 'https://xivapi.com/i/002000/002915.png',
 		onGcd: true,
@@ -109,14 +109,6 @@ export const NIN = ensureActions({
 			from: 2254,
 			end: true,
 		},
-	},
-
-	HURAIJIN: {
-		id: 25876,
-		name: 'Huraijin',
-		icon: 'https://xivapi.com/i/002000/002928.png',
-		onGcd: true,
-		speedAttribute: Attribute.SKILL_SPEED,
 	},
 
 	FORKED_RAIJU: {
@@ -315,19 +307,21 @@ export const NIN = ensureActions({
 	},
 
 	HUTON: {
-		id: 2269,
+		id: 2269, // TODO - Verify ID and icon, they may have changed since the action did
 		name: 'Huton',
 		icon: 'https://xivapi.com/i/002000/002910.png',
 		onGcd: true,
 		cooldown: 1500,
+		statusesApplied: ['SHADOW_WALKER'],
 	},
 
 	HUTON_TCJ: {
-		id: 18879,
+		id: 18879, // TODO - Verify ID and icon, they may have changed since the action did
 		name: 'Huton',
 		icon: 'https://xivapi.com/i/002000/002910.png',
 		onGcd: true,
 		cooldown: 1500,
+		statusesApplied: ['SHADOW_WALKER'],
 	},
 
 	DOTON: {
@@ -354,7 +348,7 @@ export const NIN = ensureActions({
 		icon: 'https://xivapi.com/i/002000/002913.png',
 		onGcd: true,
 		cooldown: 1500,
-		statusesApplied: ['SUITON'],
+		statusesApplied: ['SHADOW_WALKER'],
 	},
 
 	SUITON_TCJ: {
@@ -363,7 +357,7 @@ export const NIN = ensureActions({
 		icon: 'https://xivapi.com/i/002000/002913.png',
 		onGcd: true,
 		cooldown: 1500,
-		statusesApplied: ['SUITON'],
+		statusesApplied: ['SHADOW_WALKER'],
 	},
 
 	RABBIT_MEDIUM: {
@@ -445,6 +439,15 @@ export const NIN = ensureActions({
 		cooldown: 1000,
 	},
 
+	DOKUMORI: {
+		id: 0, // TODO - ID and icon
+		name: 'Dokumori',
+		icon: '',
+		onGcd: false,
+		cooldown: 120000,
+		statusesApplied: ['DOKUMORI', 'HIGI'],
+	},
+
 	BHAVACAKRA: {
 		id: 7402,
 		name: 'Bhavacakra',
@@ -459,7 +462,7 @@ export const NIN = ensureActions({
 		icon: 'https://xivapi.com/i/002000/002922.png',
 		onGcd: false,
 		cooldown: 120000,
-		statusesApplied: ['TEN_CHI_JIN'],
+		statusesApplied: ['TEN_CHI_JIN', 'TENRI_JINDO_READY'],
 	},
 
 	SHUKUCHI: {
@@ -487,5 +490,38 @@ export const NIN = ensureActions({
 		onGcd: false,
 		cooldown: 90000,
 		statusesApplied: ['BUNSHIN'],
+	},
+
+	KUNAIS_BANE: {
+		id: 0, // TODO - ID and icon
+		name: 'Kunai\'s Bane',
+		icon: '',
+		onGcd: false,
+		cooldown: 60000,
+		statusesApplied: ['KUNAIS_BANE'],
+	},
+
+	DEATHFROG_MEDIUM: {
+		id: 0, // TODO - ID and icon
+		name: 'Deathfrog Medium',
+		icon: '',
+		onGcd: false,
+		cooldown: 1000,
+	},
+
+	ZESHO_MEPPO: {
+		id: 0, // TODO - ID and icon
+		name: 'Zesho Meppo',
+		icon: '',
+		onGcd: false,
+		cooldown: 1000,
+	},
+
+	TENRI_JINDO: {
+		id: 0, // TODO - ID and icon
+		name: 'Tenri Jindo',
+		icon: '',
+		onGcd: false,
+		cooldown: 1000,
 	},
 })
