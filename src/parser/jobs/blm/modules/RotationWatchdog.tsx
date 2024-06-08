@@ -13,7 +13,7 @@ import {Actors} from 'parser/core/modules/Actors'
 import {Invulnerability} from 'parser/core/modules/Invulnerability'
 import {UnableToAct} from 'parser/core/modules/UnableToAct'
 import React, {Fragment} from 'react'
-import {Icon, Message} from 'semantic-ui-react'
+import {Message} from 'semantic-ui-react'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 import {FIRE_SPELLS, ICE_SPELLS} from './Elements'
 import {ASTRAL_UMBRAL_DURATION, ASTRAL_UMBRAL_MAX_STACKS, BLMGaugeState, UMBRAL_HEARTS_MAX_STACKS} from './Gauge'
@@ -75,18 +75,9 @@ export class RotationWatchdog extends RestartWindow {
 	override prependMessages = <Fragment>
 		<Message>
 			<Trans id="blm.rotation-watchdog.rotation-table.message">
-				The core of BLM consists of six casts of <DataLink action="FIRE_IV"/>, two casts of <DataLink action="PARADOX"/> and one cast <DataLink action="DESPAIR"/> per rotation.<br/>
-				With <DataLink action="MANAFONT"/>, an extra cast each of <DataLink action="FIRE_IV"/> and <DataLink action="DESPAIR"/> are expected.<br/>
-				Avoid missing <DataLink action="FIRE_IV" showIcon={false} /> casts where possible.
+				The core of BLM consists of six casts of <DataLink action="FIRE_IV"/>, and one cast each of <DataLink action="PARADOX"/>, <DataLink action="DESPAIR"/>, and <DataLink action="FLARE_STAR" /> per rotation.<br/>
+				Avoid missing <DataLink action="FIRE_IV" showIcon={false} /> casts where possible. since that will prevent you from using <DataLink showIcon={false} action="FLARE_STAR" />.
 			</Trans>
-		</Message>
-		<Message warning icon>
-			<Icon name="warning sign"/>
-			<Message.Content>
-				<Trans id="blm.rotation-watchdog.rotation-table.disclaimer">This module assumes you are following the standard BLM playstyle.<br/>
-					Suggestions will focus on improving standard play, but non-standard lines shouldn't be treated as an error by this report.
-				</Trans>
-			</Message.Content>
 		</Message>
 	</Fragment>
 
