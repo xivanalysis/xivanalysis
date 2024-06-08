@@ -25,7 +25,6 @@ import {ExpectedFireSpellsEvaluator} from './RotationWatchdog/ExpectedFireSpells
 import {ExtraF1Evaluator} from './RotationWatchdog/ExtraF1Evaluator'
 import {IceMageEvaluator} from './RotationWatchdog/IceMageEvaluator'
 import {ManafontTimingEvaluator} from './RotationWatchdog/ManafontTimingEvaluator'
-import {MissedIceParadoxEvaluator} from './RotationWatchdog/MissedIceParadoxEvaluator'
 import {RotationErrorNotesEvaluator} from './RotationWatchdog/RotationErrorNotesEvaluator'
 import {SkipB4Evaluator} from './RotationWatchdog/SkipB4Evaluator'
 import {SkipThunderEvaluator} from './RotationWatchdog/SkipThunderEvaluator'
@@ -149,8 +148,6 @@ export class RotationWatchdog extends RestartWindow {
 			adjustCount: this.adjustExpectedActionsCount.bind(this),
 			adjustOutcome: this.adjustExpectedActionsOutcome.bind(this),
 		}))
-
-		this.addEvaluator(new MissedIceParadoxEvaluator(this.metadataHistory))
 
 		this.addEvaluator(new ManafontTimingEvaluator({
 			manafontAction: this.data.actions.MANAFONT,
