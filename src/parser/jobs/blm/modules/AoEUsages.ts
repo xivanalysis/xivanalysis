@@ -20,6 +20,11 @@ export class AoEUsages extends CoreAoE {
 			minTargets: 2,
 		},
 		{
+			aoeAction: this.data.actions.HIGH_THUNDER_II,
+			stActions: [this.data.actions.HIGH_THUNDER],
+			minTargets: 2,
+		},
+		{
 			aoeAction: this.data.actions.BLIZZARD_II,
 			stActions: [this.data.actions.BLIZZARD_III],
 			minTargets: 3,
@@ -32,7 +37,7 @@ export class AoEUsages extends CoreAoE {
 		{
 			aoeAction: this.data.actions.FIRE_II,
 			stActions: [this.data.actions.FIRE_III, this.data.actions.FIRE_IV],
-			minTargets: 3,
+			minTargets: 4,
 		},
 		{
 			aoeAction: this.data.actions.HIGH_FIRE_II,
