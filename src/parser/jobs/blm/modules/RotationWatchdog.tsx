@@ -15,8 +15,9 @@ import {Invulnerability} from 'parser/core/modules/Invulnerability'
 import {UnableToAct} from 'parser/core/modules/UnableToAct'
 import React, {Fragment} from 'react'
 import {Message} from 'semantic-ui-react'
+import {fillActions} from 'utilities/fillArrays'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
-import {FIRE_SPELLS, ICE_SPELLS} from './Elements'
+import {FIRE_SPELLS, ICE_SPELLS, THUNDER_SPELLS} from './Elements'
 import {ASTRAL_UMBRAL_DURATION, ASTRAL_UMBRAL_MAX_STACKS, BLMGaugeState, UMBRAL_HEARTS_MAX_STACKS} from './Gauge'
 import Leylines from './Leylines'
 import Procs from './Procs'
@@ -81,8 +82,9 @@ export class RotationWatchdog extends RestartWindow {
 		</Message>
 	</Fragment>
 
-	private fireSpellIds = FIRE_SPELLS.map(key => this.data.actions[key].id)
-	private iceSpellIds = ICE_SPELLS.map(key => this.data.actions[key].id)
+	private fireSpellIds = fillActions(FIRE_SPELLS, this.data)
+	private iceSpellIds = fillActions(ICE_SPELLS, this.data)
+	private thunderSpellIds = fillActions(THUNDER_SPELLS, this.data)
 
 	private currentGaugeState = {...EMPTY_GAUGE_STATE}
 
@@ -97,7 +99,7 @@ export class RotationWatchdog extends RestartWindow {
 		expectedFire4s: -1,
 		expectedDespairs: -1,
 		expectedFlareStars: -1,
-		hardT3sInFireCount: 0,
+		thundersInFireCount: 0,
 		firePhaseMetadata: {
 			startTime: 0,
 			initialMP: 0,
@@ -379,6 +381,9 @@ export class RotationWatchdog extends RestartWindow {
 			) {
 				adjustment++
 			}
+
+			const firePhaseEvents = window.data.filter(event => event.timestamp >= windowMetadata.firePhaseMetadata.startTime)
+			windowMetadata.thundersInFireCount = firePhaseEvents.filter(event => this.thunderSpellIds.includes(event.action.id)).length
 
 			// Make sure we don't go wild and return a larger expected count than is actually possible, in case the above logic misbehaves...
 			adjustment = Math.min(adjustment, MAX_POSSIBLE_FIRE4)
