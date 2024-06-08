@@ -9,7 +9,7 @@ export const changelog = [
 	// },
 	{
 		date: new Date('2024-XX-XX'),
-		Changes: () => <>Initial data scaffolding for Dawntrail BLM</>,
+		Changes: () => <>Add new actions and statuses, remove deleted actions and statuses, and some minimal cleanup to keep modules compiling</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],
 	},
 ]
