@@ -171,7 +171,7 @@ export class RotationWatchdog extends RestartWindow {
 		this.addEvaluator(new ExtraF1Evaluator({
 			suggestionIcon: this.data.actions.FIRE_I.icon,
 			metadataHistory: this.metadataHistory,
-			limitedFireSpellIds: [this.data.actions.FIRE_I.id, this.data.actions.PARADOX.id],
+			fire1Id: this.data.actions.FIRE_I.id,
 		}))
 
 		this.addEvaluator(new UptimeSoulsEvaluator({
