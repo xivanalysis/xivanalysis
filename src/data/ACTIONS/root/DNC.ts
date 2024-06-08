@@ -26,7 +26,24 @@ export const DNC = ensureActions({
 			'STANDARD_FINISH',
 			'STANDARD_FINISH_PARTNER',
 			'ESPRIT',
+			'LAST_DANCE_READY',
 		],
+	},
+	FINISHING_MOVE: {
+		id: 7025790, // TODO
+		icon: 'https://xivapi.com/i/003000/003459.png', // TODO
+		name: 'Finishing Move',
+		onGcd: true,
+		gcdRecast: 2500,
+		speedAttribute: Attribute.SKILL_SPEED,
+		cooldown: 30000,
+	},
+	LAST_DANCE: {
+		id: 7025792, // TODO
+		icon: 'https://xivapi.com/i/003000/003480.png', // TODO
+		name: 'Last Dance',
+		onGcd: true,
+		speedAttribute: Attribute.SKILL_SPEED,
 	},
 	TECHNICAL_FINISH: {
 		id: 16004,
@@ -66,6 +83,7 @@ export const DNC = ensureActions({
 			'TECHNICAL_FINISH',
 			'ESPRIT_TECHNICAL',
 			'FLOURISHING_FINISH',
+			'DANCE_OF_THE_DAWN_READY',
 		],
 	},
 	TILLANA: {
@@ -202,6 +220,13 @@ export const DNC = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 	},
+	DANCE_OF_THE_DAWN: {
+		id: 7016005, // TODO
+		icon: 'https://xivapi.com/i/003000/003476.png', // TODO
+		name: 'Dance of the Dawn',
+		onGcd: true,
+		speedAttribute: Attribute.SKILL_SPEED,
+	},
 	CLOSED_POSITION: {
 		id: 16006,
 		icon: 'https://xivapi.com/i/003000/003470.png',
@@ -281,6 +306,7 @@ export const DNC = ensureActions({
 			'FLOURISHING_FLOW',
 			'THREEFOLD_FAN_DANCE',
 			'FOURFOLD_FAN_DANCE',
+			'FINISHING_MOVE_READY',
 		],
 	},
 	IMPROVISATION: {
