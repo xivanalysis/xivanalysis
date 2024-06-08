@@ -16,6 +16,7 @@ type GaugeModifier = Partial<Record<Event['type'], number>>
 const BUNSHIN_GAIN = 5
 const BUNSHIN_GAIN_KAMAITACHI = 10
 const HELLFROG_TARGET_MINIMUM = 3
+const DEATHFROG_TARGET_MINIMUM = 2
 
 const OVERCAP_SEVERITY = {
 	20: SEVERITY.MINOR,
@@ -40,7 +41,9 @@ export class Ninki extends CoreGauge {
 	private ninkiFilters = {
 		action: [
 			this.data.actions.BHAVACAKRA.id,
+			this.data.actions.ZESHO_MEPPO.id,
 			this.data.actions.HELLFROG_MEDIUM.id,
+			this.data.actions.DEATHFROG_MEDIUM.id,
 			this.data.actions.BUNSHIN.id,
 			this.data.actions.MEISUI.id,
 		],
@@ -53,11 +56,11 @@ export class Ninki extends CoreGauge {
 			this.data.actions.HAKKE_MUJINSATSU.id,
 		],
 		damage: [
-			this.data.actions.HURAIJIN.id,
 			this.data.actions.FORKED_RAIJU.id,
 			this.data.actions.FLEETING_RAIJU.id,
 			this.data.actions.THROWING_DAGGER.id,
 			this.data.actions.MUG.id,
+			this.data.actions.DOKUMORI.id,
 		],
 	}
 
@@ -69,19 +72,23 @@ export class Ninki extends CoreGauge {
 		[this.data.actions.ARMOR_CRUSH.id, {combo: 15}],
 		[this.data.actions.DEATH_BLOSSOM.id, {combo: 5}],
 		[this.data.actions.HAKKE_MUJINSATSU.id, {combo: 5}],
-		[this.data.actions.HURAIJIN.id, {damage: 5}],
 		[this.data.actions.FORKED_RAIJU.id, {damage: 5}],
 		[this.data.actions.FLEETING_RAIJU.id, {damage: 5}],
 		[this.data.actions.THROWING_DAGGER.id, {damage: 5}],
 		[this.data.actions.MUG.id, {damage: 40}],
+		[this.data.actions.DOKUMORI.id, {damage: 40}],
 		[this.data.actions.MEISUI.id, {action: 50}],
 		// Spenders
 		[this.data.actions.BHAVACAKRA.id, {action: -50}],
+		[this.data.actions.ZESHO_MEPPO.id, {action: -50}],
 		[this.data.actions.HELLFROG_MEDIUM.id, {action: -50}],
+		[this.data.actions.DEATHFROG_MEDIUM.id, {action: -50}],
 		[this.data.actions.BUNSHIN.id, {action: -50}],
 	])
 
-	private erroneousFrogs: number = 0 // This is my new band name
+	// Honestly not sure which of these is the better band name
+	private erroneousHellfrogs: number = 0
+	private erroneousDeathfrogs: number = 0
 
 	override initialise() {
 		super.initialise()
@@ -93,6 +100,7 @@ export class Ninki extends CoreGauge {
 		this.addEventHook(playerFilter.type('damage').cause(filter<Cause>().action(oneOf(this.ninkiFilters.damage))), this.onDamage)
 		this.addEventHook(filter<Event>().source(oneOf(pets)).type('damage'), this.onBunshinHit)
 		this.addEventHook(playerFilter.type('damage').cause(filter<Cause>().action(this.data.actions.HELLFROG_MEDIUM.id)), this.onHellfrog)
+		this.addEventHook(playerFilter.type('damage').cause(filter<Cause>().action(this.data.actions.DEATHFROG_MEDIUM.id)), this.onDeathfrog)
 		this.addEventHook('complete', this.onComplete)
 	}
 
@@ -127,7 +135,14 @@ export class Ninki extends CoreGauge {
 	private onHellfrog(event: Events['damage']) {
 		if (event.targets.length < HELLFROG_TARGET_MINIMUM) {
 			// If we have a Hellfrog event with fewer than 3 targets, it should've been a Bhava instead
-			this.erroneousFrogs++
+			this.erroneousHellfrogs++
+		}
+	}
+
+	private onDeathfrog(event: Events['damage']) {
+		if (event.targets.length < DEATHFROG_TARGET_MINIMUM) {
+			// If we have a Deathfrog event with fewer than 2 targets, it should've been a Zesho Meppo instead
+			this.erroneousDeathfrogs++
 		}
 	}
 
@@ -135,7 +150,7 @@ export class Ninki extends CoreGauge {
 		this.suggestions.add(new TieredSuggestion({
 			icon: 'https://xivapi.com/i/005000/005411.png',
 			content: <Trans id="nin.ninki.suggestions.waste.content">
-				Avoid using <ActionLink action="MUG"/> and <ActionLink action="MEISUI"/> when above 40 Ninki and holding your Ninki spenders when near or at cap (with a few small exceptions) in order to maximize the number of spenders you can use over the course of a fight.
+				Avoid using <ActionLink action="DOKUMORI"/> and <ActionLink action="MEISUI"/> when above 40 Ninki and holding your Ninki spenders when near or at cap (with a few small exceptions) in order to maximize the number of spenders you can use over the course of a fight.
 			</Trans>,
 			tiers: OVERCAP_SEVERITY,
 			value: this.ninkiGauge.overCap,
@@ -146,13 +161,25 @@ export class Ninki extends CoreGauge {
 
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.HELLFROG_MEDIUM.icon,
-			content: <Trans id="nin.ninki.suggestions.frog.content">
+			content: <Trans id="nin.ninki.suggestions.hellfrog.content">
 				Avoid using <ActionLink action="HELLFROG_MEDIUM"/> when you have fewer than three targets, as <ActionLink action="BHAVACAKRA"/> is otherwise a potency gain.
 			</Trans>,
 			tiers: FROG_SEVERITY,
-			value: this.erroneousFrogs,
-			why: <Trans id="nin.ninki.suggestions.frog.why">
-				You used Hellfrog Medium <Plural value={this.erroneousFrogs} one="# time" other="# times"/> when other spenders were available.
+			value: this.erroneousHellfrogs,
+			why: <Trans id="nin.ninki.suggestions.hellfrog.why">
+				You used Hellfrog Medium <Plural value={this.erroneousHellfrogs} one="# time" other="# times"/> when other spenders were available.
+			</Trans>,
+		}))
+
+		this.suggestions.add(new TieredSuggestion({
+			icon: this.data.actions.DEATHFROG_MEDIUM.icon,
+			content: <Trans id="nin.ninki.suggestions.deathfrog.content">
+				Avoid using <ActionLink action="DEATHFROG_MEDIUM"/> when you have fewer than two targets, as <ActionLink action="ZESHO_MEPPO"/> is otherwise a potency gain.
+			</Trans>,
+			tiers: FROG_SEVERITY,
+			value: this.erroneousDeathfrogs,
+			why: <Trans id="nin.ninki.suggestions.deathfrog.why">
+				You used Deathfrog Medium <Plural value={this.erroneousDeathfrogs} one="# time" other="# times"/> when other spenders were available.
 			</Trans>,
 		}))
 	}
