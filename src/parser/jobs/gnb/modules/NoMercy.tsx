@@ -29,7 +29,6 @@ const EXPECTED_USES = {
 	BURST_STRIKE: 1,
 	GNASHING_FANG: 1,
 	SONIC_BREAK: 1,
-	ROUGH_DIVIDE: 1,
 	BLASTING_ZONE: 1,
 	BOW_SHOCK: 1,
 	GCD: 9,
@@ -119,18 +118,12 @@ export class NoMercy extends BuffWindow {
 					action: this.data.actions.BOW_SHOCK,
 					expectedPerWindow: EXPECTED_USES.BOW_SHOCK,
 				},
-
-				{
-					action: this.data.actions.ROUGH_DIVIDE,
-					expectedPerWindow: EXPECTED_USES.ROUGH_DIVIDE,
-				},
 			],
 			suggestionIcon,
 			suggestionContent: <Trans id="gnb.nomercy.suggestions.expected-uses.content">
 				Watch your uses of certain abilities during <ActionLink action="NO_MERCY" />. Under ideal conditions, you should
 					be using <ActionLink action="SONIC_BREAK" />, a full <ActionLink action="GNASHING_FANG" /> combo, and all of
-					your off-GCD skills <ActionLink action="BLASTING_ZONE" />, <ActionLink action="BOW_SHOCK" />, and at least one
-					charge of <ActionLink action="ROUGH_DIVIDE" /> under the buff duration.
+					your off-GCD skills <ActionLink action="BLASTING_ZONE" />, <ActionLink action="BOW_SHOCK" />.
 			</Trans>,
 			suggestionWindowName,
 			severityTiers: SEVERITIES.MISSING_EXPECTED_USES,
