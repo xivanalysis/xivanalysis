@@ -34,16 +34,6 @@ export default class Procs extends CoreProcs {
 	protected override jobSpecificOnConsumeProc(procGroup: ProcGroup, event: Events['action']): void {
 		// BLM's procs are all instant-casts
 		this.castTime.setInstantCastAdjustment([event.action], event.timestamp, event.timestamp)
-
-		// Thunder procs used while sharpcast is up re-grant the proc status without technically removing it, so we need to forcibly add the 'removal' here to keep the 'dropped' counting correct
-		if ((event.action === this.data.actions.THUNDER_III.id || event.action === this.data.actions.THUNDER_IV.id) && this.actors.current.hasStatus(this.data.statuses.SHARPCAST.id)) {
-			this.tryAddEventToRemovals(procGroup, event)
-
-			// Make sure a Sharpcasted thunder always results in an open window, in case the log had weird status timing
-			if (!this.currentWindows.has(procGroup)) {
-				this.currentWindows.set(procGroup, {start: event.timestamp})
-			}
-		}
 	}
 
 	protected override addJobSpecificSuggestions(): void {

@@ -134,7 +134,7 @@ export class Thunder extends Analyser {
 		this.checklist.add(new Rule({
 			name: <Trans id="blm.thunder.checklist.dots.name">Keep your <DataLink status="THUNDER_III" /> DoT up</Trans>,
 			description: <Trans id="blm.thunder.checklist.dots.description">
-				Your <DataLink status="THUNDER_III" /> DoT contributes significantly to your overall damage, both on its own, and from additional <DataLink status="THUNDERCLOUD" /> procs. Try to keep the DoT applied.
+				Your <DataLink status="THUNDER_III" /> DoT contributes significantly to your overall damage, both on its own, and from additional <DataLink status="THUNDERHEAD" /> procs. Try to keep the DoT applied.
 			</Trans>,
 			target: 95,
 			requirements: [
@@ -152,7 +152,7 @@ export class Thunder extends Analyser {
 			this.suggestions.add(new Suggestion({
 				icon: this.data.actions.THUNDER_III.icon,
 				content: <Trans id="blm.thunder.suggestions.excess-thunder.content">
-					Casting <DataLink action="THUNDER_III" /> too frequently can cause you to lose DPS by casting fewer <DataLink action="FIRE_IV" />. Try not to cast <DataLink showIcon={false} action="THUNDER_III" /> unless your <DataLink status="THUNDER_III" /> DoT or <DataLink status="THUNDERCLOUD" /> proc are about to wear off.
+					Casting <DataLink action="THUNDER_III" /> too frequently can cause you to lose DPS by casting fewer <DataLink action="FIRE_IV" />. Try not to cast <DataLink showIcon={false} action="THUNDER_III" /> unless your <DataLink status="THUNDER_III" /> DoT or <DataLink status="THUNDERHEAD" /> proc are about to wear off.
 					Check the <a href="#" onClick={e => { e.preventDefault(); this.parser.scrollTo(Thunder.handle) }}><NormalisedMessage message={Thunder.title}/></a> module for more information.
 				</Trans>,
 				severity: sumClip > 2 * maxExpectedClip ? SEVERITY.MAJOR : SEVERITY.MEDIUM,
