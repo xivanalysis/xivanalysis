@@ -5,7 +5,7 @@ import {ActionKey} from 'data/ACTIONS'
 import {Event, Events} from 'event'
 import {filter, oneOf} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
-import {ExpectedGcdCountEvaluator, RaidBuffWindow} from 'parser/core/modules/ActionWindow'
+import {ExpectedActionsEvaluator, ExpectedGcdCountEvaluator, RaidBuffWindow} from 'parser/core/modules/ActionWindow'
 import {GlobalCooldown} from 'parser/core/modules/GlobalCooldown'
 import {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
@@ -74,6 +74,7 @@ export class Technicalities extends RaidBuffWindow {
 		this.addEventHook(technicalFilter.type('statusApply'), this.onApplyTechnicalFinish)
 		this.addEventHook(technicalFilter.type('statusRemove').source(this.parser.actor.id), this.onRemoveTechnicalFinish)
 
+		const suggestionWindowName = <DataLink status="TECHNICAL_FINISH" showIcon={false}/>
 		// We expect 9 GCDs in a Technical Finish window
 		this.addEvaluator(new ExpectedGcdCountEvaluator({
 			expectedGcds: TECHNICAL_EXPECTED_GCDS,
@@ -83,8 +84,40 @@ export class Technicalities extends RaidBuffWindow {
 			suggestionContent: <Trans id="dnc.technicalities.suggestions.missedgcd.content">
 				Try to land 9 GCDs during every <DataLink status="TECHNICAL_FINISH" /> window. Don't wait until the end to use <DataLink action="TILLANA" /> or you may not be able to fit them all in.
 			</Trans>,
-			suggestionWindowName: <DataLink status="TECHNICAL_FINISH" showIcon={false}/>,
+			suggestionWindowName,
 			severityTiers: TECHNICAL_SEVERITY_TIERS,
+		}))
+
+		this.addEvaluator(new ExpectedActionsEvaluator({
+			expectedActions: [
+				{
+					action: this.data.actions.DANCE_OF_THE_DAWN,
+					expectedPerWindow: 1,
+				},
+				{
+					action: this.data.actions.FINISHING_MOVE,
+					expectedPerWindow: 1,
+				},
+				{
+					action: this.data.actions.STARFALL_DANCE,
+					expectedPerWindow: 1,
+				},
+				{
+					action: this.data.actions.TILLANA,
+					expectedPerWindow: 1,
+				},
+				{
+					action: this.data.actions.FAN_DANCE_IV,
+					expectedPerWindow: 1,
+				},
+			],
+			suggestionIcon: this.data.actions.DANCE_OF_THE_DAWN.icon,
+			suggestionContent: <Trans id="dnc.technicalities.suggestions.missedaction.content">Every <DataLink status="TECHNICAL_FINISH"/> window should contain one use each of <DataLink action="DANCE_OF_THE_DAWN"/>, <DataLink action="FINISHING_MOVE"/>, <DataLink action="STARFALL_DANCE"/>, <DataLink action="TILLANA"/>, and <DataLink action="FAN_DANCE_IV"/> in order to maximize damage.</Trans>,
+			suggestionWindowName,
+			severityTiers: {
+				1: SEVERITY.MEDIUM,
+				3: SEVERITY.MAJOR,
+			},
 		}))
 
 		// Evaluate whether Devilment was used at the appropriate time within each window
