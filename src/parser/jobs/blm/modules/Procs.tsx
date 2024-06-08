@@ -14,7 +14,7 @@ export default class Procs extends CoreProcs {
 
 	override trackedProcs = [
 		{
-			procStatus: this.data.statuses.THUNDERCLOUD,
+			procStatus: this.data.statuses.THUNDERHEAD,
 			consumeActions: [
 				this.data.actions.THUNDER_III,
 				this.data.actions.THUNDER_IV,
@@ -47,12 +47,12 @@ export default class Procs extends CoreProcs {
 	}
 
 	protected override addJobSpecificSuggestions(): void {
-		const droppedThunderClouds: number = this.getDropCountForStatus(this.data.statuses.THUNDERCLOUD.id)
+		const droppedThunderClouds: number = this.getDropCountForStatus(this.data.statuses.THUNDERHEAD.id)
 		if (droppedThunderClouds > 0) {
 			this.suggestions.add(new Suggestion({
-				icon: iconT3p,
+				icon: this.data.statuses.THUNDERHEAD.icon,
 				content: <Trans id="blm.procs.suggestions.dropped-t3ps.content">
-					You lost at least one <ActionLink {...this.data.actions.THUNDER_III}/> proc by allowing <StatusLink {...this.data.statuses.THUNDERCLOUD}/> to expire without using it.
+					You lost at least one <ActionLink {...this.data.actions.HIGH_THUNDER}/> proc by allowing <StatusLink {...this.data.statuses.THUNDERHEAD}/> to expire without using it.
 				</Trans>,
 				severity: SEVERITY.MEDIUM,
 				why: <Trans id="blm.procs.suggestions.dropped-t3ps.why">
