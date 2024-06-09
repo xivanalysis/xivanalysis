@@ -4,7 +4,6 @@ import {BloodOfTheDragon} from './BloodOfTheDragon'
 import Buffs from './Buffs'
 import {Combos} from './Combos'
 import Debuffs from './Debuffs'
-import DragonSight from './DragonSight'
 import Drift from './Drift'
 import {Gauge} from './Gauge'
 import LanceCharge from './LanceCharge'
@@ -21,7 +20,6 @@ export default [
 	Buffs,
 	Combos,
 	Debuffs,
-	DragonSight,
 	Drift,
 	Gauge,
 	LanceCharge,
