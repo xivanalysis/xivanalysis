@@ -5,12 +5,14 @@ GNB: There is no spefific opener, it's fight dependent
 Also GNB: makes no easy track record of each fight by fight opener
 */
 
-const FIRST_USE_OFFSET_NO_MERCY = 10000 // Current opener has NM used as before 4th gcd, but in second weave slot
+// TODO: Replace Ryan's spitballed opener with a more accurate one, this just allows for a burst strike
+
+const FIRST_USE_OFFSET_NO_MERCY = 7500 // No Mercy after 3rd GCD
 const FIRST_USE_OFFSET_GNASHING_FANG = 10000 // used right after NM
 
-const FIRST_USE_OFFSET_BLOODFEST = 12500 // Current Opener have bloodfest by after the 5th gcd
+const FIRST_USE_OFFSET_BLOODFEST = 12500 //Put this on cooldown on later than 5th GCD
 
-const FIRST_USE_OFFSET_PEWPEWZONE = 12500 // Current Opener has Blasting and Bow after 5th
+const FIRST_USE_OFFSET_PEWPEWZONE = 12500 // Current Opener has Blasting after 5th
 const FIRST_USE_OFFSET_BOWSHOCK = 10000 //Current Opener has Bow Shock after 4th GCD
 
 const FIRST_USE_OFFSET_DOUBLE_DOWN = 15000 //Curent Opener has double being used as 6th GCD. *GCD Skill*
