@@ -86,26 +86,13 @@ export class Gauge extends CoreGauge {
 		},
 	}))
 
-	private whitePaintModifiers = new Map<number, GaugeModifier>([
-		// Builders
-		[this.data.actions.WATER_IN_BLUE.id, {damage: 1}],
-		[this.data.actions.WATER_II_IN_BLUE.id, {damage: 1}],
-		[this.data.actions.THUNDER_IN_MAGENTA.id, {damage: 1}],
-		[this.data.actions.THUNDER_II_IN_MAGENTA.id, {damage: 1}],
-		[this.data.actions.RAINBOW_DRIP.id, {damage: 1}],
-
-		// Spenders
-		[this.data.actions.SUBTRACTIVE_PALLETTE.id, {action: -1}],
-		[this.data.actions.HOLY_IN_WHITE.id, {action: -1}],
-	])
-
-	private blackPaintModifiers = new Map<number, GaugeModifier>([
-		// Builders
-		[this.data.actions.SUBTRACTIVE_PALLETTE.id, {action: 1}],
-
-		// Spenders
-		[this.data.actions.COMET_IN_BLACK.id, {action: -1}],
-	])
+	private whitePaintGenerators = [
+		this.data.actions.WATER_IN_BLUE.id,
+		this.data.actions.WATER_II_IN_BLUE.id,
+		this.data.actions.THUNDER_IN_MAGENTA.id,
+		this.data.actions.THUNDER_II_IN_MAGENTA.id,
+		this.data.actions.RAINBOW_DRIP.id,
+	]
 
 	private motifGauge = this.add(new SetGauge({
 		options: [
@@ -193,6 +180,8 @@ export class Gauge extends CoreGauge {
 		this.data.actions.RETRIBUTION_OF_THE_MADEEN.id,
 	]
 
+	private nextWhiteIsBlack = false
+
 	override initialise() {
 		super.initialise()
 
@@ -201,20 +190,20 @@ export class Gauge extends CoreGauge {
 		const paletteActions = Array.from(this.paletteGaugeModifiers.keys())
 		this.addEventHook(playerFilter.action(oneOf(paletteActions)), this.onPaletteModifer)
 
-		const whitePaintActions = Array.from(this.whitePaintModifiers.keys())
-		this.addEventHook(playerFilter.action(oneOf(whitePaintActions)), this.onWhitePaintModifier)
+		this.addEventHook(playerFilter.type('damage').cause(this.data.matchCauseActionId(this.whitePaintGenerators)), this.onWhitePaintGenerator)
+		this.addEventHook(playerFilter.type('action').action(this.data.actions.HOLY_IN_WHITE.id), this.onWhitePaintSpender)
 
-		const blackPaintActions = Array.from(this.blackPaintModifiers.keys())
-		this.addEventHook(playerFilter.action(oneOf(blackPaintActions)).type('action'), this.onBlackPaintModifier)
+		this.addEventHook(playerFilter.type('action').action(this.data.actions.COMET_IN_BLACK.id), this.onBlackPaintSpender)
+
+		this.addEventHook(playerFilter.type('action').action(this.data.actions.SUBTRACTIVE_PALLETTE.id), this.onSubtractivePalette)
 
 		const creatureMotifActions = Array.from(this.motifModifiers.keys())
-		this.addEventHook(playerFilter.action(oneOf(creatureMotifActions)).type('action'), this.onMotifModifier)
+		this.addEventHook(playerFilter.type('action').action(oneOf(creatureMotifActions)), this.onMotifModifier)
 
 		const creatureCanvasActions = Array.from(this.creatureCanvasModifiers.keys())
-		this.addEventHook(playerFilter.action(oneOf(creatureCanvasActions)).type('action'), this.onCreatureCanvasModifier)
+		this.addEventHook(playerFilter.type('action').action(oneOf(creatureCanvasActions)), this.onCreatureCanvasModifier)
 
-		const portaitActions = Array.from(this.portraitGaugeModifers.keys())
-		this.addEventHook(playerFilter.action(oneOf(portaitActions)).type('action'), this.onPortraitModifier)
+		this.addEventHook(playerFilter.type('action').action(oneOf(this.portraitGaugeModifers)), this.onPortraitModifier)
 
 		this.addEventHook('complete', this.onComplete)
 	}
@@ -228,7 +217,7 @@ export class Gauge extends CoreGauge {
 		}
 		if (eventActionId == null) { return }
 
-		// Subtractive Pallet does not spend gauge if Subtrative Spectrum is currently active
+		// Subtractive Pallet does not spend gauge if Subtractive Spectrum is currently active
 		if (eventActionId === this.data.actions.SUBTRACTIVE_PALLETTE.id &&
 			this.actors.current.hasStatus(this.data.statuses.SUBTRACTIVE_SPECTRUM.id)) {
 			return
@@ -240,40 +229,39 @@ export class Gauge extends CoreGauge {
 		this.paletteGauge.modify(modifier[event.type] ?? 0)
 	}
 
-	private onWhitePaintModifier(event: Event) {
-		let eventActionId
-		if (event.type === 'damage' && event.cause.type === 'action') {
-			eventActionId = event.cause.action
-		} else if (event.type === 'action') {
-			eventActionId = event.action
+	private onWhitePaintGenerator(event: Events['damage']) {
+		if (!isSuccessfulHit(event)) { return }
+
+		// If we need to generate a Black Paint because there were no White Paints available when the player hit Subtractive Palette,
+		// do that instead
+		if (this.nextWhiteIsBlack) {
+			this.paintGauge.generate(BLACK_PAINT)
+			this.nextWhiteIsBlack = false
+			return
 		}
-		if (eventActionId == null) { return }
 
-		const modifier = this.blackPaintModifiers.get(eventActionId)
-		if (modifier == null) { return }
-
-		const delta = modifier[event.type]
-		if (delta == null) { return }
-
-		if (delta > 0) {
-			this.paintGauge.generate(BLACK_PAINT, delta)
-		} else {
-			this.paintGauge.spend(BLACK_PAINT, Math.abs(delta))
-		}
+		// Otherwise generate the White Paint as expected
+		this.paintGauge.generate(WHITE_PAINT)
 	}
 
-	private onBlackPaintModifier(event: Events['action']) {
-		const modifier = this.blackPaintModifiers.get(event.action)
-		if (modifier == null) { return }
+	private onWhitePaintSpender() {
+		this.paintGauge.spend(WHITE_PAINT)
+	}
 
-		const delta = modifier[event.type]
-		if (delta == null) { return }
+	private onBlackPaintSpender() {
+		this.paintGauge.spend(BLACK_PAINT)
+	}
 
-		if (delta > 0) {
-			this.paintGauge.generate(BLACK_PAINT, delta)
-		} else {
-			this.paintGauge.spend(BLACK_PAINT, Math.abs(delta))
+	private onSubtractivePalette(event: Events['action']) {
+		// If we have a White Paint available, Subtractive Palette swaps it for a Black Paint
+		if (this.paintGauge.getCountAt(WHITE_PAINT, event.timestamp) > 0) {
+			this.paintGauge.spend(WHITE_PAINT)
+			this.paintGauge.generate(BLACK_PAINT)
+			return
 		}
+
+		// Otherwise, the next White Paint that would generate will be a Black Paint instead
+		this.nextWhiteIsBlack = true
 	}
 
 	private onMotifModifier(event: Events['action']) {
