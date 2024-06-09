@@ -10,7 +10,13 @@ Example logs can be created against any striking dummy **of level 80 or above** 
 
 ## Uploading logs to FFLogs
 
-Example logs can be uploaded to the [xivanalysis logs static](https://www.fflogs.com/guild/id/123584) for better visibility and archival.  After applying to the static, request for a `@Codebase Maintainer` on Discord to get you set up to be able to upload logs.  Once you've been configured for uploads, you can choose the "xivanalysis logs" static from within your FFLogs uploader to upload the example logs as either Public or Unlisted (Private logs cannot be read from the API for analysis).  Please note that only example logs should be uploaded to this static, as any logs for ranked content will likely not rank due to the configuration of the static.
+Example logs can be uploaded to the [xivanalysis logs static](https://www.fflogs.com/guild/id/123584) for better visibility and archival.  After applying to the static, request for a `@Codebase Maintainer` on Discord to get you set up to be able to upload logs.
+
+Once you've been configured for uploads, you can choose the "xivanalysis logs" static from within your FFLogs uploader to upload the example logs as either Public or Unlisted (Private logs cannot be read from the API for analysis).  You can also select a "Report Tag" (the middle box) to indicate which job this log is for, or use the Core tag for core modules.  Set the description for the report to indicate what module is being tested.
+
+![Sample FFLogs Upload](fflogs-upload.jpg?raw=true)
+
+Please note that only example logs should be uploaded to this static, as any logs for ranked content will likely not rank due to the configuration of the static.
 
 ## Referencing example logs in modules
 
