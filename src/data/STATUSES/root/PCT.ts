@@ -82,7 +82,7 @@ export const PCT = ensureStatuses({
 		icon: 'TODO',
 		duration: 20000,
 	},
-	RAINBOWW_BRIGHT: {
+	RAINBOW_BRIGHT: {
 		id: 5,
 		name: 'Rainbow Bright',
 		icon: 'TODO',
