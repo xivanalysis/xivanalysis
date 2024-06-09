@@ -4,11 +4,14 @@ import Color from 'color'
 import {JOBS} from 'data/JOBS'
 import {Event, Events} from 'event'
 import {filter, oneOf} from 'parser/core/filter'
+import {dependency} from 'parser/core/Injectable'
+import {Actors} from 'parser/core/modules/Actors'
 import {CounterGauge, Gauge as CoreGauge} from 'parser/core/modules/Gauge'
 import {EnumGauge} from 'parser/core/modules/Gauge/EnumGauge'
 import {SetGauge} from 'parser/core/modules/Gauge/SetGauge'
 import {GAUGE_FADE} from 'parser/core/modules/ResourceGraphs/ResourceGraphs'
 import React from 'react'
+import {isSuccessfulHit} from 'utilities'
 
 type GaugeModifier = Partial<Record<Event['type'], number>>
 interface MotifModification {
@@ -41,6 +44,8 @@ const MADEEN_COLOR = Color(JOBS.SAGE.colour).fade(GAUGE_FADE)
 export class Gauge extends CoreGauge {
 	static override handle = 'gauge'
 	static override title = t('pct.gauge.title')`Gauge`
+
+	@dependency private actors!: Actors
 
 	private paletteGauge = this.add(new CounterGauge({
 		graph: {
@@ -216,12 +221,18 @@ export class Gauge extends CoreGauge {
 
 	private onPaletteModifer(event: Event) {
 		let eventActionId
-		if (event.type === 'damage' && event.cause.type === 'action') {
+		if (event.type === 'damage' && event.cause.type === 'action' && isSuccessfulHit(event)) {
 			eventActionId = event.cause.action
 		} else if (event.type === 'action') {
 			eventActionId = event.action
 		}
 		if (eventActionId == null) { return }
+
+		// Subtractive Pallet does not spend gauge if Subtrative Spectrum is currently active
+		if (eventActionId === this.data.actions.SUBTRACTIVE_PALLETTE.id &&
+			this.actors.current.hasStatus(this.data.statuses.SUBTRACTIVE_SPECTRUM.id)) {
+			return
+		}
 
 		const modifier = this.paletteGaugeModifiers.get(eventActionId)
 		if (modifier == null) { return }
