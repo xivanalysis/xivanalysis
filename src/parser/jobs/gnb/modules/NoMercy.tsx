@@ -132,9 +132,15 @@ export class NoMercy extends BuffWindow {
 	}
 
 	private adjustExpectedActionCount(window: HistoryEntry<EvaluatedAction[]>, action: TrackedAction) {
+		//If Rushing, toss expected GCDs out the window
+		if (this.isRushedEndOfPullWindow(window) && action.action.id !== this.data.actions.LION_HEART.id) {
+			return -1
+		}
+
 		if (action.action.id !== this.data.actions.LION_HEART.id) { return 0 }
 
-		if (window.data.find(cast => cast.action.id === this.data.actions.BLOODFEST.id) && action.action.id === this.data.actions.LION_HEART.id) { //If Bloodfest was used, LionHeart is expected.
+		//If Bloodfest was used and we're not in a rush, LionHeart is expected.
+		if (window.data.find(cast => cast.action.id === this.data.actions.BLOODFEST.id) && action.action.id === this.data.actions.LION_HEART.id && !this.isRushedEndOfPullWindow(window)) {
 			return 1
 		}
 
