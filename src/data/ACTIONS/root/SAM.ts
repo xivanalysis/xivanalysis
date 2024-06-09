@@ -3,12 +3,6 @@ import {ensureActions, BonusModifier} from '../type'
 
 // Samurai Actions
 
-// Merge all 3 Tsubames into 1
-
-export const SAM_COOLDOWN_GROUP = {
-	TSUBAME: 16483,
-}
-
 export const SAM = ensureActions({
 	// -----
 	// Player GCDs
@@ -24,6 +18,17 @@ export const SAM = ensureActions({
 		},
 	},
 
+	GYOFU: {
+		id: 0, //TODO: Add ID
+		name: 'Gyofu',
+		icon: 'icon', //TODO: Add Icon
+		onGcd: true,
+		speedAttribute: Attribute.SKILL_SPEED,
+		combo: {
+			start: true,
+		},
+	},
+
 	JINPU: {
 		id: 7478,
 		name: 'Jinpu',
@@ -31,7 +36,10 @@ export const SAM = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		combo: {
-			from: 7477,
+			from: [
+				7477,
+				0, //TODO: Add Gyofu ID
+			],
 		},
 		statusesApplied: ['FUGETSU'],
 	},
@@ -52,7 +60,10 @@ export const SAM = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		combo: {
-			from: 7477,
+			from: [
+				7477,
+				0, //TODO: Add Gyofu ID
+			],
 		},
 		statusesApplied: ['FUKA'],
 	},
@@ -123,6 +134,15 @@ export const SAM = ensureActions({
 		castTime: 1300,
 	},
 
+	TENDO_GOKEN: { //TODO: Verify ID, Icon
+		id: 0,
+		name: 'Tendo Goken',
+		icon: 'icon',
+		onGcd: true,
+		speedAttribute: Attribute.SKILL_SPEED,
+		castTime: 1300,
+	},
+
 	KASHA: {
 		id: 7482,
 		name: 'Kasha',
@@ -170,6 +190,16 @@ export const SAM = ensureActions({
 		castTime: 1300,
 	},
 
+	TENDO_SETSUGEKKA: { //TODO: Verify ID, Icon
+		id: 0,
+		name: 'Tendo Setsugekka',
+		icon: 'https://xivapi.com/i/003000/003162.png',
+		onGcd: true,
+		speedAttribute: Attribute.SKILL_SPEED,
+		castTime: 1300,
+		gcdRecast: 3500,
+	},
+
 	YUKIKAZE: {
 		id: 7480,
 		name: 'Yukikaze',
@@ -191,6 +221,50 @@ export const SAM = ensureActions({
 		combo: {
 			start: true,
 		},
+	},
+
+	TSUBAME_GAESHI: {
+		id: 16483,
+		name: 'Tsubame Gaeshi',
+		icon: 'https://xivapi.com/i/003000/003180.png',
+		onGcd: true,
+		speedAttribute: Attribute.SKILL_SPEED,
+	},
+
+	KAESHI_GOKEN: {
+		id: 16485,
+		name: 'Kaeshi: Goken',
+		icon: 'https://xivapi.com/i/003000/003182.png',
+		onGcd: true,
+		speedAttribute: Attribute.SKILL_SPEED,
+		gcdRecast: 2500,
+	},
+
+	KAESHI_SETSUGEKKA: {
+		id: 16486,
+		name: 'Kaeshi: Setsugekka',
+		icon: 'https://xivapi.com/i/003000/003183.png',
+		onGcd: true,
+		speedAttribute: Attribute.SKILL_SPEED,
+		gcdRecast: 2500,
+	},
+
+	TENDO_KAESHI_GOKEN: { //TODO Id, Icon, Recast
+		id: 0,
+		name: 'Tendo Kaeshi Goken',
+		icon: 'icon',
+		onGcd: true,
+		speedAttribute: Attribute.SKILL_SPEED,
+		gcdRecast: 2500,
+	},
+
+	TENDO_KAESHI_SETSUGEKKA: { //TODO Id, Icon, Recast
+		id: 0,
+		name: 'Tendo Kaeshi Setsugekka',
+		icon: 'icon',
+		onGcd: true,
+		speedAttribute: Attribute.SKILL_SPEED,
+		gcdRecast: 3500,
 	},
 
 	OGI_NAMIKIRI: {
@@ -221,13 +295,23 @@ export const SAM = ensureActions({
 		cooldown: 15000,
 		statusesApplied: ['THIRD_EYE'],
 	},
+	TENGETSU: {
+		id: 0,
+		name: 'Tengetsu',
+		icon: 'icon',
+		cooldown: 15000,
+		statusesApplied: ['TENGETSU'],
+	},
 
 	MEIKYO_SHISUI: {
 		id: 7499,
 		name: 'Meikyo Shisui',
 		icon: 'https://xivapi.com/i/003000/003167.png',
 		cooldown: 55000,
-		statusesApplied: ['MEIKYO_SHISUI'],
+		statusesApplied: [
+			'MEIKYO_SHISUI',
+			'TSUBAME_GAESHI_READY',
+		],
 		charges: 2,
 	},
 
@@ -283,13 +367,17 @@ export const SAM = ensureActions({
 		name: 'Ikishoten',
 		icon: 'https://xivapi.com/i/003000/003179.png',
 		cooldown: 120000,
+		statusesApplied: [
+			'OGI_NAMIKIRI_READY',
+			'ZANSHIN_READY',
+		],
 	},
 
 	HISSATSU_GUREN: {
 		id: 7496,
 		name: 'Hissatsu: Guren',
 		icon: 'https://xivapi.com/i/003000/003177.png',
-		cooldown: 120000,
+		cooldown: 60000,
 		cooldownGroup: 10,
 	},
 
@@ -297,69 +385,21 @@ export const SAM = ensureActions({
 		id: 16481,
 		name: 'Hissatsu: Senei',
 		icon: 'https://xivapi.com/i/003000/003178.png',
-		cooldown: 120000,
+		cooldown: 60000,
 		cooldownGroup: 10,
 	},
 
-	TSUBAME_GAESHI: {
-		id: 16483,
-		name: 'Tsubame Gaeshi',
-		icon: 'https://xivapi.com/i/003000/003180.png',
-		onGcd: true,
-		speedAttribute: Attribute.SKILL_SPEED,
-		cooldown: 60000,
-		charges: 2,
-	},
-
-	KAESHI_HIGANBANA: {
-		id: 16484,
-		name: 'Kaeshi: Higanbana',
-		icon: 'https://xivapi.com/i/003000/003181.png',
-		onGcd: true,
-		speedAttribute: Attribute.SKILL_SPEED,
-		cooldown: 60000,
-		gcdRecast: 2500,
-		cooldownGroup: SAM_COOLDOWN_GROUP.TSUBAME,
-		statusesApplied: ['HIGANBANA'],
-		charges: 2, //I have to give All Tsubame actions 2 charges for CDDT to function properly.
-	},
-
-	KAESHI_GOKEN: {
-		id: 16485,
-		name: 'Kaeshi: Goken',
-		icon: 'https://xivapi.com/i/003000/003182.png',
-		onGcd: true,
-		speedAttribute: Attribute.SKILL_SPEED,
-		gcdRecast: 2500,
-		cooldown: 60000,
-		cooldownGroup: SAM_COOLDOWN_GROUP.TSUBAME,
-		charges: 2, //I have to give All Tsubame actions 2 charges for CDDT to function properly.
-	},
-
-	KAESHI_SETSUGEKKA: {
-		id: 16486,
-		name: 'Kaeshi: Setsugekka',
-		icon: 'https://xivapi.com/i/003000/003183.png',
-		onGcd: true,
-		speedAttribute: Attribute.SKILL_SPEED,
-		gcdRecast: 2500,
-		cooldown: 60000,
-		cooldownGroup: SAM_COOLDOWN_GROUP.TSUBAME,
-		charges: 2, //I have to give All Tsubame actions 2 charges for CDDT to function properly.
-
-	},
-
-	SHOHA: {
+	SHOHA: { //TODO: Verify new icon, maybe new ID?
 		id: 16487,
 		name: 'Shoha',
 		icon: 'https://xivapi.com/i/003000/003184.png',
 		cooldown: 15000,
 	},
 
-	SHOHA_II: { //WHY SE WHY
-		id: 25779,
-		name: 'Shoha II',
-		icon: 'https://xivapi.com/i/003000/003185.png',
-		cooldown: 15000,
+	ZANSHIN: {
+		id: 0,
+		name: 'Zanshin',
+		icon: 'icon',
+		cooldown: 1000,
 	},
 })
