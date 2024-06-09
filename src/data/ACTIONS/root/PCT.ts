@@ -278,7 +278,7 @@ export const PCT = ensureActions({
 	},
 
 	/** Weapon canvas spells */
-	WEAPON_MOTIR: {
+	WEAPON_MOTIF: {
 		id: 29,
 		name: 'Weapon Motif',
 		icon: 'TODO',
@@ -338,7 +338,7 @@ export const PCT = ensureActions({
 	},
 
 	/** Landscape canvas spells */
-	LANDSCAPE_MOTIR: {
+	LANDSCAPE_MOTIF: {
 		id: 36,
 		name: 'Lendscape Motif',
 		icon: 'TODO',
