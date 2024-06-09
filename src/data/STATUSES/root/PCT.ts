@@ -1,7 +1,6 @@
 import {iconUrl} from 'data/icon'
 import {ensureStatuses} from '../type'
 
-// TODO: Fill in the rest of this
 export const PCT = ensureStatuses({
 	AETHERHUES: {
 		id: 3675,
