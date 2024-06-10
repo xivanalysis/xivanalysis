@@ -8,14 +8,18 @@ import {AVAILABLE_MODULES} from 'parser/AVAILABLE_MODULES'
 import {Analyser, DisplayMode} from 'parser/core/Analyser'
 import React from 'react'
 import {Header} from 'semantic-ui-react'
+import {dependency} from '../Injectable'
 import styles from './About.module.css'
+import {Actors} from './Actors'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 
 export default class About extends Analyser {
-	static handle = 'about'
-	static displayOrder = DISPLAY_ORDER.ABOUT
-	static displayMode = DisplayMode.RAW
-	static title = t('core.about.title')`About`
+	static override handle = 'about'
+	static override displayOrder = DISPLAY_ORDER.ABOUT
+	static override displayMode = DisplayMode.RAW
+	static override title = t('core.about.title')`About`
+
+	@dependency private actors!: Actors
 
 	Description = null
 	contributors = []
@@ -25,6 +29,7 @@ export default class About extends Analyser {
 	//		from: ...,
 	//		to: ...,
 	// }
+	supportedLevels = null
 
 	set supportedPatch(value) {
 		// Warn the dev that they're using a deprecated prop
@@ -49,6 +54,8 @@ export default class About extends Analyser {
 		this.supportedPatches = jobMeta.supportedPatches != null
 			? this.parser.meta.supportedPatches
 			: undefined
+
+		this.supportedLevels = jobMeta.supportedLevels ?? {from: 100, to: 100}
 	}
 
 	output() {
@@ -77,6 +84,9 @@ export default class About extends Analyser {
 			this.parser.pull.timestamp / 1000,
 		)
 
+		const {from: fromLevel, to: toLevel = from} = this.supportedLevels
+		const loggedLevel = this.actors.get(this.parser.actor).at(this.parser.pull.timestamp + this.parser.pull.duration).level
+
 		const {Description} = this
 
 		return (
@@ -101,6 +111,12 @@ export default class About extends Analyser {
 				<dl className={styles.meta}>
 					<dt><Trans id="core.about.supported-patches">Supported Patches:</Trans></dt>
 					<dd>{from}{from !== to && `–${to}`}</dd>
+
+					<dt><Trans id="core.about.supported-levels">Supported Levels:</Trans></dt>
+					<dd>{fromLevel}{fromLevel !== toLevel && `-${toLevel}`}</dd>
+
+					<dt>Logged Level:</dt>
+					<dd>{loggedLevel}</dd>
 
 					{this.contributors.length > 0 && <>
 						<dt><Trans id="core.about.contributors">Contributors:</Trans></dt>

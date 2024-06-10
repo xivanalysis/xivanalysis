@@ -18,6 +18,7 @@ class ActorResources {
 	hp: Readonly<Resource>
 	mp: Readonly<Resource>
 	position: Readonly<Position>
+	level: number | undefined
 	get targetable() {
 		return this.getHistoricalValue(event => event.targetable, true)
 	}
@@ -39,6 +40,7 @@ class ActorResources {
 		this.mp = this.buildResource('mp')
 		this.position = this.buildPosition()
 		this.attributes = this.buildAttributes()
+		this.level = this.getLevel()
 	}
 
 	hasStatus(statusId: Status['id'], source?: Actor['id']) {
@@ -120,6 +122,13 @@ class ActorResources {
 				return getHistoricalAttribute(Attribute.SPELL_SPEED)
 			},
 		}
+	}
+
+	private getLevel() {
+		return this.getHistoricalValue(
+			event => event.level,
+			undefined
+		)
 	}
 
 	/**

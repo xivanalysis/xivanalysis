@@ -227,6 +227,8 @@ interface EventActorUpdate extends FieldsForActor {
 	targetable?: boolean
 	/** Current attributes (stats) */
 	attributes?: AttributeValue[]
+	/** Current level */
+	level?: number
 }
 
 export interface EventDancerGaugeUpdate extends FieldsForActor {
