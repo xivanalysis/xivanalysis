@@ -737,7 +737,7 @@
   "nin.kazematoi.resource.label": "Kazematoi",
   "nin.kazematoi.suggestions.leftover.content": "Avoid ending fights with more than 2 Kazematoi stacks remaining, as it means that you used at least one <0/> that could have been a buffed <1/> instead.",
   "nin.kazematoi.suggestions.leftover.why": "You ended the fight with {0, plural, one {# Kazematoi stack} other {# Kazematoi stacks}} left.",
-  "nin.kazematoi.suggestions.unbuffed.content": "Avoid using <0/> when you have 0 stacks of Kazematoi, as it does less damage than <1/> when unbuffed.",
+  "nin.kazematoi.suggestions.unbuffed.content": "Avoid using <0/> when you have 0 Kazematoi stacks, as it does less damage than <1/> when unbuffed.",
   "nin.kazematoi.suggestions.unbuffed.why": "You used Aeolian Edge without a Kazematoi stack {0, plural, one {# time} other {# times}}.",
   "nin.kazematoi.suggestions.waste.content": "Avoid using <0/> when you have 4 or more Kazematoi stacks in order to maximize the number of times you can use a buffed <1/>.",
   "nin.kazematoi.suggestions.waste.why": "Overcapping caused you to lose {0, plural, one {# Kazematoi stack} other {# Kazematoi stacks}} over the fight.",

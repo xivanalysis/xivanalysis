@@ -90,7 +90,7 @@ export class Kazematoi extends CoreGauge {
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.AEOLIAN_EDGE.icon,
 			content: <Trans id="nin.kazematoi.suggestions.unbuffed.content">
-				Avoid using <ActionLink action="AEOLIAN_EDGE"/> when you have 0 stacks of Kazematoi, as it does less damage than <ActionLink action="ARMOR_CRUSH"/> when unbuffed.
+				Avoid using <ActionLink action="AEOLIAN_EDGE"/> when you have 0 Kazematoi stacks, as it does less damage than <ActionLink action="ARMOR_CRUSH"/> when unbuffed.
 			</Trans>,
 			tiers: UNBUFFED_SEVERITY,
 			value: this.unbuffedAeolians,
