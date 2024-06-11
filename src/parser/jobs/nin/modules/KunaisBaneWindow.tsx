@@ -93,6 +93,10 @@ export class KunaisBaneWindow extends BuffWindow {
 					action: this.data.actions.DREAM_WITHIN_A_DREAM,
 					expectedPerWindow: 1,
 				},
+				{
+					action: this.data.actions.TENRI_JINDO,
+					expectedPerWindow: 1,
+				},
 			],
 			suggestionIcon,
 			suggestionContent: <Trans id="nin.kb-window.suggestions.trackedactions.content">
@@ -103,14 +107,14 @@ export class KunaisBaneWindow extends BuffWindow {
 				1: SEVERITY.MEDIUM,
 				3: SEVERITY.MAJOR,
 			},
-			adjustCount: this.adjustExpectedRaitonCount.bind(this),
+			adjustCount: this.adjustExpectedActionCount.bind(this),
 		}))
 
 		this.addEvaluator(new LimitedActionsEvaluator({
 			expectedActions: [
 				{
 					action: this.data.actions.ARMOR_CRUSH,
-					expectedPerWindow: 0, // TODO - Implement an adjustment for this to allow for 1 AC in the opener (since you start with 0 Kazematoi stacks)
+					expectedPerWindow: 0,
 				},
 			],
 			suggestionIcon: this.data.actions.ARMOR_CRUSH.icon,
@@ -121,6 +125,7 @@ export class KunaisBaneWindow extends BuffWindow {
 			severityTiers: {
 				1: SEVERITY.MINOR,
 			},
+			adjustCount: this.adjustExpectedActionCount.bind(this),
 		}))
 
 		this.addEvaluator(new TCJEvaluator(this.data.actions.TEN_CHI_JIN.id))
@@ -130,13 +135,27 @@ export class KunaisBaneWindow extends BuffWindow {
 		return window.data.find(cast => cast.action.id === this.data.actions.TEN_CHI_JIN.id) ? 1 : 0
 	}
 
-	private adjustExpectedRaitonCount(window: HistoryEntry<EvaluatedAction[]>, action: TrackedAction) {
+	private adjustExpectedActionCount(window: HistoryEntry<EvaluatedAction[]>, action: TrackedAction) {
 		const bufferedWindowStart = window.start - FIRST_KUNAIS_BANE_BUFFER
 
 		if (action.action.id === this.data.actions.RAITON.id) {
 			// We push one Raiton outside the Kunai's Bane window in the opener to fit an extra Bhava
 			if (bufferedWindowStart <= this.parser.pull.timestamp) {
 				return -1
+			}
+		}
+
+		if (action.action.id === this.data.actions.TENRI_JINDO.id) {
+			// Tenri Jindo should only be expected when the window contains TCJ
+			if (window.data.find(value => value.action.id === this.data.actions.TEN_CHI_JIN.id) !== undefined) {
+				return -1
+			}
+		}
+
+		if (action.action.id === this.data.actions.ARMOR_CRUSH.id) {
+			// Allow for one Armor Crush during the opener, since you won't have any Kazematoi stacks at the start of a fight
+			if (bufferedWindowStart <= this.parser.pull.timestamp) {
+				return 1
 			}
 		}
 
