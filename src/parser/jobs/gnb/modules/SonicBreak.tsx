@@ -56,7 +56,7 @@ export class SonicBreak extends Analyser {
 
 		//If below is true, we broke it and the last window was not closed properly.
 		if (lastSonicBreak != null && lastSonicBreak.end == null) {
-			lastSonicBreak.end = (lastSonicBreak.start + this.data.statuses.SONIC_BREAK.duration * 1000)
+			lastSonicBreak.end = (lastSonicBreak.start + this.data.statuses.SONIC_BREAK.duration)
 		}
 
 		this.breakMaker(event)
