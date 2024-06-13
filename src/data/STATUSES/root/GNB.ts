@@ -55,11 +55,17 @@ export const GNB = ensureStatuses({
 		icon: 'icon', //TODO: Add icon
 		duration: 10000,
 	},
+	READY_TO_BREAK: {
+		id: 0, //TODO: Add ID
+		name: 'Ready to Raze',
+		icon: 'icon', //TODO: Add icon
+		duration: 20000,
+	},
 	READY_TO_REIGN: {
 		id: 0, //TODO: Add ID
 		name: 'Ready to Reign',
 		icon: 'icon', //TODO: Add icon
-		duration: 10000,
+		duration: 30000,
 	},
 	AURORA: {
 		id: 1835,

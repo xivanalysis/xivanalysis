@@ -307,9 +307,7 @@ export const GNB = ensureActions({
 		icon: 'icon', //TODO: Add icon
 		onGcd: false,
 		cooldown: 120000,
-		statusesApplied: [
-			'GREAT_NEBULA',
-		],
+		statusesApplied: ['GREAT_NEBULA'],
 	},
 	HEART_OF_STONE: {
 		id: 16161,
