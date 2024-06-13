@@ -8,6 +8,7 @@ import {Defensives} from './Defensives'
 import {GnashingFang} from './GnashingFang'
 import {LightningShot} from './LightningShot'
 import {NoMercy} from './NoMercy'
+import {SonicBreak} from './SonicBreak'
 import {Tincture} from './Tincture'
 
 export default [
@@ -21,5 +22,6 @@ export default [
 	GnashingFang,
 	LightningShot,
 	NoMercy,
+	SonicBreak,
 	Tincture,
 ]

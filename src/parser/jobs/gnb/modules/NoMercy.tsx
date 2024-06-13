@@ -6,6 +6,7 @@ import {BuffWindow, EvaluatedAction, ExpectedActionsEvaluator, ExpectedGcdCountE
 import {HistoryEntry} from 'parser/core/modules/ActionWindow/History'
 import {GlobalCooldown} from 'parser/core/modules/GlobalCooldown'
 import {SEVERITY} from 'parser/core/modules/Suggestions'
+import DISPLAY_ORDER from 'parser/jobs/gnb/modules/DISPLAY_ORDER'
 import React from 'react'
 
 const SEVERITIES = {
@@ -63,6 +64,7 @@ class BloodfestEvaluator extends NotesEvaluator {
 export class NoMercy extends BuffWindow {
 	static override handle = 'nomercy'
 	static override title = t('gnb.nomercy.title')`No Mercy Windows`
+	static override displayOrder = DISPLAY_ORDER.NO_MERCY
 
 	@dependency globalCooldown!: GlobalCooldown
 
