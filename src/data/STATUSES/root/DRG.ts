@@ -8,28 +8,6 @@ export const DRG = ensureStatuses({
 		duration: 15000,
 	},
 
-	RIGHT_EYE: {
-		id: 1453,
-		name: 'Right Eye',
-		icon: 'https://xivapi.com/i/012000/012581.png',
-		duration: 20000,
-	},
-
-	// Because apparently Right Eye has a different status ID if you don't have a tether partner. Thanks, SE.
-	RIGHT_EYE_SOLO: {
-		id: 1910,
-		name: 'Right Eye',
-		icon: 'https://xivapi.com/i/012000/012581.png',
-		duration: 20000,
-	},
-
-	LEFT_EYE: {
-		id: 1454,
-		name: 'Left Eye',
-		icon: 'https://xivapi.com/i/012000/012582.png',
-		duration: 20000,
-	},
-
 	POWER_SURGE: {
 		id: 2720,
 		name: 'Power Surge',
@@ -37,19 +15,21 @@ export const DRG = ensureStatuses({
 		duration: 30000,
 	},
 
-	SHARPER_FANG_AND_CLAW: {
-		id: 802,
-		name: 'Sharper Fang and Claw',
-		icon: 'https://xivapi.com/i/012000/012579.png',
-		duration: 10000,
-	},
+	// I think these status effects are removed now with the addition of drakesbane
+	// leaving commented out until actual status effect data can be found
+	// SHARPER_FANG_AND_CLAW: {
+	// 	id: 802,
+	// 	name: 'Sharper Fang and Claw',
+	// 	icon: 'https://xivapi.com/i/012000/012579.png',
+	// 	duration: 10000,
+	// },
 
-	ENHANCED_WHEELING_THRUST: {
-		id: 803,
-		name: 'Enhanced Wheeling Thrust',
-		icon: 'https://xivapi.com/i/012000/012580.png',
-		duration: 10000,
-	},
+	// ENHANCED_WHEELING_THRUST: {
+	// 	id: 803,
+	// 	name: 'Enhanced Wheeling Thrust',
+	// 	icon: 'https://xivapi.com/i/012000/012580.png',
+	// 	duration: 10000,
+	// },
 
 	LANCE_CHARGE: {
 		id: 1864,
@@ -79,6 +59,20 @@ export const DRG = ensureStatuses({
 		duration: 15000,
 	},
 
+	DRAGONS_FLIGHT: {
+		id: 0, // TODO: actual id
+		name: "Dragon's Flight",
+		icon: '',
+		duration: 30000,
+	},
+
+	STARCROSS_READY: {
+		id: 0, // TODO: actual id
+		name: 'Starcross Ready',
+		icon: '',
+		duration: 20000,
+	},
+
 	LIFE_SURGE: {
 		id: 116,
 		name: 'Life Surge',
@@ -91,5 +85,12 @@ export const DRG = ensureStatuses({
 		name: 'Draconian Fire',
 		icon: 'https://xivapi.com/i/012000/012585.png',
 		duration: 30000,
+	},
+
+	NASTROND_READY: {
+		id: 0, // TODO: Actual id
+		name: 'Nastrond Ready',
+		icon: '',
+		duration: 20000,
 	},
 })

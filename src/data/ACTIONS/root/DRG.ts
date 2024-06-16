@@ -27,6 +27,18 @@ export const DRG = ensureActions({
 		},
 	},
 
+	// vorpal thrust upgrade
+	LANCE_BARRAGE: {
+		id: 0, // TODO: ID
+		name: 'Lance Barrage',
+		icon: '',
+		onGcd: true,
+		speedAttribute: Attribute.SKILL_SPEED,
+		combo: {
+			from: [75, 16479],
+		},
+	},
+
 	PIERCING_TALON: {
 		id: 90,
 		name: 'Piercing Talon',
@@ -43,8 +55,7 @@ export const DRG = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		combo: {
-			from: 78,
-			end: true,
+			from: 78,	// TODO: update with lance barrage id number
 		},
 	},
 
@@ -56,7 +67,6 @@ export const DRG = ensureActions({
 		speedAttribute: Attribute.SKILL_SPEED,
 		combo: {
 			from: 78,
-			end: true,
 		},
 	},
 
@@ -64,6 +74,19 @@ export const DRG = ensureActions({
 		id: 87,
 		name: 'Disembowel',
 		icon: 'https://xivapi.com/i/000000/000317.png',
+		onGcd: true,
+		speedAttribute: Attribute.SKILL_SPEED,
+		combo: {
+			from: [75, 16479],
+		},
+		statusesApplied: ['POWER_SURGE'],
+	},
+
+	// disembowel upgrade
+	SPIRAL_BLOW: {
+		id: 0, // TODO: actual ID
+		name: 'Spiral Blow',
+		icon: '',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		combo: {
@@ -80,7 +103,6 @@ export const DRG = ensureActions({
 		speedAttribute: Attribute.SKILL_SPEED,
 		combo: {
 			from: 87,
-			end: true,
 		},
 		statusesApplied: ['CHAOS_THRUST'],
 	},
@@ -92,8 +114,7 @@ export const DRG = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		combo: {
-			from: 87,
-			end: true,
+			from: 87,	// TODO: update with spiral blow id number
 		},
 		potencies: [{
 			value: 100,
@@ -102,13 +123,31 @@ export const DRG = ensureActions({
 			value: 140,
 			bonusModifiers: [BonusModifier.POSITIONAL],
 		}, {
-			value: 260,
+			value: 300,
 			bonusModifiers: [BonusModifier.COMBO],
 		}, {
-			value: 300,
+			value: 340,
 			bonusModifiers: [BonusModifier.COMBO, BonusModifier.POSITIONAL],
 		}],
 		statusesApplied: ['CHAOTIC_SPRING'],
+	},
+
+	// new combo finisher
+	DRAKESBANE: {
+		id: 0, // TODO: id number
+		name: 'Drakesbane',
+		icon: '',
+		onGcd: true,
+		speedAttribute: Attribute.SKILL_SPEED,
+		combo: {
+			from: [3554, 3556],
+			end: true,
+		},
+		potencies: [{
+			value: 440,
+			bonusModifiers: [],
+		}],
+		statusesApplied: ['DRACONIAN_FIRE'],
 	},
 
 	DOOM_SPIKE: {
@@ -157,6 +196,9 @@ export const DRG = ensureActions({
 			bonusModifiers: [BonusModifier.POSITIONAL],
 			baseModifiers: [PotencySpecialCase.DRG_LANCE_MASTERY],
 		}],
+		combo: {
+			from: [84, 25711],
+		},
 	},
 
 	WHEELING_THRUST: {
@@ -183,6 +225,9 @@ export const DRG = ensureActions({
 			bonusModifiers: [BonusModifier.POSITIONAL],
 			baseModifiers: [PotencySpecialCase.DRG_LANCE_MASTERY],
 		}],
+		combo: {
+			from: [88, 25722],
+		},
 	},
 
 	RAIDEN_THRUST: {
@@ -217,6 +262,7 @@ export const DRG = ensureActions({
 			from: 7397,
 			end: true,
 		},
+		statusesApplied: ['DRACONIAN_FIRE'],
 	},
 
 	// -----
@@ -262,19 +308,19 @@ export const DRG = ensureActions({
 		cooldown: 30000,
 	},
 
-	SPINESHATTER_DIVE: {
-		id: 95,
-		name: 'Spineshatter Dive',
-		icon: 'https://xivapi.com/i/002000/002580.png',
-		cooldown: 60000,
-		charges: 2,
-	},
-
 	DRAGONFIRE_DIVE: {
 		id: 96,
 		name: 'Dragonfire Dive',
 		icon: 'https://xivapi.com/i/002000/002578.png',
 		cooldown: 120000,
+		statusesApplied: ['DRAGONS_FLIGHT'],
+	},
+
+	RISE_OF_THE_DRAGON: {
+		id: 0, // TODO: actual Id
+		name: 'Rise of the Dragon',
+		icon: '',
+		cooldown: 1000,
 	},
 
 	BATTLE_LITANY: {
@@ -290,14 +336,7 @@ export const DRG = ensureActions({
 		name: 'Geirskogul',
 		icon: 'https://xivapi.com/i/002000/002583.png',
 		cooldown: 30000,
-	},
-
-	DRAGON_SIGHT: {
-		id: 7398,
-		name: 'Dragon Sight',
-		icon: 'https://xivapi.com/i/002000/002587.png',
-		cooldown: 120000,
-		statusesApplied: ['RIGHT_EYE', 'LEFT_EYE', 'RIGHT_EYE_SOLO'],
+		statusesApplied: ['NASTROND_READY'],
 	},
 
 	MIRAGE_DIVE: {
@@ -319,6 +358,14 @@ export const DRG = ensureActions({
 		name: 'Stardiver',
 		icon: 'https://xivapi.com/i/002000/002593.png',
 		cooldown: 30000,
+		statusesApplied: ['STARCROSS_READY'],
+	},
+
+	STARCROSS: {
+		id: 0, // TODO: actual id,
+		name: 'Starcross',
+		icon: '',
+		cooldown: 1000,
 	},
 
 	WYRMWIND_THRUST: {
@@ -326,5 +373,13 @@ export const DRG = ensureActions({
 		name: 'Wyrmwind Thrust',
 		icon: 'https://xivapi.com/i/002000/002597.png',
 		cooldown: 10000,
+	},
+
+	WINGED_GLIDE: {
+		id: 0, // TODO: actual id
+		name: 'Winged Glide',
+		charges: 2,
+		icon: '',
+		cooldown: 60000,
 	},
 })
