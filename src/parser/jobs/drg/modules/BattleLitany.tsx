@@ -2,13 +2,15 @@ import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
 import {ActionLink} from 'components/ui/DbLink'
 import {dependency} from 'parser/core/Injectable'
-import {ExpectedGcdCountEvaluator, RaidBuffWindow} from 'parser/core/modules/ActionWindow'
+import {EvaluatedAction, ExpectedActionsEvaluator, ExpectedGcdCountEvaluator, RaidBuffWindow, TrackedAction} from 'parser/core/modules/ActionWindow'
+import {HistoryEntry} from 'parser/core/modules/ActionWindow/History'
 import {GlobalCooldown} from 'parser/core/modules/GlobalCooldown'
 import {SEVERITY} from 'parser/core/modules/Suggestions'
 import React from 'react'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 
-const BL_GCD_TARGET = 6
+const BL_GCD_TARGET = 8
+const NASTRONDS_PER_WINDOW = 3
 
 export class BattleLitany extends RaidBuffWindow {
 	static override handle = 'battlelitany'
@@ -31,14 +33,78 @@ export class BattleLitany extends RaidBuffWindow {
 			hasStacks: false,
 			suggestionIcon,
 			suggestionContent: <Trans id="drg.bl.suggestions.missedgcd.content">
-				Try to land at least 6 GCDs during every <ActionLink action="BATTLE_LITANY" /> window.
+				Try to land at least 8 GCDs during every <ActionLink action="BATTLE_LITANY" /> window.
 			</Trans>,
 			suggestionWindowName,
 			severityTiers: {
 				1: SEVERITY.MINOR,
 				2: SEVERITY.MEDIUM,
-				3: SEVERITY.MAJOR,
+				4: SEVERITY.MAJOR,
 			},
 		}))
+
+		this.addEvaluator(new ExpectedActionsEvaluator({
+			expectedActions: [
+				// let's do... jumps then life actions
+				{
+					action: this.data.actions.HIGH_JUMP,
+					expectedPerWindow: 1,
+				},
+				{
+					action: this.data.actions.MIRAGE_DIVE,
+					expectedPerWindow: 1,
+				},
+				// due to the CD of DFD, we do expect it to always be used inside of BL
+				{
+					action: this.data.actions.DRAGONFIRE_DIVE,
+					expectedPerWindow: 1,
+				},
+				{
+					action: this.data.actions.RISE_OF_THE_DRAGON,
+					expectedPerWindow: 1,
+				},
+				// life actions
+				{
+					action: this.data.actions.GEIRSKOGUL,
+					expectedPerWindow: 1,
+				},
+				{
+					action: this.data.actions.NASTROND,
+					expectedPerWindow: NASTRONDS_PER_WINDOW,
+				},
+				{
+					action: this.data.actions.STARDIVER,
+					expectedPerWindow: 1,
+				},
+				{
+					action: this.data.actions.STARCROSS,
+					expectedPerWindow: 1,
+				},
+			],
+			suggestionIcon,
+			suggestionContent: <Trans id="drg.bl.suggestions.missedaction.content">Try to use as many of your oGCDs as possible during <ActionLink action="LANCE_CHARGE" />. Remember to keep your abilities on cooldown, when possible, to prevent them from drifting outside of your buff windows.</Trans>,
+			suggestionWindowName,
+			severityTiers: {
+				// there are 10 total CDs expected, we'll say missing half is major
+				1: SEVERITY.MINOR,
+				3: SEVERITY.MEDIUM,
+				5: SEVERITY.MAJOR,
+			},
+			adjustCount: this.adjustExpectedActionCount.bind(this),
+		}))
+	}
+
+	private adjustExpectedActionCount(window: HistoryEntry<EvaluatedAction[]>, action: TrackedAction) {
+		// so if a drg is rushing we don't really have expectations of specific actions that get fit in the window, we just want the buff used.
+		if (this.isRushedEndOfPullWindow(window)) {
+			if (action.action.id === this.data.actions.NASTROND.id) {
+				// we expect 3 nastronds. while we could try to normalize for window duration left there might be other oGCDs that
+				// had higher priority depending on fight specifics
+				return -NASTRONDS_PER_WINDOW
+			}
+
+			return -1
+		}
+		return 0
 	}
 }

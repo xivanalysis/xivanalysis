@@ -1,6 +1,5 @@
 import {t} from '@lingui/macro'
 import {Trans, Plural} from '@lingui/react'
-import Color from 'color'
 import {ActionLink, DataLink, StatusLink} from 'components/ui/DbLink'
 import {ActionKey} from 'data/ACTIONS'
 import {StatusKey} from 'data/STATUSES'
@@ -11,7 +10,7 @@ import {Actors} from 'parser/core/modules/Actors'
 import BrokenLog from 'parser/core/modules/BrokenLog'
 import {Cooldowns} from 'parser/core/modules/Cooldowns'
 import Downtime from 'parser/core/modules/Downtime'
-import {CounterGauge, Gauge as CoreGauge} from 'parser/core/modules/Gauge'
+import {Gauge as CoreGauge} from 'parser/core/modules/Gauge'
 import Suggestions, {TieredSuggestion, Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import {Timeline} from 'parser/core/modules/Timeline'
 import React, {Fragment} from 'react'
@@ -22,7 +21,6 @@ const DRAGON_DURATION_MILLIS = 30000
 const LOTD_BUFF_DELAY_MIN = 30000
 const LOTD_BUFF_DELAY_MAX = 60000
 
-const LOTD_SHOULD_RUSH_THRESHOLD = 5000		// two GCDs
 const LOTD_LATE_WINDOW_THRESHOLD = 10000	// Nastrond CD
 
 const EXPECTED_NASTRONDS_PER_WINDOW = 3
@@ -62,15 +60,6 @@ const END_OF_FIGHT_ERROR = {
 	OPENED_TOO_LATE: 2,
 }
 
-// gauge constants
-const MAX_EYES = 2
-const EYES_PER_CAST = 1
-const LOTD_COST = 2
-
-// this is like a light blue, similar to the color of mirage dive
-// eslint-disable-next-line @typescript-eslint/no-magic-numbers
-const EYE_COLOR = Color.rgb(61, 135, 255).fade(0.25).toString()
-
 // Eye gauge is tracked with core gauge (apparently it's called "First Brood's Gaze" which I did not know until EW)
 // Life of the dragon windows are manually tracked and analyzed.
 export class BloodOfTheDragon extends CoreGauge {
@@ -98,16 +87,6 @@ export class BloodOfTheDragon extends CoreGauge {
 	private lastMdTime = this.parser.pull.timestamp
 	private lastGskTime = this.parser.pull.timestamp
 
-	private eyeGauge = this.add(new CounterGauge({
-		maximum: MAX_EYES,
-		graph: {
-			label: <Trans id="drg.gauge.resource.eyes">First Brood's Gaze</Trans>,
-			color: EYE_COLOR,
-		},
-		correctHistory: true,	// correct for carryover in alliance raids
-		deterministic: true,
-	}))
-
 	override initialise() {
 		super.initialise()
 
@@ -132,13 +111,6 @@ export class BloodOfTheDragon extends CoreGauge {
 
 		if (this.actors.current.hasStatus(this.data.statuses.BATTLE_LITANY.id)) {
 			active.push('BATTLE_LITANY')
-		}
-
-		if (
-			this.actors.current.hasStatus(this.data.statuses.RIGHT_EYE.id) ||
-			this.actors.current.hasStatus(this.data.statuses.RIGHT_EYE_SOLO.id)
-		) {
-			active.push('RIGHT_EYE')
 		}
 
 		return active
@@ -181,42 +153,11 @@ export class BloodOfTheDragon extends CoreGauge {
 	onMirageDiveCast(event: Events['action']) {
 		this.updateGauge()
 		this.lastMdTime = event.timestamp
-
-		// You can accrue eyes in LotD too
-		this.eyeGauge.generate(EYES_PER_CAST)
 	}
 
 	onGeirskogulCast(event: Events['action']) {
 		this.updateGauge()
 		this.lastGskTime = event.timestamp
-
-		if (this.eyeGauge.value === MAX_EYES) {
-			// LotD tiiiiiime~
-			this.lifeDuration = DRAGON_DURATION_MILLIS
-			this.lifeWindows.current = {
-				start: this.parser.currentEpochTimestamp,
-				duration: this.lifeDuration,
-				nastronds: [],
-				stardivers: [],
-				timeToNextBuff: {
-					'LANCE_CHARGE': this.cooldowns.remaining('LANCE_CHARGE'),
-					'RIGHT_EYE': this.cooldowns.remaining('DRAGON_SIGHT'),
-					'BATTLE_LITANY': this.cooldowns.remaining('BATTLE_LITANY'),
-				},
-				activeBuffs: this.getActiveDrgBuffs(),
-				buffsInDelayWindow: {
-					'LANCE_CHARGE': false,
-					'RIGHT_EYE': false,
-					'BATTLE_LITANY': false,
-				},
-				dtOverlapTime: null,
-				isLast: false,
-				shouldDelay: false,
-				showNoDelayNote: false,
-				missedSdBuff: false,
-			}
-			this.eyeGauge.spend(LOTD_COST)
-		}
 	}
 
 	onNastrondCast(event: Events['action']) {
@@ -346,22 +287,6 @@ export class BloodOfTheDragon extends CoreGauge {
 			return END_OF_FIGHT_ERROR.NONE
 		}
 
-		// there's actually two conditions here
-		// first condition: if we still have two eyes at the end of the fight
-		if (this.eyeGauge.value === MAX_EYES) {
-			// check to see what happened
-			// if the last gsk happened before the last mirage dive, we could've opened a window
-			if (this.lastGskTime < this.lastMdTime) {
-				// if the amount of time left in the fight would've allowed at least one nastrond, we should've rushed
-				const remaining = this.parser.pull.duration - (this.lastMdTime - this.parser.pull.timestamp)
-
-				// if we had room for like two GCDs we could've fit at least one additional nastrond (stonks)
-				if (remaining > LOTD_SHOULD_RUSH_THRESHOLD) {
-					return END_OF_FIGHT_ERROR.SHOULD_HAVE_RUSHED
-				}
-			}
-		}
-
 		// second condition:
 		// - we actually did open a window but it got severely truncated by the fight
 		// in order for this to be possible, we need to actually be in a lotd that was cut short by the end of the fight
@@ -390,21 +315,6 @@ export class BloodOfTheDragon extends CoreGauge {
 		const noLifeSd = this.lifeWindows.history.filter(window => !window.isLast && window.stardivers.length === 0).length
 		const noFullNsLife = this.lifeWindows.history.filter(window => !window.isLast && window.nastronds.length < EXPECTED_NASTRONDS_PER_WINDOW).length
 		const shouldRush = this.shouldRushFinalWindow()
-
-		this.suggestions.add(new TieredSuggestion({
-			icon: this.data.actions.MIRAGE_DIVE.icon,
-			content: <Trans id="drg.blood.suggestions.eyes.content">
-				Avoid using <ActionLink {...this.data.actions.MIRAGE_DIVE}/> when you already have {MAX_EYES} Eyes. Wasting Eyes will delay your Life of the Dragon windows and potentially cost you a lot of DPS.
-			</Trans>,
-			value: this.eyeGauge.overCap,
-			tiers: {
-				1: SEVERITY.MEDIUM,
-				2: SEVERITY.MAJOR,
-			},
-			why: <Trans id="drg.blood.suggestions.eyes.why">
-				You used Mirage Dive <Plural value={this.eyeGauge.overCap} one="# time" other="# times"/> when you already had {MAX_EYES} Eyes.
-			</Trans>,
-		}))
 
 		// each window should have a stardiver
 		this.suggestions.add(new TieredSuggestion({
@@ -438,7 +348,7 @@ export class BloodOfTheDragon extends CoreGauge {
 			this.suggestions.add(new Suggestion({
 				icon: this.data.actions.STARDIVER.icon,
 				content: <Trans id="drg.blood.suggestions.buffed-stardiver">
-					Try to ensure that <ActionLink {...this.data.actions.STARDIVER} /> always lands while at least one of <ActionLink {...this.data.actions.LANCE_CHARGE} />, <ActionLink {...this.data.actions.DRAGON_SIGHT} />, or <ActionLink {...this.data.actions.BATTLE_LITANY} /> is active. Depending on the fight specifics, this may not always be possible. See the Timeline module below for details.
+					Try to ensure that <ActionLink {...this.data.actions.STARDIVER} /> always lands while at least one of <ActionLink {...this.data.actions.LANCE_CHARGE} />, or <ActionLink {...this.data.actions.BATTLE_LITANY} /> is active. Depending on the fight specifics, this may not always be possible. See the Timeline module below for details.
 				</Trans>,
 				severity: SEVERITY.MINOR,
 				why: <Trans id="drg.blood.suggestions.buffsed-stardiver.why">

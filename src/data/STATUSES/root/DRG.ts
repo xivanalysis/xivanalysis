@@ -5,7 +5,7 @@ export const DRG = ensureStatuses({
 		id: 786,
 		name: 'Battle Litany',
 		icon: 'https://xivapi.com/i/012000/012578.png',
-		duration: 15000,
+		duration: 20000,
 	},
 
 	POWER_SURGE: {

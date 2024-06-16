@@ -14,12 +14,12 @@ import React from 'react'
 import {Message} from 'semantic-ui-react'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 
-interface SsdDelayTracker {
-	nextWindowHoldSuccess: boolean
-	ssdHeld: boolean
-	expectsTwo: boolean
-	ssdUseCount: number
+const LC_DURATION = 20000
+
+interface DfdTracker {
 	start: number
+	expected: boolean
+	used: boolean
 }
 
 export default class LanceCharge extends BuffWindow {
@@ -33,12 +33,12 @@ export default class LanceCharge extends BuffWindow {
 	override buffStatus = this.data.statuses.LANCE_CHARGE
 
 	override prependMessages = <Message info>
-		<Trans id="drg.lc.prepend-message">Both charges of <ActionLink action="SPINESHATTER_DIVE" /> should be used while both <ActionLink action="LANCE_CHARGE" /> and <ActionLink action="DRAGON_SIGHT" /> are active. Since this is not always possible, we do our best in this module to avoid marking windows where <ActionLink action="SPINESHATTER_DIVE" showIcon={false} /> was correctly held as errors. <ActionLink action="DRAGONFIRE_DIVE" /> should be used in every other window.</Trans>
+		<Trans id="drg.lc.prepend-message"><ActionLink action="DRAGONFIRE_DIVE" /> has a two minute cooldown and should be used in every other window under optimal circumstances. We do our best in this module to avoid marking windows where <ActionLink action="DRAGONFIRE_DIVE" /> was not available as errors.</Trans>
 	</Message>
 
-	private ssdDelays: SsdDelayTracker[] = []
-	private currentSsdWindow?: SsdDelayTracker
-	private previousSsdWindow?: SsdDelayTracker
+	private dfdTrackers: DfdTracker[] = []
+	private currentDfdWindow?: DfdTracker
+	private previousDfdWindow?: DfdTracker
 
 	override initialise() {
 		super.initialise()
@@ -47,11 +47,11 @@ export default class LanceCharge extends BuffWindow {
 			.source(this.parser.actor.id)
 			.status(this.data.statuses.LANCE_CHARGE.id)
 
-		const ssdActionFilter = filter<Event>().source(this.parser.actor.id).type('action')
-			.action(this.data.actions.SPINESHATTER_DIVE.id)
+		const dfdActionFilter = filter<Event>().source(this.parser.actor.id).type('action')
+			.action(this.data.actions.DRAGONFIRE_DIVE.id)
 
 		this.addEventHook(lcStatusFilter.type('statusApply'), this.onLcStatusApply)
-		this.addEventHook(ssdActionFilter, this.onSsd)
+		this.addEventHook(dfdActionFilter, this.onDfd)
 		this.addEventHook(lcStatusFilter.type('statusRemove'), this.onLcStatusRemove)
 
 		const suggestionIcon = this.data.actions.LANCE_CHARGE.icon
@@ -86,10 +86,6 @@ export default class LanceCharge extends BuffWindow {
 					action: this.data.actions.MIRAGE_DIVE,
 					expectedPerWindow: 1,
 				},
-				{
-					action: this.data.actions.SPINESHATTER_DIVE,
-					expectedPerWindow: 1,
-				},
 			],
 			suggestionIcon,
 			suggestionContent: <Trans id="drg.lc.suggestions.missedaction.content">Try to use as many of your oGCDs as possible during <ActionLink action="LANCE_CHARGE" />. Remember to keep your abilities on cooldown, when possible, to prevent them from drifting outside of your buff windows.</Trans>,
@@ -106,41 +102,38 @@ export default class LanceCharge extends BuffWindow {
 	}
 
 	private onLcStatusApply(event: Events['statusApply']) {
+		// couple cases to enumerate here
+		// is DFD off-cooldown at any point during this window
+		const willBeOffCd = this.cooldowns.remaining('DRAGONFIRE_DIVE') < LC_DURATION
+
+		// if DFD is on CD, is that ok?
+		// i think this just comes down to if it was used in the previous window? if it was, we don't expect it
+		// if it wasn't we do
+		const expectedInThisWindow = !(this.previousDfdWindow?.used ?? false)
+
+		// are there other cases? what if someone's not using it on CD
+
 		// construct current
-		this.currentSsdWindow = {
-			nextWindowHoldSuccess: false,
-			ssdHeld: false,
-			ssdUseCount: 0,
+		this.currentDfdWindow = {
 			start: event.timestamp,
-			expectsTwo: this.previousSsdWindow?.ssdHeld ?? false,
+			expected: willBeOffCd || expectedInThisWindow,
+			used: false,
 		}
 
-		this.ssdDelays.push(this.currentSsdWindow)
+		this.dfdTrackers.push(this.currentDfdWindow)
 	}
 
-	private onSsd() {
-		if (this.currentSsdWindow != null) {
-			this.currentSsdWindow.ssdUseCount += 1
+	private onDfd() {
+		if (this.currentDfdWindow != null) {
+			this.currentDfdWindow.used = true
 		}
 	}
 
 	private onLcStatusRemove() {
 		// little bit of analysis
-		if (this.currentSsdWindow != null) {
-			const ssdCharges = this.cooldowns.charges('SPINESHATTER_DIVE')
-
-			if (ssdCharges >= 1) {
-				this.currentSsdWindow.ssdHeld = true
-			}
-
-			if (this.previousSsdWindow) {
-				if (this.currentSsdWindow.ssdUseCount === 2 && this.previousSsdWindow.ssdHeld) {
-					this.previousSsdWindow.nextWindowHoldSuccess = true
-				}
-			}
-
-			this.previousSsdWindow = this.currentSsdWindow
-			this.currentSsdWindow = undefined
+		if (this.currentDfdWindow != null) {
+			this.previousDfdWindow = this.currentDfdWindow
+			this.currentDfdWindow = undefined
 		}
 	}
 
@@ -150,31 +143,22 @@ export default class LanceCharge extends BuffWindow {
 			return -1
 		}
 
-		// SSD: if a buff window didn't have a SSD but the next one actually contained two SSDs, we correct
-		// this window to expect 0 (this is due to SSD having charges and it's optimal to use both during the 2 minute windows)
-		if (action.action.id === this.data.actions.SPINESHATTER_DIVE.id) {
-			// ok quick eject if there's only actually one SSD here because in that case this check isn't relevant
-			// this is just to avoid flagging an error if someone does hold charges correctly
-			const currentWindowSsd = window.data.filter(d => d.action.id === this.data.actions.SPINESHATTER_DIVE.id)
-			if (currentWindowSsd.length === 1) {
+		// attempt to adjust DFD expected uses
+		if (action.action.id === this.data.actions.DRAGONFIRE_DIVE.id) {
+			// ok quick eject if there's only actually one DFD here because in that case this check isn't relevant
+			// this is just to avoid flagging an error if someone doesn't use it because it's on CD during the window
+			// and has been previously using it correctly
+			const currentWindowDfd = window.data.filter(d => d.action.id === this.data.actions.DRAGONFIRE_DIVE.id)
+			if (currentWindowDfd.length === 1) {
 				return 0
 			}
 
 			// find the window extra data
-			const ssdDelay = this.ssdDelays.find(d => d.start === window.start)
+			const dfdData = this.dfdTrackers.find(d => d.start === window.start)
 
-			if (ssdDelay) {
-				if (ssdDelay.ssdHeld && ssdDelay.nextWindowHoldSuccess) {
+			if (dfdData) {
+				if (!dfdData.expected) {
 					return -1
-				}
-				if (ssdDelay.expectsTwo) {
-					return 1
-				}
-
-				// if we weren't expecting two but got two anyway, sure give it to them
-				// this should only happen on the first window or after a downtime reset
-				if (!ssdDelay.expectsTwo && currentWindowSsd.length === 2) {
-					return 1
 				}
 			}
 		}
