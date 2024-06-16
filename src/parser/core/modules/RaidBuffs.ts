@@ -31,7 +31,6 @@ const TRACKED_STATUSES: StatusConfig[] = [
 	{key: 'CHAIN_STRATAGEM'},
 	{key: 'EMBOLDEN_SELF'}, // tracking the self buff so it appears on the RDM's perspective
 	{key: 'EMBOLDEN_PARTY'},
-	{key: 'LEFT_EYE', exclude: ['DRAGOON']}, // notDRG
 	{key: 'TECHNICAL_FINISH'},
 	{key: 'STANDARD_FINISH_PARTNER'},
 	{key: 'DEVILMENT'},
