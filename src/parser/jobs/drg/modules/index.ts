@@ -4,7 +4,6 @@ import {BloodOfTheDragon} from './BloodOfTheDragon'
 import Buffs from './Buffs'
 import {Combos} from './Combos'
 import Debuffs from './Debuffs'
-import Drift from './Drift'
 import {Gauge} from './Gauge'
 import LanceCharge from './LanceCharge'
 import OGCDDowntime from './OGCDDowntime'
@@ -20,7 +19,6 @@ export default [
 	Buffs,
 	Combos,
 	Debuffs,
-	Drift,
 	Gauge,
 	LanceCharge,
 	OGCDDowntime,
