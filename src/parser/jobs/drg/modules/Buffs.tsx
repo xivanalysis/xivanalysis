@@ -16,18 +16,18 @@ import Suggestions, {TieredSuggestion, SEVERITY} from 'parser/core/modules/Sugge
 import React from 'react'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 
+// it's just drakesbane and HT/FT good now
 const BAD_LIFE_SURGE_CONSUMERS: ActionKey[] = [
 	'TRUE_THRUST',
 	'RAIDEN_THRUST',
 	'VORPAL_THRUST',
+	'LANCE_BARRAGE',
 	'DISEMBOWEL',
+	'SPIRAL_BLOW',
 	'CHAOS_THRUST',
 	'PIERCING_TALON',
 	'DOOM_SPIKE',
 	'SONIC_THRUST',
-]
-
-const FINAL_COMBO_HITS: ActionKey[] = [
 	'FANG_AND_CLAW',
 	'WHEELING_THRUST',
 ]
@@ -36,16 +36,14 @@ const FINAL_COMBO_HITS: ActionKey[] = [
 const CHART_LIFE_SURGE_CONSUMERS: ActionKey[] = [
 	'FULL_THRUST',
 	'HEAVENS_THRUST',
-	'FANG_AND_CLAW',
-	'WHEELING_THRUST',
 	'COERTHAN_TORMENT',
+	'DRAKESBANE',
 ]
 
 const CHART_COLORS: {[actionId in ActionKey]?: string} = {
 	'FULL_THRUST': '#0e81f7',
 	'HEAVENS_THRUST': '#0e81f7',
-	'FANG_AND_CLAW': '#b36b00',
-	'WHEELING_THRUST': '#b36b00',
+	'DRAKESBANE': '#0e81f7',	// TODO: pick a different color?
 	'COERTHAN_TORMENT': '#b36b00',
 }
 
@@ -57,8 +55,6 @@ export default class Buffs extends Analyser {
 	static override title = t('drg.buffs.title')`Buffs`
 
 	private badLifeSurges: number = 0
-	private fifthGcd: boolean = false
-	private soloDragonSightCount: number = 0
 	private lifeSurgeCasts: number[] = []
 
 	@dependency private actors!: Actors
@@ -70,7 +66,6 @@ export default class Buffs extends Analyser {
 	@dependency private statistics!: Statistics
 
 	private badLifeSurgeConsumers = BAD_LIFE_SURGE_CONSUMERS.map(k => this.data.actions[k].id)
-	private finalComboHits = FINAL_COMBO_HITS.map(k => this.data.actions[k].id)
 	private chartLifeSurgeConsumers = CHART_LIFE_SURGE_CONSUMERS.map(k => this.data.actions[k].id)
 	private chartColors: Record<number, string> = {}
 
@@ -78,7 +73,6 @@ export default class Buffs extends Analyser {
 		const playerFilter = filter<Event>().source(this.parser.actor.id)
 		this.addEventHook(playerFilter.type('action'), this.onCast)
 
-		this.addEventHook(playerFilter.action(this.data.actions.DRAGON_SIGHT.id), this.onDragonSight)
 		this.addEventHook(playerFilter.type('damage').cause(filter<Cause>().action(this.data.actions.COERTHAN_TORMENT.id)), this.onCot)
 		this.addEventHook('complete', this.onComplete)
 
@@ -97,26 +91,10 @@ export default class Buffs extends Analyser {
 
 			// 4-5 combo hit checks
 			if (this.badLifeSurgeConsumers.includes(action.id)) {
-				this.fifthGcd = false // Reset the 4-5 combo hit flag on other GCDs
 				if (this.actors.current.hasStatus(this.data.statuses.LIFE_SURGE.id)) {
 					this.badLifeSurges++
 				}
-			} else if (this.finalComboHits.includes(action.id)) {
-				if (!this.fifthGcd) {
-					// If we get 2 of these in a row (4-5 combo hits), only the first one is considered bad, so set a flag to ignore the next one
-					this.fifthGcd = true
-					if (this.actors.current.hasStatus(this.data.statuses.LIFE_SURGE.id)) {
-						this.badLifeSurges++
-					}
-				}
 			}
-		}
-	}
-
-	private onDragonSight(event: Events['action']) {
-		// self cast
-		if (event.source === event.target) {
-			this.soloDragonSightCount += 1
 		}
 	}
 
@@ -157,7 +135,7 @@ export default class Buffs extends Analyser {
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.LIFE_SURGE.icon,
 			content: <Trans id="drg.buffs.suggestions.life-surge.content">
-				<DataLink action="LIFE_SURGE"/> should be used on <DataLink action="HEAVENS_THRUST"/>, your highest potency ability, as much as possible. In order to keep <DataLink action="LIFE_SURGE" /> on cooldown, it may sometimes be necessary to use it on a 5th combo hit. In multi-target scenarios, <DataLink action="LIFE_SURGE" /> can be used on <DataLink action="COERTHAN_TORMENT" /> if you hit at least three targets.
+				<DataLink action="LIFE_SURGE"/> should be used on <DataLink action="HEAVENS_THRUST"/> or <DataLink action="DRAKESBANE" />, your highest potency abilities. Additionally, <DataLink action="LIFE_SURGE" /> should be used while as many of your buffs (Life of the Dragon, <DataLink action="LANCE_CHARGE" />, and <DataLink action="BATTLE_LITANY" />) are active as possible. In order to keep <DataLink action="LIFE_SURGE" /> on cooldown, it may sometimes be necessary to use it outside of your buffs. In multi-target scenarios, <DataLink action="LIFE_SURGE" /> can be used on <DataLink action="COERTHAN_TORMENT" /> if you hit at least three targets.
 			</Trans>,
 			tiers: {
 				1: SEVERITY.MINOR,
@@ -167,20 +145,6 @@ export default class Buffs extends Analyser {
 			value: this.badLifeSurges,
 			why: <Trans id="drg.buffs.suggestions.life-surge.why">
 				You used {this.data.actions.LIFE_SURGE.name} on a non-optimal GCD <Plural value={this.badLifeSurges} one="# time" other="# times"/>.
-			</Trans>,
-		}))
-
-		this.suggestions.add(new TieredSuggestion({
-			icon: this.data.actions.DRAGON_SIGHT.icon,
-			content: <Trans id="drg.buffs.suggestions.solo-ds.content">
-				Although it doesn't impact your personal DPS, try to always use <DataLink action="DRAGON_SIGHT" /> on a partner in group content so that someone else can benefit from the damage bonus too.
-			</Trans>,
-			tiers: {
-				1: SEVERITY.MINOR,
-			},
-			value: this.soloDragonSightCount,
-			why: <Trans id="drg.buffs.suggestions.solo-ds.why">
-				{this.soloDragonSightCount} of your Dragon Sight casts didn't have a tether partner.
 			</Trans>,
 		}))
 

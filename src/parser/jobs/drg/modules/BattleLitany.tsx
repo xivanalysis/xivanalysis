@@ -3,6 +3,7 @@ import {Trans} from '@lingui/react'
 import {ActionLink} from 'components/ui/DbLink'
 import {dependency} from 'parser/core/Injectable'
 import {EvaluatedAction, ExpectedActionsEvaluator, ExpectedGcdCountEvaluator, RaidBuffWindow, TrackedAction} from 'parser/core/modules/ActionWindow'
+import {DisplayedActionEvaluator} from 'parser/core/modules/ActionWindow/evaluators/DisplayedActionEvaluator'
 import {HistoryEntry} from 'parser/core/modules/ActionWindow/History'
 import {GlobalCooldown} from 'parser/core/modules/GlobalCooldown'
 import {SEVERITY} from 'parser/core/modules/Suggestions'
@@ -92,6 +93,10 @@ export class BattleLitany extends RaidBuffWindow {
 			},
 			adjustCount: this.adjustExpectedActionCount.bind(this),
 		}))
+
+		// and then life surge is just a trainwreck still (40s so you don't want to overcap but you also want to use it
+		// as much as possible in buff windows)
+		this.addEvaluator(new DisplayedActionEvaluator([this.data.actions.LIFE_SURGE]))
 	}
 
 	private adjustExpectedActionCount(window: HistoryEntry<EvaluatedAction[]>, action: TrackedAction) {
