@@ -1,5 +1,5 @@
 import {Attribute} from 'event'
-import {ensureActions, BonusModifier, PotencySpecialCase} from '../type'
+import {ensureActions, BonusModifier} from '../type'
 
 export const DRG = ensureActions({
 	// -----
@@ -179,22 +179,19 @@ export const DRG = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		potencies: [{
-			value: 260,
+			value: 140,
 			bonusModifiers: [],
+			baseModifiers: [],
+		}, {
+			value: 180,
+			bonusModifiers: [BonusModifier.POSITIONAL],
 			baseModifiers: [],
 		}, {
 			value: 300,
-			bonusModifiers: [BonusModifier.POSITIONAL],
-			baseModifiers: [],
+			bonusModifiers: [BonusModifier.COMBO],
 		}, {
-			// Lance Mastery increases the potency of the 5th hit by 100
-			value: 360,
-			bonusModifiers: [],
-			baseModifiers: [PotencySpecialCase.DRG_LANCE_MASTERY],
-		}, {
-			value: 400,
-			bonusModifiers: [BonusModifier.POSITIONAL],
-			baseModifiers: [PotencySpecialCase.DRG_LANCE_MASTERY],
+			value: 340,
+			bonusModifiers: [BonusModifier.POSITIONAL, BonusModifier.COMBO],
 		}],
 		combo: {
 			from: [84, 25711],
@@ -208,22 +205,19 @@ export const DRG = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		potencies: [{
-			value: 260,
+			value: 140,
 			bonusModifiers: [],
+			baseModifiers: [],
+		}, {
+			value: 180,
+			bonusModifiers: [BonusModifier.POSITIONAL],
 			baseModifiers: [],
 		}, {
 			value: 300,
-			bonusModifiers: [BonusModifier.POSITIONAL],
-			baseModifiers: [],
+			bonusModifiers: [BonusModifier.COMBO],
 		}, {
-			// Lance Mastery increases the potency of the 5th hit by 100
-			value: 360,
-			bonusModifiers: [],
-			baseModifiers: [PotencySpecialCase.DRG_LANCE_MASTERY],
-		}, {
-			value: 400,
-			bonusModifiers: [BonusModifier.POSITIONAL],
-			baseModifiers: [PotencySpecialCase.DRG_LANCE_MASTERY],
+			value: 340,
+			bonusModifiers: [BonusModifier.POSITIONAL, BonusModifier.COMBO],
 		}],
 		combo: {
 			from: [88, 25722],
