@@ -86,6 +86,10 @@ export default class LanceCharge extends BuffWindow {
 					action: this.data.actions.MIRAGE_DIVE,
 					expectedPerWindow: 1,
 				},
+				{
+					action: this.data.actions.DRAGONFIRE_DIVE,
+					expectedPerWindow: 1,
+				},
 			],
 			suggestionIcon,
 			suggestionContent: <Trans id="drg.lc.suggestions.missedaction.content">Try to use as many of your oGCDs as possible during <ActionLink action="LANCE_CHARGE" />. Remember to keep your abilities on cooldown, when possible, to prevent them from drifting outside of your buff windows.</Trans>,
@@ -98,7 +102,7 @@ export default class LanceCharge extends BuffWindow {
 			adjustCount: this.adjustExpectedActionCount.bind(this),
 		}))
 
-		this.addEvaluator(new DisplayedActionEvaluator([this.data.actions.LIFE_SURGE, this.data.actions.DRAGONFIRE_DIVE]))
+		this.addEvaluator(new DisplayedActionEvaluator([this.data.actions.LIFE_SURGE]))
 	}
 
 	private onLcStatusApply(event: Events['statusApply']) {
