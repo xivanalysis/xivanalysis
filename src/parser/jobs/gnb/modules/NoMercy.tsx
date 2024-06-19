@@ -28,7 +28,9 @@ const GCD_SLOW = 2.47
 //At a minimum 3 carts will be used under No Mercy, if GNB is going fast, a 4th cart may be used TODO: Confirm Burst Strike's expectations
 const EXPECTED_USES = {
 	DOUBLE_DOWN: 1,
-	GNASHING_FANG: 1,
+	GNASHING_FANG: 0, //This is to handle 2 Cart bursts
+	SAVAGE_CLAW: 1,
+	WICKED_TALON: 1,
 	SONIC_BREAK: 1,
 	BLASTING_ZONE: 1,
 	BOW_SHOCK: 1,
@@ -94,6 +96,14 @@ export class NoMercy extends BuffWindow {
 					action: this.data.actions.GNASHING_FANG,
 					expectedPerWindow: EXPECTED_USES.GNASHING_FANG,
 				},
+				{
+					action: this.data.actions.SAVAGE_CLAW,
+					expectedPerWindow: EXPECTED_USES.SAVAGE_CLAW,
+				},
+				{
+					action: this.data.actions.WICKED_TALON,
+					expectedPerWindow: EXPECTED_USES.WICKED_TALON,
+				},
 
 				{
 					action: this.data.actions.DOUBLE_DOWN,
@@ -134,19 +144,43 @@ export class NoMercy extends BuffWindow {
 	}
 
 	private adjustExpectedActionCount(window: HistoryEntry<EvaluatedAction[]>, action: TrackedAction) {
+
 		//If Rushing, toss expected GCDs out the window
-		if (this.isRushedEndOfPullWindow(window) && action.action.id !== this.data.actions.LION_HEART.id) {
-			return -1
-		}
+		if (this.isRushedEndOfPullWindow(window)) {
+			if (action.action.id !== this.data.actions.LION_HEART.id && action.action.id !== this.data.actions.GNASHING_FANG.id) {
+				return -1
+			}
+		} else if (!this.isRushedEndOfPullWindow(window)) {
+			// TODO: Make better 2 cart implementation, scope creep for this module has removed it from initial support, if fastGNB remains a thing, it will be added.
+			// Gnashing Fang is adjusted in 2 cases:
+			// 1. If the user is running slower than the GCD_SLOW, Gnashing Fang is expected.
+			// 2. If the user casts it it was expected. (This is covering the edge case of 2.47 or faster GNB may use GF before NM for a dps gain, hence why the default is 0.
+			if (action.action.id === this.data.actions.GNASHING_FANG.id) {
+				if (this.globalCooldown.getDuration() > GCD_SLOW) {
+					return 1
+				}
 
-		if (action.action.id !== this.data.actions.LION_HEART.id) { return 0 }
+				if (window.data.find(cast => cast.action.id === this.data.actions.GNASHING_FANG.id)) {
+					return 1
+				}
+			}
 
-		//If Bloodfest was used and we're not in a rush, LionHeart is expected.
-		if (window.data.find(cast => cast.action.id === this.data.actions.BLOODFEST.id) && action.action.id === this.data.actions.LION_HEART.id && !this.isRushedEndOfPullWindow(window)) {
-			return 1
+			//LionHeart Adjusts in 2 ways:
+			// 1. If Bloodfest is used, Lion Heart is expected
+			// 2. If Lion Heart is used, Lion Heart is expected, this is an edge case where Bloodfest was used before No Mercy.
+			if (action.action.id === this.data.actions.LION_HEART.id) {
+				if (window.data.find(cast => cast.action.id === this.data.actions.BLOODFEST.id)) {
+					return 1
+				}
+				if ((window.data.find(cast => cast.action.id !== this.data.actions.BLOODFEST.id)) && window.data.find(cast => cast.action.id === this.data.actions.LION_HEART.id)) {
+					return 1
+				}
+			}
+			//Adjust nothing else besides Lion Heart and Gnashing Fang
+			if (action.action.id !== this.data.actions.LION_HEART.id) { return 0 }
+
 		}
 
 		return 0
 	}
-
 }

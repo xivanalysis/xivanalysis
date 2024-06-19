@@ -620,6 +620,7 @@
   "gnb.nomercy.suggestions.expected-uses.content": "<0/>の効果中に使用したアビリティを確認してください。理想的な状況下においては、<1/>、<2/>コンボ全体、そしてアビリティ全て、つまり<3/>、<4/>、1回以上の<5/>を効果時間中に使いましょう。",
   "gnb.nomercy.suggestions.gcds.content": "{0}回のウェポンスキル(GCD {GCD_SLOW}以下の場合は{1}回のウェポンスキル)を<0/>の効果時間中に使用するようにしましょう。GCDタイマーが最後の1/3になるまで待って<1/>を使用することで、中断が無い状況であれば、20秒の効果時間中にこの数のウェポンスキルを使用することができます。",
   "gnb.nomercy.title": "ノー・マーシー効果時間",
+  "gnb.nomercy.twocart.notes.header": "",
   "gnb.sonic-break.accordion.message": "",
   "gnb.sonic-break.suggestions.missing-ticks.content": "",
   "gnb.sonic-break.suggestions.missing-ticks.why": "",
