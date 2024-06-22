@@ -15,8 +15,9 @@ import {Message} from 'semantic-ui-react'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 
 const LC_DURATION = 20000
+const EXPECTED_NASTRONDS_PER_WINDOW = 3
 
-interface DfdTracker {
+export interface DfdTracker {
 	start: number
 	expected: boolean
 	used: boolean
@@ -74,20 +75,39 @@ export default class LanceCharge extends BuffWindow {
 
 		this.addEvaluator(new ExpectedActionsEvaluator({
 			expectedActions: [
+				// let's do... jumps then life actions
 				{
 					action: this.data.actions.HIGH_JUMP,
-					expectedPerWindow: 1,
-				},
-				{
-					action: this.data.actions.GEIRSKOGUL,
 					expectedPerWindow: 1,
 				},
 				{
 					action: this.data.actions.MIRAGE_DIVE,
 					expectedPerWindow: 1,
 				},
+				// due to the CD of DFD, we do expect it to always be used inside of BL
 				{
 					action: this.data.actions.DRAGONFIRE_DIVE,
+					expectedPerWindow: 1,
+				},
+				{
+					action: this.data.actions.RISE_OF_THE_DRAGON,
+					expectedPerWindow: 1,
+				},
+				// life actions
+				{
+					action: this.data.actions.GEIRSKOGUL,
+					expectedPerWindow: 1,
+				},
+				{
+					action: this.data.actions.NASTROND,
+					expectedPerWindow: EXPECTED_NASTRONDS_PER_WINDOW,
+				},
+				{
+					action: this.data.actions.STARDIVER,
+					expectedPerWindow: 1,
+				},
+				{
+					action: this.data.actions.STARCROSS,
 					expectedPerWindow: 1,
 				},
 			],
@@ -96,8 +116,8 @@ export default class LanceCharge extends BuffWindow {
 			suggestionWindowName,
 			severityTiers: {
 				1: SEVERITY.MINOR,
-				6: SEVERITY.MEDIUM,
-				12: SEVERITY.MAJOR,
+				3: SEVERITY.MEDIUM,
+				5: SEVERITY.MAJOR,
 			},
 			adjustCount: this.adjustExpectedActionCount.bind(this),
 		}))
