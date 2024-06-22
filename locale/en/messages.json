@@ -620,7 +620,6 @@
   "gnb.nomercy.suggestions.expected-uses.content": "Watch your uses of certain abilities during <0/>. Under ideal conditions, you should be using <1/>, a full <2/> combo, and all of your off-GCD skills <3/>, <4/>.",
   "gnb.nomercy.suggestions.gcds.content": "Try to land {0} weaponskills ({1} weaponskills at {GCD_SLOW} GCD or slower) during every <0/> window. A 20 second duration fits all weaponskills with full uptime if you wait until the last third of your GCD timer to activate <1/>.",
   "gnb.nomercy.title": "No Mercy Windows",
-  "gnb.nomercy.twocart.notes.header": "Is Forced Two Cart Burst?",
   "gnb.sonic-break.accordion.message": "<0/> is a {0} second dot that should tick {MAX_TICKS} times for damage, if you are finding that the target is going invulnerable, consider moving it forward in your <1/> windows.",
   "gnb.sonic-break.suggestions.missing-ticks.content": "One or more of your <0/> dots had ticks that did not deal damage.",
   "gnb.sonic-break.suggestions.missing-ticks.why": "You wasted {missedTicks} ticks of <0/>",
