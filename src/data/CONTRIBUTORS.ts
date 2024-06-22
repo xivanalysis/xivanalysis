@@ -1,7 +1,7 @@
 import {MessageDescriptor} from '@lingui/core'
 import {t} from '@lingui/macro'
 import {ensureRecord} from 'utilities'
-import {Job} from './JOBS'
+import {JOBS, Job} from './JOBS'
 
 export interface Contributor {
 	name: string
@@ -10,13 +10,14 @@ export interface Contributor {
 }
 
 const CONTRIBUTORS = ensureRecord<Contributor>()({
-	// KEY: {
-	// 	name: 'Your Name',
-	// 	avatar: require('./avatar/filename.jpg'),
-	// 	jobs: [
-	// 		JOBS.SOME_JOB,
-	// 	],
-	// },
+	RYAN: {
+		name: 'Ryan',
+		avatar: require('./avatar/Ryan.jpg'),
+		jobs: [
+			JOBS.GUNBREAKER,
+			JOBS.SAMURAI,
+		],
+	},
 })
 
 export default CONTRIBUTORS
