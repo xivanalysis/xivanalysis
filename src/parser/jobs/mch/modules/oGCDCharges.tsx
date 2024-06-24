@@ -39,7 +39,8 @@ type GaugeMap = Map<number, GaugeModifier>
 
 export class OGCDCharges extends CoreGauge {
 	static override title = t('mch.oGCDCharges.title')`Gauss Round/Ricochet Charges`
-
+	static override handle = 'ogcdcharges'
+	
 	@dependency private suggestions!: Suggestions
 
 	private gaussRound = this.add(new CounterGauge({
@@ -47,7 +48,7 @@ export class OGCDCharges extends CoreGauge {
 			handle: 'gaussRound',
 			label: <Trans id="mch.ogcdcharges.resource.gaussround">Gauss Round</Trans>,
 			color: GAUSS_ROUND_COLOR,
-			collapse: false,
+			collapse: true,
 		},
 		maximum: 3,
 		initialValue: 3,
@@ -68,7 +69,7 @@ export class OGCDCharges extends CoreGauge {
 			handle: 'ricochet',
 			label: <Trans id="mch.ogcdcharges.resource.ricochet">Richochet</Trans>,
 			color: RICOCHET_COLOR,
-			collapse: false,
+			collapse: true,
 		},
 		maximum: 3,
 		initialValue: 3,
