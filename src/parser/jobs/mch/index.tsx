@@ -26,8 +26,14 @@ export const MACHINIST = new Meta({
 	},
 	contributors: [
 		{user: CONTRIBUTORS.HINT, role: ROLES.MAINTAINER},
+		{user: CONTRIBUTORS.CHOCOLATE_TEA, role: ROLES.DEVELOPER},
 	],
 	changelog: [
+		{
+			date: new Date('2024-06-17'),
+			Changes: () => <>Added Gauss Round/Ricochet stacks display to timeline.</>,
+			contributors: [CONTRIBUTORS.CHOCOLATE_TEA],
+		},
 		{
 			date: new Date('2024-05-21'),
 			Changes: () => <>Fixed Reassemble count under Tincture showing as 1/1 when two Reassembles were used.</>,
