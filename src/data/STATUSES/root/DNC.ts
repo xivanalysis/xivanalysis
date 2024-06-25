@@ -1,3 +1,4 @@
+import {iconUrl} from 'data/icon'
 import {ensureStatuses} from '../type'
 import {SHARED} from './SHARED'
 
@@ -6,13 +7,13 @@ export const DNC = ensureStatuses({
 	SILKEN_SYMMETRY: {
 		id: 2693,
 		name: 'Flourishing Symmetry',
-		icon: 'https://xivapi.com/i/013000/013718.png',
+		icon: iconUrl(13718),
 		duration: 30000,
 	},
 	SILKEN_FLOW: {
 		id: 2694,
 		name: 'Flourishing Flow',
-		icon: 'https://xivapi.com/i/013000/013719.png',
+		icon: iconUrl(13719),
 		duration: 30000,
 	},
 	// Flourishing Symmetry/Flow are the Flourish-specific statuses introduced in 6.1, their data will get added in the 6.1 layer
@@ -21,113 +22,113 @@ export const DNC = ensureStatuses({
 	THREEFOLD_FAN_DANCE: {
 		id: 1820,
 		name: 'Threefold Fan Dance',
-		icon: 'https://xivapi.com/i/013000/013707.png',
+		icon: iconUrl(13707),
 		duration: 30000,
 	},
 	FOURFOLD_FAN_DANCE: {
 		id: 2699,
 		name: 'Fourfold Fan Dance',
-		icon: 'https://xivapi.com/i/013000/013723.png',
+		icon: iconUrl(13723),
 		duration: 30000,
 	},
 	FLOURISHING_STARFALL: {
 		id: 2700,
 		name: 'Flourishing Starfall',
-		icon: 'https://xivapi.com/i/013000/013724.png',
+		icon: iconUrl(13724),
 		duration: 20000,
 	},
 	STANDARD_STEP: {
 		id: 1818,
 		name: 'Standard Step',
-		icon: 'https://xivapi.com/i/013000/013705.png',
+		icon: iconUrl(13705),
 		duration: 15000,
 	},
 	TECHNICAL_STEP: {
 		id: 1819,
 		name: 'Technical Step',
-		icon: 'https://xivapi.com/i/013000/013706.png',
+		icon: iconUrl(13706),
 		duration: 15000,
 	},
 	STANDARD_FINISH: {
 		id: 1821,
 		name: 'Standard Finish',
-		icon: 'https://xivapi.com/i/013000/013708.png',
+		icon: iconUrl(13708),
 		duration: 60000,
 	},
 	TECHNICAL_FINISH: {
 		id: 1822,
 		name: 'Technical Finish',
-		icon: 'https://xivapi.com/i/013000/013709.png',
+		icon: iconUrl(13709),
 		duration: 20000,
 	},
 	FLOURISHING_FINISH: {
 		id: 2698,
 		name: 'Flourishing Finish',
-		icon: 'https://xivapi.com/i/013000/013722.png',
+		icon: iconUrl(13722),
 		duration: 30000,
 	},
 	CLOSED_POSITION: {
 		id: 1823,
 		name: 'Closed Position',
-		icon: 'https://xivapi.com/i/013000/013712.png',
+		icon: iconUrl(13712),
 	},
 	DANCE_PARTNER: {
 		id: 1824,
 		name: 'Dance Partner',
-		icon: 'https://xivapi.com/i/013000/013713.png',
+		icon: iconUrl(13713),
 	},
 	DEVILMENT: {
 		id: 1825,
 		name: 'Devilment',
-		icon: 'https://xivapi.com/i/013000/013714.png',
+		icon: iconUrl(13714),
 		duration: 20000,
 	},
 	SHIELD_SAMBA: {
 		id: 1826,
 		name: 'Shield Samba',
-		icon: 'https://xivapi.com/i/013000/013715.png',
+		icon: iconUrl(13715),
 		duration: 15000,
 	},
 	IMPROVISATION: {
 		id: 1827,
 		name: 'Improvisation',
-		icon: 'https://xivapi.com/i/013000/013716.png',
+		icon: iconUrl(13716),
 		duration: 15000,
 	},
 	RISING_RHYTHM: {
 		id: 2696,
 		name: 'Rising Rhythm',
-		icon: '	https://xivapi.com/i/017000/017350.png',
+		icon: iconUrl(17350),
 		duration: 15000,
 	},
 	IMPROVISATION_REGEN: {
 		id: 2695,
 		name: 'Improvisation',
-		icon: 'https://xivapi.com/i/013000/013720.png',
+		icon: iconUrl(13720),
 		duration: 15000,
 	},
 	IMPROVISED_FINISH: {
 		id: 2697,
 		name: 'Improvised Finish',
-		icon: 'https://xivapi.com/i/013000/013721.png',
+		icon: iconUrl(13721),
 		duration: 30000,
 	},
 	ESPRIT: { // The Esprit buff sourced from Standard Finish, applies to the DNC and their Dance Partner
 		id: 1847,
 		name: 'Esprit',
-		icon: 'https://xivapi.com/i/013000/013710.png',
+		icon: iconUrl(13710),
 		duration: 60000,
 	},
 	ESPRIT_TECHNICAL: { // The Esprit buff sourced from Technical finish. Superseded by ESPRIT
 		id: 1848,
 		name: 'Esprit',
-		icon: 'https://xivapi.com/i/013000/013711.png',
+		icon: iconUrl(13711),
 		duration: 20000,
 	},
 	STANDARD_FINISH_PARTNER: { // The standard finish buff you get when you're the DNC's partner
 		id: 2105,
 		name: 'Standard Finish',
-		icon: 'https://xivapi.com/i/013000/013708.png',
+		icon: iconUrl(13708),
 		duration: 60000,
 	},
 })

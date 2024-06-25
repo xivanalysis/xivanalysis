@@ -1,6 +1,7 @@
+import {iconUrl} from 'data/icon'
 import {ensureActions} from '../type'
 
-const icon = 'https://xivapi.com/i/000000/000103.png'
+const icon = iconUrl(103)
 
 export const LIMIT_BREAK = ensureActions({
 	// Tank LB1

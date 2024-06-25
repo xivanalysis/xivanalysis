@@ -1,3 +1,4 @@
+import {iconUrl} from 'data/icon'
 import {Layer} from 'data/layer'
 import {StatusRoot} from '../root'
 import {SHARED} from '../root/SHARED'
@@ -15,14 +16,14 @@ export const patch610: Layer<StatusRoot> = {
 		UNDEAD_REBIRTH: {
 			id: 3255,
 			name: 'Undead Rebirth',
-			icon: 'https://xivapi.com/i/013000/013124.png',
+			icon: iconUrl(13124),
 		},
 
 		// NIN 6.1 buff changes
 		MUG_VULNERABILITY_UP: {
 			id: 638,
 			name: 'Vulnerability Up',
-			icon: 'https://xivapi.com/i/015000/015020.png',
+			icon: iconUrl(15020),
 			duration: 20000,
 		},
 		TRICK_ATTACK_VULNERABILITY_UP: SHARED.UNKNOWN,
@@ -50,26 +51,26 @@ export const patch610: Layer<StatusRoot> = {
 		FLOURISHING_SYMMETRY: {
 			id: 3017,
 			name: 'Flourishing Symmetry',
-			icon: 'https://xivapi.com/i/013000/013725.png',
+			icon: iconUrl(13725),
 			duration: 30000,
 		},
 		FLOURISHING_FLOW: {
 			id: 3018,
 			name: 'Flourishing Flow',
-			icon: 'https://xivapi.com/i/013000/013726.png',
+			icon: iconUrl(13726),
 			duration: 30000,
 		},
 
 		// SMN 6.1 changes
 		SEARING_LIGHT: {
-			icon: 'https://xivapi.com/i/012000/012699.png',
+			icon: iconUrl(12699),
 		},
 
 		//PLD 6.1 changes
 		BLADE_OF_FAITH_READY: {
 			id: 3019,
 			name: 'Blade of Faith Ready',
-			icon: 'https://xivapi.com/i/012000/012519.png',
+			icon: iconUrl(12519),
 			duration: 30000,
 		},
 	},

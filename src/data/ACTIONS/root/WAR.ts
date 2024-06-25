@@ -1,3 +1,4 @@
+import {iconUrl} from 'data/icon'
 import {Attribute} from 'event'
 import {ensureActions} from '../type'
 import {SHARED} from './SHARED'
@@ -10,7 +11,7 @@ export const WAR = ensureActions({
 	TOMAHAWK: {
 		id: 46,
 		name: 'Tomahawk',
-		icon: 'https://xivapi.com/i/000000/000261.png',
+		icon: iconUrl(261),
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		breaksCombo: false,
@@ -19,7 +20,7 @@ export const WAR = ensureActions({
 	HEAVY_SWING: {
 		id: 31,
 		name: 'Heavy Swing',
-		icon: 'https://xivapi.com/i/000000/000260.png',
+		icon: iconUrl(260),
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		combo: {
@@ -30,7 +31,7 @@ export const WAR = ensureActions({
 	MAIM: {
 		id: 37,
 		name: 'Maim',
-		icon: 'https://xivapi.com/i/000000/000255.png',
+		icon: iconUrl(255),
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		combo: {
@@ -41,7 +42,7 @@ export const WAR = ensureActions({
 	STORMS_PATH: {
 		id: 42,
 		name: 'Storm\'s Path',
-		icon: 'https://xivapi.com/i/000000/000258.png',
+		icon: iconUrl(258),
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		combo: {
@@ -53,7 +54,7 @@ export const WAR = ensureActions({
 	STORMS_EYE: {
 		id: 45,
 		name: 'Storm\'s Eye',
-		icon: 'https://xivapi.com/i/000000/000264.png',
+		icon: iconUrl(264),
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		statusesApplied: ['SURGING_TEMPEST'],
@@ -66,7 +67,7 @@ export const WAR = ensureActions({
 	FELL_CLEAVE: {
 		id: 3549,
 		name: 'Fell Cleave',
-		icon: 'https://xivapi.com/i/002000/002557.png',
+		icon: iconUrl(2557),
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		breaksCombo: false,
@@ -75,7 +76,7 @@ export const WAR = ensureActions({
 	INNER_CHAOS: {
 		id: 16465,
 		name: 'Inner Chaos',
-		icon: 'https://xivapi.com/i/002000/002568.png',
+		icon: iconUrl(2568),
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		breaksCombo: false,
@@ -84,7 +85,7 @@ export const WAR = ensureActions({
 	OVERPOWER: {
 		id: 41,
 		name: 'Overpower',
-		icon: 'https://xivapi.com/i/000000/000254.png',
+		icon: iconUrl(254),
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		combo: {
@@ -95,7 +96,7 @@ export const WAR = ensureActions({
 	MYTHRIL_TEMPEST: {
 		id: 16462,
 		name: 'Mythril Tempest',
-		icon: 'https://xivapi.com/i/002000/002565.png',
+		icon: iconUrl(2565),
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		statusesApplied: ['SURGING_TEMPEST'],
@@ -108,7 +109,7 @@ export const WAR = ensureActions({
 	DECIMATE: {
 		id: 3550,
 		name: 'Decimate',
-		icon: 'https://xivapi.com/i/002000/002558.png',
+		icon: iconUrl(2558),
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		breaksCombo: false,
@@ -117,7 +118,7 @@ export const WAR = ensureActions({
 	CHAOTIC_CYCLONE: {
 		id: 16463,
 		name: 'Chaotic Cyclone',
-		icon: 'https://xivapi.com/i/002000/002566.png',
+		icon: iconUrl(2566),
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		breaksCombo: false,
@@ -126,7 +127,7 @@ export const WAR = ensureActions({
 	PRIMAL_REND: {
 		id: 25753,
 		name: 'Primal Rend',
-		icon: 'https://xivapi.com/i/002000/002571.png',
+		icon: iconUrl(2571),
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		breaksCombo: false,
@@ -138,7 +139,7 @@ export const WAR = ensureActions({
 	EQUILIBRIUM: {
 		id: 3552,
 		name: 'Equilibrium',
-		icon: 'https://xivapi.com/i/002000/002560.png',
+		icon: iconUrl(2560),
 		cooldown: 60000,
 		statusesApplied: ['EQUILIBRIUM'],
 	},
@@ -146,7 +147,7 @@ export const WAR = ensureActions({
 	THRILL_OF_BATTLE: {
 		id: 40,
 		name: 'Thrill of Battle',
-		icon: 'https://xivapi.com/i/000000/000263.png',
+		icon: iconUrl(263),
 		cooldown: 90000,
 		statusesApplied: ['THRILL_OF_BATTLE'],
 	},
@@ -154,7 +155,7 @@ export const WAR = ensureActions({
 	HOLMGANG: {
 		id: 43,
 		name: 'Holmgang',
-		icon: 'https://xivapi.com/i/000000/000266.png',
+		icon: iconUrl(266),
 		cooldown: 240000,
 		statusesApplied: ['HOLMGANG'],
 	},
@@ -162,7 +163,7 @@ export const WAR = ensureActions({
 	VENGEANCE: {
 		id: 44,
 		name: 'Vengeance',
-		icon: 'https://xivapi.com/i/000000/000267.png',
+		icon: iconUrl(267),
 		cooldown: 120000,
 		statusesApplied: ['VENGEANCE'],
 	},
@@ -170,7 +171,7 @@ export const WAR = ensureActions({
 	BLOODWHETTING: {
 		id: 25751,
 		name: 'Bloodwhetting',
-		icon: 'https://xivapi.com/i/002000/002569.png',
+		icon: iconUrl(2569),
 		cooldown: 25000,
 		cooldownGroup: 4,
 		statusesApplied: ['BLOODWHETTING', 'STEM_THE_FLOW', 'STEM_THE_TIDE'],
@@ -179,7 +180,7 @@ export const WAR = ensureActions({
 	NASCENT_FLASH: {
 		id: 16464,
 		name: 'Nascent Flash',
-		icon: 'https://xivapi.com/i/002000/002567.png',
+		icon: iconUrl(2567),
 		cooldown: 25000,
 		cooldownGroup: 4,
 		statusesApplied: ['NASCENT_FLASH', 'NASCENT_GLINT', 'STEM_THE_FLOW', 'STEM_THE_TIDE'],
@@ -188,7 +189,7 @@ export const WAR = ensureActions({
 	SHAKE_IT_OFF: {
 		id: 7388,
 		name: 'Shake It Off',
-		icon: 'https://xivapi.com/i/002000/002563.png',
+		icon: iconUrl(2563),
 		cooldown: 90000,
 		statusesApplied: ['SHAKE_IT_OFF'],
 	},
@@ -196,7 +197,7 @@ export const WAR = ensureActions({
 	ONSLAUGHT: {
 		id: 7386,
 		name: 'Onslaught',
-		icon: 'https://xivapi.com/i/002000/002561.png',
+		icon: iconUrl(2561),
 		cooldown: 30000,
 		charges: 3,
 	},
@@ -204,7 +205,7 @@ export const WAR = ensureActions({
 	UPHEAVAL: {
 		id: 7387,
 		name: 'Upheaval',
-		icon: 'https://xivapi.com/i/002000/002562.png',
+		icon: iconUrl(2562),
 		cooldown: 30000,
 		cooldownGroup: 6,
 	},
@@ -212,7 +213,7 @@ export const WAR = ensureActions({
 	OROGENY: {
 		id: 25752,
 		name: 'Orogeny',
-		icon: 'https://xivapi.com/i/002000/002570.png',
+		icon: iconUrl(2570),
 		cooldown: 30000,
 		cooldownGroup: 6,
 	},
@@ -220,7 +221,7 @@ export const WAR = ensureActions({
 	INNER_RELEASE: {
 		id: 7389,
 		name: 'Inner Release',
-		icon: 'https://xivapi.com/i/002000/002564.png',
+		icon: iconUrl(2564),
 		cooldown: 60000,
 		statusesApplied: ['INNER_RELEASE', 'PRIMAL_REND_READY'],
 	},
@@ -228,7 +229,7 @@ export const WAR = ensureActions({
 	INFURIATE: {
 		id: 52,
 		name: 'Infuriate',
-		icon: 'https://xivapi.com/i/002000/002555.png',
+		icon: iconUrl(2555),
 		cooldown: 60000,
 		charges: 2,
 		statusesApplied: ['NASCENT_CHAOS'],
@@ -237,7 +238,7 @@ export const WAR = ensureActions({
 	DEFIANCE: {
 		id: 48,
 		name: 'Defiance',
-		icon: 'https://xivapi.com/i/002000/002551.png',
+		icon: iconUrl(2551),
 		cooldown: 10000,
 		cooldownGroup: 3,
 		statusesApplied: ['DEFIANCE'],

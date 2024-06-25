@@ -1,3 +1,4 @@
+import {iconUrl} from 'data/icon'
 import {Attribute} from 'event'
 import {ensureActions} from '../type'
 import {SHARED} from './SHARED'
@@ -9,7 +10,7 @@ export const DRK = ensureActions({
 	GRIT: {
 		id: 3629,
 		name: 'Grit',
-		icon: 'https://xivapi.com/i/003000/003070.png',
+		icon: iconUrl(3070),
 	},
 
 	RELEASE_GRIT: SHARED.UNKNOWN, // Added in patch 6.3 layer
@@ -21,28 +22,28 @@ export const DRK = ensureActions({
 	DARK_MIND: {
 		id: 3634,
 		name: 'Dark Mind',
-		icon: 'https://xivapi.com/i/003000/003076.png',
+		icon: iconUrl(3076),
 		cooldown: 60000,
 		statusesApplied: ['DARK_MIND'],
 	},
 	SHADOW_WALL: {
 		id: 3636,
 		name: 'Shadow Wall',
-		icon: 'https://xivapi.com/i/003000/003075.png',
+		icon: iconUrl(3075),
 		cooldown: 120000,
 		statusesApplied: ['SHADOW_WALL'],
 	},
 	LIVING_DEAD: {
 		id: 3638,
 		name: 'Living Dead',
-		icon: 'https://xivapi.com/i/003000/003077.png',
+		icon: iconUrl(3077),
 		cooldown: 300000,
 		statusesApplied: ['LIVING_DEAD', 'WALKING_DEAD'],
 	},
 	OBLATION: {
 		id: 25754,
 		name: 'Oblation',
-		icon: 'https://xivapi.com/i/003000/003089.png',
+		icon: iconUrl(3089),
 		cooldown: 60000,
 		statusesApplied: ['OBLATION'],
 		charges: 2,
@@ -51,7 +52,7 @@ export const DRK = ensureActions({
 	DARK_MISSIONARY: {
 		id: 16471,
 		name: 'Dark Missionary',
-		icon: 'https://xivapi.com/i/003000/003087.png',
+		icon: iconUrl(3087),
 		cooldown: 90000,
 		statusesApplied: ['DARK_MISSIONARY'],
 	},
@@ -59,21 +60,21 @@ export const DRK = ensureActions({
 	BLOOD_WEAPON: {
 		id: 3625,
 		name: 'Blood Weapon',
-		icon: 'https://xivapi.com/i/003000/003071.png',
+		icon: iconUrl(3071),
 		cooldown: 60000,
 		statusesApplied: ['BLOOD_WEAPON'],
 	},
 	THE_BLACKEST_NIGHT: {
 		id: 7393,
 		name: 'The Blackest Night',
-		icon: 'https://xivapi.com/i/003000/003081.png',
+		icon: iconUrl(3081),
 		cooldown: 15000,
 		statusesApplied: ['BLACKEST_NIGHT'],
 	},
 	DELIRIUM: {
 		id: 7390,
 		name: 'Delirium',
-		icon: 'https://xivapi.com/i/003000/003078.png',
+		icon: iconUrl(3078),
 		cooldown: 60000,
 		statusesApplied: ['DELIRIUM'],
 	},
@@ -81,65 +82,65 @@ export const DRK = ensureActions({
 	PLUNGE: {
 		id: 3640,
 		name: 'Plunge',
-		icon: 'https://xivapi.com/i/003000/003061.png',
+		icon: iconUrl(3061),
 		cooldown: 30000,
 		charges: 2,
 	},
 	CARVE_AND_SPIT: {
 		id: 3643,
 		name: 'Carve and Spit',
-		icon: 'https://xivapi.com/i/003000/003058.png',
+		icon: iconUrl(3058),
 		cooldown: 60000,
 		cooldownGroup: 14,
 	},
 	SALTED_EARTH: {
 		id: 3639,
 		name: 'Salted Earth',
-		icon: 'https://xivapi.com/i/003000/003066.png',
+		icon: iconUrl(3066),
 		cooldown: 90000,
 		statusesApplied: ['SALTED_EARTH'],
 	},
 	ABYSSAL_DRAIN: {
 		id: 3641,
 		name: 'Abyssal Drain',
-		icon: 'https://xivapi.com/i/003000/003064.png',
+		icon: iconUrl(3064),
 		cooldown: 60000,
 		cooldownGroup: 14,
 	},
 	LIVING_SHADOW: {
 		id: 16472,
 		name: 'Living Shadow',
-		icon: 'https://xivapi.com/i/003000/003088.png',
+		icon: iconUrl(3088),
 		cooldown: 120000,
 	},
 	FLOOD_OF_SHADOW: {
 		id: 16469,
 		name: 'Flood of Shadow',
-		icon: 'https://xivapi.com/i/003000/003085.png',
+		icon: iconUrl(3085),
 		cooldown: 2000,
 	},
 	EDGE_OF_SHADOW: {
 		id: 16470,
 		name: 'Edge of Shadow',
-		icon: 'https://xivapi.com/i/003000/003086.png',
+		icon: iconUrl(3086),
 		cooldown: 2000,
 	},
 	SALT_AND_DARKNESS: {
 		id: 25755,
 		name: 'Salt and Darkness',
-		icon: 'https://xivapi.com/i/003000/003090.png',
+		icon: iconUrl(3090),
 		cooldown: 20000,
 	},
 	SALT_AND_DARKNESS_DAMAGE: {
 		id: 25756,
 		name: 'Salt and Darkness',
-		icon: 'https://xivapi.com/i/003000/003090.png',
+		icon: iconUrl(3090),
 		cooldown: 20000,
 	},
 	SHADOWBRINGER: {
 		id: 25757,
 		name: 'Shadowbringer',
-		icon: 'https://xivapi.com/i/003000/003091.png',
+		icon: iconUrl(3091),
 		cooldown: 60000,
 		charges: 2,
 	},
@@ -150,7 +151,7 @@ export const DRK = ensureActions({
 	HARD_SLASH: {
 		id: 3617,
 		name: 'Hard Slash',
-		icon: 'https://xivapi.com/i/003000/003051.png',
+		icon: iconUrl(3051),
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		combo: {
@@ -160,7 +161,7 @@ export const DRK = ensureActions({
 	SYPHON_STRIKE: {
 		id: 3623,
 		name: 'Syphon Strike',
-		icon: 'https://xivapi.com/i/003000/003054.png',
+		icon: iconUrl(3054),
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		combo: {
@@ -170,7 +171,7 @@ export const DRK = ensureActions({
 	SOULEATER: {
 		id: 3632,
 		name: 'Souleater',
-		icon: 'https://xivapi.com/i/003000/003055.png',
+		icon: iconUrl(3055),
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		combo: {
@@ -182,7 +183,7 @@ export const DRK = ensureActions({
 	UNLEASH: {
 		id: 3621,
 		name: 'Unleash',
-		icon: 'https://xivapi.com/i/003000/003063.png',
+		icon: iconUrl(3063),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		combo: {
@@ -192,7 +193,7 @@ export const DRK = ensureActions({
 	STALWART_SOUL: {
 		id: 16468,
 		name: 'Stalwart Soul',
-		icon: 'https://xivapi.com/i/003000/003084.png',
+		icon: iconUrl(3084),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		combo: {
@@ -204,7 +205,7 @@ export const DRK = ensureActions({
 	UNMEND: {
 		id: 3624,
 		name: 'Unmend',
-		icon: 'https://xivapi.com/i/003000/003062.png',
+		icon: iconUrl(3062),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		breaksCombo: false,
@@ -213,7 +214,7 @@ export const DRK = ensureActions({
 	BLOODSPILLER: {
 		id: 7392,
 		name: 'Bloodspiller',
-		icon: 'https://xivapi.com/i/003000/003080.png',
+		icon: iconUrl(3080),
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		breaksCombo: false,
@@ -221,7 +222,7 @@ export const DRK = ensureActions({
 	QUIETUS: {
 		id: 7391,
 		name: 'Quietus',
-		icon: 'https://xivapi.com/i/003000/003079.png',
+		icon: iconUrl(3079),
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		breaksCombo: false,
@@ -230,41 +231,41 @@ export const DRK = ensureActions({
 	ESTEEM_ABYSSAL_DRAIN: {
 		id: 17904,
 		name: 'Abyssal Drain',
-		icon: 'https://xivapi.com/i/003000/003064.png',
+		icon: iconUrl(3064),
 	},
 	ESTEEM_BLOODSPILLER: {
 		id: 17909,
 		name: 'Bloodspiller',
-		icon: 'https://xivapi.com/i/003000/003080.png',
+		icon: iconUrl(3080),
 	},
 	ESTEEM_CARVE_AND_SPIT: {
 		id: 17915,
 		name: 'Carve and Spit',
-		icon: 'https://xivapi.com/i/003000/003058.png',
+		icon: iconUrl(3058),
 	},
 	ESTEEM_EDGE_OF_SHADOW: {
 		id: 17908,
 		name: 'Edge of Shadow',
-		icon: 'https://xivapi.com/i/003000/003086.png',
+		icon: iconUrl(3086),
 	},
 	ESTEEM_FLOOD_OF_SHADOW: {
 		id: 17907,
 		name: 'Flood of Shadow',
-		icon: 'https://xivapi.com/i/003000/003085.png',
+		icon: iconUrl(3085),
 	},
 	ESTEEM_PLUNGE: {
 		id: 17905,
 		name: 'Plunge',
-		icon: 'https://xivapi.com/i/003000/003061.png',
+		icon: iconUrl(3061),
 	},
 	ESTEEM_QUIETUS: {
 		id: 17906,
 		name: 'Quietus',
-		icon: 'https://xivapi.com/i/003000/003079.png',
+		icon: iconUrl(3079),
 	},
 	ESTEEM_SHADOWBRINGER: {
 		id: 25881,
 		name: 'Shadowbringer',
-		icon: 'https://xivapi.com/i/003000/003091.png',
+		icon: iconUrl(3091),
 	},
 })

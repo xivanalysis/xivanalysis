@@ -1,3 +1,4 @@
+import {iconUrl} from 'data/icon'
 import {Attribute} from 'event'
 import {ensureActions} from '../type'
 
@@ -6,7 +7,7 @@ export const SGE = ensureActions({
 	DIAGNOSIS: {
 		id: 24284,
 		name: 'Diagnosis',
-		icon: 'https://xivapi.com/i/003000/003652.png',
+		icon: iconUrl(3652),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 1500,
@@ -15,7 +16,7 @@ export const SGE = ensureActions({
 	EUKRASIAN_DIAGNOSIS: {
 		id: 24291,
 		name: 'Eukrasian Diagnosis',
-		icon: 'https://xivapi.com/i/003000/003659.png',
+		icon: iconUrl(3659),
 		onGcd: true,
 		gcdRecast: 1500,
 		mpCost: 900,
@@ -24,14 +25,14 @@ export const SGE = ensureActions({
 	HAIMA: {
 		id: 24305,
 		name: 'Haima',
-		icon: 'https://xivapi.com/i/003000/003673.png',
+		icon: iconUrl(3673),
 		cooldown: 120000,
 		statusesApplied: ['HAIMA', 'HAIMATINON'],
 	},
 	EGEIRO: {
 		id: 24287,
 		name: 'Egeiro',
-		icon: 'https://xivapi.com/i/003000/003655.png',
+		icon: iconUrl(3655),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 8000,
@@ -42,7 +43,7 @@ export const SGE = ensureActions({
 	PROGNOSIS: {
 		id: 24286,
 		name: 'Prognosis',
-		icon: 'https://xivapi.com/i/003000/003654.png',
+		icon: iconUrl(3654),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 2000,
@@ -51,7 +52,7 @@ export const SGE = ensureActions({
 	EUKRASIAN_PROGNOSIS: {
 		id: 24292,
 		name: 'Eukrasian Prognosis',
-		icon: 'https://xivapi.com/i/003000/003660.png',
+		icon: iconUrl(3660),
 		onGcd: true,
 		gcdRecast: 1500,
 		mpCost: 900,
@@ -60,35 +61,35 @@ export const SGE = ensureActions({
 	PANHAIMA: {
 		id: 24311,
 		name: 'Panhaima',
-		icon: 'https://xivapi.com/i/003000/003679.png',
+		icon: iconUrl(3679),
 		cooldown: 120000,
 		statusesApplied: ['PANHAIMA', 'PANHAIMATINON'],
 	},
 	PHYSIS: {
 		id: 24288,
 		name: 'Physis',
-		icon: 'https://xivapi.com/i/003000/003656.png',
+		icon: iconUrl(3656),
 		cooldown: 60000,
 		statusesApplied: ['PHYSIS'],
 	},
 	PHYSIS_II: {
 		id: 24302,
 		name: 'Physis II',
-		icon: 'https://xivapi.com/i/003000/003670.png',
+		icon: iconUrl(3670),
 		cooldown: 60000,
 		statusesApplied: ['PHYSIS_II', 'AUTOPHYSIS'],
 	},
 	HOLOS: {
 		id: 24310,
 		name: 'Holos',
-		icon: 'https://xivapi.com/i/003000/003678.png',
+		icon: iconUrl(3678),
 		cooldown: 120000,
 		statusesApplied: ['HOLOS'],
 	},
 	PEPSIS: {
 		id: 24301,
 		name: 'Pepsis',
-		icon: 'https://xivapi.com/i/003000/003669.png',
+		icon: iconUrl(3669),
 		cooldown: 15000,
 	},
 
@@ -96,14 +97,14 @@ export const SGE = ensureActions({
 	KARDIA: {
 		id: 24285,
 		name: 'Kardia',
-		icon: 'https://xivapi.com/i/003000/003653.png',
+		icon: iconUrl(3653),
 		cooldown: 5000,
 		statusesApplied: ['KARDIA', 'KARDION'],
 	},
 	EUKRASIA: {
 		id: 24290,
 		name: 'Eukrasia',
-		icon: 'https://xivapi.com/i/003000/003658.png',
+		icon: iconUrl(3658),
 		onGcd: true,
 		gcdRecast: 1000,
 		statusesApplied: ['EUKRASIA'],
@@ -111,27 +112,27 @@ export const SGE = ensureActions({
 	SOTERIA: {
 		id: 24294,
 		name: 'Soteria',
-		icon: 'https://xivapi.com/i/003000/003662.png',
+		icon: iconUrl(3662),
 		cooldown: 90000,
 		statusesApplied: ['SOTERIA'],
 	},
 	ICARUS: {
 		id: 24295,
 		name: 'Icarus',
-		icon: 'https://xivapi.com/i/003000/003663.png',
+		icon: iconUrl(3663),
 		cooldown: 45000,
 	},
 	ZOE: {
 		id: 24300,
 		name: 'Zoe',
-		icon: 'https://xivapi.com/i/003000/003668.png',
+		icon: iconUrl(3668),
 		cooldown: 90000,
 		statusesApplied: ['ZOE'],
 	},
 	KRASIS: {
 		id: 24317,
 		name: 'Krasis',
-		icon: 'https://xivapi.com/i/003000/003685.png',
+		icon: iconUrl(3685),
 		cooldown: 60000,
 		statusesApplied: ['KRASIS'],
 	},
@@ -140,32 +141,32 @@ export const SGE = ensureActions({
 	RHIZOMATA: {
 		id: 24309,
 		name: 'Rhizomata',
-		icon: 'https://xivapi.com/i/003000/003677.png',
+		icon: iconUrl(3677),
 		cooldown: 90000,
 	},
 	DRUOCHOLE: {
 		id: 24296,
 		name: 'Druochole',
-		icon: 'https://xivapi.com/i/003000/003664.png',
+		icon: iconUrl(3664),
 		cooldown: 1000,
 	},
 	IXOCHOLE: {
 		id: 24299,
 		name: 'Ixochole',
-		icon: 'https://xivapi.com/i/003000/003667.png',
+		icon: iconUrl(3667),
 		cooldown: 30000,
 	},
 	KERACHOLE: {
 		id: 24298,
 		name: 'Kerachole',
-		icon: 'https://xivapi.com/i/003000/003666.png',
+		icon: iconUrl(3666),
 		cooldown: 30000,
 		statusesApplied: ['KERACHOLE', 'KERAKEIA'],
 	},
 	TAUROCHOLE: {
 		id: 24303,
 		name: 'Taurochole',
-		icon: 'https://xivapi.com/i/003000/003671.png',
+		icon: iconUrl(3671),
 		cooldown: 45000,
 		statusesApplied: ['TAUROCHOLE'],
 	},
@@ -174,7 +175,7 @@ export const SGE = ensureActions({
 	DOSIS: {
 		id: 24283,
 		name: 'Dosis',
-		icon: 'https://xivapi.com/i/003000/003651.png',
+		icon: iconUrl(3651),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 1500,
@@ -183,7 +184,7 @@ export const SGE = ensureActions({
 	DOSIS_II: {
 		id: 24306,
 		name: 'Dosis II',
-		icon: 'https://xivapi.com/i/003000/003674.png',
+		icon: iconUrl(3674),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 1500,
@@ -192,7 +193,7 @@ export const SGE = ensureActions({
 	DOSIS_III: {
 		id: 24312,
 		name: 'Dosis III',
-		icon: 'https://xivapi.com/i/003000/003680.png',
+		icon: iconUrl(3680),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 1500,
@@ -201,7 +202,7 @@ export const SGE = ensureActions({
 	EUKRASIAN_DOSIS: {
 		id: 24293,
 		name: 'Eukrasian Dosis',
-		icon: 'https://xivapi.com/i/003000/003661.png',
+		icon: iconUrl(3661),
 		onGcd: true,
 		gcdRecast: 1500,
 		mpCost: 400,
@@ -210,7 +211,7 @@ export const SGE = ensureActions({
 	EUKRASIAN_DOSIS_II: {
 		id: 24308,
 		name: 'Eukrasian Dosis II',
-		icon: 'https://xivapi.com/i/003000/003676.png',
+		icon: iconUrl(3676),
 		onGcd: true,
 		gcdRecast: 1500,
 		mpCost: 500,
@@ -219,7 +220,7 @@ export const SGE = ensureActions({
 	EUKRASIAN_DOSIS_III: {
 		id: 24314,
 		name: 'Eukrasian Dosis III',
-		icon: 'https://xivapi.com/i/003000/003682.png',
+		icon: iconUrl(3682),
 		onGcd: true,
 		gcdRecast: 1500,
 		mpCost: 600,
@@ -230,21 +231,21 @@ export const SGE = ensureActions({
 	TOXIKON: {
 		id: 24304,
 		name: 'Toxikon',
-		icon: 'https://xivapi.com/i/003000/003672.png',
+		icon: iconUrl(3672),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 	},
 	TOXIKON_II: {
 		id: 24316,
 		name: 'Toxikon II',
-		icon: 'https://xivapi.com/i/003000/003684.png',
+		icon: iconUrl(3684),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 	},
 	DYSKRASIA: {
 		id: 24297,
 		name: 'Dyskrasia',
-		icon: 'https://xivapi.com/i/003000/003665.png',
+		icon: iconUrl(3665),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		mpCost: 400,
@@ -252,7 +253,7 @@ export const SGE = ensureActions({
 	DYSKRASIA_II: {
 		id: 24315,
 		name: 'Dyskrasia II',
-		icon: 'https://xivapi.com/i/003000/003683.png',
+		icon: iconUrl(3683),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		mpCost: 400,
@@ -260,7 +261,7 @@ export const SGE = ensureActions({
 	PHLEGMA: {
 		id: 24289,
 		name: 'Phlegma',
-		icon: 'https://xivapi.com/i/003000/003657.png',
+		icon: iconUrl(3657),
 		onGcd: true,
 		gcdRecast: 2500,
 		speedAttribute: Attribute.SPELL_SPEED,
@@ -271,7 +272,7 @@ export const SGE = ensureActions({
 	PHLEGMA_II: {
 		id: 24307,
 		name: 'Phlegma II',
-		icon: 'https://xivapi.com/i/003000/003675.png',
+		icon: iconUrl(3675),
 		onGcd: true,
 		gcdRecast: 2500,
 		speedAttribute: Attribute.SPELL_SPEED,
@@ -282,7 +283,7 @@ export const SGE = ensureActions({
 	PHLEGMA_III: {
 		id: 24313,
 		name: 'Phlegma III',
-		icon: 'https://xivapi.com/i/003000/003681.png',
+		icon: iconUrl(3681),
 		onGcd: true,
 		gcdRecast: 2500,
 		speedAttribute: Attribute.SPELL_SPEED,
@@ -293,7 +294,7 @@ export const SGE = ensureActions({
 	PNEUMA: {
 		id: 24318,
 		name: 'Pneuma',
-		icon: 'https://xivapi.com/i/003000/003686.png',
+		icon: iconUrl(3686),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 1500,
@@ -306,7 +307,7 @@ export const SGE = ensureActions({
 	PNEUMA_HEAL: {
 		id: 27524,
 		name: 'Pneuma',
-		icon: 'https://xivapi.com/i/003000/003686.png',
+		icon: iconUrl(3686),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 1500,
