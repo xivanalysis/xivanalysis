@@ -1,24 +1,25 @@
+import {iconUrl} from 'data/icon'
 import {ensureStatuses} from '../type'
 
 export const SAM = ensureStatuses({
 	THIRD_EYE: {
 		id: 1232,
 		name: 'Third Eye',
-		icon: 'https://xivapi.com/i/013000/013307.png',
+		icon: iconUrl(13307),
 		duration: 3000,
 	},
 
 	FUGETSU: {
 		id: 1298,
 		name: 'Fugetsu',
-		icon: 'https://xivapi.com/i/013000/013311.png',
+		icon: iconUrl(13311),
 		duration: 40000,
 	},
 
 	FUKA: {
 		id: 1299,
 		name: 'Fuka',
-		icon: 'https://xivapi.com/i/013000/013312.png',
+		icon: iconUrl(13312),
 		duration: 40000,
 		speedModifier: 0.87,
 	},
@@ -26,35 +27,35 @@ export const SAM = ensureStatuses({
 	MEDITATE: {
 		id: 1231,
 		name: 'Meditate',
-		icon: 'https://xivapi.com/i/013000/013306.png',
+		icon: iconUrl(13306),
 		duration: 15000,
 	},
 
 	MEDITATION: {
 		id: 1865,
 		name: 'Meditation',
-		icon: 'https://xivapi.com/i/019000/019501.png',
+		icon: iconUrl(19501),
 		duration: 45000,
 	},
 
 	HIGANBANA: {
 		id: 1228,
 		name: 'Higanbana',
-		icon: 'https://xivapi.com/i/013000/013304.png',
+		icon: iconUrl(13304),
 		duration: 60000,
 	},
 
 	KAITEN: {
 		id: 1229,
 		name: 'Kaiten',
-		icon: 'https://xivapi.com/i/013000/013305.png',
+		icon: iconUrl(13305),
 		duration: 10000,
 	},
 
 	MEIKYO_SHISUI: {
 		id: 1233,
 		name: 'Meikyo Shisui',
-		icon: 'https://xivapi.com/i/013000/013309.png',
+		icon: iconUrl(13309),
 		duration: 15000,
 		stacksApplied: 3,
 	},
@@ -62,14 +63,14 @@ export const SAM = ensureStatuses({
 	ENHANCED_ENPI: {
 		id: 1236,
 		name: 'Enhanced Enpi',
-		icon: 'https://xivapi.com/i/013000/013310.png',
+		icon: iconUrl(13310),
 		duration: 15000,
 	},
 
 	OGI_NAMIKIRI_READY: {
 		id: 2959,
 		name: 'Ogi Namikiri Ready',
-		icon: 'https://xivapi.com/i/013000/013313.png',
+		icon: iconUrl(13313),
 		duration: 30000,
 	},
 })

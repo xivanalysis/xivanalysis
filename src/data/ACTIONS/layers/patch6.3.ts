@@ -1,3 +1,4 @@
+import {iconUrl} from 'data/icon'
 import {Layer} from 'data/layer'
 import {ActionRoot} from '../root'
 
@@ -42,14 +43,14 @@ export const patch630: Layer<ActionRoot> = {
 		RELEASE_IRON_WILL: {
 			id: 32065,
 			name: 'Release Iron Will',
-			icon: 'https://xivapi.com/i/002000/002521.png',
+			icon: iconUrl(2521),
 			onGcd: false,
 			cooldown: 1000,
 		},
 		BULWARK: {
 			id: 22,
 			name: 'Bulwark',
-			icon: 'https://xivapi.com/i/000000/000167.png',
+			icon: iconUrl(167),
 			onGcd: false,
 			cooldown: 90000,
 			statusesApplied: ['BULWARK'],
@@ -72,7 +73,7 @@ export const patch630: Layer<ActionRoot> = {
 		RELEASE_DEFIANCE: {
 			id: 32066,
 			name: 'Release Defiance',
-			icon: 'https://xivapi.com/i/002000/002572.png',
+			icon: iconUrl(2572),
 			onGcd: false,
 			cooldown: 1000,
 		},
@@ -80,7 +81,7 @@ export const patch630: Layer<ActionRoot> = {
 		RELEASE_GRIT: {
 			id: 32067,
 			name: 'Release Grit',
-			icon: 'https://xivapi.com/i/003000/003092.png',
+			icon: iconUrl(3092),
 			onGcd: false,
 			cooldown: 1000,
 		},
@@ -88,7 +89,7 @@ export const patch630: Layer<ActionRoot> = {
 		RELEASE_ROYAL_GUARD: {
 			id: 32068,
 			name: 'Release Royal Guard',
-			icon: 'https://xivapi.com/i/003000/003433.png',
+			icon: iconUrl(3433),
 			onGcd: false,
 			cooldown: 1000,
 		},

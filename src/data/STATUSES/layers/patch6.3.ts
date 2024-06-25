@@ -1,3 +1,4 @@
+import {iconUrl} from 'data/icon'
 import {Layer} from 'data/layer'
 import {StatusRoot} from '../root'
 import {SHARED} from '../root/SHARED'
@@ -12,21 +13,21 @@ export const patch630: Layer<StatusRoot> = {
 		DIVINE_MIGHT: {
 			id: 2673,
 			name: 'Divine Might',
-			icon: 'https://xivapi.com/i/012000/012521.png',
+			icon: iconUrl(12521),
 			duration: 30000,
 			stacksApplied: 1,
 		},
 		DIVINE_VEIL: {
 			id: 727,
 			name: 'Divine Veil',
-			icon: 'https://xivapi.com/i/012000/012509.png',
+			icon: iconUrl(12509),
 			duration: 30000,
 		},
 		DIVINE_VEIL_PROC: SHARED.UNKNOWN,
 		BULWARK: {
 			id: 77,
 			name: 'Bulwark',
-			icon: 'https://xivapi.com/i/010000/010156.png',
+			icon: iconUrl(10156),
 			duration: 10000,
 		},
 		BLADE_OF_VALOR: SHARED.UNKNOWN,
@@ -34,7 +35,7 @@ export const patch630: Layer<StatusRoot> = {
 		CONFITEOR_READY: {
 			id: 3019,
 			name: 'Confiteor Ready',
-			icon: 'https://xivapi.com/i/012000/012520.png',
+			icon: iconUrl(12520),
 			duration: 30000,
 		},
 
@@ -43,7 +44,7 @@ export const patch630: Layer<StatusRoot> = {
 		SHAKE_IT_OFF_OVER_TIME: {
 			id: 2108,
 			name: 'Shake It Off (Over Time)',
-			icon: 'https://xivapi.com/i/012000/012567.png',
+			icon: iconUrl(12567),
 			duration: 15000,
 		},
 
@@ -52,7 +53,7 @@ export const patch630: Layer<StatusRoot> = {
 		EARTHS_REPLY: {
 			id: 1180,
 			name: "Earth's Reply",
-			icon: 'https://xivapi.com/i/012000/012531.png',
+			icon: iconUrl(12531),
 			duration: 15000,
 		},
 
@@ -60,7 +61,7 @@ export const patch630: Layer<StatusRoot> = {
 		OVERHEATED: {
 			id: 2688,
 			name: 'Overheated',
-			icon: 'https://xivapi.com/i/018000/018385.png',
+			icon: iconUrl(18385),
 			duration: 10000,
 		},
 	},

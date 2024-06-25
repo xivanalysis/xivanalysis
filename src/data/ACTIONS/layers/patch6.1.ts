@@ -1,3 +1,4 @@
+import {iconUrl} from 'data/icon'
 import {Layer} from 'data/layer'
 import {ActionRoot} from '../root'
 import {SHARED} from '../root/SHARED'
@@ -91,7 +92,7 @@ export const patch610: Layer<ActionRoot> = {
 
 		// SMN 6.1 changes
 		SEARING_LIGHT: {
-			icon: 'https://xivapi.com/i/002000/002780.png',
+			icon: iconUrl(2780),
 			statusesApplied: ['SEARING_LIGHT'],
 		},
 		RUBY_RUIN_III: {
@@ -118,7 +119,7 @@ export const patch610: Layer<ActionRoot> = {
 		LITURGY_OF_THE_BELL_ACTIVATION: {
 			id: 28509,
 			name: 'Liturgy of the Bell (Detonate)',
-			icon: 'https://xivapi.com/i/002000/002649.png',
+			icon: iconUrl(2649),
 			cooldown: 1000,
 		},
 

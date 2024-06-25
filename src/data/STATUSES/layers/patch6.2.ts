@@ -1,3 +1,4 @@
+import {iconUrl} from 'data/icon'
 import {Layer} from 'data/layer'
 import {StatusRoot} from '../root'
 
@@ -8,7 +9,7 @@ export const patch620: Layer<StatusRoot> = {
 		HOLOSAKOS: {
 			id: 3365,
 			name: 'Holosakos',
-			icon: 'https://xivapi.com/i/012000-012972.png',
+			icon: iconUrl(12972),
 			duration: 30000,
 		},
 
