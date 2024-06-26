@@ -56,6 +56,7 @@ export default class Procs extends CoreProcs {
 				this.data.actions.THUNDER_II_IN_MAGENTA,
 				this.data.actions.HOLY_IN_WHITE,
 				this.data.actions.COMET_IN_BLACK,
+				this.data.actions.STAR_PRISM,
 			],
 		},
 		{
