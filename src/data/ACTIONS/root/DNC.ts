@@ -31,7 +31,7 @@ export const DNC = ensureActions({
 		],
 	},
 	FINISHING_MOVE: {
-		id: 7025790, // TODO
+		id: 36984,
 		icon: 'https://xivapi.com/i/003000/003459.png', // TODO
 		name: 'Finishing Move',
 		onGcd: true,
@@ -40,7 +40,7 @@ export const DNC = ensureActions({
 		cooldown: 30000,
 	},
 	LAST_DANCE: {
-		id: 7025792, // TODO
+		id: 36983,
 		icon: 'https://xivapi.com/i/003000/003480.png', // TODO
 		name: 'Last Dance',
 		onGcd: true,
@@ -222,7 +222,7 @@ export const DNC = ensureActions({
 		speedAttribute: Attribute.SKILL_SPEED,
 	},
 	DANCE_OF_THE_DAWN: {
-		id: 7016005, // TODO
+		id: 36985,
 		icon: 'https://xivapi.com/i/003000/003476.png', // TODO
 		name: 'Dance of the Dawn',
 		onGcd: true,
