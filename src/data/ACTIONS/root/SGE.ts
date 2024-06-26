@@ -59,7 +59,7 @@ export const SGE = ensureActions({
 		statusesApplied: ['EUKRASIAN_PROGNOSIS'],
 	},
 	EUKRASIAN_PROGNOSIS_II: {
-		id: 7024292, // TODO
+		id: 37034,
 		name: 'Eukrasian Prognosis II',
 		icon: 'https://xivapi.com/i/003000/003660.png', // TODO
 		onGcd: true,
@@ -146,7 +146,7 @@ export const SGE = ensureActions({
 		statusesApplied: ['KRASIS'],
 	},
 	PHILOSOPHIA: {
-		id: 7024285, // TODO
+		id: 37035, // TODO
 		name: 'Philosophia',
 		icon: 'https://xivapi.com/i/003000/003653.png', // TODO
 		cooldown: 180000,
@@ -275,7 +275,7 @@ export const SGE = ensureActions({
 		mpCost: 400,
 	},
 	EUKRASIAN_DYSKRASIA: {
-		id: 7024315,
+		id: 37032,
 		name: 'Eukrasian Dyskrasia',
 		icon: 'https://xivapi.com/i/003000/003683.png', // TODO
 		onGcd: true,
@@ -317,7 +317,7 @@ export const SGE = ensureActions({
 		mpCost: 400,
 	},
 	PSYCHE: {
-		id: 7024313, // TODO
+		id: 37033,
 		name: 'Psyche',
 		icon: 'https://xivapi.com/i/003000/003681.png', // TODO
 		onGcd: false,
