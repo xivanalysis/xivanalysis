@@ -5,6 +5,7 @@ import {filter} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
 import CastTime from 'parser/core/modules/CastTime'
 import {Data} from 'parser/core/modules/Data'
+import {HYPERPHANTASIA_SPELLS} from './CommonData'
 
 export default class Inspiration extends Analyser {
 	static override handle = 'inspiration'
@@ -14,6 +15,8 @@ export default class Inspiration extends Analyser {
 	@dependency private castTime!: CastTime
 
 	private castTimeIndex: number | null = null
+
+	private hyperphantasiaSpellIds = HYPERPHANTASIA_SPELLS.map(key => this.data.actions[key].id)
 
 	override initialise() {
 		const inspirationFilter = filter<Event>()
@@ -28,10 +31,10 @@ export default class Inspiration extends Analyser {
 		this.addEventHook('complete', this.onComplete)
 	}
 
-	// Heavily simplified version of Ley Lines, since this doesn't seem to have the paired status effects that tell you whether you're actually
-	// Getting the bonus or not. Given the size of the landscape, this shouldn't be as much of a problem compared to Ley Lines
+	// Heavily simplified version of Ley Lines, since this doesn't affect all casts, only the hyperphantasia consumers
+	// It does seem like it works the same as Circle of Power where Inspiraiton is only applied while in the buff area, so there is that
 	private onGain() {
-		this.castTimeIndex = this.castTime.setPercentageAdjustment('all', this.data.statuses.INSPIRATION.speedModifier, 'both')
+		this.castTimeIndex = this.castTime.setPercentageAdjustment(this.hyperphantasiaSpellIds, this.data.statuses.INSPIRATION.speedModifier, 'both')
 	}
 
 	private onDrop() {
