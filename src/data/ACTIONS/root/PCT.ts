@@ -11,7 +11,7 @@ export const PCT_COOLDOWN_GROUPS = {
 export const PCT = ensureActions({
 	/** Single-target Astral aspected spells */
 	FIRE_IN_RED: {
-		id: 1,
+		id: 34650,
 		name: 'Fire in Red',
 		icon: 'TODO',
 		onGcd: true,
@@ -21,7 +21,7 @@ export const PCT = ensureActions({
 		statusesApplied: ['AETHERHUES'],
 	},
 	AERO_IN_GREEN: {
-		id: 2,
+		id: 34651,
 		name: 'Aero in Green',
 		icon: 'TODO',
 		onGcd: true,
@@ -31,7 +31,7 @@ export const PCT = ensureActions({
 		statusesApplied: ['AETHERHUES_II'],
 	},
 	WATER_IN_BLUE: {
-		id: 3,
+		id: 34652,
 		name: 'Water in Blue',
 		icon: 'TODO',
 		onGcd: true,
@@ -42,7 +42,7 @@ export const PCT = ensureActions({
 
 	/** AoE Astral aspected spells */
 	FIRE_II_IN_RED: {
-		id: 4,
+		id: 34656,
 		name: 'Fire II in Red',
 		icon: 'TODO',
 		onGcd: true,
@@ -52,7 +52,7 @@ export const PCT = ensureActions({
 		statusesApplied: ['AETHERHUES'],
 	},
 	AERO_II_IN_GREEN: {
-		id: 5,
+		id: 34657,
 		name: 'Aero II in Green',
 		icon: 'TODO',
 		onGcd: true,
@@ -62,7 +62,7 @@ export const PCT = ensureActions({
 		statusesApplied: ['AETHERHUES_II'],
 	},
 	WATER_II_IN_BLUE: {
-		id: 6,
+		id: 34658,
 		name: 'Water II in Blue',
 		icon: 'TODO',
 		onGcd: true,
@@ -71,7 +71,7 @@ export const PCT = ensureActions({
 		mpCost: 300,
 	},
 	HOLY_IN_WHITE: {
-		id: 7,
+		id: 34662,
 		name: 'Holy in White',
 		icon: 'TODO',
 		onGcd: true,
@@ -81,7 +81,7 @@ export const PCT = ensureActions({
 
 	/** Single-target Umbral aspected spells */
 	BLIZZARD_IN_CYAN: {
-		id: 8,
+		id: 34653,
 		name: 'Blizzard in Cyan',
 		icon: 'TODO',
 		onGcd: true,
@@ -92,7 +92,7 @@ export const PCT = ensureActions({
 		statusesApplied: ['AETHERHUES'],
 	},
 	STONE_IN_YELLOW: {
-		id: 9,
+		id: 34654,
 		name: 'Stone in Yellow',
 		icon: 'TODO',
 		onGcd: true,
@@ -103,7 +103,7 @@ export const PCT = ensureActions({
 		statusesApplied: ['AETHERHUES_II'],
 	},
 	THUNDER_IN_MAGENTA: {
-		id: 10,
+		id: 34655,
 		name: 'Thunder in Magenta',
 		icon: 'TODO',
 		onGcd: true,
@@ -115,7 +115,7 @@ export const PCT = ensureActions({
 
 	/** AoE Umbral aspected spells */
 	BLIZZARD_II_IN_CYAN: {
-		id: 11,
+		id: 34659,
 		name: 'Blizzard II in Cyan',
 		icon: 'TODO',
 		onGcd: true,
@@ -126,7 +126,7 @@ export const PCT = ensureActions({
 		statusesApplied: ['AETHERHUES'],
 	},
 	STONE_II_IN_YELLOW: {
-		id: 12,
+		id: 34660,
 		name: 'Stone II in Yellow',
 		icon: 'TODO',
 		onGcd: true,
@@ -137,7 +137,7 @@ export const PCT = ensureActions({
 		statusesApplied: ['AETHERHUES_II'],
 	},
 	THUNDER_II_IN_MAGENTA: {
-		id: 13,
+		id: 34661,
 		name: 'Thunder II in Magenta',
 		icon: 'TODO',
 		onGcd: true,
@@ -147,7 +147,7 @@ export const PCT = ensureActions({
 		mpCost: 400,
 	},
 	COMET_IN_BLACK: {
-		id: 14,
+		id: 34663,
 		name: 'Comet in Black',
 		icon: 'TODO',
 		onGcd: true,
@@ -158,7 +158,7 @@ export const PCT = ensureActions({
 
 	/** Unaspected spells */
 	RAINBOW_DRIP: {
-		id: 15,
+		id: 34688,
 		name: 'Rainbow Drip',
 		icon: 'TODO',
 		onGcd: true,
@@ -167,7 +167,7 @@ export const PCT = ensureActions({
 		gcdRecast: 6000,
 	},
 	STAR_PRISM: {
-		id: 16,
+		id: 34681,
 		name: 'Star Prism',
 		icon: 'TODO',
 		onGcd: true,
@@ -176,7 +176,7 @@ export const PCT = ensureActions({
 
 	/** Creature canvas spells */
 	CREATURE_MOTIF: {
-		id: 17,
+		id: 34689,
 		name: 'Creature Motif',
 		icon: 'TODO',
 		onGcd: true,
@@ -185,7 +185,7 @@ export const PCT = ensureActions({
 		gcdRecast: 4000,
 	},
 	POM_MOTIF: {
-		id: 18,
+		id: 34664,
 		name: 'Pom Motif',
 		icon: 'TODO',
 		onGcd: true,
@@ -194,7 +194,7 @@ export const PCT = ensureActions({
 		gcdRecast: 4000,
 	},
 	WING_MOTIF: {
-		id: 19,
+		id: 34665,
 		name: 'Wing Motif',
 		icon: 'TODO',
 		onGcd: true,
@@ -203,7 +203,7 @@ export const PCT = ensureActions({
 		gcdRecast: 4000,
 	},
 	CLAW_MOTIF: {
-		id: 20,
+		id: 34666,
 		name: 'Claw Motif',
 		icon: 'TODO',
 		onGcd: true,
@@ -212,7 +212,7 @@ export const PCT = ensureActions({
 		gcdRecast: 4000,
 	},
 	MAW_MOTIF: {
-		id: 21,
+		id: 34667,
 		name: 'Maw Motif',
 		icon: 'TODO',
 		onGcd: true,
@@ -223,7 +223,7 @@ export const PCT = ensureActions({
 
 	/** Creature canvas abilites */
 	LIVING_MUSE: {
-		id: 22,
+		id: 35347,
 		name: 'Living Muse',
 		icon: 'TODO',
 		cooldown: 40000,
@@ -231,7 +231,7 @@ export const PCT = ensureActions({
 		cooldownGroup: PCT_COOLDOWN_GROUPS.LIVING_MUSE,
 	},
 	POM_MUSE: {
-		id: 23,
+		id: 34670,
 		name: 'Pom Muse',
 		icon: 'TODO',
 		cooldown: 40000,
@@ -239,7 +239,7 @@ export const PCT = ensureActions({
 		cooldownGroup: PCT_COOLDOWN_GROUPS.LIVING_MUSE,
 	},
 	WINGED_MUSE: {
-		id: 24,
+		id: 34671,
 		name: 'Winged Muse',
 		icon: 'TODO',
 		cooldown: 40000,
@@ -247,14 +247,14 @@ export const PCT = ensureActions({
 		cooldownGroup: PCT_COOLDOWN_GROUPS.LIVING_MUSE,
 	},
 	MOG_OF_THE_AGES: {
-		id: 25,
+		id: 34676,
 		name: 'Mog of the Ages',
 		icon: 'TODO',
 		cooldown: 30000,
 		cooldownGroup: PCT_COOLDOWN_GROUPS.MOG_OF_THE_AGES,
 	},
 	CLAWED_MUSE: {
-		id: 26,
+		id: 34672,
 		name: 'Clawed Muse',
 		icon: 'TODO',
 		cooldown: 40000,
@@ -262,7 +262,7 @@ export const PCT = ensureActions({
 		cooldownGroup: PCT_COOLDOWN_GROUPS.LIVING_MUSE,
 	},
 	FANGED_MUSE: {
-		id: 27,
+		id: 34673,
 		name: 'Fanged Muse',
 		icon: 'TODO',
 		cooldown: 40000,
@@ -270,7 +270,7 @@ export const PCT = ensureActions({
 		cooldownGroup: PCT_COOLDOWN_GROUPS.LIVING_MUSE,
 	},
 	RETRIBUTION_OF_THE_MADEEN: {
-		id: 28,
+		id: 34677,
 		name: 'Mog of the Ages',
 		icon: 'TODO',
 		cooldown: 30000,
@@ -279,7 +279,7 @@ export const PCT = ensureActions({
 
 	/** Weapon canvas spells */
 	WEAPON_MOTIF: {
-		id: 29,
+		id: 34690,
 		name: 'Weapon Motif',
 		icon: 'TODO',
 		onGcd: true,
@@ -288,7 +288,7 @@ export const PCT = ensureActions({
 		gcdRecast: 4000,
 	},
 	HAMMER_MOTIF: {
-		id: 30,
+		id: 34668,
 		name: 'Hammer Motif',
 		icon: 'TODO',
 		onGcd: true,
@@ -297,7 +297,7 @@ export const PCT = ensureActions({
 		gcdRecast: 4000,
 	},
 	HAMMER_STAMP: {
-		id: 31,
+		id: 34678,
 		name: 'Hammer Stamp',
 		icon: 'TODO',
 		onGcd: true,
@@ -307,7 +307,7 @@ export const PCT = ensureActions({
 		},
 	},
 	HAMMER_BRUSH: {
-		id: 32,
+		id: 34679,
 		name: 'Hammer Brush',
 		icon: 'TODO',
 		onGcd: true,
@@ -317,7 +317,7 @@ export const PCT = ensureActions({
 		},
 	},
 	POLISHING_HAMMER: {
-		id: 33,
+		id: 34680,
 		name: 'Polishing Hammer',
 		icon: 'TODO',
 		onGcd: true,
@@ -330,7 +330,7 @@ export const PCT = ensureActions({
 
 	/** Weapon canvas abilites */
 	STEEL_MUSE: {
-		id: 34,
+		id: 35348,
 		name: 'Steel Muse',
 		icon: 'TODO',
 		cooldown: 40000,
@@ -338,7 +338,7 @@ export const PCT = ensureActions({
 		cooldownGroup: PCT_COOLDOWN_GROUPS.STEEL_MUSE,
 	},
 	STRIKING_MUSE: {
-		id: 35,
+		id: 34674,
 		name: 'Striking Muse',
 		icon: 'TODO',
 		cooldown: 40000,
@@ -349,7 +349,7 @@ export const PCT = ensureActions({
 
 	/** Landscape canvas spells */
 	LANDSCAPE_MOTIF: {
-		id: 36,
+		id: 34691,
 		name: 'Lendscape Motif',
 		icon: 'TODO',
 		onGcd: true,
@@ -358,7 +358,7 @@ export const PCT = ensureActions({
 		gcdRecast: 4000,
 	},
 	STARRY_SKY_MOTIF: {
-		id: 37,
+		id: 34669,
 		name: 'Starry Sky Motif',
 		icon: 'TODO',
 		onGcd: true,
@@ -369,14 +369,14 @@ export const PCT = ensureActions({
 
 	/** Landscape canvas abilities */
 	SCENIC_MUSE: {
-		id: 38,
+		id: 35349,
 		name: 'Scenic Muse',
 		icon: 'TODO',
 		cooldown: 120000,
 		cooldownGroup: PCT_COOLDOWN_GROUPS.SCENIC_MUSE,
 	},
 	STARRY_MUSE: {
-		id: 39,
+		id: 34675,
 		name: 'Starry Muse',
 		icon: 'TODO',
 		cooldown: 40000,
@@ -387,28 +387,28 @@ export const PCT = ensureActions({
 
 	/** Utility */
 	TEMPURA_COAT: {
-		id: 40,
+		id: 34685,
 		name: 'Tempura Coat',
 		icon: 'TODO',
 		cooldown: 60000,
 		statusesApplied: ['TEMPURA_COAT'],
 	},
 	TEMPURA_GRASSA: {
-		id: 41,
+		id: 34686,
 		name: 'Tempura Grassa',
 		icon: 'TODO',
 		cooldown: 1000,
 		statusesApplied: ['TEMPURA_GRASSA'],
 	},
 	SMUDGE: {
-		id: 42,
+		id: 34684,
 		name: 'Smudge',
 		icon: 'TODO',
 		cooldown: 20000,
 		statusesApplied: ['SMUDGE'],
 	},
 	SUBTRACTIVE_PALLETTE: {
-		id: 43,
+		id: 34683,
 		name: 'Subtractive Pallette',
 		icon: 'TODO',
 		cooldown: 20000,
