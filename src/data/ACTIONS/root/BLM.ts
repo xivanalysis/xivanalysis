@@ -108,7 +108,7 @@ export const BLM = ensureActions({
 		castTime: 3000,
 	},
 	FLARE_STAR: {
-		id: 7000162, // TODO
+		id: 36989,
 		name: 'Flare Star',
 		icon: 'https://xivapi.com/i/002000/002652.png', // TODO
 		onGcd: true,
@@ -124,7 +124,7 @@ export const BLM = ensureActions({
 		statusesApplied: ['THUNDER_III'],
 	},
 	HIGH_THUNDER: {
-		id: 7000153, // TODO
+		id: 36986,
 		name: 'High Thunder',
 		icon: 'https://xivapi.com/i/000000/000459.png', // TODO
 		onGcd: true,
@@ -140,7 +140,7 @@ export const BLM = ensureActions({
 		statusesApplied: ['THUNDER_IV'],
 	},
 	HIGH_THUNDER_II: {
-		id: 707420, // TODO
+		id: 36987,
 		name: 'High Thunder II',
 		icon: 'https://xivapi.com/i/002000/002662.png', // TODO
 		onGcd: true,
@@ -208,7 +208,7 @@ export const BLM = ensureActions({
 		cooldown: 3000,
 	},
 	RETRACE: {
-		id: 7003573, // TODO
+		id: 36988,
 		name: 'Retrace',
 		icon: 'https://xivapi.com/i/002000/002656.png', // TODO
 		cooldown: 40000,
