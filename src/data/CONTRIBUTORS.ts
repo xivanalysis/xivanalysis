@@ -12,7 +12,7 @@ export interface Contributor {
 const CONTRIBUTORS = ensureRecord<Contributor>()({
 	RYAN: {
 		name: 'Ryan',
-		avatar: require('./avatar/Ryan.jpg'),
+		avatar: require('./avatar/Ryan.png'),
 		jobs: [
 			JOBS.GUNBREAKER,
 			JOBS.SAMURAI,
