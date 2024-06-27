@@ -11,7 +11,7 @@ export const SAM = ensureStatuses({
 	TENGETSU: { //TODO: Icon
 		id: 3853,
 		name: 'Tengetsu',
-		icon: 'icon',
+		icon: iconUrl(3853),
 		duration: 4000,
 	},
 
@@ -82,23 +82,23 @@ export const SAM = ensureStatuses({
 	},
 
 	TSUBAME_GAESHI_READY: { //TODO: Id & Icon
-		id: 0,
+		id: 3852,
 		name: 'Tsubame-Gaeshi Ready',
-		icon: 'icon',
+		icon: iconUrl(3852),
 		duration: 30000,
 	},
 
 	ZANSHIN_READY: { //TODO: Id & Icon
-		id: 166,
+		id: 3855,
 		name: 'Zanshin Ready',
-		icon: 'icon',
+		icon: iconUrl(3855),
 		duration: 30000,
 	},
 
 	TENDO: { //TODO: Id & Icon
 		id: 3856,
 		name: 'Tendo',
-		icon: 'icon',
+		icon: iconUrl(3856),
 		duration: 30000,
 	},
 })

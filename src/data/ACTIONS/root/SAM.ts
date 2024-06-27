@@ -22,18 +22,7 @@ export const SAM = ensureActions({
 	GYOFU: {
 		id: 36963,
 		name: 'Gyofu',
-		icon: 'icon', //TODO: Add Icon
-		onGcd: true,
-		speedAttribute: Attribute.SKILL_SPEED,
-		combo: {
-			start: true,
-		},
-	},
-
-	GYOFU: {
-		id: 36963,
-		name: 'Gyofu',
-		icon: 'icon', //TODO: Add Icon
+		icon: iconUrl(36963),
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		combo: {
@@ -149,16 +138,7 @@ export const SAM = ensureActions({
 	TENDO_GOKEN: { //TODO: Verify Icon
 		id: 36965,
 		name: 'Tendo Goken',
-		icon: 'icon',
-		onGcd: true,
-		speedAttribute: Attribute.SKILL_SPEED,
-		castTime: 1300,
-	},
-
-	TENDO_GOKEN: { //TODO: Verify Icon
-		id: 36965,
-		name: 'Tendo Goken',
-		icon: 'icon',
+		icon: iconUrl(36965),
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		castTime: 1300,
@@ -214,11 +194,11 @@ export const SAM = ensureActions({
 	TENDO_SETSUGEKKA: { //TODO: Verify, Icon
 		id: 36966,
 		name: 'Tendo Setsugekka',
-		icon: 'https://xivapi.com/i/003000/003162.png',
+		icon: iconUrl(36966),
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		castTime: 1300,
-		gcdRecast: 3500,
+		gcdRecast: 3200,
 	},
 
 	YUKIKAZE: {
@@ -247,7 +227,7 @@ export const SAM = ensureActions({
 	TSUBAME_GAESHI: {
 		id: 16483,
 		name: 'Tsubame Gaeshi',
-		icon: 'https://xivapi.com/i/003000/003180.png',
+		icon: iconUrl(16483),
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 	},
@@ -255,7 +235,7 @@ export const SAM = ensureActions({
 	KAESHI_GOKEN: {
 		id: 16485,
 		name: 'Kaeshi: Goken',
-		icon: 'https://xivapi.com/i/003000/003182.png',
+		icon: iconUrl(16485),
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		gcdRecast: 2500,
@@ -264,7 +244,7 @@ export const SAM = ensureActions({
 	KAESHI_SETSUGEKKA: {
 		id: 16486,
 		name: 'Kaeshi: Setsugekka',
-		icon: 'https://xivapi.com/i/003000/003183.png',
+		icon: iconUrl(16486),
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		gcdRecast: 2500,
@@ -273,7 +253,7 @@ export const SAM = ensureActions({
 	TENDO_KAESHI_GOKEN: { //TODO Id, Icon, Recast
 		id: 36967,
 		name: 'Tendo Kaeshi Goken',
-		icon: 'icon',
+		icon: iconUrl(36967),
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		gcdRecast: 2500,
@@ -285,7 +265,7 @@ export const SAM = ensureActions({
 		icon: 'icon',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		gcdRecast: 3500,
+		gcdRecast: 3200,
 	},
 
 	OGI_NAMIKIRI: {
@@ -319,7 +299,7 @@ export const SAM = ensureActions({
 	TENGETSU: {
 		id: 36962,
 		name: 'Tengetsu',
-		icon: 'icon',
+		icon: iconUrl(36962),
 		cooldown: 15000,
 		statusesApplied: ['TENGETSU'],
 	},
@@ -410,54 +390,6 @@ export const SAM = ensureActions({
 		cooldownGroup: 10,
 	},
 
-	TSUBAME_GAESHI: {
-		id: 16483,
-		name: 'Tsubame Gaeshi',
-		icon: iconUrl(3180),
-		onGcd: true,
-		speedAttribute: Attribute.SKILL_SPEED,
-		cooldown: 60000,
-		charges: 2,
-	},
-
-	KAESHI_HIGANBANA: {
-		id: 16484,
-		name: 'Kaeshi: Higanbana',
-		icon: iconUrl(3181),
-		onGcd: true,
-		speedAttribute: Attribute.SKILL_SPEED,
-		cooldown: 60000,
-		gcdRecast: 2500,
-		cooldownGroup: SAM_COOLDOWN_GROUP.TSUBAME,
-		statusesApplied: ['HIGANBANA'],
-		charges: 2, //I have to give All Tsubame actions 2 charges for CDDT to function properly.
-	},
-
-	KAESHI_GOKEN: {
-		id: 16485,
-		name: 'Kaeshi: Goken',
-		icon: iconUrl(3182),
-		onGcd: true,
-		speedAttribute: Attribute.SKILL_SPEED,
-		gcdRecast: 2500,
-		cooldown: 60000,
-		cooldownGroup: SAM_COOLDOWN_GROUP.TSUBAME,
-		charges: 2, //I have to give All Tsubame actions 2 charges for CDDT to function properly.
-	},
-
-	KAESHI_SETSUGEKKA: {
-		id: 16486,
-		name: 'Kaeshi: Setsugekka',
-		icon: iconUrl(3183),
-		onGcd: true,
-		speedAttribute: Attribute.SKILL_SPEED,
-		gcdRecast: 2500,
-		cooldown: 60000,
-		cooldownGroup: SAM_COOLDOWN_GROUP.TSUBAME,
-		charges: 2, //I have to give All Tsubame actions 2 charges for CDDT to function properly.
-
-	},
-
 	SHOHA: {
 		id: 16487,
 		name: 'Shoha',
@@ -468,7 +400,7 @@ export const SAM = ensureActions({
 	ZANSHIN: {
 		id: 36964,
 		name: 'Zanshin',
-		icon: 'icon',
+		icon: iconUrl(36964),
 		cooldown: 1000,
 	},
 })
