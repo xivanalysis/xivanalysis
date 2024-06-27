@@ -231,6 +231,12 @@ Array [
     "type": "action",
   },
   Object {
+    "actor": "15",
+    "level": 90,
+    "timestamp": 1600002865189,
+    "type": "actorUpdate",
+  },
+  Object {
     "source": "15",
     "status": 1000743,
     "target": "15",
