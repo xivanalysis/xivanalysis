@@ -15,15 +15,15 @@ export const BLM = ensureStatuses({
 		duration: 21000,
 	},
 	HIGH_THUNDER: {
-		id: 7000163, // TODO
+		id: 3871,
 		name: 'High Thunder',
-		icon: 'https://xivapi.com/i/010000/010459.png', // TODO
+		icon: '12661',
 		duration: 30000,
 	},
 	HIGH_THUNDER_II: {
-		id: 7001210, // TODO
+		id: 3872,
 		name: 'High Thunder II',
-		icon: 'https://xivapi.com/i/012000/012657.png', // TODO
+		icon: '12662',
 		duration: 24000,
 	},
 	TRIPLECAST: {
@@ -38,9 +38,9 @@ export const BLM = ensureStatuses({
 		duration: 30000,
 	},
 	THUNDERHEAD: {
-		id: 7000164, // TODO
+		id: 3870,
 		name: 'Thunderhead',
-		icon: 'https://xivapi.com/i/010000/010461.png', // TODO
+		icon: '12660',
 		duration: 30000,
 	},
 	LEY_LINES: {
