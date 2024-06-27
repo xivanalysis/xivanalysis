@@ -1,3 +1,4 @@
+import {iconUrl} from 'data/icon'
 import {ensureStatuses} from '../type'
 
 export const SHARED = ensureStatuses({
@@ -5,49 +6,49 @@ export const SHARED = ensureStatuses({
 		id: 0,
 		name: 'Unknown',
 		// System action - red background, gold cross
-		icon: 'https://xivapi.com/i/000000/000026.png',
+		icon: iconUrl(26),
 	},
 
 	RAISE: {
 		id: 148,
 		name: 'Raise',
-		icon: 'https://xivapi.com/i/010000/010406.png',
+		icon: iconUrl(10406),
 	},
 
 	WEAKNESS: {
 		id: 43,
 		name: 'Weakness',
-		icon: 'https://xivapi.com/i/015000/015010.png',
+		icon: iconUrl(15010),
 	},
 
 	BRINK_OF_DEATH: {
 		id: 44,
 		name: 'Brink of Death',
-		icon: 'https://xivapi.com/i/015000/015011.png',
+		icon: iconUrl(15011),
 	},
 
 	TRANSCENDENT: {
 		id: 418,
 		name: 'Transcendent',
-		icon: 'https://xivapi.com/i/015000/015273.png',
+		icon: iconUrl(15273),
 		duration: 5000,
 	},
 
 	MEDICATED: {
 		id: 49,
 		name: 'Medicated',
-		icon: 'https://xivapi.com/i/016000/016203.png',
+		icon: iconUrl(16203),
 	},
 
 	WELL_FED: {
 		id: 48,
 		name: 'Well Fed',
-		icon: 'https://xivapi.com/i/016000/016202.png',
+		icon: iconUrl(16202),
 	},
 
 	SQUADRON_RATIONING_MANUAL: {
 		id: 1084,
 		name: 'Squadron Rationing Manual',
-		icon: 'https://xivapi.com/i/016000/016508.png',
+		icon: iconUrl(16508),
 	},
 })

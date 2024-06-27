@@ -1,93 +1,94 @@
+import {iconUrl} from 'data/icon'
 import {ensureStatuses} from '../type'
 
 export const SCH = ensureStatuses({
 	BIO_II: {
 		id: 189,
 		name: 'Bio II',
-		icon: 'https://xivapi.com/i/010000/010505.png',
+		icon: iconUrl(10505),
 		duration: 30000,
 	},
 	BIOLYSIS: {
 		id: 1895,
 		name: 'Biolysis',
-		icon: 'https://xivapi.com/i/012000/012812.png',
+		icon: iconUrl(12812),
 		duration: 30000,
 	},
 
 	CHAIN_STRATAGEM: {
 		id: 1221,
 		name: 'Chain Stratagem',
-		icon: 'https://xivapi.com/i/012000/012809.png',
+		icon: iconUrl(12809),
 		duration: 15000,
 	},
 
 	GALVANIZE: {
 		id: 297,
 		name: 'Galvanize',
-		icon: 'https://xivapi.com/i/012000/012801.png',
+		icon: iconUrl(12801),
 		duration: 30000,
 	},
 
 	CATALYZE: {
 		id: 1918,
 		name: 'Catalyze',
-		icon: 'https://xivapi.com/i/012000/012814.png',
+		icon: iconUrl(12814),
 		duration: 30000,
 	},
 
 	RECITATION: {
 		id: 1896,
 		name: 'Recitation',
-		icon: 'https://xivapi.com/i/012000/012813.png',
+		icon: iconUrl(12813),
 		duration: 15000,
 	},
 
 	DISSIPATION: {
 		id: 791,
 		name: 'Dissipation',
-		icon: 'https://xivapi.com/i/012000/012805.png',
+		icon: iconUrl(12805),
 		duration: 30000,
 	},
 
 	EXCOGITATION: {
 		id: 1220,
 		name: 'Excogitation',
-		icon: 'https://xivapi.com/i/012000/012808.png',
+		icon: iconUrl(12808),
 		duration: 45000,
 	},
 
 	SACRED_SOIL: {
 		id: 1944,
 		name: 'Sacred Soil',
-		icon: 'https://xivapi.com/i/012000/012802.png',
+		icon: iconUrl(12802),
 		duration: 15000,
 	},
 
 	EMERGENCY_TACTICS: {
 		id: 792,
 		name: 'Emergency Tactics',
-		icon: 'https://xivapi.com/i/012000/012806.png',
+		icon: iconUrl(12806),
 		duration: 45000,
 	},
 
 	PROTRACTION: {
 		id: 2710,
 		name: 'Protraction',
-		icon: 'https://xivapi.com/i/012000/012815.png',
+		icon: iconUrl(12815),
 		duration: 10000,
 	},
 
 	DESPERATE_MEASURES: {
 		id: 2711,
 		name: 'Desperate Measures',
-		icon: 'https://xivapi.com/i/012000/012816.png',
+		icon: iconUrl(12816),
 		duration: 20000,
 	},
 
 	EXPEDIENCE: {
 		id: 2712,
 		name: 'Expedience',
-		icon: 'https://xivapi.com/i/012000/012817.png',
+		icon: iconUrl(12817),
 		duration: 10000,
 	},
 
@@ -98,20 +99,20 @@ export const SCH = ensureStatuses({
 	FEY_UNION: {
 		id: 1223,
 		name: 'Fey Union',
-		icon: 'https://xivapi.com/i/012000/012811.png',
+		icon: iconUrl(12811),
 	},
 
 	WHISPERING_DAWN: {
 		id: 315,
 		name: 'Whispering Dawn',
-		icon: 'https://xivapi.com/i/012000/012826.png',
+		icon: iconUrl(12826),
 		duration: 21000,
 	},
 
 	ANGELS_WHISPER: {
 		id: 1874,
 		name: 'Angel\'s Whisper',
-		icon: 'https://xivapi.com/i/012000/012846.png',
+		icon: iconUrl(12846),
 		duration: 21000,
 	},
 })
