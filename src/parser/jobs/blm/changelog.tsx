@@ -8,7 +8,7 @@ export const changelog = [
 	// 	contributors: [CONTRIBUTORS.YOU],
 	// },
 	{
-		date: new Date('2024-XX-XX'),
+		date: new Date('2024-06-27'),
 		Changes: () => <>Add new actions and statuses, remove deleted actions and statuses, and some minimal cleanup to keep modules compiling</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],
 	},
