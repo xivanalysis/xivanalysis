@@ -30,21 +30,21 @@ export const NIN = ensureActions({
 	},
 
 	AEOLIAN_EDGE: {
-		id: 2255, // TODO - Verify ID and icon, they may have changed since the action did
+		id: 2255,
 		name: 'Aeolian Edge',
 		icon: iconUrl(605),
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		potency: 140,
+		potency: 200,
 		combo: {
 			from: 2242,
 			end: true,
 		},
 		potencies: [{
-			value: 140,
+			value: 200,
 			bonusModifiers: [],
 		}, {
-			value: 200,
+			value: 260,
 			bonusModifiers: [BonusModifier.POSITIONAL],
 		}, {
 			value: 380,
@@ -75,27 +75,27 @@ export const NIN = ensureActions({
 	},
 
 	ARMOR_CRUSH: {
-		id: 3563, // TODO - Verify ID and icon, they may have changed since the action did
+		id: 3563,
 		name: 'Armor Crush',
 		icon: iconUrl(2915),
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		potency: 140,
+		potency: 220,
 		combo: {
 			from: 2242,
 			end: true,
 		},
 		potencies: [{
-			value: 140,
+			value: 220,
 			bonusModifiers: [],
 		}, {
-			value: 200,
+			value: 280,
 			bonusModifiers: [BonusModifier.POSITIONAL],
 		}, {
-			value: 360,
+			value: 420,
 			bonusModifiers: [BonusModifier.COMBO],
 		}, {
-			value: 420,
+			value: 480,
 			bonusModifiers: [BonusModifier.POSITIONAL, BonusModifier.COMBO],
 		}],
 	},
@@ -308,7 +308,7 @@ export const NIN = ensureActions({
 	},
 
 	HUTON: {
-		id: 2269, // TODO - Verify ID and icon, they may have changed since the action did
+		id: 2269,
 		name: 'Huton',
 		icon: iconUrl(2910),
 		onGcd: true,
@@ -317,7 +317,7 @@ export const NIN = ensureActions({
 	},
 
 	HUTON_TCJ: {
-		id: 18879, // TODO - Verify ID and icon, they may have changed since the action did
+		id: 18879,
 		name: 'Huton',
 		icon: iconUrl(2910),
 		onGcd: true,
@@ -441,9 +441,9 @@ export const NIN = ensureActions({
 	},
 
 	DOKUMORI: {
-		id: 0, // TODO - ID and icon
+		id: 36957,
 		name: 'Dokumori',
-		icon: '',
+		icon: iconUrl(619),
 		onGcd: false,
 		cooldown: 120000,
 		statusesApplied: ['DOKUMORI', 'HIGI'],
@@ -494,34 +494,34 @@ export const NIN = ensureActions({
 	},
 
 	KUNAIS_BANE: {
-		id: 0, // TODO - ID and icon
+		id: 36958,
 		name: 'Kunai\'s Bane',
-		icon: '',
+		icon: iconUrl(620),
 		onGcd: false,
 		cooldown: 60000,
 		statusesApplied: ['KUNAIS_BANE'],
 	},
 
 	DEATHFROG_MEDIUM: {
-		id: 0, // TODO - ID and icon
+		id: 36959,
 		name: 'Deathfrog Medium',
-		icon: '',
+		icon: iconUrl(2934),
 		onGcd: false,
 		cooldown: 1000,
 	},
 
 	ZESHO_MEPPO: {
-		id: 0, // TODO - ID and icon
+		id: 36960,
 		name: 'Zesho Meppo',
-		icon: '',
+		icon: iconUrl(2933),
 		onGcd: false,
 		cooldown: 1000,
 	},
 
 	TENRI_JINDO: {
-		id: 0, // TODO - ID and icon
+		id: 36961,
 		name: 'Tenri Jindo',
-		icon: '',
+		icon: iconUrl(2935),
 		onGcd: false,
 		cooldown: 1000,
 	},

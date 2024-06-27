@@ -10,30 +10,30 @@ export const NIN = ensureStatuses({
 	},
 
 	KUNAIS_BANE: {
-		id: 0, // TODO - ID and icon
+		id: 3906,
 		name: 'Kunai\'s Bane',
-		icon: '',
+		icon: iconUrl(12923),
 		duration: 15000,
 	},
 
 	MUG_VULNERABILITY_UP: {
-		id: 638,
+		id: 3183,
 		name: 'Vulnerability Up',
-		icon: iconUrl(15020),
+		icon: iconUrl(14942),
 		duration: 20000,
 	},
 
 	DOKUMORI: {
-		id: 0, // TODO - ID and icon
+		id: 3849,
 		name: 'Dokumori',
-		icon: '',
+		icon: iconUrl(12920),
 		duration: 20000,
 	},
 
 	HIGI: {
-		id: 0, // TODO - ID and icon
+		id: 3850,
 		name: 'HIGI',
-		icon: '',
+		icon: iconUrl(12921),
 		duration: 30000,
 	},
 
@@ -52,9 +52,9 @@ export const NIN = ensureStatuses({
 	},
 
 	SHADOW_WALKER: {
-		id: 0, // TODO - ID and icon
+		id: 3848,
 		name: 'Shadow Walker',
-		icon: '',
+		icon: iconUrl(12919),
 		duration: 20000,
 	},
 
@@ -66,9 +66,9 @@ export const NIN = ensureStatuses({
 	},
 
 	TENRI_JINDO_READY: {
-		id: 0, // TODO - ID and icon
+		id: 3851,
 		name: 'Tenri Jindo Ready',
-		icon: '',
+		icon: iconUrl(12922),
 		duration: 30000,
 	},
 
