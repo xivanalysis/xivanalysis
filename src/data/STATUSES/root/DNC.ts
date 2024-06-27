@@ -39,9 +39,9 @@ export const DNC = ensureStatuses({
 		duration: 30000,
 	},
 	FINISHING_MOVE_READY: {
-		id: 7002699, // TODO
+		id: 3868,
 		name: 'Finishing Move Ready',
-		icon: 'https://xivapi.com/i/013000/013723.png', // TODO
+		icon: '13727',
 		duration: 30000,
 	},
 	FLOURISHING_STARFALL: {
@@ -69,9 +69,9 @@ export const DNC = ensureStatuses({
 		duration: 60000,
 	},
 	LAST_DANCE_READY: {
-		id: 7001821, // TODO
+		id: 3867,
 		name: 'Last Dance Ready',
-		icon: 'https://xivapi.com/i/013000/013708.png', // TODO
+		icon: '13728',
 		duration: 30000,
 	},
 	TECHNICAL_FINISH: {
@@ -81,9 +81,9 @@ export const DNC = ensureStatuses({
 		duration: 20000,
 	},
 	DANCE_OF_THE_DAWN_READY: {
-		id: 7001822, // TODO
+		id: 3869,
 		name: 'Dance of the Dawn Ready',
-		icon: 'https://xivapi.com/i/013000/013709.png', // TODO
+		icon: '13729',
 		duration: 30000,
 	},
 	FLOURISHING_FINISH: {
