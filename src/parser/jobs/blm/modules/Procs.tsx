@@ -7,7 +7,6 @@ import {ProcGroup, Procs as CoreProcs} from 'parser/core/modules/Procs'
 import {SEVERITY, Suggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
 import iconF3p from './f3p.png'
-import iconT3p from './t3p.png'
 
 export default class Procs extends CoreProcs {
 	@dependency castTime!: CastTime
@@ -31,7 +30,7 @@ export default class Procs extends CoreProcs {
 		return !(this.castingSpellId != null && this.castingSpellId === event.action)
 	}
 
-	protected override jobSpecificOnConsumeProc(procGroup: ProcGroup, event: Events['action']): void {
+	protected override jobSpecificOnConsumeProc(_procGroup: ProcGroup, event: Events['action']): void {
 		// BLM's procs are all instant-casts
 		this.castTime.setInstantCastAdjustment([event.action], event.timestamp, event.timestamp)
 	}
