@@ -1,3 +1,4 @@
+import {iconUrl} from 'data/icon'
 import {Attribute} from 'event'
 import {ensureActions} from '../type'
 
@@ -10,14 +11,14 @@ export const RDM = ensureActions({
 	EMBOLDEN: {
 		id: 7520,
 		name: 'Embolden',
-		icon: 'https://xivapi.com/i/003000/003218.png',
+		icon: iconUrl(3218),
 		cooldown: 120000,
 		statusesApplied: ['EMBOLDEN_SELF', 'EMBOLDEN_PARTY'],
 	},
 	ACCELERATION: {
 		id: 7518,
 		name: 'Acceleration',
-		icon: 'https://xivapi.com/i/003000/003214.png',
+		icon: iconUrl(3214),
 		cooldown: 55000,
 		statusesApplied: ['ACCELERATION'],
 		charges: 2,
@@ -25,7 +26,7 @@ export const RDM = ensureActions({
 	MANAFICATION: {
 		id: 7521,
 		name: 'Manafication',
-		icon: 'https://xivapi.com/i/003000/003219.png',
+		icon: iconUrl(3219),
 		cooldown: 110000,
 		breaksCombo: true,
 		statusesApplied: ['MANAFICATION'],
@@ -33,14 +34,14 @@ export const RDM = ensureActions({
 	CONTRE_SIXTE: {
 		id: 7519,
 		name: 'Contre Sixte',
-		icon: 'https://xivapi.com/i/003000/003217.png',
+		icon: iconUrl(3217),
 		cooldown: 35000,
 		potency: 360,
 	},
 	DISPLACEMENT: {
 		id: 7515,
 		name: 'Displacement',
-		icon: 'https://xivapi.com/i/003000/003211.png',
+		icon: iconUrl(3211),
 		cooldown: 35000,
 		potency: 180,
 		cooldownGroup: 10,
@@ -49,7 +50,7 @@ export const RDM = ensureActions({
 	ENGAGEMENT: {
 		id: 16527,
 		name: 'Engagement',
-		icon: 'https://xivapi.com/i/003000/003231.png',
+		icon: iconUrl(3231),
 		cooldown: 35000,
 		potency: 180,
 		cooldownGroup: 10,
@@ -58,7 +59,7 @@ export const RDM = ensureActions({
 	CORPS_A_CORPS: {
 		id: 7506,
 		name: 'Corps-a-corps',
-		icon: 'https://xivapi.com/i/003000/003204.png',
+		icon: iconUrl(3204),
 		cooldown: 35000,
 		potency: 130,
 		charges: 2,
@@ -66,7 +67,7 @@ export const RDM = ensureActions({
 	FLECHE: {
 		id: 7517,
 		name: 'Fleche',
-		icon: 'https://xivapi.com/i/003000/003212.png',
+		icon: iconUrl(3212),
 		cooldown: 25000,
 		potency: 460,
 	},
@@ -77,7 +78,7 @@ export const RDM = ensureActions({
 	RIPOSTE: {
 		id: 7504,
 		name: 'Riposte',
-		icon: 'https://xivapi.com/i/003000/003201.png',
+		icon: iconUrl(3201),
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		cooldown: 2500,
@@ -89,7 +90,7 @@ export const RDM = ensureActions({
 	ENCHANTED_RIPOSTE: {
 		id: 7527,
 		name: 'Enchanted Riposte',
-		icon: 'https://xivapi.com/i/003000/003225.png',
+		icon: iconUrl(3225),
 		onGcd: true,
 		cooldown: 1500,
 		potency: 220, // consumes 20 white, 20 black
@@ -100,7 +101,7 @@ export const RDM = ensureActions({
 	ZWERCHHAU: {
 		id: 7512,
 		name: 'Zwerchhau',
-		icon: 'https://xivapi.com/i/003000/003210.png',
+		icon: iconUrl(3210),
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		cooldown: 2500,
@@ -113,7 +114,7 @@ export const RDM = ensureActions({
 	ENCHANTED_ZWERCHHAU: {
 		id: 7528,
 		name: 'Enchanted Zwerchhau',
-		icon: 'https://xivapi.com/i/003000/003226.png',
+		icon: iconUrl(3226),
 		onGcd: true,
 		cooldown: 1500,
 		potency: 100, // consumes 15 white, 15 black
@@ -125,7 +126,7 @@ export const RDM = ensureActions({
 	REDOUBLEMENT: {
 		id: 7516,
 		name: 'Redoublement',
-		icon: 'https://xivapi.com/i/003000/003213.png',
+		icon: iconUrl(3213),
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		cooldown: 2500,
@@ -139,7 +140,7 @@ export const RDM = ensureActions({
 	ENCHANTED_REDOUBLEMENT: {
 		id: 7529,
 		name: 'Enchanted Redoublement',
-		icon: 'https://xivapi.com/i/003000/003227.png',
+		icon: iconUrl(3227),
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		cooldown: 2200,
@@ -153,7 +154,7 @@ export const RDM = ensureActions({
 	REPRISE: {
 		id: 16529,
 		name: 'Reprise',
-		icon: 'https://xivapi.com/i/003000/003233.png',
+		icon: iconUrl(3233),
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		cooldown: 2500,
@@ -162,7 +163,7 @@ export const RDM = ensureActions({
 	ENCHANTED_REPRISE: {
 		id: 16528,
 		name: 'Enchanted Reprise',
-		icon: 'https://xivapi.com/i/003000/003232.png',
+		icon: iconUrl(3232),
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		cooldown: 2500,
@@ -171,7 +172,7 @@ export const RDM = ensureActions({
 	VERFLARE: {
 		id: 7525,
 		name: 'Verflare',
-		icon: 'https://xivapi.com/i/003000/003223.png',
+		icon: iconUrl(3223),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		cooldown: 2500,
@@ -183,7 +184,7 @@ export const RDM = ensureActions({
 	VERHOLY: {
 		id: 7526,
 		name: 'Verholy',
-		icon: 'https://xivapi.com/i/003000/003224.png',
+		icon: iconUrl(3224),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		cooldown: 2500,
@@ -195,7 +196,7 @@ export const RDM = ensureActions({
 	SCORCH: {
 		id: 16530,
 		name: 'Scorch',
-		icon: 'https://xivapi.com/i/003000/003234.png',
+		icon: iconUrl(3234),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		cooldown: 2500,
@@ -208,7 +209,7 @@ export const RDM = ensureActions({
 	RESOLUTION: {
 		id: 25858,
 		name: 'Resolution',
-		icon: 'https://xivapi.com/i/003000/003238.png',
+		icon: iconUrl(3238),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		cooldown: 2500,
@@ -222,7 +223,7 @@ export const RDM = ensureActions({
 	JOLT: {
 		id: 7503,
 		name: 'Jolt',
-		icon: 'https://xivapi.com/i/003000/003202.png',
+		icon: iconUrl(3202),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		cooldown: 2500,
@@ -233,7 +234,7 @@ export const RDM = ensureActions({
 	JOLT_II: {
 		id: 7524,
 		name: 'Jolt II',
-		icon: 'https://xivapi.com/i/003000/003220.png',
+		icon: iconUrl(3220),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		cooldown: 2500,
@@ -244,7 +245,7 @@ export const RDM = ensureActions({
 	IMPACT: {
 		id: 16526,
 		name: 'Impact',
-		icon: 'https://xivapi.com/i/003000/003222.png',
+		icon: iconUrl(3222),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		cooldown: 2500,
@@ -255,7 +256,7 @@ export const RDM = ensureActions({
 	VERTHUNDER: {
 		id: 7505,
 		name: 'Verthunder',
-		icon: 'https://xivapi.com/i/003000/003203.png',
+		icon: iconUrl(3203),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		cooldown: 2500,
@@ -266,7 +267,7 @@ export const RDM = ensureActions({
 	VERTHUNDER_II: {
 		id: 16524,
 		name: 'Verthunder II',
-		icon: 'https://xivapi.com/i/003000/003229.png',
+		icon: iconUrl(3229),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		cooldown: 2500,
@@ -277,7 +278,7 @@ export const RDM = ensureActions({
 	VERTHUNDER_III: {
 		id: 25855,
 		name: 'Verthunder III',
-		icon: 'https://xivapi.com/i/003000/003235.png',
+		icon: iconUrl(3235),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		cooldown: 2500,
@@ -288,7 +289,7 @@ export const RDM = ensureActions({
 	VERFIRE: {
 		id: 7510,
 		name: 'Verfire',
-		icon: 'https://xivapi.com/i/003000/003208.png',
+		icon: iconUrl(3208),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		cooldown: 2500,
@@ -299,7 +300,7 @@ export const RDM = ensureActions({
 	VERAERO: {
 		id: 7507,
 		name: 'Veraero',
-		icon: 'https://xivapi.com/i/003000/003205.png',
+		icon: iconUrl(3205),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		cooldown: 2500,
@@ -310,7 +311,7 @@ export const RDM = ensureActions({
 	VERAERO_II: {
 		id: 16525,
 		name: 'Veraero II',
-		icon: 'https://xivapi.com/i/003000/003230.png',
+		icon: iconUrl(3230),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		cooldown: 2500,
@@ -321,7 +322,7 @@ export const RDM = ensureActions({
 	VERAERO_III: {
 		id: 25856,
 		name: 'Veraero III',
-		icon: 'https://xivapi.com/i/003000/003236.png',
+		icon: iconUrl(3236),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		cooldown: 2500,
@@ -332,7 +333,7 @@ export const RDM = ensureActions({
 	VERSTONE: {
 		id: 7511,
 		name: 'Verstone',
-		icon: 'https://xivapi.com/i/003000/003209.png',
+		icon: iconUrl(3209),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		cooldown: 2500,
@@ -343,7 +344,7 @@ export const RDM = ensureActions({
 	SCATTER: {
 		id: 7509,
 		name: 'Scatter',
-		icon: 'https://xivapi.com/i/003000/003207.png',
+		icon: iconUrl(3207),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		cooldown: 2500,
@@ -354,7 +355,7 @@ export const RDM = ensureActions({
 	MOULINET: {
 		id: 7513,
 		name: 'Moulinet',
-		icon: 'https://xivapi.com/i/003000/003215.png',
+		icon: iconUrl(3215),
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		cooldown: 2500,
@@ -364,7 +365,7 @@ export const RDM = ensureActions({
 	ENCHANTED_MOULINET: {
 		id: 7530,
 		name: 'Enchanted Moulinet',
-		icon: 'https://xivapi.com/i/003000/003228.png',
+		icon: iconUrl(3228),
 		onGcd: true,
 		cooldown: 1500,
 		potency: 130, // Costs 20 White and Black
@@ -373,7 +374,7 @@ export const RDM = ensureActions({
 	VERCURE: {
 		id: 7514,
 		name: 'Vercure',
-		icon: 'https://xivapi.com/i/003000/003216.png',
+		icon: iconUrl(3216),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		cooldown: 2500,
@@ -384,7 +385,7 @@ export const RDM = ensureActions({
 	VERRAISE: {
 		id: 7523,
 		name: 'Verraise',
-		icon: 'https://xivapi.com/i/003000/003221.png',
+		icon: iconUrl(3221),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		cooldown: 2500,
@@ -394,7 +395,7 @@ export const RDM = ensureActions({
 	MAGICK_BARRIER: {
 		id: 25857,
 		name: 'Magick Barrier',
-		icon: 'https://xivapi.com/i/003000/003237.png',
+		icon: iconUrl(3237),
 		speedAttribute: Attribute.SPELL_SPEED,
 		cooldown: 120000,
 		statusesApplied: ['MAGICK_BARRIER'],
