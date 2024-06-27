@@ -92,7 +92,7 @@ export const DNC = ensureActions({
 		icon: iconUrl(3480),
 		name: 'Tillana',
 		onGcd: true,
-		cooldown: 1500,
+		speedAttribute: Attribute.SKILL_SPEED,
 	},
 	CASCADE: {
 		id: 15989,
