@@ -1,6 +1,7 @@
 import {t} from '@lingui/macro'
 import {Trans, Plural} from '@lingui/react'
 import {ActionLink} from 'components/ui/DbLink'
+import {iconUrl} from 'data/icon'
 import {JOBS} from 'data/JOBS'
 import {Cause, Event, Events} from 'event'
 import {filter, oneOf} from 'parser/core/filter'
@@ -25,6 +26,8 @@ const OVERCAP_SEVERITY = {
 const FROG_SEVERITY = {
 	1: SEVERITY.MEDIUM,
 }
+
+const ICON_SHUKIHO = 5411
 
 export class Ninki extends CoreGauge {
 	static override title = t('nin.ninki.title')`Ninki Gauge`
@@ -148,7 +151,7 @@ export class Ninki extends CoreGauge {
 
 	private onComplete() {
 		this.suggestions.add(new TieredSuggestion({
-			icon: 'https://xivapi.com/i/005000/005411.png',
+			icon: iconUrl(ICON_SHUKIHO),
 			content: <Trans id="nin.ninki.suggestions.waste.content">
 				Avoid using <ActionLink action="DOKUMORI"/> and <ActionLink action="MEISUI"/> when above 40 Ninki and holding your Ninki spenders when near or at cap (with a few small exceptions) in order to maximize the number of spenders you can use over the course of a fight.
 			</Trans>,

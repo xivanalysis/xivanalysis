@@ -6,6 +6,8 @@ import CastTime from 'parser/core/modules/CastTime'
 import {ProcGroup, Procs as CoreProcs} from 'parser/core/modules/Procs'
 import {SEVERITY, Suggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
+import iconF3p from './f3p.png'
+import iconT3p from './t3p.png'
 
 export default class Procs extends CoreProcs {
 	@dependency castTime!: CastTime
@@ -48,7 +50,7 @@ export default class Procs extends CoreProcs {
 		const droppedThunderClouds: number = this.getDropCountForStatus(this.data.statuses.THUNDERCLOUD.id)
 		if (droppedThunderClouds > 0) {
 			this.suggestions.add(new Suggestion({
-				icon:  process.env.PUBLIC_URL + '/icon/action/t3p.png',
+				icon: iconT3p,
 				content: <Trans id="blm.procs.suggestions.dropped-t3ps.content">
 					You lost at least one <ActionLink {...this.data.actions.THUNDER_III}/> proc by allowing <StatusLink {...this.data.statuses.THUNDERCLOUD}/> to expire without using it.
 				</Trans>,
@@ -62,7 +64,7 @@ export default class Procs extends CoreProcs {
 		const droppedFireStarters: number = this.getDropCountForStatus(this.data.statuses.FIRESTARTER.id)
 		if (droppedFireStarters > 0) {
 			this.suggestions.add(new Suggestion({
-				icon: process.env.PUBLIC_URL + '/icon/action/f3p.png',
+				icon: iconF3p,
 				content: <Trans id="blm.procs.suggestions.dropped-f3ps.content">
 					You lost at least  one <ActionLink {...this.data.actions.FIRE_III}/> proc by allowing <StatusLink {...this.data.statuses.FIRESTARTER}/> to expire without using it.
 				</Trans>,

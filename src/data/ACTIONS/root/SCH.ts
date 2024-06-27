@@ -1,3 +1,4 @@
+import {iconUrl} from 'data/icon'
 import {Attribute} from 'event'
 import {ensureActions} from '../type'
 
@@ -9,7 +10,7 @@ export const SCH = ensureActions({
 	BROIL_IV: {
 		id: 25865,
 		name: 'Broil IV',
-		icon: 'https://xivapi.com/i/002000/002875.png',
+		icon: iconUrl(2875),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 1500,
@@ -18,14 +19,14 @@ export const SCH = ensureActions({
 	AETHERFLOW: {
 		id: 166,
 		name: 'Aetherflow',
-		icon: 'https://xivapi.com/i/000000/000510.png',
+		icon: iconUrl(510),
 		cooldown: 60000,
 	},
 
 	RESURRECTION: {
 		id: 173,
 		name: 'Resurrection',
-		icon: 'https://xivapi.com/i/000000/000511.png',
+		icon: iconUrl(511),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 8000,
@@ -34,7 +35,7 @@ export const SCH = ensureActions({
 	SCH_PHYSICK: {
 		id: 190,
 		name: 'Physick',
-		icon: 'https://xivapi.com/i/000000/000518.png',
+		icon: iconUrl(518),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 1500,
@@ -43,7 +44,7 @@ export const SCH = ensureActions({
 	BIOLYSIS: {
 		id: 16540,
 		name: 'Biolysis',
-		icon: 'https://xivapi.com/i/002000/002820.png',
+		icon: iconUrl(2820),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		statusesApplied: ['BIOLYSIS'],
@@ -52,7 +53,7 @@ export const SCH = ensureActions({
 	ADLOQUIUM: {
 		id: 185,
 		name: 'Adloquium',
-		icon: 'https://xivapi.com/i/002000/002801.png',
+		icon: iconUrl(2801),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 2000,
@@ -62,7 +63,7 @@ export const SCH = ensureActions({
 	BROIL_III: {
 		id: 16541,
 		name: 'Broil III',
-		icon: 'https://xivapi.com/i/002000/002821.png',
+		icon: iconUrl(2821),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 1500,
@@ -71,7 +72,7 @@ export const SCH = ensureActions({
 	SCH_RUIN_II: {
 		id: 17870,
 		name: 'Ruin II',
-		icon: 'https://xivapi.com/i/000000/000502.png',
+		icon: iconUrl(502),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 	},
@@ -79,7 +80,7 @@ export const SCH = ensureActions({
 	RECITATION: {
 		id: 16542,
 		name: 'Recitation',
-		icon: 'https://xivapi.com/i/002000/002822.png',
+		icon: iconUrl(2822),
 		cooldown: 90000,
 	},
 
@@ -87,21 +88,21 @@ export const SCH = ensureActions({
 	SCH_FEY_BLESSING: {
 		id: 16543,
 		name: 'Fey Blessing',
-		icon: 'https://xivapi.com/i/002000/002854.png',
+		icon: iconUrl(2854),
 		cooldown: 60000,
 	},
 
 	SUMMON_SERAPH: {
 		id: 16545,
 		name: 'Summon Seraph',
-		icon: 'https://xivapi.com/i/002000/002850.png',
+		icon: iconUrl(2850),
 		cooldown: 120000,
 	},
 
 	SCH_CONSOLATION: {
 		id: 16546,
 		name: 'Consolation',
-		icon: 'https://xivapi.com/i/002000/002851.png',
+		icon: iconUrl(2851),
 		cooldown: 30000,
 		charges: 2,
 	},
@@ -109,7 +110,7 @@ export const SCH = ensureActions({
 	SUCCOR: {
 		id: 186,
 		name: 'Succor',
-		icon: 'https://xivapi.com/i/002000/002802.png',
+		icon: iconUrl(2802),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 2000,
@@ -119,21 +120,21 @@ export const SCH = ensureActions({
 	SACRED_SOIL: {
 		id: 188,
 		name: 'Sacred Soil',
-		icon: 'https://xivapi.com/i/002000/002804.png',
+		icon: iconUrl(2804),
 		cooldown: 30000,
 	},
 
 	LUSTRATE: {
 		id: 189,
 		name: 'Lustrate',
-		icon: 'https://xivapi.com/i/002000/002805.png',
+		icon: iconUrl(2805),
 		cooldown: 1000,
 	},
 
 	ART_OF_WAR: {
 		id: 16539,
 		name: 'Art of War',
-		icon: 'https://xivapi.com/i/002000/002819.png',
+		icon: iconUrl(2819),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 	},
@@ -141,7 +142,7 @@ export const SCH = ensureActions({
 	ART_OF_WAR_II: {
 		id: 25866,
 		name: 'Art of War II',
-		icon: 'https://xivapi.com/i/002000/002876.png',
+		icon: iconUrl(2876),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 	},
@@ -149,7 +150,7 @@ export const SCH = ensureActions({
 	PROTRACTION: {
 		id: 25867,
 		name: 'Protraction',
-		icon: 'https://xivapi.com/i/002000/002877.png',
+		icon: iconUrl(2877),
 		cooldown: 60000,
 		statusesApplied: ['PROTRACTION'],
 	},
@@ -157,7 +158,7 @@ export const SCH = ensureActions({
 	EXPEDIENT: {
 		id: 25868,
 		name: 'Expedient',
-		icon: 'https://xivapi.com/i/002000/002878.png',
+		icon: iconUrl(2878),
 		cooldown: 120000,
 		statusesApplied: ['EXPEDIENCE', 'DESPERATE_MEASURES'],
 	},
@@ -165,14 +166,14 @@ export const SCH = ensureActions({
 	INDOMITABILITY: {
 		id: 3583,
 		name: 'Indomitability',
-		icon: 'https://xivapi.com/i/002000/002806.png',
+		icon: iconUrl(2806),
 		cooldown: 30000,
 	},
 
 	BROIL: {
 		id: 3584,
 		name: 'Broil',
-		icon: 'https://xivapi.com/i/002000/002807.png',
+		icon: iconUrl(2807),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 1500,
@@ -181,14 +182,14 @@ export const SCH = ensureActions({
 	DEPLOYMENT_TACTICS: {
 		id: 3585,
 		name: 'Deployment Tactics',
-		icon: 'https://xivapi.com/i/002000/002808.png',
+		icon: iconUrl(2808),
 		cooldown: 90000,
 	},
 
 	EMERGENCY_TACTICS: {
 		id: 3586,
 		name: 'Emergency Tactics',
-		icon: 'https://xivapi.com/i/002000/002809.png',
+		icon: iconUrl(2809),
 		cooldown: 15000,
 		statusesApplied: ['EMERGENCY_TACTICS'],
 	},
@@ -196,7 +197,7 @@ export const SCH = ensureActions({
 	DISSIPATION: {
 		id: 3587,
 		name: 'Dissipation',
-		icon: 'https://xivapi.com/i/002000/002810.png',
+		icon: iconUrl(2810),
 		cooldown: 180000,
 		statusesApplied: ['DISSIPATION'],
 	},
@@ -204,7 +205,7 @@ export const SCH = ensureActions({
 	EXCOGITATION: {
 		id: 7434,
 		name: 'Excogitation',
-		icon: 'https://xivapi.com/i/002000/002813.png',
+		icon: iconUrl(2813),
 		cooldown: 45000,
 		statusesApplied: ['EXCOGITATION'],
 	},
@@ -212,7 +213,7 @@ export const SCH = ensureActions({
 	BROIL_II: {
 		id: 7435,
 		name: 'Broil II',
-		icon: 'https://xivapi.com/i/002000/002814.png',
+		icon: iconUrl(2814),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 1500,
@@ -221,17 +222,16 @@ export const SCH = ensureActions({
 	BIO_II: {
 		id: 17865,
 		name: 'Bio II',
-		icon: 'https://xivapi.com/i/000000/000504.png',
+		icon: iconUrl(504),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		statusesApplied: ['BIO_II'],
 	},
 
-
 	CHAIN_STRATAGEM: {
 		id: 7436,
 		name: 'Chain Stratagem',
-		icon: 'https://xivapi.com/i/002000/002815.png',
+		icon: iconUrl(2815),
 		cooldown: 120000,
 		statusesApplied: ['CHAIN_STRATAGEM'],
 	},
@@ -239,21 +239,21 @@ export const SCH = ensureActions({
 	SCH_AETHERPACT: {
 		id: 7437,
 		name: 'Aetherpact',
-		icon: 'https://xivapi.com/i/002000/002816.png',
+		icon: iconUrl(2816),
 		cooldown: 3000,
 	},
 
 	DISSOLVE_UNION: {
 		id: 7869,
 		name: 'Dissolve Union',
-		icon: 'https://xivapi.com/i/002000/002817.png',
+		icon: iconUrl(2817),
 		cooldown: 1000,
 	},
 
 	SCH_WHISPERING_DAWN: {
 		id: 16537,
 		name: 'Whispering Dawn',
-		icon: 'https://xivapi.com/i/002000/002827.png',
+		icon: iconUrl(2827),
 		cooldown: 60000,
 		statusesApplied: ['WHISPERING_DAWN'],
 	},
@@ -261,21 +261,21 @@ export const SCH = ensureActions({
 	SCH_FEY_ILLUMINATION: {
 		id: 16538,
 		name: 'Fey Illumination',
-		icon: 'https://xivapi.com/i/002000/002829.png',
+		icon: iconUrl(2829),
 		cooldown: 120000,
 	},
 
 	SCH_ENERGY_DRAIN: {
 		id: 167,
 		name: 'Energy Drain',
-		icon: 'https://xivapi.com/i/000000/000514.png',
+		icon: iconUrl(514),
 		cooldown: 1000,
 	},
 
 	SUMMON_EOS: {
 		id: 17215,
 		name: 'Summon Eos',
-		icon: 'https://xivapi.com/i/002000/002823.png',
+		icon: iconUrl(2823),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 1500,
@@ -284,7 +284,7 @@ export const SCH = ensureActions({
 	SUMMON_SELENE: {
 		id: 17216,
 		name: 'Summon Selene',
-		icon: 'https://xivapi.com/i/002000/002824.png',
+		icon: iconUrl(2824),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 1500,
@@ -296,7 +296,7 @@ export const SCH = ensureActions({
 	EMBRACE: {
 		id: 802,
 		name: 'Embrace',
-		icon: 'https://xivapi.com/i/002000/002826.png',
+		icon: iconUrl(2826),
 		cooldown: 3000,
 		pet: true,
 	},
@@ -304,56 +304,56 @@ export const SCH = ensureActions({
 	WHISPERING_DAWN: {
 		id: 803,
 		name: 'Whispering Dawn',
-		icon: 'https://xivapi.com/i/002000/002827.png',
+		icon: iconUrl(2827),
 		pet: true,
 	},
 
 	FEY_ILLUMINATION: {
 		id: 805,
 		name: 'Fey Illumination',
-		icon: 'https://xivapi.com/i/002000/002829.png',
+		icon: iconUrl(2829),
 		pet: true,
 	},
 
 	FEY_BLESSING: {
 		id: 16544,
 		name: 'Fey Blessing',
-		icon: 'https://xivapi.com/i/002000/002855.png',
+		icon: iconUrl(2855),
 		pet: true,
 	},
 
 	SERAPHIC_VEIL: {
 		id: 16548,
 		name: 'Seraphic Veil',
-		icon: 'https://xivapi.com/i/002000/002847.png',
+		icon: iconUrl(2847),
 		pet: true,
 	},
 
 	CONSOLATION: {
 		id: 16547,
 		name: 'Consolation',
-		icon: 'https://xivapi.com/i/002000/002846.png',
+		icon: iconUrl(2846),
 		pet: true,
 	},
 
 	ANGELS_WHISPER: {
 		id: 16550,
 		name: 'Angel\'s Whisper',
-		icon: 'https://xivapi.com/i/002000/002848.png',
+		icon: iconUrl(2848),
 		pet: true,
 	},
 
 	FEY_UNION: {
 		id: 7438,
 		name: 'Fey Union',
-		icon: 'https://xivapi.com/i/002000/002818.png',
+		icon: iconUrl(2818),
 		pet: true,
 	},
 
 	SERAPHIC_ILLUMINATION: {
 		id: 16551,
 		name: 'Seraphic Illumination',
-		icon: 'https://xivapi.com/i/002000/002849.png',
+		icon: iconUrl(2849),
 		pet: true,
 	},
 })

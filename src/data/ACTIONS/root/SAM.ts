@@ -1,3 +1,4 @@
+import {iconUrl} from 'data/icon'
 import {Attribute} from 'event'
 import {ensureActions, BonusModifier} from '../type'
 
@@ -16,7 +17,7 @@ export const SAM = ensureActions({
 	HAKAZE: {
 		id: 7477,
 		name: 'Hakaze',
-		icon: 'https://xivapi.com/i/003000/003151.png',
+		icon: iconUrl(3151),
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		combo: {
@@ -27,7 +28,7 @@ export const SAM = ensureActions({
 	JINPU: {
 		id: 7478,
 		name: 'Jinpu',
-		icon: 'https://xivapi.com/i/003000/003152.png',
+		icon: iconUrl(3152),
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		combo: {
@@ -39,7 +40,7 @@ export const SAM = ensureActions({
 	ENPI: {
 		id: 7486,
 		name: 'Enpi',
-		icon: 'https://xivapi.com/i/003000/003155.png',
+		icon: iconUrl(3155),
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		breaksCombo: false,
@@ -48,7 +49,7 @@ export const SAM = ensureActions({
 	SHIFU: {
 		id: 7479,
 		name: 'Shifu',
-		icon: 'https://xivapi.com/i/003000/003156.png',
+		icon: iconUrl(3156),
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		combo: {
@@ -60,7 +61,7 @@ export const SAM = ensureActions({
 	IAIJUTSU: {
 		id: 7867,
 		name: 'Iaijutsu',
-		icon: 'https://xivapi.com/i/003000/003159.png',
+		icon: iconUrl(3159),
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		castTime: 1300,
@@ -69,7 +70,7 @@ export const SAM = ensureActions({
 	HIGANBANA: {
 		id: 7489,
 		name: 'Higanbana',
-		icon: 'https://xivapi.com/i/003000/003160.png',
+		icon: iconUrl(3160),
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		castTime: 1300,
@@ -79,7 +80,7 @@ export const SAM = ensureActions({
 	GEKKO: {
 		id: 7481,
 		name: 'Gekko',
-		icon: 'https://xivapi.com/i/003000/003158.png',
+		icon: iconUrl(3158),
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		potencies: [{
@@ -104,7 +105,7 @@ export const SAM = ensureActions({
 	MANGETSU: {
 		id: 7484,
 		name: 'Mangetsu',
-		icon: 'https://xivapi.com/i/003000/003163.png',
+		icon: iconUrl(3163),
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		combo: {
@@ -117,7 +118,7 @@ export const SAM = ensureActions({
 	TENKA_GOKEN: {
 		id: 7488,
 		name: 'Tenka Goken',
-		icon: 'https://xivapi.com/i/003000/003161.png',
+		icon: iconUrl(3161),
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		castTime: 1300,
@@ -126,7 +127,7 @@ export const SAM = ensureActions({
 	KASHA: {
 		id: 7482,
 		name: 'Kasha',
-		icon: 'https://xivapi.com/i/003000/003164.png',
+		icon: iconUrl(3164),
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		potencies: [{
@@ -151,7 +152,7 @@ export const SAM = ensureActions({
 	OKA: {
 		id: 7485,
 		name: 'Oka',
-		icon: 'https://xivapi.com/i/003000/003165.png',
+		icon: iconUrl(3165),
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		combo: {
@@ -164,7 +165,7 @@ export const SAM = ensureActions({
 	MIDARE_SETSUGEKKA: {
 		id: 7487,
 		name: 'Midare Setsugekka',
-		icon: 'https://xivapi.com/i/003000/003162.png',
+		icon: iconUrl(3162),
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		castTime: 1300,
@@ -173,7 +174,7 @@ export const SAM = ensureActions({
 	YUKIKAZE: {
 		id: 7480,
 		name: 'Yukikaze',
-		icon: 'https://xivapi.com/i/003000/003166.png',
+		icon: iconUrl(3166),
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		combo: {
@@ -185,7 +186,7 @@ export const SAM = ensureActions({
 	FUKO: {
 		id: 25780,
 		name: 'Fuko',
-		icon: 'https://xivapi.com/i/003000/003189.png',
+		icon: iconUrl(3189),
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		combo: {
@@ -196,7 +197,7 @@ export const SAM = ensureActions({
 	OGI_NAMIKIRI: {
 		id: 25781,
 		name: 'Ogi Namikiri',
-		icon: 'https://xivapi.com/i/003000/003187.png',
+		icon: iconUrl(3187),
 		onGcd: true,
 		castTime: 1300,
 		speedAttribute: Attribute.SKILL_SPEED,
@@ -205,7 +206,7 @@ export const SAM = ensureActions({
 	KAESHI_NAMIKIRI: {
 		id: 25782,
 		name: 'Kaeshi: Namikiri',
-		icon: 'https://xivapi.com/i/003000/003188.png',
+		icon: iconUrl(3188),
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 	},
@@ -217,7 +218,7 @@ export const SAM = ensureActions({
 	THIRD_EYE: {
 		id: 7498,
 		name: 'Third Eye',
-		icon: 'https://xivapi.com/i/003000/003153.png',
+		icon: iconUrl(3153),
 		cooldown: 15000,
 		statusesApplied: ['THIRD_EYE'],
 	},
@@ -225,7 +226,7 @@ export const SAM = ensureActions({
 	MEIKYO_SHISUI: {
 		id: 7499,
 		name: 'Meikyo Shisui',
-		icon: 'https://xivapi.com/i/003000/003167.png',
+		icon: iconUrl(3167),
 		cooldown: 55000,
 		statusesApplied: ['MEIKYO_SHISUI'],
 		charges: 2,
@@ -234,14 +235,14 @@ export const SAM = ensureActions({
 	HISSATSU_GYOTEN: {
 		id: 7492,
 		name: 'Hissatsu: Gyoten',
-		icon: 'https://xivapi.com/i/003000/003169.png',
+		icon: iconUrl(3169),
 		cooldown: 10000,
 	},
 
 	HISSATSU_YATEN: {
 		id: 7493,
 		name: 'Hissatsu: Yaten',
-		icon: 'https://xivapi.com/i/003000/003170.png',
+		icon: iconUrl(3170),
 		cooldown: 10000,
 		statusesApplied: ['ENHANCED_ENPI'],
 	},
@@ -249,7 +250,7 @@ export const SAM = ensureActions({
 	MEDITATE: {
 		id: 7497,
 		name: 'Meditate',
-		icon: 'https://xivapi.com/i/003000/003172.png',
+		icon: iconUrl(3172),
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		cooldown: 60000,
@@ -260,35 +261,35 @@ export const SAM = ensureActions({
 	HISSATSU_SHINTEN: {
 		id: 7490,
 		name: 'Hissatsu: Shinten',
-		icon: 'https://xivapi.com/i/003000/003173.png',
+		icon: iconUrl(3173),
 		cooldown: 1000,
 	},
 
 	HISSATSU_KYUTEN: {
 		id: 7491,
 		name: 'Hissatsu: Kyuten',
-		icon: 'https://xivapi.com/i/003000/003174.png',
+		icon: iconUrl(3174),
 		cooldown: 1000,
 	},
 
 	HAGAKURE: {
 		id: 7495,
 		name: 'Hagakure',
-		icon: 'https://xivapi.com/i/003000/003176.png',
+		icon: iconUrl(3176),
 		cooldown: 40000,
 	},
 
 	IKISHOTEN: {
 		id: 16482,
 		name: 'Ikishoten',
-		icon: 'https://xivapi.com/i/003000/003179.png',
+		icon: iconUrl(3179),
 		cooldown: 120000,
 	},
 
 	HISSATSU_GUREN: {
 		id: 7496,
 		name: 'Hissatsu: Guren',
-		icon: 'https://xivapi.com/i/003000/003177.png',
+		icon: iconUrl(3177),
 		cooldown: 120000,
 		cooldownGroup: 10,
 	},
@@ -296,7 +297,7 @@ export const SAM = ensureActions({
 	HISSATSU_SENEI: {
 		id: 16481,
 		name: 'Hissatsu: Senei',
-		icon: 'https://xivapi.com/i/003000/003178.png',
+		icon: iconUrl(3178),
 		cooldown: 120000,
 		cooldownGroup: 10,
 	},
@@ -304,7 +305,7 @@ export const SAM = ensureActions({
 	TSUBAME_GAESHI: {
 		id: 16483,
 		name: 'Tsubame Gaeshi',
-		icon: 'https://xivapi.com/i/003000/003180.png',
+		icon: iconUrl(3180),
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		cooldown: 60000,
@@ -314,7 +315,7 @@ export const SAM = ensureActions({
 	KAESHI_HIGANBANA: {
 		id: 16484,
 		name: 'Kaeshi: Higanbana',
-		icon: 'https://xivapi.com/i/003000/003181.png',
+		icon: iconUrl(3181),
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		cooldown: 60000,
@@ -327,7 +328,7 @@ export const SAM = ensureActions({
 	KAESHI_GOKEN: {
 		id: 16485,
 		name: 'Kaeshi: Goken',
-		icon: 'https://xivapi.com/i/003000/003182.png',
+		icon: iconUrl(3182),
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		gcdRecast: 2500,
@@ -339,7 +340,7 @@ export const SAM = ensureActions({
 	KAESHI_SETSUGEKKA: {
 		id: 16486,
 		name: 'Kaeshi: Setsugekka',
-		icon: 'https://xivapi.com/i/003000/003183.png',
+		icon: iconUrl(3183),
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		gcdRecast: 2500,
@@ -352,14 +353,14 @@ export const SAM = ensureActions({
 	SHOHA: {
 		id: 16487,
 		name: 'Shoha',
-		icon: 'https://xivapi.com/i/003000/003184.png',
+		icon: iconUrl(3184),
 		cooldown: 15000,
 	},
 
 	SHOHA_II: { //WHY SE WHY
 		id: 25779,
 		name: 'Shoha II',
-		icon: 'https://xivapi.com/i/003000/003185.png',
+		icon: iconUrl(3185),
 		cooldown: 15000,
 	},
 })

@@ -4,6 +4,7 @@ import {t} from '@lingui/macro'
 import {Plural, Trans} from '@lingui/react'
 import Rotation from 'components/ui/Rotation'
 import {ActionCombo} from 'data/ACTIONS/type'
+import {iconUrl} from 'data/icon'
 import {Event, Events, FieldsMultiTargeted, SourceModifier} from 'event'
 import _ from 'lodash'
 import {dependency} from 'parser/core/Injectable'
@@ -28,6 +29,8 @@ const ISSUE_TYPENAMES = {
 	timeout: <Trans id="core.combos.issuetypenames.timeout">Expired</Trans>,
 }
 
+const ICON_ATTACK = 405
+
 interface EventCombo extends FieldsMultiTargeted {
 	action: number
 }
@@ -50,7 +53,7 @@ export class Combos extends Analyser {
 	static override displayOrder = DISPLAY_ORDER.COMBOS
 
 	// This should be redefined by subclassing modules; the default is the basic 'Attack' icon
-	protected suggestionIcon = 'https://xivapi.com/i/000000/000405.png'
+	protected suggestionIcon = iconUrl(ICON_ATTACK)
 
 	@dependency protected data!: Data
 	@dependency private death!: Death

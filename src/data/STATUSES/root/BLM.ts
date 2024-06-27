@@ -1,3 +1,4 @@
+import {iconUrl} from 'data/icon'
 import {ensureStatuses} from '../type'
 
 // TODO: Fill in the rest of this
@@ -5,69 +6,69 @@ export const BLM = ensureStatuses({
 	THUNDER_I: {
 		id: 161,
 		name: 'Thunder',
-		icon: 'https://xivapi.com/i/010000/010457.png',
+		icon: iconUrl(10457),
 	},
 	THUNDER_II: {
 		id: 162,
 		name: 'Thunder II',
-		icon: 'https://xivapi.com/i/010000/010458.png',
+		icon: iconUrl(10458),
 	},
 	THUNDER_III: {
 		id: 163,
 		name: 'Thunder III',
-		icon: 'https://xivapi.com/i/010000/010459.png',
+		icon: iconUrl(10459),
 		duration: 30000,
 	},
 	THUNDER_IV: {
 		id: 1210,
 		name: 'Thunder IV',
-		icon: 'https://xivapi.com/i/012000/012657.png',
+		icon: iconUrl(12657),
 		duration: 18000,
 	},
 	TRIPLECAST: {
 		id: 1211,
 		name: 'Triplecast',
-		icon: 'https://xivapi.com/i/012000/012658.png',
+		icon: iconUrl(12658),
 	},
 	FIRESTARTER: {
 		id: 165,
 		name: 'Firestarter',
-		icon: 'https://xivapi.com/i/010000/010460.png',
+		icon: iconUrl(10460),
 		duration: 30000,
 	},
 	THUNDERCLOUD: {
 		id: 164,
 		name: 'Thundercloud',
-		icon: 'https://xivapi.com/i/010000/010461.png',
+		icon: iconUrl(10461),
 		duration: 40000,
 	},
 	LEY_LINES: {
 		id: 737,
 		name: 'Ley Lines',
-		icon: 'https://xivapi.com/i/012000/012653.png',
+		icon: iconUrl(12653),
 		duration: 30000,
 	},
 	CIRCLE_OF_POWER: {
 		id: 738,
 		name: 'Circle Of Power',
-		icon: 'https://xivapi.com/i/012000/012654.png',
+		icon: iconUrl(12654),
 		speedModifier: 0.85,
 	},
 	SHARPCAST: {
 		id: 867,
 		name: 'Sharpcast',
-		icon: 'https://xivapi.com/i/012000/012655.png',
+		icon: iconUrl(12655),
 		duration: 30000,
 	},
 	MANAWARD: {
 		id: 168,
 		name: 'Manaward',
-		icon: 'https://xivapi.com/i/010000/010456.png',
+		icon: iconUrl(10456),
 		duration: 20000,
 	},
 	ENHANCED_FLARE: {
 		id: 2960,
 		name: 'Enhanced Flare',
-		icon: 'https://xivapi.com/i/012000/012659.png',
+		icon: iconUrl(12659),
 	},
 })

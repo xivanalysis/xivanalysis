@@ -1,3 +1,4 @@
+import {iconUrl} from 'data/icon'
 import {Attribute} from 'event'
 import {ensureActions} from '../type'
 
@@ -8,7 +9,7 @@ export const PLD = ensureActions({
 	FAST_BLADE: {
 		id: 9,
 		name: 'Fast Blade',
-		icon: 'https://xivapi.com/i/000000/000158.png',
+		icon: iconUrl(158),
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		combo: {
@@ -18,7 +19,7 @@ export const PLD = ensureActions({
 	RIOT_BLADE: {
 		id: 15,
 		name: 'Riot Blade',
-		icon: 'https://xivapi.com/i/000000/000156.png',
+		icon: iconUrl(156),
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		combo: {
@@ -28,7 +29,7 @@ export const PLD = ensureActions({
 	RAGE_OF_HALONE: {
 		id: 21,
 		name: 'Rage Of Halone',
-		icon: 'https://xivapi.com/i/000000/000155.png',
+		icon: iconUrl(155),
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		combo: {
@@ -39,7 +40,7 @@ export const PLD = ensureActions({
 	ROYAL_AUTHORITY: {
 		id: 3539,
 		name: 'Royal Authority',
-		icon: 'https://xivapi.com/i/002000/002507.png',
+		icon: iconUrl(2507),
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		combo: {
@@ -51,14 +52,14 @@ export const PLD = ensureActions({
 	SHIELD_LOB: {
 		id: 24,
 		name: 'Shield Lob',
-		icon: 'https://xivapi.com/i/000000/000164.png',
+		icon: iconUrl(164),
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 	},
 	SHIELD_BASH: {
 		id: 16,
 		name: 'Shield Bash',
-		icon: 'https://xivapi.com/i/000000/000154.png',
+		icon: iconUrl(154),
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		breaksCombo: true,
@@ -66,7 +67,7 @@ export const PLD = ensureActions({
 	TOTAL_ECLIPSE: {
 		id: 7381,
 		name: 'Total Eclipse',
-		icon: 'https://xivapi.com/i/002000/002511.png',
+		icon: iconUrl(2511),
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		combo: {
@@ -76,7 +77,7 @@ export const PLD = ensureActions({
 	PROMINENCE: {
 		id: 16457,
 		name: 'Prominence',
-		icon: 'https://xivapi.com/i/002000/002516.png',
+		icon: iconUrl(2516),
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		combo: {
@@ -88,7 +89,7 @@ export const PLD = ensureActions({
 	GORING_BLADE: {
 		id: 3538,
 		name: 'Goring Blade',
-		icon: 'https://xivapi.com/i/002000/002506.png',
+		icon: iconUrl(2506),
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		cooldown: 60000,
@@ -97,7 +98,7 @@ export const PLD = ensureActions({
 	CLEMENCY: {
 		id: 3541,
 		name: 'Clemency',
-		icon: 'https://xivapi.com/i/002000/002509.png',
+		icon: iconUrl(2509),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 1500,
@@ -105,7 +106,7 @@ export const PLD = ensureActions({
 	HOLY_SPIRIT: {
 		id: 7384,
 		name: 'Holy Spirit',
-		icon: 'https://xivapi.com/i/002000/002514.png',
+		icon: iconUrl(2514),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 1500,
@@ -113,7 +114,7 @@ export const PLD = ensureActions({
 	HOLY_CIRCLE: {
 		id: 16458,
 		name: 'Holy Circle',
-		icon: 'https://xivapi.com/i/002000/002517.png',
+		icon: iconUrl(2517),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 1500,
@@ -121,7 +122,7 @@ export const PLD = ensureActions({
 	ATONEMENT: {
 		id: 16460,
 		name: 'Atonement',
-		icon: 'https://xivapi.com/i/002000/002519.png',
+		icon: iconUrl(2519),
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		breaksCombo: false,
@@ -129,7 +130,7 @@ export const PLD = ensureActions({
 	CONFITEOR: {
 		id: 16459,
 		name: 'Confiteor',
-		icon: 'https://xivapi.com/i/002000/002518.png',
+		icon: iconUrl(2518),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		combo: {
@@ -139,7 +140,7 @@ export const PLD = ensureActions({
 	BLADE_OF_FAITH: {
 		id: 25748,
 		name: 'Blade of Faith',
-		icon: 'https://xivapi.com/i/002000/002952.png',
+		icon: iconUrl(2952),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		combo: {
@@ -149,7 +150,7 @@ export const PLD = ensureActions({
 	BLADE_OF_TRUTH: {
 		id: 25749,
 		name: 'Blade of Truth',
-		icon: 'https://xivapi.com/i/002000/002953.png',
+		icon: iconUrl(2953),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		combo: {
@@ -159,7 +160,7 @@ export const PLD = ensureActions({
 	BLADE_OF_VALOR: {
 		id: 25750,
 		name: 'Blade of Valor',
-		icon: 'https://xivapi.com/i/002000/002954.png',
+		icon: iconUrl(2954),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		combo: {
@@ -174,7 +175,7 @@ export const PLD = ensureActions({
 	FIGHT_OR_FLIGHT: {
 		id: 20,
 		name: 'Fight Or Flight',
-		icon: 'https://xivapi.com/i/000000/000166.png',
+		icon: iconUrl(166),
 		onGcd: false,
 		cooldown: 60000,
 		statusesApplied: ['FIGHT_OR_FLIGHT'],
@@ -182,7 +183,7 @@ export const PLD = ensureActions({
 	IRON_WILL: {
 		id: 28,
 		name: 'Iron Will',
-		icon: 'https://xivapi.com/i/002000/002505.png',
+		icon: iconUrl(2505),
 		onGcd: false,
 		cooldown: 2000,
 	},
@@ -196,7 +197,7 @@ export const PLD = ensureActions({
 	SENTINEL: {
 		id: 17,
 		name: 'Sentinel',
-		icon: 'https://xivapi.com/i/000000/000151.png',
+		icon: iconUrl(151),
 		onGcd: false,
 		cooldown: 120000,
 		statusesApplied: ['SENTINEL'],
@@ -204,7 +205,7 @@ export const PLD = ensureActions({
 	CIRCLE_OF_SCORN: {
 		id: 23,
 		name: 'Circle Of Scorn',
-		icon: 'https://xivapi.com/i/000000/000161.png',
+		icon: iconUrl(161),
 		onGcd: false,
 		cooldown: 30000,
 		statusesApplied: ['CIRCLE_OF_SCORN'],
@@ -212,7 +213,7 @@ export const PLD = ensureActions({
 	COVER: {
 		id: 27,
 		name: 'Cover',
-		icon: 'https://xivapi.com/i/002000/002501.png',
+		icon: iconUrl(2501),
 		onGcd: false,
 		cooldown: 120000,
 		statusesApplied: ['COVER', 'COVERED'],
@@ -220,14 +221,14 @@ export const PLD = ensureActions({
 	SPIRITS_WITHIN: {
 		id: 29,
 		name: 'Spirits Within',
-		icon: 'https://xivapi.com/i/002000/002503.png',
+		icon: iconUrl(2503),
 		onGcd: false,
 		cooldown: 30000,
 	},
 	HALLOWED_GROUND: {
 		id: 30,
 		name: 'Hallowed Ground',
-		icon: 'https://xivapi.com/i/002000/002502.png',
+		icon: iconUrl(2502),
 		onGcd: false,
 		cooldown: 420000,
 		statusesApplied: ['HALLOWED_GROUND'],
@@ -243,7 +244,7 @@ export const PLD = ensureActions({
 	SHELTRON: {
 		id: 3542,
 		name: 'Sheltron',
-		icon: 'https://xivapi.com/i/002000/002510.png',
+		icon: iconUrl(2510),
 		onGcd: false,
 		cooldown: 5000,
 		statusesApplied: ['SHELTRON'],
@@ -251,7 +252,7 @@ export const PLD = ensureActions({
 	DIVINE_VEIL: {
 		id: 3540,
 		name: 'Divine Veil',
-		icon: 'https://xivapi.com/i/002000/002508.png',
+		icon: iconUrl(2508),
 		onGcd: false,
 		cooldown: 90000,
 		statusesApplied: ['DIVINE_VEIL'],
@@ -259,7 +260,7 @@ export const PLD = ensureActions({
 	INTERVENTION: {
 		id: 7382,
 		name: 'Intervention',
-		icon: 'https://xivapi.com/i/002000/002512.png',
+		icon: iconUrl(2512),
 		onGcd: false,
 		cooldown: 10000,
 		statusesApplied: ['INTERVENTION'],
@@ -267,7 +268,7 @@ export const PLD = ensureActions({
 	REQUIESCAT: {
 		id: 7383,
 		name: 'Requiescat',
-		icon: 'https://xivapi.com/i/002000/002513.png',
+		icon: iconUrl(2513),
 		onGcd: false,
 		cooldown: 60000,
 		statusesApplied: ['REQUIESCAT', 'CONFITEOR_READY'],
@@ -275,7 +276,7 @@ export const PLD = ensureActions({
 	PASSAGE_OF_ARMS: {
 		id: 7385,
 		name: 'Passage Of Arms',
-		icon: 'https://xivapi.com/i/002000/002515.png',
+		icon: iconUrl(2515),
 		onGcd: false,
 		cooldown: 120000,
 		statusesApplied: ['PASSAGE_OF_ARMS'],
@@ -283,7 +284,7 @@ export const PLD = ensureActions({
 	INTERVENE: {
 		id: 16461,
 		name: 'Intervene',
-		icon: 'https://xivapi.com/i/002000/002520.png',
+		icon: iconUrl(2520),
 		onGcd: false,
 		cooldown: 30000,
 		charges: 2,
@@ -291,7 +292,7 @@ export const PLD = ensureActions({
 	HOLY_SHELTRON: {
 		id: 25746,
 		name: 'Holy Sheltron',
-		icon: 'https://xivapi.com/i/002000/002950.png',
+		icon: iconUrl(2950),
 		onGcd: false,
 		cooldown: 5000,
 		statusesApplied: ['HOLY_SHELTRON'],
@@ -299,7 +300,7 @@ export const PLD = ensureActions({
 	EXPIACION: {
 		id: 25747,
 		name: 'Expiacion',
-		icon: 'https://xivapi.com/i/002000/002951.png',
+		icon: iconUrl(2951),
 		onGcd: false,
 		cooldown: 30000,
 	},
