@@ -61,7 +61,7 @@ export const SGE = ensureActions({
 	EUKRASIAN_PROGNOSIS_II: {
 		id: 37034,
 		name: 'Eukrasian Prognosis II',
-		icon: 'https://xivapi.com/i/003000/003660.png', // TODO
+		icon: '3689',
 		onGcd: true,
 		gcdRecast: 1500,
 		mpCost: 900,
@@ -146,11 +146,17 @@ export const SGE = ensureActions({
 		statusesApplied: ['KRASIS'],
 	},
 	PHILOSOPHIA: {
-		id: 37035, // TODO
+		id: 37035,
 		name: 'Philosophia',
-		icon: 'https://xivapi.com/i/003000/003653.png', // TODO
+		icon: '3690',
 		cooldown: 180000,
-		statusesApplied: ['KARDIA', 'KARDION'],
+		statusesApplied: ['EUDAIMONIA'],
+	},
+	// I guess Philosophia's Eudaimonia status effect produces Eudaimonia-action sourced heals?
+	EUDAIMONIA: {
+		id: 37036,
+		name: 'Eudaimonia',
+		icon: '3690', // Technically it uses the generic cure icon but eh
 	},
 
 	/** Addersgall abilities */
@@ -277,7 +283,7 @@ export const SGE = ensureActions({
 	EUKRASIAN_DYSKRASIA: {
 		id: 37032,
 		name: 'Eukrasian Dyskrasia',
-		icon: 'https://xivapi.com/i/003000/003683.png', // TODO
+		icon: '3687',
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		mpCost: 400,
@@ -319,7 +325,7 @@ export const SGE = ensureActions({
 	PSYCHE: {
 		id: 37033,
 		name: 'Psyche',
-		icon: 'https://xivapi.com/i/003000/003681.png', // TODO
+		icon: '3688',
 		onGcd: false,
 		cooldown: 60000,
 	},

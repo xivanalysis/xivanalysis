@@ -78,15 +78,15 @@ export const SGE = ensureStatuses({
 		icon: iconUrl(12952),
 	},
 	PHILOSOPHIA: {
-		id: 7002604, // TODO
+		id: 3898,
 		name: 'Philosophia',
-		icon: 'https://xivapi.com/i/012000/012951.png', // TODO
+		icon: '12974',
 		duration: 20000,
 	},
 	EUDAIMONIA: {
-		id: 7002605, // TODO
+		id: 3899,
 		name: 'Eudaimonia',
-		icon: 'https://xivapi.com/i/012000/012952.png', // TODO
+		icon: '12975',
 		duration: 20000,
 	},
 	SOTERIA: {
@@ -145,9 +145,9 @@ export const SGE = ensureStatuses({
 		duration: 30000,
 	},
 	EUKRASIAN_DYSKRASIA: {
-		id: 7002616, // TODO
+		id: 3897,
 		name: 'Eukrasian Dyskrasia',
-		icon: 'https://xivapi.com/i/012000/012962.png', // TODO
+		icon: '12973',
 		duration: 30000,
 	},
 	PNEUMA: {
