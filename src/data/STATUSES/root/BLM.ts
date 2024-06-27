@@ -17,13 +17,13 @@ export const BLM = ensureStatuses({
 	HIGH_THUNDER: {
 		id: 3871,
 		name: 'High Thunder',
-		icon: '12661',
+		icon: iconUrl(12661),
 		duration: 30000,
 	},
 	HIGH_THUNDER_II: {
 		id: 3872,
 		name: 'High Thunder II',
-		icon: '12662',
+		icon: iconUrl(12662),
 		duration: 24000,
 	},
 	TRIPLECAST: {
@@ -40,7 +40,7 @@ export const BLM = ensureStatuses({
 	THUNDERHEAD: {
 		id: 3870,
 		name: 'Thunderhead',
-		icon: '12660',
+		icon: iconUrl(12660),
 		duration: 30000,
 	},
 	LEY_LINES: {

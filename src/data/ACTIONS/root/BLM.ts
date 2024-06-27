@@ -110,7 +110,7 @@ export const BLM = ensureActions({
 	FLARE_STAR: {
 		id: 36989,
 		name: 'Flare Star',
-		icon: '2151',
+		icon: iconUrl(2151),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 3000,
@@ -126,7 +126,7 @@ export const BLM = ensureActions({
 	HIGH_THUNDER: {
 		id: 36986,
 		name: 'High Thunder',
-		icon: '2673',
+		icon: iconUrl(2673),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		statusesApplied: ['HIGH_THUNDER'],
@@ -142,7 +142,7 @@ export const BLM = ensureActions({
 	HIGH_THUNDER_II: {
 		id: 36987,
 		name: 'High Thunder II',
-		icon: '2674',
+		icon: iconUrl(2674),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		statusesApplied: ['HIGH_THUNDER_II'],
@@ -210,7 +210,7 @@ export const BLM = ensureActions({
 	RETRACE: {
 		id: 36988,
 		name: 'Retrace',
-		icon: '2150',
+		icon: iconUrl(2150),
 		cooldown: 40000,
 	},
 	TRIPLECAST: {
