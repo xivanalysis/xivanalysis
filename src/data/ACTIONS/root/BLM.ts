@@ -179,7 +179,7 @@ export const BLM = ensureActions({
 		id: 158,
 		name: 'Manafont',
 		icon: iconUrl(2651),
-		cooldown: 120000,
+		cooldown: 100000,
 	},
 	MANAWARD: {
 		id: 157,
