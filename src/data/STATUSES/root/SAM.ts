@@ -7,15 +7,15 @@ export const SAM = ensureStatuses({
 		icon: 'https://xivapi.com/i/013000/013307.png',
 		duration: 4000,
 	},
-	TENGETSU: { //TODO: Id & Icon
-		id: 0,
+	TENGETSU: { //TODO: Icon
+		id: 3853,
 		name: 'Tengetsu',
 		icon: 'icon',
 		duration: 4000,
 	},
 
 	TENGETSU_FORESIGHT: {
-		id: 0,
+		id: 3854,
 		name: "Tengetsu's Foresight",
 		icon: 'icon',
 		duration: 8000,
@@ -88,14 +88,14 @@ export const SAM = ensureStatuses({
 	},
 
 	ZANSHIN_READY: { //TODO: Id & Icon
-		id: 0,
+		id: 166,
 		name: 'Zanshin Ready',
 		icon: 'icon',
 		duration: 30000,
 	},
 
 	TENDO: { //TODO: Id & Icon
-		id: 0,
+		id: 3856,
 		name: 'Tendo',
 		icon: 'icon',
 		duration: 30000,

@@ -19,7 +19,7 @@ export const SAM = ensureActions({
 	},
 
 	GYOFU: {
-		id: 0, //TODO: Add ID
+		id: 36963,
 		name: 'Gyofu',
 		icon: 'icon', //TODO: Add Icon
 		onGcd: true,
@@ -38,7 +38,7 @@ export const SAM = ensureActions({
 		combo: {
 			from: [
 				7477,
-				0, //TODO: Add Gyofu ID
+				36963,
 			],
 		},
 		statusesApplied: ['FUGETSU'],
@@ -62,7 +62,7 @@ export const SAM = ensureActions({
 		combo: {
 			from: [
 				7477,
-				0, //TODO: Add Gyofu ID
+				36963,
 			],
 		},
 		statusesApplied: ['FUKA'],
@@ -94,16 +94,16 @@ export const SAM = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		potencies: [{
-			value: 120,
+			value: 180,
 			bonusModifiers: [],
 		}, {
-			value: 170,
+			value: 230,
 			bonusModifiers: [BonusModifier.POSITIONAL],
 		}, {
-			value: 330,
+			value: 390,
 			bonusModifiers: [BonusModifier.COMBO],
 		}, {
-			value: 370,
+			value: 440,
 			bonusModifiers: [BonusModifier.POSITIONAL, BonusModifier.COMBO],
 		}],
 		combo: {
@@ -134,8 +134,8 @@ export const SAM = ensureActions({
 		castTime: 1300,
 	},
 
-	TENDO_GOKEN: { //TODO: Verify ID, Icon
-		id: 0,
+	TENDO_GOKEN: { //TODO: Verify Icon
+		id: 36965,
 		name: 'Tendo Goken',
 		icon: 'icon',
 		onGcd: true,
@@ -150,16 +150,16 @@ export const SAM = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		potencies: [{
-			value: 120,
+			value: 180,
 			bonusModifiers: [],
 		}, {
-			value: 170,
+			value: 230,
 			bonusModifiers: [BonusModifier.POSITIONAL],
 		}, {
-			value: 330,
+			value: 390,
 			bonusModifiers: [BonusModifier.COMBO],
 		}, {
-			value: 380,
+			value: 440,
 			bonusModifiers: [BonusModifier.POSITIONAL, BonusModifier.COMBO],
 		}],
 		combo: {
@@ -190,8 +190,8 @@ export const SAM = ensureActions({
 		castTime: 1300,
 	},
 
-	TENDO_SETSUGEKKA: { //TODO: Verify ID, Icon
-		id: 0,
+	TENDO_SETSUGEKKA: { //TODO: Verify, Icon
+		id: 36966,
 		name: 'Tendo Setsugekka',
 		icon: 'https://xivapi.com/i/003000/003162.png',
 		onGcd: true,
@@ -250,7 +250,7 @@ export const SAM = ensureActions({
 	},
 
 	TENDO_KAESHI_GOKEN: { //TODO Id, Icon, Recast
-		id: 0,
+		id: 36967,
 		name: 'Tendo Kaeshi Goken',
 		icon: 'icon',
 		onGcd: true,
@@ -259,7 +259,7 @@ export const SAM = ensureActions({
 	},
 
 	TENDO_KAESHI_SETSUGEKKA: { //TODO Id, Icon, Recast
-		id: 0,
+		id: 36968,
 		name: 'Tendo Kaeshi Setsugekka',
 		icon: 'icon',
 		onGcd: true,
@@ -296,7 +296,7 @@ export const SAM = ensureActions({
 		statusesApplied: ['THIRD_EYE'],
 	},
 	TENGETSU: {
-		id: 0,
+		id: 36962,
 		name: 'Tengetsu',
 		icon: 'icon',
 		cooldown: 15000,
@@ -389,7 +389,7 @@ export const SAM = ensureActions({
 		cooldownGroup: 10,
 	},
 
-	SHOHA: { //TODO: Verify new icon, maybe new ID?
+	SHOHA: { //TODO: Verify new icon
 		id: 16487,
 		name: 'Shoha',
 		icon: 'https://xivapi.com/i/003000/003184.png',
@@ -397,7 +397,7 @@ export const SAM = ensureActions({
 	},
 
 	ZANSHIN: {
-		id: 0,
+		id: 36964,
 		name: 'Zanshin',
 		icon: 'icon',
 		cooldown: 1000,
