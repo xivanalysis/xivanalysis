@@ -17,13 +17,13 @@ export const DNC = ensureStatuses({
 	FLOURISHING_SYMMETRY: {
 		id: 3017,
 		name: 'Flourishing Symmetry',
-		icon: 'https://xivapi.com/i/013000/013725.png',
+		icon: iconUrl(13725),
 		duration: 30000,
 	},
 	FLOURISHING_FLOW: {
 		id: 3018,
 		name: 'Flourishing Flow',
-		icon: 'https://xivapi.com/i/013000/013726.png',
+		icon: iconUrl(13726),
 		duration: 30000,
 	},
 	THREEFOLD_FAN_DANCE: {
@@ -41,7 +41,7 @@ export const DNC = ensureStatuses({
 	FINISHING_MOVE_READY: {
 		id: 3868,
 		name: 'Finishing Move Ready',
-		icon: '13727',
+		icon: iconUrl(13727),
 		duration: 30000,
 	},
 	FLOURISHING_STARFALL: {
@@ -71,7 +71,7 @@ export const DNC = ensureStatuses({
 	LAST_DANCE_READY: {
 		id: 3867,
 		name: 'Last Dance Ready',
-		icon: '13728',
+		icon: iconUrl(13728),
 		duration: 30000,
 	},
 	TECHNICAL_FINISH: {
@@ -83,7 +83,7 @@ export const DNC = ensureStatuses({
 	DANCE_OF_THE_DAWN_READY: {
 		id: 3869,
 		name: 'Dance of the Dawn Ready',
-		icon: '13729',
+		icon: iconUrl(13729),
 		duration: 30000,
 	},
 	FLOURISHING_FINISH: {

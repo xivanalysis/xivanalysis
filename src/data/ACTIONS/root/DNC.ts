@@ -32,7 +32,7 @@ export const DNC = ensureActions({
 	},
 	FINISHING_MOVE: {
 		id: 36984,
-		icon: '3484',
+		icon: iconUrl(3484),
 		name: 'Finishing Move',
 		onGcd: true,
 		gcdRecast: 2500,
@@ -41,7 +41,7 @@ export const DNC = ensureActions({
 	},
 	LAST_DANCE: {
 		id: 36983,
-		icon: '3484',
+		icon: iconUrl(3483),
 		name: 'Last Dance',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
@@ -223,7 +223,7 @@ export const DNC = ensureActions({
 	},
 	DANCE_OF_THE_DAWN: {
 		id: 36985,
-		icon: '3485',
+		icon: iconUrl(3485),
 		name: 'Dance of the Dawn',
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
