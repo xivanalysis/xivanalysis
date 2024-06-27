@@ -16,9 +16,9 @@ export const NIN = ensureStatuses({
 		duration: 15000,
 	},
 
-	MUG_VULNERABILITY_UP: {
+	MUG: {
 		id: 3183,
-		name: 'Vulnerability Up',
+		name: 'Mug',
 		icon: iconUrl(14942),
 		duration: 20000,
 	},

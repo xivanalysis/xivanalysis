@@ -379,7 +379,7 @@ export const NIN = ensureActions({
 		icon: iconUrl(613),
 		onGcd: false,
 		cooldown: 120000,
-		statusesApplied: ['MUG_VULNERABILITY_UP'],
+		statusesApplied: ['MUG'],
 	},
 
 	ASSASSINATE: {
