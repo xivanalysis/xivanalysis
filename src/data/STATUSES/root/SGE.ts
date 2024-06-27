@@ -80,13 +80,13 @@ export const SGE = ensureStatuses({
 	PHILOSOPHIA: {
 		id: 3898,
 		name: 'Philosophia',
-		icon: '12974',
+		icon: iconUrl(12974),
 		duration: 20000,
 	},
 	EUDAIMONIA: {
 		id: 3899,
 		name: 'Eudaimonia',
-		icon: '12975',
+		icon: iconUrl(12975),
 		duration: 20000,
 	},
 	SOTERIA: {
@@ -147,7 +147,7 @@ export const SGE = ensureStatuses({
 	EUKRASIAN_DYSKRASIA: {
 		id: 3897,
 		name: 'Eukrasian Dyskrasia',
-		icon: '12973',
+		icon: iconUrl(12973),
 		duration: 30000,
 	},
 	PNEUMA: {
@@ -165,7 +165,7 @@ export const SGE = ensureStatuses({
 	HOLOSAKOS: {
 		id: 3365,
 		name: 'Holosakos',
-		icon: 'https://xivapi.com/i/012000-012972.png',
+		icon: iconUrl(12972),
 		duration: 30000,
 	},
 })

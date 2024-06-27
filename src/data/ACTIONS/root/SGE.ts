@@ -61,7 +61,7 @@ export const SGE = ensureActions({
 	EUKRASIAN_PROGNOSIS_II: {
 		id: 37034,
 		name: 'Eukrasian Prognosis II',
-		icon: '3689',
+		icon: iconUrl(3689),
 		onGcd: true,
 		gcdRecast: 1500,
 		mpCost: 900,
@@ -148,7 +148,7 @@ export const SGE = ensureActions({
 	PHILOSOPHIA: {
 		id: 37035,
 		name: 'Philosophia',
-		icon: '3690',
+		icon: iconUrl(3690),
 		cooldown: 180000,
 		statusesApplied: ['EUDAIMONIA'],
 	},
@@ -156,7 +156,7 @@ export const SGE = ensureActions({
 	EUDAIMONIA: {
 		id: 37036,
 		name: 'Eudaimonia',
-		icon: '3690', // Technically it uses the generic cure icon but eh
+		icon: iconUrl(3690), // Technically it uses the generic cure icon but eh
 	},
 
 	/** Addersgall abilities */
@@ -283,7 +283,7 @@ export const SGE = ensureActions({
 	EUKRASIAN_DYSKRASIA: {
 		id: 37032,
 		name: 'Eukrasian Dyskrasia',
-		icon: '3687',
+		icon: iconUrl(3687),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		mpCost: 400,
@@ -325,7 +325,7 @@ export const SGE = ensureActions({
 	PSYCHE: {
 		id: 37033,
 		name: 'Psyche',
-		icon: '3688',
+		icon: iconUrl(3688),
 		onGcd: false,
 		cooldown: 60000,
 	},
