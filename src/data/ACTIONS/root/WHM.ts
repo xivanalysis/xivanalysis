@@ -1,3 +1,4 @@
+import {iconUrl} from 'data/icon'
 import {Attribute} from 'event'
 import {ensureActions} from '../type'
 
@@ -11,19 +12,19 @@ export const WHM = ensureActions({
 	LITURGY_OF_THE_BELL_ON_EXPIRY: {
 		id: 25864,
 		name: 'Liturgy of the Bell',
-		icon: 'https://xivapi.com/i/002000/002649.png',
+		icon: iconUrl(2649),
 	},
 
 	LITURGY_OF_THE_BELL_ON_DAMAGE: {
 		id: 25863,
 		name: 'Liturgy of the Bell',
-		icon: 'https://xivapi.com/i/002000/002649.png',
+		icon: iconUrl(2649),
 	},
 
 	LITURGY_OF_THE_BELL: {
 		id: 25862,
 		name: 'Liturgy of the Bell',
-		icon: 'https://xivapi.com/i/002000/002649.png',
+		icon: iconUrl(2649),
 		cooldown: 180000,
 		statusesApplied: ['LITURGY_OF_THE_BELL'],
 	},
@@ -31,7 +32,7 @@ export const WHM = ensureActions({
 	AQUAVEIL: {
 		id: 25861,
 		name: 'Aquaveil',
-		icon: 'https://xivapi.com/i/002000/002648.png',
+		icon: iconUrl(2648),
 		cooldown: 60000,
 		statusesApplied: ['AQUAVEIL'],
 	},
@@ -39,7 +40,7 @@ export const WHM = ensureActions({
 	HOLY_III: {
 		id: 25860,
 		name: 'Holy III',
-		icon: 'https://xivapi.com/i/002000/002647.png',
+		icon: iconUrl(2647),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 2500,
@@ -49,7 +50,7 @@ export const WHM = ensureActions({
 	GLARE_III: {
 		id: 25859,
 		name: 'Glare III',
-		icon: 'https://xivapi.com/i/002000/002646.png',
+		icon: iconUrl(2646),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 1500,
@@ -59,7 +60,7 @@ export const WHM = ensureActions({
 	TEMPERANCE: {
 		id: 16536,
 		name: 'Temperance',
-		icon: 'https://xivapi.com/i/002000/002645.png',
+		icon: iconUrl(2645),
 		cooldown: 120000,
 		statusesApplied: ['TEMPERANCE'],
 	},
@@ -67,7 +68,7 @@ export const WHM = ensureActions({
 	AFFLATUS_MISERY: {
 		id: 16535,
 		name: 'Afflatus Misery',
-		icon: 'https://xivapi.com/i/002000/002644.png',
+		icon: iconUrl(2644),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 	},
@@ -75,7 +76,7 @@ export const WHM = ensureActions({
 	AFFLATUS_RAPTURE: {
 		id: 16534,
 		name: 'Afflatus Rapture',
-		icon: 'https://xivapi.com/i/002000/002643.png',
+		icon: iconUrl(2643),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 	},
@@ -83,7 +84,7 @@ export const WHM = ensureActions({
 	AFFLATUS_SOLACE: {
 		id: 16531,
 		name: 'Afflatus Solace',
-		icon: 'https://xivapi.com/i/002000/002640.png',
+		icon: iconUrl(2640),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 	},
@@ -91,7 +92,7 @@ export const WHM = ensureActions({
 	DIA: {
 		id: 16532,
 		name: 'Dia',
-		icon: 'https://xivapi.com/i/002000/002641.png',
+		icon: iconUrl(2641),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		statusesApplied: ['DIA'],
@@ -101,7 +102,7 @@ export const WHM = ensureActions({
 	GLARE: {
 		id: 16533,
 		name: 'Glare',
-		icon: 'https://xivapi.com/i/002000/002642.png',
+		icon: iconUrl(2642),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 1500,
@@ -111,7 +112,7 @@ export const WHM = ensureActions({
 	PLENARY_INDULGENCE: {
 		id: 7433,
 		name: 'Plenary Indulgence',
-		icon: 'https://xivapi.com/i/002000/002639.png',
+		icon: iconUrl(2639),
 		cooldown: 60000,
 		statusesApplied: ['CONFESSION'],
 	},
@@ -119,7 +120,7 @@ export const WHM = ensureActions({
 	STONE_IV: {
 		id: 7431,
 		name: 'Stone IV',
-		icon: 'https://xivapi.com/i/002000/002637.png',
+		icon: iconUrl(2637),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 1500,
@@ -129,21 +130,21 @@ export const WHM = ensureActions({
 	TETRAGRAMMATON: {
 		id: 3570,
 		name: 'Tetragrammaton',
-		icon: 'https://xivapi.com/i/002000/002633.png',
+		icon: iconUrl(2633),
 		cooldown: 60000,
 	},
 
 	ASSIZE: {
 		id: 3571,
 		name: 'Assize',
-		icon: 'https://xivapi.com/i/002000/002634.png',
+		icon: iconUrl(2634),
 		cooldown: 40000,
 	},
 
 	ASYLUM: {
 		id: 3569,
 		name: 'Asylum',
-		icon: 'https://xivapi.com/i/002000/002632.png',
+		icon: iconUrl(2632),
 		cooldown: 90000,
 		statusesApplied: ['ASYLUM'],
 	},
@@ -151,14 +152,14 @@ export const WHM = ensureActions({
 	BENEDICTION: {
 		id: 140,
 		name: 'Benediction',
-		icon: 'https://xivapi.com/i/002000/002627.png',
+		icon: iconUrl(2627),
 		cooldown: 180000,
 	},
 
 	HOLY: {
 		id: 139,
 		name: 'Holy',
-		icon: 'https://xivapi.com/i/002000/002629.png',
+		icon: iconUrl(2629),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 2500,
@@ -168,7 +169,7 @@ export const WHM = ensureActions({
 	PRESENCE_OF_MIND: {
 		id: 136,
 		name: 'Presence of Mind',
-		icon: 'https://xivapi.com/i/002000/002626.png',
+		icon: iconUrl(2626),
 		cooldown: 120000,
 		statusesApplied: ['PRESENCE_OF_MIND'],
 	},
@@ -176,7 +177,7 @@ export const WHM = ensureActions({
 	STONE_III: {
 		id: 3568,
 		name: 'Stone III',
-		icon: 'https://xivapi.com/i/002000/002631.png',
+		icon: iconUrl(2631),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 1500,
@@ -186,7 +187,7 @@ export const WHM = ensureActions({
 	DIVINE_BENISON: {
 		id: 7432,
 		name: 'Divine Benison',
-		icon: 'https://xivapi.com/i/002000/002638.png',
+		icon: iconUrl(2638),
 		cooldown: 30000,
 		statusesApplied: ['DIVINE_BENISON'],
 		charges: 2,
@@ -195,7 +196,7 @@ export const WHM = ensureActions({
 	THIN_AIR: {
 		id: 7430,
 		name: 'Thin Air',
-		icon: 'https://xivapi.com/i/002000/002636.png',
+		icon: iconUrl(2636),
 		cooldown: 120000,
 		statusesApplied: ['THIN_AIR'],
 		charges: 2,
@@ -204,7 +205,7 @@ export const WHM = ensureActions({
 	AERO_III: {
 		id: 3572,
 		name: 'Aero III',
-		icon: 'https://xivapi.com/i/002000/002635.png',
+		icon: iconUrl(2635),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 2500,
@@ -214,7 +215,7 @@ export const WHM = ensureActions({
 	MEDICA_II: {
 		id: 133,
 		name: 'Medica II',
-		icon: 'https://xivapi.com/i/000000/000409.png',
+		icon: iconUrl(409),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 2000,
@@ -226,7 +227,7 @@ export const WHM = ensureActions({
 	RAISE: {
 		id: 125,
 		name: 'Raise',
-		icon: 'https://xivapi.com/i/000000/000411.png',
+		icon: iconUrl(411),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 8000,
@@ -236,7 +237,7 @@ export const WHM = ensureActions({
 	CURE_II: {
 		id: 135,
 		name: 'Cure II',
-		icon: 'https://xivapi.com/i/000000/000406.png',
+		icon: iconUrl(406),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 2000,
@@ -246,7 +247,7 @@ export const WHM = ensureActions({
 	CURE_III: {
 		id: 131,
 		name: 'Cure III',
-		icon: 'https://xivapi.com/i/000000/000407.png',
+		icon: iconUrl(407),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 2000,
@@ -256,7 +257,7 @@ export const WHM = ensureActions({
 	REGEN: {
 		id: 137,
 		name: 'Regen',
-		icon: 'https://xivapi.com/i/002000/002628.png',
+		icon: iconUrl(2628),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		statusesApplied: ['REGEN'],
@@ -266,7 +267,7 @@ export const WHM = ensureActions({
 	MEDICA: {
 		id: 124,
 		name: 'Medica',
-		icon: 'https://xivapi.com/i/000000/000408.png',
+		icon: iconUrl(408),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 2000,
@@ -276,7 +277,7 @@ export const WHM = ensureActions({
 	STONE: {
 		id: 119,
 		name: 'Stone',
-		icon: 'https://xivapi.com/i/000000/000403.png',
+		icon: iconUrl(403),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 1500,
@@ -286,7 +287,7 @@ export const WHM = ensureActions({
 	AERO_II: {
 		id: 132,
 		name: 'Aero II',
-		icon: 'https://xivapi.com/i/000000/000402.png',
+		icon: iconUrl(402),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		mpCost: 400,
@@ -295,7 +296,7 @@ export const WHM = ensureActions({
 	AERO: {
 		id: 121,
 		name: 'Aero',
-		icon: 'https://xivapi.com/i/000000/000401.png',
+		icon: iconUrl(401),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		mpCost: 400,
@@ -304,7 +305,7 @@ export const WHM = ensureActions({
 	REPOSE: {
 		id: 128,
 		name: 'Repose',
-		icon: 'https://xivapi.com/i/000000/000414.png',
+		icon: iconUrl(414),
 		onGcd: true,
 		castTime: 2500,
 		mpCost: 600,
@@ -313,7 +314,7 @@ export const WHM = ensureActions({
 	STONE_II: {
 		id: 127,
 		name: 'Stone II',
-		icon: 'https://xivapi.com/i/000000/000404.png',
+		icon: iconUrl(404),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 1500,
@@ -323,7 +324,7 @@ export const WHM = ensureActions({
 	CURE: {
 		id: 120,
 		name: 'Cure',
-		icon: 'https://xivapi.com/i/000000/000405.png',
+		icon: iconUrl(405),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 1500,

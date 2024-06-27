@@ -7,6 +7,7 @@ import GeneralCDDowntime from './GeneralCDDowntime'
 import {Hypercharge} from './Hypercharge'
 import {Mitigation} from './Mitigation'
 import MultiHitSkills from './MultiHitSkills'
+import {OGCDCharges} from './oGCDCharges'
 import QueenTimeline from './QueenTimeline'
 import {Reassemble} from './Reassemble'
 import {Tincture} from './Tincture'
@@ -28,4 +29,5 @@ export default [
 	Tincture,
 	Wildfire,
 	YassQueen,
+	OGCDCharges,
 ]

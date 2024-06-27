@@ -1,40 +1,41 @@
+import {iconUrl} from 'data/icon'
 import {ensureStatuses} from '../type'
 
 export const PLD = ensureStatuses({
 	CIRCLE_OF_SCORN: {
 		id: 248,
 		name: 'Circle Of Scorn',
-		icon: 'https://xivapi.com/i/010000/010158.png',
+		icon: iconUrl(10158),
 		duration: 15000,
 	},
 	REQUIESCAT: {
 		id: 1368,
 		name: 'Requiescat',
-		icon: 'https://xivapi.com/i/012000/012514.png',
+		icon: iconUrl(12514),
 		duration: 30000,
 		stacksApplied: 4,
 	},
 	FIGHT_OR_FLIGHT: {
 		id: 76,
 		name: 'Fight Or Flight',
-		icon: 'https://xivapi.com/i/010000/010155.png',
+		icon: iconUrl(10155),
 		duration: 20000,
 	},
 	IRON_WILL: {
 		id: 79,
 		name: 'Iron Will',
-		icon: 'https://xivapi.com/i/012000/012506.png',
+		icon: iconUrl(12506),
 	},
 	SENTINEL: {
 		id: 74,
 		name: 'Sentinel',
-		icon: 'https://xivapi.com/i/010000/010151.png',
+		icon: iconUrl(10151),
 		duration: 15000,
 	},
 	SWORD_OATH: {
 		id: 1902,
 		name: 'Sword Oath',
-		icon: 'https://xivapi.com/i/019000/019461.png',
+		icon: iconUrl(19461),
 		duration: 30000,
 		stacksApplied: 3,
 	},
@@ -48,43 +49,43 @@ export const PLD = ensureStatuses({
 	SHELTRON: {
 		id: 1856,
 		name: 'Sheltron',
-		icon: 'https://xivapi.com/i/012000/012510.png',
+		icon: iconUrl(12510),
 		duration: 6000,
 	},
 	INTERVENTION: {
 		id: 1174,
 		name: 'Intervention',
-		icon: 'https://xivapi.com/i/012000/012511.png',
+		icon: iconUrl(12511),
 		duration: 6000,
 	},
 	PASSAGE_OF_ARMS: {
 		id: 1175,
 		name: 'Passage Of Arms',
-		icon: 'https://xivapi.com/i/012000/012512.png',
+		icon: iconUrl(12512),
 		duration: 18000,
 	},
 	DIVINE_VEIL: {
 		id: 727,
 		name: 'Divine Veil',
-		icon: 'https://xivapi.com/i/012000/012509.png',
+		icon: iconUrl(12509),
 		duration: 30000,
 	},
 	COVER: {
 		id: 80,
 		name: 'Cover',
-		icon: 'https://xivapi.com/i/012000/012501.png',
+		icon: iconUrl(12501),
 		duration: 12000,
 	},
 	COVERED: {
 		id: 81,
 		name: 'Covered',
-		icon: 'https://xivapi.com/i/012000/012502.png',
+		icon: iconUrl(12502),
 		duration: 12000,
 	},
 	HALLOWED_GROUND: {
 		id: 82,
 		name: 'Hallowed Ground',
-		icon: 'https://xivapi.com/i/012000/012504.png',
+		icon: iconUrl(12504),
 		duration: 10000,
 	},
 	BULWARK: {
@@ -96,25 +97,25 @@ export const PLD = ensureStatuses({
 	HOLY_SHELTRON: {
 		id: 2674,
 		name: 'Holy Sheltron',
-		icon: 'https://xivapi.com/i/012000/012515.png',
+		icon: iconUrl(12515),
 		duration: 8000,
 	},
 	KNIGHTS_RESOLVE: {
 		id: 2675,
 		name: 'Knight\'s Resolve',
-		icon: 'https://xivapi.com/i/012000/012516.png',
+		icon: iconUrl(12516),
 		duration: 4000,
 	},
 	KNIGHTS_BENEDICTION: {
 		id: 2676,
 		name: 'Knight\'s Benediction',
-		icon: 'https://xivapi.com/i/012000/012517.png',
+		icon: iconUrl(12517),
 		duration: 12000,
 	},
 	CONFITEOR_READY: {
 		id: 3019,
 		name: 'Confiteor Ready',
-		icon: 'https://xivapi.com/i/012000/012520.png',
+		icon: iconUrl(12520),
 		duration: 30000,
 	},
 })

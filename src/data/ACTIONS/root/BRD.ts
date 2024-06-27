@@ -1,3 +1,4 @@
+import {iconUrl} from 'data/icon'
 import {Attribute} from 'event'
 import {ensureActions} from '../type'
 
@@ -8,7 +9,7 @@ export const BRD = ensureActions({
 	HEAVY_SHOT: {
 		id: 97,
 		name: 'Heavy Shot',
-		icon: 'https://xivapi.com/i/000000/000358.png',
+		icon: iconUrl(358),
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		potency: 160,
@@ -16,7 +17,7 @@ export const BRD = ensureActions({
 	VENOMOUS_BITE: {
 		id: 100,
 		name: 'Venomous Bite',
-		icon: 'https://xivapi.com/i/000000/000363.png',
+		icon: iconUrl(363),
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		potency: 15,
@@ -24,7 +25,7 @@ export const BRD = ensureActions({
 	QUICK_NOCK: {
 		id: 106,
 		name: 'Quick Nock',
-		icon: 'https://xivapi.com/i/000000/000360.png',
+		icon: iconUrl(360),
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		potency: 110,
@@ -32,7 +33,7 @@ export const BRD = ensureActions({
 	BLOODLETTER: {
 		id: 110,
 		name: 'Bloodletter',
-		icon: 'https://xivapi.com/i/000000/000361.png',
+		icon: iconUrl(361),
 		onGcd: false,
 		speedAttribute: Attribute.SKILL_SPEED,
 		cooldown: 15000,
@@ -43,7 +44,7 @@ export const BRD = ensureActions({
 	STRAIGHT_SHOT: {
 		id: 98,
 		name: 'Straight Shot',
-		icon: 'https://xivapi.com/i/000000/000359.png',
+		icon: iconUrl(359),
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		potency: 200,
@@ -51,7 +52,7 @@ export const BRD = ensureActions({
 	BARRAGE: {
 		id: 107,
 		name: 'Barrage',
-		icon: 'https://xivapi.com/i/000000/000353.png',
+		icon: iconUrl(353),
 		onGcd: false,
 		cooldown: 120000,
 		statusesApplied: ['BARRAGE'],
@@ -59,7 +60,7 @@ export const BRD = ensureActions({
 	WINDBITE: {
 		id: 113,
 		name: 'Windbite',
-		icon: 'https://xivapi.com/i/000000/000367.png',
+		icon: iconUrl(367),
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		potency: 20,
@@ -67,7 +68,7 @@ export const BRD = ensureActions({
 	RAGING_STRIKES: {
 		id: 101,
 		name: 'Raging Strikes',
-		icon: 'https://xivapi.com/i/000000/000352.png',
+		icon: iconUrl(352),
 		onGcd: false,
 		cooldown: 120000,
 		statusesApplied: ['RAGING_STRIKES'],
@@ -75,7 +76,7 @@ export const BRD = ensureActions({
 	REPELLING_SHOT: {
 		id: 112,
 		name: 'Repelling Shot',
-		icon: 'https://xivapi.com/i/000000/000366.png',
+		icon: iconUrl(366),
 		onGcd: false,
 		cooldown: 30000,
 	},
@@ -84,7 +85,7 @@ export const BRD = ensureActions({
 	MAGES_BALLAD: {
 		id: 114,
 		name: 'Mage\'s Ballad',
-		icon: 'https://xivapi.com/i/002000/002602.png',
+		icon: iconUrl(2602),
 		onGcd: false,
 		cooldown: 120000,
 		potency: 100,
@@ -92,7 +93,7 @@ export const BRD = ensureActions({
 	ARMYS_PAEON: {
 		id: 116,
 		name: 'Army\'s Paeon',
-		icon: 'https://xivapi.com/i/002000/002603.png',
+		icon: iconUrl(2603),
 		onGcd: false,
 		cooldown: 120000,
 		potency: 100,
@@ -100,7 +101,7 @@ export const BRD = ensureActions({
 	RAIN_OF_DEATH: {
 		id: 117,
 		name: 'Rain Of Death',
-		icon: 'https://xivapi.com/i/002000/002605.png',
+		icon: iconUrl(2605),
 		onGcd: false,
 		cooldown: 15000,
 		potency: 100,
@@ -110,7 +111,7 @@ export const BRD = ensureActions({
 	BATTLE_VOICE: {
 		id: 118,
 		name: 'Battle Voice',
-		icon: 'https://xivapi.com/i/002000/002601.png',
+		icon: iconUrl(2601),
 		onGcd: false,
 		cooldown: 120000,
 		statusesApplied: ['BATTLE_VOICE'],
@@ -118,7 +119,7 @@ export const BRD = ensureActions({
 	EMPYREAL_ARROW: {
 		id: 3558,
 		name: 'Empyreal Arrow',
-		icon: 'https://xivapi.com/i/002000/002606.png',
+		icon: iconUrl(2606),
 		onGcd: false,
 		cooldown: 15000,
 		potency: 240,
@@ -126,7 +127,7 @@ export const BRD = ensureActions({
 	THE_WANDERERS_MINUET: {
 		id: 3559,
 		name: 'The Wanderer\'s Minuet',
-		icon: 'https://xivapi.com/i/002000/002607.png',
+		icon: iconUrl(2607),
 		onGcd: false,
 		cooldown: 120000,
 		potency: 100,
@@ -134,7 +135,7 @@ export const BRD = ensureActions({
 	IRON_JAWS: {
 		id: 3560,
 		name: 'Iron Jaws',
-		icon: 'https://xivapi.com/i/002000/002608.png',
+		icon: iconUrl(2608),
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		potency: 100,
@@ -142,7 +143,7 @@ export const BRD = ensureActions({
 	THE_WARDENS_PAEAN: {
 		id: 3561,
 		name: 'The Warden\'s Paean',
-		icon: 'https://xivapi.com/i/002000/002609.png',
+		icon: iconUrl(2609),
 		onGcd: false,
 		cooldown: 45000,
 		statusesApplied: ['THE_WARDENS_PAEAN'],
@@ -150,7 +151,7 @@ export const BRD = ensureActions({
 	SIDEWINDER: {
 		id: 3562,
 		name: 'Sidewinder',
-		icon: 'https://xivapi.com/i/002000/002610.png',
+		icon: iconUrl(2610),
 		onGcd: false,
 		cooldown: 60000,
 		potency: 320,
@@ -158,7 +159,7 @@ export const BRD = ensureActions({
 	PITCH_PERFECT: {
 		id: 7404,
 		name: 'Pitch Perfect',
-		icon: 'https://xivapi.com/i/002000/002611.png',
+		icon: iconUrl(2611),
 		onGcd: false,
 		cooldown: 1000,
 		potency: [100, 220, 360],
@@ -166,7 +167,7 @@ export const BRD = ensureActions({
 	TROUBADOUR: {
 		id: 7405,
 		name: 'Troubadour',
-		icon: 'https://xivapi.com/i/002000/002612.png',
+		icon: iconUrl(2612),
 		onGcd: false,
 		cooldown: 90000,
 		statusesApplied: ['TROUBADOUR'],
@@ -174,7 +175,7 @@ export const BRD = ensureActions({
 	CAUSTIC_BITE: {
 		id: 7406,
 		name: 'Caustic Bite',
-		icon: 'https://xivapi.com/i/002000/002613.png',
+		icon: iconUrl(2613),
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		potency: 20,
@@ -183,7 +184,7 @@ export const BRD = ensureActions({
 	STORMBITE: {
 		id: 7407,
 		name: 'Stormbite',
-		icon: 'https://xivapi.com/i/002000/002614.png',
+		icon: iconUrl(2614),
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		potency: 25,
@@ -192,7 +193,7 @@ export const BRD = ensureActions({
 	NATURES_MINNE: {
 		id: 7408,
 		name: 'Nature\'s Minne',
-		icon: 'https://xivapi.com/i/002000/002615.png',
+		icon: iconUrl(2615),
 		onGcd: false,
 		cooldown: 120000,
 		statusesApplied: ['NATURES_MINNE'],
@@ -200,7 +201,7 @@ export const BRD = ensureActions({
 	REFULGENT_ARROW: {
 		id: 7409,
 		name: 'Refulgent Arrow',
-		icon: 'https://xivapi.com/i/002000/002616.png',
+		icon: iconUrl(2616),
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		potency: 280,
@@ -208,7 +209,7 @@ export const BRD = ensureActions({
 	SHADOWBITE: {
 		id: 16494,
 		name: 'Shadowbite',
-		icon: 'https://xivapi.com/i/002000/002617.png',
+		icon: iconUrl(2617),
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		potency: 170,
@@ -216,7 +217,7 @@ export const BRD = ensureActions({
 	BURST_SHOT: {
 		id: 16495,
 		name: 'Burst Shot',
-		icon: 'https://xivapi.com/i/002000/002618.png',
+		icon: iconUrl(2618),
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		potency: 220,
@@ -224,7 +225,7 @@ export const BRD = ensureActions({
 	APEX_ARROW: {
 		id: 16496,
 		name: 'Apex Arow',
-		icon: 'https://xivapi.com/i/002000/002619.png',
+		icon: iconUrl(2619),
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		potency: 500,
@@ -232,7 +233,7 @@ export const BRD = ensureActions({
 	LADONSBITE: {
 		id: 25783,
 		name: 'Ladonsbite',
-		icon: 'https://xivapi.com/i/002000/002620.png',
+		icon: iconUrl(2620),
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		potency: 130,
@@ -240,7 +241,7 @@ export const BRD = ensureActions({
 	BLAST_ARROW: {
 		id: 25784,
 		name: 'Blast Arrow',
-		icon: 'https://xivapi.com/i/002000/002621.png',
+		icon: iconUrl(2621),
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		potency: 600,
@@ -248,7 +249,7 @@ export const BRD = ensureActions({
 	RADIANT_FINALE: {
 		id: 25785,
 		name: 'Radiant Finale',
-		icon: 'https://xivapi.com/i/002000/002622.png',
+		icon: iconUrl(2622),
 		onGcd: false,
 		cooldown: 110000,
 		statusesApplied: ['RADIANT_FINALE'],
