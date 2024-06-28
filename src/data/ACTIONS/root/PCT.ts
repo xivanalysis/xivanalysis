@@ -1,3 +1,4 @@
+import {iconUrl} from 'data/icon'
 import {Attribute} from 'event'
 import {ensureActions} from '../type'
 
@@ -13,7 +14,7 @@ export const PCT = ensureActions({
 	FIRE_IN_RED: {
 		id: 34650,
 		name: 'Fire in Red',
-		icon: '3801',
+		icon: iconUrl(3801),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 1500,
@@ -23,7 +24,7 @@ export const PCT = ensureActions({
 	AERO_IN_GREEN: {
 		id: 34651,
 		name: 'Aero in Green',
-		icon: '3802',
+		icon: iconUrl(3802),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 1500,
@@ -33,7 +34,7 @@ export const PCT = ensureActions({
 	WATER_IN_BLUE: {
 		id: 34652,
 		name: 'Water in Blue',
-		icon: '3803',
+		icon: iconUrl(3803),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 1500,
@@ -44,7 +45,7 @@ export const PCT = ensureActions({
 	FIRE_II_IN_RED: {
 		id: 34656,
 		name: 'Fire II in Red',
-		icon: '3807',
+		icon: iconUrl(3807),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 1500,
@@ -54,7 +55,7 @@ export const PCT = ensureActions({
 	AERO_II_IN_GREEN: {
 		id: 34657,
 		name: 'Aero II in Green',
-		icon: '3808',
+		icon: iconUrl(3808),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 1500,
@@ -64,7 +65,7 @@ export const PCT = ensureActions({
 	WATER_II_IN_BLUE: {
 		id: 34658,
 		name: 'Water II in Blue',
-		icon: '3809',
+		icon: iconUrl(3809),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 1500,
@@ -73,7 +74,7 @@ export const PCT = ensureActions({
 	HOLY_IN_WHITE: {
 		id: 34662,
 		name: 'Holy in White',
-		icon: '3813',
+		icon: iconUrl(3813),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		mpCost: 200,
@@ -83,7 +84,7 @@ export const PCT = ensureActions({
 	BLIZZARD_IN_CYAN: {
 		id: 34653,
 		name: 'Blizzard in Cyan',
-		icon: '3804',
+		icon: iconUrl(3804),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 2500,
@@ -94,7 +95,7 @@ export const PCT = ensureActions({
 	STONE_IN_YELLOW: {
 		id: 34654,
 		name: 'Stone in Yellow',
-		icon: '3805',
+		icon: iconUrl(3805),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 2500,
@@ -105,7 +106,7 @@ export const PCT = ensureActions({
 	THUNDER_IN_MAGENTA: {
 		id: 34655,
 		name: 'Thunder in Magenta',
-		icon: '3806',
+		icon: iconUrl(3806),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 2500,
@@ -117,7 +118,7 @@ export const PCT = ensureActions({
 	BLIZZARD_II_IN_CYAN: {
 		id: 34659,
 		name: 'Blizzard II in Cyan',
-		icon: '3810',
+		icon: iconUrl(3810),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 2500,
@@ -128,7 +129,7 @@ export const PCT = ensureActions({
 	STONE_II_IN_YELLOW: {
 		id: 34660,
 		name: 'Stone II in Yellow',
-		icon: '3811',
+		icon: iconUrl(3811),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 2500,
@@ -139,7 +140,7 @@ export const PCT = ensureActions({
 	THUNDER_II_IN_MAGENTA: {
 		id: 34661,
 		name: 'Thunder II in Magenta',
-		icon: '3812',
+		icon: iconUrl(3812),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 2500,
@@ -149,7 +150,7 @@ export const PCT = ensureActions({
 	COMET_IN_BLACK: {
 		id: 34663,
 		name: 'Comet in Black',
-		icon: '3814',
+		icon: iconUrl(3814),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		gcdRecast: 3500,
@@ -160,7 +161,7 @@ export const PCT = ensureActions({
 	RAINBOW_DRIP: {
 		id: 34688,
 		name: 'Rainbow Drip',
-		icon: '3838',
+		icon: iconUrl(3838),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 4000,
@@ -169,7 +170,7 @@ export const PCT = ensureActions({
 	STAR_PRISM: {
 		id: 34681,
 		name: 'Star Prism',
-		icon: '3832',
+		icon: iconUrl(3832),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 	},
@@ -177,14 +178,14 @@ export const PCT = ensureActions({
 	STAR_PRISM_CURE: {
 		id: 34682,
 		name: 'Star Prism',
-		icon: '3832', // Technically it uses the default cure icon but w/e
+		icon: iconUrl(3832), // Technically it uses the default cure icon but w/e
 	},
 
 	/** Creature canvas spells */
 	CREATURE_MOTIF: {
 		id: 34689,
 		name: 'Creature Motif',
-		icon: '3839',
+		icon: iconUrl(3839),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 3000,
@@ -193,7 +194,7 @@ export const PCT = ensureActions({
 	POM_MOTIF: {
 		id: 34664,
 		name: 'Pom Motif',
-		icon: '3815',
+		icon: iconUrl(3815),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 3000,
@@ -202,7 +203,7 @@ export const PCT = ensureActions({
 	WING_MOTIF: {
 		id: 34665,
 		name: 'Wing Motif',
-		icon: '3816',
+		icon: iconUrl(3816),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 3000,
@@ -211,7 +212,7 @@ export const PCT = ensureActions({
 	CLAW_MOTIF: {
 		id: 34666,
 		name: 'Claw Motif',
-		icon: '3817',
+		icon: iconUrl(3817),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 3000,
@@ -220,7 +221,7 @@ export const PCT = ensureActions({
 	MAW_MOTIF: {
 		id: 34667,
 		name: 'Maw Motif',
-		icon: '3818',
+		icon: iconUrl(3818),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 3000,
@@ -231,7 +232,7 @@ export const PCT = ensureActions({
 	LIVING_MUSE: {
 		id: 35347,
 		name: 'Living Muse',
-		icon: '3842',
+		icon: iconUrl(3842),
 		cooldown: 40000,
 		charges: 3,
 		cooldownGroup: PCT_COOLDOWN_GROUPS.LIVING_MUSE,
@@ -239,7 +240,7 @@ export const PCT = ensureActions({
 	POM_MUSE: {
 		id: 34670,
 		name: 'Pom Muse',
-		icon: '3821',
+		icon: iconUrl(3821),
 		cooldown: 40000,
 		charges: 3,
 		cooldownGroup: PCT_COOLDOWN_GROUPS.LIVING_MUSE,
@@ -247,7 +248,7 @@ export const PCT = ensureActions({
 	WINGED_MUSE: {
 		id: 34671,
 		name: 'Winged Muse',
-		icon: '3822',
+		icon: iconUrl(3822),
 		cooldown: 40000,
 		charges: 3,
 		cooldownGroup: PCT_COOLDOWN_GROUPS.LIVING_MUSE,
@@ -255,14 +256,14 @@ export const PCT = ensureActions({
 	MOG_OF_THE_AGES: {
 		id: 34676,
 		name: 'Mog of the Ages',
-		icon: '3827',
+		icon: iconUrl(3827),
 		cooldown: 30000,
 		cooldownGroup: PCT_COOLDOWN_GROUPS.MOG_OF_THE_AGES,
 	},
 	CLAWED_MUSE: {
 		id: 34672,
 		name: 'Clawed Muse',
-		icon: '3823',
+		icon: iconUrl(3823),
 		cooldown: 40000,
 		charges: 3,
 		cooldownGroup: PCT_COOLDOWN_GROUPS.LIVING_MUSE,
@@ -270,7 +271,7 @@ export const PCT = ensureActions({
 	FANGED_MUSE: {
 		id: 34673,
 		name: 'Fanged Muse',
-		icon: '3824',
+		icon: iconUrl(3824),
 		cooldown: 40000,
 		charges: 3,
 		cooldownGroup: PCT_COOLDOWN_GROUPS.LIVING_MUSE,
@@ -278,7 +279,7 @@ export const PCT = ensureActions({
 	RETRIBUTION_OF_THE_MADEEN: {
 		id: 34677,
 		name: 'Mog of the Ages',
-		icon: '3828',
+		icon: iconUrl(3828),
 		cooldown: 30000,
 		cooldownGroup: PCT_COOLDOWN_GROUPS.MOG_OF_THE_AGES,
 	},
@@ -287,7 +288,7 @@ export const PCT = ensureActions({
 	WEAPON_MOTIF: {
 		id: 34690,
 		name: 'Weapon Motif',
-		icon: '3840',
+		icon: iconUrl(3840),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 3000,
@@ -296,7 +297,7 @@ export const PCT = ensureActions({
 	HAMMER_MOTIF: {
 		id: 34668,
 		name: 'Hammer Motif',
-		icon: '3819',
+		icon: iconUrl(3819),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 3000,
@@ -305,7 +306,7 @@ export const PCT = ensureActions({
 	HAMMER_STAMP: {
 		id: 34678,
 		name: 'Hammer Stamp',
-		icon: '3829',
+		icon: iconUrl(3829),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		combo: {
@@ -315,7 +316,7 @@ export const PCT = ensureActions({
 	HAMMER_BRUSH: {
 		id: 34679,
 		name: 'Hammer Brush',
-		icon: '3830',
+		icon: iconUrl(3830),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		combo: {
@@ -325,7 +326,7 @@ export const PCT = ensureActions({
 	POLISHING_HAMMER: {
 		id: 34680,
 		name: 'Polishing Hammer',
-		icon: '3831',
+		icon: iconUrl(3831),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		combo: {
@@ -338,7 +339,7 @@ export const PCT = ensureActions({
 	STEEL_MUSE: {
 		id: 35348,
 		name: 'Steel Muse',
-		icon: '3843',
+		icon: iconUrl(3843),
 		cooldown: 40000,
 		charges: 2,
 		cooldownGroup: PCT_COOLDOWN_GROUPS.STEEL_MUSE,
@@ -346,7 +347,7 @@ export const PCT = ensureActions({
 	STRIKING_MUSE: {
 		id: 34674,
 		name: 'Striking Muse',
-		icon: '3825',
+		icon: iconUrl(3825),
 		cooldown: 40000,
 		charges: 2,
 		cooldownGroup: PCT_COOLDOWN_GROUPS.STEEL_MUSE,
@@ -357,7 +358,7 @@ export const PCT = ensureActions({
 	LANDSCAPE_MOTIF: {
 		id: 34691,
 		name: 'Lendscape Motif',
-		icon: '3841',
+		icon: iconUrl(3841),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 3000,
@@ -366,7 +367,7 @@ export const PCT = ensureActions({
 	STARRY_SKY_MOTIF: {
 		id: 34669,
 		name: 'Starry Sky Motif',
-		icon: '3820',
+		icon: iconUrl(3820),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 3000,
@@ -377,14 +378,14 @@ export const PCT = ensureActions({
 	SCENIC_MUSE: {
 		id: 35349,
 		name: 'Scenic Muse',
-		icon: '3844',
+		icon: iconUrl(3844),
 		cooldown: 120000,
 		cooldownGroup: PCT_COOLDOWN_GROUPS.SCENIC_MUSE,
 	},
 	STARRY_MUSE: {
 		id: 34675,
 		name: 'Starry Muse',
-		icon: '3826',
+		icon: iconUrl(3826),
 		cooldown: 40000,
 		charges: 2,
 		cooldownGroup: PCT_COOLDOWN_GROUPS.SCENIC_MUSE,
@@ -395,28 +396,28 @@ export const PCT = ensureActions({
 	TEMPURA_COAT: {
 		id: 34685,
 		name: 'Tempura Coat',
-		icon: '3835',
+		icon: iconUrl(3835),
 		cooldown: 60000,
 		statusesApplied: ['TEMPURA_COAT'],
 	},
 	TEMPURA_GRASSA: {
 		id: 34686,
 		name: 'Tempura Grassa',
-		icon: '3836',
+		icon: iconUrl(3836),
 		cooldown: 1000,
 		statusesApplied: ['TEMPURA_GRASSA'],
 	},
 	SMUDGE: {
 		id: 34684,
 		name: 'Smudge',
-		icon: '3834',
+		icon: iconUrl(3834),
 		cooldown: 20000,
 		statusesApplied: ['SMUDGE'],
 	},
 	SUBTRACTIVE_PALLETTE: {
 		id: 34683,
 		name: 'Subtractive Pallette',
-		icon: '3833',
+		icon: iconUrl(3833),
 		cooldown: 20000,
 		statusesApplied: ['SUBTRACTIVE_PALLETTE', 'MONOCHROME_TONES'],
 	},
