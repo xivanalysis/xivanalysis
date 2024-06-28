@@ -30,9 +30,9 @@ export const DRG = ensureActions({
 
 	// vorpal thrust upgrade
 	LANCE_BARRAGE: {
-		id: 0, // TODO: ID
+		id: 36954,
 		name: 'Lance Barrage',
-		icon: '',
+		icon: iconUrl(2076),
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		combo: {
@@ -56,7 +56,7 @@ export const DRG = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		combo: {
-			from: 78,	// TODO: update with lance barrage id number
+			from: [78, 36954],
 		},
 	},
 
@@ -85,9 +85,9 @@ export const DRG = ensureActions({
 
 	// disembowel upgrade
 	SPIRAL_BLOW: {
-		id: 0, // TODO: actual ID
+		id: 36955,
 		name: 'Spiral Blow',
-		icon: '',
+		icon: iconUrl(2077),
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		combo: {
@@ -115,7 +115,7 @@ export const DRG = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		combo: {
-			from: 87,	// TODO: update with spiral blow id number
+			from: [87, 36955],
 		},
 		potencies: [{
 			value: 100,
@@ -135,9 +135,9 @@ export const DRG = ensureActions({
 
 	// new combo finisher
 	DRAKESBANE: {
-		id: 0, // TODO: id number
+		id: 36952,
 		name: 'Drakesbane',
-		icon: '',
+		icon: iconUrl(2599),
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		combo: {
@@ -320,9 +320,9 @@ export const DRG = ensureActions({
 	},
 
 	RISE_OF_THE_DRAGON: {
-		id: 0, // TODO: actual Id
+		id: 36953,
 		name: 'Rise of the Dragon',
-		icon: '',
+		icon: iconUrl(2075),
 		cooldown: 1000,
 	},
 
@@ -365,9 +365,9 @@ export const DRG = ensureActions({
 	},
 
 	STARCROSS: {
-		id: 0, // TODO: actual id,
+		id: 36956,
 		name: 'Starcross',
-		icon: '',
+		icon: iconUrl(2078),
 		cooldown: 1000,
 	},
 
@@ -379,10 +379,10 @@ export const DRG = ensureActions({
 	},
 
 	WINGED_GLIDE: {
-		id: 0, // TODO: actual id
+		id: 36951,
 		name: 'Winged Glide',
 		charges: 2,
-		icon: '',
+		icon: iconUrl(2598),
 		cooldown: 60000,
 	},
 })

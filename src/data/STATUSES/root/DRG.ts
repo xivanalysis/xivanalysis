@@ -45,16 +45,16 @@ export const DRG = ensureStatuses({
 	},
 
 	DRAGONS_FLIGHT: {
-		id: 0, // TODO: actual id
+		id: 3845,
 		name: "Dragon's Flight",
-		icon: '',
+		icon: iconUrl(12587),
 		duration: 30000,
 	},
 
 	STARCROSS_READY: {
-		id: 0, // TODO: actual id
+		id: 3846,
 		name: 'Starcross Ready',
-		icon: '',
+		icon: iconUrl(12588),
 		duration: 20000,
 	},
 
@@ -73,9 +73,9 @@ export const DRG = ensureStatuses({
 	},
 
 	NASTROND_READY: {
-		id: 0, // TODO: Actual id
+		id: 3844,
 		name: 'Nastrond Ready',
-		icon: '',
+		icon: iconUrl(18151),
 		duration: 20000,
 	},
 })
