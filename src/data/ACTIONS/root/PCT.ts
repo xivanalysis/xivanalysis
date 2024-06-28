@@ -3,10 +3,10 @@ import {Attribute} from 'event'
 import {ensureActions} from '../type'
 
 export const PCT_COOLDOWN_GROUPS = {
-	LIVING_MUSE: 1, // TODO
-	MOG_OF_THE_AGES: 2, // TODO
-	STEEL_MUSE: 3, // TODO
-	SCENIC_MUSE: 4, // TODO
+	LIVING_MUSE: 19,
+	MOG_OF_THE_AGES: 7,
+	STEEL_MUSE: 20,
+	SCENIC_MUSE: 21,
 }
 
 export const PCT = ensureActions({
