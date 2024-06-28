@@ -2,12 +2,12 @@ import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
 import {JOBS} from 'data/JOBS'
 import {Event, Events} from 'event'
+import {EventHook} from 'parser/core/Dispatcher'
 import {filter, oneOf} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
 import {CounterGauge, Gauge as CoreGauge} from 'parser/core/modules/Gauge'
 import {Statistics} from 'parser/core/modules/Statistics'
 import Suggestions, {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
-import {DualStatistic} from 'parser/jobs/rdm/statistics/DualStatistic'
 import React, {Fragment} from 'react'
 import {isSuccessfulHit} from 'utilities'
 
@@ -23,7 +23,6 @@ export class ManaGauge extends CoreGauge {
 	static override title = t('rdm.gauge.title')`Mana Gauge Usage`
 
 	@dependency private suggestions!: Suggestions
-	@dependency private statistics!: Statistics
 
 	private whiteManaGauge = this.add(new CounterGauge({
 		graph: {
@@ -61,6 +60,8 @@ export class ManaGauge extends CoreGauge {
 	public spenderModifiers = new Map<number, GaugeModifier>([
 		[this.data.actions.ENCHANTED_REPRISE.id, {white: -5, black: -5}],
 		[this.data.actions.ENCHANTED_MOULINET.id, {white: -20, black: -20}],
+		[this.data.actions.ENCHANTED_MOULINET_DEUX.id, {white: -15, black: -15}],
+		[this.data.actions.ENCHANTED_MOULINET_TROIS.id, {white: -15, black: -15}],
 		[this.data.actions.ENCHANTED_RIPOSTE.id, {white: -20, black: -20}],
 		[this.data.actions.ENCHANTED_ZWERCHHAU.id, {white: -15, black: -15}],
 		[this.data.actions.ENCHANTED_REDOUBLEMENT.id, {white: -15, black: -15}],
@@ -77,24 +78,24 @@ export class ManaGauge extends CoreGauge {
 	}
 
 	private readonly manaLostDivisor = 2
-	private readonly manaficationManaGain = 50
 
 	manaStatistics = {
 		white: {
-			manaficationLoss: 0,
 			imbalanceLoss: 0,
 			invulnLoss: 0,
 		},
 		black: {
-			manaficationLoss: 0,
 			imbalanceLoss: 0,
 			invulnLoss: 0,
 		},
 	}
 
+	private activeGcdHook?: EventHook<Events['damage']>
+
 	override initialise() {
 		super.initialise()
 
+		const playerFilter = filter<Event>().source(this.parser.actor.id)
 		this.addEventHook(
 			filter<Event>()
 				.type('damage')
@@ -108,13 +109,9 @@ export class ManaGauge extends CoreGauge {
 				.action(oneOf(Array.from(this.spenderModifiers.keys()))),
 			this.onGaugeSpender
 		)
-		this.addEventHook(
-			filter<Event>()
-				.type('action')
-				.source(this.parser.actor.id)
-				.action(this.data.actions.MANAFICATION.id),
-			this.onManafication
-		)
+		// We hook the action for Manafication so we can just ignore stacks entirely
+		this.addEventHook(playerFilter.type('statusApply').status(this.data.statuses.MAGICKED_SWORDPLAY.id), this.onApplyMagickedSwordPlay)
+		this.addEventHook(playerFilter.type('statusRemove').status(this.data.statuses.MAGICKED_SWORDPLAY.id), this.onRemoveMagickedSwordPlay)
 		this.addEventHook('complete', this.onComplete)
 	}
 
@@ -147,26 +144,6 @@ export class ManaGauge extends CoreGauge {
 		this.manaStatistics.black.imbalanceLoss += amount.black - blackModified
 	}
 
-	private onManafication() {
-		let whiteModifier = this.getWhiteMana() + this.manaficationManaGain
-		let blackModifier = this.getBlackMana() + this.manaficationManaGain
-
-		//Now calculate and store overcap if any.  This way we can still utilize the Overcap
-		//From core, but track this loss separately.
-		if (whiteModifier > MANA_CAP) 		{
-			this.manaStatistics.white.manaficationLoss = whiteModifier - MANA_CAP
-			whiteModifier = MANA_CAP
-		}
-
-		if (blackModifier > MANA_CAP) {
-			this.manaStatistics.black.manaficationLoss = blackModifier - MANA_CAP
-			blackModifier = MANA_CAP
-		}
-
-		this.whiteManaGauge.set(whiteModifier)
-		this.blackManaGauge.set(blackModifier)
-	}
-
 	private onGaugeSpender(event: Events['action']) {
 		const modifier =  this.spenderModifiers.get(event.action)
 
@@ -177,6 +154,34 @@ export class ManaGauge extends CoreGauge {
 
 		this.whiteManaGauge.modify(amount.white)
 		this.blackManaGauge.modify(amount.black)
+	}
+
+	private onApplyMagickedSwordPlay() {
+		if (this.activeGcdHook == null) {
+			// Buffs with stacks generate separate apply events for each stack with a single remove at the end.
+			// Make sure we only start hooking for actions effected by Magicked on the first apply event -- no duplicate hooks on the "reapply" events as the stacks go down
+			this.activeGcdHook = this.addEventHook(
+				filter<Event>()
+					.source(this.parser.actor.id)
+					.type('damage'),
+				this.onHitUnderMagickedSwordPlay
+			)
+		}
+	}
+
+	private onRemoveMagickedSwordPlay() {
+		if (this.activeGcdHook != null) {
+			this.removeEventHook(this.activeGcdHook)
+			this.activeGcdHook = undefined
+		}
+	}
+
+	//Honestly I don't really need to do anything here; but I needed something to hook for onApplyMagickedSwordPlay
+	//This code was pretty much taken as is from the BloodGauge handling for Blood Weapon
+	private onHitUnderMagickedSwordPlay(event: Events['damage']) {
+		if (event.cause.type === 'status') {
+			return
+		}
 	}
 
 	//Returns which Mana should be penalized, white, black, or neither
@@ -232,21 +237,6 @@ export class ManaGauge extends CoreGauge {
 			why: <Fragment>
 				<Trans id="rdm.gauge.suggestions.mana-invuln-why">You lost { this.manaStatistics.white.invulnLoss} White Mana and { this.manaStatistics.black.invulnLoss} Black Mana due to misses or spells that targeted an invulnerable target</Trans>
 			</Fragment>,
-		}))
-
-		this.statistics.add(new DualStatistic({
-			label: <Trans id="rdm.gauge.title-mana-lost-to-manafication">Manafication Loss:</Trans>,
-			title: <Trans id="rdm.gauge.white-mana-lost-to-manafication">White</Trans>,
-			title2: <Trans id="rdm.gauge.black-mana-lost-to-manafication">Black</Trans>,
-			icon: this.data.actions.VERHOLY.icon,
-			icon2: this.data.actions.VERFLARE.icon,
-			value:  this.manaStatistics.white.manaficationLoss,
-			value2:  this.manaStatistics.black.manaficationLoss,
-			info: (
-				<Trans id="rdm.gauge.white-mana-lost-to-manafication-statistics">
-					It is ok to lose some mana to manafication over the course of a fight, you should however strive to keep this number as low as possible.
-				</Trans>
-			),
 		}))
 	}
 
