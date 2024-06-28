@@ -8,7 +8,7 @@ export const changelog = [
 	// 	contributors: [CONTRIBUTORS.YOU],
 	// },
 	{
-		date: new Date('2024-06-XX'),
+		date: new Date('2024-06-27'),
 		Changes: () => <>Initial data scaffolding for Pictomancer</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],
 	},
