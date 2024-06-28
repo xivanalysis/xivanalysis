@@ -309,9 +309,6 @@ export const PCT = ensureActions({
 		icon: iconUrl(3829),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
-		combo: {
-			start: true,
-		},
 	},
 	HAMMER_BRUSH: {
 		id: 34679,
@@ -319,9 +316,6 @@ export const PCT = ensureActions({
 		icon: iconUrl(3830),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
-		combo: {
-			from: 31, // Combos from Hammer Stamp
-		},
 	},
 	POLISHING_HAMMER: {
 		id: 34680,
@@ -329,10 +323,6 @@ export const PCT = ensureActions({
 		icon: iconUrl(3831),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
-		combo: {
-			from: 32, // Combos from Hammer brush,
-			end: true,
-		},
 	},
 
 	/** Weapon canvas abilites */
