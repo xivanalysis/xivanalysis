@@ -22,7 +22,7 @@ const CONTRIBUTORS = ensureRecord<Contributor>()({
 		name: 'Akairyu',
 		avatar: require('./avatar/Akairyu.png'),
 		jobs: [
-			JOBS.BLACK_MAGE, JOBS.DANCER, JOBS.SAGE,
+			JOBS.BLACK_MAGE, JOBS.DANCER, JOBS.SAGE, JOBS.PICTOMANCER,
 		],
 	},
 })
