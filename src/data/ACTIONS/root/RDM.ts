@@ -13,14 +13,14 @@ export const RDM = ensureActions({
 		name: 'Embolden',
 		icon: iconUrl(3218),
 		cooldown: 120000,
-		statusesApplied: ['EMBOLDEN_SELF', 'EMBOLDEN_PARTY'],
+		statusesApplied: ['EMBOLDEN_SELF', 'EMBOLDEN_PARTY', 'THORNED_FLOURISH'],
 	},
 	ACCELERATION: {
 		id: 7518,
 		name: 'Acceleration',
 		icon: iconUrl(3214),
 		cooldown: 55000,
-		statusesApplied: ['ACCELERATION'],
+		statusesApplied: ['ACCELERATION', 'GRAND_IMPACT_READY'],
 		charges: 2,
 	},
 	MANAFICATION: {
@@ -29,14 +29,14 @@ export const RDM = ensureActions({
 		icon: iconUrl(3219),
 		cooldown: 110000,
 		breaksCombo: true,
-		statusesApplied: ['MANAFICATION'],
+		statusesApplied: ['MANAFICATION', 'PREFULGENCE_READY'],
 	},
 	CONTRE_SIXTE: {
 		id: 7519,
 		name: 'Contre Sixte',
 		icon: iconUrl(3217),
 		cooldown: 35000,
-		potency: 360,
+		potency: 400,
 	},
 	DISPLACEMENT: {
 		id: 7515,
@@ -69,7 +69,26 @@ export const RDM = ensureActions({
 		name: 'Fleche',
 		icon: iconUrl(3212),
 		cooldown: 25000,
-		potency: 460,
+		potency: 480,
+	},
+	VICE_OF_THORNS: {
+		id: 37005,
+		name: 'Vice of Thorns',
+		icon: iconUrl(3242),
+		cooldown: 25000,
+		potency: 700,
+	},
+	GRAND_IMPACT: {
+		id: 37006,
+		name: 'Grand Impact',
+		icon: iconUrl(3243),
+		potency: 600, // Gives 3 white, 3 black
+	},
+	Prefulgence: {
+		id: 37007,
+		name: 'Prefulgence',
+		icon: iconUrl(3244),
+		potency: 900,
 	},
 
 	// -----
@@ -93,7 +112,7 @@ export const RDM = ensureActions({
 		icon: iconUrl(3225),
 		onGcd: true,
 		cooldown: 1500,
-		potency: 220, // consumes 20 white, 20 black
+		potency: 300, // consumes 20 white, 20 black
 		combo: {
 			start: true,
 		},
@@ -117,10 +136,10 @@ export const RDM = ensureActions({
 		icon: iconUrl(3226),
 		onGcd: true,
 		cooldown: 1500,
-		potency: 100, // consumes 15 white, 15 black
+		potency: 170, // consumes 15 white, 15 black
 		combo: {
 			from: 7527,
-			potency: 290,
+			potency: 360,
 		},
 	},
 	REDOUBLEMENT: {
@@ -144,10 +163,10 @@ export const RDM = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		cooldown: 2200,
-		potency: 100, // consumes 15 white, 15 black
+		potency: 170, // consumes 15 white, 15 black
 		combo: {
 			from: 7528,
-			potency: 470,
+			potency: 540,
 			end: true,
 		},
 	},
@@ -167,7 +186,7 @@ export const RDM = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		cooldown: 2500,
-		potency: 330, // consumes 10 white, 10 black
+		potency: 380, // consumes 10 white, 10 black
 	},
 	VERFLARE: {
 		id: 7525,
@@ -176,7 +195,7 @@ export const RDM = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		cooldown: 2500,
-		potency: 580, // Gains 11 Black Mana, if Black is lower 100% Verfire ready
+		potency: 620, // Gains 11 Black Mana, if Black is lower 100% Verfire ready
 		combo: {
 			start: true,
 		},
@@ -188,7 +207,7 @@ export const RDM = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		cooldown: 2500,
-		potency: 580, // Gains 11 white, if White is lower 100% Verstone ready
+		potency: 620, // Gains 11 white, if White is lower 100% Verstone ready
 		combo: {
 			start: true,
 		},
@@ -200,7 +219,7 @@ export const RDM = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		cooldown: 2500,
-		potency: 680, // Gains 7 white and black
+		potency: 700, // Gains 7 white and black
 		combo: {
 			from: [7525, 7526],
 			potency: 680,
@@ -213,13 +232,13 @@ export const RDM = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		cooldown: 2500,
-		potency: 750, // Increase White and Black by 4
+		potency: 800, // Increase White and Black by 4
 		combo: {
 			from: 16530,
-			potency: 750,
+			potency: 800,
 			end: true,
 		},
-	},
+	},	
 	JOLT: {
 		id: 7503,
 		name: 'Jolt',
@@ -239,7 +258,18 @@ export const RDM = ensureActions({
 		speedAttribute: Attribute.SPELL_SPEED,
 		cooldown: 2500,
 		castTime: 2000,
-		potency: 310, // Increase White and Black by 2
+		potency: 280, // Increase White and Black by 2
+		breaksCombo: true,
+	},
+	JOLT_III: {
+		id: 37004,
+		name: 'Jolt III',
+		icon: iconUrl(3241),
+		onGcd: true,
+		speedAttribute: Attribute.SPELL_SPEED,
+		cooldown: 2500,
+		castTime: 2000,
+		potency: 360, // Increase White and Black by 2
 		breaksCombo: true,
 	},
 	IMPACT: {
@@ -283,7 +313,7 @@ export const RDM = ensureActions({
 		speedAttribute: Attribute.SPELL_SPEED,
 		cooldown: 2500,
 		castTime: 5000,
-		potency: 350, // Increase Black by 6
+		potency: 420, // Increase Black by 6
 		breaksCombo: true,
 	},
 	VERFIRE: {
@@ -294,7 +324,7 @@ export const RDM = ensureActions({
 		speedAttribute: Attribute.SPELL_SPEED,
 		cooldown: 2500,
 		castTime: 2000,
-		potency: 330, // Increase Black by 5
+		potency: 380, // Increase Black by 5
 		breaksCombo: true,
 	},
 	VERAERO: {
@@ -327,7 +357,7 @@ export const RDM = ensureActions({
 		speedAttribute: Attribute.SPELL_SPEED,
 		cooldown: 2500,
 		castTime: 5000,
-		potency: 380, // Increase White by 6
+		potency: 420, // Increase White by 6
 		breaksCombo: true,
 	},
 	VERSTONE: {
@@ -338,7 +368,7 @@ export const RDM = ensureActions({
 		speedAttribute: Attribute.SPELL_SPEED,
 		cooldown: 2500,
 		castTime: 2000,
-		potency: 330, // Increase White by 5
+		potency: 380, // Increase White by 5
 		breaksCombo: true,
 	},
 	SCATTER: {
@@ -369,7 +399,36 @@ export const RDM = ensureActions({
 		onGcd: true,
 		cooldown: 1500,
 		potency: 130, // Costs 20 White and Black
-		breaksCombo: true,
+		combo: {
+			start: true,
+		},
+	},
+	ENCHANTED_MOULINET_DEUX: {
+		id: 37002,
+		name: 'Enchanted Moulinet Deux',
+		icon: iconUrl(3239),
+		onGcd: true,
+		speedAttribute: Attribute.SKILL_SPEED,
+		cooldown: 2500,
+		potency: 140,
+		combo: {
+			from: 7530,
+			potency: 140
+		}
+	},
+	ENCHANTED_MOULINET_TROIS: {
+		id: 37003,
+		name: 'Enchanted Moulinet Trois',
+		icon: iconUrl(3240),
+		onGcd: true,
+		speedAttribute: Attribute.SKILL_SPEED,
+		cooldown: 2500,
+		potency: 150,
+		combo: {
+			from: 37002,
+			potency: 150,
+			end: true
+		}
 	},
 	VERCURE: {
 		id: 7514,
