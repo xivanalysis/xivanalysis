@@ -1,3 +1,4 @@
+import {iconUrl} from 'data/icon'
 import {ensureStatuses} from '../type'
 
 export const ENEMY = ensureStatuses({
@@ -7,11 +8,11 @@ export const ENEMY = ensureStatuses({
 	TEMPORAL_DISPLACEMENT_INTERMISSION: {
 		id: 1119,
 		name: 'Temporal Displacement',
-		icon: 'https://xivapi.com/i/015000/015579.png',
+		icon: iconUrl(15579),
 	},
 	TEMPORAL_DISPLACEMENT_ENRAGE: {
 		id: 2165,
 		name: 'Temporal Displacement',
-		icon: 'https://xivapi.com/i/015000/015579.png',
+		icon: iconUrl(15579),
 	},
 })

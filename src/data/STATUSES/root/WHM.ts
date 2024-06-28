@@ -1,10 +1,11 @@
+import {iconUrl} from 'data/icon'
 import {ensureStatuses} from '../type'
 
 export const WHM = ensureStatuses({
 	LITURGY_OF_THE_BELL: {
 		id: 2709,
 		name: 'Liturgy of the Bell',
-		icon: 'https://xivapi.com/i/018000/018373.png',
+		icon: iconUrl(18373),
 		duration: 20000,
 		stacksApplied: 5,
 	},
@@ -12,88 +13,88 @@ export const WHM = ensureStatuses({
 	AQUAVEIL: {
 		id: 2708,
 		name: 'Aquaveil',
-		icon: 'https://xivapi.com/i/012000/012638.png',
+		icon: iconUrl(12638),
 		duration: 8000,
 	},
 
 	DIA: {
 		id: 1871,
 		name: 'Dia',
-		icon: 'https://xivapi.com/i/012000/012635.png',
+		icon: iconUrl(12635),
 		duration: 30000,
 	},
 
 	TEMPERANCE: {
 		id: 1872,
 		name: 'Temperance',
-		icon: 'https://xivapi.com/i/012000/012634.png',
+		icon: iconUrl(12634),
 		duration: 20000,
 	},
 
 	CONFESSION: {
 		id: 1219,
 		name: 'Confession',
-		icon: 'https://xivapi.com/i/018000/018901.png',
+		icon: iconUrl(18901),
 		duration: 10000,
 	},
 
 	REGEN: {
 		id: 158,
 		name: 'Regen',
-		icon: 'https://xivapi.com/i/012000/012626.png',
+		icon: iconUrl(12626),
 		duration: 18000,
 	},
 
 	MEDICA_II: {
 		id: 150,
 		name: 'Medica II',
-		icon: 'https://xivapi.com/i/010000/010413.png',
+		icon: iconUrl(10413),
 		duration: 15000,
 	},
 
 	AERO: {
 		id: 143,
 		name: 'Aero',
-		icon: 'https://xivapi.com/i/010000/010403.png',
+		icon: iconUrl(10403),
 	},
 
 	AERO_II: {
 		id: 144,
 		name: 'Aero II',
-		icon: 'https://xivapi.com/i/010000/010409.png',
+		icon: iconUrl(10409),
 	},
 
 	AERO_III: {
 		id: 798,
 		name: 'Aero III',
-		icon: 'https://xivapi.com/i/012000/012630.png',
+		icon: iconUrl(12630),
 	},
 
 	DIVINE_BENISON: {
 		id: 1218,
 		name: 'Divine Benison',
-		icon: 'https://xivapi.com/i/012000/012632.png',
+		icon: iconUrl(12632),
 		duration: 15000,
 	},
 
 	ASYLUM: {
 		id: 1911,
 		name: 'Asylum',
-		icon: 'https://xivapi.com/i/012000/012629.png',
+		icon: iconUrl(12629),
 		duration: 24000,
 	},
 
 	THIN_AIR: {
 		id: 1217,
 		name: 'Thin Air',
-		icon: 'https://xivapi.com/i/012000/012631.png',
+		icon: iconUrl(12631),
 		duration: 12000,
 	},
 
 	PRESENCE_OF_MIND: {
 		id: 157,
 		name: 'Presence of Mind',
-		icon: 'https://xivapi.com/i/012000/012627.png',
+		icon: iconUrl(12627),
 		duration: 15000,
 		speedModifier: 0.80,
 	},

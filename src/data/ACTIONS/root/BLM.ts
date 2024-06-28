@@ -1,3 +1,4 @@
+import {iconUrl} from 'data/icon'
 import {Attribute} from 'event'
 import {ensureActions} from '../type'
 
@@ -5,7 +6,7 @@ export const BLM = ensureActions({
 	BLIZZARD_I: {
 		id: 142,
 		name: 'Blizzard',
-		icon: 'https://xivapi.com/i/000000/000454.png',
+		icon: iconUrl(454),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 2500,
@@ -14,7 +15,7 @@ export const BLM = ensureActions({
 	BLIZZARD_II: {
 		id: 25793,
 		name: 'Blizzard II',
-		icon: 'https://xivapi.com/i/002000/002668.png',
+		icon: iconUrl(2668),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 3000,
@@ -23,7 +24,7 @@ export const BLM = ensureActions({
 	BLIZZARD_III: {
 		id: 154,
 		name: 'Blizzard III',
-		icon: 'https://xivapi.com/i/000000/000456.png',
+		icon: iconUrl(456),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 3500,
@@ -32,7 +33,7 @@ export const BLM = ensureActions({
 	BLIZZARD_IV: {
 		id: 3576,
 		name: 'Blizzard IV',
-		icon: 'https://xivapi.com/i/002000/002659.png',
+		icon: iconUrl(2659),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 2500,
@@ -41,7 +42,7 @@ export const BLM = ensureActions({
 	FREEZE: {
 		id: 159,
 		name: 'Freeze',
-		icon: 'https://xivapi.com/i/002000/002653.png',
+		icon: iconUrl(2653),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 2800,
@@ -50,14 +51,14 @@ export const BLM = ensureActions({
 	UMBRAL_SOUL: {
 		id: 16506,
 		name: 'Umbral Soul',
-		icon: 'https://xivapi.com/i/002000/002666.png',
+		icon: iconUrl(2666),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 	},
 	FIRE_I: {
 		id: 141,
 		name: 'Fire',
-		icon: 'https://xivapi.com/i/000000/000451.png',
+		icon: iconUrl(451),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 2500,
@@ -66,7 +67,7 @@ export const BLM = ensureActions({
 	FIRE_II: {
 		id: 147,
 		name: 'Fire II',
-		icon: 'https://xivapi.com/i/000000/000452.png',
+		icon: iconUrl(452),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 3000,
@@ -75,7 +76,7 @@ export const BLM = ensureActions({
 	FIRE_III: {
 		id: 152,
 		name: 'Fire III',
-		icon: 'https://xivapi.com/i/000000/000453.png',
+		icon: iconUrl(453),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 3500,
@@ -84,7 +85,7 @@ export const BLM = ensureActions({
 	FIRE_IV: {
 		id: 3577,
 		name: 'Fire IV',
-		icon: 'https://xivapi.com/i/002000/002660.png',
+		icon: iconUrl(2660),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 2800,
@@ -93,7 +94,7 @@ export const BLM = ensureActions({
 	FLARE: {
 		id: 162,
 		name: 'Flare',
-		icon: 'https://xivapi.com/i/002000/002652.png',
+		icon: iconUrl(2652),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 4000,
@@ -101,7 +102,7 @@ export const BLM = ensureActions({
 	DESPAIR: {
 		id: 16505,
 		name: 'Despair',
-		icon: 'https://xivapi.com/i/002000/002665.png',
+		icon: iconUrl(2665),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 3000,
@@ -109,7 +110,7 @@ export const BLM = ensureActions({
 	THUNDER: {
 		id: 144,
 		name: 'Thunder',
-		icon: 'https://xivapi.com/i/000000/000457.png',
+		icon: iconUrl(457),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 2500,
@@ -119,7 +120,7 @@ export const BLM = ensureActions({
 	THUNDER_II: {
 		id: 7447,
 		name: 'Thunder II',
-		icon: 'https://xivapi.com/i/000000/000468.png',
+		icon: iconUrl(468),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 2500,
@@ -129,7 +130,7 @@ export const BLM = ensureActions({
 	THUNDER_III: {
 		id: 153,
 		name: 'Thunder III',
-		icon: 'https://xivapi.com/i/000000/000459.png',
+		icon: iconUrl(459),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 2500,
@@ -139,7 +140,7 @@ export const BLM = ensureActions({
 	THUNDER_IV: {
 		id: 7420,
 		name: 'Thunder IV',
-		icon: 'https://xivapi.com/i/002000/002662.png',
+		icon: iconUrl(2662),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 2500,
@@ -149,7 +150,7 @@ export const BLM = ensureActions({
 	SCATHE: {
 		id: 156,
 		name: 'Scathe',
-		icon: 'https://xivapi.com/i/000000/000462.png',
+		icon: iconUrl(462),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		mpCost: 800,
@@ -157,53 +158,53 @@ export const BLM = ensureActions({
 	FOUL: {
 		id: 7422,
 		name: 'Foul',
-		icon: 'https://xivapi.com/i/002000/002664.png',
+		icon: iconUrl(2664),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 	},
 	XENOGLOSSY: {
 		id: 16507,
 		name: 'Xenoglossy',
-		icon: 'https://xivapi.com/i/002000/002667.png',
+		icon: iconUrl(2667),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 	},
 	TRANSPOSE: {
 		id: 149,
 		name: 'Transpose',
-		icon: 'https://xivapi.com/i/000000/000466.png',
+		icon: iconUrl(466),
 		cooldown: 5000,
 	},
 	MANAFONT: {
 		id: 158,
 		name: 'Manafont',
-		icon: 'https://xivapi.com/i/002000/002651.png',
+		icon: iconUrl(2651),
 		cooldown: 120000,
 	},
 	MANAWARD: {
 		id: 157,
 		name: 'Manaward',
-		icon: 'https://xivapi.com/i/000000/000463.png',
+		icon: iconUrl(463),
 		cooldown: 120000,
 		statusesApplied: ['MANAWARD'],
 	},
 	AETHERIAL_MANIPULATION: {
 		id: 155,
 		name: 'Aetherial Manipulation',
-		icon: 'https://xivapi.com/i/000000/000467.png',
+		icon: iconUrl(467),
 		cooldown: 10000,
 	},
 	LEY_LINES: {
 		id: 3573,
 		name: 'Ley Lines',
-		icon: 'https://xivapi.com/i/002000/002656.png',
+		icon: iconUrl(2656),
 		cooldown: 120000,
 		statusesApplied: ['LEY_LINES'],
 	},
 	SHARPCAST: {
 		id: 3574,
 		name: 'Sharpcast',
-		icon: 'https://xivapi.com/i/002000/002657.png',
+		icon: iconUrl(2657),
 		cooldown: 30000,
 		statusesApplied: ['SHARPCAST'],
 		charges: 2,
@@ -211,13 +212,13 @@ export const BLM = ensureActions({
 	BETWEEN_THE_LINES: {
 		id: 7419,
 		name: 'Between the Lines',
-		icon: 'https://xivapi.com/i/002000/002661.png',
+		icon: iconUrl(2661),
 		cooldown: 3000,
 	},
 	TRIPLECAST: {
 		id: 7421,
 		name: 'Triplecast',
-		icon: 'https://xivapi.com/i/002000/002663.png',
+		icon: iconUrl(2663),
 		cooldown: 60000,
 		statusesApplied: ['TRIPLECAST'],
 		charges: 2,
@@ -225,7 +226,7 @@ export const BLM = ensureActions({
 	HIGH_FIRE_II: {
 		id: 25794,
 		name: 'High Fire II',
-		icon: 'https://xivapi.com/i/002000/002669.png',
+		icon: iconUrl(2669),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 3000,
@@ -234,7 +235,7 @@ export const BLM = ensureActions({
 	HIGH_BLIZZARD_II: {
 		id: 25795,
 		name: 'High Blizzard II',
-		icon: 'https://xivapi.com/i/002000/002670.png',
+		icon: iconUrl(2670),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 3000,
@@ -243,13 +244,13 @@ export const BLM = ensureActions({
 	AMPLIFIER: {
 		id: 25796,
 		name: 'Amplifier',
-		icon: 'https://xivapi.com/i/002000/002671.png',
+		icon: iconUrl(2671),
 		cooldown: 120000,
 	},
 	PARADOX: {
 		id: 25797,
 		name: 'Paradox',
-		icon: 'https://xivapi.com/i/002000/002672.png',
+		icon: iconUrl(2672),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 2500,

@@ -1,45 +1,46 @@
+import {iconUrl} from 'data/icon'
 import {ensureStatuses} from '../type'
 
 export const DRK = ensureStatuses({
 	GRIT: {
 		id: 743,
 		name: 'Grit',
-		icon: 'https://xivapi.com/i/013000/013108.png',
+		icon: iconUrl(13108),
 	},
 	BLOOD_WEAPON: {
 		id: 742,
 		name: 'Blood Weapon',
-		icon: 'https://xivapi.com/i/013000/013109.png',
+		icon: iconUrl(13109),
 		duration: 15000,
 		stacksApplied: 5,
 	},
 	BLACKEST_NIGHT: {
 		id: 1178,
 		name: 'Blackest Night',
-		icon: 'https://xivapi.com/i/013000/013118.png',
+		icon: iconUrl(13118),
 		duration: 7000,
 	},
 	SALTED_EARTH: {
 		id: 749,
 		name: 'Salted Earth',
-		icon: 'https://xivapi.com/i/013000/013104.png',
+		icon: iconUrl(13104),
 		duration: 15000,
 	},
 	DARK_MISSIONARY: {
 		id: 1894,
 		name: 'Dark Missionary',
-		icon: 'https://xivapi.com/i/013000/013122.png',
+		icon: iconUrl(13122),
 		duration: 15000,
 	},
 	LIVING_DEAD: {
 		id: 810,
 		name: 'Living Dead',
-		icon: 'https://xivapi.com/i/013000/013115.png',
+		icon: iconUrl(13115),
 	},
 	WALKING_DEAD: {
 		id: 811,
 		name: 'Walking Dead',
-		icon: 'https://xivapi.com/i/013000/013116.png',
+		icon: iconUrl(13116),
 		duration: 10000,
 	},
 
@@ -52,26 +53,26 @@ export const DRK = ensureStatuses({
 	DARK_MIND: {
 		id: 746,
 		name: 'Dark Mind',
-		icon: 'https://xivapi.com/i/013000/013114.png',
+		icon: iconUrl(13114),
 		duration: 10000,
 	},
 	SHADOW_WALL: {
 		id: 747,
 		name: 'Shadow Wall',
-		icon: 'https://xivapi.com/i/013000/013113.png',
+		icon: iconUrl(13113),
 		duration: 15000,
 	},
 	DELIRIUM: {
 		id: 1972,
 		name: 'Delirium',
-		icon: 'https://xivapi.com/i/013000/013121.png',
+		icon: iconUrl(13121),
 		duration: 10000,
 		stacksApplied: 3,
 	},
 	OBLATION: {
 		id: 2682,
 		name: 'Oblation',
-		icon: 'https://xivapi.com/i/013000/013123.png',
+		icon: iconUrl(13123),
 		duration: 10000,
 	},
 })
