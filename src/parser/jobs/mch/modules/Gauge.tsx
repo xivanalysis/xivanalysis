@@ -70,6 +70,7 @@ export class Gauge extends CoreGauge {
 		[this.data.actions.HEATED_CLEAN_SHOT.id, {event: 'combo', type: 'generate', amount: 10}],
 		[this.data.actions.AIR_ANCHOR.id, {event: 'damage', type: 'generate', amount: 20}],
 		[this.data.actions.CHAIN_SAW.id, {event: 'damage', type: 'generate', amount: 20}],
+		[this.data.actions.EXCAVATOR.id, {event: 'damage', type: 'generate', amount: 20}],
 		[this.data.actions.AUTOMATON_QUEEN.id, {event: 'action', type: 'queen', amount: 50}],
 	])
 
