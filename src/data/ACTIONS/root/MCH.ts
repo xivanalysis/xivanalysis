@@ -165,6 +165,31 @@ export const MCH = ensureActions({
 		gcdRecast: 2500,
 	},
 
+	BLAZING_SHOT: {
+		id: 36978,
+		name: 'Blazing Shot',
+		icon: iconUrl(3506),
+		onGcd: true,
+		cooldown: 1500,
+	},
+
+	EXCAVATOR: {
+		id: 36981,
+		name: 'Excavator',
+		icon: iconUrl(3500),
+		onGcd: true,
+		speedAttribute: Attribute.SKILL_SPEED,
+		gcdRecast: 2500,
+	},
+
+	FULL_METAL_FIELD: {
+		id: 36982,
+		name: 'Full Metal Field',
+		icon: iconUrl(3049),
+		onGcd: true,
+		gcdRecast: 2500,
+	},
+
 	// -----
 	// Player OGCDs
 	// -----
@@ -192,7 +217,7 @@ export const MCH = ensureActions({
 		id: 16766,
 		name: 'Detonator',
 		icon: iconUrl(3039),
-		onGCD: false,
+		onGcd: false,
 		cooldown: 1000,
 	},
 
@@ -287,6 +312,24 @@ export const MCH = ensureActions({
 		icon: iconUrl(3502),
 		onGcd: false,
 		cooldown: 15000,
+	},
+
+	DOUBLE_CHECK: {
+		id: 36979,
+		name: 'Double Check',
+		icon: iconUrl(3507),
+		onGcd: false,
+		cooldown: 30000,
+		charges: 3,
+	},
+
+	CHECKMATE: {
+		id: 36980,
+		name: 'Checkmate',
+		icon: iconUrl(3508),
+		onGcd: false,
+		cooldown: 30000,
+		charges: 3,
 	},
 
 	// -----
