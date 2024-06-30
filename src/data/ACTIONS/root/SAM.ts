@@ -22,7 +22,7 @@ export const SAM = ensureActions({
 	GYOFU: {
 		id: 36963,
 		name: 'Gyofu',
-		icon: iconUrl(36963),
+		icon: iconUrl(3191),
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		combo: {
@@ -138,7 +138,7 @@ export const SAM = ensureActions({
 	TENDO_GOKEN: { //TODO: Verify Icon
 		id: 36965,
 		name: 'Tendo Goken',
-		icon: iconUrl(36965),
+		icon: iconUrl(3193),
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		castTime: 1300,
@@ -194,7 +194,7 @@ export const SAM = ensureActions({
 	TENDO_SETSUGEKKA: { //TODO: Verify, Icon
 		id: 36966,
 		name: 'Tendo Setsugekka',
-		icon: iconUrl(36966),
+		icon: iconUrl(3194),
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		castTime: 1300,
@@ -227,7 +227,7 @@ export const SAM = ensureActions({
 	TSUBAME_GAESHI: {
 		id: 16483,
 		name: 'Tsubame Gaeshi',
-		icon: iconUrl(16483),
+		icon: iconUrl(3180),
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 	},
@@ -235,7 +235,7 @@ export const SAM = ensureActions({
 	KAESHI_GOKEN: {
 		id: 16485,
 		name: 'Kaeshi: Goken',
-		icon: iconUrl(16485),
+		icon: iconUrl(3182),
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		gcdRecast: 2500,
@@ -244,7 +244,7 @@ export const SAM = ensureActions({
 	KAESHI_SETSUGEKKA: {
 		id: 16486,
 		name: 'Kaeshi: Setsugekka',
-		icon: iconUrl(16486),
+		icon: iconUrl(3183),
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		gcdRecast: 2500,
@@ -253,7 +253,7 @@ export const SAM = ensureActions({
 	TENDO_KAESHI_GOKEN: { //TODO Id, Icon, Recast
 		id: 36967,
 		name: 'Tendo Kaeshi Goken',
-		icon: iconUrl(36967),
+		icon: iconUrl(3195),
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		gcdRecast: 2500,
@@ -262,7 +262,7 @@ export const SAM = ensureActions({
 	TENDO_KAESHI_SETSUGEKKA: { //TODO Id, Icon, Recast
 		id: 36968,
 		name: 'Tendo Kaeshi Setsugekka',
-		icon: 'icon',
+		icon: iconUrl(3196),
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		gcdRecast: 3200,
@@ -299,7 +299,7 @@ export const SAM = ensureActions({
 	TENGETSU: {
 		id: 36962,
 		name: 'Tengetsu',
-		icon: iconUrl(36962),
+		icon: iconUrl(3190),
 		cooldown: 15000,
 		statusesApplied: ['TENGETSU'],
 	},
@@ -400,7 +400,7 @@ export const SAM = ensureActions({
 	ZANSHIN: {
 		id: 36964,
 		name: 'Zanshin',
-		icon: iconUrl(36964),
+		icon: iconUrl(3192),
 		cooldown: 1000,
 	},
 })
