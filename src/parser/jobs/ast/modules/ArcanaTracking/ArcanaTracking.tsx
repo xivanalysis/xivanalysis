@@ -424,9 +424,9 @@ export default class ArcanaTracking extends Analyser {
 	 * @return {void} null
 	 */
 	private retconSearch(cardActionId: number) {
-		let searchLatest = true
-		const lastLog = _.last(this.cardStateLog) as CardState
-		const latestActionId = lastLog.lastEvent.type === 'action' ? lastLog.lastEvent.action : -1
+		const searchLatest = true
+		//const lastLog = _.last(this.cardStateLog) as CardState
+		//const latestActionId = lastLog.lastEvent.type === 'action' ? lastLog.lastEvent.action : -1
 
 		// We can skip search+replace for the latest card event if that was a way to lose a card in draw slot.
 		// 1. The standard ways of losing something in draw slot.
