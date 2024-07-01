@@ -21,13 +21,9 @@ import DISPLAY_ORDER from '../DISPLAY_ORDER'
 const LINKED_EVENT_THRESHOLD = 20
 const DEATH_EVENT_STATUS_DROP_DELAY = 2000
 
-const CARD_GRANTING_ABILITIES: Array<keyof ActionRoot> = ['DRAW', 'REDRAW', ...PLAY]
+const CARD_GRANTING_ABILITIES: Array<keyof ActionRoot> = [...PLAY]
 
 const CARD_ACTIONS: Array<keyof ActionRoot> = [
-	'DRAW',
-	'REDRAW',
-	'UNDRAW',
-	'ASTRODYNE',
 	...PLAY,
 ]
 export enum SealType {
@@ -301,7 +297,7 @@ export default class ArcanaTracking extends Analyser {
 			const cardStateItem: CardState = {..._.last(this.cardStateLog)} as CardState
 			// fabbing an undraw cast event
 			const lastEvent: Events['action'] = {
-				action: this.data.actions.UNDRAW.id,
+				action: 0,
 				timestamp: event.timestamp,
 				type: 'action',
 				source: event.source,
@@ -356,15 +352,6 @@ export default class ArcanaTracking extends Analyser {
 			this.astrosignGauge.generate(SealType[sealObtained])
 		}
 
-		if (actionId === this.data.actions.ASTRODYNE.id) {
-			cardStateItem.sealState = CLEAN_SEAL_STATE
-			this.astrosignGauge.reset()
-		}
-
-		if (actionId === this.data.actions.UNDRAW.id) {
-			cardStateItem.drawState = undefined
-		}
-
 		this.cardStateLog.push(cardStateItem)
 	}
 
@@ -377,7 +364,7 @@ export default class ArcanaTracking extends Analyser {
 		// TODO: This is a duct tape fix
 		// Checks on the previous event - it may be an erroneous drawnArcana flagged by offDrawnArcana. Statuses SEEM to drop 2s + 20ms earlier than the Death event.
 		const lastCardState = {..._.last(this.cardStateLog)} as CardState
-		if (lastCardState.lastEvent.type === 'action' && lastCardState.lastEvent.action === this.data.actions.UNDRAW.id
+		if (lastCardState.lastEvent.type === 'action' && lastCardState.lastEvent.action === 0
 			&& (event.timestamp - lastCardState.lastEvent.timestamp <= DEATH_EVENT_STATUS_DROP_DELAY + LINKED_EVENT_THRESHOLD)) {
 			this.cardStateLog.pop()
 		}
@@ -444,12 +431,6 @@ export default class ArcanaTracking extends Analyser {
 		// We can skip search+replace for the latest card event if that was a way to lose a card in draw slot.
 		// 1. The standard ways of losing something in draw slot.
 		// 2. If they used Draw while holding a Minor Arcana or Draw
-		if (
-			[this.data.actions.UNDRAW.id, ...this.play, this.data.actions.REDRAW.id].includes(latestActionId)
-			|| (this.data.actions.DRAW.id === latestActionId && lastLog.drawState && this.drawnArcana.includes(lastLog.drawState))
-		) {
-			searchLatest = false
-		}
 
 		const searchLog = searchLatest ? this.cardStateLog : this.cardStateLog.slice(0, this.cardStateLog.length - 1)
 

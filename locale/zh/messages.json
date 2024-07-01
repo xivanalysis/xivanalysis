@@ -13,8 +13,6 @@
   "ast.arcana-suggestions.title": "奥秘卡日志",
   "ast.arcana-tracking.messages.death": "死亡",
   "ast.arcana-tracking.title": "奥秘卡记录",
-  "ast.arcana-undraw-usage.suggestions.content": "由于抽卡技能会在被施放时立刻进入冷却，所以永远都不要使用<0/>，而是将卡发出去或者直接以<1/>覆盖。",
-  "ast.arcana-undraw-usage.suggestions.why": "使用了{0, plural, one{#次} other {#次}}奥秘卡废弃。",
   "ast.arcana.astrosigns.celestial": "星之标识",
   "ast.arcana.astrosigns.label": "星标",
   "ast.arcana.astrosigns.lunar": "月之标识",

@@ -304,6 +304,13 @@ export const AST = ensureActions({
 		statusesApplied: ['HOROSCOPE', 'HOROSCOPE_HELIOS'],
 	},
 
+	HOROSCOPE_ACTIVATION: {
+		id: 16558,
+		name: 'Horoscope Activation',
+		icon: iconUrl(3551),
+		cooldown: 0,
+	},
+
 	NEUTRAL_SECT: {
 		id: 16559,
 		name: 'Neutral Sect',
