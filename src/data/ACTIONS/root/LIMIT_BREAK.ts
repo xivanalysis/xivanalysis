@@ -188,6 +188,16 @@ export const LIMIT_BREAK = ensureActions({
 		icon,
 	},
 
+	// VPR LB3
+	WORLD_SWALLOWER: {
+		id: 34866,
+		name: 'World-swallower',
+		onGcd: true,
+		castTime: 4500,
+		gcdRecast: 8200,
+		icon,
+	},
+
 	// Ranged LB1
 	BIG_SHOT: {
 		id: 4238,

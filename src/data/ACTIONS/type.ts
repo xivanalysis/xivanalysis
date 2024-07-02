@@ -23,6 +23,7 @@ export enum BonusModifier {
 export enum PotencySpecialCase {
 	DRG_LANCE_MASTERY,
 	BLU_MIGHTY_GOBLIN_PUNCH,
+	VPR_COMBO_FINSHER_VENOMS,
 }
 
 // When calculating the bonusPercent that the game uses to display

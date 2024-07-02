@@ -19,6 +19,7 @@ import {SCH} from './SCH'
 import {SGE} from './SGE'
 import {SHARED} from './SHARED'
 import {SMN} from './SMN'
+import {VPR} from './VPR'
 import {WAR} from './WAR'
 import {WHM} from './WHM'
 
@@ -42,6 +43,7 @@ export const root = {
 	...NIN,
 	...SAM,
 	...RPR,
+	...VPR,
 
 	...BRD,
 	...MCH,
