@@ -163,6 +163,7 @@ export const MCH = ensureActions({
 		speedAttribute: Attribute.SKILL_SPEED,
 		cooldown: 60000,
 		gcdRecast: 2500,
+		statusesApplied: ['EXCAVATOR_READY'],
 	},
 
 	BLAZING_SHOT: {
@@ -262,6 +263,7 @@ export const MCH = ensureActions({
 		icon: iconUrl(3034),
 		onGcd: false,
 		cooldown: 120000,
+		statusesApplied: ['HYPERCHARGED', 'FULL_METAL_MACHINIST'],
 	},
 
 	ROOK_OVERDRIVE: {
