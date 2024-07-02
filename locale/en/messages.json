@@ -624,7 +624,7 @@
   "gnb.nomercy.title": "No Mercy Windows",
   "gnb.tincture.suggestions.trackedActions.content": "Try to cover as much damage as possible with your Tinctures of Strength.",
   "mch.about.description": "\nWelcome to the Machinist module! This job is all about managing cooldowns to dish out as much damage as possible,\nespecially during your party's raid buff windows. This page will walk you through how well you utilized each of your major\ncooldowns and resources.\n\nTo understand the fundamentals behind the suggestions given below, check out one of the following guides:\n\n- [Icy Veins Machinist Guide](https://www.icy-veins.com/ffxiv/machinist-guide)\n- [The Balance Machinist Guide](https://www.thebalanceffxiv.com/jobs/ranged/machinist/)\n",
-  "mch.drift.accordion.message": "<0/>, <1/>, and <2/> are your strongest GCDs and ideally they should always be kept on cooldown, unless you need to insert a filler GCD to adjust for skill speed. Avoid casting <3/> if Chain Saw, Air Anchor, or Drill will come off cooldown within 8 seconds.",
+  "mch.drift.accordion.message": "<0/> and <1/> are powerful GCDs and ideally they should always be kept on cooldown, unless you need to insert a filler GCD to adjust for skill speed. Avoid casting <2/> if Chain Saw or Air Anchor will come off cooldown within 8 seconds.",
   "mch.drift.drift-header": "Drift Issue",
   "mch.drift.drift-issue": "<0/> drifted by {0}",
   "mch.drift.timelinelink-button": "Jump to Timeline",
