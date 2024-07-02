@@ -1,13 +1,16 @@
+import {Trans} from '@lingui/macro'
 import {ActionRow, ActionTimeline as CoreActionTimeline} from 'parser/core/modules/ActionTimeline'
+import React from 'react'
 
 export class ActionTimeline extends CoreActionTimeline {
 	static override rows: ActionRow[] = [
 		...CoreActionTimeline.rows,
 		// Arcanum
-		['PLAY_I', 'PLAY_II', 'PLAY_III'],
-		'MINOR_ARCANA',
+		{
+			label: <Trans id="ast.actiontimeline.play">Play / Draw</Trans>,
+			content: ['PLAY_I', 'PLAY_II', 'PLAY_III', 'ASTRAL_DRAW', 'UMBRAL_DRAW', 'MINOR_ARCANA'],
+		},
 		//other AST or party buffs
-		['ASTRAL_DRAW', 'UMBRAL_DRAW'],
 		['DIVINATION', 'ORACLE'],
 		'LIGHTSPEED',
 		// oGCD ST heals
@@ -26,7 +29,5 @@ export class ActionTimeline extends CoreActionTimeline {
 		// Party mitigation
 		'COLLECTIVE_UNCONSCIOUS',
 		'SUN_SIGN',
-		// Role actions
-		'LUCID_DREAMING',
 	]
 }

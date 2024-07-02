@@ -410,7 +410,7 @@ export const AST = ensureActions({
 	// -----
 
 	THE_BALANCE: {
-		id: 4401,
+		id: 37023,
 		name: 'The Balance',
 		icon: iconUrl(3110),
 		cooldown: 1000,
@@ -419,7 +419,7 @@ export const AST = ensureActions({
 	},
 
 	THE_BOLE: {
-		id: 4404,
+		id: 37027,
 		name: 'The Bole',
 		icon: iconUrl(3111),
 		cooldown: 1000,
@@ -428,7 +428,7 @@ export const AST = ensureActions({
 	},
 
 	THE_ARROW: {
-		id: 4402,
+		id: 37024,
 		name: 'The Arrow',
 		icon: iconUrl(3112),
 		cooldown: 1000,
@@ -437,7 +437,7 @@ export const AST = ensureActions({
 	},
 
 	THE_SPEAR: {
-		id: 4403,
+		id: 37026,
 		name: 'The Spear',
 		icon: iconUrl(3113),
 		cooldown: 1000,
@@ -446,7 +446,7 @@ export const AST = ensureActions({
 	},
 
 	THE_EWER: {
-		id: 4405,
+		id: 37028,
 		name: 'The Ewer',
 		icon: iconUrl(3114),
 		cooldown: 1000,
@@ -455,7 +455,7 @@ export const AST = ensureActions({
 	},
 
 	THE_SPIRE: {
-		id: 4406,
+		id: 37025,
 		name: 'The Spire',
 		icon: iconUrl(3115),
 		cooldown: 1000,
