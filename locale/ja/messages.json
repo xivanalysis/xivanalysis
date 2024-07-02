@@ -13,8 +13,6 @@
   "ast.arcana-suggestions.title": "アルカナ ログ",
   "ast.arcana-tracking.messages.death": "死亡",
   "ast.arcana-tracking.title": "アルカナ トラッキング",
-  "ast.arcana-undraw-usage.suggestions.content": "ドローは使用した瞬間にクールダウンを開始するため、<1/> で使用したり変換したりする代わりに、<0/> を使用する必要がなくなります。",
-  "ast.arcana-undraw-usage.suggestions.why": "アルカナ破棄の使用回数：{0, plural, other {# 回}}",
   "ast.arcana.astrosigns.celestial": "",
   "ast.arcana.astrosigns.label": "",
   "ast.arcana.astrosigns.lunar": "",

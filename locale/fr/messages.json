@@ -13,8 +13,6 @@
   "ast.arcana-suggestions.title": "Historique des Arcanes",
   "ast.arcana-tracking.messages.death": "Mort",
   "ast.arcana-tracking.title": "Suivis des Arcanes",
-  "ast.arcana-undraw-usage.suggestions.content": "Étant donné que Tirage commence son temps de recharge au moment où il est utilisé, il n’y a plus de raison de <0/> au lieu de le jouer ou de le surcharger avec <1/>.",
-  "ast.arcana-undraw-usage.suggestions.why": "{0, plural,one {# cas}other {# cas}} d'utilisation de défausse.",
   "ast.arcana.astrosigns.celestial": "",
   "ast.arcana.astrosigns.label": "",
   "ast.arcana.astrosigns.lunar": "",
