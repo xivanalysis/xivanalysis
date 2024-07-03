@@ -72,7 +72,7 @@ export const VPR = ensureActions({
 	FLANKSTING_STRIKE: {
 		id: 34610,
 		name: 'Flanksting Strike',
-		icon: iconUrl(3707),
+		icon: iconUrl(3705),
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		combo: {
