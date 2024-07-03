@@ -116,7 +116,19 @@ class Parser {
 		// Sort modules to load dependencies first
 		// Reverse is required to switch it into depencency order instead of sequence
 		// This will naturally throw an error on cyclic deps
-		this.executionOrder = toposort.array(nodes, edges).reverse()
+		try {
+			this.executionOrder = toposort.array(nodes, edges).reverse()
+		} catch (error) {
+			// If we get an unknown node error; Work out _what_ nodes are unkown so the error is a bit more meaningful.
+			if (error instanceof Error && error.message.includes('unknown node')) {
+				const nodeSet = new Set(nodes)
+				const unknown = edges
+					.filter(([_source, target]) => !nodeSet.has(target))
+					.map(([source, target]) => `${source}→${target}`)
+				throw new Error(`Unregistered modules in dependency graph: ${unknown.join(', ')}`)
+			}
+			throw error
+		}
 
 		// Initialise the modules
 		this.executionOrder.forEach(handle => {
