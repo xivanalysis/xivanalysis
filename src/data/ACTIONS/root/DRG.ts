@@ -67,7 +67,7 @@ export const DRG = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		combo: {
-			from: 78,
+			from: [78, 36954],
 		},
 	},
 
@@ -195,7 +195,7 @@ export const DRG = ensureActions({
 			bonusModifiers: [BonusModifier.POSITIONAL, BonusModifier.COMBO],
 		}],
 		combo: {
-			from: [84, 25711],
+			from: [84, 25771],
 		},
 	},
 
@@ -221,7 +221,7 @@ export const DRG = ensureActions({
 			bonusModifiers: [BonusModifier.POSITIONAL, BonusModifier.COMBO],
 		}],
 		combo: {
-			from: [88, 25722],
+			from: [88, 25772],
 		},
 	},
 

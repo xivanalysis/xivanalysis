@@ -41,16 +41,14 @@ export class BloodOfTheDragon extends TimedWindow {
 
 		// copying this from LC, might want to have like a shared thing for these two windows (they are both
 		// 60s windows)
-		const lcStatusFilter = filter<Event>()
-			.source(this.parser.actor.id)
-			.status(this.data.statuses.LANCE_CHARGE.id)
+		const lotdStartFilter = filter<Event>().source(this.parser.actor.id).action(this.data.actions.GEIRSKOGUL.id)
+			.type('action')
 
 		const dfdActionFilter = filter<Event>().source(this.parser.actor.id).type('action')
 			.action(this.data.actions.DRAGONFIRE_DIVE.id)
 
-		this.addEventHook(lcStatusFilter.type('statusApply'), this.onLcStatusApply)
+		this.addEventHook(lotdStartFilter, this.onLotdStart)
 		this.addEventHook(dfdActionFilter, this.onDfd)
-		this.addEventHook(lcStatusFilter.type('statusRemove'), this.onLcStatusRemove)
 
 		// do we uhhhh have a lotd icon??? in the game anymore???
 		const suggestionIcon = this.data.actions.NASTROND.icon
@@ -127,7 +125,7 @@ export class BloodOfTheDragon extends TimedWindow {
 		this.addEvaluator(new DisplayedActionEvaluator([this.data.actions.LIFE_SURGE]))
 	}
 
-	private onLcStatusApply(event: Events['statusApply']) {
+	private onLotdStart(event: Events['action']) {
 		// couple cases to enumerate here
 		// is DFD off-cooldown at any point during this window
 		const willBeOffCd = this.cooldowns.remaining('DRAGONFIRE_DIVE') < DRAGON_DURATION_MILLIS
@@ -147,6 +145,8 @@ export class BloodOfTheDragon extends TimedWindow {
 		}
 
 		this.dfdTrackers.push(this.currentDfdWindow)
+
+		this.addTimestampHook(event.timestamp + this.duration, () => this.onBotdEnd())
 	}
 
 	private onDfd() {
@@ -155,7 +155,7 @@ export class BloodOfTheDragon extends TimedWindow {
 		}
 	}
 
-	private onLcStatusRemove() {
+	private onBotdEnd() {
 		// little bit of analysis
 		if (this.currentDfdWindow != null) {
 			this.previousDfdWindow = this.currentDfdWindow
@@ -170,7 +170,7 @@ export class BloodOfTheDragon extends TimedWindow {
 		}
 
 		// attempt to adjust DFD expected uses
-		if (action.action.id === this.data.actions.DRAGONFIRE_DIVE.id) {
+		if (action.action.id === this.data.actions.DRAGONFIRE_DIVE.id || action.action.id === this.data.actions.RISE_OF_THE_DRAGON.id) {
 			// ok quick eject if there's only actually one DFD here because in that case this check isn't relevant
 			// this is just to avoid flagging an error if someone doesn't use it because it's on CD during the window
 			// and has been previously using it correctly

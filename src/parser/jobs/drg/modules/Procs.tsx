@@ -1,9 +1,11 @@
 import {Procs as CoreProcs} from 'parser/core/modules/Procs'
 
 export default class Procs extends CoreProcs {
-	// Nastrond is technically a status that could be tracked here, but it's probably more useful to highlight
-	// it in a suggestion tied to the life of the dragon window
 	trackedProcs = [
+		{
+			procStatus: this.data.statuses.NASTROND_READY,
+			consumeActions: [this.data.actions.NASTROND],
+		},
 		{
 			procStatus: this.data.statuses.DIVE_READY,
 			consumeActions: [this.data.actions.MIRAGE_DIVE],

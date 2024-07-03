@@ -167,8 +167,8 @@ export default class LanceCharge extends BuffWindow {
 			return -1
 		}
 
-		// attempt to adjust DFD expected uses
-		if (action.action.id === this.data.actions.DRAGONFIRE_DIVE.id) {
+		// attempt to adjust DFD and therefore ROTD expected uses
+		if (action.action.id === this.data.actions.DRAGONFIRE_DIVE.id || action.action.id === this.data.actions.RISE_OF_THE_DRAGON.id) {
 			// ok quick eject if there's only actually one DFD here because in that case this check isn't relevant
 			// this is just to avoid flagging an error if someone doesn't use it because it's on CD during the window
 			// and has been previously using it correctly
