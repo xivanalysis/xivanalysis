@@ -11,17 +11,18 @@ export const VPR = ensureStatuses({
 	},
 
 	HUNTERS_INSTINCT: {
-		id: 3368,
+		id: 3668,
 		name: "Hunter's Instinct",
 		icon: iconUrl(13774),
 		duration: 40000,
 	},
 
 	SWIFTSCALED: {
-		id: 3369,
+		id: 3669,
 		name: 'Swiftscaled',
 		icon: iconUrl(13775),
 		duration: 40000,
+		speedModifier: 0.85,
 	},
 
 	FLANKSTUNG_VENOM: {

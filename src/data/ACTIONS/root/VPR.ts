@@ -63,7 +63,7 @@ export const VPR = ensureActions({
 			bonusModifiers: [],
 			baseModifiers: [PotencySpecialCase.VPR_COMBO_FINSHER_VENOMS],
 		}, {
-			value: 400,
+			value: 460,
 			bonusModifiers: [BonusModifier.POSITIONAL],
 			baseModifiers: [PotencySpecialCase.VPR_COMBO_FINSHER_VENOMS],
 		}],
@@ -206,8 +206,9 @@ export const VPR = ensureActions({
 		name: 'Dreadwinder',
 		icon: iconUrl(3715),
 		onGcd: true,
-		speedAttribute: Attribute.SKILL_SPEED,
 		breaksCombo: false,
+		gcdRecast: 3500,
+		speedAttribute: Attribute.SKILL_SPEED,
 		cooldown: 40000,
 		charges: 2,
 		statusesApplied: ['NOXIOUS_GNASH'],
@@ -218,9 +219,9 @@ export const VPR = ensureActions({
 		name: "Hunter's Coil",
 		icon: iconUrl(3716),
 		onGcd: true,
-		speedAttribute: Attribute.SKILL_SPEED,
-		gcdRecast: 3000,
+		gcdRecast: 3500,
 		breaksCombo: false,
+		speedAttribute: Attribute.SKILL_SPEED,
 		statusesApplied: [
 			'HUNTERS_INSTINCT',
 			'HUNTERS_VENOM',
@@ -239,9 +240,9 @@ export const VPR = ensureActions({
 		name: "Swiftskin's Coil",
 		icon: iconUrl(3717),
 		onGcd: true,
-		speedAttribute: Attribute.SKILL_SPEED,
-		gcdRecast: 3000,
+		gcdRecast: 3500,
 		breaksCombo: false,
+		speedAttribute: Attribute.SKILL_SPEED,
 		statusesApplied: [
 			'SWIFTSCALED',
 			'SWIFTSKINS_VENOM',
@@ -351,6 +352,7 @@ export const VPR = ensureActions({
 		name: 'Pit of Dread',
 		icon: iconUrl(3718),
 		onGcd: true,
+		gcdRecast: 3500,
 		speedAttribute: Attribute.SKILL_SPEED,
 		breaksCombo: false,
 		cooldown: 40000,
@@ -363,8 +365,8 @@ export const VPR = ensureActions({
 		name: "Hunter's Den",
 		icon: iconUrl(3719),
 		onGcd: true,
+		gcdRecast: 3500,
 		speedAttribute: Attribute.SKILL_SPEED,
-		gcdRecast: 3000,
 		breaksCombo: false,
 		statusesApplied: [
 			'HUNTERS_INSTINCT',
@@ -377,8 +379,8 @@ export const VPR = ensureActions({
 		name: "Hunter's Den",
 		icon: iconUrl(3719),
 		onGcd: true,
+		gcdRecast: 3500,
 		speedAttribute: Attribute.SKILL_SPEED,
-		gcdRecast: 3000,
 		breaksCombo: false,
 		statusesApplied: [
 			'SWIFTSCALED',
@@ -402,11 +404,12 @@ export const VPR = ensureActions({
 	// There is 0 reason to start the combo anyway but from the first generation , so it is being defined as a combo.
 
 	REAWAKEN: {
-		id: 34625,
-		name: 'ReAwaken',
-		icon: iconUrl(3720),
+		id: 34626,
+		name: 'Reawaken',
+		icon: iconUrl(3721),
 		onGcd: true,
 		gcdRecast: 2200,
+		breaksCombo: false,
 		speedAttribute: Attribute.SKILL_SPEED,
 		statusesApplied: ['REAWAKENED'],
 	},
@@ -416,6 +419,7 @@ export const VPR = ensureActions({
 		name: 'First Generation',
 		icon: iconUrl(3722),
 		onGcd: true,
+		breaksCombo: false,
 		gcdRecast: 2200,
 		speedAttribute: Attribute.SKILL_SPEED,
 		combo: {
@@ -428,6 +432,7 @@ export const VPR = ensureActions({
 		name: 'Second Generation',
 		icon: iconUrl(3723),
 		onGcd: true,
+		breaksCombo: false,
 		gcdRecast: 2200,
 		speedAttribute: Attribute.SKILL_SPEED,
 		combo: {
@@ -440,6 +445,7 @@ export const VPR = ensureActions({
 		name: 'Third Generation',
 		icon: iconUrl(3724),
 		onGcd: true,
+		breaksCombo: false,
 		gcdRecast: 2200,
 		speedAttribute: Attribute.SKILL_SPEED,
 		combo: {
@@ -452,6 +458,7 @@ export const VPR = ensureActions({
 		name: 'Fourth Generation',
 		icon: iconUrl(3725),
 		onGcd: true,
+		breaksCombo: false,
 		gcdRecast: 2200,
 		speedAttribute: Attribute.SKILL_SPEED,
 		combo: {
@@ -478,7 +485,7 @@ export const VPR = ensureActions({
 	{
 		id: 34647,
 		name: "Serpent's Ire",
-		icon: iconUrl(37412),
+		icon: iconUrl(3741),
 		cooldown: 120000,
 	},
 
