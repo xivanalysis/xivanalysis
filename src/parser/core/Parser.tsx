@@ -119,15 +119,16 @@ class Parser {
 		try {
 			this.executionOrder = toposort.array(nodes, edges).reverse()
 		} catch (error) {
-			// If we get an unknown node error; Work out _what_ nodes are unkown so the error is a bit more meaningful.
-			if (error instanceof Error && error.message.includes('unknown node')) {
-				const nodeSet = new Set(nodes)
-				const unknown = edges
-					.filter(([_source, target]) => !nodeSet.has(target))
-					.map(([source, target]) => `${source}→${target}`)
-				throw new Error(`Unregistered modules in dependency graph: ${unknown.join(', ')}`)
+			if (!(error instanceof Error) || !error.message.includes('unknown node')) {
+				throw error
 			}
-			throw error
+
+			// If we get an unknown node error; Work out _what_ nodes are unknown so the error is a bit more meaningful.
+			const nodeSet = new Set(nodes)
+			const unknown = edges
+				.filter(([_source, target]) => !nodeSet.has(target))
+				.map(([source, target]) => `${source}→${target}`)
+			throw new Error(`Unregistered modules in dependency graph: ${unknown.join(', ')}`)
 		}
 
 		// Initialise the modules
