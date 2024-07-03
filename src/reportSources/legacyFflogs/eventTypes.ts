@@ -58,6 +58,7 @@ export enum ActorType {
 	BLACK_MAGE = 'BlackMage',
 	SUMMONER = 'Summoner',
 	RED_MAGE = 'RedMage',
+	PICTOMANCER = 'Pictomancer',
 	BLUE_MAGE = 'BlueMage',
 	LIMIT_BREAK = 'LimitBreak',
 
