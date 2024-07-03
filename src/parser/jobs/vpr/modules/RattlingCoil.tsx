@@ -36,9 +36,6 @@ export class RattlingCoil extends CoreGauge {
 		},
 	}))
 
-	// Used for Checklist as CounterGauge seems to lack total tracking at this time.
-	private totalGeneratedCoils = 0
-
 	private CoilModifiers = new Map<number, GaugeModifier>([
 
 		[this.data.actions.DREADWINDER.id, {action: 1}],
@@ -67,14 +64,10 @@ export class RattlingCoil extends CoreGauge {
 	private onGaugeModifier(event: Events['action' | 'combo']) {
 		const modifier = this.CoilModifiers.get(event.action)
 
-		if (modifier != null) {
-			const amount = modifier[event.type] ?? 0
+		if (modifier == null) { return }
+		const amount = modifier[event.type] ?? 0
+		this.coilGauge.modify(amount)
 
-			if (amount > 0) {
-				this.totalGeneratedCoils += amount //Increment total tracker for generated ammo
-			}
-			this.coilGauge.modify(amount)
-		}
 	}
 
 	private onComplete() {
@@ -90,6 +83,18 @@ export class RattlingCoil extends CoreGauge {
 			value: this.coilGauge.value,
 		}))
 
+		this.suggestions.add(new TieredSuggestion({
+			icon: this.data.actions.UNCOILED_FURY.icon,
+			content: <Trans id="vpr.rattlingcoil.overcap-coil.content">
+				Avoid overcapping rattling coils during a fight, consider using <ActionLink action="UNCOILED_FURY"/> earlier if possible to avoid overcapping.
+			</Trans>,
+			why: <Trans id="vpr.rattlingcoil.overcap-coil.why">
+				You overcapped <Plural value={this.coilGauge.value} one="# rattling coil" other="# rattling coils"/> during the fight.
+			</Trans>,
+			tiers: LEFTOVER_COIL_SEVERITY_TIERS,
+			value: this.coilGauge.overCap,
+		}))
+
 		this.checklist.add(new Rule({
 			name: <Trans id="vpr.rattlingcoil.usage.title">Cartridge usage</Trans>,
 			description: <Trans id="vpr.rattlingcoilwaste.content">
@@ -101,8 +106,8 @@ export class RattlingCoil extends CoreGauge {
 					name: <Trans id="vpr.rattlingcoil.checklist.requirement.waste.name">
 						Use as many of your rattling coils as possible
 					</Trans>,
-					value: this.totalGeneratedCoils - this.coilGauge.overCap,
-					target: this.totalGeneratedCoils,
+					value: this.coilGauge.totalGenerated - this.coilGauge.overCap,
+					target: this.coilGauge.totalGenerated,
 				}),
 			],
 		}))
