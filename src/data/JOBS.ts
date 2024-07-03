@@ -183,8 +183,8 @@ export const JOBS = ensureRecord<Job>()({
 	VIPER: {
 		name: t('game.job.viper')`Viper`,
 		speedStat: Attribute.SKILL_SPEED,
-		icon: 'V', // update to 'vpr' once we have an actual icon
-		colour: '#767676', // update once we have the real job color
+		icon: 'vpr',
+		colour: '#30a230',
 		role: 'MELEE',
 	},
 
@@ -236,8 +236,8 @@ export const JOBS = ensureRecord<Job>()({
 	PICTOMANCER: {
 		name: t('game.job.pictomancer')`Pictomancer`,
 		speedStat: Attribute.SPELL_SPEED,
-		icon: 'P', // update to 'pct' once we have an actual icon
-		colour: '#767676', // update once we have the real job color
+		icon: 'pct',
+		colour: '#ffa2f1',
 		role: 'MAGICAL_RANGED',
 	},
 	BLUE_MAGE: {
