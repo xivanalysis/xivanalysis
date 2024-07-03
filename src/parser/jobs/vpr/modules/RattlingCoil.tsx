@@ -89,7 +89,7 @@ export class RattlingCoil extends CoreGauge {
 				Avoid overcapping rattling coils during a fight, consider using <ActionLink action="UNCOILED_FURY"/> earlier if possible to avoid overcapping.
 			</Trans>,
 			why: <Trans id="vpr.rattlingcoil.overcap-coil.why">
-				You overcapped <Plural value={this.coilGauge.value} one="# rattling coil" other="# rattling coils"/> during the fight.
+				You overcapped <Plural value={this.coilGauge.overCap} one="# rattling coil" other="# rattling coils"/> during the fight.
 			</Trans>,
 			tiers: LEFTOVER_COIL_SEVERITY_TIERS,
 			value: this.coilGauge.overCap,
