@@ -24,12 +24,9 @@ const BAD_LIFE_SURGE_CONSUMERS: ActionKey[] = [
 	'LANCE_BARRAGE',
 	'DISEMBOWEL',
 	'SPIRAL_BLOW',
-	'CHAOS_THRUST',
 	'PIERCING_TALON',
 	'DOOM_SPIKE',
 	'SONIC_THRUST',
-	'FANG_AND_CLAW',
-	'WHEELING_THRUST',
 ]
 
 // these are the consumers we care to show in the chart
@@ -38,12 +35,20 @@ const CHART_LIFE_SURGE_CONSUMERS: ActionKey[] = [
 	'HEAVENS_THRUST',
 	'COERTHAN_TORMENT',
 	'DRAKESBANE',
+	'CHAOTIC_SPRING',
+	'CHAOS_THRUST',
+	'FANG_AND_CLAW',
+	'WHEELING_THRUST',
 ]
 
 const CHART_COLORS: {[actionId in ActionKey]?: string} = {
 	'FULL_THRUST': '#0e81f7',
 	'HEAVENS_THRUST': '#0e81f7',
-	'DRAKESBANE': '#0e81f7',	// TODO: pick a different color?
+	'DRAKESBANE': '#0e81f7',
+	'FANG_AND_CLAW': '#b36b00',
+	'WHEELING_THRUST': '#b36b00',
+	'CHAOTIC_SPRING': '#b36b00',
+	'CHAOS_THRUST': '#b36b00',
 	'COERTHAN_TORMENT': '#b36b00',
 }
 
