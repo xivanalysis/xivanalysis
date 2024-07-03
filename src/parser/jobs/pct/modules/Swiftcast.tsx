@@ -4,5 +4,5 @@ import {Swiftcast as CoreSwiftcast} from 'parser/core/modules/Swiftcast'
 import React from 'react'
 
 export class Swiftcast extends CoreSwiftcast {
-	override suggestionContent = <Trans id="pct.swiftcast.missed.suggestion.content">Cast a spell with <DataLink action="SWIFTCAST" /> before it expires. This allows you to instantly cast spells with a cast times, such as a motif for a long movement or weaving window.</Trans>
+	override suggestionContent = <Trans id="pct.swiftcast.missed.suggestion.content">Cast a spell with <DataLink action="SWIFTCAST" /> before it expires. This allows you to cast spells that have cast times instantly, such as using <DataLink showIcon={false} status="SWIFTCAST" />a motif for a long movement or weaving window, or <DataLink action="RAINBOW_DRIP" /> right before a boss dies or becomes untargetable.</Trans>
 }
