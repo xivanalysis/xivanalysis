@@ -8,6 +8,7 @@ import {Data} from 'parser/core/modules/Data'
 import {Invulnerability} from 'parser/core/modules/Invulnerability'
 import {Statuses} from 'parser/core/modules/Statuses'
 import React from 'react'
+import DISPLAY_ORDER from './DISPLAY_ORDER'
 
 const SEVERITIES = {
 	95: TARGET.SUCCESS,
@@ -35,6 +36,7 @@ export class NoxiousGnash extends Analyser {
 
 	private onComplete() {
 		this.checklist.add(new TieredRule({
+			displayOrder: DISPLAY_ORDER.NOXIOUS_GNASH,
 			name: <Trans id="vpr.noxiousgnash.rule.name">
 				Keep <DataLink status="NOXIOUS_GNASH"/> up
 			</Trans>,

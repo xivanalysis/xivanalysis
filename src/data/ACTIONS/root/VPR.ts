@@ -422,9 +422,6 @@ export const VPR = ensureActions({
 		breaksCombo: false,
 		gcdRecast: 2200,
 		speedAttribute: Attribute.SKILL_SPEED,
-		combo: {
-			start: true,
-		},
 	},
 
 	SECOND_GENERATION: {
@@ -435,9 +432,6 @@ export const VPR = ensureActions({
 		breaksCombo: false,
 		gcdRecast: 2200,
 		speedAttribute: Attribute.SKILL_SPEED,
-		combo: {
-			from: 34627,
-		},
 	},
 
 	THIRD_GENERATION: {
@@ -448,9 +442,6 @@ export const VPR = ensureActions({
 		breaksCombo: false,
 		gcdRecast: 2200,
 		speedAttribute: Attribute.SKILL_SPEED,
-		combo: {
-			from: 34628,
-		},
 	},
 
 	FOURTH_GENERATION: {
@@ -461,10 +452,6 @@ export const VPR = ensureActions({
 		breaksCombo: false,
 		gcdRecast: 2200,
 		speedAttribute: Attribute.SKILL_SPEED,
-		combo: {
-			from: 34629,
-			end: true,
-		},
 	},
 
 	OUROBOROS: {
