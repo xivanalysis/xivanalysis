@@ -1,5 +1,5 @@
 {
-  "ast.about.description-1": "占星術師における<0/>の最大の魅力は、味方のパーティー全体の火力をアルカナを使って強化する能力です。 このアナライザーは、星座があなたのために、どう作用するかを示し、その逆ではありません。",
+  "ast.about.description-1": "",
   "ast.about.description-2": "\nどのヒーラーでも効率的にパーティを維持するには MP とリキャストタイムとを慎重に管理する必要があります。ヒールを計画し相方とコミュニケーションをとれば，余った GCD でより DPS が高くなるでしょう。\n",
   "ast.about.description.warning.development": "このツールを包括的にするには、まだやらなければならないことがたくさんあります！ 　トラッキングする価値のある項目がある場合は、Discordチャンネルにアクセスしてください！",
   "ast.arcana-suggestions.messages.explanation": "このセクションでは戦闘中の全てのカードアクションと分配を追跡します。",
@@ -38,7 +38,7 @@
   "ast.dots.rule.name": "DoTを切らさないようにしましょう",
   "ast.dots.suggestion.clip.content": "以前に付与した <0/> の時間が十分な場合、更新を控えて下さい。",
   "ast.dots.suggestion.clip.why": "",
-  "ast.draw.checklist.description": "カードを使うことで<0/>のためのシンボルが得られますし、<1/>はMP管理にも役立ちます。",
+  "ast.draw.checklist.description": "",
   "ast.draw.checklist.description.draws": "<0/>から得た：",
   "ast.draw.checklist.description.prepull": "戦闘開始前の準備：",
   "ast.draw.checklist.description.total": "取得したカードの枚数:",

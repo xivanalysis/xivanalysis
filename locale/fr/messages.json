@@ -1,5 +1,5 @@
 {
-  "ast.about.description-1": "Le plus grand <0/> pour un Astromancien est sa capacité à buff les DPS de son équipe avec ses Arcanes. Cet analyseur vous montrera comment les étoiles travaillent pour vous et non l'inverse",
+  "ast.about.description-1": "",
   "ast.about.description-2": "\nJouer n'importe quel soigneur nécessite beaucoup d'attention pour gérer vos PM et délais de récupération pour garder efficacement votre équipe en vie. Si vous planifiez vos soins et communiquez avec votre co-soigneur, cela vous permettra bien entendu de faire plus de DPS avec les GCDs que vous avez pu libérer.\n",
   "ast.about.description.warning.development": "Il y a toujours beaucoup de travail à faire pour rendre cet outil complet! Si vous avez des suggestions sur ce qui vaut la peine d'être analyser, n'hésitez pas a venir en parler avec nous sur notre Discord!",
   "ast.arcana-suggestions.messages.explanation": "Cette partie garde une trace de toutes les actions de cartes que vous avez utilisé pendant le combat, et leur répartition après chaque action.",
@@ -38,7 +38,7 @@
   "ast.dots.rule.name": "Vérifiez que vos DoTs soient bien appliqués à votre cible en permanence",
   "ast.dots.suggestion.clip.content": "Évitez de rafraîchir <0/> trop longtemps avant son expiration.",
   "ast.dots.suggestion.clip.why": "Une moyenne de {0} secondes de <0/> par minute perdue dû à une réapplication précoce.",
-  "ast.draw.checklist.description": "Jouer des cartes donne des signes astraux pour <0/> et lancer <1/> aidera à la gestion du mana.",
+  "ast.draw.checklist.description": "",
   "ast.draw.checklist.description.draws": "Obtenu par <0/>:",
   "ast.draw.checklist.description.prepull": "Préparé avant le pull :",
   "ast.draw.checklist.description.total": "Total de cartes obtenues :",
