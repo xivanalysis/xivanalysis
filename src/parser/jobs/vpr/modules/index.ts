@@ -5,6 +5,7 @@ import {Positionals} from './Positionals'
 import {RattlingCoil} from './RattlingCoil'
 import {Snaps} from './Snaps'
 import {Swiftscaled} from './Swiftscaled'
+import {Venoms} from './Venoms'
 
 export default [
 	Buffs,
@@ -14,4 +15,5 @@ export default [
 	RattlingCoil,
 	Swiftscaled,
 	Snaps,
+	Venoms,
 ]
