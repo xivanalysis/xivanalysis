@@ -178,13 +178,11 @@ export default class Draw extends Analyser {
 		// Begin Theoretical Max Plays calc
 		const playsFromDraw = Math.ceil(Math.max(0, (this.parser.pull.duration - oGCD_ALLOWANCE - INTENTIONAL_DRIFT_FOR_BURST)) / this.data.actions.ASTRAL_DRAW.cooldown)
 		const lordPlaysFromDraw = Math.ceil(Math.max(0, (this.parser.pull.duration - oGCD_ALLOWANCE - INTENTIONAL_DRIFT_FOR_BURST)) / (this.data.actions.ASTRAL_DRAW.cooldown * 2)) //*2 done since they share the same cooldown and same button
-		const ladyPlaysFromDraw = Math.ceil(Math.max(0, (this.parser.pull.duration - oGCD_ALLOWANCE - INTENTIONAL_DRIFT_FOR_BURST)) / (this.data.actions.UMBRAL_DRAW.cooldown * 2))
 
 		// TODO: Include downtime calculation for each fight??
 
 		const theoreticalMaxPlays = playsFromDraw + (this.prepullPrepped ? 1 : 0)
 		const lordTheoreticalMaxPlays = lordPlaysFromDraw + (this.prepullPrepped ? 1 : 0)
-		const ladyTtheoreticalMaxPlays = ladyPlaysFromDraw + (this.prepullPrepped ? 1 : 0)
 		const totalCardsObtained = (this.prepullPrepped ? 1 : 0) + this.draws
 
 		/*
@@ -198,13 +196,10 @@ export default class Draw extends Analyser {
 				Play as many cards as possible
 			</Trans>,
 			description: <><Trans id="ast.draw.checklist.description">
-				Playing cards provides damage, healing, and mitigation for the party. Casting <DataLink action="ASTRAL_DRAW" /> and <DataLink action="UMBRAL_DRAW" /> will help with mana management.
-				<br/> Note: only damage related cards are included in the checklist percentage. The remaining cards are displayed here for information purposes and should be utilized to the Astrologian's discretion.
+				These cards provide additional damage either directly (<DataLink action="LORD_OF_CROWNS" />) or for the party (<DataLink action="THE_BALANCE" /> / <DataLink action="THE_SPEAR" />).
+				<br/>Casting <DataLink action="ASTRAL_DRAW" /> and <DataLink action="UMBRAL_DRAW" /> will help with mana management.
 			</Trans>
 			<li><Trans id="ast.draw.checklist.description.total">Total cards obtained:</Trans>&nbsp;{totalCardsObtained}/{theoreticalMaxPlays}</li>
-			<li><Trans id="ast.draw.checklist.description.play_II"><DataLink action="PLAY_II" /> (<DataLink action="THE_BOLE" /> / <DataLink action="THE_ARROW" />) played:</Trans>&nbsp;{this.playIIs}/{theoreticalMaxPlays}</li>
-			<li><Trans id="ast.draw.checklist.description.play_III"><DataLink action="PLAY_III" /> (<DataLink action="THE_EWER" /> / <DataLink action="THE_SPIRE" />) played:</Trans>&nbsp;{this.playIIIs}/{theoreticalMaxPlays}</li>
-			<li><Trans id="ast.draw.checklist.description.lady_of_crowns"><DataLink action="LADY_OF_CROWNS" /> played:</Trans>&nbsp;{this.playLady}/{ladyTtheoreticalMaxPlays}</li>
 			</>,
 			tiers: {[warnTarget]: TARGET.WARN, [failTarget]: TARGET.FAIL, [100]: TARGET.SUCCESS},
 			requirements: [
@@ -233,7 +228,7 @@ export default class Draw extends Analyser {
 			this.suggestions.add(new Suggestion({
 				icon: this.data.actions.ASTRAL_DRAW.icon,
 				content: <Trans id="ast.draw.suggestions.draw-no-usage.content">
-						No uses of <DataLink action="ASTRAL_DRAW" /> at all.
+						No uses of <DataLink action="ASTRAL_DRAW" /> or <DataLink action="UMBRAL_DRAW" /> at all.
 				</Trans>,
 				why: <Trans id="ast.draw.suggestions.draw-no-usage.why">
 					No draws used.

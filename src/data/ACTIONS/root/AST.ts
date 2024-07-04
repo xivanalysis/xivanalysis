@@ -111,7 +111,7 @@ export const AST = ensureActions({
 		name: 'Play II',
 		icon: iconUrl(3117),
 		cooldown: 1000,
-		cooldownGroup: 2,
+		cooldownGroup: 100, //not true cooldown group. synthed to be able to split in action timeline
 	},
 
 	PLAY_III: {
@@ -119,7 +119,7 @@ export const AST = ensureActions({
 		name: 'Play III',
 		icon: iconUrl(3118),
 		cooldown: 1000,
-		cooldownGroup: 2,
+		cooldownGroup: 101, //not true cooldown group. synthed to be able to split in action timeline
 	},
 
 	ASPECTED_BENEFIC: {
@@ -409,30 +409,13 @@ export const AST = ensureActions({
 	// Arcana cast
 	// -----
 
+	//PLAY_I
 	THE_BALANCE: {
 		id: 37023,
 		name: 'The Balance',
 		icon: iconUrl(3110),
 		cooldown: 1000,
 		statusesApplied: ['THE_BALANCE'],
-		cooldownGroup: 2,
-	},
-
-	THE_BOLE: {
-		id: 37027,
-		name: 'The Bole',
-		icon: iconUrl(3111),
-		cooldown: 1000,
-		statusesApplied: ['THE_BOLE'],
-		cooldownGroup: 2,
-	},
-
-	THE_ARROW: {
-		id: 37024,
-		name: 'The Arrow',
-		icon: iconUrl(3112),
-		cooldown: 1000,
-		statusesApplied: ['THE_ARROW'],
 		cooldownGroup: 2,
 	},
 
@@ -445,13 +428,33 @@ export const AST = ensureActions({
 		cooldownGroup: 2,
 	},
 
+	//PLAY_II
+	THE_ARROW: {
+		id: 37024,
+		name: 'The Arrow',
+		icon: iconUrl(3112),
+		cooldown: 1000,
+		statusesApplied: ['THE_ARROW'],
+		cooldownGroup: 100, //not true cooldown group. synthed to be able to split in action timeline
+	},
+
+	THE_BOLE: {
+		id: 37027,
+		name: 'The Bole',
+		icon: iconUrl(3111),
+		cooldown: 1000,
+		statusesApplied: ['THE_BOLE'],
+		cooldownGroup: 100, //not true cooldown group. synthed to be able to split in action timeline
+	},
+
+	//PLAY_III
 	THE_EWER: {
 		id: 37028,
 		name: 'The Ewer',
 		icon: iconUrl(3114),
 		cooldown: 1000,
 		statusesApplied: ['THE_EWER'],
-		cooldownGroup: 2,
+		cooldownGroup: 101, //not true cooldown group. synthed to be able to split in action timeline
 	},
 
 	THE_SPIRE: {
@@ -460,9 +463,10 @@ export const AST = ensureActions({
 		icon: iconUrl(3115),
 		cooldown: 1000,
 		statusesApplied: ['THE_SPIRE'],
-		cooldownGroup: 2,
+		cooldownGroup: 101, //not true cooldown group. synthed to be able to split in action timeline
 	},
 
+	//minor arcana
 	LADY_OF_CROWNS: {
 		id: 7445,
 		name: 'Lady Of Crowns',

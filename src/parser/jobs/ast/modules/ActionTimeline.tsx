@@ -5,14 +5,18 @@ import React from 'react'
 export class ActionTimeline extends CoreActionTimeline {
 	static override rows: ActionRow[] = [
 		...CoreActionTimeline.rows,
-		// Arcanum
-		{
-			label: <Trans id="ast.actiontimeline.play">Play / Draw</Trans>,
-			content: ['PLAY_I', 'PLAY_II', 'PLAY_III', 'ASTRAL_DRAW', 'UMBRAL_DRAW', 'MINOR_ARCANA'],
-		},
 		//other AST or party buffs
 		['DIVINATION', 'ORACLE'],
 		'LIGHTSPEED',
+		// Arcanum
+		{
+			label: <Trans id="ast.actiontimeline.draw">Draw</Trans>,
+			content: ['ASTRAL_DRAW', 'UMBRAL_DRAW'],
+		},
+		'PLAY_I',
+		'PLAY_II',
+		'PLAY_III',
+		'MINOR_ARCANA',
 		// oGCD ST heals
 		'ESSENTIAL_DIGNITY',
 		'SYNASTRY',
