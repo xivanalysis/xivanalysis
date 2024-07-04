@@ -287,7 +287,7 @@ export const VPR = ensureActions({
 	},
 
 	JAGGED_MAW: {
-		id: 34614,
+		id: 34618,
 		name: 'Jagged Maw',
 		icon: iconUrl(3713),
 		onGcd: true,
