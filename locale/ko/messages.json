@@ -779,6 +779,7 @@
   "nin.taWindow.suggestions.trackedactions.content": "매 <0/> 구간에는 피해량을 최대화할 수 있도록 <1/>, <2/> 2회, 그리고 <3/> 기술을 사용해야 합니다.",
   "nin.taWindow.title": "속임수 공격 구간",
   "pct.about.description": "",
+  "pct.swiftcast.missed.suggestion.content": "",
   "pld.about.description": "<0>백마도사와 흑마도사의 피가 반씩 섞였음에도 굳이 방패를 던지며 검으로 마법을 쓰는 험난한 길을 택하셨군요.</0><1>이 분석기는 그런 당신이 적에게 어떠한 <2/>도 보여주지 않으면서 파티의 진정한 <3/>으로 거듭날 수 있도록 도와드릴 것입니다.</1>",
   "pld.divine-might.checklist.description": "<0/> 및 <1/> 기술을 사용하면 <2/> to <3/> 또는 <4/> 기술을 강화할 수 있는 <2/> 스택이 한 개 생성됩니다. 이 스택이 있으면 피해량이 증가하며 <5/> 및 <6/> 기술의 시전 시간이 없어집니다.",
   "pld.divine-might.checklist.name": "제왕의 권위로 생성되는 충의의 검 스택을 사용",

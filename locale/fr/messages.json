@@ -779,6 +779,7 @@
   "nin.taWindow.suggestions.trackedactions.content": "Chaque fenêtre de <0/> devrait contenir <1/>, 2 <2/> et <3/> dans le but de maximiser les dégâts.",
   "nin.taWindow.title": "Fenêtre d'attaque sournoise",
   "pct.about.description": "",
+  "pct.swiftcast.missed.suggestion.content": "",
   "pld.about.description": "<0>En tant qu'enfant illégitime d'un Mage blanc et d'un Mage noir, vous avez choisi le chemin sanglant du bouclier, vous êtes le Mage qui balance son épée et qui essaie aussi d'aider tout le monde.</0><1>Cet analyseur tente de trouver ce qu'il faut pour que vous soyez un tank redoutable, qui ne montrera aucun <2/> à ses ennemis, tout en étant le vrai <3/> de l'équipe</1>",
   "pld.divine-might.checklist.description": "<0/> et <1/> génèrent 1 pile de <2/> pour renforcer <3/> ou <4/>. Cela augmente les dégâts et supprime le temps d'incantation de <5/> et <6/>.",
   "pld.divine-might.checklist.name": "Utiliser la grâce divine générée par l'Autorité royale",

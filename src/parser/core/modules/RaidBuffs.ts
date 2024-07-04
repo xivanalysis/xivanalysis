@@ -44,6 +44,7 @@ const TRACKED_STATUSES: StatusConfig[] = [
 	{key: 'SEARING_LIGHT'},
 	{key: 'RADIANT_FINALE'},
 	{key: 'MUG_VULNERABILITY_UP', name: 'Mug'},
+	{key: 'STARRY_MUSE'},
 ]
 
 export class RaidBuffs extends Analyser {
