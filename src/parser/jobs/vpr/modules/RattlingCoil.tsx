@@ -96,7 +96,7 @@ export class RattlingCoil extends CoreGauge {
 		}))
 
 		this.checklist.add(new Rule({
-			name: <Trans id="vpr.rattlingcoil.usage.title">Cartridge usage</Trans>,
+			name: <Trans id="vpr.rattlingcoil.usage.title">Rattling Coil Usage</Trans>,
 			description: <Trans id="vpr.rattlingcoilwaste.content">
 				Wasted rattling coil generation, ending the fight with rattling coils remaining, or dying with rattling coils coiled is a
 				direct potency loss. Use <ActionLink action="UNCOILED_FURY"/> to avoid wasting rattling coils.
