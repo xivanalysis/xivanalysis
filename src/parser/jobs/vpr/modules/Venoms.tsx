@@ -78,7 +78,7 @@ export class Venoms extends CoreProcs {
 		</Trans>
 
 	override addJobSpecificSuggestions() {
-		//TODO: Better Implemention, I'm not thrilled with this, but it works with some magic. if 2 0 value buffs are in a row, it will skip the following one.
+		//TODO: Better Implemention, I'm not thrilled with this, but it works with some magic. if 2 buffs that have 0 status applications during the fight are in a row, it will skip the following one.
 		// I fixed this by staggering the buffs in the order above, but I'd prefer to maintain a sense of uniformity in the order of the buffs.
 		const ProcsToJudge = this.trackedProcs
 		ProcsToJudge.forEach(proc => {
