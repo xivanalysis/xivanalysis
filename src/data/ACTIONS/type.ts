@@ -19,10 +19,15 @@ export enum BonusModifier {
 // DRG lance mastery is a special case hidden field that
 // augments the potency of the 5th hit.
 // Similarly, BLU's Goblin Punch deals extra potency when
-// cast under Mighty Guard (one of the tank stances)
+// cast under Mighty Guard (one of the tank stances).
+// MNK GCDs deal extra potency when augmented with
+// their respective Fury gauge.
 export enum PotencySpecialCase {
 	DRG_LANCE_MASTERY,
 	BLU_MIGHTY_GOBLIN_PUNCH,
+	MNK_OPO_OPOS_FURY,
+	MNK_RAPTORS_FURY,
+	MNK_COEURLS_FURY,
 }
 
 // When calculating the bonusPercent that the game uses to display
