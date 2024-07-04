@@ -2,8 +2,6 @@ import {Interrupts} from 'parser/core/modules/Interrupts'
 import {LucidDreaming} from 'parser/core/modules/LucidDreaming'
 import {ActionTimeline} from './ActionTimeline'
 import {ArcanaSuggestions, ArcanaTracking} from './ArcanaTracking'
-import {ArcanaUndrawUsage} from './ArcanaUndrawUsage'
-import {CastTime} from './CastTime'
 import {Combust} from './Combust'
 import CrownPlay from './CrownPlay'
 import {Defensives} from './Defensives'
@@ -23,8 +21,6 @@ export default [
 	ActionTimeline,
 	ArcanaSuggestions,
 	ArcanaTracking,
-	ArcanaUndrawUsage,
-	CastTime,
 	Combust,
 	Defensives,
 	Divination,

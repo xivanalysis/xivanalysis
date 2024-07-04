@@ -183,6 +183,7 @@ const actorTypeMap = new Map<ActorType, JobKey>([
 	[ActorType.MONK, 'MONK'],
 	[ActorType.DRAGOON, 'DRAGOON'],
 	[ActorType.NINJA, 'NINJA'],
+	[ActorType.VIPER, 'VIPER'],
 	[ActorType.SAMURAI, 'SAMURAI'],
 	[ActorType.REAPER, 'REAPER'],
 	[ActorType.BARD, 'BARD'],
@@ -191,6 +192,7 @@ const actorTypeMap = new Map<ActorType, JobKey>([
 	[ActorType.BLACK_MAGE, 'BLACK_MAGE'],
 	[ActorType.SUMMONER, 'SUMMONER'],
 	[ActorType.RED_MAGE, 'RED_MAGE'],
+	[ActorType.PICTOMANCER, 'PICTOMANCER'],
 	[ActorType.BLUE_MAGE, 'BLUE_MAGE'],
 ])
 const convertActorType = (actorType: ActorType) =>

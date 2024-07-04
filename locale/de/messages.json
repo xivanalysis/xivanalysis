@@ -1,5 +1,5 @@
 {
-  "ast.about.description-1": "Die Arkana, mit denen der Astrologe den DPS der Gruppe erhöht, <0/> die meisten Leute zum Astrologen. Mit diesem Analysator lässt du die Sterne für dich arbeiten - und nicht andersherum",
+  "ast.about.description-1": "",
   "ast.about.description-2": "\nAls Heiler ist es deine Aufgabe, deinen MP-Haushalt und Cooldowns unter einen Hut zu bringen, um deine Gruppe am Leben zu halten. Sprichst du dich mit deinem Co-Heiler ab und planst deine Heilungen gut, wirst du - durch die zusätzlichen GCDs - ganz automatisch mehr Schaden verursachen.\n",
   "ast.about.description.warning.development": "Damit dieses Tool allumfassend wird, gibt es noch viel zu tun! Wenn du einen Vorschlag für weitere Funktionen hast, schau gern in unserem Discord-Channel vorbei!",
   "ast.arcana-suggestions.messages.explanation": "Dieser Bereich verfolgt jede Karten Aktion und den Status der Verteilung nach jeder Aktion, die über den Kampf getätigt wurden.",
@@ -13,8 +13,6 @@
   "ast.arcana-suggestions.title": "Arkana Protokoll",
   "ast.arcana-tracking.messages.death": "Tod",
   "ast.arcana-tracking.title": "Arkana Verfolgung",
-  "ast.arcana-undraw-usage.suggestions.content": "Da Ziehen seinen nächsten Cooldown beginnt, sobald es ausgeführt wird, gibt es keinen Grund mehr zu <0/> anstatt es auszuspielen oder mit <1/> zu überschreiben.",
-  "ast.arcana-undraw-usage.suggestions.why": "",
   "ast.arcana.astrosigns.celestial": "",
   "ast.arcana.astrosigns.label": "",
   "ast.arcana.astrosigns.lunar": "",
@@ -782,6 +780,7 @@
   "nin.taWindow.suggestions.trackedactions.content": "",
   "nin.taWindow.title": "Trickattacke-Fenster",
   "pct.about.description": "",
+  "pct.swiftcast.missed.suggestion.content": "",
   "pld.about.description": "<0>Als das uneheliche Kind von Weiß- und Schwarzmagier hast du den blutigen Pfad des schildwerfenden, schwertschwingenden Magiers ausgesucht, das außerdem versucht jedem zu helfen.</0><1>Dieser Analysator versucht, die richtigen Dinge zu finden um dich zum furchteinflößenden Verteidiger zu machen, der keine <2/> gegenüber Feinden zeigt und gleichzeitig der wahre <3/> deiner Gruppe ist.</1>",
   "pld.divine-might.checklist.description": "",
   "pld.divine-might.checklist.name": "",
