@@ -8,7 +8,7 @@ import {dependency} from 'parser/core/Injectable'
 import {EvaluatedAction, ExpectedActionsEvaluator, ExpectedGcdCountEvaluator, RaidBuffWindow} from 'parser/core/modules/ActionWindow'
 import {History, HistoryEntry} from 'parser/core/modules/ActionWindow/History'
 import {Actor} from 'parser/core/modules/Actors'
-import Checklist, {Requirement, Rule} from 'parser/core/modules/Checklist'
+import Checklist from 'parser/core/modules/Checklist'
 import {GlobalCooldown} from 'parser/core/modules/GlobalCooldown'
 import React from 'react'
 import {Icon, Message} from 'semantic-ui-react'
@@ -269,34 +269,6 @@ export class Divination extends RaidBuffWindow {
 	}
 
 	override output() {
-		this.checklist.add(new Rule({
-			displayOrder: DISPLAY_ORDER.DIVINATION_CHECKLIST,
-			name: <Trans id="ast.divination.checklist.name">Use <DataLink action="DIVINATION" /> and <DataLink action="ORACLE" /></Trans>,
-			description: <><Trans id="ast.divination.checklist.description">
-				<DataLink action="DIVINATION" /> provides Astrologian with a strong amount of raid DPS when stacked together with arcanum.
-				<DataLink action="ORACLE" /> is a very powerful oGCD that should be used within the <DataLink action="DIVINATION" showIcon={false} /> window.
-				Try to time <DataLink action="DIVINATION" showIcon={false} /> to match raid buffs and high output phases of other party members - it's more important to use it on time rather than hold it.
-			</Trans>
-			</>,
-			target: 100,
-			requirements: [
-				new Requirement({
-					name: <Trans id="ast.divination.checklist.requirement.divination">
-						<DataLink action="DIVINATION" /> uses
-					</Trans>,
-					value: 1,
-					target: 1,
-				}),
-				new Requirement({
-					name: <Trans id="ast.divination.checklist.requirement.oracle">
-						<DataLink action="ORACLE" /> uses
-					</Trans>,
-					value: 1,
-					target: 1,
-				}),
-			],
-		}))
-
 		if (this.history.entries.length === 0) {
 			return <>
 				{this.prependMessages}
