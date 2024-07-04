@@ -420,7 +420,7 @@ export const VPR = ensureActions({
 		icon: iconUrl(3722),
 		onGcd: true,
 		breaksCombo: false,
-		gcdRecast: 2200,
+		gcdRecast: 2000,
 		speedAttribute: Attribute.SKILL_SPEED,
 	},
 
@@ -430,7 +430,7 @@ export const VPR = ensureActions({
 		icon: iconUrl(3723),
 		onGcd: true,
 		breaksCombo: false,
-		gcdRecast: 2200,
+		gcdRecast: 2000,
 		speedAttribute: Attribute.SKILL_SPEED,
 	},
 
@@ -440,7 +440,7 @@ export const VPR = ensureActions({
 		icon: iconUrl(3724),
 		onGcd: true,
 		breaksCombo: false,
-		gcdRecast: 2200,
+		gcdRecast: 2000,
 		speedAttribute: Attribute.SKILL_SPEED,
 	},
 
@@ -450,7 +450,7 @@ export const VPR = ensureActions({
 		icon: iconUrl(3725),
 		onGcd: true,
 		breaksCombo: false,
-		gcdRecast: 2200,
+		gcdRecast: 2000,
 		speedAttribute: Attribute.SKILL_SPEED,
 	},
 
@@ -459,7 +459,7 @@ export const VPR = ensureActions({
 		name: 'Ouroboros',
 		icon: iconUrl(3726),
 		onGcd: true,
-		gcdRecast: 2200,
+		gcdRecast: 3000,
 		speedAttribute: Attribute.SKILL_SPEED,
 		breaksCombo: false,
 	},
