@@ -147,7 +147,7 @@ export class KunaisBaneWindow extends BuffWindow {
 
 		if (action.action.id === this.data.actions.TENRI_JINDO.id) {
 			// Tenri Jindo should only be expected when the window contains TCJ
-			if (window.data.find(value => value.action.id === this.data.actions.TEN_CHI_JIN.id) !== undefined) {
+			if (window.data.find(value => value.action.id === this.data.actions.TEN_CHI_JIN.id) === undefined) {
 				return -1
 			}
 		}
