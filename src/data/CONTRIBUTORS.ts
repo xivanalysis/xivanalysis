@@ -26,6 +26,14 @@ const CONTRIBUTORS = ensureRecord<Contributor>()({
 		],
 	},
 
+	FALINDRITH: {
+		name: 'falindrith',
+		avatar: require('./avatar/falindrith.png'),
+		jobs: [
+			JOBS.DRAGOON,
+		],
+	},
+
 	RYAN: {
 		name: 'Ryan',
 		avatar: require('./avatar/Ryan.png'),

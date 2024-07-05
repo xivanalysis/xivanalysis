@@ -4,17 +4,18 @@ export class ActionTimeline extends CoreActionTimeline {
 	static override rows: ActionRow[] = [
 		...CoreActionTimeline.rows,
 		'BATTLE_LITANY',
-		'DRAGON_SIGHT',
 		'LANCE_CHARGE',
+		'LIFE_SURGE',
 		'JUMP',
 		'HIGH_JUMP',
 		'MIRAGE_DIVE',
+		'DRAGONFIRE_DIVE',
+		'RISE_OF_THE_DRAGON',
 		'GEIRSKOGUL',
 		'NASTROND',
 		'STARDIVER',
-		'SPINESHATTER_DIVE',
-		'DRAGONFIRE_DIVE',
-		'LIFE_SURGE',
+		'STARCROSS',
 		'ELUSIVE_JUMP',
+		'WINGED_GLIDE',
 	]
 }

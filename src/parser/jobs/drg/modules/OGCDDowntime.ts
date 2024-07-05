@@ -1,16 +1,18 @@
 import {CooldownDowntime} from 'parser/core/modules/CooldownDowntime'
 
+// TODO: check when release happens and openers get crafted a bit more, offsets might be a bit tight in this revision
+
 // +2s start of fight buffer added for all first use
 // at high skill speeds, Battle Litany is first, so the order is a bit fluid,
-// however all are used before the third GCD
+// however all are used before the fourth GCD
 const BUFF_FIRST_USE_OFFSET = 7000
 
 // ordering for jumps and GSK can shift, though LS is constant
-// Currenly, last jump (DFD usually) is used before 9th GCD
-const JUMP_FIRST_USE_OFFSET = 24500
+// Currenly, last jump (DFD usually) is used before 6th GCD
+const JUMP_FIRST_USE_OFFSET = 14500
 
-// always before Full Thrust, the 8th GCD
-const LIFE_SURGE_FIRST_USE_OFFSET = 22000
+// always before Drakesbane, the 5th GCD
+const LIFE_SURGE_FIRST_USE_OFFSET = 12000
 
 export default class OGCDDowntime extends CooldownDowntime {
 	override defaultFirstUseOffset = BUFF_FIRST_USE_OFFSET
@@ -24,10 +26,6 @@ export default class OGCDDowntime extends CooldownDowntime {
 			firstUseOffset: JUMP_FIRST_USE_OFFSET,
 		},
 		{
-			cooldowns: [this.data.actions.SPINESHATTER_DIVE],
-			firstUseOffset: JUMP_FIRST_USE_OFFSET,
-		},
-		{
 			cooldowns: [this.data.actions.DRAGONFIRE_DIVE],
 			firstUseOffset: JUMP_FIRST_USE_OFFSET,
 		},
@@ -36,7 +34,6 @@ export default class OGCDDowntime extends CooldownDowntime {
 			firstUseOffset: LIFE_SURGE_FIRST_USE_OFFSET,
 		},
 		{cooldowns: [this.data.actions.LANCE_CHARGE]},
-		{cooldowns: [this.data.actions.DRAGON_SIGHT]},
 		{cooldowns: [this.data.actions.BATTLE_LITANY]},
 	]
 }
