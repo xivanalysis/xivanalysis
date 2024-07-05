@@ -13,7 +13,6 @@ import React from 'react'
 import {Icon, Message} from 'semantic-ui-react'
 import {ARCANA_STATUSES} from './ArcanaGroups'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
-import {AstrodyneEvaluator} from './evaluators/AstrodyneEvaluator'
 import {ExpectedCardsEvaluator} from './evaluators/ExpectedCardsEvaluator'
 import {LightspeedEvaluator} from './evaluators/LightspeedEvaluator'
 
@@ -60,7 +59,7 @@ export class Divination extends RaidBuffWindow {
 		<Trans id="ast.divinationwindow.description">
 			<DataLink action="DIVINATION" /> provides Astrologian with a strong amount of raid DPS when stacked together with arcanum.
 			Try to time the usage to match raid buffs and high output phases of other party members - it's more important to use it on time rather than hold it. <br />
-			Additionally, an AST wants to aim to <DataLink action="PLAY" /> as many cards as possible, use <DataLink action="ASTRODYNE" />, and use <DataLink action="LORD_OF_CROWNS" /> if available* during burst windows. With many oGCD actions necessary in such a short window, <DataLink action="LIGHTSPEED" /> is required to fit in every action within the <DataLink action="DIVINATION" showIcon={false} /> window.
+			Additionally, an AST wants to aim to <DataLink action="PLAY_I" /> as many cards as possible, use , and use <DataLink action="LORD_OF_CROWNS" /> if available* during burst windows. With many oGCD actions necessary in such a short window, <DataLink action="LIGHTSPEED" /> is required to fit in every action within the <DataLink action="DIVINATION" showIcon={false} /> window.
 		</Trans>
 	</Message>
 
@@ -152,7 +151,6 @@ export class Divination extends RaidBuffWindow {
 			suggestionIcon: this.data.actions.LIGHTSPEED.icon,
 		}))
 
-		this.addEvaluator(new AstrodyneEvaluator(this.metadataHistory))
 	}
 
 	private adjustExpectedLordsCount(window: HistoryEntry<EvaluatedAction[]>) {
@@ -200,20 +198,6 @@ export class Divination extends RaidBuffWindow {
 				.status(this.data.statuses.LIGHTSPEED.id),
 			this.onLightspeed,
 		)
-		this.astrodyneApplyHook = this.addEventHook(
-			filter<Event>()
-				.source(this.parser.actor.id)
-				.type('statusApply')
-				.status(this.data.statuses.HARMONY_OF_SPIRIT.id),
-			this.onAstrodyne,
-		)
-		this.astrodyneRemoveHook = this.addEventHook(
-			filter<Event>()
-				.source(this.parser.actor.id)
-				.type('statusRemove')
-				.status(this.data.statuses.HARMONY_OF_SPIRIT.id),
-			this.onAstrodyne,
-		)
 	}
 
 	override onWindowEnd(timestamp: number) {
@@ -246,12 +230,6 @@ export class Divination extends RaidBuffWindow {
 		const currentWindow = this.metadataHistory.getCurrent()?.data
 		if (currentWindow == null) { return }
 		currentWindow.lightspeed = true
-	}
-
-	private onAstrodyne() {
-		const currentWindow = this.metadataHistory.getCurrent()?.data
-		if (currentWindow == null) { return }
-		currentWindow.astrodyne = true
 	}
 
 	/*

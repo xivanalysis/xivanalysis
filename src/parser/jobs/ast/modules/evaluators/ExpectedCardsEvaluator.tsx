@@ -27,7 +27,7 @@ export class ExpectedCardsEvaluator implements WindowEvaluator {
 		return {
 			format: 'table',
 			header: {
-				header: <DataLink action="PLAY" showName={false} />,
+				header: <DataLink action="PLAY_I" showName={false} />,
 				accessor: 'cardsPlayed',
 			},
 			rows: windows.map(window => {

@@ -83,7 +83,7 @@ export default class ArcanaSuggestions extends Analyser {
 			</p>
 			<p>
 				<Trans id="ast.arcana-suggestions.messages.footnote">
-				* No pre-pull actions are being represented aside from <ActionLink action="PLAY" />, and this is only an approximation based on the buff duration.
+				* No pre-pull actions are being represented aside from <ActionLink action="PLAY_I" />, and this is only an approximation based on the buff duration.
 				</Trans>
 			</p>
 			<Table collapsing unstackable className={styles.cardActionTable}>

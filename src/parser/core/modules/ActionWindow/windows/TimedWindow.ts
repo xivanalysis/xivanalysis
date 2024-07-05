@@ -2,6 +2,8 @@ import {Event, Events} from 'event'
 import {ensureArray} from 'utilities'
 import {filter, oneOf} from '../../../filter'
 import {ActionSpecifier} from '../../Cooldowns'
+import {EvaluatedAction} from '../EvaluatedAction'
+import {HistoryEntry} from '../History'
 import {ActionWindow} from './ActionWindow'
 
 /**
@@ -36,5 +38,17 @@ export abstract class TimedWindow extends ActionWindow {
 		this.onWindowStart(event.timestamp)
 		this.addTimestampHook(event.timestamp + this.duration,
 			(endArgs) => this.onWindowEnd(endArgs.timestamp))
+	}
+
+	/**
+	 * Determines if a window ended early due to the end of the pull.
+	 * @param window The window to check
+	 * @returns True if the window is shorter than the expected duration of the buff because of the end
+	 * of the pull; false otherwise.
+	 */
+	protected isRushedEndOfPullWindow(window: HistoryEntry<EvaluatedAction[]>) {
+		const expectedDuration = this.duration ?? 0
+		const fightTimeRemaining = (this.parser.pull.timestamp + this.parser.pull.duration) - window.start
+		return expectedDuration >= fightTimeRemaining
 	}
 }
