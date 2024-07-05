@@ -1,31 +1,31 @@
 import {ActionTimeline} from './ActionTimeline'
 import {Combos} from './Combos'
 import {Defensives} from './Defensives'
-import {Huton} from './Huton'
-import {HutonCastTime} from './HutonCastTime'
+import {IncreaseAttackSpeed} from './IncreaseAttackSpeed'
 import {Kassatsu} from './Kassatsu'
+import {Kazematoi} from './Kazematoi'
+import {KunaisBaneUsage} from './KunaisBaneUsage'
+import {KunaisBaneWindow} from './KunaisBaneWindow'
 import {Ninjutsu} from './Ninjutsu'
 import {Ninki} from './Ninki'
 import {OGCDDowntime} from './OGCDDowntime'
 import {Positionals} from './Positionals'
 import {Raiju} from './Raiju'
-import {TrickAttackUsage} from './TrickAttackUsage'
-import {TrickAttackWindow} from './TrickAttackWindow'
 import {Weaving} from './Weaving'
 
 export default [
 	ActionTimeline,
 	Combos,
 	Defensives,
-	Huton,
-	HutonCastTime,
+	IncreaseAttackSpeed,
 	Kassatsu,
+	Kazematoi,
+	KunaisBaneUsage,
+	KunaisBaneWindow,
 	Ninjutsu,
 	Ninki,
 	Positionals,
 	OGCDDowntime,
 	Raiju,
-	TrickAttackUsage,
-	TrickAttackWindow,
 	Weaving,
 ]
