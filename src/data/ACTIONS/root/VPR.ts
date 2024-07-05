@@ -1,6 +1,6 @@
 import {iconUrl} from 'data/icon'
 import {Attribute} from 'event'
-import {ensureActions, BonusModifier, PotencySpecialCase} from '../type'
+import {ensureActions, BonusModifier} from '../type'
 
 //Viper Actions
 
@@ -52,21 +52,43 @@ export const VPR = ensureActions({
 			end: true,
 		},
 		statusesApplied: ['FLANKSBANE_VENOM'],
-		potencies: [{
-			value: 300, //You can not do this outside of a combo due to the transforming nature of VPR's skills.
-			bonusModifiers: [],
-		}, {
-			value: 360,
-			bonusModifiers: [BonusModifier.POSITIONAL],
-		}, {
-			value: 400,
-			bonusModifiers: [],
-			baseModifiers: [PotencySpecialCase.VPR_COMBO_FINSHER_VENOMS],
-		}, {
-			value: 460,
-			bonusModifiers: [BonusModifier.POSITIONAL],
-			baseModifiers: [PotencySpecialCase.VPR_COMBO_FINSHER_VENOMS],
-		}],
+		potencies: [
+			// untraited Dread Fangs is the "base GCD" here
+			{
+				value: 120,
+				bonusModifiers: [],
+			},
+			// with venom, the base gets +100p
+			{
+				value: 220,
+				bonusModifiers: [],
+				baseModifiers: ['HINDSTUNG_VENOM'],
+			},
+			// the base potency of Hindsting Strike itself is treated as a "combo"
+			{
+				value: 300,
+				bonusModifiers: [BonusModifier.COMBO],
+				baseModifiers: [],
+			},
+			// +60p with positional
+			{
+				value: 360,
+				bonusModifiers: [BonusModifier.COMBO, BonusModifier.POSITIONAL],
+				baseModifiers: [],
+			},
+			// +100p with venom
+			{
+				value: 400,
+				bonusModifiers: [BonusModifier.COMBO],
+				baseModifiers: ['HINDSTUNG_VENOM'],
+			},
+			// +160p with venom + positional
+			{
+				value: 460,
+				bonusModifiers: [BonusModifier.COMBO, BonusModifier.POSITIONAL],
+				baseModifiers: ['HINDSTUNG_VENOM'],
+			},
+		],
 	},
 
 	FLANKSTING_STRIKE: {
@@ -83,21 +105,43 @@ export const VPR = ensureActions({
 			end: true,
 		},
 		statusesApplied: ['HINDSTUNG_VENOM'],
-		potencies: [{
-			value: 300, //You can not do this outside of a combo due to the transforming nature of VPR's skills.
-			bonusModifiers: [],
-		}, {
-			value: 360,
-			bonusModifiers: [BonusModifier.POSITIONAL],
-		},	{
-			value: 400,
-			bonusModifiers: [],
-			baseModifiers: [PotencySpecialCase.VPR_COMBO_FINSHER_VENOMS],
-		},	{
-			value: 460,
-			bonusModifiers: [BonusModifier.POSITIONAL],
-			baseModifiers: [PotencySpecialCase.VPR_COMBO_FINSHER_VENOMS],
-		}],
+		potencies: [
+			// untraited Dread Fangs is the "base GCD" here
+			{
+				value: 120,
+				bonusModifiers: [],
+			},
+			// with venom, the base gets +100p
+			{
+				value: 220,
+				bonusModifiers: [],
+				baseModifiers: ['FLANKSTUNG_VENOM'],
+			},
+			// the base potency of Hindsting Strike itself is treated as a "combo"
+			{
+				value: 300,
+				bonusModifiers: [BonusModifier.COMBO],
+				baseModifiers: [],
+			},
+			// +60p with positional
+			{
+				value: 360,
+				bonusModifiers: [BonusModifier.COMBO, BonusModifier.POSITIONAL],
+				baseModifiers: [],
+			},
+			// +100p with venom
+			{
+				value: 400,
+				bonusModifiers: [BonusModifier.COMBO],
+				baseModifiers: ['FLANKSTUNG_VENOM'],
+			},
+			// +160p with venom + positional
+			{
+				value: 460,
+				bonusModifiers: [BonusModifier.COMBO, BonusModifier.POSITIONAL],
+				baseModifiers: ['FLANKSTUNG_VENOM'],
+			},
+		],
 	},
 
 	//Dread Fangs + Transformation Actions
@@ -142,21 +186,43 @@ export const VPR = ensureActions({
 			end: true,
 		},
 		statusesApplied: ['FLANKSTUNG_VENOM'],
-		potencies: [{
-			value: 300, //You can not do this outside of a combo due to the transforming nature of VPR's skills.
-			bonusModifiers: [],
-		}, {
-			value: 360,
-			bonusModifiers: [BonusModifier.POSITIONAL],
-		},	{
-			value: 400,
-			bonusModifiers: [],
-			baseModifiers: [PotencySpecialCase.VPR_COMBO_FINSHER_VENOMS],
-		},	{
-			value: 460,
-			bonusModifiers: [BonusModifier.POSITIONAL],
-			baseModifiers: [PotencySpecialCase.VPR_COMBO_FINSHER_VENOMS],
-		}],
+		potencies: [
+			// untraited Dread Fangs is the "base GCD" here
+			{
+				value: 120,
+				bonusModifiers: [],
+			},
+			// with venom, the base gets +100p
+			{
+				value: 220,
+				bonusModifiers: [],
+				baseModifiers: ['HINDSBANE_VENOM'],
+			},
+			// the base potency of Hindsting Strike itself is treated as a "combo"
+			{
+				value: 300,
+				bonusModifiers: [BonusModifier.COMBO],
+				baseModifiers: [],
+			},
+			// +60p with positional
+			{
+				value: 360,
+				bonusModifiers: [BonusModifier.COMBO, BonusModifier.POSITIONAL],
+				baseModifiers: [],
+			},
+			// +100p with venom
+			{
+				value: 400,
+				bonusModifiers: [BonusModifier.COMBO],
+				baseModifiers: ['HINDSBANE_VENOM'],
+			},
+			// +160p with venom + positional
+			{
+				value: 460,
+				bonusModifiers: [BonusModifier.COMBO, BonusModifier.POSITIONAL],
+				baseModifiers: ['HINDSBANE_VENOM'],
+			},
+		],
 	},
 
 	FLANKSBANE_FANG: {
@@ -173,21 +239,43 @@ export const VPR = ensureActions({
 			end: true,
 		},
 		statusesApplied: ['HINDSBANE_VENOM'],
-		potencies: [{
-			value: 300, //You can not do this outside of a combo due to the transforming nature of VPR's skills.
-			bonusModifiers: [],
-		}, {
-			value: 360,
-			bonusModifiers: [BonusModifier.POSITIONAL],
-		}, {
-			value: 400,
-			bonusModifiers: [],
-			baseModifiers: [PotencySpecialCase.VPR_COMBO_FINSHER_VENOMS],
-		},	{
-			value: 460,
-			bonusModifiers: [BonusModifier.POSITIONAL],
-			baseModifiers: [PotencySpecialCase.VPR_COMBO_FINSHER_VENOMS],
-		}],
+		potencies: [
+			// untraited Dread Fangs is the "base GCD" here
+			{
+				value: 120,
+				bonusModifiers: [],
+			},
+			// with venom, the base gets +100p
+			{
+				value: 220,
+				bonusModifiers: [],
+				baseModifiers: ['FLANKSBANE_VENOM'],
+			},
+			// the base potency of Hindsting Strike itself is treated as a "combo"
+			{
+				value: 300,
+				bonusModifiers: [BonusModifier.COMBO],
+				baseModifiers: [],
+			},
+			// +60p with positional
+			{
+				value: 360,
+				bonusModifiers: [BonusModifier.COMBO, BonusModifier.POSITIONAL],
+				baseModifiers: [],
+			},
+			// +100p with venom
+			{
+				value: 400,
+				bonusModifiers: [BonusModifier.COMBO],
+				baseModifiers: ['FLANKSBANE_VENOM'],
+			},
+			// +160p with venom + positional
+			{
+				value: 460,
+				bonusModifiers: [BonusModifier.COMBO, BonusModifier.POSITIONAL],
+				baseModifiers: ['FLANKSBANE_VENOM'],
+			},
+		],
 	},
 
 	WRITHING_SNAP: {

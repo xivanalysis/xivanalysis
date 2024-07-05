@@ -20,7 +20,6 @@ export enum BonusModifier {
 // cast under Mighty Guard (one of the tank stances)
 export enum PotencySpecialCase {
 	BLU_MIGHTY_GOBLIN_PUNCH,
-	VPR_COMBO_FINSHER_VENOMS,
 }
 
 // When calculating the bonusPercent that the game uses to display
