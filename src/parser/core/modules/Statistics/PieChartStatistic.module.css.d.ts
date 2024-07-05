@@ -5,6 +5,7 @@ declare namespace PieChartStatisticModuleCssNamespace {
     chartWrapper: string;
     legend: string;
     swatch: string;
+    themeText: string;
   }
 }
 

@@ -109,12 +109,14 @@
 	overflow: hidden;
 	white-space: nowrap;
 	text-overflow: ellipsis;
+	color: themeText;
 }
 
 .meta {
 	flex-shrink: 0;
 	padding-left: gutter;
 	opacity: .5;
+	color: themeText;
 }
 
 .progress {

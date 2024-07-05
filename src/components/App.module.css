@@ -101,6 +101,7 @@
 	/* This is nasty, but forces the flex to resize it smaller than it thinks it should */
 	width: 0;
 	transition: filter .2s ease-in-out;
+
 }
 
 .sidebar.open + .content {

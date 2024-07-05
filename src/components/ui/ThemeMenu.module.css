@@ -1,0 +1,18 @@
+.menuItem :global(.text) {
+	margin-right: 3em;
+}
+
+.crowdinLogo {
+	margin-right: .25em !important;
+	width: 24px !important;
+	vertical-align: middle !important;
+}
+
+.container {
+	display: flex;
+}
+
+.dropdown {
+	flex-basis: 0;
+	flex-grow: 1;
+}
