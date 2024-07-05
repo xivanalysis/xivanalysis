@@ -1,6 +1,5 @@
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
-import {DataLink} from 'components/ui/DbLink'
 import TransMarkdown from 'components/ui/TransMarkdown'
 // import CONTRIBUTORS, {ROLES} from 'data/CONTRIBUTORS'
 import {Meta} from 'parser/core/Meta'
@@ -16,7 +15,7 @@ export const ASTROLOGIAN = new Meta({
 	modules: () => import('./modules' /*webpackChunkName: "jobs-ast" */),
 
 	Description: () =><>
-		<p><Trans id="ast.about.description-1">The biggest <DataLink action="DRAW" /> to an Astrologian is their ability to buff their party DPS with Arcanum.
+		<p><Trans id="ast.about.description-1">The biggest draw to an Astrologian is their ability to buff their party DPS with Arcanum.
 		This analyzer will show you how the stars work for you and not the other way around</Trans></p>
 		<TransMarkdown source={description} key="ast.about.description-2"/>
 		<Message warning icon>

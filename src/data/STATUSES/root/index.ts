@@ -10,6 +10,7 @@ import {GNB} from './GNB'
 import {MCH} from './MCH'
 import {MNK} from './MNK'
 import {NIN} from './NIN'
+import {PCT} from './PCT'
 import {PLD} from './PLD'
 import {RDM} from './RDM'
 import {ROLE} from './ROLE'
@@ -52,6 +53,7 @@ export const root = {
 	...SMN,
 	...BLM,
 	...RDM,
+	...PCT,
 	...BLU,
 }
 

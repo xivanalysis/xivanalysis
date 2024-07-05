@@ -12,6 +12,7 @@ import {LIMIT_BREAK} from './LIMIT_BREAK'
 import {MCH} from './MCH'
 import {MNK} from './MNK'
 import {NIN} from './NIN'
+import {PCT} from './PCT'
 import {PLD} from './PLD'
 import {RDM} from './RDM'
 import {ROLE} from './ROLE'
@@ -58,6 +59,7 @@ export const root = {
 	...BLM,
 	...SMN,
 	...RDM,
+	...PCT,
 	...BLU,
 }
 

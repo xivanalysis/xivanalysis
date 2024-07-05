@@ -56,7 +56,7 @@ export default class Draw extends Analyser {
 
 		this.addEventHook(playerFilter
 			.type('action')
-			.action(this.data.actions.DRAW.id)
+			.action(this.data.actions.ASTRAL_DRAW.id)
 		, this.onDraw)
 		this.addEventHook(playerFilter
 			.type('action')
@@ -79,7 +79,7 @@ export default class Draw extends Analyser {
 			this.drawTotalDrift += Math.max(0, event.timestamp - this.cooldownEndTime)
 
 			// update the last use
-			this.cooldownEndTime = this.data.actions.DRAW.cooldown + Math.max(this.cooldownEndTime, event.timestamp)
+			this.cooldownEndTime = this.data.actions.ASTRAL_DRAW.cooldown + Math.max(this.cooldownEndTime, event.timestamp)
 			this.draws++
 		}
 	}
@@ -109,7 +109,7 @@ export default class Draw extends Analyser {
 		// in otherwords, fightDuration - 15s (for the buff @ CARD_DURATION)
 
 		// Begin Theoretical Max Plays calc		//assumes that draw is not on cooldown at the start of the fight
-		const playsFromDraw = Math.ceil(Math.max(0, (this.parser.pull.duration - oGCD_ALLOWANCE)) / this.data.actions.DRAW.cooldown) + (this.data.actions.DRAW.charges - 1)
+		const playsFromDraw = Math.ceil(Math.max(0, (this.parser.pull.duration - oGCD_ALLOWANCE)) / this.data.actions.ASTRAL_DRAW.cooldown) + (2 - 1)
 
 		// TODO: Include downtime calculation for each fight??
 		// TODO: Suggest how to redraw effectively (maybe in ArcanaSuggestions)
@@ -132,18 +132,18 @@ export default class Draw extends Analyser {
 				Play as many cards as possible
 			</Trans>,
 			description: <><Trans id="ast.draw.checklist.description">
-				Playing cards provides seals for <DataLink action="ASTRODYNE" /> and casting <DataLink action="DRAW" /> will help with mana management.
+				Playing cards provides seals for  and casting <DataLink action="ASTRAL_DRAW" /> will help with mana management.
 			</Trans>
 			<ul>
 				<li><Trans id="ast.draw.checklist.description.prepull">Prepared before pull:</Trans>&nbsp;{this.prepullPrepped ? 1 : 0}/1</li>
-				<li><Trans id="ast.draw.checklist.description.draws">Obtained from <DataLink action="DRAW" />:</Trans>&nbsp;{this.draws}/{playsFromDraw}</li>
+				<li><Trans id="ast.draw.checklist.description.draws">Obtained from <DataLink action="ASTRAL_DRAW" />:</Trans>&nbsp;{this.draws}/{playsFromDraw}</li>
 				<li><Trans id="ast.draw.checklist.description.total">Total cards obtained:</Trans>&nbsp;{totalCardsObtained}/{theoreticalMaxPlays}</li>
 			</ul></>,
 			tiers: {[warnTarget]: TARGET.WARN, [failTarget]: TARGET.FAIL, [100]: TARGET.SUCCESS},
 			requirements: [
 				new Requirement({
 					name: <Trans id="ast.draw.checklist.requirement.name">
-						<DataLink action="PLAY" /> uses
+						<DataLink action="PLAY_I" /> uses
 					</Trans>,
 					value: this.plays,
 					target: theoreticalMaxPlays,
@@ -151,15 +151,15 @@ export default class Draw extends Analyser {
 			],
 		}))
 
-		const drawsMissed = Math.floor(this.drawTotalDrift / this.data.actions.DRAW.cooldown)
+		const drawsMissed = Math.floor(this.drawTotalDrift / this.data.actions.ASTRAL_DRAW.cooldown)
 		if (this.draws === 0) {
 		/*
 		SUGGESTION: Didn't use draw at all
 		*/
 			this.suggestions.add(new Suggestion({
-				icon: this.data.actions.DRAW.icon,
+				icon: this.data.actions.ASTRAL_DRAW.icon,
 				content: <Trans id="ast.draw.suggestions.draw-no-usage.content">
-						No uses of <DataLink action="DRAW" /> at all.
+						No uses of <DataLink action="ASTRAL_DRAW" /> at all.
 				</Trans>,
 				why: <Trans id="ast.draw.suggestions.draw-no-usage.why">
 					No draws used.
@@ -171,14 +171,14 @@ export default class Draw extends Analyser {
 		SUGGESTION: Didn't use draw enough
 		*/
 			this.suggestions.add(new TieredSuggestion({
-				icon: this.data.actions.DRAW.icon,
+				icon: this.data.actions.ASTRAL_DRAW.icon,
 				content: <Trans id="ast.draw.suggestions.draw-uses.content">
-						Consider casting <DataLink action="DRAW" /> as soon as its available to maximize both MP regen and the number of cards played.
+						Consider casting <DataLink action="ASTRAL_DRAW" /> as soon as its available to maximize both MP regen and the number of cards played.
 				</Trans>,
 				tiers: SEVERITIES.DRAW_HOLDING,
 				value: drawsMissed,
 				why: <Trans id="ast.draw.suggestions.draw-uses.why">
-					About <Plural value={drawsMissed} one="# use" other="# uses" /> of <DataLink action="DRAW" /> <Plural value={drawsMissed} one="was" other="were" /> missed by holding two cards on full cooldown for at least a total of {this.parser.formatDuration(this.drawTotalDrift)}.
+					About <Plural value={drawsMissed} one="# use" other="# uses" /> of <DataLink action="ASTRAL_DRAW" /> <Plural value={drawsMissed} one="was" other="were" /> missed by holding two cards on full cooldown for at least a total of {this.parser.formatDuration(this.drawTotalDrift)}.
 				</Trans>,
 			}))
 		}

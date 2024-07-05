@@ -297,4 +297,14 @@ export const LIMIT_BREAK = ensureActions({
 		gcdRecast: 12600,
 		icon,
 	},
+
+	// PCT LB3
+	CHROMATIC_FANTASY: {
+		id: 34867,
+		name: 'Chromatic Fantasy',
+		onGcd: true,
+		castTime: 4500,
+		gcdRecast: 12600,
+		icon,
+	},
 })
