@@ -24,7 +24,7 @@ export const TECHNICAL_SEVERITY_TIERS = {
 	3: SEVERITY.MAJOR,
 }
 
-export const TECHNICAL_EXPECTED_GCDS = 9
+export const TECHNICAL_EXPECTED_GCDS = 8
 
 export class Technicalities extends RaidBuffWindow {
 	static override handle = 'technicalities'
@@ -75,14 +75,14 @@ export class Technicalities extends RaidBuffWindow {
 		this.addEventHook(technicalFilter.type('statusRemove').source(this.parser.actor.id), this.onRemoveTechnicalFinish)
 
 		const suggestionWindowName = <DataLink status="TECHNICAL_FINISH" showIcon={false}/>
-		// We expect 9 GCDs in a Technical Finish window
+
 		this.addEvaluator(new ExpectedGcdCountEvaluator({
 			expectedGcds: TECHNICAL_EXPECTED_GCDS,
 			globalCooldown: this.globalCooldown,
 			hasStacks: false,
 			suggestionIcon: this.data.statuses.TECHNICAL_FINISH.icon,
 			suggestionContent: <Trans id="dnc.technicalities.suggestions.missedgcd.content">
-				Try to land 9 GCDs during every <DataLink status="TECHNICAL_FINISH" /> window. Don't wait until the end to use <DataLink action="TILLANA" /> or you may not be able to fit them all in.
+				Try to land {TECHNICAL_EXPECTED_GCDS} GCDs during every <DataLink status="TECHNICAL_FINISH" /> window.
 			</Trans>,
 			suggestionWindowName,
 			severityTiers: TECHNICAL_SEVERITY_TIERS,
@@ -105,6 +105,10 @@ export class Technicalities extends RaidBuffWindow {
 				{
 					action: this.data.actions.TILLANA,
 					expectedPerWindow: 1,
+				},
+				{
+					action: this.data.actions.LAST_DANCE,
+					expectedPerWindow: 2,
 				},
 				{
 					action: this.data.actions.FAN_DANCE_IV,
