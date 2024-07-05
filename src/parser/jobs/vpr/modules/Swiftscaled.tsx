@@ -8,12 +8,12 @@ export class Swiftscaled extends CastTime {
 	override initialise() {
 		super.initialise()
 
-		const fukaFilter = filter<Event>()
+		const SwiftscaledFilter = filter<Event>()
 			.target(this.parser.actor.id)
 			.status(this.data.statuses.SWIFTSCALED.id)
 
-		this.addEventHook(fukaFilter.type('statusApply'), this.onApplySwiftscaled)
-		this.addEventHook(fukaFilter.type('statusRemove'), this.onRemoveSwiftscaled)
+		this.addEventHook(SwiftscaledFilter.type('statusApply'), this.onApplySwiftscaled)
+		this.addEventHook(SwiftscaledFilter.type('statusRemove'), this.onRemoveSwiftscaled)
 	}
 
 	private onApplySwiftscaled(): void {

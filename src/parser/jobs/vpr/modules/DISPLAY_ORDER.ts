@@ -4,4 +4,5 @@ export default {
 	SEPRENTSTAIL: 3,
 	POSITIONALS: 4,
 	COOLDOWNS: 5,
+	SNILK: 6,
 }

@@ -6,6 +6,7 @@ import {Positionals} from './Positionals'
 import {RattlingCoil} from './RattlingCoil'
 import {SeprentsTail} from './SerpentsTail'
 import {Snaps} from './Snaps'
+import {snilk} from './snilk'
 import {Swiftscaled} from './Swiftscaled'
 import {Venoms} from './Venoms'
 
@@ -17,6 +18,7 @@ export default [
 	OGCDDowntime,
 	RattlingCoil,
 	SeprentsTail,
+	snilk,
 	Swiftscaled,
 	Snaps,
 	Venoms,
