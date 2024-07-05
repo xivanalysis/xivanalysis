@@ -1,3 +1,4 @@
+import {AoeChecker} from './AoEChecker'
 import {Buffs} from './Buffs'
 import {NoxiousGnash} from './NoxiousGnash'
 import OGCDDowntime from './OGCDDowntime'
@@ -9,6 +10,7 @@ import {Swiftscaled} from './Swiftscaled'
 import {Venoms} from './Venoms'
 
 export default [
+	AoeChecker,
 	Buffs,
 	Positionals,
 	NoxiousGnash,
