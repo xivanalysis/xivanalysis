@@ -324,7 +324,7 @@ export const MNK = ensureActions({
 
 	FIRES_REPLY: {
 		id: 36950,
-		name: 'Elixir Burst',
+		name: "Fire's Reply",
 		icon: iconUrl(2987),
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
