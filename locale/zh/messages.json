@@ -741,6 +741,7 @@
   "nin.taWindow.suggestions.trackedactions.content": "在每个<0/>期间都应该打出<1/>、2个<2/>和<3/>，从而让你的伤害最大化。",
   "nin.taWindow.title": "背刺",
   "pct.about.description": "",
+  "pct.swiftcast.missed.suggestion.content": "",
   "pld.about.description": "<0>作为黑魔与白魔不被承认的后代，你选择了一条“沥血”之路，成为了一名举着盾牌，挥舞宝剑的法师，试着去帮助所有队友。</0><1>\n这个分析器会帮助你成为一名令人畏惧的坦克，面对敌人时你没有丝毫的“<2/>”，同时作为真正的“<3/>”激励着你的团队。</1>",
   "pld.divine-might.checklist.description": "使用<0/>和<1/>会产生一层强化<3/>或者<4/>的<2/>。<2/>会强化威力并使得<5/>和<6/>可以无读条释放。",
   "pld.divine-might.checklist.name": "消耗王权剑带来的Divine Might层数",
