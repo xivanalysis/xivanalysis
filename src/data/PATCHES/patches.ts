@@ -49,8 +49,8 @@ export const PATCHES = ensureRecord<PatchInfo>()({
 	'Endwalker': {
 		date: {
 			[GameEdition.GLOBAL]: 1637312400, // 19/11/21 09:00:00 GMT
-			[GameEdition.KOREAN]: 1664870400, // 04/10/22 08:00:00 GMT
-			[GameEdition.CHINESE]: 1660032000, // 09/08/22 08:00:00 GMT
+			[GameEdition.KOREAN]: 1652169600, // 10/05/22 08:00:00 GMT
+			[GameEdition.CHINESE]: 1647417600, // 16/03/22 08:00:00 GMT
 		},
 		branch: {
 			baseUrl: 'https://endwalker.xivanalysis.com',

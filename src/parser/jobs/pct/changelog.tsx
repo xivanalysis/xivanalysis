@@ -1,5 +1,5 @@
-// import CONTRIBUTORS from 'data/CONTRIBUTORS'
-// import React from 'react'
+import CONTRIBUTORS from 'data/CONTRIBUTORS'
+import React from 'react'
 
 export const changelog = [
 	// {
@@ -7,4 +7,9 @@ export const changelog = [
 	// 	Changes: () => <>The changes you made</>,
 	// 	contributors: [CONTRIBUTORS.YOU],
 	// },
+	{
+		date: new Date('2024-07-03'),
+		Changes: () => <>Initial data and core module support for PCT</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
 ]

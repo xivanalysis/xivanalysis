@@ -9,47 +9,11 @@ export const DRG = ensureStatuses({
 		duration: 15000,
 	},
 
-	RIGHT_EYE: {
-		id: 1453,
-		name: 'Right Eye',
-		icon: iconUrl(12581),
-		duration: 20000,
-	},
-
-	// Because apparently Right Eye has a different status ID if you don't have a tether partner. Thanks, SE.
-	RIGHT_EYE_SOLO: {
-		id: 1910,
-		name: 'Right Eye',
-		icon: iconUrl(12581),
-		duration: 20000,
-	},
-
-	LEFT_EYE: {
-		id: 1454,
-		name: 'Left Eye',
-		icon: iconUrl(12582),
-		duration: 20000,
-	},
-
 	POWER_SURGE: {
 		id: 2720,
 		name: 'Power Surge',
 		icon: iconUrl(10303),
 		duration: 30000,
-	},
-
-	SHARPER_FANG_AND_CLAW: {
-		id: 802,
-		name: 'Sharper Fang and Claw',
-		icon: iconUrl(12579),
-		duration: 10000,
-	},
-
-	ENHANCED_WHEELING_THRUST: {
-		id: 803,
-		name: 'Enhanced Wheeling Thrust',
-		icon: iconUrl(12580),
-		duration: 10000,
 	},
 
 	LANCE_CHARGE: {
@@ -80,6 +44,20 @@ export const DRG = ensureStatuses({
 		duration: 15000,
 	},
 
+	DRAGONS_FLIGHT: {
+		id: 3845,
+		name: "Dragon's Flight",
+		icon: iconUrl(12587),
+		duration: 30000,
+	},
+
+	STARCROSS_READY: {
+		id: 3846,
+		name: 'Starcross Ready',
+		icon: iconUrl(12588),
+		duration: 20000,
+	},
+
 	LIFE_SURGE: {
 		id: 116,
 		name: 'Life Surge',
@@ -92,5 +70,12 @@ export const DRG = ensureStatuses({
 		name: 'Draconian Fire',
 		icon: iconUrl(12585),
 		duration: 30000,
+	},
+
+	NASTROND_READY: {
+		id: 3844,
+		name: 'Nastrond Ready',
+		icon: iconUrl(18151),
+		duration: 20000,
 	},
 })
