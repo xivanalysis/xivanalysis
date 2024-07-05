@@ -25,6 +25,16 @@ const CONTRIBUTORS = ensureRecord<Contributor>()({
 			JOBS.BLACK_MAGE, JOBS.DANCER, JOBS.SAGE, JOBS.PICTOMANCER,
 		],
 	},
+
+	RYAN: {
+		name: 'Ryan',
+		avatar: require('./avatar/Ryan.png'),
+		jobs: [
+			JOBS.GUNBREAKER,
+			JOBS.VIPER,
+			JOBS.SAMURAI,
+		],
+	},
 })
 
 export default CONTRIBUTORS
