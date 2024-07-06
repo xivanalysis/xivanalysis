@@ -42,7 +42,7 @@ const TRACKED_STATUSES: StatusConfig[] = [
 	{key: 'ARCANE_CIRCLE'},
 	{key: 'SEARING_LIGHT'},
 	{key: 'RADIANT_FINALE'},
-	{key: 'MUG_VULNERABILITY_UP', name: 'Mug'},
+	{key: 'MUG', name: 'Mug'},
 	{key: 'STARRY_MUSE'},
 ]
 

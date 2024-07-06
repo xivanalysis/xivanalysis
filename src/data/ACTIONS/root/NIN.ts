@@ -35,16 +35,16 @@ export const NIN = ensureActions({
 		icon: iconUrl(605),
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		potency: 140,
+		potency: 200,
 		combo: {
 			from: 2242,
 			end: true,
 		},
 		potencies: [{
-			value: 140,
+			value: 200,
 			bonusModifiers: [],
 		}, {
-			value: 200,
+			value: 260,
 			bonusModifiers: [BonusModifier.POSITIONAL],
 		}, {
 			value: 380,
@@ -80,22 +80,22 @@ export const NIN = ensureActions({
 		icon: iconUrl(2915),
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		potency: 140,
+		potency: 220,
 		combo: {
 			from: 2242,
 			end: true,
 		},
 		potencies: [{
-			value: 140,
+			value: 220,
 			bonusModifiers: [],
 		}, {
-			value: 200,
+			value: 280,
 			bonusModifiers: [BonusModifier.POSITIONAL],
 		}, {
-			value: 360,
+			value: 420,
 			bonusModifiers: [BonusModifier.COMBO],
 		}, {
-			value: 420,
+			value: 480,
 			bonusModifiers: [BonusModifier.POSITIONAL, BonusModifier.COMBO],
 		}],
 	},
@@ -110,14 +110,6 @@ export const NIN = ensureActions({
 			from: 2254,
 			end: true,
 		},
-	},
-
-	HURAIJIN: {
-		id: 25876,
-		name: 'Huraijin',
-		icon: iconUrl(2928),
-		onGcd: true,
-		speedAttribute: Attribute.SKILL_SPEED,
 	},
 
 	FORKED_RAIJU: {
@@ -321,6 +313,7 @@ export const NIN = ensureActions({
 		icon: iconUrl(2910),
 		onGcd: true,
 		cooldown: 1500,
+		statusesApplied: ['SHADOW_WALKER'],
 	},
 
 	HUTON_TCJ: {
@@ -329,6 +322,7 @@ export const NIN = ensureActions({
 		icon: iconUrl(2910),
 		onGcd: true,
 		cooldown: 1500,
+		statusesApplied: ['SHADOW_WALKER'],
 	},
 
 	DOTON: {
@@ -355,7 +349,7 @@ export const NIN = ensureActions({
 		icon: iconUrl(2913),
 		onGcd: true,
 		cooldown: 1500,
-		statusesApplied: ['SUITON'],
+		statusesApplied: ['SHADOW_WALKER'],
 	},
 
 	SUITON_TCJ: {
@@ -364,7 +358,7 @@ export const NIN = ensureActions({
 		icon: iconUrl(2913),
 		onGcd: true,
 		cooldown: 1500,
-		statusesApplied: ['SUITON'],
+		statusesApplied: ['SHADOW_WALKER'],
 	},
 
 	RABBIT_MEDIUM: {
@@ -385,7 +379,7 @@ export const NIN = ensureActions({
 		icon: iconUrl(613),
 		onGcd: false,
 		cooldown: 120000,
-		statusesApplied: ['MUG_VULNERABILITY_UP'],
+		statusesApplied: ['MUG'],
 	},
 
 	ASSASSINATE: {
@@ -446,6 +440,15 @@ export const NIN = ensureActions({
 		cooldown: 1000,
 	},
 
+	DOKUMORI: {
+		id: 36957,
+		name: 'Dokumori',
+		icon: iconUrl(619),
+		onGcd: false,
+		cooldown: 120000,
+		statusesApplied: ['DOKUMORI', 'HIGI'],
+	},
+
 	BHAVACAKRA: {
 		id: 7402,
 		name: 'Bhavacakra',
@@ -460,7 +463,7 @@ export const NIN = ensureActions({
 		icon: iconUrl(2922),
 		onGcd: false,
 		cooldown: 120000,
-		statusesApplied: ['TEN_CHI_JIN'],
+		statusesApplied: ['TEN_CHI_JIN', 'TENRI_JINDO_READY'],
 	},
 
 	SHUKUCHI: {
@@ -488,5 +491,38 @@ export const NIN = ensureActions({
 		onGcd: false,
 		cooldown: 90000,
 		statusesApplied: ['BUNSHIN'],
+	},
+
+	KUNAIS_BANE: {
+		id: 36958,
+		name: 'Kunai\'s Bane',
+		icon: iconUrl(620),
+		onGcd: false,
+		cooldown: 60000,
+		statusesApplied: ['KUNAIS_BANE'],
+	},
+
+	DEATHFROG_MEDIUM: {
+		id: 36959,
+		name: 'Deathfrog Medium',
+		icon: iconUrl(2934),
+		onGcd: false,
+		cooldown: 1000,
+	},
+
+	ZESHO_MEPPO: {
+		id: 36960,
+		name: 'Zesho Meppo',
+		icon: iconUrl(2933),
+		onGcd: false,
+		cooldown: 1000,
+	},
+
+	TENRI_JINDO: {
+		id: 36961,
+		name: 'Tenri Jindo',
+		icon: iconUrl(2935),
+		onGcd: false,
+		cooldown: 1000,
 	},
 })

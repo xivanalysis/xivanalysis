@@ -17,7 +17,6 @@ const CONTRIBUTORS = ensureRecord<Contributor>()({
 	// 		JOBS.SOME_JOB,
 	// 	],
 	// },
-
 	AKAIRYU: {
 		name: 'Akairyu',
 		avatar: require('./avatar/Akairyu.png'),
@@ -38,6 +37,13 @@ const CONTRIBUTORS = ensureRecord<Contributor>()({
 		jobs: [
 			JOBS.GUNBREAKER,
 			JOBS.SAMURAI,
+		],
+	},
+	TOASTDEIB: {
+		name: 'Toastdeib',
+		avatar: require('./avatar/toastdeib.png'),
+		jobs: [
+			JOBS.NINJA,
 		],
 	},
 })
