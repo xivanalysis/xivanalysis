@@ -12,9 +12,13 @@ export type OutcomeCalculator = (actual: number, expected?: number) => RotationT
  */
 export interface TrackedAction {
 	/**
-	 * The action to track.
+	 * The action to track (determines icon used in table).
 	 */
-	action: Action
+	action: Action,
+	/**
+	 * Alternative actions that also satisfy the tracked action (cooldown groups).
+	 */
+	alternativeActions?: Action[],
 	/**
 	 * The number of uses expected per window.
 	 * This may be a minimum or maximum depending on the evaluator.

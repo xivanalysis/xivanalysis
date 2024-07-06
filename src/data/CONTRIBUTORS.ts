@@ -24,6 +24,13 @@ const CONTRIBUTORS = ensureRecord<Contributor>()({
 			JOBS.BLACK_MAGE, JOBS.DANCER, JOBS.SAGE, JOBS.PICTOMANCER,
 		],
 	},
+	AZARIAH: {
+		name: 'AzariahAeroborn',
+		avatar: require('./avatar/Azariah.png'),
+		jobs: [
+			JOBS.DARK_KNIGHT,
+		],
+	},
 	FALINDRITH: {
 		name: 'falindrith',
 		avatar: require('./avatar/falindrith.png'),

@@ -81,7 +81,13 @@ export class ExpectedActionsEvaluator implements WindowEvaluator {
 	}
 
 	protected countUsed(window: HistoryEntry<EvaluatedAction[]>, action: TrackedAction) {
-		return window.data.filter(cast => cast.action.id === action.action.id).length
+		const trackedIds = [action.action.id]
+		if (action.alternativeActions != null) {
+			for (const altAction of action.alternativeActions) {
+				trackedIds.push(altAction.id)
+			}
+		}
+		return window.data.filter(cast => trackedIds.includes(cast.action.id)).length
 	}
 
 	protected determineExpected(window: HistoryEntry<EvaluatedAction[]>, action: TrackedAction): number | undefined {

@@ -15,14 +15,19 @@ export class MultiHitSkills extends AoEUsages {
 			minTargets: 3,
 		},
 		{
+			aoeAction: this.data.actions.IMPALEMENT,
+			stActions: [this.data.actions.SCARLET_DELIRIUM],
+			minTargets: 3,
+		},
+		{
 			aoeAction: this.data.actions.ABYSSAL_DRAIN,
 			stActions: [this.data.actions.CARVE_AND_SPIT],
-			minTargets: 4,
+			minTargets: 3,
 		},
 		{
 			aoeAction: this.data.actions.UNLEASH,
 			stActions: [this.data.actions.HARD_SLASH],
-			minTargets: 2,
+			minTargets: 3,
 		},
 	]
 }
