@@ -2,7 +2,8 @@ import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
 import {DataLink} from 'components/ui/DbLink'
 import {dependency} from 'parser/core/Injectable'
-import {BuffWindow, ExpectedActionsEvaluator, ExpectedGcdCountEvaluator} from 'parser/core/modules/ActionWindow'
+import {BuffWindow, ExpectedActionsEvaluator} from 'parser/core/modules/ActionWindow'
+import {EndOfWindowHandlingMode} from 'parser/core/modules/ActionWindow/windows/BuffWindow'
 import {GlobalCooldown} from 'parser/core/modules/GlobalCooldown'
 import {SEVERITY} from 'parser/core/modules/Suggestions'
 import React from 'react'
@@ -25,6 +26,7 @@ export class Delirium extends BuffWindow {
 	static override displayOrder = DISPLAY_ORDER.DELIRIUM
 
 	override buffStatus = this.data.statuses.DELIRIUM
+	override endOfWindowHandlingMode: EndOfWindowHandlingMode = 'SAME-TIMESTAMP'
 
 	@dependency globalCooldown!: GlobalCooldown
 
@@ -32,18 +34,6 @@ export class Delirium extends BuffWindow {
 		super.initialise()
 
 		const suggestionWindowName = <DataLink action="DELIRIUM" showIcon={false} />
-
-		this.addEvaluator(new ExpectedGcdCountEvaluator({
-			expectedGcds: 3,
-			globalCooldown: this.globalCooldown,
-			hasStacks: true,
-			suggestionIcon: this.data.actions.DELIRIUM.icon,
-			suggestionContent: <Trans id="drk.delrium.suggestions.gcds.content">
-				Try to land 3 GCDs during every <DataLink action="DELIRIUM" /> window.
-			</Trans>,
-			suggestionWindowName,
-			severityTiers: SEVERITIES.MISSED_GCDS,
-		}))
 
 		this.addEvaluator(new ExpectedActionsEvaluator({
 			expectedActions: [
