@@ -34,7 +34,7 @@ const WEAVING_SEVERITY = {
 // used for timeline viewing by giving you a nice 30s window
 const TIMELINE_UPPER_MOD: number = 30000
 
-const ICON_WVR_FOCUSED_SYNTHESIS = 1785
+const ICON_WEAVING_ACTION = 1751
 
 export interface Weave {
 	leadingGcdEvent: Events['action'],
@@ -54,7 +54,7 @@ export class Weaving extends Analyser {
 
 	static override title = t('core.weaving.title')`Weaving Issues`
 
-	protected suggestionIcon: string = iconUrl(ICON_WVR_FOCUSED_SYNTHESIS)
+	protected suggestionIcon: string = iconUrl(ICON_WEAVING_ACTION)
 
 	protected moduleLink = (
 		<a style={{cursor: 'pointer'}} onClick={() => this.parser.scrollTo(Weaving.handle)}>

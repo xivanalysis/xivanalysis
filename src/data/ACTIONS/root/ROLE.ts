@@ -69,11 +69,13 @@ export const ROLE = ensureActions({
 		statusesApplied: ['LUCID_DREAMING'],
 	},
 
+	// TODO: BLU doesn't benefit from the post-90 trait (yet or at all? TBD in 2 expacs),
+	// so we'll have to sort something out to make the timeline look right...
 	SWIFTCAST: {
 		id: 7561,
 		name: 'Swiftcast',
 		icon: iconUrl(866),
-		cooldown: 60000,
+		cooldown: 40000,
 		statusesApplied: ['SWIFTCAST'],
 	},
 

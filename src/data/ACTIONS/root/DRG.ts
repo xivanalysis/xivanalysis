@@ -1,6 +1,6 @@
 import {iconUrl} from 'data/icon'
 import {Attribute} from 'event'
-import {ensureActions, BonusModifier, PotencySpecialCase} from '../type'
+import {ensureActions, BonusModifier} from '../type'
 
 export const DRG = ensureActions({
 	// -----
@@ -28,6 +28,18 @@ export const DRG = ensureActions({
 		},
 	},
 
+	// vorpal thrust upgrade
+	LANCE_BARRAGE: {
+		id: 36954,
+		name: 'Lance Barrage',
+		icon: iconUrl(2076),
+		onGcd: true,
+		speedAttribute: Attribute.SKILL_SPEED,
+		combo: {
+			from: [75, 16479],
+		},
+	},
+
 	PIERCING_TALON: {
 		id: 90,
 		name: 'Piercing Talon',
@@ -44,8 +56,7 @@ export const DRG = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		combo: {
-			from: 78,
-			end: true,
+			from: [78, 36954],
 		},
 	},
 
@@ -56,8 +67,7 @@ export const DRG = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		combo: {
-			from: 78,
-			end: true,
+			from: [78, 36954],
 		},
 	},
 
@@ -65,6 +75,19 @@ export const DRG = ensureActions({
 		id: 87,
 		name: 'Disembowel',
 		icon: iconUrl(317),
+		onGcd: true,
+		speedAttribute: Attribute.SKILL_SPEED,
+		combo: {
+			from: [75, 16479],
+		},
+		statusesApplied: ['POWER_SURGE'],
+	},
+
+	// disembowel upgrade
+	SPIRAL_BLOW: {
+		id: 36955,
+		name: 'Spiral Blow',
+		icon: iconUrl(2077),
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		combo: {
@@ -81,7 +104,6 @@ export const DRG = ensureActions({
 		speedAttribute: Attribute.SKILL_SPEED,
 		combo: {
 			from: 87,
-			end: true,
 		},
 		statusesApplied: ['CHAOS_THRUST'],
 	},
@@ -93,8 +115,7 @@ export const DRG = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		combo: {
-			from: 87,
-			end: true,
+			from: [87, 36955],
 		},
 		potencies: [{
 			value: 100,
@@ -103,13 +124,31 @@ export const DRG = ensureActions({
 			value: 140,
 			bonusModifiers: [BonusModifier.POSITIONAL],
 		}, {
-			value: 260,
+			value: 300,
 			bonusModifiers: [BonusModifier.COMBO],
 		}, {
-			value: 300,
+			value: 340,
 			bonusModifiers: [BonusModifier.COMBO, BonusModifier.POSITIONAL],
 		}],
 		statusesApplied: ['CHAOTIC_SPRING'],
+	},
+
+	// new combo finisher
+	DRAKESBANE: {
+		id: 36952,
+		name: 'Drakesbane',
+		icon: iconUrl(2599),
+		onGcd: true,
+		speedAttribute: Attribute.SKILL_SPEED,
+		combo: {
+			from: [3554, 3556],
+			end: true,
+		},
+		potencies: [{
+			value: 440,
+			bonusModifiers: [],
+		}],
+		statusesApplied: ['DRACONIAN_FIRE'],
 	},
 
 	DOOM_SPIKE: {
@@ -141,23 +180,23 @@ export const DRG = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		potencies: [{
-			value: 260,
+			value: 140,
 			bonusModifiers: [],
+			baseModifiers: [],
+		}, {
+			value: 180,
+			bonusModifiers: [BonusModifier.POSITIONAL],
 			baseModifiers: [],
 		}, {
 			value: 300,
-			bonusModifiers: [BonusModifier.POSITIONAL],
-			baseModifiers: [],
+			bonusModifiers: [BonusModifier.COMBO],
 		}, {
-			// Lance Mastery increases the potency of the 5th hit by 100
-			value: 360,
-			bonusModifiers: [],
-			baseModifiers: [PotencySpecialCase.DRG_LANCE_MASTERY],
-		}, {
-			value: 400,
-			bonusModifiers: [BonusModifier.POSITIONAL],
-			baseModifiers: [PotencySpecialCase.DRG_LANCE_MASTERY],
+			value: 340,
+			bonusModifiers: [BonusModifier.POSITIONAL, BonusModifier.COMBO],
 		}],
+		combo: {
+			from: [84, 25771],
+		},
 	},
 
 	WHEELING_THRUST: {
@@ -167,23 +206,23 @@ export const DRG = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		potencies: [{
-			value: 260,
+			value: 140,
 			bonusModifiers: [],
+			baseModifiers: [],
+		}, {
+			value: 180,
+			bonusModifiers: [BonusModifier.POSITIONAL],
 			baseModifiers: [],
 		}, {
 			value: 300,
-			bonusModifiers: [BonusModifier.POSITIONAL],
-			baseModifiers: [],
+			bonusModifiers: [BonusModifier.COMBO],
 		}, {
-			// Lance Mastery increases the potency of the 5th hit by 100
-			value: 360,
-			bonusModifiers: [],
-			baseModifiers: [PotencySpecialCase.DRG_LANCE_MASTERY],
-		}, {
-			value: 400,
-			bonusModifiers: [BonusModifier.POSITIONAL],
-			baseModifiers: [PotencySpecialCase.DRG_LANCE_MASTERY],
+			value: 340,
+			bonusModifiers: [BonusModifier.POSITIONAL, BonusModifier.COMBO],
 		}],
+		combo: {
+			from: [88, 25772],
+		},
 	},
 
 	RAIDEN_THRUST: {
@@ -218,6 +257,7 @@ export const DRG = ensureActions({
 			from: 7397,
 			end: true,
 		},
+		statusesApplied: ['DRACONIAN_FIRE'],
 	},
 
 	// -----
@@ -276,6 +316,14 @@ export const DRG = ensureActions({
 		name: 'Dragonfire Dive',
 		icon: iconUrl(2578),
 		cooldown: 120000,
+		statusesApplied: ['DRAGONS_FLIGHT'],
+	},
+
+	RISE_OF_THE_DRAGON: {
+		id: 36953,
+		name: 'Rise of the Dragon',
+		icon: iconUrl(2075),
+		cooldown: 1000,
 	},
 
 	BATTLE_LITANY: {
@@ -291,14 +339,7 @@ export const DRG = ensureActions({
 		name: 'Geirskogul',
 		icon: iconUrl(2583),
 		cooldown: 30000,
-	},
-
-	DRAGON_SIGHT: {
-		id: 7398,
-		name: 'Dragon Sight',
-		icon: iconUrl(2587),
-		cooldown: 120000,
-		statusesApplied: ['RIGHT_EYE', 'LEFT_EYE', 'RIGHT_EYE_SOLO'],
+		statusesApplied: ['NASTROND_READY'],
 	},
 
 	MIRAGE_DIVE: {
@@ -320,6 +361,14 @@ export const DRG = ensureActions({
 		name: 'Stardiver',
 		icon: iconUrl(2593),
 		cooldown: 30000,
+		statusesApplied: ['STARCROSS_READY'],
+	},
+
+	STARCROSS: {
+		id: 36956,
+		name: 'Starcross',
+		icon: iconUrl(2078),
+		cooldown: 1000,
 	},
 
 	WYRMWIND_THRUST: {
@@ -327,5 +376,13 @@ export const DRG = ensureActions({
 		name: 'Wyrmwind Thrust',
 		icon: iconUrl(2597),
 		cooldown: 10000,
+	},
+
+	WINGED_GLIDE: {
+		id: 36951,
+		name: 'Winged Glide',
+		charges: 2,
+		icon: iconUrl(2598),
+		cooldown: 60000,
 	},
 })
