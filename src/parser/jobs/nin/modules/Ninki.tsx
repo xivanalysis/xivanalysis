@@ -1,5 +1,6 @@
 import {t} from '@lingui/macro'
 import {Trans, Plural} from '@lingui/react'
+import Color from 'color'
 import {ActionLink} from 'components/ui/DbLink'
 import {iconUrl} from 'data/icon'
 import {JOBS} from 'data/JOBS'
@@ -28,8 +29,11 @@ const FROG_SEVERITY = {
 }
 
 const ICON_SHUKIHO = 5411
+const FADE_AMOUNT = 0.25
+const GAUGE_COLOR = Color(JOBS.NINJA.colour).fade(FADE_AMOUNT)
 
 export class Ninki extends CoreGauge {
+	static override handle = 'ninkigauge'
 	static override title = t('nin.ninki.title')`Ninki Gauge`
 
 	@dependency private suggestions!: Suggestions
@@ -37,7 +41,7 @@ export class Ninki extends CoreGauge {
 	private ninkiGauge = this.add(new CounterGauge({
 		graph: {
 			label: <Trans id="nin.ninki.resource.label">Ninki</Trans>,
-			color: JOBS.NINJA.colour,
+			color: GAUGE_COLOR,
 		},
 	}))
 

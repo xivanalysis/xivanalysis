@@ -1,7 +1,7 @@
 import {t} from '@lingui/macro'
 import {Trans, Plural} from '@lingui/react'
+import Color from 'color'
 import {ActionLink} from 'components/ui/DbLink'
-import {JOBS} from 'data/JOBS'
 import {Event} from 'event'
 import {filter} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
@@ -12,6 +12,9 @@ import React from 'react'
 const MAX_KAZEMATOI_STACKS = 5
 const ARMOR_CRUSH_MODIFIER = 2
 const AEOLIAN_EDGE_MODIFIER = -1
+
+const FADE_AMOUNT = 0.25
+const GAUGE_COLOR = Color('#8040bf').fade(FADE_AMOUNT)
 
 const OVERCAP_SEVERITY = {
 	// TODO - Confirm what these should be
@@ -31,6 +34,7 @@ const UNBUFFED_SEVERITY = {
 
 // TODO - Implement some bullshit potency tracking logic so we can correct the gauge for multi-boss instances like dungeons and 24-man raids
 export class Kazematoi extends CoreGauge {
+	static override handle = 'kazematoigauge'
 	static override title = t('nin.kazematoi.title')`Kazematoi Gauge`
 
 	@dependency private suggestions!: Suggestions
@@ -38,7 +42,7 @@ export class Kazematoi extends CoreGauge {
 	private kazematoiGauge = this.add(new CounterGauge({
 		graph: {
 			label: <Trans id="nin.kazematoi.resource.label">Kazematoi</Trans>,
-			color: JOBS.NINJA.colour,
+			color: GAUGE_COLOR,
 		},
 		maximum: MAX_KAZEMATOI_STACKS,
 	}))
