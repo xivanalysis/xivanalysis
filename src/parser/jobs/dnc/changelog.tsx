@@ -8,12 +8,12 @@ export const changelog = [
 	// 	contributors: [CONTRIBUTORS.YOU],
 	// },
 	{
-		date: new Date('2024-06-XX'),
-		Changes: () => <>Update Esprit Gauge tracking to handle consumption by Dance of the Dawn</>,
+		date: new Date('2024-07-07'),
+		Changes: () => <>Update Esprit Gauge tracking to handle consumption by Dance of the Dawn, and generation by Tillana</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],
 	},
 	{
-		date: new Date('2024-06-XX'),
+		date: new Date('2024-06-27'),
 		Changes: () => <>Initial data scaffolding for Dawntrail</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],
 	},

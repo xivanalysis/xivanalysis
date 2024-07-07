@@ -1,3 +1,4 @@
+import {iconUrl} from 'data/icon'
 import {Attribute} from 'event'
 import {ensureActions} from '../type'
 
@@ -7,7 +8,7 @@ export const ROLE = ensureActions({
 	RAMPART: {
 		id: 7531,
 		name: 'Rampart',
-		icon: 'https://xivapi.com/i/000000/000801.png',
+		icon: iconUrl(801),
 		cooldown: 90000,
 		statusesApplied: ['RAMPART'],
 	},
@@ -15,21 +16,21 @@ export const ROLE = ensureActions({
 	LOW_BLOW: {
 		id: 7540,
 		name: 'Low Blow',
-		icon: 'https://xivapi.com/i/000000/000802.png',
+		icon: iconUrl(802),
 		cooldown: 25000,
 	},
 
 	PROVOKE: {
 		id: 7533,
 		name: 'Provoke',
-		icon: 'https://xivapi.com/i/000000/000803.png',
+		icon: iconUrl(803),
 		cooldown: 30000,
 	},
 
 	REPRISAL: {
 		id: 7535,
 		name: 'Reprisal',
-		icon: 'https://xivapi.com/i/000000/000806.png',
+		icon: iconUrl(806),
 		cooldown: 60000,
 		statusesApplied: ['REPRISAL'],
 	},
@@ -37,14 +38,14 @@ export const ROLE = ensureActions({
 	INTERJECT: {
 		id: 7538,
 		name: 'Interject',
-		icon: 'https://xivapi.com/i/000000/000808.png',
+		icon: iconUrl(808),
 		cooldown: 30000,
 	},
 
 	SHIRK: {
 		id: 7537,
 		name: 'Shirk',
-		icon: 'https://xivapi.com/i/000000/000810.png',
+		icon: iconUrl(810),
 		cooldown: 120000,
 	},
 
@@ -52,7 +53,7 @@ export const ROLE = ensureActions({
 	ESUNA: {
 		id: 7568,
 		name: 'Esuna',
-		icon: 'https://xivapi.com/i/000000/000884.png',
+		icon: iconUrl(884),
 		onGcd: true,
 		cooldown: 2500,
 		castTime: 1000,
@@ -63,23 +64,25 @@ export const ROLE = ensureActions({
 	LUCID_DREAMING: {
 		id: 7562,
 		name: 'Lucid Dreaming',
-		icon: 'https://xivapi.com/i/000000/000865.png',
+		icon: iconUrl(865),
 		cooldown: 60000,
 		statusesApplied: ['LUCID_DREAMING'],
 	},
 
+	// TODO: BLU doesn't benefit from the post-90 trait (yet or at all? TBD in 2 expacs),
+	// so we'll have to sort something out to make the timeline look right...
 	SWIFTCAST: {
 		id: 7561,
 		name: 'Swiftcast',
-		icon: 'https://xivapi.com/i/000000/000866.png',
-		cooldown: 60000,
+		icon: iconUrl(866),
+		cooldown: 40000,
 		statusesApplied: ['SWIFTCAST'],
 	},
 
 	SURECAST: {
 		id: 7559,
 		name: 'Surecast',
-		icon: 'https://xivapi.com/i/000000/000869.png',
+		icon: iconUrl(869),
 		cooldown: 120000,
 		statusesApplied: ['SURECAST'],
 	},
@@ -87,7 +90,7 @@ export const ROLE = ensureActions({
 	RESCUE: {
 		id: 7571,
 		name: 'Rescue',
-		icon: 'https://xivapi.com/i/000000/000890.png',
+		icon: iconUrl(890),
 		cooldown: 120000,
 	},
 
@@ -95,35 +98,35 @@ export const ROLE = ensureActions({
 	SECOND_WIND: {
 		id: 7541,
 		name: 'Second Wind',
-		icon: 'https://xivapi.com/i/000000/000821.png',
+		icon: iconUrl(821),
 		cooldown: 120000,
 	},
 
 	FOOT_GRAZE: {
 		id: 7553,
 		name: 'Foot Graze',
-		icon: 'https://xivapi.com/i/000000/000842.png',
+		icon: iconUrl(842),
 		cooldown: 30000,
 	},
 
 	LEG_GRAZE: {
 		id: 7554,
 		name: 'Leg Graze',
-		icon: 'https://xivapi.com/i/000000/000843.png',
+		icon: iconUrl(843),
 		cooldown: 30000,
 	},
 
 	PELOTON: {
 		id: 7557,
 		name: 'Peloton',
-		icon: 'https://xivapi.com/i/000000/000844.png',
+		icon: iconUrl(844),
 		cooldown: 5000,
 	},
 
 	HEAD_GRAZE: {
 		id: 7551,
 		name: 'Head Graze',
-		icon: 'https://xivapi.com/i/000000/000848.png',
+		icon: iconUrl(848),
 		cooldown: 30000,
 	},
 
@@ -131,14 +134,14 @@ export const ROLE = ensureActions({
 	ADDLE: {
 		id: 7560,
 		name: 'Addle',
-		icon: 'https://xivapi.com/i/000000/000861.png',
+		icon: iconUrl(861),
 		cooldown: 90000,
 		statusesApplied: ['ADDLE'],
 	},
 	SLEEP: {
 		id: 25880,
 		name: 'Sleep',
-		icon: 'https://xivapi.com/i/000000/000871.png',
+		icon: iconUrl(871),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 2500,
@@ -149,7 +152,7 @@ export const ROLE = ensureActions({
 	ARMS_LENGTH: {
 		id: 7548,
 		name: 'Arm\'s Length',
-		icon: 'https://xivapi.com/i/000000/000822.png',
+		icon: iconUrl(822),
 		cooldown: 120000,
 		statusesApplied: ['ARMS_LENGTH'],
 	},
@@ -157,14 +160,14 @@ export const ROLE = ensureActions({
 	LEG_SWEEP: {
 		id: 7863,
 		name: 'Leg Sweep',
-		icon: 'https://xivapi.com/i/000000/000824.png',
+		icon: iconUrl(824),
 		cooldown: 40000,
 	},
 
 	BLOODBATH: {
 		id: 7542,
 		name: 'Bloodbath',
-		icon: 'https://xivapi.com/i/000000/000823.png',
+		icon: iconUrl(823),
 		cooldown: 90000,
 		statusesApplied: ['BLOODBATH'],
 	},
@@ -172,7 +175,7 @@ export const ROLE = ensureActions({
 	FEINT: {
 		id: 7549,
 		name: 'Feint',
-		icon: 'https://xivapi.com/i/000000/000828.png',
+		icon: iconUrl(828),
 		cooldown: 90000,
 		statusesApplied: ['FEINT'],
 	},
@@ -180,7 +183,7 @@ export const ROLE = ensureActions({
 	TRUE_NORTH: {
 		id: 7546,
 		name: 'True North',
-		icon: 'https://xivapi.com/i/000000/000830.png',
+		icon: iconUrl(830),
 		cooldown: 45000,
 		charges: 2,
 		statusesApplied: ['TRUE_NORTH'],

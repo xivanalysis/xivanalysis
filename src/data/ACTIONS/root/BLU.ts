@@ -1,3 +1,4 @@
+import {iconUrl} from 'data/icon'
 import {Attribute, DamageType} from 'event'
 import {Action, ensureActions, BonusModifier, PotencySpecialCase} from '../type'
 
@@ -30,7 +31,7 @@ export const BLU = ensureActions({
 	WATER_CANNON: {
 		id: 11385,
 		name: 'Water Cannon',
-		icon: 'https://xivapi.com/i/003000/003253.png',
+		icon: iconUrl(3253),
 		onGcd: true,
 		castTime: 2000,
 		gcdRecast: 2500,
@@ -41,7 +42,7 @@ export const BLU = ensureActions({
 	FLAME_THROWER: {
 		id: 11402,
 		name: 'Flame Thrower',
-		icon: 'https://xivapi.com/i/003000/003270.png',
+		icon: iconUrl(3270),
 		onGcd: true,
 		castTime: 2000,
 		gcdRecast: 2500,
@@ -52,7 +53,7 @@ export const BLU = ensureActions({
 	AQUA_BREATH: {
 		id: 11390,
 		name: 'Aqua Breath',
-		icon: 'https://xivapi.com/i/003000/003258.png',
+		icon: iconUrl(3258),
 		onGcd: true,
 		castTime: 2000,
 		gcdRecast: 2500,
@@ -64,7 +65,7 @@ export const BLU = ensureActions({
 	FLYING_FRENZY: {
 		id: 11389,
 		name: 'Flying Frenzy',
-		icon: 'https://xivapi.com/i/003000/003257.png',
+		icon: iconUrl(3257),
 		onGcd: true,
 		castTime: 1000,
 		gcdRecast: 2500,
@@ -74,7 +75,7 @@ export const BLU = ensureActions({
 	DRILL_CANNONS: {
 		id: 11398,
 		name: 'Drill Cannons',
-		icon: 'https://xivapi.com/i/003000/003266.png',
+		icon: iconUrl(3266),
 		onGcd: true,
 		castTime: 2000,
 		gcdRecast: 2500,
@@ -84,7 +85,7 @@ export const BLU = ensureActions({
 	HIGH_VOLTAGE: {
 		id: 11387,
 		name: 'High Voltage',
-		icon: 'https://xivapi.com/i/003000/003255.png',
+		icon: iconUrl(3255),
 		onGcd: true,
 		castTime: 2000,
 		gcdRecast: 2500,
@@ -96,7 +97,7 @@ export const BLU = ensureActions({
 	LOOM: {
 		id: 11401,
 		name: 'Loom',
-		icon: 'https://xivapi.com/i/003000/003269.png',
+		icon: iconUrl(3269),
 		onGcd: true,
 		castTime: 1000,
 		gcdRecast: 2500,
@@ -105,7 +106,7 @@ export const BLU = ensureActions({
 	FINAL_STING: {
 		id: 11407,
 		name: 'Final Sting',
-		icon: 'https://xivapi.com/i/003000/003275.png',
+		icon: iconUrl(3275),
 		onGcd: true,
 		castTime: 2000,
 		gcdRecast: 2500,
@@ -116,7 +117,7 @@ export const BLU = ensureActions({
 	SONG_OF_TORMENT: {
 		id: 11386,
 		name: 'Song of Torment',
-		icon: 'https://xivapi.com/i/003000/003254.png',
+		icon: iconUrl(3254),
 		onGcd: true,
 		castTime: 2000,
 		gcdRecast: 2500,
@@ -127,7 +128,7 @@ export const BLU = ensureActions({
 	GLOWER: {
 		id: 11404,
 		name: 'Glower',
-		icon: 'https://xivapi.com/i/003000/003272.png',
+		icon: iconUrl(3272),
 		onGcd: true,
 		castTime: 2000,
 		gcdRecast: 2500,
@@ -139,7 +140,7 @@ export const BLU = ensureActions({
 	PLAINCRACKER: {
 		id: 11391,
 		name: 'Plaincracker',
-		icon: 'https://xivapi.com/i/003000/003259.png',
+		icon: iconUrl(3259),
 		onGcd: true,
 		castTime: 2000,
 		gcdRecast: 2500,
@@ -150,7 +151,7 @@ export const BLU = ensureActions({
 	BRISTLE: {
 		id: 11393,
 		name: 'Bristle',
-		icon: 'https://xivapi.com/i/003000/003261.png',
+		icon: iconUrl(3261),
 		onGcd: true,
 		castTime: 1000,
 		gcdRecast: 2500,
@@ -160,7 +161,7 @@ export const BLU = ensureActions({
 	WHITE_WIND: {
 		id: 11406,
 		name: 'White Wind',
-		icon: 'https://xivapi.com/i/003000/003274.png',
+		icon: iconUrl(3274),
 		onGcd: true,
 		castTime: 2000,
 		gcdRecast: 2500,
@@ -169,7 +170,7 @@ export const BLU = ensureActions({
 	LEVEL_5_PETRIFY: {
 		id: 11414,
 		name: 'Level 5 Petrify',
-		icon: 'https://xivapi.com/i/003000/003282.png',
+		icon: iconUrl(3282),
 		onGcd: true,
 		castTime: 2000,
 		gcdRecast: 2500,
@@ -179,7 +180,7 @@ export const BLU = ensureActions({
 	SHARPENED_KNIFE: {
 		id: 11400,
 		name: 'Sharpened Knife',
-		icon: 'https://xivapi.com/i/003000/003268.png',
+		icon: iconUrl(3268),
 		onGcd: true,
 		castTime: 1000,
 		gcdRecast: 2500,
@@ -189,7 +190,7 @@ export const BLU = ensureActions({
 	ICE_SPIKES: {
 		id: 11418,
 		name: 'Ice Spikes',
-		icon: 'https://xivapi.com/i/003000/003286.png',
+		icon: iconUrl(3286),
 		onGcd: true,
 		castTime: 2000,
 		gcdRecast: 2500,
@@ -199,7 +200,7 @@ export const BLU = ensureActions({
 	BLOOD_DRAIN: {
 		id: 11395,
 		name: 'Blood Drain',
-		icon: 'https://xivapi.com/i/003000/003263.png',
+		icon: iconUrl(3263),
 		onGcd: true,
 		castTime: 2000,
 		gcdRecast: 2500,
@@ -209,7 +210,7 @@ export const BLU = ensureActions({
 	ACORN_BOMB: {
 		id: 11392,
 		name: 'Acorn Bomb',
-		icon: 'https://xivapi.com/i/003000/003260.png',
+		icon: iconUrl(3260),
 		onGcd: true,
 		castTime: 2000,
 		gcdRecast: 2500,
@@ -219,7 +220,7 @@ export const BLU = ensureActions({
 	BOMB_TOSS: {
 		id: 11396,
 		name: 'Bomb Toss',
-		icon: 'https://xivapi.com/i/003000/003264.png',
+		icon: iconUrl(3264),
 		onGcd: true,
 		castTime: 2000,
 		gcdRecast: 2500,
@@ -231,7 +232,7 @@ export const BLU = ensureActions({
 	OFF_GUARD: {
 		id: 11411,
 		name: 'Off-guard',
-		icon: 'https://xivapi.com/i/003000/003279.png',
+		icon: iconUrl(3279),
 		castTime: 1000,
 		cooldown: 60000,
 		cooldownGroup: BLU_COOLDOWN_GROUPS.OFF_GUARD,
@@ -241,7 +242,7 @@ export const BLU = ensureActions({
 	SELF_DESTRUCT: {
 		id: 11408,
 		name: 'Self-destruct',
-		icon: 'https://xivapi.com/i/003000/003276.png',
+		icon: iconUrl(3276),
 		onGcd: true,
 		castTime: 2000,
 		gcdRecast: 2500,
@@ -253,7 +254,7 @@ export const BLU = ensureActions({
 	TRANSFUSION: {
 		id: 11409,
 		name: 'Transfusion',
-		icon: 'https://xivapi.com/i/003000/003277.png',
+		icon: iconUrl(3277),
 		onGcd: true,
 		castTime: 2000,
 		gcdRecast: 2500,
@@ -263,7 +264,7 @@ export const BLU = ensureActions({
 	FAZE: {
 		id: 11403,
 		name: 'Faze',
-		icon: 'https://xivapi.com/i/003000/003271.png',
+		icon: iconUrl(3271),
 		onGcd: true,
 		castTime: 2000,
 		gcdRecast: 2500,
@@ -273,7 +274,7 @@ export const BLU = ensureActions({
 	FLYING_SARDINE: {
 		id: 11423,
 		name: 'Flying Sardine',
-		icon: 'https://xivapi.com/i/003000/003291.png',
+		icon: iconUrl(3291),
 		onGcd: true,
 		damageType: PHYSICAL,
 		speedAttribute: Attribute.SPELL_SPEED,
@@ -281,7 +282,7 @@ export const BLU = ensureActions({
 	SNORT: {
 		id: 11383,
 		name: 'Snort',
-		icon: 'https://xivapi.com/i/003000/003251.png',
+		icon: iconUrl(3251),
 		onGcd: true,
 		castTime: 2000,
 		gcdRecast: 2500,
@@ -290,7 +291,7 @@ export const BLU = ensureActions({
 	FOUR_TONZE_WEIGHT: {
 		id: 11384,
 		name: '4-tonze Weight',
-		icon: 'https://xivapi.com/i/003000/003252.png',
+		icon: iconUrl(3252),
 		onGcd: true,
 		castTime: 2000,
 		gcdRecast: 2500,
@@ -301,7 +302,7 @@ export const BLU = ensureActions({
 	THE_LOOK: {
 		id: 11399,
 		name: 'The Look',
-		icon: 'https://xivapi.com/i/003000/003267.png',
+		icon: iconUrl(3267),
 		onGcd: true,
 		castTime: 2000,
 		gcdRecast: 2500,
@@ -311,7 +312,7 @@ export const BLU = ensureActions({
 	BAD_BREATH: {
 		id: 11388,
 		name: 'Bad Breath',
-		icon: 'https://xivapi.com/i/003000/003256.png',
+		icon: iconUrl(3256),
 		onGcd: true,
 		castTime: 2000,
 		gcdRecast: 2500,
@@ -321,7 +322,7 @@ export const BLU = ensureActions({
 	DIAMONDBACK: {
 		id: 11424,
 		name: 'Diamondback',
-		icon: 'https://xivapi.com/i/003000/003292.png',
+		icon: iconUrl(3292),
 		onGcd: true,
 		castTime: 2000,
 		gcdRecast: 2500,
@@ -331,7 +332,7 @@ export const BLU = ensureActions({
 	MIGHTY_GUARD: {
 		id: 11417,
 		name: 'Mighty Guard',
-		icon: 'https://xivapi.com/i/003000/003285.png',
+		icon: iconUrl(3285),
 		onGcd: true,
 		castTime: 2000,
 		gcdRecast: 2500,
@@ -341,7 +342,7 @@ export const BLU = ensureActions({
 	STICKY_TONGUE: {
 		id: 11412,
 		name: 'Sticky Tongue',
-		icon: 'https://xivapi.com/i/003000/003280.png',
+		icon: iconUrl(3280),
 		onGcd: true,
 		castTime: 2000,
 		gcdRecast: 2500,
@@ -351,7 +352,7 @@ export const BLU = ensureActions({
 	TOAD_OIL: {
 		id: 11410,
 		name: 'Toad Oil',
-		icon: 'https://xivapi.com/i/003000/003278.png',
+		icon: iconUrl(3278),
 		onGcd: true,
 		castTime: 2000,
 		gcdRecast: 2500,
@@ -361,7 +362,7 @@ export const BLU = ensureActions({
 	THE_RAMS_VOICE: {
 		id: 11419,
 		name: 'The Ram\'s Voice',
-		icon: 'https://xivapi.com/i/003000/003287.png',
+		icon: iconUrl(3287),
 		onGcd: true,
 		castTime: 2000,
 		gcdRecast: 2500,
@@ -373,7 +374,7 @@ export const BLU = ensureActions({
 	THE_DRAGONS_VOICE: {
 		id: 11420,
 		name: 'The Dragon\'s Voice',
-		icon: 'https://xivapi.com/i/003000/003288.png',
+		icon: iconUrl(3288),
 		onGcd: true,
 		castTime: 2000,
 		gcdRecast: 2500,
@@ -385,7 +386,7 @@ export const BLU = ensureActions({
 	MISSILE: {
 		id: 11405,
 		name: 'Missile',
-		icon: 'https://xivapi.com/i/003000/003273.png',
+		icon: iconUrl(3273),
 		onGcd: true,
 		castTime: 2000,
 		gcdRecast: 2500,
@@ -395,7 +396,7 @@ export const BLU = ensureActions({
 	THOUSAND_NEEDLES: {
 		id: 11397,
 		name: '1000 Needles',
-		icon: 'https://xivapi.com/i/003000/003265.png',
+		icon: iconUrl(3265),
 		onGcd: true,
 		castTime: 6000,
 		gcdRecast: 2500,
@@ -405,7 +406,7 @@ export const BLU = ensureActions({
 	INK_JET: {
 		id: 11422,
 		name: 'Ink Jet',
-		icon: 'https://xivapi.com/i/003000/003290.png',
+		icon: iconUrl(3290),
 		onGcd: true,
 		castTime: 2000,
 		gcdRecast: 2500,
@@ -416,7 +417,7 @@ export const BLU = ensureActions({
 	FIRE_ANGON: {
 		id: 11425,
 		name: 'Fire Angon',
-		icon: 'https://xivapi.com/i/003000/003293.png',
+		icon: iconUrl(3293),
 		onGcd: true,
 		castTime: 1000,
 		gcdRecast: 2500,
@@ -426,7 +427,7 @@ export const BLU = ensureActions({
 	MOON_FLUTE: {
 		id: 11415,
 		name: 'Moon Flute',
-		icon: 'https://xivapi.com/i/003000/003283.png',
+		icon: iconUrl(3283),
 		onGcd: true,
 		castTime: 2000,
 		gcdRecast: 2500,
@@ -436,7 +437,7 @@ export const BLU = ensureActions({
 	TAIL_SCREW: {
 		id: 11413,
 		name: 'Tail Screw',
-		icon: 'https://xivapi.com/i/003000/003281.png',
+		icon: iconUrl(3281),
 		onGcd: true,
 		castTime: 2000,
 		gcdRecast: 2500,
@@ -445,7 +446,7 @@ export const BLU = ensureActions({
 	MIND_BLAST: {
 		id: 11394,
 		name: 'Mind Blast',
-		icon: 'https://xivapi.com/i/003000/003262.png',
+		icon: iconUrl(3262),
 		onGcd: true,
 		castTime: 1000,
 		gcdRecast: 2500,
@@ -456,7 +457,7 @@ export const BLU = ensureActions({
 	DOOM: {
 		id: 11416,
 		name: 'Doom',
-		icon: 'https://xivapi.com/i/003000/003284.png',
+		icon: iconUrl(3284),
 		onGcd: true,
 		castTime: 2000,
 		gcdRecast: 2500,
@@ -466,7 +467,7 @@ export const BLU = ensureActions({
 	PECULIAR_LIGHT: {
 		id: 11421,
 		name: 'Peculiar Light',
-		icon: 'https://xivapi.com/i/003000/003289.png',
+		icon: iconUrl(3289),
 		castTime: 1000,
 		cooldown: 60000,
 		cooldownGroup: BLU_COOLDOWN_GROUPS.OFF_GUARD,
@@ -476,7 +477,7 @@ export const BLU = ensureActions({
 	FEATHER_RAIN: {
 		id: 11426,
 		name: 'Feather Rain',
-		icon: 'https://xivapi.com/i/003000/003294.png',
+		icon: iconUrl(3294),
 		cooldown: 30000,
 		cooldownGroup: BLU_COOLDOWN_GROUPS.FEATHER_RAIN,
 		statusesApplied: ['FEATHER_RAIN'],
@@ -486,7 +487,7 @@ export const BLU = ensureActions({
 	ERUPTION: {
 		id: 11427,
 		name: 'Eruption',
-		icon: 'https://xivapi.com/i/003000/003295.png',
+		icon: iconUrl(3295),
 		cooldown: 30000,
 		cooldownGroup: BLU_COOLDOWN_GROUPS.FEATHER_RAIN,
 		damageType: MAGICAL,
@@ -495,7 +496,7 @@ export const BLU = ensureActions({
 	BLU_MOUNTAIN_BUSTER: {
 		id: 11428,
 		name: 'Mountain Buster',
-		icon: 'https://xivapi.com/i/003000/003296.png',
+		icon: iconUrl(3296),
 		cooldown: 60000,
 		cooldownGroup: BLU_COOLDOWN_GROUPS.BLU_MOUNTAIN_BUSTER,
 		damageType: PHYSICAL,
@@ -504,7 +505,7 @@ export const BLU = ensureActions({
 	SHOCK_STRIKE: {
 		id: 11429,
 		name: 'Shock Strike',
-		icon: 'https://xivapi.com/i/003000/003297.png',
+		icon: iconUrl(3297),
 		cooldown: 60000,
 		cooldownGroup: BLU_COOLDOWN_GROUPS.BLU_MOUNTAIN_BUSTER,
 		damageType: MAGICAL,
@@ -513,7 +514,7 @@ export const BLU = ensureActions({
 	GLASS_DANCE: {
 		id: 11430,
 		name: 'Glass Dance',
-		icon: 'https://xivapi.com/i/003000/003298.png',
+		icon: iconUrl(3298),
 		cooldown: 90000,
 		cooldownGroup: BLU_COOLDOWN_GROUPS.GLASS_DANCE,
 		damageType: MAGICAL,
@@ -522,7 +523,7 @@ export const BLU = ensureActions({
 	VEIL_OF_THE_WHORL: {
 		id: 11431,
 		name: 'Veil of the Whorl',
-		icon: 'https://xivapi.com/i/003000/003299.png',
+		icon: iconUrl(3299),
 		cooldown: 90000,
 		cooldownGroup: BLU_COOLDOWN_GROUPS.GLASS_DANCE,
 		statusesApplied: ['VEIL_OF_THE_WHORL'],
@@ -530,7 +531,7 @@ export const BLU = ensureActions({
 	ALPINE_DRAFT: {
 		id: 18295,
 		name: 'Alpine Draft',
-		icon: 'https://xivapi.com/i/003000/003300.png',
+		icon: iconUrl(3300),
 		onGcd: true,
 		castTime: 2000,
 		gcdRecast: 2500,
@@ -541,7 +542,7 @@ export const BLU = ensureActions({
 	PROTEAN_WAVE: {
 		id: 18296,
 		name: 'Protean Wave',
-		icon: 'https://xivapi.com/i/003000/003301.png',
+		icon: iconUrl(3301),
 		onGcd: true,
 		castTime: 2000,
 		gcdRecast: 2500,
@@ -552,7 +553,7 @@ export const BLU = ensureActions({
 	NORTHERLIES: {
 		id: 18297,
 		name: 'Northerlies',
-		icon: 'https://xivapi.com/i/003000/003302.png',
+		icon: iconUrl(3302),
 		onGcd: true,
 		castTime: 2000,
 		gcdRecast: 2500,
@@ -564,7 +565,7 @@ export const BLU = ensureActions({
 	ELECTROGENESIS: {
 		id: 18298,
 		name: 'Electrogenesis',
-		icon: 'https://xivapi.com/i/003000/003303.png',
+		icon: iconUrl(3303),
 		onGcd: true,
 		castTime: 2000,
 		gcdRecast: 2500,
@@ -575,7 +576,7 @@ export const BLU = ensureActions({
 	KALTSTRAHL: {
 		id: 18299,
 		name: 'Kaltstrahl',
-		icon: 'https://xivapi.com/i/003000/003304.png',
+		icon: iconUrl(3304),
 		onGcd: true,
 		castTime: 2000,
 		gcdRecast: 2500,
@@ -585,7 +586,7 @@ export const BLU = ensureActions({
 	ABYSSAL_TRANSFIXION: {
 		id: 18300,
 		name: 'Abyssal Transfixion',
-		icon: 'https://xivapi.com/i/003000/003305.png',
+		icon: iconUrl(3305),
 		onGcd: true,
 		castTime: 2000,
 		gcdRecast: 2500,
@@ -596,7 +597,7 @@ export const BLU = ensureActions({
 	CHIRP: {
 		id: 18301,
 		name: 'Chirp',
-		icon: 'https://xivapi.com/i/003000/003306.png',
+		icon: iconUrl(3306),
 		onGcd: true,
 		castTime: 2000,
 		gcdRecast: 2500,
@@ -606,7 +607,7 @@ export const BLU = ensureActions({
 	EERIE_SOUNDWAVE: {
 		id: 18302,
 		name: 'Eerie Soundwave',
-		icon: 'https://xivapi.com/i/003000/003307.png',
+		icon: iconUrl(3307),
 		onGcd: true,
 		castTime: 2000,
 		gcdRecast: 2500,
@@ -615,7 +616,7 @@ export const BLU = ensureActions({
 	POM_CURE: {
 		id: 18303,
 		name: 'Pom Cure',
-		icon: 'https://xivapi.com/i/003000/003308.png',
+		icon: iconUrl(3308),
 		onGcd: true,
 		castTime: 1500,
 		gcdRecast: 2500,
@@ -624,7 +625,7 @@ export const BLU = ensureActions({
 	GOBSKIN: {
 		id: 18304,
 		name: 'Gobskin',
-		icon: 'https://xivapi.com/i/003000/003309.png',
+		icon: iconUrl(3309),
 		onGcd: true,
 		castTime: 2000,
 		gcdRecast: 2500,
@@ -634,7 +635,7 @@ export const BLU = ensureActions({
 	MAGIC_HAMMER: {
 		id: 18305,
 		name: 'Magic Hammer',
-		icon: 'https://xivapi.com/i/003000/003310.png',
+		icon: iconUrl(3310),
 		onGcd: true,
 		castTime: 1000,
 		cooldown: 90000,
@@ -647,7 +648,7 @@ export const BLU = ensureActions({
 	AVAIL: {
 		id: 18306,
 		name: 'Avail',
-		icon: 'https://xivapi.com/i/003000/003311.png',
+		icon: iconUrl(3311),
 		onGcd: true,
 		castTime: 1000,
 		cooldown: 120000,
@@ -658,7 +659,7 @@ export const BLU = ensureActions({
 	FROG_LEGS: {
 		id: 18307,
 		name: 'Frog Legs',
-		icon: 'https://xivapi.com/i/003000/003312.png',
+		icon: iconUrl(3312),
 		onGcd: true,
 		castTime: 1000,
 		gcdRecast: 2500,
@@ -667,7 +668,7 @@ export const BLU = ensureActions({
 	SONIC_BOOM: {
 		id: 18308,
 		name: 'Sonic Boom',
-		icon: 'https://xivapi.com/i/003000/003313.png',
+		icon: iconUrl(3313),
 		onGcd: true,
 		castTime: 1000,
 		gcdRecast: 2500,
@@ -678,7 +679,7 @@ export const BLU = ensureActions({
 	WHISTLE: {
 		id: 18309,
 		name: 'Whistle',
-		icon: 'https://xivapi.com/i/003000/003314.png',
+		icon: iconUrl(3314),
 		onGcd: true,
 		castTime: 1000,
 		gcdRecast: 2500,
@@ -688,7 +689,7 @@ export const BLU = ensureActions({
 	WHITE_KNIGHTS_TOUR: {
 		id: 18310,
 		name: 'White Knight\'s Tour',
-		icon: 'https://xivapi.com/i/003000/003315.png',
+		icon: iconUrl(3315),
 		onGcd: true,
 		castTime: 2000,
 		gcdRecast: 2500,
@@ -699,7 +700,7 @@ export const BLU = ensureActions({
 	BLACK_KNIGHTS_TOUR: {
 		id: 18311,
 		name: 'Black Knight\'s Tour',
-		icon: 'https://xivapi.com/i/003000/003316.png',
+		icon: iconUrl(3316),
 		onGcd: true,
 		castTime: 2000,
 		gcdRecast: 2500,
@@ -710,7 +711,7 @@ export const BLU = ensureActions({
 	LEVEL_5_DEATH: {
 		id: 18312,
 		name: 'Level 5 Death',
-		icon: 'https://xivapi.com/i/003000/003317.png',
+		icon: iconUrl(3317),
 		onGcd: true,
 		castTime: 2000,
 		gcdRecast: 2500,
@@ -720,7 +721,7 @@ export const BLU = ensureActions({
 	LAUNCHER: {
 		id: 18313,
 		name: 'Launcher',
-		icon: 'https://xivapi.com/i/003000/003318.png',
+		icon: iconUrl(3318),
 		onGcd: true,
 		castTime: 2000,
 		gcdRecast: 2500,
@@ -730,7 +731,7 @@ export const BLU = ensureActions({
 	PERPETUAL_RAY: {
 		id: 18314,
 		name: 'Perpetual Ray',
-		icon: 'https://xivapi.com/i/003000/003319.png',
+		icon: iconUrl(3319),
 		onGcd: true,
 		castTime: 3000,
 		gcdRecast: 2500,
@@ -741,7 +742,7 @@ export const BLU = ensureActions({
 	CACTGUARD: {
 		id: 18315,
 		name: 'Cactguard',
-		icon: 'https://xivapi.com/i/003000/003320.png',
+		icon: iconUrl(3320),
 		onGcd: true,
 		castTime: 1000,
 		gcdRecast: 2500,
@@ -751,7 +752,7 @@ export const BLU = ensureActions({
 	REVENGE_BLAST: {
 		id: 18316,
 		name: 'Revenge Blast',
-		icon: 'https://xivapi.com/i/003000/003321.png',
+		icon: iconUrl(3321),
 		onGcd: true,
 		castTime: 2000,
 		gcdRecast: 2500,
@@ -761,7 +762,7 @@ export const BLU = ensureActions({
 	ANGEL_WHISPER: {
 		id: 18317,
 		name: 'Angel Whisper',
-		icon: 'https://xivapi.com/i/003000/003322.png',
+		icon: iconUrl(3322),
 		onGcd: true,
 		castTime: 10000,
 		cooldown: 300000,
@@ -771,7 +772,7 @@ export const BLU = ensureActions({
 	EXUVIATION: {
 		id: 18318,
 		name: 'Exuviation',
-		icon: 'https://xivapi.com/i/003000/003323.png',
+		icon: iconUrl(3323),
 		onGcd: true,
 		castTime: 2000,
 		gcdRecast: 2500,
@@ -780,7 +781,7 @@ export const BLU = ensureActions({
 	REFLUX: {
 		id: 18319,
 		name: 'Reflux',
-		icon: 'https://xivapi.com/i/003000/003324.png',
+		icon: iconUrl(3324),
 		onGcd: true,
 		castTime: 2000,
 		gcdRecast: 2500,
@@ -792,7 +793,7 @@ export const BLU = ensureActions({
 	DEVOUR: {
 		id: 18320,
 		name: 'Devour',
-		icon: 'https://xivapi.com/i/003000/003325.png',
+		icon: iconUrl(3325),
 		onGcd: true,
 		castTime: 1000,
 		cooldown: 60000,
@@ -804,7 +805,7 @@ export const BLU = ensureActions({
 	CONDENSED_LIBRA: {
 		id: 18321,
 		name: 'Condensed Libra',
-		icon: 'https://xivapi.com/i/003000/003326.png',
+		icon: iconUrl(3326),
 		onGcd: true,
 		castTime: 2000,
 		gcdRecast: 2500,
@@ -814,7 +815,7 @@ export const BLU = ensureActions({
 	AETHERIAL_MIMICRY: {
 		id: 18322,
 		name: 'Aetherial Mimicry',
-		icon: 'https://xivapi.com/i/003000/003327.png',
+		icon: iconUrl(3327),
 		onGcd: true,
 		castTime: 1000,
 		gcdRecast: 2500,
@@ -824,7 +825,7 @@ export const BLU = ensureActions({
 	SURPANAKHA: {
 		id: 18323,
 		name: 'Surpanakha',
-		icon: 'https://xivapi.com/i/003000/003328.png',
+		icon: iconUrl(3328),
 		cooldown: 30000,
 		charges: 4,
 		statusesApplied: ['SURPANAKHA'],
@@ -834,7 +835,7 @@ export const BLU = ensureActions({
 	QUASAR: {
 		id: 18324,
 		name: 'Quasar',
-		icon: 'https://xivapi.com/i/003000/003329.png',
+		icon: iconUrl(3329),
 		cooldown: 60000,
 		cooldownGroup: BLU_COOLDOWN_GROUPS.QUASAR,
 		damageType: MAGICAL,
@@ -842,7 +843,7 @@ export const BLU = ensureActions({
 	J_KICK: {
 		id: 18325,
 		name: 'J Kick',
-		icon: 'https://xivapi.com/i/003000/003330.png',
+		icon: iconUrl(3330),
 		cooldown: 60000,
 		cooldownGroup: BLU_COOLDOWN_GROUPS.QUASAR,
 		damageType: PHYSICAL,
@@ -850,7 +851,7 @@ export const BLU = ensureActions({
 	TRIPLE_TRIDENT: {
 		id: 23264,
 		name: 'Triple Trident',
-		icon: 'https://xivapi.com/i/003000/003331.png',
+		icon: iconUrl(3331),
 		onGcd: true,
 		castTime: 2000,
 		gcdRecast: 2500,
@@ -861,7 +862,7 @@ export const BLU = ensureActions({
 	TINGLE: {
 		id: 23265,
 		name: 'Tingle',
-		icon: 'https://xivapi.com/i/003000/003332.png',
+		icon: iconUrl(3332),
 		onGcd: true,
 		castTime: 2000,
 		gcdRecast: 2500,
@@ -873,7 +874,7 @@ export const BLU = ensureActions({
 	TATAMI_GAESHI: {
 		id: 23266,
 		name: 'Tatami-gaeshi',
-		icon: 'https://xivapi.com/i/003000/003333.png',
+		icon: iconUrl(3333),
 		onGcd: true,
 		castTime: 2000,
 		gcdRecast: 2500,
@@ -884,7 +885,7 @@ export const BLU = ensureActions({
 	COLD_FOG: {
 		id: 23267,
 		name: 'Cold Fog',
-		icon: 'https://xivapi.com/i/003000/003334.png',
+		icon: iconUrl(3334),
 		onGcd: true,
 		castTime: 2000,
 		gcdRecast: 2500,
@@ -895,7 +896,7 @@ export const BLU = ensureActions({
 	WHITE_DEATH: {
 		id: 23268,
 		name: 'White Death',
-		icon: 'https://xivapi.com/i/003000/003335.png',
+		icon: iconUrl(3335),
 		onGcd: true,
 		gcdRecast: 2500,
 		statusesApplied: ['DEEP_FREEZE'],
@@ -907,7 +908,7 @@ export const BLU = ensureActions({
 	STOTRAM_ATTACK: {
 		id: 23269,
 		name: 'Stotram',
-		icon: 'https://xivapi.com/i/003000/003336.png',
+		icon: iconUrl(3336),
 		onGcd: true,
 		castTime: 2000,
 		gcdRecast: 2500,
@@ -917,7 +918,7 @@ export const BLU = ensureActions({
 	STOTRAM_HEAL: {
 		id: 23416,
 		name: 'Stotram',
-		icon: 'https://xivapi.com/i/003000/003336.png',
+		icon: iconUrl(3336),
 		onGcd: true,
 		castTime: 2000,
 		gcdRecast: 2500,
@@ -926,7 +927,7 @@ export const BLU = ensureActions({
 	SAINTLY_BEAM: {
 		id: 23270,
 		name: 'Saintly Beam',
-		icon: 'https://xivapi.com/i/003000/003337.png',
+		icon: iconUrl(3337),
 		onGcd: true,
 		castTime: 2000,
 		gcdRecast: 2500,
@@ -936,7 +937,7 @@ export const BLU = ensureActions({
 	FECULENT_FLOOD: {
 		id: 23271,
 		name: 'Feculent Flood',
-		icon: 'https://xivapi.com/i/003000/003338.png',
+		icon: iconUrl(3338),
 		onGcd: true,
 		castTime: 2000,
 		gcdRecast: 2500,
@@ -947,7 +948,7 @@ export const BLU = ensureActions({
 	ANGELS_SNACK: {
 		id: 23272,
 		name: 'Angel\'s Snack',
-		icon: 'https://xivapi.com/i/003000/003339.png',
+		icon: iconUrl(3339),
 		onGcd: true,
 		cooldown: 120000,
 		castTime: 2000,
@@ -959,7 +960,7 @@ export const BLU = ensureActions({
 	CHELONIAN_GATE: {
 		id: 23273,
 		name: 'Chelonian Gate',
-		icon: 'https://xivapi.com//i/003000/003340.png',
+		icon: iconUrl(3340),
 		onGcd: true,
 		castTime: 2000,
 		gcdRecast: 2500,
@@ -971,7 +972,7 @@ export const BLU = ensureActions({
 	DIVINE_CATARACT: {
 		id: 23274,
 		name: 'Divine Cataract',
-		icon: 'https://xivapi.com//i/003000/003341.png',
+		icon: iconUrl(3341),
 		onGcd: true,
 		gcdRecast: 2500,
 		damageType: MAGICAL,
@@ -981,7 +982,7 @@ export const BLU = ensureActions({
 	THE_ROSE_OF_DESTRUCTION: {
 		id: 23275,
 		name: 'The Rose of Destruction',
-		icon: 'https://xivapi.com//i/003000/003342.png',
+		icon: iconUrl(3342),
 		onGcd: true,
 		castTime: 2000,
 		gcdRecast: 2500,
@@ -993,7 +994,7 @@ export const BLU = ensureActions({
 	BASIC_INSTINCT: {
 		id: 23276,
 		name: 'Basic Instinct',
-		icon: 'https://xivapi.com//i/003000/003343.png',
+		icon: iconUrl(3343),
 		onGcd: true,
 		castTime: 2000,
 		gcdRecast: 2500,
@@ -1003,7 +1004,7 @@ export const BLU = ensureActions({
 	ULTRAVIBRATION: {
 		id: 23277,
 		name: 'Ultravibration',
-		icon: 'https://xivapi.com//i/003000/003344.png',
+		icon: iconUrl(3344),
 		onGcd: true,
 		castTime: 2000,
 		gcdRecast: 2500,
@@ -1013,7 +1014,7 @@ export const BLU = ensureActions({
 	BLAZE: {
 		id: 23278,
 		name: 'Blaze',
-		icon: 'https://xivapi.com//i/003000/003345.png',
+		icon: iconUrl(3345),
 		onGcd: true,
 		castTime: 2000,
 		gcdRecast: 2500,
@@ -1024,7 +1025,7 @@ export const BLU = ensureActions({
 	MUSTARD_BOMB: {
 		id: 23279,
 		name: 'Mustard Bomb',
-		icon: 'https://xivapi.com//i/003000/003346.png',
+		icon: iconUrl(3346),
 		onGcd: true,
 		castTime: 2000,
 		gcdRecast: 2500,
@@ -1036,7 +1037,7 @@ export const BLU = ensureActions({
 	DRAGON_FORCE: {
 		id: 23280,
 		name: 'Dragon Force',
-		icon: 'https://xivapi.com//i/003000/003347.png',
+		icon: iconUrl(3347),
 		onGcd: true,
 		castTime: 2000,
 		gcdRecast: 2500,
@@ -1048,7 +1049,7 @@ export const BLU = ensureActions({
 	AETHERIAL_SPARK: {
 		id: 23281,
 		name: 'Aetherial Spark',
-		icon: 'https://xivapi.com//i/003000/003348.png',
+		icon: iconUrl(3348),
 		onGcd: true,
 		castTime: 2000,
 		statusesApplied: ['BLEEDING'],
@@ -1059,7 +1060,7 @@ export const BLU = ensureActions({
 	HYDRO_PULL: {
 		id: 23282,
 		name: 'Hydro Pull',
-		icon: 'https://xivapi.com//i/003000/003349.png',
+		icon: iconUrl(3349),
 		onGcd: true,
 		castTime: 2000,
 		gcdRecast: 2500,
@@ -1070,7 +1071,7 @@ export const BLU = ensureActions({
 	MALEDICTION_OF_WATER: {
 		id: 23283,
 		name: 'Malediction of Water',
-		icon: 'https://xivapi.com//i/003000/003350.png',
+		icon: iconUrl(3350),
 		onGcd: true,
 		castTime: 2000,
 		gcdRecast: 2500,
@@ -1081,7 +1082,7 @@ export const BLU = ensureActions({
 	CHOCO_METEOR: {
 		id: 23284,
 		name: 'Choco Meteor',
-		icon: 'https://xivapi.com//i/003000/003351.png',
+		icon: iconUrl(3351),
 		onGcd: true,
 		castTime: 2000,
 		gcdRecast: 2500,
@@ -1091,7 +1092,7 @@ export const BLU = ensureActions({
 	MATRA_MAGIC: {
 		id: 23285,
 		name: 'Matra Magic',
-		icon: 'https://xivapi.com//i/003000/003352.png',
+		icon: iconUrl(3352),
 		onGcd: true,
 		castTime: 2000,
 		gcdRecast: 2500,
@@ -1103,7 +1104,7 @@ export const BLU = ensureActions({
 	PERIPHERAL_SYNTHESIS: {
 		id: 23286,
 		name: 'Peripheral Synthesis',
-		icon: 'https://xivapi.com//i/003000/003353.png',
+		icon: iconUrl(3353),
 		onGcd: true,
 		castTime: 2000,
 		gcdRecast: 2500,
@@ -1114,7 +1115,7 @@ export const BLU = ensureActions({
 	BOTH_ENDS: {
 		id: 23287,
 		name: 'Both Ends',
-		icon: 'https://xivapi.com//i/003000/003354.png',
+		icon: iconUrl(3354),
 		cooldown: 120000,
 		cooldownGroup: BLU_COOLDOWN_GROUPS.NIGHTBLOOM,
 		damageType: MAGICAL,
@@ -1122,7 +1123,7 @@ export const BLU = ensureActions({
 	PHANTOM_FLURRY: {
 		id: 23288,
 		name: 'Phantom Flurry',
-		icon: 'https://xivapi.com//i/003000/003355.png',
+		icon: iconUrl(3355),
 		gcdRecast: 2500,
 		cooldown: 120000,
 		onGcd: true, // not actually true but makes the timeline nicer
@@ -1133,7 +1134,7 @@ export const BLU = ensureActions({
 		// Even though this is a GCD, it is NOT affected by Spell Speed; it always rolls for 2.5s
 		id: 23289,
 		name: 'Phantom Flurry',
-		icon: 'https://xivapi.com//i/003000/003356.png',
+		icon: iconUrl(3356),
 		gcdRecast: 2500,
 		onGcd: true,
 		damageType: PHYSICAL, // kick is Physical/Blunt
@@ -1141,7 +1142,7 @@ export const BLU = ensureActions({
 	NIGHTBLOOM: {
 		id: 23290,
 		name: 'Nightbloom',
-		icon: 'https://xivapi.com//i/003000/003357.png',
+		icon: iconUrl(3357),
 		cooldown: 120000,
 		cooldownGroup: BLU_COOLDOWN_GROUPS.NIGHTBLOOM,
 		statusesApplied: ['BLEEDING'],
@@ -1150,7 +1151,7 @@ export const BLU = ensureActions({
 	GOBLIN_PUNCH: {
 		id: 34563,
 		name: 'Goblin Punch',
-		icon: 'https://xivapi.com/i/003000/003358.png',
+		icon: iconUrl(3358),
 		onGcd: true,
 		gcdRecast: 2500,
 		damageType: PHYSICAL,
@@ -1177,7 +1178,7 @@ export const BLU = ensureActions({
 	RIGHT_ROUND: {
 		id: 34564,
 		name: 'Right Round',
-		icon: 'https://xivapi.com/i/003000/003359.png',
+		icon: iconUrl(3359),
 		onGcd: true,
 		castTime: 2000,
 		gcdRecast: 2500,
@@ -1187,7 +1188,7 @@ export const BLU = ensureActions({
 	SCHILTRON: {
 		id: 34565,
 		name: 'Schiltron',
-		icon: 'https://xivapi.com/i/003000/003360.png',
+		icon: iconUrl(3360),
 		onGcd: true,
 		castTime: 2000,
 		gcdRecast: 2500,
@@ -1197,7 +1198,7 @@ export const BLU = ensureActions({
 	REHYDRATION: {
 		id: 34566,
 		name: 'Rehydration',
-		icon: 'https://xivapi.com/i/003000/003361.png',
+		icon: iconUrl(3361),
 		onGcd: true,
 		castTime: 5000,
 		gcdRecast: 2500,
@@ -1206,7 +1207,7 @@ export const BLU = ensureActions({
 	BREATH_OF_MAGIC: {
 		id: 34567,
 		name: 'Breath of Magic',
-		icon: 'https://xivapi.com/i/003000/003362.png',
+		icon: iconUrl(3362),
 		onGcd: true,
 		castTime: 2000,
 		gcdRecast: 2500,
@@ -1217,7 +1218,7 @@ export const BLU = ensureActions({
 	WILD_RAGE: {
 		id: 34568,
 		name: 'Wild Rage',
-		icon: 'https://xivapi.com/i/003000/003363.png',
+		icon: iconUrl(3363),
 		onGcd: true,
 		castTime: 5000,
 		gcdRecast: 2500,
@@ -1227,7 +1228,7 @@ export const BLU = ensureActions({
 	PEAT_PELT: {
 		id: 34569,
 		name: 'Peat Pelt',
-		icon: 'https://xivapi.com/i/003000/003364.png',
+		icon: iconUrl(3364),
 		onGcd: true,
 		castTime: 2000,
 		gcdRecast: 2500,
@@ -1239,7 +1240,7 @@ export const BLU = ensureActions({
 	DEEP_CLEAN: {
 		id: 34570,
 		name: 'Deep Clean',
-		icon: 'https://xivapi.com/i/003000/003365.png',
+		icon: iconUrl(3365),
 		onGcd: true,
 		castTime: 2000,
 		gcdRecast: 2500,
@@ -1250,7 +1251,7 @@ export const BLU = ensureActions({
 	RUBY_DYNAMICS: {
 		id: 34571,
 		name: 'Ruby Dynamics',
-		icon: 'https://xivapi.com/i/003000/003366.png',
+		icon: iconUrl(3366),
 		onGcd: true,
 		castTime: 2000,
 		gcdRecast: 2500,
@@ -1262,7 +1263,7 @@ export const BLU = ensureActions({
 	DIVINATION_RUNE: {
 		id: 34572,
 		name: 'Divination Rune',
-		icon: 'https://xivapi.com/i/003000/003367.png',
+		icon: iconUrl(3367),
 		onGcd: true,
 		castTime: 2000,
 		gcdRecast: 2500,
@@ -1272,7 +1273,7 @@ export const BLU = ensureActions({
 	DIMENSIONAL_SHIFT: {
 		id: 34573,
 		name: 'Dimensional Shift',
-		icon: 'https://xivapi.com/i/003000/003368.png',
+		icon: iconUrl(3368),
 		onGcd: true,
 		castTime: 5000,
 		gcdRecast: 2500,
@@ -1282,7 +1283,7 @@ export const BLU = ensureActions({
 	CONVICTION_MARCATO: {
 		id: 34574,
 		name: 'Conviction Marcato',
-		icon: 'https://xivapi.com/i/003000/003369.png',
+		icon: iconUrl(3369),
 		onGcd: true,
 		castTime: 2000,
 		gcdRecast: 2500,
@@ -1292,7 +1293,7 @@ export const BLU = ensureActions({
 	FORCE_FIELD: {
 		id: 34575,
 		name: 'Force Field',
-		icon: 'https://xivapi.com/i/003000/003370.png',
+		icon: iconUrl(3370),
 		onGcd: true,
 		castTime: 2000,
 		gcdRecast: 2500,
@@ -1305,7 +1306,7 @@ export const BLU = ensureActions({
 		// see the WingedReprobation module for details.
 		id: 34576,
 		name: 'Winged Reprobation',
-		icon: 'https://xivapi.com/i/003000/003371.png',
+		icon: iconUrl(3371),
 		onGcd: true,
 		castTime: 2000,
 		gcdRecast: 2500,
@@ -1317,7 +1318,7 @@ export const BLU = ensureActions({
 	LASER_EYE: {
 		id: 34577,
 		name: 'Laser Eye',
-		icon: 'https://xivapi.com/i/003000/003372.png',
+		icon: iconUrl(3372),
 		onGcd: true,
 		castTime: 2000,
 		gcdRecast: 2500,
@@ -1327,7 +1328,7 @@ export const BLU = ensureActions({
 	CANDY_CANE: {
 		id: 34578,
 		name: 'Candy Cane',
-		icon: 'https://xivapi.com/i/003000/003373.png',
+		icon: iconUrl(3373),
 		onGcd: true,
 		castTime: 1000,
 		cooldown: 90000,
@@ -1340,7 +1341,7 @@ export const BLU = ensureActions({
 	MORTAL_FLAME: {
 		id: 34579,
 		name: 'Mortal Flame',
-		icon: 'https://xivapi.com/i/003000/003374.png',
+		icon: iconUrl(3374),
 		onGcd: true,
 		castTime: 2000,
 		gcdRecast: 2500,
@@ -1352,7 +1353,7 @@ export const BLU = ensureActions({
 	SEA_SHANTY: {
 		id: 34580,
 		name: 'Sea Shanty',
-		icon: 'https://xivapi.com/i/003000/003375.png',
+		icon: iconUrl(3375),
 		cooldown: 120000,
 		damageType: MAGICAL,
 		elementType: UMBRAL,
@@ -1360,7 +1361,7 @@ export const BLU = ensureActions({
 	APOKALYPSIS: {
 		id: 34581,
 		name: 'Apokalypsis',
-		icon: 'https://xivapi.com/i/003000/003376.png',
+		icon: iconUrl(3376),
 		cooldown: 120000,
 		damageType: MAGICAL,
 		onGcd: true, // same justification as with Phantom Flurry
@@ -1370,7 +1371,7 @@ export const BLU = ensureActions({
 	BEING_MORTAL: {
 		id: 34582,
 		name: 'Being Mortal',
-		icon: 'https://xivapi.com/i/003000/003377.png',
+		icon: iconUrl(3377),
 		cooldown: 120000,
 		damageType: MAGICAL,
 		cooldownGroup: BLU_COOLDOWN_GROUPS.BEING_MORTAL,

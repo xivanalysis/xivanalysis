@@ -1,6 +1,7 @@
 import {t} from '@lingui/macro'
 import {Trans, Plural} from '@lingui/react'
 import {Action} from 'data/ACTIONS'
+import {iconUrl} from 'data/icon'
 import {Status} from 'data/STATUSES'
 import {Event, Events} from 'event'
 import {Actors} from 'parser/core/modules/Actors'
@@ -13,6 +14,9 @@ import {dependency} from '../Injectable'
 import {Data} from './Data'
 import Downtime from './Downtime'
 import {Invulnerability} from './Invulnerability'
+
+const ICON_HASTY_TOUCH = 1989
+const ICON_MUSCLE_MEMORY = 1994
 
 export interface ProcBuffWindow {
 	start: number,
@@ -67,12 +71,12 @@ export abstract class Procs extends Analyser {
 	 * Subclassing analysers may override these suggestion properties with relevant job-specific ones
 	 */
 	protected showDroppedProcSuggestion: boolean = false
-	protected droppedProcIcon: string = 'https://xivapi.com/i/001000/001989.png' // Hasty Touch ...
+	protected droppedProcIcon: string = iconUrl(ICON_HASTY_TOUCH)
 	protected droppedProcContent: ReactNode = <Trans id="core.procs.suggestions.dropped.content">Avoid letting your procs fall off without using them. Proc actions are generally stronger than other actions and should not be wasted.</Trans>
 	protected droppedProcSeverityTiers: SeverityTiers = DEFAULT_SEVERITY_TIERS
 
 	protected showOverwroteProcSuggestion: boolean = false
-	protected overwroteProcIcon: string = 'https://xivapi.com/i/001000/001994.png' // Muscle Memory ...
+	protected overwroteProcIcon: string = iconUrl(ICON_MUSCLE_MEMORY)
 	protected overwroteProcContent: ReactNode = <Trans id="core.procs.suggestions.overwritten.content">Avoid using an action that could generate a proc when you already have that proc active.</Trans>
 	protected overwroteProcSeverityTiers: SeverityTiers = DEFAULT_SEVERITY_TIERS
 
@@ -506,7 +510,6 @@ export abstract class Procs extends Analyser {
 	/**
 	 * Add the event to the removal map for the group, if it's not already present in the group
 	 * This method is protected so subclassing analysers can hook into it
-	 * Currently only used by BLM to deal with the interaction between T3P and Sharpcast
 	*/
 	protected tryAddEventToRemovals(procGroup: ProcGroup, event: Event) {
 		this.tryAddEventToMap(this.removals.get(procGroup), event)

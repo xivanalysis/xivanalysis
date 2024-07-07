@@ -4,9 +4,9 @@ import {BASE_GCD} from 'data/CONSTANTS'
 
 // NOTE: The location of these constants (and indeed, the logic below), must be kept up to date in `docs/patch-checklist.md`.
 
-export const SUB_ATTRIBUTE_MINIMUM = 400
+export const SUB_ATTRIBUTE_MINIMUM = 420
 
-const STAT_DIVISOR = 1900
+const STAT_DIVISOR = 2780
 
 export function getSpeedStat(estimatedGcd: number): number {
 	return Math.floor(1/130 * STAT_DIVISOR * (1000 - (1000 * estimatedGcd) / BASE_GCD) + SUB_ATTRIBUTE_MINIMUM)

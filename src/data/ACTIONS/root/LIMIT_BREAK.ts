@@ -1,12 +1,15 @@
+import {iconUrl} from 'data/icon'
 import {ensureActions} from '../type'
 
-const icon = 'https://xivapi.com/i/000000/000103.png'
+const icon = iconUrl(103)
 
 export const LIMIT_BREAK = ensureActions({
 	// Tank LB1
 	SHIELD_WALL: {
 		id: 197,
 		name: 'Shield Wall',
+		onGcd: true,
+		gcdRecast: 1930,
 		icon,
 	},
 
@@ -14,6 +17,8 @@ export const LIMIT_BREAK = ensureActions({
 	STRONGHOLD: {
 		id: 198,
 		name: 'Stronghold',
+		onGcd: true,
+		gcdRecast: 3860,
 		icon,
 	},
 
@@ -21,6 +26,8 @@ export const LIMIT_BREAK = ensureActions({
 	LAST_BASTION: {
 		id: 199,
 		name: 'Last Bastion',
+		onGcd: true,
+		gcdRecast: 3860,
 		icon,
 	},
 
@@ -28,6 +35,8 @@ export const LIMIT_BREAK = ensureActions({
 	LAND_WAKER: {
 		id: 4240,
 		name: 'Land Waker',
+		onGcd: true,
+		gcdRecast: 3860,
 		icon,
 	},
 
@@ -35,6 +44,8 @@ export const LIMIT_BREAK = ensureActions({
 	DARK_FORCE: {
 		id: 4241,
 		name: 'Dark Force',
+		onGcd: true,
+		gcdRecast: 3860,
 		icon,
 	},
 
@@ -42,6 +53,8 @@ export const LIMIT_BREAK = ensureActions({
 	GUNMETAL_SOUL: {
 		id: 17105,
 		name: 'Gunmetal Soul',
+		onGcd: true,
+		gcdRecast: 3860,
 		icon,
 	},
 
@@ -49,6 +62,9 @@ export const LIMIT_BREAK = ensureActions({
 	HEALING_WIND: {
 		id: 206,
 		name: 'Healing Wind',
+		onGcd: true,
+		castTime: 2000,
+		gcdRecast: 4100,
 		icon,
 	},
 
@@ -56,6 +72,9 @@ export const LIMIT_BREAK = ensureActions({
 	BREATH_OF_THE_EARTH: {
 		id: 207,
 		name: 'Breath of the Earth',
+		onGcd: true,
+		castTime: 2000,
+		gcdRecast: 7130,
 		icon,
 	},
 
@@ -63,6 +82,9 @@ export const LIMIT_BREAK = ensureActions({
 	PULSE_OF_LIFE: {
 		id: 208,
 		name: 'Pulse of Life',
+		onGcd: true,
+		castTime: 2000,
+		gcdRecast: 10100,
 		icon,
 	},
 
@@ -70,6 +92,9 @@ export const LIMIT_BREAK = ensureActions({
 	ANGEL_FEATHERS: {
 		id: 4247,
 		name: 'Angel Feathers',
+		onGcd: true,
+		castTime: 2000,
+		gcdRecast: 10100,
 		icon,
 	},
 
@@ -77,6 +102,9 @@ export const LIMIT_BREAK = ensureActions({
 	ASTRAL_STASIS: {
 		id: 4248,
 		name: 'Astral Stasis',
+		onGcd: true,
+		castTime: 2000,
+		gcdRecast: 10100,
 		icon,
 	},
 
@@ -84,6 +112,9 @@ export const LIMIT_BREAK = ensureActions({
 	TECHNE_MAKRE: {
 		id: 24859,
 		name: 'Techne Makre',
+		onGcd: true,
+		castTime: 2000,
+		gcdRecast: 10100,
 		icon,
 	},
 
@@ -91,6 +122,9 @@ export const LIMIT_BREAK = ensureActions({
 	BRAVER: {
 		id: 200,
 		name: 'Braver',
+		onGcd: true,
+		castTime: 2000,
+		gcdRecast: 5860,
 		icon,
 	},
 
@@ -98,6 +132,9 @@ export const LIMIT_BREAK = ensureActions({
 	BLADEDANCE: {
 		id: 201,
 		name: 'Bladedance',
+		onGcd: true,
+		castTime: 3000,
+		gcdRecast: 6860,
 		icon,
 	},
 
@@ -105,6 +142,9 @@ export const LIMIT_BREAK = ensureActions({
 	FINAL_HEAVEN: {
 		id: 202,
 		name: 'Final Heaven',
+		onGcd: true,
+		castTime: 4500,
+		gcdRecast: 8200,
 		icon,
 	},
 
@@ -112,6 +152,9 @@ export const LIMIT_BREAK = ensureActions({
 	DRAGONSONG_DIVE: {
 		id: 4242,
 		name: 'Dragonsong Dive',
+		onGcd: true,
+		castTime: 4500,
+		gcdRecast: 8200,
 		icon,
 	},
 
@@ -119,6 +162,9 @@ export const LIMIT_BREAK = ensureActions({
 	CHIMATSURI: {
 		id: 4243,
 		name: 'Chimatsuri',
+		onGcd: true,
+		castTime: 4500,
+		gcdRecast: 8200,
 		icon,
 	},
 
@@ -126,6 +172,9 @@ export const LIMIT_BREAK = ensureActions({
 	DOOM_OF_THE_LIVING: {
 		id: 7861,
 		name: 'Doom of the Living',
+		onGcd: true,
+		castTime: 4500,
+		gcdRecast: 8200,
 		icon,
 	},
 
@@ -133,6 +182,9 @@ export const LIMIT_BREAK = ensureActions({
 	THE_END: {
 		id: 24858,
 		name: 'the End',
+		onGcd: true,
+		castTime: 4500,
+		gcdRecast: 8200,
 		icon,
 	},
 
@@ -140,6 +192,9 @@ export const LIMIT_BREAK = ensureActions({
 	BIG_SHOT: {
 		id: 4238,
 		name: 'Big Shot',
+		onGcd: true,
+		castTime: 2000,
+		gcdRecast: 5100,
 		icon,
 	},
 
@@ -147,6 +202,9 @@ export const LIMIT_BREAK = ensureActions({
 	DESPERADO: {
 		id: 4239,
 		name: 'Desperado',
+		onGcd: true,
+		castTime: 3100,
+		gcdRecast: 6100,
 		icon,
 	},
 
@@ -154,6 +212,9 @@ export const LIMIT_BREAK = ensureActions({
 	SAGITTARIUS_ARROW: {
 		id: 4244,
 		name: 'Sagittarius Arrow',
+		onGcd: true,
+		castTime: 4500,
+		gcdRecast: 8200,
 		icon,
 	},
 
@@ -161,6 +222,9 @@ export const LIMIT_BREAK = ensureActions({
 	SATELLITE_BEAM: {
 		id: 4245,
 		name: 'Satellite Beam',
+		onGcd: true,
+		castTime: 4500,
+		gcdRecast: 8200,
 		icon,
 	},
 
@@ -168,6 +232,9 @@ export const LIMIT_BREAK = ensureActions({
 	CRIMSON_LOTUS: {
 		id: 17106,
 		name: 'Crimson Lotus',
+		onGcd: true,
+		castTime: 4500,
+		gcdRecast: 8200,
 		icon,
 	},
 
@@ -175,6 +242,9 @@ export const LIMIT_BREAK = ensureActions({
 	SKYSHARD: {
 		id: 203,
 		name: 'Skyshard',
+		onGcd: true,
+		castTime: 2000,
+		gcdRecast: 5100,
 		icon,
 	},
 
@@ -182,6 +252,9 @@ export const LIMIT_BREAK = ensureActions({
 	STARSTORM: {
 		id: 204,
 		name: 'Starstorm',
+		onGcd: true,
+		castTime: 3000,
+		gcdRecast: 8100,
 		icon,
 	},
 
@@ -189,6 +262,9 @@ export const LIMIT_BREAK = ensureActions({
 	METEOR: {
 		id: 205,
 		name: 'Meteor',
+		onGcd: true,
+		castTime: 4500,
+		gcdRecast: 12600,
 		icon,
 	},
 
@@ -196,6 +272,9 @@ export const LIMIT_BREAK = ensureActions({
 	TERAFLARE: {
 		id: 4246,
 		name: 'Teraflare',
+		onGcd: true,
+		castTime: 4500,
+		gcdRecast: 12600,
 		icon,
 	},
 
@@ -203,6 +282,19 @@ export const LIMIT_BREAK = ensureActions({
 	VERMILION_SCOURGE: {
 		id: 7862,
 		name: 'Vermilion Scourge',
+		onGcd: true,
+		castTime: 4500,
+		gcdRecast: 12600,
+		icon,
+	},
+
+	// PCT LB3
+	CHROMATIC_FANTASY: {
+		id: 34867,
+		name: 'Chromatic Fantasy',
+		onGcd: true,
+		castTime: 4500,
+		gcdRecast: 12600,
 		icon,
 	},
 })

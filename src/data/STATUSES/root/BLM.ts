@@ -1,73 +1,64 @@
+import {iconUrl} from 'data/icon'
 import {ensureStatuses} from '../type'
 
-// TODO: Fill in the rest of this
 export const BLM = ensureStatuses({
-	THUNDER_I: {
-		id: 161,
-		name: 'Thunder',
-		icon: 'https://xivapi.com/i/010000/010457.png',
-	},
-	THUNDER_II: {
-		id: 162,
-		name: 'Thunder II',
-		icon: 'https://xivapi.com/i/010000/010458.png',
-	},
 	THUNDER_III: {
 		id: 163,
 		name: 'Thunder III',
-		icon: 'https://xivapi.com/i/010000/010459.png',
-		duration: 30000,
+		icon: iconUrl(10459),
+		duration: 27000,
 	},
 	THUNDER_IV: {
 		id: 1210,
 		name: 'Thunder IV',
-		icon: 'https://xivapi.com/i/012000/012657.png',
-		duration: 18000,
+		icon: iconUrl(12657),
+		duration: 21000,
+	},
+	HIGH_THUNDER: {
+		id: 3871,
+		name: 'High Thunder',
+		icon: iconUrl(12661),
+		duration: 30000,
+	},
+	HIGH_THUNDER_II: {
+		id: 3872,
+		name: 'High Thunder II',
+		icon: iconUrl(12662),
+		duration: 24000,
 	},
 	TRIPLECAST: {
 		id: 1211,
 		name: 'Triplecast',
-		icon: 'https://xivapi.com/i/012000/012658.png',
+		icon: iconUrl(12658),
 	},
 	FIRESTARTER: {
 		id: 165,
 		name: 'Firestarter',
-		icon: 'https://xivapi.com/i/010000/010460.png',
+		icon: iconUrl(10460),
 		duration: 30000,
 	},
-	THUNDERCLOUD: {
-		id: 164,
-		name: 'Thundercloud',
-		icon: 'https://xivapi.com/i/010000/010461.png',
-		duration: 40000,
+	THUNDERHEAD: {
+		id: 3870,
+		name: 'Thunderhead',
+		icon: iconUrl(12660),
+		duration: 30000,
 	},
 	LEY_LINES: {
 		id: 737,
 		name: 'Ley Lines',
-		icon: 'https://xivapi.com/i/012000/012653.png',
+		icon: iconUrl(12653),
 		duration: 30000,
 	},
 	CIRCLE_OF_POWER: {
 		id: 738,
 		name: 'Circle Of Power',
-		icon: 'https://xivapi.com/i/012000/012654.png',
+		icon: iconUrl(12654),
 		speedModifier: 0.85,
-	},
-	SHARPCAST: {
-		id: 867,
-		name: 'Sharpcast',
-		icon: 'https://xivapi.com/i/012000/012655.png',
-		duration: 30000,
 	},
 	MANAWARD: {
 		id: 168,
 		name: 'Manaward',
-		icon: 'https://xivapi.com/i/010000/010456.png',
+		icon: iconUrl(10456),
 		duration: 20000,
-	},
-	ENHANCED_FLARE: {
-		id: 2960,
-		name: 'Enhanced Flare',
-		icon: 'https://xivapi.com/i/012000/012659.png',
 	},
 })
