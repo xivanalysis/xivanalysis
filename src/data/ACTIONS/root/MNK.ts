@@ -1,6 +1,6 @@
 import {iconUrl} from 'data/icon'
 import {Attribute} from 'event'
-import {ensureActions, BonusModifier} from '../type'
+import {ensureActions, BonusModifier, PotencySpecialCase} from '../type'
 
 export const MNK = ensureActions({
 	// -----
@@ -14,12 +14,12 @@ export const MNK = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		potencies: [{
-			value: 210,
+			value: 220,
 			bonusModifiers: [],
 		}, {
-			value: 310,
+			value: 420,
 			bonusModifiers: [],
-			baseModifiers: ['LEADEN_FIST'],
+			baseModifiers: [PotencySpecialCase.MNK_OPO_OPOS_FURY],
 		}],
 	},
 
@@ -30,8 +30,12 @@ export const MNK = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		potencies: [{
-			value: 300,
+			value: 290,
 			bonusModifiers: [],
+		}, {
+			value: 440,
+			bonusModifiers: [],
+			baseModifiers: [PotencySpecialCase.MNK_RAPTORS_FURY],
 		}],
 	},
 
@@ -42,11 +46,19 @@ export const MNK = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		potencies: [{
-			value: 250,
+			value: 300,
 			bonusModifiers: [],
 		}, {
-			value: 310,
+			value: 360,
 			bonusModifiers: [BonusModifier.POSITIONAL],
+		}, {
+			value: 400,
+			bonusModifiers: [],
+			baseModifiers: [PotencySpecialCase.MNK_COEURLS_FURY],
+		}, {
+			value: 460,
+			bonusModifiers: [BonusModifier.POSITIONAL],
+			baseModifiers: [PotencySpecialCase.MNK_COEURLS_FURY],
 		}],
 	},
 
@@ -56,9 +68,8 @@ export const MNK = ensureActions({
 		icon: iconUrl(213),
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		statusesApplied: ['DISCIPLINED_FIST'],
 		potencies: [{
-			value: 280,
+			value: 380,
 			bonusModifiers: [],
 		}],
 	},
@@ -85,12 +96,11 @@ export const MNK = ensureActions({
 		icon: iconUrl(204),
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		statusesApplied: ['DEMOLISH'],
 		potencies: [{
-			value: 70,
+			value: 340,
 			bonusModifiers: [],
 		}, {
-			value: 130,
+			value: 400,
 			bonusModifiers: [BonusModifier.POSITIONAL],
 		}],
 	},
@@ -120,14 +130,6 @@ export const MNK = ensureActions({
 		statusesApplied: ['FORMLESS_FIST'],
 	},
 
-	MEDITATION: {
-		id: 3546,
-		name: 'Meditation',
-		icon: iconUrl(2534),
-		onGcd: true,
-		cooldown: 1000,
-	},
-
 	FOUR_POINT_FURY: {
 		id: 16473,
 		name: 'Four-Point Fury',
@@ -138,11 +140,67 @@ export const MNK = ensureActions({
 
 	SIX_SIDED_STAR: {
 		id: 16476,
-		name: 'Six-Sided Star',
+		name: 'Six-sided Star',
 		icon: iconUrl(2547),
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		cooldown: 5000,
+		gcdRecast: 5000,
+		statusesApplied: ['SIX_SIDED_STAR'],
+	},
+
+	LEAPING_OPO: {
+		id: 36945,
+		name: 'Leaping Opo',
+		icon: iconUrl(2982),
+		onGcd: true,
+		speedAttribute: Attribute.SKILL_SPEED,
+		potencies: [{
+			value: 260,
+			bonusModifiers: [],
+		}, {
+			value: 460,
+			bonusModifiers: [],
+			baseModifiers: [PotencySpecialCase.MNK_OPO_OPOS_FURY],
+		}],
+	},
+
+	RISING_RAPTOR: {
+		id: 36946,
+		name: 'Rising Raptor',
+		icon: iconUrl(2983),
+		onGcd: true,
+		speedAttribute: Attribute.SKILL_SPEED,
+		potencies: [{
+			value: 330,
+			bonusModifiers: [],
+		}, {
+			value: 480,
+			bonusModifiers: [],
+			baseModifiers: [PotencySpecialCase.MNK_RAPTORS_FURY],
+		}],
+	},
+
+	POUNCING_COEURL: {
+		id: 36947,
+		name: 'Pouncing Coeurl',
+		icon: iconUrl(2984),
+		onGcd: true,
+		speedAttribute: Attribute.SKILL_SPEED,
+		potencies: [{
+			value: 340,
+			bonusModifiers: [],
+		}, {
+			value: 400,
+			bonusModifiers: [BonusModifier.POSITIONAL],
+		}, {
+			value: 440,
+			bonusModifiers: [],
+			baseModifiers: [PotencySpecialCase.MNK_COEURLS_FURY],
+		}, {
+			value: 500,
+			bonusModifiers: [BonusModifier.POSITIONAL],
+			baseModifiers: [PotencySpecialCase.MNK_COEURLS_FURY],
+		}],
 	},
 
 	// -----
@@ -165,7 +223,7 @@ export const MNK = ensureActions({
 		speedAttribute: Attribute.SKILL_SPEED,
 		statusesApplied: ['FORMLESS_FIST'],
 		potencies: [{
-			value: 600,
+			value: 800,
 			bonusModifiers: [],
 		}],
 	},
@@ -177,7 +235,10 @@ export const MNK = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		statusesApplied: ['FORMLESS_FIST'],
-		potency: 600,
+		potencies: [{
+			value: 600,
+			bonusModifiers: [],
+		}],
 	},
 
 	CELESTIAL_REVOLUTION: {
@@ -200,7 +261,10 @@ export const MNK = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		statusesApplied: ['FORMLESS_FIST'],
-		potency: 850,
+		potencies: [{
+			value: 850,
+			bonusModifiers: [],
+		}],
 	},
 
 	RISING_PHOENIX: {
@@ -211,7 +275,7 @@ export const MNK = ensureActions({
 		speedAttribute: Attribute.SKILL_SPEED,
 		statusesApplied: ['FORMLESS_FIST'],
 		potencies: [{
-			value: 700,
+			value: 900,
 			bonusModifiers: [],
 		}],
 	},
@@ -223,6 +287,80 @@ export const MNK = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		statusesApplied: ['FORMLESS_FIST'],
+		potencies: [{
+			value: 1400,
+			bonusModifiers: [],
+		}],
+	},
+
+	ELIXIR_BURST: {
+		id: 36948,
+		name: 'Elixir Burst',
+		icon: iconUrl(2985),
+		onGcd: true,
+		speedAttribute: Attribute.SKILL_SPEED,
+		statusesApplied: ['FORMLESS_FIST'],
+		potencies: [{
+			value: 900,
+			bonusModifiers: [],
+		}],
+	},
+
+	// -----
+	// Reply GCDs
+	// -----
+
+	WINDS_REPLY: {
+		id: 36949,
+		name: "Wind's Reply",
+		icon: iconUrl(2986),
+		onGcd: true,
+		speedAttribute: Attribute.SKILL_SPEED,
+		potencies: [{
+			value: 800,
+			bonusModifiers: [],
+		}],
+	},
+
+	FIRES_REPLY: {
+		id: 36950,
+		name: "Fire's Reply",
+		icon: iconUrl(2987),
+		onGcd: true,
+		speedAttribute: Attribute.SKILL_SPEED,
+		statusesApplied: ['FORMLESS_FIST'],
+		potencies: [{
+			value: 1100,
+			bonusModifiers: [],
+		}],
+	},
+
+	// -----
+	// Meditations (Monkus Aurelius)
+	// -----
+
+	STEELED_MEDITATION: {
+		id: 36940,
+		name: 'Steeled Meditation',
+		icon: iconUrl(218),
+		onGcd: true,
+		cooldown: 1000,
+	},
+
+	FORBIDDEN_MEDITATION: {
+		id: 36942,
+		name: 'Forbidden Meditation',
+		icon: iconUrl(218),
+		onGcd: true,
+		cooldown: 1000,
+	},
+
+	ENLIGHTENED_MEDITATION: {
+		id: 36943,
+		name: 'Enlightened Meditation',
+		icon: iconUrl(219),
+		onGcd: true,
+		cooldown: 1000,
 	},
 
 	// -----
@@ -259,7 +397,7 @@ export const MNK = ensureActions({
 		name: 'Riddle of Earth',
 		icon: iconUrl(2537),
 		cooldown: 120000,
-		statusesApplied: ['RIDDLE_OF_EARTH'],
+		statusesApplied: ['RIDDLE_OF_EARTH', 'EARTHS_RUMINATION'],
 	},
 
 	RIDDLE_OF_FIRE: {
@@ -267,7 +405,7 @@ export const MNK = ensureActions({
 		name: 'Riddle of Fire',
 		icon: iconUrl(2541),
 		cooldown: 60000,
-		statusesApplied: ['RIDDLE_OF_FIRE'],
+		statusesApplied: ['RIDDLE_OF_FIRE', 'FIRES_RUMINATION'],
 	},
 
 	RIDDLE_OF_WIND: {
@@ -275,7 +413,7 @@ export const MNK = ensureActions({
 		name: 'Riddle of Wind',
 		icon: iconUrl(2978),
 		cooldown: 90000,
-		statusesApplied: ['RIDDLE_OF_WIND'],
+		statusesApplied: ['RIDDLE_OF_WIND', 'WINDS_RUMINATION'],
 	},
 
 	STEEL_PEAK: {
@@ -310,22 +448,18 @@ export const MNK = ensureActions({
 		cooldownGroup: 1,
 	},
 
-	ANATMAN: {
-		id: 16475,
-		name: 'Anatman',
-		icon: iconUrl(2546),
-		onGcd: true,
-		speedAttribute: Attribute.SKILL_SPEED,
-		cooldown: 60000,
-		gcdRecast: 2500,
-		statusesApplied: ['ANATMAN'],
-	},
-
 	THUNDERCLAP: {
 		id: 25762,
 		name: 'Thunderclap',
 		icon: iconUrl(2975),
 		cooldown: 30000,
 		charges: 3,
+	},
+
+	EARTHS_REPLY: {
+		id: 36944,
+		name: "Earth's Reply",
+		icon: iconUrl(2549),
+		statusesApplied: ['EARTHS_REPLY'],
 	},
 })

@@ -9,6 +9,8 @@ export class ActionTimeline extends CoreActionTimeline {
 		'DETONATOR',
 		'BARREL_STABILIZER',
 		'HYPERCHARGE',
+		'DOUBLE_CHECK',
+		'CHECKMATE',
 		'GAUSS_ROUND',
 		'RICOCHET',
 		'REASSEMBLE',

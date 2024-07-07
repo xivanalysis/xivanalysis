@@ -24,11 +24,8 @@ const MIN_REOPENER_DOWNTIME = 15000
 // Timeline padding to see the drifted GCD when you jump to the window
 const TIMELINE_PADDING = 2500
 
-// 6.0: Add chain saw
 const DRIFT_GCDS: ActionKey[] = [
 	'AIR_ANCHOR',
-	'BIOBLASTER',
-	'DRILL',
 	'CHAIN_SAW',
 ]
 
@@ -56,10 +53,6 @@ export class Drift extends Analyser {
 
 	private currentWindows: { [groupId: number]: DriftWindow } = {
 		[this.data.actions.AIR_ANCHOR.id]: {
-			start: this.parser.pull.timestamp,
-			casts: [],
-		},
-		[this.data.actions.DRILL.cooldownGroup]: {
 			start: this.parser.pull.timestamp,
 			casts: [],
 		},
@@ -165,9 +158,9 @@ export class Drift extends Analyser {
 		return <Fragment>
 			<Message>
 				<Trans id="mch.drift.accordion.message">
-					<ActionLink action="CHAIN_SAW"/>, <ActionLink action="AIR_ANCHOR"/>, and <ActionLink action="DRILL"/> are your strongest GCDs and ideally they should always be kept on cooldown,
+					<ActionLink action="CHAIN_SAW"/> and <ActionLink action="AIR_ANCHOR"/> are powerful GCDs and ideally they should always be kept on cooldown,
 					unless you need to insert a filler GCD to adjust for skill speed. Avoid casting <ActionLink action="HYPERCHARGE"/> if
-					Chain Saw, Air Anchor, or Drill will come off cooldown within 8 seconds.
+					Chain Saw or Air Anchor will come off cooldown within 8 seconds.
 				</Trans>
 			</Message>
 			{driftTable}

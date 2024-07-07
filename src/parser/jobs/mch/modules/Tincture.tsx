@@ -8,6 +8,10 @@ import {SEVERITY} from 'parser/core/modules/Suggestions'
 import {Tincture as CoreTincture} from 'parser/core/modules/Tincture'
 import React from 'react'
 
+const TINCTURE_OPENER_BUFFER = 10000
+const BS_REQUIREMENT = 10
+const BS_REQUIREMENT_OPENER = 5
+
 interface reassembleOptions extends TrackedActionsOptions {
 	reassembleId: number
 	countReassemblesUsed: (window: HistoryEntry<EvaluatedAction[]>) => number
@@ -67,15 +71,7 @@ export class Tincture extends CoreTincture {
 					expectedPerWindow: 1,
 				},
 				{
-					action: this.data.actions.DRILL,
-					expectedPerWindow: 2,
-				},
-				{
-					action: this.data.actions.CHAIN_SAW,
-					expectedPerWindow: 1,
-				},
-				{
-					action: this.data.actions.AIR_ANCHOR,
+					action: this.data.actions.FULL_METAL_FIELD,
 					expectedPerWindow: 1,
 				},
 			],
@@ -92,6 +88,25 @@ export class Tincture extends CoreTincture {
 			reassembleId: this.data.actions.REASSEMBLE.id,
 			countReassemblesUsed: this.countReassemblesUsed.bind(this),
 		}))
+
+		this.addEvaluator(new ExpectedActionsEvaluator({
+			expectedActions: [
+				{
+					action: this.data.actions.BLAZING_SHOT,
+					expectedPerWindow: BS_REQUIREMENT,
+				},
+			],
+			suggestionIcon: this.data.actions.BLAZING_SHOT.icon,
+			suggestionContent: <Trans id="mch.tincture.suggestions.blazingShot.content">
+				Try to fit at least two uses of <DataLink action="HYPERCHARGE" /> in every Tincture window after the opener.
+			</Trans>,
+			suggestionWindowName: <DataLink action="INFUSION_DEX" showIcon={false} />,
+			severityTiers: {
+				1: SEVERITY.MINOR,
+				2: SEVERITY.MEDIUM,
+			},
+			adjustCount: this.adjustExpectedBlazingShotCount.bind(this),
+		}))
 	}
 
 	private onRemoveReassembled(event: Events['statusRemove']) {
@@ -106,5 +121,14 @@ export class Tincture extends CoreTincture {
 
 		const firstGcd = gcdTimestamps[0]
 		return this.reassembledRemoves.filter(timestamp => firstGcd <= timestamp && timestamp <= (window.end ?? window.start)).length
+	}
+
+	private adjustExpectedBlazingShotCount(window: HistoryEntry<EvaluatedAction[]>) {
+		// Only require 5 Blazing Shots if the potion was used at the start of the fight
+		if (window.start - TINCTURE_OPENER_BUFFER <= this.parser.pull.timestamp) {
+			return BS_REQUIREMENT_OPENER - BS_REQUIREMENT
+		}
+
+		return 0
 	}
 }
