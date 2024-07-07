@@ -38,7 +38,7 @@ const MANAFICATION_GCDS = 6
 export class Manafication extends BuffWindow {
 	static override displayOrder = DISPLAY_ORDER.MANAFICATION
 	static override handle = 'Manafication'
-	static override title = t('rdm.ms.title')`Manafication Windows`
+	static override title = t('rdm.manafication.title')`Manafication Windows`
 
 	@dependency globalCooldown!: GlobalCooldown
 
