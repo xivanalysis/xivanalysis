@@ -22,7 +22,6 @@ import Procs from './Procs'
 import {assignErrorCode, getMetadataForWindow} from './RotationWatchdog/EvaluatorUtilities'
 import {ExpectedFireSpellsEvaluator} from './RotationWatchdog/ExpectedFireSpellsEvaluator'
 import {ExtraF1Evaluator} from './RotationWatchdog/ExtraF1Evaluator'
-import {ExtraHardT3Evaluator} from './RotationWatchdog/ExtraHardT3Evaluator'
 import {IceMageEvaluator} from './RotationWatchdog/IceMageEvaluator'
 import {ManafontTimingEvaluator} from './RotationWatchdog/ManafontTimingEvaluator'
 import {MissedIceParadoxEvaluator} from './RotationWatchdog/MissedIceParadoxEvaluator'
@@ -167,14 +166,6 @@ export class RotationWatchdog extends RestartWindow {
 			suggestionIcon: this.data.actions.FIRE_I.icon,
 			metadataHistory: this.metadataHistory,
 			limitedFireSpellIds: [this.data.actions.FIRE_I.id, this.data.actions.PARADOX.id],
-		}))
-
-		// This was previously only for normal mid-fight windows but it probably should've been for everything...
-		// Also needs to be sequenced before the SkipT3Evaluator
-		this.addEvaluator(new ExtraHardT3Evaluator({
-			data: this.data,
-			metadataHistory: this.metadataHistory,
-			procs: this.procs,
 		}))
 
 		this.addEvaluator(new UptimeSoulsEvaluator({

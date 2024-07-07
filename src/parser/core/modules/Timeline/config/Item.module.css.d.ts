@@ -4,6 +4,7 @@ declare namespace ItemModuleCssNamespace {
   export interface IItemModuleCss {
     abilityItem: string;
     backgroundColour: string;
+    defaultRowHeight: string;
     zeroWidthAbility: string;
   }
 }

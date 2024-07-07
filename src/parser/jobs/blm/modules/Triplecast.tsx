@@ -30,9 +30,9 @@ export class Triplecast extends Analyser {
 	}
 
 	private onComplete() {
-		// Suggestion not to overwrite Sharpcast
+		// Suggestion not to overwrite Triplecast
 		this.suggestions.add(new TieredSuggestion({
-			icon: this.data.actions.SHARPCAST.icon,
+			icon: this.data.actions.TRIPLECAST.icon,
 			content: <Trans id="blm.triplecast.suggestions.overwrote-triplecasts.content">
 				You lost at least one instant cast spell by using <DataLink action="TRIPLECAST" /> while the status was already active.
 			</Trans>,

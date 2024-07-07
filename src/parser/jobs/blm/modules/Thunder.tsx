@@ -54,7 +54,7 @@ export class Thunder extends Analyser {
 	// Can never be too careful :blobsweat:
 	private readonly STATUS_DURATION = {
 		[this.data.statuses.THUNDER_III.id]: this.data.statuses.THUNDER_III.duration,
-		[this.data.statuses.THUNDERCLOUD.id]: this.data.statuses.THUNDERCLOUD.duration,
+		[this.data.statuses.THUNDERHEAD.id]: this.data.statuses.THUNDERHEAD.duration,
 	}
 
     private thunder3Casts = 0
@@ -134,7 +134,7 @@ export class Thunder extends Analyser {
 		this.checklist.add(new Rule({
 			name: <Trans id="blm.thunder.checklist.dots.name">Keep your <DataLink status="THUNDER_III" /> DoT up</Trans>,
 			description: <Trans id="blm.thunder.checklist.dots.description">
-				Your <DataLink status="THUNDER_III" /> DoT contributes significantly to your overall damage, both on its own, and from additional <DataLink status="THUNDERCLOUD" /> procs. Try to keep the DoT applied.
+				Your <DataLink status="THUNDER_III" /> DoT contributes significantly to your overall damage, both on its own, and from additional <DataLink status="THUNDERHEAD" /> procs. Try to keep the DoT applied.
 			</Trans>,
 			target: 95,
 			requirements: [
@@ -152,7 +152,7 @@ export class Thunder extends Analyser {
 			this.suggestions.add(new Suggestion({
 				icon: this.data.actions.THUNDER_III.icon,
 				content: <Trans id="blm.thunder.suggestions.excess-thunder.content">
-					Casting <DataLink action="THUNDER_III" /> too frequently can cause you to lose DPS by casting fewer <DataLink action="FIRE_IV" />. Try not to cast <DataLink showIcon={false} action="THUNDER_III" /> unless your <DataLink status="THUNDER_III" /> DoT or <DataLink status="THUNDERCLOUD" /> proc are about to wear off.
+					Casting <DataLink action="THUNDER_III" /> too frequently can cause you to lose DPS by casting fewer <DataLink action="FIRE_IV" />. Try not to cast <DataLink showIcon={false} action="THUNDER_III" /> unless your <DataLink status="THUNDER_III" /> DoT or <DataLink status="THUNDERHEAD" /> proc are about to wear off.
 					Check the <a href="#" onClick={e => { e.preventDefault(); this.parser.scrollTo(Thunder.handle) }}><NormalisedMessage message={Thunder.title}/></a> module for more information.
 				</Trans>,
 				severity: sumClip > 2 * maxExpectedClip ? SEVERITY.MAJOR : SEVERITY.MEDIUM,
@@ -211,8 +211,8 @@ export class Thunder extends Analyser {
 
 		const disclaimer = <Message>
 			<Trans id="blm.thunder.clip-disclaimer">
-				Due to the nature of <DataLink action="THUNDER_III" /> procs, you will run into situations where you will use your <DataLink status="THUNDERCLOUD" /> proc before it runs out, while your <DataLink status="THUNDER_III" /> is still running on your enemy.
-				At most, this could theoretically lead to refreshing <DataLink showIcon={false} status="THUNDER_III" /> a maximum of ~3 seconds early every single refresh.
+				Due to the nature of <DataLink action="HIGH_THUNDER" /> procs, you will run into situations where you will use your <DataLink status="THUNDERHEAD" /> proc before it runs out, while your <DataLink status="HIGH_THUNDER" /> is still running on your enemy.
+				At most, this could theoretically lead to refreshing <DataLink showIcon={false} status="HIGH_THUNDER" /> a maximum of ~3 seconds early every single refresh.
 				Since this amount of clipping is still considered optimal, we quantify and call this the maximum clip time.
 			</Trans>
 		</Message>

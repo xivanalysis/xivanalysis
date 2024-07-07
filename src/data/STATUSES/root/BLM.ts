@@ -1,29 +1,30 @@
 import {iconUrl} from 'data/icon'
 import {ensureStatuses} from '../type'
 
-// TODO: Fill in the rest of this
 export const BLM = ensureStatuses({
-	THUNDER_I: {
-		id: 161,
-		name: 'Thunder',
-		icon: iconUrl(10457),
-	},
-	THUNDER_II: {
-		id: 162,
-		name: 'Thunder II',
-		icon: iconUrl(10458),
-	},
 	THUNDER_III: {
 		id: 163,
 		name: 'Thunder III',
 		icon: iconUrl(10459),
-		duration: 30000,
+		duration: 27000,
 	},
 	THUNDER_IV: {
 		id: 1210,
 		name: 'Thunder IV',
 		icon: iconUrl(12657),
-		duration: 18000,
+		duration: 21000,
+	},
+	HIGH_THUNDER: {
+		id: 3871,
+		name: 'High Thunder',
+		icon: iconUrl(12661),
+		duration: 30000,
+	},
+	HIGH_THUNDER_II: {
+		id: 3872,
+		name: 'High Thunder II',
+		icon: iconUrl(12662),
+		duration: 24000,
 	},
 	TRIPLECAST: {
 		id: 1211,
@@ -36,11 +37,11 @@ export const BLM = ensureStatuses({
 		icon: iconUrl(10460),
 		duration: 30000,
 	},
-	THUNDERCLOUD: {
-		id: 164,
-		name: 'Thundercloud',
-		icon: iconUrl(10461),
-		duration: 40000,
+	THUNDERHEAD: {
+		id: 3870,
+		name: 'Thunderhead',
+		icon: iconUrl(12660),
+		duration: 30000,
 	},
 	LEY_LINES: {
 		id: 737,
@@ -54,21 +55,10 @@ export const BLM = ensureStatuses({
 		icon: iconUrl(12654),
 		speedModifier: 0.85,
 	},
-	SHARPCAST: {
-		id: 867,
-		name: 'Sharpcast',
-		icon: iconUrl(12655),
-		duration: 30000,
-	},
 	MANAWARD: {
 		id: 168,
 		name: 'Manaward',
 		icon: iconUrl(10456),
 		duration: 20000,
-	},
-	ENHANCED_FLARE: {
-		id: 2960,
-		name: 'Enhanced Flare',
-		icon: iconUrl(12659),
 	},
 })
