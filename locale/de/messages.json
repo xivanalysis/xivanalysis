@@ -83,6 +83,7 @@
   "blm.gauge.header.event": "",
   "blm.gauge.header.time": "Zeit",
   "blm.gauge.resource.astral-fire": "Lichtfeuer",
+  "blm.gauge.resource.astral-soul": "",
   "blm.gauge.resource.astral-timer": "Lichtfeuertimer",
   "blm.gauge.resource.astral-umbral": "",
   "blm.gauge.resource.paradox": "Paradox",
