@@ -12,7 +12,7 @@ export type OutcomeCalculator = (actual: number, expected?: number) => RotationT
  */
 export interface TrackedAction {
 	/**
-	 * The action to track
+	 * The action to track.
 	 */
 	action: Action
 	/**
