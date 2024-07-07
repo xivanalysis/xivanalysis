@@ -13,6 +13,11 @@ import {MeleeCombos} from './MeleeCombos'
 import {Procs} from './Procs'
 import {Swiftcast} from './Swiftcast'
 import {Weaving} from './Weaving'
+import { GrandImpact } from './GrandImpact'
+import { MagickedSwordplay } from './MagickedSwordplay'
+import { Manafication } from './Manafication'
+import { Prefulgence } from './Prefulgence'
+import { ViceOfThorns } from './ViceOfThorns'
 
 export {DualStatistic} from 'parser/jobs/rdm/statistics/DualStatistic'
 
@@ -32,4 +37,9 @@ export default [
 	Tincture,
 	Swiftcast,
 	Weaving,
+	GrandImpact,
+	MagickedSwordplay,
+	Manafication,
+	Prefulgence,
+	ViceOfThorns,
 ]

@@ -84,11 +84,19 @@ export const RDM = ensureActions({
 		icon: iconUrl(3243),
 		potency: 600, // Gives 3 white, 3 black
 	},
-	Prefulgence: {
+	PREFULGENCE: {
 		id: 37007,
 		name: 'Prefulgence',
 		icon: iconUrl(3244),
 		potency: 900,
+	},
+	MAGICK_BARRIER: {
+		id: 25857,
+		name: 'Magick Barrier',
+		icon: iconUrl(3237),
+		speedAttribute: Attribute.SPELL_SPEED,
+		cooldown: 120000,
+		statusesApplied: ['MAGICK_BARRIER'],
 	},
 
 	// -----
@@ -450,13 +458,5 @@ export const RDM = ensureActions({
 		cooldown: 2500,
 		castTime: 10000,
 		breaksCombo: true,
-	},
-	MAGICK_BARRIER: {
-		id: 25857,
-		name: 'Magick Barrier',
-		icon: iconUrl(3237),
-		speedAttribute: Attribute.SPELL_SPEED,
-		cooldown: 120000,
-		statusesApplied: ['MAGICK_BARRIER'],
 	},
 })

@@ -53,7 +53,10 @@ export class ManaGauge extends CoreGauge {
 		[this.data.actions.VERFLARE.id, {white: 0, black: 11}],
 		[this.data.actions.JOLT.id, {white: 2, black: 2}],
 		[this.data.actions.JOLT_II.id, {white: 2, black: 2}],
+		[this.data.actions.JOLT_III.id, {white: 2, black: 2}],
+		[this.data.actions.SCATTER.id, {white: 3, black: 3}],
 		[this.data.actions.IMPACT.id, {white: 3, black: 3}],
+		[this.data.actions.GRAND_IMPACT.id, {white: 3, black: 3}],
 		[this.data.actions.SCORCH.id, {white: 4, black: 4}],
 		[this.data.actions.RESOLUTION.id, {white: 4, black: 4}],
 	])
