@@ -3,7 +3,6 @@ import {AoE} from './AoE'
 import {Brotherhood} from './Brotherhood'
 import {CooldownDowntime} from './CooldownDowntime'
 import {Defensives} from './Defensives'
-import {Demolish} from './Demolish'
 import {Forms} from './Forms'
 import {GreasedLightning} from './GreasedLightning'
 import {MasterfulBlitzStatistics} from './MasterfulBlitzStatistics'
@@ -12,8 +11,6 @@ import {Positionals} from './Positionals'
 import {Revolution} from './Revolution'
 import {RiddleOfFire} from './RiddleOfFire'
 import {RiddleOfWind} from './RiddleOfWind'
-import {Steppies} from './Steppies'
-import {TwinSnakes} from './TwinSnakes'
 import {Weaving} from './Weaving'
 
 export default [
@@ -23,7 +20,6 @@ export default [
 	CooldownDowntime,
 	Revolution,
 	Defensives,
-	Demolish,
 	Forms,
 	GreasedLightning,
 	MasterfulBlitzStatistics,
@@ -31,7 +27,5 @@ export default [
 	RiddleOfFire,
 	RiddleOfWind,
 	PerfectBalance,
-	Steppies,
-	TwinSnakes,
 	Weaving,
 ]
