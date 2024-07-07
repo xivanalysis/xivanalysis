@@ -3,14 +3,14 @@ import {filter} from 'parser/core/filter'
 import {Defensives as CoreDefensives} from 'parser/core/modules/Defensives'
 
 export class Defensives extends CoreDefensives {
-	protected override trackedDefensives = [this.data.actions.TEMPURA_COAT]
+	protected override trackedDefensives = [this.data.actions.TEMPERA_COAT]
 
 	private lastShieldApplyStatusId: number | null = null
 	private lastShieldApplyTimestamp: number | null = null
 
 	private tempuraRefundAmounts = {
-		[this.data.statuses.TEMPURA_COAT.id]: 60000,
-		[this.data.statuses.TEMPURA_GRASSA.id]: 30000,
+		[this.data.statuses.TEMPERA_COAT.id]: 60000,
+		[this.data.statuses.TEMPERA_GRASSA.id]: 30000,
 	}
 
 	override initialise() {
@@ -20,11 +20,11 @@ export class Defensives extends CoreDefensives {
 		const statusApplyFilter = playerFilter.type('statusApply')
 		const statusRemoveFilter = playerFilter.type('statusRemove')
 
-		this.addEventHook(statusApplyFilter.status(this.data.statuses.TEMPURA_COAT.id), this.onApplyShield)
-		this.addEventHook(statusRemoveFilter.status(this.data.statuses.TEMPURA_COAT.id), this.onRemoveShield)
+		this.addEventHook(statusApplyFilter.status(this.data.statuses.TEMPERA_COAT.id), this.onApplyShield)
+		this.addEventHook(statusRemoveFilter.status(this.data.statuses.TEMPERA_COAT.id), this.onRemoveShield)
 
-		this.addEventHook(statusApplyFilter.status(this.data.statuses.TEMPURA_GRASSA.id), this.onApplyShield)
-		this.addEventHook(statusRemoveFilter.status(this.data.statuses.TEMPURA_GRASSA.id), this.onRemoveShield)
+		this.addEventHook(statusApplyFilter.status(this.data.statuses.TEMPERA_GRASSA.id), this.onApplyShield)
+		this.addEventHook(statusRemoveFilter.status(this.data.statuses.TEMPERA_GRASSA.id), this.onRemoveShield)
 	}
 
 	private onApplyShield(event: Events['statusApply']) {
@@ -46,7 +46,7 @@ export class Defensives extends CoreDefensives {
 		// If the shield lasted less than the full duration, and the status remove event indicates there is no shield remaining, it broke
 		if ((event.remainingShield != null && event.remainingShield === 0) && shieldDuration < (this.data.getStatus(event.status)?.duration ?? 0)) {
 			// Refund the proper amount of Tempura Coat's cooldown based on which shield broke
-			this.cooldowns.reduce(this.data.actions.TEMPURA_COAT, this.tempuraRefundAmounts[event.status])
+			this.cooldowns.reduce(this.data.actions.TEMPERA_COAT, this.tempuraRefundAmounts[event.status])
 		}
 	}
 }

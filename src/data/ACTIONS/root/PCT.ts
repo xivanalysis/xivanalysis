@@ -383,19 +383,19 @@ export const PCT = ensureActions({
 	},
 
 	/** Utility */
-	TEMPURA_COAT: {
+	TEMPERA_COAT: {
 		id: 34685,
 		name: 'Tempura Coat',
 		icon: iconUrl(3835),
 		cooldown: 60000,
-		statusesApplied: ['TEMPURA_COAT'],
+		statusesApplied: ['TEMPERA_COAT'],
 	},
-	TEMPURA_GRASSA: {
+	TEMPERA_GRASSA: {
 		id: 34686,
 		name: 'Tempura Grassa',
 		icon: iconUrl(3836),
 		cooldown: 1000,
-		statusesApplied: ['TEMPURA_GRASSA'],
+		statusesApplied: ['TEMPERA_GRASSA'],
 	},
 	SMUDGE: {
 		id: 34684,

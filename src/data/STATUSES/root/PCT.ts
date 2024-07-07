@@ -14,13 +14,13 @@ export const PCT = ensureStatuses({
 		icon: iconUrl(13802),
 		duration: 30000,
 	},
-	TEMPURA_COAT: {
+	TEMPERA_COAT: {
 		id: 3686,
 		name: 'Tempura Coat',
 		icon: iconUrl(13809),
 		duration: 10000,
 	},
-	TEMPURA_GRASSA: {
+	TEMPERA_GRASSA: {
 		id: 3687,
 		name: 'Tempura Grassa',
 		icon: iconUrl(13810),
