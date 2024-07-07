@@ -510,7 +510,6 @@ export abstract class Procs extends Analyser {
 	/**
 	 * Add the event to the removal map for the group, if it's not already present in the group
 	 * This method is protected so subclassing analysers can hook into it
-	 * Currently only used by BLM to deal with the interaction between T3P and Sharpcast
 	*/
 	protected tryAddEventToRemovals(procGroup: ProcGroup, event: Event) {
 		this.tryAddEventToMap(this.removals.get(procGroup), event)

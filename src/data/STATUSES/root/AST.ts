@@ -3,6 +3,13 @@ import {ensureStatuses} from '../type'
 
 export const AST = ensureStatuses({
 
+	COMBUST: {
+		id: 838,
+		name: 'Combust',
+		icon: iconUrl(13213),
+		duration: 30000,
+	},
+
 	COMBUST_II: {
 		id: 843,
 		name: 'Combust II',
@@ -67,7 +74,7 @@ export const AST = ensureStatuses({
 	},
 
 	COLLECTIVE_UNCONSCIOUS_MITIGATION: {
-		id: 2283,
+		id: 849,
 		name: 'Collective Unconscious (Mitigation)',
 		icon: iconUrl(13226),
 		duration: 18000,
@@ -118,7 +125,7 @@ export const AST = ensureStatuses({
 	NEUTRAL_SECT_OTHERS: {
 		id: 1921,
 		name: 'Neutral Sect (Barrier)',
-		icon: iconUrl(13253),
+		icon: iconUrl(13255),
 		duration: 30000,
 	},
 
@@ -140,7 +147,7 @@ export const AST = ensureStatuses({
 		id: 1878,
 		name: 'Divination',
 		icon: iconUrl(13245),
-		duration: 15000,
+		duration: 20000,
 	},
 
 	EXALTATION: {
@@ -157,77 +164,77 @@ export const AST = ensureStatuses({
 		duration: 15000,
 	},
 
+	DIVINING: {
+		id: 3893,
+		name: 'Divining',
+		icon: iconUrl(13264),
+		duration: 30000,
+	},
+
+	HELIOS_CONJUNCTION: {
+		id: 3894,
+		name: 'Helios Conjunction',
+		icon: iconUrl(13265),
+		duration: 15000,
+	},
+
+	SUN_TOUCHED: {
+		id: 3895,
+		name: 'Sun Touched',
+		icon: iconUrl(13266),
+		duration: 30000,
+	},
+
+	SUN_SIGN: {
+		id: 3896,
+		name: 'Sun Sign',
+		icon: iconUrl(13267),
+		duration: 15000,
+	},
+
 	// -----
 	// Card buffs
 	// -----
 
 	THE_BALANCE: {
-		id: 1882,
+		id: 3887,
 		name: 'The Balance',
 		icon: iconUrl(13204),
 		duration: 15000,
 	},
 
 	THE_BOLE: {
-		id: 1883,
+		id: 3890,
 		name: 'The Bole',
 		icon: iconUrl(13205),
 		duration: 15000,
 	},
 
 	THE_ARROW: {
-		id: 1884,
+		id: 3888,
 		name: 'The Arrow',
 		icon: iconUrl(13206),
 		duration: 15000,
 	},
 
 	THE_SPEAR: {
-		id: 1885,
+		id: 3889,
 		name: 'The Spear',
 		icon: iconUrl(13207),
 		duration: 15000,
 	},
 
 	THE_EWER: {
-		id: 1886,
+		id: 3891,
 		name: 'The Ewer',
 		icon: iconUrl(13208),
 		duration: 15000,
 	},
 
 	THE_SPIRE: {
-		id: 1887,
+		id: 3892,
 		name: 'The Spire',
 		icon: iconUrl(13209),
-		duration: 15000,
-	},
-
-	CLARIFYING_DRAW: {
-		id: 2713,
-		name: 'Clarifying Draw',
-		icon: iconUrl(13258),
-	},
-
-	HARMONY_OF_SPIRIT: {
-		id: 2714,
-		name: 'Harmony of Spirit',
-		icon: iconUrl(13259),
-		duration: 15000,
-	},
-
-	HARMONY_OF_BODY: {
-		id: 2715,
-		name: 'Harmony of Body',
-		icon: iconUrl(13260),
-		duration: 15000,
-		speedModifier: 0.90,
-	},
-
-	HARMONY_OF_MIND: {
-		id: 2716,
-		name: 'Harmony of Mind',
-		icon: iconUrl(13261),
 		duration: 15000,
 	},
 

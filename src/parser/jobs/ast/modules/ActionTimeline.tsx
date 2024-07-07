@@ -4,12 +4,11 @@ export class ActionTimeline extends CoreActionTimeline {
 	static override rows: ActionRow[] = [
 		...CoreActionTimeline.rows,
 		// Arcanum
-		['DRAW', 'UNDRAW'],
-		'PLAY',
-		'ASTRODYNE',
-		['CROWN_PLAY', 'MINOR_ARCANA'],
+		['PLAY_I', 'PLAY_II', 'PLAY_III'],
+		'MINOR_ARCANA',
 		//other AST or party buffs
-		'DIVINATION',
+		['ASTRAL_DRAW', 'UMBRAL_DRAW'],
+		['DIVINATION', 'ORACLE'],
 		'LIGHTSPEED',
 		// oGCD ST heals
 		'ESSENTIAL_DIGNITY',
@@ -26,6 +25,7 @@ export class ActionTimeline extends CoreActionTimeline {
 		'NEUTRAL_SECT',
 		// Party mitigation
 		'COLLECTIVE_UNCONSCIOUS',
+		'SUN_SIGN',
 		// Role actions
 		'LUCID_DREAMING',
 	]

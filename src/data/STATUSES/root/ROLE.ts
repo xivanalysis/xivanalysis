@@ -34,7 +34,7 @@ export const ROLE = ensureStatuses({
 		id: 1193,
 		name: 'Reprisal',
 		icon: iconUrl(13901),
-		duration: 10000,
+		duration: 15000,
 	},
 
 	ARMS_LENGTH: {
@@ -48,7 +48,7 @@ export const ROLE = ensureStatuses({
 		id: 1203,
 		name: 'Addle',
 		icon: iconUrl(13917),
-		duration: 10000,
+		duration: 15000,
 	},
 
 	BLOODBATH: {
@@ -62,13 +62,13 @@ export const ROLE = ensureStatuses({
 		id: 1195,
 		name: 'Feint',
 		icon: iconUrl(13904),
-		duration: 20000,
+		duration: 15000,
 	},
 
 	TRUE_NORTH: {
 		id: 1250,
 		name: 'True North',
 		icon: iconUrl(13903),
-		duration: 20000,
+		duration: 10000,
 	},
 })
