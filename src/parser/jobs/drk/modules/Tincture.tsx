@@ -1,6 +1,6 @@
 import {Trans} from '@lingui/react'
 import {DataLink} from 'components/ui/DbLink'
-import {ExpectedActionsEvaluator} from 'parser/core/modules/ActionWindow'
+import {ExpectedActionGroupsEvaluator} from 'parser/core/modules/ActionWindow'
 import {SEVERITY} from 'parser/core/modules/Suggestions'
 import {Tincture as CoreTincture} from 'parser/core/modules/Tincture'
 import React from 'react'
@@ -10,32 +10,30 @@ export class Tincture extends CoreTincture {
 	override initialise() {
 		super.initialise()
 
-		this.addEvaluator(new ExpectedActionsEvaluator({
-			expectedActions: [
+		this.addEvaluator(new ExpectedActionGroupsEvaluator({
+			expectedActionGroups: [
 				{
-					action: this.data.actions.DELIRIUM,
+					actions: [this.data.actions.DELIRIUM],
 					expectedPerWindow: 1,
 				},
 				{
-					action: this.data.actions.BLOODSPILLER,
+					actions: [this.data.actions.BLOODSPILLER],
 					expectedPerWindow: 2,
 				},
 				{
-					action: this.data.actions.SHADOWBRINGER,
+					actions: [this.data.actions.SHADOWBRINGER],
 					expectedPerWindow: 2,
 				},
 				{
-					action: this.data.actions.CARVE_AND_SPIT,
-					alternativeActions: [this.data.actions.ABYSSAL_DRAIN],
+					actions: [this.data.actions.CARVE_AND_SPIT, this.data.actions.ABYSSAL_DRAIN],
 					expectedPerWindow: 1,
 				},
 				{
-					action: this.data.actions.DISESTEEM,
+					actions: [this.data.actions.DISESTEEM],
 					expectedPerWindow: 1,
 				},
 				{
-					action: this.data.actions.EDGE_OF_SHADOW,
-					alternativeActions: [this.data.actions.FLOOD_OF_SHADOW],
+					actions: [this.data.actions.EDGE_OF_SHADOW, this.data.actions.FLOOD_OF_SHADOW],
 					expectedPerWindow: 4,
 				},
 			],
@@ -50,5 +48,7 @@ export class Tincture extends CoreTincture {
 				3: SEVERITY.MAJOR,
 			},
 		}))
+
+		this.addEvaluator
 	}
 }
