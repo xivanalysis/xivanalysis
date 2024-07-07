@@ -171,7 +171,18 @@ export class Gauge extends CoreGauge {
 			label: <Trans id="blm.gauge.resource.astral-soul">Astral Soul</Trans>,
 			color: FIRE_COLOR.fade(GAUGE_FADE),
 			collapse: false,
-			height: DEFAULT_ROW_HEIGHT,
+			height: DEFAULT_ROW_HEIGHT / 2,
+		},
+	}))
+
+	/** Umbral Hearts */
+	private umbralHeartsGauge = this.add(new CounterGauge({
+		maximum: UMBRAL_HEARTS_MAX_STACKS,
+		graph: {
+			label: <Trans id="blm.gauge.resource.umbral-hearts">Umbral Hearts</Trans>,
+			color: ICE_COLOR.fade(GAUGE_FADE),
+			collapse: false,
+			height: DEFAULT_ROW_HEIGHT / 2,
 		},
 	}))
 
@@ -185,17 +196,6 @@ export class Gauge extends CoreGauge {
 			height: DEFAULT_ROW_HEIGHT / 2,
 		},
 		correctHistory: true,
-	}))
-
-	/** Umbral Hearts */
-	private umbralHeartsGauge = this.add(new CounterGauge({
-		maximum: UMBRAL_HEARTS_MAX_STACKS,
-		graph: {
-			label: <Trans id="blm.gauge.resource.umbral-hearts">Umbral Hearts</Trans>,
-			color: ICE_COLOR.fade(GAUGE_FADE),
-			collapse: false,
-			height: DEFAULT_ROW_HEIGHT / 2,
-		},
 	}))
 
 	/** Polyglot */
