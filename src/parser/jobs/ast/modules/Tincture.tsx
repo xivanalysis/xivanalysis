@@ -20,7 +20,6 @@ export class Tincture extends CoreTincture {
 			this.data.actions.FALL_MALEFIC.id,
 			this.data.actions.COMBUST_III.id,
 			this.data.actions.GRAVITY_II.id,
-			this.data.actions.ASTRODYNE.id,
 			this.data.actions.MACROCOSMOS.id,
 			this.data.actions.LORD_OF_CROWNS.id,
 			this.data.actions.EARTHLY_STAR.id,
@@ -30,10 +29,6 @@ export class Tincture extends CoreTincture {
 			expectedActions: [
 				{
 					action: this.data.actions.COMBUST_III,
-					expectedPerWindow: 1,
-				},
-				{
-					action: this.data.actions.ASTRODYNE,
 					expectedPerWindow: 1,
 				},
 				{

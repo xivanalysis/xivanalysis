@@ -17,6 +17,5 @@ export class ActionTimeline extends CoreActionTimeline {
 		'RIDDLE_OF_EARTH',
 		'MANTRA',
 		'THUNDERCLAP',
-		'ANATMAN',
 	]
 }

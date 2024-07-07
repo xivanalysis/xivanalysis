@@ -26,7 +26,6 @@ export class Raiju extends Analyser {
 		this.data.actions.ARMOR_CRUSH.id,
 		this.data.actions.DEATH_BLOSSOM.id,
 		this.data.actions.HAKKE_MUJINSATSU.id,
-		this.data.actions.HURAIJIN.id,
 	]
 
 	override initialise() {
