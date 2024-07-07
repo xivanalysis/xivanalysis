@@ -35,7 +35,7 @@ export const DNC = ensureStatuses({
 	FOURFOLD_FAN_DANCE: {
 		id: 2699,
 		name: 'Fourfold Fan Dance',
-		icon: 'https://xivapi.com/i/013000/013723.png',
+		icon: iconUrl(13723),
 		duration: 30000,
 	},
 	FINISHING_MOVE_READY: {
