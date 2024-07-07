@@ -8,6 +8,7 @@ export const FIRE_SPELLS: ActionKey[] = [
 	'FLARE',
 	'DESPAIR',
 	'HIGH_FIRE_II',
+	'FLARE_STAR',
 ]
 
 /** Defining these lists separately since Gauge will need to treat the spells that must do damage to affect gauge differently from Umbral Soul */
@@ -27,3 +28,9 @@ export const ICE_SPELLS: ActionKey[] = [
 	...ICE_SPELLS_TARGETED,
 ]
 
+export const THUNDER_SPELLS: ActionKey[] = [
+	'THUNDER_III',
+	'THUNDER_IV',
+	'HIGH_THUNDER',
+	'HIGH_THUNDER_II',
+]

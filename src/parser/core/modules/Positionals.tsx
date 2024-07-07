@@ -1,7 +1,7 @@
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
 import {ActionLink, DataLink} from 'components/ui/DbLink'
-import {Action, getPotencyWithMods, getBasePotency} from 'data/ACTIONS'
+import {Action} from 'data/ACTIONS'
 import {BonusModifier} from 'data/ACTIONS/type'
 import {Event, Events} from 'event'
 import {filter} from 'parser/core/filter'
@@ -90,10 +90,36 @@ export abstract class Positionals extends Analyser {
 	// Luckily, assessing misses is easy and sufficient for the purposes
 	// of detecting positional hits.
 	private missedPositionalBonusPercents(action: Action) {
-		const missed_positional_combo_bonus_percent = this.calculateBonusPercent(
-			getBasePotency(action),
-			getPotencyWithMods(action, [BonusModifier.COMBO], []))
-		return [...new Set([NO_BONUS_PERCENT, missed_positional_combo_bonus_percent])]
+		const missedPositionalBonusPercents = [NO_BONUS_PERCENT]
+
+		if (!action.potencies) {
+			return missedPositionalBonusPercents
+		}
+
+		const possibleBasePotencies = action.potencies.filter(potency =>
+			potency.bonusModifiers.length === 0 ||
+			potency.bonusModifiers.length === 1 && potency.bonusModifiers[0] === BonusModifier.COMBO
+		)
+
+		possibleBasePotencies.forEach(base => {
+			if (!action.potencies) {
+				return
+			}
+
+			const possibleBonusPotencies = action.potencies.filter(potency =>
+				!potency.bonusModifiers.includes(BonusModifier.POSITIONAL) &&
+				potency.value > base.value
+			)
+
+			possibleBonusPotencies.forEach(bonus => {
+				missedPositionalBonusPercents.push(this.calculateBonusPercent(
+					base.value,
+					bonus.value,
+				))
+			})
+		})
+
+		return [...new Set(missedPositionalBonusPercents)]
 	}
 
 	// Currently just checks that you didn't miss. Checking for hits would

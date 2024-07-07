@@ -5,7 +5,6 @@ import {Event} from 'event'
 import {Analyser} from 'parser/core/Analyser'
 import {filter} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
-import {CooldownDowntime} from 'parser/core/modules/CooldownDowntime'
 import {Data} from 'parser/core/modules/Data'
 import {DataSet, PieChartStatistic, Statistics} from 'parser/core/modules/Statistics'
 import React from 'react'
@@ -19,7 +18,6 @@ export class MasterfulBlitzStatistics extends Analyser {
 	static override handle = 'mbstats'
 	static override title = t('mnk.mbstats.title')`Masterful Blitz`
 
-	@dependency private cooldownDowntime!: CooldownDowntime
 	@dependency private data!: Data
 	@dependency private statistics!: Statistics
 
@@ -28,7 +26,7 @@ export class MasterfulBlitzStatistics extends Analyser {
 	override initialise() {
 		this.trackedActions.set(this.data.actions.PHANTOM_RUSH.id, {color: '#9b6c6c', count: 0})
 		this.trackedActions.set(this.data.actions.RISING_PHOENIX.id, {color: '#d59b54', count: 0})
-		this.trackedActions.set(this.data.actions.ELIXIR_FIELD.id, {color: '#7b90c5', count: 0})
+		this.trackedActions.set(this.data.actions.ELIXIR_BURST.id, {color: '#7b90c5', count: 0})
 		this.trackedActions.set(this.data.actions.CELESTIAL_REVOLUTION.id, {color: '#8d85a6', count: 0})
 
 		this.addEventHook(

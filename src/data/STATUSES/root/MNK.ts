@@ -23,20 +23,6 @@ export const MNK = ensureStatuses({
 		duration: 30000,
 	},
 
-	DISCIPLINED_FIST: {
-		id: 3001,
-		name: 'Disciplined Fist',
-		icon: iconUrl(12538),
-		duration: 15000,
-	},
-
-	DEMOLISH: {
-		id: 246,
-		name: 'Demolish',
-		icon: iconUrl(10218),
-		duration: 18000,
-	},
-
 	MANTRA: {
 		id: 102,
 		name: 'Mantra',
@@ -56,14 +42,14 @@ export const MNK = ensureStatuses({
 		id: 1185,
 		name: 'Brotherhood',
 		icon: iconUrl(12532),
-		duration: 15000,
+		duration: 20000,
 	},
 
 	MEDITATIVE_BROTHERHOOD: {
 		id: 1182,
 		name: 'Meditative Brotherhood',
 		icon: iconUrl(12529),
-		duration: 15000,
+		duration: 20000,
 	},
 
 	RIDDLE_OF_EARTH: {
@@ -76,14 +62,28 @@ export const MNK = ensureStatuses({
 	EARTHS_REPLY: {
 		id: 1180,
 		name: "Earth's Reply",
-		icon: 'https://xivapi.com/i/012000/012531.png',
+		icon: iconUrl(12531),
 		duration: 15000,
+	},
+
+	EARTHS_RUMINATION: {
+		id: 3841,
+		name: "Earth's Rumination",
+		icon: iconUrl(12539),
+		duration: 30000,
 	},
 
 	RIDDLE_OF_FIRE: {
 		id: 1181,
 		name: 'Riddle of Fire',
 		icon: iconUrl(12528),
+		duration: 20000,
+	},
+
+	FIRES_RUMINATION: {
+		id: 3843,
+		name: "Fire's Rumination",
+		icon: iconUrl(12541),
 		duration: 20000,
 	},
 
@@ -94,6 +94,13 @@ export const MNK = ensureStatuses({
 		duration: 15000,
 	},
 
+	WINDS_RUMINATION: {
+		id: 3842,
+		name: "Wind's Rumination",
+		icon: iconUrl(12540),
+		duration: 15000,
+	},
+
 	FORMLESS_FIST: {
 		id: 2513,
 		name: 'Formless Fist',
@@ -101,17 +108,10 @@ export const MNK = ensureStatuses({
 		duration: 30000,
 	},
 
-	LEADEN_FIST: {
-		id: 1861,
-		name: 'Leaden Fist',
-		icon: iconUrl(12533),
-		duration: 30000,
-	},
-
-	ANATMAN: {
-		id: 1862,
-		name: 'Anatman',
-		icon: iconUrl(12534),
-		duration: 30000,
+	SIX_SIDED_STAR: {
+		id: 2514,
+		name: 'Six-sided Star',
+		icon: iconUrl(12536),
+		duration: 5000,
 	},
 })

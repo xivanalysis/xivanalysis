@@ -36,6 +36,7 @@ const IGNORED_ACTIONS: ActionKey[] = [
 	'MANTRA',
 	'THUNDERCLAP',
 	'RIDDLE_OF_EARTH',
+	'EARTHS_REPLY',
 	'SECOND_WIND',
 	'LEG_SWEEP',
 	'BLOODBATH',
@@ -105,11 +106,15 @@ export class RiddleOfFire extends BuffWindow {
 		this.addEvaluator(new LimitedActionsEvaluator({
 			expectedActions: [
 				{
-					action: this.data.actions.MEDITATION,
+					action: this.data.actions.STEELED_MEDITATION,
 					expectedPerWindow: 0,
 				},
 				{
-					action: this.data.actions.ANATMAN,
+					action: this.data.actions.FORBIDDEN_MEDITATION,
+					expectedPerWindow: 0,
+				},
+				{
+					action: this.data.actions.ENLIGHTENED_MEDITATION,
 					expectedPerWindow: 0,
 				},
 				{
@@ -117,9 +122,9 @@ export class RiddleOfFire extends BuffWindow {
 					expectedPerWindow: 0,
 				},
 			],
-			suggestionIcon: this.data.actions.MEDITATION.icon,
+			suggestionIcon: this.data.actions.FORBIDDEN_MEDITATION.icon,
 			suggestionContent: <Trans id="mnk.rof.suggestions.wasted.content">
-				Avoid using <DataLink action="MEDITATION"/>, <DataLink action="ANATMAN"/>, or <DataLink action="FORM_SHIFT"/> under <DataLink status="RIDDLE_OF_FIRE"/> as this is essentially wasting a GCD.
+				Avoid using <DataLink action="FORBIDDEN_MEDITATION"/> or <DataLink action="FORM_SHIFT"/> under <DataLink status="RIDDLE_OF_FIRE"/> as this is essentially wasting a GCD.
 			</Trans>,
 			suggestionWindowName: suggestionWindowName,
 			severityTiers: SEVERITIES.BAD_GCDS,
