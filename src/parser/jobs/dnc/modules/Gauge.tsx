@@ -129,6 +129,7 @@ export class Gauge extends CoreGauge {
 		[this.data.actions.FOUNTAINFALL.id, ESPRIT_GENERATION_AMOUNT_PROC],
 		[this.data.actions.RISING_WINDMILL.id, ESPRIT_GENERATION_AMOUNT_PROC],
 		[this.data.actions.BLOODSHOWER.id, ESPRIT_GENERATION_AMOUNT_PROC],
+		[this.data.actions.TILLANA.id, ESPRIT_COST],
 	])
 
 	protected pauseGeneration = false;
