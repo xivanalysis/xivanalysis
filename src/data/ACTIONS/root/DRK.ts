@@ -201,7 +201,7 @@ export const DRK = ensureActions({
 		name: 'Delirium',
 		icon: iconUrl(3078),
 		cooldown: 60000,
-		statusesApplied: ['DELIRIUM'],
+		statusesApplied: ['DELIRIUM', 'BLOOD_WEAPON'],
 	},
 	THE_BLACKEST_NIGHT: {
 		id: 7393,
