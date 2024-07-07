@@ -50,6 +50,7 @@ export enum ActorType {
 	MONK = 'Monk',
 	DRAGOON = 'Dragoon',
 	NINJA = 'Ninja',
+	VIPER = 'Viper',
 	SAMURAI = 'Samurai',
 	REAPER = 'Reaper',
 	BARD = 'Bard',
@@ -58,6 +59,7 @@ export enum ActorType {
 	BLACK_MAGE = 'BlackMage',
 	SUMMONER = 'Summoner',
 	RED_MAGE = 'RedMage',
+	PICTOMANCER = 'Pictomancer',
 	BLUE_MAGE = 'BlueMage',
 	LIMIT_BREAK = 'LimitBreak',
 

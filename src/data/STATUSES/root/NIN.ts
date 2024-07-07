@@ -9,11 +9,32 @@ export const NIN = ensureStatuses({
 		duration: 15000,
 	},
 
-	MUG_VULNERABILITY_UP: {
-		id: 638,
-		name: 'Vulnerability Up',
-		icon: iconUrl(15020),
+	KUNAIS_BANE: {
+		id: 3906,
+		name: 'Kunai\'s Bane',
+		icon: iconUrl(12923),
+		duration: 15000,
+	},
+
+	MUG: {
+		id: 3183,
+		name: 'Mug',
+		icon: iconUrl(14942),
 		duration: 20000,
+	},
+
+	DOKUMORI: {
+		id: 3849,
+		name: 'Dokumori',
+		icon: iconUrl(12920),
+		duration: 20000,
+	},
+
+	HIGI: {
+		id: 3850,
+		name: 'HIGI',
+		icon: iconUrl(12921),
+		duration: 30000,
 	},
 
 	KASSATSU: {
@@ -30,10 +51,10 @@ export const NIN = ensureStatuses({
 		duration: 24000,
 	},
 
-	SUITON: {
-		id: 507,
-		name: 'Suiton',
-		icon: iconUrl(12906),
+	SHADOW_WALKER: {
+		id: 3848,
+		name: 'Shadow Walker',
+		icon: iconUrl(12919),
 		duration: 20000,
 	},
 
@@ -42,6 +63,13 @@ export const NIN = ensureStatuses({
 		name: 'Ten Chi Jin',
 		icon: iconUrl(12911),
 		duration: 6000,
+	},
+
+	TENRI_JINDO_READY: {
+		id: 3851,
+		name: 'Tenri Jindo Ready',
+		icon: iconUrl(12922),
+		duration: 30000,
 	},
 
 	BUNSHIN: {

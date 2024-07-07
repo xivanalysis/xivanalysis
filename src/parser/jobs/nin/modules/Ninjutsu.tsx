@@ -6,7 +6,7 @@ import {filter, oneOf} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
 import {Actors} from 'parser/core/modules/Actors'
 import {Data} from 'parser/core/modules/Data'
-import Suggestions, {TieredSuggestion, Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import Suggestions, {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import React from 'react'
 
 const DOTON_TICK_TARGET = 6
@@ -106,7 +106,7 @@ export class Ninjutsu extends Analyser {
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.RABBIT_MEDIUM.icon,
 			content: <Trans id="nin.ninjutsu.suggestions.rabbit.content">
-				Be careful not to flub your mudras, as using <ActionLink action="RABBIT_MEDIUM"/> can cost you considerable DPS by reducing the number of <ActionLink action="TRICK_ATTACK"/>s you can do during the fight.
+				Be careful not to flub your mudras, as using <ActionLink action="RABBIT_MEDIUM"/> can cost you considerable DPS by reducing the number of <ActionLink action="KUNAIS_BANE"/> casts you can do during the fight.
 			</Trans>,
 			tiers: {
 				1: SEVERITY.MEDIUM, // You were having a bad day, mudra lag, etc.
@@ -134,18 +134,19 @@ export class Ninjutsu extends Analyser {
 			</Trans>,
 		}))
 
-		if (badAoes > 0) {
-			this.suggestions.add(new Suggestion({
-				icon: this.data.actions.DOTON.icon,
-				content: <Trans id="nin.ninjutsu.suggestions.aoe-doton.content">
-					<ActionLink action="DOTON"/> requires at least {DOTON_TICK_TARGET} ticks to be worthwhile in an AoE setting. Use <ActionLink action="KATON"/> instead against adds that will die quickly.
-				</Trans>,
-				severity: SEVERITY.MINOR,
-				why: <Trans id="nin.ninjutsu.suggestions.aoe-doton.why">
-					You cast an unoptimized Doton cast <Plural value={badAoes} one="# time" other="# times"/>.
-				</Trans>,
-			}))
-		}
+		this.suggestions.add(new TieredSuggestion({
+			icon: this.data.actions.DOTON.icon,
+			content: <Trans id="nin.ninjutsu.suggestions.aoe-doton.content">
+				<ActionLink action="DOTON"/> requires at least {DOTON_TICK_TARGET} ticks to be worthwhile in an AoE setting. Use <ActionLink action="KATON"/> instead against adds that will die quickly.
+			</Trans>,
+			tiers: {
+				1: SEVERITY.MINOR,
+			},
+			value: badAoes,
+			why: <Trans id="nin.ninjutsu.suggestions.aoe-doton.why">
+				You cast an unoptimized Doton cast <Plural value={badAoes} one="# time" other="# times"/>.
+			</Trans>,
+		}))
 
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.DOTON.icon,
