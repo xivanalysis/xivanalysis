@@ -647,7 +647,7 @@
   "mnk.gauge.resource.nadi.solar": "",
   "mnk.mbstats.headings.count": "",
   "mnk.mbstats.title": "",
-  "mnk.pb.suggestions.badActions.content": "Das Nutzen von <0/> oder <1/> während <2/> aktiv ist macht keinen Schaden und ändert nicht deine Form.",
+  "mnk.pb.suggestions.badActions.content": "",
   "mnk.pb.suggestions.badActions.why": "",
   "mnk.pb.suggestions.nadi-overcap.content": "",
   "mnk.pb.suggestions.nadi-overcap.why": "",
