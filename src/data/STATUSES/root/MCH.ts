@@ -50,4 +50,25 @@ export const MCH = ensureStatuses({
 		icon: iconUrl(13021),
 		duration: 15000,
 	},
+
+	HYPERCHARGED: {
+		id: 3864,
+		name: 'Hypercharged',
+		icon: iconUrl(13022),
+		duration: 30000,
+	},
+
+	EXCAVATOR_READY: {
+		id: 3865,
+		name: 'Excavator Ready',
+		icon: iconUrl(13023),
+		duration: 30000,
+	},
+
+	FULL_METAL_MACHINIST: {
+		id: 3866,
+		name: 'Full Metal Machinist',
+		icon: iconUrl(13024),
+		duration: 30000,
+	},
 })

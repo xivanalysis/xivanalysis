@@ -5,6 +5,7 @@ import {DataLink} from 'components/ui/DbLink'
 import {Cause, Event, Events} from 'event'
 import {filter, oneOf} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
+import {Actors} from 'parser/core/modules/Actors'
 import {CounterGauge, Gauge as CoreGauge} from 'parser/core/modules/Gauge'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
@@ -38,6 +39,7 @@ type GaugeMap = Map<number, GaugeModifier>
 export class Gauge extends CoreGauge {
 	static override title = t('mch.gauge.title')`Heat & Battery Gauge`
 
+	@dependency private actors!: Actors
 	@dependency private suggestions!: Suggestions
 
 	private heat = this.add(new CounterGauge({
@@ -61,7 +63,6 @@ export class Gauge extends CoreGauge {
 		[this.data.actions.HEATED_CLEAN_SHOT.id, {event: 'combo', type: 'generate', amount: 5}],
 		[this.data.actions.SPREAD_SHOT.id, {event: 'damage', type: 'generate', amount: 5}],
 		[this.data.actions.SCATTERGUN.id, {event: 'damage', type: 'generate', amount: 10}],
-		[this.data.actions.BARREL_STABILIZER.id, {event: 'action', type: 'generate', amount: 50}],
 		[this.data.actions.HYPERCHARGE.id, {event: 'action', type: 'spend', amount: 50}],
 	])
 
@@ -69,6 +70,7 @@ export class Gauge extends CoreGauge {
 		[this.data.actions.HEATED_CLEAN_SHOT.id, {event: 'combo', type: 'generate', amount: 10}],
 		[this.data.actions.AIR_ANCHOR.id, {event: 'damage', type: 'generate', amount: 20}],
 		[this.data.actions.CHAIN_SAW.id, {event: 'damage', type: 'generate', amount: 20}],
+		[this.data.actions.EXCAVATOR.id, {event: 'damage', type: 'generate', amount: 20}],
 		[this.data.actions.AUTOMATON_QUEEN.id, {event: 'action', type: 'queen', amount: 50}],
 	])
 
@@ -116,6 +118,11 @@ export class Gauge extends CoreGauge {
 	private onAction(gauge: CounterGauge, modifiers: GaugeMap) {
 		return (event: Events['action' | 'combo']) => {
 			const modifier = modifiers.get(event.action)
+
+			// Hypercharge doesn't consume heat with the 'Hypercharged' buff
+			if (event.action === this.data.actions.HYPERCHARGE.id && this.actors.current.hasStatus(this.data.statuses.HYPERCHARGED.id)) {
+				return
+			}
 
 			if (modifier && modifier.event === event.type) {
 				this.modifyGauge(gauge, modifier)

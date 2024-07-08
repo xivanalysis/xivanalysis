@@ -19,7 +19,6 @@ export class OGCDDowntime extends CooldownDowntime {
 		},
 		{cooldowns: [this.data.actions.TRIPLECAST]},
 		{cooldowns: [this.data.actions.AMPLIFIER]},
-		{cooldowns: [this.data.actions.SHARPCAST]},
 	]
 
 	override checklistTarget = TARGETPERCENT

@@ -8,7 +8,6 @@ export class ActionTimeline extends CoreActionTimeline {
 		'SWIFTCAST',
 		'AMPLIFIER',
 		'LEY_LINES',
-		'SHARPCAST',
 		'LUCID_DREAMING',
 		'MANAFONT',
 		'ADDLE',

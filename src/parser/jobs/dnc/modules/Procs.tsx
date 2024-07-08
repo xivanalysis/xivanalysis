@@ -21,7 +21,6 @@ export class Procs extends CoreProcs {
 			procStatus: this.data.statuses.SILKEN_FLOW,
 			consumeActions: [this.data.actions.FOUNTAINFALL, this.data.actions.BLOODSHOWER],
 		},
-		// We don't need to patch-specify this status construction since these just won't be present in pre-6.1 logs
 		{
 			procStatus: this.data.statuses.FLOURISHING_SYMMETRY,
 			consumeActions: [this.data.actions.REVERSE_CASCADE, this.data.actions.RISING_WINDMILL],
