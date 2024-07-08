@@ -119,7 +119,7 @@ export const AST = ensureActions({
 		name: 'Play III',
 		icon: iconUrl(3118),
 		cooldown: 1000,
-		cooldownGroup: 101, //not true cooldown group. synthed to be able to split in action timeline
+		cooldownGroup: 100, //not true cooldown group. synthed to be able to split in action timeline
 	},
 
 	ASPECTED_BENEFIC: {
@@ -454,7 +454,7 @@ export const AST = ensureActions({
 		icon: iconUrl(3114),
 		cooldown: 1000,
 		statusesApplied: ['THE_EWER'],
-		cooldownGroup: 101, //not true cooldown group. synthed to be able to split in action timeline
+		cooldownGroup: 100, //not true cooldown group. synthed to be able to split in action timeline
 	},
 
 	THE_SPIRE: {
@@ -463,7 +463,7 @@ export const AST = ensureActions({
 		icon: iconUrl(3115),
 		cooldown: 1000,
 		statusesApplied: ['THE_SPIRE'],
-		cooldownGroup: 101, //not true cooldown group. synthed to be able to split in action timeline
+		cooldownGroup: 100, //not true cooldown group. synthed to be able to split in action timeline
 	},
 
 	//minor arcana

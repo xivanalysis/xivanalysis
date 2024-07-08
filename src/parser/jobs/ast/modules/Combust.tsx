@@ -33,7 +33,7 @@ export class Combust extends DoTs {
 		this.checklist.add(new TieredRule({
 			name: <Trans id="ast.dots.rule.name">Keep your DoT up</Trans>,
 			description: <Trans id="ast.dots.rule.description">
-				Combust III makes up a good portion of your damage. Aim to keep this DoT up at all times. It also can be used to weave (<DataLink action="ASTRAL_DRAW" /> / <DataLink action="UMBRAL_DRAW" />) and manage cards, or maneuver around without dropping GCD uptime.
+				<DataLink action="COMBUST_III" /> makes up a good portion of your damage. Aim to keep this DoT up at all times. It also can be used to weave (<DataLink action="ASTRAL_DRAW" /> / <DataLink action="UMBRAL_DRAW" />) and manage cards, or maneuver around without dropping GCD uptime.
 			</Trans>,
 			tiers: SEVERITIES.UPTIME,
 			requirements: [

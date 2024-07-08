@@ -12,7 +12,7 @@ import {Data} from 'parser/core/modules/Data'
 import Suggestions, {SEVERITY, Suggestion, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import DISPLAY_ORDER from 'parser/jobs/ast/modules/DISPLAY_ORDER'
 import React from 'react'
-import {DAMAGE_INCREASE_STATUS, HEAL_MIT_STATUS, REGEN_SHIELD_STATUS, PLAY_I, PLAY_II, PLAY_III} from './ArcanaGroups'
+import {PLAY_I, PLAY_II_III, OFFENSIVE_ARCANA_STATUS, DEFENSIVE_ARCANA_STATUS} from './ArcanaGroups'
 
 const oGCD_ALLOWANCE = 7500 //used in case the last draw comes up in the last second of the fight. Since plays are typically done in a separate weave, a full GCD would be needed to play the card. Takes another second to cast PLAY and therefore an AST would not DRAW if they couldn't even PLAY. Additionally, an AST would not play if not even a GCD could be cast before the end of the fight. Therefore, the oGCD_ALLOWANCE should be approcimately 3 GCDs (2 for AST to cast, 1 for job to do an action) = 3 * 2500
 const INTENTIONAL_DRIFT_FOR_BURST = 7500 //gcds until draw is used in opener
@@ -47,20 +47,16 @@ export default class Draw extends Analyser {
 	private prepullPrepped: boolean = true //always true
 
 	private playDamageActions: Array<Action['id']> = []
-	private playMitigationActions: Array<Action['id']> = []
-	private playRegenActions: Array<Action['id']> = []
+	private playDefensiveActions: Array<Action['id']> = []
 	private arcanaDamageStatuses: Array<Status['id']> = []
-	private arcanaMitigationStatuses: Array<Status['id']> = []
-	private arcanaRegenStatuses: Array<Status['id']> = []
+	private arcanaDefensiveStatuses: Array<Status['id']> = []
 
 	override initialise() {
 
 		this.playDamageActions = PLAY_I.map(actionKey => this.data.actions[actionKey].id)
-		this.playMitigationActions = PLAY_II.map(actionKey => this.data.actions[actionKey].id)
-		this.playRegenActions = PLAY_III.map(actionKey => this.data.actions[actionKey].id)
-		this.arcanaDamageStatuses = DAMAGE_INCREASE_STATUS.map(statusKey => this.data.statuses[statusKey].id)
-		this.arcanaMitigationStatuses = HEAL_MIT_STATUS.map(statusKey => this.data.statuses[statusKey].id)
-		this.arcanaRegenStatuses = REGEN_SHIELD_STATUS.map(statusKey => this.data.statuses[statusKey].id)
+		this.playDefensiveActions = PLAY_II_III.map(actionKey => this.data.actions[actionKey].id)
+		this.arcanaDamageStatuses = OFFENSIVE_ARCANA_STATUS.map(statusKey => this.data.statuses[statusKey].id)
+		this.arcanaDefensiveStatuses = DEFENSIVE_ARCANA_STATUS.map(statusKey => this.data.statuses[statusKey].id)
 
 		const playerFilter = filter<Event>().source(this.parser.actor.id)
 
@@ -78,14 +74,6 @@ export default class Draw extends Analyser {
 		, this.onPlayI)
 		this.addEventHook(playerFilter
 			.type('action')
-			.action(oneOf(this.playMitigationActions))
-		, this.onPlayII)
-		this.addEventHook(playerFilter
-			.type('action')
-			.action(oneOf(this.playRegenActions))
-		, this.onPlayIII)
-		this.addEventHook(playerFilter
-			.type('action')
 			.action(this.data.actions.LORD_OF_CROWNS.id)
 		, this.onPlayLord)
 		this.addEventHook(playerFilter
@@ -97,14 +85,6 @@ export default class Draw extends Analyser {
 			.type('statusApply')
 			.status(oneOf(this.arcanaDamageStatuses))
 		, this.onPlayIBuff)
-		this.addEventHook(playerFilter
-			.type('statusApply')
-			.status(oneOf(this.arcanaMitigationStatuses))
-		, this.onPlayIIBuff)
-		this.addEventHook(playerFilter
-			.type('statusApply')
-			.status(oneOf(this.arcanaRegenStatuses))
-		, this.onPlayIIIBuff)
 
 		this.addEventHook('complete', this.onComplete)
 	}
@@ -126,14 +106,6 @@ export default class Draw extends Analyser {
 		this.playIs++
 	}
 
-	private onPlayII() {
-		this.playIIs++
-	}
-
-	private onPlayIII() {
-		this.playIIIs++
-	}
-
 	private onPlayLord() {
 		this.playLord++
 	}
@@ -147,20 +119,6 @@ export default class Draw extends Analyser {
 			return
 		}
 		this.playIs++
-	}
-
-	private onPlayIIBuff(event: Events['statusApply']) {
-		if (event.timestamp > this.parser.pull.timestamp) {
-			return
-		}
-		this.playIIs++
-	}
-
-	private onPlayIIIBuff(event: Events['statusApply']) {
-		if (event.timestamp > this.parser.pull.timestamp) {
-			return
-		}
-		this.playIIIs++
 	}
 
 	private onComplete() {

@@ -9,12 +9,9 @@ export const PLAY_I: Array<keyof ActionRoot> = [
 	'THE_SPEAR',
 ]
 
-export const PLAY_II: Array<keyof ActionRoot> = [
+export const PLAY_II_III: Array<keyof ActionRoot> = [
 	'THE_BOLE',
 	'THE_ARROW',
-]
-
-export const PLAY_III: Array<keyof ActionRoot> = [
 	'THE_EWER',
 	'THE_SPIRE',
 ]
@@ -24,17 +21,14 @@ export const MINOR_ARCANA: Array<keyof ActionRoot> = [
 	'LADY_OF_CROWNS',
 ]
 
-export const DAMAGE_INCREASE_ARCANA: Array<keyof ActionRoot> = [
+export const OFFENSIVE_ARCANA_ACTION: Array<keyof ActionRoot> = [
 	'THE_BALANCE',
 	'THE_SPEAR',
 ]
 
-export const HEAL_MIT_ARCANA: Array<keyof ActionRoot> = [
+export const DEFENSIVE_ARCANA_ACTION: Array<keyof ActionRoot> = [
 	'THE_ARROW',
 	'THE_BOLE',
-]
-
-export const REGEN_SHIELD_ARCANA: Array<keyof ActionRoot> = [
 	'THE_EWER',
 	'THE_SPIRE',
 ]
@@ -55,17 +49,14 @@ export const DRAWN_CROWN_ARCANA: Array<keyof StatusRoot> = [
 	'LADY_OF_CROWNS_DRAWN',
 ]
 
-export const DAMAGE_INCREASE_STATUS: Array<keyof StatusRoot> = [
+export const OFFENSIVE_ARCANA_STATUS: Array<keyof StatusRoot> = [
 	'THE_BALANCE',
 	'THE_SPEAR',
 ]
 
-export const HEAL_MIT_STATUS: Array<keyof StatusRoot> = [
+export const DEFENSIVE_ARCANA_STATUS: Array<keyof StatusRoot> = [
 	'THE_ARROW',
 	'THE_BOLE',
-]
-
-export const REGEN_SHIELD_STATUS: Array<keyof StatusRoot> = [
 	'THE_EWER',
 	'THE_SPIRE',
 ]

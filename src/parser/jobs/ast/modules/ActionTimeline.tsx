@@ -13,9 +13,14 @@ export class ActionTimeline extends CoreActionTimeline {
 			label: <Trans id="ast.actiontimeline.draw">Draw</Trans>,
 			content: ['ASTRAL_DRAW', 'UMBRAL_DRAW'],
 		},
-		'PLAY_I',
-		'PLAY_II',
-		'PLAY_III',
+		{
+			label: <Trans id="ast.actiontimeline.offensive_play">Offensive Cards</Trans>,
+			content: ['PLAY_I'],
+		},
+		{
+			label: <Trans id="ast.actiontimeline.defensive_play">Defensive Cards</Trans>,
+			content: ['PLAY_II', 'PLAY_III'],
+		},
 		'MINOR_ARCANA',
 		// oGCD ST heals
 		'ESSENTIAL_DIGNITY',

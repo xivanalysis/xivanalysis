@@ -8,11 +8,10 @@ import {dependency} from 'parser/core/Injectable'
 import {EvaluatedAction, ExpectedActionsEvaluator, ExpectedGcdCountEvaluator, RaidBuffWindow} from 'parser/core/modules/ActionWindow'
 import {History, HistoryEntry} from 'parser/core/modules/ActionWindow/History'
 import {Actor} from 'parser/core/modules/Actors'
-import Checklist from 'parser/core/modules/Checklist'
 import {GlobalCooldown} from 'parser/core/modules/GlobalCooldown'
 import React from 'react'
 import {Icon, Message} from 'semantic-ui-react'
-import {DAMAGE_INCREASE_STATUS} from './ArcanaGroups'
+import {OFFENSIVE_ARCANA_STATUS} from './ArcanaGroups'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 import {ExpectedCardsEvaluator} from './evaluators/ExpectedCardsEvaluator'
 import {LightspeedEvaluator} from './evaluators/LightspeedEvaluator'
@@ -33,7 +32,6 @@ export class Divination extends RaidBuffWindow {
 	static override displayOrder = DISPLAY_ORDER.DIVINATION
 
 	@dependency private globalCooldown!: GlobalCooldown
-	@dependency private checklist!: Checklist
 
 	override buffStatus = this.data.statuses.DIVINATION
 
@@ -77,7 +75,7 @@ export class Divination extends RaidBuffWindow {
 		super.initialise()
 
 		const teamMembers = this.parser.pull.actors.filter(actor => actor.playerControlled).map(actor => actor.id)
-		const arcanaStatuses = DAMAGE_INCREASE_STATUS.map(statusKey => this.data.statuses[statusKey].id)
+		const arcanaStatuses = OFFENSIVE_ARCANA_STATUS.map(statusKey => this.data.statuses[statusKey].id)
 
 		//counting minor arcana and lords
 		this.addEventHook(

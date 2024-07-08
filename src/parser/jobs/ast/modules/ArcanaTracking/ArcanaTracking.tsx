@@ -10,7 +10,7 @@ import {dependency} from 'parser/core/Injectable'
 import {Data} from 'parser/core/modules/Data'
 import {ResourceGraphs} from 'parser/core/modules/ResourceGraphs'
 import {InitEvent} from 'parser/core/Parser'
-import {DAMAGE_INCREASE_STATUS, DAMAGE_INCREASE_ARCANA, DRAWN_ARCANA, HEAL_MIT_ARCANA, PLAY_I, REGEN_SHIELD_ARCANA} from '../ArcanaGroups'
+import {DRAWN_ARCANA, PLAY_I, OFFENSIVE_ARCANA_STATUS, DEFENSIVE_ARCANA_ACTION, OFFENSIVE_ARCANA_ACTION} from '../ArcanaGroups'
 import DISPLAY_ORDER from '../DISPLAY_ORDER'
 
 const LINKED_EVENT_THRESHOLD = 20
@@ -85,13 +85,12 @@ export default class ArcanaTracking extends Analyser {
 	override initialise() {
 		// Initialize grouped reference to actions/statuses data
 		this.play = PLAY_I.map(actionKey => this.data.actions[actionKey].id)
-		this.arcanaStatuses = DAMAGE_INCREASE_STATUS.map(statusKey => this.data.statuses[statusKey].id)
+		this.arcanaStatuses = OFFENSIVE_ARCANA_STATUS.map(statusKey => this.data.statuses[statusKey].id)
 		this.cardGrantingAbilities = CARD_GRANTING_ABILITIES.map(actionKey => this.data.actions[actionKey].id)
 		this.cardActions = CARD_ACTIONS.map(actionKey => this.data.actions[actionKey].id)
 		this.drawnArcana = DRAWN_ARCANA.map(statusKey => this.data.statuses[statusKey].id)
-		this.celestialSealArcana = DAMAGE_INCREASE_ARCANA.map(actionKey => this.data.actions[actionKey].id)
-		this.lunarSealArcana = HEAL_MIT_ARCANA.map(actionKey => this.data.actions[actionKey].id)
-		this.solarSealArcana = REGEN_SHIELD_ARCANA.map(actionKey => this.data.actions[actionKey].id)
+		this.celestialSealArcana = OFFENSIVE_ARCANA_ACTION.map(actionKey => this.data.actions[actionKey].id)
+		this.lunarSealArcana = DEFENSIVE_ARCANA_ACTION.map(actionKey => this.data.actions[actionKey].id)
 
 		this.playToStatusLookup = _.zipObject(this.play, this.drawnArcana)
 		this.statusToDrawnLookup = _.zipObject(this.arcanaStatuses, this.drawnArcana)
