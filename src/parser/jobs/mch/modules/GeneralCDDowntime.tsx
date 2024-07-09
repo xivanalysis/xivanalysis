@@ -34,12 +34,24 @@ export default class GeneralCDDowntime extends CooldownDowntime {
 		firstUseOffset: 12500,
 		// isAffectedBySpeed: true,
 	}, {
-		cooldowns: [this.data.actions.GAUSS_ROUND],
+		cooldowns: [this.data.actions.DOUBLE_CHECK],
 		firstUseOffset: 3000,
-		resetBy: {actions: [this.data.actions.HEAT_BLAST], refundAmount: 15000},
+		resetBy: {
+			actions: [
+				this.data.actions.BLAZING_SHOT,
+				this.data.actions.HEAT_BLAST,
+			],
+			refundAmount: 15000,
+		},
 	}, {
-		cooldowns: [this.data.actions.RICOCHET],
+		cooldowns: [this.data.actions.CHECKMATE],
 		firstUseOffset: 3000,
-		resetBy: {actions: [this.data.actions.HEAT_BLAST], refundAmount: 15000},
+		resetBy: {
+			actions: [
+				this.data.actions.BLAZING_SHOT,
+				this.data.actions.HEAT_BLAST,
+			],
+			refundAmount: 15000,
+		},
 	}]
 }

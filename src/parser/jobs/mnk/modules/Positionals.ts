@@ -4,5 +4,6 @@ export class Positionals extends CorePositionals {
 	positionals = [
 		this.data.actions.DEMOLISH,
 		this.data.actions.SNAP_PUNCH,
+		this.data.actions.POUNCING_COEURL,
 	]
 }
