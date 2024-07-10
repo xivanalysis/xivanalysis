@@ -84,7 +84,7 @@ export const SAM = ensureStatuses({
 	TSUBAME_GAESHI_READY: {
 		id: 3852,
 		name: 'Tsubame-Gaeshi Ready',
-		icon: iconUrl(16483),
+		icon: iconUrl(13315),
 		duration: 30000,
 	},
 
