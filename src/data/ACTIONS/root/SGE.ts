@@ -58,6 +58,15 @@ export const SGE = ensureActions({
 		mpCost: 900,
 		statusesApplied: ['EUKRASIAN_PROGNOSIS'],
 	},
+	EUKRASIAN_PROGNOSIS_II: {
+		id: 37034,
+		name: 'Eukrasian Prognosis II',
+		icon: iconUrl(3689),
+		onGcd: true,
+		gcdRecast: 1500,
+		mpCost: 900,
+		statusesApplied: ['EUKRASIAN_PROGNOSIS'],
+	},
 	PANHAIMA: {
 		id: 24311,
 		name: 'Panhaima',
@@ -113,7 +122,7 @@ export const SGE = ensureActions({
 		id: 24294,
 		name: 'Soteria',
 		icon: iconUrl(3662),
-		cooldown: 90000,
+		cooldown: 60000,
 		statusesApplied: ['SOTERIA'],
 	},
 	ICARUS: {
@@ -135,6 +144,19 @@ export const SGE = ensureActions({
 		icon: iconUrl(3685),
 		cooldown: 60000,
 		statusesApplied: ['KRASIS'],
+	},
+	PHILOSOPHIA: {
+		id: 37035,
+		name: 'Philosophia',
+		icon: iconUrl(3690),
+		cooldown: 180000,
+		statusesApplied: ['EUDAIMONIA'],
+	},
+	// I guess Philosophia's Eudaimonia status effect produces Eudaimonia-action sourced heals?
+	EUDAIMONIA: {
+		id: 37036,
+		name: 'Eudaimonia',
+		icon: iconUrl(3690), // Technically it uses the generic cure icon but eh
 	},
 
 	/** Addersgall abilities */
@@ -258,6 +280,15 @@ export const SGE = ensureActions({
 		speedAttribute: Attribute.SPELL_SPEED,
 		mpCost: 400,
 	},
+	EUKRASIAN_DYSKRASIA: {
+		id: 37032,
+		name: 'Eukrasian Dyskrasia',
+		icon: iconUrl(3687),
+		onGcd: true,
+		speedAttribute: Attribute.SPELL_SPEED,
+		mpCost: 400,
+		statusesApplied: ['EUKRASIAN_DYSKRASIA'],
+	},
 	PHLEGMA: {
 		id: 24289,
 		name: 'Phlegma',
@@ -290,6 +321,13 @@ export const SGE = ensureActions({
 		cooldown: 40000,
 		charges: 2,
 		mpCost: 400,
+	},
+	PSYCHE: {
+		id: 37033,
+		name: 'Psyche',
+		icon: iconUrl(3688),
+		onGcd: false,
+		cooldown: 60000,
 	},
 	PNEUMA: {
 		id: 24318,

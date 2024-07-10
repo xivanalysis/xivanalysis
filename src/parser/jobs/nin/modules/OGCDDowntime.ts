@@ -2,9 +2,9 @@ import {Events} from 'event'
 import {CooldownDowntime} from 'parser/core/modules/CooldownDowntime'
 
 const KASSATSU_FIRST_USE_OFFSET = 1000 // After opening Suiton
-const MUG_FIRST_USE_OFFSET = 6000 // After second combo GCD
+const DOKUMORI_FIRST_USE_OFFSET = 6000 // After second combo GCD
 const BUNSHIN_FIRST_USE_OFFSET = 7000 // After second combo GCD (second weave)
-const TRICK_FIRST_USE_OFFSET = 10000 // After fourth combo GCD
+const KUNAIS_BANE_FIRST_USE_OFFSET = 10000 // After fourth combo GCD
 const DWAD_FIRST_USE_OFFSET = 12250 // After SF
 const TCJ_FIRST_USE_OFFSET = 17250 // After two Ninjutsu
 const MEISUI_FIRST_USE_OFFSET = 20750 // After TCJ
@@ -16,16 +16,16 @@ export class OGCDDowntime extends CooldownDowntime {
 			firstUseOffset: KASSATSU_FIRST_USE_OFFSET,
 		},
 		{
-			cooldowns: [this.data.actions.MUG],
-			firstUseOffset: MUG_FIRST_USE_OFFSET,
+			cooldowns: [this.data.actions.DOKUMORI],
+			firstUseOffset: DOKUMORI_FIRST_USE_OFFSET,
 		},
 		{
 			cooldowns: [this.data.actions.BUNSHIN],
 			firstUseOffset: BUNSHIN_FIRST_USE_OFFSET,
 		},
 		{
-			cooldowns: [this.data.actions.TRICK_ATTACK],
-			firstUseOffset: TRICK_FIRST_USE_OFFSET,
+			cooldowns: [this.data.actions.KUNAIS_BANE],
+			firstUseOffset: KUNAIS_BANE_FIRST_USE_OFFSET,
 		},
 		{
 			cooldowns: [this.data.actions.DREAM_WITHIN_A_DREAM],

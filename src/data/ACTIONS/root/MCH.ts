@@ -118,7 +118,7 @@ export const MCH = ensureActions({
 		name: 'Drill',
 		icon: iconUrl(3043),
 		onGcd: true,
-		speedAttribute: Attribute.SKILL_SPEED,
+		charges: 2,
 		cooldown: 20000,
 		cooldownGroup: MCH_COOLDOWN_GROUP.DRILL,
 		gcdRecast: 2500,
@@ -129,7 +129,7 @@ export const MCH = ensureActions({
 		name: 'Bioblaster',
 		icon: iconUrl(3044),
 		onGcd: true,
-		speedAttribute: Attribute.SKILL_SPEED,
+		charges: 2,
 		cooldown: 20000,
 		cooldownGroup: MCH_COOLDOWN_GROUP.DRILL,
 		gcdRecast: 2500,
@@ -163,6 +163,32 @@ export const MCH = ensureActions({
 		speedAttribute: Attribute.SKILL_SPEED,
 		cooldown: 60000,
 		gcdRecast: 2500,
+		statusesApplied: ['EXCAVATOR_READY'],
+	},
+
+	BLAZING_SHOT: {
+		id: 36978,
+		name: 'Blazing Shot',
+		icon: iconUrl(3506),
+		onGcd: true,
+		cooldown: 1500,
+	},
+
+	EXCAVATOR: {
+		id: 36981,
+		name: 'Excavator',
+		icon: iconUrl(3500),
+		onGcd: true,
+		speedAttribute: Attribute.SKILL_SPEED,
+		gcdRecast: 2500,
+	},
+
+	FULL_METAL_FIELD: {
+		id: 36982,
+		name: 'Full Metal Field',
+		icon: iconUrl(3049),
+		onGcd: true,
+		gcdRecast: 2500,
 	},
 
 	// -----
@@ -192,7 +218,7 @@ export const MCH = ensureActions({
 		id: 16766,
 		name: 'Detonator',
 		icon: iconUrl(3039),
-		onGCD: false,
+		onGcd: false,
 		cooldown: 1000,
 	},
 
@@ -237,6 +263,7 @@ export const MCH = ensureActions({
 		icon: iconUrl(3034),
 		onGcd: false,
 		cooldown: 120000,
+		statusesApplied: ['HYPERCHARGED', 'FULL_METAL_MACHINIST'],
 	},
 
 	ROOK_OVERDRIVE: {
@@ -287,6 +314,24 @@ export const MCH = ensureActions({
 		icon: iconUrl(3502),
 		onGcd: false,
 		cooldown: 15000,
+	},
+
+	DOUBLE_CHECK: {
+		id: 36979,
+		name: 'Double Check',
+		icon: iconUrl(3507),
+		onGcd: false,
+		cooldown: 30000,
+		charges: 3,
+	},
+
+	CHECKMATE: {
+		id: 36980,
+		name: 'Checkmate',
+		icon: iconUrl(3508),
+		onGcd: false,
+		cooldown: 30000,
+		charges: 3,
 	},
 
 	// -----
