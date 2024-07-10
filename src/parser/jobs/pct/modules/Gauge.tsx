@@ -40,14 +40,14 @@ const MADEEN_PORTRAIT = 'madeen'
 const PALETTE_GAUGE_COLOR = Color(JOBS.PICTOMANCER.colour).fade(GAUGE_FADE)
 const WHITE_PAINT_COLOR = Color('#00ffff').fade(GAUGE_FADE)
 const BLACK_PAINT_COLOR = Color('#d954d9').fade(GAUGE_FADE)
-const POM_MOTIF_COLOR = Color('#882a0f').fade(GAUGE_FADE)
-const WING_MOTIF_COLOR = Color('#7641c0').fade(GAUGE_FADE)
-const CLAW_MOTIF_COLOR = Color('#8f5c0f').fade(GAUGE_FADE)
-const MAW_MOTIF_COLOR = Color('#5c943b').fade(GAUGE_FADE)
-const WEAPON_MOTIF_COLOR = Color('#9f3837').fade(GAUGE_FADE)
-const LANDSCAPE_MOTIF_COLOR = Color('#3e48c4').fade(GAUGE_FADE)
-const MOOGLE_COLOR = Color('#a744c7').fade(GAUGE_FADE)
-const MADEEN_COLOR = Color('#28620b').fade(GAUGE_FADE)
+const POM_COLOR = Color('#d8ac98').fade(GAUGE_FADE)
+const WING_COLOR = Color('#ca8be3').fade(GAUGE_FADE)
+const CLAW_COLOR = Color('#caba79').fade(GAUGE_FADE)
+const MAW_COLOR = Color('#96c87a').fade(GAUGE_FADE)
+const WEAPON_MOTIF_COLOR = Color('#d76b79').fade(GAUGE_FADE)
+const LANDSCAPE_MOTIF_COLOR = Color('#909fe0').fade(GAUGE_FADE)
+const MOOGLE_COLOR = Color('#b256d6').fade(GAUGE_FADE)
+const MADEEN_COLOR = Color('#7fbb6c').fade(GAUGE_FADE)
 
 const GAUGE_DISPLAY_ORDER = {
 	PALETTE: 5,
@@ -129,7 +129,7 @@ export class Gauge extends CoreGauge {
 			{
 				value: CREATURE_MOTIF,
 				label: <Trans id="pct.canvasgauge.creature-motif.label">Creature Motif</Trans>,
-				color: MAW_MOTIF_COLOR, // Use Maw Motif for the color for now, until I can figure out SetEnum gauge :(
+				color: MAW_COLOR, // Use Maw Motif for the color for now, until I can figure out SetEnum gauge :(
 			},
 		],
 		graph: {
@@ -163,17 +163,17 @@ export class Gauge extends CoreGauge {
 			{
 				value: POM_MOTIF,
 				label: <Trans id="pct.depictiongauge.pom.label">Pom Depiction</Trans>,
-				color: POM_MOTIF_COLOR,
+				color: POM_COLOR,
 			},
 			{
 				value: WING_MOTIF,
 				label: <Trans id="pct.depictiongauge.wing.label">Wing Depiction</Trans>,
-				color: WING_MOTIF_COLOR,
+				color: WING_COLOR,
 			},
 			{
 				value: CLAW_MOTIF,
 				label: <Trans id="pct.depictiongauge.clawotif.label">Claw Depiction</Trans>,
-				color: CLAW_MOTIF_COLOR,
+				color: CLAW_COLOR,
 			},
 		],
 		graph: {
