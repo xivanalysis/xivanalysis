@@ -132,7 +132,7 @@ export const GNB = ensureActions({
 	REIGN_OF_BEASTS: {
 		id: 36937,
 		name: 'Reign of Beasts',
-		icon: iconUrl(36937),
+		icon: iconUrl(3437),
 		onGcd: true,
 		gcdRecast: 2500,
 		speedAttribute: Attribute.SKILL_SPEED,
@@ -144,7 +144,7 @@ export const GNB = ensureActions({
 	NOBLE_BLOOD: {
 		id: 36938,
 		name: 'Noble Blood',
-		icon: iconUrl(36938),
+		icon: iconUrl(3438),
 		onGcd: true,
 		gcdRecast: 2500,
 		speedAttribute: Attribute.SKILL_SPEED,
@@ -156,7 +156,7 @@ export const GNB = ensureActions({
 	LION_HEART: {
 		id: 36939,
 		name: 'Lion Heart',
-		icon: iconUrl(36939),
+		icon: iconUrl(3439),
 		onGcd: true,
 		gcdRecast: 2500,
 		speedAttribute: Attribute.SKILL_SPEED,
@@ -219,7 +219,7 @@ export const GNB = ensureActions({
 	FATED_BRAND: {
 		id: 36936,
 		name: 'Fated Brand',
-		icon: iconUrl(36936),
+		icon: iconUrl(3436),
 		onGcd: false,
 		cooldown: 1000,
 		cooldownGroup: 1,
@@ -249,7 +249,7 @@ export const GNB = ensureActions({
 	TRAJECTORY: { //Formerly known as Rough Divide
 		id: 36934,
 		name: 'Trajectory',
-		icon: iconUrl(36934),
+		icon: iconUrl(3434),
 		onGcd: false,
 		cooldown: 30000,
 		charges: 2,
@@ -265,7 +265,7 @@ export const GNB = ensureActions({
 	RELEASE_ROYAL_GUARD: {
 		id: 32068,
 		name: 'Release Royal Guard',
-		icon: iconUrl(32068),
+		icon: iconUrl(3433),
 		onGcd: false,
 		cooldown: 1000,
 	},
@@ -305,7 +305,7 @@ export const GNB = ensureActions({
 	GREAT_NEBULA: {
 		id: 36935,
 		name: 'Great Nebula',
-		icon: iconUrl(36935),
+		icon: iconUrl(3435),
 		onGcd: false,
 		cooldown: 120000,
 		statusesApplied: ['GREAT_NEBULA'],
