@@ -851,7 +851,7 @@
   "rpr.reaver.suggestion.dropped.why": "You lost {0, plural, one {# stack} other {# stacks}} over the course of the fight.",
   "rpr.tincture.suggestions.trackedActions.content": "Try to fit two uses of <0/> while under the effects of a Tincture.",
   "sam.Higanbana.checklist.requirement.name": "<0/> uptime",
-  "sam.about.description": "So you study the blade do you? Well consider this analysis the exam to see exactly how much you have learned about the basics of Samurai. This tool will track your Sen and Kenki gains/uses to see if you are missing possible resources to gain or you have failed to make the most out of what you gained over the course of the fight. Study guides for the exam:\n\n- [Bushido, a PVE Samurai Guide](http://bit.ly/SAM-Guide)\n\n- [Visual Guide to Samurai rotation](https://i.imgur.com/978VOqG.jpg)\n",
+  "sam.about.description": "So you study the blade do you? Well consider this analysis the exam to see exactly how much you have learned about the basics of Samurai. This tool will track your Sen and Kenki gains/uses to see if you are missing possible resources to gain or you have failed to make the most out of what you gained over the course of the fight.'\n",
   "sam.buffs.checklist.name": "Keep {0} and {1} up",
   "sam.buffs.checklist.requirement.fugetsu.name": "<0/> uptime",
   "sam.buffs.checklist.requirement.fuka.name": "<0/> uptime",

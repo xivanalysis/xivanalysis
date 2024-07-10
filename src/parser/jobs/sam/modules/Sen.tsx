@@ -131,7 +131,9 @@ export class Sen extends Analyser {
 	SEN_REMOVERS = [
 		this.data.actions.HIGANBANA.id,
 		this.data.actions.TENKA_GOKEN.id,
+		this.data.actions.TENDO_GOKEN.id,
 		this.data.actions.MIDARE_SETSUGEKKA.id,
+		this.data.actions.TENDO_SETSUGEKKA.id,
 		this.data.actions.HAGAKURE.id,
 	]
 
@@ -153,8 +155,16 @@ export class Sen extends Analyser {
 		// Sen Spenders
 		this.data.actions.HIGANBANA.id,
 		this.data.actions.TENKA_GOKEN.id,
+		this.data.actions.TENDO_GOKEN.id,
+		this.data.actions.TENDO_SETSUGEKKA.id,
 		this.data.actions.MIDARE_SETSUGEKKA.id,
 		this.data.actions.HAGAKURE.id,
+
+		//Tsubames
+		this.data.actions.KAESHI_GOKEN.id,
+		this.data.actions.TENDO_KAESHI_GOKEN.id,
+		this.data.actions.TENDO_KAESHI_SETSUGEKKA.id,
+		this.data.actions.KAESHI_SETSUGEKKA.id,
 
 		// I'm leaving these in as they are a way to handle Filler. not the usual way, but a way
 		this.data.actions.ENPI.id,
@@ -376,7 +386,7 @@ export class Sen extends Analyser {
 			this.suggestions.add(new Suggestion({
 				icon: this.data.actions.HAGAKURE.icon,
 				content: <Trans id = "sam.sen.no_hagakure.message"> <ActionLink {...this.data.actions.HAGAKURE}/> is a powerful tool that should be used to help keep your rotation looping smoothly. Use it to handle your filler phase of your rotation. </Trans>,
-				severity: SEVERITY.MAJOR,
+				severity: SEVERITY.MINOR,
 				why: <Trans id = "sam.sen.suggestion.no_hagakure.why"> You never cast hagakure this fight. </Trans>,
 			}))
 		}

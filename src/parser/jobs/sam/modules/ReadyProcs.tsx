@@ -48,20 +48,10 @@ export class ReadyProcs extends CoreProcs {
 			consumeActions: [this.data.actions.OGI_NAMIKIRI],
 		},
 		{
-			procStatus: this.data.statuses.TENDO,
+			procStatus: this.data.statuses.TENDO, // Also Covers Tsubame Gaeshi
 			consumeActions: [
 				this.data.actions.TENDO_GOKEN,
 				this.data.actions.TENDO_SETSUGEKKA,
-			],
-		},
-		{
-			procStatus: this.data.statuses.TSUBAME_GAESHI_READY,
-			consumeActions: [
-				this.data.actions.KAESHI_SETSUGEKKA,
-				this.data.actions.KAESHI_GOKEN,
-				this.data.actions.TENDO_KAESHI_SETSUGEKKA,
-				this.data.actions.TENDO_KAESHI_GOKEN,
-
 			],
 		},
 	]
