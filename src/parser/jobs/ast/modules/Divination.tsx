@@ -11,7 +11,7 @@ import {Actor} from 'parser/core/modules/Actors'
 import {GlobalCooldown} from 'parser/core/modules/GlobalCooldown'
 import React from 'react'
 import {Icon, Message} from 'semantic-ui-react'
-import {ARCANA_STATUSES} from './ArcanaGroups'
+import {OFFENSIVE_ARCANA_STATUS} from './ArcanaGroups'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 import {ExpectedCardsEvaluator} from './evaluators/ExpectedCardsEvaluator'
 import {LightspeedEvaluator} from './evaluators/LightspeedEvaluator'
@@ -75,7 +75,7 @@ export class Divination extends RaidBuffWindow {
 		super.initialise()
 
 		const teamMembers = this.parser.pull.actors.filter(actor => actor.playerControlled).map(actor => actor.id)
-		const arcanaStatuses = ARCANA_STATUSES.map(statusKey => this.data.statuses[statusKey].id)
+		const arcanaStatuses = OFFENSIVE_ARCANA_STATUS.map(statusKey => this.data.statuses[statusKey].id)
 
 		//counting minor arcana and lords
 		this.addEventHook(

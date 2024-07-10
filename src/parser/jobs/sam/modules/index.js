@@ -8,8 +8,8 @@ import Interrupts from './Interrupts'
 import {Kenki} from './Kenki'
 import {Meikyo} from './Meikyo'
 import OGCDDowntime from './OGCDDowntime'
-import {Ogi} from './Ogi'
 import {Positionals} from './Positionals'
+import {ReadyProcs} from './ReadyProcs'
 import {Sen} from './Sen'
 import {Shoha} from './Shoha'
 import Tincture from './Tincture'
@@ -26,7 +26,7 @@ export default [
 	Meikyo,
 	Positionals,
 	OGCDDowntime,
-	Ogi,
+	ReadyProcs,
 	Sen,
 	Shoha,
 	Tincture,

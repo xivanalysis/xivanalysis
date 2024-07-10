@@ -376,26 +376,25 @@ export const PCT = ensureActions({
 		id: 34675,
 		name: 'Starry Muse',
 		icon: iconUrl(3826),
-		cooldown: 40000,
-		charges: 2,
+		cooldown: 120000,
 		cooldownGroup: PCT_COOLDOWN_GROUPS.SCENIC_MUSE,
 		statusesApplied: ['STARRY_MUSE', 'SUBTRACTIVE_SPECTRUM', 'INSPIRATION', 'HYPERPHANTASIA', 'STARSTRUCK'],
 	},
 
 	/** Utility */
-	TEMPURA_COAT: {
+	TEMPERA_COAT: {
 		id: 34685,
 		name: 'Tempura Coat',
 		icon: iconUrl(3835),
 		cooldown: 60000,
-		statusesApplied: ['TEMPURA_COAT'],
+		statusesApplied: ['TEMPERA_COAT'],
 	},
-	TEMPURA_GRASSA: {
+	TEMPERA_GRASSA: {
 		id: 34686,
 		name: 'Tempura Grassa',
 		icon: iconUrl(3836),
 		cooldown: 1000,
-		statusesApplied: ['TEMPURA_GRASSA'],
+		statusesApplied: ['TEMPERA_GRASSA'],
 	},
 	SMUDGE: {
 		id: 34684,
