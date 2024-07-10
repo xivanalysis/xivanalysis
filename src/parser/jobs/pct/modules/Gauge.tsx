@@ -9,16 +9,16 @@ import {Actors} from 'parser/core/modules/Actors'
 import {CounterGauge, Gauge as CoreGauge} from 'parser/core/modules/Gauge'
 import {EnumGauge} from 'parser/core/modules/Gauge/EnumGauge'
 import {SetGauge} from 'parser/core/modules/Gauge/SetGauge'
-import {GAUGE_FADE} from 'parser/core/modules/ResourceGraphs/ResourceGraphs'
+import {DEFAULT_ROW_HEIGHT, GAUGE_FADE} from 'parser/core/modules/ResourceGraphs/ResourceGraphs'
 import React from 'react'
 import {isSuccessfulHit} from 'utilities'
 
 type GaugeModifier = Partial<Record<Event['type'], number>>
-interface MotifModification {
+interface CanvasModification {
 	type: 'generate' | 'spend'
 	which: 'creature' | 'weapon' | 'landscape'
 }
-type MotifModifer = Partial<Record<Event['type'], MotifModification>>
+type CanvasModifier = Partial<Record<Event['type'], CanvasModification>>
 
 const WHITE_PAINT = 'whitepaint'
 const BLACK_PAINT = 'blackpaint'
@@ -49,6 +49,14 @@ const LANDSCAPE_MOTIF_COLOR = Color('#3e48c4').fade(GAUGE_FADE)
 const MOOGLE_COLOR = Color('#a744c7').fade(GAUGE_FADE)
 const MADEEN_COLOR = Color('#28620b').fade(GAUGE_FADE)
 
+const GAUGE_DISPLAY_ORDER = {
+	PALETTE: 5,
+	PAINT: 4,
+	MOTIF: 3,
+	DEPICTION: 2,
+	PORTRAIT: 1,
+}
+
 export class Gauge extends CoreGauge {
 	static override handle = 'gauge'
 	static override title = t('pct.gauge.title')`Gauge`
@@ -57,9 +65,11 @@ export class Gauge extends CoreGauge {
 
 	private paletteGauge = this.add(new CounterGauge({
 		graph: {
+			handle: 'palette',
 			label: <Trans id="pct.gauge.resource.palette">Palette Gauge</Trans>,
 			color: PALETTE_GAUGE_COLOR,
 			forceCollapsed: true,
+			order: GAUGE_DISPLAY_ORDER.PALETTE,
 		},
 		correctHistory: true,
 	}))
@@ -80,6 +90,7 @@ export class Gauge extends CoreGauge {
 				value: BLACK_PAINT,
 				label: <Trans id="pct.paintgauge.black-paint.label">Black Paint</Trans>,
 				color: BLACK_PAINT_COLOR,
+				tooltipHideWhenEmpty: true,
 			},
 			{
 				value: WHITE_PAINT,
@@ -88,9 +99,10 @@ export class Gauge extends CoreGauge {
 			},
 		],
 		graph: {
-			handle: 'paintgauge',
+			handle: 'paint',
 			label: <Trans id="pct.gauge.resource.paint">Paint</Trans>,
-			tooltipHideWhenEmpty: true,
+			tooltipHideMaximum: true,
+			order: GAUGE_DISPLAY_ORDER.PAINT,
 		},
 	}))
 
@@ -105,9 +117,9 @@ export class Gauge extends CoreGauge {
 	private canvasGauge = this.add(new SetGauge({
 		options: [
 			{
-				value: CREATURE_MOTIF,
-				label: <Trans id="pct.canvasgauge.creature-motif.label">Creature Motif</Trans>,
-				color: MAW_MOTIF_COLOR, // Use Maw Motif for the color for now, until I can figure out SetEnum gauge :(
+				value: LANDSCAPE_MOTIF,
+				label: <Trans id="pct.canvasgauge.landscape-motif.label">Landscape Motif</Trans>,
+				color: LANDSCAPE_MOTIF_COLOR,
 			},
 			{
 				value: WEAPON_MOTIF,
@@ -115,19 +127,20 @@ export class Gauge extends CoreGauge {
 				color: WEAPON_MOTIF_COLOR,
 			},
 			{
-				value: LANDSCAPE_MOTIF,
-				label: <Trans id="pct.canvasgauge.landscape-motif.label">Landscape Motif</Trans>,
-				color: LANDSCAPE_MOTIF_COLOR,
+				value: CREATURE_MOTIF,
+				label: <Trans id="pct.canvasgauge.creature-motif.label">Creature Motif</Trans>,
+				color: MAW_MOTIF_COLOR, // Use Maw Motif for the color for now, until I can figure out SetEnum gauge :(
 			},
 		],
 		graph: {
-			handle: 'motifgauge',
-			label: <Trans id="pct.gauge.resource.motif">Motifs</Trans>,
+			handle: 'canvas',
+			label: <Trans id="pct.gauge.resource.canvas">Canvas</Trans>,
 			tooltipHideWhenEmpty: true,
+			order: GAUGE_DISPLAY_ORDER.MOTIF,
 		},
 	}))
 
-	private motifModifiers = new Map<number, MotifModifer>([
+	private canvasModifiers = new Map<number, CanvasModifier>([
 		// Builders
 		[this.data.actions.POM_MOTIF.id, {action: {type: 'generate', which: 'creature'}}],
 		[this.data.actions.WING_MOTIF.id, {action: {type: 'generate', which: 'creature'}}],
@@ -141,25 +154,25 @@ export class Gauge extends CoreGauge {
 		[this.data.actions.WINGED_MUSE.id, {action: {type: 'spend', which: 'creature'}}],
 		[this.data.actions.CLAWED_MUSE.id, {action: {type: 'spend', which: 'creature'}}],
 		[this.data.actions.FANGED_MUSE.id, {action: {type: 'spend', which: 'creature'}}],
-		[this.data.actions.STEEL_MUSE.id, {action: {type: 'spend', which: 'weapon'}}],
+		[this.data.actions.STRIKING_MUSE.id, {action: {type: 'spend', which: 'weapon'}}],
 		[this.data.actions.STARRY_MUSE.id, {action: {type: 'spend', which: 'landscape'}}],
 	])
 
-	private creatureDepictions = this.add(new SetGauge({
+	private depictionGauge = this.add(new SetGauge({
 		options: [
 			{
 				value: POM_MOTIF,
-				label: <Trans id="pct.canvasgauge.pom-motif.label">Pom Motif</Trans>,
+				label: <Trans id="pct.depictiongauge.pom.label">Pom Depiction</Trans>,
 				color: POM_MOTIF_COLOR,
 			},
 			{
 				value: WING_MOTIF,
-				label: <Trans id="pct.canvasgauge.wing-motif.label">Wing Motif</Trans>,
+				label: <Trans id="pct.depictiongauge.wing.label">Wing Depiction</Trans>,
 				color: WING_MOTIF_COLOR,
 			},
 			{
 				value: CLAW_MOTIF,
-				label: <Trans id="pct.canvasgauge.claw-motif.label">Claw Motif</Trans>,
+				label: <Trans id="pct.depictiongauge.clawotif.label">Claw Depiction</Trans>,
 				color: CLAW_MOTIF_COLOR,
 			},
 		],
@@ -167,10 +180,11 @@ export class Gauge extends CoreGauge {
 			handle: 'depictions',
 			label: <Trans id="pct.gauge.resource.depictions">Depictions</Trans>,
 			tooltipHideWhenEmpty: true,
+			order: GAUGE_DISPLAY_ORDER.DEPICTION,
 		},
 	}))
 
-	private creatureDepictionModifiers = [
+	private depictionModifiers = [
 		this.data.actions.POM_MUSE.id,
 		this.data.actions.WINGED_MUSE.id,
 		this.data.actions.CLAWED_MUSE.id,
@@ -184,21 +198,26 @@ export class Gauge extends CoreGauge {
 				value: MOOGLE_PORTRAIT,
 				label: <Trans id="pct.portraitgauge.moogle-portrait.label">Moogle Portrait</Trans>,
 				color: MOOGLE_COLOR,
+				tooltipHideWhenEmpty: true,
 			},
 			{
 				value: MADEEN_PORTRAIT,
 				label: <Trans id="pct.portraitgauge.madeen-portrait.label">Madeen Portrait</Trans>,
 				color: MADEEN_COLOR,
+				tooltipHideWhenEmpty: true,
 			},
 		],
 		graph: {
 			handle: 'portraits',
 			label: <Trans id="pct.gauge.resource.portraits">Portraits</Trans>,
-			tooltipHideWhenEmpty: true,
+			order: GAUGE_DISPLAY_ORDER.PORTRAIT,
+			tooltipHideMaximum: true,
+			// eslint-disable-next-line @typescript-eslint/no-magic-numbers
+			height: DEFAULT_ROW_HEIGHT / 3,
 		},
 	}))
 
-	private portraitGaugeModifers = [
+	private portraitModifiers = [
 		this.data.actions.WINGED_MUSE.id,
 		this.data.actions.MOG_OF_THE_AGES.id,
 		this.data.actions.FANGED_MUSE.id,
@@ -213,7 +232,8 @@ export class Gauge extends CoreGauge {
 		const playerFilter = filter<Event>().source(this.parser.actor.id)
 
 		const paletteActions = Array.from(this.paletteGaugeModifiers.keys())
-		this.addEventHook(playerFilter.action(oneOf(paletteActions)), this.onPaletteModifer)
+		this.addEventHook(playerFilter.type('action').action(oneOf(paletteActions)), this.onPaletteModifer)
+		this.addEventHook(playerFilter.type('damage').cause(this.data.matchCauseActionId(paletteActions)), this.onPaletteModifer)
 
 		this.addEventHook(playerFilter.type('damage').cause(this.data.matchCauseActionId(this.whitePaintGenerators)), this.onWhitePaintGenerator)
 		this.addEventHook(playerFilter.type('action').action(this.data.actions.HOLY_IN_WHITE.id), this.onWhitePaintSpender)
@@ -222,12 +242,15 @@ export class Gauge extends CoreGauge {
 
 		this.addEventHook(playerFilter.type('action').action(this.data.actions.SUBTRACTIVE_PALLETTE.id), this.onSubtractivePalette)
 
-		const motifActions = Array.from(this.motifModifiers.keys())
-		this.addEventHook(playerFilter.type('action').action(oneOf(motifActions)), this.onMotifModifier)
+		const canvasActions = Array.from(this.canvasModifiers.keys())
+		this.addEventHook(playerFilter.type('action').action(oneOf(canvasActions)), this.onCanvasModifier)
 
-		this.addEventHook(playerFilter.type('action').action(oneOf(this.creatureDepictionModifiers)), this.onDepictionModifier)
+		this.addEventHook(playerFilter.type('action').action(oneOf(this.depictionModifiers)), this.onDepictionModifier)
 
-		this.addEventHook(playerFilter.type('action').action(oneOf(this.portraitGaugeModifers)), this.onPortraitModifier)
+		this.addEventHook(playerFilter.type('action').action(oneOf(this.portraitModifiers)), this.onPortraitModifier)
+
+		// Default assume the player painted before the pull
+		this.canvasGauge.set([CREATURE_MOTIF, WEAPON_MOTIF, LANDSCAPE_MOTIF])
 
 		this.addEventHook('complete', this.onComplete)
 	}
@@ -288,17 +311,17 @@ export class Gauge extends CoreGauge {
 		this.nextWhiteIsBlack = true
 	}
 
-	private onMotifModifier(event: Events['action']) {
-		const modifier = this.motifModifiers.get(event.action)
+	private onCanvasModifier(event: Events['action']) {
+		const modifier = this.canvasModifiers.get(event.action)
 		if (modifier == null) { return }
 
-		const motifMod = modifier[event.type]
-		if (motifMod == null) { return }
+		const canvasMod = modifier[event.type]
+		if (canvasMod == null) { return }
 
-		if (motifMod.type === 'generate') {
-			this.canvasGauge.generate(motifMod.which)
-		} else if (motifMod.type === 'spend') {
-			this.canvasGauge.spend(motifMod.which)
+		if (canvasMod.type === 'generate') {
+			this.canvasGauge.generate(canvasMod.which)
+		} else if (canvasMod.type === 'spend') {
+			this.canvasGauge.spend(canvasMod.which)
 		}
 	}
 
@@ -306,20 +329,20 @@ export class Gauge extends CoreGauge {
 		switch (event.action) {
 		// Fanged Muse resets the depiction state while generating Madeen
 		case this.data.actions.FANGED_MUSE.id:
-			this.creatureDepictions.reset()
+			this.depictionGauge.reset()
 			break
 		// The other muses add their creature to the depiction set
 		case this.data.actions.CLAWED_MUSE.id:
-			this.creatureDepictions.generate(CLAW_MOTIF)
+			this.depictionGauge.generate(CLAW_MOTIF)
 		// Switch case fallthrough as a pseudo history correction for dungeon/24man depiction state carryover since this isn't a counter gauge with correction built in
 		/* eslint-disable no-fallthrough */
 		case this.data.actions.WINGED_MUSE.id:
-			if (!this.creatureDepictions.getStateAt(WING_MOTIF)) {
-				this.creatureDepictions.getStateAt(WING_MOTIF)
+			if (!this.depictionGauge.getStateAt(WING_MOTIF)) {
+				this.depictionGauge.generate(WING_MOTIF)
 			}
 		case this.data.actions.POM_MUSE.id:
-			if (!this.creatureDepictions.getStateAt(POM_MOTIF)) {
-				this.creatureDepictions.getStateAt(POM_MOTIF)
+			if (!this.depictionGauge.getStateAt(POM_MOTIF)) {
+				this.depictionGauge.generate(POM_MOTIF)
 			}
 			/* eslint-enable no-fallthrough */
 		}
