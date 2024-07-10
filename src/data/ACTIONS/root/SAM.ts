@@ -208,7 +208,10 @@ export const SAM = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		combo: {
-			from: 7477,
+			from: [
+					7477,
+					36963,
+			],
 			end: true,
 		},
 	},
