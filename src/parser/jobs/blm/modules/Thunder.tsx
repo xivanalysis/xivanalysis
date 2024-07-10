@@ -49,24 +49,19 @@ export class Thunder extends Analyser {
 
 	// Can never be too careful :blobsweat:
 	private readonly STATUS_DURATION = {
-		[this.data.statuses.THUNDER_III.id]: this.data.statuses.THUNDER_III.duration,
 		[this.data.statuses.HIGH_THUNDER.id]: this.data.statuses.HIGH_THUNDER.duration,
-		[this.data.statuses.THUNDERHEAD.id]: this.data.statuses.THUNDERHEAD.duration,
 	}
 
     private thunderCasts = 0
 	private totalThunderClip = 0
     private lastThunderCast: number = this.data.statuses.HIGH_THUNDER.id
 	private clip: {[key: number]: number} = {
-		[this.data.statuses.THUNDER_III.id]: 0,
 		[this.data.statuses.HIGH_THUNDER.id]: 0,
 	}
 	private tracker: ThunderApplicationTracker = {}
 
 	override initialise() {
 		const playerFilter = filter<Event>().source(this.parser.actor.id)
-		this.addEventHook(playerFilter.type('action').action(this.data.actions.THUNDER_III.id), this.onDotCast)
-		this.addEventHook(playerFilter.type('statusApply').status(this.data.statuses.THUNDER_III.id), this.onDotApply)
 		this.addEventHook(playerFilter.type('action').action(this.data.actions.HIGH_THUNDER.id), this.onDotCast)
 		this.addEventHook(playerFilter.type('statusApply').status(this.data.statuses.HIGH_THUNDER.id), this.onDotApply)
 		this.addEventHook('complete', this.onComplete)
@@ -74,7 +69,6 @@ export class Thunder extends Analyser {
 
 	private createTargetApplicationList() {
 		return {
-			[this.data.statuses.THUNDER_III.id]: [],
 			[this.data.statuses.HIGH_THUNDER.id]: [],
 		}
 	}
@@ -120,10 +114,7 @@ export class Thunder extends Analyser {
 
 	// Get the uptime percentage for the Thunder status debuff
 	private getThunderUptime() {
-		let statusTime = this.statuses.getUptime(this.data.statuses.HIGH_THUNDER, this.actors.foes)
-		if (statusTime === 0) {
-			statusTime = this.statuses.getUptime(this.data.statuses.THUNDER_III, this.actors.foes)
-		}
+		const statusTime = this.statuses.getUptime(this.data.statuses.HIGH_THUNDER, this.actors.foes)
 		const uptime = this.parser.currentDuration - this.invulnerability.getDuration({types: ['invulnerable']})
 		return (statusTime / uptime) * 100
 	}
@@ -146,7 +137,7 @@ export class Thunder extends Analyser {
 
 		// Suggestions to not spam thunder too much
 		const sumClip = this.clip[this.data.statuses.HIGH_THUNDER.id]
-		const maxExpectedClip = (this.thunderCasts - 1) * MAX_ALLOWED_CLIPPING
+		const maxExpectedClip = Math.max((this.thunderCasts - 1) * MAX_ALLOWED_CLIPPING, 0) // Stop this from looking dumb if the player never cast thunder at all...
 		if (sumClip > maxExpectedClip) {
 			this.suggestions.add(new Suggestion({
 				icon: this.data.actions.HIGH_THUNDER.icon,
@@ -176,9 +167,7 @@ export class Thunder extends Analyser {
 				{
 					target[this.data.statuses.HIGH_THUNDER.id].applications.map(
 						(event) => this.buildThunderTableRow(event)
-					).concat(target[this.data.statuses.THUNDER_III.id].applications.map(
-						(event) => this.buildThunderTableRow(event)
-					))
+					)
 				}
 			</Table.Body>
 		</Table>
