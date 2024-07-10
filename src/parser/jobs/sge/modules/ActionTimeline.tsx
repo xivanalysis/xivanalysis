@@ -18,9 +18,11 @@ export class ActionTimeline extends CoreActionTimeline {
 		'EUKRASIAN_PROGNOSIS',
 		['EUKRASIAN_DOSIS_III', 'EUKRASIAN_DOSIS_II', 'EUKRASIAN_DOSIS'],
 		// DPS 'cooldowns'
+		'PSYCHE',
 		'PNEUMA',
 		['PHLEGMA_III', 'PHLEGMA_II', 'PHLEGMA'],
 		// Cooldowns
+		'PHILOSOPHIA',
 		'HOLOS',
 		'PANHAIMA',
 		'HAIMA',
