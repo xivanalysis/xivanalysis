@@ -72,6 +72,7 @@
   "blm.gauge.header.event": "",
   "blm.gauge.header.time": "Temps",
   "blm.gauge.resource.astral-fire": "Feu astral",
+  "blm.gauge.resource.astral-soul": "",
   "blm.gauge.resource.astral-timer": "Temps restant pour Feu astral",
   "blm.gauge.resource.astral-umbral": "Feu Astral et<0></0>Glace Ombrale",
   "blm.gauge.resource.paradox": "Paradoxe",
