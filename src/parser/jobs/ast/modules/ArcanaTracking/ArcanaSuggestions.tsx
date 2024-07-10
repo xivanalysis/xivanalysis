@@ -11,7 +11,7 @@ import {Data} from 'parser/core/modules/Data'
 import {Timeline} from 'parser/core/modules/Timeline'
 import React from 'react'
 import {Button, Table} from 'semantic-ui-react'
-import {PLAY} from '../ArcanaGroups'
+import {PLAY_I} from '../ArcanaGroups'
 import DISPLAY_ORDER from '../DISPLAY_ORDER'
 import styles from './ArcanaSuggestions.module.css'
 import ArcanaTracking, {CardState, SealType} from './ArcanaTracking'
@@ -48,7 +48,7 @@ export default class ArcanaSuggestions extends Analyser {
 	private play: Array<Action['id']> = []
 
 	override initialise() {
-		this.play = PLAY.map(actionKey => this.data.actions[actionKey].id)
+		this.play = PLAY_I.map(actionKey => this.data.actions[actionKey].id)
 
 		this.addEventHook('complete', this._onComplete)
 	}

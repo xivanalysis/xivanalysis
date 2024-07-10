@@ -3,7 +3,6 @@ import {LucidDreaming} from 'parser/core/modules/LucidDreaming'
 import {ActionTimeline} from './ActionTimeline'
 import {ArcanaSuggestions, ArcanaTracking} from './ArcanaTracking'
 import {Combust} from './Combust'
-import CrownPlay from './CrownPlay'
 import {Defensives} from './Defensives'
 import {Divination} from './Divination'
 import Draw from './Draw'
@@ -25,7 +24,6 @@ export default [
 	Defensives,
 	Divination,
 	Draw,
-	CrownPlay,
 	EarthlyStar,
 	oGCDs,
 	Helios,
