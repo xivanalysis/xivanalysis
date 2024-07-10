@@ -8,6 +8,20 @@ export const SAM = ensureStatuses({
 		icon: iconUrl(13307),
 		duration: 4000,
 	},
+	TENGETSU: {
+		id: 3853,
+		name: 'Tengetsu',
+		icon: iconUrl(13316),
+		duration: 4000,
+	},
+
+	TENGETSU_FORESIGHT: {
+		id: 3854,
+		name: "Tengetsu's Foresight",
+		icon: iconUrl(13317),
+		duration: 8000,
+
+	},
 
 	FUGETSU: {
 		id: 1298,
@@ -64,6 +78,27 @@ export const SAM = ensureStatuses({
 		id: 2959,
 		name: 'Ogi Namikiri Ready',
 		icon: iconUrl(13313),
+		duration: 30000,
+	},
+
+	TSUBAME_GAESHI_READY: {
+		id: 3852,
+		name: 'Tsubame-Gaeshi Ready',
+		icon: iconUrl(13315),
+		duration: 30000,
+	},
+
+	ZANSHIN_READY: {
+		id: 3855,
+		name: 'Zanshin Ready',
+		icon: iconUrl(13318),
+		duration: 30000,
+	},
+
+	TENDO: {
+		id: 3856,
+		name: 'Tendo',
+		icon: iconUrl(13319),
 		duration: 30000,
 	},
 })
