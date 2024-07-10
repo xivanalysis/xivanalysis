@@ -338,7 +338,7 @@ export const DRG = ensureActions({
 		id: 3555,
 		name: 'Geirskogul',
 		icon: iconUrl(2583),
-		cooldown: 30000,
+		cooldown: 60000,
 		statusesApplied: ['NASTROND_READY'],
 	},
 
