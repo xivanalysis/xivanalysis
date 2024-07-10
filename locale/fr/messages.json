@@ -484,6 +484,7 @@
   "drg.lc.suggestions.missedgcd.content": "Essayez de lancer 8 GCDs durant chaque <0/>.",
   "drg.lotd.suggestions.missedaction.content": "",
   "drg.lotd.suggestions.missedgcd.content": "",
+  "drg.lotd.suggestions.window-name": "",
   "drk.about.description": "<0> Cet analyseur a pour but de vous aider à libérer vos Ténèbres intérieures. Le cœur de l'attaque des Chevaliers noirs se concentre sur l'utilisation maximale du sang et des PM, dans les fenêtres de buff d'équipe où elles sont disponibles. De plus, vous devez viser à obtenir cinq coups dans chaque fenêtre d'Arme de sang et Délirium.</0><1>Défensivement, <2/> est un puissant rechargement qui peut atténuer les dégâts importants sur vous ou une cible, et permet d'utiliser gratuitement Déluge d'ombre ou Tranchant d'ombre une fois que le bouclier est entièrement consommé.</1>",
   "drk.bloodweapon.suggestions.missedgcd.content": "Essayez d'utiliser 5 GCDs à chaque fenêtre d'<0/> . Si vous ne pouvez pas le faire avec 100% d'uptime et sans clipper, pensez à ajuster votre stuff pour y ajouter plus de Vivacité.",
   "drk.bloodweapon.title": "Utilisations d'Arme de sang",
