@@ -103,7 +103,7 @@
   "blm.procs.suggestions.dropped-f3ps.content": "You lost at least  one <0/> proc by allowing <1/> to expire without using it.",
   "blm.procs.suggestions.dropped-f3ps.why": "{droppedFireStarters, plural, one {# Firestarter proc} other {# Firestarter procs}} expired.",
   "blm.procs.suggestions.dropped-thunderheads.content": "You lost at least one <0/> proc by allowing <1/> to expire without using it.",
-  "blm.procs.suggestions.dropped-thunderheads.why": "{droppedThunderClouds, plural, one {# Thunderhead} other {# Thunderheads}} expired.",
+  "blm.procs.suggestions.dropped-thunderheads.why": "{droppedThunderHeads, plural, one {# Thunderhead} other {# Thunderheads}} expired.",
   "blm.rotation-watchdog.error-messages.died": "<0/> Died",
   "blm.rotation-watchdog.error-messages.dropped-astral-umbral": "Dropped Astral Fire or Umbral Ice",
   "blm.rotation-watchdog.error-messages.extra-f1": "Extra <0/>",

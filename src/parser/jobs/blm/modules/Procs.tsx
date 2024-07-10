@@ -36,8 +36,8 @@ export default class Procs extends CoreProcs {
 	}
 
 	protected override addJobSpecificSuggestions(): void {
-		const droppedThunderClouds: number = this.getDropCountForStatus(this.data.statuses.THUNDERHEAD.id)
-		if (droppedThunderClouds > 0) {
+		const droppedThunderHeads: number = this.getDropCountForStatus(this.data.statuses.THUNDERHEAD.id)
+		if (droppedThunderHeads > 0) {
 			this.suggestions.add(new Suggestion({
 				icon: this.data.statuses.THUNDERHEAD.icon,
 				content: <Trans id="blm.procs.suggestions.dropped-thunderheads.content">
@@ -45,7 +45,7 @@ export default class Procs extends CoreProcs {
 				</Trans>,
 				severity: SEVERITY.MEDIUM,
 				why: <Trans id="blm.procs.suggestions.dropped-thunderheads.why">
-					<Plural value={droppedThunderClouds} one="# Thunderhead" other="# Thunderheads" /> expired.
+					<Plural value={droppedThunderHeads} one="# Thunderhead" other="# Thunderheads" /> expired.
 				</Trans>,
 			}))
 		}
