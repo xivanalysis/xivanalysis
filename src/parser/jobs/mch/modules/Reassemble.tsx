@@ -16,6 +16,7 @@ const DELAY_THRESHOLD_MS = 100
 // These are the only GCDs that should be reassembled under normal circumstances
 const REASSEMBLE_GCDS: ActionKey[] = [
 	'CHAIN_SAW',
+	'EXCAVATOR',
 	'AIR_ANCHOR',
 	'DRILL',
 	'SCATTERGUN',
@@ -23,6 +24,7 @@ const REASSEMBLE_GCDS: ActionKey[] = [
 
 const OTHER_GCDS: ActionKey[] = [
 	'BIOBLASTER',
+	'BLAZING_SHOT',
 	'HEAT_BLAST',
 	'AUTO_CROSSBOW',
 	'HEATED_SPLIT_SHOT',
