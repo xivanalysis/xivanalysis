@@ -150,12 +150,6 @@ export const SGE = ensureStatuses({
 		icon: iconUrl(12973),
 		duration: 30000,
 	},
-	EUKRASIAN_DYSKRASIA: {
-		id: 7002616, // TODO
-		name: 'Eukrasian Dyskrasia',
-		icon: 'https://xivapi.com/i/012000/012962.png', // TODO
-		duration: 30000,
-	},
 	PNEUMA: {
 		id: 2623,
 		name: 'Pneuma',
