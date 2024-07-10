@@ -46,13 +46,17 @@ export class Divination extends RaidBuffWindow {
 		<Trans id="ast.divinationwindow.description">
 			<DataLink action="DIVINATION" /> provides an Astrologian with a strong amount of raid DPS when stacked together with arcanum. <br />
 			Try to time the usage to match raid buffs and high output phases of other party members - it's more important to use it on time rather than hold it. <br />
-			Additionally, an AST wants to aim to <DataLink action="PLAY_I" />* as many cards as possible, use <DataLink action="ORACLE" />, and use <DataLink action="LORD_OF_CROWNS" /> during burst windows. With many oGCD actions necessary in such a short window, <DataLink action="LIGHTSPEED" /> is required to fit in every action within the <DataLink action="DIVINATION" showIcon={false} /> window.
+			Additionally, an AST wants to aim to <DataLink action="PLAY_I" />* as many cards as possible, use damage actions (<DataLink action="ORACLE" /> / <DataLink action="LORD_OF_CROWNS" /> / <DataLink action="COMBUST_III" /> **) during burst windows. <br />
+			With many oGCD actions necessary in such a short window, <DataLink action="LIGHTSPEED" /> is required to fit in every action within the <DataLink action="DIVINATION" showIcon={false} /> window.
 		</Trans>
 	</Message>
 
 	override appendMessages = <Message>
-		<Trans id="ast.divinationwindow.footnote">
-			* - rotation shown is during <DataLink action="DIVINATION" showIcon={false} /> window. Where <DataLink action="PLAY_I" /> is activated outside the window, but is active in the window, the action is counted. For example: cards played before and expires after <DataLink action="DIVINATION" showIcon={false} /> is cast.
+		<Trans id="ast.divinationwindow.footnote1">
+			* - rotation shown is during <DataLink action="DIVINATION" showIcon={false} /> window. Where <DataLink action="PLAY_I" /> is activated outside the window, but is active in the window, the action is counted. For example: cards played before and expires after <DataLink action="DIVINATION" showIcon={false} /> is cast. <br />
+		</Trans>
+		<Trans id="ast.divinationwindow.footnote2">
+			** - <DataLink action="COMBUST_III" /> is recommended to be used as close to the end of the burst window while all party buffs are up even if the DoT clips itself or during the party-buff window if it is going to expire. <br />
 		</Trans>
 	</Message>
 
@@ -102,6 +106,10 @@ export class Divination extends RaidBuffWindow {
 				},
 				{
 					action: this.data.actions.ORACLE,
+					expectedPerWindow: 1,
+				},
+				{
+					action: this.data.actions.COMBUST_III,
 					expectedPerWindow: 1,
 				},
 			],
