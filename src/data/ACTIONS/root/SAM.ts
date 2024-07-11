@@ -4,12 +4,6 @@ import {ensureActions, BonusModifier} from '../type'
 
 // Samurai Actions
 
-// Merge all 3 Tsubames into 1
-
-export const SAM_COOLDOWN_GROUP = {
-	TSUBAME: 16483,
-}
-
 export const SAM = ensureActions({
 	// -----
 	// Player GCDs
@@ -25,6 +19,17 @@ export const SAM = ensureActions({
 		},
 	},
 
+	GYOFU: {
+		id: 36963,
+		name: 'Gyofu',
+		icon: iconUrl(3191),
+		onGcd: true,
+		speedAttribute: Attribute.SKILL_SPEED,
+		combo: {
+			start: true,
+		},
+	},
+
 	JINPU: {
 		id: 7478,
 		name: 'Jinpu',
@@ -32,7 +37,10 @@ export const SAM = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		combo: {
-			from: 7477,
+			from: [
+				7477,
+				36963,
+			],
 		},
 		statusesApplied: ['FUGETSU'],
 	},
@@ -53,7 +61,10 @@ export const SAM = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		combo: {
-			from: 7477,
+			from: [
+				7477,
+				36963,
+			],
 		},
 		statusesApplied: ['FUKA'],
 	},
@@ -84,16 +95,16 @@ export const SAM = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		potencies: [{
-			value: 120,
+			value: 180,
 			bonusModifiers: [],
 		}, {
-			value: 170,
+			value: 230,
 			bonusModifiers: [BonusModifier.POSITIONAL],
 		}, {
-			value: 330,
+			value: 390,
 			bonusModifiers: [BonusModifier.COMBO],
 		}, {
-			value: 370,
+			value: 440,
 			bonusModifiers: [BonusModifier.POSITIONAL, BonusModifier.COMBO],
 		}],
 		combo: {
@@ -124,6 +135,15 @@ export const SAM = ensureActions({
 		castTime: 1300,
 	},
 
+	TENDO_GOKEN: { //TODO: Verify Icon
+		id: 36965,
+		name: 'Tendo Goken',
+		icon: iconUrl(3193),
+		onGcd: true,
+		speedAttribute: Attribute.SKILL_SPEED,
+		castTime: 1300,
+	},
+
 	KASHA: {
 		id: 7482,
 		name: 'Kasha',
@@ -131,16 +151,16 @@ export const SAM = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		potencies: [{
-			value: 120,
+			value: 180,
 			bonusModifiers: [],
 		}, {
-			value: 170,
+			value: 230,
 			bonusModifiers: [BonusModifier.POSITIONAL],
 		}, {
-			value: 330,
+			value: 390,
 			bonusModifiers: [BonusModifier.COMBO],
 		}, {
-			value: 380,
+			value: 440,
 			bonusModifiers: [BonusModifier.POSITIONAL, BonusModifier.COMBO],
 		}],
 		combo: {
@@ -171,6 +191,16 @@ export const SAM = ensureActions({
 		castTime: 1300,
 	},
 
+	TENDO_SETSUGEKKA: { //TODO: Verify, Icon
+		id: 36966,
+		name: 'Tendo Setsugekka',
+		icon: iconUrl(3194),
+		onGcd: true,
+		speedAttribute: Attribute.SKILL_SPEED,
+		castTime: 1300,
+		gcdRecast: 3200,
+	},
+
 	YUKIKAZE: {
 		id: 7480,
 		name: 'Yukikaze',
@@ -178,7 +208,10 @@ export const SAM = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		combo: {
-			from: 7477,
+			from: [
+				7477,
+				36963,
+			],
 			end: true,
 		},
 	},
@@ -192,6 +225,50 @@ export const SAM = ensureActions({
 		combo: {
 			start: true,
 		},
+	},
+
+	TSUBAME_GAESHI: {
+		id: 16483,
+		name: 'Tsubame Gaeshi',
+		icon: iconUrl(3180),
+		onGcd: true,
+		speedAttribute: Attribute.SKILL_SPEED,
+	},
+
+	KAESHI_GOKEN: {
+		id: 16485,
+		name: 'Kaeshi: Goken',
+		icon: iconUrl(3182),
+		onGcd: true,
+		speedAttribute: Attribute.SKILL_SPEED,
+		gcdRecast: 2500,
+	},
+
+	KAESHI_SETSUGEKKA: {
+		id: 16486,
+		name: 'Kaeshi: Setsugekka',
+		icon: iconUrl(3183),
+		onGcd: true,
+		speedAttribute: Attribute.SKILL_SPEED,
+		gcdRecast: 2500,
+	},
+
+	TENDO_KAESHI_GOKEN: { //TODO Id, Icon, Recast
+		id: 36967,
+		name: 'Tendo Kaeshi Goken',
+		icon: iconUrl(3195),
+		onGcd: true,
+		speedAttribute: Attribute.SKILL_SPEED,
+		gcdRecast: 2500,
+	},
+
+	TENDO_KAESHI_SETSUGEKKA: { //TODO Id, Icon, Recast
+		id: 36968,
+		name: 'Tendo Kaeshi Setsugekka',
+		icon: iconUrl(3196),
+		onGcd: true,
+		speedAttribute: Attribute.SKILL_SPEED,
+		gcdRecast: 3200,
 	},
 
 	OGI_NAMIKIRI: {
@@ -222,13 +299,23 @@ export const SAM = ensureActions({
 		cooldown: 15000,
 		statusesApplied: ['THIRD_EYE'],
 	},
+	TENGETSU: {
+		id: 36962,
+		name: 'Tengetsu',
+		icon: iconUrl(3190),
+		cooldown: 15000,
+		statusesApplied: ['TENGETSU'],
+	},
 
 	MEIKYO_SHISUI: {
 		id: 7499,
 		name: 'Meikyo Shisui',
 		icon: iconUrl(3167),
 		cooldown: 55000,
-		statusesApplied: ['MEIKYO_SHISUI'],
+		statusesApplied: [
+			'MEIKYO_SHISUI',
+			'TSUBAME_GAESHI_READY',
+		],
 		charges: 2,
 	},
 
@@ -284,13 +371,17 @@ export const SAM = ensureActions({
 		name: 'Ikishoten',
 		icon: iconUrl(3179),
 		cooldown: 120000,
+		statusesApplied: [
+			'OGI_NAMIKIRI_READY',
+			'ZANSHIN_READY',
+		],
 	},
 
 	HISSATSU_GUREN: {
 		id: 7496,
 		name: 'Hissatsu: Guren',
 		icon: iconUrl(3177),
-		cooldown: 120000,
+		cooldown: 60000,
 		cooldownGroup: 10,
 	},
 
@@ -298,56 +389,8 @@ export const SAM = ensureActions({
 		id: 16481,
 		name: 'Hissatsu: Senei',
 		icon: iconUrl(3178),
-		cooldown: 120000,
+		cooldown: 60000,
 		cooldownGroup: 10,
-	},
-
-	TSUBAME_GAESHI: {
-		id: 16483,
-		name: 'Tsubame Gaeshi',
-		icon: iconUrl(3180),
-		onGcd: true,
-		speedAttribute: Attribute.SKILL_SPEED,
-		cooldown: 60000,
-		charges: 2,
-	},
-
-	KAESHI_HIGANBANA: {
-		id: 16484,
-		name: 'Kaeshi: Higanbana',
-		icon: iconUrl(3181),
-		onGcd: true,
-		speedAttribute: Attribute.SKILL_SPEED,
-		cooldown: 60000,
-		gcdRecast: 2500,
-		cooldownGroup: SAM_COOLDOWN_GROUP.TSUBAME,
-		statusesApplied: ['HIGANBANA'],
-		charges: 2, //I have to give All Tsubame actions 2 charges for CDDT to function properly.
-	},
-
-	KAESHI_GOKEN: {
-		id: 16485,
-		name: 'Kaeshi: Goken',
-		icon: iconUrl(3182),
-		onGcd: true,
-		speedAttribute: Attribute.SKILL_SPEED,
-		gcdRecast: 2500,
-		cooldown: 60000,
-		cooldownGroup: SAM_COOLDOWN_GROUP.TSUBAME,
-		charges: 2, //I have to give All Tsubame actions 2 charges for CDDT to function properly.
-	},
-
-	KAESHI_SETSUGEKKA: {
-		id: 16486,
-		name: 'Kaeshi: Setsugekka',
-		icon: iconUrl(3183),
-		onGcd: true,
-		speedAttribute: Attribute.SKILL_SPEED,
-		gcdRecast: 2500,
-		cooldown: 60000,
-		cooldownGroup: SAM_COOLDOWN_GROUP.TSUBAME,
-		charges: 2, //I have to give All Tsubame actions 2 charges for CDDT to function properly.
-
 	},
 
 	SHOHA: {
@@ -357,10 +400,10 @@ export const SAM = ensureActions({
 		cooldown: 15000,
 	},
 
-	SHOHA_II: { //WHY SE WHY
-		id: 25779,
-		name: 'Shoha II',
-		icon: iconUrl(3185),
-		cooldown: 15000,
+	ZANSHIN: {
+		id: 36964,
+		name: 'Zanshin',
+		icon: iconUrl(3192),
+		cooldown: 1000,
 	},
 })

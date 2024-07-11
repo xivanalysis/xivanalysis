@@ -4,7 +4,7 @@ import {History, HistoryEntry} from 'parser/core/modules/ActionWindow/History'
 import React from 'react'
 import {DivinationMetadata} from '../Divination'
 
-const TARGET_CARDS_PLAYED = 3 //used to get the target for amount of cards played in window
+const TARGET_CARDS_PLAYED = 2 //used to get the target for amount of cards played in window
 
 interface ExpectedCardsEvaluatorOpts {
 	metadataHistory: History<DivinationMetadata>
