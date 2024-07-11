@@ -8,6 +8,11 @@ export const changelog = [
 	// 	contributors: [CONTRIBUTORS.YOU],
 	// },
 	{
+		date: new Date('2024-07-09'),
+		Changes: () => <>Add Eukrasian Prognosis II to list of heals affected by Zoe</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
+	{
 		date: new Date('2024-07-07'),
 		Changes: () => <>Add Psyche to cooldowns checklist, and enforce timeline ordering for Psyche and Philosophia</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],

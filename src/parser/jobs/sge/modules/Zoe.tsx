@@ -18,6 +18,7 @@ const GCD_HEALS: ActionKey[] = [
 	'EUKRASIAN_DIAGNOSIS',
 	'PROGNOSIS',
 	'EUKRASIAN_PROGNOSIS',
+	'EUKRASIAN_PROGNOSIS_II',
 ]
 
 export class Zoe extends BuffWindow {
