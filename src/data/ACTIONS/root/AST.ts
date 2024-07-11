@@ -363,6 +363,7 @@ export const AST = ensureActions({
 		mpCost: 600,
 		cooldownGroup: 23,
 		statusesApplied: ['MACROCOSMOS'],
+		gcdRecast: 2500,
 	},
 
 	MICROCOSMOS: {
