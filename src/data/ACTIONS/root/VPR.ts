@@ -558,8 +558,9 @@ export const VPR = ensureActions({
 	{
 		id: 34647,
 		name: "Serpent's Ire",
-		icon: iconUrl(3741),
+		icon: iconUrl(3742),
 		cooldown: 120000,
+		statusesApplied: ['READY_TO_REAWAKEN'],
 	},
 
 	SLITHER: {
@@ -573,7 +574,7 @@ export const VPR = ensureActions({
 	// Seperent's tail and transformation skills.
 	// It is not possible to cast Seprent's tail and there is no status tied to it's transformative skills being usable.
 	// This skill and twinblood/twinfang are being defined for the sake of being able to datalink to them for suggestions.
-	SEPERNTS_TAIL: {
+	SERPENTS_TAIL: {
 		id: 35920,
 		name: "Serpent's Tail",
 		icon: iconUrl(3743),

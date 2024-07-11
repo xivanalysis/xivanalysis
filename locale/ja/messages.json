@@ -1,4 +1,5 @@
 {
+  "VPR.serperntstail.wast.name": "",
   "ast.about.description-1": "",
   "ast.about.description-2": "\nどのヒーラーでも効率的にパーティを維持するには MP とリキャストタイムとを慎重に管理する必要があります。ヒールを計画し相方とコミュニケーションをとれば，余った GCD でより DPS が高くなるでしょう。\n",
   "ast.about.description.warning.development": "このツールを包括的にするには、まだやらなければならないことがたくさんあります！ 　トラッキングする価値のある項目がある場合は、Discordチャンネルにアクセスしてください！",
@@ -990,7 +991,7 @@
   "vpr.buffs.checklist.requirement.swiftscaled.name": "",
   "vpr.buffs.description": "",
   "vpr.gauge.resource.coilsLabel": "",
-  "vpr.gauge.resource.kenkiLabel": "",
+  "vpr.gauge.resource.serpentofferingsLabel": "",
   "vpr.gauge.suggestions.loss.content": "",
   "vpr.gauge.suggestions.loss.why": "",
   "vpr.gauge.suggestions.overcap.content": "",

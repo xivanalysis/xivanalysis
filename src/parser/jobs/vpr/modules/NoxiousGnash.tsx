@@ -41,7 +41,7 @@ export class NoxiousGnash extends Analyser {
 				Keep <DataLink status="NOXIOUS_GNASH"/> up
 			</Trans>,
 			description: <Trans id="vpr.noxiousgnash.rule.description">
-				<DataLink status="NOXIOUS_GNASH"/>increases all damage you deal to the target by 10%. Aim to keep this debuff up at all times.
+				<DataLink status="NOXIOUS_GNASH"/> increases all damage you deal to the target by 10%. Aim to keep this debuff up at all times.
 			</Trans>,
 			tiers: SEVERITIES,
 			requirements: [

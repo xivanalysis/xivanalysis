@@ -99,7 +99,7 @@ export class Venoms extends CoreProcs {
 	}
 
 	private VenomChecklistRequirement(buffStatus: Status) {
-		const actual = this.getUsageCountForStatus(buffStatus.id)
+		const actual = this.getHistoryForStatus(buffStatus.id).length - (this.getDropCountForStatus(buffStatus.id) + this.getOverwriteCountForStatus(buffStatus.id))
 		const expected = this.getHistoryForStatus(buffStatus.id).length
 		let percent = actual / expected * 100
 		if (process.env.NODE_ENV === 'production') {

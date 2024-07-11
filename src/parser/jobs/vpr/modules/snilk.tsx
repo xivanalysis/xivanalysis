@@ -24,13 +24,13 @@ const SUGGESTION_TIERS = {
 }
 
 export class snilk extends CoreGauge {
-	static override title = t('vpr.gauge.title')`Serpent's Offerings Gauge`
+	static override title = t('vpr.gauge.title')`Serpent Offerings Gauge`
 	static override displayOrder = DISPLAY_ORDER.SNILK
 	@dependency private suggestions!: Suggestions
 
 	private snilkGauge = this.add(new CounterGauge({
 		graph: {
-			label: <Trans id="vpr.gauge.resource.kenkiLabel">Serpent's Offerings</Trans>,
+			label: <Trans id="vpr.gauge.resource.serpentofferingsLabel">Serpent Offerings</Trans>,
 			color: SnilkColor,
 		},
 	}))

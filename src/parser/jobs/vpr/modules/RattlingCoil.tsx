@@ -1,6 +1,7 @@
 import {t} from '@lingui/macro'
 import {Trans, Plural} from '@lingui/react'
-import {ActionLink} from 'components/ui/DbLink'
+import Color from 'color'
+import {ActionLink, DataLink} from 'components/ui/DbLink'
 import {JOBS} from 'data/JOBS'
 import {Event, Events} from 'event'
 import {filter, oneOf} from 'parser/core/filter'
@@ -18,6 +19,7 @@ const LEFTOVER_COIL_SEVERITY_TIERS = {
 }
 
 const MAX_COILS = 3
+const COIL_COLOR = Color('#DC1E32') // Red like the Job Gauge to help split serpent's offerings from coil stacks visually
 
 export class RattlingCoil extends CoreGauge {
 	static override handle = 'rattlingcoil'
@@ -31,7 +33,7 @@ export class RattlingCoil extends CoreGauge {
 		graph: {
 			handle: 'coils',
 			label: <Trans id="vpr.gauge.resource.coilsLabel">Rattling Coils</Trans>,
-			color: JOBS.VIPER.colour,
+			color: COIL_COLOR,
 			forceCollapsed: true,
 		},
 	}))
@@ -96,7 +98,7 @@ export class RattlingCoil extends CoreGauge {
 		}))
 
 		this.checklist.add(new Rule({
-			name: <Trans id="vpr.rattlingcoil.usage.title">Rattling Coil Usage</Trans>,
+			name: <Trans id="vpr.rattlingcoil.usage.title"> <DataLink action="UNCOILED_FURY"/> Usage</Trans>,
 			description: <Trans id="vpr.rattlingcoilwaste.content">
 				Wasted rattling coil generation, ending the fight with rattling coils remaining, or dying with rattling coils coiled is a
 				direct potency loss. Use <ActionLink action="UNCOILED_FURY"/> to avoid wasting rattling coils.

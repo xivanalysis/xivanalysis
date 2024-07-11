@@ -69,27 +69,27 @@ export class SeprentsTail extends Analyser {
 		this.tailsReady++
 	}
 
-	private onTailSpenders()	{
+	private onTailSpenders() {
 		this.tailsDone++
 	}
 
 	private onComplete() {
 		this.checklist.add(new Rule({
-			name: 'Use Your Seprents Tail follow ups',
+			name: <Trans id = "VPR.serperntstail.wast.name"> Use your <DataLink action="SERPENTS_TAIL"/> follow-ups </Trans>,
 			displayOrder: DISPLAY_ORDER.SEPRENTSTAIL,
 			description: <Trans id="vpr.seprentstail.waste.content">
-				Using <DataLink action = "HINDSBANE_FANG"/>, <DataLink action="HINDSTING_STRIKE"/>, <DataLink action="FLANKSBANE_FANG"/> and <DataLink action="FLANKSTING_STRIKE"/> grant <DataLink action="DEATH_RATTLE"/>.
+				Using <DataLink action = "HINDSBANE_FANG"/>, <DataLink action="HINDSTING_STRIKE"/>, <DataLink action="FLANKSBANE_FANG"/> or <DataLink action="FLANKSTING_STRIKE"/> grant <DataLink action="DEATH_RATTLE"/>.
 				<br/>
 				Using <DataLink action = "JAGGED_MAW"/> and <DataLink action="BLOODIED_MAW"/> grant <DataLink action="LAST_LASH"/>.
 				<br/>
 				Using the Generation skills under <DataLink action="REAWAKEN"/> grants Legacy follow up skills.
 				<br/>
-				These skills are important to a Viper's damage and must be used immediately after the skill that grants them by using <DataLink action="SEPERNTS_TAIL"></DataLink>
+				These skills are important to a Viper's damage and must be used immediately after the skill that grants them by using <DataLink action="SERPENTS_TAIL">.</DataLink>
 			</Trans>,
 			requirements: [
 				new Requirement({
 					name: <Trans id="vpr.seprentstail.checklist.requirement.waste.name">
-						Follow up your GCD combo finsihers and Generation skills with Seprent Tail's skills.
+						Follow up your GCD combo finishers and Generation skills with Serpent's Tail skills
 					</Trans>,
 					value: this.tailsDone,
 					target: this.tailsReady,

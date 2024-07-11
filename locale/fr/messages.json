@@ -1,4 +1,5 @@
 {
+  "VPR.serperntstail.wast.name": "",
   "ast.about.description-1": "",
   "ast.about.description-2": "\nJouer n'importe quel soigneur nécessite beaucoup d'attention pour gérer vos PM et délais de récupération pour garder efficacement votre équipe en vie. Si vous planifiez vos soins et communiquez avec votre co-soigneur, cela vous permettra bien entendu de faire plus de DPS avec les GCDs que vous avez pu libérer.\n",
   "ast.about.description.warning.development": "Il y a toujours beaucoup de travail à faire pour rendre cet outil complet! Si vous avez des suggestions sur ce qui vaut la peine d'être analyser, n'hésitez pas a venir en parler avec nous sur notre Discord!",
@@ -990,7 +991,7 @@
   "vpr.buffs.checklist.requirement.swiftscaled.name": "",
   "vpr.buffs.description": "",
   "vpr.gauge.resource.coilsLabel": "",
-  "vpr.gauge.resource.kenkiLabel": "",
+  "vpr.gauge.resource.serpentofferingsLabel": "",
   "vpr.gauge.suggestions.loss.content": "",
   "vpr.gauge.suggestions.loss.why": "",
   "vpr.gauge.suggestions.overcap.content": "",

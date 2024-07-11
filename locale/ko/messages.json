@@ -1,4 +1,5 @@
 {
+  "VPR.serperntstail.wast.name": "",
   "ast.about.description-1": "",
   "ast.about.description-2": "\n힐러에게는 파티원을 살리기 위한 MP 관리와 기술 배분이 매우 중요합니다. 기술 배분을 계획하고 파트너 힐러와 조율하세요. 일부 글쿨을 피해량 기술에 투자할 수 있게 됩니다.\n",
   "ast.about.description.warning.development": "모두가 쉽게 이해할 수 있는 분석기의 완성을 위해선 여러분들의 도움이 필요합니다! 저희의 디스코드는 언제나 열려있으며 여러분들의 제안들을 기다리고있습니다.",
@@ -990,7 +991,7 @@
   "vpr.buffs.checklist.requirement.swiftscaled.name": "",
   "vpr.buffs.description": "",
   "vpr.gauge.resource.coilsLabel": "",
-  "vpr.gauge.resource.kenkiLabel": "",
+  "vpr.gauge.resource.serpentofferingsLabel": "",
   "vpr.gauge.suggestions.loss.content": "",
   "vpr.gauge.suggestions.loss.why": "",
   "vpr.gauge.suggestions.overcap.content": "",

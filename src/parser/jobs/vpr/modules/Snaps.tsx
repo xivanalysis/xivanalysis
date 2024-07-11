@@ -38,7 +38,7 @@ export class Snaps extends Analyser {
 			value: `${this.snapsSnapped}`,
 			info: <Trans id="vpr.snaps.statistic.info">
 				While it is important to keep your GCD rolling as much as possible,
-				try to minimize your <ActionLink {...ACTIONS.WRITHING_SNAP}/> usage. It's better to save and use <ActionLink {...ACTIONS.UNCOILED_FURY}/> for when you can not stay in melee range as it does more damage.
+				try to minimize your <ActionLink {...ACTIONS.WRITHING_SNAP}/> usage. It's better to save and use <ActionLink {...ACTIONS.UNCOILED_FURY}/> for when you cannot stay in melee range as it does more damage.
 			</Trans>,
 		}))
 
