@@ -134,7 +134,7 @@ export class Technicalities extends RaidBuffWindow {
 			suggestionContent: <Trans id="dnc.technicalities.suggestions.missedaction.content">In order to maximize your damage, every <DataLink status="TECHNICAL_FINISH"/> window should contain the expected GCDs indicated in the table.</Trans>,
 			suggestionWindowName,
 			severityTiers: {
-				1: SEVERITY.MEDIUM,
+				1: SEVERITY.MEDIUM, // Even harsher than the GCD count tiers, since this really starts eating into your potency
 				3: SEVERITY.MAJOR,
 			},
 			adjustCount: this.adjustExpectedCounts.bind(this),
