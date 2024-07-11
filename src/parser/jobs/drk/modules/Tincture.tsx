@@ -1,9 +1,14 @@
 import {Trans} from '@lingui/react'
 import {DataLink} from 'components/ui/DbLink'
-import {ExpectedActionGroupsEvaluator} from 'parser/core/modules/ActionWindow'
+import {EvaluatedAction, ExpectedActionGroupsEvaluator} from 'parser/core/modules/ActionWindow'
+import {HistoryEntry} from 'parser/core/modules/ActionWindow/History'
 import {SEVERITY} from 'parser/core/modules/Suggestions'
 import {Tincture as CoreTincture} from 'parser/core/modules/Tincture'
 import React from 'react'
+
+const TINCTURE_OPENER_BUFFER = 10000
+const BLOODSPILLER_REQUIREMENT = 2
+const BLOODSPILLER_REQUIREMENT_OPENER = 1
 
 export class Tincture extends CoreTincture {
 
@@ -34,7 +39,7 @@ export class Tincture extends CoreTincture {
 				},
 				{
 					actions: [this.data.actions.EDGE_OF_SHADOW, this.data.actions.FLOOD_OF_SHADOW],
-					expectedPerWindow: 4,
+					expectedPerWindow: 5,
 				},
 			],
 			suggestionIcon: this.data.actions.INFUSION_STR.icon,
@@ -47,8 +52,16 @@ export class Tincture extends CoreTincture {
 				2: SEVERITY.MEDIUM,
 				3: SEVERITY.MAJOR,
 			},
+			adjustCount: this.adjustExpectedBloodspillerCount.bind(this),
 		}))
+	}
 
-		this.addEvaluator
+	private adjustExpectedBloodspillerCount(window: HistoryEntry<EvaluatedAction[]>) {
+		const evaluatedAction = window.data[0].action
+		if (window.start - TINCTURE_OPENER_BUFFER <= this.parser.pull.timestamp && evaluatedAction === this.data.actions.BLOODSPILLER) {
+			return BLOODSPILLER_REQUIREMENT_OPENER - BLOODSPILLER_REQUIREMENT
+		}
+
+		return 0
 	}
 }
