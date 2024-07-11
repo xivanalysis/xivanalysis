@@ -4,7 +4,8 @@ import {DataLink} from 'components/ui/DbLink'
 import {RotationEvent} from 'components/ui/Rotation'
 import {RotationTargetOutcome} from 'components/ui/RotationTable'
 import {ActionKey} from 'data/ACTIONS'
-import {Events} from 'event'
+import {Event, Events} from 'event'
+import {filter} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
 import {EvaluatedAction, RestartWindow, TrackedAction} from 'parser/core/modules/ActionWindow'
 import {History, HistoryEntry} from 'parser/core/modules/ActionWindow/History'
@@ -31,7 +32,7 @@ import {SkipThunderEvaluator} from './RotationWatchdog/SkipThunderEvaluator'
 import {UptimeSoulsEvaluator} from './RotationWatchdog/UptimeSoulsEvaluator'
 import {CycleMetadata, ROTATION_ERRORS, HIDDEN_PRIORITY_THRESHOLD} from './RotationWatchdog/WatchdogConstants'
 
-const DEBUG_SHOW_ALL = false && process.env.NODE_ENV !== 'production'
+const DEBUG_SHOW_ALL = true && process.env.NODE_ENV !== 'production'
 
 const MAX_POSSIBLE_FIRE4 = 6
 const NO_UH_EXPECTED_FIRE4 = 4
@@ -45,7 +46,6 @@ const ROTATION_ENDPOINTS: ActionKey[] = [
 	'TRANSPOSE',
 	'BLIZZARD_II',
 	'HIGH_BLIZZARD_II',
-	'MANAFONT',
 ]
 
 // This is feelycraft at the moment. Rotations shorter than this won't be processed for errors.
@@ -115,6 +115,9 @@ export class RotationWatchdog extends RestartWindow {
 		this.setHistoryOutputFilter(this.filterForOutput)
 
 		this.ignoreActions([this.data.actions.ATTACK.id])
+
+		this.addEventHook(filter<Event>().source(this.parser.actor.id).type('action')
+			.action(this.data.actions.MANAFONT.id), this.onManafont)
 
 		this.addEventHook('blmgauge', this.onGaugeEvent)
 		this.addEventHook({
@@ -195,6 +198,12 @@ export class RotationWatchdog extends RestartWindow {
 		this.addEvaluator(new RotationErrorNotesEvaluator(this.metadataHistory))
 
 		this.onWindowStart(this.parser.pull.timestamp)
+	}
+
+	// Special handling for Manafont, we want to show it as both the end and start of the windows it's involved in
+	private onManafont(event: Events['action']) {
+		super.onWindowAction(event)
+		super.onWindowRestart(event)
 	}
 
 	private onDeath() {
