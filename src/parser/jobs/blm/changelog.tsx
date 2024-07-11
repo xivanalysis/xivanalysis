@@ -8,6 +8,11 @@ export const changelog = [
 	// 	contributors: [CONTRIBUTORS.YOU],
 	// },
 	{
+		date: new Date('2024-07-10'),
+		Changes: () => <>Update DoT and proc tracking for Dawntrail thunder system</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
+	{
 		date: new Date('2024-07-09'),
 		Changes: () => <>Update AoE usage tracking for new spells and potencies</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],
