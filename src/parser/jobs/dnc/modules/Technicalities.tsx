@@ -48,7 +48,6 @@ const BAD_TECHNICAL_GCDS: ActionKey[] = [
 	'WINDMILL',
 	'RISING_WINDMILL',
 	'BLADESHOWER',
-	'BLOODSHOWER',
 ]
 
 export class Technicalities extends RaidBuffWindow {
@@ -149,7 +148,7 @@ export class Technicalities extends RaidBuffWindow {
 			}),
 			suggestionIcon: this.data.statuses.TECHNICAL_FINISH.icon,
 			suggestionContent: <Trans id="dnc.technicalities.suggestions.avoidactions.content">
-				Avoid using your combo and proc GCDs during your <DataLink showIcon={false} status="TECHNICAL_FINISH" /> window, as their potency is lower than the expected actions. If you run out of Esprit, using a <DataLink action="FOUNTAINFALL" /> is acceptable.
+				Avoid using your combo and proc GCDs during your <DataLink showIcon={false} status="TECHNICAL_FINISH" /> window, as their potency is lower than the expected actions. If you run out of Esprit, using a <DataLink action="FOUNTAINFALL" />, or a <DataLink action="BLOODSHOWER" /> with enough targets, is acceptable.
 			</Trans>,
 			suggestionWindowName: suggestionWindowName,
 			severityTiers: TECHNICAL_SEVERITY_TIERS,

@@ -448,7 +448,7 @@
   "dnc.technicalities.rotation-table.header.missed": "<0/> On Time?",
   "dnc.technicalities.rotation-table.header.pooled": "<0/> Pooled?",
   "dnc.technicalities.rotation-table.message": "This log contains <0/> windows that were started or extended by other Dancers.<1/>Use your best judgement about which windows you should be dumping <2/>, Feathers, and Esprit under.<3/>Try to make sure they line up with other raid buffs to maximize damage.",
-  "dnc.technicalities.suggestions.avoidactions.content": "Avoid using your combo and proc GCDs during your <0/> window, as their potency is lower than the expected actions. If you run out of Esprit, using a <1/> is acceptable.",
+  "dnc.technicalities.suggestions.avoidactions.content": "Avoid using your combo and proc GCDs during your <0/> window, as their potency is lower than the expected actions. If you run out of Esprit, using a <1/>, or a <2/> with enough targets, is acceptable.",
   "dnc.technicalities.suggestions.bad-devilments.content": "Using <0/> outside of your <1/> windows leads to an avoidable loss in DPS. Aside from certain opener situations, you should be using <2/> at the beginning of your <3/> windows.",
   "dnc.technicalities.suggestions.bad-devilments.why": "{0, plural, one {# Devilment} other {# Devilments}} used outside <0/>.",
   "dnc.technicalities.suggestions.late-devilments.content": "Using <0/> as early as possible during your <1/> windows allows you to maximize the multiplicative bonuses that both statuses give you. It should be used immediately after <2/>.",
