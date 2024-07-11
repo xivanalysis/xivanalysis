@@ -7,8 +7,6 @@ import DISPLAY_ORDER from './DISPLAY_ORDER'
 
 // Senei/Guren is used after 5th gcd
 const FIRSTUSEOFFSET_50KENKI = 13400
-// tsubame is at the 5th GCD mark
-const FIRSTUSEOFFSET_TSUBAME = 13400
 //Ikishoten is actually not used off the bat, since a pot is used ogcd 1
 const FIRSTUSEOFFSET_IKIS = 2500
 // Time that samurais have deemed ok for a OGCD to be down
@@ -22,14 +20,6 @@ export default class OGCDDowntime extends CooldownDowntime {
 		{
 			cooldowns: [this.data.actions.MEIKYO_SHISUI],
 			allowedAverageDowntime: MEIKYO_ALLOWED_DOWNTIME,
-		},
-		{
-			cooldowns: [
-				this.data.actions.KAESHI_SETSUGEKKA,
-				this.data.actions.KAESHI_GOKEN,
-				this.data.actions.KAESHI_HIGANBANA,
-			],
-			firstUseOffset: FIRSTUSEOFFSET_TSUBAME,
 		},
 		{
 			cooldowns: [

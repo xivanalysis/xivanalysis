@@ -51,7 +51,6 @@ export class Shoha extends CoreGauge {
 
 		// Spenders
 		[this.data.actions.SHOHA.id, {action: -3}],
-		[this.data.actions.SHOHA_II.id, {action: -3}],
 	])
 
 	meditateStart = -1
@@ -107,7 +106,7 @@ export class Shoha extends CoreGauge {
 			displayOrder: DISPLAY_ORDER.SHOHA,
 			description: <Trans id="sam.shoha.waste.content">
 				Wasted meditation generation, ending the fight with stacks fully charged, or dying with stacks charged is a
-				direct potency loss. Use <DataLink action = "SHOHA"/> or <DataLink action = "SHOHA_II"/> to avoid wasting stacks.
+				direct potency loss. Use <DataLink action = "SHOHA"/> to avoid wasting stacks.
 			</Trans>,
 			requirements: [
 				new Requirement({

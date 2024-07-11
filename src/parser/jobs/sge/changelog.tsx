@@ -13,6 +13,11 @@ export const changelog = [
 		contributors: [CONTRIBUTORS.AKAIRYU],
 	},
 	{
+		date: new Date('2024-07-07'),
+		Changes: () => <>Add Psyche to cooldowns checklist, and enforce timeline ordering for Psyche and Philosophia</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
+	{
 		date: new Date('2024-06-27'),
 		Changes: () => <>Initial data scaffolding for Dawntrail</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],
