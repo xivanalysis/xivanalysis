@@ -8,5 +8,7 @@ export class Positionals extends CorePositionals {
 		this.data.actions.HINDSTING_STRIKE,
 		this.data.actions.FLANKSBANE_FANG,
 		this.data.actions.FLANKSTING_STRIKE,
+		this.data.actions.SWIFTSKINS_COIL,
+		this.data.actions.HUNTERS_COIL,
 	]
 }
