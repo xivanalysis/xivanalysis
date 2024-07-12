@@ -995,7 +995,7 @@
   "vpr.gauge.suggestions.loss.content": "Ending a fight with 50 or more Serpent's Gauge or <0/>, means that you have lost a use of your <1/> burst. Use it earlier to prevent a loss.",
   "vpr.gauge.suggestions.loss.why": "You had the ability to use <0/> leftover at the end of the fight.",
   "vpr.gauge.suggestions.overcap.content": "Avoid letting your Serpent's Gauge overcap - the wasted resources may cost you uses of your <0/> burst.",
-  "vpr.gauge.suggestions.overcap.why": "{0} Seprent's Offerings lost to overcapping.",
+  "vpr.gauge.suggestions.overcap.why": "{0} Serpent's Offerings lost to overcapping.",
   "vpr.gauge.title": "Serpent Offerings Gauge",
   "vpr.noxiousgnash.requirement.uptime.name": "<0/> uptime",
   "vpr.noxiousgnash.rule.description": "<0/> increases all damage you deal to the target by 10%. Aim to keep this debuff up at all times.",

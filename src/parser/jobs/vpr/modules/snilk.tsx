@@ -88,7 +88,7 @@ export class snilk extends CoreGauge {
 				Avoid letting your Serpent's Gauge overcap - the wasted resources may cost you uses of your <DataLink action="REAWAKEN"/> burst.
 			</Trans>,
 			why: <Trans id="vpr.gauge.suggestions.overcap.why">
-				{this.snilkGauge.overCap} Seprent's Offerings lost to overcapping.
+				{this.snilkGauge.overCap} Serpent's Offerings lost to overcapping.
 			</Trans>,
 			tiers: SUGGESTION_TIERS,
 			value: this.snilkGauge.overCap,
