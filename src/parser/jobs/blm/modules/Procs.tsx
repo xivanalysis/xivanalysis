@@ -17,6 +17,8 @@ export default class Procs extends CoreProcs {
 			consumeActions: [
 				this.data.actions.THUNDER_III,
 				this.data.actions.THUNDER_IV,
+				this.data.actions.HIGH_THUNDER,
+				this.data.actions.HIGH_THUNDER_II,
 			],
 		},
 		{
@@ -25,27 +27,25 @@ export default class Procs extends CoreProcs {
 		},
 	]
 
-	protected override jobSpecificCheckConsumeProc(_procGroup: ProcGroup, event: Events['action']): boolean {
-		// If we were already hardcasting this spell, it does not consume the proc
-		return !(this.castingSpellId != null && this.castingSpellId === event.action)
-	}
+	protected override jobSpecificOnConsumeProc(procGroup: ProcGroup, event: Events['action']): void {
+		// Thunder spells are already instant in Dawntrail, their casting is just enabled by the status
+		if (procGroup.procStatus !== this.data.statuses.FIRESTARTER) { return }
 
-	protected override jobSpecificOnConsumeProc(_procGroup: ProcGroup, event: Events['action']): void {
-		// BLM's procs are all instant-casts
+		// Firestarter makes Fire III instant-cast
 		this.castTime.setInstantCastAdjustment([event.action], event.timestamp, event.timestamp)
 	}
 
 	protected override addJobSpecificSuggestions(): void {
-		const droppedThunderClouds: number = this.getDropCountForStatus(this.data.statuses.THUNDERHEAD.id)
-		if (droppedThunderClouds > 0) {
+		const droppedThunderHeads: number = this.getDropCountForStatus(this.data.statuses.THUNDERHEAD.id)
+		if (droppedThunderHeads > 0) {
 			this.suggestions.add(new Suggestion({
 				icon: this.data.statuses.THUNDERHEAD.icon,
-				content: <Trans id="blm.procs.suggestions.dropped-t3ps.content">
+				content: <Trans id="blm.procs.suggestions.dropped-thunderheads.content">
 					You lost at least one <ActionLink {...this.data.actions.HIGH_THUNDER}/> proc by allowing <StatusLink {...this.data.statuses.THUNDERHEAD}/> to expire without using it.
 				</Trans>,
 				severity: SEVERITY.MEDIUM,
-				why: <Trans id="blm.procs.suggestions.dropped-t3ps.why">
-					<Plural value={droppedThunderClouds} one="# Thundercloud proc" other="# Thundercloud procs" /> expired.
+				why: <Trans id="blm.procs.suggestions.dropped-thunderheads.why">
+					<Plural value={droppedThunderHeads} one="# Thunderhead" other="# Thunderheads" /> expired.
 				</Trans>,
 			}))
 		}
