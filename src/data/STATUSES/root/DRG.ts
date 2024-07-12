@@ -6,7 +6,7 @@ export const DRG = ensureStatuses({
 		id: 786,
 		name: 'Battle Litany',
 		icon: iconUrl(12578),
-		duration: 15000,
+		duration: 20000,
 	},
 
 	POWER_SURGE: {

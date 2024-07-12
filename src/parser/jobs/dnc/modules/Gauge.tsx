@@ -36,6 +36,10 @@ const FEATHER_GENERATION_CHANCE = .5
 const MAX_FEATHERS = 4
 
 /** Esprit configuration */
+const ESPRIT_CONSUMERS: ActionKey[] = [
+	'SABER_DANCE',
+	'DANCE_OF_THE_DAWN',
+]
 const ESPRIT_STATUSES: StatusKey[] = [
 	'ESPRIT',
 	'ESPRIT_TECHNICAL',
@@ -77,7 +81,7 @@ const ESPRIT_RATE_PARTY_TESTED = new Map<JobKey, number>([
 const ESPRIT_GENERATION_AMOUNT_COMBO = 5
 const ESPRIT_GENERATION_AMOUNT_PROC = 10
 
-const SABER_DANCE_COST = 50
+const ESPRIT_COST = 50
 
 /** Graph colors */
 const FADE_AMOUNT = 0.25
@@ -124,6 +128,7 @@ export class Gauge extends CoreGauge {
 		[this.data.actions.FOUNTAINFALL.id, ESPRIT_GENERATION_AMOUNT_PROC],
 		[this.data.actions.RISING_WINDMILL.id, ESPRIT_GENERATION_AMOUNT_PROC],
 		[this.data.actions.BLOODSHOWER.id, ESPRIT_GENERATION_AMOUNT_PROC],
+		[this.data.actions.TILLANA.id, ESPRIT_COST],
 	])
 
 	protected pauseGeneration = false;
@@ -140,7 +145,7 @@ export class Gauge extends CoreGauge {
 		this.addEventHook(statusApplyFilter.status(espritStatusMatcher), this.addEspritGenerationHook)
 		this.addEventHook(statusRemoveFilter.status(espritStatusMatcher), this.removeEspritGenerationHook)
 
-		this.espritConsumptionHook = this.addEventHook(playerFilter.type('action').action(this.data.actions.SABER_DANCE.id), this.onConsumeEsprit)
+		this.espritConsumptionHook = this.addEventHook(playerFilter.type('action').action(this.data.matchActionId(ESPRIT_CONSUMERS)), this.onConsumeEsprit)
 
 		this.addEventHook(damageFilter.cause(this.data.matchCauseAction(FEATHER_GENERATORS)), this.onCastGenerator)
 		this.featherConsumptionHook = this.addEventHook(playerFilter.type('action').action(this.data.matchActionId(FEATHER_CONSUMERS)), this.onConsumeFeather)
@@ -268,7 +273,7 @@ export class Gauge extends CoreGauge {
 	private onConsumeEsprit() {
 		// If we haven't removed the consumption hook for some reason yet, just bail
 		if (this.parser.actor.loggedGauge) { return }
-		this.espritGauge.spend(SABER_DANCE_COST)
+		this.espritGauge.spend(ESPRIT_COST)
 	}
 
 	private onCastGenerator() {
@@ -286,8 +291,8 @@ export class Gauge extends CoreGauge {
 
 	/* Parse Completion and output */
 	private onComplete() {
-		const definiteMissedSabers = this.parser.actor.loggedGauge ? Math.floor(this.espritGauge.overCap / SABER_DANCE_COST) : 0
-		const missedSaberDances = Math.floor((this.espritGauge.overCap + this.potentialOvercap) / SABER_DANCE_COST)
+		const definiteMissedSabers = this.parser.actor.loggedGauge ? Math.floor(this.espritGauge.overCap / ESPRIT_COST) : 0
+		const missedSaberDances = Math.floor((this.espritGauge.overCap + this.potentialOvercap) / ESPRIT_COST)
 
 		let suggestionContent, suggestionTiers, suggestionValue, suggestionWhy
 

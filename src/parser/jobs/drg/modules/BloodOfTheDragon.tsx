@@ -1,6 +1,5 @@
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
-import {ActionLink} from 'components/ui/DbLink'
 import {Event, Events} from 'event'
 import {filter} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
@@ -52,7 +51,7 @@ export class BloodOfTheDragon extends TimedWindow {
 
 		// do we uhhhh have a lotd icon??? in the game anymore???
 		const suggestionIcon = this.data.actions.NASTROND.icon
-		const suggestionWindowName = <ActionLink action="NASTROND" showIcon={false}/>
+		const suggestionWindowName = <Trans id="drg.lotd.suggestions.window-name">Life of the Dragon</Trans>
 		this.addEvaluator(new ExpectedGcdCountEvaluator({
 			expectedGcds: 8,
 			globalCooldown: this.globalCooldown,

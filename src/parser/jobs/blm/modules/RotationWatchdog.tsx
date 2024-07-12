@@ -57,6 +57,7 @@ const EMPTY_GAUGE_STATE: BLMGaugeState = {
 	polyglot: 0,
 	enochian: false,
 	paradox: 0,
+	astralSoul: 0,
 }
 
 export class RotationWatchdog extends RestartWindow {
