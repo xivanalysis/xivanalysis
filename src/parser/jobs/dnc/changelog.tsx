@@ -9,7 +9,7 @@ export const changelog = [
 	// },
 	{
 		date: new Date('2024-07-11'),
-		Changes: () => <>Add expected actions evaluation for Technical Finish windows, and warn against using lower potency combo and proc actions</>,
+		Changes: () => <>Add expected actions evaluation for Technical Finish windows, warn against using lower potency combo and proc actions, and mark as supported for Dawntrail</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],
 	},
 	{
