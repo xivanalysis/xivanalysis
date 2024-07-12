@@ -400,4 +400,32 @@ export const RDM = ensureActions({
 		cooldown: 120000,
 		statusesApplied: ['MAGICK_BARRIER'],
 	},
+	JOLT_III: {
+		id: 37004,
+		name: 'Jolt III',
+		icon: iconUrl(3241),
+		onGcd: true,
+		potency: 380,
+		breaksCombo: true,
+	},
+	VICE_OF_THORNS: {
+		id: 37005,
+		name: 'Vice of Thorns',
+		icon: iconUrl(3242),
+		potency: 700,
+	},
+	GRAND_IMPACT: {
+		id: 37006,
+		name: 'Grand Impact',
+		icon: iconUrl(3243),
+		onGcd: true,
+		potency: 600,
+		breaksCombo: true,
+	},
+	PREFULGENCE: {
+		id: 37007,
+		name: 'Prefulgence',
+		icon: iconUrl(3244),
+		potency: 900,
+	},
 })
