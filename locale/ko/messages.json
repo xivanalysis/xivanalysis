@@ -485,6 +485,7 @@
   "drg.lc.suggestions.missedgcd.content": "매 <0/> 구간마다 글쿨 기술을 8회 사용하십시오.",
   "drg.lotd.suggestions.missedaction.content": "",
   "drg.lotd.suggestions.missedgcd.content": "",
+  "drg.lotd.suggestions.window-name": "",
   "drk.about.description": "<0>이 분석기는 당신 내면의 간지를 이끌어내게끔 도와드릴 것입니다. 암흑기사의 핵심은 흑혈과 MP 활용, 그리고 파티 버프 구간 활용입니다. 또한, 피의 열광 및 피의 칼날을 쓸 때마다 글쿨 기술을 최소 5회 사용해야 합니다. </0><1>방어 면에서 <2/> 기술은 본인 또는 파티원을 강한 피해에서 지켜내는 강력한 경감기입니다. 보호막이 완전히 소모되면 칠흑검 및 칠흑의 파동 프록을 MP 소모 없이 사용할 수 있습니다.</1>",
   "drk.bloodweapon.suggestions.missedgcd.content": "매 <0/> 구간마다 글쿨 기술을 5개 사용하십시오. 논글쿨 기술을 과도하게 끼워넣지 않았고 공격을 놓치지 않았는데도 시간이 모자랐다면 장비 또는 마테리아를 조절하여 기술 시전 속도를 높이십시오.",
   "drk.bloodweapon.title": "피의 칼날 사용",

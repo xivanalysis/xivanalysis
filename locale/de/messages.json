@@ -485,6 +485,7 @@
   "drg.lc.suggestions.missedgcd.content": "Versuche während jedes <0/>-Zeitfensters mindestens 8 Angriffe mit globaler Abklingzeit unterzubringen.",
   "drg.lotd.suggestions.missedaction.content": "",
   "drg.lotd.suggestions.missedgcd.content": "",
+  "drg.lotd.suggestions.window-name": "",
   "drk.about.description": "<0>Dieses Modul versucht dir dabei zu helfen, deine innere Schattenseite zu finden. Der Kern von der Offensive eines Dunkelritters liegt auf der Maximierung von MP- und Blutbalkenmanagement, wenn möglich in Raidbuff-Fenstern. Dazu solltest du versuchen, jeweils fünf Treffer in jedem Blutwaffen- und Blutdeliriumfenster unterzubekommen.</0><1> Defensiv ist <2/> ein sehr starker Skill, der eingehenden Schaden entweder auf dir selbst oder auf einem Gruppenmitglied negieren kann, und dabei noch einen freien Nutzen von Schattenflut oder Schattenklinge ermöglicht, solange das Schild komplett aufgebraucht wird.</1>",
   "drk.bloodweapon.suggestions.missedgcd.content": "Während <0/> aktiv ist, solltest du 5 GCDs landen können und dies auch tunlichst versuchen. Ist das - trotz kompletter Uptime des Spells - nicht möglich ist, passe dein Equipment an um mehr in \"Schnelligkeit\" zu investieren.",
   "drk.bloodweapon.title": "Blutwaffe-Nutzung",
