@@ -1,3 +1,4 @@
+import {DataLink} from 'components/ui/DbLink'
 import CONTRIBUTORS from 'data/CONTRIBUTORS'
 import React from 'react'
 
@@ -7,6 +8,11 @@ export const changelog = [
 	// 	Changes: () => <>The changes you made</>,
 	// 	contributors: [CONTRIBUTORS.YOU],
 	// },
+	{
+		date: new Date('2024-07-11'),
+		Changes: () => <>Initial Rotation Outliers updates to remove defunct errors, and handle <DataLink action="MANAFONT" />'s full reset behavior</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
 	{
 		date: new Date('2024-07-10'),
 		Changes: () => <>Update DoT and proc tracking for Dawntrail thunder system</>,
