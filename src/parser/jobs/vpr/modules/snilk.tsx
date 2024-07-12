@@ -50,8 +50,6 @@ export class snilk extends CoreGauge {
 		[this.data.actions.REAWAKEN.id, {action: -50}],
 	])
 
-	private damageHook?: EventHook<Events['damage']>
-
 	readyToAwaken = false
 
 	override initialise() {
@@ -77,7 +75,7 @@ export class snilk extends CoreGauge {
 
 		if (modifier == null)	{ return }
 
-		if (this.readyToAwaken === true) { return } //If Ready to Reawaken, do not modify the gauge.
+		if (event.action === this.data.actions.REAWAKEN.id &&  this.readyToAwaken === true) { return } //If Ready to Reawaken, do not modify the gauge.
 
 		const amount = modifier[event.type] ?? 0
 		this.snilkGauge.modify(amount)
@@ -91,7 +89,7 @@ export class snilk extends CoreGauge {
 				Avoid letting your Serpent's Gauge overcap - the wasted resources may cost you uses of your <DataLink action="REAWAKEN"/> burst.
 			</Trans>,
 			why: <Trans id="vpr.gauge.suggestions.overcap.why">
-				{this.snilkGauge.overCap} Seperent's Offerings lost to overcapping.
+				{this.snilkGauge.overCap} Seprent's Offerings lost to overcapping.
 			</Trans>,
 			tiers: SUGGESTION_TIERS,
 			value: this.snilkGauge.overCap,

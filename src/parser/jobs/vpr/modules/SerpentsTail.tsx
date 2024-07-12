@@ -4,10 +4,15 @@ import {Event} from 'event'
 import {Analyser} from 'parser/core/Analyser'
 import {filter, oneOf} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
-import Checklist, {Requirement, Rule} from 'parser/core/modules/Checklist'
+import Checklist, {Requirement, Rule, TARGET, TieredRule} from 'parser/core/modules/Checklist'
 import {Data} from 'parser/core/modules/Data'
 import React from 'react'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
+
+const TARGET_TIERS = {
+	99: TARGET.WARN,
+	100: TARGET.SUCCESS,
+}
 
 export class SeprentsTail extends Analyser {
 	static override handle = 'SeprentsTail'
@@ -74,9 +79,10 @@ export class SeprentsTail extends Analyser {
 	}
 
 	private onComplete() {
-		this.checklist.add(new Rule({
+		this.checklist.add(new TieredRule({
 			name: <Trans id = "VPR.serperntstail.wast.name"> Use your <DataLink action="SERPENTS_TAIL"/> follow-ups </Trans>,
 			displayOrder: DISPLAY_ORDER.SEPRENTSTAIL,
+			tiers: TARGET_TIERS,
 			description: <Trans id="vpr.seprentstail.waste.content">
 				Using <DataLink action = "HINDSBANE_FANG"/>, <DataLink action="HINDSTING_STRIKE"/>, <DataLink action="FLANKSBANE_FANG"/> or <DataLink action="FLANKSTING_STRIKE"/> grant <DataLink action="DEATH_RATTLE"/>.
 				<br/>
