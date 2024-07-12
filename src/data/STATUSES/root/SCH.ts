@@ -19,7 +19,7 @@ export const SCH = ensureStatuses({
 		id: 1221,
 		name: 'Chain Stratagem',
 		icon: iconUrl(12809),
-		duration: 15000,
+		duration: 20000,
 	},
 
 	BANEFUL_IMPACTION: {
