@@ -12,4 +12,9 @@ export const changelog = [
 		Changes: () => <>Initial NIN support for Dawntrail.</>,
 		contributors: [CONTRIBUTORS.TOASTDEIB],
 	},
+	{
+		date: new Date('2024-07-12'),
+		Changes: () => <>Updated Kazematoi suggestion tiers.</>,
+		contributors: [CONTRIBUTORS.TOASTDEIB],
+	},
 ]
