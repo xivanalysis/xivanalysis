@@ -107,7 +107,7 @@ export class RattlingCoil extends CoreGauge {
 					name: <Trans id="vpr.rattlingcoil.checklist.requirement.waste.name">
 						Use as many of your rattling coils as possible
 					</Trans>,
-					value: this.coilGauge.totalGenerated - this.coilGauge.overCap,
+					value: this.coilGauge.totalGenerated - (this.coilGauge.overCap + this.coilGauge.value),
 					target: this.coilGauge.totalGenerated,
 				}),
 			],

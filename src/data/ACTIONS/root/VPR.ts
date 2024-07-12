@@ -299,6 +299,7 @@ export const VPR = ensureActions({
 		cooldown: 40000,
 		charges: 2,
 		statusesApplied: ['NOXIOUS_GNASH'],
+		cooldownGroup: 15,
 	},
 
 	HUNTERS_COIL: {
@@ -444,6 +445,7 @@ export const VPR = ensureActions({
 		cooldown: 40000,
 		charges: 2,
 		statusesApplied: ['NOXIOUS_GNASH'],
+		cooldownGroup: 15,
 	},
 
 	HUNTERS_DEN: {
@@ -665,6 +667,7 @@ export const VPR = ensureActions({
 		name: 'Twinfang Bite',
 		icon: iconUrl(3731),
 		cooldown: 1000,
+		statusesApplied: ['SWIFTSKINS_VENOM'],
 	},
 
 	TWINFANG_THRESH: {
@@ -672,6 +675,7 @@ export const VPR = ensureActions({
 		name: 'Twinfang Thresh',
 		icon: iconUrl(3733),
 		cooldown: 1000,
+		statusesApplied: ['FELLSKINS_VENOM'],
 	},
 
 	UNCOILED_TWINFANG: {
@@ -679,6 +683,7 @@ export const VPR = ensureActions({
 		name: 'Uncoiled Twinfang',
 		icon: iconUrl(3739),
 		cooldown: 1000,
+		statusesApplied: ['POISED_FOR_TWINBLOOD'],
 	},
 
 })
