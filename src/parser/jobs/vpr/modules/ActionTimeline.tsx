@@ -53,8 +53,10 @@ export class ActionTimeline extends CoreActionTimeline {
 				'FOURTH_LEGACY',
 			],
 		},
-		'TRUE_NORTH',
 		'FEINT',
+		'TRUE_NORTH',
 		'SLITHER',
+		'SECOND_WIND',
+		'BLOODBATH',
 	]
 }
