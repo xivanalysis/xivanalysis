@@ -1,7 +1,7 @@
 import {AoEUsages as CoreAoE} from 'parser/core/modules/AoEUsages'
 
 export class AoEUsages extends CoreAoE {
-	suggestionIcon = this.data.actions.FOUL.icon
+	suggestionIcon = this.data.actions.THUNDER_II_IN_MAGENTA.icon
 
 	trackedActions = [
 		{
