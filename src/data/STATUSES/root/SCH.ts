@@ -115,4 +115,11 @@ export const SCH = ensureStatuses({
 		icon: iconUrl(12846),
 		duration: 21000,
 	},
+
+	SERAPHISM : {
+		id: 3884,
+		name: 'Seraphism',
+		icon: iconUrl(12820),
+		duration: 20000,
+	}
 })

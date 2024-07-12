@@ -81,7 +81,7 @@ export const SCH = ensureActions({
 		id: 16542,
 		name: 'Recitation',
 		icon: iconUrl(2822),
-		cooldown: 90000,
+		cooldown: 60000,
 	},
 
 	// This is the action cast by the SCH
@@ -355,5 +355,14 @@ export const SCH = ensureActions({
 		name: 'Seraphic Illumination',
 		icon: iconUrl(2849),
 		pet: true,
+	},
+
+	SERAPHISM: {
+		id: 37014,
+		name: 'Seraphism',
+		icon: iconUrl(2881),
+		pet: false,
+		statusesApplied : ['SERAPHISM'],
+		cooldown: 180000,
 	},
 })
