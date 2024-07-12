@@ -31,6 +31,9 @@ export class ManafontTimingEvaluator extends RulePassedEvaluator {
 	}
 
 	override passesRule(window: HistoryEntry<EvaluatedAction[]>) {
+		// If this is a window that opened with Manafont, we'll have evaluated the timing on the previous window closed by that manafont usage. Skip
+		if (window.data.length >= 1 && window.data[0].action.id === this.manafontAction.id) { return }
+
 		const windowMetadata = this.metadataHistory.entries.find(entry => entry.start === window.start)?.data
 		if (windowMetadata == null) { return }
 

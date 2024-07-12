@@ -280,6 +280,13 @@ export class RotationWatchdog extends RestartWindow {
 		if (event.action === this.data.actions.TRANSPOSE.id && this.currentGaugeState.umbralIce > 0) {
 			return
 		}
+
+		// Do not start a new window if we're using B3 to go from partial UI to full
+		// Tranpose > instant B3 is a minor gain over hardcast hot B3
+		if (event.action === this.data.actions.BLIZZARD_III.id && this.currentGaugeState.umbralIce > 0 && this.currentGaugeState.umbralIce < ASTRAL_UMBRAL_MAX_STACKS) {
+			return
+		}
+
 		super.onWindowRestart(event)
 	}
 
