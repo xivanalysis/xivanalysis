@@ -20,7 +20,7 @@ import {FIRE_SPELLS, ICE_SPELLS} from './Elements'
 import {ASTRAL_UMBRAL_DURATION, ASTRAL_UMBRAL_MAX_STACKS, BLMGaugeState, UMBRAL_HEARTS_MAX_STACKS} from './Gauge'
 import Leylines from './Leylines'
 import Procs from './Procs'
-import {assignErrorCode, getMetadataForWindow} from './RotationWatchdog/EvaluatorUtilities'
+import {assignErrorCode, getMetadataForWindow, getPreviousMetadata} from './RotationWatchdog/EvaluatorUtilities'
 import {ExpectedFireSpellsEvaluator} from './RotationWatchdog/ExpectedFireSpellsEvaluator'
 import {ExtraF1Evaluator} from './RotationWatchdog/ExtraF1Evaluator'
 import {IceMageEvaluator} from './RotationWatchdog/IceMageEvaluator'
@@ -386,9 +386,22 @@ export class RotationWatchdog extends RestartWindow {
 			adjustment++
 		}
 
-		// We should only expect a Flare Star if we're also expected to get all 6 F4s in during a full uptime window
-		if (action.action.id === this.data.actions.FLARE_STAR.id && !windowMetadata.finalOrDowntime && windowMetadata.expectedFire4s >= MAX_POSSIBLE_FIRE4) {
-			adjustment++
+		if (action.action.id === this.data.actions.FLARE_STAR.id) {
+			// We should only expect a Flare Star if we're also expected to get all 6 F4s in during a full uptime window
+			if (!windowMetadata.finalOrDowntime && windowMetadata.expectedFire4s >= MAX_POSSIBLE_FIRE4) {
+				adjustment++
+
+				// Players may choose to carry their generated Flare Star into the post-Manafont window
+				if (window.data[window.data.length - 1].action.id === this.data.actions.MANAFONT.id && window.data.filter(event => event.action.id === this.data.actions.FLARE_STAR.id).length < 1) {
+					adjustment--
+				}
+			}
+
+			// If we carried a Flare Star over, expect to see an extra one
+			const previousMetadata = getPreviousMetadata(window, this.metadataHistory)
+			if (previousMetadata != null && previousMetadata.expectedFlareStars === 0 && previousMetadata.expectedFire4s >= MAX_POSSIBLE_FIRE4) {
+				adjustment++
+			}
 		}
 
 		switch (action.action.id) {
