@@ -43,6 +43,7 @@ export default (env: Environment, {
 	devServer: {
 		host: 'localhost',
 		port: 3000,
+		open: 'http://localhost:3000',
 		historyApiFallback: true,
 		overlay: true,
 		liveReload: false,
@@ -162,7 +163,7 @@ export default (env: Environment, {
 			// Lingui message files
 			{
 				test: /locale.+\.json$/,
-				resourceQuery: { not: [/raw/] },
+				resourceQuery: {not: [/raw/]},
 				type: 'javascript/auto',
 				use: [
 					{loader: '@lingui/loader'},

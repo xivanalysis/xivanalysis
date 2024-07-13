@@ -31,14 +31,15 @@ export class ManafontTimingEvaluator extends RulePassedEvaluator {
 	}
 
 	override passesRule(window: HistoryEntry<EvaluatedAction[]>) {
+		// If this is a window that was not closed with Manafont, then this analysis does not apply. Skip it.
+		if (window.data.length >= 1 && window.data[window.data.length - 1].action.id !== this.manafontAction.id) { return }
+
 		const windowMetadata = this.metadataHistory.entries.find(entry => entry.start === window.start)?.data
 		if (windowMetadata == null) { return }
 
-		const manafontIndex = window.data.findIndex(event => event.action.id === this.manafontAction.id)
-		if (manafontIndex === -1) { return }
-
+		// If Despair wasn't used in this window closed by Manafont, warn about it
 		const despairIndex = window.data.findIndex(event => event.action.id === this.despairId)
-		if (manafontIndex < despairIndex || despairIndex === -1) {
+		if (despairIndex === -1) {
 			assignErrorCode(windowMetadata, ROTATION_ERRORS.MANAFONT_BEFORE_DESPAIR)
 			return false
 		}

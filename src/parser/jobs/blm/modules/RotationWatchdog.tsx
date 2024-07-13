@@ -4,7 +4,8 @@ import {DataLink} from 'components/ui/DbLink'
 import {RotationEvent} from 'components/ui/Rotation'
 import {RotationTargetOutcome} from 'components/ui/RotationTable'
 import {ActionKey} from 'data/ACTIONS'
-import {Events} from 'event'
+import {Event, Events} from 'event'
+import {filter} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
 import {EvaluatedAction, RestartWindow, TrackedAction} from 'parser/core/modules/ActionWindow'
 import {History, HistoryEntry} from 'parser/core/modules/ActionWindow/History'
@@ -13,21 +14,21 @@ import {Actors} from 'parser/core/modules/Actors'
 import {Invulnerability} from 'parser/core/modules/Invulnerability'
 import {UnableToAct} from 'parser/core/modules/UnableToAct'
 import React, {Fragment} from 'react'
-import {Icon, Message} from 'semantic-ui-react'
+import {Message} from 'semantic-ui-react'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 import {FIRE_SPELLS, ICE_SPELLS} from './Elements'
 import {ASTRAL_UMBRAL_DURATION, ASTRAL_UMBRAL_MAX_STACKS, BLMGaugeState, UMBRAL_HEARTS_MAX_STACKS} from './Gauge'
 import Leylines from './Leylines'
 import Procs from './Procs'
-import {assignErrorCode, getMetadataForWindow} from './RotationWatchdog/EvaluatorUtilities'
+import {assignErrorCode, getMetadataForWindow, getPreviousMetadata} from './RotationWatchdog/EvaluatorUtilities'
 import {ExpectedFireSpellsEvaluator} from './RotationWatchdog/ExpectedFireSpellsEvaluator'
 import {ExtraF1Evaluator} from './RotationWatchdog/ExtraF1Evaluator'
+import {FlareStarUsageEvaluator} from './RotationWatchdog/FlareStarUsageEvaluator'
 import {IceMageEvaluator} from './RotationWatchdog/IceMageEvaluator'
 import {ManafontTimingEvaluator} from './RotationWatchdog/ManafontTimingEvaluator'
-import {MissedIceParadoxEvaluator} from './RotationWatchdog/MissedIceParadoxEvaluator'
 import {RotationErrorNotesEvaluator} from './RotationWatchdog/RotationErrorNotesEvaluator'
 import {SkipB4Evaluator} from './RotationWatchdog/SkipB4Evaluator'
-import {SkipT3Evaluator} from './RotationWatchdog/SkipT3Evaluator'
+import {SkipThunderEvaluator} from './RotationWatchdog/SkipThunderEvaluator'
 import {UptimeSoulsEvaluator} from './RotationWatchdog/UptimeSoulsEvaluator'
 import {CycleMetadata, ROTATION_ERRORS, HIDDEN_PRIORITY_THRESHOLD} from './RotationWatchdog/WatchdogConstants'
 
@@ -36,7 +37,6 @@ const DEBUG_SHOW_ALL = false && process.env.NODE_ENV !== 'production'
 const MAX_POSSIBLE_FIRE4 = 6
 const NO_UH_EXPECTED_FIRE4 = 4
 const MAX_MP = 10000
-const EXTRA_CASTS_FROM_MANAFONT = 1
 
 const EXTRA_F4_COP_THRESHOLD = 0.5 // Feelycraft
 
@@ -75,18 +75,9 @@ export class RotationWatchdog extends RestartWindow {
 	override prependMessages = <Fragment>
 		<Message>
 			<Trans id="blm.rotation-watchdog.rotation-table.message">
-				The core of BLM consists of six casts of <DataLink action="FIRE_IV"/>, two casts of <DataLink action="PARADOX"/> and one cast <DataLink action="DESPAIR"/> per rotation.<br/>
-				With <DataLink action="MANAFONT"/>, an extra cast each of <DataLink action="FIRE_IV"/> and <DataLink action="DESPAIR"/> are expected.<br/>
-				Avoid missing <DataLink action="FIRE_IV" showIcon={false} /> casts where possible.
+				The core of BLM consists of six casts of <DataLink action="FIRE_IV"/>, and one cast each of <DataLink action="PARADOX"/>, <DataLink action="DESPAIR"/>, and <DataLink action="FLARE_STAR" /> per rotation.<br/>
+				Avoid missing <DataLink action="FIRE_IV" showIcon={false} /> casts where possible. since that will prevent you from using <DataLink showIcon={false} action="FLARE_STAR" />.
 			</Trans>
-		</Message>
-		<Message warning icon>
-			<Icon name="warning sign"/>
-			<Message.Content>
-				<Trans id="blm.rotation-watchdog.rotation-table.disclaimer">This module assumes you are following the standard BLM playstyle.<br/>
-					Suggestions will focus on improving standard play, but non-standard lines shouldn't be treated as an error by this report.
-				</Trans>
-			</Message.Content>
 		</Message>
 	</Fragment>
 
@@ -100,10 +91,12 @@ export class RotationWatchdog extends RestartWindow {
 		finalOrDowntime: false,
 		missingDespairs: false,
 		missingFire4s: false,
+		missingFlareStars: false,
 		wasTPF1: false,
 		expectedFire4sBeforeDespair: 0,
 		expectedFire4s: -1,
 		expectedDespairs: -1,
+		expectedFlareStars: -1,
 		hardT3sInFireCount: 0,
 		firePhaseMetadata: {
 			startTime: 0,
@@ -124,6 +117,9 @@ export class RotationWatchdog extends RestartWindow {
 
 		this.ignoreActions([this.data.actions.ATTACK.id])
 
+		this.addEventHook(filter<Event>().source(this.parser.actor.id).type('action')
+			.action(this.data.actions.MANAFONT.id), this.onManafont)
+
 		this.addEventHook('blmgauge', this.onGaugeEvent)
 		this.addEventHook({
 			type: 'death',
@@ -138,6 +134,7 @@ export class RotationWatchdog extends RestartWindow {
 			pullEnd: this.parser.pull.timestamp + this.parser.pull.duration,
 			despairAction: this.data.actions.DESPAIR,
 			fire4Action: this.data.actions.FIRE_IV,
+			flareStarAction: this.data.actions.FLARE_STAR,
 			invulnerability: this.invulnerability,
 			metadataHistory: this.metadataHistory,
 			// Expected counts per window will be calculated in the adjustExpectedActionsCount function
@@ -150,12 +147,19 @@ export class RotationWatchdog extends RestartWindow {
 					action: this.data.actions.DESPAIR,
 					expectedPerWindow: 0,
 				},
+				{
+					action: this.data.actions.FLARE_STAR,
+					expectedPerWindow: 0,
+				},
 			],
 			adjustCount: this.adjustExpectedActionsCount.bind(this),
 			adjustOutcome: this.adjustExpectedActionsOutcome.bind(this),
 		}))
 
-		this.addEvaluator(new MissedIceParadoxEvaluator(this.metadataHistory))
+		this.addEvaluator(new FlareStarUsageEvaluator({
+			suggestionIcon: this.data.actions.FLARE_STAR.icon,
+			metadataHistory: this.metadataHistory,
+		}))
 
 		this.addEvaluator(new ManafontTimingEvaluator({
 			manafontAction: this.data.actions.MANAFONT,
@@ -186,7 +190,7 @@ export class RotationWatchdog extends RestartWindow {
 
 		//#region Evaluators that only apply to windows that ended in downtime
 
-		this.addEvaluator(new SkipT3Evaluator({
+		this.addEvaluator(new SkipThunderEvaluator({
 			suggestionIcon: this.data.actions.FIRE_IV.icon,
 			metadataHistory: this.metadataHistory,
 		}))
@@ -203,6 +207,12 @@ export class RotationWatchdog extends RestartWindow {
 		this.addEvaluator(new RotationErrorNotesEvaluator(this.metadataHistory))
 
 		this.onWindowStart(this.parser.pull.timestamp)
+	}
+
+	// Special handling for Manafont, we want to show it as both the end and start of the windows it's involved in
+	private onManafont(event: Events['action']) {
+		super.onWindowAction(event)
+		super.onWindowRestart(event)
 	}
 
 	private onDeath() {
@@ -279,6 +289,13 @@ export class RotationWatchdog extends RestartWindow {
 		if (event.action === this.data.actions.TRANSPOSE.id && this.currentGaugeState.umbralIce > 0) {
 			return
 		}
+
+		// Do not start a new window if we're using B3 to go from partial UI to full
+		// Tranpose > instant B3 is a minor gain over hardcast hot B3
+		if (event.action === this.data.actions.BLIZZARD_III.id && this.currentGaugeState.umbralIce > 0 && this.currentGaugeState.umbralIce < ASTRAL_UMBRAL_MAX_STACKS) {
+			return
+		}
+
 		super.onWindowRestart(event)
 	}
 
@@ -320,7 +337,7 @@ export class RotationWatchdog extends RestartWindow {
 			end: windowEnd,
 		})
 
-		// If the whole fire phase happened during downtime (ie. Transpose spamming to get a paradox marker), don't expect fire spells
+		// If the whole fire phase happened during downtime (ie. Transpose spamming to get/keep Thunderhead), don't expect fire spells
 		if (fireInvulnDuration === firePhaseDuration) { return 0 }
 
 		let adjustment = 0
@@ -343,19 +360,6 @@ export class RotationWatchdog extends RestartWindow {
 			}
 
 			const buildAstralFireEvents = window.data.filter(event => event.timestamp >= windowMetadata.firePhaseMetadata.startTime && event.timestamp <= windowMetadata.firePhaseMetadata.fullElementTime)
-			// Transpose -> Paradox -> F1 to build Astral Fire costs enough MP to remove the use of F4 they would have gained from 2 umbral hearts
-			const transposeParaF1 = [this.data.actions.TRANSPOSE.id, this.data.actions.PARADOX.id, this.data.actions.FIRE_I.id]
-			const filteredBuildEvents = buildAstralFireEvents.filter(event => transposeParaF1.includes(event.action.id)).map(event => event.action.id)
-			if (filteredBuildEvents.length === transposeParaF1.length && filteredBuildEvents.every((actionId, index) => actionId === transposeParaF1[index])) {
-				adjustment--
-				windowMetadata.wasTPF1 = true
-			}
-
-			// No Umbral hearts -> Tranpose -> Raw F3 loses an F4 due to MP, or F3P due to time (unless very speedy, in which case you're probably not going non-standard...)
-			if (windowMetadata.firePhaseMetadata.initialGaugeState.umbralHearts === 0 && (buildAstralFireEvents.length >= 1 && buildAstralFireEvents[0].action.id === this.data.actions.TRANSPOSE.id &&
-					buildAstralFireEvents[buildAstralFireEvents.length - 1].action.id === this.data.actions.FIRE_III.id)) {
-				adjustment--
-			}
 
 			/**
 			 * IF this rotation's Astral Fire phase began with no Umbral Hearts (either no-B4-opener, or a midfight alternate playstyle rotation),
@@ -389,8 +393,22 @@ export class RotationWatchdog extends RestartWindow {
 			adjustment++
 		}
 
-		if (window.data.find(event => event.action.id === this.data.actions.MANAFONT.id) != null) {
-			adjustment += EXTRA_CASTS_FROM_MANAFONT
+		if (action.action.id === this.data.actions.FLARE_STAR.id) {
+			// We should only expect a Flare Star if we're also expected to get all 6 F4s in during a full uptime window
+			if (!windowMetadata.finalOrDowntime && windowMetadata.expectedFire4s >= MAX_POSSIBLE_FIRE4) {
+				adjustment++
+
+				// Players may choose to carry their generated Flare Star into the post-Manafont window
+				if (window.data[window.data.length - 1].action.id === this.data.actions.MANAFONT.id && window.data.filter(event => event.action.id === this.data.actions.FLARE_STAR.id).length < 1) {
+					adjustment--
+				}
+			}
+
+			// If we carried a Flare Star over, expect to see an extra one
+			const previousMetadata = getPreviousMetadata(window, this.metadataHistory)
+			if (previousMetadata != null && previousMetadata.expectedFlareStars === 0 && previousMetadata.expectedFire4s >= MAX_POSSIBLE_FIRE4) {
+				adjustment++
+			}
 		}
 
 		switch (action.action.id) {
@@ -399,6 +417,10 @@ export class RotationWatchdog extends RestartWindow {
 			break
 		case this.data.actions.DESPAIR.id:
 			windowMetadata.expectedDespairs = adjustment
+			break
+		case this.data.actions.FLARE_STAR.id:
+			windowMetadata.expectedFlareStars = adjustment
+			break
 		}
 
 		return adjustment

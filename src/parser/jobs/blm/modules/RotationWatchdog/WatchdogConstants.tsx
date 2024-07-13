@@ -33,11 +33,10 @@ export const ROTATION_ERRORS = ensureRecord<CycleErrorCode>()({
 	// Messages below should be Trans objects since they'll be displayed to end users
 	SHOULD_SKIP_T3: {priority: 8, message: <Trans id="blm.rotation-watchdog.error-messages.should-skip-t3">Should skip hardcast <DataLink action="THUNDER_III"/></Trans>},
 	SHOULD_SKIP_B4: {priority: 9, message: <Trans id="blm.rotation-watchdog.error-messages.should-skip-b4">Should skip <DataLink action="BLIZZARD_IV"/></Trans>},
-	MISSING_FIRE4S: {priority: 10, message: <Trans id="blm.rotation-watchdog.error-messages.missing-fire4s">Missing one or more <DataLink action="FIRE_IV"/>s</Trans>}, // These two errors are lower priority since they can be determined by looking at the
-	MISSED_ICE_PARADOX: {priority: 15, message: <Trans id="blm.rotation-watchdog.error-messages.missed-ice-paradox">Missed <DataLink action="PARADOX"/> in Umbral Ice</Trans>},
+	MISSING_FIRE4S: {priority: 10, message: <Trans id="blm.rotation-watchdog.error-messages.missing-fire4s">Missing one or more <DataLink action="FIRE_IV"/>s</Trans>}, // These three errors are lower priority since they can be determined by looking at the
 	MISSING_DESPAIRS: {priority: 20, message: <Trans id="blm.rotation-watchdog.error-messages.missing-despair">Missing one or more <DataLink action="DESPAIR"/>s</Trans>}, // target columns in the table, so we want to tell players about other errors first
+	MISSING_FLARE_STARS: {priority: 30, message: <Trans id="blm.rotation-watchdog.error-messages.missing-flarestars">Missing one or more <DataLink action="FLARE_STAR"/>s</Trans>},
 	MANAFONT_BEFORE_DESPAIR: {priority: 40, message: <Trans id="blm.rotation-watchdog.error-messages.manafont-before-despair"><DataLink action="MANAFONT"/> used before <DataLink action="DESPAIR"/></Trans>},
-	EXTRA_T3: {priority: 59, message: <Trans id="blm.rotation-watchdog.error-messages.extra-t3">Extra <DataLink action="THUNDER_III"/>s</Trans>}, // Extra T3 and Extra F1 are *very* similar in terms of per-GCD potency loss
 	EXTRA_F1: {priority: 60, message: <Trans id="blm.rotation-watchdog.error-messages.extra-f1">Extra <DataLink action="FIRE_I"/></Trans>}, // These two codes should stay close to each other
 	NO_FIRE_SPELLS: {priority: 80, message: <Trans id="blm.rotation-watchdog.error-messages.no-fire-spells">Rotation included no Fire spells</Trans>},
 	DROPPED_AF_UI: {priority: 100, message: <Trans id="blm.rotation-watchdog.error-messages.dropped-astral-umbral">Dropped Astral Fire or Umbral Ice</Trans>},
@@ -49,10 +48,12 @@ export interface CycleMetadata {
 	finalOrDowntime: boolean
 	missingDespairs: boolean
 	missingFire4s: boolean
+	missingFlareStars: boolean
 	wasTPF1: boolean
 	expectedFire4sBeforeDespair: number
 	expectedFire4s: number,
 	expectedDespairs: number,
+	expectedFlareStars: number,
 	hardT3sInFireCount: number
 	firePhaseMetadata: PhaseMetadata
 }

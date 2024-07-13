@@ -11,11 +11,6 @@ import {ActionWindow} from './ActionWindow'
 
 const SECONDS_TO_MS: number = 1000
 
-// In true XIV fashion, statuses tend to stick around for slightly longer than
-// their specified duration. It's pretty consistently about a second, so we're
-// adding that as a fudge.
-const STATUS_DURATION_FUDGE = SECONDS_TO_MS
-
 /**
  * STRICT:
  *   The default. Events that occur on the same timestamp
@@ -38,6 +33,13 @@ export abstract class BuffWindow extends ActionWindow {
 	 * The status that the buff window tracks.
 	 */
 	abstract buffStatus: Status | Status[]
+
+	/**
+	 * In true XIV fashion, statuses tend to stick around for slightly longer than their specified duration.
+	 * It's pretty consistently about a second, so we're adding that as the default fudge, with the ability
+	 * for implementing modules to override it as needed.
+	 */
+	protected statusDurationFudge: number = SECONDS_TO_MS
 
 	/**
 	 * Determines if a window ended early due to the end of the pull.
@@ -118,7 +120,7 @@ export abstract class BuffWindow extends ActionWindow {
 		if (this.durationHook != null) {
 			this.removeTimestampHook(this.durationHook)
 		}
-		this.durationHook = this.addTimestampHook(timestamp + this.buffDuration + STATUS_DURATION_FUDGE,
+		this.durationHook = this.addTimestampHook(timestamp + this.buffDuration + this.statusDurationFudge,
 			this.endWindowByTime)
 	}
 
