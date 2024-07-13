@@ -28,18 +28,19 @@ export class SkipThunderEvaluator implements WindowEvaluator {
 
 			if (!windowMetadata.finalOrDowntime) { return total } // This suggestion only applies to windows that end with downtime
 
-			// Thunder initial potency isn't worth it if the DoT is going to go to waste before the boss jumps or dies
-			if (windowMetadata.thundersInFireCount > 0) {
+			// Thunder initial potency isn't worth it if the DoT is going to go to waste before the boss jumps or dies, and a fire spell could have been used instead
+			if (windowMetadata.thundersInFireCount > 0 && (windowMetadata.missingFire4s || windowMetadata.missingDespairs || windowMetadata.missingFlareStars)) {
 				assignErrorCode(windowMetadata, ROTATION_ERRORS.SHOULD_SKIP_T3)
+				return total + windowMetadata.thundersInFireCount
 			}
 
-			return total + windowMetadata.thundersInFireCount
+			return total
 		}, 0)
 
 		return new TieredSuggestion({
 			icon: this.suggestionIcon,
 			content: <Trans id="blm.rotation-watchdog.suggestions.should-skip-thunder.content">
-				You lost at least one <DataLink action="FIRE_IV"/> by casting <DataLink action="HIGH_THUNDER"/> before the fight finished or a phase transition occurred.
+				You lost at least one fire element spell by casting <DataLink action="HIGH_THUNDER"/> before the fight finished or a phase transition occurred.
 			</Trans>,
 			tiers: ENHANCED_SEVERITY_TIERS,
 			value: shouldSkipThunders,
