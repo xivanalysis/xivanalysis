@@ -314,8 +314,7 @@ export abstract class Procs extends Analyser {
 
 	/**
 	 * May be overridden by subclasses. Called by onCast to determine whether the action in question can consume
-	 * multiple procs from a single event. For example, Pictomancer's Aetherhues "combo" statuses, the Subtractice Palette
-	 * status, and Hyperphantasia all being potentially consumed by a single cast of Thunder in Magenta.
+	 * multiple procs from a single event.
 	 * @param _action The action that might consume multiple procs
 	 * @returns False by default. Jobs may override to return true, allowing usages to be registered for more than one proc status from the event
 	 */

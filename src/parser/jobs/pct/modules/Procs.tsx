@@ -47,10 +47,6 @@ export default class Procs extends CoreProcs {
 		},
 	]
 
-	protected override checkMayConsumeAdditionalProcs(_action: number): boolean {
-		return true // Technically should probably have some logic here but it'll just be a minor performance loss, not a functional problem
-	}
-
 	protected override jobSpecificOnConsumeProc(procGroup: ProcGroup, event: Events['action']): void {
 		// Rainbow bright changes Rainbow Drip from a 4s cast/6s recast to a standard instant GCD
 		if (procGroup.procStatus.id === this.data.statuses.RAINBOW_BRIGHT.id) {
