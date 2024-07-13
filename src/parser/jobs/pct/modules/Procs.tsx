@@ -86,14 +86,10 @@ export default class Procs extends CoreProcs {
 	}
 
 	protected override jobSpecificOnConsumeProc(procGroup: ProcGroup, event: Events['action']): void {
-		switch (procGroup.procStatus.id) {
-		case this.data.statuses.HYPERPHANTASIA.id:
-			// Not sure what this does yet...
-			break
-		case this.data.statuses.RAINBOW_BRIGHT.id:
+		// Rainbow bright changes Rainbow Drip from a 4s cast/6s recast to a standard instant GCD
+		if (procGroup.procStatus.id === this.data.statuses.RAINBOW_BRIGHT.id) {
 			this.castTime.setInstantCastAdjustment([this.data.actions.RAINBOW_DRIP.id], event.timestamp, event.timestamp)
 			this.castTime.setRecastTimeAdjustment([this.data.actions.RAINBOW_DRIP.id], RAINBOW_BRIGHT_RECAST_ADJUSTMENT)
-			break
 		}
 	}
 
