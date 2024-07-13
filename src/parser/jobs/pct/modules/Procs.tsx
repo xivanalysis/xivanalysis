@@ -34,34 +34,6 @@ export default class Procs extends CoreProcs {
 			],
 		},
 		{
-			procStatus: this.data.statuses.HYPERPHANTASIA,
-			consumeActions: [
-				this.data.actions.FIRE_IN_RED,
-				this.data.actions.FIRE_II_IN_RED,
-				this.data.actions.BLIZZARD_IN_CYAN,
-				this.data.actions.BLIZZARD_II_IN_CYAN,
-				this.data.actions.AERO_IN_GREEN,
-				this.data.actions.AERO_II_IN_GREEN,
-				this.data.actions.STONE_IN_YELLOW,
-				this.data.actions.STONE_II_IN_YELLOW,
-				this.data.actions.WATER_IN_BLUE,
-				this.data.actions.WATER_II_IN_BLUE,
-				this.data.actions.THUNDER_IN_MAGENTA,
-				this.data.actions.THUNDER_II_IN_MAGENTA,
-				this.data.actions.HOLY_IN_WHITE,
-				this.data.actions.COMET_IN_BLACK,
-				this.data.actions.STAR_PRISM,
-			],
-		},
-		{
-			procStatus: this.data.statuses.HAMMER_TIME,
-			consumeActions: [
-				this.data.actions.HAMMER_STAMP,
-				this.data.actions.HAMMER_BRUSH,
-				this.data.actions.POLISHING_HAMMER,
-			],
-		},
-		{
 			procStatus: this.data.statuses.RAINBOW_BRIGHT,
 			consumeActions: [
 				this.data.actions.RAINBOW_DRIP,
