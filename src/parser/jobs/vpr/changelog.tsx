@@ -7,9 +7,9 @@ export const changelog = [
 		date: new Date('2024-07-12'),
 		Changes: () => <>Fix gauge not being modified under the effect of "ready to awaken"</>,
 		contributors: [CONTRIBUTORS.RYAN],
-  },
-  {
-    date: new Date('2024-07-12'),
+	},
+	{
+		date: new Date('2024-07-12'),
 		Changes: () => <>Add positional tracking for <DataLink action="SWIFTSKINS_COIL" /> and <DataLink action="HUNTERS_COIL" /></>,
 		contributors: [CONTRIBUTORS.HINT],
 	},
