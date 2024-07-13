@@ -257,6 +257,7 @@ export abstract class Procs extends Analyser {
 		if (this.showProcTimelineRow) {
 			this.row = this.timeline.addRow(new SimpleRow({
 				label: 'Procs',
+				collapse: true,
 				order: 0,
 			}))
 		}

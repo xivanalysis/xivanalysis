@@ -1,6 +1,4 @@
 import {t} from '@lingui/macro'
-import {Trans} from '@lingui/react'
-import Color from 'color'
 import {Action} from 'data/ACTIONS'
 import {ActionRoot} from 'data/ACTIONS/root'
 import {Status} from 'data/STATUSES'
@@ -10,21 +8,18 @@ import {Analyser} from 'parser/core/Analyser'
 import {filter, oneOf} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
 import {Data} from 'parser/core/modules/Data'
-import {EnumGauge} from 'parser/core/modules/Gauge/EnumGauge'
 import {ResourceGraphs} from 'parser/core/modules/ResourceGraphs'
-import {GAUGE_FADE} from 'parser/core/modules/ResourceGraphs/ResourceGraphs'
 import {InitEvent} from 'parser/core/Parser'
-import React from 'react'
-import {ARCANA_STATUSES, CELESTIAL_SEAL_ARCANA, DRAWN_ARCANA, LUNAR_SEAL_ARCANA, PLAY, SOLAR_SEAL_ARCANA} from '../ArcanaGroups'
+import {DRAWN_ARCANA, PLAY_I, OFFENSIVE_ARCANA_STATUS, DEFENSIVE_ARCANA_ACTION, OFFENSIVE_ARCANA_ACTION} from '../ArcanaGroups'
 import DISPLAY_ORDER from '../DISPLAY_ORDER'
 
 const LINKED_EVENT_THRESHOLD = 20
 const DEATH_EVENT_STATUS_DROP_DELAY = 2000
 
-const CARD_GRANTING_ABILITIES: Array<keyof ActionRoot> = [...PLAY]
+const CARD_GRANTING_ABILITIES: Array<keyof ActionRoot> = [...PLAY_I]
 
 const CARD_ACTIONS: Array<keyof ActionRoot> = [
-	...PLAY,
+	...PLAY_I,
 ]
 export enum SealType {
 	NOTHING = 0,
@@ -46,10 +41,6 @@ export interface CardState {
 	sealState: SealType[]
 	sleeveState: SleeveType
 }
-
-const CELESTIAL_COLOR = Color('#75d6da').fade(GAUGE_FADE)
-const SOLAR_COLOR = Color('#c7512b').fade(GAUGE_FADE)
-const LUNAR_COLOR = Color('#d5b53d').fade(GAUGE_FADE)
 
 // TODO: Try to track for when a seal was not given on pull due to latency?
 export default class ArcanaTracking extends Analyser {
@@ -91,45 +82,15 @@ export default class ArcanaTracking extends Analyser {
 	private on_prepullArcanas?: Array<Events['statusApply']>
 	private off_prepullArcanas?: Array<Events['statusRemove']>
 
-	private astrosignGauge = new EnumGauge({
-		maximum: 3,
-		options: [
-			{
-				value: SealType[SealType.CELESTIAL],
-				label: <Trans id="ast.arcana.astrosigns.celestial">Celestial</Trans>,
-				color: CELESTIAL_COLOR,
-				tooltipHideWhenEmpty: true,
-			},
-			{
-				value: SealType[SealType.SOLAR],
-				label: <Trans id="ast.arcana.astrosigns.solar">Solar</Trans>,
-				color: SOLAR_COLOR,
-				tooltipHideWhenEmpty: true,
-			},
-			{
-				value: SealType[SealType.LUNAR],
-				label: <Trans id="ast.arcana.astrosigns.lunar">Lunar</Trans>,
-				color: LUNAR_COLOR,
-				tooltipHideWhenEmpty: true,
-			},
-		],
-		graph: {
-			handle: 'astrosigns',
-			label: <Trans id="ast.arcana.astrosigns.label">Astrosigns</Trans>,
-			tooltipHideMaximum: true,
-		},
-	})
-
 	override initialise() {
 		// Initialize grouped reference to actions/statuses data
-		this.play = PLAY.map(actionKey => this.data.actions[actionKey].id)
-		this.arcanaStatuses = ARCANA_STATUSES.map(statusKey => this.data.statuses[statusKey].id)
+		this.play = PLAY_I.map(actionKey => this.data.actions[actionKey].id)
+		this.arcanaStatuses = OFFENSIVE_ARCANA_STATUS.map(statusKey => this.data.statuses[statusKey].id)
 		this.cardGrantingAbilities = CARD_GRANTING_ABILITIES.map(actionKey => this.data.actions[actionKey].id)
 		this.cardActions = CARD_ACTIONS.map(actionKey => this.data.actions[actionKey].id)
 		this.drawnArcana = DRAWN_ARCANA.map(statusKey => this.data.statuses[statusKey].id)
-		this.celestialSealArcana = CELESTIAL_SEAL_ARCANA.map(actionKey => this.data.actions[actionKey].id)
-		this.lunarSealArcana = LUNAR_SEAL_ARCANA.map(actionKey => this.data.actions[actionKey].id)
-		this.solarSealArcana = SOLAR_SEAL_ARCANA.map(actionKey => this.data.actions[actionKey].id)
+		this.celestialSealArcana = OFFENSIVE_ARCANA_ACTION.map(actionKey => this.data.actions[actionKey].id)
+		this.lunarSealArcana = DEFENSIVE_ARCANA_ACTION.map(actionKey => this.data.actions[actionKey].id)
 
 		this.playToStatusLookup = _.zipObject(this.play, this.drawnArcana)
 		this.statusToDrawnLookup = _.zipObject(this.arcanaStatuses, this.drawnArcana)
@@ -175,14 +136,6 @@ export default class ArcanaTracking extends Analyser {
 			type: 'death',
 			actor: this.parser.actor.id,
 		}, this.onDeath)
-
-		// Since ArcanaTracking isn't extending core Gauge (yet), handle setting up the celestialSigns gauge manually
-		this.astrosignGauge.setParser(this.parser)
-
-		this.astrosignGauge.setResourceGraphs(this.resourceGraphs)
-		this.astrosignGauge.init()
-
-		this.addEventHook('complete', () => this.astrosignGauge.generateResourceGraph())
 	}
 
 	public get cardLogs() {
@@ -349,7 +302,6 @@ export default class ArcanaTracking extends Analyser {
 			}
 			const sealState = [...cardStateItem.sealState]
 			cardStateItem.sealState = this.addSeal(sealObtained, sealState)
-			this.astrosignGauge.generate(SealType[sealObtained])
 		}
 
 		this.cardStateLog.push(cardStateItem)
@@ -377,7 +329,6 @@ export default class ArcanaTracking extends Analyser {
 			sealState: lastCardState.sealState,
 			sleeveState: SleeveType.NOTHING,
 		})
-		this.astrosignGauge.reset()
 	}
 
 	/**
