@@ -81,6 +81,10 @@ export default class Procs extends CoreProcs {
 		},
 	]
 
+	protected override checkMayConsumeAdditionalProcs(_action: number): boolean {
+		return true // Technically should probably have some logic here but it'll just be a minor performance loss, not a functional problem
+	}
+
 	protected override jobSpecificOnConsumeProc(procGroup: ProcGroup, event: Events['action']): void {
 		switch (procGroup.procStatus.id) {
 		case this.data.statuses.HYPERPHANTASIA.id:
