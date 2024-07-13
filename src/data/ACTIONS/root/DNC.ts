@@ -38,6 +38,7 @@ export const DNC = ensureActions({
 		gcdRecast: 2500,
 		speedAttribute: Attribute.SKILL_SPEED,
 		cooldown: 30000,
+		cooldownGroup: 15997, // Finishing Move shares a cooldown with Standard Step
 	},
 	LAST_DANCE: {
 		id: 36983,
@@ -175,6 +176,7 @@ export const DNC = ensureActions({
 		onGcd: true,
 		cooldown: 30000,
 		gcdRecast: 1500,
+		cooldownGroup: 15997,
 		statusesApplied: ['STANDARD_STEP'],
 	},
 	TECHNICAL_STEP: {

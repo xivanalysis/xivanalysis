@@ -14,7 +14,10 @@ export default class OGCDDowntime extends CooldownDowntime {
 			allowedAverageDowntime: ALLOWED_DANCE_DOWNTIME,
 		},
 		{
-			cooldowns: [this.data.actions.STANDARD_STEP],
+			cooldowns: [
+				this.data.actions.STANDARD_STEP,
+				this.data.actions.FINISHING_MOVE,
+			],
 			firstUseOffset: -15000,
 			allowedAverageDowntime: ALLOWED_DANCE_DOWNTIME,
 		},
