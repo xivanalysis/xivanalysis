@@ -7,17 +7,19 @@ import {DualCast} from './Dualcast'
 import {Embolden} from './Embolden'
 import {GeneralCDDowntime} from './GeneralCDDowntime'
 import {Interrupts} from './Interrupts'
+import {MagickedSwordplay} from './MagickedSwordplay'
+import {Manafication} from './Manafication'
 import {ManaGauge} from './ManaGauge'
 import {ManaStackGauge} from './ManaStackGauge'
 import {MeleeCombos} from './MeleeCombos'
+import {Prefulgence} from './Prefulgence'
 import {Procs} from './Procs'
 import {Swiftcast} from './Swiftcast'
+import {ViceOfThorns} from './ViceOfThorns'
 import {Weaving} from './Weaving'
-import { GrandImpact } from './GrandImpact'
-import { MagickedSwordplay } from './MagickedSwordplay'
-import { Manafication } from './Manafication'
-import { Prefulgence } from './Prefulgence'
-import { ViceOfThorns } from './ViceOfThorns'
+//For now commenting this out, it's uncertain if we want GrandImpact to be within Procs or on its own.
+//For now it'll be contained within Procs
+//import { GrandImpact } from './GrandImpact'
 
 export {DualStatistic} from 'parser/jobs/rdm/statistics/DualStatistic'
 
@@ -37,7 +39,8 @@ export default [
 	Tincture,
 	Swiftcast,
 	Weaving,
-	GrandImpact,
+	//See Above comment on GrandImpact
+	//GrandImpact,
 	MagickedSwordplay,
 	Manafication,
 	Prefulgence,

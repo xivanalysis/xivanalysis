@@ -75,7 +75,6 @@ export const RDM = ensureActions({
 		id: 37005,
 		name: 'Vice of Thorns',
 		icon: iconUrl(3242),
-		cooldown: 25000,
 		potency: 700,
 	},
 	GRAND_IMPACT: {

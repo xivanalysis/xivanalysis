@@ -23,6 +23,10 @@ const SEVERITY_MISSED_PROCS = {
 	7: SEVERITY.MAJOR,
 }
 
+const SEVERITY_CRITICAL_PROCS = {
+	1: SEVERITY.MAJOR,
+}
+
 export class Procs extends CoreProcs {
 	static override title = t('rdm.procs.title')`Proc Issues`
 
@@ -38,6 +42,20 @@ export class Procs extends CoreProcs {
 			procStatus: this.data.statuses.VERFIRE_READY,
 			consumeActions: [this.data.actions.VERFIRE],
 		},
+		{
+			procStatus: this.data.statuses.GRAND_IMPACT_READY,
+			consumeActions: [this.data.actions.GRAND_IMPACT],
+		},
+		//We are uncertain if we want this here or on their own, for now they'll be on their own.
+		//Leaving this here in case we change our minds
+		// {
+		// 	procStatus: this.data.statuses.PREFULGENCE_READY,
+		// 	consumeActions: [this.data.actions.PREFULGENCE],
+		// },
+		// {
+		// 	procStatus: this.data.statuses.THORNED_FLOURISH,
+		// 	consumeActions: [this.data.actions.VICE_OF_THORNS],
+		// },
 	]
 
 	private getMissedProcContent(missedFire: number, missedStone: number) {
@@ -136,6 +154,42 @@ export class Procs extends CoreProcs {
 		</Trans>
 	}
 
+	private getCriticalProcContent(id: number) {
+		if (id === this.data.statuses.GRAND_IMPACT_READY.id) {
+			return <Trans id="rdm.procs.suggestions.grandimpact.content">
+				Try to consume <DataLink status="GRAND_IMPACT_READY"/> before it expires as <DataLink action="GRAND_IMPACT"/> Gives 3 White & Black Mana and is one of your strongest GCDs outside of your Finisher Combo.
+			</Trans>
+		}
+		if (id === this.data.statuses.PREFULGENCE_READY.id) {
+			return <Trans id="rdm.procs.suggestions.prefulgence.content">
+				Try to consume <DataLink status="PREFULGENCE_READY"/> before it expires as <DataLink action="PREFULGENCE"/> is your strongest skill.
+			</Trans>
+		}
+		if (id === this.data.statuses.THORNED_FLOURISH.id) {
+			return <Trans id="rdm.procs.suggestions.viceofthorns.content">
+				Try to consume <DataLink status="THORNED_FLOURISH"/> before it expires as <DataLink action="VICE_OF_THORNS"/> Gives 3 White & Black Mana and is one of your strongest GCDs outside of your Finisher Combo.
+			</Trans>
+		}
+	}
+
+	private getCriticalProcWhy(id: number) {
+		if (id === this.data.statuses.GRAND_IMPACT_READY.id) {
+			return <Trans id="rdm.grandimpact.suggestions.dropped.why">
+				<DataLink status="GRAND_IMPACT_READY"/> timed out <Plural value={this.getDropCountForStatus(this.data.statuses.GRAND_IMPACT_READY.id)} one="# time" other="# times"/>
+			</Trans>
+		}
+		if (id === this.data.statuses.PREFULGENCE_READY.id) {
+			return <Trans id="rdm.prefulgence.suggestions.dropped.why">
+				<DataLink status="PREFULGENCE_READY"/> timed out <Plural value={this.getDropCountForStatus(this.data.statuses.PREFULGENCE_READY.id)} one="# time" other="# times"/>
+			</Trans>
+		}
+		if (id === this.data.statuses.THORNED_FLOURISH.id) {
+			return <Trans id="rdm.viceofthorns.suggestions.dropped.why">
+				<DataLink status="THORNED_FLOURISH"/> timed out <Plural value={this.getDropCountForStatus(this.data.statuses.THORNED_FLOURISH.id)} one="# time" other="# times"/>
+			</Trans>
+		}
+	}
+
 	protected override addJobSpecificSuggestions() {
 		const missedFire = this.getDropCountForStatus(this.data.statuses.VERFIRE_READY.id)
 		const invulnFire = this.getInvulnCountForStatus(this.data.statuses.VERFIRE_READY.id)
@@ -153,6 +207,31 @@ export class Procs extends CoreProcs {
 			value: missedFire + missedStone,
 			why: this.getMissedProcWhy(missedFire, missedStone),
 		}))
+
+		this.suggestions.add(new TieredSuggestion({
+			icon: this.data.actions.GRAND_IMPACT.icon,
+			content: this.getCriticalProcContent(this.data.statuses.GRAND_IMPACT_READY.id),
+			tiers: SEVERITY_CRITICAL_PROCS,
+			value: this.getDropCountForStatus(this.data.statuses.GRAND_IMPACT_READY.id),
+			why: this.getCriticalProcWhy(this.data.statuses.GRAND_IMPACT_READY.id),
+		}))
+
+		//Current Thought is we want these to stand on their own, leaving this here for now in case minds are changed.
+		// this.suggestions.add(new TieredSuggestion({
+		// 	icon: this.data.actions.PREFULGENCE.icon,
+		// 	content: this.getCriticalProcContent(this.data.statuses.PREFULGENCE_READY.id),
+		// 	tiers: SEVERITY_CRITICAL_PROCS,
+		// 	value: this.getDropCountForStatus(this.data.statuses.PREFULGENCE_READY.id),
+		// 	why: this.getCriticalProcContent(this.data.statuses.PREFULGENCE_READY.id),
+		// }))
+
+		// this.suggestions.add(new TieredSuggestion({
+		// 	icon: this.data.actions.VICE_OF_THORNS.icon,
+		// 	content: this.getCriticalProcContent(this.data.statuses.THORNED_FLOURISH.id),
+		// 	tiers: SEVERITY_CRITICAL_PROCS,
+		// 	value: this.getDropCountForStatus(this.data.statuses.THORNED_FLOURISH.id),
+		// 	why: this.getCriticalProcContent(this.data.statuses.THORNED_FLOURISH.id),
+		// }))
 
 		this.suggestions.add(new TieredSuggestion({
 			icon: overWrittenFire > overWrittenStone ? this.data.actions.VERFIRE.icon : this.data.actions.VERSTONE.icon,
