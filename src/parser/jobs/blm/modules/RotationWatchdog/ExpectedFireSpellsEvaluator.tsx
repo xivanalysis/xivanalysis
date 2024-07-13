@@ -70,13 +70,8 @@ export class ExpectedFireSpellsEvaluator extends ExpectedActionsEvaluator {
 	override determineExpected(window: HistoryEntry<EvaluatedAction[]>, action: TrackedAction) {
 		const windowMetadata = getMetadataForWindow(window, this.metadataHistory)
 
-		if (action.action.id === this.fire4Action.id) {
-			if (windowMetadata.finalOrDowntime) { return undefined }
-			if (windowMetadata.expectedFire4s >= 0) { return windowMetadata.expectedFire4s }
-		}
-		if (action.action.id === this.despairAction.id && windowMetadata.expectedDespairs >= 0) {
-			return windowMetadata.expectedDespairs
-		}
+		// Fire 4 has some special handling for showing the undefined denominator for rushed windows
+		if (action.action.id === this.fire4Action.id && windowMetadata.finalOrDowntime) { return undefined }
 
 		return super.determineExpected(window, action)
 	}
@@ -86,12 +81,18 @@ export class ExpectedFireSpellsEvaluator extends ExpectedActionsEvaluator {
 		if (this.countUsed(window, action) >= (this.determineExpected(window, action) ?? 0)) { return }
 
 		// Assign error code and metadata based on which action wasn't used enough
-		if (action.action.id === this.fire4Action.id) {
+		switch (action.action.id) {
+		case this.fire4Action.id:
 			windowMetadata.missingFire4s = true
 			assignErrorCode(windowMetadata, ROTATION_ERRORS.MISSING_FIRE4S)
-		} else if (action.action.id === this.despairAction.id) {
+			break
+		case this.despairAction.id:
 			windowMetadata.missingDespairs = true
 			assignErrorCode(windowMetadata, ROTATION_ERRORS.MISSING_DESPAIRS)
+			break
+		case this.flareStarAction.id:
+			windowMetadata.missingFlareStars = true
+			assignErrorCode(windowMetadata, ROTATION_ERRORS.MISSING_FLARE_STARS)
 		}
 
 		// Re-check to see if the window was actually right before a downtime but the boss became invulnerable before another Fire 4 could've been cast.
