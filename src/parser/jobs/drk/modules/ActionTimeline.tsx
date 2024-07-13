@@ -14,7 +14,6 @@ export class ActionTimeline extends CoreActionTimeline {
 		'FLOOD_OF_SHADOW',
 		'CARVE_AND_SPIT',
 		'ABYSSAL_DRAIN',
-		'PLUNGE',
 		['SALTED_EARTH', 'SALT_AND_DARKNESS'],
 		// Personal Mitigation
 		'LIVING_DEAD',
