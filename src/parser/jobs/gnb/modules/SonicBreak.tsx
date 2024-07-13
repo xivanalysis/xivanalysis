@@ -164,7 +164,7 @@ export class SonicBreak extends Analyser {
 		return <Fragment>
 			<Message>
 				<Trans id="gnb.sonic-break.accordion.message">
-					<DataLink action = "SONIC_BREAK"/> is a {this.data.statuses.SONIC_BREAK.duration / 1000} second dot that should tick {MAX_TICKS} times for damage, if you are finding that the target is going invulnerable, consider moving it forward in your <DataLink action = "NO_MERCY"/> windows.
+					<DataLink action = "SONIC_BREAK"/> is a {this.data.statuses.SONIC_BREAK.duration / 1000} second DoT that should tick <Plural value={MAX_TICKS} one = "# time" other="# times"/> for damage, if you are finding that the target is going invulnerable, consider moving it forward in your <DataLink action = "NO_MERCY"/> windows.
 				</Trans>
 			</Message>
 			{tickTable}
