@@ -6,10 +6,9 @@ import {TrackedAction, TrackedActionsOptions} from 'parser/core/modules/ActionWi
 import {History, HistoryEntry} from 'parser/core/modules/ActionWindow/History'
 import {Invulnerability} from 'parser/core/modules/Invulnerability'
 import {TieredSuggestion} from 'parser/core/modules/Suggestions'
-import {DEFAULT_SEVERITY_TIERS} from 'parser/jobs/dnc/CommonData'
 import React from 'react'
 import {assignErrorCode, getMetadataForWindow, includeInSuggestions} from './EvaluatorUtilities'
-import {CycleMetadata, ROTATION_ERRORS} from './WatchdogConstants'
+import {CycleMetadata, ROTATION_ERRORS, DEFAULT_SEVERITY_TIERS} from './WatchdogConstants'
 
 export type ExpectedFireSpellsEvaluatorOpts =
 	& Omit<TrackedActionsOptions, 'suggestionIcon' | 'suggestionContent' | 'suggestionWindowName' | 'severityTiers'>
@@ -17,6 +16,7 @@ export type ExpectedFireSpellsEvaluatorOpts =
 	pullEnd: number
 	despairAction: Action
 	fire4Action: Action
+	flareStarAction: Action
 	invulnerability: Invulnerability
 	metadataHistory: History<CycleMetadata>
 }
@@ -25,6 +25,7 @@ export class ExpectedFireSpellsEvaluator extends ExpectedActionsEvaluator {
 	private pullEnd: number
 	private despairAction: Action
 	private fire4Action: Action
+	private flareStarAction: Action
 	private invulnerability: Invulnerability
 	private metadataHistory: History<CycleMetadata>
 
@@ -38,6 +39,7 @@ export class ExpectedFireSpellsEvaluator extends ExpectedActionsEvaluator {
 		this.pullEnd = opts.pullEnd
 		this.despairAction = opts.despairAction
 		this.fire4Action = opts.fire4Action
+		this.flareStarAction = opts.flareStarAction
 		this.invulnerability = opts.invulnerability
 		this.metadataHistory = opts.metadataHistory
 	}
@@ -68,13 +70,8 @@ export class ExpectedFireSpellsEvaluator extends ExpectedActionsEvaluator {
 	override determineExpected(window: HistoryEntry<EvaluatedAction[]>, action: TrackedAction) {
 		const windowMetadata = getMetadataForWindow(window, this.metadataHistory)
 
-		if (action.action.id === this.fire4Action.id) {
-			if (windowMetadata.finalOrDowntime) { return undefined }
-			if (windowMetadata.expectedFire4s >= 0) { return windowMetadata.expectedFire4s }
-		}
-		if (action.action.id === this.despairAction.id && windowMetadata.expectedDespairs >= 0) {
-			return windowMetadata.expectedDespairs
-		}
+		// Fire 4 has some special handling for showing the undefined denominator for rushed windows
+		if (action.action.id === this.fire4Action.id && windowMetadata.finalOrDowntime) { return undefined }
 
 		return super.determineExpected(window, action)
 	}
@@ -84,12 +81,18 @@ export class ExpectedFireSpellsEvaluator extends ExpectedActionsEvaluator {
 		if (this.countUsed(window, action) >= (this.determineExpected(window, action) ?? 0)) { return }
 
 		// Assign error code and metadata based on which action wasn't used enough
-		if (action.action.id === this.fire4Action.id) {
+		switch (action.action.id) {
+		case this.fire4Action.id:
 			windowMetadata.missingFire4s = true
 			assignErrorCode(windowMetadata, ROTATION_ERRORS.MISSING_FIRE4S)
-		} else if (action.action.id === this.despairAction.id) {
+			break
+		case this.despairAction.id:
 			windowMetadata.missingDespairs = true
 			assignErrorCode(windowMetadata, ROTATION_ERRORS.MISSING_DESPAIRS)
+			break
+		case this.flareStarAction.id:
+			windowMetadata.missingFlareStars = true
+			assignErrorCode(windowMetadata, ROTATION_ERRORS.MISSING_FLARE_STARS)
 		}
 
 		// Re-check to see if the window was actually right before a downtime but the boss became invulnerable before another Fire 4 could've been cast.
