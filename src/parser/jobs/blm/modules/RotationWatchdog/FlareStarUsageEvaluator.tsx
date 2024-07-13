@@ -50,7 +50,7 @@ export class FlareStarUsageEvaluator extends RulePassedEvaluator {
 			tiers: DEFAULT_SEVERITY_TIERS,
 			value: rotationsMissingFlareStars,
 			why: <Trans id="blm.rotation-watchdog.suggestions.flarestarusage.why">
-				<Plural value={rotationsMissingFlareStars} one="# rotation" other="# rotations"/> did not use all generated <DataLink showIcon={false} action="FLARE_STAR" />s.
+				<Plural value={rotationsMissingFlareStars} one="# Astral Fire phase" other="# Astral Fire phases"/> did not use all generated <DataLink showIcon={false} action="FLARE_STAR" />s.
 			</Trans>,
 		})
 	}
