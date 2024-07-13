@@ -1,7 +1,12 @@
+import {Plural, Trans} from '@lingui/react'
+import {DataLink} from 'components/ui/DbLink'
 import {Events} from 'event'
 import {dependency} from 'parser/core/Injectable'
 import CastTime from 'parser/core/modules/CastTime'
 import {ProcGroup, Procs as CoreProcs} from 'parser/core/modules/Procs'
+import {TieredSuggestion} from 'parser/core/modules/Suggestions'
+import {DEFAULT_SEVERITY_TIERS} from 'parser/jobs/dnc/CommonData'
+import React from 'react'
 
 // Rainbow Bright makes Rainbow Drip instant, and lowers the 6s recast to a normal 2.5s GCD
 const RAINBOW_BRIGHT_RECAST_ADJUSTMENT = -3500
@@ -83,6 +88,32 @@ export default class Procs extends CoreProcs {
 	}
 
 	protected override addJobSpecificSuggestions(): void {
-		// Suggest something here
+		const droppedAetherhues = this.getDropCountForStatus(this.data.statuses.AETHERHUES.id) + this.getDropCountForStatus(this.data.statuses.AETHERHUES_II.id)
+		const droppedRainbows = this.getDropCountForStatus(this.data.statuses.RAINBOW_BRIGHT.id)
+		const droppedStars = this.getDropCountForStatus(this.data.statuses.STARSTRUCK.id)
+
+		this.suggestions.add(new TieredSuggestion({
+			icon: this.data.statuses.AETHERHUES_II.icon,
+			content: <Trans id="pct.procs.dropped-aetherhues.content">Your <DataLink status="AETHERHUES" /> and <DataLink status="AETHERHUES_II" /> statuses function as Pictomancer's combos, and dropping them will slow the rate at which you're able to use <DataLink action="SUBTRACTIVE_PALLETTE" />, leading to lost potency over time.</Trans>,
+			why: <Trans id="pct.procs.dropped-aetherhues.why">One of your <DataLink showIcon={false} status="AETHERHUES" /> statuses were allowed to expire <Plural value={droppedAetherhues} one="# time" other="# times"/>.</Trans>,
+			value: droppedAetherhues,
+			tiers: DEFAULT_SEVERITY_TIERS,
+		}))
+
+		this.suggestions.add(new TieredSuggestion({
+			icon: this.data.statuses.RAINBOW_BRIGHT.icon,
+			content: <Trans id="pct.procs.dropped-rainbows.content"><DataLink action="RAINBOW_DRIP" /> is one of your strongest GCDs, and <DataLink status="RAINBOW_BRIGHT" /> allows its use as a normal-length instant GCD, rather than requiring an extremely long cast time.</Trans>,
+			why: <Trans id="pct.procs.dropped-rainbows.why"><DataLink showIcon={false} status="RAINBOW_BRIGHT" /> was allowed to expire <Plural value={droppedRainbows} one="# time" other="# times" />.</Trans>,
+			value: droppedRainbows,
+			tiers: DEFAULT_SEVERITY_TIERS,
+		}))
+
+		this.suggestions.add(new TieredSuggestion({
+			icon: this.data.statuses.STARSTRUCK.icon,
+			content: <Trans id="pct.procs.dropped-stars.content"><DataLink action="STAR_PRISM" /> is your strongest GCD, and includes a party-wide heal as well. Make sure to use it before <DataLink status="STARSTRUCK" /> wears off.</Trans>,
+			why: <Trans id="pct.procs.dropped-stars.why"><DataLink showIcon={false} status="STARSTRUCK" /> was allowed to expire <Plural value={droppedStars} one="# time" other="# times" />.</Trans>,
+			value: droppedStars,
+			tiers: DEFAULT_SEVERITY_TIERS,
+		}))
 	}
 }
