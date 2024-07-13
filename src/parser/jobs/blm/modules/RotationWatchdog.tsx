@@ -23,6 +23,7 @@ import Procs from './Procs'
 import {assignErrorCode, getMetadataForWindow, getPreviousMetadata} from './RotationWatchdog/EvaluatorUtilities'
 import {ExpectedFireSpellsEvaluator} from './RotationWatchdog/ExpectedFireSpellsEvaluator'
 import {ExtraF1Evaluator} from './RotationWatchdog/ExtraF1Evaluator'
+import {FlareStarUsageEvaluator} from './RotationWatchdog/FlareStarUsageEvaluator'
 import {IceMageEvaluator} from './RotationWatchdog/IceMageEvaluator'
 import {ManafontTimingEvaluator} from './RotationWatchdog/ManafontTimingEvaluator'
 import {RotationErrorNotesEvaluator} from './RotationWatchdog/RotationErrorNotesEvaluator'
@@ -90,6 +91,7 @@ export class RotationWatchdog extends RestartWindow {
 		finalOrDowntime: false,
 		missingDespairs: false,
 		missingFire4s: false,
+		missingFlareStars: false,
 		wasTPF1: false,
 		expectedFire4sBeforeDespair: 0,
 		expectedFire4s: -1,
@@ -152,6 +154,11 @@ export class RotationWatchdog extends RestartWindow {
 			],
 			adjustCount: this.adjustExpectedActionsCount.bind(this),
 			adjustOutcome: this.adjustExpectedActionsOutcome.bind(this),
+		}))
+
+		this.addEvaluator(new FlareStarUsageEvaluator({
+			suggestionIcon: this.data.actions.FLARE_STAR.icon,
+			metadataHistory: this.metadataHistory,
 		}))
 
 		this.addEvaluator(new ManafontTimingEvaluator({
