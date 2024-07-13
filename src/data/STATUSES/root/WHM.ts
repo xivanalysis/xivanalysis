@@ -2,6 +2,36 @@ import {iconUrl} from 'data/icon'
 import {ensureStatuses} from '../type'
 
 export const WHM = ensureStatuses({
+	DIVINE_AURA: {
+		id: 3904,
+		name: 'Divine Aura',
+		icon: iconUrl(12642),
+		duration: 15000,
+	},
+	DIVINE_CARESS: {
+		id: 3903,
+		name: 'Divine Caress',
+		icon: iconUrl(12641),
+		duration: 10000,
+	},
+	DIVINE_GRACE: {
+		id: 3881,
+		name: 'Divine Grace',
+		icon: iconUrl(12640),
+		duration: 30000,
+	},
+	MEDICA_III: {
+		id: 3880,
+		name: 'Medica III',
+		icon: iconUrl(12639),
+		duration: 15000,
+	},
+	SACRED_SIGHT: {
+		id: 3879,
+		name: 'Sacred Sight',
+		icon: iconUrl(18669),
+		duration: 30000,
+	},
 	LITURGY_OF_THE_BELL: {
 		id: 2709,
 		name: 'Liturgy of the Bell',
