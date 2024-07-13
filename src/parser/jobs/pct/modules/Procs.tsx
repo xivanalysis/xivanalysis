@@ -60,12 +60,6 @@ export default class Procs extends CoreProcs {
 			],
 		},
 		{
-			procStatus: this.data.statuses.MONOCHROME_TONES,
-			consumeActions: [
-				this.data.actions.COMET_IN_BLACK,
-			],
-		},
-		{
 			procStatus: this.data.statuses.HAMMER_TIME,
 			consumeActions: [
 				this.data.actions.HAMMER_STAMP,
