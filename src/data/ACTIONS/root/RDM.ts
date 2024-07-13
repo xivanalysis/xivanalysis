@@ -245,7 +245,7 @@ export const RDM = ensureActions({
 			potency: 800,
 			end: true,
 		},
-	},	
+	},
 	JOLT: {
 		id: 7503,
 		name: 'Jolt',
@@ -420,8 +420,8 @@ export const RDM = ensureActions({
 		potency: 140,
 		combo: {
 			from: 7530,
-			potency: 140
-		}
+			potency: 140,
+		},
 	},
 	ENCHANTED_MOULINET_TROIS: {
 		id: 37003,
@@ -434,8 +434,8 @@ export const RDM = ensureActions({
 		combo: {
 			from: 37002,
 			potency: 150,
-			end: true
-		}
+			end: true,
+		},
 	},
 	VERCURE: {
 		id: 7514,
