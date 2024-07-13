@@ -244,9 +244,6 @@ export const SCH = ensureActions({
 		icon: iconUrl(2815),
 		cooldown: 120000,
 		statusesApplied: ['CHAIN_STRATAGEM', 'IMPACT_IMMINENT'],
-		combo: {
-			start: true,
-		},
 	},
 
 	// Baneful Impaction
@@ -255,9 +252,6 @@ export const SCH = ensureActions({
 		name: 'Baneful Impaction',
 		icon: iconUrl(2879),
 		cooldown: 300,
-		combo: {
-			from: 7436,
-		},
 		statusesApplied: ['BANEFUL_IMPACTION'],
 	},
 
