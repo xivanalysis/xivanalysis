@@ -251,8 +251,6 @@ export class Gauge extends CoreGauge {
 
 		// Default assume the player painted before the pull
 		this.canvasGauge.set([CREATURE_MOTIF, WEAPON_MOTIF, LANDSCAPE_MOTIF])
-
-		this.addEventHook('complete', this.onComplete)
 	}
 
 	private onPaletteModifer(event: Event) {
@@ -358,10 +356,6 @@ export class Gauge extends CoreGauge {
 			this.portraitGauge.generate(MADEEN_PORTRAIT)
 			break
 		}
-	}
-
-	private onComplete() {
-		// Suggestions and stuff
 	}
 }
 
