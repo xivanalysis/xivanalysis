@@ -55,6 +55,7 @@ export class MeleeCombos extends Analyser {
 	static override handle = 'mlc'
 	static override title = t('rdm.meleecombos.title')`Melee Combos`
 	static override displayOrder = DISPLAY_ORDER.MELEE_COMBO
+	static override debug = false
 
 	@dependency private data!: Data
 	@dependency private suggestions!: Suggestions
@@ -179,6 +180,9 @@ export class MeleeCombos extends Analyser {
 		}
 
 		if (action.breaksCombo) {
+			if (current) {
+				this.debug(`Action ${action.name} Breaks Combo at ${this.parser.formatEpochTimestamp(event.timestamp, 1)}`)
+			}
 			/*
 			Manafication does break combos, but the way we are currently modeling the full RDM combo isn't accurate anymore.
 			A full fix for this entails modeling mana stacks, splitting the full combo into two, and fixing the UI to display that info in a reasonable way.
@@ -187,7 +191,8 @@ export class MeleeCombos extends Analyser {
 			how they were when they were one large combo.  As such for now this fix is no longer a bandaid but a permanent fixture.
 			*/
 			if (action.id === this.data.actions.MANAFICATION.id &&
-				current && current.data.lastAction.action === this.data.actions.ENCHANTED_REDOUBLEMENT.id) {
+				//Since we now have an actual factual AE Combo, check for either the Single Target or AE Target final hit here.
+				current && (current.data.lastAction.action === this.data.actions.ENCHANTED_REDOUBLEMENT.id || current.data.lastAction.action === this.data.actions.ENCHANTED_MOULINET_TROIS.id)) {
 				return
 			}
 			this.breakComboIfExists(event.timestamp)
