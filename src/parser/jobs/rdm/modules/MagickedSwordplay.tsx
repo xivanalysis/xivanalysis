@@ -1,5 +1,5 @@
 import {t, Trans} from '@lingui/macro'
-import {ActionLink, StatusLink} from 'components/ui/DbLink'
+import {StatusLink} from 'components/ui/DbLink'
 import {ActionKey} from 'data/ACTIONS'
 import {dependency} from 'parser/core/Injectable'
 import {AllowedGcdsOnlyEvaluator, BuffWindow, EvaluatedAction, ExpectedGcdCountEvaluator} from 'parser/core/modules/ActionWindow'
@@ -7,8 +7,8 @@ import {HistoryEntry} from 'parser/core/modules/ActionWindow/History'
 import {EndOfWindowHandlingMode} from 'parser/core/modules/ActionWindow/windows/BuffWindow'
 import {GlobalCooldown} from 'parser/core/modules/GlobalCooldown'
 import {SEVERITY} from 'parser/core/modules/Suggestions'
-import React from 'react'
 import {DISPLAY_ORDER} from 'parser/jobs/rdm/modules/DISPLAY_ORDER'
+import React from 'react'
 
 const ONLY_SHOW: ActionKey[] = [
 	'ENCHANTED_RIPOSTE',
@@ -20,17 +20,17 @@ const ONLY_SHOW: ActionKey[] = [
 	'ENCHANTED_REPRISE',
 	'JOLT_III',
 	'VERTHUNDER_III',
-    'VERAERO_III',
-    'VERSTONE',
-    'VERFIRE',
-    'IMPACT',
-    'VERCURE',
-    'VERRAISE',
-    'VERFLARE',
-    'VERHOLY',
-    'SCORCH',
-    'RESOLUTION',
-    'GRAND_IMPACT',
+	'VERAERO_III',
+	'VERSTONE',
+	'VERFIRE',
+	'IMPACT',
+	'VERCURE',
+	'VERRAISE',
+	'VERFLARE',
+	'VERHOLY',
+	'SCORCH',
+	'RESOLUTION',
+	'GRAND_IMPACT',
 ]
 
 const MAGICK_GCDS = 3
@@ -79,7 +79,7 @@ export class MagickedSwordplay extends BuffWindow {
 					// AoE
 					this.data.actions.ENCHANTED_MOULINET.id,
 					this.data.actions.ENCHANTED_MOULINET_DEUX.id,
-                    this.data.actions.ENCHANTED_MOULINET_TROIS.id,
+					this.data.actions.ENCHANTED_MOULINET_TROIS.id,
 				],
 				globalCooldown: this.globalCooldown,
 				suggestionIcon,

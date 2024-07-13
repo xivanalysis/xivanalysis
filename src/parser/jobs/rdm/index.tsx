@@ -20,7 +20,7 @@ export const RED_MAGE = new Meta({
 	},
 
 	contributors: [
-	 {user: CONTRIBUTORS.LEYLIA, role: ROLES.DEVELOPER},
+		{user: CONTRIBUTORS.LEYLIA, role: ROLES.DEVELOPER},
 	],
 
 	changelog,

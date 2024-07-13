@@ -183,7 +183,6 @@ export class MeleeCombos extends Analyser {
 			if (current) {
 				this.debug(`Action ${action.name} Breaks Combo at ${this.parser.formatEpochTimestamp(event.timestamp, 1)}`)
 			}
-			
 			/*
 			Manafication does break combos, but the way we are currently modeling the full RDM combo isn't accurate anymore.
 			A full fix for this entails modeling mana stacks, splitting the full combo into two, and fixing the UI to display that info in a reasonable way.

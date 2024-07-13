@@ -7,8 +7,8 @@ import {HistoryEntry} from 'parser/core/modules/ActionWindow/History'
 import {EndOfWindowHandlingMode} from 'parser/core/modules/ActionWindow/windows/BuffWindow'
 import {GlobalCooldown} from 'parser/core/modules/GlobalCooldown'
 import {SEVERITY} from 'parser/core/modules/Suggestions'
-import React from 'react'
 import {DISPLAY_ORDER} from 'parser/jobs/rdm/modules/DISPLAY_ORDER'
+import React from 'react'
 
 const ONLY_SHOW: ActionKey[] = [
 	'ENCHANTED_RIPOSTE',
@@ -20,17 +20,17 @@ const ONLY_SHOW: ActionKey[] = [
 	'ENCHANTED_REPRISE',
 	'JOLT_III',
 	'VERTHUNDER_III',
-    'VERAERO_III',
-    'VERSTONE',
-    'VERFIRE',
-    'IMPACT',
-    'VERCURE',
-    'VERRAISE',
-    'VERFLARE',
-    'VERHOLY',
-    'SCORCH',
-    'RESOLUTION',
-    'GRAND_IMPACT',
+	'VERAERO_III',
+	'VERSTONE',
+	'VERFIRE',
+	'IMPACT',
+	'VERCURE',
+	'VERRAISE',
+	'VERFLARE',
+	'VERHOLY',
+	'SCORCH',
+	'RESOLUTION',
+	'GRAND_IMPACT',
 ]
 
 const MANAFICATION_GCDS = 6
@@ -59,7 +59,7 @@ export class Manafication extends BuffWindow {
 				hasStacks: true,
 				suggestionIcon,
 				suggestionContent: <Trans id="rdm.manafication.suggestions.missedgcd.content">
-					Try to land a full enchanted combo and combo finisher during every <StatusLink status="MANAFICATION" /> window.
+					Try to land a full enchanted combo and combo finisher during every <StatusLink status="MANAFICATION" /> window so you don't lose out on <ActionLink action="PREFULGENCE" /> your single most powerful action.
 				</Trans>,
 				suggestionWindowName,
 				severityTiers: {
@@ -79,13 +79,13 @@ export class Manafication extends BuffWindow {
 					// AoE
 					this.data.actions.ENCHANTED_MOULINET.id,
 					this.data.actions.ENCHANTED_MOULINET_DEUX.id,
-                    this.data.actions.ENCHANTED_MOULINET_TROIS.id,
+					this.data.actions.ENCHANTED_MOULINET_TROIS.id,
 
-                    // Finishers
-                    this.data.actions.VERHOLY.id,
-                    this.data.actions.VERFLARE.id,
-                    this.data.actions.SCORCH.id,
-                    this.data.actions.RESOLUTION.id,
+					// Finishers
+					this.data.actions.VERHOLY.id,
+					this.data.actions.VERFLARE.id,
+					this.data.actions.SCORCH.id,
+					this.data.actions.RESOLUTION.id,
 				],
 				globalCooldown: this.globalCooldown,
 				suggestionIcon,
@@ -94,7 +94,7 @@ export class Manafication extends BuffWindow {
 				</Trans>,
 				suggestionWindowName,
 				severityTiers: {
-                    1: SEVERITY.MEDIUM,
+					1: SEVERITY.MEDIUM,
 					2: SEVERITY.MAJOR,
 				},
 				adjustCount: this.adjustExpectedGcdCount.bind(this),
