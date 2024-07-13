@@ -31,6 +31,7 @@ const CONTRIBUTORS = ensureRecord<Contributor>()({
 			JOBS.BLACK_MAGE, JOBS.DANCER, JOBS.SAGE, JOBS.PICTOMANCER,
 		],
 	},
+
 	FALINDRITH: {
 		name: 'falindrith',
 		avatar: require('./avatar/falindrith.png'),
@@ -52,6 +53,16 @@ const CONTRIBUTORS = ensureRecord<Contributor>()({
 		avatar: require('./avatar/toastdeib.png'),
 		jobs: [
 			JOBS.NINJA,
+		],
+	},
+	MERCWRI: {
+		name: 'Mercwri',
+		avatar: require('./avatar/mercwri.png'),
+		jobs: [
+			JOBS.SCHOLAR,
+			JOBS.SAGE,
+			JOBS.SUMMONER,
+			JOBS.BLACK_MAGE,
 		],
 	},
 })

@@ -83,7 +83,7 @@ export class BattleLitany extends RaidBuffWindow {
 				},
 			],
 			suggestionIcon,
-			suggestionContent: <Trans id="drg.bl.suggestions.missedaction.content">Try to use as many of your oGCDs as possible during <ActionLink action="LANCE_CHARGE" />. Remember to keep your abilities on cooldown, when possible, to prevent them from drifting outside of your buff windows.</Trans>,
+			suggestionContent: <Trans id="drg.bl.suggestions.missedaction.content">Try to use as many of your oGCDs as possible during <ActionLink action="BATTLE_LITANY" />. Remember to keep your abilities on cooldown, when possible, to prevent them from drifting outside of your buff windows.</Trans>,
 			suggestionWindowName,
 			severityTiers: {
 				// there are 10 total CDs expected, we'll say missing half is major

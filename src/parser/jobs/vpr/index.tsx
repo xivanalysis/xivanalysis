@@ -1,27 +1,28 @@
-import {t} from '@lingui/macro'
-import TransMarkdown from 'components/ui/TransMarkdown'
-// import CONTRIBUTORS, {ROLES} from 'data/CONTRIBUTORS'
+import {Trans} from '@lingui/macro'
+import CONTRIBUTORS, {ROLES} from 'data/CONTRIBUTORS'
 import {Meta} from 'parser/core/Meta'
 import React from 'react'
 import {changelog} from './changelog'
-
-const description = t('vpr.about.description')`
-`
 
 export const VIPER = new Meta({
 	modules: () => import('./modules' /* webpackChunkName: "jobs-vpr" */),
 
 	Description: () => <>
-		<TransMarkdown source={description}/>
+		<Trans id ="vpr.about.description">
+			<p>Are you a fresh Viper, trying to make heads and tails of this strange serpent job and its offerings? Are you desperately trying to figure out how to make the most of your venomous abilities as you slither through the battlefield? Look no further!</p>
+			<p>VPR is a fast-paced melee job that uses the classic build and spend job gauge resource system to unleash a powerful burst window, all while gaining and using various buffs on themselves and maintaining a debuff on the enemy to maximize their damage output.</p>
+			<p>As such this XIVA Module focuses on ensuring you are making the most of your resources, and using your abilities to their fullest potential.</p>
+			<p>If see a lot of suggestions, don't worry and just take small bites at it! You'll be slithering through the battlefield and filling your foes with dread with ease in no time!</p>
+		</Trans>
 	</>,
 
 	supportedPatches: {
-		from: '✖',
-		to: '✖',
+		from: '7.0',
+		to: '7.0',
 	},
 
 	contributors: [
-	// {user: CONTRIBUTORS.YOU, role: ROLES.YOUR_ROLE},
+		{user: CONTRIBUTORS.RYAN, role: ROLES.MAINTAINER},
 	],
 
 	changelog,

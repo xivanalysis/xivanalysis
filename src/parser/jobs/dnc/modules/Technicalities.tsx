@@ -5,7 +5,8 @@ import {ActionKey} from 'data/ACTIONS'
 import {Event, Events} from 'event'
 import {filter, oneOf} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
-import {ExpectedGcdCountEvaluator, RaidBuffWindow} from 'parser/core/modules/ActionWindow'
+import {EvaluatedAction, ExpectedActionsEvaluator, ExpectedGcdCountEvaluator, LimitedActionsEvaluator, RaidBuffWindow, TrackedAction} from 'parser/core/modules/ActionWindow'
+import {HistoryEntry} from 'parser/core/modules/ActionWindow/History'
 import {GlobalCooldown} from 'parser/core/modules/GlobalCooldown'
 import {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
@@ -24,7 +25,30 @@ export const TECHNICAL_SEVERITY_TIERS = {
 	3: SEVERITY.MAJOR,
 }
 
-export const TECHNICAL_EXPECTED_GCDS = 9
+export const TECHNICAL_EXPECTED_GCDS = 8
+
+// Listed in descending order of potency
+const EXPECTED_TECHNICAL_GCDs: ActionKey[] = [
+	'DANCE_OF_THE_DAWN',
+	'FINISHING_MOVE',
+	'STARFALL_DANCE',
+	'TILLANA',
+	'LAST_DANCE',
+]
+
+const ALLOWED_TECHNICAL_GCDS: ActionKey[] = [
+	...EXPECTED_TECHNICAL_GCDs,
+	'SABER_DANCE',
+]
+
+const BAD_TECHNICAL_GCDS: ActionKey[] = [
+	'CASCADE',
+	'REVERSE_CASCADE',
+	'FOUNTAIN',
+	'WINDMILL',
+	'RISING_WINDMILL',
+	'BLADESHOWER',
+]
 
 export class Technicalities extends RaidBuffWindow {
 	static override handle = 'technicalities'
@@ -42,6 +66,10 @@ export class Technicalities extends RaidBuffWindow {
 
 	private buffActive = false
 	private badDevilments: number = 0
+
+	private expectedTechnicalGcds = EXPECTED_TECHNICAL_GCDs.map(key => this.data.actions[key])
+	private allowedTechnicalGcdIds = ALLOWED_TECHNICAL_GCDS.map(key => this.data.actions[key].id)
+	private badTechnicalGcds = BAD_TECHNICAL_GCDS.map(key => this.data.actions[key])
 
 	// If the log has multiple dancers in it, add the prepend warning message
 	override prependMessages = this.parser.pull.actors.filter(actor => actor.job === 'DANCER').length > 1 ? <Message>
@@ -74,16 +102,55 @@ export class Technicalities extends RaidBuffWindow {
 		this.addEventHook(technicalFilter.type('statusApply'), this.onApplyTechnicalFinish)
 		this.addEventHook(technicalFilter.type('statusRemove').source(this.parser.actor.id), this.onRemoveTechnicalFinish)
 
-		// We expect 9 GCDs in a Technical Finish window
+		const suggestionWindowName = <DataLink status="TECHNICAL_FINISH" showIcon={false}/>
+
 		this.addEvaluator(new ExpectedGcdCountEvaluator({
 			expectedGcds: TECHNICAL_EXPECTED_GCDS,
 			globalCooldown: this.globalCooldown,
 			hasStacks: false,
 			suggestionIcon: this.data.statuses.TECHNICAL_FINISH.icon,
 			suggestionContent: <Trans id="dnc.technicalities.suggestions.missedgcd.content">
-				Try to land 9 GCDs during every <DataLink status="TECHNICAL_FINISH" /> window. Don't wait until the end to use <DataLink action="TILLANA" /> or you may not be able to fit them all in.
+				Try to land {TECHNICAL_EXPECTED_GCDS} GCDs during every <DataLink status="TECHNICAL_FINISH" /> window.
 			</Trans>,
-			suggestionWindowName: <DataLink status="TECHNICAL_FINISH" showIcon={false}/>,
+			suggestionWindowName,
+			severityTiers: TECHNICAL_SEVERITY_TIERS,
+		}))
+
+		this.addEvaluator(new ExpectedActionsEvaluator({
+			expectedActions: [
+				...this.expectedTechnicalGcds.map<TrackedAction>(action => {
+					return {
+						action,
+						expectedPerWindow: action.id === this.data.actions.LAST_DANCE.id ? 2 : 1, // Expect 2 Last dances, and 1 of each of the other expected GCDs
+					}
+				}),
+				{
+					action: this.data.actions.FAN_DANCE_IV, // we also expect one FD4 oGCD
+					expectedPerWindow: 1,
+				},
+			],
+			suggestionIcon: this.data.actions.DANCE_OF_THE_DAWN.icon,
+			suggestionContent: <Trans id="dnc.technicalities.suggestions.missedaction.content">In order to maximize your damage, every <DataLink status="TECHNICAL_FINISH"/> window should contain the expected GCDs indicated in the table.</Trans>,
+			suggestionWindowName,
+			severityTiers: {
+				1: SEVERITY.MEDIUM, // Even harsher than the GCD count tiers, since this really starts eating into your potency
+				3: SEVERITY.MAJOR,
+			},
+			adjustCount: this.adjustExpectedCounts.bind(this),
+		}))
+
+		this.addEvaluator(new LimitedActionsEvaluator({
+			expectedActions: this.badTechnicalGcds.map<TrackedAction>(action => {
+				return {
+					action,
+					expectedPerWindow: 0,
+				}
+			}),
+			suggestionIcon: this.data.statuses.TECHNICAL_FINISH.icon,
+			suggestionContent: <Trans id="dnc.technicalities.suggestions.avoidactions.content">
+				Avoid using your combo and proc GCDs during your <DataLink showIcon={false} status="TECHNICAL_FINISH" /> window, as their potency is lower than the expected actions. If you run out of Esprit, using a <DataLink action="FOUNTAINFALL" />, or a <DataLink action="BLOODSHOWER" /> with enough targets, is acceptable.
+			</Trans>,
+			suggestionWindowName: suggestionWindowName,
 			severityTiers: TECHNICAL_SEVERITY_TIERS,
 		}))
 
@@ -92,6 +159,27 @@ export class Technicalities extends RaidBuffWindow {
 
 		// Evaluate whether the player missed finishing Standard Steps initiated within a window
 		this.addEvaluator(new LateStandardEvaluator(this.data.actions.STANDARD_STEP))
+	}
+
+	private adjustExpectedCounts(window: HistoryEntry<EvaluatedAction[]>, action: TrackedAction) {
+		if (this.isRushedEndOfPullWindow(window)) {
+			return action.expectedPerWindow * -1 // If it's a rushed window, don't expect anything in particular, just let 'em get what they get
+		}
+		if (action.action.id !== this.data.actions.LAST_DANCE.id) { return 0 } // No adjustments for anything other than Last Dance
+
+		// No need to adjust if they already got the expected amount
+		if (window.data.filter(event => event.action.id === this.data.actions.LAST_DANCE.id).length >= action.expectedPerWindow) {
+			return 0
+		}
+
+		// If the window included only the allowed GCDs, they had a lot of Esprit to burn.
+		// Since Saber Dance has the same potency, we can allow them to only hit one Last Dance
+		if (window.data.filter(event => this.allowedTechnicalGcdIds.includes(event.action.id)).length === window.data.length) {
+			return -1
+		}
+
+		// Otherwise no adjustment
+		return 0
 	}
 
 	// Open new windows to deal with 6.4+ buff timing weirdness

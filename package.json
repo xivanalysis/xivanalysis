@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "start": "webpack serve --hot --mode development --open",
+    "start": "webpack serve --hot --mode development",
     "build": "webpack --mode production",
     "test": "jest",
     "lint": "eslint src",
@@ -140,5 +140,6 @@
     "webpack-cli": "^4.3.1",
     "webpack-dev-server": "^4.0.0-beta.0",
     "webpackbar": "^5.0.0-3"
-  }
+  },
+  "packageManager": "yarn@1.22.21+sha1.1959a18351b811cdeedbd484a8f86c3cc3bbaf72"
 }

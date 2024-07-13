@@ -19,11 +19,7 @@ interface StatusConfig {
 
 const TRACKED_STATUSES: StatusConfig[] = [
 	{key: 'THE_BALANCE', group: 'arcanum', name: 'Arcanum'},
-	{key: 'THE_ARROW', group: 'arcanum', name: 'Arcanum'},
 	{key: 'THE_SPEAR', group: 'arcanum', name: 'Arcanum'},
-	{key: 'THE_BOLE', group: 'arcanum', name: 'Arcanum'},
-	{key: 'THE_EWER', group: 'arcanum', name: 'Arcanum'},
-	{key: 'THE_SPIRE', group: 'arcanum', name: 'Arcanum'},
 	{key: 'DIVINATION'},
 	{key: 'BATTLE_LITANY'},
 	{key: 'BATTLE_VOICE'},

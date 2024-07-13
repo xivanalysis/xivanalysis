@@ -19,3 +19,9 @@ export function getMetadataForWindow(window: HistoryEntry<EvaluatedAction[]>, me
 	}
 	return windowMetadataEntry.data
 }
+
+export function getPreviousMetadata(window: HistoryEntry<EvaluatedAction[]>, metadataHistory: History<CycleMetadata>): CycleMetadata | undefined {
+	const previousHistoryEntries = metadataHistory.entries.filter(entry => (entry.end ?? window.start) <= window.start)
+	if (previousHistoryEntries.length === 0) { return }
+	return previousHistoryEntries[previousHistoryEntries.length - 1].data
+}

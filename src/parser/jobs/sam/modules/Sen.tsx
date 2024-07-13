@@ -28,10 +28,10 @@ const KENKI_PER_SEN = 10
 
 const SEN_HANDLING = {
 	NONE: {priority: 0, message: <> No errors </>},
+	HAGAKURE: {priority: 10, message: <Trans id = "sam.sen.sen_handling.hagakure"> Contains a Standard Filler Hagakure. </Trans>},
+	NON_STANDARD_HAGAKURE: {priority: 15, message: <Trans id = "sam.sen.sen_handling.d_hagakure"> Contains a Non-Standard use of Hagakure. </Trans>},
 	OVERWROTE_SEN: {priority: 20, message: <Trans id = "sam.sen.sen_handling.overwrote_sen"> Contains a Overwritten Sen. </Trans>},
 	OVERWROTE_SENS: {priority: 25, message: <Trans id = "sam.sen.sen_handling.overwrote_sens"> Contains Overwritten Sens. </Trans>},
-	HAGAKURE: {priority: 10, message: <Trans id = "sam.sen.sen_handling.hagakure"> Contains a Standard Filler Hagakure. </Trans>},
-	D_HAGAKURE: {priority: 15, message: <Trans id = "sam.sen.sen_handling.d_hagakure"> Contains a Non-Standard use of Hagakure. </Trans>},
 	DEATH: {priority: 30, message: <Trans id = "sam.sen.sen_handling.death"> Contains your death. </Trans>}, // BET YOU WISH YOU USED THIRD EYE NOW RED!
 }
 
@@ -51,9 +51,9 @@ class SenState {
 	rotation: Array<Events['action']>
 	isNonStandard: boolean = false // Aka Hagakure + Overwrites, used to filter later.
 	isDone: boolean = false // I SWEAR TO GOD IF THIS JANK THING WORKS, I'M LEAVING IT
-	isDeath: boolean = false // DIE! DIE! DIE! -Reaper
-	isHaga: boolean = false // is it a haga or no?
-	isOverwrite: boolean = false // is it a overwrite or no?
+	isDeath: boolean = false
+	hasHagakure: boolean = false
+	hasOverwrite: boolean = false
 
 	// Sen State trackers, do I really need to explain?
 	currentSetsu: number = 0
@@ -131,7 +131,9 @@ export class Sen extends Analyser {
 	SEN_REMOVERS = [
 		this.data.actions.HIGANBANA.id,
 		this.data.actions.TENKA_GOKEN.id,
+		this.data.actions.TENDO_GOKEN.id,
 		this.data.actions.MIDARE_SETSUGEKKA.id,
+		this.data.actions.TENDO_SETSUGEKKA.id,
 		this.data.actions.HAGAKURE.id,
 	]
 
@@ -153,8 +155,16 @@ export class Sen extends Analyser {
 		// Sen Spenders
 		this.data.actions.HIGANBANA.id,
 		this.data.actions.TENKA_GOKEN.id,
+		this.data.actions.TENDO_GOKEN.id,
+		this.data.actions.TENDO_SETSUGEKKA.id,
 		this.data.actions.MIDARE_SETSUGEKKA.id,
 		this.data.actions.HAGAKURE.id,
+
+		//Tsubames
+		this.data.actions.KAESHI_GOKEN.id,
+		this.data.actions.TENDO_KAESHI_GOKEN.id,
+		this.data.actions.TENDO_KAESHI_SETSUGEKKA.id,
+		this.data.actions.KAESHI_SETSUGEKKA.id,
 
 		// I'm leaving these in as they are a way to handle Filler. not the usual way, but a way
 		this.data.actions.ENPI.id,
@@ -225,7 +235,7 @@ export class Sen extends Analyser {
 				if (lastSenState.currentSetsu > 1) {
 					lastSenState.overwriteSetsus++
 					lastSenState.currentSetsu = 1
-					lastSenState.isOverwrite = true
+					lastSenState.hasOverwrite = true
 				}
 				break
 
@@ -237,7 +247,7 @@ export class Sen extends Analyser {
 				if (lastSenState.currentGetsu > 1) {
 					lastSenState.overwriteGetsus++
 					lastSenState.currentGetsu = 1
-					lastSenState.isOverwrite = true
+					lastSenState.hasOverwrite = true
 				}
 
 				break
@@ -250,7 +260,7 @@ export class Sen extends Analyser {
 				if (lastSenState.currentKa > 1) {
 					lastSenState.overwriteKas++
 					lastSenState.currentKa = 1
-					lastSenState.isOverwrite = true
+					lastSenState.hasOverwrite = true
 				}
 
 				break
@@ -296,20 +306,20 @@ export class Sen extends Analyser {
 				lastSenState._senCode = SEN_HANDLING.DEATH
 				lastSenState.isNonStandard = true
 				this.nonStandardCount++
-			} else if (lastSenState.isOverwrite === true && lastSenState.wastedSens > 1) {
+			} else if (lastSenState.hasOverwrite === true && lastSenState.wastedSens > 1) {
 				lastSenState._senCode = SEN_HANDLING.OVERWROTE_SENS
 				lastSenState.isNonStandard = true
 				this.nonStandardCount++
-			} else if (lastSenState.isOverwrite === true) {
+			} else if (lastSenState.hasOverwrite === true) {
 				lastSenState._senCode = SEN_HANDLING.OVERWROTE_SEN
 				lastSenState.isNonStandard = true
 				this.nonStandardCount++
-			} else if (lastSenState.isHaga === true && lastSenState.currentSens > 1) {
-				lastSenState._senCode = SEN_HANDLING.D_HAGAKURE
+			} else if (lastSenState.hasHagakure === true && lastSenState.currentSens > 1) {
+				lastSenState._senCode = SEN_HANDLING.NON_STANDARD_HAGAKURE
 				lastSenState.isNonStandard = true
 				this.nonStandardCount++
 				this.hagakureCount++
-			} else if (lastSenState.isHaga === true) {
+			} else if (lastSenState.hasHagakure === true) {
 				lastSenState._senCode = SEN_HANDLING.HAGAKURE
 				lastSenState.isNonStandard = true
 				this.nonStandardCount++
@@ -328,7 +338,7 @@ export class Sen extends Analyser {
 
 			if (action.id === this.data.actions.HAGAKURE.id) {
 				lastSenState.kenkiGained = lastSenState.currentSens * KENKI_PER_SEN
-				lastSenState.isHaga = true
+				lastSenState.hasHagakure = true
 
 				this.kenki.onHagakure(lastSenState.kenkiGained)
 			}
@@ -376,7 +386,7 @@ export class Sen extends Analyser {
 			this.suggestions.add(new Suggestion({
 				icon: this.data.actions.HAGAKURE.icon,
 				content: <Trans id = "sam.sen.no_hagakure.message"> <ActionLink {...this.data.actions.HAGAKURE}/> is a powerful tool that should be used to help keep your rotation looping smoothly. Use it to handle your filler phase of your rotation. </Trans>,
-				severity: SEVERITY.MAJOR,
+				severity: SEVERITY.MINOR,
 				why: <Trans id = "sam.sen.suggestion.no_hagakure.why"> You never cast hagakure this fight. </Trans>,
 			}))
 		}

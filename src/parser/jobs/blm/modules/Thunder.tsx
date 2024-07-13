@@ -2,7 +2,6 @@ import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
 import {DataLink, ActionLink} from 'components/ui/DbLink'
 import NormalisedMessage from 'components/ui/NormalisedMessage'
-import styles from 'components/ui/Procs/ProcOverlay.module.css'
 import {Event, Events} from 'event'
 import {Analyser} from 'parser/core/Analyser'
 import {filter} from 'parser/core/filter'
@@ -16,16 +15,14 @@ import Suggestions, {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions
 import React, {ReactNode} from 'react'
 import {Accordion, Table, Message} from 'semantic-ui-react'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
-import Procs from './Procs'
 
 const MAX_ALLOWED_BAD_GCD_THRESHOLD = 2000
-const MAX_ALLOWED_T3_CLIPPING = 3000
+const MAX_ALLOWED_CLIPPING = 3000
 
 interface ThunderApplicationData {
 	event: Events['statusApply'],
 	clip?: number,
 	source: number,
-	proc: boolean
 }
 interface ThunderStatusData {
 	lastApplication: number,
@@ -47,50 +44,43 @@ export class Thunder extends Analyser {
 	@dependency private checklist!: Checklist
 	@dependency private data!: Data
 	@dependency private invulnerability!: Invulnerability
-	@dependency private procs!: Procs
 	@dependency private statuses!: Statuses
 	@dependency private suggestions!: Suggestions
 
 	// Can never be too careful :blobsweat:
 	private readonly STATUS_DURATION = {
-		[this.data.statuses.THUNDER_III.id]: this.data.statuses.THUNDER_III.duration,
-		[this.data.statuses.THUNDERHEAD.id]: this.data.statuses.THUNDERHEAD.duration,
+		[this.data.statuses.HIGH_THUNDER.id]: this.data.statuses.HIGH_THUNDER.duration,
 	}
 
-    private thunder3Casts = 0
-    private lastThunderProc: boolean = false
-    private lastThunderCast: number = this.data.statuses.THUNDER_III.id
+    private thunderCasts = 0
+	private totalThunderClip = 0
+    private lastThunderCast: number = this.data.statuses.HIGH_THUNDER.id
 	private clip: {[key: number]: number} = {
-		[this.data.statuses.THUNDER_III.id]: 0,
+		[this.data.statuses.HIGH_THUNDER.id]: 0,
 	}
 	private tracker: ThunderApplicationTracker = {}
 
 	override initialise() {
 		const playerFilter = filter<Event>().source(this.parser.actor.id)
-		this.addEventHook(playerFilter.type('action').action(this.data.actions.THUNDER_III.id), this.onDotCast)
-		this.addEventHook(playerFilter.type('statusApply').status(this.data.statuses.THUNDER_III.id), this.onDotApply)
+		this.addEventHook(playerFilter.type('action').action(this.data.actions.HIGH_THUNDER.id), this.onDotCast)
+		this.addEventHook(playerFilter.type('statusApply').status(this.data.statuses.HIGH_THUNDER.id), this.onDotApply)
 		this.addEventHook('complete', this.onComplete)
 	}
 
 	private createTargetApplicationList() {
 		return {
-			[this.data.statuses.THUNDER_III.id]: [],
+			[this.data.statuses.HIGH_THUNDER.id]: [],
 		}
 	}
 
 	private pushApplication(targetKey: string, statusId: number, event: Events['statusApply'], clip?: number) {
 		const target = this.tracker[targetKey] = this.tracker[targetKey] || this.createTargetApplicationList()
-		const proc = this.lastThunderProc
 		const source = this.lastThunderCast
-		target[statusId].applications.push({event, clip, source, proc})
-		this.lastThunderProc = false
+		target[statusId].applications.push({event, clip, source})
 	}
 
 	private onDotCast(event: Events['action']) {
-		this.thunder3Casts++
-		if (this.procs.checkEventWasProc(event)) {
-			this.lastThunderProc = true
-		}
+		this.thunderCasts++
 		this.lastThunderCast = event.action
 	}
 
@@ -124,35 +114,35 @@ export class Thunder extends Analyser {
 
 	// Get the uptime percentage for the Thunder status debuff
 	private getThunderUptime() {
-		const statusTime = this.statuses.getUptime(this.data.statuses.THUNDER_III, this.actors.foes)
+		const statusTime = this.statuses.getUptime(this.data.statuses.HIGH_THUNDER, this.actors.foes)
 		const uptime = this.parser.currentDuration - this.invulnerability.getDuration({types: ['invulnerable']})
 		return (statusTime / uptime) * 100
 	}
 
 	private onComplete() {
-		// Checklist item for keeping Thunder 3 DoT rolling
+		// Checklist item for keeping Thunder DoT rolling
 		this.checklist.add(new Rule({
-			name: <Trans id="blm.thunder.checklist.dots.name">Keep your <DataLink status="THUNDER_III" /> DoT up</Trans>,
+			name: <Trans id="blm.thunder.checklist.dots.name">Keep your <DataLink status="HIGH_THUNDER" /> DoT up</Trans>,
 			description: <Trans id="blm.thunder.checklist.dots.description">
-				Your <DataLink status="THUNDER_III" /> DoT contributes significantly to your overall damage, both on its own, and from additional <DataLink status="THUNDERHEAD" /> procs. Try to keep the DoT applied.
+				Your <DataLink status="HIGH_THUNDER" /> DoT contributes significantly to your overall damage. Try to keep the DoT applied.
 			</Trans>,
 			target: 95,
 			requirements: [
 				new Requirement({
-					name: <Trans id="blm.thunder.checklist.dots.requirement.name"><DataLink status="THUNDER_III" /> uptime</Trans>,
+					name: <Trans id="blm.thunder.checklist.dots.requirement.name"><DataLink status="HIGH_THUNDER" /> uptime</Trans>,
 					percent: () => this.getThunderUptime(),
 				}),
 			],
 		}))
 
-		// Suggestions to not spam T3 too much
-		const sumClip = this.clip[this.data.statuses.THUNDER_III.id]
-		const maxExpectedClip = (this.thunder3Casts - 1) * MAX_ALLOWED_T3_CLIPPING
+		// Suggestions to not spam thunder too much
+		const sumClip = this.clip[this.data.statuses.HIGH_THUNDER.id]
+		const maxExpectedClip = Math.max((this.thunderCasts - 1) * MAX_ALLOWED_CLIPPING, 0) // Stop this from looking dumb if the player never cast thunder at all...
 		if (sumClip > maxExpectedClip) {
 			this.suggestions.add(new Suggestion({
-				icon: this.data.actions.THUNDER_III.icon,
+				icon: this.data.actions.HIGH_THUNDER.icon,
 				content: <Trans id="blm.thunder.suggestions.excess-thunder.content">
-					Casting <DataLink action="THUNDER_III" /> too frequently can cause you to lose DPS by casting fewer <DataLink action="FIRE_IV" />. Try not to cast <DataLink showIcon={false} action="THUNDER_III" /> unless your <DataLink status="THUNDER_III" /> DoT or <DataLink status="THUNDERHEAD" /> proc are about to wear off.
+					Casting <DataLink action="HIGH_THUNDER" /> too frequently can cause you to lose DPS by casting fewer <DataLink action="FIRE_IV" />. Try not to cast <DataLink showIcon={false} action="HIGH_THUNDER" /> unless your <DataLink showIcon={false} status="HIGH_THUNDER" /> DoT or <DataLink status="THUNDERHEAD" /> proc are about to wear off.
 					Check the <a href="#" onClick={e => { e.preventDefault(); this.parser.scrollTo(Thunder.handle) }}><NormalisedMessage message={Thunder.title}/></a> module for more information.
 				</Trans>,
 				severity: sumClip > 2 * maxExpectedClip ? SEVERITY.MAJOR : SEVERITY.MEDIUM,
@@ -164,46 +154,47 @@ export class Thunder extends Analyser {
 	}
 
 	private createTargetStatusTable(target: ThunderTargetData) {
-		let totalThunderClip = 0
 		return	<Table collapsing unstackable>
 			<Table.Header>
 				<Table.Row>
-					<Table.HeaderCell><DataLink action="THUNDER_III" /> <Trans id="blm.thunder.applied">Applied</Trans></Table.HeaderCell>
+					<Table.HeaderCell><DataLink action="HIGH_THUNDER" /> <Trans id="blm.thunder.applied">Applied</Trans></Table.HeaderCell>
 					<Table.HeaderCell><Trans id="blm.thunder.clip">Clip</Trans></Table.HeaderCell>
 					<Table.HeaderCell><Trans id="blm.thunder.total-clip">Total Clip</Trans></Table.HeaderCell>
 					<Table.HeaderCell><Trans id="blm.thunder.source">Source</Trans></Table.HeaderCell>
 				</Table.Row>
 			</Table.Header>
 			<Table.Body>
-				{target[this.data.statuses.THUNDER_III.id].applications.map(
-					(event) => {
-						const thisClip = event.clip || 0
-						totalThunderClip += thisClip
-						const action = this.data.getAction(event.source)
-						let icon = <ActionLink showName={false} {...action} />
-						//if we have a clip, overlay the proc.png over the actionlink image
-						if (event.proc) {
-							icon = <div className={styles.procOverlay}><ActionLink showName={false} {...action} /></div>
-						}
-						const renderClipTime = event.clip != null ? this.parser.formatDuration(event.clip) : '-'
-						let clipSeverity: ReactNode = renderClipTime
-						// Make it white for expected clipping, yellow if the GCD aligned poorly, and red if it was definitely clipped too hard
-						if (thisClip > MAX_ALLOWED_T3_CLIPPING && thisClip <= MAX_ALLOWED_T3_CLIPPING + MAX_ALLOWED_BAD_GCD_THRESHOLD) {
-							clipSeverity = <span className="text-warning">{clipSeverity}</span>
-						}
-						if (thisClip > MAX_ALLOWED_T3_CLIPPING + MAX_ALLOWED_BAD_GCD_THRESHOLD) {
-							clipSeverity = <span className="text-error">{clipSeverity}</span>
-						}
-						return <Table.Row key={event.event.timestamp}>
-							<Table.Cell>{this.parser.formatEpochTimestamp(event.event.timestamp)}</Table.Cell>
-							<Table.Cell>{clipSeverity}</Table.Cell>
-							<Table.Cell>{totalThunderClip ? this.parser.formatDuration(totalThunderClip) : '-'}</Table.Cell>
-							<Table.Cell style={{textAlign: 'center'}}>{icon}</Table.Cell>
-						</Table.Row>
-					})}
+				{
+					target[this.data.statuses.HIGH_THUNDER.id].applications.map(
+						(event) => this.buildThunderTableRow(event)
+					)
+				}
 			</Table.Body>
 		</Table>
 
+	}
+
+	private buildThunderTableRow(event: ThunderApplicationData): ReactNode {
+		const thisClip = event.clip || 0
+		this.totalThunderClip += thisClip
+		const action = this.data.getAction(event.source)
+		const icon = <ActionLink showName={false} {...action} />
+		const renderClipTime = event.clip != null ? this.parser.formatDuration(event.clip) : '-'
+		let clipSeverity: ReactNode = renderClipTime
+		// Make it white for expected clipping, yellow if the GCD aligned poorly, and red if it was definitely clipped too hard
+		if (thisClip > MAX_ALLOWED_CLIPPING && thisClip <= MAX_ALLOWED_CLIPPING + MAX_ALLOWED_BAD_GCD_THRESHOLD) {
+			clipSeverity = <span className="text-warning">{clipSeverity}</span>
+		}
+		if (thisClip > MAX_ALLOWED_CLIPPING + MAX_ALLOWED_BAD_GCD_THRESHOLD) {
+			clipSeverity = <span className="text-error">{clipSeverity}</span>
+		}
+
+		return <Table.Row key={event.event.timestamp}>
+			<Table.Cell>{this.parser.formatEpochTimestamp(event.event.timestamp)}</Table.Cell>
+			<Table.Cell>{clipSeverity}</Table.Cell>
+			<Table.Cell>{this.totalThunderClip ? this.parser.formatDuration(this.totalThunderClip) : '-'}</Table.Cell>
+			<Table.Cell style={{textAlign: 'center'}}>{icon}</Table.Cell>
+		</Table.Row>
 	}
 
 	override output() {
