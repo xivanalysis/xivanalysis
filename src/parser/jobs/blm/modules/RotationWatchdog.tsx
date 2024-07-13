@@ -99,7 +99,6 @@ export class RotationWatchdog extends RestartWindow {
 		expectedFire4s: -1,
 		expectedDespairs: -1,
 		expectedFlareStars: -1,
-		thundersInFireCount: 0,
 		firePhaseMetadata: {
 			startTime: 0,
 			initialMP: 0,
@@ -193,7 +192,8 @@ export class RotationWatchdog extends RestartWindow {
 		//#region Evaluators that only apply to windows that ended in downtime
 
 		this.addEvaluator(new SkipThunderEvaluator({
-			suggestionIcon: this.data.actions.FIRE_IV.icon,
+			suggestionIcon: this.data.actions.HIGH_THUNDER.icon,
+			thunderSpellIds: this.thunderSpellIds,
 			metadataHistory: this.metadataHistory,
 		}))
 
@@ -381,9 +381,6 @@ export class RotationWatchdog extends RestartWindow {
 			) {
 				adjustment++
 			}
-
-			const firePhaseEvents = window.data.filter(event => event.timestamp >= windowMetadata.firePhaseMetadata.startTime)
-			windowMetadata.thundersInFireCount = firePhaseEvents.filter(event => this.thunderSpellIds.includes(event.action.id)).length
 
 			// Make sure we don't go wild and return a larger expected count than is actually possible, in case the above logic misbehaves...
 			adjustment = Math.min(adjustment, MAX_POSSIBLE_FIRE4)

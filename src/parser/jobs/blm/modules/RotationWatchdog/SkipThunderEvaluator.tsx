@@ -9,15 +9,18 @@ import {CycleMetadata, ROTATION_ERRORS, ENHANCED_SEVERITY_TIERS} from './Watchdo
 
 export interface SkipThunderEvaluatorOpts {
 	suggestionIcon: string
+	thunderSpellIds: number[]
 	metadataHistory: History<CycleMetadata>
 }
 
 export class SkipThunderEvaluator implements WindowEvaluator {
 	private suggestionIcon: string
+	private thunderSpellIds: number[]
 	private metadataHistory: History<CycleMetadata>
 
 	constructor(opts: SkipThunderEvaluatorOpts) {
 		this.suggestionIcon = opts.suggestionIcon
+		this.thunderSpellIds = opts.thunderSpellIds
 		this.metadataHistory = opts.metadataHistory
 	}
 
@@ -28,10 +31,13 @@ export class SkipThunderEvaluator implements WindowEvaluator {
 
 			if (!windowMetadata.finalOrDowntime) { return total } // This suggestion only applies to windows that end with downtime
 
+			const firePhaseEvents = window.data.filter(event => event.timestamp >= windowMetadata.firePhaseMetadata.startTime)
+			const thundersInFireCount = firePhaseEvents.filter(event => this.thunderSpellIds.includes(event.action.id)).length
+
 			// Thunder initial potency isn't worth it if the DoT is going to go to waste before the boss jumps or dies, and a fire spell could have been used instead
-			if (windowMetadata.thundersInFireCount > 0 && (windowMetadata.missingFire4s || windowMetadata.missingDespairs || windowMetadata.missingFlareStars)) {
+			if (thundersInFireCount > 0 && (windowMetadata.missingFire4s || windowMetadata.missingDespairs || windowMetadata.missingFlareStars)) {
 				assignErrorCode(windowMetadata, ROTATION_ERRORS.SHOULD_SKIP_T3)
-				return total + windowMetadata.thundersInFireCount
+				return total + thundersInFireCount
 			}
 
 			return total
