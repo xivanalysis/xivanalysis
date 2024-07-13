@@ -4,6 +4,7 @@ import {AoEUsages} from './AoEUsages'
 import {CooldownDowntime} from './CooldownDowntime'
 import {Defensives} from './Defensives'
 import {Gauge} from './Gauge'
+import Procs from './Procs'
 import {Swiftcast} from './Swiftcast'
 
 export default [
@@ -12,6 +13,7 @@ export default [
 	Defensives,
 	Gauge,
 	Interrupts,
+	Procs,
 	Swiftcast,
 	Tincture,
 ]
