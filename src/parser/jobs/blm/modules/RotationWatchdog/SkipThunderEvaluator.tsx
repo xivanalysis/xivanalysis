@@ -7,16 +7,16 @@ import React from 'react'
 import {assignErrorCode, getMetadataForWindow} from './EvaluatorUtilities'
 import {CycleMetadata, ROTATION_ERRORS, ENHANCED_SEVERITY_TIERS} from './WatchdogConstants'
 
-export interface SkipT3EvaluatorOpts {
+export interface SkipThunderEvaluatorOpts {
 	suggestionIcon: string
 	metadataHistory: History<CycleMetadata>
 }
 
-export class SkipT3Evaluator implements WindowEvaluator {
+export class SkipThunderEvaluator implements WindowEvaluator {
 	private suggestionIcon: string
 	private metadataHistory: History<CycleMetadata>
 
-	constructor(opts: SkipT3EvaluatorOpts) {
+	constructor(opts: SkipThunderEvaluatorOpts) {
 		this.suggestionIcon = opts.suggestionIcon
 		this.metadataHistory = opts.metadataHistory
 	}

@@ -4,7 +4,8 @@ import {DataLink} from 'components/ui/DbLink'
 import {RotationEvent} from 'components/ui/Rotation'
 import {RotationTargetOutcome} from 'components/ui/RotationTable'
 import {ActionKey} from 'data/ACTIONS'
-import {Events} from 'event'
+import {Event, Events} from 'event'
+import {filter} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
 import {EvaluatedAction, RestartWindow, TrackedAction} from 'parser/core/modules/ActionWindow'
 import {History, HistoryEntry} from 'parser/core/modules/ActionWindow/History'
@@ -13,7 +14,7 @@ import {Actors} from 'parser/core/modules/Actors'
 import {Invulnerability} from 'parser/core/modules/Invulnerability'
 import {UnableToAct} from 'parser/core/modules/UnableToAct'
 import React, {Fragment} from 'react'
-import {Icon, Message} from 'semantic-ui-react'
+import {Message} from 'semantic-ui-react'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 import {FIRE_SPELLS, ICE_SPELLS} from './Elements'
 import {ASTRAL_UMBRAL_DURATION, ASTRAL_UMBRAL_MAX_STACKS, BLMGaugeState, UMBRAL_HEARTS_MAX_STACKS} from './Gauge'
@@ -24,10 +25,9 @@ import {ExpectedFireSpellsEvaluator} from './RotationWatchdog/ExpectedFireSpells
 import {ExtraF1Evaluator} from './RotationWatchdog/ExtraF1Evaluator'
 import {IceMageEvaluator} from './RotationWatchdog/IceMageEvaluator'
 import {ManafontTimingEvaluator} from './RotationWatchdog/ManafontTimingEvaluator'
-import {MissedIceParadoxEvaluator} from './RotationWatchdog/MissedIceParadoxEvaluator'
 import {RotationErrorNotesEvaluator} from './RotationWatchdog/RotationErrorNotesEvaluator'
 import {SkipB4Evaluator} from './RotationWatchdog/SkipB4Evaluator'
-import {SkipT3Evaluator} from './RotationWatchdog/SkipT3Evaluator'
+import {SkipThunderEvaluator} from './RotationWatchdog/SkipThunderEvaluator'
 import {UptimeSoulsEvaluator} from './RotationWatchdog/UptimeSoulsEvaluator'
 import {CycleMetadata, ROTATION_ERRORS, HIDDEN_PRIORITY_THRESHOLD} from './RotationWatchdog/WatchdogConstants'
 
@@ -75,18 +75,9 @@ export class RotationWatchdog extends RestartWindow {
 	override prependMessages = <Fragment>
 		<Message>
 			<Trans id="blm.rotation-watchdog.rotation-table.message">
-				The core of BLM consists of six casts of <DataLink action="FIRE_IV"/>, two casts of <DataLink action="PARADOX"/> and one cast <DataLink action="DESPAIR"/> per rotation.<br/>
-				With <DataLink action="MANAFONT"/>, an extra cast each of <DataLink action="FIRE_IV"/> and <DataLink action="DESPAIR"/> are expected.<br/>
-				Avoid missing <DataLink action="FIRE_IV" showIcon={false} /> casts where possible.
+				The core of BLM consists of six casts of <DataLink action="FIRE_IV"/>, and one cast each of <DataLink action="PARADOX"/>, <DataLink action="DESPAIR"/>, and <DataLink action="FLARE_STAR" /> per rotation.<br/>
+				Avoid missing <DataLink action="FIRE_IV" showIcon={false} /> casts where possible. since that will prevent you from using <DataLink showIcon={false} action="FLARE_STAR" />.
 			</Trans>
-		</Message>
-		<Message warning icon>
-			<Icon name="warning sign"/>
-			<Message.Content>
-				<Trans id="blm.rotation-watchdog.rotation-table.disclaimer">This module assumes you are following the standard BLM playstyle.<br/>
-					Suggestions will focus on improving standard play, but non-standard lines shouldn't be treated as an error by this report.
-				</Trans>
-			</Message.Content>
 		</Message>
 	</Fragment>
 
@@ -124,6 +115,9 @@ export class RotationWatchdog extends RestartWindow {
 
 		this.ignoreActions([this.data.actions.ATTACK.id])
 
+		this.addEventHook(filter<Event>().source(this.parser.actor.id).type('action')
+			.action(this.data.actions.MANAFONT.id), this.onManafont)
+
 		this.addEventHook('blmgauge', this.onGaugeEvent)
 		this.addEventHook({
 			type: 'death',
@@ -155,8 +149,6 @@ export class RotationWatchdog extends RestartWindow {
 			adjustOutcome: this.adjustExpectedActionsOutcome.bind(this),
 		}))
 
-		this.addEvaluator(new MissedIceParadoxEvaluator(this.metadataHistory))
-
 		this.addEvaluator(new ManafontTimingEvaluator({
 			manafontAction: this.data.actions.MANAFONT,
 			despairId: this.data.actions.DESPAIR.id,
@@ -186,7 +178,7 @@ export class RotationWatchdog extends RestartWindow {
 
 		//#region Evaluators that only apply to windows that ended in downtime
 
-		this.addEvaluator(new SkipT3Evaluator({
+		this.addEvaluator(new SkipThunderEvaluator({
 			suggestionIcon: this.data.actions.FIRE_IV.icon,
 			metadataHistory: this.metadataHistory,
 		}))
@@ -203,6 +195,12 @@ export class RotationWatchdog extends RestartWindow {
 		this.addEvaluator(new RotationErrorNotesEvaluator(this.metadataHistory))
 
 		this.onWindowStart(this.parser.pull.timestamp)
+	}
+
+	// Special handling for Manafont, we want to show it as both the end and start of the windows it's involved in
+	private onManafont(event: Events['action']) {
+		super.onWindowAction(event)
+		super.onWindowRestart(event)
 	}
 
 	private onDeath() {
@@ -279,6 +277,13 @@ export class RotationWatchdog extends RestartWindow {
 		if (event.action === this.data.actions.TRANSPOSE.id && this.currentGaugeState.umbralIce > 0) {
 			return
 		}
+
+		// Do not start a new window if we're using B3 to go from partial UI to full
+		// Tranpose > instant B3 is a minor gain over hardcast hot B3
+		if (event.action === this.data.actions.BLIZZARD_III.id && this.currentGaugeState.umbralIce > 0 && this.currentGaugeState.umbralIce < ASTRAL_UMBRAL_MAX_STACKS) {
+			return
+		}
+
 		super.onWindowRestart(event)
 	}
 
