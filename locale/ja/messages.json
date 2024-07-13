@@ -932,6 +932,8 @@
   "sch.overheal.hot.name": "野戦治療の陣",
   "sch.overheal.pet.name": "フェアリー",
   "sch.overheal.pethot.name": "フェアリー(HoT)",
+  "sch.procs.suggestions.missed-impacts.content": "",
+  "sch.procs.suggestions.missed-impacts.why": "",
   "sch.swiftcast.missed.suggestion.content": "<0/>の効果時間が切れる前に魔法を使用してください。これにより、素早く組成するための<1/>や、アビリティを挟むための<2/>など、詠唱時間を持つ魔法を無詠唱で使用することができます。",
   "sch.weaving.content": "<0/>, <1/>, <2/>はGCDの時間を超えない範囲で挟み込みましょう。挟み込みのやりすぎは次のGCDスキルの遅れを招き、アクティブ率の低下につながります。{0} モジュールで詳細を確認してください。",
   "sge.about.description": "\nこのアナライザーは戦闘中に起きたことについてのより深い洞察を提供するとともに、賢者の操作を手軽に改善できるようにすることを目指しています。\n\nもっと賢者について知りたい場合は、[The Balance](https://thebalanceffxiv.com/)上のガイドをチェックして、#sge_questionsチャンネルに入ってください。\n",

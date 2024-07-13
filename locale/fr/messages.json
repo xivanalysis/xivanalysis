@@ -932,6 +932,8 @@
   "sch.overheal.hot.name": "Dogme de survie",
   "sch.overheal.pet.name": "Fée",
   "sch.overheal.pethot.name": "Soins sur la durée de la fée",
+  "sch.procs.suggestions.missed-impacts.content": "",
+  "sch.procs.suggestions.missed-impacts.why": "",
   "sch.swiftcast.missed.suggestion.content": "Utiliser des sorts avec <0/> avant qu'ils expirent. Cela vous permet d'utiliser directement des sorts avec des temps de lancement, tel que <1/> pour une résurrection rapide , ou <2/> pour weave.",
   "sch.weaving.content": "Essayez d'utiliser <0/>, <1/>, ou <2/> pour tisser vos actions, et évitez de tisser plus d'actions que vous n'en avez le temps dans une seule fenêtre GCD. Cela retardera votre prochain GCD, ce qui réduira votre temps de disponibilité. Consultez le module {0} ci-dessous pour une analyse plus détaillée.",
   "sge.about.description": "\nCet analyseur a pour but d'identifier certains sorts qui pourraient être utilisés pour améliorer votre gameplay de Sage, ainsi que de donner un aperçu plus profond de ce qui s'est passé pendant une rencontre.\n\nSi vous voulez en savoir plus sur Erudit, consultez les guides à[The Balance] (https://thebalanceffxiv.com/), et discutez dans le canal #sge_questions.\n",

@@ -932,6 +932,8 @@
   "sch.overheal.hot.name": "野战治疗阵",
   "sch.overheal.pet.name": "小仙女",
   "sch.overheal.pethot.name": "小仙女的HoT",
+  "sch.procs.suggestions.missed-impacts.content": "",
+  "sch.procs.suggestions.missed-impacts.why": "",
   "sch.swiftcast.missed.suggestion.content": "在<0/>结束之前放一个法术。这样你就可以用<1/>秒拉人或者<2/>来插入能力技。",
   "sch.weaving.content": "用<0/>、<1/>或者<2/>来插入能力技，不要在GCD之间插入过多的能力技能，否则会延后下一个GCD导致GCD利用率下降。下面的 {0} 模块有详细分析。",
   "sge.about.description": "\n这个分析器旨在帮你找到一些触手可及的提升贤者手法的方法，也会提供一些战斗中的细节分析。\n\n如果你想要更加了解贤者，可以在[The Balance](https://thebalanceffxiv.com/)上查看贤者的攻略，也可以在#sge_questions频道聊聊。\n",
