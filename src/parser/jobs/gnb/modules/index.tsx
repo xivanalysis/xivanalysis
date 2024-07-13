@@ -7,6 +7,7 @@ import {AbilityDowntime} from './Cooldowns'
 import {Defensives} from './Defensives'
 import {GnashingFang} from './GnashingFang'
 import {LightningShot} from './LightningShot'
+import {Lionheart} from './Lionheart'
 import {NoMercy} from './NoMercy'
 import {SonicBreak} from './SonicBreak'
 import {Tincture} from './Tincture'
@@ -21,6 +22,7 @@ export default [
 	Defensives,
 	GnashingFang,
 	LightningShot,
+	Lionheart,
 	NoMercy,
 	SonicBreak,
 	Tincture,

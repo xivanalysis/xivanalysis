@@ -1,5 +1,5 @@
 import {t} from '@lingui/macro'
-import {Trans} from '@lingui/react'
+import {Trans, Plural} from '@lingui/react'
 import {DataLink} from 'components/ui/DbLink'
 import {Event, Events} from 'event'
 import _ from 'lodash'
@@ -100,9 +100,7 @@ export class SonicBreak extends Analyser {
 
 			lastSonicBreak.end = event.timestamp
 
-			if (lastSonicBreak.totalTicks < MAX_TICKS) {
-				lastSonicBreak.isMissingTicks = true
-			}
+			lastSonicBreak.isMissingTicks = lastSonicBreak.totalTicks < MAX_TICKS
 		}
 	}
 
@@ -113,7 +111,7 @@ export class SonicBreak extends Analyser {
 			this.suggestions.add(new TieredSuggestion({
 				icon: this.data.actions.SONIC_BREAK.icon,
 				content: <Trans id="gnb.sonic-break.suggestions.missing-ticks.content">
-					One or more of your <DataLink action = "SONIC_BREAK"/> dots had ticks that did not deal damage. </Trans>,
+					One or more of your <DataLink action = "SONIC_BREAK"/> DoTs had ticks that did not deal damage. </Trans>,
 				tiers: {
 					1: SEVERITY.MINOR,
 					5: SEVERITY.MEDIUM,
@@ -121,7 +119,7 @@ export class SonicBreak extends Analyser {
 
 				},
 				value: missedTicks,
-				why: <Trans id = "gnb.sonic-break.suggestions.missing-ticks.why"> You wasted {missedTicks} ticks of <DataLink action = "SONIC_BREAK"/> </Trans>,
+				why: <Trans id = "gnb.sonic-break.suggestions.missing-ticks.why"> You wasted <Plural value= {missedTicks} one="# tick" other=" #ticks"/> of <DataLink action = "SONIC_BREAK"/> </Trans>,
 			},
 			))
 		}
@@ -146,7 +144,7 @@ export class SonicBreak extends Analyser {
 						<Table.Cell>{this.parser.formatEpochTimestamp(window.start)}</Table.Cell>
 						<Table.Cell>
 							<Trans id="sonic-break.tick-issue">
-								<DataLink action = "SONIC_BREAK"/> had {MAX_TICKS - window.totalTicks} ticks deal no damage.
+								<DataLink action = "SONIC_BREAK"/> had <Plural value={MAX_TICKS - window.totalTicks} one="# tick" other="# ticks"/> deal no damage.
 							</Trans>
 						</Table.Cell>
 						<Table.Cell>

@@ -17,7 +17,7 @@ export class Tincture extends CoreTincture {
 					expectedPerWindow: 1,
 				},
 				{
-					action: this.data.actions.WICKED_TALON,
+					action: this.data.actions.GNASHING_FANG,
 					expectedPerWindow: 1,
 				},
 				{

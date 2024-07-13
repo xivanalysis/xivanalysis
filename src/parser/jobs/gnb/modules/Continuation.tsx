@@ -1,9 +1,13 @@
 import {Trans} from '@lingui/react'
-import {DataLink} from 'components/ui/DbLink'
+import {DataLink, StatusLink} from 'components/ui/DbLink'
+import {Status} from 'data/STATUSES'
+import {dependency} from 'parser/core/Injectable'
+import Checklist, {Requirement, Rule} from 'parser/core/modules/Checklist'
 import {Procs as CoreProcs} from 'parser/core/modules/Procs'
 import React from 'react'
 
-export class Continuation extends CoreProcs { //Also Lion Heart I guess
+export class Continuation extends CoreProcs {
+	@dependency private checklist!: Checklist
 	override trackedProcs = [
 		{
 			procStatus: this.data.statuses.READY_TO_RIP,
@@ -25,10 +29,6 @@ export class Continuation extends CoreProcs { //Also Lion Heart I guess
 			procStatus: this.data.statuses.READY_TO_RAZE,
 			consumeActions: [this.data.actions.FATED_BRAND],
 		},
-		{
-			procStatus: this.data.statuses.READY_TO_REIGN,
-			consumeActions: [this.data.actions.REIGN_OF_BEASTS],
-		},
 	]
 
 	override showDroppedProcSuggestion = true
@@ -37,4 +37,36 @@ export class Continuation extends CoreProcs { //Also Lion Heart I guess
 		<Trans id="gnb.continuation.suggestions.drops.content">
 			Avoid dropping your <DataLink action="CONTINUATION"/> procs. They are a significant portion of your damage and should be used as soon as possible.
 		</Trans>
+
+	override addJobSpecificSuggestions() {
+		const ProcsToJudge = this.trackedProcs
+		ProcsToJudge.forEach(proc => {
+			if (this.getHistoryForStatus(proc.procStatus.id).length === 0) {
+				ProcsToJudge.splice(ProcsToJudge.indexOf(proc), 1)
+			}
+		})
+
+		this.checklist.add(new Rule({
+			name: <Trans id="gnb.contiunation.usage.title">Use your <DataLink action="CONTINUATION"/> skills </Trans>,
+			description: <Trans id="gnb.contiunation.checklist.content">
+				Gunbreaker can follow up cartridge skills with <DataLink action="CONTINUATION"/> skills. Make sure to usse them immediately as they will fall off if another GCD is pressed.
+			</Trans>,
+			requirements: ProcsToJudge.map(proc => this.ContinuationChecklistRequirement(proc.procStatus)),
+		}))
+	}
+
+	private ContinuationChecklistRequirement(buffStatus: Status) {
+		const actual = this.getHistoryForStatus(buffStatus.id).length - (this.getDropCountForStatus(buffStatus.id) + this.getOverwriteCountForStatus(buffStatus.id))
+		const expected = this.getHistoryForStatus(buffStatus.id).length
+		let percent = actual / expected * 100
+		if (process.env.NODE_ENV === 'production') {
+			percent = Math.min(percent, 100)
+		}
+		return new Requirement({
+			name: <StatusLink {...buffStatus}/>,
+			percent: percent,
+			weight: expected,
+			overrideDisplay: `${actual} / ${expected} (${percent.toFixed(2)}%)`,
+		})
+	}
 }

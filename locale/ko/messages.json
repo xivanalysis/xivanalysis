@@ -557,6 +557,8 @@
   "gnb.ammo.usage.title": "소일 사용",
   "gnb.ammo.waste.content": "소일 스택이 넘치거나, 충전된 소일을 사용하지 않은 채 전투가 끝나거나, 소일을 가진 채 죽게 되면 이는 곧 피해량 손해가 됩니다. <0/> (대상이 둘 이상이라면 <1/>) 기술을 사용하여 소일을 낭비하지 마십시오.",
   "gnb.continuation.suggestions.drops.content": "",
+  "gnb.contiunation.checklist.content": "",
+  "gnb.contiunation.usage.title": "",
   "gnb.gauge.resource.ammoLabel": "특수탄",
   "gnb.lightningshot.statistic.info": "",
   "gnb.lightningshot.statistic.title": "",

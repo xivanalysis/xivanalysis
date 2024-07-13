@@ -19,8 +19,8 @@ export const GUNBREAKER = new Meta({
 	Description: () => <TransMarkdown source={description}/>,
 
 	supportedPatches: {
-		from: '✖',
-		to: '✖',
+		from: '7.0',
+		to: '7.0',
 	},
 
 	contributors: [

@@ -557,6 +557,8 @@
   "gnb.ammo.usage.title": "Utilisation des Cartouches d'éther",
   "gnb.ammo.waste.content": "Générer des Cartouches en excès, finir le combat avec des Cartouches disponibles ou mourir en ayant encore des Cartouches disponibles est une perte nette de dégâts. Utilisez <0/> (ou <1/> s'il y a plus d'une cible) afin d'éviter de gaspiller des Cartouches.",
   "gnb.continuation.suggestions.drops.content": "",
+  "gnb.contiunation.checklist.content": "",
+  "gnb.contiunation.usage.title": "",
   "gnb.gauge.resource.ammoLabel": "Cartouches",
   "gnb.lightningshot.statistic.info": "",
   "gnb.lightningshot.statistic.title": "",

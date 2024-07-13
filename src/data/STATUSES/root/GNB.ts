@@ -60,7 +60,7 @@ export const GNB = ensureStatuses({
 		id: 3886,
 		name: 'Ready to Break',
 		icon: iconUrl(13622),
-		duration: 20000,
+		duration: 30000,
 	},
 	READY_TO_REIGN: {
 		id: 3840,

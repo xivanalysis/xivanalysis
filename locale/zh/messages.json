@@ -557,6 +557,8 @@
   "gnb.ammo.usage.title": "晶壤的使用记录",
   "gnb.ammo.waste.content": "晶壤溢出，在战斗结束前还剩余晶壤，或是带着晶壤死亡，都会直接损失输出。使用<0/>（或在多目标时使用<1/>）来避免浪费晶壤。",
   "gnb.continuation.suggestions.drops.content": "",
+  "gnb.contiunation.checklist.content": "",
+  "gnb.contiunation.usage.title": "",
   "gnb.gauge.resource.ammoLabel": "特殊弹",
   "gnb.lightningshot.statistic.info": "虽然闪雷弹能让你保持GCD不空转，但尽可能少用 <0/> 。闪雷弹的伤害很低，而且不产生任何资源。",
   "gnb.lightningshot.statistic.title": "闪雷弹",

@@ -129,16 +129,13 @@ export const GNB = ensureActions({
 		cooldown: 60000,
 		speedAttribute: Attribute.SKILL_SPEED,
 	},
-	REIGN_OF_BEASTS: {
+	REIGN_OF_BEASTS: { //The combo is Reign of Beasts -> Noble Blood -> Lion Heart, however marking them as a combo breaks core combo because 2 combos can't exist in the same space.
 		id: 36937,
 		name: 'Reign of Beasts',
 		icon: iconUrl(3437),
 		onGcd: true,
 		gcdRecast: 2500,
 		speedAttribute: Attribute.SKILL_SPEED,
-		combo: {
-			start: true,
-		},
 	},
 
 	NOBLE_BLOOD: {
@@ -146,11 +143,9 @@ export const GNB = ensureActions({
 		name: 'Noble Blood',
 		icon: iconUrl(3438),
 		onGcd: true,
+		breaksCombo: false,
 		gcdRecast: 2500,
 		speedAttribute: Attribute.SKILL_SPEED,
-		combo: {
-			from: 36937,
-		},
 	},
 
 	LION_HEART: {
@@ -158,12 +153,9 @@ export const GNB = ensureActions({
 		name: 'Lion Heart',
 		icon: iconUrl(3439),
 		onGcd: true,
+		breaksCombo: false,
 		gcdRecast: 2500,
 		speedAttribute: Attribute.SKILL_SPEED,
-		combo: {
-			from: 36938,
-			end: true,
-		},
 	},
 
 	// -----

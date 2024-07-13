@@ -557,6 +557,8 @@
   "gnb.ammo.usage.title": "ソイルの使用",
   "gnb.ammo.waste.content": "無駄なソイルを生むこと、ソイルを持ったまま戦闘終了したり死亡することは直接的に威力を失うことに繋がります。ソイルを無駄にしないように、<0/>(敵が複数の場合<1/>) を使いましょう。",
   "gnb.continuation.suggestions.drops.content": "",
+  "gnb.contiunation.checklist.content": "",
+  "gnb.contiunation.usage.title": "",
   "gnb.gauge.resource.ammoLabel": "",
   "gnb.lightningshot.statistic.info": "GCDを回し続けることは重要ですが、<0/>を極力使用しないで回しましょう。他のスキルと比べダメージ量が低く、ダメージリソースの生成も遅くなります。",
   "gnb.lightningshot.statistic.title": "サンダーバレット",
