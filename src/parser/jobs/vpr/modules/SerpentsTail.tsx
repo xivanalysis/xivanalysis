@@ -4,18 +4,14 @@ import {Event} from 'event'
 import {Analyser} from 'parser/core/Analyser'
 import {filter, oneOf} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
-import Checklist, {Requirement, TARGET, TieredRule} from 'parser/core/modules/Checklist'
+import Checklist, {Requirement, Rule} from 'parser/core/modules/Checklist'
 import {Data} from 'parser/core/modules/Data'
 import React from 'react'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 
-const TARGET_TIERS = {
-	99: TARGET.WARN,
-	100: TARGET.SUCCESS,
-}
-
-export class SeprentsTail extends Analyser {
-	static override handle = 'SeprentsTail'
+const PERFECTIO = 100 // 100% perfect, RPR would be proud
+export class SerpentsTail extends Analyser {
+	static override handle = 'SerpentsTail'
 	@dependency private checklist!: Checklist
 	@dependency private data!: Data
 
@@ -79,11 +75,11 @@ export class SeprentsTail extends Analyser {
 	}
 
 	private onComplete() {
-		this.checklist.add(new TieredRule({
-			name: <Trans id = "VPR.serperntstail.wast.name"> Use your <DataLink action="SERPENTS_TAIL"/> follow-ups </Trans>,
+		this.checklist.add(new Rule({
+			name: <Trans id = "VPR.serpentstail.waste.name"> Use your <DataLink action="SERPENTS_TAIL"/> follow-ups </Trans>,
 			displayOrder: DISPLAY_ORDER.SEPRENTSTAIL,
-			tiers: TARGET_TIERS,
-			description: <Trans id="vpr.seprentstail.waste.content">
+			target: PERFECTIO,
+			description: <Trans id="vpr.serpentstail.waste.content">
 				Using <DataLink action = "HINDSBANE_FANG"/>, <DataLink action="HINDSTING_STRIKE"/>, <DataLink action="FLANKSBANE_FANG"/> or <DataLink action="FLANKSTING_STRIKE"/> grant <DataLink action="DEATH_RATTLE"/>.
 				<br/>
 				Using <DataLink action = "JAGGED_MAW"/> and <DataLink action="BLOODIED_MAW"/> grant <DataLink action="LAST_LASH"/>.
@@ -94,7 +90,7 @@ export class SeprentsTail extends Analyser {
 			</Trans>,
 			requirements: [
 				new Requirement({
-					name: <Trans id="vpr.seprentstail.checklist.requirement.waste.name">
+					name: <Trans id="vpr.serpentstail.checklist.requirement.waste.name">
 						Follow up your GCD combo finishers and Generation skills with Serpent's Tail skills
 					</Trans>,
 					value: this.tailsDone,

@@ -1,5 +1,5 @@
 {
-  "VPR.serperntstail.wast.name": "",
+  "VPR.serpentstail.waste.name": "",
   "ast.about.description-1": "",
   "ast.about.description-2": "\nどのヒーラーでも効率的にパーティを維持するには MP とリキャストタイムとを慎重に管理する必要があります。ヒールを計画し相方とコミュニケーションをとれば，余った GCD でより DPS が高くなるでしょう。\n",
   "ast.about.description.warning.development": "このツールを包括的にするには、まだやらなければならないことがたくさんあります！ 　トラッキングする価値のある項目がある場合は、Discordチャンネルにアクセスしてください！",
@@ -1008,8 +1008,8 @@
   "vpr.rattlingcoil.title": "",
   "vpr.rattlingcoil.usage.title": "",
   "vpr.rattlingcoilwaste.content": "",
-  "vpr.seprentstail.checklist.requirement.waste.name": "",
-  "vpr.seprentstail.waste.content": "",
+  "vpr.serpentstail.checklist.requirement.waste.name": "",
+  "vpr.serpentstail.waste.content": "",
   "vpr.snaps.statistic.info": "",
   "vpr.snaps.statistic.title": "",
   "vpr.venom.checklist.content": "",

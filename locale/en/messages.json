@@ -1,5 +1,5 @@
 {
-  "VPR.serperntstail.wast.name": "Use your <0/> follow-ups",
+  "VPR.serpentstail.waste.name": "Use your <0/> follow-ups",
   "ast.about.description-1": "The biggest draw to an Astrologian is their ability to buff their party DPS with Arcanum. This analyzer will show you how the stars work for you and not the other way around",
   "ast.about.description-2": "\nPlaying any healer requires you to carefully manage your MP and cooldowns to efficiently keep your party alive. If you plan out your heals and communicate with your co-healer, you will naturally end up putting out more DPS with the extra GCDs gained.\n",
   "ast.about.description.warning.development": "There's still lots more work to be done for this tool to be comprehensive! If you have a suggestion for what is worth tracking please pop by our Discord channel!",
@@ -1008,8 +1008,8 @@
   "vpr.rattlingcoil.title": "Rattling Coil Timeline",
   "vpr.rattlingcoil.usage.title": "<0/> Usage",
   "vpr.rattlingcoilwaste.content": "Wasted rattling coil generation, ending the fight with rattling coils remaining, or dying with rattling coils coiled is a direct potency loss. Use <0/> to avoid wasting rattling coils.",
-  "vpr.seprentstail.checklist.requirement.waste.name": "Follow up your GCD combo finishers and Generation skills with Serpent's Tail skills",
-  "vpr.seprentstail.waste.content": "Using <0/>, <1/>, <2/> or <3/> grant <4/>.<5/>Using <6/> and <7/> grant <8/>.<9/>Using the Generation skills under <10/> grants Legacy follow up skills.<11/>These skills are important to a Viper's damage and must be used immediately after the skill that grants them by using <12>.</12>",
+  "vpr.serpentstail.checklist.requirement.waste.name": "Follow up your GCD combo finishers and Generation skills with Serpent's Tail skills",
+  "vpr.serpentstail.waste.content": "Using <0/>, <1/>, <2/> or <3/> grant <4/>.<5/>Using <6/> and <7/> grant <8/>.<9/>Using the Generation skills under <10/> grants Legacy follow up skills.<11/>These skills are important to a Viper's damage and must be used immediately after the skill that grants them by using <12>.</12>",
   "vpr.snaps.statistic.info": "While it is important to keep your GCD rolling as much as possible, try to minimize your <0/> usage. It's better to save and use <1/> for when you cannot stay in melee range as it does more damage.",
   "vpr.snaps.statistic.title": "Writhing Snaps",
   "vpr.venom.checklist.content": "Viper generates venom buffs that increase the damage of certain actions. Make sure to use these actions while the buffs are active. Going out of order will cause the buff to drop.",
