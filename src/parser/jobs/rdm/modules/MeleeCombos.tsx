@@ -190,10 +190,11 @@ export class MeleeCombos extends Analyser {
 			Additional Note: Event though we've now modeled the underlying combos differently, to accurately handle finishers we fabricate them appearing similar to
 			how they were when they were one large combo.  As such for now this fix is no longer a bandaid but a permanent fixture.
 			*/
-			// if (action.id === this.data.actions.MANAFICATION.id &&
-			// 	current && current.data.lastAction.action === this.data.actions.ENCHANTED_REDOUBLEMENT.id) {
-			// 	return
-			// }
+			if (action.id === this.data.actions.MANAFICATION.id &&
+				//Since we now have an actual factual AE Combo, check for either the Single Target or AE Target final hit here.
+				current && (current.data.lastAction.action === this.data.actions.ENCHANTED_REDOUBLEMENT.id || current.data.lastAction.action === this.data.actions.ENCHANTED_MOULINET_TROIS.id)) {
+				return
+			}
 			this.breakComboIfExists(event.timestamp)
 		}
 	}

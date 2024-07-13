@@ -811,8 +811,6 @@
   "rdm.procs.suggestions.overwritten-stone.why": "{overWrittenStone, plural,one {# proc de verterre a été} other {# procs de verterre ont été}} perdus à cause de l'écrasement de ce bonus.",
   "rdm.procs.suggestions.overwritten.content": "Ne lancez pas <0/> lorsque vous avez <1/> ou <2/> quand vous avez <3/>.",
   "rdm.procs.suggestions.overwritten.why": "{overWrittenFire, plural,one {# proc de verfeu } other {# procs de verfeu }} et {overWrittenStone, plural,one {# proc de verterre }other {# procs de verterre }}furent perdus a cause de leur remplacement.",
-  "rdm.procs.suggestions.prefulgence.content": "",
-  "rdm.procs.suggestions.viceofthorns.content": "",
   "rdm.procs.title": "Problème de procs",
   "rdm.swiftcast.suggestion.content": "",
   "rdm.swiftcast.table.note.bad": "",

@@ -811,8 +811,6 @@
   "rdm.procs.suggestions.overwritten-stone.why": "버스톤 프록을 {overWrittenStone, plural, other {#회}} 덮어썼습니다.",
   "rdm.procs.suggestions.overwritten.content": "<1/> 버프를 가지고 있다면 <0/> 기술을 시전하지 마십시오. <3/> 버프를 가지고 있다면 <2/> 기술을 시전하지 마십시오.",
   "rdm.procs.suggestions.overwritten.why": "버파이어 프록을 {overWrittenFire, plural, other {#회}}, 버스톤 프록을 {overWrittenStone, plural, other {#회}} 덮어썼습니다.",
-  "rdm.procs.suggestions.prefulgence.content": "",
-  "rdm.procs.suggestions.viceofthorns.content": "",
   "rdm.procs.title": "프록 문제점",
   "rdm.swiftcast.suggestion.content": "",
   "rdm.swiftcast.table.note.bad": "",

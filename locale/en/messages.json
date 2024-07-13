@@ -811,8 +811,6 @@
   "rdm.procs.suggestions.overwritten-stone.why": "{overWrittenStone, plural, one {# Verstone proc was} other {# Verstone procs were}} lost due to being overwritten.",
   "rdm.procs.suggestions.overwritten.content": "Don't cast <0/> when you have <1/> or <2/> when you have <3/>.",
   "rdm.procs.suggestions.overwritten.why": "{overWrittenFire, plural, one {# Verfire proc} other {# Verfire procs}} and {overWrittenStone, plural, one {# Verstone proc} other {# Verstone procs}} were lost due to being overwritten.",
-  "rdm.procs.suggestions.prefulgence.content": "Try to consume <0/> before it expires as <1/> is your strongest skill.",
-  "rdm.procs.suggestions.viceofthorns.content": "Try to consume <0/> before it expires as <1/> Gives 3 White & Black Mana and is one of your strongest GCDs outside of your Finisher Combo.",
   "rdm.procs.title": "Proc Issues",
   "rdm.swiftcast.suggestion.content": "Spells used while <0/> is up should be limited to <1/>, <2/>, <3/>, and <4/>.",
   "rdm.swiftcast.table.note.bad": "Swiftcast used on a suboptimal spell",

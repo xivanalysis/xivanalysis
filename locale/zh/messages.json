@@ -811,8 +811,6 @@
   "rdm.procs.suggestions.overwritten-stone.why": "你覆盖了 {overWrittenStone, plural, one {# 次} other {# 次}}赤飞石预备。",
   "rdm.procs.suggestions.overwritten.content": "当你有<1/>的时候，不要咏唱<0/>；当你有<3/>的时候，不要咏唱<2/>.",
   "rdm.procs.suggestions.overwritten.why": "你因为触发覆盖而浪费了 {overWrittenFire, plural, one {# 次赤火炎} other {# 次赤火炎}}，和 {overWrittenStone, plural, one {# 次赤飞石} other {# 次赤飞石}}。",
-  "rdm.procs.suggestions.prefulgence.content": "",
-  "rdm.procs.suggestions.viceofthorns.content": "",
   "rdm.procs.title": "触发问题",
   "rdm.swiftcast.suggestion.content": "在 <0/> 状态下只应该使用 <1/>、<2/>、<3/> 和 <4/>。",
   "rdm.swiftcast.table.note.bad": "即刻咏唱被用于短读条魔法",

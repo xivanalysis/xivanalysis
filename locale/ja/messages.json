@@ -811,8 +811,6 @@
   "rdm.procs.suggestions.overwritten-stone.why": "{overWrittenStone, plural, other {# ヴァルストーンprocsが}}上書きによって失われました。",
   "rdm.procs.suggestions.overwritten.content": "<1/>があるときは<0/>を、<3/>があるときは<2/>を使わないようにしましょう。",
   "rdm.procs.suggestions.overwritten.why": "{overWrittenFire, plural, other {# ヴァルファイアprocs}}および{overWrittenStone, plural, other {# ヴァルストーンprocs}} が上書きによって失われました。",
-  "rdm.procs.suggestions.prefulgence.content": "",
-  "rdm.procs.suggestions.viceofthorns.content": "",
   "rdm.procs.title": "プロックの問題",
   "rdm.swiftcast.suggestion.content": "<0/>が付与されたときは、<1/>、<2/>、<3/>、<4/>のみを使用しましょう。",
   "rdm.swiftcast.table.note.bad": "",
