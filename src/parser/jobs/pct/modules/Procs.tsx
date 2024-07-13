@@ -29,17 +29,6 @@ export default class Procs extends CoreProcs {
 			],
 		},
 		{
-			procStatus: this.data.statuses.SUBTRACTIVE_PALLETTE,
-			consumeActions: [
-				this.data.actions.BLIZZARD_IN_CYAN,
-				this.data.actions.BLIZZARD_II_IN_CYAN,
-				this.data.actions.STONE_IN_YELLOW,
-				this.data.actions.STONE_II_IN_YELLOW,
-				this.data.actions.THUNDER_IN_MAGENTA,
-				this.data.actions.THUNDER_II_IN_MAGENTA,
-			],
-		},
-		{
 			procStatus: this.data.statuses.HYPERPHANTASIA,
 			consumeActions: [
 				this.data.actions.FIRE_IN_RED,
