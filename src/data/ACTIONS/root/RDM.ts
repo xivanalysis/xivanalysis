@@ -93,7 +93,6 @@ export const RDM = ensureActions({
 		id: 25857,
 		name: 'Magick Barrier',
 		icon: iconUrl(3237),
-		speedAttribute: Attribute.SPELL_SPEED,
 		cooldown: 120000,
 		statusesApplied: ['MAGICK_BARRIER'],
 	},

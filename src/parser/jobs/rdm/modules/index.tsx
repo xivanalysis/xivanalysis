@@ -17,9 +17,6 @@ import {Procs} from './Procs'
 import {Swiftcast} from './Swiftcast'
 import {ViceOfThorns} from './ViceOfThorns'
 import {Weaving} from './Weaving'
-//For now commenting this out, it's uncertain if we want GrandImpact to be within Procs or on its own.
-//For now it'll be contained within Procs
-//import { GrandImpact } from './GrandImpact'
 
 export {DualStatistic} from 'parser/jobs/rdm/statistics/DualStatistic'
 
@@ -39,8 +36,6 @@ export default [
 	Tincture,
 	Swiftcast,
 	Weaving,
-	//See Above comment on GrandImpact
-	//GrandImpact,
 	MagickedSwordplay,
 	Manafication,
 	Prefulgence,

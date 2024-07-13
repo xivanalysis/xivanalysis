@@ -154,42 +154,6 @@ export class Procs extends CoreProcs {
 		</Trans>
 	}
 
-	private getCriticalProcContent(id: number) {
-		if (id === this.data.statuses.GRAND_IMPACT_READY.id) {
-			return <Trans id="rdm.procs.suggestions.grandimpact.content">
-				Try to consume <DataLink status="GRAND_IMPACT_READY"/> before it expires as <DataLink action="GRAND_IMPACT"/> Gives 3 White & Black Mana and is one of your strongest GCDs outside of your Finisher Combo.
-			</Trans>
-		}
-		if (id === this.data.statuses.PREFULGENCE_READY.id) {
-			return <Trans id="rdm.procs.suggestions.prefulgence.content">
-				Try to consume <DataLink status="PREFULGENCE_READY"/> before it expires as <DataLink action="PREFULGENCE"/> is your strongest skill.
-			</Trans>
-		}
-		if (id === this.data.statuses.THORNED_FLOURISH.id) {
-			return <Trans id="rdm.procs.suggestions.viceofthorns.content">
-				Try to consume <DataLink status="THORNED_FLOURISH"/> before it expires as <DataLink action="VICE_OF_THORNS"/> Gives 3 White & Black Mana and is one of your strongest GCDs outside of your Finisher Combo.
-			</Trans>
-		}
-	}
-
-	private getCriticalProcWhy(id: number) {
-		if (id === this.data.statuses.GRAND_IMPACT_READY.id) {
-			return <Trans id="rdm.grandimpact.suggestions.dropped.why">
-				<DataLink status="GRAND_IMPACT_READY"/> timed out <Plural value={this.getDropCountForStatus(this.data.statuses.GRAND_IMPACT_READY.id)} one="# time" other="# times"/>
-			</Trans>
-		}
-		if (id === this.data.statuses.PREFULGENCE_READY.id) {
-			return <Trans id="rdm.prefulgence.suggestions.dropped.why">
-				<DataLink status="PREFULGENCE_READY"/> timed out <Plural value={this.getDropCountForStatus(this.data.statuses.PREFULGENCE_READY.id)} one="# time" other="# times"/>
-			</Trans>
-		}
-		if (id === this.data.statuses.THORNED_FLOURISH.id) {
-			return <Trans id="rdm.viceofthorns.suggestions.dropped.why">
-				<DataLink status="THORNED_FLOURISH"/> timed out <Plural value={this.getDropCountForStatus(this.data.statuses.THORNED_FLOURISH.id)} one="# time" other="# times"/>
-			</Trans>
-		}
-	}
-
 	protected override addJobSpecificSuggestions() {
 		const missedFire = this.getDropCountForStatus(this.data.statuses.VERFIRE_READY.id)
 		const invulnFire = this.getInvulnCountForStatus(this.data.statuses.VERFIRE_READY.id)
@@ -210,27 +174,39 @@ export class Procs extends CoreProcs {
 
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.GRAND_IMPACT.icon,
-			content: this.getCriticalProcContent(this.data.statuses.GRAND_IMPACT_READY.id),
+			content: <Trans id="rdm.procs.suggestions.grandimpact.content">
+					Try to consume <DataLink status="GRAND_IMPACT_READY"/> before it expires as <DataLink action="GRAND_IMPACT"/> Gives 3 White & Black Mana and is one of your strongest GCDs outside of your Finisher Combo.
+			</Trans>,
 			tiers: SEVERITY_CRITICAL_PROCS,
 			value: this.getDropCountForStatus(this.data.statuses.GRAND_IMPACT_READY.id),
-			why: this.getCriticalProcWhy(this.data.statuses.GRAND_IMPACT_READY.id),
+			why: <Trans id="rdm.grandimpact.suggestions.dropped.why">
+				<DataLink status="GRAND_IMPACT_READY"/> timed out <Plural value={this.getDropCountForStatus(this.data.statuses.GRAND_IMPACT_READY.id)} one="# time" other="# times"/>
+			</Trans>,
 		}))
 
 		//Current Thought is we want these to stand on their own, leaving this here for now in case minds are changed.
 		// this.suggestions.add(new TieredSuggestion({
 		// 	icon: this.data.actions.PREFULGENCE.icon,
-		// 	content: this.getCriticalProcContent(this.data.statuses.PREFULGENCE_READY.id),
+		// 	content: <Trans id="rdm.procs.suggestions.prefulgence.content">
+		// 			Try to consume <DataLink status="PREFULGENCE_READY"/> before it expires as <DataLink action="PREFULGENCE"/> is your strongest skill.
+		// 	</Trans>,
 		// 	tiers: SEVERITY_CRITICAL_PROCS,
 		// 	value: this.getDropCountForStatus(this.data.statuses.PREFULGENCE_READY.id),
-		// 	why: this.getCriticalProcContent(this.data.statuses.PREFULGENCE_READY.id),
+		// 	why: <Trans id="rdm.prefulgence.suggestions.dropped.why">
+		// 		<DataLink status="PREFULGENCE_READY"/> timed out <Plural value={this.getDropCountForStatus(this.data.statuses.PREFULGENCE_READY.id)} one="# time" other="# times"/>
+		// 	</Trans>,
 		// }))
 
 		// this.suggestions.add(new TieredSuggestion({
 		// 	icon: this.data.actions.VICE_OF_THORNS.icon,
-		// 	content: this.getCriticalProcContent(this.data.statuses.THORNED_FLOURISH.id),
+		// 	content: <Trans id="rdm.procs.suggestions.viceofthorns.content">
+		// 			Try to consume <DataLink status="THORNED_FLOURISH"/> before it expires as <DataLink action="VICE_OF_THORNS"/> Gives 3 White & Black Mana and is one of your strongest GCDs outside of your Finisher Combo.
+		// 	</Trans>,
 		// 	tiers: SEVERITY_CRITICAL_PROCS,
 		// 	value: this.getDropCountForStatus(this.data.statuses.THORNED_FLOURISH.id),
-		// 	why: this.getCriticalProcContent(this.data.statuses.THORNED_FLOURISH.id),
+		// 	why: <Trans id="rdm.viceofthorns.suggestions.dropped.why">
+		// 		<DataLink status="THORNED_FLOURISH"/> timed out <Plural value={this.getDropCountForStatus(this.data.statuses.THORNED_FLOURISH.id)} one="# time" other="# times"/>
+		// 	</Trans>,
 		// }))
 
 		this.suggestions.add(new TieredSuggestion({

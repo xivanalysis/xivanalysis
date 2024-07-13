@@ -2,9 +2,9 @@ import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
 import {JOBS} from 'data/JOBS'
 import {Event, Events} from 'event'
-import {EventHook} from 'parser/core/Dispatcher'
 import {filter, oneOf} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
+import {Actors} from 'parser/core/modules/Actors'
 import {CounterGauge, Gauge as CoreGauge} from 'parser/core/modules/Gauge'
 import Suggestions, {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import React, {Fragment} from 'react'
@@ -22,6 +22,7 @@ export class ManaGauge extends CoreGauge {
 	static override title = t('rdm.gauge.title')`Mana Gauge Usage`
 
 	@dependency private suggestions!: Suggestions
+	@dependency private actors!: Actors
 
 	private whiteManaGauge = this.add(new CounterGauge({
 		graph: {
@@ -92,12 +93,9 @@ export class ManaGauge extends CoreGauge {
 		},
 	}
 
-	private activeGcdHook?: EventHook<Events['damage']>
-
 	override initialise() {
 		super.initialise()
 
-		const playerFilter = filter<Event>().source(this.parser.actor.id)
 		this.addEventHook(
 			filter<Event>()
 				.type('damage')
@@ -111,9 +109,6 @@ export class ManaGauge extends CoreGauge {
 				.action(oneOf(Array.from(this.spenderModifiers.keys()))),
 			this.onGaugeSpender
 		)
-		// We hook the action for Manafication so we can just ignore stacks entirely
-		this.addEventHook(playerFilter.type('statusApply').status(this.data.statuses.MAGICKED_SWORDPLAY.id), this.onApplyMagickedSwordPlay)
-		this.addEventHook(playerFilter.type('statusRemove').status(this.data.statuses.MAGICKED_SWORDPLAY.id), this.onRemoveMagickedSwordPlay)
 		this.addEventHook('complete', this.onComplete)
 	}
 
@@ -154,36 +149,15 @@ export class ManaGauge extends CoreGauge {
 		}
 		const amount = modifier
 
-		this.whiteManaGauge.modify(amount.white)
-		this.blackManaGauge.modify(amount.black)
-	}
-
-	private onApplyMagickedSwordPlay() {
-		if (this.activeGcdHook == null) {
-			// Buffs with stacks generate separate apply events for each stack with a single remove at the end.
-			// Make sure we only start hooking for actions effected by Magicked on the first apply event -- no duplicate hooks on the "reapply" events as the stacks go down
-			this.activeGcdHook = this.addEventHook(
-				filter<Event>()
-					.source(this.parser.actor.id)
-					.type('damage'),
-				this.onHitUnderMagickedSwordPlay
-			)
-		}
-	}
-
-	private onRemoveMagickedSwordPlay() {
-		if (this.activeGcdHook != null) {
-			this.removeEventHook(this.activeGcdHook)
-			this.activeGcdHook = undefined
-		}
-	}
-
-	//Honestly I don't really need to do anything here; but I needed something to hook for onApplyMagickedSwordPlay
-	//This code was pretty much taken as is from the BloodGauge handling for Blood Weapon
-	private onHitUnderMagickedSwordPlay(event: Events['damage']) {
-		if (event.cause.type === 'status') {
+		//Magicked SwordPlay enables us to use our combo without expending mana, the order of eventing
+		//Is Action --> Status change, so in any circumstance the attack should always happen before the buff removal
+		if (this.actors.current.at(event.timestamp).hasStatus(this.data.statuses.MAGICKED_SWORDPLAY.id)) {
+			//Then don't spend.
 			return
 		}
+
+		this.whiteManaGauge.modify(amount.white)
+		this.blackManaGauge.modify(amount.black)
 	}
 
 	//Returns which Mana should be penalized, white, black, or neither
