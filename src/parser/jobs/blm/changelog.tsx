@@ -9,6 +9,11 @@ export const changelog = [
 	// 	contributors: [CONTRIBUTORS.YOU],
 	// },
 	{
+		date: new Date('2024-07-13'),
+		Changes: () => <>Update expected fire spell counting to account for Dawntrail's rotation changes, and add a suggestion to use all <DataLink action="FLARE_STAR" />s generated.</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
+	{
 		date: new Date('2024-07-11'),
 		Changes: () => <>Initial Rotation Outliers updates to remove defunct errors, and handle <DataLink action="MANAFONT" />'s full reset behavior</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],
