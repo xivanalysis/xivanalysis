@@ -119,7 +119,7 @@ export class SonicBreak extends Analyser {
 
 				},
 				value: missedTicks,
-				why: <Trans id = "gnb.sonic-break.suggestions.missing-ticks.why"> You wasted <Plural value= {missedTicks} one="# tick" other=" #ticks"/> of <DataLink action = "SONIC_BREAK"/> </Trans>,
+				why: <Trans id = "gnb.sonic-break.suggestions.missing-ticks.why"> You wasted <Plural value= {missedTicks} one="# tick" other="# ticks"/> of <DataLink action = "SONIC_BREAK"/> </Trans>,
 			},
 			))
 		}

@@ -77,7 +77,7 @@ export class Lionheart extends Analyser {
 				this.debug(`Action ${action?.name} (${action}) is a Reign of Beasts action`)
 
 				if (lastLionheartCombo != null && lastLionheartCombo.endTime == null) { // They dropped the combo via timeout
-					this.OnEndLionheartCombo(event)
+					this.onEndLionheartCombo(event)
 				}
 
 				const lionheartComboState = new LionHeartComboState(event.timestamp)
@@ -86,7 +86,7 @@ export class Lionheart extends Analyser {
 
 			if (this.COMBO_BREAKERS.includes(action.id)) {
 
-				this.OnEndLionheartCombo(event)
+				this.onEndLionheartCombo(event)
 			}
 
 			// If the action is a lionheart Combo one, log it
@@ -99,7 +99,7 @@ export class Lionheart extends Analyser {
 					lastLionheartCombo.rotation.push(event)
 
 					if (action === this.data.actions.LION_HEART) {
-						this.OnEndLionheartCombo(event)
+						this.onEndLionheartCombo(event)
 					}
 				}
 
@@ -107,7 +107,7 @@ export class Lionheart extends Analyser {
 		}
 	}
 
-	private OnEndLionheartCombo(event: Events['action']) {
+	private onEndLionheartCombo(event: Events['action']) {
 
 		const lastLionheartCombo = this.lastLionheartCombo
 

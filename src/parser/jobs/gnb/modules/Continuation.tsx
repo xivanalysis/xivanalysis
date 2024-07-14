@@ -39,10 +39,10 @@ export class Continuation extends CoreProcs {
 		</Trans>
 
 	override addJobSpecificSuggestions() {
-		const ProcsToJudge = this.trackedProcs
-		ProcsToJudge.forEach(proc => {
+		const procsToJudge = this.trackedProcs
+		procsToJudge.forEach(proc => {
 			if (this.getHistoryForStatus(proc.procStatus.id).length === 0) {
-				ProcsToJudge.splice(ProcsToJudge.indexOf(proc), 1)
+				procsToJudge.splice(procsToJudge.indexOf(proc), 1)
 			}
 		})
 
@@ -51,11 +51,11 @@ export class Continuation extends CoreProcs {
 			description: <Trans id="gnb.contiunation.checklist.content">
 				Gunbreaker can follow up cartridge skills with <DataLink action="CONTINUATION"/> skills. Make sure to usse them immediately as they will fall off if another GCD is pressed.
 			</Trans>,
-			requirements: ProcsToJudge.map(proc => this.ContinuationChecklistRequirement(proc.procStatus)),
+			requirements: procsToJudge.map(proc => this.continuationChecklistRequirement(proc.procStatus)),
 		}))
 	}
 
-	private ContinuationChecklistRequirement(buffStatus: Status) {
+	private continuationChecklistRequirement(buffStatus: Status) {
 		const actual = this.getHistoryForStatus(buffStatus.id).length - (this.getDropCountForStatus(buffStatus.id) + this.getOverwriteCountForStatus(buffStatus.id))
 		const expected = this.getHistoryForStatus(buffStatus.id).length
 		let percent = actual / expected * 100
