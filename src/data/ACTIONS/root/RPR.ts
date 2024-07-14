@@ -115,6 +115,10 @@ export const RPR = ensureActions({
 		icon: iconUrl(3613),
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
+		statusesApplied: [
+			'PERFECTIO_OCCULTA',
+			'IDEAL_HOST',
+		],
 	},
 
 	// -----
@@ -154,6 +158,14 @@ export const RPR = ensureActions({
 		onGcd: true,
 		castTime: 1300,
 		speedAttribute: Attribute.SPELL_SPEED,
+		statusesApplied: ['PERFECTIO_PARATA'],
+	},
+
+	PERFECTIO: {
+		id: 36973,
+		name: 'Perfectio',
+		icon: iconUrl(3638),
+		onGcd: true,
 	},
 
 	// -----
@@ -168,19 +180,45 @@ export const RPR = ensureActions({
 		speedAttribute: Attribute.SKILL_SPEED,
 		statusesApplied: ['ENHANCED_GIBBET'],
 		potencies: [{
-			value: 400,
+			value: 500,
 			bonusModifiers: [],
 			baseModifiers: [],
 		}, {
-			value: 460,
+			value: 560,
 			bonusModifiers: [BonusModifier.POSITIONAL],
 			baseModifiers: [],
 		}, {
-			value: 460,
+			value: 560,
 			bonusModifiers: [],
 			baseModifiers: ['ENHANCED_GALLOWS'],
 		}, {
-			value: 520,
+			value: 620,
+			bonusModifiers: [BonusModifier.POSITIONAL],
+			baseModifiers: ['ENHANCED_GALLOWS'],
+		}],
+	},
+
+	EXECUTIONERS_GALLOWS: {
+		id: 36971,
+		name: "Executioner's Gallows",
+		icon: iconUrl(3636),
+		onGcd: true,
+		speedAttribute: Attribute.SKILL_SPEED,
+		statusesApplied: ['ENHANCED_GIBBET'],
+		potencies: [{
+			value: 700,
+			bonusModifiers: [],
+			baseModifiers: [],
+		}, {
+			value: 760,
+			bonusModifiers: [BonusModifier.POSITIONAL],
+			baseModifiers: [],
+		}, {
+			value: 760,
+			bonusModifiers: [],
+			baseModifiers: ['ENHANCED_GALLOWS'],
+		}, {
+			value: 820,
 			bonusModifiers: [BonusModifier.POSITIONAL],
 			baseModifiers: ['ENHANCED_GALLOWS'],
 		}],
@@ -194,19 +232,45 @@ export const RPR = ensureActions({
 		speedAttribute: Attribute.SKILL_SPEED,
 		statusesApplied: ['ENHANCED_GALLOWS'],
 		potencies: [{
-			value: 400,
+			value: 500,
 			bonusModifiers: [],
 			baseModifiers: [],
 		}, {
-			value: 460,
+			value: 560,
 			bonusModifiers: [BonusModifier.POSITIONAL],
 			baseModifiers: [],
 		}, {
-			value: 460,
+			value: 560,
 			bonusModifiers: [],
 			baseModifiers: ['ENHANCED_GIBBET'],
 		}, {
-			value: 520,
+			value: 620,
+			bonusModifiers: [BonusModifier.POSITIONAL],
+			baseModifiers: ['ENHANCED_GIBBET'],
+		}],
+	},
+
+	EXECUTIONERS_GIBBET: {
+		id: 36970,
+		name: "Executioner's Gibbet",
+		icon: iconUrl(3635),
+		onGcd: true,
+		speedAttribute: Attribute.SKILL_SPEED,
+		statusesApplied: ['ENHANCED_GALLOWS'],
+		potencies: [{
+			value: 700,
+			bonusModifiers: [],
+			baseModifiers: [],
+		}, {
+			value: 760,
+			bonusModifiers: [BonusModifier.POSITIONAL],
+			baseModifiers: [],
+		}, {
+			value: 760,
+			bonusModifiers: [],
+			baseModifiers: ['ENHANCED_GIBBET'],
+		}, {
+			value: 820,
 			bonusModifiers: [BonusModifier.POSITIONAL],
 			baseModifiers: ['ENHANCED_GIBBET'],
 		}],
@@ -216,6 +280,14 @@ export const RPR = ensureActions({
 		id: 24384,
 		name: 'Guillotine',
 		icon: iconUrl(3612),
+		onGcd: true,
+		speedAttribute: Attribute.SKILL_SPEED,
+	},
+
+	EXECUTIONERS_GUILLOTINE: {
+		id: 36972,
+		name: "Executioner's Guillotine",
+		icon: iconUrl(3637),
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 	},
@@ -313,6 +385,13 @@ export const RPR = ensureActions({
 		cooldown: 1000,
 	},
 
+	SACRIFICIUM: {
+		id: 36969,
+		name: 'Sacrificium',
+		icon: iconUrl(3634),
+		cooldown: 1000,
+	},
+
 	// -----
 	// Soul Gauge oGCDs
 	// Note:
@@ -324,7 +403,10 @@ export const RPR = ensureActions({
 		name: 'Gluttony',
 		icon: iconUrl(3621),
 		cooldown: 60000,
-		statusesApplied: ['SOUL_REAVER'],
+		statusesApplied: [
+			'SOUL_REAVER',
+			'EXECUTIONER',
+		],
 	},
 
 	BLOOD_STALK: {

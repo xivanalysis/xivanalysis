@@ -7,6 +7,7 @@ import {DeathGauge} from './DeathGauge'
 import {DeathsDesign} from './DeathsDesign'
 import {Defensives} from './Defensives'
 import {Enshroud} from './Enshroud'
+import {Harpe} from './Harpe'
 import {HarvestMoon} from './HarvestMoon'
 import {OtherGauges} from './OtherGauges'
 import {Positionals} from './Positionals'
@@ -25,6 +26,7 @@ export default [
 	DeathGauge,
 	Defensives,
 	Enshroud,
+	Harpe,
 	HarvestMoon,
 	OtherGauges,
 	Positionals,
