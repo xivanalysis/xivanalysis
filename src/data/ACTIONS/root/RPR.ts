@@ -404,8 +404,7 @@ export const RPR = ensureActions({
 		icon: iconUrl(3621),
 		cooldown: 60000,
 		statusesApplied: [
-			'SOUL_REAVER',
-			'EXECUTIONER',
+			'EXECUTIONER', //Grants Soul Reaver below 96
 		],
 	},
 
