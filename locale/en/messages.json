@@ -570,7 +570,7 @@
   "gnb.nomercy.title": "No Mercy Windows",
   "gnb.sonic-break.accordion.message": "<0/> is a {0} second DoT that should tick {MAX_TICKS, plural, one {# time} other {# times}} for damage, if you are finding that the target is going invulnerable, consider moving it forward in your <1/> windows.",
   "gnb.sonic-break.suggestions.missing-ticks.content": "One or more of your <0/> DoTs had ticks that did not deal damage.",
-  "gnb.sonic-break.suggestions.missing-ticks.why": "You wasted {missedTicks, plural, one {# tick} other { #ticks}} of <0/>",
+  "gnb.sonic-break.suggestions.missing-ticks.why": "You wasted {missedTicks, plural, one {# tick} other {# ticks}} of <0/>",
   "gnb.sonic-break.ticktable": "Timestamp",
   "gnb.sonic-break.ticktable.drift-header": "Missing Ticks",
   "gnb.sonic-break.ticktable.timelinelink-button": "Jump to Timeline",
