@@ -22,6 +22,10 @@ export class Tincture extends CoreTincture {
 					action: this.data.actions.EUKRASIAN_DOSIS_III,
 					expectedPerWindow: 1,
 				},
+				{
+					action: this.data.actions.PSYCHE,
+					expectedPerWindow: 1,
+				},
 			],
 			suggestionIcon: this.data.actions.INFUSION_MND.icon,
 			suggestionContent: <Trans id="sge.tincture.suggestions.trackedActions.content">

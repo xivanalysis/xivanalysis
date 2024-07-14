@@ -10,10 +10,9 @@ import {SEVERITY} from 'parser/core/modules/Suggestions'
 import React from 'react'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 
-// Set for stuff to ignore TODO: revisit this and get it to show iaijutsu properly
-// const IGNORE_THIS = new Set([ACTIONS.MIDARE_SETSUGEKKA.id, ACTIONS.TENKA_GOKEN.id, ACTIONS.HIGANBANA.id, ACTIONS.KAESHI_SETSUGEKKA.id, ACTIONS.KAESHI_GOKEN.id, ACTIONS.KAESHI_HIGANBANA])
 const ONLY_SHOW: ActionKey[] = [
 	'HAKAZE',
+	'GYOFU',
 	'JINPU',
 	'SHIFU',
 	'FUKO',

@@ -33,18 +33,30 @@ export class AoeChecker extends AoEUsages {
 		{
 			aoeAction: ACTIONS.TENKA_GOKEN,
 			stActions: [ACTIONS.MIDARE_SETSUGEKKA],
-			minTargets: 2,
+			minTargets: 3,
+		},
+
+		{
+			aoeAction: ACTIONS.TENDO_GOKEN,
+			stActions: [ACTIONS.TENDO_SETSUGEKKA],
+			minTargets: 3,
 		},
 
 		{
 			aoeAction: ACTIONS.KAESHI_GOKEN,
 			stActions: [ACTIONS.KAESHI_SETSUGEKKA],
-			minTargets: 2,
+			minTargets: 3,
+		},
+
+		{
+			aoeAction: ACTIONS.TENDO_KAESHI_GOKEN,
+			stActions: [ACTIONS.TENDO_KAESHI_SETSUGEKKA],
+			minTargets: 3,
 		},
 
 		{
 			aoeAction: ACTIONS.FUKO,
-			stActions: [ACTIONS.HAKAZE],
+			stActions: [ACTIONS.GYOFU],
 			minTargets: 3,
 
 		},
@@ -61,11 +73,6 @@ export class AoeChecker extends AoEUsages {
 			minTargets: 3,
 		},
 
-		{
-			aoeAction: ACTIONS.SHOHA_II,
-			stActions: [ACTIONS.SHOHA],
-			minTargets: 3,
-		},
 	]
 
 	protected override adjustMinTargets(event: Events['damage'], minTargets: number): number {

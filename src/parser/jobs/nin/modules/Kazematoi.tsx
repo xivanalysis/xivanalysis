@@ -17,19 +17,17 @@ const FADE_AMOUNT = 0.25
 const GAUGE_COLOR = Color('#8040bf').fade(FADE_AMOUNT)
 
 const OVERCAP_SEVERITY = {
-	// TODO - Confirm what these should be
 	1: SEVERITY.MINOR,
 	2: SEVERITY.MEDIUM,
 	5: SEVERITY.MAJOR,
 }
 const LEFTOVER_SEVERITY = {
-	// TODO - Confirm what these should be
 	3: SEVERITY.MEDIUM,
 }
 const UNBUFFED_SEVERITY = {
-	// TODO - Confirm what these should be
 	1: SEVERITY.MINOR,
-	4: SEVERITY.MEDIUM,
+	2: SEVERITY.MEDIUM,
+	4: SEVERITY.MAJOR,
 }
 
 // TODO - Implement some bullshit potency tracking logic so we can correct the gauge for multi-boss instances like dungeons and 24-man raids

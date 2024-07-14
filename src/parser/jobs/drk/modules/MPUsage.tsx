@@ -61,10 +61,16 @@ export class MPUsage extends Analyser {
 		[this.data.actions.UNMEND.id, 600],
 		[this.data.actions.UNLEASH.id, 600],
 		[this.data.actions.STALWART_SOUL.id, 600],
+		[this.data.actions.SCARLET_DELIRIUM.id, 600],
+		[this.data.actions.COMEUPPANCE.id, 600],
+		[this.data.actions.TORCLEAVER.id, 600],
+		[this.data.actions.DISESTEEM.id, 600],
 	])
 	private deliriumGenerators = new Map<number, number>([
-		[this.data.actions.BLOODSPILLER.id, 200],
-		[this.data.actions.QUIETUS.id, 500],
+		[this.data.actions.SCARLET_DELIRIUM.id, 200],
+		[this.data.actions.COMEUPPANCE.id, 200],
+		[this.data.actions.TORCLEAVER.id, 200],
+		[this.data.actions.IMPALEMENT.id, 500],
 	])
 	/* eslint-enable @typescript-eslint/no-magic-numbers */
 

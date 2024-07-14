@@ -26,6 +26,7 @@ const AETHERFLOW_GENERATORS: ActionKey[] = [
 const AETHERFLOW_SPENDERS: ActionKey[] = [
 	'FESTER',
 	'PAINFLARE',
+	'NECROTIZE',
 ]
 
 // These are lower potency filler casts.  If one of these was

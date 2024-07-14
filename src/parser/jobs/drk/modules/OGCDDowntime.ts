@@ -1,34 +1,26 @@
 import {CooldownDowntime} from 'parser/core/modules/CooldownDowntime'
 
-const DEFAULT_FIRST_USE_OFFSET = 15000
-
 export class OGCDDowntime extends CooldownDowntime {
-	override defaultFirstUseOffset = DEFAULT_FIRST_USE_OFFSET
 	override trackedCds = [
 		{
-			cooldowns: [this.data.actions.BLOOD_WEAPON],
-			firstUseOffset: 2500,
-		},
-		{
 			cooldowns: [this.data.actions.DELIRIUM],
-			firstUseOffset: 7500,
-		},
-		{
-			cooldowns: [this.data.actions.PLUNGE],
-			resetBy: {
-				actions: [this.data.actions.UNMEND],
-				refundAmount: 5000,
-			},
+			firstUseOffset: 10000,
 		},
 		{
 			cooldowns: [this.data.actions.SALTED_EARTH],
-			firstUseOffset: 10000,
+			firstUseOffset: 12500,
 		},
-		{cooldowns: [this.data.actions.CARVE_AND_SPIT, this.data.actions.ABYSSAL_DRAIN]},
-		{cooldowns: [this.data.actions.SHADOWBRINGER]},
+		{
+			cooldowns: [this.data.actions.CARVE_AND_SPIT, this.data.actions.ABYSSAL_DRAIN],
+			firstUseOffset: 17500,
+		},
+		{
+			cooldowns: [this.data.actions.SHADOWBRINGER],
+			firstUseOffset: 20000,
+		},
 		{
 			cooldowns: [this.data.actions.LIVING_SHADOW],
-			firstUseOffset: 10000,
+			firstUseOffset: 5000,
 		},
 	]
 }

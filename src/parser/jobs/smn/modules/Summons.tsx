@@ -31,13 +31,15 @@ const MAX_POSSIBLE_SLIPSTREAM = 1
 const SUMMON_SKILLS: ActionKey[] = [
 	'SUMMON_BAHAMUT',
 	'SUMMON_PHOENIX',
+	'SUMMON_SOLAR_BAHAMUT',
 ]
 
 interface SummonWindow {
 	demiSummon?: Events['action']
 	demiGcds: number
-	deathflareOrRekindle: number
+	demiAstralFlow: number
 	enkindle: number
+	//Lux Solaris is not tracked here, since it is not required to be used during the demi
 
 	ifritSummon?: Events['action']
 	rubyGcds: number
@@ -70,7 +72,7 @@ export class Summons extends Analyser {
 		() => ({
 			demiSummon: undefined,
 			demiGcds: 0,
-			deathflareOrRekindle: 0,
+			demiAstralFlow: 0,
 			enkindle: 0,
 
 			ifritSummon: undefined,
@@ -126,14 +128,18 @@ export class Summons extends Analyser {
 		case this.data.actions.ASTRAL_FLARE.id:
 		case this.data.actions.FOUNTAIN_OF_FIRE.id:
 		case this.data.actions.BRAND_OF_PURGATORY.id:
+		case this.data.actions.UMBRAL_IMPULSE.id:
+		case this.data.actions.UMBRAL_FLARE.id:
 			current.data.demiGcds += 1
 			break
 		case this.data.actions.DEATHFLARE.id:
 		case this.data.actions.REKINDLE.id:
-			current.data.deathflareOrRekindle += 1
+		case this.data.actions.SUNFLARE.id:
+			current.data.demiAstralFlow += 1
 			break
 		case this.data.actions.ENKINDLE_BAHAMUT.id:
 		case this.data.actions.ENKINDLE_PHOENIX.id:
+		case this.data.actions.ENKINDLE_SOLAR_BAHAMUT.id:
 			current.data.enkindle += 1
 			break
 
@@ -218,7 +224,7 @@ export class Summons extends Analyser {
 
 		// Deathflares (Rekindles are separate to allow for lower severity since they aren't a direct damage loss)
 		missed = this.history.entries
-			.filter(entry => entry.data.demiSummon?.action === this.data.actions.SUMMON_BAHAMUT.id && entry.data.deathflareOrRekindle === 0)
+			.filter(entry => entry.data.demiSummon?.action === this.data.actions.SUMMON_BAHAMUT.id && entry.data.demiAstralFlow === 0)
 			.length
 		if (missed > 0) {
 			this.suggestions.add(new Suggestion({
@@ -231,7 +237,7 @@ export class Summons extends Analyser {
 
 		// Rekindles
 		missed = this.history.entries
-			.filter(entry => entry.data.demiSummon?.action === this.data.actions.SUMMON_PHOENIX.id && entry.data.deathflareOrRekindle === 0)
+			.filter(entry => entry.data.demiSummon?.action === this.data.actions.SUMMON_PHOENIX.id && entry.data.demiAstralFlow === 0)
 			.length
 		if (missed > 0) {
 			this.suggestions.add(new Suggestion({
@@ -249,7 +255,8 @@ export class Summons extends Analyser {
 			this.suggestions.add(new Suggestion({
 				icon: this.data.actions.ENKINDLE_BAHAMUT.icon,
 				content: <Trans id="smn.summons.enkindle.content">Be sure to use <ActionLink action="ENKINDLE_BAHAMUT"/> each time you summon
-				Bahamut and <ActionLink action="ENKINDLE_PHOENIX"/> each time you summon Phoenix.</Trans>,
+				Bahamut, <ActionLink action="ENKINDLE_PHOENIX"/> each time you summon Phoenix, and <ActionLink action="ENKINDLE_SOLAR_BAHAMUT"/>
+				each time you summon Solar Bahamut.</Trans>,
 				why: <Trans id="smn.summons.enkindle.why">You failed to cast an Enkindle ability <Plural value={missed} one="# time" other="# times"/>.</Trans>,
 				severity: SEVERITY.MAJOR,
 			}))
@@ -356,9 +363,7 @@ export class Summons extends Analyser {
 	}
 
 	private buildWindowOutput(summon: HistoryEntry<SummonWindow>) {
-		const demiRow = (summon.data.demiSummon?.action === this.data.actions.SUMMON_BAHAMUT.id) ?
-			this.buildBahamutRow(summon) :
-			this.buildPhoenixRow(summon)
+		const demiRow = this.buildDemiRow(summon)
 
 		const missedMountainBusters = summon.data.mountainBusters < summon.data.topazGcds
 		const badR4 = (summon.data.ruinIV == null && summon.data.fillerGcds > 0) ||
@@ -435,11 +440,21 @@ export class Summons extends Analyser {
 		}
 	}
 
+	private buildDemiRow(summon: HistoryEntry<SummonWindow>) {
+		if (summon.data.demiSummon?.action === this.data.actions.SUMMON_BAHAMUT.id) {
+			return this.buildBahamutRow(summon)
+		}
+		if (summon.data.demiSummon?.action === this.data.actions.SUMMON_BAHAMUT.id) {
+			return this.buildPhoenixRow(summon)
+		}
+		return this.buildSolarBahamutRow(summon)
+	}
+
 	private buildBahamutRow(summon: HistoryEntry<SummonWindow>) {
 		const expectedGcds = this.expectedDemiGcdsForWindow(summon)
 
 		const missingGcds = summon.data.demiGcds < expectedGcds
-		const missingAstralFlow = summon.data.deathflareOrRekindle < 1
+		const missingAstralFlow = summon.data.demiAstralFlow < 1
 		const missingEnkindle = summon.data.enkindle < 1
 
 		return {
@@ -455,7 +470,7 @@ export class Summons extends Analyser {
 				</Table.Cell>
 				<Table.Cell positive={!missingAstralFlow} negative={missingAstralFlow}>
 					<ActionLink showName={false} action="DEATHFLARE" />
-					&nbsp;{summon.data.deathflareOrRekindle}
+					&nbsp;{summon.data.demiAstralFlow}
 				</Table.Cell>
 				<Table.Cell positive={!missingEnkindle} negative={missingEnkindle}>
 					<ActionLink showName={false} action="ENKINDLE_BAHAMUT" />
@@ -469,7 +484,7 @@ export class Summons extends Analyser {
 		const expectedGcds = this.expectedDemiGcdsForWindow(summon)
 
 		const missingGcds = summon.data.demiGcds < expectedGcds
-		const missingAstralFlow = summon.data.deathflareOrRekindle < 1
+		const missingAstralFlow = summon.data.demiAstralFlow < 1
 		const missingEnkindle = summon.data.enkindle < 1
 
 		return {
@@ -485,10 +500,40 @@ export class Summons extends Analyser {
 				</Table.Cell>
 				<Table.Cell positive={!missingAstralFlow} negative={missingAstralFlow}>
 					<ActionLink showName={false} action="REKINDLE" />
-					&nbsp;{summon.data.deathflareOrRekindle}
+					&nbsp;{summon.data.demiAstralFlow}
 				</Table.Cell>
 				<Table.Cell positive={!missingEnkindle} negative={missingEnkindle}>
 					<ActionLink showName={false} action="ENKINDLE_PHOENIX" />
+					&nbsp;{summon.data.enkindle}
+				</Table.Cell>
+			</Table.Row>,
+		}
+	}
+
+	private buildSolarBahamutRow(summon: HistoryEntry<SummonWindow>) {
+		const expectedGcds = this.expectedDemiGcdsForWindow(summon)
+
+		const missingGcds = summon.data.demiGcds < expectedGcds
+		const missingAstralFlow = summon.data.demiAstralFlow < 1
+		const missingEnkindle = summon.data.enkindle < 1
+
+		return {
+			hasError: missingGcds || missingAstralFlow || missingEnkindle,
+			display: <Table.Row>
+				<Table.Cell>
+					<ActionLink showName={false} action="SUMMON_SOLAR_BAHAMUT" />
+					&nbsp;{this.parser.formatEpochTimestamp(summon.start)}
+				</Table.Cell>
+				<Table.Cell positive={!missingGcds} negative={missingGcds}>
+					<ActionLink showName={false} action="UMBRAL_IMPULSE" />/<ActionLink showName={false} action="UMBRAL_FLARE" />
+					&nbsp;{summon.data.demiGcds}
+				</Table.Cell>
+				<Table.Cell positive={!missingAstralFlow} negative={missingAstralFlow}>
+					<ActionLink showName={false} action="SUNFLARE" />
+					&nbsp;{summon.data.demiAstralFlow}
+				</Table.Cell>
+				<Table.Cell positive={!missingEnkindle} negative={missingEnkindle}>
+					<ActionLink showName={false} action="ENKINDLE_SOLAR_BAHAMUT" />
 					&nbsp;{summon.data.enkindle}
 				</Table.Cell>
 			</Table.Row>,
