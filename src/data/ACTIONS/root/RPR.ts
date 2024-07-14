@@ -166,6 +166,7 @@ export const RPR = ensureActions({
 		name: 'Perfectio',
 		icon: iconUrl(3638),
 		onGcd: true,
+		speedAttribute: Attribute.SKILL_SPEED, //Why is does this scale, but not Communio?!
 	},
 
 	// -----
