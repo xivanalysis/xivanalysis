@@ -101,16 +101,13 @@ export class DroppedDefensives extends Analyser {
 
 		const playerFilter = filter<Event>().source(this.parser.actor.id)
 		const defensives: Array<Action['id']> = this.defensivesHistory
-			.map(defensiveItem => defensiveItem.defensive.id)
+			.flatMap(defensiveItem => defensiveItem.defensive.id)
 		const prerequisiteActions: Array<Action['id']> = this.defensivesHistory
-			.map(defensiveItem => { if (defensiveItem.prerequisiteAction != null) { return defensiveItem.prerequisiteAction.id } })
-			.filter(prerequisiteAction => prerequisiteAction != null)
+			.flatMap(defensiveItem => defensiveItem.prerequisiteAction?.id ?? [])
 		const cancellingActions: Array<Action['id']> = this.defensivesHistory
-			.map(defensiveItem => { if (defensiveItem.cancellingAction != null) { return defensiveItem.cancellingAction.id } })
-			.filter(cancellingAction => cancellingAction != null)
+			.flatMap(defensiveItem => defensiveItem.cancellingAction?.id ?? [])
 		const prerequisiteStatuses: Array<Status['id']> = this.defensivesHistory
-			.map(defensiveItem => { if (defensiveItem.prerequisiteStatus != null) { return defensiveItem.prerequisiteStatus.id } })
-			.filter(prerequisiteStatus => prerequisiteStatus != null)
+			.flatMap(defensiveItem => defensiveItem.prerequisiteStatus?.id ?? [])
 
 		this.addEventHook(playerFilter
 			.type('action')
