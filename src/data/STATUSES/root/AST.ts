@@ -180,7 +180,7 @@ export const AST = ensureStatuses({
 
 	SUN_TOUCHED: {
 		id: 3895,
-		name: 'Sun Touched',
+		name: 'Suntouched',
 		icon: iconUrl(13266),
 		duration: 30000,
 	},
