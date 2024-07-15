@@ -31,12 +31,25 @@ const CONTRIBUTORS = ensureRecord<Contributor>()({
 			JOBS.BLACK_MAGE, JOBS.DANCER, JOBS.SAGE, JOBS.PICTOMANCER,
 		],
 	},
-
+	AZARIAH: {
+		name: 'AzariahAeroborn',
+		avatar: require('./avatar/azariah.png'),
+		jobs: [
+			JOBS.DARK_KNIGHT,
+		],
+	},
 	FALINDRITH: {
 		name: 'falindrith',
 		avatar: require('./avatar/falindrith.png'),
 		jobs: [
 			JOBS.DRAGOON,
+		],
+	},
+	KELOS: {
+		name: 'Kelos',
+		avatar: '',
+		jobs: [
+			JOBS.SUMMONER,
 		],
 	},
 	RYAN: {
@@ -53,6 +66,13 @@ const CONTRIBUTORS = ensureRecord<Contributor>()({
 		avatar: require('./avatar/toastdeib.png'),
 		jobs: [
 			JOBS.NINJA,
+		],
+	},
+	LEYLIA: {
+		name: 'Leylia',
+		avatar: require('./avatar/Leylia.png'),
+		jobs: [
+			JOBS.RED_MAGE,
 		],
 	},
 	MERCWRI: {

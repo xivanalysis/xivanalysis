@@ -104,7 +104,7 @@ export const SMN = ensureActions({
 
 	ASTRAL_FLARE: {
 		id: 25821,
-		name: 'Astral Impulse',
+		name: 'Astral Flare',
 		icon: iconUrl(2758),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
@@ -398,6 +398,68 @@ export const SMN = ensureActions({
 		speedAttribute: Attribute.SPELL_SPEED,
 	},
 
+	NECROTIZE: {
+		id: 36990,
+		name: 'Necrotize',
+		icon: iconUrl(2699),
+		cooldown: 1000,
+	},
+
+	SEARING_FLASH: {
+		id: 36991,
+		name: 'Searing Flash',
+		icon: iconUrl(2781),
+		cooldown: 1000,
+	},
+
+	LUX_SOLARIS: {
+		id: 36997,
+		name: 'Lux Solaris',
+		icon: iconUrl(2787),
+		cooldown: 1000,
+	},
+
+	SUMMON_SOLAR_BAHAMUT: {
+		id: 36992,
+		name: 'Summon Solar Bahamut',
+		icon: iconUrl(2782),
+		onGcd: true,
+		speedAttribute: Attribute.SPELL_SPEED,
+		gcdRecast: 2500,
+		cooldown: 60000,
+		cooldownGroup: SMN_COOLDOWN_GROUP.DEMI,
+	},
+
+	ENKINDLE_SOLAR_BAHAMUT: {
+		id: 36998,
+		name: 'Enkindle Solar Bahamut',
+		icon: iconUrl(2788),
+		cooldown: 20000,
+	},
+
+	UMBRAL_IMPULSE: {
+		id: 36994,
+		name: 'Umbral Impulse',
+		icon: iconUrl(2784),
+		onGcd: true,
+		speedAttribute: Attribute.SPELL_SPEED,
+	},
+
+	UMBRAL_FLARE: {
+		id: 36995,
+		name: 'Umbral Flare',
+		icon: iconUrl(2785),
+		onGcd: true,
+		speedAttribute: Attribute.SPELL_SPEED,
+	},
+
+	SUNFLARE: {
+		id: 36996,
+		name: 'Sunflare',
+		icon: iconUrl(2786),
+		cooldown: 20000,
+	},
+
 	// -----
 	// Pet
 	// -----
@@ -432,6 +494,19 @@ export const SMN = ensureActions({
 		name: 'Everlasting Flight',
 		icon: iconUrl(2731),
 		statusesApplied: ['EVERLASTING_FLIGHT'],
+	},
+
+	// Demi-solar bahamut
+	LUXWAVE: {
+		id: 36993,
+		name: 'Luxwave',
+		icon: iconUrl(2783),
+	},
+
+	EXODUS: {
+		id: 36999,
+		name: 'Exodus',
+		icon: iconUrl(2789),
 	},
 
 	// Ifrit
