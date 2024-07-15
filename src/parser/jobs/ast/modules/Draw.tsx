@@ -12,7 +12,7 @@ import {Data} from 'parser/core/modules/Data'
 import Suggestions, {SEVERITY, Suggestion, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import DISPLAY_ORDER from 'parser/jobs/ast/modules/DISPLAY_ORDER'
 import React from 'react'
-import {PLAY_I, PLAY_II_III, OFFENSIVE_ARCANA_STATUS, DEFENSIVE_ARCANA_STATUS} from './ArcanaGroups'
+import {PLAY_I, OFFENSIVE_ARCANA_STATUS} from './ArcanaGroups'
 
 const oGCD_ALLOWANCE = 7500 //used in case the last draw comes up in the last second of the fight. Since plays are typically done in a separate weave, a full GCD would be needed to play the card. Takes another second to cast PLAY and therefore an AST would not DRAW if they couldn't even PLAY. Additionally, an AST would not play if not even a GCD could be cast before the end of the fight. Therefore, the oGCD_ALLOWANCE should be approcimately 3 GCDs (2 for AST to cast, 1 for job to do an action) = 3 * 2500
 const INTENTIONAL_DRIFT_FOR_BURST = 7500 //gcds until draw is used in opener
@@ -39,24 +39,18 @@ export default class Draw extends Analyser {
 	private cooldownEndTime: number = this.parser.pull.timestamp
 	private drawTotalDrift: number = 0
 	private playIs: number = 0
-	private playIIs: number = 0
-	private playIIIs: number = 0
 	private playLord: number = 0
 	private playLady: number = 0
 
 	private prepullPrepped: boolean = true //always true
 
 	private playDamageActions: Array<Action['id']> = []
-	private playDefensiveActions: Array<Action['id']> = []
 	private arcanaDamageStatuses: Array<Status['id']> = []
-	private arcanaDefensiveStatuses: Array<Status['id']> = []
 
 	override initialise() {
 
 		this.playDamageActions = PLAY_I.map(actionKey => this.data.actions[actionKey].id)
-		this.playDefensiveActions = PLAY_II_III.map(actionKey => this.data.actions[actionKey].id)
 		this.arcanaDamageStatuses = OFFENSIVE_ARCANA_STATUS.map(statusKey => this.data.statuses[statusKey].id)
-		this.arcanaDefensiveStatuses = DEFENSIVE_ARCANA_STATUS.map(statusKey => this.data.statuses[statusKey].id)
 
 		const playerFilter = filter<Event>().source(this.parser.actor.id)
 
