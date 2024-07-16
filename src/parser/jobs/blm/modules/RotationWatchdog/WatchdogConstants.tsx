@@ -49,8 +49,6 @@ export interface CycleMetadata {
 	missingDespairs: boolean
 	missingFire4s: boolean
 	missingFlareStars: boolean
-	wasTPF1: boolean
-	expectedFire4sBeforeDespair: number
 	expectedFire4s: number,
 	expectedDespairs: number,
 	expectedFlareStars: number,

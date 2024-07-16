@@ -95,8 +95,6 @@ export class RotationWatchdog extends RestartWindow {
 		missingDespairs: false,
 		missingFire4s: false,
 		missingFlareStars: false,
-		wasTPF1: false,
-		expectedFire4sBeforeDespair: 0,
 		expectedFire4s: -1,
 		expectedDespairs: -1,
 		expectedFlareStars: -1,
@@ -391,11 +389,9 @@ export class RotationWatchdog extends RestartWindow {
 
 			// Make sure we don't go wild and return a larger expected count than is actually possible, in case the above logic misbehaves...
 			adjustment = Math.min(adjustment, MAX_POSSIBLE_FIRE4)
-			const despairTime = window.data.find(event => event.action.id === this.data.actions.DESPAIR.id)?.timestamp
 
 			// Give them credit if we were overly pessimistic
-			adjustment = Math.max(adjustment, window.data.filter(event => event.action.id === action.action.id && (!despairTime || event.timestamp < despairTime)).length)
-			windowMetadata.expectedFire4sBeforeDespair = adjustment
+			adjustment = Math.max(adjustment, window.data.filter(event => event.action.id === action.action.id).length)
 		}
 
 		if (action.action.id === this.data.actions.DESPAIR.id) {
@@ -408,7 +404,8 @@ export class RotationWatchdog extends RestartWindow {
 				adjustment++
 
 				// Players may choose to carry their generated Flare Star into the post-Manafont window
-				if (window.data[window.data.length - 1].action.id === this.data.actions.MANAFONT.id && window.data.filter(event => event.action.id === this.data.actions.FLARE_STAR.id).length < 1) {
+				if (window.data[window.data.length - 1].action.id === this.data.actions.MANAFONT.id &&
+					window.data.filter(event => event.action.id === this.data.actions.FLARE_STAR.id).length < 1) {
 					adjustment--
 				}
 			}

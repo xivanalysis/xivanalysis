@@ -6,7 +6,6 @@ import CastTime from 'parser/core/modules/CastTime'
 import {ProcGroup, Procs as CoreProcs} from 'parser/core/modules/Procs'
 import {SEVERITY, Suggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
-import iconF3p from './f3p.png'
 
 export default class Procs extends CoreProcs {
 	@dependency castTime!: CastTime
@@ -53,7 +52,7 @@ export default class Procs extends CoreProcs {
 		const droppedFireStarters: number = this.getDropCountForStatus(this.data.statuses.FIRESTARTER.id)
 		if (droppedFireStarters > 0) {
 			this.suggestions.add(new Suggestion({
-				icon: iconF3p,
+				icon: this.data.statuses.FIRESTARTER.icon,
 				content: <Trans id="blm.procs.suggestions.dropped-f3ps.content">
 					You lost at least  one <ActionLink {...this.data.actions.FIRE_III}/> proc by allowing <StatusLink {...this.data.statuses.FIRESTARTER}/> to expire without using it.
 				</Trans>,
