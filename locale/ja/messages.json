@@ -122,6 +122,8 @@
   "blm.rotation-watchdog.suggestions.end-with-despair.why": "<0/>をキャストせずにアストラルファイアが終了したのは{astralFiresMissingDespairs, plural, other {# 回}}ありました。",
   "blm.rotation-watchdog.suggestions.extra-f1s.content": "1回のアストラルファイアのローテーションで2回以上の<0/>に頼るのを避けてください。戦闘前により良いスキル回しを計画しましょう。",
   "blm.rotation-watchdog.suggestions.extra-f1s.why": "あなたは更に<0/>を詠唱可能でした。 {extraF1s, plural, one {# time} other {# times}}.",
+  "blm.rotation-watchdog.suggestions.firestarter-usage.content": "",
+  "blm.rotation-watchdog.suggestions.firestarter-usage.why": "",
   "blm.rotation-watchdog.suggestions.flarestarusage.content": "",
   "blm.rotation-watchdog.suggestions.flarestarusage.why": "",
   "blm.rotation-watchdog.suggestions.icemage.content": "アンブラルブリザードを長時間保持することは避けてください。 与えるダメージの大部分はアストラルファイア中に発生するため、戦闘中の<0/>の詠唱する数を最大にする必要があります。",

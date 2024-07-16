@@ -122,6 +122,8 @@
   "blm.rotation-watchdog.suggestions.end-with-despair.why": "천상의 화염 구간이 <0/>이 아닌 기술로 {astralFiresMissingDespairs, plural, other {#회}} 마무리되었습니다.",
   "blm.rotation-watchdog.suggestions.extra-f1s.content": "천상의 화염 상태에서 2회 이상의 <0/>을 사용하는 것은 사전에 계획하여 되도록 피해야 합니다.",
   "blm.rotation-watchdog.suggestions.extra-f1s.why": "<0/> 기술을 추가로 {extraF1s, plural, other {#회}} 사용했습니다.",
+  "blm.rotation-watchdog.suggestions.firestarter-usage.content": "",
+  "blm.rotation-watchdog.suggestions.firestarter-usage.why": "",
   "blm.rotation-watchdog.suggestions.flarestarusage.content": "",
   "blm.rotation-watchdog.suggestions.flarestarusage.why": "",
   "blm.rotation-watchdog.suggestions.icemage.content": "저승의 냉기를 장시간 유지하지 마십시오. <0/>를 최대한 많이 시전하는것이 중요합니다.",

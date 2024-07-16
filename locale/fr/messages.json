@@ -122,6 +122,8 @@
   "blm.rotation-watchdog.suggestions.end-with-despair.why": "{astralFiresMissingDespairs, plural, one {# phase de Feu Astral ne comportait pas} other {# phases de Feu Astral ne comportaient pas}} au moins un <0/>.",
   "blm.rotation-watchdog.suggestions.extra-f1s.content": "Incanter plus d'un <0/> pendant votre phase de Feu Astral est une perte qui devrait être évitée grâce a une meilleure connaissance des mécaniques du combat.",
   "blm.rotation-watchdog.suggestions.extra-f1s.why": "Vous avez utilisé <0/> {extraF1s, plural, one {# fois} other {# fois}} de trop.",
+  "blm.rotation-watchdog.suggestions.firestarter-usage.content": "",
+  "blm.rotation-watchdog.suggestions.firestarter-usage.why": "",
   "blm.rotation-watchdog.suggestions.flarestarusage.content": "",
   "blm.rotation-watchdog.suggestions.flarestarusage.why": "",
   "blm.rotation-watchdog.suggestions.icemage.content": "Évitez de rester trop longtemps en Glace Ombrale. La majorité des dégâts que vous faites sont infligés pendant votre phase Feu Astral, alors à vous de maximiser le nombre de <0/> lancés pendant le combat.",
