@@ -24,6 +24,7 @@ import Procs from './Procs'
 import {assignErrorCode, getMetadataForWindow, getPreviousMetadata} from './RotationWatchdog/EvaluatorUtilities'
 import {ExpectedFireSpellsEvaluator} from './RotationWatchdog/ExpectedFireSpellsEvaluator'
 import {ExtraF1Evaluator} from './RotationWatchdog/ExtraF1Evaluator'
+import {FirestarterUsageEvaluator} from './RotationWatchdog/FirestarterUsageEvaluator'
 import {FlareStarUsageEvaluator} from './RotationWatchdog/FlareStarUsageEvaluator'
 import {IceMageEvaluator} from './RotationWatchdog/IceMageEvaluator'
 import {ManafontTimingEvaluator} from './RotationWatchdog/ManafontTimingEvaluator'
@@ -177,6 +178,12 @@ export class RotationWatchdog extends RestartWindow {
 		this.addEvaluator(new UptimeSoulsEvaluator({
 			umbralSoulAction: this.data.actions.UMBRAL_SOUL,
 			invulnerability: this.invulnerability,
+		}))
+
+		this.addEvaluator(new FirestarterUsageEvaluator({
+			manafontId: this.data.actions.MANAFONT.id,
+			paradoxId: this.data.actions.PARADOX.id,
+			fire3Id: this.data.actions.FIRE_III.id,
 		}))
 		//#endregion
 
