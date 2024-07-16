@@ -44,14 +44,12 @@ export class Hyperphantasia extends BuffWindow {
 			hasStacks: true,
 			suggestionIcon: this.data.statuses.HYPERPHANTASIA.icon,
 			suggestionContent: <Trans id="pct.hyperphantasia.suggestions.missedgcd.content">
-				<DataLink status="HYPERPHANTASIA" /> allows for faster casting of your aetherhue spells while combined with <DataLink status="INSPIRATION" />, and using all of the stacks is required to generate a <DataLink status="RAINBOW_BRIGHT" /> for a quick use of <DataLink action="RAINBOW_DRIP" />.<br/>
-				Make sure you use them before they wear off.
+				<DataLink status="HYPERPHANTASIA" /> allows for faster casting of your aetherhue spells while combined with <DataLink status="INSPIRATION" />, and using all of the stacks is required to generate a <DataLink status="RAINBOW_BRIGHT" /> for a quick use of <DataLink action="RAINBOW_DRIP" />. Make sure you use them before they wear off.
 			</Trans>,
 			suggestionWindowName: <DataLink showIcon={false} status="HYPERPHANTASIA" />,
 			severityTiers: {
-				1: SEVERITY.MINOR,
-				3: SEVERITY.MEDIUM,
-				5: SEVERITY.MAJOR,
+				1: SEVERITY.MEDIUM,
+				2: SEVERITY.MAJOR,
 			},
 		}))
 	}

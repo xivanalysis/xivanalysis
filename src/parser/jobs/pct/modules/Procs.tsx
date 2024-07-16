@@ -4,7 +4,7 @@ import {Events} from 'event'
 import {dependency} from 'parser/core/Injectable'
 import CastTime from 'parser/core/modules/CastTime'
 import {ProcGroup, Procs as CoreProcs} from 'parser/core/modules/Procs'
-import {TieredSuggestion} from 'parser/core/modules/Suggestions'
+import {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import {DEFAULT_SEVERITY_TIERS} from 'parser/jobs/dnc/CommonData'
 import React from 'react'
 
@@ -73,7 +73,10 @@ export default class Procs extends CoreProcs {
 			content: <Trans id="pct.procs.dropped-rainbows.content"><DataLink action="RAINBOW_DRIP" /> is one of your strongest GCDs, and <DataLink status="RAINBOW_BRIGHT" /> allows its use as a normal-length instant GCD, rather than requiring an extremely long cast time.</Trans>,
 			why: <Trans id="pct.procs.dropped-rainbows.why"><DataLink showIcon={false} status="RAINBOW_BRIGHT" /> was allowed to expire <Plural value={droppedRainbows} one="# time" other="# times" />.</Trans>,
 			value: droppedRainbows,
-			tiers: DEFAULT_SEVERITY_TIERS,
+			tiers:  {
+				1: SEVERITY.MEDIUM,
+				2: SEVERITY.MAJOR,
+			},
 		}))
 
 		this.suggestions.add(new TieredSuggestion({
@@ -81,7 +84,10 @@ export default class Procs extends CoreProcs {
 			content: <Trans id="pct.procs.dropped-stars.content"><DataLink action="STAR_PRISM" /> is your strongest GCD, and includes a party-wide heal as well. Make sure to use it before <DataLink status="STARSTRUCK" /> wears off.</Trans>,
 			why: <Trans id="pct.procs.dropped-stars.why"><DataLink showIcon={false} status="STARSTRUCK" /> was allowed to expire <Plural value={droppedStars} one="# time" other="# times" />.</Trans>,
 			value: droppedStars,
-			tiers: DEFAULT_SEVERITY_TIERS,
+			tiers:  {
+				1: SEVERITY.MEDIUM,
+				2: SEVERITY.MAJOR,
+			},
 		}))
 	}
 }
