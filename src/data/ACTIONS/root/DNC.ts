@@ -2,6 +2,10 @@ import {iconUrl} from 'data/icon'
 import {Attribute} from 'event'
 import {ensureActions} from '../type'
 
+export const DNC_COOLDOWN_GROUPS = {
+	STANDARD_STEP: 7,
+}
+
 export const DNC = ensureActions({
 	STANDARD_FINISH: {
 		id: 16003,
@@ -38,7 +42,7 @@ export const DNC = ensureActions({
 		gcdRecast: 2500,
 		speedAttribute: Attribute.SKILL_SPEED,
 		cooldown: 30000,
-		cooldownGroup: 15997, // Finishing Move shares a cooldown with Standard Step
+		cooldownGroup: DNC_COOLDOWN_GROUPS.STANDARD_STEP, // Finishing Move shares a cooldown with Standard Step
 	},
 	LAST_DANCE: {
 		id: 36983,
@@ -176,7 +180,7 @@ export const DNC = ensureActions({
 		onGcd: true,
 		cooldown: 30000,
 		gcdRecast: 1500,
-		cooldownGroup: 15997,
+		cooldownGroup: DNC_COOLDOWN_GROUPS.STANDARD_STEP,
 		statusesApplied: ['STANDARD_STEP'],
 	},
 	TECHNICAL_STEP: {
