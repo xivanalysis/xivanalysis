@@ -8,6 +8,7 @@ import {Gauge} from './Gauge'
 import {Hyperphantasia} from './Hyperphantasia'
 import Procs from './Procs'
 import {Swiftcast} from './Swiftcast'
+import Weaving from './Weaving'
 
 export default [
 	AoEUsages,
@@ -20,4 +21,5 @@ export default [
 	Procs,
 	Swiftcast,
 	Tincture,
+	Weaving,
 ]
