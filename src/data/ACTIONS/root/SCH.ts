@@ -81,7 +81,7 @@ export const SCH = ensureActions({
 		id: 16542,
 		name: 'Recitation',
 		icon: iconUrl(2822),
-		cooldown: 90000,
+		cooldown: 60000,
 	},
 
 	// This is the action cast by the SCH
@@ -111,6 +111,16 @@ export const SCH = ensureActions({
 		id: 186,
 		name: 'Succor',
 		icon: iconUrl(2802),
+		onGcd: true,
+		speedAttribute: Attribute.SPELL_SPEED,
+		castTime: 2000,
+		statusesApplied: ['GALVANIZE'],
+	},
+
+	CONCITATION: {
+		id: 37013,
+		name: 'Conciation',
+		icon: iconUrl(2880),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 2000,
@@ -233,7 +243,16 @@ export const SCH = ensureActions({
 		name: 'Chain Stratagem',
 		icon: iconUrl(2815),
 		cooldown: 120000,
-		statusesApplied: ['CHAIN_STRATAGEM'],
+		statusesApplied: ['CHAIN_STRATAGEM', 'IMPACT_IMMINENT'],
+	},
+
+	// Baneful Impaction
+	BANEFUL_IMPACTION: {
+		id: 37012,
+		name: 'Baneful Impaction',
+		icon: iconUrl(2879),
+		cooldown: 300,
+		statusesApplied: ['BANEFUL_IMPACTION'],
 	},
 
 	SCH_AETHERPACT: {
@@ -355,5 +374,37 @@ export const SCH = ensureActions({
 		name: 'Seraphic Illumination',
 		icon: iconUrl(2849),
 		pet: true,
+	},
+
+	// -----
+	// SERAPHISM ACTIONS
+	// -----
+	SERAPHISM: {
+		id: 37014,
+		name: 'Seraphism',
+		icon: iconUrl(2881),
+		pet: false,
+		statusesApplied: ['SERAPHISM'],
+		cooldown: 180000,
+	},
+
+	MANIFESTATION: {
+		id: 37015,
+		name: 'Manifestation',
+		icon: iconUrl(2882),
+		onGcd: true,
+		speedAttribute: Attribute.SPELL_SPEED,
+		castTime: 2000,
+		statusesApplied: ['GALVANIZE', 'CATALYZE'],
+	},
+
+	ACCESSION: {
+		id: 37016,
+		name: 'Accession',
+		icon: iconUrl(2883),
+		onGcd: true,
+		speedAttribute: Attribute.SPELL_SPEED,
+		castTime: 2000,
+		statusesApplied: ['GALVANIZE', 'CATALYZE'],
 	},
 })

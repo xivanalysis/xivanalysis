@@ -63,9 +63,9 @@ export const DRK = ensureStatuses({
 		duration: 15000,
 	},
 	DELIRIUM: {
-		id: 1972,
+		id: 3836,
 		name: 'Delirium',
-		icon: iconUrl(13121),
+		icon: iconUrl(17147),
 		duration: 10000,
 		stacksApplied: 3,
 	},
@@ -74,5 +74,17 @@ export const DRK = ensureStatuses({
 		name: 'Oblation',
 		icon: iconUrl(13123),
 		duration: 10000,
+	},
+	SHADOWED_VIGIL: {
+		id: 3835,
+		name: 'Shadowed Vigil',
+		icon: iconUrl(13125),
+		duration: 15000,
+	},
+	VIGILANT: {
+		id: 3902,
+		name: 'Vigilant',
+		icon: iconUrl(13127),
+		duration: 20000,
 	},
 })
