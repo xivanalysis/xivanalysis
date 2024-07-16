@@ -8,6 +8,11 @@ export const changelog = [
 	// 	contributors: [CONTRIBUTORS.YOU],
 	// },
 	{
+		date: new Date('2024-07-14'),
+		Changes: () => <>Fix a bug in the logic that allows a single Last Dance if no GCD weaker than Saber Dance is used under Technical Finish</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
+	{
 		date: new Date('2024-07-11'),
 		Changes: () => <>Add expected actions evaluation for Technical Finish windows, warn against using lower potency combo and proc actions, and mark as supported for Dawntrail</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],
