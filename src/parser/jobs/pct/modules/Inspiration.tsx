@@ -31,8 +31,9 @@ export default class Inspiration extends Analyser {
 		this.addEventHook('complete', this.onComplete)
 	}
 
-	// Heavily simplified version of Ley Lines, since this doesn't affect all casts, only the hyperphantasia consumers
-	// It does seem like it works the same as Circle of Power where Inspiraiton is only applied while in the buff area, so there is that
+	// Heavily simplified version of Ley Lines, since this doesn't affect all casts, only the Hyperphantasia consumers
+	// It  works the same as Circle of Power where Inspiration is only applied while in the buff area, and it falls off
+	// once all 5 stacks of Hyperphantasia are consumed
 	private onGain() {
 		this.castTimeIndex = this.castTime.setPercentageAdjustment(this.hyperphantasiaSpellIds, this.data.statuses.INSPIRATION.speedModifier, 'both')
 	}
