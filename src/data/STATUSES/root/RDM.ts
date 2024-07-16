@@ -43,13 +43,39 @@ export const RDM = ensureStatuses({
 	MANAFICATION: {
 		id: 1971,
 		name: 'Manafication',
-		icon: iconUrl(13407),
-		duration: 10000,
+		icon: iconUrl(17491),
+		duration: 15000,
+		stacksApplied: 6,
 	},
 	MAGICK_BARRIER: {
 		id: 2707,
 		name: 'Magick Barrier',
 		icon: iconUrl(13408),
 		duration: 10000,
+	},
+	THORNED_FLOURISH: {
+		id: 3876,
+		name: 'Thorned Flourish',
+		icon: iconUrl(13411),
+		duration: 30000,
+	},
+	GRAND_IMPACT_READY: {
+		id: 3877,
+		name: 'Grand Impact Ready',
+		icon: iconUrl(13412),
+		duration: 30000,
+	},
+	PREFULGENCE_READY: {
+		id: 3878,
+		name: 'Prefulgence Ready',
+		icon: iconUrl(13413),
+		duration: 30000,
+	},
+	MAGICKED_SWORDPLAY: {
+		id: 3875,
+		name: 'Magicked Swordplay',
+		icon: iconUrl(18665),
+		duration: 30000,
+		stacksApplied: 3,
 	},
 })

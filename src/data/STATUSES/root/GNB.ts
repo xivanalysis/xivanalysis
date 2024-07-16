@@ -50,6 +50,24 @@ export const GNB = ensureStatuses({
 		icon: iconUrl(13618),
 		duration: 10000,
 	},
+	READY_TO_RAZE: {
+		id: 3839,
+		name: 'Ready to Raze',
+		icon: iconUrl(13620),
+		duration: 10000,
+	},
+	READY_TO_BREAK: {
+		id: 3886,
+		name: 'Ready to Break',
+		icon: iconUrl(13622),
+		duration: 30000,
+	},
+	READY_TO_REIGN: {
+		id: 3840,
+		name: 'Ready to Reign',
+		icon: iconUrl(13621),
+		duration: 30000,
+	},
 	AURORA: {
 		id: 1835,
 		name: 'Aurora',
@@ -90,6 +108,12 @@ export const GNB = ensureStatuses({
 		id: 1834,
 		name: 'Nebula',
 		icon: iconUrl(13604),
+		duration: 15000,
+	},
+	GREAT_NEBULA: {
+		id: 3838,
+		name: 'Great Nebula',
+		icon: iconUrl(13619),
 		duration: 15000,
 	},
 	SUPERBOLIDE: {

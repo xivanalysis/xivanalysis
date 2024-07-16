@@ -19,6 +19,13 @@ export const SCH = ensureStatuses({
 		id: 1221,
 		name: 'Chain Stratagem',
 		icon: iconUrl(12809),
+		duration: 20000,
+	},
+
+	BANEFUL_IMPACTION: {
+		id: 3883,
+		name: 'Baneful Impaction',
+		icon: iconUrl(12819),
 		duration: 15000,
 	},
 
@@ -92,6 +99,20 @@ export const SCH = ensureStatuses({
 		duration: 10000,
 	},
 
+	IMPACT_IMMINENT: {
+		id: 3882,
+		name: 'Impact Imminent',
+		icon: iconUrl(12818),
+		duration: 30000,
+	},
+
+	SERAPHISM: {
+		id: 3884,
+		name: 'Seraphism',
+		icon: iconUrl(12820),
+		duration: 20000,
+	},
+
 	// -----
 	// PET
 	// -----
@@ -115,4 +136,5 @@ export const SCH = ensureStatuses({
 		icon: iconUrl(12846),
 		duration: 21000,
 	},
+
 })
