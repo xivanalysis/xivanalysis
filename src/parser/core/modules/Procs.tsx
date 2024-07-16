@@ -318,7 +318,7 @@ export abstract class Procs extends Analyser {
 	 * @param _action The action that might consume multiple procs
 	 * @returns False by default. Jobs may override to return true, allowing usages to be registered for more than one proc status from the event
 	 */
-	protected checkMayConsumeAdditionalProcs(_action: number): boolean {
+	protected actionMayConsumeAdditionalProcs(_action: number): boolean {
 		return false
 	}
 
@@ -332,7 +332,7 @@ export abstract class Procs extends Analyser {
 
 				this.jobSpecificOnConsumeProc(procGroup, event)
 
-				if (!this.checkMayConsumeAdditionalProcs(event.action)) {
+				if (!this.actionMayConsumeAdditionalProcs(event.action)) {
 					break // Get out of the loop if we only consume one proc status at a time
 				}
 			}
