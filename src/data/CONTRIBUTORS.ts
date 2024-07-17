@@ -97,8 +97,8 @@ const CONTRIBUTORS = ensureRecord<Contributor>()({
 		avatar: require('./avatar/Inni.png'),
 		jobs: [
 			JOBS.WHITE_MAGE,
-    ],
-  },
+		],
+  	},
 })
 
 export default CONTRIBUTORS
