@@ -90,6 +90,8 @@ const CONTRIBUTORS = ensureRecord<Contributor>()({
 		avatar: require('./avatar/otocephaly.jpg'),
 		jobs: [
 			JOBS.ASTROLOGIAN,
+		],
+	},
 	NONO: {
 		name: 'Nono',
 		avatar: require('./avatar/nono.png'),
