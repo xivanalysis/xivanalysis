@@ -109,7 +109,7 @@ export class SetGauge extends AbstractGauge {
 		if (!this.getStateAt(value)) { return }
 		const spentValues = [...this.current]
 		const valueIndex = _.lastIndexOf(spentValues, value)
-		if (valueIndex <= 0) { return }
+		if (valueIndex < 0) { return }
 		spentValues.splice(valueIndex, 1)
 		this.set(spentValues)
 	}

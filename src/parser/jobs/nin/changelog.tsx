@@ -17,4 +17,9 @@ export const changelog = [
 		Changes: () => <>Updated Kazematoi suggestion tiers.</>,
 		contributors: [CONTRIBUTORS.TOASTDEIB],
 	},
+	{
+		date: new Date('2024-07-12'),
+		Changes: () => <>Fixed a bug with Kunai's Bane not always registering the last attack in a window.</>,
+		contributors: [CONTRIBUTORS.TOASTDEIB],
+	},
 ]

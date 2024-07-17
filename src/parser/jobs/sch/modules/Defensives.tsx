@@ -10,6 +10,7 @@ export class Defensives extends CoreDefensives {
 		this.data.actions.SUMMON_SERAPH,
 		this.data.actions.PROTRACTION,
 		this.data.actions.EXPEDIENT,
+		this.data.actions.SERAPHISM,
 	]
 
 	// Retaining the old trans ID

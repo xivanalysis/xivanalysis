@@ -9,6 +9,11 @@ export const changelog = [
 	// },
 	{
 		date: new Date('2024-07-10'),
+		Changes: () => <>Update Defensives and Tincture tracking, and mark as supported for Dawntrail</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
+	{
+		date: new Date('2024-07-10'),
 		Changes: () => <>Exclude Philosophia healing from overheal tracking, similar to Kardia</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],
 	},

@@ -15,6 +15,8 @@ const BASE_GCDS_PER_WINDOW = 7
 // For opener detection - first Kunai's Bane should be 8-9s into the fight, with a bit of wiggle room for late starts
 const FIRST_KUNAIS_BANE_BUFFER = 12000
 
+const FUDGE_FACTOR_MS = 1500
+
 const MUDRAS: ActionKey[] = [
 	'TEN',
 	'TEN_KASSATSU',
@@ -55,6 +57,7 @@ export class KunaisBaneWindow extends BuffWindow {
 	@dependency globalCooldown!: GlobalCooldown
 
 	override buffStatus = this.data.statuses.KUNAIS_BANE
+	override statusDurationFudge = FUDGE_FACTOR_MS
 
 	override initialise() {
 		super.initialise()

@@ -16,8 +16,8 @@ export class AoeChecker extends AoEUsages {
 		},
 		{
 			aoeAction: this.data.actions.PAINFLARE,
-			stActions: [this.data.actions.FESTER],
-			minTargets: 2,
+			stActions: [this.data.actions.NECROTIZE],
+			minTargets: 3,
 		},
 		{
 			aoeAction: this.data.actions.ASTRAL_FLARE,
@@ -27,6 +27,11 @@ export class AoeChecker extends AoEUsages {
 		{
 			aoeAction: this.data.actions.BRAND_OF_PURGATORY,
 			stActions: [this.data.actions.FOUNTAIN_OF_FIRE],
+			minTargets: 3,
+		},
+		{
+			aoeAction: this.data.actions.UMBRAL_FLARE,
+			stActions: [this.data.actions.UMBRAL_IMPULSE],
 			minTargets: 3,
 		},
 		{

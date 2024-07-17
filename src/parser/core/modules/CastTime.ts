@@ -63,6 +63,18 @@ export default class CastTime extends Analyser {
 	}
 
 	/**
+	 * Sets a recast cast time adjustment for a flat time amount per cast (See: Rainbow Bright for Rainbow Drip)
+	 * @param actions The actions this adjustment applies to. Either an array of IDs, or the string 'all'
+	 * @param adjustment The amount of time that cast times are adjustmented by
+	 * @param start The beginning of the adjustment time range. Defaults to the current epoch timestamp
+	 * @param end The end of the adjustment time range. May be left null if the end of the range is not yet known
+	 * @returns The index number within the cast time adjustments collection, can be used to reset/end this adjustment later
+	 */
+	public setRecastTimeAdjustment(actions: number[] | 'all', adjustment: number, start: number = this.parser.currentEpochTimestamp, end?: number): number {
+		return this.set({actions, adjustment, start, end, type: 'time', affectsWhich: 'recast'})
+	}
+
+	/**
 	 * Shorthand function for setting casts to instant (ie. Swiftcast, Triplecast)
 	 * @param actions The actions this adjustment applies to. Either an array of IDs, or the string 'all'. Defaults to 'all'
 	 * @param start The beginning of the adjustment time range. Defaults to the current epoch timestamp
