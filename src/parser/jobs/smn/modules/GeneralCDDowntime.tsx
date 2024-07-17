@@ -6,6 +6,7 @@ export default class GeneralCDDowntime extends CooldownDowntime {
 		cooldowns: [
 			this.data.actions.SUMMON_BAHAMUT,
 			this.data.actions.SUMMON_PHOENIX,
+			this.data.actions.SUMMON_SOLAR_BAHAMUT,
 		],
 		firstUseOffset: 4500, //may use 2 Ruin 3's before summoning to ensure Searing Light does not ghost
 		//isAffectedBySpeed: true,

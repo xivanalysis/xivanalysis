@@ -25,6 +25,7 @@ export class Combos extends CoreCombos {
 		ACTIONS.RIPOSTE.id,
 		ACTIONS.ZWERCHHAU.id,
 		ACTIONS.REDOUBLEMENT.id,
+		ACTIONS.MOULINET.id,
 	]
 	_severityNotEnoughManaActions = {
 		1: SEVERITY.MAJOR,

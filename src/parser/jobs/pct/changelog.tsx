@@ -9,6 +9,16 @@ export const changelog = [
 	// 	contributors: [CONTRIBUTORS.YOU],
 	// },
 	{
+		date: new Date('2024-07-13'),
+		Changes: () => <>Add tracking for, and suggestions to avoid dropping, Pictomancer's procs and the stacking <DataLink showIcon={false} status="HAMMER_TIME" /> and <DataLink showIcon={false} status="HYPERPHANTASIA" /> buffs.</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
+	{
+		date: new Date('2024-07-12'),
+		Changes: () => <>Add gauge state tracking for PCT</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
+	{
 		date: new Date('2024-07-11'),
 		Changes: () => <>Add checks for using AoE spells with too few targets</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],

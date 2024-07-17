@@ -5,6 +5,7 @@ import React from 'react'
 
 export class Defensives extends CoreDefensives {
 	protected override trackedDefensives = [
+		this.data.actions.PHILOSOPHIA,
 		this.data.actions.PNEUMA,
 		this.data.actions.HOLOS,
 		this.data.actions.PANHAIMA,
