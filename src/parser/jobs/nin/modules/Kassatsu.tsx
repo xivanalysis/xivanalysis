@@ -1,5 +1,5 @@
 import {Trans, Plural} from '@lingui/react'
-import {ActionLink} from 'components/ui/DbLink'
+import {ActionLink, StatusLink} from 'components/ui/DbLink'
 import {Event, Events} from 'event'
 import {Analyser} from 'parser/core/Analyser'
 import {filter, oneOf} from 'parser/core/filter'
@@ -57,7 +57,7 @@ export class Kassatsu extends Analyser {
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.KASSATSU.icon,
 			content: <Trans id="nin.kassatsu.suggestions.waste.content">
-				Be careful not to let <ActionLink action="KASSATSU"/> fall off, as it wastes a 30% potency buff and means that you're delaying your Ninjutsu casts significantly.
+				Be careful not to let <StatusLink status="KASSATSU"/> fall off, as it wastes a 30% potency buff and means that you're delaying your Ninjutsu casts significantly.
 			</Trans>,
 			tiers: {
 				1: SEVERITY.MAJOR,
