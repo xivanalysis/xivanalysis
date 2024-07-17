@@ -312,6 +312,16 @@ export abstract class Procs extends Analyser {
 	*/
 	protected jobSpecificOnConsumeProc(_procGroup: ProcGroup, _event: Events['action']): void { /* */ }
 
+	/**
+	 * May be overridden by subclasses. Called by onCast to determine whether the action in question can consume
+	 * multiple procs from a single event.
+	 * @param _action The action that might consume multiple procs
+	 * @returns False by default. Jobs may override to return true, allowing usages to be registered for more than one proc status from the event
+	 */
+	protected actionMayConsumeAdditionalProcs(_action: number): boolean {
+		return false
+	}
+
 	private onCast(event: Events['action']): void {
 		const procGroups = this.getTrackedGroupsByAction(event.action)
 
@@ -321,7 +331,10 @@ export abstract class Procs extends Analyser {
 				this.stopAndSave(procGroup, event, 'usage')
 
 				this.jobSpecificOnConsumeProc(procGroup, event)
-				break // Get out of the loop, we only consume one proc status at a time
+
+				if (!this.actionMayConsumeAdditionalProcs(event.action)) {
+					break // Get out of the loop if we only consume one proc status at a time
+				}
 			}
 		}
 

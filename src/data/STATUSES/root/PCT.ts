@@ -35,14 +35,14 @@ export const PCT = ensureStatuses({
 	HAMMER_TIME: {
 		id: 3680,
 		name: 'Hammer Time',
-		icon: iconUrl(18677), // TODO, stack-less
+		icon: iconUrl(18677),
 		duration: 30000,
 		stacksApplied: 3,
 	},
 	SUBTRACTIVE_PALLETTE: {
 		id: 3674,
 		name: 'Subtractive Pallette',
-		icon: iconUrl(18673), // TODO, stack-less
+		icon: iconUrl(18673),
 		duration: 30000,
 		stacksApplied: 3,
 	},
@@ -72,7 +72,7 @@ export const PCT = ensureStatuses({
 	HYPERPHANTASIA: {
 		id: 3688,
 		name: 'Hyperphantasia',
-		icon: iconUrl(18155), // TODO, stack number-less?
+		icon: iconUrl(18155),
 		duration: 30000,
 		stacksApplied: 5,
 	},
