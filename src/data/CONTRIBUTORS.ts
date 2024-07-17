@@ -68,7 +68,7 @@ const CONTRIBUTORS = ensureRecord<Contributor>()({
 			JOBS.NINJA,
 		],
 	},
-  LEYLIA: {
+	LEYLIA: {
 		name: 'Leylia',
 		avatar: require('./avatar/Leylia.png'),
 		jobs: [
@@ -92,13 +92,13 @@ const CONTRIBUTORS = ensureRecord<Contributor>()({
 			JOBS.SCHOLAR,
 		],
 	},
-  INNI: {
+	INNI: {
 		name: 'Inni',
 		avatar: require('./avatar/Inni.png'),
 		jobs: [
 			JOBS.WHITE_MAGE,
 		],
-  	},
+	},
 })
 
 export default CONTRIBUTORS
