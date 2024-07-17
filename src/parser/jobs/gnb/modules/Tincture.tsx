@@ -13,15 +13,27 @@ export class Tincture extends CoreTincture {
 		this.addEvaluator(new ExpectedActionsEvaluator({
 			expectedActions: [
 				{
-					action: this.data.actions.WICKED_TALON,
+					action: this.data.actions.SONIC_BREAK,
 					expectedPerWindow: 1,
 				},
 				{
-					action: this.data.actions.BLASTING_ZONE,
+					action: this.data.actions.GNASHING_FANG,
 					expectedPerWindow: 1,
 				},
 				{
 					action: this.data.actions.DOUBLE_DOWN,
+					expectedPerWindow: 1,
+				},
+				{
+					action: this.data.actions.LION_HEART,
+					expectedPerWindow: 1,
+				},
+				{
+					action: this.data.actions.BOW_SHOCK,
+					expectedPerWindow: 1,
+				},
+				{
+					action: this.data.actions.BLASTING_ZONE,
 					expectedPerWindow: 1,
 				},
 			],

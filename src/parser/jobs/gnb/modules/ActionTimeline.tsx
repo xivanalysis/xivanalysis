@@ -18,12 +18,13 @@ export class ActionTimeline extends CoreActionTimeline {
 		'DANGER_ZONE',
 		'BLASTING_ZONE',
 		'BOW_SHOCK',
-		'ROUGH_DIVIDE',
+		'TRAJECTORY',
 
 		// Personal Mitigation
 		'SUPERBOLIDE',
 		'CAMOUFLAGE',
 		'NEBULA',
+		'GREAT_NEBULA',
 		'RAMPART',
 
 		// Party Mitigation

@@ -129,6 +129,34 @@ export const GNB = ensureActions({
 		cooldown: 60000,
 		speedAttribute: Attribute.SKILL_SPEED,
 	},
+	REIGN_OF_BEASTS: { //The combo is Reign of Beasts -> Noble Blood -> Lion Heart, however marking them as a combo breaks core combo because 2 combos can't exist in the same space.
+		id: 36937,
+		name: 'Reign of Beasts',
+		icon: iconUrl(3437),
+		onGcd: true,
+		gcdRecast: 2500,
+		speedAttribute: Attribute.SKILL_SPEED,
+	},
+
+	NOBLE_BLOOD: {
+		id: 36938,
+		name: 'Noble Blood',
+		icon: iconUrl(3438),
+		onGcd: true,
+		breaksCombo: false,
+		gcdRecast: 2500,
+		speedAttribute: Attribute.SKILL_SPEED,
+	},
+
+	LION_HEART: {
+		id: 36939,
+		name: 'Lion Heart',
+		icon: iconUrl(3439),
+		onGcd: true,
+		breaksCombo: false,
+		gcdRecast: 2500,
+		speedAttribute: Attribute.SKILL_SPEED,
+	},
 
 	// -----
 	// Player oGCDs
@@ -180,6 +208,14 @@ export const GNB = ensureActions({
 		cooldown: 1000,
 		cooldownGroup: 1,
 	},
+	FATED_BRAND: {
+		id: 36936,
+		name: 'Fated Brand',
+		icon: iconUrl(3436),
+		onGcd: false,
+		cooldown: 1000,
+		cooldownGroup: 1,
+	},
 	DANGER_ZONE: {	// Note: upgrades to Blasting Zone at lvl 80
 		id: 16144,
 		name: 'Danger Zone',
@@ -202,10 +238,10 @@ export const GNB = ensureActions({
 		cooldown: 60000,
 		statusesApplied: ['BOW_SHOCK'],
 	},
-	ROUGH_DIVIDE: {
-		id: 16154,
-		name: 'Rough Divide',
-		icon: iconUrl(3418),
+	TRAJECTORY: { //Formerly known as Rough Divide
+		id: 36934,
+		name: 'Trajectory',
+		icon: iconUrl(3434),
 		onGcd: false,
 		cooldown: 30000,
 		charges: 2,
@@ -221,7 +257,7 @@ export const GNB = ensureActions({
 	RELEASE_ROYAL_GUARD: {
 		id: 32068,
 		name: 'Release Royal Guard',
-		icon: 'https://xivapi.com/i/003000/003433.png',
+		icon: iconUrl(3433),
 		onGcd: false,
 		cooldown: 1000,
 	},
@@ -257,6 +293,14 @@ export const GNB = ensureActions({
 		onGcd: false,
 		cooldown: 120000,
 		statusesApplied: ['NEBULA'],
+	},
+	GREAT_NEBULA: {
+		id: 36935,
+		name: 'Great Nebula',
+		icon: iconUrl(3435),
+		onGcd: false,
+		cooldown: 120000,
+		statusesApplied: ['GREAT_NEBULA'],
 	},
 	HEART_OF_STONE: {
 		id: 16161,

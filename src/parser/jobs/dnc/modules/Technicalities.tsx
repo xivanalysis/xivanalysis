@@ -174,7 +174,7 @@ export class Technicalities extends RaidBuffWindow {
 
 		// If the window included only the allowed GCDs, they had a lot of Esprit to burn.
 		// Since Saber Dance has the same potency, we can allow them to only hit one Last Dance
-		if (window.data.filter(event => this.allowedTechnicalGcdIds.includes(event.action.id)).length === window.data.length) {
+		if (window.data.filter(event => event.action.onGcd).every(event => this.allowedTechnicalGcdIds.includes(event.action.id))) {
 			return -1
 		}
 
