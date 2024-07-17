@@ -946,6 +946,8 @@
   "sch.overheal.hot.name": "Sacred Soil",
   "sch.overheal.pet.name": "Fairy",
   "sch.overheal.pethot.name": "Fairy HoTs",
+  "sch.procs.suggestions.missed-impacts.content": "You should always use <0/> before <1/> expires.",
+  "sch.procs.suggestions.missed-impacts.why": "{droppedImpacts, plural, one {# proc} other {# procs}} expired.",
   "sch.swiftcast.missed.suggestion.content": "Use spells with <0/> before it expires. This allows you to use spells with cast times instantly, such as <1/> for a quick revive, or <2/> for weaving.",
   "sch.weaving.content": "Try to use <0/>, <1/>, or <2/> to weave your actions, and avoid weaving more actions than you have time for in a single GCD window. Doing so will delay your next GCD, reducing possible uptime. Check the {0} module below for more detailed analysis.",
   "sge.about.description": "\nThis analyser aims to identify some of the low-hanging fruit that could be used to improve your SGE gameplay, as well as give a deeper insight into what happened during an encounter.\n\nIf you would like to learn more about SGE, check the guides over at [The Balance](https://thebalanceffxiv.com/), and have a chat in the #sge_questions channel.\n",
