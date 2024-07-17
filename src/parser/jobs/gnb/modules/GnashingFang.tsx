@@ -1,13 +1,10 @@
-import {Trans} from '@lingui/react'
 import {ActionLink} from 'components/ui/DbLink'
 import {RotationTable} from 'components/ui/RotationTable'
 import ACTIONS from 'data/ACTIONS'
-import {Event, Events} from 'event'
+import {Events} from 'event'
 import _ from 'lodash'
 import {Analyser} from 'parser/core/Analyser'
-import {filter, oneOf} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
-import Checklist, {Requirement, Rule} from 'parser/core/modules/Checklist'
 import {Data} from 'parser/core/modules/Data'
 import {Timeline} from 'parser/core/modules/Timeline'
 import React from 'react'
@@ -36,19 +33,16 @@ class GnashingComboState {
 
 }
 
-export class AmmoCombo extends Analyser {
+export class GnashingFang extends Analyser {
 	static override handle = 'Gnashing Fang Combo issues'
 	static override debug = false
 
-	@dependency private checklist!: Checklist
 	@dependency private timeline!: Timeline
 	@dependency private data!: Data
 
-	private buffs = 0
-	private actions = 0
 	private errors = 0
 
-	private COMBO_BREAKERS = [this.data.actions.KEEN_EDGE.id, this.data.actions.BRUTAL_SHELL.id, this.data.actions.SOLID_BARREL.id] // These skills will break the Gnashing combo
+	private COMBO_BREAKERS = [this.data.actions.KEEN_EDGE.id, this.data.actions.BRUTAL_SHELL.id, this.data.actions.SOLID_BARREL.id, this.data.actions.LION_HEART.id, this.data.actions.NOBLE_BLOOD.id, this.data.actions.REIGN_OF_BEASTS.id] // These skills will break the Gnashing combo
 	private COMBO_ACTIONS = [this.data.actions.GNASHING_FANG.id, this.data.actions.JUGULAR_RIP.id, this.data.actions.SAVAGE_CLAW.id, this.data.actions.ABDOMEN_TEAR.id, this.data.actions.WICKED_TALON.id, ACTIONS.EYE_GOUGE.id]
 
 	private gnashingComboWindows: GnashingComboState[] = [] // Store all the gnashing fang combos to be output to the rotationTable
@@ -59,15 +53,6 @@ export class AmmoCombo extends Analyser {
 
 	override initialise() {
 		super.initialise()
-
-		const RELEVANT_ACTIONS = [this.data.actions.JUGULAR_RIP.id, this.data.actions.ABDOMEN_TEAR.id, this.data.actions.EYE_GOUGE.id, this.data.actions.HYPERVELOCITY.id]
-		const RELEVANT_STATUSES = [this.data.statuses.READY_TO_TEAR.id, this.data.statuses.READY_TO_RIP.id, this.data.statuses.READY_TO_GOUGE.id, this.data.statuses.READY_TO_BLAST.id]
-
-		const playerFilter = filter<Event>().source(this.parser.actor.id)
-
-		this.addEventHook(playerFilter.type('statusApply').status(oneOf(RELEVANT_STATUSES)), () => this.buffs++)
-		this.addEventHook(playerFilter.type('action').action(oneOf(RELEVANT_ACTIONS)), () => this.actions++)
-
 		this.addEventHook('complete', this.onComplete)
 	}
 	onCast(event: Events['action']): void {
@@ -146,22 +131,6 @@ export class AmmoCombo extends Analyser {
 
 			lastGnashingCombo.endTime = this.parser.currentEpochTimestamp
 		}
-
-		this.checklist.add(new Rule({
-			name: <Trans id="gnb.continuation.checklist.title">Use a Continuation once per single-target ammo action</Trans>,
-			description: <Trans id="gnb.continuation.checklist.description">
-				One <ActionLink {...ACTIONS.CONTINUATION}/> action should be used for each single-target ammo skill
-			</Trans>,
-			requirements: [
-				new Requirement({
-					name: <Trans id="gnb.continuation.checklist.requirement.continuation.name">
-						<ActionLink {...ACTIONS.CONTINUATION}/> uses per <ActionLink {...ACTIONS.GNASHING_FANG}/> combo action
-					</Trans>,
-					value: this.actions,
-					target: this.buffs,
-				}),
-			],
-		}))
 	}
 
 	override output() {
