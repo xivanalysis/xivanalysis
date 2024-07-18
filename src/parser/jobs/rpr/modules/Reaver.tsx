@@ -16,7 +16,6 @@ const SEVERITIES = {
 }
 
 const STACK_BUILDERS: ActionKey [] = [
-	'GLUTTONY',
 	'BLOOD_STALK',
 	'GRIM_SWATHE',
 	'UNVEILED_GALLOWS',
@@ -46,9 +45,7 @@ const STACK_CONSUMERS: ActionKey [] = [
 	'GUILLOTINE',
 ]
 
-const BASE_GAIN = 1 // Soul consuming moves grant 1 reaver
-const HIGH_GAIN = 2 // Gluttony grants 2 reavers
-
+const REAVER_GAIN = 1 // Soul consuming moves grant 1 reaver
 export class Reaver extends Analyser {
 	static override handle = 'reaver'
 
@@ -74,13 +71,13 @@ export class Reaver extends Analyser {
 
 	}
 
-	private onGain(event: Events['action']) : void {
+	private onGain() : void {
 		// Overwriting existing stacks
 		if (this.actors.current.hasStatus(this.data.statuses.SOUL_REAVER.id)) {
 			this.dropStacks()
 		}
 
-		this.currentReaverStacks = (event.action === this.data.actions.GLUTTONY.id) ? HIGH_GAIN : BASE_GAIN
+		this.currentReaverStacks = REAVER_GAIN
 	}
 
 	private onUse() {
