@@ -1,7 +1,7 @@
 import {Plural, Trans} from '@lingui/react'
 import {DataLink} from 'components/ui/DbLink'
 import {ActionKey} from 'data/ACTIONS'
-import {Event, Events} from 'event'
+import {Event} from 'event'
 import {Analyser} from 'parser/core/Analyser'
 import {filter} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
@@ -42,7 +42,7 @@ const STACK_CONSUMERS: ActionKey [] = [
 	'EXECUTIONERS_GUILLOTINE',
 ]
 
-const EXECUTIONERS_GAIN = 2 // Soul consuming moves grant 1 reaver
+const EXECUTIONERS_GAIN = 2 //Gluttony gives 2
 export class Executioner extends Analyser {
 	static override handle = 'Executioner'
 
