@@ -21,6 +21,7 @@ const SEVERITIES = {
 const LOST_PROC_POTENCY = 60
 
 export class Procs extends CoreProcs {
+	static override handle = 'enhanced procs'
 	static override title = t('rpr.procs.title')`Enhanced Procs`
 	static override debug = false
 

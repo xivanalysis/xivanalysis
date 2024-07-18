@@ -3,10 +3,34 @@ import {Attribute} from 'event'
 import {ensureActions} from '../type'
 
 export const WHM = ensureActions({
+	DIVINE_CARESS: {
+		id: 37011,
+		name: 'Divine Caress',
+		icon: iconUrl(2128),
+		cooldown: 1000,
+		statusesApplied: ['DIVINE_GRACE'],
+	},
+	MEDICA_III: {
+		id: 37010,
+		name: 'Medica III',
+		icon: iconUrl(2127),
+		castTime: 2000,
+		onGcd: true,
+		speedAttribute: Attribute.SPELL_SPEED,
+		mpCost: 1000,
+		statusesApplied: ['MEDICA_III'],
+	},
+	GLARE_IV: {
+		id: 37009,
+		name: 'Glare IV',
+		onGcd: true,
+		speedAttribute: Attribute.SPELL_SPEED,
+		icon: iconUrl(2126),
+	},
 	LITURGY_OF_THE_BELL_ACTIVATION: {
 		id: 28509,
 		name: 'Liturgy of the Bell (Detonate)',
-		icon: 'https://xivapi.com/i/002000/002649.png',
+		icon: iconUrl(2649),
 		cooldown: 1000,
 	},
 	LITURGY_OF_THE_BELL_ON_EXPIRY: {
@@ -62,7 +86,7 @@ export const WHM = ensureActions({
 		name: 'Temperance',
 		icon: iconUrl(2645),
 		cooldown: 120000,
-		statusesApplied: ['TEMPERANCE'],
+		statusesApplied: ['TEMPERANCE', 'DIVINE_GRACE'],
 	},
 
 	AFFLATUS_MISERY: {
@@ -132,6 +156,7 @@ export const WHM = ensureActions({
 		name: 'Tetragrammaton',
 		icon: iconUrl(2633),
 		cooldown: 60000,
+		charges: 2,
 	},
 
 	ASSIZE: {
@@ -171,7 +196,7 @@ export const WHM = ensureActions({
 		name: 'Presence of Mind',
 		icon: iconUrl(2626),
 		cooldown: 120000,
-		statusesApplied: ['PRESENCE_OF_MIND'],
+		statusesApplied: ['PRESENCE_OF_MIND', 'SACRED_SIGHT'],
 	},
 
 	STONE_III: {

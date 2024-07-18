@@ -1,3 +1,4 @@
+import {DataLink} from 'components/ui/DbLink'
 import CONTRIBUTORS from 'data/CONTRIBUTORS'
 import React from 'react'
 
@@ -10,6 +11,11 @@ export const changelog = [
 	{
 		date: new Date('2024-07-14'),
 		Changes: () => <>Fix a bug in the logic that allows a single Last Dance if no GCD weaker than Saber Dance is used under Technical Finish</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
+	{
+		date: new Date('2024-07-13'),
+		Changes: () => <>Add shared cooldown support for <DataLink action="STANDARD_STEP" /> and <DataLink action="FINISHING_MOVE" /></>,
 		contributors: [CONTRIBUTORS.AKAIRYU],
 	},
 	{
