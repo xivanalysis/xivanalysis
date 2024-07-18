@@ -1,6 +1,7 @@
 import {Plural, Trans} from '@lingui/react'
 import ACTIONS from 'data/ACTIONS'
-import {Events} from 'event'
+import {Event, Events} from 'event'
+import {filter} from 'parser/core/filter'
 import {Combos as CoreCombos} from 'parser/core/modules/Combos'
 import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import React from 'react'
@@ -36,6 +37,22 @@ export class Combos extends CoreCombos {
 	}
 
 	//Overrides
+	override initialise() {
+		super.initialise()
+
+		//Manafication breaks combos, so lets ensure we break when we see it, if we're in a combo!
+		this.addEventHook(
+			filter<Event>()
+				.type('action')
+				.source(this.parser.actor.id)
+				.action(ACTIONS.MANAFICATION.id),
+			this.onTrackedCast)
+	}
+
+	private onTrackedCast(event: Events['action']) {
+		this.onNonDamageCast(event)
+	}
+
 	override addJobSpecificSuggestions(comboBreakers: Array<Events['damage']>, uncomboedGcds: Array<Events['damage']>): boolean {
 		if (comboBreakers.length === 0 && uncomboedGcds.length === 0) {
 			return false

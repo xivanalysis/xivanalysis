@@ -5,7 +5,7 @@ import {Plural, Trans} from '@lingui/react'
 import Rotation from 'components/ui/Rotation'
 import {ActionCombo} from 'data/ACTIONS/type'
 import {iconUrl} from 'data/icon'
-import {Event, Events, FieldsMultiTargeted, SourceModifier} from 'event'
+import {Event, Events, FieldsMultiTargeted, SourceModifier, TargetModifier} from 'event'
 import _ from 'lodash'
 import {dependency} from 'parser/core/Injectable'
 import DISPLAY_ORDER from 'parser/core/modules/DISPLAY_ORDER'
@@ -51,7 +51,7 @@ export class Combos extends Analyser {
 	static override handle = 'combos'
 	static override title = t('core.combos.title')`Combo Issues`
 	static override displayOrder = DISPLAY_ORDER.COMBOS
-
+	static override debug = false
 	// This should be redefined by subclassing modules; the default is the basic 'Attack' icon
 	protected suggestionIcon = iconUrl(ICON_ATTACK)
 
@@ -184,6 +184,51 @@ export class Combos extends Analyser {
 		// Action did not continue combo correctly and is not a new combo starter
 		this.recordBrokenCombo(event, this.currentComboChain)
 		return false
+	}
+
+	/**This method provides the functionality to implementers of combo extensions to specify actions
+	 * that do no damage but break combos anyway.  RDM Manafication being an example.  All the checks
+	 * and fabrication of an EventDamage object to be recorded on break are handled within.
+	 */
+	protected onNonDamageCast(event: Events['action']) {
+		this.debug(`onNonDamageCast Hit in Combos for actionID: ${event.action}`)
+
+		if (!event) {
+			return
+		}
+
+		const action = this.data.getAction(event.action)
+
+		if (!action) {
+			return
+		}
+
+		if (action.breaksCombo && this.lastAction != null) {
+			this.debug(`onNonDamageCast Hit in Combos for action: ${action.name} Breaks Combo at ${this.parser.formatEpochTimestamp(event.timestamp, 1)}`)
+
+			// We fabricate a damage event here due to the fact that everything downstream expects the fields of the EventDamage interface
+			// an attempt was made to get away with just fabricating a rotation event, but that proved to be a nonstarter for the rest of the logic in this class
+			// as such we fabricate the much larger event and if it's a combo break we push it, however we only fabricate the event if it's an actual combo break.
+			const fabEvent: Events['damage'] = {
+				cause: {
+					type: 'action',
+					action: event.action,
+				},
+				source: event.source,
+				targets:  [{
+					target: event.target,
+					amount: 0,
+					bonusPercent: 0,
+					overkill: 0,
+					sourceModifier: SourceModifier.NORMAL,
+					targetModifier: TargetModifier.NORMAL}],
+				timestamp: event.timestamp,
+				sequence: event.action,
+				type: 'damage',
+			}
+			// Combo breaking action, that's a paddlin'
+			this.recordBrokenCombo(fabEvent, this.currentComboChain)
+		}
 	}
 
 	private onCast(event: Events['damage']) {
