@@ -9,6 +9,11 @@ export const changelog = [
 	// 	contributors: [CONTRIBUTORS.YOU],
 	// },
 	{
+		date: new Date('2024-07-17'),
+		Changes: () => <>Update Weaving analysis to support the longer-than-normal cast times on Motifs and handle <DataLink showIcon={false} status="INSPIRATION" />'s cast time reduction.</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
+	{
 		date: new Date('2024-07-13'),
 		Changes: () => <>Add tracking for, and suggestions to avoid dropping, Pictomancer's procs and the stacking <DataLink showIcon={false} status="HAMMER_TIME" /> and <DataLink showIcon={false} status="HYPERPHANTASIA" /> buffs.</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],
