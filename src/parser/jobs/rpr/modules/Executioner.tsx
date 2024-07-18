@@ -19,7 +19,7 @@ const STACK_BUILDERS: ActionKey [] = [
 	'GLUTTONY',
 ]
 
-// These drop EVERY Reaver stack when used
+// These drop EVERY Gluttony stack when used
 const STACK_DROPPERS: ActionKey [] = [
 	'SLICE',
 	'WAXING_SLICE',
