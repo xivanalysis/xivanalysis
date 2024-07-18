@@ -31,9 +31,14 @@ export class AoE extends AoEUsages {
 			minTargets: 3,
 		},
 		{
+			aoeAction: this.data.actions.EXECUTIONERS_GUILLOTINE,
+			stActions: [this.data.actions.EXECUTIONERS_GALLOWS, this.data.actions.EXECUTIONERS_GIBBET],
+			minTargets: 3,
+		},
+		{
 			aoeAction: this.data.actions.LEMURES_SCYTHE,
 			stActions: [this.data.actions.LEMURES_SLICE],
-			minTargets: 2,
+			minTargets: 3,
 		},
 		{
 			aoeAction: this.data.actions.GRIM_REAPING,
