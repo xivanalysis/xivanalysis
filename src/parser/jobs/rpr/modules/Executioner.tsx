@@ -16,10 +16,7 @@ const SEVERITIES = {
 }
 
 const STACK_BUILDERS: ActionKey [] = [
-	'BLOOD_STALK',
-	'GRIM_SWATHE',
-	'UNVEILED_GALLOWS',
-	'UNVEILED_GIBBET',
+	'GLUTTONY',
 ]
 
 // These drop EVERY Reaver stack when used
@@ -40,22 +37,22 @@ const STACK_DROPPERS: ActionKey [] = [
 ]
 
 const STACK_CONSUMERS: ActionKey [] = [
-	'GALLOWS',
-	'GIBBET',
-	'GUILLOTINE',
+	'EXECUTIONERS_GALLOWS',
+	'EXECUTIONERS_GIBBET',
+	'EXECUTIONERS_GUILLOTINE',
 ]
 
-const REAVER_GAIN = 1 // Soul consuming moves grant 1 reaver
-export class Reaver extends Analyser {
-	static override handle = 'reaver'
+const EXECUTIONERS_GAIN = 2 // Soul consuming moves grant 1 reaver
+export class Executioner extends Analyser {
+	static override handle = 'Executioner'
 
 	@dependency private data!: Data
 	@dependency private suggestions!: Suggestions
 	@dependency private actors!: Actors
 
 	//Trackers
-	private droppedReavers = 0
-	private currentReaverStacks = 0
+	private droppedExecutioners = 0
+	private currentExecutionersStacks = 0
 
 	override initialise() {
 		super.initialise()
@@ -77,32 +74,32 @@ export class Reaver extends Analyser {
 			this.dropStacks()
 		}
 
-		this.currentReaverStacks = REAVER_GAIN
+		this.currentExecutionersStacks = EXECUTIONERS_GAIN
 	}
 
 	private onUse() {
 		if (this.actors.current.hasStatus(this.data.statuses.SOUL_REAVER.id)) {
-			this.currentReaverStacks--
+			this.currentExecutionersStacks--
 		}
 	}
 
 	private dropStacks() {
-		this.droppedReavers += this.currentReaverStacks
-		this.currentReaverStacks = 0
+		this.droppedExecutioners += this.currentExecutionersStacks
+		this.currentExecutionersStacks = 0
 	}
 
 	private onComplete() {
 		this.suggestions.add(new TieredSuggestion({
-			icon: this.data.actions.BLOOD_STALK.icon,
-			content: <Trans id = "rpr.reaver.suggestion.dropped.content">
-				Avoid dropping <DataLink status="SOUL_REAVER"/> by using <DataLink action="GALLOWS"/>, <DataLink action="GIBBET"/>, or <DataLink action="GUILLOTINE"/>.
+			icon: this.data.actions.GLUTTONY.icon,
+			content: <Trans id = "rpr.executioner.suggestion.dropped.content">
+				Avoid dropping <DataLink status="EXECUTIONER"/> by using <DataLink action="EXECUTIONERS_GALLOWS"/>, <DataLink action="EXECUTIONERS_GIBBET"/>, or <DataLink action="EXECUTIONERS_GUILLOTINE"/>.
 				These actions have high damage and grant you 10 Shroud gauge, giving you more chances to use <DataLink action="ENSHROUD"/> over the course of a fight.
 			</Trans>,
 			tiers: SEVERITIES,
-			why: <Trans id ="rpr.reaver.suggestion.dropped.why">
-					You lost <Plural value={this.droppedReavers} one="# stack" other="# stacks"/> over the course of the fight.
+			why: <Trans id ="rpr.executioner.suggestion.dropped.why">
+					You lost <Plural value={this.droppedExecutioners} one="# stack" other="# stacks"/> over the course of the fight.
 			</Trans>,
-			value: this.droppedReavers,
+			value: this.droppedExecutioners,
 		}))
 	}
 }
