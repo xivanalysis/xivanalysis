@@ -9,6 +9,11 @@ export const changelog = [
 	// },
 	{
 		date: new Date('2024-07-13'),
+		Changes: () => <>Add Impact Imminent proc tracking</>,
+		contributors: [CONTRIBUTORS.NONO],
+	},
+	{
+		date: new Date('2024-07-13'),
 		Changes: () => <>Basic update for Dawntrail Abilities</>,
 		contributors: [CONTRIBUTORS.MERCWRI],
 	},
