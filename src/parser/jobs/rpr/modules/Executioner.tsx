@@ -70,7 +70,7 @@ export class Executioner extends Analyser {
 
 	private onGain() : void {
 		// Overwriting existing stacks
-		if (this.actors.current.hasStatus(this.data.statuses.SOUL_REAVER.id)) {
+		if (this.actors.current.hasStatus(this.data.statuses.EXECUTIONER.id)) {
 			this.dropStacks()
 		}
 
@@ -78,7 +78,7 @@ export class Executioner extends Analyser {
 	}
 
 	private onUse() {
-		if (this.actors.current.hasStatus(this.data.statuses.SOUL_REAVER.id)) {
+		if (this.actors.current.hasStatus(this.data.statuses.EXECUTIONER.id)) {
 			this.currentExecutionersStacks--
 		}
 	}
