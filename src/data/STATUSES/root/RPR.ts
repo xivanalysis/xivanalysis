@@ -106,4 +106,32 @@ export const RPR = ensureStatuses({
 		icon: iconUrl(12931),
 		duration: 30000,
 	},
+
+	IDEAL_HOST: {
+		id: 3905,
+		name: 'Ideal Host',
+		icon: iconUrl(12944),
+		duration: 30000,
+	},
+
+	PERFECTIO_OCCULTA: {
+		id: 3859,
+		name: 'Perfectio Occulta',
+		icon: iconUrl(12942),
+		duration: 30000,
+	},
+
+	PERFECTIO_PARATA: {
+		id: 3860,
+		name: 'Perfectio Parata',
+		icon: iconUrl(12943),
+		duration: 30000,
+	},
+
+	EXECUTIONER: {
+		id: 3858,
+		name: 'Executioner',
+		icon: iconUrl(17198),
+		duration: 30000,
+	},
 })
