@@ -71,7 +71,18 @@ export class ExpectedFireSpellsEvaluator extends ExpectedActionsEvaluator {
 		const windowMetadata = getMetadataForWindow(window, this.metadataHistory)
 
 		// Fire 4 has some special handling for showing the undefined denominator for rushed windows
-		if (action.action.id === this.fire4Action.id && windowMetadata.finalOrDowntime) { return undefined }
+		// Also we need to make sure we don't re-run the count evaluation for the action if we already did
+		// If we do, it can screw up other evaluators
+		if (action.action.id === this.fire4Action.id) {
+			if (windowMetadata.finalOrDowntime) { return undefined }
+			if (windowMetadata.expectedFire4s >= 0) { return windowMetadata.expectedFire4s }
+		}
+		if (action.action.id === this.despairAction.id && windowMetadata.expectedDespairs >= 0) {
+			return windowMetadata.expectedDespairs
+		}
+		if (action.action.id === this.flareStarAction.id && windowMetadata.expectedFlareStars >= 0) {
+			return windowMetadata.expectedFlareStars
+		}
 
 		return super.determineExpected(window, action)
 	}

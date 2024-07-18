@@ -10,6 +10,11 @@ export const changelog = [
 	// },
 	{
 		date: new Date('2024-07-13'),
+		Changes: () => <>Update the suggestion for skipping <DataLink action="HIGH_THUNDER" /> before a downtime since it can no longer be hardcast.</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
+	{
+		date: new Date('2024-07-13'),
 		Changes: () => <>Update expected fire spell counting to account for Dawntrail's rotation changes, and add a suggestion to use all <DataLink action="FLARE_STAR" />s generated.</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],
 	},

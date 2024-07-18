@@ -9,42 +9,49 @@ import {CycleMetadata, ROTATION_ERRORS, ENHANCED_SEVERITY_TIERS} from './Watchdo
 
 export interface SkipThunderEvaluatorOpts {
 	suggestionIcon: string
+	thunderSpellIds: number[]
 	metadataHistory: History<CycleMetadata>
 }
 
 export class SkipThunderEvaluator implements WindowEvaluator {
 	private suggestionIcon: string
+	private thunderSpellIds: number[]
 	private metadataHistory: History<CycleMetadata>
 
 	constructor(opts: SkipThunderEvaluatorOpts) {
 		this.suggestionIcon = opts.suggestionIcon
+		this.thunderSpellIds = opts.thunderSpellIds
 		this.metadataHistory = opts.metadataHistory
 	}
 
-	// Suggestion for skipping T3 on rotations that are cut short by the end of the parse or downtime
+	// Suggestion for skipping thunder on rotations that are cut short by the end of the parse or downtime
 	suggest(windows: Array<HistoryEntry<EvaluatedAction[]>>) {
-		const shouldSkipT3s = windows.reduce((total, window) => {
+		const shouldSkipThunders = windows.reduce((total, window) => {
 			const windowMetadata = getMetadataForWindow(window, this.metadataHistory)
 
 			if (!windowMetadata.finalOrDowntime) { return total } // This suggestion only applies to windows that end with downtime
 
-			// Hardcasted T3's initial potency isn't worth it if the DoT is going to go to waste before the boss jumps or dies
-			if (windowMetadata.hardT3sInFireCount > 0) {
+			const firePhaseEvents = window.data.filter(event => event.timestamp >= windowMetadata.firePhaseMetadata.startTime)
+			const thundersInFireCount = firePhaseEvents.filter(event => this.thunderSpellIds.includes(event.action.id)).length
+
+			// Thunder initial potency isn't worth it if the DoT is going to go to waste before the boss jumps or dies, and a fire spell could have been used instead
+			if (thundersInFireCount > 0 && (windowMetadata.missingFire4s || windowMetadata.missingDespairs || windowMetadata.missingFlareStars)) {
 				assignErrorCode(windowMetadata, ROTATION_ERRORS.SHOULD_SKIP_T3)
+				return total + thundersInFireCount
 			}
 
-			return total + windowMetadata.hardT3sInFireCount
+			return total
 		}, 0)
 
 		return new TieredSuggestion({
 			icon: this.suggestionIcon,
-			content: <Trans id="blm.rotation-watchdog.suggestions.should-skip-t3.content">
-				You lost at least one <DataLink action="FIRE_IV"/> by hard casting <DataLink action="THUNDER_III"/> before the fight finished or a phase transition occurred.
+			content: <Trans id="blm.rotation-watchdog.suggestions.should-skip-thunder.content">
+				You lost at least one fire element spell by casting <DataLink action="HIGH_THUNDER"/> before the fight finished or a phase transition occurred.
 			</Trans>,
 			tiers: ENHANCED_SEVERITY_TIERS,
-			value: shouldSkipT3s,
-			why: <Trans id="blm.rotation-watchdog.suggestions.should-skip-t3.why">
-				You should have skipped <DataLink showIcon={false} action="THUNDER_III"/> <Plural value={shouldSkipT3s} one="# time" other="# times"/>.
+			value: shouldSkipThunders,
+			why: <Trans id="blm.rotation-watchdog.suggestions.should-skip-thunder.why">
+				You should have skipped <DataLink showIcon={false} action="HIGH_THUNDER"/> <Plural value={shouldSkipThunders} one="# time" other="# times"/>.
 			</Trans>,
 		})
 	}
