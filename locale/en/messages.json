@@ -1053,6 +1053,7 @@
   "vpr.serpentstail.waste.content": "Using <0/>, <1/>, <2/> or <3/> grant <4/>.<5/>Using <6/> and <7/> grant <8/>.<9/>Using the Generation skills under <10/> grants Legacy follow up skills.<11/>These skills are important to a Viper's damage and must be used immediately after the skill that grants them by using <12>.</12>",
   "vpr.snaps.statistic.info": "While it is important to keep your GCD rolling as much as possible, try to minimize your <0/> usage. It's better to save and use <1/> for when you cannot stay in melee range as it does more damage.",
   "vpr.snaps.statistic.title": "Writhing Snaps",
+  "vpr.tincture.suggestions.trackedActions.content": "Try to fit two full uses of <0/> while under the effects of a Tincture.",
   "vpr.venom.checklist.content": "Viper generates venom buffs that increase the damage of certain actions. Make sure to use these actions while the buffs are active. Going out of order will cause the buff to drop.",
   "vpr.venom.usage.title": "Use your venom buffs",
   "vpr.venoms.suggestions.drops.content": "Avoid dropping your venom buffs unless absolutely unavoidable. Use your <0/> and <1/> actions in the proper order to avoid losing procs.",
