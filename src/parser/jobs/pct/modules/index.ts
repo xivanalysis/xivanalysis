@@ -7,6 +7,7 @@ import {Defensives} from './Defensives'
 import {Gauge} from './Gauge'
 import {Hyperphantasia} from './Hyperphantasia'
 import Procs from './Procs'
+import {StarryMuse} from './StarryMuse'
 import {Swiftcast} from './Swiftcast'
 import Weaving from './Weaving'
 
@@ -19,6 +20,7 @@ export default [
 	Hyperphantasia,
 	Interrupts,
 	Procs,
+	StarryMuse,
 	Swiftcast,
 	Tincture,
 	Weaving,
