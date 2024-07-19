@@ -8,7 +8,7 @@ import {Invulnerability} from 'parser/core/modules/Invulnerability'
 import {TieredSuggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
 import {assignErrorCode, getMetadataForWindow, includeInSuggestions} from './EvaluatorUtilities'
-import {CycleMetadata, ROTATION_ERRORS, DEFAULT_SEVERITY_TIERS} from './WatchdogConstants'
+import {CycleMetadata, ROTATION_ERRORS, DEFAULT_SEVERITY_TIERS, FLARE_STAR_CARRYOVER_CODE} from './WatchdogConstants'
 
 export type ExpectedFireSpellsEvaluatorOpts =
 	& Omit<TrackedActionsOptions, 'suggestionIcon' | 'suggestionContent' | 'suggestionWindowName' | 'severityTiers'>
@@ -80,8 +80,9 @@ export class ExpectedFireSpellsEvaluator extends ExpectedActionsEvaluator {
 		if (action.action.id === this.despairAction.id && windowMetadata.expectedDespairs >= 0) {
 			return windowMetadata.expectedDespairs
 		}
-		if (action.action.id === this.flareStarAction.id && windowMetadata.expectedFlareStars >= 0) {
-			return windowMetadata.expectedFlareStars
+		if (action.action.id === this.flareStarAction.id) {
+			if (windowMetadata.finalOrDowntime || windowMetadata.expectedFlareStars === FLARE_STAR_CARRYOVER_CODE) { return undefined }
+			if (windowMetadata.expectedFlareStars >= 0) { return windowMetadata.expectedFlareStars }
 		}
 
 		return super.determineExpected(window, action)

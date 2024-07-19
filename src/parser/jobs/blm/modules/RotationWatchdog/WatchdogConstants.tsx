@@ -17,6 +17,8 @@ export const ENHANCED_SEVERITY_TIERS = {
 	3: SEVERITY.MAJOR,
 }
 
+export const FLARE_STAR_CARRYOVER_CODE = -2
+
 export interface CycleErrorCode {priority: number, message: ReactNode}
 export const DEATH_PRIORITY = 101 // Define this const here so we can reference it in both classes
 export const HIDDEN_PRIORITY_THRESHOLD = 2 // Same as ^

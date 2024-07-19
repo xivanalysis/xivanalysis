@@ -32,7 +32,7 @@ import {RotationErrorNotesEvaluator} from './RotationWatchdog/RotationErrorNotes
 import {SkipB4Evaluator} from './RotationWatchdog/SkipB4Evaluator'
 import {SkipThunderEvaluator} from './RotationWatchdog/SkipThunderEvaluator'
 import {UptimeSoulsEvaluator} from './RotationWatchdog/UptimeSoulsEvaluator'
-import {CycleMetadata, ROTATION_ERRORS, HIDDEN_PRIORITY_THRESHOLD} from './RotationWatchdog/WatchdogConstants'
+import {CycleMetadata, ROTATION_ERRORS, HIDDEN_PRIORITY_THRESHOLD, FLARE_STAR_CARRYOVER_CODE} from './RotationWatchdog/WatchdogConstants'
 
 const DEBUG_SHOW_ALL = false && process.env.NODE_ENV !== 'production'
 
@@ -352,6 +352,12 @@ export class RotationWatchdog extends RestartWindow {
 			// Let the player rush the Despair if they need to before a downtime/end of fight
 			if (windowMetadata.finalOrDowntime) { return window.data.filter(event => event.action.id === this.data.actions.FIRE_IV.id).length }
 
+			// Windows begun by Manafont by definition should contain the full 6 F4s
+			if (window.data[0].action.id === this.data.actions.MANAFONT.id) {
+				windowMetadata.expectedFire4s = MAX_POSSIBLE_FIRE4
+				return MAX_POSSIBLE_FIRE4
+			}
+
 			// Start off with the baseline assumption they've reached full MP in Umbral Ice, since MP events from the log source aren't reliably timed
 			adjustment = NO_UH_EXPECTED_FIRE4
 
@@ -401,18 +407,20 @@ export class RotationWatchdog extends RestartWindow {
 		if (action.action.id === this.data.actions.FLARE_STAR.id) {
 			// We should only expect a Flare Star if we're also expected to get all 6 F4s in during a full uptime window
 			if (!windowMetadata.finalOrDowntime && windowMetadata.expectedFire4s >= MAX_POSSIBLE_FIRE4) {
-				adjustment++
-
 				// Players may choose to carry their generated Flare Star into the post-Manafont window
 				if (window.data[window.data.length - 1].action.id === this.data.actions.MANAFONT.id &&
-					window.data.filter(event => event.action.id === this.data.actions.FLARE_STAR.id).length < 1) {
-					adjustment--
+					!window.data.some(event => event.action.id === this.data.actions.FLARE_STAR.id)) {
+					windowMetadata.expectedFlareStars = FLARE_STAR_CARRYOVER_CODE
+					return windowMetadata.expectedFlareStars
 				}
+
+				adjustment++
 			}
 
 			// If we carried a Flare Star over, expect to see an extra one
 			const previousMetadata = getPreviousMetadata(window, this.metadataHistory)
-			if (previousMetadata != null && previousMetadata.expectedFlareStars === 0 && previousMetadata.expectedFire4s >= MAX_POSSIBLE_FIRE4) {
+			if (previousMetadata != null && previousMetadata.expectedFlareStars === FLARE_STAR_CARRYOVER_CODE &&
+				previousMetadata.expectedFire4s >= MAX_POSSIBLE_FIRE4) {
 				adjustment++
 			}
 		}
