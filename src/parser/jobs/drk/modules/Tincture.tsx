@@ -5,12 +5,18 @@ import {HistoryEntry} from 'parser/core/modules/ActionWindow/History'
 import {SEVERITY} from 'parser/core/modules/Suggestions'
 import {Tincture as CoreTincture} from 'parser/core/modules/Tincture'
 import React from 'react'
+import {Message} from 'semantic-ui-react'
 
 const TINCTURE_OPENER_BUFFER = 10000
 const BLOODSPILLER_REQUIREMENT = 2
 const BLOODSPILLER_REQUIREMENT_OPENER = 1
 
 export class Tincture extends CoreTincture {
+	override prependMessages = <Message>
+		<Trans id="drk.tincture.description">
+			While you can use <DataLink action="DELIRIUM" /> either before or during your potion window, you should be sure to fit all three <DataLink action="DELIRIUM" /> enhanced skills within the potion window.
+		</Trans>
+	</Message>
 
 	override initialise() {
 		super.initialise()
@@ -18,8 +24,9 @@ export class Tincture extends CoreTincture {
 		this.addEvaluator(new ExpectedActionGroupsEvaluator({
 			expectedActionGroups: [
 				{
-					actions: [this.data.actions.DELIRIUM],
-					expectedPerWindow: 1,
+					actions: [this.data.actions.SCARLET_DELIRIUM, this.data.actions.COMEUPPANCE, this.data.actions.TORCLEAVER, this.data.actions.IMPALEMENT],
+					expectedPerWindow: 3,
+					overrideHeader: this.data.actions.DELIRIUM,
 				},
 				{
 					actions: [this.data.actions.BLOODSPILLER],

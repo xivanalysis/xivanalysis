@@ -58,17 +58,20 @@ export class ExpectedActionGroupsEvaluator implements WindowEvaluator {
 
 	public output(windows: Array<HistoryEntry<EvaluatedAction[]>>): EvaluationOutput[]  {
 		return this.expectedActionGroups.map(actionGroup => {
-			const headerActions = actionGroup.actions.map((action, i) => {
-				return <>
-					{ i > 0 && <> / </> }
-					<ActionLink key={i} showName={false} {...action}/>
-				</>
-			})
+			const header = (actionGroup.overrideHeader != null ?
+				<><ActionLink showName={false} {...actionGroup.overrideHeader}/></>
+				: actionGroup.actions.map((action, i) => {
+					return <>
+						{ i > 0 && <> / </> }
+						<ActionLink key={i} showName={false} {...action}/>
+					</>
+				})
+			)
 
 			return {
 				format: 'table',
 				header: {
-					header: <>{headerActions}</>,
+					header: header,
 					accessor: _.first(actionGroup.actions)?.name ?? '',
 				},
 				rows: windows.map(window => {
