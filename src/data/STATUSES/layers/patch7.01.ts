@@ -1,4 +1,3 @@
-import {iconUrl} from 'data/icon'
 import {Layer} from 'data/layer'
 import {StatusRoot} from '../root'
 
