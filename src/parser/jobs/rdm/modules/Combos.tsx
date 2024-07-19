@@ -1,6 +1,7 @@
 import {Plural, Trans} from '@lingui/react'
 import ACTIONS from 'data/ACTIONS'
-import {Events} from 'event'
+import {Event, Events} from 'event'
+import {filter} from 'parser/core/filter'
 import {Combos as CoreCombos} from 'parser/core/modules/Combos'
 import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import React from 'react'
@@ -10,6 +11,36 @@ export class Combos extends CoreCombos {
 	// Overrides
 	override suggestionIcon = ACTIONS.ENCHANTED_REDOUBLEMENT.icon
 	static override displayOrder = DISPLAY_ORDER.COMBO_ISSUES
+
+	override initialise() {
+		super.initialise()
+
+		this.addEventHook(
+			filter<Event>()
+				.type('action')
+				.source(this.parser.actor.id)
+				.action(ACTIONS.MANAFICATION.id),
+			this.onBreakerCast
+		)
+
+		this.addEventHook(
+			filter<Event>()
+				.type('prepare')
+				.source(this.parser.actor.id),
+			this.onBreakerCast
+		)
+	}
+
+	private onBreakerCast(event: Events['action'] | Events['prepare']) {
+		const action = this.data.getAction(event.action)
+		if (action == null) {
+			return
+		}
+
+		if (action.breaksCombo && this.lastAction != null) {
+			this.recordBrokenCombo({timestamp: event.timestamp, cause: {type: 'action', action: event.action}})
+		}
+	}
 
 	//These actions are considered a combo DERP
 	_derpComboActions = [

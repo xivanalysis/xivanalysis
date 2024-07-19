@@ -5,7 +5,7 @@ import {Plural, Trans} from '@lingui/react'
 import Rotation from 'components/ui/Rotation'
 import {ActionCombo} from 'data/ACTIONS/type'
 import {iconUrl} from 'data/icon'
-import {Event, Events, FieldsMultiTargeted, SourceModifier} from 'event'
+import {Cause, Event, Events, FieldsMultiTargeted, SourceModifier} from 'event'
 import _ from 'lodash'
 import {dependency} from 'parser/core/Injectable'
 import DISPLAY_ORDER from 'parser/core/modules/DISPLAY_ORDER'
@@ -41,10 +41,14 @@ declare module 'event' {
 	}
 }
 
+interface ComboBreak {
+	timestamp: number
+	cause: Cause
+}
 export interface ComboIssue {
 	type: keyof typeof ISSUE_TYPENAMES
 	context: Array<Events['damage']>
-	event: Events['damage']
+	breaker: ComboBreak
 }
 
 export class Combos extends Analyser {
@@ -75,7 +79,7 @@ export class Combos extends Analyser {
 		return _.last(this.currentComboChain)
 	}
 
-	private get lastAction(): number | undefined {
+	protected get lastAction(): number | undefined {
 		const lastComboEvent = this.lastComboEvent
 		if (!lastComboEvent || lastComboEvent.cause.type !== 'action') {
 			return undefined
@@ -84,16 +88,16 @@ export class Combos extends Analyser {
 		return lastComboEvent.cause.action
 	}
 
-	private get comboBreakers(): Array<Events['damage']> {
+	private get comboBreakers(): ComboBreak[] {
 		return this.issues
 			.filter(issue => issue.type === 'combobreak')
-			.map(issue => issue.event)
+			.map(issue => issue.breaker)
 	}
 
-	private get uncomboedGcds(): Array<Events['damage']> {
+	private get uncomboedGcds(): ComboBreak[] {
 		return this.issues
 			.filter(issue => issue.type === 'uncomboed')
-			.map(issue => issue.event)
+			.map(issue => issue.breaker)
 	}
 
 	protected fabricateComboEvent(event: Events['damage']) {
@@ -109,40 +113,41 @@ export class Combos extends Analyser {
 		})
 	}
 
-	private recordBrokenCombo(event: Events['damage'], context: Array<Events['damage']>) {
-		if (!this.isAllowableComboBreak(event, context)) {
+	protected recordBrokenCombo(breaker: ComboBreak) {
+		const context = this.currentComboChain
+		if (!this.isAllowableComboBreak(breaker, context)) {
 			this.issues.push({
 				type: 'combobreak',
-				event,
+				breaker,
 				context,
 			})
 		}
 		this.currentComboChain = []
 	}
 
-	private recordUncomboedGcd(event: Events['damage']) {
+	private recordUncomboedGcd(breaker: ComboBreak) {
 		this.issues.push({
 			type: 'uncomboed',
-			event,
+			breaker,
 			context: [],
 		})
 		this.currentComboChain = []
 	}
 
-	private recordFailedCombo(event: Events['damage'], context: Array<Events['damage']>) {
+	private recordFailedCombo(breaker: ComboBreak) {
 		this.issues.push({
 			type: 'failedcombo',
-			event,
-			context,
+			breaker,
+			context: this.currentComboChain,
 		})
 		this.currentComboChain = []
 	}
 
-	private recordExpiredCombo(event: Events['damage'], context: Array<Events['damage']>) {
+	private recordExpiredCombo(breaker: ComboBreak) {
 		this.issues.push({
 			type: 'timeout',
-			event,
-			context,
+			breaker,
+			context: this.currentComboChain,
 		})
 	}
 
@@ -169,7 +174,7 @@ export class Combos extends Analyser {
 
 		if (combo.start) {
 			// Broken combo - starting a new combo while in a current combo
-			this.recordBrokenCombo(event, this.currentComboChain)
+			this.recordBrokenCombo(event)
 			return true // Start a new combo
 		}
 
@@ -182,7 +187,7 @@ export class Combos extends Analyser {
 		}
 
 		// Action did not continue combo correctly and is not a new combo starter
-		this.recordBrokenCombo(event, this.currentComboChain)
+		this.recordBrokenCombo(event)
 		return false
 	}
 
@@ -202,7 +207,7 @@ export class Combos extends Analyser {
 			if (event.timestamp > comboExpiration && this.currentComboChain.length > 0) {
 				if (!(this.downtime.getDowntime(comboExpiration - CONTINUE_AFTER_DOWNTIME_GRACE, comboExpiration) > 0)) {
 					// Forgive the combo expiration if there was downtime within 1 second of the combo expiration (if downtime ends more than 1 second before combo expiration, record the timeout)
-					this.recordExpiredCombo(event, this.currentComboChain)
+					this.recordExpiredCombo(event)
 				}
 				// If we've had enough downtime between GCDs to let the combo expire, reset the state so we don't count erroneous combo breaks
 				this.currentComboChain = []
@@ -215,7 +220,7 @@ export class Combos extends Analyser {
 		if (action.combo) {
 			if (event.targets.every(t => t.sourceModifier === SourceModifier.MISS)) {
 				// Misses break combo
-				this.recordFailedCombo(event, this.currentComboChain)
+				this.recordFailedCombo(event)
 				return
 			}
 
@@ -229,7 +234,7 @@ export class Combos extends Analyser {
 
 		if (action.breaksCombo && this.lastAction != null) {
 			// Combo breaking action, that's a paddlin'
-			this.recordBrokenCombo(event, this.currentComboChain)
+			this.recordBrokenCombo(event)
 		}
 	}
 
@@ -270,7 +275,7 @@ export class Combos extends Analyser {
 	 * @param uncomboedGcds An array of combo actions that were used outside of a combo (events that combo from other events, but were used when no combo chain was active)
 	 * @returns true to prevent adding the default suggestion, or false to include the default suggestions
 	 */
-	protected addJobSpecificSuggestions(_comboBreakers: Array<Events['damage']>, _uncomboedGcds: Array<Events['damage']>): boolean {
+	protected addJobSpecificSuggestions(_comboBreakers: ComboBreak[], _uncomboedGcds: ComboBreak[]): boolean {
 		return false
 	}
 
@@ -282,7 +287,7 @@ export class Combos extends Analyser {
 	 * @param context The active combo chain that is being broken
 	 * @returns true if this combo break should not be recorded
 	 */
-	protected isAllowableComboBreak(_event: Events['damage'], _context: Array<Events['damage']>): boolean {
+	protected isAllowableComboBreak(_breaker: ComboBreak, _context: Array<Events['damage']>): boolean {
 		return false
 	}
 
@@ -296,7 +301,7 @@ export class Combos extends Analyser {
 			return false
 		}
 
-		const data = this.issues.sort((a, b) => a.event.timestamp - b.event.timestamp)
+		const data = this.issues.sort((a, b) => a.breaker.timestamp - b.breaker.timestamp)
 
 		return <Table compact unstackable celled textAlign="center">
 			<Table.Header>
@@ -321,10 +326,8 @@ export class Combos extends Analyser {
 			<Table.Body>
 				{
 					data.map(issue => {
-						const completeContext = [...(issue.context || []), issue.event]
-
-						const startEvent = completeContext[0]
-						const brokenTime = issue.type !== 'timeout' ? completeContext[completeContext.length-1].timestamp : startEvent.timestamp + COMBO_TIMEOUT
+						const startEvent = issue.context[0]
+						const brokenTime = issue.type !== 'timeout' ? issue.breaker.timestamp : startEvent.timestamp + COMBO_TIMEOUT
 
 						return <Table.Row key={startEvent.timestamp}>
 							<Table.Cell style={{whiteSpace: 'nowrap'}}>
@@ -357,7 +360,7 @@ export class Combos extends Analyser {
 								</>
 							</Table.Cell>
 							<Table.Cell>
-								{issue.type !== 'timeout' && <Rotation events={[issue.event]}/>}
+								{issue.type !== 'timeout' && <Rotation events={[issue.breaker]}/>}
 							</Table.Cell>
 							<Table.Cell>
 								<span style={{whiteSpace: 'nowrap'}}>{ISSUE_TYPENAMES[issue.type]}</span>
