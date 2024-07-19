@@ -9,6 +9,7 @@ import {SerpentsTail} from './SerpentsTail'
 import {Snaps} from './Snaps'
 import {snilk} from './snilk'
 import {Swiftscaled} from './Swiftscaled'
+import {Tincture} from './Tincture'
 import {Venoms} from './Venoms'
 
 export default [
@@ -23,5 +24,6 @@ export default [
 	snilk,
 	Swiftscaled,
 	Snaps,
+	Tincture,
 	Venoms,
 ]
