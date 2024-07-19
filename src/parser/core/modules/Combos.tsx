@@ -231,6 +231,41 @@ export class Combos extends Analyser {
 		}
 	}
 
+	protected onPreparedCast(event: Events['prepare']) {
+		this.debug(`onPreparedCast Hit in Combos for actionID: ${event.action}`)
+		const action = this.data.getAction(event.action)
+
+		//Verify it's an action.
+		if (!action) {
+			return
+		}
+
+		//Now check for combo and break it if exists.  Making certain we check for this.lastAction so we don't flag every GCD in the log.
+		if (action.onGcd && (action.combo != null || action.breaksCombo) && this.lastAction != null) {
+			// We fabricate a damage event here due to the fact that everything downstream expects the fields of the EventDamage interface
+			this.debug(`onPreparedCast Hit in Combos for action: ${action.name} Breaks Combo at ${this.parser.formatEpochTimestamp(event.timestamp, 1)}`)
+			const fabEvent: Events['damage'] = {
+				cause: {
+					type: 'action',
+					action: event.action,
+				},
+				source: event.source,
+				targets:  [{
+					target: event.target,
+					amount: 0,
+					bonusPercent: 0,
+					overkill: 0,
+					sourceModifier: SourceModifier.NORMAL,
+					targetModifier: TargetModifier.NORMAL}],
+				timestamp: event.timestamp,
+				sequence: event.action,
+				type: 'damage',
+			}
+			// Combo breaking action, that's a paddlin'
+			this.recordBrokenCombo(fabEvent, this.currentComboChain)
+		}
+	}
+
 	private onCast(event: Events['damage']) {
 		if (event.cause.type !== 'action') {
 			return
