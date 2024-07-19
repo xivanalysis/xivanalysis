@@ -490,7 +490,7 @@ export const NIN = ensureActions({
 		icon: iconUrl(2927),
 		onGcd: false,
 		cooldown: 90000,
-		statusesApplied: ['BUNSHIN'],
+		statusesApplied: ['BUNSHIN', 'PHANTOM_KAMAITACHI_READY'],
 	},
 
 	KUNAIS_BANE: {

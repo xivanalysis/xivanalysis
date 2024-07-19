@@ -8,8 +8,13 @@ export const changelog = [
 	// 	contributors: [CONTRIBUTORS.YOU],
 	// },
 	{
-		date: new Date('2024-06-10'),
-		Changes: () => <>Initial NIN support for Dawntrail.</>,
+		date: new Date('2024-07-17'),
+		Changes: () => <>Added a module for tracking dropped Phantom Kamaitachi Ready and Tenri Jindo Ready procs.</>,
+		contributors: [CONTRIBUTORS.TOASTDEIB],
+	},
+	{
+		date: new Date('2024-07-12'),
+		Changes: () => <>Fixed a bug with Kunai's Bane not always registering the last attack in a window.</>,
 		contributors: [CONTRIBUTORS.TOASTDEIB],
 	},
 	{
@@ -18,8 +23,8 @@ export const changelog = [
 		contributors: [CONTRIBUTORS.TOASTDEIB],
 	},
 	{
-		date: new Date('2024-07-12'),
-		Changes: () => <>Fixed a bug with Kunai's Bane not always registering the last attack in a window.</>,
+		date: new Date('2024-06-10'),
+		Changes: () => <>Initial NIN support for Dawntrail.</>,
 		contributors: [CONTRIBUTORS.TOASTDEIB],
 	},
 ]
