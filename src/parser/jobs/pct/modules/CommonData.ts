@@ -1,0 +1,128 @@
+import {ActionKey} from 'data/ACTIONS'
+
+export const AETHERHUE_STARTER_SPELLS_SINGLE_TARGET: ActionKey[] = [
+	'FIRE_IN_RED',
+	'BLIZZARD_IN_CYAN',
+]
+
+export const AETHERHUE_STARTER_SPELLS_AOE: ActionKey[] = [
+	'FIRE_II_IN_RED',
+	'BLIZZARD_II_IN_CYAN',
+]
+
+export const AETHERHUE_STARTER_SPELLS: ActionKey[] = [
+	...AETHERHUE_STARTER_SPELLS_SINGLE_TARGET,
+	...AETHERHUE_STARTER_SPELLS_AOE,
+]
+
+export const AETHERHUE_ONE_SPELLS_SINGLE_TARGET: ActionKey[] = [
+	'AERO_IN_GREEN',
+	'STONE_IN_YELLOW',
+]
+
+export const AETHERHUE_ONE_SPELLS_AOE: ActionKey[] = [
+	'AERO_IN_GREEN',
+	'STONE_IN_YELLOW',
+]
+
+export const AETHERHUE_ONE_SPELLS: ActionKey[] = [
+	...AETHERHUE_ONE_SPELLS_SINGLE_TARGET,
+	...AETHERHUE_ONE_SPELLS_AOE,
+]
+
+export const AETHERHUE_TWO_SPELLS_SINGLE_TARGET: ActionKey[] = [
+	'WATER_IN_BLUE',
+	'THUNDER_IN_MAGENTA',
+]
+
+export const AETHERHUE_TWO_SPELLS_AOE: ActionKey[] = [
+	'WATER_II_IN_BLUE',
+	'THUNDER_II_IN_MAGENTA',
+]
+
+export const AETHERHUE_TWO_SPELLS: ActionKey[] = [
+	...AETHERHUE_TWO_SPELLS_SINGLE_TARGET,
+	...AETHERHUE_TWO_SPELLS_AOE,
+]
+
+export const AETHERHUE_SPELLS: ActionKey[] = [
+	...AETHERHUE_STARTER_SPELLS,
+	...AETHERHUE_ONE_SPELLS,
+	...AETHERHUE_TWO_SPELLS,
+]
+
+export const ADDITIVE_SINGLE_TARGET: ActionKey[] = [
+	'FIRE_IN_RED',
+	'AERO_IN_GREEN',
+	'WATER_IN_BLUE',
+]
+
+export const ADDITIVE_AOE: ActionKey[] = [
+	'FIRE_II_IN_RED',
+	'AERO_II_IN_GREEN',
+	'WATER_II_IN_BLUE',
+]
+
+export const ADDITIVE_COMBO: ActionKey[] = [
+	...ADDITIVE_SINGLE_TARGET,
+	...ADDITIVE_AOE,
+]
+
+export const ADDITIVE_SPELLS: ActionKey[] = [
+	...ADDITIVE_COMBO,
+	'HOLY_IN_WHITE',
+]
+
+export const SUBTRACTIVE_SINGLE_TARGET: ActionKey[] = [
+	'BLIZZARD_IN_CYAN',
+	'STONE_IN_YELLOW',
+	'THUNDER_IN_MAGENTA',
+]
+
+export const SUBTRACTIVE_AOE: ActionKey[] = [
+	'BLIZZARD_II_IN_CYAN',
+	'STONE_II_IN_YELLOW',
+	'THUNDER_II_IN_MAGENTA',
+]
+
+export const SUBTRACTIVE_COMBO: ActionKey[] = [
+	...SUBTRACTIVE_SINGLE_TARGET,
+	...SUBTRACTIVE_AOE,
+]
+
+export const SUBTRACTIVE_SPELLS: ActionKey[] = [
+	...SUBTRACTIVE_COMBO,
+	'COMET_IN_BLACK',
+]
+
+export const HYPERPHANTASIA_SPELLS: ActionKey[] = [
+	...ADDITIVE_SPELLS,
+	...SUBTRACTIVE_SPELLS,
+	'STAR_PRISM',
+]
+
+export const CREATURE_MUSES: ActionKey[] = [
+	'POM_MUSE',
+	'WINGED_MUSE',
+	'CLAWED_MUSE',
+	'FANGED_MUSE',
+]
+
+export const MUSES: ActionKey[] = [
+	...CREATURE_MUSES,
+	'STRIKING_MUSE',
+	'STARRY_MUSE',
+]
+
+export const CREATURE_MOTIFS: ActionKey[] = [
+	'POM_MOTIF',
+	'WING_MOTIF',
+	'CLAW_MOTIF',
+	'MAW_MOTIF',
+]
+
+export const MOTIFS: ActionKey[] = [
+	...CREATURE_MOTIFS,
+	'HAMMER_MOTIF',
+	'STARRY_SKY_MOTIF',
+]
