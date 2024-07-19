@@ -29,6 +29,8 @@ export class StarryMuse extends RaidBuffWindow {
 	override initialise(): void {
 		super.initialise()
 
+		this.ignoreActions([this.data.actions.STAR_PRISM_CURE.id])
+
 		// Shouldn't also need an Expected GCD Count evaluator since the expected action groups will effectively enforce that
 		this.addEvaluator(new ExpectedActionGroupsEvaluator({
 			expectedActionGroups: [

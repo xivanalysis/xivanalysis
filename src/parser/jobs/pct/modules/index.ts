@@ -1,5 +1,4 @@
 import {Interrupts} from 'parser/core/modules/Interrupts'
-import {Tincture} from 'parser/core/modules/Tincture'
 import {AoEUsages} from './AoEUsages'
 import {CantTouchThis} from './CantTouchThis'
 import {CooldownDowntime} from './CooldownDowntime'
@@ -9,6 +8,7 @@ import {Hyperphantasia} from './Hyperphantasia'
 import Procs from './Procs'
 import {StarryMuse} from './StarryMuse'
 import {Swiftcast} from './Swiftcast'
+import {Tincture} from './Tincture'
 import Weaving from './Weaving'
 
 export default [
