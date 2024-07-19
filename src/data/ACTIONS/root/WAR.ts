@@ -70,6 +70,7 @@ export const WAR = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		breaksCombo: false,
+		statusesApplied: ['BURGEONING_FURY', 'WRATHFUL'],
 	},
 
 	INNER_CHAOS: {
@@ -127,6 +128,16 @@ export const WAR = ensureActions({
 		id: 25753,
 		name: 'Primal Rend',
 		icon: iconUrl(2571),
+		onGcd: true,
+		speedAttribute: Attribute.SKILL_SPEED,
+		statusesApplied: ['PRIMAL_RUINATION_READY'],
+		breaksCombo: false,
+	},
+
+	PRIMAL_RUINATION: {
+		id: 36925,
+		name: 'Primal Ruination',
+		icon: iconUrl(2050),
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		breaksCombo: false,
@@ -246,8 +257,27 @@ export const WAR = ensureActions({
 	RELEASE_DEFIANCE: {
 		id: 32066,
 		name: 'Release Defiance',
-		icon: 'https://xivapi.com/i/002000/002572.png',
+		icon: iconUrl(2572),
 		onGcd: false,
 		cooldown: 1000,
 	},
+
+	PRIMAL_WRATH: {
+		id: 36924,
+		name: 'Primal Wrath',
+		icon: iconUrl(2574),
+		onGcd: false,
+		cooldown: 1000,
+	},
+
+	DAMNATION: {
+		id: 36923,
+		name: 'Damnation',
+		icon: iconUrl(2573),
+		onGcd: false,
+		cooldown: 120000,
+		cooldownGroup: 22,
+		statusesApplied: ['DAMNATION', 'PRIMEVAL_IMPULSE'],
+	},
+
 })
