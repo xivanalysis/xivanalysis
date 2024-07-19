@@ -2,7 +2,7 @@ import {Plural, Trans} from '@lingui/react'
 import ACTIONS from 'data/ACTIONS'
 import {Event, Events} from 'event'
 import {filter} from 'parser/core/filter'
-import {Combos as CoreCombos} from 'parser/core/modules/Combos'
+import {ComboBreak, Combos as CoreCombos} from 'parser/core/modules/Combos'
 import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import React from 'react'
 import {DISPLAY_ORDER} from './DISPLAY_ORDER'
@@ -67,7 +67,7 @@ export class Combos extends CoreCombos {
 	}
 
 	//Overrides
-	override addJobSpecificSuggestions(comboBreakers: Array<Events['damage']>, uncomboedGcds: Array<Events['damage']>): boolean {
+	override addJobSpecificSuggestions(comboBreakers: ComboBreak[], uncomboedGcds: ComboBreak[]): boolean {
 		if (comboBreakers.length === 0 && uncomboedGcds.length === 0) {
 			return false
 		}

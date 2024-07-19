@@ -41,7 +41,7 @@ declare module 'event' {
 	}
 }
 
-interface ComboBreak {
+export interface ComboBreak {
 	timestamp: number
 	cause: Cause
 }
