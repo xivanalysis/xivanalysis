@@ -46,11 +46,7 @@ export class Combos extends CoreCombos {
 				.type('action')
 				.source(this.parser.actor.id)
 				.action(ACTIONS.MANAFICATION.id),
-			this.onTrackedCast)
-	}
-
-	private onTrackedCast(event: Events['action']) {
-		this.onNonDamageCast(event)
+			this.onNonDamageCast)
 	}
 
 	override addJobSpecificSuggestions(comboBreakers: Array<Events['damage']>, uncomboedGcds: Array<Events['damage']>): boolean {
