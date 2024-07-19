@@ -11,9 +11,10 @@ export class ActionTimeline extends CoreActionTimeline {
 		// oGCD Damage
 		['UPHEAVAL', 'OROGENY'],
 		'ONSLAUGHT',
+		'PRIMAL_WRATH',
 
 		// Personal Mitigation
-		'VENGEANCE',
+		'DAMNATION',
 		'RAMPART',
 		'NASCENT_FLASH',
 		'BLOODWHETTING',

@@ -88,7 +88,7 @@ export const WAR = ensureStatuses({
 	SHAKE_IT_OFF_OVER_TIME: {
 		id: 2108,
 		name: 'Shake It Off (Over Time)',
-		icon: 'https://xivapi.com/i/012000/012567.png',
+		icon: iconUrl(12567),
 		duration: 15000,
 	},
 
@@ -113,4 +113,40 @@ export const WAR = ensureStatuses({
 		icon: iconUrl(12566),
 		duration: 30000,
 	},
+
+	PRIMAL_RUINATION_READY: {
+		id: 3834,
+		name: 'Primal Ruination Ready',
+		icon: iconUrl(12569),
+		duration: 30000,
+	},
+
+	BURGEONING_FURY: {
+		id: 3833,
+		name: 'Burgeoning Fury',
+		icon: iconUrl(18147),
+		duration: 30000,
+	},
+
+	WRATHFUL: {
+		id: 3901,
+		name: 'Wrathful',
+		icon: iconUrl(12571),
+		duration: 30000,
+	},
+
+	DAMNATION: {
+		id: 3832,
+		name: 'Damnation',
+		icon: iconUrl(12568),
+		duration: 15000,
+	},
+
+	PRIMEVAL_IMPULSE: {
+		id: 3900,
+		name: 'Primeval Impulse',
+		icon: iconUrl(12570),
+		duration: 15000,
+	},
+
 })
