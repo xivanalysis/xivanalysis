@@ -35,6 +35,7 @@ export class StarryMuse extends RaidBuffWindow {
 				{
 					actions: [this.data.actions.HAMMER_STAMP, this.data.actions.HAMMER_BRUSH, this.data.actions.POLISHING_HAMMER],
 					expectedPerWindow: 3,
+					overrideHeader: <DataLink showName={false} status="HAMMER_TIME" />,
 				},
 				{
 					actions: [this.data.actions.STAR_PRISM],
@@ -51,10 +52,19 @@ export class StarryMuse extends RaidBuffWindow {
 				{
 					actions: this.subtractiveActions,
 					expectedPerWindow: 2, // Default to 2, adjust to 3 for the opener
+					overrideHeader: <DataLink showName={false} status="SUBTRACTIVE_PALLETTE" />,
 				},
 				{
 					actions: this.museActions,
 					expectedPerWindow: 1, // Default to 1, we'll assess the window as a triple muse if they actually got more
+					overrideHeader: <DataLink showName={false} action="LIVING_MUSE" />,
+				},
+				{
+					actions: [
+						this.data.actions.MOG_OF_THE_AGES,
+						this.data.actions.RETRIBUTION_OF_THE_MADEEN,
+					],
+					expectedPerWindow: 1,
 				},
 			],
 			suggestionIcon: this.data.actions.STARRY_MUSE.icon,
