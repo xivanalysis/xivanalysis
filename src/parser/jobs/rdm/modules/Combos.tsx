@@ -7,6 +7,9 @@ import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import React from 'react'
 import {DISPLAY_ORDER} from './DISPLAY_ORDER'
 
+/**
+ * Sample log for recording combo breaks with Manafication or channeling a spell: https://www.fflogs.com/reports/7LwvjFPKpCdq4kZG
+ */
 export class Combos extends CoreCombos {
 	// Overrides
 	override suggestionIcon = ACTIONS.ENCHANTED_REDOUBLEMENT.icon
