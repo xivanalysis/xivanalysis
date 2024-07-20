@@ -26,7 +26,7 @@ export class Tincture extends CoreTincture {
 				{
 					actions: [this.data.actions.SCARLET_DELIRIUM, this.data.actions.COMEUPPANCE, this.data.actions.TORCLEAVER, this.data.actions.IMPALEMENT],
 					expectedPerWindow: 3,
-					overrideHeader: this.data.actions.DELIRIUM,
+					overrideHeader: <DataLink showName={false} action="DELIRIUM" />,
 				},
 				{
 					actions: [this.data.actions.BLOODSPILLER],
