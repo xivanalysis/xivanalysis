@@ -45,7 +45,7 @@ export class PrimalProcs extends CoreProcs {
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.PRIMAL_RUINATION.icon,
 			content: <Trans id="war.primalruination.suggestions.dropped.content">
-				Using <DataLink action="PRIMAL_REND" /> grants you <DataLink action="PRIMAL_RUINATION_READY" /> for 20 seconds which lets you use <DataLink action="PRIMAL_RUINATION" />. It is your highest damage GCD, so try to spend it before it expires.
+				Using <DataLink action="PRIMAL_REND" /> grants you <DataLink status="PRIMAL_RUINATION_READY" /> for 20 seconds which lets you use <DataLink action="PRIMAL_RUINATION" />. It is your highest damage GCD, so try to spend it before it expires.
 			</Trans>,
 			tiers: SEVERITY_MISSED_PROCS,
 			value: missedRuination,
