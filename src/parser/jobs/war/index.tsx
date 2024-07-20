@@ -16,12 +16,12 @@ export const WARRIOR = new Meta({
 	</>,
 
 	supportedPatches: {
-		from: '✖',
-		to: '✖',
+		from: '7.0',
+		to: '7.01',
 	},
 
 	contributors: [
-	// {user: CONTRIBUTORS.YOU, role: ROLES.YOUR_ROLE},
+		{user: CONTRIBUTORS.KWEREY, role: ROLES.DEVELOPER},
 	],
 
 	changelog,
