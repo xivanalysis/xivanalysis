@@ -1,5 +1,4 @@
 import axios from 'axios'
-import bodybuilder from 'bodybuilder'
 import fs from 'fs'
 
 main().catch(e => {
@@ -7,26 +6,24 @@ main().catch(e => {
 	process.exit(1)
 })
 
-interface XivapiPagination {
-	Page: number
-	PageNext: number | null
-	PagePrev: number | null
-	PageTotal: number
-	Results: number
-	ResultsPerPage: number
-	ResultsTotal: number
+interface XivapiResponse<T> {
+	next?: string
+	schema: string,
+	results: Array<XivapiResult<T>>
 }
 
-interface XivapiResponse<T> {
-	Pagination: XivapiPagination
-	Results: T[]
+interface XivapiResult<T> {
+	score: number,
+	sheet: string,
+	row_id: number,
+	subrow_id?: number
+	fields: T
 }
 
 interface XivapiStatus {
-	ID: number
-	Name: string | null
-	LockActions: 0 | 1
-	LockControl: 0 | 1
+	Name: string
+	LockActions: boolean
+	LockControl: boolean
 }
 
 interface UTAStatus {
@@ -36,30 +33,25 @@ interface UTAStatus {
 }
 
 async function main() {
-	const {data} = await axios.post<XivapiResponse<XivapiStatus>>('https://xivapi.com/search', {
-		indexes: 'status',
-		columns: 'ID,LockActions,LockControl,Name',
-		body: bodybuilder()
-			.orFilter('term', 'LockActions', 1)
-			.orFilter('term', 'LockControl', 1)
-			.size(1000)
-			.build(),
-	})
+	const {data} = await axios.get<XivapiResponse<XivapiStatus>>('https://beta.xivapi.com/api/1/search?sheets=Status&query=LockActions=1 LockControl=1&fields=LockActions,LockControl,Name&limit=500')
+
+	if (data.next != null) {
+		throw new Error('too many results, pagination needs to be handled')
+	}
 
 	// Build the list of statuses that imply inability to act
 	const utaStatuses: UTAStatus[] = []
-	// for await (const status of statuses.getRows()) {
-	for (const status of data.Results) {
-		if (status.LockActions === 0 && status.LockControl === 0) {
+	for (const status of data.results) {
+		if (!status.fields.LockActions && !status.fields.LockControl) {
 			continue
 		}
 
 		utaStatuses.push({
-			id: status.ID,
-			name: status.Name != null ? status.Name : undefined,
+			id: status.row_id,
+			name: status.fields.Name,
 			reasons: [
-				...status.LockActions ? ['lockActions'] : [],
-				...status.LockControl ? ['lockControl'] : [],
+				...status.fields.LockActions ? ['lockActions'] : [],
+				...status.fields.LockControl ? ['lockControl'] : [],
 			],
 		})
 	}
@@ -72,9 +64,11 @@ async function main() {
 		id: 1727,
 		name: 'Waning Nocturne',
 		reasons: [
-			['lockActions'],
+			'lockActions',
 		],
 	})
+
+	utaStatuses.sort((a, b) => a.id - b.id)
 
 	// Codegen
 	const statusLines = utaStatuses
