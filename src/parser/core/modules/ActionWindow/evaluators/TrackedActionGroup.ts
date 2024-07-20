@@ -18,6 +18,11 @@ export interface TrackedActionGroup {
 	 * This may be a minimum or maximum depending on the evaluator.
 	 */
 	expectedPerWindow: number
+	/**
+	 * Optional parameter to specify a single action icon to display as the header for this group
+	 * Will override the default behavior of showing all actions in the group separated by "/"
+	 */
+	overrideHeader?: Action
 }
 
 /**
