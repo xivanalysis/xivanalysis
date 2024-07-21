@@ -126,6 +126,26 @@ export const PLD = ensureActions({
 		statusesApplied: [
 			'SUPPLICATION_READY',
 		],
+		breaksCombo: false,
+	},
+	SUPPLICATION: {
+		id: 36918,
+		name: 'Supplication',
+		icon: iconUrl(2522),
+		onGcd: true,
+		speedAttribute: Attribute.SKILL_SPEED,
+		statusesApplied: [
+			'SEPULCHRE_READY',
+		],
+		breaksCombo: false,
+	},
+	SEPULCHRE: {
+		id: 36919,
+		name: 'Sepulchre',
+		icon: iconUrl(2523),
+		onGcd: true,
+		speedAttribute: Attribute.SKILL_SPEED,
+		breaksCombo: false,
 	},
 	CONFITEOR: {
 		id: 16459,
@@ -174,23 +194,6 @@ export const PLD = ensureActions({
 		statusesApplied: [
 			'BLADE_OF_HONOR_READY',
 		],
-	},
-	SUPPLICATION: {
-		id: 36918,
-		name: 'Supplication',
-		icon: iconUrl(2522),
-		onGcd: true,
-		speedAttribute: Attribute.SKILL_SPEED,
-		statusesApplied: [
-			'SEPULCHRE_READY',
-		],
-	},
-	SEPULCHRE: {
-		id: 36919,
-		name: 'Sepulchre',
-		icon: iconUrl(2523),
-		onGcd: true,
-		speedAttribute: Attribute.SKILL_SPEED,
 	},
 
 	// -----
