@@ -9,7 +9,7 @@ export const changelog = [
 	// },
 	{
 		date: new Date('2024-07-21'),
-		Changes: () => (<>Add rudimentary support for 7.0 and 7.01 Paladin</>),
+		Changes: () => <>Add rudimentary support for 7.0 and 7.01 Paladin</>,
 		contributors: [
 			CONTRIBUTORS.CHRIS,
 		],
