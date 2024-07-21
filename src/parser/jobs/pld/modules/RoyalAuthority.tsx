@@ -168,7 +168,7 @@ export class RoyalAuthority extends Analyser {
 			name: <Trans id= "pld.sword-oath.checklist.name">Use Follow Up Skills of Royal Authority</Trans>,
 			description: <Trans id="pld.sword-oath.checklist.description">
 				<DataLink action="ROYAL_AUTHORITY" /> generates <DataLink status="ATONEMENT_READY" /> to use on <DataLink action="ATONEMENT" /> and follow up actions <DataLink action="SUPPLICATION" /> and <DataLink action="SEPULCHRE" />.
-				This is effectively the same as getting {this.usages.atonement.total * 3} uses of <DataLink showIcon={false} action="ROYAL_AUTHORITY" /> or stronger actions.
+				This is effectively the same as getting {this.usages.atonement.total + this.usages.supplication.total + this.usages.sepulchre.total} uses of <DataLink showIcon={false} action="ROYAL_AUTHORITY" /> or stronger actions.
 			</Trans>,
 			tiers: SWORD_OATH_SEVERITY,
 			requirements: [
