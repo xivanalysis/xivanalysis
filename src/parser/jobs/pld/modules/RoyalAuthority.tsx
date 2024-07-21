@@ -165,19 +165,19 @@ export class RoyalAuthority extends Analyser {
 			tiers: ROYAL_AUTHORITY_SEVERITY,
 			requirements: [
 				new Requirement({
-					name: <Trans id="pld.atonement.checklist.requirement.name">
+					name: <Trans id="pld.royal-authority.checklist.requirement.name">
 						Uses of <DataLink status="ATONEMENT_READY" /> out of possible uses
 					</Trans>,
 					overrideDisplay: this.getDisplayOverride(this.usages.atonement),
 					percent: this.getPercent(this.usages.atonement),
 				}), new Requirement({
-					name: <Trans id="pld.supplication.checklist.requirement.name">
+					name: <Trans id="pld.royal-authority.checklist.requirement.name">
 						Uses of <DataLink status="SUPPLICATION_READY" /> out of possible uses
 					</Trans>,
 					overrideDisplay: this.getDisplayOverride(this.usages.supplication),
 					percent: this.getPercent(this.usages.supplication),
 				}), new Requirement({
-					name: <Trans id="pld.sepulchre.checklist.requirement.name">
+					name: <Trans id="pld.royal-authority.checklist.requirement.name">
 						Uses of <DataLink status="SEPULCHRE_READY" /> out of possible uses
 					</Trans>,
 					overrideDisplay: this.getDisplayOverride(this.usages.sepulchre),
