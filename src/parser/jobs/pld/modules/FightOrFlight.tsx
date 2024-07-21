@@ -69,12 +69,10 @@ export class FightOrFlight extends BuffWindow {
 				{action: actions.BLADE_OF_VALOR, expectedPerWindow: 1},
 			],
 			suggestionIcon: actions.FIGHT_OR_FLIGHT.icon,
-			suggestionContent: <Trans id="pld.fightorflight.suggestions.gcd_actions.content">
-				Try to land at least one cast of <DataLink action="GORING_BLADE" />
-				, <DataLink action="CONFITEOR" />, <DataLink action="BLADE_OF_FAITH" />, <DataLink action="BLADE_OF_TRUTH" />
-				, <DataLink action="BLADE_OF_VALOR" />, and the highest potency combination of <DataLink action="SEPULCHRE" />, <DataLink status="DIVINE_MIGHT" />
-				empowered <DataLink action="HOLY_SPIRIT" />, <DataLink action="SUPPLICATION" />, <DataLink action="ATONEMENT" /> and <DataLink action="ROYAL_AUTHORITY" />
-				during every <DataLink action="FIGHT_OR_FLIGHT" /> window.
+			suggestionContent: <Trans id="pld.fightorflight.suggestions.high_potency_gcd_actions.content">
+				Try to land <DataLink action="GORING_BLADE" />, <DataLink action="CONFITEOR" />
+				, <DataLink action="BLADE_OF_FAITH" />, <DataLink action="BLADE_OF_TRUTH" />
+				, and <DataLink action="BLADE_OF_VALOR" /> during every <DataLink action="FIGHT_OR_FLIGHT" /> window.
 			</Trans>,
 			suggestionWindowName,
 			severityTiers: SEVERITIES.MISSED_ACTIONS,
@@ -92,12 +90,10 @@ export class FightOrFlight extends BuffWindow {
 				expectedPerWindow: 3,
 			}],
 			suggestionIcon: actions.FIGHT_OR_FLIGHT.icon,
-			suggestionContent: <Trans id="pld.fightorflight.suggestions.gcd_actions.content">
-				Try to land at least one cast of <DataLink action="GORING_BLADE" />
-				, <DataLink action="CONFITEOR" />, <DataLink action="BLADE_OF_FAITH" />, <DataLink action="BLADE_OF_TRUTH" />
-				, <DataLink action="BLADE_OF_VALOR" />, and the highest potency combination of <DataLink action="SEPULCHRE" />, <DataLink status="DIVINE_MIGHT" />
-				empowered <DataLink action="HOLY_SPIRIT" />, <DataLink action="SUPPLICATION" />, <DataLink action="ATONEMENT" /> and <DataLink action="ROYAL_AUTHORITY" />
-				during every <DataLink action="FIGHT_OR_FLIGHT" /> window.
+			suggestionContent: <Trans id="pld.fightorflight.suggestions.low_potency_gcd_actions.content">
+				Try to land three of <DataLink action="ROYAL_AUTHORITY" />, <DataLink action="ATONEMENT" />
+				, <DataLink action="SUPPLICATION" />, <DataLink action="SEPULCHRE" />
+				, or <DataLink status="DIVINE_MIGHT" /> empowered <DataLink action="HOLY_SPIRIT" /> during every <DataLink action="FIGHT_OR_FLIGHT" /> window.
 			</Trans>,
 			suggestionWindowName,
 			severityTiers: SEVERITIES.MISSED_ACTIONS,
@@ -112,8 +108,8 @@ export class FightOrFlight extends BuffWindow {
 			],
 			suggestionIcon: actions.FIGHT_OR_FLIGHT.icon,
 			suggestionContent: <Trans id="pld.fightorflight.suggestions.ogcds.content">
-				Try to land at least one cast of each of your off-GCD skills (<DataLink action="EXPIACION" />,
-				<DataLink action="CIRCLE_OF_SCORN" />, and <DataLink action="INTERVENE" />)
+				Try to land at least one cast of each of your off-GCD skills (<DataLink action="BLADE_OF_HONOR" />
+				, <DataLink action="EXPIACION" />, <DataLink action="CIRCLE_OF_SCORN" />, and <DataLink action="INTERVENE" /> )
 				during every <DataLink action="FIGHT_OR_FLIGHT" /> window.
 			</Trans>,
 			suggestionWindowName,
