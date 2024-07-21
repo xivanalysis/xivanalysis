@@ -134,7 +134,6 @@ export const PLD = ensureStatuses({
 		name: 'Blade of Honor Ready',
 		icon: iconUrl(13052),
 		duration: 30000,
-		stacksApplied: 3,
 	},
 	GORING_BLADE_READY: {
 		id: 3847,
