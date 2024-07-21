@@ -8,7 +8,7 @@ export const WHM = ensureActions({
 		name: 'Divine Caress',
 		icon: iconUrl(2128),
 		cooldown: 1000,
-		statusesApplied: ['DIVINE_GRACE'],
+		statusesApplied: ['DIVINE_CARESS'],
 	},
 	MEDICA_III: {
 		id: 37010,

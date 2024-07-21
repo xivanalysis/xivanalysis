@@ -31,6 +31,7 @@ export const WHM = ensureStatuses({
 		name: 'Sacred Sight',
 		icon: iconUrl(18669),
 		duration: 30000,
+		stacksApplied: 3,
 	},
 	LITURGY_OF_THE_BELL: {
 		id: 2709,
