@@ -39,6 +39,7 @@ export class DeduplicateActorUpdateStep extends AdapterStep {
 			['position', this.resolvePosition(prev.position, next.position)],
 			['targetable', this.resolveValue(prev.targetable, next.targetable)],
 			['attributes', this.resolveAttributes(prev.attributes, next.attributes)],
+			['level', this.resolveValue(prev.level, next.level)],
 		])
 
 		// If nothing has changed, we can noop this entire event

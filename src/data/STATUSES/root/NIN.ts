@@ -102,7 +102,7 @@ export const NIN = ensureStatuses({
 
 	PHANTOM_KAMAITACHI_READY: {
 		id: 2723,
-		name: 'Meisui',
+		name: 'Phantom Kamaitachi Ready',
 		icon: iconUrl(12917),
 		duration: 45000,
 	},

@@ -82,6 +82,9 @@ export const RDM = ensureActions({
 		name: 'Grand Impact',
 		icon: iconUrl(3243),
 		potency: 600, // Gives 3 white, 3 black
+		onGcd: true,
+		cooldown: 2500,
+		breaksCombo: true,
 	},
 	PREFULGENCE: {
 		id: 37007,

@@ -7,6 +7,7 @@ import {EndOfWindowHandlingMode} from 'parser/core/modules/ActionWindow/windows/
 import {GlobalCooldown} from 'parser/core/modules/GlobalCooldown'
 import {SEVERITY} from 'parser/core/modules/Suggestions'
 import React from 'react'
+import {HYPERPHANTASIA_SPELLS} from './CommonData'
 
 export class Hyperphantasia extends BuffWindow {
 	static override handle = 'hyperphantasia'
@@ -20,23 +21,7 @@ export class Hyperphantasia extends BuffWindow {
 	override initialise() {
 		super.initialise()
 
-		this.trackOnlyActions([
-			this.data.actions.FIRE_IN_RED.id,
-			this.data.actions.FIRE_II_IN_RED.id,
-			this.data.actions.BLIZZARD_IN_CYAN.id,
-			this.data.actions.BLIZZARD_II_IN_CYAN.id,
-			this.data.actions.AERO_IN_GREEN.id,
-			this.data.actions.AERO_II_IN_GREEN.id,
-			this.data.actions.STONE_IN_YELLOW.id,
-			this.data.actions.STONE_II_IN_YELLOW.id,
-			this.data.actions.WATER_IN_BLUE.id,
-			this.data.actions.WATER_II_IN_BLUE.id,
-			this.data.actions.THUNDER_IN_MAGENTA.id,
-			this.data.actions.THUNDER_II_IN_MAGENTA.id,
-			this.data.actions.HOLY_IN_WHITE.id,
-			this.data.actions.COMET_IN_BLACK.id,
-			this.data.actions.STAR_PRISM.id,
-		])
+		this.trackOnlyActions(HYPERPHANTASIA_SPELLS.map(key => this.data.actions[key].id))
 
 		this.addEvaluator(new ExpectedGcdCountEvaluator({
 			expectedGcds: this.data.statuses.HYPERPHANTASIA.stacksApplied,

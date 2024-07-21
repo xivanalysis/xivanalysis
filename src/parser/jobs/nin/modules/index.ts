@@ -10,6 +10,7 @@ import {Ninjutsu} from './Ninjutsu'
 import {Ninki} from './Ninki'
 import {OGCDDowntime} from './OGCDDowntime'
 import {Positionals} from './Positionals'
+import {Procs} from './Procs'
 import {Raiju} from './Raiju'
 import {Weaving} from './Weaving'
 
@@ -25,6 +26,7 @@ export default [
 	Ninjutsu,
 	Ninki,
 	Positionals,
+	Procs,
 	OGCDDowntime,
 	Raiju,
 	Weaving,

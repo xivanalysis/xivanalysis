@@ -68,6 +68,7 @@ export const PCT = ensureStatuses({
 		name: 'Inspiration',
 		icon: iconUrl(13811),
 		duration: 30000,
+		speedModifier: 0.75,
 	},
 	HYPERPHANTASIA: {
 		id: 3688,

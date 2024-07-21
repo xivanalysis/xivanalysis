@@ -80,6 +80,12 @@ export class MagickedSwordplay extends BuffWindow {
 					this.data.actions.ENCHANTED_MOULINET.id,
 					this.data.actions.ENCHANTED_MOULINET_DEUX.id,
 					this.data.actions.ENCHANTED_MOULINET_TROIS.id,
+
+					// Finishers
+					this.data.actions.VERHOLY.id,
+					this.data.actions.VERFLARE.id,
+					this.data.actions.SCORCH.id,
+					this.data.actions.RESOLUTION.id,
 				],
 				globalCooldown: this.globalCooldown,
 				suggestionIcon,

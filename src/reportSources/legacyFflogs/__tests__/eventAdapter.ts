@@ -1180,22 +1180,31 @@ describe('Event adapter', () => {
 		}])
 
 		/* eslint-disable @typescript-eslint/no-magic-numbers */
-		expect(result).toEqual([{
-			timestamp: timestamp + 100,
-			type: 'actorUpdate',
-			actor: '1',
-			attributes: [
-				{attribute: Attribute.SKILL_SPEED, value: 100, estimated: false},
-				{attribute: Attribute.SPELL_SPEED, value: 100, estimated: false},
-			],
-		}, {
-			timestamp: timestamp + 200,
-			type: 'actorUpdate',
-			actor: '1',
-			attributes: [
-				{attribute: Attribute.SPELL_SPEED, value: 200, estimated: false},
-			],
-		}])
+		expect(result).toEqual([
+			{
+				timestamp: timestamp + 100,
+				type: 'actorUpdate',
+				actor: '1',
+				level: 90,
+			},
+			{
+				timestamp: timestamp + 100,
+				type: 'actorUpdate',
+				actor: '1',
+				attributes: [
+					{attribute: Attribute.SKILL_SPEED, value: 100, estimated: false},
+					{attribute: Attribute.SPELL_SPEED, value: 100, estimated: false},
+				],
+			},
+			{
+				timestamp: timestamp + 200,
+				type: 'actorUpdate',
+				actor: '1',
+				attributes: [
+					{attribute: Attribute.SPELL_SPEED, value: 200, estimated: false},
+				],
+			},
+		])
 		/* eslint-enable @typescript-eslint/no-magic-numbers */
 	})
 

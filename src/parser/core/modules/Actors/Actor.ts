@@ -21,6 +21,9 @@ class ActorResources {
 	get targetable() {
 		return this.getHistoricalValue(event => event.targetable, true)
 	}
+	get level() {
+		return this.getHistoricalValue(event => event.level, undefined)
+	}
 	attributes: Readonly<Record<Attribute, AttributeValue>>
 
 	protected _updateHistory: Array<Events['actorUpdate']>
