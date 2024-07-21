@@ -1,6 +1,4 @@
-// import CONTRIBUTORS from 'data/CONTRIBUTORS'
-// import React from 'react'
-
+import CONTRIBUTORS from 'data/CONTRIBUTORS'
 import React from 'react'
 
 export const changelog = [
@@ -12,6 +10,8 @@ export const changelog = [
 	{
 		date: new Date('2024-07-21'),
 		Changes: () => (<>Add rudimentary support for 7.0 and 7.01 Paladin</>),
-		contributors: [],
+		contributors: [
+			CONTRIBUTORS.CHRIS,
+		],
 	},
 ]
