@@ -341,8 +341,7 @@ export const PLD = ensureActions({
 		name: 'Blade of Honor',
 		icon: iconUrl(2956),
 		onGcd: false,
-		// Setting a cooldown is technically incorrect, but xivanalysis core modules require it for it to show up on the timeline
-		cooldown: 30000,
+		cooldown: 1000,
 	},
 	GUARDIAN: {
 		id: 36920,
