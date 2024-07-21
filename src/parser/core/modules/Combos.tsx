@@ -326,20 +326,20 @@ export class Combos extends Analyser {
 			<Table.Body>
 				{
 					data.map(issue => {
-						const startEvent = issue.context[0]
-						const brokenTime = issue.type !== 'timeout' ? issue.breaker.timestamp : startEvent.timestamp + COMBO_TIMEOUT
+						const startEventTimestamp = issue.context[0]?.timestamp ?? issue.breaker.timestamp
+						const brokenTime = issue.type !== 'timeout' ? issue.breaker.timestamp : startEventTimestamp + COMBO_TIMEOUT
 
-						return <Table.Row key={startEvent.timestamp}>
+						return <Table.Row key={startEventTimestamp}>
 							<Table.Cell style={{whiteSpace: 'nowrap'}}>
 								{issue.context.length > 0 &&
 									<>
-										<span>{this.parser.formatEpochTimestamp(startEvent.timestamp, 0)}</span>
+										<span>{this.parser.formatEpochTimestamp(startEventTimestamp, 0)}</span>
 										<Button style={{marginLeft: 5}}
 											circular
 											compact
 											size="mini"
 											icon="time"
-											onClick={() => this.timeline.show(this.relativeTimestamp(startEvent.timestamp), this.relativeTimestamp(brokenTime + DEFAULT_GCD))}
+											onClick={() => this.timeline.show(this.relativeTimestamp(startEventTimestamp), this.relativeTimestamp(brokenTime + DEFAULT_GCD))}
 										/>
 									</>}
 							</Table.Cell>
