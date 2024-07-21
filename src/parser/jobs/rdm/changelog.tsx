@@ -3,6 +3,11 @@ import React from 'react'
 
 export const changelog = [
 	{
+		date: new Date('2024-07-17'),
+		Changes: () => <>Fixed issue with Manafication not breaking melee combos</>,
+		contributors: [CONTRIBUTORS.LEYLIA, CONTRIBUTORS.AZARIAH],
+	},
+	{
 		date: new Date('2024-07-14'),
 		Changes: () => <>Mark Grand Impact as a GCD</>,
 		contributors: [CONTRIBUTORS.HUGMEIR],

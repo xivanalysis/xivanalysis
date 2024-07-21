@@ -11,5 +11,8 @@ export const patch701: Layer<StatusRoot> = {
 			duration: 20000,
 		},
 
+		MANAFICATION: {
+			duration: 30000,
+		},
 	},
 }
