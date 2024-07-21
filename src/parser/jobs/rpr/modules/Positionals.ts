@@ -6,8 +6,6 @@ export class Positionals extends CorePositionals {
 
 	positionals = [
 		this.data.actions.GIBBET,
-		this.data.actions.EXECUTIONERS_GIBBET,
 		this.data.actions.GALLOWS,
-		this.data.actions.EXECUTIONERS_GALLOWS,
 	]
 }
