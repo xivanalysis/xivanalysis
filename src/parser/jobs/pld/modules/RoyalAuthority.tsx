@@ -7,7 +7,7 @@ import Checklist, {TieredRule, TARGET, Requirement} from 'parser/core/modules/Ch
 import {Data} from 'parser/core/modules/Data'
 import React from 'react'
 
-const SWORD_OATH_SEVERITY = {
+const ROYAL_AUTHORITY_SEVERITY = {
 	94: TARGET.SUCCESS,
 }
 
@@ -165,12 +165,12 @@ export class RoyalAuthority extends Analyser {
 		// const droppedStacks = this.swordOathHistory.reduce((dropped, swordOath) => dropped + Math.max(swordOath.initial - swordOath.used, 0), 0)
 
 		this.checklist.add(new TieredRule({
-			name: <Trans id= "pld.sword-oath.checklist.name">Use Follow Up Skills of Royal Authority</Trans>,
-			description: <Trans id="pld.sword-oath.checklist.description">
+			name: <Trans id= "pld.royal-authority.checklist.name">Use Follow Up Skills of Royal Authority</Trans>,
+			description: <Trans id="pld.royal-authority.checklist.description">
 				<DataLink action="ROYAL_AUTHORITY" /> generates <DataLink status="ATONEMENT_READY" /> to use on <DataLink action="ATONEMENT" /> and follow up actions <DataLink action="SUPPLICATION" /> and <DataLink action="SEPULCHRE" />.
 				This is effectively the same as getting {this.usages.atonement.total + this.usages.supplication.total + this.usages.sepulchre.total} uses of <DataLink showIcon={false} action="ROYAL_AUTHORITY" /> or stronger actions.
 			</Trans>,
-			tiers: SWORD_OATH_SEVERITY,
+			tiers: ROYAL_AUTHORITY_SEVERITY,
 			requirements: [
 				new Requirement({
 					name: <Trans id="pld.atonement.checklist.requirement.name">
