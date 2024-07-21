@@ -8,7 +8,7 @@ const SEVERITY_MISSED_PROCS = {
 	1: SEVERITY.MAJOR,
 }
 
-export class PrimalProcs extends CoreProcs {
+export class Procs extends CoreProcs {
 
 	override trackedProcs = [
 		{
