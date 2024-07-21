@@ -133,7 +133,7 @@
   "blm.rotation-watchdog.suggestions.should-skip-thunder.content": "",
   "blm.rotation-watchdog.suggestions.should-skip-thunder.why": "",
   "blm.rotation-watchdog.suggestions.uptime-souls.content": "N'utilisez pas <0/> tant qu'il y a un ennemi que vous pouvez cibler avec des actions pouvant infliger des dégâts. <1/> n'endommage pas l'ennemi et empêche l'usage d'autres GCDs. Ce sort ne devrait être utilisé que durant les pauses, entre deux combats ou pendant une phase de transition.",
-  "blm.rotation-watchdog.suggestions.uptime-souls.why": "",
+  "blm.rotation-watchdog.suggestions.uptime-souls.why": "<0/> a été utilisé {uptimeSouls, plural, one {# fois} other {# fois}} à la place d'un GCD offensif.",
   "blm.rotation-watchdog.title": "Problèmes dans la Rotation",
   "blm.thunder.applied": "Appliqué",
   "blm.thunder.checklist.dots.description": "",
