@@ -32,37 +32,37 @@ export class PrimalProcs extends CoreProcs {
 
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.PRIMAL_REND.icon,
-			content: <Trans id="war.primalrend.suggestions.dropped.content">
+			content: <Trans id="war.procs.suggestions.dropped-primal-rend.content">
 				Using <DataLink action="INNER_RELEASE" /> grants <DataLink status="PRIMAL_REND_READY" />. Use it for a strong attack and to unlock the even stronger <DataLink action="PRIMAL_RUINATION" />.
 			</Trans>,
 			tiers: SEVERITY_MISSED_PROCS,
 			value: missedRend,
-			why: <Trans id="war.primalrend.suggestions.dropped.why">
-				You missed <Plural value={missedRend} one="# Primal Rend use" other="# Primal Rend uses" />.
+			why: <Trans id="war.procs.suggestions.dropped-primal-rend.why">
+				You missed <Plural value={missedRend} one="# use" other="# uses" /> of Primal Rend.
 			</Trans>,
 		}))
 
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.PRIMAL_RUINATION.icon,
-			content: <Trans id="war.primalruination.suggestions.dropped.content">
-				Using <DataLink action="PRIMAL_REND" /> grants you <DataLink status="PRIMAL_RUINATION_READY" /> for 20 seconds which lets you use <DataLink action="PRIMAL_RUINATION" />. It is your highest damage GCD, so try to spend it before it expires.
+			content: <Trans id="war.procs.suggestions.dropped-primal-ruination.content">
+				Using <DataLink action="PRIMAL_REND" /> grants you <DataLink status="PRIMAL_RUINATION_READY" /> for 20 seconds which lets you use <DataLink action="PRIMAL_RUINATION" />. It's your strongest GCD, so make sure to spend it before it expires.
 			</Trans>,
 			tiers: SEVERITY_MISSED_PROCS,
 			value: missedRuination,
-			why: <Trans id="war.primalruination.suggestions.dropped.why">
-			You let <Plural value={missedRuination} one="# Primal Ruination proc" other="# Primal Ruination procs" /> time out.
+			why: <Trans id="war.procs.suggestions.dropped-primal-ruination.why">
+			You missed <Plural value={missedRuination} one="# use" other="# uses" /> of Primal Ruination.
 			</Trans>,
 		}))
 
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.PRIMAL_WRATH.icon,
-			content: <Trans id="war.primalwrath.suggestions.dropped.content">
-				Using <DataLink action="FELL_CLEAVE" /> 3 times under <DataLink status="INNER_RELEASE" /> lets you use <DataLink action="PRIMAL_WRATH" />. Try to spend it before it expires.
+			content: <Trans id="war.procs.suggestions.dropped-primal-wrath.content">
+				Using <DataLink action="FELL_CLEAVE" /> 3 times under <DataLink status="INNER_RELEASE" /> lets you use <DataLink action="PRIMAL_WRATH" />. Make sure to spend it before it expires.
 			</Trans>,
 			tiers: SEVERITY_MISSED_PROCS,
 			value: missedWrath,
-			why: <Trans id="war.primalwrath.suggestions.dropped.why">
-			You let <Plural value={missedWrath} one="# Primal Wrath proc" other="# Primal Wrath procs" /> time out.
+			why: <Trans id="war.procs.suggestions.dropped-primal-wrath.why">
+			You missed <Plural value={missedWrath} one="# use" other="# uses" /> of Primal Wrath.
 			</Trans>,
 		}))
 	}

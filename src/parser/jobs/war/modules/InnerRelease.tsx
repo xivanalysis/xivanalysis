@@ -121,7 +121,7 @@ export class InnerRelease extends Analyser {
 			</Trans>,
 			description: <Trans id="war.ir.checklist.missedgcd.description">
 				<DataLink action="INNER_RELEASE"/> grants {this.stacksApplied} stacks to use on <DataLink action="FELL_CLEAVE"/> (or <DataLink action="DECIMATE"/> for 3 or more targets).
-				Failing to use them loses uses of Fell Cleave and a Primal Wrath proc, so try to use them all before they expire.
+				Failing to use them loses uses of Fell Cleave and a Primal Wrath proc, so make sure to use them all before they expire.
 			</Trans>,
 			target: 100,
 			requirements: [
