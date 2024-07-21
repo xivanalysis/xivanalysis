@@ -414,6 +414,20 @@ export class TranslateAdapterStep extends AdapterStep {
 		}
 
 		const ourEvents = new Array<Events['actorUpdate'] | Events['statusApply']>()
+
+		if (event.level != null) {
+			ourEvents.push({
+				...this.adaptBaseFields(event),
+				type: 'actorUpdate',
+				level: event.level,
+				actor: resolveActorId({
+					id: event.sourceID,
+					instance: event.sourceInstance,
+					actor: event.source,
+				}),
+			})
+		}
+
 		// "Auras" seems to be a holdover from WoW, but over here they mainly cover Stances;
 		// Tank Stance (Grit, etc), as well as the BLU mimickries.
 		// The minimum thing we can do here is just report these as a statusApply at the
