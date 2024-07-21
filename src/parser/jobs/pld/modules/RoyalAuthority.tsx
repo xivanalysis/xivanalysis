@@ -36,26 +36,10 @@ export class RoyalAuthority extends Analyser {
 	@dependency private data!: Data
 
 	usages: RoyalAuthorityDependentUsages = {
-		divineMight: {
-			active: false,
-			uses: 0,
-			total: 0,
-		},
-		atonement: {
-			active: false,
-			uses: 0,
-			total: 0,
-		},
-		supplication: {
-			active: false,
-			uses: 0,
-			total: 0,
-		},
-		sepulchre: {
-			active: false,
-			uses: 0,
-			total: 0,
-		},
+		divineMight: this.createNewUsages(),
+		atonement: this.createNewUsages(),
+		supplication: this.createNewUsages(),
+		sepulchre: this.createNewUsages(),
 	};
 
 	override initialise() {
@@ -211,6 +195,14 @@ export class RoyalAuthority extends Analyser {
 
 	private getPercent(usages: Usages): number {
 		return ((usages.uses/usages.total) * 100)
+	}
+
+	private createNewUsages() : Usages {
+		return {
+			active: false,
+			uses: 0,
+			total: 0,
+		}
 	}
 
 }
