@@ -10,8 +10,11 @@ import {CounterGauge, Gauge as CoreGauge} from 'parser/core/modules/Gauge'
 import {EnumGauge} from 'parser/core/modules/Gauge/EnumGauge'
 import {SetGauge} from 'parser/core/modules/Gauge/SetGauge'
 import {DEFAULT_ROW_HEIGHT, GAUGE_FADE} from 'parser/core/modules/ResourceGraphs/ResourceGraphs'
+import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
 import {isSuccessfulHit} from 'utilities'
+
+const SUBTRACTIVE_COST = 50
 
 type GaugeModifier = Partial<Record<Event['type'], number>>
 interface CanvasModification {
@@ -62,6 +65,7 @@ export class Gauge extends CoreGauge {
 	static override title = t('pct.gauge.title')`Gauge`
 
 	@dependency private actors!: Actors
+	@dependency private suggestions!: Suggestions
 
 	private paletteGauge = this.add(new CounterGauge({
 		graph: {
@@ -80,7 +84,7 @@ export class Gauge extends CoreGauge {
 		[this.data.actions.WATER_II_IN_BLUE.id, {damage: 25}],
 
 		// Spenders
-		[this.data.actions.SUBTRACTIVE_PALLETTE.id, {action: -50}],
+		[this.data.actions.SUBTRACTIVE_PALLETTE.id, {action: -SUBTRACTIVE_COST}],
 	])
 
 	private paintGauge = this.add(new EnumGauge({
@@ -217,14 +221,19 @@ export class Gauge extends CoreGauge {
 		},
 	}))
 
-	private portraitModifiers = [
+	private portraitGenerators = [
 		this.data.actions.WINGED_MUSE.id,
-		this.data.actions.MOG_OF_THE_AGES.id,
 		this.data.actions.FANGED_MUSE.id,
+	]
+
+	private portraitSpenders = [
+		this.data.actions.MOG_OF_THE_AGES.id,
 		this.data.actions.RETRIBUTION_OF_THE_MADEEN.id,
 	]
 
 	private nextWhiteIsBlack = false
+	private overtones = 0
+	private overwrotePortrait = 0
 
 	override initialise() {
 		super.initialise()
@@ -247,10 +256,65 @@ export class Gauge extends CoreGauge {
 
 		this.addEventHook(playerFilter.type('action').action(oneOf(this.depictionModifiers)), this.onDepictionModifier)
 
-		this.addEventHook(playerFilter.type('action').action(oneOf(this.portraitModifiers)), this.onPortraitModifier)
+		this.addEventHook(playerFilter.type('action').action(oneOf(this.portraitGenerators)), this.onPortraitSpender)
+		this.addEventHook(playerFilter.type('action').action(oneOf(this.portraitSpenders)), () => this.portraitGauge.reset())
 
 		// Default assume the player painted before the pull
 		this.canvasGauge.set([CREATURE_MOTIF, WEAPON_MOTIF, LANDSCAPE_MOTIF])
+
+		this.addEventHook('complete', this.onComplete)
+	}
+
+	private onComplete() {
+		// Suggestion to not overcap the palette gauge
+		const lostSubtractives = Math.floor(this.paletteGauge.overCap / SUBTRACTIVE_COST)
+		this.suggestions.add(new TieredSuggestion({
+			icon: this.data.actions.SUBTRACTIVE_PALLETTE.icon,
+			value: lostSubtractives,
+			content: <Trans></Trans>,
+			why: <Trans></Trans>,
+			tiers: {
+				1: SEVERITY.MEDIUM,
+				2: SEVERITY.MAJOR,
+			},
+		}))
+
+		// Suggestion to not end the fight with palette gauge remaining
+		const wastedSubtractives = Math.floor(this.paletteGauge.value / SUBTRACTIVE_COST)
+		this.suggestions.add(new TieredSuggestion({
+			icon: this.data.actions.SUBTRACTIVE_PALLETTE.icon,
+			value: wastedSubtractives,
+			content: <Trans></Trans>,
+			why: <Trans></Trans>,
+			tiers: {
+				1: SEVERITY.MEDIUM,
+				2: SEVERITY.MAJOR,
+			},
+		}))
+
+		// Suggestion to not overwrite Monochrome Tones
+		this.suggestions.add(new TieredSuggestion({
+			icon: this.data.actions.COMET_IN_BLACK.icon,
+			value: this.overtones,
+			content: <Trans></Trans>,
+			why: <Trans></Trans>,
+			tiers: {
+				1: SEVERITY.MEDIUM,
+				2: SEVERITY.MAJOR,
+			},
+		}))
+
+		// Suggestion to not overwrite Mog/Madeen
+		this.suggestions.add(new TieredSuggestion({
+			icon: this.data.actions.RETRIBUTION_OF_THE_MADEEN.icon,
+			value: this.overwrotePortrait,
+			content: <Trans></Trans>,
+			why: <Trans></Trans>,
+			tiers: {
+				1: SEVERITY.MEDIUM,
+				2: SEVERITY.MAJOR,
+			},
+		}))
 	}
 
 	private onPaletteModifer(event: Event) {
@@ -298,6 +362,10 @@ export class Gauge extends CoreGauge {
 	}
 
 	private onSubtractivePalette(event: Events['action']) {
+		if (this.actors.current.hasStatus(this.data.statuses.MONOCHROME_TONES.id)) {
+			this.overtones++
+		}
+
 		// If we have a White Paint available, Subtractive Palette swaps it for a Black Paint
 		if (this.paintGauge.getCountAt(WHITE_PAINT, event.timestamp) > 0) {
 			this.paintGauge.spend(WHITE_PAINT)
@@ -346,8 +414,11 @@ export class Gauge extends CoreGauge {
 		}
 	}
 
-	private onPortraitModifier(event: Events['action']) {
-		this.portraitGauge.reset() // Spend, or make sure our generate event will go through
+	private onPortraitSpender(event: Events['action']) {
+		if (this.portraitGauge.capped) {
+			this.overwrotePortrait++
+		}
+
 		switch (event.action) {
 		case this.data.actions.WINGED_MUSE.id:
 			this.portraitGauge.generate(MOOGLE_PORTRAIT)
