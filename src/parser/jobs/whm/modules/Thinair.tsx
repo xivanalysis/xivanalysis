@@ -153,7 +153,7 @@ export class Thinair extends Analyser {
 
 		return <Fragment>
 			<p><Trans id="whm.thinair.messages.explanation">
-				The main use of <ActionLink {...this.data.actions.THIN_AIR} /> should be to save MP on high MP-cost spells. Don't be afraid to hold it and lose a use over the fight as long as it covers an MP-heavy spell such as usages of <ActionLink {...this.data.actions.MEDICA_II}/>, <ActionLink {...this.data.actions.CURE_III}/>, and <ActionLink {...this.data.actions.RAISE} />. Usages that did not save a considerable amount of MP are marked red.
+				The main use of <ActionLink {...this.data.actions.THIN_AIR} /> should be to save MP on high MP-cost spells. Don't be afraid to hold it and lose a use over the fight as long as it covers an MP-heavy spell such as usages of <ActionLink {...this.data.actions.MEDICA_III}/>, <ActionLink {...this.data.actions.CURE_III}/>, and <ActionLink {...this.data.actions.RAISE} />. Usages that did not save a considerable amount of MP are marked red.
 			</Trans></p>
 			{thinairDisplay}
 		</Fragment>
