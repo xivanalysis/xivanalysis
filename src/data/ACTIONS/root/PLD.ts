@@ -92,8 +92,6 @@ export const PLD = ensureActions({
 		icon: iconUrl(2506),
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		cooldown: 60000,
-		gcdRecast: 2500,
 	},
 	CLEMENCY: {
 		id: 3541,
@@ -204,7 +202,7 @@ export const PLD = ensureActions({
 		icon: iconUrl(166),
 		onGcd: false,
 		cooldown: 60000,
-		statusesApplied: ['FIGHT_OR_FLIGHT'],
+		statusesApplied: ['FIGHT_OR_FLIGHT', 'GORING_BLADE_READY'],
 	},
 	IRON_WILL: {
 		id: 28,
