@@ -89,7 +89,6 @@ export class FightOrFlight extends BuffWindow {
 					actions.SEPULCHRE,
 					actions.HOLY_SPIRIT,
 				],
-				overrideHeader: actions.SEPULCHRE,
 				expectedPerWindow: 3,
 			}],
 			suggestionIcon: actions.FIGHT_OR_FLIGHT.icon,
