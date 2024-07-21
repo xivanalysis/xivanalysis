@@ -47,7 +47,7 @@ export const PLD = ensureActions({
 			from: 15,
 			end: true,
 		},
-		statusesApplied: ['SWORD_OATH', 'DIVINE_MIGHT'],
+		statusesApplied: ['ATONEMENT_READY', 'DIVINE_MIGHT'],
 	},
 	SHIELD_LOB: {
 		id: 24,
@@ -126,6 +126,9 @@ export const PLD = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		breaksCombo: false,
+		statusesApplied: [
+			'SUPPLICATION_READY',
+		],
 	},
 	CONFITEOR: {
 		id: 16459,
@@ -167,6 +170,28 @@ export const PLD = ensureActions({
 			from: 25749,
 			end: true,
 		},
+		statusesApplied: [
+			'BLADE_OF_HONOR_READY',
+		],
+	},
+	SUPPLICATION: {
+		id: 36918,
+		name: 'Supplication',
+		icon: iconUrl(2522),
+		onGcd: true,
+		speedAttribute: Attribute.SKILL_SPEED,
+		breaksCombo: false,
+		statusesApplied: [
+			'SEPULCHRE_READY',
+		],
+	},
+	SEPULCHRE: {
+		id: 36919,
+		name: 'Sepulchre',
+		icon: iconUrl(2523),
+		onGcd: true,
+		speedAttribute: Attribute.SKILL_SPEED,
+		breaksCombo: false,
 	},
 
 	// -----
@@ -303,5 +328,29 @@ export const PLD = ensureActions({
 		icon: iconUrl(2951),
 		onGcd: false,
 		cooldown: 30000,
+	},
+	IMPERATOR: {
+		id: 36921,
+		name: 'Imperator',
+		icon: iconUrl(2955),
+		onGcd: false,
+		cooldown: 60000,
+		statusesApplied: ['REQUIESCAT', 'CONFITEOR_READY'],
+	},
+	BLADE_OF_HONOR: {
+		id: 36922,
+		name: 'Blade of Honor',
+		icon: iconUrl(2956),
+		onGcd: false,
+		// Setting a cooldown is technically incorrect, but xivanalysis core modules require it for it to show up on the timeline
+		cooldown: 30000,
+	},
+	GUARDIAN: {
+		id: 36920,
+		name: 'Guardian',
+		icon: iconUrl(2524),
+		onGcd: false,
+		cooldown: 120000,
+		statusesApplied: ['GUARDIAN', 'GUARDIANS_WILL'],
 	},
 })
