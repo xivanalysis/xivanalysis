@@ -125,7 +125,6 @@ export const PLD = ensureActions({
 		icon: iconUrl(2519),
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		breaksCombo: false,
 		statusesApplied: [
 			'SUPPLICATION_READY',
 		],
@@ -136,9 +135,10 @@ export const PLD = ensureActions({
 		icon: iconUrl(2518),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
-		combo: {
-			start: true,
-		},
+		// Technically incorrect, but this way we don't get spurious broken combos
+		// combo: {
+		// 	start: true,
+		// },
 	},
 	BLADE_OF_FAITH: {
 		id: 25748,
@@ -146,9 +146,10 @@ export const PLD = ensureActions({
 		icon: iconUrl(2952),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
-		combo: {
-			from: 16459,
-		},
+		// Technically incorrect, but this way we don't get spurious broken combos
+		// combo: {
+		// 	from: 16459,
+		// },
 	},
 	BLADE_OF_TRUTH: {
 		id: 25749,
@@ -156,9 +157,10 @@ export const PLD = ensureActions({
 		icon: iconUrl(2953),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
-		combo: {
-			from: 25748,
-		},
+		// Technically incorrect, but this way we don't get spurious broken combos
+		// combo: {
+		// 	from: 25748,
+		// },
 	},
 	BLADE_OF_VALOR: {
 		id: 25750,
@@ -166,10 +168,11 @@ export const PLD = ensureActions({
 		icon: iconUrl(2954),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
-		combo: {
-			from: 25749,
-			end: true,
-		},
+		// Technically incorrect, but this way we don't get spurious broken combos
+		// combo: {
+		// 	from: 25749,
+		// 	end: true,
+		// },
 		statusesApplied: [
 			'BLADE_OF_HONOR_READY',
 		],
@@ -180,7 +183,6 @@ export const PLD = ensureActions({
 		icon: iconUrl(2522),
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		breaksCombo: false,
 		statusesApplied: [
 			'SEPULCHRE_READY',
 		],
@@ -191,7 +193,6 @@ export const PLD = ensureActions({
 		icon: iconUrl(2523),
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		breaksCombo: false,
 	},
 
 	// -----
