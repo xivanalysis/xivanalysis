@@ -6,6 +6,7 @@ import {CooldownDowntime} from './CooldownDowntime'
 import {DeathGauge} from './DeathGauge'
 import {DeathsDesign} from './DeathsDesign'
 import {Defensives} from './Defensives'
+import Drift from './Drift'
 import {Enshroud} from './Enshroud'
 import {Executioner} from './Executioner'
 import {Harpe} from './Harpe'
@@ -26,6 +27,7 @@ export default [
 	DeathsDesign,
 	DeathGauge,
 	Defensives,
+	Drift,
 	Enshroud,
 	Executioner,
 	Harpe,

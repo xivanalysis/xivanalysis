@@ -6,6 +6,7 @@ import {DisplayedActionEvaluator} from 'parser/core/modules/ActionWindow/evaluat
 import {HistoryEntry} from 'parser/core/modules/ActionWindow/History'
 import {SEVERITY} from 'parser/core/modules/Suggestions'
 import React from 'react'
+import {Message} from 'semantic-ui-react'
 import {OPENER_BUFFER} from '../constants'
 import {DISPLAY_ORDER} from './DISPLAY_ORDER'
 
@@ -33,6 +34,10 @@ export class ArcaneCircle extends RaidBuffWindow {
 	static override displayOrder = DISPLAY_ORDER.ARCANE_CIRCLE
 
 	override buffStatus = this.data.statuses.ARCANE_CIRCLE
+
+	override prependMessages = <Message info>
+		<Trans id="rpr.arcanecircle.prepend-message"> <ActionLink action="PERFECTIO"/> should be used under <ActionLink action="ARCANE_CIRCLE"/> when possible, but certain factors, such as needing to continue combo to prevent combo break or using it as a disengage tool to keep uptime, are more important than putting it in buffs. </Trans>
+	</Message>
 
 	override initialise() {
 		super.initialise()
