@@ -94,7 +94,11 @@ export class RoyalAuthority extends Analyser {
 			type: 'statusApply',
 			target: this.parser.actor.id,
 			status: this.data.statuses.ATONEMENT_READY.id,
-		}, () => this.onApplyStatus(this.usages.atonement))
+		}, () => {
+			this.onApplyStatus(this.usages.atonement)
+			this.onApplyStatus(this.usages.supplication)
+			this.onApplyStatus(this.usages.sepulchre)
+		})
 
 		this.addEventHook({
 			type: 'statusRemove',
@@ -103,22 +107,10 @@ export class RoyalAuthority extends Analyser {
 		}, () => this.onRemoveStatus(this.usages.atonement))
 
 		this.addEventHook({
-			type: 'statusApply',
-			target: this.parser.actor.id,
-			status: this.data.statuses.SUPPLICATION_READY.id,
-		}, () => this.onApplyStatus(this.usages.supplication))
-
-		this.addEventHook({
 			type: 'statusRemove',
 			target: this.parser.actor.id,
 			status: this.data.statuses.SUPPLICATION_READY.id,
 		}, () => this.onRemoveStatus(this.usages.supplication))
-
-		this.addEventHook({
-			type: 'statusApply',
-			target: this.parser.actor.id,
-			status: this.data.statuses.SEPULCHRE_READY.id,
-		}, () => this.onApplyStatus(this.usages.sepulchre))
 
 		this.addEventHook({
 			type: 'statusRemove',
