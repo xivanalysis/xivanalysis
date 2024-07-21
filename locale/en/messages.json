@@ -865,7 +865,7 @@
   "rpr.drift.table.heading-3": "Total Drift",
   "rpr.drift.title": "Gluttony Drift",
   "rpr.enshroud.enhanced.header": "Alternated Reapings",
-  "rpr.enshroud.suggestions.content": "Each <0/> window should contain 2 uses each of <1/>, <2/>, and <3/> (or their AoE equivalents), and 1 use of <4/>.",
+  "rpr.enshroud.suggestions.content": "Each <0/> window should contain 2 uses each of <1/>, <2/>, and <3/> (or their AoE equivalents), and 1 use of <4/> and <5/>.",
   "rpr.enshroud.title": "Enshroud",
   "rpr.executioner.suggestion.dropped.content": "Avoid dropping <0/> by using <1/>, <2/>, or <3/>. These actions have high damage and grant you 10 Shroud gauge, giving you more chances to use <4/> over the course of a fight.",
   "rpr.executioner.suggestion.dropped.why": "You lost {0, plural, one {# stack} other {# stacks}} over the course of the fight.",
