@@ -1,15 +1,18 @@
-import {t} from '@lingui/macro'
+import {t, Trans} from '@lingui/macro'
 import TimeLineChart from 'components/ui/TimeLineChart'
 import {StatusKey} from 'data/STATUSES'
 import {Event, Events} from 'event'
 import {Analyser} from 'parser/core/Analyser'
 import {filter} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
+import {Timeline} from 'parser/core/modules/Timeline'
 import React from 'react'
+import {Button, Table} from 'semantic-ui-react'
 import {isDefined} from 'utilities'
 import {Data} from '../Data'
 import {ResourceGraphs} from '../ResourceGraphs'
 import {AbstractGauge} from './AbstractGauge'
+import {CounterGauge} from './CounterGauge'
 import {TimerGauge} from './TimerGauge'
 
 const PAUSES_TIMER_GAUGE_STATUSES: StatusKey[] = [
@@ -23,6 +26,7 @@ export class Gauge extends Analyser {
 
 	@dependency protected resourceGraphs!: ResourceGraphs
 	@dependency protected data!: Data
+	@dependency private timeline!: Timeline
 
 	private gauges: AbstractGauge[] = []
 
@@ -91,17 +95,78 @@ export class Gauge extends Analyser {
 		})
 	}
 
+	private relativeTimestamp(timestamp: number) {
+		return timestamp - this.parser.pull.timestamp
+	}
+
+	private createTimelineButton(timestamp: number) {
+		const relative_timestamp = this.relativeTimestamp(timestamp)
+		return <Button
+			circular
+			compact
+			icon="time"
+			size="small"
+			onClick={() => this.timeline.show(relative_timestamp, relative_timestamp)}
+			content={this.parser.formatEpochTimestamp(timestamp)}
+		/>
+	}
+
+	private getOvercapTable(): React.ReactNode {
+		// can typescript narrow this for me or...
+		const counterGauges = this.gauges.filter(g => g instanceof CounterGauge && g.outputOvercapTable && g.overCap > 0) as CounterGauge[]
+
+		if (counterGauges.length > 0) {
+			return <Table compact unstackable celled textAlign="center">
+				<Table.Header>
+					<Table.Row>
+						<Table.HeaderCell>
+							<strong><Trans id="core.ui.overcap-table.header.action">Resource</Trans></strong>
+						</Table.HeaderCell>
+						<Table.HeaderCell>
+							<strong><Trans id="core.ui.overcap-table.header.time">Overcap Time</Trans></strong>
+						</Table.HeaderCell>
+					</Table.Row>
+				</Table.Header>
+				<Table.Body>
+					{
+						// gauges don't have ids, key is array index
+						counterGauges.map((gauge, index) => {
+							return <Table.Row key={index}>
+								<Table.Cell style={{whiteSpace: 'nowrap'}}>
+									{gauge.label}
+								</Table.Cell>
+								<Table.Cell textAlign="left">
+									{
+										gauge.history.filter(h => h.overcapped).map(history => {
+											return this.createTimelineButton(history.timestamp)
+										})
+									}
+								</Table.Cell>
+							</Table.Row>
+						})
+					}
+				</Table.Body>
+			</Table>
+		}
+	}
+
 	override output() {
 		// Generate a dataset from each registered gauge
 		const datasets = this.gauges
 			.map(gauge => gauge.generateDataset())
 			.filter(isDefined)
 
-		if (datasets.length < 1) {
+		// check if any counter gauged are outputting overcap events in a table
+		const tables = this.gauges.filter(g => g instanceof CounterGauge && g.outputOvercapTable && g.overCap > 0)
+
+		if (datasets.length < 1 && tables.length < 1) {
 			return false
 		}
 
 		const data = {datasets}
-		return <TimeLineChart data={data}/>
+		return <>
+			{datasets.length > 0 ? <TimeLineChart data={data}/> : undefined}
+			{this.getOvercapTable()}
+		</>
 	}
 }

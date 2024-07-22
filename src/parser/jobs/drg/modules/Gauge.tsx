@@ -1,3 +1,4 @@
+import {t} from '@lingui/macro'
 import {Trans, Plural} from '@lingui/react'
 import Color from 'color'
 import {DataLink} from 'components/ui/DbLink'
@@ -26,6 +27,8 @@ const FMF_GENERATORS: ActionKey[] = [
 // todo:
 // - check how this handles situations where drg carried over a fmf stack
 export class Gauge extends CoreGauge {
+	static override title = t('drg.fmf-gauge.title')`Firstminds' Focus`
+
 	@dependency private suggestions!: Suggestions
 
 	// this is technically a gauge for Firstminds' Focus which enables wyrmwind thrust
@@ -37,6 +40,7 @@ export class Gauge extends CoreGauge {
 		},
 		correctHistory: true,
 		deterministic: true,
+		outputOvercapTable: true,
 	}))
 
 	override initialise() {
@@ -74,5 +78,11 @@ export class Gauge extends CoreGauge {
 				<Plural value={fmfOvercap} one="# Firstminds' Focus stack" other="# Firstminds' Focus stacks" /> were lost.
 			</Trans>,
 		}))
+	}
+
+	override output() {
+		const defaultOutput = super.output()
+
+		return defaultOutput
 	}
 }
