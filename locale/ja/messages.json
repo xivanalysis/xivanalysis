@@ -1110,6 +1110,7 @@
   "whm.overheal.afflatus.name": "",
   "whm.overheal.hot.name": "HoT",
   "whm.overheal.liturgyofthebell.name": "リタージー・オブ・ベル",
+  "whm.procs.suggestions.dropped-divine-caress.content": "",
   "whm.swiftcast.missed.suggestion.content": "<0/>の効果時間が切れる前に魔法を使用してください。これにより、素早く組成するための<1/>や、アビリティを挟むための<2/>など、詠唱時間を持つ魔法を無詠唱で使用することができます。",
   "whm.thinair.messages.explanation": "<0/> の主な用途は、MP コストの高い呪文で MP を節約することです。<1/>、<2/>、<3/>のようなMPを多く消費する呪文をカバーするためであれば、戦闘中の使用で保持できず失うことを恐れてはいけません。 MP を大幅に節約できなかった使用法は赤色で表示されます。",
   "whm.thinair.messages.no-casts": "<0/> の際に何もキャストされませんでした。",
