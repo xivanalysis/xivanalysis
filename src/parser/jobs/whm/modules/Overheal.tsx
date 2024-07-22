@@ -19,11 +19,9 @@ export class Overheal extends CoreOverheal {
 			color: SuggestedColors[1],
 			trackedHealIds: [
 				this.data.statuses.REGEN.id,
-				this.data.actions.MEDICA_II.id,
 				this.data.statuses.MEDICA_II.id,
 				this.data.actions.ASYLUM.id,
 				this.data.statuses.ASYLUM.id,
-				this.data.actions.MEDICA_III.id,
 				this.data.statuses.MEDICA_III.id,
 				this.data.statuses.DIVINE_AURA.id,
 			],
