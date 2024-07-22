@@ -25,7 +25,6 @@ const SACRIFICIUM_PER_BURST = 2
 const HARVEST_PER_BURST = 1
 const COMMUNIO_PER_BURST = 2
 
-const INVERTOR = -1 // Magic numbers strikes again!
 const OPENER_FEE = -0.5 // Opener costs half a burst
 
 export class ArcaneCircle extends RaidBuffWindow {
@@ -107,26 +106,26 @@ export class ArcaneCircle extends RaidBuffWindow {
 					case this.data.actions.CROSS_REAPING:
 					case this.data.actions.VOID_REAPING:
 					case this.data.actions.GRIM_REAPING:
-						return (INVERTOR * REAPINGS_PER_BURST)
+						return (-REAPINGS_PER_BURST)
 
 					case this.data.actions.LEMURES_SLICE:
 					case this.data.actions.LEMURES_SCYTHE:
-						return (INVERTOR * LEMURES_PER_BURST)
+						return (-LEMURES_PER_BURST)
 
 					case this.data.actions.SACRIFICIUM:
-						return (INVERTOR * SACRIFICIUM_PER_BURST)
+						return (-SACRIFICIUM_PER_BURST)
 
 					case this.data.actions.PLENTIFUL_HARVEST:
-						return (INVERTOR * HARVEST_PER_BURST)
+						return (-HARVEST_PER_BURST)
 
 					case this.data.actions.COMMUNIO:
-						return (INVERTOR * COMMUNIO_PER_BURST)
+						return (-COMMUNIO_PER_BURST)
 
 					default:
 						return 0
 					}
 				}
-
+			} else {
 				// We have enough time for 1 Communio, but not both
 				for (const skill of action.actions) {
 					switch (skill) {
@@ -138,13 +137,13 @@ export class ArcaneCircle extends RaidBuffWindow {
 
 					case this.data.actions.LEMURES_SLICE:
 					case this.data.actions.LEMURES_SCYTHE:
-						return (INVERTOR * LEMURES_PER_BURST)
+						return (OPENER_FEE * LEMURES_PER_BURST)
 
 					case this.data.actions.SACRIFICIUM:
-						return (INVERTOR * SACRIFICIUM_PER_BURST)
+						return (-SACRIFICIUM_PER_BURST)
 
 					case this.data.actions.PLENTIFUL_HARVEST:
-						return (INVERTOR * HARVEST_PER_BURST)
+						return (-HARVEST_PER_BURST)
 
 					case this.data.actions.COMMUNIO:
 						return (OPENER_FEE * COMMUNIO_PER_BURST)
@@ -154,12 +153,6 @@ export class ArcaneCircle extends RaidBuffWindow {
 					}
 				}
 			}
-
-			// If it's not Communio, we don't care at this point
-			for (const skill of action.actions) {
-				if (skill !== this.data.actions.COMMUNIO) { return 0 }
-			}
-
 		}
 
 		//If opener, everything but harvest is cut in half
@@ -189,6 +182,7 @@ export class ArcaneCircle extends RaidBuffWindow {
 			}
 		}
 
+		//Else, it's just a normal window
 		return 0
 	}
 }
