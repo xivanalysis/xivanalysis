@@ -21,9 +21,11 @@ const SUGGESTION_TIERS = {
 
 const SHROUD_ACTIONS: ActionKey[] = [
 	'GIBBET',
+	'EXECUTIONERS_GIBBET',
 	'GALLOWS',
+	'EXECUTIONERS_GALLOWS',
 	'GUILLOTINE',
-	'PLENTIFUL_HARVEST',
+	'EXECUTIONERS_GUILLOTINE',
 	'ENSHROUD',
 ]
 
@@ -112,10 +114,6 @@ export class OtherGauges extends CoreGauge {
 		switch (action.id) {
 		case this.data.actions.ENSHROUD.id:
 			this.shroudGauge.spend(HIGH_SHROUD_MOD)
-			break
-
-		case this.data.actions.PLENTIFUL_HARVEST.id:
-			this.shroudGauge.generate(HIGH_SHROUD_MOD)
 			break
 
 		default:
