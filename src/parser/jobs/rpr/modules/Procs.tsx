@@ -45,11 +45,17 @@ export class Procs extends CoreProcs {
 	trackedProcs = [
 		{
 			procStatus: this.data.statuses.ENHANCED_GALLOWS,
-			consumeActions: [this.data.actions.GALLOWS],
+			consumeActions: [
+				this.data.actions.GALLOWS,
+				this.data.actions.EXECUTIONERS_GALLOWS,
+			],
 		},
 		{
 			procStatus: this.data.statuses.ENHANCED_GIBBET,
-			consumeActions: [this.data.actions.GIBBET],
+			consumeActions: [
+				this.data.actions.GIBBET,
+				this.data.actions.EXECUTIONERS_GIBBET,
+			],
 		},
 		{
 			procStatus: this.data.statuses.ENHANCED_CROSS_REAPING,

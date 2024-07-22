@@ -26,6 +26,7 @@ const SHROUD_ACTIONS: ActionKey[] = [
 	'GRIM_REAPING',
 	'LEMURES_SLICE',
 	'LEMURES_SCYTHE',
+	'SACRIFICIUM',
 	'COMMUNIO',
 ]
 
@@ -95,6 +96,12 @@ export class Enshroud extends BuffWindow {
 				},
 				{
 					actions: [
+						this.data.actions.SACRIFICIUM,
+					],
+					expectedPerWindow: 1,
+				},
+				{
+					actions: [
 						this.data.actions.COMMUNIO,
 					],
 					expectedPerWindow: 1,
@@ -103,7 +110,7 @@ export class Enshroud extends BuffWindow {
 			suggestionIcon: this.data.actions.ENSHROUD.icon,
 			suggestionContent: <Trans id="rpr.enshroud.suggestions.content">
 				Each <ActionLink action="ENSHROUD"/> window should contain 2 uses each of <ActionLink action="CROSS_REAPING"/>, <ActionLink action="VOID_REAPING"/>,
-				and <ActionLink action="LEMURES_SLICE"/> (or their AoE equivalents), and 1 use of <ActionLink action="COMMUNIO"/>.
+				and <ActionLink action="LEMURES_SLICE"/> (or their AoE equivalents), and 1 use of <ActionLink action="SACRIFICIUM"/> and <ActionLink action="COMMUNIO"/>.
 			</Trans>,
 			suggestionWindowName: <ActionLink action="ENSHROUD" showIcon={false} />,
 			severityTiers: SEVERITIES,

@@ -16,8 +16,8 @@ export class CooldownDowntime extends CoreCooldownDowntime {
 
 		{
 			cooldowns: [this.data.actions.GLUTTONY],
-			// Delayed Gluttony opener is just before 10th GCD
-			firstUseOffset: 22500,
+			//Delayed Gluttony is dead, this is used after 2nd GCD, weaved after Arcane Circle
+			firstUseOffset: 6000,
 		},
 	]
 }
