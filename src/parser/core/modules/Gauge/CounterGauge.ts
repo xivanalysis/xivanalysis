@@ -68,9 +68,6 @@ export class CounterGauge extends AbstractGauge {
 
 	public history: CounterHistory[] = []
 
-	/** timestamps at which this gauge overcapped */
-	public overcapTimes: number[] = []
-
 	/** set to true to have the CoreGage module output a table indicating when each overcap event happened */
 	public outputOvercapTable: boolean = false
 
