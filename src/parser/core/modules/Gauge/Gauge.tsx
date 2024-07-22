@@ -156,7 +156,7 @@ export class Gauge extends Analyser {
 			.map(gauge => gauge.generateDataset())
 			.filter(isDefined)
 
-		// check if any counter gauged are outputting overcap events in a table
+		// check if any counter gauges are outputting overcap events in a table
 		const tables = this.gauges.filter(g => g instanceof CounterGauge && g.outputOvercapTable && g.overCap > 0)
 
 		if (datasets.length < 1 && tables.length < 1) {
