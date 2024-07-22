@@ -15,7 +15,6 @@ import {CounterGauge, TimerGauge, Gauge as CoreGauge} from 'parser/core/modules/
 import {EnumGauge} from 'parser/core/modules/Gauge/EnumGauge'
 import {DEFAULT_ROW_HEIGHT, GAUGE_FADE} from 'parser/core/modules/ResourceGraphs/ResourceGraphs'
 import Suggestions, {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
-import {Timeline} from 'parser/core/modules/Timeline'
 import {UnableToAct} from 'parser/core/modules/UnableToAct'
 import React, {Fragment} from 'react'
 import {Message, Table, Button} from 'semantic-ui-react'
@@ -103,7 +102,6 @@ export class Gauge extends CoreGauge {
 	@dependency private suggestions!: Suggestions
 	@dependency private unableToAct!: UnableToAct
 	@dependency private castTime!: CastTime
-	@dependency private timeline!: Timeline
 
 	private gaugeErrors: BLMGaugeError[] = []
 	private droppedEnoTimestamps: number[] = []

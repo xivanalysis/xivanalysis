@@ -26,7 +26,7 @@ export class Gauge extends Analyser {
 
 	@dependency protected resourceGraphs!: ResourceGraphs
 	@dependency protected data!: Data
-	@dependency private timeline!: Timeline
+	@dependency protected timeline!: Timeline
 
 	private gauges: AbstractGauge[] = []
 
