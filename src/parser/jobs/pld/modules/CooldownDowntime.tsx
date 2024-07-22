@@ -28,10 +28,5 @@ export class CooldownDowntime extends CoreCooldownDowntime {
 			// Standard opener uses after 5th GCD
 			firstUseOffset: 12500,
 		},
-		{
-			cooldowns: [this.data.actions.GORING_BLADE],
-			// Standard opener uses this as the 5th GCD
-			firstUseOffset: 12500,
-		},
 	]
 }
