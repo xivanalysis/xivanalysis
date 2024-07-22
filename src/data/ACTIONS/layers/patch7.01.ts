@@ -4,6 +4,7 @@ import {ActionRoot} from '../root'
 export const patch701: Layer<ActionRoot> = {
 	patch: '7.01',
 	data: {
-		// Patch 7.01 actions
+		TENDO_SETSUGEKKA: {gcdRecast: 2500},
+		TENDO_GOKEN: {gcdRecast: 2500},
 	},
 }
