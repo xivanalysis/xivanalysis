@@ -10,7 +10,7 @@ export const changelog = [
 	// },
 	{
 		date: new Date('2024-07-19'),
-		Changes: () => <>Update suggestion to avoid using <DataLink action="FIRE_I" />, add evaluation for the usage of <DataLink status="FIRESTARTER" />, and mark as supported for Dawntrial.</>,
+		Changes: () => <>Update suggestion to avoid using <DataLink action="FIRE_I" />, add evaluation for the usage of <DataLink status="FIRESTARTER" />, and mark as supported for Dawntrail.</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],
 	},
 	{
