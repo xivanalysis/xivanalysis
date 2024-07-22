@@ -1108,7 +1108,6 @@
   "whm.ogcds.suggestions.temperance.content": "Setze <0/> oft ein, um gruppenweiten Schaden zu mitigieren und die Potenzen deiner Heilungen mit globaler Abklingzeit zu erhöhen. Vermeide für Anwendungen in der Animation gefangen zu sein (/zu clippen).",
   "whm.ogcds.suggestions.why": "Ungefähr {missed} Casts von {maxUses} möglichen Anwendungen verpasst.",
   "whm.overheal.afflatus.name": "",
-  "whm.overheal.assize.name": "Assise",
   "whm.overheal.hot.name": "Heilung über Zeit",
   "whm.overheal.liturgyofthebell.name": "Glockenspiel",
   "whm.swiftcast.missed.suggestion.content": "Wirke Zauber mit <0/> bevor es abläuft. Dadurch kannst du Angriffe mit Anwendungszeit sofort benutzen, wie beispielsweise <1/> für schnelle Wiederbelebungen oder <2/> zwischen Angriffen mit globaler Abklingzeit (zum weaven).",

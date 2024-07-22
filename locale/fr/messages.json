@@ -1108,7 +1108,6 @@
   "whm.ogcds.suggestions.temperance.content": "Utilisez régulièrement <0/> pour atténuer les dommages causés par les attaques ennemies et augmenter la puissance de guérison des GCD. Évitez de clipper pour l'appliquer.",
   "whm.ogcds.suggestions.why": "Vous avez raté environ {missed} utilisations sur {maxUses} .",
   "whm.overheal.afflatus.name": "Soin des Offrandes",
-  "whm.overheal.assize.name": "Assises",
   "whm.overheal.hot.name": "Soins sur la durée",
   "whm.overheal.liturgyofthebell.name": "Tintinnabule",
   "whm.swiftcast.missed.suggestion.content": "Lancez un sort avec <0/> avant qu'il n'expire. Cela vous permet d'utiliser un sort instantanément, comme <1/> pour une résurrection rapide ou <2/> pour weave.",
