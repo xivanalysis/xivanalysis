@@ -24,6 +24,7 @@ import Procs from './Procs'
 import {assignErrorCode, getMetadataForWindow, getPreviousMetadata} from './RotationWatchdog/EvaluatorUtilities'
 import {ExpectedFireSpellsEvaluator} from './RotationWatchdog/ExpectedFireSpellsEvaluator'
 import {ExtraF1Evaluator} from './RotationWatchdog/ExtraF1Evaluator'
+import {FirestarterUsageEvaluator} from './RotationWatchdog/FirestarterUsageEvaluator'
 import {FlareStarUsageEvaluator} from './RotationWatchdog/FlareStarUsageEvaluator'
 import {IceMageEvaluator} from './RotationWatchdog/IceMageEvaluator'
 import {ManafontTimingEvaluator} from './RotationWatchdog/ManafontTimingEvaluator'
@@ -31,7 +32,7 @@ import {RotationErrorNotesEvaluator} from './RotationWatchdog/RotationErrorNotes
 import {SkipB4Evaluator} from './RotationWatchdog/SkipB4Evaluator'
 import {SkipThunderEvaluator} from './RotationWatchdog/SkipThunderEvaluator'
 import {UptimeSoulsEvaluator} from './RotationWatchdog/UptimeSoulsEvaluator'
-import {CycleMetadata, ROTATION_ERRORS, HIDDEN_PRIORITY_THRESHOLD} from './RotationWatchdog/WatchdogConstants'
+import {CycleMetadata, ROTATION_ERRORS, HIDDEN_PRIORITY_THRESHOLD, FLARE_STAR_CARRYOVER_CODE} from './RotationWatchdog/WatchdogConstants'
 
 const DEBUG_SHOW_ALL = false && process.env.NODE_ENV !== 'production'
 
@@ -94,8 +95,6 @@ export class RotationWatchdog extends RestartWindow {
 		missingDespairs: false,
 		missingFire4s: false,
 		missingFlareStars: false,
-		wasTPF1: false,
-		expectedFire4sBeforeDespair: 0,
 		expectedFire4s: -1,
 		expectedDespairs: -1,
 		expectedFlareStars: -1,
@@ -171,12 +170,18 @@ export class RotationWatchdog extends RestartWindow {
 		this.addEvaluator(new ExtraF1Evaluator({
 			suggestionIcon: this.data.actions.FIRE_I.icon,
 			metadataHistory: this.metadataHistory,
-			limitedFireSpellIds: [this.data.actions.FIRE_I.id, this.data.actions.PARADOX.id],
+			fire1Id: this.data.actions.FIRE_I.id,
 		}))
 
 		this.addEvaluator(new UptimeSoulsEvaluator({
 			umbralSoulAction: this.data.actions.UMBRAL_SOUL,
 			invulnerability: this.invulnerability,
+		}))
+
+		this.addEvaluator(new FirestarterUsageEvaluator({
+			manafontId: this.data.actions.MANAFONT.id,
+			paradoxId: this.data.actions.PARADOX.id,
+			fire3Id: this.data.actions.FIRE_III.id,
 		}))
 		//#endregion
 
@@ -347,6 +352,12 @@ export class RotationWatchdog extends RestartWindow {
 			// Let the player rush the Despair if they need to before a downtime/end of fight
 			if (windowMetadata.finalOrDowntime) { return window.data.filter(event => event.action.id === this.data.actions.FIRE_IV.id).length }
 
+			// Windows begun by Manafont by definition should contain the full 6 F4s
+			if (window.data[0].action.id === this.data.actions.MANAFONT.id) {
+				windowMetadata.expectedFire4s = MAX_POSSIBLE_FIRE4
+				return MAX_POSSIBLE_FIRE4
+			}
+
 			// Start off with the baseline assumption they've reached full MP in Umbral Ice, since MP events from the log source aren't reliably timed
 			adjustment = NO_UH_EXPECTED_FIRE4
 
@@ -384,11 +395,9 @@ export class RotationWatchdog extends RestartWindow {
 
 			// Make sure we don't go wild and return a larger expected count than is actually possible, in case the above logic misbehaves...
 			adjustment = Math.min(adjustment, MAX_POSSIBLE_FIRE4)
-			const despairTime = window.data.find(event => event.action.id === this.data.actions.DESPAIR.id)?.timestamp
 
 			// Give them credit if we were overly pessimistic
-			adjustment = Math.max(adjustment, window.data.filter(event => event.action.id === action.action.id && (!despairTime || event.timestamp < despairTime)).length)
-			windowMetadata.expectedFire4sBeforeDespair = adjustment
+			adjustment = Math.max(adjustment, window.data.filter(event => event.action.id === action.action.id).length)
 		}
 
 		if (action.action.id === this.data.actions.DESPAIR.id) {
@@ -398,17 +407,20 @@ export class RotationWatchdog extends RestartWindow {
 		if (action.action.id === this.data.actions.FLARE_STAR.id) {
 			// We should only expect a Flare Star if we're also expected to get all 6 F4s in during a full uptime window
 			if (!windowMetadata.finalOrDowntime && windowMetadata.expectedFire4s >= MAX_POSSIBLE_FIRE4) {
-				adjustment++
-
 				// Players may choose to carry their generated Flare Star into the post-Manafont window
-				if (window.data[window.data.length - 1].action.id === this.data.actions.MANAFONT.id && window.data.filter(event => event.action.id === this.data.actions.FLARE_STAR.id).length < 1) {
-					adjustment--
+				if (window.data[window.data.length - 1].action.id === this.data.actions.MANAFONT.id &&
+					!window.data.some(event => event.action.id === this.data.actions.FLARE_STAR.id)) {
+					windowMetadata.expectedFlareStars = FLARE_STAR_CARRYOVER_CODE
+					return windowMetadata.expectedFlareStars
 				}
+
+				adjustment++
 			}
 
 			// If we carried a Flare Star over, expect to see an extra one
 			const previousMetadata = getPreviousMetadata(window, this.metadataHistory)
-			if (previousMetadata != null && previousMetadata.expectedFlareStars === 0 && previousMetadata.expectedFire4s >= MAX_POSSIBLE_FIRE4) {
+			if (previousMetadata != null && previousMetadata.expectedFlareStars === FLARE_STAR_CARRYOVER_CODE &&
+				previousMetadata.expectedFire4s >= MAX_POSSIBLE_FIRE4) {
 				adjustment++
 			}
 		}

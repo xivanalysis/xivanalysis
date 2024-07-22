@@ -122,6 +122,8 @@
   "blm.rotation-watchdog.suggestions.end-with-despair.why": "{astralFiresMissingDespairs, plural, one {# 次星极火状态} other {# 次星极火状态}}结束前没有使用过<0/>.",
   "blm.rotation-watchdog.suggestions.extra-f1s.content": "在每次星极火循环中咏唱多于一个<0/>就会损失输出。可以通过规划副本时间轴来改善。",
   "blm.rotation-watchdog.suggestions.extra-f1s.why": "你读了{extraF1s, plural, one {#次} other {#次}}多余的<0/>。",
+  "blm.rotation-watchdog.suggestions.firestarter-usage.content": "",
+  "blm.rotation-watchdog.suggestions.firestarter-usage.why": "",
   "blm.rotation-watchdog.suggestions.flarestarusage.content": "",
   "blm.rotation-watchdog.suggestions.flarestarusage.why": "",
   "blm.rotation-watchdog.suggestions.icemage.content": "不要在灵极冰阶段停留太长时间。你的主要伤害来自星极火阶段，应该最大化<0/>在战斗中的使用次数。",
