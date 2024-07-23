@@ -8,7 +8,7 @@ import {HistoryEntry} from 'parser/core/modules/ActionWindow/History'
 import {SEVERITY} from 'parser/core/modules/Suggestions'
 import React from 'react'
 import {Message} from 'semantic-ui-react'
-import {ADDITIVE_SPELLS, CREATURE_MUSES, SUBTRACTIVE_SINGLE_TARGET} from './CommonData'
+import {ADDITIVE_SPELLS, CREATURE_MOTIFS, CREATURE_MUSES, SUBTRACTIVE_SINGLE_TARGET} from './CommonData'
 
 export class StarryMuse extends RaidBuffWindow {
 	static override handle = 'starrymuse'
@@ -17,12 +17,13 @@ export class StarryMuse extends RaidBuffWindow {
 	override buffStatus: Status | Status[] = this.data.statuses.STARRY_MUSE
 
 	private museActions = CREATURE_MUSES.map(key => this.data.actions[key])
+	private creatureMotifs = CREATURE_MOTIFS.map(key => this.data.actions[key])
 	private subtractiveActions = SUBTRACTIVE_SINGLE_TARGET.map(key => this.data.actions[key])
 
 	override prependMessages = <Message>
 		<Trans id="pct.starrymuse.table-header">
 			Your <DataLink status="STARRY_MUSE" /> windows should contain your full <DataLink status="HAMMER_TIME" /> combo, <DataLink action="STAR_PRISM" />, <DataLink action="RAINBOW_DRIP" />, two <DataLink action="COMET_IN_BLACK" /> (one in the opener), and fill the remainder with your <DataLink status="SUBTRACTIVE_PALLETTE" /> spells.<br/>
-			If you are doing a triple Muse burst for alignment, you will push some of your <DataLink showIcon={false} status="SUBTRACTIVE_PALLETTE" /> spells and <DataLink showIcon={false} action="RAINBOW_DRIP" /> out of the window.<br/>
+			If you are using more muses for buff alignment reasons, you will push some of your <DataLink showIcon={false} status="SUBTRACTIVE_PALLETTE" /> spells and <DataLink showIcon={false} action="RAINBOW_DRIP" /> out of the window.<br/>
 			Try to make sure you use all of the expected actions in each window as seen below.
 		</Trans>
 	</Message>
@@ -59,7 +60,7 @@ export class StarryMuse extends RaidBuffWindow {
 				},
 				{
 					actions: this.museActions,
-					expectedPerWindow: 1, // Default to 1, we'll assess the window as a triple muse if they actually got more
+					expectedPerWindow: 1, // Assume they'll have one prepped, if they cast a motif, we'll expect that to get used as well
 					overrideHeader: <DataLink showName={false} action="LIVING_MUSE" />,
 				},
 				{
@@ -100,22 +101,22 @@ export class StarryMuse extends RaidBuffWindow {
 	}
 
 	private adjustExpectedActionGroupCounts(window: HistoryEntry<EvaluatedAction[]>, action: TrackedActionGroup): number {
-		const attemptedTripleMuse = this.countActionsUsed(window, this.museActions) > 1
+		const motifsPainted = this.countActionsUsed(window, this.creatureMotifs)
 		const firstWindow = this.history.entries.length > 0 ? this.history.entries[0].start === window.start : false
 
 		if (action.actions.includes(this.data.actions.COMET_IN_BLACK)) {
 			// If they had carried-over gauge we couldn't see, let 'em
 			if (this.countUsed(window, action) >= action.expectedPerWindow) { return 0 }
 
-			// If this is the opener window, or they're doing the triple muse window, expect that they'll only fit one comet
-			if (firstWindow || attemptedTripleMuse) {
+			// If this is the opener window, or they're doing a multi-muse window, expect that they'll only fit one comet
+			if (firstWindow || motifsPainted > 0) {
 				return -1
 			}
 		}
 
 		if (action.actions.some(action => this.subtractiveActions.includes(action))) {
-			// Only one subtractive spell can be fit into a triple muse window
-			if (attemptedTripleMuse) {
+			// Only one subtractive spell can normally be fit into a multi-muse window
+			if (motifsPainted > 0) {
 				return -1
 			}
 
@@ -125,14 +126,14 @@ export class StarryMuse extends RaidBuffWindow {
 			}
 		}
 
-		// The triple muse burst pushes Rainbow Drip out of the window
-		if (action.actions.includes(this.data.actions.RAINBOW_DRIP) && attemptedTripleMuse) {
+		// A multi-muse burst pushes Rainbow Drip out of the window
+		if (action.actions.includes(this.data.actions.RAINBOW_DRIP) && motifsPainted > 0) {
 			return -1
 		}
 
-		// If they got more than one muse, assume they were trying to triple muse
-		if (action.actions.some(action => this.museActions.includes(action))  && attemptedTripleMuse) {
-			return 2
+		// If they painted a motif during the burst window, they should make sure to use the muse in the window too
+		if (action.actions.some(action => this.museActions.includes(action))) {
+			return motifsPainted
 		}
 
 		return 0
