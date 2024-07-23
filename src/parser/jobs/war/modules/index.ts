@@ -6,7 +6,7 @@ import {Gauge} from './Gauge'
 import {Infuriate} from './Infuriate'
 import {InnerRelease} from './InnerRelease'
 import {OGCDDowntime} from './OGCDDowntime'
-import {PrimalRend} from './PrimalRend'
+import {Procs} from './Procs'
 import {SurgingTempest} from './SurgingTempest'
 
 export default [
@@ -18,6 +18,6 @@ export default [
 	Infuriate,
 	InnerRelease,
 	OGCDDowntime,
-	PrimalRend,
+	Procs,
 	SurgingTempest,
 ]

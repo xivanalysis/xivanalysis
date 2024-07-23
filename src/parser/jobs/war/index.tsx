@@ -1,5 +1,5 @@
 import {Trans} from '@lingui/react'
-// import CONTRIBUTORS, {ROLES} from 'data/CONTRIBUTORS'
+import CONTRIBUTORS, {ROLES} from 'data/CONTRIBUTORS'
 import {Meta} from 'parser/core/Meta'
 import React from 'react'
 import {changelog} from './changelog'
@@ -16,12 +16,12 @@ export const WARRIOR = new Meta({
 	</>,
 
 	supportedPatches: {
-		from: '✖',
-		to: '✖',
+		from: '7.0',
+		to: '7.01',
 	},
 
 	contributors: [
-	// {user: CONTRIBUTORS.YOU, role: ROLES.YOUR_ROLE},
+		{user: CONTRIBUTORS.KWEREY, role: ROLES.MAINTAINER},
 	],
 
 	changelog,
