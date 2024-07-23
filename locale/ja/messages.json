@@ -151,7 +151,6 @@
   "blm.triplecast.suggestions.overwrote-triplecasts.content": "",
   "blm.triplecast.suggestions.overwrote-triplecasts.why": "<0/>は上書きされました。",
   "blu.about.description": "",
-  "blu.about.description.warning": "このモジュールは最近拡張されたので、フィードバックをお待ちしています！",
   "blu.always-cast.description": "何かしらのアクションを常に回しているようにしてください。正確性を求めて手を緩めるより細かいミスをしていた方が比較的にいいです。<0/>BLU の場合、以下を GCD 稼働時間としてカウントします。<1><2><3/>の効果時間</2><4><6/>後の<5/>での強制行動不能時間</4><7><8/>と<9/>の効果時間</7><10><11/>アビリティ</10></1>",
   "blu.apokalypsis.dropped_ticks.content": "<0/> を止めるのが早すぎると、ダメージ ティックを損失します。",
   "blu.apokalypsis.dropped_ticks.why": "{missingApokalypsisTicks, plural, other {# 回のアポカリュプシスのティック}} が、キャンセルが早すぎたために失われました。",
