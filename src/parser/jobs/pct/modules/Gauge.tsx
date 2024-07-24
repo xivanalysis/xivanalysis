@@ -1,6 +1,7 @@
 import {t} from '@lingui/macro'
-import {Trans} from '@lingui/react'
+import {Plural, Trans} from '@lingui/react'
 import Color from 'color'
+import {DataLink} from 'components/ui/DbLink'
 import {JOBS} from 'data/JOBS'
 import {Event, Events} from 'event'
 import {filter, oneOf} from 'parser/core/filter'
@@ -271,8 +272,8 @@ export class Gauge extends CoreGauge {
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.SUBTRACTIVE_PALETTE.icon,
 			value: lostSubtractives,
-			content: <Trans></Trans>,
-			why: <Trans></Trans>,
+			content: <Trans id="pct.gauge.suggestions.lost-subtractives.content">Overcapping the Palette gauge will cause you to lose uses of <DataLink action="SUBTRACTIVE_PALETTE"/> over the course of the fight, leading to lost potency. Make sure to use your gauge before it overcaps.</Trans>,
+			why: <Trans id="pct.gauge.suggestions.lost-subtractives.why">You lose <Plural value={lostSubtractives} one="# use" other="# uses" /> of <DataLink showIcon={false} action="SUBTRACTIVE_PALETTE" /> due to overcapping the Palette gauge.</Trans>,
 			tiers: {
 				1: SEVERITY.MEDIUM,
 				2: SEVERITY.MAJOR,
@@ -284,8 +285,8 @@ export class Gauge extends CoreGauge {
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.SUBTRACTIVE_PALETTE.icon,
 			value: wastedSubtractives,
-			content: <Trans></Trans>,
-			why: <Trans></Trans>,
+			content: <Trans id="pct.gauge.suggestions.wasted-subtractives.content">Ending the fight with Palette gauge remaining means you could have used another set of <DataLink action="SUBTRACTIVE_PALETTE" /> spells for additional damage.</Trans>,
+			why: <Trans id="pct.gauge.suggestions.wasted-subtractives.why">You ended the fight with enough Palette gauge to use <DataLink showIcon={false} action="SUBTRACTIVE_PALETTE" /> <Plural value={wastedSubtractives} one="# time" other="# times" />.</Trans>,
 			tiers: {
 				1: SEVERITY.MEDIUM,
 				2: SEVERITY.MAJOR,
@@ -296,8 +297,8 @@ export class Gauge extends CoreGauge {
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.COMET_IN_BLACK.icon,
 			value: this.overtones,
-			content: <Trans></Trans>,
-			why: <Trans></Trans>,
+			content: <Trans id="pct.gauge.suggestions.overwrote-monochrome.content">Using <DataLink action="SUBTRACTIVE_PALETTE" /> a second time before casting <DataLink action="COMET_IN_BLACK" /> will lose you a use due to overwriting your <DataLink status="MONOCHROME_TONES" /> buff.</Trans>,
+			why: <Trans id="pct.gauge.suggestions.overwrote-monochrome.why">You overwrote <DataLink showIcon={false} status="MONOCHROME_TONES" /> <Plural value={this.overtones} one="# time" other="# times" />.</Trans>,
 			tiers: {
 				1: SEVERITY.MEDIUM,
 				2: SEVERITY.MAJOR,
@@ -308,8 +309,11 @@ export class Gauge extends CoreGauge {
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.RETRIBUTION_OF_THE_MADEEN.icon,
 			value: this.overwrotePortrait,
-			content: <Trans></Trans>,
-			why: <Trans></Trans>,
+			content: <Trans id="pct.gauge.suggestions.overwrote-portrait.content">
+				Rendering <DataLink action="WINGED_MUSE" /> or <DataLink action="FANGED_MUSE" /> without using <DataLink action="MOG_OF_THE_AGES" /> or <DataLink action="RETRIBUTION_OF_THE_MADEEN" /> will overwrite your Portrait.
+				Make sure you use every Portrait you paint.
+			</Trans>,
+			why: <Trans id="pct.gauge.suggestions.overwrote-portrait.why">You overwrote your Portrait <Plural value={this.overwrotePortrait} one="# time" other="# times" />.</Trans>,
 			tiers: {
 				1: SEVERITY.MEDIUM,
 				2: SEVERITY.MAJOR,
