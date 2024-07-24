@@ -62,7 +62,7 @@ export default class Procs extends CoreProcs {
 
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.statuses.AETHERHUES_II.icon,
-			content: <Trans id="pct.procs.dropped-aetherhues.content">Your <DataLink status="AETHERHUES" /> and <DataLink status="AETHERHUES_II" /> statuses function as Pictomancer's combos, and dropping them will slow the rate at which you're able to use <DataLink action="SUBTRACTIVE_PALLETTE" />, leading to lost potency over time.</Trans>,
+			content: <Trans id="pct.procs.dropped-aetherhues.content">Your <DataLink status="AETHERHUES" /> and <DataLink status="AETHERHUES_II" /> statuses function as Pictomancer's combos, and dropping them will slow the rate at which you're able to use <DataLink action="SUBTRACTIVE_PALETTE" />, leading to lost potency over time.</Trans>,
 			why: <Trans id="pct.procs.dropped-aetherhues.why">One of your <DataLink showIcon={false} status="AETHERHUES" /> statuses were allowed to expire <Plural value={droppedAetherhues} one="# time" other="# times"/>.</Trans>,
 			value: droppedAetherhues,
 			tiers: DEFAULT_SEVERITY_TIERS,

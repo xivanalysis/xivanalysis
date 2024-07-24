@@ -84,7 +84,7 @@ export class Gauge extends CoreGauge {
 		[this.data.actions.WATER_II_IN_BLUE.id, {damage: 25}],
 
 		// Spenders
-		[this.data.actions.SUBTRACTIVE_PALLETTE.id, {action: -SUBTRACTIVE_COST}],
+		[this.data.actions.SUBTRACTIVE_PALETTE.id, {action: -SUBTRACTIVE_COST}],
 	])
 
 	private paintGauge = this.add(new EnumGauge({
@@ -249,7 +249,7 @@ export class Gauge extends CoreGauge {
 
 		this.addEventHook(playerFilter.type('action').action(this.data.actions.COMET_IN_BLACK.id), this.onBlackPaintSpender)
 
-		this.addEventHook(playerFilter.type('action').action(this.data.actions.SUBTRACTIVE_PALLETTE.id), this.onSubtractivePalette)
+		this.addEventHook(playerFilter.type('action').action(this.data.actions.SUBTRACTIVE_PALETTE.id), this.onSubtractivePalette)
 
 		const canvasActions = Array.from(this.canvasModifiers.keys())
 		this.addEventHook(playerFilter.type('action').action(oneOf(canvasActions)), this.onCanvasModifier)
@@ -269,7 +269,7 @@ export class Gauge extends CoreGauge {
 		// Suggestion to not overcap the palette gauge
 		const lostSubtractives = Math.floor(this.paletteGauge.overCap / SUBTRACTIVE_COST)
 		this.suggestions.add(new TieredSuggestion({
-			icon: this.data.actions.SUBTRACTIVE_PALLETTE.icon,
+			icon: this.data.actions.SUBTRACTIVE_PALETTE.icon,
 			value: lostSubtractives,
 			content: <Trans></Trans>,
 			why: <Trans></Trans>,
@@ -282,7 +282,7 @@ export class Gauge extends CoreGauge {
 		// Suggestion to not end the fight with palette gauge remaining
 		const wastedSubtractives = Math.floor(this.paletteGauge.value / SUBTRACTIVE_COST)
 		this.suggestions.add(new TieredSuggestion({
-			icon: this.data.actions.SUBTRACTIVE_PALLETTE.icon,
+			icon: this.data.actions.SUBTRACTIVE_PALETTE.icon,
 			value: wastedSubtractives,
 			content: <Trans></Trans>,
 			why: <Trans></Trans>,
@@ -326,8 +326,8 @@ export class Gauge extends CoreGauge {
 		}
 		if (eventActionId == null) { return }
 
-		// Subtractive Pallet does not spend gauge if Subtractive Spectrum is currently active
-		if (eventActionId === this.data.actions.SUBTRACTIVE_PALLETTE.id &&
+		// Subtractive Palette does not spend gauge if Subtractive Spectrum is currently active
+		if (eventActionId === this.data.actions.SUBTRACTIVE_PALETTE.id &&
 			this.actors.current.hasStatus(this.data.statuses.SUBTRACTIVE_SPECTRUM.id)) {
 			return
 		}

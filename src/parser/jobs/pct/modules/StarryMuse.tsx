@@ -22,8 +22,8 @@ export class StarryMuse extends RaidBuffWindow {
 
 	override prependMessages = <Message>
 		<Trans id="pct.starrymuse.table-header">
-			Your <DataLink status="STARRY_MUSE" /> windows should contain your full <DataLink status="HAMMER_TIME" /> combo, <DataLink action="STAR_PRISM" />, <DataLink action="RAINBOW_DRIP" />, two <DataLink action="COMET_IN_BLACK" /> (one in the opener), and fill the remainder with your <DataLink status="SUBTRACTIVE_PALLETTE" /> spells.<br/>
-			If you are using more muses for buff alignment reasons, you will push some of your <DataLink showIcon={false} status="SUBTRACTIVE_PALLETTE" /> spells and <DataLink showIcon={false} action="RAINBOW_DRIP" /> out of the window.<br/>
+			Your <DataLink status="STARRY_MUSE" /> windows should contain your full <DataLink status="HAMMER_TIME" /> combo, <DataLink action="STAR_PRISM" />, <DataLink action="RAINBOW_DRIP" />, two <DataLink action="COMET_IN_BLACK" /> (one in the opener), and fill the remainder with your <DataLink status="SUBTRACTIVE_PALETTE" /> spells.<br/>
+			If you are using more muses for buff alignment reasons, you will push some of your <DataLink showIcon={false} status="SUBTRACTIVE_PALETTE" /> spells and <DataLink showIcon={false} action="RAINBOW_DRIP" /> out of the window.<br/>
 			Try to make sure you use all of the expected actions in each window as seen below.
 		</Trans>
 	</Message>
@@ -56,7 +56,7 @@ export class StarryMuse extends RaidBuffWindow {
 				{
 					actions: this.subtractiveActions,
 					expectedPerWindow: 2, // Default to 2, adjust to 3 for the opener
-					overrideHeader: <DataLink showName={false} status="SUBTRACTIVE_PALLETTE" />,
+					overrideHeader: <DataLink showName={false} status="SUBTRACTIVE_PALETTE" />,
 				},
 				{
 					actions: this.museActions,
@@ -91,7 +91,7 @@ export class StarryMuse extends RaidBuffWindow {
 			}),
 			suggestionIcon: this.data.actions.FIRE_IN_RED.icon,
 			suggestionWindowName: <DataLink showIcon={false} action="STARRY_MUSE" />,
-			suggestionContent: <Trans id="pct.starrymuse.suggestions.limited-actions.content">Avoid using the additive paint spells during your <DataLink status="STARRY_MUSE" /> windows. The <DataLink status="SUBTRACTIVE_PALLETTE" /> spells have higher potency, allowing you to do more damage during your burst.</Trans>,
+			suggestionContent: <Trans id="pct.starrymuse.suggestions.limited-actions.content">Avoid using the additive paint spells during your <DataLink status="STARRY_MUSE" /> windows. The <DataLink status="SUBTRACTIVE_PALETTE" /> spells have higher potency, allowing you to do more damage during your burst.</Trans>,
 			severityTiers: {
 				1: SEVERITY.MINOR,
 				3: SEVERITY.MEDIUM,

@@ -375,14 +375,14 @@ export const PCT = ensureActions({
 	/** Utility */
 	TEMPERA_COAT: {
 		id: 34685,
-		name: 'Tempura Coat',
+		name: 'Tempera Coat',
 		icon: iconUrl(3835),
 		cooldown: 120000,
 		statusesApplied: ['TEMPERA_COAT'],
 	},
 	TEMPERA_GRASSA: {
 		id: 34686,
-		name: 'Tempura Grassa',
+		name: 'Tempera Grassa',
 		icon: iconUrl(3836),
 		cooldown: 1000,
 		statusesApplied: ['TEMPERA_GRASSA'],
@@ -394,12 +394,12 @@ export const PCT = ensureActions({
 		cooldown: 20000,
 		statusesApplied: ['SMUDGE'],
 	},
-	SUBTRACTIVE_PALLETTE: {
+	SUBTRACTIVE_PALETTE: {
 		id: 34683,
-		name: 'Subtractive Pallette',
+		name: 'Subtractive Palette',
 		icon: iconUrl(3833),
 		cooldown: 20000,
-		statusesApplied: ['SUBTRACTIVE_PALLETTE', 'MONOCHROME_TONES'],
+		statusesApplied: ['SUBTRACTIVE_PALETTE', 'MONOCHROME_TONES'],
 	},
 
 })
