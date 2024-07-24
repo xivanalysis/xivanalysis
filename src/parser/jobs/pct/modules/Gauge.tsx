@@ -317,6 +317,12 @@ export class Gauge extends CoreGauge {
 		}))
 	}
 
+	// Canvas, Depictions, and Portrait don't reset on death, override onDeath handling to only reset Paint and Palette
+	override onDeath() {
+		this.paintGauge.reset()
+		this.paletteGauge.reset()
+	}
+
 	private onPaletteModifer(event: Event) {
 		let eventActionId
 		if (event.type === 'damage' && event.cause.type === 'action' && isSuccessfulHit(event)) {
