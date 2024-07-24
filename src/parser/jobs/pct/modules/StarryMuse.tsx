@@ -9,10 +9,12 @@ import {SEVERITY} from 'parser/core/modules/Suggestions'
 import React from 'react'
 import {Message} from 'semantic-ui-react'
 import {ADDITIVE_SPELLS, CREATURE_MOTIFS, CREATURE_MUSES, SUBTRACTIVE_SINGLE_TARGET} from './CommonData'
+import DISPLAY_ORDER from './DISPLAY_ORDER'
 
 export class StarryMuse extends RaidBuffWindow {
 	static override handle = 'starrymuse'
 	static override title = t('pct.starrymuse.title')`Starry Muse`
+	static override displayOrder = DISPLAY_ORDER.STARRY_MUSE
 
 	override buffStatus: Status | Status[] = this.data.statuses.STARRY_MUSE
 
