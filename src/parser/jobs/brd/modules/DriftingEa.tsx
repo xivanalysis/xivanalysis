@@ -43,6 +43,7 @@ import Downtime from 'parser/core/modules/Downtime'
 import {Timeline} from 'parser/core/modules/Timeline'
 import React, {Fragment} from 'react'
 import {Button, Message, Table} from 'semantic-ui-react'
+import DISPLAY_ORDER from "./DISPLAY_ORDER";
 
 // Buffer (ms) to forgive insignificant drift
 const DRIFT_BUFFER = 2000
@@ -67,6 +68,7 @@ interface ConfirmedDriftWindow extends DriftWindow {
 export class DriftingEa extends Analyser {
 	static override handle = 'drifting-ea'
 	static override title = t('brd.drifting-ea.title')`Empyreal Arrow Drift`
+	static override displayOrder = DISPLAY_ORDER.DRIFTING_EA
 
 	@dependency private data!: Data
 	@dependency private downtime!: Downtime
