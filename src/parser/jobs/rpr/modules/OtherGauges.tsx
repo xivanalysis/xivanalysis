@@ -41,6 +41,7 @@ export class OtherGauges extends CoreGauge {
 	@dependency private actors!: Actors
 	@dependency private suggestions!: Suggestions
 
+	IsIdealHost = false
 	// Initialise our gauges - default max is 100 so yolo it is
 	private soulGauge = this.add(new CounterGauge({
 		graph: {
@@ -83,6 +84,8 @@ export class OtherGauges extends CoreGauge {
 		// Soul Gauge
 		const soulActions = Array.from(this.soulGaugeModifiers.keys())
 		this.addEventHook(playerFilter.type(oneOf(['action', 'combo'])).action(oneOf(soulActions)), this.onSoulModifier)
+		this.addEventHook(playerFilter.type('statusApply').status(this.data.statuses.IDEAL_HOST.id), () => this.IsIdealHost = true)
+		this.addEventHook(playerFilter.type('statusRemove').status(this.data.statuses.IDEAL_HOST.id), () => this.IsIdealHost = false)
 		this.addEventHook(foeFilter.type('death'), this.onFoeDeath)
 
 		// Shroud Gauge
@@ -113,7 +116,7 @@ export class OtherGauges extends CoreGauge {
 
 		switch (action.id) {
 		case this.data.actions.ENSHROUD.id:
-			this.shroudGauge.spend(HIGH_SHROUD_MOD)
+			if (this.IsIdealHost === false) { this.shroudGauge.spend(HIGH_SHROUD_MOD) }
 			break
 
 		default:
