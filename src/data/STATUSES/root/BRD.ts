@@ -105,7 +105,7 @@ export const BRD = ensureStatuses({
 		id: 141,
 		name: 'Battle Voice',
 		icon: iconUrl(12601),
-		duration: 15000,
+		duration: 20000,
 	},
 	THE_WARDENS_PAEAN: {
 		id: 866,
@@ -129,6 +129,6 @@ export const BRD = ensureStatuses({
 		id: 2964,
 		name: 'Radiant Finale',
 		icon: iconUrl(12622),
-		duration: 15000,
+		duration: 20000,
 	},
 })
