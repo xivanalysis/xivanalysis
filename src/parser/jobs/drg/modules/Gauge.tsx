@@ -79,10 +79,4 @@ export class Gauge extends CoreGauge {
 			</Trans>,
 		}))
 	}
-
-	override output() {
-		const defaultOutput = super.output()
-
-		return defaultOutput
-	}
 }
