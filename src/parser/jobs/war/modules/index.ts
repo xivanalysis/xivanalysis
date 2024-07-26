@@ -3,6 +3,7 @@ import {AoE} from './AoE'
 import {Combos} from './Combos'
 import {Defensives} from './Defensives'
 import {Gauge} from './Gauge'
+import {DisengageGcds} from './GreedMore'
 import {Infuriate} from './Infuriate'
 import {InnerRelease} from './InnerRelease'
 import {OGCDDowntime} from './OGCDDowntime'
@@ -20,4 +21,5 @@ export default [
 	OGCDDowntime,
 	Procs,
 	SurgingTempest,
+	DisengageGcds,
 ]
