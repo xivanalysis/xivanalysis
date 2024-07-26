@@ -37,6 +37,16 @@ export const FORM_ACTIONS: ActionKey[] = [
 	...COEURL_ACTIONS,
 ]
 
+export const AOE_FORM_ACTIONS: ActionKey[] = [
+	'ROCKBREAKER',
+	'FOUR_POINT_FURY',
+	'ARM_OF_THE_DESTROYER',
+	'SHADOW_OF_THE_DESTROYER',
+]
+
+export const ST_FORM_ACTIONS: ActionKey[] = FORM_ACTIONS
+	.filter(action => !AOE_FORM_ACTIONS.includes(action))
+
 // Blitzes
 export const BLITZ_ACTIONS: ActionKey[] = [
 	'TORNADO_KICK',
@@ -46,4 +56,10 @@ export const BLITZ_ACTIONS: ActionKey[] = [
 	'RISING_PHOENIX',
 	'PHANTOM_RUSH',
 	'ELIXIR_BURST',
+]
+
+export const FORMLESS_APPLYING_ACTIONS: ActionKey[] = [
+	...BLITZ_ACTIONS,
+	'FORM_SHIFT',
+	'FIRES_REPLY',
 ]
