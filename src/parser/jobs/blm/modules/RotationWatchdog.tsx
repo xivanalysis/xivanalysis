@@ -29,7 +29,6 @@ import {FlareStarUsageEvaluator} from './RotationWatchdog/FlareStarUsageEvaluato
 import {IceMageEvaluator} from './RotationWatchdog/IceMageEvaluator'
 import {ManafontTimingEvaluator} from './RotationWatchdog/ManafontTimingEvaluator'
 import {RotationErrorNotesEvaluator} from './RotationWatchdog/RotationErrorNotesEvaluator'
-import {SkipB4Evaluator} from './RotationWatchdog/SkipB4Evaluator'
 import {SkipThunderEvaluator} from './RotationWatchdog/SkipThunderEvaluator'
 import {UptimeSoulsEvaluator} from './RotationWatchdog/UptimeSoulsEvaluator'
 import {CycleMetadata, ROTATION_ERRORS, HIDDEN_PRIORITY_THRESHOLD, FLARE_STAR_CARRYOVER_CODE} from './RotationWatchdog/WatchdogConstants'
@@ -199,13 +198,6 @@ export class RotationWatchdog extends RestartWindow {
 		this.addEvaluator(new SkipThunderEvaluator({
 			suggestionIcon: this.data.actions.HIGH_THUNDER.icon,
 			thunderSpellIds: this.thunderSpellIds,
-			metadataHistory: this.metadataHistory,
-		}))
-
-		this.addEvaluator(new SkipB4Evaluator({
-			blizzard4Id: this.data.actions.BLIZZARD_IV.id,
-			fire4action: this.data.actions.FIRE_IV,
-			minExpectedF4s: NO_UH_EXPECTED_FIRE4,
 			metadataHistory: this.metadataHistory,
 		}))
 		//#endregion

@@ -9,6 +9,11 @@ export const changelog = [
 	// 	contributors: [CONTRIBUTORS.YOU],
 	// },
 	{
+		date: new Date('2024-07-24'),
+		Changes: () => <>Remove overlooked defunct evaluator for skipping <DataLink action="BLIZZARD_IV" /> before a downtime.</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
+	{
 		date: new Date('2024-07-22'),
 		Changes: () => <>Fix some text in the Gauge errors output header to specify the correct maximum number of Polyglot charges.</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],
