@@ -114,6 +114,12 @@ const CONTRIBUTORS = ensureRecord<Contributor>()({
 			JOBS.WARRIOR,
 		],
 	},
+	CHRIS: {
+		name: 'Chris',
+		jobs: [
+			JOBS.PALADIN,
+		],
+	},
 })
 
 export default CONTRIBUTORS

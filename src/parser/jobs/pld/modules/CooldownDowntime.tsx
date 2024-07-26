@@ -9,7 +9,7 @@ export class CooldownDowntime extends CoreCooldownDowntime {
 			firstUseOffset: 7500,
 		},
 		{
-			cooldowns: [this.data.actions.REQUIESCAT],
+			cooldowns: [this.data.actions.IMPERATOR],
 			// Standard opener uses after 3rd GCD
 			firstUseOffset: 7500,
 		},
@@ -26,11 +26,6 @@ export class CooldownDowntime extends CoreCooldownDowntime {
 		{
 			cooldowns: [this.data.actions.INTERVENE],
 			// Standard opener uses after 5th GCD
-			firstUseOffset: 12500,
-		},
-		{
-			cooldowns: [this.data.actions.GORING_BLADE],
-			// Standard opener uses this as the 5th GCD
 			firstUseOffset: 12500,
 		},
 	]
