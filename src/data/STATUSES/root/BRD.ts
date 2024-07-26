@@ -3,11 +3,11 @@ import {ensureStatuses} from '../type'
 
 export const BRD = ensureStatuses({
 	// Self statuses
-	STRAIGHT_SHOT_READY: {
-		id: 122,
-		name: 'Straight Shot Ready',
-		icon: iconUrl(10365),
-		duration: 10000,
+	HAWKS_EYE: {
+		id: 3861,
+		name: 'Hawk\'s Eye',
+		icon: iconUrl(13075),
+		duration: 30000,
 	},
 	RAGING_STRIKES: {
 		id: 125,
@@ -41,10 +41,16 @@ export const BRD = ensureStatuses({
 		icon: iconUrl(12621),
 		duration: 10000,
 	},
-	SHADOWBITE_READY: {
-		id: 3002,
-		name: 'Shadowbite Ready',
-		icon: iconUrl(12623),
+	RESONANT_ARROW_READY: {
+		id: 3862,
+		name: 'Resonant Arrow Ready',
+		icon: iconUrl(13076),
+		duration: 30000,
+	},
+	RADIANT_ENCORE_READY: {
+		id: 3863,
+		name: 'Radiant Encore Ready',
+		icon: iconUrl(13077),
 		duration: 30000,
 	},
 
@@ -99,7 +105,7 @@ export const BRD = ensureStatuses({
 		id: 141,
 		name: 'Battle Voice',
 		icon: iconUrl(12601),
-		duration: 15000,
+		duration: 20000,
 	},
 	THE_WARDENS_PAEAN: {
 		id: 866,
@@ -123,6 +129,6 @@ export const BRD = ensureStatuses({
 		id: 2964,
 		name: 'Radiant Finale',
 		icon: iconUrl(12622),
-		duration: 15000,
+		duration: 20000,
 	},
 })
