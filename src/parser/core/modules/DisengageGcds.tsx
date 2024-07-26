@@ -28,11 +28,8 @@ export class DisengageGcds extends Analyser {
 		this.addEventHook('complete', this.onComplete)
 	}
 
-	private onUse(): void {
-		this.disengageGcds++
-	}
-
-	private onComplete() {
+	// Override this to suggest job-specific ways to handle downtime
+	protected addDisengageSuggestion() {
 		this.statistics.add(new SimpleStatistic({
 			title: <Trans id="core.disengage.statistic.title">
 				{this.trackedAction.name} Uses
@@ -44,6 +41,13 @@ export class DisengageGcds extends Analyser {
 				try to minimize your <ActionLink {...this.trackedAction}/> usage. It does less damage and delays resource generation.
 			</Trans>,
 		}))
+	}
 
+	private onUse(): void {
+		this.disengageGcds++
+	}
+
+	private onComplete() {
+		this.addDisengageSuggestion()
 	}
 }
