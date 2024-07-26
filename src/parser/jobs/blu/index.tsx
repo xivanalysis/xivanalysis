@@ -1,9 +1,8 @@
-import {t, Trans} from '@lingui/macro'
+import {t} from '@lingui/macro'
 import TransMarkdown from 'components/ui/TransMarkdown'
-// import CONTRIBUTORS, {ROLES} from 'data/CONTRIBUTORS'
+import CONTRIBUTORS, {ROLES} from 'data/CONTRIBUTORS'
 import {Meta} from 'parser/core/Meta'
 import React from 'react'
-import {Icon, Message} from 'semantic-ui-react'
 import {changelog} from './changelog'
 
 const description = t('blu.about.description')`BLU has wildly different play styles depending on your mimicry. This page will primarily focus on the DPS aspect of the job, so do take the advice with a grain of salt if you are healing or tanking.
@@ -17,21 +16,15 @@ export const BLUE_MAGE = new Meta({
 
 	Description: () => <>
 		<TransMarkdown source={description}/>
-		<Message warning icon>
-			<Icon name="warning sign"/>
-			<Message.Content>
-				<Trans id="blu.about.description.warning">This module was recently extended and we would appreciate feedback!</Trans>
-			</Message.Content>
-		</Message>
 	</>,
 
 	supportedPatches: {
-		from: '✖',
-		to: '✖',
+		from: '7.0',
+		to: '7.01',
 	},
 
 	contributors: [
-		// {user: CONTRIBUTORS.YOU, role: ROLES.YOUR_ROLE},
+		{user: CONTRIBUTORS.HUGMEIR, role: ROLES.DEVELOPER},
 	],
 
 	changelog,

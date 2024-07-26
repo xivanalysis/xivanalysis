@@ -1,3 +1,4 @@
+import {} from './OverrideRoleActionsForBLU'
 import {LucidDreaming} from 'parser/core/modules/LucidDreaming'
 import {Tincture} from 'parser/core/modules/Tincture'
 import {ActionTimeline} from './ActionTimeline'
