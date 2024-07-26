@@ -5,22 +5,37 @@ GNB: There is no spefific opener, it's fight dependent
 Also GNB: makes no easy track record of each fight by fight opener
 */
 
-// https://i.imgur.com/rmc2s11.png 9 GCD NM opener
-// https://i.imgur.com/f6Jwf9I.png 2.5 GCD opener
+// https://i.imgur.com/zIPcinP.png 2.4X Opener (9 GCD)
+// https://imgur.com/adXPxrb 2.5 GCD opener
 
-const FIRST_USE_OFFSET_NO_MERCY = 7500 // No Mercy after 3rd GCD
-const FIRST_USE_OFFSET_GNASHING_FANG = 10000 // used as 4th GCD *GCD Skill*
+/*
+GNB Opener offsets:
+________________________________________________
+|Skill         | 2.4x Opener   | 2.5 Opener    |
+|----------------------------------------------|
+|Bloodfest     | After 1st GCD | After 2nd GCD |
+|No Mercy      | After 2nd GCD | After 2nd GCD |
+|Gnashing Fang | 3rd GCD       | 5th GCD       |
+|Bow Shock     | After 4th GCD | After 3rd GCD |
+|Blasting Zone | After 5th GCD | After 4th GCD |
+|Double Down   | 4th GCD       | 4th GCD       |
+|Sonic Break   | 5th GCD       | 3rd GCD       |
+|______________|_______________|_______________|
 
-const FIRST_USE_OFFSET_BLOODFEST = 12500 //used right after the 5th GCD of the opener
+Quick Maths, 2500 * GCD # = Offset, take the higher number for the offset.
+*/
 
-const FIRST_USE_OFFSET_PEWPEWZONE = 15000 // Current Opener has Blasting after 5th GCD
-const FIRST_USE_OFFSET_BOWSHOCK = 15000 //Current Opener has Bow Shock after 5th GCD
+const FIRST_USE_OFFSET_BLOODFEST = 5000
+const ALLOWED_BLOODFEST_HOLDTIME = 10000 // Bloodfest is allowed to be held in order to delay it back under buffs, this should be a maximum of 4 GCDs, 2 ahead of NM, 2 after NM cast to dump ammo.
 
-const FIRST_USE_OFFSET_DOUBLE_DOWN = 12500 //Curent Opener has double being used as 5th GCD. *GCD Skill*
+const FIRST_USE_OFFSET_NO_MERCY = 5000
+const FIRST_USE_OFFSET_GNASHING_FANG = 12500
+const FIRST_USE_OFFSET_BOWSHOCK = 10000
+const FIRST_USE_OFFSET_PEWPEWZONE = 12500
+const FIRST_USE_OFFSET_DOUBLE_DOWN = 10000
+const FIRST_USE_OFFSET_SONIC_BREAK = 12500
 
-const FIRST_USE_OFFSET_SONIC_BREAK = 30000 // Sonic Break is either used as 6th GCD for 2.5, or 12 GCD on <2.47 builds *GCD Skill*
-
-export class AbilityDowntime extends CooldownDowntime { //Order by cooldown length
+export class AbilityDowntime extends CooldownDowntime { // Order by cooldown length
 
 	trackedCds = [
 		{
@@ -50,6 +65,7 @@ export class AbilityDowntime extends CooldownDowntime { //Order by cooldown leng
 		{
 			cooldowns: [this.data.actions.BLOODFEST],
 			firstUseOffset: FIRST_USE_OFFSET_BLOODFEST,
+			allowedAverageDowntime: ALLOWED_BLOODFEST_HOLDTIME,
 		},
 	]
 }

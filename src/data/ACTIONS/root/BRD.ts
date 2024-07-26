@@ -37,7 +37,7 @@ export const BRD = ensureActions({
 		onGcd: false,
 		speedAttribute: Attribute.SKILL_SPEED,
 		cooldown: 15000,
-		potency: 110,
+		potency: 130,
 		cooldownGroup: 5,
 		charges: 3,
 	},
@@ -80,6 +80,14 @@ export const BRD = ensureActions({
 		onGcd: false,
 		cooldown: 30000,
 	},
+	WIDE_VOLLEY: {
+		id: 111,
+		name: 'Wide Volley',
+		icon: iconUrl(357),
+		onGcd: true,
+		speedAttribute: Attribute.SKILL_SPEED,
+		potency: 140,
+	},
 
 	// Bard
 	MAGES_BALLAD: {
@@ -88,7 +96,6 @@ export const BRD = ensureActions({
 		icon: iconUrl(2602),
 		onGcd: false,
 		cooldown: 120000,
-		potency: 100,
 	},
 	ARMYS_PAEON: {
 		id: 116,
@@ -96,7 +103,6 @@ export const BRD = ensureActions({
 		icon: iconUrl(2603),
 		onGcd: false,
 		cooldown: 120000,
-		potency: 100,
 	},
 	RAIN_OF_DEATH: {
 		id: 117,
@@ -122,7 +128,7 @@ export const BRD = ensureActions({
 		icon: iconUrl(2606),
 		onGcd: false,
 		cooldown: 15000,
-		potency: 240,
+		potency: 260,
 	},
 	THE_WANDERERS_MINUET: {
 		id: 3559,
@@ -130,7 +136,6 @@ export const BRD = ensureActions({
 		icon: iconUrl(2607),
 		onGcd: false,
 		cooldown: 120000,
-		potency: 100,
 	},
 	IRON_JAWS: {
 		id: 3560,
@@ -154,7 +159,7 @@ export const BRD = ensureActions({
 		icon: iconUrl(2610),
 		onGcd: false,
 		cooldown: 60000,
-		potency: 320,
+		potency: 400,
 	},
 	PITCH_PERFECT: {
 		id: 7404,
@@ -228,7 +233,7 @@ export const BRD = ensureActions({
 		icon: iconUrl(2619),
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		potency: 500,
+		potency: 600,
 	},
 	LADONSBITE: {
 		id: 25783,
@@ -253,5 +258,32 @@ export const BRD = ensureActions({
 		onGcd: false,
 		cooldown: 110000,
 		statusesApplied: ['RADIANT_FINALE'],
+	},
+	HEARTBREAK_SHOT: {
+		id: 36975,
+		name: 'Heartbreak Shot',
+		icon: iconUrl(2623),
+		onGcd: false,
+		speedAttribute: Attribute.SKILL_SPEED,
+		cooldown: 15000,
+		potency: 180,
+		cooldownGroup: 5,
+		charges: 3,
+	},
+	RESONANT_ARROW: {
+		id: 36976,
+		name: 'Resonant Arrow',
+		icon: iconUrl(2624),
+		onGcd: true,
+		speedAttribute: Attribute.SKILL_SPEED,
+		potency: 600,
+	},
+	RADIANT_ENCORE: {
+		id: 36977,
+		name: 'Radiant Encore',
+		icon: iconUrl(2100),
+		onGcd: true,
+		speedAttribute: Attribute.SKILL_SPEED,
+		potency: [500, 600, 900],
 	},
 })
