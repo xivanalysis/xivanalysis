@@ -15,6 +15,7 @@ interface CounterHistory {
 	minimum: number
 	maximum: number
 	delta: number
+	overcapped: boolean
 	reason: GaugeEventReason
 }
 
@@ -42,6 +43,10 @@ export interface CounterGaugeOptions extends AbstractGaugeOptions {
 	 * Examples of non-deterministic gauges: DNC's Feathers and Esprit, SAM's Kenki
 	 */
 	deterministic?: boolean
+	/**
+	 * Should this gauge output a table displaying every time the gauge got overcapped?
+	 */
+	outputOvercapTable?: boolean
 }
 
 type CounterGraphOptions = Omit<ResourceGraphOptions, ''> // Not currently omitting any options, but making easier to do so in the future
@@ -63,6 +68,9 @@ export class CounterGauge extends AbstractGauge {
 
 	public history: CounterHistory[] = []
 
+	/** set to true to have the CoreGage module output a table indicating when each overcap event happened */
+	public outputOvercapTable: boolean = false
+
 	get value(): number {
 		return this.currentValue
 	}
@@ -83,6 +91,10 @@ export class CounterGauge extends AbstractGauge {
 		return this.history.filter(entry => entry.reason === 'generate').reduce((total, entry) => total + Math.abs(entry.delta), 0)
 	}
 
+	get label(): React.ReactNode {
+		return this.graphOptions?.label
+	}
+
 	constructor(opts: CounterGaugeOptions = {}) {
 		super(opts)
 
@@ -92,6 +104,7 @@ export class CounterGauge extends AbstractGauge {
 		this.maximum = opts.maximum ?? 100
 		this.correctHistory = opts.correctHistory ?? false
 		this.deterministic = opts.deterministic ?? true
+		this.outputOvercapTable = opts.outputOvercapTable ?? false
 
 		this.graphOptions = opts.graph
 	}
@@ -120,6 +133,7 @@ export class CounterGauge extends AbstractGauge {
 				value: this.initialValue,
 				minimum: this.minimum,
 				maximum: this.maximum,
+				overcapped: false,
 				delta: 0,
 				reason: 'init',
 			})
@@ -146,14 +160,15 @@ export class CounterGauge extends AbstractGauge {
 		const newValue = Math.min(Math.max(value, this.minimum), this.maximum)
 
 		const diff = value - newValue
-		if (diff > 0) {
+		const overcapped = diff > 0
+		if (overcapped) {
 			this.overCap += diff
 		} else if (diff < 0 && this.correctHistory) {
 			this.correctGaugeHistory(delta, this.currentValue)
 		}
 
 		this.currentValue = newValue
-		this.pushHistory(reason ?? defaultReason, delta)
+		this.pushHistory(reason ?? defaultReason, delta, overcapped)
 	}
 
 	private correctGaugeHistory(spenderCost: number, currentGauge: number) {
@@ -200,7 +215,7 @@ export class CounterGauge extends AbstractGauge {
 		this.set(this.currentValue, 'changeBounds')
 	}
 
-	private pushHistory(reason: GaugeEventReason, delta: number) {
+	private pushHistory(reason: GaugeEventReason, delta: number, overcapped: boolean) {
 		const timestamp = this.parser.currentEpochTimestamp
 
 		// Ensure we're not generating multiple entries at the same timestamp
@@ -221,6 +236,7 @@ export class CounterGauge extends AbstractGauge {
 			minimum: this.minimum,
 			maximum: this.maximum,
 			delta,
+			overcapped,
 			reason,
 		})
 	}
