@@ -829,7 +829,6 @@
   "rdm.meleecombos.table.header.starting-procs": "Starting Procs",
   "rdm.meleecombos.table.header.time": "Time",
   "rdm.meleecombos.title": "Melee Combos",
-  "rdm.ms.suggestions.badgcd.content": "GCDs used during <0/> should be limited to combo skills.",
   "rdm.ms.suggestions.missedgcd.content": "Try to land a full Enchanted Single Target or Enchanted AE combo during every <0/> window.",
   "rdm.ms.title": "Magicked Swordplay Windows",
   "rdm.prefulgence.suggestions.dropped.content": "Try to consume <0/> before it expires as <1/> is your strongest skill.",
