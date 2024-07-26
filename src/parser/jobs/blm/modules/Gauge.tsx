@@ -677,7 +677,7 @@ export class Gauge extends CoreGauge {
 						Reaching Umbral Ice III and gaining 3 Umbral Hearts then swapping to the opposite element generates a <DataLink action="PARADOX"/> marker.<br/>
 						Using <DataLink action="MANAFONT" /> also generates a <DataLink action="PARADOX" /> marker.<br/>
 						Maintaining Enochian for 30 seconds or using <DataLink action="AMPLIFIER"/> generates a Polyglot charge, allowing
-						the casting of <DataLink action="XENOGLOSSY"/> or <DataLink action="FOUL"/>. You can have up to 2 Polyglot charges.<br/>
+						the casting of <DataLink action="XENOGLOSSY"/> or <DataLink action="FOUL"/>. You can have up to <Plural value={POLYGLOT_MAX_STACKS} one="# Polyglot charge" other="# Polyglot charges"/>.<br/>
 						This module displays when these gauge effects were overwritten.
 					</Trans>
 				</Message>
