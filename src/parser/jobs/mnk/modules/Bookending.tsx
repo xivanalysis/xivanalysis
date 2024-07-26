@@ -135,7 +135,7 @@ export class Bookending extends Analyser {
 		this.checklist.add(new TieredRule({
 			name: <Trans id="mnk.bookending.formless.checklist.name">Consume <DataLink status="FORMLESS_FIST" /> with Opo-opo actions</Trans>,
 			description: <Trans id="mnk.bookending.formless.checklist.description">
-				Opo-opo actions have the highest average potency of the three forms. Try to maximize uses of these actions by consuming <DataLink status="FORMLESS_FIST" /> on <DataLink action="LEAPING_OPO" />, <DataLink action="SHADOW_OF_THE_DESTROYER" />, or <DataLink action="DRAGON_KICK" />.
+				Opo-opo actions have the highest average potency of the three forms. Try to maximize uses of these actions by consuming <DataLink status="FORMLESS_FIST" /> with <DataLink action="LEAPING_OPO" />, <DataLink action="SHADOW_OF_THE_DESTROYER" />, or <DataLink action="DRAGON_KICK" />.
 			</Trans>,
 			tiers: SEVERITIES.FORMLESS,
 			requirements: [
@@ -155,7 +155,7 @@ export class Bookending extends Analyser {
 			tiers: SEVERITIES.POST_OPO_ACTIONS,
 			requirements: [
 				new Requirement({
-					name: <Trans id="mnk.bookending.pb.checklist.pb-requirement"><DataLink status="PERFECT_BALANCE" /> used after Opo-opo actions</Trans>,
+					name: <Trans id="mnk.bookending.pb.checklist.pb-requirement"><DataLink action="PERFECT_BALANCE" /> used after Opo-opo actions</Trans>,
 					percent: pbPercent,
 					overrideDisplay: `${this.pbUsages.correct} / ${this.pbUsages.total} (${pbPercent.toFixed(2)}%)`,
 				}),
