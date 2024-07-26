@@ -34,7 +34,6 @@ export const ROTATION_ERRORS = ensureRecord<CycleErrorCode>()({
 	SHORT: {priority: HIDDEN_PRIORITY_THRESHOLD, message: 'Too short, won\'t process'},
 	// Messages below should be Trans objects since they'll be displayed to end users
 	SHOULD_SKIP_T3: {priority: 8, message: <Trans id="blm.rotation-watchdog.error-messages.should-skip-t3">Should skip hardcast <DataLink action="THUNDER_III"/></Trans>},
-	SHOULD_SKIP_B4: {priority: 9, message: <Trans id="blm.rotation-watchdog.error-messages.should-skip-b4">Should skip <DataLink action="BLIZZARD_IV"/></Trans>},
 	MISSING_FIRE4S: {priority: 10, message: <Trans id="blm.rotation-watchdog.error-messages.missing-fire4s">Missing one or more <DataLink action="FIRE_IV"/>s</Trans>}, // These three errors are lower priority since they can be determined by looking at the
 	MISSING_DESPAIRS: {priority: 20, message: <Trans id="blm.rotation-watchdog.error-messages.missing-despair">Missing one or more <DataLink action="DESPAIR"/>s</Trans>}, // target columns in the table, so we want to tell players about other errors first
 	MISSING_FLARE_STARS: {priority: 30, message: <Trans id="blm.rotation-watchdog.error-messages.missing-flarestars">Missing one or more <DataLink action="FLARE_STAR"/>s</Trans>},

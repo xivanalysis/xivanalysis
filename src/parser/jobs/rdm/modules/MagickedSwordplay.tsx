@@ -2,7 +2,7 @@ import {t, Trans} from '@lingui/macro'
 import {StatusLink} from 'components/ui/DbLink'
 import {ActionKey} from 'data/ACTIONS'
 import {dependency} from 'parser/core/Injectable'
-import {AllowedGcdsOnlyEvaluator, BuffWindow, EvaluatedAction, ExpectedGcdCountEvaluator} from 'parser/core/modules/ActionWindow'
+import {BuffWindow, EvaluatedAction, ExpectedGcdCountEvaluator} from 'parser/core/modules/ActionWindow'
 import {HistoryEntry} from 'parser/core/modules/ActionWindow/History'
 import {EndOfWindowHandlingMode} from 'parser/core/modules/ActionWindow/windows/BuffWindow'
 import {GlobalCooldown} from 'parser/core/modules/GlobalCooldown'
@@ -60,37 +60,6 @@ export class MagickedSwordplay extends BuffWindow {
 				suggestionIcon,
 				suggestionContent: <Trans id="rdm.ms.suggestions.missedgcd.content">
 					Try to land a full Enchanted Single Target or Enchanted AE combo during every <StatusLink status="MAGICKED_SWORDPLAY" /> window.
-				</Trans>,
-				suggestionWindowName,
-				severityTiers: {
-					1: SEVERITY.MAJOR,
-				},
-				adjustCount: this.adjustExpectedGcdCount.bind(this),
-			}))
-		this.addEvaluator(
-			new AllowedGcdsOnlyEvaluator({
-				expectedGcdCount: MAGICK_GCDS,
-				allowedGcds: [
-					// Single Target
-					this.data.actions.ENCHANTED_RIPOSTE.id,
-					this.data.actions.ENCHANTED_ZWERCHHAU.id,
-					this.data.actions.ENCHANTED_REDOUBLEMENT.id,
-
-					// AoE
-					this.data.actions.ENCHANTED_MOULINET.id,
-					this.data.actions.ENCHANTED_MOULINET_DEUX.id,
-					this.data.actions.ENCHANTED_MOULINET_TROIS.id,
-
-					// Finishers
-					this.data.actions.VERHOLY.id,
-					this.data.actions.VERFLARE.id,
-					this.data.actions.SCORCH.id,
-					this.data.actions.RESOLUTION.id,
-				],
-				globalCooldown: this.globalCooldown,
-				suggestionIcon,
-				suggestionContent: <Trans id="rdm.ms.suggestions.badgcd.content">
-					GCDs used during <StatusLink status="MAGICKED_SWORDPLAY"/> should be limited to combo skills.
 				</Trans>,
 				suggestionWindowName,
 				severityTiers: {

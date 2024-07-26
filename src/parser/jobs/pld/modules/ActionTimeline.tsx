@@ -7,10 +7,12 @@ export class ActionTimeline extends CoreActionTimeline {
 		// Buffs
 		'FIGHT_OR_FLIGHT',
 		'REQUIESCAT',
+		'IMPERATOR',
 		// oGCD Damage
 		'EXPIACION',
 		'CIRCLE_OF_SCORN',
 		'INTERVENE',
+		'BLADE_OF_HONOR',
 		// Gauge Mitigation
 		'HOLY_SHELTRON',
 		'INTERVENTION',
@@ -18,6 +20,7 @@ export class ActionTimeline extends CoreActionTimeline {
 		'BULWARK',
 		'HALLOWED_GROUND',
 		'SENTINEL',
+		'GUARDIAN',
 		'RAMPART',
 		// Personal Utility
 		'ARMS_LENGTH',

@@ -1,14 +1,13 @@
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
 import {DataLink} from 'components/ui/DbLink'
-import {Events} from 'event'
 import {Analyser} from 'parser/core/Analyser'
 import {dependency} from 'parser/core/Injectable'
 import Checklist, {TieredRule, TARGET, Requirement} from 'parser/core/modules/Checklist'
 import {Data} from 'parser/core/modules/Data'
 import React from 'react'
 
-const SWORD_OATH_SEVERITY = {
+const ROYAL_AUTHORITY_SEVERITY = {
 	94: TARGET.SUCCESS,
 }
 
@@ -16,10 +15,17 @@ const DIVINE_MIGHT_SEVERITY = {
 	94: TARGET.SUCCESS,
 }
 
-interface SwordOath {
-	initial: number
-	stacks: number
-	used: number
+type Usages = {
+	active: boolean,
+	uses: number,
+	total: number,
+}
+
+type RoyalAuthorityDependentUsages = {
+	divineMight: Usages,
+	atonement: Usages,
+	supplication: Usages,
+	sepulchre: Usages,
 }
 
 export class RoyalAuthority extends Analyser {
@@ -29,14 +35,12 @@ export class RoyalAuthority extends Analyser {
 	@dependency private checklist!: Checklist
 	@dependency private data!: Data
 
-	protected swordOathOvercap: number = 0
-
-	private currentSwordOath: SwordOath | undefined
-	private swordOathHistory: SwordOath[] = []
-
-	private divineMightActive: boolean = false
-	private divineMightUses: number = 0
-	private divineMightTotal: number = 0
+	usages: RoyalAuthorityDependentUsages = {
+		divineMight: this.createNewUsages(),
+		atonement: this.createNewUsages(),
+		supplication: this.createNewUsages(),
+		sepulchre: this.createNewUsages(),
+	};
 
 	override initialise() {
 
@@ -44,123 +48,124 @@ export class RoyalAuthority extends Analyser {
 			type: 'action',
 			source: this.parser.actor.id,
 			action: this.data.actions.ATONEMENT.id,
-		}, this.onAtonement)
+		}, () => this.onAction(this.usages.atonement))
+
+		this.addEventHook({
+			type: 'action',
+			source: this.parser.actor.id,
+			action: this.data.actions.SUPPLICATION.id,
+		}, () => this.onAction(this.usages.supplication))
+
+		this.addEventHook({
+			type: 'action',
+			source: this.parser.actor.id,
+			action: this.data.actions.SEPULCHRE.id,
+		}, () => this.onAction(this.usages.sepulchre))
 
 		this.addEventHook({
 			type: 'action',
 			source: this.parser.actor.id,
 			action: this.data.actions.HOLY_SPIRIT.id,
-		}, this.onHolySpirit)
+		}, () => this.onAction(this.usages.divineMight))
 
 		this.addEventHook({
 			type: 'action',
 			source: this.parser.actor.id,
 			action: this.data.actions.HOLY_CIRCLE.id,
-		}, this.onHolyCircle)
+		}, () => this.onAction(this.usages.divineMight))
 
 		this.addEventHook({
 			type: 'statusApply',
 			target: this.parser.actor.id,
-			status: this.data.statuses.SWORD_OATH.id,
-		}, this.onApplySwordOath)
+			status: this.data.statuses.ATONEMENT_READY.id,
+		}, () => {
+			this.onApplyStatus(this.usages.atonement)
+			this.onApplyStatus(this.usages.supplication)
+			this.onApplyStatus(this.usages.sepulchre)
+		})
 
 		this.addEventHook({
 			type: 'statusRemove',
 			target: this.parser.actor.id,
-			status: this.data.statuses.SWORD_OATH.id,
-		}, this.onRemoveSwordOath)
+			status: this.data.statuses.ATONEMENT_READY.id,
+		}, () => this.onRemoveStatus(this.usages.atonement))
+
+		this.addEventHook({
+			type: 'statusRemove',
+			target: this.parser.actor.id,
+			status: this.data.statuses.SUPPLICATION_READY.id,
+		}, () => this.onRemoveStatus(this.usages.supplication))
+
+		this.addEventHook({
+			type: 'statusRemove',
+			target: this.parser.actor.id,
+			status: this.data.statuses.SEPULCHRE_READY.id,
+		}, () => this.onRemoveStatus(this.usages.sepulchre))
 
 		this.addEventHook({
 			type: 'statusApply',
 			target: this.parser.actor.id,
 			status: this.data.statuses.DIVINE_MIGHT.id,
-		}, this.onApplyDivineMight)
+		}, () => this.onApplyStatus(this.usages.divineMight))
 
 		this.addEventHook({
 			type: 'statusRemove',
 			target: this.parser.actor.id,
 			status: this.data.statuses.DIVINE_MIGHT.id,
-		}, this.onRemoveDivineMight)
+		}, () => this.onRemoveStatus(this.usages.divineMight))
 
 		this.addEventHook('complete', this.onComplete)
 	}
 
-	private onAtonement() {
-		if (this.currentSwordOath == null) { return }
-		this.currentSwordOath.used++
+	private onApplyStatus(usages: Usages) {
+		usages.active = true
+		usages.total += 1
 	}
 
-	private onHolySpirit() {
-		if (this.divineMightActive === false) { return }
-		this.divineMightUses++
+	private onRemoveStatus(usages: Usages) {
+		usages.active = false
 	}
 
-	private onHolyCircle() {
-		if (this.divineMightActive === false) { return }
-		this.divineMightUses++
-	}
-
-	private onApplySwordOath(event: Events['statusApply']): void {
-		if (event.data == null) { return }
-
-		// Track potential uses & any overcap due to reapplication while the status was still active
-		if (event.data === this.data.statuses.SWORD_OATH.stacksApplied) {
-			if (this.currentSwordOath != null) {
-				this.swordOathOvercap += this.currentSwordOath.stacks
-				this.onRemoveSwordOath()
-			}
-		}
-
-		if (this.currentSwordOath == null) {
-			this.currentSwordOath = {
-				initial: event.data,
-				stacks: event.data,
-				used: 0,
-			}
-		} else {
-			this.currentSwordOath.stacks = event.data
-		}
-	}
-
-	private onRemoveSwordOath(): void {
-		if (this.currentSwordOath == null) { return }
-		this.swordOathHistory.push(this.currentSwordOath)
-		this.currentSwordOath = undefined
-	}
-
-	private onApplyDivineMight(): void {
-		this.divineMightActive = true
-		this.divineMightTotal++
-	}
-
-	private onRemoveDivineMight(): void {
-		this.divineMightActive = false
+	private onAction(usages: Usages) {
+		if (usages.active === false) { return }
+		usages.uses += 1
 	}
 
 	private onComplete() {
-		this.onRemoveSwordOath()
-		this.onRemoveDivineMight()
+		this.onRemoveStatus(this.usages.atonement)
+		this.onRemoveStatus(this.usages.supplication)
+		this.onRemoveStatus(this.usages.sepulchre)
+		this.onRemoveStatus(this.usages.divineMight)
 
-		const swordOathStacks = this.data.statuses.SWORD_OATH.stacksApplied
-		const swordOathStacksUsed = this.swordOathHistory.reduce((used, swordOath) => used + swordOath.used, 0)
-		const swordOathPotentialStacks = this.swordOathHistory.reduce((potential, swordOath) => potential + swordOath.initial, 0)
 		// Leaving the following commented out since it's not actually being used right now, but here's the calculation for checking dropped stacks if that data becomes useful
 		// const droppedStacks = this.swordOathHistory.reduce((dropped, swordOath) => dropped + Math.max(swordOath.initial - swordOath.used, 0), 0)
 
 		this.checklist.add(new TieredRule({
-			name: <Trans id= "pld.sword-oath.checklist.name">Use Sword Oath stacks generated by Royal Authority</Trans>,
-			description: <Trans id="pld.sword-oath.checklist.description">
-				<DataLink action="ROYAL_AUTHORITY" /> generates {swordOathStacks} stacks of <DataLink status="SWORD_OATH" /> to use on <DataLink action="ATONEMENT" />.
-				This is effectively the same as getting {swordOathStacks} uses of <DataLink showIcon={false} action="ROYAL_AUTHORITY" />.
+			name: <Trans id= "pld.royal-authority.checklist.name">Use Follow Up Skills of Royal Authority</Trans>,
+			description: <Trans id="pld.royal-authority.checklist.description">
+				<DataLink action="ROYAL_AUTHORITY" /> generates <DataLink status="ATONEMENT_READY" /> to use on <DataLink action="ATONEMENT" /> and follow up actions <DataLink action="SUPPLICATION" /> and <DataLink action="SEPULCHRE" />.
+				This is effectively the same as getting {this.usages.atonement.total + this.usages.supplication.total + this.usages.sepulchre.total} uses of <DataLink showIcon={false} action="ROYAL_AUTHORITY" /> or stronger actions.
 			</Trans>,
-			tiers: SWORD_OATH_SEVERITY,
+			tiers: ROYAL_AUTHORITY_SEVERITY,
 			requirements: [
 				new Requirement({
-					name: <Trans id="pld.sword-oath.checklist.requirement.name">
-						Uses of <DataLink status="SWORD_OATH" /> out of possible uses
+					name: <Trans id="pld.royal-authority.checklist.requirement.name">
+						Uses of <DataLink status="ATONEMENT_READY" /> out of possible uses
 					</Trans>,
-					overrideDisplay: `${swordOathStacksUsed} / ${swordOathPotentialStacks} (${this.getPercent(swordOathStacksUsed, swordOathPotentialStacks).toFixed(2)}%)`,
-					percent: this.getPercent(swordOathStacksUsed, swordOathPotentialStacks),
+					overrideDisplay: this.getDisplayOverride(this.usages.atonement),
+					percent: this.getPercent(this.usages.atonement),
+				}), new Requirement({
+					name: <Trans id="pld.royal-authority.checklist.requirement.name">
+						Uses of <DataLink status="SUPPLICATION_READY" /> out of possible uses
+					</Trans>,
+					overrideDisplay: this.getDisplayOverride(this.usages.supplication),
+					percent: this.getPercent(this.usages.supplication),
+				}), new Requirement({
+					name: <Trans id="pld.royal-authority.checklist.requirement.name">
+						Uses of <DataLink status="SEPULCHRE_READY" /> out of possible uses
+					</Trans>,
+					overrideDisplay: this.getDisplayOverride(this.usages.sepulchre),
+					percent: this.getPercent(this.usages.sepulchre),
 				}),
 			],
 		}))
@@ -177,15 +182,27 @@ export class RoyalAuthority extends Analyser {
 					name: <Trans id="pld.divine-might.checklist.requirement.name">
 						Uses of <DataLink status="DIVINE_MIGHT" /> out of possible uses
 					</Trans>,
-					overrideDisplay: `${this.divineMightUses} / ${this.divineMightTotal} (${this.getPercent(this.divineMightUses, this.divineMightTotal).toFixed(2)}%)`,
-					percent: this.getPercent(this.divineMightUses, this.divineMightTotal),
+					overrideDisplay: this.getDisplayOverride(this.usages.divineMight),
+					percent: this.getPercent(this.usages.divineMight),
 				}),
 			],
 		}))
 	}
 
-	private getPercent(actual: number, possible: number): number {
-		return ((actual/possible) * 100)
+	private getDisplayOverride(usages: Usages): string {
+		return `${usages.uses} / ${usages.total} (${this.getPercent(usages).toFixed(2)}%)`
+	}
+
+	private getPercent(usages: Usages): number {
+		return ((usages.uses/usages.total) * 100)
+	}
+
+	private createNewUsages() : Usages {
+		return {
+			active: false,
+			uses: 0,
+			total: 0,
+		}
 	}
 
 }

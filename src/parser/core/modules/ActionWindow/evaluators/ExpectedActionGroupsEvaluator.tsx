@@ -59,7 +59,7 @@ export class ExpectedActionGroupsEvaluator implements WindowEvaluator {
 	public output(windows: Array<HistoryEntry<EvaluatedAction[]>>): EvaluationOutput[]  {
 		return this.expectedActionGroups.map(actionGroup => {
 			const header = (actionGroup.overrideHeader != null ?
-				<><ActionLink showName={false} {...actionGroup.overrideHeader}/></>
+				actionGroup.overrideHeader
 				: actionGroup.actions.map((action, i) => {
 					return <>
 						{ i > 0 && <> / </> }
