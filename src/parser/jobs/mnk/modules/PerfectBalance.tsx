@@ -190,12 +190,15 @@ export class PerfectBalance extends Gauge {
 		this.stopAndSave()
 
 		switch (action.id) {
+		case this.data.actions.ELIXIR_BURST.id:
 		case this.data.actions.ELIXIR_FIELD.id:
 			this.nadiGauge.generate(LUNAR_VALUE)
 			break
+		case this.data.actions.FLINT_STRIKE.id:
 		case this.data.actions.RISING_PHOENIX.id:
 			this.nadiGauge.generate(SOLAR_VALUE)
 			break
+		case this.data.actions.TORNADO_KICK.id:
 		case this.data.actions.PHANTOM_RUSH.id:
 			this.nadiGauge.reset()
 			break
