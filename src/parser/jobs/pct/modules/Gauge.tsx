@@ -257,7 +257,7 @@ export class Gauge extends CoreGauge {
 
 		this.addEventHook(playerFilter.type('action').action(oneOf(this.depictionModifiers)), this.onDepictionModifier)
 
-		this.addEventHook(playerFilter.type('action').action(oneOf(this.portraitGenerators)), this.onPortraitSpender)
+		this.addEventHook(playerFilter.type('action').action(oneOf(this.portraitGenerators)), this.onPortraitGenerator)
 		this.addEventHook(playerFilter.type('action').action(oneOf(this.portraitSpenders)), () => this.portraitGauge.reset())
 
 		// Default assume the player painted before the pull
@@ -424,7 +424,7 @@ export class Gauge extends CoreGauge {
 		}
 	}
 
-	private onPortraitSpender(event: Events['action']) {
+	private onPortraitGenerator(event: Events['action']) {
 		if (this.portraitGauge.capped) {
 			this.overwrotePortrait++
 		}
