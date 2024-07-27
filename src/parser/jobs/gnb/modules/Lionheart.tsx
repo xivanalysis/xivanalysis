@@ -54,6 +54,7 @@ export class Lionheart extends Analyser {
 	override initialise() {
 		super.initialise()
 		const playerFilter = filter<Event>().source(this.parser.actor.id)
+		this.addEventHook(playerFilter.type('action'), this.onCast)
 		this.addEventHook(playerFilter.type('statusApply').status(this.data.statuses.READY_TO_REIGN.id), () => this.ReadyToReigns++)
 		this.addEventHook('complete', this.onComplete)
 	}
@@ -64,7 +65,7 @@ export class Lionheart extends Analyser {
 		if (action) { //If it ain't defined I don't want it
 
 			// If ain't a combo or a breaker IDGAF
-			if (!this.COMBO_ACTIONS.includes(action.id)  || (!this.COMBO_BREAKERS.includes(action.id))) {
+			if (!this.COMBO_ACTIONS.includes(action.id)  && (!this.COMBO_BREAKERS.includes(action.id))) {
 				return
 			}
 
