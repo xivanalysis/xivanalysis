@@ -20,7 +20,11 @@ export class Tincture extends CoreTincture {
 				},
 				{
 					action: this.data.actions.DIA,
-					expectedPerWindow: 1,
+					expectedPerWindow: 2,
+				},
+				{
+					action: this.data.actions.GLARE_IV,
+					expectedPerWindow: 3,
 				},
 			],
 			suggestionIcon: this.data.actions.INFUSION_MND.icon,
