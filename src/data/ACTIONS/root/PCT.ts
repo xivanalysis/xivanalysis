@@ -88,7 +88,7 @@ export const PCT = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 2300,
-		gcdRecast: 3300,
+		cooldown: 3300,
 		mpCost: 300,
 		statusesApplied: ['AETHERHUES'],
 	},
@@ -99,7 +99,7 @@ export const PCT = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 2300,
-		gcdRecast: 3300,
+		cooldown: 3300,
 		mpCost: 300,
 		statusesApplied: ['AETHERHUES_II'],
 	},
@@ -110,7 +110,7 @@ export const PCT = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 2300,
-		gcdRecast: 3300,
+		cooldown: 3300,
 		mpCost: 300,
 	},
 
@@ -122,7 +122,7 @@ export const PCT = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 2300,
-		gcdRecast: 3300,
+		cooldown: 3300,
 		mpCost: 400,
 		statusesApplied: ['AETHERHUES'],
 	},
@@ -133,7 +133,7 @@ export const PCT = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 2300,
-		gcdRecast: 3300,
+		cooldown: 3300,
 		mpCost: 400,
 		statusesApplied: ['AETHERHUES_II'],
 	},
@@ -144,7 +144,7 @@ export const PCT = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 2300,
-		gcdRecast: 3300,
+		cooldown: 3300,
 		mpCost: 400,
 	},
 	COMET_IN_BLACK: {
@@ -153,7 +153,7 @@ export const PCT = ensureActions({
 		icon: iconUrl(3814),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
-		gcdRecast: 3300,
+		cooldown: 3300,
 		mpCost: 300,
 	},
 
@@ -165,7 +165,7 @@ export const PCT = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		castTime: 4000,
-		gcdRecast: 6000,
+		cooldown: 6000,
 	},
 	STAR_PRISM: {
 		id: 34681,
@@ -188,7 +188,7 @@ export const PCT = ensureActions({
 		icon: iconUrl(3839),
 		onGcd: true,
 		castTime: 3000,
-		gcdRecast: 4000,
+		cooldown: 4000,
 	},
 	POM_MOTIF: {
 		id: 34664,
@@ -196,7 +196,7 @@ export const PCT = ensureActions({
 		icon: iconUrl(3815),
 		onGcd: true,
 		castTime: 3000,
-		gcdRecast: 4000,
+		cooldown: 4000,
 	},
 	WING_MOTIF: {
 		id: 34665,
@@ -204,7 +204,7 @@ export const PCT = ensureActions({
 		icon: iconUrl(3816),
 		onGcd: true,
 		castTime: 3000,
-		gcdRecast: 4000,
+		cooldown: 4000,
 	},
 	CLAW_MOTIF: {
 		id: 34666,
@@ -212,7 +212,7 @@ export const PCT = ensureActions({
 		icon: iconUrl(3817),
 		onGcd: true,
 		castTime: 3000,
-		gcdRecast: 4000,
+		cooldown: 4000,
 	},
 	MAW_MOTIF: {
 		id: 34667,
@@ -220,7 +220,7 @@ export const PCT = ensureActions({
 		icon: iconUrl(3818),
 		onGcd: true,
 		castTime: 3000,
-		gcdRecast: 4000,
+		cooldown: 4000,
 	},
 
 	/** Creature canvas abilites */
@@ -286,7 +286,7 @@ export const PCT = ensureActions({
 		icon: iconUrl(3840),
 		onGcd: true,
 		castTime: 3000,
-		gcdRecast: 4000,
+		cooldown: 4000,
 	},
 	HAMMER_MOTIF: {
 		id: 34668,
@@ -294,7 +294,7 @@ export const PCT = ensureActions({
 		icon: iconUrl(3819),
 		onGcd: true,
 		castTime: 3000,
-		gcdRecast: 4000,
+		cooldown: 4000,
 	},
 	HAMMER_STAMP: {
 		id: 34678,
@@ -344,7 +344,7 @@ export const PCT = ensureActions({
 		icon: iconUrl(3841),
 		onGcd: true,
 		castTime: 3000,
-		gcdRecast: 4000,
+		cooldown: 4000,
 	},
 	STARRY_SKY_MOTIF: {
 		id: 34669,
@@ -352,7 +352,7 @@ export const PCT = ensureActions({
 		icon: iconUrl(3820),
 		onGcd: true,
 		castTime: 3000,
-		gcdRecast: 4000,
+		cooldown: 4000,
 	},
 
 	/** Landscape canvas abilities */
@@ -375,14 +375,14 @@ export const PCT = ensureActions({
 	/** Utility */
 	TEMPERA_COAT: {
 		id: 34685,
-		name: 'Tempura Coat',
+		name: 'Tempera Coat',
 		icon: iconUrl(3835),
 		cooldown: 120000,
 		statusesApplied: ['TEMPERA_COAT'],
 	},
 	TEMPERA_GRASSA: {
 		id: 34686,
-		name: 'Tempura Grassa',
+		name: 'Tempera Grassa',
 		icon: iconUrl(3836),
 		cooldown: 1000,
 		statusesApplied: ['TEMPERA_GRASSA'],
@@ -394,12 +394,12 @@ export const PCT = ensureActions({
 		cooldown: 20000,
 		statusesApplied: ['SMUDGE'],
 	},
-	SUBTRACTIVE_PALLETTE: {
+	SUBTRACTIVE_PALETTE: {
 		id: 34683,
-		name: 'Subtractive Pallette',
+		name: 'Subtractive Palette',
 		icon: iconUrl(3833),
 		cooldown: 20000,
-		statusesApplied: ['SUBTRACTIVE_PALLETTE', 'MONOCHROME_TONES'],
+		statusesApplied: ['SUBTRACTIVE_PALETTE', 'MONOCHROME_TONES'],
 	},
 
 })

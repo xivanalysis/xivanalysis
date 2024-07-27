@@ -16,13 +16,13 @@ export const PCT = ensureStatuses({
 	},
 	TEMPERA_COAT: {
 		id: 3686,
-		name: 'Tempura Coat',
+		name: 'Tempera Coat',
 		icon: iconUrl(13809),
 		duration: 10000,
 	},
 	TEMPERA_GRASSA: {
 		id: 3687,
-		name: 'Tempura Grassa',
+		name: 'Tempera Grassa',
 		icon: iconUrl(13810),
 		duration: 10000,
 	},
@@ -39,9 +39,9 @@ export const PCT = ensureStatuses({
 		duration: 30000,
 		stacksApplied: 3,
 	},
-	SUBTRACTIVE_PALLETTE: {
+	SUBTRACTIVE_PALETTE: {
 		id: 3674,
-		name: 'Subtractive Pallette',
+		name: 'Subtractive Palette',
 		icon: iconUrl(18673),
 		duration: 30000,
 		stacksApplied: 3,
