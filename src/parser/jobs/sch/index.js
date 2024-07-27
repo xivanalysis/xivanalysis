@@ -24,7 +24,7 @@ export const SCHOLAR = new Meta({
 	},
 
 	contributors: [
-		{user: CONTRIBUTORS.NONO, role: ROLES.MAINTAINER},
+		{user: CONTRIBUTORS.NONO, role: ROLES.DEVELOPER},
 	],
 
 	changelog,

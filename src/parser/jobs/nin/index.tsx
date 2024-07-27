@@ -21,7 +21,7 @@ export const NINJA = new Meta({
 	},
 
 	contributors: [
-		{user: CONTRIBUTORS.TOASTDEIB, role: ROLES.MAINTAINER},
+		{user: CONTRIBUTORS.TOASTDEIB, role: ROLES.DEVELOPER},
 	],
 
 	changelog,

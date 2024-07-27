@@ -22,7 +22,7 @@ export const VIPER = new Meta({
 	},
 
 	contributors: [
-		{user: CONTRIBUTORS.RYAN, role: ROLES.MAINTAINER},
+		{user: CONTRIBUTORS.RYAN, role: ROLES.DEVELOPER},
 	],
 
 	changelog,

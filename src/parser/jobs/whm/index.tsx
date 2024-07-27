@@ -28,7 +28,7 @@ export const WHITE_MAGE = new Meta({
 
 	contributors: [
 	// {user: CONTRIBUTORS.YOU, role: ROLES.YOUR_ROLE},
-		{user: CONTRIBUTORS.INNI, role: ROLES.MAINTAINER},
+		{user: CONTRIBUTORS.INNI, role: ROLES.DEVELOPER},
 	],
 
 	changelog,
