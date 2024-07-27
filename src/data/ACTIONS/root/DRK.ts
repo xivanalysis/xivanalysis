@@ -94,7 +94,7 @@ export const DRK = ensureActions({
 		name: 'Blood Weapon',
 		icon: iconUrl(3071),
 		cooldown: 60000,
-		statusesApplied: ['BLOOD_WEAPON'],
+		//statusesApplied: ['BLOOD_WEAPON'],  // Removing this until we have better level sync support, as Blood Weapon upgrades to Delirium at 68 and then Delirium applies both statuses
 	},
 	SHADOW_WALL: {
 		id: 3636,
