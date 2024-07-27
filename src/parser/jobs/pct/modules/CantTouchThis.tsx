@@ -7,10 +7,12 @@ import {EndOfWindowHandlingMode} from 'parser/core/modules/ActionWindow/windows/
 import {GlobalCooldown} from 'parser/core/modules/GlobalCooldown'
 import {SEVERITY} from 'parser/core/modules/Suggestions'
 import React from 'react'
+import DISPLAY_ORDER from './DISPLAY_ORDER'
 
 export class CantTouchThis extends BuffWindow {
 	static override handle = 'hammertime'
 	static override title = t('pct.hammertime.title')`Hammer Time Usage`
+	static override displayOrder = DISPLAY_ORDER.HAMMER_TIME
 
 	@dependency globalCooldown!: GlobalCooldown
 

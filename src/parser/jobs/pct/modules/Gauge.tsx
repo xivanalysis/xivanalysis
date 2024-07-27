@@ -1,6 +1,7 @@
 import {t} from '@lingui/macro'
-import {Trans} from '@lingui/react'
+import {Plural, Trans} from '@lingui/react'
 import Color from 'color'
+import {DataLink} from 'components/ui/DbLink'
 import {JOBS} from 'data/JOBS'
 import {Event, Events} from 'event'
 import {filter, oneOf} from 'parser/core/filter'
@@ -10,8 +11,11 @@ import {CounterGauge, Gauge as CoreGauge} from 'parser/core/modules/Gauge'
 import {EnumGauge} from 'parser/core/modules/Gauge/EnumGauge'
 import {SetGauge} from 'parser/core/modules/Gauge/SetGauge'
 import {DEFAULT_ROW_HEIGHT, GAUGE_FADE} from 'parser/core/modules/ResourceGraphs/ResourceGraphs'
+import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
 import {isSuccessfulHit} from 'utilities'
+
+const SUBTRACTIVE_COST = 50
 
 type GaugeModifier = Partial<Record<Event['type'], number>>
 interface CanvasModification {
@@ -62,6 +66,7 @@ export class Gauge extends CoreGauge {
 	static override title = t('pct.gauge.title')`Gauge`
 
 	@dependency private actors!: Actors
+	@dependency private suggestions!: Suggestions
 
 	private paletteGauge = this.add(new CounterGauge({
 		graph: {
@@ -80,7 +85,7 @@ export class Gauge extends CoreGauge {
 		[this.data.actions.WATER_II_IN_BLUE.id, {damage: 25}],
 
 		// Spenders
-		[this.data.actions.SUBTRACTIVE_PALLETTE.id, {action: -50}],
+		[this.data.actions.SUBTRACTIVE_PALETTE.id, {action: -SUBTRACTIVE_COST}],
 	])
 
 	private paintGauge = this.add(new EnumGauge({
@@ -217,14 +222,19 @@ export class Gauge extends CoreGauge {
 		},
 	}))
 
-	private portraitModifiers = [
+	private portraitGenerators = [
 		this.data.actions.WINGED_MUSE.id,
-		this.data.actions.MOG_OF_THE_AGES.id,
 		this.data.actions.FANGED_MUSE.id,
+	]
+
+	private portraitSpenders = [
+		this.data.actions.MOG_OF_THE_AGES.id,
 		this.data.actions.RETRIBUTION_OF_THE_MADEEN.id,
 	]
 
 	private nextWhiteIsBlack = false
+	private overtones = 0
+	private overwrotePortrait = 0
 
 	override initialise() {
 		super.initialise()
@@ -240,17 +250,68 @@ export class Gauge extends CoreGauge {
 
 		this.addEventHook(playerFilter.type('action').action(this.data.actions.COMET_IN_BLACK.id), this.onBlackPaintSpender)
 
-		this.addEventHook(playerFilter.type('action').action(this.data.actions.SUBTRACTIVE_PALLETTE.id), this.onSubtractivePalette)
+		this.addEventHook(playerFilter.type('action').action(this.data.actions.SUBTRACTIVE_PALETTE.id), this.onSubtractivePalette)
 
 		const canvasActions = Array.from(this.canvasModifiers.keys())
 		this.addEventHook(playerFilter.type('action').action(oneOf(canvasActions)), this.onCanvasModifier)
 
 		this.addEventHook(playerFilter.type('action').action(oneOf(this.depictionModifiers)), this.onDepictionModifier)
 
-		this.addEventHook(playerFilter.type('action').action(oneOf(this.portraitModifiers)), this.onPortraitModifier)
+		this.addEventHook(playerFilter.type('action').action(oneOf(this.portraitGenerators)), this.onPortraitGenerator)
+		this.addEventHook(playerFilter.type('action').action(oneOf(this.portraitSpenders)), () => this.portraitGauge.reset())
 
 		// Default assume the player painted before the pull
 		this.canvasGauge.set([CREATURE_MOTIF, WEAPON_MOTIF, LANDSCAPE_MOTIF])
+
+		this.addEventHook('complete', this.onComplete)
+	}
+
+	private onComplete() {
+		// Suggestion to not overcap the palette gauge
+		const lostSubtractives = Math.floor(this.paletteGauge.overCap / SUBTRACTIVE_COST)
+		this.suggestions.add(new TieredSuggestion({
+			icon: this.data.actions.SUBTRACTIVE_PALETTE.icon,
+			value: lostSubtractives,
+			content: <Trans id="pct.gauge.suggestions.lost-subtractives.content">Overcapping the Palette gauge will cause you to lose uses of <DataLink action="SUBTRACTIVE_PALETTE"/> over the course of the fight, leading to lost potency. Make sure to use your gauge before it overcaps.</Trans>,
+			why: <Trans id="pct.gauge.suggestions.lost-subtractives.why">You lost <Plural value={lostSubtractives} one="# use" other="# uses" /> of <DataLink showIcon={false} action="SUBTRACTIVE_PALETTE" /> due to overcapping the Palette gauge.</Trans>,
+			tiers: {
+				1: SEVERITY.MEDIUM,
+				2: SEVERITY.MAJOR,
+			},
+		}))
+
+		// Suggestion to not overwrite Monochrome Tones
+		this.suggestions.add(new TieredSuggestion({
+			icon: this.data.actions.COMET_IN_BLACK.icon,
+			value: this.overtones,
+			content: <Trans id="pct.gauge.suggestions.overwrote-monochrome.content">Using <DataLink action="SUBTRACTIVE_PALETTE" /> a second time before casting <DataLink action="COMET_IN_BLACK" /> will lose you a use due to overwriting your <DataLink status="MONOCHROME_TONES" /> buff.</Trans>,
+			why: <Trans id="pct.gauge.suggestions.overwrote-monochrome.why">You overwrote <DataLink showIcon={false} status="MONOCHROME_TONES" /> <Plural value={this.overtones} one="# time" other="# times" />.</Trans>,
+			tiers: {
+				1: SEVERITY.MEDIUM,
+				2: SEVERITY.MAJOR,
+			},
+		}))
+
+		// Suggestion to not overwrite Mog/Madeen
+		this.suggestions.add(new TieredSuggestion({
+			icon: this.data.actions.RETRIBUTION_OF_THE_MADEEN.icon,
+			value: this.overwrotePortrait,
+			content: <Trans id="pct.gauge.suggestions.overwrote-portrait.content">
+				Rendering <DataLink action="WINGED_MUSE" /> or <DataLink action="FANGED_MUSE" /> without using <DataLink action="MOG_OF_THE_AGES" /> or <DataLink action="RETRIBUTION_OF_THE_MADEEN" /> will overwrite your Portrait.
+				Make sure you use every Portrait you paint.
+			</Trans>,
+			why: <Trans id="pct.gauge.suggestions.overwrote-portrait.why">You overwrote your Portrait <Plural value={this.overwrotePortrait} one="# time" other="# times" />.</Trans>,
+			tiers: {
+				1: SEVERITY.MEDIUM,
+				2: SEVERITY.MAJOR,
+			},
+		}))
+	}
+
+	// Canvas, Depictions, and Portrait don't reset on death, override onDeath handling to only reset Paint and Palette
+	override onDeath() {
+		this.paintGauge.reset()
+		this.paletteGauge.reset()
 	}
 
 	private onPaletteModifer(event: Event) {
@@ -262,8 +323,8 @@ export class Gauge extends CoreGauge {
 		}
 		if (eventActionId == null) { return }
 
-		// Subtractive Pallet does not spend gauge if Subtractive Spectrum is currently active
-		if (eventActionId === this.data.actions.SUBTRACTIVE_PALLETTE.id &&
+		// Subtractive Palette does not spend gauge if Subtractive Spectrum is currently active
+		if (eventActionId === this.data.actions.SUBTRACTIVE_PALETTE.id &&
 			this.actors.current.hasStatus(this.data.statuses.SUBTRACTIVE_SPECTRUM.id)) {
 			return
 		}
@@ -298,6 +359,10 @@ export class Gauge extends CoreGauge {
 	}
 
 	private onSubtractivePalette(event: Events['action']) {
+		if (this.actors.current.hasStatus(this.data.statuses.MONOCHROME_TONES.id)) {
+			this.overtones++
+		}
+
 		// If we have a White Paint available, Subtractive Palette swaps it for a Black Paint
 		if (this.paintGauge.getCountAt(WHITE_PAINT, event.timestamp) > 0) {
 			this.paintGauge.spend(WHITE_PAINT)
@@ -346,8 +411,11 @@ export class Gauge extends CoreGauge {
 		}
 	}
 
-	private onPortraitModifier(event: Events['action']) {
-		this.portraitGauge.reset() // Spend, or make sure our generate event will go through
+	private onPortraitGenerator(event: Events['action']) {
+		if (this.portraitGauge.capped) {
+			this.overwrotePortrait++
+		}
+
 		switch (event.action) {
 		case this.data.actions.WINGED_MUSE.id:
 			this.portraitGauge.generate(MOOGLE_PORTRAIT)
