@@ -1,10 +1,13 @@
 import {Trans} from '@lingui/react'
 import {DataLink} from 'components/ui/DbLink'
-import {ExpectedActionsEvaluator} from 'parser/core/modules/ActionWindow'
+import {EvaluatedAction, ExpectedActionsEvaluator, TrackedAction} from 'parser/core/modules/ActionWindow'
+import {HistoryEntry} from 'parser/core/modules/ActionWindow/History'
 import {SEVERITY} from 'parser/core/modules/Suggestions'
 import {Tincture as CoreTincture} from 'parser/core/modules/Tincture'
 import React from 'react'
 import {DISPLAY_ORDER} from './DISPLAY_ORDER'
+
+const TINCTURE_OPENER_BUFFER = 10000
 
 export class Tincture extends CoreTincture {
 	static override displayOrder = DISPLAY_ORDER.TINCTURES
@@ -20,7 +23,7 @@ export class Tincture extends CoreTincture {
 				},
 				{
 					action: this.data.actions.DIA,
-					expectedPerWindow: 2,
+					expectedPerWindow: 1,
 				},
 				{
 					action: this.data.actions.GLARE_IV,
@@ -37,6 +40,14 @@ export class Tincture extends CoreTincture {
 				2: SEVERITY.MEDIUM,
 				3: SEVERITY.MAJOR,
 			},
+			adjustCount: this.adjustDiaCountInOpener.bind(this),
 		}))
+	}
+
+	private adjustDiaCountInOpener(window: HistoryEntry<EvaluatedAction[]>, trackedAction: TrackedAction) {
+		const isInOpener = window.start - TINCTURE_OPENER_BUFFER <= this.parser.pull.timestamp
+		const currentActionIsDia = trackedAction.action.id === this.data.actions.DIA.id
+
+		return isInOpener && currentActionIsDia ? 1 : 0
 	}
 }
