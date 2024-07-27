@@ -322,6 +322,13 @@ export abstract class Procs extends Analyser {
 		return false
 	}
 
+	/**
+	 * May be overriden by Subclasses. Called by OnProcGained to allow jobs to implment job-specific logic for evaluting a proc when it is gained
+	 * @param event The event to check
+	 * @returns False by default. Jobs may override to return true, allowing them to implement job-specific logic to consider an event
+	 */
+	protected jobSpecificOnProcGainedConsiderEvent(_event: Events['statusApply']): boolean { return true }
+
 	private onCast(event: Events['action']): void {
 		const procGroups = this.getTrackedGroupsByAction(event.action)
 
@@ -345,6 +352,7 @@ export abstract class Procs extends Analyser {
 	private onProcGained(event: Events['statusApply']): void {
 		const procGroup = this.getTrackedGroupByStatus(event.status)
 
+		if (!this.jobSpecificOnProcGainedConsiderEvent(event)) { return }
 		if (procGroup == null) { return }
 
 		if (this.currentWindows.has(procGroup)) {

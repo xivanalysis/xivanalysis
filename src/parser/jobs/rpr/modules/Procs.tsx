@@ -1,7 +1,7 @@
 import {t} from '@lingui/macro'
 import {Trans, Plural} from '@lingui/react'
 import {DataLink} from 'components/ui/DbLink'
-import {Event} from 'event'
+import {Event, Events} from 'event'
 import {filter} from 'parser/core/filter'
 import {Procs as CoreProcs} from 'parser/core/modules/Procs'
 import {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
@@ -19,13 +19,15 @@ const SEVERITIES = {
 }
 
 const LOST_PROC_POTENCY = 60
+const ENCHANCED_GIBBET_IGNORE_INTERVAL = 23000
 
 export class Procs extends CoreProcs {
 	static override handle = 'enhanced procs'
 	static override title = t('rpr.procs.title')`Enhanced Procs`
-	static override debug = false
+	static override debug = true
 
 	private badStalks: number = 0
+	private ignoreEnhancedGibbetUntilTimestamp: number = 0
 
 	override initialise() {
 		super.initialise()
@@ -66,6 +68,15 @@ export class Procs extends CoreProcs {
 			consumeActions: [this.data.actions.VOID_REAPING],
 		},
 	]
+
+	protected override jobSpecificOnProcGainedConsiderEvent(event: Events['statusApply']): boolean {
+		if (event.status === this.data.statuses.ENHANCED_GIBBET.id) {
+			if (this.ignoreEnhancedGibbetUntilTimestamp > this.parser.currentDuration) { return false }
+
+			this.ignoreEnhancedGibbetUntilTimestamp = this.parser.currentDuration + ENCHANCED_GIBBET_IGNORE_INTERVAL
+		}
+		return true
+	}
 
 	protected override addJobSpecificSuggestions() {
 		const overwrittenGibbet = this.getOverwriteCountForStatus(this.data.statuses.ENHANCED_GIBBET.id)
