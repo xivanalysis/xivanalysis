@@ -273,20 +273,7 @@ export class Gauge extends CoreGauge {
 			icon: this.data.actions.SUBTRACTIVE_PALETTE.icon,
 			value: lostSubtractives,
 			content: <Trans id="pct.gauge.suggestions.lost-subtractives.content">Overcapping the Palette gauge will cause you to lose uses of <DataLink action="SUBTRACTIVE_PALETTE"/> over the course of the fight, leading to lost potency. Make sure to use your gauge before it overcaps.</Trans>,
-			why: <Trans id="pct.gauge.suggestions.lost-subtractives.why">You lose <Plural value={lostSubtractives} one="# use" other="# uses" /> of <DataLink showIcon={false} action="SUBTRACTIVE_PALETTE" /> due to overcapping the Palette gauge.</Trans>,
-			tiers: {
-				1: SEVERITY.MEDIUM,
-				2: SEVERITY.MAJOR,
-			},
-		}))
-
-		// Suggestion to not end the fight with palette gauge remaining
-		const wastedSubtractives = Math.floor(this.paletteGauge.value / SUBTRACTIVE_COST)
-		this.suggestions.add(new TieredSuggestion({
-			icon: this.data.actions.SUBTRACTIVE_PALETTE.icon,
-			value: wastedSubtractives,
-			content: <Trans id="pct.gauge.suggestions.wasted-subtractives.content">Ending the fight with Palette gauge remaining means you could have used another set of <DataLink action="SUBTRACTIVE_PALETTE" /> spells for additional damage.</Trans>,
-			why: <Trans id="pct.gauge.suggestions.wasted-subtractives.why">You ended the fight with enough Palette gauge to use <DataLink showIcon={false} action="SUBTRACTIVE_PALETTE" /> <Plural value={wastedSubtractives} one="# time" other="# times" />.</Trans>,
+			why: <Trans id="pct.gauge.suggestions.lost-subtractives.why">You lost <Plural value={lostSubtractives} one="# use" other="# uses" /> of <DataLink showIcon={false} action="SUBTRACTIVE_PALETTE" /> due to overcapping the Palette gauge.</Trans>,
 			tiers: {
 				1: SEVERITY.MEDIUM,
 				2: SEVERITY.MAJOR,
