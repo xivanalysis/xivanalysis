@@ -1,11 +1,13 @@
 import {BASE_GCD} from 'data/CONSTANTS'
 import {Weaving as CoreWeaving, Weave} from 'parser/core/modules/Weaving'
 import {MOTIFS, SUBTRACTIVE_SPELLS} from './CommonData'
+import DISPLAY_ORDER from './DISPLAY_ORDER'
 
 // most animations lock the user out of another action for a total of 600ms
 const ANIMATION_LOCK = 600
 
 export default class Weaving extends CoreWeaving {
+	static override displayOrder = DISPLAY_ORDER.WEAVING
 
 	private longCastIds = [
 		...MOTIFS.map(key => this.data.actions[key].id),
