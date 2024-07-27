@@ -14,7 +14,7 @@ export class PrepullActionAdapterStep extends AdapterStep {
 					action: event.cause.action,
 					source: event.source,
 					target: event.targets[0]?.target,
-					timestamp: this.pull.timestamp + PREPULL_OFFSETS.PULL_ACTION,
+					timestamp: this.pull.firstEvent + PREPULL_OFFSETS.PULL_ACTION,
 				})
 			} else if (event.type === 'action') {
 				// Stop once we hit the first real action event post-pull

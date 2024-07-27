@@ -230,7 +230,7 @@ export class SpeedStatsAdapterStep extends AdapterStep {
 			return {
 				type: 'actorUpdate',
 				actor: actorId,
-				timestamp: this.pull.timestamp + PREPULL_OFFSETS.ATTRIBUTE_UPDATE,
+				timestamp: this.pull.firstEvent + PREPULL_OFFSETS.ATTRIBUTE_UPDATE,
 				attributes,
 			}
 		}

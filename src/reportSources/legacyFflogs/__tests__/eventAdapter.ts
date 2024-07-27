@@ -28,10 +28,14 @@ const actor: Actor = {
 
 // Semi-arbitrary time during 5.3. Needs to be post-5.08 for code path purposes.
 const timestamp = 1600000000000
+// Set up tests to simulate 500ms worth of prepull events in the parse
+// eslint-disable-next-line @typescript-eslint/no-magic-numbers
+const firstEvent = timestamp - 500
 
 const pull: Pull = {
 	id: '1',
 	timestamp,
+	firstEvent,
 	duration: 1,
 	encounter: {
 		name: 'test encounter',

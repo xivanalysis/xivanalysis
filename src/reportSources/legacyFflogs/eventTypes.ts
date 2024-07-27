@@ -21,6 +21,7 @@ export interface Fight {
 
 	start_time: number
 	end_time: number
+	combatTime: number
 }
 
 export interface Phase {
