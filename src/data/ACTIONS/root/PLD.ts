@@ -47,7 +47,7 @@ export const PLD = ensureActions({
 			from: 15,
 			end: true,
 		},
-		statusesApplied: ['SWORD_OATH', 'DIVINE_MIGHT'],
+		statusesApplied: ['ATONEMENT_READY', 'DIVINE_MIGHT'],
 	},
 	SHIELD_LOB: {
 		id: 24,
@@ -92,8 +92,6 @@ export const PLD = ensureActions({
 		icon: iconUrl(2506),
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
-		cooldown: 60000,
-		gcdRecast: 2500,
 	},
 	CLEMENCY: {
 		id: 3541,
@@ -125,6 +123,28 @@ export const PLD = ensureActions({
 		icon: iconUrl(2519),
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
+		statusesApplied: [
+			'SUPPLICATION_READY',
+		],
+		breaksCombo: false,
+	},
+	SUPPLICATION: {
+		id: 36918,
+		name: 'Supplication',
+		icon: iconUrl(2522),
+		onGcd: true,
+		speedAttribute: Attribute.SKILL_SPEED,
+		statusesApplied: [
+			'SEPULCHRE_READY',
+		],
+		breaksCombo: false,
+	},
+	SEPULCHRE: {
+		id: 36919,
+		name: 'Sepulchre',
+		icon: iconUrl(2523),
+		onGcd: true,
+		speedAttribute: Attribute.SKILL_SPEED,
 		breaksCombo: false,
 	},
 	CONFITEOR: {
@@ -133,9 +153,10 @@ export const PLD = ensureActions({
 		icon: iconUrl(2518),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
-		combo: {
-			start: true,
-		},
+		// Technically incorrect, but this way we don't get spurious broken combos
+		// combo: {
+		// 	start: true,
+		// },
 	},
 	BLADE_OF_FAITH: {
 		id: 25748,
@@ -143,9 +164,10 @@ export const PLD = ensureActions({
 		icon: iconUrl(2952),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
-		combo: {
-			from: 16459,
-		},
+		// Technically incorrect, but this way we don't get spurious broken combos
+		// combo: {
+		// 	from: 16459,
+		// },
 	},
 	BLADE_OF_TRUTH: {
 		id: 25749,
@@ -153,9 +175,10 @@ export const PLD = ensureActions({
 		icon: iconUrl(2953),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
-		combo: {
-			from: 25748,
-		},
+		// Technically incorrect, but this way we don't get spurious broken combos
+		// combo: {
+		// 	from: 25748,
+		// },
 	},
 	BLADE_OF_VALOR: {
 		id: 25750,
@@ -163,10 +186,14 @@ export const PLD = ensureActions({
 		icon: iconUrl(2954),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
-		combo: {
-			from: 25749,
-			end: true,
-		},
+		// Technically incorrect, but this way we don't get spurious broken combos
+		// combo: {
+		// 	from: 25749,
+		// 	end: true,
+		// },
+		statusesApplied: [
+			'BLADE_OF_HONOR_READY',
+		],
 	},
 
 	// -----
@@ -178,7 +205,7 @@ export const PLD = ensureActions({
 		icon: iconUrl(166),
 		onGcd: false,
 		cooldown: 60000,
-		statusesApplied: ['FIGHT_OR_FLIGHT'],
+		statusesApplied: ['FIGHT_OR_FLIGHT', 'GORING_BLADE_READY'],
 	},
 	IRON_WILL: {
 		id: 28,
@@ -303,5 +330,28 @@ export const PLD = ensureActions({
 		icon: iconUrl(2951),
 		onGcd: false,
 		cooldown: 30000,
+	},
+	IMPERATOR: {
+		id: 36921,
+		name: 'Imperator',
+		icon: iconUrl(2955),
+		onGcd: false,
+		cooldown: 60000,
+		statusesApplied: ['REQUIESCAT', 'CONFITEOR_READY'],
+	},
+	BLADE_OF_HONOR: {
+		id: 36922,
+		name: 'Blade of Honor',
+		icon: iconUrl(2956),
+		onGcd: false,
+		cooldown: 1000,
+	},
+	GUARDIAN: {
+		id: 36920,
+		name: 'Guardian',
+		icon: iconUrl(2524),
+		onGcd: false,
+		cooldown: 120000,
+		statusesApplied: ['GUARDIAN', 'GUARDIANS_WILL'],
 	},
 })

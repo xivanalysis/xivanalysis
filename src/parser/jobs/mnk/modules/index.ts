@@ -9,6 +9,7 @@ import {GreasedLightning} from './GreasedLightning'
 import {MasterfulBlitzStatistics} from './MasterfulBlitzStatistics'
 import {PerfectBalance} from './PerfectBalance'
 import {Positionals} from './Positionals'
+import {Replies} from './Replies'
 import {Revolution} from './Revolution'
 import {RiddleOfFire} from './RiddleOfFire'
 import {RiddleOfWind} from './RiddleOfWind'
@@ -26,6 +27,7 @@ export default [
 	GreasedLightning,
 	MasterfulBlitzStatistics,
 	Positionals,
+	Replies,
 	RiddleOfFire,
 	RiddleOfWind,
 	PerfectBalance,

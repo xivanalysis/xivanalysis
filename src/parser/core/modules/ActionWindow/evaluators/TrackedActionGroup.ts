@@ -1,4 +1,5 @@
 import {Action} from 'data/ACTIONS'
+import {ReactNode} from 'react'
 import {SeverityTiers} from '../../Suggestions/Suggestion'
 import {EvaluatedAction} from '../EvaluatedAction'
 import {HistoryEntry} from '../History'
@@ -22,7 +23,7 @@ export interface TrackedActionGroup {
 	 * Optional parameter to specify a single action icon to display as the header for this group
 	 * Will override the default behavior of showing all actions in the group separated by "/"
 	 */
-	overrideHeader?: Action
+	overrideHeader?: ReactNode
 }
 
 /**
