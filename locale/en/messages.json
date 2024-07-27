@@ -365,7 +365,6 @@
   "core.resource-graphs.resource-value": "{label}: {current,number} / {maximum,number}",
   "core.resource-graphs.row-label": "Resources",
   "core.role.developer": "Developer",
-  "core.role.maintainer": "Maintainer",
   "core.role.theorycraft": "Theorycraft",
   "core.statistics.title": "Statistics",
   "core.suggestion.nothing": "There's nothing here!",
