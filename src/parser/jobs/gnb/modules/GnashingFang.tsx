@@ -1,9 +1,10 @@
 import {ActionLink} from 'components/ui/DbLink'
 import {RotationTable} from 'components/ui/RotationTable'
 import ACTIONS from 'data/ACTIONS'
-import {Events} from 'event'
+import {Event, Events} from 'event'
 import _ from 'lodash'
 import {Analyser} from 'parser/core/Analyser'
+import {filter} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
 import {Data} from 'parser/core/modules/Data'
 import {Timeline} from 'parser/core/modules/Timeline'
@@ -53,16 +54,22 @@ export class GnashingFang extends Analyser {
 
 	override initialise() {
 		super.initialise()
+
+		const playerFilter = filter<Event>().source(this.parser.actor.id)
+
+		this.addEventHook(playerFilter.type('action'), this.onCast)
 		this.addEventHook('complete', this.onComplete)
 	}
-	onCast(event: Events['action']): void {
+
+	private onCast(event: Events['action']): void {
 
 		const action = this.data.getAction(event.action)
 
 		if (action) { //If it ain't defined I don't want it
 
 			// If ain't a combo or a breaker IDGAF
-			if (!this.COMBO_ACTIONS.includes(action.id)  || (!this.COMBO_BREAKERS.includes(action.id))) {
+			if (!this.COMBO_ACTIONS.includes(action.id) && (!this.COMBO_BREAKERS.includes(action.id))) {
+				this.debug(`Action ${action?.name} (${action}) is not a Gnashing Fang action or a breaker`)
 				return
 			}
 
@@ -83,6 +90,7 @@ export class GnashingFang extends Analyser {
 			}
 
 			if (this.COMBO_BREAKERS.includes(action.id)) {
+				this.debug(`Action ${action?.name} (${action}) is a Gnashing Fang breaker`)
 
 				this.onEndGnashingCombo(event)
 			}

@@ -463,9 +463,9 @@ export const VPR = ensureActions({
 	},
 
 	SWIFTSKINS_DEN: {
-		id: 34624,
-		name: "Hunter's Den",
-		icon: iconUrl(3719),
+		id: 34625,
+		name: "Swiftskin's Den",
+		icon: iconUrl(3720),
 		onGcd: true,
 		gcdRecast: 3000,
 		speedAttribute: Attribute.SKILL_SPEED,

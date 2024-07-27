@@ -85,7 +85,7 @@ export const MNK = ensureActions({
 	SHADOW_OF_THE_DESTROYER: {
 		id: 25767,
 		name: 'Shadow of the Destroyer',
-		icon: iconUrl(215),
+		icon: iconUrl(2979),
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 	},
