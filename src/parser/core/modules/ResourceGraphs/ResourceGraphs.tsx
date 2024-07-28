@@ -170,7 +170,8 @@ export class ResourceGraphs extends Analyser {
 			}),
 			tooltipHideWhenEmpty,
 		}
-		if (resourceGroup.data.length === 0) {
+
+		if (!this.dataGroups.has(handle)) {
 			this.timeline.addRow(resourceGroup.row)
 			this.dataGroups.set(handle, resourceGroup)
 		} else {

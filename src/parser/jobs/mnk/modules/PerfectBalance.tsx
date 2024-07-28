@@ -98,6 +98,7 @@ export class PerfectBalance extends Gauge {
 		graph: {
 			handle: BEAST_GAUGE_HANDLE,
 			label: <Trans id="mnk.gauge.resource.beast.chakra">Beast Chakra</Trans>,
+			height: 16,
 			order: 1,
 			tooltipHideMaximum: true, // It looks weird to imply one could have 9 total chakra. Hide the denominator from the tooltip
 		},
@@ -119,6 +120,7 @@ export class PerfectBalance extends Gauge {
 		graph: {
 			handle: NADI_GAUGE_HANDLE,
 			label: <Trans id="mnk.gauge.resource.nadi">Nadi Gauge</Trans>,
+			height: 16,
 			order: 2,
 		},
 	}))

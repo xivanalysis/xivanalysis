@@ -6,8 +6,7 @@ import {Event, Events} from 'event'
 import {filter, oneOf} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
 import {Actors} from 'parser/core/modules/Actors'
-import {Gauge} from 'parser/core/modules/Gauge'
-import {SetGauge} from 'parser/core/modules/Gauge/SetGauge'
+import {CounterGauge, Gauge} from 'parser/core/modules/Gauge'
 import {GAUGE_FADE} from 'parser/core/modules/ResourceGraphs/ResourceGraphs'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
@@ -25,43 +24,60 @@ const OVERCAP_SEVERITY = {
 }
 
 export class Balls extends Gauge {
-	static override handle = 'balls'
 	static override title = t('mnk.balls.title')`Fury Gauge`
 
-	@dependency private suggestions!: Suggestions
 	@dependency private actors!: Actors
+	@dependency private suggestions!: Suggestions
 
-	private furyGauge = this.add(new SetGauge({
-		options: [
-			{
-				value: 'opo',
-				color: OPO_GAUGE_COLOR.fade(GAUGE_FADE),
-				label: <Trans id="mnk.balls.opoFury.label">Opo-opo Fury</Trans>,
-			},
-			{
-				value: 'raptor',
-				color: RAPTOR_GAUGE_COLOR.fade(GAUGE_FADE),
-				label: <Trans id="mnk.balls.raptorFury.label">Raptor Fury</Trans>,
-			},
-			{
-				value: 'coeurl' + 0,
-				color: COEURL_GAUGE_COLOR.fade(GAUGE_FADE),
-				label: <Trans id="mnk.balls.coeurlFury.label">Coeurl Fury 1</Trans>,
-			},
-			{
-				value: 'coeurl' + 1,
-				color: COEURL_GAUGE_COLOR.fade(GAUGE_FADE),
-				label: <Trans id="mnk.balls.coeurlFury2.label">Coeurl Fury 2</Trans>,
-			},
-		],
-		graph: {
-			handle: 'furyGauge',
-			label: <Trans id="mnk.balls.furyGauge.label">Fury Gauge</Trans>,
-		},
-	}))
+	private opoFury: CounterGauge | null = null
+	private raptorFury: CounterGauge | null = null
+	private coeurlFury: CounterGauge | null = null
 
 	override initialise() {
 		super.initialise()
+
+		this.resourceGraphs.addDataGroup({
+			handle: 'gauges',
+			label: <Trans id="mnk.balls.resource-graphs.fury">Fury Gauge</Trans>,
+			height: 32,
+			collapse: true,
+		})
+
+		this.opoFury = this.add(new CounterGauge({
+			graph: {
+				handle: 'gauges',
+				label: <Trans id="mnk.balls.opoFury.label">Opo-opo Fury</Trans>,
+				color: OPO_GAUGE_COLOR.fade(GAUGE_FADE),
+				collapse: true,
+				height: 8,
+			},
+			maximum: 1,
+			initialValue: 0,
+		}))
+
+		this.raptorFury = this.add(new CounterGauge({
+			graph: {
+				handle: 'gauges',
+				label: <Trans id="mnk.balls.raptorFury.label">Raptor Fury</Trans>,
+				color: RAPTOR_GAUGE_COLOR.fade(GAUGE_FADE),
+				collapse: true,
+				height: 8,
+			},
+			maximum: 1,
+			initialValue: 0,
+		}))
+
+		this.coeurlFury = this.add(new CounterGauge({
+			graph: {
+				handle: 'gauges',
+				label: <Trans id="mnk.balls.coeurlFury.label">Coeurl Fury</Trans>,
+				color: COEURL_GAUGE_COLOR.fade(GAUGE_FADE),
+				collapse: true,
+				height: 16,
+			},
+			maximum: 2,
+			initialValue: 0,
+		}))
 
 		const gaugeModifiers = fillActions(ST_FORM_ACTIONS, this.data)
 
@@ -75,6 +91,10 @@ export class Balls extends Gauge {
 	}
 
 	private onGaugeModifier(event: Events['action']) {
+		if (!this.opoFury || !this.raptorFury || !this.coeurlFury) {
+			return
+		}
+
 		const hasFormless = this.actors.current.hasStatus(this.data.statuses.FORMLESS_FIST.id)
 		const hasPerfectBalance = this.actors.current.hasStatus(this.data.statuses.PERFECT_BALANCE.id)
 		const hasOpoForm = this.actors.current.hasStatus(this.data.statuses.OPO_OPO_FORM.id)
@@ -83,38 +103,47 @@ export class Balls extends Gauge {
 		// DK is the only action that can "fail" to generate balls
 		case this.data.actions.DRAGON_KICK.id:
 			if (hasFormless || hasPerfectBalance || hasOpoForm) {
-				this.furyGauge.generate('opo')
+				this.opoFury.generate(1)
 			}
 			break
 		case this.data.actions.BOOTSHINE.id:
 		case this.data.actions.LEAPING_OPO.id:
-			this.furyGauge.spend('opo')
+			this.opoFury.spend(1)
 			break
 		case this.data.actions.TWIN_SNAKES.id:
-			this.furyGauge.generate('raptor')
+			this.raptorFury.generate(1)
 			break
 		case this.data.actions.TRUE_STRIKE.id:
 		case this.data.actions.RISING_RAPTOR.id:
-			this.furyGauge.spend('raptor')
+			this.raptorFury.spend(1)
 			break
 		case this.data.actions.DEMOLISH.id:
-			this.furyGauge.generate('coeurl' + 0)
-			this.furyGauge.generate('coeurl' + 1)
+			this.coeurlFury.generate(2)
 			break
 		case this.data.actions.SNAP_PUNCH.id:
 		case this.data.actions.POUNCING_COEURL.id:
-			this.furyGauge.getStateAt('coeurl' + 1)
-				? this.furyGauge.spend('coeurl' + 1)
-				: this.furyGauge.spend('coeurl' + 0)
+			this.coeurlFury.spend(1)
 			break
 		}
 	}
 
 	private onComplete() {
-		const overCap = this.furyGauge.overcap
+		if (!this.opoFury || !this.raptorFury || !this.coeurlFury) {
+			return
+		}
+
+		const overCap = this.opoFury.overCap + this.raptorFury.overCap + this.coeurlFury.overCap
+		// Get the icon for the action that overcapped the most balls
+		const dominantOvercapIcon = this.opoFury.overCap > this.raptorFury.overCap
+			? this.opoFury.overCap > this.coeurlFury.overCap
+				? this.data.actions.BOOTSHINE.icon
+				: this.data.actions.LEAPING_OPO.icon
+			: this.raptorFury.overCap > this.coeurlFury.overCap
+				? this.data.actions.TRUE_STRIKE.icon
+				: this.data.actions.RISING_RAPTOR.icon
 
 		this.suggestions.add(new TieredSuggestion({
-			icon: this.data.actions.DEMOLISH.icon,
+			icon: dominantOvercapIcon,
 			content: <Trans id="mnk.balls.suggestions.overcap.content">
 				Try not to overcap your Fury gauge. Use <ActionLink action="LEAPING_OPO" />, <ActionLink action="RISING_RAPTOR" />, and <ActionLink action="POUNCING_COEURL" /> over their alternatives whenever a stack of their respective Fury gauge is available.
 			</Trans>,
