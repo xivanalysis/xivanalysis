@@ -809,6 +809,7 @@
   "rdm.grandimpact.suggestions.dropped.content": "",
   "rdm.grandimpact.suggestions.dropped.why": "",
   "rdm.interrupts.suggestion.content": "",
+  "rdm.magickedswordplay.suggestions.dropped.why": "",
   "rdm.magickedswordplay.suggestions.missed.content": "",
   "rdm.manaStackGauge.black-mana-lost-to-overcap": "Schwarz",
   "rdm.manaStackGauge.resource.manaStacks": "",
@@ -1137,5 +1138,6 @@
   "whm.thinair.messages.explanation": "",
   "whm.thinair.messages.no-casts": "Es wurden keine Ausführungen von <0/> aufgezeichnet",
   "whm.thinair.title": "Ex Machina",
-  "whm.tincture.suggestions.trackedActions.content": ""
+  "whm.tincture.suggestions.trackedActions.content": "",
+  "{0, plural, one {# stack} other {# stacks}}": ""
 }

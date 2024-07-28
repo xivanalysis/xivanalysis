@@ -1,12 +1,13 @@
 import {t, Trans} from '@lingui/macro'
+import {Plural} from '@lingui/react'
 import {DataLink} from 'components/ui/DbLink'
-import {ActionEnhancingStatuses} from 'parser/core/modules/ActionEnhancingStatuses'
+import {Procs} from 'parser/core/modules/Procs'
 import {DISPLAY_ORDER} from 'parser/jobs/rdm/modules/DISPLAY_ORDER'
 import React from 'react'
 
 // Test log: unused MagickedSwordplay stacks - https://www.fflogs.com/reports/y9bc6qpf4KgVnvTX
 
-export class MagickedSwordplay extends ActionEnhancingStatuses {
+export class MagickedSwordplay extends Procs {
 	static override displayOrder = DISPLAY_ORDER.MAGICKED_SWORDPLAY
 	static override handle = 'MagickedSwordplay'
 	static override title = t('rdm.ms.title')`Magicked Swordplay Windows`
@@ -30,6 +31,9 @@ export class MagickedSwordplay extends ActionEnhancingStatuses {
 	override droppedProcContent = <Trans id="rdm.magickedswordplay.suggestions.missed.content">
 		Try to use all three stacks of <DataLink status="MAGICKED_SWORDPLAY" /> by using a full enchanted sword combo whenever you use <DataLink action="MANAFICATION" />
 	</Trans>
+	override overrideDroppedProcsWhy() {
+		this.droppedProcWhy = <Trans id="rdm.magickedswordplay.suggestions.dropped.why">You dropped <Plural value={this.droppedProcs} one="# stack" other="# stacks" /> of <DataLink status="MAGICKED_SWORDPLAY" showIcon={false} showTooltip={false} />.</Trans>
+	}
 
 	override showInvulnProcSuggestion = true
 }

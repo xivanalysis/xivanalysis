@@ -809,6 +809,7 @@
   "rdm.grandimpact.suggestions.dropped.content": "",
   "rdm.grandimpact.suggestions.dropped.why": "<0/>没有保持{0, plural,one {#时间}other {#秒}}",
   "rdm.interrupts.suggestion.content": "通过合理的站位以及熟练运用滑步来减少咏唱终端。如果必须移动，提前留一个<0/>、<1/>或者资源来打近战三连，或者如果这些都不可用，请使用<2/>。",
+  "rdm.magickedswordplay.suggestions.dropped.why": "",
   "rdm.magickedswordplay.suggestions.missed.content": "",
   "rdm.manaStackGauge.black-mana-lost-to-overcap": "黑魔元",
   "rdm.manaStackGauge.resource.manaStacks": "魔元集量谱",
@@ -1137,5 +1138,6 @@
   "whm.thinair.messages.explanation": "<0/>的主要用途应当是在战斗中省下高耗蓝魔法的蓝耗。在战斗中，不要担心它会因为没有转好就用而浪费使用机会，只要覆盖到了蓝量消耗大的魔法，例如<1/>、<2/>和<3/>就可以。未能有效节约蓝量的使用记录已被标红。",
   "whm.thinair.messages.no-casts": "没有<0/>的使用记录",
   "whm.thinair.title": "无中生有",
-  "whm.tincture.suggestions.trackedActions.content": "在爆发药期间打出尽可能多的伤害。"
+  "whm.tincture.suggestions.trackedActions.content": "在爆发药期间打出尽可能多的伤害。",
+  "{0, plural, one {# stack} other {# stacks}}": ""
 }

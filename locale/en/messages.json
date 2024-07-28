@@ -809,6 +809,7 @@
   "rdm.grandimpact.suggestions.dropped.content": "Try to consume <0/> before it expires as <1/> Gives 3 White & Black Mana and is one of your strongest GCDs outside of your Finisher Combo.",
   "rdm.grandimpact.suggestions.dropped.why": "<0/> timed out {0, plural, one {# time} other {# times}}",
   "rdm.interrupts.suggestion.content": "Avoid interrupting casts by either prepositioning yourself or utilizing slidecasting where possible. If you need to move, try to save a use of <0/>, <1/>, or pool mana for a melee combo or if none of these are available use <2/>.",
+  "rdm.magickedswordplay.suggestions.dropped.why": "You dropped <0/> of <1/>.",
   "rdm.magickedswordplay.suggestions.missed.content": "Try to use all three stacks of <0/> by using a full enchanted sword combo whenever you use <1/>",
   "rdm.manaStackGauge.black-mana-lost-to-overcap": "Black",
   "rdm.manaStackGauge.resource.manaStacks": "Mana Stacks",
@@ -1137,5 +1138,6 @@
   "whm.thinair.messages.explanation": "The main use of <0/> should be to save MP on high MP-cost spells. Don't be afraid to hold it and lose a use over the fight as long as it covers an MP-heavy spell such as usages of <1/>, <2/>, and <3/>. Usages that did not save a considerable amount of MP are marked red.",
   "whm.thinair.messages.no-casts": "No casts recorded for <0/>",
   "whm.thinair.title": "Thin Air",
-  "whm.tincture.suggestions.trackedActions.content": "Try to cover as much damage as possible with your Tinctures of Mind."
+  "whm.tincture.suggestions.trackedActions.content": "Try to cover as much damage as possible with your Tinctures of Mind.",
+  "{0, plural, one {# stack} other {# stacks}}": "{0, plural, one {# stack} other {# stacks}}"
 }
