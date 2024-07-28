@@ -47,6 +47,8 @@ const SUPPORT_ACTIONS: ActionKey[] = [
 	'TROUBADOUR',
 ]
 
+const FAILED_OVERLAPS_SUGGESTION_THRESHOLD = 3
+
 interface MuseWindow {
 	start: number,
 	end?: number | undefined,
@@ -257,7 +259,7 @@ export class BurstWindow extends BuffGroupWindow {
 		const failedOverlaps = this.failedOverlapStarts.length
 		let severity: number
 
-		if (failedOverlaps < 3) {
+		if (failedOverlaps < FAILED_OVERLAPS_SUGGESTION_THRESHOLD) {
 			severity = SEVERITY.MEDIUM
 		} else {
 			severity = SEVERITY.MAJOR

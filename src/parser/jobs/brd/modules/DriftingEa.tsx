@@ -43,7 +43,7 @@ import Downtime from 'parser/core/modules/Downtime'
 import {Timeline} from 'parser/core/modules/Timeline'
 import React, {Fragment} from 'react'
 import {Button, Message, Table} from 'semantic-ui-react'
-import DISPLAY_ORDER from "./DISPLAY_ORDER";
+import DISPLAY_ORDER from './DISPLAY_ORDER'
 
 // Buffer (ms) to forgive insignificant drift
 const DRIFT_BUFFER = 2000
