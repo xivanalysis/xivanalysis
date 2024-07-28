@@ -742,7 +742,7 @@
   "pct.gauge.suggestions.lost-subtractives.content": "",
   "pct.gauge.suggestions.lost-subtractives.why": "",
   "pct.gauge.suggestions.overwrote-monochrome.content": "",
-  "pct.gauge.suggestions.overwrote-monochrome.why": "",
+  "pct.gauge.suggestions.overwrote-monochrome.why": "<0/> 효과를 {0, plural, other {#회}} 덮어썼습니다.",
   "pct.gauge.suggestions.overwrote-portrait.content": "",
   "pct.gauge.suggestions.overwrote-portrait.why": "",
   "pct.gauge.title": "극성과 언어",

@@ -742,7 +742,7 @@
   "pct.gauge.suggestions.lost-subtractives.content": "",
   "pct.gauge.suggestions.lost-subtractives.why": "",
   "pct.gauge.suggestions.overwrote-monochrome.content": "",
-  "pct.gauge.suggestions.overwrote-monochrome.why": "",
+  "pct.gauge.suggestions.overwrote-monochrome.why": "你覆盖了{0, plural, one {#次} other {#次}}<0/>。",
   "pct.gauge.suggestions.overwrote-portrait.content": "",
   "pct.gauge.suggestions.overwrote-portrait.why": "",
   "pct.gauge.title": "职业量谱",
