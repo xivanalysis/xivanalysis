@@ -1,6 +1,7 @@
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
 import {DataLink} from 'components/ui/DbLink'
+import {RotationTargetOutcome} from 'components/ui/RotationTable'
 import {Action, ActionKey} from 'data/ACTIONS'
 import {BuffWindow, ExpectedActionGroupsEvaluator, EvaluatedAction, NotesEvaluator, TrackedActionGroup} from 'parser/core/modules/ActionWindow'
 import {HistoryEntry} from 'parser/core/modules/ActionWindow/History'
@@ -132,6 +133,7 @@ export class Reawaken extends BuffWindow {
 			suggestionWindowName: <DataLink action="REAWAKEN" showIcon={false} />,
 			severityTiers: SEVERITIES,
 			adjustCount: this.adjustExpectedActionCount.bind(this),
+			adjustOutcome: this.adjustOutcome.bind(this),
 		}))
 
 		this.addEvaluator(new GenerationsEvalutor(this.data))
@@ -143,5 +145,16 @@ export class Reawaken extends BuffWindow {
 			return -action.expectedPerWindow
 		}
 		return 0
+	}
+
+	private adjustOutcome(window: HistoryEntry<EvaluatedAction[]>, action: TrackedActionGroup) {
+		if (action.actions[0].onGcd === false) { return undefined }
+		if (action.actions[0] === this.data.actions.OUROBOROS) { return undefined }
+		if (this.isRushedEndOfPullWindow(window)) { return undefined }
+
+		return (actual: number, expected?: number) => {
+			//Going over the expected count of generations is bad since that means you will lose the Ouroboros.
+			return (actual === expected) ? RotationTargetOutcome.POSITIVE : RotationTargetOutcome.NEGATIVE
+		}
 	}
 }
