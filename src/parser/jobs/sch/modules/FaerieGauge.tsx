@@ -14,11 +14,8 @@ import React from 'react'
 
 const GAUGE_GAIN_AMOUNT = 10
 
-// Start at 30 because you can overcap when seraph is out and you can't drain the gauge
 const OVERCAP_SEVERITY = {
 	30: SEVERITY.MINOR,
-	50: SEVERITY.MEDIUM,
-	70: SEVERITY.MAJOR,
 }
 
 const GAUGE_GENERATORS: ActionKey[] = [
