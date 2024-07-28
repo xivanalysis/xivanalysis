@@ -4,6 +4,11 @@ import React from 'react'
 
 export const changelog = [
 	{
+		date: new Date('2024-07-27'),
+		Changes: () => <>Add <DataLink action="REAWAKEN"/> buff window analysis.</>,
+		contributors: [CONTRIBUTORS.RYAN],
+	},
+	{
 		date: new Date('2024-07-18'),
 		Changes: () => <>Add Tincture Module to Viper</>,
 		contributors: [CONTRIBUTORS.RYAN],
