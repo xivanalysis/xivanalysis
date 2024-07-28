@@ -123,7 +123,7 @@ export abstract class Procs extends Analyser {
 	protected getUsageCountForStatus(status: number | ProcGroup): number {
 		const procGroup = this.getTrackedGroupByStatus(status)
 		if (procGroup == null) { return 0 }
-		return this.getUsagesForStatus.length
+		return this.getUsagesForStatus(status).length
 	}
 
 	/**
