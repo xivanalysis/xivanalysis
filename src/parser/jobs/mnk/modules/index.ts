@@ -1,5 +1,6 @@
 import {ActionTimeline} from './ActionTimeline'
 import {AoE} from './AoE'
+import {Balls} from './Balls'
 import {Brotherhood} from './Brotherhood'
 import {CooldownDowntime} from './CooldownDowntime'
 import {Defensives} from './Defensives'
@@ -17,6 +18,7 @@ import {Weaving} from './Weaving'
 export default [
 	ActionTimeline,
 	AoE,
+	Balls,
 	Brotherhood,
 	CooldownDowntime,
 	Revolution,

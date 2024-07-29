@@ -10,6 +10,11 @@ export const changelog = [
 	},
 	{
 		date: new Date('2024-07-25'),
+		Changes: () => <>Add Fury Gauge graph and suggestions for overcapped Fury</>,
+		contributors: [CONTRIBUTORS.HINT],
+	},
+	{
+		date: new Date('2024-07-25'),
 		Changes: () => <>Add Nadi tracking for <ActionLink action="ELIXIR_BURST" /> and pre-upgrade Blitz actions</>,
 		contributors: [CONTRIBUTORS.HINT],
 	},
