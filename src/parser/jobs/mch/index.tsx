@@ -29,7 +29,7 @@ export const MACHINIST = new Meta({
 	},
 
 	contributors: [
-		{user: CONTRIBUTORS.HINT, role: ROLES.MAINTAINER},
+		{user: CONTRIBUTORS.HINT, role: ROLES.DEVELOPER},
 	],
 
 	changelog,

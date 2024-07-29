@@ -21,7 +21,7 @@ export const WARRIOR = new Meta({
 	},
 
 	contributors: [
-		{user: CONTRIBUTORS.KWEREY, role: ROLES.MAINTAINER},
+		{user: CONTRIBUTORS.KWEREY, role: ROLES.DEVELOPER},
 	],
 
 	changelog,

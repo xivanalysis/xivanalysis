@@ -24,7 +24,7 @@ export const DARK_KNIGHT = new Meta({
 	},
 
 	contributors: [
-		{user: CONTRIBUTORS.AZARIAH, role: ROLES.MAINTAINER},
+		{user: CONTRIBUTORS.AZARIAH, role: ROLES.DEVELOPER},
 	],
 
 	changelog,

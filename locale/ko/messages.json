@@ -365,7 +365,6 @@
   "core.resource-graphs.resource-value": "{label}: {current,number} / {maximum,number}",
   "core.resource-graphs.row-label": "자원",
   "core.role.developer": "개발자",
-  "core.role.maintainer": "관리자",
   "core.role.theorycraft": "이론",
   "core.statistics.title": "통계",
   "core.suggestion.nothing": "여기엔 아무것도 없습니다!",

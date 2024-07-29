@@ -365,7 +365,6 @@
   "core.resource-graphs.resource-value": "{label}: {current,number} / {maximum,number}",
   "core.resource-graphs.row-label": "リソース",
   "core.role.developer": "開発者",
-  "core.role.maintainer": "メンテナー",
   "core.role.theorycraft": "理論提案者",
   "core.statistics.title": "統計",
   "core.suggestion.nothing": "ここに何もありませんよ！",

@@ -136,9 +136,6 @@ export interface Role {
 }
 
 export const ROLES = ensureRecord<Role>()({
-	MAINTAINER: {
-		text: t('core.role.maintainer')`Maintainer`,
-	},
 	THEORYCRAFT: {
 		text: t('core.role.theorycraft')`Theorycraft`,
 	},

@@ -20,7 +20,7 @@ export const DRAGOON = new Meta({
 	},
 
 	contributors: [
-		{user: CONTRIBUTORS.FALINDRITH, role: ROLES.MAINTAINER},
+		{user: CONTRIBUTORS.FALINDRITH, role: ROLES.DEVELOPER},
 	],
 
 	changelog,
