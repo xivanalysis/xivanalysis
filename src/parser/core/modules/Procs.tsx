@@ -18,9 +18,8 @@ import {Invulnerability} from './Invulnerability'
 const ICON_HASTY_TOUCH = 1989
 const ICON_MUSCLE_MEMORY = 1994
 
-export interface ProcBuffWindow {
+interface CurrentProcBuffWindow {
 	start: number,
-	stop: number, // All windows will eventually be closed with stopAndSave, either due to a remove event or EOF.  Force not-null to make reliable for consumers and initialize with stop = start
 	consumingEvents: Array<Events['action']>,
 	consumingInvulnEvents: Array<Events['action']>,
 	nonConsumingEvents: Array<Events['action']>,
@@ -28,11 +27,20 @@ export interface ProcBuffWindow {
 	overwriteEvent?: Event
 }
 
+export interface ProcBuffWindow extends CurrentProcBuffWindow {
+	stop: number,
+}
+
 export interface ProcGroup {
 	procStatus: Status,
 	consumeActions: Action[],
 	mayOverwrite?: boolean,
 }
+
+type WindowEndReason =
+	| 'removal'
+	| 'overwrite'
+	| 'endoffight'
 
 const DEFAULT_SEVERITY_TIERS = {
 	1: SEVERITY.MINOR,
@@ -241,12 +249,12 @@ export abstract class Procs extends Analyser {
 		if (this.downtime.isDowntime(window.stop)) { return false }
 
 		// Don't count procs that were dropped due to end of fight
-		if (window.stop === this.parser.pull.timestamp + this.parser.pull.duration) { return false }
+		if (window.stop >= this.parser.pull.timestamp + this.parser.pull.duration) { return false }
 
 		return true
 	}
 
-	protected currentWindows = new Map<ProcGroup, ProcBuffWindow>()
+	protected currentWindows = new Map<ProcGroup, CurrentProcBuffWindow>()
 	private history = new Map<ProcGroup, ProcBuffWindow[]>()
 	/**
 	 * Gets the array of buff windows for a specified status
@@ -370,12 +378,11 @@ export abstract class Procs extends Analyser {
 
 		if (this.currentWindows.has(procGroup)) {
 			// Close this window and open a fresh one so the timeline shows the re-applications correctly
-			this.stopAndSave(procGroup, event, true)
+			this.stopAndSave(procGroup, 'overwrite', event)
 		}
 
 		this.currentWindows.set(procGroup, {
 			start: event.timestamp,
-			stop: event.timestamp,
 			consumingEvents: [],
 			consumingInvulnEvents: [],
 			nonConsumingEvents: [],
@@ -388,7 +395,7 @@ export abstract class Procs extends Analyser {
 
 		if (procGroup == null) { return }
 
-		this.stopAndSave(procGroup, event, false)
+		this.stopAndSave(procGroup, 'removal', event)
 	}
 
 	/**
@@ -445,7 +452,7 @@ export abstract class Procs extends Analyser {
 
 			const fightStart = this.parser.pull.timestamp
 			// Finalise the buff if it was still active, shouldn't be counted as dropped or overwritten
-			this.stopAndSave(procGroup)
+			this.stopAndSave(procGroup, 'endoffight')
 
 			// Add buff windows to the timeline
 			if (this.showProcTimelineRow) {
@@ -506,16 +513,20 @@ export abstract class Procs extends Analyser {
 		this.addJobSpecificSuggestions()
 	}
 
-	private stopAndSave(procGroup: ProcGroup, event?: Event, isOverwrite?: boolean): void {
+	private stopAndSave(procGroup: ProcGroup, endReason: WindowEndReason, event?: Event): void {
 		const currentWindow = this.currentWindows.get(procGroup)
 		if (currentWindow == null) { return }
 
-		currentWindow.overwritten = isOverwrite ?? false
-		if (isOverwrite && event != null) {
+		currentWindow.overwritten = endReason === 'overwrite'
+		if (endReason === 'overwrite' && event != null) {
 			currentWindow.overwriteEvent = event
 		}
-		currentWindow.stop = event?.timestamp ?? this.parser.pull.timestamp + this.parser.pull.duration
-		this.history.get(procGroup)?.push(currentWindow)
+
+		const stop = event?.timestamp ?? this.parser.pull.timestamp + this.parser.pull.duration
+		this.history.get(procGroup)?.push({
+			...currentWindow,
+			stop,
+		})
 		this.currentWindows.delete(procGroup)
 	}
 
