@@ -15,7 +15,6 @@ import {CounterGauge, TimerGauge, Gauge as CoreGauge} from 'parser/core/modules/
 import {EnumGauge} from 'parser/core/modules/Gauge/EnumGauge'
 import {DEFAULT_ROW_HEIGHT, GAUGE_FADE} from 'parser/core/modules/ResourceGraphs/ResourceGraphs'
 import Suggestions, {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
-import {Timeline} from 'parser/core/modules/Timeline'
 import {UnableToAct} from 'parser/core/modules/UnableToAct'
 import React, {Fragment} from 'react'
 import {Message, Table, Button} from 'semantic-ui-react'
@@ -103,7 +102,6 @@ export class Gauge extends CoreGauge {
 	@dependency private suggestions!: Suggestions
 	@dependency private unableToAct!: UnableToAct
 	@dependency private castTime!: CastTime
-	@dependency private timeline!: Timeline
 
 	private gaugeErrors: BLMGaugeError[] = []
 	private droppedEnoTimestamps: number[] = []
@@ -677,7 +675,7 @@ export class Gauge extends CoreGauge {
 						Reaching Umbral Ice III and gaining 3 Umbral Hearts then swapping to the opposite element generates a <DataLink action="PARADOX"/> marker.<br/>
 						Using <DataLink action="MANAFONT" /> also generates a <DataLink action="PARADOX" /> marker.<br/>
 						Maintaining Enochian for 30 seconds or using <DataLink action="AMPLIFIER"/> generates a Polyglot charge, allowing
-						the casting of <DataLink action="XENOGLOSSY"/> or <DataLink action="FOUL"/>. You can have up to 2 Polyglot charges.<br/>
+						the casting of <DataLink action="XENOGLOSSY"/> or <DataLink action="FOUL"/>. You can have up to <Plural value={POLYGLOT_MAX_STACKS} one="# Polyglot charge" other="# Polyglot charges"/>.<br/>
 						This module displays when these gauge effects were overwritten.
 					</Trans>
 				</Message>

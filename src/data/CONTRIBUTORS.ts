@@ -114,6 +114,19 @@ const CONTRIBUTORS = ensureRecord<Contributor>()({
 			JOBS.WARRIOR,
 		],
 	},
+	CHRIS: {
+		name: 'Chris',
+		jobs: [
+			JOBS.PALADIN,
+		],
+	},
+	NICOLAS: {
+		name: 'Nicolas',
+		avatar: require('./avatar/nicolas.png'),
+		jobs: [
+			JOBS.WHITE_MAGE,
+		],
+	},
 })
 
 export default CONTRIBUTORS
@@ -123,9 +136,6 @@ export interface Role {
 }
 
 export const ROLES = ensureRecord<Role>()({
-	MAINTAINER: {
-		text: t('core.role.maintainer')`Maintainer`,
-	},
 	THEORYCRAFT: {
 		text: t('core.role.theorycraft')`Theorycraft`,
 	},

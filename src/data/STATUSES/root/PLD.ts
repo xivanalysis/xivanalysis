@@ -32,13 +32,6 @@ export const PLD = ensureStatuses({
 		icon: iconUrl(10151),
 		duration: 15000,
 	},
-	SWORD_OATH: {
-		id: 1902,
-		name: 'Sword Oath',
-		icon: iconUrl(19461),
-		duration: 30000,
-		stacksApplied: 3,
-	},
 	DIVINE_MIGHT: {
 		id: 2673,
 		name: 'Divine Might',
@@ -117,5 +110,47 @@ export const PLD = ensureStatuses({
 		name: 'Confiteor Ready',
 		icon: iconUrl(12520),
 		duration: 30000,
+	},
+	ATONEMENT_READY: {
+		id: 1902,
+		name: 'Atonement Ready',
+		icon: iconUrl(10207),
+		duration: 30000,
+	},
+	SUPPLICATION_READY: {
+		id: 3827,
+		name: 'Supplication Ready',
+		icon: iconUrl(12523),
+		duration: 30000,
+	},
+	SEPULCHRE_READY: {
+		id: 3828,
+		name: 'Sepulchre Ready',
+		icon: iconUrl(12524),
+		duration: 30000,
+	},
+	BLADE_OF_HONOR_READY: {
+		id: 3831,
+		name: 'Blade of Honor Ready',
+		icon: iconUrl(13052),
+		duration: 30000,
+	},
+	GORING_BLADE_READY: {
+		id: 3847,
+		name: 'Goring Blade Ready',
+		icon: iconUrl(13053),
+		duration: 30000,
+	},
+	GUARDIAN: {
+		id: 3829,
+		name: 'Guardian',
+		icon: iconUrl(13050),
+		duration: 15000,
+	},
+	GUARDIANS_WILL: {
+		id: 3830,
+		name: 'Guardian\'s Will',
+		icon: iconUrl(13051),
+		duration: 15000,
 	},
 })

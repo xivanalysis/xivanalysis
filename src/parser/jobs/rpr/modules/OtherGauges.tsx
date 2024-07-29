@@ -21,9 +21,11 @@ const SUGGESTION_TIERS = {
 
 const SHROUD_ACTIONS: ActionKey[] = [
 	'GIBBET',
+	'EXECUTIONERS_GIBBET',
 	'GALLOWS',
+	'EXECUTIONERS_GALLOWS',
 	'GUILLOTINE',
-	'PLENTIFUL_HARVEST',
+	'EXECUTIONERS_GUILLOTINE',
 	'ENSHROUD',
 ]
 
@@ -39,6 +41,7 @@ export class OtherGauges extends CoreGauge {
 	@dependency private actors!: Actors
 	@dependency private suggestions!: Suggestions
 
+	IsIdealHost = false
 	// Initialise our gauges - default max is 100 so yolo it is
 	private soulGauge = this.add(new CounterGauge({
 		graph: {
@@ -111,11 +114,7 @@ export class OtherGauges extends CoreGauge {
 
 		switch (action.id) {
 		case this.data.actions.ENSHROUD.id:
-			this.shroudGauge.spend(HIGH_SHROUD_MOD)
-			break
-
-		case this.data.actions.PLENTIFUL_HARVEST.id:
-			this.shroudGauge.generate(HIGH_SHROUD_MOD)
+			if (!this.actors.current.hasStatus(this.data.statuses.IDEAL_HOST.id)) { this.shroudGauge.spend(HIGH_SHROUD_MOD) }
 			break
 
 		default:

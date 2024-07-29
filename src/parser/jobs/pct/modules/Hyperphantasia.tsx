@@ -8,10 +8,12 @@ import {GlobalCooldown} from 'parser/core/modules/GlobalCooldown'
 import {SEVERITY} from 'parser/core/modules/Suggestions'
 import React from 'react'
 import {HYPERPHANTASIA_SPELLS} from './CommonData'
+import DISPLAY_ORDER from './DISPLAY_ORDER'
 
 export class Hyperphantasia extends BuffWindow {
 	static override handle = 'hyperphantasia'
 	static override title = t('pct.hyperphantasia.title')`Hyperphantasia Usage`
+	static override displayOrder = DISPLAY_ORDER.HYPERPHANTASIA
 
 	@dependency globalCooldown!: GlobalCooldown
 

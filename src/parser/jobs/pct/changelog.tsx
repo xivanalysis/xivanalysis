@@ -9,6 +9,11 @@ export const changelog = [
 	// 	contributors: [CONTRIBUTORS.YOU],
 	// },
 	{
+		date: new Date('2024-07-19'),
+		Changes: () => <>Add analysis for the contents of the <DataLink showIcon={false} action="STARRY_MUSE" /> buff windows.</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
+	{
 		date: new Date('2024-07-17'),
 		Changes: () => <>Update Weaving analysis to support the longer-than-normal cast times on Motifs and handle <DataLink showIcon={false} status="INSPIRATION" />'s cast time reduction.</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],

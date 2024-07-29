@@ -1,3 +1,4 @@
+import {Tincture} from 'parser/core/modules/Tincture'
 import {AoEUsages} from './AoEUsages'
 import {Combos} from './Combos'
 import {Defensives} from './Defensives'
@@ -16,4 +17,5 @@ export default [
 	OGCDDowntime,
 	Technicalities,
 	Gauge,
+	Tincture,
 ]

@@ -1,5 +1,6 @@
 import {ActionTimeline} from './ActionTimeline'
 import {AoE} from './AoE'
+import {Balls} from './Balls'
 import {Bookending} from './Bookending'
 import {Brotherhood} from './Brotherhood'
 import {CooldownDowntime} from './CooldownDowntime'
@@ -9,6 +10,7 @@ import {GreasedLightning} from './GreasedLightning'
 import {MasterfulBlitzStatistics} from './MasterfulBlitzStatistics'
 import {PerfectBalance} from './PerfectBalance'
 import {Positionals} from './Positionals'
+import {Replies} from './Replies'
 import {Revolution} from './Revolution'
 import {RiddleOfFire} from './RiddleOfFire'
 import {RiddleOfWind} from './RiddleOfWind'
@@ -18,6 +20,7 @@ export default [
 	ActionTimeline,
 	AoE,
 	Bookending,
+	Balls,
 	Brotherhood,
 	CooldownDowntime,
 	Revolution,
@@ -26,6 +29,7 @@ export default [
 	GreasedLightning,
 	MasterfulBlitzStatistics,
 	Positionals,
+	Replies,
 	RiddleOfFire,
 	RiddleOfWind,
 	PerfectBalance,

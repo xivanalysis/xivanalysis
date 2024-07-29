@@ -58,7 +58,7 @@ export class ReadyProcs extends CoreProcs {
 
 	override addJobSpecificSuggestions(): void {
 		this.checklist.add(new Rule({
-			name: 'Use Your Ogis',
+			name: <Trans id = "sam.readyprocs.ogi.checklist.name">Use Your Ogis </Trans>,
 			displayOrder: DISPLAY_ORDER.OGI,
 			description: <Trans id="sam.readyprocs.ogi.waste.content">
 				Using <DataLink action = "IKISHOTEN"/> grants <DataLink status = "OGI_NAMIKIRI_READY"/> which is consumed to use <DataLink action="OGI_NAMIKIRI"/> and <DataLink action="KAESHI_NAMIKIRI"/>.
@@ -76,7 +76,7 @@ export class ReadyProcs extends CoreProcs {
 		}))
 
 		this.checklist.add(new Rule({
-			name: 'Use Your Tendos',
+			name: <Trans id="sam.readyprocs.tendo.checklist.name">Use Your Tendos </Trans>,
 			displayOrder: DISPLAY_ORDER.OGI,
 			description: <Trans id="sam.readyprocs.tendo.waste.content">
 				Using <DataLink action = "MEIKYO_SHISUI"/> grants <DataLink status = "TENDO"/> which is consumed to use <DataLink action="TENDO_SETSUGEKKA"/> and its followup <DataLink action="TENDO_KAESHI_SETSUGEKKA"/> or <DataLink action="TENDO_GOKEN"/> and its followup <DataLink action="TENDO_KAESHI_GOKEN"/>.

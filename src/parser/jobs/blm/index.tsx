@@ -19,7 +19,7 @@ export const BLACK_MAGE = new Meta({
 
 	contributors: [
 		// {user: CONTRIBUTORS.YOU, role: ROLES.YOUR_ROLE},
-		{user: CONTRIBUTORS.AKAIRYU, role: ROLES.MAINTAINER},
+		{user: CONTRIBUTORS.AKAIRYU, role: ROLES.DEVELOPER},
 	],
 
 	changelog,
