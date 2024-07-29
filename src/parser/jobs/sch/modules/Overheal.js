@@ -6,7 +6,6 @@ import React from 'react'
 
 export default class Overheal extends CoreOverheal {
 	static handle = 'overheal'
-	static debug = true
 
 	checklistRuleBreakout = true
 	displayPieChart = true
