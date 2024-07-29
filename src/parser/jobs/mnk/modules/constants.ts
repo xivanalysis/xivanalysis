@@ -57,3 +57,9 @@ export const BLITZ_ACTIONS: ActionKey[] = [
 	'PHANTOM_RUSH',
 	'ELIXIR_BURST',
 ]
+
+export const FORMLESS_APPLYING_ACTIONS: ActionKey[] = [
+	...BLITZ_ACTIONS,
+	'FORM_SHIFT',
+	'FIRES_REPLY',
+]

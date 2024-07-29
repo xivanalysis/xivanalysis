@@ -81,7 +81,7 @@ export class BlitzEvaluator implements WindowEvaluator {
 			tiers: BLITZ_SEVERITY_TIERS,
 			value: missedBlitzes,
 			why: <Trans id="mnk.rof.suggestions.blitz.why">
-				<Plural value={missedBlitzes} one="# use of" other="# uses of"/> <DataLink action="MASTERFUL_BLITZ"/> <Plural value={missedBlitzes} one="was" other="were"/> missed during {badWindows.length} <DataLink action="RIDDLE_OF_FIRE"/> <Plural value={badWindows.length} one ="window" other="windows"/>
+				<Plural value={missedBlitzes} one="# use of" other="# uses of"/> <DataLink action="MASTERFUL_BLITZ"/> <Plural value={missedBlitzes} one="was" other="were"/> missed during {badWindows.length} <DataLink action="RIDDLE_OF_FIRE"/> <Plural value={badWindows.length} one ="window" other="windows"/>.
 			</Trans>,
 		})
 	}
