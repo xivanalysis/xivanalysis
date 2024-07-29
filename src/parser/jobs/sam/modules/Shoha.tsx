@@ -102,7 +102,7 @@ export class Shoha extends CoreGauge {
 			totalPossible = ShohaUses
 		}
 		this.checklist.add(new Rule({
-			name: 'Use Meditation Stacks',
+			name: <Trans id="sam.shoha.checklist.name">Use Meditation Stacks</Trans>,
 			displayOrder: DISPLAY_ORDER.SHOHA,
 			description: <Trans id="sam.shoha.waste.content">
 				Wasted meditation generation, ending the fight with stacks fully charged, or dying with stacks charged is a
