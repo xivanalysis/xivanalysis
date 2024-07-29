@@ -120,7 +120,7 @@ export class BurstWindow extends BuffGroupWindow {
 		this.addEventHook(buffFilter.type('statusRemove'), this.onRemoveMuse)
 		this.addEventHook(playerFilter.status(this.data.statuses.BARRAGE.id).type('statusRemove'), this.onRemoveBarrage)
 
-		const suggestionWindowName = <Trans id="brd.burst.suggestion.burstwindow">Burst Window</Trans>
+		const suggestionWindowName = <Trans id="brd.burst.suggestions.name">Burst</Trans>
 
 		this.addEvaluator(new RequiredGcdCountEvaluator({
 			requiredGcds: 7,
@@ -128,7 +128,7 @@ export class BurstWindow extends BuffGroupWindow {
 			globalCooldown: this.globalCooldown,
 			suggestionIcon: this.data.actions.RAGING_STRIKES.icon,
 			suggestionContent: <Trans id="brd.burst.suggestions.missedgcd.content">
-				Try to land 7 GCDs (8 GCDs with <DataLink status="ARMYS_MUSE"/>) during every {suggestionWindowName}.
+				Try to land 7 GCDs (8 GCDs with <DataLink status="ARMYS_MUSE"/>) during every {suggestionWindowName} window.
 			</Trans>,
 			suggestionWindowName,
 			severityTiers: {
@@ -153,7 +153,7 @@ export class BurstWindow extends BuffGroupWindow {
 			],
 			suggestionIcon: this.data.actions.BARRAGE.icon,
 			suggestionContent: <Trans id="brd.burst.suggestions.trackedactions.content">
-				One use of <DataLink action="BARRAGE"/> and one use of <DataLink action="IRON_JAWS"/> should occur during every {suggestionWindowName}.
+				One use of <DataLink action="BARRAGE"/> and one use of <DataLink action="IRON_JAWS"/> should occur during every {suggestionWindowName} window.
 			</Trans>,
 			suggestionWindowName,
 			severityTiers: {
@@ -180,7 +180,7 @@ export class BurstWindow extends BuffGroupWindow {
 			],
 			suggestionIcon: this.data.actions.BLAST_ARROW.icon,
 			suggestionContent: <Trans id="brd.burst.suggestions.aaba-evaluator.content">
-				One use of <DataLink action="APEX_ARROW"/> and <DataLink action="BLAST_ARROW"/> should occur during every {suggestionWindowName} after the opener. Make sure you have at least 80 Soul Voice Gauge for your buffs.
+				One use of <DataLink action="APEX_ARROW"/> and <DataLink action="BLAST_ARROW"/> should occur during every {suggestionWindowName} window after the opener. Make sure you have at least 80 Soul Voice Gauge for your buffs.
 			</Trans>,
 			suggestionWindowName,
 			severityTiers: {
@@ -203,7 +203,7 @@ export class BurstWindow extends BuffGroupWindow {
 			],
 			suggestionIcon: this.data.actions.RADIANT_ENCORE.icon,
 			suggestionContent: <Trans id="brd.burst.suggestions.prio-gcds-evaluator.content">
-				One use of <DataLink action="RADIANT_ENCORE"/> and <DataLink action="RESONANT_ARROW"/> should occur during every {suggestionWindowName}.
+				One use of <DataLink action="RADIANT_ENCORE"/> and <DataLink action="RESONANT_ARROW"/> should occur during every {suggestionWindowName} window.
 			</Trans>,
 			suggestionWindowName,
 			severityTiers: {
@@ -226,7 +226,7 @@ export class BurstWindow extends BuffGroupWindow {
 			],
 			suggestionIcon: this.data.actions.SIDEWINDER.icon,
 			suggestionContent: <Trans id="brd.burst.suggestions.prio-ogcds-evaluator.content">
-				One use of <DataLink action="SIDEWINDER"/> and at least one use of <DataLink action="EMPYREAL_ARROW"/> should occur during every {suggestionWindowName}.
+				One use of <DataLink action="SIDEWINDER"/> and at least one use of <DataLink action="EMPYREAL_ARROW"/> should occur during every {suggestionWindowName} window.
 			</Trans>,
 			suggestionWindowName,
 			severityTiers: {
@@ -243,7 +243,7 @@ export class BurstWindow extends BuffGroupWindow {
 			}],
 			suggestionIcon: this.data.actions.HEARTBREAK_SHOT.icon,
 			suggestionContent: <Trans id="brd.burst.suggestions.hbs-evaluator.content">
-				At least three uses of <DataLink action="HEARTBREAK_SHOT"/> or <DataLink action="RAIN_OF_DEATH"/> should occur during every {suggestionWindowName}. Make sure you pool your <DataLink action="HEARTBREAK_SHOT"/> or <DataLink action="RAIN_OF_DEATH"/> charges during <DataLink action="ARMYS_PAEON"/>.
+				At least three uses of <DataLink action="HEARTBREAK_SHOT"/> or <DataLink action="RAIN_OF_DEATH"/> should occur during every {suggestionWindowName} window. Make sure you pool your <DataLink action="HEARTBREAK_SHOT"/> or <DataLink action="RAIN_OF_DEATH"/> charges during <DataLink action="ARMYS_PAEON"/>.
 			</Trans>,
 			suggestionWindowName,
 			severityTiers: {
@@ -270,7 +270,7 @@ export class BurstWindow extends BuffGroupWindow {
 			content: <Trans id="brd.burst.suggestions.failed-overlaps.content">
 				Make sure your <DataLink action="RADIANT_FINALE"/>, <DataLink action="BATTLE_VOICE"/> and <DataLink action="RAGING_STRIKES"/> are properly aligned and overlapping. Buffs are multiplicative, and using them as close to each other as possible increases your damage output. Check the {this.moduleLink} module below for more detailed analysis.
 			</Trans>,
-			why: <Trans id="brd.burst.suggestions.failed-overlaps.why"><Plural value={failedOverlaps} one="# buff application" other="# buff aplications" />weren't properly aligned.</Trans>,
+			why: <Trans id="brd.burst.suggestions.failed-overlaps.why"><Plural value={failedOverlaps} one="# buff application wasn't" other="# buff aplications weren't" /> properly aligned.</Trans>,
 			severity,
 		})
 	}
