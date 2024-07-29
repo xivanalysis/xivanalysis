@@ -35,7 +35,6 @@ const firstEvent = timestamp - 500
 const pull: Pull = {
 	id: '1',
 	timestamp,
-	firstEvent,
 	duration: 1,
 	encounter: {
 		name: 'test encounter',
@@ -894,7 +893,7 @@ describe('Event adapter', () => {
 
 		Object.keys(fakeEvents).forEach(eventType => it(`adapts ${eventType}`, () => {
 			for (const event of fakeEvents[eventType as keyof typeof fakeEvents]) {
-				expect(adaptEvents(report, pull, [event])).toMatchSnapshot()
+				expect(adaptEvents(report, pull, [event], firstEvent)).toMatchSnapshot()
 			}
 		}))
 	})
@@ -918,7 +917,7 @@ describe('Event adapter', () => {
 				sourceID: 1,
 				ability: reassembleAbility,
 			} as CastEvent,
-		])
+		], firstEvent)
 
 		expect(result.map(event => event.type)).toEqual([
 			'action', // action first
@@ -938,7 +937,7 @@ describe('Event adapter', () => {
 
 			{...fakeEvents.begincast[0], ability: interruptedAbility, sourceID: 1, timestamp: 3} as CastEvent,
 			{...fakeEvents.begincast[0], ability: interruptingAbility, sourceID: 1, timestamp: interruptionTimestamp} as CastEvent,
-		])
+		], firstEvent)
 
 		expect(result.map(event => event.type)).toEqual([
 			'actorUpdate', // injected actor update with stats
@@ -964,7 +963,7 @@ describe('Event adapter', () => {
 		const result = adaptEvents(report, pull, [
 			fakeEvents.begincast[0],
 			fakeEvents.calculateddamage[0],
-		])
+		], firstEvent)
 		expect(result.map(event => event.type)).toEqual([
 			'action', // prepull synth
 			'prepare', // begincast
@@ -994,7 +993,7 @@ describe('Event adapter', () => {
 					abilityIcon: '012000-012848.png',
 				},
 			},
-		])
+		], firstEvent)
 		expect(result.map(event => event.type)).toEqual([
 			'action', // prepull synth
 			'prepare', // begincast
@@ -1008,7 +1007,7 @@ describe('Event adapter', () => {
 		const result = adaptEvents(report, pull, [
 			fakeEvents.begincast[0],
 			fakeEvents.removebuff[0],
-		])
+		], firstEvent)
 		expect(result.map(event => event.type)).toEqual([
 			'action', // prepull synth
 			'statusApply', // prepull synth
@@ -1037,7 +1036,7 @@ describe('Event adapter', () => {
 			targetIsFriendly: true,
 			ability: fakeAbility,
 			stack: statusData,
-		}])
+		}], firstEvent)
 
 		expect(result).toHaveLength(1)
 		expect(result[0].type).toBe('statusApply')
@@ -1073,7 +1072,7 @@ describe('Event adapter', () => {
 			targetIsFriendly: true,
 			ability: fakeAbility,
 			stack: 20,
-		}])
+		}], firstEvent)
 
 		expect(result).toHaveLength(2)
 		expect(result[0].type).toBe('statusApply')
@@ -1126,7 +1125,7 @@ describe('Event adapter', () => {
 				x: 150,
 				y: 50,
 			},
-		}])
+		}], firstEvent)
 
 		const updates = result.filter(event => true
 			&& event.type === 'actorUpdate'
@@ -1181,7 +1180,7 @@ describe('Event adapter', () => {
 			timestamp: 300,
 			skillSpeed: 100,
 			spellSpeed: 200,
-		}])
+		}], firstEvent)
 
 		/* eslint-disable @typescript-eslint/no-magic-numbers */
 		expect(result).toEqual([
@@ -1216,7 +1215,7 @@ describe('Event adapter', () => {
 		const result = adaptEvents(report, pull, [
 			fakeEvents.calculatedheal[0],
 			fakeEvents.heal[2],
-		])
+		], firstEvent)
 
 		const heal = result.filter((event): event is Events['heal'] => event.type === 'heal')
 		// eslint-disable-next-line @typescript-eslint/no-magic-numbers
@@ -1226,7 +1225,7 @@ describe('Event adapter', () => {
 	it('marks unmatched heal events as fully overheal', () => {
 		const result = adaptEvents(report, pull, [
 			fakeEvents.calculatedheal[0],
-		])
+		], firstEvent)
 
 		const heal = result.filter((event): event is Events['heal'] => event.type === 'heal')
 		// eslint-disable-next-line @typescript-eslint/no-magic-numbers
@@ -1256,7 +1255,7 @@ describe('Event adapter', () => {
 			},
 		]
 
-		const result = adaptEvents(report, pull, events)
+		const result = adaptEvents(report, pull, events, firstEvent)
 
 		expect(result.map(event => event.type))
 			.toEqual(expect.arrayContaining(['damage', 'execute']))

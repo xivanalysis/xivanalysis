@@ -48,7 +48,7 @@ export abstract class AdapterStep extends Debuggable {
 	 * Perform postprocessing on the final array of adapted events. This will be
 	 * called once after all report source events have been adapted.
 	 */
-	postprocess(adaptedEvents: Event[]): Event[] {
+	postprocess(adaptedEvents: Event[], _firstEvent: number): Event[] {
 		return adaptedEvents
 	}
 }
