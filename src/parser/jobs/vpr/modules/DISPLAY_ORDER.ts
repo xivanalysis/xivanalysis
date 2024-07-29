@@ -5,4 +5,5 @@ export default {
 	POSITIONALS: 4,
 	COOLDOWNS: 5,
 	SNILK: 6,
+	REAWAKEN: 7,
 }

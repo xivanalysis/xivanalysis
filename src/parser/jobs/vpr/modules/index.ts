@@ -5,6 +5,7 @@ import {NoxiousGnash} from './NoxiousGnash'
 import OGCDDowntime from './OGCDDowntime'
 import {Positionals} from './Positionals'
 import {RattlingCoil} from './RattlingCoil'
+import {Reawaken} from './Reawaken'
 import {SerpentsTail} from './SerpentsTail'
 import {Snaps} from './Snaps'
 import {snilk} from './snilk'
@@ -20,6 +21,7 @@ export default [
 	NoxiousGnash,
 	OGCDDowntime,
 	RattlingCoil,
+	Reawaken,
 	SerpentsTail,
 	snilk,
 	Swiftscaled,
