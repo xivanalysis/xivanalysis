@@ -5,6 +5,11 @@ import React from 'react'
 export const changelog = [
 	{
 		date: new Date('2024-07-29'),
+		Changes: () => <>Mark Monk as supported for patch 7.01</>,
+		contributors: [CONTRIBUTORS.HINT],
+	},
+	{
+		date: new Date('2024-07-29'),
 		Changes: () => <>Add checklist items and suggestions for maximizing Opo-opo GCDs</>,
 		contributors: [CONTRIBUTORS.HINT],
 	},
