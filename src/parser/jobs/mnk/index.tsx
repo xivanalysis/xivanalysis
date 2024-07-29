@@ -19,8 +19,8 @@ export const MONK = new Meta({
 	</>,
 
 	supportedPatches: {
-		from: '✖',
-		to: '✖',
+		from: '7.01',
+		to: '7.01',
 	},
 
 	contributors: [
