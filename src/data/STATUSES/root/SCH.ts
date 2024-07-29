@@ -113,6 +113,13 @@ export const SCH = ensureStatuses({
 		duration: 20000,
 	},
 
+	SERAPHISM_HOT: {
+		id: 3885,
+		name: 'Seraphism',
+		icon: iconUrl(12823),
+		duration: 20000,
+	},
+
 	// -----
 	// PET
 	// -----

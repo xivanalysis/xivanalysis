@@ -20,23 +20,25 @@ export default class Overheal extends CoreOverheal {
 			],
 		},
 		{
-			name: <Trans id="sch.overheal.pet.name">Fairy</Trans>,
-			color: SuggestedColors[2],
+			name: <Trans id="sch.overheal.fairy-and-hots.name">Fairy and HoTs</Trans>,
+			color: SuggestedColors[3],
 			trackedHealIds: [
 				ACTIONS.FEY_BLESSING.id,
 				ACTIONS.CONSOLATION.id,
-				ACTIONS.EMBRACE.id,
 				ACTIONS.SERAPHIC_VEIL.id,
-			],
-		},
-		{
-			name: <Trans id="sch.overheal.pethot.name">Fairy HoTs</Trans>,
-			color: SuggestedColors[3],
-			trackedHealIds: [
 				STATUSES.WHISPERING_DAWN.id,
 				STATUSES.ANGELS_WHISPER.id,
 				STATUSES.FEY_UNION.id,
 			],
+		},
+		{
+			name: 'Ignored Heals',
+			trackedHealIds: [
+				ACTIONS.EMBRACE.id,
+				ACTIONS.SCH_ENERGY_DRAIN,
+				STATUSES.SERAPHISM_HOT,
+			],
+			ignore: true,
 		},
 	]
 }
