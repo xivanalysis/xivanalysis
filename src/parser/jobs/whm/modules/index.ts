@@ -3,6 +3,7 @@ import {CastTime} from './CastTime'
 import {Defensives} from './Defensives'
 import {DivineCaress} from './DivineCaress'
 import {DoTs} from './DoTs'
+import {GlareFlare} from './GlareFlare'
 import {Interrupts} from './Interrupts'
 import {Lilies} from './Lilies'
 import {OGCDs as oGCDs} from './oGCDs'
@@ -17,6 +18,7 @@ export default [
 	Defensives,
 	DivineCaress,
 	DoTs,
+	GlareFlare,
 	Interrupts,
 	Lilies,
 	oGCDs,
