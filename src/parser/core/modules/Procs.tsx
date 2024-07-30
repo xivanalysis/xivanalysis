@@ -25,8 +25,6 @@ interface CurrentProcBuffWindow {
 	nonConsumingEvents: Array<Events['action']>,
 	overwritten: boolean,
 	overwriteEvent?: Event
-	dropped: boolean,
-	dropEvent?: Event
 }
 
 export interface ProcBuffWindow extends CurrentProcBuffWindow {
@@ -218,17 +216,6 @@ export abstract class Procs extends Analyser {
 	}
 
 	/**
-	 * Get an array of dropped events for a given proc status
-	 * @param status The status, as an ID number or ProcGroup object
-	 * @returns The array of dropped Events
-	 */
-	protected getDroppedProcsForStatus(status: number | ProcGroup): ProcBuffWindow[] {
-		const procGroup = this.getTrackedGroupByStatus(status)
-		if (procGroup == null) { return [] }
-		return this.getHistoryForStatus(status).filter(window => window.overwritten)
-	}
-
-	/**
 	 * Gets the number of times a proc was allowed to fall off
 	 * @param status The status, as an ID number or ProcGroup object
 	 * @returns The number of times the proc was dropped (removals - usages)
@@ -407,7 +394,6 @@ export abstract class Procs extends Analyser {
 			consumingInvulnEvents: [],
 			nonConsumingEvents: [],
 			overwritten: false,
-			dropped: false,
 		})
 	}
 
