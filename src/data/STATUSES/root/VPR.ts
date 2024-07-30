@@ -1,5 +1,6 @@
 import {iconUrl} from 'data/icon'
 import {ensureStatuses} from '../type'
+import {SHARED} from './SHARED'
 
 export const VPR = ensureStatuses({
 
@@ -9,6 +10,9 @@ export const VPR = ensureStatuses({
 		icon: iconUrl(13773),
 		duration: 20000,
 	},
+
+	HONED_STEEL: SHARED.UNKNOWN,
+	HONED_REAVERS: SHARED.UNKNOWN,
 
 	HUNTERS_INSTINCT: {
 		id: 3668,

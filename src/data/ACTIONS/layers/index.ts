@@ -7,4 +7,5 @@ export const layers: Array<Layer<ActionRoot>> = [
 	// Example layer:
 	// {patch: '5.05', data: {ATTACK: {id: 9001}}},
 	patch701,
+	patch705,
 ]

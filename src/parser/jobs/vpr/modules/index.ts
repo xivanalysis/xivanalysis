@@ -1,7 +1,6 @@
 import {ActionTimeline} from './ActionTimeline'
 import {AoeChecker} from './AoEChecker'
 import {Buffs} from './Buffs'
-import {NoxiousGnash} from './NoxiousGnash'
 import OGCDDowntime from './OGCDDowntime'
 import {Positionals} from './Positionals'
 import {RattlingCoil} from './RattlingCoil'
@@ -18,7 +17,6 @@ export default [
 	AoeChecker,
 	Buffs,
 	Positionals,
-	NoxiousGnash,
 	OGCDDowntime,
 	RattlingCoil,
 	Reawaken,

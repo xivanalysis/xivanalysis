@@ -7,11 +7,15 @@ import Checklist, {Requirement, Rule} from 'parser/core/modules/Checklist'
 import {Procs as CoreProcs} from 'parser/core/modules/Procs'
 import React from 'react'
 
+const FINISHER_PROCS_LOST_POTENCY = 100
+const OGCD_PROCS_LOST_POTENCY = 50
+const HONED_PROC_LOST_POTENCY = 100 // Aoes are only 20 potency... do I account for them?
 export class Venoms extends CoreProcs {
 
 	@dependency private checklist!: Checklist
 	override trackedProcs = [
 		//GCD Procs
+
 		{
 			procStatus: this.data.statuses.HINDSBANE_VENOM,
 			consumeActions: [this.data.actions.HINDSBANE_FANG],

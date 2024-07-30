@@ -1,6 +1,7 @@
 import {iconUrl} from 'data/icon'
 import {Attribute} from 'event'
 import {ensureActions, BonusModifier} from '../type'
+import {SHARED} from './SHARED'
 
 //Viper Actions
 
@@ -157,6 +158,8 @@ export const VPR = ensureActions({
 		statusesApplied: ['NOXIOUS_GNASH'],
 	},
 
+	REAVING_FANGS: SHARED.UNKNOWN,
+
 	SWIFTSKINS_STING: {
 		id: 34609,
 		name: "Swiftskin's Sting",
@@ -302,6 +305,8 @@ export const VPR = ensureActions({
 		cooldownGroup: 15,
 	},
 
+	VICEWINDER: SHARED.UNKNOWN,
+
 	HUNTERS_COIL: {
 		id: 34621,
 		name: "Hunter's Coil",
@@ -402,6 +407,8 @@ export const VPR = ensureActions({
 		statusesApplied: ['NOXIOUS_GNASH'],
 	},
 
+	REAVING_MAW: SHARED.UNKNOWN,
+
 	SWIFTSKINS_BITE: {
 		id: 34617,
 		name: "Swiftskin's Bite",
@@ -447,6 +454,8 @@ export const VPR = ensureActions({
 		statusesApplied: ['NOXIOUS_GNASH'],
 		cooldownGroup: 15,
 	},
+
+	VICEPIT: SHARED.UNKNOWN,
 
 	HUNTERS_DEN: {
 		id: 34624,
