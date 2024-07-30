@@ -10,7 +10,6 @@ import DISPLAY_ORDER from './DISPLAY_ORDER'
 
 export class Venoms extends CoreProcs {
 	static override handle = 'venoms'
-	static override displayOrder = DISPLAY_ORDER.VENOM_PROCS
 
 	@dependency private checklist!: Checklist
 	override trackedProcs = [
@@ -72,6 +71,7 @@ export class Venoms extends CoreProcs {
 			description: <Trans id="vpr.venom.checklist.content">
 				Viper generates venom buffs that increase the damage of certain actions. Make sure to use these actions while the buffs are active. Going out of order will cause the buff to drop.
 			</Trans>,
+			displayOrder: DISPLAY_ORDER.VENOM_PROCS,
 			requirements: ProcsToJudge.map(proc => this.VenomChecklistRequirement(proc.procStatus)),
 		}))
 

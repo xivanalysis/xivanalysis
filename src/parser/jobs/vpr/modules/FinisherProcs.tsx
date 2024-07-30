@@ -71,6 +71,7 @@ export class FinisherProcs extends CoreProcs {
 			description: <Trans id="vpr.finisherprocs.checklist.content">
 				Viper generates venom buffs that increase the damage of certain actions. Make sure to use these actions while the buffs are active. Going out of order will cause the buff to drop.
 			</Trans>,
+			displayOrder: DISPLAY_ORDER.FINISHER_PROCS,
 			requirements: ProcsToJudge.map(proc => this.ChecklistRequirementMaker(proc.procStatus)),
 		}))
 

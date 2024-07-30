@@ -23,7 +23,6 @@ const SEVERITIES = {
 const HONED_PROC_LOST_POTENCY = 100 // Aoes are only 20 potency... do I account for them?
 export class HonedProcs extends CoreProcs {
 	static override handle = 'honedprocs'
-	static override displayOrder = DISPLAY_ORDER.HONED_PROCS
 
 	@dependency private checklist!: Checklist
 	override trackedProcs = [
@@ -52,6 +51,7 @@ export class HonedProcs extends CoreProcs {
 			description: <Trans id="vpr.honedprocs.checklist.content">
 				Viper generates venom buffs that increase the damage of certain actions. Make sure to use these actions while the buffs are active. Going out of order will cause the buff to drop.
 			</Trans>,
+			displayOrder: DISPLAY_ORDER.HONED_PROCS,
 			requirements: this.trackedProcs.map(proc => this.ChecklistRequirementMaker(proc.procStatus)),
 		}))
 

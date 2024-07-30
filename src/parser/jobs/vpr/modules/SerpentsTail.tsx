@@ -78,7 +78,7 @@ export class SerpentsTail extends Analyser {
 	private onComplete() {
 		this.checklist.add(new Rule({
 			name: <Trans id = "VPR.serpentstail.waste.name"> Use your <DataLink action="SERPENTS_TAIL"/> follow-ups </Trans>,
-			displayOrder: DISPLAY_ORDER.SEPRENTSTAIL,
+			displayOrder: DISPLAY_ORDER.SEPRENTS_TAIL,
 			target: PERFECTIO,
 			description: <Trans id="vpr.serpentstail.waste.content">
 				Using <DataLink action = "HINDSBANE_FANG"/>, <DataLink action="HINDSTING_STRIKE"/>, <DataLink action="FLANKSBANE_FANG"/> or <DataLink action="FLANKSTING_STRIKE"/> grant <DataLink action="DEATH_RATTLE"/>.
