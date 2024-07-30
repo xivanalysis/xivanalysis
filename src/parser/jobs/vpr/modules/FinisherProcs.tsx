@@ -20,7 +20,7 @@ const SEVERITIES = {
 	},
 }
 const FINISHER_PROC_LOST_POTENCY = 100
-export class HonedProcs extends CoreProcs {
+export class FinisherProcs extends CoreProcs {
 
 	@dependency private checklist!: Checklist
 	override trackedProcs = [

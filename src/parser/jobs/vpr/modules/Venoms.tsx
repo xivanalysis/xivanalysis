@@ -7,7 +7,6 @@ import Checklist, {Requirement, Rule} from 'parser/core/modules/Checklist'
 import {Procs as CoreProcs} from 'parser/core/modules/Procs'
 import React from 'react'
 
-const OGCD_PROCS_LOST_POTENCY = 50
 export class Venoms extends CoreProcs {
 
 	@dependency private checklist!: Checklist

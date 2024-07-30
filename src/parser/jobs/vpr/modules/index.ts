@@ -1,6 +1,8 @@
 import {ActionTimeline} from './ActionTimeline'
 import {AoeChecker} from './AoEChecker'
 import {Buffs} from './Buffs'
+import {FinisherProcs} from './FinisherProcs'
+import {HonedProcs} from './HonedProcs'
 import OGCDDowntime from './OGCDDowntime'
 import {Positionals} from './Positionals'
 import {RattlingCoil} from './RattlingCoil'
@@ -16,6 +18,8 @@ export default [
 	ActionTimeline,
 	AoeChecker,
 	Buffs,
+	FinisherProcs,
+	HonedProcs,
 	Positionals,
 	OGCDDowntime,
 	RattlingCoil,
