@@ -7,39 +7,12 @@ import Checklist, {Requirement, Rule} from 'parser/core/modules/Checklist'
 import {Procs as CoreProcs} from 'parser/core/modules/Procs'
 import React from 'react'
 
-const FINISHER_PROCS_LOST_POTENCY = 100
 const OGCD_PROCS_LOST_POTENCY = 50
-const HONED_PROC_LOST_POTENCY = 100 // Aoes are only 20 potency... do I account for them?
 export class Venoms extends CoreProcs {
 
 	@dependency private checklist!: Checklist
 	override trackedProcs = [
-		//GCD Procs
 
-		{
-			procStatus: this.data.statuses.HINDSBANE_VENOM,
-			consumeActions: [this.data.actions.HINDSBANE_FANG],
-		},
-		{
-			procStatus: this.data.statuses.HINDSTUNG_VENOM,
-			consumeActions: [this.data.actions.HINDSTING_STRIKE],
-		},
-		{
-			procStatus: this.data.statuses.FLANKSBANE_VENOM,
-			consumeActions: [this.data.actions.FLANKSBANE_FANG],
-		},
-		{
-			procStatus: this.data.statuses.GRIMHUNTERS_VENOM,
-			consumeActions: [this.data.actions.JAGGED_MAW],
-		},
-		{
-			procStatus: this.data.statuses.FLANKSTUNG_VENOM,
-			consumeActions: [this.data.actions.FLANKSTING_STRIKE],
-		},
-		{
-			procStatus: this.data.statuses.GRIMSKINS_VENOM,
-			consumeActions: [this.data.actions.BLOODIED_MAW],
-		},
 		//OGCD Procs
 		{
 			procStatus: this.data.statuses.POISED_FOR_TWINBLOOD,
@@ -68,14 +41,14 @@ export class Venoms extends CoreProcs {
 	]
 
 	override showDroppedProcSuggestion = true
-	override droppedProcIcon = this.data.actions.HINDSBANE_FANG.icon
+	override droppedProcIcon = this.data.actions.TWINBLOOD.icon
 	override droppedProcContent =
 		<Trans id="vpr.venoms.suggestions.drops.content">
 			Avoid dropping your venom buffs unless absolutely unavoidable. Use your <DataLink action="TWINBLOOD"/> and <DataLink action="TWINFANG"/> actions in the proper order to avoid losing procs.
 		</Trans>
 
 	override showOverwroteProcSuggestion = true
-	override overwroteProcIcon = this.data.actions.FLANKSTING_STRIKE.icon
+	override overwroteProcIcon = this.data.actions.TWINFANG.icon
 	override overwroteProcContent =
 		<Trans id="vpr.venoms.suggestions.overwrite.content">
 			Avoid overwriting your procs.

@@ -70,7 +70,7 @@ export class HonedProcs extends CoreProcs {
 			</Trans>,
 			tiers: SEVERITIES.OVERWRITTEN,
 			value: OverwroteHoneds,
-			why: <Trans id="vpr.honedprocs.suggestions.drops.why"> {OverwroteHoneds * HONED_PROC_LOST_POTENCY} potency lost to overwrote procs.</Trans>,
+			why: <Trans id="vpr.honedprocs.suggestions.overwrites.why"> {OverwroteHoneds * HONED_PROC_LOST_POTENCY} potency lost to overwrote procs.</Trans>,
 		})
 		)
 	}
