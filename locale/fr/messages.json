@@ -1160,6 +1160,7 @@
   "whm.overheal.hot.name": "Soins sur la durée",
   "whm.overheal.liturgyofthebell.name": "Tintinnabule",
   "whm.procs.suggestions.dropped-divine-caress.content": "Essayez d'utiliser Caresse Divine lorsque vous avez lancé Tempérance. Cela permet de lancer une régénération sur la durée et une barrière sur votre groupe !",
+  "whm.procs.suggestions.dropped-glare-iv.content": "",
   "whm.swiftcast.missed.suggestion.content": "Lancez un sort avec <0/> avant qu'il n'expire. Cela vous permet d'utiliser un sort instantanément, comme <1/> pour une résurrection rapide ou <2/> pour weave.",
   "whm.thinair.messages.explanation": "L'utilisation principale de <0/> devrait être d'économiser des PM sur des sorts ayant un coût élevé. N'ayez pas peur de garder une charge et d'en perdre une sur la durée du combat, du moment qu'elle sont utilisées pour des sorts chers en PM comme <1/>, <2/> et <3/>.\nLes utilisations qui n'ont pas économisé un grand nombre de PM sont marquées en rouge.",
   "whm.thinair.messages.no-casts": "Aucune utilisation de <0/> enregistrée",

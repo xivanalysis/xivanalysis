@@ -12,4 +12,9 @@ export const changelog = [
 		Changes: () => <>Updated Tinctures section (Glare IV + Multiple Dia)</>,
 		contributors: [CONTRIBUTORS.NICOLAS],
 	},
+	{
+		date: new Date('2024-07-30'),
+		Changes: () => <>Added tracking for unused Glare IV procs</>,
+		contributors: [CONTRIBUTORS.INNI],
+	},
 ]
