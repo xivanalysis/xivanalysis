@@ -830,6 +830,8 @@
   "rdm.grandimpact.suggestions.dropped.content": "Essayez d'utiliser <0/> avant qu'il expire. <1/> donne 3 Mana Blancs et 3 Mana Noirs et est l'un de vos GCD les plus puissants en dehors des derniers sorts de votre combo.",
   "rdm.grandimpact.suggestions.dropped.why": "<0/> a expiré {0} fois",
   "rdm.interrupts.suggestion.content": "Évitez d'interrompre les lancers en vous plaçant à l'avance ou en utilisant le slidecasting lorsque c'est possible. Si vous devez vous déplacer, essayez d'économiser une utilisation de <0/>, <1/>, ou de pool mana pour un combo de mêlée ou si aucun de ces éléments n'est disponible, utilisez <2/>.",
+  "rdm.magickedswordplay.suggestions.dropped.why": "",
+  "rdm.magickedswordplay.suggestions.missed.content": "",
   "rdm.manaStackGauge.black-mana-lost-to-overcap": "Noir",
   "rdm.manaStackGauge.resource.manaStacks": "Cristaux de mana",
   "rdm.manaStackGauge.suggestions.manaStack-loss-content": "Assurez-vous de ne pas utiliser un GCD non-enchanté quand vous avez des Cristaux de mana, sinon vous les perdez tous",
@@ -855,7 +857,6 @@
   "rdm.meleecombos.table.header.starting-procs": "Procs de départ",
   "rdm.meleecombos.table.header.time": "Temps",
   "rdm.meleecombos.title": "Combos mélée",
-  "rdm.ms.suggestions.missedgcd.content": "Essayez de lancer un Combo Magilame complet, monocible ou multicible, pendant chaque fenêtre de <0/>.",
   "rdm.ms.title": "Fenêtre de Combo Magilame préparé",
   "rdm.prefulgence.suggestions.dropped.content": "Essayez d'utiliser <0/> avant qu'il n'expire, car <1/> est votre action la puissante.",
   "rdm.prefulgence.suggestions.dropped.why": "<0/> a expiré {0} fois",
@@ -1163,5 +1164,6 @@
   "whm.thinair.messages.explanation": "L'utilisation principale de <0/> devrait être d'économiser des PM sur des sorts ayant un coût élevé. N'ayez pas peur de garder une charge et d'en perdre une sur la durée du combat, du moment qu'elle sont utilisées pour des sorts chers en PM comme <1/>, <2/> et <3/>.\nLes utilisations qui n'ont pas économisé un grand nombre de PM sont marquées en rouge.",
   "whm.thinair.messages.no-casts": "Aucune utilisation de <0/> enregistrée",
   "whm.thinair.title": "Sponte",
-  "whm.tincture.suggestions.trackedActions.content": "Essayez de faire autant de dégâts que possible avec vos potions d'esprit."
+  "whm.tincture.suggestions.trackedActions.content": "Essayez de faire autant de dégâts que possible avec vos potions d'esprit.",
+  "{0, plural, one {# stack} other {# stacks}}": ""
 }

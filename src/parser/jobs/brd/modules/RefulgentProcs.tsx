@@ -29,7 +29,7 @@ export class RefulgentProcs extends Procs {
 	</Trans>
 
 	override output() {
-		const allOverwrites = this.getOverwritesForStatus(this.data.statuses.HAWKS_EYE.id).sort((a, b) => a.timestamp - b.timestamp)
+		const allOverwrites = this.getOverwrittenProcsForStatus(this.data.statuses.HAWKS_EYE.id).sort((a, b) => a.stop - b.stop)
 		if (allOverwrites.length === 0) { return }
 
 		return <Fragment>
@@ -48,11 +48,11 @@ export class RefulgentProcs extends Procs {
 				</Table.Header>
 				<Table.Body>
 					{allOverwrites.map(item => {
-						return <Table.Row key={item.timestamp}>
-							<Table.Cell>{this.parser.formatEpochTimestamp(item.timestamp)}</Table.Cell>
+						return <Table.Row key={item.stop}>
+							<Table.Cell>{this.parser.formatEpochTimestamp(item.stop)}</Table.Cell>
 							<Table.Cell>
 								<Button onClick={() =>
-									this.timeline.show(item.timestamp - this.parser.pull.timestamp, item.timestamp - this.parser.pull.timestamp)}>
+									this.timeline.show(item.stop - this.parser.pull.timestamp, item.stop - this.parser.pull.timestamp)}>
 									<Trans id="brd.procs.refulgentproc.timelinelink-button">Jump to Timeline</Trans>
 								</Button>
 							</Table.Cell>

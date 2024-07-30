@@ -1,88 +1,39 @@
 import {t, Trans} from '@lingui/macro'
-import {StatusLink} from 'components/ui/DbLink'
-import {ActionKey} from 'data/ACTIONS'
-import {dependency} from 'parser/core/Injectable'
-import {BuffWindow, EvaluatedAction, ExpectedGcdCountEvaluator} from 'parser/core/modules/ActionWindow'
-import {HistoryEntry} from 'parser/core/modules/ActionWindow/History'
-import {EndOfWindowHandlingMode} from 'parser/core/modules/ActionWindow/windows/BuffWindow'
-import {GlobalCooldown} from 'parser/core/modules/GlobalCooldown'
-import {SEVERITY} from 'parser/core/modules/Suggestions'
+import {Plural} from '@lingui/react'
+import {DataLink} from 'components/ui/DbLink'
+import {Procs} from 'parser/core/modules/Procs'
 import {DISPLAY_ORDER} from 'parser/jobs/rdm/modules/DISPLAY_ORDER'
 import React from 'react'
 
-const ONLY_SHOW: ActionKey[] = [
-	'ENCHANTED_RIPOSTE',
-	'ENCHANTED_ZWERCHHAU',
-	'ENCHANTED_REDOUBLEMENT',
-	'ENCHANTED_MOULINET',
-	'ENCHANTED_MOULINET_DEUX',
-	'ENCHANTED_MOULINET_TROIS',
-	'ENCHANTED_REPRISE',
-	'JOLT_III',
-	'VERTHUNDER_III',
-	'VERAERO_III',
-	'VERSTONE',
-	'VERFIRE',
-	'IMPACT',
-	'VERCURE',
-	'VERRAISE',
-	'VERFLARE',
-	'VERHOLY',
-	'SCORCH',
-	'RESOLUTION',
-	'GRAND_IMPACT',
-]
+// Test log: unused MagickedSwordplay stacks - https://www.fflogs.com/reports/y9bc6qpf4KgVnvTX
 
-const MAGICK_GCDS = 3
-
-export class MagickedSwordplay extends BuffWindow {
+export class MagickedSwordplay extends Procs {
 	static override displayOrder = DISPLAY_ORDER.MAGICKED_SWORDPLAY
 	static override handle = 'MagickedSwordplay'
 	static override title = t('rdm.ms.title')`Magicked Swordplay Windows`
 
-	@dependency globalCooldown!: GlobalCooldown
+	override trackedProcs = [
+		{
+			procStatus: this.data.statuses.MAGICKED_SWORDPLAY,
+			consumeActions: [
+				this.data.actions.ENCHANTED_RIPOSTE,
+				this.data.actions.ENCHANTED_ZWERCHHAU,
+				this.data.actions.ENCHANTED_REDOUBLEMENT,
+				this.data.actions.ENCHANTED_MOULINET,
+				this.data.actions.ENCHANTED_MOULINET_DEUX,
+				this.data.actions.ENCHANTED_MOULINET_TROIS,
+			],
+		},
+	]
 
-	override buffStatus = this.data.statuses.MAGICKED_SWORDPLAY
-	override endOfWindowHandlingMode: EndOfWindowHandlingMode = 'SAME-TIMESTAMP'
-
-	override initialise() {
-		super.initialise()
-
-		this.trackOnlyActions(ONLY_SHOW.map(k => this.data.actions[k].id))
-
-		const suggestionIcon = this.data.statuses.MAGICKED_SWORDPLAY.icon
-		const suggestionWindowName = <StatusLink status="MAGICKED_SWORDPLAY" showIcon={false}/>
-		this.addEvaluator(
-			new ExpectedGcdCountEvaluator({
-				expectedGcds: MAGICK_GCDS,
-				globalCooldown: this.globalCooldown,
-				hasStacks: true,
-				suggestionIcon,
-				suggestionContent: <Trans id="rdm.ms.suggestions.missedgcd.content">
-					Try to land a full Enchanted Single Target or Enchanted AE combo during every <StatusLink status="MAGICKED_SWORDPLAY" /> window.
-				</Trans>,
-				suggestionWindowName,
-				severityTiers: {
-					1: SEVERITY.MAJOR,
-				},
-				adjustCount: this.adjustExpectedGcdCount.bind(this),
-			}))
+	override showDroppedProcSuggestion = true
+	override droppedProcIcon = this.data.actions.ENCHANTED_ZWERCHHAU.icon
+	override droppedProcContent = <Trans id="rdm.magickedswordplay.suggestions.missed.content">
+		Try to use all three stacks of <DataLink status="MAGICKED_SWORDPLAY" /> by using a full enchanted sword combo whenever you use <DataLink action="MANAFICATION" />
+	</Trans>
+	override overrideDroppedProcsWhy() {
+		this.droppedProcWhy = <Trans id="rdm.magickedswordplay.suggestions.dropped.why">You dropped <Plural value={this.droppedProcs} one="# stack" other="# stacks" /> of <DataLink status="MAGICKED_SWORDPLAY" showIcon={false} showTooltip={false} />.</Trans>
 	}
 
-	private adjustExpectedGcdCount(window: HistoryEntry<EvaluatedAction[]>) {
-		if (this.isRushedEndOfPullWindow(window)) {
-			const defaultEoFValue = Math.ceil(((window.end ?? window.start) - window.start) / this.globalCooldown.getDuration())
-
-			// This is using floor instead of ceiling to grant some forgiveness to first weave slot casts at the cost of 2nd weaves might be too forgiven
-			const fightTimeRemaining = (this.parser.pull.timestamp + this.parser.pull.duration) - window.start
-			const possibleGCDs = Math.floor(fightTimeRemaining / this.globalCooldown.getDuration())
-
-			//No magic will give you 2 GCDs for the price of 1
-			if (possibleGCDs < MAGICK_GCDS) {
-				return possibleGCDs - defaultEoFValue
-			}
-		}
-
-		return 0
-	}
+	override showInvulnProcSuggestion = true
 }

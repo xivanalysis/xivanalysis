@@ -830,6 +830,8 @@
   "rdm.grandimpact.suggestions.dropped.content": "",
   "rdm.grandimpact.suggestions.dropped.why": "{0, plural, other {# 回}}の<0/>が時間切れになりました。",
   "rdm.interrupts.suggestion.content": "できる限り事前の位置取りやすべり撃ちを活用して詠唱中断を避けましょう。もし移動する必要がある場合は <0/>, <1/> を温存しておくか、近接コンボのためのマナを貯めておくか、それが無理な場合は<2/> を使いましょう。",
+  "rdm.magickedswordplay.suggestions.dropped.why": "",
+  "rdm.magickedswordplay.suggestions.missed.content": "",
   "rdm.manaStackGauge.black-mana-lost-to-overcap": "黒",
   "rdm.manaStackGauge.resource.manaStacks": "マナスタック",
   "rdm.manaStackGauge.suggestions.manaStack-loss-content": "マナスタックがある場合は、エンチャントされていない GCD を使用しないようにしてください。そうしないと、マナスタックがすべて失われます。",
@@ -855,7 +857,6 @@
   "rdm.meleecombos.table.header.starting-procs": "開始時のプロック",
   "rdm.meleecombos.table.header.time": "タイム",
   "rdm.meleecombos.title": "メレーコンボ",
-  "rdm.ms.suggestions.missedgcd.content": "",
   "rdm.ms.title": "",
   "rdm.prefulgence.suggestions.dropped.content": "",
   "rdm.prefulgence.suggestions.dropped.why": "{0, plural, other {# 回}}の<0/>が時間切れになりました。",
@@ -1163,5 +1164,6 @@
   "whm.thinair.messages.explanation": "<0/> の主な用途は、MP コストの高い呪文で MP を節約することです。<1/>、<2/>、<3/>のようなMPを多く消費する呪文をカバーするためであれば、戦闘中の使用で保持できず失うことを恐れてはいけません。 MP を大幅に節約できなかった使用法は赤色で表示されます。",
   "whm.thinair.messages.no-casts": "<0/> の際に何もキャストされませんでした。",
   "whm.thinair.title": "シンエアー",
-  "whm.tincture.suggestions.trackedActions.content": "できるだけ心力の幻薬でダメージを稼ぎましょう。"
+  "whm.tincture.suggestions.trackedActions.content": "できるだけ心力の幻薬でダメージを稼ぎましょう。",
+  "{0, plural, one {# stack} other {# stacks}}": ""
 }

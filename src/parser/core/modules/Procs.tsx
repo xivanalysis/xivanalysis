@@ -18,33 +18,36 @@ import {Invulnerability} from './Invulnerability'
 const ICON_HASTY_TOUCH = 1989
 const ICON_MUSCLE_MEMORY = 1994
 
-export interface ProcBuffWindow {
+interface CurrentProcBuffWindow {
 	start: number,
-	stop?: number
+	consumingEvents: Array<Events['action']>,
+	consumingInvulnEvents: Array<Events['action']>,
+	nonConsumingEvents: Array<Events['action']>,
+	overwritten: boolean,
+	overwriteEvent?: Event
+}
+
+export interface ProcBuffWindow extends CurrentProcBuffWindow {
+	stop: number,
 }
 
 export interface ProcGroup {
 	procStatus: Status,
 	consumeActions: Action[],
 	mayOverwrite?: boolean,
-	procsBecomeInstant?: boolean,
 }
 
-export interface ProcGroupEvents {
-	timestamps: number[],
-	events: Event[]
-}
-
-type ProcStatusEventType =
-	| 'overwrite'
+type WindowEndReason =
 	| 'removal'
-	| 'usage'
+	| 'overwrite'
+	| 'endoffight'
 
 const DEFAULT_SEVERITY_TIERS = {
 	1: SEVERITY.MINOR,
 	2: SEVERITY.MEDIUM,
 	3: SEVERITY.MAJOR,
 }
+
 export abstract class Procs extends Analyser {
 	static override handle = 'procs'
 	static override title = t('core.procs.title')`Procs`
@@ -98,16 +101,27 @@ export abstract class Procs extends Analyser {
 	protected overwroteProcWhy!: ReactNode
 	protected invulnProcWhy!: ReactNode
 
-	private usages = new Map<ProcGroup, ProcGroupEvents>()
+	/**
+	 * Get the total number of stacks of the proc applied
+	 * @param status The status, as an ID number or ProcGroup object
+	 * @returns The total number of stacks of the proc applied during the fight
+	 */
+	protected getAppliedCountForStatus(status: number | ProcGroup): number {
+		const procGroup = this.getTrackedGroupByStatus(status)
+		if (procGroup == null) { return 0 }
+		const stacksPerWindow = procGroup.procStatus.stacksApplied ?? 1
+		return this.getHistoryForStatus(status).length * stacksPerWindow
+	}
+
 	/**
 	 * Get an array of usage events for a given proc status
 	 * @param status The status, as an ID number or ProcGroup object
 	 * @returns The array of usage Events
 	 */
-	protected getUsagesForStatus(status: number | ProcGroup): Event[] {
+	protected getUsagesForStatus(status: number | ProcGroup): Array<Events['action']> {
 		const procGroup = this.getTrackedGroupByStatus(status)
 		if (procGroup == null) { return [] }
-		return this.usages.get(procGroup)?.events || []
+		return this.getHistoryForStatus(status).reduce((usageEvents, window) => usageEvents.concat(window.consumingEvents), [] as Array<Events['action']>)
 	}
 	/**
 	 * Get the number of times a proc was used
@@ -117,8 +131,9 @@ export abstract class Procs extends Analyser {
 	protected getUsageCountForStatus(status: number | ProcGroup): number {
 		const procGroup = this.getTrackedGroupByStatus(status)
 		if (procGroup == null) { return 0 }
-		return this.usages.get(procGroup)?.events.length || 0
+		return this.getUsagesForStatus(status).length
 	}
+
 	/**
 	 * Checks to see if the specified event was a proc usage
 	 * @param event The event to check
@@ -143,16 +158,15 @@ export abstract class Procs extends Analyser {
 		return wasProc
 	}
 
-	private overwrites = new Map<ProcGroup, ProcGroupEvents>()
 	/**
 	 * Get an array of overwrite events for a given proc status
 	 * @param status The status, as an ID number or ProcGroup object
 	 * @returns The array of overwrite Events
 	 */
-	protected getOverwritesForStatus(status: number | ProcGroup): Event[] {
+	protected getOverwrittenProcsForStatus(status: number | ProcGroup): ProcBuffWindow[] {
 		const procGroup = this.getTrackedGroupByStatus(status)
 		if (procGroup == null) { return [] }
-		return this.overwrites.get(procGroup)?.events || []
+		return this.getHistoryForStatus(status).filter(window => window.overwritten)
 	}
 	/**
 	 * Get the number of times a proc was overwritten
@@ -162,41 +176,33 @@ export abstract class Procs extends Analyser {
 	protected getOverwriteCountForStatus(status: number | ProcGroup): number {
 		const procGroup = this.getTrackedGroupByStatus(status)
 		if (procGroup == null) { return 0 }
-		return this.overwrites.get(procGroup)?.events.length || 0
+		const stacksPerWindow = procGroup.procStatus.stacksApplied ?? 1
+		return this.getOverwrittenProcsForStatus(status).reduce((overwritten, window) => {
+			if (this.considerOverwrittenProcs(window)) {
+				overwritten += Math.max(0, stacksPerWindow - window.consumingEvents.length)
+			}
+			return overwritten
+		}, 0)
 	}
 
-	private removals = new Map<ProcGroup, ProcGroupEvents>()
 	/**
-	 * Get an array of removal events for a given proc status
-	 * @param status The status, as an ID number or ProcGroup object
-	 * @returns The array of removal Events
+	 * If some overwrites should not be considered as bad, override this with logic to return false for overrides that are not considered bad.
+	 * @param window The window that was overwritten
+	 * @returns True if the overwrite should count as bad, False if the overwrite should not be counted
 	 */
-	protected getRemovalsForStatus(status: number | ProcGroup): Event[] {
-		const procGroup = this.getTrackedGroupByStatus(status)
-		if (procGroup == null) { return [] }
-		return this.removals.get(procGroup)?.events || []
-	}
-	/**
-	 * Get the number of times a proc was removed
-	 * @param status The status, as an ID number or ProcGroup object
-	 * @returns The number of times the proc was removed
-	 */
-	protected getRemovalCountForStatus(status: number | ProcGroup): number {
-		const procGroup = this.getTrackedGroupByStatus(status)
-		if (procGroup == null) { return 0 }
-		return this.removals.get(procGroup)?.events.length || 0
+	protected considerOverwrittenProcs(_window: ProcBuffWindow): boolean {
+		return true
 	}
 
-	private invulns = new Map<ProcGroup, ProcGroupEvents>()
 	/**
 	 * Get an array of invulnerable usage events for a given proc status
 	 * @param status The status, as an ID number or ProcGroup object
 	 * @returns The array of invulnerable usage Events
 	 */
-	protected getInvulnsForStatus(status: number | ProcGroup): Event[] {
+	protected getInvulnsForStatus(status: number | ProcGroup): Array<Events['action']> {
 		const procGroup = this.getTrackedGroupByStatus(status)
 		if (procGroup == null) { return [] }
-		return this.invulns.get(procGroup)?.events || []
+		return this.getHistoryForStatus(status).reduce((invulnEvents, window) => invulnEvents.concat(window.consumingInvulnEvents), [] as Array<Events['action']>)
 	}
 	/**
 	 * Get the number of times a proc was used on an invulnerable target
@@ -206,7 +212,7 @@ export abstract class Procs extends Analyser {
 	protected getInvulnCountForStatus(status: number | ProcGroup): number {
 		const procGroup = this.getTrackedGroupByStatus(status)
 		if (procGroup == null) { return 0 }
-		return this.invulns.get(procGroup)?.events.length || 0
+		return this.getInvulnsForStatus(status).length
 	}
 
 	/**
@@ -217,10 +223,38 @@ export abstract class Procs extends Analyser {
 	protected getDropCountForStatus(status: number| ProcGroup): number {
 		const procGroup = this.getTrackedGroupByStatus(status)
 		if (procGroup == null) { return 0 }
-		return this.getRemovalCountForStatus(status) - this.getUsageCountForStatus(status)
+		const stacksPerWindow = procGroup.procStatus.stacksApplied ?? 1
+
+		return this.getHistoryForStatus(status)
+			.filter(window => window.overwritten === false && window.consumingEvents.length < stacksPerWindow)
+			.reduce((dropped, window) => {
+				if (this.considerDroppedProcs(window)) {
+					dropped += Math.max(0, stacksPerWindow - window.consumingEvents.length)
+				}
+				return dropped
+			}, 0)
 	}
 
-	protected currentWindows = new Map<ProcGroup, ProcBuffWindow>()
+	/**
+	 * If some dropped procs should not be considered as bad, override this with logic to return false for drops that are not considered bad.
+	 * Recommended to have your override return super.considerDroppedProcs && your logic, to still get the death and downtime forgiveness without having to copy the logic
+	 * @param window The window that included dropped procs
+	 * @returns True if the drop should count as bad, False if the drop should not be counted
+	 */
+	protected considerDroppedProcs(window: ProcBuffWindow): boolean {
+		// Don't count procs that were dropped due to death
+		if (this.actors.get(this.parser.actor).at(window.stop).hp.current === 0) { return false }
+
+		// Don't count procs that were dropped due to downtime
+		if (this.downtime.isDowntime(window.stop)) { return false }
+
+		// Don't count procs that were dropped due to end of fight
+		if (window.stop >= this.parser.pull.timestamp + this.parser.pull.duration) { return false }
+
+		return true
+	}
+
+	protected currentWindows = new Map<ProcGroup, CurrentProcBuffWindow>()
 	private history = new Map<ProcGroup, ProcBuffWindow[]>()
 	/**
 	 * Gets the array of buff windows for a specified status
@@ -236,16 +270,10 @@ export abstract class Procs extends Analyser {
 	private row!: SimpleRow
 	private rows = new Map()
 
-	protected castingSpellId?: number
-
 	override initialise() {
 		const playerFilter = filter<Event>().source(this.parser.actor.id)
-		this.addEventHook(playerFilter.type('prepare'), this.onPrepare)
-		this.addEventHook(playerFilter.type('interrupt'), this.onInterrupt)
 
-		const trackedProcActionsIds: number[] = this.trackedProcs.map(group => group.consumeActions).reduce((acc, cur) => acc.concat(cur)).map(action => action.id)
-		const trackedActionFilter = playerFilter.action(oneOf(trackedProcActionsIds))
-		this.addEventHook(trackedActionFilter.type('action'), this.onCast)
+		this.addEventHook(playerFilter.type('action'), this.onCast)
 
 		const trackedProcStatusIds: number[] = this.trackedProcs.map(group => group.procStatus.id)
 		const trackedStatusFilter = playerFilter.status(oneOf(trackedProcStatusIds))
@@ -263,20 +291,8 @@ export abstract class Procs extends Analyser {
 		}
 
 		this.trackedProcs.forEach(group => {
-			this.usages.set(group, {timestamps: [], events: []})
-			this.overwrites.set(group, {timestamps: [], events: []})
-			this.removals.set(group, {timestamps: [], events: []})
-			this.invulns.set(group, {timestamps: [], events: []})
 			this.history.set(group, [])
 		})
-	}
-
-	private onPrepare(event: Events['prepare']): void {
-		this.castingSpellId = event.action
-	}
-
-	private onInterrupt(_event: Events['interrupt']): void {
-		this.castingSpellId = undefined
 	}
 
 	/**
@@ -288,12 +304,15 @@ export abstract class Procs extends Analyser {
 	private checkConsumeProc(procGroup: ProcGroup, event: Events['action']): boolean {
 		// If we don't currently have this proc active, we can't possibly consume it
 		if (!this.currentWindows.has(procGroup)) { return false }
+		const action = this.data.getAction(event.action)
 		// If we have no idea what this action is, it doesn't consume it
-		if (this.data.getAction(event.action) == null) { return false }
+		if (action == null) { return false }
+		// If we're in downtime, we don't consume procs (don't credit using an AoE-around-self Proc during downtime)
+		if (this.downtime.isDowntime(event.timestamp)) { return false }
 
 		// If we pass the error checks, return the value from jobSpecificCheckConsumeProc
 		// Subclasses can assume the basic error handling is dealt with and focus on only the job-specific logic
-		return this.jobSpecificCheckConsumeProc(procGroup, event)
+		return procGroup.consumeActions.includes(action) && this.jobSpecificCheckConsumeProc(procGroup, event)
 	}
 
 	/**
@@ -323,23 +342,28 @@ export abstract class Procs extends Analyser {
 	}
 
 	private onCast(event: Events['action']): void {
-		const procGroups = this.getTrackedGroupsByAction(event.action)
-
-		for (const procGroup of procGroups) {
+		for (const activeProc of this.currentWindows.keys()) {
 			// If this action consumed a proc, log it
-			if (this.checkConsumeProc(procGroup, event)) {
-				this.stopAndSave(procGroup, event, 'usage')
+			if (this.checkConsumeProc(activeProc, event)) {
+				if (this.invulnerability.isActive({
+					timestamp: event.timestamp,
+					actorFilter: actor => actor.id === event.target,
+					types: ['invulnerable'],
+				})) {
+					this.currentWindows.get(activeProc)?.consumingInvulnEvents.push(event)
+				} else {
+					this.currentWindows.get(activeProc)?.consumingEvents.push(event)
+				}
 
-				this.jobSpecificOnConsumeProc(procGroup, event)
+				this.jobSpecificOnConsumeProc(activeProc, event)
 
 				if (!this.actionMayConsumeAdditionalProcs(event.action)) {
 					break // Get out of the loop if we only consume one proc status at a time
 				}
+			} else {
+				this.currentWindows.get(activeProc)?.nonConsumingEvents.push(event)
 			}
 		}
-
-		// Reset the variable tracking hardcasts since we just finished casting something
-		this.castingSpellId = undefined
 	}
 
 	private onProcGained(event: Events['statusApply']): void {
@@ -347,12 +371,22 @@ export abstract class Procs extends Analyser {
 
 		if (procGroup == null) { return }
 
+		if (procGroup.procStatus.stacksApplied != null && event.data != null && event.data < procGroup.procStatus.stacksApplied) {
+			// Only consider apply events for statuses with stacks when they're the max number of stacks - we get reapply events for each reduced stack count as the status is consumed
+			return
+		}
+
 		if (this.currentWindows.has(procGroup)) {
 			// Close this window and open a fresh one so the timeline shows the re-applications correctly
-			this.stopAndSave(procGroup, event, 'overwrite')
+			this.stopAndSave(procGroup, 'overwrite', event)
 		}
+
 		this.currentWindows.set(procGroup, {
 			start: event.timestamp,
+			consumingEvents: [],
+			consumingInvulnEvents: [],
+			nonConsumingEvents: [],
+			overwritten: false,
 		})
 	}
 
@@ -361,7 +395,7 @@ export abstract class Procs extends Analyser {
 
 		if (procGroup == null) { return }
 
-		this.stopAndSave(procGroup, event, 'removal')
+		this.stopAndSave(procGroup, 'removal', event)
 	}
 
 	/**
@@ -418,7 +452,7 @@ export abstract class Procs extends Analyser {
 
 			const fightStart = this.parser.pull.timestamp
 			// Finalise the buff if it was still active, shouldn't be counted as dropped or overwritten
-			this.stopAndSave(procGroup)
+			this.stopAndSave(procGroup, 'endoffight')
 
 			// Add buff windows to the timeline
 			if (this.showProcTimelineRow) {
@@ -479,74 +513,21 @@ export abstract class Procs extends Analyser {
 		this.addJobSpecificSuggestions()
 	}
 
-	private stopAndSave(procGroup: ProcGroup, event?: Event, type?: ProcStatusEventType): void {
-
-		// Only count usages if the event happens during uptime, you don't get credit for using an AoE-around-self Proc during downtime
-		if (event && type === 'usage' && !this.downtime.isDowntime(event.timestamp)) {
-			this.tryAddEventToUsages(procGroup, event)
-
-			// If the target of the cast was invulnerable, keep track of that too
-			if (this.invulnerability.isActive({
-				timestamp: event.timestamp,
-				actorFilter: actor => actor.id === (event as Events['action']).target,
-				types: ['invulnerable'],
-			})) {
-				this.tryAddEventToInvulns(procGroup, event)
-			}
-		}
-
-		// Count removals that occur during uptime, and the player is still alive. Don't need to double-penalize deaths or not having GCD space to use all your procs before a downtime
-		if (event && type === 'removal' && !(this.downtime.isDowntime(event.timestamp) || this.actors.current.hp.current === 0)) {
-			this.tryAddEventToRemovals(procGroup, event)
-		}
-
-		// If this was an overwrite event, and overwrites are disallowed for this proc, save a record of that
-		if (event && type === 'overwrite' && !procGroup.mayOverwrite) {
-			this.tryAddEventToOverwrites(procGroup, event)
-		}
-
-		if (!this.currentWindows.has(procGroup)) { return }
-
+	private stopAndSave(procGroup: ProcGroup, endReason: WindowEndReason, event?: Event): void {
 		const currentWindow = this.currentWindows.get(procGroup)
 		if (currentWindow == null) { return }
 
-		currentWindow.stop = event?.timestamp ?? this.parser.pull.timestamp + this.parser.pull.duration
-		this.history.get(procGroup)?.push(currentWindow)
+		currentWindow.overwritten = endReason === 'overwrite'
+		if (endReason === 'overwrite' && event != null) {
+			currentWindow.overwriteEvent = event
+		}
+
+		const stop = event?.timestamp ?? this.parser.pull.timestamp + this.parser.pull.duration
+		this.history.get(procGroup)?.push({
+			...currentWindow,
+			stop,
+		})
 		this.currentWindows.delete(procGroup)
-	}
-
-	/**
-	 * Add the event to the usage map for the group, if it's not already present in the group
-	*/
-	private tryAddEventToUsages(procGroup: ProcGroup, event: Event) {
-		this.tryAddEventToMap(this.usages.get(procGroup), event)
-	}
-	/**
-	 * Add the event to the removal map for the group, if it's not already present in the group
-	 * This method is protected so subclassing analysers can hook into it
-	*/
-	protected tryAddEventToRemovals(procGroup: ProcGroup, event: Event) {
-		this.tryAddEventToMap(this.removals.get(procGroup), event)
-	}
-	/**
-	 * Add the event to the invuln map for the group, if it's not already present in the group
-	*/
-	private tryAddEventToInvulns(procGroup: ProcGroup, event: Event) {
-		this.tryAddEventToMap(this.invulns.get(procGroup), event)
-	}
-	/**
-	 * Add the event to the overwrite map for the group, if it's not already present in the group
-	*/
-	private tryAddEventToOverwrites(procGroup: ProcGroup, event: Event) {
-		this.tryAddEventToMap(this.overwrites.get(procGroup), event)
-	}
-
-	/** Checks to see if the specified event timestamp already exists in that map, and if not, adds the event to the collection */
-	private tryAddEventToMap(groupEvents: ProcGroupEvents | undefined, event: Event) {
-		if (groupEvents == null) { return }
-		if (groupEvents.timestamps.includes(event.timestamp)) { return }
-		groupEvents.timestamps.push(event.timestamp)
-		groupEvents.events.push(event)
 	}
 
 	/** Gets the row for a given status, creating it if necessary. Public so Sharpcast can access it */

@@ -830,6 +830,8 @@
   "rdm.grandimpact.suggestions.dropped.content": "",
   "rdm.grandimpact.suggestions.dropped.why": "<0/> 버프가 {0, plural, other {#}}회 만료되었습니다.",
   "rdm.interrupts.suggestion.content": "위치를 미리 잡거나 슬라이드 캐스팅을 활용하여 시전이 끊기지 않도록 하십시오. 반드시 이동해야 한다면 <0/> 또는 <1/> 기술을 사용하거나 마나를 소비하여 근거리 콤보를 사용하십시오. 모두 사용할 수 없다면 <2/> 기술을 사용하십시오.",
+  "rdm.magickedswordplay.suggestions.dropped.why": "",
+  "rdm.magickedswordplay.suggestions.missed.content": "",
   "rdm.manaStackGauge.black-mana-lost-to-overcap": "흑마나",
   "rdm.manaStackGauge.resource.manaStacks": "마나 중첩",
   "rdm.manaStackGauge.suggestions.manaStack-loss-content": "마나 중첩이 있을 때 강화되지 않은 근접 글쿨 기술을 사용하지 마십시오. 마나 중첩 스택을 전부 잃게 됩니다.",
@@ -855,7 +857,6 @@
   "rdm.meleecombos.table.header.starting-procs": "전투 시작시 프록",
   "rdm.meleecombos.table.header.time": "시간",
   "rdm.meleecombos.title": "근접 콤보",
-  "rdm.ms.suggestions.missedgcd.content": "",
   "rdm.ms.title": "",
   "rdm.prefulgence.suggestions.dropped.content": "",
   "rdm.prefulgence.suggestions.dropped.why": "<0/> 버프가 {0, plural, other {#}}회 만료되었습니다.",
@@ -1163,5 +1164,6 @@
   "whm.thinair.messages.explanation": "<0/> 기술은 MP 요구량이 높은 기술에 사용해야 합니다. <1/>, <2/>, <3/> 등 많은 MP를 요구하는 기술과 함께 사용하여 MP 소모량을 줄이십시오. MP 소모량이 크게 아껴지지 않았다면 하단에서 붉은색으로 표시됩니다.",
   "whm.thinair.messages.no-casts": "<0/> 사용 기록 없음",
   "whm.thinair.title": "실바람",
-  "whm.tincture.suggestions.trackedActions.content": "정신력의 환혹약을 사용하여 피해량을 최대한 많이 주십시오."
+  "whm.tincture.suggestions.trackedActions.content": "정신력의 환혹약을 사용하여 피해량을 최대한 많이 주십시오.",
+  "{0, plural, one {# stack} other {# stacks}}": ""
 }
