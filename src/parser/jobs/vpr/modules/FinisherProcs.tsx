@@ -6,6 +6,7 @@ import {dependency} from 'parser/core/Injectable'
 import Checklist, {Requirement, Rule} from 'parser/core/modules/Checklist'
 import {Procs as CoreProcs} from 'parser/core/modules/Procs'
 import {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
+import DISPLAY_ORDER from 'parser/jobs/vpr/modules/DISPLAY_ORDER'
 import React from 'react'
 
 const SEVERITIES = {
@@ -21,6 +22,8 @@ const SEVERITIES = {
 }
 const FINISHER_PROC_LOST_POTENCY = 100
 export class FinisherProcs extends CoreProcs {
+	static override handle = 'finisherprocs'
+	static override displayOrder = DISPLAY_ORDER.FINISHER_PROCS
 
 	@dependency private checklist!: Checklist
 	override trackedProcs = [
@@ -79,8 +82,7 @@ export class FinisherProcs extends CoreProcs {
 			tiers: SEVERITIES.DROPPED,
 			value: DroppedFinishers,
 			why: <Trans id="vpr.finisherprocs.suggestions.drops.why"> {DroppedFinishers * FINISHER_PROC_LOST_POTENCY} potency lost to dropped procs.</Trans>,
-		})
-		)
+		}))
 
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.FLANKSBANE_FANG.icon,
@@ -90,8 +92,7 @@ export class FinisherProcs extends CoreProcs {
 			tiers: SEVERITIES.OVERWRITTEN,
 			value: OverwroteFinishers,
 			why: <Trans id="vpr.finisherprocs.suggestions.overwrites.why"> {OverwroteFinishers * FINISHER_PROC_LOST_POTENCY} potency lost to overwrote procs.</Trans>,
-		})
-		)
+		}))
 	}
 
 	private ChecklistRequirementMaker(buffStatus: Status) {

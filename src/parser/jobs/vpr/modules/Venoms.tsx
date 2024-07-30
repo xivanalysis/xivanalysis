@@ -6,8 +6,11 @@ import {dependency} from 'parser/core/Injectable'
 import Checklist, {Requirement, Rule} from 'parser/core/modules/Checklist'
 import {Procs as CoreProcs} from 'parser/core/modules/Procs'
 import React from 'react'
+import DISPLAY_ORDER from './DISPLAY_ORDER'
 
 export class Venoms extends CoreProcs {
+	static override handle = 'venoms'
+	static override displayOrder = DISPLAY_ORDER.VENOM_PROCS
 
 	@dependency private checklist!: Checklist
 	override trackedProcs = [

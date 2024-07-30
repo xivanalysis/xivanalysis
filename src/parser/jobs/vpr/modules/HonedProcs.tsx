@@ -6,6 +6,7 @@ import {dependency} from 'parser/core/Injectable'
 import Checklist, {Requirement, Rule} from 'parser/core/modules/Checklist'
 import {Procs as CoreProcs} from 'parser/core/modules/Procs'
 import {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
+import DISPLAY_ORDER from 'parser/jobs/vpr/modules/DISPLAY_ORDER'
 import React from 'react'
 
 const SEVERITIES = {
@@ -21,6 +22,8 @@ const SEVERITIES = {
 }
 const HONED_PROC_LOST_POTENCY = 100 // Aoes are only 20 potency... do I account for them?
 export class HonedProcs extends CoreProcs {
+	static override handle = 'honedprocs'
+	static override displayOrder = DISPLAY_ORDER.HONED_PROCS
 
 	@dependency private checklist!: Checklist
 	override trackedProcs = [
@@ -60,8 +63,7 @@ export class HonedProcs extends CoreProcs {
 			tiers: SEVERITIES.DROPPED,
 			value: DroppedHoneds,
 			why: <Trans id="vpr.honedprocs.suggestions.drops.why"> {DroppedHoneds * HONED_PROC_LOST_POTENCY} potency lost to dropped procs.</Trans>,
-		})
-		)
+		}))
 
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.DREAD_FANGS.icon,
@@ -71,8 +73,7 @@ export class HonedProcs extends CoreProcs {
 			tiers: SEVERITIES.OVERWRITTEN,
 			value: OverwroteHoneds,
 			why: <Trans id="vpr.honedprocs.suggestions.overwrites.why"> {OverwroteHoneds * HONED_PROC_LOST_POTENCY} potency lost to overwrote procs.</Trans>,
-		})
-		)
+		}))
 	}
 
 	private ChecklistRequirementMaker(buffStatus: Status) {
