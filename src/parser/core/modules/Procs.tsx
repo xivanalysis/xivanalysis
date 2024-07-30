@@ -25,6 +25,8 @@ interface CurrentProcBuffWindow {
 	nonConsumingEvents: Array<Events['action']>,
 	overwritten: boolean,
 	overwriteEvent?: Event
+	dropped: boolean,
+	dropEvent?: Event
 }
 
 export interface ProcBuffWindow extends CurrentProcBuffWindow {
@@ -216,6 +218,17 @@ export abstract class Procs extends Analyser {
 	}
 
 	/**
+	 * Get an array of dropped events for a given proc status
+	 * @param status The status, as an ID number or ProcGroup object
+	 * @returns The array of dropped Events
+	 */
+	protected getDroppedProcsForStatus(status: number | ProcGroup): ProcBuffWindow[] {
+		const procGroup = this.getTrackedGroupByStatus(status)
+		if (procGroup == null) { return [] }
+		return this.getHistoryForStatus(status).filter(window => window.overwritten)
+	}
+
+	/**
 	 * Gets the number of times a proc was allowed to fall off
 	 * @param status The status, as an ID number or ProcGroup object
 	 * @returns The number of times the proc was dropped (removals - usages)
@@ -332,6 +345,12 @@ export abstract class Procs extends Analyser {
 	protected jobSpecificOnConsumeProc(_procGroup: ProcGroup, _event: Events['action']): void { /* */ }
 
 	/**
+	 * May be overriden by Subclasses. Called by OnProcGained to allow jobs to implment job-specific logic for evaluting a proc when it is gained
+	 * @param event The event to check
+	 * @returns False by default. Jobs may override to return true, allowing them to implement job-specific logic to consider an event
+	 */
+	protected jobSpecificOnProcGainedConsiderEvent(_event: Events['statusApply']): boolean { return true }
+	/**
 	 * May be overridden by subclasses. Called by onCast to determine whether the action in question can consume
 	 * multiple procs from a single event.
 	 * @param _action The action that might consume multiple procs
@@ -369,6 +388,7 @@ export abstract class Procs extends Analyser {
 	private onProcGained(event: Events['statusApply']): void {
 		const procGroup = this.getTrackedGroupByStatus(event.status)
 
+		if (!this.jobSpecificOnProcGainedConsiderEvent(event)) { return }
 		if (procGroup == null) { return }
 
 		if (procGroup.procStatus.stacksApplied != null && event.data != null && event.data < procGroup.procStatus.stacksApplied) {
@@ -387,6 +407,7 @@ export abstract class Procs extends Analyser {
 			consumingInvulnEvents: [],
 			nonConsumingEvents: [],
 			overwritten: false,
+			dropped: false,
 		})
 	}
 
