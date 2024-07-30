@@ -1,16 +1,20 @@
+import {Trans} from '@lingui/react'
+import {iconUrl} from 'data/icon'
 import {Procs as CoreProcs} from 'parser/core/modules/Procs'
 import {SEVERITY} from 'parser/core/modules/Suggestions'
+import React from 'react'
+
+const ICON_STARCROSS = 2078
 
 export default class Procs extends CoreProcs {
 	protected override showDroppedProcSuggestion = true
 	// DRG wants to use every proc, and dropping any of them is a major issue
+	protected override droppedProcIcon = iconUrl(ICON_STARCROSS)
+	protected override droppedProcContent = <Trans id="drg.procs.suggestions.dropped.content">Avoid lettings your procs fall off without using them, ideally while buffed. This might not always be possible, so remember to at least use your procs before they fall off.</Trans>
 	protected override droppedProcSeverityTiers = {
 		1: SEVERITY.MEDIUM,
 		2: SEVERITY.MAJOR,
 	}
-
-	// we'll show invuln stuff too, though some of the drg actions are cleaves so will have to monitor for spurious suggestions
-	protected override showInvulnProcSuggestion = true
 
 	trackedProcs = [
 		{

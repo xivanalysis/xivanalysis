@@ -489,6 +489,7 @@
   "drg.lotd.suggestions.missedaction.content": "",
   "drg.lotd.suggestions.missedgcd.content": "尽可能在红莲龙血期间打出至少8个GCD。",
   "drg.lotd.suggestions.window-name": "红莲龙血",
+  "drg.procs.suggestions.dropped.content": "",
   "drk.about.description": "<0>这个分析工具旨在帮助你释放你的潜力。暗黑骑士进攻的核心在于，在团辅buff存在期间，最大程度地利用你的暗血和MP。此外，你应该注意在每个血乱和嗜血期间打出5个技能。</0><1>在防御方面，<2/>可以减轻你或一个队友受到的大伤害，并且拥有极短的冷却时间。如果盾值被完全消耗，它还能让你免费试用一次暗影锋或者暗影波动。</1>",
   "drk.bloodweapon.suggestions.missedgcd.content": "每次<0/>时间里要打5个GCD技能，如果你的GCD完全没有空转也打不出5个的话，请考虑提高技速。",
   "drk.bloodweapon.title": "嗜血的使用记录",

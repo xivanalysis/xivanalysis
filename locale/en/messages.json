@@ -489,6 +489,7 @@
   "drg.lotd.suggestions.missedaction.content": "Try to use as many of your oGCDs as possible during Life of the Dragon. Remember to keep your abilities on cooldown, when possible, to prevent them from drifting outside of your buff windows.",
   "drg.lotd.suggestions.missedgcd.content": "Try to land at least 8 GCDs during every Life of the Dragon window.",
   "drg.lotd.suggestions.window-name": "Life of the Dragon",
+  "drg.procs.suggestions.dropped.content": "Avoid lettings your procs fall off without using them, ideally while buffed. This might not always be possible, so remember to at least use your procs before they fall off.",
   "drk.about.description": "<0>This analyzer aims to help you unleash your inner edge. The core of Dark Knight offense focuses on maximizing blood and MP utilization, in raid buff windows where available. In addition, you should aim to land five hits in each Blood Weapon and Delirium window.</0><1>Defensively, <2/> is a powerful cooldown that can mitigate heavy damage on you or a target, and grants a free use of Edge of Shadow or Flood of Shadow as long as the shield is fully consumed.</1>",
   "drk.bloodweapon.suggestions.missedgcd.content": "Try to land 5 GCDs during every <0/> window.  If you cannot do this with full uptime and no clipping, consider adjusting your gearset for more Skill Speed.",
   "drk.bloodweapon.title": "Blood Weapon Usage",
