@@ -680,7 +680,7 @@
   "mnk.rof.chart.notes.late": "使用が早すぎる",
   "mnk.rof.chart.notes.missed": "",
   "mnk.rof.suggestions.blitz.content": "必殺技は最も火力のあるスキルのため、開幕回しと偶数バースト中の<1/>の効果時間中に<0/>を2回、奇数バースト中の効果時間中に<2/>を1回、使用するようにしてください。",
-  "mnk.rof.suggestions.blitz.why": "{missedBlitzes, plural, other {# 回}}の <0/> を {0}{missedBlitzes, plural, other {回}} の <1/> {1, plural, other {効果時間}}中で失いました。",
+  "mnk.rof.suggestions.blitz.why": "",
   "mnk.rof.suggestions.gcd.content": "<0/> 中に {EXPECTED_GCDS} 回のGCDスキルを使いましょう。",
   "mnk.rof.suggestions.wasted.content": "",
   "mnk.rof.title": "紅蓮の極意",

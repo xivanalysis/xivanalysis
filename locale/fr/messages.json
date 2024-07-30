@@ -634,7 +634,7 @@
   "mnk.bookending.formless.checklist.name": "",
   "mnk.bookending.formless.checklist.requirement": "",
   "mnk.bookending.formless.suggestion.content": "",
-  "mnk.bookending.formless.suggestion.why": "",
+  "mnk.bookending.formless.suggestion.why": "Vous avez supplanté <0/> {0, plural, one {# fois} other {# fois}}.",
   "mnk.bookending.pb.checklist.description": "",
   "mnk.bookending.pb.checklist.fr-requirement": "",
   "mnk.bookending.pb.checklist.name": "",

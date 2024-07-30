@@ -634,7 +634,7 @@
   "mnk.bookending.formless.checklist.name": "",
   "mnk.bookending.formless.checklist.requirement": "",
   "mnk.bookending.formless.suggestion.content": "",
-  "mnk.bookending.formless.suggestion.why": "",
+  "mnk.bookending.formless.suggestion.why": "<0/> 효과를 {0, plural, other {#회}} 덮어썼습니다.",
   "mnk.bookending.pb.checklist.description": "",
   "mnk.bookending.pb.checklist.fr-requirement": "",
   "mnk.bookending.pb.checklist.name": "",
