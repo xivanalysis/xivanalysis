@@ -270,7 +270,7 @@ export class BurstWindow extends BuffGroupWindow {
 			content: <Trans id="brd.burst.suggestions.failed-overlaps.content">
 				Make sure your <DataLink action="RADIANT_FINALE"/>, <DataLink action="BATTLE_VOICE"/> and <DataLink action="RAGING_STRIKES"/> are properly aligned and overlapping. Buffs are multiplicative, and using them as close to each other as possible increases your damage output. Check the {this.moduleLink} module below for more detailed analysis.
 			</Trans>,
-			why: <Trans id="brd.burst.suggestions.failed-overlaps.why"><Plural value={failedOverlaps} one="# buff application wasn't" other="# buff aplications weren't" /> properly aligned.</Trans>,
+			why: <Trans id="brd.burst.suggestions.failed-overlaps.why"><Plural value={failedOverlaps} one="# buff application wasn't" other="# buff applications weren't" /> properly aligned.</Trans>,
 			severity,
 		})
 	}
