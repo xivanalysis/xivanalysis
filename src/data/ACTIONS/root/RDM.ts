@@ -36,7 +36,7 @@ export const RDM = ensureActions({
 		name: 'Contre Sixte',
 		icon: iconUrl(3217),
 		cooldown: 35000,
-		potency: 400,
+		potency: 420,
 	},
 	DISPLACEMENT: {
 		id: 7515,
@@ -195,7 +195,7 @@ export const RDM = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SKILL_SPEED,
 		cooldown: 2500,
-		potency: 380, // consumes 10 white, 10 black
+		potency: 420, // consumes 10 white, 10 black
 	},
 	VERFLARE: {
 		id: 7525,
@@ -322,7 +322,7 @@ export const RDM = ensureActions({
 		speedAttribute: Attribute.SPELL_SPEED,
 		cooldown: 2500,
 		castTime: 5000,
-		potency: 420, // Increase Black by 6
+		potency: 440, // Increase Black by 6
 		breaksCombo: true,
 	},
 	VERFIRE: {
@@ -366,7 +366,7 @@ export const RDM = ensureActions({
 		speedAttribute: Attribute.SPELL_SPEED,
 		cooldown: 2500,
 		castTime: 5000,
-		potency: 420, // Increase White by 6
+		potency: 440, // Increase White by 6
 		breaksCombo: true,
 	},
 	VERSTONE: {
