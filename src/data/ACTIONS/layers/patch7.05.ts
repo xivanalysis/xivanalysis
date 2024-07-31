@@ -28,5 +28,7 @@ export const patch705: Layer<ActionRoot> = {
 		},
 		CARVE_AND_SPIT: {potencies: [{value: 540, bonusModifiers: []}]},
 		DISESTEEM: {potencies: [{value: 1000, bonusModifiers: []}]},
+		STARDIVER: {potencies: [{value: 720, bonusModifiers: []}]},
+		STARCROSS: {potencies: [{value: 900, bonusModifiers: []}]},
 	},
 }
