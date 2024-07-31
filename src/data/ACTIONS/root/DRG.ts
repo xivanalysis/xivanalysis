@@ -362,6 +362,10 @@ export const DRG = ensureActions({
 		icon: iconUrl(2593),
 		cooldown: 30000,
 		statusesApplied: ['STARCROSS_READY'],
+		potencies: [{
+			value: 620,
+			bonusModifiers: [],
+		}],
 	},
 
 	STARCROSS: {
@@ -369,6 +373,10 @@ export const DRG = ensureActions({
 		name: 'Starcross',
 		icon: iconUrl(2078),
 		cooldown: 1000,
+		potencies: [{
+			value: 700,
+			bonusModifiers: [],
+		}],
 	},
 
 	WYRMWIND_THRUST: {
