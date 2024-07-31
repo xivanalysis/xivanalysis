@@ -1,6 +1,6 @@
 import {t} from '@lingui/macro'
 import TransMarkdown from 'components/ui/TransMarkdown'
-// import CONTRIBUTORS, {ROLES} from 'data/CONTRIBUTORS'
+import CONTRIBUTORS, {ROLES} from 'data/CONTRIBUTORS'
 import {Meta} from 'parser/core/Meta'
 import React from 'react'
 import {changelog} from './changelog'
@@ -23,12 +23,12 @@ export const BARD = new Meta({
 	</>,
 
 	supportedPatches: {
-		from: '✖',
-		to: '✖',
+		from: '7.0',
+		to: '7.05',
 	},
 
 	contributors: [
-		// {user: CONTRIBUTORS.YOU, role: ROLES.YOUR_ROLE},
+		{user: CONTRIBUTORS.YUMIYA, role: ROLES.DEVELOPER},
 	],
 
 	changelog,
