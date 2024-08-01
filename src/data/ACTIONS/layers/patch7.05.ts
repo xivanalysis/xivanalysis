@@ -52,5 +52,7 @@ export const patch705: Layer<ActionRoot> = {
 				bonusModifiers: [],
 			}],
 		},
+		STARDIVER: {potencies: [{value: 720, bonusModifiers: []}]},
+		STARCROSS: {potencies: [{value: 900, bonusModifiers: []}]},
 	},
 }
