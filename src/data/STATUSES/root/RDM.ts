@@ -44,7 +44,7 @@ export const RDM = ensureStatuses({
 		id: 1971,
 		name: 'Manafication',
 		icon: iconUrl(17491),
-		duration: 30000,
+		duration: 15000,
 		stacksApplied: 6,
 	},
 	MAGICK_BARRIER: {
@@ -75,7 +75,7 @@ export const RDM = ensureStatuses({
 		id: 3875,
 		name: 'Magicked Swordplay',
 		icon: iconUrl(18665),
-		duration: 30000,
+		duration: 15000,
 		stacksApplied: 3,
 	},
 })

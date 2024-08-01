@@ -28,5 +28,29 @@ export const patch705: Layer<ActionRoot> = {
 		},
 		CARVE_AND_SPIT: {potencies: [{value: 540, bonusModifiers: []}]},
 		DISESTEEM: {potencies: [{value: 1000, bonusModifiers: []}]},
+		CONTRE_SIXTE: {
+			potencies: [{
+				value: 420,
+				bonusModifiers: [],
+			}],
+		},
+		ENCHANTED_REPRISE: {
+			potencies: [{
+				value: 420,
+				bonusModifiers: [],
+			}],
+		},
+		VERAERO_III: {
+			potencies: [{
+				value: 440,
+				bonusModifiers: [],
+			}],
+		},
+		VERTHUNDER_III: {
+			potencies: [{
+				value: 440,
+				bonusModifiers: [],
+			}],
+		},
 	},
 }
