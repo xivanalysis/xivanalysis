@@ -401,10 +401,10 @@ export class Gauge extends CoreGauge {
 	}
 
 	private tryGainParadox(lastGaugeState: BLMGaugeState) {
-		// Swapping element states only generates a paradox if we started with full UI/UH and are switching to Astral Fire
-		if (lastGaugeState.umbralIce === ASTRAL_UMBRAL_MAX_STACKS &&
-			this.astralUmbralGauge.getCountAt(ASTRAL_FIRE_HANDLE) > 0 &&
-			this.umbralHeartsGauge.capped) {
+		// We gain Paradox when swapping to Astral Fire with max UI stacks and max hearts
+		// Patch 7.05 brought back gaining Paradox when switching to Umbral Ice with max AF stacks
+		if ((lastGaugeState.umbralIce === ASTRAL_UMBRAL_MAX_STACKS && this.astralUmbralGauge.getCountAt(ASTRAL_FIRE_HANDLE) > 0 && this.umbralHeartsGauge.capped) ||
+			(lastGaugeState.astralFire === ASTRAL_UMBRAL_MAX_STACKS && this.astralUmbralGauge.getCountAt(UMBRAL_ICE_HANDLE) > 0 && !this.parser.patch.before('7.05'))) {
 
 			this.onGainParadox()
 		}
@@ -570,7 +570,11 @@ export class Gauge extends CoreGauge {
 			this.paradoxGauge.spend(1)
 		} else if (event.type === 'damage') {
 			// We checked isSuccessfulHit back in onCast, so we don't need to check it again here
-			// In Dawntrail it shouldn't be possible to cast Paradox with an expired Astral Fire timer but we'll leave the check in to be safe
+			// Add a stack for whichever timer isn't expired
+			// Because it was physically impossible to cast UI Paradox before patch 7.05, we don't need an extra patch level check here
+			if (!this.umbralIceTimer.expired) {
+				this.onGainUmbralIceStacks(1)
+			}
 			if (!this.astralFireTimer.expired) {
 				this.onGainAstralFireStacks(1)
 			}
