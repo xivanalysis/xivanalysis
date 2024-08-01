@@ -28,6 +28,7 @@ import {FirestarterUsageEvaluator} from './RotationWatchdog/FirestarterUsageEval
 import {FlareStarUsageEvaluator} from './RotationWatchdog/FlareStarUsageEvaluator'
 import {IceMageEvaluator} from './RotationWatchdog/IceMageEvaluator'
 import {ManafontTimingEvaluator} from './RotationWatchdog/ManafontTimingEvaluator'
+import {MissedIceParadoxEvaluator} from './RotationWatchdog/MissedIceParadoxEvaluator'
 import {RotationErrorNotesEvaluator} from './RotationWatchdog/RotationErrorNotesEvaluator'
 import {SkipThunderEvaluator} from './RotationWatchdog/SkipThunderEvaluator'
 import {UptimeSoulsEvaluator} from './RotationWatchdog/UptimeSoulsEvaluator'
@@ -154,6 +155,11 @@ export class RotationWatchdog extends RestartWindow {
 			adjustCount: this.adjustExpectedActionsCount.bind(this),
 			adjustOutcome: this.adjustExpectedActionsOutcome.bind(this),
 		}))
+
+		// Patch 7.05 re-added Ice Paradox, only load the evaluator when necessary
+		if (!this.parser.patch.before('7.05')) {
+			this.addEvaluator(new MissedIceParadoxEvaluator(this.metadataHistory))
+		}
 
 		this.addEvaluator(new FlareStarUsageEvaluator({
 			suggestionIcon: this.data.actions.FLARE_STAR.icon,
