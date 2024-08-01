@@ -12,7 +12,7 @@ export const DRK = ensureStatuses({
 		name: 'Blood Weapon',
 		icon: iconUrl(13109),
 		duration: 15000,
-		stacksApplied: 5,
+		stacksApplied: 3,
 	},
 	BLACKEST_NIGHT: {
 		id: 1178,

@@ -24,7 +24,7 @@ export abstract class ActionWindow extends Analyser {
 
 	@dependency protected data!: Data
 	@dependency protected suggestions!: Suggestions
-	@dependency private timeline!: Timeline
+	@dependency protected timeline!: Timeline
 
 	/**
 	 * The captured windows.

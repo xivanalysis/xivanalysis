@@ -239,5 +239,30 @@ export const patch705: Layer<ActionRoot> = {
 			cooldownGroup: 15,
 		},
 
+		HARD_SLASH: {potencies: [{value: 300, bonusModifiers: []}]},
+		SYPHON_STRIKE: {
+			potencies: [{
+				value: 240,
+				bonusModifiers: [],
+			},
+			{
+				value: 380,
+				bonusModifiers: [BonusModifier.COMBO],
+			}],
+		},
+		SOULEATER: {
+			potencies: [{
+				value: 260,
+				bonusModifiers: [],
+			},
+			{
+				value: 480,
+				bonusModifiers: [BonusModifier.COMBO],
+			}],
+		},
+		CARVE_AND_SPIT: {potencies: [{value: 540, bonusModifiers: []}]},
+		DISESTEEM: {potencies: [{value: 1000, bonusModifiers: []}]},
+		STARDIVER: {potencies: [{value: 720, bonusModifiers: []}]},
+		STARCROSS: {potencies: [{value: 900, bonusModifiers: []}]},
 	},
 }

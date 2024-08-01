@@ -87,7 +87,7 @@ export abstract class BuffWindow extends ActionWindow {
 		this.buffDuration = _.max(ensureArray(this.buffStatus).map(s => s.duration))
 	}
 
-	private onStatusApply(event: Events['statusApply']) {
+	protected onStatusApply(event: Events['statusApply']) {
 		this.startWindowAndTimeout(event.timestamp)
 	}
 
@@ -124,7 +124,7 @@ export abstract class BuffWindow extends ActionWindow {
 			this.endWindowByTime)
 	}
 
-	private onStatusRemove(event: Events['statusRemove']) {
+	protected onStatusRemove(event: Events['statusRemove']) {
 		this.onWindowEnd(event.timestamp)
 		if (this.durationHook != null) {
 			this.removeTimestampHook(this.durationHook)

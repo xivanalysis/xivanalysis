@@ -41,7 +41,6 @@ export class BloodGauge extends CoreGauge {
 	])
 
 	private onActionModifiers = new Map<Action['id'], number>([
-		[this.data.actions.LIVING_SHADOW.id, -50],
 		[this.data.actions.QUIETUS.id, -50],
 		[this.data.actions.BLOODSPILLER.id, -50],
 	])

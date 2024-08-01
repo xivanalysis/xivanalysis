@@ -15,7 +15,7 @@ export function calculateExpectedGcdsForTime(defaultExpected: number, gcdEstimat
 	return Math.min(defaultExpected, Math.ceil(((end ?? start) - start) / gcdEstimate))
 }
 
-interface ExpectedGcdCountOptions {
+export interface ExpectedGcdCountOptions {
 	expectedGcds: number
 	/**
 	 * This should be the globalCooldown dependency object.
@@ -54,7 +54,7 @@ export class ExpectedGcdCountEvaluator implements WindowEvaluator {
 	private suggestionContent: JSX.Element
 	private suggestionWindowName: JSX.Element
 	private severityTiers: SeverityTiers
-	private adjustCount: (window: HistoryEntry<EvaluatedAction[]>) => number
+	protected adjustCount: (window: HistoryEntry<EvaluatedAction[]>) => number
 
 	constructor(opts: ExpectedGcdCountOptions) {
 		this.expectedGcds = opts.expectedGcds
@@ -105,7 +105,7 @@ export class ExpectedGcdCountEvaluator implements WindowEvaluator {
 
 	// Buffs with stacks have durations tightly coupled to the GCD
 	// and do not benefit from accounting for weave delay
-	private calculateExpectedGcdsForWindow(window: HistoryEntry<EvaluatedAction[]>) {
+	protected calculateExpectedGcdsForWindow(window: HistoryEntry<EvaluatedAction[]>) {
 		let adjustedStart = window.start
 
 		if (!this.hasStacks) {
