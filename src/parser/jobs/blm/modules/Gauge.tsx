@@ -651,7 +651,7 @@ export class Gauge extends CoreGauge {
 			this.suggestions.add(new Suggestion({
 				icon: this.data.actions.PARADOX.icon,
 				content: <Trans id="blm.gauge.suggestions.overwritten-paradox.content">
-					You overwrote <DataLink action="PARADOX"/> by not casting it before using <DataLink showIcon={false} action="MANAFONT" />. <DataLink showIcon={false} action="PARADOX"/> is a strong spell, and guarantees you a free <DataLink showIcon={false} status="FIRESTARTER" />, so be sure to use it.
+					You overwrote <DataLink action="PARADOX"/> by generating a new marker without using the previous one. <DataLink showIcon={false} action="PARADOX"/> is a strong spell, and guarantees you a free <DataLink showIcon={false} status="FIRESTARTER" /> when cast under Astral Fire, so be sure to use it.
 				</Trans>,
 				severity: SEVERITY.MAJOR,
 				why: <Trans id="blm.gage.suggestions.overwritten-paradox.why">
@@ -681,7 +681,7 @@ export class Gauge extends CoreGauge {
 				<Message>
 					<Trans id="blm.gauge.error.content">
 						Reaching Umbral Ice III and gaining 3 Umbral Hearts then swapping to the opposite element generates a <DataLink action="PARADOX"/> marker.<br/>
-						Using <DataLink action="MANAFONT" /> also generates a <DataLink action="PARADOX" /> marker.<br/>
+						Using <DataLink action="MANAFONT" />, or reaching Astral Fire III then swapping to the opposite element also generates a <DataLink action="PARADOX" /> marker.<br/>
 						Maintaining Enochian for 30 seconds or using <DataLink action="AMPLIFIER"/> generates a Polyglot charge, allowing
 						the casting of <DataLink action="XENOGLOSSY"/> or <DataLink action="FOUL"/>. You can have up to <Plural value={POLYGLOT_MAX_STACKS} one="# Polyglot charge" other="# Polyglot charges"/>.<br/>
 						This module displays when these gauge effects were overwritten.
