@@ -85,6 +85,13 @@ const CONTRIBUTORS = ensureRecord<Contributor>()({
 			JOBS.BLACK_MAGE,
 		],
 	},
+	OTOCEPHALY: {
+		name: 'Otocephaly',
+		avatar: require('./avatar/otocephaly.jpg'),
+		jobs: [
+			JOBS.ASTROLOGIAN,
+		],
+	},
 	NONO: {
 		name: 'Nono',
 		avatar: require('./avatar/nono.png'),
