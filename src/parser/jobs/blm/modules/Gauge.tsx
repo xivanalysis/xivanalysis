@@ -292,6 +292,10 @@ export class Gauge extends CoreGauge {
 		case this.data.actions.UMBRAL_SOUL.id:
 			this.onGainUmbralIceStacks(1)
 			this.tryGainUmbralHearts(1)
+			// Patch 7.05 updated Umbral Soul such that it pauses the Umbral Ice timer, but the Polyglot timer keeps rolling
+			if (!this.parser.patch.before('7.05')) {
+				this.umbralIceTimer.pause()
+			}
 			break
 		case this.data.actions.FIRE_I.id:
 			this.tryConsumeUmbralHearts(1)
