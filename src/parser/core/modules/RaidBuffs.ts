@@ -39,6 +39,7 @@ const TRACKED_STATUSES: StatusConfig[] = [
 	{key: 'SEARING_LIGHT'},
 	{key: 'RADIANT_FINALE'},
 	{key: 'MUG', name: 'Mug'},
+	{key: 'DOKUMORI'},
 	{key: 'STARRY_MUSE'},
 ]
 
