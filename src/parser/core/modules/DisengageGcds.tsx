@@ -32,18 +32,16 @@ export class DisengageGcds extends Analyser {
 
 	/**
 	 * Jobs MAY override this to add additional suggestions beyond the default
-	 * @param trackedAction, Action which we want to report a count for
-	 * @param disengageGcds Count of time the action was used
 	 * @returns true to prevent adding the default suggestion, or false to include the default suggestions
 	 */
-	protected addJobSpecificSuggestions(_trackedAction: Action, _disengageGcds: number): boolean {
+	protected addJobSpecificStatistics(): boolean {
 		return false
 	}
 
-	// Use addJobSpecificSuggestions to change this output
+	// Set addJobSpecificSuggestions to true replace this output, or false to add to it
 	protected addDisengageStatistic() {
 
-		if (this.addJobSpecificSuggestions(this.trackedAction, this.disengageGcds)) {
+		if (this.addJobSpecificStatistics()) {
 			return
 		}
 
