@@ -43,7 +43,7 @@
   "ast.draw.title": "Tirage",
   "ast.dropped-defensives.action.header": "",
   "ast.dropped-defensives.action.unused": "",
-  "ast.dropped-defensives.action.used": "",
+  "ast.dropped-defensives.action.used": "Utilisé à <0></0> {0}",
   "ast.dropped-defensives.messages.explanation": "",
   "ast.dropped-defensives.title": "",
   "ast.earthly-star.suggestion.missed-use.content": "Utilisez <0/> plus souvent. Cela pourrai sauver une GCD de soin et donc permettre de faire plus de dégâts.",

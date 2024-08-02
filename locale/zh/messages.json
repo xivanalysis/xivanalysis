@@ -43,7 +43,7 @@
   "ast.draw.title": "抽卡",
   "ast.dropped-defensives.action.header": "",
   "ast.dropped-defensives.action.unused": "",
-  "ast.dropped-defensives.action.used": "",
+  "ast.dropped-defensives.action.used": "<0></0> {0} 时已使用",
   "ast.dropped-defensives.messages.explanation": "",
   "ast.dropped-defensives.title": "",
   "ast.earthly-star.suggestion.missed-use.content": "尽可能多使用<0/>，它可以让你的GCD多用于在输出上。",
