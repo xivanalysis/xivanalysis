@@ -27,5 +27,8 @@ export const patch705: Layer<StatusRoot> = {
 		GRIMSKINS_VENOM: {duration: 60000},
 		GRIMHUNTERS_VENOM: {duration: 60000},
 
+		MAGICKED_SWORDPLAY: {
+			duration: 30000,
+		},
 	},
 }

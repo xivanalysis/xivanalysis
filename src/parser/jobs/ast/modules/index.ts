@@ -6,6 +6,7 @@ import {Combust} from './Combust'
 import {Defensives} from './Defensives'
 import {Divination} from './Divination'
 import Draw from './Draw'
+import {DroppedDefensives} from './DroppedDefensives'
 import {EarthlyStar} from './EarthlyStar'
 import {Helios} from './Helios'
 import {Lightspeed} from './Lightspeed'
@@ -24,6 +25,7 @@ export default [
 	Defensives,
 	Divination,
 	Draw,
+	DroppedDefensives,
 	EarthlyStar,
 	oGCDs,
 	Helios,

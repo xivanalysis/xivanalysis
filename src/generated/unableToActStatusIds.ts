@@ -243,6 +243,7 @@ export const UNABLE_TO_ACT_STATUS_IDS = [
 	3811, // Crystallized (lockActions, lockControl)
 	3908, // Down for the Count (lockActions)
 	3920, // Fatal Attraction (lockActions)
+	3921, // Drone (lockActions)
 	3948, // Benoggined (lockActions)
 	3980, // Numbing Current (lockActions)
 	3983, // Down for the Count (lockActions)

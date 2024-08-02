@@ -34,9 +34,8 @@ export class ActionTimeline extends CoreActionTimeline {
 		'EXALTATION',
 		['HOROSCOPE', 'HOROSCOPE_ACTIVATION'],
 		// Healing buff
-		'NEUTRAL_SECT',
+		['NEUTRAL_SECT', 'SUN_SIGN'],
 		// Party mitigation
 		'COLLECTIVE_UNCONSCIOUS',
-		'SUN_SIGN',
 	]
 }
