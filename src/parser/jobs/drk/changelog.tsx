@@ -8,6 +8,11 @@ export const changelog = [
 	// 	contributors: [CONTRIBUTORS.YOU],
 	// },
 	{
+		date: new Date('2024-08-02'),
+		Changes: () => <>Fixed Bloodspiller adjustment for expected uses during a potion window in the opener</>,
+		contributors: [CONTRIBUTORS.AZARIAH],
+	},
+	{
 		date: new Date('2024-07-29'),
 		Changes: () => <>Fixed incorrect Blood Weapon stacks and Living Shadow no longer costs blood to use</>,
 		contributors: [CONTRIBUTORS.AZARIAH],
