@@ -3,12 +3,12 @@ import {AoE} from './AoE'
 import {Combos} from './Combos'
 import {Defensives} from './Defensives'
 import {Gauge} from './Gauge'
-import {GreedMore} from './GreedMore'
 import {Infuriate} from './Infuriate'
 import {InnerRelease} from './InnerRelease'
 import {OGCDDowntime} from './OGCDDowntime'
 import {Procs} from './Procs'
 import {SurgingTempest} from './SurgingTempest'
+import {Tomahawk} from './Tomahawk'
 
 export default [
 	ActionTimeline,
@@ -21,5 +21,5 @@ export default [
 	OGCDDowntime,
 	Procs,
 	SurgingTempest,
-	GreedMore,
+	Tomahawk,
 ]

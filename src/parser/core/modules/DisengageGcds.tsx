@@ -1,5 +1,4 @@
 import {Trans} from '@lingui/react'
-import {ActionLink} from 'components/ui/DbLink'
 import {Action} from 'data/ACTIONS'
 import {Event} from 'event'
 import {Analyser} from 'parser/core/Analyser'
@@ -7,7 +6,7 @@ import {filter} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
 import {Data} from 'parser/core/modules/Data'
 import {SimpleStatistic, Statistics} from 'parser/core/modules/Statistics'
-import React from 'react'
+import React, {ReactNode} from 'react'
 
 export class DisengageGcds extends Analyser {
 	static override handle = 'disengagegcds'
@@ -20,6 +19,9 @@ export class DisengageGcds extends Analyser {
 	// Pass in the GCD you want to track as an Action.
 	protected trackedAction: Action = this.data.actions.UNKNOWN
 
+	// Override these to provide job specific title and text for this statistic
+	protected disengageInfo: ReactNode = <Trans id="core.disengage.statistic.info">While it is important to keep your GCD rolling as much as possible, try to minimize using ranged attacks that do less damage and delay resource generation.</Trans>
+
 	override initialise() {
 		super.initialise()
 
@@ -28,18 +30,30 @@ export class DisengageGcds extends Analyser {
 		this.addEventHook('complete', this.onComplete)
 	}
 
-	// Override this to suggest job-specific ways to handle downtime
-	protected addDisengageSuggestion() {
+	/**
+	 * Jobs MAY override this to add additional suggestions beyond the default
+	 * @param trackedAction, Action which we want to report a count for
+	 * @param disengageGcds Count of time the action was used
+	 * @returns true to prevent adding the default suggestion, or false to include the default suggestions
+	 */
+	protected addJobSpecificSuggestions(_trackedAction: Action, _disengageGcds: number): boolean {
+		return false
+	}
+
+	// Use addJobSpecificSuggestions to change this output
+	protected addDisengageStatistic() {
+
+		if (this.addJobSpecificSuggestions(this.trackedAction, this.disengageGcds)) {
+			return
+		}
+
 		this.statistics.add(new SimpleStatistic({
 			title: <Trans id="core.disengage.statistic.title">
 				{this.trackedAction.name} Uses
 			</Trans>,
 			icon: this.trackedAction.icon,
 			value: `${this.disengageGcds}`,
-			info: <Trans id="core.disengage.statistic.info">
-				While it is important to keep your GCD rolling as much as possible,
-				try to minimize your <ActionLink {...this.trackedAction}/> usage. It does less damage and delays resource generation.
-			</Trans>,
+			info: this.disengageInfo,
 		}))
 	}
 
@@ -48,6 +62,6 @@ export class DisengageGcds extends Analyser {
 	}
 
 	private onComplete() {
-		this.addDisengageSuggestion()
+		this.addDisengageStatistic()
 	}
 }
