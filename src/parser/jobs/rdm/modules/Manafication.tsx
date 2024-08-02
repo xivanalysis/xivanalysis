@@ -86,6 +86,15 @@ export class Manafication extends BuffWindow {
 					this.data.actions.VERFLARE.id,
 					this.data.actions.SCORCH.id,
 					this.data.actions.RESOLUTION.id,
+
+					// Casted skills for rushing
+					// Tested with this 7.05 Log: https://www.fflogs.com/reports/K7TyWcQwvpGH1B8X#fight=20&type=damage-done
+					this.data.actions.VERAERO_III.id,
+					this.data.actions.VERSTONE.id,
+					this.data.actions.VERTHUNDER_III.id,
+					this.data.actions.VERFIRE.id,
+					this.data.actions.GRAND_IMPACT.id,
+					this.data.actions.JOLT_III.id,
 				],
 				globalCooldown: this.globalCooldown,
 				suggestionIcon,
