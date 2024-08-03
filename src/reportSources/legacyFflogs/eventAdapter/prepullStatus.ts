@@ -17,7 +17,7 @@ export class PrepullStatusAdapterStep extends AdapterStep {
 
 	static override debug = false
 
-	override postprocess(adaptedEvents: Event[]): Event[] {
+	override postprocess(adaptedEvents: Event[], firstEvent: number): Event[] {
 		for (const event of adaptedEvents) {
 			if (event.type !== 'statusApply' && event.type !== 'statusRemove') {
 				if (event.type === 'action') {
@@ -34,7 +34,7 @@ export class PrepullStatusAdapterStep extends AdapterStep {
 				}
 
 				this.debug(`Timestamp ${event.timestamp}: Saw first statusApply for status ${event.status} on target ${event.target}`)
-				this.synthesizeActionIfNew(event)
+				this.synthesizeActionIfNew(event, firstEvent)
 
 				// If the first observed instance of a status that is applied
 				// with stacks has fewer than the applied value, synth an apply
@@ -42,7 +42,7 @@ export class PrepullStatusAdapterStep extends AdapterStep {
 				const applied = getDataBy(getStatuses(this.report), 'id', event.status)
 				if (applied != null && applied.stacksApplied != null && applied.stacksApplied > 0 &&
 					event.data != null && event.data < applied.stacksApplied) {
-					this.synthesizeStatusApply(event, applied.stacksApplied)
+					this.synthesizeStatusApply(event, firstEvent, applied.stacksApplied)
 				}
 
 				this.observeStatus(event.status, event.target)
@@ -53,8 +53,8 @@ export class PrepullStatusAdapterStep extends AdapterStep {
 					// If we've already seen a matching apply event, skip
 					continue
 				}
-				this.synthesizeActionIfNew(event)
-				this.synthesizeStatusApply(event)
+				this.synthesizeActionIfNew(event, firstEvent)
+				this.synthesizeStatusApply(event, firstEvent)
 				this.observeStatus(event.status, event.target)
 			}
 		}
@@ -82,7 +82,7 @@ export class PrepullStatusAdapterStep extends AdapterStep {
 		statuses.add(statusId)
 	}
 
-	private synthesizeActionIfNew(event: StatusEvent) {
+	private synthesizeActionIfNew(event: StatusEvent, firstEvent: number) {
 		const statusKey = _.findKey(getStatuses(this.report), status => status.id === event.status) as StatusKey | undefined
 		if (!statusKey) {
 			// This shouldn't be possible, but let's be safe and bail if there's no key
@@ -110,18 +110,18 @@ export class PrepullStatusAdapterStep extends AdapterStep {
 			...event,
 			type: 'action',
 			action: action.id,
-			timestamp: this.pull.timestamp + PREPULL_OFFSETS.STATUS_ACTION,
+			timestamp: firstEvent + PREPULL_OFFSETS.STATUS_ACTION,
 		}
 
 		this.precastEvents.push(actionEvent)
 		this.observeAction(action.id, event.source)
 	}
 
-	private synthesizeStatusApply(event: StatusEvent, stacks?: number) {
+	private synthesizeStatusApply(event: StatusEvent, firstEvent: number, stacks?: number) {
 		const applyEvent: Events['statusApply'] = {
 			...event,
 			type: 'statusApply',
-			timestamp: this.pull.timestamp + PREPULL_OFFSETS.STATUS_APPLY,
+			timestamp: firstEvent + PREPULL_OFFSETS.STATUS_APPLY,
 		}
 		if (stacks != null) {
 			applyEvent.data = stacks

@@ -69,7 +69,7 @@ export class LegacyFflogsReportStore extends ReportStore {
 			legacyFight,
 		)
 
-		return adaptEvents(report, pull, legacyEvents)
+		return adaptEvents(report, pull, legacyEvents, legacyFight.start_time)
 	}
 
 	override getReportLink(pullId?: Pull['id'], actorId?: Actor['id']) {

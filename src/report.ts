@@ -53,7 +53,7 @@ export interface Pull {
 	 */
 	id: string
 
-	/** Unix timestamp (ms) of the start of the pull. */
+	/** Unix timestamp (ms) of the start of combat for the pull. */
 	timestamp: number
 	/** Duration of the pull (ms). */
 	duration: number

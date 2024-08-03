@@ -94,7 +94,7 @@ function EventItem({data: {events, pull}, index, style}: EventItemProps) {
 
 	const timestamp = formatDuration(
 		event.timestamp - pull.timestamp,
-		{secondPrecision: 3},
+		{secondPrecision: 3, showNegative: true},
 	)
 
 	const formatter = eventFormatters.get(event.type)

@@ -140,8 +140,8 @@ const convertFight = (
 ): Pull => ({
 	id: fight.id.toString(),
 
-	timestamp: report.start + fight.start_time,
-	duration: fight.end_time - fight.start_time,
+	timestamp: report.start + fight.end_time - fight.combatTime,
+	duration: fight.combatTime,
 	progress: getFightProgress(fight),
 
 	encounter: {
