@@ -292,6 +292,10 @@ export class Gauge extends CoreGauge {
 		case this.data.actions.UMBRAL_SOUL.id:
 			this.onGainUmbralIceStacks(1)
 			this.tryGainUmbralHearts(1)
+			// Patch 7.05 updated Umbral Soul such that it pauses the Umbral Ice timer, but the Polyglot timer keeps rolling
+			if (!this.parser.patch.before('7.05')) {
+				this.umbralIceTimer.pause()
+			}
 			break
 		case this.data.actions.FIRE_I.id:
 			this.tryConsumeUmbralHearts(1)
@@ -401,10 +405,10 @@ export class Gauge extends CoreGauge {
 	}
 
 	private tryGainParadox(lastGaugeState: BLMGaugeState) {
-		// Swapping element states only generates a paradox if we started with full UI/UH and are switching to Astral Fire
-		if (lastGaugeState.umbralIce === ASTRAL_UMBRAL_MAX_STACKS &&
-			this.astralUmbralGauge.getCountAt(ASTRAL_FIRE_HANDLE) > 0 &&
-			this.umbralHeartsGauge.capped) {
+		// We gain Paradox when swapping to Astral Fire with max UI stacks and max hearts
+		// Patch 7.05 brought back gaining Paradox when switching to Umbral Ice with max AF stacks
+		if ((lastGaugeState.umbralIce === ASTRAL_UMBRAL_MAX_STACKS && this.astralUmbralGauge.getCountAt(ASTRAL_FIRE_HANDLE) > 0 && this.umbralHeartsGauge.capped) ||
+			(lastGaugeState.astralFire === ASTRAL_UMBRAL_MAX_STACKS && this.astralUmbralGauge.getCountAt(UMBRAL_ICE_HANDLE) > 0 && !this.parser.patch.before('7.05'))) {
 
 			this.onGainParadox()
 		}
@@ -570,7 +574,11 @@ export class Gauge extends CoreGauge {
 			this.paradoxGauge.spend(1)
 		} else if (event.type === 'damage') {
 			// We checked isSuccessfulHit back in onCast, so we don't need to check it again here
-			// In Dawntrail it shouldn't be possible to cast Paradox with an expired Astral Fire timer but we'll leave the check in to be safe
+			// Add a stack for whichever timer isn't expired
+			// Because it was physically impossible to cast UI Paradox before patch 7.05, we don't need an extra patch level check here
+			if (!this.umbralIceTimer.expired) {
+				this.onGainUmbralIceStacks(1)
+			}
 			if (!this.astralFireTimer.expired) {
 				this.onGainAstralFireStacks(1)
 			}
@@ -643,7 +651,7 @@ export class Gauge extends CoreGauge {
 			this.suggestions.add(new Suggestion({
 				icon: this.data.actions.PARADOX.icon,
 				content: <Trans id="blm.gauge.suggestions.overwritten-paradox.content">
-					You overwrote <DataLink action="PARADOX"/> by not casting it before using <DataLink showIcon={false} action="MANAFONT" />. <DataLink showIcon={false} action="PARADOX"/> is a strong spell, and guarantees you a free <DataLink showIcon={false} status="FIRESTARTER" />, so be sure to use it.
+					You overwrote <DataLink action="PARADOX"/> by generating a new marker without using the previous one. <DataLink showIcon={false} action="PARADOX"/> is a strong spell, and guarantees you a free <DataLink showIcon={false} status="FIRESTARTER" /> when cast under Astral Fire, so be sure to use it.
 				</Trans>,
 				severity: SEVERITY.MAJOR,
 				why: <Trans id="blm.gage.suggestions.overwritten-paradox.why">
@@ -673,7 +681,7 @@ export class Gauge extends CoreGauge {
 				<Message>
 					<Trans id="blm.gauge.error.content">
 						Reaching Umbral Ice III and gaining 3 Umbral Hearts then swapping to the opposite element generates a <DataLink action="PARADOX"/> marker.<br/>
-						Using <DataLink action="MANAFONT" /> also generates a <DataLink action="PARADOX" /> marker.<br/>
+						Using <DataLink action="MANAFONT" />, or reaching Astral Fire III then swapping to the opposite element also generates a <DataLink action="PARADOX" /> marker.<br/>
 						Maintaining Enochian for 30 seconds or using <DataLink action="AMPLIFIER"/> generates a Polyglot charge, allowing
 						the casting of <DataLink action="XENOGLOSSY"/> or <DataLink action="FOUL"/>. You can have up to <Plural value={POLYGLOT_MAX_STACKS} one="# Polyglot charge" other="# Polyglot charges"/>.<br/>
 						This module displays when these gauge effects were overwritten.
