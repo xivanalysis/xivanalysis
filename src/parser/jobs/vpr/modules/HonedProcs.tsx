@@ -24,7 +24,7 @@ const SEVERITIES = {
 const HONED_PROC_LOST_POTENCY = 100 // Aoes are only 20 potency... do I account for them?
 export class HonedProcs extends CoreProcs {
 	static override handle = 'honedprocs'
-	static override title = t('vpr.honedprocs.title')`Honed Procs`
+	static label = t('vpr.honedprocs.title')`Honed Procs`
 
 	@dependency private checklist!: Checklist
 	override trackedProcs = [
@@ -68,7 +68,7 @@ export class HonedProcs extends CoreProcs {
 		}))
 
 		this.suggestions.add(new TieredSuggestion({
-			icon: this.data.actions.DREAD_FANGS.icon,
+			icon: this.data.actions.REAVING_FANGS.icon,
 			content: <Trans id="vpr.honedprocs.suggestions.overwrites.content">
 			Avoid overwritting your <DataLink status="HONED_STEEL"/> & <DataLink status= "HONED_REAVERS"/> buffs as they increase the damage dealt by your combo starters.
 			</Trans>,

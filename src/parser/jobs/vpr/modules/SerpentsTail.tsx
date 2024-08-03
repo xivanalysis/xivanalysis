@@ -12,7 +12,7 @@ import React from 'react'
 const PERFECTIO = 100 // 100% perfect, RPR would be proud
 export class SerpentsTail extends Analyser {
 	static override handle = 'SerpentsTail'
-	static override displayOrder = DISPLAY_ORDER.SEPRENTS_TAIL
+	static override displayOrder = DISPLAY_ORDER.SERPENTS_TAIL
 	@dependency private checklist!: Checklist
 	@dependency private data!: Data
 
@@ -78,7 +78,7 @@ export class SerpentsTail extends Analyser {
 	private onComplete() {
 		this.checklist.add(new Rule({
 			name: <Trans id = "VPR.serpentstail.waste.name"> Use your <DataLink action="SERPENTS_TAIL"/> follow-ups </Trans>,
-			displayOrder: DISPLAY_ORDER.SEPRENTS_TAIL,
+			displayOrder: DISPLAY_ORDER.SERPENTS_TAIL,
 			target: PERFECTIO,
 			description: <Trans id="vpr.serpentstail.waste.content">
 				Using <DataLink action = "HINDSBANE_FANG"/>, <DataLink action="HINDSTING_STRIKE"/>, <DataLink action="FLANKSBANE_FANG"/> or <DataLink action="FLANKSTING_STRIKE"/> grant <DataLink action="DEATH_RATTLE"/>.

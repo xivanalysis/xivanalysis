@@ -10,7 +10,7 @@ export const patch705: Layer<ActionRoot> = {
 	data: {
 		// My Viper, WHY?!
 		STEEL_FANGS: {statusesApplied: ['HONED_REAVERS']},
-		DREAD_FANGS: {id: SHARED.UNKNOWN.id},
+		DREAD_FANGS: SHARED.UNKNOWN,
 		REAVING_FANGS: {
 			id: 34607,
 			name: 'Reaving Fangs',
@@ -26,14 +26,14 @@ export const patch705: Layer<ActionRoot> = {
 
 		HINDSTING_STRIKE: {
 			potencies: [
-				// untraited Dread Fangs is the "base GCD" here
+				// untraited Reaving Fangs is the "base GCD" here
 				{
 					value: 120,
 					bonusModifiers: [],
 				},
 				// with venom, the base gets +100p
 				{
-					value: 220,
+					value: 300,
 					bonusModifiers: [],
 					baseModifiers: ['HINDSTUNG_VENOM'],
 				},
@@ -65,14 +65,14 @@ export const patch705: Layer<ActionRoot> = {
 		},
 		FLANKSTING_STRIKE: {
 			potencies: [
-				// untraited Dread Fangs is the "base GCD" here
+				// untraited Reaving Fangs is the "base GCD" here
 				{
 					value: 120,
 					bonusModifiers: [],
 				},
 				// with venom, the base gets +100p
 				{
-					value: 220,
+					value: 200,
 					bonusModifiers: [],
 					baseModifiers: ['FLANKSTUNG_VENOM'],
 				},
@@ -104,14 +104,14 @@ export const patch705: Layer<ActionRoot> = {
 		},
 		HINDSBANE_FANG: {
 			potencies: [
-				// untraited Dread Fangs is the "base GCD" here
+				// untraited Reaving Fangs is the "base GCD" here
 				{
 					value: 120,
 					bonusModifiers: [],
 				},
 				// with venom, the base gets +100p
 				{
-					value: 220,
+					value: 200,
 					bonusModifiers: [],
 					baseModifiers: ['HINDSBANE_VENOM'],
 				},
@@ -150,7 +150,7 @@ export const patch705: Layer<ActionRoot> = {
 				},
 				// with venom, the base gets +100p
 				{
-					value: 220,
+					value: 200,
 					bonusModifiers: [],
 					baseModifiers: ['FLANKSBANE_VENOM'],
 				},
@@ -182,7 +182,7 @@ export const patch705: Layer<ActionRoot> = {
 		},
 
 		STEEL_MAW: {statusesApplied: ['HONED_REAVERS']},
-		DREAD_MAW: {id: SHARED.UNKNOWN.id},
+		DREAD_MAW: SHARED.UNKNOWN,
 		REAVING_MAW: {
 			id: 34615,
 			name: 'Reaving Maw',
@@ -195,7 +195,7 @@ export const patch705: Layer<ActionRoot> = {
 			statusesApplied: ['HONED_STEEL'],
 		},
 
-		DREADWINDER: {id: SHARED.UNKNOWN.id},
+		DREADWINDER: SHARED.UNKNOWN,
 		VICEWINDER: {
 			id: 34620,
 			name: 'Vicewinder',
@@ -226,7 +226,7 @@ export const patch705: Layer<ActionRoot> = {
 			}],
 		},
 
-		PIT_OF_DREAD: {id: SHARED.UNKNOWN.id},
+		PIT_OF_DREAD: SHARED.UNKNOWN,
 		VICEPIT: {
 			id: 34623,
 			name: 'Vicepit',
