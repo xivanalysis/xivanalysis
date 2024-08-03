@@ -1,10 +1,8 @@
-import {t} from '@lingui/macro'
 import {Trans, Plural} from '@lingui/react'
 import {DataLink} from 'components/ui/DbLink'
-import {Events} from 'event'
 import {Procs as CoreProcs} from 'parser/core/modules/Procs'
 import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
-import React, {Fragment} from 'react'
+import React from 'react'
 
 const SEVERITY_OVERWRITTEN_PROCS = {
 	1: SEVERITY.MINOR,
@@ -28,8 +26,6 @@ const SEVERITY_CRITICAL_PROCS = {
 }
 
 export class Procs extends CoreProcs {
-	static override title = t('rdm.procs.title')`Proc Issues`
-
 	/**
 	 * Procs that a RDM gains over a fight caused by the RDM themselves
 	 */
@@ -57,6 +53,14 @@ export class Procs extends CoreProcs {
 		// 	consumeActions: [this.data.actions.VICE_OF_THORNS],
 		// },
 	]
+
+	// Currently we only care about Invuln points in time, this has been requested quite often in The Balance from RDMs looking over their logs
+	override showProcIssueOutput = true
+	override showDroppedProcOutput = false
+	override showOverwrittenProcOutput = false
+	override procOutputHeader = <Trans id="rdm.procs.invulnlist.preface">
+		Each of the bullets below is the chronological order of procs wasted on an invulnerable boss
+	</Trans>
 
 	private getMissedProcContent(missedFire: number, missedStone: number) {
 		if (missedFire > 0 && missedStone > 0) {
@@ -224,23 +228,5 @@ export class Procs extends CoreProcs {
 			value: invulnFire + invulnStone,
 			why: this.getInvulnProcWhy(invulnFire, invulnStone),
 		}))
-	}
-
-	override output() {
-		const allInvulns = this.getInvulnsForStatus(this.data.statuses.VERFIRE_READY.id).concat(this.getInvulnsForStatus(this.data.statuses.VERSTONE_READY.id)).sort((a, b) => a.timestamp - b.timestamp)
-		if (allInvulns.length === 0) { return }
-
-		//Currently we only care about Invuln points in time, this has been requested quite often in The Balance from RDMs looking over their logs
-		return <Fragment>
-			<Trans id="rdm.procs.invulnlist.preface">
-				Each of the bullets below is the chronological order of procs wasted on an invulnerable boss
-			</Trans>
-			<ul>
-				{allInvulns.map(item => <li key={item.timestamp}>
-					<strong>{this.parser.formatEpochTimestamp(item.timestamp)}</strong>:&nbsp;
-					{this.data.getAction((item as Events['action']).action)?.name}&nbsp;-&nbsp;<strong><Trans id="rdm.procs.invuln.target">Target</Trans></strong>:&nbsp;{this.actors.get((item as Events['action']).target).name}
-				</li>)}
-			</ul>
-		</Fragment>
 	}
 }
