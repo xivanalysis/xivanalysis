@@ -31,9 +31,9 @@ export const patch705: Layer<ActionRoot> = {
 					value: 120,
 					bonusModifiers: [],
 				},
-				// with venom, the base gets +100p
+				// with venom, the base gets +80p
 				{
-					value: 300,
+					value: 200,
 					bonusModifiers: [],
 					baseModifiers: ['HINDSTUNG_VENOM'],
 				},
@@ -65,12 +65,12 @@ export const patch705: Layer<ActionRoot> = {
 		},
 		FLANKSTING_STRIKE: {
 			potencies: [
-				// untraited Reaving Fangs is the "base GCD" here
+				// untraited Dread Fangs is the "base GCD" here
 				{
 					value: 120,
 					bonusModifiers: [],
 				},
-				// with venom, the base gets +100p
+				// with venom, the base gets +80p
 				{
 					value: 200,
 					bonusModifiers: [],
@@ -104,12 +104,12 @@ export const patch705: Layer<ActionRoot> = {
 		},
 		HINDSBANE_FANG: {
 			potencies: [
-				// untraited Reaving Fangs is the "base GCD" here
+				// untraited Dread Fangs is the "base GCD" here
 				{
 					value: 120,
 					bonusModifiers: [],
 				},
-				// with venom, the base gets +100p
+				// with venom, the base gets +80p or is base potency of Reaving
 				{
 					value: 200,
 					bonusModifiers: [],
@@ -148,7 +148,7 @@ export const patch705: Layer<ActionRoot> = {
 					value: 120,
 					bonusModifiers: [],
 				},
-				// with venom, the base gets +100p
+				// with venom, the base gets +80p
 				{
 					value: 200,
 					bonusModifiers: [],
