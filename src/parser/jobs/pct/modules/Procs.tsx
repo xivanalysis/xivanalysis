@@ -46,6 +46,7 @@ export default class Procs extends CoreProcs {
 			],
 		},
 	]
+	override showProcIssueOutput = true
 
 	protected override jobSpecificOnConsumeProc(procGroup: ProcGroup, event: Events['action']): void {
 		// Rainbow bright changes Rainbow Drip from a 4s cast/6s recast to a standard instant GCD
