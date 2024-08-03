@@ -8,6 +8,11 @@ export const changelog = [
 	// 	contributors: [CONTRIBUTORS.YOU],
 	// },
 	{
+		date: new Date('2024-08-02'),
+		Changes: () => <>Added Dokumori to the raid buffs list on the timeline.</>,
+		contributors: [CONTRIBUTORS.TOASTDEIB],
+	},
+	{
 		date: new Date('2024-07-17'),
 		Changes: () => <>Added a module for tracking dropped Phantom Kamaitachi Ready and Tenri Jindo Ready procs.</>,
 		contributors: [CONTRIBUTORS.TOASTDEIB],
