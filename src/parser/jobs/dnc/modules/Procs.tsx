@@ -40,6 +40,7 @@ export class Procs extends CoreProcs {
 	]
 
 	override showDroppedProcSuggestion = true
+	override showProcIssueOutput = true
 	override droppedProcIcon = this.data.actions.FOUNTAINFALL.icon
 	override droppedProcContent =
 		<Trans id="dnc.procs.suggestions.drops.content">
