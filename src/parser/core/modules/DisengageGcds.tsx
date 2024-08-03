@@ -8,7 +8,7 @@ import {Data} from 'parser/core/modules/Data'
 import {SimpleStatistic, Statistics} from 'parser/core/modules/Statistics'
 import React, {ReactNode} from 'react'
 
-export class DisengageGcds extends Analyser {
+export abstract class DisengageGcds extends Analyser {
 	static override handle = 'disengagegcds'
 
 	@dependency data!: Data
@@ -16,43 +16,32 @@ export class DisengageGcds extends Analyser {
 
 	private disengageGcds: number = 0
 
-	// Pass in the GCD you want to track as an Action.
-	protected trackedAction: Action = this.data.actions.UNKNOWN
+	// Required: Override with the GCD you want to track as an Action.
+	protected abstract disengageAction: Action = this.data.actions.UNKNOWN
 
-	// Override these to provide job specific title and text for this statistic
+	// Recommended: Override this to provide the action's icon, eg for gunbreaker:
+	// override disengageIcon = this.data.actions.LIGHTNING_SHOT.icon
+	protected disengageIcon: string = this.data.actions.UNKNOWN.icon
+
+	// Optional: Override to provide job-specific title and info text for this statistic
+	protected disengageTitle: ReactNode = <Trans id="core.disengage.statistic.title">Ranged Attack Uses</Trans>
 	protected disengageInfo: ReactNode = <Trans id="core.disengage.statistic.info">While it is important to keep your GCD rolling as much as possible, try to minimize using ranged attacks that do less damage and delay resource generation.</Trans>
 
 	override initialise() {
 		super.initialise()
 
 		const playerFilter = filter<Event>().source(this.parser.actor.id)
-		this.addEventHook(playerFilter.type('action').action(this.trackedAction.id), this.onUse)
-		this.addEventHook('complete', this.onComplete)
+		this.addEventHook(playerFilter.type('action').action(this.disengageAction.id), this.onUse)
+		this.addEventHook('complete', this.addDisengageStatistic)
 	}
 
-	/**
-	 * Jobs MAY override this to add additional suggestions beyond the default
-	 * @param disengageGcds The number of times the tracked action was used in this pull
-	 * @returns true to prevent adding the default suggestion, or false to include the default suggestions
-	 */
-	protected addJobSpecificStatistics(_disengageGcds: number): boolean {
-		return false
-	}
-
-	// Set addJobSpecificSuggestions to true replace this output, or false to add to it
 	protected addDisengageStatistic() {
 
-		if (this.addJobSpecificStatistics(this.disengageGcds)) {
-			return
-		}
-
 		this.statistics.add(new SimpleStatistic({
-			title: <Trans id="core.disengage.statistic.title">
-				{this.trackedAction.name} Uses
-			</Trans>,
-			icon: this.trackedAction.icon,
-			value: `${this.disengageGcds}`,
+			title: this.disengageTitle,
+			icon: this.disengageIcon,
 			info: this.disengageInfo,
+			value: `${this.disengageGcds}`,
 		}))
 	}
 
@@ -60,7 +49,4 @@ export class DisengageGcds extends Analyser {
 		this.disengageGcds++
 	}
 
-	private onComplete() {
-		this.addDisengageStatistic()
-	}
 }

@@ -1,5 +1,8 @@
+import {Trans} from '@lingui/react'
 import {DisengageGcds as CoreDisengageGcds} from 'parser/core/modules/DisengageGcds'
 
 export class LightningShot extends CoreDisengageGcds {
-	protected override trackedAction = this.data.actions.LIGHTNING_SHOT
+	override disengageTitle = <Trans id="gnb.disengage.statistic.title">Lightning Shots</Trans>
+	override disengageIcon = this.data.actions.LIGHTNING_SHOT.icon
+	override disengageAction = this.data.actions.LIGHTNING_SHOT
 }
