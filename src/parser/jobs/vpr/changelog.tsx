@@ -4,6 +4,11 @@ import React from 'react'
 
 export const changelog = [
 	{
+		date: new Date('2024-11-16'),
+		Changes: () => <>Add a table displaying timestamps when procs were dropped or overwritten, for better clarity around when those issues occurred.</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
+	{
 		date: new Date('2024-11-14'),
 		Changes: () => <>Mark Viper supported for 7.1</>,
 		contributors: [CONTRIBUTORS.RYAN],
