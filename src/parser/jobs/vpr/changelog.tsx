@@ -4,6 +4,11 @@ import React from 'react'
 
 export const changelog = [
 	{
+		date: new Date('2024-08-03'),
+		Changes: () => <>Add a table displaying timestamps when procs were dropped or overwritten, for better clarity around when those issues occurred.</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
+	{
 		date: new Date('2024-07-27'),
 		Changes: () => <>Add <DataLink action="REAWAKEN"/> buff window analysis.</>,
 		contributors: [CONTRIBUTORS.RYAN],

@@ -63,6 +63,8 @@ export class Venoms extends CoreProcs {
 		},
 	]
 
+	override showProcIssueOutput = true
+
 	override showDroppedProcSuggestion = true
 	override droppedProcIcon = this.data.actions.HINDSBANE_FANG.icon
 	override droppedProcContent =
