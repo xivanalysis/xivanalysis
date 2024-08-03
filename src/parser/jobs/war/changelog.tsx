@@ -8,6 +8,11 @@ export const changelog = [
 	// 	contributors: [CONTRIBUTORS.YOU],
 	// },
 	{
+		date: new Date('2024-08-03'),
+		Changes: () => <>Bump supported patch, no other changes</>,
+		contributors: [CONTRIBUTORS.KWEREY],
+	},
+	{
 		date: new Date('2024-07-19'),
 		Changes: () => <>Add support for new Dawntrail job actions</>,
 		contributors: [CONTRIBUTORS.KWEREY],
