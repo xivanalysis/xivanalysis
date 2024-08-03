@@ -7,7 +7,6 @@ import Checklist, {Requirement, Rule} from 'parser/core/modules/Checklist'
 import {Procs as CoreProcs} from 'parser/core/modules/Procs'
 import React from 'react'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
-
 export class ReadyProcs extends CoreProcs {
 	static override handle = 'ReadyProcs'
 	@dependency private checklist!: Checklist
@@ -48,10 +47,19 @@ export class ReadyProcs extends CoreProcs {
 			consumeActions: [this.data.actions.OGI_NAMIKIRI],
 		},
 		{
-			procStatus: this.data.statuses.TENDO, // Also Covers Tsubame Gaeshi
+			procStatus: this.data.statuses.TENDO,
 			consumeActions: [
 				this.data.actions.TENDO_GOKEN,
 				this.data.actions.TENDO_SETSUGEKKA,
+			],
+		},
+		{
+			procStatus: this.data.statuses.TSUBAME_GAESHI_READY,
+			consumeActions: [
+				this.data.actions.KAESHI_GOKEN,
+				this.data.actions.KAESHI_SETSUGEKKA,
+				this.data.actions.TENDO_KAESHI_GOKEN,
+				this.data.actions.TENDO_KAESHI_SETSUGEKKA,
 			],
 		},
 	]
@@ -92,6 +100,24 @@ export class ReadyProcs extends CoreProcs {
 				}),
 			],
 		}))
+
+		this.checklist.add(new Rule({
+			name: <Trans id="sam.readyprocs.tsubame.checklist.name">Use Your <DataLink action="TSUBAME_GAESHI"/> </Trans>,
+			displayOrder: DISPLAY_ORDER.OGI,
+			description: <Trans id="sam.readyprocs.tsubame.waste.content">
+				Using <DataLink action="IAIJUTSU"/> actions except for <DataLink action="HIGANBANA"/> grants <DataLink status="TSUBAME_GAESHI_READY"/> which is consumed to use <DataLink action="TSUBAME_GAESHI"/> actions.
+				Do not drop these actions by not casting them, or overwrite them by casting another <DataLink status="TSUBAME_GAESHI_READY"/> granting <DataLink action="IAIJUTSU"/> before using the <DataLink action="TSUBAME_GAESHI"/>.
+			</Trans>,
+			requirements: [
+				new Requirement({
+					name: <Trans id="sam.readyprocs.tsubame.checklist.requirement.waste.name">
+						Use all of your <DataLink action="TSUBAME_GAESHI"/>s.
+					</Trans>,
+					value: this.getUsageCountForStatus(this.data.statuses.TSUBAME_GAESHI_READY.id),
+					target: this.getHistoryForStatus(this.data.statuses.TSUBAME_GAESHI_READY.id).length,
+				}),
+			],
+		}))
 	}
 
 	override showDroppedProcSuggestion = true
@@ -105,6 +131,6 @@ export class ReadyProcs extends CoreProcs {
 	override overwroteProcIcon = this.data.actions.GYOFU.icon
 	override overwroteProcContent =
 		<Trans id="sam.readyprocs.suggestions.overwrite.content">
-			Avoid overwriting your procs. Make sure you consume all procs from <DataLink action="MEIKYO_SHISUI"/> before using it again.
+			Avoid overwriting your procs.
 		</Trans>
 }
