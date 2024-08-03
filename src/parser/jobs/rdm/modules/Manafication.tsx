@@ -59,7 +59,7 @@ export class Manafication extends BuffWindow {
 				hasStacks: true,
 				suggestionIcon,
 				suggestionContent: <Trans id="rdm.manafication.suggestions.missedgcd.content">
-					Try to land a full enchanted combo and combo finisher during every <StatusLink status="MANAFICATION" /> window so you don't lose out on <ActionLink action="PREFULGENCE" /> your single most powerful action.
+					Ensure you consume all stacks of <StatusLink status="MANAFICATION" /> so you don't lose out on <ActionLink action="PREFULGENCE" /> your single most powerful action.
 				</Trans>,
 				suggestionWindowName,
 				severityTiers: {
@@ -95,11 +95,14 @@ export class Manafication extends BuffWindow {
 					this.data.actions.VERFIRE.id,
 					this.data.actions.GRAND_IMPACT.id,
 					this.data.actions.JOLT_III.id,
+
+					//While this action isn't optimal in any sense of the word it does consume stacks, and during movement away might be warranted
+					this.data.actions.ENCHANTED_REPRISE.id,
 				],
 				globalCooldown: this.globalCooldown,
 				suggestionIcon,
 				suggestionContent: <Trans id="rdm.manafication.suggestions.badgcd.content">
-					GCDs used during <StatusLink status="MANAFICATION"/> should be limited to enchanted combo and combo finisher skills.
+					GCDs used during <StatusLink status="MANAFICATION"/> should be limited to actions that consume <StatusLink status="MANAFICATION"/>
 				</Trans>,
 				suggestionWindowName,
 				severityTiers: {
