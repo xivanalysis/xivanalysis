@@ -1,4 +1,5 @@
 /* eslint-disable no-console */
+import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
 import {DataLink, StatusLink} from 'components/ui/DbLink'
 import {Status} from 'data/STATUSES'
@@ -23,6 +24,7 @@ const SEVERITIES = {
 const HONED_PROC_LOST_POTENCY = 100 // Aoes are only 20 potency... do I account for them?
 export class HonedProcs extends CoreProcs {
 	static override handle = 'honedprocs'
+	static override title = t('vpr.honedprocs.title')`Honed Procs`
 
 	@dependency private checklist!: Checklist
 	override trackedProcs = [

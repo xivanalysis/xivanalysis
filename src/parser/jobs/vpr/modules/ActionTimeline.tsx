@@ -8,18 +8,18 @@ export class ActionTimeline extends CoreActionTimeline {
 		'DEATH_RATTLE',
 		'SERPENTS_IRE',
 		{
-			label: <Trans id="vpr.action-timeline.dreadwinder">Dreadwinder Combo</Trans>,
+			label: <Trans id="vpr.action-timeline.dreadwinder">Vicewinder Combo</Trans>,
 			content: [
-				'DREADWINDER',
+				'VICEWINDER',
 				'HUNTERS_COIL',
 				'SWIFTSKINS_COIL',
-				'PIT_OF_DREAD',
+				'VICEPIT',
 				'HUNTERS_DEN',
 				'SWIFTSKINS_DEN',
 			],
 		},
 		{
-			label: <Trans id="vpr.action-timeline.dreadwinder-procs">Dreadwinder Procs</Trans>,
+			label: <Trans id="vpr.action-timeline.dreadwinder-procs">Vicewinder Procs</Trans>,
 			content: [
 				'TWINFANG_BITE',
 				'TWINBLOOD_BITE',
