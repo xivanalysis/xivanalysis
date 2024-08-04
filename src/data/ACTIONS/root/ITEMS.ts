@@ -131,7 +131,7 @@ const ITEMS = ensureActions({
 	G2_GEMDRAUGHT_VIT: {
 		id: 44164,
 		name: 'Grade 2 Gemdraught of Vitality',
-		icon: iconUrl(20710),
+		icon: iconUrl(20707),
 		duration: 30,
 	},
 
