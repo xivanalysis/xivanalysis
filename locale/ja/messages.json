@@ -115,7 +115,7 @@
   "blm.rotation-watchdog.error-messages.dropped-astral-umbral": "アストラルファイヤかアンブラルブリザードが切れた",
   "blm.rotation-watchdog.error-messages.extra-f1": "エクストラ<0/>",
   "blm.rotation-watchdog.error-messages.manafont-before-despair": "<0/>は<1/>の前で使いました。",
-  "blm.rotation-watchdog.error-messages.missed-ice-paradox": "",
+  "blm.rotation-watchdog.error-messages.missed-ice-paradox": "UB中に<0/>が使えていません。",
   "blm.rotation-watchdog.error-messages.missing-despair": "1回以上の<0/>を失いました。",
   "blm.rotation-watchdog.error-messages.missing-fire4s": "1回以上の<0/>を失いました。",
   "blm.rotation-watchdog.error-messages.missing-flarestars": "1回以上の<0/>を失いました。",

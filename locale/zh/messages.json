@@ -115,7 +115,7 @@
   "blm.rotation-watchdog.error-messages.dropped-astral-umbral": "丢失了星极火或灵极冰",
   "blm.rotation-watchdog.error-messages.extra-f1": "多用了<0/>",
   "blm.rotation-watchdog.error-messages.manafont-before-despair": "<0/>用在了<1/>之前",
-  "blm.rotation-watchdog.error-messages.missed-ice-paradox": "",
+  "blm.rotation-watchdog.error-messages.missed-ice-paradox": "在灵极冰中少打了<0/>",
   "blm.rotation-watchdog.error-messages.missing-despair": "少打了一个或更多的<0/>。",
   "blm.rotation-watchdog.error-messages.missing-fire4s": "少打了一个或更多的<0/>。",
   "blm.rotation-watchdog.error-messages.missing-flarestars": "少打了一个或更多的<0/>。",
