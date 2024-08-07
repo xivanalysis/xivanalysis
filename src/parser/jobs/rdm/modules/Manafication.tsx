@@ -98,6 +98,8 @@ export class Manafication extends BuffWindow {
 
 					//While this action isn't optimal in any sense of the word it does consume stacks, and during movement away might be warranted
 					this.data.actions.ENCHANTED_REPRISE.id,
+					//There are very very very niche situations where it's reasonable to use VerCure to consume stacks so I was asked to allow it.
+					this.data.actions.VERCURE.id,
 				],
 				globalCooldown: this.globalCooldown,
 				suggestionIcon,
