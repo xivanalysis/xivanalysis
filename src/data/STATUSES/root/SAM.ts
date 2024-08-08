@@ -1,5 +1,6 @@
 import {iconUrl} from 'data/icon'
 import {ensureStatuses} from '../type'
+import {SHARED} from './SHARED'
 
 export const SAM = ensureStatuses({
 	THIRD_EYE: {
@@ -88,6 +89,10 @@ export const SAM = ensureStatuses({
 		duration: 30000,
 	},
 
+	TSUBAME_GAESHI_MIDARE: SHARED.UNKNOWN,
+	TSUBAME_GAESHI_TENDO_MIDARE: SHARED.UNKNOWN,
+	TSUBAME_GAESHI_TENDO_GOKEN: SHARED.UNKNOWN,
+
 	ZANSHIN_READY: {
 		id: 3855,
 		name: 'Zanshin Ready',
@@ -101,4 +106,5 @@ export const SAM = ensureStatuses({
 		icon: iconUrl(13319),
 		duration: 30000,
 	},
+
 })

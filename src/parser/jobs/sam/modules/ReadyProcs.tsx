@@ -55,16 +55,32 @@ export class ReadyProcs extends CoreProcs {
 		},
 		{
 			procStatus: this.data.statuses.TSUBAME_GAESHI_READY,
+			consumeActions: [this.data.actions.KAESHI_GOKEN],
+		},
+		{
+			procStatus: this.data.statuses.TSUBAME_GAESHI_MIDARE,
 			consumeActions: [
-				this.data.actions.KAESHI_GOKEN,
 				this.data.actions.KAESHI_SETSUGEKKA,
-				this.data.actions.TENDO_KAESHI_GOKEN,
+			],
+		},
+		{
+			procStatus: this.data.statuses.TSUBAME_GAESHI_TENDO_MIDARE,
+			consumeActions: [
 				this.data.actions.TENDO_KAESHI_SETSUGEKKA,
+			],
+		},
+		{
+			procStatus: this.data.statuses.TSUBAME_GAESHI_TENDO_GOKEN,
+			consumeActions: [
+				this.data.actions.TENDO_KAESHI_GOKEN,
 			],
 		},
 	]
 
 	override addJobSpecificSuggestions(): void {
+		const TsubameSpent = this.getUsageCountForStatus(this.data.statuses.TSUBAME_GAESHI_READY.id) + this.getUsageCountForStatus(this.data.statuses.TSUBAME_GAESHI_MIDARE.id) + this.getUsageCountForStatus(this.data.statuses.TSUBAME_GAESHI_TENDO_MIDARE.id) + this.getUsageCountForStatus(this.data.statuses.TSUBAME_GAESHI_TENDO_GOKEN.id)
+		const TsubameGained =this.getHistoryForStatus(this.data.statuses.TSUBAME_GAESHI_READY.id).length + this.getHistoryForStatus(this.data.statuses.TSUBAME_GAESHI_MIDARE.id).length + this.getHistoryForStatus(this.data.statuses.TSUBAME_GAESHI_TENDO_MIDARE.id).length + this.getHistoryForStatus(this.data.statuses.TSUBAME_GAESHI_TENDO_GOKEN.id).length
+
 		this.checklist.add(new Rule({
 			name: <Trans id = "sam.readyprocs.ogi.checklist.name">Use Your Ogis </Trans>,
 			displayOrder: DISPLAY_ORDER.OGI,
@@ -113,8 +129,8 @@ export class ReadyProcs extends CoreProcs {
 					name: <Trans id="sam.readyprocs.tsubame.checklist.requirement.waste.name">
 						Use all of your <DataLink action="TSUBAME_GAESHI"/>s.
 					</Trans>,
-					value: this.getUsageCountForStatus(this.data.statuses.TSUBAME_GAESHI_READY.id),
-					target: this.getHistoryForStatus(this.data.statuses.TSUBAME_GAESHI_READY.id).length,
+					value: TsubameSpent,
+					target: TsubameGained,
 				}),
 			],
 		}))
