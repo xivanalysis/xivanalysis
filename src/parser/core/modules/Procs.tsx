@@ -334,7 +334,7 @@ export abstract class Procs extends Analyser {
 	/**
 	 * May be overriden by Subclasses. Called by OnProcGained to allow jobs to implment job-specific logic for evaluting a proc when it is gained
 	 * @param event The event to check
-	 * @returns False by default. Jobs may override to return true, allowing them to implement job-specific logic to consider an event
+	 * @returns True by default. Jobs may override to return false, allowing them to implement job-specific logic to ignore a proc gain
 	 */
 	protected jobSpecificOnProcGainedConsiderEvent(_event: Events['statusApply']): boolean { return true }
 	/**
