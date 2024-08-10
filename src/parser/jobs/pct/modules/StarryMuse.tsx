@@ -53,11 +53,11 @@ export class StarryMuse extends RaidBuffWindow {
 				},
 				{
 					actions: [this.data.actions.COMET_IN_BLACK],
-					expectedPerWindow: 2, // Default to 2, adjust to 1 for the opener
+					expectedPerWindow: 1,
 				},
 				{
 					actions: this.subtractiveActions,
-					expectedPerWindow: 2, // Default to 2, adjust to 3 for the opener
+					expectedPerWindow: 3,
 					overrideHeader: <DataLink showName={false} status="SUBTRACTIVE_PALETTE" />,
 				},
 				{
@@ -104,28 +104,20 @@ export class StarryMuse extends RaidBuffWindow {
 
 	private adjustExpectedActionGroupCounts(window: HistoryEntry<EvaluatedAction[]>, action: TrackedActionGroup): number {
 		const motifsPainted = this.countActionsUsed(window, this.creatureMotifs)
-		const firstWindow = this.history.entries.length > 0 ? this.history.entries[0].start === window.start : false
-
-		if (action.actions.includes(this.data.actions.COMET_IN_BLACK)) {
-			// If they had carried-over gauge we couldn't see, let 'em
-			if (this.countUsed(window, action) >= action.expectedPerWindow) { return 0 }
-
-			// If this is the opener window, or they're doing a multi-muse window, expect that they'll only fit one comet
-			if (firstWindow || motifsPainted > 0) {
-				return -1
-			}
-		}
 
 		if (action.actions.some(action => this.subtractiveActions.includes(action))) {
+			let adjustment = 0
 			// Only one subtractive spell can normally be fit into a multi-muse window
 			if (motifsPainted > 0) {
-				return -1
+				adjustment -= 2
 			}
 
-			// The opener window, with no carried over gauge, should replace the second comet with a third subtractive spell
-			if (firstWindow && this.countActionsUsed(window, [this.data.actions.COMET_IN_BLACK]) < 2) {
-				return 1
+			// Carrying a comet into the window (commonly referred to as KMYK) means pushing the third Subtractive spell out of the window
+			if (this.countActionsUsed(window, [this.data.actions.COMET_IN_BLACK]) > 1) {
+				adjustment--
 			}
+
+			return adjustment
 		}
 
 		// A multi-muse burst pushes Rainbow Drip out of the window
