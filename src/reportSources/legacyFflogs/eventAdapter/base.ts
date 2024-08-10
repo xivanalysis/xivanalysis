@@ -3,11 +3,12 @@ import {Debuggable} from 'parser/core/Debuggable'
 import {Pull, Report} from 'report'
 import {FflogsEvent} from '../eventTypes'
 
+// Time (in MS) to offset prepull synthesized events from the first event in the pull
 export const PREPULL_OFFSETS = {
-	ATTRIBUTE_UPDATE: -4,
-	STATUS_ACTION: -3,
-	STATUS_APPLY: -2,
-	PULL_ACTION: -1,
+	ATTRIBUTE_UPDATE: -400,
+	STATUS_ACTION: -300,
+	STATUS_APPLY: -200,
+	PULL_ACTION: -100,
 }
 
 // This stuff will probably be moved to a shared location for other sources to use
@@ -47,7 +48,7 @@ export abstract class AdapterStep extends Debuggable {
 	 * Perform postprocessing on the final array of adapted events. This will be
 	 * called once after all report source events have been adapted.
 	 */
-	postprocess(adaptedEvents: Event[]): Event[] {
+	postprocess(adaptedEvents: Event[], _firstEvent: number): Event[] {
 		return adaptedEvents
 	}
 }

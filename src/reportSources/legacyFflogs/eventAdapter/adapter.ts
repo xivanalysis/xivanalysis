@@ -18,14 +18,14 @@ import {SpeedStatsAdapterStep} from './speedStat'
 import {TranslateAdapterStep} from './translate'
 
 /** Adapt an array of FFLogs APIv1 events to xiva representation. */
-export function adaptEvents(report: Report, pull: Pull, baseEvents: FflogsEvent[]): Event[] {
+export function adaptEvents(report: Report, pull: Pull, baseEvents: FflogsEvent[], firstEvent: number): Event[] {
 	const adapter = new EventAdapter({report, pull})
 
 	// Shallow clone to ensure top-level updates will not effect the base array.
 	// Child adapters are responsible for ensuring updates are copy-on-write.
 	const events = [...baseEvents]
 
-	return adapter.adaptEvents(events)
+	return adapter.adaptEvents(events, firstEvent)
 }
 
 class EventAdapter {
@@ -50,7 +50,7 @@ class EventAdapter {
 		]
 	}
 
-	adaptEvents(events: FflogsEvent[]): Event[] {
+	adaptEvents(events: FflogsEvent[], firstEvent: number): Event[] {
 		const adaptedEvents = events.flatMap(baseEvent =>
 			this.adaptionSteps.reduce(
 				(adaptedEvents, step) => {
@@ -68,7 +68,7 @@ class EventAdapter {
 		)
 
 		return this.adaptionSteps.reduce(
-			(processedEvents, step) => step.postprocess(processedEvents),
+			(processedEvents, step) => step.postprocess(processedEvents, firstEvent),
 			adaptedEvents,
 		)
 	}

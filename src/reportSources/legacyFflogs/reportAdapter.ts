@@ -133,28 +133,32 @@ function resolveActorKind(id: number, guid: number) {
 	return guid.toString()
 }
 
-const convertFight = (
-	report: LegacyReport,
-	fight: Fight,
-	actors: Actor[],
-): Pull => ({
-	id: fight.id.toString(),
+function convertFight(report: LegacyReport, fight: Fight, actors: Actor[]): Pull {
+	let timestamp = report.start + fight.start_time
+	let duration = fight.end_time - fight.start_time
+	if (fight.combatTime != null) {
+		// If the pull has a combat time flag, adjust the start of pull timestamp to use that instead
+		// Dungeons and trash pulls don't have a combat time flag, so preserve the original behavior using fight.start_time for those
+		timestamp = report.start + (fight.end_time - fight.combatTime)
+		duration = fight.combatTime
+	}
 
-	timestamp: report.start + fight.start_time,
-	duration: fight.end_time - fight.start_time,
-	progress: getFightProgress(fight),
-
-	encounter: {
-		key: getEncounterKey('legacyFflogs', fight.boss.toString()),
-		name: fight.name,
-		duty: {
-			id: fight.zoneID,
-			name: fight.zoneName,
+	return {
+		id: fight.id.toString(),
+		timestamp,
+		duration,
+		progress: getFightProgress(fight),
+		encounter: {
+			key: getEncounterKey('legacyFflogs', fight.boss.toString()),
+			name: fight.name,
+			duty: {
+				id: fight.zoneID,
+				name: fight.zoneName,
+			},
 		},
-	},
-
-	actors: [...actors, UNKNOWN_ACTOR],
-})
+		actors: [...actors, UNKNOWN_ACTOR],
+	}
+}
 
 function getFightProgress(fight: Fight) {
 	// Always mark kills as 100% progress

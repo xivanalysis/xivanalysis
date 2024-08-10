@@ -20,7 +20,7 @@ export const PALADIN = new Meta({
 
 	supportedPatches: {
 		from: '7.0',
-		to: '7.01',
+		to: '7.05',
 	},
 
 	contributors: [

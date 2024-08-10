@@ -1,6 +1,6 @@
 import {Trans} from '@lingui/react'
 import {DataLink} from 'components/ui/DbLink'
-import {EvaluatedAction, ExpectedActionGroupsEvaluator} from 'parser/core/modules/ActionWindow'
+import {EvaluatedAction, ExpectedActionGroupsEvaluator, TrackedActionGroup} from 'parser/core/modules/ActionWindow'
 import {HistoryEntry} from 'parser/core/modules/ActionWindow/History'
 import {SEVERITY} from 'parser/core/modules/Suggestions'
 import {Tincture as CoreTincture} from 'parser/core/modules/Tincture'
@@ -63,8 +63,8 @@ export class Tincture extends CoreTincture {
 		}))
 	}
 
-	private adjustExpectedBloodspillerCount(window: HistoryEntry<EvaluatedAction[]>) {
-		const evaluatedAction = window.data[0].action
+	private adjustExpectedBloodspillerCount(window: HistoryEntry<EvaluatedAction[]>, action: TrackedActionGroup) {
+		const evaluatedAction = action.actions[0]
 		if (window.start - TINCTURE_OPENER_BUFFER <= this.parser.pull.timestamp && evaluatedAction === this.data.actions.BLOODSPILLER) {
 			return BLOODSPILLER_REQUIREMENT_OPENER - BLOODSPILLER_REQUIREMENT
 		}

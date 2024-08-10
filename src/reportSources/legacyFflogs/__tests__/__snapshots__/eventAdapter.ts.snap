@@ -22,7 +22,7 @@ Array [
     "source": "7",
     "status": 1001238,
     "target": "7",
-    "timestamp": 1599999999997,
+    "timestamp": 1599999999200,
     "type": "action",
   },
   Object {
@@ -79,7 +79,7 @@ Array [
     "action": 3554,
     "source": "1",
     "target": "3",
-    "timestamp": 1599999999999,
+    "timestamp": 1599999999400,
     "type": "action",
   },
   Object {
@@ -203,7 +203,7 @@ Array [
     "source": "16",
     "status": 1000727,
     "target": "15",
-    "timestamp": 1599999999997,
+    "timestamp": 1599999999200,
     "type": "action",
   },
   Object {
@@ -211,7 +211,7 @@ Array [
     "source": "20",
     "status": 1001218,
     "target": "15",
-    "timestamp": 1599999999997,
+    "timestamp": 1599999999200,
     "type": "action",
   },
   Object {
@@ -219,7 +219,7 @@ Array [
     "source": "20",
     "status": 1000158,
     "target": "15",
-    "timestamp": 1599999999997,
+    "timestamp": 1599999999200,
     "type": "action",
   },
   Object {
@@ -498,7 +498,7 @@ Array [
     "action": 9899,
     "source": "1957:4",
     "target": "1951",
-    "timestamp": 1599999999999,
+    "timestamp": 1599999999400,
     "type": "action",
   },
   Object {
@@ -608,7 +608,7 @@ Array [
     "source": "1",
     "status": 1001902,
     "target": "1",
-    "timestamp": 1599999999997,
+    "timestamp": 1599999999200,
     "type": "action",
   },
   Object {
@@ -616,7 +616,7 @@ Array [
     "source": "1",
     "status": 1001902,
     "target": "1",
-    "timestamp": 1599999999998,
+    "timestamp": 1599999999300,
     "type": "statusApply",
   },
   Object {
@@ -638,7 +638,7 @@ Array [
     "source": "7",
     "status": 1001238,
     "target": "7",
-    "timestamp": 1599999999997,
+    "timestamp": 1599999999200,
     "type": "action",
   },
   Object {
@@ -660,7 +660,7 @@ Array [
     "source": "9",
     "status": 1001221,
     "target": "2",
-    "timestamp": 1599999999997,
+    "timestamp": 1599999999200,
     "type": "action",
   },
   Object {
@@ -668,7 +668,7 @@ Array [
     "source": "9",
     "status": 1001221,
     "target": "2",
-    "timestamp": 1599999999998,
+    "timestamp": 1599999999300,
     "type": "statusApply",
   },
   Object {

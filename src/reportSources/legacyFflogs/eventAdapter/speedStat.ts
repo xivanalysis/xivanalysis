@@ -60,7 +60,7 @@ export class SpeedStatsAdapterStep extends AdapterStep {
 		return adaptedEvents
 	}
 
-	override postprocess(adaptedEvents: Event[]): Event[] {
+	override postprocess(adaptedEvents: Event[], firstEvent: number): Event[] {
 		adaptedEvents.forEach((event) => {
 			if (
 				!('source' in event)
@@ -84,7 +84,7 @@ export class SpeedStatsAdapterStep extends AdapterStep {
 
 		const eventsToAdd: Array<Events['actorUpdate']> = []
 		this.actorActions.forEach((gcds, actorId) => {
-			const speedStatUpdate = this.estimateActorSpeedStat(gcds, actorId)
+			const speedStatUpdate = this.estimateActorSpeedStat(gcds, actorId, firstEvent)
 			if (speedStatUpdate != null) { eventsToAdd.push(speedStatUpdate) }
 		})
 
@@ -173,7 +173,7 @@ export class SpeedStatsAdapterStep extends AdapterStep {
 		windowMap[windowMap.length-1].end = event.timestamp
 	}
 
-	private estimateActorSpeedStat(gcds: GCD[], actorId: string): Events['actorUpdate'] | undefined {
+	private estimateActorSpeedStat(gcds: GCD[], actorId: string, firstEvent: number): Events['actorUpdate'] | undefined {
 		const speedAttributeKeys = [Attribute.SKILL_SPEED, Attribute.SPELL_SPEED] as const
 		const intervals: Record<Attribute, number[]> = {
 			[Attribute.SKILL_SPEED]: [],
@@ -230,7 +230,7 @@ export class SpeedStatsAdapterStep extends AdapterStep {
 			return {
 				type: 'actorUpdate',
 				actor: actorId,
-				timestamp: this.pull.timestamp + PREPULL_OFFSETS.ATTRIBUTE_UPDATE,
+				timestamp: firstEvent + PREPULL_OFFSETS.ATTRIBUTE_UPDATE,
 				attributes,
 			}
 		}

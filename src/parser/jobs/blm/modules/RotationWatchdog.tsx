@@ -28,6 +28,7 @@ import {FirestarterUsageEvaluator} from './RotationWatchdog/FirestarterUsageEval
 import {FlareStarUsageEvaluator} from './RotationWatchdog/FlareStarUsageEvaluator'
 import {IceMageEvaluator} from './RotationWatchdog/IceMageEvaluator'
 import {ManafontTimingEvaluator} from './RotationWatchdog/ManafontTimingEvaluator'
+import {MissedIceParadoxEvaluator} from './RotationWatchdog/MissedIceParadoxEvaluator'
 import {RotationErrorNotesEvaluator} from './RotationWatchdog/RotationErrorNotesEvaluator'
 import {SkipThunderEvaluator} from './RotationWatchdog/SkipThunderEvaluator'
 import {UptimeSoulsEvaluator} from './RotationWatchdog/UptimeSoulsEvaluator'
@@ -76,7 +77,7 @@ export class RotationWatchdog extends RestartWindow {
 	override prependMessages = <Fragment>
 		<Message>
 			<Trans id="blm.rotation-watchdog.rotation-table.message">
-				The core of BLM consists of six casts of <DataLink action="FIRE_IV"/>, and one cast each of <DataLink action="PARADOX"/>, <DataLink action="DESPAIR"/>, and <DataLink action="FLARE_STAR" /> per rotation.<br/>
+				The core of BLM consists of six casts of <DataLink action="FIRE_IV"/>, two casts of <DataLink action="PARADOX"/>, and one cast each of <DataLink action="DESPAIR"/>, and <DataLink action="FLARE_STAR" /> per rotation.<br/>
 				Avoid missing <DataLink action="FIRE_IV" showIcon={false} /> casts where possible. since that will prevent you from using <DataLink showIcon={false} action="FLARE_STAR" />.
 			</Trans>
 		</Message>
@@ -154,6 +155,11 @@ export class RotationWatchdog extends RestartWindow {
 			adjustCount: this.adjustExpectedActionsCount.bind(this),
 			adjustOutcome: this.adjustExpectedActionsOutcome.bind(this),
 		}))
+
+		// Patch 7.05 re-added Ice Paradox, only load the evaluator when necessary
+		if (!this.parser.patch.before('7.05')) {
+			this.addEvaluator(new MissedIceParadoxEvaluator(this.metadataHistory))
+		}
 
 		this.addEvaluator(new FlareStarUsageEvaluator({
 			suggestionIcon: this.data.actions.FLARE_STAR.icon,
