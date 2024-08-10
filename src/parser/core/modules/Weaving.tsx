@@ -67,6 +67,8 @@ export class Weaving extends Analyser {
 
 	protected severity = WEAVING_SEVERITY
 
+	protected ignoredActionIds: number[] = []
+
 	//used to synth a start and end in case there were no actions before the pull or close to when the pull ended. it's also used to ensure that leading and trailing gcd events are not nullable
 	private pullStart: Events['action'] = {
 		action: 0,
@@ -107,6 +109,11 @@ export class Weaving extends Analyser {
 
 		// If the action is an auto, just ignore it
 		if (!action || action.autoAttack) {
+			return
+		}
+
+		// Ignore actions we were told to ignore
+		if (this.ignoredActionIds.includes(action.id)) {
 			return
 		}
 
