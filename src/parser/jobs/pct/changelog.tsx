@@ -10,7 +10,7 @@ export const changelog = [
 	// },
 	{
 		date: new Date('2024-08-10'),
-		Changes: () => <>Fixed issue causing <DataLink showIcon={false} status="INSPIRATION" />'s cast time reduction to be ignored for uptime calculations.</>,
+		Changes: () => <>Fixed incorrect uptime calculations caused by erroneous <DataLink showIcon={false} status="INSPIRATION" /> and <DataLink showIcon={false} status="RAINBOW_BRIGHT"/> handling.</>,
 		contributors: [CONTRIBUTORS.ACKWELL],
 	},
 	{
