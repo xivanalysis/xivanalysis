@@ -10,7 +10,7 @@ export const patch705: Layer<ActionRoot> = {
 	data: {
 		// My Viper, WHY?!
 		STEEL_FANGS: {statusesApplied: ['HONED_REAVERS']},
-		DREAD_FANGS: SHARED.UNKNOWN,
+		DREAD_FANGS: {id: SHARED.UNKNOWN.id},
 		REAVING_FANGS: {
 			id: 34607,
 			name: 'Reaving Fangs',
@@ -182,7 +182,7 @@ export const patch705: Layer<ActionRoot> = {
 		},
 
 		STEEL_MAW: {statusesApplied: ['HONED_REAVERS']},
-		DREAD_MAW: SHARED.UNKNOWN,
+		DREAD_MAW: {id: SHARED.UNKNOWN.id},
 		REAVING_MAW: {
 			id: 34615,
 			name: 'Reaving Maw',
@@ -195,7 +195,7 @@ export const patch705: Layer<ActionRoot> = {
 			statusesApplied: ['HONED_STEEL'],
 		},
 
-		DREADWINDER: SHARED.UNKNOWN,
+		DREADWINDER: {id: SHARED.UNKNOWN.id},
 		VICEWINDER: {
 			id: 34620,
 			name: 'Vicewinder',
@@ -226,7 +226,7 @@ export const patch705: Layer<ActionRoot> = {
 			}],
 		},
 
-		PIT_OF_DREAD: SHARED.UNKNOWN,
+		PIT_OF_DREAD: {id: SHARED.UNKNOWN.id},
 		VICEPIT: {
 			id: 34623,
 			name: 'Vicepit',
