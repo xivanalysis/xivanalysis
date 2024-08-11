@@ -15,14 +15,15 @@ export class Tincture extends CoreTincture {
 		super.initialise()
 
 		const suggestionIcon = this.data.actions.G2_GEMDRAUGHT_STR.icon
-		const suggestionWindowName = <DataLink item="G2_GEMDRAUGHT_STR" />
+		const suggestionWindowName = <DataLink status="MEDICATED" showIcon={false}/>
+
 		this.addEvaluator(new ExpectedGcdCountEvaluator({
 			expectedGcds: 12,
 			globalCooldown: this.globalCooldown,
 			hasStacks: false,
 			suggestionIcon,
 			suggestionContent: <Trans id="war.tincture.suggestions.missedgcd.content">
-				Try to land 12 GCDs during every <DataLink item="INFUSION_STR" /> window.
+				Try to land 12 GCDs before your <DataLink status="MEDICATED" /> buff runs out.
 			</Trans>,
 			suggestionWindowName,
 			severityTiers: {
@@ -44,9 +45,7 @@ export class Tincture extends CoreTincture {
 			],
 			suggestionIcon,
 			suggestionContent: <Trans id="war.tincture.suggestions.trackedactions.content">
-				Try to land at least one cast of <DataLink action="PRIMAL_REND" />, <DataLink action="PRIMAL_RUINATION" />
-				, <DataLink action="PRIMAL_WRATH" />, <DataLink action="UPHEAVAL" />, three or more casts of
-				<DataLink action="FELL_CLEAVE" /> and <DataLink action="ONSLAUGHT" />, and two or more uses of <DataLink action="INNER_CHAOS" /> during every <DataLink item="G2_GEMDRAUGHT_STR" /> window.
+				Try to land at least one cast of <DataLink action="PRIMAL_REND" />, <DataLink action="PRIMAL_RUINATION" />, <DataLink action="PRIMAL_WRATH" />, <DataLink action="UPHEAVAL" />, three or more casts of <DataLink action="FELL_CLEAVE" /> and <DataLink action="ONSLAUGHT" />, and two or more uses of <DataLink action="INNER_CHAOS" /> before your <DataLink status="MEDICATED" /> buff runs out.
 			</Trans>,
 			suggestionWindowName,
 			severityTiers: {
