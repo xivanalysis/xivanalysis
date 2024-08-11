@@ -1148,6 +1148,7 @@
   "war.surgingtempest.checklist.uptime": "<0/> 覆盖率",
   "war.tincture.suggestions.missedgcd.content": "",
   "war.tincture.suggestions.trackedactions.content": "",
+  "war.tincture.title": "",
   "whm.about.description": "\n这个分析工具旨在帮助你找到一些能改善你白魔游戏体验的有问题的操作，并让你对战斗期间发生的状况有一个更深入的了解。\n\n如果你想学习更多有关白魔的知识，请阅读 [The Balance网站](https://thebalanceffxiv.com/) 的攻略，并在Discord的#whm_questions频道与我们交流。\n\n目前，这个模块能够监控DoT的持续时间，记录治愈百合的溢出情况，检查卡GCD以及中断读条的情况，并报告能力技空转的问题。\n\n治疗职业的分析可能会非常主观——即使下面的建议并不适合于你，它们仍然能够帮助你注意到一些你忽略的问题。\n",
   "whm.dots.requirement.uptime-dia.name": "<0/> 覆盖率",
   "whm.dots.rule.description": "作为白魔法师，<0/>将占你伤害量的很大一部分。尽量时刻保持 Boss 身上的 DoT 。",

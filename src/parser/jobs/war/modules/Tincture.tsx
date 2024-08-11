@@ -1,5 +1,4 @@
 import {Trans} from '@lingui/react'
-import {DataLink} from 'components/ui/DbLink'
 import {dependency} from 'parser/core/Injectable'
 import {ExpectedActionsEvaluator, ExpectedGcdCountEvaluator} from 'parser/core/modules/ActionWindow'
 import {GlobalCooldown} from 'parser/core/modules/GlobalCooldown'
@@ -15,7 +14,7 @@ export class Tincture extends CoreTincture {
 		super.initialise()
 
 		const suggestionIcon = this.data.actions.G2_GEMDRAUGHT_STR.icon
-		const suggestionWindowName = <DataLink status="MEDICATED" showIcon={false}/>
+		const suggestionWindowName = <Trans id="war.tincture.title">Gemdraught of Strength</Trans>
 
 		this.addEvaluator(new ExpectedGcdCountEvaluator({
 			expectedGcds: 12,
@@ -23,7 +22,7 @@ export class Tincture extends CoreTincture {
 			hasStacks: false,
 			suggestionIcon,
 			suggestionContent: <Trans id="war.tincture.suggestions.missedgcd.content">
-				Try to land 12 GCDs before your <DataLink status="MEDICATED" /> buff runs out.
+				Try to land 12 GCDs during the damage buff given by your Gemdraught of Strength.
 			</Trans>,
 			suggestionWindowName,
 			severityTiers: {
@@ -45,7 +44,7 @@ export class Tincture extends CoreTincture {
 			],
 			suggestionIcon,
 			suggestionContent: <Trans id="war.tincture.suggestions.trackedactions.content">
-				Try to land at least one cast of <DataLink action="PRIMAL_REND" />, <DataLink action="PRIMAL_RUINATION" />, <DataLink action="PRIMAL_WRATH" />, <DataLink action="UPHEAVAL" />, three or more casts of <DataLink action="FELL_CLEAVE" /> and <DataLink action="ONSLAUGHT" />, and two or more uses of <DataLink action="INNER_CHAOS" /> before your <DataLink status="MEDICATED" /> buff runs out.
+				Try to use all your higher damage abilities during your Gemdraughts of Strength.
 			</Trans>,
 			suggestionWindowName,
 			severityTiers: {

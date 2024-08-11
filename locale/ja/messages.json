@@ -1148,6 +1148,7 @@
   "war.surgingtempest.checklist.uptime": "アクティブ率: <0/>",
   "war.tincture.suggestions.missedgcd.content": "",
   "war.tincture.suggestions.trackedactions.content": "",
+  "war.tincture.title": "",
   "whm.about.description": "\nこのアナライザーは戦闘中に起きたことについてのより深い洞察を提供するとともに、白魔道士の操作を手軽に改善できるようにすることを目指しています。\n\nもっと白魔道士について学びたい場合は、[The Balance](https://thebalanceffxiv.com/) をチェックした上で #whm_questions チャンネルでお話しましょう。\n\n現状このモジュールではDoTの効果時間、ヒーリングリリーが満タンのときの指摘事項、食い込みの問題、詠唱中断、アビリティの使用漏れを検知しています。\n\nヒールの分析は主観的なものかもしれませんが、あなたにそのまま当てはめられないにしても、なにか見落としているかもしれないことを知るのに役立つと思います。\n",
   "whm.dots.requirement.uptime-dia.name": "アクティブ率: <0/>",
   "whm.dots.rule.description": "<0/> によるDoTは白魔道士にとって重要なダメージ源です。常にDoTを切らさず維持してください。",

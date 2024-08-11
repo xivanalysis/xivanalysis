@@ -1148,6 +1148,7 @@
   "war.surgingtempest.checklist.uptime": "적용시간 <0/>",
   "war.tincture.suggestions.missedgcd.content": "",
   "war.tincture.suggestions.trackedactions.content": "",
+  "war.tincture.title": "",
   "whm.about.description": "\n이 분석기는 전투 중 어떤 일이 일어났는지 자세하게 분석하여 백마도사 게임플레이에 개선점이 있을지를 분석합니다.\n\n백마도사에 대해 더 자세히 알고 싶다면 [The Balance](https://thebalanceffxiv.com/)에서 가이드를 확인하고 #whm_questions 채널(영문)에서 대화를 나눠보세요.\n\n본 모듈은 지속 피해 업타임, 백합 게이지 최대치, 글쿨 밀림, 시전 끊김, 논글쿨 기술 시전 횟수 손해 등을 추적합니다.\n\n힐러 분석은 매우 주관적이며, 아래 제언 중 일부는 당신의 상황에 해당하지 않을 수 있습니다. 하지만 무엇이 부족했는지 정도는 참고할 수 있을 것입니다.\n",
   "whm.dots.requirement.uptime-dia.name": "적용시간 <0/>",
   "whm.dots.rule.description": "백마도사로서 <0/> 기술은 지속 피해의 큰 부분을 차지합니다. 피해량을 최대로 줄 수 있도록 최대한 오래 유지하십시오.",
