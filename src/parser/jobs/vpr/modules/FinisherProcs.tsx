@@ -26,6 +26,7 @@ export class FinisherProcs extends CoreProcs {
 	static override handle = 'finisherprocs'
 	static override title = t('vpr.finisherprocs.title')`Finisher Procs`
 	static override displayOrder = DISPLAY_ORDER.FINISHER_PROCS
+	override ProcGroupLabel = <Trans id="vpr.FinisherProcs.group.label"> Finisher Procs </Trans>
 
 	@dependency private checklist!: Checklist
 	override trackedProcs = [
