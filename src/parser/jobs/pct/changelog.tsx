@@ -9,8 +9,23 @@ export const changelog = [
 	// 	contributors: [CONTRIBUTORS.YOU],
 	// },
 	{
-		date: new Date('2024-08-03'),
+		date: new Date('2024-08-11'),
 		Changes: () => <>Add a table displaying timestamps when procs were dropped, for better clarity around when those issues occurred.</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
+	{
+		date: new Date('2024-08-10'),
+		Changes: () => <>Ignore the cure effect of <DataLink showIcon={false} action="STAR_PRISM" /> when looking for weaving issues.</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
+	{
+		date: new Date('2024-08-10'),
+		Changes: () => <>Fix incorrect uptime calculations caused by erroneous <DataLink showIcon={false} status="INSPIRATION" /> and <DataLink showIcon={false} status="RAINBOW_BRIGHT"/> handling.</>,
+		contributors: [CONTRIBUTORS.ACKWELL],
+	},
+	{
+		date: new Date('2024-08-02'),
+		Changes: () => <>Relax the expectation for <DataLink showIcon={false} action="COMET_IN_BLACK" /> usage in <DataLink showIcon={false} action="STARRY_MUSE" /> buff windows.</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],
 	},
 	{

@@ -75,18 +75,30 @@ export class AlwaysBeCasting extends Analyser {
 
 		const castStart = (this.lastBeginCast != null && this.lastBeginCast.action === event.action) ? this.lastBeginCast.timestamp : event.timestamp
 		if (this.considerCast(action, castStart)) {
+			const gcdDuration = Math.max(castTime, recastTime)
+
 			const relativeTimestamp = event.timestamp - this.parser.pull.timestamp
+			const relativeEndTime = relativeTimestamp + gcdDuration
+
 			if (castTime > relativeTimestamp) {
-				this.debug(`GCD Uptime for precast ${action.name} at ${this.parser.formatEpochTimestamp(event.timestamp, 1)} - Cast time: ${castTime} | Recast time: ${recastTime} | Time of completion: ${relativeTimestamp}`)
+				const gcdUptime = relativeTimestamp - castTime + gcdDuration
+				this.debug(`GCD Uptime for precast ${action.name} at ${this.parser.formatEpochTimestamp(event.timestamp, 1)} - Cast time: ${castTime} | Recast time: ${recastTime} | Time of completion: ${gcdUptime}`)
 				this.gcdUptimeEvents.push({
 					time: event.timestamp,
-					gcdUptime: Math.max(0, relativeTimestamp),
+					gcdUptime: Math.max(0, gcdUptime),
+				})
+			} else if (relativeEndTime > this.parser.pull.duration) {
+				const gcdUptime = relativeEndTime - this.parser.pull.duration
+				this.debug(`GCD Uptime for end-of-fight ${action.name} at ${this.parser.formatEpochTimestamp(event.timestamp, 1)} - Cast time: ${castTime} | Recast time: ${recastTime} | In-combat uptime ${gcdUptime}`)
+				this.gcdUptimeEvents.push({
+					time: event.timestamp,
+					gcdUptime: Math.max(0, gcdUptime),
 				})
 			} else {
 				this.debug(`GCD Uptime for ${action.name} at ${this.parser.formatEpochTimestamp(event.timestamp, 1)} - Cast time: ${castTime} | Recast time: ${recastTime}`)
 				this.gcdUptimeEvents.push({
 					time: event.timestamp,
-					gcdUptime: Math.max(castTime, recastTime),
+					gcdUptime: gcdDuration,
 				})
 			}
 			this.gcdsCounted += 1

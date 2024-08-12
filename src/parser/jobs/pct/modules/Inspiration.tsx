@@ -7,7 +7,7 @@ import CastTime from 'parser/core/modules/CastTime'
 import {Data} from 'parser/core/modules/Data'
 import {HYPERPHANTASIA_SPELLS} from './CommonData'
 
-export default class Inspiration extends Analyser {
+export class Inspiration extends Analyser {
 	static override handle = 'inspiration'
 	static override title = t('pct.inspiration.title')`Inspiration`
 
@@ -35,6 +35,11 @@ export default class Inspiration extends Analyser {
 	// It  works the same as Circle of Power where Inspiration is only applied while in the buff area, and it falls off
 	// once all 5 stacks of Hyperphantasia are consumed
 	private onGain() {
+		// Inspiration can be re-applied multiple times during the window it is active - avoid stacking.
+		if (this.castTimeIndex != null) {
+			return
+		}
+
 		this.castTimeIndex = this.castTime.setPercentageAdjustment(this.hyperphantasiaSpellIds, this.data.statuses.INSPIRATION.speedModifier, 'both')
 	}
 

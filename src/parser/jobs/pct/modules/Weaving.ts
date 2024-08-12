@@ -15,6 +15,9 @@ export default class Weaving extends CoreWeaving {
 		this.data.actions.RAINBOW_DRIP.id,
 	]
 
+	// Star Prism's cure isn't a real action, it can't hurt you
+	override ignoredActionIds = [this.data.actions.STAR_PRISM_CURE.id]
+
 	override getMaxWeaves(weave: Weave) {
 
 		// If this isn't one of the funky long GCDs, use the default Weaving behavior
