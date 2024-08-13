@@ -54,38 +54,38 @@ export const VPR = ensureActions({
 		},
 		statusesApplied: ['FLANKSBANE_VENOM'],
 		potencies: [
-			// untraited Dread Fangs is the "base GCD" here
+			// just go read this. Big thanks to Hint for helping with math jank https://discord.com/channels/441414116914233364/470050640005955605/1272595506367041639
 			{
-				value: 120,
+				value: 160,
 				bonusModifiers: [],
 			},
 			// with venom, the base gets +100p
 			{
-				value: 220,
+				value: 260,
 				bonusModifiers: [],
 				baseModifiers: ['HINDSTUNG_VENOM'],
 			},
 			// the base potency of Hindsting Strike itself is treated as a "combo"
 			{
-				value: 300,
+				value: 340,
 				bonusModifiers: [BonusModifier.COMBO],
 				baseModifiers: [],
 			},
 			// +60p with positional
 			{
-				value: 360,
+				value: 400,
 				bonusModifiers: [BonusModifier.COMBO, BonusModifier.POSITIONAL],
 				baseModifiers: [],
 			},
 			// +100p with venom
 			{
-				value: 400,
+				value: 440,
 				bonusModifiers: [BonusModifier.COMBO],
 				baseModifiers: ['HINDSTUNG_VENOM'],
 			},
 			// +160p with venom + positional
 			{
-				value: 460,
+				value: 500,
 				bonusModifiers: [BonusModifier.COMBO, BonusModifier.POSITIONAL],
 				baseModifiers: ['HINDSTUNG_VENOM'],
 			},
@@ -107,38 +107,38 @@ export const VPR = ensureActions({
 		},
 		statusesApplied: ['HINDSTUNG_VENOM'],
 		potencies: [
-			// untraited Dread Fangs is the "base GCD" here
+			// // just go read this. Big thanks to Hint for helping with math jank https://discord.com/channels/441414116914233364/470050640005955605/1272595506367041639
 			{
-				value: 120,
+				value: 160,
 				bonusModifiers: [],
 			},
 			// with venom, the base gets +100p
 			{
-				value: 220,
+				value: 260,
 				bonusModifiers: [],
 				baseModifiers: ['FLANKSTUNG_VENOM'],
 			},
 			// the base potency of Hindsting Strike itself is treated as a "combo"
 			{
-				value: 300,
+				value: 340,
 				bonusModifiers: [BonusModifier.COMBO],
 				baseModifiers: [],
 			},
 			// +60p with positional
 			{
-				value: 360,
+				value: 400,
 				bonusModifiers: [BonusModifier.COMBO, BonusModifier.POSITIONAL],
 				baseModifiers: [],
 			},
 			// +100p with venom
 			{
-				value: 400,
+				value: 440,
 				bonusModifiers: [BonusModifier.COMBO],
 				baseModifiers: ['FLANKSTUNG_VENOM'],
 			},
 			// +160p with venom + positional
 			{
-				value: 460,
+				value: 500,
 				bonusModifiers: [BonusModifier.COMBO, BonusModifier.POSITIONAL],
 				baseModifiers: ['FLANKSTUNG_VENOM'],
 			},
@@ -190,38 +190,38 @@ export const VPR = ensureActions({
 		},
 		statusesApplied: ['FLANKSTUNG_VENOM'],
 		potencies: [
-			// untraited Dread Fangs is the "base GCD" here
+			// just go read this. Big thanks to Hint for helping with math jank https://discord.com/channels/441414116914233364/470050640005955605/1272595506367041639
 			{
-				value: 120,
+				value: 160,
 				bonusModifiers: [],
 			},
 			// with venom, the base gets +100p
 			{
-				value: 220,
+				value: 260,
 				bonusModifiers: [],
 				baseModifiers: ['HINDSBANE_VENOM'],
 			},
 			// the base potency of Hindsting Strike itself is treated as a "combo"
 			{
-				value: 300,
+				value: 340,
 				bonusModifiers: [BonusModifier.COMBO],
 				baseModifiers: [],
 			},
 			// +60p with positional
 			{
-				value: 360,
+				value: 400,
 				bonusModifiers: [BonusModifier.COMBO, BonusModifier.POSITIONAL],
 				baseModifiers: [],
 			},
 			// +100p with venom
 			{
-				value: 400,
+				value: 440,
 				bonusModifiers: [BonusModifier.COMBO],
 				baseModifiers: ['HINDSBANE_VENOM'],
 			},
 			// +160p with venom + positional
 			{
-				value: 460,
+				value: 500,
 				bonusModifiers: [BonusModifier.COMBO, BonusModifier.POSITIONAL],
 				baseModifiers: ['HINDSBANE_VENOM'],
 			},
@@ -243,38 +243,38 @@ export const VPR = ensureActions({
 		},
 		statusesApplied: ['HINDSBANE_VENOM'],
 		potencies: [
-			// untraited Dread Fangs is the "base GCD" here
+			// just go read this. Big thanks to Hint for helping with math jank https://discord.com/channels/441414116914233364/470050640005955605/1272595506367041639
 			{
-				value: 120,
+				value: 160,
 				bonusModifiers: [],
 			},
 			// with venom, the base gets +100p
 			{
-				value: 220,
+				value: 260,
 				bonusModifiers: [],
 				baseModifiers: ['FLANKSBANE_VENOM'],
 			},
 			// the base potency of Hindsting Strike itself is treated as a "combo"
 			{
-				value: 300,
+				value: 340,
 				bonusModifiers: [BonusModifier.COMBO],
 				baseModifiers: [],
 			},
 			// +60p with positional
 			{
-				value: 360,
+				value: 400,
 				bonusModifiers: [BonusModifier.COMBO, BonusModifier.POSITIONAL],
 				baseModifiers: [],
 			},
 			// +100p with venom
 			{
-				value: 400,
+				value: 440,
 				bonusModifiers: [BonusModifier.COMBO],
 				baseModifiers: ['FLANKSBANE_VENOM'],
 			},
 			// +160p with venom + positional
 			{
-				value: 460,
+				value: 500,
 				bonusModifiers: [BonusModifier.COMBO, BonusModifier.POSITIONAL],
 				baseModifiers: ['FLANKSBANE_VENOM'],
 			},
