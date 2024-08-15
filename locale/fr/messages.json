@@ -471,7 +471,7 @@
   "dnc.technicalities.suggestions.missedaction.content": "Dans le but de maximiser vos dégâts, chaque fenêtre de <0/> devrait contenir les GCDs attendus indiqués dans le tableau.",
   "dnc.technicalities.suggestions.missedgcd.content": "Essayez d'utiliser {TECHNICAL_EXPECTED_GCDS} GCDs pendant chaque fenêtre de <0/>.",
   "dnc.technicalities.suggestions.unpooled.content": "Regrouper vos Plumes oniriques avant d'entrer dans une fenêtre <0/> vous permet d'utiliser plus de <1/> avec les bonus multiplicatifs actifs, augmentant leur efficacité. Essayez de regrouper et de garder au moins trois Plumes oniriques entre les fenêtres.",
-  "dnc.technicalities.suggestions.unpooled.why": "{unpooledWindows, plural, one {#fenêtre} other {#fenêtres}} ou il manquait de potentiels <0/>s.",
+  "dnc.technicalities.suggestions.unpooled.why": "{unpooledWindows, plural, one {# fenêtre} other {# fenêtres}} où il manquait de potentielles <0/>s.",
   "dnc.technicalities.title": "Fenêtres techniques",
   "dnc.technicalities.unpooled.context.opener": "Opener",
   "drg.about.description": "<0> Cet analyseur a pour but de vous aider à vaincre les stéréotypes, à ne pas vous retrouver à tanker le sol et à produire des chiffres conséquent. La rotation du chavalier dragon étant assez stricte, les suggestions que vous verrez se concentreront principalement sur la fluidité de cette rotation, ainsi que sur les problèmes liés aux fenêtres de la Vie du Dragon et à l'alignement des buffs. </0>",
