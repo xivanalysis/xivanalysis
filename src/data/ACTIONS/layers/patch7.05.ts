@@ -54,5 +54,44 @@ export const patch705: Layer<ActionRoot> = {
 		},
 		STARDIVER: {potencies: [{value: 720, bonusModifiers: []}]},
 		STARCROSS: {potencies: [{value: 900, bonusModifiers: []}]},
+		// SAM stuff
+		MEIKYO_SHISUI: {statusesApplied: ['MEIKYO_SHISUI']},
+		MIDARE_SETSUGEKKA: {statusesApplied: ['TSUBAME_GAESHI_READY']},
+		TENDO_SETSUGEKKA: {statusesApplied: ['TSUBAME_GAESHI_READY']},
+		TENDO_GOKEN: {statusesApplied: ['TSUBAME_GAESHI_READY']},
+		TENKA_GOKEN: {statusesApplied: ['TSUBAME_GAESHI_READY']},
+
+		GEKKO: {
+			potencies: [{
+				value: 160,
+				bonusModifiers: [],
+			}, {
+				value: 210,
+				bonusModifiers: [BonusModifier.POSITIONAL],
+			}, {
+				value: 370,
+				bonusModifiers: [BonusModifier.COMBO],
+			}, {
+				value: 420,
+				bonusModifiers: [BonusModifier.POSITIONAL, BonusModifier.COMBO],
+			}],
+		},
+
+		KASHA: {
+			potencies: [{
+				value: 160,
+				bonusModifiers: [],
+			}, {
+				value: 210,
+				bonusModifiers: [BonusModifier.POSITIONAL],
+			}, {
+				value: 370,
+				bonusModifiers: [BonusModifier.COMBO],
+			}, {
+				value: 420,
+				bonusModifiers: [BonusModifier.POSITIONAL, BonusModifier.COMBO],
+			}],
+		},
+
 	},
 }

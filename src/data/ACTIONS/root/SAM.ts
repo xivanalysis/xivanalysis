@@ -317,6 +317,7 @@ export const SAM = ensureActions({
 			'TSUBAME_GAESHI_READY',
 		],
 		charges: 2,
+		breaksCombo: true,
 	},
 
 	HISSATSU_GYOTEN: {
