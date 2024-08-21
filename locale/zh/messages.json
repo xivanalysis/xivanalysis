@@ -574,7 +574,7 @@
   "gnb.continuation.suggestions.drops.content": "请避免延迟使用 <0/>，它们是输出占比相当高的环节，请在冷却时间结束后尽快的使用它们。",
   "gnb.contiunation.checklist.content": "",
   "gnb.contiunation.usage.title": "使用 <0/> 技能",
-  "gnb.disengage.statistic.title": "",
+  "gnb.disengage.statistic.title": "闪雷弹",
   "gnb.gauge.resource.ammoLabel": "特殊弹",
   "gnb.nomercy.chart.notes.no": "否",
   "gnb.nomercy.chart.notes.yes": "是",
