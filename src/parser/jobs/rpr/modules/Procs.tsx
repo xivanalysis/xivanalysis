@@ -1,7 +1,7 @@
 import {t} from '@lingui/macro'
 import {Trans, Plural} from '@lingui/react'
 import {DataLink} from 'components/ui/DbLink'
-import {Event} from 'event'
+import {Event, Events} from 'event'
 import {filter} from 'parser/core/filter'
 import {Procs as CoreProcs} from 'parser/core/modules/Procs'
 import {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
@@ -19,6 +19,7 @@ const SEVERITIES = {
 }
 
 const LOST_PROC_POTENCY = 60
+const ENCHANCED_GIBBET_IGNORE_INTERVAL = 2300
 
 export class Procs extends CoreProcs {
 	static override handle = 'enhanced procs'
@@ -26,6 +27,7 @@ export class Procs extends CoreProcs {
 	static override debug = false
 
 	private badStalks: number = 0
+	private ignoreEnchancedGibbetUntilTimestamp: number = 0
 
 	override initialise() {
 		super.initialise()
@@ -66,6 +68,17 @@ export class Procs extends CoreProcs {
 			consumeActions: [this.data.actions.VOID_REAPING],
 		},
 	]
+
+	// At time of writing, 07-29-2024, Executioner's Gallows has a weird interaction with Enhanced Gibbet where it applys the buff on both preare and damage events,
+	// causing 2 applications per single cast. We are using the different between the 2 events, 2300ms as a ignore interval to avoid double counting the buff.
+	protected override jobSpecificOnProcGainedConsiderEvent(event: Events['statusApply']): boolean {
+		if (event.status === this.data.statuses.ENHANCED_GIBBET.id) {
+			if (this.ignoreEnchancedGibbetUntilTimestamp > event.timestamp) { return false }
+
+			this.ignoreEnchancedGibbetUntilTimestamp = event.timestamp + ENCHANCED_GIBBET_IGNORE_INTERVAL
+		}
+		return true
+	}
 
 	protected override addJobSpecificSuggestions() {
 		const overwrittenGibbet = this.getOverwriteCountForStatus(this.data.statuses.ENHANCED_GIBBET.id)

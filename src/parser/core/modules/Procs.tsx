@@ -395,6 +395,12 @@ export abstract class Procs extends Analyser {
 	protected jobSpecificOnConsumeProc(_procGroup: ProcGroup, _event: Events['action']): void { /* */ }
 
 	/**
+	 * May be overriden by Subclasses. Called by OnProcGained to allow jobs to implment job-specific logic for evaluting a proc when it is gained
+	 * @param event The event to check
+	 * @returns True by default. Jobs may override to return false, allowing them to implement job-specific logic to ignore a proc gain
+	 */
+	protected jobSpecificOnProcGainedConsiderEvent(_event: Events['statusApply']): boolean { return true }
+	/**
 	 * May be overridden by subclasses. Called by onCast to determine whether the action in question can consume
 	 * multiple procs from a single event.
 	 * @param _action The action that might consume multiple procs
@@ -432,6 +438,7 @@ export abstract class Procs extends Analyser {
 	private onProcGained(event: Events['statusApply']): void {
 		const procGroup = this.getTrackedGroupByStatus(event.status)
 
+		if (!this.jobSpecificOnProcGainedConsiderEvent(event)) { return }
 		if (procGroup == null) { return }
 
 		if (procGroup.procStatus.stacksApplied != null && event.data != null && event.data < procGroup.procStatus.stacksApplied) {
