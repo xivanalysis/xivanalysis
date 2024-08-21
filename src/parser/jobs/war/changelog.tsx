@@ -22,4 +22,9 @@ export const changelog = [
 		Changes: () => <>Add support for new Dawntrail job actions</>,
 		contributors: [CONTRIBUTORS.KWEREY],
 	},
+	{
+		date: new Date('2024-08-02'),
+		Changes: () => <>Add statistic for use of ranged attacks</>,
+		contributors: [CONTRIBUTORS.KWEREY],
+	},
 ]
