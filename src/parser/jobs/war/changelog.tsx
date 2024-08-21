@@ -8,6 +8,11 @@ export const changelog = [
 	// 	contributors: [CONTRIBUTORS.YOU],
 	// },
 	{
+		date: new Date('2024-08-04'),
+		Changes: () => <>Add tincture module</>,
+		contributors: [CONTRIBUTORS.KWEREY],
+	},
+	{
 		date: new Date('2024-08-03'),
 		Changes: () => <>Bump supported patch, no other changes</>,
 		contributors: [CONTRIBUTORS.KWEREY],

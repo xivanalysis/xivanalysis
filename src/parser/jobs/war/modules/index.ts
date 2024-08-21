@@ -8,6 +8,7 @@ import {InnerRelease} from './InnerRelease'
 import {OGCDDowntime} from './OGCDDowntime'
 import {Procs} from './Procs'
 import {SurgingTempest} from './SurgingTempest'
+import {Tincture} from './Tincture'
 import {Tomahawk} from './Tomahawk'
 
 export default [
@@ -21,5 +22,6 @@ export default [
 	OGCDDowntime,
 	Procs,
 	SurgingTempest,
+	Tincture,
 	Tomahawk,
 ]

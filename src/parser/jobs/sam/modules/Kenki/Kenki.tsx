@@ -40,9 +40,15 @@ export class Kenki extends CoreGauge {
 		},
 	}))
 
+	private theEyes = [
+		this.data.statuses.THIRD_EYE.id,
+		this.data.statuses.TENGETSU.id,
+	]
+
 	private kenkiGaugeModifiers = new Map<number, GaugeModifier>([
 		// Builders
 		[this.data.actions.HAKAZE.id, {action: 5}],
+		[this.data.actions.GYOFU.id, {action: 5}],
 		[this.data.actions.JINPU.id, {combo: 5}],
 		[this.data.actions.ENPI.id, {action: 10}],
 		[this.data.actions.SHIFU.id, {combo: 5}],
@@ -82,8 +88,8 @@ export class Kenki extends CoreGauge {
 				.action(oneOf(kenkiActions)),
 			this.onGaugeModifier,
 		)
-		this.addEventHook(playerFilter.type('statusApply').status(this.data.statuses.THIRD_EYE.id), this.onApplyEye)
-		this.addEventHook(playerFilter.type('statusRemove').status(this.data.statuses.THIRD_EYE.id), this.onRemoveEye)
+		this.addEventHook(playerFilter.type('statusApply').status(oneOf(this.theEyes)), this.onApplyEye)
+		this.addEventHook(playerFilter.type('statusRemove').status(oneOf(this.theEyes)), this.onRemoveEye)
 
 		this.addEventHook(playerFilter.type('statusApply').status(this.data.statuses.MEDITATE.id), this.onApplyMeditate)
 		this.addEventHook(playerFilter.type('statusRemove').status(this.data.statuses.MEDITATE.id), this.onRemoveMeditate)

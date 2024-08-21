@@ -6,6 +6,7 @@ import {CooldownDowntime} from './CooldownDowntime'
 import {Defensives} from './Defensives'
 import {Gauge} from './Gauge'
 import {Hyperphantasia} from './Hyperphantasia'
+import {Inspiration} from './Inspiration'
 import Procs from './Procs'
 import {StarryMuse} from './StarryMuse'
 import {Swiftcast} from './Swiftcast'
@@ -20,6 +21,7 @@ export default [
 	Defensives,
 	Gauge,
 	Hyperphantasia,
+	Inspiration,
 	Interrupts,
 	Procs,
 	StarryMuse,
