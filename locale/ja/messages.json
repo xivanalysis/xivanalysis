@@ -252,8 +252,6 @@
   "brd.drifting-ea.timestamp-header": "タイムスタンプ",
   "brd.drifting-ea.title": "エンピリアルアローのずれ",
   "brd.procs.refulgentproc.content": "<0/>は<1/>、<2/>、<3/>、<4/>によって付与される可能性があります。",
-  "brd.procs.refulgentproc.timelinelink-button": "タイムラインに移動",
-  "brd.procs.refulgentproc.timestamp-header": "タイムスタンプ",
   "brd.procs.suggestions.missed.content": "<1/>がある場合、<0/>を使ってください。",
   "brd.procs.suggestions.overwritten.content": "<1/> を使える時、<0/> を付与するアクションを使わないでください。",
   "brd.procs.title": "ホークアイの上書き",
