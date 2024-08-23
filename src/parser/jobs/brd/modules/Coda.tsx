@@ -24,6 +24,7 @@ const ARMYS_COLOR = Color('#eb9b5f').fade(GAUGE_FADE)
 const MAGES_COLOR = Color('#ffbcf8').fade(GAUGE_FADE)
 
 export class Coda extends Gauge {
+	static override handle = 'coda'
 	private songIds = SONGS.map(song => this.data.actions[song].id)
 
 	private codaGauge = this.add(new SetGauge({
