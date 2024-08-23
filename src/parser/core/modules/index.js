@@ -17,7 +17,6 @@ import {EventsView} from './EventsView'
 import {GlobalCooldown} from './GlobalCooldown'
 import Hijinks from './Hijinks'
 import {Invulnerability} from './Invulnerability'
-import {Medicated} from './Medicated'
 import {RaidBuffs} from './RaidBuffs'
 import {ResourceGraphs} from './ResourceGraphs'
 import {SpeedAdjustments} from './SpeedAdjustments'
@@ -49,7 +48,6 @@ export default [
 	GlobalCooldown,
 	Hijinks,
 	Invulnerability,
-	Medicated,
 	RaidBuffs,
 	ResourceGraphs,
 	SpeedAdjustments,
