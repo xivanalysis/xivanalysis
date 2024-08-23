@@ -93,5 +93,24 @@ export const patch705: Layer<ActionRoot> = {
 			}],
 		},
 
+		PHANTOM_RUSH: {
+			potencies: [{
+				value: 1500,
+				bonusModifiers: [],
+			}],
+		},
+		WINDS_REPLY: {
+			potencies: [{
+				value: 900,
+				bonusModifiers: [],
+			}],
+		},
+		FIRES_REPLY: {
+			potencies: [{
+				value: 1200,
+				bonusModifiers: [],
+			}],
+		},
+
 	},
 }
