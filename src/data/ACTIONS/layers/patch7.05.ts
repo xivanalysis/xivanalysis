@@ -112,5 +112,13 @@ export const patch705: Layer<ActionRoot> = {
 			}],
 		},
 
+		//AST 7.05 changes
+		//previously these all were cooldown group 2, but with the timeline we synthed different ones anyway. note left here for reference
+		PLAY_II: {cooldownGroup: 3},
+		THE_BOLE: {cooldownGroup: 3},
+		THE_ARROW: {cooldownGroup: 3},
+		PLAY_III: {cooldownGroup: 4},
+		THE_EWER: {cooldownGroup: 4},
+		THE_SPIRE: {cooldownGroup: 4},
 	},
 }
