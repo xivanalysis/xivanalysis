@@ -10,6 +10,11 @@ export const changelog: ChangelogEntry[] = [
 	// 	contributors: [CONTRIBUTORS.YOU],
 	// },
 	{
+		date: new Date('2024-08-24'),
+		Changes: () => <>Fixed prepull actions for defensives. Added blurb and feature for defensives with charges.</>,
+		contributors: [CONTRIBUTORS.OTOCEPHALY],
+	},
+	{
 		date: new Date('2024-08-10'),
 		Changes: () => <>Fix uptime calculations for precast and end-of-fight actions.</>,
 		contributors: [CONTRIBUTORS.ACKWELL],
