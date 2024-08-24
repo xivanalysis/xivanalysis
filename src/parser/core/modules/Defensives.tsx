@@ -118,7 +118,7 @@ export class Defensives extends Analyser {
 					this.trackedDefensives.map((defensive, index) => {
 						//checking if there was a prepull noted
 						let firstAdditionalUsageTry: ReactNode | undefined = undefined
-						if (this.getUses(defensive)[0].start > this.parser.pull.timestamp) {
+						if (this.getUses(defensive).length === 0 || (this.getUses(defensive).length === 0 && this.getUses(defensive)[0].start > this.parser.pull.timestamp)) {
 							firstAdditionalUsageTry = this.tryGetAdditionalUseRow(defensive)
 						}
 
