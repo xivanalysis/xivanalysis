@@ -90,8 +90,20 @@ export class Defensives extends Analyser {
 	}
 
 	private getMaxUses(defensive: Action): number {
-		const totalAdditionalUses = this.getGroupUses(defensive).reduce((acc, usage) => acc + this.getAdditionalUsageData(defensive, usage.start).chargesBeforeNextUse, this.getAdditionalUsageData(defensive).chargesBeforeNextUse)
+		//if there is a prepull need to initialize without any additional or it'll double count. if there is no prepull, need to initialize with first usage
+		let totalAdditionalUses = 0
+		if (this.checkForPrepull(defensive)) {
+			totalAdditionalUses = this.getGroupUses(defensive).reduce((acc, usage) => acc + this.getAdditionalUsageData(defensive, usage.start).chargesBeforeNextUse, 0)
+		} else {
+			totalAdditionalUses = this.getGroupUses(defensive).reduce((acc, usage) => acc + this.getAdditionalUsageData(defensive, usage.start).chargesBeforeNextUse, this.getAdditionalUsageData(defensive).chargesBeforeNextUse)
+		}
 		return this.getUsageCount(defensive) + totalAdditionalUses
+	}
+
+	private checkForPrepull(defensive: Action): boolean {
+		let prepullBoolean: boolean = false
+		if (this.getGroupUses(defensive).length > 0 && this.getGroupUses(defensive)[0].start < this.parser.pull.timestamp) { prepullBoolean = true }
+		return prepullBoolean
 	}
 
 	override output() {
@@ -116,9 +128,9 @@ export class Defensives extends Analyser {
 				fluid
 				panels={
 					this.trackedDefensives.map((defensive, index) => {
-						//checking if there was a prepull noted since get additional use row uses checks after the first usage which conflicts with the pull time-ish
+						//checking if there was a prepull noted since get additional use row uses checks starting from first usage (if first usage in the beginning, no need to add initial additional)
 						let firstAdditionalUsageTry: ReactNode | undefined = undefined
-						if (this.getUses(defensive).length === 0 || (this.getUses(defensive).length !== 0 && this.getUses(defensive)[0].start > this.parser.pull.timestamp)) {
+						if (!this.checkForPrepull(defensive)) {
 							firstAdditionalUsageTry = this.tryGetAdditionalUseRow(defensive)
 						}
 
