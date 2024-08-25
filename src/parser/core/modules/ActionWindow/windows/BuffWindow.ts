@@ -61,22 +61,21 @@ export abstract class BuffWindow extends ActionWindow {
 	private buffDuration?: number
 	private durationHook?: TimestampHook
 
+	// Normal BuffWindows only track applications to the parser's actor themselves
+	protected partyBuffTargetList = [this.parser.actor.id]
+
 	override initialise() {
 		super.initialise()
 
-		// buff windows are either active on the parser's actor,
-		// another actor in the parser's party (raid buffs),
+		// buff windows are either active on specified players in the parser's party
 		// or on an enemy actor (trick attack)
 		// enemies are not on the same team as the parser actor
 		const enemyTargets = this.parser.pull.actors
 			.filter(actor => actor.team !== this.parser.actor.team &&
 				actor.team !== Team.UNKNOWN) // Ignore actors with an 'unknown' team
 			.map(actor => actor.id)
-		const partyMembers = this.parser.pull.actors
-			.filter(actor => actor.playerControlled)
-			.map(actor => actor.id)
 
-		const targets = [...partyMembers, ...enemyTargets]
+		const targets = [...this.partyBuffTargetList, ...enemyTargets]
 		const playerOwnedIds = this.parser.pull.actors
 			.filter(actor => (actor.owner === this.parser.actor) || actor === this.parser.actor)
 			.map(actor => actor.id)
