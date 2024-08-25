@@ -26,6 +26,7 @@ export class SoulVoice extends Gauge {
 				this.soulVoiceGauge = this.add(new CounterGauge({
 					maximum: MAX_SOUL_VOICE,
 					graph: {
+						handle: 'soulvoice',
 						label: <Trans id="brd.gauge.resource.soulvoice">Soul Voice</Trans>,
 						color: SOUL_VOICE_COLOR,
 						forceCollapsed: true,
