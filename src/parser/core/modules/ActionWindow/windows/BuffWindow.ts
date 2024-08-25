@@ -75,18 +75,20 @@ export abstract class BuffWindow extends ActionWindow {
 				actor.team !== Team.UNKNOWN) // Ignore actors with an 'unknown' team
 			.map(actor => actor.id)
 
-		const targets = [...this.partyBuffTargetList, ...enemyTargets]
+		const applyTargets = [...this.partyBuffTargetList, ...enemyTargets]
+		const removeTargets = [this.parser.actor.id, ...enemyTargets]
 		const playerOwnedIds = this.parser.pull.actors
 			.filter(actor => (actor.owner === this.parser.actor) || actor === this.parser.actor)
 			.map(actor => actor.id)
 
 		const buffFilter = filter<Event>()
 			.source(oneOf(playerOwnedIds))
-			.target(oneOf(targets))
 			.status(oneOf(ensureArray(this.buffStatus).map(s => s.id)))
 
-		this.addEventHook(buffFilter.type('statusApply'), this.onStatusApply)
-		this.addEventHook(buffFilter.type('statusRemove'), this.onStatusRemove)
+		// Open the window when any applicable target receives the buff
+		this.addEventHook(buffFilter.type('statusApply').target(oneOf(applyTargets)), this.onStatusApply)
+		// Close the window when the player or an enemy loses the buff, to prevent party member deaths from closing the window prematurely
+		this.addEventHook(buffFilter.type('statusRemove').target(oneOf(removeTargets)), this.onStatusRemove)
 		this.buffDuration = _.max(ensureArray(this.buffStatus).map(s => s.duration))
 	}
 
