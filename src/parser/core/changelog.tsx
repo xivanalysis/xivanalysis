@@ -10,6 +10,11 @@ export const changelog: ChangelogEntry[] = [
 	// 	contributors: [CONTRIBUTORS.YOU],
 	// },
 	{
+		date: new Date('2024-08-24'),
+		Changes: () => <>Fixed prepull actions for defensives for both duplicates and missing suggested available times. </>,
+		contributors: [CONTRIBUTORS.AKAIRYU, CONTRIBUTORS.OTOCEPHALY],
+	},
+	{
 		date: new Date('2024-08-23'),
 		Changes: () => <>Resolve an issue that could cause raid buff analysis to report fewer players buffed than there actually were.</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],

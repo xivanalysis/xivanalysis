@@ -116,6 +116,12 @@ export class Defensives extends Analyser {
 				fluid
 				panels={
 					this.trackedDefensives.map((defensive, index) => {
+						//checking if there was a prepull noted since get additional use row uses checks after the first usage which conflicts with the pull time-ish
+						let firstAdditionalUsageTry: ReactNode | undefined = undefined
+						if (this.getUses(defensive).length === 0 || (this.getUses(defensive).length !== 0 && this.getUses(defensive)[0].start > this.parser.pull.timestamp)) {
+							firstAdditionalUsageTry = this.tryGetAdditionalUseRow(defensive)
+						}
+
 						return {
 							key: defensive.id,
 							title: {
@@ -124,9 +130,7 @@ export class Defensives extends Analyser {
 							content: {
 								content: <Table compact unstackable celled>
 									<Table.Body>
-										{
-											this.tryGetAdditionalUseRow(defensive)
-										}
+										{firstAdditionalUsageTry}
 										{
 											this.getGroupUses(defensive).map((entry) => {
 												return this.getUsageRow(entry, defensive)
@@ -165,14 +169,9 @@ export class Defensives extends Analyser {
 			currentCharges = chargesAvailableEvent?.current || 0
 		}
 
-		const prepullBoolean: boolean = this.getGroupUses(defensive).find(historyEntry => historyEntry.start === this.parser.pull.timestamp)?.start != null
 		const cooldown = defensive.cooldown || this.parser.pull.duration
 		const nextEntry = this.getGroupUses(defensive).find(historyEntry => historyEntry.start > timestamp)
 		const useByTimestamp = nextEntry != null ? (nextEntry.start - cooldown) : (this.parser.pull.timestamp + this.parser.pull.duration)
-
-		//need to consider whether there is a prepull action as it will shift every subsequent event for this analysis. assumption is that it was actioned right at pull since no timestamp available for prepull so cooldown is used
-		availableTimestamp = availableTimestamp
-			+ (prepullBoolean && availableTimestamp !== (this.parser.pull.duration + this.parser.pull.timestamp) ? cooldown : 0)
 
 		// if use by is before available or the usage window is less than an appropriate weave window, return 0 charges
 		if (useByTimestamp <= availableTimestamp || (useByTimestamp - availableTimestamp) < this.forgiveness_ms) {
