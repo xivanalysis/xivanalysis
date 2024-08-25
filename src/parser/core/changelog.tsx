@@ -12,7 +12,7 @@ export const changelog: ChangelogEntry[] = [
 	{
 		date: new Date('2024-08-25'),
 		Changes: () => <>Fixed prepull actions for defensives for both duplicates, weird counts, and missing suggested available times. </>,
-		contributors: [CONTRIBUTORS.AKAIRYU, CONTRIBUTORS.AKAIRYU, CONTRIBUTORS.OTOCEPHALY],
+		contributors: [CONTRIBUTORS.AKAIRYU, CONTRIBUTORS.AZARIAH, CONTRIBUTORS.OTOCEPHALY],
 	},
 	{
 		date: new Date('2024-08-23'),
