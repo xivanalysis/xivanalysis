@@ -210,7 +210,7 @@ export class Gauge extends CoreGauge {
 	//#endregion
 
 	private onComplete() {
-		const addersgallLeniency = ADDERSGALL_TIME_REQUIRED / 2
+		const addersgallLeniency = ADDERSGALL_TIME_REQUIRED / 2 + this.parser.pull.timestamp
 		const forceGainUtaWindows = this.unableToAct.getWindows().filter(uta => Math.max(0, uta.end - uta.start) >= ADDERSGALL_TIME_REQUIRED)
 		const addersgallExpirationTime = this.addersgallTimer.getExpirationTime(addersgallLeniency, this.parser.currentEpochTimestamp, forceGainUtaWindows, addersgallLeniency)
 		const lostAddersgall = Math.floor(addersgallExpirationTime / ADDERSGALL_TIME_REQUIRED)
