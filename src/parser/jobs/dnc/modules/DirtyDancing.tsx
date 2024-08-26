@@ -156,7 +156,7 @@ export class DirtyDancing extends ActionWindow {
 		const statusTime = Math.max(this.statuses.getUptime(statusKey, this.actors.friends) - this.downtime.getDowntime(), 0)
 		const uptime = Math.max(this.parser.currentDuration - this.downtime.getDowntime(), 0)
 
-		return (statusTime / uptime) * 100
+		return Math.min((statusTime / uptime) * 100, 100)
 	}
 
 	override onComplete() {
