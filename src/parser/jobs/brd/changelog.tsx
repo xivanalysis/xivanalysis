@@ -8,6 +8,11 @@ export const changelog = [
 	// 	contributors: [CONTRIBUTORS.YOU],
 	// },
 	{
+		date: new Date('2024-08-24'),
+		Changes: () => <>Fix a buff tracking issue that could cause the Burst Window tracking to close the window early.</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
+	{
 		date: new Date('2024-08-23'),
 		Changes: () => <>Added soul voice and repertoire gauge tracking when gauge information is available.</>,
 		contributors: [CONTRIBUTORS.YUMIYA],
