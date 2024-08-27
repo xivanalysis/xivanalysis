@@ -41,7 +41,7 @@ export class Tincture extends CoreTincture {
 			suggestionContent: <Trans id="gnb.tincture.suggestions.trackedActions.content">
 				Try to cover as much damage as possible with your Tinctures of Strength.
 			</Trans>,
-			suggestionWindowName: <DataLink action="INFUSION_STR" showIcon={false}/>,
+			suggestionWindowName: <DataLink item="INFUSION_STR" showIcon={false}/>,
 			severityTiers: {
 				1: SEVERITY.MINOR,
 				2: SEVERITY.MEDIUM,

@@ -55,11 +55,11 @@ const BYTE_FIELD_OFFSETS = {
 }
 
 const GAUGE_JOB_IDS = {
+	BARD: 23,
 	DANCER: 38,
 }
 
 const CHARS_PER_HEX_WORD = 8
-const CHARS_PER_HEX_BYTE = 2
 
 /** Translate an FFLogs APIv1 event to the xiva representation, if any exists. */
 export class TranslateAdapterStep extends AdapterStep {
@@ -467,6 +467,8 @@ export class TranslateAdapterStep extends AdapterStep {
 		switch (jobId) {
 		case GAUGE_JOB_IDS.DANCER:
 			return this.adaptDancerGaugeEvent(event)
+		case GAUGE_JOB_IDS.BARD:
+			return this.adaptBardGaugeEvent(event)
 		default:
 			return []
 		}
@@ -491,6 +493,19 @@ export class TranslateAdapterStep extends AdapterStep {
 		return []
 	}
 
+	private adaptBardGaugeEvent(event: GaugeUpdateEvent): Event[] {
+		const adaptedEvent: Events['gaugeUpdate'] = {
+			...this.adaptBaseFields(event),
+			actor: this.loggingActorId, // Relies on there being a combatant info event first...
+			type: 'gaugeUpdate',
+			repertoire: numberFromHexBytes(event.data2, BYTE_FIELD_OFFSETS.THIRD),
+			soulVoice: numberFromHexBytes(event.data2, BYTE_FIELD_OFFSETS.SECOND),
+			coda: numberFromHex(event.data3, 2, 0, 1, 'nibble'),
+			song: numberFromHex(event.data3, 2, 1, 1, 'nibble'),
+		}
+		return [adaptedEvent]
+	}
+
 	private adaptTargetedFields(event: FflogsEvent) {
 		return {
 			...this.adaptBaseFields(event),
@@ -511,14 +526,19 @@ export class TranslateAdapterStep extends AdapterStep {
 }
 
 const numberFromHexBytes = (hexWord: string, offset: number = 0, bytes: number = 1): number => {
-	if (offset < BYTE_FIELD_OFFSETS.FIRST || offset > BYTE_FIELD_OFFSETS.FOURTH) { return 0 }
+	return numberFromHex(hexWord, CHARS_PER_HEX_WORD, offset, bytes, 'byte')
+}
 
-	const paddedWord = hexWord.padStart(CHARS_PER_HEX_WORD, '0')
-	const startIndex = Math.min(offset * CHARS_PER_HEX_BYTE, CHARS_PER_HEX_WORD - CHARS_PER_HEX_BYTE)
-	const endIndex = startIndex + CHARS_PER_HEX_BYTE * bytes >= CHARS_PER_HEX_WORD ? undefined : startIndex + CHARS_PER_HEX_BYTE * bytes
-	const byteString = paddedWord.substring(startIndex, endIndex)
+const numberFromHex = (hexWord: string, wordSize: number, offset: number, amount: number, unit: 'byte'|'nibble') => {
+	const substringSize = (unit === 'byte' ? 2 : 1) * amount
+	const startIndex = offset * substringSize
+	if (offset < 0 || startIndex > (wordSize - substringSize)) { return 0 }
 
-	return Number('0x' + byteString)
+	const paddedWord = hexWord.padStart(wordSize, '0')
+	const endIndex = startIndex + substringSize
+	const substring = paddedWord.substring(startIndex, endIndex)
+
+	return Number('0x' + substring)
 }
 
 const resolveActorIds = (event: FflogsEvent) => ({
