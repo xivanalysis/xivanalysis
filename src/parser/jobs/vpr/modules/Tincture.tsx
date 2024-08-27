@@ -51,7 +51,7 @@ export class Tincture extends CoreTincture {
 			suggestionContent: <Trans id="vpr.tincture.suggestions.trackedActions.content">
 				Try to fit two full uses of <DataLink action="REAWAKEN"/> while under the effects of a Tincture.
 			</Trans>,
-			suggestionWindowName: <DataLink action="INFUSION_DEX" showIcon={false}/>,
+			suggestionWindowName: <DataLink item="INFUSION_DEX" showIcon={false}/>,
 			severityTiers: SEVERITY_TIERS,
 			adjustCount: this.adjustExpectedActionCount,
 		}))
