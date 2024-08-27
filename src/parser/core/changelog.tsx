@@ -13,8 +13,8 @@ export const changelog: ChangelogEntry[] = [
 		date: new Date('2024-08-27'),
 		Changes: () => <>Added blurb and feature for defensives with charges.</>,
 		contributors: [CONTRIBUTORS.OTOCEPHALY],
-  },
-  {
+	},
+	{
 		date: new Date('2024-08-23'),
 		Changes: () => <>Resolve an issue that could cause raid buff analysis to report fewer players buffed than there actually were.</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],
