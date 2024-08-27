@@ -10,8 +10,8 @@ export const changelog: ChangelogEntry[] = [
 	// 	contributors: [CONTRIBUTORS.YOU],
 	// },
 	{
-		date: new Date('2024-08-24'),
-		Changes: () => <>Fixed prepull actions for defensives. Added blurb and feature for defensives with charges.</>,
+		date: new Date('2024-08-27'),
+		Changes: () => <>Added blurb and feature for defensives with charges.</>,
 		contributors: [CONTRIBUTORS.OTOCEPHALY],
 	},
 	{
