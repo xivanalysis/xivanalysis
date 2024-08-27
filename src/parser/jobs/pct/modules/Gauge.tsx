@@ -260,8 +260,12 @@ export class Gauge extends CoreGauge {
 		this.addEventHook(playerFilter.type('action').action(oneOf(this.portraitGenerators)), this.onPortraitGenerator)
 		this.addEventHook(playerFilter.type('action').action(oneOf(this.portraitSpenders)), () => this.portraitGauge.reset())
 
-		// Default assume the player painted before the pull
-		this.canvasGauge.set([CREATURE_MOTIF, WEAPON_MOTIF, LANDSCAPE_MOTIF])
+		// Default assume the player painted before the pull, until backtrack corrections are supported
+		this.canvasGauge.set([
+			{handle: CREATURE_MOTIF, value: POM_MOTIF},
+			{handle: WEAPON_MOTIF, value: HAMMER_MOTIF},
+			{handle: LANDSCAPE_MOTIF, value: STARRY_MOTIF},
+		])
 
 		this.addEventHook('complete', this.onComplete)
 	}

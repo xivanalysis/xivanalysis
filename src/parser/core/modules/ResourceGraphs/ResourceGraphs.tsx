@@ -9,6 +9,7 @@ import {SimpleItem, SimpleRow, Timeline} from 'parser/core/modules/Timeline'
 import React, {ReactNode} from 'react'
 import {CounterResourceData} from '../Gauge/CounterGauge'
 import {EnumResourceData} from '../Gauge/EnumGauge'
+import {SetEnumResourceData} from '../Gauge/SetEnumGauge'
 import {SetResourceData} from '../Gauge/SetGauge'
 import {TimerResourceData} from '../Gauge/TimerGauge'
 import {Graph} from './Graph'
@@ -37,6 +38,7 @@ export type TypedResourceData =
 	| VariableResourceData
 	| SetResourceData
 	| EnumResourceData
+	| SetEnumResourceData
 
 export interface ResourceData extends ResourceDataCommon {
 	type: ResourceDataTypes
