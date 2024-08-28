@@ -8,6 +8,11 @@ export const changelog = [
 	// 	contributors: [CONTRIBUTORS.YOU],
 	// },
 	{
+		date: new Date('2024-11-16'),
+		Changes: () => <>Add checklist item for Kardia uptime</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
+	{
 		date: new Date('2024-11-10'),
 		Changes: () => <>Fixed a data issue causing Pneuma's heal effect to be treated as second simultaneous GCD use</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],
