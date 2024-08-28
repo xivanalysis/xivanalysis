@@ -133,6 +133,9 @@ export class Defensives extends Analyser {
 											})
 										}
 									</Table.Body>
+									{
+										this.getChargesFooterMessage(defensive)
+									}
 								</Table>,
 							},
 						}
@@ -188,6 +191,14 @@ export class Defensives extends Analyser {
 			return <></>
 		}
 
+		let chargesMessage: ReactNode = <></>
+		const chargesAvailableEvent = this.getChargeHistory(defensive).find(charges => charges.timestamp === entry.start && charges.delta === -1)
+		const currentCharges: number | undefined = chargesAvailableEvent?.current || 0
+
+		if (defensive.charges != null && defensive.charges > 1 && currentCharges != null) {
+			chargesMessage = <>. - <Trans id="core.defensives.table.usage-row.charges"><Plural value={currentCharges} one="1 charge" other="# charges"/> remaining.</Trans></>
+		}
+
 		return <Table.Row key={entry.start}>
 			<Table.Cell>
 				<Trans id="core.defensives.table.usage-row.text">Used at <Button
@@ -197,6 +208,7 @@ export class Defensives extends Analyser {
 					icon="time"onClick={() => this.timeline.show(entry.start - this.parser.pull.timestamp, entry.end - this.parser.pull.timestamp)}>
 				</Button> {this.parser.formatEpochTimestamp(entry.start)}
 				</Trans>
+				{chargesMessage}
 			</Table.Cell>
 		</Table.Row>
 	}
@@ -219,5 +231,24 @@ export class Defensives extends Analyser {
 				</Trans>
 			</Table.Cell>
 		</Table.Row>
+	}
+
+	private getChargesFooterMessage(defensive: Action): ReactNode {
+		if (defensive.charges == null || defensive.charges <= 1) {
+			return <></>
+		}
+
+		return <Message icon>
+			<Icon name="info" />
+			<Message.Content>
+				<Trans id="core.defensives.footer.charges-advice">
+				Number of charges are displayed for abilities with charges to help guide you on a potential extra use in the fight.
+				For example, if you always have 1 charge at every cast, you are likely able to use this charge at any point in the fight.
+				If you are using <ActionLink {...defensive} /> mostly on cooldown, then using the charge may cause unintended drifting.
+				If <ActionLink {...defensive} showIcon={false} /> has 0 charges at any point, then the previous <Plural value={defensive.charges - 1} one="charge" other="charges"/> may not be available.
+				Careful consideration should be utilized with this feature as it is advanced-level knowledge.
+				</Trans>
+			</Message.Content>
+		</Message>
 	}
 }
