@@ -1,6 +1,7 @@
 import _ from 'lodash'
 import {GAUGE_HANDLE, ResourceGraphOptions, ResourceGroupOptions} from '../ResourceGraphs/ResourceGraphs'
 import {AbstractGauge, AbstractGaugeOptions} from './AbstractGauge'
+import {GaugeEventReason} from './CounterGauge'
 import {SetEntryOption, SetGraphOptions, SetResourceData} from './SetGauge'
 
 const FORCE_COLLAPSE = true || process.env.NODE_ENV === 'production'
@@ -8,6 +9,7 @@ const FORCE_COLLAPSE = true || process.env.NODE_ENV === 'production'
 interface SetEnumHistory {
 	timestamp: number
 	groups: SetEnumHistoryEntry[],
+	reason: GaugeEventReason | undefined
 }
 
 interface SetEnumHistoryEntry {
@@ -24,6 +26,14 @@ export interface SetEnumGaugeOptions extends AbstractGaugeOptions {
 	groups: SetEnumGroup[],
 	/** Graph options. Omit to disable graphing in the timeline for this gauge. */
 	graph?: SetGraphOptions
+	/**
+	 * Should this gauge correct its history in the event of underflow? Pass false to disable
+	 * Important note:
+	 *   This WILL mutate the history array, but will not re-run any additional logic done partway through the analysis.
+	 *   If you are driving suggestions or other logic off gauge values at specific points in time, that should be run during
+	 *   an onComplete hook, or within the calling class's output function
+	 */
+	correctHistory?: boolean
 }
 
 export interface SetEnumResourceData extends SetResourceData {
@@ -34,6 +44,7 @@ export class SetEnumGauge extends AbstractGauge {
 	private groups: SetEnumGroup[]
 
 	private graphOptions?: ResourceGraphOptions
+	private correctHistory: boolean
 
 	public history: SetEnumHistory[] = []
 	public overcap = 0
@@ -62,6 +73,7 @@ export class SetEnumGauge extends AbstractGauge {
 		this.groups = opts.groups
 
 		this.graphOptions = opts.graph
+		this.correctHistory = opts.correctHistory ?? true
 	}
 
 	getStateAt(handle: string, value: string, timestamp: number = this.parser.currentEpochTimestamp): boolean {
@@ -75,7 +87,7 @@ export class SetEnumGauge extends AbstractGauge {
 
 	/** @inheritdoc */
 	reset() {
-		this.set([])
+		this.set([], 'reset')
 	}
 
 	clear(handle: string) {
@@ -83,7 +95,7 @@ export class SetEnumGauge extends AbstractGauge {
 	}
 
 	raise() {
-		this.reset()
+		this.set([], 'init')
 	}
 
 	init() {
@@ -92,6 +104,7 @@ export class SetEnumGauge extends AbstractGauge {
 			this.history.push({
 				timestamp: this.parser.pull.timestamp,
 				groups: [],
+				reason: 'init',
 			})
 		}
 	}
@@ -122,7 +135,7 @@ export class SetEnumGauge extends AbstractGauge {
 			generatedGroup.value = value
 		}
 
-		this.set(generatedValues)
+		this.set(generatedValues, 'generate')
 	}
 
 	/** Removes the specified value from the gauge */
@@ -130,25 +143,40 @@ export class SetEnumGauge extends AbstractGauge {
 		const group = this.groups.find(group => group.handle === handle)
 		if (group == null) { return }
 		if (!group.options.some(option => option.value === value)) { return }
-		if (!this.getStateAt(handle, value)) { return } // TODO: Implement prior state correction here
+		if (!this.getStateAt(handle, value)) { this.correctGaugeHistory(handle, value) }
 
 		const spentValues = this.copyCurrent().filter(spentGroup => spentGroup.handle !== handle)
 
-		this.set(spentValues)
+		this.set(spentValues, 'spend')
 	}
 
 	/** Set the current value of the gauge. Value will automatically be bounded to valid values */
-	set(values: SetEnumHistoryEntry[]) {
+	set(values: SetEnumHistoryEntry[], reason?: GaugeEventReason) {
 		// Filter out input where the handle is invalid, or the value is missing from that groups options, and remove duplicate handles
 		const correctedValues = values.filter((value, index) => this.groups.some(group => group.handle === value.handle &&
 			group.options.some(option => option.value === value.value) &&
 			values.findIndex(val => val.handle === value.handle) === index
 		))
 
-		this.pushHistory(correctedValues)
+		this.pushHistory(correctedValues, reason)
 	}
 
-	private pushHistory(groups: SetEnumHistoryEntry[]) {
+	private correctGaugeHistory(handle: string, value: string) {
+		if (!this.correctHistory) { return }
+
+		// Get the most recent initialisation event
+		const lastGeneratorIndex = _.findLastIndex(this.history, event => event.reason === 'init')
+
+		// Add the value we spent to the last generation event, and all events through the current one
+		for (let i = lastGeneratorIndex; i < this.history.length; i++) {
+			const correctedGroup = this.history[i].groups.find(group => group.handle === handle)
+			if (correctedGroup == null) {
+				this.history[i].groups.push({handle, value})
+			} else if (correctedGroup.value == null) { correctedGroup.value = value }
+		}
+	}
+
+	private pushHistory(groups: SetEnumHistoryEntry[], reason?: GaugeEventReason) {
 		const timestamp = this.parser.currentEpochTimestamp
 
 		// Ensure we're not generating multiple entries at the same timestamp
@@ -162,6 +190,7 @@ export class SetEnumGauge extends AbstractGauge {
 		this.history.push({
 			timestamp,
 			groups,
+			reason,
 		})
 	}
 
