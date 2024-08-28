@@ -3,12 +3,14 @@ import _ from 'lodash'
 import {ReactNode} from 'react'
 import {GAUGE_HANDLE, ResourceData, ResourceGraphOptions, ResourceGroupOptions} from '../ResourceGraphs/ResourceGraphs'
 import {AbstractGauge, AbstractGaugeOptions} from './AbstractGauge'
+import {GaugeEventReason} from './CounterGauge'
 
 const FORCE_COLLAPSE = true || process.env.NODE_ENV === 'production'
 
 interface EnumHistory {
 	timestamp: number
 	values: Array<EnumEntryOption['value']>
+	reason: GaugeEventReason | undefined
 }
 
 export interface EnumEntryOption {
@@ -23,6 +25,14 @@ export interface EnumGaugeOptions extends AbstractGaugeOptions {
 	maximum: number,
 	/** Graph options. Omit to disable graphing in the timeline for this gauge. */
 	graph?: EnumGraphOptions
+	/**
+	 * Should this gauge correct its history in the event of underflow? Must pass true to enable
+	 * Important note:
+	 *   This WILL mutate the history array, but will not re-run any additional logic done partway through the analysis.
+	 *   If you are driving suggestions or other logic off gauge values at specific points in time, that should be run during
+	 *   an onComplete hook, or within the calling class's output function
+	 */
+	correctHistory?: boolean
 }
 
 type EnumGraphOptions = Omit<ResourceGraphOptions, ''> // Not currently omitting any options, but making easier to do so in the future
@@ -37,6 +47,7 @@ export class EnumGauge extends AbstractGauge {
 	private maximum: number
 
 	private graphOptions?: ResourceGraphOptions
+	private correctHistory: boolean
 
 	public history: EnumHistory[] = []
 
@@ -59,6 +70,7 @@ export class EnumGauge extends AbstractGauge {
 		this.maximum = opts.maximum
 
 		this.graphOptions = opts.graph
+		this.correctHistory = opts.correctHistory ?? false
 	}
 
 	getCountAt(value: string, timestamp: number = this.parser.currentEpochTimestamp): number {
@@ -74,7 +86,7 @@ export class EnumGauge extends AbstractGauge {
 	reset() {
 		// NOTE: This assumes counters always reset to their minimum value.
 		// Should that not be the case, probbaly needs a `resetTo` value.
-		this.set([])
+		this.set([], 'reset')
 	}
 
 	clear(value: string) {
@@ -82,7 +94,7 @@ export class EnumGauge extends AbstractGauge {
 	}
 
 	raise() {
-		this.reset()
+		this.set([], 'init')
 	}
 
 	init() {
@@ -91,6 +103,7 @@ export class EnumGauge extends AbstractGauge {
 			this.history.push({
 				timestamp: this.parser.pull.timestamp,
 				values: [],
+				reason: 'init',
 			})
 		}
 	}
@@ -100,30 +113,58 @@ export class EnumGauge extends AbstractGauge {
 		if (!this.options.some(option => option.value === value)) { return }
 		const generatedValues = [...this.current]
 		generatedValues.push(...Array<EnumEntryOption['value']>(count).fill(value))
-		this.set(generatedValues)
+		this.set(generatedValues, 'generate')
 	}
 
 	/** Removes the specified number of entries of the given value from the gauge. Defaults to removing one entry. */
 	spend = (value: string, count: number = 1) => {
 		if (!this.options.some(option => option.value === value)) { return }
 		const spentValues = [...this.current]
+		const valueCount = spentValues.filter(val => val === value).length
+		if (valueCount < count) {
+			this.correctGaugeHistory(value, count - valueCount)
+		}
 		while (count > 0) {
 			const valueIndex = _.lastIndexOf(spentValues, value)
 			if (valueIndex <= 0) { break }
 			spentValues.splice(valueIndex, 1)
 			count--
 		}
-		this.set(spentValues)
+		this.set(spentValues, 'spend')
 	}
 
 	/** Set the current value of the gauge. Value will automatically be bounded to valid values */
-	set(values: Array<EnumEntryOption['value']>) {
+	set(values: Array<EnumEntryOption['value']>, reason?: GaugeEventReason) {
 		const correctedValues = values.filter(value => this.options.some(option => option.value === value)).slice(0, this.maximum)
 
-		this.pushHistory(correctedValues)
+		this.pushHistory(correctedValues, reason)
 	}
 
-	private pushHistory(values: Array<EnumEntryOption['value']>) {
+	private correctGaugeHistory(value: string, underrunAmount: number) {
+		if (!this.correctHistory) { return }
+
+		// Get the most recent initialisation event (or generation event if this gauge isn't deterministic) we've recorded
+		const lastGeneratorIndex = _.findLastIndex(this.history, event => event.reason === 'init')
+
+		// Add the amount we underran the simulation by to the last generation event, and all events through the current one
+		for (let i = lastGeneratorIndex; i < this.history.length; i++) {
+			this.history[i].values.push(...Array<EnumEntryOption['value']>(underrunAmount).fill(value))
+		}
+
+		// If the last generator was also the first event (dungeons with stocked resources, etc.), we're done
+		if (lastGeneratorIndex === 0) {
+			return
+		}
+
+		// Find the last non-generation event previous to the last generator we already found, and smooth the graph between the two events by adding a proportional amount of the underrun value to each event
+		const previousSpenderIndex = _.findLastIndex(this.history.slice(0, lastGeneratorIndex), event => event.reason !== 'generate')
+		const adjustmentPerEvent = underrunAmount / (lastGeneratorIndex - previousSpenderIndex)
+		for (let i = previousSpenderIndex + 1; i < lastGeneratorIndex; i ++) {
+			this.history[i].values.push(...Array<EnumEntryOption['value']>(adjustmentPerEvent * (i - previousSpenderIndex)).fill(value))
+		}
+	}
+
+	private pushHistory(values: Array<EnumEntryOption['value']>, reason?: GaugeEventReason) {
 		const timestamp = this.parser.currentEpochTimestamp
 
 		// Ensure we're not generating multiple entries at the same timestamp
@@ -137,6 +178,7 @@ export class EnumGauge extends AbstractGauge {
 		this.history.push({
 			timestamp,
 			values,
+			reason,
 		})
 	}
 

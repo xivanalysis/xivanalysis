@@ -113,6 +113,7 @@ export class Gauge extends CoreGauge {
 			tooltipHideMaximum: true,
 			order: GAUGE_DISPLAY_ORDER.PAINT,
 		},
+		correctHistory: true,
 	}))
 
 	private whitePaintGenerators = [
@@ -254,6 +255,7 @@ export class Gauge extends CoreGauge {
 			// eslint-disable-next-line @typescript-eslint/no-magic-numbers
 			height: DEFAULT_ROW_HEIGHT / 3,
 		},
+		correctHistory: true,
 	}))
 
 	private portraitGenerators = [
@@ -293,11 +295,6 @@ export class Gauge extends CoreGauge {
 
 		this.addEventHook(playerFilter.type('action').action(oneOf(this.portraitGenerators)), this.onPortraitGenerator)
 		this.addEventHook(playerFilter.type('action').action(oneOf(this.portraitSpenders)), () => this.portraitGauge.reset())
-
-		// Default assume the player painted before the pull, until backtrack corrections are supported
-		this.canvasGauge.set(CREATURE_MOTIF, POM_MOTIF)
-		this.canvasGauge.set(WEAPON_MOTIF, HAMMER_MOTIF)
-		this.canvasGauge.set(LANDSCAPE_MOTIF, STARRY_MOTIF)
 
 		this.addEventHook('complete', this.onComplete)
 	}
@@ -346,6 +343,12 @@ export class Gauge extends CoreGauge {
 
 	// Canvas, Depictions, and Portrait don't reset on death, override onDeath handling to only reset Paint and Palette
 	override onDeath() {
+		this.paintGauge.reset()
+		this.paletteGauge.reset()
+	}
+
+	// Also override onRaise to match onDeath, in case we missed the death event in a dungeon log or something
+	override onRaise() {
 		this.paintGauge.reset()
 		this.paletteGauge.reset()
 	}

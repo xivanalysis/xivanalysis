@@ -2,7 +2,7 @@ import _ from 'lodash'
 import {GAUGE_HANDLE, ResourceData, ResourceGraphOptions} from '../ResourceGraphs/ResourceGraphs'
 import {AbstractGauge, AbstractGaugeOptions} from './AbstractGauge'
 
-type GaugeEventReason =
+export type GaugeEventReason =
 	| 'init'
 	| 'generate'
 	| 'spend'
