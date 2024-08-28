@@ -400,6 +400,7 @@ export class Gauge extends CoreGauge {
 	private onSubtractivePalette(event: Events['action']) {
 		if (this.actors.current.hasStatus(this.data.statuses.MONOCHROME_TONES.id)) {
 			this.overtones++
+			return
 		}
 
 		// If we have a White Paint available, Subtractive Palette swaps it for a Black Paint
