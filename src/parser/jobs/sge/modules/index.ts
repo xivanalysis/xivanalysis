@@ -4,6 +4,7 @@ import {Defensives} from './Defensives'
 import {DoTs} from './DoTs'
 import {Gauge} from './Gauge'
 import {Interrupts} from './Interrupts'
+import {Kardia} from './Kardia'
 import {Overheal} from './Overheal'
 import {Swiftcast} from './Swiftcast'
 import {Tincture} from './Tincture'
@@ -16,6 +17,7 @@ export default [
 	DoTs,
 	Gauge,
 	Interrupts,
+	Kardia,
 	Overheal,
 	Swiftcast,
 	Tincture,
