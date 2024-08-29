@@ -49,8 +49,7 @@ export abstract class MuseBuffWindow extends BuffWindow {
 			suggestionContent,
 			suggestionWindowName,
 			severityTiers: {
-				1: SEVERITY.MINOR,
-				2: SEVERITY.MEDIUM,
+				0: SEVERITY.IGNORE,
 			},
 			adjustCount: this.adjustMuseGcdCount.bind(this),
 		})

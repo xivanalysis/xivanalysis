@@ -36,7 +36,7 @@ export class ArmysMuse extends BuffWindow {
 			suggestionContent,
 			suggestionWindowName,
 			severityTiers: {
-				1: SEVERITY.MEDIUM,
+				0: SEVERITY.IGNORE,
 			},
 		})
 
