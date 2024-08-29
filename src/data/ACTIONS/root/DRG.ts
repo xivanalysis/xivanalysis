@@ -118,10 +118,10 @@ export const DRG = ensureActions({
 			from: [87, 36955],
 		},
 		potencies: [{
-			value: 100,
+			value: 140,
 			bonusModifiers: [],
 		}, {
-			value: 140,
+			value: 180,
 			bonusModifiers: [BonusModifier.POSITIONAL],
 		}, {
 			value: 300,
