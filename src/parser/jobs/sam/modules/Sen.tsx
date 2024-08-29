@@ -22,7 +22,7 @@ import {Kenki} from './Kenki'
 
 // defining a const message to assign later via markdown
 
-const samWarningMessage = t('sam.sen.rotation-table.disclaimer')` This module labels a "Standard Sen Window" to be a window that with no Sen overwrites that ends on an Iaijutsu. Please consult The Balance Discord and this [Infograph](https://i.imgur.com/978VOqG.jpg) for more details on looping Samurai gameplay.`
+const samWarningMessage = t('sam.sen.rotation-table.disclaimer')` This module labels a "Standard Sen Window" to be a window that with no Sen overwrites that ends on an Iaijutsu. Please consult The Balance Discord and this [Infograph](https://i.imgur.com/C0ryA5F) for more details on looping Samurai gameplay.`
 
 const KENKI_PER_SEN = 10
 
