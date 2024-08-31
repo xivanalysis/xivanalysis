@@ -8,6 +8,11 @@ export const changelog = [
 	// 	contributors: [CONTRIBUTORS.YOU],
 	// },
 	{
+		date: new Date('2024-08-31'),
+		Changes: () => <>Added buff window GCD trackers for Raging Strikes, Battle Voice, Radiant Finale and Army's Muse.</>,
+		contributors: [CONTRIBUTORS.YUMIYA],
+	},
+	{
 		date: new Date('2024-08-24'),
 		Changes: () => <>Fix a buff tracking issue that could cause the Burst Window tracking to close the window early.</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],
