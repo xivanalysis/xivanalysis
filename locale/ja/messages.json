@@ -266,7 +266,7 @@
   "brd.procs.suggestions.overwritten.content": "<1/> を使える時、<0/> を付与するアクションを使わないでください。",
   "brd.procs.title": "ホークアイの上書き",
   "brd.radiantfinale.title": "",
-  "brd.ragingstrikes.title": "",
+  "brd.ragingstrikes.title": "猛者の撃",
   "code.suggestions.severity.memes": "",
   "core.about.contributors": "貢献者:",
   "core.about.patch-unsupported.description": "このログはパッチ {0} のものですが、まだこのアナライザーではサポートされていません。計算や提案は暫定的なもので、今後変更されるかもしれません。",

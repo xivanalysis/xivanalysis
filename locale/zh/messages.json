@@ -266,7 +266,7 @@
   "brd.procs.suggestions.overwritten.content": "当你可以使用<1/>时，尽量不要用会触发<0/>的技能。",
   "brd.procs.title": "",
   "brd.radiantfinale.title": "",
-  "brd.ragingstrikes.title": "",
+  "brd.ragingstrikes.title": "猛者强击",
   "code.suggestions.severity.memes": "Memes",
   "core.about.contributors": "贡献者：",
   "core.about.patch-unsupported.description": "这个报告是在{0} 版本记录的，分析器不支持此报告。计算和建议可能会因版本间更改而受到影响。",

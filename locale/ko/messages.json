@@ -266,7 +266,7 @@
   "brd.procs.suggestions.overwritten.content": "<1/> 기술을 사용할 수 있을 때 <0/> 스택을 부여하는 기술을 사용하지 마십시오.",
   "brd.procs.title": "",
   "brd.radiantfinale.title": "",
-  "brd.ragingstrikes.title": "",
+  "brd.ragingstrikes.title": "용맹한 사격",
   "code.suggestions.severity.memes": "",
   "core.about.contributors": "기여자:",
   "core.about.patch-unsupported.description": "이 리포트는 분석기의 지원을 받을 수 없는 {0} 버전에서 작성되었습니다. 계산 결과와 조언들은 이후 패치의 영향을 받을 수 있습니다.",

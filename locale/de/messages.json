@@ -266,7 +266,7 @@
   "brd.procs.suggestions.overwritten.content": "Vermeide das Verwenden von Aktionen, welche <0/> geben, wenn du stattdessen <1/> verwenden könntest.",
   "brd.procs.title": "",
   "brd.radiantfinale.title": "",
-  "brd.ragingstrikes.title": "",
+  "brd.ragingstrikes.title": "Wütende Attacke",
   "code.suggestions.severity.memes": "",
   "core.about.contributors": "Mitwirkende:",
   "core.about.patch-unsupported.description": "Dieser Log wurde während Patch {0} aufgezeichnet, welcher nicht vom Analysator unterstützt wird. Berechnungen und Vorschläge könnten durch eventuelle Spieländerungen nicht korrekt sein.",
