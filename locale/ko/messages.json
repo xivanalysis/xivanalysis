@@ -994,7 +994,7 @@
   "sam.sen.getsu.label": "",
   "sam.sen.ka.label": "",
   "sam.sen.no_hagakure.message": "<0/> 기술은 딜 사이클을 자연스럽게 돌리게 해줍니다. 딜 사이클 중 필러 페이즈(중요하지 않은 글쿨 사용 시기) 때 사용하십시오.",
-  "sam.sen.rotation-table.disclaimer": "이 모듈은 거합술 전까지 섬을 덮어쓰지 않는 것을 \"표준 섬 딜 사이클\"로 정의합니다. The Balance Discord와 [인포그래픽](https://i.imgur.com/978VOqG.jpg)에서 사무라이의 운용 방법을 확인할 수 있습니다.",
+  "sam.sen.rotation-table.disclaimer": "",
   "sam.sen.rotation-table.message": "아래의 표는 어떻게 표준 섬 구간에 포함되지 않게 됬는지 정리하여 보여드립니다. 사망, 섬 덮어씌우기, 무사도 사용 구간 모두 비표준 섬 구간에 포함됩니다.",
   "sam.sen.sen_handling.d_hagakure": "표준적인 무사도 사용 포함.",
   "sam.sen.sen_handling.death": "사망 포함.",

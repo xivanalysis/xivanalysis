@@ -994,7 +994,7 @@
   "sam.sen.getsu.label": "月之闪",
   "sam.sen.ka.label": "花之闪",
   "sam.sen.no_hagakure.message": "<0/>是一个很有效的帮你维持循环流畅的手段。使用它来处理你循环的填充阶段。",
-  "sam.sen.rotation-table.disclaimer": " 这一模块会使用“标准的闪窗口”来表示没有重复打闪的一段以居合术结尾的循环期。请参考The Balance的Discord或者这个[Infograph](https://i.imgur.com/978VOqG.jpg)以获取更多有关武士循环的信息。",
+  "sam.sen.rotation-table.disclaimer": "",
   "sam.sen.rotation-table.message": "下表能够更好地看到那些导致闪窗口被标记为“非标准”的事件。死亡，覆盖了现有的闪，或者使用叶隐的行为都会被标记为“非标准”。",
   "sam.sen.sen_handling.d_hagakure": "包含非标准的叶隐使用情况。",
   "sam.sen.sen_handling.death": "包含你死亡的情况。",

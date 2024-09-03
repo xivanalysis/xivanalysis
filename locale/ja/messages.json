@@ -994,7 +994,7 @@
   "sam.sen.getsu.label": "月の閃",
   "sam.sen.ka.label": "花の閃",
   "sam.sen.no_hagakure.message": "<0/>はスキル回しをスムースに行うための強力なツールです。スキル回しの調節を行うフィラーで使うようにしましょう。",
-  "sam.sen.rotation-table.disclaimer": "このモジュールでは「標準的な閃の使用方法」を閃の上書きがなく、居合術で終わる一連のローテーションとして認識しています。侍のスキル回しについての概要はThe BalanceのDiscordサーバーか、[この画像](https://i.imgur.com/978VOqG.jpg)を参照してください。",
+  "sam.sen.rotation-table.disclaimer": "",
   "sam.sen.rotation-table.message": "この表は「標準的ではない」閃の使用を見やすく表示しています。死亡、重複した閃の上書き、葉隠の使用を非標準的として表示しています。",
   "sam.sen.sen_handling.d_hagakure": "一般的でない葉隠の使用",
   "sam.sen.sen_handling.death": "あなたの死亡が含まれています。",

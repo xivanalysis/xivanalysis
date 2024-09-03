@@ -994,7 +994,7 @@
   "sam.sen.getsu.label": "Getsu",
   "sam.sen.ka.label": "Ka",
   "sam.sen.no_hagakure.message": "<0/> est un outil puissant qui devrait être utilisé pour vous aider à garder votre rotation fluide. Utiliser-le pour gérer la phase de remplissage de votre rotation.",
-  "sam.sen.rotation-table.disclaimer": " Ce module appellé \"fenêtre Sen standard\" est une fenêtre ou aucun Sen, se termine sur un Iaijutsu. Veuillez consulter The Balance Discord et ce [Infograph] (https://i.imgur.com/978VOqG.jpg) pour plus de détails sur la rotation de jeu du Samurai.",
+  "sam.sen.rotation-table.disclaimer": "",
   "sam.sen.rotation-table.message": "Ce tableau permet de mieux voir les événements qui se prêtent à une fenêtre Sen qui a été jugée \"non standard\" comme expliqué ci-dessous. La mort, l'écrasement d'un Sen ou l'utilisation de l'hagakure font qu'une fenêtre sera signalée comme non standard.",
   "sam.sen.sen_handling.d_hagakure": "Contient une utilisation non standard de Hagakure.",
   "sam.sen.sen_handling.death": "Contient vos morts.",
