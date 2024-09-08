@@ -394,7 +394,6 @@ export const SCH = ensureActions({
 		icon: iconUrl(2882),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
-		castTime: 2000,
 		statusesApplied: ['GALVANIZE', 'CATALYZE'],
 	},
 
@@ -404,7 +403,6 @@ export const SCH = ensureActions({
 		icon: iconUrl(2883),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
-		castTime: 2000,
 		statusesApplied: ['GALVANIZE', 'CATALYZE'],
 	},
 })

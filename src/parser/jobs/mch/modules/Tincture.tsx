@@ -79,7 +79,7 @@ export class Tincture extends CoreTincture {
 			suggestionContent: <Trans id="mch.tincture.suggestions.trackedActions.content">
 				Try to cover as much damage as possible with your Tinctures of Dexterity.
 			</Trans>,
-			suggestionWindowName: <DataLink action="INFUSION_DEX" showIcon={false} />,
+			suggestionWindowName: <DataLink item="INFUSION_DEX" showIcon={false} />,
 			severityTiers: {
 				2: SEVERITY.MINOR,
 				4: SEVERITY.MEDIUM,
@@ -100,7 +100,7 @@ export class Tincture extends CoreTincture {
 			suggestionContent: <Trans id="mch.tincture.suggestions.blazingShot.content">
 				Try to fit at least two uses of <DataLink action="HYPERCHARGE" /> in every Tincture window after the opener.
 			</Trans>,
-			suggestionWindowName: <DataLink action="INFUSION_DEX" showIcon={false} />,
+			suggestionWindowName: <DataLink item="INFUSION_DEX" showIcon={false} />,
 			severityTiers: {
 				1: SEVERITY.MINOR,
 				2: SEVERITY.MEDIUM,

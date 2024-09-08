@@ -24,9 +24,9 @@ import React, {Fragment} from 'react'
 import {Team} from 'report'
 import {Button, Icon, Message, Table} from 'semantic-ui-react'
 import {isDefined} from 'utilities'
-import NormalisedMessage from '../../../../components/ui/NormalisedMessage'
-import {BuffGroupWindow} from '../../../core/modules/ActionWindow/windows/BuffGroupWindow'
-import DISPLAY_ORDER from './DISPLAY_ORDER'
+import NormalisedMessage from '../../../../../components/ui/NormalisedMessage'
+import {BuffGroupWindow} from '../../../../core/modules/ActionWindow/windows/BuffGroupWindow'
+import DISPLAY_ORDER from '../DISPLAY_ORDER'
 
 // Minimum muse GCDs needed to expect a burst window to have 9 GCDs
 const MIN_MUSE_GCDS = 2

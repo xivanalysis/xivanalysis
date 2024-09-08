@@ -2,7 +2,7 @@ import {Event} from 'event'
 import {AdapterStep, PREPULL_OFFSETS} from './base'
 
 export class PrepullActionAdapterStep extends AdapterStep {
-	override postprocess(adaptedEvents: Event[]): Event[] {
+	override postprocess(adaptedEvents: Event[], firstEvent: number): Event[] {
 		const precastEvents: Event[] = []
 
 		for (const event of adaptedEvents) {
@@ -14,7 +14,7 @@ export class PrepullActionAdapterStep extends AdapterStep {
 					action: event.cause.action,
 					source: event.source,
 					target: event.targets[0]?.target,
-					timestamp: this.pull.timestamp + PREPULL_OFFSETS.PULL_ACTION,
+					timestamp: firstEvent + PREPULL_OFFSETS.PULL_ACTION,
 				})
 			} else if (event.type === 'action') {
 				// Stop once we hit the first real action event post-pull

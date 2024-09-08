@@ -114,6 +114,41 @@ const ITEMS = ensureActions({
 		duration: 30,
 	},
 
+	G2_GEMDRAUGHT_MND: {
+		id: 44166,
+		name: 'Grade 2 Gemdraught of Mind',
+		icon: iconUrl(20708),
+		duration: 30,
+	},
+
+	G2_GEMDRAUGHT_STR: {
+		id: 44162,
+		name: 'Grade 2 Gemdraught of Strength',
+		icon: iconUrl(20710),
+		duration: 30,
+	},
+
+	G2_GEMDRAUGHT_VIT: {
+		id: 44164,
+		name: 'Grade 2 Gemdraught of Vitality',
+		icon: iconUrl(20707),
+		duration: 30,
+	},
+
+	G2_GEMDRAUGHT_DEX: {
+		id: 44163,
+		name: 'Grade 2 Gemdraught of Dexterity',
+		icon: iconUrl(20709),
+		duration: 30,
+	},
+
+	G2_GEMDRAUGHT_INT: {
+		id: 44165,
+		name: 'Grade 2 Gemdraught of Intelligence',
+		icon: iconUrl(20706),
+		duration: 30,
+	},
+
 	SUPER_ETHER: {
 		id: 23168 - ITEM_ID_OFFSET, // what is consistency?
 		name: 'Super-Ether',

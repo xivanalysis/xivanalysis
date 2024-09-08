@@ -31,7 +31,7 @@ export class Tincture extends CoreTincture {
 			suggestionContent: <Trans id="sge.tincture.suggestions.trackedActions.content">
 				Try to cover as much damage as possible with your Tinctures of Mind.
 			</Trans>,
-			suggestionWindowName: <DataLink action="INFUSION_MND" showIcon={false}/>,
+			suggestionWindowName: <DataLink item="INFUSION_MND" showIcon={false}/>,
 			severityTiers: {
 				1: SEVERITY.MINOR,
 				2: SEVERITY.MEDIUM,

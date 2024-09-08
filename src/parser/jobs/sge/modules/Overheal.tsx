@@ -26,7 +26,7 @@ export class Overheal extends CoreOverheal {
 			name: 'Kardia/Philosophia',
 			trackedHealIds: [
 				this.data.statuses.KARDIA.id,
-				this.data.statuses.PHILOSOPHIA.id,
+				this.data.statuses.EUDAIMONIA.id,
 			],
 			ignore: true,
 		},
