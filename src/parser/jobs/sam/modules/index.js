@@ -3,7 +3,7 @@ import {Buffs} from './Buffs'
 import {Combos} from './Combos'
 import {Defensives} from './Defensives'
 import {Fuka} from './Fuka'
-import {HagakureStats} from './HagakureStat'
+import {Hagakure} from './Hagakure'
 import {Higanbana} from './Higanbana'
 import Interrupts from './Interrupts'
 import {Kenki} from './Kenki'
@@ -22,7 +22,7 @@ export default [
 	Defensives,
 	Fuka,
 	Kenki,
-	HagakureStats,
+	Hagakure,
 	Higanbana,
 	Interrupts,
 	Meikyo,
