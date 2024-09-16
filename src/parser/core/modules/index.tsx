@@ -18,6 +18,7 @@ import {GlobalCooldown} from './GlobalCooldown'
 import Hijinks from './Hijinks'
 import {Invulnerability} from './Invulnerability'
 import {Medicated} from './Medicated'
+import {NotCasting} from './NotCasting'
 import {RaidBuffs} from './RaidBuffs'
 import {ResourceGraphs} from './ResourceGraphs'
 import {SpeedAdjustments} from './SpeedAdjustments'
@@ -50,6 +51,7 @@ export default [
 	Hijinks,
 	Invulnerability,
 	Medicated,
+	NotCasting,
 	RaidBuffs,
 	ResourceGraphs,
 	SpeedAdjustments,
