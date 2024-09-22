@@ -999,7 +999,7 @@
   "sam.sen.rotation-table.disclaimer": " This module labels a \"Standard Sen Window\" to be a window that with no Sen overwrites that ends on an Iaijutsu. Please consult The Balance Discord and this [Infograph](https://i.imgur.com/C0ryA5F) for more details on looping Samurai gameplay.",
   "sam.sen.rotation-table.message": "This table serves as a way to better see the events that lend up to a Sen window that has been deemed \"Non-Standard\" as explained below. Dying, overwriting a sen, or using hagakure will cause a window to be flagged as Non-Standard.",
   "sam.sen.sen_handling.death": "Contains your death.",
-  "sam.sen.sen_handling.hagakure": "Contains a Standard Filler Hagakure.",
+  "sam.sen.sen_handling.hagakure": "Contains a Hagakure.",
   "sam.sen.sen_handling.overwrote_sen": "Contains a Overwritten Sen.",
   "sam.sen.sen_handling.overwrote_sens": "Contains Overwritten Sens.",
   "sam.sen.sen_handling.why": "Why Non-Standard",
