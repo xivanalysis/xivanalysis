@@ -11,7 +11,7 @@ export const changelog = [
 	{
 		date: new Date('2024-08-03'),
 		Changes: () => <>7.05 support added. pre-7.05 support removed </>,
-		contributors: [CONTRIBUTORS.RYA
+		contributors: [CONTRIBUTORS.RYAN],
 	},
 	{
 		date: new Date('2024-07-21'),
@@ -24,3 +24,4 @@ export const changelog = [
 		contributors: [CONTRIBUTORS.RYAN],
 	},
 ]
+c
