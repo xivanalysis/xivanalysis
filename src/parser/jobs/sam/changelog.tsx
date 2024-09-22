@@ -24,4 +24,4 @@ export const changelog = [
 		contributors: [CONTRIBUTORS.RYAN],
 	},
 ]
-c
+
