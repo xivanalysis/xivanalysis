@@ -1,5 +1,6 @@
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
+import {Action} from 'data/ACTIONS'
 import {Event, Events} from 'event'
 import {Analyser} from 'parser/core/Analyser'
 import {filter} from 'parser/core/filter'
@@ -9,16 +10,24 @@ import {GlobalCooldown} from 'parser/core/modules/GlobalCooldown'
 import {Timeline} from 'parser/core/modules/Timeline'
 import React from 'react'
 import {Table, Button} from 'semantic-ui-react'
+import {Data} from './Data'
 
 //value to be added to the gcd to avoid false positives. 100ms for caster tax, 50ms for gcd jitter.
 const GCD_ERROR_OFFSET = 150
-
-//slide cast period is 500 ms.
-const SLIDECAST_OFFSET = 500
+const BASE_RECAST = 2500
 
 interface Window {
 	start: number,
-	stop?: number
+	stop?: number,
+	recastTime: number,
+}
+
+interface tempWindow {
+	start?: number,
+	stop?: number,
+	difference?: number,
+	gcdLength: number,
+	actionName?: string,
 }
 
 export class NotCasting extends Analyser {
@@ -28,11 +37,19 @@ export class NotCasting extends Analyser {
 	@dependency private timeline!: Timeline
 	@dependency protected gcd!: GlobalCooldown
 	@dependency protected downtime!: Downtime
+	@dependency protected data!: Data
+
+	// give some options depending on what is optimal for that job
+	protected includeOGCDs: boolean = false
 
 	private noCastWindows: {current?: Window, history: Window[]} = {
 		history: [],
 	}
-	private hardCast = false
+	private hardCastStartTime: number | undefined = undefined
+
+	private CastWindows: {current?: tempWindow, history: tempWindow[]} = {
+		history: [],
+	}
 
 	override initialise() {
 		const playerFilter = filter<Event>().source(this.parser.actor.id)
@@ -46,42 +63,65 @@ export class NotCasting extends Analyser {
 	}
 
 	private onCast(event: Events['action']) {
-		//better than using 2.5s I guess
-		const gcdLength = this.gcd.getDuration()
+		//some jobs might care about oGCDs. e.g. BLM
+		const actionIsOGCD: boolean = !this.data.getAction(event.action)?.onGcd ?? false
+		if (!this.includeOGCDs && actionIsOGCD) { return }
+
+		const actionRecast: number = this.getRecast(event.action)
+
 		let timeStamp = event.timestamp
 
 		//coming from a hard cast, adjust for slidecasting
-		if (this.hardCast) {
-			timeStamp = event.timestamp + SLIDECAST_OFFSET
-			this.hardCast = false
+		if (this.hardCastStartTime != null) {
+			timeStamp = this.hardCastStartTime
+			this.hardCastStartTime = undefined
 		}
+		//start of test section
+		if (this.CastWindows.current != null) {
+			this.CastWindows.current.stop = Math.max(timeStamp - this.parser.pull.timestamp, 0)
+			this.CastWindows.current.difference = (this.CastWindows.current.stop ?? this.CastWindows.current.start ?? 0) - (this.CastWindows.current.start ?? 0)
+			this.CastWindows.history.push(this.CastWindows.current)
+		}
+		this.CastWindows.current = undefined
+		this.CastWindows.current = {
+			start: Math.max(timeStamp - this.parser.pull.timestamp, 0),
+			actionName: this.data.getAction(event.action)?.name,
+			gcdLength: actionRecast,
+		}
+		//end of test section
 
 		//don't check the time that you actually spent casting
 		if (!this.noCastWindows.current) {
 			this.noCastWindows.current = {
 				start: timeStamp,
+				recastTime: actionRecast,
 			}
 			return
 		}
 
 		//check if it's been more than a gcd length
-		if (timeStamp - this.noCastWindows.current.start > gcdLength + GCD_ERROR_OFFSET) {
+		if (timeStamp - this.noCastWindows.current.start > actionRecast + GCD_ERROR_OFFSET) {
 			this.stopAndSave(timeStamp)
 		}
 		//this cast is our new last cast
 		this.noCastWindows.current = {
 			start: timeStamp,
+			recastTime: actionRecast,
 		}
 	}
 
 	private onBegin(event: Events['prepare']) {
-		const gcdLength = this.gcd.getDuration()
+		const actionIsOGCD: boolean = !this.data.getAction(event.action)?.onGcd ?? false
+		//some jobs might care about oGCDs. e.g. BLM
+		if (!this.includeOGCDs && actionIsOGCD) { return }
+
+		const actionRecast = this.getRecast(event.action)
 		if (this.noCastWindows.current) {
-			if (event.timestamp - this.noCastWindows.current.start > gcdLength + GCD_ERROR_OFFSET) {
+			if (event.timestamp - this.noCastWindows.current.start > actionRecast + GCD_ERROR_OFFSET) {
 				this.stopAndSave(event.timestamp)
 			}
 			this.noCastWindows.current = undefined
-			this.hardCast = true
+			this.hardCastStartTime = event.timestamp
 		}
 	}
 
@@ -102,8 +142,31 @@ export class NotCasting extends Analyser {
 		tracker.current = undefined
 	}
 
+	/**
+	 * Estimate recast based on GCD Length and base recast rounded up to 2 decimal places
+	 * @param {Action['id']} action - desired action for recast
+	 * @returns {number} - estimated recast for desired action, if no cast mentioned, returns base gcdLength
+	 */
+	private getRecast(action: Action['id']): number {
+		const gcdLength: number = this.gcd.getDuration()
+		const actionAttribute: Action['speedAttribute'] | undefined = this.data.getAction(action)?.speedAttribute
+		const actionGCDRecastTime: number = this.data.getAction(action)?.gcdRecast ?? 0
+		//TODO need to consider swiftcast since gcd could be less than recast (see blm)
+		/**
+		 * if there is no recast time, take base estimated gcd length
+		 * if action speed attribute is undefined, assume recast time is always raw e.g. PCT canvas
+		 * if there is a recast time impacted by speed attribute, estimate recast by base recast (2.5s) and actual gcd length.
+		 * In this case, it's rounded up at 2 decimal places to give benefit of doubt
+		 */
+		const unroundedActionRecast: number
+			= actionGCDRecastTime === 0 ? gcdLength
+				: actionAttribute === undefined ? actionGCDRecastTime
+					: gcdLength / BASE_RECAST * actionGCDRecastTime
+		const actionRecast: number = Math.ceil(unroundedActionRecast * 100)/100
+		return actionRecast
+	}
+
 	private onComplete(event: Events['complete']) {
-		const gcdLength = this.gcd.getDuration()
 		//finish up
 		this.stopAndSave(event.timestamp)
 
@@ -113,12 +176,11 @@ export class NotCasting extends Analyser {
 				windows.start,
 				windows.stop ?? windows.start,
 			)
-			return duration === 0 && (windows.stop ?? windows.start) - windows.start > gcdLength + GCD_ERROR_OFFSET
+			return duration === 0 && (windows.stop ?? windows.start) - windows.start > windows.recastTime + GCD_ERROR_OFFSET
 		})
 	}
 
 	override output() {
-		const gcdLength = this.gcd.getDuration()
 		if (this.noCastWindows.history.length === 0) { return }
 		return <Table collapsing unstackable compact="very">
 			<Table.Header>
@@ -132,7 +194,7 @@ export class NotCasting extends Analyser {
 				{this.noCastWindows.history.map(notCasting => {
 					return <Table.Row key={notCasting.start}>
 						<Table.Cell>{this.parser.formatEpochTimestamp(notCasting.start)}</Table.Cell>
-						<Table.Cell>&ge;{this.parser.formatDuration((notCasting.stop ?? notCasting.start) - notCasting.start - gcdLength - GCD_ERROR_OFFSET)}</Table.Cell>
+						<Table.Cell>&ge;{this.parser.formatDuration((notCasting.stop ?? notCasting.start) - notCasting.start - notCasting.recastTime)}</Table.Cell>
 						<Table.Cell>
 							<Button onClick={() =>
 								this.timeline.show(notCasting.start - this.parser.pull.timestamp, (notCasting.stop ?? notCasting.start) - this.parser.pull.timestamp)}>
