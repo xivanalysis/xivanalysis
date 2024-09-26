@@ -22,14 +22,6 @@ interface Window {
 	recastTime: number,
 }
 
-interface tempWindow {
-	start?: number,
-	stop?: number,
-	difference?: number,
-	gcdLength: number,
-	actionName?: string,
-}
-
 export class NotCasting extends Analyser {
 	static override handle = 'notcasting'
 	static override title = t('core.notcasting.title')`Times you did literally nothing`
@@ -46,10 +38,6 @@ export class NotCasting extends Analyser {
 		history: [],
 	}
 	private hardCastStartTime: number | undefined = undefined
-
-	private CastWindows: {current?: tempWindow, history: tempWindow[]} = {
-		history: [],
-	}
 
 	override initialise() {
 		const playerFilter = filter<Event>().source(this.parser.actor.id)
@@ -76,19 +64,6 @@ export class NotCasting extends Analyser {
 			timeStamp = this.hardCastStartTime
 			this.hardCastStartTime = undefined
 		}
-		//start of test section
-		if (this.CastWindows.current != null) {
-			this.CastWindows.current.stop = Math.max(timeStamp - this.parser.pull.timestamp, 0)
-			this.CastWindows.current.difference = (this.CastWindows.current.stop ?? this.CastWindows.current.start ?? 0) - (this.CastWindows.current.start ?? 0)
-			this.CastWindows.history.push(this.CastWindows.current)
-		}
-		this.CastWindows.current = undefined
-		this.CastWindows.current = {
-			start: Math.max(timeStamp - this.parser.pull.timestamp, 0),
-			actionName: this.data.getAction(event.action)?.name,
-			gcdLength: actionRecast,
-		}
-		//end of test section
 
 		//don't check the time that you actually spent casting
 		if (!this.noCastWindows.current) {
