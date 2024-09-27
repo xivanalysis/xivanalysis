@@ -2,6 +2,7 @@ import About from './About'
 import {ActionTimeline} from './ActionTimeline'
 import {Actors} from './Actors'
 import {AlwaysBeCasting} from './AlwaysBeCasting'
+import {ABCTable} from './AlwaysBeCastingTable'
 import BrokenLog from './BrokenLog'
 import CastTime from './CastTime'
 import ChangeLog from './ChangeLog'
@@ -34,6 +35,7 @@ export default [
 	ActionTimeline,
 	Actors,
 	AlwaysBeCasting,
+	ABCTable,
 	BrokenLog,
 	ChangeLog,
 	CastTime,
