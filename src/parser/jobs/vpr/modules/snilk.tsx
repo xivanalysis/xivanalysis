@@ -36,14 +36,20 @@ export class snilk extends CoreGauge {
 
 	private snakeGaugeModifiers = new Map<number, GaugeModifier>([
 		// Builders
+
+		//Single Target
 		[this.data.actions.HUNTERS_COIL.id, {action: 5}],
-		[this.data.actions.HUNTERS_DEN.id, {action: 5}],
 		[this.data.actions.SWIFTSKINS_COIL.id, {action: 5}],
-		[this.data.actions.SWIFTSKINS_DEN.id, {action: 5}],
 		[this.data.actions.HINDSBANE_FANG.id, {action: 10}],
 		[this.data.actions.HINDSTING_STRIKE.id, {action: 10}],
 		[this.data.actions.FLANKSBANE_FANG.id, {action: 10}],
 		[this.data.actions.FLANKSTING_STRIKE.id, {action: 10}],
+
+		//AoE
+		[this.data.actions.HUNTERS_DEN.id, {action: 5}],
+		[this.data.actions.SWIFTSKINS_DEN.id, {action: 5}],
+		[this.data.actions.JAGGED_MAW.id, {action: 10}],
+		[this.data.actions.BLOODIED_MAW.id, {action: 10}],
 
 		// Spenders
 		[this.data.actions.REAWAKEN.id, {action: -50}],
