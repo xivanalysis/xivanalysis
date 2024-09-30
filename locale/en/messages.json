@@ -1148,6 +1148,8 @@
   "vpr.reawaken.generations.header": "Generations used in order",
   "vpr.reawaken.suggestions.content": "Each <0/> window should contain <1/>, <2/>, <3/>, and <4/> used in order, and their follow up skills <5/>, <6/>, <7/>, and <8/> used in order with <9/> finishing the window.",
   "vpr.reawaken.title": "Reawaken",
+  "vpr.serpents_ire.suggestions.trackedActions.content": "<0/> is the sign that a 2 minute window for party buffs is coming up. After using it, you should do 1 more GCD to align with 2 minute buffs before using a full <1/> window twice in a row.",
+  "vpr.serpents_ire.title": "\"2 Minute Windows\"",
   "vpr.serpentstail.checklist.requirement.waste.name": "Follow up your GCD combo finishers and Generation skills with Serpent's Tail skills",
   "vpr.serpentstail.waste.content": "Using <0/>, <1/>, <2/> or <3/> grant <4/>.<5/>Using <6/> and <7/> grant <8/>.<9/>Using the Generation skills under <10/> grants Legacy follow up skills.<11/>These skills are important to a Viper's damage and must be used immediately after the skill that grants them by using <12>.</12>",
   "vpr.snaps.statistic.info": "While it is important to keep your GCD rolling as much as possible, try to minimize your <0/> usage. It's better to save and use <1/> for when you cannot stay in melee range as it does more damage.",

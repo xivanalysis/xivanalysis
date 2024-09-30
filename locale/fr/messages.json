@@ -1148,6 +1148,8 @@
   "vpr.reawaken.generations.header": "Ères utilisées dans le bon ordre",
   "vpr.reawaken.suggestions.content": "Chaque fenêtre de <0/> devrait contenir <1/>, <2/>, <3/> et <4/>, utilisées dans le bon ordre, et les oGCD associés <5/>, <6/>, <7/> et <8/>. La fenêtre se termine par <9/>.",
   "vpr.reawaken.title": "Réminiscence",
+  "vpr.serpents_ire.suggestions.trackedActions.content": "",
+  "vpr.serpents_ire.title": "",
   "vpr.serpentstail.checklist.requirement.waste.name": "Utilisez vos actions de Queue Serpentine",
   "vpr.serpentstail.waste.content": "Utiliser <0/>, <1/>, <2/> ou <3/> vous donne <4/>.<5/>Utiliser <6/> et <7/> vous donne <8/>.<9/>Utiliser les Ères pendant <10/> vous donne les Cycles associés.<11/>Ces aptitudes sont une part importante des dégâts du Rôdeur Vipère, et doivent être utilisées immédiatement après la technique d'arme qui en permet l'utilisation, en utilisant <12>.</12>",
   "vpr.snaps.statistic.info": "Même s'il est important de maintenir votre GCD le plus possible, vous devriez essayer de minimiser le nombre d'utilisations de <0/>. Il est plus intéressant de garder <1/> pour l'utiliser quand vous ne pouvez plus être au corps à corps de votre cible.",
