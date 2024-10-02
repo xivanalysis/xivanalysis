@@ -95,7 +95,7 @@ export const Tooltip = memo(function Tooltip({
 
 class LabelData extends Data {
 	@column('Name') name!: string
-	@column('Icon', {type: 'url'}) icon!: string
+	@column('Icon', {type: 'icon'}) icon!: string
 }
 
 export interface LabelProps extends BaseTooltipProps {

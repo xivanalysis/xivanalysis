@@ -39,8 +39,8 @@ export class RattlingCoil extends CoreGauge {
 
 	private CoilModifiers = new Map<number, GaugeModifier>([
 
-		[this.data.actions.DREADWINDER.id, {action: 1}],
-		[this.data.actions.PIT_OF_DREAD.id, {action: 1}],
+		[this.data.actions.VICEWINDER.id, {action: 1}],
+		[this.data.actions.VICEPIT.id, {action: 1}],
 		[this.data.actions.SERPENTS_IRE.id, {action: 1}],
 
 		[this.data.actions.UNCOILED_FURY.id, {action: -1}],

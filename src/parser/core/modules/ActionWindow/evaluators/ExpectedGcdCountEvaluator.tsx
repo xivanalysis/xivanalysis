@@ -97,6 +97,10 @@ export class ExpectedGcdCountEvaluator implements WindowEvaluator {
 		}
 	}
 
+	public isWindowMissingGcds(window: HistoryEntry<EvaluatedAction[]>) {
+		return this.calculateMissingGcdsForWindow(window) > 0
+	}
+
 	private calculateMissingGcdsForWindow(window: HistoryEntry<EvaluatedAction[]>) {
 		const expected = this.calculateExpectedGcdsForWindow(window)
 		const actual = this.countGcdsInWindow(window)

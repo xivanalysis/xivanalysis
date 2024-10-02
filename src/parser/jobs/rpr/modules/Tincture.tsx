@@ -53,7 +53,7 @@ export class Tincture extends CoreTincture {
 			suggestionContent: <Trans id="rpr.tincture.suggestions.trackedActions.content">
 				Try to fit two uses of <DataLink action="COMMUNIO"/> while under the effects of a Tincture.
 			</Trans>,
-			suggestionWindowName: <DataLink action="INFUSION_STR" showIcon={false}/>,
+			suggestionWindowName: <DataLink item="INFUSION_STR" showIcon={false}/>,
 			severityTiers: COMMUNIO_SEVERITY,
 			adjustCount: this.adjustExpectedActionCount,
 		}))

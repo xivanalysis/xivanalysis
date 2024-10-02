@@ -107,6 +107,7 @@ export abstract class Procs extends Analyser {
 	 * Subclassing analysers may override this to toggle off timeline display
 	 */
 	protected showProcTimelineRow: boolean = true
+	protected ProcGroupLabel: ReactNode = <Trans id="core.procs.group.label"> Proc </Trans>
 	/**
 	 * Subclassing analysers may override these to toggle on the output display of proc issues, and to control which issue types are shown in the output
 	 */
@@ -347,7 +348,7 @@ export abstract class Procs extends Analyser {
 
 		if (this.showProcTimelineRow) {
 			this.row = this.timeline.addRow(new SimpleRow({
-				label: 'Procs',
+				label: this.ProcGroupLabel,
 				collapse: true,
 				order: 0,
 			}))

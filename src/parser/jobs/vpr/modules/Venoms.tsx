@@ -1,4 +1,5 @@
 /* eslint-disable no-console */
+import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
 import {DataLink, StatusLink} from 'components/ui/DbLink'
 import {Status} from 'data/STATUSES'
@@ -6,36 +7,17 @@ import {dependency} from 'parser/core/Injectable'
 import Checklist, {Requirement, Rule} from 'parser/core/modules/Checklist'
 import {Procs as CoreProcs} from 'parser/core/modules/Procs'
 import React from 'react'
+import DISPLAY_ORDER from './DISPLAY_ORDER'
 
 export class Venoms extends CoreProcs {
+	static override handle = 'venoms'
+	static override title = t('vpr.venoms.title')`oGCD Procs`
+
+	override ProcGroupLabel = <Trans id="vpr.Venoms.group.label"> oGCD Procs </Trans>
 
 	@dependency private checklist!: Checklist
 	override trackedProcs = [
-		//GCD Procs
-		{
-			procStatus: this.data.statuses.HINDSBANE_VENOM,
-			consumeActions: [this.data.actions.HINDSBANE_FANG],
-		},
-		{
-			procStatus: this.data.statuses.HINDSTUNG_VENOM,
-			consumeActions: [this.data.actions.HINDSTING_STRIKE],
-		},
-		{
-			procStatus: this.data.statuses.FLANKSBANE_VENOM,
-			consumeActions: [this.data.actions.FLANKSBANE_FANG],
-		},
-		{
-			procStatus: this.data.statuses.GRIMHUNTERS_VENOM,
-			consumeActions: [this.data.actions.JAGGED_MAW],
-		},
-		{
-			procStatus: this.data.statuses.FLANKSTUNG_VENOM,
-			consumeActions: [this.data.actions.FLANKSTING_STRIKE],
-		},
-		{
-			procStatus: this.data.statuses.GRIMSKINS_VENOM,
-			consumeActions: [this.data.actions.BLOODIED_MAW],
-		},
+
 		//OGCD Procs
 		{
 			procStatus: this.data.statuses.POISED_FOR_TWINBLOOD,
@@ -66,14 +48,14 @@ export class Venoms extends CoreProcs {
 	override showProcIssueOutput = true
 
 	override showDroppedProcSuggestion = true
-	override droppedProcIcon = this.data.actions.HINDSBANE_FANG.icon
+	override droppedProcIcon = this.data.actions.TWINBLOOD.icon
 	override droppedProcContent =
 		<Trans id="vpr.venoms.suggestions.drops.content">
 			Avoid dropping your venom buffs unless absolutely unavoidable. Use your <DataLink action="TWINBLOOD"/> and <DataLink action="TWINFANG"/> actions in the proper order to avoid losing procs.
 		</Trans>
 
 	override showOverwroteProcSuggestion = true
-	override overwroteProcIcon = this.data.actions.FLANKSTING_STRIKE.icon
+	override overwroteProcIcon = this.data.actions.TWINFANG.icon
 	override overwroteProcContent =
 		<Trans id="vpr.venoms.suggestions.overwrite.content">
 			Avoid overwriting your procs.
@@ -95,6 +77,7 @@ export class Venoms extends CoreProcs {
 			description: <Trans id="vpr.venom.checklist.content">
 				Viper generates venom buffs that increase the damage of certain actions. Make sure to use these actions while the buffs are active. Going out of order will cause the buff to drop.
 			</Trans>,
+			displayOrder: DISPLAY_ORDER.VENOM_PROCS,
 			requirements: ProcsToJudge.map(proc => this.VenomChecklistRequirement(proc.procStatus)),
 		}))
 
