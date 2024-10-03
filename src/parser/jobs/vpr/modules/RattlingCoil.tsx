@@ -46,6 +46,9 @@ export class RattlingCoil extends CoreGauge {
 		[this.data.actions.UNCOILED_FURY.id, {action: -1}],
 	])
 
+	private uncoiledTwinbloods = 0
+	private uncoiledTwinfangs = 0
+
 	override initialise() {
 		super.initialise()
 
@@ -57,6 +60,22 @@ export class RattlingCoil extends CoreGauge {
 				.type(oneOf(['action', 'combo']))
 				.action(oneOf(coilActions)),
 			this.onGaugeModifier,
+		)
+
+		const playerFilter = filter<Event>().source(this.parser.actor.id)
+
+		this.addEventHook(
+			playerFilter
+				.type(oneOf(['action']))
+				.action(this.data.actions.UNCOILED_TWINBLOOD.id),
+			() => this.uncoiledTwinbloods++,
+		)
+
+		this.addEventHook(
+			playerFilter
+				.type(oneOf(['action']))
+				.action(this.data.actions.UNCOILED_TWINFANG.id),
+			() => this.uncoiledTwinfangs++,
 		)
 
 		this.addEventHook('complete', this.onComplete)
@@ -97,17 +116,29 @@ export class RattlingCoil extends CoreGauge {
 		}))
 
 		this.checklist.add(new Rule({
-			name: <Trans id="vpr.rattlingcoil.usage.title"> <DataLink action="UNCOILED_FURY"/> Usage</Trans>,
+			name: <Trans id="vpr.rattlingcoil.usage.title"> <DataLink action="UNCOILED_FURY"/>,  <DataLink action="UNCOILED_TWINBLOOD"/> &  <DataLink action="UNCOILED_TWINFANG"/> Usage</Trans>,
 			description: <Trans id="vpr.rattlingcoilwaste.content">
 				Wasted rattling coil generation, ending the fight with rattling coils remaining, or dying with rattling coils coiled is a
 				direct potency loss. Use <ActionLink action="UNCOILED_FURY"/> to avoid wasting rattling coils.
+				<br/>
+				Using <DataLink action="UNCOILED_FURY"/> will grant access to <DataLink action="UNCOILED_TWINBLOOD"/> and <DataLink action="UNCOILED_TWINFANG"/> as follow up attacks. Make sure to use them as well.
 			</Trans>,
 			requirements: [
 				new Requirement({
 					name: <Trans id="vpr.rattlingcoil.checklist.requirement.waste.name">
-						Use as many of your rattling coils as possible
+						<DataLink action="UNCOILED_FURY"/>
 					</Trans>,
 					value: this.coilGauge.totalGenerated - (this.coilGauge.overCap + this.coilGauge.value),
+					target: this.coilGauge.totalGenerated,
+				}),
+				new Requirement({
+					name: <Trans id="vpr.rattlingcoil.checklist.requirement.twinblood.name"> <DataLink action="UNCOILED_TWINBLOOD"/></Trans>,
+					value: this.uncoiledTwinbloods,
+					target: this.coilGauge.totalGenerated,
+				}),
+				new Requirement({
+					name: <Trans id="vpr.rattlingcoil.checklist.requirement.twinfang.name"> <DataLink action="UNCOILED_TWINFANG"/></Trans>,
+					value: this.uncoiledTwinfangs,
 					target: this.coilGauge.totalGenerated,
 				}),
 			],

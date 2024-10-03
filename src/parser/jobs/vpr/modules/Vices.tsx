@@ -123,7 +123,7 @@ export class Vices extends Analyser {
 				<br/>
 				Using <DataLink action="VICEPIT"/> lets you use <DataLink action="HUNTERS_DEN"/> and <DataLink action="SWIFTSKINS_DEN"/> which grant <DataLink action="TWINBLOOD_THRESH"/> and <DataLink action="TWINFANG_THRESH"/>.
 				<br/>
-				These skills are important to a Viper's damage and must be used immediately after the skill that grants them by.
+				These skills are important to a Viper's damage and must be used immediately after the skill that grants them.
 			</Trans>,
 			requirements: [
 				...Object.values(Counters)

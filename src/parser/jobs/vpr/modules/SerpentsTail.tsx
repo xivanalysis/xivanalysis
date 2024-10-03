@@ -151,9 +151,9 @@ export class SerpentsTail extends Analyser {
 			displayOrder: DISPLAY_ORDER.SERPENTS_TAIL,
 			target: PERFECTIO,
 			description: <Trans id="vpr.serpentstail.waste.content">
-				Using <DataLink action="HINDSBANE_FANG"/>, <DataLink action="HINDSTING_STRIKE"/>, <DataLink action="FLANKSBANE_FANG"/> or <DataLink action="FLANKSTING_STRIKE"/> grant <DataLink action="DEATH_RATTLE"/>.
+				Using <DataLink action="HINDSBANE_FANG"/>, <DataLink action="HINDSTING_STRIKE"/>, <DataLink action="FLANKSBANE_FANG"/> or <DataLink action="FLANKSTING_STRIKE"/> grants <DataLink action="DEATH_RATTLE"/>.
 				<br/>
-				Using <DataLink action="JAGGED_MAW"/> and <DataLink action="BLOODIED_MAW"/> grant <DataLink action="LAST_LASH"/>.
+				Using <DataLink action="JAGGED_MAW"/> and <DataLink action="BLOODIED_MAW"/> grants <DataLink action="LAST_LASH"/>.
 				<br/>
 				Using the Generation skills under <DataLink action="REAWAKEN"/> grants Legacy follow up skills.
 				<br/>
