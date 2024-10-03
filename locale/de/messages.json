@@ -1,5 +1,6 @@
 {
   "VPR.serpentstail.waste.name": "",
+  "VPR.vice.waste.name": "",
   "ast.about.description-1": "",
   "ast.about.description-2": "\nAls Heiler ist es deine Aufgabe, deinen MP-Haushalt und Cooldowns unter einen Hut zu bringen, um deine Gruppe am Leben zu halten. Sprichst du dich mit deinem Co-Heiler ab und planst deine Heilungen gut, wirst du - durch die zusätzlichen GCDs - ganz automatisch mehr Schaden verursachen.\n",
   "ast.about.description.warning.development": "Damit dieses Tool allumfassend wird, gibt es noch viel zu tun! Wenn du einen Vorschlag für weitere Funktionen hast, schau gern in unserem Discord-Channel vorbei!",
@@ -1148,7 +1149,6 @@
   "vpr.reawaken.generations.header": "",
   "vpr.reawaken.suggestions.content": "",
   "vpr.reawaken.title": "",
-  "vpr.serpentstail.checklist.requirement.waste.name": "",
   "vpr.serpentstail.waste.content": "",
   "vpr.snaps.statistic.info": "",
   "vpr.snaps.statistic.title": "",
@@ -1158,6 +1158,7 @@
   "vpr.venoms.suggestions.drops.content": "",
   "vpr.venoms.suggestions.overwrite.content": "",
   "vpr.venoms.title": "",
+  "vpr.vice.waste.content": "",
   "war.about.description": "",
   "war.disengage.statistic.info": "",
   "war.disengage.statistic.title": "",

@@ -1,5 +1,6 @@
 {
   "VPR.serpentstail.waste.name": "",
+  "VPR.vice.waste.name": "",
   "ast.about.description-1": "占星術師におけるドローの最大の魅力は、味方のパーティー全体の火力をアルカナを使って強化する能力です。 このアナライザーは、星座があなたのために、どう作用するかを示し、その逆ではありません。",
   "ast.about.description-2": "\nどのヒーラーでも効率的にパーティを維持するには MP とリキャストタイムとを慎重に管理する必要があります。ヒールを計画し相方とコミュニケーションをとれば，余った GCD でより DPS が高くなるでしょう。\n",
   "ast.about.description.warning.development": "このツールを包括的にするには、まだやらなければならないことがたくさんあります！ 　トラッキングする価値のある項目がある場合は、Discordチャンネルにアクセスしてください！",
@@ -1148,7 +1149,6 @@
   "vpr.reawaken.generations.header": "",
   "vpr.reawaken.suggestions.content": "",
   "vpr.reawaken.title": "",
-  "vpr.serpentstail.checklist.requirement.waste.name": "",
   "vpr.serpentstail.waste.content": "",
   "vpr.snaps.statistic.info": "",
   "vpr.snaps.statistic.title": "",
@@ -1158,6 +1158,7 @@
   "vpr.venoms.suggestions.drops.content": "",
   "vpr.venoms.suggestions.overwrite.content": "",
   "vpr.venoms.title": "",
+  "vpr.vice.waste.content": "",
   "war.about.description": "<0>このアナライザーは戦闘中に起きたことについてのより深い洞察を提供するとともに、戦士の操作を手軽に改善できるようにすることを目指しています。</0><1>なにか間違いにお気づきの場合は、私達のDiscordサーバーに来て #fb-warrior チャンネルに報告してください。</1>",
   "war.disengage.statistic.info": "",
   "war.disengage.statistic.title": "",

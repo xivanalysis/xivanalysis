@@ -1,5 +1,6 @@
 {
   "VPR.serpentstail.waste.name": "Use your <0/> follow-ups",
+  "VPR.vice.waste.name": "Use your <0/> & <1/> follow-ups",
   "ast.about.description-1": "The biggest draw to an Astrologian is their ability to buff their party DPS with Arcanum. This analyzer will show you how the stars work for you and not the other way around",
   "ast.about.description-2": "\nPlaying any healer requires you to carefully manage your MP and cooldowns to efficiently keep your party alive. If you plan out your heals and communicate with your co-healer, you will naturally end up putting out more DPS with the extra GCDs gained.\n",
   "ast.about.description.warning.development": "There's still lots more work to be done for this tool to be comprehensive! If you have a suggestion for what is worth tracking please pop by our Discord channel!",
@@ -1148,7 +1149,6 @@
   "vpr.reawaken.generations.header": "Generations used in order",
   "vpr.reawaken.suggestions.content": "Each <0/> window should contain <1/>, <2/>, <3/>, and <4/> used in order, and their follow up skills <5/>, <6/>, <7/>, and <8/> used in order with <9/> finishing the window.",
   "vpr.reawaken.title": "Reawaken",
-  "vpr.serpentstail.checklist.requirement.waste.name": "Follow up your GCD combo finishers and Generation skills with Serpent's Tail skills",
   "vpr.serpentstail.waste.content": "Using <0/>, <1/>, <2/> or <3/> grant <4/>.<5/>Using <6/> and <7/> grant <8/>.<9/>Using the Generation skills under <10/> grants Legacy follow up skills.<11/>These skills are important to a Viper's damage and must be used immediately after the skill that grants them by using <12>.</12>",
   "vpr.snaps.statistic.info": "While it is important to keep your GCD rolling as much as possible, try to minimize your <0/> usage. It's better to save and use <1/> for when you cannot stay in melee range as it does more damage.",
   "vpr.snaps.statistic.title": "Writhing Snaps",
@@ -1158,6 +1158,7 @@
   "vpr.venoms.suggestions.drops.content": "Avoid dropping your venom buffs unless absolutely unavoidable. Use your <0/> and <1/> actions in the proper order to avoid losing procs.",
   "vpr.venoms.suggestions.overwrite.content": "Avoid overwriting your procs.",
   "vpr.venoms.title": "oGCD Procs",
+  "vpr.vice.waste.content": "Using <0/> lets you use <1/> and <2/> which grant <3/> and <4/>.<5/>Using <6/> lets you use <7/> and <8/> which grant <9/> and <10/>.<11/>These skills are important to a Viper's damage and must be used immediately after the skill that grants them by.",
   "war.about.description": "<0>This analyser aims to identify some of the low-hanging fruit that could be used to improve your WAR gameplay, as well as give a deeper insight into what happened during an encounter.</0><1>If you notice anything that looks particularly wrong, please visit our Discord server and report it in the #fb-warrior channel.</1>",
   "war.disengage.statistic.info": "While it is important to keep your GCD rolling as much as possible, try to minimize <0/> since it does less damage than your combo actions and does not build Beast Gauge.",
   "war.disengage.statistic.title": "Tomahawk Uses",
