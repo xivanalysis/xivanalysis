@@ -89,7 +89,7 @@ export abstract class Positionals extends Analyser {
 	// things such as DRG's 5th hit combo buff and RPR's reaver buff.
 	// Luckily, assessing misses is easy and sufficient for the purposes
 	// of detecting positional hits.
-	private missedPositionalBonusPercents(action: Action) {
+	protected missedPositionalBonusPercents(action: Action) {
 		const missedPositionalBonusPercents = [NO_BONUS_PERCENT]
 
 		if (!action.potencies) {
@@ -124,7 +124,7 @@ export abstract class Positionals extends Analyser {
 
 	// Currently just checks that you didn't miss. Checking for hits would
 	// otherwise be more complex.
-	private positionalHit(action: Action, bonusPercent: number) {
+	protected positionalHit(action: Action, bonusPercent: number) {
 		return !this.missedPositionalBonusPercents(action).includes(bonusPercent)
 	}
 
