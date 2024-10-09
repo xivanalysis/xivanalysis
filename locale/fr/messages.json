@@ -1148,6 +1148,7 @@
   "vpr.reawaken.generations.header": "Ères utilisées dans le bon ordre",
   "vpr.reawaken.suggestions.content": "Chaque fenêtre de <0/> devrait contenir <1/>, <2/>, <3/> et <4/>, utilisées dans le bon ordre, et les oGCD associés <5/>, <6/>, <7/> et <8/>. La fenêtre se termine par <9/>.",
   "vpr.reawaken.title": "Réminiscence",
+  "vpr.serpentsIre.prepend-message": "",
   "vpr.serpents_ire.suggestions.trackedActions.content": "",
   "vpr.serpents_ire.title": "",
   "vpr.serpentstail.checklist.requirement.waste.name": "Utilisez vos actions de Queue Serpentine",
