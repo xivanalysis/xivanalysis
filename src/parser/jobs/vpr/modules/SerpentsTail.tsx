@@ -157,7 +157,7 @@ export class SerpentsTail extends Analyser {
 				<br/>
 				Using the Generation skills under <DataLink action="REAWAKEN"/> grants Legacy follow up skills.
 				<br/>
-				These skills are important to a Viper's damage and must be used immediately after the skill that grants them by using <DataLink action="SERPENTS_TAIL">.</DataLink>
+				These skills are important to a Viper's damage and must be used immediately after the skill that grants them by using <DataLink action="SERPENTS_TAIL"/>.
 			</Trans>,
 			requirements: [
 				...Object.values(Counters)
