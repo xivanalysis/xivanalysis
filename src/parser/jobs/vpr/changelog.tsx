@@ -4,6 +4,12 @@ import React from 'react'
 
 export const changelog = [
 	{
+		date: new Date('2024-09-29'),
+		Changes: () => <>Add 2 minute burst window based off <DataLink action="SERPENTS_IRE" /> casts for party buff alignments.</>,
+		contributors: [CONTRIBUTORS.RYAN],
+
+	},
+	{
 		date: new Date('2024-07-27'),
 		Changes: () => <>Add <DataLink action="REAWAKEN"/> buff window analysis.</>,
 		contributors: [CONTRIBUTORS.RYAN],
