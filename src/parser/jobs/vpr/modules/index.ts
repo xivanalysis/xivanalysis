@@ -7,6 +7,7 @@ import OGCDDowntime from './OGCDDowntime'
 import {Positionals} from './Positionals'
 import {RattlingCoil} from './RattlingCoil'
 import {Reawaken} from './Reawaken'
+import {SerpentsIre} from './SerpentsIre'
 import {SerpentsTail} from './SerpentsTail'
 import {Snaps} from './Snaps'
 import {snilk} from './snilk'
@@ -25,6 +26,7 @@ export default [
 	OGCDDowntime,
 	RattlingCoil,
 	Reawaken,
+	SerpentsIre,
 	SerpentsTail,
 	snilk,
 	Swiftscaled,
