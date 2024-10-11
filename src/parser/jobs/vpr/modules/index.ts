@@ -7,12 +7,14 @@ import OGCDDowntime from './OGCDDowntime'
 import {Positionals} from './Positionals'
 import {RattlingCoil} from './RattlingCoil'
 import {Reawaken} from './Reawaken'
+import {SerpentsIre} from './SerpentsIre'
 import {SerpentsTail} from './SerpentsTail'
 import {Snaps} from './Snaps'
 import {snilk} from './snilk'
 import {Swiftscaled} from './Swiftscaled'
 import {Tincture} from './Tincture'
 import {Venoms} from './Venoms'
+import {Vices} from './Vices'
 
 export default [
 	ActionTimeline,
@@ -24,10 +26,12 @@ export default [
 	OGCDDowntime,
 	RattlingCoil,
 	Reawaken,
+	SerpentsIre,
 	SerpentsTail,
 	snilk,
 	Swiftscaled,
 	Snaps,
 	Tincture,
 	Venoms,
+	Vices,
 ]
