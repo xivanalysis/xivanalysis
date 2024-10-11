@@ -9,8 +9,8 @@ export const changelog = [
 	// 	contributors: [CONTRIBUTORS.YOU],
 	// },
 	{
-		date: new Date('2024-08-23'),
-		Changes: () => <>Make sure the <DataLink action="PARADOX" /> gauge marker is reset on death.</>,
+		date: new Date('2024-10-10'),
+		Changes: () => <>Make sure the <DataLink action="PARADOX" /> gauge marker is reset on death, and Polyglot count is not reset when Enochian is dropped.</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],
 	},
 	{

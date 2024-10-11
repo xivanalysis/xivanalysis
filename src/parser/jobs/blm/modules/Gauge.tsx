@@ -521,7 +521,6 @@ export class Gauge extends CoreGauge {
 
 		this.umbralHeartsGauge.reset()
 
-		this.polyglotGauge.reset()
 		this.astralSoulGauge.reset()
 
 		this.addEvent()
