@@ -588,6 +588,7 @@ export class Gauge extends CoreGauge {
 		// Not counting the loss towards the rest of the gauge loss, that'll just double up on the suggestions
 		this.onAstralUmbralEnd(false)
 		this.paradoxGauge.reset()
+		this.polyglotGauge.reset()
 	}
 
 	private onComplete() {
