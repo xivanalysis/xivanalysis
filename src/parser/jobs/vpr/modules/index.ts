@@ -14,6 +14,7 @@ import {snilk} from './snilk'
 import {Swiftscaled} from './Swiftscaled'
 import {Tincture} from './Tincture'
 import {Venoms} from './Venoms'
+import {Vices} from './Vices'
 
 export default [
 	ActionTimeline,
@@ -32,4 +33,5 @@ export default [
 	Snaps,
 	Tincture,
 	Venoms,
+	Vices,
 ]
