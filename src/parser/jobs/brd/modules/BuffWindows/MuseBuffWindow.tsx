@@ -55,8 +55,6 @@ export abstract class MuseBuffWindow extends BuffWindow {
 		})
 
 		this.addEvaluator(evaluator)
-
-		this.setHistoryOutputFilter((window) => evaluator.isWindowMissingGcds(window) || DEBUG_SHOW_WINDOWS)
 	}
 
 	private get activeMuse(): MuseWindow | undefined {
