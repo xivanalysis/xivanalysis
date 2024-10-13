@@ -8,7 +8,6 @@ import {RequiredGcdCountEvaluator} from '../../../../core/modules/ActionWindow/e
 import {GlobalCooldown} from '../../../../core/modules/GlobalCooldown'
 import {SEVERITY} from '../../../../core/modules/Suggestions'
 import DISPLAY_ORDER from '../DISPLAY_ORDER'
-import {DEBUG_SHOW_WINDOWS} from './Constants'
 
 export class ArmysMuse extends BuffWindow {
 	static override handle = 'armysmuse'
