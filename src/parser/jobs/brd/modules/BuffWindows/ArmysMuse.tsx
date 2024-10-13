@@ -41,6 +41,5 @@ export class ArmysMuse extends BuffWindow {
 		})
 
 		this.addEvaluator(evaluator)
-		this.setHistoryOutputFilter((window) => evaluator.isWindowMissingGcds(window) || DEBUG_SHOW_WINDOWS)
 	}
 }
