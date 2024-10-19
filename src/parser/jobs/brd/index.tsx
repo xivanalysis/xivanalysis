@@ -29,6 +29,7 @@ export const BARD = new Meta({
 
 	contributors: [
 		{user: CONTRIBUTORS.YUMIYA, role: ROLES.DEVELOPER},
+		{user: CONTRIBUTORS.YUZUKITSURU, role: ROLES.DEVELOPER},
 	],
 
 	changelog,
