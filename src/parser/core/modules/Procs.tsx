@@ -1,5 +1,6 @@
 import {t} from '@lingui/macro'
 import {Trans, Plural} from '@lingui/react'
+import {StatusLink} from 'components/ui/DbLink'
 import {Action} from 'data/ACTIONS'
 import {iconUrl} from 'data/icon'
 import {Status} from 'data/STATUSES'
@@ -8,12 +9,15 @@ import {Actors} from 'parser/core/modules/Actors'
 import Suggestions, {TieredSuggestion, SEVERITY, SeverityTiers} from 'parser/core/modules/Suggestions'
 import {SimpleRow, StatusItem, Timeline} from 'parser/core/modules/Timeline'
 import React, {ReactNode} from 'react'
+import {Button, Message, Table} from 'semantic-ui-react'
 import {Analyser} from '../Analyser'
 import {filter, oneOf} from '../filter'
 import {dependency} from '../Injectable'
 import {Data} from './Data'
 import Downtime from './Downtime'
 import {Invulnerability} from './Invulnerability'
+
+const TIMELINE_CONTEXT_DURATION = 15000 // 15s either side of the proc issue, 30s window overall
 
 const ICON_HASTY_TOUCH = 1989
 const ICON_MUSCLE_MEMORY = 1994
@@ -37,6 +41,17 @@ export interface ProcGroup {
 	mayOverwrite?: boolean,
 }
 
+type ProcIssueType =
+	| 'dropped'
+	| 'overwritten'
+	| 'invuln'
+
+interface ProcIssues {
+	status: Status,
+	timestamp: number,
+	type: ProcIssueType,
+}
+
 type WindowEndReason =
 	| 'removal'
 	| 'overwrite'
@@ -50,7 +65,7 @@ const DEFAULT_SEVERITY_TIERS = {
 
 export abstract class Procs extends Analyser {
 	static override handle = 'procs'
-	static override title = t('core.procs.title')`Procs`
+	static override title = t('core.procs.title')`Proc Issues`
 
 	@dependency private downtime!: Downtime
 	@dependency protected suggestions!: Suggestions
@@ -93,6 +108,14 @@ export abstract class Procs extends Analyser {
 	 */
 	protected showProcTimelineRow: boolean = true
 	protected ProcGroupLabel: ReactNode = <Trans id="core.procs.group.label"> Proc </Trans>
+	/**
+	 * Subclassing analysers may override these to toggle on the output display of proc issues, and to control which issue types are shown in the output
+	 */
+	protected showProcIssueOutput: boolean = false
+	protected showDroppedProcOutput: boolean = true
+	protected showOverwrittenProcOutput: boolean = true
+	protected showInvulnProcOutput: boolean = true
+	protected procOutputHeader: ReactNode | undefined = undefined
 
 	/**
 	 * Subclassing analysers should not assign these directly. The corresponding override functions should be used instead to ensure that the
@@ -167,7 +190,7 @@ export abstract class Procs extends Analyser {
 	protected getOverwrittenProcsForStatus(status: number | ProcGroup): ProcBuffWindow[] {
 		const procGroup = this.getTrackedGroupByStatus(status)
 		if (procGroup == null) { return [] }
-		return this.getHistoryForStatus(status).filter(window => window.overwritten)
+		return this.getHistoryForStatus(status).filter(window => window.overwritten && !procGroup.mayOverwrite && this.considerOverwrittenProcs(window))
 	}
 	/**
 	 * Get the number of times a proc was overwritten
@@ -179,9 +202,7 @@ export abstract class Procs extends Analyser {
 		if (procGroup == null) { return 0 }
 		const stacksPerWindow = procGroup.procStatus.stacksApplied ?? 1
 		return this.getOverwrittenProcsForStatus(status).reduce((overwritten, window) => {
-			if (this.considerOverwrittenProcs(window)) {
-				overwritten += Math.max(0, stacksPerWindow - window.consumingEvents.length)
-			}
+			overwritten += Math.max(0, stacksPerWindow - window.consumingEvents.length)
 			return overwritten
 		}, 0)
 	}
@@ -217,6 +238,20 @@ export abstract class Procs extends Analyser {
 	}
 
 	/**
+	 * Get an array of dropped windows for a given proc status
+	 * @param status The status, as an ID number or ProcGroup object
+	 * @returns The array of invulnerable usage Events
+	 */
+	protected getDroppedWindowsForStatus(status: number | ProcGroup): ProcBuffWindow[] {
+		const procGroup = this.getTrackedGroupByStatus(status)
+		if (procGroup == null) { return [] }
+		const stacksPerWindow = procGroup.procStatus.stacksApplied ?? 1
+
+		return this.getHistoryForStatus(status)
+			.filter(window => window.overwritten === false && window.consumingEvents.length < stacksPerWindow && this.considerDroppedProcs(window))
+	}
+
+	/**
 	 * Gets the number of times a proc was allowed to fall off
 	 * @param status The status, as an ID number or ProcGroup object
 	 * @returns The number of times the proc was dropped (removals - usages)
@@ -226,14 +261,42 @@ export abstract class Procs extends Analyser {
 		if (procGroup == null) { return 0 }
 		const stacksPerWindow = procGroup.procStatus.stacksApplied ?? 1
 
-		return this.getHistoryForStatus(status)
-			.filter(window => window.overwritten === false && window.consumingEvents.length < stacksPerWindow)
+		return this.getDroppedWindowsForStatus(status)
 			.reduce((dropped, window) => {
-				if (this.considerDroppedProcs(window)) {
-					dropped += Math.max(0, stacksPerWindow - window.consumingEvents.length)
-				}
+				dropped += Math.max(0, stacksPerWindow - window.consumingEvents.length)
 				return dropped
 			}, 0)
+	}
+
+	/**
+	 * Get an array of the proc issues we're going to display, for all statuses
+	 * @returns The array of issues, sorted by timestamp
+	 */
+	private getDisplayedProcIssues(): ProcIssues[] {
+		return this.trackedProcs.reduce((dropArray, procGroup) => {
+			const droppedWindows: ProcIssues[] = this.showDroppedProcOutput ? this.getDroppedWindowsForStatus(procGroup).map(window => {
+				return {
+					status: procGroup.procStatus,
+					timestamp: window.stop,
+					type: 'dropped',
+				}
+			}) : []
+			const overwriteWindows: ProcIssues[] = this.showOverwrittenProcOutput ? this.getOverwrittenProcsForStatus(procGroup).map(window => {
+				return {
+					status: procGroup.procStatus,
+					timestamp: window.stop,
+					type: 'overwritten',
+				}
+			}) : []
+			const invulnWindows: ProcIssues[] = this.showInvulnProcOutput ? this.getInvulnsForStatus(procGroup).map(event => {
+				return {
+					status: procGroup.procStatus,
+					timestamp: event.timestamp,
+					type: 'invuln',
+				}
+			}) : []
+			return dropArray.concat(droppedWindows).concat(overwriteWindows).concat(invulnWindows)
+		}, [] as ProcIssues[]).sort((a, b) => a.timestamp - b.timestamp)
 	}
 
 	/**
@@ -554,5 +617,81 @@ export abstract class Procs extends Analyser {
 
 	protected getTrackedGroupsByAction(actionId: number): ProcGroup[] {
 		return this.trackedProcs.filter(group => group.consumeActions.find(action => action.id === actionId) != null)
+	}
+
+	private relativeTimestamp(timestamp: number) {
+		if (timestamp < this.parser.pull.timestamp) { return this.parser.pull.timestamp }
+		const relativeTimestamp = timestamp - this.parser.pull.timestamp
+		if (relativeTimestamp > this.parser.pull.duration) { return this.parser.pull.duration }
+
+		return timestamp - this.parser.pull.timestamp
+	}
+
+	private getProcIssueLabel(issue: ProcIssues) {
+		switch (issue.type) {
+		case 'dropped':
+			return <Trans id="core.ui.procs-table.issue.dropped">Dropped</Trans>
+		case 'overwritten':
+			return <Trans id="core.ui.procs-table.issue.overwrite">Overwritten</Trans>
+		case 'invuln':
+			return <Trans id="core.ui.procs-table.issue.invuln">Invulnerable</Trans>
+		default:
+			return <Trans id="core.ui.procs-table.issue.unknown">Unknown</Trans>
+		}
+	}
+
+	override output() {
+		if (!this.showProcIssueOutput) { return null }
+
+		const procIssues = this.getDisplayedProcIssues()
+		if (procIssues.length === 0) { return null }
+
+		return <>
+			{
+				this.procOutputHeader ?
+					<Message>{this.procOutputHeader}</Message> :
+					<></>
+			}
+			<Table compact unstackable celled collapsing>
+				<Table.Header>
+					<Table.Row>
+						<Table.HeaderCell collapsing>
+							<strong><Trans id="core.ui.procs-table.header.time">Time</Trans></strong>
+						</Table.HeaderCell>
+						<Table.HeaderCell>
+							<strong><Trans id="core.ui.procs-table.header.which-proc">Proc Status</Trans></strong>
+						</Table.HeaderCell>
+						<Table.HeaderCell>
+							<strong><Trans id="core.ui.procs-table.header.issue">Issue</Trans></strong>
+						</Table.HeaderCell>
+					</Table.Row>
+				</Table.Header>
+				<Table.Body>
+					{
+						procIssues.map(window => {
+
+							return <Table.Row key={window.timestamp}>
+								<Table.Cell style={{whiteSpace: 'center'}}>
+									<span>{this.parser.formatEpochTimestamp(window.timestamp, 0)}</span>
+									<Button style={{marginLeft: 5}}
+										circular
+										compact
+										size="mini"
+										icon="time"
+										onClick={() => this.timeline.show(this.relativeTimestamp(window.timestamp - TIMELINE_CONTEXT_DURATION), this.relativeTimestamp(window.timestamp + TIMELINE_CONTEXT_DURATION))}
+									/>
+								</Table.Cell>
+								<Table.Cell>
+									<StatusLink {...window.status} />
+								</Table.Cell>
+								<Table.Cell>
+									{this.getProcIssueLabel(window)}
+								</Table.Cell>
+							</Table.Row>
+						})
+					}
+				</Table.Body>
+			</Table>
+		</>
 	}
 }

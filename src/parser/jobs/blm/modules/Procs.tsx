@@ -19,12 +19,14 @@ export default class Procs extends CoreProcs {
 				this.data.actions.HIGH_THUNDER,
 				this.data.actions.HIGH_THUNDER_II,
 			],
+			mayOverwrite: true,
 		},
 		{
 			procStatus: this.data.statuses.FIRESTARTER,
 			consumeActions: [this.data.actions.FIRE_III],
 		},
 	]
+	override showProcIssueOutput = true
 
 	protected override jobSpecificOnConsumeProc(procGroup: ProcGroup, event: Events['action']): void {
 		// Thunder spells are already instant in Dawntrail, their casting is just enabled by the status
