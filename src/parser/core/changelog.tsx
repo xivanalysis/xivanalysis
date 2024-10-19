@@ -13,8 +13,8 @@ export const changelog: ChangelogEntry[] = [
 		date: new Date('2024-08-25'),
 		Changes: () => <>Fixed prepull actions for defensives for duplicates, weird counts, and missing suggested available times. </>,
 		contributors: [CONTRIBUTORS.AKAIRYU, CONTRIBUTORS.AZARIAH, CONTRIBUTORS.OTOCEPHALY],
-  },
-  {
+	},
+	{
 		date: new Date('2024-08-27'),
 		Changes: () => <>Added blurb and feature for defensives with charges.</>,
 		contributors: [CONTRIBUTORS.OTOCEPHALY],
