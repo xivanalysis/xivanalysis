@@ -1,7 +1,7 @@
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
-import React from 'react'
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
+import React from 'react'
 import {Icon, Message} from 'semantic-ui-react'
 import {dependency} from '../../../../core/Injectable'
 import {BuffWindow} from '../../../../core/modules/ActionWindow'
