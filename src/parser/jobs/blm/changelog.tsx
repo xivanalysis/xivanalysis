@@ -9,6 +9,11 @@ export const changelog = [
 	// 	contributors: [CONTRIBUTORS.YOU],
 	// },
 	{
+		date: new Date('2024-10-10'),
+		Changes: () => <>Make sure the <DataLink action="PARADOX" /> gauge marker is reset on death, and Polyglot count is not reset when Enochian is dropped.</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
+	{
 		date: new Date('2024-07-31'),
 		Changes: () => <>Revive support for Umbral Ice <DataLink action="PARADOX" />, and handle the new timer pause functionality from <DataLink action="UMBRAL_SOUL" />.</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],
