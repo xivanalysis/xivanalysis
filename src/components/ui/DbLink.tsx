@@ -28,13 +28,21 @@ export interface ProviderProps {
 export function Provider({children}: ProviderProps) {
 	const {i18nStore} = useContext(StoreContext)
 
+	/** 
+	 * Due to the temporary unavailability of Chinese services, English API will be used instead.
+	 * When the API adaptation is complete, it needs to be modified back.
+	 */
 	const baseUrl = i18nStore.gameLanguage === Language.CHINESE
-		? 'https://cafemaker.wakingsands.com'
+		? undefined /* 'https://cafemaker.wakingsands.com' */
 		: undefined
+
+	const gameLanguage = i18nStore.gameLanguage === Language.CHINESE
+		? Language.ENGLISH
+		: i18nStore.gameLanguage
 
 	return useObserver(() => (
 		<TooltipProvider
-			language={i18nStore.gameLanguage}
+			language={gameLanguage}
 			baseUrl={baseUrl}
 		>
 			{children}
