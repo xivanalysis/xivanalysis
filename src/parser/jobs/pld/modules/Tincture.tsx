@@ -15,14 +15,14 @@ export class Tincture extends CoreTincture {
 		super.initialise()
 
 		const suggestionIcon = this.data.actions.INFUSION_STR.icon
-		const suggestionWindowName = <DataLink action="INFUSION_STR" />
+		const suggestionWindowName = <DataLink item="INFUSION_STR" />
 		this.addEvaluator(new ExpectedGcdCountEvaluator({
 			expectedGcds: 12,
 			globalCooldown: this.globalCooldown,
 			hasStacks: false,
 			suggestionIcon,
 			suggestionContent: <Trans id="pld.tincture.suggestions.missedgcd.content">
-				Try to land 12 GCDs during every <DataLink action="INFUSION_STR" /> window.
+				Try to land 12 GCDs during every <DataLink item="INFUSION_STR" /> window.
 			</Trans>,
 			suggestionWindowName,
 			severityTiers: {
@@ -48,7 +48,7 @@ export class Tincture extends CoreTincture {
 				Try to land at least one cast of <DataLink action="EXPIACION" />, <DataLink action="CIRCLE_OF_SCORN" />
 				, <DataLink action="INTERVENE" />, <DataLink action="GORING_BLADE" />, <DataLink action="CONFITEOR" />
 				, <DataLink action="BLADE_OF_FAITH" />, <DataLink action="BLADE_OF_TRUTH" />, <DataLink action="BLADE_OF_VALOR" />
-				, and a <DataLink status="DIVINE_MIGHT" /> empowered <DataLink action ="HOLY_SPIRIT" /> during every <DataLink action="INFUSION_STR" /> window.
+				, and a <DataLink status="DIVINE_MIGHT" /> empowered <DataLink action ="HOLY_SPIRIT" /> during every <DataLink item="INFUSION_STR" /> window.
 			</Trans>,
 			suggestionWindowName,
 			severityTiers: {

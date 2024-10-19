@@ -13,7 +13,7 @@ import {Data} from 'parser/core/modules/Data'
 import {SetGauge} from 'parser/core/modules/Gauge/SetGauge'
 import {ResourceGraphs} from 'parser/core/modules/ResourceGraphs'
 import {GAUGE_FADE} from 'parser/core/modules/ResourceGraphs/ResourceGraphs'
-import Suggestions, {SEVERITY, Suggestion, TieredSuggestion} from 'parser/core/modules/Suggestions'
+import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import {Timeline} from 'parser/core/modules/Timeline'
 import React, {Fragment} from 'react'
 import {Message, Icon} from 'semantic-ui-react'
@@ -22,14 +22,13 @@ import {Kenki} from './Kenki'
 
 // defining a const message to assign later via markdown
 
-const samWarningMessage = t('sam.sen.rotation-table.disclaimer')` This module labels a "Standard Sen Window" to be a window that with no Sen overwrites that ends on an Iaijutsu. Please consult The Balance Discord and this [Infograph](https://i.imgur.com/978VOqG.jpg) for more details on looping Samurai gameplay.`
+const samWarningMessage = t('sam.sen.rotation-table.disclaimer')` This module labels a "Standard Sen Window" to be a window that with no Sen overwrites that ends on an Iaijutsu. Please consult The Balance Discord and this [Infograph](https://i.imgur.com/C0ryA5F) for more details on looping Samurai gameplay.`
 
 const KENKI_PER_SEN = 10
 
 const SEN_HANDLING = {
 	NONE: {priority: 0, message: <> No errors </>},
-	HAGAKURE: {priority: 10, message: <Trans id = "sam.sen.sen_handling.hagakure"> Contains a Standard Filler Hagakure. </Trans>},
-	NON_STANDARD_HAGAKURE: {priority: 15, message: <Trans id = "sam.sen.sen_handling.d_hagakure"> Contains a Non-Standard use of Hagakure. </Trans>},
+	HAGAKURE: {priority: 10, message: <Trans id = "sam.sen.sen_handling.hagakure"> Contains a Hagakure. </Trans>},
 	OVERWROTE_SEN: {priority: 20, message: <Trans id = "sam.sen.sen_handling.overwrote_sen"> Contains a Overwritten Sen. </Trans>},
 	OVERWROTE_SENS: {priority: 25, message: <Trans id = "sam.sen.sen_handling.overwrote_sens"> Contains Overwritten Sens. </Trans>},
 	DEATH: {priority: 30, message: <Trans id = "sam.sen.sen_handling.death"> Contains your death. </Trans>}, // BET YOU WISH YOU USED THIRD EYE NOW RED!
@@ -314,11 +313,6 @@ export class Sen extends Analyser {
 				lastSenState._senCode = SEN_HANDLING.OVERWROTE_SEN
 				lastSenState.isNonStandard = true
 				this.nonStandardCount++
-			} else if (lastSenState.hasHagakure === true && lastSenState.currentSens > 1) {
-				lastSenState._senCode = SEN_HANDLING.NON_STANDARD_HAGAKURE
-				lastSenState.isNonStandard = true
-				this.nonStandardCount++
-				this.hagakureCount++
 			} else if (lastSenState.hasHagakure === true) {
 				lastSenState._senCode = SEN_HANDLING.HAGAKURE
 				lastSenState.isNonStandard = true
@@ -382,15 +376,6 @@ export class Sen extends Analyser {
 			value: this.wasted,
 			why: <Trans id = "sam.sen.suggestion.why">You wasted {this.wasted} sen.</Trans>,
 		}))
-		if (this.hagakureCount === 0) {
-			this.suggestions.add(new Suggestion({
-				icon: this.data.actions.HAGAKURE.icon,
-				content: <Trans id = "sam.sen.no_hagakure.message"> <ActionLink {...this.data.actions.HAGAKURE}/> is a powerful tool that should be used to help keep your rotation looping smoothly. Use it to handle your filler phase of your rotation. </Trans>,
-				severity: SEVERITY.MINOR,
-				why: <Trans id = "sam.sen.suggestion.no_hagakure.why"> You never cast hagakure this fight. </Trans>,
-			}))
-		}
-
 	}
 
 	override output() {

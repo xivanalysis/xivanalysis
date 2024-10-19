@@ -59,7 +59,7 @@ export class Manafication extends BuffWindow {
 				hasStacks: true,
 				suggestionIcon,
 				suggestionContent: <Trans id="rdm.manafication.suggestions.missedgcd.content">
-					Try to land a full enchanted combo and combo finisher during every <StatusLink status="MANAFICATION" /> window so you don't lose out on <ActionLink action="PREFULGENCE" /> your single most powerful action.
+					Ensure you consume all stacks of <StatusLink status="MANAFICATION" /> so you don't lose out on <ActionLink action="PREFULGENCE" /> your single most powerful action.
 				</Trans>,
 				suggestionWindowName,
 				severityTiers: {
@@ -86,11 +86,25 @@ export class Manafication extends BuffWindow {
 					this.data.actions.VERFLARE.id,
 					this.data.actions.SCORCH.id,
 					this.data.actions.RESOLUTION.id,
+
+					// Casted skills for rushing
+					// Tested with this 7.05 Log: https://www.fflogs.com/reports/K7TyWcQwvpGH1B8X#fight=20&type=damage-done
+					this.data.actions.VERAERO_III.id,
+					this.data.actions.VERSTONE.id,
+					this.data.actions.VERTHUNDER_III.id,
+					this.data.actions.VERFIRE.id,
+					this.data.actions.GRAND_IMPACT.id,
+					this.data.actions.JOLT_III.id,
+
+					//While this action isn't optimal in any sense of the word it does consume stacks, and during movement away might be warranted
+					this.data.actions.ENCHANTED_REPRISE.id,
+					//There are very very very niche situations where it's reasonable to use VerCure to consume stacks so I was asked to allow it.
+					this.data.actions.VERCURE.id,
 				],
 				globalCooldown: this.globalCooldown,
 				suggestionIcon,
 				suggestionContent: <Trans id="rdm.manafication.suggestions.badgcd.content">
-					GCDs used during <StatusLink status="MANAFICATION"/> should be limited to enchanted combo and combo finisher skills.
+					GCDs used during <StatusLink status="MANAFICATION"/> should be limited to actions that consume <StatusLink status="MANAFICATION"/>
 				</Trans>,
 				suggestionWindowName,
 				severityTiers: {

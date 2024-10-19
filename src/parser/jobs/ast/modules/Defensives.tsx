@@ -12,5 +12,7 @@ export class Defensives extends CoreDefensives {
 		this.data.actions.HOROSCOPE,
 		this.data.actions.NEUTRAL_SECT,
 		this.data.actions.COLLECTIVE_UNCONSCIOUS,
+		this.data.actions.LIGHTSPEED,
+		this.data.actions.SWIFTCAST,
 	]
 }

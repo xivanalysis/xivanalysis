@@ -34,7 +34,7 @@ export const ASTROLOGIAN = new Meta({
 	},
 
 	contributors: [
-		// {user: CONTRIBUTORS.YOU, role: ROLES.YOUR_ROLE},
+		{user: CONTRIBUTORS.SUSHIROU, role: ROLES.DEVELOPER},
 		{user: CONTRIBUTORS.OTOCEPHALY, role: ROLES.DEVELOPER},
 	],
 

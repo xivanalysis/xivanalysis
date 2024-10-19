@@ -92,6 +92,7 @@ export abstract class Procs extends Analyser {
 	 * Subclassing analysers may override this to toggle off timeline display
 	 */
 	protected showProcTimelineRow: boolean = true
+	protected ProcGroupLabel: ReactNode = <Trans id="core.procs.group.label"> Proc </Trans>
 
 	/**
 	 * Subclassing analysers should not assign these directly. The corresponding override functions should be used instead to ensure that the
@@ -284,7 +285,7 @@ export abstract class Procs extends Analyser {
 
 		if (this.showProcTimelineRow) {
 			this.row = this.timeline.addRow(new SimpleRow({
-				label: 'Procs',
+				label: this.ProcGroupLabel,
 				collapse: true,
 				order: 0,
 			}))

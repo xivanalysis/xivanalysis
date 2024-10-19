@@ -29,6 +29,11 @@ export abstract class RaidBuffWindow extends BuffWindow {
 	 */
 	protected expectedCount = 0
 
+	// RaidBuffWindows track applications to all members of the parsing actor's party
+	override partyBuffTargetList = this.parser.pull.actors
+		.filter(actor => actor.playerControlled)
+		.map(actor => actor.id)
+
 	override initialise() {
 		super.initialise()
 

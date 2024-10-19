@@ -1,6 +1,10 @@
 import {ActionTimeline} from './ActionTimeline'
 import {AlwaysBeCasting} from './AlwaysBeCasting'
-import {BurstWindow} from './BurstWindow'
+import {ArmysMuse} from './BuffWindows/ArmysMuse'
+import {BattleVoice} from './BuffWindows/BattleVoice'
+import {BurstWindow} from './BuffWindows/BurstWindow'
+import {RadiantFinale} from './BuffWindows/RadiantFinale'
+import {RagingStrikes} from './BuffWindows/RagingStrikes'
 import {Coda} from './Coda'
 import {DoTs} from './DoTs'
 import {DriftingEa} from './DriftingEa'
@@ -24,4 +28,8 @@ export default [
 	OGCDDowntime,
 	BurstWindow,
 	RefulgentProcs,
+	RagingStrikes,
+	BattleVoice,
+	RadiantFinale,
+	ArmysMuse,
 ]
