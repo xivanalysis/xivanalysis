@@ -8,6 +8,11 @@ export const changelog = [
 	// 	contributors: [CONTRIBUTORS.YOU],
 	// },
 	{
+		date: new Date('2024-10-13'),
+		Changes: () => <>Remove buff window GCD trackers filter for more intuitively display the correct GCD wave.</>,
+		contributors: [CONTRIBUTORS.YUZUKITSURU],
+	},
+	{
 		date: new Date('2024-08-31'),
 		Changes: () => <>Added buff window GCD trackers for Raging Strikes, Battle Voice, Radiant Finale and Army's Muse.</>,
 		contributors: [CONTRIBUTORS.YUMIYA],

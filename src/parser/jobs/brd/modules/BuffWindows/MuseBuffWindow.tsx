@@ -12,7 +12,6 @@ import {BuffWindow, EvaluatedAction, ExpectedGcdCountEvaluator} from '../../../.
 import {HistoryEntry} from '../../../../core/modules/ActionWindow/History'
 import {GlobalCooldown} from '../../../../core/modules/GlobalCooldown'
 import {SEVERITY} from '../../../../core/modules/Suggestions'
-import {DEBUG_SHOW_WINDOWS} from './Constants'
 
 interface MuseWindow {
 	start: number,
@@ -55,8 +54,6 @@ export abstract class MuseBuffWindow extends BuffWindow {
 		})
 
 		this.addEvaluator(evaluator)
-
-		this.setHistoryOutputFilter((window) => evaluator.isWindowMissingGcds(window) || DEBUG_SHOW_WINDOWS)
 	}
 
 	private get activeMuse(): MuseWindow | undefined {
