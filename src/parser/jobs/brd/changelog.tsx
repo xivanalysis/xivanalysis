@@ -8,6 +8,11 @@ export const changelog = [
 	// 	contributors: [CONTRIBUTORS.YOU],
 	// },
 	{
+		date: new Date('2024-10-20'),
+		Changes: () => <>Add prepend messages info for buff window GCD trackers.</>,
+		contributors: [CONTRIBUTORS.YUZUKITSURU],
+	},
+	{
 		date: new Date('2024-10-13'),
 		Changes: () => <>Remove buff window GCD trackers filter for more intuitively display the correct GCD wave.</>,
 		contributors: [CONTRIBUTORS.YUZUKITSURU],
