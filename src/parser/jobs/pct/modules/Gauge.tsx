@@ -9,6 +9,7 @@ import {dependency} from 'parser/core/Injectable'
 import {Actors} from 'parser/core/modules/Actors'
 import {CounterGauge, Gauge as CoreGauge} from 'parser/core/modules/Gauge'
 import {EnumGauge} from 'parser/core/modules/Gauge/EnumGauge'
+import {SetEnumGauge} from 'parser/core/modules/Gauge/SetEnumGauge'
 import {SetGauge} from 'parser/core/modules/Gauge/SetGauge'
 import {DEFAULT_ROW_HEIGHT, GAUGE_FADE} from 'parser/core/modules/ResourceGraphs/ResourceGraphs'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
@@ -20,7 +21,8 @@ const SUBTRACTIVE_COST = 50
 type GaugeModifier = Partial<Record<Event['type'], number>>
 interface CanvasModification {
 	type: 'generate' | 'spend'
-	which: 'creature' | 'weapon' | 'landscape'
+	which: typeof CREATURE_MOTIF | typeof WEAPON_MOTIF | typeof LANDSCAPE_MOTIF
+	motif: string,
 }
 type CanvasModifier = Partial<Record<Event['type'], CanvasModification>>
 
@@ -31,11 +33,13 @@ const CREATURE_MOTIF = 'creature'
 const POM_MOTIF = 'pommotif'
 const WING_MOTIF = 'wingmotif'
 const CLAW_MOTIF = 'clawmotif'
-// Will need this later...
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const MAW_MOTIF = 'mawmotif'
+
 const WEAPON_MOTIF = 'weapon'
+const HAMMER_MOTIF = 'hammermotif'
+
 const LANDSCAPE_MOTIF = 'landscape'
+const STARRY_MOTIF = 'starrymotif'
 
 const MOOGLE_PORTRAIT = 'moogle'
 const MADEEN_PORTRAIT = 'madeen'
@@ -48,8 +52,8 @@ const POM_COLOR = Color('#d8ac98').fade(GAUGE_FADE)
 const WING_COLOR = Color('#ca8be3').fade(GAUGE_FADE)
 const CLAW_COLOR = Color('#caba79').fade(GAUGE_FADE)
 const MAW_COLOR = Color('#96c87a').fade(GAUGE_FADE)
-const WEAPON_MOTIF_COLOR = Color('#d76b79').fade(GAUGE_FADE)
-const LANDSCAPE_MOTIF_COLOR = Color('#909fe0').fade(GAUGE_FADE)
+const HAMMER_COLOR = Color('#d76b79').fade(GAUGE_FADE)
+const STARRY_COLOR = Color('#909fe0').fade(GAUGE_FADE)
 const MOOGLE_COLOR = Color('#b256d6').fade(GAUGE_FADE)
 const MADEEN_COLOR = Color('#7fbb6c').fade(GAUGE_FADE)
 
@@ -109,6 +113,7 @@ export class Gauge extends CoreGauge {
 			tooltipHideMaximum: true,
 			order: GAUGE_DISPLAY_ORDER.PAINT,
 		},
+		correctHistory: true,
 	}))
 
 	private whitePaintGenerators = [
@@ -119,22 +124,52 @@ export class Gauge extends CoreGauge {
 		this.data.actions.RAINBOW_DRIP.id,
 	]
 
-	private canvasGauge = this.add(new SetGauge({
-		options: [
+	private canvasGauge = this.add(new SetEnumGauge({
+		groups: [
 			{
-				value: LANDSCAPE_MOTIF,
-				label: <Trans id="pct.canvasgauge.landscape-motif.label">Landscape Motif</Trans>,
-				color: LANDSCAPE_MOTIF_COLOR,
+				handle: LANDSCAPE_MOTIF,
+				options: [
+					{
+						value: STARRY_MOTIF,
+						label: <DataLink showIcon={false} action="STARRY_SKY_MOTIF"/>,
+						color: STARRY_COLOR,
+					},
+				],
 			},
 			{
-				value: WEAPON_MOTIF,
-				label: <Trans id="pct.canvasgauge.weapon-motif.label">Weapon Motif</Trans>,
-				color: WEAPON_MOTIF_COLOR,
+				handle: WEAPON_MOTIF,
+				options: [
+					{
+						value: HAMMER_MOTIF,
+						label: <DataLink showIcon={false} action="HAMMER_MOTIF"/>,
+						color: HAMMER_COLOR,
+					},
+				],
 			},
 			{
-				value: CREATURE_MOTIF,
-				label: <Trans id="pct.canvasgauge.creature-motif.label">Creature Motif</Trans>,
-				color: MAW_COLOR, // Use Maw Motif for the color for now, until I can figure out SetEnum gauge :(
+				handle: CREATURE_MOTIF,
+				options: [
+					{
+						value: POM_MOTIF,
+						label: <DataLink showIcon={false} action="POM_MOTIF"/>,
+						color: POM_COLOR,
+					},
+					{
+						value: WING_MOTIF,
+						label: <DataLink showIcon={false} action="WING_MOTIF"/>,
+						color: WING_COLOR,
+					},
+					{
+						value: CLAW_MOTIF,
+						label: <DataLink showIcon={false} action="CLAW_MOTIF"/>,
+						color: CLAW_COLOR,
+					},
+					{
+						value: MAW_MOTIF,
+						label: <DataLink showIcon={false} action="MAW_MOTIF"/>,
+						color: MAW_COLOR,
+					},
+				],
 			},
 		],
 		graph: {
@@ -147,20 +182,20 @@ export class Gauge extends CoreGauge {
 
 	private canvasModifiers = new Map<number, CanvasModifier>([
 		// Builders
-		[this.data.actions.POM_MOTIF.id, {action: {type: 'generate', which: 'creature'}}],
-		[this.data.actions.WING_MOTIF.id, {action: {type: 'generate', which: 'creature'}}],
-		[this.data.actions.CLAW_MOTIF.id, {action: {type: 'generate', which: 'creature'}}],
-		[this.data.actions.MAW_MOTIF.id, {action: {type: 'generate', which: 'creature'}}],
-		[this.data.actions.HAMMER_MOTIF.id, {action: {type: 'generate', which: 'weapon'}}],
-		[this.data.actions.STARRY_SKY_MOTIF.id, {action: {type: 'generate', which: 'landscape'}}],
+		[this.data.actions.POM_MOTIF.id, {action: {type: 'generate', which: CREATURE_MOTIF, motif: POM_MOTIF}}],
+		[this.data.actions.WING_MOTIF.id, {action: {type: 'generate', which: CREATURE_MOTIF, motif: WING_MOTIF}}],
+		[this.data.actions.CLAW_MOTIF.id, {action: {type: 'generate', which: CREATURE_MOTIF, motif: CLAW_MOTIF}}],
+		[this.data.actions.MAW_MOTIF.id, {action: {type: 'generate', which: CREATURE_MOTIF, motif: MAW_MOTIF}}],
+		[this.data.actions.HAMMER_MOTIF.id, {action: {type: 'generate', which: WEAPON_MOTIF, motif: HAMMER_MOTIF}}],
+		[this.data.actions.STARRY_SKY_MOTIF.id, {action: {type: 'generate', which: LANDSCAPE_MOTIF, motif: STARRY_MOTIF}}],
 
 		// Spenders
-		[this.data.actions.POM_MUSE.id, {action: {type: 'spend', which: 'creature'}}],
-		[this.data.actions.WINGED_MUSE.id, {action: {type: 'spend', which: 'creature'}}],
-		[this.data.actions.CLAWED_MUSE.id, {action: {type: 'spend', which: 'creature'}}],
-		[this.data.actions.FANGED_MUSE.id, {action: {type: 'spend', which: 'creature'}}],
-		[this.data.actions.STRIKING_MUSE.id, {action: {type: 'spend', which: 'weapon'}}],
-		[this.data.actions.STARRY_MUSE.id, {action: {type: 'spend', which: 'landscape'}}],
+		[this.data.actions.POM_MUSE.id, {action: {type: 'spend', which: CREATURE_MOTIF, motif: POM_MOTIF}}],
+		[this.data.actions.WINGED_MUSE.id, {action: {type: 'spend', which: CREATURE_MOTIF, motif: WING_MOTIF}}],
+		[this.data.actions.CLAWED_MUSE.id, {action: {type: 'spend', which: CREATURE_MOTIF, motif: CLAW_MOTIF}}],
+		[this.data.actions.FANGED_MUSE.id, {action: {type: 'spend', which: CREATURE_MOTIF, motif: MAW_MOTIF}}],
+		[this.data.actions.STRIKING_MUSE.id, {action: {type: 'spend', which: WEAPON_MOTIF, motif: HAMMER_MOTIF}}],
+		[this.data.actions.STARRY_MUSE.id, {action: {type: 'spend', which: LANDSCAPE_MOTIF, motif: STARRY_MOTIF}}],
 	])
 
 	private depictionGauge = this.add(new SetGauge({
@@ -220,6 +255,7 @@ export class Gauge extends CoreGauge {
 			// eslint-disable-next-line @typescript-eslint/no-magic-numbers
 			height: DEFAULT_ROW_HEIGHT / 3,
 		},
+		correctHistory: true,
 	}))
 
 	private portraitGenerators = [
@@ -259,9 +295,6 @@ export class Gauge extends CoreGauge {
 
 		this.addEventHook(playerFilter.type('action').action(oneOf(this.portraitGenerators)), this.onPortraitGenerator)
 		this.addEventHook(playerFilter.type('action').action(oneOf(this.portraitSpenders)), () => this.portraitGauge.reset())
-
-		// Default assume the player painted before the pull
-		this.canvasGauge.set([CREATURE_MOTIF, WEAPON_MOTIF, LANDSCAPE_MOTIF])
 
 		this.addEventHook('complete', this.onComplete)
 	}
@@ -314,6 +347,12 @@ export class Gauge extends CoreGauge {
 		this.paletteGauge.reset()
 	}
 
+	// Also override onRaise to match onDeath, in case we missed the death event in a dungeon log or something
+	override onRaise() {
+		this.paintGauge.reset()
+		this.paletteGauge.reset()
+	}
+
 	private onPaletteModifer(event: Event) {
 		let eventActionId
 		if (event.type === 'damage' && event.cause.type === 'action' && isSuccessfulHit(event)) {
@@ -361,6 +400,7 @@ export class Gauge extends CoreGauge {
 	private onSubtractivePalette(event: Events['action']) {
 		if (this.actors.current.hasStatus(this.data.statuses.MONOCHROME_TONES.id)) {
 			this.overtones++
+			return
 		}
 
 		// If we have a White Paint available, Subtractive Palette swaps it for a Black Paint
@@ -382,9 +422,9 @@ export class Gauge extends CoreGauge {
 		if (canvasMod == null) { return }
 
 		if (canvasMod.type === 'generate') {
-			this.canvasGauge.generate(canvasMod.which)
+			this.canvasGauge.generate(canvasMod.which, canvasMod.motif)
 		} else if (canvasMod.type === 'spend') {
-			this.canvasGauge.spend(canvasMod.which)
+			this.canvasGauge.spend(canvasMod.which, canvasMod.motif)
 		}
 	}
 
