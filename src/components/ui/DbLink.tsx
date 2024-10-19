@@ -28,7 +28,7 @@ export interface ProviderProps {
 export function Provider({children}: ProviderProps) {
 	const {i18nStore} = useContext(StoreContext)
 
-	/** 
+	/**
 	 * Due to the temporary unavailability of Chinese services, English API will be used instead.
 	 * When the API adaptation is complete, it needs to be modified back.
 	 */
