@@ -1,5 +1,6 @@
 import {Interrupts} from 'parser/core/modules/Interrupts'
 import {LucidDreaming} from 'parser/core/modules/LucidDreaming'
+import {NotCasting} from 'parser/core/modules/NotCasting'
 import {ActionTimeline} from './ActionTimeline'
 import {ArcanaSuggestions, ArcanaTracking} from './ArcanaTracking'
 import {Combust} from './Combust'
@@ -33,6 +34,7 @@ export default [
 	Lightspeed,
 	LucidDreaming,
 	Macrocosmos,
+	NotCasting,
 	Overheal,
 	StatusTimeline,
 	Synastry,
