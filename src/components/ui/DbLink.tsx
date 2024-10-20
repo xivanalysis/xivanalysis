@@ -34,8 +34,8 @@ export function Provider({children}: ProviderProps) {
 
 	// fix for xivapi not support language zh
 	const gameLanguage = i18nStore.gameLanguage === Language.CHINESE
-	? Language.ENGLISH
-	: i18nStore.gameLanguage
+		? Language.ENGLISH
+		: i18nStore.gameLanguage
 
 	return useObserver(() => (
 		<TooltipProvider
