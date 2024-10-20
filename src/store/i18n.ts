@@ -5,7 +5,7 @@ import {getUserLanguage} from 'utilities'
 
 export const gameLanguageEditions: GameEdition[] = [
 	GameEdition.GLOBAL,
-	GameEdition.CHINESE, // Cafemaker
+	// GameEdition.CHINESE, // Cafemaker
 ]
 
 function getGameLanguage(language: Language): Language {
