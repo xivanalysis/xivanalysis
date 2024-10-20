@@ -9,6 +9,7 @@ import {
 } from '@xivanalysis/tooltips'
 import {useDataContext} from 'components/DataContext'
 import {ActionKey, ITEM_ID_OFFSET} from 'data/ACTIONS'
+import {Language} from 'data/LANGUAGES'
 import {StatusKey, STATUS_ID_OFFSET} from 'data/STATUSES'
 import {useObserver} from 'mobx-react'
 import React, {CSSProperties, memo, ReactNode, useContext, useState} from 'react'
@@ -31,9 +32,14 @@ export function Provider({children}: ProviderProps) {
 	// 	? 'https://cafemaker.wakingsands.com'
 	// 	: undefined
 
+	// fix for xivapi not support language zh
+	const gameLanguage = i18nStore.gameLanguage === Language.CHINESE
+	? Language.ENGLISH
+	: i18nStore.gameLanguage
+
 	return useObserver(() => (
 		<TooltipProvider
-			language={i18nStore.gameLanguage}
+			language={gameLanguage}
 			// baseUrl={baseUrl}
 		>
 			{children}
