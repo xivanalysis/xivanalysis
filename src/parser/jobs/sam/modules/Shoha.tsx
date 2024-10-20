@@ -48,6 +48,8 @@ export class Shoha extends CoreGauge {
 		[this.data.actions.TENKA_GOKEN.id, {action: 1}],
 		[this.data.actions.MIDARE_SETSUGEKKA.id, {action: 1}],
 		[this.data.actions.OGI_NAMIKIRI.id, {action: 1}],
+		[this.data.actions.TENDO_GOKEN.id, {action: 1}],
+		[this.data.actions.TENDO_SETSUGEKKA.id, {action: 1}],
 
 		// Spenders
 		[this.data.actions.SHOHA.id, {action: -3}],
