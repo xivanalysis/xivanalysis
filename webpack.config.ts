@@ -12,6 +12,17 @@ import {calculateLocaleCompletion} from './config/locale'
 
 import './config/loadDotenv'
 
+function browserOpenCommand() {
+	switch (os.platform()) {
+	case 'win32': // Windows systems
+		return 'explorer'
+	case 'darwin': // Mac Systems
+		return 'open'
+	default: // Linux and other Unix-compliant systems
+		return 'xdg-open'
+	}
+}
+
 /* eslint-disable @typescript-eslint/no-magic-numbers */
 
 interface Environment {
@@ -44,7 +55,7 @@ export default (env: Environment, {
 	devServer: {
 		host: 'localhost',
 		port: 3000,
-		open: os.platform() === 'win32' ? 'explorer' : 'xdg-open',
+		open: browserOpenCommand(),
 		openPage: 'http://localhost:3000',
 		historyApiFallback: true,
 		overlay: true,
