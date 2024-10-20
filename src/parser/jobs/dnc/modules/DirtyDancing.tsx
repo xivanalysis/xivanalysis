@@ -1,6 +1,6 @@
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
-import {StatusLink} from 'components/ui/DbLink'
+import {DataLink} from 'components/ui/DbLink'
 import {StatusKey} from 'data/STATUSES'
 import {Event, Events} from 'event'
 import {filter} from 'parser/core/filter'
@@ -164,14 +164,14 @@ export class DirtyDancing extends ActionWindow {
 
 		const standardFinishUptimePct = this.getStatusUptimePercent('STANDARD_FINISH')
 		this.checklist.add(new Rule({
-			name: <Trans id="dnc.dirty-dancing.checklist.standard-finish-buff.name">Keep your <StatusLink {...this.data.statuses.STANDARD_FINISH} /> buff up</Trans>,
+			name: <Trans id="dnc.dirty-dancing.checklist.standard-finish-buff.name">Keep your <DataLink status="STANDARD_FINISH" /> buff up</Trans>,
 			description: <Trans id="dnc.dirty-dancing.checklist.standard-finish-buff.description">
-				Your <StatusLink {...this.data.statuses.STANDARD_FINISH} /> buff contributes significantly to your overall damage, and the damage of your <StatusLink {...this.data.statuses.DANCE_PARTNER} /> as well. Make sure to keep it up at all times.
+				Your <DataLink status="STANDARD_FINISH" /> buff contributes significantly to your overall damage, and the damage of your <DataLink status="DANCE_PARTNER" /> as well. Make sure to keep it up at all times.
 			</Trans>,
 			target: 95,
 			requirements: [
 				new Requirement({
-					name: <Trans id="dnc.dirty-dancing.checklist.standard-finish-buff.uptime"><StatusLink {...this.data.statuses.STANDARD_FINISH} /> uptime</Trans>,
+					name: <Trans id="dnc.dirty-dancing.checklist.standard-finish-buff.uptime"><DataLink status="STANDARD_FINISH" /> uptime</Trans>,
 					percent: standardFinishUptimePct,
 				}),
 			],
@@ -179,14 +179,14 @@ export class DirtyDancing extends ActionWindow {
 
 		const closedPositionUptimePct = this.getStatusUptimePercent('CLOSED_POSITION')
 		this.checklist.add(new Rule({
-			name: <Trans id="dnc.dirty-dancing.checklist.closed-position-buff.name">Choose a <StatusLink {...this.data.statuses.DANCE_PARTNER} /></Trans>,
+			name: <Trans id="dnc.dirty-dancing.checklist.closed-position-buff.name">Choose a <DataLink status="DANCE_PARTNER" /></Trans>,
 			description: <Trans id="dnc.dirty-dancing.checklist.closed-position-buff.description">
-				Choosing a <StatusLink {...this.data.statuses.DANCE_PARTNER} /> will also give them the <StatusLink {...this.data.statuses.STANDARD_FINISH_PARTNER} /> and <StatusLink {...this.data.statuses.DEVILMENT} /> buffs. Make sure to keep it up at all times except for rare circumstances where a switch is warranted.
+				Choosing a <DataLink status="DANCE_PARTNER" /> will also give them the <DataLink status="STANDARD_FINISH_PARTNER" /> and <DataLink status="DEVILMENT" /> buffs. Make sure to keep it up at all times except for rare circumstances where a switch is warranted.
 			</Trans>,
 			target: 95,
 			requirements: [
 				new Requirement({
-					name: <Trans id="dnc.dirty-dancing.checklist.closed-position-buff.uptime"><StatusLink {...this.data.statuses.CLOSED_POSITION} /> uptime (excluding downtime)</Trans>,
+					name: <Trans id="dnc.dirty-dancing.checklist.closed-position-buff.uptime"><DataLink status="CLOSED_POSITION" /> uptime (excluding downtime)</Trans>,
 					percent: closedPositionUptimePct,
 				}),
 			],

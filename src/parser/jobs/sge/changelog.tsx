@@ -8,6 +8,11 @@ export const changelog = [
 	// 	contributors: [CONTRIBUTORS.YOU],
 	// },
 	{
+		date: new Date('2024-08-28'),
+		Changes: () => <>Add checklist item for Kardia uptime</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
+	{
 		date: new Date('2024-08-23'),
 		Changes: () => <>Fix Philosophia overheal ignoring to correctly attribute its healing to the Eudaimonia status effect</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],
