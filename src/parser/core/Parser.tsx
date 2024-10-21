@@ -63,9 +63,7 @@ class Parser {
 
 	/** Get the unix epoch timestamp of the current state of the parser. */
 	get currentEpochTimestamp() {
-		const start = this.pull.timestamp
-		const end = start + this.pull.duration
-		return Math.min(end, Math.max(start, this.dispatcher.timestamp))
+		return this.dispatcher.timestamp
 	}
 
 	get currentDuration() {
