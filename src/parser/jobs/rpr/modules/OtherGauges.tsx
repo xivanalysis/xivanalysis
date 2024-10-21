@@ -61,6 +61,8 @@ export class OtherGauges extends CoreGauge {
 	private soulGaugeModifiers = new Map<Action['id'], GaugeModifier>([
 		// Builders - other than Design since it's a status
 		[this.data.actions.SLICE.id, {action: 10}],
+		[this.data.actions.HARPE.id, {action: 10}],
+		[this.data.actions.HARVEST_MOON.id, {action: 10}],
 		[this.data.actions.WAXING_SLICE.id, {combo: 10}],
 		[this.data.actions.INFERNAL_SLICE.id, {combo: 10}],
 		[this.data.actions.SPINNING_SCYTHE.id, {action: 10}],
