@@ -5,7 +5,7 @@ import React from 'react'
 export const changelog = [
 	{
 		date: new Date('2024-10-20'),
-		Changes: () => <>Disabled feedback modules that require 7.05 skills for Viper parses before 7.0.</>,
+		Changes: () => <>Disabled feedback modules that were implmented for 7.05 Viper Changes</>,
 		contributors: [CONTRIBUTORS.RYAN],
 	},
 	{
