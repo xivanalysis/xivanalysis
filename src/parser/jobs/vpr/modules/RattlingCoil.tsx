@@ -128,7 +128,7 @@ export class RattlingCoil extends CoreGauge {
 					name: <Trans id="vpr.rattlingcoil.checklist.requirement.waste.name">
 						<DataLink action="UNCOILED_FURY"/>
 					</Trans>,
-					value: this.coilGauge.totalGenerated - (this.coilGauge.overCap + this.coilGauge.value),
+					value: this.coilGauge.totalSpent,
 					target: this.coilGauge.totalGenerated,
 				}),
 				new Requirement({
