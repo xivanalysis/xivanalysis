@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
 import {DataLink, StatusLink} from 'components/ui/DbLink'
@@ -47,6 +46,10 @@ export class HonedProcs extends CoreProcs {
 
 	]
 	override addJobSpecificSuggestions() {
+		if (this.parser.patch.before('7.05')) {
+			return //NOT SUPPORTED
+		}
+
 		const DroppedHoneds= this.getDropCountForStatus(this.data.statuses.HONED_STEEL.id) + this.getDropCountForStatus(this.data.statuses.HONED_REAVERS.id)
 		const OverwroteHoneds = this.getOverwriteCountForStatus(this.data.statuses.HONED_STEEL.id) + this.getOverwriteCountForStatus(this.data.statuses.HONED_REAVERS.id)
 

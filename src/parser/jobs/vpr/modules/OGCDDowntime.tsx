@@ -16,12 +16,18 @@ export default class OGCDDowntime extends CooldownDowntime {
 			],
 			firstUseOffset: FIRSTUSEOFFSET_IRE,
 		},
-		{
+		...(this.parser.patch.after('7.01') ? [{
 			cooldowns: [
 				this.data.actions.VICEWINDER,
 				this.data.actions.VICEPIT,
 			],
 			firstUseOffset: FIRSTUSEOFFSET_DREAD,
-		},
+		}] : [{
+			cooldowns: [
+				this.data.actions.DREADWINDER,
+				this.data.actions.PIT_OF_DREAD,
+			],
+			firstUseOffset: FIRSTUSEOFFSET_DREAD,
+		}]),
 	]
 }

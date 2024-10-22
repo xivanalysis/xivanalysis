@@ -99,6 +99,9 @@ export class Vices extends Analyser {
 	}
 
 	private onComplete() {
+		if (this.parser.patch.before('7.05')) { //NOT SUPPORTED
+			return
+		}
 
 		const Counters = {
 			viceWinders: {action: this.data.actions.VICEWINDER, ready: this.viceWinders, done: this.viceWinders},

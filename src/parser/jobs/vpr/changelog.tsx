@@ -4,6 +4,11 @@ import React from 'react'
 
 export const changelog = [
 	{
+		date: new Date('2024-10-20'),
+		Changes: () => <>Disabled feedback modules that require 7.05 skills for Viper parses before 7.0.</>,
+		contributors: [CONTRIBUTORS.RYAN],
+	},
+	{
 		date: new Date('2024-10-02'),
 		Changes: () => <>Expand <DataLink action="SERPENTS_TAIL"/> checklist and add <DataLink action="VICEWINDER"/> and <DataLink action="VICEPIT"/> checklist.</>,
 		contributors: [CONTRIBUTORS.RYAN],
