@@ -33,7 +33,7 @@ export function Provider({children}: ProviderProps) {
 
 	return useObserver(() => (
 		<TooltipProvider
-			language={i18nStore.gameLanguage}
+			language={i18nStore.safeGameLanguage}
 			// baseUrl={baseUrl}
 		>
 			{children}

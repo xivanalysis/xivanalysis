@@ -1,6 +1,6 @@
 import {GameEdition} from 'data/EDITIONS'
 import {Language, LANGUAGES} from 'data/LANGUAGES'
-import {action, observable} from 'mobx'
+import {action, computed, observable} from 'mobx'
 import {getUserLanguage} from 'utilities'
 
 export const gameLanguageEditions: GameEdition[] = [
@@ -19,9 +19,27 @@ function getGameLanguage(language: Language): Language {
 export class I18nStore {
 	@observable siteLanguage: Language = getUserLanguage()
 	@observable siteSet: boolean = false
-	@observable gameLanguage: Language = getGameLanguage(this.siteLanguage)
 	@observable gameSet: boolean = false
 	@observable overlay: boolean = false
+
+	/**
+	 * Get the raw game language as defined by the user or derived from site-wide language.
+	 *
+	 * @deprecated **DO NOT USE DIRECTLY:** this property exists for compatibility with
+	 * localstorage user configuration. Use `safeGameLanguage` instead.
+	 */
+	@observable gameLanguage: Language = getGameLanguage(this.siteLanguage)
+
+	/**
+	 * Get the user-specified game language if valid, falling back to English if
+	 * the game language targets an unsupported game edition.
+	 *
+	 * This is an unfortunate side effect of the old mobx+localstorage persistence
+	 * setup, and is a bandaid at best.
+	 */
+	@computed get safeGameLanguage() {
+		return getGameLanguage(this.gameLanguage)
+	}
 
 	@action
 	setSiteLanguage(language: Language) {
