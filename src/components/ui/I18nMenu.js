@@ -55,8 +55,9 @@ class I18nMenu extends Component {
 
 	render() {
 		const {i18nStore} = this.context
+		const gameLanguageKey = i18nStore.safeGameLanguage
 		const siteLang = LANGUAGES[i18nStore.siteLanguage]
-		const gameLang = LANGUAGES[i18nStore.gameLanguage]
+		const gameLang = LANGUAGES[gameLanguageKey]
 
 		return <div className={styles.container}>
 			{/* Site language */}
@@ -110,7 +111,7 @@ class I18nMenu extends Component {
 					{this.gameLanguageOptions.map(options => (
 						<Dropdown.Item
 							key={options.value}
-							active={i18nStore.gameLanguage === options.value}
+							active={gameLanguageKey === options.value}
 							onClick={this.handleChangeGame}
 							{...options}
 							className={styles.menuItem}
