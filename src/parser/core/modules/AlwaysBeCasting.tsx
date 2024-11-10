@@ -88,7 +88,7 @@ export class AlwaysBeCasting extends Analyser {
 					gcdUptime: Math.max(0, gcdUptime),
 				})
 			} else if (relativeEndTime > this.parser.pull.duration) {
-				const gcdUptime = relativeEndTime - this.parser.pull.duration
+				const gcdUptime = this.parser.pull.timestamp + this.parser.pull.duration - event.timestamp
 				this.debug(`GCD Uptime for end-of-fight ${action.name} at ${this.parser.formatEpochTimestamp(event.timestamp, 1)} - Cast time: ${castTime} | Recast time: ${recastTime} | In-combat uptime ${gcdUptime}`)
 				this.gcdUptimeEvents.push({
 					time: event.timestamp,
