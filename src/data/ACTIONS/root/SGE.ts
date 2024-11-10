@@ -341,16 +341,10 @@ export const SGE = ensureActions({
 		mpCost: 700,
 		statusesApplied: ['PNEUMA'],
 	},
-	// The heal from Pneuma is technically a different action source because reasons apparently. Unsure how much of this data should stay around but at least removing the statusesApplied array...
+	// The heal from Pneuma is technically a different action source because reasons
 	PNEUMA_HEAL: {
 		id: 27524,
 		name: 'Pneuma',
 		icon: iconUrl(3686),
-		onGcd: true,
-		speedAttribute: Attribute.SPELL_SPEED,
-		castTime: 1500,
-		gcdRecast: 2500,
-		cooldown: 120000,
-		mpCost: 700,
 	},
 })
