@@ -55,5 +55,13 @@ export const patch710: Layer<ActionRoot> = {
 		},
 		//SAM
 		HISSATSU_GYOTEN: {cooldown: 5000}, //10s -> 5s
+
+		// BLM action changes for 7.1
+		LEY_LINES: {
+			charges: 2, // Ley Lines now has two charges
+		},
+		DESPAIR: {
+			castTime: 0, // Despair is now instant cast by default without needing Swift/Triple
+		},
 	},
 }
