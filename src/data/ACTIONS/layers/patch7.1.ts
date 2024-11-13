@@ -63,5 +63,8 @@ export const patch710: Layer<ActionRoot> = {
 		DESPAIR: {
 			castTime: 0, // Despair is now instant cast by default without needing Swift/Triple
 		},
+		FLARE: {
+			castTime: 3000,
+		},
 	},
 }

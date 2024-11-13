@@ -19,6 +19,11 @@ export const changelog = [
 		contributors: [CONTRIBUTORS.AKAIRYU],
 	},
 	{
+		date: new Date('2024-11-12'),
+		Changes: () => <>Handle 7.1 patch changes to cast times for <DataLink action="DESPAIR" /> and <DataLink action="FLARE" />, and the second charge for <DataLink action="LEY_LINES" />.</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
+	{
 		date: new Date('2024-07-31'),
 		Changes: () => <>Revive support for Umbral Ice <DataLink action="PARADOX" />, and handle the new timer pause functionality from <DataLink action="UMBRAL_SOUL" />.</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],
