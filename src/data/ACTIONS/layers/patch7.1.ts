@@ -66,5 +66,19 @@ export const patch710: Layer<ActionRoot> = {
 		FLARE: {
 			castTime: 3000,
 		},
+
+		// SGE MP cost changes
+		PROGNOSIS: {
+			mpCost: 700,
+		},
+		EUKRASIAN_DIAGNOSIS: {
+			mpCost: 800,
+		},
+		EUKRASIAN_PROGNOSIS: {
+			mpCost: 800,
+		},
+		EUKRASIAN_PROGNOSIS_II: {
+			mpCost: 800,
+		},
 	},
 }
