@@ -11,13 +11,13 @@ export const patch705: Layer<StatusRoot> = {
 		HONED_STEEL: {
 			id: 3672,
 			name: 'Honed Steel',
-			icon: iconUrl(13757),
+			icon: iconUrl(213757),
 			duration: 60000,
 		},
 		HONED_REAVERS: {
 			id: 3772,
 			name: 'Honed Reavers',
-			icon: iconUrl(13758),
+			icon: iconUrl(213758),
 			duration: 60000,
 		},
 		HINDSBANE_VENOM: {duration: 60000},
@@ -35,21 +35,21 @@ export const patch705: Layer<StatusRoot> = {
 		TSUBAME_GAESHI_MIDARE: {
 			id: 4216,
 			name: 'Tsubame-Gaeshi',
-			icon: iconUrl(13315),
+			icon: iconUrl(213315),
 			duration: 30000,
 		},
 
 		TSUBAME_GAESHI_TENDO_GOKEN: {
 			id: 4217,
 			name: 'Tsubame-Gaeshi',
-			icon: iconUrl(13315),
+			icon: iconUrl(213315),
 			duration: 30000,
 		},
 
 		TSUBAME_GAESHI_TENDO_MIDARE: {
 			id: 4218,
 			name: 'Tsubame-Gaeshi',
-			icon: iconUrl(13315),
+			icon: iconUrl(213315),
 			duration: 30000,
 		},
 	},
