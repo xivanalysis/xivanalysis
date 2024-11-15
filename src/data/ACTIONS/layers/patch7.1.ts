@@ -53,5 +53,7 @@ export const patch710: Layer<ActionRoot> = {
 				},
 			],
 		},
+		//SAM
+		HISSATSU_GYOTEN: {cooldown: 5000}, //10s -> 5s
 	},
 }
