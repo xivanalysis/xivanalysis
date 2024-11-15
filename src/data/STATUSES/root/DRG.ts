@@ -1,5 +1,6 @@
 import {iconUrl} from 'data/icon'
 import {ensureStatuses} from '../type'
+import {SHARED} from './SHARED'
 
 export const DRG = ensureStatuses({
 	BATTLE_LITANY: {
@@ -78,4 +79,6 @@ export const DRG = ensureStatuses({
 		icon: iconUrl(18151),
 		duration: 20000,
 	},
+
+	ENHANCED_PIERCING_TALON: SHARED.UNKNOWN,
 })

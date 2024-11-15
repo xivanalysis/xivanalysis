@@ -15,7 +15,7 @@ import {Message} from 'semantic-ui-react'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 
 const LC_DURATION = 20000
-const EXPECTED_NASTRONDS_PER_WINDOW = 3
+const EXPECTED_NASTRONDS_PER_WINDOW = 1
 
 export interface DfdTracker {
 	start: number

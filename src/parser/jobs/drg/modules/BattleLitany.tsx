@@ -11,7 +11,7 @@ import React from 'react'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 
 const BL_GCD_TARGET = 8
-const NASTRONDS_PER_WINDOW = 3
+const NASTRONDS_PER_WINDOW = 1
 
 export class BattleLitany extends RaidBuffWindow {
 	static override handle = 'battlelitany'
