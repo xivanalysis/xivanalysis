@@ -55,6 +55,7 @@ export const ROLE = ensureActions({
 		name: 'Esuna',
 		icon: iconUrl(884),
 		onGcd: true,
+		castTime: 1000,
 		cooldown: 2500,
 		mpCost: 600,
 		mpCostFactor: 5,

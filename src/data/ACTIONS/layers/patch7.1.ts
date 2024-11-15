@@ -67,6 +67,11 @@ export const patch710: Layer<ActionRoot> = {
 			castTime: 3000,
 		},
 
+		// Esuna Role action is now instant
+		ESUNA: {
+			castTime: 0,
+		},
+
 		// SGE MP cost changes
 		PROGNOSIS: {
 			mpCost: 700,
