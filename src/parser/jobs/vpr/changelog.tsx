@@ -4,6 +4,11 @@ import React from 'react'
 
 export const changelog = [
 	{
+		date: new Date('2024-11-14'),
+		Changes: () => <>Mark Viper supported for 7.1</>,
+		contributors: [CONTRIBUTORS.RYAN],
+	},
+	{
 		date: new Date('2024-10-21'),
 		Changes: () => <> Fixed Bug with <DataLink action="UNCOILED_FURY" /> not being tracked correctly in the checklist.</>,
 		contributors: [CONTRIBUTORS.RYAN],
