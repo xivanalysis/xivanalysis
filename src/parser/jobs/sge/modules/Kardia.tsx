@@ -39,7 +39,7 @@ export class Kardia extends Analyser {
 			description: <Trans id="sge.kardia.checklist.kardia.description">
 				Placing <DataLink status="KARDIA" /> on a player will heal them over time when you deal damage with your GCDs, allowing you keep them healthier without spending other resources to do so. Try to keep it on someone, like a tank, at all times.
 			</Trans>,
-			target: 95,
+			target: 100,
 			requirements: [
 				new Requirement({
 					name: <Trans id="sge.kardia.checklist.kardia.uptime"><DataLink status="KARDIA" /> uptime (excluding downtime)</Trans>,
