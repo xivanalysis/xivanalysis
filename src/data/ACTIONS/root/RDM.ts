@@ -204,7 +204,7 @@ export const RDM = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		cooldown: 2500,
-		potency: 620, // Gains 11 Black Mana, if Black is lower 100% Verfire ready
+		potency: 650, // Gains 11 Black Mana, if Black is lower 100% Verfire ready
 		combo: {
 			start: true,
 		},
@@ -216,7 +216,7 @@ export const RDM = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		cooldown: 2500,
-		potency: 620, // Gains 11 white, if White is lower 100% Verstone ready
+		potency: 650, // Gains 11 white, if White is lower 100% Verstone ready
 		combo: {
 			start: true,
 		},
@@ -228,7 +228,7 @@ export const RDM = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		cooldown: 2500,
-		potency: 700, // Gains 7 white and black
+		potency: 750, // Gains 7 white and black
 		combo: {
 			from: [7525, 7526],
 			potency: 680,
@@ -241,7 +241,7 @@ export const RDM = ensureActions({
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
 		cooldown: 2500,
-		potency: 800, // Increase White and Black by 4
+		potency: 850, // Increase White and Black by 4
 		combo: {
 			from: 16530,
 			potency: 800,
