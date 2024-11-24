@@ -8,6 +8,7 @@ import {dependency} from 'parser/core/Injectable'
 import {Actors} from 'parser/core/modules/Actors'
 import Checklist, {Requirement, TARGET, TieredRule} from 'parser/core/modules/Checklist'
 import {Data} from 'parser/core/modules/Data'
+import Downtime from 'parser/core/modules/Downtime'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
 import {fillActions} from 'utilities/fillArrays'
@@ -46,6 +47,7 @@ export class Bookending extends Analyser {
 	@dependency private actors!: Actors
 	@dependency private checklist!: Checklist
 	@dependency private data!: Data
+	@dependency private downtime!: Downtime
 	@dependency private suggestions!: Suggestions
 
 	private opoActions: Array<Action['id']> = []
@@ -100,7 +102,11 @@ export class Bookending extends Analyser {
 		this.formlessUsages.total++
 	}
 
-	private onFormlessFistApplier() {
+	private onFormlessFistApplier(event: Events['action']) {
+		if (this.downtime.isDowntime(event.timestamp)) {
+			return
+		}
+
 		if (this.actors.current.hasStatus(this.data.statuses.FORMLESS_FIST.id)) {
 			this.formlessOverwrites++
 			this.formlessUsages.total++

@@ -5,8 +5,10 @@ import {ActionKey} from 'data/ACTIONS'
 import {Event, Events} from 'event'
 import {filter} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
-import {BuffWindow, ExpectedGcdCountEvaluator, LimitedActionsEvaluator} from 'parser/core/modules/ActionWindow'
+import {BuffWindow, EvaluatedAction, ExpectedGcdCountEvaluator, LimitedActionsEvaluator, TrackedAction} from 'parser/core/modules/ActionWindow'
+import {HistoryEntry} from 'parser/core/modules/ActionWindow/History'
 import {Cooldowns} from 'parser/core/modules/Cooldowns'
+import Downtime from 'parser/core/modules/Downtime'
 import {GlobalCooldown} from 'parser/core/modules/GlobalCooldown'
 import {SEVERITY} from 'parser/core/modules/Suggestions'
 import React from 'react'
@@ -50,14 +52,22 @@ export class RiddleOfFire extends BuffWindow {
 	static override title = t('mnk.rof.title')`Riddle of Fire`
 	static override displayOrder = DISPLAY_ORDER.RIDDLE_OF_FIRE
 
-	@dependency private globalCooldown!: GlobalCooldown
 	@dependency private cooldowns!: Cooldowns
+	@dependency private downtime!: Downtime
+	@dependency private globalCooldown!: GlobalCooldown
 	@dependency private perfectBalance!: PerfectBalance
 
 	private pbCasts: number[] = []
 	private blitzActions = fillActions(BLITZ_ACTIONS, this.data)
 	private riddleActions = fillActions(['RIDDLE_OF_WIND'], this.data)
 	buffStatus = this.data.statuses.RIDDLE_OF_FIRE
+
+	private allowActionsInDowntime = (window: HistoryEntry<EvaluatedAction[]>, trackedAction: TrackedAction) => {
+		const actionsInDowntime = window.data.filter(action =>
+			action.action.id === trackedAction.action.id && this.downtime.isDowntime(action.timestamp)
+		)
+		return trackedAction.expectedPerWindow + actionsInDowntime.length
+	}
 
 	override initialise() {
 		super.initialise()
@@ -128,6 +138,7 @@ export class RiddleOfFire extends BuffWindow {
 			</Trans>,
 			suggestionWindowName: suggestionWindowName,
 			severityTiers: SEVERITIES.BAD_GCDS,
+			adjustCount: this.allowActionsInDowntime,
 		}))
 	}
 

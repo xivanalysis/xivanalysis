@@ -1,5 +1,6 @@
 import {iconUrl} from 'data/icon'
 import {ensureStatuses} from '../type'
+import {SHARED} from './SHARED'
 
 // TODO: Fill in the rest of this
 export const SMN = ensureStatuses({
@@ -51,4 +52,6 @@ export const SMN = ensureStatuses({
 		icon: iconUrl(212695),
 		duration: 15000,
 	},
+
+	CRIMSON_STRIKE_READY: SHARED.UNKNOWN,
 })

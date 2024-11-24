@@ -659,7 +659,7 @@
   "mch.wildfire.suggestions.gcds.why": "{badWildfires}次打在野火里的战技数量少于{EXPECTED_GCDS}次。",
   "mch.wildfire.table.message": "每个 <0/> 期间都应该打出 {EXPECTED_GCDS} 个战技以最大化野火威力。但需注意，只有在野火debuff消失之前造成伤害的战技才会被计入次数。<1>下面显示的战技只是在期间判定，不一定在野火debuff消失前造成了伤害！</1>",
   "mch.wildfire.title": "野火",
-  "mnk.about.description": "",
+  "mnk.about.description": "<0>你好啊我的武僧朋友！</0><1>这个武僧分析工具旨在帮助你发现在原始log当中难以发现的问题，从而发掘你作为武僧的真正潜力。我们主要关注你的buff窗口期，并提供一些使用技能的小提示，从而确保你的能力技都在冷却当中。</1><2>如果你注意到任何错误，或是有什么意见建议，请访问我们的Discord服务器并在#fb-meele频道中反馈。</2>",
   "mnk.action-timeline.chakras": "斗气",
   "mnk.balls.coeurlFury.label": "猛豹身形",
   "mnk.balls.opoFury.label": "魔猿身形",

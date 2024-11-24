@@ -92,6 +92,11 @@ export const patch710: Layer<ActionRoot> = {
 		HOLY_III: {
 			castTime: 1500,
 		},
+
+		CRIMSON_CYCLONE: {
+			statusesApplied: ['CRIMSON_STRIKE_READY'],
+		},
+
 		RESOLUTION: {
 			potency: 850,
 		},

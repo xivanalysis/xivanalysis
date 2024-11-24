@@ -251,4 +251,9 @@ export const UNABLE_TO_ACT_STATUS_IDS = [
 	4066, // The Narwhal's Lullaby (lockActions, lockControl)
 	4132, // Down for the Count (lockActions)
 	4150, // Deep Freeze (lockActions)
+	4185, // Bonds of Loathing (lockControl)
+	4350, // Down for the Count (lockActions)
+	4374, // Stun (lockActions)
+	4378, // Stun (lockActions)
+	4433, // Stun (lockActions)
 ]

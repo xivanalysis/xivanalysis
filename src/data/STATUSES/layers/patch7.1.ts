@@ -11,5 +11,11 @@ export const patch710: Layer<StatusRoot> = {
 			icon: iconUrl(212590),
 			duration: 15000,
 		},
+		CRIMSON_STRIKE_READY: {
+			id: 4403,
+			name: 'Crimson Strike Ready',
+			icon: iconUrl(212752),
+			duration: 30000,
+		},
 	},
 }
