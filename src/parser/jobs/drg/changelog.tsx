@@ -3,6 +3,11 @@ import React from 'react'
 
 export const changelog = [
 	{
+		date: new Date('2024-11-14'),
+		Changes: () => <>Adjust number of expected uses of Nastrond from 3 to 1 for each buff window. Updated data for patch 7.1.</>,
+		contributors: [CONTRIBUTORS.FALINDRITH],
+	},
+	{
 		date: new Date('2024-07-28'),
 		Changes: () => <>Enable suggestion output for unused procs.</>,
 		contributors: [CONTRIBUTORS.FALINDRITH],

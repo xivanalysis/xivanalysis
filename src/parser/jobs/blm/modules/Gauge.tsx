@@ -521,7 +521,6 @@ export class Gauge extends CoreGauge {
 
 		this.umbralHeartsGauge.reset()
 
-		this.polyglotGauge.reset()
 		this.astralSoulGauge.reset()
 
 		this.addEvent()
@@ -588,6 +587,8 @@ export class Gauge extends CoreGauge {
 	override onDeath() {
 		// Not counting the loss towards the rest of the gauge loss, that'll just double up on the suggestions
 		this.onAstralUmbralEnd(false)
+		this.paradoxGauge.reset()
+		this.polyglotGauge.reset()
 	}
 
 	private onComplete() {

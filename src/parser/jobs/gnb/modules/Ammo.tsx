@@ -18,6 +18,7 @@ const LEFTOVER_AMMO_SEVERITY_TIERS = {
 }
 
 const MAX_AMMO = 3
+let DoubleDownCost = 1
 
 export class Ammo extends CoreGauge {
 	static override handle = 'ammo'
@@ -48,12 +49,16 @@ export class Ammo extends CoreGauge {
 		[this.data.actions.BURST_STRIKE.id, {action: -1}],
 		[this.data.actions.FATED_CIRCLE.id, {action: -1}],
 		[this.data.actions.GNASHING_FANG.id, {action: -1}],
-		[this.data.actions.DOUBLE_DOWN.id, {action: -2}],
+		[this.data.actions.DOUBLE_DOWN.id, {action: -DoubleDownCost}],
 
 	])
 
 	override initialise() {
 		super.initialise()
+
+		if (this.parser.patch.before('7.1')) {
+			DoubleDownCost = 2
+		}
 
 		const ammoActions = Array.from(this.ammoModifiers.keys())
 

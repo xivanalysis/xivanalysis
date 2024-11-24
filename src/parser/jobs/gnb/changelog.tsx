@@ -4,6 +4,11 @@ import React from 'react'
 
 export const changelog = [
 	{
+		date: new Date('2024-11-14'),
+		Changes: () => <>GNB 7.1 Support added.</>,
+		contributors: [CONTRIBUTORS.RYAN],
+	},
+	{
 		date: new Date('2024-07-24'),
 		Changes: () => <> Updated Cooldown offsets for the updated 2.4X and 2.5 Openers and added allowed downtime to <DataLink action="BLOODFEST"/> to allow it to be delayed back under <DataLink action="NO_MERCY"/>.</>,
 		contributors: [CONTRIBUTORS.RYAN],

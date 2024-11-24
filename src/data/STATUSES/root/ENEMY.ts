@@ -8,11 +8,11 @@ export const ENEMY = ensureStatuses({
 	TEMPORAL_DISPLACEMENT_INTERMISSION: {
 		id: 1119,
 		name: 'Temporal Displacement',
-		icon: iconUrl(15579),
+		icon: iconUrl(215579),
 	},
 	TEMPORAL_DISPLACEMENT_ENRAGE: {
 		id: 2165,
 		name: 'Temporal Displacement',
-		icon: iconUrl(15579),
+		icon: iconUrl(215579),
 	},
 })

@@ -9,6 +9,16 @@ export const changelog = [
 	// 	contributors: [CONTRIBUTORS.YOU],
 	// },
 	{
+		date: new Date('2024-11-16'),
+		Changes: () => <>Update Canvas timeline display to show which Creature Muse was painted, and fix some bugs with Canvas and Paint state tracking.</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
+	{
+		date: new Date('2024-11-16'),
+		Changes: () => <>Add a table displaying timestamps when procs were dropped, for better clarity around when those issues occurred.</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
+	{
 		date: new Date('2024-08-10'),
 		Changes: () => <>Ignore the cure effect of <DataLink showIcon={false} action="STAR_PRISM" /> when looking for weaving issues.</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],

@@ -14,7 +14,7 @@ import DISPLAY_ORDER from './DISPLAY_ORDER'
 import {DfdTracker} from './LanceCharge'
 
 const DRAGON_DURATION_MILLIS = 20000
-const EXPECTED_NASTRONDS_PER_WINDOW = 3
+const EXPECTED_NASTRONDS_PER_WINDOW = 1
 
 // we can massively simplify this analyzer from Endwalker. It now functions like a standard timed window
 // and we fold in all the analysis of what actions were missed and what were expected into standard formats.

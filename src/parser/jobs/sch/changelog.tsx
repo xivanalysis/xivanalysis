@@ -8,6 +8,11 @@ export const changelog = [
 	// 	contributors: [CONTRIBUTORS.YOU],
 	// },
 	{
+		date: new Date('2024-11-14'),
+		Changes: () => <>Esuna to instant cast, no other usecase changes</>,
+		contributors: [CONTRIBUTORS.MERCWRI],
+	},
+	{
 		date: new Date('2024-07-28'),
 		Changes: () => <>Initial support for 7.0: Refactor overhealing; overcapping fairy gauge is a always a minor warning now.</>,
 		contributors: [CONTRIBUTORS.NONO],

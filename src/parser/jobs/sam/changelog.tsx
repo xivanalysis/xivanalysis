@@ -4,6 +4,11 @@ import React from 'react'
 
 export const changelog = [
 	{
+		date: new Date('2024-11-14'),
+		Changes: () => <>SAM updated for 7.1 Support</>,
+		contributors: [CONTRIBUTORS.RYAN],
+	},
+	{
 		date: new Date('2024-10-20'),
 		Changes: () => <>Fixed an issue where the resource timeline did not reflect Meditation stacks gained from <DataLink action="TENDO_GOKEN"/> and <DataLink action="TENDO_SETSUGEKKA"/>. </>,
 		contributors: [CONTRIBUTORS.RYAN],

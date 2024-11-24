@@ -249,7 +249,7 @@ export const MNK = ensureActions({
 		speedAttribute: Attribute.SKILL_SPEED,
 		statusesApplied: ['FORMLESS_FIST'],
 		potencies: [{
-			value: 450,
+			value: 600,
 			bonusModifiers: [],
 		}],
 	},
