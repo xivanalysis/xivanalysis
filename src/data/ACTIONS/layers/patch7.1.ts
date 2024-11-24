@@ -92,5 +92,17 @@ export const patch710: Layer<ActionRoot> = {
 		HOLY_III: {
 			castTime: 1500,
 		},
+		RESOLUTION: {
+			potency: 850,
+		},
+		SCORCH: {
+			potency: 750,
+		},
+		VERFLARE: {
+			potency: 650,
+		},
+		VERHOLY: {
+			potency: 650,
+		},
 	},
 }
