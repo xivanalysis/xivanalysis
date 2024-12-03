@@ -20,6 +20,7 @@ import React, {Fragment} from 'react'
 import {Message, Table, Button} from 'semantic-ui-react'
 import {isSuccessfulHit} from 'utilities'
 import {FIRE_SPELLS, ICE_SPELLS_TARGETED, ICE_SPELLS_UNTARGETED} from './Elements'
+import Procs from './Procs'
 
 /** Configuration */
 const POLYGLOT_DURATION_REQUIRED = 30000
@@ -103,6 +104,7 @@ export class Gauge extends CoreGauge {
 	@dependency private suggestions!: Suggestions
 	@dependency private unableToAct!: UnableToAct
 	@dependency private castTime!: CastTime
+	@dependency private procs!: Procs
 
 	private gaugeErrors: BLMGaugeError[] = []
 	private droppedEnoTimestamps: number[] = []
@@ -279,7 +281,10 @@ export class Gauge extends CoreGauge {
 		case this.data.actions.HIGH_FIRE_II.id:
 		case this.data.actions.FIRE_III.id:
 		case this.data.actions.FIRE_IV.id:
+			// Firestarters don't cost MP and so don't consume Umbral Hearts
+			if (!(abilityId === this.data.actions.FIRE_III.id && this.procs.checkEventWasProc(event))) {
 				this.tryConsumeUmbralHearts(1)
+			}
 			break
 		case this.data.actions.FLARE.id:
 			this.tryConsumeUmbralHearts(FLARE_MAX_HEART_CONSUMPTION, true)
