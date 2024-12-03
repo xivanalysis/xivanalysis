@@ -259,7 +259,7 @@ export abstract class Procs extends Analyser {
 		const stacksPerWindow = procGroup.procStatus.stacksApplied ?? 1
 
 		return this.getHistoryForStatus(status)
-			.filter(window => window.overwritten === false && window.consumingEvents.length < stacksPerWindow && this.considerDroppedProcs(window))
+			.filter(window => window.overwritten === false && (window.consumingEvents.length + window.consumingInvulnEvents.length) < stacksPerWindow && this.considerDroppedProcs(window))
 	}
 
 	/**
@@ -274,7 +274,7 @@ export abstract class Procs extends Analyser {
 
 		return this.getDroppedWindowsForStatus(status)
 			.reduce((dropped, window) => {
-				dropped += Math.max(0, stacksPerWindow - window.consumingEvents.length)
+				dropped += Math.max(0, stacksPerWindow - (window.consumingEvents.length + window.consumingInvulnEvents.length))
 				return dropped
 			}, 0)
 	}
