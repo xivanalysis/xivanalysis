@@ -308,6 +308,8 @@ export class Gauge extends CoreGauge {
 			this.onGainParadox()
 			break
 		}
+
+		this.addEvent()
 	}
 
 	// Actions that must do damage to affect gauge state, such as gaining/refreshing AF/UI stacks
@@ -372,6 +374,8 @@ export class Gauge extends CoreGauge {
 			}
 			break
 		}
+
+		this.addEvent()
 	}
 
 	private addEvent() {
@@ -474,8 +478,6 @@ export class Gauge extends CoreGauge {
 
 			this.astralFireTimer.start()
 			this.astralUmbralGauge.generate(ASTRAL_FIRE_HANDLE, stackCount)
-
-			this.addEvent()
 		}
 	}
 
@@ -491,8 +493,6 @@ export class Gauge extends CoreGauge {
 
 			this.paradoxGauge.reset()
 			this.astralSoulGauge.reset()
-
-			this.addEvent()
 		}
 	}
 
@@ -506,8 +506,6 @@ export class Gauge extends CoreGauge {
 		} else { // Otherwise, we're swapping to fire
 			this.onGainAstralFireStacks(1, false)
 		}
-
-		this.addEvent()
 	}
 	//#endregion
 
@@ -520,16 +518,12 @@ export class Gauge extends CoreGauge {
 
 	private gainUmbralHearts(count: number) {
 		this.umbralHeartsGauge.generate(count)
-
-		this.addEvent()
 	}
 
 	private tryConsumeUmbralHearts(count:  number, force: boolean = false) {
 		if (this.umbralHeartsGauge.empty || (this.astralUmbralGauge.getCountAt(ASTRAL_FIRE_HANDLE) === 0 && !force)) { return }
 
 		this.umbralHeartsGauge.spend(count)
-
-		this.addEvent()
 	}
 	//#endregion
 
@@ -550,8 +544,6 @@ export class Gauge extends CoreGauge {
 		this.umbralHeartsGauge.reset()
 
 		this.astralSoulGauge.reset()
-
-		this.addEvent()
 	}
 
 	private onPolyglotTimerComplete() {
@@ -567,8 +559,6 @@ export class Gauge extends CoreGauge {
 		}
 
 		this.polyglotGauge.generate(1)
-
-		this.addEvent()
 	}
 
 	private onConsumePolyglot() {
@@ -581,8 +571,6 @@ export class Gauge extends CoreGauge {
 		}
 
 		this.polyglotGauge.spend(1)
-
-		this.addEvent()
 	}
 
 	private countLostPolyglots(time: number) {
@@ -595,6 +583,8 @@ export class Gauge extends CoreGauge {
 		this.onAstralUmbralEnd(false)
 		this.paradoxGauge.reset()
 		this.polyglotGauge.reset()
+
+		this.addEvent()
 	}
 
 	private onComplete() {
