@@ -279,10 +279,12 @@ export class Gauge extends CoreGauge {
 		case this.data.actions.FIRE_I.id:
 		case this.data.actions.FIRE_II.id:
 		case this.data.actions.HIGH_FIRE_II.id:
-		case this.data.actions.FIRE_III.id:
 		case this.data.actions.FIRE_IV.id:
+			this.tryConsumeUmbralHearts(1)
+			break
+		case this.data.actions.FIRE_III.id:
 			// Firestarters don't cost MP and so don't consume Umbral Hearts
-			if (!(abilityId === this.data.actions.FIRE_III.id && this.procs.checkEventWasProc(event))) {
+			if (!this.procs.checkEventWasProc(event)) {
 				this.tryConsumeUmbralHearts(1)
 			}
 			break
@@ -298,6 +300,9 @@ export class Gauge extends CoreGauge {
 			break
 		case this.data.actions.PARADOX.id:
 			this.paradoxGauge.spend(1)
+			break
+		case this.data.actions.AMPLIFIER.id:
+			this.onGeneratePolyglot()
 			break
 		case this.data.actions.FLARE_STAR.id:
 			this.astralSoulGauge.reset()
@@ -550,6 +555,8 @@ export class Gauge extends CoreGauge {
 		this.polyglotTimer.refresh()
 
 		this.onGeneratePolyglot()
+
+		this.addEvent()
 	}
 
 	private onGeneratePolyglot() {
