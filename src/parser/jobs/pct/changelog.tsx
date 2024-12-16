@@ -9,6 +9,11 @@ export const changelog = [
 	// 	contributors: [CONTRIBUTORS.YOU],
 	// },
 	{
+		date: new Date('2024-12-15'),
+		Changes: () => <>Moved tracking for <DataLink showIcon={false} status="HYPERPHANTASIA" /> and <DataLink showIcon={false} status="HAMMER_TIME" /> into Proc Issues.</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
+	{
 		date: new Date('2024-11-16'),
 		Changes: () => <>Update Canvas timeline display to show which Creature Muse was painted, and fix some bugs with Canvas and Paint state tracking.</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],
