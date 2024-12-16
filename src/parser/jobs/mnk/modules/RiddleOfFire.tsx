@@ -12,12 +12,12 @@ import Downtime from 'parser/core/modules/Downtime'
 import {GlobalCooldown} from 'parser/core/modules/GlobalCooldown'
 import {SEVERITY} from 'parser/core/modules/Suggestions'
 import React from 'react'
+import {fillActionIds} from 'utilities/fillArrays'
 import {BLITZ_ACTIONS} from './constants'
 import {DISPLAY_ORDER} from './DISPLAY_ORDER'
 import {BlitzEvaluator} from './evaluators/BlitzEvaluator'
 import {RiddleOfWindEvaluator} from './evaluators/RiddleOfWindEvaluator'
 import {PerfectBalance} from './PerfectBalance'
-import {fillActions} from './utilities'
 
 const EXPECTED_GCDS = 11
 
@@ -58,8 +58,8 @@ export class RiddleOfFire extends BuffWindow {
 	@dependency private perfectBalance!: PerfectBalance
 
 	private pbCasts: number[] = []
-	private blitzActions = fillActions(BLITZ_ACTIONS, this.data)
-	private riddleActions = fillActions(['RIDDLE_OF_WIND'], this.data)
+	private blitzActions = fillActionIds(BLITZ_ACTIONS, this.data)
+	private riddleActions = fillActionIds(['RIDDLE_OF_WIND'], this.data)
 	buffStatus = this.data.statuses.RIDDLE_OF_FIRE
 
 	private allowActionsInDowntime = (window: HistoryEntry<EvaluatedAction[]>, trackedAction: TrackedAction) => {
@@ -81,7 +81,7 @@ export class RiddleOfFire extends BuffWindow {
 
 		const suggestionWindowName = <DataLink action="RIDDLE_OF_FIRE"/>
 
-		this.ignoreActions(fillActions(IGNORED_ACTIONS, this.data))
+		this.ignoreActions(fillActionIds(IGNORED_ACTIONS, this.data))
 
 		this.addEvaluator(new BlitzEvaluator({
 			blitzActions: this.blitzActions,

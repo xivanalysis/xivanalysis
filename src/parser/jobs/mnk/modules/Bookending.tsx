@@ -11,7 +11,7 @@ import {Data} from 'parser/core/modules/Data'
 import Downtime from 'parser/core/modules/Downtime'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
-import {fillActions} from 'utilities/fillArrays'
+import {fillActionIds} from 'utilities/fillArrays'
 import {FORM_ACTIONS, FORMLESS_APPLYING_ACTIONS, OPO_OPO_ACTIONS} from './constants'
 
 const SEVERITIES = {
@@ -58,9 +58,9 @@ export class Bookending extends Analyser {
 	private formlessOverwrites = 0
 
 	override initialise() {
-		this.opoActions = fillActions(OPO_OPO_ACTIONS, this.data)
-		const formActions = fillActions(FORM_ACTIONS, this.data)
-		const formlessActions = fillActions(FORMLESS_APPLYING_ACTIONS, this.data)
+		this.opoActions = fillActionIds(OPO_OPO_ACTIONS, this.data)
+		const formActions = fillActionIds(FORM_ACTIONS, this.data)
+		const formlessActions = fillActionIds(FORMLESS_APPLYING_ACTIONS, this.data)
 
 		const baseFilter = filter<Event>()
 			.source(this.parser.actor.id)

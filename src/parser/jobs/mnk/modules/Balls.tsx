@@ -10,7 +10,7 @@ import {CounterGauge, Gauge} from 'parser/core/modules/Gauge'
 import {GAUGE_FADE} from 'parser/core/modules/ResourceGraphs/ResourceGraphs'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
-import {fillActions} from 'utilities/fillArrays'
+import {fillActionIds} from 'utilities/fillArrays'
 import {ST_FORM_ACTIONS} from './constants'
 
 const OPO_GAUGE_COLOR = Color('#a256dc')
@@ -79,7 +79,7 @@ export class Balls extends Gauge {
 			initialValue: 0,
 		}))
 
-		const gaugeModifiers = fillActions(ST_FORM_ACTIONS, this.data)
+		const gaugeModifiers = fillActionIds(ST_FORM_ACTIONS, this.data)
 
 		const gaugeModifierFilter = filter<Event>()
 			.source(this.parser.actor.id)
