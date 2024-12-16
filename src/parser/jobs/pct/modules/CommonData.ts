@@ -21,8 +21,8 @@ export const AETHERHUE_ONE_SPELLS_SINGLE_TARGET: ActionKey[] = [
 ]
 
 export const AETHERHUE_ONE_SPELLS_AOE: ActionKey[] = [
-	'AERO_IN_GREEN',
-	'STONE_IN_YELLOW',
+	'AERO_II_IN_GREEN',
+	'STONE_II_IN_YELLOW',
 ]
 
 export const AETHERHUE_ONE_SPELLS: ActionKey[] = [
