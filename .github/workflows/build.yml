@@ -10,18 +10,34 @@ jobs:
   lint:
     name: Lint
     runs-on: ubuntu-latest
-    # TODO: does this work on PRs? one way to find out!
+    # TODO: Can I define this in a shared location? or should i just make a no-steps job for it
     if: github.repository_owner == 'xivanalysis'
-
     steps:
-    # Set up the repository & node environment
+    # Setup
     - uses: actions/checkout@v4
     - uses: actions/setup-node@v4
       with:
         node-version: 18
         cache: yarn
     - run: yarn install
-    # Run lints
+    # Lints
     - run: yarn lint --format=compact
     - run: yarn types
     - run: bash ./.github/scripts/check-extract.sh
+
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    if: github.repository_owner == 'xivanalysis'
+    steps:
+    # Setup
+    - uses: actions/checkout@v4
+    - uses: actions/setup-node@v4
+      with:
+        node-version: 18
+        cache: yarn
+    - run: yarn install
+    # Tests
+    # TODO: swap this to `--reporters=github-actions` and remove this
+    # package once jest is targeting >28
+    - run: yarn test --reporters=jest-github-actions-reporter
