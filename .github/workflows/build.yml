@@ -21,7 +21,7 @@ jobs:
     # Run lints
     - run: yarn lint --format junit -o reports/eslint/results.xml
     - run: yarn types
-    - run: bash ./scripts/check-extract.sh
+    - run: bash ./.github/scripts/check-extract.sh
     # Publish the reports
     - uses: mikepenz/action-junit-report@v5
       if: always()
