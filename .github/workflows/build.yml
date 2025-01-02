@@ -13,6 +13,7 @@ jobs:
     # TODO: Can I define this in a shared location? or should i just make a no-steps job for it
     if: github.repository_owner == 'xivanalysis'
     steps:
+    # TODO: move this setup to shared actions file
     # Setup
     - uses: actions/checkout@v4
     - uses: actions/setup-node@v4
@@ -41,3 +42,25 @@ jobs:
     # TODO: swap this to `--reporters=github-actions` and remove this
     # package once jest is targeting >28
     - run: yarn test --reporters=jest-github-actions-reporter
+
+  # TODO: ok everything from this point on should only execute for actual merges
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+    # Setup
+    - uses: actions/checkout@v4
+    - uses: actions/setup-node@v4
+      with:
+        node-version: 18
+        cache: yarn
+    - run: yarn install
+    # Build
+    - name: build
+      run: |
+        yarn extract
+        export REACT_APP_VERSION=$CIRCLE_BUILD_NUM
+        export REACT_APP_GIT_COMMIT=$(git rev-parse --short HEAD)
+        export REACT_APP_GIT_BRANCH=$CIRCLE_BRANCH
+        CI=false NODE_ENV=production yarn build
+    # TODO: this one will probably need to save the artifact or otherwise just go straight into deploying
