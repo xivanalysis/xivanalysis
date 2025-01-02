@@ -62,8 +62,8 @@ jobs:
     - name: build
       run: |
         yarn extract
-        export REACT_APP_VERSION=$CIRCLE_BUILD_NUM
+        export REACT_APP_VERSION=$GITHUB_RUN_NUMBER
         export REACT_APP_GIT_COMMIT=$(git rev-parse --short HEAD)
-        export REACT_APP_GIT_BRANCH=$CIRCLE_BRANCH
+        export REACT_APP_GIT_BRANCH=$GITHUB_REF_NAME
         CI=false NODE_ENV=production yarn build
     # TODO: this one will probably need to save the artifact or otherwise just go straight into deploying
