@@ -1,0 +1,29 @@
+name: Build
+on:
+  pull_request: {}
+  # TODO: need a push here too
+
+jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    # TODO: does this work on PRs? one way to find out!
+    if: github.repository_owner == 'xivanalysis'
+
+    steps:
+    # Set up the repository & node environment
+    - uses: actions/checkout@v4
+    - uses: actions/setup-node@v4
+      with:
+        node-version: 18
+        cache: yarn
+    - run: yarn install
+    # Run lints
+    - run: yarn lint --format junit -o reports/eslint/results.xml
+    - run: yarn types
+    - run: bash ./scripts/check-extract.sh
+    # Publish the reports
+    - uses: mikepenz/action-junit-report@v5
+      if: always()
+      with:
+        report_paths: reports/**/*.xml
