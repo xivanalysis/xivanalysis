@@ -23,13 +23,12 @@ export class Timeline extends Analyser {
 	static override handle = 'timeline'
 	static override displayOrder = DISPLAY_ORDER.TIMELINE
 	static override displayMode = DisplayMode.FULL
-	static override title = t('core.timeline.title')`Timeline`
+	static override title = t('core.timeline.title')`Timeline 2 electric boogaloo`
 
 	private setView?: SetViewFn
 
 	private rows: RowConfig[] = []
-	// DO NOT COMMIT: checking if lint fails actually fail
-	private items: Array<ItemConfig> = []
+	private items: ItemConfig[] = []
 
 	/**
 	 * Add a row to the timeline.
