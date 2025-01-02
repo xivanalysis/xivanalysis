@@ -23,7 +23,7 @@ export class Timeline extends Analyser {
 	static override handle = 'timeline'
 	static override displayOrder = DISPLAY_ORDER.TIMELINE
 	static override displayMode = DisplayMode.FULL
-	static override title = t('core.timeline.title')`Timeline 2 electric boogaloo`
+	static override title = t('core.timeline.title')`Timeline`
 
 	private setView?: SetViewFn
 
