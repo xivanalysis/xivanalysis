@@ -63,6 +63,7 @@ jobs:
     - uses: actions/download-artifact@v4
       with:
         name: dist-client
+        path: build
     - name: set environment
       run: echo 'BUILD_ID="$GITHUB_REF_NAME.$GITHUB_SHA"' >> "$GITHUB_ENV"
     - name: prepare payload
