@@ -28,7 +28,8 @@ export class Timeline extends Analyser {
 	private setView?: SetViewFn
 
 	private rows: RowConfig[] = []
-	private items: ItemConfig[] = []
+	// DO NOT COMMIT: checking if lint fails actually fail
+	private items: Array<ItemConfig> = []
 
 	/**
 	 * Add a row to the timeline.
