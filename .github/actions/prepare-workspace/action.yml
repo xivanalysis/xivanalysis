@@ -7,4 +7,5 @@ runs:
     with:
       node-version: 18
       cache: yarn
-  - run: yarn install
+  - shell: bash
+    run: yarn install
