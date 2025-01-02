@@ -98,5 +98,8 @@ jobs:
         tags: tag:xivanalysis
     - name: upload
       run: scp -4 -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $BUILD_ID.tgz xivanalysis@xivanalysis.neko-tawny.ts.net:client/deploy-cache
-    # ain't no deploy script there yet
-    # todo also like, vars for the stuff above
+    - name: deploy
+      run: ssh -4 -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null xivanalysis@xivanalysis.neko-tawny.ts.net "cd client && ./deploy.sh ${GITHUB_REF_NAME/\//_} ${{ github.sha }}"
+
+    # TODO: work out how to send a deploy notification
+    # possibly can use https://docs.github.com/en/actions/use-cases-and-examples/deploying/deploying-with-github-actions in combo with standard gh webhook? not sure. could always just use the existing scripts too
