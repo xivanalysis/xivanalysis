@@ -8,7 +8,6 @@ permissions:
 
 jobs:
   lint:
-    name: Lint
     runs-on: ubuntu-latest
     # TODO: Can I define this in a shared location? or should i just make a no-steps job for it
     if: github.repository_owner == 'xivanalysis'
@@ -21,7 +20,6 @@ jobs:
     - run: bash ./.github/scripts/check-extract.sh
 
   test:
-    name: Test
     runs-on: ubuntu-latest
     if: github.repository_owner == 'xivanalysis'
     steps:
@@ -34,7 +32,6 @@ jobs:
 
   # TODO: ok everything from this point on should only execute for actual merges
   build:
-    name: Build
     runs-on: ubuntu-latest
     needs:
     - lint
@@ -50,8 +47,22 @@ jobs:
         export REACT_APP_GIT_COMMIT=$(git rev-parse --short HEAD)
         export REACT_APP_GIT_BRANCH=$GITHUB_REF_NAME
         CI=false NODE_ENV=production yarn build
+    - uses: actions/upload-artifact@v4
+      with:
+        name: dist-client
+        path: build
+        retention-days: 7
+  
+  # This is seperated out such that it can be re-run seperately to the rest of the build.
+  deploy:
+    runs-on: ubuntu-latest
+    needs:
+      - build
+    steps:
     # Deploy
-    # TODO: should this be a seperate job? Just means we'd need to upload / download artifacts...
+    - uses: actions/download-artifact@v4
+      with:
+        name: dist-client
     - name: set environment
       run: echo 'BUILD_ID="$GITHUB_REF_NAME.$GITHUB_SHA"' >> "$GITHUB_ENV"
     - name: prepare payload
