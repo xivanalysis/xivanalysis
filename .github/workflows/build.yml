@@ -22,8 +22,6 @@ jobs:
         cache: yarn
     - run: yarn install
     # Run lints
-    # TODO: swap this to `--reporters=github-actions` and remove this
-    # package once jest is targeting >28
-    - run: yarn lint --reporters=jest-github-actions-reporter
+    - run: yarn lint --format=compact
     - run: yarn types
     - run: bash ./.github/scripts/check-extract.sh
