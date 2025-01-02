@@ -66,4 +66,21 @@ jobs:
         export REACT_APP_GIT_COMMIT=$(git rev-parse --short HEAD)
         export REACT_APP_GIT_BRANCH=$GITHUB_REF_NAME
         CI=false NODE_ENV=production yarn build
-    # TODO: this one will probably need to save the artifact or otherwise just go straight into deploying
+    # Deploy
+    # TODO: should this be a seperate job? Just means we'd need to upload / download artifacts...
+    - name: set environment
+      run: echo 'BUILD_ID="$GITHUB_REF_NAME.$GITHUB_SHA"' >> "$GITHUB_ENV"
+    - name: prepare payload
+      run: |
+        mv build $BUILD_ID
+        tar -czf $BUILD_ID.tgz $BUILD_ID
+    - name: connect to tailnet
+      uses: tailscale/github-action@v2
+      with:
+        oauth-client-id: ${{ secrets.TS_OAUTH_CLIENT_ID }}
+        oauth-secret: ${{ secrets.TS_OAUTH_SECRET }}
+        tags: tag:xivanalysis
+    - name: upload
+      run: scp -4 -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $BUILD_ID.tgz xivanalysis@xivanalysis.neko-tawny.ts.net:client/deploy-cache
+    # ain't no deploy script there yet
+    # todo also like, vars for the stuff above
