@@ -10,7 +10,8 @@ jobs:
   gate:
     if: github.repository_owner == 'xivanalysis'
     runs-on: ubuntu-latest
-    steps: []
+    steps:
+    - run: echo "running on upstream repository"
 
   lint:
     runs-on: ubuntu-latest
