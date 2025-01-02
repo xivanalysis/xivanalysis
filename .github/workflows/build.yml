@@ -13,6 +13,7 @@ jobs:
     # TODO: Can I define this in a shared location? or should i just make a no-steps job for it
     if: github.repository_owner == 'xivanalysis'
     steps:
+    - uses: actions/checkout@v4
     - uses: ./.github/actions/prepare-workspace
     # Lints
     - run: yarn lint --format=compact
@@ -24,6 +25,7 @@ jobs:
     runs-on: ubuntu-latest
     if: github.repository_owner == 'xivanalysis'
     steps:
+    - uses: actions/checkout@v4
     - uses: ./.github/actions/prepare-workspace
     # Tests
     # TODO: swap this to `--reporters=github-actions` and remove this
@@ -38,6 +40,7 @@ jobs:
     - lint
     - test
     steps:
+    - uses: actions/checkout@v4
     - uses: ./.github/actions/prepare-workspace
     # Build
     - name: build
