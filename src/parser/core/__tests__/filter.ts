@@ -46,6 +46,11 @@ describe('filter', () => {
 		expect(testFilter(testShape)).toBeTrue()
 		expect(called).toBeTrue()
 	})
+
+	// DO NOT MERGE
+	it('always fails', () => {
+		expect(true).toBe(false)
+	})
 })
 
 describe('matchers', () => {
