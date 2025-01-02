@@ -1,0 +1,29 @@
+name: Upload source strings to Crowdin
+on:
+  workflow_dispatch:
+    inputs:
+      force:
+        description: Force i18n to be uploaded
+        required: false
+        type: boolean
+  push:
+    branches:
+    - dawntrail
+    paths:
+    - locale/en/**
+
+jobs:
+  upload_i18n:
+    name: Upload i18n sources to Crowdin
+    runs-on: ubuntu-latest
+    if: github.repository_owner == 'xivanalysis'
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Install Crowdin CLI
+      uses: ./.github/actions/install-crowdin-cli
+
+    - name: Upload i18n sources
+      run: crowdin upload sources -b $GITHUB_REF_NAME --no-progress
+      env:
+        CROWDIN_API_TOKEN: ${{ secrets.CROWDIN_API_TOKEN }}
