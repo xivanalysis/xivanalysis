@@ -76,8 +76,10 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     needs: [build]
+    # Ensure that only one build can deploy at a time.
+    concurrency: production
+    environment: aposimz
     steps:
-    # Deploy
     - uses: actions/download-artifact@v4
       with:
         name: dist-client
@@ -97,9 +99,9 @@ jobs:
         oauth-secret: ${{ secrets.TS_OAUTH_SECRET }}
         tags: tag:xivanalysis
     - name: upload
-      run: scp -4 -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $BUILD_ID.tgz xivanalysis@xivanalysis.neko-tawny.ts.net:client/deploy-cache
+      run: scp -4 -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $BUILD_ID.tgz ${{ secrets.DEPLOY_SSH_REMOTE }}:${{ secrets.DEPLOY_CLIENT_PATH }}/deploy-cache
     - name: deploy
-      run: ssh -4 -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null xivanalysis@xivanalysis.neko-tawny.ts.net "cd client && ./deploy.sh ${GITHUB_REF_NAME/\//_} ${{ github.sha }}"
+      run: ssh -4 -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ${{ secrets.DEPLOY_SSH_REMOTE }} "cd ${{ secrets.DEPLOY_CLIENT_PATH }} && ./deploy.sh ${GITHUB_REF_NAME/\//_} ${{ github.sha }}"
 
     # TODO: work out how to send a deploy notification
     # possibly can use https://docs.github.com/en/actions/use-cases-and-examples/deploying/deploying-with-github-actions in combo with standard gh webhook? not sure. could always just use the existing scripts too
