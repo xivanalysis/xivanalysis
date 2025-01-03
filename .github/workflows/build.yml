@@ -94,6 +94,11 @@ jobs:
       run: |
         BUILD_ID="${{ github.ref_name }}.${{ github.sha }}"
         echo "BUILD_ID=${BUILD_ID/\//_}" >> "$GITHUB_ENV"
+        if [ ${{ github.event_name}} == "push" ]; then
+          echo "COMPARE=${{ github.event.before }}...${{ github.event.after }}" >> "$GITHUB_ENV"
+        else
+          echo "COMPARE=${{ github.sha }}^...${{ github.sha }}" >> "$GITHUB_ENV"
+        fi
     - name: prepare payload
       run: |
         mv build $BUILD_ID
@@ -108,6 +113,11 @@ jobs:
       run: scp -q -4 -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $BUILD_ID.tgz ${{ secrets.DEPLOY_SSH_REMOTE }}:${{ secrets.DEPLOY_CLIENT_PATH }}/deploy-cache
     - name: deploy
       run: ssh -q -4 -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ${{ secrets.DEPLOY_SSH_REMOTE }} "cd ${{ secrets.DEPLOY_CLIENT_PATH }} && ./deploy.sh ${GITHUB_REF_NAME/\//_} ${{ github.sha }}"
+    - name: success webhook
+      run: bash ./.github/scripts/success.sh
+    - name: failure webhook
+      if: failure()
+      run: bash ./.github/scripts/fail.sh
 
     # TODO: work out how to send a deploy notification
     # possibly can use https://docs.github.com/en/actions/use-cases-and-examples/deploying/deploying-with-github-actions in combo with standard gh webhook? not sure. could always just use the existing scripts too
