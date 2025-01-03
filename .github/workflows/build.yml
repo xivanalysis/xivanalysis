@@ -117,7 +117,11 @@ jobs:
     # At least it's only checked out after we've finished the deploy.
     - uses: actions/checkout@v4
     - name: success webhook
+      env:
+        DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
       run: bash ./.github/scripts/deploy-webhook.sh Passed 4303448
     - name: failure webhook
       if: failure()
+      env:
+        DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
       run: bash ./.github/scripts/deploy-webhook.sh Failed 13700128
