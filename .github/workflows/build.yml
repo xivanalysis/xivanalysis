@@ -113,11 +113,11 @@ jobs:
       run: scp -q -4 -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $BUILD_ID.tgz ${{ secrets.DEPLOY_SSH_REMOTE }}:${{ secrets.DEPLOY_CLIENT_PATH }}/deploy-cache
     - name: deploy
       run: ssh -q -4 -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ${{ secrets.DEPLOY_SSH_REMOTE }} "cd ${{ secrets.DEPLOY_CLIENT_PATH }} && ./deploy.sh ${GITHUB_REF_NAME/\//_} ${{ github.sha }}"
+    # Yeah we really are checking out the repo to pull in the webhook script.
+    # At least it's only checked out after we've finished the deploy.
+    - uses: actions/checkout@v4
     - name: success webhook
-      run: bash ./.github/scripts/success.sh
+      run: bash ./.github/scripts/deploy-webhook.sh Passed 4303448
     - name: failure webhook
       if: failure()
-      run: bash ./.github/scripts/fail.sh
-
-    # TODO: work out how to send a deploy notification
-    # possibly can use https://docs.github.com/en/actions/use-cases-and-examples/deploying/deploying-with-github-actions in combo with standard gh webhook? not sure. could always just use the existing scripts too
+      run: bash ./.github/scripts/deploy-webhook.sh Failed 13700128
