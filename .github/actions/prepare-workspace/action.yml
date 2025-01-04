@@ -1,0 +1,11 @@
+name: Prepare workspace
+description: Check out and prepare the repository workspace environment
+runs:
+  using: composite
+  steps:
+  - uses: actions/setup-node@v4
+    with:
+      node-version: 18
+      cache: yarn
+  - shell: bash
+    run: yarn install
