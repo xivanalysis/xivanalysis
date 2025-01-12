@@ -5,7 +5,7 @@ import {ActionKey} from 'data/ACTIONS'
 import {Event, Events} from 'event'
 import {filter, oneOf} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
-import {EvaluatedAction, ExpectedActionGroupsEvaluator, LimitedActionsEvaluator, RaidBuffWindow, TrackedAction, TrackedActionGroup} from 'parser/core/modules/ActionWindow'
+import {EvaluatedAction, ExpectedActionGroupsEvaluator, ExpectedGcdCountEvaluator, LimitedActionsEvaluator, RaidBuffWindow, TrackedAction, TrackedActionGroup} from 'parser/core/modules/ActionWindow'
 import {HistoryEntry} from 'parser/core/modules/ActionWindow/History'
 import {GlobalCooldown} from 'parser/core/modules/GlobalCooldown'
 import {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
@@ -103,6 +103,18 @@ export class Technicalities extends RaidBuffWindow {
 		this.addEventHook(technicalFilter.type('statusRemove').source(this.parser.actor.id), this.onRemoveTechnicalFinish)
 
 		const suggestionWindowName = <DataLink status="TECHNICAL_FINISH" showIcon={false}/>
+
+		this.addEvaluator(new ExpectedGcdCountEvaluator({
+			expectedGcds: TECHNICAL_EXPECTED_GCDS,
+			globalCooldown: this.globalCooldown,
+			hasStacks: false,
+			suggestionIcon: this.data.statuses.TECHNICAL_FINISH.icon,
+			suggestionContent: <Trans id="dnc.technicalities.suggestions.missedgcd.content">
+				Try to land {TECHNICAL_EXPECTED_GCDS} GCDs during every <DataLink status="TECHNICAL_FINISH" /> window.
+			</Trans>,
+			suggestionWindowName,
+			severityTiers: TECHNICAL_SEVERITY_TIERS,
+		}))
 
 		this.addEvaluator(new ExpectedActionGroupsEvaluator({
 			expectedActionGroups: [
