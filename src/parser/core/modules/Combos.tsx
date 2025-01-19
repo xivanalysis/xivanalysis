@@ -191,6 +191,14 @@ export class Combos extends Analyser {
 		return false
 	}
 
+	protected checkExpiredCombo(event: Events['action']): boolean {
+		const comboExpiration = this.lastGcdTime + COMBO_TIMEOUT
+		if (event.timestamp > comboExpiration && this.currentComboChain.length > 0) {
+			return true
+		}
+
+		return false
+	}
 	private onCast(event: Events['damage']) {
 		if (event.cause.type !== 'action') {
 			return
