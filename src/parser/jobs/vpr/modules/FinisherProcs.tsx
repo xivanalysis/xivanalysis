@@ -70,7 +70,7 @@ export class FinisherProcs extends CoreProcs {
 		const OverwroteFinishers = this.getOverwriteCountForStatus(this.data.statuses.HINDSBANE_VENOM.id) + this.getOverwriteCountForStatus(this.data.statuses.HINDSTUNG_VENOM.id) + this.getOverwriteCountForStatus(this.data.statuses.FLANKSBANE_VENOM.id) + this.getOverwriteCountForStatus(this.data.statuses.FLANKSTUNG_VENOM.id) + this.getOverwriteCountForStatus(this.data.statuses.GRIMSKINS_VENOM.id)
 
 		this.checklist.add(new Rule({
-			name: <Trans id="vpr.finisherprocs.usage.title">Use your Combo Finsher Buffs</Trans>,
+			name: <Trans id="vpr.finisherprocs.usage.title">Use your Combo Finisher Buffs</Trans>,
 			description: <Trans id="vpr.finisherprocs.checklist.content">
 				Viper generates venom buffs that increase the damage of certain actions. Make sure to use these actions while the buffs are active. Going out of order will cause the buff to drop.
 			</Trans>,
