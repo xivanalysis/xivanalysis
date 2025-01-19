@@ -20,7 +20,7 @@ const SUGGESTION_TIERS = {
 	35: SEVERITY.MAJOR,
 }
 
-const TENGETSU_GAIN = 10
+const TENGENTSU_GAIN = 10
 const KENKI_PER_MEDITATE_TICK = 10
 const MEDITATE_TICK_FREQUENCY = 3000
 const MAX_MEDITATE_TICKS = 5
@@ -42,7 +42,7 @@ export class Kenki extends CoreGauge {
 
 	private theEyes = [
 		this.data.statuses.THIRD_EYE.id,
-		this.data.statuses.TENGETSU.id,
+		this.data.statuses.TENGENTSU.id,
 	]
 
 	private kenkiGaugeModifiers = new Map<number, GaugeModifier>([
@@ -108,7 +108,7 @@ export class Kenki extends CoreGauge {
 		if (this.damageHook == null) { return }
 		const targetedSelf = event.targets.some(({target}) => target === this.parser.actor.id)
 		if (targetedSelf) {
-			this.kenkiGauge.modify(TENGETSU_GAIN)
+			this.kenkiGauge.modify(TENGENTSU_GAIN)
 			// This handles an edge case with multi-hit attacks; the damage hooks will all get invoked
 			// before the Third Eye status gets removed, incorrectly giving Kenki for each hit rather
 			// than just the first one.  See https://github.com/xivanalysis/xivanalysis/issues/1750

@@ -30,7 +30,7 @@ export const patch705: Layer<StatusRoot> = {
 		MAGICKED_SWORDPLAY: {
 			duration: 30000,
 		},
-		TENGETSU_FORESIGHT: {duration: 9000},
+		TENGENTSU_FORESIGHT: {duration: 9000},
 
 		TSUBAME_GAESHI_MIDARE: {
 			id: 4216,
