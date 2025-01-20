@@ -143,7 +143,7 @@ export class Combos extends Analyser {
 		this.currentComboChain = []
 	}
 
-	private recordExpiredCombo(breaker: ComboBreak) {
+	protected recordExpiredCombo(breaker: ComboBreak) {
 		this.issues.push({
 			type: 'timeout',
 			breaker,
@@ -199,6 +199,7 @@ export class Combos extends Analyser {
 
 		return false
 	}
+
 	private onCast(event: Events['damage']) {
 		if (event.cause.type !== 'action') {
 			return
