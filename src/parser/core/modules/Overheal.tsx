@@ -4,7 +4,7 @@ import {Event, Events} from 'event'
 import {Analyser, DisplayOrder} from 'parser/core/Analyser'
 import {filter, oneOf} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
-import Checklist, {Requirement, TARGET, TieredRule} from 'parser/core/modules/Checklist'
+import Checklist, {Requirement, Rule} from 'parser/core/modules/Checklist'
 import {Data} from 'parser/core/modules/Data'
 import {DataSet, PieChartStatistic, Statistics} from 'parser/core/modules/Statistics'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
@@ -32,12 +32,8 @@ const SUGGESTION_SEVERITY_TIERS: SeverityTiers = {
 	50: SEVERITY.MAJOR,
 }
 
-const CHECKLIST_SEVERITY_TIERS: SeverityTiers = {
-	// eslint-disable-next-line @typescript-eslint/no-magic-numbers
-	[100-35]: TARGET.SUCCESS,
-	// eslint-disable-next-line @typescript-eslint/no-magic-numbers
-	[100-50]: TARGET.WARN,
-}
+// Target based on the old tiered success target of 35
+const CHECKLIST_TARGET = 65
 
 export const SuggestedColors: string[] = [
 	'#157f1f', // dark green
@@ -197,11 +193,11 @@ export class Overheal extends Analyser {
 	 */
 	protected displayOrder = DisplayOrder.DEFAULT
 	/**
-	 * Implementing modules MAY wish to override this to set custom severity tiers.
-	 * Do remember that the numbers for checklist are inverted for overheal (e.g., warning at
-	 * 35% overheal means you need to set your threshold at 65)
+	 * Implementing modules MAY wish to override this to set a custom checklist target.
+	 * Do remember that the numbers for checklist are inverted for overheal (e.g., failing at
+	 * 35% overheal means you need to set your target to 65)
 	 */
-	protected checklistSeverity: SeverityTiers = CHECKLIST_SEVERITY_TIERS
+	protected checklistTarget: number = CHECKLIST_TARGET
 	/**
 	 * Implementing modules MAY wish to override this to change the name for the checklist title
 	 */
@@ -391,11 +387,11 @@ export class Overheal extends Analyser {
 				percent: 100 - overallOverhealPercent,
 			}))
 
-			this.checklist.add(new TieredRule({
+			this.checklist.add(new Rule({
 				name: this.checklistRuleName,
 				description: this.checklistDescription([this.direct, ...this.trackedOverheals]),
-				tiers: this.checklistSeverity,
 				requirements,
+				target: this.checklistTarget,
 				displayOrder: this.displayOrder,
 			}))
 		}
@@ -421,7 +417,7 @@ class InvertedRequirement extends Requirement {
 	}
 
 	override get content() {
-		if (this._percent !== null || this.value === null) { return `${this.percentInverted.toFixed(2)}%` }
+		if (this._percent != null || this.value == null) { return `${this.percentInverted.toFixed(2)}%` }
 		return `${this.value.toFixed(0)}/${this.target.toFixed(0)}` // avoid weird floating point shit
 	}
 }
