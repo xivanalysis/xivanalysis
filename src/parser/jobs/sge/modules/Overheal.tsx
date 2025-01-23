@@ -6,9 +6,7 @@ import React from 'react'
 export class Overheal extends CoreOverheal {
 	override checklistRuleBreakout = true
 	override displayPieChart = true
-	override displaySuggestion = true
 
-	override suggestionIcon = this.data.actions.DIAGNOSIS.icon
 	override overhealName = <Trans id="sge.overheal.direct.name">GCD Heals</Trans>
 
 	override trackedHealCategories = [

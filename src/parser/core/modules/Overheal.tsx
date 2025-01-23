@@ -1,5 +1,4 @@
 import {Trans} from '@lingui/react'
-import ACTIONS from 'data/ACTIONS'
 import {Event, Events} from 'event'
 import {Analyser, DisplayOrder} from 'parser/core/Analyser'
 import {filter, oneOf} from 'parser/core/filter'
@@ -7,12 +6,7 @@ import {dependency} from 'parser/core/Injectable'
 import Checklist, {Requirement, Rule} from 'parser/core/modules/Checklist'
 import {Data} from 'parser/core/modules/Data'
 import {DataSet, PieChartStatistic, Statistics} from 'parser/core/modules/Statistics'
-import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
-
-interface SeverityTiers {
-	[key: number]: number
-}
 
 interface TrackedOverhealOpts {
 	bucketId?: number
@@ -25,12 +19,6 @@ interface TrackedOverhealOpts {
 
 const REGENERATION_ID: number = 1302
 const DEFAULT_DISPLAY_ORDER: number = 10
-
-const SUGGESTION_SEVERITY_TIERS: SeverityTiers = {
-	0: SEVERITY.MINOR,
-	35: SEVERITY.MEDIUM,
-	50: SEVERITY.MAJOR,
-}
 
 // Target based on the old tiered success target of 35
 const CHECKLIST_TARGET = 65
@@ -134,7 +122,6 @@ export class Overheal extends Analyser {
 
 	@dependency private checklist!: Checklist
 	@dependency protected data!: Data
-	@dependency private suggestions!: Suggestions
 	@dependency private statistics!: Statistics
 
 	// Overall tracking options
@@ -159,23 +146,6 @@ export class Overheal extends Analyser {
 	 * breakdown of all their categories they're tracking
 	 */
 	protected displayPieChart: boolean = false
-
-	/**
-	 * Implementing modules MAY wish set this to true in order to provide a suggestion
-	 */
-	protected displaySuggestion: boolean = false
-	/**
-	 * Implementing modules MAY change this to set the suggestion icon
-	 */
-	protected suggestionIcon: string = ACTIONS.SCH_PHYSICK.icon
-	/**
-	 * Implementing mdoules MAY change this to set the suggestion text
-	 */
-	protected suggestionContent: JSX.Element = <Trans id="core.overheal.suggestion.content">Avoid healing your party for more than is needed. Cut back on unnecessary heals and coordinate with your co-healer to plan resources efficiently.</Trans>
-	/**
-	 * Implementing modules MAY change this to define the severity tiers for the suggestion
-	 */
-	protected suggestionSeverity: SeverityTiers = SUGGESTION_SEVERITY_TIERS
 
 	/**
 	 * Implementing modules MAY wish to set this to false in order to suppress adding this as a
@@ -393,16 +363,6 @@ export class Overheal extends Analyser {
 				requirements,
 				target: this.checklistTarget,
 				displayOrder: this.displayOrder,
-			}))
-		}
-
-		if (this.displaySuggestion) {
-			this.suggestions.add(new TieredSuggestion({
-				icon: this.suggestionIcon,
-				tiers: this.suggestionSeverity,
-				value: overallOverhealPercent,
-				content: this.suggestionContent,
-				why: this.suggestionWhy(overallOverhealPercent),
 			}))
 		}
 	}

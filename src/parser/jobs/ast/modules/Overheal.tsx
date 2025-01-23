@@ -9,7 +9,6 @@ export class Overheal extends CoreOverheal {
 
 	protected override checklistRuleBreakout = true
 	protected override displayPieChart = true
-	protected override displaySuggestion = true
 	protected override displayOrder = DISPLAY_ORDER.OVERHEAL_CHECKLIST
 
 	protected content = <Trans id="ast.overheal.suggestion.content">

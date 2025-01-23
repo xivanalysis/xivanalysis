@@ -6,7 +6,6 @@ export class Overheal extends CoreOverheal {
 
 	override checklistRuleBreakout = true
 	override displayPieChart = true
-	override displaySuggestion = true
 
 	override trackedHealCategories = [
 		{
