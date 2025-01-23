@@ -35,7 +35,7 @@ export class Higanbana extends DoTs {
 			requirements: [
 				new Requirement({
 					name: <Trans id="sam.Higanbana.checklist.requirement.name"><DataLink action="HIGANBANA"/> uptime</Trans>,
-					percent: () => this.getUptimePercent(this.data.statuses.HIGANBANA.id),
+					percent: this.getUptimePercent(this.data.statuses.HIGANBANA.id),
 				}),
 			],
 			target: 90,

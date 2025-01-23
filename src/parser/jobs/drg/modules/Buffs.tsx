@@ -132,7 +132,7 @@ export default class Buffs extends Analyser {
 			requirements: [
 				new Requirement({
 					name: <Trans id="drg.buffs.checklist.requirement.name"><DataLink status="POWER_SURGE" /> uptime</Trans>,
-					percent: () => this.getPowerSurgeUptimePercent(),
+					percent: this.getPowerSurgeUptimePercent(),
 				}),
 			],
 		}))

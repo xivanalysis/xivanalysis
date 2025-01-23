@@ -7,7 +7,7 @@ import {Event, Events} from 'event'
 import {Analyser} from 'parser/core/Analyser'
 import {filter, oneOf} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
-import Checklist, {Requirement, TARGET, TieredRule} from 'parser/core/modules/Checklist'
+import Checklist, {Requirement, Rule} from 'parser/core/modules/Checklist'
 import {Data} from 'parser/core/modules/Data'
 import Suggestions, {SEVERITY, Suggestion, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import DISPLAY_ORDER from 'parser/jobs/ast/modules/DISPLAY_ORDER'
@@ -16,9 +16,6 @@ import {PLAY_I, OFFENSIVE_ARCANA_STATUS} from './ArcanaGroups'
 
 const oGCD_ALLOWANCE = 7500 //used in case the last draw comes up in the last second of the fight. Since plays are typically done in a separate weave, a full GCD would be needed to play the card. Takes another second to cast PLAY and therefore an AST would not DRAW if they couldn't even PLAY. Additionally, an AST would not play if not even a GCD could be cast before the end of the fight. Therefore, the oGCD_ALLOWANCE should be approcimately 3 GCDs (2 for AST to cast, 1 for job to do an action) = 3 * 2500
 const INTENTIONAL_DRIFT_FOR_BURST = 7500 //gcds until draw is used in opener
-
-const WARN_TARGET_MAXPLAYS = 1
-const FAIL_TARGET_MAXPLAYS = 2
 
 const SEVERITIES = {
 	DRAW_HOLDING: { //harsh thresholds were chosen since a drift will invariably mess up burst alignment
@@ -140,9 +137,7 @@ export default class Draw extends Analyser {
 		/*
 			CHECKLIST: Number of cards played
 		*/
-		const warnTarget = Math.floor(((theoreticalMaxPlays - WARN_TARGET_MAXPLAYS) / theoreticalMaxPlays) * 100)
-		const failTarget = Math.floor(((theoreticalMaxPlays - FAIL_TARGET_MAXPLAYS) / theoreticalMaxPlays) * 100)
-		this.checklist.add(new TieredRule({
+		this.checklist.add(new Rule({
 			displayOrder: DISPLAY_ORDER.DRAW_CHECKLIST,
 			name: <Trans id="ast.draw.checklist.name">
 				Play as many cards as possible
@@ -153,7 +148,6 @@ export default class Draw extends Analyser {
 			</Trans>
 			<li><Trans id="ast.draw.checklist.description.total">Total cards obtained:</Trans>&nbsp;{totalCardsObtained}/{theoreticalMaxPlays}</li>
 			</>,
-			tiers: {[warnTarget]: TARGET.WARN, [failTarget]: TARGET.FAIL, [100]: TARGET.SUCCESS},
 			requirements: [
 				new Requirement({
 					name: <Trans id="ast.draw.checklist.requirement.playI">

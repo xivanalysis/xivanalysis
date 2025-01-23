@@ -153,9 +153,9 @@ export class InnerRelease extends Analyser {
 		return Math.min(this.stacksApplied, hits)
 	}
 
-	getPercentUsed(target: number, missed: number): string {
+	getPercentUsed(target: number, missed: number): number {
 		const used = target - missed
 
-		return ((used / target) * 100).toFixed(2)
+		return (used / target) * 100
 	}
 }

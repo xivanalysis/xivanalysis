@@ -26,7 +26,7 @@ export default class Debuffs extends CoreDoTs {
 			requirements: [
 				new Requirement({
 					name: <Trans id="drg.debuffs.checklist.requirement.chaos-thrust.name"><ActionLink {...this.data.actions.CHAOTIC_SPRING} /> uptime</Trans>,
-					percent: () => this.getUptimePercent(this.data.statuses.CHAOTIC_SPRING.id),
+					percent: this.getUptimePercent(this.data.statuses.CHAOTIC_SPRING.id),
 				}),
 			],
 		}))

@@ -1,7 +1,7 @@
 import {Trans} from '@lingui/react'
 import {DataLink} from 'components/ui/DbLink'
 import {dependency} from 'parser/core/Injectable'
-import Checklist, {Requirement, TARGET, TieredRule} from 'parser/core/modules/Checklist'
+import Checklist, {Requirement, Rule} from 'parser/core/modules/Checklist'
 import {DoTs} from 'parser/core/modules/DoTs'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
@@ -12,10 +12,6 @@ const SEVERITIES = {
 		6000: SEVERITY.MINOR,
 		9000: SEVERITY.MEDIUM,
 		12000: SEVERITY.MAJOR,
-	},
-	UPTIME: {
-		90: TARGET.WARN,
-		95: TARGET.SUCCESS,
 	},
 }
 
@@ -30,16 +26,15 @@ export class Combust extends DoTs {
 	]
 
 	override addChecklistRules() {
-		this.checklist.add(new TieredRule({
+		this.checklist.add(new Rule({
 			name: <Trans id="ast.dots.rule.name">Keep your DoT up</Trans>,
 			description: <Trans id="ast.dots.rule.description">
 				<DataLink action="COMBUST_III" /> makes up a good portion of your damage. Aim to keep this DoT up at all times. It also can be used to weave (<DataLink action="ASTRAL_DRAW" /> / <DataLink action="UMBRAL_DRAW" />) and manage cards, or maneuver around without dropping GCD uptime.
 			</Trans>,
-			tiers: SEVERITIES.UPTIME,
 			requirements: [
 				new Requirement({
 					name: <Trans id="ast.dots.requirement.uptime.name"><DataLink action="COMBUST_III" /> uptime</Trans>,
-					percent: () => this.getUptimePercent(this.data.statuses.COMBUST_III.id),
+					percent: this.getUptimePercent(this.data.statuses.COMBUST_III.id),
 				}),
 			],
 			displayOrder: DISPLAY_ORDER.DOT_CHECKLIST,

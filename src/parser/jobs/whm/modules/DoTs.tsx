@@ -1,7 +1,7 @@
 import {Trans} from '@lingui/react'
 import {DataLink} from 'components/ui/DbLink'
 import {dependency} from 'parser/core/Injectable'
-import Checklist, {Requirement, TARGET, TieredRule} from 'parser/core/modules/Checklist'
+import Checklist, {Requirement, Rule} from 'parser/core/modules/Checklist'
 import {DoTs as CoreDoTs} from 'parser/core/modules/DoTs'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
@@ -12,10 +12,6 @@ const SEVERITIES = {
 		6000: SEVERITY.MINOR,
 		9000: SEVERITY.MEDIUM,
 		12000: SEVERITY.MAJOR,
-	},
-	UPTIME: {
-		90: TARGET.WARN,
-		95: TARGET.SUCCESS,
 	},
 }
 
@@ -29,12 +25,11 @@ export class DoTs extends CoreDoTs {
 
 	protected override addChecklistRules() {
 		const uptimePercent = this.getUptimePercent(this.data.statuses.DIA.id)
-		this.checklist.add(new TieredRule({
+		this.checklist.add(new Rule({
 			name: <Trans id="whm.dots.rule.name">Keep your DoTs up </Trans>,
 			description: <Trans id="whm.dots.rule.description">
 				As a White Mage, <DataLink status="DIA" showIcon={false} showTooltip={false} /> is significant portion of your sustained damage. Aim to keep it up at all times.
 			</Trans>,
-			tiers: SEVERITIES.UPTIME,
 			requirements: [
 				new Requirement({
 					name: <Trans id="whm.dots.requirement.uptime-dia.name"><DataLink status="DIA" /> uptime</Trans>,

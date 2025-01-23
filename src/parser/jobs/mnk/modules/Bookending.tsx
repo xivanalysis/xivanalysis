@@ -6,7 +6,7 @@ import {Analyser} from 'parser/core/Analyser'
 import {filter, oneOf} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
 import {Actors} from 'parser/core/modules/Actors'
-import Checklist, {Requirement, TARGET, TieredRule} from 'parser/core/modules/Checklist'
+import Checklist, {Requirement, Rule} from 'parser/core/modules/Checklist'
 import {Data} from 'parser/core/modules/Data'
 import Downtime from 'parser/core/modules/Downtime'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
@@ -15,14 +15,6 @@ import {fillActions} from 'utilities/fillArrays'
 import {FORM_ACTIONS, FORMLESS_APPLYING_ACTIONS, OPO_OPO_ACTIONS} from './constants'
 
 const SEVERITIES = {
-	FORMLESS: {
-		100: TARGET.SUCCESS,
-		95: TARGET.WARN,
-	},
-	POST_OPO_ACTIONS: {
-		100: TARGET.SUCCESS,
-		90: TARGET.WARN,
-	},
 	OVERWRITTEN_FORMLESS: {
 		1: SEVERITY.MINOR,
 		3: SEVERITY.MEDIUM,
@@ -138,12 +130,11 @@ export class Bookending extends Analyser {
 			frPercent = Math.min(frPercent, 100)
 		}
 
-		this.checklist.add(new TieredRule({
+		this.checklist.add(new Rule({
 			name: <Trans id="mnk.bookending.formless.checklist.name">Consume <DataLink status="FORMLESS_FIST" /> with Opo-opo actions</Trans>,
 			description: <Trans id="mnk.bookending.formless.checklist.description">
 				Opo-opo actions have the highest average potency of the three forms. Try to maximize uses of these actions by consuming <DataLink status="FORMLESS_FIST" /> with <DataLink action="LEAPING_OPO" />, <DataLink action="SHADOW_OF_THE_DESTROYER" />, or <DataLink action="DRAGON_KICK" />.
 			</Trans>,
-			tiers: SEVERITIES.FORMLESS,
 			requirements: [
 				new Requirement({
 					name: <Trans id="mnk.bookending.formless.checklist.requirement"><DataLink status="FORMLESS_FIST" /> used on Opo-opo actions</Trans>,
@@ -153,12 +144,11 @@ export class Bookending extends Analyser {
 			],
 		}))
 
-		this.checklist.add(new TieredRule({
+		this.checklist.add(new Rule({
 			name: <Trans id="mnk.bookending.pb.checklist.name">Use <DataLink action="PERFECT_BALANCE" /> and <DataLink action="FIRES_REPLY" /> after Opo-opo actions</Trans>,
 			description: <Trans id="mnk.bookending.pb.checklist.description">
 				Opo-opo actions have the highest average potency of the three forms. Try to maximize uses of these actions by following them up with <DataLink action="PERFECT_BALANCE" /> or <DataLink action="FIRES_REPLY" />, which allows you to skip the next two forms in the sequence.
 			</Trans>,
-			tiers: SEVERITIES.POST_OPO_ACTIONS,
 			requirements: [
 				new Requirement({
 					name: <Trans id="mnk.bookending.pb.checklist.pb-requirement"><DataLink action="PERFECT_BALANCE" /> used after Opo-opo actions</Trans>,

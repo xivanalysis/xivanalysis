@@ -1,7 +1,7 @@
 import {Trans} from '@lingui/react'
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
 import {dependency} from 'parser/core/Injectable'
-import Checklist, {Requirement, TARGET, TieredRule} from 'parser/core/modules/Checklist'
+import Checklist, {Requirement, Rule} from 'parser/core/modules/Checklist'
 import {DoTs as CoreDoTs} from 'parser/core/modules/DoTs'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
@@ -12,10 +12,6 @@ const SEVERITIES = {
 		10000: SEVERITY.MINOR,
 		15000: SEVERITY.MEDIUM,
 		20000: SEVERITY.MAJOR,
-	},
-	UPTIME: {
-		85: TARGET.WARN,
-		95: TARGET.SUCCESS,
 	},
 }
 
@@ -29,20 +25,19 @@ export class DoTs extends CoreDoTs {
 	]
 
 	protected override addChecklistRules() {
-		this.checklist.add(new TieredRule({
+		this.checklist.add(new Rule({
 			name: <Trans id="brd.dots.checklist.name">Keep your DoTs up</Trans>,
 			description: <Trans id="brd.dots.checklist.description">A significant amount of Bard's DPS comes from <ActionLink {...this.data.actions.CAUSTIC_BITE}/> and <ActionLink {...this.data.actions.STORMBITE}/>.
 				Make sure you have these skills applied on the target at all times. Use <ActionLink {...this.data.actions.IRON_JAWS}/> to refresh the timer on the Damage over Time (DoT) debuff.
 			</Trans>,
-			tiers: SEVERITIES.UPTIME,
 			requirements: [
 				new Requirement({
 					name: <Trans id="brd.dots.checklist.requirement.caustic"><StatusLink {...this.data.statuses.CAUSTIC_BITE} /> uptime</Trans>,
-					percent: () => this.getUptimePercent(this.data.statuses.CAUSTIC_BITE.id),
+					percent: this.getUptimePercent(this.data.statuses.CAUSTIC_BITE.id),
 				}),
 				new Requirement({
 					name: <Trans id="brd.dots.checklist.requirement.storm"><StatusLink {...this.data.statuses.STORMBITE} /> uptime</Trans>,
-					percent: () => this.getUptimePercent(this.data.statuses.STORMBITE.id),
+					percent: this.getUptimePercent(this.data.statuses.STORMBITE.id),
 				}),
 			],
 		}))

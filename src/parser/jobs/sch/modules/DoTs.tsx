@@ -3,7 +3,7 @@ import {DataLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import {dependency} from 'parser/core/Injectable'
-import Checklist, {TieredRule, TARGET, Requirement} from 'parser/core/modules/Checklist'
+import Checklist, {Requirement, Rule} from 'parser/core/modules/Checklist'
 import {DoTs as CoreDoTs} from 'parser/core/modules/DoTs'
 import Suggestions, {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import React from 'react'
@@ -16,10 +16,6 @@ const SEVERITIES = {
 		9000: SEVERITY.MEDIUM,
 		12000: SEVERITY.MAJOR,
 	},
-	UPTIME: {
-		90: TARGET.WARN,
-		95: TARGET.SUCCESS,
-	},
 }
 
 export default class DoTs extends CoreDoTs {
@@ -31,17 +27,16 @@ export default class DoTs extends CoreDoTs {
 	]
 
 	addChecklistRules() {
-		this.checklist.add(new TieredRule({
+		this.checklist.add(new Rule({
 			name: <Trans id="sch.dots.checklist.name">Keep your DoT up</Trans>,
 			description: <Trans id="sch.dots.checklist.description">
 				As a Scholar, Biolysis is a notable portion of your damage. Aim to keep it up as much as possible, so long as you can get at least 15 seconds of uptime per application.
 			</Trans>,
 			displayOrder: DISPLAY_ORDER.DOTS,
-			tiers: SEVERITIES.UPTIME,
 			requirements: [
 				new Requirement({
 					name: <Trans id="sch.dots.checklist.requirement.bio-ii.name"><DataLink action="BIOLYSIS" /> uptime</Trans>,
-					percent: () => this.getUptimePercent(STATUSES.BIOLYSIS.id),
+					percent: this.getUptimePercent(STATUSES.BIOLYSIS.id),
 				}),
 			],
 		}))

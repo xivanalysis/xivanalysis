@@ -130,7 +130,7 @@ export class Thunder extends Analyser {
 			requirements: [
 				new Requirement({
 					name: <Trans id="blm.thunder.checklist.dots.requirement.name"><DataLink status="HIGH_THUNDER" /> uptime</Trans>,
-					percent: () => this.getThunderUptime(),
+					percent: this.getThunderUptime(),
 				}),
 			],
 		}))

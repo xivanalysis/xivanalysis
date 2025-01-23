@@ -3,15 +3,11 @@ import {DataLink} from 'components/ui/DbLink'
 import {Analyser} from 'parser/core/Analyser'
 import {dependency} from 'parser/core/Injectable'
 import {Actors} from 'parser/core/modules/Actors'
-import Checklist, {Requirement, TARGET, TieredRule} from 'parser/core/modules/Checklist'
+import Checklist, {Requirement, Rule} from 'parser/core/modules/Checklist'
 import {Data} from 'parser/core/modules/Data'
 import {Invulnerability} from 'parser/core/modules/Invulnerability'
 import {Statuses} from 'parser/core/modules/Statuses'
 import React from 'react'
-
-const SEVERITIES = {
-	95: TARGET.SUCCESS,
-}
 
 export class DeathsDesign extends Analyser {
 	static override handle = 'deathsdesign'
@@ -33,18 +29,18 @@ export class DeathsDesign extends Analyser {
 	}
 
 	private onComplete() {
-		this.checklist.add(new TieredRule({
+		this.checklist.add(new Rule({
 			name: <Trans id="rpr.deathsdesign.rule.name">
 				Keep <DataLink status="DEATHS_DESIGN"/> up
 			</Trans>,
 			description: <Trans id="rpr.deathsdesign.rule.description">
 				Death's Design increases all damage you deal to the target by 10%. Aim to keep this debuff up at all times.
 			</Trans>,
-			tiers: SEVERITIES,
+
 			requirements: [
 				new Requirement({
 					name: <Trans id="rpr.deathsdesign.requirement.uptime.name"><DataLink status="DEATHS_DESIGN"/> uptime</Trans>,
-					percent: () => this.getUptimePercent(),
+					percent: this.getUptimePercent(),
 				}),
 			],
 		}))

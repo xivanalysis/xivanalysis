@@ -34,12 +34,12 @@ export class Buffs extends Analyser {
 			requirements: [
 				new Requirement({
 					name: <Trans id = "sam.buffs.checklist.requirement.fugetsu.name"> <DataLink status="FUGETSU"/> uptime </Trans>,
-					percent: () => this.getUptimePercent(this.data.statuses.FUGETSU),
+					percent: this.getUptimePercent(this.data.statuses.FUGETSU),
 				}),
 
 				new Requirement({
 					name: <Trans id= "sam.buffs.checklist.requirement.fuka.name"> <DataLink status="FUKA"/> uptime </Trans>,
-					percent: () => this.getUptimePercent(this.data.statuses.FUKA),
+					percent: this.getUptimePercent(this.data.statuses.FUKA),
 				}),
 			],
 		}))

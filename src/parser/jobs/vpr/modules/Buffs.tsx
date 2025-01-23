@@ -34,12 +34,12 @@ export class Buffs extends Analyser {
 			requirements: [
 				new Requirement({
 					name: <Trans id = "vpr.buffs.checklist.requirement.huntersinstinct.name"> <DataLink status="HUNTERS_INSTINCT"/> uptime </Trans>,
-					percent: () => this.getUptimePercent(this.data.statuses.HUNTERS_INSTINCT),
+					percent: this.getUptimePercent(this.data.statuses.HUNTERS_INSTINCT),
 				}),
 
 				new Requirement({
 					name: <Trans id= "vpr.buffs.checklist.requirement.swiftscaled.name"> <DataLink status="SWIFTSCALED"/> uptime </Trans>,
-					percent: () => this.getUptimePercent(this.data.statuses.SWIFTSCALED),
+					percent: this.getUptimePercent(this.data.statuses.SWIFTSCALED),
 				}),
 			],
 		}))

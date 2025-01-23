@@ -83,7 +83,7 @@ export class Darkside extends Gauge {
 			requirements: [
 				new Requirement({
 					name: <Trans id="drk.darkside.uptime">Darkside Uptime</Trans>,
-					percent: () => uptime,
+					percent: uptime,
 				}),
 			],
 			target: 99,

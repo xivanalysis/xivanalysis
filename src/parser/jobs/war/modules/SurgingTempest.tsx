@@ -28,7 +28,7 @@ export class SurgingTempest extends Analyser {
 			requirements: [
 				new Requirement({
 					name: <Trans id="war.surgingtempest.checklist.uptime"><DataLink status="SURGING_TEMPEST"/> uptime</Trans>,
-					percent: () => this.getUptimePercent(),
+					percent: this.getUptimePercent(),
 				}),
 			],
 		}))

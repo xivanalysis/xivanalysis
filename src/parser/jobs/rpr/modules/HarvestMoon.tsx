@@ -94,7 +94,7 @@ export class HarvestMoon extends Analyser {
 		}))
 	}
 
-	private getUsedPercentage(expected: number): string {
-		return (this.moons / expected * 100).toFixed(2)
+	private getUsedPercentage(expected: number): number {
+		return this.moons / expected * 100
 	}
 }
