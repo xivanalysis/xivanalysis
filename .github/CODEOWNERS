@@ -1,7 +1,9 @@
 # See https://help.github.com/articles/about-codeowners/
 # for more info about CODEOWNERS file
 
-# Just locking core to require a check by me for now. This can be expanded as required.
-# NOTE: Disabled while I'm on holiday and generally uncontactable. Will be re-enabled when back.
-#/src/components/ @ackwell
-#/src/parser/core/ @ackwell
+# Editing these can technically leak access to some spicy creds so uh don't do that.
+/.github/ @ackwell
+
+# These are fine though
+/.github/labeler.yml
+/.github/pull_request_template.md
