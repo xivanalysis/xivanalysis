@@ -20,6 +20,7 @@ import React, {Fragment} from 'react'
 import {Message, Table, Button} from 'semantic-ui-react'
 import {isSuccessfulHit} from 'utilities'
 import {FIRE_SPELLS, ICE_SPELLS_TARGETED, ICE_SPELLS_UNTARGETED} from './Elements'
+import Procs from './Procs'
 
 /** Configuration */
 const POLYGLOT_DURATION_REQUIRED = 30000
@@ -45,6 +46,7 @@ const AFFECTS_GAUGE_ON_DAMAGE: ActionKey[] = [
 ]
 
 const AFFECTS_GAUGE_ON_CAST: ActionKey[] = [
+	...FIRE_SPELLS,
 	...ICE_SPELLS_UNTARGETED,
 	'TRANSPOSE',
 	'FOUL',
@@ -102,6 +104,7 @@ export class Gauge extends CoreGauge {
 	@dependency private suggestions!: Suggestions
 	@dependency private unableToAct!: UnableToAct
 	@dependency private castTime!: CastTime
+	@dependency private procs!: Procs
 
 	private gaugeErrors: BLMGaugeError[] = []
 	private droppedEnoTimestamps: number[] = []
@@ -230,10 +233,11 @@ export class Gauge extends CoreGauge {
 
 		// The action event is sufficient for actions that don't need to do damage to affect gauge state (ie. Transpose, Enochian, Umbral Soul)
 		// Foul, Xenoglossy, and Paradox also fall into this category since they consume their gauge markers on execution
+		// Fire spells also consume Umbral Hearts whether or not they actually do damage
 		this.addEventHook(playerFilter.type('action').action(this.data.matchActionId(AFFECTS_GAUGE_ON_CAST)), this.onCast)
 
 		// The rest of the fire and ice spells must do damage in order to affect gauge state, so hook that event instead.
-		this.addEventHook(playerFilter.type('damage').cause(this.data.matchCauseActionId(this.affectsGaugeOnDamage)), this.onCast)
+		this.addEventHook(playerFilter.type('damage').cause(this.data.matchCauseActionId(this.affectsGaugeOnDamage)), this.onDamage)
 
 		this.addEventHook('complete', this.onComplete)
 	}
@@ -258,20 +262,75 @@ export class Gauge extends CoreGauge {
 	}
 
 	//#region onCast and gauge state modification
-	private onCast(event: Events['damage'] | Events['action']) {
+
+	// Actions that modify gauge state on cast, such as spending Umbral Hearts, or Amplifier granting Polyglot
+	private onCast(event: Events['action']) {
+		const abilityId = event.action
+
+		switch (abilityId) {
+		case this.data.actions.UMBRAL_SOUL.id:
+			this.onGainUmbralIceStacks(1)
+			this.tryGainUmbralHearts(1)
+			// Patch 7.05 updated Umbral Soul such that it pauses the Umbral Ice timer, but the Polyglot timer keeps rolling
+			if (!this.parser.patch.before('7.05')) {
+				this.umbralIceTimer.pause()
+			}
+			break
+		case this.data.actions.FIRE_I.id:
+		case this.data.actions.FIRE_II.id:
+		case this.data.actions.HIGH_FIRE_II.id:
+		case this.data.actions.FIRE_IV.id:
+			this.tryConsumeUmbralHearts(1)
+			break
+		case this.data.actions.FIRE_III.id:
+			// Firestarters don't cost MP and so don't consume Umbral Hearts
+			if (!this.procs.checkEventWasProc(event)) {
+				this.tryConsumeUmbralHearts(1)
+			}
+			break
+		case this.data.actions.FLARE.id:
+			this.tryConsumeUmbralHearts(FLARE_MAX_HEART_CONSUMPTION, true)
+			break
+		case this.data.actions.XENOGLOSSY.id:
+		case this.data.actions.FOUL.id:
+			this.onConsumePolyglot()
+			break
+		case this.data.actions.TRANSPOSE.id:
+			this.onTransposeStacks()
+			break
+		case this.data.actions.PARADOX.id:
+			this.paradoxGauge.spend(1)
+			break
+		case this.data.actions.AMPLIFIER.id:
+			this.onGeneratePolyglot()
+			break
+		case this.data.actions.FLARE_STAR.id:
+			this.astralSoulGauge.reset()
+			break
+		case this.data.actions.MANAFONT.id:
+			this.onGainAstralFireStacks(ASTRAL_UMBRAL_MAX_STACKS, false)
+			this.gainUmbralHearts(UMBRAL_HEARTS_MAX_STACKS)
+			this.onGainParadox()
+			break
+		}
+
+		this.addEvent()
+	}
+
+	// Actions that must do damage to affect gauge state, such as gaining/refreshing AF/UI stacks
+	private onDamage(event: Events['damage']) {
 		let abilityId
 		if ('cause' in event && 'action' in event.cause) {
 			abilityId = event.cause.action
-		} else if ('action' in event) {
-			abilityId = event.action
 		}
 
 		// If we couldn't figure out what ability this is (somehow wound up here because of a DoT?), bail
 		if (abilityId == null) { return }
 
-		// Bail out if the event didn't do damage and the action needs to in order to affect gauge state
-		if (this.affectsGaugeOnDamage.includes(abilityId) && event.type === 'damage' && !isSuccessfulHit(event)) { return }
+		// Bail out if the event didn't do damage
+		if (!isSuccessfulHit(event)) { return }
 
+		// Modify the gauge state based on this successful hit
 		switch (abilityId) {
 		case this.data.actions.BLIZZARD_I.id:
 			this.onGainUmbralIceStacks(1)
@@ -287,63 +346,41 @@ export class Gauge extends CoreGauge {
 				this.onGainUmbralIceStacks(1, false)
 			}
 			this.umbralHeartsGauge.set(UMBRAL_HEARTS_MAX_STACKS)
-			this.addEvent()
-			break
-		case this.data.actions.UMBRAL_SOUL.id:
-			this.onGainUmbralIceStacks(1)
-			this.tryGainUmbralHearts(1)
-			// Patch 7.05 updated Umbral Soul such that it pauses the Umbral Ice timer, but the Polyglot timer keeps rolling
-			if (!this.parser.patch.before('7.05')) {
-				this.umbralIceTimer.pause()
-			}
 			break
 		case this.data.actions.FIRE_I.id:
-			this.tryConsumeUmbralHearts(1)
 			this.onGainAstralFireStacks(1)
 			break
 		case this.data.actions.FIRE_II.id:
 		case this.data.actions.HIGH_FIRE_II.id:
 		case this.data.actions.FIRE_III.id:
-			this.tryConsumeUmbralHearts(1)
 			this.onGainAstralFireStacks(ASTRAL_UMBRAL_MAX_STACKS, false)
 			break
 		case this.data.actions.FIRE_IV.id:
 			if (this.astralUmbralGauge.getCountAt(ASTRAL_FIRE_HANDLE) === 0) {
 				this.onGainAstralFireStacks(1, false)
 			}
-			this.tryConsumeUmbralHearts(1)
 			this.onGainAstralSoul(1)
 			break
 		case this.data.actions.DESPAIR.id:
 			this.onGainAstralFireStacks(ASTRAL_UMBRAL_MAX_STACKS, false)
 			break
 		case this.data.actions.FLARE.id:
-			this.tryConsumeUmbralHearts(FLARE_MAX_HEART_CONSUMPTION, true)
 			this.onGainAstralFireStacks(ASTRAL_UMBRAL_MAX_STACKS, false)
 			this.onGainAstralSoul(FLARE_SOUL_GENERATION)
 			break
-		case this.data.actions.XENOGLOSSY.id:
-		case this.data.actions.FOUL.id:
-			this.onConsumePolyglot()
-			break
-		case this.data.actions.TRANSPOSE.id:
-			this.onTransposeStacks()
-			break
 		case this.data.actions.PARADOX.id:
-			this.handleParadox(event)
-			break
-		case this.data.actions.AMPLIFIER.id:
-			this.onGeneratePolyglot()
-			break
-		case this.data.actions.FLARE_STAR.id:
-			this.astralSoulGauge.reset()
-			break
-		case this.data.actions.MANAFONT.id:
-			this.onGainAstralFireStacks(ASTRAL_UMBRAL_MAX_STACKS, false)
-			this.gainUmbralHearts(UMBRAL_HEARTS_MAX_STACKS)
-			this.onGainParadox()
+			// Add a stack for whichever timer isn't expired
+			// Because it was physically impossible to cast UI Paradox before patch 7.05, we don't need an extra patch level check here
+			if (!this.umbralIceTimer.expired) {
+				this.onGainUmbralIceStacks(1)
+			}
+			if (!this.astralFireTimer.expired) {
+				this.onGainAstralFireStacks(1)
+			}
 			break
 		}
+
+		this.addEvent()
 	}
 
 	private addEvent() {
@@ -446,8 +483,6 @@ export class Gauge extends CoreGauge {
 
 			this.astralFireTimer.start()
 			this.astralUmbralGauge.generate(ASTRAL_FIRE_HANDLE, stackCount)
-
-			this.addEvent()
 		}
 	}
 
@@ -463,8 +498,6 @@ export class Gauge extends CoreGauge {
 
 			this.paradoxGauge.reset()
 			this.astralSoulGauge.reset()
-
-			this.addEvent()
 		}
 	}
 
@@ -478,8 +511,6 @@ export class Gauge extends CoreGauge {
 		} else { // Otherwise, we're swapping to fire
 			this.onGainAstralFireStacks(1, false)
 		}
-
-		this.addEvent()
 	}
 	//#endregion
 
@@ -492,16 +523,12 @@ export class Gauge extends CoreGauge {
 
 	private gainUmbralHearts(count: number) {
 		this.umbralHeartsGauge.generate(count)
-
-		this.addEvent()
 	}
 
 	private tryConsumeUmbralHearts(count:  number, force: boolean = false) {
 		if (this.umbralHeartsGauge.empty || (this.astralUmbralGauge.getCountAt(ASTRAL_FIRE_HANDLE) === 0 && !force)) { return }
 
 		this.umbralHeartsGauge.spend(count)
-
-		this.addEvent()
 	}
 	//#endregion
 
@@ -522,14 +549,14 @@ export class Gauge extends CoreGauge {
 		this.umbralHeartsGauge.reset()
 
 		this.astralSoulGauge.reset()
-
-		this.addEvent()
 	}
 
 	private onPolyglotTimerComplete() {
 		this.polyglotTimer.refresh()
 
 		this.onGeneratePolyglot()
+
+		this.addEvent()
 	}
 
 	private onGeneratePolyglot() {
@@ -539,8 +566,6 @@ export class Gauge extends CoreGauge {
 		}
 
 		this.polyglotGauge.generate(1)
-
-		this.addEvent()
 	}
 
 	private onConsumePolyglot() {
@@ -553,8 +578,6 @@ export class Gauge extends CoreGauge {
 		}
 
 		this.polyglotGauge.spend(1)
-
-		this.addEvent()
 	}
 
 	private countLostPolyglots(time: number) {
@@ -562,33 +585,13 @@ export class Gauge extends CoreGauge {
 	}
 	//#endregion
 
-	/**
-	 * Handles the effects of each kind of event for Paradox:
-	 * - action: Paradox gauge is spent when the action is executed, whether it does damage or not
-	 * - damage: Paradox refreshes the active AF/UI timer when it registers a successful damage event
-	 * @param event The Paradox event
-	 */
-	private handleParadox(event: Events['action'] | Events['damage']) {
-		if (event.type === 'action') {
-			this.paradoxGauge.spend(1)
-		} else if (event.type === 'damage') {
-			// We checked isSuccessfulHit back in onCast, so we don't need to check it again here
-			// Add a stack for whichever timer isn't expired
-			// Because it was physically impossible to cast UI Paradox before patch 7.05, we don't need an extra patch level check here
-			if (!this.umbralIceTimer.expired) {
-				this.onGainUmbralIceStacks(1)
-			}
-			if (!this.astralFireTimer.expired) {
-				this.onGainAstralFireStacks(1)
-			}
-		}
-	}
-
 	override onDeath() {
 		// Not counting the loss towards the rest of the gauge loss, that'll just double up on the suggestions
 		this.onAstralUmbralEnd(false)
 		this.paradoxGauge.reset()
 		this.polyglotGauge.reset()
+
+		this.addEvent()
 	}
 
 	private onComplete() {

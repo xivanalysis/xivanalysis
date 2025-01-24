@@ -684,7 +684,6 @@
   "mnk.brotherhood.missed-window.why": "",
   "mnk.cr.suggestions.content": "단일 대상에게 최대 피해량을 주려면 <0/> 대신 <1/> 또는 <2/> 기술을 사용하십시오.",
   "mnk.cr.suggestions.why": "",
-  "mnk.downtime.title": "",
   "mnk.forms.suggestions.dropped.content": "품새를 상시 유지하십시오. 돌진기를 사용하거나 보스에 붙어있어야 유지가능하며 실패시 이는 일반적으로 더 큰 문제점이 있기 떄문입니다.",
   "mnk.forms.suggestions.dropped.why": "품새를 {0, plural, other {#회}} 잃었습니다.",
   "mnk.forms.suggestions.formless.content": "<0/> 외의 구간에서 원숭이 품새 기술을 사용하지 마십시오. 품새 보너스는 오직 알맞은 품새 상태에서만 받을 수 있습니다.",

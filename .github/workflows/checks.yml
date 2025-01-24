@@ -1,0 +1,56 @@
+name: checks
+on:
+  workflow_dispatch: {}
+  workflow_call: {}
+  pull_request: {}
+
+jobs:
+  gate:
+    if: github.repository_owner == 'xivanalysis'
+    runs-on: ubuntu-latest
+    steps:
+    - run: echo "running on upstream repository"
+
+  lint:
+    runs-on: ubuntu-latest
+    needs: [gate]
+    steps:
+    - uses: actions/checkout@v4
+    - uses: ./.github/actions/prepare-workspace
+    - run: yarn lint --format=compact
+
+  typecheck:
+    runs-on: ubuntu-latest
+    needs: [gate]
+    steps:
+    - uses: actions/checkout@v4
+    - uses: ./.github/actions/prepare-workspace
+    - run: yarn types
+
+  check-extract:
+    runs-on: ubuntu-latest
+    needs: [gate]
+    steps:
+    - uses: actions/checkout@v4
+    - uses: ./.github/actions/prepare-workspace
+    - run: bash ./.github/scripts/check-extract.sh
+
+  test:
+    runs-on: ubuntu-latest
+    needs: [gate]
+    steps:
+    - uses: actions/checkout@v4
+    - uses: ./.github/actions/prepare-workspace
+    # TODO: swap this to `--reporters=github-actions` and remove this
+    # package once jest is targeting >28
+    - run: yarn test --reporters=jest-github-actions-reporter
+
+  checks-pass:
+    runs-on: ubuntu-latest
+    needs:
+    - lint
+    - typecheck
+    - check-extract
+    - test
+    steps:
+    - run: echo "all checks passing"
