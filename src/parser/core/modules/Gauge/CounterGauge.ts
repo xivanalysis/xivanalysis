@@ -129,7 +129,7 @@ export class CounterGauge extends AbstractGauge {
 		// Ensure we have a gauge init event, can't do in constructor because the parser reference might not be there yet
 		if (this.history.length === 0) {
 			this.history.push({
-				timestamp: this.parser.pull.timestamp,
+				timestamp: -1,
 				value: this.initialValue,
 				minimum: this.minimum,
 				maximum: this.maximum,

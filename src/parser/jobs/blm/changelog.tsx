@@ -9,6 +9,11 @@ export const changelog = [
 	// 	contributors: [CONTRIBUTORS.YOU],
 	// },
 	{
+		date: new Date('2024-12-02'),
+		Changes: () => <>Fixed a gauge tracking bug that caused Umbral Hearts to be consumed by <DataLink status="FIRESTARTER" /> procs.</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
+	{
 		date: new Date('2024-11-16'),
 		Changes: () => <>Add a table displaying timestamps when procs were dropped, for better clarity around when those issues occurred.</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],

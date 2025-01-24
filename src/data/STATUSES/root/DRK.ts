@@ -66,7 +66,7 @@ export const DRK = ensureStatuses({
 		id: 3836,
 		name: 'Delirium',
 		icon: iconUrl(217147),
-		duration: 10000,
+		duration: 15000,
 		stacksApplied: 3,
 	},
 	OBLATION: {

@@ -8,6 +8,11 @@ export const changelog = [
 	// 	contributors: [CONTRIBUTORS.YOU],
 	// },
 	{
+		date: new Date('2024-12-05'),
+		Changes: () => <>Ignore Pneuma's secondary heal effect when checking for weaving issues</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
+	{
 		date: new Date('2024-11-16'),
 		Changes: () => <>Add checklist item for Kardia uptime</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],
