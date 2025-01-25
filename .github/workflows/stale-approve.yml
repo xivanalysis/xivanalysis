@@ -48,7 +48,6 @@ jobs:
             const opts = github.rest.repos.listCollaborators.endpoint.merge({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              permission: 'push',
             })
             const foo = await github.paginate(opts);
             console.log(JSON.stringify(foo, undefined, 2))
