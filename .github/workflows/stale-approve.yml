@@ -31,5 +31,5 @@ jobs:
         with:
           script: |
             const prs = JSON.parse(process.env.PRS)
-            const ids = prs.filter(pr => pr.number)
+            const ids = prs.map(pr => pr.number)
             console.log(`test: ${JSON.stringify(ids, undefined, 2)}`)
