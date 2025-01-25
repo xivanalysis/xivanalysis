@@ -23,8 +23,8 @@ jobs:
           days-before-close: -1
           # Drafts should not be approved
           exempt-draft-pr: true
-          # Don't actually add a label
-          stale-pr-label: ''
+          # NOTE: ok so we can't not-set a label - think of a better name if we can't leave it in dryrun mode
+          stale-pr-label: 'stale'
       - uses: actions/github-script@v7
         env:
           PRS: ${{ steps.stale.outputs.staled-issues-prs }}
