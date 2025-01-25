@@ -5,9 +5,6 @@ import React from 'react'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 
 export class Overheal extends CoreOverheal {
-	static override handle = 'overheal'
-
-	protected override checklistRuleBreakout = true
 	protected override displayPieChart = true
 	protected override displayOrder = DISPLAY_ORDER.OVERHEAL_CHECKLIST
 

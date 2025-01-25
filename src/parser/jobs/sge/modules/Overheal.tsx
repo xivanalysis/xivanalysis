@@ -4,7 +4,6 @@ import {Overheal as CoreOverheal, SuggestedColors} from 'parser/core/modules/Ove
 import React from 'react'
 
 export class Overheal extends CoreOverheal {
-	override checklistRuleBreakout = true
 	override displayPieChart = true
 
 	override overhealName = <Trans id="sge.overheal.direct.name">GCD Heals</Trans>

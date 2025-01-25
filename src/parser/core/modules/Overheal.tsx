@@ -176,12 +176,6 @@ export class Overheal extends Analyser {
 	 * Implementing modules MAY wish to change this in order to reflect the overall healing requiement name
 	 */
 	protected checklistRequirementName: JSX.Element = <Trans id="core.overheal.requirement.all">Overall (all sources)</Trans>
-	/**
-	 * Implementing modules MAY change this to true in order to generate multiple requirements for each
-	 * category of tracked heals; leaving it at false will only generate a single requirement against
-	 * the total overheal percent
-	 */
-	protected checklistRuleBreakout: boolean = false
 
 	// direct healing
 	protected direct!: TrackedOverheal
@@ -247,7 +241,7 @@ export class Overheal extends Analyser {
 	}
 
 	private onHeal(event: Events['heal'], petHeal: boolean = false) {
-		if (this.isRegeneration(event) || ! this.considerHeal(event, petHeal)) { return }
+		if (this.isRegeneration(event) || !this.considerHeal(event, petHeal)) { return }
 
 		const guid = event.cause.type === 'action' ? event.cause.action : event.cause.status
 		const name = event.cause.type === 'action' ? this.data.getAction(guid)?.name : this.data.getStatus(guid)?.name
@@ -335,23 +329,23 @@ export class Overheal extends Analyser {
 
 		if (this.displayChecklist) {
 			const requirements: InvertedRequirement[] = []
-			if (this.checklistRuleBreakout) {
+
+			requirements.push(new InvertedRequirement({
+				name: this.overhealName,
+				percent:  this.direct.percentInverted,
+				weight: 0,
+			}))
+
+			for (const trackedHeal of this.trackedOverheals) {
+				if (trackedHeal.ignore) { continue }
+
 				requirements.push(new InvertedRequirement({
-					name: this.overhealName,
-					percent:  this.direct.percentInverted,
+					name: trackedHeal.name,
+					percent: trackedHeal.percentInverted,
 					weight: 0,
 				}))
-
-				for (const trackedHeal of this.trackedOverheals) {
-					if (trackedHeal.ignore) { continue }
-
-					requirements.push(new InvertedRequirement({
-						name: trackedHeal.name,
-						percent: trackedHeal.percentInverted,
-						weight: 0,
-					}))
-				}
 			}
+
 			requirements.push(new InvertedRequirement({
 				name: this.checklistRequirementName,
 				percent: 100 - overallOverhealPercent,

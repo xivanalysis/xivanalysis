@@ -1,15 +1,11 @@
 import {Trans} from '@lingui/react'
-import ACTIONS from 'data/ACTIONS'
 import {Event, Events} from 'event'
 import {filter} from 'parser/core/filter'
 import {Overheal, SuggestedColors} from 'parser/core/modules/Overheal'
 import React from 'react'
 
 export class BLUOverheal extends Overheal {
-	override checklistRuleBreakout = true
 	override displayPieChart = true
-	override displaySuggestion = true
-	override suggestionIcon = ACTIONS.POM_CURE.icon
 
 	override trackedHealCategories = [
 		{
@@ -72,10 +68,7 @@ export class BLUOverheal extends Overheal {
 			return
 		}
 
-		this.checklistRuleBreakout = false
 		this.displayPieChart = false
-		this.displaySuggestion = false
 		this.displayChecklist = false
-		this.checklistRuleBreakout = false
 	}
 }
