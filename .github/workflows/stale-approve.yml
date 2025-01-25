@@ -1,12 +1,9 @@
 name: stale-approve
 on:
   workflow_dispatch: {}
-  # TEMP FOR TESTING
-  pull_request: {}
-  # ENABLE WHEN READY
-  # schedule:
-  #   # Run daily
-  #   - cron: '42 0 * * *'
+  schedule:
+    # Run daily
+    - cron: '42 0 * * *'
 
 jobs:
   stale-approve:
@@ -65,9 +62,15 @@ jobs:
                 .filter(permissions => permissions.data.user.permissions.push)
                 .map(permissions => permissions.data.user.login)
             )
-            console.log(`wut ${JSON.stringify(Array.from(maintainers), undefined, 2)}`)
             const maintainerPrs = prMeta.filter(meta => maintainers.has(meta.data.user.login))
-            const temp = maintainerPrs.map(p => p.data.number)
 
-
-            console.log(`test: ${JSON.stringify(temp, undefined, 2)}`)
+            // Approve the found PRs
+            const requests = maintainerPrs.map(pr =>
+              github.rest.pulls.createReview({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                pull_number: pr.data.number,
+                event: 'APPROVE',
+              })
+            )
+            await Promise.all(requests)
