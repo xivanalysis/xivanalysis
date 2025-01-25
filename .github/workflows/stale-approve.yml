@@ -45,7 +45,7 @@ jobs:
             )
             const prMeta = await Promise.all(pendingPrMeta)
 
-            // Get unique list of PR authors and check permissions
+            // Get unique list of PR authors and their permissions
             const authors = Array.from(new Set(prMeta.map(meta => meta.data.user.login)))
             const pendingAuthorPermissions = authors.map(author => 
               github.request('GET /repos/{owner}/{repo}/collaborators/{username}/permission', {
@@ -59,4 +59,13 @@ jobs:
             )
             const authorPermissions = await Promise.all(pendingAuthorPermissions)
 
-            console.log(`test: ${JSON.stringify(authors, undefined, 2)}, ${JSON.stringify(authorPermissions, undefined, 2)}`)
+            // Filter down to the PRs owned by authors with push access
+            const maintainers = new Set(
+              authorPermissions
+                .filter(permissions => permissions.data.user.permissions.push)
+                .map(permissions => persmissions.data.user.login)
+            )
+            const maintainerPrs = prMeta.filter(meta => maintainers.has(meta.data.user.login))
+
+
+            console.log(`test: ${JSON.stringify(maintainerPrs, undefined, 2)}`)
