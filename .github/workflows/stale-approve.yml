@@ -9,27 +9,34 @@ on:
   #   - cron: '42 0 * * *'
 
 jobs:
-  fuck:
+  stale-approve:
     if: github.repository_owner == 'xivanalysis'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/stale@v9
         id: stale
         with:
-          debug-only: true # TODO: can i leave this here? check outputs
+          # NOTE: This is intentional - we're using the "stale" action to find
+          # the PRs, but we don't want it to peform any operations - we're doing
+          # that ourselves later.
+          debug-only: true
           # We only want to know about PRs that are >= 7 days old
           days-before-stale: -1
           days-before-pr-stale: 7
           days-before-close: -1
           # Drafts should not be approved
           exempt-draft-pr: true
-          # NOTE: ok so we can't not-set a label - think of a better name if we can't leave it in dryrun mode
-          stale-pr-label: 'stale'
       - uses: actions/github-script@v7
         env:
           PRS: ${{ steps.stale.outputs.staled-issues-prs }}
         with:
           script: |
-            const prs = JSON.parse(process.env.PRS)
-            const ids = prs.map(pr => pr.number)
-            console.log(`test: ${JSON.stringify(ids, undefined, 2)}`)
+            const staledPrs = JSON.parse(process.env.PRS)
+            const pendingPrMeta = staledPrs
+              .map(pr => github.rest.pulls.get({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                pull_number: pr.number,
+              }))
+            const prMeta = await Promise.all(pendingPrMeta)
+            console.log(`test: ${JSON.stringify(prMeta, undefined, 2)}`)
