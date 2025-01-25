@@ -112,11 +112,7 @@ workflows:
   version: 2
   flow:
     jobs:
-      - setup:
-          filters:
-            branches:
-              only:
-                - shhhhh-now-be-quiet-darling
+      - setup
       - lint:
           requires:
             - setup
