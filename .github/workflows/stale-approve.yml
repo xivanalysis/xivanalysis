@@ -31,12 +31,29 @@ jobs:
           PRS: ${{ steps.stale.outputs.staled-issues-prs }}
         with:
           script: |
+            // Get the list of PRs deemed stale
             const staledPrs = JSON.parse(process.env.PRS)
-            const pendingPrMeta = staledPrs
-              .map(pr => github.rest.pulls.get({
+            if (staledPrs.length === 0) { return }
+
+            // Hydrate the PRs will full metadata
+            const pendingPrMeta = staledPrs.map(pr =>
+              github.rest.pulls.get({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
                 pull_number: pr.number,
-              }))
+              })
+            )
             const prMeta = await Promise.all(pendingPrMeta)
-            console.log(`test: ${JSON.stringify(prMeta, undefined, 2)}`)
+
+            // Get unique list of PR authors and check permissions
+            const authors = Array.from(new Set(prMeta.map(meta => meta.data.user.login)))
+            const pendingAuthorPermissions = authors.map(author => 
+              github.repos.getCollaboratorPermissionLevel({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                username: TODO
+              })
+            )
+            const authorPermissions = await Promise.all(pendingAuthorPermissions)
+
+            console.log(`test: ${JSON.stringify(authors, undefined, 2)}, ${JSON.stringify(authorPermissions, undefined, 2)}`)
