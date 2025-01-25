@@ -1,0 +1,34 @@
+name: stale-approve
+on:
+  workflow_dispatch: {}
+  # TEMP FOR TESTING
+  pull_request: {}
+  # ENABLE WHEN READY
+  # schedule:
+  #   # Run daily
+  #   - cron: '42 0 * * *'
+
+jobs:
+  fuck:
+    if: github.repository_owner == 'xivanalysis'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/stale@v9
+        id: stale
+        with:
+          debug-only: true # TODO: can i leave this here? check outputs
+          # We only want to know about PRs that are >= 7 days old
+          days-before-stale: -1
+          days-before-pr-stale: 7
+          days-before-close: -1
+          # Drafts should not be approved
+          exempt-draft-pr: true
+          # Don't actually add a label
+          stale-pr-label: ''
+      - uses: actions/github-script@v7
+        env:
+          PRS: ${{ steps.stale.outputs.staled-issues-prs }}
+        with:
+          script: |
+            const {PRS} = process.env
+            console.log(`test: ${JSON.stringify(PRS)}`)

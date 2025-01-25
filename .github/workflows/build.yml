@@ -14,7 +14,6 @@ jobs:
     if: github.repository_owner == 'xivanalysis'
     uses: ./.github/workflows/checks.yml
 
-  # TODO: ok everything from this point on should only execute for actual merges
   build:
     runs-on: ubuntu-latest
     needs: [checks]
