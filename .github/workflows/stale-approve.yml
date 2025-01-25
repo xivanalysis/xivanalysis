@@ -45,15 +45,12 @@ jobs:
             )
             const prMeta = await Promise.all(pendingPrMeta)
 
-            // Get unique list of PR authors and check permissions
-            const authors = Array.from(new Set(prMeta.map(meta => meta.data.user.login)))
-            const pendingAuthorPermissions = authors.map(author => 
-              github.repos.getCollaboratorPermissionLevel({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                username: TODO
-              })
-            )
-            const authorPermissions = await Promise.all(pendingAuthorPermissions)
+            const opts = github.rest.repos.listCollaborators.endpoint.merge({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              permission: 'push',
+            })
+            const foo = await github.paginate(opts);
+            console.log(JSON.stringify(foo, undefined, 2))
 
-            console.log(`test: ${JSON.stringify(authors, undefined, 2)}, ${JSON.stringify(authorPermissions, undefined, 2)}`)
+            // console.log(`test: ${JSON.stringify(authors, undefined, 2)}, ${JSON.stringify(authorPermissions, undefined, 2)}`)
