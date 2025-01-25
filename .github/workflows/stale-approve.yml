@@ -65,7 +65,9 @@ jobs:
                 .filter(permissions => permissions.data.user.permissions.push)
                 .map(permissions => permissions.data.user.login)
             )
+            console.log(`wut ${JSON.stringify(Array.from(maintainers), undefined, 2)}`)
             const maintainerPrs = prMeta.filter(meta => maintainers.has(meta.data.user.login))
+            const temp = maintainerPrs.map(p => p.data.number)
 
 
-            console.log(`test: ${JSON.stringify(maintainerPrs, undefined, 2)}`)
+            console.log(`test: ${JSON.stringify(temp, undefined, 2)}`)
