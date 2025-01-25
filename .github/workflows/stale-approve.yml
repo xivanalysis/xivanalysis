@@ -63,7 +63,7 @@ jobs:
             const maintainers = new Set(
               authorPermissions
                 .filter(permissions => permissions.data.user.permissions.push)
-                .map(permissions => persmissions.data.user.login)
+                .map(permissions => permissions.data.user.login)
             )
             const maintainerPrs = prMeta.filter(meta => maintainers.has(meta.data.user.login))
 
