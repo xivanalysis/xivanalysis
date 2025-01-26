@@ -1,18 +1,18 @@
 import {Trans} from '@lingui/react'
 import {Event, Events} from 'event'
 import {filter} from 'parser/core/filter'
-import {Overheal} from 'parser/core/modules/Overheal'
+import {Overheal, TrackedOverhealOpts} from 'parser/core/modules/Overheal'
 import React from 'react'
 
 export class BLUOverheal extends Overheal {
-	override trackedHealCategories = [
+	protected override trackedHealCategories:TrackedOverhealOpts[] = [
 		{
 			name: <Trans id="blu.overheal.hot.name">Healing Over Time</Trans>,
 			trackedHealIds: [
 				this.data.statuses.ANGELS_SNACK.id,
 				this.data.actions.ANGELS_SNACK.id,
 			],
-			informational: false,
+			includeInChecklist: true,
 		},
 		{
 			name: <Trans id="blu.overheal.aoe.name">AoE</Trans>,
@@ -20,14 +20,14 @@ export class BLUOverheal extends Overheal {
 				this.data.actions.STOTRAM_HEAL.id,
 				this.data.actions.EXUVIATION.id,
 			],
-			informational: false,
+			includeInChecklist: true,
 		},
 		{
 			name: <Trans id="blu.overheal.white_wind.name">White Wind</Trans>,
 			trackedHealIds: [
 				this.data.actions.WHITE_WIND.id,
 			],
-			informational: false,
+			includeInChecklist: true,
 		},
 	]
 

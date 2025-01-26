@@ -2,7 +2,7 @@ import {Trans} from '@lingui/react'
 import {DataLink} from 'components/ui/DbLink'
 import {Action} from 'data/ACTIONS'
 import {Events} from 'event'
-import {Overheal as CoreOverheal} from 'parser/core/modules/Overheal'
+import {Overheal as CoreOverheal, TrackedOverhealOpts} from 'parser/core/modules/Overheal'
 import React from 'react'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 
@@ -17,7 +17,7 @@ export class Overheal extends CoreOverheal {
 		this.data.actions.HELIOS_CONJUNCTION.id,
 	]
 
-	protected override trackedHealCategories = [
+	protected override trackedHealCategories: TrackedOverhealOpts[] = [
 		{
 			name: <Trans id="ast.overheal.gcd.name">GCD Heals (including Healing over Time)</Trans>,
 			trackedHealIds: [
@@ -33,7 +33,7 @@ export class Overheal extends CoreOverheal {
 				this.data.actions.HELIOS_CONJUNCTION.id,
 				this.data.statuses.HELIOS_CONJUNCTION.id,
 			],
-			informational: false,
+			includeInChecklist: true,
 		},
 		{
 			name: <Trans id="ast.overheal.abilities-direct.name">Direct healing abilities</Trans>,
@@ -41,7 +41,7 @@ export class Overheal extends CoreOverheal {
 				this.data.actions.ESSENTIAL_DIGNITY.id,
 			],
 			// Marking this as non-informational because it has no secondary purpose, and does have a charge system allowing flexibility of use
-			informational: false,
+			includeInChecklist: true,
 		},
 		{
 			name: <Trans id="ast.overheal.neutral_sect_gcd.name">GCDs applying <DataLink showIcon={false} status="NEUTRAL_SECT_OTHERS" /></Trans>,

@@ -3,7 +3,7 @@ import {DataLink} from 'components/ui/DbLink'
 import {Action} from 'data/ACTIONS'
 import {Status} from 'data/STATUSES'
 import {Events} from 'event'
-import {Overheal as CoreOverheal} from 'parser/core/modules/Overheal'
+import {Overheal as CoreOverheal, TrackedOverhealOpts} from 'parser/core/modules/Overheal'
 import React from 'react'
 
 const BUCKET_IDS = {
@@ -25,14 +25,14 @@ export class Overheal extends CoreOverheal {
 		this.data.statuses.EUKRASIAN_PROGNOSIS.id,
 	]
 
-	override trackedHealCategories = [
+	protected override trackedHealCategories: TrackedOverhealOpts[] = [
 		{
 			name: <Trans id="sch.overheal.gcd.name">GCD Heals (includes <DataLink showIcon={false} action="EMERGENCY_TACTICS" />)</Trans>,
 			trackedHealIds: [
 				this.data.actions.SCH_PHYSICK.id,
 			],
 			bucketId: BUCKET_IDS.GCD_HEALS,
-			informational: false,
+			includeInChecklist: true,
 		},
 		{
 			name: <Trans id="sch.overheal.aetherflow.name">Aetherflow</Trans>,
@@ -42,13 +42,13 @@ export class Overheal extends CoreOverheal {
 				this.data.statuses.EXCOGITATION.id,
 			],
 			// Marking these as non-informational, since they cost Aetherflow charges that could otherwise be used on Sacred Soil or Energy Drain
-			informational: false,
+			includeInChecklist: true,
 		},
 		{
 			name: <Trans id="sch.overheal.shield-overwrites.name">Shield GCDs (overwritten shield)</Trans>,
 			// No trackedHealIds added by default, all events added here will be due to bucket overrides
 			bucketId: BUCKET_IDS.SHIELD_OVERWRITES,
-			informational: false,
+			includeInChecklist: true,
 		},
 		{
 			name: <Trans id="sch.overheal.shield-application.name">Shield GCDs (fresh application)</Trans>,

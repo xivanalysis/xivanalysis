@@ -1,9 +1,9 @@
 import {Trans} from '@lingui/react'
-import {Overheal as CoreOverheal} from 'parser/core/modules/Overheal'
+import {Overheal as CoreOverheal, TrackedOverhealOpts} from 'parser/core/modules/Overheal'
 import React from 'react'
 
 export class Overheal extends CoreOverheal {
-	override trackedHealCategories = [
+	protected override trackedHealCategories: TrackedOverhealOpts[] = [
 		{
 			name: <Trans id="ast.overheal.gcd.name">GCD Heals (including Healing over Time)</Trans>,
 			trackedHealIds: [
@@ -20,7 +20,7 @@ export class Overheal extends CoreOverheal {
 				this.data.statuses.MEDICA_III.id,
 				this.data.actions.CURE_III.id,
 			],
-			informational: false,
+			includeInChecklist: true,
 		},
 		{
 			name: <Trans id="whm.overheal.abilities-direct.name">Direct healing abilities</Trans>,
@@ -28,7 +28,7 @@ export class Overheal extends CoreOverheal {
 				this.data.actions.TETRAGRAMMATON.id,
 			],
 			// Marking this as non-informational because it has no secondary purpose, and does have a charge system allowing flexibility of use
-			informational: false,
+			includeInChecklist: true,
 		},
 		{
 			name: <Trans id="whm.overheal.afflatus.name">Afflatus Healing</Trans>,

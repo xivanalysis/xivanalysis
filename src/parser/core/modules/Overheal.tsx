@@ -16,12 +16,19 @@ import {isDefined} from 'utilities'
 import {Actors} from './Actors'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 
-interface TrackedOverhealOpts {
+export interface TrackedOverhealOpts {
 	bucketId?: number
 	name: JSX.Element | string;
 	trackedHealIds?: Array<Action['id'] | Status['id']>;
+	/**
+	 * Pass true to fully exclude this bucket from checklist and display
+	 */
 	ignore?: boolean
-	informational?: boolean
+	/**
+	 * Pass true to include this bucket in the checklist requirements
+	 * Also defaults the bucket as expanded/active in the accordion output
+	 */
+	includeInChecklist?: boolean
 	debugName?: string
 }
 
@@ -33,7 +40,7 @@ const CHECKLIST_TARGET = 65
 export class TrackedOverheal {
 	bucketId: number = -1
 	ignore: boolean
-	informational: boolean
+	includeInChecklist: boolean
 	name: JSX.Element | string
 	protected trackedHealIds: Array<Action['id'] | Status['id']>
 	heal: number = 0
@@ -46,7 +53,7 @@ export class TrackedOverheal {
 		this.trackedHealIds = opts.trackedHealIds || []
 		this.bucketId = opts.bucketId || -1
 		this.ignore = opts.ignore || false
-		this.informational = opts.informational ?? true
+		this.includeInChecklist = opts.includeInChecklist || false
 		this.internalDebugName = opts.debugName
 	}
 
@@ -199,7 +206,7 @@ export class Overheal extends Analyser {
 	override initialise() {
 		this.uncategorized = new TrackedOverheal({
 			name: this.uncategorizedOverheals,
-			informational: false,
+			includeInChecklist: true,
 		})
 		for (const healCategoryOpts of this.trackedHealCategories) {
 			this.trackedOverheals.push(new TrackedOverheal(healCategoryOpts))
@@ -290,7 +297,7 @@ export class Overheal extends Analyser {
 		let overhealtotal = this.uncategorized.overheal
 
 		this.trackedOverheals.forEach(x => {
-			if (!(x.ignore || x.informational) && x.hasData) {
+			if ((!x.ignore || x.includeInChecklist) && x.hasData) {
 				healtotal += x.heal
 				overhealtotal += x.overheal
 			}
@@ -300,6 +307,8 @@ export class Overheal extends Analyser {
 		if (this.displayChecklist) {
 			const requirements: InvertedRequirement[] = []
 
+			// Ideally, job modules will categorize all possible sources of healing
+			// Only include this in the checklist if there was actually data
 			if (this.uncategorized.hasData) {
 				requirements.push(new InvertedRequirement({
 					name: this.uncategorizedOverheals,
@@ -309,7 +318,7 @@ export class Overheal extends Analyser {
 			}
 
 			for (const trackedHeal of this.trackedOverheals) {
-				if (trackedHeal.ignore || trackedHeal.informational) { continue }
+				if (trackedHeal.ignore || !trackedHeal.includeInChecklist) { continue }
 
 				requirements.push(new InvertedRequirement({
 					name: trackedHeal.name,
@@ -374,7 +383,7 @@ export class Overheal extends Analyser {
 		if (!tableBody) { return }
 
 		return {
-			startActive: !bucket.informational,
+			startActive: bucket.includeInChecklist,
 			panel: {
 				key: bucket.bucketId,
 				title: {

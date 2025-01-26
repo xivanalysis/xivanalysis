@@ -2,7 +2,7 @@ import {Trans} from '@lingui/macro'
 import {Action} from 'data/ACTIONS'
 import {Status} from 'data/STATUSES'
 import {Events} from 'event'
-import {Overheal as CoreOverheal} from 'parser/core/modules/Overheal'
+import {Overheal as CoreOverheal, TrackedOverhealOpts} from 'parser/core/modules/Overheal'
 import React from 'react'
 
 const BUCKET_IDS = {
@@ -23,7 +23,7 @@ export class Overheal extends CoreOverheal {
 		this.data.statuses.EUKRASIAN_PROGNOSIS.id,
 	]
 
-	override trackedHealCategories = [
+	protected override trackedHealCategories: TrackedOverhealOpts[] = [
 		{
 			name: <Trans id="sge.overheal.direct.name">GCD Heals</Trans>,
 			trackedHealIds: [
@@ -34,7 +34,7 @@ export class Overheal extends CoreOverheal {
 				this.data.actions.PROGNOSIS.id,
 			],
 			bucketId: BUCKET_IDS.GCD_HEALS,
-			informational: false,
+			includeInChecklist: true,
 		},
 		{
 			name: <Trans id="sge.overheal.abilities-direct.name">Direct healing abilities</Trans>,
@@ -42,13 +42,13 @@ export class Overheal extends CoreOverheal {
 				this.data.actions.PEPSIS.id,
 			],
 			// Marking this as non-informational because it has no secondary purpose
-			informational: false,
+			includeInChecklist: true,
 		},
 		{
 			name: <Trans id="sge.overheal.shield-overwrites.name">Shield GCDs (overwritten shield)</Trans>,
 			// No trackedHealIds added by default, all events added here will be due to bucket overrides
 			bucketId: BUCKET_IDS.SHIELD_OVERWRITES,
-			informational: false,
+			includeInChecklist: true,
 		},
 		{
 			name: <Trans id="sge.overheal.shield-application.name">Shield GCDs (fresh application)</Trans>,
