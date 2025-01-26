@@ -418,13 +418,13 @@ export class Overheal extends Analyser {
 				<ActionLink {...getDataBy(this.data.actions, 'id', causeId)} /> :
 				<StatusLink {...getDataBy(this.data.statuses, 'id', causeId)} />
 			const overhealPercent = 100 * causeData.overheal / causeData.heal
+			const healingPerSecond = causeData.heal / this.parser.pull.duration * 1000
 
 			return <Table.Row key={causeId}>
 				<Table.Cell>{causeLink}</Table.Cell>
-				<Table.Cell>{causeData.count.toLocaleString()}</Table.Cell>
-				<Table.Cell>{causeData.heal.toLocaleString()}</Table.Cell>
-				<Table.Cell>{causeData.overheal.toLocaleString()}</Table.Cell>
-				<Table.Cell>{overhealPercent.toFixed(2)}%</Table.Cell>
+				<Table.Cell textAlign="right">{causeData.count.toLocaleString()}</Table.Cell>
+				<Table.Cell textAlign="right">{healingPerSecond.toFixed(2)}</Table.Cell>
+				<Table.Cell textAlign="right">{overhealPercent.toFixed(2)}%</Table.Cell>
 			</Table.Row>
 		})
 
@@ -441,10 +441,9 @@ export class Overheal extends Analyser {
 					content: <Table compact unstackable celled>
 						<Table.Header>
 							<Table.HeaderCell><Trans id="core.overheal.table.source.header">Heal Source</Trans></Table.HeaderCell>
-							<Table.HeaderCell><Trans id="core.overheal.table.count.header">Count</Trans></Table.HeaderCell>
-							<Table.HeaderCell><Trans id="core.overheal.table.total-healing.header">Total Healing</Trans></Table.HeaderCell>
-							<Table.HeaderCell><Trans id="core.overheal.table.overheal-amount.header">Overheal Amount</Trans></Table.HeaderCell>
-							<Table.HeaderCell><Trans id="core.overheal.table.overheal-percent.header">Overheal %</Trans></Table.HeaderCell>
+							<Table.HeaderCell textAlign="right"><Trans id="core.overheal.table.count.header">Count</Trans></Table.HeaderCell>
+							<Table.HeaderCell textAlign="right"><Trans id="core.overheal.table.hps.header">HPS</Trans></Table.HeaderCell>
+							<Table.HeaderCell textAlign="right"><Trans id="core.overheal.table.overheal-percent.header">Overheal %</Trans></Table.HeaderCell>
 						</Table.Header>
 						<Table.Body>{tableBody}</Table.Body>
 					</Table>,
