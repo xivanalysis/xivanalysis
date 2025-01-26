@@ -386,12 +386,11 @@ export class Overheal extends Analyser {
 			<Message icon>
 				<Icon name="info" />
 				<Message.Content>
-					<Trans id="core.overheal.suggestion.content">
-						Avoid healing your party for more than is needed. Cut back on unnecessary heals and coordinate with your co-healer to plan resources efficiently.
+					<Trans id="core.overheal.header.content">
+						The below tables will show you which actions overhealed. Focus on reducing the overheal percentage of the categories included in the checklist first.
 					</Trans>
-					<br/><br/>
+					<br/>
 					<Trans id="core.overheal.header.sub-content">
-						The below tables will show you which actions overhealed. Focus on reducing the overheal percentage of the categories included in the checklist first.<br/>
 						The other categories typically have secondary purposes, or may overheal as an incidental part of a complete defensive plan.
 					</Trans>
 				</Message.Content>
