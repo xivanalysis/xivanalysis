@@ -25,7 +25,7 @@ export class Overheal extends CoreOverheal {
 
 	protected override trackedHealCategories: TrackedOverhealOpts[] = [
 		{
-			name: <Trans id="sge.overheal.direct.name">GCD Heals</Trans>,
+			name: this.defaultCategoryNames.DIRECT_GCD_HEALS,
 			trackedHealIds: [
 				// Single-Target
 				this.data.actions.DIAGNOSIS.id,
@@ -37,25 +37,25 @@ export class Overheal extends CoreOverheal {
 			includeInChecklist: true,
 		},
 		{
-			name: <Trans id="sge.overheal.abilities-direct.name">Direct healing abilities</Trans>,
+			name: this.defaultCategoryNames.DIRECT_HEALING_ABILITIES,
 			trackedHealIds: [
 				this.data.actions.PEPSIS.id,
 			],
-			// Marking this as non-informational because it has no secondary purpose
+			// Including this in the checklist because it has no secondary purpose
 			includeInChecklist: true,
 		},
 		{
-			name: <Trans id="sge.overheal.shield-overwrites.name">Shield GCDs (overwritten shield)</Trans>,
+			name: this.defaultCategoryNames.SHIELD_GCD_OVERWRITE,
 			// No trackedHealIds added by default, all events added here will be due to bucket overrides
 			bucketId: BUCKET_IDS.SHIELD_OVERWRITES,
 			includeInChecklist: true,
 		},
 		{
-			name: <Trans id="sge.overheal.shield-application.name">Shield GCDs (fresh application)</Trans>,
+			name: this.defaultCategoryNames.SHIELD_GCD_APPLICATION,
 			trackedHealIds: this.shieldGCDIds,
 		},
 		{
-			name: <Trans id="sge.overheal.addersgall.name">Addersgall abilities</Trans>,
+			name: <Trans id="sge.overheal.addersgall.name">Addersgall Abilities</Trans>,
 			trackedHealIds: [
 				this.data.statuses.KERAKEIA.id,
 				this.data.actions.DRUOCHOLE.id,
@@ -71,7 +71,7 @@ export class Overheal extends CoreOverheal {
 			],
 		},
 		{
-			name: <Trans id="sge.overheal.other.name">Other abilities</Trans>,
+			name: this.defaultCategoryNames.OTHER_HEALING_ABILITIES,
 			trackedHealIds: [
 				this.data.actions.HOLOS.id,
 				this.data.statuses.PHYSIS.id,

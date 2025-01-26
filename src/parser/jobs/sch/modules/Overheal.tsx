@@ -27,7 +27,7 @@ export class Overheal extends CoreOverheal {
 
 	protected override trackedHealCategories: TrackedOverhealOpts[] = [
 		{
-			name: <Trans id="sch.overheal.gcd.name">GCD Heals (includes <DataLink showIcon={false} action="EMERGENCY_TACTICS" />)</Trans>,
+			name: <Trans id="sch.overheal.gcd.name">GCD Heals (including <DataLink showIcon={false} action="EMERGENCY_TACTICS" />)</Trans>,
 			trackedHealIds: [
 				this.data.actions.SCH_PHYSICK.id,
 			],
@@ -41,17 +41,17 @@ export class Overheal extends CoreOverheal {
 				this.data.actions.INDOMITABILITY.id,
 				this.data.statuses.EXCOGITATION.id,
 			],
-			// Marking these as non-informational, since they cost Aetherflow charges that could otherwise be used on Sacred Soil or Energy Drain
+			// Including these in the checklist since they cost Aetherflow charges that could otherwise be used on Sacred Soil or Energy Drain
 			includeInChecklist: true,
 		},
 		{
-			name: <Trans id="sch.overheal.shield-overwrites.name">Shield GCDs (overwritten shield)</Trans>,
+			name: this.defaultCategoryNames.SHIELD_GCD_OVERWRITE,
 			// No trackedHealIds added by default, all events added here will be due to bucket overrides
 			bucketId: BUCKET_IDS.SHIELD_OVERWRITES,
 			includeInChecklist: true,
 		},
 		{
-			name: <Trans id="sch.overheal.shield-application.name">Shield GCDs (fresh application)</Trans>,
+			name: this.defaultCategoryNames.SHIELD_GCD_APPLICATION,
 			trackedHealIds: this.shieldGCDIds,
 		},
 		{

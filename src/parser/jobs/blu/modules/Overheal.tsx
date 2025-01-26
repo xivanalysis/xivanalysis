@@ -7,7 +7,7 @@ import React from 'react'
 export class BLUOverheal extends Overheal {
 	protected override trackedHealCategories:TrackedOverhealOpts[] = [
 		{
-			name: <Trans id="blu.overheal.hot.name">Healing Over Time</Trans>,
+			name: this.defaultCategoryNames.HEALING_OVER_TIME,
 			trackedHealIds: [
 				this.data.statuses.ANGELS_SNACK.id,
 				this.data.actions.ANGELS_SNACK.id,

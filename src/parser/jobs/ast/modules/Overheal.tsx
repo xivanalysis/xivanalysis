@@ -19,7 +19,7 @@ export class Overheal extends CoreOverheal {
 
 	protected override trackedHealCategories: TrackedOverhealOpts[] = [
 		{
-			name: <Trans id="ast.overheal.gcd.name">GCD Heals (including Healing over Time)</Trans>,
+			name: this.defaultCategoryNames.DIRECT_AND_REGEN_GCD_HEALS,
 			trackedHealIds: [
 				// Single-Target
 				this.data.actions.BENEFIC.id,
@@ -36,11 +36,11 @@ export class Overheal extends CoreOverheal {
 			includeInChecklist: true,
 		},
 		{
-			name: <Trans id="ast.overheal.abilities-direct.name">Direct healing abilities</Trans>,
+			name: this.defaultCategoryNames.DIRECT_HEALING_ABILITIES,
 			trackedHealIds: [
 				this.data.actions.ESSENTIAL_DIGNITY.id,
 			],
-			// Marking this as non-informational because it has no secondary purpose, and does have a charge system allowing flexibility of use
+			// Including this in the checklist because it has no secondary purpose, and does have a charge system allowing flexibility of use
 			includeInChecklist: true,
 		},
 		{
@@ -56,15 +56,6 @@ export class Overheal extends CoreOverheal {
 			],
 		},
 		{
-			name: <Trans id="ast.overheal.abilities-other.name">Other healing abilities</Trans>,
-			trackedHealIds: [
-				this.data.actions.CELESTIAL_INTERSECTION.id,
-				this.data.statuses.WHEEL_OF_FORTUNE.id,
-				this.data.actions.CELESTIAL_OPPOSITION.id,
-				this.data.statuses.OPPOSITION.id,
-			],
-		},
-		{
 			// These heals are ones that are planned a bit of time in advance, but not self-activated.
 			// i.e. is the astrologian planning well in advance?
 			// an overheal in this sense would imply that they don't trust the heals to top off the party.
@@ -77,6 +68,15 @@ export class Overheal extends CoreOverheal {
 				this.data.statuses.HOROSCOPE_HELIOS.id,
 				this.data.statuses.EXALTATION.id,
 				this.data.statuses.MACROCOSMOS.id,
+			],
+		},
+		{
+			name: this.defaultCategoryNames.OTHER_HEALING_ABILITIES,
+			trackedHealIds: [
+				this.data.actions.CELESTIAL_INTERSECTION.id,
+				this.data.statuses.WHEEL_OF_FORTUNE.id,
+				this.data.actions.CELESTIAL_OPPOSITION.id,
+				this.data.statuses.OPPOSITION.id,
 			],
 		},
 	]

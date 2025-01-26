@@ -11,7 +11,7 @@ import {dependency} from 'parser/core/Injectable'
 import Checklist, {Requirement, Rule} from 'parser/core/modules/Checklist'
 import {Data} from 'parser/core/modules/Data'
 import React, {Fragment} from 'react'
-import {Accordion, Message, Table} from 'semantic-ui-react'
+import {Accordion, Icon, Message, Table} from 'semantic-ui-react'
 import {isDefined} from 'utilities'
 import {Actors} from './Actors'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
@@ -37,6 +37,13 @@ const REGENERATION_ID: number = 1302
 // Target based on the old tiered success target of 35
 const CHECKLIST_TARGET = 65
 
+interface OverhealCauseData {
+	heal: number,
+	overheal: number,
+	type?: Cause['type'],
+	count: number,
+}
+
 export class TrackedOverheal {
 	bucketId: number = -1
 	ignore: boolean
@@ -46,7 +53,7 @@ export class TrackedOverheal {
 	heal: number = 0
 	overheal: number = 0
 	internalDebugName: string | undefined
-	causes: Map<number, {heal: number, overheal: number, type: Cause['type']}> = new Map();
+	causes: Map<number, OverhealCauseData> = new Map();
 
 	constructor(opts: TrackedOverhealOpts) {
 		this.name = opts.name
@@ -55,6 +62,13 @@ export class TrackedOverheal {
 		this.ignore = opts.ignore || false
 		this.includeInChecklist = opts.includeInChecklist || false
 		this.internalDebugName = opts.debugName
+
+		// Initialize the causes map to preserve the ordering specified by the job
+		this.trackedHealIds.forEach((healId) => this.causes.set(healId, {
+			heal: 0,
+			overheal: 0,
+			count: 0,
+		}))
 	}
 
 	/**
@@ -123,11 +137,20 @@ export class TrackedOverheal {
 
 		const guid = event.cause.type === 'action' ? event.cause.action : event.cause.status
 		const cause = this.causes.get(guid)
+
+		// If this cause ID is missing, it's because the heal was overridden into this bucket. Add the data now
 		if (!cause) {
-			this.causes.set(guid, {heal: eventHeal, overheal: eventOverheal, type: event.cause.type})
+			this.causes.set(guid, {
+				heal: eventHeal,
+				overheal: eventOverheal,
+				type: event.cause.type,
+				count: 1,
+			})
 		} else {
 			cause.heal += eventHeal
 			cause.overheal += eventOverheal
+			cause.count++
+			cause.type = event.cause.type
 		}
 
 		this.heal += eventHeal
@@ -150,7 +173,24 @@ export class Overheal extends Analyser {
 	private uncategorizedOverheals: JSX.Element = <Trans id="core.overheal.uncategorized.name">Uncategorized</Trans>
 
 	/**
-	 * Implementing modules MAY override this to provide a list of heal 'categories' to track for the checklist
+	 * A selection of category names we expect to be used across multiple jobs and would like to have consistent copy/translations for
+	 */
+	protected defaultCategoryNames = {
+		// Yes this is from SGE since I didn't want to force re-translation after this update
+		DIRECT_GCD_HEALS: <Trans id="sge.overheal.direct.name">GCD Heals</Trans>,
+		DIRECT_AND_REGEN_GCD_HEALS: <Trans id="core.overheal.gcd-hot.name">GCD Heals (including Healing over Time)</Trans>,
+		DIRECT_HEALING_ABILITIES: <Trans id="core.overheal.abilities-direct.name">Direct Healing Abilities</Trans>,
+		// Similarly snitched from AST
+		HEALING_OVER_TIME: <Trans id="ast.overheal.hot.name">Healing over Time</Trans>,
+		OTHER_HEALING_ABILITIES: <Trans id="core.overheal.abilities-other.name">Other Healing Abilities</Trans>,
+		SHIELD_GCD_OVERWRITE: <Trans id="core.overheal.shield-overwrites.name">Shield GCDs (overwritten shield)</Trans>,
+		SHIELD_GCD_APPLICATION: <Trans id="sge.overheal.shield-application.name">Shield GCDs (fresh application)</Trans>,
+	}
+
+	/**
+	 * Implementing modules MAY override this to provide a list of heal 'categories' to track for the checklist.
+	 * It's recommended to list any categories to be included in the checklist first,
+	 * so they also display first in the module output.
 	 */
 	protected trackedHealCategories: TrackedOverhealOpts[] = []
 
@@ -288,10 +328,6 @@ export class Overheal extends Analyser {
 		this.onHeal(event, true)
 	}
 
-	private percentageOf(category: number, total: number): number {
-		return (100 * category) / total
-	}
-
 	private onComplete() {
 		let healtotal = this.uncategorized.heal
 		let overhealtotal = this.uncategorized.overheal
@@ -347,14 +383,24 @@ export class Overheal extends Analyser {
 
 		const rows = [this.uncategorized, ...this.trackedOverheals].map((bucket) => this.buildPanel(bucket)).filter(isDefined)
 		return <Fragment>
-			<Message>
-				this is a message
+			<Message icon>
+				<Icon name="info" />
+				<Message.Content>
+					<Trans id="core.overheal.suggestion.content">
+						Avoid healing your party for more than is needed. Cut back on unnecessary heals and coordinate with your co-healer to plan resources efficiently.
+					</Trans>
+					<br/><br/>
+					<Trans id="core.overheal.header.sub-content">
+						The below tables will show you which actions overhealed. Focus on reducing the overheal percentage of the categories included in the checklist first.<br/>
+						The other categories typically have secondary purposes, or may overheal as an incidental part of a complete defensive plan.
+					</Trans>
+				</Message.Content>
 			</Message>
 			<Accordion
 				exclusive={false}
 				styled
 				fluid
-				defaultActiveIndex={rows.map((row, idx) => row.startActive ? idx : -1).filter(i => i >= 0)}
+				defaultActiveIndex={rows.map((row, idx) => row.startActive ? idx : undefined).filter(isDefined)}
 				panels={rows.map(row => row.panel)}
 			/>
 		</Fragment>
@@ -366,6 +412,7 @@ export class Overheal extends Analyser {
 		const tableBody = (Array.from(bucket.causes.keys())).map((causeId) => {
 			const causeData = bucket.causes.get(causeId)
 			if (!causeData) { return }
+			if (!causeData.type) { return }
 
 			const causeLink = causeData.type === 'action' ?
 				<ActionLink {...getDataBy(this.data.actions, 'id', causeId)} /> :
@@ -374,6 +421,7 @@ export class Overheal extends Analyser {
 
 			return <Table.Row key={causeId}>
 				<Table.Cell>{causeLink}</Table.Cell>
+				<Table.Cell>{causeData.count.toLocaleString()}</Table.Cell>
 				<Table.Cell>{causeData.heal.toLocaleString()}</Table.Cell>
 				<Table.Cell>{causeData.overheal.toLocaleString()}</Table.Cell>
 				<Table.Cell>{overhealPercent.toFixed(2)}%</Table.Cell>
@@ -392,10 +440,11 @@ export class Overheal extends Analyser {
 				content: {
 					content: <Table compact unstackable celled>
 						<Table.Header>
-							<Table.HeaderCell>Heal Source</Table.HeaderCell>
-							<Table.HeaderCell>Total Healing</Table.HeaderCell>
-							<Table.HeaderCell>Overheal Amount</Table.HeaderCell>
-							<Table.HeaderCell>Overheal %</Table.HeaderCell>
+							<Table.HeaderCell><Trans id="core.overheal.table.source.header">Heal Source</Trans></Table.HeaderCell>
+							<Table.HeaderCell><Trans id="core.overheal.table.count.header">Count</Trans></Table.HeaderCell>
+							<Table.HeaderCell><Trans id="core.overheal.table.total-healing.header">Total Healing</Trans></Table.HeaderCell>
+							<Table.HeaderCell><Trans id="core.overheal.table.overheal-amount.header">Overheal Amount</Trans></Table.HeaderCell>
+							<Table.HeaderCell><Trans id="core.overheal.table.overheal-percent.header">Overheal %</Trans></Table.HeaderCell>
 						</Table.Header>
 						<Table.Body>{tableBody}</Table.Body>
 					</Table>,

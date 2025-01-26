@@ -5,7 +5,7 @@ import React from 'react'
 export class Overheal extends CoreOverheal {
 	protected override trackedHealCategories: TrackedOverhealOpts[] = [
 		{
-			name: <Trans id="ast.overheal.gcd.name">GCD Heals (including Healing over Time)</Trans>,
+			name: this.defaultCategoryNames.DIRECT_AND_REGEN_GCD_HEALS,
 			trackedHealIds: [
 				// Single-Target
 				this.data.actions.CURE.id,
@@ -23,11 +23,11 @@ export class Overheal extends CoreOverheal {
 			includeInChecklist: true,
 		},
 		{
-			name: <Trans id="whm.overheal.abilities-direct.name">Direct healing abilities</Trans>,
+			name: this.defaultCategoryNames.DIRECT_HEALING_ABILITIES,
 			trackedHealIds: [
 				this.data.actions.TETRAGRAMMATON.id,
 			],
-			// Marking this as non-informational because it has no secondary purpose, and does have a charge system allowing flexibility of use
+			// Including this in the checklist because it has no secondary purpose, and does have a charge system allowing flexibility of use
 			includeInChecklist: true,
 		},
 		{
@@ -38,7 +38,7 @@ export class Overheal extends CoreOverheal {
 			],
 		},
 		{
-			name: <Trans id="whm.overheal.hot.name">Healing Over Time</Trans>,
+			name: this.defaultCategoryNames.HEALING_OVER_TIME,
 			trackedHealIds: [
 				this.data.actions.ASYLUM.id,
 				this.data.statuses.ASYLUM.id,
@@ -54,7 +54,7 @@ export class Overheal extends CoreOverheal {
 			],
 		},
 		{
-			name: <Trans id="whm.overheal.abilities-other.name">Other healing abilities</Trans>,
+			name: this.defaultCategoryNames.OTHER_HEALING_ABILITIES,
 			trackedHealIds: [
 				this.data.actions.ASSIZE.id,
 				this.data.actions.BENEDICTION.id,
