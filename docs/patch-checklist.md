@@ -11,7 +11,7 @@ Some patches will require more work and changes than others - to facilitate, the
 
 ### Run data generation scripts
 
-Some of the data used in XIVA is automatically generated from game files or sources such as XIVAPI. Run `yarn generate` to re-run the scripts and update any such data.
+Some of the data used in XIVA is automatically generated from game files or sources such as XIVAPI. Run `pnpm run generate` to re-run the scripts and update any such data.
 
 ### Verify invulnerability windows for new content
 
