@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 echo "Checking if message extract is up to date...";
-yarn extract;
+pnpm run extract;
 
 if [[ $(git diff --stat locale) != '' ]]; then
 	echo "Extract diff found.";
@@ -9,7 +9,7 @@ if [[ $(git diff --stat locale) != '' ]]; then
 	<testsuites>
 		<testsuite package=\"xiva.extract\" time=\"0\" tests=\"1\" errors=\"1\" name=\"i18n message extraction\" >
 			<testcase time=\"0\" name=\"xiva.extract.failure\">
-				<failure message=\"Changes to locale files detected. Please run \`yarn extract\` and commit the changes to ensure translations remain in sync.\"><![CDATA[$DIFF]]></failure>
+				<failure message=\"Changes to locale files detected. Please run \`pnpm run extract\` and commit the changes to ensure translations remain in sync.\"><![CDATA[$DIFF]]></failure>
 			</testcase>
 		</testsuite>
 	</testsuites>

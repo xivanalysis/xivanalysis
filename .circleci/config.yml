@@ -11,12 +11,12 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          key: dependency-cache-{{ checksum "yarn.lock" }}
+          key: dependency-cache-{{ checksum "pnpm-lock.yaml" }}
       - run:
           name: Install dependencies
-          command: yarn install
+          command: pnpm install
       - save_cache:
-          key: dependency-cache-{{ checksum "yarn.lock" }}
+          key: dependency-cache-{{ checksum "pnpm-lock.yaml" }}
           paths:
             - node_modules/
       - persist_to_workspace:
@@ -31,11 +31,11 @@ jobs:
           at: /tmp
       - run:
           name: Lint
-          command: yarn lint --format junit -o reports/eslint/results.xml
+          command: pnpm run lint --format junit -o reports/eslint/results.xml
       # TODO: Move this into its own step if it starts chewing time.
       - run:
           name: Check types
-          command: yarn types
+          command: pnpm run types
       - run:
           name: Ensure extract
           command: |
@@ -51,7 +51,7 @@ jobs:
           at: /tmp
       - run:
           name: Tests
-          command: yarn test --ci --reporters=jest-junit
+          command: pnpm run test --ci --reporters=jest-junit
           environment:
             JEST_JUNIT_OUTPUT_DIR: reports/jest
             JEST_JUNIT_OUTPUT_NAME: results.xml
@@ -66,11 +66,11 @@ jobs:
       - run:
           name: Run build
           command: |
-            yarn extract
+            pnpm run extract
             export REACT_APP_VERSION=$CIRCLE_BUILD_NUM
             export REACT_APP_GIT_COMMIT=$(git rev-parse --short HEAD)
             export REACT_APP_GIT_BRANCH=$CIRCLE_BRANCH
-            CI=false NODE_ENV=production yarn build
+            CI=false NODE_ENV=production pnpm run build
       - persist_to_workspace:
           root: /tmp
           paths:

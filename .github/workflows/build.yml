@@ -23,17 +23,17 @@ jobs:
     # Build
     - name: build
       run: |
-        yarn extract
+        pnpm run extract
         export REACT_APP_VERSION=$GITHUB_RUN_NUMBER
         export REACT_APP_GIT_COMMIT=$(git rev-parse --short HEAD)
         export REACT_APP_GIT_BRANCH=$GITHUB_REF_NAME
-        CI=false NODE_ENV=production yarn build
+        CI=false NODE_ENV=production pnpm run build
     - uses: actions/upload-artifact@v4
       with:
         name: dist-client
         path: build
         retention-days: 7
-  
+
   # This is seperated out such that it can be re-run seperately to the rest of the build.
   deploy:
     runs-on: ubuntu-latest
