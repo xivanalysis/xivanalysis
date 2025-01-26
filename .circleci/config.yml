@@ -13,12 +13,17 @@ jobs:
       - restore_cache:
           key: dependency-cache-{{ checksum "pnpm-lock.yaml" }}
       - run:
+          name: Install pnpm
+          command: |
+            corepack enable
+            pnpm config set store-dir .pnpm-store
+      - run:
           name: Install dependencies
-          command: pnpm install
+          command: pnpm install --frozen-lockfile
       - save_cache:
           key: dependency-cache-{{ checksum "pnpm-lock.yaml" }}
           paths:
-            - node_modules/
+            - .pnpm-store
       - persist_to_workspace:
           root: /tmp
           paths:
