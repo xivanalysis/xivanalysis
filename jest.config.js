@@ -33,7 +33,7 @@ module.exports = {
 
 	// An array of regexp pattern strings that are matched against all source file paths, matched files will skip transformation
 	transformIgnorePatterns: [
-		'node_modules/(?!ky|@compiled|@babel/runtime-corejs3)',
+		'node_modules/(?!.pnpm|ky|@compiled|@babel/runtime-corejs3)',
 		'\\.pnp\\.[^\\/]+$',
 	],
 }
