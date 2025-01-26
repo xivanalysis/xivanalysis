@@ -3,7 +3,7 @@ import {DataLink} from 'components/ui/DbLink'
 import {Action} from 'data/ACTIONS'
 import {Status} from 'data/STATUSES'
 import {Events} from 'event'
-import {Overheal as CoreOverheal, SuggestedColors} from 'parser/core/modules/Overheal'
+import {Overheal as CoreOverheal} from 'parser/core/modules/Overheal'
 import React from 'react'
 
 const BUCKET_IDS = {
@@ -12,8 +12,6 @@ const BUCKET_IDS = {
 }
 
 export class Overheal extends CoreOverheal {
-	override displayPieChart = true
-
 	private readonly shieldGCDIds: Array<Action['id']> = [
 		this.data.actions.SUCCOR.id,
 		this.data.actions.CONCITATION.id,
@@ -58,14 +56,12 @@ export class Overheal extends CoreOverheal {
 		},
 		{
 			name: <Trans id="sch.overheal.hot.name">Sacred Soil</Trans>,
-			color: SuggestedColors[1],
 			trackedHealIds: [
 				this.data.statuses.SACRED_SOIL.id,
 			],
 		},
 		{
 			name: <Trans id="sch.overheal.fairy-and-hots.name">Fairy and HoTs</Trans>,
-			color: SuggestedColors[3],
 			trackedHealIds: [
 				this.data.actions.FEY_BLESSING.id,
 				this.data.actions.CONSOLATION.id,

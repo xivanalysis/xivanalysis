@@ -2,14 +2,13 @@ import {Trans} from '@lingui/react'
 import {DataLink} from 'components/ui/DbLink'
 import {Action} from 'data/ACTIONS'
 import {Events} from 'event'
-import {Overheal as CoreOverheal, SuggestedColors} from 'parser/core/modules/Overheal'
+import {Overheal as CoreOverheal} from 'parser/core/modules/Overheal'
 import React from 'react'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 
 const NEUTRAL_SECT_APPLICATION_BUCKET_ID = 1
 
 export class Overheal extends CoreOverheal {
-	protected override displayPieChart = true
 	protected override checklistDisplayOrder = DISPLAY_ORDER.OVERHEAL_CHECKLIST
 
 	private readonly shieldGCDIds: Array<Action['id']> = [
@@ -38,7 +37,6 @@ export class Overheal extends CoreOverheal {
 		},
 		{
 			name: <Trans id="ast.overheal.abilities-direct.name">Direct healing abilities</Trans>,
-			color: SuggestedColors[1],
 			trackedHealIds: [
 				this.data.actions.ESSENTIAL_DIGNITY.id,
 			],
@@ -52,7 +50,6 @@ export class Overheal extends CoreOverheal {
 		},
 		{
 			name: <Trans id="ast.overheal.cards.name">Cards</Trans>,
-			color: SuggestedColors[1],
 			trackedHealIds: [
 				this.data.actions.LADY_OF_CROWNS.id,
 				this.data.statuses.THE_EWER.id,
@@ -60,7 +57,6 @@ export class Overheal extends CoreOverheal {
 		},
 		{
 			name: <Trans id="ast.overheal.abilities-other.name">Other healing abilities</Trans>,
-			color: SuggestedColors[1],
 			trackedHealIds: [
 				this.data.actions.CELESTIAL_INTERSECTION.id,
 				this.data.statuses.WHEEL_OF_FORTUNE.id,
@@ -73,7 +69,6 @@ export class Overheal extends CoreOverheal {
 			// i.e. is the astrologian planning well in advance?
 			// an overheal in this sense would imply that they don't trust the heals to top off the party.
 			name: <Trans id="ast.overheal.delayedheals.name">Delayed Heals</Trans>,
-			color: SuggestedColors[3],
 			trackedHealIds: [
 				this.data.actions.STELLAR_BURST.id,
 				this.data.actions.STELLAR_EXPLOSION.id,

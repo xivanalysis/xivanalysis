@@ -2,7 +2,7 @@ import {Trans} from '@lingui/macro'
 import {Action} from 'data/ACTIONS'
 import {Status} from 'data/STATUSES'
 import {Events} from 'event'
-import {Overheal as CoreOverheal, SuggestedColors} from 'parser/core/modules/Overheal'
+import {Overheal as CoreOverheal} from 'parser/core/modules/Overheal'
 import React from 'react'
 
 const BUCKET_IDS = {
@@ -11,8 +11,6 @@ const BUCKET_IDS = {
 }
 
 export class Overheal extends CoreOverheal {
-	override displayPieChart = true
-
 	private readonly shieldGCDIds: Array<Action['id']> = [
 		this.data.actions.EUKRASIAN_DIAGNOSIS.id,
 		this.data.actions.EUKRASIAN_PROGNOSIS.id,
@@ -67,7 +65,6 @@ export class Overheal extends CoreOverheal {
 		},
 		{
 			name: <Trans id="sge.overheal.haima.name">Haima &amp; Panhaima Expiration</Trans>,
-			color: SuggestedColors[3],
 			trackedHealIds: [
 				this.data.statuses.HAIMATINON.id,
 				this.data.statuses.PANHAIMATINON.id,

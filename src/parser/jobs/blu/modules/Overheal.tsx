@@ -1,16 +1,13 @@
 import {Trans} from '@lingui/react'
 import {Event, Events} from 'event'
 import {filter} from 'parser/core/filter'
-import {Overheal, SuggestedColors} from 'parser/core/modules/Overheal'
+import {Overheal} from 'parser/core/modules/Overheal'
 import React from 'react'
 
 export class BLUOverheal extends Overheal {
-	override displayPieChart = true
-
 	override trackedHealCategories = [
 		{
 			name: <Trans id="blu.overheal.hot.name">Healing Over Time</Trans>,
-			color: SuggestedColors[1], // 0 is used for "Direct"
 			trackedHealIds: [
 				this.data.statuses.ANGELS_SNACK.id,
 				this.data.actions.ANGELS_SNACK.id,
@@ -19,7 +16,6 @@ export class BLUOverheal extends Overheal {
 		},
 		{
 			name: <Trans id="blu.overheal.aoe.name">AoE</Trans>,
-			color: SuggestedColors[2],
 			trackedHealIds: [
 				this.data.actions.STOTRAM_HEAL.id,
 				this.data.actions.EXUVIATION.id,
@@ -28,7 +24,6 @@ export class BLUOverheal extends Overheal {
 		},
 		{
 			name: <Trans id="blu.overheal.white_wind.name">White Wind</Trans>,
-			color: SuggestedColors[3],
 			trackedHealIds: [
 				this.data.actions.WHITE_WIND.id,
 			],
@@ -71,7 +66,7 @@ export class BLUOverheal extends Overheal {
 			return
 		}
 
-		this.displayPieChart = false
+		this.suppressOutput = true
 		this.displayChecklist = false
 	}
 }

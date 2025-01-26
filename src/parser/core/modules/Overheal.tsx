@@ -10,7 +10,6 @@ import {filter, oneOf} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
 import Checklist, {Requirement, Rule} from 'parser/core/modules/Checklist'
 import {Data} from 'parser/core/modules/Data'
-import {DataSet, PieChartStatistic, Statistics} from 'parser/core/modules/Statistics'
 import React, {Fragment} from 'react'
 import {Accordion, Message, Table} from 'semantic-ui-react'
 import {isDefined} from 'utilities'
@@ -20,7 +19,6 @@ import DISPLAY_ORDER from './DISPLAY_ORDER'
 interface TrackedOverhealOpts {
 	bucketId?: number
 	name: JSX.Element | string;
-	color?: string;
 	trackedHealIds?: Array<Action['id'] | Status['id']>;
 	ignore?: boolean
 	informational?: boolean
@@ -28,25 +26,15 @@ interface TrackedOverhealOpts {
 }
 
 const REGENERATION_ID: number = 1302
-const DEFAULT_DISPLAY_ORDER: number = 10
 
 // Target based on the old tiered success target of 35
 const CHECKLIST_TARGET = 65
-
-export const SuggestedColors: string[] = [
-	'#157f1f', // dark green
-	'#12ba45', // light green
-	'#00b5ad', // dark teal
-	'#a0eade', // light teal
-	'#b5cc18', // ~~snot green~~ why are you using this?
-]
 
 export class TrackedOverheal {
 	bucketId: number = -1
 	ignore: boolean
 	informational: boolean
 	name: JSX.Element | string
-	color: string = '#fff'
 	protected trackedHealIds: Array<Action['id'] | Status['id']>
 	heal: number = 0
 	overheal: number = 0
@@ -55,7 +43,6 @@ export class TrackedOverheal {
 
 	constructor(opts: TrackedOverhealOpts) {
 		this.name = opts.name
-		this.color = opts.color || this.color
 		this.trackedHealIds = opts.trackedHealIds || []
 		this.bucketId = opts.bucketId || -1
 		this.ignore = opts.ignore || false
@@ -149,16 +136,12 @@ export class Overheal extends Analyser {
 
 	@dependency private checklist!: Checklist
 	@dependency protected data!: Data
-	@dependency private statistics!: Statistics
 	@dependency protected actors!: Actors
 
 	// Overall tracking options
 
 	private uncategorizedOverheals: JSX.Element = <Trans id="core.overheal.uncategorized.name">Uncategorized</Trans>
-	/**
-	 * Implementing modules MAY override this to change the color for direct overheals in the pie chart
-	 */
-	protected overhealColor: string = SuggestedColors[0]
+
 	/**
 	 * Implementing modules MAY override this to provide a list of heal 'categories' to track for the checklist
 	 */
@@ -167,10 +150,9 @@ export class Overheal extends Analyser {
 	// Display options
 
 	/**
-	 * Implementing modules MAY change this to true in order to spit out a spiffy pie chart
-	 * breakdown of all their categories they're tracking
+	 * Implementing modules MAY change this to true in order to suppress the module output table
 	 */
-	protected displayPieChart: boolean = false
+	protected suppressOutput: boolean = false
 
 	/**
 	 * Implementing modules MAY wish to set this to false in order to suppress adding this as a
@@ -179,24 +161,22 @@ export class Overheal extends Analyser {
 	protected displayChecklist: boolean = true
 
 	/**
-	 * Implementing modules MAY modify this value to change the order displayed within the stats panel
-	 */
-	protected statsDisplayOrder: number = DEFAULT_DISPLAY_ORDER
-
-	/**
 	 * Allows for more flexibility in ordering of the checklist if necessary.
 	 */
 	protected checklistDisplayOrder = DisplayOrder.DEFAULT
+
 	/**
 	 * Implementing modules MAY wish to override this to set a custom checklist target.
 	 * Do remember that the numbers for checklist are inverted for overheal (e.g., failing at
 	 * 35% overheal means you need to set your target to 65)
 	 */
 	protected checklistTarget: number = CHECKLIST_TARGET
+
 	/**
 	 * Implementing modules MAY wish to override this to change the name for the checklist title
 	 */
 	protected checklistRuleName: JSX.Element = <Trans id="core.overheal.rule.name">Avoid Overheal</Trans>
+
 	/**
 	 * Implementing modules MAY wish to change this in order to reflect the overall healing requiement name
 	 */
@@ -219,7 +199,6 @@ export class Overheal extends Analyser {
 	override initialise() {
 		this.uncategorized = new TrackedOverheal({
 			name: this.uncategorizedOverheals,
-			color: this.overhealColor,
 			informational: false,
 		})
 		for (const healCategoryOpts of this.trackedHealCategories) {
@@ -318,46 +297,6 @@ export class Overheal extends Analyser {
 		})
 		const overallOverhealPercent: number = 100 * overhealtotal / healtotal
 
-		if (this.displayPieChart) {
-			const directPercentage = this.percentageOf(this.uncategorized.overheal, overhealtotal)
-			// eslint-disable-next-line @typescript-eslint/no-magic-numbers
-			const data: DataSet<React.ReactNode, 3> = [{
-				value: directPercentage,
-				color: this.uncategorized.color,
-				columns: [
-					this.uncategorized.name,
-					this.percentageOf(this.uncategorized.overheal, overhealtotal).toFixed(2) + '%',
-					this.uncategorized.percent.toFixed(2) + '%',
-				],
-			}]
-
-			for (const trackedHeal of this.trackedOverheals) {
-				if (!trackedHeal.ignore && trackedHeal.hasData) {
-					const percentage = this.percentageOf(trackedHeal.overheal, overhealtotal)
-					data.push({
-						value: percentage,
-						color: trackedHeal.color,
-						columns: [
-							trackedHeal.name,
-							percentage.toFixed(2) + '%',
-							trackedHeal.percent.toFixed(2) + '%',
-						],
-					})
-				}
-			}
-
-			this.statistics.add(new PieChartStatistic({
-				headings: [
-					<Trans id="core.overheal.header.type" key="core.overheal.header.type">Type of heal</Trans>,
-					<Trans id="core.overheal.header.percenttotal" key="core.overheal.header.percenttotal">% of total overheal</Trans>,
-					<Trans id="core.overheal.header.percenttype" key="core.overheal.header.percenttype">Overheal % per type</Trans>,
-				],
-				data: data,
-				width: 3, // chart's wide, yo
-				statsDisplayOrder: this.statsDisplayOrder,
-			}))
-		}
-
 		if (this.displayChecklist) {
 			const requirements: InvertedRequirement[] = []
 
@@ -395,7 +334,8 @@ export class Overheal extends Analyser {
 	}
 
 	override output(): React.ReactNode {
-		if (!this.displayPieChart) { return }
+		if (this.suppressOutput) { return }
+
 		const rows = [this.uncategorized, ...this.trackedOverheals].map((bucket) => this.buildPanel(bucket)).filter(isDefined)
 		return <Fragment>
 			<Message>
@@ -425,9 +365,9 @@ export class Overheal extends Analyser {
 
 			return <Table.Row key={causeId}>
 				<Table.Cell>{causeLink}</Table.Cell>
-				<Table.Cell>{causeData.heal}</Table.Cell>
-				<Table.Cell>{causeData.overheal}</Table.Cell>
-				<Table.Cell>{overhealPercent.toFixed(2)}</Table.Cell>
+				<Table.Cell>{causeData.heal.toLocaleString()}</Table.Cell>
+				<Table.Cell>{causeData.overheal.toLocaleString()}</Table.Cell>
+				<Table.Cell>{overhealPercent.toFixed(2)}%</Table.Cell>
 			</Table.Row>
 		})
 
