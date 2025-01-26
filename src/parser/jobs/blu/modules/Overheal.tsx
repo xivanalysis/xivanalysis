@@ -15,6 +15,7 @@ export class BLUOverheal extends Overheal {
 				this.data.statuses.ANGELS_SNACK.id,
 				this.data.actions.ANGELS_SNACK.id,
 			],
+			informational: false,
 		},
 		{
 			name: <Trans id="blu.overheal.aoe.name">AoE</Trans>,
@@ -23,6 +24,7 @@ export class BLUOverheal extends Overheal {
 				this.data.actions.STOTRAM_HEAL.id,
 				this.data.actions.EXUVIATION.id,
 			],
+			informational: false,
 		},
 		{
 			name: <Trans id="blu.overheal.white_wind.name">White Wind</Trans>,
@@ -30,6 +32,7 @@ export class BLUOverheal extends Overheal {
 			trackedHealIds: [
 				this.data.actions.WHITE_WIND.id,
 			],
+			informational: false,
 		},
 	]
 
@@ -57,7 +60,7 @@ export class BLUOverheal extends Overheal {
 		// normally get before even going into the instance.
 
 		// So let's instead just check if they did any sort of non-White Wind healing
-		const nonWWhealing = this.direct.heal + this.trackedOverheals.reduce((acc, entry) => {
+		const nonWWhealing = this.uncategorized.heal + this.trackedOverheals.reduce((acc, entry) => {
 			if (entry.idIsTracked(this.data.actions.WHITE_WIND.id)) {
 				return acc
 			}

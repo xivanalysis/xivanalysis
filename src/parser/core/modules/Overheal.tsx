@@ -1,19 +1,29 @@
+import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
-import {Event, Events} from 'event'
+import {ActionLink, StatusLink} from 'components/ui/DbLink'
+import {getDataBy} from 'data'
+import {Action} from 'data/ACTIONS'
+import {Status} from 'data/STATUSES'
+import {Cause, Event, Events} from 'event'
 import {Analyser, DisplayOrder} from 'parser/core/Analyser'
 import {filter, oneOf} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
 import Checklist, {Requirement, Rule} from 'parser/core/modules/Checklist'
 import {Data} from 'parser/core/modules/Data'
 import {DataSet, PieChartStatistic, Statistics} from 'parser/core/modules/Statistics'
-import React from 'react'
+import React, {Fragment} from 'react'
+import {Accordion, Message, Table} from 'semantic-ui-react'
+import {isDefined} from 'utilities'
+import {Actors} from './Actors'
+import DISPLAY_ORDER from './DISPLAY_ORDER'
 
 interface TrackedOverhealOpts {
 	bucketId?: number
 	name: JSX.Element | string;
 	color?: string;
-	trackedHealIds?: number[];
+	trackedHealIds?: Array<Action['id'] | Status['id']>;
 	ignore?: boolean
+	informational?: boolean
 	debugName?: string
 }
 
@@ -34,12 +44,14 @@ export const SuggestedColors: string[] = [
 export class TrackedOverheal {
 	bucketId: number = -1
 	ignore: boolean
+	informational: boolean
 	name: JSX.Element | string
 	color: string = '#fff'
-	protected trackedHealIds: number[]
+	protected trackedHealIds: Array<Action['id'] | Status['id']>
 	heal: number = 0
 	overheal: number = 0
 	internalDebugName: string | undefined
+	causes: Map<number, {heal: number, overheal: number, type: Cause['type']}> = new Map();
 
 	constructor(opts: TrackedOverhealOpts) {
 		this.name = opts.name
@@ -47,6 +59,7 @@ export class TrackedOverheal {
 		this.trackedHealIds = opts.trackedHealIds || []
 		this.bucketId = opts.bucketId || -1
 		this.ignore = opts.ignore || false
+		this.informational = opts.informational ?? true
 		this.internalDebugName = opts.debugName
 	}
 
@@ -111,31 +124,43 @@ export class TrackedOverheal {
 	 * @param event - The heal event to track
 	 */
 	pushHeal(event: Events['heal']) {
-		this.heal += event.targets.reduce((total, target) => total + target.amount, 0)
-		this.overheal += event.targets.reduce((total, target) => total + target.overheal, 0)
+		const eventHeal = event.targets.reduce((total, target) => total + target.amount, 0)
+		const eventOverheal = event.targets.reduce((total, target) => total + target.overheal, 0)
+
+		const guid = event.cause.type === 'action' ? event.cause.action : event.cause.status
+		const cause = this.causes.get(guid)
+		if (!cause) {
+			this.causes.set(guid, {heal: eventHeal, overheal: eventOverheal, type: event.cause.type})
+		} else {
+			cause.heal += eventHeal
+			cause.overheal += eventOverheal
+		}
+
+		this.heal += eventHeal
+		this.overheal += eventOverheal
 	}
 }
 
 export class Overheal extends Analyser {
 	static override handle: string = 'overheal'
+	static override title = t('core.overheal.title')`Overheal`
+	static override displayOrder = DISPLAY_ORDER.DEFENSIVES
 	static override debug = false
 
 	@dependency private checklist!: Checklist
 	@dependency protected data!: Data
 	@dependency private statistics!: Statistics
+	@dependency protected actors!: Actors
 
 	// Overall tracking options
 
+	private uncategorizedOverheals: JSX.Element = <Trans id="core.overheal.uncategorized.name">Uncategorized</Trans>
 	/**
-	 * Implementing modules MAY override this to provide a more relevant name for the overhealing requirement
-	 */
-	protected overhealName: JSX.Element = <Trans id="core.overheal.direct.name">Direct</Trans>
-	/**
-	 * Implementing moduels MAY override this to change the color for direct overheals in the pie chart
+	 * Implementing modules MAY override this to change the color for direct overheals in the pie chart
 	 */
 	protected overhealColor: string = SuggestedColors[0]
 	/**
-	 * Implementing modules MAY override this to provide a list of heal 'categories' to track
+	 * Implementing modules MAY override this to provide a list of heal 'categories' to track for the checklist
 	 */
 	protected trackedHealCategories: TrackedOverhealOpts[] = []
 
@@ -161,7 +186,7 @@ export class Overheal extends Analyser {
 	/**
 	 * Allows for more flexibility in ordering of the checklist if necessary.
 	 */
-	protected displayOrder = DisplayOrder.DEFAULT
+	protected checklistDisplayOrder = DisplayOrder.DEFAULT
 	/**
 	 * Implementing modules MAY wish to override this to set a custom checklist target.
 	 * Do remember that the numbers for checklist are inverted for overheal (e.g., failing at
@@ -175,10 +200,11 @@ export class Overheal extends Analyser {
 	/**
 	 * Implementing modules MAY wish to change this in order to reflect the overall healing requiement name
 	 */
-	protected checklistRequirementName: JSX.Element = <Trans id="core.overheal.requirement.all">Overall (all sources)</Trans>
+	protected checklistRequirementName: JSX.Element = <Trans id="core.overheal.requirement.all">Overall</Trans>
 
-	// direct healing
-	protected direct!: TrackedOverheal
+	// Uncategorized healing
+	protected uncategorized!: TrackedOverheal
+
 	// Everything else
 	protected trackedOverheals: TrackedOverheal[] = []
 
@@ -191,9 +217,10 @@ export class Overheal extends Analyser {
 	}
 
 	override initialise() {
-		this.direct = new TrackedOverheal({
-			name: this.overhealName,
+		this.uncategorized = new TrackedOverheal({
+			name: this.uncategorizedOverheals,
 			color: this.overhealColor,
+			informational: false,
 		})
 		for (const healCategoryOpts of this.trackedHealCategories) {
 			this.trackedOverheals.push(new TrackedOverheal(healCategoryOpts))
@@ -248,6 +275,10 @@ export class Overheal extends Analyser {
 
 		const bucketId = this.overrideHealBucket(event, petHeal)
 		if (bucketId >= 0) {
+			if (this.uncategorized.bucketId === bucketId) {
+				this.debug(`Heal ${name} (${guid}) at ${event.timestamp} MANUALLY shoved into direct healing`)
+				this.uncategorized.pushHeal(event)
+			}
 			for (const trackedHeal of this.trackedOverheals) {
 				if (trackedHeal.bucketId === bucketId) {
 					this.debug(`Heal ${name} (${guid}) at ${event.timestamp} MANUALLY shoved into bucket ${trackedHeal.debugName}`)
@@ -264,7 +295,7 @@ export class Overheal extends Analyser {
 			}
 		}
 		this.debug(`Heal from ${name} (${guid}) at ${event.timestamp} matched into direct healing`)
-		this.direct.pushHeal(event)
+		this.uncategorized.pushHeal(event)
 	}
 
 	private onPetHeal(event: Events['heal']) {
@@ -276,11 +307,11 @@ export class Overheal extends Analyser {
 	}
 
 	private onComplete() {
-		let healtotal = this.direct.heal
-		let overhealtotal = this.direct.overheal
+		let healtotal = this.uncategorized.heal
+		let overhealtotal = this.uncategorized.overheal
 
 		this.trackedOverheals.forEach(x => {
-			if (!x.ignore && x.hasData) {
+			if (!(x.ignore || x.informational) && x.hasData) {
 				healtotal += x.heal
 				overhealtotal += x.overheal
 			}
@@ -288,15 +319,15 @@ export class Overheal extends Analyser {
 		const overallOverhealPercent: number = 100 * overhealtotal / healtotal
 
 		if (this.displayPieChart) {
-			const directPercentage = this.percentageOf(this.direct.overheal, overhealtotal)
+			const directPercentage = this.percentageOf(this.uncategorized.overheal, overhealtotal)
 			// eslint-disable-next-line @typescript-eslint/no-magic-numbers
 			const data: DataSet<React.ReactNode, 3> = [{
 				value: directPercentage,
-				color: this.direct.color,
+				color: this.uncategorized.color,
 				columns: [
-					this.direct.name,
-					this.percentageOf(this.direct.overheal, overhealtotal).toFixed(2) + '%',
-					this.direct.percent.toFixed(2) + '%',
+					this.uncategorized.name,
+					this.percentageOf(this.uncategorized.overheal, overhealtotal).toFixed(2) + '%',
+					this.uncategorized.percent.toFixed(2) + '%',
 				],
 			}]
 
@@ -330,14 +361,16 @@ export class Overheal extends Analyser {
 		if (this.displayChecklist) {
 			const requirements: InvertedRequirement[] = []
 
-			requirements.push(new InvertedRequirement({
-				name: this.overhealName,
-				percent:  this.direct.percentInverted,
-				weight: 0,
-			}))
+			if (this.uncategorized.hasData) {
+				requirements.push(new InvertedRequirement({
+					name: this.uncategorizedOverheals,
+					percent:  this.uncategorized.percentInverted,
+					weight: 0,
+				}))
+			}
 
 			for (const trackedHeal of this.trackedOverheals) {
-				if (trackedHeal.ignore) { continue }
+				if (trackedHeal.ignore || trackedHeal.informational) { continue }
 
 				requirements.push(new InvertedRequirement({
 					name: trackedHeal.name,
@@ -353,11 +386,72 @@ export class Overheal extends Analyser {
 
 			this.checklist.add(new Rule({
 				name: this.checklistRuleName,
-				description: this.checklistDescription([this.direct, ...this.trackedOverheals]),
+				description: this.checklistDescription([this.uncategorized, ...this.trackedOverheals]),
 				requirements,
 				target: this.checklistTarget,
-				displayOrder: this.displayOrder,
+				displayOrder: this.checklistDisplayOrder,
 			}))
+		}
+	}
+
+	override output(): React.ReactNode {
+		if (!this.displayPieChart) { return }
+		const rows = [this.uncategorized, ...this.trackedOverheals].map((bucket) => this.buildPanel(bucket)).filter(isDefined)
+		return <Fragment>
+			<Message>
+				this is a message
+			</Message>
+			<Accordion
+				exclusive={false}
+				styled
+				fluid
+				defaultActiveIndex={rows.map((row, idx) => row.startActive ? idx : -1).filter(i => i >= 0)}
+				panels={rows.map(row => row.panel)}
+			/>
+		</Fragment>
+	}
+
+	private buildPanel(bucket: TrackedOverheal) {
+		if (bucket.ignore || !bucket.hasData) { return }
+
+		const tableBody = (Array.from(bucket.causes.keys())).map((causeId) => {
+			const causeData = bucket.causes.get(causeId)
+			if (!causeData) { return }
+
+			const causeLink = causeData.type === 'action' ?
+				<ActionLink {...getDataBy(this.data.actions, 'id', causeId)} /> :
+				<StatusLink {...getDataBy(this.data.statuses, 'id', causeId)} />
+			const overhealPercent = 100 * causeData.overheal / causeData.heal
+
+			return <Table.Row key={causeId}>
+				<Table.Cell>{causeLink}</Table.Cell>
+				<Table.Cell>{causeData.heal}</Table.Cell>
+				<Table.Cell>{causeData.overheal}</Table.Cell>
+				<Table.Cell>{overhealPercent.toFixed(2)}</Table.Cell>
+			</Table.Row>
+		})
+
+		if (!tableBody) { return }
+
+		return {
+			startActive: !bucket.informational,
+			panel: {
+				key: bucket.bucketId,
+				title: {
+					content: bucket.name,
+				},
+				content: {
+					content: <Table compact unstackable celled>
+						<Table.Header>
+							<Table.HeaderCell>Heal Source</Table.HeaderCell>
+							<Table.HeaderCell>Total Healing</Table.HeaderCell>
+							<Table.HeaderCell>Overheal Amount</Table.HeaderCell>
+							<Table.HeaderCell>Overheal %</Table.HeaderCell>
+						</Table.Header>
+						<Table.Body>{tableBody}</Table.Body>
+					</Table>,
+				},
+			},
 		}
 	}
 }

@@ -1,50 +1,111 @@
 import {Trans} from '@lingui/react'
 import {DataLink} from 'components/ui/DbLink'
-import {Overheal as CoreOverheal, SuggestedColors, TrackedOverheal} from 'parser/core/modules/Overheal'
+import {Action} from 'data/ACTIONS'
+import {Events} from 'event'
+import {Overheal as CoreOverheal, SuggestedColors} from 'parser/core/modules/Overheal'
 import React from 'react'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 
+const NEUTRAL_SECT_APPLICATION_BUCKET_ID = 1
+
 export class Overheal extends CoreOverheal {
 	protected override displayPieChart = true
-	protected override displayOrder = DISPLAY_ORDER.OVERHEAL_CHECKLIST
+	protected override checklistDisplayOrder = DISPLAY_ORDER.OVERHEAL_CHECKLIST
 
-	protected content = <Trans id="ast.overheal.suggestion.content">
-		Avoid healing your party for more than is needed. Cut back on unnecessary heals and coordinate with your co-healer to plan resources efficiently. <br/>
-		* Delayed heals include heals such as <DataLink action="EXALTATION" />, <DataLink action="HOROSCOPE" />, and <DataLink action="MACROCOSMOS" /> when not manually activated.
-	</Trans>
-
-	protected override checklistDescription(_overheals: TrackedOverheal[]): JSX.Element {
-		return this.content
-	}
+	private readonly shieldGCDIds: Array<Action['id']> = [
+		this.data.actions.ASPECTED_BENEFIC.id,
+		this.data.actions.ASPECTED_HELIOS.id,
+		this.data.actions.HELIOS_CONJUNCTION.id,
+	]
 
 	protected override trackedHealCategories = [
 		{
-			name: <Trans id="ast.overheal.hot.name">Healing over Time</Trans>,
+			name: <Trans id="ast.overheal.gcd.name">GCD Heals (including Healing over Time)</Trans>,
+			trackedHealIds: [
+				// Single-Target
+				this.data.actions.BENEFIC.id,
+				this.data.actions.ASPECTED_BENEFIC.id,
+				this.data.statuses.ASPECTED_BENEFIC.id,
+
+				// AoE
+				this.data.actions.HELIOS.id,
+				this.data.actions.ASPECTED_HELIOS.id,
+				this.data.statuses.ASPECTED_HELIOS.id,
+				this.data.actions.HELIOS_CONJUNCTION.id,
+				this.data.statuses.HELIOS_CONJUNCTION.id,
+			],
+			informational: false,
+		},
+		{
+			name: <Trans id="ast.overheal.abilities-direct.name">Direct healing abilities</Trans>,
 			color: SuggestedColors[1],
 			trackedHealIds: [
-				this.data.statuses.ASPECTED_HELIOS.id,
-				this.data.statuses.HELIOS_CONJUNCTION.id,
+				this.data.actions.ESSENTIAL_DIGNITY.id,
+			],
+			// Marking this as non-informational because it has no secondary purpose, and does have a charge system allowing flexibility of use
+			informational: false,
+		},
+		{
+			name: <Trans id="ast.overheal.neutral_sect_gcd.name">GCDs applying <DataLink showIcon={false} status="NEUTRAL_SECT_OTHERS" /></Trans>,
+			// No trackedHealIds added by default, all events added here will be due to bucket overrides
+			bucketId: NEUTRAL_SECT_APPLICATION_BUCKET_ID,
+		},
+		{
+			name: <Trans id="ast.overheal.cards.name">Cards</Trans>,
+			color: SuggestedColors[1],
+			trackedHealIds: [
+				this.data.actions.LADY_OF_CROWNS.id,
+				this.data.statuses.THE_EWER.id,
+			],
+		},
+		{
+			name: <Trans id="ast.overheal.abilities-other.name">Other healing abilities</Trans>,
+			color: SuggestedColors[1],
+			trackedHealIds: [
+				this.data.actions.CELESTIAL_INTERSECTION.id,
 				this.data.statuses.WHEEL_OF_FORTUNE.id,
-				this.data.statuses.ASPECTED_BENEFIC.id,
+				this.data.actions.CELESTIAL_OPPOSITION.id,
 				this.data.statuses.OPPOSITION.id,
 			],
 		},
 		{
-			name: <Trans id="ast.overheal.earthlystar.name">Earthly Star</Trans>,
-			color: SuggestedColors[2],
+			// These heals are ones that are planned a bit of time in advance, but not self-activated.
+			// i.e. is the astrologian planning well in advance?
+			// an overheal in this sense would imply that they don't trust the heals to top off the party.
+			name: <Trans id="ast.overheal.delayedheals.name">Delayed Heals</Trans>,
+			color: SuggestedColors[3],
 			trackedHealIds: [
 				this.data.actions.STELLAR_BURST.id,
 				this.data.actions.STELLAR_EXPLOSION.id,
-			],
-		},
-		{
-			name: <Trans id="ast.overheal.delayedheals.name">Delayed Heals*</Trans>, //these heals are ones that are planned a bit of time in advance, but not self-activated. i.e. is the astrologian planning well in advance? an overheal in this sense would imply that they don't trust the heals to top off the party.
-			color: SuggestedColors[3],
-			trackedHealIds: [
+				this.data.actions.HOROSCOPE_ACTIVATION.id,
+				this.data.statuses.HOROSCOPE.id,
 				this.data.statuses.HOROSCOPE_HELIOS.id,
 				this.data.statuses.EXALTATION.id,
 				this.data.statuses.MACROCOSMOS.id,
 			],
 		},
 	]
+
+	protected override overrideHealBucket(event: Events['heal'], petHeal?: boolean): number {
+		// Star heals don't need re-bucketing
+		if (petHeal) { return -1 }
+
+		// Hots don't need re-bucketing
+		if (event.cause.type === 'status') { return -1 }
+
+		// If the heal wasn't in the list of shield-applying actions, it doesn't need re-bucketing
+		if (!this.shieldGCDIds.includes(event.cause.action)) { return -1 }
+
+		// If the player doesn't have Neutral up, it can't apply a shield so doesn't need re-bucketing
+		if (!this.actors.current.hasStatus(this.data.statuses.NEUTRAL_SECT.id)) { return -1 }
+
+		// If any of the targets did not currently have the Neutral Sect shield on, override it into the Neutral Sect application bucket
+		if (event.targets.filter((targetEvent) =>
+			!this.actors.get(targetEvent.target).hasStatus(this.data.statuses.NEUTRAL_SECT_OTHERS.id)).length > 0) {
+			return NEUTRAL_SECT_APPLICATION_BUCKET_ID
+		}
+
+		// Otherwise, no bucket overriding required
+		return -1
+	}
 }

@@ -48,6 +48,10 @@ class ActorResources {
 		return this.getStatusApplication(statusId, source) != null
 	}
 
+	hasAnyStatus(statusIds: Array<Status['id']>, source?: Actor['id']) {
+		return statusIds.filter((statusId) => this.hasStatus(statusId, source)).length > 0
+	}
+
 	getStatusData(statusId: Status['id'], source?: Actor['id']) {
 		return this.getStatusApplication(statusId, source)?.data
 	}
