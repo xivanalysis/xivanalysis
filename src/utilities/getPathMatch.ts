@@ -1,4 +1,4 @@
-import {matchPath} from 'react-router'
+import {matchPath} from 'react-router-dom'
 
 // This is pretty damn nasty, but it'll do for now
 export function getPathMatch<Params extends { [K in keyof Params]?: string }>(pathname: string) {

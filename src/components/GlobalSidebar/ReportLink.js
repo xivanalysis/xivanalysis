@@ -1,7 +1,7 @@
 import {Trans} from '@lingui/react'
 import * as PropTypes from 'prop-types'
 import React from 'react'
-import {withRouter} from 'react-router'
+import {withRouter} from 'react-router-dom'
 import {getPathMatch} from 'utilities'
 import fflogsLogo from './fflogs.png'
 import styles from './ReportLink.module.css'
