@@ -1,10 +1,10 @@
+version: 2.1
+
 # Config shared by all jobs
 defaults: &defaults
   working_directory: /tmp/xiva-client
   docker:
     - image: cimg/node:22.13
-
-version: 2
 
 commands:
   setup_pnpm:
