@@ -8,10 +8,14 @@
     "test": "jest",
     "lint": "eslint src",
     "types": "tsc",
-    "extract": "rimraf locale/_build && rimraf locale/en && lingui add-locale en && cross-env NODE_ENV=development lingui extract --clean",
+    "extract": "pnpm run clean:locale && rimraf locale/en && lingui add-locale en && cross-env NODE_ENV=development lingui extract --clean",
     "compile": "lingui compile",
-    "generate": "pnpm run generate:unable-to-act",
-    "generate:unable-to-act": "babel-node -x .ts ./scripts/generate-unable-to-act"
+    "generate": "pnpm run \"/^generate:.*/\"",
+    "generate:unable-to-act": "babel-node -x .ts ./scripts/generate-unable-to-act",
+    "clean": "pnpm run \"/^clean:.*/\"",
+    "clean:build": "rimraf build",
+    "clean:deps": "rimraf node_modules",
+    "clean:locale": "rimraf locale/_build"
   },
   "packageManager": "pnpm@10.0.0",
   "engines": {
