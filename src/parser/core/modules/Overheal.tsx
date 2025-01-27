@@ -387,7 +387,7 @@ export class Overheal extends Analyser {
 				<Icon name="info" />
 				<Message.Content>
 					<Trans id="core.overheal.header.content">
-						Overhealing is unavoidable even with optimized usage of your actions but it can also be a result of poor planning, which means it must be analyzed on a case-by-case basis.
+					Overhealing is unavoidable even with optimized usage of your actions, but it can also be a result of poor planning. As such, overhealing must be analyzed on a case-by-case basis.
 					</Trans>
 					<br/><br/>
 					<Trans id="core.overheal.header.sub-content">
