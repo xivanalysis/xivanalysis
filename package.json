@@ -21,6 +21,9 @@
   "resolutions": {
     "babel-core": "7.0.0-bridge.0"
   },
+  "pnpm": {
+    "neverBuiltDependencies": ["core-js", "core-js-pure"]
+  },
   "dependencies": {
     "@babel/runtime-corejs3": "^7.12.5",
     "@lingui/react": "^2.5.0",
