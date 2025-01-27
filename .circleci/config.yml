@@ -15,7 +15,7 @@ jobs:
       - run:
           name: Install pnpm
           command: |
-            corepack enable
+            corepack enable --install-directory ~/bin
             pnpm config set store-dir .pnpm-store
       - run:
           name: Install dependencies
