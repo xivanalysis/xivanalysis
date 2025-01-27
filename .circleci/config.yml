@@ -5,6 +5,15 @@ defaults: &defaults
     - image: cimg/node:22.13
 
 version: 2
+
+commands:
+  setup_pnpm:
+    description: "Ensure PNPM is enabled and configured"
+    steps:
+      - run: |
+          corepack enable --install-directory ~/bin
+          pnpm config set store-dir .pnpm-store
+
 jobs:
   setup:
     <<: *defaults
@@ -12,11 +21,7 @@ jobs:
       - checkout
       - restore_cache:
           key: dependency-cache-{{ checksum "pnpm-lock.yaml" }}
-      - run:
-          name: Install pnpm
-          command: |
-            corepack enable --install-directory ~/bin
-            pnpm config set store-dir .pnpm-store
+      - setup_pnpm: {}
       - run:
           name: Install dependencies
           command: pnpm install --frozen-lockfile
@@ -34,6 +39,7 @@ jobs:
     steps:
       - attach_workspace:
           at: /tmp
+      - setup_pnpm: {}
       - run:
           name: Lint
           command: pnpm run lint --format junit -o reports/eslint/results.xml
@@ -54,6 +60,7 @@ jobs:
     steps:
       - attach_workspace:
           at: /tmp
+      - setup_pnpm: {}
       - run:
           name: Tests
           command: pnpm run test --ci --reporters=jest-junit
@@ -68,6 +75,7 @@ jobs:
     steps:
       - attach_workspace:
           at: /tmp
+      - setup_pnpm: {}
       - run:
           name: Run build
           command: |
