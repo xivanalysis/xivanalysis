@@ -5,7 +5,7 @@ import {ActionKey} from 'data/ACTIONS'
 import {Event, Events} from 'event'
 import {filter, oneOf} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
-import {EvaluatedAction, ExpectedActionsEvaluator, ExpectedGcdCountEvaluator, LimitedActionsEvaluator, RaidBuffWindow, TrackedAction} from 'parser/core/modules/ActionWindow'
+import {EvaluatedAction, ExpectedActionGroupsEvaluator, ExpectedGcdCountEvaluator, LimitedActionsEvaluator, RaidBuffWindow, TrackedAction, TrackedActionGroup} from 'parser/core/modules/ActionWindow'
 import {HistoryEntry} from 'parser/core/modules/ActionWindow/History'
 import {GlobalCooldown} from 'parser/core/modules/GlobalCooldown'
 import {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
@@ -33,11 +33,11 @@ const EXPECTED_TECHNICAL_GCDs: ActionKey[] = [
 	'FINISHING_MOVE',
 	'STARFALL_DANCE',
 	'TILLANA',
-	'LAST_DANCE',
 ]
 
 const ALLOWED_TECHNICAL_GCDS: ActionKey[] = [
 	...EXPECTED_TECHNICAL_GCDs,
+	'LAST_DANCE',
 	'SABER_DANCE',
 ]
 
@@ -116,16 +116,23 @@ export class Technicalities extends RaidBuffWindow {
 			severityTiers: TECHNICAL_SEVERITY_TIERS,
 		}))
 
-		this.addEvaluator(new ExpectedActionsEvaluator({
-			expectedActions: [
-				...this.expectedTechnicalGcds.map<TrackedAction>(action => {
+		this.addEvaluator(new ExpectedActionGroupsEvaluator({
+			expectedActionGroups: [
+				...this.expectedTechnicalGcds.map<TrackedActionGroup>((action) => {
 					return {
-						action,
-						expectedPerWindow: action.id === this.data.actions.LAST_DANCE.id ? 2 : 1, // Expect 2 Last dances, and 1 of each of the other expected GCDs
+						actions: [action],
+						expectedPerWindow: 1,
 					}
 				}),
 				{
-					action: this.data.actions.FAN_DANCE_IV, // we also expect one FD4 oGCD
+					actions: [
+						this.data.actions.LAST_DANCE,
+						this.data.actions.SABER_DANCE,
+					],
+					expectedPerWindow: 4,
+				},
+				{
+					actions: [this.data.actions.FAN_DANCE_IV], // we also expect one FD4 oGCD
 					expectedPerWindow: 1,
 				},
 			],
@@ -161,20 +168,20 @@ export class Technicalities extends RaidBuffWindow {
 		this.addEvaluator(new LateStandardEvaluator(this.data.actions.STANDARD_STEP))
 	}
 
-	private adjustExpectedCounts(window: HistoryEntry<EvaluatedAction[]>, action: TrackedAction) {
+	private adjustExpectedCounts(window: HistoryEntry<EvaluatedAction[]>, actionGroup: TrackedActionGroup) {
 		if (this.isRushedEndOfPullWindow(window)) {
-			return action.expectedPerWindow * -1 // If it's a rushed window, don't expect anything in particular, just let 'em get what they get
+			return actionGroup.expectedPerWindow * -1 // If it's a rushed window, don't expect anything in particular, just let 'em get what they get
 		}
-		if (action.action.id !== this.data.actions.LAST_DANCE.id) { return 0 } // No adjustments for anything other than Last Dance
+		if (!actionGroup.actions.includes(this.data.actions.LAST_DANCE)) { return 0 } // No adjustments for anything other than the Last/Saber Dance group
 
 		// No need to adjust if they already got the expected amount
-		if (window.data.filter(event => event.action.id === this.data.actions.LAST_DANCE.id).length >= action.expectedPerWindow) {
+		if (window.data.filter(event => actionGroup.actions.includes(event.action)).length >= actionGroup.expectedPerWindow) {
 			return 0
 		}
 
-		// If the window included only the allowed GCDs, they had a lot of Esprit to burn.
-		// Since Saber Dance has the same potency, we can allow them to only hit one Last Dance
-		if (window.data.filter(event => event.action.onGcd).every(event => this.allowedTechnicalGcdIds.includes(event.action.id))) {
+		// If the window did not include any bad GCDs, they likely had a dearth of Esprit.
+		// Sometimes it do be that way. Allow them the one Fountainfall
+		if (window.data.filter(event => event.action.onGcd).every(event => !this.badTechnicalGcds.includes(event.action))) {
 			return -1
 		}
 

@@ -438,6 +438,7 @@ export const MNK = ensureActions({
 		icon: iconUrl(2535),
 		cooldown: 1000,
 		cooldownGroup: 1,
+		potency: 400,
 	},
 
 	ENLIGHTENMENT: {

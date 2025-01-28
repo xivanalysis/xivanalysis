@@ -3,6 +3,7 @@ import {BuffWindow, EvaluatedAction, PlayersBuffedEvaluator} from 'parser/core/m
 import {HistoryEntry} from 'parser/core/modules/ActionWindow/History'
 import {ensureArray} from 'utilities'
 import {filter, oneOf, noneOf} from '../../../filter'
+import {Actor} from '../../Actors'
 import {RaidBuffOverwriteEvaluator} from '../evaluators/RaidBuffOverwriteEvaluator'
 
 const FULL_PARTY_SIZE = 8
@@ -33,6 +34,8 @@ export abstract class RaidBuffWindow extends BuffWindow {
 	override partyBuffTargetList = this.parser.pull.actors
 		.filter(actor => actor.playerControlled)
 		.map(actor => actor.id)
+
+	private playerBuffedActorIds = new Array<Actor['id']>()
 
 	override initialise() {
 		super.initialise()
@@ -72,12 +75,16 @@ export abstract class RaidBuffWindow extends BuffWindow {
 				raidBuffApplications: this.raidBuffApplications,
 				buffStatus: this.buffStatus,
 				playerId: this.parser.actor.id,
+				playerBuffedTargets: this.playerBuffedActorIds,
 			}))
 		}
 	}
 
 	private onRaidBuffApply(event: Events['statusApply']) {
 		this.raidBuffApplications.push(event)
+		if (event.source === this.parser.actor.id && !this.playerBuffedActorIds.includes(event.target)) {
+			this.playerBuffedActorIds.push(event.target)
+		}
 	}
 
 	private affectedPlayers(buffWindow: HistoryEntry<EvaluatedAction[]>): number {

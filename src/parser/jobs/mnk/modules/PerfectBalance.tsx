@@ -13,9 +13,9 @@ import {SetGauge} from 'parser/core/modules/Gauge/SetGauge'
 import {GAUGE_FADE} from 'parser/core/modules/ResourceGraphs/ResourceGraphs'
 import Suggestions, {SEVERITY, Suggestion, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
+import {fillActionIds} from 'utilities/fillArrays'
 import {BLITZ_ACTIONS, COEURL_ACTIONS, FORM_ACTIONS, OPO_OPO_ACTIONS, RAPTOR_ACTIONS} from './constants'
 import {DISPLAY_ORDER} from './DISPLAY_ORDER'
-import {fillActions} from './utilities'
 
 const BEAST_GAUGE_HANDLE = 'beastgauge'
 const NADI_GAUGE_HANDLE = 'nadigauge'
@@ -129,12 +129,12 @@ export class PerfectBalance extends Gauge {
 	override initialise() {
 		super.initialise()
 
-		this.badActions = fillActions(PB_BAD_ACTIONS, this.data)
-		this.formActions = fillActions(FORM_ACTIONS, this.data)
-		this.opoActions = fillActions(OPO_OPO_ACTIONS, this.data)
-		this.raptorActions = fillActions(RAPTOR_ACTIONS, this.data)
-		this.coeurlActions = fillActions(COEURL_ACTIONS, this.data)
-		this.blitzActions = fillActions(BLITZ_ACTIONS, this.data)
+		this.badActions = fillActionIds(PB_BAD_ACTIONS, this.data)
+		this.formActions = fillActionIds(FORM_ACTIONS, this.data)
+		this.opoActions = fillActionIds(OPO_OPO_ACTIONS, this.data)
+		this.raptorActions = fillActionIds(RAPTOR_ACTIONS, this.data)
+		this.coeurlActions = fillActionIds(COEURL_ACTIONS, this.data)
+		this.blitzActions = fillActionIds(BLITZ_ACTIONS, this.data)
 
 		const playerFilter = filter<Event>().source(this.parser.actor.id)
 		this.addEventHook(playerFilter.type('statusApply').status(this.data.statuses.PERFECT_BALANCE.id), this.onStacc)

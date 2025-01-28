@@ -1,6 +1,7 @@
 export enum DISPLAY_ORDER {
 	TINCTURES = 1,
-	ZOE = 2,
-	SWIFTCAST = 3,
-	INTERRUPTS = 4,
+	WEAVING = 2,
+	ZOE = 3,
+	SWIFTCAST = 4,
+	INTERRUPTS = 5,
 }

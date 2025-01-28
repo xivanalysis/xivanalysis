@@ -4,6 +4,11 @@ import React from 'react'
 
 export const changelog = [
 	{
+		date: new Date('2024-12-12'),
+		Changes: () => <>Add a chakra gauge to the timeline and suggestions for overcapping chakra. Gauge events are only visible to the logging player, so these won't show up unless the Monk was the player who uploaded this log.</>,
+		contributors: [CONTRIBUTORS.HINT],
+	},
+	{
 		date: new Date('2024-11-19'),
 		Changes: () => <>Refine the suggestion for overwritten <StatusLink status="FORMLESS_FIST" /> applications to ignore downtime</>,
 		contributors: [CONTRIBUTORS.HINT],

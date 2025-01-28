@@ -15,7 +15,7 @@ import {Invulnerability} from 'parser/core/modules/Invulnerability'
 import {UnableToAct} from 'parser/core/modules/UnableToAct'
 import React, {Fragment} from 'react'
 import {Message} from 'semantic-ui-react'
-import {fillActions} from 'utilities/fillArrays'
+import {fillActionIds} from 'utilities/fillArrays'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 import {FIRE_SPELLS, ICE_SPELLS, THUNDER_SPELLS} from './Elements'
 import {ASTRAL_UMBRAL_DURATION, ASTRAL_UMBRAL_MAX_STACKS, BLMGaugeState, UMBRAL_HEARTS_MAX_STACKS} from './Gauge'
@@ -83,9 +83,9 @@ export class RotationWatchdog extends RestartWindow {
 		</Message>
 	</Fragment>
 
-	private fireSpellIds = fillActions(FIRE_SPELLS, this.data)
-	private iceSpellIds = fillActions(ICE_SPELLS, this.data)
-	private thunderSpellIds = fillActions(THUNDER_SPELLS, this.data)
+	private fireSpellIds = fillActionIds(FIRE_SPELLS, this.data)
+	private iceSpellIds = fillActionIds(ICE_SPELLS, this.data)
+	private thunderSpellIds = fillActionIds(THUNDER_SPELLS, this.data)
 
 	private currentGaugeState = {...EMPTY_GAUGE_STATE}
 

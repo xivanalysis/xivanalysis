@@ -299,12 +299,12 @@ export const SAM = ensureActions({
 		cooldown: 15000,
 		statusesApplied: ['THIRD_EYE'],
 	},
-	TENGETSU: {
+	TENGENTSU: {
 		id: 36962,
-		name: 'Tengetsu',
+		name: 'Tengentsu',
 		icon: iconUrl(3190),
 		cooldown: 15000,
-		statusesApplied: ['TENGETSU'],
+		statusesApplied: ['TENGENTSU'],
 	},
 
 	MEIKYO_SHISUI: {

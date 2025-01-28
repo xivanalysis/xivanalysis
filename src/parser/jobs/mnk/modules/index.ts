@@ -3,6 +3,7 @@ import {AoE} from './AoE'
 import {Balls} from './Balls'
 import {Bookending} from './Bookending'
 import {Brotherhood} from './Brotherhood'
+import {Chakra} from './Chakra'
 import {CooldownDowntime} from './CooldownDowntime'
 import {Defensives} from './Defensives'
 import {Forms} from './Forms'
@@ -22,6 +23,7 @@ export default [
 	Bookending,
 	Balls,
 	Brotherhood,
+	Chakra,
 	CooldownDowntime,
 	Revolution,
 	Defensives,

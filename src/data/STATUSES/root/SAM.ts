@@ -9,16 +9,16 @@ export const SAM = ensureStatuses({
 		icon: iconUrl(213307),
 		duration: 4000,
 	},
-	TENGETSU: {
+	TENGENTSU: {
 		id: 3853,
-		name: 'Tengetsu',
+		name: 'Tengentsu',
 		icon: iconUrl(213316),
 		duration: 4000,
 	},
 
-	TENGETSU_FORESIGHT: {
+	TENGENTSU_FORESIGHT: {
 		id: 3854,
-		name: "Tengetsu's Foresight",
+		name: "Tengentsu's Foresight",
 		icon: iconUrl(213317),
 		duration: 8000,
 

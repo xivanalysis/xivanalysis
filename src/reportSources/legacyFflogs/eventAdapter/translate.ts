@@ -55,6 +55,7 @@ const BYTE_FIELD_OFFSETS = {
 }
 
 const GAUGE_JOB_IDS = {
+	MONK: 20,
 	BARD: 23,
 	DANCER: 38,
 }
@@ -469,6 +470,8 @@ export class TranslateAdapterStep extends AdapterStep {
 			return this.adaptDancerGaugeEvent(event)
 		case GAUGE_JOB_IDS.BARD:
 			return this.adaptBardGaugeEvent(event)
+		case GAUGE_JOB_IDS.MONK:
+			return this.adaptMonkGaugeEvent(event)
 		default:
 			return []
 		}
@@ -504,6 +507,24 @@ export class TranslateAdapterStep extends AdapterStep {
 			song: numberFromHex(event.data3, 2, 1, 1, 'nibble'),
 		}
 		return [adaptedEvent]
+	}
+
+	private adaptMonkGaugeEvent(event: GaugeUpdateEvent): Event[] {
+		const adaptedEvent: Events['gaugeUpdate'] = {
+			...this.adaptBaseFields(event),
+			actor: this.loggingActorId, // Relies on there being a combatant info event first...
+			type: 'gaugeUpdate',
+			chakra: numberFromHexBytes(event.data1, BYTE_FIELD_OFFSETS.THIRD),
+		}
+
+		// Only return an adapted event if something we care about actually changed
+		if (this.lastGaugeUpdate == null ||
+			('chakra' in this.lastGaugeUpdate && this.lastGaugeUpdate.chakra !== adaptedEvent.chakra)
+		) {
+			this.lastGaugeUpdate = adaptedEvent
+			return [adaptedEvent]
+		}
+		return []
 	}
 
 	private adaptTargetedFields(event: FflogsEvent) {

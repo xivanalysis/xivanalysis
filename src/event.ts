@@ -243,9 +243,14 @@ export interface EventBardGaugeUpdate extends FieldsForActor {
 	song: number
 }
 
+export interface EventMonkGaugeUpdate extends FieldsForActor {
+	chakra: number
+}
+
 export type EventGaugeUpdate =
 	| EventDancerGaugeUpdate
 	| EventBardGaugeUpdate
+	| EventMonkGaugeUpdate
 
 // Merge core events into the repository.
 // No declare module, as we're in the same file as the root repository.

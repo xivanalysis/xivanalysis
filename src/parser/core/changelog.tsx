@@ -15,6 +15,21 @@ export const changelog: ChangelogEntry[] = [
 		contributors: [CONTRIBUTORS.AKAIRYU],
 	},
 	{
+		date: new Date('2025-01-04'),
+		Changes: () => <>Fixed an issue where raid buff overwrite analysis incorrectly reported issues when the other player was in a different alliance party. </>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
+	{
+		date: new Date('2024-12-03'),
+		Changes: () => <>Fixed an issue with gauge stack backtrack corrections when modified by events prior to the start of combat.</>,
+		contributors: [CONTRIBUTORS.AKAIRYU, CONTRIBUTORS.AZARIAH, CONTRIBUTORS.OTOCEPHALY],
+	},
+	{
+		date: new Date('2024-12-03'),
+		Changes: () => <>Fixed an issue causing initial hits on newly spawned adds to sometimes be treated as hits against an invulnerable target.</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
+	{
 		date: new Date('2024-11-21'),
 		Changes: () => <>Fixed prepull actions for defensives for duplicates, weird counts, and missing suggested available times. </>,
 		contributors: [CONTRIBUTORS.AKAIRYU, CONTRIBUTORS.AZARIAH, CONTRIBUTORS.OTOCEPHALY],
