@@ -5,8 +5,8 @@ import {Accordion, Icon, Progress} from 'semantic-ui-react'
 import styles from './Checklist.module.css'
 
 const RULE_STYLES = {
-	[true]: {text: 'text-success', color: 'green', icon: 'checkmark', autoExpand: false},
-	[false]: {text: 'text-error', color: 'red', icon: 'remove', autoExpand: true},
+	passed: {text: 'text-success', color: 'green', icon: 'checkmark', autoExpand: false},
+	failed: {text: 'text-error', color: 'red', icon: 'remove', autoExpand: true},
 }
 
 class Checklist extends Component {
@@ -30,7 +30,7 @@ class Checklist extends Component {
 
 		const expanded = []
 		const panels = rules.map((rule, index) => {
-			const ruleStyles = RULE_STYLES[rule.passed]
+			const ruleStyles = RULE_STYLES[rule.passed ? 'passed' : 'failed']
 
 			// We cap the percent @ 100 in production mode - calculations can always be a bit janky
 			let percent = rule.percent
