@@ -1,0 +1,64 @@
+# Parser labels
+Parser - Core:
+- changed-files:
+  - any-glob-to-any-file: src/parser/core/**/*
+
+Parser - AST:
+- changed-files:
+  - any-glob-to-any-file: src/parser/jobs/ast/**/*
+
+Parser - BLM:
+- changed-files:
+  - any-glob-to-any-file: src/parser/jobs/blm/**/*
+
+Parser - BRD:
+- changed-files:
+  - any-glob-to-any-file: src/parser/jobs/brd/**/*
+
+Parser - DRG:
+- changed-files:
+  - any-glob-to-any-file: src/parser/jobs/drg/**/*
+
+Parser - DRK:
+- changed-files:
+  - any-glob-to-any-file: src/parser/jobs/drk/**/*
+
+Parser - MCH:
+- changed-files:
+  - any-glob-to-any-file: src/parser/jobs/mch/**/*
+
+Parser - MNK:
+- changed-files:
+  - any-glob-to-any-file: src/parser/jobs/mnk/**/*
+
+Parser - NIN:
+- changed-files:
+  - any-glob-to-any-file: src/parser/jobs/nin/**/*
+
+Parser - PLD:
+- changed-files:
+  - any-glob-to-any-file: src/parser/jobs/pld/**/*
+
+Parser - RDM:
+- changed-files:
+  - any-glob-to-any-file: src/parser/jobs/rdm/**/*
+
+Parser - SAM:
+- changed-files:
+  - any-glob-to-any-file: src/parser/jobs/sam/**/*
+
+Parser - SCH:
+- changed-files:
+  - any-glob-to-any-file: src/parser/jobs/sch/**/*
+
+Parser - SMN:
+- changed-files:
+  - any-glob-to-any-file: src/parser/jobs/smn/**/*
+
+Parser - WAR:
+- changed-files:
+  - any-glob-to-any-file: src/parser/jobs/war/**/*
+
+Parser - WHM:
+- changed-files:
+  - any-glob-to-any-file: src/parser/jobs/whm/**/*

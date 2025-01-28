@@ -1,0 +1,40 @@
+name: Sync translations from Crowdin
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 0 * * *'
+jobs:
+  sync_translations:
+    name: Sync translations from Crowdin
+    runs-on: ubuntu-latest
+    if: github.repository_owner == 'xivanalysis'
+
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        token: ${{ secrets.I18N_WORKER_API_TOKEN }}
+
+    - uses: ./.github/actions/prepare-workspace
+
+    - uses: ./.github/actions/install-crowdin-cli
+
+    - name: Sync translations
+      run: crowdin download -b $GITHUB_REF_NAME --no-progress
+      env:
+        CROWDIN_API_TOKEN: ${{ secrets.CROWDIN_API_TOKEN }}
+
+    - name: Extract
+      run: yarn extract
+
+    - name: Check for changes
+      id: check-changes
+      run: echo "::set-output name=changes::$(git status --porcelain | wc -l)"
+
+    - name: Commit
+      if: steps.check-changes.outputs.changes != 0
+      run: |
+        git config user.name xivanalysis-i18n-worker
+        git config user.email xiva-worker@ackwell.com.au
+        git add locale
+        git commit -m "i18n sync $(date -u "+%Y/%m/%d %H:%M:%S")"
+        git push
