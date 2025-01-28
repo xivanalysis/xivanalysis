@@ -361,7 +361,6 @@
   "core.overheal.abilities-other.name": "",
   "core.overheal.gcd-hot.name": "",
   "core.overheal.header.content": "",
-  "core.overheal.header.sub-content": "",
   "core.overheal.requirement.all": "Globale (toutes les sources)",
   "core.overheal.rule.description": "Ne soignez pas votre équipe davantage que nécessaire. Coordonnez-vous avec votre co-healer pour diminuer la quantité de soins effectués et planifier vos ressources de façon efficace.",
   "core.overheal.rule.name": "Réduire l'Overheal",

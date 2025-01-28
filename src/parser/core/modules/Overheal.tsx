@@ -1,6 +1,7 @@
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
+import TransMarkdown from 'components/ui/TransMarkdown'
 import {getDataBy} from 'data'
 import {Action} from 'data/ACTIONS'
 import {Status} from 'data/STATUSES'
@@ -386,14 +387,7 @@ export class Overheal extends Analyser {
 			<Message icon>
 				<Icon name="info" />
 				<Message.Content>
-					<Trans id="core.overheal.header.content">
-					Overhealing is unavoidable even with optimized usage of your actions, but it can also be a result of poor planning. As such, overhealing must be analyzed on a case-by-case basis.
-					</Trans>
-					<br/><br/>
-					<Trans id="core.overheal.header.sub-content">
-						The below tables will show you which actions overhealed. Focus on reducing the overheal percentage of the categories included in the checklist first.
-						The other categories typically have secondary purposes, or may overheal as an incidental part of a complete defensive plan.
-					</Trans>
+					<TransMarkdown source={outputHeader}/>
 				</Message.Content>
 			</Message>
 			<Accordion
@@ -452,6 +446,17 @@ export class Overheal extends Analyser {
 		}
 	}
 }
+
+const outputHeader = t('core.overheal.header.content')`
+Overhealing is unavoidable even with optimized usage of your actions, but it can
+also be a result of poor planning. As such, overhealing must be analyzed on a
+case-by-case basis.
+
+The below tables will show you which actions overhealed. Focus on reducing the
+overheal percentage of the categories included in the checklist first. The other
+categories typically have secondary purposes, or may overheal as an incidental
+part of a complete defensive plan.
+`
 
 // From the original comments:
 // yeh, I'm not doing this in core, but I really want to show overheal as overheal, since that's what the community understands

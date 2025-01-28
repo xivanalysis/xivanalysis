@@ -361,7 +361,6 @@
   "core.overheal.abilities-other.name": "",
   "core.overheal.gcd-hot.name": "",
   "core.overheal.header.content": "",
-  "core.overheal.header.sub-content": "",
   "core.overheal.requirement.all": "Insgesamt (Alle Quellen)",
   "core.overheal.rule.description": "Vermeide es, deine Gruppe mehr zu heilen als notwendig. Schraub unnötige Heilung zurück und koordiniere dich mit deinem Co-Heiler, um eure Ressourcen effizient zu planen.",
   "core.overheal.rule.name": "Vermeide Overheal",
