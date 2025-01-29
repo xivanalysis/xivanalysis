@@ -10,6 +10,11 @@ export const changelog: ChangelogEntry[] = [
 	// 	contributors: [CONTRIBUTORS.YOU],
 	// },
 	{
+		date: new Date('2025-01-28'),
+		Changes: () => <>Fix recently introduced checklist requirement bugs.</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
+	{
 		date: new Date('2025-01-26'),
 		Changes: () => <>Updated Overheal analysis for all healers and Blue Mage.</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],
