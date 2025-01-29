@@ -334,7 +334,7 @@ export class Overheal extends Analyser {
 		let overhealtotal = this.uncategorized.overheal
 
 		this.trackedOverheals.forEach(x => {
-			if ((!x.ignore || x.includeInChecklist) && x.hasData) {
+			if (!x.ignore && x.includeInChecklist && x.hasData) {
 				healtotal += x.heal
 				overhealtotal += x.overheal
 			}
