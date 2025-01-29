@@ -38,6 +38,7 @@ export default class Requirement {
 		this.percent = props.percent
 		this.value = props.value
 		this.weight = props.weight ?? 1
+		this.target = props.target ?? 100
 		this.overrideDisplay = props.overrideDisplay
 	}
 }
