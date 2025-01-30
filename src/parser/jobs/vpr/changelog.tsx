@@ -4,6 +4,11 @@ import React from 'react'
 
 export const changelog = [
 	{
+		date: new Date('2025-01-29'),
+		Changes: () => <>Fix a data error that was causing phantom prepull uses of <DataLink action="VICEWINDER"/> and <DataLink action="VICEPIT"/> follow-up GCDs to be recorded.</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
+	{
 		date: new Date('2024-11-16'),
 		Changes: () => <>Add a table displaying timestamps when procs were dropped or overwritten, for better clarity around when those issues occurred.</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],

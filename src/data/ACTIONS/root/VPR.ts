@@ -647,6 +647,7 @@ export const VPR = ensureActions({
 		name: 'Twinblood Bite',
 		icon: iconUrl(3732),
 		cooldown: 1000,
+		statusesApplied: ['SWIFTSKINS_VENOM'],
 	},
 
 	TWINBLOOD_THRESH: {
@@ -654,6 +655,7 @@ export const VPR = ensureActions({
 		name: 'Twinblood Thresh',
 		icon: iconUrl(3734),
 		cooldown: 1000,
+		statusesApplied: ['HUNTERS_VENOM'],
 	},
 
 	UNCOILED_TWINBLOOD: {
@@ -676,7 +678,7 @@ export const VPR = ensureActions({
 		name: 'Twinfang Bite',
 		icon: iconUrl(3731),
 		cooldown: 1000,
-		statusesApplied: ['SWIFTSKINS_VENOM'],
+		statusesApplied: ['FELLSKINS_VENOM'],
 	},
 
 	TWINFANG_THRESH: {
@@ -684,7 +686,7 @@ export const VPR = ensureActions({
 		name: 'Twinfang Thresh',
 		icon: iconUrl(3733),
 		cooldown: 1000,
-		statusesApplied: ['FELLSKINS_VENOM'],
+		statusesApplied: ['FELLHUNTERS_VENOM'],
 	},
 
 	UNCOILED_TWINFANG: {
