@@ -339,7 +339,7 @@ export class Overheal extends Analyser {
 				overhealtotal += x.overheal
 			}
 		})
-		const overallOverhealPercent: number = 100 * overhealtotal / healtotal
+		const overallOverhealPercent: number = (healtotal === 0) ? 0 : 100 * overhealtotal / healtotal
 
 		if (this.displayChecklist) {
 			const requirements: InvertedRequirement[] = []
