@@ -87,6 +87,10 @@ export class Dispatcher {
 			try {
 				hook.callback({timestamp: hook.timestamp})
 			} catch (error) {
+				if (!(error instanceof Error)) {
+					throw error
+				}
+
 				issues.push({handle: hook.handle, error})
 			}
 		}
@@ -111,6 +115,10 @@ export class Dispatcher {
 					hook.callback(event)
 				}
 			} catch (error) {
+				if (!(error instanceof Error)) {
+					throw error
+				}
+
 				// If there was an error in any, stop immediately & report
 				issues.push({handle, error})
 				continue

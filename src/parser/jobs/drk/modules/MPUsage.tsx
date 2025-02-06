@@ -152,9 +152,11 @@ export class MPUsage extends Analyser {
 	}
 
 	private onActorUpdate(event: Events['actorUpdate']) {
-		if (event.mp == null) { return }
+		const mp = event.mp?.current
 
-		if (event.mp < this.actors.current.mp.maximum) {
+		if (mp == null) { return }
+
+		if (mp < this.actors.current.mp.maximum) {
 			if (this.cappedTimestamp == null) { return }
 
 			const timeSinceCapped = event.timestamp - this.cappedTimestamp

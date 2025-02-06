@@ -46,7 +46,7 @@ export const useScales = () => useContext(ScaleContext)
 // Utility functions
 
 // Different browsers and devices report deltas in different manners. Try to normalise the values.
-const multipliers = new Map([
+const multipliers = new Map<number, number>([
 	[WheelEvent.DOM_DELTA_LINE, LINE_HEIGHT],
 	[WheelEvent.DOM_DELTA_PAGE, PAGE_HEIGHT],
 ])

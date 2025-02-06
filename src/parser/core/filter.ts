@@ -1,5 +1,6 @@
 import _ from 'lodash'
 import * as TB from 'ts-toolbelt'
+import {Compute} from 'utilities'
 
 // -----
 // #region Core filter logic
@@ -94,40 +95,34 @@ type ResolveValue<Value, Shape, Key extends keyof Shape> =
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type Matcher<Type> = (input: any) => input is Type
 
-// Build a filter function for Key in Base, given constraints in Current
-type FilterFunction<
-	Base,
-	Current extends Partial<Base>,
-	Key extends DistributedKeyof<Base>
-> = (
-	// Resolve WithKey to members of Base constrained by Current that contain Key
-	// Constrain parameter to types permitted on the above via Value.
-	// Return a new filter, passing down base and extending current with the resolved Value.
-	<
-		WithKey extends HasKey<TB.Union.Select<Required<Base>, Current>, Key>,
-		Value extends WithKey[Key]
-	>(
-		_value: Value | Matcher<Value>
-	) => (
-		Filter<Base, TB.Any.Compute<
-			& Current
-			& {[_ in Key]: ResolveValue<Value, WithKey, Key>}
-		>>
-	)
-)
+type FilteredBase<Base, Current extends Partial<Base>> =
+	Extract<Required<Base>, Current>
 
 // Build a filter object for Base, given constraints in Current
 export type Filter<Base, Current extends Partial<Base> = {}> =
 	// Chaining builder methods
 	& {
+		// Map over all keys that remain valid in Base when constrained by Current,
+		// omitting any that are already present in Current.
 		[Key in Exclude<
-			DistributedKeyof<TB.Union.Select<Required<Base>, Current>>,
+			DistributedKeyof<FilteredBase<Base, Current>>,
 			keyof Current
 		>]:
-		FilterFunction<Base, Current, Key>
+			// Require function parameter is, or is a matcher for, the type of the Key
+			// in Base when constrained by Current.
+			<Value extends HasKey<FilteredBase<Base, Current>, Key>[Key]>
+			(_value: Value | Matcher<Value>)
+			// Return a new Filter that incorporates the loosest representation of
+			// Key's Value into the new Current.
+			=> Filter<Base, Compute<
+				& Current
+				& {
+					[_ in Key]: ResolveValue<Value, HasKey<FilteredBase<Base, Current>, Key>, Key>
+				}
+			>>
 	}
 	// Call signature for the filter
-	& {(value: Base): value is TB.Any.Compute<TB.Union.Select<Required<Base>, Current>>}
+	& {(value: Base): value is Compute<TB.Union.Select<Required<Base>, Current>>}
 
 // -----
 // #endregion

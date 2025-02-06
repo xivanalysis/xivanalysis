@@ -334,6 +334,10 @@ class Parser {
 			try {
 				output = this.getOutput(injectable)
 			} catch (error) {
+				if (!(error instanceof Error)) {
+					throw error
+				}
+
 				this.captureError({
 					error,
 					type: 'output',
