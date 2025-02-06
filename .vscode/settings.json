@@ -2,6 +2,7 @@
 	"javascript.preferences.quoteStyle": "single",
 	"javascript.format.insertSpaceAfterOpeningAndBeforeClosingNonemptyBraces": false,
 	"typescript.tsdk": "node_modules/typescript/lib",
+	"eslint.useFlatConfig": true,
 	"editor.codeActionsOnSave": {
 		"source.fixAll.eslint": "explicit",
 	}
