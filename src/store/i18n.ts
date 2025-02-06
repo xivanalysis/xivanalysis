@@ -18,7 +18,6 @@ function getGameLanguage(language: Language): Language {
 
 export class I18nStore {
 	@observable siteLanguage: Language = getUserLanguage()
-	@observable siteSet: boolean = false
 	@observable gameSet: boolean = false
 	@observable overlay: boolean = false
 
@@ -44,7 +43,6 @@ export class I18nStore {
 	@action
 	setSiteLanguage(language: Language) {
 		this.siteLanguage = language
-		this.siteSet = true
 
 		// Track if they've manually resynced it
 		if (this.gameLanguage === this.siteLanguage) {
@@ -55,12 +53,6 @@ export class I18nStore {
 		if (!this.gameSet) {
 			this.gameLanguage = getGameLanguage(language)
 		}
-	}
-
-	@action
-	resetSiteLanguage() {
-		this.siteLanguage = getUserLanguage()
-		this.siteSet = false
 	}
 
 	@action
