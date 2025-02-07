@@ -1,6 +1,8 @@
 import {ScaleTime, scaleUtc} from 'd3-scale'
 import _ from 'lodash'
-import {createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type WheelEvent} from 'react'
+import {createContext, useCallback, useContext, useEffect, useMemo, useRef, useState} from 'react'
+// eslint-disable-next-line no-duplicate-imports
+import type {WheelEvent} from 'react'
 import Measure, {BoundingRect, ContentRect, MeasureProps} from 'react-measure'
 import {useGesture} from 'react-use-gesture'
 import {UseGestureEvent} from 'react-use-gesture/dist/types'
