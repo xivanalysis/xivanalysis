@@ -121,7 +121,7 @@ export default (env: Environment, {
 		new webpack.WatchIgnorePlugin({paths: [/module\.css\.d\.ts$/]}),
 
 		new WebpackBar({}),
-	].filter(Boolean),
+	].filter(x => !!x),
 
 	module: {
 		rules: [

@@ -217,8 +217,8 @@ importers:
         specifier: ^2.5.2
         version: 2.8.3
       '@types/lodash':
-        specifier: ^4.14.116
-        version: 4.14.168
+        specifier: ^4.17.15
+        version: 4.17.15
       '@types/mini-css-extract-plugin':
         specifier: ^1.2.2
         version: 1.2.2(webpack-cli@4.3.1)
@@ -258,9 +258,6 @@ importers:
       '@types/webpack-env':
         specifier: ^1.13.6
         version: 1.15.3
-      '@xivanalysis/eslint-plugin':
-        specifier: ^0.0.2
-        version: 0.0.2(babel-eslint@9.0.0)(eslint@9.19.0)
       autoprefixer:
         specifier: ^10.1.0
         version: 10.1.0(postcss@8.2.15)
@@ -1359,8 +1356,8 @@ packages:
   '@types/lingui__react@2.8.3':
     resolution: {integrity: sha512-MXkYBg0KrFqEBam5kthNVaVa56YhWwtFlpZIS3Xr/9CE1jGlFo8isMBzgX/2m6QzTr/x4rLQ2PdUgUMjNzdG5A==}
 
-  '@types/lodash@4.14.168':
-    resolution: {integrity: sha512-oVfRvqHV/V6D1yifJbVRU3TMp8OT6o6BG+U9MkwuJ3U8/CsDHvalRpsxBqivn71ztOFZBTfJMvETbqHiaNSj7Q==}
+  '@types/lodash@4.17.15':
+    resolution: {integrity: sha512-w/P33JFeySuhN6JLkysYUK2gEmy9kHHFN7E8ro0tkfmlDOgxBDzWEZ/J8cWA+fHqFevpswDTFZnDx+R9lbL6xw==}
 
   '@types/mdast@3.0.3':
     resolution: {integrity: sha512-SXPBMnFVQg1s00dlMCc/jCdvPqdE4mXaMMCeRlxLDmTAEoegHT53xKtkDnzDTOcmMHUfcjyf36/YYZ6SxRdnsw==}
@@ -1593,12 +1590,6 @@ packages:
     peerDependenciesMeta:
       webpack-dev-server:
         optional: true
-
-  '@xivanalysis/eslint-plugin@0.0.2':
-    resolution: {integrity: sha512-g9ixF09DaWWC+EWdPT9kk1+h5n6D6eofVGin144TkZ+4bliKLaAnys8RvNLS14IccxyS/PpAaTSJM0R9wcuF4A==}
-    engines: {node: '>=0.10.0'}
-    peerDependencies:
-      babel-eslint: ^9.0.0
 
   '@xivanalysis/tooltips@0.1.6':
     resolution: {integrity: sha512-+9PMizEcRzELqI/+0zdcJAEDKhRIDCUphW4jkneYsVMKVub62dy2Sl/Drf24YgvXHdD7pDFf584t6VXAebQdZQ==}
@@ -1833,11 +1824,6 @@ packages:
     resolution: {integrity: sha512-poPX9mZH/5CSanm50Q+1toVci6pv5KSRv/5TWCwtzQS5XEwn40BcCrgIeMFWP9CKKIniKXNxoIOnOq4VVlGXhg==}
     peerDependencies:
       '@babel/core': ^7.0.0-0
-
-  babel-eslint@9.0.0:
-    resolution: {integrity: sha512-itv1MwE3TMbY0QtNfeL7wzak1mV47Uy+n6HtSOO4Xd7rvmO+tsGQSgyOEEgo6Y2vHZKZphaoelNeSVj4vkLA1g==}
-    engines: {node: '>=6'}
-    deprecated: babel-eslint is now @babel/eslint-parser. This package will no longer receive updates.
 
   babel-generator@6.26.1:
     resolution: {integrity: sha512-HyfwY6ApZj7BYTcJURpM5tznulaBvyio7/0d4zFOeMPUmfxkCjHocCuoLa2SAGzBI8AREcH3eP3758F672DppA==}
@@ -2793,12 +2779,6 @@ packages:
       eslint-import-resolver-webpack:
         optional: true
 
-  eslint-plugin-babel@5.3.1:
-    resolution: {integrity: sha512-VsQEr6NH3dj664+EyxJwO4FCYm/00JhYb3Sk3ft8o+fpKuIfQ9TaW6uVUfvwMXHcf/lsnRIoyFPsLMyiWCSL/g==}
-    engines: {node: '>=4'}
-    peerDependencies:
-      eslint: '>=4.0.0'
-
   eslint-plugin-import@2.31.0:
     resolution: {integrity: sha512-ixmkI62Rbc2/w8Vfxyh1jQRTdRTF52VxwRVHl/ykPAmqG+Nb7/kNn+byLP0LxPgI7zWA16Jt82SybJInmMia3A==}
     engines: {node: '>=4'}
@@ -2808,12 +2788,6 @@ packages:
     peerDependenciesMeta:
       '@typescript-eslint/parser':
         optional: true
-
-  eslint-plugin-jest@21.27.2:
-    resolution: {integrity: sha512-0E4OIgBJVlAmf1KfYFtZ3gYxgUzC5Eb3Jzmrc9ikI1OY+/cM8Kh72Ti7KfpeHNeD3HJNf9SmEfmvQLIz44Hrhw==}
-    engines: {node: '>= 4'}
-    peerDependencies:
-      eslint: '>=3.6'
 
   eslint-plugin-jest@28.11.0:
     resolution: {integrity: sha512-QAfipLcNCWLVocVbZW8GimKn5p5iiMcgGbRzz8z/P5q7xw+cNEpYqyzFMtIF/ZgF2HLOyy+dYBut+DoYolvqig==}
@@ -2840,14 +2814,6 @@ packages:
     peerDependencies:
       eslint: ^3 || ^4 || ^5 || ^6 || ^7 || ^8 || ^9.7
 
-  eslint-rule-composer@0.3.0:
-    resolution: {integrity: sha512-bt+Sh8CtDmn2OajxvNO+BX7Wn4CIWMpTRm3MaiKPCQcnnlm0CS2mhui6QaoeQugs+3Kj2ESKEEGJUdVafwhiCg==}
-    engines: {node: '>=4.0.0'}
-
-  eslint-scope@3.7.1:
-    resolution: {integrity: sha512-ivpbtpUgg9SJS4TLjK7KdcDhqc/E3CGItsvQbBNLkNGUeMhd5qnJcryba/brESS+dg3vrLqPuc/UcS7jRJdN5A==}
-    engines: {node: '>=4.0.0'}
-
   eslint-scope@5.1.1:
     resolution: {integrity: sha512-2NxwbF/hZ0KpepYN0cNbo+FN6XoK7GaHlQhgx/hIZl6Va0bF45RQOOwhLIy8lQDbuCiadSLCBnH2CFYquit5bw==}
     engines: {node: '>=8.0.0'}
@@ -2855,10 +2821,6 @@ packages:
   eslint-scope@8.2.0:
     resolution: {integrity: sha512-PHlWUfG6lvPc3yvP5A4PNyBL1W8fkDUccmI21JUu/+GKZBoH/W5u6usENXUrWFRsyoW5ACUjFGgAFQp5gUlb/A==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
-
-  eslint-visitor-keys@1.3.0:
-    resolution: {integrity: sha512-6J72N8UNa462wa/KFODt/PJ3IU60SDpC3QXC1Hjc1BXXpfL2C9R5+AU7jhe0F6GREqVMh4Juu+NY7xn+6dipUQ==}
-    engines: {node: '>=4'}
 
   eslint-visitor-keys@3.4.3:
     resolution: {integrity: sha512-wpc+LXeiyiisxPlEkUzU6svyS1frIO3Mgxj1fdy7Pm8Ygzguax2N3Fa/D/ag1WqbOprdI+uY6wMUl8/a2G+iag==}
@@ -5263,10 +5225,6 @@ packages:
 
   require-package-name@2.0.1:
     resolution: {integrity: sha512-uuoJ1hU/k6M0779t3VMVIYpb2VMJk05cehCaABFhXaibcbvfgR8wKiozLjVFSzJPmQMRqIcO0HMyTFqfV09V6Q==}
-
-  requireindex@1.2.0:
-    resolution: {integrity: sha512-L9jEkOi3ASd9PYit2cwRfyppc9NoABujTP8/5gFcbERmo5jUoAKovIC3fsF17pkTnGsrByysqX+Kxd2OTNI1ww==}
-    engines: {node: '>=0.10.5'}
 
   requires-port@1.0.0:
     resolution: {integrity: sha512-KigOCHcocU3XODJxsu8i/j8T9tzT4adHiecwORRQ0ZZFcp7ahwXuRU1m+yuO90C5ZUyGeGfocHDI14M3L3yDAQ==}
@@ -7780,7 +7738,7 @@ snapshots:
       '@types/lingui__core': 2.7.1
       '@types/react': 16.9.49
 
-  '@types/lodash@4.14.168': {}
+  '@types/lodash@4.17.15': {}
 
   '@types/mdast@3.0.3':
     dependencies:
@@ -8033,7 +7991,7 @@ snapshots:
       '@types/classnames': 2.2.11
       '@types/d3-path': 1.0.9
       '@types/d3-shape': 1.3.5
-      '@types/lodash': 4.14.168
+      '@types/lodash': 4.17.15
       '@types/react': 16.9.49
       '@visx/curve': 1.7.0
       '@visx/group': 1.7.0(react@16.14.0)
@@ -8131,16 +8089,6 @@ snapshots:
       webpack-cli: 4.3.1(webpack-dev-server@4.0.0-beta.0)(webpack@5.75.0)
     optionalDependencies:
       webpack-dev-server: 4.0.0-beta.0(webpack-cli@4.3.1)(webpack@5.75.0)
-
-  '@xivanalysis/eslint-plugin@0.0.2(babel-eslint@9.0.0)(eslint@9.19.0)':
-    dependencies:
-      babel-eslint: 9.0.0
-      eslint-plugin-babel: 5.3.1(eslint@9.19.0)
-      eslint-plugin-jest: 21.27.2(eslint@9.19.0)
-      eslint-plugin-react: 7.37.4(eslint@9.19.0)
-      requireindex: 1.2.0
-    transitivePeerDependencies:
-      - eslint
 
   '@xivanalysis/tooltips@0.1.6(react-dom@16.14.0(react@16.14.0))(react@16.14.0)':
     dependencies:
@@ -8370,17 +8318,6 @@ snapshots:
   babel-core@7.0.0-bridge.0(@babel/core@7.14.3):
     dependencies:
       '@babel/core': 7.14.3
-
-  babel-eslint@9.0.0:
-    dependencies:
-      '@babel/code-frame': 7.12.13
-      '@babel/parser': 7.14.4
-      '@babel/traverse': 7.14.2
-      '@babel/types': 7.14.4
-      eslint-scope: 3.7.1
-      eslint-visitor-keys: 1.3.0
-    transitivePeerDependencies:
-      - supports-color
 
   babel-generator@6.26.1:
     dependencies:
@@ -9549,11 +9486,6 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-plugin-babel@5.3.1(eslint@9.19.0):
-    dependencies:
-      eslint: 9.19.0
-      eslint-rule-composer: 0.3.0
-
   eslint-plugin-import@2.31.0(@typescript-eslint/parser@8.23.0(eslint@9.19.0)(typescript@5.7.3))(eslint-import-resolver-typescript@3.7.0)(eslint@9.19.0):
     dependencies:
       '@rtsao/scc': 1.1.0
@@ -9582,10 +9514,6 @@ snapshots:
       - eslint-import-resolver-typescript
       - eslint-import-resolver-webpack
       - supports-color
-
-  eslint-plugin-jest@21.27.2(eslint@9.19.0):
-    dependencies:
-      eslint: 9.19.0
 
   eslint-plugin-jest@28.11.0(@typescript-eslint/eslint-plugin@8.23.0(@typescript-eslint/parser@8.23.0(eslint@9.19.0)(typescript@5.7.3))(eslint@9.19.0)(typescript@5.7.3))(eslint@9.19.0)(jest@26.6.3)(typescript@5.7.3):
     dependencies:
@@ -9624,13 +9552,6 @@ snapshots:
       string.prototype.matchall: 4.0.12
       string.prototype.repeat: 1.0.0
 
-  eslint-rule-composer@0.3.0: {}
-
-  eslint-scope@3.7.1:
-    dependencies:
-      esrecurse: 4.3.0
-      estraverse: 4.3.0
-
   eslint-scope@5.1.1:
     dependencies:
       esrecurse: 4.3.0
@@ -9640,8 +9561,6 @@ snapshots:
     dependencies:
       esrecurse: 4.3.0
       estraverse: 5.3.0
-
-  eslint-visitor-keys@1.3.0: {}
 
   eslint-visitor-keys@3.4.3: {}
 
@@ -12489,8 +12408,6 @@ snapshots:
   require-main-filename@2.0.0: {}
 
   require-package-name@2.0.1: {}
-
-  requireindex@1.2.0: {}
 
   requires-port@1.0.0: {}
 
