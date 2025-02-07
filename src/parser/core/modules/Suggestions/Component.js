@@ -2,7 +2,7 @@ import {Trans} from '@lingui/react'
 import {observer} from 'mobx-react'
 import {SEVERITY} from 'parser/core/modules/Suggestions/Suggestion'
 import * as PropTypes from 'prop-types'
-import React from 'react'
+import {Component} from 'react'
 import {Checkbox, Label} from 'semantic-ui-react'
 // Direct path import 'cus it'll be a dep loop otherwise
 import {StoreContext} from 'store'
@@ -18,7 +18,7 @@ const SEVERITY_LABEL_PROPS = {
 }
 
 @observer
-class Suggestions extends React.Component {
+class Suggestions extends Component {
 	static propTypes = {
 		settingsStore: PropTypes.instanceOf(SettingsStore),
 		suggestions: PropTypes.arrayOf(PropTypes.shape({

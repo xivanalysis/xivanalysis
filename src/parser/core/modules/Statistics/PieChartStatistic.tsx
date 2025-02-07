@@ -1,5 +1,5 @@
 import {merge} from 'lodash'
-import React from 'react'
+import {ReactNode} from 'react'
 import {Pie} from 'react-chartjs-2'
 import {AbstractStatistic, AbstractStatisticOptions} from './AbstractStatistic'
 import styles from './PieChartStatistic.module.css'
@@ -27,13 +27,13 @@ export interface DataPoint<T, L extends number> {
 }
 
 export class PieChartStatistic<L extends number> extends AbstractStatistic {
-	private readonly headings: FixedLengthArray<React.ReactNode, L>
-	private readonly data: DataSet<React.ReactNode, L>
+	private readonly headings: FixedLengthArray<ReactNode, L>
+	private readonly data: DataSet<ReactNode, L>
 	private readonly options: Chart.ChartOptions
 
 	constructor(opts: {
-		headings: FixedLengthArray<React.ReactNode, L>,
-		data: DataSet<React.ReactNode, L>,
+		headings: FixedLengthArray<ReactNode, L>,
+		data: DataSet<ReactNode, L>,
 		options?: Chart.ChartOptions,
 	} & AbstractStatisticOptions) {
 		super({

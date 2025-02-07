@@ -7,7 +7,6 @@ import {DisplayedActionEvaluator} from 'parser/core/modules/ActionWindow/evaluat
 import {HistoryEntry} from 'parser/core/modules/ActionWindow/History'
 import {GlobalCooldown} from 'parser/core/modules/GlobalCooldown'
 import {SEVERITY} from 'parser/core/modules/Suggestions'
-import React from 'react'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 
 const BL_GCD_TARGET = 8

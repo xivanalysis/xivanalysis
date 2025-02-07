@@ -3,7 +3,6 @@ import {RotationTable, RotationTableNotesMap, RotationTableTargetData} from 'com
 import {Event, Events} from 'event'
 import {dependency} from 'parser/core/Injectable'
 import {Timeline} from 'parser/core/modules/Timeline'
-import React from 'react'
 import {ensureArray, isDefined} from 'utilities'
 import {Analyser} from '../../../Analyser'
 import {EventFilterPredicate, EventHook} from '../../../Dispatcher'

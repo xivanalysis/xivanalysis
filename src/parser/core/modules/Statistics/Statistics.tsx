@@ -1,6 +1,6 @@
 import {t} from '@lingui/macro'
 import {Analyser, DisplayMode} from 'parser/core/Analyser'
-import React from 'react'
+import {ComponentType} from 'react'
 import DISPLAY_ORDER from '../DISPLAY_ORDER'
 import {StatisticComponent} from './StatisticComponent'
 import styles from './Statistics.module.css'
@@ -9,8 +9,8 @@ import styles from './Statistics.module.css'
 export type ColumnSpan = 1 | 2 | 3 | 4
 
 export interface Statistic {
-	Content: React.ComponentType
-	Info?: React.ComponentType
+	Content: ComponentType
+	Info?: ComponentType
 	width?: ColumnSpan
 	height?: number
 	statsDisplayOrder?: number

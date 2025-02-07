@@ -16,7 +16,7 @@ import {EnumGauge} from 'parser/core/modules/Gauge/EnumGauge'
 import {DEFAULT_ROW_HEIGHT, GAUGE_FADE} from 'parser/core/modules/ResourceGraphs/ResourceGraphs'
 import Suggestions, {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import {UnableToAct} from 'parser/core/modules/UnableToAct'
-import React, {Fragment} from 'react'
+import {Fragment} from 'react'
 import {Message, Table, Button} from 'semantic-ui-react'
 import {isSuccessfulHit} from 'utilities'
 import {FIRE_SPELLS, ICE_SPELLS_TARGETED, ICE_SPELLS_UNTARGETED} from './Elements'
@@ -718,4 +718,3 @@ export class Gauge extends CoreGauge {
 		)
 	}
 }
-

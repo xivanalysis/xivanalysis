@@ -3,7 +3,6 @@ import {Trans} from '@lingui/react'
 import {DataLink, StatusLink} from 'components/ui/DbLink'
 import {Action} from 'data/ACTIONS'
 import {Status} from 'data/STATUSES'
-import React from 'react'
 import {Icon, Message} from 'semantic-ui-react'
 import DISPLAY_ORDER from '../DISPLAY_ORDER'
 import {MuseBuffWindow} from './MuseBuffWindow'
@@ -13,7 +12,7 @@ export class RagingStrikes extends MuseBuffWindow {
 	static override title = t('brd.ragingstrikes.title')`Raging Strikes`
 	static override displayOrder = DISPLAY_ORDER.RAGING_STRIKES
 
-    action: Action = this.data.actions.RAGING_STRIKES
+	action: Action = this.data.actions.RAGING_STRIKES
 	buffStatus: Status = this.data.statuses.RAGING_STRIKES
 
 	override prependMessages = <Message icon>

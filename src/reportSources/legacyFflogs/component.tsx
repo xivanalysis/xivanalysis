@@ -3,7 +3,7 @@ import {ReportLoader} from 'components/ui/SharedLoaders'
 import {getEncounterKey} from 'data/ENCOUNTERS'
 import _ from 'lodash'
 import {observer} from 'mobx-react'
-import React, {useEffect} from 'react'
+import {ComponentType, useEffect} from 'react'
 import {useRouteMatch, Switch, Route, Redirect, useParams} from 'react-router-dom'
 import {ReportStore} from 'reportSources'
 import {useLazyRef} from 'utilities/react'
@@ -45,7 +45,7 @@ interface WithReportComponentProps {
 }
 
 interface WithReportProps {
-	Component: React.ComponentType<WithReportComponentProps>
+	Component: ComponentType<WithReportComponentProps>
 	baseUrl: string
 }
 

@@ -3,7 +3,7 @@ import {Trans} from '@lingui/react'
 import NormalisedMessage from 'components/ui/NormalisedMessage'
 import {action, observable} from 'mobx'
 import {observer} from 'mobx-react'
-import React from 'react'
+import {ChangeEvent, Component} from 'react'
 import {RouteComponentProps, withRouter, Redirect} from 'react-router-dom'
 import {SearchHandlerResult} from 'reportSources'
 import {Button, Input, InputOnChangeData} from 'semantic-ui-react'
@@ -13,12 +13,12 @@ import styles from './ReportSearch.module.css'
 const DEFAULT_REASON = t('core.home.report-search.unknown-query-error')`An unknown error occured when parsing the provided query.`
 
 @observer
-class ReportSearch extends React.Component<RouteComponentProps> {
+class ReportSearch extends Component<RouteComponentProps> {
 	@observable.ref private value = ''
 	@observable.ref private result: SearchHandlerResult = {valid: false}
 
 	@action.bound
-	private onChange(event: React.ChangeEvent, data: InputOnChangeData) {
+	private onChange(event: ChangeEvent, data: InputOnChangeData) {
 		this.value = data.value
 
 		// 'aint nobody got time to click a button.

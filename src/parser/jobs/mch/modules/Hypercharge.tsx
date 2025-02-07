@@ -11,7 +11,7 @@ import {dependency} from 'parser/core/Injectable'
 import {History} from 'parser/core/modules/ActionWindow/History'
 import {Data} from 'parser/core/modules/Data'
 import {Timeline} from 'parser/core/modules/Timeline'
-import React, {Fragment} from 'react'
+import {Fragment} from 'react'
 import {Message, Accordion, Button} from 'semantic-ui-react'
 
 const HYPERCHARGE_DURATION = 10000

@@ -1,7 +1,7 @@
 import cx from 'classnames'
 import {Event} from 'event'
 import {Analyser} from 'parser/core/Analyser'
-import React, {CSSProperties, useState} from 'react'
+import {CSSProperties, useState} from 'react'
 import Measure from 'react-measure'
 import {FixedSizeList} from 'react-window'
 import {Pull} from 'report'

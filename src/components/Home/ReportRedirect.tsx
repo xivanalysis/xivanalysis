@@ -1,4 +1,3 @@
-import React from 'react'
 import {useParams, Redirect, useLocation} from 'react-router-dom'
 import {parseInput} from './parseInput'
 

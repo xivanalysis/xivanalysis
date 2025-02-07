@@ -13,7 +13,7 @@ import {Actor, Actors} from 'parser/core/modules/Actors'
 import {Data} from 'parser/core/modules/Data'
 import Suggestions, {SEVERITY, Suggestion} from 'parser/core/modules/Suggestions'
 import {Timeline} from 'parser/core/modules/Timeline'
-import React, {Fragment} from 'react'
+import {Fragment} from 'react'
 import {Team} from 'report'
 import {Message, Button, Table} from 'semantic-ui-react'
 import {DISPLAY_ORDER} from './DISPLAY_ORDER'
@@ -447,4 +447,3 @@ export class BLURaidBuffs extends Analyser {
 		</Fragment>
 	}
 }
-

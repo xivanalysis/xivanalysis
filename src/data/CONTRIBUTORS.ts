@@ -3,6 +3,8 @@ import {t} from '@lingui/macro'
 import {ensureRecord} from 'utilities'
 import {Job, JOBS} from './JOBS'
 
+/* eslint-disable @typescript-eslint/no-require-imports */
+
 export interface Contributor {
 	name: string
 	avatar?: string

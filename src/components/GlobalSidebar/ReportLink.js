@@ -1,12 +1,12 @@
 import {Trans} from '@lingui/react'
 import * as PropTypes from 'prop-types'
-import React from 'react'
+import {Component} from 'react'
 import {withRouter} from 'react-router-dom'
 import {getPathMatch} from 'utilities'
 import fflogsLogo from './fflogs.png'
 import styles from './ReportLink.module.css'
 
-class ReportLink extends React.Component {
+class ReportLink extends Component {
 	static propTypes = {
 		location: PropTypes.shape({
 			pathname: PropTypes.string.isRequired,

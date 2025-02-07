@@ -32,6 +32,7 @@ const filterInternal = <Base, Current extends Partial<Base>>(current: Current) =
 
 /** Create a filter builder for the shape of Base. */
 // This is just a pass-through to fitlerInternal for type wrangling purposes.
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export const filter = <Base>() => filterInternal<Base, {}>({})
 
 // -----
@@ -99,6 +100,7 @@ type FilteredBase<Base, Current extends Partial<Base>> =
 	Extract<Required<Base>, Current>
 
 // Build a filter object for Base, given constraints in Current
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export type Filter<Base, Current extends Partial<Base> = {}> =
 	// Chaining builder methods
 	& {

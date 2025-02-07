@@ -10,7 +10,7 @@ import {dependency} from 'parser/core/Injectable'
 import {Data} from 'parser/core/modules/Data'
 import Downtime from 'parser/core/modules/Downtime'
 import Suggestions, {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
-import React, {Fragment} from 'react'
+import {Fragment} from 'react'
 import {Accordion} from 'semantic-ui-react'
 import {DISPLAY_ORDER} from './DISPLAY_ORDER'
 

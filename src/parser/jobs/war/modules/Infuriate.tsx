@@ -7,7 +7,6 @@ import {dependency} from 'parser/core/Injectable'
 import {Cooldowns} from 'parser/core/modules/Cooldowns'
 import {Procs as CoreProcs} from 'parser/core/modules/Procs'
 import {SEVERITY} from 'parser/core/modules/Suggestions'
-import React from 'react'
 
 const INFURIATE_REDUCERS: ActionKey[] = [
 	'FELL_CLEAVE',

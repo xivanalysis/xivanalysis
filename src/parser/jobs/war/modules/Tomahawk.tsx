@@ -1,7 +1,6 @@
 import {Trans} from '@lingui/react'
 import {DataLink} from 'components/ui/DbLink'
 import {DisengageGcds as CoreDisengageGcds} from 'parser/core/modules/DisengageGcds'
-import React from 'react'
 
 export class Tomahawk extends CoreDisengageGcds {
 	override disengageTitle = <Trans id="war.disengage.statistic.title">Tomahawk Uses</Trans>

@@ -7,7 +7,6 @@ import {dependency} from 'parser/core/Injectable'
 import {Actors} from 'parser/core/modules/Actors'
 import {Data} from 'parser/core/modules/Data'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
-import React from 'react'
 
 // Triple Trident can be loosely considered as the last step in a combo;
 // you always want to pop
@@ -57,4 +56,3 @@ export class TripleTrident extends Analyser {
 		}))
 	}
 }
-

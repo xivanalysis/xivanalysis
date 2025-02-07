@@ -2,7 +2,6 @@ import {Trans} from '@lingui/react'
 import {iconUrl} from 'data/icon'
 import {Procs as CoreProcs} from 'parser/core/modules/Procs'
 import {SEVERITY} from 'parser/core/modules/Suggestions'
-import React from 'react'
 
 const ICON_STARCROSS = 2078
 

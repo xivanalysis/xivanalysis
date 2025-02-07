@@ -8,7 +8,6 @@ import {filter} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
 import {Data} from 'parser/core/modules/Data'
 import {Timeline} from 'parser/core/modules/Timeline'
-import React from 'react'
 
 // A combo module because core combo doesn't support parallel combos... TODO: Fix core combo
 const EXPECTED_USES = {

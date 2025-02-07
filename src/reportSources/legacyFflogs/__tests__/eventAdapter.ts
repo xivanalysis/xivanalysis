@@ -1127,8 +1127,8 @@ describe('Event adapter', () => {
 			},
 		}], firstEvent)
 
-		const updates = result.filter(event => true
-			&& event.type === 'actorUpdate'
+		const updates = result.filter(event =>
+			event.type === 'actorUpdate'
 			&& event.actor === '1'
 		)
 

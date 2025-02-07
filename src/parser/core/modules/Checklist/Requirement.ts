@@ -34,7 +34,7 @@ export default class Requirement {
 	}
 
 	constructor(props: RequirementProps) {
-		this.name = props.name,
+		this.name = props.name
 		this.percent = props.percent
 		this.value = props.value
 		this.weight = props.weight ?? 1

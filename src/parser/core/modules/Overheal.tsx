@@ -11,7 +11,7 @@ import {filter, oneOf} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
 import Checklist, {Requirement, Rule} from 'parser/core/modules/Checklist'
 import {Data} from 'parser/core/modules/Data'
-import React, {Fragment} from 'react'
+import {Fragment, ReactNode} from 'react'
 import {Accordion, Icon, Message, Table} from 'semantic-ui-react'
 import {isDefined} from 'utilities'
 import {Actors} from './Actors'
@@ -54,7 +54,7 @@ export class TrackedOverheal {
 	heal: number = 0
 	overheal: number = 0
 	internalDebugName: string | undefined
-	causes: Map<number, OverhealCauseData> = new Map();
+	causes: Map<number, OverhealCauseData> = new Map()
 
 	constructor(opts: TrackedOverhealOpts) {
 		this.name = opts.name
@@ -379,7 +379,7 @@ export class Overheal extends Analyser {
 		}
 	}
 
-	override output(): React.ReactNode {
+	override output(): ReactNode {
 		if (this.suppressOutput) { return }
 
 		const rows = [this.uncategorized, ...this.trackedOverheals].map((bucket) => this.buildPanel(bucket)).filter(isDefined)

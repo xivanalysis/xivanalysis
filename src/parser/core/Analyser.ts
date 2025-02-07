@@ -1,6 +1,7 @@
 import {MessageDescriptor} from '@lingui/core'
 import {Event} from 'event'
 import _ from 'lodash'
+import {ReactNode} from 'react'
 import {Compute} from 'utilities'
 import {EventFilterPredicate, EventHook, EventHookCallback, TimestampHook, TimestampHookCallback} from './Dispatcher'
 import {Injectable} from './Injectable'
@@ -93,7 +94,7 @@ export class Analyser extends Injectable {
 	 * Called at the end of an analysis run to retrieve any output that should be rendered to the
 	 * results view. Omit or return `null` to prevent the analyser from being displayed.
 	 */
-	output?(): React.ReactNode
+	output?(): ReactNode
 
 	// -----
 	// #region Hook management

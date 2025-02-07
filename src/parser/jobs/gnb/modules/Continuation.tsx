@@ -4,7 +4,6 @@ import {Status} from 'data/STATUSES'
 import {dependency} from 'parser/core/Injectable'
 import Checklist, {Requirement, Rule} from 'parser/core/modules/Checklist'
 import {Procs as CoreProcs} from 'parser/core/modules/Procs'
-import React from 'react'
 
 export class Continuation extends CoreProcs {
 	@dependency private checklist!: Checklist

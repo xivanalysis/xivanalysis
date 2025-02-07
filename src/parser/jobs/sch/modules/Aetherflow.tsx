@@ -8,7 +8,6 @@ import {dependency} from 'parser/core/Injectable'
 import {Data} from 'parser/core/modules/Data'
 import {Timeline} from 'parser/core/modules/Timeline'
 import {UnableToAct} from 'parser/core/modules/UnableToAct'
-import React from 'react'
 import {Button, Grid, Table} from 'semantic-ui-react'
 
 export class Aetherflow extends Analyser {
@@ -37,14 +36,14 @@ export class Aetherflow extends Analyser {
 		this.data.actions.INDOMITABILITY.id,
 		this.data.actions.SACRED_SOIL.id,
 		this.data.actions.SCH_ENERGY_DRAIN.id,
-	];
+	]
 
 	private readonly RECITATION_ACTIONS: number[] = [
 		this.data.actions.EXCOGITATION.id,
 		this.data.actions.INDOMITABILITY.id,
 		this.data.actions.ADLOQUIUM.id,
 		this.data.actions.SUCCOR.id,
-	];
+	]
 
 	private readonly AETHERFLOW_CHARGES_PER_CAST = 3
 	private readonly AETHERFLOW_TIMELINE_START_PADDING = 5000

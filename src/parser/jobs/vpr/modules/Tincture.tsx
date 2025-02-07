@@ -5,7 +5,6 @@ import {EvaluatedAction, ExpectedActionsEvaluator} from 'parser/core/modules/Act
 import {HistoryEntry} from 'parser/core/modules/ActionWindow/History'
 import {SEVERITY} from 'parser/core/modules/Suggestions'
 import {Tincture as CoreTincture} from 'parser/core/modules/Tincture'
-import React from 'react'
 
 const SEVERITY_TIERS = {
 	1: SEVERITY.MEDIUM,

@@ -7,7 +7,7 @@ import {dependency} from 'parser/core/Injectable'
 import {Actors} from 'parser/core/modules/Actors'
 import {CounterGauge, Gauge as CoreGauge} from 'parser/core/modules/Gauge'
 import Suggestions, {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
-import React, {Fragment} from 'react'
+import {Fragment} from 'react'
 import {isSuccessfulHit} from 'utilities'
 
 interface GaugeModifier {

@@ -1,4 +1,3 @@
-import React from 'react'
 import {Popup} from 'semantic-ui-react'
 import styles from './Version.module.css'
 

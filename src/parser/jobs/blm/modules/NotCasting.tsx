@@ -7,7 +7,6 @@ import {dependency} from 'parser/core/Injectable'
 import Downtime from 'parser/core/modules/Downtime'
 import {GlobalCooldown} from 'parser/core/modules/GlobalCooldown'
 import {Timeline} from 'parser/core/modules/Timeline'
-import React from 'react'
 import {Table, Button} from 'semantic-ui-react'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 

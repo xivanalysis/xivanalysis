@@ -4,7 +4,6 @@ import {Action} from 'data/ACTIONS'
 import {Status} from 'data/STATUSES'
 import {Events} from 'event'
 import {Overheal as CoreOverheal, TrackedOverhealOpts} from 'parser/core/modules/Overheal'
-import React from 'react'
 
 const BUCKET_IDS = {
 	GCD_HEALS: 1,

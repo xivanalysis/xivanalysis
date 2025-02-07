@@ -9,7 +9,6 @@ import {dependency} from 'parser/core/Injectable'
 import {Data} from 'parser/core/modules/Data'
 import Downtime from 'parser/core/modules/Downtime'
 import Suggestions, {SEVERITY, Suggestion} from 'parser/core/modules/Suggestions'
-import React from 'react'
 
 export class Physick extends Analyser {
 	static override handle = 'physick'

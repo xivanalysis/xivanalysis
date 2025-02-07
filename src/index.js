@@ -3,7 +3,6 @@ import 'whatwg-fetch'
 import 'reflect-metadata'
 
 import * as Sentry from '@sentry/browser'
-import React from 'react'
 import ReactDOM from 'react-dom'
 import Root from './Root'
 

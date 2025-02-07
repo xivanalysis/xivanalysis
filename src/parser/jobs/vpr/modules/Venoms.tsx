@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
 import {DataLink, StatusLink} from 'components/ui/DbLink'
@@ -6,7 +5,6 @@ import {Status} from 'data/STATUSES'
 import {dependency} from 'parser/core/Injectable'
 import Checklist, {Requirement, Rule} from 'parser/core/modules/Checklist'
 import {Procs as CoreProcs} from 'parser/core/modules/Procs'
-import React from 'react'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 
 export class Venoms extends CoreProcs {
@@ -98,4 +96,3 @@ export class Venoms extends CoreProcs {
 		})
 	}
 }
-

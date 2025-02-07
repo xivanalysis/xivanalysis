@@ -1,4 +1,4 @@
-import React, {ReactNode, createContext, useContext, useState, useEffect, useMemo} from 'react'
+import {ReactNode, createContext, useContext, useState, useEffect, useMemo, Dispatch, SetStateAction} from 'react'
 import {Helmet} from 'react-helmet'
 import {useRouteMatch, matchPath, useLocation, Link} from 'react-router-dom'
 import style from './Breadcrumbs.module.css'
@@ -11,9 +11,9 @@ interface BreadcrumbValue {
 type BreadcrumbRegistry = Record<string, BreadcrumbValue>
 interface BreadcrumbContextValue {
 	registry: BreadcrumbRegistry
-	setRegistry: React.Dispatch<React.SetStateAction<BreadcrumbRegistry>>
+	setRegistry: Dispatch<SetStateAction<BreadcrumbRegistry>>
 	banner: string | undefined
-	setBanner: React.Dispatch<React.SetStateAction<string | undefined>>
+	setBanner: Dispatch<SetStateAction<string | undefined>>
 }
 
 const BreadcrumbContext = createContext<BreadcrumbContextValue | undefined>(undefined)
@@ -48,7 +48,7 @@ export function Breadcrumbs() {
 			let url: string | undefined
 			let escapeHatch = 0
 			const segments: Array<BreadcrumbValue & {url: string}> = []
-			// eslint-disable-next-line no-constant-condition
+
 			while (true) {
 				path += '/:segment'
 				url = matchPath(pathname, {path})?.url

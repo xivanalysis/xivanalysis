@@ -9,7 +9,6 @@ import CastTime from 'parser/core/modules/CastTime'
 import Checklist, {Rule, Requirement} from 'parser/core/modules/Checklist'
 import {Data} from 'parser/core/modules/Data'
 import {SimpleRow, StatusItem, Timeline} from 'parser/core/modules/Timeline'
-import React from 'react'
 import {Table, Button} from 'semantic-ui-react'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 

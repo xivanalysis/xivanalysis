@@ -36,9 +36,9 @@ export default class Rule {
 	}
 
 	constructor(props: RuleProps) {
-		this.name = props.name,
+		this.name = props.name
 		this.description = props.description
-		this.requirements = props.requirements,
+		this.requirements = props.requirements
 		this.target = props.target ?? DEFAULT_TARGET
 		this.displayOrder = props.displayOrder ?? DisplayOrder.DEFAULT
 	}

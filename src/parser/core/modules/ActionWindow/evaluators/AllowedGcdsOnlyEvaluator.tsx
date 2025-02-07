@@ -1,5 +1,4 @@
 import {Plural, Trans} from '@lingui/react'
-import React from 'react'
 import {GlobalCooldown} from '../../GlobalCooldown'
 import {SeverityTiers, TieredSuggestion} from '../../Suggestions/Suggestion'
 import {EvaluatedAction} from '../EvaluatedAction'

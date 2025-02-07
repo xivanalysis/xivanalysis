@@ -5,7 +5,6 @@ import {dependency} from 'parser/core/Injectable'
 import CastTime from 'parser/core/modules/CastTime'
 import {ProcGroup, Procs as CoreProcs} from 'parser/core/modules/Procs'
 import {SEVERITY, Suggestion} from 'parser/core/modules/Suggestions'
-import React from 'react'
 
 export default class Procs extends CoreProcs {
 	@dependency castTime!: CastTime

@@ -1,6 +1,6 @@
 import Color from 'color'
 import {Contributor} from 'data/CONTRIBUTORS'
-import React, {CSSProperties, PureComponent, ReactNode} from 'react'
+import {CSSProperties, PureComponent, ReactNode} from 'react'
 import {Label} from 'semantic-ui-react'
 
 interface ContributorLabelProps {

@@ -4,12 +4,12 @@ import _ from 'lodash'
 import {observable, action} from 'mobx'
 import {observer} from 'mobx-react'
 import * as PropTypes from 'prop-types'
-import React from 'react'
+import {Component} from 'react'
 import {Popup, List, Icon} from 'semantic-ui-react'
 import styles from './I18nOverlay.module.css'
 
 @observer
-class I18nErrorBoundary extends React.Component {
+class I18nErrorBoundary extends Component {
 	static propTypes = {
 		id: PropTypes.string,
 		children: PropTypes.node,
@@ -39,7 +39,7 @@ class I18nErrorBoundary extends React.Component {
 	}
 }
 
-export default class I18nOverlay extends React.Component {
+export default class I18nOverlay extends Component {
 	static propTypes = {
 		enabled: PropTypes.bool.isRequired,
 		language: PropTypes.string.isRequired,
@@ -54,10 +54,10 @@ export default class I18nOverlay extends React.Component {
 		try {
 			const rawCatalog = await import(
 				/* webpackMode: 'lazy', webpackChunkName: 'i18n-[index]-raw' */
-				'../../locale/' + language + '/messages.json?raw' // eslint-disable-line comma-dangle
+				'../../locale/' + language + '/messages.json?raw'
 			)
 			catalog = JSON.parse(rawCatalog.default)
-		} catch (err) {
+		} catch (_err) {
 			catalog = null
 		}
 
@@ -121,7 +121,7 @@ export default class I18nOverlay extends React.Component {
 					<strong>values:</strong>
 					<pre>{ _.map(values, (val, key) => `${key}: ${JSON.stringify(val)}`) }</pre>
 				</>
-			} catch (err) { /* no-op */ }
+			} catch (_err) { /* no-op */ }
 		}
 
 		if (id && i18n) {

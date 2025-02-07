@@ -1,5 +1,5 @@
 import classNames from 'classnames'
-import React from 'react'
+import {PureComponent, ReactNode} from 'react'
 import {Icon, SemanticICONS} from 'semantic-ui-react'
 import styles from './Message.module.css'
 import {MessageHeader} from './MessageHeader'
@@ -21,9 +21,10 @@ const typePrecedence: ReadonlyArray<keyof MessageTypes> = [
 interface Props extends MessageTypes {
 	// TODO: Replace with straight FA once we rip SUI out
 	icon?: SemanticICONS
+	children?: ReactNode
 }
 
-export class Message extends React.PureComponent<Props> {
+export class Message extends PureComponent<Props> {
 	static Header = MessageHeader
 
 	override render() {

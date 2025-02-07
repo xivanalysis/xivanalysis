@@ -6,7 +6,7 @@ import {Analyser} from 'parser/core/Analyser'
 import {filter} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
 import {Timeline} from 'parser/core/modules/Timeline'
-import React from 'react'
+import {ReactNode} from 'react'
 import {Button, Table} from 'semantic-ui-react'
 import {isDefined} from 'utilities'
 import {Data} from '../Data'
@@ -111,7 +111,7 @@ export class Gauge extends Analyser {
 		/>
 	}
 
-	private getOvercapTable(): React.ReactNode {
+	private getOvercapTable(): ReactNode {
 		// can typescript narrow this for me or...
 		const counterGauges = this.gauges.filter(g => g instanceof CounterGauge && g.outputOvercapTable && g.overCap > 0) as CounterGauge[]
 

@@ -1,6 +1,5 @@
 import {Trans} from '@lingui/react'
 import {CooldownDowntime} from 'parser/core/modules/CooldownDowntime'
-import React from 'react'
 
 // due to our limited weaving capabilities we'll allow a downtime of 5000ms or about 2 GCDs
 const ALLOWEDDOWNTIMEALL = 5000

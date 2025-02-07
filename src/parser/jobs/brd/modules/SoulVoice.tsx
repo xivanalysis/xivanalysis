@@ -4,7 +4,6 @@ import {Event, Events} from 'event'
 import {filter} from 'parser/core/filter'
 import {CounterGauge, Gauge} from 'parser/core/modules/Gauge'
 import {GAUGE_FADE} from 'parser/core/modules/ResourceGraphs/ResourceGraphs'
-import React from 'react'
 
 const MAX_SOUL_VOICE = 100
 const SOUL_VOICE_COLOR = Color('#5DBD99').fade(GAUGE_FADE)

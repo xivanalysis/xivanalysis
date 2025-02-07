@@ -1,6 +1,5 @@
 import {t} from '@lingui/macro'
 import {Analyser, DisplayMode} from 'parser/core/Analyser'
-import React from 'react'
 import DISPLAY_ORDER from '../DISPLAY_ORDER'
 import SuggestionsComponent from './Component'
 import Suggestion, {SEVERITY} from './Suggestion'

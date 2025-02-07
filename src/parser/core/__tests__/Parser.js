@@ -7,7 +7,7 @@ import Parser from '../Parser'
 
 jest.mock('../Dispatcher')
 
-/* eslint-disable @xivanalysis/no-unused-dependencies, @typescript-eslint/no-magic-numbers */
+/* eslint-disable @typescript-eslint/no-magic-numbers */
 
 // Testing modules
 class BasicAnalyser extends Analyser {

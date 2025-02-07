@@ -2,7 +2,7 @@ import {Trans} from '@lingui/react'
 import {Segment} from 'akkd'
 import PATCHES, {getPatch} from 'data/PATCHES'
 import {observer} from 'mobx-react'
-import React from 'react'
+import {Component} from 'react'
 import {RouteComponentProps, withRouter} from 'react-router-dom'
 import {Report} from 'report'
 import {Header} from 'semantic-ui-react'
@@ -13,7 +13,7 @@ type BranchBannerProps =
 	& {report: Report}
 
 @observer
-class BranchBannerComponent extends React.Component<BranchBannerProps> {
+class BranchBannerComponent extends Component<BranchBannerProps> {
 	override render() {
 		const {location, report} = this.props
 

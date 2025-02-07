@@ -5,7 +5,6 @@ import {RulePassedEvaluator} from 'parser/core/modules/ActionWindow/evaluators/R
 import {History, HistoryEntry} from 'parser/core/modules/ActionWindow/History'
 import {TieredSuggestion} from 'parser/core/modules/Suggestions'
 import {DEFAULT_SEVERITY_TIERS} from 'parser/jobs/dnc/CommonData'
-import React from 'react'
 import {getMetadataForWindow} from './EvaluatorUtilities'
 import {CycleMetadata, DEATH_PRIORITY} from './WatchdogConstants'
 

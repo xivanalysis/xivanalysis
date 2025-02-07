@@ -12,7 +12,7 @@ import {Data} from 'parser/core/modules/Data'
 import {Invulnerability} from 'parser/core/modules/Invulnerability'
 import {Statuses} from 'parser/core/modules/Statuses'
 import Suggestions, {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
-import React, {ReactNode} from 'react'
+import {ReactNode} from 'react'
 import {Accordion, Table, Message} from 'semantic-ui-react'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 
@@ -52,9 +52,9 @@ export class Thunder extends Analyser {
 		[this.data.statuses.HIGH_THUNDER.id]: this.data.statuses.HIGH_THUNDER.duration,
 	}
 
-    private thunderCasts = 0
+	private thunderCasts = 0
 	private totalThunderClip = 0
-    private lastThunderCast: number = this.data.statuses.HIGH_THUNDER.id
+	private lastThunderCast: number = this.data.statuses.HIGH_THUNDER.id
 	private clip: {[key: number]: number} = {
 		[this.data.statuses.HIGH_THUNDER.id]: 0,
 	}

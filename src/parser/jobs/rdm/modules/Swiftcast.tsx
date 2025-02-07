@@ -6,7 +6,6 @@ import {EvaluatedAction} from 'parser/core/modules/ActionWindow'
 import {HistoryEntry} from 'parser/core/modules/ActionWindow/History'
 import {Actors} from 'parser/core/modules/Actors'
 import {Swiftcast as CoreSwiftcast} from 'parser/core/modules/Swiftcast'
-import React from 'react'
 import {DISPLAY_ORDER} from './DISPLAY_ORDER'
 
 export class Swiftcast extends CoreSwiftcast {

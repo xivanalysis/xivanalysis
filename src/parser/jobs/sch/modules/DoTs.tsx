@@ -6,7 +6,6 @@ import {dependency} from 'parser/core/Injectable'
 import Checklist, {Requirement, Rule} from 'parser/core/modules/Checklist'
 import {DoTs as CoreDoTs} from 'parser/core/modules/DoTs'
 import Suggestions, {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
-import React from 'react'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 
 // In seconds
@@ -57,4 +56,3 @@ export default class DoTs extends CoreDoTs {
 		}))
 	}
 }
-

@@ -2,7 +2,6 @@ import {Trans} from '@lingui/react'
 import {DataLink} from 'components/ui/DbLink'
 import {Action} from 'data/ACTIONS'
 import {CooldownDowntime} from 'parser/core/modules/CooldownDowntime'
-import React from 'react'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 
 export class oGCDs extends CooldownDowntime {
@@ -16,7 +15,7 @@ export class oGCDs extends CooldownDowntime {
 		<br/><DataLink action="ORACLE" /> is a very powerful oGCD that should be used within the <DataLink action="DIVINATION" showIcon={false} /> window.
 		<br/>Try to time <DataLink action="DIVINATION" showIcon={false} /> to match raid buffs and high output phases of other party members - it's more important to use it on time rather than hold it.
 	</Trans>
-	// eslint-disable-next-line @typescript-eslint/no-magic-numbers
+
 	override checklistTarget = 100
 
 	override trackedDisplayOrder = DISPLAY_ORDER.DIVINATION_CHECKLIST

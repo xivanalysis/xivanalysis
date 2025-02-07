@@ -1,7 +1,7 @@
 import {Analyser} from 'parser/core/Analyser'
 import {TimestampHookArguments, TimestampHookCallback} from 'parser/core/Dispatcher'
-import {GAUGE_HANDLE, ResourceData, ResourceGraphOptions} from '../ResourceGraphs/ResourceGraphs'
 import {AbstractGauge, AbstractGaugeOptions} from './AbstractGauge'
+import {GAUGE_HANDLE, ResourceData, ResourceGraphOptions} from '../ResourceGraphs/ResourceGraphs'
 
 function expectExist<T>(value?: T) {
 	if (!value) {

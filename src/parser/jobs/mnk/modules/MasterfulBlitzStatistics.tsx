@@ -7,7 +7,7 @@ import {filter} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
 import {Data} from 'parser/core/modules/Data'
 import {DataSet, PieChartStatistic, Statistics} from 'parser/core/modules/Statistics'
-import React from 'react'
+import {ReactNode} from 'react'
 
 interface TrackedAction {
 	color: string,
@@ -21,7 +21,7 @@ export class MasterfulBlitzStatistics extends Analyser {
 	@dependency private data!: Data
 	@dependency private statistics!: Statistics
 
-	private trackedActions: Map<number, TrackedAction> = new Map<number, TrackedAction>();
+	private trackedActions: Map<number, TrackedAction> = new Map<number, TrackedAction>()
 
 	override initialise() {
 		this.trackedActions.set(this.data.actions.PHANTOM_RUSH.id, {color: '#9b6c6c', count: 0})
@@ -46,7 +46,7 @@ export class MasterfulBlitzStatistics extends Analyser {
 	}
 
 	private onComplete() {
-		const data: DataSet<React.ReactNode, 2> = Array.from(this.trackedActions.entries()).map((val) => {
+		const data: DataSet<ReactNode, 2> = Array.from(this.trackedActions.entries()).map((val) => {
 			const actionId: number = val[0]
 			const trackedAction: TrackedAction = val[1]
 			return {

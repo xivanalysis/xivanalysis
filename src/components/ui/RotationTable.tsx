@@ -1,6 +1,6 @@
 import {Trans} from '@lingui/react'
 import Rotation, {RotationEvent} from 'components/ui/Rotation'
-import React from 'react'
+import {Component, ReactNode} from 'react'
 import {Button, Table} from 'semantic-ui-react'
 import {isDefined, formatDuration} from 'utilities'
 
@@ -8,7 +8,7 @@ export interface RotationTarget {
 	/**
 	 * Displayed header
 	 */
-	header: React.ReactNode
+	header: ReactNode
 	/**
 	 * Accessor can either be a string, in which case this will resolve to the value assigned to the same key in the `targetsData` field in each entry,
 	 * or a function resolving the entry to the `RotationTargetData`.
@@ -20,12 +20,12 @@ export interface RotationNotes {
 	/**
 	 * Displayed header
 	 */
-	header: React.ReactNode
+	header: ReactNode
 	/**
 	 * Accessor can either be a string, in which case this will resolve to the value assigned to the same key in the `targetsData` field in each entry,
 	 * or a function resolving the entry to the `RotationTargetData`.
 	 */
-	accessor: string | ((entry: RotationTableEntry) => React.ReactNode)
+	accessor: string | ((entry: RotationTableEntry) => ReactNode)
 }
 
 /**
@@ -59,7 +59,7 @@ export interface RotationTableNotesMap {
 	/**
 	 * Identifier to Notes mapping
 	 */
-	[id: string]: React.ReactNode
+	[id: string]: ReactNode
 }
 
 export interface RotationTableEntry {
@@ -132,7 +132,7 @@ interface RotationTableRowProps {
 	onGoto?: (start: number, end: number, scrollTo?: boolean) => void
 }
 
-export class RotationTable extends React.Component<RotationTableProps> {
+export class RotationTable extends Component<RotationTableProps> {
 	static defaultTargetComparator(actual: number, expected?: number): RotationTargetOutcome {
 		if (!isDefined(expected)) {
 			return RotationTargetOutcome.NEUTRAL
@@ -160,7 +160,7 @@ export class RotationTable extends React.Component<RotationTableProps> {
 		}
 	}
 
-	static notesAccessorResolver = (entry: RotationTableEntry, note: RotationNotes): React.ReactNode => {
+	static notesAccessorResolver = (entry: RotationTableEntry, note: RotationNotes): ReactNode => {
 		if (typeof note.accessor === 'string' && entry.notesMap != null) {
 			return entry.notesMap[note.accessor]
 		}
@@ -221,7 +221,7 @@ export class RotationTable extends React.Component<RotationTableProps> {
 			}
 		</Table.Row>
 
-	override render(): React.ReactNode {
+	override render(): ReactNode {
 		const {
 			targets,
 			notes,

@@ -8,7 +8,6 @@ import {dependency} from 'parser/core/Injectable'
 import {History} from 'parser/core/modules/ActionWindow/History'
 import {Data} from 'parser/core/modules/Data'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
-import React from 'react'
 
 // Tiered suggestion severities
 const COLD_SEVERITY = {

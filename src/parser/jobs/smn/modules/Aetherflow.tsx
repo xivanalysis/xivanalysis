@@ -9,7 +9,6 @@ import {dependency} from 'parser/core/Injectable'
 import {History} from 'parser/core/modules/ActionWindow/History'
 import {Data} from 'parser/core/modules/Data'
 import Suggestions, {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
-import React from 'react'
 
 const MAX_ALLOWED_FILLER_COUNT = 2
 

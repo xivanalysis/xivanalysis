@@ -6,7 +6,6 @@ import {Actors} from 'parser/core/modules/Actors'
 import Checklist, {Rule, Requirement} from 'parser/core/modules/Checklist'
 import {Invulnerability} from 'parser/core/modules/Invulnerability'
 import {Statuses} from 'parser/core/modules/Statuses'
-import React from 'react'
 
 export class SurgingTempest extends Analyser {
 	static override handle = 'surgingtempest'

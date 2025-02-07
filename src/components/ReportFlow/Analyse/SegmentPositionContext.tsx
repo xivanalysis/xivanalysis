@@ -1,4 +1,4 @@
-import React, {ReactNode} from 'react'
+import {createContext, PureComponent, ReactNode} from 'react'
 
 export interface Scrollable {
 	scrollIntoView(): void
@@ -11,7 +11,7 @@ export interface Context {
 	scrollToId(id?: number): void
 }
 
-const context = React.createContext<Context>(undefined as never)
+const context = createContext<Context>(undefined as never)
 export const {Consumer} = context
 
 interface ProviderProps {
@@ -22,7 +22,7 @@ interface ProviderState extends Context {
 	registry: ReadonlyMap<number, boolean>
 }
 
-export class SegmentPositionProvider extends React.PureComponent<ProviderProps, ProviderState> {
+export class SegmentPositionProvider extends PureComponent<ProviderProps, ProviderState> {
 	override readonly state: Readonly<ProviderState> = {
 		active: null,
 		register: this.register.bind(this),

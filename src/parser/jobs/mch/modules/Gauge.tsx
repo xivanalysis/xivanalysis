@@ -8,7 +8,6 @@ import {dependency} from 'parser/core/Injectable'
 import {Actors} from 'parser/core/modules/Actors'
 import {CounterGauge, Gauge as CoreGauge} from 'parser/core/modules/Gauge'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
-import React from 'react'
 import {isSuccessfulHit} from 'utilities'
 
 const OVERCAP_SEVERITY = {
@@ -81,9 +80,11 @@ export class Gauge extends CoreGauge {
 		const castActions = []
 
 		for (const [action, modifier] of modifiers.entries()) {
-			modifier.event === 'damage' ?
-				damageActions.push(action) :
+			if (modifier.event === 'damage') {
+				damageActions.push(action)
+			} else {
 				castActions.push(action)
+			}
 		}
 
 		const baseFilter = filter<Event>().source(this.parser.actor.id)

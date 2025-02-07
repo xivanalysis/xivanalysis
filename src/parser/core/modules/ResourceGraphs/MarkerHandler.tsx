@@ -1,5 +1,5 @@
 import {NumberFormat, Trans} from '@lingui/react'
-import React, {MouseEventHandler, ReactNode, useCallback, useState} from 'react'
+import {MouseEventHandler, ReactNode, useCallback, useState} from 'react'
 import {createPortal} from 'react-dom'
 import {ResourceDatum, ResourceMeta} from './ResourceGraphs'
 import styles from './ResourceGraphs.module.css'

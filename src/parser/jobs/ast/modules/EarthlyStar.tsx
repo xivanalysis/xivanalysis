@@ -8,7 +8,6 @@ import {filter, oneOf} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
 import {Data} from 'parser/core/modules/Data'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
-import React from 'react'
 
 // Tiny module to count the number of early detonations on Earthly Star.
 // TODO: Could expand to analyse Earthly Star usage, timing, overheal, etc - Sushi

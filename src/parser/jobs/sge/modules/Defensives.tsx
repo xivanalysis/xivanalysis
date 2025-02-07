@@ -1,7 +1,6 @@
 import {Trans} from '@lingui/react'
 import {DataLink} from 'components/ui/DbLink'
 import {Defensives as CoreDefensives} from 'parser/core/modules/Defensives'
-import React from 'react'
 
 export class Defensives extends CoreDefensives {
 	protected override trackedDefensives = [

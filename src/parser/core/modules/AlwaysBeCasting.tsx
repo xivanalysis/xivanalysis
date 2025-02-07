@@ -11,7 +11,6 @@ import {Data} from 'parser/core/modules/Data'
 import Downtime from 'parser/core/modules/Downtime'
 import {GlobalCooldown} from 'parser/core/modules/GlobalCooldown'
 import {SpeedAdjustments} from 'parser/core/modules/SpeedAdjustments'
-import React from 'react'
 
 const UPTIME_TARGET = 98
 

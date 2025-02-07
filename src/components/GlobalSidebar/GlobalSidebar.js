@@ -1,6 +1,6 @@
 import classnames from 'classnames'
 import * as PropTypes from 'prop-types'
-import React from 'react'
+import {Component, createRef} from 'react'
 import ReactDOM from 'react-dom'
 import {Link} from 'react-router-dom'
 import {Breadcrumbs} from './Breadcrumbs'
@@ -8,9 +8,9 @@ import styles from './GlobalSidebar.module.css'
 import Options from './Options'
 
 // TODO: This assumes there's only ever one GlobalSidebar. Which, I mean... there is. But what if there /isn't/!
-let contentRef = React.createRef() // eslint-disable-line prefer-const
+let contentRef = createRef() // eslint-disable-line prefer-const
 
-class GlobalSidebar extends React.Component {
+class GlobalSidebar extends Component {
 	static propTypes = {
 		centerLogo: PropTypes.bool,
 	}
@@ -45,7 +45,7 @@ class GlobalSidebar extends React.Component {
 	}
 }
 
-export class SidebarContent extends React.Component {
+export class SidebarContent extends Component {
 	static propTypes = {
 		children: PropTypes.node,
 	}

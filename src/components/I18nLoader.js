@@ -2,7 +2,7 @@ import {I18nProvider} from '@lingui/react'
 import {observable, reaction, runInAction} from 'mobx'
 import {disposeOnUnmount, observer} from 'mobx-react'
 import * as PropTypes from 'prop-types'
-import React from 'react'
+import {Component} from 'react'
 import {Container, Loader, Message} from 'semantic-ui-react'
 import {StoreContext} from 'store'
 import I18nOverlay from './I18nOverlay'
@@ -18,7 +18,7 @@ const cleanMessages = messages => {
 }
 
 @observer
-class I18nLoader extends React.Component {
+class I18nLoader extends Component {
 	static propTypes = {
 		children: PropTypes.node.isRequired,
 	}
@@ -33,7 +33,7 @@ class I18nLoader extends React.Component {
 		const promises = [import(
 			/* webpackMode: 'lazy' */
 			/* webpackChunkName: 'i18n-[index]' */
-			'../../locale/' + language + '/messages.json' // eslint-disable-line comma-dangle
+			'../../locale/' + language + '/messages.json'
 		)]
 
 		// Polyfill
@@ -43,7 +43,7 @@ class I18nLoader extends React.Component {
 				import(
 					/* webpackMode: 'lazy' */
 					/* webpackChunkName: 'nv-intl-polyfill' */
-					'intl' // eslint-disable-line comma-dangle
+					'intl'
 				),
 			)
 		}
@@ -67,7 +67,7 @@ class I18nLoader extends React.Component {
 					/* webpackMode: 'lazy' */
 					/* webpackChunkName: 'nv-intl-polyfill-[index]' */
 					/* webpackInclude: /(?:de|en|fr|ja|ko|zh).js/ */
-					'intl/locale-data/jsonp/' + language + '.js' // eslint-disable-line comma-dangle
+					'intl/locale-data/jsonp/' + language + '.js'
 				)
 			} catch {
 				runInAction(() => this.errored = true)

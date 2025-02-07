@@ -3,7 +3,7 @@ import {DataLink} from 'components/ui/DbLink'
 import {dependency} from 'parser/core/Injectable'
 import {CooldownDowntime} from 'parser/core/modules/CooldownDowntime'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
-import React, {Fragment} from 'react'
+import {Fragment} from 'react'
 
 const DPS_TARGET_PERCENT = 75
 

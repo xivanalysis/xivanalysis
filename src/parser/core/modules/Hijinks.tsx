@@ -1,5 +1,4 @@
 import {Trans} from '@lingui/react'
-import React from 'react'
 import {getIsAprilFirst} from '..'
 import {Analyser} from '../Analyser'
 import {dependency} from '../Injectable'
@@ -14,6 +13,7 @@ export default class Hijinks extends Analyser {
 		if (getIsAprilFirst()) {
 			this.addEventHook('complete', () => {
 				this.suggestions.add(new Suggestion({
+					// eslint-disable-next-line @typescript-eslint/no-require-imports
 					icon: require('../../../data/avatar/Godbert.png'),
 					severity: SEVERITY.MEMES,
 					content: <Trans id="core.hijinks.crit-more.content">Godbert says you should crit more to do more damage!</Trans>,

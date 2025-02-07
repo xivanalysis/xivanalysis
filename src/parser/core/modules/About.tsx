@@ -6,7 +6,7 @@ import NormalisedMessage from 'components/ui/NormalisedMessage'
 import {patchSupported} from 'data/PATCHES'
 import {AVAILABLE_MODULES} from 'parser/AVAILABLE_MODULES'
 import {Analyser, DisplayMode} from 'parser/core/Analyser'
-import React from 'react'
+import {ComponentType} from 'react'
 import {Header} from 'semantic-ui-react'
 import {dependency} from '../Injectable'
 import {ContributorRole, SupportedPatches} from '../Meta'
@@ -22,7 +22,7 @@ export default class About extends Analyser {
 
 	@dependency private actors!: Actors
 
-	Description?: React.ComponentType
+	Description?: ComponentType
 	contributors?: ContributorRole[]
 
 	supportedPatches?: SupportedPatches

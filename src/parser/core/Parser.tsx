@@ -5,7 +5,7 @@ import ErrorMessage from 'components/ui/ErrorMessage'
 import {getReportPatch, Patch} from 'data/PATCHES'
 import {DependencyCascadeError, ModulesNotFoundError} from 'errors'
 import {Event} from 'event'
-import React from 'react'
+import {ReactNode} from 'react'
 import {Report, Pull, Actor} from 'report'
 import toposort from 'toposort'
 import {extractErrorContext, isDefined, formatDuration} from 'utilities'
@@ -20,7 +20,7 @@ export interface Result {
 	name: string | MessageDescriptor
 	mode: DisplayMode
 	order: number
-	markup: React.ReactNode
+	markup: ReactNode
 }
 
 declare module 'event' {
@@ -198,7 +198,7 @@ class Parser {
 			const queue = this.eventDispatchQueue
 			while (queue.length > 0 && queue[queue.length -1].timestamp < event.timestamp) {
 				// Enforced by the while loop.
-				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+
 				yield queue.pop()!
 			}
 
@@ -330,7 +330,7 @@ class Parser {
 			}
 
 			// Use the ErrorMessage component for errors in the output too (and sentry)
-			let output: React.ReactNode = null
+			let output: ReactNode = null
 			try {
 				output = this.getOutput(injectable)
 			} catch (error) {
@@ -380,7 +380,7 @@ class Parser {
 		throw new Error(`Unhandled injectable type for result meta: ${constructor.handle}`)
 	}
 
-	private getOutput(injectable: Injectable): React.ReactNode {
+	private getOutput(injectable: Injectable): ReactNode {
 		if (injectable instanceof Analyser) {
 			return injectable.output?.()
 		}

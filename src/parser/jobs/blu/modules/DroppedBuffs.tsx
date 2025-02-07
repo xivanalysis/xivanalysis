@@ -8,7 +8,6 @@ import {dependency} from 'parser/core/Injectable'
 import {Data} from 'parser/core/modules/Data'
 import Downtime from 'parser/core/modules/Downtime'
 import Suggestions, {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
-import React from 'react'
 
 interface buffMisuse {
 	dropped: number

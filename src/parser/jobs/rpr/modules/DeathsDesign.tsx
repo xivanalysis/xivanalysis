@@ -7,7 +7,6 @@ import Checklist, {Requirement, Rule} from 'parser/core/modules/Checklist'
 import {Data} from 'parser/core/modules/Data'
 import {Invulnerability} from 'parser/core/modules/Invulnerability'
 import {Statuses} from 'parser/core/modules/Statuses'
-import React from 'react'
 
 export class DeathsDesign extends Analyser {
 	static override handle = 'deathsdesign'

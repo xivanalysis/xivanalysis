@@ -9,7 +9,6 @@ import {filter} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
 import {CounterGauge, Gauge} from 'parser/core/modules/Gauge'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
-import React from 'react'
 
 const CHAKRA_CAP = 5
 const BH_CHAKRA_CAP = 10

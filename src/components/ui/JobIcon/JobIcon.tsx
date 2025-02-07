@@ -1,5 +1,4 @@
 import {Job} from 'data/JOBS'
-import React from 'react'
 import styles from './JobIcon.module.css'
 
 export interface JobIconProps {

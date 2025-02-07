@@ -1,12 +1,13 @@
 import classNames from 'classnames'
-import React from 'react'
+import {PureComponent, ReactNode} from 'react'
 import styles from './Container.module.css'
 
 interface Props {
 	className?: string,
+	children?: ReactNode
 }
 
-export class Container extends React.PureComponent<Props> {
+export class Container extends PureComponent<Props> {
 	override render() {
 		const {className, children} = this.props
 		return (

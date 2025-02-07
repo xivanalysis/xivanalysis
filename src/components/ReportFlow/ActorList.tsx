@@ -8,7 +8,7 @@ import {patchSupported} from 'data/PATCHES'
 import {FALLBACK_KEY} from 'data/PATCHES/patches'
 import {AVAILABLE_MODULES} from 'parser/AVAILABLE_MODULES'
 import {Meta} from 'parser/core/Meta'
-import React, {ReactNode} from 'react'
+import {Fragment, ReactNode} from 'react'
 import {useRouteMatch, Link} from 'react-router-dom'
 import {Report, Actor, Pull} from 'report'
 import {ReportStore} from 'reportSources'
@@ -58,16 +58,16 @@ export function ActorList({reportStore, meta, report, pull}: ActorListProps) {
 	return (
 		<div className={styles.actorList}>
 			{sortedGroups.map(group => {
-				const showWarning = true
-					&& !warningDisplayed
+				const showWarning =
+					!warningDisplayed
 					&& UNSUPPORTED_ROLES.includes(group.role)
 				if (showWarning) { warningDisplayed = true }
 
 				return (
-					<React.Fragment key={group.role.id}>
+					<Fragment key={group.role.id}>
 						{showWarning && <UnsupportedWarning/>}
 						<RoleGroup meta={meta} group={group}/>
-					</React.Fragment>
+					</Fragment>
 				)
 			})}
 		</div>

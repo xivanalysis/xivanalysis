@@ -2,7 +2,6 @@ import {DataLink} from 'components/ui/DbLink'
 import {Action} from 'data/ACTIONS'
 import {EvaluationOutput, WindowEvaluator, EvaluatedAction} from 'parser/core/modules/ActionWindow'
 import {HistoryEntry} from 'parser/core/modules/ActionWindow/History'
-import React from 'react'
 
 interface RiddleOfWindEvaluatorOpts {
 	riddleActions: Array<Action['id']>,

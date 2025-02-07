@@ -5,7 +5,6 @@ import {filter, oneOf} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
 import Checklist, {Requirement, Rule} from 'parser/core/modules/Checklist'
 import {Procs as CoreProcs} from 'parser/core/modules/Procs'
-import React from 'react'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 export class ReadyProcs extends CoreProcs {
 	static override handle = 'ReadyProcs'

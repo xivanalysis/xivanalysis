@@ -10,7 +10,6 @@ import Checklist, {Requirement, Rule} from 'parser/core/modules/Checklist'
 import {Data} from 'parser/core/modules/Data'
 import Downtime from 'parser/core/modules/Downtime'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
-import React from 'react'
 import {fillActionIds} from 'utilities/fillArrays'
 import {FORM_ACTIONS, FORMLESS_APPLYING_ACTIONS, OPO_OPO_ACTIONS} from './constants'
 

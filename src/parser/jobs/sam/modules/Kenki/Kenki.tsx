@@ -8,7 +8,6 @@ import {filter, oneOf} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
 import {CounterGauge, Gauge as CoreGauge} from 'parser/core/modules/Gauge'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
-import React from 'react'
 import DISPLAY_ORDER from '../DISPLAY_ORDER'
 import kenkiIcon from './kenki.png'
 

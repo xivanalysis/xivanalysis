@@ -1,6 +1,5 @@
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
 import CONTRIBUTORS from 'data/CONTRIBUTORS'
-import React from 'react'
 
 export const changelog = [
 	{

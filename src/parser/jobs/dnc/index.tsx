@@ -2,7 +2,6 @@ import {t, Trans} from '@lingui/macro'
 import TransMarkdown from 'components/ui/TransMarkdown'
 import CONTRIBUTORS, {ROLES} from 'data/CONTRIBUTORS'
 import {Meta} from 'parser/core/Meta'
-import React from 'react'
 import {Icon, Message} from 'semantic-ui-react'
 import {changelog} from './changelog'
 

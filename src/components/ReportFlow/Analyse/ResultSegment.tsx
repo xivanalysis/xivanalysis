@@ -3,7 +3,7 @@ import {Segment} from 'akkd'
 import NormalisedMessage from 'components/ui/NormalisedMessage'
 import {DisplayMode} from 'parser/core/Analyser'
 import {Result} from 'parser/core/Parser'
-import React from 'react'
+import {PureComponent} from 'react'
 import ReactDOM from 'react-dom'
 import {Header, Icon} from 'semantic-ui-react'
 import {gutter} from 'theme'
@@ -23,7 +23,7 @@ export const OFFSET_FROM_VIEWPORT_TOP = gutter
 const MODULE_HEIGHT_MAX = 400
 const MODULE_HEIGHT_LEEWAY = 200
 
-export class ResultSegment extends React.PureComponent<Props, State> implements Scrollable {
+export class ResultSegment extends PureComponent<Props, State> implements Scrollable {
 	private static instances = new Map<string, ResultSegment>()
 	public static scrollIntoView(handle: string) {
 		const instance = this.instances.get(handle)
@@ -72,7 +72,9 @@ export class ResultSegment extends React.PureComponent<Props, State> implements 
 		const ref = ReactDOM.findDOMNode(this) as HTMLElement
 
 		if (ref !== this.ref) {
-			this.ref != null && this.observer.unobserve(this.ref)
+			if (this.ref != null) {
+				this.observer.unobserve(this.ref)
+			}
 			this.ref = ref
 			this.observer.observe(ref)
 		}

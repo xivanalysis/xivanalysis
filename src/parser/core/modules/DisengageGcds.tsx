@@ -6,7 +6,7 @@ import {filter} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
 import {Data} from 'parser/core/modules/Data'
 import {SimpleStatistic, Statistics} from 'parser/core/modules/Statistics'
-import React, {ReactNode} from 'react'
+import {ReactNode} from 'react'
 
 export abstract class DisengageGcds extends Analyser {
 	static override handle = 'disengagegcds'

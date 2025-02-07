@@ -10,7 +10,7 @@ import {Data} from 'parser/core/modules/Data'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import {Timeline} from 'parser/core/modules/Timeline'
 import DISPLAY_ORDER from 'parser/jobs/gnb/modules/DISPLAY_ORDER'
-import React, {Fragment} from 'react'
+import {Fragment} from 'react'
 import {Button, Message, Table} from 'semantic-ui-react'
 
 const MAX_TICKS = 10  // Sonic Break is 30s

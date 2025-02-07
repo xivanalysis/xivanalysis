@@ -6,7 +6,6 @@ import {filter, oneOf} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
 import {CounterGauge, Gauge as CoreGauge, TimerGauge} from 'parser/core/modules/Gauge'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
-import React from 'react'
 
 const FADE_AMOUNT = 0.25
 const CHECKMATE_COLOR = Color('#9767C7').fade(FADE_AMOUNT)

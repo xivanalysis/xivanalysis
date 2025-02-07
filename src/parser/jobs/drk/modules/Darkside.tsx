@@ -11,7 +11,6 @@ import {dependency} from 'parser/core/Injectable'
 import Checklist, {Requirement, Rule} from 'parser/core/modules/Checklist'
 import Downtime from 'parser/core/modules/Downtime'
 import {Gauge, TimerGauge} from 'parser/core/modules/Gauge'
-import React from 'react'
 import {Table} from 'semantic-ui-react'
 import {isSuccessfulHit} from 'utilities'
 

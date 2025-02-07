@@ -1,10 +1,11 @@
 import Color from 'color'
 import _ from 'lodash'
 import {ReactNode} from 'react'
-import {GAUGE_HANDLE, ResourceData, ResourceGraphOptions, ResourceGroupOptions} from '../ResourceGraphs/ResourceGraphs'
 import {AbstractGauge, AbstractGaugeOptions} from './AbstractGauge'
 import {GaugeEventReason} from './CounterGauge'
+import {GAUGE_HANDLE, ResourceData, ResourceGraphOptions, ResourceGroupOptions} from '../ResourceGraphs/ResourceGraphs'
 
+// eslint-disable-next-line no-constant-binary-expression
 const FORCE_COLLAPSE = true || process.env.NODE_ENV === 'production'
 
 interface EnumHistory {

@@ -8,7 +8,6 @@ import {dependency} from 'parser/core/Injectable'
 import {Cooldowns} from 'parser/core/modules/Cooldowns'
 import {Data} from 'parser/core/modules/Data'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
-import React from 'react'
 
 // Things to track:
 // Did they cast a Helios/Aspected Helios without Horoscope or Neutral Sect despite having either up?

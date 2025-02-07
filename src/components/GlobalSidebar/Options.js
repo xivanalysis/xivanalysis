@@ -1,7 +1,7 @@
 import classNames from 'classnames'
 import I18nMenu from 'components/ui/I18nMenu'
 import {observer} from 'mobx-react'
-import React, {useRef, useEffect, useContext} from 'react'
+import {useRef, useEffect, useContext} from 'react'
 import ReactDOM from 'react-dom'
 import {StoreContext} from 'store'
 import {LinkDiscord, LinkGitHub} from './Links'

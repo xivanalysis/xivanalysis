@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
 import {DataLink, StatusLink} from 'components/ui/DbLink'
@@ -8,7 +7,6 @@ import Checklist, {Requirement, Rule} from 'parser/core/modules/Checklist'
 import {Procs as CoreProcs} from 'parser/core/modules/Procs'
 import {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import DISPLAY_ORDER from 'parser/jobs/vpr/modules/DISPLAY_ORDER'
-import React from 'react'
 
 const SEVERITIES = {
 	DROPPED: {
@@ -114,4 +112,3 @@ export class FinisherProcs extends CoreProcs {
 		})
 	}
 }
-

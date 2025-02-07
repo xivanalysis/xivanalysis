@@ -11,7 +11,7 @@ import {dependency} from 'parser/core/Injectable'
 import DISPLAY_ORDER from 'parser/core/modules/DISPLAY_ORDER'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import {Timeline} from 'parser/core/modules/Timeline'
-import React from 'react'
+import {ReactNode} from 'react'
 import {Button, Table} from 'semantic-ui-react'
 import {Analyser} from '../Analyser'
 import {filter} from '../filter'
@@ -296,7 +296,7 @@ export class Combos extends Analyser {
 		return timestamp - this.parser.pull.timestamp
 	}
 
-	override output(): React.ReactNode {
+	override output(): ReactNode {
 		if (this.issues.length <= 0) {
 			return false
 		}

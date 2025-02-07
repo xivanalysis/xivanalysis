@@ -11,7 +11,6 @@ import {Actors} from 'parser/core/modules/Actors'
 import {Data} from 'parser/core/modules/Data'
 import Downtime from 'parser/core/modules/Downtime'
 import Suggestions, {SEVERITY, Suggestion, TieredSuggestion} from 'parser/core/modules/Suggestions'
-import React from 'react'
 import {fillActionIds, fillStatusIds} from 'utilities/fillArrays'
 import {FORM_TIMEOUT_MILLIS, FORMS, OPO_OPO_ACTIONS} from './constants'
 

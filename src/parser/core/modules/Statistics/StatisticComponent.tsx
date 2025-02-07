@@ -1,5 +1,5 @@
 import classNames from 'classnames'
-import React from 'react'
+import {PureComponent} from 'react'
 import {Icon, Popup} from 'semantic-ui-react'
 import {ColumnSpan, Statistic} from './Statistics'
 import styles from './Statistics.module.css'
@@ -15,7 +15,7 @@ interface Props {
 	statistic: Statistic
 }
 
-export class StatisticComponent extends React.PureComponent<Props> {
+export class StatisticComponent extends PureComponent<Props> {
 	override render() {
 		const {statistic} = this.props
 		const colSpanClass = spanClassMap[statistic.width || 1]

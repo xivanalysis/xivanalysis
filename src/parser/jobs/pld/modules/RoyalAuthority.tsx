@@ -5,7 +5,6 @@ import {Analyser} from 'parser/core/Analyser'
 import {dependency} from 'parser/core/Injectable'
 import Checklist, {Requirement, Rule} from 'parser/core/modules/Checklist'
 import {Data} from 'parser/core/modules/Data'
-import React from 'react'
 
 const ROYAL_AUTHORITY_TARGET = 94
 
@@ -36,7 +35,7 @@ export class RoyalAuthority extends Analyser {
 		atonement: this.createNewUsages(),
 		supplication: this.createNewUsages(),
 		sepulchre: this.createNewUsages(),
-	};
+	}
 
 	override initialise() {
 

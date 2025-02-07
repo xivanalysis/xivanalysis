@@ -8,7 +8,6 @@ import {dependency} from 'parser/core/Injectable'
 import {Actors} from 'parser/core/modules/Actors'
 import {CounterGauge, Gauge as CoreGauge, TimerGauge} from 'parser/core/modules/Gauge'
 import Suggestions, {SEVERITY, TieredSuggestion, Suggestion} from 'parser/core/modules/Suggestions'
-import React from 'react'
 
 const LILY_MAX_STACKS = 3
 const LILY_INTERVAL = 20000
@@ -59,7 +58,7 @@ export class Lilies extends CoreGauge {
 	@dependency private suggestions!: Suggestions
 	@dependency private actors!: Actors
 
-	private wastedGcds = 0;
+	private wastedGcds = 0
 
 	private lilyInterval = LILY_INTERVAL
 
@@ -192,4 +191,3 @@ export class Lilies extends CoreGauge {
 		}))
 	}
 }
-

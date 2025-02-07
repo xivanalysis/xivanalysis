@@ -3,7 +3,7 @@ import {ActionLink, ItemLink} from 'components/ui/DbLink'
 import {getDataBy} from 'data'
 import ACTIONS, {ITEM_ID_OFFSET} from 'data/ACTIONS'
 import {Cause} from 'event'
-import React, {Component} from 'react'
+import {Component} from 'react'
 import overlayStyle from './Procs/ProcOverlay.module.css'
 import styles from './Rotation.module.css'
 

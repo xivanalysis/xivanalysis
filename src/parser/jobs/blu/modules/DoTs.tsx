@@ -8,7 +8,6 @@ import {Actors} from 'parser/core/modules/Actors'
 import Checklist, {Requirement, TARGET, Rule} from 'parser/core/modules/Checklist'
 import {DoTs as CoreDoTs} from 'parser/core/modules/DoTs'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
-import React from 'react'
 
 const SEVERITIES = {
 	UNBUFFED_SOT: {
@@ -197,4 +196,3 @@ export class DoTs extends CoreDoTs {
 		}))
 	}
 }
-

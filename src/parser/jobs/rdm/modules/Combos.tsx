@@ -4,7 +4,6 @@ import {Event, Events} from 'event'
 import {filter} from 'parser/core/filter'
 import {ComboBreak, Combos as CoreCombos} from 'parser/core/modules/Combos'
 import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
-import React from 'react'
 import {DISPLAY_ORDER} from './DISPLAY_ORDER'
 
 /**

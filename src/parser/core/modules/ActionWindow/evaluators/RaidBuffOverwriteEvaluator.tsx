@@ -4,7 +4,6 @@ import {Events} from 'event'
 import _ from 'lodash'
 import {EvaluatedAction, EvaluationOutput, NotesEvaluator} from 'parser/core/modules/ActionWindow'
 import {HistoryEntry} from 'parser/core/modules/ActionWindow/History'
-import React from 'react'
 import {ensureArray} from 'utilities'
 import {Actor} from '../../Actors'
 

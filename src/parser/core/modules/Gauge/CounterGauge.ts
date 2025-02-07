@@ -1,6 +1,7 @@
 import _ from 'lodash'
-import {GAUGE_HANDLE, ResourceData, ResourceGraphOptions} from '../ResourceGraphs/ResourceGraphs'
+import {ReactNode} from 'react'
 import {AbstractGauge, AbstractGaugeOptions} from './AbstractGauge'
+import {GAUGE_HANDLE, ResourceData, ResourceGraphOptions} from '../ResourceGraphs/ResourceGraphs'
 
 export type GaugeEventReason =
 	| 'init'
@@ -91,7 +92,7 @@ export class CounterGauge extends AbstractGauge {
 		return this.history.filter(entry => entry.reason === 'generate').reduce((total, entry) => total + Math.abs(entry.delta), 0)
 	}
 
-	get label(): React.ReactNode {
+	get label(): ReactNode {
 		return this.graphOptions?.label
 	}
 

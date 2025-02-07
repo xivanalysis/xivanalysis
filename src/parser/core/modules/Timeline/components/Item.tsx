@@ -1,4 +1,4 @@
-import React, {memo, ReactNode} from 'react'
+import {memo, ReactNode} from 'react'
 import {Item as ItemConfig} from '../config'
 import {useScales} from './ScaleHandler'
 import styles from './Timeline.module.css'

@@ -1,6 +1,5 @@
 import {Plural, Trans} from '@lingui/react'
 import {Event, Events, FieldsBase, Resource} from 'event'
-import React from 'react'
 import {Actor} from 'report'
 import {Analyser} from '../Analyser'
 import {EventHook} from '../Dispatcher'

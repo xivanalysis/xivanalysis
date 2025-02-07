@@ -4,7 +4,6 @@ import {EvaluatedAction} from 'parser/core/modules/ActionWindow'
 import {RulePassedEvaluator} from 'parser/core/modules/ActionWindow/evaluators/RulePassedEvaluator'
 import {History, HistoryEntry} from 'parser/core/modules/ActionWindow/History'
 import {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
-import React from 'react'
 import {assignErrorCode, getMetadataForWindow} from './EvaluatorUtilities'
 import {CycleMetadata, ROTATION_ERRORS} from './WatchdogConstants'
 

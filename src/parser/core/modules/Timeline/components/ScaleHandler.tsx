@@ -1,6 +1,6 @@
 import {ScaleTime, scaleUtc} from 'd3-scale'
 import _ from 'lodash'
-import React, {createContext, useCallback, useContext, useEffect, useMemo, useRef, useState} from 'react'
+import {createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type WheelEvent} from 'react'
 import Measure, {BoundingRect, ContentRect, MeasureProps} from 'react-measure'
 import {useGesture} from 'react-use-gesture'
 import {UseGestureEvent} from 'react-use-gesture/dist/types'
@@ -52,7 +52,7 @@ const multipliers = new Map<number, number>([
 ])
 
 // I shouldn't need this but I do so here we are
-const isWheelEvent = (event: UseGestureEvent): event is React.WheelEvent =>
+const isWheelEvent = (event: UseGestureEvent): event is WheelEvent =>
 	event.type === 'wheel'
 
 function normaliseWheelDelta(deltaMode: number, delta: number) {

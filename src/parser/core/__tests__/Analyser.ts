@@ -3,8 +3,6 @@ import {Analyser} from '../Analyser'
 import {EventHook, TimestampHook} from '../Dispatcher'
 import Parser from '../Parser'
 
-/* eslint-disable @xivanalysis/no-unused-dependencies */
-
 describe('Analyser', () => {
 	let parser: Parser
 

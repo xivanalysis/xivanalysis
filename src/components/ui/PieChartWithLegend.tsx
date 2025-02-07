@@ -1,5 +1,5 @@
 import {merge} from 'lodash'
-import React from 'react'
+import {Component, ReactNode} from 'react'
 import {ChartComponentProps, Pie} from 'react-chartjs-2'
 import * as styles from './PieChartWithLegend.module.css'
 
@@ -7,20 +7,20 @@ interface DataPoint {
 	value: number,
 	label: string,
 	backgroundColor?: string,
-	additional?: React.ReactNode[],
+	additional?: ReactNode[],
 }
 
 type Props = ChartComponentProps & {
 	headers?: {
-		label?: React.ReactNode,
-		additional?: React.ReactNode[],
+		label?: ReactNode,
+		additional?: ReactNode[],
 	},
 	data: DataPoint[],
 }
 
 const MISSING_COLOUR_FALLBACK = '#888'
 
-export default class PieChartWithLegend extends React.Component<Props> {
+export default class PieChartWithLegend extends Component<Props> {
 	override render() {
 		const {
 			data: propData,

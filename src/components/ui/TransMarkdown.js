@@ -2,7 +2,7 @@ import {withI18n} from '@lingui/react'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import * as PropTypes from 'prop-types'
-import React, {PureComponent} from 'react'
+import {createElement, isValidElement, PureComponent} from 'react'
 import ReactMarkdown from 'react-markdown'
 import {ActionLink, StatusLink} from './DbLink'
 import GlossaryTerm from './GlossaryTerm'
@@ -14,7 +14,7 @@ import GlossaryTerm from './GlossaryTerm'
 const LINK_EXTRACTOR = /^~([^/]+)\/(.+)$/
 
 const LINK_TYPES = {
-	term: (term, children) => React.createElement(GlossaryTerm, {
+	term: (term, children) => createElement(GlossaryTerm, {
 		term,
 	}, children),
 
@@ -26,7 +26,7 @@ const LINK_TYPES = {
 			actionId = parseInt(actionId, 10)
 		}
 
-		return React.createElement(ActionLink, {
+		return createElement(ActionLink, {
 			id: actionId,
 			name: children,
 		})
@@ -40,7 +40,7 @@ const LINK_TYPES = {
 			statusId = parseInt(statusId, 10)
 		}
 
-		return React.createElement(StatusLink, {
+		return createElement(StatusLink, {
 			id: statusId,
 			name: children,
 		})
@@ -66,7 +66,7 @@ class TransMarkdown extends PureComponent {
 
 	renderLink(data) {
 		// Don't do this at home kids
-		const href = React.isValidElement(data.href)
+		const href = isValidElement(data.href)
 			? data.href.props.children
 			: data.href
 
@@ -78,7 +78,7 @@ class TransMarkdown extends PureComponent {
 			}
 		}
 
-		return React.createElement('a', {
+		return createElement('a', {
 			target: this.props.linkTarget,
 			href: data.href,
 		}, data.children)

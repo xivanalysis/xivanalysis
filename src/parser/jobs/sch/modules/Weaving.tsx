@@ -2,7 +2,6 @@ import {Trans} from '@lingui/react'
 import {DataLink} from 'components/ui/DbLink'
 import {SEVERITY} from 'parser/core/modules/Suggestions'
 import {Weaving as CoreWeaving} from 'parser/core/modules/Weaving'
-import React from 'react'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 
 const WEAVING_SEVERITY = {

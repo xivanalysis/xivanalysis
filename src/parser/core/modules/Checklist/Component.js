@@ -1,6 +1,6 @@
 import {TARGET} from 'parser/core/modules/Checklist/Rule'
 import * as PropTypes from 'prop-types'
-import React, {Component} from 'react'
+import {Component} from 'react'
 import {Accordion, Icon, Progress} from 'semantic-ui-react'
 import styles from './Checklist.module.css'
 

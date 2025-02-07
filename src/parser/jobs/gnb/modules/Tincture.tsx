@@ -3,7 +3,6 @@ import {DataLink} from 'components/ui/DbLink'
 import {ExpectedActionsEvaluator} from 'parser/core/modules/ActionWindow'
 import {SEVERITY} from 'parser/core/modules/Suggestions'
 import {Tincture as CoreTincture} from 'parser/core/modules/Tincture'
-import React from 'react'
 
 export class Tincture extends CoreTincture {
 

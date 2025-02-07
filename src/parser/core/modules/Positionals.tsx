@@ -9,7 +9,7 @@ import {dependency} from 'parser/core/Injectable'
 import Checklist, {Requirement, Rule} from 'parser/core/modules/Checklist'
 import DISPLAY_ORDER from 'parser/core/modules/DISPLAY_ORDER'
 import {Timeline} from 'parser/core/modules/Timeline'
-import React from 'react'
+import {ReactNode} from 'react'
 import {Button, Table} from 'semantic-ui-react'
 import {Analyser} from '../Analyser'
 import {Data} from './Data'
@@ -183,7 +183,7 @@ export abstract class Positionals extends Analyser {
 		})
 	}
 
-	override output(): React.ReactNode {
+	override output(): ReactNode {
 		const totalMisses = this.positionalResults.reduce((total, current) => total + current.misses.length, 0)
 
 		if (totalMisses === 0) { return }

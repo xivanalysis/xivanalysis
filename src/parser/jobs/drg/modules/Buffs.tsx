@@ -13,7 +13,6 @@ import {Invulnerability} from 'parser/core/modules/Invulnerability'
 import {PieChartStatistic, Statistics} from 'parser/core/modules/Statistics'
 import {Statuses} from 'parser/core/modules/Statuses'
 import Suggestions, {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
-import React from 'react'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 
 // it's just drakesbane and HT/FT good now

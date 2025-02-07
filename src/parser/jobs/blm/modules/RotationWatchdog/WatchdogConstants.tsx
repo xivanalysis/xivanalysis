@@ -1,7 +1,7 @@
 import {Trans} from '@lingui/react'
 import {DataLink} from 'components/ui/DbLink'
 import {SEVERITY} from 'parser/core/modules/Suggestions'
-import React, {ReactNode} from 'react'
+import {ReactNode} from 'react'
 import {ensureRecord} from 'utilities'
 import {BLMGaugeState} from '../Gauge'
 

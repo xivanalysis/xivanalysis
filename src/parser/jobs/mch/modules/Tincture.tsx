@@ -6,7 +6,6 @@ import {EvaluatedAction, ExpectedActionsEvaluator, TrackedAction, TrackedActions
 import {HistoryEntry} from 'parser/core/modules/ActionWindow/History'
 import {SEVERITY} from 'parser/core/modules/Suggestions'
 import {Tincture as CoreTincture} from 'parser/core/modules/Tincture'
-import React from 'react'
 
 const TINCTURE_OPENER_BUFFER = 10000
 const BS_REQUIREMENT = 10

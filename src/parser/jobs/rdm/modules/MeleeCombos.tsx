@@ -15,7 +15,7 @@ import Suggestions, {TieredSuggestion, SEVERITY} from 'parser/core/modules/Sugge
 import {Timeline} from 'parser/core/modules/Timeline'
 import {DISPLAY_ORDER} from 'parser/jobs/rdm/modules/DISPLAY_ORDER'
 import {ManaGauge, MANA_DIFFERENCE_THRESHOLD, MANA_CAP} from 'parser/jobs/rdm/modules/ManaGauge'
-import React, {Fragment} from 'react'
+import {Fragment} from 'react'
 import {Button, Message, Table} from 'semantic-ui-react'
 
 type MeleeCombo = {
@@ -114,7 +114,7 @@ export class MeleeCombos extends Analyser {
 		verflare: 0,
 		delay: 0,
 	}
-	private footnoteIndexes: SuggestionKey[] = [];
+	private footnoteIndexes: SuggestionKey[] = []
 
 	override initialise() {
 		super.initialise()

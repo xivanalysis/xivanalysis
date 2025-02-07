@@ -7,7 +7,6 @@ import {dependency} from 'parser/core/Injectable'
 import {Cooldowns} from 'parser/core/modules/Cooldowns'
 import {Procs as CoreProcs} from 'parser/core/modules/Procs'
 import {Statistics, SimpleStatistic} from 'parser/core/modules/Statistics'
-import React from 'react'
 
 const HARPE_CDR = 5000 //Harpe cast under Enhanced Harpe status reduced recast of Ingress/Engress by 5s
 export class Harpe extends CoreProcs {

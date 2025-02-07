@@ -11,7 +11,6 @@ import {dependency} from 'parser/core/Injectable'
 import {Actors} from 'parser/core/modules/Actors'
 import {CounterGauge, Gauge as CoreGauge} from 'parser/core/modules/Gauge'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
-import React from 'react'
 import {DEFAULT_SEVERITY_TIERS} from '../CommonData'
 
 // More lenient than usual due to the probable unreliability of the data.
@@ -131,7 +130,7 @@ export class Gauge extends CoreGauge {
 		[this.data.actions.TILLANA.id, ESPRIT_COST],
 	])
 
-	protected pauseGeneration = false;
+	protected pauseGeneration = false
 
 	override initialise() {
 		super.initialise()

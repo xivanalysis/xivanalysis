@@ -1,6 +1,5 @@
 import {Trans} from '@lingui/react'
 import {Overheal as CoreOverheal, TrackedOverhealOpts} from 'parser/core/modules/Overheal'
-import React from 'react'
 
 export class Overheal extends CoreOverheal {
 	protected override trackedHealCategories: TrackedOverhealOpts[] = [

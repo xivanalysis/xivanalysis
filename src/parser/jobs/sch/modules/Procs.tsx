@@ -2,7 +2,6 @@ import {Trans, Plural} from '@lingui/react'
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
 import {Procs as CoreProcs, ProcGroup} from 'parser/core/modules/Procs'
 import {SEVERITY, Suggestion} from 'parser/core/modules/Suggestions'
-import React from 'react'
 
 export default class Procs extends CoreProcs {
 	protected override trackedProcs: ProcGroup[] = [

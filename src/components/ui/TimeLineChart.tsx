@@ -1,7 +1,7 @@
 import type {ChartData as PureChartData, ChartOptions} from 'chart.js'
 import _ from 'lodash'
 import * as PropTypes from 'prop-types'
-import React, {PureComponent} from 'react'
+import {PureComponent} from 'react'
 import {ChartData, Line} from 'react-chartjs-2'
 
 const DEFAULT_OPTIONS: ChartOptions = {

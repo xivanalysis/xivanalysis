@@ -9,7 +9,6 @@ import {EvaluatedAction, ExpectedActionGroupsEvaluator, ExpectedGcdCountEvaluato
 import {HistoryEntry} from 'parser/core/modules/ActionWindow/History'
 import {GlobalCooldown} from 'parser/core/modules/GlobalCooldown'
 import {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
-import React from 'react'
 import {Message} from 'semantic-ui-react'
 import {DANCE_MOVES, TECHNICAL_FINISHES} from '../CommonData'
 import DISPLAY_ORDER from '../DISPLAY_ORDER'

@@ -1,4 +1,3 @@
-import React from 'react'
 import {Analyser} from '../Analyser'
 import {dependency} from '../Injectable'
 import {Invulnerability} from './Invulnerability'

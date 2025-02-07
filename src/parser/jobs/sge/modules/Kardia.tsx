@@ -8,7 +8,6 @@ import {Actors} from 'parser/core/modules/Actors'
 import CheckList, {Requirement, Rule} from 'parser/core/modules/Checklist'
 import Downtime from 'parser/core/modules/Downtime'
 import {Statuses} from 'parser/core/modules/Statuses'
-import React from 'react'
 
 export class Kardia extends Analyser {
 	static override handle = 'kardia'

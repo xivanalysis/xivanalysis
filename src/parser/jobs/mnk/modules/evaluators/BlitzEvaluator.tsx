@@ -6,7 +6,6 @@ import {EvaluatedAction, EvaluationOutput, WindowEvaluator} from 'parser/core/mo
 import {HistoryEntry} from 'parser/core/modules/ActionWindow/History'
 import {ChargeHistoryEntry, Cooldowns} from 'parser/core/modules/Cooldowns'
 import {SEVERITY, Suggestion, TieredSuggestion} from 'parser/core/modules/Suggestions'
-import React from 'react'
 import {PerfectBalance} from '../PerfectBalance'
 
 /**

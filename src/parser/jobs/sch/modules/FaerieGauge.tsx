@@ -10,7 +10,6 @@ import {dependency} from 'parser/core/Injectable'
 import {CounterGauge} from 'parser/core/modules/Gauge'
 import {Gauge as CoreGauge} from 'parser/core/modules/Gauge/Gauge'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
-import React from 'react'
 
 const GAUGE_GAIN_AMOUNT = 10
 

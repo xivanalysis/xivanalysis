@@ -8,7 +8,6 @@ import Checklist, {Requirement, Rule} from 'parser/core/modules/Checklist'
 import {Data} from 'parser/core/modules/Data'
 import {Invulnerability} from 'parser/core/modules/Invulnerability'
 import {UnableToAct} from 'parser/core/modules/UnableToAct'
-import React from 'react'
 
 const SOULSOW_BUFFER = 1000
 

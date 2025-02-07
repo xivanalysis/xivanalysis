@@ -4,7 +4,7 @@ import {JobKey} from 'data/JOBS'
 import {Compute} from 'utilities'
 
 /** Declaration merge target for report meta types. */
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export interface ReportMetaRepository {}
 
 /**

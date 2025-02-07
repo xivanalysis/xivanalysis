@@ -1,7 +1,7 @@
 import ContributorLabel from 'components/ui/ContributorLabel'
 import {ChangelogEntry} from 'parser/core/Meta'
 import * as PropTypes from 'prop-types'
-import React from 'react'
+import {Fragment, MouseEvent, PureComponent} from 'react'
 import {Accordion, AccordionTitleProps} from 'semantic-ui-react'
 import styles from './ChangeLog.module.css'
 
@@ -9,7 +9,7 @@ interface ChangeLogProps {
 	changelog: ChangelogEntry[]
 }
 
-export default class ChangeLog extends React.PureComponent<ChangeLogProps> {
+export default class ChangeLog extends PureComponent<ChangeLogProps> {
 	static propTypes = {
 		changelog: PropTypes.arrayOf(PropTypes.shape({
 			date: PropTypes.instanceOf(Date),
@@ -22,7 +22,7 @@ export default class ChangeLog extends React.PureComponent<ChangeLogProps> {
 		activeIndexes: new Set(),
 	}
 
-	handleClick = (event: React.MouseEvent<HTMLDivElement>, data: AccordionTitleProps) => {
+	handleClick = (event: MouseEvent<HTMLDivElement>, data: AccordionTitleProps) => {
 		const {index} = data
 		const {activeIndexes} = this.state
 
@@ -44,7 +44,7 @@ export default class ChangeLog extends React.PureComponent<ChangeLogProps> {
 				const dateString = item.date.toLocaleDateString()
 				const active = activeIndexes.has(index)
 
-				return <React.Fragment key={index}>
+				return <Fragment key={index}>
 					<Accordion.Title
 						index={index}
 						active={active}
@@ -67,7 +67,7 @@ export default class ChangeLog extends React.PureComponent<ChangeLogProps> {
 					<Accordion.Content active={active}>
 						<item.Changes/>
 					</Accordion.Content>
-				</React.Fragment>
+				</Fragment>
 			})}
 		</Accordion>
 	}

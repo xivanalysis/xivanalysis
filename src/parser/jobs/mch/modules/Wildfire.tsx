@@ -11,7 +11,7 @@ import {History} from 'parser/core/modules/ActionWindow/History'
 import {Data} from 'parser/core/modules/Data'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import {Timeline} from 'parser/core/modules/Timeline'
-import React, {Fragment} from 'react'
+import {Fragment} from 'react'
 import {Message} from 'semantic-ui-react'
 
 // We always want 6 GCDs in WF

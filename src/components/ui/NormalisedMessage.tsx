@@ -1,6 +1,5 @@
 import {I18n, MessageDescriptor} from '@lingui/core'
 import {Trans, withI18n} from '@lingui/react'
-import React from 'react'
 
 interface Props {
 	i18n: I18n

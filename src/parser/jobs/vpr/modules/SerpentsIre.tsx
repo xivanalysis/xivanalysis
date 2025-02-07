@@ -3,7 +3,7 @@ import {DataLink} from 'components/ui/DbLink'
 import {EvaluatedAction, ExpectedActionsEvaluator, TimedWindow} from 'parser/core/modules/ActionWindow'
 import {HistoryEntry} from 'parser/core/modules/ActionWindow/History'
 import {SEVERITY} from 'parser/core/modules/Suggestions'
-import React from 'react'
+import {ReactElement} from 'react'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 
 const SEVERITY_TIERS = {
@@ -24,7 +24,7 @@ export class SerpentsIre extends TimedWindow { // AKA Peusdo 2 Minute Window
 	override startAction = this.data.actions.SERPENTS_IRE
 	override duration = DOUBLE_AWAKKEN_TIME // 30s. After Eye is cast, 1 GCD should be used before doing a double reawaken back to back
 
-	protected override prependMessages?: React.ReactElement = PREPEND_MESSAGE
+	protected override prependMessages?: ReactElement = PREPEND_MESSAGE
 
 	private adjustExpectedActionCount = (window: HistoryEntry<EvaluatedAction[]>) => {
 		if (window.start - OPENER_BUFFER <= this.parser.pull.timestamp) {

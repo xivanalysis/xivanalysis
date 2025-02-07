@@ -7,7 +7,6 @@ import {filter} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
 import {CounterGauge, Gauge as CoreGauge} from 'parser/core/modules/Gauge'
 import Suggestions, {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
-import React from 'react'
 
 const MAX_KAZEMATOI_STACKS = 5
 const ARMOR_CRUSH_MODIFIER = 2

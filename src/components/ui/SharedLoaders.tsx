@@ -1,5 +1,4 @@
 import {Trans} from '@lingui/react'
-import React from 'react'
 import {Loader} from 'semantic-ui-react'
 
 export const ReportLoader = () => (

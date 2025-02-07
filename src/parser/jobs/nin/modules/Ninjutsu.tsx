@@ -7,7 +7,6 @@ import {dependency} from 'parser/core/Injectable'
 import {Actors} from 'parser/core/modules/Actors'
 import {Data} from 'parser/core/modules/Data'
 import Suggestions, {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
-import React from 'react'
 
 const DOTON_TICK_TARGET = 6
 const JUSTIFIABLE_DOTON_TICKS = 10

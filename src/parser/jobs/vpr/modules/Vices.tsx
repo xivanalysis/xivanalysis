@@ -8,7 +8,6 @@ import {dependency} from 'parser/core/Injectable'
 import Checklist, {Requirement, Rule} from 'parser/core/modules/Checklist'
 import {Data} from 'parser/core/modules/Data'
 import DISPLAY_ORDER from 'parser/jobs/vpr/modules/DISPLAY_ORDER'
-import React from 'react'
 
 const PERFECTIO = 100 // 100% perfect, RPR would be proud
 export class Vices extends Analyser {

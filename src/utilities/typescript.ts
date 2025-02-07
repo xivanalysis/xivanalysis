@@ -43,11 +43,10 @@ export const ensureRecord =
 export type ReplaceFrom<Target, Source, Props extends keyof Source> =
 	Omit<Target, Props> & {[K in Props]: Source[K]}
 
-/* eslint-disable @typescript-eslint/ban-types,@typescript-eslint/no-explicit-any */
 /** Force typescript to compute a type for display purposes. */
-export type Compute<A extends any> =
+export type Compute<A> =
+	// eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
 	A extends Function? A : {[K in keyof A]: A[K]} & {}
-/* eslint-enable @typescript-eslint/ban-types,@typescript-eslint/no-explicit-any */
 
 /*
 The below is a collection of types used to create a "backfilled" union - that is, a

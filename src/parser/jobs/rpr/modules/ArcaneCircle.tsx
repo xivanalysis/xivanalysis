@@ -5,7 +5,6 @@ import {RaidBuffWindow, EvaluatedAction, TrackedActionGroup, ExpectedActionGroup
 import {DisplayedActionEvaluator} from 'parser/core/modules/ActionWindow/evaluators/DisplayedActionEvaluator'
 import {HistoryEntry} from 'parser/core/modules/ActionWindow/History'
 import {SEVERITY} from 'parser/core/modules/Suggestions'
-import React from 'react'
 import {Message} from 'semantic-ui-react'
 import {OPENER_BUFFER} from '../constants'
 import {DISPLAY_ORDER} from './DISPLAY_ORDER'

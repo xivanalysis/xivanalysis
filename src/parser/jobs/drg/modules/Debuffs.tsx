@@ -4,7 +4,6 @@ import {dependency} from 'parser/core/Injectable'
 import Checklist, {Rule, Requirement} from 'parser/core/modules/Checklist'
 import {DoTs as CoreDoTs} from 'parser/core/modules/DoTs'
 import Suggestions, {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
-import React from 'react'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 
 export default class Debuffs extends CoreDoTs {

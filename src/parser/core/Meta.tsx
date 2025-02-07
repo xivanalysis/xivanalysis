@@ -3,7 +3,7 @@ import {GameEdition} from 'data/EDITIONS'
 import PATCHES, {PatchNumber} from 'data/PATCHES'
 import {FALLBACK_KEY} from 'data/PATCHES/patches'
 import _ from 'lodash'
-import React from 'react'
+import {ComponentType} from 'react'
 import {Injectable} from './Injectable'
 
 type ModulesLoader = () => Promise<{default: Array<typeof Injectable>}>
@@ -24,12 +24,12 @@ export interface ContributorRole {
 export interface ChangelogEntry {
 	date: Date
 	contributors: Contributor[]
-	Changes: React.ComponentType
+	Changes: ComponentType
 }
 
 export class Meta {
 	readonly supportedPatches?: SupportedPatches
-	readonly Description?: React.ComponentType
+	readonly Description?: ComponentType
 	readonly contributors: ContributorRole[]
 	readonly changelog: ChangelogEntry[]
 
@@ -39,7 +39,7 @@ export class Meta {
 	constructor(opts: {
 		modules: ModulesLoader,
 		supportedPatches?: SupportedPatches,
-		Description?: React.ComponentType,
+		Description?: ComponentType,
 		contributors?: ContributorRole[],
 		changelog?: ChangelogEntry[],
 	}) {

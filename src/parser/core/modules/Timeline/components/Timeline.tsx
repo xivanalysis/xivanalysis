@@ -1,4 +1,3 @@
-import React from 'react'
 import {Item as ItemConfig, Row as RowConfig} from '../config'
 import {Axis} from './Axis'
 import {Items} from './Item'

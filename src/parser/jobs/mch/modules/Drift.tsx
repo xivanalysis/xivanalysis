@@ -9,7 +9,7 @@ import {dependency} from 'parser/core/Injectable'
 import {Data} from 'parser/core/modules/Data'
 import Downtime from 'parser/core/modules/Downtime'
 import {Timeline} from 'parser/core/modules/Timeline'
-import React, {Fragment} from 'react'
+import {Fragment} from 'react'
 import {Button, Message, Table} from 'semantic-ui-react'
 
 // Buffer (ms) to forgive insignificant drift, we really only care about GCD drift here

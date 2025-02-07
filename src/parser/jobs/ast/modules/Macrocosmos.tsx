@@ -8,7 +8,6 @@ import {Cooldowns} from 'parser/core/modules/Cooldowns'
 import {Data} from 'parser/core/modules/Data'
 import {Invulnerability} from 'parser/core/modules/Invulnerability'
 import Suggestions, {SEVERITY, Suggestion, TieredSuggestion} from 'parser/core/modules/Suggestions'
-import React from 'react'
 
 /**some notes for macrocosmos. Its potency is 250 and then 40% less (150 potency) for all other adds.
 * it it noteworthy that fall malefic's potency is also 250 and that gravity II's potency is 130.
@@ -98,7 +97,9 @@ export class Macrocosmos extends Analyser {
 
 		const content = this.gravityIIUses === 0 ? [generalContent] : [gravityIIContent]
 		const why = this.macrocosmosUses === 0 ? [noCastWhy] : [generalWhy]
-		this.gravityIIUses !== 0 ? why.push(gravityIIWhy) : ''
+		if (this.gravityIIUses !== 0) {
+			why.push(gravityIIWhy)
+		}
 
 		if (this.macrocosmosUses === 0 && this.gravityIIUses === 0) {
 			this.suggestions.add(new Suggestion({

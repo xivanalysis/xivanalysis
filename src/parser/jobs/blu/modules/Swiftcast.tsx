@@ -2,7 +2,6 @@ import {Trans} from '@lingui/react'
 import {EvaluatedAction} from 'parser/core/modules/ActionWindow'
 import {HistoryEntry} from 'parser/core/modules/ActionWindow/History'
 import {Swiftcast as CoreSwiftcast} from 'parser/core/modules/Swiftcast'
-import React from 'react'
 import {DISPLAY_ORDER} from './DISPLAY_ORDER'
 
 // Annoyingly we can't directly use the Swiftcast
@@ -41,4 +40,3 @@ export class Swiftcast extends CoreSwiftcast {
 	}
 	override swiftcastValidators = [this.badSwiftValidator]
 }
-

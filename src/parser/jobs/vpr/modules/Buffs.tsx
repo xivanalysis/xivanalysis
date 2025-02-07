@@ -8,7 +8,6 @@ import Checklist, {Rule, Requirement} from 'parser/core/modules/Checklist'
 import {Data} from 'parser/core/modules/Data'
 import {Invulnerability} from 'parser/core/modules/Invulnerability'
 import {Statuses} from 'parser/core/modules/Statuses'
-import React from 'react'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 
 export class Buffs extends Analyser {

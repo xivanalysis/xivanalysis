@@ -4,7 +4,7 @@ import * as Sentry from '@sentry/browser'
 import {Message, Segment} from 'akkd'
 import NormalisedMessage from 'components/ui/NormalisedMessage'
 import {getReportPatch} from 'data/PATCHES'
-import React from 'react'
+import {ReactNode} from 'react'
 import {Table} from 'semantic-ui-react'
 import {Analyser, DisplayMode} from '../Analyser'
 import {dependency} from '../Injectable'
@@ -13,7 +13,7 @@ import DISPLAY_ORDER from './DISPLAY_ORDER'
 
 interface Trigger {
 	source: typeof Analyser
-	reason?: React.ReactNode
+	reason?: ReactNode
 }
 
 export default class BrokenLog extends Analyser {
@@ -36,7 +36,7 @@ export default class BrokenLog extends Analyser {
 	trigger(
 		source: Analyser,
 		key: string,
-		reason?: React.ReactNode,
+		reason?: ReactNode,
 		erroneous = true,
 	) {
 		const constructor = (source.constructor as typeof Analyser)

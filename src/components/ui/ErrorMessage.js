@@ -1,7 +1,6 @@
 import {Trans} from '@lingui/react'
 import {SEVERITY} from 'errors'
 import * as PropTypes from 'prop-types'
-import React from 'react'
 import {Message} from 'semantic-ui-react'
 
 // Error type render config

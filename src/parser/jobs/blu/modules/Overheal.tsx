@@ -2,7 +2,6 @@ import {Trans} from '@lingui/react'
 import {Event, Events} from 'event'
 import {filter} from 'parser/core/filter'
 import {Overheal, TrackedOverhealOpts} from 'parser/core/modules/Overheal'
-import React from 'react'
 
 export class BLUOverheal extends Overheal {
 	protected override trackedHealCategories:TrackedOverhealOpts[] = [

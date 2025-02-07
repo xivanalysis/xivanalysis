@@ -4,7 +4,6 @@ import {ActionLink} from 'components/ui/DbLink'
 import {Status} from 'data/STATUSES'
 import {RaidBuffWindow, ExpectedActionsEvaluator} from 'parser/core/modules/ActionWindow'
 import {SEVERITY} from 'parser/core/modules/Suggestions'
-import React from 'react'
 import {DISPLAY_ORDER} from './DISPLAY_ORDER'
 
 export class SearingLight extends RaidBuffWindow {

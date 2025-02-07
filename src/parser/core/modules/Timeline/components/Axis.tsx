@@ -1,7 +1,7 @@
 import classNames from 'classnames'
 import {timeMinute} from 'd3-time'
 import {utcFormat} from 'd3-time-format'
-import React, {Fragment, memo} from 'react'
+import {Fragment, memo} from 'react'
 import {isDefined} from 'utilities'
 import {Item} from './Item'
 import {useScales} from './ScaleHandler'

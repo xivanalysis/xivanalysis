@@ -6,7 +6,6 @@ import CastTime from 'parser/core/modules/CastTime'
 import {ProcGroup, Procs as CoreProcs} from 'parser/core/modules/Procs'
 import {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import {DEFAULT_SEVERITY_TIERS} from 'parser/jobs/dnc/CommonData'
-import React from 'react'
 import {fillActionIds, fillActions} from 'utilities/fillArrays'
 import {AETHERHUE_ONE_SPELLS, AETHERHUE_TWO_SPELLS, HYPERPHANTASIA_SPELLS} from './CommonData'
 

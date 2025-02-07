@@ -2,7 +2,7 @@ import {Trans} from '@lingui/react'
 import classNames from 'classnames'
 import {getDutyBanner} from 'data/ENCOUNTERS'
 import {observer} from 'mobx-react'
-import React, {useContext, useCallback} from 'react'
+import {useContext, useCallback, Key} from 'react'
 import {Link, useRouteMatch} from 'react-router-dom'
 import {Duty, Pull} from 'report'
 import {ReportStore} from 'reportSources'
@@ -19,7 +19,7 @@ const TRASH_DUTY: Duty = {
 interface PullGroupData {
 	duty: Duty
 	pulls: Pull[]
-	key: React.Key
+	key: Key
 }
 
 export interface PullListProps {

@@ -4,7 +4,6 @@ import {RulePassedEvaluator} from 'parser/core/modules/ActionWindow/evaluators/R
 import {HistoryEntry} from 'parser/core/modules/ActionWindow/History'
 import {Invulnerability} from 'parser/core/modules/Invulnerability'
 import {TieredSuggestion} from 'parser/core/modules/Suggestions'
-import React from 'react'
 import {DEFAULT_SEVERITY_TIERS} from '../../CommonData'
 
 export interface DanceExpectations {

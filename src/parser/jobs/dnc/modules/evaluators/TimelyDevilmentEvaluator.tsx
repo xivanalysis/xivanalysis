@@ -6,7 +6,6 @@ import {RulePassedEvaluator} from 'parser/core/modules/ActionWindow/evaluators/R
 import {HistoryEntry} from 'parser/core/modules/ActionWindow/History'
 import {Data} from 'parser/core/modules/Data'
 import {TieredSuggestion} from 'parser/core/modules/Suggestions'
-import React from 'react'
 import {TECHNICAL_SEVERITY_TIERS} from '../Technicalities'
 
 export interface TimelyDevilmentEvaluatorOpts {

@@ -13,7 +13,7 @@ import {HistoryEntryPredicate} from 'parser/core/modules/ActionWindow/windows/Ac
 import {Actors} from 'parser/core/modules/Actors'
 import {Invulnerability} from 'parser/core/modules/Invulnerability'
 import {UnableToAct} from 'parser/core/modules/UnableToAct'
-import React, {Fragment} from 'react'
+import {Fragment} from 'react'
 import {Message} from 'semantic-ui-react'
 import {fillActionIds} from 'utilities/fillArrays'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
@@ -34,6 +34,7 @@ import {SkipThunderEvaluator} from './RotationWatchdog/SkipThunderEvaluator'
 import {UptimeSoulsEvaluator} from './RotationWatchdog/UptimeSoulsEvaluator'
 import {CycleMetadata, ROTATION_ERRORS, HIDDEN_PRIORITY_THRESHOLD, FLARE_STAR_CARRYOVER_CODE} from './RotationWatchdog/WatchdogConstants'
 
+// eslint-disable-next-line no-constant-binary-expression
 const DEBUG_SHOW_ALL = false && process.env.NODE_ENV !== 'production'
 
 const MAX_POSSIBLE_FIRE4 = 6
