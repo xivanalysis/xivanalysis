@@ -95,6 +95,10 @@ export async function fetchFflogs<T>(
 			throw new Errors.TooManyRequestsError()
 		}
 
+		if (!(error instanceof Error)) {
+			throw error
+		}
+
 		throw new Errors.UnknownApiError({inner: error})
 	}
 }

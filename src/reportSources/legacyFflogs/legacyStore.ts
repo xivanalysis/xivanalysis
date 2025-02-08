@@ -40,7 +40,7 @@ export class ReportStore {
 
 		let response: ReportFightsResponse
 		try {
-			let cache : Cache | undefined
+			let cache: Cache | undefined
 			try {
 				cache = await getCache(code)
 			} catch (error) {
@@ -57,26 +57,28 @@ export class ReportStore {
 				bypassCache ? 'bypass' : 'read',
 			)
 		} catch (e) {
+			const error = e instanceof Error ? e : new Error(Object.prototype.toString.call(e))
+
 			// Something's gone wrong, clear report status then dispatch an error
 			runInAction(() => {
 				this.report = undefined
 			})
 
 			// TODO: Add more error handling to this if they start cropping up more
-			if (e instanceof Errors.UnknownApiError && e.inner instanceof ky.HTTPError) {
-				const json: ErrorResponse | undefined = await e.inner.response.json().catch(_err => undefined)
+			if (error instanceof Errors.UnknownApiError && error.inner instanceof ky.HTTPError) {
+				const json: ErrorResponse | undefined = await error.inner.response.json().catch(_err => undefined)
 				if (json && json.error === 'This report does not exist or is private.') {
 					globalErrorStore.setGlobalError(new Errors.ReportNotFoundError())
 					return
 				}
 			}
 
-			if (e instanceof Errors.GlobalError) {
-				globalErrorStore.setGlobalError(e)
+			if (error instanceof Errors.GlobalError) {
+				globalErrorStore.setGlobalError(error)
 				return
 			}
 
-			globalErrorStore.setGlobalError(new Errors.UnknownApiError({inner: e}))
+			globalErrorStore.setGlobalError(new Errors.UnknownApiError({inner: error}))
 			return
 		}
 
