@@ -1,32 +1,32 @@
 import * as Sentry from '@sentry/browser'
 import {action, observable} from 'mobx'
 import {observer} from 'mobx-react'
-import * as PropTypes from 'prop-types'
-import {Component} from 'react'
+import {Component, ContextType, ErrorInfo, ReactNode} from 'react'
 import {Container} from 'semantic-ui-react'
 import {StoreContext} from 'store'
 import ErrorMessage from './ui/ErrorMessage'
 
+export type ErrorBoundaryProps = {
+	children?: ReactNode
+}
+
 @observer
-class ErrorBoundary extends Component {
-	static propTypes = {
-		children: PropTypes.node,
-	}
+export class ErrorBoundary extends Component<ErrorBoundaryProps> {
+	static override contextType = StoreContext
+	declare context: ContextType<typeof StoreContext>
 
-	static contextType = StoreContext
-
-	@observable componentError
+	@observable componentError: Error | undefined
 
 	@action
-	componentDidCatch(error, errorInfo) {
+	override componentDidCatch(error: Error, errorInfo: ErrorInfo) {
 		this.componentError = error
 		Sentry.withScope(scope => {
-			scope.setExtras(errorInfo)
+			scope.setExtras({...errorInfo})
 			Sentry.captureException(error)
 		})
 	}
 
-	render() {
+	override render() {
 		const error = this.context.globalErrorStore.error || this.componentError
 
 		if (!error) {
@@ -40,5 +40,3 @@ class ErrorBoundary extends Component {
 		)
 	}
 }
-
-export default ErrorBoundary
