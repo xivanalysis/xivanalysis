@@ -1,6 +1,5 @@
 import classnames from 'classnames'
-import * as PropTypes from 'prop-types'
-import {Component, createRef} from 'react'
+import {createRef, ReactNode} from 'react'
 import ReactDOM from 'react-dom'
 import {Link} from 'react-router-dom'
 import {Breadcrumbs} from './Breadcrumbs'
@@ -8,17 +7,15 @@ import styles from './GlobalSidebar.module.css'
 import Options from './Options'
 
 // TODO: This assumes there's only ever one GlobalSidebar. Which, I mean... there is. But what if there /isn't/!
-let contentRef = createRef() // eslint-disable-line prefer-const
+const contentRef = createRef<HTMLDivElement>()
 
-class GlobalSidebar extends Component {
-	static propTypes = {
-		centerLogo: PropTypes.bool,
-	}
+export type GlobalSidebarProps = {
+	centerLogo: boolean
+}
 
-	render() {
-		const {centerLogo} = this.props
-
-		return <div className={styles.sidebar}>
+export function GlobalSidebar({centerLogo}: GlobalSidebarProps) {
+	return (
+		<div className={styles.sidebar}>
 			{/* Main logo */}
 			<Link to="/" className={classnames(
 				styles.logo,
@@ -32,29 +29,27 @@ class GlobalSidebar extends Component {
 				xivanalysis
 			</Link>
 
-			<Breadcrumbs/>
+			<Breadcrumbs />
 
 			{/* Content */}
-			<div ref={contentRef} className={styles.content}/>
+			<div ref={contentRef} className={styles.content} />
 
 			{/* Options pinned to the bottom */}
 			<div className={styles.options}>
-				<Options/>
+				<Options />
 			</div>
 		</div>
-	}
+	)
 }
 
-export class SidebarContent extends Component {
-	static propTypes = {
-		children: PropTypes.node,
-	}
-	render() {
-		return ReactDOM.createPortal(
-			this.props.children,
-			contentRef.current,
-		)
-	}
+export type SidebarContentProps = {
+	children?: ReactNode
 }
 
-export default GlobalSidebar
+export function SidebarContent({children}: SidebarContentProps) {
+	return ReactDOM.createPortal(
+		children,
+		// @ts-expect-error TODO: This is unsound, but has been safe until now. Fix properly.
+		contentRef.current,
+	)
+}
