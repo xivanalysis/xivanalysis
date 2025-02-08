@@ -1,7 +1,7 @@
 import classNames from 'classnames'
-import I18nMenu from 'components/ui/I18nMenu'
+import {I18nMenu} from 'components/ui/I18nMenu'
 import {observer} from 'mobx-react'
-import {useRef, useEffect, useContext} from 'react'
+import {useRef, useEffect, useContext, ReactNode} from 'react'
 import ReactDOM from 'react-dom'
 import {StoreContext} from 'store'
 import {LinkDiscord, LinkGitHub} from './Links'
@@ -9,10 +9,11 @@ import styles from './Options.module.css'
 import ReportLink from './ReportLink'
 import {VersionInfo} from './Version'
 
-export default function Options() {
+export function Options() {
 	const {sidebarStore} = useContext(StoreContext)
 
-	const reportLinkRef = useRef()
+	const reportLinkRef = useRef<HTMLDivElement>(null)
+
 	useEffect(
 		() => {
 			sidebarStore.setReportLinkRef(reportLinkRef)
@@ -40,7 +41,11 @@ export default function Options() {
 	</>
 }
 
-export const ReportLinkContent = observer(({children}) => {
+export type ReportLinkContentProps = {
+	children?: ReactNode
+}
+
+export const ReportLinkContent = observer(({children}: ReportLinkContentProps) => {
 	const {sidebarStore: {reportLinkRef}} = useContext(StoreContext)
 
 	if (reportLinkRef?.current == null) {
