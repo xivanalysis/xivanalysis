@@ -89,6 +89,24 @@ export class Overheal extends CoreOverheal {
 		},
 	]
 
+	protected override considerHeal(event: Events['heal'], pet?: boolean): boolean {
+		// Default consideration for heals from actions and pet effects (ie. Star)
+		if (event.cause.type === 'action' || pet) { return true }
+
+		// If this heal status effect was not part of the GCD regen group, consider it like normal
+		if (!this.trackedHealCategories.find((group) =>
+			group.name === this.defaultCategoryNames.OVER_TIME_GCD_HEALS)?.trackedHealIds?.includes(event.cause.status)) {
+			return true
+		}
+
+		// If the status effect was last applied during downtime, we'll ignore it
+		if (this.statusAppliedInDowntime.get(event.cause.status)) {
+			return false
+		}
+
+		return true
+	}
+
 	protected override overrideHealBucket(event: Events['heal'], petHeal?: boolean): number {
 		// Star heals don't need re-bucketing
 		if (petHeal) { return -1 }

@@ -348,7 +348,7 @@ export class Overheal extends Analyser {
 
 	// Treat events before the pull or when the boss is untargetable as downtime events
 	protected isDowntimeEvent(event: Event) {
-		return this.parser.currentEpochTimestamp < this.parser.pull.timestamp || this.invulnerability.isActive({timestamp: event.timestamp, types: ['untargetable']})
+		return event.timestamp < this.parser.pull.timestamp || this.invulnerability.isActive({timestamp: event.timestamp, types: ['untargetable']})
 	}
 
 	private onComplete() {
