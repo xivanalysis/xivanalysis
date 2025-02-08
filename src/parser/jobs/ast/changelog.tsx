@@ -3,6 +3,11 @@ import CONTRIBUTORS from 'data/CONTRIBUTORS'
 
 export const changelog = [
 	{
+		date: new Date('2025-02-07'),
+		Changes: () => <>Split the direct healing effects of GCDs up from the regen effects they apply, and ignore them if they were applied before the pull or during downtime.</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
+	{
 		date: new Date('2024-08-24'),
 		Changes: () => <>Added <DataLink action={'LIGHTSPEED'} /> and <DataLink action={'SWIFTCAST'} /> to defensives. </>,
 		contributors: [CONTRIBUTORS.OTOCEPHALY],

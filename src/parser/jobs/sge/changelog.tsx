@@ -7,6 +7,11 @@ export const changelog = [
 	// 	contributors: [CONTRIBUTORS.YOU],
 	// },
 	{
+		date: new Date('2025-02-07'),
+		Changes: () => <>Ignore overheal from Eukrasian Diagnosis cast during downtime since it can impact Addersting generation</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
+	{
 		date: new Date('2024-12-05'),
 		Changes: () => <>Ignore Pneuma's secondary heal effect when checking for weaving issues</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],
