@@ -1,9 +1,9 @@
 import {Trans} from '@lingui/react'
-import {LANGUAGES} from 'data/LANGUAGES'
+import {Language, LANGUAGES} from 'data/LANGUAGES'
 import {computed} from 'mobx'
 import {observer} from 'mobx-react'
-import {Component} from 'react'
-import {Dropdown, Icon, Image} from 'semantic-ui-react'
+import {Component, ContextType, MouseEvent} from 'react'
+import {Dropdown, DropdownItemProps, Icon, Image} from 'semantic-ui-react'
 import {StoreContext} from 'store'
 import {gameLanguageEditions} from 'store/i18n'
 import crowdinLogo from './crowdin-dark-symbol.png'
@@ -12,8 +12,9 @@ import styles from './I18nMenu.module.css'
 const DEBUG = process.env.NODE_ENV === 'development'
 
 @observer
-class I18nMenu extends Component {
-	static contextType = StoreContext
+export class I18nMenu extends Component {
+	static override contextType = StoreContext
+	declare context: ContextType<typeof StoreContext>
 
 	@computed
 	get availableLanguages() {
@@ -38,14 +39,14 @@ class I18nMenu extends Component {
 			}))
 	}
 
-	handleChangeSite = (event, data) => {
+	handleChangeSite = (event: MouseEvent, data:DropdownItemProps) => {
 		const {i18nStore} = this.context
-		i18nStore.setSiteLanguage(data.value)
+		i18nStore.setSiteLanguage(data.value as Language)
 	}
 
-	handleChangeGame = (event, data) => {
+	handleChangeGame = (event: MouseEvent, data:DropdownItemProps) => {
 		const {i18nStore} = this.context
-		i18nStore.setGameLanguage(data.value)
+		i18nStore.setGameLanguage(data.value as Language)
 	}
 
 	toggleOverlay = () => {
@@ -53,7 +54,7 @@ class I18nMenu extends Component {
 		i18nStore.toggleOverlay()
 	}
 
-	render() {
+	override render() {
 		const {i18nStore} = this.context
 		const gameLanguageKey = i18nStore.safeGameLanguage
 		const siteLang = LANGUAGES[i18nStore.siteLanguage]
@@ -122,5 +123,3 @@ class I18nMenu extends Component {
 		</div>
 	}
 }
-
-export default I18nMenu
