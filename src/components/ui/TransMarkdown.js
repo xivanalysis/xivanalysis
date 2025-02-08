@@ -1,46 +1,7 @@
 import {withI18n} from '@lingui/react'
-import ACTIONS from 'data/ACTIONS'
-import STATUSES from 'data/STATUSES'
 import * as PropTypes from 'prop-types'
-import {createElement, isValidElement, PureComponent} from 'react'
+import {PureComponent} from 'react'
 import ReactMarkdown from 'react-markdown'
-import {ActionLink, StatusLink} from './DbLink'
-
-// This line is required because eslint thinks LINK_TYPES is
-// full of React components when it's not.
-/* eslint react/display-name: 0 */
-
-const LINK_EXTRACTOR = /^~([^/]+)\/(.+)$/
-
-const LINK_TYPES = {
-	action: (actionId, children) => {
-		const action = ACTIONS[actionId]
-		if (action) {
-			actionId = action.id
-		} else {
-			actionId = parseInt(actionId, 10)
-		}
-
-		return createElement(ActionLink, {
-			id: actionId,
-			name: children,
-		})
-	},
-
-	status: (statusId, children) => {
-		const status = STATUSES[statusId]
-		if (status) {
-			statusId = status.id
-		} else {
-			statusId = parseInt(statusId, 10)
-		}
-
-		return createElement(StatusLink, {
-			id: statusId,
-			name: children,
-		})
-	},
-}
 
 class TransMarkdown extends PureComponent {
 	static propTypes = {
@@ -59,26 +20,6 @@ class TransMarkdown extends PureComponent {
 		linkTarget: PropTypes.string,
 	}
 
-	renderLink(data) {
-		// Don't do this at home kids
-		const href = isValidElement(data.href)
-			? data.href.props.children
-			: data.href
-
-		const match = LINK_EXTRACTOR.exec(href)
-		if (match) {
-			const factory = LINK_TYPES[match[1]]
-			if (factory) {
-				return factory(match[2], data.isReference ? null : data.children)
-			}
-		}
-
-		return createElement('a', {
-			target: this.props.linkTarget,
-			href: data.href,
-		}, data.children)
-	}
-
 	render() {
 		const {i18n, source, renderers} = this.props
 
@@ -90,21 +31,7 @@ class TransMarkdown extends PureComponent {
 
 		return <ReactMarkdown
 			source={finalSource}
-			renderers={{
-				...renderers,
-				link: props => this.renderLink(props),
-
-				// This breaks reference style links in Markdown, and
-				// I'm not sure why, but I'm also almost certain no one
-				// is going to use them, while this is important for
-				// allowing people to use links to insert rich content
-				// like action links.
-				linkReference: props => this.renderLink({
-					...props,
-					isReference: true,
-					href: props.children[0],
-				}),
-			}}
+			renderers={renderers}
 		/>
 	}
 }

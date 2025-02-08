@@ -60,11 +60,7 @@ this.suggestions.add(new Suggestion({
 
 Sometimes, you _really_ gotta put a lot of content in - it's cases like this that markdown comes in handy. We use a slightly extended syntax based on [CommonMark](https://commonmark.org/).
 
-Key differences:
-
-* `[~action/ACTION_KEY]` will automatically turn into an `ActionLink` with icon, tooltip, and similar.
-* `[~status/STATUS_KEY]` will likewise automatically turn into a `StatusLink`.
-* Don't use code blocks (`` `...` ``). Just... don't. Please. It breaks everything.
+Don't use code blocks (`` `...` ``). Just... don't. Please. It breaks everything.
 
 ```jsx
 import {t} from '@lingui/macro'
@@ -73,7 +69,7 @@ import TransMarkdown from 'components/ui/TransMarkdown'
 const description = t('your-job.about.description')`
 This is an _example_ of using **markdown** in conjunction with the TransMarkdown component.
 
-I am also [contractually](https://some-url.com/) obliged to remind you to [~action/RUIN_III] everything.
+I am also [contractually](https://some-url.com/) obliged to remind you to Ruin III everything.
 `
 const rendered = <TransMarkdown source={description}/>
 ```
