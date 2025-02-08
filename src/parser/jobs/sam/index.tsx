@@ -10,9 +10,7 @@ const samDescript = t('sam.about.description')`So you study the blade do you? We
 export const SAMURAI = new Meta({
 	modules: () => import('./modules' /*webpackChunkName: "jobs-sam" */),
 
-	Description: () => <>
-		<TransMarkdown source={samDescript}/>
-	</>,
+	Description: () => <TransMarkdown source={samDescript}/>,
 
 	supportedPatches: {
 		from: '7.05',

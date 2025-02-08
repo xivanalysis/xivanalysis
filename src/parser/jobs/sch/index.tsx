@@ -13,9 +13,7 @@ If you would like to learn more about SCH, check the guides over at [The Balance
 export const SCHOLAR = new Meta({
 	modules: () => import('./modules' /* webpackChunkName: "jobs-sch" */),
 
-	Description: () => <>
-		<TransMarkdown source={description} key="sch.about.description"/>
-	</>,
+	Description: () => <TransMarkdown source={description} key="sch.about.description"/>,
 
 	supportedPatches: {
 		from: '7.0',
