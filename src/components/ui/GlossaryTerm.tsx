@@ -1,27 +1,20 @@
-import {TERMS} from 'data/GLOSSARY'
-import * as PropTypes from 'prop-types'
-import {PureComponent} from 'react'
+import {GlossaryEntry, TermKey, TERMS} from 'data/GLOSSARY'
+import {PureComponent, ReactNode} from 'react'
 import {Popup, Icon} from 'semantic-ui-react'
 import styles from './GlossaryTerm.module.css'
 import NormalisedMessage from './NormalisedMessage'
 import TransMarkdown from './TransMarkdown'
 
-export default class GlossaryTerm extends PureComponent {
-	static propTypes = {
-		term: PropTypes.oneOfType([
-			PropTypes.string,
-			PropTypes.shape({
-				text: PropTypes.string.isRequired,
-				description: PropTypes.string.isRequired,
-			}),
-		]).isRequired,
-		children: PropTypes.node,
-	}
+export type GlossaryTermProps = {
+	term: TermKey | GlossaryEntry
+	children?: ReactNode
+}
 
-	render() {
+export class GlossaryTerm extends PureComponent<GlossaryTermProps> {
+	override render() {
 		const {children} = this.props
 		let {term} = this.props
-		if (TERMS[term]) {
+		if (typeof term === 'string') {
 			term = TERMS[term]
 		}
 
@@ -29,8 +22,7 @@ export default class GlossaryTerm extends PureComponent {
 
 		return <Popup
 			trigger={<span className={styles.term}>{children || title}</span>}
-			hoverable={term.interactive}
-			wide={term.width || 'very'}
+			wide="very"
 		>
 			<Popup.Header>
 				<Icon name="info" />

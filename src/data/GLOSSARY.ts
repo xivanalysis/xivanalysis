@@ -2,7 +2,7 @@ import {MessageDescriptor} from '@lingui/core'
 import {t} from '@lingui/macro'
 import {ensureRecord} from 'utilities'
 
-interface GlossaryEntry {
+export interface GlossaryEntry {
 	text: MessageDescriptor,
 	description: MessageDescriptor,
 }
@@ -15,3 +15,5 @@ export const TERMS = ensureRecord<GlossaryEntry>()({
 For example, [~action/VERTHUNDER] has a 50% chance of triggering the status [~status/VERFIRE_READY] when cast.`,
 	},
 })
+
+export type TermKey = keyof typeof TERMS
