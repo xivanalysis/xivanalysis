@@ -204,6 +204,9 @@ importers:
       '@types/d3-time-format':
         specifier: ^3
         version: 3.0.0
+      '@types/intl':
+        specifier: ^1
+        version: 1.2.2
       '@types/jest':
         specifier: ^26.0.19
         version: 26.0.19
@@ -1328,6 +1331,9 @@ packages:
 
   '@types/http-proxy@1.17.4':
     resolution: {integrity: sha512-IrSHl2u6AWXduUaDLqYpt45tLVCtYv7o4Z0s1KghBCDgIIS9oW5K1H8mZG/A2CfeLdEa7rTd1ACOiHBc1EMT2Q==}
+
+  '@types/intl@1.2.2':
+    resolution: {integrity: sha512-A4g5UEAA9c56JWKhc4LSJ9vzDMztjxVXDAXtVK4EbS3hW1V7Sz05VfcTgDQIvkOYJp1NqH222eg62P72HwltfQ==}
 
   '@types/istanbul-lib-coverage@2.0.3':
     resolution: {integrity: sha512-sz7iLqvVUg1gIedBOvlkxPlc8/uVzyS5OwGz1cKjXzkl3FpL3al0crU8YGU1WoHkxn0Wxbw5tyi6hvzJKNzFsw==}
@@ -7708,6 +7714,8 @@ snapshots:
   '@types/http-proxy@1.17.4':
     dependencies:
       '@types/node': 14.14.19
+
+  '@types/intl@1.2.2': {}
 
   '@types/istanbul-lib-coverage@2.0.3': {}
 

@@ -98,6 +98,7 @@
     "@types/d3-shape": "^1",
     "@types/d3-time": "^1",
     "@types/d3-time-format": "^3",
+    "@types/intl": "^1",
     "@types/jest": "^26.0.19",
     "@types/lingui__core": "^2.7.0",
     "@types/lingui__macro": "^2.7.3",

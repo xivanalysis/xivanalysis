@@ -1,13 +1,15 @@
+import {Catalog} from '@lingui/core'
+import {Messages} from '@lingui/core/i18n'
 import {I18nProvider} from '@lingui/react'
+import {Language} from 'data/LANGUAGES'
 import {observable, reaction, runInAction} from 'mobx'
 import {disposeOnUnmount, observer} from 'mobx-react'
-import * as PropTypes from 'prop-types'
-import {Component} from 'react'
+import {Component, ContextType, ReactNode} from 'react'
 import {Container, Loader, Message} from 'semantic-ui-react'
 import {StoreContext} from 'store'
 import I18nOverlay from './I18nOverlay'
 
-const cleanMessages = messages => {
+const cleanMessages = (messages: Messages) => {
 	for (const [key, val] of Object.entries(messages)) {
 		if (key === val) {
 			delete messages[key]
@@ -17,19 +19,20 @@ const cleanMessages = messages => {
 	return messages
 }
 
+export type I18nLoaderProps = {
+	children: ReactNode
+}
+
 @observer
-class I18nLoader extends Component {
-	static propTypes = {
-		children: PropTypes.node.isRequired,
-	}
+export class I18nLoader extends Component<I18nLoaderProps> {
+	static override contextType = StoreContext
+	declare context: ContextType<typeof StoreContext>
 
-	static contextType = StoreContext
-
-	@observable oldLanguage = null
-	@observable catalogs = {}
+	@observable oldLanguage: Language | null = null
+	@observable catalogs: Partial<Record<Language, Catalog>> = {}
 	@observable errored = false
 
-	async loadCatalog(language) {
+	async loadCatalog(language: Language) {
 		const promises = [import(
 			/* webpackMode: 'lazy' */
 			/* webpackChunkName: 'i18n-[index]' */
@@ -57,7 +60,7 @@ class I18nLoader extends Component {
 			runInAction(() => this.errored = true)
 			return
 		}
-		const catalog = resolutions[0]
+		const catalog: Catalog = resolutions[0]
 
 		// This _must_ be run after `intl` is included and ready.
 		if (needsPolyfill) {
@@ -83,10 +86,6 @@ class I18nLoader extends Component {
 			cleanMessages(catalog.messages)
 		}
 
-		if (catalog.default && catalog.default.messages) {
-			cleanMessages(catalog.default.messages)
-		}
-
 		runInAction(() => {
 			this.catalogs = {
 				...this.catalogs,
@@ -95,7 +94,7 @@ class I18nLoader extends Component {
 		})
 	}
 
-	componentDidMount() {
+	override componentDidMount() {
 		const {i18nStore} = this.context
 		this.loadCatalog(i18nStore.siteLanguage)
 
@@ -114,7 +113,7 @@ class I18nLoader extends Component {
 		))
 	}
 
-	render() {
+	override render() {
 		// If we errored out, show _something_ to signify the issue.
 		if (this.errored) {
 			// TODO: This needs to be in every language, I guess.
@@ -130,15 +129,11 @@ class I18nLoader extends Component {
 
 		const {i18nStore} = this.context
 
-		let language = i18nStore.siteLanguage
+		const language = i18nStore.siteLanguage
 		let loading = false
 
-		if (!this.catalogs[language]) {
-			if (!this.catalogs[this.oldLanguage]) {
-				loading = true
-			} else {
-				language = this.oldLanguage
-			}
+		if (this.catalogs[language] != null) {
+			loading = true
 		}
 
 		if (loading) {
@@ -155,5 +150,3 @@ class I18nLoader extends Component {
 		</I18nProvider>
 	}
 }
-
-export default I18nLoader
