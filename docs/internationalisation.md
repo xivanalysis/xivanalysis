@@ -64,7 +64,7 @@ Don't use code blocks (`` `...` ``). Just... don't. Please. It breaks everything
 
 ```jsx
 import {t} from '@lingui/macro'
-import TransMarkdown from 'components/ui/TransMarkdown'
+import {TransMarkdown} from 'components/ui/TransMarkdown'
 
 const description = t('your-job.about.description')`
 This is an _example_ of using **markdown** in conjunction with the TransMarkdown component.

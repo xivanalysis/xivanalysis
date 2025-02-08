@@ -1,3 +1,3 @@
 export * from './Breadcrumbs'
 export {GlobalSidebar, SidebarContent} from './GlobalSidebar'
-export {default as Options, ReportLinkContent} from './Options'
+export {Options, ReportLinkContent} from './Options'

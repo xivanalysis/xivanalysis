@@ -4,7 +4,7 @@ import ReactDOM from 'react-dom'
 import {Link} from 'react-router-dom'
 import {Breadcrumbs} from './Breadcrumbs'
 import styles from './GlobalSidebar.module.css'
-import Options from './Options'
+import {Options} from './Options'
 
 // TODO: This assumes there's only ever one GlobalSidebar. Which, I mean... there is. But what if there /isn't/!
 const contentRef = createRef<HTMLDivElement>()

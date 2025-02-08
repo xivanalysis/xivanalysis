@@ -1,7 +1,7 @@
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
-import TransMarkdown from 'components/ui/TransMarkdown'
+import {TransMarkdown} from 'components/ui/TransMarkdown'
 import {getDataBy} from 'data'
 import {Action} from 'data/ACTIONS'
 import {Status} from 'data/STATUSES'
