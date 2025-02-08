@@ -8,7 +8,7 @@ export const SEVERITY = {
 export type Severity = (typeof SEVERITY)[keyof typeof SEVERITY]
 
 // Base error handling
-abstract class BaseError extends ExtendableError {
+export abstract class BaseError extends ExtendableError {
 	severity: Severity = SEVERITY.ERROR
 	abstract readonly detail?: string
 	inner?: Error

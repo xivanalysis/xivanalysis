@@ -4,7 +4,7 @@ import {observer} from 'mobx-react'
 import {Component, ContextType, ErrorInfo, ReactNode} from 'react'
 import {Container} from 'semantic-ui-react'
 import {StoreContext} from 'store'
-import ErrorMessage from './ui/ErrorMessage'
+import {ErrorMessage} from './ui/ErrorMessage'
 
 export type ErrorBoundaryProps = {
 	children?: ReactNode
