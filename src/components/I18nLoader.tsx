@@ -132,7 +132,7 @@ export class I18nLoader extends Component<I18nLoaderProps> {
 		const language = i18nStore.siteLanguage
 		let loading = false
 
-		if (this.catalogs[language] != null) {
+		if (this.catalogs[language] == null) {
 			loading = true
 		}
 
