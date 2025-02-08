@@ -5,7 +5,6 @@ import * as PropTypes from 'prop-types'
 import {createElement, isValidElement, PureComponent} from 'react'
 import ReactMarkdown from 'react-markdown'
 import {ActionLink, StatusLink} from './DbLink'
-import GlossaryTerm from './GlossaryTerm'
 
 // This line is required because eslint thinks LINK_TYPES is
 // full of React components when it's not.
@@ -14,10 +13,6 @@ import GlossaryTerm from './GlossaryTerm'
 const LINK_EXTRACTOR = /^~([^/]+)\/(.+)$/
 
 const LINK_TYPES = {
-	term: (term, children) => createElement(GlossaryTerm, {
-		term,
-	}, children),
-
 	action: (actionId, children) => {
 		const action = ACTIONS[actionId]
 		if (action) {

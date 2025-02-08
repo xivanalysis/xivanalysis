@@ -590,8 +590,6 @@
   "game.roles.physical-ranged-dps": "DPS physiques à distance",
   "game.roles.tank": "Tank",
   "game.roles.unsupported": "Non supporté",
-  "glossary.proc.description": "Proc est un terme utilisé dans le jeu pour désigner un événement (une \"procédure\") qui est déclenché dans certaines circonstances.\n\nPar exemple,[~action/VERTHUNDER] a 50% de chances de déclencher le statut[~status/VERFIRE_READY] lors du lancer.",
-  "glossary.proc.title": "proc",
   "gnb.about.description": "Cet analyseur cherche les problèmes les plus simples et les plus faciles à repérer dans votre gameplay, qui peuvent être corrigés pour améliorer vos dégâts lors d'un combat en tant que Gunbreaker.\nSi vous souhaitez en savoir plus sur le fonctionnement de ce job, jetez un coup d'œil à quelques guides de base :\n\n* [Guide général de tanking par Aletin] (https://goo.gl/nYzAnq)\n\nSi vous avez des suggestions à propos du module, n'hésitez pas à rejoindre le discord XIVA et à utiliser les canaux de commentaires.\n",
   "gnb.ammo.checklist.requirement.waste.name": "Utilisez autant de Cartouches d'éther que possible",
   "gnb.ammo.leftover-ammo.content": "Évitez d'avoir des Cartouches restantes à la fin d'un combat, et tentez de les utiliser plus tôt si possible. <0/> est plus puissante que n'importe lequel de vos Combos <1/>.",
