@@ -18,18 +18,27 @@ export class Overheal extends CoreOverheal {
 
 	protected override trackedHealCategories: TrackedOverhealOpts[] = [
 		{
-			name: this.defaultCategoryNames.DIRECT_AND_REGEN_GCD_HEALS,
+			name: this.defaultCategoryNames.DIRECT_GCD_HEALS,
 			trackedHealIds: [
 				// Single-Target
 				this.data.actions.BENEFIC.id,
 				this.data.actions.ASPECTED_BENEFIC.id,
-				this.data.statuses.ASPECTED_BENEFIC.id,
 
 				// AoE
 				this.data.actions.HELIOS.id,
 				this.data.actions.ASPECTED_HELIOS.id,
-				this.data.statuses.ASPECTED_HELIOS.id,
 				this.data.actions.HELIOS_CONJUNCTION.id,
+			],
+			includeInChecklist: true,
+		},
+		{
+			name: this.defaultCategoryNames.OVER_TIME_GCD_HEALS,
+			trackedHealIds: [
+				// Single-Target
+				this.data.statuses.ASPECTED_BENEFIC.id,
+
+				// AoE
+				this.data.statuses.ASPECTED_HELIOS.id,
 				this.data.statuses.HELIOS_CONJUNCTION.id,
 			],
 			includeInChecklist: true,

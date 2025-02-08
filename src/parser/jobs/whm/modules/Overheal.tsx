@@ -4,20 +4,29 @@ import {Overheal as CoreOverheal, TrackedOverhealOpts} from 'parser/core/modules
 export class Overheal extends CoreOverheal {
 	protected override trackedHealCategories: TrackedOverhealOpts[] = [
 		{
-			name: this.defaultCategoryNames.DIRECT_AND_REGEN_GCD_HEALS,
+			name: this.defaultCategoryNames.DIRECT_GCD_HEALS,
 			trackedHealIds: [
 				// Single-Target
 				this.data.actions.CURE.id,
 				this.data.actions.CURE_II.id,
-				this.data.statuses.REGEN.id,
 
 				// AoE
 				this.data.actions.MEDICA.id,
 				this.data.actions.MEDICA_II.id,
-				this.data.statuses.MEDICA_II.id,
 				this.data.actions.MEDICA_III.id,
-				this.data.statuses.MEDICA_III.id,
 				this.data.actions.CURE_III.id,
+			],
+			includeInChecklist: true,
+		},
+		{
+			name: this.defaultCategoryNames.OVER_TIME_GCD_HEALS,
+			trackedHealIds: [
+				// Single-Target
+				this.data.statuses.REGEN.id,
+
+				// AoE
+				this.data.statuses.MEDICA_II.id,
+				this.data.statuses.MEDICA_III.id,
 			],
 			includeInChecklist: true,
 		},
