@@ -93,10 +93,12 @@ export class Overheal extends CoreOverheal {
 		// Ignore Eukrasian Diagnosis heals when no targets were available
 		// They are probably overwriting for Addersting generation
 		// Do consider it if the target already had a Eukrasian Diagnosis shield though, since that's a waste of time MP to re-apply it
-		if (event.cause.type === 'action' &&
+		if (
+			event.cause.type === 'action' &&
 			event.cause.action === this.data.actions.EUKRASIAN_DIAGNOSIS.id &&
-			event.targets.filter((targetEvent) => this.actors.get(targetEvent.target).hasStatus(this.data.statuses.EUKRASIAN_DIAGNOSIS.id)).length === 0 &&
-			this.isDowntimeEvent(event)) {
+			!event.targets.some((targetEvent) => this.actors.get(targetEvent.target).hasStatus(this.data.statuses.EUKRASIAN_DIAGNOSIS.id)) &&
+			this.isDowntimeEvent(event)
+		) {
 			return false
 		}
 
