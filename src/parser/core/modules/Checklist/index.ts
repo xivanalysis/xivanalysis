@@ -1,3 +1,3 @@
-export {default} from './Checklist'
-export {default as Rule, TARGET} from './Rule'
-export {default as Requirement} from './Requirement'
+export {Checklist} from './Checklist'
+export {Rule, TARGET} from './Rule'
+export {Requirement} from './Requirement'

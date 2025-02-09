@@ -1,6 +1,6 @@
 import {DisplayOrder} from 'parser/core/Analyser'
 import {ReactNode} from 'react'
-import Requirement from './Requirement'
+import {Requirement} from './Requirement'
 
 export const TARGET = {
 	SUCCESS: 2,
@@ -18,7 +18,7 @@ export interface RuleProps {
 	displayOrder?: number,
 }
 
-export default class Rule {
+export class Rule {
 	name: ReactNode
 	description: ReactNode
 	requirements: Requirement[]

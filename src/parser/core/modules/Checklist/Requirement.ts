@@ -9,7 +9,7 @@ export interface RequirementProps {
 	overrideDisplay?: ReactNode
 }
 
-export default class Requirement {
+export class Requirement {
 	name: ReactNode
 	_percent: number | undefined
 	value: number | undefined
