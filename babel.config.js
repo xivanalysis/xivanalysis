@@ -1,5 +1,4 @@
 const getPlugins = ({
-	isDevelopment = false,
 	isTypescript = false,
 	isTSX = false,
 } = {}) => [
@@ -13,9 +12,6 @@ const getPlugins = ({
 	['@babel/plugin-proposal-private-methods', {loose: true}],
 	'babel-plugin-macros',
 	'babel-plugin-lodash',
-	!isDevelopment && ['babel-plugin-transform-react-remove-prop-types', {
-		removeImport: true,
-	}],
 	'./locale/babel-plugin-transform-react.js',
 	['@babel/plugin-transform-runtime', {
 		corejs: {version: 3},
@@ -24,8 +20,8 @@ const getPlugins = ({
 	}],
 ].filter(item => !!item)
 
-const needsNodeTarget = caller => false
-	|| caller?.name === '@babel/register'
+const needsNodeTarget = caller =>
+	caller?.name === '@babel/register'
 	|| caller?.name === '@babel/node'
 	|| caller?.name === 'babel-jest'
 
@@ -46,12 +42,12 @@ module.exports = api => ({
 
 	overrides: [{
 		test: /\.jsx?$/,
-		plugins: getPlugins({isDevelopment: api.env('development')}),
+		plugins: getPlugins(),
 	}, {
 		test: /\.ts$/,
-		plugins: getPlugins({isDevelopment: api.env('development'), isTypescript: true}),
+		plugins: getPlugins({isTypescript: true}),
 	}, {
 		test: /\.tsx$/,
-		plugins: getPlugins({isDevelopment: api.env('development'), isTypescript: true, isTSX: true}),
+		plugins: getPlugins({isTypescript: true, isTSX: true}),
 	}],
 })

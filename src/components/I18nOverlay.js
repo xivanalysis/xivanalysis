@@ -3,18 +3,14 @@ import classNames from 'classnames'
 import _ from 'lodash'
 import {observable, action} from 'mobx'
 import {observer} from 'mobx-react'
-import * as PropTypes from 'prop-types'
 import {Component} from 'react'
 import {Popup, List, Icon} from 'semantic-ui-react'
 import styles from './I18nOverlay.module.css'
 
+/* eslint-disable react/prop-types */
+
 @observer
 class I18nErrorBoundary extends Component {
-	static propTypes = {
-		id: PropTypes.string,
-		children: PropTypes.node,
-	}
-
 	@observable.ref didError = false
 
 	@action
@@ -40,11 +36,6 @@ class I18nErrorBoundary extends Component {
 }
 
 export class I18nOverlay extends Component {
-	static propTypes = {
-		enabled: PropTypes.bool.isRequired,
-		language: PropTypes.string.isRequired,
-	}
-
 	state = {
 		catalogs: {},
 	}
@@ -185,7 +176,6 @@ export class I18nOverlay extends Component {
 		const self = this
 		const old_render = this.old_render = Trans.prototype.render
 
-		/* eslint-disable react/prop-types */
 		Trans.prototype.render = function() {
 			const content = old_render.call(this)
 			if (!content || this.props.__bypassOverlay) { return content }
@@ -215,7 +205,6 @@ export class I18nOverlay extends Component {
 				</Popup>
 			)
 		}
-		/* eslint-enable react/prop-types */
 
 		this.tryUpdate()
 	}
