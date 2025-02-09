@@ -10,7 +10,7 @@ export type Severity = (typeof SEVERITY)[keyof typeof SEVERITY]
 // Base error handling
 export abstract class BaseError extends ExtendableError {
 	severity: Severity = SEVERITY.ERROR
-	abstract readonly detail?: string
+	declare abstract readonly detail?: string
 	inner?: Error
 
 	constructor() {

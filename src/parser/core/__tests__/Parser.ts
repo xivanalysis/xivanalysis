@@ -1,27 +1,38 @@
 import {GameEdition} from 'data/EDITIONS'
-import {Team} from 'report'
+import {Event} from 'event'
+import {Actor, Pull, Report, ReportMeta, Team} from 'report'
 import {Analyser} from '../Analyser'
 import {Dispatcher} from '../Dispatcher'
+import {Injectable} from '../Injectable'
 import {Meta} from '../Meta'
 import {Parser} from '../Parser'
-
-jest.mock('../Dispatcher')
 
 /* eslint-disable @typescript-eslint/no-magic-numbers */
 
 // Testing modules
 class BasicAnalyser extends Analyser {
-	static handle = 'test_basic'
+	static override handle = 'test_basic'
 }
 class RenamedAnalyser extends Analyser {
-	static handle = 'test_renamed'
+	static override handle = 'test_renamed'
 }
 class DependentAnalyser extends Analyser {
-	static handle = 'test_dependent'
-	static dependencies = [
+	static override handle = 'test_dependent'
+	static override dependencies = [
 		'test_basic',
 		{handle: 'test_renamed', prop: 'renamed'},
 	]
+	declare test_basic: BasicAnalyser
+	declare renamed: RenamedAnalyser
+}
+
+class TestDispatcher implements Dispatcher {
+	timestamp = 0
+	dispatch = jest.fn()
+	addEventHook = jest.fn()
+	removeEventHook = jest.fn()
+	addTimestampHook = jest.fn()
+	removeTimestampHook = jest.fn()
 }
 
 const REPORT_START_TIME = 10000
@@ -29,14 +40,15 @@ const PULL_START_TIME_OFFSET = 1000
 const NEW_EVENT_OFFSET = REPORT_START_TIME + PULL_START_TIME_OFFSET
 
 // Bunch of basic testing data
-const actor = {
+const actor: Actor = {
 	id: '1',
+	kind: '1',
 	name: 'In Fight',
 	team: Team.FRIEND,
 	playerControlled: true,
 	job: 'UNKNOWN',
 }
-const pull = {
+const pull: Pull = {
 	id: '1',
 	timestamp: NEW_EVENT_OFFSET,
 	duration: 100,
@@ -46,25 +58,25 @@ const pull = {
 	},
 	actors: [actor],
 }
-const report = {
+const report: Report = {
 	timestamp: REPORT_START_TIME,
 	edition: GameEdition.GLOBAL,
 	name: 'Test report',
 	pulls: [pull],
-	meta: {source: '__test'},
+	meta: {source: '__test'} as unknown as ReportMeta,
 }
-const event = {
+const event: Event = {
 	type: '__test',
 	timestamp: NEW_EVENT_OFFSET+50,
-}
+} as unknown as Event
 
-const buildParser = (modules = []) => {
-	const dispatcher = new Dispatcher()
+const buildParser = (modules: Array<typeof Injectable> = []) => {
+	const dispatcher = new TestDispatcher()
 	dispatcher.timestamp = 0
 	dispatcher.dispatch.mockReturnValue([])
 
-	return new Parser({
-		meta: new Meta({modules: () => Promise.resolve({default: modules})}),
+	const parser = new Parser({
+		meta: new Meta({modules: () => Promise.resolve({modules})}),
 
 		report,
 		pull,
@@ -72,18 +84,18 @@ const buildParser = (modules = []) => {
 
 		dispatcher,
 	})
+
+	return [parser, dispatcher] as const
 }
 
 describe('Parser', () => {
-	let parser
-	let dispatcher
+	let parser: Parser
+	let dispatcher: TestDispatcher
 
 	beforeEach(() => {
-		Dispatcher.mockClear()
-
-		parser = buildParser()
-
-		dispatcher = Dispatcher.mock.instances[0]
+		const [newParser, newDispatcher] = buildParser()
+		parser = newParser
+		dispatcher = newDispatcher
 	})
 
 	it('exposes metadata', () => {
@@ -104,7 +116,7 @@ describe('Parser', () => {
 	})
 
 	it('loads analysers', async () => {
-		parser = buildParser([BasicAnalyser])
+		const [parser] = buildParser([BasicAnalyser])
 		await parser.configure()
 
 		expect(parser.container).toHaveProperty('test_basic')
@@ -122,15 +134,14 @@ describe('Parser', () => {
 	})
 
 	it('stops dispatching to analysers that error', async () => {
-		parser = buildParser([BasicAnalyser])
-		dispatcher = Dispatcher.mock.instances[1]
+		const [parser, dispatcher] = buildParser([BasicAnalyser])
 		dispatcher.dispatch.mockReturnValueOnce([{handle: 'test_basic', error: new Error('test')}])
 		await parser.configure()
 		parser.parseEvents({
 			events: [
 				{type: 'test', timestamp: 50},
 				{type: 'test', timestamp: 60},
-			],
+			] as unknown as Event[],
 		})
 
 		const {calls} = dispatcher.dispatch.mock
@@ -139,10 +150,10 @@ describe('Parser', () => {
 	})
 
 	it('links dependencies', async () => {
-		parser = buildParser([BasicAnalyser, DependentAnalyser, RenamedAnalyser])
+		const [parser] = buildParser([BasicAnalyser, DependentAnalyser, RenamedAnalyser])
 		await parser.configure()
 
-		const module = parser.container.test_dependent
+		const module = parser.container.test_dependent as DependentAnalyser
 		expect(module.test_basic)
 			.toBeInstanceOf(BasicAnalyser)
 			.toBe(parser.container.test_basic)
@@ -152,8 +163,7 @@ describe('Parser', () => {
 	})
 
 	it('cascades errors to dependents', async () => {
-		parser = buildParser([BasicAnalyser, RenamedAnalyser, DependentAnalyser])
-		dispatcher = Dispatcher.mock.instances[1]
+		const [parser, dispatcher] = buildParser([BasicAnalyser, RenamedAnalyser, DependentAnalyser])
 		dispatcher.dispatch.mockReturnValueOnce([{handle: 'test_basic', error: new Error('test')}])
 		await parser.configure()
 		parser.parseEvents({events: [event]})
@@ -164,8 +174,7 @@ describe('Parser', () => {
 	})
 
 	it('cascades errors to dependents while renamed', async () => {
-		parser = buildParser([BasicAnalyser, RenamedAnalyser, DependentAnalyser])
-		dispatcher = Dispatcher.mock.instances[1]
+		const [parser, dispatcher] = buildParser([BasicAnalyser, RenamedAnalyser, DependentAnalyser])
 		dispatcher.dispatch.mockReturnValueOnce([{handle: 'test_renamed', error: new Error('test')}])
 		await parser.configure()
 		parser.parseEvents({events: [event]})
@@ -180,13 +189,13 @@ describe('Parser', () => {
 			{timestamp: NEW_EVENT_OFFSET+50, type: '__queuedEvent'},
 			{timestamp: NEW_EVENT_OFFSET+70, type: '__queuedEvent'},
 			{timestamp: NEW_EVENT_OFFSET+0, type: '__queuedEvent'},
-		]
-		const dispatchedEvents = []
+		] as unknown as Event[]
+		const dispatchedEvents: Array<{event:Event, timestamp: number}> = []
 
-		function mockDispatch(event) {
+		function mockDispatch(this: TestDispatcher, event: Event) {
 			this.timestamp = event.timestamp
 			dispatchedEvents.push({event, timestamp: parser.currentEpochTimestamp})
-			if (toQueue.length > 0) { parser.queueEvent(toQueue.shift()) }
+			if (toQueue.length > 0) { parser.queueEvent(toQueue.shift()!) }
 			return []
 		}
 
@@ -198,7 +207,7 @@ describe('Parser', () => {
 				{timestamp: NEW_EVENT_OFFSET+0, type: '__sourceEvent'},
 				{timestamp: NEW_EVENT_OFFSET+50, type: '__sourceEvent'},
 				{timestamp: NEW_EVENT_OFFSET+100, type: '__sourceEvent'},
-			],
+			] as unknown as Event[],
 		})
 
 		expect(dispatchedEvents.map(({event}) => event.type)).toEqual([

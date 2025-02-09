@@ -10,7 +10,7 @@ import {Report, Pull, Actor} from 'report'
 import toposort from 'toposort'
 import {extractErrorContext, isDefined, formatDuration} from 'utilities'
 import {Analyser, DisplayMode} from './Analyser'
-import {Dispatcher} from './Dispatcher'
+import {Dispatcher, DispatcherImpl} from './Dispatcher'
 import {Injectable, MappedDependency} from './Injectable'
 import {Meta} from './Meta'
 
@@ -85,7 +85,7 @@ export class Parser {
 
 		dispatcher?: Dispatcher
 	}) {
-		this.dispatcher = opts.dispatcher ?? new Dispatcher()
+		this.dispatcher = opts.dispatcher ?? new DispatcherImpl()
 
 		this.meta = opts.meta
 

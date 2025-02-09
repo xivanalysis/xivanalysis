@@ -38,11 +38,20 @@ export interface DispatchIssue {
 	error: Error
 }
 
+export interface Dispatcher {
+	readonly timestamp: number
+	dispatch(event: Event, handles: Handle[]): DispatchIssue[]
+	addEventHook<T extends Event>(hook: EventHook<T>): void
+	removeEventHook<T extends Event>(hook: EventHook<T>): boolean
+	addTimestampHook(hook: TimestampHook): void
+	removeTimestampHook(hook: TimestampHook): boolean
+}
+
 /**
  * Dispatcher is in charge of consuming events from the parser and fanning them
  * out to matching hooks where required.
  */
-export class Dispatcher {
+export class DispatcherImpl implements Dispatcher {
 	private _timestamp = 0
 	/** The timestamp of the hook currently being executed. */
 	get timestamp() { return this._timestamp }
