@@ -16,6 +16,7 @@ import {Accordion, Icon, Message, Table} from 'semantic-ui-react'
 import {isDefined} from 'utilities'
 import {Actors} from './Actors'
 import {DISPLAY_ORDER} from './DISPLAY_ORDER'
+import {Invulnerability} from './Invulnerability'
 
 export interface TrackedOverhealOpts {
 	bucketId?: number
@@ -168,6 +169,7 @@ export class Overheal extends Analyser {
 	@dependency private checklist!: Checklist
 	@dependency protected data!: Data
 	@dependency protected actors!: Actors
+	@dependency private invulnerability!: Invulnerability
 
 	// Overall tracking options
 
@@ -179,7 +181,7 @@ export class Overheal extends Analyser {
 	protected defaultCategoryNames = {
 		// Yes this is from SGE since I didn't want to force re-translation after this update
 		DIRECT_GCD_HEALS: <Trans id="sge.overheal.direct.name">GCD Heals</Trans>,
-		DIRECT_AND_REGEN_GCD_HEALS: <Trans id="core.overheal.gcd-hot.name">GCD Heals (including Healing over Time)</Trans>,
+		OVER_TIME_GCD_HEALS: <Trans id="core.overheal.gcd-hot.name">Healing over Time from GCD Spells</Trans>,
 		DIRECT_HEALING_ABILITIES: <Trans id="core.overheal.abilities-direct.name">Direct Healing Abilities</Trans>,
 		// Similarly snitched from AST
 		HEALING_OVER_TIME: <Trans id="ast.overheal.hot.name">Healing over Time</Trans>,
@@ -244,6 +246,8 @@ export class Overheal extends Analyser {
 		return <Trans id="core.overheal.suggestion.why">You had an overheal of { overhealPercent.toFixed(2) }%</Trans>
 	}
 
+	protected statusAppliedInDowntime: Map<Status['id'], boolean> = new Map()
+
 	override initialise() {
 		this.uncategorized = new TrackedOverheal({
 			name: this.uncategorizedOverheals,
@@ -259,6 +263,15 @@ export class Overheal extends Analyser {
 			.filter(actor => actor.owner != null && actor.owner.id === this.parser.actor.id)
 			.map(pet => pet.id)
 		this.addEventHook(filter<Event>().type('heal').source(oneOf(actorPets)), this.onPetHeal)
+
+		const healStatuses = this.trackedHealCategories.reduce<number[]>((acc, category) => {
+			const categoryStatusHeals = (category.trackedHealIds ?? []).filter((healId) => getDataBy(this.data.statuses, 'id', healId))
+			acc.push(...categoryStatusHeals)
+			return acc
+		}, [])
+		this.addEventHook(filter<Event>().type('statusApply').source(this.parser.actor.id)
+			.status(oneOf(healStatuses)), this.onHealStatusApply)
+
 		this.addEventHook('complete', this.onComplete)
 	}
 
@@ -327,6 +340,15 @@ export class Overheal extends Analyser {
 
 	private onPetHeal(event: Events['heal']) {
 		this.onHeal(event, true)
+	}
+
+	private onHealStatusApply(event: Events['statusApply']) {
+		this.statusAppliedInDowntime.set(event.status, this.isDowntimeEvent(event))
+	}
+
+	// Treat events before the pull or when the boss is untargetable as downtime events
+	protected isDowntimeEvent(event: Event) {
+		return event.timestamp < this.parser.pull.timestamp || this.invulnerability.isActive({timestamp: event.timestamp, types: ['untargetable']})
 	}
 
 	private onComplete() {

@@ -89,6 +89,23 @@ export class Overheal extends CoreOverheal {
 		},
 	]
 
+	protected override considerHeal(event: Events['heal'], _pet?: boolean): boolean {
+		// Ignore Eukrasian Diagnosis heals when no targets were available
+		// They are probably overwriting for Addersting generation
+		// Do consider it if the target already had a Eukrasian Diagnosis shield though, since that's a waste of time MP to re-apply it
+		if (
+			event.cause.type === 'action' &&
+			event.cause.action === this.data.actions.EUKRASIAN_DIAGNOSIS.id &&
+			!event.targets.some((targetEvent) => this.actors.get(targetEvent.target).hasStatus(this.data.statuses.EUKRASIAN_DIAGNOSIS.id)) &&
+			this.isDowntimeEvent(event)
+		) {
+			return false
+		}
+
+		// Consider all other heals
+		return true
+	}
+
 	protected override overrideHealBucket(event: Events['heal'], petHeal?: boolean): number {
 		// SGE doesn't have pet heals, but if they did, we wouldn't re-bucket
 		if (petHeal) { return -1 }

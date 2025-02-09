@@ -359,7 +359,7 @@
   "core.lucid-dreaming.suggestion.why": "{usesMissed, plural, one {# use} other {# uses}} of Lucid Dreaming {usesMissed, plural, one {was} other {were}} missed by holding it for at least a total of {0}.",
   "core.overheal.abilities-direct.name": "Direct Healing Abilities",
   "core.overheal.abilities-other.name": "Other Healing Abilities",
-  "core.overheal.gcd-hot.name": "GCD Heals (including Healing over Time)",
+  "core.overheal.gcd-hot.name": "Healing over Time from GCD Spells",
   "core.overheal.header.content": "\nOverhealing is unavoidable even with optimized usage of your actions, but it can\nalso be a result of poor planning. As such, overhealing must be analyzed on a\ncase-by-case basis.\n\nThe below tables will show you which actions overhealed. Focus on reducing the\noverheal percentage of the categories included in the checklist first. The other\ncategories typically have secondary purposes, or may overheal as an incidental\npart of a complete defensive plan.\n",
   "core.overheal.requirement.all": "Overall",
   "core.overheal.rule.description": "Avoid healing your party for more than is needed. Cut back on unnecessary heals and coordinate with your co-healer to plan resources efficiently.",

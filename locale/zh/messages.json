@@ -359,7 +359,7 @@
   "core.lucid-dreaming.suggestion.why": "因为CD空转了至少 {0}，你大约少用了 {usesMissed, plural, other {#}} {usesMissed, plural, other {次}}醒梦。",
   "core.overheal.abilities-direct.name": "直接治疗能力技",
   "core.overheal.abilities-other.name": "其他治疗能力技",
-  "core.overheal.gcd-hot.name": "GCD治疗 (包括持续治疗)",
+  "core.overheal.gcd-hot.name": "",
   "core.overheal.header.content": "\n过量治疗在最优和不佳的治疗技能规划下均会存在，因此必须逐例分析，不能一概而论。\n\n下表中列出了你的技能过量治疗数据。优先减少列表中第一类的过量治疗比例，其他类别中的治疗可能存在预防措施之类的其他用途。\n",
   "core.overheal.requirement.all": "总览",
   "core.overheal.rule.description": "注意避免过量治疗你的队伍，减少不必要的治疗，并和你的搭档沟通协调，最大化利用治疗资源。",
