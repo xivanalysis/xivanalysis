@@ -1,12 +1,10 @@
 import {Trans} from '@lingui/react'
 import {observer} from 'mobx-react'
 import {SEVERITY} from 'parser/core/modules/Suggestions/Suggestion'
-import * as PropTypes from 'prop-types'
-import {Component} from 'react'
-import {Checkbox, Label} from 'semantic-ui-react'
-// Direct path import 'cus it'll be a dep loop otherwise
+import {Component, ContextType, FormEvent} from 'react'
+import {Checkbox, CheckboxProps, Label} from 'semantic-ui-react'
 import {StoreContext} from 'store'
-import {SettingsStore} from 'store/settings'
+import {Suggestion} from './Suggestion'
 import styles from './Suggestions.module.css'
 
 const SEVERITY_LABEL_PROPS = {
@@ -15,33 +13,32 @@ const SEVERITY_LABEL_PROPS = {
 	[SEVERITY.MEDIUM]: {content: <Trans id="core.suggestions.severity.medium">Medium</Trans>, color: 'orange'},
 	[SEVERITY.MINOR]: {content: <Trans id="core.suggestions.severity.minor">Minor</Trans>, color: 'blue', icon: 'arrow down'},
 	[SEVERITY.MEMES]: {content: <Trans id="code.suggestions.severity.memes">Memes</Trans>, color: 'yellow', icon: 'exclamation'},
+} as const
+
+export type SuggestionsProps = {
+	suggestions: Suggestion[]
 }
 
 @observer
-class Suggestions extends Component {
-	static propTypes = {
-		settingsStore: PropTypes.instanceOf(SettingsStore),
-		suggestions: PropTypes.arrayOf(PropTypes.shape({
-			icon: PropTypes.string.isRequired,
-			content: PropTypes.node.isRequired,
-			why: PropTypes.node.isRequired,
-			severity: PropTypes.number.isRequired,
-		})).isRequired,
-	}
+export class Suggestions extends Component<SuggestionsProps> {
+	static override contextType = StoreContext
+	declare context: ContextType<typeof StoreContext>
 
-	static contextType = StoreContext
-
-	onToggleShowMinor = (_, data) => {
+	onToggleShowMinor = (_: FormEvent, data: CheckboxProps) => {
 		const {settingsStore} = this.context
-		settingsStore.setShowMinorSuggestions(data.checked)
+		settingsStore.setShowMinorSuggestions(!!data.checked)
 	}
 
-	render() {
+	override render() {
 		const showMinor = this.context.settingsStore.showMinorSuggestions
 
-		const suggestions = this.props.suggestions.filter(
-			suggestion => showMinor || suggestion.severity !== SEVERITY.MINOR,
-		)
+		const suggestions = this.props.suggestions
+			// Always filter IGNORE
+			.filter(suggestion => suggestion.severity !== SEVERITY.IGNORE)
+			// Filter MINOR if showMinor is not enabled
+			.filter(suggestion => showMinor || suggestion.severity !== SEVERITY.MINOR)
+			// Sort by severity
+			.sort((a, b) => a.severity - b.severity)
 
 		const hasMinor = this.props.suggestions.some(suggestion => suggestion.severity === SEVERITY.MINOR)
 
@@ -55,7 +52,7 @@ class Suggestions extends Component {
 			/>}
 			<div className={styles.items}>
 				{suggestions.map((suggestion, index) => <div key={index} className={styles.item}>
-					<img src={suggestion.icon} alt=""/>
+					<img src={suggestion.icon} alt="" />
 					<div>
 						{suggestion.content}
 						<div className={styles.extra}>
@@ -66,7 +63,7 @@ class Suggestions extends Component {
 				</div>)}
 				{suggestions.length === 0 && <div className={styles.item}>
 					<div>
-						<strong><Trans id="core.suggestion.nothing">There's nothing here!</Trans></strong><br/>
+						<strong><Trans id="core.suggestion.nothing">There's nothing here!</Trans></strong><br />
 						{hasMinor && <Trans id="core.suggestion.nothing-but-minor">You can check over the minor suggestions by flicking the "Show minor" switch in the top right.</Trans>}
 					</div>
 				</div>}
@@ -74,5 +71,3 @@ class Suggestions extends Component {
 		</>
 	}
 }
-
-export default Suggestions
