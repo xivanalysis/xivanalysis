@@ -7,7 +7,7 @@ import {Event} from 'event'
 import {filter} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
 import {CounterGauge, Gauge as CoreGauge} from 'parser/core/modules/Gauge'
-import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
+import {Suggestions, SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 
 // you get 2 (two) scales
 const MAX_FOCUS = 2

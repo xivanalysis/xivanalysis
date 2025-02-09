@@ -7,7 +7,7 @@ import {filter, oneOf} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
 import {Cooldowns} from 'parser/core/modules/Cooldowns'
 import {Data} from 'parser/core/modules/Data'
-import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
+import {Suggestions, SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 
 const SEVERITIES = {
 	WASTED_ST_HEAL_TIERS: {

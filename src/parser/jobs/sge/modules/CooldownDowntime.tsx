@@ -1,14 +1,10 @@
 import {Trans} from '@lingui/react'
 import {DataLink} from 'components/ui/DbLink'
-import {dependency} from 'parser/core/Injectable'
 import {CooldownDowntime as CoreCooldownDowntime} from 'parser/core/modules/CooldownDowntime'
-import Suggestions from 'parser/core/modules/Suggestions'
 
 const DPS_TARGET_PERCENT = 80
 
 export class CooldownDowntime extends CoreCooldownDowntime {
-	@dependency private suggestions!: Suggestions
-
 	/**
 	 * DPS cooldowns. Modified description since Phlegma is itself a GCD.
 	 */

@@ -2,7 +2,7 @@ import {Trans} from '@lingui/react'
 import {getIsAprilFirst} from '..'
 import {Analyser} from '../Analyser'
 import {dependency} from '../Injectable'
-import Suggestions, {SEVERITY, Suggestion} from './Suggestions'
+import {Suggestions, SEVERITY, Suggestion} from './Suggestions'
 
 export default class Hijinks extends Analyser {
 	static override handle = 'hijinks'

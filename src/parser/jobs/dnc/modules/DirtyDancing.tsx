@@ -8,7 +8,7 @@ import {dependency} from 'parser/core/Injectable'
 import {ActionWindow, EvaluatedAction} from 'parser/core/modules/ActionWindow'
 import {HistoryEntry} from 'parser/core/modules/ActionWindow/History'
 import {Actors} from 'parser/core/modules/Actors'
-import CheckList, {Requirement, Rule} from 'parser/core/modules/Checklist'
+import {Checklist, Requirement, Rule} from 'parser/core/modules/Checklist'
 import Downtime from 'parser/core/modules/Downtime'
 import {Invulnerability} from 'parser/core/modules/Invulnerability'
 import {Statuses} from 'parser/core/modules/Statuses'
@@ -35,7 +35,7 @@ export class DirtyDancing extends ActionWindow {
 	static override displayOrder = DISPLAY_ORDER.DIRTY_DANCING
 
 	@dependency private actors!: Actors
-	@dependency private checklist!: CheckList
+	@dependency private checklist!: Checklist
 	@dependency private downtime!: Downtime
 	@dependency private invulnerability!: Invulnerability
 	@dependency private statuses!: Statuses

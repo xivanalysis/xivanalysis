@@ -5,7 +5,7 @@ import {Event, Events} from 'event'
 import {filter, oneOf} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
 import {Defensives as CoreDefensives} from 'parser/core/modules/Defensives'
-import Suggestions, {SEVERITY, Suggestion} from 'parser/core/modules/Suggestions'
+import {Suggestions, SEVERITY, Suggestion} from 'parser/core/modules/Suggestions'
 import {DISPLAY_ORDER} from './DISPLAY_ORDER'
 
 // Defensive suggestions are a bit different for each mimicry.

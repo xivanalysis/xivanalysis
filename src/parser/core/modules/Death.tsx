@@ -6,7 +6,7 @@ import {EventHook} from '../Dispatcher'
 import {filter} from '../filter'
 import {dependency} from '../Injectable'
 import {Data} from './Data'
-import Suggestions, {SEVERITY, Suggestion} from './Suggestions'
+import {Suggestions, SEVERITY, Suggestion} from './Suggestions'
 import {SimpleItem, Timeline} from './Timeline'
 
 interface EventDeath extends FieldsBase {

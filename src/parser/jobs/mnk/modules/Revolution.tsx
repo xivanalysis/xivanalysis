@@ -6,7 +6,7 @@ import {Analyser} from 'parser/core/Analyser'
 import {filter} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
 import {Data} from 'parser/core/modules/Data'
-import Suggestions, {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import {Suggestions, Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
 export class Revolution extends Analyser {
 	static override handle = 'cr'

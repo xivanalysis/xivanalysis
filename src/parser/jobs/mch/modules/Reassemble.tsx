@@ -7,7 +7,7 @@ import {EventHook} from 'parser/core/Dispatcher'
 import {filter, oneOf} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
 import {Data} from 'parser/core/modules/Data'
-import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
+import {Suggestions, SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 
 // Rarely, reassembled fade timestamps don't match the GCD cast timestamps - deal with it
 const DELAY_THRESHOLD_MS = 100

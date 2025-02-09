@@ -12,7 +12,7 @@ import {EnumGauge} from 'parser/core/modules/Gauge/EnumGauge'
 import {SetEnumGauge} from 'parser/core/modules/Gauge/SetEnumGauge'
 import {SetGauge} from 'parser/core/modules/Gauge/SetGauge'
 import {DEFAULT_ROW_HEIGHT, GAUGE_FADE} from 'parser/core/modules/ResourceGraphs/ResourceGraphs'
-import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
+import {Suggestions, SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import {isSuccessfulHit} from 'utilities'
 
 const SUBTRACTIVE_COST = 50

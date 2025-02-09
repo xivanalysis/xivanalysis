@@ -10,7 +10,7 @@ import {dependency} from 'parser/core/Injectable'
 import {Actor, Actors} from 'parser/core/modules/Actors'
 import {CounterGauge, Gauge as CoreGauge, TimerGauge} from 'parser/core/modules/Gauge'
 import {SimpleStatistic, Statistics} from 'parser/core/modules/Statistics'
-import Suggestions, {SEVERITY, Suggestion, TieredSuggestion} from 'parser/core/modules/Suggestions'
+import {Suggestions, SEVERITY, Suggestion, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import {UnableToAct} from 'parser/core/modules/UnableToAct'
 import {CooldownDowntime} from './CooldownDowntime'
 

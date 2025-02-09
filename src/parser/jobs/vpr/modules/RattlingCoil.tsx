@@ -5,9 +5,9 @@ import {ActionLink, DataLink} from 'components/ui/DbLink'
 import {Event, Events} from 'event'
 import {filter, oneOf} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
-import Checklist, {Requirement, Rule} from 'parser/core/modules/Checklist'
+import {Checklist, Requirement, Rule} from 'parser/core/modules/Checklist'
 import {CounterGauge, Gauge as CoreGauge} from 'parser/core/modules/Gauge'
-import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
+import {Suggestions, SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 
 type GaugeModifier = Partial<Record<Event['type'], number>>
 

@@ -3,7 +3,7 @@ import {DataLink} from 'components/ui/DbLink'
 import {Event, Events} from 'event'
 import {filter, oneOf} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
-import Checklist, {Requirement, Rule} from 'parser/core/modules/Checklist'
+import {Checklist, Requirement, Rule} from 'parser/core/modules/Checklist'
 import {Procs as CoreProcs} from 'parser/core/modules/Procs'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 export class ReadyProcs extends CoreProcs {

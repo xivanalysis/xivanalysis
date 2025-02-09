@@ -8,7 +8,7 @@ import {History} from 'parser/core/modules/ActionWindow/History'
 import {Actors} from 'parser/core/modules/Actors'
 import {AlwaysBeCasting as CoreAlwaysBeCasting} from 'parser/core/modules/AlwaysBeCasting'
 import {SimpleStatistic, Statistics} from 'parser/core/modules/Statistics'
-import Suggestions, {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import {Suggestions, TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
 const PHANTOM_FLURRY_CHANNEL_DURATION_MAX_MS = 5000
 const PHANTOM_FLURRY_CHANNEL_WITH_KICK_DURATION_MS = 4000

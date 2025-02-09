@@ -7,9 +7,9 @@ import {Analyser} from 'parser/core/Analyser'
 import {EventHook} from 'parser/core/Dispatcher'
 import {filter} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
-import Checklist, {Requirement, Rule} from 'parser/core/modules/Checklist'
+import {Checklist, Requirement, Rule} from 'parser/core/modules/Checklist'
 import {Data} from 'parser/core/modules/Data'
-import Suggestions from 'parser/core/modules/Suggestions'
+import {Suggestions} from 'parser/core/modules/Suggestions'
 
 // Default case
 const IR_STACKS_APPLIED = 3

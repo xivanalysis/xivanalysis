@@ -1,6 +1,6 @@
 import {ActionLink} from 'components/ui/DbLink'
 import {Action} from 'data/ACTIONS'
-import Suggestion from '../../Suggestions/Suggestion'
+import {Suggestion} from '../../Suggestions/Suggestion'
 import {EvaluatedAction} from '../EvaluatedAction'
 import {HistoryEntry} from '../History'
 import {EvaluationOutput, WindowEvaluator} from './WindowEvaluator'

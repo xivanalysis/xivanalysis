@@ -7,7 +7,7 @@ import {dependency} from 'parser/core/Injectable'
 import {Requirement, Rule} from 'parser/core/modules/Checklist'
 import {Analyser, DisplayOrder} from '../Analyser'
 import {filter, oneOf} from '../filter'
-import Checklist from './Checklist'
+import {Checklist} from './Checklist'
 import {Data} from './Data'
 import Downtime from './Downtime'
 
