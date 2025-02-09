@@ -359,7 +359,7 @@
   "core.lucid-dreaming.suggestion.why": "{usesMissed, plural, one {# utilisation} other {# utilisations}} de Rêve lucide {usesMissed, plural, one {a été manquée} other {ont été manquées}} en le laissant disponible pendant au moins {0}.",
   "core.overheal.abilities-direct.name": "Aptitudes de Soin Direct",
   "core.overheal.abilities-other.name": "Autres aptitudes de Soin",
-  "core.overheal.gcd-hot.name": "GCD de Soin (en incluant le soin sur la durée)",
+  "core.overheal.gcd-hot.name": "",
   "core.overheal.header.content": "\nL'overheal est impossible à éviter, même avec une utilisation optimisée de vos actions, mais peut aussi être induit par une mauvaise planification de vos soins. Par conséquent, l'overhealing doit être analysé au cas par cas.\n\nLes tableaux ci-dessous montrent quelles actions ont provoqué du overheal. Essayez de réduire le pourcentage d'overheal dans les catégories de la checklist en priorité. Les actions présentes dans les autres catégories ont généralement d'autres utilités, et leur action de soin n'est généralement pas le principal effet recherché lors de leur utilisation.\n",
   "core.overheal.requirement.all": "Généralités",
   "core.overheal.rule.description": "Ne soignez pas votre équipe davantage que nécessaire. Coordonnez-vous avec votre co-healer pour diminuer la quantité de soins effectués et planifier vos ressources de façon efficace.",
