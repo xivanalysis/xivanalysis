@@ -12,7 +12,7 @@ export const SEVERITY = {
 	// IGNORE will never be shown, but needs to be numeric for comparisons
 	IGNORE: Infinity,
 }
-type Severity = typeof SEVERITY[keyof typeof SEVERITY]
+export type Severity = typeof SEVERITY[keyof typeof SEVERITY]
 
 export interface SuggestionOptions {
 	icon: string
