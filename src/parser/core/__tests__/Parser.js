@@ -3,7 +3,7 @@ import {Team} from 'report'
 import {Analyser} from '../Analyser'
 import {Dispatcher} from '../Dispatcher'
 import {Meta} from '../Meta'
-import Parser from '../Parser'
+import {Parser} from '../Parser'
 
 jest.mock('../Dispatcher')
 

@@ -1,5 +1,5 @@
 import ReactDOM from 'react-dom'
-import Root from '../Root'
+import {Root} from '../Root'
 
 describe('Root', () => {
 	it('renders without crashing', () => {

@@ -5,7 +5,7 @@ import {ReactNode} from 'react'
 import {Compute} from 'utilities'
 import {EventFilterPredicate, EventHook, EventHookCallback, TimestampHook, TimestampHookCallback} from './Dispatcher'
 import {Injectable} from './Injectable'
-import Parser from './Parser'
+import {Parser} from './Parser'
 
 const DEFAULT_DISPLAY_ORDER = 50
 

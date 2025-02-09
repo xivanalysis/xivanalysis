@@ -2,7 +2,7 @@ import {Trans} from '@lingui/react'
 import {DataLink} from 'components/ui/DbLink'
 import {Action} from 'data/ACTIONS'
 import {CooldownDowntime} from 'parser/core/modules/CooldownDowntime'
-import DISPLAY_ORDER from './DISPLAY_ORDER'
+import {DISPLAY_ORDER} from './DISPLAY_ORDER'
 
 export class oGCDs extends CooldownDowntime {
 	private oracle_override: Action = { //this is used to ensure that Oracle has the same cooldown as Divination since it functionally does

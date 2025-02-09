@@ -1,2 +1,2 @@
-export {default as ArcanaTracking} from './ArcanaTracking'
-export {default as ArcanaSuggestions} from './ArcanaSuggestions'
+export {ArcanaTracking} from './ArcanaTracking'
+export {ArcanaSuggestions} from './ArcanaSuggestions'

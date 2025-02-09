@@ -1,6 +1,6 @@
 import {Trans} from '@lingui/react'
 import {Segment} from 'akkd'
-import NormalisedMessage from 'components/ui/NormalisedMessage'
+import {NormalisedMessage} from 'components/ui/NormalisedMessage'
 import {DisplayMode} from 'parser/core/Analyser'
 import {Result} from 'parser/core/Parser'
 import {PureComponent} from 'react'

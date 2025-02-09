@@ -38,7 +38,7 @@ export interface CompleteEvent {
 	timestamp: number
 }
 
-class Parser {
+export class Parser {
 	// -----
 	// Properties
 	// -----
@@ -465,5 +465,3 @@ class Parser {
 		ResultSegment.scrollIntoView((module.constructor as typeof Injectable).handle)
 	}
 }
-
-export default Parser

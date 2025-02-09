@@ -7,10 +7,10 @@ interface Props {
 	id?: string
 }
 
-function NormalisedMessage({message, id, i18n}: Props) {
+function NormalisedMessageImpl({message, id, i18n}: Props) {
 	return typeof message === 'string'
 		? <Trans id={id} defaults={message}/>
 		: <>{i18n._(message)}</>
 }
 
-export default withI18n()(NormalisedMessage)
+export const NormalisedMessage = withI18n()(NormalisedMessageImpl)

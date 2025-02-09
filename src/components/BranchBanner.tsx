@@ -1,6 +1,6 @@
 import {Trans} from '@lingui/react'
 import {Segment} from 'akkd'
-import PATCHES, {getPatch} from 'data/PATCHES'
+import {PATCHES, getPatch} from 'data/PATCHES'
 import {observer} from 'mobx-react'
 import {Component} from 'react'
 import {RouteComponentProps, withRouter} from 'react-router-dom'

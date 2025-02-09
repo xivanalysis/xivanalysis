@@ -1,12 +1,12 @@
 import {CooldownDowntime} from 'parser/core/modules/CooldownDowntime'
-import DISPLAY_ORDER from './DISPLAY_ORDER'
+import {DISPLAY_ORDER} from './DISPLAY_ORDER'
 
 const FIRSTUSEOFFSET_IRE = 2500
 const FIRSTUSEOFFSET_DREAD = 7500
 // Time that vipers have deemed ok for a OGCD to be down
 const DEFAULT_ALLOWED_DOWNTIME = 2180
 
-export default class OGCDDowntime extends CooldownDowntime {
+export class OGCDDowntime extends CooldownDowntime {
 	override defaultAllowedAverageDowntime = DEFAULT_ALLOWED_DOWNTIME
 	displayOrder = DISPLAY_ORDER.COOLDOWNS
 	override trackedCds = [

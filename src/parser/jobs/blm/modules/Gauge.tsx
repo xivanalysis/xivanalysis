@@ -10,7 +10,7 @@ import _ from 'lodash'
 import {TimestampHookArguments} from 'parser/core/Dispatcher'
 import {filter} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
-import CastTime from 'parser/core/modules/CastTime'
+import {CastTime} from 'parser/core/modules/CastTime'
 import {CounterGauge, TimerGauge, Gauge as CoreGauge} from 'parser/core/modules/Gauge'
 import {EnumGauge} from 'parser/core/modules/Gauge/EnumGauge'
 import {DEFAULT_ROW_HEIGHT, GAUGE_FADE} from 'parser/core/modules/ResourceGraphs/ResourceGraphs'
@@ -20,7 +20,7 @@ import {Fragment} from 'react'
 import {Message, Table, Button} from 'semantic-ui-react'
 import {isSuccessfulHit} from 'utilities'
 import {FIRE_SPELLS, ICE_SPELLS_TARGETED, ICE_SPELLS_UNTARGETED} from './Elements'
-import Procs from './Procs'
+import {Procs} from './Procs'
 
 /** Configuration */
 const POLYGLOT_DURATION_REQUIRED = 30000

@@ -1,7 +1,7 @@
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
 import {DataLink, ActionLink} from 'components/ui/DbLink'
-import NormalisedMessage from 'components/ui/NormalisedMessage'
+import {NormalisedMessage} from 'components/ui/NormalisedMessage'
 import {Event, Events} from 'event'
 import {Analyser} from 'parser/core/Analyser'
 import {filter} from 'parser/core/filter'
@@ -14,7 +14,7 @@ import {Statuses} from 'parser/core/modules/Statuses'
 import {Suggestions, Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import {ReactNode} from 'react'
 import {Accordion, Table, Message} from 'semantic-ui-react'
-import DISPLAY_ORDER from './DISPLAY_ORDER'
+import {DISPLAY_ORDER} from './DISPLAY_ORDER'
 
 const MAX_ALLOWED_BAD_GCD_THRESHOLD = 2000
 const MAX_ALLOWED_CLIPPING = 3000

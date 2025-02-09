@@ -1,7 +1,7 @@
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
 import {Analyser, DisplayMode} from 'parser/core/Analyser'
-import DISPLAY_ORDER from '../DISPLAY_ORDER'
+import {DISPLAY_ORDER} from '../DISPLAY_ORDER'
 import {
 	SetViewFn,
 	Timeline as TimelineComponent,

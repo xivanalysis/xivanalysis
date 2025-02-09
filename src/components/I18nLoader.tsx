@@ -7,7 +7,7 @@ import {disposeOnUnmount, observer} from 'mobx-react'
 import {Component, ContextType, ReactNode} from 'react'
 import {Container, Loader, Message} from 'semantic-ui-react'
 import {StoreContext} from 'store'
-import I18nOverlay from './I18nOverlay'
+import {I18nOverlay} from './I18nOverlay'
 
 const cleanMessages = (messages: Messages) => {
 	for (const [key, val] of Object.entries(messages)) {

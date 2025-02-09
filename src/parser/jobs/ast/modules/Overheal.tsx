@@ -3,7 +3,7 @@ import {DataLink} from 'components/ui/DbLink'
 import {Action} from 'data/ACTIONS'
 import {Events} from 'event'
 import {Overheal as CoreOverheal, TrackedOverhealOpts} from 'parser/core/modules/Overheal'
-import DISPLAY_ORDER from './DISPLAY_ORDER'
+import {DISPLAY_ORDER} from './DISPLAY_ORDER'
 
 const NEUTRAL_SECT_APPLICATION_BUCKET_ID = 1
 

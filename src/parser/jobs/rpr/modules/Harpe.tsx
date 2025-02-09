@@ -1,6 +1,6 @@
 import {Trans} from '@lingui/macro'
 import {ActionLink} from 'components/ui/DbLink'
-import ACTIONS from 'data/ACTIONS'
+import {ACTIONS} from 'data/ACTIONS'
 import {Event, Events} from 'event'
 import {filter} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'

@@ -2,13 +2,13 @@
 
 import {t} from '@lingui/macro'
 import {Plural, Trans} from '@lingui/react'
-import Rotation from 'components/ui/Rotation'
+import {Rotation} from 'components/ui/Rotation'
 import {ActionCombo} from 'data/ACTIONS/type'
 import {iconUrl} from 'data/icon'
 import {Cause, Event, Events, FieldsMultiTargeted, SourceModifier} from 'event'
 import _ from 'lodash'
 import {dependency} from 'parser/core/Injectable'
-import DISPLAY_ORDER from 'parser/core/modules/DISPLAY_ORDER'
+import {DISPLAY_ORDER} from 'parser/core/modules/DISPLAY_ORDER'
 import {Suggestions, SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import {Timeline} from 'parser/core/modules/Timeline'
 import {ReactNode} from 'react'
@@ -17,7 +17,7 @@ import {Analyser} from '../Analyser'
 import {filter} from '../filter'
 import {Data} from './Data'
 import {Death} from './Death'
-import Downtime from './Downtime'
+import {Downtime} from './Downtime'
 
 const DEFAULT_GCD = 2500
 const COMBO_TIMEOUT = 30000

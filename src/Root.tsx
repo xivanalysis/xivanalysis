@@ -5,7 +5,7 @@ import {Provider as TooltipProvider} from 'components/ui/DbLink'
 import {BrowserRouter as Router} from 'react-router-dom'
 import {StoreProvider} from 'store'
 
-export default () => (
+export const Root = () => (
 	<StoreProvider>
 		<I18nLoader>
 			<TooltipProvider>

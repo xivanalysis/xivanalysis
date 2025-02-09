@@ -1,6 +1,6 @@
-import ACTIONS from 'data/ACTIONS'
+import {ACTIONS} from 'data/ACTIONS'
 import {AoEUsages} from 'parser/core/modules/AoEUsages'
-import DISPLAY_ORDER from './DISPLAY_ORDER'
+import {DISPLAY_ORDER} from './DISPLAY_ORDER'
 
 export class MultiHitSkills extends AoEUsages {
 	static displayerOrder = DISPLAY_ORDER.MULTI_HIT_SKILLS

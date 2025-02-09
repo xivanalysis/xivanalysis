@@ -11,7 +11,7 @@ import {SurgingTempest} from './SurgingTempest'
 import {Tincture} from './Tincture'
 import {Tomahawk} from './Tomahawk'
 
-export default [
+export const modules = [
 	ActionTimeline,
 	AoE,
 	Combos,

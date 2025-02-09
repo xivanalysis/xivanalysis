@@ -1,6 +1,6 @@
 import {Event} from 'event'
 import {filter} from 'parser/core/filter'
-import CastTime from 'parser/core/modules/CastTime'
+import {CastTime} from 'parser/core/modules/CastTime'
 
 export class Swiftscaled extends CastTime {
 	private SwiftscaledIndex: number | null = null

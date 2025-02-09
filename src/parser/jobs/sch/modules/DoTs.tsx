@@ -1,12 +1,12 @@
 import {Trans} from '@lingui/react'
 import {DataLink} from 'components/ui/DbLink'
-import ACTIONS from 'data/ACTIONS'
-import STATUSES from 'data/STATUSES'
+import {ACTIONS} from 'data/ACTIONS'
+import {STATUSES} from 'data/STATUSES'
 import {dependency} from 'parser/core/Injectable'
 import {Checklist, Requirement, Rule} from 'parser/core/modules/Checklist'
 import {DoTs as CoreDoTs} from 'parser/core/modules/DoTs'
 import {Suggestions, TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
-import DISPLAY_ORDER from './DISPLAY_ORDER'
+import {DISPLAY_ORDER} from './DISPLAY_ORDER'
 
 // In seconds
 const SEVERITIES = {
@@ -17,7 +17,7 @@ const SEVERITIES = {
 	},
 }
 
-export default class DoTs extends CoreDoTs {
+export class DoTs extends CoreDoTs {
 	@dependency private checklist!: Checklist
 	@dependency private suggestions!: Suggestions
 

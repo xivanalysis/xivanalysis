@@ -1,5 +1,5 @@
 import {Trans} from '@lingui/react'
-import Rotation, {RotationEvent} from 'components/ui/Rotation'
+import {Rotation, RotationEvent} from 'components/ui/Rotation'
 import {Component, ReactNode} from 'react'
 import {Button, Table} from 'semantic-ui-react'
 import {isDefined, formatDuration} from 'utilities'

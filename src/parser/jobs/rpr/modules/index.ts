@@ -6,7 +6,7 @@ import {CooldownDowntime} from './CooldownDowntime'
 import {DeathGauge} from './DeathGauge'
 import {DeathsDesign} from './DeathsDesign'
 import {Defensives} from './Defensives'
-import Drift from './Drift'
+import {Drift} from './Drift'
 import {Enshroud} from './Enshroud'
 import {Executioner} from './Executioner'
 import {Harpe} from './Harpe'
@@ -18,7 +18,7 @@ import {Reaver} from './Reaver'
 import {Tincture} from './Tincture'
 import {Weaving} from './Weaving'
 
-export default [
+export const modules = [
 	ActionTimeline,
 	AoE,
 	ArcaneCircle,

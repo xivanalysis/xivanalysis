@@ -20,7 +20,7 @@ type Props = ChartComponentProps & {
 
 const MISSING_COLOUR_FALLBACK = '#888'
 
-export default class PieChartWithLegend extends Component<Props> {
+export class PieChartWithLegend extends Component<Props> {
 	override render() {
 		const {
 			data: propData,

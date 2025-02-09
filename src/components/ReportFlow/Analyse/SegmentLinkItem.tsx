@@ -1,5 +1,5 @@
 import classnames from 'classnames'
-import NormalisedMessage from 'components/ui/NormalisedMessage'
+import {NormalisedMessage} from 'components/ui/NormalisedMessage'
 import {Result} from 'parser/core/Parser'
 import styles from './SegmentLinkItem.module.css'
 import {Consumer} from './SegmentPositionContext'

@@ -1,5 +1,5 @@
 import {Plural, Trans} from '@lingui/react'
-import ACTIONS from 'data/ACTIONS'
+import {ACTIONS} from 'data/ACTIONS'
 import {Event, Events} from 'event'
 import {filter} from 'parser/core/filter'
 import {ComboBreak, Combos as CoreCombos} from 'parser/core/modules/Combos'

@@ -64,7 +64,7 @@ export const ENCOUNTER_KEY_HERE = new Meta({
 
 ```ts
 // src/parser/bosses/<encounter>/modules/index.tsx
-export default [
+export const modules = [
 	// Add modules here...
 ]
 ```

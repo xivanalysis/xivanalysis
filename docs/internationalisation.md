@@ -21,7 +21,7 @@ If your module has `output`, it should also be given a translated title. This ti
 import {t} from '@lingui/macro'
 import {Analyser} from 'parser/core/Analyser'
 
-export default class MyModule extends Analyser {
+export class MyModule extends Analyser {
 	// ...
 	static title = t('my-job.my-module.title')`My Module`
 	// ...

@@ -34,6 +34,7 @@ interface Arguments {
 	[key: string]: unknown
 }
 
+// eslint-disable-next-line import/no-default-export
 export default (env: Environment, {
 	mode = 'development',
 }: Arguments): webpack.Configuration => ({

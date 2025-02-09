@@ -3,7 +3,7 @@ import {CooldownDowntime} from 'parser/core/modules/CooldownDowntime'
 // Strict downtime allowance for drill/bio blaster/air anchor
 const DOWNTIME_ALLOWED_GCD = 100
 
-export default class GeneralCDDowntime extends CooldownDowntime {
+export class GeneralCDDowntime extends CooldownDowntime {
 	trackedCds = [{
 		cooldowns: [this.data.actions.WILDFIRE],
 		firstUseOffset: 10000,

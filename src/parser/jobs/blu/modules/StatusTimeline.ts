@@ -1,4 +1,4 @@
-import STATUSES from 'data/STATUSES'
+import {STATUSES} from 'data/STATUSES'
 import {StatusTimeline as CoreStatusTimeline} from 'parser/core/modules/StatusTimeline'
 
 export class StatusTimeline extends CoreStatusTimeline {

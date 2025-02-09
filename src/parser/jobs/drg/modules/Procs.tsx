@@ -5,7 +5,7 @@ import {SEVERITY} from 'parser/core/modules/Suggestions'
 
 const ICON_STARCROSS = 2078
 
-export default class Procs extends CoreProcs {
+export class Procs extends CoreProcs {
 	protected override showDroppedProcSuggestion = true
 	// DRG wants to use every proc, and dropping any of them is a major issue
 	protected override droppedProcIcon = iconUrl(ICON_STARCROSS)

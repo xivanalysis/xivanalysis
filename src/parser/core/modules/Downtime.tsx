@@ -9,7 +9,7 @@ interface DowntimeWindow {
 	end: number
 }
 
-export default class Downtime extends Analyser {
+export class Downtime extends Analyser {
 	static override handle = 'downtime'
 
 	@dependency private readonly unableToAct!: UnableToAct

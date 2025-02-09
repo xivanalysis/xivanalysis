@@ -28,7 +28,7 @@ interface TimeLineChartProps {
 	options?: ChartOptions
 }
 
-export default class TimeLineChart extends PureComponent<TimeLineChartProps> {
+export class TimeLineChart extends PureComponent<TimeLineChartProps> {
 	static propTypes = {
 		data: PropTypes.object.isRequired,
 		options: PropTypes.object,

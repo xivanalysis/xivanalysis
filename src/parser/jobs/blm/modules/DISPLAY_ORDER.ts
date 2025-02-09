@@ -1,4 +1,4 @@
-export default {
+export const DISPLAY_ORDER = {
 	ROTATION: 1,
 	NOTCASTING: 2,
 	LEY_LINES: 3,

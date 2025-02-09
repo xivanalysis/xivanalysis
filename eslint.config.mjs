@@ -6,6 +6,7 @@ import pluginReactHooks from 'eslint-plugin-react-hooks'
 import globals from 'globals'
 import pluginTs from 'typescript-eslint'
 
+// eslint-disable-next-line import/no-default-export
 export default pluginTs.config(
 	{ignores: ["./build", './locale']},
 	pluginJs.configs.recommended,
@@ -135,6 +136,7 @@ export default pluginTs.config(
 				'newlines-between': 'never',
 				alphabetize: {order: 'asc', caseInsensitive: true},
 			}],
+			'import/no-default-export': 'error',
 
 			// React-specific rules
 			'react/display-name': 'off',

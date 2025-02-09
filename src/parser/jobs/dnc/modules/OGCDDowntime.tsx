@@ -7,7 +7,7 @@ import {CooldownDowntime} from 'parser/core/modules/CooldownDowntime'
  */
 const ALLOWED_DANCE_DOWNTIME = 250
 
-export default class OGCDDowntime extends CooldownDowntime {
+export class OGCDDowntime extends CooldownDowntime {
 	trackedCds = [
 		{
 			cooldowns: [this.data.actions.TECHNICAL_STEP],

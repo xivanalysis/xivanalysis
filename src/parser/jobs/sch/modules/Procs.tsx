@@ -3,7 +3,7 @@ import {ActionLink, StatusLink} from 'components/ui/DbLink'
 import {Procs as CoreProcs, ProcGroup} from 'parser/core/modules/Procs'
 import {SEVERITY, Suggestion} from 'parser/core/modules/Suggestions'
 
-export default class Procs extends CoreProcs {
+export class Procs extends CoreProcs {
 	protected override trackedProcs: ProcGroup[] = [
 		{
 			procStatus: this.data.statuses.IMPACT_IMMINENT,

@@ -1,9 +1,9 @@
 import {t} from '@lingui/macro'
 import {Analyser, DisplayMode} from 'parser/core/Analyser'
-import DISPLAY_ORDER from '../DISPLAY_ORDER'
-import {default as ChangelogComponent} from './Component'
+import {DISPLAY_ORDER} from '../DISPLAY_ORDER'
+import {ChangeLog as ChangelogComponent} from './Component'
 
-export default class ChangeLog extends Analyser {
+export class ChangeLog extends Analyser {
 	static override handle = 'changelog'
 	static override displayOrder = DISPLAY_ORDER.CHANGELOG
 	static override displayMode = DisplayMode.FULL

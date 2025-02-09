@@ -9,7 +9,7 @@ import {BuffWindow, EvaluatedAction, ExpectedActionsEvaluator} from 'parser/core
 import {HistoryEntry} from 'parser/core/modules/ActionWindow/History'
 import {EndOfWindowHandlingMode} from 'parser/core/modules/ActionWindow/windows/BuffWindow'
 import {Actors} from 'parser/core/modules/Actors'
-import Downtime from 'parser/core/modules/Downtime'
+import {Downtime} from 'parser/core/modules/Downtime'
 import {GlobalCooldown} from 'parser/core/modules/GlobalCooldown'
 import {SEVERITY} from 'parser/core/modules/Suggestions'
 import {Fragment} from 'react'

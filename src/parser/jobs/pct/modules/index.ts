@@ -5,13 +5,13 @@ import {CooldownDowntime} from './CooldownDowntime'
 import {Defensives} from './Defensives'
 import {Gauge} from './Gauge'
 import {Inspiration} from './Inspiration'
-import Procs from './Procs'
+import {Procs} from './Procs'
 import {StarryMuse} from './StarryMuse'
 import {Swiftcast} from './Swiftcast'
 import {Tincture} from './Tincture'
-import Weaving from './Weaving'
+import {Weaving} from './Weaving'
 
-export default [
+export const modules = [
 	ActionTimeline,
 	AoEUsages,
 	CooldownDowntime,

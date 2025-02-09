@@ -1,5 +1,5 @@
 //import {DataLink} from 'components/ui/DbLink'
-import CONTRIBUTORS from 'data/CONTRIBUTORS'
+import {CONTRIBUTORS} from 'data/CONTRIBUTORS'
 import {ChangelogEntry} from './Meta'
 
 export const changelog: ChangelogEntry[] = [

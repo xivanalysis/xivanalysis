@@ -14,7 +14,7 @@ import {Analyser} from '../Analyser'
 import {filter, oneOf} from '../filter'
 import {dependency} from '../Injectable'
 import {Data} from './Data'
-import Downtime from './Downtime'
+import {Downtime} from './Downtime'
 import {Invulnerability} from './Invulnerability'
 
 const TIMELINE_CONTEXT_DURATION = 15000 // 15s either side of the proc issue, 30s window overall

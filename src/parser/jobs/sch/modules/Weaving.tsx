@@ -2,7 +2,7 @@ import {Trans} from '@lingui/react'
 import {DataLink} from 'components/ui/DbLink'
 import {SEVERITY} from 'parser/core/modules/Suggestions'
 import {Weaving as CoreWeaving} from 'parser/core/modules/Weaving'
-import DISPLAY_ORDER from './DISPLAY_ORDER'
+import {DISPLAY_ORDER} from './DISPLAY_ORDER'
 
 const WEAVING_SEVERITY = {
 	1: SEVERITY.MINOR,
@@ -10,7 +10,7 @@ const WEAVING_SEVERITY = {
 	10: SEVERITY.MAJOR,
 }
 
-export default class Weaving extends CoreWeaving {
+export class Weaving extends CoreWeaving {
 	static override displayOrder = DISPLAY_ORDER.WEAVING
 
 	override suggestionContent = <Trans id="sch.weaving.content">

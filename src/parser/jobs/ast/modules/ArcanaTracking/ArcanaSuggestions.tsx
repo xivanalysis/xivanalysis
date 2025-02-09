@@ -11,9 +11,9 @@ import {Data} from 'parser/core/modules/Data'
 import {Timeline} from 'parser/core/modules/Timeline'
 import {Button, Table} from 'semantic-ui-react'
 import {PLAY_I} from '../ArcanaGroups'
-import DISPLAY_ORDER from '../DISPLAY_ORDER'
+import {DISPLAY_ORDER} from '../DISPLAY_ORDER'
 import styles from './ArcanaSuggestions.module.css'
-import ArcanaTracking, {CardState, SealType} from './ArcanaTracking'
+import {ArcanaTracking, CardState, SealType} from './ArcanaTracking'
 import sealCelestial from './seal_celestial.png'
 import sealLunar from './seal_lunar.png'
 import sealSolar from './seal_solar.png'
@@ -32,7 +32,7 @@ interface CardLog extends CardState {
 	targetJob: Actor['job']
 }
 
-export default class ArcanaSuggestions extends Analyser {
+export class ArcanaSuggestions extends Analyser {
 	static override handle = 'arcanaSuggestions'
 
 	static override title = t('ast.arcana-suggestions.title')`Arcana Logs`

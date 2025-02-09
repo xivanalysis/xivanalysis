@@ -14,7 +14,7 @@ const JUMP_FIRST_USE_OFFSET = 14500
 // always before Drakesbane, the 5th GCD
 const LIFE_SURGE_FIRST_USE_OFFSET = 12000
 
-export default class OGCDDowntime extends CooldownDowntime {
+export class OGCDDowntime extends CooldownDowntime {
 	override defaultFirstUseOffset = BUFF_FIRST_USE_OFFSET
 	override trackedCds = [
 		{

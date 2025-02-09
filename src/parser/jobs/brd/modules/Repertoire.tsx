@@ -4,7 +4,7 @@ import {Event, Events} from 'event'
 import {filter} from 'parser/core/filter'
 import {CounterGauge, Gauge} from 'parser/core/modules/Gauge'
 import {GAUGE_FADE, ResourceDataGroup} from 'parser/core/modules/ResourceGraphs/ResourceGraphs'
-import ACTIONS, {Action} from '../../../../data/ACTIONS'
+import {ACTIONS, Action} from '../../../../data/ACTIONS'
 
 const MAX_WM_REPERTOIRE = 3
 const MAX_AP_REPERTOIRE = 4

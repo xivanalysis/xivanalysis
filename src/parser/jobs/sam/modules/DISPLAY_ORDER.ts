@@ -1,4 +1,4 @@
-export default {
+export const DISPLAY_ORDER = {
 	BUFFS: 1,
 	HIGANBANA: 2,
 	COOLDOWNS: 3,

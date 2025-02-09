@@ -17,7 +17,7 @@ import {Suggestions, SEVERITY, TieredSuggestion} from 'parser/core/modules/Sugge
 import {Timeline} from 'parser/core/modules/Timeline'
 import {Fragment} from 'react'
 import {Message, Icon} from 'semantic-ui-react'
-import DISPLAY_ORDER from './DISPLAY_ORDER'
+import {DISPLAY_ORDER} from './DISPLAY_ORDER'
 import {Kenki} from './Kenki'
 
 // defining a const message to assign later via markdown

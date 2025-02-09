@@ -5,7 +5,7 @@ import {Status} from 'data/STATUSES'
 import {dependency} from 'parser/core/Injectable'
 import {Checklist, Requirement, Rule} from 'parser/core/modules/Checklist'
 import {Procs as CoreProcs} from 'parser/core/modules/Procs'
-import DISPLAY_ORDER from './DISPLAY_ORDER'
+import {DISPLAY_ORDER} from './DISPLAY_ORDER'
 
 export class Venoms extends CoreProcs {
 	static override handle = 'venoms'

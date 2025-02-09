@@ -1,5 +1,5 @@
 import {ChartDataSets} from 'chart.js'
-import Parser from 'parser/core/Parser'
+import {Parser} from 'parser/core/Parser'
 import {ResourceGraphs} from '../ResourceGraphs'
 
 export interface AbstractGaugeOptions {

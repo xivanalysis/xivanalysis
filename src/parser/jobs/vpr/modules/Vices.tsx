@@ -7,7 +7,7 @@ import {filter, oneOf} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
 import {Checklist, Requirement, Rule} from 'parser/core/modules/Checklist'
 import {Data} from 'parser/core/modules/Data'
-import DISPLAY_ORDER from 'parser/jobs/vpr/modules/DISPLAY_ORDER'
+import {DISPLAY_ORDER} from 'parser/jobs/vpr/modules/DISPLAY_ORDER'
 
 const PERFECTIO = 100 // 100% perfect, RPR would be proud
 export class Vices extends Analyser {

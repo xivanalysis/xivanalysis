@@ -4,7 +4,7 @@ import {EvaluatedAction, ExpectedActionsEvaluator, TimedWindow} from 'parser/cor
 import {HistoryEntry} from 'parser/core/modules/ActionWindow/History'
 import {SEVERITY} from 'parser/core/modules/Suggestions'
 import {ReactElement} from 'react'
-import DISPLAY_ORDER from './DISPLAY_ORDER'
+import {DISPLAY_ORDER} from './DISPLAY_ORDER'
 
 const SEVERITY_TIERS = {
 	1: SEVERITY.MEDIUM,

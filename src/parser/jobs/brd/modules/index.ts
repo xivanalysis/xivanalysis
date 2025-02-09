@@ -15,7 +15,7 @@ import {RefulgentProcs} from './RefulgentProcs'
 import {Repertoire} from './Repertoire'
 import {SoulVoice} from './SoulVoice'
 
-export default [
+export const modules = [
 	ActionTimeline,
 	AlwaysBeCasting,
 	Repertoire,

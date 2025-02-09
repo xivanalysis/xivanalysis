@@ -20,7 +20,7 @@ import {Weaving} from './Weaving'
 
 export {DualStatistic} from 'parser/jobs/rdm/statistics/DualStatistic'
 
-export default [
+export const modules = [
 	AlwaysBeCasting,
 	Embolden,
 	ManaGauge,

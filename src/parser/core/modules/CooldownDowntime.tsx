@@ -9,7 +9,7 @@ import {Analyser, DisplayOrder} from '../Analyser'
 import {filter, oneOf} from '../filter'
 import {Checklist} from './Checklist'
 import {Data} from './Data'
-import Downtime from './Downtime'
+import {Downtime} from './Downtime'
 
 export interface CooldownReset {
 	/**

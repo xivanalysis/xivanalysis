@@ -4,7 +4,7 @@ import 'reflect-metadata'
 
 import * as Sentry from '@sentry/browser'
 import ReactDOM from 'react-dom'
-import Root from './Root'
+import {Root} from './Root'
 
 // If we're in prod, boot up sentry
 const {NODE_ENV, REACT_APP_VERSION, REACT_APP_SENTRY_DSN} = process.env

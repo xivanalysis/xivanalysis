@@ -7,7 +7,7 @@ import {HistoryEntry} from 'parser/core/modules/ActionWindow/History'
 import {EndOfWindowHandlingMode} from 'parser/core/modules/ActionWindow/windows/BuffWindow'
 import {GlobalCooldown} from 'parser/core/modules/GlobalCooldown'
 import {SEVERITY} from 'parser/core/modules/Suggestions'
-import DISPLAY_ORDER from './DISPLAY_ORDER'
+import {DISPLAY_ORDER} from './DISPLAY_ORDER'
 
 const ONLY_SHOW: ActionKey[] = [
 	'HAKAZE',

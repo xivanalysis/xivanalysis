@@ -11,7 +11,7 @@ export interface Contributor {
 	jobs: Job[]
 }
 
-const CONTRIBUTORS = ensureRecord<Contributor>()({
+export const CONTRIBUTORS = ensureRecord<Contributor>()({
 	// KEY: {
 	// 	name: 'Your Name',
 	// 	avatar: require('./avatar/filename.jpg'),
@@ -163,8 +163,6 @@ const CONTRIBUTORS = ensureRecord<Contributor>()({
 		],
 	},
 })
-
-export default CONTRIBUTORS
 
 export interface Role {
 	text: MessageDescriptor

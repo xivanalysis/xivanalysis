@@ -8,7 +8,7 @@ interface ContributorLabelProps {
 	detail?: ReactNode
 }
 
-export default class ContributorLabel extends PureComponent<ContributorLabelProps> {
+export class ContributorLabel extends PureComponent<ContributorLabelProps> {
 	override render() {
 		const {contributor, detail} = this.props
 

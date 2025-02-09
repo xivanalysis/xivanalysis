@@ -7,7 +7,7 @@ import {Analyser} from 'parser/core/Analyser'
 import {filter, oneOf} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
 import {Data} from 'parser/core/modules/Data'
-import Downtime from 'parser/core/modules/Downtime'
+import {Downtime} from 'parser/core/modules/Downtime'
 import {Timeline} from 'parser/core/modules/Timeline'
 import {Fragment} from 'react'
 import {Table, Button, Message} from 'semantic-ui-react'
@@ -29,7 +29,7 @@ class DriftWindow {
 	}
 }
 
-export default class Drift extends Analyser {
+export class Drift extends Analyser {
 	static override debug = false
 	static override handle = 'drift'
 	static override title = t('rpr.drift.title')`Gluttony Drift`

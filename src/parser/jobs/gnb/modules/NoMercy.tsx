@@ -6,7 +6,7 @@ import {BuffWindow, EvaluatedAction, ExpectedActionsEvaluator, ExpectedGcdCountE
 import {HistoryEntry} from 'parser/core/modules/ActionWindow/History'
 import {GlobalCooldown} from 'parser/core/modules/GlobalCooldown'
 import {SEVERITY} from 'parser/core/modules/Suggestions'
-import DISPLAY_ORDER from 'parser/jobs/gnb/modules/DISPLAY_ORDER'
+import {DISPLAY_ORDER} from 'parser/jobs/gnb/modules/DISPLAY_ORDER'
 
 const SEVERITIES = {
 	MISSING_EXPECTED_USES: {

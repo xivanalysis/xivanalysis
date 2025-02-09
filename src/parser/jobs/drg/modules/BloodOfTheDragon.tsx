@@ -9,7 +9,7 @@ import {HistoryEntry} from 'parser/core/modules/ActionWindow/History'
 import {ActionSpecifier, Cooldowns} from 'parser/core/modules/Cooldowns'
 import {GlobalCooldown} from 'parser/core/modules/GlobalCooldown'
 import {SEVERITY} from 'parser/core/modules/Suggestions'
-import DISPLAY_ORDER from './DISPLAY_ORDER'
+import {DISPLAY_ORDER} from './DISPLAY_ORDER'
 import {DfdTracker} from './LanceCharge'
 
 const DRAGON_DURATION_MILLIS = 20000

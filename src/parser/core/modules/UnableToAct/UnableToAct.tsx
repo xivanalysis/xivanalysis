@@ -4,7 +4,7 @@ import {Analyser} from 'parser/core/Analyser'
 import {filter, oneOf} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
 import {Actor} from 'report'
-import BrokenLog from '../BrokenLog'
+import {BrokenLog} from '../BrokenLog'
 import {SimpleItem, SimpleRow, Timeline} from '../Timeline'
 import {STATUS_IDS} from './statusIds'
 

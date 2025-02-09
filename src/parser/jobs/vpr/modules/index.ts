@@ -3,7 +3,7 @@ import {AoeChecker} from './AoEChecker'
 import {Buffs} from './Buffs'
 import {FinisherProcs} from './FinisherProcs'
 import {HonedProcs} from './HonedProcs'
-import OGCDDowntime from './OGCDDowntime'
+import {OGCDDowntime} from './OGCDDowntime'
 import {Positionals} from './Positionals'
 import {RattlingCoil} from './RattlingCoil'
 import {Reawaken} from './Reawaken'
@@ -16,7 +16,7 @@ import {Tincture} from './Tincture'
 import {Venoms} from './Venoms'
 import {Vices} from './Vices'
 
-export default [
+export const modules = [
 	ActionTimeline,
 	AoeChecker,
 	Buffs,

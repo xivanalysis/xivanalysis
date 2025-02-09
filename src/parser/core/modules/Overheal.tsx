@@ -15,7 +15,7 @@ import {Fragment, ReactNode} from 'react'
 import {Accordion, Icon, Message, Table} from 'semantic-ui-react'
 import {isDefined} from 'utilities'
 import {Actors} from './Actors'
-import DISPLAY_ORDER from './DISPLAY_ORDER'
+import {DISPLAY_ORDER} from './DISPLAY_ORDER'
 
 export interface TrackedOverhealOpts {
 	bucketId?: number

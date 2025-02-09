@@ -1,5 +1,5 @@
 import {t, Trans} from '@lingui/macro'
-import TimeLineChart from 'components/ui/TimeLineChart'
+import {TimeLineChart} from 'components/ui/TimeLineChart'
 import {StatusKey} from 'data/STATUSES'
 import {Event, Events} from 'event'
 import {Analyser} from 'parser/core/Analyser'

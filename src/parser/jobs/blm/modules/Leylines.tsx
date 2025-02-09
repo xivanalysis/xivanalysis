@@ -5,12 +5,12 @@ import {Event, Events} from 'event'
 import {Analyser} from 'parser/core/Analyser'
 import {filter, oneOf} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
-import CastTime from 'parser/core/modules/CastTime'
+import {CastTime} from 'parser/core/modules/CastTime'
 import {Checklist, Rule, Requirement} from 'parser/core/modules/Checklist'
 import {Data} from 'parser/core/modules/Data'
 import {SimpleRow, StatusItem, Timeline} from 'parser/core/modules/Timeline'
 import {Table, Button} from 'semantic-ui-react'
-import DISPLAY_ORDER from './DISPLAY_ORDER'
+import {DISPLAY_ORDER} from './DISPLAY_ORDER'
 
 interface LeyLinesWindow {
 	start: number,
@@ -22,7 +22,7 @@ interface LeyLinesWindows {
 	history: LeyLinesWindow[]
 }
 
-export default class Leylines extends Analyser {
+export class Leylines extends Analyser {
 	static override handle = 'leylines'
 	static override title = t('blm.leylines.title')`Ley Lines`
 	static override displayOrder = DISPLAY_ORDER.LEY_LINES

@@ -1,13 +1,13 @@
 import {t} from '@lingui/macro'
 import {Plural, Trans} from '@lingui/react'
 import {ActionLink} from 'components/ui/DbLink'
-import ACTIONS from 'data/ACTIONS'
+import {ACTIONS} from 'data/ACTIONS'
 import {Event, Events} from 'event'
 import {Analyser} from 'parser/core/Analyser'
 import {filter} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
 import {Data} from 'parser/core/modules/Data'
-import Downtime from 'parser/core/modules/Downtime'
+import {Downtime} from 'parser/core/modules/Downtime'
 import {Suggestions, SEVERITY, Suggestion} from 'parser/core/modules/Suggestions'
 
 export class Physick extends Analyser {

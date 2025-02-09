@@ -1,4 +1,4 @@
-import ContributorLabel from 'components/ui/ContributorLabel'
+import {ContributorLabel} from 'components/ui/ContributorLabel'
 import {ChangelogEntry} from 'parser/core/Meta'
 import * as PropTypes from 'prop-types'
 import {Fragment, MouseEvent, PureComponent} from 'react'
@@ -9,7 +9,7 @@ interface ChangeLogProps {
 	changelog: ChangelogEntry[]
 }
 
-export default class ChangeLog extends PureComponent<ChangeLogProps> {
+export class ChangeLog extends PureComponent<ChangeLogProps> {
 	static propTypes = {
 		changelog: PropTypes.arrayOf(PropTypes.shape({
 			date: PropTypes.instanceOf(Date),

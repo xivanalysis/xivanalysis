@@ -21,7 +21,7 @@ export interface CastTimeAdjustment {
 	end?: number
 }
 
-export default class CastTime extends Analyser {
+export class CastTime extends Analyser {
 	static override handle = 'castTime'
 
 	@dependency data!: Data

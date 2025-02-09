@@ -4,7 +4,7 @@ import {dependency} from 'parser/core/Injectable'
 import {Checklist, Requirement, Rule} from 'parser/core/modules/Checklist'
 import {DoTs} from 'parser/core/modules/DoTs'
 import {Suggestions, SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
-import DISPLAY_ORDER from './DISPLAY_ORDER'
+import {DISPLAY_ORDER} from './DISPLAY_ORDER'
 
 const SUGGESTION_TIERS = {
 	CLIPPING: {

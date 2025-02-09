@@ -6,7 +6,7 @@ import {dependency} from 'parser/core/Injectable'
 import {Checklist, Requirement, Rule} from 'parser/core/modules/Checklist'
 import {Procs as CoreProcs} from 'parser/core/modules/Procs'
 import {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
-import DISPLAY_ORDER from 'parser/jobs/vpr/modules/DISPLAY_ORDER'
+import {DISPLAY_ORDER} from 'parser/jobs/vpr/modules/DISPLAY_ORDER'
 
 const SEVERITIES = {
 	DROPPED: {

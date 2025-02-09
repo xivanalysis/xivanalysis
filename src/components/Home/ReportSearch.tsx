@@ -1,6 +1,6 @@
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
-import NormalisedMessage from 'components/ui/NormalisedMessage'
+import {NormalisedMessage} from 'components/ui/NormalisedMessage'
 import {action, observable} from 'mobx'
 import {observer} from 'mobx-react'
 import {ChangeEvent, Component} from 'react'
@@ -13,7 +13,7 @@ import styles from './ReportSearch.module.css'
 const DEFAULT_REASON = t('core.home.report-search.unknown-query-error')`An unknown error occured when parsing the provided query.`
 
 @observer
-class ReportSearch extends Component<RouteComponentProps> {
+class ReportSearchImpl extends Component<RouteComponentProps> {
 	@observable.ref private value = ''
 	@observable.ref private result: SearchHandlerResult = {valid: false}
 
@@ -69,4 +69,4 @@ class ReportSearch extends Component<RouteComponentProps> {
 	}
 }
 
-export default withRouter(ReportSearch)
+export const ReportSearch = withRouter(ReportSearchImpl)

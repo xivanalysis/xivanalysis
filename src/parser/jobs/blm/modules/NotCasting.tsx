@@ -4,11 +4,11 @@ import {Event, Events} from 'event'
 import {Analyser} from 'parser/core/Analyser'
 import {filter} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
-import Downtime from 'parser/core/modules/Downtime'
+import {Downtime} from 'parser/core/modules/Downtime'
 import {GlobalCooldown} from 'parser/core/modules/GlobalCooldown'
 import {Timeline} from 'parser/core/modules/Timeline'
 import {Table, Button} from 'semantic-ui-react'
-import DISPLAY_ORDER from './DISPLAY_ORDER'
+import {DISPLAY_ORDER} from './DISPLAY_ORDER'
 
 //value to be added to the gcd to avoid false positives. 100ms for caster tax, 50ms for gcd jitter.
 const GCD_ERROR_OFFSET = 150

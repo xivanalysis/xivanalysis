@@ -33,17 +33,17 @@
 
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
-import Tooltip, {ActionLink} from 'components/ui/DbLink'
+import {Tooltip, ActionLink} from 'components/ui/DbLink'
 import {Event, Events} from 'event'
 import {Analyser} from 'parser/core/Analyser'
 import {filter} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
 import {Data} from 'parser/core/modules/Data'
-import Downtime from 'parser/core/modules/Downtime'
+import {Downtime} from 'parser/core/modules/Downtime'
 import {Timeline} from 'parser/core/modules/Timeline'
 import {Fragment} from 'react'
 import {Button, Message, Table} from 'semantic-ui-react'
-import DISPLAY_ORDER from './DISPLAY_ORDER'
+import {DISPLAY_ORDER} from './DISPLAY_ORDER'
 
 // Buffer (ms) to forgive insignificant drift
 const DRIFT_BUFFER = 2000

@@ -2,7 +2,7 @@ import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
 import {DataLink} from 'components/ui/DbLink'
 import {Procs} from 'parser/core/modules/Procs'
-import DISPLAY_ORDER from './DISPLAY_ORDER'
+import {DISPLAY_ORDER} from './DISPLAY_ORDER'
 
 export class RefulgentProcs extends Procs {
 	static override title = t('brd.procs.title')`Hawk's Eye Overwrites`

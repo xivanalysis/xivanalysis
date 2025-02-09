@@ -9,7 +9,7 @@ import {StoreContext} from 'store'
 import styles from './App.module.css'
 import {ErrorBoundary} from './ErrorBoundary'
 import {GlobalSidebar} from './GlobalSidebar'
-import Home from './Home'
+import {Home} from './Home'
 import {ReportRedirect} from './Home/ReportRedirect'
 
 import 'semantic-ui-css/semantic.min.css'

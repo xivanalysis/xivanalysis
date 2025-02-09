@@ -8,7 +8,7 @@ import {dependency} from 'parser/core/Injectable'
 import {Checklist, Requirement, Rule} from 'parser/core/modules/Checklist'
 import {CounterGauge, Gauge as CoreGauge} from 'parser/core/modules/Gauge'
 import {Suggestions, SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
-import DISPLAY_ORDER from './DISPLAY_ORDER'
+import {DISPLAY_ORDER} from './DISPLAY_ORDER'
 
 type GaugeModifier = Partial<Record<Event['type'], number>>
 

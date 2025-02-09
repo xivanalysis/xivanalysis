@@ -11,7 +11,7 @@ import {Cooldowns} from 'parser/core/modules/Cooldowns'
 import {GlobalCooldown} from 'parser/core/modules/GlobalCooldown'
 import {SEVERITY} from 'parser/core/modules/Suggestions'
 import {Message} from 'semantic-ui-react'
-import DISPLAY_ORDER from './DISPLAY_ORDER'
+import {DISPLAY_ORDER} from './DISPLAY_ORDER'
 
 const LC_DURATION = 20000
 const EXPECTED_NASTRONDS_PER_WINDOW = 1
@@ -22,7 +22,7 @@ export interface DfdTracker {
 	used: boolean
 }
 
-export default class LanceCharge extends BuffWindow {
+export class LanceCharge extends BuffWindow {
 	static override handle: string = 'lancecharge'
 	static override title = t('drg.lancecharge.title')`Lance Charge`
 	static override displayOrder = DISPLAY_ORDER.LANCE_CHARGE

@@ -231,6 +231,3 @@ export function ItemLink({item, ...props}: ItemLinkProps) {
 		/>
 	)
 }
-
-/** @deprecated */
-export default Tooltip

@@ -2,7 +2,7 @@ import {Plural, Trans} from '@lingui/react'
 import {DataLink} from 'components/ui/DbLink'
 import {Events} from 'event'
 import {dependency} from 'parser/core/Injectable'
-import CastTime from 'parser/core/modules/CastTime'
+import {CastTime} from 'parser/core/modules/CastTime'
 import {ProcGroup, Procs as CoreProcs} from 'parser/core/modules/Procs'
 import {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import {DEFAULT_SEVERITY_TIERS} from 'parser/jobs/dnc/CommonData'
@@ -12,7 +12,7 @@ import {AETHERHUE_ONE_SPELLS, AETHERHUE_TWO_SPELLS, HYPERPHANTASIA_SPELLS} from 
 // Rainbow Bright makes Rainbow Drip instant, and lowers the 6s recast to a normal 2.5s GCD
 const RAINBOW_BRIGHT_RECAST_ADJUSTMENT = -3500
 
-export default class Procs extends CoreProcs {
+export class Procs extends CoreProcs {
 	@dependency castTime!: CastTime
 
 	override trackedProcs = [

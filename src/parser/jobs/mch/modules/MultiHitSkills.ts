@@ -1,7 +1,7 @@
-import ACTIONS from 'data/ACTIONS'
+import {ACTIONS} from 'data/ACTIONS'
 import {AoEUsages} from 'parser/core/modules/AoEUsages'
 
-export default class MultiHitSkills extends AoEUsages {
+export class MultiHitSkills extends AoEUsages {
 	suggestionIcon = ACTIONS.SPREAD_SHOT.icon
 
 	trackedActions = [

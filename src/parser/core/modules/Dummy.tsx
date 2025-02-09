@@ -6,7 +6,7 @@ import {Analyser} from '../Analyser'
 import {EventHook} from '../Dispatcher'
 import {filter, oneOf} from '../filter'
 import {dependency} from '../Injectable'
-import BrokenLog from './BrokenLog'
+import {BrokenLog} from './BrokenLog'
 import {Death} from './Death'
 
 const LIKELY_DUMMY_THRESHOLD = 3

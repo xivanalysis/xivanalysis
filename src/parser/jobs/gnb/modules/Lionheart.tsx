@@ -1,6 +1,6 @@
 import {ActionLink} from 'components/ui/DbLink'
 import {RotationTable} from 'components/ui/RotationTable'
-import ACTIONS from 'data/ACTIONS'
+import {ACTIONS} from 'data/ACTIONS'
 import {Event, Events} from 'event'
 import _ from 'lodash'
 import {Analyser} from 'parser/core/Analyser'

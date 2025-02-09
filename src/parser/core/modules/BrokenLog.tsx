@@ -2,21 +2,21 @@ import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
 import * as Sentry from '@sentry/browser'
 import {Message, Segment} from 'akkd'
-import NormalisedMessage from 'components/ui/NormalisedMessage'
+import {NormalisedMessage} from 'components/ui/NormalisedMessage'
 import {getReportPatch} from 'data/PATCHES'
 import {ReactNode} from 'react'
 import {Table} from 'semantic-ui-react'
 import {Analyser, DisplayMode} from '../Analyser'
 import {dependency} from '../Injectable'
 import {Data} from './Data'
-import DISPLAY_ORDER from './DISPLAY_ORDER'
+import {DISPLAY_ORDER} from './DISPLAY_ORDER'
 
 interface Trigger {
 	source: typeof Analyser
 	reason?: ReactNode
 }
 
-export default class BrokenLog extends Analyser {
+export class BrokenLog extends Analyser {
 	static override handle = 'brokenLog'
 	static override title = t('core.broken-log.title')`Broken Log`
 	static override displayOrder = DISPLAY_ORDER.BROKEN_LOG

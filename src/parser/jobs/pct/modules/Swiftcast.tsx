@@ -1,7 +1,7 @@
 import {Trans} from '@lingui/macro'
 import {DataLink} from 'components/ui/DbLink'
 import {Swiftcast as CoreSwiftcast} from 'parser/core/modules/Swiftcast'
-import DISPLAY_ORDER from './DISPLAY_ORDER'
+import {DISPLAY_ORDER} from './DISPLAY_ORDER'
 
 export class Swiftcast extends CoreSwiftcast {
 	static override displayOrder = DISPLAY_ORDER.SWIFTCAST

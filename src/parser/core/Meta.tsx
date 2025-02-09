@@ -1,12 +1,12 @@
 import {Contributor, Role} from 'data/CONTRIBUTORS'
 import {GameEdition} from 'data/EDITIONS'
-import PATCHES, {PatchNumber} from 'data/PATCHES'
+import {PATCHES, PatchNumber} from 'data/PATCHES'
 import {FALLBACK_KEY} from 'data/PATCHES/patches'
 import _ from 'lodash'
 import {ComponentType} from 'react'
 import {Injectable} from './Injectable'
 
-type ModulesLoader = () => Promise<{default: Array<typeof Injectable>}>
+type ModulesLoader = () => Promise<{modules: Array<typeof Injectable>}>
 
 /** Representation of patches supported by a meta instance. */
 export interface SupportedPatches {
@@ -59,7 +59,7 @@ export class Meta {
 		}
 
 		return this.modulesLoader()
-			.then(({default: modules}) => {
+			.then(({modules}) => {
 				this.loadedModules = modules
 				return modules
 			})
@@ -70,7 +70,7 @@ export class Meta {
 		return new Meta({
 			// Modules should contain all loaded modules
 			modules: () => Promise.all([this.getModules(), meta.getModules()])
-				.then(groupedModules => ({default: _.flatten(groupedModules)})),
+				.then(groupedModules => ({modules: _.flatten(groupedModules)})),
 
 			// New sets of supported patches narrow old ones
 			supportedPatches: this.mergeSupportedPatches(meta.supportedPatches),

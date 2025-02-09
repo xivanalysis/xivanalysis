@@ -11,7 +11,7 @@ import {Data} from 'parser/core/modules/Data'
 import {ResourceGraphs} from 'parser/core/modules/ResourceGraphs'
 import {InitEvent} from 'parser/core/Parser'
 import {DRAWN_ARCANA, PLAY_I, OFFENSIVE_ARCANA_STATUS, DEFENSIVE_ARCANA_ACTION, OFFENSIVE_ARCANA_ACTION} from '../ArcanaGroups'
-import DISPLAY_ORDER from '../DISPLAY_ORDER'
+import {DISPLAY_ORDER} from '../DISPLAY_ORDER'
 
 const LINKED_EVENT_THRESHOLD = 20
 const DEATH_EVENT_STATUS_DROP_DELAY = 2000
@@ -43,7 +43,7 @@ export interface CardState {
 }
 
 // TODO: Try to track for when a seal was not given on pull due to latency?
-export default class ArcanaTracking extends Analyser {
+export class ArcanaTracking extends Analyser {
 	static override handle = 'arcanaTracking'
 	static override title = t('ast.arcana-tracking.title')`Arcana Tracking`
 	static override displayOrder = DISPLAY_ORDER.ARCANA_TRACKING

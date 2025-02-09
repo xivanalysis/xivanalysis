@@ -1,4 +1,4 @@
-enum DISPLAY_ORDER {
+export enum DISPLAY_ORDER {
 	ABOUT = -50,
 	BROKEN_LOG = -40,
 	CHECKLIST = -30,
@@ -13,5 +13,3 @@ enum DISPLAY_ORDER {
 	EVENTS_VIEW = 140,
 	CHANGELOG = 150,
 }
-
-export default DISPLAY_ORDER

@@ -4,11 +4,11 @@ import {Combos} from './Combos'
 import {Defensives} from './Defensives'
 import {DirtyDancing} from './DirtyDancing'
 import {Gauge} from './Gauge'
-import OGCDDowntime from './OGCDDowntime'
+import {OGCDDowntime} from './OGCDDowntime'
 import {Procs} from './Procs'
 import {Technicalities} from './Technicalities'
 
-export default [
+export const modules = [
 	AoEUsages,
 	Combos,
 	Procs,

@@ -2,11 +2,11 @@ import {Plural, Trans} from '@lingui/react'
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
 import {Events} from 'event'
 import {dependency} from 'parser/core/Injectable'
-import CastTime from 'parser/core/modules/CastTime'
+import {CastTime} from 'parser/core/modules/CastTime'
 import {ProcGroup, Procs as CoreProcs} from 'parser/core/modules/Procs'
 import {SEVERITY, Suggestion} from 'parser/core/modules/Suggestions'
 
-export default class Procs extends CoreProcs {
+export class Procs extends CoreProcs {
 	@dependency castTime!: CastTime
 
 	override trackedProcs = [

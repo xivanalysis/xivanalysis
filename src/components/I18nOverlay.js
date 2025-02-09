@@ -39,7 +39,7 @@ class I18nErrorBoundary extends Component {
 	}
 }
 
-export default class I18nOverlay extends Component {
+export class I18nOverlay extends Component {
 	static propTypes = {
 		enabled: PropTypes.bool.isRequired,
 		language: PropTypes.string.isRequired,

@@ -10,7 +10,7 @@ import {Data} from 'parser/core/modules/Data'
 import {Fragment, ReactNode} from 'react'
 import {Accordion, Button, Icon, Message, Table} from 'semantic-ui-react'
 import {ChargeHistoryEntry, CooldownEndReason, CooldownHistoryEntry, Cooldowns} from './Cooldowns'
-import DISPLAY_ORDER from './DISPLAY_ORDER'
+import {DISPLAY_ORDER} from './DISPLAY_ORDER'
 import {Timeline} from './Timeline'
 
 const DEFENSIVE_ROLE_ACTIONS: Map<RoleKey, ActionKey[]> = new Map<RoleKey, ActionKey[]>([

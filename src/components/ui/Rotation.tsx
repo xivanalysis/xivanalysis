@@ -1,7 +1,7 @@
 import cn from 'classnames'
 import {ActionLink, ItemLink} from 'components/ui/DbLink'
 import {getDataBy} from 'data'
-import ACTIONS, {ITEM_ID_OFFSET} from 'data/ACTIONS'
+import {ACTIONS, ITEM_ID_OFFSET} from 'data/ACTIONS'
 import {Cause} from 'event'
 import {Component} from 'react'
 import overlayStyle from './Procs/ProcOverlay.module.css'
@@ -16,7 +16,7 @@ interface RotationProps {
 	events: RotationEvent[]
 }
 
-export default class Rotation extends Component<RotationProps> {
+export class Rotation extends Component<RotationProps> {
 	getActionId(event: RotationEvent): number | undefined {
 		if (event.action != null) {
 			return event.action

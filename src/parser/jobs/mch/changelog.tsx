@@ -1,4 +1,4 @@
-import CONTRIBUTORS from 'data/CONTRIBUTORS'
+import {CONTRIBUTORS} from 'data/CONTRIBUTORS'
 
 export const changelog = [
 	{

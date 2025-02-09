@@ -1,7 +1,7 @@
 import {t} from '@lingui/macro'
 import {Analyser, DisplayMode} from 'parser/core/Analyser'
 import {ComponentType} from 'react'
-import DISPLAY_ORDER from '../DISPLAY_ORDER'
+import {DISPLAY_ORDER} from '../DISPLAY_ORDER'
 import {StatisticComponent} from './StatisticComponent'
 import styles from './Statistics.module.css'
 

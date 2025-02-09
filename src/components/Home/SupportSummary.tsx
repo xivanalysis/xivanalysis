@@ -1,6 +1,6 @@
 import {Trans} from '@lingui/react'
 import {JobIcon} from 'components/ui/JobIcon'
-import NormalisedMessage from 'components/ui/NormalisedMessage'
+import {NormalisedMessage} from 'components/ui/NormalisedMessage'
 import {GameEdition} from 'data/EDITIONS'
 import {JobKey, JOBS, RoleKey, ROLES} from 'data/JOBS'
 import {patchSupported} from 'data/PATCHES'
@@ -15,7 +15,7 @@ interface RoleData {
 	jobKeys: JobKey[]
 }
 
-class SupportSummary extends Component {
+export class SupportSummary extends Component {
 	override render() {
 		const maxPatch = Object.entries(PATCHES)
 			.map(patch => ({name: patch[0], date: patch[1].date[GameEdition.GLOBAL]}))
@@ -65,10 +65,7 @@ class SupportSummary extends Component {
 			</div>
 		</>
 	}
-
 }
-
-export default SupportSummary
 
 interface SupportSummaryGridProp {
 	roles: RoleData[]

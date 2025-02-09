@@ -1,4 +1,4 @@
-export default {
+export const DISPLAY_ORDER = {
 	DIRTY_DANCING: 1,
 	TECHNICALITIES: 2,
 	WEAVING: 3,

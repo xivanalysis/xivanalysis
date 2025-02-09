@@ -13,7 +13,7 @@ import {Invulnerability} from 'parser/core/modules/Invulnerability'
 import {PieChartStatistic, Statistics} from 'parser/core/modules/Statistics'
 import {Statuses} from 'parser/core/modules/Statuses'
 import {Suggestions, TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
-import DISPLAY_ORDER from './DISPLAY_ORDER'
+import {DISPLAY_ORDER} from './DISPLAY_ORDER'
 
 // it's just drakesbane and HT/FT good now
 const BAD_LIFE_SURGE_CONSUMERS: ActionKey[] = [
@@ -54,7 +54,7 @@ const CHART_COLORS: {[actionId in ActionKey]?: string} = {
 const OTHER_ACTION_COLOR: string = '#660000'
 const MIN_COT_HITS: number = 3
 
-export default class Buffs extends Analyser {
+export class Buffs extends Analyser {
 	static override handle = 'buffs'
 	static override title = t('drg.buffs.title')`Buffs`
 

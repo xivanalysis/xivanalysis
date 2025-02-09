@@ -3,7 +3,7 @@ import {Event} from 'event'
 import {Analyser} from 'parser/core/Analyser'
 import {filter} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
-import CastTime from 'parser/core/modules/CastTime'
+import {CastTime} from 'parser/core/modules/CastTime'
 import {Data} from 'parser/core/modules/Data'
 import {HYPERPHANTASIA_SPELLS} from './CommonData'
 

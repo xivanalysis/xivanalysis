@@ -1,4 +1,4 @@
-export default {
+export const DISPLAY_ORDER = {
 	AETHERFLOW: 51,
 	DOTS: 52,
 	WEAVING: 54,

@@ -17,7 +17,7 @@ import {RiddleOfFire} from './RiddleOfFire'
 import {RiddleOfWind} from './RiddleOfWind'
 import {Weaving} from './Weaving'
 
-export default [
+export const modules = [
 	ActionTimeline,
 	AoE,
 	Bookending,

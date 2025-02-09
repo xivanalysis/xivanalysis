@@ -1,7 +1,7 @@
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
 import {ActionLink} from 'components/ui/DbLink'
-import Rotation from 'components/ui/Rotation'
+import {Rotation} from 'components/ui/Rotation'
 import {Action} from 'data/ACTIONS'
 import {Event, Events} from 'event'
 import {Analyser} from 'parser/core/Analyser'

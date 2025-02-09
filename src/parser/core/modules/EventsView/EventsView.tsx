@@ -7,7 +7,7 @@ import {FixedSizeList} from 'react-window'
 import {Pull} from 'report'
 import {Icon, Popup} from 'semantic-ui-react'
 import {formatDuration} from 'utilities/strings'
-import DISPLAY_ORDER from '../DISPLAY_ORDER'
+import {DISPLAY_ORDER} from '../DISPLAY_ORDER'
 import {eventFormatters} from './eventFormatter'
 import styles from './EventsView.module.css'
 

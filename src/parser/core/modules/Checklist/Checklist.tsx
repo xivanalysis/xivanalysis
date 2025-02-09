@@ -1,6 +1,6 @@
 import {t} from '@lingui/macro'
 import {Analyser, DisplayMode} from 'parser/core/Analyser'
-import DISPLAY_ORDER from '../DISPLAY_ORDER'
+import {DISPLAY_ORDER} from '../DISPLAY_ORDER'
 import {Checklist as ChecklistComponent} from './Component'
 import {Rule} from './Rule'
 

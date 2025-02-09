@@ -8,7 +8,7 @@ import {HistoryEntry} from 'parser/core/modules/ActionWindow/History'
 import {SEVERITY} from 'parser/core/modules/Suggestions'
 import {Message} from 'semantic-ui-react'
 import {ADDITIVE_SPELLS, CREATURE_MOTIFS, CREATURE_MUSES, SUBTRACTIVE_SINGLE_TARGET} from './CommonData'
-import DISPLAY_ORDER from './DISPLAY_ORDER'
+import {DISPLAY_ORDER} from './DISPLAY_ORDER'
 
 export class StarryMuse extends RaidBuffWindow {
 	static override handle = 'starrymuse'

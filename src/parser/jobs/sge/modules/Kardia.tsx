@@ -6,7 +6,7 @@ import {Analyser} from 'parser/core/Analyser'
 import {dependency} from 'parser/core/Injectable'
 import {Actors} from 'parser/core/modules/Actors'
 import {Checklist, Requirement, Rule} from 'parser/core/modules/Checklist'
-import Downtime from 'parser/core/modules/Downtime'
+import {Downtime} from 'parser/core/modules/Downtime'
 import {Statuses} from 'parser/core/modules/Statuses'
 
 export class Kardia extends Analyser {

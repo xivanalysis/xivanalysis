@@ -7,7 +7,7 @@ import {BuffWindow} from '../../../../core/modules/ActionWindow'
 import {RequiredGcdCountEvaluator} from '../../../../core/modules/ActionWindow/evaluators/RequiredGcdCountEvaluator'
 import {GlobalCooldown} from '../../../../core/modules/GlobalCooldown'
 import {SEVERITY} from '../../../../core/modules/Suggestions'
-import DISPLAY_ORDER from '../DISPLAY_ORDER'
+import {DISPLAY_ORDER} from '../DISPLAY_ORDER'
 
 export class ArmysMuse extends BuffWindow {
 	static override handle = 'armysmuse'
