@@ -8,7 +8,7 @@
   "ast.actiontimeline.draw": "抽卡",
   "ast.actiontimeline.offensive_play": "攻击性卡牌",
   "ast.arcana-suggestions.messages.explanation": "本段跟踪战斗中所有卡片技能，以及每次使用技能时的奥秘卡状态。",
-  "ast.arcana-suggestions.messages.footnote": "*除<0/>之外，开场前预先准备的技能并不会显示。这只是从增益效果持续时间上得到的估计值。",
+  "ast.arcana-suggestions.messages.footnote": "",
   "ast.arcana-suggestions.messages.latest-action": "使用的奥秘卡技能",
   "ast.arcana-suggestions.messages.pull": "开怪",
   "ast.arcana-suggestions.messages.spread-state": "奥秘量谱状态",

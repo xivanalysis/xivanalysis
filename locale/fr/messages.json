@@ -8,7 +8,7 @@
   "ast.actiontimeline.draw": "Tirage",
   "ast.actiontimeline.offensive_play": "Cartes Offensives",
   "ast.arcana-suggestions.messages.explanation": "Cette partie garde une trace de toutes les actions de cartes que vous avez utilisé pendant le combat, et leur répartition après chaque action.",
-  "ast.arcana-suggestions.messages.footnote": "* Aucune action de pré-engagement sont représentées par <0/>, et ceci est uniquement et approximativement basé sur la durée du bonus.",
+  "ast.arcana-suggestions.messages.footnote": "",
   "ast.arcana-suggestions.messages.latest-action": "Dernière Action",
   "ast.arcana-suggestions.messages.pull": "Tirez",
   "ast.arcana-suggestions.messages.spread-state": "État de propagation",

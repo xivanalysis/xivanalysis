@@ -4,6 +4,11 @@ import {StatusRoot} from 'data/STATUSES/root'
 
 /* Grouped actions */
 
+export const DRAW: Array<keyof ActionRoot> = [
+	'ASTRAL_DRAW',
+	'UMBRAL_DRAW',
+]
+
 export const PLAY_I: Array<keyof ActionRoot> = [
 	'THE_BALANCE',
 	'THE_SPEAR',
@@ -12,6 +17,16 @@ export const PLAY_I: Array<keyof ActionRoot> = [
 export const PLAY_II_III: Array<keyof ActionRoot> = [
 	'THE_BOLE',
 	'THE_ARROW',
+	'THE_EWER',
+	'THE_SPIRE',
+]
+
+export const PLAY_II: Array<keyof ActionRoot> = [
+	'THE_BOLE',
+	'THE_ARROW',
+]
+
+export const PLAY_III: Array<keyof ActionRoot> = [
 	'THE_EWER',
 	'THE_SPIRE',
 ]
@@ -59,4 +74,16 @@ export const DEFENSIVE_ARCANA_STATUS: Array<keyof StatusRoot> = [
 	'THE_BOLE',
 	'THE_EWER',
 	'THE_SPIRE',
+]
+
+export const ASTRAL_CARDS: Array<keyof StatusRoot> = [
+	'THE_BALANCE',
+	'THE_ARROW',
+	'THE_SPIRE',
+]
+
+export const UMBRAL_CARDS: Array<keyof StatusRoot> = [
+	'THE_SPEAR',
+	'THE_BOLE',
+	'THE_EWER',
 ]

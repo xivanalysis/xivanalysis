@@ -8,7 +8,7 @@
   "ast.actiontimeline.draw": "점지",
   "ast.actiontimeline.offensive_play": "",
   "ast.arcana-suggestions.messages.explanation": "이 섹션은 전투 중 사용된 카드들과 각 카드의 강화 상태를 추적합니다.",
-  "ast.arcana-suggestions.messages.footnote": "* 전투 시작 전 기록되는 행동은 오직 <0/> 기술이며, 이는 해당 버프의 지속 시간에 맞춰 추산합니다.",
+  "ast.arcana-suggestions.messages.footnote": "",
   "ast.arcana-suggestions.messages.latest-action": "마지막 액션",
   "ast.arcana-suggestions.messages.pull": "초기 상태",
   "ast.arcana-suggestions.messages.spread-state": "카드 슬롯 상태",

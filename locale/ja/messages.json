@@ -8,7 +8,7 @@
   "ast.actiontimeline.draw": "ドロー",
   "ast.actiontimeline.offensive_play": "",
   "ast.arcana-suggestions.messages.explanation": "このセクションでは戦闘中の全てのカードアクションと分配を追跡します。",
-  "ast.arcana-suggestions.messages.footnote": "* 戦闘前に使った<0/>以外のアクションは表現されておりません。バフの持続時間に基づいた近似値だけを表示します。",
+  "ast.arcana-suggestions.messages.footnote": "",
   "ast.arcana-suggestions.messages.latest-action": "最後のアクション",
   "ast.arcana-suggestions.messages.pull": "引く",
   "ast.arcana-suggestions.messages.spread-state": "拡散状態",

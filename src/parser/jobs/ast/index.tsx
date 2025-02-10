@@ -28,12 +28,12 @@ export const ASTROLOGIAN = new Meta({
 	</>,
 
 	supportedPatches: {
-		from: '✖',
-		to: '✖',
+		from: '7.0',
+		to: '7.1',
 	},
 
 	contributors: [
-		{user: CONTRIBUTORS.SUSHIROU, role: ROLES.DEVELOPER},
+		{user: CONTRIBUTORS.SUSHI, role: ROLES.DEVELOPER},
 		{user: CONTRIBUTORS.OTOCEPHALY, role: ROLES.DEVELOPER},
 	],
 

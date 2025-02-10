@@ -8,7 +8,7 @@
   "ast.actiontimeline.draw": "Draw",
   "ast.actiontimeline.offensive_play": "Offensive Cards",
   "ast.arcana-suggestions.messages.explanation": "This section keeps track of every card action made during the fight, and the state of the spread after each action.",
-  "ast.arcana-suggestions.messages.footnote": "* No pre-pull actions are being represented aside from <0/>, and this is only an approximation based on the buff duration.",
+  "ast.arcana-suggestions.messages.footnote": "* No pre-pull actions are being represented aside from <0/> / <1/>, and this is only an approximation based on initial actions performed.",
   "ast.arcana-suggestions.messages.latest-action": "Lastest Action",
   "ast.arcana-suggestions.messages.pull": "Pull",
   "ast.arcana-suggestions.messages.spread-state": "Spread State",
