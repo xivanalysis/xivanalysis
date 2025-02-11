@@ -32,8 +32,10 @@ module.exports = {
 	},
 
 	// An array of regexp pattern strings that are matched against all source file paths, matched files will skip transformation
+	// We're re-including a number of node_modules into the transformation, as they're ESM-only.
+	// TODO: Reevaluate jest transformation pipelines.
 	transformIgnorePatterns: [
-		'node_modules/(?!.pnpm|ky|@compiled|@babel/runtime-corejs3)',
+		'node_modules/(?!.pnpm|ky|@compiled|@babel/runtime-corejs3|d3-|internmap)',
 		'\\.pnp\\.[^\\/]+$',
 	],
 }
