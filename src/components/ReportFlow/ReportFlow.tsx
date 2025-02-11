@@ -69,9 +69,7 @@ export function ReportFlow({reportStore}: ReportFlowProps) {
 		<DataProvider report={report}>
 			<BranchBanner report={report}/>
 
-			<Route path={`${path}/:pullId?/:actorId?`}>
-				<ReportLink reportStore={reportStore}/>
-			</Route>
+			<ReportLink reportStore={reportStore}/>
 
 			<Breadcrumb
 				title={report.name}
@@ -268,10 +266,14 @@ interface ReportLinkRouteParams {
 }
 
 function ReportLink({reportStore}: ReportLinkProps) {
-	const {pullId, actorId} = useParams<ReportLinkRouteParams>()
+	const {path} = useRouteMatch()
+	const match = useRouteMatch<ReportLinkRouteParams>(`${path}/:pullId?/:actorId?`)
+	if (match == null) {
+		return null
+	}
 
+	const {pullId, actorId} = match.params
 	const link = reportStore.getReportLink(pullId, actorId)
-
 	if (link == null) {
 		return null
 	}
