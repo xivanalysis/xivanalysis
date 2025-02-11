@@ -28,11 +28,13 @@ export function App() {
 
 	const onHome = pathname === '/'
 
+	const trailingSlash = useRouteMatch({path: '/*/', exact: true, strict: true})
+
 	return <>
 		{/* If there's a trailing slash, strip it */}
-		<Route path="/*/" exact strict>
-			<StripTrailingSlash/>
-		</Route>
+		{trailingSlash &&
+			<Redirect to={_.trimEnd(trailingSlash.url, '/')}/>
+		}
 
 		<div className={classnames(
 			styles.mobileHeader,
@@ -88,9 +90,4 @@ export function App() {
 			</Container>
 		</div>
 	</>
-}
-
-function StripTrailingSlash() {
-	const {url} = useRouteMatch()
-	return <Redirect to={_.trimEnd(url, '/')}/>
 }
