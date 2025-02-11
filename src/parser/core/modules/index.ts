@@ -16,6 +16,7 @@ import {Dummy} from './Dummy'
 import {EventsView} from './EventsView'
 import {GlobalCooldown} from './GlobalCooldown'
 import {Hijinks} from './Hijinks'
+import {InvalidEvent} from './InvalidEvent'
 import {Invulnerability} from './Invulnerability'
 import {Medicated} from './Medicated'
 import {RaidBuffs} from './RaidBuffs'
@@ -48,6 +49,7 @@ export const modules = [
 	EventsView,
 	GlobalCooldown,
 	Hijinks,
+	InvalidEvent,
 	Invulnerability,
 	Medicated,
 	RaidBuffs,

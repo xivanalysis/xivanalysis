@@ -355,6 +355,8 @@
   "core.interrupts.table.cast": "キャスト",
   "core.interrupts.table.time": "タイム",
   "core.interrupts.title": "詠唱中断",
+  "core.invalid-event.title": "",
+  "core.invalid-event.trigger.invalid-timestamp": "",
   "core.lucid-dreaming.suggestion.content": "MP管理を良くするために、<0/>をリキャストごとに使いましょう。",
   "core.lucid-dreaming.suggestion.why": "",
   "core.overheal.abilities-direct.name": "",

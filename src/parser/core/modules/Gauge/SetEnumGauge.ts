@@ -1,3 +1,4 @@
+import {PREPULL_EVENT_WINDOW} from 'event'
 import _ from 'lodash'
 import {AbstractGauge, AbstractGaugeOptions} from './AbstractGauge'
 import {GaugeEventReason} from './CounterGauge'
@@ -103,7 +104,7 @@ export class SetEnumGauge extends AbstractGauge {
 		// Ensure we have a gauge init event, can't do in constructor because the parser reference might not be there yet
 		if (this.history.length === 0) {
 			this.history.push({
-				timestamp: -1,
+				timestamp: this.parser.pull.timestamp - PREPULL_EVENT_WINDOW,
 				groups: [],
 				reason: 'init',
 			})

@@ -45,6 +45,20 @@ export type Events = MergeType<EventTypeRepository>
 /** Union of every event type declared throughout the application. */
 export type Event = Events[keyof EventTypeRepository]
 
+/**
+ * The time window before the pull in which events are considered valid.
+ *
+ * Some events may occur prior to the official start point of a pull
+ * (`pull.timestamp`), such as the `prepare` for an `action` cast on, or shortly
+ * after, the pull.
+ *
+ * Parser logic may need to make assumptions about a point in time that is prior
+ * to any events in a pull. As the parser ensures that no event prior to this
+ * window exists, it is safe to assume that any timestamps synthesised outside
+ * the window will be before all events.
+ */
+export const PREPULL_EVENT_WINDOW = 10_000
+
 // -----
 // #region Core xivanalysis parser event definitions.
 // -----

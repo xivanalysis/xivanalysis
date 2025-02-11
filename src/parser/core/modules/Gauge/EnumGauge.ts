@@ -1,4 +1,5 @@
 import Color from 'color'
+import {PREPULL_EVENT_WINDOW} from 'event'
 import _ from 'lodash'
 import {ReactNode} from 'react'
 import {AbstractGauge, AbstractGaugeOptions} from './AbstractGauge'
@@ -102,7 +103,7 @@ export class EnumGauge extends AbstractGauge {
 		// Ensure we have a gauge init event, can't do in constructor because the parser reference might not be there yet
 		if (this.history.length === 0) {
 			this.history.push({
-				timestamp: -1,
+				timestamp: this.parser.pull.timestamp - PREPULL_EVENT_WINDOW,
 				values: [],
 				reason: 'init',
 			})
