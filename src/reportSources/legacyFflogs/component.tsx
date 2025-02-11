@@ -26,7 +26,7 @@ export function LegacyFflogs() {
 	return (
 		<Switch>
 			{/* Can't do anything without a report code, redirect to the home page */}
-			<Redirect path={path} exact to="/"/>
+			<Route path={path} exact render={() => <Redirect to="/"/>}/>
 
 			<Route path={`${path}/last/:code/:source?`}>
 				<WithReport Component={LastFightRedirect} baseUrl={url}/>
