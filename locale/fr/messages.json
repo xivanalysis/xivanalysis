@@ -355,6 +355,8 @@
   "core.interrupts.table.cast": "Incantation",
   "core.interrupts.table.time": "Temps",
   "core.interrupts.title": "Incantations interrompues",
+  "core.invalid-event.title": "",
+  "core.invalid-event.trigger.invalid-timestamp": "",
   "core.lucid-dreaming.suggestion.content": "Essayer de garder <0/> en rechargement pour une meilleure gestion de votre mana.",
   "core.lucid-dreaming.suggestion.why": "{usesMissed, plural, one {# utilisation} other {# utilisations}} de Rêve lucide {usesMissed, plural, one {a été manquée} other {ont été manquées}} en le laissant disponible pendant au moins {0}.",
   "core.overheal.abilities-direct.name": "Aptitudes de Soin Direct",

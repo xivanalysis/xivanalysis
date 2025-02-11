@@ -355,6 +355,8 @@
   "core.interrupts.table.cast": "咏唱",
   "core.interrupts.table.time": "时间",
   "core.interrupts.title": "中断的咏唱",
+  "core.invalid-event.title": "",
+  "core.invalid-event.trigger.invalid-timestamp": "",
   "core.lucid-dreaming.suggestion.content": "尽可能保持 <0/> 不空转以增加可用的MP。",
   "core.lucid-dreaming.suggestion.why": "因为CD空转了至少 {0}，你大约少用了 {usesMissed, plural, other {#}} {usesMissed, plural, other {次}}醒梦。",
   "core.overheal.abilities-direct.name": "直接治疗能力技",

@@ -355,6 +355,8 @@
   "core.interrupts.table.cast": "Cast",
   "core.interrupts.table.time": "Time",
   "core.interrupts.title": "Interrupted Casts",
+  "core.invalid-event.title": "Invalid Event",
+  "core.invalid-event.trigger.invalid-timestamp": "An event occured outside the permissible time window for the pull.",
   "core.lucid-dreaming.suggestion.content": "Try to keep <0/> on cooldown for better MP management.",
   "core.lucid-dreaming.suggestion.why": "{usesMissed, plural, one {# use} other {# uses}} of Lucid Dreaming {usesMissed, plural, one {was} other {were}} missed by holding it for at least a total of {0}.",
   "core.overheal.abilities-direct.name": "Direct Healing Abilities",
