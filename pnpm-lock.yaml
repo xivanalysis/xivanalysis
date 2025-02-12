@@ -96,8 +96,8 @@ importers:
         specifier: ^1.3.7
         version: 1.3.7(react@16.14.0)
       react-router-dom:
-        specifier: ^5.1
-        version: 5.2.0(react@16.14.0)
+        specifier: ^6
+        version: 6.29.0(react-dom@16.14.0(react@16.14.0))(react@16.14.0)
       react-use-gesture:
         specifier: ^7.0.5
         version: 7.0.16(react@16.14.0)
@@ -234,9 +234,6 @@ importers:
       '@types/react-measure':
         specifier: ^2.0.6
         version: 2.0.6
-      '@types/react-router-dom':
-        specifier: ^5.1
-        version: 5.1.5
       '@types/react-scroll':
         specifier: ^1.5.4
         version: 1.8.0
@@ -1175,6 +1172,10 @@ packages:
       react: ^16.8.0 || 17.x
       react-dom: ^16.8.0 || 17.x
 
+  '@remix-run/router@1.22.0':
+    resolution: {integrity: sha512-MBOl8MeOzpK0HQQQshKB7pABXbmyHizdTpqnrIseTbsv0nAepwC2ENZa1aaBExNQcpLoXmWthhak8SABLzvGPw==}
+    engines: {node: '>=14.0.0'}
+
   '@rtsao/scc@1.1.0':
     resolution: {integrity: sha512-zt6OdqaDoOnJ1ZYsCYGt9YmWzDXl4vQdKTyJev62gFhRGKdx7mcT54V9KIjg+d2wi9EXsPvAPKe7i7WjfVWB8g==}
 
@@ -1326,9 +1327,6 @@ packages:
   '@types/graceful-fs@4.1.4':
     resolution: {integrity: sha512-mWA/4zFQhfvOA8zWkXobwJvBD7vzcxgrOQ0J5CH1votGqdq9m7+FwtGaqyCZqC3NyyBkc9z4m+iry4LlqcMWJg==}
 
-  '@types/history@4.7.5':
-    resolution: {integrity: sha512-wLD/Aq2VggCJXSjxEwrMafIP51Z+13H78nXIX0ABEuIGhmB5sNGbR113MOKo+yfw+RDo1ZU3DM6yfnnRF/+ouw==}
-
   '@types/html-minifier-terser@5.1.1':
     resolution: {integrity: sha512-giAlZwstKbmvMk1OO7WXSj4OZ0keXAcl2TQq4LWHiiPH2ByaH7WeUzng+Qej8UPxxv+8lRTuouo0iaNDBuzIBA==}
 
@@ -1415,12 +1413,6 @@ packages:
 
   '@types/react-measure@2.0.6':
     resolution: {integrity: sha512-FxAwgDVKvxm4SPXu24x9cwzsty8x33UueazHcpxM1UWZlGJI57yIHM2djE3xUJhYVxuzNzi4E8UL3kmCkdh+4A==}
-
-  '@types/react-router-dom@5.1.5':
-    resolution: {integrity: sha512-ArBM4B1g3BWLGbaGvwBGO75GNFbLDUthrDojV2vHLih/Tq8M+tgvY1DSwkuNrPSwdp/GUL93WSEpTZs8nVyJLw==}
-
-  '@types/react-router@5.1.7':
-    resolution: {integrity: sha512-2ouP76VQafKjtuc0ShpwUebhHwJo0G6rhahW9Pb8au3tQTjYXd2jta4wv6U2tGLR/I42yuG00+UXjNYY0dTzbg==}
 
   '@types/react-scroll@1.8.0':
     resolution: {integrity: sha512-qeSk1fHZkOydpYPathIrQxsrLMH/xE5rdZ6dkLoceHYU38TspS/Hkua2xlmuQAgU6o3OIG+9IW6x+bmOXd2eCA==}
@@ -3296,9 +3288,6 @@ packages:
   hex-color-regex@1.1.0:
     resolution: {integrity: sha512-l9sfDFsuqtOqKDsQdqrMRk0U85RZc0RtOR9yPI7mRVOa4FsR/BVnZ0shmQRM96Ji99kYZP/7hn1cedc1+ApsTQ==}
 
-  history@4.10.1:
-    resolution: {integrity: sha512-36nwAD620w12kuzPAsyINPWJqlNbij+hpK1k9XRloDtym8mxzGYl2c17LnV6IAGB2Dmg4tEa7G7DlawS0+qjew==}
-
   hoist-non-react-statics@3.3.0:
     resolution: {integrity: sha512-0XsbTXxgiaCDYDIWFcwkmerZPSwywfUqYmwT4jzewKTQSWoE6FCMoUVOeBJWK3E/CrWbxRG3m5GzY4lnIwGRBA==}
 
@@ -3742,9 +3731,6 @@ packages:
   is-wsl@2.2.0:
     resolution: {integrity: sha512-fKzAra0rGJUUBwGBgNkHZuToZcn+TtXHpeCgmkMJMMYx1sQDYaCSyjJBSCa2nH1DGm7s3n1oBnohoVTBaN7Lww==}
     engines: {node: '>=8'}
-
-  isarray@0.0.1:
-    resolution: {integrity: sha512-D2S+3GLxWH+uhrNEcoh/fnmYeP8E8/zHl644d/jdA0g2uyXvy3sb0qxotE+ne0LtccHknQzWwZEzhak7oJ0COQ==}
 
   isarray@1.0.0:
     resolution: {integrity: sha512-VLghIWNM6ELQzo7zwmcg0NmTVyWKYjvIeM83yjp0wRDTmUnrM678fQbcKBo6n2CJEF0szoG//ytg+TKla89ALQ==}
@@ -4275,13 +4261,6 @@ packages:
     resolution: {integrity: sha512-Ysbi9uYW9hFyfrThdDEQuykN4Ey6BuwPD2kpI5ES/nFTDn/98yxYNLZJcgUAKPT/mcrLLKaGzJR9YVxJrIdASQ==}
     engines: {node: '>=8'}
 
-  mini-create-react-context@0.4.0:
-    resolution: {integrity: sha512-b0TytUgFSbgFJGzJqXPKCFCBWigAjpjo+Fl7Vf7ZbKRDptszpppKxXH6DRXEABZ/gcEQczeb0iZ7JvL8e8jjCA==}
-    deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
-    peerDependencies:
-      prop-types: ^15.0.0
-      react: ^0.14.0 || ^15.0.0 || ^16.0.0
-
   mini-css-extract-plugin@1.3.3:
     resolution: {integrity: sha512-7lvliDSMiuZc81kI+5/qxvn47SCM7BehXex3f2c6l/pR3Goj58IQxZh9nuPQ3AkGQgoETyXuIqLDaO5Oa0TyBw==}
     engines: {node: '>= 10.13.0'}
@@ -4663,9 +4642,6 @@ packages:
 
   path-to-regexp@0.1.7:
     resolution: {integrity: sha512-5DFkuoqlv1uYQKxy8omFBeJPQcdoE07Kv2sferDCrAq1ohOU+MSDswDIbnx3YAM60qIOnYa53wBhXW0EbMonrQ==}
-
-  path-to-regexp@1.8.0:
-    resolution: {integrity: sha512-n43JRhlUKUAlibEJhPeir1ncUID16QnEjNpwzNdO3Lm4ywrBpBZ5oLD0I6br9evr1Y9JTqwRtAh7JLoOzAQdVA==}
 
   path-type@4.0.0:
     resolution: {integrity: sha512-gDKb8aZMDeD/tZWs9P6+q0J9Mwkdl6xMV8TjnGP3qJVJ06bdMgkbBlLU8IdfOsIsFz2BW1rNVT3XuNEl8zPAvw==}
@@ -5103,15 +5079,18 @@ packages:
     peerDependencies:
       react: 0.14.x || ^15.0.0 || ^16.0.0
 
-  react-router-dom@5.2.0:
-    resolution: {integrity: sha512-gxAmfylo2QUjcwxI63RhQ5G85Qqt4voZpUXSEqCwykV0baaOTQDR1f0PmY8AELqIyVc0NEZUj0Gov5lNGcXgsA==}
+  react-router-dom@6.29.0:
+    resolution: {integrity: sha512-pkEbJPATRJ2iotK+wUwHfy0xs2T59YPEN8BQxVCPeBZvK7kfPESRc/nyxzdcxR17hXgUPYx2whMwl+eo9cUdnQ==}
+    engines: {node: '>=14.0.0'}
     peerDependencies:
-      react: '>=15'
+      react: '>=16.8'
+      react-dom: '>=16.8'
 
-  react-router@5.2.0:
-    resolution: {integrity: sha512-smz1DUuFHRKdcJC0jobGo8cVbhO3x50tCL4icacOlcwDOEQPq4TMqwx3sY1TP+DvtTgz4nm3thuo7A+BK2U0Dw==}
+  react-router@6.29.0:
+    resolution: {integrity: sha512-DXZJoE0q+KyeVw75Ck6GkPxFak63C4fGqZGNijnWgzB/HzSP1ZfTlBj5COaGWwhrMQ/R8bXiq5Ooy4KG+ReyjQ==}
+    engines: {node: '>=14.0.0'}
     peerDependencies:
-      react: '>=15'
+      react: '>=16.8'
 
   react-side-effect@2.1.0:
     resolution: {integrity: sha512-IgmcegOSi5SNX+2Snh1vqmF0Vg/CbkycU9XZbOHJlZ6kMzTmi3yc254oB1WCkgA7OQtIAoLmcSFuHTc/tlcqXg==}
@@ -5274,9 +5253,6 @@ packages:
   resolve-from@5.0.0:
     resolution: {integrity: sha512-qYg9KP24dD5qka9J47d0aVky0N+b4fTU89LN9iDnjB5waksiC49rvMB0PrUJQGoTmH50XPiqOvAjDfaijGxYZw==}
     engines: {node: '>=8'}
-
-  resolve-pathname@3.0.0:
-    resolution: {integrity: sha512-C7rARubxI8bXFNB/hqcp/4iUeIXJhJZvFPFPiSPRnhU5UPxzMFIl+2E6yY6c4k9giDJAhtV+enfA+G89N6Csng==}
 
   resolve-pkg-maps@1.0.0:
     resolution: {integrity: sha512-seS2Tj26TBVOC2NIc2rOe2y2ZO7efxITtLZcGSOnHHNOQ7CkiUBfw0Iw2ck6xkIhPwLhKNLS8BO+hEpngQlqzw==}
@@ -5804,9 +5780,6 @@ packages:
   timsort@0.3.0:
     resolution: {integrity: sha512-qsdtZH+vMoCARQtyod4imc2nIJwg9Cc7lPRrw9CzF8ZKR0khdr8+2nX80PBhET3tcyTtJDxAffGh2rXH4tyU8A==}
 
-  tiny-invariant@1.1.0:
-    resolution: {integrity: sha512-ytxQvrb1cPc9WBEI/HSeYYoGD0kWnGEOR8RY6KomWLBVhqz0RgTwVO9dLrGz7dC+nN9llyI7OKAgRq8Vq4ZBSw==}
-
   tiny-warning@1.0.3:
     resolution: {integrity: sha512-lBN9zLN/oAf68o3zNXYrdCt1kP8WsiGW8Oo2ka41b2IM5JL/S1CTyX1rW0mb/zSuJun0ZUrDxx4sqvYS2FWzPA==}
 
@@ -6076,9 +6049,6 @@ packages:
 
   validate-npm-package-license@3.0.4:
     resolution: {integrity: sha512-DpKm2Ui/xN7/HQKCtpZxoRWBhZ9Z0kqtygG8XCgNQ8ZlDnxuQmWhj566j8fN4Cu3/JmbhsDo7fcAJq4s9h27Ew==}
-
-  value-equal@1.0.1:
-    resolution: {integrity: sha512-NOJ6JZCAWr0zlxZt+xqCHNTEKOsrks2HQd4MqhP1qy4z1SkbEP467eNx6TgDKXMvUOb+OENfJCZwM+16n7fRfw==}
 
   vary@1.1.2:
     resolution: {integrity: sha512-BNGbWLfd0eUPabhkXUVm0j8uuvREyTh5ovRa/dyow/BqAbZJyC+5fU+IzQOzmAKzYqYRAISoRhdQr3eIZ/PXqg==}
@@ -7527,6 +7497,8 @@ snapshots:
       tiny-warning: 1.0.3
       tslib: 2.1.0
 
+  '@remix-run/router@1.22.0': {}
+
   '@rtsao/scc@1.1.0': {}
 
   '@semantic-ui-react/event-stack@3.1.1(react-dom@16.14.0(react@16.14.0))(react@16.14.0)':
@@ -7722,8 +7694,6 @@ snapshots:
     dependencies:
       '@types/node': 14.14.19
 
-  '@types/history@4.7.5': {}
-
   '@types/html-minifier-terser@5.1.1': {}
 
   '@types/http-proxy-middleware@0.19.3':
@@ -7817,17 +7787,6 @@ snapshots:
 
   '@types/react-measure@2.0.6':
     dependencies:
-      '@types/react': 16.9.49
-
-  '@types/react-router-dom@5.1.5':
-    dependencies:
-      '@types/history': 4.7.5
-      '@types/react': 16.9.49
-      '@types/react-router': 5.1.7
-
-  '@types/react-router@5.1.7':
-    dependencies:
-      '@types/history': 4.7.5
       '@types/react': 16.9.49
 
   '@types/react-scroll@1.8.0':
@@ -10154,15 +10113,6 @@ snapshots:
 
   hex-color-regex@1.1.0: {}
 
-  history@4.10.1:
-    dependencies:
-      '@babel/runtime': 7.14.0
-      loose-envify: 1.4.0
-      resolve-pathname: 3.0.0
-      tiny-invariant: 1.1.0
-      tiny-warning: 1.0.3
-      value-equal: 1.0.1
-
   hoist-non-react-statics@3.3.0:
     dependencies:
       react-is: 16.13.1
@@ -10610,8 +10560,6 @@ snapshots:
   is-wsl@2.2.0:
     dependencies:
       is-docker: 2.1.1
-
-  isarray@0.0.1: {}
 
   isarray@1.0.0: {}
 
@@ -11392,13 +11340,6 @@ snapshots:
 
   mimic-fn@3.1.0: {}
 
-  mini-create-react-context@0.4.0(prop-types@15.8.1)(react@16.14.0):
-    dependencies:
-      '@babel/runtime': 7.14.0
-      prop-types: 15.8.1
-      react: 16.14.0
-      tiny-warning: 1.0.3
-
   mini-css-extract-plugin@1.3.3(webpack@5.75.0):
     dependencies:
       loader-utils: 2.0.0
@@ -11790,10 +11731,6 @@ snapshots:
   path-parse@1.0.7: {}
 
   path-to-regexp@0.1.7: {}
-
-  path-to-regexp@1.8.0:
-    dependencies:
-      isarray: 0.0.1
 
   path-type@4.0.0: {}
 
@@ -12254,30 +12191,17 @@ snapshots:
       typed-styles: 0.0.7
       warning: 4.0.3
 
-  react-router-dom@5.2.0(react@16.14.0):
+  react-router-dom@6.29.0(react-dom@16.14.0(react@16.14.0))(react@16.14.0):
     dependencies:
-      '@babel/runtime': 7.14.0
-      history: 4.10.1
-      loose-envify: 1.4.0
-      prop-types: 15.8.1
+      '@remix-run/router': 1.22.0
       react: 16.14.0
-      react-router: 5.2.0(react@16.14.0)
-      tiny-invariant: 1.1.0
-      tiny-warning: 1.0.3
+      react-dom: 16.14.0(react@16.14.0)
+      react-router: 6.29.0(react@16.14.0)
 
-  react-router@5.2.0(react@16.14.0):
+  react-router@6.29.0(react@16.14.0):
     dependencies:
-      '@babel/runtime': 7.14.0
-      history: 4.10.1
-      hoist-non-react-statics: 3.3.0
-      loose-envify: 1.4.0
-      mini-create-react-context: 0.4.0(prop-types@15.8.1)(react@16.14.0)
-      path-to-regexp: 1.8.0
-      prop-types: 15.8.1
+      '@remix-run/router': 1.22.0
       react: 16.14.0
-      react-is: 16.13.1
-      tiny-invariant: 1.1.0
-      tiny-warning: 1.0.3
 
   react-side-effect@2.1.0(react@16.14.0):
     dependencies:
@@ -12473,8 +12397,6 @@ snapshots:
   resolve-from@4.0.0: {}
 
   resolve-from@5.0.0: {}
-
-  resolve-pathname@3.0.0: {}
 
   resolve-pkg-maps@1.0.0: {}
 
@@ -13099,8 +13021,6 @@ snapshots:
 
   timsort@0.3.0: {}
 
-  tiny-invariant@1.1.0: {}
-
   tiny-warning@1.0.3: {}
 
   tmp@0.0.33:
@@ -13380,8 +13300,6 @@ snapshots:
     dependencies:
       spdx-correct: 3.1.1
       spdx-expression-parse: 3.0.1
-
-  value-equal@1.0.1: {}
 
   vary@1.1.2: {}
 
