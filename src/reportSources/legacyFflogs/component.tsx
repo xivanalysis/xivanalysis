@@ -20,11 +20,11 @@ export function LegacyFflogs() {
 			<Route index={true} element={<Navigate to="/" replace={true}/>}/>
 
 			<Route
-				path={`last/:code/:source?`}
+				path="last/:code/:source?"
 				element={<WithReport Component={LastFightRedirect}/>}
 			/>
 
-			<Route path={`:code`}>
+			<Route path=":code">
 				<Route index path="*" element={<WithReport Component={ReportFlow}/>}/>
 			</Route>
 		</Routes>

@@ -11,7 +11,7 @@ type BranchBannerProps = {
 	report: Report
 }
 
-export const BranchBanner = observer(function BranchBanner2({report}: BranchBannerProps) {
+export const BranchBanner = observer(function BranchBanner({report}: BranchBannerProps) {
 	const location = useLocation()
 
 	// Get the patch data for the report
