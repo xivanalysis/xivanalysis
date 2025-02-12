@@ -6,7 +6,6 @@ import ReactDOM from 'react-dom'
 import {StoreContext} from 'store'
 import {LinkDiscord, LinkGitHub} from './Links'
 import styles from './Options.module.css'
-import {ReportLink} from './ReportLink'
 import {VersionInfo} from './Version'
 
 export function Options() {
@@ -25,8 +24,6 @@ export function Options() {
 	return <>
 		<div className={styles.row}>
 			<div ref={reportLinkRef}/>
-
-			<ReportLink/>
 		</div>
 
 		<div className={styles.row}>

@@ -43,6 +43,7 @@ interface WithReportProps {
 	baseUrl: string
 }
 
+// TODO: remove this tbqh
 const WithReport = observer(function WithReport(
 	{Component, baseUrl}: WithReportProps,
 ) {
