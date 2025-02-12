@@ -4,7 +4,7 @@ import {getEncounterKey} from 'data/ENCOUNTERS'
 import _ from 'lodash'
 import {observer} from 'mobx-react'
 import {ComponentType, useEffect} from 'react'
-import {useRouteMatch, Route, Redirect, useParams, Routes} from 'react-router-dom'
+import {useRouteMatch, Route, useParams, Routes, Navigate} from 'react-router-dom'
 import {ReportStore} from 'reportSources'
 import {useLazyRef} from 'utilities/react'
 import {LegacyFflogsReportStore} from './store'
@@ -26,7 +26,7 @@ export function LegacyFflogs() {
 	return (
 		<Routes>
 			{/* Can't do anything without a report code, redirect to the home page */}
-			<Route index={true} element={<Redirect to="/" replace={true}/>}/>
+			<Route index={true} element={<Navigate to="/" replace={true}/>}/>
 
 			<Route
 				path={`last/:code/:source?`}
@@ -79,5 +79,5 @@ function LastFightRedirect({reportStore, baseUrl}: WithReportComponentProps) {
 	const lastPull = _.last(pullIds)
 	const path = `${baseUrl}/${code}${buildReportFlowPath(lastPull, source)}`
 
-	return <Redirect to={path}/>
+	return <Navigate to={path} replace={true}/>
 }

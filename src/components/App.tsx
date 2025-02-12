@@ -2,7 +2,7 @@ import {Container} from 'akkd'
 import classnames from 'classnames'
 import _ from 'lodash'
 import {useContext, useEffect, useState} from 'react'
-import {Link, Route, useRouteMatch, Redirect, useLocation, Routes} from 'react-router-dom'
+import {Link, Route, useRouteMatch, useLocation, Routes, Navigate} from 'react-router-dom'
 import {reportSources} from 'reportSources'
 import {Icon} from 'semantic-ui-react'
 import {StoreContext} from 'store'
@@ -33,7 +33,10 @@ export function App() {
 	return <>
 		{/* If there's a trailing slash, strip it */}
 		{trailingSlash &&
-			<Redirect to={_.trimEnd(trailingSlash.url, '/')}/>
+			<Navigate
+				to={_.trimEnd(trailingSlash.url, '/')}
+				replace={true}
+			/>
 		}
 
 		<div className={classnames(

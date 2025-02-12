@@ -3,7 +3,7 @@ import {Trans} from '@lingui/react'
 import {NormalisedMessage} from 'components/ui/NormalisedMessage'
 import {observer} from 'mobx-react'
 import {ChangeEvent, useCallback, useState} from 'react'
-import {Redirect} from 'react-router-dom'
+import {Navigate} from 'react-router-dom'
 import {SearchHandlerResult} from 'reportSources'
 import {Button, Input, InputOnChangeData} from 'semantic-ui-react'
 import {parseInput} from './parseInput'
@@ -28,7 +28,7 @@ export const ReportSearch = observer(function ReportSearch() {
 	}, [])
 
 	if (result.valid) {
-		return <Redirect to={result.path}/>
+		return <Navigate to={result.path} replace={false}/>
 	}
 
 	// Any valid searches will have already been redirected by now, so the only
