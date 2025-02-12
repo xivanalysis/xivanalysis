@@ -79,14 +79,14 @@ export function App() {
 			<Container className={styles.content}>
 				<ErrorBoundary>
 					<Routes>
-						<Route path="/" element={<Home/>}/>
-						<Route path="/report-redirect/:input" element={<ReportRedirect/>}/>
+						<Route index={true} element={<Home/>}/>
+						<Route path="/report-redirect/*" element={<ReportRedirect/>}/>
 
 						{/* Report sources*/}
 						{reportSources.map(source => (
 							<Route
 								key={source.path}
-								path={source.path}
+								path={`${source.path}/*`}
 								element={<source.Component/>}
 							/>
 						))}

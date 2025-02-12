@@ -12,7 +12,7 @@ export interface ReportSource {
 
 export const reportSources: ReportSource[] = [
 	{
-		path: '/fflogs/*',
+		path: '/fflogs',
 		Component: LegacyFflogs,
 		searchHandlers: legacyFflogsSearchHandlers,
 	},

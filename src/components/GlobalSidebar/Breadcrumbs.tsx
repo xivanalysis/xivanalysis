@@ -1,6 +1,6 @@
 import {ReactNode, createContext, useContext, useState, useEffect, useMemo, Dispatch, SetStateAction} from 'react'
 import {Helmet} from 'react-helmet'
-import {matchPath, useLocation, Link} from 'react-router-dom'
+import {matchPath, useLocation, Link, useResolvedPath} from 'react-router-dom'
 import style from './Breadcrumbs.module.css'
 
 interface BreadcrumbValue {
@@ -51,7 +51,7 @@ export function Breadcrumbs() {
 
 			while (true) {
 				path += '/:segment'
-				url = matchPath({path}, pathname)?.pathname
+				url = matchPath({path: path + '/*'}, pathname)?.pathnameBase
 				if (url == null || escapeHatch > 100) { break }
 				const crumb = registry?.[url]
 				if (crumb != null) { segments.push({...crumb, url: crumb.url ?? url}) }
@@ -98,7 +98,7 @@ export function Breadcrumbs() {
 
 export function Breadcrumb(crumb: BreadcrumbValue) {
 	const {setRegistry} = useContext(BreadcrumbContext) ?? {}
-	const {pathname} = useLocation()
+	const {pathname} = useResolvedPath('.')
 
 	useEffect(
 		() => {

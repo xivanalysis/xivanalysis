@@ -10,7 +10,7 @@ import {getPatch, Patch} from 'data/PATCHES'
 import {AVAILABLE_MODULES} from 'parser/AVAILABLE_MODULES'
 import {Meta} from 'parser/core/Meta'
 import {ReactNode, useCallback, useMemo} from 'react'
-import {Route, useParams, Routes, useLocation, useMatch} from 'react-router-dom'
+import {Route, useParams, Routes, useLocation, useMatch, useResolvedPath} from 'react-router-dom'
 import {Pull, Report} from 'report'
 import {ReportStore} from 'reportSources'
 import {Icon} from 'semantic-ui-react'
@@ -262,7 +262,9 @@ interface ReportLinkProps {
 }
 
 function ReportLink({reportStore}: ReportLinkProps) {
-	const match = useMatch(":pullId?/:actorId?")
+	// Using ResolvedPath rather than Location to ensure we have a stable base to match against
+	const {pathname} = useResolvedPath('.')
+	const match = useMatch(`${pathname}/:pullId?/:actorId?`)
 	if (match == null) {
 		return null
 	}

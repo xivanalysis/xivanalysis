@@ -4,7 +4,7 @@ import {getEncounterKey} from 'data/ENCOUNTERS'
 import _ from 'lodash'
 import {observer} from 'mobx-react'
 import {ComponentType, useEffect} from 'react'
-import {Route, useParams, Routes, Navigate, useLocation} from 'react-router-dom'
+import {Route, useParams, Routes, Navigate, useResolvedPath} from 'react-router-dom'
 import {ReportStore} from 'reportSources'
 import {useLazyRef} from 'utilities/react'
 import {LegacyFflogsReportStore} from './store'
@@ -14,7 +14,7 @@ import {LegacyFflogsReportStore} from './store'
  * This should be removed once migration away from the legacy report store is complete.
  */
 export function LegacyFflogs() {
-	const {pathname} = useLocation()
+	const {pathname} =  useResolvedPath('.')
 	return (
 		<Routes>
 			{/* Can't do anything without a report code, redirect to the home page */}
@@ -26,7 +26,7 @@ export function LegacyFflogs() {
 			/>
 
 			<Route
-				path={`:code`}
+				path={`:code/*`}
 				element={<WithReport Component={ReportFlow} baseUrl={pathname}/>}
 			/>
 		</Routes>
