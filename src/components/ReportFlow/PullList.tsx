@@ -3,7 +3,7 @@ import classNames from 'classnames'
 import {getDutyBanner} from 'data/ENCOUNTERS'
 import {observer} from 'mobx-react'
 import {useContext, useCallback, Key} from 'react'
-import {Link, useRouteMatch} from 'react-router-dom'
+import {Link} from 'react-router-dom'
 import {Duty, Pull} from 'report'
 import {ReportStore} from 'reportSources'
 import {Checkbox, Icon, CheckboxProps} from 'semantic-ui-react'
@@ -133,11 +133,9 @@ interface PullLinkProps {
 }
 
 function PullLink({pull}: PullLinkProps) {
-	const {url} = useRouteMatch()
-
 	return (
 		<Link
-			to={`${url}/${pull.id}`}
+			to={pull.id}
 			className={styles.link}
 		>
 			<span className={styles.text}>

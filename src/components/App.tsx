@@ -2,7 +2,7 @@ import {Container} from 'akkd'
 import classnames from 'classnames'
 import _ from 'lodash'
 import {useContext, useEffect, useState} from 'react'
-import {Link, Route, useRouteMatch, useLocation, Routes, Navigate} from 'react-router-dom'
+import {Link, Route, useLocation, Routes, Navigate} from 'react-router-dom'
 import {reportSources} from 'reportSources'
 import {Icon} from 'semantic-ui-react'
 import {StoreContext} from 'store'
@@ -28,17 +28,17 @@ export function App() {
 
 	const onHome = pathname === '/'
 
-	const trailingSlash = useRouteMatch({path: '/*/', exact: true, strict: true})
-
-	return <>
-		{/* If there's a trailing slash, strip it */}
-		{trailingSlash &&
+	// Strip trailing slashes for everything beyond home.
+	if (!onHome && pathname.endsWith('/')) {
+		return (
 			<Navigate
-				to={_.trimEnd(trailingSlash.url, '/')}
+				to={_.trimEnd(pathname, '/')}
 				replace={true}
 			/>
-		}
+		)
+	}
 
+	return <>
 		<div className={classnames(
 			styles.mobileHeader,
 			onHome && styles.home,

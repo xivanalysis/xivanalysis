@@ -10,7 +10,7 @@ import {getPatch, Patch} from 'data/PATCHES'
 import {AVAILABLE_MODULES} from 'parser/AVAILABLE_MODULES'
 import {Meta} from 'parser/core/Meta'
 import {ReactNode, useCallback, useMemo} from 'react'
-import {useRouteMatch, Route, useParams, Routes} from 'react-router-dom'
+import {Route, useParams, Routes, useLocation, useMatch} from 'react-router-dom'
 import {Actor, Pull, Report} from 'report'
 import {ReportStore} from 'reportSources'
 import {Icon} from 'semantic-ui-react'
@@ -47,7 +47,7 @@ export interface ReportFlowProps {
  * store for consumption by the flow.
  */
 export function ReportFlow({reportStore}: ReportFlowProps) {
-	const {path, url} = useRouteMatch()
+	const {pathname: url} = useLocation()
 	const {report} = reportStore
 
 	// This is intentionally quite generic. If a specific report source can provide
@@ -134,7 +134,6 @@ function ActorListRoute({
 	meta: parentMeta,
 	report,
 }: ActorListRouteProps) {
-	const {path} = useRouteMatch()
 	const {pullId} = useParams<ActorListRouteParams>()
 
 	const onRefreshPulls = useCallback(
@@ -270,14 +269,8 @@ interface ReportLinkProps {
 	reportStore: ReportStore
 }
 
-interface ReportLinkRouteParams {
-	pullId?: Pull['id']
-	actorId?: Actor['id']
-}
-
 function ReportLink({reportStore}: ReportLinkProps) {
-	const {path} = useRouteMatch()
-	const match = useRouteMatch<ReportLinkRouteParams>(`${path}/:pullId?/:actorId?`)
+	const match = useMatch(":pullId?/:actorId?")
 	if (match == null) {
 		return null
 	}
