@@ -284,7 +284,6 @@
   "core.always-cast.gcd-uptime": "글로벌 쿨타임 적용시간",
   "core.always-cast.title": "항상 캐스팅을 하기",
   "core.analyse.see-more": "더 보기",
-  "core.analyse.view-on-fflogs": "FF Logs에서 기록 보기",
   "core.aoeusages.aoe-ability": "광역기 사용",
   "core.aoeusages.min-targets": "최소 개체 수",
   "core.aoeusages.number-bad-usages": "잘못된 사용",

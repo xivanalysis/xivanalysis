@@ -284,7 +284,6 @@
   "core.always-cast.gcd-uptime": "GCD覆盖率",
   "core.always-cast.title": "保持使用技能",
   "core.analyse.see-more": "查看更多",
-  "core.analyse.view-on-fflogs": "在FFlogs上查看报告",
   "core.aoeusages.aoe-ability": "AoE技能使用",
   "core.aoeusages.min-targets": "最少目标",
   "core.aoeusages.number-bad-usages": "错误使用次数",
