@@ -9,6 +9,11 @@ export const changelog: ChangelogEntry[] = [
 	// 	contributors: [CONTRIBUTORS.YOU],
 	// },
 	{
+		date: new Date('2025-02-12'),
+		Changes: () => <>Fixed an issue that caused AOE attacks to incorrectly report broken combos if they cleaved an invulnerable target.</>,
+		contributors: [CONTRIBUTORS.AZARIAH],
+	},
+	{
 		date: new Date('2025-01-28'),
 		Changes: () => <>Fix recently introduced checklist requirement bugs.</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],
