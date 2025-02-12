@@ -86,16 +86,15 @@ export function ReportFlow({reportStore}: ReportFlowProps) {
 					index={true}
 					element={<PullList reportStore={reportStore}/>}
 				/>
-				<Route
-					path=":pullId/*"
-					element={
+				<Route path=":pullId">
+					<Route index path="*" element={
 						<ActorListRoute
 							reportStore={reportStore}
 							meta={meta}
 							report={report}
 						/>
-					}
-				/>
+					}/>
+				</Route>
 			</Routes>
 		</DataProvider>
 	)
@@ -184,17 +183,16 @@ function ActorListRoute({
 					/>
 				}
 			/>
-			<Route
-				path=":actorId/*"
-				element={
+			<Route path=":actorId">
+				<Route index path="*" element={
 					<AnalyseRoute
 						reportStore={reportStore}
 						meta={meta}
 						report={report}
 						pull={pull}
 					/>
-				}
-			/>
+				}/>
+			</Route>
 		</Routes>
 	</>
 }
@@ -263,7 +261,7 @@ interface ReportLinkProps {
 
 function ReportLink({reportStore}: ReportLinkProps) {
 	// Using ResolvedPath rather than Location to ensure we have a stable base to match against
-	const {pathname} = useResolvedPath('.')
+	const {pathname} = useResolvedPath('..')
 	const match = useMatch(`${pathname}/:pullId?/:actorId?`)
 	if (match == null) {
 		return null

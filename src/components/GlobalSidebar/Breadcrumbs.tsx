@@ -98,7 +98,7 @@ export function Breadcrumbs() {
 
 export function Breadcrumb(crumb: BreadcrumbValue) {
 	const {setRegistry} = useContext(BreadcrumbContext) ?? {}
-	const {pathname} = useResolvedPath('.')
+	const {pathname} = useResolvedPath('..')
 
 	useEffect(
 		() => {

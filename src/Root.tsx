@@ -9,7 +9,9 @@ export const Root = () => (
 	<StoreProvider>
 		<I18nLoader>
 			<TooltipProvider>
-				<Router>
+				<Router future={{
+					v7_relativeSplatPath: true,
+				}}>
 					<BreadcrumbProvider>
 						<App/>
 					</BreadcrumbProvider>

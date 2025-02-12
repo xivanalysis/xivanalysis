@@ -14,7 +14,6 @@ import {LegacyFflogsReportStore} from './store'
  * This should be removed once migration away from the legacy report store is complete.
  */
 export function LegacyFflogs() {
-	const {pathname} =  useResolvedPath('.')
 	return (
 		<Routes>
 			{/* Can't do anything without a report code, redirect to the home page */}
@@ -22,31 +21,27 @@ export function LegacyFflogs() {
 
 			<Route
 				path={`last/:code/:source?`}
-				element={<WithReport Component={LastFightRedirect} baseUrl={pathname}/>}
+				element={<WithReport Component={LastFightRedirect}/>}
 			/>
 
-			<Route
-				path={`:code/*`}
-				element={<WithReport Component={ReportFlow} baseUrl={pathname}/>}
-			/>
+			<Route path={`:code`}>
+				<Route index path="*" element={<WithReport Component={ReportFlow}/>}/>
+			</Route>
 		</Routes>
 	)
 }
 
 interface WithReportComponentProps {
 	reportStore: ReportStore
-	baseUrl: string
 }
 
 interface WithReportProps {
 	Component: ComponentType<WithReportComponentProps>
-	baseUrl: string
 }
 
-// TODO: remove this tbqh
-const WithReport = observer(function WithReport(
-	{Component, baseUrl}: WithReportProps,
-) {
+const WithReport = observer(function WithReport({
+	Component,
+}: WithReportProps) {
 	const {code} = useParams()
 	if (code == null) {
 		throw new Error('Invariant broken.')
@@ -61,10 +56,11 @@ const WithReport = observer(function WithReport(
 		return <ReportLoader/>
 	}
 
-	return <Component reportStore={reportStore} baseUrl={baseUrl}/>
+	return <Component reportStore={reportStore}/>
 })
 
-function LastFightRedirect({reportStore, baseUrl}: WithReportComponentProps) {
+function LastFightRedirect({reportStore}: WithReportComponentProps) {
+	const {pathname} =  useResolvedPath('..')
 	const {code, source} = useParams()
 
 	// Filter out trash pulls
@@ -73,7 +69,7 @@ function LastFightRedirect({reportStore, baseUrl}: WithReportComponentProps) {
 		.map(fight => fight.id.toString())
 
 	const lastPull = _.last(pullIds)
-	const path = `${baseUrl}/${code}${buildReportFlowPath(lastPull, source)}`
+	const path = `${pathname}/${code}${buildReportFlowPath(lastPull, source)}`
 
 	return <Navigate to={path} replace={true}/>
 }

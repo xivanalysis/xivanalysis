@@ -84,11 +84,9 @@ export function App() {
 
 						{/* Report sources*/}
 						{reportSources.map(source => (
-							<Route
-								key={source.path}
-								path={`${source.path}/*`}
-								element={<source.Component/>}
-							/>
+							<Route key={source.path} path={`${source.path}`}>
+								<Route index path="*" element={<source.Component/>}/>
+							</Route>
 						))}
 					</Routes>
 				</ErrorBoundary>
