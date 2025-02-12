@@ -10,7 +10,7 @@ import {getPatch, Patch} from 'data/PATCHES'
 import {AVAILABLE_MODULES} from 'parser/AVAILABLE_MODULES'
 import {Meta} from 'parser/core/Meta'
 import {ReactNode, useCallback, useMemo} from 'react'
-import {Switch, useRouteMatch, Route, useParams} from 'react-router-dom'
+import {useRouteMatch, Route, useParams, Routes} from 'react-router-dom'
 import {Actor, Pull, Report} from 'report'
 import {ReportStore} from 'reportSources'
 import {Icon} from 'semantic-ui-react'
@@ -81,18 +81,22 @@ export function ReportFlow({reportStore}: ReportFlowProps) {
 				</>}
 			/>
 
-			<Switch>
-				<Route path={`${path}/:pullId`}>
-					<ActorListRoute
-						reportStore={reportStore}
-						meta={meta}
-						report={report}
-					/>
-				</Route>
-				<Route path={path}>
-					<PullList reportStore={reportStore}/>
-				</Route>
-			</Switch>
+			<Routes>
+				<Route
+					index={true}
+					element={<PullList reportStore={reportStore}/>}
+				/>
+				<Route
+					path=":pullId/*"
+					element={
+						<ActorListRoute
+							reportStore={reportStore}
+							meta={meta}
+							report={report}
+						/>
+					}
+				/>
+			</Routes>
 		</DataProvider>
 	)
 }
@@ -173,24 +177,30 @@ function ActorListRoute({
 		/>
 		<BreadcrumbsBanner banner={getDutyBanner(pull.encounter.duty.id)}/>
 
-		<Switch>
-			<Route path={`${path}/:actorId`}>
-				<AnalyseRoute
-					reportStore={reportStore}
-					meta={meta}
-					report={report}
-					pull={pull}
-				/>
-			</Route>
-			<Route path={path}>
-				<ActorList
-					reportStore={reportStore}
-					meta={meta}
-					report={report}
-					pull={pull}
-				/>
-			</Route>
-		</Switch>
+		<Routes>
+			<Route
+				index={true}
+				element={
+					<ActorList
+						reportStore={reportStore}
+						meta={meta}
+						report={report}
+						pull={pull}
+					/>
+				}
+			/>
+			<Route
+				path=":actorId/*"
+				element={
+					<AnalyseRoute
+						reportStore={reportStore}
+						meta={meta}
+						report={report}
+						pull={pull}
+					/>
+				}
+			/>
+		</Routes>
 	</>
 }
 
