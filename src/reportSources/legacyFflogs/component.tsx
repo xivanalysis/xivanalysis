@@ -9,14 +9,6 @@ import {ReportStore} from 'reportSources'
 import {useLazyRef} from 'utilities/react'
 import {LegacyFflogsReportStore} from './store'
 
-interface WithCodeParams {
-	code: string
-}
-
-interface LastFightRedirectParams extends WithCodeParams {
-	source?: string
-}
-
 /**
  * Report source component for adapting the legacy report store into the new flow.
  * This should be removed once migration away from the legacy report store is complete.
@@ -54,7 +46,10 @@ interface WithReportProps {
 const WithReport = observer(function WithReport(
 	{Component, baseUrl}: WithReportProps,
 ) {
-	const {code} = useParams<WithCodeParams>()
+	const {code} = useParams()
+	if (code == null) {
+		throw new Error('Invariant broken.')
+	}
 
 	// Get a stable reference to the store and ensure we've requested a report for the current code
 	const reportStore = useLazyRef(() => new LegacyFflogsReportStore()).current
@@ -69,7 +64,7 @@ const WithReport = observer(function WithReport(
 })
 
 function LastFightRedirect({reportStore, baseUrl}: WithReportComponentProps) {
-	const {code, source} = useParams<LastFightRedirectParams>()
+	const {code, source} = useParams()
 
 	// Filter out trash pulls
 	const pullIds = reportStore.report?.meta.fights

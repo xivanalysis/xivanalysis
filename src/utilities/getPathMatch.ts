@@ -2,7 +2,7 @@ import {matchPath} from 'react-router-dom'
 
 // This is pretty damn nasty, but it'll do for now
 export function getPathMatch<Params extends { [K in keyof Params]?: string }>(pathname: string) {
-	const page = matchPath<{ page: string }>(pathname, {path: '/:page?'})
+	const page = matchPath({path: '/:page?'}, pathname)
 
 	let path = '/'
 	switch (page !== null && page.params.page) {
@@ -11,5 +11,5 @@ export function getPathMatch<Params extends { [K in keyof Params]?: string }>(pa
 	default:        // Do nothing
 	}
 
-	return matchPath<Params>(pathname, {path})
+	return matchPath({path}, pathname)
 }

@@ -51,7 +51,7 @@ export function Breadcrumbs() {
 
 			while (true) {
 				path += '/:segment'
-				url = matchPath(pathname, {path})?.url
+				url = matchPath({path}, pathname)?.pathname
 				if (url == null || escapeHatch > 100) { break }
 				const crumb = registry?.[url]
 				if (crumb != null) { segments.push({...crumb, url: crumb.url ?? url}) }

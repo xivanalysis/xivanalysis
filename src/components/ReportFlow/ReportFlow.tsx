@@ -11,7 +11,7 @@ import {AVAILABLE_MODULES} from 'parser/AVAILABLE_MODULES'
 import {Meta} from 'parser/core/Meta'
 import {ReactNode, useCallback, useMemo} from 'react'
 import {Route, useParams, Routes, useLocation, useMatch} from 'react-router-dom'
-import {Actor, Pull, Report} from 'report'
+import {Pull, Report} from 'report'
 import {ReportStore} from 'reportSources'
 import {Icon} from 'semantic-ui-react'
 import {formatDuration} from 'utilities'
@@ -125,16 +125,12 @@ interface ActorListRouteProps {
 	report: Report
 }
 
-interface ActorListRouteParams {
-	pullId: Pull['id']
-}
-
 function ActorListRoute({
 	reportStore,
 	meta: parentMeta,
 	report,
 }: ActorListRouteProps) {
-	const {pullId} = useParams<ActorListRouteParams>()
+	const {pullId} = useParams()
 
 	const onRefreshPulls = useCallback(
 		() => reportStore.requestPulls({bypassCache: true}),
@@ -210,17 +206,13 @@ interface AnalyseRouteProps {
 	pull: Pull
 }
 
-interface AnalyseRouteParams {
-	actorId: Actor['id']
-}
-
 function AnalyseRoute({
 	reportStore,
 	meta: parentMeta,
 	report,
 	pull,
 }: AnalyseRouteProps) {
-	const {actorId} = useParams<AnalyseRouteParams>()
+	const {actorId} = useParams()
 	const actor = pull.actors.find(actor => actor.id === actorId)
 
 	const onRefreshActors = useCallback(

@@ -1,12 +1,8 @@
 import {useParams, useLocation, Navigate} from 'react-router-dom'
 import {parseInput} from './parseInput'
 
-interface ReportRedirectParams {
-	input: string
-}
-
 export function ReportRedirect() {
-	const {input} = useParams<ReportRedirectParams>()
+	const {input} = useParams()
 	const location = useLocation()
 
 	const fullInput = `${input}${location.search}${location.hash}`
