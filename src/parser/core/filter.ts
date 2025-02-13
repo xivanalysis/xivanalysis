@@ -1,10 +1,16 @@
 import _ from 'lodash'
 import * as TB from 'ts-toolbelt'
 import {Compute} from 'utilities'
+import {FILTER_TYPE} from './Dispatcher'
 
 // -----
 // #region Core filter logic
 // ----
+
+type FilterState<Current> = {
+	type?: string
+	current: Current,
+}
 
 const proxyInner = (() => { /* unused */ }) as object
 
@@ -17,23 +23,44 @@ const customiser: _.isMatchWithCustomizer = (objValue, filterValue) => {
 }
 
 // Actual filter logic
-const filterInternal = <Base, Current extends Partial<Base>>(current: Current) =>
+const filterInternal = <Base, Current extends Partial<Base>>(state: FilterState<Current>) =>
 	new Proxy(proxyInner, {
 		// Property access generates a new filter with a narrowed Current, i.e.
 		// filter<Base, {}>.key(value) results in current={[key]:value}
-		get: (target, key) =>
-			(value: unknown) =>
-				filterInternal({...current, [key]: value}),
+		get: (target, key) => {
+			// If the filtered type is being requested, expose it.
+			if (key === FILTER_TYPE) {
+				return state.type
+			}
+
+			return (value: unknown) => {
+				// Merge in the new property to match against
+				const next: FilterState<Current & {[key: string]: unknown}> = {
+					...state,
+					current: {...state.current, [key]: value},
+				}
+
+				// Optimisation: If a simple type value is being set, sidechannel it for
+				// bucketing by the dispatcher.
+				if (key === 'type' && typeof value === 'string') {
+					next.type = value
+				}
+
+				return filterInternal(next)
+			}
+		},
 
 		// Calling the filter directly execute the filter on the value passed in
 		// the first argument. The exposed return type is a predicate.
-		apply: (target, thisArg, [toCheck]) => _.isMatchWith(toCheck, current, customiser),
+		apply: (target, thisArg, [toCheck]) => {
+			return _.isMatchWith(toCheck, state.current, customiser)
+		},
 	}) as Filter<Base, Current>
 
 /** Create a filter builder for the shape of Base. */
 // This is just a pass-through to fitlerInternal for type wrangling purposes.
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
-export const filter = <Base>() => filterInternal<Base, {}>({})
+export const filter = <Base>() => filterInternal<Base, {}>({current: {}})
 
 // -----
 // #endregion
@@ -123,6 +150,8 @@ export type Filter<Base, Current extends Partial<Base> = {}> =
 				}
 			>>
 	}
+	// Filter type side channel
+	& {[FILTER_TYPE]?: string}
 	// Call signature for the filter
 	& {(value: Base): value is Compute<TB.Union.Select<Required<Base>, Current>>}
 
