@@ -53,6 +53,8 @@ export interface Dispatcher {
 	removeTimestampHook(hook: TimestampHook): boolean
 }
 
+const FILTER_TYPE_FALLBACK = '__CHECK_ALL'
+
 /**
  * Dispatcher is in charge of consuming events from the parser and fanning them
  * out to matching hooks where required.
@@ -63,12 +65,9 @@ export class DispatcherImpl implements Dispatcher {
 	get timestamp() { return this._timestamp }
 
 	private eventHooks = new Map<
-		Handle,
-		Map<
-			string | undefined,
-			// eslint-disable-next-line @typescript-eslint/no-explicit-any
-			Set<EventHook<any>>
-		>
+		`${Handle}::${string | typeof FILTER_TYPE_FALLBACK}`,
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		Set<EventHook<any>>
 	>()
 
 	// Stored nearest-last so we can use the significantly-faster pop
@@ -123,21 +122,16 @@ export class DispatcherImpl implements Dispatcher {
 
 		const issues: DispatchIssue[] = []
 
-		const typeKeys = [event.type, undefined]
+		const typeKeys = [event.type, FILTER_TYPE_FALLBACK] as const
 
 		// Iterate over the handles provided, looking for registered hooks
 		for (const handle of handles) {
-			const handleHooks = this.eventHooks.get(handle)
-			if (handleHooks == null) { continue }
-
+			// Try to execute any matching hooks for the current handle
 			try {
-				// Try to execute any matching hooks for the current handle
 				for (const typeKey of typeKeys) {
-					const handleTypes = handleHooks.get(typeKey)
-					if (handleTypes == null) {
-						continue
-					}
-					for (const hook of handleTypes.values()) {
+					const hooks = this.eventHooks.get(`${handle}::${typeKey}`)
+					if (hooks == null) { continue }
+					for (const hook of hooks.values()) {
 						if (!hook.predicate(event)) { continue }
 						hook.callback(event)
 					}
@@ -163,20 +157,15 @@ export class DispatcherImpl implements Dispatcher {
 	 * @param hook The hook to register.
 	 */
 	addEventHook<T extends Event>(hook: EventHook<T>) {
-		let handleTypes = this.eventHooks.get(hook.handle)
-		if (handleTypes == null) {
-			handleTypes = new Map()
-			this.eventHooks.set(hook.handle, handleTypes)
+		const filterType = hook.predicate[FILTER_TYPE] ?? FILTER_TYPE_FALLBACK
+		const key = `${hook.handle}::${filterType}` as const
+		let hooks = this.eventHooks.get(key)
+		if (hooks == null) {
+			hooks = new Set()
+			this.eventHooks.set(key, hooks)
 		}
 
-		const filterType = hook.predicate[FILTER_TYPE]
-		let handleHooks = handleTypes.get(filterType)
-		if (handleHooks == null) {
-			handleHooks = new Set()
-			handleTypes.set(filterType, handleHooks)
-		}
-
-		handleHooks.add(hook)
+		hooks.add(hook)
 	}
 
 	/**
@@ -187,21 +176,12 @@ export class DispatcherImpl implements Dispatcher {
 	 * @return `true` if the hook was removed successfully.
 	 */
 	removeEventHook<T extends Event>(hook: EventHook<T>): boolean {
-		const handleTypes = this.eventHooks.get(hook.handle)
-		if (handleTypes == null) { return false }
+		const filterType = hook.predicate[FILTER_TYPE] ?? FILTER_TYPE_FALLBACK
+		const key = `${hook.handle}::${filterType}` as const
+		const hooks = this.eventHooks.get(key)
+		if (hooks == null) { return false }
 
-		const filterType = hook.predicate[FILTER_TYPE]
-		const handleHooks = handleTypes.get(filterType)
-		if (handleHooks == null) { return false }
-
-		const removed = handleHooks.delete(hook)
-		if (!removed) { return false }
-
-		if (handleHooks.size === 0) {
-			handleTypes.delete(filterType)
-		}
-
-		return true
+		return hooks.delete(hook)
 	}
 
 	/**
