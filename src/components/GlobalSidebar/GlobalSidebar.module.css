@@ -38,10 +38,12 @@
 .content {
 	position: relative;
 	flex-grow: 1;
+	color: themeText;
 }
 
 .options {
 	margin: 0 calc(-1 * gutter);
+	color: themeText;
 }
 
 @media md {

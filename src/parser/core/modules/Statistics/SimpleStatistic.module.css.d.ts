@@ -5,6 +5,7 @@ declare namespace SimpleStatisticModuleCssNamespace {
     gutter: string;
     icon: string;
     simpleStatistic: string;
+    themeText: string;
     title: string;
     titleWrapper: string;
     value: string;

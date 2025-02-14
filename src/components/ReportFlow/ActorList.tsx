@@ -1,6 +1,5 @@
 import {Trans} from '@lingui/react'
 import {Message, Segment} from 'akkd'
-import Color from 'color'
 import {JobIcon} from 'components/ui/JobIcon'
 import NormalisedMessage from 'components/ui/NormalisedMessage'
 import {Role, RoleKey, ROLES, JobKey, JOBS} from 'data/JOBS'
@@ -107,8 +106,8 @@ interface RoleGroupProps {
 
 function RoleGroup({meta, group: {role, actors}}: RoleGroupProps) {
 	/* eslint-disable @typescript-eslint/no-magic-numbers */
-	const background = Color(role.colour).fade(0.8).toString()
-	const color = Color(role.colour).darken(0.5).toString()
+	const background = role.colour.background
+	const color = role.colour.text
 	/* eslint-enable @typescript-eslint/no-magic-numbers */
 
 	return (

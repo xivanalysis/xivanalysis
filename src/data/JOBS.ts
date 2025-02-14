@@ -6,14 +6,29 @@ import {ensureRecord} from 'utilities'
 export interface Role {
 	id: number
 	name: MessageDescriptor
-	colour: string
+	colour: {
+		background: string,
+		text: string
+	}
 }
 
 const colors = {
-	tank: '#2185d0',
-	healer: '#21ba45',
-	dps: '#db2828',
-	misc: '#767676',
+	tank: {
+		background: 'var(--tank-background)',
+		text: 'var(--tank-text)',
+	},
+	healer: {
+		background: 'var(--healer-background)',
+		text: 'var(--healer-text)',
+	},
+	dps: {
+		background: 'var(--dps-background)',
+		text: 'var(--dps-text)',
+	},
+	misc: {
+		background: 'var(--misc-background)',
+		text: 'var(--misc-text)',
+	},
 }
 
 export const ROLES = ensureRecord<Role>()({
