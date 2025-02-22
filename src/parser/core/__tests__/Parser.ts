@@ -19,7 +19,7 @@ class RenamedAnalyser extends Analyser {
 class DependentAnalyser extends Analyser {
 	static override handle = 'test_dependent'
 	static override dependencies = [
-		'test_basic',
+		{handle: 'test_basic', prop: 'test_basic'},
 		{handle: 'test_renamed', prop: 'renamed'},
 	]
 	declare test_basic: BasicAnalyser

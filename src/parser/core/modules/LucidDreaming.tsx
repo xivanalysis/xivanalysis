@@ -19,9 +19,6 @@ const SEVERITIES = {
 
 export class LucidDreaming extends Analyser {
 	static override handle = 'lucid'
-	static override dependencies = [
-		'suggestions',
-	]
 
 	@dependency private data!: Data
 	@dependency private suggestions!: Suggestions
