@@ -15,7 +15,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps> {
 	static override contextType = StoreContext
 	declare context: ContextType<typeof StoreContext>
 
-	@observable componentError: Error | undefined
+	@observable accessor componentError: Error | undefined
 
 	@action
 	override componentDidCatch(error: Error, errorInfo: ErrorInfo) {

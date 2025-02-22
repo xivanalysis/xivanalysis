@@ -23,7 +23,7 @@ interface ErrorResponse {
 }
 
 export class ReportStore {
-	@observable report?: PossiblyLoadedReport
+	@observable accessor report: PossiblyLoadedReport | undefined
 
 	@action
 	clearReport() {

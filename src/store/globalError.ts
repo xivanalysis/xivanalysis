@@ -2,7 +2,7 @@ import {GlobalError} from 'errors'
 import {action, observable} from 'mobx'
 
 export class GlobalErrorStore {
-	@observable error?: GlobalError
+	@observable accessor error: GlobalError | undefined
 
 	@action
 	setGlobalError(error: GlobalError) {

@@ -17,9 +17,9 @@ function getGameLanguage(language: Language): Language {
 }
 
 export class I18nStore {
-	@observable siteLanguage: Language = getUserLanguage()
-	@observable gameSet: boolean = false
-	@observable overlay: boolean = false
+	@observable accessor siteLanguage: Language = getUserLanguage()
+	@observable accessor gameSet: boolean = false
+	@observable accessor overlay: boolean = false
 
 	/**
 	 * Get the raw game language as defined by the user or derived from site-wide language.
@@ -27,7 +27,7 @@ export class I18nStore {
 	 * @deprecated **DO NOT USE DIRECTLY:** this property exists for compatibility with
 	 * localstorage user configuration. Use `safeGameLanguage` instead.
 	 */
-	@observable gameLanguage: Language = getGameLanguage(this.siteLanguage)
+	@observable accessor gameLanguage: Language = getGameLanguage(this.siteLanguage)
 
 	/**
 	 * Get the user-specified game language if valid, falling back to English if

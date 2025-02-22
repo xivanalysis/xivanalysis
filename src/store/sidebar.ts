@@ -2,7 +2,7 @@ import {observable, action} from 'mobx'
 import {RefObject} from 'react'
 
 export class SidebarStore {
-	@observable.ref reportLinkRef?: RefObject<HTMLDivElement>
+	@observable.ref accessor reportLinkRef: RefObject<HTMLDivElement> | undefined
 
 	// TODO: Migrate breadcrumb state in here
 

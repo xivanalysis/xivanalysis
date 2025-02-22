@@ -11,7 +11,7 @@ import styles from './I18nOverlay.module.css'
 
 @observer
 class I18nErrorBoundary extends Component {
-	@observable.ref didError = false
+	@observable.ref accessor didError = false
 
 	@action
 	componentDidCatch() {

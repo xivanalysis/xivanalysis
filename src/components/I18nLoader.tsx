@@ -28,9 +28,9 @@ export class I18nLoader extends Component<I18nLoaderProps> {
 	static override contextType = StoreContext
 	declare context: ContextType<typeof StoreContext>
 
-	@observable oldLanguage: Language | null = null
-	@observable catalogs: Partial<Record<Language, Catalog>> = {}
-	@observable errored = false
+	@observable accessor oldLanguage: Language | null = null
+	@observable accessor catalogs: Partial<Record<Language, Catalog>> = {}
+	@observable accessor errored = false
 
 	async loadCatalog(language: Language) {
 		const promises = [import(
