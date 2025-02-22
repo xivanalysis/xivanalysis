@@ -1,8 +1,8 @@
 import {Trans} from '@lingui/react'
 import {Language, LANGUAGES} from 'data/LANGUAGES'
 import {computed} from 'mobx'
-import {observer} from 'mobx-react'
-import {Component, ContextType, MouseEvent} from 'react'
+import {Observer} from 'mobx-react'
+import {Component, ContextType,  MouseEvent} from 'react'
 import {Dropdown, DropdownItemProps, Icon, Image} from 'semantic-ui-react'
 import {StoreContext} from 'store'
 import {gameLanguageEditions} from 'store/i18n'
@@ -11,7 +11,6 @@ import styles from './I18nMenu.module.css'
 
 const DEBUG = process.env.NODE_ENV === 'development'
 
-@observer
 export class I18nMenu extends Component {
 	static override contextType = StoreContext
 	declare context: ContextType<typeof StoreContext>
@@ -55,6 +54,10 @@ export class I18nMenu extends Component {
 	}
 
 	override render() {
+		return <Observer children={() => this.renderImpl()}/>
+	}
+
+	renderImpl() {
 		const {i18nStore} = this.context
 		const gameLanguageKey = i18nStore.safeGameLanguage
 		const siteLang = LANGUAGES[i18nStore.siteLanguage]
