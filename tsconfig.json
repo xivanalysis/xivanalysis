@@ -15,7 +15,7 @@
 		"isolatedModules": true,
 
 		"jsx": "preserve",
-		"experimentalDecorators": true,
+		"useDefineForClassFields": true,
 
 		"noErrorTruncation": true,
 
