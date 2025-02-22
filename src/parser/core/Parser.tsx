@@ -11,7 +11,7 @@ import toposort from 'toposort'
 import {extractErrorContext, isDefined, formatDuration} from 'utilities'
 import {Analyser, DisplayMode} from './Analyser'
 import {Dispatcher, DispatcherImpl} from './Dispatcher'
-import {Injectable, MappedDependency} from './Injectable'
+import {Injectable} from './Injectable'
 import {Meta} from './Meta'
 
 export interface Result {
@@ -110,7 +110,7 @@ export class Parser {
 		const nodes = Object.keys(constructors)
 		const edges: Array<[string, string]> = []
 		nodes.forEach(mod => constructors[mod].dependencies.forEach(dep => {
-			edges.push([mod, this.getDepHandle(dep)])
+			edges.push([mod, dep.handle])
 		}))
 
 		// Sort modules to load dependencies first
@@ -165,11 +165,6 @@ export class Parser {
 
 		return ctors
 	}
-
-	private getDepHandle = (dep: string | MappedDependency) =>
-		typeof dep === 'string'
-			? dep
-			: dep.handle
 
 	// -----
 	// Event handling
@@ -261,7 +256,7 @@ export class Parser {
 		// Cascade via dependencies
 		Object.keys(this.container).forEach(key => {
 			const constructor = this.container[key].constructor as typeof Injectable
-			if (constructor.dependencies.some(dep => this.getDepHandle(dep) === mod)) {
+			if (constructor.dependencies.some(dep => dep.handle === mod)) {
 				this._setModuleError(key, new DependencyCascadeError({dependency: mod}))
 			}
 		})
@@ -298,7 +293,7 @@ export class Parser {
 
 			if (constructor && Array.isArray(constructor.dependencies)) {
 				for (const dep of constructor.dependencies) {
-					const handle = this.getDepHandle(dep)
+					const handle = dep.handle
 					if (!visited.has(handle)) {
 						crawler(handle)
 					}

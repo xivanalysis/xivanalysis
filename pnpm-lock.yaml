@@ -104,9 +104,6 @@ importers:
       react-window:
         specifier: ^1.8.6
         version: 1.8.6(react-dom@16.14.0(react@16.14.0))(react@16.14.0)
-      reflect-metadata:
-        specifier: ^0.1.12
-        version: 0.1.13
       semantic-ui-css:
         specifier: ^2.4.0
         version: 2.4.1
@@ -5326,9 +5323,6 @@ packages:
   rechoir@0.7.0:
     resolution: {integrity: sha512-ADsDEH2bvbjltXEP+hTIAmeFekTFK0V2BTxMkok6qILyAJEXV0AFfoWcAq4yfll5VdIMd/RVXq0lR+wQi5ZU3Q==}
     engines: {node: '>= 0.10'}
-
-  reflect-metadata@0.1.13:
-    resolution: {integrity: sha512-Ts1Y/anZELhSsjMcU605fU9RE4Oi3p5ORujwbIKXfWa+0Zxs510Qrmrce5/Jowq3cHSZSJqBjypxmHarc+vEWg==}
 
   reflect.getprototypeof@1.0.10:
     resolution: {integrity: sha512-00o4I+DVrefhv+nX0ulyi3biSHCPDe+yLv5o/p6d/UVlirijB8E16FtfwSAi4g3tcqrQ4lRAqQSoFEZJehYEcw==}
@@ -12565,8 +12559,6 @@ snapshots:
   rechoir@0.7.0:
     dependencies:
       resolve: 1.22.10
-
-  reflect-metadata@0.1.13: {}
 
   reflect.getprototypeof@1.0.10:
     dependencies:

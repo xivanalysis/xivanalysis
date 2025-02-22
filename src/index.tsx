@@ -1,10 +1,15 @@
 import 'intersection-observer'
 import 'whatwg-fetch'
-import 'reflect-metadata'
 
 import * as Sentry from '@sentry/browser'
 import ReactDOM from 'react-dom'
 import {Root} from './Root'
+
+if (!Object.hasOwn(Symbol, 'metadata')) {
+	Object.defineProperty(Symbol, 'metadata', {
+		value: Symbol.for('Symbol.metadata'),
+	})
+}
 
 // If we're in prod, boot up sentry
 const {NODE_ENV, REACT_APP_VERSION, REACT_APP_SENTRY_DSN} = process.env
