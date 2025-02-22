@@ -93,9 +93,17 @@ export const Tooltip = memo(function Tooltip({
 	)
 })
 
+function columnShim(...args: Parameters<typeof column>) {
+	const decorator = column(...args)
+	return function(_: undefined, {name}: ClassFieldDecoratorContext) {
+		const target = {constructor: LabelData} as unknown as LabelData
+		decorator(target, name as string)
+	}
+}
+
 class LabelData extends Data {
-	@column('Name') name!: string
-	@column('Icon', {type: 'icon'}) icon!: string
+	@columnShim('Name') name!: string
+	@columnShim('Icon', {type: 'icon'}) icon!: string
 }
 
 export interface LabelProps extends BaseTooltipProps {
