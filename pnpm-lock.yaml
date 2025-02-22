@@ -69,10 +69,10 @@ importers:
         specifier: ^4.17.13
         version: 4.17.21
       mobx:
-        specifier: ^5.10.1
+        specifier: ^5.15.7
         version: 5.15.7
       mobx-react:
-        specifier: ^6.1.3
+        specifier: ^6.3.1
         version: 6.3.1(mobx@5.15.7)(react-dom@16.14.0(react@16.14.0))(react@16.14.0)
       react:
         specifier: ^16.14.0
