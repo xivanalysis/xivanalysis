@@ -69,11 +69,11 @@ importers:
         specifier: ^4.17.13
         version: 4.17.21
       mobx:
-        specifier: ^5.15.7
-        version: 5.15.7
+        specifier: ^6.13.6
+        version: 6.13.6
       mobx-react:
-        specifier: ^6.3.1
-        version: 6.3.1(mobx@5.15.7)(react-dom@16.14.0(react@16.14.0))(react@16.14.0)
+        specifier: ^9.2.0
+        version: 9.2.0(mobx@6.13.6)(react-dom@16.14.0(react@16.14.0))(react@16.14.0)
       react:
         specifier: ^16.14.0
         version: 16.14.0
@@ -4466,11 +4466,11 @@ packages:
     engines: {node: '>=10'}
     hasBin: true
 
-  mobx-react-lite@2.2.2:
-    resolution: {integrity: sha512-2SlXALHIkyUPDsV4VTKVR9DW7K3Ksh1aaIv3NrNJygTbhXe2A9GrcKHZ2ovIiOp/BXilOcTYemfHHZubP431dg==}
+  mobx-react-lite@4.1.0:
+    resolution: {integrity: sha512-QEP10dpHHBeQNv1pks3WnHRCem2Zp636lq54M2nKO2Sarr13pL4u6diQXf65yzXUn0mkk18SyIDCm9UOJYTi1w==}
     peerDependencies:
-      mobx: ^4.0.0 || ^5.0.0
-      react: ^16.8.0
+      mobx: ^6.9.0
+      react: ^16.8.0 || ^17 || ^18 || ^19
       react-dom: '*'
       react-native: '*'
     peerDependenciesMeta:
@@ -4479,14 +4479,21 @@ packages:
       react-native:
         optional: true
 
-  mobx-react@6.3.1:
-    resolution: {integrity: sha512-IOxdJGnRSNSJrL2uGpWO5w9JH5q5HoxEqwOF4gye1gmZYdjoYkkMzSGMDnRCUpN/BNzZcFoMdHXrjvkwO7KgaQ==}
+  mobx-react@9.2.0:
+    resolution: {integrity: sha512-dkGWCx+S0/1mfiuFfHRH8D9cplmwhxOV5CkXMp38u6rQGG2Pv3FWYztS0M7ncR6TyPRQKaTG/pnitInoYE9Vrw==}
     peerDependencies:
-      mobx: ^5.15.4 || ^4.15.4
-      react: ^16.8.0 || 16.9.0-alpha.0
+      mobx: ^6.9.0
+      react: ^16.8.0 || ^17 || ^18 || ^19
+      react-dom: '*'
+      react-native: '*'
+    peerDependenciesMeta:
+      react-dom:
+        optional: true
+      react-native:
+        optional: true
 
-  mobx@5.15.7:
-    resolution: {integrity: sha512-wyM3FghTkhmC+hQjyPGGFdpehrcX1KOXsDuERhfK2YbJemkUhEB+6wzEN639T21onxlfYBmriA1PFnvxTUhcKw==}
+  mobx@6.13.6:
+    resolution: {integrity: sha512-r19KNV0uBN4b+ER8Z0gA4y+MzDYIQ2SvOmn3fUrqPnWXdQfakd9yfbPBDBF/p5I+bd3N5Rk1fHONIvMay+bJGA==}
 
   moment@2.29.1:
     resolution: {integrity: sha512-kHmoybcPV8Sqy59DwNDY3Jefr64lK/by/da0ViFcuA4DH0vQg5Q6Ze5VimxkfQNSC+Mls/Kx53s7TjP1RhFEDQ==}
@@ -6201,6 +6208,11 @@ packages:
 
   url@0.11.0:
     resolution: {integrity: sha512-kbailJa29QrtXnxgq+DdCEGlbTeYM2eJUxsz6vjZavrCYPMIFHMKQmSKYAIuUK2i7hgPm28a8piX5NTUtM/LKQ==}
+
+  use-sync-external-store@1.4.0:
+    resolution: {integrity: sha512-9WXSPC5fMv61vaupRkCKCxsPxBocVnwakBEkMIHHpkTTg6icbJtg6jzgtLDm4bl3cSHAca52rYWih0k4K3PfHw==}
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
 
   use@3.1.1:
     resolution: {integrity: sha512-cwESVXlO3url9YWlFW/TA9cshCEhtu7IKJ/p5soJ/gGpj7vbvFrAY/eIioQ6Dw23KjZhYgiIo8HOs1nQ2vr/oQ==}
@@ -11657,23 +11669,23 @@ snapshots:
 
   mkdirp@1.0.4: {}
 
-  mobx-react-lite@2.2.2(mobx@5.15.7)(react-dom@16.14.0(react@16.14.0))(react@16.14.0):
+  mobx-react-lite@4.1.0(mobx@6.13.6)(react-dom@16.14.0(react@16.14.0))(react@16.14.0):
     dependencies:
-      mobx: 5.15.7
+      mobx: 6.13.6
+      react: 16.14.0
+      use-sync-external-store: 1.4.0(react@16.14.0)
+    optionalDependencies:
+      react-dom: 16.14.0(react@16.14.0)
+
+  mobx-react@9.2.0(mobx@6.13.6)(react-dom@16.14.0(react@16.14.0))(react@16.14.0):
+    dependencies:
+      mobx: 6.13.6
+      mobx-react-lite: 4.1.0(mobx@6.13.6)(react-dom@16.14.0(react@16.14.0))(react@16.14.0)
       react: 16.14.0
     optionalDependencies:
       react-dom: 16.14.0(react@16.14.0)
 
-  mobx-react@6.3.1(mobx@5.15.7)(react-dom@16.14.0(react@16.14.0))(react@16.14.0):
-    dependencies:
-      mobx: 5.15.7
-      mobx-react-lite: 2.2.2(mobx@5.15.7)(react-dom@16.14.0(react@16.14.0))(react@16.14.0)
-      react: 16.14.0
-    transitivePeerDependencies:
-      - react-dom
-      - react-native
-
-  mobx@5.15.7: {}
+  mobx@6.13.6: {}
 
   moment@2.29.1: {}
 
@@ -13562,6 +13574,10 @@ snapshots:
     dependencies:
       punycode: 1.3.2
       querystring: 0.2.0
+
+  use-sync-external-store@1.4.0(react@16.14.0):
+    dependencies:
+      react: 16.14.0
 
   use@3.1.1: {}
 
