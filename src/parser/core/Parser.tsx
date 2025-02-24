@@ -147,7 +147,7 @@ export class Parser {
 		})
 	}
 
-	private async loadModuleConstructors() {
+	private async loadModuleConstructors(): Promise<Record<string, typeof Injectable>> {
 		let allCtors: ReadonlyArray<typeof Injectable>
 		try {
 			allCtors = await this.meta.getModules()
@@ -162,6 +162,7 @@ export class Parser {
 			localStorage.setItem(LS_KEY_LAST_FAILING_VERSION, XIVA_VERSION)
 			if (lastVersion !== XIVA_VERSION) {
 				window.location.reload()
+				return {}
 			}
 
 			// We're at the same version as the last failure, fail out with an error.
