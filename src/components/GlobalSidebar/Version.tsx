@@ -1,22 +1,18 @@
+import {XIVA_VERSION, XIVA_GIT_COMMIT, XIVA_GIT_BRANCH} from 'env'
 import {Popup} from 'semantic-ui-react'
 import styles from './Version.module.css'
 
-// Version info
-const version = process.env.REACT_APP_VERSION || 'DEV'
-const gitCommit = process.env.REACT_APP_GIT_COMMIT || 'DEV'
-const gitBranch = process.env.REACT_APP_GIT_BRANCH || 'DEV'
-
 export const VersionInfo = () => (
 	<Popup
-		trigger={<span className={styles.version}>#{version}</span>}
+		trigger={<span className={styles.version}>#{XIVA_VERSION}</span>}
 		position="bottom center"
 	>
 		<Popup.Content>
 			<dl className={styles.versionInfo}>
 				<dt>Commit</dt>
-				<dd>{gitCommit}</dd>
+				<dd>{XIVA_GIT_COMMIT}</dd>
 				<dt>Branch</dt>
-				<dd>{gitBranch}</dd>
+				<dd>{XIVA_GIT_BRANCH}</dd>
 			</dl>
 		</Popup.Content>
 	</Popup>
