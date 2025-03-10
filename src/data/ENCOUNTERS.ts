@@ -10,6 +10,7 @@ export interface Encounter {
 // instructions on how to find encounter IDs for each report source.
 export const ENCOUNTERS = ensureRecord<Encounter>()({
 	TRASH: {ids: {legacyFflogs: '0'}},
+	FRU: {ids: {legacyFflogs: '1079'}},
 })
 
 export type EncounterKey = keyof typeof ENCOUNTERS
