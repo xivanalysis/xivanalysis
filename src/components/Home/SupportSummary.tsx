@@ -17,8 +17,10 @@ interface RoleData {
 
 export class SupportSummary extends Component {
 	override render() {
+		const nowEpoch = Date.now() / 1000
 		const maxPatch = Object.entries(PATCHES)
 			.map(patch => ({name: patch[0], date: patch[1].date[GameEdition.GLOBAL]}))
+			.filter((patch) => patch.date <= nowEpoch)
 			.sort((a, b) => b.date - a.date)[0].name
 		const coreMeta = AVAILABLE_MODULES.CORE
 		const coreTo = coreMeta.supportedPatches?.to ?? FALLBACK_KEY
