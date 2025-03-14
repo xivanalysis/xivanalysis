@@ -79,6 +79,11 @@ export const PATCHES = ensureRecord<PatchInfo>()({
 			[GameEdition.KOREAN]: 1742284800, // 18/03/25 08:00:00 GMT
 		},
 	},
+	'7.2': {
+		date: {
+			[GameEdition.GLOBAL]: 1742889600, // 25/03/25 8:00:00 GMT
+		},
+	},
 })
 
 export type PatchNumber = keyof typeof PATCHES
