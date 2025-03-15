@@ -47,8 +47,9 @@ export class Combos extends CoreCombos {
 		if (action.breaksCombo && this.lastAction != null) {
 			if (!super.checkExpiredCombo(event)) { // If the combo was not expired, it was broken
 				this.recordBrokenCombo({timestamp: event.timestamp, cause: {type: 'action', action: event.action}})
+			} else {
+				this.recordExpiredCombo({timestamp: event.timestamp, cause: {type: 'action', action: event.action}})
 			}
-			this.recordExpiredCombo({timestamp: event.timestamp, cause: {type: 'action', action: event.action}})
 		}
 	}
 }
