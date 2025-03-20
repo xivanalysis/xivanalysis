@@ -373,11 +373,14 @@ export class Gauge extends CoreGauge {
 		case this.data.actions.PARADOX.id:
 			// Add a stack for whichever stance is active
 			// Because it was physically impossible to cast UI Paradox before patch 7.05, we don't need an extra patch level check here
-			if (this.astralUmbralGauge.getCountAt(UMBRAL_ICE_HANDLE) !== 0) {
-				this.onGainUmbralIceStacks(1)
-			}
-			if (this.astralUmbralGauge.getCountAt(ASTRAL_FIRE_HANDLE) !== 0) {
-				this.onGainAstralFireStacks(1)
+			// And now I'm eating my words because in patch 7.2 Paradox doesn't grant stacks...
+			if (this.parser.patch.before('7.2')) {
+				if (this.astralUmbralGauge.getCountAt(UMBRAL_ICE_HANDLE) !== 0) {
+					this.onGainUmbralIceStacks(1)
+				}
+				if (this.astralUmbralGauge.getCountAt(ASTRAL_FIRE_HANDLE) !== 0) {
+					this.onGainAstralFireStacks(1)
+				}
 			}
 			break
 		}
