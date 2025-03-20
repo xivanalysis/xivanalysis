@@ -33,6 +33,27 @@ export const patch720: Layer<ActionRoot> = {
 		},
 		PREFULGENCE: {
 			potency: 1000,
+		},		// BLM Cast time changes
+		FLARE_STAR: {
+			castTime: 2000,
+		},
+		FIRE_IV: {
+			castTime: 2000,
+		},
+		FIRE_I: {
+			castTime: 2000,
+		},
+		BLIZZARD_IV: {
+			castTime: 2000,
+		},
+		BLIZZARD_I: {
+			castTime: 2000,
+		},
+		FLARE: {
+			castTime: 2000,
+		},
+		FREEZE: {
+			castTime: 2000,
 		},
 	},
 }
