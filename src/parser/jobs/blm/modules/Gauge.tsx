@@ -496,7 +496,6 @@ export class Gauge extends CoreGauge {
 			this.umbralIceTimer.start()
 			this.astralUmbralGauge.generate(UMBRAL_ICE_HANDLE, stackCount)
 
-			this.paradoxGauge.reset()
 			this.astralSoulGauge.reset()
 		}
 	}
