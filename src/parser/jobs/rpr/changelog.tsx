@@ -1,4 +1,4 @@
-import { DataLink } from 'components/ui/DbLink'
+import {DataLink} from 'components/ui/DbLink'
 import {CONTRIBUTORS} from 'data/CONTRIBUTORS'
 
 export const changelog = [
