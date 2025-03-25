@@ -1,4 +1,3 @@
-import {date} from '@lingui/macro'
 import {DataLink} from 'components/ui/DbLink'
 import {CONTRIBUTORS} from 'data/CONTRIBUTORS'
 
