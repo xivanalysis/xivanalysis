@@ -27,5 +27,12 @@ export const patch720: Layer<ActionRoot> = {
 				bonusModifiers: [BonusModifier.COMBO],
 			}],
 		},
+		//RDM
+		VICE_OF_THORNS: {
+			potency: 800,
+		},
+		PREFULGENCE: {
+			potency: 1000,
+		},
 	},
 }
