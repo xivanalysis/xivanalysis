@@ -10,7 +10,7 @@ export class AoE extends AoEUsages {
 		{
 			aoeAction: this.data.actions.SPINNING_SCYTHE,
 			stActions: [this.data.actions.SLICE],
-			minTargets: 3,
+			minTargets: 4,
 		}, {
 			aoeAction: this.data.actions.SOUL_SCYTHE,
 			stActions: [this.data.actions.SOUL_SLICE],
@@ -33,7 +33,7 @@ export class AoE extends AoEUsages {
 		{
 			aoeAction: this.data.actions.EXECUTIONERS_GUILLOTINE,
 			stActions: [this.data.actions.EXECUTIONERS_GALLOWS, this.data.actions.EXECUTIONERS_GIBBET],
-			minTargets: 3,
+			minTargets: 4,
 		},
 		{
 			aoeAction: this.data.actions.LEMURES_SCYTHE,
