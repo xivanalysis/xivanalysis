@@ -35,13 +35,13 @@ export const WHM = ensureActions({
 	},
 	LITURGY_OF_THE_BELL_ON_EXPIRY: {
 		id: 25864,
-		name: 'Liturgy of the Bell',
+		name: 'Liturgy of the Bell (Expiring)',
 		icon: iconUrl(2649),
 	},
 
 	LITURGY_OF_THE_BELL_ON_DAMAGE: {
 		id: 25863,
-		name: 'Liturgy of the Bell',
+		name: 'Liturgy of the Bell (On Damage)',
 		icon: iconUrl(2649),
 	},
 
