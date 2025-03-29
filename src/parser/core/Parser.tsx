@@ -3,6 +3,7 @@ import * as Sentry from '@sentry/browser'
 import {ResultSegment} from 'components/ReportFlow/Analyse/ResultSegment'
 import {ErrorMessage} from 'components/ui/ErrorMessage'
 import {getReportPatch, Patch} from 'data/PATCHES'
+import {XIVA_VERSION} from 'env'
 import {DependencyCascadeError, ModulesNotFoundError} from 'errors'
 import {Event} from 'event'
 import {ReactNode} from 'react'
@@ -13,6 +14,8 @@ import {Analyser, DisplayMode} from './Analyser'
 import {Dispatcher, DispatcherImpl} from './Dispatcher'
 import {Injectable} from './Injectable'
 import {Meta} from './Meta'
+
+const LS_KEY_LAST_FAILING_VERSION = 'xiva.lastFailingVersion'
 
 export interface Result {
 	i18n_id?: string
@@ -144,8 +147,7 @@ export class Parser {
 		})
 	}
 
-	private async loadModuleConstructors() {
-		// If this throws, then there was probably a deploy between page load and this call. Tell them to refresh.
+	private async loadModuleConstructors(): Promise<Record<string, typeof Injectable>> {
 		let allCtors: ReadonlyArray<typeof Injectable>
 		try {
 			allCtors = await this.meta.getModules()
@@ -153,6 +155,19 @@ export class Parser {
 			if (process.env.NODE_ENV === 'development') {
 				throw error
 			}
+
+			// If this is the first time we've failed on this version, try to refresh
+			// - there may have been a deploy between page load and this call.
+			const lastVersion = localStorage.getItem(LS_KEY_LAST_FAILING_VERSION)
+			localStorage.setItem(LS_KEY_LAST_FAILING_VERSION, XIVA_VERSION)
+			if (lastVersion !== XIVA_VERSION) {
+				window.location.reload()
+				return {}
+			}
+
+			// We're at the same version as the last failure, fail out with an error.
+			// We're still asking for a refresh in the error; as the programmatic one
+			// above _may_ not be enough.
 			throw new ModulesNotFoundError()
 		}
 

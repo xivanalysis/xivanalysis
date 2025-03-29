@@ -3,6 +3,11 @@ import {CONTRIBUTORS} from 'data/CONTRIBUTORS'
 
 export const changelog = [
 	{
+		date: new Date('2025-03-24'),
+		Changes: () => <>SAM 7.2 Support added. <DataLink action="HISSATSU_GUREN"/> breakpoint increased to 3 from 2.</>,
+		contributors: [CONTRIBUTORS.RYAN],
+	},
+	{
 		date: new Date('2025-01-19'),
 		Changes: () => <>Fixed the spelling of <DataLink action="TENGENTSU"/>.</>,
 		contributors: [CONTRIBUTORS.RYAN],

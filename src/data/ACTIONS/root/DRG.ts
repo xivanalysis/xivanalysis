@@ -69,6 +69,13 @@ export const DRG = ensureActions({
 		combo: {
 			from: [78, 36954],
 		},
+		potencies: [{
+			value: 140,
+			bonusModifiers: [],
+		}, {
+			value: 440,
+			bonusModifiers: [BonusModifier.COMBO],
+		}],
 	},
 
 	DISEMBOWEL: {
