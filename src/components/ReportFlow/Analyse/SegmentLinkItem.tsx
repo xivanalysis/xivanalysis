@@ -18,7 +18,11 @@ export function SegmentLinkItem({result, index}: Props) {
 			)}
 			onClick={() => scrollToId(index)}
 		>
-			<NormalisedMessage message={result.name} id={result.i18n_id}/>
+			{result.name != null ? (
+				<NormalisedMessage message={result.name}/>
+			) : (
+				result.handle
+			)}
 		</div>
 	)}</Consumer>
 }

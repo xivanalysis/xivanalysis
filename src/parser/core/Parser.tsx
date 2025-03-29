@@ -18,9 +18,8 @@ import {Meta} from './Meta'
 const LS_KEY_LAST_FAILING_VERSION = 'xiva.lastFailingVersion'
 
 export interface Result {
-	i18n_id?: string
 	handle: string
-	name: string | MessageDescriptor
+	name?: MessageDescriptor
 	mode: DisplayMode
 	order: number
 	markup: ReactNode

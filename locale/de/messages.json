@@ -331,6 +331,7 @@
   "core.dummy.broken-log": "",
   "core.dummy.title": "Trainingspuppe",
   "core.error.unknown": "",
+  "core.events-view.title": "",
   "core.gauge.title": "Balken",
   "core.gcd.estimate-help.fflogs": "",
   "core.gcd.estimated-gcd": "Geschätzte globale Abklingzeit",

@@ -331,6 +331,7 @@
   "core.dummy.broken-log": "One or more actors in this pull appear to be striking dummies. The behaviour of dummy health pools breaks a number of assumptions made by xivanalysis, which can lead to subtly incorrect results.",
   "core.dummy.title": "Striking Dummy",
   "core.error.unknown": "xivanalysis encountered an unknown error. If this issue persists, let us know on Discord.",
+  "core.events-view.title": "Events View",
   "core.gauge.title": "Gauge",
   "core.gcd.estimate-help.fflogs": "Precise attribute values are only available from FF Logs for the player who logged the report in ACT.",
   "core.gcd.estimated-gcd": "Estimated GCD",

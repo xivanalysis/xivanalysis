@@ -331,6 +331,7 @@
   "core.dummy.broken-log": "レポートに一つかそれ以上のターゲットは木人らしいです。木人のHPはxivanalysisの仮定ルールと一致していませんので、計算は間違う可能性があります。",
   "core.dummy.title": "木人",
   "core.error.unknown": "xivanalysis で不明なエラーが発生しました。 この問題が解決しない場合は、Discord でお知らせください。",
+  "core.events-view.title": "",
   "core.gauge.title": "ゲージ",
   "core.gcd.estimate-help.fflogs": "正確な値は、ACT でレポートを記録したプレイヤーの FF Logsからのみ入手できます。",
   "core.gcd.estimated-gcd": "推定GCD",

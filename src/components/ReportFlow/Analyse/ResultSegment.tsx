@@ -104,7 +104,12 @@ export class ResultSegment extends PureComponent<Props, State> implements Scroll
 		}
 
 		const contents = <>
-			<Header><NormalisedMessage message={result.name} id={result.i18n_id}/></Header>
+			<Header>
+				{result.name != null
+					? <NormalisedMessage message={result.name}/>
+					: result.handle
+				}
+			</Header>
 			<div>{result.markup}</div>
 		</>
 

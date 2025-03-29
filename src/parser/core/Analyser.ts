@@ -51,19 +51,8 @@ const buildFilterPredicate = <T extends Event>(filter: Partial<Event>) =>
 export type AnalyserOptions = ConstructorParameters<typeof Analyser>
 
 export class Analyser extends Injectable {
-	private static _title?: string | MessageDescriptor
-	/**
-	 * Title displayed above analysis output, and in the sidebar. If omitted, a
-	 * title cased version of the handle will be used.
-	 */
-	static get title() {
-		return this._title != null
-			? this._title
-			: _.startCase(this.handle)
-	}
-	static set title(value) {
-		this._title = value
-	}
+	/** Title displayed above analysis output, and in the sidebar. */
+	static title?: MessageDescriptor
 
 	/**
 	 * Value used to control the order in which output is displayed in the results
