@@ -1,4 +1,4 @@
-import {t} from '@lingui/macro'
+import {defineMessage} from '@lingui/macro'
 import {Trans} from '@lingui/react'
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
 import {TransMarkdown} from 'components/ui/TransMarkdown'
@@ -162,7 +162,7 @@ export class TrackedOverheal {
 
 export class Overheal extends Analyser {
 	static override handle: string = 'overheal'
-	static override title = t('core.overheal.title')`Overheal`
+	static override title = defineMessage({id: 'core.overheal.title', message: 'Overheal'})
 	static override displayOrder = DISPLAY_ORDER.DEFENSIVES
 	static override debug = false
 

@@ -1,4 +1,4 @@
-import {t} from '@lingui/macro'
+import {defineMessage} from '@lingui/macro'
 import {Trans} from '@lingui/react'
 import {ActionLink} from 'components/ui/DbLink'
 import {Action} from 'data/ACTIONS'
@@ -68,7 +68,7 @@ const DEFAULT_ALLOWED_AVERAGE_DOWNTIME = 1250
 
 export abstract class CooldownDowntime extends Analyser {
 	static override handle = 'cooldownDowntime'
-	static override title = t('core.cooldownDowntime.title')`Cooldown Downtime`
+	static override title = defineMessage({id: 'core.cooldownDowntime.title', message: 'Cooldown Downtime'})
 	static override debug = false
 
 	@dependency protected data!: Data

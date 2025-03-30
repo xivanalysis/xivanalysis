@@ -1,4 +1,4 @@
-import {t} from '@lingui/macro'
+import {defineMessage} from '@lingui/macro'
 import {Trans} from '@lingui/react'
 import {ActionLink} from 'components/ui/DbLink'
 import {dependency} from 'parser/core/Injectable'
@@ -64,7 +64,7 @@ class BloodfestEvaluator extends NotesEvaluator {
 
 export class NoMercy extends BuffWindow {
 	static override handle = 'nomercy'
-	static override title = t('gnb.nomercy.title')`No Mercy Windows`
+	static override title = defineMessage({id: 'gnb.nomercy.title', message: 'No Mercy Windows'})
 	static override displayOrder = DISPLAY_ORDER.NO_MERCY
 
 	@dependency globalCooldown!: GlobalCooldown

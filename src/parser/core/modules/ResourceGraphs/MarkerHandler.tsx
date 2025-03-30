@@ -1,4 +1,4 @@
-import {NumberFormat, Trans} from '@lingui/react'
+import {Trans, useLingui} from '@lingui/react'
 import {MouseEventHandler, ReactNode, useCallback, useState} from 'react'
 import {createPortal} from 'react-dom'
 import {ResourceDatum, ResourceMeta} from './ResourceGraphs'
@@ -81,6 +81,15 @@ export function MarkerHandler(props: MarkerHandlerProps) {
 			)}
 		</div>
 	)
+}
+
+type NumberFormatProps = {
+	value: number
+}
+
+function NumberFormat({value}: NumberFormatProps) {
+	const {i18n} = useLingui()
+	return <>{i18n.number(value)}</>
 }
 
 interface MarkerProps extends MarkerPositionData {

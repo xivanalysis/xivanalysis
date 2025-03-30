@@ -1,4 +1,4 @@
-import {t} from '@lingui/macro'
+import {defineMessage} from '@lingui/macro'
 import {Trans} from '@lingui/react'
 import {DataLink} from 'components/ui/DbLink'
 import {Event, Events} from 'event'
@@ -24,7 +24,7 @@ const BASE_GCDS_PER_WINDOW = 8
 
 export class Divination extends RaidBuffWindow {
 	static override handle = 'Divination'
-	static override title = t('ast.divination.title')`Divination`
+	static override title = defineMessage({id: 'ast.divination.title', message: 'Divination'})
 	static override displayOrder = DISPLAY_ORDER.DIVINATION
 
 	@dependency private globalCooldown!: GlobalCooldown

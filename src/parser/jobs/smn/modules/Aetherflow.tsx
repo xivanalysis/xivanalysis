@@ -1,5 +1,4 @@
-import {t} from '@lingui/macro'
-import {Plural, Trans} from '@lingui/react'
+import {defineMessage, Plural, Trans} from '@lingui/macro'
 import {ActionLink} from 'components/ui/DbLink'
 import {ActionKey} from 'data/ACTIONS'
 import {Event, Events} from 'event'
@@ -37,7 +36,7 @@ const FILLER_CASTS: ActionKey[] = [
 
 export class Aetherflow extends Analyser {
 	static override handle = 'aetherflow'
-	static override title = t('smn.aetherflow.title')`Aetherflow`
+	static override title = defineMessage({id: 'smn.aetherflow.title', message: 'Aetherflow'})
 
 	@dependency private data!: Data
 	@dependency private suggestions!: Suggestions

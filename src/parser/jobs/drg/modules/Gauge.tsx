@@ -1,5 +1,4 @@
-import {t} from '@lingui/macro'
-import {Trans, Plural} from '@lingui/react'
+import {Trans, Plural, defineMessage} from '@lingui/macro'
 import Color from 'color'
 import {DataLink} from 'components/ui/DbLink'
 import {ActionKey} from 'data/ACTIONS'
@@ -26,7 +25,7 @@ const FMF_GENERATORS: ActionKey[] = [
 // todo:
 // - check how this handles situations where drg carried over a fmf stack
 export class Gauge extends CoreGauge {
-	static override title = t('drg.fmf-gauge.title')`Firstminds' Focus`
+	static override title = defineMessage({id: 'drg.fmf-gauge.title', message: 'Firstminds\' Focus'})
 
 	@dependency private suggestions!: Suggestions
 

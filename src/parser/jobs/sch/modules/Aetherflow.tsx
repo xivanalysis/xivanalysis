@@ -1,4 +1,4 @@
-import {t} from '@lingui/macro'
+import {defineMessage} from '@lingui/macro'
 import {Trans} from '@lingui/react'
 import {ActionLink} from 'components/ui/DbLink'
 import {Event, Events} from 'event'
@@ -12,7 +12,7 @@ import {Button, Grid, Table} from 'semantic-ui-react'
 
 export class Aetherflow extends Analyser {
 	static override handle = 'aetherflow'
-	static override title = t('sch.aetherflow.title')`Aetherflow`
+	static override title = defineMessage({id: 'sch.aetherflow.title', message: 'Aetherflow'})
 
 	private recitationActive: boolean = false
 	private aetherflowWindows: AetherflowWindow[] = []

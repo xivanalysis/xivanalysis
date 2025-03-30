@@ -1,4 +1,4 @@
-import {t} from '@lingui/macro'
+import {defineMessage} from '@lingui/macro'
 import {Trans} from '@lingui/react'
 import {ActionLink} from 'components/ui/DbLink'
 import {ActionKey} from 'data/ACTIONS'
@@ -32,7 +32,7 @@ class DriftWindow {
 export class Drift extends Analyser {
 	static override debug = false
 	static override handle = 'drift'
-	static override title = t('rpr.drift.title')`Gluttony Drift`
+	static override title = defineMessage({id: 'rpr.drift.title', message: 'Gluttony Drift'})
 	static override displayOrder = DISPLAY_ORDER.DRIFT
 
 	@dependency private downtime!: Downtime

@@ -1,4 +1,4 @@
-import {t} from '@lingui/macro'
+import {defineMessage} from '@lingui/macro'
 import {Trans} from '@lingui/react'
 import {ActionLink} from 'components/ui/DbLink'
 import {RotationTargetOutcome} from 'components/ui/RotationTable'
@@ -75,7 +75,7 @@ const unusedOrPositiveOutcome = (actual: number, expected?: number) => {
 
 export class MoonFlute extends BuffWindow {
 	static override handle = 'moonflutes'
-	static override title = t('blu.moonflutes.title')`Moon Flute Windows`
+	static override title = defineMessage({id: 'blu.moonflutes.title', message: 'Moon Flute Windows'})
 	static override displayOrder = DISPLAY_ORDER.MOON_FLUTE
 
 	@dependency globalCooldown!: GlobalCooldown

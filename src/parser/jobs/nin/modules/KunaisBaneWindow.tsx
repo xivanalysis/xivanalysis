@@ -1,5 +1,4 @@
-import {t} from '@lingui/macro'
-import {Trans, Plural} from '@lingui/react'
+import {Trans, Plural, defineMessage} from '@lingui/macro'
 import {ActionLink} from 'components/ui/DbLink'
 import {ActionKey} from 'data/ACTIONS'
 import {dependency} from 'parser/core/Injectable'
@@ -51,7 +50,7 @@ class TCJEvaluator extends NotesEvaluator {
 
 export class KunaisBaneWindow extends BuffWindow {
 	static override handle = 'kbWindow'
-	static override title = t('nin.kb-window.title')`Kunai's Bane Windows`
+	static override title = defineMessage({id: 'nin.kb-window.title', message: 'Kunai\'s Bane Windows'})
 
 	@dependency globalCooldown!: GlobalCooldown
 

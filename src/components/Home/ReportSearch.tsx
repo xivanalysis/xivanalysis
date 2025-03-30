@@ -1,4 +1,4 @@
-import {t} from '@lingui/macro'
+import {defineMessage} from '@lingui/macro'
 import {Trans} from '@lingui/react'
 import {NormalisedMessage} from 'components/ui/NormalisedMessage'
 import {observer} from 'mobx-react'
@@ -9,7 +9,7 @@ import {Button, Input, InputOnChangeData} from 'semantic-ui-react'
 import {parseInput} from './parseInput'
 import styles from './ReportSearch.module.css'
 
-const DEFAULT_REASON = t('core.home.report-search.unknown-query-error')`An unknown error occured when parsing the provided query.`
+const DEFAULT_REASON = defineMessage({id: 'core.home.report-search.unknown-query-error', message: 'An unknown error occured when parsing the provided query.'})
 
 type InputState = {
 	value: string,

@@ -1,4 +1,4 @@
-import {Plural, Trans} from '@lingui/react'
+import {Plural, Trans} from '@lingui/macro'
 import {GlobalCooldown} from '../../GlobalCooldown'
 import {SeverityTiers, TieredSuggestion} from '../../Suggestions/Suggestion'
 import {EvaluatedAction} from '../EvaluatedAction'

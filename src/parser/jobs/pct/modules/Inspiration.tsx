@@ -1,4 +1,4 @@
-import {t} from '@lingui/macro'
+import {defineMessage} from '@lingui/macro'
 import {Event} from 'event'
 import {Analyser} from 'parser/core/Analyser'
 import {filter} from 'parser/core/filter'
@@ -9,7 +9,7 @@ import {HYPERPHANTASIA_SPELLS} from './CommonData'
 
 export class Inspiration extends Analyser {
 	static override handle = 'inspiration'
-	static override title = t('pct.inspiration.title')`Inspiration`
+	static override title = defineMessage({id: 'pct.inspiration.title', message: 'Inspiration'})
 
 	@dependency private data!: Data
 	@dependency private castTime!: CastTime

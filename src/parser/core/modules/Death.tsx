@@ -1,4 +1,4 @@
-import {Plural, Trans} from '@lingui/react'
+import {Plural, Trans} from '@lingui/macro'
 import {Event, Events, FieldsBase, Resource} from 'event'
 import {Actor} from 'report'
 import {Analyser} from '../Analyser'

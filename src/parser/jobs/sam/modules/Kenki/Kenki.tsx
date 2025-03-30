@@ -1,4 +1,4 @@
-import {t} from '@lingui/macro'
+import {defineMessage} from '@lingui/macro'
 import {Trans} from '@lingui/react'
 import Color from 'color'
 import {JOBS} from 'data/JOBS'
@@ -28,7 +28,7 @@ const FADE = 0.25
 const KENKI_COLOR = Color(JOBS.SAMURAI.colour).fade(FADE)
 
 export class Kenki extends CoreGauge {
-	static override title = t('sam.gauge.title')`Kenki Gauge`
+	static override title = defineMessage({id: 'sam.gauge.title', message: 'Kenki Gauge'})
 	static override displayOrder = DISPLAY_ORDER.KENKI
 	@dependency private suggestions!: Suggestions
 

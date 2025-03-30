@@ -1,5 +1,4 @@
-import {t} from '@lingui/macro'
-import {Plural, Trans} from '@lingui/react'
+import {defineMessage, Plural, Trans} from '@lingui/macro'
 import {ActionLink} from 'components/ui/DbLink'
 import {Action, ActionKey} from 'data/ACTIONS'
 import {JOBS, RoleKey} from 'data/JOBS'
@@ -25,7 +24,7 @@ const DEFAULT_FORGIVENESS_MS: number = 800
 
 export class Defensives extends Analyser {
 	static override handle = 'defensives'
-	static override title = t('core.defensives.title')`Defensives`
+	static override title = defineMessage({id: 'core.defensives.title', message: 'Defensives'})
 	static override displayOrder = DISPLAY_ORDER.DEFENSIVES
 
 	@dependency protected cooldowns!:Cooldowns

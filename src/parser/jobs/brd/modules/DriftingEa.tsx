@@ -31,7 +31,7 @@
 //            :Mm:                         :smm-          ./
 //             /                              -+-
 
-import {t} from '@lingui/macro'
+import {defineMessage} from '@lingui/macro'
 import {Trans} from '@lingui/react'
 import {Tooltip, ActionLink} from 'components/ui/DbLink'
 import {Event, Events} from 'event'
@@ -67,7 +67,7 @@ interface ConfirmedDriftWindow extends DriftWindow {
 
 export class DriftingEa extends Analyser {
 	static override handle = 'drifting-ea'
-	static override title = t('brd.drifting-ea.title')`Empyreal Arrow Drift`
+	static override title = defineMessage({id: 'brd.drifting-ea.title', message: 'Empyreal Arrow Drift'})
 	static override displayOrder = DISPLAY_ORDER.DRIFTING_EA
 
 	@dependency private data!: Data

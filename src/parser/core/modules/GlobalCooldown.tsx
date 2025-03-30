@@ -1,5 +1,5 @@
 import {MessageDescriptor} from '@lingui/core'
-import {t} from '@lingui/macro'
+import {defineMessage} from '@lingui/macro'
 import {Trans} from '@lingui/react'
 import {TransMarkdown} from 'components/ui/TransMarkdown'
 import {BASE_GCD} from 'data/CONSTANTS'
@@ -11,8 +11,8 @@ import {SpeedAdjustments} from './SpeedAdjustments'
 import {SimpleStatistic, Statistics} from './Statistics'
 
 const estimateHelp: Record<Report['meta']['source'] | '__all', MessageDescriptor> = {
-	__all: t('core.gcd.no-statistics.v2')`This GCD recast is an *estimate*, and may be incorrect. If it is reporting a GCD recast *longer* than reality, you likely need to focus on keeping your GCD rolling.`,
-	legacyFflogs: t('core.gcd.estimate-help.fflogs')`Precise attribute values are only available from FF Logs for the player who logged the report in ACT.`,
+	__all: defineMessage({id: 'core.gcd.no-statistics.v2', message: 'This GCD recast is an *estimate*, and may be incorrect. If it is reporting a GCD recast *longer* than reality, you likely need to focus on keeping your GCD rolling.'}),
+	legacyFflogs: defineMessage({id: 'core.gcd.estimate-help.fflogs', message: 'Precise attribute values are only available from FF Logs for the player who logged the report in ACT.'}),
 }
 
 export class GlobalCooldown extends Analyser {

@@ -3,7 +3,7 @@
 * e.g. Sun Sign requires Neutral Sect
 */
 
-import {t} from '@lingui/macro'
+import {defineMessage} from '@lingui/macro'
 import {Trans} from '@lingui/react'
 import {ActionLink, DataLink, StatusLink} from 'components/ui/DbLink'
 import {Action} from 'data/ACTIONS'
@@ -42,7 +42,7 @@ interface ActiveDefensives {
 
 export class DroppedDefensives extends Analyser {
 	static override handle = 'droppedDefensives'
-	static override title = t('ast.dropped-defensives.title')`Dropped Defensives`
+	static override title = defineMessage({id: 'ast.dropped-defensives.title', message: 'Dropped Defensives'})
 	static override displayOrder = DISPLAY_ORDER.DROPPED_DEFENSIVES
 
 	@dependency private data!: Data

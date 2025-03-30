@@ -3,8 +3,7 @@
  * https://www.fflogs.com/reports/gWpnqRyfFY1TZm7D#fight=1 (2 dropped Phantom Kamaitachis, 1 dropped Tenri Jindo)
  */
 
-import {t} from '@lingui/macro'
-import {Plural, Trans} from '@lingui/react'
+import {defineMessage, Plural, Trans} from '@lingui/macro'
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
 import {Procs as CoreProcs} from 'parser/core/modules/Procs'
 import {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
@@ -15,7 +14,7 @@ const DROP_SEVERITY = {
 }
 
 export class Procs extends CoreProcs {
-	static override title = t('nin.procs.title')`Dropped Procs`
+	static override title = defineMessage({id: 'nin.procs.title', message: 'Dropped Procs'})
 	override showProcTimelineRow = false
 
 	override trackedProcs = [

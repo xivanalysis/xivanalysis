@@ -1,4 +1,4 @@
-import {Plural, Trans} from '@lingui/react'
+import {Plural, Trans} from '@lingui/macro'
 import {ACTIONS} from 'data/ACTIONS'
 import {Event, Events} from 'event'
 import {filter} from 'parser/core/filter'

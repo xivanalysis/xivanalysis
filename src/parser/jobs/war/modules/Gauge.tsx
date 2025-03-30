@@ -1,4 +1,4 @@
-import {t} from '@lingui/macro'
+import {defineMessage} from '@lingui/macro'
 import {Trans} from '@lingui/react'
 import {Action} from 'data/ACTIONS'
 import {JOBS} from 'data/JOBS'
@@ -17,7 +17,7 @@ const SUGGESTION_TIERS = {
 }
 
 export class Gauge extends CoreGauge {
-	static override title = t('war.gauge.title')`Beast Gauge`
+	static override title = defineMessage({id: 'war.gauge.title', message: 'Beast Gauge'})
 
 	@dependency private actors!: Actors
 	@dependency private suggestions!: Suggestions

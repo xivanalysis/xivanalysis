@@ -1,7 +1,6 @@
 // If you can make it through this entire file without hitting semantic saturation of the word "combo", hats off to you. IT DOESN'T LOOK REAL ANYMORE.
 
-import {t} from '@lingui/macro'
-import {Plural, Trans} from '@lingui/react'
+import {defineMessage, Plural, Trans} from '@lingui/macro'
 import {Rotation} from 'components/ui/Rotation'
 import {ActionCombo} from 'data/ACTIONS/type'
 import {iconUrl} from 'data/icon'
@@ -53,7 +52,7 @@ export interface ComboIssue {
 
 export class Combos extends Analyser {
 	static override handle = 'combos'
-	static override title = t('core.combos.title')`Combo Issues`
+	static override title = defineMessage({id: 'core.combos.title', message: 'Combo Issues'})
 	static override displayOrder = DISPLAY_ORDER.COMBOS
 
 	// This should be redefined by subclassing modules; the default is the basic 'Attack' icon

@@ -1,4 +1,4 @@
-import {t} from '@lingui/macro'
+import {defineMessage} from '@lingui/macro'
 import {Analyser, DisplayMode} from 'parser/core/Analyser'
 import {ComponentType} from 'react'
 import {DISPLAY_ORDER} from '../DISPLAY_ORDER'
@@ -18,7 +18,7 @@ export interface Statistic {
 
 export class Statistics extends Analyser {
 	static override handle = 'statistics'
-	static override title = t('core.statistics.title')`Statistics`
+	static override title = defineMessage({id: 'core.statistics.title', message: 'Statistics'})
 	static override displayOrder = DISPLAY_ORDER.STATISTICS
 	static override displayMode = DisplayMode.RAW
 

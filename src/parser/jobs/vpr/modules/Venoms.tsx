@@ -1,4 +1,4 @@
-import {t} from '@lingui/macro'
+import {defineMessage} from '@lingui/macro'
 import {Trans} from '@lingui/react'
 import {DataLink, StatusLink} from 'components/ui/DbLink'
 import {Status} from 'data/STATUSES'
@@ -9,7 +9,7 @@ import {DISPLAY_ORDER} from './DISPLAY_ORDER'
 
 export class Venoms extends CoreProcs {
 	static override handle = 'venoms'
-	static override title = t('vpr.venoms.title')`oGCD Procs`
+	static override title = defineMessage({id: 'vpr.venoms.title', message: 'oGCD Procs'})
 
 	override ProcGroupLabel = <Trans id="vpr.Venoms.group.label"> oGCD Procs </Trans>
 

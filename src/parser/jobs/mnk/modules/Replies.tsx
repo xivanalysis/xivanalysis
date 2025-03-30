@@ -1,5 +1,4 @@
-import {t} from '@lingui/macro'
-import {Plural, Trans} from '@lingui/react'
+import {defineMessage, Plural, Trans} from '@lingui/macro'
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
 import {Procs} from 'parser/core/modules/Procs'
 import {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
@@ -14,7 +13,7 @@ const WR_DROP_SEVERITY = {
 }
 
 export class Replies extends Procs {
-	static override title = t('mnk.replies.title')`Replies`
+	static override title = defineMessage({id: 'mnk.replies.title', message: 'Replies'})
 	override showProcTimelineRow = false
 
 	override trackedProcs = [

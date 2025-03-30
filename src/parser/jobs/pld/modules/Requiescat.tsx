@@ -1,4 +1,4 @@
-import {t} from '@lingui/macro'
+import {defineMessage} from '@lingui/macro'
 import {Trans} from '@lingui/react'
 import {DataLink} from 'components/ui/DbLink'
 import {ActionKey} from 'data/ACTIONS'
@@ -42,7 +42,7 @@ const REQUIESCAT_ACTIONS: ActionKey[] = [
 
 export class Requiescat extends BuffWindow {
 	static override handle = 'requiescat'
-	static override title = t('pld.requiescat.title')`Requiescat Usage`
+	static override title = defineMessage({id: 'pld.requiescat.title', message: 'Requiescat Usage'})
 
 	@dependency actors!: Actors
 	@dependency downtime!: Downtime

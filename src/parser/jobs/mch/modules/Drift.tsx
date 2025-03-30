@@ -1,4 +1,4 @@
-import {t} from '@lingui/macro'
+import {defineMessage} from '@lingui/macro'
 import {Trans} from '@lingui/react'
 import {ActionLink} from 'components/ui/DbLink'
 import {ActionKey} from 'data/ACTIONS'
@@ -42,7 +42,7 @@ interface ConfirmedDriftWindow extends DriftWindow {
 
 export class Drift extends Analyser {
 	static override handle = 'drift'
-	static override title = t('mch.drift.title')`GCD Drift`
+	static override title = defineMessage({id: 'mch.drift.title', message: 'GCD Drift'})
 
 	@dependency private data!: Data
 	@dependency private downtime!: Downtime

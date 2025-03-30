@@ -1,5 +1,4 @@
-import {t} from '@lingui/macro'
-import {Trans, Plural} from '@lingui/react'
+import {defineMessage, Trans, Plural} from '@lingui/macro'
 import Color from 'color'
 import {ActionLink, DataLink} from 'components/ui/DbLink'
 import {Event, Events} from 'event'
@@ -21,7 +20,7 @@ const COIL_COLOR = Color('#DC1E32') // Red like the Job Gauge to help split serp
 
 export class RattlingCoil extends CoreGauge {
 	static override handle = 'rattlingcoil'
-	static override title = t('vpr.rattlingcoil.title')`Rattling Coil Timeline`
+	static override title = defineMessage({id: 'vpr.rattlingcoil.title', message: 'Rattling Coil Timeline'})
 
 	@dependency private suggestions!: Suggestions
 	@dependency private checklist!: Checklist

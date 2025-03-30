@@ -1,4 +1,4 @@
-import {t} from '@lingui/macro'
+import {defineMessage} from '@lingui/macro'
 import {Trans} from '@lingui/react'
 import Color from 'color'
 import {ActionLink, DataLink} from 'components/ui/DbLink'
@@ -22,7 +22,7 @@ import {Kenki} from './Kenki'
 
 // defining a const message to assign later via markdown
 
-const samWarningMessage = t('sam.sen.rotation-table.disclaimer')` This module labels a "Standard Sen Window" to be a window that with no Sen overwrites that ends on an Iaijutsu. Please consult The Balance Discord and this [Infograph](https://i.imgur.com/C0ryA5F) for more details on looping Samurai gameplay.`
+const samWarningMessage = defineMessage({id: 'sam.sen.rotation-table.disclaimer', message: ' This module labels a "Standard Sen Window" to be a window that with no Sen overwrites that ends on an Iaijutsu. Please consult The Balance Discord and this [Infograph](https://i.imgur.com/C0ryA5F) for more details on looping Samurai gameplay.'})
 
 const KENKI_PER_SEN = 10
 
@@ -99,7 +99,7 @@ class SenState {
 export class Sen extends Analyser {
 	static override displayOrder = DISPLAY_ORDER.SEN
 	static override handle = 'sen'
-	static override title = t('sam.sen.title')`Non-Standard Sen Windows`
+	static override title = defineMessage({id: 'sam.sen.title', message: 'Non-Standard Sen Windows'})
 
 	@dependency private data!: Data
 	@dependency private suggestions!: Suggestions

@@ -1,5 +1,4 @@
-import {t} from '@lingui/macro'
-import {Plural, Trans} from '@lingui/react'
+import {defineMessage, Plural, Trans} from '@lingui/macro'
 import {DataLink} from 'components/ui/DbLink'
 import {Event, Events} from 'event'
 import {Analyser} from 'parser/core/Analyser'
@@ -31,7 +30,7 @@ interface ColdFogWindow {
 
 export class ColdFog extends Analyser {
 	static override handle = 'coldfog'
-	static override title = t('blu.cold_fog.title')`Cold Fog`
+	static override title = defineMessage({id: 'blu.cold_fog.title', message: 'Cold Fog'})
 
 	@dependency private data!: Data
 	@dependency private suggestions!: Suggestions

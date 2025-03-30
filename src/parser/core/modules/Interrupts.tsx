@@ -1,5 +1,5 @@
 import {MessageDescriptor} from '@lingui/core'
-import {t} from '@lingui/macro'
+import {defineMessage} from '@lingui/macro'
 import {Trans} from '@lingui/react'
 import {ActionLink} from 'components/ui/DbLink'
 import {ACTIONS} from 'data/ACTIONS'
@@ -22,7 +22,7 @@ const TIMELINE_UPPER_MOD: number = 30000
 
 export class Interrupts extends Analyser {
 	static override handle: string = 'interrupts'
-	static override title: MessageDescriptor = t('core.interrupts.title')`Interrupted Casts`
+	static override title: MessageDescriptor = defineMessage({id: 'core.interrupts.title', message: 'Interrupted Casts'})
 	static override debug: boolean = false
 
 	@dependency private castTime!: CastTime

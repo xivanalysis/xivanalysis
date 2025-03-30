@@ -1,4 +1,4 @@
-import {t} from '@lingui/macro'
+import {defineMessage} from '@lingui/macro'
 import {Trans} from '@lingui/react'
 import {JOBS} from 'data/JOBS'
 import {Event, Events} from 'event'
@@ -19,7 +19,7 @@ export const MANA_DIFFERENCE_THRESHOLD = 30
 export const MANA_CAP = 100
 
 export class ManaGauge extends CoreGauge {
-	static override title = t('rdm.gauge.title')`Mana Gauge Usage`
+	static override title = defineMessage({id: 'rdm.gauge.title', message: 'Mana Gauge Usage'})
 
 	@dependency private suggestions!: Suggestions
 	@dependency private actors!: Actors

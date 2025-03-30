@@ -1,5 +1,4 @@
-import {t} from '@lingui/macro'
-import {Plural, Trans} from '@lingui/react'
+import {defineMessage, Plural, Trans} from '@lingui/macro'
 import {DataLink} from 'components/ui/DbLink'
 import {Rotation} from 'components/ui/Rotation'
 import {ActionKey} from 'data/ACTIONS'
@@ -27,7 +26,7 @@ const HYPERCHARGE_GCDS: ActionKey[] = [
 
 export class Hypercharge extends Analyser {
 	static override handle = 'hypercharge'
-	static override title = t('mch.hypercharge.title')`Hypercharge Windows`
+	static override title = defineMessage({id: 'mch.hypercharge.title', message: 'Hypercharge Windows'})
 
 	@dependency private data!: Data
 	@dependency private timeline!: Timeline

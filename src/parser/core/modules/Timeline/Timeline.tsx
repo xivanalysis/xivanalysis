@@ -1,4 +1,4 @@
-import {t} from '@lingui/macro'
+import {defineMessage} from '@lingui/macro'
 import {Trans} from '@lingui/react'
 import {Analyser, DisplayMode} from 'parser/core/Analyser'
 import {DISPLAY_ORDER} from '../DISPLAY_ORDER'
@@ -22,7 +22,7 @@ export class Timeline extends Analyser {
 	static override handle = 'timeline'
 	static override displayOrder = DISPLAY_ORDER.TIMELINE
 	static override displayMode = DisplayMode.FULL
-	static override title = t('core.timeline.title')`Timeline`
+	static override title = defineMessage({id: 'core.timeline.title', message: 'Timeline'})
 
 	private setView?: SetViewFn
 

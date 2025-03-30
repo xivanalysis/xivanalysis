@@ -1,4 +1,4 @@
-import {t} from '@lingui/macro'
+import {defineMessage} from '@lingui/macro'
 import {Analyser, DisplayMode} from 'parser/core/Analyser'
 import {DISPLAY_ORDER} from '../DISPLAY_ORDER'
 import {Checklist as ChecklistComponent} from './Component'
@@ -6,7 +6,7 @@ import {Rule} from './Rule'
 
 export class Checklist extends Analyser {
 	static override handle = 'checklist'
-	static override title = t('core.checklist.title')`Checklist`
+	static override title = defineMessage({id: 'core.checklist.title', message: 'Checklist'})
 	static override displayOrder = DISPLAY_ORDER.CHECKLIST
 	static override displayMode = DisplayMode.FULL
 

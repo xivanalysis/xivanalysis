@@ -1,13 +1,13 @@
-import {t, Trans} from '@lingui/macro'
+import {defineMessage, Trans} from '@lingui/macro'
 import {TransMarkdown} from 'components/ui/TransMarkdown'
 import {CONTRIBUTORS, ROLES} from 'data/CONTRIBUTORS'
 import {Meta} from 'parser/core/Meta'
 import {Icon, Message} from 'semantic-ui-react'
 import {changelog} from './changelog'
 
-const description = t('dnc.about.description')`So, you've become a dancer, but you don't know your Jetes from your Pirouettes? This module will help you learn how to Improvise your way to a standing ovation!
+const description = defineMessage({id: 'dnc.about.description', message: `So, you've become a dancer, but you don't know your Jetes from your Pirouettes? This module will help you learn how to Improvise your way to a standing ovation!
 
-The core parts of dancer are proper performance of your dances, preventing your gauges from overcapping, and using your procs. We'll provide suggestions to help you use these to their best effect.`
+The core parts of dancer are proper performance of your dances, preventing your gauges from overcapping, and using your procs. We'll provide suggestions to help you use these to their best effect.`})
 
 export const DANCER = new Meta({
 	modules: () => import('./modules' /* webpackChunkName: "jobs-dnc" */),

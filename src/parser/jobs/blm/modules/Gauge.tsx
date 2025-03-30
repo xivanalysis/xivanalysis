@@ -1,6 +1,5 @@
 //I've heard it's cool to build your own job gauge.
-import {t} from '@lingui/macro'
-import {Trans, Plural} from '@lingui/react'
+import {defineMessage, Trans, Plural} from '@lingui/macro'
 import Color from 'color'
 import {DataLink} from 'components/ui/DbLink'
 import {ActionKey} from 'data/ACTIONS'
@@ -99,7 +98,7 @@ const POLYGLOT_COLOR = Color(JOBS.BLACK_MAGE.colour)
 
 export class Gauge extends CoreGauge {
 	static override handle = 'gauge'
-	static override title = t('blm.gauge.title')`Gauge`
+	static override title = defineMessage({id: 'blm.gauge.title', message: 'Gauge'})
 
 	@dependency private suggestions!: Suggestions
 	@dependency private unableToAct!: UnableToAct

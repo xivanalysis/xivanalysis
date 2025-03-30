@@ -1,4 +1,4 @@
-import {t} from '@lingui/macro'
+import {defineMessage} from '@lingui/macro'
 import {Trans} from '@lingui/react'
 import {Message, Segment} from 'akkd'
 import {ContributorLabel} from 'components/ui/ContributorLabel'
@@ -18,7 +18,7 @@ export class About extends Analyser {
 	static override handle = 'about'
 	static override displayOrder = DISPLAY_ORDER.ABOUT
 	static override displayMode = DisplayMode.RAW
-	static override title = t('core.about.title')`About`
+	static override title = defineMessage({id: 'core.about.title', message: 'About'})
 
 	@dependency private actors!: Actors
 

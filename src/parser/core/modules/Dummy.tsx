@@ -1,4 +1,4 @@
-import {t} from '@lingui/macro'
+import {defineMessage} from '@lingui/macro'
 import {Trans} from '@lingui/react'
 import {Event, Events} from 'event'
 import {Team} from 'report'
@@ -12,7 +12,7 @@ import {Death} from './Death'
 const LIKELY_DUMMY_THRESHOLD = 3
 
 export class Dummy extends Analyser {
-	static override title = t('core.dummy.title')`Striking Dummy`
+	static override title = defineMessage({id: 'core.dummy.title', message: 'Striking Dummy'})
 	static override handle = 'dummy'
 	static override debug = false
 

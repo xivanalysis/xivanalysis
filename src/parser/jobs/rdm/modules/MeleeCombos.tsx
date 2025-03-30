@@ -1,5 +1,4 @@
-import {t} from '@lingui/macro'
-import {Trans, Plural} from '@lingui/react'
+import {defineMessage, Trans, Plural} from '@lingui/macro'
 import {ActionLink, DataLink} from 'components/ui/DbLink'
 import {Rotation} from 'components/ui/Rotation'
 import {Action} from 'data/ACTIONS/type'
@@ -53,7 +52,7 @@ enum SuggestionKey {
 
 export class MeleeCombos extends Analyser {
 	static override handle = 'mlc'
-	static override title = t('rdm.meleecombos.title')`Melee Combos`
+	static override title = defineMessage({id: 'rdm.meleecombos.title', message: 'Melee Combos'})
 	static override displayOrder = DISPLAY_ORDER.MELEE_COMBO
 	static override debug = false
 

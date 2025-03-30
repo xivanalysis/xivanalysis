@@ -1,4 +1,4 @@
-import {t} from '@lingui/macro'
+import {defineMessage} from '@lingui/macro'
 import {Trans} from '@lingui/react'
 import {DataLink, StatusLink} from 'components/ui/DbLink'
 import {Action} from 'data/ACTIONS'
@@ -9,7 +9,7 @@ import {MuseBuffWindow} from './MuseBuffWindow'
 
 export class BattleVoice extends MuseBuffWindow {
 	static override handle = 'battlevoice'
-	static override title = t('brd.battlevoice.title')`Battle Voice`
+	static override title = defineMessage({id: 'brd.battlevoice.title', message: 'Battle Voice'})
 	static override displayOrder = DISPLAY_ORDER.BATTLE_VOICE
 
 	action: Action = this.data.actions.BATTLE_VOICE

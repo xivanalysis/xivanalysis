@@ -1,4 +1,4 @@
-import {t} from '@lingui/macro'
+import {defineMessage} from '@lingui/macro'
 import {Trans} from '@lingui/react'
 import {DataLink} from 'components/ui/DbLink'
 import {Action} from 'data/ACTIONS'
@@ -12,7 +12,7 @@ import {DISPLAY_ORDER} from './DISPLAY_ORDER'
 
 export class StarryMuse extends RaidBuffWindow {
 	static override handle = 'starrymuse'
-	static override title = t('pct.starrymuse.title')`Starry Muse`
+	static override title = defineMessage({id: 'pct.starrymuse.title', message: 'Starry Muse'})
 	static override displayOrder = DISPLAY_ORDER.STARRY_MUSE
 
 	override buffStatus: Status | Status[] = this.data.statuses.STARRY_MUSE

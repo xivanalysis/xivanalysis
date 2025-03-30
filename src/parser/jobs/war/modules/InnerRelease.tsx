@@ -1,4 +1,4 @@
-import {t} from '@lingui/macro'
+import {defineMessage} from '@lingui/macro'
 import {Trans} from '@lingui/react'
 import {DataLink} from 'components/ui/DbLink'
 import {Action, ActionKey} from 'data/ACTIONS'
@@ -28,7 +28,7 @@ interface ReleaseWindow {
 
 export class InnerRelease extends Analyser {
 	static override handle = 'ir'
-	static override title = t('war.ir.title')`Inner Release`
+	static override title = defineMessage({id: 'war.ir.title', message: 'Inner Release'})
 
 	@dependency checklist!: Checklist
 	@dependency data!: Data

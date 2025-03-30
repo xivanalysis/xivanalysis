@@ -1,4 +1,4 @@
-import {t} from '@lingui/macro'
+import {defineMessage} from '@lingui/macro'
 import {Trans} from '@lingui/react'
 import Color from 'color'
 import {Event, Events} from 'event'
@@ -38,7 +38,7 @@ type GaugeMap = Map<number, GaugeModifier>
 
 export class OGCDCharges extends CoreGauge {
 	static override handle = 'ogcdcharges'
-	static override title = t('mch.ogcdcharges.title')`Double Check / Checkmate Charges`
+	static override title = defineMessage({id: 'mch.ogcdcharges.title', message: 'Double Check / Checkmate Charges'})
 
 	@dependency private suggestions!: Suggestions
 

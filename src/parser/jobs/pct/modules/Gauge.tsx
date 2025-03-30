@@ -1,5 +1,4 @@
-import {t} from '@lingui/macro'
-import {Plural, Trans} from '@lingui/react'
+import {defineMessage, Plural, Trans} from '@lingui/macro'
 import Color from 'color'
 import {DataLink} from 'components/ui/DbLink'
 import {JOBS} from 'data/JOBS'
@@ -66,7 +65,7 @@ const GAUGE_DISPLAY_ORDER = {
 
 export class Gauge extends CoreGauge {
 	static override handle = 'gauge'
-	static override title = t('pct.gauge.title')`Gauge`
+	static override title = defineMessage({id: 'pct.gauge.title', message: 'Gauge'})
 
 	@dependency private actors!: Actors
 	@dependency private suggestions!: Suggestions

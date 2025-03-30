@@ -1,5 +1,4 @@
-import {t} from '@lingui/macro'
-import {Trans, Plural} from '@lingui/react'
+import {defineMessage, Trans, Plural} from '@lingui/macro'
 import {DataLink} from 'components/ui/DbLink'
 import {Event, Events} from 'event'
 import _ from 'lodash'
@@ -29,7 +28,7 @@ class SonicBreakApplication {
 
 export class SonicBreak extends Analyser {
 	static override handle = 'Sonic Break'
-	static override title = t('gnb.sonic-break.title')`Sonic Break`
+	static override title = defineMessage({id: 'gnb.sonic-break.title', message: 'Sonic Break'})
 	static override displayOrder = DISPLAY_ORDER.SONIC_BREAK
 
 	@dependency private data!: Data

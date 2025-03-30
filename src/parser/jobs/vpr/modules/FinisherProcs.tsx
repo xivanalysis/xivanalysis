@@ -1,4 +1,4 @@
-import {t} from '@lingui/macro'
+import {defineMessage} from '@lingui/macro'
 import {Trans} from '@lingui/react'
 import {DataLink, StatusLink} from 'components/ui/DbLink'
 import {Status} from 'data/STATUSES'
@@ -22,7 +22,7 @@ const SEVERITIES = {
 const FINISHER_PROC_LOST_POTENCY = 100
 export class FinisherProcs extends CoreProcs {
 	static override handle = 'finisherprocs'
-	static override title = t('vpr.finisherprocs.title')`Finisher Procs`
+	static override title = defineMessage({id: 'vpr.finisherprocs.title', message: 'Finisher Procs'})
 	static override displayOrder = DISPLAY_ORDER.FINISHER_PROCS
 	override ProcGroupLabel = <Trans id="vpr.FinisherProcs.group.label"> Finisher Procs </Trans>
 

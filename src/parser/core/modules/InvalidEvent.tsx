@@ -1,4 +1,4 @@
-import {t} from "@lingui/macro"
+import {defineMessage} from "@lingui/macro"
 import {Trans} from "@lingui/react"
 import {Event, PREPULL_EVENT_WINDOW} from "event"
 import {Analyser} from "../Analyser"
@@ -8,7 +8,7 @@ import {Data} from "./Data"
 
 export class InvalidEvent extends Analyser {
 	static override handle = 'invalidEvent'
-	static override title = t('core.invalid-event.title')`Invalid Event`
+	static override title = defineMessage({id: 'core.invalid-event.title', message: 'Invalid Event'})
 
 	@dependency private brokenLog!: BrokenLog
 	@dependency private data!: Data

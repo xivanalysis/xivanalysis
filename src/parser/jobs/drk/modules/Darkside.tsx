@@ -1,5 +1,5 @@
 import {MessageDescriptor} from '@lingui/core'
-import {t} from '@lingui/macro'
+import {defineMessage} from '@lingui/macro'
 import {Trans} from '@lingui/react'
 import {DataLink} from 'components/ui/DbLink'
 import {NormalisedMessage} from 'components/ui/NormalisedMessage'
@@ -30,7 +30,7 @@ interface DarksideDrop {
 export class Darkside extends Gauge {
 	static override handle = 'Darkside'
 
-	static override title = t('drk.darkside.title')`Darkside`
+	static override title = defineMessage({id: 'drk.darkside.title', message: 'Darkside'})
 	@dependency private checklist!: Checklist
 	@dependency private downtime!: Downtime
 
@@ -55,11 +55,11 @@ export class Darkside extends Gauge {
 
 	protected override onDeath(event: Events['death']) {
 		super.onDeath(event)
-		this.darksideDrops.push({timestamp: event.timestamp, reason: t('drk.darkside.drop.reason.death')`Death`})
+		this.darksideDrops.push({timestamp: event.timestamp, reason: defineMessage({id: 'drk.darkside.drop.reason.death', message: 'Death'})})
 	}
 
 	private onDarksideExpiration(args: TimestampHookArguments) {
-		this.darksideDrops.push({timestamp: args.timestamp, reason: t('drk.darkside.drop.reason.timeout')`Timeout`})
+		this.darksideDrops.push({timestamp: args.timestamp, reason: defineMessage({id: 'drk.darkside.drop.reason.timeout', message: 'Timeout'})})
 	}
 
 	private onComplete() {

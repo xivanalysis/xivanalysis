@@ -1,4 +1,4 @@
-import {t} from '@lingui/macro'
+import {defineMessage} from '@lingui/macro'
 import {Trans} from '@lingui/react'
 import {ActionLink} from 'components/ui/DbLink'
 import {Rotation} from 'components/ui/Rotation'
@@ -38,7 +38,7 @@ interface QueenUsage {
 
 export class YassQueen extends Analyser {
 	static override handle = 'queen'
-	static override title = t('mch.queen.title')`Automaton Queen Usage`
+	static override title = defineMessage({id: 'mch.queen.title', message: 'Automaton Queen Usage'})
 
 	@dependency private brokenLog!: BrokenLog
 	@dependency private data!: Data
