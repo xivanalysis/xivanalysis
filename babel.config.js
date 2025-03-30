@@ -11,7 +11,6 @@ const getPlugins = ({
 	'@babel/plugin-transform-class-properties',
 	'babel-plugin-macros',
 	'babel-plugin-lodash',
-	'./locale/babel-plugin-transform-react.js',
 	['@babel/plugin-transform-runtime', {
 		corejs: {version: 3},
 		useESModules: true,
