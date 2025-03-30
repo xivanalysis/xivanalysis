@@ -13,6 +13,7 @@ import {dependency} from 'parser/core/Injectable'
 import {CastTime} from 'parser/core/modules/CastTime'
 import {CounterGauge, TimerGauge, Gauge as CoreGauge} from 'parser/core/modules/Gauge'
 import {EnumGauge} from 'parser/core/modules/Gauge/EnumGauge'
+import {Invulnerability} from 'parser/core/modules/Invulnerability'
 import {DEFAULT_ROW_HEIGHT, GAUGE_FADE} from 'parser/core/modules/ResourceGraphs/ResourceGraphs'
 import {Suggestions, Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import {UnableToAct} from 'parser/core/modules/UnableToAct'
@@ -105,6 +106,7 @@ export class Gauge extends CoreGauge {
 	@dependency private unableToAct!: UnableToAct
 	@dependency private castTime!: CastTime
 	@dependency private procs!: Procs
+	@dependency private invuln!: Invulnerability
 
 	private gaugeErrors: BLMGaugeError[] = []
 	private droppedEnoTimestamps: number[] = []
@@ -465,7 +467,7 @@ export class Gauge extends CoreGauge {
 	}
 
 	private onGainParadox() {
-		if (!this.paradoxGauge.empty) {
+		if (!this.paradoxGauge.empty && !this.invuln.isActive({timestamp: this.parser.currentEpochTimestamp})) {
 			this.gaugeErrors.push({timestamp: this.parser.currentEpochTimestamp, error: GAUGE_ERROR_TYPE.OVERWROTE_PARADOX})
 		}
 
