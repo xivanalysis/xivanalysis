@@ -110,7 +110,7 @@ export class SonicBreak extends Analyser {
 			this.suggestions.add(new TieredSuggestion({
 				icon: this.data.actions.SONIC_BREAK.icon,
 				content: <Trans id="gnb.sonic-break.suggestions.missing-ticks.content">
-					One or more of your <DataLink action = "SONIC_BREAK"/> DoTs had ticks that did not deal damage. </Trans>,
+					One or more of your <DataLink action = "SONIC_BREAK"/>DoTs had ticks that did not deal damage.</Trans>,
 				tiers: {
 					1: SEVERITY.MINOR,
 					5: SEVERITY.MEDIUM,
@@ -118,7 +118,7 @@ export class SonicBreak extends Analyser {
 
 				},
 				value: missedTicks,
-				why: <Trans id = "gnb.sonic-break.suggestions.missing-ticks.why"> You wasted <Plural value= {missedTicks} one="# tick" other="# ticks"/> of <DataLink action = "SONIC_BREAK"/> </Trans>,
+				why: <Trans id = "gnb.sonic-break.suggestions.missing-ticks.why">You wasted <Plural value= {missedTicks} one="# tick" other="# ticks"/> of <DataLink action = "SONIC_BREAK"/></Trans>,
 			},
 			))
 		}

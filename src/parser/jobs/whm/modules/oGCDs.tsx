@@ -40,7 +40,7 @@ export class OGCDs extends CooldownDowntime {
 			cooldowns: [this.data.actions.AQUAVEIL],
 			tiers: {2: SEVERITY.MINOR, 3: SEVERITY.MEDIUM},
 			content: <Fragment>
-				<Trans id="whm.ogcds.suggestions.AQUAVEIL.content">Use <DataLink action="AQUAVEIL"/> as often as possible to minimize single target healing needed. </Trans>
+				<Trans id="whm.ogcds.suggestions.aquaveil.content">Use <DataLink action="AQUAVEIL"/> as often as possible to minimize single target healing needed.</Trans>
 			</Fragment>,
 		},
 		{

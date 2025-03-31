@@ -25,7 +25,7 @@ export class DoTs extends CoreDoTs {
 	protected override addChecklistRules() {
 		const uptimePercent = this.getUptimePercent(this.data.statuses.DIA.id)
 		this.checklist.add(new Rule({
-			name: <Trans id="whm.dots.rule.name">Keep your DoTs up </Trans>,
+			name: <Trans id="whm.dots.rule.name">Keep your DoTs up</Trans>,
 			description: <Trans id="whm.dots.rule.description">
 				As a White Mage, <DataLink status="DIA" showIcon={false} showTooltip={false} /> is significant portion of your sustained damage. Aim to keep it up at all times.
 			</Trans>,

@@ -23,7 +23,7 @@ export class FinisherProcs extends CoreProcs {
 	static override handle = 'finisherprocs'
 	static override title = defineMessage({id: 'vpr.finisherprocs.title', message: 'Finisher Procs'})
 	static override displayOrder = DISPLAY_ORDER.FINISHER_PROCS
-	override ProcGroupLabel = <Trans id="vpr.FinisherProcs.group.label"> Finisher Procs </Trans>
+	override ProcGroupLabel = <Trans id="vpr.FinisherProcs.group.label">Finisher Procs</Trans>
 
 	@dependency private checklist!: Checklist
 	override trackedProcs = [
@@ -82,7 +82,7 @@ export class FinisherProcs extends CoreProcs {
 			</Trans>,
 			tiers: SEVERITIES.DROPPED,
 			value: DroppedFinishers,
-			why: <Trans id="vpr.finisherprocs.suggestions.drops.why"> {DroppedFinishers * FINISHER_PROC_LOST_POTENCY} potency lost to dropped procs.</Trans>,
+			why: <Trans id="vpr.finisherprocs.suggestions.drops.why">{DroppedFinishers * FINISHER_PROC_LOST_POTENCY} potency lost to dropped procs.</Trans>,
 		}))
 
 		this.suggestions.add(new TieredSuggestion({
@@ -92,7 +92,7 @@ export class FinisherProcs extends CoreProcs {
 			</Trans>,
 			tiers: SEVERITIES.OVERWRITTEN,
 			value: OverwroteFinishers,
-			why: <Trans id="vpr.finisherprocs.suggestions.overwrites.why"> {OverwroteFinishers * FINISHER_PROC_LOST_POTENCY} potency lost to overwrote procs.</Trans>,
+			why: <Trans id="vpr.finisherprocs.suggestions.overwrites.why">{OverwroteFinishers * FINISHER_PROC_LOST_POTENCY} potency lost to overwrote procs.</Trans>,
 		}))
 	}
 

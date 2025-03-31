@@ -26,18 +26,18 @@ export class Buffs extends Analyser {
 
 	onComplete() {
 		this.checklist.add(new Rule({
-			name: <Trans id="sam.buffs.checklist.name"> Keep {this.data.statuses.FUKA.name} and {this.data.statuses.FUGETSU.name} up </Trans>,
+			name: <Trans id="sam.buffs.checklist.name">Keep {this.data.statuses.FUKA.name} and {this.data.statuses.FUGETSU.name} up</Trans>,
 			displayOrder: DISPLAY_ORDER.BUFFS,
-			description: <Trans id= "sam.buffs.description"> {this.data.statuses.FUGETSU.name} and {this.data.statuses.FUKA.name} increases your damage and speed by 13%. Both buffs are key part of Samurai's damage.</Trans>,
+			description: <Trans id= "sam.buffs.description">{this.data.statuses.FUGETSU.name} and {this.data.statuses.FUKA.name} increases your damage and speed by 13%. Both buffs are key part of Samurai's damage.</Trans>,
 			target: 95,
 			requirements: [
 				new Requirement({
-					name: <Trans id = "sam.buffs.checklist.requirement.fugetsu.name"> <DataLink status="FUGETSU"/> uptime </Trans>,
+					name: <Trans id="sam.buffs.checklist.requirement.fugetsu.name"><DataLink status="FUGETSU"/> uptime</Trans>,
 					percent: this.getUptimePercent(this.data.statuses.FUGETSU),
 				}),
 
 				new Requirement({
-					name: <Trans id= "sam.buffs.checklist.requirement.fuka.name"> <DataLink status="FUKA"/> uptime </Trans>,
+					name: <Trans id="sam.buffs.checklist.requirement.fuka.name"><DataLink status="FUKA"/> uptime</Trans>,
 					percent: this.getUptimePercent(this.data.statuses.FUKA),
 				}),
 			],

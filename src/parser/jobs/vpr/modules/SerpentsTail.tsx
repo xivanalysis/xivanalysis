@@ -146,7 +146,7 @@ export class SerpentsTail extends Analyser {
 		}
 
 		this.checklist.add(new Rule({
-			name: <Trans id="VPR.serpentstail.waste.name"> Use your <DataLink action="SERPENTS_TAIL"/> follow-ups </Trans>,
+			name: <Trans id="vpr.serpentstail.waste.name">Use your <DataLink action="SERPENTS_TAIL"/> follow-ups</Trans>,
 			displayOrder: DISPLAY_ORDER.SERPENTS_TAIL,
 			target: PERFECTIO,
 			description: <Trans id="vpr.serpentstail.waste.content">

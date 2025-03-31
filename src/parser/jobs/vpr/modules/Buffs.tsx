@@ -26,18 +26,18 @@ export class Buffs extends Analyser {
 
 	onComplete() {
 		this.checklist.add(new Rule({
-			name: <Trans id="vpr.buffs.checklist.name"> <DataLink status="HUNTERS_INSTINCT"/> and <DataLink status="SWIFTSCALED"/> up </Trans>,
+			name: <Trans id="vpr.buffs.checklist.name"><DataLink status="HUNTERS_INSTINCT"/> and <DataLink status="SWIFTSCALED"/> up</Trans>,
 			displayOrder: DISPLAY_ORDER.BUFFS,
-			description: <Trans id= "vpr.buffs.description"> <DataLink status="HUNTERS_INSTINCT"/> increases your damage by 10%  and <DataLink status="SWIFTSCALED"/>  and speed by 15%. Both buffs are key parts of Viper's damage.</Trans>,
+			description: <Trans id= "vpr.buffs.description"><DataLink status="HUNTERS_INSTINCT"/> increases your damage by 10%  and <DataLink status="SWIFTSCALED"/>  and speed by 15%. Both buffs are key parts of Viper's damage.</Trans>,
 			target: 95,
 			requirements: [
 				new Requirement({
-					name: <Trans id = "vpr.buffs.checklist.requirement.huntersinstinct.name"> <DataLink status="HUNTERS_INSTINCT"/> uptime </Trans>,
+					name: <Trans id="vpr.buffs.checklist.requirement.huntersinstinct.name"><DataLink status="HUNTERS_INSTINCT"/> uptime</Trans>,
 					percent: this.getUptimePercent(this.data.statuses.HUNTERS_INSTINCT),
 				}),
 
 				new Requirement({
-					name: <Trans id= "vpr.buffs.checklist.requirement.swiftscaled.name"> <DataLink status="SWIFTSCALED"/> uptime </Trans>,
+					name: <Trans id="vpr.buffs.checklist.requirement.swiftscaled.name"><DataLink status="SWIFTSCALED"/> uptime</Trans>,
 					percent: this.getUptimePercent(this.data.statuses.SWIFTSCALED),
 				}),
 			],

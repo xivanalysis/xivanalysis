@@ -133,7 +133,7 @@ export class Drift extends Analyser {
 
 		return <Fragment>
 			<Message info>
-				<Trans id="rpr.drift.prepend-message"> <ActionLink action="GLUTTONY"/>'s drift between uses should be less than 3 seconds except at the 2 minute mark, where it may be delayed 15 to 20 seconds due to 2 minute burst not having room for its cast. </Trans>
+				<Trans id="rpr.drift.prepend-message"><ActionLink action="GLUTTONY"/>'s drift between uses should be less than 3 seconds except at the 2 minute mark, where it may be delayed 15 to 20 seconds due to 2 minute burst not having room for its cast.</Trans>
 			</Message>
 			<Table style={{border: 'none'}}>
 				<Table.Body>

@@ -81,7 +81,7 @@ export class ReadyProcs extends CoreProcs {
 		const TsubameGained =this.getHistoryForStatus(this.data.statuses.TSUBAME_GAESHI_READY.id).length + this.getHistoryForStatus(this.data.statuses.TSUBAME_GAESHI_MIDARE.id).length + this.getHistoryForStatus(this.data.statuses.TSUBAME_GAESHI_TENDO_MIDARE.id).length + this.getHistoryForStatus(this.data.statuses.TSUBAME_GAESHI_TENDO_GOKEN.id).length
 
 		this.checklist.add(new Rule({
-			name: <Trans id = "sam.readyprocs.ogi.checklist.name">Use Your Ogis </Trans>,
+			name: <Trans id = "sam.readyprocs.ogi.checklist.name">Use Your Ogis</Trans>,
 			displayOrder: DISPLAY_ORDER.OGI,
 			description: <Trans id="sam.readyprocs.ogi.waste.content">
 				Using <DataLink action = "IKISHOTEN"/> grants <DataLink status = "OGI_NAMIKIRI_READY"/> which is consumed to use <DataLink action="OGI_NAMIKIRI"/> and <DataLink action="KAESHI_NAMIKIRI"/>.
@@ -99,7 +99,7 @@ export class ReadyProcs extends CoreProcs {
 		}))
 
 		this.checklist.add(new Rule({
-			name: <Trans id="sam.readyprocs.tendo.checklist.name">Use Your Tendos </Trans>,
+			name: <Trans id="sam.readyprocs.tendo.checklist.name">Use Your Tendos</Trans>,
 			displayOrder: DISPLAY_ORDER.OGI,
 			description: <Trans id="sam.readyprocs.tendo.waste.content">
 				Using <DataLink action = "MEIKYO_SHISUI"/> grants <DataLink status = "TENDO"/> which is consumed to use <DataLink action="TENDO_SETSUGEKKA"/> and its followup <DataLink action="TENDO_KAESHI_SETSUGEKKA"/> or <DataLink action="TENDO_GOKEN"/> and its followup <DataLink action="TENDO_KAESHI_GOKEN"/>.
@@ -117,7 +117,7 @@ export class ReadyProcs extends CoreProcs {
 		}))
 
 		this.checklist.add(new Rule({
-			name: <Trans id="sam.readyprocs.tsubame.checklist.name">Use Your <DataLink action="TSUBAME_GAESHI"/> </Trans>,
+			name: <Trans id="sam.readyprocs.tsubame.checklist.name">Use Your <DataLink action="TSUBAME_GAESHI"/></Trans>,
 			displayOrder: DISPLAY_ORDER.OGI,
 			description: <Trans id="sam.readyprocs.tsubame.waste.content">
 				Using <DataLink action="IAIJUTSU"/> actions except for <DataLink action="HIGANBANA"/> grants <DataLink status="TSUBAME_GAESHI_READY"/> which is consumed to use <DataLink action="TSUBAME_GAESHI"/> actions.

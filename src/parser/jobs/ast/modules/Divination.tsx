@@ -185,7 +185,7 @@ export class Divination extends RaidBuffWindow {
 				<Message error icon>
 					<Icon name="remove"/>
 					<Message.Content>
-						<Trans id="ast.divination.messages.no-casts"> There were no casts recorded for <DataLink action="DIVINATION" />.</Trans>
+						<Trans id="ast.divination.messages.no-casts">There were no casts recorded for <DataLink action="DIVINATION" />.</Trans>
 					</Message.Content>
 				</Message>
 				{this.appendMessages}

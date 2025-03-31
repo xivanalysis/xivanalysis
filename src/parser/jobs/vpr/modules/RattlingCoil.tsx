@@ -114,7 +114,7 @@ export class RattlingCoil extends CoreGauge {
 		}))
 
 		this.checklist.add(new Rule({
-			name: <Trans id="vpr.rattlingcoil.usage.title"> <DataLink action="UNCOILED_FURY"/> Usage</Trans>,
+			name: <Trans id="vpr.rattlingcoil.usage.title"><DataLink action="UNCOILED_FURY"/> Usage</Trans>,
 			description: <Trans id="vpr.rattlingcoilwaste.content">
 				Wasted rattling coil generation, ending the fight with rattling coils remaining, or dying with rattling coils coiled is a
 				direct potency loss. Use <ActionLink action="UNCOILED_FURY"/> to avoid wasting rattling coils.
@@ -123,19 +123,17 @@ export class RattlingCoil extends CoreGauge {
 			</Trans>,
 			requirements: [
 				new Requirement({
-					name: <Trans id="vpr.rattlingcoil.checklist.requirement.waste.name">
-						<DataLink action="UNCOILED_FURY"/>
-					</Trans>,
+					name: <DataLink action="UNCOILED_FURY"/>,
 					value: this.coilGauge.totalSpent,
 					target: this.coilGauge.totalGenerated,
 				}),
 				new Requirement({
-					name: <Trans id="vpr.rattlingcoil.checklist.requirement.twinblood.name"> <DataLink action="UNCOILED_TWINBLOOD"/></Trans>,
+					name: <DataLink action="UNCOILED_TWINBLOOD"/>,
 					value: this.uncoiledTwinbloods,
 					target: this.coilGauge.totalGenerated,
 				}),
 				new Requirement({
-					name: <Trans id="vpr.rattlingcoil.checklist.requirement.twinfang.name"> <DataLink action="UNCOILED_TWINFANG"/></Trans>,
+					name: <DataLink action="UNCOILED_TWINFANG"/>,
 					value: this.uncoiledTwinfangs,
 					target: this.coilGauge.totalGenerated,
 				}),

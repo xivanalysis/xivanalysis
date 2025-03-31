@@ -10,7 +10,7 @@ export class Venoms extends CoreProcs {
 	static override handle = 'venoms'
 	static override title = defineMessage({id: 'vpr.venoms.title', message: 'oGCD Procs'})
 
-	override ProcGroupLabel = <Trans id="vpr.Venoms.group.label"> oGCD Procs </Trans>
+	override ProcGroupLabel = <Trans id="vpr.Venoms.group.label">oGCD Procs</Trans>
 
 	@dependency private checklist!: Checklist
 	override trackedProcs = [
