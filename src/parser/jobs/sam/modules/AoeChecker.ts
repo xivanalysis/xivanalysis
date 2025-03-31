@@ -21,7 +21,7 @@ export class AoeChecker extends AoEUsages {
 		{
 			aoeAction: ACTIONS.HISSATSU_GUREN,
 			stActions: [ACTIONS.HISSATSU_SENEI],
-			minTargets: 2,
+			minTargets: 3,
 		},
 
 		{

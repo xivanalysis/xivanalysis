@@ -3,6 +3,11 @@ import {CONTRIBUTORS} from 'data/CONTRIBUTORS'
 
 export const changelog = [
 	{
+		date: new Date('2025-03-24'),
+		Changes: () => <>GNB 7.2 Support added.</>,
+		contributors: [CONTRIBUTORS.RYAN],
+	},
+	{
 		date: new Date('2024-11-14'),
 		Changes: () => <>GNB 7.1 Support added.</>,
 		contributors: [CONTRIBUTORS.RYAN],

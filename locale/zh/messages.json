@@ -18,7 +18,7 @@
   "ast.arcana-suggestions.title": "奥秘卡日志",
   "ast.arcana-tracking.messages.death": "死亡",
   "ast.arcana-tracking.title": "奥秘卡记录",
-  "ast.divination.checklist.description": "当与奥秘卡叠加时，<0/>为占星人提供了大量的rDPS。<1/><2/>是一个高威力能力技，应该在<3/>窗口内使用。<4/>尝试在团辅爆发期对齐<5/>以提高团队伤害，一定记得不要空转。",
+  "ast.divination.checklist.description": "占星术士在<0/>期间发奥秘卡可以获得大量的rDPS。<1/>能力技<2/>的威力很高，应在<3/>窗口内打出。<4/>尝试在团辅爆发期对齐<5/>以提高团队伤害，一定记得不要空转。",
   "ast.divination.checklist.name": "使用<0/>和<1/>",
   "ast.divination.messages.no-casts": "没有<0/>的使用记录。",
   "ast.divination.suggestion.lightspeed.usage.content": "使用 <0/> 以便在每个 <1/> 期间插入大量能力技最大化rDPS。使用 <2/> 以保证所有必要技能都能插入 <3/> 期间。",
