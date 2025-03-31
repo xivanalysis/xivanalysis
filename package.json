@@ -8,15 +8,12 @@
     "test": "jest",
     "lint": "eslint src",
     "types": "tsc",
-    "e2": "lingui extract --clean --overwrite",
-    "extract": "pnpm run clean:locale && rimraf locale/en && lingui add-locale en && cross-env NODE_ENV=development lingui extract --clean",
-    "compile": "lingui compile",
+    "extract": "lingui extract --clean --overwrite",
     "generate": "pnpm run \"/^generate:.*/\"",
     "generate:unable-to-act": "babel-node -x .ts ./scripts/generate-unable-to-act",
     "clean": "pnpm run \"/^clean:.*/\"",
     "clean:build": "rimraf build",
-    "clean:deps": "rimraf node_modules",
-    "clean:locale": "rimraf locale/_build"
+    "clean:deps": "rimraf node_modules"
   },
   "packageManager": "pnpm@10.0.0",
   "engines": {
@@ -87,7 +84,6 @@
     "@lingui/conf": "^5.3.0",
     "@lingui/format-json": "^5",
     "@lingui/loader": "^5",
-    "@lingui/macro": "^5",
     "@teamsupercell/typings-for-css-modules-loader": "^2.4.0",
     "@types/chart.js": "^2.7.37",
     "@types/classnames": "^2.2.6",

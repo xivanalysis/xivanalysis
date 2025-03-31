@@ -12,6 +12,7 @@ const config:LinguiConfig = {
 	fallbackLocales: {
 		default: "en",
 	},
+	orderBy: 'messageId',
 	format: formatter({style: 'minimal'}),
 }
 
