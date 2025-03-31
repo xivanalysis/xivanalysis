@@ -74,9 +74,11 @@ export class BrokenLog extends Analyser {
 
 		return <Segment>
 			<Message error icon="times circle outline">
-				<Trans id="core.broken-log.broken-log.title" component={Message.Header}>
-					This log is broken.
-				</Trans>
+				<Message.Header>
+					<Trans id="core.broken-log.broken-log.title">
+						This log is broken.
+					</Trans>
+				</Message.Header>
 				<Trans id="core.broken-log.broken-log.description">
 					One or more modules have reported that this log contains inconsistencies that would suggest data is missing or incorrect. While the system does try to maintain sane results in this situation, some statistics may be inaccurate.
 				</Trans>
@@ -85,8 +87,8 @@ export class BrokenLog extends Analyser {
 			<Table basic="very" compact="very">
 				<Table.Header>
 					<Table.Row>
-						<Trans id="core.broken-log.list.module" component={Table.HeaderCell}>Module</Trans>
-						<Trans id="core.broken-log.list.reason" component={Table.HeaderCell}>Reason</Trans>
+						<Table.HeaderCell><Trans id="core.broken-log.list.module">Module</Trans></Table.HeaderCell>
+						<Table.HeaderCell><Trans id="core.broken-log.list.reason">Reason</Trans></Table.HeaderCell>
 					</Table.Row>
 				</Table.Header>
 				<Table.Body>
