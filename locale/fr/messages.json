@@ -153,7 +153,7 @@
   "blm.thunder.title": "Foudre",
   "blm.thunder.total-clip": "Temps total de clipping",
   "blm.triplecast.suggestions.overwrote-triplecasts.content": "Vous avez utilisé <0/> alors que vous disposiez déjà d'une ou plusieurs charges, vous privant d'au moins un sort instantané supplémentaire.",
-  "blm.triplecast.suggestions.overwrote-triplecasts.why": "Vous avez supplanté votre <0/>.",
+  "blm.triplecast.suggestions.overwrote-triplecasts.why": "",
   "blu.about.description": "La BLU offre des styles de jeu très différents en fonction de votre mimétisme. Cette page se concentre principalement sur l'aspect DPS du travail, donc prenez les conseils avec un grain de sel si vous êtes soigneur ou tankiste.\n\nIl faut également garder à l'esprit l'adage habituel selon lequel le contenu de la BLU se gagne et se perd sur la mécanique, et non sur le DPS. Suivre les suggestions ici pour optimiser vos performances sera toujours le bienvenu, mais cela ne doit pas vous détourner de la mécanique. Il n'est pas recommandé d'augmenter les ticks de la Furie fantôme au détriment de la santé mentale de vos coéquipiers.\n\nSi vous voulez plus de détails sur les suggestions données ici, le [Discord de l'Académie bleue] (https://discord.gg/blueacademy) est la principale source d'information pour les Mages bleus.",
   "blu.always-cast.description": "Veillez à toujours faire quelque chose. Il est souvent préférable de faire de petites erreurs tout en continuant à faire rouler le GCD que d'effectuer lentement la bonne rotation.<0/>Pour la BLU, nous comptons les éléments suivants comme temps de fonctionnement du GCD:<1><2>Temps passé sous <3/></2><4><5/>, le temps d'arrêt forcé suite à un <6/></4><7>Les canaux <8/> et <9/></7><10>Le spam oGCD <11/></10></1>",
   "blu.apokalypsis.dropped_ticks.content": "En sortant trop tôt de <0/>, vous perdrez des ticks de dégâts.",
@@ -349,7 +349,6 @@
   "core.i18n.help-translate": "Aidez-nous à traduire !",
   "core.i18n.hide-overlay": "Masquer l'overlay de traduction",
   "core.i18n.show-overlay": "Afficher l'overlay de traduction",
-  "core.i18n.translation-error": "Une erreur est survenue lors du chargement de la traduction de \"{id}\".",
   "core.interrupts.suggestion.content": "Évitez d'interrompre vos sorts en vous prépositionnant à l'avance, ou via l'usage de slidecasting. Si vous devez vous déplacer, optimisez ce mouvement grâce à l'usage de sorts instantanés pour maintenir activement votre GCD.",
   "core.interrupts.suggestion.why": "Vous avez perdu {0} incantations (approximativement {1} du temps total d'incantation) dû à cette interruption.",
   "core.interrupts.table.cast": "Incantation",
@@ -1099,7 +1098,7 @@
   "smn.aetherflow.lost-ruin4.why": "{wastedR4, plural, one {# lancement de Giga Ruine perdu} other {# lancements de Giga Ruine perdus}}.",
   "smn.aetherflow.title": "Flux d'éther",
   "smn.pets.suggestions.slipstream-ticks.content": "Assurez-vous d'utiliser <0/> pour faire en sorte d'infliger des dégâts sur la durée totale.",
-  "smn.pets.suggestions.slipstream-ticks.why": "de Sillage.",
+  "smn.pets.suggestions.slipstream-ticks.why": "",
   "smn.physick.suggestion.content": "Ne lancer pas <0/> en équipe. Le soin est trop petite pour justifier une utilisation d'un GCd de soin au lieu d'un GCD de Dps.",
   "smn.physick.suggestion.why": "Vous avez utilisez médecine{0, plural,one {#fois}other {#fois}}.",
   "smn.physick.title": "Médecine",
@@ -1241,6 +1240,5 @@
   "whm.thinair.messages.explanation": "L'utilisation principale de <0/> devrait être d'économiser des PM sur des sorts ayant un coût élevé. N'ayez pas peur de garder une charge et d'en perdre une sur la durée du combat, du moment qu'elle sont utilisées pour des sorts chers en PM comme <1/>, <2/> et <3/>.\nLes utilisations qui n'ont pas économisé un grand nombre de PM sont marquées en rouge.",
   "whm.thinair.messages.no-casts": "Aucune utilisation de <0/> enregistrée",
   "whm.thinair.title": "Sponte",
-  "whm.tincture.suggestions.trackedActions.content": "Essayez de faire autant de dégâts que possible avec vos potions d'esprit.",
-  "{0, plural, one {# stack} other {# stacks}}": "{0, plural, one {# charge} other {# charges}}"
+  "whm.tincture.suggestions.trackedActions.content": "Essayez de faire autant de dégâts que possible avec vos potions d'esprit."
 }

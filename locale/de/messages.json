@@ -153,7 +153,7 @@
   "blm.thunder.title": "Blitz",
   "blm.thunder.total-clip": "Insgesamt Überschrieben",
   "blm.triplecast.suggestions.overwrote-triplecasts.content": "",
-  "blm.triplecast.suggestions.overwrote-triplecasts.why": "Du hast <0/> überschrieben.",
+  "blm.triplecast.suggestions.overwrote-triplecasts.why": "",
   "blu.about.description": "",
   "blu.always-cast.description": "",
   "blu.apokalypsis.dropped_ticks.content": "",
@@ -349,7 +349,6 @@
   "core.i18n.help-translate": "Hilf beim Übersetzen!",
   "core.i18n.hide-overlay": "Übersetzungshilfe verstecken",
   "core.i18n.show-overlay": "Übersetzungshilfe anzeigen",
-  "core.i18n.translation-error": "Beim Laden der Übersetzung von \"{id}\" ist ein Fehler aufgetreten.",
   "core.interrupts.suggestion.content": "",
   "core.interrupts.suggestion.why": "Durch Unterbrechungen hast du (während der Gesamtwirkungsdauer von {1}) {0} Anwendungen versäumt.",
   "core.interrupts.table.cast": "Anwendungen",
@@ -1241,6 +1240,5 @@
   "whm.thinair.messages.explanation": "Die Benutzung von <0/> sollte sich auf sehr hohe MP kosten minimiert werden. <1/>, <2/> und <3/> sind hier die besten Beispiele. \nBenutzungen, die nicht genug MP gespart haben, sind Rot markiert.",
   "whm.thinair.messages.no-casts": "Es wurden keine Ausführungen von <0/> aufgezeichnet",
   "whm.thinair.title": "Ex Machina",
-  "whm.tincture.suggestions.trackedActions.content": "Versuche so viel Schaden wie möglich während des Effekts deines Trankes auszuführen.",
-  "{0, plural, one {# stack} other {# stacks}}": ""
+  "whm.tincture.suggestions.trackedActions.content": "Versuche so viel Schaden wie möglich während des Effekts deines Trankes auszuführen."
 }

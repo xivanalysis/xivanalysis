@@ -153,7 +153,7 @@
   "blm.thunder.title": "선더가",
   "blm.thunder.total-clip": "총 손실시간",
   "blm.triplecast.suggestions.overwrote-triplecasts.content": "프록이 켜진 상태에서 <0/> 기술을 써서 즉시 시전 기회를 최소 1회 잃었습니다.",
-  "blm.triplecast.suggestions.overwrote-triplecasts.why": "<0/> 기술을 덮어썼습니다.",
+  "blm.triplecast.suggestions.overwrote-triplecasts.why": "",
   "blu.about.description": "",
   "blu.always-cast.description": "",
   "blu.apokalypsis.dropped_ticks.content": "",
@@ -349,7 +349,6 @@
   "core.i18n.help-translate": "번역을 도와주세요!",
   "core.i18n.hide-overlay": "i18n 오버레이 숨기기",
   "core.i18n.show-overlay": "i18n 오버레이 표시",
-  "core.i18n.translation-error": "\"{id}\" 를 불러오는 중에 오류가 발생하였습니다.",
   "core.interrupts.suggestion.content": "위치를 미리 잡거나 슬라이드 캐스팅을 활용하여 시전이 끊기지 않도록 하십시오. 반드시 이동해야 한다면 즉시 시전기를 사용하여 글쿨 시간이 놀지 않게끔 하십시오.",
   "core.interrupts.suggestion.why": "시전을 중단하여 시전 기회를 {0}회 잃었습니다. (전체 대략 {1})",
   "core.interrupts.table.cast": "시전",
@@ -1099,7 +1098,7 @@
   "smn.aetherflow.lost-ruin4.why": "루인쟈를 {wastedR4, plural, other {#회}} 잃었습니다.",
   "smn.aetherflow.title": "에테르 순환",
   "smn.pets.suggestions.slipstream-ticks.content": "<0/> 기술을 사용하면 전체 지속 시간 동안 피해를 줄 수 있게끔 하십시오.",
-  "smn.pets.suggestions.slipstream-ticks.why": "반동기류의",
+  "smn.pets.suggestions.slipstream-ticks.why": "",
   "smn.physick.suggestion.content": "파티 콘텐츠에서 <0/> 기술을 사용하지 마십시오. 피해를 주는 글쿨 기술의 이득에 비해 치유량이 지나치게 적습니다.",
   "smn.physick.suggestion.why": "치유술을 {0, plural, other {#}}회 사용했습니다.",
   "smn.physick.title": "치유술",
@@ -1241,6 +1240,5 @@
   "whm.thinair.messages.explanation": "<0/> 기술은 MP 요구량이 높은 기술에 사용해야 합니다. <1/>, <2/>, <3/> 등 많은 MP를 요구하는 기술과 함께 사용하여 MP 소모량을 줄이십시오. MP 소모량이 크게 아껴지지 않았다면 하단에서 붉은색으로 표시됩니다.",
   "whm.thinair.messages.no-casts": "<0/> 사용 기록 없음",
   "whm.thinair.title": "실바람",
-  "whm.tincture.suggestions.trackedActions.content": "정신력의 환혹약을 사용하여 피해량을 최대한 많이 주십시오.",
-  "{0, plural, one {# stack} other {# stacks}}": ""
+  "whm.tincture.suggestions.trackedActions.content": "정신력의 환혹약을 사용하여 피해량을 최대한 많이 주십시오."
 }

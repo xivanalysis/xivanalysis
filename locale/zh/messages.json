@@ -153,7 +153,7 @@
   "blm.thunder.title": "暴雷",
   "blm.thunder.total-clip": "合计覆盖",
   "blm.triplecast.suggestions.overwrote-triplecasts.content": "你在瞬发魔法效果还在的时候使用了<0/>，失去至少一次立即施放魔法的机会。",
-  "blm.triplecast.suggestions.overwrote-triplecasts.why": "你覆盖了<0/>。",
+  "blm.triplecast.suggestions.overwrote-triplecasts.why": "",
   "blu.about.description": "根据所选技能的不同，青魔法师的玩法可能千变万化。本页主要讨论如何打出更高的DPS，所以如果你在玩T青或者奶青，有些建议可能并不适用。\n\n此外，青魔法师的挑战主要在于对机制的处理，而不是DPS压力。此处的建议可以优化你的输出，但机制需要仍然是绝对优先。别贪输出把你的队友给贪进去了。\n\n若你想要进一步理解此处的建议，建议造访青魔法学会 (https://discord.gg/blueacademy) 以获得第一手资料。",
   "blu.always-cast.description": "始终保持GCD不空转。大部分情况下就算出了一些小错误，也比缓慢地打出正确循环要好。<0/>对于青魔法师，我们额外排除了以下会导致GCD空转的正常情况：<1><2>处于 <3/> 时</2><4>处于 <5/> 时（<6/>之后无法使用技能的时期）</4><7>持续引导<8/>和<9/>时</7><10>连发<11/>时</10></1>",
   "blu.apokalypsis.dropped_ticks.content": "中断 <0/> 过早会损失伤害次数。",
@@ -349,7 +349,6 @@
   "core.i18n.help-translate": "帮助翻译！",
   "core.i18n.hide-overlay": "隐藏本地化遮罩",
   "core.i18n.show-overlay": "显示本地化遮罩",
-  "core.i18n.translation-error": "加载“{id}”的翻译时出错。",
   "core.interrupts.suggestion.content": "通过合理的站位以及熟练运用滑步来减少中断咏唱的场合。如果你必须移动，尝试使用一些瞬发的法术来保证你的GCD不被浪费。",
   "core.interrupts.suggestion.why": "你因为打断而丢失了 {0} 次咏唱 (大约占总咏唱时间的 {1}) 。",
   "core.interrupts.table.cast": "咏唱",
@@ -1099,7 +1098,7 @@
   "smn.aetherflow.lost-ruin4.why": "浪费了{wastedR4} 次毁绝。",
   "smn.aetherflow.title": "以太超流",
   "smn.pets.suggestions.slipstream-ticks.content": "保证你使用的<0/>能在他持续的时间内能造成所有的伤害",
-  "smn.pets.suggestions.slipstream-ticks.why": "来自螺旋气流",
+  "smn.pets.suggestions.slipstream-ticks.why": "",
   "smn.physick.suggestion.content": "不要在8人副本中使用<0/>。<0/>的治疗量太小，不值得因此损失一个输出GCD。",
   "smn.physick.suggestion.why": "使用了 {0, plural, one {# 次} other {# 次}}医术。",
   "smn.physick.title": "医术",
@@ -1241,6 +1240,5 @@
   "whm.thinair.messages.explanation": "<0/>的主要用途应当是在战斗中省下高耗蓝魔法的蓝耗。在战斗中，不要担心它会因为没有转好就用而浪费使用机会，只要覆盖到了蓝量消耗大的魔法，例如<1/>、<2/>和<3/>就可以。未能有效节约蓝量的使用记录已被标红。",
   "whm.thinair.messages.no-casts": "没有<0/>的使用记录",
   "whm.thinair.title": "无中生有",
-  "whm.tincture.suggestions.trackedActions.content": "在爆发药期间打出尽可能多的伤害。",
-  "{0, plural, one {# stack} other {# stacks}}": "{0, plural, other {# 充能}}"
+  "whm.tincture.suggestions.trackedActions.content": "在爆发药期间打出尽可能多的伤害。"
 }
