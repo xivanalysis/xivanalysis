@@ -62,9 +62,6 @@ importers:
       intersection-observer:
         specifier: ^0.12
         version: 0.12.0
-      intl:
-        specifier: ^1.2.5
-        version: 1.2.5
       ky:
         specifier: ^0.24
         version: 0.24.0
@@ -195,9 +192,6 @@ importers:
       '@types/d3-time-format':
         specifier: ^4
         version: 4.0.3
-      '@types/intl':
-        specifier: ^1
-        version: 1.2.2
       '@types/jest':
         specifier: ^26.0.19
         version: 26.0.19
@@ -1498,9 +1492,6 @@ packages:
 
   '@types/http-proxy@1.17.4':
     resolution: {integrity: sha512-IrSHl2u6AWXduUaDLqYpt45tLVCtYv7o4Z0s1KghBCDgIIS9oW5K1H8mZG/A2CfeLdEa7rTd1ACOiHBc1EMT2Q==}
-
-  '@types/intl@1.2.2':
-    resolution: {integrity: sha512-A4g5UEAA9c56JWKhc4LSJ9vzDMztjxVXDAXtVK4EbS3hW1V7Sz05VfcTgDQIvkOYJp1NqH222eg62P72HwltfQ==}
 
   '@types/istanbul-lib-coverage@2.0.3':
     resolution: {integrity: sha512-sz7iLqvVUg1gIedBOvlkxPlc8/uVzyS5OwGz1cKjXzkl3FpL3al0crU8YGU1WoHkxn0Wxbw5tyi6hvzJKNzFsw==}
@@ -3624,9 +3615,6 @@ packages:
 
   intersection-observer@0.12.0:
     resolution: {integrity: sha512-2Vkz8z46Dv401zTWudDGwO7KiGHNDkMv417T5ItcNYfmvHR/1qCTVBO9vwH8zZmQ0WkA/1ARwpysR9bsnop4NQ==}
-
-  intl@1.2.5:
-    resolution: {integrity: sha512-rK0KcPHeBFBcqsErKSpvZnrOmWOj+EmDkyJ57e90YWaQNqbcivcqmKDlHEeNprDWOsKzPsh1BfSpPQdDvclHVw==}
 
   ip-regex@2.1.0:
     resolution: {integrity: sha512-58yWmlHpp7VYfcdTwMTvwMmqx/Elfxjd9RXTDyMsbL7lLWmhMylLEqiYVLKuLzOZqVgiWXD9MfR62Vv89VRxkw==}
@@ -8020,8 +8008,6 @@ snapshots:
     dependencies:
       '@types/node': 14.14.19
 
-  '@types/intl@1.2.2': {}
-
   '@types/istanbul-lib-coverage@2.0.3': {}
 
   '@types/istanbul-lib-report@3.0.0':
@@ -10627,8 +10613,6 @@ snapshots:
 
   intersection-observer@0.12.0: {}
 
-  intl@1.2.5: {}
-
   ip-regex@2.1.0: {}
 
   ip-regex@4.2.0: {}
@@ -10970,7 +10954,7 @@ snapshots:
       jest-environment-jsdom: 26.6.2
       jest-environment-node: 26.6.2
       jest-get-type: 26.3.0
-      jest-jasmine2: 26.6.3
+      jest-jasmine2: 26.6.3(ts-node@10.9.2(@types/node@14.14.19)(typescript@5.7.3))
       jest-regex-util: 26.0.0
       jest-resolve: 26.6.2
       jest-util: 26.6.2
@@ -11072,7 +11056,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  jest-jasmine2@26.6.3:
+  jest-jasmine2@26.6.3(ts-node@10.9.2(@types/node@14.14.19)(typescript@5.7.3)):
     dependencies:
       '@babel/traverse': 7.26.9
       '@jest/environment': 26.6.2
@@ -11093,7 +11077,11 @@ snapshots:
       pretty-format: 26.6.2
       throat: 5.0.0
     transitivePeerDependencies:
+      - bufferutil
+      - canvas
       - supports-color
+      - ts-node
+      - utf-8-validate
 
   jest-junit@12.0.0:
     dependencies:

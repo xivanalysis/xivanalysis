@@ -7,16 +7,6 @@ import {Component, ContextType, ReactNode} from 'react'
 import {Container, Loader, Message} from 'semantic-ui-react'
 import {StoreContext} from 'store'
 
-// const cleanMessages = (messages: Messages) => {
-// 	for (const [key, val] of Object.entries(messages)) {
-// 		if (key === val) {
-// 			delete messages[key]
-// 		}
-// 	}
-
-// 	return messages
-// }
-
 export type I18nLoaderProps = {
 	children: ReactNode
 }
@@ -37,18 +27,6 @@ export class I18nLoader extends Component<I18nLoaderProps> {
 			'../../locale/' + language + '/messages.json'
 		)]
 
-		// Polyfill
-		const needsPolyfill = !window.Intl
-		if (needsPolyfill) {
-			promises.push(
-				import(
-					/* webpackMode: 'lazy' */
-					/* webpackChunkName: 'nv-intl-polyfill' */
-					'intl'
-				),
-			)
-		}
-
 		// Wait for the initial i18n promises before we continue. Our catalog will always be the first arg.
 		let resolutions
 		try {
@@ -60,32 +38,6 @@ export class I18nLoader extends Component<I18nLoaderProps> {
 		}
 		const messages: Messages = resolutions[0].messages
 		// const localeData: LocaleData = resolutions[0].languageData
-
-		// This _must_ be run after `intl` is included and ready.
-		// TODO: is this still needed?
-		if (needsPolyfill) {
-			// TODO: This is also including `kde` and I've got no idea how to get rid of it
-			try {
-				await import(
-					/* webpackMode: 'lazy' */
-					/* webpackChunkName: 'nv-intl-polyfill-[index]' */
-					/* webpackInclude: /(?:de|en|fr|ja|ko|zh).js/ */
-					'intl/locale-data/jsonp/' + language + '.js'
-				)
-			} catch {
-				runInAction(() => this.errored = true)
-				return
-			}
-		}
-
-		// In some misguided attempt to be useful, lingui compiles
-		// messages so that values without translation are set to
-		// their keys. We're using a forked babel transformation that
-		// doesn't strip default values, so we don't want this behavior.
-		// if (catalog && catalog.messages) {
-		// 	cleanMessages(catalog.messages)
-		// }
-		console.log(messages)
 
 		i18n.load({[language]: messages})
 		// TODO: make-plural?
