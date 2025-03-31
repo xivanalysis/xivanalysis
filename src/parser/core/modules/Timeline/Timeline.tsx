@@ -69,9 +69,11 @@ export class Timeline extends Analyser {
 
 	override output() {
 		return <>
-			<Trans id="core.timeline.help-text" render="span" className={styles.helpText}>
-				Scroll or click+drag to pan, ctrl+scroll or pinch to zoom.
-			</Trans>
+			<span className={styles.helpText}>
+				<Trans id="core.timeline.help-text">
+					Scroll or click+drag to pan, ctrl+scroll or pinch to zoom.
+				</Trans>
+			</span>
 			<TimelineComponent
 				rows={this.rows}
 				items={this.items}

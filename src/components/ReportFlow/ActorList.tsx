@@ -95,7 +95,7 @@ function getJobRole(
 
 const UnsupportedWarning = () => (
 	<Segment><Message info icon="code">
-		<Message.Header><Trans id="core.report-flow.job-unsupported.title" render="strong">Favourite job unsupported?</Trans></Message.Header>
+		<Message.Header><strong><Trans id="core.report-flow.job-unsupported.title">Favourite job unsupported?</Trans></strong></Message.Header>
 		<Trans id="core.report-flow.job-unsupported.description">We're always looking to expand our support and accuracy. Come drop by our Discord channel and see how you could help out!</Trans>
 	</Message></Segment>
 )

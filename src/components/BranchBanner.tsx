@@ -33,7 +33,7 @@ export const BranchBanner = observer(function BranchBanner({report}: BranchBanne
 				className={styles.container}
 			>
 				<div className={styles.text}>
-					<Trans id="core.branch-banner.header" render={<Header/>}>
+					<Trans id="core.branch-banner.header" component={Header}>
 						This report is from a different expansion!
 					</Trans>
 					<Trans id="core.branch-banner.description">

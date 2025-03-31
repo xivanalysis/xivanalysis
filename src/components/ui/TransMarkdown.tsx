@@ -15,7 +15,7 @@ function TransMarkdownImpl({i18n, source}: TransMarkdownImplProps) {
 	// ridiculous .replace because lingui is pants on head and escaped the escape characters.
 	const finalSource = i18n
 		? i18n._(source).replace(/\\`/g, '`')
-		: source.defaults || ''
+		: source.message || ''
 
 	return <ReactMarkdown	children={finalSource}/>
 }
