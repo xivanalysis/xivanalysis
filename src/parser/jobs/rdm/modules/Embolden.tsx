@@ -1,4 +1,4 @@
-import {msg} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {RaidBuffWindow} from 'parser/core/modules/ActionWindow'
 import {DISPLAY_ORDER} from './DISPLAY_ORDER'
 

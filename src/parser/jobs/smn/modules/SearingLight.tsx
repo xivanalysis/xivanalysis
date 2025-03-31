@@ -1,4 +1,5 @@
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
+import {Trans} from '@lingui/react/macro'
 import {ActionLink} from 'components/ui/DbLink'
 import {Status} from 'data/STATUSES'
 import {RaidBuffWindow, ExpectedActionsEvaluator} from 'parser/core/modules/ActionWindow'

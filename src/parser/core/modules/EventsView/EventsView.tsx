@@ -1,4 +1,4 @@
-import {msg} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import cx from 'classnames'
 import {Event} from 'event'
 import {Analyser} from 'parser/core/Analyser'

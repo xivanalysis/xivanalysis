@@ -1,4 +1,4 @@
-import {Trans} from '@lingui/macro'
+import {Trans} from '@lingui/react/macro'
 import {Events} from 'event'
 import {Overheal as CoreOverheal, TrackedOverhealOpts} from 'parser/core/modules/Overheal'
 

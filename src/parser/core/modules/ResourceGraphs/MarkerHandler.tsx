@@ -1,5 +1,5 @@
 import {i18n} from '@lingui/core'
-import {Trans} from '@lingui/macro'
+import {Trans} from '@lingui/react/macro'
 import {MouseEventHandler, ReactNode, useCallback, useState} from 'react'
 import {createPortal} from 'react-dom'
 import {ResourceDatum, ResourceMeta} from './ResourceGraphs'

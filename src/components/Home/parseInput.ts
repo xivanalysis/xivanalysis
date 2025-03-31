@@ -1,4 +1,4 @@
-import {msg} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {SearchHandlerResult, reportSources} from 'reportSources'
 
 // Localhost is... a bit generous. But we'll let the rest of the app fail out on that for us.

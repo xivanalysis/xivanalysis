@@ -1,4 +1,4 @@
-import {Trans} from '@lingui/macro'
+import {Trans} from '@lingui/react/macro'
 import Color from 'color'
 import {ActionKey} from 'data/ACTIONS'
 import {Event, Events} from 'event'

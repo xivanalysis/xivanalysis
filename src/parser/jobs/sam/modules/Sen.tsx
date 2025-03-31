@@ -1,4 +1,5 @@
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
+import {Trans} from '@lingui/react/macro'
 import Color from 'color'
 import {ActionLink, DataLink} from 'components/ui/DbLink'
 import {RotationTable} from 'components/ui/RotationTable'

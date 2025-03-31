@@ -1,4 +1,4 @@
-import {Trans} from '@lingui/macro'
+import {Trans} from '@lingui/react/macro'
 import {DataLink} from 'components/ui/DbLink'
 import {SEVERITY} from 'parser/core/modules/Suggestions'
 import {Weaving as CoreWeaving} from 'parser/core/modules/Weaving'

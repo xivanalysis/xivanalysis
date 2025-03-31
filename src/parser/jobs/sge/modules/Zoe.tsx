@@ -1,5 +1,6 @@
 import {MessageDescriptor} from '@lingui/core'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
+import {Trans} from '@lingui/react/macro'
 import {DataLink} from 'components/ui/DbLink'
 import {ActionKey} from 'data/ACTIONS'
 import {Status} from 'data/STATUSES'

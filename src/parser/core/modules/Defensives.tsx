@@ -1,4 +1,5 @@
-import {msg, Plural, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
+import {Plural, Trans} from '@lingui/react/macro'
 import {ActionLink} from 'components/ui/DbLink'
 import {Action, ActionKey} from 'data/ACTIONS'
 import {JOBS, RoleKey} from 'data/JOBS'

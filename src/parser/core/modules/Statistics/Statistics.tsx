@@ -1,4 +1,4 @@
-import {msg} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {Analyser, DisplayMode} from 'parser/core/Analyser'
 import {ComponentType} from 'react'
 import {DISPLAY_ORDER} from '../DISPLAY_ORDER'

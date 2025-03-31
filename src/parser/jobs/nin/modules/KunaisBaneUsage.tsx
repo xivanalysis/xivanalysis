@@ -1,4 +1,4 @@
-import {Trans, Plural} from '@lingui/macro'
+import {Trans, Plural} from '@lingui/react/macro'
 import {ActionLink} from 'components/ui/DbLink'
 import {ActionKey} from 'data/ACTIONS'
 import {Event, Events} from 'event'

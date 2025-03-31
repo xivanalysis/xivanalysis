@@ -1,4 +1,4 @@
-import {Trans} from '@lingui/macro'
+import {Trans} from '@lingui/react/macro'
 import {JobIcon} from 'components/ui/JobIcon'
 import {NormalisedMessage} from 'components/ui/NormalisedMessage'
 import {GameEdition} from 'data/EDITIONS'

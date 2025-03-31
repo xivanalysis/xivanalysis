@@ -1,5 +1,5 @@
-//I've heard it's cool to build your own job gauge.
-import {msg, Trans, Plural} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
+import {Trans, Plural} from '@lingui/react/macro'
 import Color from 'color'
 import {DataLink} from 'components/ui/DbLink'
 import {ActionKey} from 'data/ACTIONS'

@@ -1,4 +1,5 @@
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
+import {Trans} from '@lingui/react/macro'
 import * as Sentry from '@sentry/browser'
 import {Message, Segment} from 'akkd'
 import {NormalisedMessage} from 'components/ui/NormalisedMessage'

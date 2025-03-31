@@ -1,4 +1,4 @@
-import {Plural, Trans} from '@lingui/macro'
+import {Plural, Trans} from '@lingui/react/macro'
 import {DataLink} from 'components/ui/DbLink'
 import _ from 'lodash'
 import {calculateExpectedGcdsForTime, EvaluatedAction} from 'parser/core/modules/ActionWindow'

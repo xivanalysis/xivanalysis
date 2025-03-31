@@ -1,9 +1,5 @@
-/*
-* this module differs from defensives because these ones are only active after an ability has been prepped.
-* e.g. Sun Sign requires Neutral Sect
-*/
-
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
+import {Trans} from '@lingui/react/macro'
 import {ActionLink, DataLink, StatusLink} from 'components/ui/DbLink'
 import {Action} from 'data/ACTIONS'
 import {Status} from 'data/STATUSES'
@@ -16,6 +12,11 @@ import {Timeline} from 'parser/core/modules/Timeline'
 import {ReactNode} from 'react'
 import {Accordion, Button, Table} from 'semantic-ui-react'
 import {DISPLAY_ORDER} from './DISPLAY_ORDER'
+
+/*
+* this module differs from defensives because these ones are only active after an ability has been prepped.
+* e.g. Sun Sign requires Neutral Sect
+*/
 
 const DEFENSIVE_USE_WINDOW = 20 //this is used since the defensive cooldown isn't necessarily displayed due to it relating to an underlying status or action
 

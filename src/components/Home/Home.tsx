@@ -1,4 +1,5 @@
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
+import {Trans} from '@lingui/react/macro'
 import {LinkDiscord, LinkGitHub} from 'components/GlobalSidebar/Links'
 import {VersionInfo} from 'components/GlobalSidebar/Version'
 import {I18nMenu} from 'components/ui/I18nMenu'

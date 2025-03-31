@@ -1,4 +1,4 @@
-import {Trans, Plural} from '@lingui/macro'
+import {Trans, Plural} from '@lingui/react/macro'
 import {DataLink} from 'components/ui/DbLink'
 import {Procs as CoreProcs} from 'parser/core/modules/Procs'
 import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'

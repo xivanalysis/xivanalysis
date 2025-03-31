@@ -1,4 +1,4 @@
-import {Trans, Plural} from '@lingui/macro'
+import {Trans, Plural} from '@lingui/react/macro'
 import {DataLink} from 'components/ui/DbLink'
 import {Action} from 'data/ACTIONS'
 import {EvaluatedAction, ExpectedActionsEvaluator} from 'parser/core/modules/ActionWindow'

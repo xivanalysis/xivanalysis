@@ -1,4 +1,4 @@
-import {Trans} from '@lingui/macro'
+import {Trans} from '@lingui/react/macro'
 import {getIsAprilFirst} from '..'
 import {Analyser} from '../Analyser'
 import {dependency} from '../Injectable'

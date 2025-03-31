@@ -1,4 +1,4 @@
-import {Trans, Plural} from '@lingui/macro'
+import {Trans, Plural} from '@lingui/react/macro'
 import {DataLink} from 'components/ui/DbLink'
 import {BASE_GCD} from 'data/CONSTANTS'
 import {Event, Events} from 'event'

@@ -1,4 +1,5 @@
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
+import {Trans} from '@lingui/react/macro'
 import {ActionLink, DataLink, StatusLink} from 'components/ui/DbLink'
 import {BlueAction} from 'data/ACTIONS/root/BLU'
 import {Status} from 'data/STATUSES'

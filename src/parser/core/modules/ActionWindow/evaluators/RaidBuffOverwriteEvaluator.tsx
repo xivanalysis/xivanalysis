@@ -1,4 +1,4 @@
-import {Trans} from '@lingui/macro'
+import {Trans} from '@lingui/react/macro'
 import {Status} from 'data/STATUSES'
 import {Events} from 'event'
 import _ from 'lodash'

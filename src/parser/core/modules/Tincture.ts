@@ -1,4 +1,4 @@
-import {msg} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {BuffWindow} from './ActionWindow/windows/BuffWindow'
 
 export class Tincture extends BuffWindow {

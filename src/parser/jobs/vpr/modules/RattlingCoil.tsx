@@ -1,4 +1,5 @@
-import {msg, Trans, Plural} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
+import {Trans, Plural} from '@lingui/react/macro'
 import Color from 'color'
 import {ActionLink, DataLink} from 'components/ui/DbLink'
 import {Event, Events} from 'event'

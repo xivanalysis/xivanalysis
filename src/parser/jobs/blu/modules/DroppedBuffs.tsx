@@ -1,4 +1,4 @@
-import {Trans, Plural} from '@lingui/macro'
+import {Trans, Plural} from '@lingui/react/macro'
 import {StatusLink} from 'components/ui/DbLink'
 import {STATUSES, Status} from 'data/STATUSES'
 import {Event, Events} from 'event'

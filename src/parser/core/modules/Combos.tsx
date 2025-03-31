@@ -1,6 +1,5 @@
-// If you can make it through this entire file without hitting semantic saturation of the word "combo", hats off to you. IT DOESN'T LOOK REAL ANYMORE.
-
-import {msg, Plural, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
+import {Plural, Trans} from '@lingui/react/macro'
 import {Rotation} from 'components/ui/Rotation'
 import {ActionCombo} from 'data/ACTIONS/type'
 import {iconUrl} from 'data/icon'

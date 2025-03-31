@@ -1,37 +1,5 @@
-//                     Lv.89 DRIFTING EA
-//
-//                          ``......`
-//                 `-:+sydmNNNNNNNNNNNmdys+:.
-//             .:ohmNMMMMMMMMMMMMMMMMMMMMMMMNmy+-
-//          .+hNMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMNdo.
-//       `:hNMMMMMMMMMMMMMMMMMMMMMMMMMMNmmmNMMMMMMMNy-
-//      /dMMMMMMMMMMMMMMMMMMMMMMMMMMms:-....:ohNMMMMMNs.
-//    .yMMMMMMMMMMMMMMMMMMMMMMMMMMMs.          .omMMMMMm/
-//   -mMMMMMMMMMMMMMMMMMMMMMMMMMMMs          --. .sNMMMMMs`
-//  .mMMMMMMMMMMMMMMMMMMMMMMMMMMMM. yhy:    :MMNs  :NMMMMMy`
-//  hMMMMMMMMMMMMMMMMMMMMMMMMMMMMM. mMMM:   `hMMM.  :MMMMMMo
-// -MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMo .yNN/    `:o+    sMMMMMM-
-// oMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM/  ``             .MMMMMMy
-// sMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMs`                dMMMMMM`
-// +MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMm-               sMMMMMM:
-// .MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMo              /MMMMMM+
-//  hMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMh`            :MMMMMMo
-//  .MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMd.           -MMMMMM:
-//   +MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMd`          -MMMMMN`
-//    yMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMh          -MMMMMo
-//    `dMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM/         -MMMMN.
-//     .mMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMo         .MMMMy
-//      -NMMMMMMMMMMMMMMMMMyNMMMMMMMMMMMMMMM:         .MMMM:
-//       :NMMMMMMMMMMMMMMMMd-hMMMMdoMMMMMMMN`         `MMMM`
-//        /NMMMMMMMhhMMMMMMM/`:so:` NMMMMMMd           NMMN
-//         /NMMMMMMy /mMN++hd`      oMMMMMMm           yMMM
-//          /NMMMMMo  `+h   .`       +NMMMMM/          -MMM`
-//           +MMMMM-                  .sNMMMN-          +MM:
-//            dMMM+                     .omMMm.          +Ns
-//            :Mm:                         :smm-          ./
-//             /                              -+-
-
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
+import {Trans} from '@lingui/react/macro'
 import {Tooltip, ActionLink} from 'components/ui/DbLink'
 import {Event, Events} from 'event'
 import {Analyser} from 'parser/core/Analyser'

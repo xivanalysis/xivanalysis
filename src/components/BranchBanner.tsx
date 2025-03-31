@@ -1,4 +1,4 @@
-import {Trans} from '@lingui/macro'
+import {Trans} from '@lingui/react/macro'
 import {Segment} from 'akkd'
 import {PATCHES, getPatch} from 'data/PATCHES'
 import {observer} from 'mobx-react'

@@ -1,4 +1,5 @@
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
+import {Trans} from '@lingui/react/macro'
 import {TimeLineChart} from 'components/ui/TimeLineChart'
 import {StatusKey} from 'data/STATUSES'
 import {Event, Events} from 'event'

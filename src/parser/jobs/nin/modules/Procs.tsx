@@ -1,9 +1,5 @@
-/**
- * Example logs:
- * https://www.fflogs.com/reports/gWpnqRyfFY1TZm7D#fight=1 (2 dropped Phantom Kamaitachis, 1 dropped Tenri Jindo)
- */
-
-import {msg, Plural, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
+import {Plural, Trans} from '@lingui/react/macro'
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
 import {Procs as CoreProcs} from 'parser/core/modules/Procs'
 import {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
