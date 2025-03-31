@@ -52,6 +52,7 @@
     "intersection-observer": "^0.12",
     "ky": "^0.24",
     "lodash": "^4.17.13",
+    "make-plural": "^6",
     "mobx": "^6.13.6",
     "mobx-react": "^9.2.0",
     "react": "^16.14.0",
