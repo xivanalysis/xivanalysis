@@ -1,4 +1,4 @@
-import {defineMessage, Trans, Plural} from '@lingui/macro'
+import {msg, Trans, Plural} from '@lingui/macro'
 import {StatusLink} from 'components/ui/DbLink'
 import {Action} from 'data/ACTIONS'
 import {iconUrl} from 'data/icon'
@@ -64,7 +64,7 @@ const DEFAULT_SEVERITY_TIERS = {
 
 export abstract class Procs extends Analyser {
 	static override handle = 'procs'
-	static override title = defineMessage({id: 'core.procs.title', message: 'Proc Issues'})
+	static override title = msg({id: 'core.procs.title', message: 'Proc Issues'})
 
 	@dependency private downtime!: Downtime
 	@dependency protected suggestions!: Suggestions

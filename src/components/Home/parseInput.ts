@@ -1,4 +1,4 @@
-import {defineMessage} from '@lingui/macro'
+import {msg} from '@lingui/macro'
 import {SearchHandlerResult, reportSources} from 'reportSources'
 
 // Localhost is... a bit generous. But we'll let the rest of the app fail out on that for us.
@@ -35,6 +35,6 @@ export function parseInput(input: string): SearchHandlerResult {
 
 	return {
 		valid: false,
-		reason: defineMessage({id: 'core.home.report-search.invalid-query', message: 'The provided query does not match any of the expected formats.'}),
+		reason: msg({id: 'core.home.report-search.invalid-query', message: 'The provided query does not match any of the expected formats.'}),
 	}
 }

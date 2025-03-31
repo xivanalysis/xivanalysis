@@ -1,4 +1,4 @@
-import {defineMessage, Plural, Trans} from '@lingui/macro'
+import {msg, Plural, Trans} from '@lingui/macro'
 import {DataLink} from 'components/ui/DbLink'
 import {Event} from 'event'
 import {Analyser} from 'parser/core/Analyser'
@@ -21,7 +21,7 @@ const SEVERITIES = {
 
 export class Helios extends Analyser {
 	static override handle = 'horoscope'
-	static override title = defineMessage({id: 'ast.horoscope.title', message: 'Horoscope'})
+	static override title = msg({id: 'ast.horoscope.title', message: 'Horoscope'})
 
 	@dependency private data!: Data
 	@dependency private cooldowns!: Cooldowns

@@ -1,4 +1,4 @@
-import {defineMessage} from '@lingui/macro'
+import {msg} from '@lingui/macro'
 import cx from 'classnames'
 import {Event} from 'event'
 import {Analyser} from 'parser/core/Analyser'
@@ -15,7 +15,7 @@ import styles from './EventsView.module.css'
 const rowHeight = parseInt(styles.rowHeight, 10)
 
 export class EventsView extends Analyser {
-	static override title = defineMessage({id: 'core.events-view.title', message: 'Events View'})
+	static override title = msg({id: 'core.events-view.title', message: 'Events View'})
 	static override handle = 'eventsView'
 	static override displayOrder = DISPLAY_ORDER.EVENTS_VIEW
 	static override debug = true

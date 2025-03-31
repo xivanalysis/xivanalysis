@@ -1,4 +1,4 @@
-import {defineMessage, Trans, Plural} from '@lingui/macro'
+import {msg, Trans, Plural} from '@lingui/macro'
 import Color from 'color'
 import {ActionLink} from 'components/ui/DbLink'
 import {iconUrl} from 'data/icon'
@@ -32,7 +32,7 @@ const GAUGE_COLOR = Color(JOBS.NINJA.colour).fade(FADE_AMOUNT)
 
 export class Ninki extends CoreGauge {
 	static override handle = 'ninkigauge'
-	static override title = defineMessage({id: 'nin.ninki.title', message: 'Ninki Gauge'})
+	static override title = msg({id: 'nin.ninki.title', message: 'Ninki Gauge'})
 
 	@dependency private suggestions!: Suggestions
 

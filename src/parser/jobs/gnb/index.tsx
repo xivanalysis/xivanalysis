@@ -1,10 +1,10 @@
-import {defineMessage} from '@lingui/macro'
+import {msg} from '@lingui/macro'
 import {TransMarkdown} from 'components/ui/TransMarkdown'
 import {CONTRIBUTORS, ROLES} from 'data/CONTRIBUTORS'
 import {Meta} from 'parser/core/Meta'
 import {changelog} from './changelog'
 
-const description = defineMessage({id: 'gnb.about.description', message: `This analyzer looks for the low-hanging, easy to spot issues in your gameplay that can be fixed to improve your damage across a fight as Gunbreaker.
+const description = msg({id: 'gnb.about.description', message: `This analyzer looks for the low-hanging, easy to spot issues in your gameplay that can be fixed to improve your damage across a fight as Gunbreaker.
 If you're looking to learn about how exactly the job plays and functions from the ground up, take a look at a few basic guides:
 
 * [General tanking guide by Aletin](https://goo.gl/nYzAnq)

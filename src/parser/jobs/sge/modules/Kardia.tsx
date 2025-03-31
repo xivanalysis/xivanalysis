@@ -1,4 +1,4 @@
-import {defineMessage, Trans} from '@lingui/macro'
+import {msg, Trans} from '@lingui/macro'
 import {DataLink} from 'components/ui/DbLink'
 import {StatusKey} from 'data/STATUSES'
 import {Analyser} from 'parser/core/Analyser'
@@ -10,7 +10,7 @@ import {Statuses} from 'parser/core/modules/Statuses'
 
 export class Kardia extends Analyser {
 	static override handle = 'kardia'
-	static override title = defineMessage({id: 'sge.kardia.title', message: 'Kardia'})
+	static override title = msg({id: 'sge.kardia.title', message: 'Kardia'})
 
 	@dependency private actors!: Actors
 	@dependency private checklist!: Checklist

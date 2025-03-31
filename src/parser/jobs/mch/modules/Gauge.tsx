@@ -1,4 +1,4 @@
-import {defineMessage, Trans} from '@lingui/macro'
+import {msg, Trans} from '@lingui/macro'
 import Color from 'color'
 import {DataLink} from 'components/ui/DbLink'
 import {Cause, Event, Events} from 'event'
@@ -35,7 +35,7 @@ interface GaugeModifier {
 type GaugeMap = Map<number, GaugeModifier>
 
 export class Gauge extends CoreGauge {
-	static override title = defineMessage({id: 'mch.gauge.title', message: 'Heat & Battery Gauge'})
+	static override title = msg({id: 'mch.gauge.title', message: 'Heat & Battery Gauge'})
 
 	@dependency private actors!: Actors
 	@dependency private suggestions!: Suggestions

@@ -18,12 +18,12 @@ keys should be somewhat descriptive to make it clear for translators what exactl
 If your module has `output`, it should also be given a translated title. This title will be shown above its output, as well as used for the link in the sidebar.
 
 ```typescript
-import {defineMessage} from '@lingui/macro'
+import {msg} from '@lingui/macro'
 import {Analyser} from 'parser/core/Analyser'
 
 export class MyModule extends Analyser {
 	// ...
-	static title = defineMessage({id: 'my-job.my-module.title', message: 'My Module'})
+	static title = msg({id: 'my-job.my-module.title', message: 'My Module'})
 	// ...
 }
 ```
@@ -63,10 +63,10 @@ Sometimes, you _really_ gotta put a lot of content in - it's cases like this tha
 Don't use code blocks (`` `...` ``). Just... don't. Please. It breaks everything.
 
 ```jsx
-import {defineMessage} from '@lingui/macro'
+import {msg} from '@lingui/macro'
 import {TransMarkdown} from 'components/ui/TransMarkdown'
 
-const description = defineMessage({id: 'your-job.about.description', message: `
+const description = msg({id: 'your-job.about.description', message: `
 This is an _example_ of using **markdown** in conjunction with the TransMarkdown component.
 
 I am also [contractually](https://some-url.com/) obliged to remind you to Ruin III everything.

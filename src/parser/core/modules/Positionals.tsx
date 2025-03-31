@@ -1,4 +1,4 @@
-import {defineMessage, Trans} from '@lingui/macro'
+import {msg, Trans} from '@lingui/macro'
 import {ActionLink, DataLink} from 'components/ui/DbLink'
 import {Action} from 'data/ACTIONS'
 import {BonusModifier} from 'data/ACTIONS/type'
@@ -27,7 +27,7 @@ export abstract class Positionals extends Analyser {
 	@dependency private timeline!: Timeline
 
 	static override handle = 'positionals'
-	static override title = defineMessage({id: 'core.positionals.title', message: 'Positionals'})
+	static override title = msg({id: 'core.positionals.title', message: 'Positionals'})
 	static override displayOrder = DISPLAY_ORDER.POSITIONALS
 
 	private positionalResults: PositionalResult[] = []

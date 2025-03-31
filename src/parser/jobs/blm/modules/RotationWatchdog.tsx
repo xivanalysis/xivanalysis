@@ -1,4 +1,4 @@
-import {defineMessage, Trans} from '@lingui/macro'
+import {msg, Trans} from '@lingui/macro'
 import {DataLink} from 'components/ui/DbLink'
 import {RotationEvent} from 'components/ui/Rotation'
 import {RotationTargetOutcome} from 'components/ui/RotationTable'
@@ -64,7 +64,7 @@ const EMPTY_GAUGE_STATE: BLMGaugeState = {
 
 export class RotationWatchdog extends RestartWindow {
 	static override handle = 'RotationWatchdog'
-	static override title = defineMessage({id: 'blm.rotation-watchdog.title', message: 'Rotation Outliers'})
+	static override title = msg({id: 'blm.rotation-watchdog.title', message: 'Rotation Outliers'})
 	static override displayOrder = DISPLAY_ORDER.ROTATION
 
 	@dependency private actors!: Actors

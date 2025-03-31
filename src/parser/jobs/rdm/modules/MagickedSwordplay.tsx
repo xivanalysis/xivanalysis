@@ -1,4 +1,4 @@
-import {defineMessage, Trans, Plural} from '@lingui/macro'
+import {msg, Trans, Plural} from '@lingui/macro'
 import {DataLink} from 'components/ui/DbLink'
 import {Procs} from 'parser/core/modules/Procs'
 import {DISPLAY_ORDER} from 'parser/jobs/rdm/modules/DISPLAY_ORDER'
@@ -8,7 +8,7 @@ import {DISPLAY_ORDER} from 'parser/jobs/rdm/modules/DISPLAY_ORDER'
 export class MagickedSwordplay extends Procs {
 	static override displayOrder = DISPLAY_ORDER.MAGICKED_SWORDPLAY
 	static override handle = 'MagickedSwordplay'
-	static override title = defineMessage({id: 'rdm.ms.title', message: 'Magicked Swordplay Windows'})
+	static override title = msg({id: 'rdm.ms.title', message: 'Magicked Swordplay Windows'})
 
 	override trackedProcs = [
 		{

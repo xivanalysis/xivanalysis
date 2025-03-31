@@ -1,4 +1,4 @@
-import {defineMessage, Trans} from '@lingui/macro'
+import {msg, Trans} from '@lingui/macro'
 import {ActionLink} from 'components/ui/DbLink'
 import {Rotation} from 'components/ui/Rotation'
 import {Action} from 'data/ACTIONS'
@@ -28,7 +28,7 @@ const MP_MARGIN = 900
 
 export class Thinair extends Analyser {
 	static override handle = 'thinair'
-	static override title = defineMessage({id: 'whm.thinair.title', message: `Thin Air`})
+	static override title = msg({id: 'whm.thinair.title', message: `Thin Air`})
 	static override displayOrder = DISPLAY_ORDER.THIN_AIR
 
 	@dependency private data!: Data

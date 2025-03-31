@@ -1,4 +1,4 @@
-import {defineMessage, Plural, Trans} from '@lingui/macro'
+import {msg, Plural, Trans} from '@lingui/macro'
 import {DataLink} from 'components/ui/DbLink'
 import {ActionKey} from 'data/ACTIONS'
 import {Event, Events} from 'event'
@@ -35,7 +35,7 @@ const SEVERITY_WASTED_MP_ACTIONS = {
 
 export class MPUsage extends Analyser {
 	static override handle = 'resourceanalyzer'
-	static override title = defineMessage({id: 'drk.resourceanalyzer.title', message: 'Resource Analyzer'})
+	static override title = msg({id: 'drk.resourceanalyzer.title', message: 'Resource Analyzer'})
 	static override displayOrder = DISPLAY_ORDER.RESOURCES
 
 	@dependency private actors!: Actors

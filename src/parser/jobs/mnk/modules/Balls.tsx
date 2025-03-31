@@ -1,4 +1,4 @@
-import {defineMessage, Plural, Trans} from '@lingui/macro'
+import {msg, Plural, Trans} from '@lingui/macro'
 import Color from 'color'
 import {ActionLink} from 'components/ui/DbLink'
 import {Event, Events} from 'event'
@@ -22,7 +22,7 @@ const OVERCAP_SEVERITY = {
 }
 
 export class Balls extends Gauge {
-	static override title = defineMessage({id: 'mnk.balls.title', message: 'Fury Gauge'})
+	static override title = msg({id: 'mnk.balls.title', message: 'Fury Gauge'})
 
 	@dependency private actors!: Actors
 	@dependency private suggestions!: Suggestions

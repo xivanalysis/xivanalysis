@@ -1,10 +1,10 @@
-import {defineMessage} from '@lingui/macro'
+import {msg} from '@lingui/macro'
 import {TransMarkdown} from 'components/ui/TransMarkdown'
 import {CONTRIBUTORS, ROLES} from 'data/CONTRIBUTORS'
 import {Meta} from 'parser/core/Meta'
 import {changelog} from './changelog'
 
-const description = defineMessage({id: 'pct.about.description', message: `
+const description = msg({id: 'pct.about.description', message: `
 Don't know your oils from your acrylics? Your stamps from your brushes? Do you want to Hammer out a series of brilliant Portraits?
 
 This page will help you find your Muse, so you can Inspire the rest of your party with your artwork!

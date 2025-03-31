@@ -1,4 +1,4 @@
-import {defineMessage, Plural, Trans} from '@lingui/macro'
+import {msg, Plural, Trans} from '@lingui/macro'
 import {ActionLink} from 'components/ui/DbLink'
 import {ACTIONS} from 'data/ACTIONS'
 import {Event, Events} from 'event'
@@ -11,7 +11,7 @@ import {Suggestions, SEVERITY, Suggestion} from 'parser/core/modules/Suggestions
 
 export class Physick extends Analyser {
 	static override handle = 'physick'
-	static override title = defineMessage({id: 'smn.physick.title', message: 'Physick'})
+	static override title = msg({id: 'smn.physick.title', message: 'Physick'})
 
 	@dependency private data!: Data
 	@dependency private downtime!: Downtime

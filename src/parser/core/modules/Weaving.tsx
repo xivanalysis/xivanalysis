@@ -1,4 +1,4 @@
-import {defineMessage, Trans, Plural} from '@lingui/macro'
+import {msg, Trans, Plural} from '@lingui/macro'
 import {NormalisedMessage} from 'components/ui/NormalisedMessage'
 import {Rotation} from 'components/ui/Rotation'
 import {Action} from 'data/ACTIONS'
@@ -51,7 +51,7 @@ export class Weaving extends Analyser {
 	@dependency protected suggestions!: Suggestions
 	@dependency private timeline!: Timeline
 
-	static override title = defineMessage({id: 'core.weaving.title', message: 'Weaving Issues'})
+	static override title = msg({id: 'core.weaving.title', message: 'Weaving Issues'})
 
 	protected suggestionIcon: string = iconUrl(ICON_WEAVING_ACTION)
 

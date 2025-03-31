@@ -1,4 +1,4 @@
-import {defineMessage, Trans} from '@lingui/macro'
+import {msg, Trans} from '@lingui/macro'
 import {ActionLink} from 'components/ui/DbLink'
 import {Event, Events} from 'event'
 import {filter} from 'parser/core/filter'
@@ -23,7 +23,7 @@ export interface DfdTracker {
 
 export class LanceCharge extends BuffWindow {
 	static override handle: string = 'lancecharge'
-	static override title = defineMessage({id: 'drg.lancecharge.title', message: 'Lance Charge'})
+	static override title = msg({id: 'drg.lancecharge.title', message: 'Lance Charge'})
 	static override displayOrder = DISPLAY_ORDER.LANCE_CHARGE
 
 	@dependency globalCooldown!: GlobalCooldown

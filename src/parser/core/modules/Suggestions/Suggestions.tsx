@@ -1,4 +1,4 @@
-import {defineMessage} from '@lingui/macro'
+import {msg} from '@lingui/macro'
 import {Analyser, DisplayMode} from 'parser/core/Analyser'
 import {DISPLAY_ORDER} from '../DISPLAY_ORDER'
 import {Suggestions as SuggestionsComponent} from './Component'
@@ -8,7 +8,7 @@ export class Suggestions extends Analyser {
 	static override handle = 'suggestions'
 	static override displayOrder = DISPLAY_ORDER.SUGGESTIONS
 	static override displayMode = DisplayMode.FULL
-	static override title = defineMessage({id: 'core.suggestions.title', message: 'Suggestions'})
+	static override title = msg({id: 'core.suggestions.title', message: 'Suggestions'})
 
 	_suggestions: Suggestion[] = []
 

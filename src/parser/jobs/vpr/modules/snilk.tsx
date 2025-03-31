@@ -1,4 +1,4 @@
-import {defineMessage, Trans} from '@lingui/macro'
+import {msg, Trans} from '@lingui/macro'
 import Color from 'color'
 import {DataLink} from 'components/ui/DbLink'
 import {JOBS} from 'data/JOBS'
@@ -21,7 +21,7 @@ const SUGGESTION_TIERS = {
 }
 
 export class snilk extends CoreGauge {
-	static override title = defineMessage({id: 'vpr.gauge.title', message: 'Serpent Offerings Gauge'})
+	static override title = msg({id: 'vpr.gauge.title', message: 'Serpent Offerings Gauge'})
 	static override displayOrder = DISPLAY_ORDER.SNILK
 	@dependency private suggestions!: Suggestions
 

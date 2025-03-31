@@ -1,4 +1,4 @@
-import {defineMessage, Trans} from '@lingui/macro'
+import {msg, Trans} from '@lingui/macro'
 import {DataLink} from 'components/ui/DbLink'
 import {EvaluatedAction, ExpectedActionsEvaluator, TimedWindow} from 'parser/core/modules/ActionWindow'
 import {HistoryEntry} from 'parser/core/modules/ActionWindow/History'
@@ -18,7 +18,7 @@ const PREPEND_MESSAGE = <Trans id="vpr.serpentsIre.prepend-message"><DataLink ac
 
 export class SerpentsIre extends TimedWindow { // AKA Peusdo 2 Minute Window
 	static override handle = 'serpentsIre'
-	static override title = defineMessage({id: 'vpr.serpents_ire.title', message: 'Serpent\'s Ire'})
+	static override title = msg({id: 'vpr.serpents_ire.title', message: 'Serpent\'s Ire'})
 	static override displayOrder = DISPLAY_ORDER.SERPENTS_IRE
 
 	override startAction = this.data.actions.SERPENTS_IRE

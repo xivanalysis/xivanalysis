@@ -1,10 +1,10 @@
-import {defineMessage, Trans} from '@lingui/macro'
+import {msg, Trans} from '@lingui/macro'
 import {DataLink} from 'components/ui/DbLink'
 import {Procs} from 'parser/core/modules/Procs'
 import {DISPLAY_ORDER} from './DISPLAY_ORDER'
 
 export class RefulgentProcs extends Procs {
-	static override title = defineMessage({id: 'brd.procs.title', message: 'Hawk\'s Eye Overwrites'})
+	static override title = msg({id: 'brd.procs.title', message: 'Hawk\'s Eye Overwrites'})
 	static override displayOrder = DISPLAY_ORDER.REFULGENT_PROCS
 
 	override trackedProcs = [

@@ -1,10 +1,10 @@
-import {defineMessage} from '@lingui/macro'
+import {msg} from '@lingui/macro'
 import {RaidBuffWindow} from 'parser/core/modules/ActionWindow'
 import {DISPLAY_ORDER} from './DISPLAY_ORDER'
 
 export class Embolden extends RaidBuffWindow {
 	static override handle = 'embolden'
-	static override title = defineMessage({id: 'rdm.embolden.title', message: 'Embolden'})
+	static override title = msg({id: 'rdm.embolden.title', message: 'Embolden'})
 	static override displayOrder = DISPLAY_ORDER.EMBOLDEN
 	override buffStatus = [this.data.statuses.EMBOLDEN_SELF, this.data.statuses.EMBOLDEN_PARTY]
 

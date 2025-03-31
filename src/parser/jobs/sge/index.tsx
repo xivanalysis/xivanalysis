@@ -1,10 +1,10 @@
-import {defineMessage} from '@lingui/macro'
+import {msg} from '@lingui/macro'
 import {TransMarkdown} from 'components/ui/TransMarkdown'
 import {CONTRIBUTORS, ROLES} from 'data/CONTRIBUTORS'
 import {Meta} from 'parser/core/Meta'
 import {changelog} from './changelog'
 
-const description = defineMessage({id: 'sge.about.description', message: `
+const description = msg({id: 'sge.about.description', message: `
 This analyser aims to identify some of the low-hanging fruit that could be used to improve your SGE gameplay, as well as give a deeper insight into what happened during an encounter.
 
 If you would like to learn more about SGE, check the guides over at [The Balance](https://thebalanceffxiv.com/), and have a chat in the #sge_questions channel.

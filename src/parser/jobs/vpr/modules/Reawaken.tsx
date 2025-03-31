@@ -1,4 +1,4 @@
-import {defineMessage, Trans} from '@lingui/macro'
+import {msg, Trans} from '@lingui/macro'
 import {DataLink} from 'components/ui/DbLink'
 import {RotationTargetOutcome} from 'components/ui/RotationTable'
 import {Action, ActionKey} from 'data/ACTIONS'
@@ -85,7 +85,7 @@ class GenerationsEvalutor extends NotesEvaluator {
 
 export class Reawaken extends BuffWindow {
 	static override handle = 'reawaken'
-	static override title = defineMessage({id: 'vpr.reawaken.title', message: 'Reawaken'})
+	static override title = msg({id: 'vpr.reawaken.title', message: 'Reawaken'})
 	static override displayOrder = DISPLAY_ORDER.REAWAKEN
 
 	override buffStatus = this.data.statuses.REAWAKENED

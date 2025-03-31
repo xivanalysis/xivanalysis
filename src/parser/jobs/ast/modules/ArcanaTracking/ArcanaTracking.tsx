@@ -1,4 +1,4 @@
-import {defineMessage} from '@lingui/macro'
+import {msg} from '@lingui/macro'
 import {Action} from 'data/ACTIONS'
 import {ActionRoot} from 'data/ACTIONS/root'
 import {Status} from 'data/STATUSES'
@@ -32,7 +32,7 @@ export interface CardState extends CardSlotMap {
 // TODO: Try to track for when a seal was not given on pull due to latency?
 export class ArcanaTracking extends Analyser {
 	static override handle = 'arcanaTracking'
-	static override title = defineMessage({id: 'ast.arcana-tracking.title', message: 'Arcana Tracking'})
+	static override title = msg({id: 'ast.arcana-tracking.title', message: 'Arcana Tracking'})
 	static override displayOrder = DISPLAY_ORDER.ARCANA_TRACKING
 
 	@dependency private data!: Data

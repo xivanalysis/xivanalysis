@@ -1,4 +1,4 @@
-import {defineMessage, Plural, Trans} from '@lingui/macro'
+import {msg, Plural, Trans} from '@lingui/macro'
 import {DataLink} from 'components/ui/DbLink'
 import {Action} from 'data/ACTIONS'
 import {Status} from 'data/STATUSES'
@@ -24,7 +24,7 @@ const SEVERITIES = {
 
 export class Draw extends Analyser {
 	static override handle = 'draw'
-	static override title = defineMessage({id: 'ast.draw.title', message: 'Draw'})
+	static override title = msg({id: 'ast.draw.title', message: 'Draw'})
 
 	@dependency private data!: Data
 	@dependency private checklist!: Checklist

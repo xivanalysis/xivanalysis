@@ -1,4 +1,4 @@
-import {defineMessage, Trans} from '@lingui/macro'
+import {msg, Trans} from '@lingui/macro'
 import Color from 'color'
 import {DataLink} from 'components/ui/DbLink'
 import {Event, Events} from 'event'
@@ -25,7 +25,7 @@ const FADE = 0.75
 const SHOHA_COLOR = Color('#cf2621').fade(FADE)
 
 export class Shoha extends CoreGauge {
-	static override title = defineMessage({id: 'sam.shoha.title', message: 'Meditatation Stacks'})
+	static override title = msg({id: 'sam.shoha.title', message: 'Meditatation Stacks'})
 	static override handle = 'shoha'
 	static override displayOrder = DISPLAY_ORDER.SHOHA
 

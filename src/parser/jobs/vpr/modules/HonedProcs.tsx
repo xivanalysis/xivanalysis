@@ -1,4 +1,4 @@
-import {defineMessage, Trans} from '@lingui/macro'
+import {msg, Trans} from '@lingui/macro'
 import {DataLink, StatusLink} from 'components/ui/DbLink'
 import {Status} from 'data/STATUSES'
 import {dependency} from 'parser/core/Injectable'
@@ -21,7 +21,7 @@ const SEVERITIES = {
 const HONED_PROC_LOST_POTENCY = 100 // Aoes are only 20 potency... do I account for them?
 export class HonedProcs extends CoreProcs {
 	static override handle = 'honedprocs'
-	static override title = defineMessage({id: 'vpr.honedprocs.title', message: 'Honed Procs'})
+	static override title = msg({id: 'vpr.honedprocs.title', message: 'Honed Procs'})
 
 	override ProcGroupLabel = <Trans id="vpr.HonedProcs.group.label">Honed Procs</Trans>
 

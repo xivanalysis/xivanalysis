@@ -1,4 +1,4 @@
-import {defineMessage, Trans, Plural} from '@lingui/macro'
+import {msg, Trans, Plural} from '@lingui/macro'
 import {DataLink} from 'components/ui/DbLink'
 import {ActionKey} from 'data/ACTIONS'
 import {Cause, Event, Events} from 'event'
@@ -55,7 +55,7 @@ const MIN_COT_HITS: number = 3
 
 export class Buffs extends Analyser {
 	static override handle = 'buffs'
-	static override title = defineMessage({id: 'drg.buffs.title', message: 'Buffs'})
+	static override title = msg({id: 'drg.buffs.title', message: 'Buffs'})
 
 	private badLifeSurges: number = 0
 	private lifeSurgeCasts: number[] = []

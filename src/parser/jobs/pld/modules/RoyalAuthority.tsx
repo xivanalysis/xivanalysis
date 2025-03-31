@@ -1,4 +1,4 @@
-import {defineMessage, Trans} from '@lingui/macro'
+import {msg, Trans} from '@lingui/macro'
 import {DataLink} from 'components/ui/DbLink'
 import {Analyser} from 'parser/core/Analyser'
 import {dependency} from 'parser/core/Injectable'
@@ -24,7 +24,7 @@ type RoyalAuthorityDependentUsages = {
 
 export class RoyalAuthority extends Analyser {
 	static override handle = 'Royal Authority'
-	static override title = defineMessage({id: 'pld.royal-authority.title', message: 'Royal Authority'})
+	static override title = msg({id: 'pld.royal-authority.title', message: 'Royal Authority'})
 
 	@dependency private checklist!: Checklist
 	@dependency private data!: Data

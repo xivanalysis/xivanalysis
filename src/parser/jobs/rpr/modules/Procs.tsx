@@ -1,4 +1,4 @@
-import {defineMessage, Trans, Plural} from '@lingui/macro'
+import {msg, Trans, Plural} from '@lingui/macro'
 import {DataLink} from 'components/ui/DbLink'
 import {Event, Events} from 'event'
 import {filter} from 'parser/core/filter'
@@ -21,7 +21,7 @@ const ENCHANCED_GIBBET_IGNORE_INTERVAL = 2300
 
 export class Procs extends CoreProcs {
 	static override handle = 'enhanced procs'
-	static override title = defineMessage({id: 'rpr.procs.title', message: 'Enhanced Procs'})
+	static override title = msg({id: 'rpr.procs.title', message: 'Enhanced Procs'})
 	static override debug = false
 
 	private badStalks: number = 0

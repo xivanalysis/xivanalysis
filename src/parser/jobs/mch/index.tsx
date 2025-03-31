@@ -1,10 +1,10 @@
-import {defineMessage} from '@lingui/macro'
+import {msg} from '@lingui/macro'
 import {TransMarkdown} from 'components/ui/TransMarkdown'
 import {CONTRIBUTORS, ROLES} from 'data/CONTRIBUTORS'
 import {Meta} from 'parser/core/Meta'
 import {changelog} from './changelog'
 
-const about = defineMessage({id: 'mch.about.description', message: `
+const about = msg({id: 'mch.about.description', message: `
 Welcome to the Machinist module! This job is all about managing cooldowns to dish out as much damage as possible,
 especially during your party's raid buff windows. This page will walk you through how well you utilized each of your major
 cooldowns and resources.

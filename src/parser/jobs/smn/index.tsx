@@ -1,10 +1,10 @@
-import {defineMessage} from '@lingui/macro'
+import {msg} from '@lingui/macro'
 import {TransMarkdown} from 'components/ui/TransMarkdown'
 import {CONTRIBUTORS, ROLES} from 'data/CONTRIBUTORS'
 import {Meta} from 'parser/core/Meta'
 import {changelog} from './changelog'
 
-const description = defineMessage({id: 'smn.about.description', message: `
+const description = msg({id: 'smn.about.description', message: `
 While the SMN toolkit is very flexible and full optimization will require you to consider each fight and your stats individually, there are still some common guidelines to follow in any fight.
 
 This page will highlight those common rules and provide some additional visualizations of your rotation within a fight that you can use to further refine your gameplay.

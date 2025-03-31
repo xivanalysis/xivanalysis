@@ -1,4 +1,4 @@
-import {defineMessage, Plural, Trans} from '@lingui/macro'
+import {msg, Plural, Trans} from '@lingui/macro'
 import {DataLink} from 'components/ui/DbLink'
 import {Action} from 'data/ACTIONS'
 import {Event, Events} from 'event'
@@ -24,7 +24,7 @@ const SEVERETIES = {
 
 export class EarthlyStar extends Analyser {
 	static override handle = 'earthlystar'
-	static override title = defineMessage({id: 'ast.earthly-star.title', message: 'Earthly Star'})
+	static override title = msg({id: 'ast.earthly-star.title', message: 'Earthly Star'})
 
 	@dependency private data!: Data
 	@dependency private suggestions!: Suggestions

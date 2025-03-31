@@ -1,4 +1,4 @@
-import {defineMessage} from '@lingui/macro'
+import {msg} from '@lingui/macro'
 import {Analyser, DisplayMode} from 'parser/core/Analyser'
 import {DISPLAY_ORDER} from '../DISPLAY_ORDER'
 import {ChangeLog as ChangelogComponent} from './Component'
@@ -8,7 +8,7 @@ export class ChangeLog extends Analyser {
 	static override displayOrder = DISPLAY_ORDER.CHANGELOG
 	static override displayMode = DisplayMode.FULL
 
-	static override title = defineMessage({id: 'core.changelog.title', message: 'Changelog'})
+	static override title = msg({id: 'core.changelog.title', message: 'Changelog'})
 
 	override output() {
 		const {changelog} = this.parser.meta

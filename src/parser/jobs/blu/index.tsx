@@ -1,10 +1,10 @@
-import {defineMessage} from '@lingui/macro'
+import {msg} from '@lingui/macro'
 import {TransMarkdown} from 'components/ui/TransMarkdown'
 import {CONTRIBUTORS, ROLES} from 'data/CONTRIBUTORS'
 import {Meta} from 'parser/core/Meta'
 import {changelog} from './changelog'
 
-const description = defineMessage({id: 'blu.about.description', message: `BLU has wildly different play styles depending on your mimicry. This page will primarily focus on the DPS aspect of the job, so do take the advice with a grain of salt if you are healing or tanking.
+const description = msg({id: 'blu.about.description', message: `BLU has wildly different play styles depending on your mimicry. This page will primarily focus on the DPS aspect of the job, so do take the advice with a grain of salt if you are healing or tanking.
 
 Worth also keeping in mind the usual adage that BLU content is won and lost on mechanics, not DPS. Following the suggestions here to optimize your performance will always be welcome, but it should not detract from mechanics. Greeding Phantom Flurry ticks at the expense of your teammates' sanity is not recommended.
 

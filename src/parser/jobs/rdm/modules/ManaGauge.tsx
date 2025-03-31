@@ -1,4 +1,4 @@
-import {defineMessage, Trans} from '@lingui/macro'
+import {msg, Trans} from '@lingui/macro'
 import {JOBS} from 'data/JOBS'
 import {Event, Events} from 'event'
 import {filter, oneOf} from 'parser/core/filter'
@@ -18,7 +18,7 @@ export const MANA_DIFFERENCE_THRESHOLD = 30
 export const MANA_CAP = 100
 
 export class ManaGauge extends CoreGauge {
-	static override title = defineMessage({id: 'rdm.gauge.title', message: 'Mana Gauge Usage'})
+	static override title = msg({id: 'rdm.gauge.title', message: 'Mana Gauge Usage'})
 
 	@dependency private suggestions!: Suggestions
 	@dependency private actors!: Actors

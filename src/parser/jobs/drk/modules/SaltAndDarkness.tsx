@@ -1,4 +1,4 @@
-import {defineMessage, Plural, Trans} from '@lingui/macro'
+import {msg, Plural, Trans} from '@lingui/macro'
 import {DataLink} from 'components/ui/DbLink'
 import {Event, Events} from 'event'
 import {Analyser} from 'parser/core/Analyser'
@@ -22,7 +22,7 @@ const SEVERITIES = {
 
 export class SaltAndDarkness extends Analyser {
 	static override handle = 'saltanddarkness'
-	static override title = defineMessage({id: 'drk.saltanddarkness.title', message: 'Salt And Darkness'})
+	static override title = msg({id: 'drk.saltanddarkness.title', message: 'Salt And Darkness'})
 	static override displayOrder = DISPLAY_ORDER.RESOURCES
 
 	@dependency private data!: Data

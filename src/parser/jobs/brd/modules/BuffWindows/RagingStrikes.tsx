@@ -1,4 +1,4 @@
-import {defineMessage, Trans} from '@lingui/macro'
+import {msg, Trans} from '@lingui/macro'
 import {DataLink, StatusLink} from 'components/ui/DbLink'
 import {Action} from 'data/ACTIONS'
 import {Status} from 'data/STATUSES'
@@ -8,7 +8,7 @@ import {MuseBuffWindow} from './MuseBuffWindow'
 
 export class RagingStrikes extends MuseBuffWindow {
 	static override handle = 'ragingstrikes'
-	static override title = defineMessage({id: 'brd.ragingstrikes.title', message: 'Raging Strikes'})
+	static override title = msg({id: 'brd.ragingstrikes.title', message: 'Raging Strikes'})
 	static override displayOrder = DISPLAY_ORDER.RAGING_STRIKES
 
 	action: Action = this.data.actions.RAGING_STRIKES

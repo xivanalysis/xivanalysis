@@ -1,4 +1,4 @@
-import {defineMessage, Trans} from '@lingui/macro'
+import {msg, Trans} from '@lingui/macro'
 import {ActionLink} from 'components/ui/DbLink'
 import {dependency} from 'parser/core/Injectable'
 import {EvaluatedAction, ExpectedActionsEvaluator, ExpectedGcdCountEvaluator, RaidBuffWindow, TrackedAction} from 'parser/core/modules/ActionWindow'
@@ -13,7 +13,7 @@ const NASTRONDS_PER_WINDOW = 1
 
 export class BattleLitany extends RaidBuffWindow {
 	static override handle = 'battlelitany'
-	static override title = defineMessage({id: 'drg.battlelitany.title', message: 'Battle Litany'})
+	static override title = msg({id: 'drg.battlelitany.title', message: 'Battle Litany'})
 	static override displayOrder = DISPLAY_ORDER.BATTLE_LITANY
 
 	@dependency private globalCooldown!: GlobalCooldown

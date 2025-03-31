@@ -1,4 +1,4 @@
-import {defineMessage, Trans} from '@lingui/macro'
+import {msg, Trans} from '@lingui/macro'
 import {DataLink} from 'components/ui/DbLink'
 import {ActionKey} from 'data/ACTIONS'
 import {dependency} from 'parser/core/Injectable'
@@ -31,7 +31,7 @@ const EXCLUDED_ACTIONS: ActionKey[] = [
 
 export class FightOrFlight extends BuffWindow {
 	static override handle = 'fightorflight'
-	static override title = defineMessage({id: 'pld.fightorflight.title', message: 'Fight Or Flight Usage'})
+	static override title = msg({id: 'pld.fightorflight.title', message: 'Fight Or Flight Usage'})
 
 	@dependency globalCooldown!: GlobalCooldown
 

@@ -1,4 +1,4 @@
-import {Plural, defineMessage, Trans} from '@lingui/macro'
+import {Plural, msg, Trans} from '@lingui/macro'
 import {ActionLink} from 'components/ui/DbLink'
 import {Event, Events} from 'event'
 import {Analyser} from 'parser/core/Analyser'
@@ -20,7 +20,7 @@ const SLIPSTREAM_SEVERITY = {
 
 export class Slipstream extends Analyser {
 	static override handle = 'slipstream'
-	static override title = defineMessage({id: 'smn.slipstream.title', message: 'Slipstream'})
+	static override title = msg({id: 'smn.slipstream.title', message: 'Slipstream'})
 
 	@dependency data!: Data
 	@dependency suggestions!: Suggestions

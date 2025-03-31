@@ -1,10 +1,10 @@
-import {defineMessage} from '@lingui/macro'
+import {msg} from '@lingui/macro'
 import {TransMarkdown} from 'components/ui/TransMarkdown'
 import {CONTRIBUTORS, ROLES} from 'data/CONTRIBUTORS'
 import {Meta} from 'parser/core/Meta'
 import {changelog} from './changelog'
 
-const about = defineMessage({id: 'brd.about.description', message: `
+const about = msg({id: 'brd.about.description', message: `
 Welcome to the Bard module! Although Bard might seem to be a straightforward job on the surface, its complexity can be deceiving.
 Considered by many as an "*easy to learn, hard to master*" job, Bards have to make minute-to-minute decisions about their repertoire procs, Damage-over-Time actions, and Soul Voice gauge.
 

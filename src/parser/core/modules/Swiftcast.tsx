@@ -1,4 +1,4 @@
-import {defineMessage, Plural, Trans} from '@lingui/macro'
+import {msg, Plural, Trans} from '@lingui/macro'
 import {ActionLink} from 'components/ui/DbLink'
 import {Action} from 'data/ACTIONS'
 import {Status} from 'data/STATUSES'
@@ -113,7 +113,7 @@ class SwiftcastEvaluator implements WindowEvaluator, SwiftcastEvaluatorOptions {
 
 export abstract class Swiftcast extends BuffWindow {
 	static override handle: string = 'swiftcast'
-	static override title = defineMessage({id: 'core.swiftcast.title', message: 'Swiftcast Actions'})
+	static override title = msg({id: 'core.swiftcast.title', message: 'Swiftcast Actions'})
 
 	@dependency private globalCooldown!: GlobalCooldown
 

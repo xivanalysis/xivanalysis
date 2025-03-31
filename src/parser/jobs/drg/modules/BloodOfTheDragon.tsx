@@ -1,4 +1,4 @@
-import {defineMessage, Trans} from '@lingui/macro'
+import {msg, Trans} from '@lingui/macro'
 import {Event, Events} from 'event'
 import {filter} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
@@ -20,7 +20,7 @@ const EXPECTED_NASTRONDS_PER_WINDOW = 1
 // on core for that as well
 export class BloodOfTheDragon extends TimedWindow {
 	static override handle = 'bloodOfTheDragon'
-	static override title = defineMessage({id: 'drg.blood.title', message: 'Life of the Dragon'})
+	static override title = msg({id: 'drg.blood.title', message: 'Life of the Dragon'})
 	static override displayOrder = DISPLAY_ORDER.LIFE_OF_THE_DRAGON
 
 	@dependency globalCooldown!: GlobalCooldown

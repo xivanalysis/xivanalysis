@@ -1,4 +1,4 @@
-import {defineMessage, Trans} from '@lingui/macro'
+import {msg, Trans} from '@lingui/macro'
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
 import {TransMarkdown} from 'components/ui/TransMarkdown'
 import {getDataBy} from 'data'
@@ -161,7 +161,7 @@ export class TrackedOverheal {
 
 export class Overheal extends Analyser {
 	static override handle: string = 'overheal'
-	static override title = defineMessage({id: 'core.overheal.title', message: 'Overheal'})
+	static override title = msg({id: 'core.overheal.title', message: 'Overheal'})
 	static override displayOrder = DISPLAY_ORDER.DEFENSIVES
 	static override debug = false
 
@@ -468,7 +468,7 @@ export class Overheal extends Analyser {
 	}
 }
 
-const outputHeader = defineMessage({id: 'core.overheal.header.content', message: `
+const outputHeader = msg({id: 'core.overheal.header.content', message: `
 Overhealing is unavoidable even with optimized usage of your actions, but it can
 also be a result of poor planning. As such, overhealing must be analyzed on a
 case-by-case basis.

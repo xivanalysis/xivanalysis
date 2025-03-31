@@ -1,4 +1,4 @@
-import {defineMessage, Trans, Plural} from '@lingui/macro'
+import {msg, Trans, Plural} from '@lingui/macro'
 import {ActionLink} from 'components/ui/DbLink'
 import {JOBS} from 'data/JOBS'
 import {Event, Events} from 'event'
@@ -20,7 +20,7 @@ let DoubleDownCost = 1
 
 export class Ammo extends CoreGauge {
 	static override handle = 'ammo'
-	static override title = defineMessage({id: 'gnb.ammo.title', message: 'Cartridge Timeline'})
+	static override title = msg({id: 'gnb.ammo.title', message: 'Cartridge Timeline'})
 
 	@dependency private suggestions!: Suggestions
 	@dependency private checklist!: Checklist

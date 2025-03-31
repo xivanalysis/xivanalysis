@@ -1,4 +1,4 @@
-import {defineMessage, Trans} from '@lingui/macro'
+import {msg, Trans} from '@lingui/macro'
 import {ActionLink, DataLink, StatusLink} from 'components/ui/DbLink'
 import {BlueAction} from 'data/ACTIONS/root/BLU'
 import {Status} from 'data/STATUSES'
@@ -77,7 +77,7 @@ const BUFF_OVERWRITE_THRESHOLD_MS = 3000 // 3 seconds
 
 export class BLURaidBuffs extends Analyser {
 	static override handle = 'buffwindows'
-	static override title = defineMessage({id: 'blu.buffs.title', message: 'Buff Windows'})
+	static override title = msg({id: 'blu.buffs.title', message: 'Buff Windows'})
 	static override displayOrder = DISPLAY_ORDER.RAID_BUFFS
 
 	@dependency private actors!: Actors

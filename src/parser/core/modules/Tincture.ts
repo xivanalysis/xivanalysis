@@ -1,9 +1,9 @@
-import {defineMessage} from '@lingui/macro'
+import {msg} from '@lingui/macro'
 import {BuffWindow} from './ActionWindow/windows/BuffWindow'
 
 export class Tincture extends BuffWindow {
 	static override handle = 'tincture'
-	static override title = defineMessage({id: 'core.tincture.title', message: 'Tinctures'})
+	static override title = msg({id: 'core.tincture.title', message: 'Tinctures'})
 
 	buffStatus = this.data.statuses.MEDICATED
 

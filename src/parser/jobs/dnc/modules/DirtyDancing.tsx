@@ -1,4 +1,4 @@
-import {defineMessage, Trans} from '@lingui/macro'
+import {msg, Trans} from '@lingui/macro'
 import {DataLink} from 'components/ui/DbLink'
 import {StatusKey} from 'data/STATUSES'
 import {Event, Events} from 'event'
@@ -30,7 +30,7 @@ const TECHNICAL_DANCE_MOVES = 4
 
 export class DirtyDancing extends ActionWindow {
 	static override handle = 'dirtydancing'
-	static override title = defineMessage({id: 'dnc.dirty-dancing.title', message: 'Dance Issues'})
+	static override title = msg({id: 'dnc.dirty-dancing.title', message: 'Dance Issues'})
 	static override displayOrder = DISPLAY_ORDER.DIRTY_DANCING
 
 	@dependency private actors!: Actors

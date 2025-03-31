@@ -1,4 +1,4 @@
-import {defineMessage, Plural, Trans} from '@lingui/macro'
+import {msg, Plural, Trans} from '@lingui/macro'
 import {DataLink, StatusLink} from 'components/ui/DbLink'
 import {RotationTargetOutcome} from 'components/ui/RotationTable'
 import {ActionKey} from 'data/ACTIONS'
@@ -80,7 +80,7 @@ class BarrageIronJawsEvaluator extends ExpectedActionsEvaluator {
 
 export class BurstWindow extends BuffGroupWindow {
 	static override handle = 'burst'
-	static override title = defineMessage({id: 'brd.burst.title', message: 'Burst Window'})
+	static override title = msg({id: 'brd.burst.title', message: 'Burst Window'})
 	static override displayOrder = DISPLAY_ORDER.BURST_WINDOW
 
 	@dependency private globalCooldown!: GlobalCooldown

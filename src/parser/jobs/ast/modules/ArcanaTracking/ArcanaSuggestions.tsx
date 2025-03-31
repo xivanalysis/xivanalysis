@@ -1,4 +1,4 @@
-import {defineMessage, Trans} from '@lingui/macro'
+import {msg, Trans} from '@lingui/macro'
 import {ActionLink} from 'components/ui/DbLink'
 import {JobIcon} from 'components/ui/JobIcon'
 import {Action} from 'data/ACTIONS'
@@ -24,7 +24,7 @@ interface CardLog extends CardState {
 export class ArcanaSuggestions extends Analyser {
 	static override handle = 'arcanaSuggestions'
 
-	static override title = defineMessage({id: 'ast.arcana-suggestions.title', message: 'Arcana Logs'})
+	static override title = msg({id: 'ast.arcana-suggestions.title', message: 'Arcana Logs'})
 	static override displayOrder = DISPLAY_ORDER.ARCANA_TRACKING
 
 	@dependency private data!: Data

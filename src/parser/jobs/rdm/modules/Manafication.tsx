@@ -1,4 +1,4 @@
-import {defineMessage, Trans} from '@lingui/macro'
+import {msg, Trans} from '@lingui/macro'
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
 import {ActionKey} from 'data/ACTIONS'
 import {dependency} from 'parser/core/Injectable'
@@ -39,7 +39,7 @@ const MANAFICATION_GCDS = 6
 export class Manafication extends BuffWindow {
 	static override displayOrder = DISPLAY_ORDER.MANAFICATION
 	static override handle = 'Manafication'
-	static override title = defineMessage({id: 'rdm.manafication.title', message: 'Manafication Windows'})
+	static override title = msg({id: 'rdm.manafication.title', message: 'Manafication Windows'})
 
 	@dependency globalCooldown!: GlobalCooldown
 

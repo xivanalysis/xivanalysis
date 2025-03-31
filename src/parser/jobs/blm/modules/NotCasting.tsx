@@ -1,4 +1,4 @@
-import {defineMessage, Trans} from '@lingui/macro'
+import {msg, Trans} from '@lingui/macro'
 import {Event, Events} from 'event'
 import {Analyser} from 'parser/core/Analyser'
 import {filter} from 'parser/core/filter'
@@ -22,7 +22,7 @@ interface Window {
 
 export class NotCasting extends Analyser {
 	static override handle = 'notcasting'
-	static override title = defineMessage({id: 'blm.notcasting.title', message: 'Times you did literally nothing'})
+	static override title = msg({id: 'blm.notcasting.title', message: 'Times you did literally nothing'})
 	static override displayOrder = DISPLAY_ORDER.NOTCASTING
 
 	@dependency private timeline!: Timeline

@@ -1,4 +1,4 @@
-import {defineMessage, Trans} from '@lingui/macro'
+import {msg, Trans} from '@lingui/macro'
 import {JOBS} from 'data/JOBS'
 import {Event, Events} from 'event'
 import {filter, oneOf} from 'parser/core/filter'
@@ -23,7 +23,7 @@ export const MAXIMUM = 3
 
 export class ManaStackGauge extends CoreGauge {
 	static override handle = 'manaStackGauge'
-	static override title = defineMessage({id: 'rdm.manaStackGauge.title', message: 'Mana Stack Gauge Usage'})
+	static override title = msg({id: 'rdm.manaStackGauge.title', message: 'Mana Stack Gauge Usage'})
 	static override debug = false
 
 	@dependency private suggestions!: Suggestions

@@ -1,5 +1,5 @@
 import {MessageDescriptor} from '@lingui/core'
-import {defineMessage} from '@lingui/macro'
+import {msg} from '@lingui/macro'
 import {ensureRecord} from 'utilities'
 import {Job, JOBS} from './JOBS'
 
@@ -170,9 +170,9 @@ export interface Role {
 
 export const ROLES = ensureRecord<Role>()({
 	THEORYCRAFT: {
-		text: defineMessage({id: 'core.role.theorycraft', message: 'Theorycraft'}),
+		text: msg({id: 'core.role.theorycraft', message: 'Theorycraft'}),
 	},
 	DEVELOPER: {
-		text: defineMessage({id: 'core.role.developer', message: 'Developer'}),
+		text: msg({id: 'core.role.developer', message: 'Developer'}),
 	},
 })

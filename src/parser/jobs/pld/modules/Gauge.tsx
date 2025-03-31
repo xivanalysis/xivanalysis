@@ -1,4 +1,4 @@
-import {defineMessage, Trans} from '@lingui/macro'
+import {msg, Trans} from '@lingui/macro'
 import {DataLink} from 'components/ui/DbLink'
 import {JOBS} from 'data/JOBS'
 import {Event, Events} from 'event'
@@ -10,7 +10,7 @@ import {Suggestions, SEVERITY, Suggestion} from 'parser/core/modules/Suggestions
 type GaugeModifier = Partial<Record<Event['type'], number>>
 
 export class Gauge extends CoreGauge {
-	static override title = defineMessage({id: 'pld.gauge.title', message: 'Oath Gauge Usage'})
+	static override title = msg({id: 'pld.gauge.title', message: 'Oath Gauge Usage'})
 
 	@dependency private suggestions!: Suggestions
 

@@ -1,4 +1,4 @@
-import {defineMessage, Trans} from '@lingui/macro'
+import {msg, Trans} from '@lingui/macro'
 import {ActionLink} from 'components/ui/DbLink'
 import {RaidBuffWindow, EvaluatedAction, TrackedActionGroup, ExpectedActionGroupsEvaluator} from 'parser/core/modules/ActionWindow'
 import {DisplayedActionEvaluator} from 'parser/core/modules/ActionWindow/evaluators/DisplayedActionEvaluator'
@@ -27,7 +27,7 @@ const OPENER_FEE = -0.5 // Opener costs half a burst
 
 export class ArcaneCircle extends RaidBuffWindow {
 	static override handle = 'arcaneCircle'
-	static override title = defineMessage({id: 'rpr.arcanecircle.title', message: 'Arcane Circle'})
+	static override title = msg({id: 'rpr.arcanecircle.title', message: 'Arcane Circle'})
 	static override displayOrder = DISPLAY_ORDER.ARCANE_CIRCLE
 
 	override buffStatus = this.data.statuses.ARCANE_CIRCLE

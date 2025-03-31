@@ -1,4 +1,4 @@
-import {defineMessage, Trans} from '@lingui/macro'
+import {msg, Trans} from '@lingui/macro'
 import * as Sentry from '@sentry/browser'
 import {Message, Segment} from 'akkd'
 import {NormalisedMessage} from 'components/ui/NormalisedMessage'
@@ -15,7 +15,7 @@ interface Trigger {
 
 export class BrokenLog extends Analyser {
 	static override handle = 'brokenLog'
-	static override title = defineMessage({id: 'core.broken-log.title', message: 'Broken Log'})
+	static override title = msg({id: 'core.broken-log.title', message: 'Broken Log'})
 	static override displayOrder = DISPLAY_ORDER.BROKEN_LOG
 	static override displayMode = DisplayMode.RAW
 

@@ -1,4 +1,4 @@
-import {defineMessage, Trans} from '@lingui/macro'
+import {msg, Trans} from '@lingui/macro'
 import {ActionLink} from 'components/ui/DbLink'
 import {dependency} from 'parser/core/Injectable'
 import {BuffWindow, EvaluatedAction, ExpectedActionsEvaluator, ExpectedGcdCountEvaluator, NotesEvaluator, TrackedAction} from 'parser/core/modules/ActionWindow'
@@ -63,7 +63,7 @@ class BloodfestEvaluator extends NotesEvaluator {
 
 export class NoMercy extends BuffWindow {
 	static override handle = 'nomercy'
-	static override title = defineMessage({id: 'gnb.nomercy.title', message: 'No Mercy Windows'})
+	static override title = msg({id: 'gnb.nomercy.title', message: 'No Mercy Windows'})
 	static override displayOrder = DISPLAY_ORDER.NO_MERCY
 
 	@dependency globalCooldown!: GlobalCooldown

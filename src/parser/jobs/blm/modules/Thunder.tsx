@@ -1,4 +1,4 @@
-import {defineMessage, Trans} from '@lingui/macro'
+import {msg, Trans} from '@lingui/macro'
 import {DataLink, ActionLink} from 'components/ui/DbLink'
 import {NormalisedMessage} from 'components/ui/NormalisedMessage'
 import {Event, Events} from 'event'
@@ -36,7 +36,7 @@ interface ThunderApplicationTracker {
 
 export class Thunder extends Analyser {
 	static override handle = 'thunder'
-	static override title = defineMessage({id: 'blm.thunder.title', message: 'Thunder'})
+	static override title = msg({id: 'blm.thunder.title', message: 'Thunder'})
 	static override displayOrder = DISPLAY_ORDER.THUNDER
 
 	@dependency private actors!: Actors
