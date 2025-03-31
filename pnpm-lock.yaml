@@ -168,9 +168,6 @@ importers:
       '@lingui/loader':
         specifier: ^5
         version: 5.3.0(typescript@5.7.3)(webpack@5.75.0)
-      '@lingui/macro':
-        specifier: ^5
-        version: 5.3.0(@lingui/babel-plugin-lingui-macro@5.3.0(babel-plugin-macros@3.1.0)(typescript@5.7.3))(babel-plugin-macros@3.1.0)(react@16.14.0)
       '@teamsupercell/typings-for-css-modules-loader':
         specifier: ^2.4.0
         version: 2.4.0
@@ -1443,18 +1440,6 @@ packages:
     engines: {node: '>=20.0.0'}
     peerDependencies:
       webpack: ^5.0.0
-
-  '@lingui/macro@5.3.0':
-    resolution: {integrity: sha512-bw/ic7Cjk98z8KDWWAjpb7Dcw2bEuORfnRhmjbLgZucKaw2Chbv4JQulfFAVB4ObTxLcmMJoc+HKbMSMumhFUg==}
-    engines: {node: '>=20.0.0'}
-    peerDependencies:
-      '@lingui/babel-plugin-lingui-macro': 5.3.0
-      babel-plugin-macros: 2 || 3
-    peerDependenciesMeta:
-      '@lingui/babel-plugin-lingui-macro':
-        optional: true
-      babel-plugin-macros:
-        optional: true
 
   '@lingui/message-utils@5.3.0':
     resolution: {integrity: sha512-pWh7rUUkIdfq2WrxXpXXlnikmKDf+2OvHUb0LTb60AyWAvvFT0rtZ1O2OSLUQ68rKfSQJCTYl1o6LELHJ38EXA==}
@@ -8113,16 +8098,6 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
       - typescript
-
-  '@lingui/macro@5.3.0(@lingui/babel-plugin-lingui-macro@5.3.0(babel-plugin-macros@3.1.0)(typescript@5.7.3))(babel-plugin-macros@3.1.0)(react@16.14.0)':
-    dependencies:
-      '@lingui/core': 5.3.0(@lingui/babel-plugin-lingui-macro@5.3.0(babel-plugin-macros@3.1.0)(typescript@5.7.3))(babel-plugin-macros@3.1.0)
-      '@lingui/react': 5.3.0(@lingui/babel-plugin-lingui-macro@5.3.0(babel-plugin-macros@3.1.0)(typescript@5.7.3))(babel-plugin-macros@3.1.0)(react@16.14.0)
-    optionalDependencies:
-      '@lingui/babel-plugin-lingui-macro': 5.3.0(babel-plugin-macros@3.1.0)(typescript@5.7.3)
-      babel-plugin-macros: 3.1.0
-    transitivePeerDependencies:
-      - react
 
   '@lingui/message-utils@5.3.0':
     dependencies:
