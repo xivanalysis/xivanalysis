@@ -1,21 +1,11 @@
 import {i18n, Messages} from '@lingui/core'
 import {I18nProvider} from '@lingui/react'
 import {Language} from 'data/LANGUAGES'
-import {de, en, fr, ja, ko, zh} from 'make-plural/plurals'
 import {observable, reaction, runInAction} from 'mobx'
 import {disposeOnUnmount, observer} from 'mobx-react'
 import {Component, ContextType, ReactNode} from 'react'
 import {Container, Loader, Message} from 'semantic-ui-react'
 import {StoreContext} from 'store'
-
-i18n.loadLocaleData({
-	de: {plurals: de},
-	en: {plurals: en},
-	fr: {plurals: fr},
-	ja: {plurals: ja},
-	ko: {plurals: ko},
-	zh: {plurals: zh},
-})
 
 export type I18nLoaderProps = {
 	children: ReactNode
