@@ -1,4 +1,4 @@
-import {Trans} from '@lingui/react'
+import {Trans} from '@lingui/macro'
 import {iconUrl} from 'data/icon'
 import {Procs as CoreProcs} from 'parser/core/modules/Procs'
 import {SEVERITY} from 'parser/core/modules/Suggestions'

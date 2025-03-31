@@ -1,4 +1,4 @@
-import {Trans} from '@lingui/react'
+import {Trans} from '@lingui/macro'
 import Color from 'color'
 import {ScaleTime, scaleUtc} from 'd3-scale'
 import {Resource} from 'event'

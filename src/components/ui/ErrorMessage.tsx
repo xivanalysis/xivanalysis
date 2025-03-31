@@ -1,4 +1,4 @@
-import {Trans} from '@lingui/react'
+import {Trans} from '@lingui/macro'
 import {BaseError, Severity, SEVERITY} from 'errors'
 import {Message, MessageProps} from 'semantic-ui-react'
 

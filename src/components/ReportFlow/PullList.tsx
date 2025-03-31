@@ -1,4 +1,4 @@
-import {Trans} from '@lingui/react'
+import {Trans} from '@lingui/macro'
 import classNames from 'classnames'
 import {getDutyBanner} from 'data/ENCOUNTERS'
 import {observer} from 'mobx-react'

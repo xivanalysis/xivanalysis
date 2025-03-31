@@ -1,4 +1,4 @@
-import {Trans} from '@lingui/react'
+import {Trans} from '@lingui/macro'
 import {Action, ActionKey} from 'data/ACTIONS'
 import {Analyser} from 'parser/core/Analyser'
 import {dependency} from 'parser/core/Injectable'

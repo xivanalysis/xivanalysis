@@ -1,5 +1,4 @@
-import {defineMessage} from '@lingui/macro'
-import {Trans} from '@lingui/react'
+import {defineMessage, Trans} from '@lingui/macro'
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
 import {Icon, Message} from 'semantic-ui-react'
 import {dependency} from '../../../../core/Injectable'

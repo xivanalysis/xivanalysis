@@ -1,5 +1,4 @@
-import {defineMessage} from '@lingui/macro'
-import {Trans} from '@lingui/react'
+import {defineMessage, Trans} from '@lingui/macro'
 import Color from 'color'
 import {JOBS} from 'data/JOBS'
 import {Event, Events} from 'event'

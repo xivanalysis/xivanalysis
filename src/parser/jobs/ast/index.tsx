@@ -1,5 +1,4 @@
-import {defineMessage} from '@lingui/macro'
-import {Trans} from '@lingui/react'
+import {defineMessage, Trans} from '@lingui/macro'
 import {TransMarkdown} from 'components/ui/TransMarkdown'
 import {CONTRIBUTORS, ROLES} from 'data/CONTRIBUTORS'
 import {Meta} from 'parser/core/Meta'

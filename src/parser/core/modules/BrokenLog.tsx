@@ -1,5 +1,4 @@
-import {defineMessage} from '@lingui/macro'
-import {Trans} from '@lingui/react'
+import {defineMessage, Trans} from '@lingui/macro'
 import * as Sentry from '@sentry/browser'
 import {Message, Segment} from 'akkd'
 import {NormalisedMessage} from 'components/ui/NormalisedMessage'
@@ -74,7 +73,7 @@ export class BrokenLog extends Analyser {
 
 		return <Segment>
 			<Message error icon="times circle outline">
-				<Trans id="core.broken-log.broken-log.title" render={<Message.Header/>}>
+				<Trans id="core.broken-log.broken-log.title" component={Message.Header}>
 					This log is broken.
 				</Trans>
 				<Trans id="core.broken-log.broken-log.description">
@@ -85,14 +84,14 @@ export class BrokenLog extends Analyser {
 			<Table basic="very" compact="very">
 				<Table.Header>
 					<Table.Row>
-						<Trans id="core.broken-log.list.module" render={<Table.HeaderCell/>}>Module</Trans>
-						<Trans id="core.broken-log.list.reason" render={<Table.HeaderCell/>}>Reason</Trans>
+						<Trans id="core.broken-log.list.module" component={Table.HeaderCell}>Module</Trans>
+						<Trans id="core.broken-log.list.reason" component={Table.HeaderCell}>Reason</Trans>
 					</Table.Row>
 				</Table.Header>
 				<Table.Body>
 					{Array.from(this.triggers.values()).map(({source, reason}, index) => (
 						<Table.Row key={index}>
-							<Table.Cell><NormalisedMessage message={source.title}/></Table.Cell>
+							<Table.Cell>{source.title != null ? <NormalisedMessage message={source.title}/> : source.handle}</Table.Cell>
 							<Table.Cell>{reason}</Table.Cell>
 						</Table.Row>
 					))}

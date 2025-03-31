@@ -1,4 +1,4 @@
-import {Trans} from '@lingui/react'
+import {Trans} from '@lingui/macro'
 import {Language, LANGUAGES} from 'data/LANGUAGES'
 import {computed} from 'mobx'
 import {Observer} from 'mobx-react'

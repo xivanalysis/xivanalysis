@@ -1,5 +1,4 @@
-import {defineMessage} from '@lingui/macro'
-import {Trans} from '@lingui/react'
+import {defineMessage, Trans} from '@lingui/macro'
 import {DataLink} from 'components/ui/DbLink'
 import {RotationTargetOutcome} from 'components/ui/RotationTable'
 import {Action, ActionKey} from 'data/ACTIONS'

@@ -1,4 +1,4 @@
-import {Trans} from '@lingui/react'
+import {Trans} from '@lingui/macro'
 import {DataLink} from 'components/ui/DbLink'
 import {dependency} from 'parser/core/Injectable'
 import {CooldownDowntime, CooldownGroup} from 'parser/core/modules/CooldownDowntime'

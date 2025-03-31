@@ -1,5 +1,4 @@
-import {defineMessage} from '@lingui/macro'
-import {Trans} from '@lingui/react'
+import {defineMessage, Trans} from '@lingui/macro'
 import {Event, Events} from 'event'
 import {filter} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'

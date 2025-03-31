@@ -1,4 +1,4 @@
-import {Trans} from '@lingui/react'
+import {Trans} from '@lingui/macro'
 import {Message, Segment} from 'akkd'
 import Color from 'color'
 import {JobIcon} from 'components/ui/JobIcon'

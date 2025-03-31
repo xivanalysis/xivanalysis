@@ -1,4 +1,4 @@
-import {Trans} from '@lingui/react'
+import {Trans} from '@lingui/macro'
 import {Defensives as CoreDefensives} from 'parser/core/modules/Defensives'
 
 export class Defensives extends CoreDefensives {

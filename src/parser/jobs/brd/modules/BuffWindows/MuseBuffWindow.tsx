@@ -1,4 +1,4 @@
-import {Trans} from '@lingui/react'
+import {Trans} from '@lingui/macro'
 import _ from 'lodash'
 import {ActionLink, DataLink} from '../../../../../components/ui/DbLink'
 import {Action} from '../../../../../data/ACTIONS'

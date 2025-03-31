@@ -1,5 +1,4 @@
-import {defineMessage} from '@lingui/macro'
-import {Trans} from '@lingui/react'
+import {defineMessage, Trans} from '@lingui/macro'
 import {Analyser, DisplayMode} from 'parser/core/Analyser'
 import {DISPLAY_ORDER} from '../DISPLAY_ORDER'
 import {

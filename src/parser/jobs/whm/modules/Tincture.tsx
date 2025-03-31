@@ -1,4 +1,4 @@
-import {Trans} from '@lingui/react'
+import {Trans} from '@lingui/macro'
 import {DataLink} from 'components/ui/DbLink'
 import {EvaluatedAction, ExpectedActionsEvaluator, TrackedAction} from 'parser/core/modules/ActionWindow'
 import {HistoryEntry} from 'parser/core/modules/ActionWindow/History'

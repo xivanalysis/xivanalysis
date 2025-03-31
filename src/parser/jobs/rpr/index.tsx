@@ -1,4 +1,4 @@
-import {Trans} from '@lingui/react'
+import {Trans} from '@lingui/macro'
 import {CONTRIBUTORS, ROLES} from 'data/CONTRIBUTORS'
 import {Meta} from 'parser/core/Meta'
 import {changelog} from './changelog'

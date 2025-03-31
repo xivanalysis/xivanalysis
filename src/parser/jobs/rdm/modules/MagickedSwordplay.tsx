@@ -1,5 +1,4 @@
-import {defineMessage, Trans} from '@lingui/macro'
-import {Plural} from '@lingui/react'
+import {defineMessage, Trans, Plural} from '@lingui/macro'
 import {DataLink} from 'components/ui/DbLink'
 import {Procs} from 'parser/core/modules/Procs'
 import {DISPLAY_ORDER} from 'parser/jobs/rdm/modules/DISPLAY_ORDER'

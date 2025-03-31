@@ -1,4 +1,4 @@
-import {Trans} from '@lingui/react'
+import {Trans} from '@lingui/macro'
 import {Segment} from 'akkd'
 import {NormalisedMessage} from 'components/ui/NormalisedMessage'
 import {DisplayMode} from 'parser/core/Analyser'

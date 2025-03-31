@@ -1,4 +1,4 @@
-import {Trans} from '@lingui/react'
+import {Trans} from '@lingui/macro'
 import {Message} from 'akkd'
 import classNames from 'classnames'
 import {BranchBanner} from 'components/BranchBanner'

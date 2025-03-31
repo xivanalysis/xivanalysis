@@ -1,4 +1,4 @@
-import {Trans} from '@lingui/react'
+import {Trans} from '@lingui/macro'
 import {Action} from 'data/ACTIONS'
 import {ANIMATION_LOCK} from 'data/CONSTANTS'
 import {Event, Events} from 'event'

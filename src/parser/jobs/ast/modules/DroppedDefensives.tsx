@@ -3,8 +3,7 @@
 * e.g. Sun Sign requires Neutral Sect
 */
 
-import {defineMessage} from '@lingui/macro'
-import {Trans} from '@lingui/react'
+import {defineMessage, Trans} from '@lingui/macro'
 import {ActionLink, DataLink, StatusLink} from 'components/ui/DbLink'
 import {Action} from 'data/ACTIONS'
 import {Status} from 'data/STATUSES'

@@ -1,5 +1,4 @@
-import {defineMessage} from '@lingui/macro'
-import {Trans} from '@lingui/react'
+import {defineMessage, Trans} from '@lingui/macro'
 import {ActionLink, DataLink} from 'components/ui/DbLink'
 import {Action} from 'data/ACTIONS'
 import {BonusModifier} from 'data/ACTIONS/type'

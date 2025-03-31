@@ -1,4 +1,4 @@
-import {Trans} from '@lingui/react'
+import {Trans} from '@lingui/macro'
 import {Rotation, RotationEvent} from 'components/ui/Rotation'
 import {Component, ReactNode} from 'react'
 import {Button, Table} from 'semantic-ui-react'

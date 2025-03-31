@@ -1,6 +1,5 @@
 import {MessageDescriptor} from '@lingui/core'
-import {defineMessage} from '@lingui/macro'
-import {Trans} from '@lingui/react'
+import {defineMessage, Trans} from '@lingui/macro'
 import {TransMarkdown} from 'components/ui/TransMarkdown'
 import {BASE_GCD} from 'data/CONSTANTS'
 import {Report} from 'report'

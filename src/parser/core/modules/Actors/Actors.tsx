@@ -1,4 +1,4 @@
-import {Trans} from '@lingui/react'
+import {Trans} from '@lingui/macro'
 import {JOBS, RoleKey} from 'data/JOBS'
 import {Event, Events} from 'event'
 import {Analyser} from 'parser/core/Analyser'

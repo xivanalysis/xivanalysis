@@ -1,5 +1,4 @@
-import {defineMessage} from '@lingui/macro'
-import {Trans} from '@lingui/react'
+import {defineMessage, Trans} from '@lingui/macro'
 import {DataLink, StatusLink} from 'components/ui/DbLink'
 import {Status} from 'data/STATUSES'
 import {dependency} from 'parser/core/Injectable'

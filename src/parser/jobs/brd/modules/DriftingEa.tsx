@@ -31,8 +31,7 @@
 //            :Mm:                         :smm-          ./
 //             /                              -+-
 
-import {defineMessage} from '@lingui/macro'
-import {Trans} from '@lingui/react'
+import {defineMessage, Trans} from '@lingui/macro'
 import {Tooltip, ActionLink} from 'components/ui/DbLink'
 import {Event, Events} from 'event'
 import {Analyser} from 'parser/core/Analyser'

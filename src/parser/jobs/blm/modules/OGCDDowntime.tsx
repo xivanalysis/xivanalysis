@@ -1,4 +1,4 @@
-import {Trans} from '@lingui/react'
+import {Trans} from '@lingui/macro'
 import {CooldownDowntime} from 'parser/core/modules/CooldownDowntime'
 
 // due to our limited weaving capabilities we'll allow a downtime of 5000ms or about 2 GCDs

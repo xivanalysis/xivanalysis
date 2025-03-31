@@ -1,4 +1,4 @@
-import {Trans} from '@lingui/react'
+import {Trans} from '@lingui/macro'
 import Color from 'color'
 import {DataLink} from 'components/ui/DbLink'
 import {Action, ActionKey} from 'data/ACTIONS'

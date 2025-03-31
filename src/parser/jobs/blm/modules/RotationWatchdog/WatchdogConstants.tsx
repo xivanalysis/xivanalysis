@@ -1,4 +1,4 @@
-import {Trans} from '@lingui/react'
+import {Trans} from '@lingui/macro'
 import {DataLink} from 'components/ui/DbLink'
 import {SEVERITY} from 'parser/core/modules/Suggestions'
 import {ReactNode} from 'react'

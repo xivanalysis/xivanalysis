@@ -1,5 +1,4 @@
-import {defineMessage} from '@lingui/macro'
-import {Trans} from '@lingui/react'
+import {defineMessage, Trans} from '@lingui/macro'
 import {Message, Segment} from 'akkd'
 import {ContributorLabel} from 'components/ui/ContributorLabel'
 import {NormalisedMessage} from 'components/ui/NormalisedMessage'

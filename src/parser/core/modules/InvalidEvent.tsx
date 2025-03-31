@@ -1,5 +1,4 @@
-import {defineMessage} from "@lingui/macro"
-import {Trans} from "@lingui/react"
+import {defineMessage, Trans} from "@lingui/macro"
 import {Event, PREPULL_EVENT_WINDOW} from "event"
 import {Analyser} from "../Analyser"
 import {dependency} from "../Injectable"

@@ -1,4 +1,4 @@
-import {Trans} from '@lingui/react'
+import {Trans} from '@lingui/macro'
 import {dependency} from 'parser/core/Injectable'
 import {ExpectedActionsEvaluator, ExpectedGcdCountEvaluator} from 'parser/core/modules/ActionWindow'
 import {GlobalCooldown} from 'parser/core/modules/GlobalCooldown'

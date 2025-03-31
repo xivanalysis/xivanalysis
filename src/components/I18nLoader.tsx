@@ -85,7 +85,7 @@ export class I18nLoader extends Component<I18nLoaderProps> {
 		// if (catalog && catalog.messages) {
 		// 	cleanMessages(catalog.messages)
 		// }
-
+		console.log(messages)
 
 		i18n.load({[language]: messages})
 		// TODO: make-plural?

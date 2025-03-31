@@ -1,4 +1,4 @@
-import {Trans} from '@lingui/react'
+import {Trans} from '@lingui/macro'
 import {DataLink} from 'components/ui/DbLink'
 import {CONTRIBUTORS, ROLES} from 'data/CONTRIBUTORS'
 import {Meta} from 'parser/core/Meta'

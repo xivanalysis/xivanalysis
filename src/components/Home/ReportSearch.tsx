@@ -1,5 +1,4 @@
-import {defineMessage} from '@lingui/macro'
-import {Trans} from '@lingui/react'
+import {defineMessage, Trans} from '@lingui/macro'
 import {NormalisedMessage} from 'components/ui/NormalisedMessage'
 import {observer} from 'mobx-react'
 import {ChangeEvent, useCallback, useState} from 'react'

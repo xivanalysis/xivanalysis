@@ -109,8 +109,7 @@ export class Aetherflow extends Analyser {
 				</Trans>,
 				severity: SEVERITY.MAJOR,
 				why: <Trans id="smn.aetherflow.lost-aetherflow.why">
-					<Plural value={lostAetherflow} one="# stack" other="# stacks"/>
-					of Aetherflow lost.
+					<Plural value={lostAetherflow} one="# stack" other="# stacks"/> of Aetherflow lost.
 				</Trans>,
 			}))
 		}

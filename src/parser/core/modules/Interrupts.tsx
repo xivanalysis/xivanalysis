@@ -1,6 +1,5 @@
 import {MessageDescriptor} from '@lingui/core'
-import {defineMessage} from '@lingui/macro'
-import {Trans} from '@lingui/react'
+import {defineMessage, Trans} from '@lingui/macro'
 import {ActionLink} from 'components/ui/DbLink'
 import {ACTIONS} from 'data/ACTIONS'
 import {Event, Events} from 'event'

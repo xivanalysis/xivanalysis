@@ -1,5 +1,4 @@
-import {defineMessage} from '@lingui/macro'
-import {Trans} from '@lingui/react'
+import {defineMessage, Trans} from '@lingui/macro'
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
 import {TransMarkdown} from 'components/ui/TransMarkdown'
 import {getDataBy} from 'data'
@@ -469,7 +468,7 @@ export class Overheal extends Analyser {
 	}
 }
 
-const outputHeader = t('core.overheal.header.content')`
+const outputHeader = defineMessage({id: 'core.overheal.header.content', message: `
 Overhealing is unavoidable even with optimized usage of your actions, but it can
 also be a result of poor planning. As such, overhealing must be analyzed on a
 case-by-case basis.
@@ -478,7 +477,7 @@ The below tables will show you which actions overhealed. Focus on reducing the
 overheal percentage of the categories included in the checklist first. The other
 categories typically have secondary purposes, or may overheal as an incidental
 part of a complete defensive plan.
-`
+`})
 
 // From the original comments:
 // yeh, I'm not doing this in core, but I really want to show overheal as overheal, since that's what the community understands

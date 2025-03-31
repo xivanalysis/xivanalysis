@@ -1,5 +1,4 @@
-import {defineMessage} from '@lingui/macro'
-import {Trans} from '@lingui/react'
+import {defineMessage, Trans} from '@lingui/macro'
 import {ActionLink} from 'components/ui/DbLink'
 import {dependency} from 'parser/core/Injectable'
 import {BuffWindow, ExpectedGcdCountEvaluator} from 'parser/core/modules/ActionWindow'

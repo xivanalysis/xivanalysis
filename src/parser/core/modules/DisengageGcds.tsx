@@ -1,4 +1,4 @@
-import {Trans} from '@lingui/react'
+import {Trans} from '@lingui/macro'
 import {Action} from 'data/ACTIONS'
 import {Event} from 'event'
 import {Analyser} from 'parser/core/Analyser'

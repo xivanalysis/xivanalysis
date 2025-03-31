@@ -1,5 +1,4 @@
-import {defineMessage} from '@lingui/macro'
-import {Trans} from '@lingui/react'
+import {defineMessage, Trans} from '@lingui/macro'
 import Color from 'color'
 import {Event, Events} from 'event'
 import {filter, oneOf} from 'parser/core/filter'

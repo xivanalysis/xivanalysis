@@ -1,4 +1,4 @@
-import {Trans} from '@lingui/react'
+import {Trans} from '@lingui/macro'
 import {DisengageGcds as CoreDisengageGcds} from 'parser/core/modules/DisengageGcds'
 
 export class LightningShot extends CoreDisengageGcds {
