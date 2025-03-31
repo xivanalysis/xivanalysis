@@ -1,5 +1,4 @@
-import {Catalog} from '@lingui/core'
-import {Messages} from '@lingui/core/i18n'
+import {i18n, Messages} from '@lingui/core'
 import {I18nProvider} from '@lingui/react'
 import {Language} from 'data/LANGUAGES'
 import {observable, reaction, runInAction} from 'mobx'
@@ -7,29 +6,28 @@ import {disposeOnUnmount, observer} from 'mobx-react'
 import {Component, ContextType, ReactNode} from 'react'
 import {Container, Loader, Message} from 'semantic-ui-react'
 import {StoreContext} from 'store'
-import {I18nOverlay} from './I18nOverlay'
 
-const cleanMessages = (messages: Messages) => {
-	for (const [key, val] of Object.entries(messages)) {
-		if (key === val) {
-			delete messages[key]
-		}
-	}
+// const cleanMessages = (messages: Messages) => {
+// 	for (const [key, val] of Object.entries(messages)) {
+// 		if (key === val) {
+// 			delete messages[key]
+// 		}
+// 	}
 
-	return messages
-}
+// 	return messages
+// }
 
 export type I18nLoaderProps = {
 	children: ReactNode
 }
 
+// TODO: massivly simplify all this it's hot garbo
 @observer
 export class I18nLoader extends Component<I18nLoaderProps> {
 	static override contextType = StoreContext
 	declare context: ContextType<typeof StoreContext>
 
-	@observable accessor oldLanguage: Language | null = null
-	@observable accessor catalogs: Partial<Record<Language, Catalog>> = {}
+	loaded = observable.set<Language>()
 	@observable accessor errored = false
 
 	async loadCatalog(language: Language) {
@@ -60,9 +58,11 @@ export class I18nLoader extends Component<I18nLoaderProps> {
 			runInAction(() => this.errored = true)
 			return
 		}
-		const catalog: Catalog = resolutions[0]
+		const messages: Messages = resolutions[0].messages
+		// const localeData: LocaleData = resolutions[0].languageData
 
 		// This _must_ be run after `intl` is included and ready.
+		// TODO: is this still needed?
 		if (needsPolyfill) {
 			// TODO: This is also including `kde` and I've got no idea how to get rid of it
 			try {
@@ -82,34 +82,31 @@ export class I18nLoader extends Component<I18nLoaderProps> {
 		// messages so that values without translation are set to
 		// their keys. We're using a forked babel transformation that
 		// doesn't strip default values, so we don't want this behavior.
-		if (catalog && catalog.messages) {
-			cleanMessages(catalog.messages)
-		}
+		// if (catalog && catalog.messages) {
+		// 	cleanMessages(catalog.messages)
+		// }
 
-		runInAction(() => {
-			this.catalogs = {
-				...this.catalogs,
-				[language]: catalog,
-			}
-		})
+
+		i18n.load({[language]: messages})
+		// TODO: make-plural?
+		// i18n.loadLocaleData({[language]: localeData})
+
+		runInAction(() => this.loaded.add(language))
 	}
 
 	override componentDidMount() {
 		const {i18nStore} = this.context
-		this.loadCatalog(i18nStore.siteLanguage)
 
 		disposeOnUnmount(this, reaction(
 			() => i18nStore.siteLanguage,
-			language => {
-				if (
-					language === this.oldLanguage ||
-					this.catalogs[language]
-				) {
-					return
+			async language => {
+				if (!this.loaded.has(language)) {
+					await this.loadCatalog(language)
 				}
 
-				this.loadCatalog(language)
+				i18n.activate(language)
 			},
+			{fireImmediately: true}
 		))
 	}
 
@@ -130,11 +127,7 @@ export class I18nLoader extends Component<I18nLoaderProps> {
 		const {i18nStore} = this.context
 
 		const language = i18nStore.siteLanguage
-		let loading = false
-
-		if (this.catalogs[language] == null) {
-			loading = true
-		}
+		const loading = !this.loaded.has(language)
 
 		if (loading) {
 			return <Container>
@@ -144,8 +137,9 @@ export class I18nLoader extends Component<I18nLoaderProps> {
 			</Container>
 		}
 
-		return <I18nProvider language={language} catalogs={this.catalogs}>
-			<I18nOverlay enabled={i18nStore.overlay} language={language} />
+		return <I18nProvider i18n={i18n}>
+			{/* TODO: Might be able to use defaultComponent to reimplement the overlay? */}
+			{/* <I18nOverlay enabled={i18nStore.overlay} language={language} /> */}
 			{this.props.children}
 		</I18nProvider>
 	}

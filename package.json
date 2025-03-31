@@ -8,6 +8,7 @@
     "test": "jest",
     "lint": "eslint src",
     "types": "tsc",
+    "e2": "lingui extract --clean --overwrite",
     "extract": "pnpm run clean:locale && rimraf locale/en && lingui add-locale en && cross-env NODE_ENV=development lingui extract --clean",
     "compile": "lingui compile",
     "generate": "pnpm run \"/^generate:.*/\"",
