@@ -297,6 +297,9 @@ importers:
       eslint-plugin-react-hooks:
         specifier: ^5.1.0
         version: 5.1.0(eslint@9.19.0(jiti@1.21.7))
+      glob:
+        specifier: ^11.0.1
+        version: 11.0.1
       globals:
         specifier: ^15.14.0
         version: 15.14.0

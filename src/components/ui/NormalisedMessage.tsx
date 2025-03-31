@@ -1,13 +1,11 @@
-import {I18n, MessageDescriptor} from '@lingui/core'
-import {withI18n} from '@lingui/react'
+import {MessageDescriptor} from '@lingui/core'
+import {useLingui} from '@lingui/react/macro'
 
 interface Props {
-	i18n: I18n
 	message: MessageDescriptor
 }
 
-function NormalisedMessageImpl({message, i18n}: Props) {
+export function NormalisedMessage({message}: Props) {
+	const {i18n} = useLingui()
 	return <>{i18n._(message)}</>
 }
-
-export const NormalisedMessage = withI18n()(NormalisedMessageImpl)

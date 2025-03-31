@@ -1,16 +1,14 @@
 import {MessageDescriptor} from '@lingui/core'
-import {withI18n, withI18nProps} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import ReactMarkdown from 'react-markdown'
 
 export type TransMarkdownProps = {
 	source: MessageDescriptor
 }
 
-type TransMarkdownImplProps =
-	& TransMarkdownProps
-	& withI18nProps
+export function TransMarkdown({source}: TransMarkdownProps) {
+	const {i18n} = useLingui()
 
-function TransMarkdownImpl({i18n, source}: TransMarkdownImplProps) {
 	// i18n might not be ready yet, load the default as a fallback
 	// ridiculous .replace because lingui is pants on head and escaped the escape characters.
 	const finalSource = i18n
@@ -19,5 +17,3 @@ function TransMarkdownImpl({i18n, source}: TransMarkdownImplProps) {
 
 	return <ReactMarkdown	children={finalSource}/>
 }
-
-export const TransMarkdown = withI18n()(TransMarkdownImpl)
