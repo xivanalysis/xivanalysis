@@ -8,6 +8,11 @@ export const changelog = [
 	// 	contributors: [CONTRIBUTORS.YOU],
 	// },
 	{
+		date: new Date('2025-03-31'),
+		Changes: () => <>Remove <DataLink showIcon={false} action="STRIKING_MUSE" /> from cooldowns checklist requirement and update <DataLink showIcon={false} action="STARRY_MUSE" /> window analysis to allow for fewer than three Hammer GCDs.</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
+	{
 		date: new Date('2024-12-15'),
 		Changes: () => <>Moved tracking for <DataLink showIcon={false} status="HYPERPHANTASIA" /> and <DataLink showIcon={false} status="HAMMER_TIME" /> into Proc Issues.</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],
