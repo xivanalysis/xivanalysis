@@ -11,7 +11,6 @@ export type I18nLoaderProps = {
 	children: ReactNode
 }
 
-// TODO: massivly simplify all this it's hot garbo
 @observer
 export class I18nLoader extends Component<I18nLoaderProps> {
 	static override contextType = StoreContext
@@ -21,27 +20,20 @@ export class I18nLoader extends Component<I18nLoaderProps> {
 	@observable accessor errored = false
 
 	async loadCatalog(language: Language) {
-		const promises = [import(
-			/* webpackMode: 'lazy' */
-			/* webpackChunkName: 'i18n-[index]' */
-			'../../locale/' + language + '/messages.json'
-		)]
-
-		// Wait for the initial i18n promises before we continue. Our catalog will always be the first arg.
-		let resolutions
+		let catalog: {messages: Messages}
 		try {
-			resolutions = await Promise.all(promises)
+			catalog = await import(
+				/* webpackMode: 'lazy' */
+				/* webpackChunkName: 'i18n-[index]' */
+				'../../locale/' + language + '/messages.json'
+			)
 		} catch {
 			// There was an error while loading i18n data - we're a top-level provider, so global errors are out the window.
 			runInAction(() => this.errored = true)
 			return
 		}
-		const messages: Messages = resolutions[0].messages
-		// const localeData: LocaleData = resolutions[0].languageData
 
-		i18n.load(language, messages)
-		// TODO: make-plural?
-		// i18n.loadLocaleData({[language]: localeData})
+		i18n.load(language, catalog.messages)
 
 		runInAction(() => this.loaded.add(language))
 	}

@@ -1,7 +1,7 @@
 import type {LinguiConfig} from '@lingui/conf'
 import {formatter} from '@lingui/format-json'
 
-const config:LinguiConfig = {
+const config: LinguiConfig = {
 	catalogs: [{
 		path: "<rootDir>/locale/{locale}/messages",
 		include: ["<rootDir>/src"],
