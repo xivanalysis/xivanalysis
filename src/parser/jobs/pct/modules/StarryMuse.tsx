@@ -32,7 +32,7 @@ export class StarryMuse extends RaidBuffWindow {
 
 	override prependMessages = <Message>
 		<Trans id="pct.starrymuse.table-header">
-			Your <DataLink status="STARRY_MUSE" /> windows should contain your full <DataLink status="HAMMER_TIME" /> combo, <DataLink action="STAR_PRISM" />, <DataLink action="RAINBOW_DRIP" />, two <DataLink action="COMET_IN_BLACK" /> (one in the opener), and fill the remainder with your <DataLink status="SUBTRACTIVE_PALETTE" /> spells.<br/>
+			Your <DataLink status="STARRY_MUSE" /> windows should contain <DataLink action="STAR_PRISM" />, <DataLink action="RAINBOW_DRIP" />, at least one <DataLink action="COMET_IN_BLACK" />, and fill the remainder with your <DataLink status="SUBTRACTIVE_PALETTE" /> spells and <DataLink status="HAMMER_TIME" /> combo.<br/>
 			If you are using more muses for buff alignment reasons, you will push some of your <DataLink showIcon={false} status="SUBTRACTIVE_PALETTE" /> spells and <DataLink showIcon={false} action="RAINBOW_DRIP" /> out of the window.<br/>
 			Try to make sure you use all of the expected actions in each window as seen below.
 		</Trans>
