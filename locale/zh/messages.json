@@ -821,7 +821,7 @@
   "pct.procs.dropped-stars.why": "你的<0/>状态超时掉了{droppedStars, plural, one {# 次} other {# 次}}。",
   "pct.starrymuse.suggestions.expected-actions.content": "为了达到最大输出，你应该确保<0/>期间使用了所有推荐的技能。",
   "pct.starrymuse.suggestions.limited-actions.content": "避免在<0/>期间使用彩绘技能。咏唱<1/>可以提供更高的威力，让你在爆发期里造成更多伤害。",
-  "pct.starrymuse.table-header": "你的<0/>中应该有完整的<1/>连击、<2/>、<3/>、两个<4/>（开场爆发时是一个），其余时间使用<5/>。<6/>如果为了对齐buff而使用了更多构想技能的话，你可以把<7/>和<8/>挪出去。<9/>试着确保你每次爆发窗口期里都使用了如下显示的技能。",
+  "pct.starrymuse.table-header": "",
   "pct.starrymuse.title": "星空构想",
   "pct.swiftcast.missed.suggestion.content": "不要让 <0/> 过期。该瞬发可用于使用 <1/> 同时进行长距离移动或穿插能力，以及在boss离场或死亡前打出 <2/> 。",
   "pld.about.description": "<0>作为黑魔与白魔不被承认的后代，你选择了一条“沥血”之路，成为了一名举着盾牌，挥舞宝剑的法师，试着去帮助所有队友。</0><1>\n这个分析器会帮助你成为一名令人畏惧的坦克，面对敌人时你没有丝毫的“<2/>”，同时作为真正的“<3/>”激励着你的团队。</1>",
