@@ -17,7 +17,7 @@ export const ENHANCED_SEVERITY_TIERS = {
 	3: SEVERITY.MAJOR,
 }
 
-export const FLARE_STAR_CARRYOVER_CODE = -2
+export const NO_DENOMINATOR_CODE = -2
 
 export interface CycleErrorCode {priority: number, message: ReactNode}
 export const DEATH_PRIORITY = 101 // Define this const here so we can reference it in both classes
@@ -59,10 +59,7 @@ export interface CycleMetadata {
 
 export interface PhaseMetadata {
 	startTime: number
-	initialMP: number
-	initialGaugeState: BLMGaugeState
+	gaugeStateBeforeFire: BLMGaugeState
+	fireEntryGaugeState: BLMGaugeState
 	fullElementTime: number
-	fullElementMP: number
-	fullElementGaugeState: BLMGaugeState
-	circleOfPowerPct: number
 }
