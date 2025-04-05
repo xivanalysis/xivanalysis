@@ -287,6 +287,9 @@ export class RotationWatchdog extends RestartWindow {
 	}
 
 	override onWindowRestart(event: Events['action']) {
+		// Don't start a new window if we hadn't actually put any data in the current window yet (ie. opening with raw B3)
+		if (this.history.getCurrent()?.data.length === 0) { return }
+
 		// Do not start a new window if transposing from Ice to Fire
 		if (event.action === this.data.actions.TRANSPOSE.id && this.currentGaugeState.umbralIce > 0) {
 			return
