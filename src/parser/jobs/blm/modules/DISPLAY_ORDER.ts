@@ -8,4 +8,5 @@ export const DISPLAY_ORDER = {
 
 	SWIFTCAST: 97,
 	TRIPLECAST: 98,
+	UTILITIES: 99,
 }
