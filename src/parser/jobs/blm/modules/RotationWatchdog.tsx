@@ -192,6 +192,7 @@ export class RotationWatchdog extends RestartWindow {
 			this.addEvaluator(new ColdF3Evaluator({
 				fire3Action: this.data.actions.FIRE_III,
 				gauge: this.gauge,
+				metadataHistory: this.metadataHistory,
 			}))
 		}
 		//#endregion
