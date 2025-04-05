@@ -6,7 +6,7 @@ import {DISPLAY_ORDER} from './DISPLAY_ORDER'
 export class Defensives extends CoreDefensives {
 	static override displayOrder = DISPLAY_ORDER.DEFENSIVES
 
-	protected override trackedDefensives = [this.data.actions.TEMPERA_COAT]
+	protected override trackedActions = [this.data.actions.TEMPERA_COAT]
 
 	private lastShieldApplyStatusId: number | null = null
 	private lastShieldApplyTimestamp: number | null = null

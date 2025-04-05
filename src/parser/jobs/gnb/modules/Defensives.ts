@@ -3,7 +3,7 @@ import {DISPLAY_ORDER} from 'parser/jobs/gnb/modules/DISPLAY_ORDER'
 
 export class Defensives extends CoreDefensives {
 	static override displayOrder = DISPLAY_ORDER.DEFENSIVES
-	protected override trackedDefensives = [
+	protected override trackedActions = [
 		this.data.actions.SUPERBOLIDE,
 		this.data.actions.GREAT_NEBULA,
 		this.data.actions.HEART_OF_LIGHT,
