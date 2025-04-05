@@ -8,6 +8,11 @@ export const changelog = [
 	// 	contributors: [CONTRIBUTORS.YOU],
 	// },
 	{
+		date: new Date('2025-04-04'),
+		Changes: () => <>Remove Triplecast from cooldown checklist requirement, and add analysis for the usage of Swiftcast and Triplecast.</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
+	{
 		date: new Date('2024-12-02'),
 		Changes: () => <>Fixed a gauge tracking bug that caused Umbral Hearts to be consumed by <DataLink status="FIRESTARTER" /> procs.</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],
