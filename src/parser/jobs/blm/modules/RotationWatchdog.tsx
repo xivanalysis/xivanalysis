@@ -201,6 +201,7 @@ export class RotationWatchdog extends RestartWindow {
 			suggestionIcon: this.data.actions.HIGH_BLIZZARD_II.icon,
 			metadataHistory: this.metadataHistory,
 			fireSpellIds: this.fireSpellIds,
+			icespellIds: this.iceSpellIds,
 		}))
 		//#endregion
 
