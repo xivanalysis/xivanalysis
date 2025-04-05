@@ -5,4 +5,6 @@ export const DISPLAY_ORDER = {
 	THUNDER: 4,
 	WEAVING: 5,
 	TINCTURES: 6,
+
+	SWIFTCAST: 97,
 }
