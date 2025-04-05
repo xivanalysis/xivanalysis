@@ -124,6 +124,8 @@
   "blm.rotation-watchdog.error-messages.should-skip-t3": "应跳过咏唱<0/>",
   "blm.rotation-watchdog.rotation-table.header.reason": "错误原因",
   "blm.rotation-watchdog.rotation-table.message": "黑魔的核心是每轮循环需要使用6次 <0/>，2次<1/>，以及 <2/>、 <3/> 各一次。<4/>尽量避免漏掉 <5/> ，因为那会导致你用不了 <6/>。",
+  "blm.rotation-watchdog.suggestions.coldf3.content": "",
+  "blm.rotation-watchdog.suggestions.coldf3.why": "",
   "blm.rotation-watchdog.suggestions.end-with-despair.content": "在星极火里，如果用了下一个技能会使你的MP低于800以下，你应该跳过这个技能，立刻用<0/>。",
   "blm.rotation-watchdog.suggestions.end-with-despair.why": "{astralFiresMissingDespairs, plural, one {# 次星极火状态} other {# 次星极火状态}}结束前没有使用过<0/>.",
   "blm.rotation-watchdog.suggestions.extra-f1s.content": "使用 <0/> 来为 <1/> 生成足够的星极魂。使用 <2/> 或 <3/> 触发来保持星极火状态。",

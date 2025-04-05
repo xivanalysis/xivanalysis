@@ -124,6 +124,8 @@
   "blm.rotation-watchdog.error-messages.should-skip-t3": "",
   "blm.rotation-watchdog.rotation-table.header.reason": "Abweichungen",
   "blm.rotation-watchdog.rotation-table.message": "",
+  "blm.rotation-watchdog.suggestions.coldf3.content": "",
+  "blm.rotation-watchdog.suggestions.coldf3.why": "",
   "blm.rotation-watchdog.suggestions.end-with-despair.content": "Sobald du unter dem Effekt von Lichtfeuer stehst, keinen weiteren Zauber casten kannst und über 800 MP bist, solltest du deine verbleibenden MP mit <0/> aufbrauchen.",
   "blm.rotation-watchdog.suggestions.end-with-despair.why": "",
   "blm.rotation-watchdog.suggestions.extra-f1s.content": "",

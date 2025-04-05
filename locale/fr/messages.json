@@ -124,6 +124,8 @@
   "blm.rotation-watchdog.error-messages.should-skip-t3": "Mauvais timing pour l'incantation de <0/>",
   "blm.rotation-watchdog.rotation-table.header.reason": "Problèmes soulignés",
   "blm.rotation-watchdog.rotation-table.message": "L'essence du Mage Noir consiste à lancer six fois <0/>, deux fois <1/>, et une fois <2/> et <3/> par rotation.<4/>Évitez de manquer des lancements de <5/> quand c'est possible, puisque ça vous empêchera de lancer <6/>.",
+  "blm.rotation-watchdog.suggestions.coldf3.content": "",
+  "blm.rotation-watchdog.suggestions.coldf3.why": "",
   "blm.rotation-watchdog.suggestions.end-with-despair.content": "Quand vous ne pouvez plus lancer d'autre sorts en Feu Astral et qu'il vous reste plus que 800 PM, vous devriez utiliser vos PM restants en utilisant <0/>.",
   "blm.rotation-watchdog.suggestions.end-with-despair.why": "{astralFiresMissingDespairs, plural, one {# phase de Feu Astral ne comportait pas} other {# phases de Feu Astral ne comportaient pas}} au moins un <0/>.",
   "blm.rotation-watchdog.suggestions.extra-f1s.content": "Lancer <0/> va consommer le mana nécessaire à la génération de suffisamment d'Âmes Astrale pour lancer <1/>. Utilisez <2/> ou votre proc <3/> pour garder votre Feu Astral à la place.",
