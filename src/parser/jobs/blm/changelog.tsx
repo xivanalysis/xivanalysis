@@ -8,6 +8,11 @@ export const changelog = [
 	// 	contributors: [CONTRIBUTORS.YOU],
 	// },
 	{
+		date: new Date('2025-04-05'),
+		Changes: () => <>Update rotation analysis due to the removal of most timers in patch 7.2.</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
+	{
 		date: new Date('2024-12-02'),
 		Changes: () => <>Fixed a gauge tracking bug that caused Umbral Hearts to be consumed by <DataLink status="FIRESTARTER" /> procs.</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],
