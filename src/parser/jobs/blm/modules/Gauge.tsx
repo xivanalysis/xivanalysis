@@ -120,6 +120,9 @@ export class Gauge extends CoreGauge {
 
 	private castTimeIndex: number | null = null
 
+	// In 7.2+, the 5+7 opener will cause one paradox overwrite because we use that MP on an extra F4 to enable a second Flare Star
+	private forgiveOneParadoxOverwrite = !this.parser.patch.before('7.2')
+
 	/** Astral Fire and Umbral Ice */
 	private astralUmbralGauge = this.add(new EnumGauge({
 		maximum: 3,
@@ -468,7 +471,12 @@ export class Gauge extends CoreGauge {
 
 	private onGainParadox() {
 		if (!this.paradoxGauge.empty && !this.invuln.isActive({timestamp: this.parser.currentEpochTimestamp})) {
-			this.gaugeErrors.push({timestamp: this.parser.currentEpochTimestamp, error: GAUGE_ERROR_TYPE.OVERWROTE_PARADOX})
+			// If we're forgiving this overwrite, note that we have done so and move on
+			if (this.forgiveOneParadoxOverwrite) {
+				this.forgiveOneParadoxOverwrite = false
+			} else {
+				this.gaugeErrors.push({timestamp: this.parser.currentEpochTimestamp, error: GAUGE_ERROR_TYPE.OVERWROTE_PARADOX})
+			}
 		}
 
 		this.paradoxGauge.generate(1)
@@ -665,7 +673,9 @@ export class Gauge extends CoreGauge {
 			}))
 		}
 
-		if (this.paradoxGauge.overCap > 0) {
+		// If we forgave an overwrite because of the 5+7 opener, remove that from the raw gauge overcap amount when checking to see if we should suggest
+		const  totalParadoxOvercap = this.paradoxGauge.overCap - ((!this.parser.patch.before('7.2') && !this.forgiveOneParadoxOverwrite) ? 1: 0)
+		if (totalParadoxOvercap > 0) {
 			this.suggestions.add(new Suggestion({
 				icon: this.data.actions.PARADOX.icon,
 				content: <Trans id="blm.gauge.suggestions.overwritten-paradox.content">
@@ -673,7 +683,7 @@ export class Gauge extends CoreGauge {
 				</Trans>,
 				severity: SEVERITY.MAJOR,
 				why: <Trans id="blm.gage.suggestions.overwritten-paradox.why">
-					<DataLink showIcon={false} action="PARADOX"/> got overwritten <Plural value={this.paradoxGauge.overCap} one="# time" other="# times"/>.
+					<DataLink showIcon={false} action="PARADOX"/> got overwritten <Plural value={totalParadoxOvercap} one="# time" other="# times"/>.
 				</Trans>,
 			}))
 		}
