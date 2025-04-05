@@ -19,6 +19,7 @@ import {DISPLAY_ORDER} from './DISPLAY_ORDER'
 import {FIRE_SPELLS, ICE_SPELLS, THUNDER_SPELLS} from './Elements'
 import {ASTRAL_SOUL_MAX_STACKS, ASTRAL_UMBRAL_DURATION, ASTRAL_UMBRAL_MAX_STACKS, BLMGaugeState, Gauge, UMBRAL_HEARTS_MAX_STACKS} from './Gauge'
 import {Procs} from './Procs'
+import {ColdF3Evaluator} from './RotationWatchdog/ColdF3Evaluator'
 import {assignErrorCode, getMetadataForWindow} from './RotationWatchdog/EvaluatorUtilities'
 import {ExpectedFireSpellsEvaluator} from './RotationWatchdog/ExpectedFireSpellsEvaluator'
 import {ExtraF1Evaluator} from './RotationWatchdog/ExtraF1Evaluator'
@@ -177,11 +178,21 @@ export class RotationWatchdog extends RestartWindow {
 			invulnerability: this.invulnerability,
 		}))
 
-		this.addEvaluator(new FirestarterUsageEvaluator({
-			manafontId: this.data.actions.MANAFONT.id,
-			paradoxId: this.data.actions.PARADOX.id,
-			fire3Id: this.data.actions.FIRE_III.id,
-		}))
+		// Since timer considerations are no longer relevant for 7.2+, we can swap the minor "you probably should hold Firestarter" suggestion
+		// for a more stringent tiered one. Transpose AF1 PD F3P is basically free now, so it should be the default if an F3P is not held over
+		// from the previous phase
+		if (this.parser.patch.before('7.2')) {
+			this.addEvaluator(new FirestarterUsageEvaluator({
+				manafontId: this.data.actions.MANAFONT.id,
+				paradoxId: this.data.actions.PARADOX.id,
+				fire3Id: this.data.actions.FIRE_III.id,
+			}))
+		} else {
+			this.addEvaluator(new ColdF3Evaluator({
+				fire3Action: this.data.actions.FIRE_III,
+				gauge: this.gauge,
+			}))
+		}
 		//#endregion
 
 		//#region Evaluators that only apply to normal mid-fight windows
