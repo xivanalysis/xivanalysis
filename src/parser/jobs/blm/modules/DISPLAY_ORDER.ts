@@ -7,4 +7,5 @@ export const DISPLAY_ORDER = {
 	TINCTURES: 6,
 
 	SWIFTCAST: 97,
+	TRIPLECAST: 98,
 }
