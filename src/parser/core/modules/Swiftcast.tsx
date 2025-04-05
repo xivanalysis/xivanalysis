@@ -33,6 +33,7 @@ interface SwiftcastEvaluatorOptions {
 	suggestionIcon: string
 	suggestionContent: JSX.Element
 	severityTiers: SeverityTiers
+	showGoodUseColumn: boolean
 }
 
 class SwiftcastEvaluator implements WindowEvaluator, SwiftcastEvaluatorOptions {
@@ -40,12 +41,14 @@ class SwiftcastEvaluator implements WindowEvaluator, SwiftcastEvaluatorOptions {
 	suggestionIcon: string
 	suggestionContent: JSX.Element
 	severityTiers: SeverityTiers
+	showGoodUseColumn: boolean
 
 	constructor(opt: SwiftcastEvaluatorOptions) {
 		this.validators = opt.validators
 		this.suggestionIcon = opt.suggestionIcon
 		this.suggestionContent = opt.suggestionContent
 		this.severityTiers = opt.severityTiers
+		this.showGoodUseColumn = opt.showGoodUseColumn
 	}
 
 	private isValidSwiftcastUse = _.memoize((window: HistoryEntry<EvaluatedAction[]>) => {
@@ -88,14 +91,18 @@ class SwiftcastEvaluator implements WindowEvaluator, SwiftcastEvaluatorOptions {
 	}
 
 	public output = (windows: Array<HistoryEntry<EvaluatedAction[]>>) => {
-		const columns: EvaluationOutput[] = [{
-			format: 'notes',
-			header: {
-				header: <Trans id="core.swiftcast.chart.good.header">Good Use?</Trans>,
-				accessor: 'good',
-			},
-			rows: windows.map(this.generateValidColumn),
-		}]
+		const columns: EvaluationOutput[] = []
+
+		if (this.showGoodUseColumn) {
+			columns.push({
+				format: 'notes',
+				header: {
+					header: <Trans id="core.swiftcast.chart.good.header">Good Use?</Trans>,
+					accessor: 'good',
+				},
+				rows: windows.map(this.generateValidColumn),
+			})
+		}
 
 		if (windows.some(this.hasNote)) {
 			columns.push({
@@ -121,6 +128,8 @@ export abstract class Swiftcast extends BuffWindow {
 	override buffStatus: Status = this.data.statuses.SWIFTCAST
 	override endOfWindowHandlingMode: EndOfWindowHandlingMode = 'SAME-TIMESTAMP'
 
+	protected showGoodUseColumn: boolean = true
+
 	override initialise() {
 		super.initialise()
 
@@ -129,6 +138,7 @@ export abstract class Swiftcast extends BuffWindow {
 			suggestionIcon: this.data.actions.SWIFTCAST.icon,
 			suggestionContent: this.suggestionContent,
 			severityTiers: this.severityTiers,
+			showGoodUseColumn: this.showGoodUseColumn,
 		}))
 	}
 
