@@ -126,3 +126,9 @@ export const MOTIFS: ActionKey[] = [
 	'HAMMER_MOTIF',
 	'STARRY_SKY_MOTIF',
 ]
+
+export const HAMMER_COMBO: ActionKey[] = [
+	'HAMMER_STAMP',
+	'HAMMER_BRUSH',
+	'POLISHING_HAMMER',
+]
