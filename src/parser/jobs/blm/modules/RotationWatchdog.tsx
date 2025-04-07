@@ -354,8 +354,9 @@ export class RotationWatchdog extends RestartWindow {
 			// Let the player rush the Despair if they need to before a downtime/end of fight
 			if (windowMetadata.finalOrDowntime) { return window.data.filter(event => event.action.id === this.data.actions.FIRE_IV.id).length }
 
-			// We definitely reached full MP if an ice spell was cast at UI3, or we Umbral Souled three times
-			const definitelyFullMP = window.data.find(event => this.iceSpellIds.includes(event.action.id) && this.gauge.getGaugeState(event.timestamp).umbralIce === ASTRAL_UMBRAL_MAX_STACKS) != null ||
+			// We definitely reached full MP if an ice spell was cast while already at UI3, or we Umbral Souled three times
+			const definitelyFullMP = window.data.find(event => this.iceSpellIds.includes(event.action.id) &&
+					this.gauge.getGaugeState(event.timestamp - 1).umbralIce === ASTRAL_UMBRAL_MAX_STACKS) != null ||
 				window.data.filter(event => event.action.id === this.data.actions.UMBRAL_SOUL.id).length === UMBRAL_HEARTS_MAX_STACKS
 
 			let afterUHMP = definitelyFullMP ? MAX_MP : 0
