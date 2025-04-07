@@ -71,7 +71,6 @@ export class Triplecast extends BuffWindow {
 		}
 
 		this.addEventHook(filter<Event>().source(this.parser.actor.id).action(this.data.actions.TRIPLECAST.id), this.onTriplecast)
-		this.addEventHook('complete', this.onComplete)
 	}
 
 	private onTriplecast() {
