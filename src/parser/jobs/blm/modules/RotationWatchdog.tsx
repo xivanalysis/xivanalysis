@@ -17,7 +17,7 @@ import {Message} from 'semantic-ui-react'
 import {fillActionIds} from 'utilities/fillArrays'
 import {DISPLAY_ORDER} from './DISPLAY_ORDER'
 import {FIRE_SPELLS, ICE_SPELLS, THUNDER_SPELLS} from './Elements'
-import {ASTRAL_SOUL_MAX_STACKS, ASTRAL_UMBRAL_DURATION, ASTRAL_UMBRAL_MAX_STACKS, BLMGaugeState, Gauge, UMBRAL_HEARTS_MAX_STACKS} from './Gauge'
+import {ASTRAL_SOUL_MAX_STACKS, ASTRAL_UMBRAL_DURATION, ASTRAL_UMBRAL_MAX_STACKS, BLMGaugeState, FLARE_SOUL_GENERATION, Gauge, UMBRAL_HEARTS_MAX_STACKS} from './Gauge'
 import {Procs} from './Procs'
 import {ColdF3Evaluator} from './RotationWatchdog/ColdF3Evaluator'
 import {assignErrorCode, getMetadataForWindow} from './RotationWatchdog/EvaluatorUtilities'
@@ -422,6 +422,9 @@ export class RotationWatchdog extends RestartWindow {
 					adjustment++
 				}
 			}
+
+			// If the player needed to AoE, credit them for the souls that Flare generated
+			adjustment -= window.data.filter(event => event.action.id === this.data.actions.FLARE.id).length * FLARE_SOUL_GENERATION
 		}
 
 		if (action.action.id === this.data.actions.DESPAIR.id) {
