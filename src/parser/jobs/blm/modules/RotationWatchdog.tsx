@@ -364,26 +364,21 @@ export class RotationWatchdog extends RestartWindow {
 			// If we don't know for sure that the player reached full MP for this window, try to figure out how much MP they had from their resources
 			// This is less reliable, since the resource update events don't always come through at the times they should with respect to game behavior
 			if (!definitelyFullMP) {
-				// Figure out when the player entered Astral Fire, and reached Astral Fire 3 (these may be different)
-				const firstGCDInAFTimestamp = window.data.find((event) => event.timestamp > windowMetadata.firePhaseMetadata.startTime && event.action.onGcd)?.timestamp
-				const firstGCDInFullAFTimestamp  = window.data.find((event) => event.timestamp > windowMetadata.firePhaseMetadata.fullElementTime && event.action.onGcd)?.timestamp
+				// If Manafont was used to reach AF3, we shouldn't expect F4s, since you generally don't want to cast Fire spells below AF3
+				const beforeFullAFManafontEvent = window.data.some((event) => event.action.id === this.data.actions.MANAFONT.id && event.timestamp <= windowMetadata.firePhaseMetadata.fullElementTime)
+				if (!beforeFullAFManafontEvent) {
+					// Figure out when the player entered Astral Fire, and reached Astral Fire 3 (these may be different)
+					const firstGCDInAFTimestamp = window.data.find((event) => event.timestamp > windowMetadata.firePhaseMetadata.startTime && event.action.onGcd)?.timestamp
+					const firstGCDInFullAFTimestamp  = window.data.find((event) => event.timestamp > windowMetadata.firePhaseMetadata.fullElementTime && event.action.onGcd)?.timestamp
 
-				// This shouldn't happen, but to be safe...
-				if (firstGCDInAFTimestamp == null || firstGCDInFullAFTimestamp == null) {
-					windowMetadata.expectedFire4s = NO_DENOMINATOR_CODE
-					return windowMetadata.expectedFire4s
-				}
+					// This shouldn't happen, but to be safe...
+					if (firstGCDInAFTimestamp == null || firstGCDInFullAFTimestamp == null) {
+						windowMetadata.expectedFire4s = NO_DENOMINATOR_CODE
+						return windowMetadata.expectedFire4s
+					}
 
-				// Start with the MP we think they had on entering Astral Fire
-				afterUHMP = this.actors.current.at(firstGCDInAFTimestamp - 1).mp.current
-
-				// If Manafont was used to reach AF3, check just before Manafont to see if it had a higher listed MP value
-				const beforeFullAFManafontEvent = window.data.find((event) => event.action.id === this.data.actions.MANAFONT.id && event.timestamp <= windowMetadata.firePhaseMetadata.fullElementTime)
-				if (beforeFullAFManafontEvent != null) {
-					afterUHMP = Math.max(afterUHMP, this.actors.current.at(beforeFullAFManafontEvent.timestamp - 1).mp.current)
-				} else {
-					// Otherwise, look at the MP just before the first full AF GCD
-					afterUHMP = Math.max(afterUHMP, this.actors.current.at(firstGCDInFullAFTimestamp - 1).mp.current)
+					// Start with the MP we think they had on entering Astral Fire, by looking for the maximum of the MP values before the entry and AF3 reached times
+					afterUHMP = Math.max(this.actors.current.at(firstGCDInAFTimestamp - 1).mp.current, this.actors.current.at(firstGCDInFullAFTimestamp - 1).mp.current)
 				}
 			}
 

@@ -8,7 +8,7 @@ import {Actors} from 'parser/core/modules/Actors'
 import {TieredSuggestion} from 'parser/core/modules/Suggestions'
 import {assignErrorCode} from './EvaluatorUtilities'
 import {CycleMetadata, ROTATION_ERRORS, ENHANCED_SEVERITY_TIERS} from './WatchdogConstants'
-import {Gauge} from '../Gauge'
+import {ASTRAL_UMBRAL_MAX_STACKS, Gauge} from '../Gauge'
 
 export interface ManafontTimingEvaluatorOpts {
 	manafontAction: Action
@@ -52,6 +52,12 @@ export class ManafontTimingEvaluator extends RulePassedEvaluator {
 		if (windowMetadata == null) { return }
 
 		const manafontTimestamp = window.data[manafontIndex].timestamp
+
+		// If Manafont was used to reach Astral Fire, it's a neutral result
+		if (this.gauge.getGaugeState(manafontTimestamp - 1).astralFire < ASTRAL_UMBRAL_MAX_STACKS) {
+			return
+		}
+
 		// If Despair was used before Manafont, they pass the rule of using Manafont at 0 MP remaining
 		const despairIndex = window.data.findIndex(event => event.action.id === this.despairId && event.timestamp < manafontTimestamp)
 		if (despairIndex >= 0) {
