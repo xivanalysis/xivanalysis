@@ -424,16 +424,42 @@ export class RotationWatchdog extends RestartWindow {
 		}
 
 		if (action.action.id === this.data.actions.DESPAIR.id) {
+			const manafontIndex = window.data.findIndex(event => event.action.id === this.data.actions.MANAFONT.id)
 			const lastFlareIndex = window.data.findLastIndex(event => event.action.id === this.data.actions.FLARE.id)
 			if (lastFlareIndex >= 0) {
 				const priorGaugeState = this.gauge.getGaugeState(window.data[lastFlareIndex].timestamp - 1)
 				// If player had no Umbral Hearts, Flare eats all remaining MP the way Despair does. We're going to assume they knew why they were doing that...
 				if (priorGaugeState.umbralHearts === 0) {
-					windowMetadata.expectedDespairs = NO_DENOMINATOR_CODE
-					return windowMetadata.expectedDespairs
+					// If they didn't Manafont this window, we shouldn't expect a Despair, and we can bail out
+					if (manafontIndex < 0) {
+						windowMetadata.expectedDespairs = NO_DENOMINATOR_CODE
+						return windowMetadata.expectedDespairs
+					}
+				} else {
+					// If they had Hearts remaining at the time they Flared, we should also see a Despair
+					adjustment++
+				}
+			} else {
+				// If they did not Flare, we should see a Despair
+				adjustment++
+			}
+			if (manafontIndex >= 0) {
+				const manafontFlareIndex = window.data.findLastIndex((event, index) => event.action.id === this.data.actions.FLARE.id && index < manafontIndex)
+				if (manafontFlareIndex >= 0) {
+					const priorGaugeState = this.gauge.getGaugeState(window.data[lastFlareIndex].timestamp - 1)
+					// If they Flared at 0 Hearts before Manafont, similarly assume no Despair from that half the phase
+					if (priorGaugeState.umbralHearts === 0) {
+						// If we didn't expect a Despair from the post-Manafont window either, indicate as such
+						if (adjustment === 0) {
+							windowMetadata.expectedDespairs = NO_DENOMINATOR_CODE
+							return windowMetadata.expectedDespairs
+						}
+					} else {
+						// If they had Hearts remaining at the time they Flared before Manafont, we should also see a Despair
+						adjustment++
+					}
 				}
 			}
-			adjustment++
 		}
 
 		if (action.action.id === this.data.actions.FLARE_STAR.id) {
