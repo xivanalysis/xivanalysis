@@ -27,6 +27,19 @@ export const patch720: Layer<ActionRoot> = {
 				bonusModifiers: [BonusModifier.COMBO],
 			}],
 		},
+		// MNK
+		WINDS_REPLY: {
+			potencies: [{
+				value: 1040,
+				bonusModifiers: [],
+			}],
+		},
+		FIRES_REPLY: {
+			potencies: [{
+				value: 1400,
+				bonusModifiers: [],
+			}],
+		},
 		//RDM
 		VICE_OF_THORNS: {
 			potency: 800,
