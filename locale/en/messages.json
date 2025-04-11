@@ -671,6 +671,7 @@
   "mnk.balls.suggestions.overcap.content": "Try not to overcap your Fury gauge. Use <0/>, <1/>, and <2/> over their alternatives whenever a stack of their respective Fury gauge is available.",
   "mnk.balls.suggestions.overcap.why": "You lost {overCap, plural, one {# stack} other {# stacks}} of Fury due to overcapping.",
   "mnk.balls.title": "Fury Gauge",
+  "mnk.bh.suggestions.gcd.content": "Aim to hit {EXPECTED_GCDS} GCDs during each <0/> window.",
   "mnk.bookending.formless.checklist.description": "Opo-opo actions have the highest average potency of the three forms. Try to maximize uses of these actions by consuming <0/> with <1/>, <2/>, or <3/>.",
   "mnk.bookending.formless.checklist.name": "Consume <0/> with Opo-opo actions",
   "mnk.bookending.formless.checklist.requirement": "<0/> used on Opo-opo actions",
