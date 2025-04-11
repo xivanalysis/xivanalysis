@@ -1,12 +1,12 @@
+import {Trans} from '@lingui/react'
+import {DataLink} from 'components/ui/DbLink'
 import {dependency} from 'parser/core/Injectable'
 import {EvaluatedAction, ExpectedGcdCountEvaluator, RaidBuffWindow} from 'parser/core/modules/ActionWindow'
 import {HistoryEntry} from 'parser/core/modules/ActionWindow/History'
 import {BrotherhoodDriftEvaluator, MissedBrotherhoodEvaluator} from './evaluators/BrotherhoodEvaluator'
 import {RiddleOfFire} from './RiddleOfFire'
-import {SEVERITY} from 'parser/core/modules/Suggestions'
 import {GlobalCooldown} from 'parser/core/modules/GlobalCooldown'
-import {DataLink} from 'components/ui/DbLink'
-import {Trans} from '@lingui/react'
+import {SEVERITY} from 'parser/core/modules/Suggestions'
 
 const EXPECTED_GCDS = 10
 
