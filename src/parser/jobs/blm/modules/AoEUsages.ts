@@ -7,12 +7,14 @@ export class AoEUsages extends CoreAoE {
 		{
 			aoeAction: this.data.actions.FOUL,
 			stActions: [this.data.actions.XENOGLOSSY],
-			minTargets: 3,
+			// eslint-disable-next-line @typescript-eslint/no-magic-numbers
+			minTargets: this.parser.patch.before('7.2') ? 3 : 2,
 		},
 		{
 			aoeAction: this.data.actions.FLARE,
-			stActions: [this.data.actions.DESPAIR],
-			minTargets: 3,
+			stActions: [this.data.actions.FIRE_IV, this.data.actions.DESPAIR],
+			// eslint-disable-next-line @typescript-eslint/no-magic-numbers
+			minTargets: this.parser.patch.before('7.1') ? 3 : 2,
 		},
 		{
 			aoeAction: this.data.actions.THUNDER_IV,

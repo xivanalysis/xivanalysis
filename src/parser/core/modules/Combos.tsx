@@ -143,7 +143,7 @@ export class Combos extends Analyser {
 		this.currentComboChain = []
 	}
 
-	private recordExpiredCombo(breaker: ComboBreak) {
+	protected recordExpiredCombo(breaker: ComboBreak) {
 		this.issues.push({
 			type: 'timeout',
 			breaker,
@@ -188,6 +188,15 @@ export class Combos extends Analyser {
 
 		// Action did not continue combo correctly and is not a new combo starter
 		this.recordBrokenCombo(event)
+		return false
+	}
+
+	protected checkExpiredCombo(event: Events['action']): boolean {
+		const comboExpiration = this.lastGcdTime + COMBO_TIMEOUT
+		if (event.timestamp > comboExpiration && this.currentComboChain.length > 0) {
+			return true
+		}
+
 		return false
 	}
 

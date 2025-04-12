@@ -4,7 +4,6 @@ import {Combos} from './Combos'
 import {Defensives} from './Defensives'
 import {Gauge} from './Gauge'
 import {Infuriate} from './Infuriate'
-import {InnerRelease} from './InnerRelease'
 import {OGCDDowntime} from './OGCDDowntime'
 import {Procs} from './Procs'
 import {SurgingTempest} from './SurgingTempest'
@@ -18,7 +17,6 @@ export const modules = [
 	Defensives,
 	Gauge,
 	Infuriate,
-	InnerRelease,
 	OGCDDowntime,
 	Procs,
 	SurgingTempest,

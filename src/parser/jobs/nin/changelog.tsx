@@ -7,6 +7,11 @@ export const changelog = [
 	// 	contributors: [CONTRIBUTORS.YOU],
 	// },
 	{
+		date: new Date('2025-04-05'),
+		Changes: () => <>Corrected Deathfrog Medium tracking to expect three or more targets instead of two or more.</>,
+		contributors: [CONTRIBUTORS.TOASTDEIB],
+	},
+	{
 		date: new Date('2024-08-02'),
 		Changes: () => <>Added Dokumori to the raid buffs list on the timeline.</>,
 		contributors: [CONTRIBUTORS.TOASTDEIB],

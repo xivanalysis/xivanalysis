@@ -7,6 +7,10 @@ import {dependency} from 'parser/core/Injectable'
 import {Actors} from 'parser/core/modules/Actors'
 import {Combos as CoreCombos} from 'parser/core/modules/Combos'
 
+const starterSkills = [ // These are the skills that can start a combo, Gyofu replaces Hakaze at higher
+	ACTIONS.HAKAZE.id,
+	ACTIONS.GYOFU.id,
+]
 export class Combos extends CoreCombos {
 	override suggestionIcon = ACTIONS.HAKAZE.icon
 
@@ -26,7 +30,7 @@ export class Combos extends CoreCombos {
 
 	override checkCombo(combo: ActionCombo, event: Events['damage']) {
 		// If they've got Meikyo Shisui up, all combos are correct, and nothing combos together
-		if (this.actors.current.hasStatus(STATUSES.MEIKYO_SHISUI.id) && event.cause.type === 'action' && event.cause.action !== ACTIONS.HAKAZE.id) {
+		if (this.actors.current.hasStatus(STATUSES.MEIKYO_SHISUI.id) && event.cause.type === 'action' && !starterSkills.includes(event.cause.action)) {
 			this.fabricateComboEvent(event)
 			return false
 		}
@@ -41,7 +45,11 @@ export class Combos extends CoreCombos {
 		}
 
 		if (action.breaksCombo && this.lastAction != null) {
-			this.recordBrokenCombo({timestamp: event.timestamp, cause: {type: 'action', action: event.action}})
+			if (!super.checkExpiredCombo(event)) { // If the combo was not expired, it was broken
+				this.recordBrokenCombo({timestamp: event.timestamp, cause: {type: 'action', action: event.action}})
+			} else {
+				this.recordExpiredCombo({timestamp: event.timestamp, cause: {type: 'action', action: event.action}})
+			}
 		}
 	}
 }
