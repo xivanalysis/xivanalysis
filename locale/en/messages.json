@@ -70,6 +70,8 @@
   "ast.synastry.suggestion.why": "{0, plural, one {# single-target GCD heal was cast} other {# single-target GCD heals were cast}} without synastry even though it was available.",
   "ast.tincture.suggestions.trackedActions.content": "Try to cover as much damage as possible with your Tinctures of Mind.",
   "blm.about.description": "This analyser aims to identify how you're not actually casting <0/> as much as you think you are.",
+  "blm.dots.suggestion.clip.content": "Casting <0/> too frequently can cause you to lose DPS by casting fewer <1/>. Try not to cast <2/> unless your <3/> DoT is about to wear off.",
+  "blm.dots.suggestion.clip.why": "An average of {0} seconds of <0/> clipped per minute due to early refreshes.",
   "blm.gage.suggestions.overwritten-paradox.why": "<0/> got overwritten {0, plural, one {# time} other {# times}}.",
   "blm.gauge.error.content": "Reaching Umbral Ice III and gaining 3 Umbral Hearts then swapping to the opposite element generates a <0/> marker.<1/>Using <2/>, or reaching Astral Fire III then swapping to the opposite element also generates a <3/> marker.<4/>Maintaining Enochian for 30 seconds or using <5/> generates a Polyglot charge, allowing the casting of <6/> or <7/>. You can have up to {POLYGLOT_MAX_STACKS, plural, one {# Polyglot charge} other {# Polyglot charges}}.<8/>This module displays when these gauge effects were overwritten.",
   "blm.gauge.error.paradox": "<0/>",

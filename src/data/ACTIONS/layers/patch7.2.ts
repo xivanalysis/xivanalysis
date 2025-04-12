@@ -27,12 +27,46 @@ export const patch720: Layer<ActionRoot> = {
 				bonusModifiers: [BonusModifier.COMBO],
 			}],
 		},
+		// MNK
+		WINDS_REPLY: {
+			potencies: [{
+				value: 1040,
+				bonusModifiers: [],
+			}],
+		},
+		FIRES_REPLY: {
+			potencies: [{
+				value: 1400,
+				bonusModifiers: [],
+			}],
+		},
 		//RDM
 		VICE_OF_THORNS: {
 			potency: 800,
 		},
 		PREFULGENCE: {
 			potency: 1000,
+		},		// BLM Cast time changes
+		FLARE_STAR: {
+			castTime: 2000,
+		},
+		FIRE_IV: {
+			castTime: 2000,
+		},
+		FIRE_I: {
+			castTime: 2000,
+		},
+		BLIZZARD_IV: {
+			castTime: 2000,
+		},
+		BLIZZARD_I: {
+			castTime: 2000,
+		},
+		FLARE: {
+			castTime: 2000,
+		},
+		FREEZE: {
+			castTime: 2000,
 		},
 	},
 }

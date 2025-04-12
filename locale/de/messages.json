@@ -70,6 +70,8 @@
   "ast.synastry.suggestion.why": "{0, plural, one {# Heilzauber mit globaler Abklingzeit wurde auf ein einzelnes Ziel gewirkt} other {# Heilzauber mit globaler Abklingzeit wurden auf ein einzelnes Ziel gewirkt}}, ohne dass Synastrie aktiv war, obwohl es verfügbar war.",
   "ast.tincture.suggestions.trackedActions.content": "",
   "blm.about.description": "Dieser Analysator zeigt dir, warum du weniger <0/> castest, als du denkst.",
+  "blm.dots.suggestion.clip.content": "",
+  "blm.dots.suggestion.clip.why": "",
   "blm.gage.suggestions.overwritten-paradox.why": "",
   "blm.gauge.error.content": "",
   "blm.gauge.error.paradox": "",

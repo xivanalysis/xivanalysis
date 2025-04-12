@@ -70,6 +70,8 @@
   "ast.synastry.suggestion.why": "{0, plural,one {#mono-cible GCD de heal a été utilisé}other {#mono-cible gcd de heal ont été utilisé}} sans synastrie, même si elle était disponible.",
   "ast.tincture.suggestions.trackedActions.content": "Essayez de faire autant de dégâts que possible avec vos potions d'esprit.",
   "blm.about.description": "Cet analyseur a pour but d'identifier à quel point vous n'utilisez pas <0/> autant que vous pourriez le pensez.",
+  "blm.dots.suggestion.clip.content": "",
+  "blm.dots.suggestion.clip.why": "Une moyenne de {0} secondes de <0/> par minute perdue dû à une réapplication précoce.",
   "blm.gage.suggestions.overwritten-paradox.why": "<0/> a été supplanté {0, plural, one {# fois} other {# fois}}.",
   "blm.gauge.error.content": "Atteindre Glace Ombrale III, gagner trois Cœurs Ombraux, puis changer pour l'élément opposé génère un proc <0/>.<1/>Utiliser <2/>, ou atteindre Feu Astral III puis changer pour l'élément opposé génère également un proc <3/>.<4/>Garder Enochien actif pendant 30 secondes ou utiliser <5/> génère une charge de Polyglotte, permettant de lancer <6/> ou <7/>. Il est possible d'avoir jusqu'à {POLYGLOT_MAX_STACKS, plural, one {# charge} other {# charges}} de Polyglotte.<8/>Ce module montre quand ces procs ou charges ont été écrasés.",
   "blm.gauge.error.paradox": "<0/>",

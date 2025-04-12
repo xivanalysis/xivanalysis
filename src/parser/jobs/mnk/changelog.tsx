@@ -4,6 +4,11 @@ import {CONTRIBUTORS} from 'data/CONTRIBUTORS'
 export const changelog = [
 	{
 		date: new Date('2025-04-11'),
+		Changes: () => <>Update Enlightenment target count for patch 7.2</>,
+		contributors: [CONTRIBUTORS.HINT],
+	},
+	{
+		date: new Date('2025-04-11'),
 		Changes: () => <>Add a 10-GCD target for <StatusLink status="BROTHERHOOD" /> windows. It is technically possible to get 11 GCDs in Brotherhood, but this is extremely tight at the standard 1.94 GCD.</>,
 		contributors: [CONTRIBUTORS.HINT],
 	},

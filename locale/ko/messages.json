@@ -70,6 +70,8 @@
   "ast.synastry.suggestion.why": "궁합이 사용 가능함에도 단힐 대상 글쿨 회복 기술을 궁합 없이 {0, plural, other {#회}} 시전했습니다.",
   "ast.tincture.suggestions.trackedActions.content": "정신력의 환혹약을 사용하여 피해량을 최대한 많이 주십시오.",
   "blm.about.description": "이 분석기는 당신이 <0/> 기술을 생각과는 달리 얼마나 시전하지 않는지를 알려줍니다.",
+  "blm.dots.suggestion.clip.content": "",
+  "blm.dots.suggestion.clip.why": "이른 갱신으로 인해 <0/> 효과를 평균 {0}초 잃었습니다.",
   "blm.gage.suggestions.overwritten-paradox.why": "<0/>을 {0, plural, one {#회} other {#회}} 미처 사용하지 못하고 갱신하였습니다.",
   "blm.gauge.error.content": "",
   "blm.gauge.error.paradox": "<0/>",

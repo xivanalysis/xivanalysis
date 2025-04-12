@@ -70,6 +70,8 @@
   "ast.synastry.suggestion.why": "https://cn.fflogs.com/reports/ZpRVNxtqKnAz9TkC#fight=6&type=damage-done&source=8",
   "ast.tincture.suggestions.trackedActions.content": "在爆发药期间打出尽可能多的伤害。",
   "blm.about.description": "本分析器旨在分析你打的<0/>为什么没有你想的那么多。",
+  "blm.dots.suggestion.clip.content": "",
+  "blm.dots.suggestion.clip.why": "因提前刷新导致每分钟平均损失了{0}秒的<0/>",
   "blm.gage.suggestions.overwritten-paradox.why": "<0/>被覆盖了{0, plural, one {#次} other {#次}}。",
   "blm.gauge.error.content": "进入3档灵极冰并获得 3 个灵极心后，切换到星极火可以获得<0/>标记。<1/>使用<2/>，或处于3档星极火状态时，切换到灵极冰也会获得<3/>标记。<4/>保持天语 30 秒或使用 <5/> 会获得1档通晓，用以发动<6/>或<7/>。你最多可积累{POLYGLOT_MAX_STACKS, plural, other {# 档通晓}}。<8/>本模块展示这些资源是否有溢出。",
   "blm.gauge.error.paradox": "<0/>",

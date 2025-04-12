@@ -70,6 +70,8 @@
   "ast.synastry.suggestion.why": "{0, plural, other {# 回の単体GCDヒールが}} シナストリーが利用可能であったにも関わらず単体回復を詠唱し、シナストリーを無駄にしました。",
   "ast.tincture.suggestions.trackedActions.content": "できるだけ心力の幻薬でダメージを稼ぎましょう。",
   "blm.about.description": "このアナライザーは、あなたが考えているより実際に詠唱できていない<0/>を特定することを目指しています。",
+  "blm.dots.suggestion.clip.content": "",
+  "blm.dots.suggestion.clip.why": "早すぎる更新により、1分あたり平均 {0} 秒の <0/> が無駄になりました。",
   "blm.gage.suggestions.overwritten-paradox.why": "<0/> が上書きされました。 {0, plural, one {# time} other {# times}}",
   "blm.gauge.error.content": "",
   "blm.gauge.error.paradox": "<0/>",
