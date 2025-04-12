@@ -3,6 +3,11 @@ import {CONTRIBUTORS} from 'data/CONTRIBUTORS'
 
 export const changelog = [
 	{
+		date: new Date('2025-03-26'),
+		Changes: () => <>Added AoE Usages section and adjusted <DataLink action="MACROCOSMOS" /> suggestion to exclude considerations for <DataLink action="GRAVITY_II" />. </>,
+		contributors: [CONTRIBUTORS.OTOCEPHALY],
+	},
+	{
 		date: new Date('2025-02-09'),
 		Changes: () => <>Added support for AST up to 7.1 including updating the Arcana Logs section. </>,
 		contributors: [CONTRIBUTORS.SUSHI, CONTRIBUTORS.OTOCEPHALY],

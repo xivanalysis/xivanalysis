@@ -186,6 +186,7 @@ export class RotationWatchdog extends RestartWindow {
 				manafontId: this.data.actions.MANAFONT.id,
 				paradoxId: this.data.actions.PARADOX.id,
 				fire3Id: this.data.actions.FIRE_III.id,
+				metadataHistory: this.metadataHistory,
 			}))
 		} else {
 			this.addEvaluator(new ColdF3Evaluator({

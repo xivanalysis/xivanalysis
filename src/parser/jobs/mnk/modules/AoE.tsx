@@ -25,7 +25,7 @@ export class AoE extends AoEUsages {
 		{
 			aoeAction: this.data.actions.ENLIGHTENMENT,
 			stActions: [this.data.actions.THE_FORBIDDEN_CHAKRA],
-			minTargets: 2,
+			minTargets: 3,
 		},
 	]
 }

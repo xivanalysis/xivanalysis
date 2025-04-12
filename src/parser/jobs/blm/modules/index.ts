@@ -4,6 +4,7 @@ import {ActionTimeline} from './ActionTimeline'
 import {AoEUsages} from './AoEUsages'
 import {CastTime} from './CastTime'
 import {Defensives} from './Defensives'
+import {DoTs} from './DoTs'
 import {Gauge} from './Gauge'
 import {Leylines} from './Leylines'
 import {NotCasting} from './NotCasting'
@@ -28,6 +29,7 @@ export const modules = [
 	OGCDDowntime,
 	Procs,
 	RotationWatchdog,
+	DoTs,
 	Thunder,
 	Triplecast,
 ]

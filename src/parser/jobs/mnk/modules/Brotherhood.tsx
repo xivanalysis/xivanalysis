@@ -1,8 +1,22 @@
+import {Trans} from '@lingui/react'
+import {DataLink} from 'components/ui/DbLink'
 import {dependency} from 'parser/core/Injectable'
-import {EvaluatedAction, RaidBuffWindow} from 'parser/core/modules/ActionWindow'
+import {EvaluatedAction, ExpectedGcdCountEvaluator, RaidBuffWindow} from 'parser/core/modules/ActionWindow'
 import {HistoryEntry} from 'parser/core/modules/ActionWindow/History'
+import {GlobalCooldown} from 'parser/core/modules/GlobalCooldown'
+import {SEVERITY} from 'parser/core/modules/Suggestions'
 import {BrotherhoodDriftEvaluator, MissedBrotherhoodEvaluator} from './evaluators/BrotherhoodEvaluator'
 import {RiddleOfFire} from './RiddleOfFire'
+
+const EXPECTED_GCDS = 10
+
+const SEVERITIES = {
+	TOTAL_GCDS: {
+		9: SEVERITY.MINOR,
+		8: SEVERITY.MEDIUM,
+		5: SEVERITY.MAJOR,
+	},
+}
 
 export interface BrotherhoodWindow {
 	start: number
@@ -34,12 +48,28 @@ export class Brotherhood extends RaidBuffWindow {
 
 	override buffStatus = this.data.statuses.BROTHERHOOD
 
+	@dependency private globalCooldown!: GlobalCooldown
 	@dependency private riddleOfFire!: RiddleOfFire
 
 	private windowOverlaps: Map<number, OverlapStatus> = new Map<number, OverlapStatus>()
 
 	override initialise() {
 		super.initialise()
+
+		this.addEvaluator(new ExpectedGcdCountEvaluator({
+			expectedGcds: EXPECTED_GCDS,
+			globalCooldown: this.globalCooldown,
+			hasStacks: false,
+			suggestionIcon: this.data.actions.BROTHERHOOD.icon,
+			severityTiers: SEVERITIES.TOTAL_GCDS,
+			suggestionWindowName: <DataLink action="BROTHERHOOD" />,
+			suggestionContent: <Trans id="mnk.bh.suggestions.gcd.content">
+				Aim to hit {EXPECTED_GCDS} GCDs during each <DataLink action="BROTHERHOOD" /> window.
+			</Trans>,
+			// 6SS counts as 2 GCDs
+			adjustCount: (window) =>
+				-window.data.filter(value => value.action.id === this.data.actions.SIX_SIDED_STAR.id).length,
+		}))
 
 		this.addEvaluator(new BrotherhoodDriftEvaluator({
 			suggestionIcon: this.data.actions.BROTHERHOOD.icon,
