@@ -3,6 +3,7 @@ import {StatusRoot} from '../root'
 import {patch701} from './patch7.01'
 import {patch705} from './patch7.05'
 import {patch710} from './patch7.1'
+import {patch720} from './patch7.2'
 
 export const layers: Array<Layer<StatusRoot>> = [
 	// Layers should be in their own files, and imported for use here.
@@ -11,4 +12,5 @@ export const layers: Array<Layer<StatusRoot>> = [
 	patch701,
 	patch705,
 	patch710,
+	patch720,
 ]

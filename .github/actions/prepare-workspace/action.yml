@@ -3,9 +3,12 @@ description: Check out and prepare the repository workspace environment
 runs:
   using: composite
   steps:
+  - uses: pnpm/action-setup@v4
+    with:
+      run_install: false
   - uses: actions/setup-node@v4
     with:
-      node-version: 18
-      cache: yarn
+      node-version: 22
+      cache: pnpm
   - shell: bash
-    run: yarn install
+    run: pnpm install --frozen-lockfile

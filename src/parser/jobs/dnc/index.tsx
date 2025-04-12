@@ -1,8 +1,7 @@
 import {t, Trans} from '@lingui/macro'
-import TransMarkdown from 'components/ui/TransMarkdown'
-import CONTRIBUTORS, {ROLES} from 'data/CONTRIBUTORS'
+import {TransMarkdown} from 'components/ui/TransMarkdown'
+import {CONTRIBUTORS, ROLES} from 'data/CONTRIBUTORS'
 import {Meta} from 'parser/core/Meta'
-import React from 'react'
 import {Icon, Message} from 'semantic-ui-react'
 import {changelog} from './changelog'
 
@@ -25,7 +24,7 @@ export const DANCER = new Meta({
 
 	supportedPatches: {
 		from: '7.0',
-		to: '7.1',
+		to: '7.2',
 	},
 
 	contributors: [

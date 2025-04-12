@@ -10,7 +10,7 @@
 .cardActionRow a:hover {
 	color: #4183c4;
 }
-.cardActionTable .cardActionRow td {
+.cardActionTable .cardActionRow .deathRow td {
 	padding-top: 5px;
 	padding-bottom: 5px;
 }
@@ -55,4 +55,24 @@
 }
 .sealIcon:nth-child(3) {
 	left: 42px;
+}
+
+.umbralHighlight {
+	background-color: #FBECFF;
+}
+.astralHighlight {
+	background-color: #D6FFF2;
+}
+
+.deathRow {
+	background-color: #000000;
+	color: #FFFFFF;
+}
+.deathRow a {
+	cursor: pointer;
+	text-decoration: underline;
+	color: #FFFFFF;
+}
+.deathRow a:hover {
+	color: #4183c4;
 }

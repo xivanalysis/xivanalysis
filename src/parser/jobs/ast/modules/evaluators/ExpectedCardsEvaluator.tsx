@@ -1,7 +1,6 @@
 import {DataLink} from 'components/ui/DbLink'
 import {EvaluatedAction, EvaluationOutput, WindowEvaluator} from 'parser/core/modules/ActionWindow'
 import {History, HistoryEntry} from 'parser/core/modules/ActionWindow/History'
-import React from 'react'
 import {DivinationMetadata} from '../Divination'
 
 const TARGET_CARDS_PLAYED = 2 //used to get the target for amount of cards played in window

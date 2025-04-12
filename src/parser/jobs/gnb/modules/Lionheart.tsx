@@ -1,6 +1,6 @@
 import {ActionLink} from 'components/ui/DbLink'
 import {RotationTable} from 'components/ui/RotationTable'
-import ACTIONS from 'data/ACTIONS'
+import {ACTIONS} from 'data/ACTIONS'
 import {Event, Events} from 'event'
 import _ from 'lodash'
 import {Analyser} from 'parser/core/Analyser'
@@ -8,7 +8,6 @@ import {filter} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
 import {Data} from 'parser/core/modules/Data'
 import {Timeline} from 'parser/core/modules/Timeline'
-import React from 'react'
 
 // A combo module because core combo doesn't support parallel combos... TODO: Fix core combo
 const EXPECTED_USES = {

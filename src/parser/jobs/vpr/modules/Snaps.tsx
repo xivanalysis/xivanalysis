@@ -1,13 +1,12 @@
 import {Trans} from '@lingui/react'
 import {ActionLink} from 'components/ui/DbLink'
-import ACTIONS from 'data/ACTIONS'
+import {ACTIONS} from 'data/ACTIONS'
 import {Event} from 'event'
 import {Analyser} from 'parser/core/Analyser'
 import {filter} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
 import {Data} from 'parser/core/modules/Data'
 import {SimpleStatistic, Statistics} from 'parser/core/modules/Statistics'
-import React from 'react'
 
 export class Snaps extends Analyser {
 	static override handle = 'snaps'

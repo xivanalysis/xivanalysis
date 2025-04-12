@@ -4,13 +4,14 @@ import {Events} from 'event'
 import _ from 'lodash'
 import {EvaluatedAction, EvaluationOutput, NotesEvaluator} from 'parser/core/modules/ActionWindow'
 import {HistoryEntry} from 'parser/core/modules/ActionWindow/History'
-import React from 'react'
 import {ensureArray} from 'utilities'
+import {Actor} from '../../Actors'
 
 export interface RaidBuffOverwriteEvaluatorOpts {
 	raidBuffApplications: Array<Events['statusApply']>
 	buffStatus: Status | Status[]
-	playerId: string
+	playerId: Actor['id']
+	playerBuffedTargets: Array<Actor['id']>
 }
 
 const MULTI_JOB_ERROR = {
@@ -22,7 +23,8 @@ const MULTI_JOB_ERROR = {
 export class RaidBuffOverwriteEvaluator extends NotesEvaluator {
 	private raidBuffApplications: Array<Events['statusApply']>
 	private buffStatus: Status | Status[]
-	private playerId: string
+	private playerId: Actor['id']
+	private playerBuffedTargets: Array<Actor['id']>
 
 	header = {
 		header: <Trans id="core.raidbuffwindow.table.header.interference">Window Interference</Trans>,
@@ -34,6 +36,7 @@ export class RaidBuffOverwriteEvaluator extends NotesEvaluator {
 		this.raidBuffApplications = opts.raidBuffApplications
 		this.buffStatus = opts.buffStatus
 		this.playerId = opts.playerId
+		this.playerBuffedTargets = opts.playerBuffedTargets
 	}
 
 	override output(windows: Array<HistoryEntry<EvaluatedAction[]>>): EvaluationOutput | undefined {
@@ -68,6 +71,7 @@ export class RaidBuffOverwriteEvaluator extends NotesEvaluator {
 		const otherPlayerLookbackApplications = this.raidBuffApplications.filter(ba => {
 			return (
 				ba.source !== this.playerId &&
+				this.playerBuffedTargets.includes(ba.target) &&
 				lookbackStart <= ba.timestamp &&
 				ba.timestamp <= buffWindow.start
 			)
@@ -82,6 +86,7 @@ export class RaidBuffOverwriteEvaluator extends NotesEvaluator {
 		const otherPlayerApplications = this.raidBuffApplications.filter(ba => {
 			return (
 				ba.source !== this.playerId &&
+				this.playerBuffedTargets.includes(ba.target) &&
 				buffWindow.start <= ba.timestamp &&
 				ba.timestamp <= buffWindow.start + actualWindowDuration
 			)

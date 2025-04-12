@@ -17,7 +17,7 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - uses: ./.github/actions/prepare-workspace
-    - run: yarn lint --format=compact
+    - run: pnpm run lint --format=compact
 
   typecheck:
     runs-on: ubuntu-latest
@@ -25,7 +25,7 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - uses: ./.github/actions/prepare-workspace
-    - run: yarn types
+    - run: pnpm run types
 
   check-extract:
     runs-on: ubuntu-latest
@@ -43,7 +43,7 @@ jobs:
     - uses: ./.github/actions/prepare-workspace
     # TODO: swap this to `--reporters=github-actions` and remove this
     # package once jest is targeting >28
-    - run: yarn test --reporters=jest-github-actions-reporter
+    - run: pnpm run test --reporters=jest-github-actions-reporter
 
   checks-pass:
     runs-on: ubuntu-latest

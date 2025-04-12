@@ -1,6 +1,6 @@
 import Color from 'color'
 import {Contributor} from 'data/CONTRIBUTORS'
-import React, {CSSProperties, PureComponent, ReactNode} from 'react'
+import {CSSProperties, PureComponent, ReactNode} from 'react'
 import {Label} from 'semantic-ui-react'
 
 interface ContributorLabelProps {
@@ -8,7 +8,7 @@ interface ContributorLabelProps {
 	detail?: ReactNode
 }
 
-export default class ContributorLabel extends PureComponent<ContributorLabelProps> {
+export class ContributorLabel extends PureComponent<ContributorLabelProps> {
 	override render() {
 		const {contributor, detail} = this.props
 

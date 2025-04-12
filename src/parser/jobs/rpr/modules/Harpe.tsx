@@ -1,13 +1,12 @@
 import {Trans} from '@lingui/macro'
 import {ActionLink} from 'components/ui/DbLink'
-import ACTIONS from 'data/ACTIONS'
+import {ACTIONS} from 'data/ACTIONS'
 import {Event, Events} from 'event'
 import {filter} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
 import {Cooldowns} from 'parser/core/modules/Cooldowns'
 import {Procs as CoreProcs} from 'parser/core/modules/Procs'
 import {Statistics, SimpleStatistic} from 'parser/core/modules/Statistics'
-import React from 'react'
 
 const HARPE_CDR = 5000 //Harpe cast under Enhanced Harpe status reduced recast of Ingress/Engress by 5s
 export class Harpe extends CoreProcs {

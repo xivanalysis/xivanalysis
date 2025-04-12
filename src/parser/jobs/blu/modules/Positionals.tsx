@@ -1,7 +1,6 @@
 import {Trans} from '@lingui/react'
 import {DataLink} from 'components/ui/DbLink'
 import {Positionals as CorePositionals} from 'parser/core/modules/Positionals'
-import React from 'react'
 
 export class Positionals extends CorePositionals {
 	positionals = [

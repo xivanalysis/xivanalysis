@@ -14,9 +14,9 @@ import {filter, oneOf} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
 import {Data} from 'parser/core/modules/Data'
 import {Timeline} from 'parser/core/modules/Timeline'
-import React, {ReactNode} from 'react'
+import {ReactNode} from 'react'
 import {Accordion, Button, Table} from 'semantic-ui-react'
-import DISPLAY_ORDER from './DISPLAY_ORDER'
+import {DISPLAY_ORDER} from './DISPLAY_ORDER'
 
 const DEFENSIVE_USE_WINDOW = 20 //this is used since the defensive cooldown isn't necessarily displayed due to it relating to an underlying status or action
 

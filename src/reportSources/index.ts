@@ -1,3 +1,4 @@
+import {ComponentType} from 'react'
 import {SearchHandler} from './base'
 import {LegacyFflogs, legacyFflogsSearchHandlers} from './legacyFflogs'
 
@@ -5,7 +6,7 @@ export * from './base'
 
 export interface ReportSource {
 	path: string,
-	Component: React.ComponentType,
+	Component: ComponentType,
 	searchHandlers?: SearchHandler[]
 }
 

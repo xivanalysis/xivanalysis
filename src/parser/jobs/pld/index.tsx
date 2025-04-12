@@ -1,9 +1,8 @@
 import {Trans} from '@lingui/macro'
 import {ActionLink} from 'components/ui/DbLink'
-import ACTIONS from 'data/ACTIONS'
-import CONTRIBUTORS, {ROLES} from 'data/CONTRIBUTORS'
+import {ACTIONS} from 'data/ACTIONS'
+import {CONTRIBUTORS, ROLES} from 'data/CONTRIBUTORS'
 import {Meta} from 'parser/core/Meta'
-import React from 'react'
 import {changelog} from './changelog'
 
 export const PALADIN = new Meta({
@@ -20,7 +19,7 @@ export const PALADIN = new Meta({
 
 	supportedPatches: {
 		from: '7.0',
-		to: '7.1',
+		to: '7.2',
 	},
 
 	contributors: [

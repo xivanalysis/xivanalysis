@@ -1,8 +1,7 @@
 import {Trans} from '@lingui/macro'
 import {DataLink} from 'components/ui/DbLink'
-import CONTRIBUTORS, {ROLES} from 'data/CONTRIBUTORS'
+import {CONTRIBUTORS, ROLES} from 'data/CONTRIBUTORS'
 import {Meta} from 'parser/core/Meta'
-import React from 'react'
 import {changelog} from './changelog'
 
 export const DARK_KNIGHT = new Meta({

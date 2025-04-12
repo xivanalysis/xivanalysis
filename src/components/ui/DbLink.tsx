@@ -11,7 +11,7 @@ import {useDataContext} from 'components/DataContext'
 import {ActionKey, ITEM_ID_OFFSET} from 'data/ACTIONS'
 import {StatusKey, STATUS_ID_OFFSET} from 'data/STATUSES'
 import {useObserver} from 'mobx-react'
-import React, {CSSProperties, memo, ReactNode, useContext, useState} from 'react'
+import {CSSProperties, memo, ReactNode, useContext, useState} from 'react'
 import {createPortal} from 'react-dom'
 import {Manager, Popper, Reference} from 'react-popper'
 import {Icon} from 'semantic-ui-react'
@@ -30,11 +30,12 @@ export function Provider({children}: ProviderProps) {
 	// const baseUrl = i18nStore.gameLanguage === Language.CHINESE
 	// 	? 'https://cafemaker.wakingsands.com'
 	// 	: undefined
+	const baseUrl = 'https://v2.xivapi.com/api'
 
 	return useObserver(() => (
 		<TooltipProvider
 			language={i18nStore.safeGameLanguage}
-			// baseUrl={baseUrl}
+			baseUrl={baseUrl}
 		>
 			{children}
 		</TooltipProvider>
@@ -92,9 +93,17 @@ export const Tooltip = memo(function Tooltip({
 	)
 })
 
+function columnShim(...args: Parameters<typeof column>) {
+	const decorator = column(...args)
+	return function(_: undefined, {name}: ClassFieldDecoratorContext) {
+		const target = {constructor: LabelData} as unknown as LabelData
+		decorator(target, name as string)
+	}
+}
+
 class LabelData extends Data {
-	@column('Name') name!: string
-	@column('Icon', {type: 'icon'}) icon!: string
+	@columnShim('Name') name!: string
+	@columnShim('Icon', {type: 'icon'}) icon!: string
 }
 
 export interface LabelProps extends BaseTooltipProps {
@@ -132,8 +141,7 @@ function Label({
 			/>
 		)
 
-	const name: ReactNode = undefined
-		?? children
+	const name: ReactNode = children
 		?? data?.name
 		?? providedName
 		?? <Trans id="core.dblink.loading">Loading...</Trans>
@@ -231,6 +239,3 @@ export function ItemLink({item, ...props}: ItemLinkProps) {
 		/>
 	)
 }
-
-/** @deprecated */
-export default Tooltip

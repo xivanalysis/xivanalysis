@@ -6,7 +6,6 @@ import {dependency} from 'parser/core/Injectable'
 import {Actor} from 'parser/core/modules/Actors'
 import {Data} from 'parser/core/modules/Data'
 import {ActorDeathInfo, Death} from 'parser/core/modules/Death'
-import React from 'react'
 
 // Deaths from Final Sting and Self-Destruct should not count for
 // the report.
@@ -65,4 +64,3 @@ export class BLUDeath extends Death {
 		</Trans>
 	}
 }
-

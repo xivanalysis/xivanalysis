@@ -12,7 +12,7 @@ const PET_ACTIONS_FROM_COMMANDS: ActionKey[] = [
 	'SERAPHIC_ILLUMINATION',
 ]
 
-export default class Pets extends PetTimeline {
+export class Pets extends PetTimeline {
 	static override handle = 'schfaerietimeline'
 
 	protected override canPetBeCommanded = true

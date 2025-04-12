@@ -1,0 +1,76 @@
+name: stale-approve
+on:
+  workflow_dispatch: {}
+  schedule:
+    # Run daily
+    - cron: '42 0 * * *'
+
+jobs:
+  stale-approve:
+    if: github.repository_owner == 'xivanalysis'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/stale@v9
+        id: stale
+        with:
+          # NOTE: This is intentional - we're using the "stale" action to find
+          # the PRs, but we don't want it to peform any operations - we're doing
+          # that ourselves later.
+          debug-only: true
+          # We only want to know about PRs that are >= 7 days old
+          days-before-stale: -1
+          days-before-pr-stale: 7
+          days-before-close: -1
+          # Drafts should not be approved
+          exempt-draft-pr: true
+      - uses: actions/github-script@v7
+        env:
+          PRS: ${{ steps.stale.outputs.staled-issues-prs }}
+        with:
+          script: |
+            // Get the list of PRs deemed stale
+            const staledPrs = JSON.parse(process.env.PRS)
+            if (staledPrs.length === 0) { return }
+
+            // Hydrate the PRs will full metadata
+            const pendingPrMeta = staledPrs.map(pr =>
+              github.rest.pulls.get({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                pull_number: pr.number,
+              })
+            )
+            const prMeta = await Promise.all(pendingPrMeta)
+
+            // Get unique list of PR authors and their permissions
+            const authors = Array.from(new Set(prMeta.map(meta => meta.data.user.login)))
+            const pendingAuthorPermissions = authors.map(author => 
+              github.request('GET /repos/{owner}/{repo}/collaborators/{username}/permission', {
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                username: author,
+                headers: {
+                  'X-GitHub-Api-Version': '2022-11-28'
+                }
+              })
+            )
+            const authorPermissions = await Promise.all(pendingAuthorPermissions)
+
+            // Filter down to the PRs owned by authors with push access
+            const maintainers = new Set(
+              authorPermissions
+                .filter(permissions => permissions.data.user.permissions.push)
+                .map(permissions => permissions.data.user.login)
+            )
+            const maintainerPrs = prMeta.filter(meta => maintainers.has(meta.data.user.login))
+
+            // Approve the found PRs
+            const requests = maintainerPrs.map(pr =>
+              github.rest.pulls.createReview({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                pull_number: pr.data.number,
+                event: 'APPROVE',
+              })
+            )
+            await Promise.all(requests)

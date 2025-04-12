@@ -5,8 +5,8 @@ import {Analyser} from 'parser/core/Analyser'
 import {filter} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
 import {Data} from 'parser/core/modules/Data'
-import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
-import React, {Fragment} from 'react'
+import {Suggestions, SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
+import {Fragment} from 'react'
 
 //assumptions listed after each severity
 const SEVERITIES = {
@@ -19,9 +19,6 @@ const SEVERITIES = {
 
 export class LucidDreaming extends Analyser {
 	static override handle = 'lucid'
-	static override dependencies = [
-		'suggestions',
-	]
 
 	@dependency private data!: Data
 	@dependency private suggestions!: Suggestions

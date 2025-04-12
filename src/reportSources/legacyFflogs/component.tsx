@@ -3,56 +3,49 @@ import {ReportLoader} from 'components/ui/SharedLoaders'
 import {getEncounterKey} from 'data/ENCOUNTERS'
 import _ from 'lodash'
 import {observer} from 'mobx-react'
-import React, {useEffect} from 'react'
-import {useRouteMatch, Switch, Route, Redirect, useParams} from 'react-router-dom'
+import {ComponentType, useEffect} from 'react'
+import {Route, useParams, Routes, Navigate, useResolvedPath} from 'react-router-dom'
 import {ReportStore} from 'reportSources'
 import {useLazyRef} from 'utilities/react'
 import {LegacyFflogsReportStore} from './store'
-
-interface WithCodeParams {
-	code: string
-}
-
-interface LastFightRedirectParams extends WithCodeParams {
-	source?: string
-}
 
 /**
  * Report source component for adapting the legacy report store into the new flow.
  * This should be removed once migration away from the legacy report store is complete.
  */
 export function LegacyFflogs() {
-	const {path, url} = useRouteMatch()
 	return (
-		<Switch>
+		<Routes>
 			{/* Can't do anything without a report code, redirect to the home page */}
-			<Redirect path={path} exact to="/"/>
+			<Route index={true} element={<Navigate to="/" replace={true}/>}/>
 
-			<Route path={`${path}/last/:code/:source?`}>
-				<WithReport Component={LastFightRedirect} baseUrl={url}/>
-			</Route>
+			<Route
+				path="last/:code/:source?"
+				element={<WithReport Component={LastFightRedirect}/>}
+			/>
 
-			<Route path={`${path}/:code`}>
-				<WithReport Component={ReportFlow} baseUrl={url}/>
+			<Route path=":code">
+				<Route index path="*" element={<WithReport Component={ReportFlow}/>}/>
 			</Route>
-		</Switch>
+		</Routes>
 	)
 }
 
 interface WithReportComponentProps {
 	reportStore: ReportStore
-	baseUrl: string
 }
 
 interface WithReportProps {
-	Component: React.ComponentType<WithReportComponentProps>
-	baseUrl: string
+	Component: ComponentType<WithReportComponentProps>
 }
 
-const WithReport = observer(function WithReport(
-	{Component, baseUrl}: WithReportProps,
-) {
-	const {code} = useParams<WithCodeParams>()
+const WithReport = observer(function WithReport({
+	Component,
+}: WithReportProps) {
+	const {code} = useParams()
+	if (code == null) {
+		throw new Error('Invariant broken.')
+	}
 
 	// Get a stable reference to the store and ensure we've requested a report for the current code
 	const reportStore = useLazyRef(() => new LegacyFflogsReportStore()).current
@@ -63,11 +56,12 @@ const WithReport = observer(function WithReport(
 		return <ReportLoader/>
 	}
 
-	return <Component reportStore={reportStore} baseUrl={baseUrl}/>
+	return <Component reportStore={reportStore}/>
 })
 
-function LastFightRedirect({reportStore, baseUrl}: WithReportComponentProps) {
-	const {code, source} = useParams<LastFightRedirectParams>()
+function LastFightRedirect({reportStore}: WithReportComponentProps) {
+	const {pathname} =  useResolvedPath('..')
+	const {code, source} = useParams()
 
 	// Filter out trash pulls
 	const pullIds = reportStore.report?.meta.fights
@@ -75,7 +69,7 @@ function LastFightRedirect({reportStore, baseUrl}: WithReportComponentProps) {
 		.map(fight => fight.id.toString())
 
 	const lastPull = _.last(pullIds)
-	const path = `${baseUrl}/${code}${buildReportFlowPath(lastPull, source)}`
+	const path = `${pathname}/${code}${buildReportFlowPath(lastPull, source)}`
 
-	return <Redirect to={path}/>
+	return <Navigate to={path} replace={true}/>
 }

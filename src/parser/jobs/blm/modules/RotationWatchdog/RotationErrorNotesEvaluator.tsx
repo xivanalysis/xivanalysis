@@ -1,7 +1,6 @@
 import {Trans} from '@lingui/macro'
 import {EvaluatedAction, NotesEvaluator} from 'parser/core/modules/ActionWindow'
 import {History, HistoryEntry} from 'parser/core/modules/ActionWindow/History'
-import React from 'react'
 import {getMetadataForWindow} from './EvaluatorUtilities'
 import {CycleMetadata} from './WatchdogConstants'
 

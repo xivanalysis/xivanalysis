@@ -4,12 +4,11 @@ import {Status} from 'data/STATUSES'
 import {Analyser} from 'parser/core/Analyser'
 import {dependency} from 'parser/core/Injectable'
 import {Actors} from 'parser/core/modules/Actors'
-import Checklist, {Rule, Requirement} from 'parser/core/modules/Checklist'
+import {Checklist, Rule, Requirement} from 'parser/core/modules/Checklist'
 import {Data} from 'parser/core/modules/Data'
 import {Invulnerability} from 'parser/core/modules/Invulnerability'
 import {Statuses} from 'parser/core/modules/Statuses'
-import React from 'react'
-import DISPLAY_ORDER from './DISPLAY_ORDER'
+import {DISPLAY_ORDER} from './DISPLAY_ORDER'
 
 export class Buffs extends Analyser {
 	static override handle = 'Buffs'
@@ -34,12 +33,12 @@ export class Buffs extends Analyser {
 			requirements: [
 				new Requirement({
 					name: <Trans id = "vpr.buffs.checklist.requirement.huntersinstinct.name"> <DataLink status="HUNTERS_INSTINCT"/> uptime </Trans>,
-					percent: () => this.getUptimePercent(this.data.statuses.HUNTERS_INSTINCT),
+					percent: this.getUptimePercent(this.data.statuses.HUNTERS_INSTINCT),
 				}),
 
 				new Requirement({
 					name: <Trans id= "vpr.buffs.checklist.requirement.swiftscaled.name"> <DataLink status="SWIFTSCALED"/> uptime </Trans>,
-					percent: () => this.getUptimePercent(this.data.statuses.SWIFTSCALED),
+					percent: this.getUptimePercent(this.data.statuses.SWIFTSCALED),
 				}),
 			],
 		}))

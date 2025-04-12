@@ -647,6 +647,7 @@ export const VPR = ensureActions({
 		name: 'Twinblood Bite',
 		icon: iconUrl(3732),
 		cooldown: 1000,
+		statusesApplied: ['HUNTERS_VENOM'],
 	},
 
 	TWINBLOOD_THRESH: {
@@ -654,6 +655,7 @@ export const VPR = ensureActions({
 		name: 'Twinblood Thresh',
 		icon: iconUrl(3734),
 		cooldown: 1000,
+		statusesApplied: ['FELLHUNTERS_VENOM'],
 	},
 
 	UNCOILED_TWINBLOOD: {

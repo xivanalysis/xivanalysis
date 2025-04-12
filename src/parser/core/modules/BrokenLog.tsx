@@ -2,27 +2,23 @@ import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
 import * as Sentry from '@sentry/browser'
 import {Message, Segment} from 'akkd'
-import NormalisedMessage from 'components/ui/NormalisedMessage'
+import {NormalisedMessage} from 'components/ui/NormalisedMessage'
 import {getReportPatch} from 'data/PATCHES'
-import React from 'react'
+import {ReactNode} from 'react'
 import {Table} from 'semantic-ui-react'
 import {Analyser, DisplayMode} from '../Analyser'
-import {dependency} from '../Injectable'
-import {Data} from './Data'
-import DISPLAY_ORDER from './DISPLAY_ORDER'
+import {DISPLAY_ORDER} from './DISPLAY_ORDER'
 
 interface Trigger {
 	source: typeof Analyser
-	reason?: React.ReactNode
+	reason?: ReactNode
 }
 
-export default class BrokenLog extends Analyser {
+export class BrokenLog extends Analyser {
 	static override handle = 'brokenLog'
 	static override title = t('core.broken-log.title')`Broken Log`
 	static override displayOrder = DISPLAY_ORDER.BROKEN_LOG
 	static override displayMode = DisplayMode.RAW
-
-	@dependency private data!: Data
 
 	private triggers = new Map<string, Trigger>()
 
@@ -36,7 +32,7 @@ export default class BrokenLog extends Analyser {
 	trigger(
 		source: Analyser,
 		key: string,
-		reason?: React.ReactNode,
+		reason?: ReactNode,
 		erroneous = true,
 	) {
 		const constructor = (source.constructor as typeof Analyser)
@@ -69,24 +65,6 @@ export default class BrokenLog extends Analyser {
 			source: constructor,
 			reason,
 		})
-	}
-
-	override initialise() {
-		const unknownAction = this.data.actions.UNKNOWN.id
-		this.addEventHook({cause: {type: 'action', action: unknownAction}}, this.triggerUnknownCause)
-		this.addEventHook({action: unknownAction}, this.triggerUnknownCause)
-
-		const unknownStatus = this.data.statuses.UNKNOWN.id
-		this.addEventHook({cause: {type: 'status', status: unknownStatus}}, this.triggerUnknownCause)
-		this.addEventHook({status: unknownStatus}, this.triggerUnknownCause)
-	}
-
-	private triggerUnknownCause() {
-		this.trigger(this, 'unknown action', (
-			<Trans id="core.broken-log.trigger.unknown-action">
-				One or more actions were recorded incorrectly, and could not be parsed.
-			</Trans>
-		))
 	}
 
 	override output() {

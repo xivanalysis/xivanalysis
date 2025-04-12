@@ -5,7 +5,6 @@ import {EvaluatedAction, WindowEvaluator} from 'parser/core/modules/ActionWindow
 import {HistoryEntry} from 'parser/core/modules/ActionWindow/History'
 import {Invulnerability} from 'parser/core/modules/Invulnerability'
 import {TieredSuggestion} from 'parser/core/modules/Suggestions'
-import React from 'react'
 import {DEFAULT_SEVERITY_TIERS} from './WatchdogConstants'
 
 export interface UptimeSoulsEvaluatorOpts {

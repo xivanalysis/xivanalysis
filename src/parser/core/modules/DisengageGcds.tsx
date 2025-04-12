@@ -6,7 +6,7 @@ import {filter} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
 import {Data} from 'parser/core/modules/Data'
 import {SimpleStatistic, Statistics} from 'parser/core/modules/Statistics'
-import React, {ReactNode} from 'react'
+import {ReactNode} from 'react'
 
 export abstract class DisengageGcds extends Analyser {
 	static override handle = 'disengagegcds'
@@ -17,7 +17,7 @@ export abstract class DisengageGcds extends Analyser {
 	private disengageGcds: number = 0
 
 	// Required: Override with the GCD you want to track as an Action.
-	protected abstract disengageAction: Action = this.data.actions.UNKNOWN
+	protected abstract disengageAction: Action
 
 	// Recommended: Override this to provide the action's icon, eg for gunbreaker:
 	// override disengageIcon = this.data.actions.LIGHTNING_SHOT.icon

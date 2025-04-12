@@ -8,21 +8,21 @@ import {dependency} from 'parser/core/Injectable'
 import {ActionWindow, EvaluatedAction} from 'parser/core/modules/ActionWindow'
 import {HistoryEntry} from 'parser/core/modules/ActionWindow/History'
 import {Actors} from 'parser/core/modules/Actors'
-import CheckList, {Requirement, Rule} from 'parser/core/modules/Checklist'
-import Downtime from 'parser/core/modules/Downtime'
+import {Checklist, Requirement, Rule} from 'parser/core/modules/Checklist'
+import {Downtime} from 'parser/core/modules/Downtime'
 import {Invulnerability} from 'parser/core/modules/Invulnerability'
 import {Statuses} from 'parser/core/modules/Statuses'
-import React from 'react'
 import {Message} from 'semantic-ui-react'
 import {isSuccessfulHit} from 'utilities'
 import {DANCE_MOVES, FINISHES, STEPS} from '../CommonData'
-import DISPLAY_ORDER from '../DISPLAY_ORDER'
+import {DISPLAY_ORDER} from '../DISPLAY_ORDER'
 import {CleanDanceEvaluator} from './evaluators/CleanDanceEvaluator'
 import {FootlooseEvaluator} from './evaluators/FootlooseEvaluator'
 import {HitTargetEvaluator} from './evaluators/HitTargetEvaluator'
 import {ZeroStepStandardEvaluator} from './evaluators/ZeroStepStandardEvaluator'
 import {ZeroStepTechnicalEvaluator} from './evaluators/ZeroStepTechnicalEvaluator'
 
+// eslint-disable-next-line no-constant-binary-expression
 const DEBUG_SHOW_ALL = false && process.env.NODE_ENV !== 'production'
 
 const DANCE_COMPLETION_LENIENCY_MILLIS = 1000
@@ -35,7 +35,7 @@ export class DirtyDancing extends ActionWindow {
 	static override displayOrder = DISPLAY_ORDER.DIRTY_DANCING
 
 	@dependency private actors!: Actors
-	@dependency private checklist!: CheckList
+	@dependency private checklist!: Checklist
 	@dependency private downtime!: Downtime
 	@dependency private invulnerability!: Invulnerability
 	@dependency private statuses!: Statuses

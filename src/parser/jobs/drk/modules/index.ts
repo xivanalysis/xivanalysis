@@ -12,7 +12,7 @@ import {SaltAndDarkness} from './SaltAndDarkness'
 import {StatusTimeline} from './StatusTimeline'
 import {Tincture} from './Tincture'
 
-export default [
+export const modules = [
 	ActionTimeline,
 	BloodGauge,
 	//BloodWeapon,   keeping commented out for now pending dealing with low level Blood Weapon vs high level Delirium

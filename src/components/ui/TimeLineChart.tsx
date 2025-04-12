@@ -1,7 +1,6 @@
 import type {ChartData as PureChartData, ChartOptions} from 'chart.js'
 import _ from 'lodash'
-import * as PropTypes from 'prop-types'
-import React, {PureComponent} from 'react'
+import {PureComponent} from 'react'
 import {ChartData, Line} from 'react-chartjs-2'
 
 const DEFAULT_OPTIONS: ChartOptions = {
@@ -28,12 +27,7 @@ interface TimeLineChartProps {
 	options?: ChartOptions
 }
 
-export default class TimeLineChart extends PureComponent<TimeLineChartProps> {
-	static propTypes = {
-		data: PropTypes.object.isRequired,
-		options: PropTypes.object,
-	}
-
+export class TimeLineChart extends PureComponent<TimeLineChartProps> {
 	override render() {
 		const options = _.merge({}, DEFAULT_OPTIONS, this.props.options || {})
 		return <Line

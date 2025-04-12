@@ -1,6 +1,5 @@
 import {DataLink} from 'components/ui/DbLink'
-import CONTRIBUTORS from 'data/CONTRIBUTORS'
-import React from 'react'
+import {CONTRIBUTORS} from 'data/CONTRIBUTORS'
 
 export const changelog = [
 	// {
@@ -8,6 +7,11 @@ export const changelog = [
 	// 	Changes: () => <>The changes you made</>,
 	// 	contributors: [CONTRIBUTORS.YOU],
 	// },
+	{
+		date: new Date('2025-01-11'),
+		Changes: () => <>Adjust Technical Finish window tracking to be less prescriptive about Last Dance and Saber Dance since they're equivalent potency.</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
 	{
 		date: new Date('2024-11-16'),
 		Changes: () => <>Add a table displaying timestamps when procs were dropped or overwritten, for better clarity around when those issues occurred.</>,

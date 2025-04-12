@@ -3,7 +3,6 @@ import {Plural, Trans} from '@lingui/react'
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
 import {Procs} from 'parser/core/modules/Procs'
 import {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
-import React from 'react'
 
 const FR_DROP_SEVERITY = {
 	1: SEVERITY.MAJOR,

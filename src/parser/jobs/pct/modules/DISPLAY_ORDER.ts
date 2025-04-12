@@ -1,4 +1,4 @@
-export default {
+export const DISPLAY_ORDER = {
 	STARRY_MUSE: 1,
 	TINCTURES: 2,
 	WEAVING: 3,

@@ -9,10 +9,10 @@ export const SEVERITY = {
 	MINOR: 3,
 	// Also don't use this for real suggestions, tis but a meme
 	MEMES: 100,
-	// The matchClosest fall back to undefined, so let's use that for ignore too
-	IGNORE: undefined,
+	// IGNORE will never be shown, but needs to be numeric for comparisons
+	IGNORE: Infinity,
 }
-type Severity = typeof SEVERITY[keyof typeof SEVERITY]
+export type Severity = typeof SEVERITY[keyof typeof SEVERITY]
 
 export interface SuggestionOptions {
 	icon: string
@@ -21,7 +21,7 @@ export interface SuggestionOptions {
 	severity: number
 }
 
-export default class Suggestion {
+export class Suggestion {
 	public icon: string // TODO: default image
 	public content: ReactNode
 	public why: ReactNode
@@ -53,13 +53,13 @@ export interface TieredSuggestionOptions {
 	why: ReactNode
 	tiers: SeverityTiers
 	value: number
-	matcher?: (tiers: SeverityTiers, value: number) => Severity
+	matcher?: (tiers: SeverityTiers, value: number) => Severity | undefined
 }
 
 export class TieredSuggestion extends Suggestion {
 	public tiers: SeverityTiers
 	public value: number
-	public matcher: (tiers: SeverityTiers, value: number) => Severity
+	public matcher: (tiers: SeverityTiers, value: number) => Severity | undefined
 
 	constructor(options: TieredSuggestionOptions) {
 		super({...options, severity: SEVERITY.MINOR})
@@ -70,7 +70,7 @@ export class TieredSuggestion extends Suggestion {
 	}
 
 	override get severity() {
-		return this.matcher(this.tiers, this.value)
+		return this.matcher(this.tiers, this.value) ?? SEVERITY.IGNORE
 	}
 
 	// noop setter so it doesn't die from the base class

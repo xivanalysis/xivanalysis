@@ -9,8 +9,7 @@ import {filter, oneOf} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
 import {Actors} from 'parser/core/modules/Actors'
 import {Data} from 'parser/core/modules/Data'
-import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
-import React from 'react'
+import {Suggestions, SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import {isSuccessfulHit} from 'utilities'
 import {DISPLAY_ORDER} from './DISPLAY_ORDER'
 
@@ -152,9 +151,11 @@ export class MPUsage extends Analyser {
 	}
 
 	private onActorUpdate(event: Events['actorUpdate']) {
-		if (event.mp == null) { return }
+		const mp = event.mp?.current
 
-		if (event.mp < this.actors.current.mp.maximum) {
+		if (mp == null) { return }
+
+		if (mp < this.actors.current.mp.maximum) {
 			if (this.cappedTimestamp == null) { return }
 
 			const timeSinceCapped = event.timestamp - this.cappedTimestamp

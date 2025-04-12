@@ -4,7 +4,6 @@ import {EvaluatedAction, ExpectedActionGroupsEvaluator, TrackedActionGroup} from
 import {HistoryEntry} from 'parser/core/modules/ActionWindow/History'
 import {SEVERITY} from 'parser/core/modules/Suggestions'
 import {Tincture as CoreTincture} from 'parser/core/modules/Tincture'
-import React from 'react'
 import {Message} from 'semantic-ui-react'
 
 const TINCTURE_OPENER_BUFFER = 10000

@@ -12,7 +12,10 @@ export class DeduplicateActorUpdateStep extends AdapterStep {
 			const adapted = event.type === 'actorUpdate'
 				? this.adaptActorUpdate(event)
 				: event
-			adapted && out.push(adapted)
+
+			if (adapted != null) {
+				out.push(adapted)
+			}
 		}
 		return out
 	}

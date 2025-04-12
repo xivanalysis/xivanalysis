@@ -3,7 +3,6 @@ import {Plural} from '@lingui/react'
 import {DataLink} from 'components/ui/DbLink'
 import {Procs} from 'parser/core/modules/Procs'
 import {DISPLAY_ORDER} from 'parser/jobs/rdm/modules/DISPLAY_ORDER'
-import React from 'react'
 
 // Test log: unused MagickedSwordplay stacks - https://www.fflogs.com/reports/y9bc6qpf4KgVnvTX
 

@@ -1,8 +1,22 @@
 import {DataLink} from 'components/ui/DbLink'
-import CONTRIBUTORS from 'data/CONTRIBUTORS'
-import React from 'react'
+import {CONTRIBUTORS} from 'data/CONTRIBUTORS'
 
 export const changelog = [
+	{
+		date: new Date('2025-03-26'),
+		Changes: () => <>Added AoE Usages section and adjusted <DataLink action="MACROCOSMOS" /> suggestion to exclude considerations for <DataLink action="GRAVITY_II" />. </>,
+		contributors: [CONTRIBUTORS.OTOCEPHALY],
+	},
+	{
+		date: new Date('2025-02-09'),
+		Changes: () => <>Added support for AST up to 7.1 including updating the Arcana Logs section. </>,
+		contributors: [CONTRIBUTORS.SUSHI, CONTRIBUTORS.OTOCEPHALY],
+	},
+	{
+		date: new Date('2025-02-07'),
+		Changes: () => <>Split the direct healing effects of GCDs up from the regen effects they apply, and ignore them if they were applied before the pull or during downtime.</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
 	{
 		date: new Date('2024-08-24'),
 		Changes: () => <>Added <DataLink action={'LIGHTSPEED'} /> and <DataLink action={'SWIFTCAST'} /> to defensives. </>,

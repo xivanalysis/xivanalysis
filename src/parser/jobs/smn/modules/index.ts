@@ -4,7 +4,7 @@ import {Tincture} from 'parser/core/modules/Tincture'
 import {Weaving} from 'parser/core/modules/Weaving'
 import {ActionTimeline} from './ActionTimeline'
 import {Aetherflow} from './Aetherflow'
-import GeneralCDDowntime from './GeneralCDDowntime'
+import {GeneralCDDowntime} from './GeneralCDDowntime'
 import {AoeChecker} from './MultiHitSkills'
 import {Physick} from './Physick'
 import {RadiantAegis} from './RadiantAegis'
@@ -13,7 +13,7 @@ import {Slipstream} from './Slipstream'
 import {Summons} from './Summons'
 import {Swiftcast} from './Swiftcast'
 
-export default [
+export const modules = [
 	ActionTimeline,
 	Aetherflow,
 	GeneralCDDowntime,

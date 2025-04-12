@@ -1,6 +1,6 @@
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
 import {Cause, Event, Events, SourceModifier, TargetModifier} from 'event'
-import React from 'react'
+import {ReactNode} from 'react'
 import {Actor, Pull} from 'report'
 import {formatDuration} from 'utilities'
 
@@ -9,7 +9,7 @@ export interface EventFormatterOptions<E extends Event> {
 	pull: Pull,
 }
 export type EventFormatter<E extends Event> =
-	(event: EventFormatterOptions<E>) => React.ReactNode
+	(event: EventFormatterOptions<E>) => ReactNode
 export const eventFormatters = new Map<string, EventFormatter<Event>>()
 
 /**

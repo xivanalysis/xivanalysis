@@ -12,7 +12,7 @@ import {Swiftcast} from './Swiftcast'
 import {Thinair} from './Thinair'
 import {Tincture} from './Tincture'
 
-export default [
+export const modules = [
 	ActionTimeline,
 	CastTime,
 	Defensives,

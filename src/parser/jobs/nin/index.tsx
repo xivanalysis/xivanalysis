@@ -1,7 +1,6 @@
 import {Trans} from '@lingui/macro'
-import CONTRIBUTORS, {ROLES} from 'data/CONTRIBUTORS'
+import {CONTRIBUTORS, ROLES} from 'data/CONTRIBUTORS'
 import {Meta} from 'parser/core/Meta'
-import React from 'react'
 import {changelog} from './changelog'
 
 export const NINJA = new Meta({
@@ -17,7 +16,7 @@ export const NINJA = new Meta({
 
 	supportedPatches: {
 		from: '7.0',
-		to: '7.1',
+		to: '7.2',
 	},
 
 	contributors: [

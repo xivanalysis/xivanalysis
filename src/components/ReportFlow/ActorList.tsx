@@ -2,14 +2,14 @@ import {Trans} from '@lingui/react'
 import {Message, Segment} from 'akkd'
 import Color from 'color'
 import {JobIcon} from 'components/ui/JobIcon'
-import NormalisedMessage from 'components/ui/NormalisedMessage'
+import {NormalisedMessage} from 'components/ui/NormalisedMessage'
 import {Role, RoleKey, ROLES, JobKey, JOBS} from 'data/JOBS'
 import {patchSupported} from 'data/PATCHES'
 import {FALLBACK_KEY} from 'data/PATCHES/patches'
 import {AVAILABLE_MODULES} from 'parser/AVAILABLE_MODULES'
 import {Meta} from 'parser/core/Meta'
-import React, {ReactNode} from 'react'
-import {useRouteMatch, Link} from 'react-router-dom'
+import {Fragment, ReactNode} from 'react'
+import {Link} from 'react-router-dom'
 import {Report, Actor, Pull} from 'report'
 import {ReportStore} from 'reportSources'
 import styles from './ReportFlow.module.css'
@@ -58,16 +58,16 @@ export function ActorList({reportStore, meta, report, pull}: ActorListProps) {
 	return (
 		<div className={styles.actorList}>
 			{sortedGroups.map(group => {
-				const showWarning = true
-					&& !warningDisplayed
+				const showWarning =
+					!warningDisplayed
 					&& UNSUPPORTED_ROLES.includes(group.role)
 				if (showWarning) { warningDisplayed = true }
 
 				return (
-					<React.Fragment key={group.role.id}>
+					<Fragment key={group.role.id}>
 						{showWarning && <UnsupportedWarning/>}
 						<RoleGroup meta={meta} group={group}/>
-					</React.Fragment>
+					</Fragment>
 				)
 			})}
 		</div>
@@ -130,8 +130,6 @@ interface ActorLinkProps {
 }
 
 function ActorLink({meta: baseMeta, actor}: ActorLinkProps) {
-	const {url} = useRouteMatch()
-
 	const job = JOBS[actor.job]
 	const jobMeta = AVAILABLE_MODULES.JOBS[actor.job]
 
@@ -153,7 +151,7 @@ function ActorLink({meta: baseMeta, actor}: ActorLinkProps) {
 	}
 
 	return (
-		<Link key={actor.id} to={`${url}/${actor.id}`} className={styles.link}>
+		<Link key={actor.id} to={actor.id} className={styles.link}>
 			<span className={styles.text}>
 				<JobIcon job={job}/>
 				{actor.name}

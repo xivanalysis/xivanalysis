@@ -1,4 +1,4 @@
-import React, {ReactNode} from 'react'
+import {ReactNode} from 'react'
 import {Icon} from 'semantic-ui-react'
 import {EvaluatedAction} from '../EvaluatedAction'
 import {HistoryEntry} from '../History'

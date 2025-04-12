@@ -59,5 +59,4 @@ export function getPotencyWithMods(action: Action, bonusModifiers: BonusModifier
 
 // Everything below here is temp back compat
 // need to export a collated everything-applied as default for back compat
-const collated = layers.reduce(applyLayer, correctedRoot)
-export default collated
+export const ACTIONS = layers.reduce(applyLayer, correctedRoot)

@@ -7,7 +7,6 @@ import {BuffWindow, EvaluatedAction, ExpectedActionsEvaluator, ExpectedGcdCountE
 import {HistoryEntry} from 'parser/core/modules/ActionWindow/History'
 import {GlobalCooldown} from 'parser/core/modules/GlobalCooldown'
 import {SEVERITY} from 'parser/core/modules/Suggestions'
-import React from 'react'
 
 // TCJ windows should have 5-6 Ninjutsu + 2-3 (or 3-4, with good ping) weaponskills, non-TCJ windows should have 3 Ninjutsu + 4 weaponskills
 const BASE_GCDS_PER_WINDOW = 7

@@ -1,17 +1,17 @@
-import React from 'react'
+import {ComponentType, ReactNode} from 'react'
 import {ColumnSpan, Statistic} from './Statistics'
 
 export interface AbstractStatisticOptions {
-	info?: React.ReactNode
+	info?: ReactNode
 	width?: ColumnSpan
 	height?: number
 	statsDisplayOrder?: number
 }
 
 export abstract class AbstractStatistic implements Statistic {
-	abstract Content: React.ComponentType
+	abstract Content: ComponentType
 
-	Info?: React.ComponentType
+	Info?: ComponentType
 	width?: ColumnSpan
 	height?: number
 	statsDisplayOrder?: number

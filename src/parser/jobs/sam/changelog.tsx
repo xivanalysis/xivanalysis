@@ -1,8 +1,17 @@
 import {DataLink} from 'components/ui/DbLink'
-import CONTRIBUTORS from 'data/CONTRIBUTORS'
-import React from 'react'
+import {CONTRIBUTORS} from 'data/CONTRIBUTORS'
 
 export const changelog = [
+	{
+		date: new Date('2025-03-24'),
+		Changes: () => <>SAM 7.2 Support added. <DataLink action="HISSATSU_GUREN"/> breakpoint increased to 3 from 2.</>,
+		contributors: [CONTRIBUTORS.RYAN],
+	},
+	{
+		date: new Date('2025-01-19'),
+		Changes: () => <>Fixed the spelling of <DataLink action="TENGENTSU"/>.</>,
+		contributors: [CONTRIBUTORS.RYAN],
+	},
 	{
 		date: new Date('2025-01-19'),
 		Changes: () => <> Fixed an issue where Meikyo would count as breaking combos when used after a combo already expired. </>,
@@ -39,4 +48,3 @@ export const changelog = [
 		contributors: [CONTRIBUTORS.RYAN],
 	},
 ]
-

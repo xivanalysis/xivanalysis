@@ -5,7 +5,6 @@ import {EvaluatedAction} from 'parser/core/modules/ActionWindow'
 import {RulePassedEvaluator} from 'parser/core/modules/ActionWindow/evaluators/RulePassedEvaluator'
 import {HistoryEntry} from 'parser/core/modules/ActionWindow/History'
 import {TieredSuggestion} from 'parser/core/modules/Suggestions'
-import React from 'react'
 import {TECHNICAL_SEVERITY_TIERS} from '../Technicalities'
 
 export class LateStandardEvaluator extends RulePassedEvaluator {

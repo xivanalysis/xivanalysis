@@ -1,4 +1,4 @@
-export default {
+export const DISPLAY_ORDER = {
 	BLOOD_OF_THE_DRAGON_CHECKLIST: 1,
 	DISEMBOWEL: 2,
 	DEBUFFS: 3,

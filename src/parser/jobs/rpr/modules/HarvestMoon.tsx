@@ -4,11 +4,10 @@ import {Event} from 'event'
 import {Analyser} from 'parser/core/Analyser'
 import {filter} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
-import Checklist, {Requirement, Rule} from 'parser/core/modules/Checklist'
+import {Checklist, Requirement, Rule} from 'parser/core/modules/Checklist'
 import {Data} from 'parser/core/modules/Data'
 import {Invulnerability} from 'parser/core/modules/Invulnerability'
 import {UnableToAct} from 'parser/core/modules/UnableToAct'
-import React from 'react'
 
 const SOULSOW_BUFFER = 1000
 
@@ -94,7 +93,7 @@ export class HarvestMoon extends Analyser {
 		}))
 	}
 
-	private getUsedPercentage(expected: number): string {
-		return (this.moons / expected * 100).toFixed(2)
+	private getUsedPercentage(expected: number): number {
+		return this.moons / expected * 100
 	}
 }

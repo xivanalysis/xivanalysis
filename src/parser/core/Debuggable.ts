@@ -24,9 +24,11 @@ export abstract class Debuggable {
 			return
 		}
 
-		typeof args[0] === 'function'
-			? args[0]({log: this.debugLog})
-			: this.debugLog(...args)
+		if (typeof args[0] === 'function') {
+			args[0]({log: this.debugLog})
+		} else {
+			this.debugLog(...args)
+		}
 	}
 
 	private debugLog = (...data: LogParameters) => {

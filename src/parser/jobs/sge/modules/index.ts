@@ -8,9 +8,10 @@ import {Kardia} from './Kardia'
 import {Overheal} from './Overheal'
 import {Swiftcast} from './Swiftcast'
 import {Tincture} from './Tincture'
+import {Weaving} from './Weaving'
 import {Zoe} from './Zoe'
 
-export default [
+export const modules = [
 	ActionTimeline,
 	CooldownDowntime,
 	Defensives,
@@ -21,5 +22,6 @@ export default [
 	Overheal,
 	Swiftcast,
 	Tincture,
+	Weaving,
 	Zoe,
 ]

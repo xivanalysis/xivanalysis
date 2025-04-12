@@ -1,7 +1,7 @@
 import {t} from '@lingui/macro'
 import {Plural, Trans} from '@lingui/react'
 import {DataLink} from 'components/ui/DbLink'
-import Rotation from 'components/ui/Rotation'
+import {Rotation} from 'components/ui/Rotation'
 import {ActionKey} from 'data/ACTIONS'
 import {Event, Events} from 'event'
 import {Analyser} from 'parser/core/Analyser'
@@ -11,7 +11,7 @@ import {dependency} from 'parser/core/Injectable'
 import {History} from 'parser/core/modules/ActionWindow/History'
 import {Data} from 'parser/core/modules/Data'
 import {Timeline} from 'parser/core/modules/Timeline'
-import React, {Fragment} from 'react'
+import {Fragment} from 'react'
 import {Message, Accordion, Button} from 'semantic-ui-react'
 
 const HYPERCHARGE_DURATION = 10000

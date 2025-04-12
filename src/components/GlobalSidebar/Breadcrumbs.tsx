@@ -1,6 +1,6 @@
-import React, {ReactNode, createContext, useContext, useState, useEffect, useMemo} from 'react'
+import {ReactNode, createContext, useContext, useState, useEffect, useMemo, Dispatch, SetStateAction} from 'react'
 import {Helmet} from 'react-helmet'
-import {useRouteMatch, matchPath, useLocation, Link} from 'react-router-dom'
+import {matchPath, useLocation, Link, useResolvedPath} from 'react-router-dom'
 import style from './Breadcrumbs.module.css'
 
 interface BreadcrumbValue {
@@ -11,9 +11,9 @@ interface BreadcrumbValue {
 type BreadcrumbRegistry = Record<string, BreadcrumbValue>
 interface BreadcrumbContextValue {
 	registry: BreadcrumbRegistry
-	setRegistry: React.Dispatch<React.SetStateAction<BreadcrumbRegistry>>
+	setRegistry: Dispatch<SetStateAction<BreadcrumbRegistry>>
 	banner: string | undefined
-	setBanner: React.Dispatch<React.SetStateAction<string | undefined>>
+	setBanner: Dispatch<SetStateAction<string | undefined>>
 }
 
 const BreadcrumbContext = createContext<BreadcrumbContextValue | undefined>(undefined)
@@ -48,10 +48,10 @@ export function Breadcrumbs() {
 			let url: string | undefined
 			let escapeHatch = 0
 			const segments: Array<BreadcrumbValue & {url: string}> = []
-			// eslint-disable-next-line no-constant-condition
+
 			while (true) {
 				path += '/:segment'
-				url = matchPath(pathname, {path})?.url
+				url = matchPath({path: path + '/*'}, pathname)?.pathnameBase
 				if (url == null || escapeHatch > 100) { break }
 				const crumb = registry?.[url]
 				if (crumb != null) { segments.push({...crumb, url: crumb.url ?? url}) }
@@ -98,21 +98,21 @@ export function Breadcrumbs() {
 
 export function Breadcrumb(crumb: BreadcrumbValue) {
 	const {setRegistry} = useContext(BreadcrumbContext) ?? {}
-	const {url} = useRouteMatch()
+	const {pathname} = useResolvedPath('..')
 
 	useEffect(
 		() => {
 			if (setRegistry == null) { return }
 
-			setRegistry(registry => ({...registry, [url]: crumb}))
+			setRegistry(registry => ({...registry, [pathname]: crumb}))
 
 			return () => setRegistry(registry => {
 				const newRegistry = {...registry}
-				delete newRegistry[url]
+				delete newRegistry[pathname]
 				return newRegistry
 			})
 		},
-		[setRegistry, url, crumb],
+		[setRegistry, pathname, crumb],
 	)
 
 	return null

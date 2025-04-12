@@ -1,6 +1,6 @@
-import ACTIONS from 'data/ACTIONS'
+import {ACTIONS} from 'data/ACTIONS'
 import {ActionCombo} from 'data/ACTIONS/type'
-import STATUSES from 'data/STATUSES'
+import {STATUSES} from 'data/STATUSES'
 import {Event, Events} from 'event'
 import {filter} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'

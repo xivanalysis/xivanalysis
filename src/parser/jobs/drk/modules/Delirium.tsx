@@ -6,7 +6,6 @@ import {BuffWindow, ExpectedActionsEvaluator} from 'parser/core/modules/ActionWi
 import {EndOfWindowHandlingMode} from 'parser/core/modules/ActionWindow/windows/BuffWindow'
 import {GlobalCooldown} from 'parser/core/modules/GlobalCooldown'
 import {SEVERITY} from 'parser/core/modules/Suggestions'
-import React from 'react'
 import {DISPLAY_ORDER} from './DISPLAY_ORDER'
 
 const SEVERITIES = {

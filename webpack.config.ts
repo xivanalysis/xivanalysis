@@ -34,6 +34,7 @@ interface Arguments {
 	[key: string]: unknown
 }
 
+// eslint-disable-next-line import/no-default-export
 export default (env: Environment, {
 	mode = 'development',
 }: Arguments): webpack.Configuration => ({
@@ -121,7 +122,7 @@ export default (env: Environment, {
 		new webpack.WatchIgnorePlugin({paths: [/module\.css\.d\.ts$/]}),
 
 		new WebpackBar({}),
-	].filter(Boolean),
+	].filter(x => !!x),
 
 	module: {
 		rules: [

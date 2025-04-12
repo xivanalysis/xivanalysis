@@ -10,11 +10,11 @@ import {dependency} from 'parser/core/Injectable'
 import {History} from 'parser/core/modules/ActionWindow/History'
 import {Actors} from 'parser/core/modules/Actors'
 import {Data} from 'parser/core/modules/Data'
-import Downtime from 'parser/core/modules/Downtime'
+import {Downtime} from 'parser/core/modules/Downtime'
 import {GlobalCooldown} from 'parser/core/modules/GlobalCooldown'
-import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
+import {Suggestions, SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import {Timeline} from 'parser/core/modules/Timeline'
-import React, {Fragment} from 'react'
+import {Fragment} from 'react'
 import {Message} from 'semantic-ui-react'
 import {DISPLAY_ORDER} from './DISPLAY_ORDER'
 
@@ -216,4 +216,3 @@ export class RevengeBlast extends Analyser {
 		</Fragment>
 	}
 }
-

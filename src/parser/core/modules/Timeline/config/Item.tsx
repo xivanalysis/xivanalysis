@@ -1,7 +1,7 @@
 import classNames from 'classnames'
 import {Action} from 'data/ACTIONS'
 import {Status} from 'data/STATUSES'
-import React, {ComponentType, ReactNode} from 'react'
+import {ComponentType, ReactNode} from 'react'
 import styles from './Item.module.css'
 
 export interface Item {

@@ -1,6 +1,6 @@
 import {Event} from 'event'
 import {filter} from 'parser/core/filter'
-import CoreCastTime from 'parser/core/modules/CastTime'
+import {CastTime as CoreCastTime} from 'parser/core/modules/CastTime'
 
 export class CastTime extends CoreCastTime {
 	private accelerationIndex: number | null = null

@@ -1,7 +1,7 @@
 import {t} from '@lingui/macro'
 import {Trans, Plural} from '@lingui/react'
-import NormalisedMessage from 'components/ui/NormalisedMessage'
-import Rotation from 'components/ui/Rotation'
+import {NormalisedMessage} from 'components/ui/NormalisedMessage'
+import {Rotation} from 'components/ui/Rotation'
 import {Action} from 'data/ACTIONS'
 import {BASE_GCD} from 'data/CONSTANTS'
 import {iconUrl} from 'data/icon'
@@ -9,11 +9,11 @@ import {Event, Events} from 'event'
 import {Analyser} from 'parser/core/Analyser'
 import {filter} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
-import CastTime from 'parser/core/modules/CastTime'
+import {CastTime} from 'parser/core/modules/CastTime'
 import {Data} from 'parser/core/modules/Data'
 import {Invulnerability} from 'parser/core/modules/Invulnerability'
-import Suggestions, {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
-import React, {ReactNode} from 'react'
+import {Suggestions, TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import {ReactNode} from 'react'
 import {Button, Table} from 'semantic-ui-react'
 import {matchClosestLower} from 'utilities'
 import {Timeline} from './Timeline'
@@ -204,8 +204,8 @@ export class Weaving extends Analyser {
 	private isBadWeave(weave: Weave) {
 		// Calc. the no. of weaves - we're ignoring any made while the boss is untargetable, and events that happened before the pull
 		const weaveCount = weave.weaves.filter(
-			event => true
-				&& !this.invulnerability.isActive({timestamp: event.timestamp, types: ['untargetable']})
+			event =>
+				!this.invulnerability.isActive({timestamp: event.timestamp, types: ['untargetable']})
 				&& event.timestamp >= this.parser.pull.timestamp,
 		).length
 

@@ -6,7 +6,6 @@ import {TrackedAction, TrackedActionsOptions} from 'parser/core/modules/ActionWi
 import {History, HistoryEntry} from 'parser/core/modules/ActionWindow/History'
 import {Invulnerability} from 'parser/core/modules/Invulnerability'
 import {TieredSuggestion} from 'parser/core/modules/Suggestions'
-import React from 'react'
 import {assignErrorCode, getMetadataForWindow, includeInSuggestions} from './EvaluatorUtilities'
 import {CycleMetadata, ROTATION_ERRORS, DEFAULT_SEVERITY_TIERS, FLARE_STAR_CARRYOVER_CODE} from './WatchdogConstants'
 

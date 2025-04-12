@@ -1,6 +1,5 @@
 import {DataLink} from 'components/ui/DbLink'
-import CONTRIBUTORS from 'data/CONTRIBUTORS'
-import React from 'react'
+import {CONTRIBUTORS} from 'data/CONTRIBUTORS'
 
 export const changelog = [
 	// {
@@ -8,6 +7,16 @@ export const changelog = [
 	// 	Changes: () => <>The changes you made</>,
 	// 	contributors: [CONTRIBUTORS.YOU],
 	// },
+	{
+		date: new Date('2025-03-31'),
+		Changes: () => <>Remove <DataLink showIcon={false} action="STRIKING_MUSE" /> from cooldowns checklist requirement and update <DataLink showIcon={false} action="STARRY_MUSE" /> window analysis to allow for fewer than three Hammer GCDs.</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
+	{
+		date: new Date('2024-12-15'),
+		Changes: () => <>Moved tracking for <DataLink showIcon={false} status="HYPERPHANTASIA" /> and <DataLink showIcon={false} status="HAMMER_TIME" /> into Proc Issues.</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
 	{
 		date: new Date('2024-11-16'),
 		Changes: () => <>Update Canvas timeline display to show which Creature Muse was painted, and fix some bugs with Canvas and Paint state tracking.</>,

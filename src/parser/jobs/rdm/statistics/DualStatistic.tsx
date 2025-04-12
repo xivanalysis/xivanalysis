@@ -1,24 +1,24 @@
 import {AbstractStatistic, AbstractStatisticOptions} from 'parser/core/modules/Statistics/AbstractStatistic'
-import React from 'react'
+import {ReactNode} from 'react'
 import styles from './DualStatistic.module.css'
 
 export class DualStatistic extends AbstractStatistic {
-	private label: React.ReactNode
-	private title: React.ReactNode
-	private title2: React.ReactNode
+	private label: ReactNode
+	private title: ReactNode
+	private title2: ReactNode
 	private icon?: string
 	private icon2?: string
-	private value: React.ReactNode
-	private value2: React.ReactNode
+	private value: ReactNode
+	private value2: ReactNode
 
 	constructor(opts: {
-		label: React.ReactNode,
-		title: React.ReactNode,
-		title2: React.ReactNode,
+		label: ReactNode,
+		title: ReactNode,
+		title2: ReactNode,
 		icon?: string,
 		icon2?: string,
-		value: React.ReactNode,
-		value2: React.ReactNode,
+		value: ReactNode,
+		value2: ReactNode,
 	} & AbstractStatisticOptions) {
 	// 	super({
 	// 		...opts,

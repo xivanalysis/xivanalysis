@@ -1,11 +1,18 @@
 import {Trans} from '@lingui/react'
 import {DataLink} from 'components/ui/DbLink'
 import {dependency} from 'parser/core/Injectable'
-import {CooldownDowntime} from 'parser/core/modules/CooldownDowntime'
-import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
-import React, {Fragment} from 'react'
+import {CooldownDowntime, CooldownGroup} from 'parser/core/modules/CooldownDowntime'
+import {Suggestions, SEVERITY, TieredSuggestion, Severity} from 'parser/core/modules/Suggestions'
+import {Fragment, ReactNode} from 'react'
 
 const DPS_TARGET_PERCENT = 75
+
+type OgcdSuggestion =
+	& CooldownGroup
+	& {
+		tiers: Record<number, Severity>
+		content: ReactNode
+	}
 
 export class OGCDs extends CooldownDowntime {
 	@dependency private suggestions!: Suggestions
@@ -14,7 +21,7 @@ export class OGCDs extends CooldownDowntime {
 		{cooldowns: [this.data.actions.ASSIZE], weight: 1},
 		{cooldowns: [this.data.actions.PRESENCE_OF_MIND], weight: 1},
 	]
-	override suggestionOnlyCooldowns = [
+	override suggestionOnlyCooldowns: OgcdSuggestion[] = [
 		{
 			cooldowns: [this.data.actions.LITURGY_OF_THE_BELL],
 			tiers: {2: SEVERITY.MINOR, 3: SEVERITY.MEDIUM},

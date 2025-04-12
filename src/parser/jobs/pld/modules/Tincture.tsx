@@ -5,7 +5,6 @@ import {ExpectedActionsEvaluator, ExpectedGcdCountEvaluator} from 'parser/core/m
 import {GlobalCooldown} from 'parser/core/modules/GlobalCooldown'
 import {SEVERITY} from 'parser/core/modules/Suggestions'
 import {Tincture as CoreTincture} from 'parser/core/modules/Tincture'
-import React from 'react'
 
 export class Tincture extends CoreTincture {
 

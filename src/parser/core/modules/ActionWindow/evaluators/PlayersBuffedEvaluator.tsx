@@ -1,7 +1,6 @@
 import {Trans} from '@lingui/react'
 import {EvaluatedAction, EvaluationOutput, WindowEvaluator} from 'parser/core/modules/ActionWindow'
 import {HistoryEntry} from 'parser/core/modules/ActionWindow/History'
-import React from 'react'
 
 interface TrackedBuffOpts {
 	expectedCount: number,

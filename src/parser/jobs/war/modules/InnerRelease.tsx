@@ -7,10 +7,9 @@ import {Analyser} from 'parser/core/Analyser'
 import {EventHook} from 'parser/core/Dispatcher'
 import {filter} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
-import Checklist, {Requirement, Rule} from 'parser/core/modules/Checklist'
+import {Checklist, Requirement, Rule} from 'parser/core/modules/Checklist'
 import {Data} from 'parser/core/modules/Data'
-import Suggestions from 'parser/core/modules/Suggestions'
-import React from 'react'
+import {Suggestions} from 'parser/core/modules/Suggestions'
 
 // Default case
 const IR_STACKS_APPLIED = 3
@@ -153,9 +152,9 @@ export class InnerRelease extends Analyser {
 		return Math.min(this.stacksApplied, hits)
 	}
 
-	getPercentUsed(target: number, missed: number): string {
+	getPercentUsed(target: number, missed: number): number {
 		const used = target - missed
 
-		return ((used / target) * 100).toFixed(2)
+		return (used / target) * 100
 	}
 }

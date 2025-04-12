@@ -1,5 +1,5 @@
 import classNames from 'classnames'
-import React, {CSSProperties, memo, ReactNode, useCallback, useMemo, useState} from 'react'
+import {CSSProperties, memo, ReactNode, useCallback, useMemo, useState} from 'react'
 import Measure from 'react-measure'
 import {Row as RowConfig} from '../config'
 import {Items} from './Item'

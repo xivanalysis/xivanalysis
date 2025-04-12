@@ -1,39 +1,32 @@
 import {Trans} from '@lingui/react'
-import ACTIONS from 'data/ACTIONS'
 import {Event, Events} from 'event'
 import {filter} from 'parser/core/filter'
-import {Overheal, SuggestedColors} from 'parser/core/modules/Overheal'
-import React from 'react'
+import {Overheal, TrackedOverhealOpts} from 'parser/core/modules/Overheal'
 
 export class BLUOverheal extends Overheal {
-	override checklistRuleBreakout = true
-	override displayPieChart = true
-	override displaySuggestion = true
-	override suggestionIcon = ACTIONS.POM_CURE.icon
-
-	override trackedHealCategories = [
+	protected override trackedHealCategories:TrackedOverhealOpts[] = [
 		{
-			name: <Trans id="blu.overheal.hot.name">Healing Over Time</Trans>,
-			color: SuggestedColors[1], // 0 is used for "Direct"
+			name: this.defaultCategoryNames.HEALING_OVER_TIME,
 			trackedHealIds: [
 				this.data.statuses.ANGELS_SNACK.id,
 				this.data.actions.ANGELS_SNACK.id,
 			],
+			includeInChecklist: true,
 		},
 		{
 			name: <Trans id="blu.overheal.aoe.name">AoE</Trans>,
-			color: SuggestedColors[2],
 			trackedHealIds: [
 				this.data.actions.STOTRAM_HEAL.id,
 				this.data.actions.EXUVIATION.id,
 			],
+			includeInChecklist: true,
 		},
 		{
 			name: <Trans id="blu.overheal.white_wind.name">White Wind</Trans>,
-			color: SuggestedColors[3],
 			trackedHealIds: [
 				this.data.actions.WHITE_WIND.id,
 			],
+			includeInChecklist: true,
 		},
 	]
 
@@ -61,7 +54,7 @@ export class BLUOverheal extends Overheal {
 		// normally get before even going into the instance.
 
 		// So let's instead just check if they did any sort of non-White Wind healing
-		const nonWWhealing = this.direct.heal + this.trackedOverheals.reduce((acc, entry) => {
+		const nonWWhealing = this.uncategorized.heal + this.trackedOverheals.reduce((acc, entry) => {
 			if (entry.idIsTracked(this.data.actions.WHITE_WIND.id)) {
 				return acc
 			}
@@ -72,10 +65,7 @@ export class BLUOverheal extends Overheal {
 			return
 		}
 
-		this.checklistRuleBreakout = false
-		this.displayPieChart = false
-		this.displaySuggestion = false
+		this.suppressOutput = true
 		this.displayChecklist = false
-		this.checklistRuleBreakout = false
 	}
 }

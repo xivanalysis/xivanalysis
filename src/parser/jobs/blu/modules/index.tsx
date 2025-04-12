@@ -22,7 +22,7 @@ import {TripleTrident} from './TripleTrident'
 import {BLUWeaving} from './Weaving'
 import {WingedReprobation} from './WingedReprobation'
 
-export default [
+export const modules = [
 	MightyGuardGCDing,
 	Defensives,
 	ActionTimeline,

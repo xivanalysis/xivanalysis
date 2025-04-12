@@ -2,7 +2,6 @@ import {Plural, Trans} from '@lingui/react'
 import {DataLink} from 'components/ui/DbLink'
 import {Procs as CoreProcs} from 'parser/core/modules/Procs'
 import {SEVERITY} from 'parser/core/modules/Suggestions'
-import React from 'react'
 
 const GRAND_IMPACT_SEVERITY = {
 	1: SEVERITY.MAJOR,

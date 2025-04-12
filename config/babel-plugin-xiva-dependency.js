@@ -7,7 +7,7 @@ dependency system. Effectively turns declarations like:
 into
 ```
 @dependency
-@Reflect.metadata('design:type', SomeModule)
+@dependency.type(SomeModule)
 private someModule: SomeModule = this.someModule
 ```
 which will then be further processed by other presets.
@@ -57,13 +57,13 @@ module.exports = function({
 			? toMemberExpression(annotationPath.get('typeAnnotation').get('typeName'))
 			: t.identifier('Object')
 
-		// Push a Reflect.metadata call into the decorators, with the design type as an argument
+		// Push a dependency.type call into the decorators, with the design type as an argument
 		propertyPath.pushContainer(
 			'decorators',
 			t.decorator(
 				t.callExpression(
-					t.memberExpression(t.identifier('Reflect'), t.identifier('metadata')),
-					[t.stringLiteral('design:type'), designTypeExpression]
+					t.memberExpression(t.identifier('dependency'), t.identifier('type')),
+					[designTypeExpression]
 				)
 			),
 		)

@@ -1,6 +1,5 @@
 import {Trans} from '@lingui/macro'
 import {ActionRow, ActionTimeline as CoreActionTimeline} from 'parser/core/modules/ActionTimeline'
-import React from 'react'
 
 export class ActionTimeline extends CoreActionTimeline {
 	static override rows: ActionRow[] = [

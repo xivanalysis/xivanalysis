@@ -1,11 +1,12 @@
 import {Interrupts} from 'parser/core/modules/Interrupts'
 import {LucidDreaming} from 'parser/core/modules/LucidDreaming'
 import {ActionTimeline} from './ActionTimeline'
+import {AoEUsages} from './AoEUsages'
 import {ArcanaSuggestions, ArcanaTracking} from './ArcanaTracking'
 import {Combust} from './Combust'
 import {Defensives} from './Defensives'
 import {Divination} from './Divination'
-import Draw from './Draw'
+import {Draw} from './Draw'
 import {DroppedDefensives} from './DroppedDefensives'
 import {EarthlyStar} from './EarthlyStar'
 import {Helios} from './Helios'
@@ -17,8 +18,9 @@ import {StatusTimeline} from './StatusTimeline'
 import {Synastry} from './Synastry'
 import {Tincture} from './Tincture'
 
-export default [
+export const modules = [
 	ActionTimeline,
+	AoEUsages,
 	ArcanaSuggestions,
 	ArcanaTracking,
 	Combust,

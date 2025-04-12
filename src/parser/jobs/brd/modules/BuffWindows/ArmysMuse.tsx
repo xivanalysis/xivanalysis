@@ -1,14 +1,13 @@
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
-import React from 'react'
 import {Icon, Message} from 'semantic-ui-react'
 import {dependency} from '../../../../core/Injectable'
 import {BuffWindow} from '../../../../core/modules/ActionWindow'
 import {RequiredGcdCountEvaluator} from '../../../../core/modules/ActionWindow/evaluators/RequiredGcdCountEvaluator'
 import {GlobalCooldown} from '../../../../core/modules/GlobalCooldown'
 import {SEVERITY} from '../../../../core/modules/Suggestions'
-import DISPLAY_ORDER from '../DISPLAY_ORDER'
+import {DISPLAY_ORDER} from '../DISPLAY_ORDER'
 
 export class ArmysMuse extends BuffWindow {
 	static override handle = 'armysmuse'

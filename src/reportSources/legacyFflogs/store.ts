@@ -86,7 +86,7 @@ export class LegacyFflogsReportStore extends ReportStore {
 		].filter(isDefined)
 
 		if (params.length > 0) {
-			url = `${url}#${params.join('&')}`
+			url = `${url}?${params.join('&')}`
 		}
 
 		return {

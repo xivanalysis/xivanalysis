@@ -5,14 +5,13 @@ import {Action} from 'data/ACTIONS'
 import {Event, Events} from 'event'
 import {dependency} from 'parser/core/Injectable'
 import {Requirement, Rule} from 'parser/core/modules/Checklist'
-import React from 'react'
 import {Analyser, DisplayOrder} from '../Analyser'
 import {filter, oneOf} from '../filter'
-import Checklist from './Checklist'
+import {Checklist} from './Checklist'
 import {Data} from './Data'
-import Downtime from './Downtime'
+import {Downtime} from './Downtime'
 
-interface CooldownReset {
+export interface CooldownReset {
 	/**
 	 * One or more skills that trigger a cooldown reset.
 	 */
@@ -24,7 +23,7 @@ interface CooldownReset {
 	refundAmount: number
 }
 
-interface CooldownGroup {
+export interface CooldownGroup {
 	/**
 	 * One or more skills that share a recharge.
 	 */

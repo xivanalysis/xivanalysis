@@ -2,16 +2,15 @@ import {MessageDescriptor} from '@lingui/core'
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
 import {DataLink} from 'components/ui/DbLink'
-import NormalisedMessage from 'components/ui/NormalisedMessage'
+import {NormalisedMessage} from 'components/ui/NormalisedMessage'
 import {ActionKey} from 'data/ACTIONS'
 import {Event, Events} from 'event'
 import {TimestampHookArguments} from 'parser/core/Dispatcher'
 import {filter} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
-import Checklist, {Requirement, Rule} from 'parser/core/modules/Checklist'
-import Downtime from 'parser/core/modules/Downtime'
+import {Checklist, Requirement, Rule} from 'parser/core/modules/Checklist'
+import {Downtime} from 'parser/core/modules/Downtime'
 import {Gauge, TimerGauge} from 'parser/core/modules/Gauge'
-import React from 'react'
 import {Table} from 'semantic-ui-react'
 import {isSuccessfulHit} from 'utilities'
 
@@ -83,7 +82,7 @@ export class Darkside extends Gauge {
 			requirements: [
 				new Requirement({
 					name: <Trans id="drk.darkside.uptime">Darkside Uptime</Trans>,
-					percent: () => uptime,
+					percent: uptime,
 				}),
 			],
 			target: 99,

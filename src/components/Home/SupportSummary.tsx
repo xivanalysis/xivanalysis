@@ -1,12 +1,12 @@
 import {Trans} from '@lingui/react'
 import {JobIcon} from 'components/ui/JobIcon'
-import NormalisedMessage from 'components/ui/NormalisedMessage'
+import {NormalisedMessage} from 'components/ui/NormalisedMessage'
 import {GameEdition} from 'data/EDITIONS'
 import {JobKey, JOBS, RoleKey, ROLES} from 'data/JOBS'
 import {patchSupported} from 'data/PATCHES'
 import {FALLBACK_KEY, PATCHES} from 'data/PATCHES/patches'
 import {AVAILABLE_MODULES} from 'parser/AVAILABLE_MODULES'
-import React, {Component, Fragment} from 'react'
+import {Component, Fragment, ReactNode} from 'react'
 import {Message} from 'semantic-ui-react'
 import styles from './SupportSummary.module.css'
 
@@ -15,10 +15,12 @@ interface RoleData {
 	jobKeys: JobKey[]
 }
 
-class SupportSummary extends Component {
+export class SupportSummary extends Component {
 	override render() {
+		const nowEpoch = Date.now() / 1000
 		const maxPatch = Object.entries(PATCHES)
 			.map(patch => ({name: patch[0], date: patch[1].date[GameEdition.GLOBAL]}))
+			.filter((patch) => patch.date <= nowEpoch)
 			.sort((a, b) => b.date - a.date)[0].name
 		const coreMeta = AVAILABLE_MODULES.CORE
 		const coreTo = coreMeta.supportedPatches?.to ?? FALLBACK_KEY
@@ -65,10 +67,7 @@ class SupportSummary extends Component {
 			</div>
 		</>
 	}
-
 }
-
-export default SupportSummary
 
 interface SupportSummaryGridProp {
 	roles: RoleData[]
@@ -82,7 +81,7 @@ interface SupportSummaryJobTileProp {
 	jobKey: JobKey
 }
 
-export class SupportSummaryGrid extends React.Component<SupportSummaryGridProp> {
+export class SupportSummaryGrid extends Component<SupportSummaryGridProp> {
 
 	static JobTile = ({jobKey}: SupportSummaryJobTileProp) => {
 		const meta = AVAILABLE_MODULES.JOBS[jobKey]
@@ -127,7 +126,7 @@ export class SupportSummaryGrid extends React.Component<SupportSummaryGridProp> 
 			}
 		</div>
 
-	override render(): React.ReactNode {
+	override render(): ReactNode {
 		const {roles} = this.props
 
 		return <div className={styles.supportGrid}>

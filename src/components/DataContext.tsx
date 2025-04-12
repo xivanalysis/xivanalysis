@@ -10,7 +10,7 @@ import {
 	root as statusRoot,
 	StatusRoot,
 } from 'data/STATUSES'
-import React, {createContext, ReactNode, useContext, useMemo} from 'react'
+import {createContext, ReactNode, useContext, useMemo} from 'react'
 
 interface DataContextValue {
 	actions: ActionRoot

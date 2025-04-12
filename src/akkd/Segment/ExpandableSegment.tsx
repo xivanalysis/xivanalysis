@@ -1,12 +1,13 @@
 import classNames from 'classnames'
-import React from 'react'
+import {createRef, CSSProperties, PureComponent, ReactNode, RefObject} from 'react'
 import styles from './Segment.module.css'
 
 interface Props {
-	seeMore?: React.ReactNode
+	seeMore?: ReactNode
 	collapsed?: boolean
 	maxHeight?: number
 	leeway?: number
+	children?: ReactNode
 }
 
 interface State {
@@ -15,13 +16,13 @@ interface State {
 	maxHeight?: number | 'none'
 }
 
-export class ExpandableSegment extends React.PureComponent<Props, State> {
-	private ref: React.RefObject<HTMLDivElement>
+export class ExpandableSegment extends PureComponent<Props, State> {
+	private ref: RefObject<HTMLDivElement>
 
 	constructor(props: Props) {
 		super(props)
 
-		this.ref = React.createRef()
+		this.ref = createRef()
 
 		this.state = {
 			overflowing: false,
@@ -92,7 +93,7 @@ export class ExpandableSegment extends React.PureComponent<Props, State> {
 
 		const maxHeight = collapsed? propHeight : stateHeight
 
-		const style: React.CSSProperties = {}
+		const style: CSSProperties = {}
 		if (maxHeight && overflowing) {
 			style.maxHeight = maxHeight
 		}

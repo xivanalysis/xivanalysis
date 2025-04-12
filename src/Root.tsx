@@ -1,16 +1,17 @@
-import App from 'components/App'
+import {App} from 'components/App'
 import {BreadcrumbProvider} from 'components/GlobalSidebar'
-import I18nLoader from 'components/I18nLoader'
+import {I18nLoader} from 'components/I18nLoader'
 import {Provider as TooltipProvider} from 'components/ui/DbLink'
-import React from 'react'
 import {BrowserRouter as Router} from 'react-router-dom'
 import {StoreProvider} from 'store'
 
-export default () => (
+export const Root = () => (
 	<StoreProvider>
 		<I18nLoader>
 			<TooltipProvider>
-				<Router>
+				<Router future={{
+					v7_relativeSplatPath: true,
+				}}>
 					<BreadcrumbProvider>
 						<App/>
 					</BreadcrumbProvider>

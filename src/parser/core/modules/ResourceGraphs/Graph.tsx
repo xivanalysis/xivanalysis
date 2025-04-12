@@ -4,7 +4,7 @@ import {Area} from '@visx/shape'
 import {scaleLinear, ScaleTime} from 'd3-scale'
 import {curveLinear, curveStepAfter} from 'd3-shape'
 import _ from 'lodash'
-import React, {ReactNode} from 'react'
+import {ReactNode} from 'react'
 import {ResourceData} from './ResourceGraphs'
 import styles from './ResourceGraphs.module.css'
 

@@ -1,20 +1,20 @@
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
 import {Message, Segment} from 'akkd'
-import ContributorLabel from 'components/ui/ContributorLabel'
-import NormalisedMessage from 'components/ui/NormalisedMessage'
+import {ContributorLabel} from 'components/ui/ContributorLabel'
+import {NormalisedMessage} from 'components/ui/NormalisedMessage'
 import {patchSupported} from 'data/PATCHES'
 import {AVAILABLE_MODULES} from 'parser/AVAILABLE_MODULES'
 import {Analyser, DisplayMode} from 'parser/core/Analyser'
-import React from 'react'
+import {ComponentType} from 'react'
 import {Header} from 'semantic-ui-react'
 import {dependency} from '../Injectable'
 import {ContributorRole, SupportedPatches} from '../Meta'
 import styles from './About.module.css'
 import {Actors} from './Actors'
-import DISPLAY_ORDER from './DISPLAY_ORDER'
+import {DISPLAY_ORDER} from './DISPLAY_ORDER'
 
-export default class About extends Analyser {
+export class About extends Analyser {
 	static override handle = 'about'
 	static override displayOrder = DISPLAY_ORDER.ABOUT
 	static override displayMode = DisplayMode.RAW
@@ -22,7 +22,7 @@ export default class About extends Analyser {
 
 	@dependency private actors!: Actors
 
-	Description?: React.ComponentType
+	Description?: ComponentType
 	contributors?: ContributorRole[]
 
 	supportedPatches?: SupportedPatches

@@ -20,13 +20,13 @@ import {HistoryEntry} from 'parser/core/modules/ActionWindow/History'
 import {Actors} from 'parser/core/modules/Actors'
 import {GlobalCooldown} from 'parser/core/modules/GlobalCooldown'
 import {SEVERITY, Suggestion} from 'parser/core/modules/Suggestions'
-import React, {Fragment} from 'react'
+import {Fragment} from 'react'
 import {Team} from 'report'
 import {Button, Icon, Message, Table} from 'semantic-ui-react'
 import {isDefined} from 'utilities'
-import NormalisedMessage from '../../../../../components/ui/NormalisedMessage'
+import {NormalisedMessage} from '../../../../../components/ui/NormalisedMessage'
 import {BuffGroupWindow} from '../../../../core/modules/ActionWindow/windows/BuffGroupWindow'
-import DISPLAY_ORDER from '../DISPLAY_ORDER'
+import {DISPLAY_ORDER} from '../DISPLAY_ORDER'
 
 // Minimum muse GCDs needed to expect a burst window to have 9 GCDs
 const MIN_MUSE_GCDS = 2

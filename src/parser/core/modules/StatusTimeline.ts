@@ -25,11 +25,11 @@ export class StatusTimeline extends Analyser {
 
 	static statusesStackMapping: Record<number, number> = {}
 
-	@dependency private actionTimeline!: ActionTimeline;
-	@dependency private actors!: Actors;
+	@dependency private actionTimeline!: ActionTimeline
+	@dependency private actors!: Actors
 	@dependency private data!: Data
 
-	private statusActionMap = new Map<Status['id'], Action>();
+	private statusActionMap = new Map<Status['id'], Action>()
 	private usages = new Map<Status['id'], Map<Actor['id'], StatusTarget>>()
 	private rows = new Map<string, SimpleRow>()
 

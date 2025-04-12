@@ -7,10 +7,10 @@ import {Analyser} from 'parser/core/Analyser'
 import {dependency} from 'parser/core/Injectable'
 import {CooldownDowntime} from 'parser/core/modules/CooldownDowntime'
 import {Data} from 'parser/core/modules/Data'
-import React, {Fragment, ReactNode} from 'react'
+import {Fragment, ReactNode} from 'react'
 import {Accordion, Button, Icon, Message, Table} from 'semantic-ui-react'
 import {ChargeHistoryEntry, CooldownEndReason, CooldownHistoryEntry, Cooldowns} from './Cooldowns'
-import DISPLAY_ORDER from './DISPLAY_ORDER'
+import {DISPLAY_ORDER} from './DISPLAY_ORDER'
 import {Timeline} from './Timeline'
 
 const DEFENSIVE_ROLE_ACTIONS: Map<RoleKey, ActionKey[]> = new Map<RoleKey, ActionKey[]>([

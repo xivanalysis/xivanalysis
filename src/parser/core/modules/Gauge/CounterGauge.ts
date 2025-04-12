@@ -1,6 +1,8 @@
+import {PREPULL_EVENT_WINDOW} from 'event'
 import _ from 'lodash'
-import {GAUGE_HANDLE, ResourceData, ResourceGraphOptions} from '../ResourceGraphs/ResourceGraphs'
+import {ReactNode} from 'react'
 import {AbstractGauge, AbstractGaugeOptions} from './AbstractGauge'
+import {GAUGE_HANDLE, ResourceData, ResourceGraphOptions} from '../ResourceGraphs/ResourceGraphs'
 
 export type GaugeEventReason =
 	| 'init'
@@ -91,7 +93,7 @@ export class CounterGauge extends AbstractGauge {
 		return this.history.filter(entry => entry.reason === 'generate').reduce((total, entry) => total + Math.abs(entry.delta), 0)
 	}
 
-	get label(): React.ReactNode {
+	get label(): ReactNode {
 		return this.graphOptions?.label
 	}
 
@@ -129,7 +131,7 @@ export class CounterGauge extends AbstractGauge {
 		// Ensure we have a gauge init event, can't do in constructor because the parser reference might not be there yet
 		if (this.history.length === 0) {
 			this.history.push({
-				timestamp: this.parser.pull.timestamp,
+				timestamp: this.parser.pull.timestamp - PREPULL_EVENT_WINDOW,
 				value: this.initialValue,
 				minimum: this.minimum,
 				maximum: this.maximum,

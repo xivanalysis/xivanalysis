@@ -1,8 +1,17 @@
 import {DataLink} from 'components/ui/DbLink'
-import CONTRIBUTORS from 'data/CONTRIBUTORS'
-import React from 'react'
+import {CONTRIBUTORS} from 'data/CONTRIBUTORS'
 
 export const changelog = [
+	{
+		date: new Date('2025-03-24'),
+		Changes: () => <>Viper 7.2 Support added.</>,
+		contributors: [CONTRIBUTORS.RYAN],
+	},
+	{
+		date: new Date('2025-01-29'),
+		Changes: () => <>Fix a data error that was causing phantom prepull uses of <DataLink action="VICEWINDER"/> and <DataLink action="VICEPIT"/> follow-up GCDs to be recorded.</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
 	{
 		date: new Date('2024-11-16'),
 		Changes: () => <>Add a table displaying timestamps when procs were dropped or overwritten, for better clarity around when those issues occurred.</>,

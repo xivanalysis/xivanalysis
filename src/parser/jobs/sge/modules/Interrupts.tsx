@@ -1,7 +1,6 @@
 import {Trans} from '@lingui/react'
 import {DataLink} from 'components/ui/DbLink'
 import {Interrupts as CoreInterrupts} from 'parser/core/modules/Interrupts'
-import React from 'react'
 import {DISPLAY_ORDER} from './DISPLAY_ORDER'
 
 export class Interrupts extends CoreInterrupts {

@@ -6,10 +6,10 @@ import {filter, oneOf} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
 import {CounterGauge, Gauge as CoreGauge} from 'parser/core/modules/Gauge'
 import {Statistics} from 'parser/core/modules/Statistics'
-import Suggestions, {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import {Suggestions, TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import {ManaGauge} from 'parser/jobs/rdm/modules/ManaGauge'
 import {DualStatistic} from 'parser/jobs/rdm/statistics/DualStatistic'
-import React, {Fragment} from 'react'
+import {Fragment} from 'react'
 
 interface ManaStackGaugeModifier {
 	manaStack: number

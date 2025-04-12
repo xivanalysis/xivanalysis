@@ -14,7 +14,7 @@ import {Procs} from './Procs'
 import {Raiju} from './Raiju'
 import {Weaving} from './Weaving'
 
-export default [
+export const modules = [
 	ActionTimeline,
 	Combos,
 	Defensives,

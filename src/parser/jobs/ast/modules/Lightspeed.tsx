@@ -2,7 +2,7 @@ import {Event, Events} from 'event'
 import {Analyser} from 'parser/core/Analyser'
 import {filter} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
-import CastTime from 'parser/core/modules/CastTime'
+import {CastTime} from 'parser/core/modules/CastTime'
 import {Data} from 'parser/core/modules/Data'
 
 const LIGHTSPEED_REDUCTION = -2500

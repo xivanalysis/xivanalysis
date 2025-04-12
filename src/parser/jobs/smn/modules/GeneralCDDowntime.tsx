@@ -1,7 +1,6 @@
 import {CooldownDowntime} from 'parser/core/modules/CooldownDowntime'
 
-export default class GeneralCDDowntime extends CooldownDowntime {
-
+export class GeneralCDDowntime extends CooldownDowntime {
 	trackedCds = [{
 		cooldowns: [
 			this.data.actions.SUMMON_BAHAMUT,

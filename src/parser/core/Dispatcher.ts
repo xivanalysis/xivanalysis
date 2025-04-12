@@ -3,8 +3,14 @@ import {Injectable} from './Injectable'
 
 type Handle = (typeof Injectable)['handle']
 
+export const FILTER_TYPE = Symbol('filter.type')
+
 /** Signature of event filter predicate functions. */
-export type EventFilterPredicate<T extends Event> = (event: Event) => event is T
+export type EventFilterPredicate<T extends Event> = {
+	(event: Event): event is T
+	/** If set, will be used to bucket the predicate as a first-pass optimisation. */
+	[FILTER_TYPE]?: string,
+}
 
 /** Callback signature for event hooks. */
 export type EventHookCallback<T extends Event> = (event: T) => void
@@ -38,17 +44,32 @@ export interface DispatchIssue {
 	error: Error
 }
 
+export interface Dispatcher {
+	readonly timestamp: number
+	dispatch(event: Event, handles: Handle[]): DispatchIssue[]
+	addEventHook<T extends Event>(hook: EventHook<T>): void
+	removeEventHook<T extends Event>(hook: EventHook<T>): boolean
+	addTimestampHook(hook: TimestampHook): void
+	removeTimestampHook(hook: TimestampHook): boolean
+}
+
 /**
  * Dispatcher is in charge of consuming events from the parser and fanning them
  * out to matching hooks where required.
  */
-export class Dispatcher {
+export class DispatcherImpl implements Dispatcher {
 	private _timestamp = 0
 	/** The timestamp of the hook currently being executed. */
 	get timestamp() { return this._timestamp }
 
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	private eventHooks = new Map<Handle, Set<EventHook<any>>>()
+	private eventHooks = new Map<
+		Handle,
+		Map<
+			string | undefined,
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
+			Set<EventHook<any>>
+		>
+	>()
 
 	// Stored nearest-last so we can use the significantly-faster pop
 	private timestampHookQueue: TimestampHook[] = []
@@ -74,7 +95,6 @@ export class Dispatcher {
 		const queue = this.timestampHookQueue
 		while (queue.length > 0 && queue[queue.length - 1].timestamp <= timestamp) {
 			// Enforced by the while loop.
-			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 			const hook = queue.pop()!
 
 			// If we're not trigering on this module, skip the hook. This effectively removes it.
@@ -87,6 +107,10 @@ export class Dispatcher {
 			try {
 				hook.callback({timestamp: hook.timestamp})
 			} catch (error) {
+				if (!(error instanceof Error)) {
+					throw error
+				}
+
 				issues.push({handle: hook.handle, error})
 			}
 		}
@@ -99,6 +123,8 @@ export class Dispatcher {
 
 		const issues: DispatchIssue[] = []
 
+		const typeKeys = [event.type, undefined]
+
 		// Iterate over the handles provided, looking for registered hooks
 		for (const handle of handles) {
 			const handleHooks = this.eventHooks.get(handle)
@@ -106,11 +132,21 @@ export class Dispatcher {
 
 			try {
 				// Try to execute any matching hooks for the current handle
-				for (const hook of handleHooks.values()) {
-					if (!hook.predicate(event)) { continue }
-					hook.callback(event)
+				for (const typeKey of typeKeys) {
+					const handleTypes = handleHooks.get(typeKey)
+					if (handleTypes == null) {
+						continue
+					}
+					for (const hook of handleTypes.values()) {
+						if (!hook.predicate(event)) { continue }
+						hook.callback(event)
+					}
 				}
 			} catch (error) {
+				if (!(error instanceof Error)) {
+					throw error
+				}
+
 				// If there was an error in any, stop immediately & report
 				issues.push({handle, error})
 				continue
@@ -127,10 +163,17 @@ export class Dispatcher {
 	 * @param hook The hook to register.
 	 */
 	addEventHook<T extends Event>(hook: EventHook<T>) {
-		let handleHooks = this.eventHooks.get(hook.handle)
+		let handleTypes = this.eventHooks.get(hook.handle)
+		if (handleTypes == null) {
+			handleTypes = new Map()
+			this.eventHooks.set(hook.handle, handleTypes)
+		}
+
+		const filterType = hook.predicate[FILTER_TYPE]
+		let handleHooks = handleTypes.get(filterType)
 		if (handleHooks == null) {
 			handleHooks = new Set()
-			this.eventHooks.set(hook.handle, handleHooks)
+			handleTypes.set(filterType, handleHooks)
 		}
 
 		handleHooks.add(hook)
@@ -144,10 +187,21 @@ export class Dispatcher {
 	 * @return `true` if the hook was removed successfully.
 	 */
 	removeEventHook<T extends Event>(hook: EventHook<T>): boolean {
-		const handleHooks = this.eventHooks.get(hook.handle)
+		const handleTypes = this.eventHooks.get(hook.handle)
+		if (handleTypes == null) { return false }
+
+		const filterType = hook.predicate[FILTER_TYPE]
+		const handleHooks = handleTypes.get(filterType)
 		if (handleHooks == null) { return false }
 
-		return handleHooks.delete(hook)
+		const removed = handleHooks.delete(hook)
+		if (!removed) { return false }
+
+		if (handleHooks.size === 0) {
+			handleTypes.delete(filterType)
+		}
+
+		return true
 	}
 
 	/**

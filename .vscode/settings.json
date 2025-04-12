@@ -1,13 +1,9 @@
 {
 	"javascript.preferences.quoteStyle": "single",
 	"javascript.format.insertSpaceAfterOpeningAndBeforeClosingNonemptyBraces": false,
-	"eslint.autoFixOnSave": true,
-	"eslint.packageManager": "yarn",
-	"tslint.autoFixOnSave": true,
-	"tslint.configFile": "tslint.json",
-	"typescript.tsdk": "node_modules\\typescript\\lib",
+	"typescript.tsdk": "node_modules/typescript/lib",
+	"eslint.useFlatConfig": true,
 	"editor.codeActionsOnSave": {
 		"source.fixAll.eslint": "explicit",
-		"source.fixAll.tslint": "explicit"
 	}
 }

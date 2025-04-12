@@ -1,9 +1,8 @@
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
-import TransMarkdown from 'components/ui/TransMarkdown'
-import CONTRIBUTORS, {ROLES} from 'data/CONTRIBUTORS'
+import {TransMarkdown} from 'components/ui/TransMarkdown'
+import {CONTRIBUTORS, ROLES} from 'data/CONTRIBUTORS'
 import {Meta} from 'parser/core/Meta'
-import React from 'react'
 import {Icon, Message} from 'semantic-ui-react'
 import {changelog} from './changelog'
 
@@ -29,12 +28,12 @@ export const ASTROLOGIAN = new Meta({
 	</>,
 
 	supportedPatches: {
-		from: '✖',
-		to: '✖',
+		from: '7.0',
+		to: '7.2',
 	},
 
 	contributors: [
-		{user: CONTRIBUTORS.SUSHIROU, role: ROLES.DEVELOPER},
+		{user: CONTRIBUTORS.SUSHI, role: ROLES.DEVELOPER},
 		{user: CONTRIBUTORS.OTOCEPHALY, role: ROLES.DEVELOPER},
 	],
 

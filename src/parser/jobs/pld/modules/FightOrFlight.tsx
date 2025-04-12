@@ -6,7 +6,6 @@ import {dependency} from 'parser/core/Injectable'
 import {BuffWindow, ExpectedActionGroupsEvaluator, ExpectedActionsEvaluator, ExpectedGcdCountEvaluator} from 'parser/core/modules/ActionWindow'
 import {GlobalCooldown} from 'parser/core/modules/GlobalCooldown'
 import {SEVERITY} from 'parser/core/modules/Suggestions'
-import React from 'react'
 
 const SEVERITIES = {
 	MISSED_OGCDS: {

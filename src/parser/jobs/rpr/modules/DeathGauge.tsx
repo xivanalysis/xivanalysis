@@ -8,7 +8,6 @@ import {Actors} from 'parser/core/modules/Actors'
 import {Gauge as CoreGauge} from 'parser/core/modules/Gauge'
 import {EnumGauge} from 'parser/core/modules/Gauge/EnumGauge'
 import {GAUGE_FADE} from 'parser/core/modules/ResourceGraphs/ResourceGraphs'
-import React from 'react'
 
 const MAX_STACKS = 5
 

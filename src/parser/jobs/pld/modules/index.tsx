@@ -11,7 +11,7 @@ import {Requiescat} from './Requiescat'
 import {RoyalAuthority} from './RoyalAuthority'
 import {Tincture} from './Tincture'
 
-export default [
+export const modules = [
 	ActionTimeline,
 	CastTime,
 	Combos,

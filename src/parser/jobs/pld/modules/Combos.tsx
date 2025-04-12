@@ -1,4 +1,4 @@
-import ACTIONS from 'data/ACTIONS'
+import {ACTIONS} from 'data/ACTIONS'
 import {Combos as CoreCombos} from 'parser/core/modules/Combos'
 
 export class Combos extends CoreCombos {

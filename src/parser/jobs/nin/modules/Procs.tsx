@@ -8,7 +8,6 @@ import {Plural, Trans} from '@lingui/react'
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
 import {Procs as CoreProcs} from 'parser/core/modules/Procs'
 import {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
-import React from 'react'
 
 const DROP_SEVERITY = {
 	1: SEVERITY.MEDIUM,

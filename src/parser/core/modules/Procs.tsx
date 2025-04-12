@@ -6,15 +6,15 @@ import {iconUrl} from 'data/icon'
 import {Status} from 'data/STATUSES'
 import {Event, Events} from 'event'
 import {Actors} from 'parser/core/modules/Actors'
-import Suggestions, {TieredSuggestion, SEVERITY, SeverityTiers} from 'parser/core/modules/Suggestions'
+import {Suggestions, TieredSuggestion, SEVERITY, SeverityTiers} from 'parser/core/modules/Suggestions'
 import {SimpleRow, StatusItem, Timeline} from 'parser/core/modules/Timeline'
-import React, {ReactNode} from 'react'
+import {ReactNode} from 'react'
 import {Button, Message, Table} from 'semantic-ui-react'
 import {Analyser} from '../Analyser'
 import {filter, oneOf} from '../filter'
 import {dependency} from '../Injectable'
 import {Data} from './Data'
-import Downtime from './Downtime'
+import {Downtime} from './Downtime'
 import {Invulnerability} from './Invulnerability'
 
 const TIMELINE_CONTEXT_DURATION = 15000 // 15s either side of the proc issue, 30s window overall
@@ -134,7 +134,8 @@ export abstract class Procs extends Analyser {
 		const procGroup = this.getTrackedGroupByStatus(status)
 		if (procGroup == null) { return 0 }
 		const stacksPerWindow = procGroup.procStatus.stacksApplied ?? 1
-		return this.getHistoryForStatus(status).length * stacksPerWindow
+		const currentWindow = this.currentWindows.get(procGroup)
+		return (this.getHistoryForStatus(status).length + (currentWindow ? 1 : 0)) * stacksPerWindow
 	}
 
 	/**
@@ -145,7 +146,12 @@ export abstract class Procs extends Analyser {
 	protected getUsagesForStatus(status: number | ProcGroup): Array<Events['action']> {
 		const procGroup = this.getTrackedGroupByStatus(status)
 		if (procGroup == null) { return [] }
-		return this.getHistoryForStatus(status).reduce((usageEvents, window) => usageEvents.concat(window.consumingEvents), [] as Array<Events['action']>)
+		const usageEvents = this.getHistoryForStatus(status).reduce((usageEvents, window) => usageEvents.concat(window.consumingEvents), [] as Array<Events['action']>)
+		const currentWindow = this.currentWindows.get(procGroup)
+		if (currentWindow) {
+			usageEvents.push(...currentWindow.consumingEvents)
+		}
+		return usageEvents
 	}
 	/**
 	 * Get the number of times a proc was used
@@ -224,7 +230,12 @@ export abstract class Procs extends Analyser {
 	protected getInvulnsForStatus(status: number | ProcGroup): Array<Events['action']> {
 		const procGroup = this.getTrackedGroupByStatus(status)
 		if (procGroup == null) { return [] }
-		return this.getHistoryForStatus(status).reduce((invulnEvents, window) => invulnEvents.concat(window.consumingInvulnEvents), [] as Array<Events['action']>)
+		const invulnerableEvents = this.getHistoryForStatus(status).reduce((invulnEvents, window) => invulnEvents.concat(window.consumingInvulnEvents), [] as Array<Events['action']>)
+		const currentWindow = this.currentWindows.get(procGroup)
+		if (currentWindow) {
+			invulnerableEvents.push(...currentWindow.consumingInvulnEvents)
+		}
+		return invulnerableEvents
 	}
 	/**
 	 * Get the number of times a proc was used on an invulnerable target
@@ -248,7 +259,7 @@ export abstract class Procs extends Analyser {
 		const stacksPerWindow = procGroup.procStatus.stacksApplied ?? 1
 
 		return this.getHistoryForStatus(status)
-			.filter(window => window.overwritten === false && window.consumingEvents.length < stacksPerWindow && this.considerDroppedProcs(window))
+			.filter(window => window.overwritten === false && (window.consumingEvents.length + window.consumingInvulnEvents.length) < stacksPerWindow && this.considerDroppedProcs(window))
 	}
 
 	/**
@@ -263,7 +274,7 @@ export abstract class Procs extends Analyser {
 
 		return this.getDroppedWindowsForStatus(status)
 			.reduce((dropped, window) => {
-				dropped += Math.max(0, stacksPerWindow - window.consumingEvents.length)
+				dropped += Math.max(0, stacksPerWindow - (window.consumingEvents.length + window.consumingInvulnEvents.length))
 				return dropped
 			}, 0)
 	}

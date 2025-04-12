@@ -2,14 +2,17 @@
 /* eslint-disable */
 declare namespace ArcanaSuggestionsModuleCssNamespace {
   export interface IArcanaSuggestionsModuleCss {
+    astralHighlight: string;
     buffIcon: string;
     buffPlaceholder: string;
     buffUnknown: string;
     cardActionRow: string;
     cardActionTable: string;
+    deathRow: string;
     jobIcon: string;
     sealIcon: string;
     sealIconContainer: string;
+    umbralHighlight: string;
   }
 }
 

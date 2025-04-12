@@ -1,18 +1,21 @@
 import {MessageDescriptor} from '@lingui/core'
 import * as Sentry from '@sentry/browser'
 import {ResultSegment} from 'components/ReportFlow/Analyse/ResultSegment'
-import ErrorMessage from 'components/ui/ErrorMessage'
+import {ErrorMessage} from 'components/ui/ErrorMessage'
 import {getReportPatch, Patch} from 'data/PATCHES'
+import {XIVA_VERSION} from 'env'
 import {DependencyCascadeError, ModulesNotFoundError} from 'errors'
 import {Event} from 'event'
-import React from 'react'
+import {ReactNode} from 'react'
 import {Report, Pull, Actor} from 'report'
 import toposort from 'toposort'
 import {extractErrorContext, isDefined, formatDuration} from 'utilities'
 import {Analyser, DisplayMode} from './Analyser'
-import {Dispatcher} from './Dispatcher'
-import {Injectable, MappedDependency} from './Injectable'
+import {Dispatcher, DispatcherImpl} from './Dispatcher'
+import {Injectable} from './Injectable'
 import {Meta} from './Meta'
+
+const LS_KEY_LAST_FAILING_VERSION = 'xiva.lastFailingVersion'
 
 export interface Result {
 	i18n_id?: string
@@ -20,7 +23,7 @@ export interface Result {
 	name: string | MessageDescriptor
 	mode: DisplayMode
 	order: number
-	markup: React.ReactNode
+	markup: ReactNode
 }
 
 declare module 'event' {
@@ -38,7 +41,7 @@ export interface CompleteEvent {
 	timestamp: number
 }
 
-class Parser {
+export class Parser {
 	// -----
 	// Properties
 	// -----
@@ -85,7 +88,7 @@ class Parser {
 
 		dispatcher?: Dispatcher
 	}) {
-		this.dispatcher = opts.dispatcher ?? new Dispatcher()
+		this.dispatcher = opts.dispatcher ?? new DispatcherImpl()
 
 		this.meta = opts.meta
 
@@ -110,7 +113,7 @@ class Parser {
 		const nodes = Object.keys(constructors)
 		const edges: Array<[string, string]> = []
 		nodes.forEach(mod => constructors[mod].dependencies.forEach(dep => {
-			edges.push([mod, this.getDepHandle(dep)])
+			edges.push([mod, dep.handle])
 		}))
 
 		// Sort modules to load dependencies first
@@ -144,8 +147,7 @@ class Parser {
 		})
 	}
 
-	private async loadModuleConstructors() {
-		// If this throws, then there was probably a deploy between page load and this call. Tell them to refresh.
+	private async loadModuleConstructors(): Promise<Record<string, typeof Injectable>> {
 		let allCtors: ReadonlyArray<typeof Injectable>
 		try {
 			allCtors = await this.meta.getModules()
@@ -153,6 +155,19 @@ class Parser {
 			if (process.env.NODE_ENV === 'development') {
 				throw error
 			}
+
+			// If this is the first time we've failed on this version, try to refresh
+			// - there may have been a deploy between page load and this call.
+			const lastVersion = localStorage.getItem(LS_KEY_LAST_FAILING_VERSION)
+			localStorage.setItem(LS_KEY_LAST_FAILING_VERSION, XIVA_VERSION)
+			if (lastVersion !== XIVA_VERSION) {
+				window.location.reload()
+				return {}
+			}
+
+			// We're at the same version as the last failure, fail out with an error.
+			// We're still asking for a refresh in the error; as the programmatic one
+			// above _may_ not be enough.
 			throw new ModulesNotFoundError()
 		}
 
@@ -165,11 +180,6 @@ class Parser {
 
 		return ctors
 	}
-
-	private getDepHandle = (dep: string | MappedDependency) =>
-		typeof dep === 'string'
-			? dep
-			: dep.handle
 
 	// -----
 	// Event handling
@@ -198,7 +208,7 @@ class Parser {
 			const queue = this.eventDispatchQueue
 			while (queue.length > 0 && queue[queue.length -1].timestamp < event.timestamp) {
 				// Enforced by the while loop.
-				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+
 				yield queue.pop()!
 			}
 
@@ -261,7 +271,7 @@ class Parser {
 		// Cascade via dependencies
 		Object.keys(this.container).forEach(key => {
 			const constructor = this.container[key].constructor as typeof Injectable
-			if (constructor.dependencies.some(dep => this.getDepHandle(dep) === mod)) {
+			if (constructor.dependencies.some(dep => dep.handle === mod)) {
 				this._setModuleError(key, new DependencyCascadeError({dependency: mod}))
 			}
 		})
@@ -298,7 +308,7 @@ class Parser {
 
 			if (constructor && Array.isArray(constructor.dependencies)) {
 				for (const dep of constructor.dependencies) {
-					const handle = this.getDepHandle(dep)
+					const handle = dep.handle
 					if (!visited.has(handle)) {
 						crawler(handle)
 					}
@@ -330,10 +340,14 @@ class Parser {
 			}
 
 			// Use the ErrorMessage component for errors in the output too (and sentry)
-			let output: React.ReactNode = null
+			let output: ReactNode = null
 			try {
 				output = this.getOutput(injectable)
 			} catch (error) {
+				if (!(error instanceof Error)) {
+					throw error
+				}
+
 				this.captureError({
 					error,
 					type: 'output',
@@ -376,7 +390,7 @@ class Parser {
 		throw new Error(`Unhandled injectable type for result meta: ${constructor.handle}`)
 	}
 
-	private getOutput(injectable: Injectable): React.ReactNode {
+	private getOutput(injectable: Injectable): ReactNode {
 		if (injectable instanceof Analyser) {
 			return injectable.output?.()
 		}
@@ -461,5 +475,3 @@ class Parser {
 		ResultSegment.scrollIntoView((module.constructor as typeof Injectable).handle)
 	}
 }
-
-export default Parser

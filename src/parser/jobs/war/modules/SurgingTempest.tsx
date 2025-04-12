@@ -3,10 +3,9 @@ import {DataLink} from 'components/ui/DbLink'
 import {Analyser} from 'parser/core/Analyser'
 import {dependency} from 'parser/core/Injectable'
 import {Actors} from 'parser/core/modules/Actors'
-import Checklist, {Rule, Requirement} from 'parser/core/modules/Checklist'
+import {Checklist, Rule, Requirement} from 'parser/core/modules/Checklist'
 import {Invulnerability} from 'parser/core/modules/Invulnerability'
 import {Statuses} from 'parser/core/modules/Statuses'
-import React from 'react'
 
 export class SurgingTempest extends Analyser {
 	static override handle = 'surgingtempest'
@@ -28,7 +27,7 @@ export class SurgingTempest extends Analyser {
 			requirements: [
 				new Requirement({
 					name: <Trans id="war.surgingtempest.checklist.uptime"><DataLink status="SURGING_TEMPEST"/> uptime</Trans>,
-					percent: () => this.getUptimePercent(),
+					percent: this.getUptimePercent(),
 				}),
 			],
 		}))

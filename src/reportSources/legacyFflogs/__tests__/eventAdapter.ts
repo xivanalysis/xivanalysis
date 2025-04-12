@@ -4,7 +4,7 @@ import {Actor, Pull, Report, Team} from 'report'
 import {adaptEvents} from '../eventAdapter'
 import {AdapterStep} from '../eventAdapter/base'
 import {ReassignUnknownActorStep} from '../eventAdapter/reassignUnknownActor'
-import {ActorType, BuffEvent, CastEvent, CombatantInfoAura, DamageEvent, FflogsEvent, HitType, ReportLanguage} from '../eventTypes'
+import {AbilityType, ActorType, BuffEvent, CastEvent, CombatantInfoAura, DamageEvent, FflogsEvent, HitType, ReportLanguage} from '../eventTypes'
 
 // "Mock" the reassign unknown actor step with its real implementation. We use this mock handling later
 // to disable the step on a test-by-test basis.
@@ -573,7 +573,7 @@ const fakeEvents: Record<FflogsEvent['type'], FflogsEvent[]> = {
 		ability: {
 			name: 'Unknown Ability',
 			guid: 0,
-			type: 0,
+			type: AbilityType.PHYSICAL_DOT,
 			abilityIcon: '000000-000405.png',
 		},
 		targetable: 1,
@@ -589,7 +589,7 @@ const fakeEvents: Record<FflogsEvent['type'], FflogsEvent[]> = {
 		ability: {
 			name: 'Unknown Ability',
 			guid: 0,
-			type: 0,
+			type: AbilityType.PHYSICAL_DOT,
 			abilityIcon: '000000-000405.png',
 		},
 	}],
@@ -824,7 +824,7 @@ const fakeEvents: Record<FflogsEvent['type'], FflogsEvent[]> = {
 		ability: {
 			name: 'Unknown Ability',
 			guid: 0,
-			type: 0,
+			type: AbilityType.PHYSICAL_DOT,
 			abilityIcon: '000000-000405.png',
 		},
 		markerID: 328,
@@ -844,7 +844,7 @@ const fakeEvents: Record<FflogsEvent['type'], FflogsEvent[]> = {
 		ability: {
 			name: 'Unknown Ability',
 			guid: 0,
-			type: 0,
+			type: AbilityType.PHYSICAL_DOT,
 			abilityIcon: '000000-000405.png',
 		},
 		markerID: 86,
@@ -861,7 +861,7 @@ const fakeEvents: Record<FflogsEvent['type'], FflogsEvent[]> = {
 		ability: {
 			name: 'Unknown Ability',
 			guid: 0,
-			type: 0,
+			type: AbilityType.PHYSICAL_DOT,
 			abilityIcon: '000000-000405.png',
 		},
 		tetherID: 202,
@@ -1127,8 +1127,8 @@ describe('Event adapter', () => {
 			},
 		}], firstEvent)
 
-		const updates = result.filter(event => true
-			&& event.type === 'actorUpdate'
+		const updates = result.filter(event =>
+			event.type === 'actorUpdate'
 			&& event.actor === '1'
 		)
 

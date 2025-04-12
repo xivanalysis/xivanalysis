@@ -6,7 +6,6 @@ import {filter, oneOf} from 'parser/core/filter'
 import {Gauge} from 'parser/core/modules/Gauge'
 import {SetGauge} from 'parser/core/modules/Gauge/SetGauge'
 import {GAUGE_FADE} from 'parser/core/modules/ResourceGraphs/ResourceGraphs'
-import React from 'react'
 
 const SONGS: ActionKey[] = [
 	'THE_WANDERERS_MINUET',

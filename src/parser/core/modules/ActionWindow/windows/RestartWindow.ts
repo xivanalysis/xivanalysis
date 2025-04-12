@@ -1,8 +1,8 @@
 import {Event, Events} from 'event'
 import {ensureArray} from 'utilities'
+import {ActionWindow} from './ActionWindow'
 import {filter, oneOf} from '../../../filter'
 import {ActionSpecifier} from '../../Cooldowns'
-import {ActionWindow} from './ActionWindow'
 
 /**
  * Tracks actions that occur between casts of an action by the player.

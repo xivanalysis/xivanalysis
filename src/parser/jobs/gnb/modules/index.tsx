@@ -12,7 +12,7 @@ import {NoMercy} from './NoMercy'
 import {SonicBreak} from './SonicBreak'
 import {Tincture} from './Tincture'
 
-export default [
+export const modules = [
 	AbilityDowntime,
 	ActionTimeline,
 	Ammo,

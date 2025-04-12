@@ -7,7 +7,6 @@ import {dependency} from 'parser/core/Injectable'
 import {Actors} from 'parser/core/modules/Actors'
 import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import {Weaving, Weave} from 'parser/core/modules/Weaving'
-import React from 'react'
 import {DISPLAY_ORDER} from './DISPLAY_ORDER'
 
 const MAX_CAST_TIME_FOR_SINGLE_WEAVE = 1500
@@ -136,4 +135,3 @@ export class BLUWeaving extends Weaving {
 		}))
 	}
 }
-

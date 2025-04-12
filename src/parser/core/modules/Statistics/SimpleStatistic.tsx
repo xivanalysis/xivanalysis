@@ -1,16 +1,16 @@
-import React from 'react'
+import {ReactNode} from 'react'
 import {AbstractStatistic, AbstractStatisticOptions} from './AbstractStatistic'
 import styles from './SimpleStatistic.module.css'
 
 export class SimpleStatistic extends AbstractStatistic {
-	private title: React.ReactNode
+	private title: ReactNode
 	private icon?: string
-	private value: React.ReactNode
+	private value: ReactNode
 
 	constructor(opts: {
-		title: React.ReactNode,
+		title: ReactNode,
 		icon?: string,
-		value: React.ReactNode,
+		value: ReactNode,
 	} & AbstractStatisticOptions) {
 		super(opts)
 

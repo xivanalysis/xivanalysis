@@ -1,5 +1,4 @@
-import CONTRIBUTORS from 'data/CONTRIBUTORS'
-import React from 'react'
+import {CONTRIBUTORS} from 'data/CONTRIBUTORS'
 
 export const changelog = [
 	// {
@@ -7,6 +6,16 @@ export const changelog = [
 	// 	Changes: () => <>The changes you made</>,
 	// 	contributors: [CONTRIBUTORS.YOU],
 	// },
+	{
+		date: new Date('2025-02-07'),
+		Changes: () => <>Ignore overheal from Eukrasian Diagnosis cast during downtime since it can impact Addersting generation</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
+	{
+		date: new Date('2024-12-05'),
+		Changes: () => <>Ignore Pneuma's secondary heal effect when checking for weaving issues</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
 	{
 		date: new Date('2024-11-16'),
 		Changes: () => <>Add checklist item for Kardia uptime</>,

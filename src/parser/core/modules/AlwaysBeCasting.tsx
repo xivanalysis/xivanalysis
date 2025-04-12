@@ -5,13 +5,12 @@ import {Event, Events} from 'event'
 import {Analyser} from 'parser/core/Analyser'
 import {filter} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
-import CastTime from 'parser/core/modules/CastTime'
-import Checklist, {Requirement, Rule} from 'parser/core/modules/Checklist'
+import {CastTime} from 'parser/core/modules/CastTime'
+import {Checklist, Requirement, Rule} from 'parser/core/modules/Checklist'
 import {Data} from 'parser/core/modules/Data'
-import Downtime from 'parser/core/modules/Downtime'
+import {Downtime} from 'parser/core/modules/Downtime'
 import {GlobalCooldown} from 'parser/core/modules/GlobalCooldown'
 import {SpeedAdjustments} from 'parser/core/modules/SpeedAdjustments'
-import React from 'react'
 
 const UPTIME_TARGET = 98
 

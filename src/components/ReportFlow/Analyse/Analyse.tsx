@@ -1,12 +1,12 @@
 import * as Sentry from '@sentry/browser'
 import {SidebarContent} from 'components/GlobalSidebar'
 import {JobIcon} from 'components/ui/JobIcon'
-import NormalisedMessage from 'components/ui/NormalisedMessage'
+import {NormalisedMessage} from 'components/ui/NormalisedMessage'
 import {AnalysisLoader} from 'components/ui/SharedLoaders'
 import {JOBS, ROLES} from 'data/JOBS'
 import {Meta} from 'parser/core/Meta'
-import Parser, {Result} from 'parser/core/Parser'
-import React, {useContext, useState} from 'react'
+import {Parser, Result} from 'parser/core/Parser'
+import {useContext, useEffect, useState} from 'react'
 import {Actor, Pull, Report} from 'report'
 import {ReportStore} from 'reportSources'
 import {Header} from 'semantic-ui-react'
@@ -35,7 +35,7 @@ export function Analyse({
 
 	const [results, setResults] = useState<readonly Result[]>()
 
-	React.useEffect(() => {
+	useEffect(() => {
 		analyseReport(reportStore, meta, report, pull, actor)
 			.then(setResults)
 			.catch(error => {

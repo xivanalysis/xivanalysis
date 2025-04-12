@@ -1,7 +1,5 @@
 import {getDataBy, getDataArrayBy} from '../getDataBy'
 
-/* eslint-disable @typescript-eslint/no-magic-numbers */
-
 const ExampleData = {
 	ONE: {value: 'one', arr: [0, 1, 2, 3, 4]},
 	TWO: {value: 'two', arr: [10, 11, 12, 13, 14]},
@@ -22,7 +20,8 @@ describe('DATA', () => {
 		it('falls back when no match is found', () => {
 			expect(getDataBy(ExampleData, 'value', 'three')).toBeUndefined()
 		})
-	}),
+	})
+
 	describe('getDataArrayBy', () => {
 		it('returns all matching data entries', () => {
 			expect(getDataArrayBy(ExampleData, 'value', 'same'))

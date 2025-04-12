@@ -4,7 +4,6 @@ import {EvaluatedAction} from 'parser/core/modules/ActionWindow'
 import {RulePassedEvaluator} from 'parser/core/modules/ActionWindow/evaluators/RulePassedEvaluator'
 import {History, HistoryEntry} from 'parser/core/modules/ActionWindow/History'
 import {SEVERITY, Suggestion} from 'parser/core/modules/Suggestions'
-import React from 'react'
 import {DivinationMetadata} from '../Divination'
 
 export interface LightspeedEvaluatorOpts {

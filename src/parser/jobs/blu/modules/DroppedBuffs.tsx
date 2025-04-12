@@ -1,14 +1,13 @@
 import {Trans, Plural} from '@lingui/react'
 import {StatusLink} from 'components/ui/DbLink'
-import STATUSES, {Status} from 'data/STATUSES'
+import {STATUSES, Status} from 'data/STATUSES'
 import {Event, Events} from 'event'
 import {Analyser} from 'parser/core/Analyser'
 import {filter, oneOf} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
 import {Data} from 'parser/core/modules/Data'
-import Downtime from 'parser/core/modules/Downtime'
-import Suggestions, {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
-import React from 'react'
+import {Downtime} from 'parser/core/modules/Downtime'
+import {Suggestions, TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
 interface buffMisuse {
 	dropped: number

@@ -1,4 +1,4 @@
-export default {
+export const DISPLAY_ORDER = {
 	BURST_WINDOW: 1,
 	ARMYS_MUSE: 2,
 	RAGING_STRIKES: 3,

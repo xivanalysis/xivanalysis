@@ -8,7 +8,6 @@ import {EndOfWindowHandlingMode} from 'parser/core/modules/ActionWindow/windows/
 import {GlobalCooldown} from 'parser/core/modules/GlobalCooldown'
 import {SEVERITY} from 'parser/core/modules/Suggestions'
 import {DISPLAY_ORDER} from 'parser/jobs/rdm/modules/DISPLAY_ORDER'
-import React from 'react'
 
 const ONLY_SHOW: ActionKey[] = [
 	'ENCHANTED_RIPOSTE',
@@ -20,7 +19,9 @@ const ONLY_SHOW: ActionKey[] = [
 	'ENCHANTED_REPRISE',
 	'JOLT_III',
 	'VERTHUNDER_III',
+	'VERTHUNDER_II',
 	'VERAERO_III',
+	'VERAERO_II',
 	'VERSTONE',
 	'VERFIRE',
 	'IMPACT',
@@ -100,6 +101,9 @@ export class Manafication extends BuffWindow {
 					this.data.actions.ENCHANTED_REPRISE.id,
 					//There are very very very niche situations where it's reasonable to use VerCure to consume stacks so I was asked to allow it.
 					this.data.actions.VERCURE.id,
+					//Due to people using XIVA against ultimates, it's been requested that we just let any skill count so adding the last casted skills
+					this.data.actions.VERAERO_II.id,
+					this.data.actions.VERTHUNDER_II.id,
 				],
 				globalCooldown: this.globalCooldown,
 				suggestionIcon,

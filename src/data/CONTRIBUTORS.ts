@@ -3,13 +3,15 @@ import {t} from '@lingui/macro'
 import {ensureRecord} from 'utilities'
 import {Job, JOBS} from './JOBS'
 
+/* eslint-disable @typescript-eslint/no-require-imports */
+
 export interface Contributor {
 	name: string
 	avatar?: string
 	jobs: Job[]
 }
 
-const CONTRIBUTORS = ensureRecord<Contributor>()({
+export const CONTRIBUTORS = ensureRecord<Contributor>()({
 	// KEY: {
 	// 	name: 'Your Name',
 	// 	avatar: require('./avatar/filename.jpg'),
@@ -146,13 +148,6 @@ const CONTRIBUTORS = ensureRecord<Contributor>()({
 			JOBS.BARD,
 		],
 	},
-	SUSHIROU: {
-		name: 'suShirou',
-		avatar: require('./avatar/sushirou.png'),
-		jobs: [
-			JOBS.ASTROLOGIAN,
-		],
-	},
 	YUZUKITSURU: {
 		name: 'YuzukiTsuru',
 		avatar: require('./avatar/Yuzukitsuru.jpg'),
@@ -160,9 +155,14 @@ const CONTRIBUTORS = ensureRecord<Contributor>()({
 			JOBS.BARD,
 		],
 	},
+	SUSHI: {
+		name: 'Shiruco "Sushi" Ruu',
+		avatar: require('./avatar/sushirou.png'),
+		jobs: [
+			JOBS.ASTROLOGIAN,
+		],
+	},
 })
-
-export default CONTRIBUTORS
 
 export interface Role {
 	text: MessageDescriptor

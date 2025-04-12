@@ -11,16 +11,22 @@
 }
 
 // Admonitions for content
+@mixin admonition-bg($color) {
+	border-color: $color;
+	background-color: change-color($color, $alpha: 0.25);
+}
+
 .admonition {
 	border-radius: 5px;
 	padding: 10px 15px;
-	background-color: $grey-dk-100;
+	border-left: 5px solid transparent;
+	@include admonition-bg($grey-dk-100);
 }
 
-.admonition.tip { background-color: $green-300; }
-.admonition.info { background-color: $blue-200; }
-.admonition.caution { background-color: darken($yellow-300, 20%); }
-.admonition.danger { background-color: darken($red-300, 15%); }
+.admonition.tip { @include admonition-bg($green-300); }
+.admonition.info { @include admonition-bg($blue-200); }
+.admonition.caution { @include admonition-bg($yellow-300); }
+.admonition.danger { @include admonition-bg($red-300); }
 
 // Fix up code styling for dark theme
 .highlight .nx,

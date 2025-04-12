@@ -1,9 +1,9 @@
 import {action, observable} from 'mobx'
 
 export class SettingsStore {
-	@observable killsOnly: boolean = true
-	@observable showMinorSuggestions: boolean = false
-	@observable bypassCacheNextRequest: boolean = false
+	@observable accessor killsOnly: boolean = true
+	@observable accessor showMinorSuggestions: boolean = false
+	@observable accessor bypassCacheNextRequest: boolean = false
 
 	@action
 	setViewKillsOnly(value: boolean) {

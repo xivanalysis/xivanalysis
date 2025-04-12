@@ -8,7 +8,6 @@ import {HistoryEntry} from 'parser/core/modules/ActionWindow/History'
 import {EndOfWindowHandlingMode} from 'parser/core/modules/ActionWindow/windows/BuffWindow'
 import {Data} from 'parser/core/modules/Data'
 import {SEVERITY} from 'parser/core/modules/Suggestions'
-import React from 'react'
 import {Icon} from 'semantic-ui-react'
 import {DISPLAY_ORDER} from './DISPLAY_ORDER'
 

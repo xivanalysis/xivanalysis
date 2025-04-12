@@ -1,8 +1,6 @@
 import {Defensives as CoreDefensives} from 'parser/core/modules/Defensives'
-import DISPLAY_ORDER from './DISPLAY_ORDER'
 
 export class Defensives extends CoreDefensives {
-	static override displayOrder = DISPLAY_ORDER.DEFENSIVES
 	protected override trackedDefensives = [
 		this.data.actions.CELESTIAL_INTERSECTION,
 		this.data.actions.CELESTIAL_OPPOSITION,

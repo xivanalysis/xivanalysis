@@ -1,4 +1,4 @@
-export default {
+export const DISPLAY_ORDER = {
 	DEFENSIVES: 1,
 	NO_MERCY: 2,
 	SONIC_BREAK: 3,

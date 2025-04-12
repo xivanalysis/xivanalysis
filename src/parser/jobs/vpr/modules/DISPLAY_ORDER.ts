@@ -1,4 +1,4 @@
-export default {
+export const DISPLAY_ORDER = {
 	BUFFS: 1,
 	HONED_PROCS: 2,
 	FINISHER_PROCS: 3,

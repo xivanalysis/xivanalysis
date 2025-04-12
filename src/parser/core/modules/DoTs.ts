@@ -25,7 +25,7 @@ export abstract class DoTs extends Analyser {
 	@dependency private statuses!: Statuses
 
 	/** Implementing modules MUST override this with a list of Status IDs. */
-	protected abstract trackedStatuses: number[] = []
+	protected abstract trackedStatuses: number[]
 
 	private statusApplications: DotTracking = new Map<number, Map<string, DotTargetTracking>>()
 

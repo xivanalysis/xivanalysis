@@ -1,7 +1,7 @@
 import {t} from '@lingui/macro'
 import {Trans, Plural} from '@lingui/react'
 import {ActionLink, DataLink} from 'components/ui/DbLink'
-import Rotation from 'components/ui/Rotation'
+import {Rotation} from 'components/ui/Rotation'
 import {Action} from 'data/ACTIONS/type'
 import {Status} from 'data/STATUSES/type'
 import {Event, Events} from 'event'
@@ -11,11 +11,11 @@ import {dependency} from 'parser/core/Injectable'
 import {History} from 'parser/core/modules/ActionWindow/History'
 import {Actors} from 'parser/core/modules/Actors'
 import {Data} from 'parser/core/modules/Data'
-import Suggestions, {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import {Suggestions, TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import {Timeline} from 'parser/core/modules/Timeline'
 import {DISPLAY_ORDER} from 'parser/jobs/rdm/modules/DISPLAY_ORDER'
 import {ManaGauge, MANA_DIFFERENCE_THRESHOLD, MANA_CAP} from 'parser/jobs/rdm/modules/ManaGauge'
-import React, {Fragment} from 'react'
+import {Fragment} from 'react'
 import {Button, Message, Table} from 'semantic-ui-react'
 
 type MeleeCombo = {
@@ -114,7 +114,7 @@ export class MeleeCombos extends Analyser {
 		verflare: 0,
 		delay: 0,
 	}
-	private footnoteIndexes: SuggestionKey[] = [];
+	private footnoteIndexes: SuggestionKey[] = []
 
 	override initialise() {
 		super.initialise()

@@ -1,7 +1,7 @@
 import {Event, Events} from 'event'
 import {filter} from 'parser/core/filter'
 import {Defensives as CoreDefensives} from 'parser/core/modules/Defensives'
-import DISPLAY_ORDER from './DISPLAY_ORDER'
+import {DISPLAY_ORDER} from './DISPLAY_ORDER'
 
 export class Defensives extends CoreDefensives {
 	static override displayOrder = DISPLAY_ORDER.DEFENSIVES

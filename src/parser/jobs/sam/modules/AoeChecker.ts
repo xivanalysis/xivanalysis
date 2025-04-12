@@ -1,5 +1,5 @@
-import ACTIONS from 'data/ACTIONS'
-import STATUSES from 'data/STATUSES'
+import {ACTIONS} from 'data/ACTIONS'
+import {STATUSES} from 'data/STATUSES'
 import {Events} from 'event'
 import {dependency} from 'parser/core/Injectable'
 import {Actors} from 'parser/core/modules/Actors'
@@ -21,7 +21,7 @@ export class AoeChecker extends AoEUsages {
 		{
 			aoeAction: ACTIONS.HISSATSU_GUREN,
 			stActions: [ACTIONS.HISSATSU_SENEI],
-			minTargets: 2,
+			minTargets: 3,
 		},
 
 		{
@@ -87,4 +87,3 @@ export class AoeChecker extends AoEUsages {
 		return minTargets
 	}
 }
-

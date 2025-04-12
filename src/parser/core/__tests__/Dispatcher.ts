@@ -1,5 +1,5 @@
 import {Event, Events} from 'event'
-import {Dispatcher, EventHook, TimestampHook} from '../Dispatcher'
+import {DispatcherImpl, EventHook, TimestampHook} from '../Dispatcher'
 
 /* eslint-disable @typescript-eslint/no-magic-numbers */
 
@@ -12,13 +12,13 @@ const event: Events['action'] = {
 }
 
 describe('Dispatcher', () => {
-	let dispatcher: Dispatcher
+	let dispatcher: DispatcherImpl
 	let callback: jest.Mock
 	let eventHook: EventHook<Events['action']>
 	let timestampHook: TimestampHook
 
 	beforeEach(() => {
-		dispatcher = new Dispatcher()
+		dispatcher = new DispatcherImpl()
 		callback = jest.fn()
 		eventHook = {
 			predicate: (event: Event): event is Events['action'] => true,

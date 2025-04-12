@@ -1,4 +1,3 @@
-import React from 'react'
 import {Analyser} from '../Analyser'
 import {dependency} from '../Injectable'
 import {Invulnerability} from './Invulnerability'
@@ -10,7 +9,7 @@ interface DowntimeWindow {
 	end: number
 }
 
-export default class Downtime extends Analyser {
+export class Downtime extends Analyser {
 	static override handle = 'downtime'
 
 	@dependency private readonly unableToAct!: UnableToAct

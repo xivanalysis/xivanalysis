@@ -7,6 +7,7 @@ import {DeduplicateActorUpdateStep} from './deduplicateActorUpdates'
 import {DeduplicateAoEStep} from './deduplicateAoE'
 import {DeduplicateStatusApplicationStep} from './deduplicateStatus'
 import {ErroneousFriendDeathAdapterStep} from './erroneousFriendDeath'
+import {FixMissEventSequenceIDStep} from './fixMissEventSequenceID'
 import {InterruptsAdapterStep} from './interrupts'
 import {MergeActorInstancesStep} from './mergeActorInstance'
 import {OneHpLockAdapterStep} from './oneHpLock'
@@ -36,6 +37,7 @@ class EventAdapter {
 			new ReassignUnknownActorStep(opts),
 			new MergeActorInstancesStep(opts),
 			new TranslateAdapterStep(opts),
+			new FixMissEventSequenceIDStep(opts),
 			new ErroneousFriendDeathAdapterStep(opts),
 			new AssignOverhealStep(opts),
 			new InterruptsAdapterStep(opts),

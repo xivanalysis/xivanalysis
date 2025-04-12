@@ -9,31 +9,20 @@ import {dependency} from 'parser/core/Injectable'
 import {Actor, Actors} from 'parser/core/modules/Actors'
 import {Data} from 'parser/core/modules/Data'
 import {Timeline} from 'parser/core/modules/Timeline'
-import React from 'react'
 import {Button, Table} from 'semantic-ui-react'
-import {PLAY_I} from '../ArcanaGroups'
-import DISPLAY_ORDER from '../DISPLAY_ORDER'
+import {PLAY_I, PLAY_II, PLAY_III} from '../ArcanaGroups'
+import {DISPLAY_ORDER} from '../DISPLAY_ORDER'
 import styles from './ArcanaSuggestions.module.css'
-import ArcanaTracking, {CardState, SealType} from './ArcanaTracking'
-import sealCelestial from './seal_celestial.png'
-import sealLunar from './seal_lunar.png'
-import sealSolar from './seal_solar.png'
+import {ArcanaTracking, CardState} from './ArcanaTracking'
 
 const TIMELINE_UPPER_MOD = 30000 // in ms
-
-const SEAL_ICON = {
-	[SealType.NOTHING]: '',
-	[SealType.SOLAR]: sealSolar,
-	[SealType.LUNAR]: sealLunar,
-	[SealType.CELESTIAL]: sealCelestial,
-}
 
 interface CardLog extends CardState {
 	targetName: Actor['name']
 	targetJob: Actor['job']
 }
 
-export default class ArcanaSuggestions extends Analyser {
+export class ArcanaSuggestions extends Analyser {
 	static override handle = 'arcanaSuggestions'
 
 	static override title = t('ast.arcana-suggestions.title')`Arcana Logs`
@@ -45,10 +34,12 @@ export default class ArcanaSuggestions extends Analyser {
 	@dependency private actors!: Actors
 
 	private cardLogs: CardLog[] = []
-	private play: Array<Action['id']> = []
+	private plays: Array<Action['id']> = []
 
 	override initialise() {
-		this.play = PLAY_I.map(actionKey => this.data.actions[actionKey].id)
+		this.plays = PLAY_I.map(actionKey => this.data.actions[actionKey].id)
+		this.plays = this.plays.concat(PLAY_II.map(actionKey => this.data.actions[actionKey].id))
+		this.plays = this.plays.concat(PLAY_III.map(actionKey => this.data.actions[actionKey].id))
 
 		this.addEventHook('complete', this._onComplete)
 	}
@@ -83,7 +74,7 @@ export default class ArcanaSuggestions extends Analyser {
 			</p>
 			<p>
 				<Trans id="ast.arcana-suggestions.messages.footnote">
-				* No pre-pull actions are being represented aside from <ActionLink action="PLAY_I" />, and this is only an approximation based on the buff duration.
+				* No pre-pull actions are being represented aside from <ActionLink action="ASTRAL_DRAW" /> / <ActionLink action="UMBRAL_DRAW" />, and this is only an approximation based on initial actions performed.
 				</Trans>
 			</p>
 			<Table collapsing unstackable className={styles.cardActionTable}>
@@ -133,7 +124,12 @@ export default class ArcanaSuggestions extends Analyser {
 						const end = start + TIMELINE_UPPER_MOD
 						const formattedTime = this.parser.formatDuration(start)
 
-						return <Table.Row key={artifact.lastEvent.timestamp} className={styles.cardActionRow}>
+						let styleRow = styles.cardActionRow
+						if (artifact.lastEvent.type === 'action' && artifact.lastEvent.action === this.data.actions.ASTRAL_DRAW.id) { styleRow = styleRow.concat(' ').concat(styles.astralHighlight) }
+						if (artifact.lastEvent.type === 'action' && artifact.lastEvent.action === this.data.actions.UMBRAL_DRAW.id) { styleRow = styleRow.concat(' ').concat(styles.umbralHighlight) }
+						if (artifact.lastEvent.type === 'death') { styleRow = styles.deathRow }
+
+						return <Table.Row key={artifact.lastEvent.timestamp} className={styleRow}>
 							<Table.Cell>
 								{start >= 0 && <Button
 									circular
@@ -158,7 +154,7 @@ export default class ArcanaSuggestions extends Analyser {
 
 	// Helper for override output()
 	RenderAction(artifact: CardLog) {
-		if (artifact.lastEvent.type === 'action' && this.play.includes(artifact.lastEvent.action) && artifact.targetJob != null) {
+		if (artifact.lastEvent.type === 'action' && this.plays.includes(artifact.lastEvent.action) && artifact.targetJob != null) {
 			const targetJob = JOBS[artifact.targetJob]
 
 			return <>
@@ -199,26 +195,49 @@ export default class ArcanaSuggestions extends Analyser {
 		</>
 	}
 
-	// Helper for override output()
+	/**
+	 * Helper for override output()
+	 *
+	 */
 	RenderSpreadState(artifact: CardLog) {
-		const drawnArcana = artifact.drawState ? this.data.getStatus(artifact.drawState) : undefined
+		const slot1Arcana = artifact.slot1 ? this.data.getStatus(artifact.slot1) : undefined
+		const slot2Arcana = artifact.slot2 ? this.data.getStatus(artifact.slot2) : undefined
+		const slot3Arcana = artifact.slot3 ? this.data.getStatus(artifact.slot3) : undefined
+		const minorArcana = artifact.minorState ? this.data.getStatus(artifact.minorState) : undefined
 
 		return <Table.Cell>
-			<span style={{marginRight: 10, marginLeft: 0}}>
-				{drawnArcana && <img
-					src={drawnArcana.icon}
+			<span style={{marginRight: 2, marginLeft: 0}}>
+
+				{slot1Arcana && <img
+					src={slot1Arcana.icon}
 					className={styles.buffIcon}
-					alt={drawnArcana.name}
+					alt={slot1Arcana.name}
 				/>}
-				{!drawnArcana && <span className={styles.buffPlaceholder} />}
+				{!slot1Arcana && <span className={styles.buffPlaceholder} />}
 			</span>
-			<span className={styles.sealIconContainer}>
-				{artifact.sealState.map((sealType, index) => {
-					if (sealType > 0) {
-						return <img key={index} src={SEAL_ICON[sealType]} className={styles.sealIcon} alt="Seal icon" />
-					}
-					return <span key={index} className={styles.sealIcon}></span>
-				})}
+			<span style={{marginRight: 2, marginLeft: 0}}>
+				{slot2Arcana && <img
+					src={slot2Arcana.icon}
+					className={styles.buffIcon}
+					alt={slot2Arcana.name}
+				/>}
+				{!slot2Arcana && <span className={styles.buffPlaceholder} />}
+			</span>
+			<span style={{marginRight: 12, marginLeft: 0}}>
+				{slot3Arcana && <img
+					src={slot3Arcana.icon}
+					className={styles.buffIcon}
+					alt={slot3Arcana.name}
+				/>}
+				{!slot3Arcana && <span className={styles.buffPlaceholder} />}
+			</span>
+			<span style={{marginRight: 0, marginLeft: 0}}>
+				{minorArcana && <img
+					src={minorArcana.icon}
+					className={styles.buffIcon}
+					alt={minorArcana.name}
+				/>}
+				{!minorArcana && <span className={styles.buffPlaceholder} />}
 			</span>
 		</Table.Cell>
 	}

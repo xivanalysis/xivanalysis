@@ -8,7 +8,7 @@ permalink: /:title
 
 # Build settings
 markdown: kramdown
-remote_theme: pmarsceill/just-the-docs
+remote_theme: just-the-docs/just-the-docs@main
 sass:
   style: compressed
 

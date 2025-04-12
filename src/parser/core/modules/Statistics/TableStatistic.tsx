@@ -1,4 +1,4 @@
-import React from 'react'
+import {ReactNode} from 'react'
 import {AbstractStatistic, AbstractStatisticOptions} from './AbstractStatistic'
 import styles from './TableStatistic.module.css'
 
@@ -10,12 +10,12 @@ interface FixedLengthArray<T, L extends number> extends ReadonlyArray<T> {
 export type Rows<T, L extends number> = Array<FixedLengthArray<T, L>>
 
 export class TableStatistic<L extends number> extends AbstractStatistic {
-	private readonly headings: FixedLengthArray<React.ReactNode, L>
-	private readonly rows: Rows<React.ReactNode, L>
+	private readonly headings: FixedLengthArray<ReactNode, L>
+	private readonly rows: Rows<ReactNode, L>
 
 	constructor(opts: {
-		headings: FixedLengthArray<React.ReactNode, L>,
-		rows: Rows<React.ReactNode, L>,
+		headings: FixedLengthArray<ReactNode, L>,
+		rows: Rows<ReactNode, L>,
 	} & AbstractStatisticOptions) {
 		super(opts)
 

@@ -1,8 +1,7 @@
 import {t} from '@lingui/macro'
-import TransMarkdown from 'components/ui/TransMarkdown'
-import CONTRIBUTORS, {ROLES} from 'data/CONTRIBUTORS'
+import {TransMarkdown} from 'components/ui/TransMarkdown'
+import {CONTRIBUTORS, ROLES} from 'data/CONTRIBUTORS'
 import {Meta} from 'parser/core/Meta'
-import React from 'react'
 import {changelog} from './changelog'
 
 const about = t('brd.about.description')`
@@ -24,7 +23,7 @@ export const BARD = new Meta({
 
 	supportedPatches: {
 		from: '7.0',
-		to: '7.05',
+		to: '7.1',
 	},
 
 	contributors: [

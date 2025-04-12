@@ -1,7 +1,6 @@
 import {Trans} from '@lingui/react'
 import {DataLink} from 'components/ui/DbLink'
 import {Procs as CoreProcs} from 'parser/core/modules/Procs'
-import React from 'react'
 
 export class Procs extends CoreProcs {
 	override trackedProcs = [

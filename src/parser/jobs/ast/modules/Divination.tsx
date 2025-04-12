@@ -9,10 +9,9 @@ import {ExpectedActionsEvaluator, ExpectedGcdCountEvaluator, RaidBuffWindow} fro
 import {History} from 'parser/core/modules/ActionWindow/History'
 import {Actor} from 'parser/core/modules/Actors'
 import {GlobalCooldown} from 'parser/core/modules/GlobalCooldown'
-import React from 'react'
 import {Icon, Message} from 'semantic-ui-react'
 import {OFFENSIVE_ARCANA_STATUS} from './ArcanaGroups'
-import DISPLAY_ORDER from './DISPLAY_ORDER'
+import {DISPLAY_ORDER} from './DISPLAY_ORDER'
 import {ExpectedCardsEvaluator} from './evaluators/ExpectedCardsEvaluator'
 import {LightspeedEvaluator} from './evaluators/LightspeedEvaluator'
 

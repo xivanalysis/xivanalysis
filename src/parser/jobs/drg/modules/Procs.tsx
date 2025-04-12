@@ -2,11 +2,10 @@ import {Trans} from '@lingui/react'
 import {iconUrl} from 'data/icon'
 import {Procs as CoreProcs} from 'parser/core/modules/Procs'
 import {SEVERITY} from 'parser/core/modules/Suggestions'
-import React from 'react'
 
 const ICON_STARCROSS = 2078
 
-export default class Procs extends CoreProcs {
+export class Procs extends CoreProcs {
 	protected override showDroppedProcSuggestion = true
 	// DRG wants to use every proc, and dropping any of them is a major issue
 	protected override droppedProcIcon = iconUrl(ICON_STARCROSS)

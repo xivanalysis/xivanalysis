@@ -73,7 +73,4 @@ export interface Action {
 */
 type TroublesomeProperties = 'statusesApplied' | 'combo'
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-// export const ensureActions = <T extends Record<string, Action>>(actions: T): EnsuredActions<T> => actions as any // trust me
-
 export const ensureActions = ensureRecord<Action, TroublesomeProperties>()

@@ -1,10 +1,12 @@
 import Color from 'color'
+import {PREPULL_EVENT_WINDOW} from 'event'
 import _ from 'lodash'
 import {ReactNode} from 'react'
-import {GAUGE_HANDLE, ResourceData, ResourceGraphOptions, ResourceGroupOptions} from '../ResourceGraphs/ResourceGraphs'
 import {AbstractGauge, AbstractGaugeOptions} from './AbstractGauge'
 import {GaugeEventReason} from './CounterGauge'
+import {GAUGE_HANDLE, ResourceData, ResourceGraphOptions, ResourceGroupOptions} from '../ResourceGraphs/ResourceGraphs'
 
+// eslint-disable-next-line no-constant-binary-expression
 const FORCE_COLLAPSE = true || process.env.NODE_ENV === 'production'
 
 interface SetHistory {
@@ -97,7 +99,7 @@ export class SetGauge extends AbstractGauge {
 		// Ensure we have a gauge init event, can't do in constructor because the parser reference might not be there yet
 		if (this.history.length === 0) {
 			this.history.push({
-				timestamp: this.parser.pull.timestamp,
+				timestamp: this.parser.pull.timestamp - PREPULL_EVENT_WINDOW,
 				values: [],
 				reason: 'init',
 			})

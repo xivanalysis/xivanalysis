@@ -9,9 +9,9 @@ import {getDutyBanner} from 'data/ENCOUNTERS'
 import {getPatch, Patch} from 'data/PATCHES'
 import {AVAILABLE_MODULES} from 'parser/AVAILABLE_MODULES'
 import {Meta} from 'parser/core/Meta'
-import React, {ReactNode, useCallback, useMemo} from 'react'
-import {Switch, useRouteMatch, Route, useParams} from 'react-router-dom'
-import {Actor, Pull, Report} from 'report'
+import {ReactNode, useCallback, useMemo} from 'react'
+import {Route, useParams, Routes, useLocation, useMatch, useResolvedPath} from 'react-router-dom'
+import {Pull, Report} from 'report'
 import {ReportStore} from 'reportSources'
 import {Icon} from 'semantic-ui-react'
 import {formatDuration} from 'utilities'
@@ -47,7 +47,7 @@ export interface ReportFlowProps {
  * store for consumption by the flow.
  */
 export function ReportFlow({reportStore}: ReportFlowProps) {
-	const {path, url} = useRouteMatch()
+	const {pathname: url} = useLocation()
 	const {report} = reportStore
 
 	// This is intentionally quite generic. If a specific report source can provide
@@ -69,9 +69,7 @@ export function ReportFlow({reportStore}: ReportFlowProps) {
 		<DataProvider report={report}>
 			<BranchBanner report={report}/>
 
-			<Route path={`${path}/:pullId?/:actorId?`}>
-				<ReportLink reportStore={reportStore}/>
-			</Route>
+			<ReportLink reportStore={reportStore}/>
 
 			<Breadcrumb
 				title={report.name}
@@ -83,18 +81,21 @@ export function ReportFlow({reportStore}: ReportFlowProps) {
 				</>}
 			/>
 
-			<Switch>
-				<Route path={`${path}/:pullId`}>
-					<ActorListRoute
-						reportStore={reportStore}
-						meta={meta}
-						report={report}
-					/>
+			<Routes>
+				<Route
+					index={true}
+					element={<PullList reportStore={reportStore}/>}
+				/>
+				<Route path=":pullId">
+					<Route index path="*" element={
+						<ActorListRoute
+							reportStore={reportStore}
+							meta={meta}
+							report={report}
+						/>
+					}/>
 				</Route>
-				<Route path={path}>
-					<PullList reportStore={reportStore}/>
-				</Route>
-			</Switch>
+			</Routes>
 		</DataProvider>
 	)
 }
@@ -123,17 +124,12 @@ interface ActorListRouteProps {
 	report: Report
 }
 
-interface ActorListRouteParams {
-	pullId: Pull['id']
-}
-
 function ActorListRoute({
 	reportStore,
 	meta: parentMeta,
 	report,
 }: ActorListRouteProps) {
-	const {path} = useRouteMatch()
-	const {pullId} = useParams<ActorListRouteParams>()
+	const {pullId} = useParams()
 
 	const onRefreshPulls = useCallback(
 		() => reportStore.requestPulls({bypassCache: true}),
@@ -175,24 +171,29 @@ function ActorListRoute({
 		/>
 		<BreadcrumbsBanner banner={getDutyBanner(pull.encounter.duty.id)}/>
 
-		<Switch>
-			<Route path={`${path}/:actorId`}>
-				<AnalyseRoute
-					reportStore={reportStore}
-					meta={meta}
-					report={report}
-					pull={pull}
-				/>
+		<Routes>
+			<Route
+				index={true}
+				element={
+					<ActorList
+						reportStore={reportStore}
+						meta={meta}
+						report={report}
+						pull={pull}
+					/>
+				}
+			/>
+			<Route path=":actorId">
+				<Route index path="*" element={
+					<AnalyseRoute
+						reportStore={reportStore}
+						meta={meta}
+						report={report}
+						pull={pull}
+					/>
+				}/>
 			</Route>
-			<Route path={path}>
-				<ActorList
-					reportStore={reportStore}
-					meta={meta}
-					report={report}
-					pull={pull}
-				/>
-			</Route>
-		</Switch>
+		</Routes>
 	</>
 }
 
@@ -203,17 +204,13 @@ interface AnalyseRouteProps {
 	pull: Pull
 }
 
-interface AnalyseRouteParams {
-	actorId: Actor['id']
-}
-
 function AnalyseRoute({
 	reportStore,
 	meta: parentMeta,
 	report,
 	pull,
 }: AnalyseRouteProps) {
-	const {actorId} = useParams<AnalyseRouteParams>()
+	const {actorId} = useParams()
 	const actor = pull.actors.find(actor => actor.id === actorId)
 
 	const onRefreshActors = useCallback(
@@ -262,16 +259,16 @@ interface ReportLinkProps {
 	reportStore: ReportStore
 }
 
-interface ReportLinkRouteParams {
-	pullId?: Pull['id']
-	actorId?: Actor['id']
-}
-
 function ReportLink({reportStore}: ReportLinkProps) {
-	const {pullId, actorId} = useParams<ReportLinkRouteParams>()
+	// Using ResolvedPath rather than Location to ensure we have a stable base to match against
+	const {pathname} = useResolvedPath('..')
+	const match = useMatch(`${pathname}/:pullId?/:actorId?`)
+	if (match == null) {
+		return null
+	}
 
+	const {pullId, actorId} = match.params
 	const link = reportStore.getReportLink(pullId, actorId)
-
 	if (link == null) {
 		return null
 	}

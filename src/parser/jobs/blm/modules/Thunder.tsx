@@ -1,20 +1,21 @@
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
 import {DataLink, ActionLink} from 'components/ui/DbLink'
-import NormalisedMessage from 'components/ui/NormalisedMessage'
+import {NormalisedMessage} from 'components/ui/NormalisedMessage'
 import {Event, Events} from 'event'
 import {Analyser} from 'parser/core/Analyser'
 import {filter} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
 import {Actors} from 'parser/core/modules/Actors'
-import Checklist, {Rule, Requirement} from 'parser/core/modules/Checklist'
+import {Checklist, Rule, Requirement} from 'parser/core/modules/Checklist'
 import {Data} from 'parser/core/modules/Data'
 import {Invulnerability} from 'parser/core/modules/Invulnerability'
 import {Statuses} from 'parser/core/modules/Statuses'
-import Suggestions, {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
-import React, {ReactNode} from 'react'
+import {Suggestions, Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import {ReactNode} from 'react'
 import {Accordion, Table, Message} from 'semantic-ui-react'
-import DISPLAY_ORDER from './DISPLAY_ORDER'
+import {DISPLAY_ORDER} from './DISPLAY_ORDER'
+import {THUNDER_CHECKLIST_DESCRIPTION, THUNDER_CHECKLIST_NAME, THUNDER_REQUIREMENT_NAME} from './DoTsCommon'
 
 const MAX_ALLOWED_BAD_GCD_THRESHOLD = 2000
 const MAX_ALLOWED_CLIPPING = 3000
@@ -52,15 +53,18 @@ export class Thunder extends Analyser {
 		[this.data.statuses.HIGH_THUNDER.id]: this.data.statuses.HIGH_THUNDER.duration,
 	}
 
-    private thunderCasts = 0
+	private thunderCasts = 0
 	private totalThunderClip = 0
-    private lastThunderCast: number = this.data.statuses.HIGH_THUNDER.id
+	private lastThunderCast: number = this.data.statuses.HIGH_THUNDER.id
 	private clip: {[key: number]: number} = {
 		[this.data.statuses.HIGH_THUNDER.id]: 0,
 	}
 	private tracker: ThunderApplicationTracker = {}
 
 	override initialise() {
+		// Bespoke Thunder analysis replaced by default DoT override in 7.2+
+		if (!this.parser.patch.before('7.2')) { return }
+
 		const playerFilter = filter<Event>().source(this.parser.actor.id)
 		this.addEventHook(playerFilter.type('action').action(this.data.actions.HIGH_THUNDER.id), this.onDotCast)
 		this.addEventHook(playerFilter.type('statusApply').status(this.data.statuses.HIGH_THUNDER.id), this.onDotApply)
@@ -122,15 +126,13 @@ export class Thunder extends Analyser {
 	private onComplete() {
 		// Checklist item for keeping Thunder DoT rolling
 		this.checklist.add(new Rule({
-			name: <Trans id="blm.thunder.checklist.dots.name">Keep your <DataLink status="HIGH_THUNDER" /> DoT up</Trans>,
-			description: <Trans id="blm.thunder.checklist.dots.description">
-				Your <DataLink status="HIGH_THUNDER" /> DoT contributes significantly to your overall damage. Try to keep the DoT applied.
-			</Trans>,
+			name: THUNDER_CHECKLIST_NAME,
+			description: THUNDER_CHECKLIST_DESCRIPTION,
 			target: 95,
 			requirements: [
 				new Requirement({
-					name: <Trans id="blm.thunder.checklist.dots.requirement.name"><DataLink status="HIGH_THUNDER" /> uptime</Trans>,
-					percent: () => this.getThunderUptime(),
+					name: THUNDER_REQUIREMENT_NAME,
+					percent: this.getThunderUptime(),
 				}),
 			],
 		}))
@@ -198,6 +200,9 @@ export class Thunder extends Analyser {
 	}
 
 	override output() {
+		// Bespoke Thunder analysis replaced by default DoT override in 7.2+
+		if (!this.parser.patch.before('7.2')) { return }
+
 		const numTargets = Object.keys(this.tracker).length
 
 		const disclaimer = <Message>

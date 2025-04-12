@@ -1,5 +1,5 @@
 import {configure} from 'mobx'
-import React, {ReactNode} from 'react'
+import {createContext, ReactNode} from 'react'
 import {globalErrorStore} from './globalError'
 import {i18nStore} from './i18n'
 import {settingsStore} from './settings'
@@ -22,7 +22,7 @@ configureStorage({
 	settingsStore,
 })
 
-export const StoreContext = React.createContext(stores)
+export const StoreContext = createContext(stores)
 
 export const StoreProvider = ({children}: {children: ReactNode}) => (
 	<StoreContext.Provider value={stores}>

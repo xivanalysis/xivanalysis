@@ -3,7 +3,6 @@ import {EvaluatedAction} from 'parser/core/modules/ActionWindow'
 import {RulePassedEvaluator} from 'parser/core/modules/ActionWindow/evaluators/RulePassedEvaluator'
 import {HistoryEntry} from 'parser/core/modules/ActionWindow/History'
 import {TieredSuggestion} from 'parser/core/modules/Suggestions'
-import React from 'react'
 import {DEFAULT_SEVERITY_TIERS} from '../../CommonData'
 
 export interface FootlooseEvaluatorOpts {

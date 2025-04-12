@@ -6,14 +6,14 @@ import _ from 'lodash'
 import {Analyser, AnalyserOptions} from 'parser/core/Analyser'
 import {dependency} from 'parser/core/Injectable'
 import {SimpleItem, SimpleRow, Timeline} from 'parser/core/modules/Timeline'
-import React, {ReactNode} from 'react'
+import {ReactNode} from 'react'
+import {Graph} from './Graph'
+import {MarkerHandler, ResourceInfo} from './MarkerHandler'
 import {CounterResourceData} from '../Gauge/CounterGauge'
 import {EnumResourceData} from '../Gauge/EnumGauge'
 import {SetEnumResourceData} from '../Gauge/SetEnumGauge'
 import {SetResourceData} from '../Gauge/SetGauge'
 import {TimerResourceData} from '../Gauge/TimerGauge'
-import {Graph} from './Graph'
-import {MarkerHandler, ResourceInfo} from './MarkerHandler'
 
 export interface ResourceMeta {
 	label: ReactNode

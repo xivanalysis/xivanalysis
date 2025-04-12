@@ -1,4 +1,4 @@
-import ACTIONS from 'data/ACTIONS'
+import {ACTIONS} from 'data/ACTIONS'
 import {dependency} from 'parser/core/Injectable'
 import {Actors} from 'parser/core/modules/Actors'
 import {AoEUsages} from 'parser/core/modules/AoEUsages'
@@ -28,4 +28,3 @@ export class AoeChecker extends AoEUsages {
 		},
 	]
 }
-

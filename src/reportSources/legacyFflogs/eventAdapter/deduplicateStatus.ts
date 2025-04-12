@@ -11,7 +11,7 @@ const PERMITTED_TIME_DELTA = 0
  * the distinction (as it's irrelevant in XIV), merge the two back together.
  */
 export class DeduplicateStatusApplicationStep extends AdapterStep {
-	private activeStatuses = new Map<string, Events['statusApply']>();
+	private activeStatuses = new Map<string, Events['statusApply']>()
 
 	override adapt(baseEvent: FflogsEvent, adaptedEvents: Event[]): Event[] {
 		const out: Event[] = []
@@ -19,7 +19,10 @@ export class DeduplicateStatusApplicationStep extends AdapterStep {
 			const adapted = event.type === 'statusApply'
 				? this.adaptStatusApply(event)
 				: event
-			adapted && out.push(adapted)
+
+			if (adapted != null) {
+				out.push(adapted)
+			}
 		}
 		return out
 	}

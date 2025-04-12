@@ -1,40 +1,64 @@
 import {Debuggable} from 'parser/core/Debuggable'
-import 'reflect-metadata'
+
+const DEPENDENCY_METADATA = Symbol('dependency metadata')
+type DependencyMetadata = Partial<Record<string, DependencyEntry>>
+interface DependencyEntry {
+	field?: string
+	type?: typeof Injectable | object
+}
 
 /**
  * Mark the decorated property as a dependency. The dependency will be injected
  * during construction, and will be available for the lifetime of the instance.
  */
-export function dependency(target: Injectable, prop: string) {
-	const dependency = Reflect.getMetadata('design:type', target, prop)
-	const constructor = target.constructor as typeof Injectable
-
-	// DO NOT REMOVE
-	// This totally-redundant line is a workaround for an issue in FF ~73 which causes the
-	// assignment in the conditional below to completely kludge the entire array regardless
-	// of it's contents if this isn't here.
-	const constructorDependencies = constructor.dependencies
-
-	// Make sure we're not modifying every single instance
-	if (!Object.hasOwnProperty.call(constructor, 'dependencies')) {
-		constructor.dependencies = [...constructorDependencies]
+export function dependency(_: undefined, context: ClassFieldDecoratorContext) {
+	const {name} = context
+	if (typeof name !== 'string') {
+		throw new Error('unexpected non-string dependency field name')
 	}
 
-	// If the dep is Object, it's _probably_ from a JS file. Fall back to simple handling
-	if (dependency === Object) {
-		constructor.dependencies.push(prop)
+	updateDepMeta(context, current => ({...current, field: name}))
+}
+
+// Used by `/conf/babel-plugin-xiva-dependency`
+dependency.type = function(type: typeof Injectable) {
+	return function decorator(_: undefined, context: ClassFieldDecoratorContext) {
+		updateDepMeta(context, current => ({...current, type}))
+	}
+}
+
+function updateDepMeta(
+	{name, metadata}: ClassFieldDecoratorContext,
+	transform: (depMeta: DependencyEntry) => DependencyEntry
+) {
+	if (typeof name !== 'string') {
+		throw new Error('unexpected non-string dependency field name')
+	}
+
+	// NOTE: This is using copying / reassignment, rather than mutation, to ensure
+	// we don't leak dependencies from subclasses up to their parents. The
+	// `metadata` object's prototype is set according to inheritance, so assigning
+	// a clean value will inherit parent values while avoiding leaks.
+	const meta = (metadata[DEPENDENCY_METADATA] ?? {}) as DependencyMetadata
+	metadata[DEPENDENCY_METADATA] = {
+		...meta,
+		[name]: transform(meta[name] ?? {}),
+	}
+}
+
+function resolveDependencyHandle(entry: DependencyEntry): string | undefined {
+	// If there's no type info, or it's set to Object, we assume it's one of the
+	// zero remaining JS files.
+	if (entry.type == null || entry.type === Object) {
 		return
 	}
 
-	// Check that the dep is actually an injectable
-	if (!Object.isPrototypeOf.call(Injectable, dependency)) {
-		throw new Error(`${constructor.name}'s dependency \`${prop}\` is invalid. Expected \`Injectable\`, got \`${dependency.name}\`.`)
+	// Ensure that the dependency is actually an injectable
+	if (!Object.isPrototypeOf.call(Injectable, entry.type)) {
+		throw new Error(`invalid dependency type ${entry.type}`)
 	}
 
-	constructor.dependencies.push({
-		handle: dependency.handle,
-		prop,
-	})
+	return (entry.type as typeof Injectable).handle
 }
 
 export interface MappedDependency {
@@ -52,7 +76,29 @@ export interface InjectableOptions {
  * specifying dependencies within the class definition.
  */
 export class Injectable extends Debuggable {
-	static dependencies: Array<string | MappedDependency> = []
+	static get dependencies(): MappedDependency[] {
+		const meta = this[Symbol.metadata]?.[DEPENDENCY_METADATA] as DependencyMetadata | undefined
+
+		// If there's no meta, we assume there's just no deps.
+		if (meta == null) {
+			return []
+		}
+
+		const dependencies: MappedDependency[] = []
+		for (const entry of Object.values(meta)) {
+			if (entry == null) { continue }
+			if (entry.field == null) {
+				throw new Error('dependency with no field')
+			}
+
+			dependencies.push({
+				prop: entry.field,
+				handle: resolveDependencyHandle(entry) ?? entry.field,
+			})
+		}
+
+		return dependencies
+	}
 
 	private static _handle: string
 	/** Name to be used throughout the dependency system to refer to this injectable. */

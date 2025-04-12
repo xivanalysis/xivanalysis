@@ -1,16 +1,17 @@
 import classNames from 'classnames'
-import React from 'react'
+import {ElementType, PureComponent, ReactNode} from 'react'
 import styles from './List.module.css'
 
 // If someone can work out magic to generic this w/ React.ReactType that'd be awesome
 // Semantic doesn't so I gave up.
 interface ListItemProps {
-	as?: React.ElementType
+	as?: ElementType
 	className?: string
 	[key: string]: unknown
+	children?: ReactNode
 }
 
-class ListItem extends React.PureComponent<ListItemProps> {
+class ListItem extends PureComponent<ListItemProps> {
 	override render() {
 		const {
 			as: Component = 'div',
@@ -33,11 +34,12 @@ class ListItem extends React.PureComponent<ListItemProps> {
 }
 
 interface ListProps {
-	title?: React.ReactNode,
+	title?: ReactNode,
 	color?: string,
+	children?: ReactNode
 }
 
-export class List extends React.PureComponent<ListProps> {
+export class List extends PureComponent<ListProps> {
 	static Item = ListItem
 
 	override render() {

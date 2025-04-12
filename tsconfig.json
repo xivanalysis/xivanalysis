@@ -15,14 +15,18 @@
 		"isolatedModules": true,
 
 		"jsx": "preserve",
-		"experimentalDecorators": true,
+		"useDefineForClassFields": true,
 
 		"noErrorTruncation": true,
 
 		"types": [
 			"webpack-env",
 			"jest"
-		]
+		],
+
+		// TODO: Some dependencies are sufficiently old that they don't typecheck -
+		// we can't keep lib check enabled until they're upgraded or removed.
+		"skipLibCheck": true,
 	},
 	"include": ["src/**/*"]
 }
