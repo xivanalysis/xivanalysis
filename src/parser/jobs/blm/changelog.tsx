@@ -8,6 +8,16 @@ export const changelog = [
 	// 	contributors: [CONTRIBUTORS.YOU],
 	// },
 	{
+		date: new Date('2025-03-31'),
+		Changes: () => <>Initial patch 7.2 changes:<br/><ul>
+			<li>Cast time and status duration updates</li>
+			<li>Adjusted AoE checks for revised potencies</li>
+			<li>Ported Thunder DoT tracking to the core module</li>
+			<li>Updated Gauge state handling due to removal of the AF/UI timer</li>
+			<li>Fixed Firestarter usage analysis to stop flagging AF1 PD F3P as an AF3 extension</li></ul></>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
+	{
 		date: new Date('2024-12-02'),
 		Changes: () => <>Fixed a gauge tracking bug that caused Umbral Hearts to be consumed by <DataLink status="FIRESTARTER" /> procs.</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],

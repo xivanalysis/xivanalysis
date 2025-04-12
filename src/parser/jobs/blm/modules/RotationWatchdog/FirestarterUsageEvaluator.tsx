@@ -2,29 +2,34 @@ import {Plural, Trans} from '@lingui/react'
 import {DataLink} from 'components/ui/DbLink'
 import {EvaluatedAction} from 'parser/core/modules/ActionWindow'
 import {RulePassedEvaluator} from 'parser/core/modules/ActionWindow/evaluators/RulePassedEvaluator'
-import {HistoryEntry} from 'parser/core/modules/ActionWindow/History'
+import {History, HistoryEntry} from 'parser/core/modules/ActionWindow/History'
 import {SEVERITY, Suggestion} from 'parser/core/modules/Suggestions'
 import iconF3p from '../f3p.png'
+import {getMetadataForWindow} from './EvaluatorUtilities'
+import {CycleMetadata} from './WatchdogConstants'
 
-export interface ExtraF1EvaluatorOpts {
+export interface FirestarterUsageEvaluatorOpts {
 	manafontId: number
 	paradoxId: number
 	fire3Id: number
+	metadataHistory: History<CycleMetadata>
 }
 
 export class FirestarterUsageEvaluator extends RulePassedEvaluator {
 	private manafontId: number
 	private paradoxId: number
 	private fire3Id: number
+	private metadataHistory: History<CycleMetadata>
 
 	override header = undefined
 
-	constructor(opts: ExtraF1EvaluatorOpts) {
+	constructor(opts: FirestarterUsageEvaluatorOpts) {
 		super()
 
 		this.manafontId = opts.manafontId
 		this.paradoxId = opts.paradoxId
 		this.fire3Id = opts.fire3Id
+		this.metadataHistory = opts.metadataHistory
 	}
 
 	override passesRule(window: HistoryEntry<EvaluatedAction[]>) {
@@ -35,6 +40,12 @@ export class FirestarterUsageEvaluator extends RulePassedEvaluator {
 
 		// If the window didn't generate a Firestarter, no need to evaluate whether it was properly used
 		if (paradoxIndex === -1) { return }
+
+		const paradoxTime = window.data[paradoxIndex].timestamp
+		const windowMetadata = getMetadataForWindow(window, this.metadataHistory)
+
+		// If the Firestarter was generated prior to reaching AF3, the resultant F3P would be used to reach AF3 instead of extend it
+		if (paradoxTime < windowMetadata.firePhaseMetadata.fullElementTime) { return true }
 
 		// Find out if the window contained an F3 after Paradox was used, it could've been saved to gain AF3 on a subsequent window
 		const containsAF3F3P = window.data.slice(paradoxIndex).some(event => event.action.id === this.fire3Id)
