@@ -7,6 +7,11 @@ export const changelog = [
 	// 	contributors: [CONTRIBUTORS.YOU],
 	// },
 	{
+		date: new Date('2025-04-12'),
+		Changes: () => <>Use core procs module for Inner Release</>,
+		contributors: [CONTRIBUTORS.KWEREY],
+	},
+	{
 		date: new Date('2024-08-04'),
 		Changes: () => <>Add tincture module</>,
 		contributors: [CONTRIBUTORS.KWEREY],
