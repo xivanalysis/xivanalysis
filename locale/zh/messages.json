@@ -673,7 +673,7 @@
   "mnk.balls.suggestions.overcap.content": "不要覆盖你的象形拳量谱。当<0/>、<1/>、 <2/>所指向的身形功力可用的时候，使用它们而非其他技能。",
   "mnk.balls.suggestions.overcap.why": "你由于覆盖导致损失了 {overCap, plural, other {# 次}}身形。",
   "mnk.balls.title": "怒气值",
-  "mnk.bh.suggestions.gcd.content": "",
+  "mnk.bh.suggestions.gcd.content": "尝试在 <0/> 的持续时间内插入 {EXPECTED_GCDS} 个GCD技能。",
   "mnk.bookending.formless.checklist.description": "魔猿身形的技能在3种身形中有着最高的平均威力。用<1/>、<2/>或<3/>来消耗<0/>以最大化使用这些技能。",
   "mnk.bookending.formless.checklist.name": "用魔猿技能消耗<0/>",
   "mnk.bookending.formless.checklist.requirement": "在魔猿技能中使用了<0/>",

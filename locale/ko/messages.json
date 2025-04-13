@@ -673,7 +673,7 @@
   "mnk.balls.suggestions.overcap.content": "",
   "mnk.balls.suggestions.overcap.why": "",
   "mnk.balls.title": "",
-  "mnk.bh.suggestions.gcd.content": "",
+  "mnk.bh.suggestions.gcd.content": "<0/> 구간 중 글쿨 기술을 {EXPECTED_GCDS}회 사용하십시오.",
   "mnk.bookending.formless.checklist.description": "",
   "mnk.bookending.formless.checklist.name": "",
   "mnk.bookending.formless.checklist.requirement": "",

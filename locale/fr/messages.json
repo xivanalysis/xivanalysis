@@ -673,7 +673,7 @@
   "mnk.balls.suggestions.overcap.content": "Essayez de ne pas écraser de ressource dans votre jauge de Fureur. Utilisez <0/>, <1/> et <2/> plutôt que leurs alternatives quand une charge de leur jauge de fureur respective est disponible.",
   "mnk.balls.suggestions.overcap.why": "Vous avez perdu {overCap, plural, one {# charge} other {# charges}} de Fureur dû à un écrasement de charge.",
   "mnk.balls.title": "Jauge de Fureur",
-  "mnk.bh.suggestions.gcd.content": "",
+  "mnk.bh.suggestions.gcd.content": "Essayez d'utiliser {EXPECTED_GCDS} GCDs durant chaque fenêtre de <0/>.",
   "mnk.bookending.formless.checklist.description": "Les actions Opo-opo ont la plus grande puissance en moyenne sur les 3 postures. Essayez d'en maximiser l'utilisation en consommant <0/> avec <1/>, <2/> ou <3/>.",
   "mnk.bookending.formless.checklist.name": "Consommez <0/> avec vos actions Opo-opo",
   "mnk.bookending.formless.checklist.requirement": "<0/> utilisés sur des actions Opo-opo",

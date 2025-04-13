@@ -673,7 +673,7 @@
   "mnk.balls.suggestions.overcap.content": "",
   "mnk.balls.suggestions.overcap.why": "",
   "mnk.balls.title": "",
-  "mnk.bh.suggestions.gcd.content": "",
+  "mnk.bh.suggestions.gcd.content": "<0/> 中に {EXPECTED_GCDS} 回のGCDスキルを使いましょう。",
   "mnk.bookending.formless.checklist.description": "",
   "mnk.bookending.formless.checklist.name": "",
   "mnk.bookending.formless.checklist.requirement": "",
