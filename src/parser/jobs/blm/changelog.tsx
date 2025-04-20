@@ -8,6 +8,11 @@ export const changelog = [
 	// 	contributors: [CONTRIBUTORS.YOU],
 	// },
 	{
+		date: new Date('2025-04-04'),
+		Changes: () => <>Remove Triplecast from cooldown checklist requirement, and add analysis for the usage of Swiftcast and Triplecast.</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
+	{
 		date: new Date('2025-03-31'),
 		Changes: () => <>Initial patch 7.2 changes:<br/><ul>
 			<li>Cast time and status duration updates</li>

@@ -1,5 +1,5 @@
 import {Defensives} from 'parser/core/modules/Defensives'
 
 export class RadiantAegis extends Defensives {
-	protected override trackedDefensives = [this.data.actions.RADIANT_AEGIS]
+	protected override trackedActions = [this.data.actions.RADIANT_AEGIS]
 }

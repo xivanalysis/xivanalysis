@@ -443,7 +443,7 @@ export class Summons extends Analyser {
 		if (summon.data.demiSummon?.action === this.data.actions.SUMMON_BAHAMUT.id) {
 			return this.buildBahamutRow(summon)
 		}
-		if (summon.data.demiSummon?.action === this.data.actions.SUMMON_BAHAMUT.id) {
+		if (summon.data.demiSummon?.action === this.data.actions.SUMMON_PHOENIX.id) {
 			return this.buildPhoenixRow(summon)
 		}
 		return this.buildSolarBahamutRow(summon)

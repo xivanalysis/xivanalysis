@@ -11,8 +11,10 @@ import {NotCasting} from './NotCasting'
 import {OGCDDowntime} from './OGCDDowntime'
 import {Procs} from './Procs'
 import {RotationWatchdog} from './RotationWatchdog'
+import {Swiftcast} from './Swiftcast'
 import {Thunder} from './Thunder'
 import {Triplecast} from './Triplecast'
+import {Utilities} from './Utilities'
 import {Weaving} from './Weaving'
 
 export const modules = [
@@ -30,6 +32,8 @@ export const modules = [
 	Procs,
 	RotationWatchdog,
 	DoTs,
+	Swiftcast,
 	Thunder,
 	Triplecast,
+	Utilities,
 ]
