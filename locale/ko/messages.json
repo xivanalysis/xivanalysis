@@ -116,6 +116,7 @@
   "blm.procs.suggestions.dropped-f3ps.why": "파이가 효과 향상 프록이 {droppedFireStarters, plural, other {#개}} 만료되었습니다.",
   "blm.procs.suggestions.dropped-thunderheads.content": "<1/>이 끊기기 전까지 효과 향상된 <0/>을 사용하지 않아 최소 1회 이상 사용 기회를 놓쳤습니다.",
   "blm.procs.suggestions.dropped-thunderheads.why": "",
+  "blm.rotation-watchdog.error-messages.cold-f3": "",
   "blm.rotation-watchdog.error-messages.died": "<0/> 전투불능",
   "blm.rotation-watchdog.error-messages.dropped-astral-umbral": "천상의 화염 또는 저승의 냉기 끊김",
   "blm.rotation-watchdog.error-messages.extra-f1": "<0/> 사용 초과",

@@ -116,6 +116,7 @@
   "blm.procs.suggestions.dropped-f3ps.why": "",
   "blm.procs.suggestions.dropped-thunderheads.content": "Du hast mindestens ein <0/> Proc verloren, da du <1/> auslaufen gelassen hast, ohne es zu verwenden.",
   "blm.procs.suggestions.dropped-thunderheads.why": "",
+  "blm.rotation-watchdog.error-messages.cold-f3": "",
   "blm.rotation-watchdog.error-messages.died": "<0/> gestorben",
   "blm.rotation-watchdog.error-messages.dropped-astral-umbral": "",
   "blm.rotation-watchdog.error-messages.extra-f1": "Zusätzliche <0/>",

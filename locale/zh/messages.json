@@ -116,6 +116,7 @@
   "blm.procs.suggestions.dropped-f3ps.why": "损失了 {droppedFireStarters, plural, one {# 次} other {# 次}}火苗效果。",
   "blm.procs.suggestions.dropped-thunderheads.content": "至少有一个<0/>触发的<1/>未被使用而损失掉。",
   "blm.procs.suggestions.dropped-thunderheads.why": "损失了 {droppedThunderHeads, plural, other {# 次雷云}}。",
+  "blm.rotation-watchdog.error-messages.cold-f3": "",
   "blm.rotation-watchdog.error-messages.died": "<0/> 死亡",
   "blm.rotation-watchdog.error-messages.dropped-astral-umbral": "丢失了星极火或灵极冰",
   "blm.rotation-watchdog.error-messages.extra-f1": "多用了<0/>",

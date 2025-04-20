@@ -9,7 +9,7 @@ export const changelog = [
 	// },
 	{
 		date: new Date('2025-04-05'),
-		Changes: () => <>Update rotation analysis due to the removal of most timers in patch 7.2.</>,
+		Changes: () => <>Update rotation analysis and mark as supported for patch 7.2.</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],
 	},
 	{

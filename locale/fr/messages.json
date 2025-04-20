@@ -116,6 +116,7 @@
   "blm.procs.suggestions.dropped-f3ps.why": "{droppedFireStarters, plural, one {# instance} other {# instances}} d'expiration de Pyromane.",
   "blm.procs.suggestions.dropped-thunderheads.content": "Vous avez perdu un proc de <0/> car vous avez laissez <1/> expirer sans l'utiliser.",
   "blm.procs.suggestions.dropped-thunderheads.why": "{droppedThunderHeads, plural, one {# Électrifié} other {# Électrifiés}} ont expiré.",
+  "blm.rotation-watchdog.error-messages.cold-f3": "",
   "blm.rotation-watchdog.error-messages.died": "Vous êtes <0/> mort·e",
   "blm.rotation-watchdog.error-messages.dropped-astral-umbral": "Feu Astral ou Glace ombrale a été perdu",
   "blm.rotation-watchdog.error-messages.extra-f1": "<0/> en trop",
