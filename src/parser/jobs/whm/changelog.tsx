@@ -2,6 +2,11 @@ import {CONTRIBUTORS} from 'data/CONTRIBUTORS'
 
 export const changelog = [
 	{
+		date: new Date('2025-04-20'),
+		Changes: () => <>Add informational display of Swiftcast and Lucid Dreaming usage/cooldown availability adjacent to Defensives.</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
+	{
 		date: new Date('2025-02-07'),
 		Changes: () => <>Split the direct healing effects of GCDs up from the regen effects they apply.</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],

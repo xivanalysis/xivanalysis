@@ -8,6 +8,7 @@ import {Kardia} from './Kardia'
 import {Overheal} from './Overheal'
 import {Swiftcast} from './Swiftcast'
 import {Tincture} from './Tincture'
+import {Utilities} from './Utilities'
 import {Weaving} from './Weaving'
 import {Zoe} from './Zoe'
 
@@ -22,6 +23,7 @@ export const modules = [
 	Overheal,
 	Swiftcast,
 	Tincture,
+	Utilities,
 	Weaving,
 	Zoe,
 ]

@@ -12,6 +12,7 @@ import {SearingLight} from './SearingLight'
 import {Slipstream} from './Slipstream'
 import {Summons} from './Summons'
 import {Swiftcast} from './Swiftcast'
+import {Utilities} from './Utilities'
 
 export const modules = [
 	ActionTimeline,
@@ -27,5 +28,6 @@ export const modules = [
 	Summons,
 	Swiftcast,
 	Tincture,
+	Utilities,
 	Weaving,
 ]

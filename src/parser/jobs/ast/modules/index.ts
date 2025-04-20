@@ -17,6 +17,7 @@ import {Overheal} from './Overheal'
 import {StatusTimeline} from './StatusTimeline'
 import {Synastry} from './Synastry'
 import {Tincture} from './Tincture'
+import {Utilities} from './Utilities'
 
 export const modules = [
 	ActionTimeline,
@@ -39,4 +40,5 @@ export const modules = [
 	StatusTimeline,
 	Synastry,
 	Tincture,
+	Utilities,
 ]

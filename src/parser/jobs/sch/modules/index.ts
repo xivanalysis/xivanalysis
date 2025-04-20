@@ -9,6 +9,7 @@ import {Pets} from './Pets'
 import {Procs} from './Procs'
 import {Swiftcast} from './Swiftcast'
 import {Tincture} from './Tincture'
+import {Utilities} from './Utilities'
 import {Weaving} from './Weaving'
 
 export const modules = [
@@ -23,5 +24,6 @@ export const modules = [
 	Pets,
 	Swiftcast,
 	Tincture,
+	Utilities,
 	Weaving,
 ]

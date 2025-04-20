@@ -15,6 +15,7 @@ import {MeleeCombos} from './MeleeCombos'
 import {Prefulgence} from './Prefulgence'
 import {Procs} from './Procs'
 import {Swiftcast} from './Swiftcast'
+import {Utilities} from './Utilities'
 import {ViceOfThorns} from './ViceOfThorns'
 import {Weaving} from './Weaving'
 
@@ -39,5 +40,6 @@ export const modules = [
 	MagickedSwordplay,
 	Manafication,
 	Prefulgence,
+	Utilities,
 	ViceOfThorns,
 ]
