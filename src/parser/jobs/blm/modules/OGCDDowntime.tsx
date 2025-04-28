@@ -10,13 +10,22 @@ export class OGCDDowntime extends CooldownDowntime {
 	// Time in ms that Laqi deems ok for a OGCD to be down : ^)
 	override defaultAllowedAverageDowntime = ALLOWEDDOWNTIMEALL
 	override defaultFirstUseOffset = FIRSTUSEOFFSETALL
-	trackedCds = [
+
+	// Remove Triplecast from the list for 7.2+ since it's no longer a DPS increase aside from UI1 B3
+	trackedCds = this.parser.patch.before('7.2') ? [
 		{cooldowns: [this.data.actions.LEY_LINES]},
 		{
 			cooldowns: [this.data.actions.MANAFONT],
 			firstUseOffset: 25000,
 		},
 		{cooldowns: [this.data.actions.TRIPLECAST]},
+		{cooldowns: [this.data.actions.AMPLIFIER]},
+	] : [
+		{cooldowns: [this.data.actions.LEY_LINES]},
+		{
+			cooldowns: [this.data.actions.MANAFONT],
+			firstUseOffset: 25000,
+		},
 		{cooldowns: [this.data.actions.AMPLIFIER]},
 	]
 

@@ -12,6 +12,7 @@ import {dependency} from 'parser/core/Injectable'
 import {CastTime} from 'parser/core/modules/CastTime'
 import {CounterGauge, TimerGauge, Gauge as CoreGauge} from 'parser/core/modules/Gauge'
 import {EnumGauge} from 'parser/core/modules/Gauge/EnumGauge'
+import {Invulnerability} from 'parser/core/modules/Invulnerability'
 import {DEFAULT_ROW_HEIGHT, GAUGE_FADE} from 'parser/core/modules/ResourceGraphs/ResourceGraphs'
 import {Suggestions, Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import {UnableToAct} from 'parser/core/modules/UnableToAct'
@@ -29,7 +30,7 @@ export const UMBRAL_HEARTS_MAX_STACKS = 3
 export const ASTRAL_SOUL_MAX_STACKS = 6
 const CAPPED_ASTRAL_UMBRAL_CAST_SCALAR = 0.5
 const FLARE_MAX_HEART_CONSUMPTION = 3
-const FLARE_SOUL_GENERATION = 3
+export const FLARE_SOUL_GENERATION = 3
 const POLYGLOT_MAX_STACKS = 3
 const PARADOX_MAX_STACKS = 1
 const ASTRAL_UMBRAL_HANDLE = 'astralumbral'
@@ -104,6 +105,7 @@ export class Gauge extends CoreGauge {
 	@dependency private unableToAct!: UnableToAct
 	@dependency private castTime!: CastTime
 	@dependency private procs!: Procs
+	@dependency private invuln!: Invulnerability
 
 	private gaugeErrors: BLMGaugeError[] = []
 	private droppedEnoTimestamps: number[] = []
@@ -116,6 +118,9 @@ export class Gauge extends CoreGauge {
 	private affectsGaugeOnDamage = AFFECTS_GAUGE_ON_DAMAGE.map(key => this.data.actions[key].id)
 
 	private castTimeIndex: number | null = null
+
+	// In 7.2+, the 5+7 opener will cause one paradox overwrite because we use that MP on an extra F4 to enable a second Flare Star
+	private forgiveOneParadoxOverwrite = !this.parser.patch.before('7.2')
 
 	/** Astral Fire and Umbral Ice */
 	private astralUmbralGauge = this.add(new EnumGauge({
@@ -143,7 +148,7 @@ export class Gauge extends CoreGauge {
 		},
 	}))
 
-	private astralFireTimer = this.add(new TimerGauge({
+	private astralFireTimer = this.parser.patch.before('7.2') ? this.add(new TimerGauge({
 		maximum: ASTRAL_UMBRAL_DURATION,
 		onExpiration: this.onAstralUmbralTimeout.bind(this),
 		graph: {
@@ -152,8 +157,9 @@ export class Gauge extends CoreGauge {
 			color: FIRE_COLOR.fade(TIMER_FADE),
 			tooltipHideWhenEmpty: true,
 		},
-	}))
-	private umbralIceTimer = this.add(new TimerGauge({
+	})) : undefined
+
+	private umbralIceTimer = this.parser.patch.before('7.2') ? this.add(new TimerGauge({
 		maximum: ASTRAL_UMBRAL_DURATION,
 		onExpiration: this.onAstralUmbralTimeout.bind(this),
 		graph: {
@@ -162,7 +168,7 @@ export class Gauge extends CoreGauge {
 			color: ICE_COLOR.fade(TIMER_FADE),
 			tooltipHideWhenEmpty: true,
 		},
-	}))
+	})) : undefined
 
 	/** Astral Soul */
 	private astralSoulGauge = this.add(new CounterGauge({
@@ -272,7 +278,8 @@ export class Gauge extends CoreGauge {
 			this.tryGainUmbralHearts(1)
 			// Patch 7.05 updated Umbral Soul such that it pauses the Umbral Ice timer, but the Polyglot timer keeps rolling
 			if (!this.parser.patch.before('7.05')) {
-				this.umbralIceTimer.pause()
+				// If the timer isn't defined, we can't pause it, but that's ok since that'll only happen if we're patch 7.2+
+				this.umbralIceTimer?.pause()
 			}
 			break
 		case this.data.actions.FIRE_I.id:
@@ -368,13 +375,16 @@ export class Gauge extends CoreGauge {
 			this.onGainAstralSoul(FLARE_SOUL_GENERATION)
 			break
 		case this.data.actions.PARADOX.id:
-			// Add a stack for whichever timer isn't expired
+			// Add a stack for whichever stance is active
 			// Because it was physically impossible to cast UI Paradox before patch 7.05, we don't need an extra patch level check here
-			if (!this.umbralIceTimer.expired) {
-				this.onGainUmbralIceStacks(1)
-			}
-			if (!this.astralFireTimer.expired) {
-				this.onGainAstralFireStacks(1)
+			// And now I'm eating my words because in patch 7.2 Paradox doesn't grant stacks...
+			if (this.parser.patch.before('7.2')) {
+				if (this.astralUmbralGauge.getCountAt(UMBRAL_ICE_HANDLE) !== 0) {
+					this.onGainUmbralIceStacks(1)
+				}
+				if (this.astralUmbralGauge.getCountAt(ASTRAL_FIRE_HANDLE) !== 0) {
+					this.onGainAstralFireStacks(1)
+				}
 			}
 			break
 		}
@@ -383,13 +393,21 @@ export class Gauge extends CoreGauge {
 	}
 
 	private addEvent() {
-		if (this.astralUmbralGauge.getCountAt(ASTRAL_FIRE_HANDLE) !== 0 && this.astralFireTimer.expired) {
-			this.astralFireTimer.start()
+		const inAstralFire = this.astralUmbralGauge.getCountAt(ASTRAL_FIRE_HANDLE) !== 0
+		const inUmbralIce = this.astralUmbralGauge.getCountAt(UMBRAL_ICE_HANDLE) !== 0
+
+		// Before patch 7.2 we'll have defined the timers so we can just assert they will be
+		if (this.parser.patch.before('7.2')) {
+			if (inAstralFire && this.astralFireTimer!.expired) {
+				this.astralFireTimer!.start()
+			}
+			if (inUmbralIce && this.umbralIceTimer!.expired) {
+				this.umbralIceTimer!.start()
+			}
 		}
-		if (this.astralUmbralGauge.getCountAt(UMBRAL_ICE_HANDLE) !== 0 && this.umbralIceTimer.expired) {
-			this.umbralIceTimer.start()
-		}
-		if ((!this.astralFireTimer.expired || !this.umbralIceTimer.expired) && this.polyglotTimer.expired) {
+
+		// Make sure Polyglot's timer is ticking if we're in either element
+		if ((inAstralFire || inUmbralIce) && this.polyglotTimer.expired) {
 			this.polyglotTimer.start()
 		}
 
@@ -451,8 +469,13 @@ export class Gauge extends CoreGauge {
 	}
 
 	private onGainParadox() {
-		if (!this.paradoxGauge.empty) {
-			this.gaugeErrors.push({timestamp: this.parser.currentEpochTimestamp, error: GAUGE_ERROR_TYPE.OVERWROTE_PARADOX})
+		if (!this.paradoxGauge.empty && !this.invuln.isActive({timestamp: this.parser.currentEpochTimestamp})) {
+			// If we're forgiving this overwrite, note that we have done so and move on
+			if (this.forgiveOneParadoxOverwrite) {
+				this.forgiveOneParadoxOverwrite = false
+			} else {
+				this.gaugeErrors.push({timestamp: this.parser.currentEpochTimestamp, error: GAUGE_ERROR_TYPE.OVERWROTE_PARADOX})
+			}
 		}
 
 		this.paradoxGauge.generate(1)
@@ -465,8 +488,8 @@ export class Gauge extends CoreGauge {
 	}
 
 	private onAstralUmbralEnd(flagIssues: boolean) {
-		this.astralFireTimer.reset()
-		this.umbralIceTimer.reset()
+		this.astralFireTimer?.reset()
+		this.umbralIceTimer?.reset()
 
 		this.astralUmbralGauge.reset()
 
@@ -477,10 +500,10 @@ export class Gauge extends CoreGauge {
 		if (this.astralUmbralGauge.getCountAt(UMBRAL_ICE_HANDLE) > 0 && dropsElementOnSwap) {
 			this.onAstralUmbralEnd(true)
 		} else {
-			this.umbralIceTimer.reset()
+			this.umbralIceTimer?.reset()
 			this.astralUmbralGauge.clear(UMBRAL_ICE_HANDLE)
 
-			this.astralFireTimer.start()
+			this.astralFireTimer?.start()
 			this.astralUmbralGauge.generate(ASTRAL_FIRE_HANDLE, stackCount)
 		}
 	}
@@ -489,13 +512,12 @@ export class Gauge extends CoreGauge {
 		if (this.astralUmbralGauge.getCountAt(ASTRAL_FIRE_HANDLE) > 0 && dropsElementOnSwap) {
 			this.onAstralUmbralEnd(true)
 		} else {
-			this.astralFireTimer.reset()
+			this.astralFireTimer?.reset()
 			this.astralUmbralGauge.clear(ASTRAL_FIRE_HANDLE)
 
-			this.umbralIceTimer.start()
+			this.umbralIceTimer?.start()
 			this.astralUmbralGauge.generate(UMBRAL_ICE_HANDLE, stackCount)
 
-			this.paradoxGauge.reset()
 			this.astralSoulGauge.reset()
 		}
 	}
@@ -650,7 +672,9 @@ export class Gauge extends CoreGauge {
 			}))
 		}
 
-		if (this.paradoxGauge.overCap > 0) {
+		// If we forgave an overwrite because of the 5+7 opener, remove that from the raw gauge overcap amount when checking to see if we should suggest
+		const  totalParadoxOvercap = this.paradoxGauge.overCap - ((!this.parser.patch.before('7.2') && !this.forgiveOneParadoxOverwrite) ? 1: 0)
+		if (totalParadoxOvercap > 0) {
 			this.suggestions.add(new Suggestion({
 				icon: this.data.actions.PARADOX.icon,
 				content: <Trans id="blm.gauge.suggestions.overwritten-paradox.content">
@@ -658,7 +682,7 @@ export class Gauge extends CoreGauge {
 				</Trans>,
 				severity: SEVERITY.MAJOR,
 				why: <Trans id="blm.gage.suggestions.overwritten-paradox.why">
-					<DataLink showIcon={false} action="PARADOX"/> got overwritten <Plural value={this.paradoxGauge.overCap} one="# time" other="# times"/>.
+					<DataLink showIcon={false} action="PARADOX"/> got overwritten <Plural value={totalParadoxOvercap} one="# time" other="# times"/>.
 				</Trans>,
 			}))
 		}

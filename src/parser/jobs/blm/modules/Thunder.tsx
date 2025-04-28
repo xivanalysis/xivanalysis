@@ -15,6 +15,7 @@ import {Suggestions, Suggestion, SEVERITY} from 'parser/core/modules/Suggestions
 import {ReactNode} from 'react'
 import {Accordion, Table, Message} from 'semantic-ui-react'
 import {DISPLAY_ORDER} from './DISPLAY_ORDER'
+import {THUNDER_CHECKLIST_DESCRIPTION, THUNDER_CHECKLIST_NAME, THUNDER_REQUIREMENT_NAME} from './DoTsCommon'
 
 const MAX_ALLOWED_BAD_GCD_THRESHOLD = 2000
 const MAX_ALLOWED_CLIPPING = 3000
@@ -61,6 +62,9 @@ export class Thunder extends Analyser {
 	private tracker: ThunderApplicationTracker = {}
 
 	override initialise() {
+		// Bespoke Thunder analysis replaced by default DoT override in 7.2+
+		if (!this.parser.patch.before('7.2')) { return }
+
 		const playerFilter = filter<Event>().source(this.parser.actor.id)
 		this.addEventHook(playerFilter.type('action').action(this.data.actions.HIGH_THUNDER.id), this.onDotCast)
 		this.addEventHook(playerFilter.type('statusApply').status(this.data.statuses.HIGH_THUNDER.id), this.onDotApply)
@@ -122,14 +126,12 @@ export class Thunder extends Analyser {
 	private onComplete() {
 		// Checklist item for keeping Thunder DoT rolling
 		this.checklist.add(new Rule({
-			name: <Trans id="blm.thunder.checklist.dots.name">Keep your <DataLink status="HIGH_THUNDER" /> DoT up</Trans>,
-			description: <Trans id="blm.thunder.checklist.dots.description">
-				Your <DataLink status="HIGH_THUNDER" /> DoT contributes significantly to your overall damage. Try to keep the DoT applied.
-			</Trans>,
+			name: THUNDER_CHECKLIST_NAME,
+			description: THUNDER_CHECKLIST_DESCRIPTION,
 			target: 95,
 			requirements: [
 				new Requirement({
-					name: <Trans id="blm.thunder.checklist.dots.requirement.name"><DataLink status="HIGH_THUNDER" /> uptime</Trans>,
+					name: THUNDER_REQUIREMENT_NAME,
 					percent: this.getThunderUptime(),
 				}),
 			],
@@ -198,6 +200,9 @@ export class Thunder extends Analyser {
 	}
 
 	override output() {
+		// Bespoke Thunder analysis replaced by default DoT override in 7.2+
+		if (!this.parser.patch.before('7.2')) { return }
+
 		const numTargets = Object.keys(this.tracker).length
 
 		const disclaimer = <Message>

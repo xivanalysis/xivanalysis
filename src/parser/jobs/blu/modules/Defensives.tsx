@@ -17,7 +17,7 @@ export class Defensives extends CoreDefensives {
 	// Basic defensives are Addle and Magic Hammer.
 	// Due to spell slot limitations, not everyone will be carrying Magic Hammer,
 	// so later we filter this out of the report if they never used it.
-	protected override trackedDefensives = [
+	protected override trackedActions = [
 		this.data.actions.ADDLE,
 		this.data.actions.MAGIC_HAMMER,
 	]
@@ -49,20 +49,20 @@ export class Defensives extends CoreDefensives {
 		// Filter out Magic Hammer if they never used it -- Assume that they just didn't
 		// have it slotted.
 		if (this.getUses(this.data.actions.MAGIC_HAMMER).length === 0) {
-			const index = this.trackedDefensives.indexOf(this.data.actions.MAGIC_HAMMER)
-			this.trackedDefensives.splice(index, 1)
+			const index = this.trackedActions.indexOf(this.data.actions.MAGIC_HAMMER)
+			this.trackedActions.splice(index, 1)
 		}
 
 		switch (this.currentMimicry) {
 		case this.data.statuses.MIMICRY_TANK.id:
-			this.trackedDefensives.push(
+			this.trackedActions.push(
 				this.data.actions.DRAGON_FORCE,
 				this.data.actions.CHELONIAN_GATE,
 				this.data.actions.DEVOUR,
 			)
 			break
 		case this.data.statuses.MIMICRY_HEALER.id:
-			this.trackedDefensives.push(this.data.actions.ANGELS_SNACK)
+			this.trackedActions.push(this.data.actions.ANGELS_SNACK)
 			break
 		case this.data.statuses.MIMICRY_DPS.id:
 			// DPSes just get Addle and possibly Magic Hammer.

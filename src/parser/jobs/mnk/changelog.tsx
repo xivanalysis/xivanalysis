@@ -3,6 +3,16 @@ import {CONTRIBUTORS} from 'data/CONTRIBUTORS'
 
 export const changelog = [
 	{
+		date: new Date('2025-04-11'),
+		Changes: () => <>Update Enlightenment target count for patch 7.2</>,
+		contributors: [CONTRIBUTORS.HINT],
+	},
+	{
+		date: new Date('2025-04-11'),
+		Changes: () => <>Add a 10-GCD target for <StatusLink status="BROTHERHOOD" /> windows. It is technically possible to get 11 GCDs in Brotherhood, but this is extremely tight at the standard 1.94 GCD.</>,
+		contributors: [CONTRIBUTORS.HINT],
+	},
+	{
 		date: new Date('2024-12-12'),
 		Changes: () => <>Add a chakra gauge to the timeline and suggestions for overcapping chakra. Gauge events are only visible to the logging player, so these won't show up unless the Monk was the player who uploaded this log.</>,
 		contributors: [CONTRIBUTORS.HINT],

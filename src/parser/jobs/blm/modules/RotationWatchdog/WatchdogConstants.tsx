@@ -17,7 +17,7 @@ export const ENHANCED_SEVERITY_TIERS = {
 	3: SEVERITY.MAJOR,
 }
 
-export const FLARE_STAR_CARRYOVER_CODE = -2
+export const NO_DENOMINATOR_CODE = -2
 
 export interface CycleErrorCode {priority: number, message: ReactNode}
 export const DEATH_PRIORITY = 101 // Define this const here so we can reference it in both classes
@@ -34,6 +34,7 @@ export const ROTATION_ERRORS = ensureRecord<CycleErrorCode>()({
 	SHORT: {priority: HIDDEN_PRIORITY_THRESHOLD, message: 'Too short, won\'t process'},
 	// Messages below should be Trans objects since they'll be displayed to end users
 	SHOULD_SKIP_T3: {priority: 8, message: <Trans id="blm.rotation-watchdog.error-messages.should-skip-t3">Should skip hardcast <DataLink action="THUNDER_III"/></Trans>},
+	COLD_F3: {priority: 9, message: <Trans id="blm.rotation-watchdog.error-messages.cold-f3">Cast <DataLink action="FIRE_III" /> in Umbral Ice</Trans>},
 	MISSING_FIRE4S: {priority: 10, message: <Trans id="blm.rotation-watchdog.error-messages.missing-fire4s">Missing one or more <DataLink action="FIRE_IV"/>s</Trans>}, // These three errors are lower priority since they can be determined by looking at the
 	MISSED_ICE_PARADOX: {priority: 15, message: <Trans id="blm.rotation-watchdog.error-messages.missed-ice-paradox">Missed <DataLink action="PARADOX"/> in Umbral Ice</Trans>},
 	MISSING_DESPAIRS: {priority: 20, message: <Trans id="blm.rotation-watchdog.error-messages.missing-despair">Missing one or more <DataLink action="DESPAIR"/>s</Trans>}, // target columns in the table, so we want to tell players about other errors first
@@ -59,10 +60,7 @@ export interface CycleMetadata {
 
 export interface PhaseMetadata {
 	startTime: number
-	initialMP: number
-	initialGaugeState: BLMGaugeState
+	gaugeStateBeforeFire: BLMGaugeState
+	fireEntryGaugeState: BLMGaugeState
 	fullElementTime: number
-	fullElementMP: number
-	fullElementGaugeState: BLMGaugeState
-	circleOfPowerPct: number
 }

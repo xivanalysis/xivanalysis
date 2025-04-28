@@ -1,5 +1,8 @@
 import {AoEUsages} from 'parser/core/modules/AoEUsages'
 
+const PF_BP_71 = 3
+const PF_BP_72 = 4
+
 export class AoeChecker extends AoEUsages {
 	suggestionIcon = this.data.actions.TRI_DISASTER.icon
 
@@ -17,7 +20,7 @@ export class AoeChecker extends AoEUsages {
 		{
 			aoeAction: this.data.actions.PAINFLARE,
 			stActions: [this.data.actions.NECROTIZE],
-			minTargets: 3,
+			minTargets: (!this.parser.patch.before('7.2')) ? PF_BP_71 : PF_BP_72,
 		},
 		{
 			aoeAction: this.data.actions.ASTRAL_FLARE,

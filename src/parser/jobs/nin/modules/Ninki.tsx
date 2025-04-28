@@ -17,7 +17,7 @@ type GaugeModifier = Partial<Record<Event['type'], number>>
 const BUNSHIN_GAIN = 5
 const BUNSHIN_GAIN_KAMAITACHI = 10
 const HELLFROG_TARGET_MINIMUM = 3
-const DEATHFROG_TARGET_MINIMUM = 2
+const DEATHFROG_TARGET_MINIMUM = 3
 
 const OVERCAP_SEVERITY = {
 	20: SEVERITY.MINOR,
@@ -147,7 +147,7 @@ export class Ninki extends CoreGauge {
 
 	private onDeathfrog(event: Events['damage']) {
 		if (event.targets.length < DEATHFROG_TARGET_MINIMUM) {
-			// If we have a Deathfrog event with fewer than 2 targets, it should've been a Zesho Meppo instead
+			// If we have a Deathfrog event with fewer than 3 targets, it should've been a Zesho Meppo instead
 			this.erroneousDeathfrogs++
 		}
 	}
@@ -173,19 +173,19 @@ export class Ninki extends CoreGauge {
 			tiers: FROG_SEVERITY,
 			value: this.erroneousHellfrogs,
 			why: <Trans id="nin.ninki.suggestions.hellfrog.why">
-				You used Hellfrog Medium <Plural value={this.erroneousHellfrogs} one="# time" other="# times"/> when other spenders were available.
+				You used Hellfrog Medium on fewer than three targets <Plural value={this.erroneousHellfrogs} one="# time" other="# times"/>.
 			</Trans>,
 		}))
 
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.DEATHFROG_MEDIUM.icon,
 			content: <Trans id="nin.ninki.suggestions.deathfrog.content">
-				Avoid using <ActionLink action="DEATHFROG_MEDIUM"/> when you have fewer than two targets, as <ActionLink action="ZESHO_MEPPO"/> is otherwise a potency gain.
+				Avoid using <ActionLink action="DEATHFROG_MEDIUM"/> when you have fewer than three targets, as <ActionLink action="ZESHO_MEPPO"/> is otherwise a potency gain.
 			</Trans>,
 			tiers: FROG_SEVERITY,
 			value: this.erroneousDeathfrogs,
 			why: <Trans id="nin.ninki.suggestions.deathfrog.why">
-				You used Deathfrog Medium <Plural value={this.erroneousDeathfrogs} one="# time" other="# times"/> when other spenders were available.
+				You used Deathfrog Medium on fewer than three targets <Plural value={this.erroneousDeathfrogs} one="# time" other="# times"/>.
 			</Trans>,
 		}))
 	}
