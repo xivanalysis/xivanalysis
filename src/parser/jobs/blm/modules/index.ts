@@ -4,14 +4,17 @@ import {ActionTimeline} from './ActionTimeline'
 import {AoEUsages} from './AoEUsages'
 import {CastTime} from './CastTime'
 import {Defensives} from './Defensives'
+import {DoTs} from './DoTs'
 import {Gauge} from './Gauge'
 import {Leylines} from './Leylines'
 import {NotCasting} from './NotCasting'
 import {OGCDDowntime} from './OGCDDowntime'
 import {Procs} from './Procs'
 import {RotationWatchdog} from './RotationWatchdog'
+import {Swiftcast} from './Swiftcast'
 import {Thunder} from './Thunder'
 import {Triplecast} from './Triplecast'
+import {Utilities} from './Utilities'
 import {Weaving} from './Weaving'
 
 export const modules = [
@@ -28,6 +31,9 @@ export const modules = [
 	OGCDDowntime,
 	Procs,
 	RotationWatchdog,
+	DoTs,
+	Swiftcast,
 	Thunder,
 	Triplecast,
+	Utilities,
 ]

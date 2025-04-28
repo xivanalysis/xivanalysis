@@ -12,12 +12,14 @@ export interface IceMageEvaluatorOpts {
 	suggestionIcon: string
 	metadataHistory: History<CycleMetadata>
 	fireSpellIds: number[]
+	icespellIds: number[]
 }
 
 export class IceMageEvaluator extends RulePassedEvaluator {
 	private suggestionIcon: string
 	private metadataHistory: History<CycleMetadata>
 	private fireSpellIds: number[]
+	private iceSpellIds: number[]
 
 	override header = undefined
 
@@ -27,6 +29,7 @@ export class IceMageEvaluator extends RulePassedEvaluator {
 		this.suggestionIcon = opts.suggestionIcon
 		this.metadataHistory = opts.metadataHistory
 		this.fireSpellIds = opts.fireSpellIds
+		this.iceSpellIds = opts.icespellIds
 	}
 
 	override passesRule(window: HistoryEntry<EvaluatedAction[]>) {
@@ -36,6 +39,11 @@ export class IceMageEvaluator extends RulePassedEvaluator {
 
 		// If they had fire spells, they weren't an ice mage, good
 		if (window.data.some(event => this.fireSpellIds.includes(event.action.id))) {
+			return true
+		}
+
+		// If they weren't using ice spells, they weren't an ice mage, good
+		if (!window.data.some(event => this.iceSpellIds.includes(event.action.id))) {
 			return true
 		}
 

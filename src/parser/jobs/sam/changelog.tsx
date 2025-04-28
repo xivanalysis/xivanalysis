@@ -13,6 +13,11 @@ export const changelog = [
 		contributors: [CONTRIBUTORS.RYAN],
 	},
 	{
+		date: new Date('2025-01-19'),
+		Changes: () => <> Fixed an issue where Meikyo would count as breaking combos when used after a combo already expired. </>,
+		contributors: [CONTRIBUTORS.RYAN],
+	},
+	{
 		date: new Date('2024-11-14'),
 		Changes: () => <>SAM updated for 7.1 Support</>,
 		contributors: [CONTRIBUTORS.RYAN],

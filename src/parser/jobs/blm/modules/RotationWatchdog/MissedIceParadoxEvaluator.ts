@@ -20,9 +20,9 @@ export class MissedIceParadoxEvaluator extends RulePassedEvaluator {
 		const windowMetadata = getMetadataForWindow(window, this.metadataHistory)
 
 		// Check if the rotation overwrote a Paradox from the ice phase
-		if (windowMetadata.firePhaseMetadata.initialGaugeState.paradox > 0 &&
-			windowMetadata.firePhaseMetadata.initialGaugeState.umbralIce === ASTRAL_UMBRAL_MAX_STACKS &&
-			windowMetadata.firePhaseMetadata.initialGaugeState.umbralHearts === UMBRAL_HEARTS_MAX_STACKS) {
+		if (windowMetadata.firePhaseMetadata.gaugeStateBeforeFire.paradox > 0 &&
+			windowMetadata.firePhaseMetadata.gaugeStateBeforeFire.umbralIce === ASTRAL_UMBRAL_MAX_STACKS &&
+			windowMetadata.firePhaseMetadata.gaugeStateBeforeFire.umbralHearts === UMBRAL_HEARTS_MAX_STACKS) {
 			assignErrorCode(windowMetadata, ROTATION_ERRORS.MISSED_ICE_PARADOX)
 		}
 		return

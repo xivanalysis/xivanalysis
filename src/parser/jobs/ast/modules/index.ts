@@ -1,6 +1,7 @@
 import {Interrupts} from 'parser/core/modules/Interrupts'
 import {LucidDreaming} from 'parser/core/modules/LucidDreaming'
 import {ActionTimeline} from './ActionTimeline'
+import {AoEUsages} from './AoEUsages'
 import {ArcanaSuggestions, ArcanaTracking} from './ArcanaTracking'
 import {Combust} from './Combust'
 import {Defensives} from './Defensives'
@@ -19,6 +20,7 @@ import {Tincture} from './Tincture'
 
 export const modules = [
 	ActionTimeline,
+	AoEUsages,
 	ArcanaSuggestions,
 	ArcanaTracking,
 	Combust,

@@ -7,7 +7,7 @@ import {History, HistoryEntry} from 'parser/core/modules/ActionWindow/History'
 import {Invulnerability} from 'parser/core/modules/Invulnerability'
 import {TieredSuggestion} from 'parser/core/modules/Suggestions'
 import {assignErrorCode, getMetadataForWindow, includeInSuggestions} from './EvaluatorUtilities'
-import {CycleMetadata, ROTATION_ERRORS, DEFAULT_SEVERITY_TIERS, FLARE_STAR_CARRYOVER_CODE} from './WatchdogConstants'
+import {CycleMetadata, ROTATION_ERRORS, DEFAULT_SEVERITY_TIERS, NO_DENOMINATOR_CODE} from './WatchdogConstants'
 
 export type ExpectedFireSpellsEvaluatorOpts =
 	& Omit<TrackedActionsOptions, 'suggestionIcon' | 'suggestionContent' | 'suggestionWindowName' | 'severityTiers'>
@@ -73,14 +73,15 @@ export class ExpectedFireSpellsEvaluator extends ExpectedActionsEvaluator {
 		// Also we need to make sure we don't re-run the count evaluation for the action if we already did
 		// If we do, it can screw up other evaluators
 		if (action.action.id === this.fire4Action.id) {
-			if (windowMetadata.finalOrDowntime) { return undefined }
+			if (windowMetadata.finalOrDowntime || windowMetadata.expectedFire4s === NO_DENOMINATOR_CODE) { return undefined }
 			if (windowMetadata.expectedFire4s >= 0) { return windowMetadata.expectedFire4s }
 		}
-		if (action.action.id === this.despairAction.id && windowMetadata.expectedDespairs >= 0) {
-			return windowMetadata.expectedDespairs
+		if (action.action.id === this.despairAction.id) {
+			if (windowMetadata.expectedDespairs === NO_DENOMINATOR_CODE) { return undefined }
+			if (windowMetadata.expectedDespairs >= 0) { return windowMetadata.expectedDespairs }
 		}
 		if (action.action.id === this.flareStarAction.id) {
-			if (windowMetadata.finalOrDowntime || windowMetadata.expectedFlareStars === FLARE_STAR_CARRYOVER_CODE) { return undefined }
+			if (windowMetadata.finalOrDowntime || windowMetadata.expectedFlareStars === NO_DENOMINATOR_CODE) { return undefined }
 			if (windowMetadata.expectedFlareStars >= 0) { return windowMetadata.expectedFlareStars }
 		}
 

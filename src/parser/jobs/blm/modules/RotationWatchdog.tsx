@@ -4,8 +4,7 @@ import {DataLink} from 'components/ui/DbLink'
 import {RotationEvent} from 'components/ui/Rotation'
 import {RotationTargetOutcome} from 'components/ui/RotationTable'
 import {ActionKey} from 'data/ACTIONS'
-import {Event, Events} from 'event'
-import {filter} from 'parser/core/filter'
+import {Events} from 'event'
 import {dependency} from 'parser/core/Injectable'
 import {EvaluatedAction, RestartWindow, TrackedAction} from 'parser/core/modules/ActionWindow'
 import {History, HistoryEntry} from 'parser/core/modules/ActionWindow/History'
@@ -18,10 +17,10 @@ import {Message} from 'semantic-ui-react'
 import {fillActionIds} from 'utilities/fillArrays'
 import {DISPLAY_ORDER} from './DISPLAY_ORDER'
 import {FIRE_SPELLS, ICE_SPELLS, THUNDER_SPELLS} from './Elements'
-import {ASTRAL_UMBRAL_DURATION, ASTRAL_UMBRAL_MAX_STACKS, BLMGaugeState, UMBRAL_HEARTS_MAX_STACKS} from './Gauge'
-import {Leylines} from './Leylines'
+import {ASTRAL_SOUL_MAX_STACKS, ASTRAL_UMBRAL_DURATION, ASTRAL_UMBRAL_MAX_STACKS, BLMGaugeState, FLARE_SOUL_GENERATION, Gauge, UMBRAL_HEARTS_MAX_STACKS} from './Gauge'
 import {Procs} from './Procs'
-import {assignErrorCode, getMetadataForWindow, getPreviousMetadata} from './RotationWatchdog/EvaluatorUtilities'
+import {ColdF3Evaluator} from './RotationWatchdog/ColdF3Evaluator'
+import {assignErrorCode, getMetadataForWindow} from './RotationWatchdog/EvaluatorUtilities'
 import {ExpectedFireSpellsEvaluator} from './RotationWatchdog/ExpectedFireSpellsEvaluator'
 import {ExtraF1Evaluator} from './RotationWatchdog/ExtraF1Evaluator'
 import {FirestarterUsageEvaluator} from './RotationWatchdog/FirestarterUsageEvaluator'
@@ -32,16 +31,13 @@ import {MissedIceParadoxEvaluator} from './RotationWatchdog/MissedIceParadoxEval
 import {RotationErrorNotesEvaluator} from './RotationWatchdog/RotationErrorNotesEvaluator'
 import {SkipThunderEvaluator} from './RotationWatchdog/SkipThunderEvaluator'
 import {UptimeSoulsEvaluator} from './RotationWatchdog/UptimeSoulsEvaluator'
-import {CycleMetadata, ROTATION_ERRORS, HIDDEN_PRIORITY_THRESHOLD, FLARE_STAR_CARRYOVER_CODE} from './RotationWatchdog/WatchdogConstants'
+import {CycleMetadata, ROTATION_ERRORS, HIDDEN_PRIORITY_THRESHOLD, NO_DENOMINATOR_CODE} from './RotationWatchdog/WatchdogConstants'
 
 // eslint-disable-next-line no-constant-binary-expression
 const DEBUG_SHOW_ALL = false && process.env.NODE_ENV !== 'production'
 
-const MAX_POSSIBLE_FIRE4 = 6
 const NO_UH_EXPECTED_FIRE4 = 4
 const MAX_MP = 10000
-
-const EXTRA_F4_COP_THRESHOLD = 0.5 // Feelycraft
 
 const ROTATION_ENDPOINTS: ActionKey[] = [
 	'BLIZZARD_III',
@@ -70,16 +66,16 @@ export class RotationWatchdog extends RestartWindow {
 
 	@dependency private actors!: Actors
 	@dependency private invulnerability!: Invulnerability
-	@dependency private leylines!: Leylines
 	@dependency private procs!: Procs
 	@dependency private unableToAct!: UnableToAct
+	@dependency private gauge!: Gauge
 
 	override startAction = ROTATION_ENDPOINTS
 	override prependMessages = <Fragment>
 		<Message>
 			<Trans id="blm.rotation-watchdog.rotation-table.message">
 				The core of BLM consists of six casts of <DataLink action="FIRE_IV"/>, two casts of <DataLink action="PARADOX"/>, and one cast each of <DataLink action="DESPAIR"/>, and <DataLink action="FLARE_STAR" /> per rotation.<br/>
-				Avoid missing <DataLink action="FIRE_IV" showIcon={false} /> casts where possible. since that will prevent you from using <DataLink showIcon={false} action="FLARE_STAR" />.
+				Avoid missing <DataLink action="FIRE_IV" showIcon={false} /> casts where possible, since that will prevent you from using <DataLink showIcon={false} action="FLARE_STAR" />.
 			</Trans>
 		</Message>
 	</Fragment>
@@ -101,12 +97,9 @@ export class RotationWatchdog extends RestartWindow {
 		expectedFlareStars: -1,
 		firePhaseMetadata: {
 			startTime: 0,
-			initialMP: 0,
-			initialGaugeState: {...EMPTY_GAUGE_STATE},
+			gaugeStateBeforeFire: {...EMPTY_GAUGE_STATE},
+			fireEntryGaugeState: {...EMPTY_GAUGE_STATE},
 			fullElementTime: 0,
-			fullElementMP: 0,
-			fullElementGaugeState: {...EMPTY_GAUGE_STATE},
-			circleOfPowerPct: 0,
 		}}
 	))
 
@@ -117,9 +110,6 @@ export class RotationWatchdog extends RestartWindow {
 		this.setHistoryOutputFilter(this.filterForOutput)
 
 		this.ignoreActions([this.data.actions.ATTACK.id])
-
-		this.addEventHook(filter<Event>().source(this.parser.actor.id).type('action')
-			.action(this.data.actions.MANAFONT.id), this.onManafont)
 
 		this.addEventHook('blmgauge', this.onGaugeEvent)
 		this.addEventHook({
@@ -171,6 +161,10 @@ export class RotationWatchdog extends RestartWindow {
 			manafontAction: this.data.actions.MANAFONT,
 			despairId: this.data.actions.DESPAIR.id,
 			metadataHistory: this.metadataHistory,
+			requiredMP: this.data.actions.FIRE_IV.mpCost,
+			flareId: this.data.actions.FLARE.id,
+			gauge: this.gauge,
+			actors: this.actors,
 		}))
 
 		this.addEvaluator(new ExtraF1Evaluator({
@@ -184,11 +178,23 @@ export class RotationWatchdog extends RestartWindow {
 			invulnerability: this.invulnerability,
 		}))
 
-		this.addEvaluator(new FirestarterUsageEvaluator({
-			manafontId: this.data.actions.MANAFONT.id,
-			paradoxId: this.data.actions.PARADOX.id,
-			fire3Id: this.data.actions.FIRE_III.id,
-		}))
+		// Since timer considerations are no longer relevant for 7.2+, we can swap the minor "you probably should hold Firestarter" suggestion
+		// for a more stringent tiered one. Transpose AF1 PD F3P is basically free now, so it should be the default if an F3P is not held over
+		// from the previous phase
+		if (this.parser.patch.before('7.2')) {
+			this.addEvaluator(new FirestarterUsageEvaluator({
+				manafontId: this.data.actions.MANAFONT.id,
+				paradoxId: this.data.actions.PARADOX.id,
+				fire3Id: this.data.actions.FIRE_III.id,
+				metadataHistory: this.metadataHistory,
+			}))
+		} else {
+			this.addEvaluator(new ColdF3Evaluator({
+				fire3Action: this.data.actions.FIRE_III,
+				gauge: this.gauge,
+				metadataHistory: this.metadataHistory,
+			}))
+		}
 		//#endregion
 
 		//#region Evaluators that only apply to normal mid-fight windows
@@ -197,6 +203,7 @@ export class RotationWatchdog extends RestartWindow {
 			suggestionIcon: this.data.actions.HIGH_BLIZZARD_II.icon,
 			metadataHistory: this.metadataHistory,
 			fireSpellIds: this.fireSpellIds,
+			icespellIds: this.iceSpellIds,
 		}))
 		//#endregion
 
@@ -213,12 +220,6 @@ export class RotationWatchdog extends RestartWindow {
 		this.addEvaluator(new RotationErrorNotesEvaluator(this.metadataHistory))
 
 		this.onWindowStart(this.parser.pull.timestamp)
-	}
-
-	// Special handling for Manafont, we want to show it as both the end and start of the windows it's involved in
-	private onManafont(event: Events['action']) {
-		super.onWindowAction(event)
-		super.onWindowRestart(event)
 	}
 
 	private onDeath() {
@@ -238,14 +239,15 @@ export class RotationWatchdog extends RestartWindow {
 				metadata.firePhaseMetadata.startTime = event.timestamp
 
 				// Spread the current gauge state into the phase metadata for future reference (technically the final state of the gauge before it changes to Fire)
-				metadata.firePhaseMetadata.initialGaugeState = {...this.currentGaugeState}
+				metadata.firePhaseMetadata.gaugeStateBeforeFire = {...this.currentGaugeState}
+
+				// Also spread the incoming gauge state
+				metadata.firePhaseMetadata.fireEntryGaugeState = {...event.gaugeState}
 			}
 
 			// Tranpose -> Paradox -> F1 is a thing in non-standard scenarios, so only store the initial MP once we actually reach full AF
 			if (this.currentGaugeState.astralFire < ASTRAL_UMBRAL_MAX_STACKS && event.gaugeState.astralFire === ASTRAL_UMBRAL_MAX_STACKS) {
 				metadata.firePhaseMetadata.fullElementTime = event.timestamp
-				metadata.firePhaseMetadata.fullElementGaugeState = {...event.gaugeState}
-				metadata.firePhaseMetadata.fullElementMP = this.actors.current.mp.current
 			}
 
 			// If we no longer have enochian, flag it for display
@@ -266,10 +268,6 @@ export class RotationWatchdog extends RestartWindow {
 	override onWindowEnd(timestamp: number) {
 		const metadata = this.metadataHistory.getCurrent()
 		if (metadata != null) {
-			metadata.data.firePhaseMetadata.circleOfPowerPct =
-				this.leylines.getStatusDurationInRange(this.data.statuses.CIRCLE_OF_POWER.id, metadata.data.firePhaseMetadata.startTime, timestamp) /
-				(timestamp - metadata.data.firePhaseMetadata.startTime)
-
 			// If the window ended while the boss was untargetable, mark it as a downtime window
 			if (this.invulnerability.isActive({
 				timestamp: timestamp,
@@ -291,6 +289,9 @@ export class RotationWatchdog extends RestartWindow {
 	}
 
 	override onWindowRestart(event: Events['action']) {
+		// Don't start a new window if we hadn't actually put any data in the current window yet (ie. opening with raw B3)
+		if (this.history.getCurrent()?.data.length === 0) { return }
+
 		// Do not start a new window if transposing from Ice to Fire
 		if (event.action === this.data.actions.TRANSPOSE.id && this.currentGaugeState.umbralIce > 0) {
 			return
@@ -298,7 +299,7 @@ export class RotationWatchdog extends RestartWindow {
 
 		// Do not start a new window if we're using B3 to go from partial UI to full
 		// Tranpose > instant B3 is a minor gain over hardcast hot B3
-		if (event.action === this.data.actions.BLIZZARD_III.id && this.currentGaugeState.umbralIce > 0 && this.currentGaugeState.umbralIce < ASTRAL_UMBRAL_MAX_STACKS) {
+		if (this.currentGaugeState.umbralIce > 0 && this.currentGaugeState.umbralIce < ASTRAL_UMBRAL_MAX_STACKS) {
 			return
 		}
 
@@ -343,86 +344,136 @@ export class RotationWatchdog extends RestartWindow {
 			end: windowEnd,
 		})
 
-		// If the whole fire phase happened during downtime (ie. Transpose spamming to get/keep Thunderhead), don't expect fire spells
+		// If the whole fire phase happened during downtime (ie. Transpose spamming to get/keep Thunderhead or Paradox), don't expect fire spells
 		if (fireInvulnDuration === firePhaseDuration) { return 0 }
+
+		const actualCount = window.data.filter(event => event.action.id === action.action.id).length
 
 		let adjustment = 0
 		if (action.action.id === this.data.actions.FIRE_IV.id) {
 			// Let the player rush the Despair if they need to before a downtime/end of fight
 			if (windowMetadata.finalOrDowntime) { return window.data.filter(event => event.action.id === this.data.actions.FIRE_IV.id).length }
 
-			// Windows begun by Manafont by definition should contain the full 6 F4s
-			if (window.data[0].action.id === this.data.actions.MANAFONT.id) {
-				windowMetadata.expectedFire4s = MAX_POSSIBLE_FIRE4
-				return MAX_POSSIBLE_FIRE4
+			// We definitely reached full MP if an ice spell was cast while already at UI3, or we Umbral Souled three times
+			const definitelyFullMP = window.data.find(event => this.iceSpellIds.includes(event.action.id) &&
+					this.gauge.getGaugeState(event.timestamp - 1).umbralIce === ASTRAL_UMBRAL_MAX_STACKS) != null ||
+				window.data.filter(event => event.action.id === this.data.actions.UMBRAL_SOUL.id).length === UMBRAL_HEARTS_MAX_STACKS
+
+			let afterUHMP = definitelyFullMP ? MAX_MP : 0
+
+			// If we don't know for sure that the player reached full MP for this window, try to figure out how much MP they had from their resources
+			// This is less reliable, since the resource update events don't always come through at the times they should with respect to game behavior
+			if (!definitelyFullMP) {
+				// If Manafont was used to reach AF3, we shouldn't expect F4s, since you generally don't want to cast Fire spells below AF3
+				const beforeFullAFManafontEvent = window.data.some((event) => event.action.id === this.data.actions.MANAFONT.id && event.timestamp <= windowMetadata.firePhaseMetadata.fullElementTime)
+				if (!beforeFullAFManafontEvent) {
+					// Figure out when the player entered Astral Fire, and reached Astral Fire 3 (these may be different)
+					const firstGCDInAFTimestamp = window.data.find((event) => event.timestamp > windowMetadata.firePhaseMetadata.startTime && event.action.onGcd)?.timestamp
+					const firstGCDInFullAFTimestamp  = window.data.find((event) => event.timestamp > windowMetadata.firePhaseMetadata.fullElementTime && event.action.onGcd)?.timestamp
+
+					// This shouldn't happen, but to be safe...
+					if (firstGCDInAFTimestamp == null || firstGCDInFullAFTimestamp == null) {
+						windowMetadata.expectedFire4s = NO_DENOMINATOR_CODE
+						return windowMetadata.expectedFire4s
+					}
+
+					// Start with the MP we think they had on entering Astral Fire, by looking for the maximum of the MP values before the entry and AF3 reached times
+					afterUHMP = Math.max(this.actors.current.at(firstGCDInAFTimestamp - 1).mp.current, this.actors.current.at(firstGCDInFullAFTimestamp - 1).mp.current)
+				}
 			}
 
-			// Start off with the baseline assumption they've reached full MP in Umbral Ice, since MP events from the log source aren't reliably timed
-			adjustment = NO_UH_EXPECTED_FIRE4
+			for (let i = 0; i < windowMetadata.firePhaseMetadata.fireEntryGaugeState.umbralHearts; i++) {
+				// If we have enough MP to cast F4 while maintaining a reserve for Despair (which requires at least the base cost of an F4 to use), we should count it
+				if (afterUHMP > this.data.actions.FIRE_IV.mpCost * 2) {
+					// Add the Umbral Heart casts of F4 to the adjustment total
+					adjustment++
+					// Reduce the amount of MP
+					afterUHMP -= this.data.actions.FIRE_IV.mpCost
+				}
+			}
+			// Count the number of remaining F4 casts they can afford with the MP left after spending all of their hearts
+			let fullMPCasts = Math.floor(afterUHMP / (this.data.actions.FIRE_IV.mpCost * 2))
 
-			// Rotations with at least one heart get an extra F4 (5x F4 + F1 with 1 heart is the same MP cost as the standard 6F4 + F1 with 3)
-			// Note that two hearts does not give any extra F4s, though it'll hardly ever come up in practice
-			if (windowMetadata.firePhaseMetadata.fullElementGaugeState.umbralHearts > 0) {
-				adjustment++
+			// If the player had a Paradox marker when they entered AF, we expect them to spend it
+			if (windowMetadata.firePhaseMetadata.fireEntryGaugeState.paradox > 0 && fullMPCasts > 0) {
+				fullMPCasts--
 			}
 
-			// Rotations with full hearts get two extra F4s
-			if (windowMetadata.firePhaseMetadata.fullElementGaugeState.umbralHearts === UMBRAL_HEARTS_MAX_STACKS) {
-				adjustment++
+			// Prior to patch 7.2, expecting more than the baseline of 4 F4s without a Paradox available means needing to Despair to refresh the timer. Dock one expected cast
+			if (this.parser.patch.before('7.2') && adjustment + fullMPCasts > NO_UH_EXPECTED_FIRE4 && windowMetadata.firePhaseMetadata.fireEntryGaugeState.paradox === 0) {
+				fullMPCasts--
 			}
 
-			const buildAstralFireEvents = window.data.filter(event => event.timestamp >= windowMetadata.firePhaseMetadata.startTime && event.timestamp <= windowMetadata.firePhaseMetadata.fullElementTime)
-
-			/**
-			 * IF this rotation's Astral Fire phase began with no Umbral Hearts (either no-B4-opener, or a midfight alternate playstyle rotation),
-			 * AND it begins with a cost-less Fire 3 (ie, the rotation includes an ice phase and they didn't Transpose -> hardcast F3)
-			 * AND we have leylines for long enough to squeeze in an extra F4
-			 * AND we actually have enough MP for it
-			 * THEN we increase the expected count by one
-			 */
-			if (
-				windowMetadata.firePhaseMetadata.initialGaugeState.umbralHearts === 0 &&
-				window.data.some(event => this.iceSpellIds.includes(event.action.id)) &&
-				(buildAstralFireEvents.length === 1 || // Did the window either start via UI F3 or a Transpose F3P?
-					(buildAstralFireEvents.length > 1 && buildAstralFireEvents[0].action.id === this.data.actions.TRANSPOSE.id && buildAstralFireEvents[buildAstralFireEvents.length - 1].action.id === this.data.actions.FIRE_III.id &&
-						this.procs.checkActionWasProc(this.data.actions.FIRE_III.id, buildAstralFireEvents[buildAstralFireEvents.length - 1].timestamp))) &&
-				windowMetadata.firePhaseMetadata.circleOfPowerPct >= EXTRA_F4_COP_THRESHOLD &&
-				((adjustment + 1) * 2 + 1) * this.data.actions.FIRE_IV.mpCost < MAX_MP
-			) {
-				adjustment++
-			}
+			// Add the full MP casts of F4 to the adjustment total
+			adjustment += fullMPCasts
 
 			// Make sure we don't go wild and return a larger expected count than is actually possible, in case the above logic misbehaves...
-			adjustment = Math.min(adjustment, MAX_POSSIBLE_FIRE4)
+			//adjustment = Math.min(adjustment, MAX_POSSIBLE_FIRE4)
 
-			// Give them credit if we were overly pessimistic
-			adjustment = Math.max(adjustment, window.data.filter(event => event.action.id === action.action.id).length)
+			// If the player used Manafont in this window, we expect them to use enough F4s to get another Flare Star
+			if (window.data.some(event => event.action.id === this.data.actions.MANAFONT.id)) {
+				adjustment += ASTRAL_SOUL_MAX_STACKS
+				// If using the Manafont Paradox would leave the player one Soul short of a second Flare Star, they should skip it and use F4 instead
+				if (adjustment === (ASTRAL_SOUL_MAX_STACKS * 2 - 1)) {
+					adjustment++
+				}
+			}
+
+			// If the player needed to AoE, credit them for the souls that Flare generated
+			adjustment -= window.data.filter(event => event.action.id === this.data.actions.FLARE.id).length * FLARE_SOUL_GENERATION
 		}
 
 		if (action.action.id === this.data.actions.DESPAIR.id) {
-			adjustment++
+			const manafontIndex = window.data.findIndex(event => event.action.id === this.data.actions.MANAFONT.id)
+			const lastFlareIndex = window.data.findLastIndex(event => event.action.id === this.data.actions.FLARE.id)
+			if (lastFlareIndex >= 0) {
+				const priorGaugeState = this.gauge.getGaugeState(window.data[lastFlareIndex].timestamp - 1)
+				// If player had no Umbral Hearts, Flare eats all remaining MP the way Despair does. We're going to assume they knew why they were doing that...
+				if (priorGaugeState.umbralHearts === 0) {
+					// If they didn't Manafont this window, we shouldn't expect a Despair, and we can bail out
+					if (manafontIndex < 0) {
+						windowMetadata.expectedDespairs = NO_DENOMINATOR_CODE
+						return windowMetadata.expectedDespairs
+					}
+				} else {
+					// If they had Hearts remaining at the time they Flared, we should also see a Despair
+					adjustment++
+				}
+			} else {
+				// If they did not Flare, we should see a Despair
+				adjustment++
+			}
+			if (manafontIndex >= 0) {
+				const manafontFlareIndex = window.data.findLastIndex((event, index) => event.action.id === this.data.actions.FLARE.id && index < manafontIndex)
+				if (manafontFlareIndex >= 0) {
+					const priorGaugeState = this.gauge.getGaugeState(window.data[lastFlareIndex].timestamp - 1)
+					// If they Flared at 0 Hearts before Manafont, similarly assume no Despair from that half the phase
+					if (priorGaugeState.umbralHearts === 0) {
+						// If we didn't expect a Despair from the post-Manafont window either, indicate as such
+						if (adjustment === 0) {
+							windowMetadata.expectedDespairs = NO_DENOMINATOR_CODE
+							return windowMetadata.expectedDespairs
+						}
+					} else {
+						// If they had Hearts remaining at the time they Flared before Manafont, we should also see a Despair
+						adjustment++
+					}
+				}
+			}
 		}
 
 		if (action.action.id === this.data.actions.FLARE_STAR.id) {
 			// We should only expect a Flare Star if we're also expected to get all 6 F4s in during a full uptime window
-			if (!windowMetadata.finalOrDowntime && windowMetadata.expectedFire4s >= MAX_POSSIBLE_FIRE4) {
-				// Players may choose to carry their generated Flare Star into the post-Manafont window
-				if (window.data[window.data.length - 1].action.id === this.data.actions.MANAFONT.id &&
-					!window.data.some(event => event.action.id === this.data.actions.FLARE_STAR.id)) {
-					windowMetadata.expectedFlareStars = FLARE_STAR_CARRYOVER_CODE
-					return windowMetadata.expectedFlareStars
-				}
-
-				adjustment++
+			if (windowMetadata.finalOrDowntime || windowMetadata.expectedFire4s < 0) {
+				windowMetadata.expectedFlareStars = NO_DENOMINATOR_CODE
+				return windowMetadata.expectedFlareStars
 			}
 
-			// If we carried a Flare Star over, expect to see an extra one
-			const previousMetadata = getPreviousMetadata(window, this.metadataHistory)
-			if (previousMetadata != null && previousMetadata.expectedFlareStars === FLARE_STAR_CARRYOVER_CODE &&
-				previousMetadata.expectedFire4s >= MAX_POSSIBLE_FIRE4) {
-				adjustment++
-			}
+			adjustment = Math.floor(windowMetadata.expectedFire4s / ASTRAL_SOUL_MAX_STACKS)
 		}
+
+		// Give them credit if we were overly pessimistic
+		adjustment = Math.max(adjustment, actualCount)
 
 		switch (action.action.id) {
 		case this.data.actions.FIRE_IV.id:
