@@ -1,4 +1,4 @@
-import {Trans} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 import {DataLink} from 'components/ui/DbLink'
 import {dependency} from 'parser/core/Injectable'
 import {EvaluatedAction, ExpectedGcdCountEvaluator, RaidBuffWindow} from 'parser/core/modules/ActionWindow'

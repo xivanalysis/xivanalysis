@@ -1,5 +1,5 @@
-import {t} from '@lingui/macro'
-import {Plural, Trans} from '@lingui/react'
+import {msg} from '@lingui/core/macro'
+import {Plural, Trans} from '@lingui/react/macro'
 import {ActionLink} from 'components/ui/DbLink'
 import {Action} from 'data/ACTIONS'
 import {Analyser} from 'parser/core/Analyser'
@@ -16,7 +16,7 @@ const DEFAULT_FORGIVENESS_MS: number = 800
 
 export abstract class Utilities extends Analyser {
 	static override handle = 'utilities'
-	static override title = t('core.utilities.title')`Utilities`
+	static override title = msg({id: 'core.utilities.title', message: 'Utilities'})
 	static override displayOrder: number = DISPLAY_ORDER.UTILITIES
 
 	@dependency protected cooldowns!:Cooldowns

@@ -1,4 +1,4 @@
-import {Trans} from "@lingui/react"
+import {Trans} from "@lingui/react/macro"
 import {EvaluatedAction} from "parser/core/modules/ActionWindow"
 import {RulePassedEvaluator} from "parser/core/modules/ActionWindow/evaluators/RulePassedEvaluator"
 import {HistoryEntry} from "parser/core/modules/ActionWindow/History"

@@ -1,5 +1,5 @@
 import {msg} from '@lingui/core/macro'
-import {Plural,  Trans} from '@lingui/react/macro'
+import {Plural, Trans} from '@lingui/react/macro'
 import {DataLink} from 'components/ui/DbLink'
 import {getDataBy} from 'data'
 import {Status} from 'data/STATUSES'

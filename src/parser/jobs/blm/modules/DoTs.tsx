@@ -1,4 +1,4 @@
-import {Trans} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 import {DataLink} from 'components/ui/DbLink'
 import {dependency} from 'parser/core/Injectable'
 import {Checklist, Requirement, Rule} from 'parser/core/modules/Checklist'

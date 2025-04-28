@@ -1,4 +1,4 @@
-import {Plural, Trans} from '@lingui/react'
+import {Plural, Trans} from '@lingui/react/macro'
 import {DataLink} from 'components/ui/DbLink'
 import {AoEUsages as CoreAoE} from 'parser/core/modules/AoEUsages'
 

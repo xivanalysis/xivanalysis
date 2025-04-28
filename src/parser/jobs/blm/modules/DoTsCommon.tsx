@@ -1,4 +1,4 @@
-import {Trans} from "@lingui/react"
+import {Trans} from "@lingui/react/macro"
 import {DataLink} from "components/ui/DbLink"
 
 export const THUNDER_CHECKLIST_NAME = <Trans id="blm.thunder.checklist.dots.name">Keep your <DataLink status="HIGH_THUNDER" /> DoT up</Trans>
