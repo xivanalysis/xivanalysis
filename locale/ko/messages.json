@@ -160,7 +160,7 @@
   "blm.thunder.total-clip": "총 손실시간",
   "blm.triplecast.header.message": "",
   "blm.triplecast.suggestions.overwrote-triplecasts.content": "프록이 켜진 상태에서 <0/> 기술을 써서 즉시 시전 기회를 최소 1회 잃었습니다.",
-  "blm.triplecast.suggestions.overwrote-triplecasts.why": "<0/> 기술을 덮어썼습니다.",
+  "blm.triplecast.suggestions.overwrote-triplecasts.why": "",
   "blm.triplecast.title": "",
   "blu.about.description": "",
   "blu.always-cast.description": "",
