@@ -1,0 +1,11 @@
+.translationWrapper:hover {
+	background: gold;
+}
+
+.translationMissing {
+	background: rgba(127, 127, 255, 0.3);
+}
+
+.translationMissing:hover {
+	background: rgba(127, 127, 255);
+}

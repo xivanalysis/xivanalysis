@@ -1,11 +1,13 @@
 import {i18n, Messages} from '@lingui/core'
-import {I18nProvider} from '@lingui/react'
+import {I18nProvider, TransRenderProps} from '@lingui/react'
+import classNames from 'classnames'
 import {Language} from 'data/LANGUAGES'
 import {observable, reaction, runInAction} from 'mobx'
 import {disposeOnUnmount, observer} from 'mobx-react'
-import {Component, ContextType, ReactNode} from 'react'
-import {Container, Loader, Message} from 'semantic-ui-react'
+import {Component, ContextType, ReactNode, useContext} from 'react'
+import {Container, Loader, Message, Popup, List} from 'semantic-ui-react'
 import {StoreContext} from 'store'
+import styles from './I18nLoader.module.css'
 
 export type I18nLoaderProps = {
 	children: ReactNode
@@ -74,17 +76,55 @@ export class I18nLoader extends Component<I18nLoaderProps> {
 		const loading = !this.loaded.has(language)
 
 		if (loading) {
-			return <Container>
-				<Loader active>
+			return (
+				<Container>
+					<Loader active>
 					Loading
-				</Loader>
-			</Container>
+					</Loader>
+				</Container>
+			)
 		}
 
-		return <I18nProvider i18n={i18n}>
-			{/* TODO: Might be able to use defaultComponent to reimplement the overlay? */}
-			{/* <I18nOverlay enabled={i18nStore.overlay} language={language} /> */}
-			{this.props.children}
-		</I18nProvider>
+		return (
+			<I18nProvider i18n={i18n} defaultComponent={Wrapper}>
+				{this.props.children}
+			</I18nProvider>
+		)
 	}
 }
+
+const Wrapper = observer(function Wrapper({id, message, translation}: TransRenderProps) {
+	const {i18nStore} = useContext(StoreContext)
+
+	if (!i18nStore.overlay) {
+		return <>{translation}</>
+	}
+
+	const translationMissing = i18nStore.siteLanguage !== 'en' && translation === message
+
+	return (
+		<Popup
+			inverted
+			trigger={(
+				<span className={classNames({
+					[styles.translationWrapper]: true,
+					[styles.translationMissing]: translationMissing,
+				})}>
+					{translation}
+				</span>
+			)}
+		>
+			<Popup.Header>Localized String</Popup.Header>
+			<Popup.Content>
+				<List>
+					<List.Item>
+						<strong>id:</strong> {id}
+					</List.Item>
+					<List.Item>
+						<strong>source:</strong> {message}
+					</List.Item>
+				</List>
+			</Popup.Content>
+		</Popup>
+	)
+})
