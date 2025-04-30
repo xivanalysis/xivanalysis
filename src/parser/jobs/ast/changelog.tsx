@@ -8,6 +8,13 @@ export const changelog = [
 		contributors: [CONTRIBUTORS.AKAIRYU],
 	},
 	{
+		date: new Date('2025-04-19'),
+		Changes: () => <>Fixed draw suggestions and checklist to align better with <DataLink action="DIVINATION" />.
+			<br/> Added a suggestion when using Draw (overwritting) when there is an available <DataLink action="LORD_OF_CROWNS" /> or <DataLink action="PLAY_I" />.
+			<br/> Updated <DataLink action="MACROCOSMOS" /> suggestion with higher thresholds and better wording to align better with defensives in a way. </>,
+		contributors: [CONTRIBUTORS.OTOCEPHALY],
+	},
+	{
 		date: new Date('2025-03-26'),
 		Changes: () => <>Added AoE Usages section and adjusted <DataLink action="MACROCOSMOS" /> suggestion to exclude considerations for <DataLink action="GRAVITY_II" />. </>,
 		contributors: [CONTRIBUTORS.OTOCEPHALY],

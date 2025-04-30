@@ -9,9 +9,9 @@ import {Invulnerability} from 'parser/core/modules/Invulnerability'
 import {Suggestions, SEVERITY, Suggestion, TieredSuggestion} from 'parser/core/modules/Suggestions'
 
 const SEVERITY_MOD = {
-	0.2: SEVERITY.MINOR,
-	0.6: SEVERITY.MEDIUM,
-	0.8: SEVERITY.MAJOR,
+	0.5: SEVERITY.MINOR,
+	0.75: SEVERITY.MEDIUM,
+	0.9: SEVERITY.MAJOR,
 }
 
 // Lifted from WHM benison and adapted to AST and TSX
@@ -42,12 +42,13 @@ export class Macrocosmos extends Analyser {
 
 		const generalContent =
 			<Trans id="ast.macrocosmos.content.general">
-				Consider utilizing <DataLink action="MACROCOSMOS" /> more frequently. <DataLink action="MACROCOSMOS" showIcon={false} /> has the same potency as <DataLink action="FALL_MALEFIC" />; however, <DataLink action="MACROCOSMOS" showIcon={false} /> can be utilized to weave in healing for incoming raid wide attacks leading to more value for your GCD. <br/>
+				Consider utilizing <DataLink action="MACROCOSMOS" /> more frequently. <DataLink action="MACROCOSMOS" showIcon={false} /> has the same potency as <DataLink action="FALL_MALEFIC" /> and even greater potency per target than <DataLink action="GRAVITY_II" />.
+				<br />While this should not be used on cooldown if you plan to use for healing purposes, it can help with keeping dps uptime or with weaving in healing for incoming raid wide attacks leading to more value for your GCD.
 			</Trans>
 
 		const generalWhy =
 			<Trans id="ast.macrocosmos.why.general">
-				Out of a possible {macrocosmosMaxUses} <Plural value={macrocosmosMaxUses} one="cast" other="casts" /> during available dps uptime, there <Plural value={this.macrocosmosUses} one="was" other="were" /> {this.macrocosmosUses} <Plural value={this.macrocosmosUses} one="cast" other="casts" /> noted. <br />
+				There <Plural value={this.macrocosmosUses} one="was only # cast" other="were only # casts" /> of <DataLink action="MACROCOSMOS" /> noted.
 			</Trans>
 
 		const noCastWhy =<p><span className="text-error"><Trans id="ast.macrocosmos.why.nocasts">
