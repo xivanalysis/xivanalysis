@@ -3,6 +3,11 @@ import {CONTRIBUTORS} from 'data/CONTRIBUTORS'
 
 export const changelog = [
 	{
+		date: new Date('2025-04-20'),
+		Changes: () => <>Move Lightspeed and Swiftcast usage/cooldown availability information from Defensives to Utilities, and add Lucid Dreaming.</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
+	{
 		date: new Date('2025-04-19'),
 		Changes: () => <>Fixed draw suggestions and checklist to align better with <DataLink action="DIVINATION" />.
 			<br/> Added a suggestion when using Draw (overwritting) when there is an available <DataLink action="LORD_OF_CROWNS" /> or <DataLink action="PLAY_I" />.

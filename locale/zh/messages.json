@@ -424,7 +424,7 @@
   "core.support-summary.core-supported": "xivanalysis 目前支持到 {coreTo} 版本",
   "core.support-summary.fallback-header": "xivanalysis 暂不支持此版本。",
   "core.support-summary.fallback-message": "请过一段时间再试。",
-  "core.swiftcast.chart.good.header": "好的用法？",
+  "core.swiftcast.chart.good.header": "正确使用？",
   "core.swiftcast.chart.note.header": "备注",
   "core.swiftcast.missed.suggestion.content": "在<0/>结束之前放一个法术。你可以用来拉人或者使用一个GCD以插入能力技。",
   "core.swiftcast.suggestion.why": "{badUses, plural, other {# 次}} <0/> 使用得不正确。",

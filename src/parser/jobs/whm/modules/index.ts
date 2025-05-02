@@ -11,6 +11,7 @@ import {Overheal} from './Overheal'
 import {Swiftcast} from './Swiftcast'
 import {Thinair} from './Thinair'
 import {Tincture} from './Tincture'
+import {Utilities} from './Utilities'
 
 export const modules = [
 	ActionTimeline,
@@ -26,4 +27,5 @@ export const modules = [
 	Swiftcast,
 	Thinair,
 	Tincture,
+	Utilities,
 ]
