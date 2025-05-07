@@ -119,7 +119,7 @@ export const SCH = ensureActions({
 
 	CONCITATION: {
 		id: 37013,
-		name: 'Conciation',
+		name: 'Concitation',
 		icon: iconUrl(2880),
 		onGcd: true,
 		speedAttribute: Attribute.SPELL_SPEED,
