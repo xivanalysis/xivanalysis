@@ -44,7 +44,7 @@ const BROTHERHOOD_DRIFT_TOLERANCE = 1500
  * said windows to provided RoF windows.
  */
 export class Brotherhood extends RaidBuffWindow {
-	static override handle = 'brotherhood'
+	static override handle = 'Brotherhood'
 
 	override buffStatus = this.data.statuses.BROTHERHOOD
 
