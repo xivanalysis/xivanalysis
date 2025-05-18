@@ -19,7 +19,7 @@ export class Defensives extends CoreDefensives {
 	override initialise() {
 		super.initialise()
 
-		const playerFilter = filter<Event>().source(this.parser.actor.id)
+		const playerFilter = filter<Event>().source(this.parser.actor.id).target(this.parser.actor.id)
 		const statusApplyFilter = playerFilter.type('statusApply')
 		const statusRemoveFilter = playerFilter.type('statusRemove')
 
