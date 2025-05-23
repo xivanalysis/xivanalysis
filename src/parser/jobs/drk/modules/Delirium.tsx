@@ -68,6 +68,17 @@ export class Delirium extends BuffWindow {
 		return scarletUsed && comeuppanceUsed && torcleaverUsed
 	}
 
+	// We want to allow the following mixtures of AoE/single target:
+	// - 2x Impalement, 1x Scarlet Delirium
+	// - 1x Scarlet Delirium, 1x Comeuppance, 1x Impalement
+	// Anything else (e.g. 2x Scarlet Delirium, 1x Impalement) is disallowed
+	private deliriumMixtureUsed(window: HistoryEntry<EvaluatedAction[]>): boolean {
+		const scarletUsed = window.data.filter(event => (event.action.id === this.data.actions.SCARLET_DELIRIUM.id)).length
+		const comeuppanceUsed = window.data.filter(event => (event.action.id === this.data.actions.COMEUPPANCE.id)).length
+		const impalementUsed = window.data.filter(event => (event.action.id === this.data.actions.IMPALEMENT.id)).length
+		return (scarletUsed === 2 && impalementUsed === 1) || (scarletUsed === 1 && comeuppanceUsed === 1 && impalementUsed === 1)
+	}
+
 	private adjustCount(window: HistoryEntry<EvaluatedAction[]>, action: TrackedAction) {
 		const scarletUsed = window.data.filter(event => (event.action.id === this.data.actions.SCARLET_DELIRIUM.id)).length
 		const comeuppanceUsed = window.data.filter(event => (event.action.id === this.data.actions.COMEUPPANCE.id)).length
@@ -81,13 +92,19 @@ export class Delirium extends BuffWindow {
 		const totalNumberOfDeliriumStacks = 3
 		const impalementUsed = window.data.filter(event => (event.action.id === this.data.actions.IMPALEMENT.id)).length
 		if (impalementUsed === totalNumberOfDeliriumStacks) {
-			if (action.action.id === this.data.actions.SCARLET_DELIRIUM.id) {
+			if (action.action.id === this.data.actions.TORCLEAVER.id) {
 				return -1
 			}
+		}
+
+		if (impalementUsed >= 2) {
 			if (action.action.id === this.data.actions.COMEUPPANCE.id) {
 				return -1
 			}
-			if (action.action.id === this.data.actions.TORCLEAVER.id) {
+		}
+
+		if (impalementUsed >= 1) {
+			if (action.action.id === this.data.actions.SCARLET_DELIRIUM.id) {
 				return -1
 			}
 		}
@@ -101,6 +118,9 @@ export class Delirium extends BuffWindow {
 				return RotationTargetOutcome.POSITIVE
 			}
 			if (this.allThreeComboActionsUsed(window)) {
+				return RotationTargetOutcome.POSITIVE
+			}
+			if (this.deliriumMixtureUsed(window)) {
 				return RotationTargetOutcome.POSITIVE
 			}
 			if (actual === expected) {
