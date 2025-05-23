@@ -1,7 +1,6 @@
 import {msg} from '@lingui/core/macro'
 import {Trans} from '@lingui/react/macro'
 import {DataLink} from 'components/ui/DbLink'
-import {RotationTargetOutcome} from 'components/ui/RotationTable'
 import {dependency} from 'parser/core/Injectable'
 import {BuffWindow, EvaluatedAction, ExpectedActionsEvaluator, TrackedAction} from 'parser/core/modules/ActionWindow'
 import {HistoryEntry} from 'parser/core/modules/ActionWindow/History'
@@ -51,32 +50,7 @@ export class Delirium extends BuffWindow {
 			suggestionWindowName,
 			severityTiers: SEVERITIES.WRONG_GCDS,
 			adjustCount: this.adjustCount.bind(this),
-			adjustOutcome: this.adjustOutcome.bind(this),
 		}))
-	}
-
-	private threeImpalementsUsedInWindow(window: HistoryEntry<EvaluatedAction[]>): boolean {
-		const totalNumberOfDeliriumStacks = 3
-		const threeImpalementsUsed = window.data.filter(event => (event.action.id === this.data.actions.IMPALEMENT.id)).length === totalNumberOfDeliriumStacks
-		return threeImpalementsUsed
-	}
-
-	private allThreeComboActionsUsed(window: HistoryEntry<EvaluatedAction[]>): boolean {
-		const scarletUsed = window.data.filter(event => (event.action.id === this.data.actions.SCARLET_DELIRIUM.id)).length > 0
-		const comeuppanceUsed = window.data.filter(event => (event.action.id === this.data.actions.COMEUPPANCE.id)).length > 0
-		const torcleaverUsed = window.data.filter(event => (event.action.id === this.data.actions.TORCLEAVER.id)).length > 0
-		return scarletUsed && comeuppanceUsed && torcleaverUsed
-	}
-
-	// We want to allow the following mixtures of AoE/single target:
-	// - 2x Impalement, 1x Scarlet Delirium
-	// - 1x Scarlet Delirium, 1x Comeuppance, 1x Impalement
-	// Anything else (e.g. 2x Scarlet Delirium, 1x Impalement) is disallowed
-	private deliriumMixtureUsed(window: HistoryEntry<EvaluatedAction[]>): boolean {
-		const scarletUsed = window.data.filter(event => (event.action.id === this.data.actions.SCARLET_DELIRIUM.id)).length
-		const comeuppanceUsed = window.data.filter(event => (event.action.id === this.data.actions.COMEUPPANCE.id)).length
-		const impalementUsed = window.data.filter(event => (event.action.id === this.data.actions.IMPALEMENT.id)).length
-		return (scarletUsed === 2 && impalementUsed === 1) || (scarletUsed === 1 && comeuppanceUsed === 1 && impalementUsed === 1)
 	}
 
 	private adjustCount(window: HistoryEntry<EvaluatedAction[]>, action: TrackedAction) {
@@ -91,6 +65,10 @@ export class Delirium extends BuffWindow {
 
 		const totalNumberOfDeliriumStacks = 3
 		const impalementUsed = window.data.filter(event => (event.action.id === this.data.actions.IMPALEMENT.id)).length
+		// This will allow the following mixtures of AoE/single target:
+		// - 2x Impalement, 1x Scarlet Delirium
+		// - 1x Scarlet Delirium, 1x Comeuppance, 1x Impalement
+		// Anything else (e.g. 2x Scarlet Delirium, 1x Impalement) is disallowed
 		if (impalementUsed === totalNumberOfDeliriumStacks) {
 			if (action.action.id === this.data.actions.TORCLEAVER.id) {
 				return -1
@@ -110,23 +88,5 @@ export class Delirium extends BuffWindow {
 		}
 
 		return 0
-	}
-
-	private adjustOutcome(window: HistoryEntry<EvaluatedAction[]>, _trackedAction: TrackedAction) {
-		return (actual: number, expected?: number) => {
-			if (this.threeImpalementsUsedInWindow(window)) {
-				return RotationTargetOutcome.POSITIVE
-			}
-			if (this.allThreeComboActionsUsed(window)) {
-				return RotationTargetOutcome.POSITIVE
-			}
-			if (this.deliriumMixtureUsed(window)) {
-				return RotationTargetOutcome.POSITIVE
-			}
-			if (actual === expected) {
-				return RotationTargetOutcome.POSITIVE
-			}
-			return RotationTargetOutcome.NEGATIVE
-		}
 	}
 }
