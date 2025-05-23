@@ -46,7 +46,7 @@ export class Delirium extends BuffWindow {
 			suggestionIcon: this.data.actions.DELIRIUM.icon,
 			suggestionContent: <Trans id="drk.delirium.suggestions.gcdactions.content">
 				Each <DataLink action="DELIRIUM" /> window should contain <DataLink action="SCARLET_DELIRIUM" />, <DataLink action="COMEUPPANCE" />, and <DataLink action="TORCLEAVER" />, or three <DataLink action="IMPALEMENT" />s.
-				Using Souleater combo weaponskills or Impalement resets your Delirium combo progress and causes you to lose the increased potency of the comboed skills.
+				Using non-Delirium combo actions resets your Delirium combo progress and causes you to lose the increased potency of the comboed skills.
 			</Trans>,
 			suggestionWindowName,
 			severityTiers: SEVERITIES.WRONG_GCDS,
@@ -76,6 +76,20 @@ export class Delirium extends BuffWindow {
 		// Reduce required impalements by number of single target actions used
 		if (action.action.id === this.data.actions.IMPALEMENT.id) {
 			return -(scarletUsed + comeuppanceUsed + torcleaverUsed)
+		}
+
+		const totalNumberOfDeliriumStacks = 3
+		const impalementUsed = window.data.filter(event => (event.action.id === this.data.actions.IMPALEMENT.id)).length
+		if (impalementUsed === totalNumberOfDeliriumStacks) {
+			if (action.action.id === this.data.actions.SCARLET_DELIRIUM.id) {
+				return -1
+			}
+			if (action.action.id === this.data.actions.COMEUPPANCE.id) {
+				return -1
+			}
+			if (action.action.id === this.data.actions.TORCLEAVER.id) {
+				return -1
+			}
 		}
 
 		return 0

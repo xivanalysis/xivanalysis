@@ -164,6 +164,7 @@ export const CONTRIBUTORS = ensureRecord<Contributor>()({
 	},
 	VIOLET: {
 		name: 'Violet Stardust',
+		avatar: require('./avatar/violet.png'),
 		jobs: [
 			JOBS.DARK_KNIGHT,
 		],
