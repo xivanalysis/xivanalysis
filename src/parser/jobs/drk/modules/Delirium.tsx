@@ -1,8 +1,10 @@
 import {msg} from '@lingui/core/macro'
 import {Trans} from '@lingui/react/macro'
 import {DataLink} from 'components/ui/DbLink'
+import {RotationTargetOutcome} from 'components/ui/RotationTable'
 import {dependency} from 'parser/core/Injectable'
-import {BuffWindow, ExpectedActionsEvaluator} from 'parser/core/modules/ActionWindow'
+import {BuffWindow, EvaluatedAction, ExpectedActionsEvaluator, TrackedAction} from 'parser/core/modules/ActionWindow'
+import {HistoryEntry} from 'parser/core/modules/ActionWindow/History'
 import {EndOfWindowHandlingMode} from 'parser/core/modules/ActionWindow/windows/BuffWindow'
 import {GlobalCooldown} from 'parser/core/modules/GlobalCooldown'
 import {SEVERITY} from 'parser/core/modules/Suggestions'
@@ -39,14 +41,58 @@ export class Delirium extends BuffWindow {
 				{action: this.data.actions.SCARLET_DELIRIUM, expectedPerWindow: 1},
 				{action: this.data.actions.COMEUPPANCE, expectedPerWindow: 1},
 				{action: this.data.actions.TORCLEAVER, expectedPerWindow: 1},
+				{action: this.data.actions.IMPALEMENT, expectedPerWindow: 3},
 			],
 			suggestionIcon: this.data.actions.DELIRIUM.icon,
 			suggestionContent: <Trans id="drk.delirium.suggestions.gcdactions.content">
-				Each <DataLink action="DELIRIUM" /> window should contain <DataLink action="SCARLET_DELIRIUM" />, <DataLink action="COMEUPPANCE" />, and <DataLink action="TORCLEAVER" />.
-				Using regular weaponskills resets your Delirium combo progress and causes you to lose the increased potency of the comboed skills.
+				Each <DataLink action="DELIRIUM" /> window should contain <DataLink action="SCARLET_DELIRIUM" />, <DataLink action="COMEUPPANCE" />, and <DataLink action="TORCLEAVER" />, or three <DataLink action="IMPALEMENT" />s.
+				Using Souleater combo weaponskills or Impalement resets your Delirium combo progress and causes you to lose the increased potency of the comboed skills.
 			</Trans>,
 			suggestionWindowName,
 			severityTiers: SEVERITIES.WRONG_GCDS,
+			adjustCount: this.adjustCount.bind(this),
+			adjustOutcome: this.adjustOutcome.bind(this),
 		}))
+	}
+
+	private threeImpalementsUsedInWindow(window: HistoryEntry<EvaluatedAction[]>): boolean {
+		const totalNumberOfDeliriumStacks = 3
+		const threeImpalementsUsed = window.data.filter(event => (event.action.id === this.data.actions.IMPALEMENT.id)).length === totalNumberOfDeliriumStacks
+		return threeImpalementsUsed
+	}
+
+	private allThreeComboActionsUsed(window: HistoryEntry<EvaluatedAction[]>): boolean {
+		const scarletUsed = window.data.filter(event => (event.action.id === this.data.actions.SCARLET_DELIRIUM.id)).length > 0
+		const comeuppanceUsed = window.data.filter(event => (event.action.id === this.data.actions.COMEUPPANCE.id)).length > 0
+		const torcleaverUsed = window.data.filter(event => (event.action.id === this.data.actions.TORCLEAVER.id)).length > 0
+		return scarletUsed && comeuppanceUsed && torcleaverUsed
+	}
+
+	private adjustCount(window: HistoryEntry<EvaluatedAction[]>, action: TrackedAction) {
+		const scarletUsed = window.data.filter(event => (event.action.id === this.data.actions.SCARLET_DELIRIUM.id)).length
+		const comeuppanceUsed = window.data.filter(event => (event.action.id === this.data.actions.COMEUPPANCE.id)).length
+		const torcleaverUsed = window.data.filter(event => (event.action.id === this.data.actions.TORCLEAVER.id)).length
+
+		// Reduce required impalements by number of single target actions used
+		if (action.action.id === this.data.actions.IMPALEMENT.id) {
+			return -(scarletUsed + comeuppanceUsed + torcleaverUsed)
+		}
+
+		return 0
+	}
+
+	private adjustOutcome(window: HistoryEntry<EvaluatedAction[]>, _trackedAction: TrackedAction) {
+		return (actual: number, expected?: number) => {
+			if (this.threeImpalementsUsedInWindow(window)) {
+				return RotationTargetOutcome.POSITIVE
+			}
+			if (this.allThreeComboActionsUsed(window)) {
+				return RotationTargetOutcome.POSITIVE
+			}
+			if (actual === expected) {
+				return RotationTargetOutcome.POSITIVE
+			}
+			return RotationTargetOutcome.NEGATIVE
+		}
 	}
 }

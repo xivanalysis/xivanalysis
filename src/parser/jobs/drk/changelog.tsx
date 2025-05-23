@@ -7,6 +7,11 @@ export const changelog = [
 	// 	contributors: [CONTRIBUTORS.YOU],
 	// },
 	{
+		date: new Date('2025-05-23'),
+		Changes: () => <>Corrected reporting of Delirium windows that involve Impalement.</>,
+		contributors: [CONTRIBUTORS.AZARIAH],
+	},
+	{
 		date: new Date('2024-08-02'),
 		Changes: () => <>Fixed Bloodspiller adjustment for expected uses during a potion window in the opener</>,
 		contributors: [CONTRIBUTORS.AZARIAH],

@@ -162,6 +162,12 @@ export const CONTRIBUTORS = ensureRecord<Contributor>()({
 			JOBS.ASTROLOGIAN,
 		],
 	},
+	VIOLET: {
+		name: 'Violet Stardust',
+		jobs: [
+			JOBS.DARK_KNIGHT,
+		],
+	},
 })
 
 export interface Role {
