@@ -8,6 +8,11 @@ export const changelog = [
 	// },
 	{
 		date: new Date('2025-05-23'),
+		Changes: () => <>Corrected Shadowstride icon.</>,
+		contributors: [CONTRIBUTORS.VIOLET],
+	},
+	{
+		date: new Date('2025-05-23'),
 		Changes: () => <>Corrected reporting of Delirium windows that involve Impalement.</>,
 		contributors: [CONTRIBUTORS.VIOLET],
 	},
