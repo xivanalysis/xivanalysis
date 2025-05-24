@@ -146,7 +146,7 @@ export const DRK = ensureActions({
 	SHADOWSTRIDE: {
 		id: 36926,
 		name: 'Shadowstride',
-		icon: iconUrl(3061),
+		icon: iconUrl(3093),
 		cooldown: 30000,
 		charges: 2,
 	},
@@ -355,7 +355,7 @@ export const DRK = ensureActions({
 	ESTEEM_SHADOWSTRIDE: {
 		id: 38512,
 		name: 'Shadowstride',
-		icon: iconUrl(3061),
+		icon: iconUrl(3093),
 	},
 	ESTEEM_SHADOWBRINGER: {
 		id: 25881,
