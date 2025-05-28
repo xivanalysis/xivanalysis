@@ -1,6 +1,6 @@
 import {Trans} from '@lingui/react/macro'
 import {dependency} from 'parser/core/Injectable'
-import {ExpectedActionsEvaluator, ExpectedGcdCountEvaluator} from 'parser/core/modules/ActionWindow'
+import {ExpectedActionGroupsEvaluator, ExpectedGcdCountEvaluator} from 'parser/core/modules/ActionWindow'
 import {GlobalCooldown} from 'parser/core/modules/GlobalCooldown'
 import {SEVERITY} from 'parser/core/modules/Suggestions'
 import {Tincture as CoreTincture} from 'parser/core/modules/Tincture'
@@ -31,15 +31,33 @@ export class Tincture extends CoreTincture {
 			},
 		}))
 
-		this.addEvaluator(new ExpectedActionsEvaluator({
-			expectedActions: [
-				{action: this.data.actions.PRIMAL_REND, expectedPerWindow: 1},
-				{action: this.data.actions.PRIMAL_RUINATION, expectedPerWindow: 1},
-				{action: this.data.actions.PRIMAL_WRATH, expectedPerWindow: 1},
-				{action: this.data.actions.INNER_CHAOS, expectedPerWindow: 2},
-				{action: this.data.actions.FELL_CLEAVE, expectedPerWindow: 3},
-				{action: this.data.actions.ONSLAUGHT, expectedPerWindow: 3},
-				{action: this.data.actions.UPHEAVAL, expectedPerWindow: 1},
+		this.addEvaluator(new ExpectedActionGroupsEvaluator({
+			expectedActionGroups: [
+				{
+					actions: [this.data.actions.PRIMAL_REND], expectedPerWindow: 1,
+				},
+				{
+					actions: [this.data.actions.PRIMAL_RUINATION],
+					expectedPerWindow: 1,
+				},
+				{
+					actions: [this.data.actions.PRIMAL_WRATH], expectedPerWindow: 1,
+				},
+				{
+					actions: [this.data.actions.ONSLAUGHT], expectedPerWindow: 3,
+				},
+				{
+					actions: [this.data.actions.UPHEAVAL, this.data.actions.OROGENY],
+					expectedPerWindow: 1,
+				},
+				{
+					actions: [this.data.actions.INNER_CHAOS, this.data.actions.CHAOTIC_CYCLONE],
+					expectedPerWindow: 2,
+				},
+				{
+					actions: [this.data.actions.FELL_CLEAVE, this.data.actions.DECIMATE],
+					expectedPerWindow: 3,
+				},
 			],
 			suggestionIcon,
 			suggestionContent: <Trans id="war.tincture.suggestions.trackedactions.content">
@@ -47,9 +65,9 @@ export class Tincture extends CoreTincture {
 			</Trans>,
 			suggestionWindowName,
 			severityTiers: {
-				2: SEVERITY.MINOR,
-				4: SEVERITY.MEDIUM,
-				6: SEVERITY.MAJOR,
+				1: SEVERITY.MINOR,
+				2: SEVERITY.MEDIUM,
+				3: SEVERITY.MAJOR,
 			},
 		}))
 	}
