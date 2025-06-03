@@ -69,20 +69,23 @@ export class Delirium extends BuffWindow {
 		// - 2x Impalement, 1x Scarlet Delirium
 		// - 1x Scarlet Delirium, 1x Comeuppance, 1x Impalement
 		// Anything else (e.g. 2x Scarlet Delirium, 1x Impalement) is disallowed
-		if (impalementUsed === totalNumberOfDeliriumStacks) {
-			if (action.action.id === this.data.actions.TORCLEAVER.id) {
+		// Three Impalements means we miss a Scarlet Delirium
+		if (impalementUsed >= totalNumberOfDeliriumStacks) {
+			if (action.action.id === this.data.actions.SCARLET_DELIRIUM.id) {
 				return -1
 			}
 		}
 
+		// Two Impalements means we miss Comeuppance
 		if (impalementUsed >= 2) {
 			if (action.action.id === this.data.actions.COMEUPPANCE.id) {
 				return -1
 			}
 		}
 
+		// Any Impalement means means we miss Torcleaver
 		if (impalementUsed >= 1) {
-			if (action.action.id === this.data.actions.SCARLET_DELIRIUM.id) {
+			if (action.action.id === this.data.actions.TORCLEAVER.id) {
 				return -1
 			}
 		}
