@@ -28,7 +28,7 @@ export class Tincture extends CoreTincture {
 					overrideHeader: <DataLink showName={false} action="DELIRIUM" />,
 				},
 				{
-					actions: [this.data.actions.BLOODSPILLER],
+					actions: [this.data.actions.BLOODSPILLER, this.data.actions.QUIETUS],
 					expectedPerWindow: 2,
 				},
 				{
