@@ -7,8 +7,13 @@ export const changelog = [
 	// 	contributors: [CONTRIBUTORS.YOU],
 	// },
 	{
-		date: new Date('2025-05-23'),
+		date: new Date('2025-06-03'),
 		Changes: () => <>Corrected Shadowstride icon.</>,
+		contributors: [CONTRIBUTORS.VIOLET],
+	},
+	{
+		date: new Date('2025-06-03'),
+		Changes: () => <>Fixed Delirium single target count adjustments being in the wrong order when using Impalement, and double-counting missed Delirium actions.</>,
 		contributors: [CONTRIBUTORS.VIOLET],
 	},
 	{

@@ -57,32 +57,43 @@ export class Delirium extends BuffWindow {
 		const scarletUsed = window.data.filter(event => (event.action.id === this.data.actions.SCARLET_DELIRIUM.id)).length
 		const comeuppanceUsed = window.data.filter(event => (event.action.id === this.data.actions.COMEUPPANCE.id)).length
 		const torcleaverUsed = window.data.filter(event => (event.action.id === this.data.actions.TORCLEAVER.id)).length
+		const impalementUsed = window.data.filter(event => (event.action.id === this.data.actions.IMPALEMENT.id)).length
+		const totalNumberOfDeliriumStacks = 3
 
-		// Reduce required impalements by number of single target actions used
+		// Reduce required Impalements by number of single target actions used
 		if (action.action.id === this.data.actions.IMPALEMENT.id) {
+			const totalActionsUsed = scarletUsed + comeuppanceUsed + torcleaverUsed + impalementUsed
+			// We want to avoid double counting for missed actions, e.g. a fully missed Delirium being shown as 6 errors, like:
+			// 0/1 + 0/1 + 0/1 + 0/3
+			// So, if any are missed, lower required Impalements (since single target combo is much more common)
+			if (totalActionsUsed < totalNumberOfDeliriumStacks) {
+				return -(totalNumberOfDeliriumStacks - impalementUsed)
+			}
+
 			return -(scarletUsed + comeuppanceUsed + torcleaverUsed)
 		}
 
-		const totalNumberOfDeliriumStacks = 3
-		const impalementUsed = window.data.filter(event => (event.action.id === this.data.actions.IMPALEMENT.id)).length
 		// This will allow the following mixtures of AoE/single target:
 		// - 2x Impalement, 1x Scarlet Delirium
 		// - 1x Scarlet Delirium, 1x Comeuppance, 1x Impalement
 		// Anything else (e.g. 2x Scarlet Delirium, 1x Impalement) is disallowed
-		if (impalementUsed === totalNumberOfDeliriumStacks) {
-			if (action.action.id === this.data.actions.TORCLEAVER.id) {
+		// Three Impalements means we miss a Scarlet Delirium
+		if (impalementUsed >= totalNumberOfDeliriumStacks) {
+			if (action.action.id === this.data.actions.SCARLET_DELIRIUM.id) {
 				return -1
 			}
 		}
 
+		// Two Impalements means we miss Comeuppance
 		if (impalementUsed >= 2) {
 			if (action.action.id === this.data.actions.COMEUPPANCE.id) {
 				return -1
 			}
 		}
 
+		// Any Impalement means means we miss Torcleaver
 		if (impalementUsed >= 1) {
-			if (action.action.id === this.data.actions.SCARLET_DELIRIUM.id) {
+			if (action.action.id === this.data.actions.TORCLEAVER.id) {
 				return -1
 			}
 		}

@@ -554,7 +554,7 @@
   "drk.darkside.uptime": "暗黑持续时间",
   "drk.darkside.uptime.name": "保持暗黑状态",
   "drk.darkside.uptime.why": "暗黑通过<0/>或<1/>获得，它可以提高10%的伤害。暗黑骑士需要暗黑来提高输出，请尽量保持常驻。",
-  "drk.delirium.suggestions.gcdactions.content": "每个<0/>窗口应包含<1/>、<2/>和<3/>，使用基础连击会中断血乱连击，导致血乱连击后续技能的高威力丧失。",
+  "drk.delirium.suggestions.gcdactions.content": "",
   "drk.delirium.title": "血乱的使用",
   "drk.gauge.bloodgauge.label": "暗血",
   "drk.gauge.suggestions.loss.content": "避免暗血溢出。溢出的暗血能让你多释放别的消耗暗血的技能。",
