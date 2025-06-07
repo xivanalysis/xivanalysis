@@ -8,6 +8,11 @@ export const changelog = [
 	// 	contributors: [CONTRIBUTORS.YOU],
 	// },
 	{
+		date: new Date('2025-05-18'),
+		Changes: () => <>Fix an issue causing over-refunding of Tempera's cooldown when Tempera Grassa breaks.</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
+	{
 		date: new Date('2025-04-20'),
 		Changes: () => <>Add informational display of Swiftcast and Lucid Dreaming usage/cooldown availability adjacent to Defensives.</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],

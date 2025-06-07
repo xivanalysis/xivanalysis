@@ -162,6 +162,13 @@ export const CONTRIBUTORS = ensureRecord<Contributor>()({
 			JOBS.ASTROLOGIAN,
 		],
 	},
+	VIOLET: {
+		name: 'Violet Stardust',
+		avatar: require('./avatar/violet.png'),
+		jobs: [
+			JOBS.DARK_KNIGHT,
+		],
+	},
 })
 
 export interface Role {
