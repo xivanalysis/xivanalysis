@@ -7,6 +7,7 @@ import {GlobalCooldown} from 'parser/core/modules/GlobalCooldown'
 import {SEVERITY} from 'parser/core/modules/Suggestions'
 import {BrotherhoodDriftEvaluator, MissedBrotherhoodEvaluator} from './evaluators/BrotherhoodEvaluator'
 import {RiddleOfFire} from './RiddleOfFire'
+import {msg} from '@lingui/core/macro'
 
 const EXPECTED_GCDS = 10
 
@@ -44,8 +45,8 @@ const BROTHERHOOD_DRIFT_TOLERANCE = 1500
  * said windows to provided RoF windows.
  */
 export class Brotherhood extends RaidBuffWindow {
-	static override handle = 'Brotherhood'
-
+	static override handle = 'brotherhood'
+	static override title = msg({id: 'mnk.bh.title', message: 'Brotherhood'})
 	override buffStatus = this.data.statuses.BROTHERHOOD
 
 	@dependency private globalCooldown!: GlobalCooldown
