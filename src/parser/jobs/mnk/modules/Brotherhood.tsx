@@ -1,3 +1,4 @@
+import {msg} from '@lingui/core/macro'
 import {Trans} from '@lingui/react/macro'
 import {DataLink} from 'components/ui/DbLink'
 import {dependency} from 'parser/core/Injectable'
@@ -7,7 +8,6 @@ import {GlobalCooldown} from 'parser/core/modules/GlobalCooldown'
 import {SEVERITY} from 'parser/core/modules/Suggestions'
 import {BrotherhoodDriftEvaluator, MissedBrotherhoodEvaluator} from './evaluators/BrotherhoodEvaluator'
 import {RiddleOfFire} from './RiddleOfFire'
-import {msg} from '@lingui/core/macro'
 
 const EXPECTED_GCDS = 10
 
