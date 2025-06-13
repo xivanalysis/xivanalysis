@@ -649,7 +649,7 @@ export class Gauge extends CoreGauge {
 			this.suggestions.add(new Suggestion({
 				icon: this.data.actions.XENOGLOSSY.icon,
 				content: <Trans id="blm.gauge.suggestions.lost-polyglot.content">
-					You lost Polyglot due to dropped Astral Fire or Umbral Ice. <DataLink action="XENOGLOSSY"/> and <DataLink action="FOUL"/> are your strongest GCDs, so always maximize their casts.
+					You lost Polyglot due to dropped Astral Fire or Umbral Ice. <DataLink action="XENOGLOSSY"/> and <DataLink action="FOUL"/> are your strongest GCDs, so make sure you generate as many as you can by keeping your stance up.
 				</Trans>,
 				severity: SEVERITY.MAJOR,
 				why: <Trans id="blm.gauge.suggestions.lost-polyglot.why">
@@ -663,7 +663,7 @@ export class Gauge extends CoreGauge {
 			this.suggestions.add(new Suggestion({
 				icon: this.data.actions.XENOGLOSSY.icon,
 				content: <Trans id="blm.gauge.suggestions.overwritten-polyglot.content">
-					You overwrote Polyglot due to not casting <DataLink action="XENOGLOSSY"/> or <DataLink action="FOUL"/> for 30s after gaining a second stack. <DataLink action="XENOGLOSSY"/> and <DataLink action="FOUL"/> are your strongest GCDs, so always maximize their casts.
+					You overwrote Polyglot due to not casting <DataLink action="XENOGLOSSY"/> or <DataLink action="FOUL"/> for 30s after capping on stacks. <DataLink action="XENOGLOSSY"/> and <DataLink action="FOUL"/> are your strongest GCDs, so be sure to use all of the stacks you generate.
 				</Trans>,
 				severity: SEVERITY.MAJOR,
 				why: <Trans id="blm.gauge.suggestions.overwritten-polyglot.why">

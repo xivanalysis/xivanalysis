@@ -8,6 +8,11 @@ export const changelog = [
 	// 	contributors: [CONTRIBUTORS.YOU],
 	// },
 	{
+		date: new Date('2025-06-12'),
+		Changes: () => <>Minor revisions to lost Poloylot suggestion wording, for clarity.</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
+	{
 		date: new Date('2025-04-05'),
 		Changes: () => <>Update rotation analysis and mark as supported for patch 7.2.</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],
