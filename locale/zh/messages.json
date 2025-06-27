@@ -347,7 +347,7 @@
   "core.gcd.no-statistics.v2": "这个 GCD 时间是估计值，可能有误。如果这个时间长于实际值，你可能需要专注于确保提高 GCD 利用率。",
   "core.hijinks.crit-more.content": "朋友，你暴击率实在是惨不忍睹啊！",
   "core.hijinks.crit-more.why": "你脸实在是太黑了，洗把脸再来吧。",
-  "core.home.about.content": "\nxivanalysis是一个来帮助_你_提高的工具，网站会提供一些自动生成的建议和指标。有些指标是全职业共享的，比如“别死”。不过，为了保证精确且有用，这些建议和指标大部分都是为各个职业量身定做的，\n\n为了达成目的，我们对取自[FF Logs](https://www.fflogs.com/)的战斗日志中的数据进行处理。如果你并没有在使用FF Logs，你可以从[这里](https://github.com/FFXIV-ACT/setup-guide#readme)了解并下载ACT（ACT是读取并记录游戏数据的工具），并使用[这个工具](https://www.fflogs.com/client/download)上传数据。\n\n把你的日志URL地址粘贴过来，就能看到分析了！\n\n如果你有任何问题、建议，或者只是想随便聊聊，加入我们的Discord频道，链接在左边边栏上。\n",
+  "core.home.about.content": "\nxivanalysis是一个来帮助_你_提高的工具，网站会提供一些自动生成的建议和指标。有些指标是全职业共享的，比如“别死”。不过，为了保证精确且有用，这些建议和指标大部分都是为各个职业量身定做的，\n\n为了达成目的，我们对取自[FF Logs](https://www.fflogs.com/)的战斗日志中的数据进行处理。如果你并没有在使用FF Logs，你可以从[这里](https://overlayplugin.github.io/docs/setup/)了解并下载ACT（ACT是读取并记录游戏数据的工具），并使用[这个工具](https://www.fflogs.com/client/download)上传数据。\n\n把你的日志URL地址粘贴过来，就能看到分析了！\n\n如果你有任何问题、建议，或者只是想随便聊聊，加入我们的Discord频道，链接在左边边栏上。\n",
   "core.home.about.link": "这是什么网站？",
   "core.home.about.title": "关于XivAnalysis",
   "core.home.analyse": "分析",

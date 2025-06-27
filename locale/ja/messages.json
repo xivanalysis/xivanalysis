@@ -347,7 +347,7 @@
   "core.gcd.no-statistics.v2": "このGCDリキャストは*推定*で不正確な可能性があります。分析のGCDリキャストが実際のGCDより*長い*と報告された場合、GCD を回し続けることに集中する必要があるかもしれません。",
   "core.hijinks.crit-more.content": "",
   "core.hijinks.crit-more.why": "",
-  "core.home.about.content": "\nxivanalysisは、自動的な提案や指標を通して、_あなた_のパフォーマンスを向上させることを目的としたツールです。「死なないこと」など、すべてのジョブで共通の指標もありますが、ほとんどの指標は各ジョブに応じて可能な限り正確で有用なものとなるよう調整されています。\n\nxivanalysisは[FF Logs](https://www.fflogs.com/)にアップロードされたログデータを処理します。まだFF Logsを使っていないのであれば、[こちら](https://github.com/FFXIV-ACT/setup-guide#readme) や [こちら](https://www.fflogs.com/client/download) にある手順に従ってACT (ゲームからデータを読むプログラムです)の導入を行ってください。\n\nログのURLを貼り付けて、確かめてみましょう！\n\n質問や提案、またはチャットをしたいのであれば、サイドバーにあるDiscordサーバへどうぞ。\n",
+  "core.home.about.content": "\nxivanalysisは、自動的な提案や指標を通して、_あなた_のパフォーマンスを向上させることを目的としたツールです。「死なないこと」など、すべてのジョブで共通の指標もありますが、ほとんどの指標は各ジョブに応じて可能な限り正確で有用なものとなるよう調整されています。\n\nxivanalysisは[FF Logs](https://www.fflogs.com/)にアップロードされたログデータを処理します。まだFF Logsを使っていないのであれば、[こちら](https://overlayplugin.github.io/docs/setup/) や [こちら](https://www.fflogs.com/client/download) にある手順に従ってACT (ゲームからデータを読むプログラムです)の導入を行ってください。\n\nログのURLを貼り付けて、確かめてみましょう！\n\n質問や提案、またはチャットをしたいのであれば、サイドバーにあるDiscordサーバへどうぞ。\n",
   "core.home.about.link": "このサイトについて",
   "core.home.about.title": "xivanalysisについて",
   "core.home.analyse": "分析",
