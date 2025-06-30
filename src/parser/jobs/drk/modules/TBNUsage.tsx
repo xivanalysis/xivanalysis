@@ -117,7 +117,7 @@ export class TBNUsage extends Gauge {
 							this.tbnUsageTimestamps.map((timestamp) => {
 								return <Table.Row key="0">
 									<Table.Cell>
-										<Trans id="core.defensives.table.usage-row.text">Used at {this.parser.formatEpochTimestamp(timestamp)}
+										<Trans id="drk.tbn.table.usage-row.text">Used at {this.parser.formatEpochTimestamp(timestamp)}
 										</Trans>
 									</Table.Cell>
 								</Table.Row>
