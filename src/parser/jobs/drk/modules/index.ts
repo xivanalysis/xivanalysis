@@ -10,6 +10,7 @@ import {MultiHitSkills} from './MultiHitSkills'
 import {OGCDDowntime} from './OGCDDowntime'
 import {SaltAndDarkness} from './SaltAndDarkness'
 import {StatusTimeline} from './StatusTimeline'
+import {TBNUsage} from './TBNUsage'
 import {Tincture} from './Tincture'
 
 export const modules = [
@@ -25,5 +26,6 @@ export const modules = [
 	OGCDDowntime,
 	SaltAndDarkness,
 	StatusTimeline,
+	TBNUsage,
 	Tincture,
 ]

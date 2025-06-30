@@ -10,6 +10,7 @@ import {dependency} from 'parser/core/Injectable'
 import {Actors} from 'parser/core/modules/Actors'
 import {Data} from 'parser/core/modules/Data'
 import {Suggestions, SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
+import {Team} from 'report'
 import {isSuccessfulHit} from 'utilities'
 import {DISPLAY_ORDER} from './DISPLAY_ORDER'
 
@@ -78,7 +79,9 @@ export class MPUsage extends Analyser {
 	private mpGeneratedOvercap = 0
 	private mpRegenOvercap = 0
 	private droppedTBNs = 0
+	private droppedTBNTimestamps: number[] = []
 	private overwriteDarkArts = 0
+	private overwriteDarkArtsTimestamps: number[] = []
 	private darkArts = false
 
 	override initialise() {
@@ -95,7 +98,17 @@ export class MPUsage extends Analyser {
 		this.addEventHook(playerFilter.type('statusApply').status(this.data.statuses.DELIRIUM.id), this.onApplyDelirium)
 		this.addEventHook(playerFilter.type('statusRemove').status(this.data.statuses.DELIRIUM.id), this.onRemoveDelirium)
 
-		this.addEventHook(playerFilter.type('statusRemove').status(this.data.statuses.BLACKEST_NIGHT.id), this.onRemoveBlackestNight)
+		const friendlyTargets = this.parser.pull.actors
+			.filter(actor => actor.team === Team.FRIEND)
+			.map(actor => actor.id)
+		friendlyTargets.forEach((id) => {
+			this.addEventHook(
+				filter<Event>()
+					.source(id)
+					.type('statusRemove')
+					.status(this.data.statuses.BLACKEST_NIGHT.id), this.onRemoveBlackestNight)
+		})
+
 		this.addEventHook(playerFilter.type('action').action(this.data.matchActionId(DARK_ARTS_SPENDERS)), () => this.darkArts = false)
 
 		this.addEventHook('complete', this.onComplete)
@@ -169,16 +182,18 @@ export class MPUsage extends Analyser {
 	private onRemoveBlackestNight(event: Events['statusRemove']) {
 		if (event.remainingShield != null && event.remainingShield > 0) {
 			this.droppedTBNs += 1
+			this.droppedTBNTimestamps = [...this.droppedTBNTimestamps, event.timestamp]
 		} else {
 			if (this.darkArts) {
 				this.overwriteDarkArts += 1
+				this.overwriteDarkArtsTimestamps = [...this.overwriteDarkArtsTimestamps, event.timestamp]
 			}
 			this.darkArts = true
 		}
 	}
 
 	private onComplete() {
-		const wastedDarkArts = this.droppedTBNs + this.overwriteDarkArts
+		const wastedDarkArts = this.droppedTBNTimestamps.length + this.overwriteDarkArtsTimestamps.length
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.THE_BLACKEST_NIGHT.icon,
 			content: <Trans id="drk.resourceanalyzer.blackestnight.content">
