@@ -79,9 +79,7 @@ export class MPUsage extends Analyser {
 	private mpGeneratedOvercap = 0
 	private mpRegenOvercap = 0
 	private droppedTBNs = 0
-	private droppedTBNTimestamps: number[] = []
 	private overwriteDarkArts = 0
-	private overwriteDarkArtsTimestamps: number[] = []
 	private darkArts = false
 
 	override initialise() {
@@ -182,18 +180,16 @@ export class MPUsage extends Analyser {
 	private onRemoveBlackestNight(event: Events['statusRemove']) {
 		if (event.remainingShield != null && event.remainingShield > 0) {
 			this.droppedTBNs += 1
-			this.droppedTBNTimestamps = [...this.droppedTBNTimestamps, event.timestamp]
 		} else {
 			if (this.darkArts) {
 				this.overwriteDarkArts += 1
-				this.overwriteDarkArtsTimestamps = [...this.overwriteDarkArtsTimestamps, event.timestamp]
 			}
 			this.darkArts = true
 		}
 	}
 
 	private onComplete() {
-		const wastedDarkArts = this.droppedTBNTimestamps.length + this.overwriteDarkArtsTimestamps.length
+		const wastedDarkArts =  this.droppedTBNs + this.overwriteDarkArts
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.THE_BLACKEST_NIGHT.icon,
 			content: <Trans id="drk.resourceanalyzer.blackestnight.content">
