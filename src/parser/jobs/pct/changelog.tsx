@@ -8,6 +8,11 @@ export const changelog = [
 	// 	contributors: [CONTRIBUTORS.YOU],
 	// },
 	{
+		date: new Date('2025-07-11'),
+		Changes: () => <>Updated AoE recommendations to reflect 7.2 potencies.</>,
+		contributors: [CONTRIBUTORS.SHANZHE],
+	},
+	{
 		date: new Date('2025-05-18'),
 		Changes: () => <>Fix an issue causing over-refunding of Tempera's cooldown when Tempera Grassa breaks.</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],

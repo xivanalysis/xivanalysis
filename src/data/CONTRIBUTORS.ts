@@ -169,6 +169,12 @@ export const CONTRIBUTORS = ensureRecord<Contributor>()({
 			JOBS.DARK_KNIGHT,
 		],
 	},
+	SHANZHE: {
+		name: 'Shanzhe',
+		jobs: [
+			JOBS.PICTOMANCER,
+		],
+	},
 })
 
 export interface Role {
