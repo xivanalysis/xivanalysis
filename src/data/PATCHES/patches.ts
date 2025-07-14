@@ -82,6 +82,7 @@ export const PATCHES = ensureRecord<PatchInfo>()({
 	'7.2': {
 		date: {
 			[GameEdition.GLOBAL]: 1742889600, // 25/03/25 8:00:00 GMT
+			[GameEdition.KOREAN]: 1752566400, // 15/07/25 08:00:00 GMT
 		},
 	},
 })
