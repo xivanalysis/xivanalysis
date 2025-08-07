@@ -59,7 +59,7 @@ export const PATCHES = ensureRecord<PatchInfo>()({
 	'7.0': {
 		date: {
 			[GameEdition.GLOBAL]: 1719565200, // 28/06/24 09:00:00 GMT
-			[GameEdition.CHINESE]: 1727402400, // 27/09/24 02:00:00 GMT (10:00:00 GMT+8)
+			// [GameEdition.CHINESE]: 1727402400, // 27/09/24 02:00:00 GMT (10:00:00 GMT+8) Chinese version of 7.0 is unnecessary.
 		},
 	},
 	'7.01': {
@@ -71,18 +71,21 @@ export const PATCHES = ensureRecord<PatchInfo>()({
 		date: {
 			[GameEdition.GLOBAL]: 1722333600, // 30/07/24 10:00:00 GMT
 			[GameEdition.KOREAN]: 1733212800, // 03/12/24 08:00:00 GMT
+			[GameEdition.CHINESE]: 1727402400, // 27/09/24 02:00:00 GMT (10:00:00 GMT+8) Chinese version come with 7.05 job changes when launched.
 		},
 	},
 	'7.1': {
 		date: {
 			[GameEdition.GLOBAL]: 1731398400, // 12/11/24 8:00:00 GMT
 			[GameEdition.KOREAN]: 1742284800, // 18/03/25 08:00:00 GMT
+			[GameEdition.CHINESE]: 1739865600, // 18/02/25 08:00:00 GMT
 		},
 	},
 	'7.2': {
 		date: {
 			[GameEdition.GLOBAL]: 1742889600, // 25/03/25 8:00:00 GMT
 			[GameEdition.KOREAN]: 1752566400, // 15/07/25 08:00:00 GMT
+			[GameEdition.CHINESE]: 1750752000, // 24/06/25 08:00:00 GMT
 		},
 	},
 	'7.3': {
