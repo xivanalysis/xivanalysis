@@ -129,7 +129,7 @@ export class StarryMuse extends RaidBuffWindow {
 	private adjustExpectedActionGroupCounts(window: HistoryEntry<EvaluatedAction[]>, action: TrackedActionGroup): number {
 		const motifsPainted = this.countActionsUsed(window, this.creatureMotifs)
 
-		// In 7.2+, using fewer hammers is acceptable as long as the earlier hammers are skipped
+		// In 7.2, using fewer hammers is acceptable as long as the earlier hammers are skipped
 		if (this.isPatch720 && action.actions.some(action => this.hammerActions.includes(action))) {
 			let adjustment = 0
 			// Yes, this disgusting nesting is necessary to make sure we're not reducing the count because they used weaker hammers and skipped the stronger ones
