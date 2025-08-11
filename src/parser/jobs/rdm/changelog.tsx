@@ -2,6 +2,11 @@ import {CONTRIBUTORS} from 'data/CONTRIBUTORS'
 
 export const changelog = [
 	{
+		date: new Date('2025-08-10'),
+		Changes: () => <>RDM 7.3 Support added.</>,
+		contributors: [CONTRIBUTORS.LEYLIA],
+	},
+	{
 		date: new Date('2025-04-20'),
 		Changes: () => <>Add informational display of Swiftcast and Lucid Dreaming usage/cooldown availability adjacent to Defensives.</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],
