@@ -7,6 +7,11 @@ export const changelog = [
 	// 	contributors: [CONTRIBUTORS.YOU],
 	// },
 	{
+		date: new Date('2025-08-30'),
+		Changes: () => <>Display Edge and Flood of Darkness on the timeline for level synced content.</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
+	{
 		date: new Date('2025-06-03'),
 		Changes: () => <>Corrected Shadowstride icon.</>,
 		contributors: [CONTRIBUTORS.VIOLET],
