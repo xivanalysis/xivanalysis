@@ -1,3 +1,4 @@
+import {msg} from '@lingui/core/macro'
 import {Trans} from '@lingui/react/macro'
 import {DataLink} from 'components/ui/DbLink'
 import {dependency} from 'parser/core/Injectable'
@@ -45,7 +46,7 @@ const BROTHERHOOD_DRIFT_TOLERANCE = 1500
  */
 export class Brotherhood extends RaidBuffWindow {
 	static override handle = 'brotherhood'
-
+	static override title = msg({id: 'mnk.bh.title', message: 'Brotherhood'})
 	override buffStatus = this.data.statuses.BROTHERHOOD
 
 	@dependency private globalCooldown!: GlobalCooldown
