@@ -45,7 +45,7 @@ export class FaerieGauge extends CoreGauge {
 		},
 	}))
 
-	private fairyOut: boolean = false
+	private faerieOut: boolean = false
 	private actorPets = this.parser.pull.actors.filter(actor => actor.owner != null && actor.owner.id === this.parser.actor.id).map(pet => pet.id)
 	private petHook?: EventHook<Events['action']>
 
@@ -54,10 +54,15 @@ export class FaerieGauge extends CoreGauge {
 		const playerFilter = filter<Event>().source(this.parser.actor.id)
 
 		//Faerie Summon same as the generation actions, this list is only used once.
-		this.addEventHook(playerFilter.type('action').action(this.data.matchActionId(FAERIE_SUMMONERS)), this.onSummon)
+		this.addEventHook(playerFilter
+			.type('action')
+			.action(this.data.matchActionId(FAERIE_SUMMONERS))
+		, this.onSummon)
 
 		//sanity check, your pets can't take actions if they're not out.
-		this.petHook = this.addEventHook(filter<Event>().source(oneOf(this.actorPets)), this.onSummon)
+		this.petHook = this.addEventHook(filter<Event>()
+			.source(oneOf(this.actorPets))
+		, this.onSummon)
 
 		//Consumers
 		this.addEventHook(filter<Event>()
@@ -73,19 +78,32 @@ export class FaerieGauge extends CoreGauge {
 		this.onGaugeGenerate)
 
 		//Death
-		this.addEventHook('death', () => this.fairyOut = false)
+		this.addEventHook({
+			type: 'death',
+			actor: this.parser.actor.id,
+		}, this.killFaerie)
 		//Dissipation (Faerie is automatically re-summoned at status expiration)
-		this.addEventHook(playerFilter.type('statusApply').status(this.data.statuses.DISSIPATION.id), () => this.fairyOut = false)
-		this.addEventHook(playerFilter.type('statusRemove').status(this.data.statuses.DISSIPATION.id), () => this.fairyOut = true)
+		this.addEventHook(playerFilter
+			.type('statusApply')
+			.status(this.data.statuses.DISSIPATION.id)
+		, this.killFaerie)
+		this.addEventHook(playerFilter
+			.type('statusRemove')
+			.status(this.data.statuses.DISSIPATION.id)
+		, this.onSummon)
 
 		this.addEventHook('complete', this.onComplete)
 	}
 
 	private onSummon() {
-		this.fairyOut = true
+		this.faerieOut = true
 		if (this.petHook != null) {
 			this.removeEventHook(this.petHook)
 		}
+	}
+
+	private killFaerie() {
+		this.faerieOut = false
 	}
 
 	//all spenders consume 10 gauge per event
@@ -94,7 +112,7 @@ export class FaerieGauge extends CoreGauge {
 	}
 
 	private onGaugeGenerate() {
-		if (this.fairyOut) {
+		if (this.faerieOut) {
 			this.gauge.generate(GAUGE_GAIN_AMOUNT)
 		}
 	}

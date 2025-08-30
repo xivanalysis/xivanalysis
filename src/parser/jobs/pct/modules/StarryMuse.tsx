@@ -28,7 +28,7 @@ export class StarryMuse extends RaidBuffWindow {
 	private creatureMotifs = CREATURE_MOTIFS.map(key => this.data.actions[key])
 	private subtractiveActions = SUBTRACTIVE_SINGLE_TARGET.map(key => this.data.actions[key])
 
-	private patch72OrLater = !this.parser.patch.before('7.2')
+	private isPatch720 = this.parser.patch.is('7.2')
 
 	override prependMessages = <Message>
 		<Trans id="pct.starrymuse.table-header">
@@ -43,8 +43,8 @@ export class StarryMuse extends RaidBuffWindow {
 
 		this.ignoreActions([this.data.actions.STAR_PRISM_CURE.id])
 
-		// Since a 7.2+ 6Sub window will have one RGBW GCD, we need a count evaluator now...
-		if (this.patch72OrLater) {
+		// Since a 7.2 6Sub window will have one RGBW GCD, we need a count evaluator...
+		if (this.isPatch720) {
 			this.addEvaluator(new ExpectedGcdCountEvaluator({
 				expectedGcds: BASE_GCDS_PER_WINDOW,
 				globalCooldown: this.globalCooldown,
@@ -56,7 +56,7 @@ export class StarryMuse extends RaidBuffWindow {
 			}))
 		}
 
-		// Shouldn't also need an Expected GCD Count evaluator (for 7.1 and prior) since the expected action groups will effectively enforce that
+		// Shouldn't also need an Expected GCD Count evaluator (for patches other than 7.2) since the expected action groups will effectively enforce that
 		this.addEvaluator(new ExpectedActionGroupsEvaluator({
 			expectedActionGroups: [
 				{
@@ -105,8 +105,8 @@ export class StarryMuse extends RaidBuffWindow {
 			adjustCount: this.adjustExpectedActionGroupCounts.bind(this),
 		}))
 
-		// In Patch 7.2+, a 6sub window will have one of RGBW, so we shouldn't add the limited actions evaluator warning against it
-		if (!this.patch72OrLater) {
+		// In Patch 7.2, a 6sub window will have one of RGBW, so we shouldn't add the limited actions evaluator warning against it
+		if (!this.isPatch720) {
 			this.addEvaluator(new LimitedActionsEvaluator({
 				expectedActions: ADDITIVE_SPELLS.map<TrackedAction>(key => {
 					return {
@@ -129,8 +129,8 @@ export class StarryMuse extends RaidBuffWindow {
 	private adjustExpectedActionGroupCounts(window: HistoryEntry<EvaluatedAction[]>, action: TrackedActionGroup): number {
 		const motifsPainted = this.countActionsUsed(window, this.creatureMotifs)
 
-		// In 7.2+, using fewer hammers is acceptable as long as the earlier hammers are skipped
-		if (this.patch72OrLater && action.actions.some(action => this.hammerActions.includes(action))) {
+		// In 7.2, using fewer hammers is acceptable as long as the earlier hammers are skipped
+		if (this.isPatch720 && action.actions.some(action => this.hammerActions.includes(action))) {
 			let adjustment = 0
 			// Yes, this disgusting nesting is necessary to make sure we're not reducing the count because they used weaker hammers and skipped the stronger ones
 			if (this.countActionsUsed(window, [this.data.actions.HAMMER_STAMP]) === 0) {
@@ -153,8 +153,8 @@ export class StarryMuse extends RaidBuffWindow {
 
 			let adjustment = 0
 
-			// In Patch 7.2+, hammers can be replaced with additional subtractive spells
-			if (this.patch72OrLater) {
+			// In Patch 7.2, hammers can be replaced with additional subtractive spells
+			if (this.isPatch720) {
 				const hammersUsed = this.countActionsUsed(window, this.hammerActions)
 				// If they didn't use a second comet in an H2/H3 window, they should use a fourth subtractive spell
 				if (hammersUsed === 2 && cometsUsed < 2) {

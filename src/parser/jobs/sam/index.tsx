@@ -13,7 +13,7 @@ export const SAMURAI = new Meta({
 
 	supportedPatches: {
 		from: '7.05',
-		to: '7.2',
+		to: '7.3',
 	},
 
 	contributors: [

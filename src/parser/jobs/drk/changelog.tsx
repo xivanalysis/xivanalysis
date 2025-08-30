@@ -7,8 +7,13 @@ export const changelog = [
 	// 	contributors: [CONTRIBUTORS.YOU],
 	// },
 	{
-		date: new Date('2025-06-30'),
+		date: new Date('2025-08-30'),
 		Changes: () => <>Included timestamps and information about TBN usage, as well as missed Dark Arts uses.</>,
+		contributors: [CONTRIBUTORS.VIOLET],
+	},
+	{
+		date: new Date('2025-06-30'),
+		Changes: () => <>Potion windows will now expect a combination of two between Bloodspillers or Quietus, not just two Bloodspillers.</>,
 		contributors: [CONTRIBUTORS.VIOLET],
 	},
 	{

@@ -16,8 +16,12 @@ type GaugeModifier = Partial<Record<Event['type'], number>>
 // Constants
 const BUNSHIN_GAIN = 5
 const BUNSHIN_GAIN_KAMAITACHI = 10
-const HELLFROG_TARGET_MINIMUM = 3
-const DEATHFROG_TARGET_MINIMUM = 3
+
+// Oh baby we got some patch divergence; potency changes in 7.3 made Hellfrog/Deathfrog better than Bhava/Zesho on 2 targets
+const HELLFROG_TARGET_MINIMUM_73 = 2
+const DEATHFROG_TARGET_MINIMUM_73 = 2
+const HELLFROG_TARGET_MINIMUM_72_AND_OLDER = 3
+const DEATHFROG_TARGET_MINIMUM_72_AND_OLDER = 3
 
 const OVERCAP_SEVERITY = {
 	20: SEVERITY.MINOR,
@@ -92,6 +96,9 @@ export class Ninki extends CoreGauge {
 		[this.data.actions.BUNSHIN.id, {action: -50}],
 	])
 
+	private hellfrogThreshold: number = this.parser.patch.before('7.3') ? HELLFROG_TARGET_MINIMUM_72_AND_OLDER : HELLFROG_TARGET_MINIMUM_73
+	private deathfrogThreshold: number = this.parser.patch.before('7.3') ? DEATHFROG_TARGET_MINIMUM_72_AND_OLDER : DEATHFROG_TARGET_MINIMUM_73
+
 	// Honestly not sure which of these is the better band name
 	private erroneousHellfrogs: number = 0
 	private erroneousDeathfrogs: number = 0
@@ -139,15 +146,15 @@ export class Ninki extends CoreGauge {
 	}
 
 	private onHellfrog(event: Events['damage']) {
-		if (event.targets.length < HELLFROG_TARGET_MINIMUM) {
-			// If we have a Hellfrog event with fewer than 3 targets, it should've been a Bhava instead
+		if (event.targets.length < this.hellfrogThreshold) {
+			// If we have a Hellfrog event with too few targets, it should've been a Bhava instead
 			this.erroneousHellfrogs++
 		}
 	}
 
 	private onDeathfrog(event: Events['damage']) {
-		if (event.targets.length < DEATHFROG_TARGET_MINIMUM) {
-			// If we have a Deathfrog event with fewer than 3 targets, it should've been a Zesho Meppo instead
+		if (event.targets.length < this.deathfrogThreshold) {
+			// If we have a Deathfrog event with too few targets, it should've been a Zesho Meppo instead
 			this.erroneousDeathfrogs++
 		}
 	}
@@ -168,24 +175,24 @@ export class Ninki extends CoreGauge {
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.HELLFROG_MEDIUM.icon,
 			content: <Trans id="nin.ninki.suggestions.hellfrog.content">
-				Avoid using <ActionLink action="HELLFROG_MEDIUM"/> when you have fewer than three targets, as <ActionLink action="BHAVACAKRA"/> is otherwise a potency gain.
+				Avoid using <ActionLink action="HELLFROG_MEDIUM"/> when you have fewer than <Plural value={this.hellfrogThreshold} one="# target" other="# targets"/>, as <ActionLink action="BHAVACAKRA"/> is otherwise a potency gain.
 			</Trans>,
 			tiers: FROG_SEVERITY,
 			value: this.erroneousHellfrogs,
 			why: <Trans id="nin.ninki.suggestions.hellfrog.why">
-				You used Hellfrog Medium on fewer than three targets <Plural value={this.erroneousHellfrogs} one="# time" other="# times"/>.
+				You used Hellfrog Medium on too few targets <Plural value={this.erroneousHellfrogs} one="# time" other="# times"/>.
 			</Trans>,
 		}))
 
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.DEATHFROG_MEDIUM.icon,
 			content: <Trans id="nin.ninki.suggestions.deathfrog.content">
-				Avoid using <ActionLink action="DEATHFROG_MEDIUM"/> when you have fewer than three targets, as <ActionLink action="ZESHO_MEPPO"/> is otherwise a potency gain.
+				Avoid using <ActionLink action="DEATHFROG_MEDIUM"/> when you have fewer than <Plural value={this.deathfrogThreshold} one="# target" other="# targets"/>, as <ActionLink action="ZESHO_MEPPO"/> is otherwise a potency gain.
 			</Trans>,
 			tiers: FROG_SEVERITY,
 			value: this.erroneousDeathfrogs,
 			why: <Trans id="nin.ninki.suggestions.deathfrog.why">
-				You used Deathfrog Medium on fewer than three targets <Plural value={this.erroneousDeathfrogs} one="# time" other="# times"/>.
+				You used Deathfrog Medium on too few targets <Plural value={this.erroneousDeathfrogs} one="# time" other="# times"/>.
 			</Trans>,
 		}))
 	}

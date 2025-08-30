@@ -7,6 +7,11 @@ export const changelog = [
 	// 	contributors: [CONTRIBUTORS.YOU],
 	// },
 	{
+		date: new Date('2025-08-06'),
+		Changes: () => <>Updated Hellfrog/Deathfrog Medium tracking for the 7.3 potency changes.</>,
+		contributors: [CONTRIBUTORS.TOASTDEIB],
+	},
+	{
 		date: new Date('2025-04-05'),
 		Changes: () => <>Corrected Deathfrog Medium tracking to expect three or more targets instead of two or more.</>,
 		contributors: [CONTRIBUTORS.TOASTDEIB],

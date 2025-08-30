@@ -20,7 +20,7 @@ export const WHITE_MAGE = new Meta({
 
 	supportedPatches: {
 		from: '7.0',
-		to: '7.2',
+		to: '7.3',
 	},
 
 	contributors: [

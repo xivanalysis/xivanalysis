@@ -4,7 +4,7 @@ import {CooldownDowntime as CoreCooldownDowntime} from 'parser/core/modules/Cool
 // TODO: First use offsets?
 
 export class CooldownDowntime extends CoreCooldownDowntime {
-	trackedCds = this.parser.patch.before('7.2') ? [
+	trackedCds = !this.parser.patch.is('7.2') ? [
 		{
 			cooldowns: [
 				this.data.actions.POM_MUSE,
@@ -23,7 +23,7 @@ export class CooldownDowntime extends CoreCooldownDowntime {
 				this.data.actions.STARRY_MUSE,
 			],
 		},
-	] : [ // Drop Striking Muse from Patch 7.2+ cooldown usage requirement, since it's no longer strictly a gain
+	] : [ // Drop Striking Muse from Patch 7.2 cooldown usage requirement, since it was not strictly a gain for that patch
 		{
 			cooldowns: [
 				this.data.actions.POM_MUSE,
