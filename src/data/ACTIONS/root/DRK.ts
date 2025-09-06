@@ -379,4 +379,14 @@ export const DRK = ensureActions({
 		name: 'Disesteem',
 		icon: iconUrl(3099),
 	},
+	ESTEEM_CARVE_AND_SPIT: {
+		id: 17915,
+		name: 'Carve and Spit',
+		icon: iconUrl(3058),
+	},
+	ESTEEM_FLOOD_OF_SHADOW: {
+		id: 17907,
+		name: 'Flood of Shadow',
+		icon: iconUrl(3085),
+	},
 })

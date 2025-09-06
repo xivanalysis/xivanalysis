@@ -8,7 +8,7 @@ export const changelog = [
 	// },
 	{
 		date: new Date('2025-08-30'),
-		Changes: () => <>Display Edge and Flood of Darkness on the timeline for level synced content.</>,
+		Changes: () => <>Display Edge and Flood of Darkness, as well as lower level Esteem actions, on the timeline for level synced content.</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],
 	},
 	{
