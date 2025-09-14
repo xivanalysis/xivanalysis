@@ -22,12 +22,12 @@ export class BloodWeapon extends BuffWindow {
 		super.initialise()
 
 		this.addEvaluator(new ExpectedGcdCountEvaluator({
-			expectedGcds: 5,
+			expectedGcds: 3,
 			globalCooldown: this.globalCooldown,
 			hasStacks: true,
 			suggestionIcon: this.data.actions.BLOOD_WEAPON.icon,
 			suggestionContent: <Trans id="drk.bloodweapon.suggestions.missedgcd.content">
-				Try to land 5 GCDs during every <ActionLink action="BLOOD_WEAPON" /> window.  If you cannot do this with full uptime and no clipping, consider adjusting your gearset for more Skill Speed.
+				Try to land 3 GCDs during every <ActionLink action="BLOOD_WEAPON" /> window.
 			</Trans>,
 			suggestionWindowName: <ActionLink action="BLOOD_WEAPON" showIcon={false}/>,
 			severityTiers: {
