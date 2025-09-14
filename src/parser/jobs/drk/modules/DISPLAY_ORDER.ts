@@ -3,4 +3,5 @@ export enum DISPLAY_ORDER {
 	BLOOD_WEAPON = 2,
 	RESOURCES = 3,
 	TINCTURES = 4,
+	ESTEEM_WINDOW = 5,
 }

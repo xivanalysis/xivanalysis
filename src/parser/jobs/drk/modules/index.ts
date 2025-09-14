@@ -5,6 +5,7 @@ import {Darkside} from './Darkside'
 import {Defensives} from './Defensives'
 import {Delirium} from './Delirium'
 import {EsteemTimeline} from './EsteemTimeline'
+import {EsteemWindow} from './EsteemWindow'
 import {MPUsage} from './MPUsage'
 import {MultiHitSkills} from './MultiHitSkills'
 import {OGCDDowntime} from './OGCDDowntime'
@@ -26,4 +27,5 @@ export const modules = [
 	SaltAndDarkness,
 	StatusTimeline,
 	Tincture,
+	EsteemWindow,
 ]
