@@ -1,14 +1,13 @@
 import {MessageDescriptor} from '@lingui/core'
 import {msg} from '@lingui/core/macro'
 import {Trans} from '@lingui/react/macro'
-import {ActionLink} from 'components/ui/DbLink'
 import {NormalisedMessage} from 'components/ui/NormalisedMessage'
 import {ActionKey} from 'data/ACTIONS'
 import {Event, Events} from 'event'
 import {filter} from 'parser/core/filter'
 import {Gauge} from 'parser/core/modules/Gauge'
 import {Team} from 'report'
-import {Accordion, Table} from 'semantic-ui-react'
+import {Table} from 'semantic-ui-react'
 
 const DARK_ARTS_SPENDERS: ActionKey[] = [
 	'FLOOD_OF_SHADOW',
@@ -24,10 +23,10 @@ interface LostDarkArts {
 	reason: MessageDescriptor
 }
 
-export class TBNUsage extends Gauge {
-	static override handle = 'The Blackest Night Usage'
+export class DarkArtsLost extends Gauge {
+	static override handle = 'Missed Dark Arts'
 
-	static override title = msg({id: 'drk.tbn.title', message: 'The Blackest Night Usage'})
+	static override title = msg({id: 'drk.missed.dark.arts.title', message: 'Missed Dark Arts'})
 
 	private darkArts = false
 	private droppedTBNTimestamps: LostDarkArts[] = []
@@ -82,7 +81,7 @@ export class TBNUsage extends Gauge {
 	}
 
 	override output() {
-		let darkArtsLostTable = <Table collapsing unstackable>
+		const darkArtsLostTable = <Table collapsing unstackable>
 			<Table.Header>
 				<Table.Row>
 					<Table.HeaderCell><Trans id="drk.darkarts.lost.at">Dark Arts Lost Time</Trans></Table.HeaderCell>
@@ -102,40 +101,11 @@ export class TBNUsage extends Gauge {
 		</Table>
 
 		if (this.droppedTBNTimestamps.length === 0) {
-			darkArtsLostTable = <></>
-		}
-
-		const tbnUsagePanel = {
-			key: this.data.actions.THE_BLACKEST_NIGHT.id,
-			title: {
-				content: <><ActionLink key={0} {...this.data.actions.THE_BLACKEST_NIGHT} /> - {this.tbnUsageTimestamps.length} <Trans id="drk.tbn.uses.text">uses</Trans></>,
-			},
-			content: {
-				content: <Table compact unstackable celled>
-					<Table.Body>
-						{
-							this.tbnUsageTimestamps.map((timestamp) => {
-								return <Table.Row key="0">
-									<Table.Cell>
-										<Trans id="drk.tbn.table.usage-row.text">Used at {this.parser.formatEpochTimestamp(timestamp)}
-										</Trans>
-									</Table.Cell>
-								</Table.Row>
-							})
-						}
-					</Table.Body>
-				</Table>,
-			},
+			return undefined
 		}
 
 		return (
 			<div>
-				<Accordion
-					exclusive={false}
-					styled
-					fluid
-					panels={[tbnUsagePanel]}
-				/>
 				{darkArtsLostTable}
 			</div>
 		)

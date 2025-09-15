@@ -6,10 +6,16 @@ export const changelog = [
 	// 	Changes: () => <>The changes you made</>,
 	// 	contributors: [CONTRIBUTORS.YOU],
 	// },
+	//
+	{
+		date: new Date('2025-09-15'),
+		Changes: () => <>Included timestamps and information about missed Dark Arts uses.</>,
+		contributors: [CONTRIBUTORS.VIOLET],
+	},
 	{
 		date: new Date('2025-08-30'),
-		Changes: () => <>Included timestamps and information about TBN usage, as well as missed Dark Arts uses.</>,
-		contributors: [CONTRIBUTORS.VIOLET],
+		Changes: () => <>Display Edge and Flood of Darkness, as well as lower level Esteem actions, on the timeline for level synced content.</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
 	},
 	{
 		date: new Date('2025-06-30'),

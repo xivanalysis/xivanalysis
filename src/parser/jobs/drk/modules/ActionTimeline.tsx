@@ -12,6 +12,8 @@ export class ActionTimeline extends CoreActionTimeline {
 		'SHADOWBRINGER',
 		'EDGE_OF_SHADOW',
 		'FLOOD_OF_SHADOW',
+		'EDGE_OF_DARKNESS',
+		'FLOOD_OF_DARKNESS',
 		'CARVE_AND_SPIT',
 		'ABYSSAL_DRAIN',
 		['SALTED_EARTH', 'SALT_AND_DARKNESS'],
