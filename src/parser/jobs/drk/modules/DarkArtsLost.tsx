@@ -101,7 +101,7 @@ export class DarkArtsLost extends Gauge {
 		</Table>
 
 		if (this.droppedTBNTimestamps.length === 0) {
-			return undefined
+			return false
 		}
 
 		return (
