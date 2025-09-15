@@ -1,16 +1,32 @@
-/* eslint-disable @typescript-eslint/no-magic-numbers */
 import {msg} from '@lingui/core/macro'
+import {RotationEvent} from 'components/ui/Rotation'
 import {ActionKey} from 'data/ACTIONS'
-// import {Events} from 'event'
 import {Event, Events} from 'event'
-import {filter} from 'parser/core/filter'
+import {filter, oneOf} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
-import {ActionWindow} from 'parser/core/modules/ActionWindow'
-import {GlobalCooldown} from 'parser/core/modules/GlobalCooldown'
+import {ActionWindow, EvaluatedAction} from 'parser/core/modules/ActionWindow'
+import {Actors} from 'parser/core/modules/Actors'
 import {DISPLAY_ORDER} from './DISPLAY_ORDER'
 import {EsteemUsageEvaluator} from './EsteemUsageEvaluator'
 
-// TODO Violet other levels
+const ESTEEM_LEVEL_80: ActionKey[] = [
+	'ESTEEM_ABYSSAL_DRAIN',
+	'ESTEEM_SHADOWSTRIDE',
+	'ESTEEM_FLOOD_OF_SHADOW',
+	'ESTEEM_EDGE_OF_SHADOW',
+	'ESTEEM_BLOODSPILLER',
+	'ESTEEM_CARVE_AND_SPIT',
+]
+
+const ESTEEM_LEVEL_90: ActionKey[] = [
+	'ESTEEM_ABYSSAL_DRAIN',
+	'ESTEEM_SHADOWSTRIDE',
+	'ESTEEM_SHADOWBRINGER',
+	'ESTEEM_EDGE_OF_SHADOW',
+	'ESTEEM_BLOODSPILLER',
+	'ESTEEM_CARVE_AND_SPIT',
+]
+
 const ESTEEM_LEVEL_100: ActionKey[] = [
 	'ESTEEM_ABYSSAL_DRAIN',
 	'ESTEEM_SHADOWSTRIDE',
@@ -25,85 +41,67 @@ export class EsteemWindow extends ActionWindow {
 	static override title = msg({id: 'drk.esteemwindow.title', message: 'Esteem Action Usage'})
 	static override displayOrder = DISPLAY_ORDER.ESTEEM_WINDOW
 	static LIVING_SHADOW_ACTION_KEY: ActionKey = 'LIVING_SHADOW'
-	static livingShadowActionId = 16472
-	// Abyssal Drain, Shadowstride, Shadowbringer, Edge, Bloodspiller, Disesteem
-	static esteemActionIds100 = [17904, 38512, 25881, 17909, 17908, 36933]
 
-	@dependency globalCooldown!: GlobalCooldown
-
-	// override buffStatus = this.data.statuses.BLOOD_WEAPON
-	// override endOfWindowHandlingMode: EndOfWindowHandlingMode = 'SAME-TIMESTAMP'
+	@dependency private actors!: Actors
 
 	override initialise() {
 		super.initialise()
 
-		const ids = ESTEEM_LEVEL_100.map(k => this.data.actions[k].id)
-		this.trackOnlyActions(ids)
-		//this.trackOnlyActions(EsteemWindow.esteemActionIds100)
 		const playerFilter = filter<Event>().source(this.parser.actor.id)
+		const pets = this.parser.pull.actors.filter(actor => actor.owner === this.parser.actor).map(actor => actor.id)
+
+		const playerActionFilter = filter<Event>()
+			.source(this.parser.actor.id)
+			.type('action')
+		const esteemActionFilter = filter<Event>()
+			.source(oneOf(pets))
+			.type('action')
+		this.setEventFilter((event): event is Events['action'] => {
+			if (playerActionFilter(event)) {
+				return event.action === this.data.actions[EsteemWindow.LIVING_SHADOW_ACTION_KEY].id
+			}
+			return esteemActionFilter(event)
+		})
+
 		this.addEventHook(playerFilter.type('action').action(this.data.matchActionId([EsteemWindow.LIVING_SHADOW_ACTION_KEY])), this.beginEsteem)
 
 		this.addEvaluator(new EsteemUsageEvaluator({
 			suggestionIcon: this.data.actions.LIVING_SHADOW.icon,
-			esteemActionIds: ids,
+			esteemActionIds: ESTEEM_LEVEL_100.map(k => this.data.actions[k].id),
+			esteemActionIds90: ESTEEM_LEVEL_90.map(k => this.data.actions[k].id),
+			esteemActionIds80: ESTEEM_LEVEL_80.map(k => this.data.actions[k].id),
+			// We pass the level as a func dynamically so that it is actually populated
+			actorLevelFunc: () => this.actors.get(this.parser.actor).level,
 		}))
+	}
 
-		// this.addEvaluator(new ExpectedActionGroupsEvaluator({
-		// 			expectedActionGroups: [
-		// 				{
-		// 					actions: [this.data.actions.SCARLET_DELIRIUM, this.data.actions.COMEUPPANCE, this.data.actions.TORCLEAVER, this.data.actions.IMPALEMENT],
-		// 					expectedPerWindow: 3,
-		// 					overrideHeader: <DataLink showName={false} action="DELIRIUM" />,
-		// 				},
-		// 				{
-		// 					actions: [this.data.actions.BLOODSPILLER, this.data.actions.QUIETUS],
-		// 					expectedPerWindow: 2,
-		// 				},
-		// 				{
-		// 					actions: [this.data.actions.SHADOWBRINGER],
-		// 					expectedPerWindow: 2,
-		// 				},
-		// 				{
-		// 					actions: [this.data.actions.CARVE_AND_SPIT, this.data.actions.ABYSSAL_DRAIN],
-		// 					expectedPerWindow: 1,
-		// 				},
-		// 				{
-		// 					actions: [this.data.actions.DISESTEEM],
-		// 					expectedPerWindow: 1,
-		// 				},
-		// 				{
-		// 					actions: [this.data.actions.EDGE_OF_SHADOW, this.data.actions.FLOOD_OF_SHADOW],
-		// 					expectedPerWindow: 5,
-		// 				},
-		// 			],
-		// 			suggestionIcon: this.data.actions.INFUSION_STR.icon,
-		// 			suggestionContent: <Trans id="gnb.tincture.suggestions.trackedActions.content">
-		// 				Try to cover as much damage as possible with your Tinctures of Strength.
-		// 			</Trans>,
-		// 			suggestionWindowName: <DataLink item="INFUSION_STR" showIcon={false}/>,
-		// 			severityTiers: {
-		// 				1: SEVERITY.MINOR,
-		// 				2: SEVERITY.MEDIUM,
-		// 				3: SEVERITY.MAJOR,
-		// 			},
-		// 			adjustCount: this.adjustExpectedBloodspillerCount.bind(this),
-		// 		}))
-
-		// this.addEvaluator(new ExpectedGcdCountEvaluator({
-		// 	expectedGcds: 5,
-		// 	globalCooldown: this.globalCooldown,
-		// 	hasStacks: true,
-		// 	suggestionIcon: this.data.actions.BLOOD_WEAPON.icon,
-		// 	suggestionContent: <Trans id="drk.bloodweapon.suggestions.missedgcd.content">
-		// 		Try to land 5 GCDs during every <ActionLink action="BLOOD_WEAPON" /> window.  If you cannot do this with full uptime and no clipping, consider adjusting your gearset for more Skill Speed.
-		// 	</Trans>,
-		// 	suggestionWindowName: <ActionLink action="BLOOD_WEAPON" showIcon={false}/>,
-		// 	severityTiers: {
-		// 		1: SEVERITY.MINOR,
-		// 		3: SEVERITY.MEDIUM,
-		// 		5: SEVERITY.MAJOR,
-		// 	},
-		// }))
+	override getRotationOutputForAction(action: EvaluatedAction): RotationEvent {
+		// Let's make the actions have real icons and tooltips
+		if (action.action.id === this.data.actions.ESTEEM_ABYSSAL_DRAIN.id) {
+			return {action: this.data.actions.ABYSSAL_DRAIN.id}
+		}
+		if (action.action.id === this.data.actions.ESTEEM_SHADOWSTRIDE.id) {
+			return {action: this.data.actions.SHADOWSTRIDE.id}
+		}
+		if (action.action.id === this.data.actions.ESTEEM_SHADOWBRINGER.id) {
+			return {action: this.data.actions.SHADOWBRINGER.id}
+		}
+		if (action.action.id === this.data.actions.ESTEEM_EDGE_OF_SHADOW.id) {
+			return {action: this.data.actions.EDGE_OF_SHADOW.id}
+		}
+		if (action.action.id === this.data.actions.ESTEEM_BLOODSPILLER.id) {
+			return {action: this.data.actions.BLOODSPILLER.id}
+		}
+		if (action.action.id === this.data.actions.ESTEEM_DISESTEEM.id) {
+			return {action: this.data.actions.DISESTEEM.id}
+		}
+		if (action.action.id === this.data.actions.ESTEEM_FLOOD_OF_SHADOW.id) {
+			return {action: this.data.actions.FLOOD_OF_SHADOW.id}
+		}
+		if (action.action.id === this.data.actions.ESTEEM_CARVE_AND_SPIT.id) {
+			return {action: this.data.actions.CARVE_AND_SPIT.id}
+		}
+		return {action: action.action.id}
 	}
 
 	private beginEsteem(event: Events['action']) {
