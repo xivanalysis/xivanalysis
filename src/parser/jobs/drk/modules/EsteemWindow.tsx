@@ -78,28 +78,28 @@ export class EsteemWindow extends ActionWindow {
 	override getRotationOutputForAction(action: EvaluatedAction): RotationEvent {
 		// Let's make the actions have real icons and tooltips
 		if (action.action.id === this.data.actions.ESTEEM_ABYSSAL_DRAIN.id) {
-			return {action: this.data.actions.ABYSSAL_DRAIN.id}
+			return {action: this.data.actions.ABYSSAL_DRAIN.id, forceGCDSizeAndStyle: true}
 		}
 		if (action.action.id === this.data.actions.ESTEEM_SHADOWSTRIDE.id) {
-			return {action: this.data.actions.SHADOWSTRIDE.id}
+			return {action: this.data.actions.SHADOWSTRIDE.id, forceGCDSizeAndStyle: true}
 		}
 		if (action.action.id === this.data.actions.ESTEEM_SHADOWBRINGER.id) {
-			return {action: this.data.actions.SHADOWBRINGER.id}
+			return {action: this.data.actions.SHADOWBRINGER.id, forceGCDSizeAndStyle: true}
 		}
 		if (action.action.id === this.data.actions.ESTEEM_EDGE_OF_SHADOW.id) {
-			return {action: this.data.actions.EDGE_OF_SHADOW.id}
+			return {action: this.data.actions.EDGE_OF_SHADOW.id, forceGCDSizeAndStyle: true}
 		}
 		if (action.action.id === this.data.actions.ESTEEM_BLOODSPILLER.id) {
-			return {action: this.data.actions.BLOODSPILLER.id}
+			return {action: this.data.actions.BLOODSPILLER.id, forceGCDSizeAndStyle: true}
 		}
 		if (action.action.id === this.data.actions.ESTEEM_DISESTEEM.id) {
-			return {action: this.data.actions.DISESTEEM.id}
+			return {action: this.data.actions.DISESTEEM.id, forceGCDSizeAndStyle: true}
 		}
 		if (action.action.id === this.data.actions.ESTEEM_FLOOD_OF_SHADOW.id) {
-			return {action: this.data.actions.FLOOD_OF_SHADOW.id}
+			return {action: this.data.actions.FLOOD_OF_SHADOW.id, forceGCDSizeAndStyle: true}
 		}
 		if (action.action.id === this.data.actions.ESTEEM_CARVE_AND_SPIT.id) {
-			return {action: this.data.actions.CARVE_AND_SPIT.id}
+			return {action: this.data.actions.CARVE_AND_SPIT.id, forceGCDSizeAndStyle: true}
 		}
 		return {action: action.action.id}
 	}

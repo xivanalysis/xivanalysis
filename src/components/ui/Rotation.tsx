@@ -11,6 +11,7 @@ export interface RotationEvent {
 	cause?: Cause,
 	action?: number
 	isProc?: boolean
+	forceGCDSizeAndStyle?: boolean
 }
 interface RotationProps {
 	events: RotationEvent[]
@@ -48,13 +49,15 @@ export class Rotation extends Component<RotationProps> {
 					return false
 				}
 
+				const isGCD = action.onGCD || event.forceGCDSizeAndStyle
+
 				const linkClassName = [
 					styles.link,
-					{[styles.ogcd]: !action.onGcd},
+					{[styles.ogcd]: !isGCD},
 					event.isProc ? overlayStyle.procOverlay : '',
 				]
 
-				const iconSize = action.onGcd ? styles.gcdSize : styles.ogcdSize
+				const iconSize = isGCD ? styles.gcdSize : styles.ogcdSize
 
 				const isItem = action.id >= ITEM_ID_OFFSET
 
