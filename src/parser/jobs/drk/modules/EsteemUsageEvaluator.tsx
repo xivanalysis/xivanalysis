@@ -65,7 +65,7 @@ export class EsteemUsageEvaluator extends RulePassedEvaluator  {
 
 		const severityTiers  = {
 			1: SEVERITY.MEDIUM,
-			3: SEVERITY.MAJOR,
+			2: SEVERITY.MAJOR,
 		}
 
 		return new TieredSuggestion({
