@@ -49,7 +49,7 @@ export class Rotation extends Component<RotationProps> {
 					return false
 				}
 
-				const isGCD = action.onGCD || event.forceGCDSizeAndStyle
+				const isGCD = !!action.onGcd || !!event.forceGCDSizeAndStyle
 
 				const linkClassName = [
 					styles.link,

@@ -38,7 +38,7 @@ const ESTEEM_LEVEL_100: ActionKey[] = [
 
 export class EsteemWindow extends ActionWindow {
 	static override handle = 'esteem'
-	static override title = msg({id: 'drk.esteemwindow.title', message: 'Esteem Action Usage'})
+	static override title = msg({id: 'drk.esteem.rotation.window.title', message: 'Actions Used By Esteem (Living Shadow)'})
 	static override displayOrder = DISPLAY_ORDER.ESTEEM_WINDOW
 	static LIVING_SHADOW_ACTION_KEY: ActionKey = 'LIVING_SHADOW'
 

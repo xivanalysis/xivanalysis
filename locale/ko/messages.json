@@ -558,7 +558,7 @@
   "drk.delirium.title": "피의 열광 사용",
   "drk.esteem.nonstandard.rotation": "",
   "drk.esteem.nonstandard.rotation.why": "",
-  "drk.esteemwindow.title": "",
+  "drk.esteem.rotation.window.title": "",
   "drk.gauge.bloodgauge.label": "흑혈 게이지",
   "drk.gauge.suggestions.loss.content": "흑혈 게이지가 넘치지 않도록 하십시오. 손해를 본 자원만큼 기술 사용 횟수에 손실을 입게 됩니다.",
   "drk.gauge.suggestions.loss.why": "게이지 초과로 흑혈을 {0} 잃었습니다.",

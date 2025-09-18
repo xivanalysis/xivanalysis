@@ -558,7 +558,7 @@
   "drk.delirium.title": "Utilisation de Delirium de sang",
   "drk.esteem.nonstandard.rotation": "",
   "drk.esteem.nonstandard.rotation.why": "",
-  "drk.esteemwindow.title": "",
+  "drk.esteem.rotation.window.title": "",
   "drk.gauge.bloodgauge.label": "Jauge de sang",
   "drk.gauge.suggestions.loss.content": "Évitez de laisser votre Jauge de sang se surcharger - les ressources perdues peuvent vous coûter l'utilisation d'une compétence sur la longueur du combat.",
   "drk.gauge.suggestions.loss.why": "{0} de Jauge de sang perdu à cause de la jauge pleine.",

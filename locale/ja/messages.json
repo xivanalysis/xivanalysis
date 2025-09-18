@@ -558,7 +558,7 @@
   "drk.delirium.title": "ブラッドデリリアムの使用状況",
   "drk.esteem.nonstandard.rotation": "",
   "drk.esteem.nonstandard.rotation.why": "",
-  "drk.esteemwindow.title": "",
+  "drk.esteem.rotation.window.title": "",
   "drk.gauge.bloodgauge.label": "ブラッドゲージ",
   "drk.gauge.suggestions.loss.content": "インナービーストのゲージを溢れさせるのは避けましょう。リソースを無駄にしたせいで、戦闘を通してインナービースト使用に影響があるかもしれません。",
   "drk.gauge.suggestions.loss.why": "{0} のインナービーストゲージを上限を超えたため失いました。",
