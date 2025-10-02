@@ -43,6 +43,7 @@ export class EsteemUsageEvaluator extends RulePassedEvaluator  {
 			idsToUse = this.esteemActionIds90
 		}
 
+		// eslint-disable-next-line @typescript-eslint/no-magic-numbers
 		if (playerLevel && playerLevel < 90) {
 			idsToUse = this.esteemActionIds80
 		}

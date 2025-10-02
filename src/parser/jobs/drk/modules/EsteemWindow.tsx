@@ -1,4 +1,6 @@
 import {msg} from '@lingui/core/macro'
+import {Trans} from '@lingui/react/macro'
+import {DataLink} from 'components/ui/DbLink'
 import {RotationEvent} from 'components/ui/Rotation'
 import {ActionKey} from 'data/ACTIONS'
 import {Event, Events} from 'event'
@@ -6,6 +8,7 @@ import {filter, oneOf} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
 import {ActionWindow, EvaluatedAction} from 'parser/core/modules/ActionWindow'
 import {Actors} from 'parser/core/modules/Actors'
+import {Message} from 'semantic-ui-react'
 import {DISPLAY_ORDER} from './DISPLAY_ORDER'
 import {EsteemUsageEvaluator} from './EsteemUsageEvaluator'
 
@@ -41,6 +44,11 @@ export class EsteemWindow extends ActionWindow {
 	static override title = msg({id: 'drk.esteem.rotation.window.title', message: 'Actions Used By Esteem (Living Shadow)'})
 	static override displayOrder = DISPLAY_ORDER.ESTEEM_WINDOW
 	static LIVING_SHADOW_ACTION_KEY: ActionKey = 'LIVING_SHADOW'
+	override prependMessages = <Message>
+		<Trans id="drk.esteem.rotation.window.description">
+				This shows the actions used by Esteem following each use of <DataLink action="LIVING_SHADOW" />. If uninterrupted, at level 100, Esteem will use the following six abilities in order: <DataLink action="ABYSSAL_DRAIN" />, <DataLink action="SHADOWSTRIDE" />, <DataLink action="SHADOWBRINGER" />, <DataLink action="EDGE_OF_SHADOW" />, <DataLink action="BLOODSPILLER" />, <DataLink action="DISESTEEM" />. Less than six abilities indicates Esteem did not get all of its attacks off on an enemy, such as due to the boss phasing. Duplicate abilities indicate that Esteem was out of range at one or more points during its attacks. Both are significant potency losses.
+		</Trans>
+	</Message>
 
 	@dependency private actors!: Actors
 
