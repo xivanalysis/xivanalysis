@@ -8,6 +8,11 @@ export const changelog = [
 	// 	contributors: [CONTRIBUTORS.YOU],
 	// },
 	{
+		date: new Date('2025-10-27'),
+		Changes: () => <>Update Ley Lines analysis for 7.2+ to count the number of casts affected by Circle of Power, instead of the simple buff uptime calculation.</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
+	{
 		date: new Date('2025-06-12'),
 		Changes: () => <>Minor revisions to lost Poloylot suggestion wording, for clarity.</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],
