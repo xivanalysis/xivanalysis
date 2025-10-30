@@ -147,6 +147,7 @@ export class Leylines extends Analyser {
 		}
 		this.maybeUnsetEventHooks()
 	}
+
 	private onAction(event: Events['action']) {
 		// Only track GCDs
 		const action = this.data.getAction(event.action)
@@ -220,6 +221,11 @@ export class Leylines extends Analyser {
 	// We died, close windows
 	private onDeath(event: Events['death']) {
 		this.stopAndSave(this.data.statuses.LEY_LINES.id, event.timestamp)
+
+		// also clear cast counting/tracking data/hooks
+		this.linesActionId = null
+		this.circleActionId = null
+		this.unsetEventHooks()
 	}
 
 	// Finalise a buff window
@@ -247,6 +253,7 @@ export class Leylines extends Analyser {
 
 	// A reminder of man's ability to generate electricity
 	private dontMovePercent(power: number, lines: number) {
+		if (lines === 0) { return 0 }
 		return (power / lines) * 100
 	}
 
