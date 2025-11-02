@@ -7,6 +7,11 @@ export const changelog = [
 	// 	contributors: [CONTRIBUTORS.YOU],
 	// },
 	{
+		date: new Date('2025-11-02'),
+		Changes: () => <>Update for patch 7.3.</>,
+		contributors: [CONTRIBUTORS.YUZUKITSURU],
+	},
+	{
 		date: new Date('2025-04-29'),
 		Changes: () => <>Update for patch 7.2.</>,
 		contributors: [CONTRIBUTORS.YUZUKITSURU],
