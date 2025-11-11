@@ -3,6 +3,10 @@ import {AoEUsages} from 'parser/core/modules/AoEUsages'
 const PF_BP_71 = 3
 const PF_BP_72 = 4
 
+// Ruin 3 was boosted from 360p to 400p in 7.3, so it now takes 4 targets before Tri Disaster wins out
+const TD_BEFORE_73 = 3
+const TD_AFTER_73 = 4
+
 export class AoeChecker extends AoEUsages {
 	suggestionIcon = this.data.actions.TRI_DISASTER.icon
 
@@ -10,7 +14,7 @@ export class AoeChecker extends AoEUsages {
 		{
 			aoeAction: this.data.actions.TRI_DISASTER,
 			stActions: [this.data.actions.RUIN_III],
-			minTargets: 3,
+			minTargets: this.parser.patch.before('7.3') ? TD_BEFORE_73 : TD_AFTER_73,
 		},
 		{
 			aoeAction: this.data.actions.ENERGY_SIPHON,
