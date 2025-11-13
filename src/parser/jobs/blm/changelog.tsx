@@ -8,6 +8,11 @@ export const changelog = [
 	// 	contributors: [CONTRIBUTORS.YOU],
 	// },
 	{
+		date: new Date('2025-11-12'),
+		Changes: () => <>Fix issue with broken icons.</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
+	{
 		date: new Date('2025-10-27'),
 		Changes: () => <>Update Ley Lines analysis for 7.2+ to count the number of casts affected by Circle of Power, instead of the simple buff uptime calculation.</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],
