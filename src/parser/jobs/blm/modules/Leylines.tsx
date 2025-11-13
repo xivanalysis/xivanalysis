@@ -1,6 +1,6 @@
 import {msg} from '@lingui/core/macro'
 import {Trans} from '@lingui/react/macro'
-import {ActionLink, DataLink, StatusLink} from 'components/ui/DbLink'
+import {DataLink} from 'components/ui/DbLink'
 import {Action} from 'data/ACTIONS'
 import {Status} from 'data/STATUSES'
 import {Event, Events} from 'event'
@@ -63,8 +63,8 @@ export class Leylines extends Analyser {
 	// Only count cast events if we're at patch 7.2 or beyond. Prior to that patch, GCD lengths were not consistent.
 	private countCasts = !this.parser.patch.before('7.2')
 
-	private checklistName = <Trans id="blm.leylines.checklist-caption">Stay in your <ActionLink {...this.data.actions.LEY_LINES} /></Trans>
-	private checklistDescription = <Trans id="blm.leylines.checklist">Try to avoid leaving your <ActionLink showIcon={false} {...this.data.actions.LEY_LINES} /> after placing them. Take advantage of <ActionLink showIcon={false} {...this.data.actions.LEY_LINES} />' size to stay in them while dodging AOEs and being in range of healers. If you can't stay in them for the majority of a <ActionLink showIcon={false} {...this.data.actions.LEY_LINES} />' duration, consider changing where they're placed in the fight.</Trans>
+	private checklistName = <Trans id="blm.leylines.checklist-caption">Stay in your <DataLink action="LEY_LINES" /></Trans>
+	private checklistDescription = <Trans id="blm.leylines.checklist">Try to avoid leaving your <DataLink showIcon={false} action="LEY_LINES" /> after placing them. Take advantage of <DataLink showIcon={false} action="LEY_LINES" />' size to stay in them while dodging AOEs and being in range of healers. If you can't stay in them for the majority of a <DataLink showIcon={false} action="LEY_LINES" />' duration, consider changing where they're placed in the fight.</Trans>
 
 	override initialise() {
 		const leyLinesFilter = filter<Event>()
@@ -291,7 +291,7 @@ export class Leylines extends Analyser {
 				description: this.checklistDescription,
 				requirements: [
 					new Requirement({
-						name: <ActionLink {...this.data.actions.LEY_LINES} />,
+						name: <DataLink action="LEY_LINES" />,
 						percent: this.dontMovePercent(copDuration, linesDuration),
 					}),
 				],
@@ -307,7 +307,7 @@ export class Leylines extends Analyser {
 				description: this.checklistDescription,
 				requirements: [
 					new Requirement({
-						name: <><ActionLink {...this.data.actions.LEY_LINES} /> casts affected by <ActionLink {...this.data.statuses.CIRCLE_OF_POWER} /></>,
+						name: <><DataLink action="LEY_LINES" /> casts affected by <DataLink status="CIRCLE_OF_POWER" /></>,
 						percent: this.dontMovePercent(powerCasts, linesCasts),
 					}),
 				],
@@ -355,7 +355,7 @@ export class Leylines extends Analyser {
 						{	// Show the buff duration and max possible casts headers if we're in 7.2+ cast count mode, and some window wasn't the full duration
 							this.countCasts && showDuration
 								? <>
-									<Table.HeaderCell><Trans id="blm.leylines.duration-header"><StatusLink showIcon={false} {...this.data.statuses.LEY_LINES} /> duration</Trans></Table.HeaderCell>
+									<Table.HeaderCell><Trans id="blm.leylines.duration-header"><DataLink showIcon={false} status="LEY_LINES" /> duration</Trans></Table.HeaderCell>
 									<Table.HeaderCell><Trans id="blm.leylines.possible-header">Max Possible Casts</Trans></Table.HeaderCell>
 								</>
 								: <></>
