@@ -6,7 +6,7 @@ export function calculateLocaleCompletion(): Record<string, number> {
 	// Locale completion calc
 	// Pull in all the locale files
 	const localeFiles = glob.sync('../locale/*/messages.json', {cwd: __dirname})
-	const localeKeyRegex = /\/(\w{2})\/messages/
+	const localeKeyRegex = /[\/\\](\w{2})[\/\\]messages/
 	const localeCount = {}
 	localeFiles.forEach(file => {
 		const localeKey = localeKeyRegex.exec(file)![1]
