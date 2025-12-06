@@ -39,6 +39,19 @@ const ESTEEM_LEVEL_100: ActionKey[] = [
 	'ESTEEM_DISESTEEM',
 ]
 
+// Esteem actions that will have the same potency at any level.
+// In theory, any of these could be intermingled without a potency loss.
+// In practice, the only action that can really be doubled is Abyssal Drain,
+// but sequences like the following are valid at level 100:
+// Abyssal Drain -> Shadowstride -> Shadowbringer -> Abyssal Drain -> Bloodspiller -> Disesteem
+const EQUIVALENT_ACTIONS: ActionKey[] = [
+	'ESTEEM_ABYSSAL_DRAIN',
+	'ESTEEM_EDGE_OF_SHADOW',
+	'ESTEEM_BLOODSPILLER',
+	'ESTEEM_FLOOD_OF_SHADOW',
+	'ESTEEM_CARVE_AND_SPIT',
+]
+
 export class EsteemWindow extends ActionWindow {
 	static override handle = 'esteem'
 	static override title = msg({id: 'drk.esteem.rotation.window.title', message: 'Actions Used By Esteem (Living Shadow)'})
@@ -46,7 +59,7 @@ export class EsteemWindow extends ActionWindow {
 	static LIVING_SHADOW_ACTION_KEY: ActionKey = 'LIVING_SHADOW'
 	override prependMessages = <Message>
 		<Trans id="drk.esteem.rotation.window.description">
-				This shows the actions used by Esteem following each use of <DataLink action="LIVING_SHADOW" />. If uninterrupted, at level 100, Esteem will use the following six abilities in order: <DataLink action="ABYSSAL_DRAIN" />, <DataLink action="SHADOWSTRIDE" />, <DataLink action="SHADOWBRINGER" />, <DataLink action="EDGE_OF_SHADOW" />, <DataLink action="BLOODSPILLER" />, <DataLink action="DISESTEEM" />. Less than six abilities indicates Esteem did not get all of its attacks off on an enemy, such as due to the boss phasing. Duplicate abilities indicate that Esteem was out of range at one or more points during its attacks. Both are significant potency losses.
+				This shows the actions used by Esteem following each use of <DataLink action="LIVING_SHADOW" />. If uninterrupted, at level 100, Esteem will use the following six abilities in order: <DataLink action="ABYSSAL_DRAIN" />, <DataLink action="SHADOWSTRIDE" />, <DataLink action="SHADOWBRINGER" />, <DataLink action="EDGE_OF_SHADOW" />, <DataLink action="BLOODSPILLER" />, <DataLink action="DISESTEEM" />. Less than six abilities indicates Esteem did not get all of its attacks off on an enemy, such as due to the boss phasing. Duplicate abilities indicate that Esteem was out of range at one or more points during its attacks. Both can be significant potency losses.
 		</Trans>
 	</Message>
 
@@ -78,6 +91,7 @@ export class EsteemWindow extends ActionWindow {
 			esteemActionIds: ESTEEM_LEVEL_100.map(k => this.data.actions[k].id),
 			esteemActionIds90: ESTEEM_LEVEL_90.map(k => this.data.actions[k].id),
 			esteemActionIds80: ESTEEM_LEVEL_80.map(k => this.data.actions[k].id),
+			equivalentActionIds: EQUIVALENT_ACTIONS.map(k => this.data.actions[k].id),
 			// We pass the level as a func dynamically so that it is actually populated
 			actorLevelFunc: () => this.actors.get(this.parser.actor).level,
 		}))
