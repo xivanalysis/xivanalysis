@@ -39,13 +39,18 @@ export class OGCDDowntime extends CooldownDowntime {
 	}
 
 	override calculateUsageCount(group: CooldownGroup): number {
+		const usageCount = super.calculateUsageCount(group)
 		// Note: we index off Scorn being applied instead of Living Shadow being used
 		// since this captures pre-pull Living Shadows too. fflogs does not include
 		// Living Shadows used pre-pull, but it does include Scorn.
+		// We still want to check if Scorn >= usageCount since Scorn does not exist
+		// at lower levels.
 		if (group.cooldowns.includes(this.data.actions.LIVING_SHADOW)) {
-			return this.numberOfScorns
+			if (this.numberOfScorns >= usageCount) {
+				return this.numberOfScorns
+			}
 		}
-		return super.calculateUsageCount(group)
+		return usageCount
 
 	}
 

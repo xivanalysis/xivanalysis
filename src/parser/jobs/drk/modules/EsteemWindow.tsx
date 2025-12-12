@@ -65,6 +65,10 @@ export class EsteemWindow extends ActionWindow {
 
 	@dependency private actors!: Actors
 
+	// If Scorn is being applied in the log (it is a level 100 log) then we should
+	// index Esteem starting off Scorn instead of Living Shadow usage.
+	private shouldUseScorn = false
+
 	override initialise() {
 		super.initialise()
 
@@ -76,13 +80,19 @@ export class EsteemWindow extends ActionWindow {
 			return esteemActionFilter(event)
 		})
 
+		// Note: we _want_ to index off Scorn being applied instead of Living Shadow being used
+		// since this captures pre-pull Living Shadows too.
+		// We can only do this if Scorn is being applied (we don't know the level right now).
+		// We add both event hooks, and the event hooks will figure out if they should be starting
+		// the window or not based on whether Scorn gets used.
 		const statusApplyFilter = filter<Event>()
 			.source(this.parser.actor.id)
 			.type("statusApply")
-
-		// Note: we index off Scorn being applied instead of Living Shadow being used
-		// since this captures pre-pull Living Shadows too.
-		this.addEventHook(statusApplyFilter.status(this.data.statuses.SCORN.id), this.beginEsteem)
+		this.addEventHook(statusApplyFilter.status(this.data.statuses.SCORN.id), this.beginEsteemWithScorn)
+		const playerActionFilter = filter<Event>()
+			.source(this.parser.actor.id)
+			.type('action')
+		this.addEventHook(playerActionFilter.action(this.data.matchActionId([EsteemWindow.LIVING_SHADOW_ACTION_KEY])), this.beginEsteemLivingShadow)
 
 		this.addEvaluator(new EsteemUsageEvaluator({
 			suggestionIcon: this.data.actions.LIVING_SHADOW.icon,
@@ -124,7 +134,23 @@ export class EsteemWindow extends ActionWindow {
 		return {action: action.action.id}
 	}
 
-	private beginEsteem(event: Events['statusApply']) {
+	private beginEsteemWithScorn(event: Events['statusApply']) {
+		// Scorn is being applied, so we should use Scorn to index Living Shadow usage:
+		this.shouldUseScorn = true
+
+		// Forcibly close any open windows, i.e. each Esteem Window is until the next Living Shadow is used
+		this.onWindowEnd(event.timestamp)
+		// Then start the new window
+		this.onWindowStart(event.timestamp)
+	}
+
+	private beginEsteemLivingShadow(event: Events['action']) {
+		// The log has Scorn usages, so we should ignore Living Shadow usages for the purposes
+		// of starting the window.
+		if (this.shouldUseScorn) {
+			return
+		}
+
 		// Forcibly close any open windows, i.e. each Esteem Window is until the next Living Shadow is used
 		this.onWindowEnd(event.timestamp)
 		// Then start the new window
