@@ -8,6 +8,11 @@ export const changelog = [
 	// },
 	//
 	{
+		date: new Date('2025-12-11'),
+		Changes: () => <>Made Living Shadow evaluator clearer as to which uses were full damage and which weren't.</>,
+		contributors: [CONTRIBUTORS.VIOLET],
+	},
+	{
 		date: new Date('2025-12-05'),
 		Changes: () => <>Fixed minor issue where Living Shadow usages would be marked as having lost potency when only equivalent actions were replaced by Abyssal Drain.</>,
 		contributors: [CONTRIBUTORS.VIOLET],
