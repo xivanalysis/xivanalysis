@@ -45,7 +45,7 @@ export class OGCDDowntime extends CooldownDowntime {
 		if (group.cooldowns.includes(this.data.actions.LIVING_SHADOW)) {
 			return this.numberOfScorns
 		}
-		return (this.usages.get(group) ?? []).length
+		return super.calculateUsageCount(group)
 
 	}
 
