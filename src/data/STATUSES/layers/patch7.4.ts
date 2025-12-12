@@ -1,0 +1,8 @@
+import {Layer} from 'data/layer'
+import {StatusRoot} from '../root'
+
+export const patch740: Layer<StatusRoot> = {
+	patch: '7.4',
+	data: {
+	},
+}
