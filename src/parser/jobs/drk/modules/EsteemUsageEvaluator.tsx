@@ -23,7 +23,7 @@ export class EsteemUsageEvaluator extends RulePassedEvaluator  {
 	private actorLevelFunc: () => number | undefined
 
 	override header = {
-		header: <Trans id="drk.esteem.nonstandard.rotation.header">Full damage?</Trans>,
+		header: <Trans id="drk.esteem.nonstandard.rotation.header">Full Damage?</Trans>,
 		accessor: 'fulldamage',
 	}
 
