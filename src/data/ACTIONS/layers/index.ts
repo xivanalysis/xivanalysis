@@ -5,6 +5,7 @@ import {patch705} from './patch7.05'
 import {patch710} from './patch7.1'
 import {patch720} from './patch7.2'
 import {patch730} from './patch7.3'
+import {patch740} from './patch7.4'
 
 export const layers: Array<Layer<ActionRoot>> = [
 	// Layers should be in their own files, and imported for use here.
@@ -15,4 +16,5 @@ export const layers: Array<Layer<ActionRoot>> = [
 	patch710,
 	patch720,
 	patch730,
+	patch740,
 ]
