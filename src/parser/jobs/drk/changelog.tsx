@@ -9,6 +9,11 @@ export const changelog = [
 	//
 	{
 		date: new Date('2025-12-11'),
+		Changes: () => <>Living Shadow used prepull now counts towards usage for cooldown evaluation, and is shown in the Esteem evaluator.</>,
+		contributors: [CONTRIBUTORS.VIOLET],
+	},
+	{
+		date: new Date('2025-12-11'),
 		Changes: () => <>Made Living Shadow evaluator clearer as to which uses were full damage and which weren't.</>,
 		contributors: [CONTRIBUTORS.VIOLET],
 	},
