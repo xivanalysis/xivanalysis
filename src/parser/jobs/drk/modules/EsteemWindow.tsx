@@ -68,23 +68,21 @@ export class EsteemWindow extends ActionWindow {
 	override initialise() {
 		super.initialise()
 
-		const playerFilter = filter<Event>().source(this.parser.actor.id)
 		const pets = this.parser.pull.actors.filter(actor => actor.owner === this.parser.actor).map(actor => actor.id)
-
-		const playerActionFilter = filter<Event>()
-			.source(this.parser.actor.id)
-			.type('action')
 		const esteemActionFilter = filter<Event>()
 			.source(oneOf(pets))
 			.type('action')
 		this.setEventFilter((event): event is Events['action'] => {
-			if (playerActionFilter(event)) {
-				return event.action === this.data.actions[EsteemWindow.LIVING_SHADOW_ACTION_KEY].id
-			}
 			return esteemActionFilter(event)
 		})
 
-		this.addEventHook(playerFilter.type('action').action(this.data.matchActionId([EsteemWindow.LIVING_SHADOW_ACTION_KEY])), this.beginEsteem)
+		const statusApplyFilter = filter<Event>()
+			.source(this.parser.actor.id)
+			.type("statusApply")
+
+		// Note: we index off Scorn being applied instead of Living Shadow being used
+		// since this captures pre-pull Living Shadows too.
+		this.addEventHook(statusApplyFilter.status(this.data.statuses.SCORN.id), this.beginEsteem)
 
 		this.addEvaluator(new EsteemUsageEvaluator({
 			suggestionIcon: this.data.actions.LIVING_SHADOW.icon,
@@ -126,11 +124,10 @@ export class EsteemWindow extends ActionWindow {
 		return {action: action.action.id}
 	}
 
-	private beginEsteem(event: Events['action']) {
+	private beginEsteem(event: Events['statusApply']) {
 		// Forcibly close any open windows, i.e. each Esteem Window is until the next Living Shadow is used
 		this.onWindowEnd(event.timestamp)
 		// Then start the new window
 		this.onWindowStart(event.timestamp)
 	}
-
 }

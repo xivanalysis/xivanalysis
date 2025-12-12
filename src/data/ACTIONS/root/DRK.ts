@@ -344,7 +344,7 @@ export const DRK = ensureActions({
 		speedAttribute: Attribute.SKILL_SPEED,
 		breaksCombo: false,
 		potencies: [{
-			value: 800,
+			value: 1000,
 			bonusModifiers: [],
 		}],
 	},

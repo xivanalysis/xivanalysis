@@ -87,4 +87,10 @@ export const DRK = ensureStatuses({
 		icon: iconUrl(213127),
 		duration: 20000,
 	},
+	SCORN: {
+		id: 3837,
+		name: 'Scorn',
+		icon: iconUrl(213126),
+		duration: 30000,
+	},
 })

@@ -89,7 +89,7 @@ export abstract class CooldownDowntime extends Analyser {
 		return this.trackedCds.concat(this.suggestionOnlyCooldowns)
 	}
 
-	private usages = new Map<CooldownGroup, Array<Events['action']>>()
+	protected usages = new Map<CooldownGroup, Array<Events['action']>>()
 	private resets = new Map<CooldownGroup, Array<Events['action']>>()
 
 	protected checklistName = <Trans id="core.cooldownDowntime.use-ogcd-cds">Use your cooldowns</Trans>
