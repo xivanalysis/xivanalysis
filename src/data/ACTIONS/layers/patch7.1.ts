@@ -109,5 +109,30 @@ export const patch710: Layer<ActionRoot> = {
 		VERHOLY: {
 			potency: 650,
 		},
+
+		SCARLET_DELIRIUM: {
+			potencies: [
+				{
+					value: 620,
+					bonusModifiers: [],
+				},
+			],
+		},
+		COMEUPPANCE: {
+			potencies: [
+				{
+					value: 720,
+					bonusModifiers: [],
+				},
+			],
+		},
+		TORCLEAVER: {
+			potencies: [
+				{
+					value: 820,
+					bonusModifiers: [],
+				},
+			],
+		},
 	},
 }

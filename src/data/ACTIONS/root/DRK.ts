@@ -296,7 +296,7 @@ export const DRK = ensureActions({
 		speedAttribute: Attribute.SKILL_SPEED,
 		breaksCombo: false,
 		potencies: [{
-			value: 620,
+			value: 600,
 			bonusModifiers: [],
 		}],
 	},
@@ -308,7 +308,7 @@ export const DRK = ensureActions({
 		speedAttribute: Attribute.SKILL_SPEED,
 		breaksCombo: false,
 		potencies: [{
-			value: 720,
+			value: 700,
 			bonusModifiers: [],
 		}],
 	},
@@ -320,7 +320,7 @@ export const DRK = ensureActions({
 		speedAttribute: Attribute.SKILL_SPEED,
 		breaksCombo: false,
 		potencies: [{
-			value: 820,
+			value: 800,
 			bonusModifiers: [],
 		}],
 	},
@@ -344,7 +344,7 @@ export const DRK = ensureActions({
 		speedAttribute: Attribute.SKILL_SPEED,
 		breaksCombo: false,
 		potencies: [{
-			value: 1000,
+			value: 800,
 			bonusModifiers: [],
 		}],
 	},
