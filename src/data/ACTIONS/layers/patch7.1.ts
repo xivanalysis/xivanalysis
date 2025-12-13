@@ -110,6 +110,14 @@ export const patch710: Layer<ActionRoot> = {
 			potency: 650,
 		},
 
+		BLOODSPILLER: {
+			potencies: [
+				{
+					value: 600,
+					bonusModifiers: [],
+				},
+			],
+		},
 		SCARLET_DELIRIUM: {
 			potencies: [
 				{
