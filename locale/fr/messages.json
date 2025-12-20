@@ -633,6 +633,7 @@
   "gnb.nomercy.chart.notes.no": "Non",
   "gnb.nomercy.chart.notes.yes": "Oui",
   "gnb.nomercy.notes.header": "Cartouche de sang",
+  "gnb.nomercy.prepend-message": "",
   "gnb.nomercy.suggestions.expected-uses.content": "Faites attention à l'utilisation de certaines techniques d'armes pendant <0/>. Dans le meilleur scénario, vous devriez utiliser <1/>, un combo complet de <2/>, et toutes vos aptitudes <3/> et <4/>.",
   "gnb.nomercy.suggestions.gcds.content": "Essayez de poser {0} compétences d'armes ({1} compétences d'armes à {GCD_SLOW} GCD ou plus lent) pendant chaque fenêtre <0/>. Une durée de 20 secondes correspond à toutes les compétences d'armes avec un temps d'utilisation complet si vous attendez le dernier tiers de votre compteur GCD pour activer <1/>.",
   "gnb.nomercy.title": "Fenêtres de Sans pitié",

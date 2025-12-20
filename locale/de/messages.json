@@ -633,6 +633,7 @@
   "gnb.nomercy.chart.notes.no": "Nein",
   "gnb.nomercy.chart.notes.yes": "Ja",
   "gnb.nomercy.notes.header": "Blutpatronen verwendet",
+  "gnb.nomercy.prepend-message": "",
   "gnb.nomercy.suggestions.expected-uses.content": "",
   "gnb.nomercy.suggestions.gcds.content": "",
   "gnb.nomercy.title": "Ohne Gnade-Fenster",

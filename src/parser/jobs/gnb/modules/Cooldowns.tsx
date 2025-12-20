@@ -25,8 +25,8 @@ ________________________________________________
 Quick Maths, 2500 * GCD # = Offset, take the higher number for the offset.
 */
 
-const FIRST_USE_OFFSET_BLOODFEST = 5000
-const ALLOWED_BLOODFEST_HOLDTIME = 10000 // Bloodfest is allowed to be held in order to delay it back under buffs, this should be a maximum of 4 GCDs, 2 ahead of NM, 2 after NM cast to dump ammo.
+const FIRST_USE_OFFSET_BLOODFEST = 2500
+let ALLOWED_BLOODFEST_HOLDTIME = 10000 // Bloodfest is allowed to be held in order to delay it back under buffs, this should be a maximum of 4 GCDs, 2 ahead of NM, 2 after NM cast to dump ammo.
 
 const FIRST_USE_OFFSET_NO_MERCY = 5000
 const FIRST_USE_OFFSET_GNASHING_FANG = 12500
@@ -36,6 +36,13 @@ const FIRST_USE_OFFSET_DOUBLE_DOWN = 10000
 const FIRST_USE_OFFSET_SONIC_BREAK = 12500
 
 export class AbilityDowntime extends CooldownDowntime { // Order by cooldown length
+	override initialise() {
+		super.initialise()
+		if (this.parser.patch.after('7.3')) {
+			// 7.4 changes to Bloodfest make it use it on cooldown unless downtime
+			ALLOWED_BLOODFEST_HOLDTIME = 0
+		}
+	}
 
 	trackedCds = [
 		{

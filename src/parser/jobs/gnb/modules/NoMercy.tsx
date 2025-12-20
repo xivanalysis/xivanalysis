@@ -7,6 +7,7 @@ import {HistoryEntry} from 'parser/core/modules/ActionWindow/History'
 import {GlobalCooldown} from 'parser/core/modules/GlobalCooldown'
 import {SEVERITY} from 'parser/core/modules/Suggestions'
 import {DISPLAY_ORDER} from 'parser/jobs/gnb/modules/DISPLAY_ORDER'
+import {Message} from 'semantic-ui-react'
 
 const SEVERITIES = {
 	MISSING_EXPECTED_USES: {
@@ -70,6 +71,14 @@ export class NoMercy extends BuffWindow {
 	@dependency globalCooldown!: GlobalCooldown
 
 	override buffStatus = this.data.statuses.NO_MERCY
+
+	override prependMessages = <Message info>
+		<Trans id="gnb.nomercy.prepend-message">
+			Gunbreaker has a small dps optimization technique that can be done by using the extra charge of <ActionLink action="GNASHING_FANG"/> to enter <ActionLink action="NO_MERCY"/> right before <ActionLink action="WICKED_TALON"/>.<br />
+			This is done by holding the half minute charge of <ActionLink action="GNASHING_FANG"/> and starting a combo before <ActionLink action="NO_MERCY"/>. Please see the rotation infographic by Krom at the top of this page for more information.<br />
+			This technique is not always possible and as such the <ActionLink action="NO_MERCY"/> module does not expect it, but this technique should be used whenever you can. <br />
+		</Trans>
+	</Message>
 
 	override initialise() {
 		super.initialise()

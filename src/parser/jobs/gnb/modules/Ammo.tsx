@@ -1,10 +1,8 @@
-/* eslint-disable no-console */
 import {msg} from '@lingui/core/macro'
 import {Trans, Plural} from '@lingui/react/macro'
 import {ActionLink} from 'components/ui/DbLink'
 import {JOBS} from 'data/JOBS'
 import {Event, Events} from 'event'
-import {action} from 'mobx'
 import {filter, oneOf} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
 import {Checklist, Requirement, Rule} from 'parser/core/modules/Checklist'
@@ -21,9 +19,6 @@ const LEFTOVER_AMMO_SEVERITY_TIERS = {
 const MAX_AMMO = 3
 const BLOODFEST_AMMO_CAP = 6 // x2 normal cap during Bloodfest
 const DoubleDownCost = 1
-
-let totalGeneratedAmmo = 0
-let totalSpentAmmo = 0
 
 export class Ammo extends CoreGauge {
 	static override handle = 'ammo'
@@ -63,8 +58,23 @@ export class Ammo extends CoreGauge {
 		if (this.parser.patch.before('7.1') || this.parser.patch.after('7.3')) {
 			this.ammoModifiers.set(this.data.actions.DOUBLE_DOWN.id, {action: -2})
 		}
+		if (this.parser.patch.after('7.3')) {
+			this.ammoModifiers.delete(this.data.actions.BLOODFEST.id)
+		}
 
 		const ammoActions = Array.from(this.ammoModifiers.keys())
+
+		if (this.parser.patch.before('7.4')) {
+			this.addEventHook(
+				filter<Event>()
+					.source(this.parser.actor.id)
+					.type('action')
+					.action(this.data.actions.BLOODFEST.id),
+				() => {
+					this.ammoGauge.modify(MAX_AMMO)
+				},
+			)
+		}
 
 		// 7.4 onwards, Bloodfest applies a status that increases the ammo cap by x2.
 		if (this.parser.patch.after('7.3')) {
@@ -110,29 +120,10 @@ export class Ammo extends CoreGauge {
 
 	private onGaugeModifier(event: Events['action' | 'combo']) {
 		const modifier = this.ammoModifiers.get(event.action)
-
 		if (modifier != null) {
 			const amount = modifier[event.type] ?? 0
-			if (amount < 0) {
-				totalSpentAmmo += amount
-			} else {
-				totalGeneratedAmmo += amount
-			}
-
-			if (this.parser.patch.before('7.4')) {
-				console.log('Ammo module used in pre-7.4 patch!')
-				this.ammoGauge.modify(amount)
-			} else if (event.action !== this.data.actions.BLOODFEST.id) {
-				console.log('Ammo module used in 7.4+ patch!')
-				console.log(`Modifying ammo by ${amount} for action ${this.data.getAction(event.action)?.name}`)
-				console.log(`Current ammo before modification: ${this.ammoGauge.value}`)
-				this.ammoGauge.modify(amount)
-				console.log(`New ammo after modification: ${this.ammoGauge.value}`)
-			} else {
-				// Ammo increase for bloodfest is handled in the status apply due to application timing.
-			}
+			this.ammoGauge.modify(amount)
 		}
-		console.log(`Total Generated Ammo: ${totalGeneratedAmmo}, Total Spent Ammo: ${totalSpentAmmo}`)
 	}
 
 	private onComplete() {

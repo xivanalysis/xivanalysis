@@ -17,7 +17,7 @@ export class Tincture extends CoreTincture {
 				},
 				{
 					action: this.data.actions.GNASHING_FANG,
-					expectedPerWindow: 1,
+					expectedPerWindow: 2,
 				},
 				{
 					action: this.data.actions.DOUBLE_DOWN,
