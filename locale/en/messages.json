@@ -620,6 +620,8 @@
   "gnb.ammo.checklist.requirement.waste.name": "Use as many of your loaded cartridges as possible",
   "gnb.ammo.leftover-ammo.content": "Avoid having leftover ammo at the end of a fight, consider using the ammo earlier if possible. <0/> is more potency than any of your <1/> combo.",
   "gnb.ammo.leftover-ammo.why": "You had {0, plural, one {# cartridge} other {# cartridges}} remaining at the end of the fight.",
+  "gnb.ammo.overload-ammo-drop.content": "During <0/>, you can store up to {BLOODFEST_AMMO_CAP} cartridges. However once <1/> ends, any cartridges over {MAX_AMMO} are lost. Make sure that you have no more than {MAX_AMMO} cartridges when <2/> is about to expire to avoid losing cartridges.",
+  "gnb.ammo.overload-ammo-drop.why": "You lost {0, plural, one {# cartridge} other {# cartridges}} by being over {MAX_AMMO} when <0/> expires.",
   "gnb.ammo.title": "Cartridge Timeline",
   "gnb.ammo.usage.title": "Cartridge usage",
   "gnb.ammo.waste.content": "Wasted cartridge generation, ending the fight with cartridges loaded, or dying with cartridges loaded is a direct potency loss. Use <0/> (or <1/> if there is more than one target) to avoid wasting cartridges.",

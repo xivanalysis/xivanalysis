@@ -620,6 +620,8 @@
   "gnb.ammo.checklist.requirement.waste.name": "蓄積したソイルをできるだけ多く消費してください。",
   "gnb.ammo.leftover-ammo.content": "チャージアクションを戦闘終了時に残さないようにし，可能であれば早めに使うことを検討してください。<0/>はどの<1/>コンボよりも高威力です。",
   "gnb.ammo.leftover-ammo.why": "戦闘終了時にソイルが{0,plural,other{#つ}}残っていました。",
+  "gnb.ammo.overload-ammo-drop.content": "",
+  "gnb.ammo.overload-ammo-drop.why": "",
   "gnb.ammo.title": "ソイル装弾タイムライン",
   "gnb.ammo.usage.title": "ソイルの使用",
   "gnb.ammo.waste.content": "無駄なソイルを生むこと、ソイルを持ったまま戦闘終了したり死亡することは直接的に威力を失うことに繋がります。ソイルを無駄にしないように、<0/>(敵が複数の場合<1/>) を使いましょう。",

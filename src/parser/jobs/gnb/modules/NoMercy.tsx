@@ -139,7 +139,9 @@ export class NoMercy extends BuffWindow {
 			adjustCount: this.adjustExpectedActionCount.bind(this),
 		}))
 
-		this.addEvaluator(new BloodfestEvaluator(this.data.actions.BLOODFEST.id))
+		if (this.parser.patch.before('7.3')) { // As of patch 7.4, Every Burst Window should have Bloodfest used in it.
+			this.addEvaluator(new BloodfestEvaluator(this.data.actions.BLOODFEST.id))
+		}
 	}
 
 	private adjustExpectedActionCount(window: HistoryEntry<EvaluatedAction[]>, action: TrackedAction) {
@@ -164,20 +166,24 @@ export class NoMercy extends BuffWindow {
 				}
 			}
 
-			//LionHeart Adjusts in 2 ways:
-			// 1. If Bloodfest is used, Lion Heart is expected
-			// 2. If Lion Heart is used, Lion Heart is expected, this is an edge case where Bloodfest was used before No Mercy.
-			if (action.action.id === this.data.actions.LION_HEART.id) {
-				if (window.data.find(cast => cast.action.id === this.data.actions.BLOODFEST.id)) {
-					return 1
+			if (this.parser.patch.before('7.4')) {
+				//LionHeart Adjusts in 2 ways:
+				// 1. If Bloodfest is used, Lion Heart is expected
+				// 2. If Lion Heart is used, Lion Heart is expected, this is an edge case where Bloodfest was used before No Mercy.
+				if (action.action.id === this.data.actions.LION_HEART.id) {
+					if (window.data.find(cast => cast.action.id === this.data.actions.BLOODFEST.id)) {
+						return 1
+					}
+					if ((window.data.find(cast => cast.action.id !== this.data.actions.BLOODFEST.id)) && window.data.find(cast => cast.action.id === this.data.actions.LION_HEART.id)) {
+						return 1
+					}
 				}
-				if ((window.data.find(cast => cast.action.id !== this.data.actions.BLOODFEST.id)) && window.data.find(cast => cast.action.id === this.data.actions.LION_HEART.id)) {
-					return 1
-				}
+				//Adjust nothing else besides Lion Heart and Gnashing Fang
+				if (action.action.id !== this.data.actions.LION_HEART.id) { return 0 }
+			} else if (action.action.id === this.data.actions.LION_HEART.id) {
+				// Post 7.4, Lion Heart is always expected in a No Mercy window.
+				return 1
 			}
-			//Adjust nothing else besides Lion Heart and Gnashing Fang
-			if (action.action.id !== this.data.actions.LION_HEART.id) { return 0 }
-
 		}
 
 		return 0

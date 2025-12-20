@@ -620,6 +620,8 @@
   "gnb.ammo.checklist.requirement.waste.name": "충전된 소일을 최대한 많이 사용하십시오.",
   "gnb.ammo.leftover-ammo.content": "전투 종료 전 소일이 남지 않도록 주의하십시오. <0/> 기술의 위력은 <1/> 콤보보다 위력이 강합니다. 가능하다면 미리 소일을 사용하십시오.",
   "gnb.ammo.leftover-ammo.why": "소일을 {0, plural, other {#개}} 남긴 상태에서 전투를 종료했습니다.",
+  "gnb.ammo.overload-ammo-drop.content": "",
+  "gnb.ammo.overload-ammo-drop.why": "",
   "gnb.ammo.title": "소일 타임라인",
   "gnb.ammo.usage.title": "소일 사용",
   "gnb.ammo.waste.content": "소일 스택이 넘치거나, 충전된 소일을 사용하지 않은 채 전투가 끝나거나, 소일을 가진 채 죽게 되면 이는 곧 피해량 손해가 됩니다. <0/> (대상이 둘 이상이라면 <1/>) 기술을 사용하여 소일을 낭비하지 마십시오.",

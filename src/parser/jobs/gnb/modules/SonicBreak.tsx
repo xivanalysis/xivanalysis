@@ -13,7 +13,7 @@ import {DISPLAY_ORDER} from 'parser/jobs/gnb/modules/DISPLAY_ORDER'
 import {Fragment} from 'react'
 import {Button, Message, Table} from 'semantic-ui-react'
 
-const MAX_TICKS = 10  // Sonic Break is 30s
+let MAX_TICKS = 10  // Sonic Break is 30s pre 7.4
 
 class SonicBreakApplication {
 	start: number
@@ -43,6 +43,10 @@ export class SonicBreak extends Analyser {
 	}
 
 	override initialise() {
+
+		if (this.parser.patch.after('7.3')) {
+			MAX_TICKS = 5
+		}
 		const playerFilter = filter<Event>().source(this.parser.actor.id)
 		this.addEventHook(playerFilter.type('statusApply').status(this.data.statuses.SONIC_BREAK.id), this.onDotApply)
 		this.addEventHook(playerFilter.type('damage'), this.onDotDamage)
