@@ -8,6 +8,11 @@ export const changelog = [
 	// },
 	//
 	{
+		date: new Date('2025-12-20'),
+		Changes: () => <>Patch 7.4 bump, minor bug fix related to Esteem evaluator, and severities adjusted.</>,
+		contributors: [CONTRIBUTORS.VIOLET],
+	},
+	{
 		date: new Date('2025-12-11'),
 		Changes: () => <>Living Shadow used prepull now counts towards usage for cooldown evaluation, and is shown in the Esteem evaluator.</>,
 		contributors: [CONTRIBUTORS.VIOLET],
