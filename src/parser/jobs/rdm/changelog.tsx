@@ -2,6 +2,11 @@ import {CONTRIBUTORS} from 'data/CONTRIBUTORS'
 
 export const changelog = [
 	{
+		date: new Date('2025-12-20'),
+		Changes: () => <>RDM 7.4 Support added.</>,
+		contributors: [CONTRIBUTORS.LEYLIA],
+	},
+	{
 		date: new Date('2025-08-10'),
 		Changes: () => <>RDM 7.3 Support added.</>,
 		contributors: [CONTRIBUTORS.LEYLIA],

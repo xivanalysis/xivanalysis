@@ -126,6 +126,17 @@ export const RDM = ensureActions({
 			start: true,
 		},
 	},
+	MANAFICATION_ENCHANTED_RIPOSTE: {
+		id: 45960,
+		name: 'Enchanted Riposte',
+		icon: iconUrl(3225),
+		onGcd: true,
+		cooldown: 1500,
+		potency: 300, // consumes 20 white, 20 black
+		combo: {
+			start: true,
+		},
+	},
 	ZWERCHHAU: {
 		id: 7512,
 		name: 'Zwerchhau',
@@ -147,7 +158,19 @@ export const RDM = ensureActions({
 		cooldown: 1500,
 		potency: 170, // consumes 15 white, 15 black
 		combo: {
-			from: 7527,
+			from: [7527, 45960],
+			potency: 360,
+		},
+	},
+	MANAFICATION_ENCHANTED_ZWERCHHAU: {
+		id: 45961,
+		name: 'Enchanted Zwerchhau',
+		icon: iconUrl(3226),
+		onGcd: true,
+		cooldown: 1500,
+		potency: 170, // consumes 15 white, 15 black
+		combo: {
+			from: [7527, 45960],
 			potency: 360,
 		},
 	},
@@ -174,7 +197,21 @@ export const RDM = ensureActions({
 		cooldown: 2200,
 		potency: 170, // consumes 15 white, 15 black
 		combo: {
-			from: 7528,
+			from: [7528, 45961],
+			potency: 540,
+			end: true,
+		},
+	},
+	MANAFICATION_ENCHANTED_REDOUBLEMENT: {
+		id: 45962,
+		name: 'Enchanted Redoublement',
+		icon: iconUrl(3227),
+		onGcd: true,
+		speedAttribute: Attribute.SKILL_SPEED,
+		cooldown: 2200,
+		potency: 170, // consumes 15 white, 15 black
+		combo: {
+			from: [7528, 45961],
 			potency: 540,
 			end: true,
 		},

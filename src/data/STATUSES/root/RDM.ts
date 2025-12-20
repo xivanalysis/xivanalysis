@@ -45,7 +45,7 @@ export const RDM = ensureStatuses({
 		name: 'Manafication',
 		icon: iconUrl(217491),
 		duration: 15000,
-		stacksApplied: 6,
+		stacksApplied: 3,
 	},
 	MAGICK_BARRIER: {
 		id: 2707,
