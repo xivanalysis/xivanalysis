@@ -73,11 +73,33 @@ export class NoMercy extends BuffWindow {
 	override buffStatus = this.data.statuses.NO_MERCY
 
 	override prependMessages = <Message info>
-		<Trans id="gnb.nomercy.prepend-message">
-			Gunbreaker has a small dps optimization technique that can be done by using the extra charge of <ActionLink action="GNASHING_FANG"/> to enter <ActionLink action="NO_MERCY"/> right before <ActionLink action="WICKED_TALON"/>.<br />
-			This is done by holding the half minute charge of <ActionLink action="GNASHING_FANG"/> and starting a combo before <ActionLink action="NO_MERCY"/>. Please see the rotation infographic by Krom at the top of this page for more information.<br />
-			This technique is not always possible and as such the <ActionLink action="NO_MERCY"/> module does not expect it, but this technique should be used whenever you can. <br />
-		</Trans>
+		<p>
+			<Trans id="gnb.nomercy.prepend-message.intro">
+				Gunbreaker has a small dps optimization technique that can be done by using the extra charge of <ActionLink action="GNASHING_FANG"/> from the half minute of your rotation in order to enter <ActionLink action="NO_MERCY"/> at the following times:
+			</Trans>
+		</p>
+		<ul>
+			<li>
+				<Trans id="gnb.nomercy.prepend-message.slow-gcd">
+					If you are running at a slower GCD (2.47 or slower), you can only do 8 GCDs under <ActionLink action="NO_MERCY"/> so you will use <ActionLink action="NO_MERCY"/> right before <ActionLink action="EYE_GOUGE"/>.
+				</Trans>
+			</li>
+			<li>
+				<Trans id="gnb.nomercy.prepend-message.fast-gcd">
+					If you are running at a faster GCD (2.46 or faster), you can do a full 9 GCDs under <ActionLink action="NO_MERCY"/> so you will use <ActionLink action="NO_MERCY"/> right before <ActionLink action="WICKED_TALON"/>.
+				</Trans>
+			</li>
+		</ul>
+		<p>
+			<Trans id="gnb.nomercy.prepend-message.infographic">
+				Please see the rotation infographic by Krom at the top of this page for more information.
+			</Trans>
+		</p>
+		<p>
+			<Trans id="gnb.nomercy.prepend-message.disclaimer">
+				This technique is not always possible and as such the <ActionLink action="NO_MERCY"/> module does not expect it, but this technique should be used whenever you can.
+			</Trans>
+		</p>
 	</Message>
 
 	override initialise() {
