@@ -78,8 +78,11 @@ export class Manafication extends BuffWindow {
 				allowedGcds: [
 					// Single Target
 					this.data.actions.ENCHANTED_RIPOSTE.id,
+					this.data.actions.MANAFICATION_ENCHANTED_RIPOSTE.id,
 					this.data.actions.ENCHANTED_ZWERCHHAU.id,
+					this.data.actions.MANAFICATION_ENCHANTED_ZWERCHHAU.id,
 					this.data.actions.ENCHANTED_REDOUBLEMENT.id,
+					this.data.actions.MANAFICATION_ENCHANTED_REDOUBLEMENT.id,
 
 					// AoE
 					this.data.actions.ENCHANTED_MOULINET.id,

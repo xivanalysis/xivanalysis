@@ -7,5 +7,8 @@ export const patch740: Layer<StatusRoot> = {
 		COLLECTIVE_UNCONSCIOUS_MITIGATION: {
 			duration: 10000,
 		},
+		MANAFICATION: {
+			stacksApplied: 3,
+		},
 	},
 }
