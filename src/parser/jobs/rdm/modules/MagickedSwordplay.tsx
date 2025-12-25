@@ -16,8 +16,11 @@ export class MagickedSwordplay extends Procs {
 			procStatus: this.data.statuses.MAGICKED_SWORDPLAY,
 			consumeActions: [
 				this.data.actions.ENCHANTED_RIPOSTE,
+				this.data.actions.MANAFICATION_ENCHANTED_RIPOSTE,
 				this.data.actions.ENCHANTED_ZWERCHHAU,
+				this.data.actions.MANAFICATION_ENCHANTED_ZWERCHHAU,
 				this.data.actions.ENCHANTED_REDOUBLEMENT,
+				this.data.actions.MANAFICATION_ENCHANTED_REDOUBLEMENT,
 				this.data.actions.ENCHANTED_MOULINET,
 				this.data.actions.ENCHANTED_MOULINET_DEUX,
 				this.data.actions.ENCHANTED_MOULINET_TROIS,
