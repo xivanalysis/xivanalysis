@@ -18,7 +18,9 @@ const LEFTOVER_AMMO_SEVERITY_TIERS = {
 
 const MAX_AMMO = 3
 const BLOODFEST_AMMO_CAP = 6 // x2 normal cap during Bloodfest
-const DoubleDownCost = 1
+const DOUBLE_DOWN_COST_7_2_AND_7_3 = 1
+
+const DOUBLE_DOWN_PRE_7_1 = 2 // also 7.4 and beyond!
 
 export class Ammo extends CoreGauge {
 	static override handle = 'ammo'
@@ -48,7 +50,7 @@ export class Ammo extends CoreGauge {
 		[this.data.actions.BURST_STRIKE.id, {action: -1}],
 		[this.data.actions.FATED_CIRCLE.id, {action: -1}],
 		[this.data.actions.GNASHING_FANG.id, {action: -1}],
-		[this.data.actions.DOUBLE_DOWN.id, {action: -DoubleDownCost}],
+		[this.data.actions.DOUBLE_DOWN.id, {action: -DOUBLE_DOWN_COST_7_2_AND_7_3}],
 
 	])
 
@@ -56,7 +58,7 @@ export class Ammo extends CoreGauge {
 		super.initialise()
 
 		if (this.parser.patch.before('7.1') || this.parser.patch.after('7.3')) {
-			this.ammoModifiers.set(this.data.actions.DOUBLE_DOWN.id, {action: -2})
+			this.ammoModifiers.set(this.data.actions.DOUBLE_DOWN.id, {action: -DOUBLE_DOWN_PRE_7_1})
 		}
 		if (this.parser.patch.after('7.3')) {
 			this.ammoModifiers.delete(this.data.actions.BLOODFEST.id)

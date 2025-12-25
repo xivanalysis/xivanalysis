@@ -81,12 +81,12 @@ export class NoMercy extends BuffWindow {
 		<ul>
 			<li>
 				<Trans id="gnb.nomercy.prepend-message.slow-gcd">
-					If you are running at a slower GCD (2.47 or slower), you can only do 8 GCDs under <ActionLink action="NO_MERCY"/> so you will use <ActionLink action="NO_MERCY"/> right before a <ActionLink action="CONTINUATION"/>, ideally <ActionLink action="EYE_GOUGE"/>.
+					If you are running at a slower GCD (2.47 or slower), you will only do 8 GCDs under <ActionLink action="NO_MERCY"/> so you will use <ActionLink action="NO_MERCY"/> right before a <ActionLink action="CONTINUATION"/>, ideally <ActionLink action="EYE_GOUGE"/>.
 				</Trans>
 			</li>
 			<li>
 				<Trans id="gnb.nomercy.prepend-message.fast-gcd">
-					If you are running at a faster GCD (2.46 or faster), you can do a full 9 GCDs under <ActionLink action="NO_MERCY"/> so you will use <ActionLink action="NO_MERCY"/> right before a weaponskill in the combo and its follow up <ActionLink action = "CONTINUATION"/>, ideally <ActionLink action="WICKED_TALON"/>.
+					If you are running at a faster GCD (2.46 or faster), you will do a full 9 GCDs under <ActionLink action="NO_MERCY"/> so you will use <ActionLink action="NO_MERCY"/> right before a weaponskill in the combo and its follow up <ActionLink action = "CONTINUATION"/>, ideally <ActionLink action="WICKED_TALON"/>.
 				</Trans>
 			</li>
 		</ul>

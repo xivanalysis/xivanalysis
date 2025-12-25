@@ -13,7 +13,7 @@ export const patch740: Layer<StatusRoot> = {
 			id: 5051,
 			name: 'Bloodfest',
 			icon: iconUrl(213623),
-			duration: 8000,
+			duration: 30000,
 		},
 
 		SONIC_BREAK: {

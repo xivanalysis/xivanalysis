@@ -14,6 +14,8 @@ import {Fragment} from 'react'
 import {Button, Message, Table} from 'semantic-ui-react'
 
 let MAX_TICKS = 10  // Sonic Break is 30s pre 7.4
+const MAX_TICKS_PRE_7_4 = 10
+const MAX_TICKS_POST_7_4 = 5
 
 class SonicBreakApplication {
 	start: number
@@ -44,9 +46,8 @@ export class SonicBreak extends Analyser {
 
 	override initialise() {
 
-		if (this.parser.patch.after('7.3')) {
-			MAX_TICKS = 5
-		}
+		MAX_TICKS = this.parser.patch.before('7.4') ? MAX_TICKS_PRE_7_4 : MAX_TICKS_POST_7_4
+
 		const playerFilter = filter<Event>().source(this.parser.actor.id)
 		this.addEventHook(playerFilter.type('statusApply').status(this.data.statuses.SONIC_BREAK.id), this.onDotApply)
 		this.addEventHook(playerFilter.type('damage'), this.onDotDamage)
