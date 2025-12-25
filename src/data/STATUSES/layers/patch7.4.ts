@@ -18,8 +18,8 @@ export const patch740: Layer<StatusRoot> = {
 
 		SONIC_BREAK: {
 			duration: 15000,
-    },
-    
+    	},
+
 		MANAFICATION: {
 			stacksApplied: 3,
 		},
