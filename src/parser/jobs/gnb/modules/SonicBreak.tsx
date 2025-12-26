@@ -13,7 +13,6 @@ import {DISPLAY_ORDER} from 'parser/jobs/gnb/modules/DISPLAY_ORDER'
 import {Fragment} from 'react'
 import {Button, Message, Table} from 'semantic-ui-react'
 
-let MAX_TICKS = 10  // Sonic Break is 30s pre 7.4
 const MAX_TICKS_PRE_7_4 = 10
 const MAX_TICKS_POST_7_4 = 5
 
@@ -39,6 +38,7 @@ export class SonicBreak extends Analyser {
 	@dependency private timeline!: Timeline
 
 	private SonicBreakApplications: SonicBreakApplication[] = []
+	private MaxTicks: number = MAX_TICKS_PRE_7_4
 
 	private get lastSonicBreakApplication(): SonicBreakApplication | undefined {
 		return _.last(this.SonicBreakApplications)
@@ -46,7 +46,7 @@ export class SonicBreak extends Analyser {
 
 	override initialise() {
 
-		MAX_TICKS = this.parser.patch.before('7.4') ? MAX_TICKS_PRE_7_4 : MAX_TICKS_POST_7_4
+		this.MaxTicks = this.parser.patch.before('7.4') ? MAX_TICKS_PRE_7_4 : MAX_TICKS_POST_7_4
 
 		const playerFilter = filter<Event>().source(this.parser.actor.id)
 		this.addEventHook(playerFilter.type('statusApply').status(this.data.statuses.SONIC_BREAK.id), this.onDotApply)
@@ -105,14 +105,14 @@ export class SonicBreak extends Analyser {
 
 			lastSonicBreak.end = event.timestamp
 
-			lastSonicBreak.isMissingTicks = lastSonicBreak.totalTicks < MAX_TICKS
+			lastSonicBreak.isMissingTicks = lastSonicBreak.totalTicks < this.MaxTicks
 		}
 	}
 
 	private onComplete() {
 		const badSonicBreaks = this.SonicBreakApplications.filter(sonicBreak => sonicBreak.isMissingTicks)
 		if (badSonicBreaks.length > 0) {
-			const missedTicks = badSonicBreaks.reduce((acc, val) => acc + (MAX_TICKS - val.totalTicks), 0)
+			const missedTicks = badSonicBreaks.reduce((acc, val) => acc + (this.MaxTicks - val.totalTicks), 0)
 			this.suggestions.add(new TieredSuggestion({
 				icon: this.data.actions.SONIC_BREAK.icon,
 				content: <Trans id="gnb.sonic-break.suggestions.missing-ticks.content">
@@ -149,7 +149,7 @@ export class SonicBreak extends Analyser {
 						<Table.Cell>{this.parser.formatEpochTimestamp(window.start)}</Table.Cell>
 						<Table.Cell>
 							<Trans id="sonic-break.tick-issue">
-								<DataLink action = "SONIC_BREAK"/> had <Plural value={MAX_TICKS - window.totalTicks} one="# tick" other="# ticks"/> deal no damage.
+								<DataLink action = "SONIC_BREAK"/> had <Plural value={this.MaxTicks - window.totalTicks} one="# tick" other="# ticks"/> deal no damage.
 							</Trans>
 						</Table.Cell>
 						<Table.Cell>
@@ -169,7 +169,7 @@ export class SonicBreak extends Analyser {
 		return <Fragment>
 			<Message>
 				<Trans id="gnb.sonic-break.accordion.message">
-					<DataLink action = "SONIC_BREAK"/> is a {this.data.statuses.SONIC_BREAK.duration / 1000} second DoT that should tick <Plural value={MAX_TICKS} one = "# time" other="# times"/> for damage, if you are finding that the target is going invulnerable, consider moving it forward in your <DataLink action = "NO_MERCY"/> windows.
+					<DataLink action = "SONIC_BREAK"/> is a {this.data.statuses.SONIC_BREAK.duration / 1000} second DoT that should tick <Plural value={this.MaxTicks} one = "# time" other="# times"/> for damage, if you are finding that the target is going invulnerable, consider moving it forward in your <DataLink action = "NO_MERCY"/> windows.
 				</Trans>
 			</Message>
 			{tickTable}
