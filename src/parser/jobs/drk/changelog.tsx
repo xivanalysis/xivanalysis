@@ -8,6 +8,11 @@ export const changelog = [
 	// },
 	//
 	{
+		date: new Date('2025-12-29'),
+		Changes: () => <>Fixed bug related to missed Dark Arts being incorrectly logged with multiple Dark Knights in the party.</>,
+		contributors: [CONTRIBUTORS.VIOLET],
+	},
+	{
 		date: new Date('2025-12-20'),
 		Changes: () => <>Patch 7.4 bump, minor bug fix related to Esteem evaluator, and severities adjusted.</>,
 		contributors: [CONTRIBUTORS.VIOLET],

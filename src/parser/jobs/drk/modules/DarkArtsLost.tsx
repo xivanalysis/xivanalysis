@@ -6,7 +6,6 @@ import {ActionKey} from 'data/ACTIONS'
 import {Event, Events} from 'event'
 import {filter} from 'parser/core/filter'
 import {Gauge} from 'parser/core/modules/Gauge'
-import {Team} from 'report'
 import {Table} from 'semantic-ui-react'
 
 const DARK_ARTS_SPENDERS: ActionKey[] = [
@@ -58,17 +57,13 @@ export class DarkArtsLost extends Gauge {
 			.type('action')
 			.action(this.data.matchActionId(DARK_ARTS_SPENDERS)), () => this.darkArts = false)
 
-		const friendlyTargets = this.parser.pull.actors
-			.filter(actor => actor.team === Team.FRIEND)
-			.map(actor => actor.id)
-
-		friendlyTargets.forEach((id) => {
-			this.addEventHook(
-				filter<Event>()
-					.source(id)
-					.type('statusRemove')
-					.status(this.data.statuses.BLACKEST_NIGHT.id), this.onRemoveBlackestNight)
-		})
+		const playerFilter = filter<Event>().source(this.parser.actor.id)
+		// Note: This approach misses the following chances to lose a Dark Arts:
+		// 1. You press TBN, and then a secondary Dark Knight uses TBN on the same target
+		// 2. You press TBN on another player, and that player's TBN does not pop (death/expiry/a second dark Knight using TBN on them/etc)
+		// For #1, it doesn't seem reasonable to mark it 'against' the player, and for #2, there are
+		// enough edge cases for minimal value that it seems fine to leave that for a future exercise.
+		this.addEventHook(playerFilter.type('statusRemove').status(this.data.statuses.BLACKEST_NIGHT.id), this.onRemoveBlackestNight)
 
 	}
 
