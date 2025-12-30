@@ -1,9 +1,9 @@
-import {Trans} from "@lingui/react/macro"
-import {EvaluatedAction} from "parser/core/modules/ActionWindow"
-import {RulePassedEvaluator} from "parser/core/modules/ActionWindow/evaluators/RulePassedEvaluator"
-import {HistoryEntry} from "parser/core/modules/ActionWindow/History"
-import {ReactNode} from "react"
-import {ASTRAL_UMBRAL_MAX_STACKS, Gauge} from "../Gauge"
+import {Trans} from '@lingui/react/macro'
+import {EvaluatedAction} from 'parser/core/modules/ActionWindow'
+import {RulePassedEvaluator} from 'parser/core/modules/ActionWindow/evaluators/RulePassedEvaluator'
+import {HistoryEntry} from 'parser/core/modules/ActionWindow/History'
+import {ReactNode} from 'react'
+import {ASTRAL_UMBRAL_MAX_STACKS, Gauge} from '../Gauge'
 
 export interface InstantCastUsageEvaluatorOpts {
 	blizzard3Id: number,
