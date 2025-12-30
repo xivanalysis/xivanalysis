@@ -16,7 +16,7 @@ const GCD_ERROR_OFFSET = 150
 //slide cast period is 500 ms.
 const SLIDECAST_OFFSET = 500
 
-interface Window {
+interface GcdDowntimeWindow {
 	start: number,
 	stop?: number
 }
@@ -27,13 +27,14 @@ export class NotCasting extends Analyser {
 	static override displayOrder = DISPLAY_ORDER.NOTCASTING
 
 	@dependency private timeline!: Timeline
-	@dependency private gcd!: GlobalCooldown
+	@dependency private globalCooldown!: GlobalCooldown
 	@dependency private downtime!: Downtime
 
-	private noCastWindows: {current?: Window, history: Window[]} = {
+	private gcdDowntimeWindows: {current?: GcdDowntimeWindow, history: GcdDowntimeWindow[]} = {
 		history: [],
 	}
 	private hardCast = false
+	private gcdLength = this.globalCooldown.getDuration()
 
 	override initialise() {
 		const playerFilter = filter<Event>().source(this.parser.actor.id)
@@ -47,8 +48,6 @@ export class NotCasting extends Analyser {
 	}
 
 	private onCast(event: Events['action']) {
-		//better than using 2.5s I guess
-		const gcdLength = this.gcd.getDuration()
 		let timeStamp = event.timestamp
 
 		//coming from a hard cast, adjust for slidecasting
@@ -58,39 +57,38 @@ export class NotCasting extends Analyser {
 		}
 
 		//don't check the time that you actually spent casting
-		if (!this.noCastWindows.current) {
-			this.noCastWindows.current = {
+		if (!this.gcdDowntimeWindows.current) {
+			this.gcdDowntimeWindows.current = {
 				start: timeStamp,
 			}
 			return
 		}
 
 		//check if it's been more than a gcd length
-		if (timeStamp - this.noCastWindows.current.start > gcdLength + GCD_ERROR_OFFSET) {
+		if (timeStamp - this.gcdDowntimeWindows.current.start > this.gcdLength + GCD_ERROR_OFFSET) {
 			this.stopAndSave(timeStamp)
 		}
 		//this cast is our new last cast
-		this.noCastWindows.current = {
+		this.gcdDowntimeWindows.current = {
 			start: timeStamp,
 		}
 	}
 
 	private onBegin(event: Events['prepare']) {
-		const gcdLength = this.gcd.getDuration()
-		if (this.noCastWindows.current) {
-			if (event.timestamp - this.noCastWindows.current.start > gcdLength + GCD_ERROR_OFFSET) {
+		if (this.gcdDowntimeWindows.current) {
+			if (event.timestamp - this.gcdDowntimeWindows.current.start > this.gcdLength + GCD_ERROR_OFFSET) {
 				this.stopAndSave(event.timestamp)
 			}
-			this.noCastWindows.current = undefined
+			this.gcdDowntimeWindows.current = undefined
 			this.hardCast = true
 		}
 	}
 
 	//reset to not count the time you lie on the ground as time you aren't casting : ^)
-	private onDeath() { this.noCastWindows.current = undefined }
+	private onDeath() { this.gcdDowntimeWindows.current = undefined }
 
 	private stopAndSave(endTime: number) {
-		const tracker = this.noCastWindows
+		const tracker = this.gcdDowntimeWindows
 
 		// Already closed, nothing to do here
 		if (!tracker.current) {
@@ -104,23 +102,21 @@ export class NotCasting extends Analyser {
 	}
 
 	private onComplete(event: Events['complete']) {
-		const gcdLength = this.gcd.getDuration()
 		//finish up
 		this.stopAndSave(event.timestamp)
 
 		// Filter out periods where you got stunned, boss is untargetable, etc, or windows with negative durations
-		this.noCastWindows.history = this.noCastWindows.history.filter(windows => {
+		this.gcdDowntimeWindows.history = this.gcdDowntimeWindows.history.filter(windows => {
 			const duration = this.downtime.getDowntime(
 				windows.start,
 				windows.stop ?? windows.start,
 			)
-			return duration === 0 && (windows.stop ?? windows.start) - windows.start > gcdLength + GCD_ERROR_OFFSET
+			return duration === 0 && (windows.stop ?? windows.start) - windows.start > this.gcdLength + GCD_ERROR_OFFSET
 		})
 	}
 
 	override output() {
-		const gcdLength = this.gcd.getDuration()
-		if (this.noCastWindows.history.length === 0) { return }
+		if (this.gcdDowntimeWindows.history.length === 0) { return }
 		return <Table collapsing unstackable compact="very">
 			<Table.Header>
 				<Table.Row>
@@ -130,10 +126,10 @@ export class NotCasting extends Analyser {
 				</Table.Row>
 			</Table.Header>
 			<Table.Body>
-				{this.noCastWindows.history.map(notCasting => {
+				{this.gcdDowntimeWindows.history.map(notCasting => {
 					return <Table.Row key={notCasting.start}>
 						<Table.Cell>{this.parser.formatEpochTimestamp(notCasting.start)}</Table.Cell>
-						<Table.Cell>&ge;{this.parser.formatDuration((notCasting.stop ?? notCasting.start) - notCasting.start - gcdLength - GCD_ERROR_OFFSET)}</Table.Cell>
+						<Table.Cell>&ge;{this.parser.formatDuration((notCasting.stop ?? notCasting.start) - notCasting.start - this.gcdLength - GCD_ERROR_OFFSET)}</Table.Cell>
 						<Table.Cell>
 							<Button onClick={() =>
 								this.timeline.show(notCasting.start - this.parser.pull.timestamp, (notCasting.stop ?? notCasting.start) - this.parser.pull.timestamp)}>

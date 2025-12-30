@@ -149,8 +149,8 @@ export class AlwaysBeCasting extends CoreAlwaysBeCasting {
 		return uptime
 	}
 
-	override onComplete() {
-		super.onComplete()
+	override onComplete(event: Events['complete']) {
+		super.onComplete(event)
 
 		const endOfPullTimestamp = this.parser.pull.timestamp + this.parser.pull.duration
 		this.channelHistory.closeCurrent(endOfPullTimestamp)
