@@ -9,6 +9,11 @@ export const changelog: ChangelogEntry[] = [
 	// 	contributors: [CONTRIBUTORS.YOU],
 	// },
 	{
+		date: new Date('2025-12-30'),
+		Changes: () => <>Fixed invulnerability checks for Doomtrain Extreme to ensure correct DoT uptime calculations.</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
+	{
 		date: new Date('2025-02-12'),
 		Changes: () => <>Fixed an issue that caused AOE attacks to incorrectly report broken combos if they cleaved an invulnerable target.</>,
 		contributors: [CONTRIBUTORS.AZARIAH],
