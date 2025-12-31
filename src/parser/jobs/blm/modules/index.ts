@@ -7,7 +7,6 @@ import {Defensives} from './Defensives'
 import {DoTs} from './DoTs'
 import {Gauge} from './Gauge'
 import {Leylines} from './Leylines'
-import {NotCasting} from './NotCasting'
 import {OGCDDowntime} from './OGCDDowntime'
 import {Procs} from './Procs'
 import {RotationWatchdog} from './RotationWatchdog'
@@ -27,7 +26,6 @@ export const modules = [
 	Interrupts,
 	Tincture,
 	Leylines,
-	NotCasting,
 	OGCDDowntime,
 	Procs,
 	RotationWatchdog,
