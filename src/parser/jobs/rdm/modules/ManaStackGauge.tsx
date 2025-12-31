@@ -43,8 +43,11 @@ export class ManaStackGauge extends CoreGauge {
 		[this.data.actions.ENCHANTED_REPRISE.id, {manaStack: 0}],
 		[this.data.actions.ENCHANTED_MOULINET.id, {manaStack: 1}],
 		[this.data.actions.ENCHANTED_RIPOSTE.id, {manaStack: 1}],
+		[this.data.actions.MANAFICATION_ENCHANTED_RIPOSTE.id, {manaStack: 1}],
 		[this.data.actions.ENCHANTED_ZWERCHHAU.id, {manaStack: 1}],
+		[this.data.actions.MANAFICATION_ENCHANTED_ZWERCHHAU.id, {manaStack: 1}],
 		[this.data.actions.ENCHANTED_REDOUBLEMENT.id, {manaStack: 1}],
+		[this.data.actions.MANAFICATION_ENCHANTED_REDOUBLEMENT.id, {manaStack: 1}],
 	])
 	public spenderModifiers = new Map<number, ManaStackGaugeModifier>([
 		[this.data.actions.VERHOLY.id, {manaStack: -3}],

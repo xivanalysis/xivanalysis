@@ -66,8 +66,11 @@ export class ManaGauge extends CoreGauge {
 		[this.data.actions.ENCHANTED_MOULINET_DEUX.id, {white: -15, black: -15}],
 		[this.data.actions.ENCHANTED_MOULINET_TROIS.id, {white: -15, black: -15}],
 		[this.data.actions.ENCHANTED_RIPOSTE.id, {white: -20, black: -20}],
+		[this.data.actions.MANAFICATION_ENCHANTED_RIPOSTE.id, {white: -20, black: -20}],
 		[this.data.actions.ENCHANTED_ZWERCHHAU.id, {white: -15, black: -15}],
+		[this.data.actions.MANAFICATION_ENCHANTED_ZWERCHHAU.id, {white: -15, black: -15}],
 		[this.data.actions.ENCHANTED_REDOUBLEMENT.id, {white: -15, black: -15}],
+		[this.data.actions.MANAFICATION_ENCHANTED_REDOUBLEMENT.id, {white: -15, black: -15}],
 	])
 	private severityWastedMana = {
 		1: SEVERITY.MINOR,

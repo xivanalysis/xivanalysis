@@ -2,6 +2,11 @@ import {CONTRIBUTORS} from 'data/CONTRIBUTORS'
 
 export const changelog = [
 	{
+		date: new Date('2025-12-31'),
+		Changes: () => <>Removed Manafication GCD Window; fixed the oversight on Mana gauge calcualtions with the new manafication ranged melee combo.</>,
+		contributors: [CONTRIBUTORS.LEYLIA],
+	},
+	{
 		date: new Date('2025-12-20'),
 		Changes: () => <>RDM 7.4 Support added.</>,
 		contributors: [CONTRIBUTORS.LEYLIA],
