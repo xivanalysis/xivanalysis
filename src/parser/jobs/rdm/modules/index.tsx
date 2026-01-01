@@ -8,6 +8,7 @@ import {Embolden} from './Embolden'
 import {GeneralCDDowntime} from './GeneralCDDowntime'
 import {Interrupts} from './Interrupts'
 import {MagickedSwordplay} from './MagickedSwordplay'
+import {Manafication} from './Manafication'
 import {ManaGauge} from './ManaGauge'
 import {ManaStackGauge} from './ManaStackGauge'
 import {MeleeCombos} from './MeleeCombos'
@@ -37,6 +38,7 @@ export const modules = [
 	Swiftcast,
 	Weaving,
 	MagickedSwordplay,
+	Manafication,
 	Prefulgence,
 	Utilities,
 	ViceOfThorns,
