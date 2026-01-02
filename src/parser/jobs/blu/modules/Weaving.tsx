@@ -5,8 +5,8 @@ import {Event, Events} from 'event'
 import {filter} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
 import {Actors} from 'parser/core/modules/Actors'
-import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import {Weaving, Weave} from 'parser/core/modules/AlwaysBeCasting/Weaving'
+import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
 const MAX_CAST_TIME_FOR_SINGLE_WEAVE = 1500
 const SINGLE_WEAVE_MS = 1000
