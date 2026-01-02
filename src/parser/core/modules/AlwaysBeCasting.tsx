@@ -1,5 +1,7 @@
 import {msg} from '@lingui/core/macro'
 import {Trans} from '@lingui/react/macro'
+import {NormalisedMessage} from 'components/ui/NormalisedMessage'
+import {Rotation} from 'components/ui/Rotation'
 import {Action} from 'data/ACTIONS'
 import {ANIMATION_LOCK} from 'data/CONSTANTS'
 import {Event, Events} from 'event'
@@ -12,9 +14,21 @@ import {Data} from 'parser/core/modules/Data'
 import {Downtime} from 'parser/core/modules/Downtime'
 import {GlobalCooldown} from 'parser/core/modules/GlobalCooldown'
 import {SpeedAdjustments} from 'parser/core/modules/SpeedAdjustments'
-import {Button, Icon, Message, Table} from 'semantic-ui-react'
+import {ReactNode} from 'react'
+import {Accordion, Button, Icon, Message, Table} from 'semantic-ui-react'
 import {DISPLAY_ORDER} from './DISPLAY_ORDER'
+import {Interrupts} from './Interrupts'
 import {Timeline} from './Timeline'
+import {Weaving} from './Weaving'
+
+export interface AlwaysBeCastingIssueInfo {
+	timestamp: number,
+	delay: number,
+	start: number,
+	stop: number,
+	actionsContent: ReactNode,
+	infoContent?: ReactNode,
+}
 
 const UPTIME_TARGET = 98
 
@@ -32,6 +46,8 @@ const SLIDECAST_OFFSET = 500
 interface GcdDowntimeWindow {
 	start: number,
 	leadingEvent: Events['action']
+	trailingOgcds: Array<Events['action']>
+	trailingEvent?: Events['action'] | Events['prepare']
 	stop?: number
 }
 
@@ -48,6 +64,8 @@ export class AlwaysBeCasting extends Analyser {
 	@dependency protected globalCooldown!: GlobalCooldown
 	@dependency protected speedAdjustments!: SpeedAdjustments
 	@dependency private timeline!: Timeline
+	@dependency private weaving!: Weaving
+	@dependency private interrupts!: Interrupts
 
 	protected gcdUptimeSuggestionContent: JSX.Element = <Trans id="core.always-cast.description">
 		Make sure you're always doing something. It's often better to make small
@@ -64,6 +82,22 @@ export class AlwaysBeCasting extends Analyser {
 		history: [],
 	}
 	private gcdLength = this.globalCooldown.getDuration()
+
+	private outputModules = [
+		{
+			module: this,
+			title: <Trans id="core.always-cast.gcd-downtime.title">GCD Downtime</Trans>,
+			header: <Trans id="core.always-cast.header.about">This report identifies when your GCD was idle and for how long.</Trans>,
+		},
+		{
+			module: this.weaving,
+			header: <Trans id="core.always-cast.header.weaving">This report identifies when your GCD was delayed by weaving too many cooldowns.</Trans>,
+		},
+		{
+			module: this.interrupts,
+			header: <Trans id="core.always-cast.header.interrupts">This report identifies when your GCD was wasted by interrupting a cast.</Trans>,
+		},
+	]
 
 	override initialise() {
 		this.addEventHook(
@@ -84,7 +118,7 @@ export class AlwaysBeCasting extends Analyser {
 	//reset to not count the time you lie on the ground as time you aren't casting : ^)
 	private onDeath() { this.gcdDowntimeWindows.current = undefined }
 
-	private closeGcdDowntimeWindow(endTime: number) {
+	private closeGcdDowntimeWindow(endTime: number, event: Events['action'] | Events['prepare'] | undefined = undefined) {
 		const tracker = this.gcdDowntimeWindows
 
 		// Already closed, nothing to do here
@@ -96,6 +130,7 @@ export class AlwaysBeCasting extends Analyser {
 		// Add the current window to the history array if we've exceeded the GCD length
 		if (endTime - tracker.current.start > leadingEventGcdLength + GCD_ERROR_OFFSET) {
 			tracker.current.stop = endTime
+			tracker.current.trailingEvent = event
 			tracker.history.push(tracker.current)
 		}
 
@@ -104,24 +139,30 @@ export class AlwaysBeCasting extends Analyser {
 
 	private onBeginCast(event: Events['prepare']) {
 		this.lastBeginCast = event
-		this.closeGcdDowntimeWindow(event.timestamp)
+		this.closeGcdDowntimeWindow(event.timestamp, event)
 	}
 
 	private onCast(event: Events['action']) {
 		const action = this.data.getAction(event.action)
+		if (action == null) { return }
 
-		if (action == null || action.onGcd == null || !action.onGcd) {
+		if (!action.onGcd) {
+			this.gcdDowntimeWindows.current?.trailingOgcds.push(event)
 			return
 		}
 
 		//coming from a hard cast, adjust for slidecasting
 		const slidecastAdjustedTimestamp = event.timestamp + (this.lastBeginCast ? SLIDECAST_OFFSET : 0)
-		this.closeGcdDowntimeWindow(slidecastAdjustedTimestamp)
+		this.closeGcdDowntimeWindow(slidecastAdjustedTimestamp, event)
 
-		//this cast is our new last cast
-		this.gcdDowntimeWindows.current = {
-			start: slidecastAdjustedTimestamp,
-			leadingEvent: event,
+		// Don't trust timestamps before the pull, they can be synthed and be wrong
+		if (event.timestamp > this.parser.pull.timestamp) {
+			//this cast is our new last cast
+			this.gcdDowntimeWindows.current = {
+				start: slidecastAdjustedTimestamp,
+				leadingEvent: event,
+				trailingOgcds: [],
+			}
 		}
 
 		let castTime = this.castTime.forEvent(event) ?? 0
@@ -230,42 +271,113 @@ export class AlwaysBeCasting extends Analyser {
 		}))
 	}
 
+	public get hasIssues() {
+		return this.gcdDowntimeWindows.history.length > 0
+	}
+
+	public getIssueData() {
+		return this.gcdDowntimeWindows.history.map(window => {
+			return {
+				timestamp: window.start,
+				delay: this.getDelayPerIssue(window),
+				start: window.start - this.parser.pull.timestamp,
+				stop: (window.stop ?? window.start) - this.parser.pull.timestamp,
+				actionsContent: <Rotation events={[window.leadingEvent, ...window.trailingOgcds, window.trailingEvent].filter(event => event != null)} />,
+				infoContent: <>{this.parser.formatDuration((window.stop ?? window.start) - window.leadingEvent.timestamp)}&nbsp;<Trans id="core.weaving.between-gcds">between GCDs</Trans></>,
+			}
+		})
+	}
+
+	public getDelayPerIssue(downtime: GcdDowntimeWindow) {
+		return (downtime.stop ?? downtime.start) - downtime.start - this.gcdLength - GCD_ERROR_OFFSET
+	}
+
+	public getTotalDelay() {
+		return this.gcdDowntimeWindows.history.reduce((acc, downtime) => acc + this.getDelayPerIssue(downtime), 0)
+	}
+
 	override output() {
-		if (this.gcdDowntimeWindows.history.length === 0) { return }
+		if (!this.outputModules.some(entry => entry.module.hasIssues)) { return }
+
+		const filteredModules = this.outputModules.filter(entry => entry.module.hasIssues)
+		const maxDelay = Math.max(...filteredModules.map(entry => entry.module.getTotalDelay()))
+		const maxIndex = filteredModules.filter(entry => entry.module.hasIssues).findIndex(entry => entry.module.getTotalDelay() === maxDelay)
+
 		return <>
 			<Message icon>
 				<Icon name="exclamation" />
 				<Message.Content>
 					<Trans id="core.always-cast.header.content">Keeping your GCD rolling is the most important component of maximizing your damage.</Trans>
 					<br/>
-					<Trans id="core.always-cast.header.about">This report identifies when your GCD was idle and for how long.</Trans>
+					<Trans id="core.always-cast.header.sub-content">These reports will help identify ways you can improve on your GCD uptime.</Trans>
+					<br/><br/>
+					Total time lost: {this.parser.formatDuration(filteredModules.reduce((acc, entry) => acc + entry.module.getTotalDelay(), 0))}
 				</Message.Content>
 			</Message>
-			<Table compact unstackable celled collapsing>
-				<Table.Header>
-					<Table.Row>
-						<Table.HeaderCell collapsing><Trans id="core.always-cast.timestamp-header">Time</Trans></Table.HeaderCell>
-						<Table.HeaderCell><Trans id="core.always-cast.downtime-header">Duration</Trans></Table.HeaderCell>
-					</Table.Row>
-				</Table.Header>
-				<Table.Body>
-					{this.gcdDowntimeWindows.history.map(notCasting => {
-						return <Table.Row key={notCasting.start}>
-							<Table.Cell textAlign="center">
-								<span style={{marginRight: 5}}>{this.parser.formatEpochTimestamp(notCasting.start)}</span>
-								<Button
-									circular
-									compact
-									size="mini"
-									icon="time"
-									onClick={() => this.timeline.show(notCasting.start - this.parser.pull.timestamp, (notCasting.stop ?? notCasting.start) - this.parser.pull.timestamp)}
-								/>
-							</Table.Cell>
-							<Table.Cell>&ge;{this.parser.formatDuration((notCasting.stop ?? notCasting.start) - notCasting.start - this.gcdLength - GCD_ERROR_OFFSET)}</Table.Cell>
-						</Table.Row>
-					})}
-				</Table.Body>
-			</Table>
+			<Accordion exclusive={false}
+				styled
+				fluid
+				defaultActiveIndex={[maxIndex]}
+				panels={
+					filteredModules.map(entry => {
+						const module = entry.module
+						const moduleStatic = (module.constructor as typeof Analyser)
+						const title = entry.title ? entry.title : moduleStatic.title ? <NormalisedMessage message={moduleStatic.title} /> : moduleStatic.handle
+						return {
+							key: moduleStatic.handle,
+							title: {
+								content: <>{title} - {this.parser.formatDuration(module.getTotalDelay())}</>,
+							},
+							content: {
+								content: <>
+									<Message info>
+										{entry.header}
+									</Message>
+									<Table compact unstackable celled collapsing>
+										<Table.Header>
+											<Table.Row>
+												<Table.HeaderCell collapsing><Trans id="core.always-cast.timestamp-header">Time</Trans></Table.HeaderCell>
+												<Table.HeaderCell><Trans id="core.always-cast.gcd-delay-header">GCD Delay</Trans></Table.HeaderCell>
+												<Table.HeaderCell><Trans id="core.always-cast.actions-header">Actions</Trans></Table.HeaderCell>
+												{
+													module.getIssueData().some(entry => entry.infoContent != null)
+														? <Table.HeaderCell collapsing><Trans id="core.always-cast.info-header">Info</Trans></Table.HeaderCell>
+														: <></>
+												}
+											</Table.Row>
+										</Table.Header>
+										<Table.Body>
+											{
+												module.getIssueData().map(issue => {
+													return <Table.Row key={issue.timestamp}>
+														<Table.Cell textAlign="center">
+															<span style={{marginRight: 5}}>{this.parser.formatEpochTimestamp(issue.timestamp)}</span>
+															<Button
+																circular
+																compact
+																size="mini"
+																icon="time"
+																onClick={() => this.timeline.show(Math.max(issue.start, 0), Math.min(issue.stop, this.parser.pull.duration))}
+															/>
+														</Table.Cell>
+														<Table.Cell>{this.parser.formatDuration((issue.delay))}</Table.Cell>
+														<Table.Cell>
+															{issue.actionsContent}
+														</Table.Cell>
+														{
+															issue.infoContent != null
+																? <Table.Cell>{issue.infoContent}</Table.Cell>
+																: <></>
+														}
+													</Table.Row>
+												})}
+										</Table.Body>
+									</Table>
+								</>,
+							},
+						}
+					})
+				} />
 		</>
 	}
 }

@@ -1,4 +1,3 @@
-import {Interrupts} from 'parser/core/modules/Interrupts'
 import {PetTimeline} from 'parser/core/modules/PetTimeline'
 import {Tincture} from 'parser/core/modules/Tincture'
 import {Weaving} from 'parser/core/modules/Weaving'
@@ -18,7 +17,6 @@ export const modules = [
 	ActionTimeline,
 	Aetherflow,
 	GeneralCDDowntime,
-	Interrupts,
 	AoeChecker,
 	PetTimeline,
 	Physick,

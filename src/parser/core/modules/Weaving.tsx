@@ -3,7 +3,6 @@ import {Trans, Plural} from '@lingui/react/macro'
 import {NormalisedMessage} from 'components/ui/NormalisedMessage'
 import {Rotation} from 'components/ui/Rotation'
 import {Action} from 'data/ACTIONS'
-import {BASE_GCD} from 'data/CONSTANTS'
 import {iconUrl} from 'data/icon'
 import {Event, Events} from 'event'
 import {Analyser} from 'parser/core/Analyser'
@@ -16,6 +15,8 @@ import {Suggestions, TieredSuggestion, SEVERITY} from 'parser/core/modules/Sugge
 import {ReactNode} from 'react'
 import {Button, Table} from 'semantic-ui-react'
 import {matchClosestLower} from 'utilities'
+import {AlwaysBeCasting} from './AlwaysBeCasting'
+import {GlobalCooldown} from './GlobalCooldown'
 import {Timeline} from './Timeline'
 
 const CAST_TIME_MAX_WEAVES = {
@@ -32,7 +33,7 @@ const WEAVING_SEVERITY = {
 }
 
 // used for timeline viewing by giving you a nice 30s window
-const TIMELINE_UPPER_MOD: number = 30000
+const TIMELINE_UPPER_MOD: number = 15000
 
 const ICON_WEAVING_ACTION = 1751
 
@@ -51,14 +52,15 @@ export class Weaving extends Analyser {
 	@dependency private invulnerability!: Invulnerability
 	@dependency protected suggestions!: Suggestions
 	@dependency private timeline!: Timeline
+	@dependency private globalCooldown!: GlobalCooldown
 
 	static override title = msg({id: 'core.weaving.title', message: 'Weaving Issues'})
 
 	protected suggestionIcon: string = iconUrl(ICON_WEAVING_ACTION)
 
 	protected moduleLink = (
-		<a style={{cursor: 'pointer'}} onClick={() => this.parser.scrollTo(Weaving.handle)}>
-			<NormalisedMessage message={Weaving.title}/>
+		<a style={{cursor: 'pointer'}} onClick={() => this.parser.scrollTo(AlwaysBeCasting.handle)}>
+			<Trans id="core.weaving.module-link"><NormalisedMessage message={Weaving.title}/> section of the <NormalisedMessage message={AlwaysBeCasting.title}/></Trans>
 		</a>
 	)
 	protected suggestionContent: ReactNode = <Trans id="core.weaving.content">
@@ -209,7 +211,7 @@ export class Weaving extends Analyser {
 				&& event.timestamp >= this.parser.pull.timestamp,
 		).length
 
-		const recast = ((weave.leadingGcdEvent != null) ? this.castTime.recastForEvent(weave.leadingGcdEvent) : undefined) ?? BASE_GCD
+		const recast = ((weave.leadingGcdEvent != null) ? this.castTime.recastForEvent(weave.leadingGcdEvent) : undefined) ?? this.globalCooldown.getDuration()
 		// Check the downtime-adjusted GCD time difference for this weave - do not treat multiple weaves during downtime as bad weaves
 		return weave.gcdTimeDiff > recast && weaveCount > this.getMaxWeaves(weave)
 	}
@@ -247,9 +249,48 @@ export class Weaving extends Analyser {
 		}
 
 		const maxWeaves = matchClosestLower(CAST_TIME_MAX_WEAVES, castTime) ?? DEFAULT_MAX_WEAVES
-		const recastTime = this.castTime.recastForEvent(weave.leadingGcdEvent) ?? BASE_GCD
+		const recastTime = this.castTime.recastForEvent(weave.leadingGcdEvent) ?? this.globalCooldown.getDuration()
 
 		return maxWeaves - (recastTime < REDUCE_MAX_WEAVES_RECAST_BELOW ? 1 : 0)
+	}
+
+	public get hasIssues() {
+		return this.badWeaves.length > 0
+	}
+
+	// The amount of time the GCD was delayed by is the invuln-adjusted GCD time difference between the leading/trailing GCDs,
+	// less the leading event's expected recast time
+	public getDelayPerIssue(weave: Weave) {
+		const leadingEventRecastTime = this.castTime.recastForEvent(weave.leadingGcdEvent) ?? this.globalCooldown.getDuration()
+		return weave.gcdTimeDiff - leadingEventRecastTime
+	}
+
+	public getTotalDelay() {
+		return this.badWeaves.reduce((acc, weave) => acc + this.getDelayPerIssue(weave), 0)
+	}
+
+	public getIssueData() {
+		return this.badWeaves.map(weave => {
+			return {
+				timestamp: weave.leadingGcdEvent.timestamp,
+				delay: this.getDelayPerIssue(weave),
+				start: weave.leadingGcdEvent.timestamp - this.parser.pull.timestamp - TIMELINE_UPPER_MOD,
+				stop: weave.trailingGcdEvent.timestamp - this.parser.pull.timestamp + TIMELINE_UPPER_MOD,
+				actionsContent: <Rotation events={[
+					...(weave.leadingGcdEvent.action !== 0 ? [weave.leadingGcdEvent] : []), // don't want to show null action if individual weaves a lot in the beginning without any beginning actions
+					...weave.weaves,
+					...(weave.trailingGcdEvent.action !== 0 ? [weave.trailingGcdEvent] : []), // don't want to show null action if individual weaves a lot close to the end without any ending actions
+				]}/>,
+				infoContent: <><Plural
+					id="core.weaving.panel-count"
+					value={weave.weaves.length}
+					_1="# weave"
+					other="# weaves"
+				/><br/>
+				{this.parser.formatDuration(weave.gcdTimeDiff)}&nbsp;<Trans id="core.weaving.between-gcds">between GCDs</Trans></>,
+
+			}
+		})
 	}
 
 	override output() {
@@ -257,17 +298,18 @@ export class Weaving extends Analyser {
 			return false
 		}
 
-		return <Table unstackable collapsing>
+		return <Table unstackable collapsing celled compact>
 			<Table.Header>
 				<Table.Row>
 					<Table.HeaderCell collapsing>
 						<strong><Trans id="core.weaving.table.time">Time</Trans></strong>
 					</Table.HeaderCell>
-					<Table.HeaderCell collapsing>
-						<strong><Trans id="core.weaving.table.weave-info">Weave info</Trans></strong>
-					</Table.HeaderCell>
+					<Table.HeaderCell>GCD Delay</Table.HeaderCell>
 					<Table.HeaderCell>
 						<strong><Trans id="core.weaving.table.weave-actions">Actions</Trans></strong>
+					</Table.HeaderCell>
+					<Table.HeaderCell collapsing>
+						<strong><Trans id="core.weaving.table.weave-info">Weave info</Trans></strong>
 					</Table.HeaderCell>
 				</Table.Row>
 			</Table.Header>
@@ -285,6 +327,14 @@ export class Weaving extends Analyser {
 									onClick={() => this.timeline.show(item.leadingGcdEvent.timestamp - this.parser.pull.timestamp, item.leadingGcdEvent.timestamp - this.parser.pull.timestamp + TIMELINE_UPPER_MOD)}
 								/>
 							</Table.Cell>
+							<Table.Cell>{this.parser.formatDuration(this.getDelayPerIssue(item))}</Table.Cell>
+							<Table.Cell>
+								<Rotation events={[
+									...(item.leadingGcdEvent.action !== 0 ? [item.leadingGcdEvent] : []), // don't want to show null action if individual weaves a lot in the beginning without any beginning actions
+									...item.weaves,
+									...(item.trailingGcdEvent.action !== 0 ? [item.trailingGcdEvent] : []), // don't want to show null action if individual weaves a lot close to the end without any ending actions
+								]}/>
+							</Table.Cell>
 							<Table.Cell>
 								<Plural
 									id="core.weaving.panel-count"
@@ -296,13 +346,6 @@ export class Weaving extends Analyser {
 								{this.parser.formatDuration(item.gcdTimeDiff)}
 								&nbsp;
 								<Trans id="core.weaving.between-gcds">between GCDs</Trans>
-							</Table.Cell>
-							<Table.Cell>
-								<Rotation events={[
-									...(item.leadingGcdEvent.action !== 0 ? [item.leadingGcdEvent] : []), // don't want to show null action if individual weaves a lot in the beginning without any beginning actions
-									...item.weaves,
-									...(item.trailingGcdEvent.action !== 0 ? [item.trailingGcdEvent] : []), // don't want to show null action if individual weaves a lot close to the end without any ending actions
-								]}/>
 							</Table.Cell>
 						</Table.Row>
 					})

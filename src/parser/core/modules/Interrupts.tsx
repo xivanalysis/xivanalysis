@@ -1,7 +1,7 @@
 import {MessageDescriptor} from '@lingui/core'
 import {msg} from '@lingui/core/macro'
 import {Trans} from '@lingui/react/macro'
-import {ActionLink} from 'components/ui/DbLink'
+import {Rotation} from 'components/ui/Rotation'
 import {ACTIONS} from 'data/ACTIONS'
 import {Event, Events} from 'event'
 import {Analyser} from 'parser/core/Analyser'
@@ -10,6 +10,7 @@ import {Timeline} from 'parser/core/modules/Timeline'
 import {Button, Table} from 'semantic-ui-react'
 import {filter} from '../filter'
 import {dependency} from '../Injectable'
+import {AlwaysBeCastingIssueInfo} from './AlwaysBeCasting'
 import {CastTime} from './CastTime'
 import {Data} from './Data'
 
@@ -18,7 +19,13 @@ interface SeverityTiers {
 }
 
 // used for timeline viewing by giving you a nice 30s window
-const TIMELINE_UPPER_MOD: number = 30000
+const TIMELINE_UPPER_MOD: number = 15000
+
+interface InterruptInfo {
+	event: Events['interrupt'],
+	missedTimeMS: number
+	leadingEvent: Events['prepare']
+}
 
 export class Interrupts extends Analyser {
 	static override handle: string = 'interrupts'
@@ -31,7 +38,7 @@ export class Interrupts extends Analyser {
 	@dependency private timeline!: Timeline
 
 	private currentCast?: Events['prepare']
-	private droppedCasts: Array<Events['interrupt']> = []
+	private droppedCasts: InterruptInfo[] = []
 	private missedTimeMS: number = 0
 
 	/**
@@ -62,7 +69,7 @@ export class Interrupts extends Analyser {
 	 * @param missedTime The approximate time wasted via interrupts
 	 * @returns JSX that conforms to your suggestion content
 	 */
-	protected suggestionWhy(missedCasts: Array<Events['interrupt']>, missedTime: number): JSX.Element {
+	protected suggestionWhy(missedCasts: InterruptInfo[], missedTime: number): JSX.Element {
 		return <Trans id="core.interrupts.suggestion.why">You missed { missedCasts.length } casts (approximately { this.parser.formatDuration(missedTime) } of total casting time) due to interruption.</Trans>
 	}
 
@@ -99,11 +106,16 @@ export class Interrupts extends Analyser {
 
 		const castTime = this.castTime.forAction(this.currentCast.action, this.currentCast.timestamp) ?? 0
 
-		this.missedTimeMS += Math.min(
-			event.timestamp - (this.currentCast?.timestamp ?? this.parser.currentEpochTimestamp),
+		const missedTimeMS = Math.min(
+			event.timestamp - (this.currentCast.timestamp ?? this.parser.currentEpochTimestamp),
 			castTime
 		)
-		this.droppedCasts.push(event)
+		this.missedTimeMS += missedTimeMS
+		this.droppedCasts.push({
+			event,
+			missedTimeMS,
+			leadingEvent: this.currentCast,
+		})
 		this.currentCast = undefined
 	}
 
@@ -117,6 +129,31 @@ export class Interrupts extends Analyser {
 		}))
 	}
 
+	public get hasIssues() {
+		return this.droppedCasts.length > 0
+	}
+
+	public getDelayPerIssue(interrupt:  InterruptInfo) {
+		return interrupt.missedTimeMS
+	}
+
+	public getTotalDelay() {
+		return this.droppedCasts.reduce((acc, interrupt) => acc + this.getDelayPerIssue(interrupt), 0)
+	}
+
+	public getIssueData(): AlwaysBeCastingIssueInfo[] {
+		return this.droppedCasts.map(cast => {
+			return {
+				timestamp: cast.event.timestamp,
+				delay: cast.missedTimeMS,
+				start: cast.event.timestamp - this.parser.pull.timestamp - TIMELINE_UPPER_MOD,
+				stop: cast.event.timestamp - this.parser.pull.timestamp + TIMELINE_UPPER_MOD,
+				actionsContent: <Rotation events={[cast.event]} />,
+				infoContent: undefined,
+			}
+		})
+	}
+
 	override output() {
 		if (this.droppedCasts.length === 0) {
 			return this.noInterruptsOutput()
@@ -128,6 +165,7 @@ export class Interrupts extends Analyser {
 					<Table.HeaderCell collapsing>
 						<strong><Trans id="core.interrupts.table.time">Time</Trans></strong>
 					</Table.HeaderCell>
+					<Table.HeaderCell>GCD Delay</Table.HeaderCell>
 					<Table.HeaderCell>
 						<strong><Trans id="core.interrupts.table.cast">Cast</Trans></strong>
 					</Table.HeaderCell>
@@ -136,20 +174,22 @@ export class Interrupts extends Analyser {
 			<Table.Body>
 				{
 					this.droppedCasts.map((cast) => {
-						const action = this.data.getAction(cast.action)
-						return <Table.Row key={cast.timestamp}>
+						return <Table.Row key={cast.event.timestamp}>
 							<Table.Cell textAlign="center">
-								<span style={{marginRight: 5}}>{this.parser.formatEpochTimestamp(cast.timestamp)}</span>
+								<span style={{marginRight: 5}}>{this.parser.formatEpochTimestamp(cast.event.timestamp)}</span>
 								<Button
 									circular
 									compact
 									size="mini"
 									icon="time"
-									onClick={() => this.timeline.show(cast.timestamp - this.parser.pull.timestamp, cast.timestamp - this.parser.pull.timestamp + TIMELINE_UPPER_MOD)}
+									onClick={() => this.timeline.show(cast.event.timestamp - this.parser.pull.timestamp, cast.event.timestamp - this.parser.pull.timestamp + TIMELINE_UPPER_MOD)}
 								/>
 							</Table.Cell>
 							<Table.Cell>
-								<ActionLink {...action} />
+								{this.parser.formatDuration(cast.missedTimeMS)}
+							</Table.Cell>
+							<Table.Cell>
+								<Rotation events={[cast.event]} />
 							</Table.Cell>
 						</Table.Row>
 					})

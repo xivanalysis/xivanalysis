@@ -1,4 +1,3 @@
-import {Interrupts} from 'parser/core/modules/Interrupts'
 import {Tincture} from 'parser/core/modules/Tincture'
 import {ActionTimeline} from './ActionTimeline'
 import {AoEUsages} from './AoEUsages'
@@ -23,7 +22,6 @@ export const modules = [
 	CastTime,
 	Defensives,
 	Gauge,
-	Interrupts,
 	Tincture,
 	Leylines,
 	OGCDDowntime,
