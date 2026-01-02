@@ -17,7 +17,6 @@ import {Procs} from './Procs'
 import {Swiftcast} from './Swiftcast'
 import {Utilities} from './Utilities'
 import {ViceOfThorns} from './ViceOfThorns'
-import {Weaving} from './Weaving'
 
 export {DualStatistic} from 'parser/jobs/rdm/statistics/DualStatistic'
 
@@ -36,7 +35,6 @@ export const modules = [
 	MeleeCombos,
 	Tincture,
 	Swiftcast,
-	Weaving,
 	MagickedSwordplay,
 	Manafication,
 	Prefulgence,

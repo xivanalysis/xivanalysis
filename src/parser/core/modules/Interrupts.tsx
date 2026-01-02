@@ -6,8 +6,6 @@ import {ACTIONS} from 'data/ACTIONS'
 import {Event, Events} from 'event'
 import {Analyser} from 'parser/core/Analyser'
 import {Suggestions, SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
-import {Timeline} from 'parser/core/modules/Timeline'
-import {Button, Table} from 'semantic-ui-react'
 import {filter} from '../filter'
 import {dependency} from '../Injectable'
 import {AlwaysBeCastingIssueInfo} from './AlwaysBeCasting'
@@ -35,7 +33,6 @@ export class Interrupts extends Analyser {
 	@dependency private castTime!: CastTime
 	@dependency protected data!: Data
 	@dependency private suggestions!: Suggestions
-	@dependency private timeline!: Timeline
 
 	private currentCast?: Events['prepare']
 	private droppedCasts: InterruptInfo[] = []
@@ -152,50 +149,5 @@ export class Interrupts extends Analyser {
 				infoContent: undefined,
 			}
 		})
-	}
-
-	override output() {
-		if (this.droppedCasts.length === 0) {
-			return this.noInterruptsOutput()
-		}
-
-		return <Table compact unstackable celled collapsing>
-			<Table.Header>
-				<Table.Row>
-					<Table.HeaderCell collapsing>
-						<strong><Trans id="core.interrupts.table.time">Time</Trans></strong>
-					</Table.HeaderCell>
-					<Table.HeaderCell>GCD Delay</Table.HeaderCell>
-					<Table.HeaderCell>
-						<strong><Trans id="core.interrupts.table.cast">Cast</Trans></strong>
-					</Table.HeaderCell>
-				</Table.Row>
-			</Table.Header>
-			<Table.Body>
-				{
-					this.droppedCasts.map((cast) => {
-						return <Table.Row key={cast.event.timestamp}>
-							<Table.Cell textAlign="center">
-								<span style={{marginRight: 5}}>{this.parser.formatEpochTimestamp(cast.event.timestamp)}</span>
-								<Button
-									circular
-									compact
-									size="mini"
-									icon="time"
-									onClick={() => this.timeline.show(cast.event.timestamp - this.parser.pull.timestamp, cast.event.timestamp - this.parser.pull.timestamp + TIMELINE_UPPER_MOD)}
-								/>
-							</Table.Cell>
-							<Table.Cell>
-								{this.parser.formatDuration(cast.missedTimeMS)}
-							</Table.Cell>
-							<Table.Cell>
-								<Rotation events={[cast.event]} />
-							</Table.Cell>
-						</Table.Row>
-					})
-				}
-			</Table.Body>
-		</Table>
-
 	}
 }

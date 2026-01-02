@@ -13,11 +13,9 @@ import {Data} from 'parser/core/modules/Data'
 import {Invulnerability} from 'parser/core/modules/Invulnerability'
 import {Suggestions, TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import {ReactNode} from 'react'
-import {Button, Table} from 'semantic-ui-react'
 import {matchClosestLower} from 'utilities'
 import {AlwaysBeCasting} from './AlwaysBeCasting'
 import {GlobalCooldown} from './GlobalCooldown'
-import {Timeline} from './Timeline'
 
 const CAST_TIME_MAX_WEAVES = {
 	0: 2,
@@ -51,7 +49,6 @@ export class Weaving extends Analyser {
 	@dependency protected data!: Data
 	@dependency private invulnerability!: Invulnerability
 	@dependency protected suggestions!: Suggestions
-	@dependency private timeline!: Timeline
 	@dependency private globalCooldown!: GlobalCooldown
 
 	static override title = msg({id: 'core.weaving.title', message: 'Weaving Issues'})
@@ -291,66 +288,5 @@ export class Weaving extends Analyser {
 
 			}
 		})
-	}
-
-	override output() {
-		if (this.badWeaves.length === 0) {
-			return false
-		}
-
-		return <Table unstackable collapsing celled compact>
-			<Table.Header>
-				<Table.Row>
-					<Table.HeaderCell collapsing>
-						<strong><Trans id="core.weaving.table.time">Time</Trans></strong>
-					</Table.HeaderCell>
-					<Table.HeaderCell>GCD Delay</Table.HeaderCell>
-					<Table.HeaderCell>
-						<strong><Trans id="core.weaving.table.weave-actions">Actions</Trans></strong>
-					</Table.HeaderCell>
-					<Table.HeaderCell collapsing>
-						<strong><Trans id="core.weaving.table.weave-info">Weave info</Trans></strong>
-					</Table.HeaderCell>
-				</Table.Row>
-			</Table.Header>
-			<Table.Body>
-				{
-					this.badWeaves.map((item) => {
-						return <Table.Row key={item.leadingGcdEvent.timestamp}>
-							<Table.Cell textAlign="center">
-								<span style={{marginRight: 5}}>{this.parser.formatEpochTimestamp(item.leadingGcdEvent.timestamp)}</span>
-								<Button
-									circular
-									compact
-									size="mini"
-									icon="time"
-									onClick={() => this.timeline.show(item.leadingGcdEvent.timestamp - this.parser.pull.timestamp, item.leadingGcdEvent.timestamp - this.parser.pull.timestamp + TIMELINE_UPPER_MOD)}
-								/>
-							</Table.Cell>
-							<Table.Cell>{this.parser.formatDuration(this.getDelayPerIssue(item))}</Table.Cell>
-							<Table.Cell>
-								<Rotation events={[
-									...(item.leadingGcdEvent.action !== 0 ? [item.leadingGcdEvent] : []), // don't want to show null action if individual weaves a lot in the beginning without any beginning actions
-									...item.weaves,
-									...(item.trailingGcdEvent.action !== 0 ? [item.trailingGcdEvent] : []), // don't want to show null action if individual weaves a lot close to the end without any ending actions
-								]}/>
-							</Table.Cell>
-							<Table.Cell>
-								<Plural
-									id="core.weaving.panel-count"
-									value={item.weaves.length}
-									_1="# weave"
-									other="# weaves"
-								/>
-								&nbsp; - &nbsp;
-								{this.parser.formatDuration(item.gcdTimeDiff)}
-								&nbsp;
-								<Trans id="core.weaving.between-gcds">between GCDs</Trans>
-							</Table.Cell>
-						</Table.Row>
-					})
-				}
-			</Table.Body>
-		</Table>
 	}
 }
