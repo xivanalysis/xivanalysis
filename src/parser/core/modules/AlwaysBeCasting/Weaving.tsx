@@ -5,7 +5,6 @@ import {Rotation} from 'components/ui/Rotation'
 import {Action} from 'data/ACTIONS'
 import {iconUrl} from 'data/icon'
 import {Event, Events} from 'event'
-import {Analyser} from 'parser/core/Analyser'
 import {filter} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
 import {CastTime} from 'parser/core/modules/CastTime'
@@ -15,7 +14,8 @@ import {Suggestions, TieredSuggestion, SEVERITY} from 'parser/core/modules/Sugge
 import {ReactNode} from 'react'
 import {matchClosestLower} from 'utilities'
 import {AlwaysBeCasting} from './AlwaysBeCasting'
-import {GlobalCooldown} from './GlobalCooldown'
+import {GlobalCooldown} from '../GlobalCooldown'
+import {AlwaysBeCastingAnalyser, AlwaysBeCastingIssueInfo} from './AlwaysBeCastingCommon'
 
 const CAST_TIME_MAX_WEAVES = {
 	0: 2,
@@ -42,7 +42,7 @@ export interface Weave {
 	weaves: Array<Events['action']>,
 }
 
-export class Weaving extends Analyser {
+export class Weaving extends AlwaysBeCastingAnalyser {
 	static override handle = 'weaving'
 
 	@dependency protected castTime!: CastTime
@@ -251,22 +251,22 @@ export class Weaving extends Analyser {
 		return maxWeaves - (recastTime < REDUCE_MAX_WEAVES_RECAST_BELOW ? 1 : 0)
 	}
 
-	public get hasIssues() {
+	override get hasIssues() {
 		return this.badWeaves.length > 0
 	}
 
 	// The amount of time the GCD was delayed by is the invuln-adjusted GCD time difference between the leading/trailing GCDs,
 	// less the leading event's expected recast time
-	public getDelayPerIssue(weave: Weave) {
+	override getDelayPerIssue(weave: Weave) {
 		const leadingEventRecastTime = this.castTime.recastForEvent(weave.leadingGcdEvent) ?? this.globalCooldown.getDuration()
 		return weave.gcdTimeDiff - leadingEventRecastTime
 	}
 
-	public getTotalDelay() {
+	override getTotalDelay() {
 		return this.badWeaves.reduce((acc, weave) => acc + this.getDelayPerIssue(weave), 0)
 	}
 
-	public getIssueData() {
+	override getIssueData(): AlwaysBeCastingIssueInfo[] {
 		return this.badWeaves.map(weave => {
 			return {
 				timestamp: weave.leadingGcdEvent.timestamp,

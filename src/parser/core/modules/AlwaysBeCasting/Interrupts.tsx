@@ -4,13 +4,12 @@ import {Trans} from '@lingui/react/macro'
 import {Rotation} from 'components/ui/Rotation'
 import {ACTIONS} from 'data/ACTIONS'
 import {Event, Events} from 'event'
-import {Analyser} from 'parser/core/Analyser'
 import {Suggestions, SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
-import {filter} from '../filter'
-import {dependency} from '../Injectable'
-import {AlwaysBeCastingIssueInfo} from './AlwaysBeCasting'
-import {CastTime} from './CastTime'
-import {Data} from './Data'
+import {AlwaysBeCastingAnalyser, AlwaysBeCastingIssueInfo} from './AlwaysBeCastingCommon'
+import {filter} from '../../filter'
+import {dependency} from '../../Injectable'
+import {CastTime} from '../CastTime'
+import {Data} from '../Data'
 
 interface SeverityTiers {
 	[key: number]: number
@@ -25,7 +24,7 @@ interface InterruptInfo {
 	leadingEvent: Events['prepare']
 }
 
-export class Interrupts extends Analyser {
+export class Interrupts extends AlwaysBeCastingAnalyser {
 	static override handle: string = 'interrupts'
 	static override title: MessageDescriptor = msg({id: 'core.interrupts.title', message: 'Interrupted Casts'})
 	static override debug: boolean = false
@@ -126,19 +125,19 @@ export class Interrupts extends Analyser {
 		}))
 	}
 
-	public get hasIssues() {
+	override get hasIssues() {
 		return this.droppedCasts.length > 0
 	}
 
-	public getDelayPerIssue(interrupt:  InterruptInfo) {
+	override getDelayPerIssue(interrupt:  InterruptInfo) {
 		return interrupt.missedTimeMS
 	}
 
-	public getTotalDelay() {
+	override getTotalDelay() {
 		return this.droppedCasts.reduce((acc, interrupt) => acc + this.getDelayPerIssue(interrupt), 0)
 	}
 
-	public getIssueData(): AlwaysBeCastingIssueInfo[] {
+	override getIssueData(): AlwaysBeCastingIssueInfo[] {
 		return this.droppedCasts.map(cast => {
 			return {
 				timestamp: cast.event.timestamp,

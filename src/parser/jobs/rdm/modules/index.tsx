@@ -1,4 +1,3 @@
-import {AlwaysBeCasting} from 'parser/core/modules/AlwaysBeCasting'
 import {Tincture} from 'parser/core/modules/Tincture'
 import {CastTime} from './CastTime'
 import {Combos} from './Combos'
@@ -21,7 +20,6 @@ import {ViceOfThorns} from './ViceOfThorns'
 export {DualStatistic} from 'parser/jobs/rdm/statistics/DualStatistic'
 
 export const modules = [
-	AlwaysBeCasting,
 	Embolden,
 	ManaGauge,
 	ManaStackGauge,

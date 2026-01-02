@@ -1,5 +1,5 @@
 import {BASE_GCD} from 'data/CONSTANTS'
-import {Weaving as CoreWeaving, Weave} from 'parser/core/modules/Weaving'
+import {Weaving as CoreWeaving, Weave} from 'parser/core/modules/AlwaysBeCasting/Weaving'
 import {MOTIFS, SUBTRACTIVE_SPELLS} from './CommonData'
 
 // most animations lock the user out of another action for a total of 600ms

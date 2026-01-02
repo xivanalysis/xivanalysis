@@ -16,19 +16,11 @@ import {GlobalCooldown} from 'parser/core/modules/GlobalCooldown'
 import {SpeedAdjustments} from 'parser/core/modules/SpeedAdjustments'
 import {ReactNode} from 'react'
 import {Accordion, Button, Icon, Message, Table} from 'semantic-ui-react'
-import {DISPLAY_ORDER} from './DISPLAY_ORDER'
+import {DISPLAY_ORDER} from '../DISPLAY_ORDER'
+import {Timeline} from '../Timeline'
+import {AlwaysBeCastingAnalyser} from './AlwaysBeCastingCommon'
 import {Interrupts} from './Interrupts'
-import {Timeline} from './Timeline'
 import {Weaving} from './Weaving'
-
-export interface AlwaysBeCastingIssueInfo {
-	timestamp: number,
-	delay: number,
-	start: number,
-	stop: number,
-	actionsContent: ReactNode,
-	infoContent?: ReactNode,
-}
 
 const UPTIME_TARGET = 98
 
@@ -51,7 +43,7 @@ interface GcdDowntimeWindow {
 	stop?: number
 }
 
-export class AlwaysBeCasting extends Analyser {
+export class AlwaysBeCasting extends AlwaysBeCastingAnalyser {
 	static override handle = 'abc'
 	static override title = msg({id: 'core.abc.title', message: 'Always Be Casting'})
 	static override displayOrder = DISPLAY_ORDER.ABC
@@ -83,21 +75,25 @@ export class AlwaysBeCasting extends Analyser {
 	}
 	private gcdLength = this.globalCooldown.getDuration()
 
-	private outputModules = [
-		{
-			module: this,
-			title: <Trans id="core.always-cast.gcd-downtime.title">GCD Downtime</Trans>,
-			header: <Trans id="core.always-cast.header.about">This report identifies when your GCD was idle and for how long.</Trans>,
-		},
-		{
-			module: this.weaving,
-			header: <Trans id="core.always-cast.header.weaving">This report identifies when your GCD was delayed by weaving too many cooldowns.</Trans>,
-		},
-		{
-			module: this.interrupts,
-			header: <Trans id="core.always-cast.header.interrupts">This report identifies when your GCD was wasted by interrupting a cast.</Trans>,
-		},
-	]
+	private outputModules: Array<{
+		module: AlwaysBeCastingAnalyser,
+		header: ReactNode,
+		title?: ReactNode
+	}> = [
+			{
+				module: this,
+				title: <Trans id="core.always-cast.gcd-downtime.title">GCD Downtime</Trans>,
+				header: <Trans id="core.always-cast.header.about">This report identifies when your GCD was idle and for how long.</Trans>,
+			},
+			{
+				module: this.weaving,
+				header: <Trans id="core.always-cast.header.weaving">This report identifies when your GCD was delayed by weaving too many cooldowns.</Trans>,
+			},
+			{
+				module: this.interrupts,
+				header: <Trans id="core.always-cast.header.interrupts">This report identifies when your GCD was wasted by interrupting a cast.</Trans>,
+			},
+		]
 
 	override initialise() {
 		this.addEventHook(
@@ -271,11 +267,11 @@ export class AlwaysBeCasting extends Analyser {
 		}))
 	}
 
-	public get hasIssues() {
+	override get hasIssues() {
 		return this.gcdDowntimeWindows.history.length > 0
 	}
 
-	public getIssueData() {
+	override getIssueData() {
 		return this.gcdDowntimeWindows.history.map(window => {
 			return {
 				timestamp: window.start,
@@ -288,11 +284,11 @@ export class AlwaysBeCasting extends Analyser {
 		})
 	}
 
-	public getDelayPerIssue(downtime: GcdDowntimeWindow) {
+	override getDelayPerIssue(downtime: GcdDowntimeWindow) {
 		return (downtime.stop ?? downtime.start) - downtime.start - this.gcdLength - GCD_ERROR_OFFSET
 	}
 
-	public getTotalDelay() {
+	override getTotalDelay() {
 		return this.gcdDowntimeWindows.history.reduce((acc, downtime) => acc + this.getDelayPerIssue(downtime), 0)
 	}
 
