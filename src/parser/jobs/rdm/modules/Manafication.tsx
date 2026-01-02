@@ -51,6 +51,10 @@ export class Manafication extends BuffWindow {
 	override endOfWindowHandlingMode: EndOfWindowHandlingMode = 'SAME-TIMESTAMP'
 
 	override initialise() {
+		//This now only applies to 7.0 to 7.3.x.  As such if we're 7.4 and higher we need to return.
+		if (this.parser.patch.after("7.3")) {
+			return
+		}
 		super.initialise()
 
 		this.trackOnlyActions(ONLY_SHOW.map(k => this.data.actions[k].id))
