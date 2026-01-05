@@ -134,7 +134,7 @@ export class Leylines extends Analyser {
 
 		// Add hooks for tracking cast events
 		if (status.id === this.data.statuses.LEY_LINES.id && this.countCasts) {
-			this.setEventHooks()
+			this.maybeSetEventHooks()
 		}
 	}
 
@@ -185,11 +185,18 @@ export class Leylines extends Analyser {
 		this.maybeUnsetEventHooks()
 	}
 
-	private setEventHooks() {
+	// Don't assumme the hooks are unset, if they slam another ley lines right after the previous one the hooks could overlap
+	private maybeSetEventHooks() {
 		const playerFilter = filter<Event>().source(this.parser.actor.id)
-		this.preparesEventHook = this.addEventHook(playerFilter.type('prepare'), this.onPrepare)
-		this.actionEventHook = this.addEventHook(playerFilter.type('action'), this.onAction)
-		this.interruptEventHook = this.addEventHook(playerFilter.type('interrupt'), this.onInterrupt)
+		if (this.preparesEventHook == null) {
+			this.preparesEventHook = this.addEventHook(playerFilter.type('prepare'), this.onPrepare)
+		}
+		if (this.actionEventHook == null) {
+			this.actionEventHook = this.addEventHook(playerFilter.type('action'), this.onAction)
+		}
+		if (this.interruptEventHook == null) {
+			this.interruptEventHook = this.addEventHook(playerFilter.type('interrupt'), this.onInterrupt)
+		}
 	}
 
 	private maybeUnsetEventHooks() {
