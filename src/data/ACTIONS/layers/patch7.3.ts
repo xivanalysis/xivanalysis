@@ -8,5 +8,11 @@ export const patch730: Layer<ActionRoot> = {
 		ENSHROUD: {
 			cooldown: 5000,
 		},
+		RESONANT_ARROW: {
+			potency: 700,
+		},
+		RADIANT_ENCORE: {
+			potency: [600, 700, 1000],
+		},
 	},
 }
