@@ -26,6 +26,7 @@ import {ExtraF1Evaluator} from './RotationWatchdog/ExtraF1Evaluator'
 import {FirestarterUsageEvaluator} from './RotationWatchdog/FirestarterUsageEvaluator'
 import {FlareStarUsageEvaluator} from './RotationWatchdog/FlareStarUsageEvaluator'
 import {IceMageEvaluator} from './RotationWatchdog/IceMageEvaluator'
+import {LukewarmF4Evaluator} from './RotationWatchdog/LukewarmF4Evaluator'
 import {ManafontTimingEvaluator} from './RotationWatchdog/ManafontTimingEvaluator'
 import {MissedIceParadoxEvaluator} from './RotationWatchdog/MissedIceParadoxEvaluator'
 import {RotationErrorNotesEvaluator} from './RotationWatchdog/RotationErrorNotesEvaluator'
@@ -195,6 +196,11 @@ export class RotationWatchdog extends RestartWindow {
 				metadataHistory: this.metadataHistory,
 			}))
 		}
+
+		this.addEvaluator(new LukewarmF4Evaluator({
+			fire4Action: this.data.actions.FIRE_IV,
+			metadataHistory: this.metadataHistory,
+		}))
 		//#endregion
 
 		//#region Evaluators that only apply to normal mid-fight windows

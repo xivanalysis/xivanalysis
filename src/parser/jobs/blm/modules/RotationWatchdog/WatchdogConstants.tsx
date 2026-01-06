@@ -39,6 +39,7 @@ export const ROTATION_ERRORS = ensureRecord<CycleErrorCode>()({
 	MISSED_ICE_PARADOX: {priority: 15, message: <Trans id="blm.rotation-watchdog.error-messages.missed-ice-paradox">Missed <DataLink action="PARADOX"/> in Umbral Ice</Trans>},
 	MISSING_DESPAIRS: {priority: 20, message: <Trans id="blm.rotation-watchdog.error-messages.missing-despair">Missing one or more <DataLink action="DESPAIR"/>s</Trans>}, // target columns in the table, so we want to tell players about other errors first
 	MISSING_FLARE_STARS: {priority: 30, message: <Trans id="blm.rotation-watchdog.error-messages.missing-flarestars">Missing one or more <DataLink action="FLARE_STAR"/>s</Trans>},
+	LUKEWARM_F4: {priority: 35, message: <Trans id="blm.rotation-watchdog.error-messages.lukewarm-f4">One or more <DataLink action="FIRE_IV"/>s cast without full Astral Fire</Trans>},
 	MANAFONT_BEFORE_DESPAIR: {priority: 40, message: <Trans id="blm.rotation-watchdog.error-messages.manafont-before-despair"><DataLink action="MANAFONT"/> used before <DataLink action="DESPAIR"/></Trans>},
 	EXTRA_F1: {priority: 60, message: <Trans id="blm.rotation-watchdog.error-messages.extra-f1">Extra <DataLink action="FIRE_I"/></Trans>}, // These two codes should stay close to each other
 	NO_FIRE_SPELLS: {priority: 80, message: <Trans id="blm.rotation-watchdog.error-messages.no-fire-spells">Rotation included no Fire spells</Trans>},
