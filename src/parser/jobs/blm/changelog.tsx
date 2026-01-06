@@ -8,6 +8,11 @@ export const changelog = [
 	// 	contributors: [CONTRIBUTORS.YOU],
 	// },
 	{
+		date: new Date('2026-01-05'),
+		Changes: () => <>Add warning about casting Fire IV without having reached Astral Fire III.</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
+	{
 		date: new Date('2025-11-12'),
 		Changes: () => <>Fix issue with broken icons.</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],
