@@ -17,7 +17,7 @@ export const SAGE = new Meta({
 
 	supportedPatches: {
 		from: '7.0',
-		to: '7.3',
+		to: '7.4',
 	},
 
 	contributors: [

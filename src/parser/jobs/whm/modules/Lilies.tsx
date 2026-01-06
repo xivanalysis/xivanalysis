@@ -64,11 +64,12 @@ export class Lilies extends CoreGauge {
 
 	private lilyGauge = this.add(new CounterGauge({
 		maximum: LILY_MAX_STACKS,
-		initialValue: 0,
+		initialValue: this.parser.patch.before('7.4') ? 0 : LILY_MAX_STACKS,
 		graph: {
 			label: <Trans id="whm.gauge.lily.stacks.label">Lily</Trans>,
 			color: GAUGE_COLOURS.LILY_GAUGE,
 		},
+		correctHistory: true,
 	}))
 
 	private lilyTimer = this.add(new TimerGauge({
@@ -78,16 +79,16 @@ export class Lilies extends CoreGauge {
 			label: <Trans id="whm.gauge.lily.timer.label">Lily Timer</Trans>,
 			color: GAUGE_COLOURS.LILY_TIMER,
 		},
-
 	}))
 
 	private bloodLilyGauge = this.add(new CounterGauge({
 		maximum: LILY_MAX_STACKS,
-		initialValue: 0,
+		initialValue: this.parser.patch.before('7.4') ? 0 : LILY_MAX_STACKS,
 		graph: {
 			label: <Trans id="whm.gauge.bloodlily.stacks.label">Blood Lily</Trans>,
 			color: GAUGE_COLOURS.BLOODLILY,
 		},
+		correctHistory: true,
 	}))
 
 	override initialise() {
@@ -100,7 +101,9 @@ export class Lilies extends CoreGauge {
 
 		this.addEventHook('complete', this.onComplete)
 
-		this.lilyTimer.start()
+		if (this.parser.patch.before('7.4')) {
+			this.lilyTimer.start()
+		}
 	}
 
 	private onGain() {

@@ -65,10 +65,6 @@ export class EsteemWindow extends ActionWindow {
 
 	@dependency private actors!: Actors
 
-	// If Scorn is being applied in the log (it is a level 100 log) then we should
-	// index Esteem starting off Scorn instead of Living Shadow usage.
-	private shouldUseScorn = false
-
 	override initialise() {
 		super.initialise()
 
@@ -105,6 +101,10 @@ export class EsteemWindow extends ActionWindow {
 		}))
 	}
 
+	private getPlayerLevel() {
+		return this.actors.get(this.parser.actor).level
+	}
+
 	override getRotationOutputForAction(action: EvaluatedAction): RotationEvent {
 		// Let's make the actions have real icons and tooltips
 		if (action.action.id === this.data.actions.ESTEEM_ABYSSAL_DRAIN.id) {
@@ -135,9 +135,6 @@ export class EsteemWindow extends ActionWindow {
 	}
 
 	private beginEsteemWithScorn(event: Events['statusApply']) {
-		// Scorn is being applied, so we should use Scorn to index Living Shadow usage:
-		this.shouldUseScorn = true
-
 		// Forcibly close any open windows, i.e. each Esteem Window is until the next Living Shadow is used
 		this.onWindowEnd(event.timestamp)
 		// Then start the new window
@@ -145,9 +142,9 @@ export class EsteemWindow extends ActionWindow {
 	}
 
 	private beginEsteemLivingShadow(event: Events['action']) {
-		// The log has Scorn usages, so we should ignore Living Shadow usages for the purposes
-		// of starting the window.
-		if (this.shouldUseScorn) {
+		// The log is level 100, so we should trust Scorn instead of Living Shadow to begin
+		// Esteem windows.
+		if (this.getPlayerLevel() === 100) {
 			return
 		}
 

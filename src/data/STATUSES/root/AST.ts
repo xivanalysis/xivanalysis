@@ -77,7 +77,7 @@ export const AST = ensureStatuses({
 		id: 849,
 		name: 'Collective Unconscious (Mitigation)',
 		icon: iconUrl(213226),
-		duration: 18000,
+		duration: 5000,
 	},
 
 	WHEEL_OF_FORTUNE: {

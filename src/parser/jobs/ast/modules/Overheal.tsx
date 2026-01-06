@@ -87,6 +87,15 @@ export class Overheal extends CoreOverheal {
 				this.data.statuses.OPPOSITION.id,
 			],
 		},
+		{
+			name: 'Collective Unconscious (non-heal non-mit)',
+			trackedHealIds: [
+				this.data.statuses.COLLECTIVE_UNCONSCIOUS.id,
+			],
+			//collective unconscious applies wheel of fortune during ticks when party member is within bubble so this specific status can be ignored
+			//note: there is a mit portion that isn't included in overhealing, but is tracked in a separate ID
+			ignore: true,
+		},
 	]
 
 	protected override considerHeal(event: Events['heal'], pet?: boolean): boolean {

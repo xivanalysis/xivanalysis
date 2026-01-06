@@ -8,6 +8,8 @@ const description = msg({id: 'gnb.about.description', message: `This analyzer lo
 If you're looking to learn about how exactly the job plays and functions from the ground up, take a look at a few basic guides:
 
 * [General tanking guide by Aletin](https://goo.gl/nYzAnq)
+* [Gunbreaker opener infographic by Krom](https://u.cubeupload.com/krom/O1Ms7E.png)
+* [Gunbreaker rotation infographic by Krom](https://u.cubeupload.com/krom/ZOrXeg.png)
 
 If you have any suggestions about the module, feel free to join the XIVA discord and use the feedback channels.
 `})
@@ -19,7 +21,7 @@ export const GUNBREAKER = new Meta({
 
 	supportedPatches: {
 		from: '7.0',
-		to: '7.3',
+		to: '7.4',
 	},
 
 	contributors: [

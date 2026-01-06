@@ -1,5 +1,6 @@
 import {iconUrl} from 'data/icon'
 import {ensureStatuses} from '../type'
+import {SHARED} from './SHARED'
 
 export const GNB = ensureStatuses({
 	SONIC_BREAK: {
@@ -122,4 +123,5 @@ export const GNB = ensureStatuses({
 		icon: iconUrl(213606),
 		duration: 8000,
 	},
+	BLOODFEST: SHARED.UNKNOWN,
 })

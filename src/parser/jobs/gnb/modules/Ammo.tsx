@@ -17,7 +17,10 @@ const LEFTOVER_AMMO_SEVERITY_TIERS = {
 }
 
 const MAX_AMMO = 3
-let DoubleDownCost = 1
+const BLOODFEST_AMMO_CAP = 6 // x2 normal cap during Bloodfest
+const DOUBLE_DOWN_COST_7_2_AND_7_3 = 1
+
+const DOUBLE_DOWN_PRE_7_1 = 2 // also 7.4 and beyond!
 
 export class Ammo extends CoreGauge {
 	static override handle = 'ammo'
@@ -36,8 +39,7 @@ export class Ammo extends CoreGauge {
 		},
 	}))
 
-	// Used for Checklist as CounterGauge seems to lack total tracking at this time.
-	private totalGeneratedAmmo = 0
+	private lostAmmoDroppedAfterBloodfest = 0 // Tracks ammo dropped by being over the regular cap when bloodfest ends.
 
 	private ammoModifiers = new Map<number, GaugeModifier>([
 		//Builders. Well more of loaders
@@ -48,18 +50,51 @@ export class Ammo extends CoreGauge {
 		[this.data.actions.BURST_STRIKE.id, {action: -1}],
 		[this.data.actions.FATED_CIRCLE.id, {action: -1}],
 		[this.data.actions.GNASHING_FANG.id, {action: -1}],
-		[this.data.actions.DOUBLE_DOWN.id, {action: -DoubleDownCost}],
+		[this.data.actions.DOUBLE_DOWN.id, {action: -DOUBLE_DOWN_COST_7_2_AND_7_3}],
 
 	])
 
 	override initialise() {
 		super.initialise()
 
-		if (this.parser.patch.before('7.1')) {
-			DoubleDownCost = 2
+		if (this.parser.patch.before('7.1') || this.parser.patch.after('7.3')) {
+			this.ammoModifiers.set(this.data.actions.DOUBLE_DOWN.id, {action: -DOUBLE_DOWN_PRE_7_1})
+		}
+		if (this.parser.patch.after('7.3')) {
+			this.ammoModifiers.delete(this.data.actions.BLOODFEST.id)
 		}
 
 		const ammoActions = Array.from(this.ammoModifiers.keys())
+
+		if (this.parser.patch.before('7.4')) {
+			this.addEventHook(
+				filter<Event>()
+					.source(this.parser.actor.id)
+					.type('action')
+					.action(this.data.actions.BLOODFEST.id),
+				() => {
+					this.ammoGauge.modify(MAX_AMMO)
+				},
+			)
+		}
+
+		// 7.4 onwards, Bloodfest applies a status that increases the ammo cap by x2.
+		if (this.parser.patch.after('7.3')) {
+			this.addEventHook(
+				filter<Event>()
+					.source(this.parser.actor.id)
+					.type('statusApply')
+					.status(this.data.statuses.BLOODFEST.id),
+				this.onBloodfestApply,
+			)
+			this.addEventHook(
+				filter<Event>()
+					.source(this.parser.actor.id)
+					.type('statusRemove')
+					.status(this.data.statuses.BLOODFEST.id),
+				this.onBloodfestRemove,
+			)
+		}
 
 		this.addEventHook(
 			filter<Event>()
@@ -71,16 +106,24 @@ export class Ammo extends CoreGauge {
 
 		this.addEventHook('complete', this.onComplete)
 	}
+	private onBloodfestApply() {
+		this.ammoGauge.setMaximum(BLOODFEST_AMMO_CAP)
+		// Based on test logs, Bloodfest status and ammo gain comes from the status apply.
+		// This causes ammo to not properly be added when processed on bloodfest cast.
+		this.ammoGauge.modify(MAX_AMMO)
+	}
+	private onBloodfestRemove() {
+		const droppedOverloadAmmo = this.ammoGauge.value - MAX_AMMO
+		if (droppedOverloadAmmo > 0) {
+			this.lostAmmoDroppedAfterBloodfest += droppedOverloadAmmo
+		}
+		this.ammoGauge.setMaximum(MAX_AMMO)
+	}
 
 	private onGaugeModifier(event: Events['action' | 'combo']) {
 		const modifier = this.ammoModifiers.get(event.action)
-
 		if (modifier != null) {
 			const amount = modifier[event.type] ?? 0
-
-			if (amount > 0) {
-				this.totalGeneratedAmmo += amount //Increment total tracker for generated ammo
-			}
 			this.ammoGauge.modify(amount)
 		}
 	}
@@ -97,6 +140,18 @@ export class Ammo extends CoreGauge {
 			tiers: LEFTOVER_AMMO_SEVERITY_TIERS,
 			value: this.ammoGauge.value,
 		}))
+		this.suggestions.add(new TieredSuggestion({
+			icon: this.data.actions.BLOODFEST.icon,
+			content: <Trans id="gnb.ammo.overload-ammo-drop.content">
+				During <ActionLink action="BLOODFEST"/>, you can store up to {BLOODFEST_AMMO_CAP} cartridges. However once <ActionLink action="BLOODFEST"/> ends, any cartridges over {MAX_AMMO} are lost.
+				Make sure that you have no more than {MAX_AMMO} cartridges when <ActionLink action="BLOODFEST"/> is about to expire to avoid losing cartridges.
+			</Trans>,
+			why: <Trans id="gnb.ammo.overload-ammo-drop.why">
+				You lost <Plural value={this.lostAmmoDroppedAfterBloodfest} one="# cartridge" other="# cartridges"/> by being over {MAX_AMMO} when <ActionLink action="BLOODFEST"/> expires.
+			</Trans>,
+			tiers: LEFTOVER_AMMO_SEVERITY_TIERS,
+			value: this.lostAmmoDroppedAfterBloodfest,
+		}))
 
 		this.checklist.add(new Rule({
 			name: <Trans id="gnb.ammo.usage.title">Cartridge usage</Trans>,
@@ -110,8 +165,8 @@ export class Ammo extends CoreGauge {
 					name: <Trans id="gnb.ammo.checklist.requirement.waste.name">
 						Use as many of your loaded cartridges as possible
 					</Trans>,
-					value: this.totalGeneratedAmmo - this.ammoGauge.overCap,
-					target: this.totalGeneratedAmmo,
+					value: this.ammoGauge.totalSpent,
+					target: this.ammoGauge.totalGenerated,
 				}),
 			],
 		}))

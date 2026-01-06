@@ -12,8 +12,11 @@ import {DISPLAY_ORDER} from 'parser/jobs/rdm/modules/DISPLAY_ORDER'
 
 const ONLY_SHOW: ActionKey[] = [
 	'ENCHANTED_RIPOSTE',
+	'MANAFICATION_ENCHANTED_RIPOSTE',
 	'ENCHANTED_ZWERCHHAU',
+	'MANAFICATION_ENCHANTED_ZWERCHHAU',
 	'ENCHANTED_REDOUBLEMENT',
+	'MANAFICATION_ENCHANTED_REDOUBLEMENT',
 	'ENCHANTED_MOULINET',
 	'ENCHANTED_MOULINET_DEUX',
 	'ENCHANTED_MOULINET_TROIS',
@@ -48,6 +51,10 @@ export class Manafication extends BuffWindow {
 	override endOfWindowHandlingMode: EndOfWindowHandlingMode = 'SAME-TIMESTAMP'
 
 	override initialise() {
+		//This now only applies to 7.0 to 7.3.x.  As such if we're 7.4 and higher we need to return.
+		if (this.parser.patch.after("7.3")) {
+			return
+		}
 		super.initialise()
 
 		this.trackOnlyActions(ONLY_SHOW.map(k => this.data.actions[k].id))
@@ -75,8 +82,11 @@ export class Manafication extends BuffWindow {
 				allowedGcds: [
 					// Single Target
 					this.data.actions.ENCHANTED_RIPOSTE.id,
+					this.data.actions.MANAFICATION_ENCHANTED_RIPOSTE.id,
 					this.data.actions.ENCHANTED_ZWERCHHAU.id,
+					this.data.actions.MANAFICATION_ENCHANTED_ZWERCHHAU.id,
 					this.data.actions.ENCHANTED_REDOUBLEMENT.id,
+					this.data.actions.MANAFICATION_ENCHANTED_REDOUBLEMENT.id,
 
 					// AoE
 					this.data.actions.ENCHANTED_MOULINET.id,

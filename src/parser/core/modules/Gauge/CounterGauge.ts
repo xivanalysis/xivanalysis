@@ -144,7 +144,9 @@ export class CounterGauge extends AbstractGauge {
 
 	/** Modify the current value by the provided amount. Equivalent to `set(currentValue + amount)` */
 	modify(amount: number) {
-		this.set(this.currentValue + amount)
+		if (amount !== 0) {
+			this.set(this.currentValue + amount)
+		}
 	}
 
 	/** Increase the current value by the provided amount. */
@@ -240,6 +242,7 @@ export class CounterGauge extends AbstractGauge {
 			delta,
 			overcapped,
 			reason,
+
 		})
 	}
 

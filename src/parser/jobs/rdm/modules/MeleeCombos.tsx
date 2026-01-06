@@ -192,7 +192,9 @@ export class MeleeCombos extends Analyser {
 			*/
 			if (action.id === this.data.actions.MANAFICATION.id &&
 				//Since we now have an actual factual AE Combo, check for either the Single Target or AE Target final hit here.
-				current && (current.data.lastAction.action === this.data.actions.ENCHANTED_REDOUBLEMENT.id || current.data.lastAction.action === this.data.actions.ENCHANTED_MOULINET_TROIS.id)) {
+				current && (current.data.lastAction.action === this.data.actions.ENCHANTED_REDOUBLEMENT.id
+					|| current.data.lastAction.action === this.data.actions.MANAFICATION_ENCHANTED_REDOUBLEMENT.id
+					|| current.data.lastAction.action === this.data.actions.ENCHANTED_MOULINET_TROIS.id)) {
 				return
 			}
 			this.breakComboIfExists(event.timestamp)

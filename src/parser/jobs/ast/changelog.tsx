@@ -3,6 +3,11 @@ import {CONTRIBUTORS} from 'data/CONTRIBUTORS'
 
 export const changelog = [
 	{
+		date: new Date('2025-12-18'),
+		Changes: () => <>Removed the non-mit, non-heal portion of <DataLink status="COLLECTIVE_UNCONSCIOUS" /> from overhealing.</>,
+		contributors: [CONTRIBUTORS.OTOCEPHALY],
+	},
+	{
 		date: new Date('2025-04-20'),
 		Changes: () => <>Move Lightspeed and Swiftcast usage/cooldown availability information from Defensives to Utilities, and add Lucid Dreaming.</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],

@@ -15,7 +15,7 @@ export const CORE = new Meta({
 	// Read `docs/patch-checklist.md` before editing the following values.
 	supportedPatches: {
 		from: '7.0',
-		to: '7.3',
+		to: '7.4',
 	},
 })
 

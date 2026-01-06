@@ -268,7 +268,10 @@ export const UNABLE_TO_ACT_STATUS_IDS = [
 	4513, // Now Boarding (lockControl)
 	4515, //  (lockActions)
 	4537, // Stone Curse (lockActions)
+	4568, // Sum of All Sins (lockActions, lockControl)
 	4578, // Fetters (lockActions, lockControl)
 	4618, // Standing Firm (lockActions, lockControl)
 	4619, //  (lockActions, lockControl)
+	5058, // Stone Curse (lockActions)
+	5174, // Forced March (lockActions)
 ]

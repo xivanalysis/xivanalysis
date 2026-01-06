@@ -7,6 +7,7 @@ import {HistoryEntry} from 'parser/core/modules/ActionWindow/History'
 import {GlobalCooldown} from 'parser/core/modules/GlobalCooldown'
 import {SEVERITY} from 'parser/core/modules/Suggestions'
 import {DISPLAY_ORDER} from 'parser/jobs/gnb/modules/DISPLAY_ORDER'
+import {Message} from 'semantic-ui-react'
 
 const SEVERITIES = {
 	MISSING_EXPECTED_USES: {
@@ -70,6 +71,36 @@ export class NoMercy extends BuffWindow {
 	@dependency globalCooldown!: GlobalCooldown
 
 	override buffStatus = this.data.statuses.NO_MERCY
+
+	override prependMessages = <Message info>
+		<p>
+			<Trans id="gnb.nomercy.prepend-message.intro">
+				Gunbreaker has a small dps optimization technique that can be done by using the extra charge of <ActionLink action="GNASHING_FANG"/> from the half minute of your rotation in order to enter <ActionLink action="NO_MERCY"/> at the following times:
+			</Trans>
+		</p>
+		<ul>
+			<li>
+				<Trans id="gnb.nomercy.prepend-message.slow-gcd">
+					If you are running at a slower GCD (2.47 or slower), you will only do 8 GCDs under <ActionLink action="NO_MERCY"/> so you will use <ActionLink action="NO_MERCY"/> right before a <ActionLink action="CONTINUATION"/>, ideally <ActionLink action="EYE_GOUGE"/>.
+				</Trans>
+			</li>
+			<li>
+				<Trans id="gnb.nomercy.prepend-message.fast-gcd">
+					If you are running at a faster GCD (2.46 or faster), you will do a full 9 GCDs under <ActionLink action="NO_MERCY"/> so you will use <ActionLink action="NO_MERCY"/> right before a weaponskill in the combo and its follow up <ActionLink action = "CONTINUATION"/>, ideally <ActionLink action="WICKED_TALON"/>.
+				</Trans>
+			</li>
+		</ul>
+		<p>
+			<Trans id="gnb.nomercy.prepend-message.infographic">
+				Please see the rotation infographic by Krom at the top of this page for more information.
+			</Trans>
+		</p>
+		<p>
+			<Trans id="gnb.nomercy.prepend-message.disclaimer">
+				This technique is not always possible or correct in the event that <ActionLink action="NO_MERCY"/> is interrupted, and as such the <ActionLink action="NO_MERCY"/> module does not expect it, but this technique should be used whenever you can.
+			</Trans>
+		</p>
+	</Message>
 
 	override initialise() {
 		super.initialise()
@@ -139,7 +170,9 @@ export class NoMercy extends BuffWindow {
 			adjustCount: this.adjustExpectedActionCount.bind(this),
 		}))
 
-		this.addEvaluator(new BloodfestEvaluator(this.data.actions.BLOODFEST.id))
+		if (this.parser.patch.before('7.3')) { // As of patch 7.4, Every Burst Window should have Bloodfest used in it.
+			this.addEvaluator(new BloodfestEvaluator(this.data.actions.BLOODFEST.id))
+		}
 	}
 
 	private adjustExpectedActionCount(window: HistoryEntry<EvaluatedAction[]>, action: TrackedAction) {
@@ -164,20 +197,24 @@ export class NoMercy extends BuffWindow {
 				}
 			}
 
-			//LionHeart Adjusts in 2 ways:
-			// 1. If Bloodfest is used, Lion Heart is expected
-			// 2. If Lion Heart is used, Lion Heart is expected, this is an edge case where Bloodfest was used before No Mercy.
-			if (action.action.id === this.data.actions.LION_HEART.id) {
-				if (window.data.find(cast => cast.action.id === this.data.actions.BLOODFEST.id)) {
-					return 1
+			if (this.parser.patch.before('7.4')) {
+				//LionHeart Adjusts in 2 ways:
+				// 1. If Bloodfest is used, Lion Heart is expected
+				// 2. If Lion Heart is used, Lion Heart is expected, this is an edge case where Bloodfest was used before No Mercy.
+				if (action.action.id === this.data.actions.LION_HEART.id) {
+					if (window.data.find(cast => cast.action.id === this.data.actions.BLOODFEST.id)) {
+						return 1
+					}
+					if ((window.data.find(cast => cast.action.id !== this.data.actions.BLOODFEST.id)) && window.data.find(cast => cast.action.id === this.data.actions.LION_HEART.id)) {
+						return 1
+					}
 				}
-				if ((window.data.find(cast => cast.action.id !== this.data.actions.BLOODFEST.id)) && window.data.find(cast => cast.action.id === this.data.actions.LION_HEART.id)) {
-					return 1
-				}
+				//Adjust nothing else besides Lion Heart and Gnashing Fang
+				if (action.action.id !== this.data.actions.LION_HEART.id) { return 0 }
+			} else if (action.action.id === this.data.actions.LION_HEART.id) {
+				// Post 7.4, Lion Heart is always expected in a No Mercy window.
+				return 1
 			}
-			//Adjust nothing else besides Lion Heart and Gnashing Fang
-			if (action.action.id !== this.data.actions.LION_HEART.id) { return 0 }
-
 		}
 
 		return 0
