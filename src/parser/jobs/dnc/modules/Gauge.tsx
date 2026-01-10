@@ -151,8 +151,11 @@ export class Gauge extends CoreGauge {
 
 		this.addEventHook('complete', this.onComplete)
 
+		// Temporarily disable gauge event logging for 7.4 and forwards due to an event format update from ACT/fflogs, until I have time to figure out how to deal with it...
+		if (this.parser.patch.before('7.4')) {
 		// right now only the logging player has gauge update events, but in case that changes, narrow this to only the parsing actor
-		this.addEventHook(filter<Event>().actor(this.parser.actor.id).type('gaugeUpdate'), this.handleLoggedGauge)
+			this.addEventHook(filter<Event>().actor(this.parser.actor.id).type('gaugeUpdate'), this.handleLoggedGauge)
+		}
 	}
 
 	private handleLoggedGauge(event: Events['gaugeUpdate']) {
