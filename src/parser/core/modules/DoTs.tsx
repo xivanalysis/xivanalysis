@@ -11,10 +11,11 @@ import {Data} from 'parser/core/modules/Data'
 import {Invulnerability} from 'parser/core/modules/Invulnerability'
 import {Statuses} from 'parser/core/modules/Statuses'
 import {ReactNode} from 'react'
-import {Button, Message, Table} from 'semantic-ui-react'
+import {Button, Icon, Message, Table} from 'semantic-ui-react'
 import {Timeline} from './Timeline'
 
 const MILLISECONDS_PER_MINUTE = 60000
+const TIMELINE_EITHER_SIDE = 15000
 
 type DotTracking = Map<Status['id'], Map<Actor['id'], DotTargetTracking>>
 interface DotTargetTracking {
@@ -75,6 +76,18 @@ export abstract class DoTs extends Analyser {
 	protected excludeApplication() {
 		return false
 	}
+
+	/**
+	 * Implementing modules can optionally set this to change the amount of time a DoT application needs
+	 * to lose to the target being invulnerable before it appears in the module's output.
+	 */
+	protected defaultInvulnWarningDuration: number = 0
+
+	/**
+	 * Implementing modules can optionally add data to this object to control the invulnerable reporting
+	 * threshold individually per status effect (for example, BLM with two different DoT potencies/durations)
+	 */
+	protected statusInvulnWarningDuration: {[key: Status['id']]: number} = {}
 
 	private onApply(event: Events['statusApply']) {
 		// Cannot track for statuses that are not defined with a duration
@@ -153,9 +166,23 @@ export abstract class DoTs extends Analyser {
 		const statusApplications = this.statusApplications.get(statusId)
 		if (statusApplications == null) { return 0 }
 
-		const totalClipping = Array.from(statusApplications.values()).reduce((clip, target) => clip + target.totalClipping, 0)
-		const clipMSPerMin = Math.round(totalClipping / (fightDuration / MILLISECONDS_PER_MINUTE))
-		return clipMSPerMin
+		const clippingAmount = Array.from(statusApplications.keys()).reduce((clip, actorId) => {
+			const actorStatusApplications = statusApplications.get(actorId)
+			if (actorStatusApplications == null) { return clip }
+
+			const actorDuration = this.parser.pull.duration - this.invulnerability.getDuration({types: ['invulnerable'], actorFilter: actor => actor.id === actorId})
+			const actorClipMSPerMin = Math.round(actorStatusApplications.totalClipping / (actorDuration / MILLISECONDS_PER_MINUTE))
+
+			clip += actorClipMSPerMin
+			return clip
+		}, 0)
+
+		return clippingAmount
+	}
+
+	private invulnExceedsThresholdForStatus(statusId: Status['id'], invulnTime: number): boolean {
+		const statusThreshold = this.statusInvulnWarningDuration[statusId] ?? this.defaultInvulnWarningDuration
+		return invulnTime > statusThreshold
 	}
 
 	override output(): ReactNode {
@@ -180,6 +207,7 @@ export abstract class DoTs extends Analyser {
 					 * - The status falling off
 					 * - The status getting overwritten
 					 * - The end of the fight
+					 * Note that this doesn't yet work well with BLM's mutually-exclusive DoTs but it's close enough
 					 */
 					const effectiveEndTime = Math.min(
 						applicationTimestamp + this.statusDurationCache[statusId],
@@ -193,7 +221,7 @@ export abstract class DoTs extends Analyser {
 						end: effectiveEndTime,
 						actorFilter: actor => actor.id === actorId,
 					})
-					if (applicationInvuln > 0) {
+					if (this.invulnExceedsThresholdForStatus(statusId, applicationInvuln)) {
 						invulnApplications.push({
 							timestamp: applicationTimestamp,
 							statusId,
@@ -208,8 +236,13 @@ export abstract class DoTs extends Analyser {
 		if (invulnApplications.length === 0) { return }
 
 		return <>
-			<Message>
-				Something here about not applying when invuln is coming
+			<Message icon warning>
+				<Icon name="warning" />
+				<Message.Content>
+					<Trans id="core.dots.header.content">Targets will not take damage from DoTs while they're invulnerable, so those GCDs may be better used on direct damage attacks.</Trans>
+					<br/>
+					<Trans id="core.dots.header.sub-content">Even if it results in less total uptime, consider skipping the DoT applications listed below.</Trans>
+				</Message.Content>
 			</Message>
 			<Table compact unstackable celled collapsing>
 				<Table.Header>
@@ -232,7 +265,7 @@ export abstract class DoTs extends Analyser {
 										compact
 										size="mini"
 										icon="time"
-										onClick={() => this.timeline.show(application.timestamp - this.parser.pull.timestamp - 15000, application.timestamp - this.parser.pull.timestamp + 15000)}
+										onClick={() => this.timeline.show(application.timestamp - this.parser.pull.timestamp - TIMELINE_EITHER_SIDE, application.timestamp - this.parser.pull.timestamp + TIMELINE_EITHER_SIDE)}
 									/>
 								</Table.Cell>
 								<Table.Cell>
