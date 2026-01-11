@@ -9,6 +9,11 @@ export const changelog: ChangelogEntry[] = [
 	// 	contributors: [CONTRIBUTORS.YOU],
 	// },
 	{
+		date: new Date('2026-01-11'),
+		Changes: () => <>Improve DoT uptime calculations for multi-target fights.</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
+	{
 		date: new Date('2025-12-30'),
 		Changes: () => <>Fixed invulnerability checks for Doomtrain Extreme to ensure correct DoT uptime calculations.</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],
