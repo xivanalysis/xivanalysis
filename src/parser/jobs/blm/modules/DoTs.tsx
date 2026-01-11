@@ -23,6 +23,7 @@ export class DoTs extends CoreDoTs {
 
 	protected override trackedStatuses = [
 		this.thunderStatusId,
+		this.data.statuses.HIGH_THUNDER_II.id,
 	]
 
 	protected override addChecklistRules() {
@@ -35,7 +36,7 @@ export class DoTs extends CoreDoTs {
 			requirements: [
 				new Requirement({
 					name: THUNDER_REQUIREMENT_NAME,
-					percent: this.getUptimePercent(this.thunderStatusId),
+					percent: this.getUptimePercent(this.thunderStatusId) + this.getUptimePercent(this.data.statuses.HIGH_THUNDER_II.id),
 				}),
 			],
 		}))
@@ -45,7 +46,7 @@ export class DoTs extends CoreDoTs {
 		// Only tracking Thunder by way of DoTs override in 7.2+
 		if (this.parser.patch.before('7.2')) { return }
 
-		const clipPerMinute = this.getClippingAmount(this.thunderStatusId)
+		const clipPerMinute = this.getClippingAmount(this.thunderStatusId) + this.getClippingAmount(this.data.statuses.HIGH_THUNDER_II.id)
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.HIGH_THUNDER.icon,
 			content: <Trans id="blm.dots.suggestion.clip.content">
