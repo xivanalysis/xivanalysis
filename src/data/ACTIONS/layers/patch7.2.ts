@@ -68,5 +68,12 @@ export const patch720: Layer<ActionRoot> = {
 		FREEZE: {
 			castTime: 2000,
 		},
+
+		LADONSBITE: {
+			potency: 140,
+		},
+		SHADOWBITE: {
+			potency: 180,
+		},
 	},
 }

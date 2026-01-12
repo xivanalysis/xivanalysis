@@ -160,6 +160,20 @@ export abstract class Utilities extends Analyser {
 		</>
 	}
 
+	/**
+	 * Determine if a given utility cooldown was freely available to use at a given timestamp, without interference
+	 * with other logged uses
+	 * @param action The utility action in question
+	 * @param timestamp The timestamp at which to check if there was a spare charge available
+	 * @returns True if the cooldown could be used without interfering with logged uses. False if not, or if the cooldown isn't being tracked
+	 */
+	public usageAvailableAtTimestamp(action: Action, timestamp: number = this.parser.pull.timestamp): boolean {
+		if (!this.trackedActions.includes(action)) { return false }
+		const lastUse = this.getGroupUses(action).findLast(historyEntry => historyEntry.start < timestamp)
+		const additionalUsageData = this.getAdditionalUsageData(action, lastUse?.start)
+		return additionalUsageData.availableTimestamp < timestamp
+	}
+
 	private getAdditionalUsageData(action: Action, timestamp: number = this.parser.pull.timestamp): {chargesBeforeNextUse: number, availableTimestamp: number, useByTimestamp: number} {
 		let availableTimestamp: number, currentCharges
 

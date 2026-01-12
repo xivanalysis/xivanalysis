@@ -5,6 +5,7 @@ import {CastTime} from './CastTime'
 import {Defensives} from './Defensives'
 import {DoTs} from './DoTs'
 import {Gauge} from './Gauge'
+import {HotBlizzard3Info} from './HotBlizzard3Info'
 import {Leylines} from './Leylines'
 import {OGCDDowntime} from './OGCDDowntime'
 import {Procs} from './Procs'
@@ -22,6 +23,7 @@ export const modules = [
 	CastTime,
 	Defensives,
 	Gauge,
+	HotBlizzard3Info,
 	Tincture,
 	Leylines,
 	OGCDDowntime,
