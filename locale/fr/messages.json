@@ -305,7 +305,7 @@
   "core.always-cast.header.sub-content": "",
   "core.always-cast.header.weaving": "",
   "core.always-cast.info-header": "",
-  "core.always-cast.timestamp-header": "",
+  "core.always-cast.timestamp-header": "Temps",
   "core.always-cast.title": "Soyez toujours en train de lançer vos sorts",
   "core.analyse.see-more": "Voir plus",
   "core.aoeusages.aoe-ability": "Action AoE Utilisée",

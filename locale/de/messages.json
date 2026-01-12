@@ -305,7 +305,7 @@
   "core.always-cast.header.sub-content": "",
   "core.always-cast.header.weaving": "",
   "core.always-cast.info-header": "",
-  "core.always-cast.timestamp-header": "",
+  "core.always-cast.timestamp-header": "Zeit",
   "core.always-cast.title": "Mach immer etwas",
   "core.analyse.see-more": "Siehe mehr",
   "core.aoeusages.aoe-ability": "AoE-Aktionen benutzt",
