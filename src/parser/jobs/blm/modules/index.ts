@@ -1,4 +1,3 @@
-import {Interrupts} from 'parser/core/modules/Interrupts'
 import {Tincture} from 'parser/core/modules/Tincture'
 import {ActionTimeline} from './ActionTimeline'
 import {AoEUsages} from './AoEUsages'
@@ -8,7 +7,6 @@ import {DoTs} from './DoTs'
 import {Gauge} from './Gauge'
 import {HotBlizzard3Info} from './HotBlizzard3Info'
 import {Leylines} from './Leylines'
-import {NotCasting} from './NotCasting'
 import {OGCDDowntime} from './OGCDDowntime'
 import {Procs} from './Procs'
 import {RotationWatchdog} from './RotationWatchdog'
@@ -26,10 +24,8 @@ export const modules = [
 	Defensives,
 	Gauge,
 	HotBlizzard3Info,
-	Interrupts,
 	Tincture,
 	Leylines,
-	NotCasting,
 	OGCDDowntime,
 	Procs,
 	RotationWatchdog,

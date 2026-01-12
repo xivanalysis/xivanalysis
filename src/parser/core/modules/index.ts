@@ -1,7 +1,9 @@
 import {About} from './About'
 import {ActionTimeline} from './ActionTimeline'
 import {Actors} from './Actors'
-import {AlwaysBeCasting} from './AlwaysBeCasting'
+import {AlwaysBeCasting} from './AlwaysBeCasting/AlwaysBeCasting'
+import {Interrupts} from './AlwaysBeCasting/Interrupts'
+import {Weaving} from './AlwaysBeCasting/Weaving'
 import {BrokenLog} from './BrokenLog'
 import {CastTime} from './CastTime'
 import {ChangeLog} from './ChangeLog'
@@ -28,7 +30,6 @@ import {StatusTimeline} from './StatusTimeline'
 import {Suggestions} from './Suggestions'
 import {Timeline} from './Timeline'
 import {UnableToAct} from './UnableToAct'
-import {Weaving} from './Weaving'
 
 export const modules = [
 	About,
@@ -49,6 +50,7 @@ export const modules = [
 	EventsView,
 	GlobalCooldown,
 	Hijinks,
+	Interrupts,
 	InvalidEvent,
 	Invulnerability,
 	Medicated,

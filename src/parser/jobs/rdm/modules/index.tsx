@@ -1,4 +1,3 @@
-import {AlwaysBeCasting} from 'parser/core/modules/AlwaysBeCasting'
 import {Tincture} from 'parser/core/modules/Tincture'
 import {CastTime} from './CastTime'
 import {Combos} from './Combos'
@@ -17,12 +16,10 @@ import {Procs} from './Procs'
 import {Swiftcast} from './Swiftcast'
 import {Utilities} from './Utilities'
 import {ViceOfThorns} from './ViceOfThorns'
-import {Weaving} from './Weaving'
 
 export {DualStatistic} from 'parser/jobs/rdm/statistics/DualStatistic'
 
 export const modules = [
-	AlwaysBeCasting,
 	Embolden,
 	ManaGauge,
 	ManaStackGauge,
@@ -36,7 +33,6 @@ export const modules = [
 	MeleeCombos,
 	Tincture,
 	Swiftcast,
-	Weaving,
 	MagickedSwordplay,
 	Manafication,
 	Prefulgence,
