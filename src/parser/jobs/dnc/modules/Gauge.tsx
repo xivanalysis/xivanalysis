@@ -276,7 +276,7 @@ export class Gauge extends CoreGauge {
 
 	private onCastGenerator() {
 		// Make sure we keep track of overcap even with gauge update events
-		if (!this.parser.actor.loggedGauge || this.espritGauge.capped) {
+		if (!this.parser.actor.loggedGauge || this.featherGauge.capped) {
 			this.featherGauge.generate(FEATHER_GENERATION_CHANCE)
 		}
 	}
