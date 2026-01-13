@@ -1,4 +1,5 @@
 import * as Sentry from '@sentry/browser'
+import {Patch} from 'data/PATCHES'
 import {STATUS_ID_OFFSET} from 'data/STATUSES'
 import {Event, Events, Cause, SourceModifier, TargetModifier, AttributeValue, Attribute, EventGaugeUpdate} from 'event'
 import {Actor} from 'report'
@@ -478,12 +479,19 @@ export class TranslateAdapterStep extends AdapterStep {
 	}
 
 	private adaptDancerGaugeEvent(event: GaugeUpdateEvent): Event[] {
+		// Patch 7.4 shifted both Esprit and Feather's byte field offsets over by one
+		// Figure out which offsets we should load the data from based on the game edition and log timestamp (in seconds precision to match our patch date definitions)
+		const beforePatch74 = new Patch(this.report.edition, this.report.timestamp / 1000).before('7.4')
+
+		const espritByteFieldOffset = beforePatch74 ? BYTE_FIELD_OFFSETS.SECOND : BYTE_FIELD_OFFSETS.FIRST
+		const feathersByteFieldOffset = beforePatch74 ? BYTE_FIELD_OFFSETS.THIRD : BYTE_FIELD_OFFSETS.SECOND
+
 		const adaptedEvent: Events['gaugeUpdate'] = {
 			...this.adaptBaseFields(event),
 			actor: this.loggingActorId, // Relies on there being a combatant info event first...
 			type: 'gaugeUpdate',
-			esprit: numberFromHexBytes(event.data1, BYTE_FIELD_OFFSETS.SECOND),
-			feathers: numberFromHexBytes(event.data1, BYTE_FIELD_OFFSETS.THIRD),
+			esprit: numberFromHexBytes(event.data1, espritByteFieldOffset),
+			feathers: numberFromHexBytes(event.data1, feathersByteFieldOffset),
 		}
 		// Only return an adapted event if something we care about actually changed
 		if (this.lastGaugeUpdate == null ||
