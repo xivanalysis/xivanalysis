@@ -486,6 +486,22 @@ export class TranslateAdapterStep extends AdapterStep {
 		const espritByteFieldOffset = beforePatch74 ? BYTE_FIELD_OFFSETS.SECOND : BYTE_FIELD_OFFSETS.FIRST
 		const feathersByteFieldOffset = beforePatch74 ? BYTE_FIELD_OFFSETS.THIRD : BYTE_FIELD_OFFSETS.SECOND
 
+		/**
+		 * I ever want to do something with it:
+		 *
+		 * event.data2 is the order of steps required to successfully complete the current dance (standard or technical)
+		 * It looks something like "2040301" for Technical and "302" for Standard. I don't know if the order the player
+		 * is expected to execute them in is in descending or ascending byte order yet, will need to eyeball some logs
+		 * to figure out which.
+		 *
+		 * event.data3 is the number of correctly executed steps in the current dance (and will therefor correspond to which)
+		 * standard or technical finish gets executed if the finish button is pressed next.
+		 *
+		 * All of the above is pretty low priority because the finishes have different action Ids, so we can know whether they did it right
+		 * by the existing "did you get the right finish, and did you not press too many steps" checks, but if the dances get more
+		 * complicated in the future (intentional repeats?), this might be helpful.
+		 */
+
 		const adaptedEvent: Events['gaugeUpdate'] = {
 			...this.adaptBaseFields(event),
 			actor: this.loggingActorId, // Relies on there being a combatant info event first...
