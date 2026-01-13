@@ -1,8 +1,7 @@
 import {Trans} from '@lingui/react/macro'
 import {DataLink} from 'components/ui/DbLink'
+import {Weaving as CoreWeaving} from 'parser/core/modules/AlwaysBeCasting/Weaving'
 import {SEVERITY} from 'parser/core/modules/Suggestions'
-import {Weaving as CoreWeaving} from 'parser/core/modules/Weaving'
-import {DISPLAY_ORDER} from './DISPLAY_ORDER'
 
 const WEAVING_SEVERITY = {
 	1: SEVERITY.MINOR,
@@ -11,7 +10,6 @@ const WEAVING_SEVERITY = {
 }
 
 export class Weaving extends CoreWeaving {
-	static override displayOrder = DISPLAY_ORDER.WEAVING
 
 	override suggestionContent = <Trans id="sch.weaving.content">
 		Try to use <DataLink action="BROIL_IV" />, <DataLink action="SCH_RUIN_II" />, or <DataLink action="BIOLYSIS" /> to weave your actions, and avoid weaving more actions than you have time for in a single GCD window.

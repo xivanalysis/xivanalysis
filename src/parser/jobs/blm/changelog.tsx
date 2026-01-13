@@ -13,6 +13,16 @@ export const changelog = [
 		contributors: [CONTRIBUTORS.AKAIRYU],
 	},
 	{
+		date: new Date('2026-01-04'),
+		Changes: () => <>Fixed a bug with Ley Lines cast counting when two uses of Ley Lines were used consecutively.</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
+	{
+		date: new Date('2025-12-29'),
+		Changes: () => <>Add informational output about Blizzard III casts in Astral Fire.</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
+	{
 		date: new Date('2025-11-12'),
 		Changes: () => <>Fix issue with broken icons.</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],
@@ -24,7 +34,7 @@ export const changelog = [
 	},
 	{
 		date: new Date('2025-06-12'),
-		Changes: () => <>Minor revisions to lost Poloylot suggestion wording, for clarity.</>,
+		Changes: () => <>Minor revisions to lost Polyglot suggestion wording, for clarity.</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],
 	},
 	{

@@ -4,6 +4,7 @@ export enum DISPLAY_ORDER {
 	CHECKLIST = -30,
 	SUGGESTIONS = -20,
 	STATISTICS = -10,
+	ABC = -5,
 	// Module DO is 0-100
 	COMBOS = 110,
 	POSITIONALS = 120,

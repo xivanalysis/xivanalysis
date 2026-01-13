@@ -1,6 +1,6 @@
 import {ActionKey} from 'data/ACTIONS'
 import {dependency} from 'parser/core/Injectable'
-import {Weave, Weaving as CoreWeaving} from 'parser/core/modules/Weaving'
+import {Weave, Weaving as CoreWeaving} from 'parser/core/modules/AlwaysBeCasting/Weaving'
 import {FIRE_SPELLS, ICE_SPELLS} from './Elements'
 import {Gauge, ASTRAL_UMBRAL_MAX_STACKS} from './Gauge'
 

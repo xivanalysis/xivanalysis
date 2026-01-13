@@ -8,7 +8,7 @@ import {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import {assignErrorCode, getMetadataForWindow} from './EvaluatorUtilities'
 import {CycleMetadata, ROTATION_ERRORS} from './WatchdogConstants'
 
-export interface ColdF3EvaluatorOpts {
+export interface LukewarmF4EvaluatorOpts {
 	fire4Action: Action
 	metadataHistory: History<CycleMetadata>
 }
@@ -19,7 +19,7 @@ export class LukewarmF4Evaluator extends RulePassedEvaluator {
 
 	override header = undefined
 
-	constructor(opts: ColdF3EvaluatorOpts) {
+	constructor(opts: LukewarmF4EvaluatorOpts) {
 		super()
 
 		this.fire4Action = opts.fire4Action

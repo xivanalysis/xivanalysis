@@ -1,4 +1,3 @@
-import {Interrupts} from 'parser/core/modules/Interrupts'
 import {LucidDreaming} from 'parser/core/modules/LucidDreaming'
 import {ActionTimeline} from './ActionTimeline'
 import {AoEUsages} from './AoEUsages'
@@ -32,7 +31,6 @@ export const modules = [
 	EarthlyStar,
 	oGCDs,
 	Helios,
-	Interrupts,
 	Lightspeed,
 	LucidDreaming,
 	Macrocosmos,

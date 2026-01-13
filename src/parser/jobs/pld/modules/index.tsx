@@ -1,4 +1,3 @@
-import {Interrupts} from 'parser/core/modules/Interrupts'
 import {ActionTimeline} from './ActionTimeline'
 import {CastTime} from './CastTime'
 import {Combos} from './Combos'
@@ -19,7 +18,6 @@ export const modules = [
 	CooldownDowntime,
 	Defensives,
 	FightOrFlight,
-	Interrupts,
 	Gauge,
 	RoyalAuthority,
 	Requiescat,
