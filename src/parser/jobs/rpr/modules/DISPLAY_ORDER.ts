@@ -9,6 +9,4 @@ export const DISPLAY_ORDER = {
 	AOE: 50,
 	COMBOS: 51,
 	POSITIONALS: 52,
-	WEAVING: 53,
-	INTERRUPTS: 54,
 }

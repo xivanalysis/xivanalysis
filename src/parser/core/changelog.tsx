@@ -9,6 +9,16 @@ export const changelog: ChangelogEntry[] = [
 	// 	contributors: [CONTRIBUTORS.YOU],
 	// },
 	{
+		date: new Date('2026-01-01'),
+		Changes: () => <>Updated Always Be Casting as the one-stop-shop for reviewing why the GCD wasn't rolling. Contains a generalized version of BLM's Not Casting module, and the output of the Weaving and Interrupts modules.</>,
+		contributors: [CONTRIBUTORS.AKAIRYU, CONTRIBUTORS.OTOCEPHALY],
+	},
+	{
+		date: new Date('2025-12-30'),
+		Changes: () => <>Fixed invulnerability checks for Doomtrain Extreme to ensure correct DoT uptime calculations.</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
+	{
 		date: new Date('2025-02-12'),
 		Changes: () => <>Fixed an issue that caused AOE attacks to incorrectly report broken combos if they cleaved an invulnerable target.</>,
 		contributors: [CONTRIBUTORS.AZARIAH],

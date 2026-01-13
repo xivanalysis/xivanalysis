@@ -1,7 +1,7 @@
 import {Trans} from '@lingui/react/macro'
 import {ActionLink} from 'components/ui/DbLink'
 import {ACTIONS} from 'data/ACTIONS'
-import {Interrupts as CoreInterrupts} from 'parser/core/modules/Interrupts'
+import {Interrupts as CoreInterrupts} from 'parser/core/modules/AlwaysBeCasting/Interrupts'
 
 export class Interrupts extends CoreInterrupts {
 	override suggestionContent = <Trans id="sam.interrupts.suggestion.content">

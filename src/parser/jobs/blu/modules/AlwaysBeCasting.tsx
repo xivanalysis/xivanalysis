@@ -6,7 +6,7 @@ import {filter, oneOf} from 'parser/core/filter'
 import {dependency} from 'parser/core/Injectable'
 import {History} from 'parser/core/modules/ActionWindow/History'
 import {Actors} from 'parser/core/modules/Actors'
-import {AlwaysBeCasting as CoreAlwaysBeCasting} from 'parser/core/modules/AlwaysBeCasting'
+import {AlwaysBeCasting as CoreAlwaysBeCasting} from 'parser/core/modules/AlwaysBeCasting/AlwaysBeCasting'
 import {SimpleStatistic, Statistics} from 'parser/core/modules/Statistics'
 import {Suggestions, TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
@@ -149,8 +149,8 @@ export class AlwaysBeCasting extends CoreAlwaysBeCasting {
 		return uptime
 	}
 
-	override onComplete() {
-		super.onComplete()
+	override onComplete(event: Events['complete']) {
+		super.onComplete(event)
 
 		const endOfPullTimestamp = this.parser.pull.timestamp + this.parser.pull.duration
 		this.channelHistory.closeCurrent(endOfPullTimestamp)

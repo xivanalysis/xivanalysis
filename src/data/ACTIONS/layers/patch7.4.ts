@@ -11,5 +11,14 @@ export const patch740: Layer<ActionRoot> = {
 		BLOODFEST: {
 			cooldown: 60000,
 		},
+		APEX_ARROW: {
+			potency: 700,
+		},
+		BLAST_ARROW: {
+			potency: 700,
+		},
+		RADIANT_ENCORE: {
+			potency: [700, 800, 1100],
+		},
 	},
 }

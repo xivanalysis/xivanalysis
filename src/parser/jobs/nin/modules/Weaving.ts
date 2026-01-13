@@ -1,4 +1,4 @@
-import {Weaving as CoreWeaving, Weave} from 'parser/core/modules/Weaving'
+import {Weaving as CoreWeaving, Weave} from 'parser/core/modules/AlwaysBeCasting/Weaving'
 
 export class Weaving extends CoreWeaving {
 	override getMaxWeaves(weave: Weave) {

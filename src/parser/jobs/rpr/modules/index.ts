@@ -16,7 +16,6 @@ import {Positionals} from './Positionals'
 import {Procs} from './Procs'
 import {Reaver} from './Reaver'
 import {Tincture} from './Tincture'
-import {Weaving} from './Weaving'
 
 export const modules = [
 	ActionTimeline,
@@ -37,5 +36,4 @@ export const modules = [
 	Procs,
 	Reaver,
 	Tincture,
-	Weaving,
 ]

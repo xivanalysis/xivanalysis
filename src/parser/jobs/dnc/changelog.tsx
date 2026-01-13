@@ -8,6 +8,11 @@ export const changelog = [
 	// 	contributors: [CONTRIBUTORS.YOU],
 	// },
 	{
+		date: new Date('2026-01-10'),
+		Changes: () => <>Temporarily revert to gauge event simulation for Patch 7.4 logs, even for the log uploader, due to a data format change.</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
+	{
 		date: new Date('2025-01-11'),
 		Changes: () => <>Adjust Technical Finish window tracking to be less prescriptive about Last Dance and Saber Dance since they're equivalent potency.</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],
