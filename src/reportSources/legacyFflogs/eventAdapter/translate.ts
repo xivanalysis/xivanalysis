@@ -536,11 +536,16 @@ export class TranslateAdapterStep extends AdapterStep {
 	}
 
 	private adaptMonkGaugeEvent(event: GaugeUpdateEvent): Event[] {
+		// Patch 7.4 introduces a breaking change to the gauge format
+		const chakraBytes = this.beforePatch74
+			? BYTE_FIELD_OFFSETS.THIRD
+			: BYTE_FIELD_OFFSETS.SECOND
+
 		const adaptedEvent: Events['gaugeUpdate'] = {
 			...this.adaptBaseFields(event),
 			actor: this.loggingActorId, // Relies on there being a combatant info event first...
 			type: 'gaugeUpdate',
-			chakra: numberFromHexBytes(event.data1, BYTE_FIELD_OFFSETS.THIRD),
+			chakra: numberFromHexBytes(event.data1, chakraBytes),
 		}
 
 		// Only return an adapted event if something we care about actually changed
