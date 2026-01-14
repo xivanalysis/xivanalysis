@@ -71,6 +71,10 @@ export class TranslateAdapterStep extends AdapterStep {
 	private loggingActorId: Actor['id'] = ''
 	private lastGaugeUpdate: EventGaugeUpdate | undefined = undefined
 
+	// Patch 7.4 made some breaking changes to gauge event data
+	// Determine whether this log was affected based on the game edition and log timestamp (in seconds precision to match our patch date definitions)
+	private beforePatch74 = new Patch(this.report.edition, this.report.timestamp / 1000).before('7.4')
+
 	override adapt(baseEvent: FflogsEvent, _adaptedEvents: Event[]): Event[] {
 		switch (baseEvent.type) {
 		case 'begincast':
@@ -479,12 +483,33 @@ export class TranslateAdapterStep extends AdapterStep {
 	}
 
 	private adaptDancerGaugeEvent(event: GaugeUpdateEvent): Event[] {
+		// Patch 7.4 shifted both Esprit and Feather's byte field offsets over by one
+		// Figure out which offsets we should load the data from based on whether we're before or after that point
+		const espritByteFieldOffset = this.beforePatch74 ? BYTE_FIELD_OFFSETS.SECOND : BYTE_FIELD_OFFSETS.FIRST
+		const feathersByteFieldOffset = this.beforePatch74 ? BYTE_FIELD_OFFSETS.THIRD : BYTE_FIELD_OFFSETS.SECOND
+
+		/**
+		 * If I ever want to do something with it:
+		 *
+		 * event.data2 is the order of steps required to successfully complete the current dance (standard or technical)
+		 * It looks something like "2040301" for Technical and "302" for Standard. I don't know if the order the player
+		 * is expected to execute them in is in descending or ascending byte order yet, will need to eyeball some logs
+		 * to figure out which.
+		 *
+		 * event.data3 is the number of correctly executed steps in the current dance (and will therefor correspond to which)
+		 * standard or technical finish gets executed if the finish button is pressed next.
+		 *
+		 * All of the above is pretty low priority because the finishes have different action Ids, so we can know whether they did it right
+		 * by the existing "did you get the right finish, and did you not press too many steps" checks, but if the dances get more
+		 * complicated in the future (intentional repeats?), this might be helpful.
+		 */
+
 		const adaptedEvent: Events['gaugeUpdate'] = {
 			...this.adaptBaseFields(event),
 			actor: this.loggingActorId, // Relies on there being a combatant info event first...
 			type: 'gaugeUpdate',
-			esprit: numberFromHexBytes(event.data1, BYTE_FIELD_OFFSETS.SECOND),
-			feathers: numberFromHexBytes(event.data1, BYTE_FIELD_OFFSETS.THIRD),
+			esprit: numberFromHexBytes(event.data1, espritByteFieldOffset),
+			feathers: numberFromHexBytes(event.data1, feathersByteFieldOffset),
 		}
 		// Only return an adapted event if something we care about actually changed
 		if (this.lastGaugeUpdate == null ||

@@ -8,6 +8,11 @@ export const changelog = [
 	// 	contributors: [CONTRIBUTORS.YOU],
 	// },
 	{
+		date: new Date('2026-01-12'),
+		Changes: () => <>Fix Dancer gauge event translation, and return to using gauge events instead of gauge simulation for the log uploader.</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
+	{
 		date: new Date('2026-01-10'),
 		Changes: () => <>Temporarily revert to gauge event simulation for Patch 7.4 logs, even for the log uploader, due to a data format change.</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],
