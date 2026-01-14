@@ -3,6 +3,11 @@ import {CONTRIBUTORS} from 'data/CONTRIBUTORS'
 
 export const changelog = [
 	{
+		date: new Date('2026-01-13'),
+		Changes: () => <>Fix chakra gauge tracking for patch 7.4 logs</>,
+		contributors: [CONTRIBUTORS.HINT],
+	},
+	{
 		date: new Date('2025-04-11'),
 		Changes: () => <>Update Enlightenment target count for patch 7.2</>,
 		contributors: [CONTRIBUTORS.HINT],

@@ -1,4 +1,5 @@
 import * as Sentry from '@sentry/browser'
+import {Patch} from 'data/PATCHES'
 import {STATUS_ID_OFFSET} from 'data/STATUSES'
 import {Event, Events, Cause, SourceModifier, TargetModifier, AttributeValue, Attribute, EventGaugeUpdate} from 'event'
 import {Actor} from 'report'
@@ -510,11 +511,17 @@ export class TranslateAdapterStep extends AdapterStep {
 	}
 
 	private adaptMonkGaugeEvent(event: GaugeUpdateEvent): Event[] {
+		// Patch 7.4 introduces a breaking change to the gauge format
+		const isBeforePatch74 = new Patch(this.report.edition, this.report.timestamp / 1000).before('7.4')
+		const chakraBytes = isBeforePatch74
+			? BYTE_FIELD_OFFSETS.THIRD
+			: BYTE_FIELD_OFFSETS.SECOND
+
 		const adaptedEvent: Events['gaugeUpdate'] = {
 			...this.adaptBaseFields(event),
 			actor: this.loggingActorId, // Relies on there being a combatant info event first...
 			type: 'gaugeUpdate',
-			chakra: numberFromHexBytes(event.data1, BYTE_FIELD_OFFSETS.THIRD),
+			chakra: numberFromHexBytes(event.data1, chakraBytes),
 		}
 
 		// Only return an adapted event if something we care about actually changed
