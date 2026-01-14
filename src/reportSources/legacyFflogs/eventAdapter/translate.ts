@@ -537,8 +537,7 @@ export class TranslateAdapterStep extends AdapterStep {
 
 	private adaptMonkGaugeEvent(event: GaugeUpdateEvent): Event[] {
 		// Patch 7.4 introduces a breaking change to the gauge format
-		const isBeforePatch74 = new Patch(this.report.edition, this.report.timestamp / 1000).before('7.4')
-		const chakraBytes = isBeforePatch74
+		const chakraBytes = this.beforePatch74
 			? BYTE_FIELD_OFFSETS.THIRD
 			: BYTE_FIELD_OFFSETS.SECOND
 
