@@ -14,6 +14,11 @@ export const changelog: ChangelogEntry[] = [
 		contributors: [CONTRIBUTORS.AKAIRYU],
 	},
 	{
+		date: new Date('2026-01-01'),
+		Changes: () => <>Updated Always Be Casting as the one-stop-shop for reviewing why the GCD wasn't rolling. Contains a generalized version of BLM's Not Casting module, and the output of the Weaving and Interrupts modules.</>,
+		contributors: [CONTRIBUTORS.AKAIRYU, CONTRIBUTORS.OTOCEPHALY],
+	},
+	{
 		date: new Date('2025-12-30'),
 		Changes: () => <>Fixed invulnerability checks for Doomtrain Extreme to ensure correct DoT uptime calculations.</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],

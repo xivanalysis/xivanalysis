@@ -13,6 +13,16 @@ export const changelog = [
 		contributors: [CONTRIBUTORS.AKAIRYU],
 	},
 	{
+		date: new Date('2026-01-05'),
+		Changes: () => <>Add warning about casting Fire IV without having reached Astral Fire III.</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
+	{
+		date: new Date('2026-01-04'),
+		Changes: () => <>Fixed a bug with Ley Lines cast counting when two uses of Ley Lines were used consecutively.</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
+	{
 		date: new Date('2025-12-29'),
 		Changes: () => <>Add informational output about Blizzard III casts in Astral Fire.</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],

@@ -1,4 +1,3 @@
-import {Interrupts} from 'parser/core/modules/Interrupts'
 import {ActionTimeline} from './ActionTimeline'
 import {AoEUsages} from './AoEUsages'
 import {CooldownDowntime} from './CooldownDowntime'
@@ -19,7 +18,6 @@ export const modules = [
 	Defensives,
 	Gauge,
 	Inspiration,
-	Interrupts,
 	Procs,
 	StarryMuse,
 	Swiftcast,

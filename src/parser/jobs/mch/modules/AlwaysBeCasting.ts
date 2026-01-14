@@ -2,7 +2,7 @@ import {Action} from 'data/ACTIONS'
 import {Event, Events} from 'event'
 import {EventHook} from 'parser/core/Dispatcher'
 import {filter, noneOf} from 'parser/core/filter'
-import {AlwaysBeCasting as CoreAlwaysBeCasting} from 'parser/core/modules/AlwaysBeCasting'
+import {AlwaysBeCasting as CoreAlwaysBeCasting} from 'parser/core/modules/AlwaysBeCasting/AlwaysBeCasting'
 
 interface FlameWindow {
 	start: number

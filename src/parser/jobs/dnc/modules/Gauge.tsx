@@ -151,7 +151,6 @@ export class Gauge extends CoreGauge {
 
 		this.addEventHook('complete', this.onComplete)
 
-		// right now only the logging player has gauge update events, but in case that changes, narrow this to only the parsing actor
 		this.addEventHook(filter<Event>().actor(this.parser.actor.id).type('gaugeUpdate'), this.handleLoggedGauge)
 	}
 
@@ -277,7 +276,7 @@ export class Gauge extends CoreGauge {
 
 	private onCastGenerator() {
 		// Make sure we keep track of overcap even with gauge update events
-		if (!this.parser.actor.loggedGauge || this.espritGauge.capped) {
+		if (!this.parser.actor.loggedGauge || this.featherGauge.capped) {
 			this.featherGauge.generate(FEATHER_GENERATION_CHANCE)
 		}
 	}

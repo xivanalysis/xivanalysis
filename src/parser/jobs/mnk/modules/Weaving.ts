@@ -1,4 +1,4 @@
-import {Weaving as CoreWeaving, Weave} from 'parser/core/modules/Weaving'
+import {Weaving as CoreWeaving, Weave} from 'parser/core/modules/AlwaysBeCasting/Weaving'
 
 // Due to Greased Lightning, Monk frequently hits GCD speeds that make double
 // weaving without clipping really close to the wire, to the point implementation
