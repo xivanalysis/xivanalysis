@@ -12,9 +12,15 @@ import {Message} from 'semantic-ui-react'
 import {DISPLAY_ORDER} from './DISPLAY_ORDER'
 import {EsteemUsageEvaluator} from './EsteemUsageEvaluator'
 
+// We don't include Shadowstride since we only want to
+// validate that the damaging actions went off. Multiple
+// Shadowstrides isn't inherently an issue unless it
+// costs a damage action.
+// Shadowstride is left commented out to illustrate the
+// standard set of Esteem actions regardless.
 const ESTEEM_LEVEL_80: ActionKey[] = [
 	'ESTEEM_ABYSSAL_DRAIN',
-	'ESTEEM_SHADOWSTRIDE',
+	//'ESTEEM_SHADOWSTRIDE',
 	'ESTEEM_FLOOD_OF_SHADOW',
 	'ESTEEM_EDGE_OF_SHADOW',
 	'ESTEEM_BLOODSPILLER',
@@ -23,7 +29,7 @@ const ESTEEM_LEVEL_80: ActionKey[] = [
 
 const ESTEEM_LEVEL_90: ActionKey[] = [
 	'ESTEEM_ABYSSAL_DRAIN',
-	'ESTEEM_SHADOWSTRIDE',
+	//'ESTEEM_SHADOWSTRIDE',
 	'ESTEEM_SHADOWBRINGER',
 	'ESTEEM_EDGE_OF_SHADOW',
 	'ESTEEM_BLOODSPILLER',
@@ -32,7 +38,7 @@ const ESTEEM_LEVEL_90: ActionKey[] = [
 
 const ESTEEM_LEVEL_100: ActionKey[] = [
 	'ESTEEM_ABYSSAL_DRAIN',
-	'ESTEEM_SHADOWSTRIDE',
+	//'ESTEEM_SHADOWSTRIDE',
 	'ESTEEM_SHADOWBRINGER',
 	'ESTEEM_EDGE_OF_SHADOW',
 	'ESTEEM_BLOODSPILLER',
