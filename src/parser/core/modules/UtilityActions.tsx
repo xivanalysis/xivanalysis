@@ -171,7 +171,7 @@ export abstract class Utilities extends Analyser {
 		if (!this.trackedActions.includes(action)) { return false }
 		const lastUse = this.getGroupUses(action).findLast(historyEntry => historyEntry.start < timestamp)
 		const additionalUsageData = this.getAdditionalUsageData(action, lastUse?.start)
-		return additionalUsageData.availableTimestamp < timestamp
+		return additionalUsageData.chargesBeforeNextUse > 0
 	}
 
 	private getAdditionalUsageData(action: Action, timestamp: number = this.parser.pull.timestamp): {chargesBeforeNextUse: number, availableTimestamp: number, useByTimestamp: number} {

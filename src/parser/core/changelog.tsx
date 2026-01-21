@@ -9,6 +9,11 @@ export const changelog: ChangelogEntry[] = [
 	// 	contributors: [CONTRIBUTORS.YOU],
 	// },
 	{
+		date: new Date('2026-01-11'),
+		Changes: () => <>Improve DoT uptime calculations for multi-target fights.</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
+	{
 		date: new Date('2026-01-01'),
 		Changes: () => <>Updated Always Be Casting as the one-stop-shop for reviewing why the GCD wasn't rolling. Contains a generalized version of BLM's Not Casting module, and the output of the Weaving and Interrupts modules.</>,
 		contributors: [CONTRIBUTORS.AKAIRYU, CONTRIBUTORS.OTOCEPHALY],

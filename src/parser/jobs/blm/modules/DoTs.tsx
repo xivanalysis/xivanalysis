@@ -14,20 +14,34 @@ const SEVERITIES = {
 	},
 }
 
+// HT requires 21s of uptime to break even with F4
+const MINIMUM_THUNDER_UPTIME_ST = 21000
+// HT2 requires 15s of uptime to break even with F4
+const MINIMUM_THUNDER_UPTIME_AOE = 15000
+
 export class DoTs extends CoreDoTs {
 
 	@dependency private checklist!: Checklist
 	@dependency private suggestions!: Suggestions
 
-	private thunderStatusId = this.data.statuses.HIGH_THUNDER.id
-
 	protected override trackedStatuses = [
-		this.thunderStatusId,
+		this.data.statuses.HIGH_THUNDER.id,
+		this.data.statuses.HIGH_THUNDER_II.id,
 	]
+
+	override initialise(): void {
+		super.initialise()
+
+		this.statusInvulnWarningDuration[this.data.statuses.HIGH_THUNDER.id] = this.data.statuses.HIGH_THUNDER.duration - MINIMUM_THUNDER_UPTIME_ST
+		this.statusInvulnWarningDuration[this.data.statuses.HIGH_THUNDER_II.id] = this.data.statuses.HIGH_THUNDER_II.duration - MINIMUM_THUNDER_UPTIME_AOE
+	}
 
 	protected override addChecklistRules() {
 		// Only tracking Thunder by way of DoTs override in 7.2+
 		if (this.parser.patch.before('7.2')) { return }
+
+		// Since BLM's DoTs are mutually-exclusive, adding their uptime percentages together paints the full picture of either of their uptime
+		const cumulativeUptimePercent = this.getUptimePercent(this.data.statuses.HIGH_THUNDER.id) + this.getUptimePercent(this.data.statuses.HIGH_THUNDER_II.id)
 
 		this.checklist.add(new Rule({
 			name: THUNDER_CHECKLIST_NAME,
@@ -35,7 +49,7 @@ export class DoTs extends CoreDoTs {
 			requirements: [
 				new Requirement({
 					name: THUNDER_REQUIREMENT_NAME,
-					percent: this.getUptimePercent(this.thunderStatusId),
+					percent: cumulativeUptimePercent,
 				}),
 			],
 		}))
@@ -45,7 +59,10 @@ export class DoTs extends CoreDoTs {
 		// Only tracking Thunder by way of DoTs override in 7.2+
 		if (this.parser.patch.before('7.2')) { return }
 
-		const clipPerMinute = this.getClippingAmount(this.thunderStatusId)
+		// Technically, with how Core DoTs works, this only tracks clipping by refreshing the same status effect, not when switching between the two
+		// If I can ever make Core work with mutually-exclusive status effects and not have it devolve into insanity, we'll be ready for it here
+		const clipPerMinute = this.getClippingAmount(this.data.statuses.HIGH_THUNDER.id) + this.getClippingAmount(this.data.statuses.HIGH_THUNDER_II.id)
+
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.HIGH_THUNDER.icon,
 			content: <Trans id="blm.dots.suggestion.clip.content">

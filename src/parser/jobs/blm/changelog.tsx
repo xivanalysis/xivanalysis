@@ -8,6 +8,11 @@ export const changelog = [
 	// 	contributors: [CONTRIBUTORS.YOU],
 	// },
 	{
+		date: new Date('2026-01-11'),
+		Changes: () => <>Include High Thunder II in DoT uptime analysis, and small bugfix for instant cast availability in Hot Blizzard III information.</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
+	{
 		date: new Date('2026-01-05'),
 		Changes: () => <>Add warning about casting Fire IV without having reached Astral Fire III.</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],
