@@ -88,7 +88,7 @@ export class Weaving extends AlwaysBeCastingAnalyser {
 	private ongoingCastEvent?: Events['prepare']
 	private leadingGcdEvent: Events['action'] = this.pullStart
 	private trailingGcdEvent: Events['action'] = this.pullStart
-	private badWeaves: Weave[] = []
+	public badWeaves: Weave[] = []
 
 	override initialise() {
 		const playerFilter = filter<Event>().source(this.parser.actor.id)
