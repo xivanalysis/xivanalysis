@@ -248,6 +248,10 @@ export class AlwaysBeCasting extends AlwaysBeCastingAnalyser {
 			)
 			return duration === 0 && (windows.stop ?? windows.start) - windows.start > this.gcdLength + GCD_ERROR_OFFSET
 		})
+		// Filter out periods that duplicate detections from the weaving module
+		this.gcdDowntimeWindows.history = this.gcdDowntimeWindows.history.filter(window => {
+			return !this.weaving.badWeaves.some(badWeave => badWeave.leadingGcdEvent.action === window.leadingEvent.action && badWeave.leadingGcdEvent.timestamp === window.leadingEvent.timestamp)
+		})
 
 		if (this.gcdUptimeEvents.length === 0) {
 			return
@@ -279,13 +283,13 @@ export class AlwaysBeCasting extends AlwaysBeCastingAnalyser {
 				start: window.start - this.parser.pull.timestamp,
 				stop: (window.stop ?? window.start) - this.parser.pull.timestamp,
 				actionsContent: <Rotation events={[window.leadingEvent, ...window.trailingOgcds, window.trailingEvent].filter(event => event != null)} />,
-				infoContent: <>{this.parser.formatDuration((window.stop ?? window.start) - window.leadingEvent.timestamp)}&nbsp;<Trans id="core.weaving.between-gcds">between GCDs</Trans></>,
+				infoContent: <>{this.parser.formatDuration((window.stop ?? window.start) - window.leadingEvent.timestamp, 2)}&nbsp;<Trans id="core.weaving.between-gcds">between GCDs</Trans></>,
 			}
 		})
 	}
 
 	override getDelayPerIssue(downtime: GcdDowntimeWindow) {
-		return (downtime.stop ?? downtime.start) - downtime.start - this.gcdLength - GCD_ERROR_OFFSET
+		return (downtime.stop ?? downtime.start) - downtime.start - this.gcdLength
 	}
 
 	override getTotalDelay() {
@@ -307,7 +311,7 @@ export class AlwaysBeCasting extends AlwaysBeCastingAnalyser {
 					<br/>
 					<Trans id="core.always-cast.header.sub-content">These reports will help identify ways you can improve on your GCD uptime.</Trans>
 					<br/><br/>
-					Total time lost: {this.parser.formatDuration(filteredModules.reduce((acc, entry) => acc + entry.module.getTotalDelay(), 0))}
+					Total time lost: {this.parser.formatDuration(filteredModules.reduce((acc, entry) => acc + entry.module.getTotalDelay(), 2))}
 				</Message.Content>
 			</Message>
 			<Accordion exclusive={false}
@@ -322,7 +326,7 @@ export class AlwaysBeCasting extends AlwaysBeCastingAnalyser {
 						return {
 							key: moduleStatic.handle,
 							title: {
-								content: <>{title} - {this.parser.formatDuration(module.getTotalDelay())}</>,
+								content: <>{title} - {this.parser.formatDuration(module.getTotalDelay(), 2)}</>,
 							},
 							content: {
 								content: <>
@@ -356,7 +360,7 @@ export class AlwaysBeCasting extends AlwaysBeCastingAnalyser {
 																onClick={() => this.timeline.show(Math.max(issue.start, 0), Math.min(issue.stop, this.parser.pull.duration))}
 															/>
 														</Table.Cell>
-														<Table.Cell>{this.parser.formatDuration((issue.delay))}</Table.Cell>
+														<Table.Cell>{this.parser.formatDuration((issue.delay), 2)}</Table.Cell>
 														<Table.Cell>
 															{issue.actionsContent}
 														</Table.Cell>
