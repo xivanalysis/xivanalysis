@@ -5,7 +5,10 @@ import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
 const SEVERITY_OVERWRITTEN_PROCS = {
 	1: SEVERITY.MINOR,
-	15: SEVERITY.MEDIUM,
+	//It's been reported that this particular suggestion isn't as helpful as they thought but since they are uncertain as to what they want to do about it
+	//for now it's been asked that we make this always a minor suggestion; it's easily possible they'll change their minds later so for now just leaving
+	//this as a tiered suggestion but making it nigh impossible in a single fight to reach medium.
+	100: SEVERITY.MEDIUM,
 }
 
 const SEVERITY_INVULN_PROCS = {
@@ -96,7 +99,7 @@ export class Procs extends CoreProcs {
 	private getOverwrittenProcContent(overWrittenFire: number, overWrittenStone: number) {
 		if (overWrittenFire > 0 && overWrittenStone > 0) {
 			return <Trans id="rdm.procs.suggestions.overwritten.content">
-				Don't cast <DataLink action="VERTHUNDER_III"/> when you have <DataLink status="VERFIRE_READY"/> or <DataLink action="VERAERO_III"/> when you have <DataLink status="VERSTONE_READY"/>.
+				When not using <DataLink action="ACCELERATION"/> with both procs available, trye to avoid casting <DataLink action="VERTHUNDER_III"/> when you have <DataLink status="VERFIRE_READY"/> or <DataLink action="VERAERO_III"/> when you have <DataLink status="VERSTONE_READY"/>.
 			</Trans>
 		}
 		if (overWrittenFire > 0) {
