@@ -6,6 +6,7 @@ export class Defensives extends CoreDefensives {
 		this.data.actions.ASYLUM,
 		this.data.actions.AQUAVEIL,
 		this.data.actions.DIVINE_BENISON,
+		this.data.actions.PLENARY_INDULGENCE,
 		this.data.actions.TEMPERANCE,
 	]
 }
