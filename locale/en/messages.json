@@ -973,7 +973,7 @@
   "rdm.procs.suggestions.overwritten-fire.why": "{overWrittenFire, plural, one {# Verfire proc was} other {# Verfire procs were}} lost due to being overwritten.",
   "rdm.procs.suggestions.overwritten-stone.content": "Don't cast <0/> when you have <1/>.",
   "rdm.procs.suggestions.overwritten-stone.why": "{overWrittenStone, plural, one {# Verstone proc was} other {# Verstone procs were}} lost due to being overwritten.",
-  "rdm.procs.suggestions.overwritten.content": "When not using <0/> with both procs available, trye to avoid casting <1/> when you have <2/> or <3/> when you have <4/>.",
+  "rdm.procs.suggestions.overwritten.content": "When not using <0/> with both procs available, try to avoid casting <1/> when you have <2/> or <3/> when you have <4/>.",
   "rdm.procs.suggestions.overwritten.why": "{overWrittenFire, plural, one {# Verfire proc} other {# Verfire procs}} and {overWrittenStone, plural, one {# Verstone proc} other {# Verstone procs}} were lost due to being overwritten.",
   "rdm.swiftcast.suggestion.content": "Spells used while <0/> is up should be limited to <1/>, <2/>, <3/>, and <4/>.",
   "rdm.swiftcast.table.note.bad": "Swiftcast used on a suboptimal spell",

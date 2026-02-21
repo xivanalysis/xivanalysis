@@ -99,7 +99,7 @@ export class Procs extends CoreProcs {
 	private getOverwrittenProcContent(overWrittenFire: number, overWrittenStone: number) {
 		if (overWrittenFire > 0 && overWrittenStone > 0) {
 			return <Trans id="rdm.procs.suggestions.overwritten.content">
-				When not using <DataLink action="ACCELERATION"/> with both procs available, trye to avoid casting <DataLink action="VERTHUNDER_III"/> when you have <DataLink status="VERFIRE_READY"/> or <DataLink action="VERAERO_III"/> when you have <DataLink status="VERSTONE_READY"/>.
+				When not using <DataLink action="ACCELERATION"/> with both procs available, try to avoid casting <DataLink action="VERTHUNDER_III"/> when you have <DataLink status="VERFIRE_READY"/> or <DataLink action="VERAERO_III"/> when you have <DataLink status="VERSTONE_READY"/>.
 			</Trans>
 		}
 		if (overWrittenFire > 0) {
