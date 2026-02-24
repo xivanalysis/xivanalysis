@@ -36,7 +36,7 @@ export class Kardia extends Analyser {
 		this.checklist.add(new Rule({
 			name: <Trans id="sge.kardia.checklist.kardia.name">Choose a <DataLink status="KARDIA" /> target</Trans>,
 			description: <Trans id="sge.kardia.checklist.kardia.description">
-				Placing <DataLink status="KARDIA" /> on a player will heal them over time when you deal damage with your GCDs, allowing you keep them healthier without spending other resources to do so. Try to keep it on someone, like a tank, at all times.
+				Placing <DataLink status="KARDIA" /> on a player will heal them over time when you deal damage with your GCDs, allowing you to keep them healthier without spending other resources to do so. Try to keep it on someone, like a tank, at all times.
 			</Trans>,
 			target: 100,
 			requirements: [
