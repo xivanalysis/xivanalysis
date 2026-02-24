@@ -11,6 +11,8 @@ export class Tincture extends CoreTincture {
 	override initialise() {
 		super.initialise()
 
+		this.ignoreActions([this.data.actions.PNEUMA_HEAL.id])
+
 		this.addEvaluator(new ExpectedActionsEvaluator({
 			expectedActions: [
 				{

@@ -1,4 +1,5 @@
 import {ActionTimeline} from './ActionTimeline'
+import {AoEUsages} from './AoEUsages'
 import {CooldownDowntime} from './CooldownDowntime'
 import {Defensives} from './Defensives'
 import {DoTs} from './DoTs'
@@ -13,6 +14,7 @@ import {Weaving} from './Weaving'
 import {Zoe} from './Zoe'
 
 export const modules = [
+	AoEUsages,
 	ActionTimeline,
 	CooldownDowntime,
 	Defensives,
