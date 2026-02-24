@@ -1129,7 +1129,7 @@
   "sge.gauge.suggestions.lost-to-rhizomata.content": "",
   "sge.gauge.suggestions.lost-to-rhizomata.why": "",
   "sge.interrupts.suggestion.content": "できる限り事前の位置取りやすべり撃ちを活用して詠唱中断を避けましょう。<0/>の更新タイミングを使ってギミックの前に移動しましょう。それができない場合は<1/>や<2/>を組み込んでみてGCDを止めずに移動できるようにしてみましょう。移動するために<3/>を早く更新するのは最後の手段です。",
-  "sge.kardia.checklist.kardia.description": "<0/>をプレイヤーに付与すると、GCD でダメージを与えたときに時間の経過とともにプレイヤーの体力が回復し、他のリソースを消費することなくプレイヤーの体力を維持できます。タンクなど常に誰かに付与しておくようにしてください。",
+  "sge.kardia.checklist.kardia.description": "",
   "sge.kardia.checklist.kardia.name": "<0/>のターゲットを選択しましょう",
   "sge.kardia.checklist.kardia.uptime": "アクティブ率 (攻撃できない・ターゲットできない時間を除く): <0/>",
   "sge.kardia.title": "カルディア",
