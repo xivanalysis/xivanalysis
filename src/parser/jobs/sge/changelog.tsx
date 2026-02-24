@@ -7,6 +7,11 @@ export const changelog = [
 	// 	contributors: [CONTRIBUTORS.YOU],
 	// },
 	{
+		date: new Date('2026-02-23'),
+		Changes: () => <>Track Eukrasian Dyskrasia as a mutually-exclusive DoT with Eukrasian Dosis, and some other minor fixes.</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
+	{
 		date: new Date('2025-04-20'),
 		Changes: () => <>Add informational display of Swiftcast and Lucid Dreaming usage/cooldown availability adjacent to Defensives.</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],
