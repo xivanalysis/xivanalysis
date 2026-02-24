@@ -20,9 +20,11 @@ export class DoTs extends CoreDoTs {
 
 	protected override trackedStatuses = [
 		this.data.statuses.EUKRASIAN_DOSIS_III.id,
+		this.data.statuses.EUKRASIAN_DYSKRASIA.id,
 	]
 
 	protected override addChecklistRules() {
+		const dotUptimePct = this.getUptimePercent(this.data.statuses.EUKRASIAN_DOSIS_III.id) + this.getUptimePercent(this.data.statuses.EUKRASIAN_DYSKRASIA.id)
 		this.checklist.add(new Rule({
 			name: <Trans id="sge.dots.rule.name">Keep your DoT up</Trans>,
 			description: <Trans id="sge.dots.rule.description">
@@ -31,14 +33,14 @@ export class DoTs extends CoreDoTs {
 			requirements: [
 				new Requirement({
 					name: <Trans id="sge.dots.requirement.uptime.name"><DataLink status="EUKRASIAN_DOSIS_III" /> uptime</Trans>,
-					percent: this.getUptimePercent(this.data.statuses.EUKRASIAN_DOSIS_III.id),
+					percent: dotUptimePct,
 				}),
 			],
 		}))
 	}
 
 	protected addClippingSuggestions() {
-		const dosisClipPerMinute = this.getClippingAmount(this.data.statuses.EUKRASIAN_DOSIS_III.id)
+		const dosisClipPerMinute = this.getClippingAmount(this.data.statuses.EUKRASIAN_DOSIS_III.id) + this.getClippingAmount(this.data.statuses.EUKRASIAN_DYSKRASIA.id)
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.EUKRASIAN_DOSIS_III.icon,
 			content: <Trans id="sge.dots.suggestion.clip.content">
