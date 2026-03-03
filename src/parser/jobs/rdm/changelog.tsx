@@ -2,6 +2,11 @@ import {CONTRIBUTORS} from 'data/CONTRIBUTORS'
 
 export const changelog = [
 	{
+		date: new Date('2026-02-15'),
+		Changes: () => <>Modified Overwritten procs suggestion when both procs are available, adjusted tiers so that for now all overwrite proc suggestions will be Minor.</>,
+		contributors: [CONTRIBUTORS.LEYLIA],
+	},
+	{
 		date: new Date('2025-12-31'),
 		Changes: () => <>Removed Manafication GCD Window; fixed the oversight on Mana gauge calcualtions with the new manafication ranged melee combo.</>,
 		contributors: [CONTRIBUTORS.LEYLIA],
