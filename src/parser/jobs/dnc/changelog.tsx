@@ -8,6 +8,11 @@ export const changelog = [
 	// 	contributors: [CONTRIBUTORS.YOU],
 	// },
 	{
+		date: new Date('2026-03-15'),
+		Changes: () => <>Update Proc consumption checking to better handle both Silken and Flourishing procs being active at the same time.</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
+	{
 		date: new Date('2026-01-12'),
 		Changes: () => <>Fix Dancer gauge event translation, and return to using gauge events instead of gauge simulation for the log uploader.</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],
