@@ -142,7 +142,7 @@ export class Ammo extends CoreGauge {
 		this.ammoGauge.modify(MAX_AMMO)
 	}
 	private onBloodfestRemove() {
-		const droppedOverloadAmmo = this.ammoGauge.value - MAX_AMMO
+		const droppedOverloadAmmo = this.ammoGauge.value - this.ammoGauge.maximumValue
 		if (droppedOverloadAmmo > 0) {
 			this.lostAmmoDroppedAfterBloodfest += droppedOverloadAmmo
 			this.ammoWasteEvents.push({
@@ -163,7 +163,7 @@ export class Ammo extends CoreGauge {
 			// Track overcap before modifying
 			if (amount > 0) {
 				const potentialValue = this.ammoGauge.value + amount
-				const overcapAmount = Math.max(0, potentialValue - this.ammoGauge.maximum)
+				const overcapAmount = Math.max(0, potentialValue - this.ammoGauge.maximumValue)
 
 				if (overcapAmount > 0) {
 					if (event.action === this.data.actions.BLOODFEST.id) {
