@@ -3,6 +3,11 @@ import {CONTRIBUTORS} from 'data/CONTRIBUTORS'
 
 export const changelog = [
 	{
+		date: new Date('2026-03-27'),
+		Changes: () => <>Expanded Gauge Feedback with regards to lost ammo</>,
+		contributors: [CONTRIBUTORS.RYAN],
+	},
+	{
 		date: new Date('2025-12-20'),
 		Changes: () => <>GNB 7.4 Support added.</>,
 		contributors: [CONTRIBUTORS.RYAN],
