@@ -322,25 +322,24 @@ export class Ammo extends CoreGauge {
 				tiers: OVERCAPPED_AMMO_SEVERITY_TIERS,
 				value: comboOvercap,
 			}))
-
-			this.checklist.add(new Rule({
-				name: <Trans id="gnb.ammo.usage.title">Cartridge usage</Trans>,
-				description: <Trans id="gnb.ammo.waste.content">
-				Wasted cartridge generation, ending the fight with cartridges loaded, or dying with cartridges loaded is a
-				direct potency loss. Use <ActionLink action="BURST_STRIKE"/> (or <ActionLink action="FATED_CIRCLE"/> if
-				there is more than one target) to avoid wasting cartridges.
-				</Trans>,
-				requirements: [
-					new Requirement({
-						name: <Trans id="gnb.ammo.checklist.requirement.waste.name">
-						Use as many of your loaded cartridges as possible
-						</Trans>,
-						value: this.ammoGauge.totalSpent,
-						target: this.ammoGauge.totalGenerated,
-					}),
-				],
-			}))
 		}
+		this.checklist.add(new Rule({
+			name: <Trans id="gnb.ammo.usage.title">Cartridge usage</Trans>,
+			description: <Trans id="gnb.ammo.waste.content">
+			Wasted cartridge generation, ending the fight with cartridges loaded, or dying with cartridges loaded is a
+			direct potency loss. Use <ActionLink action="BURST_STRIKE"/> (or <ActionLink action="FATED_CIRCLE"/> if
+			there is more than one target) to avoid wasting cartridges.
+			</Trans>,
+			requirements: [
+				new Requirement({
+					name: <Trans id="gnb.ammo.checklist.requirement.waste.name">
+					Use as many of your loaded cartridges as possible
+					</Trans>,
+					value: this.ammoGauge.totalSpent,
+					target: this.ammoGauge.totalGenerated,
+				}),
+			],
+		}))
 	}
 	private get totalAmmoWaste(): number {
 		return this.ammoWasteEvents.reduce((total, event) => total + event.amount, 0)
