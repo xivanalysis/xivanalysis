@@ -1,7 +1,7 @@
 import _ from 'lodash'
 import {Report} from 'report'
 import {GameEdition} from '../EDITIONS'
-import {FALLBACK_KEY, PATCHES, PatchInfo, PatchNumber} from './patches'
+import {FALLBACK_KEY, LEVEL_CAP, PATCHES, PatchInfo, PatchNumber} from './patches'
 
 interface PatchData {[key: string]: PatchInfo}
 const patchData: PatchData = PATCHES
@@ -46,4 +46,13 @@ export function patchSupported(
 		: Infinity
 
 	return _.inRange(at, fromDate, toDate)
+}
+
+export function contentSupported(loggedLevel: number | undefined) {
+	if (!loggedLevel) {
+		// If the log doesn't include a level, assume it's supported to preserve the status quo.
+		return true
+	}
+
+	return loggedLevel < LEVEL_CAP
 }

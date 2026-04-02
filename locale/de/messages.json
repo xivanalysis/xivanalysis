@@ -287,6 +287,8 @@
   "brd.ragingstrikes.title": "Wütende Attacke",
   "code.suggestions.severity.memes": "",
   "core.abc.title": "",
+  "core.about.content-unsupported.description": "",
+  "core.about.content-unsupported.title": "",
   "core.about.contributors": "Mitwirkende:",
   "core.about.patch-unsupported.description": "Dieser Log wurde während Patch {0} aufgezeichnet, welcher nicht vom Analysator unterstützt wird. Berechnungen und Vorschläge könnten durch eventuelle Spieländerungen nicht korrekt sein.",
   "core.about.patch-unsupported.title": "Nicht unterstützten Patch melden",

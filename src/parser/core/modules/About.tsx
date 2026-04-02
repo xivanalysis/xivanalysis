@@ -3,7 +3,7 @@ import {Trans} from '@lingui/react/macro'
 import {Message, Segment} from 'akkd'
 import {ContributorLabel} from 'components/ui/ContributorLabel'
 import {NormalisedMessage} from 'components/ui/NormalisedMessage'
-import {patchSupported} from 'data/PATCHES'
+import {contentSupported, patchSupported} from 'data/PATCHES'
 import {AVAILABLE_MODULES} from 'parser/AVAILABLE_MODULES'
 import {Analyser, DisplayMode} from 'parser/core/Analyser'
 import {ComponentType} from 'react'
@@ -80,6 +80,17 @@ export class About extends Analyser {
 							</Message.Header>
 							<Trans id="core.about.patch-unsupported.description">
 								This report was logged during patch {this.parser.patch.key}, which is not supported by the analyser. Calculations and suggestions may be impacted by changes in the interim.
+							</Trans>
+						</Message>
+					)}
+
+					{contentSupported(loggedLevel) && (
+						<Message error icon="times circle outline">
+							<Message.Header>
+								<Trans id="core.about.content-unsupported.title">Report content unsupported</Trans>
+							</Message.Header>
+							<Trans id="core.about.content-unsupported.description">
+								This report is for level {loggedLevel} content, which is not supported by the analyser. Calculations and suggestions will be inaccurate due to missing abilities and incomplete rotations.
 							</Trans>
 						</Message>
 					)}
