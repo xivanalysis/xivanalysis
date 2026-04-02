@@ -84,7 +84,7 @@ export class About extends Analyser {
 						</Message>
 					)}
 
-					{contentSupported(loggedLevel) && (
+					{!contentSupported(loggedLevel, this.parser.actor.job) && (
 						<Message error icon="times circle outline">
 							<Message.Header>
 								<Trans id="core.about.content-unsupported.title">Report content unsupported</Trans>

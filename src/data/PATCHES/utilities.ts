@@ -2,6 +2,7 @@ import _ from 'lodash'
 import {Report} from 'report'
 import {GameEdition} from '../EDITIONS'
 import {FALLBACK_KEY, LEVEL_CAP, PATCHES, PatchInfo, PatchNumber} from './patches'
+import {JobKey} from "../JOBS"
 
 interface PatchData {[key: string]: PatchInfo}
 const patchData: PatchData = PATCHES
@@ -48,11 +49,16 @@ export function patchSupported(
 	return _.inRange(at, fromDate, toDate)
 }
 
-export function contentSupported(loggedLevel: number | undefined) {
+export function contentSupported(loggedLevel: number | undefined, job: JobKey) {
 	if (!loggedLevel) {
 		// If the log doesn't include a level, assume it's supported to preserve the status quo.
 		return true
 	}
 
-	return loggedLevel < LEVEL_CAP
+	if (job === "BLUE_MAGE") {
+		// The level cap is only relevant for non-limited jobs like BLU. If and when they eventually add more (looking at you, BST), we'll need to update this.
+		return true
+	}
+
+	return loggedLevel === LEVEL_CAP
 }
