@@ -2,7 +2,7 @@ import _ from 'lodash'
 import {Report} from 'report'
 import {GameEdition} from '../EDITIONS'
 import {FALLBACK_KEY, LEVEL_CAP, PATCHES, PatchInfo, PatchNumber} from './patches'
-import {JobKey} from "../JOBS"
+import {JobKey, JOBS} from "../JOBS"
 
 interface PatchData {[key: string]: PatchInfo}
 const patchData: PatchData = PATCHES
@@ -55,8 +55,8 @@ export function contentSupported(loggedLevel: number | undefined, job: JobKey) {
 		return true
 	}
 
-	if (job === "BLUE_MAGE") {
-		// The level cap is only relevant for non-limited jobs like BLU. If and when they eventually add more (looking at you, BST), we'll need to update this.
+	if (JOBS[job].isLimited) {
+		// The level cap is only relevant for non-limited jobs, so all content should be considered supported for limited ones.
 		return true
 	}
 
