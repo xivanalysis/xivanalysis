@@ -70,6 +70,7 @@ export interface Job {
 	colour: string
 	role: RoleKey
 	usesMP?: boolean // Used by Actors to determine if an MP graph should be shown for jobs outside the healer and caster roles
+	isLimited?: boolean // Used by utilities.ts to determine whether to show the "this content is below level cap" warning
 }
 
 // Yeah I know there's lots of repetition but they're all different apis and endpoints and shit and I don't wanna pull it apart later to fix a desync
@@ -246,6 +247,7 @@ export const JOBS = ensureRecord<Job>()({
 		icon: 'blu',
 		colour: '#3366ff',
 		role: 'MAGICAL_RANGED',
+		isLimited: true,
 	},
 })
 

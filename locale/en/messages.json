@@ -287,6 +287,8 @@
   "brd.ragingstrikes.title": "Raging Strikes",
   "code.suggestions.severity.memes": "Memes",
   "core.abc.title": "Always Be Casting",
+  "core.about.content-unsupported.description": "This report is for level {loggedLevel} content, which is not supported by the analyser. Calculations and suggestions will be inaccurate due to missing abilities and incomplete rotations.",
+  "core.about.content-unsupported.title": "Report content unsupported",
   "core.about.contributors": "Contributors:",
   "core.about.patch-unsupported.description": "This report was logged during patch {0}, which is not supported by the analyser. Calculations and suggestions may be impacted by changes in the interim.",
   "core.about.patch-unsupported.title": "Report patch unsupported",

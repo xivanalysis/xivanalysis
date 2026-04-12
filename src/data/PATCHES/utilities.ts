@@ -1,7 +1,8 @@
 import _ from 'lodash'
 import {Report} from 'report'
 import {GameEdition} from '../EDITIONS'
-import {FALLBACK_KEY, PATCHES, PatchInfo, PatchNumber} from './patches'
+import {FALLBACK_KEY, LEVEL_CAP, PATCHES, PatchInfo, PatchNumber} from './patches'
+import {JobKey, JOBS} from "../JOBS"
 
 interface PatchData {[key: string]: PatchInfo}
 const patchData: PatchData = PATCHES
@@ -46,4 +47,18 @@ export function patchSupported(
 		: Infinity
 
 	return _.inRange(at, fromDate, toDate)
+}
+
+export function contentSupported(loggedLevel: number | undefined, job: JobKey) {
+	if (!loggedLevel) {
+		// If the log doesn't include a level, assume it's supported to preserve the status quo.
+		return true
+	}
+
+	if (JOBS[job].isLimited) {
+		// The level cap is only relevant for non-limited jobs, so all content should be considered supported for limited ones.
+		return true
+	}
+
+	return loggedLevel === LEVEL_CAP
 }

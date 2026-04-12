@@ -287,6 +287,8 @@
   "brd.ragingstrikes.title": "猛者の撃",
   "code.suggestions.severity.memes": "",
   "core.abc.title": "",
+  "core.about.content-unsupported.description": "",
+  "core.about.content-unsupported.title": "",
   "core.about.contributors": "貢献者:",
   "core.about.patch-unsupported.description": "このログはパッチ {0} のものですが、まだこのアナライザーではサポートされていません。計算や提案は暫定的なもので、今後変更されるかもしれません。",
   "core.about.patch-unsupported.title": "報告された未対応パッチ",

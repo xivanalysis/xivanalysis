@@ -287,6 +287,8 @@
   "brd.ragingstrikes.title": "용맹한 사격",
   "code.suggestions.severity.memes": "",
   "core.abc.title": "",
+  "core.about.content-unsupported.description": "",
+  "core.about.content-unsupported.title": "",
   "core.about.contributors": "기여자:",
   "core.about.patch-unsupported.description": "이 리포트는 분석기의 지원을 받을 수 없는 {0} 버전에서 작성되었습니다. 계산 결과와 조언들은 이후 패치의 영향을 받을 수 있습니다.",
   "core.about.patch-unsupported.title": "지원되지 않는 패치",

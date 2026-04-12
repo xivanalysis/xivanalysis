@@ -15,6 +15,7 @@ export interface PatchInfo {
 	branch?: PatchBranch
 }
 
+export const LEVEL_CAP = 100
 // This is all right from /PatchList - should be easy to sync Eventually™
 export const FALLBACK_KEY = '✖'
 export const PATCHES = ensureRecord<PatchInfo>()({
