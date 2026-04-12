@@ -81,6 +81,10 @@ export class CounterGauge extends AbstractGauge {
 		return this.currentValue >= this.maximum
 	}
 
+	get maximumValue(): number {
+		return this.maximum
+	}
+
 	get empty(): boolean {
 		return this.currentValue <= this.minimum
 	}
