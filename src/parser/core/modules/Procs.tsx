@@ -39,6 +39,9 @@ export interface ProcGroup {
 	procStatus: Status,
 	consumeActions: Action[],
 	mayOverwrite?: boolean,
+	// If an action can consume multiple procs, but only one of them per usage (see DNC's Silken/Flourishing Symmetry/Flow procs), set this to indicate the
+	// relative priority of those proc statuses. Higher numbers indicate those are consumed first when the action is used.
+	priority?: number
 }
 
 type ProcIssueType =
@@ -423,7 +426,8 @@ export abstract class Procs extends Analyser {
 	}
 
 	private onCast(event: Events['action']): void {
-		for (const activeProc of this.currentWindows.keys()) {
+		// Sort the procs by their relative consumption priorities before figuring out which may have been used by this event
+		for (const activeProc of this.currentWindows.keys().toArray().sort((a, b) => (b.priority ?? 0) - (a.priority ?? 0))) {
 			// If this action consumed a proc, log it
 			if (this.checkConsumeProc(activeProc, event)) {
 				if (this.invulnerability.isActive({

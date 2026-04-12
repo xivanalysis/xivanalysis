@@ -289,7 +289,7 @@ export class AlwaysBeCasting extends AlwaysBeCastingAnalyser {
 	}
 
 	override getDelayPerIssue(downtime: GcdDowntimeWindow) {
-		return (downtime.stop ?? downtime.start) - downtime.start - this.gcdLength
+		return (downtime.stop ?? downtime.start) - downtime.start - (this.castTime.recastForEvent(downtime.leadingEvent) ?? this.gcdLength)
 	}
 
 	override getTotalDelay() {

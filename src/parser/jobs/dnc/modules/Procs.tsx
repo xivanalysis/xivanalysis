@@ -15,18 +15,22 @@ export class Procs extends CoreProcs {
 		{
 			procStatus: this.data.statuses.SILKEN_SYMMETRY,
 			consumeActions: [this.data.actions.REVERSE_CASCADE, this.data.actions.RISING_WINDMILL],
+			priority: 2,
 		},
 		{
 			procStatus: this.data.statuses.SILKEN_FLOW,
 			consumeActions: [this.data.actions.FOUNTAINFALL, this.data.actions.BLOODSHOWER],
+			priority: 2,
 		},
 		{
 			procStatus: this.data.statuses.FLOURISHING_SYMMETRY,
 			consumeActions: [this.data.actions.REVERSE_CASCADE, this.data.actions.RISING_WINDMILL],
+			priority: 1,
 		},
 		{
 			procStatus: this.data.statuses.FLOURISHING_FLOW,
 			consumeActions: [this.data.actions.FOUNTAINFALL, this.data.actions.BLOODSHOWER],
+			priority: 1,
 		},
 		{
 			procStatus: this.data.statuses.FLOURISHING_STARFALL,

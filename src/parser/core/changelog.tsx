@@ -9,6 +9,11 @@ export const changelog: ChangelogEntry[] = [
 	// 	contributors: [CONTRIBUTORS.YOU],
 	// },
 	{
+		date: new Date('2026-03-15'),
+		Changes: () => <>Update Always be Casting GCD Delay calculation to better handle longer than normal GCD recasts, such as PCT's Motif spells.</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
+	{
 		date: new Date('2026-01-11'),
 		Changes: () => <>Improve DoT uptime calculations for multi-target fights.</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],
