@@ -687,6 +687,7 @@
   "gnb.sonic-break.ticktable.timelinelink-button": "跳转到时间轴",
   "gnb.sonic-break.title": "音速破",
   "gnb.tincture.suggestions.trackedActions.content": "在爆发药期间打出尽可能多的伤害。",
+  "in.kb-window.suggestions.kassatsu-actions.content": "",
   "mch.about.description": "\n欢迎使用机工士分析模块！机工士的重点在于“有啥打啥”——不要让GCD空转以提高输出，特别是在团辅窗口期里。本页面将会为您讲解您是如何管理能力技和职业资源的。\n\n为了更好地理解提出的建议，请阅读以下职业教程（英文）：\n\n- [Icy Veins Machinist Guide](https://www.icy-veins.com/ffxiv/machinist-guide)\n- [The Balance Machinist Guide](https://www.thebalanceffxiv.com/jobs/ranged/machinist/)\n",
   "mch.drift.accordion.message": "<0/>和<1/>是高威力GCD技能，理想情况下应该始终保持它们的冷却时间，除非你需要插入一个填充GCD来调整技能速度。如果回转飞锯或空气锚在8秒内将结束冷却，避免施放<2/>。",
   "mch.drift.drift-header": "技能延后问题",
