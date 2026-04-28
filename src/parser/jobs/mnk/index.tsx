@@ -19,7 +19,7 @@ export const MONK = new Meta({
 
 	supportedPatches: {
 		from: '7.01',
-		to: '7.4',
+		to: '7.5',
 	},
 
 	contributors: [
