@@ -834,7 +834,7 @@
   "nin.kb-window.chart.notes.yes": "はい",
   "nin.kb-window.suggestions.badtrackedactions.content": "",
   "nin.kb-window.suggestions.gcds.content": "効果時間中に実行すべきウェポンスキルの数は<0/>が使われているかどうかによって異なりますが、<1/>の効果時間中には最低でも{BASE_GCDS_PER_WINDOW}回のウェポンスキルを使用しましょう。",
-  "nin.kb-window.suggestions.trackedactions.content": "最大ダメージを与えるためには、<0/>の効果時間中に<1/>、2回の<2/>、そして<3/>を使う必要があります。",
+  "nin.kb-window.suggestions.trackedactions.content": "",
   "nin.kb-window.title": "百雷銃",
   "nin.ninjutsu.suggestions.aoe-doton.content": "<0/>の効果を高めるためには少なくとも敵に継続ダメージを{DOTON_TICK_TARGET} 回当てる必要があります。すく死んでしまう雑魚敵に対しては<1/>を使ってください。",
   "nin.ninjutsu.suggestions.aoe-doton.why": "最適でない土遁の術を {badAoes, plural, other {# 回}} やっちゃいましたよ！",

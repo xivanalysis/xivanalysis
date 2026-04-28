@@ -834,7 +834,7 @@
   "nin.kb-window.chart.notes.yes": "Oui",
   "nin.kb-window.suggestions.badtrackedactions.content": "Évitez de lancer <0/> pendant <1/>, à moins que vous n'ayez plus de charges de Kazematoi ou que vous ne puissiez toucher que le côté de la cible, car <2/> a une puissance plus importante.",
   "nin.kb-window.suggestions.gcds.content": "Tandis que le nombre exact de GCD par fenêtre peut varier selon si <0/> est actif, chaque fenêtre de <1/> devrait contenir au moins {BASE_GCDS_PER_WINDOW, plural, one {# GCD} other {# GCDs}}.",
-  "nin.kb-window.suggestions.trackedactions.content": "Chaque fenêtre de <0/> devrait contenir <1/>, 2 <2/> et <3/> dans le but de maximiser les dégâts.",
+  "nin.kb-window.suggestions.trackedactions.content": "",
   "nin.kb-window.title": "Fenêtre de Kunai Explosifs",
   "nin.ninjutsu.suggestions.aoe-doton.content": "<0/> requiert au moins {DOTON_TICK_TARGET} ticks pour être rentable dans un contexte AoE. Utilisez <1/> à la place pour des adds qui vont mourir rapidement.",
   "nin.ninjutsu.suggestions.aoe-doton.why": "Vous avez utilisé Doton {badAoes, plural,one {# fois}other {# fois}} de manière non-optimale.",

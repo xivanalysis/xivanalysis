@@ -834,7 +834,7 @@
   "nin.kb-window.chart.notes.yes": "적용",
   "nin.kb-window.suggestions.badtrackedactions.content": "",
   "nin.kb-window.suggestions.gcds.content": "<0/> 적용 여부에 따라 글클 기술 사용 횟수가 달라지나, 매 <1/> 구간마다 글쿨 기술을 최소 {BASE_GCDS_PER_WINDOW, plural, other {#}}회 사용해야 합니다.",
-  "nin.kb-window.suggestions.trackedactions.content": "매 <0/> 구간에는 피해량을 최대화할 수 있도록 <1/>, <2/> 2회, 그리고 <3/> 기술을 사용해야 합니다.",
+  "nin.kb-window.suggestions.trackedactions.content": "",
   "nin.kb-window.title": "",
   "nin.ninjutsu.suggestions.aoe-doton.content": "<0/>은 광딜을 칠 경우 {DOTON_TICK_TARGET} 틱 이상 적용되어야 이득입니다. 더 일찍 죽는 대상에 대해서는 <1/>을 대신 사용합니다.",
   "nin.ninjutsu.suggestions.aoe-doton.why": "잘못된 토둔술을 {0, plural, one {#회} other {#회}} 사용했습니다.",

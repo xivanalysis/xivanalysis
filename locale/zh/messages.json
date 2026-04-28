@@ -834,7 +834,7 @@
   "nin.kb-window.chart.notes.yes": "是",
   "nin.kb-window.suggestions.badtrackedactions.content": "避免在<1/>中使用<0/>，除非你没有风缠档位，或者你只能打侧身位，不然带有风缠的<2/>是威力更高的技能。",
   "nin.kb-window.suggestions.gcds.content": "虽然每个窗口期的GCD确切数量会因为<0/>是否开启而有所不同，但每个<1/>持续期间都应该包含至少 {BASE_GCDS_PER_WINDOW, plural, one {# 个GCD} other {# 个GCD}} 。",
-  "nin.kb-window.suggestions.trackedactions.content": "在每个<0/>期间都应该打出<1/>、2个<2/>和<3/>，从而让你的伤害最大化。",
+  "nin.kb-window.suggestions.trackedactions.content": "",
   "nin.kb-window.title": "百雷铳窗口",
   "nin.ninjutsu.suggestions.aoe-doton.content": "AOE时，<0/>需要至少{DOTON_TICK_TARGET} 跳土遁才赚，敌人要死亡时用<1/>更好。",
   "nin.ninjutsu.suggestions.aoe-doton.why": "你施放了非正规的土遁 {badAoes, plural, one {# 次} other {# 次}}。",
