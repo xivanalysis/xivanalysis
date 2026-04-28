@@ -103,6 +103,13 @@ export const PATCHES = ensureRecord<PatchInfo>()({
 			[GameEdition.CHINESE]: 1765872000, // CN is synced with global as of 7.4
 		},
 	},
+	'7.5': {
+		date: {
+			[GameEdition.GLOBAL]: 1777363200, // 28/04/26 8:00:00 GMT
+			[GameEdition.KOREAN]: 1777363200, // KR is synced with global as of 7.5
+			[GameEdition.CHINESE]: 1777363200,
+		},
+	},
 })
 
 export type PatchNumber = keyof typeof PATCHES
