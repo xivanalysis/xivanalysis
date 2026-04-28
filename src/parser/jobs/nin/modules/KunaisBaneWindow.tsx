@@ -3,7 +3,10 @@ import {Trans, Plural} from '@lingui/react/macro'
 import {ActionLink} from 'components/ui/DbLink'
 import {ActionKey} from 'data/ACTIONS'
 import {dependency} from 'parser/core/Injectable'
-import {BuffWindow, EvaluatedAction, ExpectedActionsEvaluator, ExpectedGcdCountEvaluator, LimitedActionsEvaluator, NotesEvaluator, TrackedAction} from 'parser/core/modules/ActionWindow'
+import {
+	BuffWindow, EvaluatedAction,
+	ExpectedActionGroupsEvaluator, ExpectedActionsEvaluator, ExpectedGcdCountEvaluator, LimitedActionsEvaluator, NotesEvaluator, TrackedAction,
+} from 'parser/core/modules/ActionWindow'
 import {HistoryEntry} from 'parser/core/modules/ActionWindow/History'
 import {GlobalCooldown} from 'parser/core/modules/GlobalCooldown'
 import {SEVERITY} from 'parser/core/modules/Suggestions'
@@ -81,12 +84,25 @@ export class KunaisBaneWindow extends BuffWindow {
 			adjustCount: this.adjustExpectedGcdCount.bind(this),
 		}))
 
-		this.addEvaluator(new ExpectedActionsEvaluator({
-			expectedActions: [
+		this.addEvaluator(new ExpectedActionGroupsEvaluator({
+			expectedActionGroups: [
 				{
-					action: this.data.actions.HYOSHO_RANRYU,
+					actions: [this.data.actions.HYOSHO_RANRYU, this.data.actions.GOKA_MEKKYAKU],
 					expectedPerWindow: 1,
 				},
+			],
+			suggestionIcon,
+			suggestionContent: <Trans id="in.kb-window.suggestions.kassatsu-actions.content">
+				Every <ActionLink action="KUNAIS_BANE"/> window should contain either <ActionLink action="HYOSHO_RANRYU"/> or <ActionLink action="GOKA_MEKKYAKU"/>, depending on the number of targets.
+			</Trans>,
+			suggestionWindowName,
+			severityTiers: {
+				1: SEVERITY.MAJOR,
+			},
+		}))
+
+		this.addEvaluator(new ExpectedActionsEvaluator({
+			expectedActions: [
 				{
 					action: this.data.actions.RAITON,
 					expectedPerWindow: 2,
@@ -102,7 +118,7 @@ export class KunaisBaneWindow extends BuffWindow {
 			],
 			suggestionIcon,
 			suggestionContent: <Trans id="nin.kb-window.suggestions.trackedactions.content">
-				Every <ActionLink action="KUNAIS_BANE"/> window should contain <ActionLink action="HYOSHO_RANRYU"/>, 2 <ActionLink action="RAITON"/> casts, and <ActionLink action="DREAM_WITHIN_A_DREAM"/> in order to maximize damage.
+				Every <ActionLink action="KUNAIS_BANE"/> window should contain 2 <ActionLink action="RAITON"/> casts and <ActionLink action="DREAM_WITHIN_A_DREAM"/> in order to maximize damage.
 			</Trans>,
 			suggestionWindowName,
 			severityTiers: {

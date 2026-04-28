@@ -687,6 +687,7 @@
   "gnb.sonic-break.ticktable.timelinelink-button": "タイムラインに移動",
   "gnb.sonic-break.title": "ソニックブレイク",
   "gnb.tincture.suggestions.trackedActions.content": "できるだけ剛力の幻薬でダメージを稼ぎましょう。",
+  "in.kb-window.suggestions.kassatsu-actions.content": "",
   "mch.about.description": "\n機工士モジュールへようこそ！ このジョブは、特にパーティーのレイドバフウィンドウ中に、できるだけ多くのダメージを与えるためにクールダウンを管理することです。 このページでは、主要なクールダウンとリソースをそれぞれどのように活用したかについて説明します。\n\n以下に示す提案の背景にある基本を理解するには、次のガイドのいずれかを確認してください。\n\n- [Icy Veins Machinist Guide](https://www.icy-veins.com/ffxiv/machinist-guide)\n- [The Balance Machinist Guide](https://www.thebalanceffxiv.com/jobs/ranged/machinist/)\n",
   "mch.drift.accordion.message": "<0/> と<1/> は強力なGCDスキルであり、スキルスピードによる調整が必要でない限り、リキャスト撃ちされているのが理想的です。回転のこぎりかエアアンカーが8秒以内に戻ってくるときには、<2/>を使うことは避けましょう。",
   "mch.drift.drift-header": "遅延の問題",

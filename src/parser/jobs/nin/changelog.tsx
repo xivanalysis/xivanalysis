@@ -7,6 +7,11 @@ export const changelog = [
 	// 	contributors: [CONTRIBUTORS.YOU],
 	// },
 	{
+		date: new Date('2026-04-18'),
+		Changes: () => <>Updated Kunai's Bane window tracking to stop penalizing uses of Goka Mekkyaku.</>,
+		contributors: [CONTRIBUTORS.TOASTDEIB],
+	},
+	{
 		date: new Date('2025-08-06'),
 		Changes: () => <>Updated Hellfrog/Deathfrog Medium tracking for the 7.3 potency changes.</>,
 		contributors: [CONTRIBUTORS.TOASTDEIB],

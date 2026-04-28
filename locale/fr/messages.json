@@ -687,6 +687,7 @@
   "gnb.sonic-break.ticktable.timelinelink-button": "Voir sur la chronologie",
   "gnb.sonic-break.title": "Rupture Sonique",
   "gnb.tincture.suggestions.trackedActions.content": "Essayez de faire autant de dégâts que possible avec vos Potions de Force.",
+  "in.kb-window.suggestions.kassatsu-actions.content": "",
   "mch.about.description": "\nBienvenue dans le module Machiniste ! Ce job consiste à gérer vos temps de recharge pour infliger le plus de dégâts possible,\nsurtout pendant les fenêtres de buffs de votre groupe. Cette page vous aidera à déterminer si vous avez bien utilisé chacun de vos principaux cooldowns et ressources.\n\nPour apprendre les bases du job et comprendre les suggestions données ci-dessous, consultez l'un des guides suivants (Icy Veins et The Balance sont des sites anglais, Sharlayan est un discord francophone):\n\n- [Guide du machiniste de Icy Veins] (https://www.icy-veins.com/ffxiv/machinist-guide)\n- [Guide du machiniste de The Balance](https://www.thebalanceffxiv.com/jobs/ranged/machinist/)\n- [Guide du machiniste sur Sharlayan](https://discord.gg/kB69PGFYxk)\n",
   "mch.drift.accordion.message": "<0/> et <1/> sont vos GCD les plus puissants et idéalement, ils devraient toujours être maintenus en cooldown, à moins que vous ne deviez ajouter un GCD à cause de votre vivacité. Évitez d'utiliser <2/> si Tronçonneuses rotatives ou Ancre aérienne sont disponibles dans les 8 secondes.",
   "mch.drift.drift-header": "Problème de dérive",
