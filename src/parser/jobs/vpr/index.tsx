@@ -17,7 +17,7 @@ export const VIPER = new Meta({
 
 	supportedPatches: {
 		from: '7.05',
-		to: '7.4',
+		to: '7.5',
 	},
 
 	contributors: [
