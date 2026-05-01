@@ -19,7 +19,7 @@ export const BLUE_MAGE = new Meta({
 
 	supportedPatches: {
 		from: '7.0',
-		to: '7.4',
+		to: '7.5',
 	},
 
 	contributors: [

@@ -91,16 +91,23 @@ export const PATCHES = ensureRecord<PatchInfo>()({
 	},
 	'7.3': {
 		date: {
-			[GameEdition.GLOBAL]: 1754380800, // 25/08/05 8:00:00 GMT
+			[GameEdition.GLOBAL]: 1754380800, // 05/08/25 8:00:00 GMT
 			[GameEdition.KOREAN]: 1761638400, // 28/10/25 08:00:00 GMT
 			[GameEdition.CHINESE]: 1757982344, // 16/09/25 08:00:00 GMT
 		},
 	},
 	'7.4': {
 		date: {
-			[GameEdition.GLOBAL]: 1765872000, // 25/12/16 8:00:00 GMT
-			[GameEdition.KOREAN]: 1770105600, // 26/02/03 08:00:00 GMT
+			[GameEdition.GLOBAL]: 1765872000, // 16/12/25 8:00:00 GMT
+			[GameEdition.KOREAN]: 1770105600, // 03/02/26 08:00:00 GMT
 			[GameEdition.CHINESE]: 1765872000, // CN is synced with global as of 7.4
+		},
+	},
+	'7.5': {
+		date: {
+			[GameEdition.GLOBAL]: 1777363200, // 28/04/26 8:00:00 GMT
+			[GameEdition.KOREAN]: 1777363200, // KR is synced with global as of 7.5
+			[GameEdition.CHINESE]: 1777363200,
 		},
 	},
 })
