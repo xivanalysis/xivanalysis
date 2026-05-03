@@ -15,6 +15,7 @@ import {Swiftscaled} from './Swiftscaled'
 import {Tincture} from './Tincture'
 import {Venoms} from './Venoms'
 import {Vices} from './Vices'
+import {Weaving} from './Weaving'
 
 export const modules = [
 	ActionTimeline,
@@ -34,4 +35,5 @@ export const modules = [
 	Tincture,
 	Venoms,
 	Vices,
+	Weaving,
 ]
