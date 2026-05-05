@@ -272,8 +272,11 @@ export const UNABLE_TO_ACT_STATUS_IDS = [
 	4578, // Fetters (lockActions, lockControl)
 	4618, // Standing Firm (lockActions, lockControl)
 	4619, //  (lockActions, lockControl)
+	4973, // In Event (lockActions, lockControl)
 	5043, // Stun (lockActions)
+	5047, // Bubble Gaol (lockActions, lockControl)
 	5058, // Stone Curse (lockActions)
 	5110, //  (lockActions, lockControl)
 	5174, // Forced March (lockActions)
+	5407, // Strung Up (lockControl)
 ]
