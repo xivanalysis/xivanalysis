@@ -3,6 +3,11 @@ import {CONTRIBUTORS} from 'data/CONTRIBUTORS'
 
 export const changelog = [
 	{
+		date: new Date('2026-05-03'),
+		Changes: () => <>Allowed triple weaves on Uncoiled Fury.</>,
+		contributors: [CONTRIBUTORS.TOASTDEIB],
+	},
+	{
 		date: new Date('2025-03-24'),
 		Changes: () => <>Viper 7.2 Support added.</>,
 		contributors: [CONTRIBUTORS.RYAN],
