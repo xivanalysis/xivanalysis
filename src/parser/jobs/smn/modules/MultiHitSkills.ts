@@ -24,7 +24,7 @@ export class AoeChecker extends AoEUsages {
 		{
 			aoeAction: this.data.actions.PAINFLARE,
 			stActions: [this.data.actions.NECROTIZE],
-			minTargets: (!this.parser.patch.before('7.2')) ? PF_BP_71 : PF_BP_72,
+			minTargets: this.getPainflareMinTargets(),
 		},
 		{
 			aoeAction: this.data.actions.ASTRAL_FLARE,
@@ -57,4 +57,17 @@ export class AoeChecker extends AoEUsages {
 			minTargets: 3,
 		},
 	]
+
+	private getPainflareMinTargets() {
+		// Prior to patch 7.2, Painflare required 3 targets to pull ahead
+		if (this.parser.patch.before('7.2')) {
+			return PF_BP_71
+		}
+		// Potency changes in patch 7.2 made Painflare require 4 targets
+		if (this.parser.patch.before('7.5')) {
+			return PF_BP_72
+		}
+		// Patch 7.5's potency changes to both Painflare and Necrotize returned it to a 3 target threshold
+		return PF_BP_71
+	}
 }
