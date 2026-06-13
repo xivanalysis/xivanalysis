@@ -20,6 +20,7 @@ export type HistoryEntryPredicate = (e: HistoryEntry<EvaluatedAction[]>) => bool
  * By default, all actions cast during a window will be included.
  */
 export abstract class ActionWindow extends Analyser {
+	static override expandable = true
 
 	@dependency protected data!: Data
 	@dependency protected suggestions!: Suggestions

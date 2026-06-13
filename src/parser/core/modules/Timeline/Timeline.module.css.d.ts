@@ -2,8 +2,10 @@
 /* eslint-disable */
 declare namespace TimelineModuleCssNamespace {
   export interface ITimelineModuleCss {
+    expanded: string;
     gutter: string;
     helpText: string;
+    timelineWrapper: string;
   }
 }
 
