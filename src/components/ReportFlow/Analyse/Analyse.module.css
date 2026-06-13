@@ -84,6 +84,26 @@
 	margin-left: auto;
 }
 
+@media (max-width: 767px) {
+	.moduleHeader {
+		flex-wrap: wrap;
+	}
+
+	.moduleTitle {
+		flex-basis: 100%;
+	}
+
+	.moduleHeaderActions {
+		flex: 1 1 100%;
+		justify-content: space-between;
+		margin-left: 0;
+	}
+
+	.moduleHeaderActions > :only-child {
+		margin-left: auto;
+	}
+}
+
 .expandedSegment .moduleHeader {
 	position: sticky;
 	top: calc(-1 * gutter);
