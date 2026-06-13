@@ -84,6 +84,15 @@
 	margin-left: auto;
 }
 
+.moduleExpandButton {
+}
+
+.expandedModuleExpandButton {
+}
+
+.moduleHeaderActionsExpandOnly {
+}
+
 @media (max-width: 767px) {
 	.moduleHeader {
 		flex-wrap: wrap;
@@ -101,6 +110,14 @@
 
 	.moduleHeaderActions > :only-child {
 		margin-left: auto;
+	}
+
+	.moduleExpandButton.moduleExpandButton:not(.expandedModuleExpandButton) {
+		display: none;
+	}
+
+	.moduleHeaderActionsExpandOnly {
+		display: none;
 	}
 }
 

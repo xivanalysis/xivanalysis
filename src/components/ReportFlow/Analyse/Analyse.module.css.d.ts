@@ -3,12 +3,15 @@
 declare namespace AnalyseModuleCssNamespace {
   export interface IAnalyseModuleCss {
     expanded: string;
+    expandedModuleExpandButton: string;
     expandedSegment: string;
     gutter: string;
     header: string;
+    moduleExpandButton: string;
     moduleExpansionFrame: string;
     moduleHeader: string;
     moduleHeaderActions: string;
+    moduleHeaderActionsExpandOnly: string;
     moduleSegment: string;
     moduleTitle: string;
     resultsContainer: string;

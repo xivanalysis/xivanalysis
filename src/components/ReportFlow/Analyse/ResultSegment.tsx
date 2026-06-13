@@ -44,6 +44,10 @@ function ExpansionButton({
 		aria-label={label}
 		aria-pressed={expanded}
 		circular
+		className={classNames(
+			styles.moduleExpandButton,
+			expanded && styles.expandedModuleExpandButton,
+		)}
 		compact
 		icon={expanded ? 'compress' : 'expand'}
 		onClick={onClick}
@@ -226,9 +230,13 @@ export class ResultSegment extends PureComponent<Props, State> implements Scroll
 	private renderHeaderActions() {
 		const {result} = this.props
 		if (!result.expandable && result.headerActions == null) { return null }
+		const isExpandOnly = result.expandable && result.headerActions == null && !this.state.expanded
 
 		return (
-			<div className={styles.moduleHeaderActions}>
+			<div className={classNames(
+				styles.moduleHeaderActions,
+				isExpandOnly && styles.moduleHeaderActionsExpandOnly,
+			)}>
 				{result.headerActions}
 				{result.expandable && (
 					<ExpansionButton
