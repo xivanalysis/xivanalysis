@@ -87,7 +87,7 @@
 .expandedSegment .moduleHeader {
 	position: sticky;
 	top: calc(-1 * gutter);
-	z-index: 1;
+	z-index: 10;
 	align-items: center;
 	margin: calc(-1 * gutter) calc(-1 * gutter) gutter;
 	padding: gutter;
