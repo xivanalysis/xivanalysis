@@ -22,6 +22,7 @@
 
 .markerTooltip {
 	position: fixed;
+	z-index: 1900;
 	border: 1px solid black;
 	padding: 5px;
 	transform: translate(-50%, calc(-100% - markerPointerSize));
