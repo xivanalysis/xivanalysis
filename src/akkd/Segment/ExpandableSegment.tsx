@@ -1,10 +1,13 @@
 import classNames from 'classnames'
-import {createRef, CSSProperties, PureComponent, ReactNode, RefObject} from 'react'
+import {createRef, CSSProperties, MouseEventHandler, PureComponent, ReactNode, RefObject} from 'react'
 import styles from './Segment.module.css'
 
 interface Props {
+	className?: string
+	onClick?: MouseEventHandler<HTMLDivElement>
 	seeMore?: ReactNode
 	collapsed?: boolean
+	forceExpanded?: boolean
 	maxHeight?: number
 	leeway?: number
 	children?: ReactNode
@@ -81,7 +84,10 @@ export class ExpandableSegment extends PureComponent<Props, State> {
 
 	override render() {
 		const {
+			className,
+			onClick,
 			seeMore,
+			forceExpanded,
 			maxHeight: propHeight,
 			children,
 		} = this.props
@@ -91,10 +97,12 @@ export class ExpandableSegment extends PureComponent<Props, State> {
 			maxHeight: stateHeight,
 		} = this.state
 
-		const maxHeight = collapsed? propHeight : stateHeight
+		const isCollapsed = collapsed && !forceExpanded
+		const maxHeight = isCollapsed? propHeight : stateHeight
+		const shouldClip = maxHeight && overflowing && !forceExpanded
 
 		const style: CSSProperties = {}
-		if (maxHeight && overflowing) {
+		if (shouldClip) {
 			style.maxHeight = maxHeight
 		}
 
@@ -103,12 +111,14 @@ export class ExpandableSegment extends PureComponent<Props, State> {
 				ref={this.ref}
 				className={classNames(
 					styles.segment,
-					maxHeight && styles.expandable,
+					className,
+					shouldClip && styles.expandable,
 				)}
+				onClick={onClick}
 				style={style}
 			>
 				{children}
-				{overflowing && collapsed && (
+				{overflowing && isCollapsed && (
 					<div className={styles.expand} onClick={this.expand}>
 						<span className={styles.expandMarker}>{seeMore || 'See more'}</span>
 					</div>

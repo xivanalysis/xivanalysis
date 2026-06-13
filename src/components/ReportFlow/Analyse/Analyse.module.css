@@ -1,3 +1,5 @@
+@value gutter, themeBackground, themeInverse from "theme.module.css";
+
 .header {
 	display: flex;
 }
@@ -16,4 +18,78 @@
 
 .seeMore {
 	margin: 0 5px;
+}
+
+.moduleExpansionFrame {
+	display: block;
+	margin: gutter 0;
+}
+
+.moduleExpansionFrame:first-child {
+	margin-top: 0;
+}
+
+.moduleExpansionFrame:last-child {
+	margin-bottom: 0;
+}
+
+.moduleExpansionFrame.expanded {
+	position: fixed;
+	inset: 0;
+	z-index: 1004;
+	box-sizing: border-box;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin: 0;
+	padding: gutter;
+	background: rgba(0, 0, 0, 0.5);
+	overflow: auto;
+}
+
+.moduleSegment {
+	margin: 0;
+	max-width: 100%;
+}
+
+.expandedSegment.expandedSegment {
+	box-sizing: border-box;
+	width: fit-content;
+	max-height: 100%;
+	max-width: 100%;
+	box-shadow: 0 2px 12px color(themeInverse a(30%));
+	overflow: auto;
+}
+
+.moduleHeader {
+	display: flex;
+	align-items: flex-start;
+	gap: calc(gutter / 2);
+	margin-bottom: 1em;
+}
+
+.moduleTitle {
+	flex: 1 1 auto;
+	margin: 0 !important;
+	min-width: 0;
+}
+
+.moduleHeaderActions {
+	display: flex;
+	flex: 0 1 auto;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: flex-end;
+	gap: calc(gutter / 2);
+	margin-left: auto;
+}
+
+.expandedSegment .moduleHeader {
+	position: sticky;
+	top: calc(-1 * gutter);
+	z-index: 1;
+	align-items: center;
+	margin: calc(-1 * gutter) calc(-1 * gutter) gutter;
+	padding: gutter;
+	background: themeBackground;
 }

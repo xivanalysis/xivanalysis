@@ -312,6 +312,8 @@
   "core.always-cast.info-header": "Info",
   "core.always-cast.timestamp-header": "Temps",
   "core.always-cast.title": "Soyez toujours en train de lançer vos sorts",
+  "core.analyse.collapse-module": "",
+  "core.analyse.expand-module": "",
   "core.analyse.see-more": "Voir plus",
   "core.aoeusages.aoe-ability": "Action AoE Utilisée",
   "core.aoeusages.min-targets": "Cibles Minimum Recommandées",

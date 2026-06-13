@@ -312,6 +312,8 @@
   "core.always-cast.info-header": "",
   "core.always-cast.timestamp-header": "Zeit",
   "core.always-cast.title": "Mach immer etwas",
+  "core.analyse.collapse-module": "",
+  "core.analyse.expand-module": "",
   "core.analyse.see-more": "Siehe mehr",
   "core.aoeusages.aoe-ability": "AoE-Aktionen benutzt",
   "core.aoeusages.min-targets": "Minimale Ziele",

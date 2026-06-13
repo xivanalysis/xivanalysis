@@ -312,6 +312,8 @@
   "core.always-cast.info-header": "",
   "core.always-cast.timestamp-header": "시간",
   "core.always-cast.title": "항상 캐스팅을 하기",
+  "core.analyse.collapse-module": "",
+  "core.analyse.expand-module": "",
   "core.analyse.see-more": "더 보기",
   "core.aoeusages.aoe-ability": "광역기 사용",
   "core.aoeusages.min-targets": "최소 개체 수",

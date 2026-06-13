@@ -20,8 +20,10 @@ const LS_KEY_LAST_FAILING_VERSION = 'xiva.lastFailingVersion'
 export interface Result {
 	handle: string
 	name?: MessageDescriptor
+	headerActions?: ReactNode
 	mode: DisplayMode
 	order: number
+	expandable: boolean
 	markup: ReactNode
 }
 
@@ -378,9 +380,11 @@ export class Parser {
 			const constructor = injectable.constructor as typeof Analyser
 			return {
 				name: constructor.title,
+				headerActions: constructor.headerActions,
 				handle: constructor.handle,
 				mode: constructor.displayMode,
 				order: constructor.displayOrder,
+				expandable: constructor.expandable,
 				markup: null,
 			}
 		}

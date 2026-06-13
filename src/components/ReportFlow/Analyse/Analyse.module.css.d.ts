@@ -2,9 +2,19 @@
 /* eslint-disable */
 declare namespace AnalyseModuleCssNamespace {
   export interface IAnalyseModuleCss {
+    expanded: string;
+    expandedSegment: string;
+    gutter: string;
     header: string;
+    moduleExpansionFrame: string;
+    moduleHeader: string;
+    moduleHeaderActions: string;
+    moduleSegment: string;
+    moduleTitle: string;
     resultsContainer: string;
     seeMore: string;
+    themeBackground: string;
+    themeInverse: string;
   }
 }
 

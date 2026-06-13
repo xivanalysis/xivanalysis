@@ -312,6 +312,8 @@
   "core.always-cast.info-header": "Info",
   "core.always-cast.timestamp-header": "Time",
   "core.always-cast.title": "Always be casting",
+  "core.analyse.collapse-module": "Collapse module",
+  "core.analyse.expand-module": "Expand module",
   "core.analyse.see-more": "See more",
   "core.aoeusages.aoe-ability": "AoE Action Used",
   "core.aoeusages.min-targets": "Minimum Targets",

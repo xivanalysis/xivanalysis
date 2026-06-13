@@ -312,6 +312,8 @@
   "core.always-cast.info-header": "情報",
   "core.always-cast.timestamp-header": "タイム",
   "core.always-cast.title": "常に回しましょう",
+  "core.analyse.collapse-module": "",
+  "core.analyse.expand-module": "",
   "core.analyse.see-more": "もっと見る",
   "core.aoeusages.aoe-ability": "範囲攻撃使用数",
   "core.aoeusages.min-targets": "最低ターゲット数",
