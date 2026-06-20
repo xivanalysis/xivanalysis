@@ -308,7 +308,7 @@
   "core.always-cast.header.content": "Garder votre GCD en roulement est le plus important pour maximiser vos dégâts.",
   "core.always-cast.header.interrupts": "Ce rapport identifie lorsque votre GCD a été arrêté en interrompant un cast.",
   "core.always-cast.header.sub-content": "Ces rapports vont vous aider à identifier des façons d'améliorer le fait que garder votre GCD en roulement.",
-  "core.always-cast.header.weaving": "",
+  "core.always-cast.header.weaving": "Ce rapport indique lorsque votre GCD a été retardé en utilisant trop d'actions \"hors-GCD\".",
   "core.always-cast.info-header": "Info",
   "core.always-cast.timestamp-header": "Temps",
   "core.always-cast.title": "Soyez toujours en train de lançer vos sorts",
