@@ -24,7 +24,7 @@ export class AoeChecker extends AoEUsages {
 		{
 			aoeAction: ACTIONS.HISSATSU_GUREN,
 			stActions: [ACTIONS.HISSATSU_SENEI],
-			minTargets: this.parser.patch.after('7.4') ? PATCH74_GUREN_SENEI_BREAKPOINT : GUREN_SENEI_BREAKPOINT,
+			minTargets: this.parser.patch.before('7.4') ? GUREN_SENEI_BREAKPOINT : PATCH74_GUREN_SENEI_BREAKPOINT,
 		},
 
 		{
