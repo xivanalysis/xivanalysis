@@ -12,6 +12,9 @@ const AOE_FINISHERS = [
 	ACTIONS.OKA.id,
 ]
 
+const GUREN_SENEI_BREAKPOINT = 3
+const PATCH74_GUREN_SENEI_BREAKPOINT = 2
+
 export class AoeChecker extends AoEUsages {
 	@dependency private actors!: Actors
 
@@ -21,7 +24,7 @@ export class AoeChecker extends AoEUsages {
 		{
 			aoeAction: ACTIONS.HISSATSU_GUREN,
 			stActions: [ACTIONS.HISSATSU_SENEI],
-			minTargets: 3,
+			minTargets: this.parser.patch.before('7.4') ? GUREN_SENEI_BREAKPOINT : PATCH74_GUREN_SENEI_BREAKPOINT,
 		},
 
 		{

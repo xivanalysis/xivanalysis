@@ -3,6 +3,11 @@ import {CONTRIBUTORS} from 'data/CONTRIBUTORS'
 
 export const changelog = [
 	{
+		date: new Date('2026-06-23'),
+		Changes: () => <>Updated SAM AoE to reflect 7.4's potency change that reduced the <DataLink action="HISSATSU_GUREN"/> breakpoint from 3 to 2.</>,
+		contributors: [CONTRIBUTORS.RYAN],
+	},
+	{
 		date: new Date('2025-03-24'),
 		Changes: () => <>SAM 7.2 Support added. <DataLink action="HISSATSU_GUREN"/> breakpoint increased to 3 from 2.</>,
 		contributors: [CONTRIBUTORS.RYAN],
