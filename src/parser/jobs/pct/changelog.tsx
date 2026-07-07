@@ -8,6 +8,11 @@ export const changelog = [
 	// 	contributors: [CONTRIBUTORS.YOU],
 	// },
 	{
+		date: new Date('2026-07-06'),
+		Changes: () => <>Filter Rainbow Drips that were instant cast due to Rainbow Bright out of the Swiftcast Actions display.</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
+	{
 		date: new Date('2025-08-08'),
 		Changes: () => <>Return <DataLink showIcon={false} action="STRIKING_MUSE" /> to the cooldowns checklist requirement and update <DataLink showIcon={false} action="STARRY_MUSE" /> window analysis to once again expect all three Hammer GCDs.</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],
