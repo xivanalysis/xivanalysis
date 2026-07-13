@@ -1,5 +1,6 @@
 import {msg} from '@lingui/core/macro'
 import {Trans} from '@lingui/react/macro'
+import {useModuleExpansion} from 'components/ReportFlow/Analyse/ModuleExpansionContext'
 import {Analyser, DisplayMode} from 'parser/core/Analyser'
 import {DISPLAY_ORDER} from '../DISPLAY_ORDER'
 import {
@@ -18,11 +19,46 @@ const INITIAL_END = 60000 // One minute
 
 const MINIMUM_ZOOM = 10000 // 10 seconds (~4 gcds)
 
+interface TimelineOutputProps {
+	rows: RowConfig[]
+	items: ItemConfig[]
+	duration: number
+	exposeSetView(handler: SetViewFn): void
+}
+
+function TimelineOutput({
+	rows,
+	items,
+	duration,
+	exposeSetView,
+}: TimelineOutputProps) {
+	const {expanded} = useModuleExpansion()
+
+	return <div className={expanded ? `${styles.timelineWrapper} ${styles.expanded}` : styles.timelineWrapper}>
+		<TimelineComponent
+			rows={rows}
+			items={items}
+
+			min={0}
+			max={duration}
+			end={Math.min(duration, INITIAL_END)}
+			zoomMin={MINIMUM_ZOOM}
+			exposeSetView={exposeSetView}
+		/>
+	</div>
+}
+
 export class Timeline extends Analyser {
 	static override handle = 'timeline'
 	static override displayOrder = DISPLAY_ORDER.TIMELINE
 	static override displayMode = DisplayMode.FULL
 	static override title = msg({id: 'core.timeline.title', message: 'Timeline'})
+	static override expandable = true
+	static override headerActions = <span className={styles.helpText}>
+		<Trans id="core.timeline.help-text">
+			Scroll or click+drag to pan, ctrl+scroll or pinch to zoom.
+		</Trans>
+	</span>
 
 	private setView?: SetViewFn
 
@@ -69,22 +105,11 @@ export class Timeline extends Analyser {
 	}
 
 	override output() {
-		return <>
-			<span className={styles.helpText}>
-				<Trans id="core.timeline.help-text">
-					Scroll or click+drag to pan, ctrl+scroll or pinch to zoom.
-				</Trans>
-			</span>
-			<TimelineComponent
-				rows={this.rows}
-				items={this.items}
-
-				min={0}
-				max={this.parser.currentDuration}
-				end={Math.min(this.parser.currentDuration, INITIAL_END)}
-				zoomMin={MINIMUM_ZOOM}
-				exposeSetView={this.exposeSetView}
-			/>
-		</>
+		return <TimelineOutput
+			rows={this.rows}
+			items={this.items}
+			duration={this.parser.currentDuration}
+			exposeSetView={this.exposeSetView}
+		/>
 	}
 }

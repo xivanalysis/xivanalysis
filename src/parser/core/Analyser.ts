@@ -53,6 +53,8 @@ export type AnalyserOptions = ConstructorParameters<typeof Analyser>
 export class Analyser extends Injectable {
 	/** Title displayed above analysis output, and in the sidebar. */
 	static title?: MessageDescriptor
+	/** Extra content displayed beside the module title in the result header. */
+	static headerActions?: ReactNode
 
 	/**
 	 * Value used to control the order in which output is displayed in the results
@@ -62,6 +64,8 @@ export class Analyser extends Injectable {
 	static displayOrder = DEFAULT_DISPLAY_ORDER
 	/** The style of the wrapper that analysis output should be rendered in. */
 	static displayMode = DisplayMode.COLLAPSIBLE
+	/** Whether the module can be expanded into a modal-style view. */
+	static expandable = false
 
 	/** The parser for the current analysis. */
 	protected readonly parser: Parser

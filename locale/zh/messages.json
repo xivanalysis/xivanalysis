@@ -312,6 +312,8 @@
   "core.always-cast.info-header": "详细",
   "core.always-cast.timestamp-header": "时间",
   "core.always-cast.title": "保持使用技能",
+  "core.analyse.collapse-module": "",
+  "core.analyse.expand-module": "",
   "core.analyse.see-more": "查看更多",
   "core.aoeusages.aoe-ability": "AoE技能使用",
   "core.aoeusages.min-targets": "最少目标",

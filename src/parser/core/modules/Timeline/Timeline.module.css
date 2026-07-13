@@ -4,10 +4,11 @@
 	font-style: italic;
 }
 
-@media (min-width: 992px) {
-	.helpText {
-		position: absolute;
-		top: gutter;
-		right: gutter;
-	}
+.timelineWrapper {
+	display: block;
+}
+
+.timelineWrapper.expanded {
+	width: calc(100vw - 4 * gutter);
+	max-width: 100%;
 }
