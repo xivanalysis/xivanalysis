@@ -175,6 +175,13 @@ export const CONTRIBUTORS = ensureRecord<Contributor>()({
 			JOBS.PICTOMANCER,
 		],
 	},
+	ANTHONY: {
+		name: 'Anthony',
+		avatar: require('./avatar/Anthony.png'),
+		jobs: [
+			JOBS.RED_MAGE
+		],
+	},
 })
 
 export interface Role {
