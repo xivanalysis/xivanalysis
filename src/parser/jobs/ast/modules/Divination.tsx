@@ -81,8 +81,6 @@ export class Divination extends RaidBuffWindow {
 				.target(oneOf(teamMembers)),
 			this.offCard)
 
-		this.addEventHook('complete', this.onComplete)
-
 		this.addEvaluator(new ExpectedGcdCountEvaluator({
 			expectedGcds: BASE_GCDS_PER_WINDOW,
 			globalCooldown: this.globalCooldown,
