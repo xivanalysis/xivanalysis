@@ -179,7 +179,7 @@ export const CONTRIBUTORS = ensureRecord<Contributor>()({
 		name: 'Anthony',
 		avatar: require('./avatar/Anthony.png'),
 		jobs: [
-			JOBS.RED_MAGE
+			JOBS.RED_MAGE,
 		],
 	},
 })
