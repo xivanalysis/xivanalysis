@@ -26,15 +26,18 @@ export interface ProviderProps {
 /** Tooltip data provider. Wrapping here to supply i18n language context. */
 export function Provider({children}: ProviderProps) {
 	const {i18nStore} = useContext(StoreContext)
+	const gameLang = i18nStore.safeGameLanguage
+	const apiLanguage = gameLang === Language.CHINESE
+        ? 'chs'  // Cafemaker using 'chs' instead of 'zh'
+        : gameLang  
 
-	// const baseUrl = i18nStore.gameLanguage === Language.CHINESE
-	// 	? 'https://cafemaker.wakingsands.com'
-	// 	: undefined
-	const baseUrl = 'https://v2.xivapi.com/api'
+	const baseUrl = i18nStore.gameLanguage === Language.CHINESE
+		? 'https://xivapi-v2.xivcdn.com/api' //cafemaker v2 API
+		: 'https://v2.xivapi.com/api'
 
 	return useObserver(() => (
 		<TooltipProvider
-			language={i18nStore.safeGameLanguage}
+			language={apiLanguage}
 			baseUrl={baseUrl}
 		>
 			{children}
