@@ -3,6 +3,11 @@ import {CONTRIBUTORS} from 'data/CONTRIBUTORS'
 
 export const changelog = [
 	{
+		date: new Date('2026-09-06'),
+		Changes: () => <>Fixed duplicated Divination window suggestions.</>,
+		contributors: [CONTRIBUTORS.ANTHONY]
+	},
+	{
 		date: new Date('2025-12-18'),
 		Changes: () => <>Removed the non-mit, non-heal portion of <DataLink status="COLLECTIVE_UNCONSCIOUS" /> from overhealing.</>,
 		contributors: [CONTRIBUTORS.OTOCEPHALY],
