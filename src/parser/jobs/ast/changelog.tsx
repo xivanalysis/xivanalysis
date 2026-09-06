@@ -5,7 +5,7 @@ export const changelog = [
 	{
 		date: new Date('2026-09-06'),
 		Changes: () => <>Fixed duplicated Divination window suggestions.</>,
-		contributors: [CONTRIBUTORS.ANTHONY]
+		contributors: [CONTRIBUTORS.ANTHONY],
 	},
 	{
 		date: new Date('2025-12-18'),
