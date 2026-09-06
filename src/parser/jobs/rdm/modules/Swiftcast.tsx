@@ -22,6 +22,7 @@ export class Swiftcast extends CoreSwiftcast {
 	private badSwiftcastSpells: Action[] = [
 		this.data.actions.JOLT,
 		this.data.actions.JOLT_II,
+		this.data.actions.JOLT_III,
 		this.data.actions.VERTHUNDER_II,
 		this.data.actions.VERAERO_II,
 		this.data.actions.VERFIRE,

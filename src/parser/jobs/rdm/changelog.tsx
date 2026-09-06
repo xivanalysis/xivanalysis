@@ -2,6 +2,11 @@ import {CONTRIBUTORS} from 'data/CONTRIBUTORS'
 
 export const changelog = [
 	{
+		date: new Date('2026-08-28'),
+		Changes: () => <>Jolt III is now flagged as a bad use of Swiftcast.</>,
+		contributors: [CONTRIBUTORS.ANTHONY],
+	},
+	{
 		date: new Date('2026-02-15'),
 		Changes: () => <>Modified Overwritten procs suggestion when both procs are available, adjusted tiers so that for now all overwrite proc suggestions will be Minor.</>,
 		contributors: [CONTRIBUTORS.LEYLIA],
