@@ -675,8 +675,8 @@ export class Gauge extends CoreGauge {
 			}))
 		}
 
-		// If we forgave an overwrite because of the 5+7 opener, remove that from the raw gauge overcap amount when checking to see if we should suggest
-		const  totalParadoxOvercap = this.paradoxGauge.overCap - ((!this.parser.patch.before('7.2') && !this.forgiveOneParadoxOverwrite) ? 1: 0)
+		// Use the gauge errors cache instead of funky math on the paradoxGauge.overcap to make sure the suggestion aligns with the Gauge module output
+		const  totalParadoxOvercap = this.gaugeErrors.filter(errorEvent => errorEvent.error === GAUGE_ERROR_TYPE.OVERWROTE_PARADOX).length
 		if (totalParadoxOvercap > 0) {
 			this.suggestions.add(new Suggestion({
 				icon: this.data.actions.PARADOX.icon,
