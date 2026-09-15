@@ -230,6 +230,7 @@ export class Gauge extends CoreGauge {
 	}))
 
 	private previousGaugeState: BLMGaugeState = this.getGaugeState(this.parser.pull.timestamp)
+	private previousGaugeEventTimestamp: number = 0
 
 	override initialise() {
 		super.initialise()
@@ -419,9 +420,11 @@ export class Gauge extends CoreGauge {
 			// Queue event to tell other analysers about the change
 			this.parser.queueEvent({
 				type: 'blmgauge',
-				timestamp: this.parser.currentEpochTimestamp,
+				timestamp: this.parser.currentEpochTimestamp + (this.parser.currentEpochTimestamp === this.previousGaugeEventTimestamp ? 1: 0),
 				gaugeState: {...this.previousGaugeState},
 			})
+
+			this.previousGaugeEventTimestamp = this.parser.currentEpochTimestamp
 		}
 	}
 

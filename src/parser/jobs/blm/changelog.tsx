@@ -8,6 +8,11 @@ export const changelog = [
 	// 	contributors: [CONTRIBUTORS.YOU],
 	// },
 	{
+		date: new Date('2026-09-06'),
+		Changes: () => <>Ensure gauge update events process in the correct order when a spell updates gauge on both cast and damage events.</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
+	{
 		date: new Date('2026-01-11'),
 		Changes: () => <>Include High Thunder II in DoT uptime analysis, and small bugfix for instant cast availability in Hot Blizzard III information.</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],
