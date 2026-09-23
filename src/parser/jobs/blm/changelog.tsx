@@ -8,6 +8,11 @@ export const changelog = [
 	// 	contributors: [CONTRIBUTORS.YOU],
 	// },
 	{
+		date: new Date('2026-09-15'),
+		Changes: () => <>Ensure Paradox overwrites during downtime are treated the same by the suggestions and the Gauge module output.</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
+	{
 		date: new Date('2026-09-06'),
 		Changes: () => <>Ensure gauge update events process in the correct order when a spell updates gauge on both cast and damage events.</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],
