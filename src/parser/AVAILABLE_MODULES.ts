@@ -9,6 +9,7 @@ import {ASTROLOGIAN} from './jobs/ast'
 import {BLACK_MAGE} from './jobs/blm'
 import {BLUE_MAGE} from './jobs/blu'
 import {BARD} from './jobs/brd'
+import {BEASTMASTER} from './jobs/bst'
 import {DANCER} from './jobs/dnc'
 import {DRAGOON} from './jobs/drg'
 import {DARK_KNIGHT} from './jobs/drk'
@@ -54,6 +55,7 @@ export const AVAILABLE_MODULES: AvailableModules = {
 		SAMURAI,
 		REAPER,
 		VIPER,
+		BEASTMASTER,
 
 		BARD,
 		MACHINIST,

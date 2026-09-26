@@ -120,12 +120,12 @@ export abstract class CooldownDowntime extends Analyser {
 
 	override initialise() {
 		const trackedIds = this.allCooldowns.map(group => group.cooldowns)
-			.reduce((acc, cur) => acc.concat(cur))
+			.reduce((acc, cur) => acc.concat(cur), [])
 			.map(action => action.id)
 
 		const resetIds = this.allCooldowns
 			.map(group => group.resetBy?.actions ?? [])
-			.reduce((acc, cur) => acc.concat(cur))
+			.reduce((acc, cur) => acc.concat(cur), [])
 			.map(action => action.id)
 
 		const baseFilter = filter<Event>()

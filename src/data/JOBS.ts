@@ -188,6 +188,14 @@ export const JOBS = ensureRecord<Job>()({
 		colour: '#30a230',
 		role: 'MELEE',
 	},
+	BEASTMASTER: {
+		name: msg({id: 'game.job.beastmaster', message: 'Beastmaster'}),
+		speedStat: Attribute.SKILL_SPEED,
+		icon: 'bst',
+		colour: '#8ed7f2',
+		role: 'MELEE',
+		isLimited: true,
+	},
 
 	// Phys Ranged
 	BARD: {

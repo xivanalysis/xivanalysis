@@ -188,6 +188,7 @@ const actorTypeMap = new Map<ActorType, JobKey>([
 	[ActorType.DRAGOON, 'DRAGOON'],
 	[ActorType.NINJA, 'NINJA'],
 	[ActorType.VIPER, 'VIPER'],
+	[ActorType.BEASTMASTER, 'BEASTMASTER'],
 	[ActorType.SAMURAI, 'SAMURAI'],
 	[ActorType.REAPER, 'REAPER'],
 	[ActorType.BARD, 'BARD'],

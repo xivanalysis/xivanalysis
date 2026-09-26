@@ -28,7 +28,9 @@ export class Defensives extends Utilities {
 	</Trans>
 
 	override initialise() {
-		const roleDefensives = DEFENSIVE_ROLE_ACTIONS.get(JOBS[this.parser.actor.job].role)?.map(key => this.data.actions[key]) ?? []
+		const playerJob = JOBS[this.parser.actor.job]
+		// Beastmaster doesn't have role actions for some reason...
+		const roleDefensives = DEFENSIVE_ROLE_ACTIONS.get(playerJob !== JOBS.BEASTMASTER ? playerJob.role : "UNSUPPORTED")?.map(key => this.data.actions[key]) ?? []
 		roleDefensives.forEach(roleAction => {
 			if (!this.trackedActions.find(action => roleAction.id === action.id)) {
 				this.trackedActions.push(roleAction)

@@ -52,6 +52,7 @@ export enum ActorType {
 	DRAGOON = 'Dragoon',
 	NINJA = 'Ninja',
 	VIPER = 'Viper',
+	BEASTMASTER = 'Beastmaster',
 	SAMURAI = 'Samurai',
 	REAPER = 'Reaper',
 	BARD = 'Bard',

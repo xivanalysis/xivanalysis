@@ -2,6 +2,7 @@ import {AST} from './AST'
 import {BLM} from './BLM'
 import {BLU} from './BLU'
 import {BRD} from './BRD'
+import {BST} from './BST'
 import {DNC} from './DNC'
 import {DRG} from './DRG'
 import {DRK} from './DRK'
@@ -51,6 +52,7 @@ export const root = {
 	...DRG,
 	...RPR,
 	...VPR,
+	...BST,
 
 	...BRD,
 	...MCH,
