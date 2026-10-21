@@ -7,6 +7,11 @@ export const changelog = [
 	// 	contributors: [CONTRIBUTORS.YOU],
 	// },
 	{
+		date: new Date('2026-10-20'),
+		Changes: () => <>Track Zoe under Defensives.</>,
+		contributors: [CONTRIBUTORS.ANTHONY],
+	},
+	{
 		date: new Date('2026-02-23'),
 		Changes: () => <>Track Eukrasian Dyskrasia as a mutually-exclusive DoT with Eukrasian Dosis, and some other minor fixes.</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],
