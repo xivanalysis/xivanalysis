@@ -13,6 +13,7 @@ export class Defensives extends CoreDefensives {
 		this.data.actions.SOTERIA,
 		this.data.actions.RHIZOMATA,
 		this.data.actions.KRASIS,
+		this.data.actions.ZOE,
 	]
 
 	// Retaining old Trans ID to maintain i18n
